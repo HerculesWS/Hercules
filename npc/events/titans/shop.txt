@@ -23,6 +23,7 @@ prontera,164,171,4	script	Tienda de Eventos::event_shop_titans	871,{
 	OnBuyItem:
 		set .@bought,0;
 		set .@weight,readparam(24);
+		set .@total,0;
 		for (.@i = 0; .@i < getarraysize(@bought_nameid); ++.@i) {
 				set .@weight,.@weight+getiteminfo(@bought_nameid[.@i],6);
 				set .@total, .@total+ .PRIZE_ITEMS[.@j+1];
@@ -39,10 +40,14 @@ prontera,164,171,4	script	Tienda de Eventos::event_shop_titans	871,{
 				} else {
 					for(.@j=0;.@j<getarraysize(.PRIZE_ITEMS);++.@j) {
 						if(.PRIZE_ITEMS[.@j] == @bought_nameid[.@i]) {
+							if(zeny >= .@total) {
 								getitem  @bought_nameid[.@i],@bought_quantity[.@i] ;
 								dispbottom getvariableofnpc(.gotItem$,"event_shop_es")+getitemname(@bought_nameid[.@i]);
 								Zeny -= .PRIZE_ITEMS[.@j+1];
 								set .@bought,1;
+							} else {
+								mes getvariableofnpc(.bankHack$,"event_shop_es");
+							}
 						}
 					}
 					
@@ -79,6 +84,7 @@ prontera,164,171,4	script	Tienda de Eventos::event_shop_titans	871,{
 		set .gotItem$,"Obtuvistes un ";
 		setarray .haveTickets$[0],"Veo que has conseguido","^FF0000"+.rewardItemName$+"^000000","Deseas cambiar algunos por premios?";
 		set .haveTicketsSize,getarraysize(.haveTickets$);
+		set .bankHack$,"Nah, sin zeny no te llevas nada de esta tienda";
 		set .weightLimit$,"Excedes el ^FF0000limite de peso^000000 para comprar. Regresa cuando tengas espacio.";
 		setarray .menuTrade$[0],"Si","No";
 	end;
