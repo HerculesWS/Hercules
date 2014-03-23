@@ -9206,8 +9206,12 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_ITEMSCRIPT:
 			if( sd ) {
 				switch( val1 ) {
-					//case ITEMID_PHREEONI_CARD:
-					//case ITEMID_GHOSTRING_CARD:
+					case ITEMID_PHREEONI_CARD:
+						clif->status_change(bl, SI_FOOD_BASICHIT, 1, tick, 0, 0, 0);
+						break;
+					case ITEMID_GHOSTRING_CARD:
+						clif->status_change(bl,SI_ARMOR_PROPERTY,1,tick,0,0,0);
+						break;
 					case ITEMID_TAO_GUNKA_CARD:
 						clif->status_change(bl,SI_MVPCARD_TAOGUNKA,1,tick,0,0,0);
 						break;
@@ -10084,8 +10088,12 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		case SC_ITEMSCRIPT:
 			if( sd ) {
 				switch( sce->val1 ) {
-				//case ITEMID_PHREEONI_CARD:
-				//case ITEMID_GHOSTRING_CARD:
+				case ITEMID_PHREEONI_CARD:
+					clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_FOOD_BASICHIT);
+					break;
+				case ITEMID_GHOSTRING_CARD:
+					clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_ARMOR_PROPERTY);
+					break;
 				case ITEMID_TAO_GUNKA_CARD:
 					clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_MVPCARD_TAOGUNKA);
 					break;

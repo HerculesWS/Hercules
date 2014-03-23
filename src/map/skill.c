@@ -2629,6 +2629,9 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 			case WL_CRIMSONROCK:
 				dir = map->calc_dir(bl,skill->area_temp[4],skill->area_temp[5]);
 				break;
+			case MC_CARTREVOLUTION:
+				dir = 6; // Official servers push target to the West
+				break;
 
 		}
 		
@@ -9073,21 +9076,25 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case SO_EL_ACTION:
 			if( sd ) {
 				int duration = 3000;
-				if( !sd->ed )	break;
+				if( !sd->ed )
+					break;
+				
+				switch(sd->ed->db->class_){
+					case 2115:case 2124:
+					case 2118:case 2121:
+						duration = 6000;
+						break;
+					case 2116:case 2119:
+					case 2122:case 2125:
+						duration = 9000;
+						break;
+				}
+				
 				sd->skill_id_old = skill_id;
 				elemental->action(sd->ed, bl, tick);
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-					switch(sd->ed->db->class_){
-						case 2115:case 2124:
-						case 2118:case 2121:
-							duration = 6000;
-							break;
-						case 2116:case 2119:
-						case 2122:case 2125:
-							duration = 9000;
-							break;
-					}
-					skill->blockpc_start(sd, skill_id, duration);
+												
+				skill->blockpc_start(sd, skill_id, duration);
 			}
 			break;
 
@@ -9488,6 +9495,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			if (hd)
 				skill->blockhomun_start(hd, skill_id, skill->get_cooldown(skill_id, skill_lv));
 		}
+			break;
+		case SO_ELEMENTAL_SHIELD:/* somehow its handled outside this switch, so we need a empty case otherwise default would be triggered. */
 			break;
 		default:
 			ShowWarning("skill_castend_nodamage_id: Unknown skill used:%d\n",skill_id);
