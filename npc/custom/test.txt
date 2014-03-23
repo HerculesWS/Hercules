@@ -1,0 +1,4 @@
+prontera,150,150,4	script	test_npc	245,{
+	mes "Agrego el primer mensaje";
+	close;
+}
