@@ -2033,6 +2033,10 @@ int do_init(int argc, char** argv)
 		core->runflag = LOGINSERVER_ST_RUNNING;
 	}
 
+#ifdef CONSOLE_INPUT
+	console->display_gplnotice();
+#endif // CONSOLE_INPUT
+
 	ShowStatus("The login-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %u).\n\n", login_config.login_port);
 	login_log(0, "login server", 100, "login server started");
 

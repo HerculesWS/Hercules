@@ -75,6 +75,16 @@ void display_title(void) {
 	ShowInfo("Compiled with %s\n", sysinfo->compiler());
 	ShowInfo("Compile Flags: %s\n", sysinfo->cflags());
 }
+
+/**
+ * Shows a license notice as per GNU GPL recommendation.
+ */
+void display_gplnotice(void)
+{
+	ShowInfo("Hercules, Copyright (C) 2012-2015, Hercules Dev Team and others.\n");
+	ShowInfo("Licensed under the GNU General Public License, version 3 or later.\n");
+}
+
 #ifdef CONSOLE_INPUT
 int console_parse_key_pressed(void)
 {
@@ -532,6 +542,7 @@ void console_defaults(void)
 	console->init = console_init;
 	console->final = console_final;
 	console->display_title = display_title;
+	console->display_gplnotice = display_gplnotice;
 #ifdef CONSOLE_INPUT
 	console->input = &console_input_s;
 	console->input->parse_init = console_parse_init;

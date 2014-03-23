@@ -5959,6 +5959,8 @@ int do_init(int argc, char *argv[])
 
 #ifdef CONSOLE_INPUT
 	console->input->setSQL(map->mysql_handle);
+	if (!minimal && core->runflag != CORE_ST_STOP)
+		console->display_gplnotice();
 #endif
 
 	ShowStatus("Server is '"CL_GREEN"ready"CL_RESET"' and listening on port '"CL_WHITE"%d"CL_RESET"'.\n\n", map->port);

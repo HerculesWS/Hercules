@@ -84,6 +84,7 @@ struct console_interface {
 	void (*init) (void);
 	void (*final) (void);
 	void (*display_title) (void);
+	void (*display_gplnotice) (void);
 
 	struct console_input_interface *input;
 };
