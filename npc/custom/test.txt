@@ -1,4 +1,5 @@
 prontera,150,150,4	script	test_npc	245,{
 	mes "Agrego el primer mensaje";
+	mes "Agrego mi primer mensaje -- Will";
 	close;
 }
