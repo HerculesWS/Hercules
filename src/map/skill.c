@@ -2201,12 +2201,12 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		 **/
 		#if MAGIC_REFLECTION_TYPE
 
-		#if defined(DISABLE_RENEWAL)
+		#ifdef RENEWAL
+			if( dmg.dmg_lv != ATK_MISS ) //Wiz SL cancelled and consumed fragment
+		#else
 			// issue:6415 in pre-renewal Kaite reflected the entire damage received
 			// regardless of caster's equipament (Aegis 11.1)
 			if( dmg.dmg_lv != ATK_MISS && type == 1 ) //Wiz SL cancelled and consumed fragment
-		#else
-			if( dmg.dmg_lv != ATK_MISS ) //Wiz SL cancelled and consumed fragment
 		#endif
 			{
 				short s_ele = skill->get_ele(skill_id, skill_lv);

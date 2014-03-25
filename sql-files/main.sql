@@ -127,6 +127,7 @@ CREATE TABLE IF NOT EXISTS `charlog` (
   `time` datetime NOT NULL default '0000-00-00 00:00:00',
   `char_msg` varchar(255) NOT NULL default 'char select',
   `account_id` int(11) NOT NULL default '0',
+  `char_id` int(11) unsigned NOT NULL default '0',
   `char_num` tinyint(4) NOT NULL default '0',
   `name` varchar(23) NOT NULL default '',
   `str` int(11) unsigned NOT NULL default '0',
@@ -663,6 +664,7 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1387844126); -- 2013-12-24--00-1
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1388854043); -- 2014-01-04--16-47.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1389028967); -- 2014-01-06--17-22.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1392832626); -- 2014-02-19--17-57.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1395789302); -- 2014-03-25--23-57.sql
 
 --
 -- Table structure for table `sstatus`
