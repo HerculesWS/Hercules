@@ -1092,8 +1092,12 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 		sc = NULL; //Unneeded
 
 	//temp: used to signal combo-skills right now.
-	if (sc && sc->data[SC_COMBOATTACK] && (sc->data[SC_COMBOATTACK]->val1 == skill_id ||
-		(sd?skill->check_condition_castbegin(sd,skill_id,skill_lv):0) )) {
+	if (sc && sc->data[SC_COMBOATTACK]
+	&& skill->is_combo(skill_id)
+	&& (sc->data[SC_COMBOATTACK]->val1 == skill_id
+		|| ( sd?skill->check_condition_castbegin(sd,skill_id,skill_lv):0 )
+		)
+	) {
 		if (sc->data[SC_COMBOATTACK]->val2)
 			target_id = sc->data[SC_COMBOATTACK]->val2;
 		else

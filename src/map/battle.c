@@ -3726,8 +3726,6 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 				md.damage = 7 * targetVit * skill_lv * (atk + matk) / 100;
 				/*
 				// Pending [malufett]
-				if( unknown condition )
-					md.damage >>= 1;
 				if( unknown condition ){
 					md.damage = 7 * md.damage % 20;
 					md.damage = 7 * md.damage / 20;
@@ -3739,6 +3737,8 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 					vitfactor = (vitfactor * (matk + atk) / 10) / status_get_vit(target);
 				ftemp = max(0, vitfactor) + (targetVit * (matk + atk)) / 10;
 				md.damage = (int64)(ftemp * 70 * skill_lv / 100);
+				if (target->type == BL_PC)
+					md.damage >>= 1;
 			}
 			md.damage -= totaldef;
 		}
@@ -3750,7 +3750,10 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 			md.damage = 0;
 		if (tsd) md.damage>>=1;
 #endif
-		if (md.damage < 0 || md.damage > INT_MAX>>1)
+		// Some monsters have totaldef higher than md.damage in some cases, leading to md.damage < 0
+		if( md.damage < 0 )
+			md.damage = 0;
+		if( md.damage > INT_MAX>>1 )
 	  	//Overflow prevention, will anyone whine if I cap it to a few billion?
 		//Not capped to INT_MAX to give some room for further damage increase.
 			md.damage = INT_MAX>>1;
@@ -5322,7 +5325,7 @@ void battle_reflect_damage(struct block_list *target, struct block_list *src, st
 				//ATK [{(Target HP / 100) x Skill Level} x Caster Base Level / 125] % + [Received damage x {1 + (Skill Level x 0.2)}]
 				int ratio = (status_get_hp(src) / 100) * sc->data[SC_CRESCENTELBOW]->val1 * status->get_lv(target) / 125;
 				if (ratio > 5000) ratio = 5000; // Maximum of 5000% ATK
-				rdamage = rdamage * ratio / 100 + (damage) * (10 + sc->data[SC_CRESCENTELBOW]->val1 * 20 / 10) / 10;
+				rdamage = ratio + (damage)* (10 + sc->data[SC_CRESCENTELBOW]->val1 * 20 / 10) / 10;
 				skill->blown(target, src, skill->get_blewcount(SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1), unit->getdir(src), 0);
 				clif->skill_damage(target, src, tick, status_get_amotion(src), 0, rdamage,
 						   1, SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1, 6); // This is how official does
