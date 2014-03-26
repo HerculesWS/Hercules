@@ -4,7 +4,7 @@
 -- Remember to make a backup before applying.
 -- We are not liable for any data loss this may cause.
 -- Apply in the same database you applied your main.sql
--- Last revised: March 21, 2014 20:30 GMT
+-- Last revised: March 26, 2014 12:57 GMT
 
 -- Drop table contents from ´sc_data´ since we use a different status order than rAthena
 -- /!\ WARNING /!\ This will remove _ALL_ of the status effects active on the server
@@ -24,6 +24,10 @@ ALTER TABLE `cart_inventory` MODIFY `bound` tinyint(1) unsigned NOT NULL default
 ALTER TABLE `char` CHANGE `moves` `slotchange` SMALLINT(3) UNSIGNED NOT NULL default '0',
 	ADD `char_opt` INT( 11 ) UNSIGNED NOT NULL default '0' AFTER `slotchange`,
 	ADD `font` TINYINT( 3 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `char_opt`;
+
+
+-- Upgrades for table `charlog`
+ALTER TABLE `charlog` ADD COLUMN `char_id` int(11) unsigned NOT NULL default '0' AFTER `account_id`;
 
 
 -- Upgrades for table `guild_storage`
@@ -83,6 +87,7 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1387844126); -- 2013-12-24--00-1
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1388854043); -- 2014-01-04--16-47.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1389028967); -- 2014-01-06--17-22.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1392832626); -- 2014-02-19--17-57.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1395789302); -- 2014-03-25--23-57.sql
 
 
 -- Updates to table `storage`
