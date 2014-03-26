@@ -1,0 +1,19 @@
+//===== Hercules Script ======================================
+//= Mr. Smile Quest
+//===== By: ==================================================
+//= Daegaladh, Masao
+//===== Current Version: =====================================
+//= 1.1
+//===== Description: =========================================
+//= [Official Conversion]
+//= Trade Clover, Fluff and Jellopy for a Mr. Smile mask.
+//===== Additional Comments: =================================
+//= 1.0 Updated to match the new Izlude Map. [Masao]
+//= 1.1 Added Izlude duplicates. [Euphy]
+//============================================================
+
+izlude,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz	4_F_03
+izlude_a,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz_a	4_F_03
+izlude_b,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz_b	4_F_03
+izlude_c,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz_c	4_F_03
+izlude_d,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz_d	4_F_03

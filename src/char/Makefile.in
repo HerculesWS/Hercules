@@ -1,0 +1,109 @@
+
+CONFIG_D = ../config
+CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
+
+COMMON_D = ../common
+COMMON_H = $(wildcard $(COMMON_D)/*.h)
+
+LIBCONFIG_D = ../../3rdparty/libconfig
+LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
+                scanner.o strbuf.o)
+LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
+              scanctx.h scanner.h strbuf.h wincompat.h)
+LIBCONFIG_INCLUDE = -I$(LIBCONFIG_D)
+
+MT19937AR_D = ../../3rdparty/mt19937ar
+MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
+MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
+MT19937AR_INCLUDE = -I$(MT19937AR_D)
+
+CHAR_C = char.c inter.c int_auction.c int_elemental.c int_guild.c int_homun.c \
+         int_mail.c int_mercenary.c int_party.c int_pet.c int_quest.c \
+         int_storage.c pincode.c
+CHAR_OBJ = $(addprefix obj_sql/, $(patsubst %.c,%.o,$(CHAR_C)))
+CHAR_H = char.h inter.h int_auction.h int_elemental.h int_guild.h int_homun.h \
+         int_mail.h int_mercenary.h int_party.h int_pet.h int_quest.h \
+         int_storage.h pincode.h
+
+HAVE_MYSQL=@HAVE_MYSQL@
+ifeq ($(HAVE_MYSQL),yes)
+	CHAR_SERVER_SQL_DEPENDS=$(CHAR_OBJ) $(COMMON_D)/obj_sql/common_sql.a $(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ)
+else
+	CHAR_SERVER_SQL_DEPENDS=needs_mysql
+endif
+
+@SET_MAKE@
+
+CC = @CC@
+export CC
+
+#####################################################################
+.PHONY: all sql char-server clean buildclean help
+
+all: sql
+
+sql: char-server
+
+buildclean:
+	@echo "	CLEAN	char (build temp files)"
+	@rm -rf *.o obj_sql
+
+clean: buildclean
+	@echo "	CLEAN	char"
+	@rm -rf ../../char-server@EXEEXT@
+
+help:
+	@echo "possible targets are 'char-server' 'all' 'clean' 'help'"
+	@echo "'char-server'  - char server"
+	@echo "'all'          - builds all above targets"
+	@echo "'clean'        - cleans builds and objects"
+	@echo "'buildclean'   - cleans build temporary (object) files, without deleting the"
+	@echo "                 executables"
+	@echo "'help'         - outputs this message"
+
+#####################################################################
+
+Makefile: Makefile.in
+	@$(MAKE) -C ../.. src/char/Makefile
+
+needs_mysql:
+	@echo "MySQL not found or disabled by the configure script"
+	@exit 1
+
+# object directories
+
+obj_sql:
+	@echo "	MKDIR	obj_sql"
+	@-mkdir obj_sql
+
+# executables
+
+char-server: ../../char-server@EXEEXT@
+
+../../char-server@EXEEXT@: $(CHAR_SERVER_SQL_DEPENDS) Makefile
+	@echo "	LD	$(notdir $@)"
+	@$(CC) @LDFLAGS@ -o ../../char-server@EXEEXT@ $(CHAR_OBJ) $(COMMON_D)/obj_sql/common_sql.a \
+		$(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
+
+# char object files
+
+obj_sql/%.o: %.c $(CHAR_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj_sql
+	@echo "	CC	$<"
+	@$(CC) @CFLAGS@ $(MT19937AR_INCLUDE) $(LIBCONFIG_INCLUDE) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
+
+# missing object files
+$(COMMON_D)/obj_all/common.a:
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(COMMON_D) sql
+
+$(COMMON_D)/obj_sql/common_sql.a:
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(COMMON_D) sql
+
+$(MT19937AR_OBJ):
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(MT19937AR_D)
+
+$(LIBCONFIG_OBJ):
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(LIBCONFIG_D)

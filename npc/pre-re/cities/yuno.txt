@@ -1,0 +1,20 @@
+//===== Hercules Script ======================================
+//= Juno City
+//===== By: ==================================================
+//= Euphy
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= [Official Conversion]
+//= NPCs for the City of Juno
+//===== Additional Comments: =================================
+//= 1.0 First version.
+//============================================================
+
+yuno,150,283,4	duplicate(JunoSoldier1)	Juno Soldier#juno	8W_SOLDIER
+yuno,165,283,4	duplicate(JunoSoldier2)	Juno Soldier#2juno	8W_SOLDIER
+yuno,227,292,4	duplicate(JunoSoldier3)	Juno Soldier#3juno	8W_SOLDIER
+yuno,165,228,4	duplicate(JunoSoldier4)	Juno Soldier#4juno	8W_SOLDIER
+yuno,150,228,4	duplicate(JunoSoldier5)	Juno Soldier#5juno	8W_SOLDIER
+yuno,334,182,4	duplicate(JunoSoldier6)	Juno Soldier#6juno	8W_SOLDIER
+yuno,263,320,4	duplicate(JunoSoldier7)	Juno Soldier#7juno	8W_SOLDIER

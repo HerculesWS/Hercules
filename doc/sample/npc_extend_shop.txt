@@ -1,0 +1,351 @@
+//===== Hercules Script ======================================
+//= Sample: Extended Shops
+//===== By: ==================================================
+//= Hercules Dev Team
+//===== Current Version: =====================================
+//= 20131225
+//===== Description: =========================================
+//= An example of shop NPCs.
+//============================================================
+
+prontera,182,213,3	trader	Super Novice Shop	4_M_KID2,{
+OnInit:
+	sellitem Novice_Knife;
+	sellitem Novice_Guard;
+	sellitem Novice_Breast;
+	sellitem Novice_Plate;
+	sellitem Novice_Boots;
+	sellitem Novice_Hood;
+	sellitem Novice_Armlet;
+	sellitem Novice_Egg_Cap;
+}
+prontera,149,139,5	trader	Whips Merchant	1_M_MERCHANT,{
+OnInit:
+	sellitem Rope_;
+	sellitem Line_;
+	sellitem Wire_;
+	sellitem Rante_;
+	sellitem Tail_;
+	sellitem Whip_;
+	sellitem Lariat;
+	sellitem Rapture_Rose;
+	sellitem Chemeti;
+}
+prontera,162,175,3	trader	Headgears Merchant 1	1_F_MERCHANT_01,{
+OnInit:
+	sellitem Ribbon_;
+	sellitem Hair_Band;
+	sellitem Bandana;
+	sellitem Hat_;
+	sellitem Turban_;
+	sellitem Biretta_;
+	sellitem Cap_;
+	sellitem Gemmed_Sallet_;
+	sellitem Goggle_;
+	sellitem Helm_;
+}
+prontera,162,172,3	trader	Headgears Merchant 2	1_F_MERCHANT_01,{
+OnInit:
+	sellitem Glasses;
+	sellitem Eye_Bandage;
+	sellitem Flu_Mask;
+	sellitem One_Eyed_Glass;
+	sellitem Granpa_Beard;
+	sellitem Luxury_Sunglasses;
+	sellitem Spinning_Eyes;
+	sellitem Gangster_Patch;
+	sellitem Ganster_Mask;
+	sellitem Eagle_Eyes;
+	sellitem Mr_Scream;
+	sellitem Masquerade;
+	sellitem Goblini_Mask;
+}
+prontera,162,169,3	trader	Armours Merchant	1_F_MERCHANT_01,{
+OnInit:
+	sellitem Mink_Coat;
+	sellitem Padded_Armor_;
+	sellitem Chain_Mail_;
+	sellitem Plate_Armor_;
+	sellitem Clothes_Of_The_Lord;
+	sellitem Formal_Suit;
+	sellitem Silk_Robe_;
+	sellitem Scapulare_;
+	sellitem Saint_Robe_;
+	sellitem Holy_Robe;
+	sellitem Wooden_Mail_;
+	sellitem Tights_;
+	sellitem Mage_Coat;
+	sellitem Thief_Clothes_;
+	sellitem Ninja_Suit;
+	sellitem Full_Plate_Armor_;
+}
+prontera,162,166,3	trader	Shields Merchant	1_F_MERCHANT_01,{
+OnInit:
+	sellitem Guard_;
+	sellitem Buckler_;
+	sellitem Shield_;
+	sellitem Mirror_Shield_;
+	sellitem Memorize_Book;
+	sellitem Holy_Guard;
+	sellitem Herald_Of_GOD;
+}
+prontera,162,163,3	trader	Boots Merchant	1_F_MERCHANT_01,{
+OnInit:
+	sellitem Sandals_;
+	sellitem Shoes_;
+	sellitem Boots_;
+	sellitem Chrystal_Pumps;
+	sellitem Grave_;
+	sellitem Safty_Boots;
+}
+prontera,162,160,3	trader	Robes Merchant	1_F_MERCHANT_01,{
+OnInit:
+	sellitem Hood_;
+	sellitem Muffler_;
+	sellitem Manteau_;
+	sellitem Cape_Of_Ancient_Lord;
+	sellitem Ragamuffin_Cape;
+	sellitem Clack_Of_Servival;
+}
+prontera,162,157,3	trader	Accessory Merchant	1_F_MERCHANT_01,{
+OnInit:
+	sellitem Ring;
+	sellitem Earring;
+	sellitem Necklace;
+	sellitem Glove;
+	sellitem Brooch;
+	sellitem Clip;
+	sellitem Rosary;
+	sellitem Safety_Ring;
+	sellitem Critical_Ring;
+	sellitem Matyr's_Flea_Guard;
+	sellitem Thimble_Of_Archer;
+}
+prontera,162,154,3	trader	Arrows Merchant	1_F_MERCHANT_01,{
+OnInit:
+	sellitem Arrow;
+	sellitem Silver_Arrow;
+	sellitem Fire_Arrow;
+	sellitem Steel_Arrow;
+	sellitem Crystal_Arrow;
+	sellitem Arrow_Of_Wind;
+	sellitem Stone_Arrow;
+	sellitem Immatrial_Arrow;
+	sellitem Stun_Arrow;
+	sellitem Freezing_Arrow;
+	sellitem Flash_Arrow;
+	sellitem Curse_Arrow;
+	sellitem Rusty_Arrow;
+	sellitem Poison_Arrow;
+	sellitem Incisive_Arrow;
+	sellitem Oridecon_Arrow;
+	sellitem Arrow_Of_Counter_Evil;
+	sellitem Arrow_Of_Shadow;
+	sellitem Sleep_Arrow;
+	sellitem Silence_Arrow;
+}
+prontera,162,151,3	trader	Alchemist Shop	1_F_MERCHANT_01,{
+OnInit:
+	sellitem Alcol_Create_Book;
+	sellitem FireBottle_Create_Book;
+	sellitem Acid_Create_Book;
+	sellitem Plant_Create_Book;
+	sellitem Mine_Create_Book;
+	sellitem Coating_Create_Book;
+	sellitem Slim_Potion_Create_Book;
+	sellitem Normal_Potion_Book;
+	sellitem Medicine_Bowl;
+	sellitem Empty_Potion;
+}
+prontera,162,148,3	trader	Taming Merchant	1_F_MERCHANT_01,{
+OnInit:
+	sellitem Unripe_Apple;
+	sellitem Orange_Juice;
+	sellitem Bitter_Herb;
+	sellitem Rainbow_Carrot;
+	sellitem Earthworm_The_Dude;
+	sellitem Rotten_Fish;
+	sellitem Lusty_Iron;
+	sellitem Monster_Juice;
+	sellitem Sweet_Milk;
+	sellitem Well_Dried_Bone;
+	sellitem Singing_Flower;
+	sellitem Dew_Laden_Moss;
+	sellitem Deadly_Noxious_Herb;
+	sellitem Fatty_Chubby_Earthworm;
+	sellitem Baked_Yam;
+	sellitem Tropical_Banana;
+	sellitem Horror_Of_Tribe;
+	sellitem No_Recipient;
+	sellitem Old_Broom;
+	sellitem Silver_Knife_Of_Chaste;
+	sellitem Armlet_Of_Obedience;
+	sellitem Shining_Stone;
+	sellitem Contracts_In_Shadow;
+	sellitem Book_Of_Devil;
+	sellitem Heart_Of_Her;
+}
+prontera,162,145,3	trader	Pet Equipment	1_F_MERCHANT_01,{
+OnInit:
+	sellitem Skull_Helm;
+	sellitem Monster_Oxygen_Mask;
+	sellitem Transparent_Headgear;
+	sellitem Pacifier;
+	sellitem Wig;
+	sellitem Queen's_Hair_Ornament;
+	sellitem Silk_Ribbon;
+	sellitem Punisher;
+	sellitem Wild_Flower;
+	sellitem Battered_Pot;
+	sellitem Stellar_Hairpin;
+	sellitem Tiny_Egg_Shell;
+	sellitem Backpack;
+	sellitem Rocker_Glasses;
+	sellitem Green_Lace;
+	sellitem Golden_Bell;
+	sellitem Bark_Shorts;
+	sellitem Monkey_Circlet;
+	sellitem Red_Muffler;
+	sellitem Sword_Of_Grave_Keeper;
+}
+prontera,148,234,5	trader	Weapon Card Merchant	1_F_PUBGIRL,{
+OnInit:
+	sellitem Drops_Card,            100000;
+	sellitem Andre_Larva_Card,      100000;
+	sellitem Skeleton_Card,         100000;
+	sellitem Thief_Bug_Female_Card, 100000;
+	sellitem Hornet_Card,           100000;
+	sellitem Wolf_Card,             100000;
+	sellitem Andre_Card,            100000;
+	sellitem Savage_Babe_Card,      100000;
+	sellitem Farmiliar_Card,        100000;
+	sellitem Plankton_Card,         100000;
+	sellitem Snake_Card,            100000;
+	sellitem Marina_Card,           100000;
+	sellitem Metaller_Card,         100000;
+	sellitem Magnolia_Card,         100000;
+	sellitem Zenorc_Card,           100000;
+	sellitem Requiem_Card,          100000;
+	sellitem Mandragora_Card,       100000;
+	sellitem Vadon_Card,            100000;
+	sellitem Anacondaq_Card,        100000;
+	sellitem Drainliar_Card,        100000;
+	sellitem Orc_Skeleton_Card,     100000;
+	sellitem Pecopeco_Egg_Card,     100000;
+	sellitem Goblin_Card,           100000;
+	sellitem Caramel_Card,          100000;
+	sellitem Scorpion_Card,         100000;
+	sellitem Flora_Card,            100000;
+	sellitem Archer_Skeleton_Card,  100000;
+	sellitem Strouf_Card,           100000;
+	sellitem Petit_Card,            100000;
+	sellitem Desert_Wolf_Card,       20700;
+	sellitem Skel_Worker_Card,      100000;
+	sellitem Minorous_Card,         100000;
+	sellitem Golem_Card,            100000;
+	sellitem Hunter_Fly_Card,       100000;
+	sellitem Hydra_Card,            100000;
+	sellitem Soldier_Skeleton_Card, 100000;
+	sellitem Mummy_Card,            100000;
+	sellitem Side_Winder_Card,      100000;
+	sellitem Deviace_Card,          100000;
+}
+prontera,148,231,5	trader	Headgear Card Merchant	1_F_PUBGIRL,{
+OnInit:
+	sellitem Wilow_Card,       100000;
+	sellitem Stainer_Card,     100000;
+	sellitem Martin_Card,      100000;
+	sellitem Elder_Wilow_Card, 100000;
+	sellitem Giearth_Card,     100000;
+	sellitem Ghoul_Card,       100000;
+	sellitem Marduk_Card,      100000;
+	sellitem Deviruchi_Card,   100000;
+	sellitem Nightmare_Card,   100000;
+}
+prontera,146,229,5	trader	Armor Card Merchant	1_F_PUBGIRL,{
+OnInit:
+	sellitem Pupa_Card,             100000;
+	sellitem Picky_Card,            100000;
+	sellitem Picky__Card,           100000;
+	sellitem Roda_Frog_Card,        100000;
+	sellitem Thief_Bug_Card,        100000;
+	sellitem Rocker_Card,           100000;
+	sellitem Desert_Wolf_Babe_Card, 100000;
+	sellitem Pecopeco_Card,         100000;
+	sellitem Savage_Card,           100000;
+	sellitem Sword_Fish_Card,       100000;
+	sellitem Dokebi_Card,           100000;
+	sellitem Pasana_Card,           100000;
+	sellitem Sand_Man_Card,         100000;
+	sellitem Argiope_Card,          100000;
+	sellitem Bathory_Card,          100000;
+	sellitem Evil_Druid_Card,       100000;
+	sellitem Cornutus_Card,         100000;
+	sellitem Marc_Card,             100000;
+}
+prontera,144,227,5	trader	Shield Card Merchant	1_F_PUBGIRL,{
+OnInit:
+	sellitem Andre_Egg_Card,     100000;
+	sellitem Ambernite_Card,     100000;
+	sellitem Thara_Frog_Card,    100000;
+	sellitem Soldier_Andre_Card, 100000;
+	sellitem Orc_Warrior_Card,   100000;
+	sellitem BigFoot_Card,       100000;
+	sellitem Rafflesia_Card,     100000;
+	sellitem Petit__Card,        100000;
+	sellitem Medusa_Card,        100000;
+	sellitem Khalitzburg_Card,   100000;
+	sellitem Anubis_Card,        100000;
+	sellitem Horn_Card,          100000;
+	sellitem Megalodon_Card,     100000;
+	sellitem Argos_Card,         100000;
+	sellitem Munak_Card,         100000;
+}
+prontera,142,225,5	trader	Robe Card Merchant	1_F_PUBGIRL,{
+OnInit:
+	sellitem Dustiness_Card,  100000;
+	sellitem Orc_Zombie_Card, 100000;
+	sellitem Hode_Card,       100000;
+	sellitem Marse_Card,      100000;
+	sellitem Myst_Card,       100000;
+	sellitem Jakk_Card,       100000;
+	sellitem Marionette_Card, 100000;
+	sellitem Isis_Card,       100000;
+	sellitem Daydric_Card,    100000;
+	sellitem Condor_Card,     100000;
+	sellitem Frilldora_Card,  100000;
+	sellitem Whisper_Card,    100000;
+	sellitem Baphomet__Card,  100000;
+}
+prontera,140,223,5	trader	Shoes Card Merchant	1_F_PUBGIRL,{
+OnInit:
+	sellitem Chonchon_Card,       100000;
+	sellitem Zombie_Card,         100000;
+	sellitem Thief_Bug_Male_Card, 100000;
+	sellitem Eggyra_Card,         100000;
+	sellitem Matyr_Card,          100000;
+	sellitem Sohee_Card,          100000;
+	sellitem Verit_Card,          100000;
+}
+prontera,138,221,5	trader	Accessory Card Merchant	1_F_PUBGIRL,{
+OnInit:
+	sellitem Spore_Card,         100500;
+	sellitem Kukre_Card,         100500;
+	sellitem Tarou_Card,         100500;
+	sellitem Worm_Tail_Card,     100500;
+	sellitem Yoyo_Card,          100500;
+	sellitem Zerom_Card,         100500;
+	sellitem Kobold_Card,        100500;
+	sellitem Mantis_Card,        100500;
+	sellitem Poporing_Card,      100500;
+	sellitem Creamy_Card,        100500;
+	sellitem Smokie_Card,        100500;
+	sellitem Poison_Spore_Card,  100500;
+	sellitem Vitata_Card,        100500;
+	sellitem Pirate_Skel_Card,   100500;
+	sellitem Phen_Card,          100500;
+	sellitem Marine_Sphere_Card, 100500;
+	sellitem Obeaune_Card,       100500;
+	sellitem Horong_Card,        100500;
+	sellitem Joker_Card,         100500;
+}

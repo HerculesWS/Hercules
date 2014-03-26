@@ -1,0 +1,19 @@
+//===== Hercules Script =======================================
+//= Sample: Checkoption
+//===== By: ==================================================
+//= Hercules Dev Team
+//===== Current Version: =====================================
+//= 20131225
+//===== Description: ========================================= 
+//= Demonstrates the 'checkoption' command.
+//============================================================
+
+prontera,156,89,6	script	test_checkoption	4_F_KAFRA1,{
+	mes "Please enter a value of type!";
+	input .@value;
+	if(checkoption(.@value) == 1)
+		mes "True!";
+	else if(checkoption(.@value) == 0)
+		mes "False!";
+	close;
+}

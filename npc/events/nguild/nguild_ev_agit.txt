@@ -1,0 +1,214 @@
+//===== Hercules Script ======================================
+//= War of Emperium - NGuild Wars Events
+//===== By: ==================================================
+//= kobra_k88
+//===== Current Version: =====================================
+//= 1.5
+//===== Description: =========================================
+//= Event Triggers for NGuild Wars
+//===== Additional Comments: =================================
+// Based off existing guild scripts.  Do not know if it is accurate.[kobra_k88]
+//= 1.3 Added code for abandoning captured castles on /breakguild [Lupus]
+//= 1.4 AGIT Functions added, treasure spawning added. [L0ne_W0lf]
+//= 1.5 Emperium should now properly respawn. [L0ne_W0lf]
+//============================================================
+
+
+// Function for OnAgitStart =========================================
+function	script	F_AgitStart	{
+	set .@map$, getarg(0);
+	set .@castle$, getarg(1);
+	set .@empx, getarg(2);
+	set .@empy, getarg(3);
+
+	maprespawnguildid .@map$,getcastledata(.@map$,1),2;
+	monster .@map$,.@empx,.@empy,"Emperium",1288,1,"Agit_"+.@castle$+"::OnAgitBreak";
+	gvgon .@map$;
+	if (getcastledata(.@map$,1) != 0) return;
+	end;
+}
+
+// Function for OnGuildBreak ======================================
+function	script	F_GuildBreak	{
+	set .@map$, getarg(0);
+	set .@castle$, getarg(1);
+
+	killmonsterall .@map$;
+
+	announce "Guild Base [" + getcastlename(.@map$) + "] has been abandoned.",0;
+	disablenpc "Kafra Staff#"+.@castle$;
+
+	setcastledata .@map$,0,0;
+	return;
+}
+
+// Function for OnAgitBreak ======================================
+function	script	F_AgitBreak	{
+	set .@map$, getarg(0);
+	set .@castle$, getarg(1);
+
+	set .@GID,getcharid(2);
+	if (.@GID <= 0) return;
+
+	set .@Economy,getcastledata(.@map$,2) - 5;
+	if (.@Economy < 0) set .@Economy, 0;
+	setcastledata .@map$, 2, .@Economy;
+
+	set .@defence,getcastledata(.@map$,3) - 5;
+	if (.@defence < 0) set .@defence, 0;
+	setcastledata .@map$, 3, .@defence;
+
+	setcastledata .@map$,1, .@GID;
+	mapannounce .@map$,"The emperium has been destroyed.",bc_map,0x00CCFF;
+	announce "The [" + getcastlename(.@map$) + "] castle has been conquered by the [" + getguildname(.@GID) + "] guild.",bc_all;
+	donpcevent "::OnRecvCastle"+.@castle$;
+
+	disablenpc "Kafra Staff#"+.@castle$;
+
+	// remove investment data and kafra
+	for( set .@i, 4; .@i <= 9; set .@i, .@i+1 )
+		setcastledata .@map$, .@i, 0;
+
+	// if the new guild doesn't have Guardian Research, erase guardians
+	if( getgdskilllv(.@GID,10002) == 0 )
+		for( set .@i, 10; .@i <= 17; set .@i, .@i+1 )
+			setcastledata .@map$, .@i, 0;
+
+	return;
+}
+
+
+// Function for OnAgitEnd ======================================
+function	script	F_AgitEnd	{
+	set .@map$, getarg(0);
+	set .@castle$, getarg(1);
+
+	gvgoff .@map$;
+	// Disable the following if statment to keep empty
+	// castles from being aquired after after WoE ends.
+	if (getcastledata(.@map$,1) == 0) return;
+	maprespawnguildid .@map$,getcastledata(.@map$,1),4;
+	killmonster .@map$,"Agit_"+.@castle$+"::OnAgitBreak";
+	end;
+}
+
+// Castle 1 ================================================================
+nguild_alde,0,0,0	script	Agit_N01	-1,{
+OnInterIfInitOnce:
+	donpcevent "::OnRecvCastleN01";
+	end;
+OnRecvCastleN01:
+	requestguildinfo getcastledata("nguild_alde",1);
+	end;
+OnAgitStart:
+	callfunc "F_AgitStart","nguild_alde","N01",216,24;
+	end;
+OnAgitBreak:
+	callfunc "F_AgitBreak","nguild_alde","N01";
+	goto OnAgitEliminate;
+	end;
+OnGuildBreak:
+	callfunc "F_GuildBreak","nguild_alde","N01";
+	end;
+OnAgitEliminate:
+	maprespawnguildid "nguild_alde",getcastledata("nguild_alde",1),6;
+	monster "nguild_alde",216,24,"EMPERIUM",1288,1,"Agit_N01::OnAgitBreak";
+	end;
+OnAgitEnd:
+	callfunc "F_AgitEnd","nguild_alde","N01";
+	end;
+}
+
+// Castle 2 ================================================================
+nguild_gef,0,0,0	script	Agit_N02	-1,{
+OnInterIfInitOnce:
+	donpcevent "::OnRecvCastleN02";
+	end;
+OnRecvCastleN02:
+	requestguildinfo getcastledata("nguild_gef",1);
+	end;
+OnAgitStart:
+	callfunc "F_AgitStart","nguild_gef","N02",198,182;
+	end;
+OnAgitBreak:
+	callfunc "F_AgitBreak","nguild_gef","N02";
+	goto OnAgitEliminate;
+	end;
+OnGuildBreak:
+	callfunc "F_GuildBreak","nguild_gef","N02";
+	end;
+OnAgitEliminate:
+	maprespawnguildid "nguild_gef",getcastledata("nguild_gef",1),6;
+	monster "nguild_gef",198,182,"EMPERIUM",1288,1,"Agit_N02::OnAgitBreak";
+	end;
+OnAgitEnd:
+	callfunc "F_AgitEnd","nguild_gef","N02";
+	end;
+}
+
+// Castle 3 ================================================================
+nguild_pay,0,0,0	script	Agit_N03	-1,{
+OnInterIfInitOnce:
+	donpcevent "::OnRecvCastleN03";
+	end;
+OnRecvCastleN03:
+	requestguildinfo getcastledata("nguild_pay",1);
+	end;
+OnAgitStart:
+	callfunc "F_AgitStart","nguild_pay","N03",139,139;
+	end;
+OnAgitBreak:
+	callfunc "F_AgitBreak","nguild_pay","N03";
+	goto OnAgitEliminate;
+	end;
+OnGuildBreak:
+	callfunc "F_GuildBreak","nguild_pay","N03";
+	end;
+OnAgitEliminate:
+	maprespawnguildid "nguild_pay",getcastledata("nguild_pay",1),6;
+	monster "nguild_pay",139,139,"EMPERIUM",1288,1,"Agit_N03::OnAgitBreak";
+	end;
+OnAgitEnd:
+	callfunc "F_AgitEnd","nguild_pay","N03";
+	end;
+}
+
+// Castle 4 ================================================================
+nguild_prt,0,0,0	script	Agit_N04	-1,{
+OnInterIfInitOnce:
+	donpcevent "::OnRecvCastleN04";
+	end;
+OnRecvCastleN04:
+	requestguildinfo getcastledata("nguild_prt",1);
+	end;
+OnAgitStart:
+	callfunc "F_AgitStart","nguild_prt","N04",197,197;
+	end;
+OnAgitBreak:
+	callfunc "F_AgitBreak","nguild_prt","N04";
+	goto OnAgitEliminate;
+	end;
+OnGuildBreak:
+	callfunc "F_GuildBreak","nguild_prt","N04";
+	end;
+OnAgitEliminate:
+	maprespawnguildid "nguild_prt",getcastledata("nguild_prt",1),6;
+	monster "nguild_prt",197,197,"EMPERIUM",1288,1,"Agit_N04::OnAgitBreak";
+	end;
+OnAgitEnd:
+	callfunc "F_AgitEnd","nguild_prt","N04";
+	end;
+}
+
+// Treasure Spawn Time
+//========================================
+-	script	TreasSpawn	-1,{
+	end;
+
+OnClock0005:
+	callfunc "F_GldTreas","nguild_alde","N01",$boxNumN01,$@bxN01,$@boxIdN01,1324,114,218,123,227,0;
+	callfunc "F_GldTreas","nguild_gef","N02",$boxNumN02,$@bxN02,$@boxIdN02,1334,150,108,158,114,0;
+	callfunc "F_GldTreas","nguild_pay","N03",$boxNumN03,$@bxN03,$@boxIdN03,1344,286,4,295,13,0;
+	callfunc "F_GldTreas","nguild_prt","N04",$boxNumN04,$@bxN04,$@boxIdN04,1354,6,204,15,213,0;
+	end;
+}

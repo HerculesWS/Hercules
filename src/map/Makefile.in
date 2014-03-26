@@ -1,0 +1,122 @@
+
+CONFIG_D = ../config
+CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
+
+COMMON_D = ../common
+COMMON_H = $(wildcard $(COMMON_D)/*.h)
+
+LIBCONFIG_D = ../../3rdparty/libconfig
+LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
+                scanner.o strbuf.o)
+LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
+              scanctx.h scanner.h strbuf.h wincompat.h)
+LIBCONFIG_INCLUDE = -I$(LIBCONFIG_D)
+
+MT19937AR_D = ../../3rdparty/mt19937ar
+MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
+MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
+MT19937AR_INCLUDE = -I$(MT19937AR_D)
+
+MAP_C = atcommand.c battle.c battleground.c buyingstore.c chat.c chrif.c \
+        clif.c date.c duel.c elemental.c guild.c homunculus.c HPMmap.c \
+        instance.c intif.c irc-bot.c itemdb.c log.c mail.c map.c mapreg_sql.c \
+        mercenary.c mob.c npc.c npc_chat.c party.c path.c pc.c pc_groups.c \
+        pet.c quest.c script.c searchstore.c skill.c status.c storage.c \
+        trade.c unit.c vending.c
+MAP_OBJ = $(addprefix obj_sql/, $(patsubst %c,%o,$(MAP_C)))
+MAP_H = atcommand.h battle.h battleground.h buyingstore.h chat.h chrif.h \
+        clif.h date.h duel.h elemental.h guild.h homunculus.h HPMmap.h \
+        instance.h intif.h irc-bot.h itemdb.h log.h mail.h map.h mapreg.h \
+        mercenary.h mob.h npc.h packets.h packets_struct.h party.h path.h \
+        pc.h pc_groups.h pet.h quest.h script.h searchstore.h skill.h \
+        status.h storage.h trade.h unit.h vending.h
+
+HAVE_MYSQL=@HAVE_MYSQL@
+ifeq ($(HAVE_MYSQL),yes)
+	MAP_SERVER_SQL_DEPENDS=$(MAP_OBJ) $(COMMON_D)/obj_sql/common_sql.a $(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ)
+else
+	MAP_SERVER_SQL_DEPENDS=needs_mysql
+endif
+
+HAVE_PCRE=@HAVE_PCRE@
+ifeq ($(HAVE_PCRE),yes)
+	PCRE_CFLAGS=-DPCRE_SUPPORT @PCRE_CFLAGS@
+else
+	PCRE_CFLAGS=
+endif
+
+@SET_MAKE@
+
+CC = @CC@
+export CC
+
+#####################################################################
+.PHONY: all sql map-server clean buildclean help
+
+all: sql
+
+sql: map-server
+
+buildclean:
+	@echo "	CLEAN	map (build temp files)"
+	@rm -rf *.o obj_sql
+
+clean: buildclean
+	@echo "	CLEAN	map"
+	@rm -rf ../../map-server@EXEEXT@
+
+help:
+	@echo "possible targets are 'map-server' 'all' 'clean' 'help'"
+	@echo "'map-server'   - map server"
+	@echo "'all'          - builds all above targets"
+	@echo "'clean'        - cleans builds and objects"
+	@echo "'buildclean'   - cleans build temporary (object) files, without deleting the"
+	@echo "                 executables"
+	@echo "'help'         - outputs this message"
+
+#####################################################################
+
+Makefile: Makefile.in
+	@$(MAKE) -C ../.. src/map/Makefile
+
+needs_mysql:
+	@echo "MySQL not found or disabled by the configure script"
+	@exit 1
+
+# object directories
+
+obj_sql:
+	@echo "	MKDIR	obj_sql"
+	@-mkdir obj_sql
+
+# executables
+
+map-server: ../../map-server@EXEEXT@
+
+../../map-server@EXEEXT@: $(MAP_SERVER_SQL_DEPENDS) Makefile
+	@echo "	LD	$(notdir $@)"
+	@$(CC) @LDFLAGS@ -o ../../map-server@EXEEXT@ $(MAP_OBJ) $(COMMON_D)/obj_sql/common_sql.a \
+		$(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @PCRE_LIBS@ @MYSQL_LIBS@
+
+# map object files
+
+obj_sql/%.o: %.c $(MAP_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj_sql
+	@echo "	CC	$<"
+	@$(CC) @CFLAGS@ $(MT19937AR_INCLUDE) $(LIBCONFIG_INCLUDE) $(PCRE_CFLAGS) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
+
+# missing object files
+$(COMMON_D)/obj_all/common.a:
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(COMMON_D) sql
+
+$(COMMON_D)/obj_sql/common_sql.a:
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(COMMON_D) sql
+
+$(MT19937AR_OBJ):
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(MT19937AR_D)
+
+$(LIBCONFIG_OBJ):
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(LIBCONFIG_D)

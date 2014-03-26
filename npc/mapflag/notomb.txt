@@ -1,0 +1,17 @@
+//===== Hercules Script ======================================
+//= Mapflag: Disable MVP Tomb.
+//===== By: ==================================================
+//= Hercules Dev Team
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= Disables MVP tomb on some maps.
+//===== Additional Comments: =================================
+//= 1.0 - Added Bossnia maps. [CairoLee]
+//============================================================
+
+// Bossnia =====
+bossnia_01	mapflag	notomb
+bossnia_02	mapflag	notomb
+bossnia_03	mapflag	notomb
+bossnia_04	mapflag	notomb

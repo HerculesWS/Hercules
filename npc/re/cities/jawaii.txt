@@ -1,0 +1,20 @@
+//===== Hercules Script =======================================
+//= Jawaii Town Renewal
+//===== By: ==================================================
+//= Daegaladh, Masao
+//===== Current Version: =====================================
+//= 1.2
+//===== Description: =========================================
+//= [Official Conversion]
+//= Jawaii town NPCs.
+//===== Additional Comments: =================================
+//= 1.0 First Version. Renewal coordinates by Masao.
+//= 1.1 Moved "Honeymoon Helper" NPC.
+//= 1.2 Added Izlude duplicates. [Euphy]
+//============================================================
+
+izlude,180,224,3	duplicate(Honeymoon_Helper_Izlude)	Honeymoon Helper#Izlude	1_F_LIBRARYGIRL
+izlude_a,180,224,3	duplicate(Honeymoon_Helper_Izlude)	Honeymoon Helper#Iz_a	1_F_LIBRARYGIRL
+izlude_b,180,224,3	duplicate(Honeymoon_Helper_Izlude)	Honeymoon Helper#Iz_b	1_F_LIBRARYGIRL
+izlude_c,180,224,3	duplicate(Honeymoon_Helper_Izlude)	Honeymoon Helper#Iz_c	1_F_LIBRARYGIRL
+izlude_d,180,224,3	duplicate(Honeymoon_Helper_Izlude)	Honeymoon Helper#Iz_d	1_F_LIBRARYGIRL

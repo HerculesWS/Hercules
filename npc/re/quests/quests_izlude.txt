@@ -1,0 +1,19 @@
+//===== Hercules Script ======================================
+//= Quest NPCs related to Izlude
+//===== By: ==================================================
+//= Daegaladh, Masao
+//===== Current Version: =====================================
+//= 1.1
+//===== Description: =========================================
+//= Contains:
+//= - Edgar's Offer
+//===== Additional Comments: =================================
+//= 1.0 Updated to match the new Izlude Map. [Masao]
+//= 1.1 Added Izlude duplicates. [Euphy]
+//============================================================
+
+izlude,179,219,2	duplicate(Edgar_izlude)	Edgar#izlude	1_M_03
+izlude_a,179,219,2	duplicate(Edgar_izlude)	Edgar#izlude_a	1_M_03
+izlude_b,179,219,2	duplicate(Edgar_izlude)	Edgar#izlude_b	1_M_03
+izlude_c,179,219,2	duplicate(Edgar_izlude)	Edgar#izlude_c	1_M_03
+izlude_d,179,219,2	duplicate(Edgar_izlude)	Edgar#izlude_d	1_M_03
