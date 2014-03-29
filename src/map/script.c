@@ -12722,6 +12722,13 @@ BUILDIN(skilleffect) {
 	uint16 skill_lv=script_getnum(st,3);
 	sd=script->rid2sd(st);
 
+	/* ensure we're standing because the following packet causes the client to virtually set the char to stand,
+	 * which leaves the server thinking it still is sitting. */
+	if( pc_issit(sd) ) {
+		pc->setstand(sd);
+		skill->sit(sd,0);
+		clif->standing(&sd->bl);
+	}
 	clif->skill_nodamage(&sd->bl,&sd->bl,skill_id,skill_lv,1);
 
 	return true;
