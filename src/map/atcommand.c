@@ -6646,10 +6646,10 @@ ACMD(mobinfo)
 					continue;
 				if (monster->mvpitem[i].p > 0) {
 					j++;
-					if (j == 1)
-						sprintf(atcmd_output2, " %s  %02.02f%%", item_data->jname, (float)monster->mvpitem[i].p / 100);
+					if(item_data->slot)
+						sprintf(atcmd_output2, " %s%s[%d]  %02.02f%%",j != 1 ? "- " : "", item_data->jname, item_data->slot, (float)monster->mvpitem[i].p / 100);
 					else
-						sprintf(atcmd_output2, " - %s  %02.02f%%", item_data->jname, (float)monster->mvpitem[i].p / 100);
+						sprintf(atcmd_output2, " %s%s  %02.02f%%",j != 1 ? "- " : "", item_data->jname, (float)monster->mvpitem[i].p / 100);
 					strcat(atcmd_output, atcmd_output2);
 				}
 			}
