@@ -11177,7 +11177,15 @@ void clif_parse_ChangeCart(int fd,struct map_session_data *sd)
 ///     Old clients send always 1 for this, even when using /str+ and the like.
 ///     Newer clients (2013-12-23 and newer) send the correct amount.
 void clif_parse_StatusUp(int fd,struct map_session_data *sd) {
-	pc->statusup(sd,RFIFOW(fd,2), RFIFOB(fd, 4));
+	int increase_amount;
+
+	increase_amount = RFIFOB(fd,4);
+	if( increase_amount < 0 )
+	{
+		ShowDebug("clif_parse_StatusUp: Negative 'increase' value sent by client! (fd: %d, value: %d)\n",
+			fd, increase_amount);
+	}
+	pc->statusup(sd, RFIFOW(fd,2), increase_amount);
 }
 
 
