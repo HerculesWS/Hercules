@@ -16,9 +16,21 @@
  **/
 #define CONSOLE_PARSE_SIZE 10
 
+/**
+ * Default parsing function abstract prototype
+ **/
 typedef void (*CParseFunc)(char *line);
+
+/**
+ * Console parsing function prototypes
+ * CPCMD: Console Parsing CoMmand
+ * x - command
+ * y - category
+ **/
 #define CPCMD(x) void console_parse_ ##x (char *line)
 #define CPCMD_A(x) console_parse_ ##x
+#define CPCMD_C(x,y) void console_parse_ ##y ##x (char *line)
+#define CPCMD_C_A(x,y) console_parse_ ##y ##x
 
 #define CP_CMD_LENGTH 20
 struct CParseEntry {

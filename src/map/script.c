@@ -12722,6 +12722,13 @@ BUILDIN(skilleffect) {
 	uint16 skill_lv=script_getnum(st,3);
 	sd=script->rid2sd(st);
 
+	/* ensure we're standing because the following packet causes the client to virtually set the char to stand,
+	 * which leaves the server thinking it still is sitting. */
+	if( pc_issit(sd) ) {
+		pc->setstand(sd);
+		skill->sit(sd,0);
+		clif->standing(&sd->bl);
+	}
 	clif->skill_nodamage(&sd->bl,&sd->bl,skill_id,skill_lv,1);
 
 	return true;
@@ -13263,6 +13270,24 @@ BUILDIN(getmapxy)
 		script_pushint(st,-1);
 		return false;
 	}
+	
+	if( !is_string_variable(reference_getname(script_getdata(st, 2))) ) {
+		ShowWarning("script: buildin_getmapxy: %s is not a string variable\n",reference_getname(script_getdata(st, 2)));
+		script_pushint(st,-1);
+		return false;
+	}
+	
+	if( is_string_variable(reference_getname(script_getdata(st, 3))) ) {
+		ShowWarning("script: buildin_getmapxy: %s is a string variable, should be int\n",reference_getname(script_getdata(st, 3)));
+		script_pushint(st,-1);
+		return false;
+	}
+
+	if( is_string_variable(reference_getname(script_getdata(st, 4))) ) {
+		ShowWarning("script: buildin_getmapxy: %s is a string variable, should be int\n",reference_getname(script_getdata(st, 4)));
+		script_pushint(st,-1);
+		return false;
+	}
 
 	// Possible needly check function parameters on C_STR,C_INT,C_INT
 	type=script_getnum(st,5);
@@ -13343,7 +13368,7 @@ BUILDIN(getmapxy)
 	num=st->stack->stack_data[st->start+2].u.num;
 	name=script->get_str(script_getvarid(num));
 	prefix=*name;
-
+	
 	if(not_server_variable(prefix))
 		sd=script->rid2sd(st);
 	else

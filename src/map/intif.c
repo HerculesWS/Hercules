@@ -1023,6 +1023,8 @@ void intif_parse_Registers(int fd)
 		unsigned int index;
 		int max = RFIFOW(fd, 14), cursor = 16, ival;
 		
+		script->parser_current_file = "loading char/acc variables";//for script_add_str to refer to here in case errors occur
+		
 		/**
 		 * Vessel!char_reg_num_db
 		 *
@@ -1062,6 +1064,8 @@ void intif_parse_Registers(int fd)
 				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, (void*)__64BPTRSIZE(ival), NULL);
 			}
 		}
+		
+		script->parser_current_file = NULL;/* reset */
 	}
 	
 	/* flag it back */
