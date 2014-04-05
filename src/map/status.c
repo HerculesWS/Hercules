@@ -5425,6 +5425,8 @@ short status_calc_aspd(struct block_list *bl, struct status_change *sc, short fl
 		skills2 -= 25;
 	if( sc->data[SC_MELON_BOMB] )
 		skills2 -= sc->data[SC_MELON_BOMB]->val1;
+	if( sc->data[SC_PAIN_KILLER] )
+		skills2 -= sc->data[SC_PAIN_KILLER]->val2;
 
 	if( sc->data[SC_SWING] )
 		skills2 += sc->data[SC_SWING]->val3;
