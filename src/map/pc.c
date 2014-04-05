@@ -5016,7 +5016,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 		do {
 			x=rnd()%(map->list[m].xs-2)+1;
 			y=rnd()%(map->list[m].ys-2)+1;
-		} while(map->getcell(m,x,y,CELL_CHKNOPASS));
+		} while(map->getcell(m,x,y,CELL_CHKNOPASS) || (battle_config.avoid_warp && npc->check_areanpc(1,m,x,y,battle_config.avoid_distance_tele)) || (battle_config.avoid_ontouch && npc->check_areanpc(2,m,x,y,battle_config.avoid_distance_tele)));
 	}
 
 	if (sd->state.vending && map->getcell(m,x,y,CELL_CHKNOVENDING)) {
@@ -5091,7 +5091,7 @@ int pc_randomwarp(struct map_session_data *sd, clr_type type) {
 	do {
 		x=rnd()%(map->list[m].xs-2)+1;
 		y=rnd()%(map->list[m].ys-2)+1;
-	} while( map->getcell(m,x,y,CELL_CHKNOPASS) && (i++) < 1000 );
+	} while( (map->getcell(m,x,y,CELL_CHKNOPASS) || (battle_config.avoid_warp && npc->check_areanpc(1,m,x,y,battle_config.avoid_distance_tele)) || (battle_config.avoid_ontouch && npc->check_areanpc(2,m,x,y,battle_config.avoid_distance_tele))) && (i++) < 1000 );
 
 	if (i < 1000)
 		return pc->setpos(sd,map_id2index(sd->bl.m),x,y,type);

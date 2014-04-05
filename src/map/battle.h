@@ -468,6 +468,11 @@ struct Battle_Config {
 	int mon_trans_disable_in_gvg;
 
 	int case_sensitive_aegisnames;
+	
+	int avoid_warp;
+	int avoid_ontouch;
+	int avoid_distance_mob;
+	int avoid_distance_tele;
 } battle_config;
 
 /* criteria for battle_config.idletime_critera */

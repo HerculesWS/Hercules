@@ -6740,6 +6740,10 @@ static const struct _battle_data {
 
 	{ "mon_trans_disable_in_gvg",           &battle_config.mon_trans_disable_in_gvg,        0,      0,      1,              },
 	{ "case_sensitive_aegisnames",          &battle_config.case_sensitive_aegisnames,       1,      0,      1,              },
+	{ "avoid_warp",                         &battle_config.avoid_warp,                      0,      0,      1,              },
+	{ "avoid_ontouch",                      &battle_config.avoid_ontouch,                   0,      0,      1,              },
+	{ "avoid_distance_mob",                 &battle_config.avoid_distance_mob,              0,      0,      10,             },
+	{ "avoid_distance_tele",                &battle_config.avoid_distance_tele,             0,      0,      10,             },
 };
 #ifndef STATS_OPT_OUT
 /**
