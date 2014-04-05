@@ -5296,6 +5296,10 @@ re-apply).
 You can see the full list of status effects caused by skills in 
 'src/map/status.h' - they are currently not fully documented, but most of 
 that should be rather obvious.
+Note: to use SC_NOCHAT you should alter Manner
+	set Manner, -5;	// Will mute a user for 5 minutes
+	set Manner, 0;	// Will unmute a user
+	set Manner, 5;	// Will unmute a user and prevent the next use of 'Manner'
 
 ---------------------------------------
 

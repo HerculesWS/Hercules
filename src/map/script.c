@@ -8687,7 +8687,7 @@ BUILDIN(savepoint) {
 
 	sd = script->rid2sd(st);
 	if( sd == NULL )
-		return true;// no player attached, report source
+		return false;// no player attached, report source
 
 	str   = script_getstr(st,2);
 	x     = script_getnum(st,3);

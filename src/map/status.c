@@ -7755,7 +7755,10 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				unit->stop_attack(bl);
 				break;
 			case SC_NOCHAT:
-				// [GodLesZ] FIXME: is this correct? a hardcoded interval of 60sec? what about configuration ?_?
+				// A hardcoded interval of 60 seconds is expected, as the time that SC_NOCHAT uses is defined by
+				// mmocharstatus.manner, each negative point results in 1 minute with this status activated
+				// This is done this way because the message that the client displays is hardcoded, and only
+				// shows how many minutes are remaining. [Panikon]
 				tick = 60000;
 				val1 = battle_config.manner_system; //Mute filters.
 				if (sd)
