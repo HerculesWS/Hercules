@@ -5484,7 +5484,14 @@ ACMD(autotrade) {
 		int timeout = atoi(message);
 		status->change_start(NULL,&sd->bl, SC_AUTOTRADE, 10000, 0, 0, 0, 0, ((timeout > 0) ? min(timeout,battle_config.at_timeout) : battle_config.at_timeout) * 60000, 0);
 	}
-		
+
+	/* currently standalones are not supporting buyingstores, so we rely on the previous method */
+	if( sd->state.buyingstore ) {
+		clif->authfail_fd(fd, 15);
+		return true;
+	}
+
+	
 	clif->chsys_quit(sd);
 	
 	clif->authfail_fd(sd->fd, 15);
@@ -6639,10 +6646,10 @@ ACMD(mobinfo)
 					continue;
 				if (monster->mvpitem[i].p > 0) {
 					j++;
-					if (j == 1)
-						sprintf(atcmd_output2, " %s  %02.02f%%", item_data->jname, (float)monster->mvpitem[i].p / 100);
+					if(item_data->slot)
+						sprintf(atcmd_output2, " %s%s[%d]  %02.02f%%",j != 1 ? "- " : "", item_data->jname, item_data->slot, (float)monster->mvpitem[i].p / 100);
 					else
-						sprintf(atcmd_output2, " - %s  %02.02f%%", item_data->jname, (float)monster->mvpitem[i].p / 100);
+						sprintf(atcmd_output2, " %s%s  %02.02f%%",j != 1 ? "- " : "", item_data->jname, (float)monster->mvpitem[i].p / 100);
 					strcat(atcmd_output, atcmd_output2);
 				}
 			}
