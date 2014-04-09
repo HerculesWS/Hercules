@@ -3204,6 +3204,12 @@ void clif_changelook(struct block_list *bl,int type,int val)
 			break;
 			case LOOK_BASE:
 				if( !sd ) break;
+				// We shouldn't update LOOK_BASE if the player is disguised
+				// if we do so the client will think that the player class
+				// is really a mob and issues like 7725 will happen in every
+				// SC_ that alters class_ in any way [Panikon]
+				if( sd->disguise != -1 )
+					return;
 
 				if( sd->sc.option&OPTION_COSTUME )
 					vd->weapon = vd->shield = 0;
@@ -11321,8 +11327,17 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 #endif
 		return;
 	}
-	if( pc_cant_act(sd) && skill_id != RK_REFRESH && !(skill_id == SR_GENTLETOUCH_CURE && (sd->sc.opt1 == OPT1_STONE || sd->sc.opt1 == OPT1_FREEZE || sd->sc.opt1 == OPT1_STUN)) )
-		return;
+
+	if( pc_cant_act(sd)
+	&& skill_id != RK_REFRESH
+	&& !(skill_id == SR_GENTLETOUCH_CURE && (sd->sc.opt1 == OPT1_STONE || sd->sc.opt1 == OPT1_FREEZE || sd->sc.opt1 == OPT1_STUN)) 
+	) {
+		// SELF skills can be used with the storage open, issue: 8027
+		if( sd->state.storage_flag && tmp&INF_SELF_SKILL )
+			storage->close(sd);
+		else
+			return;
+	}
 	if( pc_issit(sd) )
 		return;
 

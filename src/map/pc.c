@@ -1758,6 +1758,13 @@ int pc_disguise(struct map_session_data *sd, int class_) {
 
 	status->set_viewdata(&sd->bl, class_);
 	clif->changeoption(&sd->bl);
+	// We need to update the client so it knows that a costume is being used
+	if( sd->sc.option&OPTION_COSTUME ) {
+		clif->changelook(&sd->bl,LOOK_BASE,sd->vd.class_);
+		clif->changelook(&sd->bl,LOOK_WEAPON,0);
+		clif->changelook(&sd->bl,LOOK_SHIELD,0);
+		clif->changelook(&sd->bl,LOOK_CLOTHES_COLOR,sd->vd.cloth_color);
+	}
 
 	if (sd->bl.prev != NULL) {
 		clif->spawn(&sd->bl);

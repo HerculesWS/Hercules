@@ -9954,6 +9954,11 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 
 	//Attempt to use the command
 	if ( (info->func(fd, (*atcmd_msg == atcommand->at_symbol) ? sd : ssd, command, params,info) != true) ) {
+#ifdef AUTOTRADE_PERSISTENCY
+		// Autotrade was successful if standalone is set
+		if( ((*atcmd_msg == atcommand->at_symbol) ? sd->state.standalone : ssd->state.standalone) )
+			return true;
+#endif
 		sprintf(output,msg_txt(154), command); // %s failed.
 		clif->message(fd, output);
 		return true;
