@@ -258,8 +258,9 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 	StringBuf buf;
 	SqlStmt* stmt;
 	struct item item;
-	int j, i=0, s;
+	int j, i=0, s=0, bound_qt=0;
 	struct item items[MAX_INVENTORY];
+	unsigned int bound_item[MAX_INVENTORY] = {0};
 	int char_id = RFIFOL(fd,2);
 	int aid = RFIFOL(fd,6);
 	int guild_id = RFIFOW(fd,10);
@@ -313,6 +314,11 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 			StrBuf->AppendStr(&buf, " OR");
 
 		StrBuf->Printf(&buf, " `id`=%d",items[j].id);
+
+		if( items[j].bound && items[j].equip ) {
+			bound_item[bound_qt] = items[j].equip;
+			bound_qt++;
+		}
 	}
 
 	if( SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
@@ -324,19 +330,62 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 		return 1;
 	}
 
+	// Removes any view id that was set by an item that was removed
+	if( bound_qt ) {
+	// Verifies equip bitmasks (see item.equip) and handles the sql statement
+#define CHECK_REMOVE(var,mask,token) do {\
+							if((var&mask)) {\
+								if((var) != mask && s) StrBuf->AppendStr((&buf), ",");\
+								StrBuf->AppendStr((&buf),"`"#token"`='0'");\
+								var &= ~mask;\
+								s++;\
+							}\
+						} while(0)
+		StrBuf->Clear(&buf);
+		StrBuf->Printf(&buf, "UPDATE `%s` SET ", char_db);
+		for( j = 0; j < bound_qt; j++ ) {
+			// Equips can be at more than one slot at the same time
+			CHECK_REMOVE(bound_item[j],EQP_HAND_R,weapon);
+			CHECK_REMOVE(bound_item[j],EQP_HAND_L,shield);
+			CHECK_REMOVE(bound_item[j],EQP_HEAD_TOP,head_top);
+			CHECK_REMOVE(bound_item[j],EQP_HEAD_MID,head_mid);
+			CHECK_REMOVE(bound_item[j],EQP_HEAD_LOW,head_bottom);
+			CHECK_REMOVE(bound_item[j],EQP_GARMENT,robe);
+		}
+		StrBuf->Printf(&buf, " WHERE `char_id`='%d'", char_id);
+
+		if( SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
+		||  SQL_ERROR == SQL->StmtExecute(stmt) )
+		{
+			Sql_ShowDebug(sql_handle);
+			SQL->StmtFree(stmt);
+			StrBuf->Destroy(&buf);
+			return 1;
+		}
+#undef CHECK_REMOVE
+	}
+
 	//Now let's update the guild storage with those deleted items
+	/// TODO/FIXME:
+	/// This approach is basically the same as the one from memitemdata_to_sql, but
+	/// the latter compares current database values and this is not needed in this case
+	/// maybe sometime separate memitemdata_to_sql into different methods in order to use
+	/// call that function here as well [Panikon]
 	StrBuf->Clear(&buf);
-	StrBuf->Printf(&buf, "INSERT INTO `%s` (`guild_id`, `nameid`, `amount`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`", guild_storage_db);
-	for( j = 0; j < MAX_SLOTS; ++j )
-		StrBuf->Printf(&buf, ", `card%d`", j);
-	StrBuf->AppendStr(&buf, ") VALUES ");
-	
+	StrBuf->Printf(&buf,"INSERT INTO `%s` (`guild_id`,`nameid`,`amount`,`equip`,`identify`,`refine`,"
+						"`attribute`,`expire_time`,`bound`,`unique_id`",
+					guild_storage_db);
+	for( s = 0; s < MAX_SLOTS; ++s )
+		StrBuf->Printf(&buf, ", `card%d`", s);
+	StrBuf->AppendStr(&buf," ) VALUES ");
+
 	for( j = 0; j < i; ++j ) {
 		if( j )
 			StrBuf->AppendStr(&buf, ",");
 
-		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d'",
-			guild_id, items[j].nameid, items[j].amount, items[j].identify, items[j].refine, items[j].attribute, items[j].expire_time, items[j].bound, items[j].unique_id);
+		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d'",
+			guild_id, items[j].nameid, items[j].amount, items[j].equip, items[j].identify, items[j].refine,
+			items[j].attribute, items[j].expire_time, items[j].bound, items[j].unique_id);
 		for( s = 0; s < MAX_SLOTS; ++s )
 			StrBuf->Printf(&buf, ", '%d'", items[j].card[s]);
 		StrBuf->AppendStr(&buf, ")");
@@ -356,6 +405,9 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 
 	//Finally reload storage and tell map we're done
 	mapif_load_guild_storage(fd,aid,guild_id,0);
+
+	// If character is logged in char, disconnect
+	disconnect_player(aid);
 #endif
 	return 0;
 }
