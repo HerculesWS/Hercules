@@ -9237,6 +9237,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 #if PACKETVER >= 20090218
 	int i;
 #endif
+	bool first_time = false;
 
 	if(sd->bl.prev != NULL)
 		return;
@@ -9397,6 +9398,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 
 	if(sd->state.connect_new) {
 		int lv;
+		first_time = true;
 		sd->state.connect_new = 0;
 		clif->skillinfoblock(sd);
 		clif->hotkeys(sd);
@@ -9536,6 +9538,10 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 	}
 
 	clif->weather_check(sd);
+
+	// This should be displayed last
+	if( sd->guild && first_time )
+		clif->guild_notice(sd, sd->guild);
 
 	// For automatic triggering of NPCs after map loading (so you don't need to walk 1 step first)
 	if (map->getcell(sd->bl.m,sd->bl.x,sd->bl.y,CELL_CHKNPC))
@@ -11330,14 +11336,15 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 
 	if( pc_cant_act(sd)
 	&& skill_id != RK_REFRESH
-	&& !(skill_id == SR_GENTLETOUCH_CURE && (sd->sc.opt1 == OPT1_STONE || sd->sc.opt1 == OPT1_FREEZE || sd->sc.opt1 == OPT1_STUN)) 
-	) {
-		// SELF skills can be used with the storage open, issue: 8027
-		if( sd->state.storage_flag && tmp&INF_SELF_SKILL )
-			storage->close(sd);
-		else
-			return;
-	}
+	&& !(skill_id == SR_GENTLETOUCH_CURE && (sd->sc.opt1 == OPT1_STONE || sd->sc.opt1 == OPT1_FREEZE || sd->sc.opt1 == OPT1_STUN))
+	&& ( sd->state.storage_flag && !tmp&INF_SELF_SKILL ) // SELF skills can be used with the storage open, issue: 8027
+	)
+		return;
+
+	// Some self skills need to close the storage to work properly
+	if( skill_id == AL_TELEPORT && sd->state.storage_flag )
+		storage->close(sd);
+
 	if( pc_issit(sd) )
 		return;
 
