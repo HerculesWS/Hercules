@@ -841,10 +841,8 @@ bool chrif_char_ask_name_answer(int acc, const char* player_name, uint16 type, u
  * Request char server to change sex of char (modified by Yor)
  *------------------------------------------*/
 void chrif_changedsex(int fd) {
-	int acc, sex;
-
-	acc = RFIFOL(fd,2);
-	sex = RFIFOL(fd,6);
+	int acc = RFIFOL(fd,2);
+	//int sex = RFIFOL(fd,6); // Dead store. Uncomment if needed again.
 	
 	if ( battle_config.etc_log )
 		ShowNotice("chrif_changedsex %d.\n", acc);

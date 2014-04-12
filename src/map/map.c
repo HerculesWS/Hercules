@@ -5808,7 +5808,7 @@ int do_init(int argc, char *argv[])
 	if (load_extras) {
 		aFree(load_extras);
 		load_extras = NULL;
-		load_extras_count = 0;
+		//load_extras_count = 0; // Dead store. Uncomment if needed again.
 	}
 
 	if( minimal ) {

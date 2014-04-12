@@ -1155,8 +1155,7 @@ int npc_click(struct map_session_data* sd, struct npc_data* nd)
 	// have view ids of mobs to avoid this "issue" [Panikon]
 	if (sd->npc_id != 0) {
 		// The player clicked a npc after entering an OnTouch area
-		if( sd->areanpc_id == sd->npc_id );
-		else
+		if( sd->areanpc_id != sd->npc_id )
 			ShowError("npc_click: npc_id != 0\n");
 
 		return 1;
