@@ -316,8 +316,17 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 		StrBuf->Printf(&buf, " `id`=%d",items[j].id);
 
 		if( items[j].bound && items[j].equip ) {
-			bound_item[bound_qt] = items[j].equip;
-			bound_qt++;
+			// Only the items that are also stored in `char` `equip`
+			if( items[j].equip&EQP_HAND_R
+			||  items[j].equip&EQP_HAND_L
+			||  items[j].equip&EQP_HEAD_TOP
+			||  items[j].equip&EQP_HEAD_MID
+			||  items[j].equip&EQP_HEAD_LOW
+			||  items[j].equip&EQP_GARMENT
+			) {
+				bound_item[bound_qt] = items[j].equip;
+				bound_qt++;
+			}
 		}
 	}
 
