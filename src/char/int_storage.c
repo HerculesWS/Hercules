@@ -332,15 +332,16 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 
 	// Removes any view id that was set by an item that was removed
 	if( bound_qt ) {
-	// Verifies equip bitmasks (see item.equip) and handles the sql statement
-#define CHECK_REMOVE(var,mask,token) do {\
-							if((var&mask)) {\
-								if((var) != mask && s) StrBuf->AppendStr((&buf), ",");\
-								StrBuf->AppendStr((&buf),"`"#token"`='0'");\
-								var &= ~mask;\
-								s++;\
-							}\
-						} while(0)
+
+#define CHECK_REMOVE(var,mask,token) do { /* Verifies equip bitmasks (see item.equip) and handles the sql statement */ \
+	if ((var)&(mask)) { \
+		if ((var) != (mask) && s) StrBuf->AppendStr(&buf, ","); \
+		StrBuf->AppendStr(&buf,"`"#token"`='0'"); \
+		(var) &= ~(mask); \
+		s++; \
+	} \
+} while(0)
+
 		StrBuf->Clear(&buf);
 		StrBuf->Printf(&buf, "UPDATE `%s` SET ", char_db);
 		for( j = 0; j < bound_qt; j++ ) {
