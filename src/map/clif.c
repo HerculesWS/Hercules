@@ -10101,7 +10101,7 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 				return;
 			}
 			
-			if( pc_cant_act(sd) || sd->sc.option&OPTION_HIDE )
+			if( pc_cant_act(sd) || pc_issit(sd) || sd->sc.option&OPTION_HIDE )
 				return;
 
 			if( sd->sc.option&OPTION_COSTUME )
