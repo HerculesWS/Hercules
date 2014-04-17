@@ -12,6 +12,7 @@
 #include "../common/socket.h"
 #include "../common/strlib.h"
 #include "../common/utils.h"
+#include "../common/sysinfo.h"
 #include "../common/HPM.h"
 
 #include "map.h"
@@ -6748,8 +6749,6 @@ static const struct _battle_data {
 void Hercules_report(char* date, char *time_c) {
 	int i, bd_size = ARRAYLENGTH(battle_data);
 	unsigned int config = 0;
-	const char *svn = get_svn_revision();
-	const char *git = get_git_hash();
 	char timestring[25];
 	time_t curtime;
 	char* buf;
@@ -6757,7 +6756,7 @@ void Hercules_report(char* date, char *time_c) {
 	enum config_table {
 		C_CIRCULAR_AREA         = 0x0001,
 		C_CELLNOSTACK           = 0x0002,
-		C_CONSOLE_INPUT			= 0x0004,
+		C_CONSOLE_INPUT         = 0x0004,
 		C_SCRIPT_CALLFUNC_CHECK = 0x0008,
 		C_OFFICIAL_WALKPATH     = 0x0010,
 		C_RENEWAL               = 0x0020,
@@ -6768,12 +6767,15 @@ void Hercules_report(char* date, char *time_c) {
 		C_RENEWAL_EDP           = 0x0400,
 		C_RENEWAL_ASPD          = 0x0800,
 		C_SECURE_NPCTIMEOUT     = 0x1000,
-		C_SQL_DBS               = 0x2000,
+		C_SQL_DB_ITEM           = 0x2000,
 		C_SQL_LOGS              = 0x4000,
-		C_MEMWATCH				= 0x8000,
-		C_DMALLOC				= 0x10000,
-		C_GCOLLECT				= 0x20000,
-		C_SEND_SHORTLIST		= 0x40000,
+		C_MEMWATCH              = 0x8000,
+		C_DMALLOC               = 0x10000,
+		C_GCOLLECT              = 0x20000,
+		C_SEND_SHORTLIST        = 0x40000,
+		C_SQL_DB_MOB            = 0x80000,
+		C_SQL_DB_MOBSKILL       = 0x100000,
+		C_PACKETVER_RE          = 0x200000,
 	};
 
 	/* we get the current time */
@@ -6831,10 +6833,18 @@ void Hercules_report(char* date, char *time_c) {
 #ifdef SECURE_NPCTIMEOUT
 	config |= C_SECURE_NPCTIMEOUT;
 #endif
+
+#ifdef PACKETVER_RE
+	config |= C_PACKETVER_RE
+#endif
 	
 	/* non-define part */
-	if( map->db_use_sql_item_db || map->db_use_sql_mob_db || map->db_use_sql_mob_skill_db )
-		config |= C_SQL_DBS; //TODO: split this config into three.
+	if( map->db_use_sql_item_db )
+		config |= C_SQL_DB_ITEM;
+	if( map->db_use_sql_mob_db )
+		config |= C_SQL_DB_MOB;
+	if( map->db_use_sql_mob_skill_db )
+		config |= C_SQL_DB_MOBSKILL;
 
 	if( logs->config.sql_logs )
 		config |= C_SQL_LOGS;
@@ -6855,30 +6865,40 @@ void Hercules_report(char* date, char *time_c) {
 
 #define BFLAG_LENGTH 35
 
-	CREATE(buf, char, 6 + 12 + 9 + 24 + 41 + 4 + 4 + 4 + ( bd_size * ( BFLAG_LENGTH + 4 ) ) + 1 );
+	CREATE(buf, char, 262 + ( bd_size * ( BFLAG_LENGTH + 4 ) ) + 1 );
 
 	/* build packet */
 
 	WBUFW(buf,0) = 0x3000;
-	WBUFW(buf,2) = 6 + 12 + 9 + 24 + 41 + 4 + 4 + 4 + ( bd_size * ( BFLAG_LENGTH + 4 ) );
-	WBUFW(buf,4) = 0x9e;
+	WBUFW(buf,2) = 262 + ( bd_size * ( BFLAG_LENGTH + 4 ) );
+	WBUFW(buf,4) = 0x9f;
 
 	safestrncpy((char*)WBUFP(buf,6), date, 12);
-	safestrncpy((char*)WBUFP(buf,6 + 12), time_c, 9);
-	safestrncpy((char*)WBUFP(buf,6 + 12 + 9), timestring, 24);
+	safestrncpy((char*)WBUFP(buf,18), time_c, 9);
+	safestrncpy((char*)WBUFP(buf,27), timestring, 24);
 
-	safestrncpy((char*)WBUFP(buf,6 + 12 + 9 + 24), git[0] != HERC_UNKNOWN_VER ? git : svn[0] != HERC_UNKNOWN_VER ? svn : "Unknown", 41);
-	WBUFL(buf,6 + 12 + 9 + 24 + 41) = map->getusers();
+	safestrncpy((char*)WBUFP(buf,51), sysinfo->platform(), 16);
+	safestrncpy((char*)WBUFP(buf,67), sysinfo->osversion(), 50);
+	safestrncpy((char*)WBUFP(buf,117), sysinfo->cpu(), 32);
+	WBUFL(buf,149) = sysinfo->cpucores();
+	safestrncpy((char*)WBUFP(buf,153), sysinfo->arch(), 8);
+	WBUFB(buf,161) = sysinfo->vcstypeid();
+	WBUFB(buf,162) = sysinfo->is64bit();
+	safestrncpy((char*)WBUFP(buf,163), sysinfo->vcsrevision_src(), 41);
+	safestrncpy((char*)WBUFP(buf,204), sysinfo->vcsrevision_scripts(), 41);
+	WBUFB(buf,245) = (sysinfo->is_superuser()? 1 : 0);
+	WBUFL(buf,246) = map->getusers();
 
-	WBUFL(buf,6 + 12 + 9 + 24 + 41 + 4) = config;
-	WBUFL(buf,6 + 12 + 9 + 24 + 41 + 4 + 4) = bd_size;
+	WBUFL(buf,250) = config;
+	WBUFL(buf,254) = PACKETVER;
 
+	WBUFL(buf,258) = bd_size;
 	for( i = 0; i < bd_size; i++ ) {
-		safestrncpy((char*)WBUFP(buf,6 + 12 + 9 + 24 + 41 + 4 + 4 + 4 + ( i * ( BFLAG_LENGTH + 4 ) ) ), battle_data[i].str, 35);
-		WBUFL(buf,6 + 12 + 9 + 24 + 41 + 4 + 4 + 4 + BFLAG_LENGTH + ( i * ( BFLAG_LENGTH + 4 )  )  ) = *battle_data[i].val;
+		safestrncpy((char*)WBUFP(buf,262 + ( i * ( BFLAG_LENGTH + 4 ) ) ), battle_data[i].str, BFLAG_LENGTH);
+		WBUFL(buf,262 + BFLAG_LENGTH + ( i * ( BFLAG_LENGTH + 4 )  )  ) = *battle_data[i].val;
 	}
 
-	chrif->send_report(buf,  6 + 12 + 9 + 24 + 41 + 4 + 4 + 4 + ( bd_size * ( BFLAG_LENGTH + 4 ) ) );
+	chrif->send_report(buf, 262 + ( bd_size * ( BFLAG_LENGTH + 4 ) ) );
 
 	aFree(buf);
 

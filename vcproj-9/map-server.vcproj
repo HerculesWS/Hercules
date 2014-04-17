@@ -444,6 +444,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\common\sysinfo.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\common\sysinfo.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\common\thread.c"
 				>
 			</File>

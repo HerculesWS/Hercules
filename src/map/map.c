@@ -5373,9 +5373,6 @@ void map_helpscreen(bool do_exit)
  * Map-Server Version Screen [MC Cameri]
  *------------------------------------------------------*/
 void map_versionscreen(bool do_exit) {
-	const char *svn = get_svn_revision();
-	const char *git = get_git_hash();
-	ShowInfo(CL_WHITE"Hercules version: %s" CL_RESET"\n", git[0] != HERC_UNKNOWN_VER ? git : svn[0] != HERC_UNKNOWN_VER ? svn : "Unknown");
 	ShowInfo(CL_GREEN"Website/Forum:"CL_RESET"\thttp://hercules.ws/\n");
 	ShowInfo(CL_GREEN"IRC Channel:"CL_RESET"\tirc://irc.rizon.net/#Hercules\n");
 	ShowInfo("Open "CL_WHITE"readme.txt"CL_RESET" for more information.\n");
