@@ -5474,7 +5474,7 @@ ACMD(autotrade) {
 		return false;
 	}
 	
-	if( !sd->state.vending && !sd->state.buyingstore ) { //check if player is vending or buying
+	if( sd->state.vending || sd->state.buyingstore ) { //check if player is vending or buying
 		clif->message(fd, msg_txt(549)); // "You should have a shop open in order to use @autotrade."
 		return false;
 	}
@@ -5485,11 +5485,11 @@ ACMD(autotrade) {
 		status->change_start(NULL,&sd->bl, SC_AUTOTRADE, 10000, 0, 0, 0, 0, ((timeout > 0) ? min(timeout,battle_config.at_timeout) : battle_config.at_timeout) * 60000, 0);
 	}
 
-	/* currently standalones are not supporting buyingstores, so we rely on the previous method */
+	/* currently standalones are not supporting buyingstores, so we rely on the previous method
 	if( sd->state.buyingstore ) {
 		clif->authfail_fd(fd, 15);
 		return true;
-	}
+	}*/
 
 	
 	clif->chsys_quit(sd);
