@@ -1,8 +1,8 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 
-#ifndef	_COMMON_CONSOLE_H_
-#define	_COMMON_CONSOLE_H_
+#ifndef _COMMON_CONSOLE_H_
+#define _COMMON_CONSOLE_H_
 
 #include "../common/thread.h"
 #include "../common/mutex.h"

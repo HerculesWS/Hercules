@@ -1,3 +1,5 @@
+# Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+# See the LICENSE file
 
 MT19937AR_OBJ = mt19937ar.o
 MT19937AR_H = mt19937ar.h

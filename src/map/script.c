@@ -12,6 +12,7 @@
 #include "../common/strlib.h"
 #include "../common/timer.h"
 #include "../common/utils.h"
+#include "../common/sysinfo.h"
 
 #include "map.h"
 #include "path.h"
@@ -4499,6 +4500,8 @@ int script_reload(void) {
 
 	itemdb->name_constants();
 
+	sysinfo->vcsrevision_reload();
+
 	return 0;
 }
 /* returns name of current function being run, from within the stack [Ind/Hercules] */
@@ -8687,7 +8690,7 @@ BUILDIN(savepoint) {
 
 	sd = script->rid2sd(st);
 	if( sd == NULL )
-		return true;// no player attached, report source
+		return false;// no player attached, report source
 
 	str   = script_getstr(st,2);
 	x     = script_getnum(st,3);
@@ -17315,19 +17318,6 @@ BUILDIN(is_function) {
 	return true;
 }
 /**
- * get_revision() -> retrieves the current svn revision (if available)
- **/
-BUILDIN(get_revision) {
-	const char *svn = get_svn_revision();
-
-	if ( svn[0] != HERC_UNKNOWN_VER )
-		script_pushint(st,atoi(svn));
-	else
-		script_pushint(st,-1);//unknown
-
-	return true;
-}
-/**
  * freeloop(<toggle>) -> toggles this script instance's looping-check ability
  **/
 BUILDIN(freeloop) {
@@ -19152,7 +19142,6 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getargcount,""),
 		BUILDIN_DEF(getcharip,"?"),
 		BUILDIN_DEF(is_function,"s"),
-		BUILDIN_DEF(get_revision,""),
 		BUILDIN_DEF(freeloop,"i"),
 		BUILDIN_DEF(getrandgroupitem,"ii"),
 		BUILDIN_DEF(cleanmap,"s"),

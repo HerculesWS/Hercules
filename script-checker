@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 # See the LICENSE file
@@ -13,10 +13,18 @@ if [ -z "$1" ]; then
 	echo "No file specified."
 	echo "Usage: $0 <path to the script>"
 	echo " (you may use a relative or absolute path)"
-	exit -1
+	exit 1
 fi
+case "$1" in
+	/*)
+		FILE="$1"
+		;;
+	*)
+		FILE="${ORIG_CWD}/$1"
+		;;
+esac
 if [ ! -x "$EXECUTABLE" ]; then
-	exit -1
+	exit 1
 fi
 
 while [ -n "$1" ]; do

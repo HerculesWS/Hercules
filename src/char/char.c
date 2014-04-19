@@ -2423,71 +2423,82 @@ int parse_fromlogin(int fd) {
 			{
 				unsigned char buf[7];
 
+				int char_id[MAX_CHARS];
+				int class_[MAX_CHARS];
+				int guild_id[MAX_CHARS];
+				int num;
+				int i;
+				char* data;
+				struct auth_node* node;
+
 				int acc = RFIFOL(fd,2);
 				int sex = RFIFOB(fd,6);
+
 				RFIFOSKIP(fd,7);
 
-				if( acc > 0 )
-				{// TODO: Is this even possible?
-					int char_id[MAX_CHARS];
-					int class_[MAX_CHARS];
-					int guild_id[MAX_CHARS];
-					int num;
-					int i;
-					char* data;
-
-					struct auth_node* node = (struct auth_node*)idb_get(auth_db, acc);
-					if( node != NULL )
-						node->sex = sex;
-
-					// get characters
-					if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `char_id`,`class`,`guild_id` FROM `%s` WHERE `account_id` = '%d'", char_db, acc) )
-						Sql_ShowDebug(sql_handle);
-					for( i = 0; i < MAX_CHARS && SQL_SUCCESS == SQL->NextRow(sql_handle); ++i )
-					{
-						SQL->GetData(sql_handle, 0, &data, NULL); char_id[i] = atoi(data);
-						SQL->GetData(sql_handle, 1, &data, NULL); class_[i] = atoi(data);
-						SQL->GetData(sql_handle, 2, &data, NULL); guild_id[i] = atoi(data);
-					}
-					num = i;
-					for( i = 0; i < num; ++i )
-					{
-						if( class_[i] == JOB_BARD || class_[i] == JOB_DANCER ||
-							class_[i] == JOB_CLOWN || class_[i] == JOB_GYPSY ||
-							class_[i] == JOB_BABY_BARD || class_[i] == JOB_BABY_DANCER ||
-							class_[i] == JOB_MINSTREL || class_[i] == JOB_WANDERER ||
-							class_[i] == JOB_MINSTREL_T || class_[i] == JOB_WANDERER_T ||
-							class_[i] == JOB_BABY_MINSTREL || class_[i] == JOB_BABY_WANDERER ||
-							class_[i] == JOB_KAGEROU || class_[i] == JOB_OBORO )
-						{
-							// job modification
-							if( class_[i] == JOB_BARD || class_[i] == JOB_DANCER )
-								class_[i] = (sex ? JOB_BARD : JOB_DANCER);
-							else if( class_[i] == JOB_CLOWN || class_[i] == JOB_GYPSY )
-								class_[i] = (sex ? JOB_CLOWN : JOB_GYPSY);
-							else if( class_[i] == JOB_BABY_BARD || class_[i] == JOB_BABY_DANCER )
-								class_[i] = (sex ? JOB_BABY_BARD : JOB_BABY_DANCER);
-							else if( class_[i] == JOB_MINSTREL || class_[i] == JOB_WANDERER )
-								class_[i] = (sex ? JOB_MINSTREL : JOB_WANDERER);
-							else if( class_[i] == JOB_MINSTREL_T || class_[i] == JOB_WANDERER_T )
-								class_[i] = (sex ? JOB_MINSTREL_T : JOB_WANDERER_T);
-							else if( class_[i] == JOB_BABY_MINSTREL || class_[i] == JOB_BABY_WANDERER )
-								class_[i] = (sex ? JOB_BABY_MINSTREL : JOB_BABY_WANDERER);
-							else if( class_[i] == JOB_KAGEROU || class_[i] == JOB_OBORO )
-								class_[i] = (sex ? JOB_KAGEROU : JOB_OBORO);
-						}
-
-						if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `class`='%d', `weapon`='0', `shield`='0', `head_top`='0', `head_mid`='0', `head_bottom`='0' WHERE `char_id`='%d'", char_db, class_[i], char_id[i]) )
-							Sql_ShowDebug(sql_handle);
-
-						if( guild_id[i] )// If there is a guild, update the guild_member data [Skotlex]
-							inter_guild_sex_changed(guild_id[i], acc, char_id[i], sex);
-					}
-					SQL->FreeResult(sql_handle);
-
-					// disconnect player if online on char-server
-					disconnect_player(acc);
+				// This should _never_ happen
+				if( acc <= 0 ) {
+					ShowError("Received invalid account id from login server! (aid: %d)\n", acc);
+					return 0;
 				}
+
+				node = (struct auth_node*)idb_get(auth_db, acc);
+				if( node != NULL )
+					node->sex = sex;
+
+				// get characters
+				if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `char_id`,`class`,`guild_id` FROM `%s` WHERE `account_id` = '%d'", char_db, acc) )
+					Sql_ShowDebug(sql_handle);
+				for( i = 0; i < MAX_CHARS && SQL_SUCCESS == SQL->NextRow(sql_handle); ++i )
+				{
+					SQL->GetData(sql_handle, 0, &data, NULL); char_id[i] = atoi(data);
+					SQL->GetData(sql_handle, 1, &data, NULL); class_[i] = atoi(data);
+					SQL->GetData(sql_handle, 2, &data, NULL); guild_id[i] = atoi(data);
+				}
+				num = i;
+				for( i = 0; i < num; ++i )
+				{
+					if( class_[i] == JOB_BARD || class_[i] == JOB_DANCER ||
+						class_[i] == JOB_CLOWN || class_[i] == JOB_GYPSY ||
+						class_[i] == JOB_BABY_BARD || class_[i] == JOB_BABY_DANCER ||
+						class_[i] == JOB_MINSTREL || class_[i] == JOB_WANDERER ||
+						class_[i] == JOB_MINSTREL_T || class_[i] == JOB_WANDERER_T ||
+						class_[i] == JOB_BABY_MINSTREL || class_[i] == JOB_BABY_WANDERER ||
+						class_[i] == JOB_KAGEROU || class_[i] == JOB_OBORO )
+					{
+						// job modification
+						if( class_[i] == JOB_BARD || class_[i] == JOB_DANCER )
+							class_[i] = (sex ? JOB_BARD : JOB_DANCER);
+						else if( class_[i] == JOB_CLOWN || class_[i] == JOB_GYPSY )
+							class_[i] = (sex ? JOB_CLOWN : JOB_GYPSY);
+						else if( class_[i] == JOB_BABY_BARD || class_[i] == JOB_BABY_DANCER )
+							class_[i] = (sex ? JOB_BABY_BARD : JOB_BABY_DANCER);
+						else if( class_[i] == JOB_MINSTREL || class_[i] == JOB_WANDERER )
+							class_[i] = (sex ? JOB_MINSTREL : JOB_WANDERER);
+						else if( class_[i] == JOB_MINSTREL_T || class_[i] == JOB_WANDERER_T )
+							class_[i] = (sex ? JOB_MINSTREL_T : JOB_WANDERER_T);
+						else if( class_[i] == JOB_BABY_MINSTREL || class_[i] == JOB_BABY_WANDERER )
+							class_[i] = (sex ? JOB_BABY_MINSTREL : JOB_BABY_WANDERER);
+						else if( class_[i] == JOB_KAGEROU || class_[i] == JOB_OBORO )
+							class_[i] = (sex ? JOB_KAGEROU : JOB_OBORO);
+					}
+
+					if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `equip`='0' WHERE `char_id`='%d'", inventory_db, char_id[i]) )
+						Sql_ShowDebug(sql_handle);
+
+					if( SQL_ERROR == SQL->Query(sql_handle,
+						"UPDATE `%s` SET `class`='%d', `weapon`='0', `shield`='0', `head_top`='0', `head_mid`='0', "
+						"`head_bottom`='0' WHERE `char_id`='%d'",
+						char_db, class_[i], char_id[i]) )
+						Sql_ShowDebug(sql_handle);
+
+					if( guild_id[i] )// If there is a guild, update the guild_member data [Skotlex]
+						inter_guild_sex_changed(guild_id[i], acc, char_id[i], sex);
+				}
+				SQL->FreeResult(sql_handle);
+
+				// disconnect player if online on char-server
+				disconnect_player(acc);
 
 				// notify all mapservers about this change
 				WBUFW(buf,0) = 0x2b0d;

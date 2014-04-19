@@ -3204,6 +3204,12 @@ void clif_changelook(struct block_list *bl,int type,int val)
 			break;
 			case LOOK_BASE:
 				if( !sd ) break;
+				// We shouldn't update LOOK_BASE if the player is disguised
+				// if we do so the client will think that the player class
+				// is really a mob and issues like 7725 will happen in every
+				// SC_ that alters class_ in any way [Panikon]
+				if( sd->disguise != -1 )
+					return;
 
 				if( sd->sc.option&OPTION_COSTUME )
 					vd->weapon = vd->shield = 0;
@@ -8474,6 +8480,26 @@ void clif_refresh(struct map_session_data *sd)
 		pc->disguise(sd, disguise);
 	}
 
+	// Notify the client that the storage is open
+	if( sd->state.storage_flag == 1 ) {
+		storage->sortitem(sd->status.storage.items, ARRAYLENGTH(sd->status.storage.items));
+		clif->storagelist(sd, sd->status.storage.items, ARRAYLENGTH(sd->status.storage.items));
+		clif->updatestorageamount(sd, sd->status.storage.storage_amount, MAX_STORAGE);
+	}
+	// Notify the client that the gstorage is open otherwise it will
+	// remain locked forever and nobody will be able to access it
+	if( sd->state.storage_flag == 2 ) {
+		struct guild_storage *gstor;
+		if( (gstor = gstorage->id2storage2(sd->status.guild_id)) == NULL) {
+			// Shouldn't happen... The information should already be at the map-server
+			intif->request_guild_storage(sd->status.account_id,sd->status.guild_id);
+		} else {
+			storage->sortitem(gstor->items, ARRAYLENGTH(gstor->items));
+			clif->storagelist(sd, gstor->items, ARRAYLENGTH(gstor->items));
+			clif->updatestorageamount(sd, gstor->storage_amount, MAX_GUILD_STORAGE);
+		}
+	}
+
 }
 
 
@@ -9231,6 +9257,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 #if PACKETVER >= 20090218
 	int i;
 #endif
+	bool first_time = false;
 
 	if(sd->bl.prev != NULL)
 		return;
@@ -9391,6 +9418,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 
 	if(sd->state.connect_new) {
 		int lv;
+		first_time = true;
 		sd->state.connect_new = 0;
 		clif->skillinfoblock(sd);
 		clif->hotkeys(sd);
@@ -9530,6 +9558,10 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 	}
 
 	clif->weather_check(sd);
+
+	// This should be displayed last
+	if( sd->guild && first_time )
+		clif->guild_notice(sd, sd->guild);
 
 	// For automatic triggering of NPCs after map loading (so you don't need to walk 1 step first)
 	if (map->getcell(sd->bl.m,sd->bl.x,sd->bl.y,CELL_CHKNPC))
@@ -10089,7 +10121,7 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 				return;
 			}
 			
-			if( pc_cant_act(sd) || sd->sc.option&OPTION_HIDE )
+			if( pc_cant_act(sd) || pc_issit(sd) || sd->sc.option&OPTION_HIDE )
 				return;
 
 			if( sd->sc.option&OPTION_COSTUME )
@@ -11321,8 +11353,18 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 #endif
 		return;
 	}
-	if( pc_cant_act(sd) && skill_id != RK_REFRESH && !(skill_id == SR_GENTLETOUCH_CURE && (sd->sc.opt1 == OPT1_STONE || sd->sc.opt1 == OPT1_FREEZE || sd->sc.opt1 == OPT1_STUN)) )
+
+	if( pc_cant_act(sd)
+	&& skill_id != RK_REFRESH
+	&& !(skill_id == SR_GENTLETOUCH_CURE && (sd->sc.opt1 == OPT1_STONE || sd->sc.opt1 == OPT1_FREEZE || sd->sc.opt1 == OPT1_STUN))
+	&& ( sd->state.storage_flag && !(tmp&INF_SELF_SKILL) ) // SELF skills can be used with the storage open, issue: 8027
+	)
 		return;
+
+	// Some self skills need to close the storage to work properly
+	if( skill_id == AL_TELEPORT && sd->state.storage_flag )
+		storage->close(sd);
+
 	if( pc_issit(sd) )
 		return;
 

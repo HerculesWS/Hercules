@@ -545,32 +545,6 @@ struct map_session_data {
 
 };
 
-//Equip position constants
-enum equip_pos {
-	EQP_HEAD_LOW           = 0x000001,
-	EQP_HEAD_MID           = 0x000200, //512
-	EQP_HEAD_TOP           = 0x000100, //256
-	EQP_HAND_R             = 0x000002, //2
-	EQP_HAND_L             = 0x000020, //32
-	EQP_ARMOR              = 0x000010, //16
-	EQP_SHOES              = 0x000040, //64
-	EQP_GARMENT            = 0x000004, //4
-	EQP_ACC_L              = 0x000008, //8
-	EQP_ACC_R              = 0x000080, //128
-	EQP_COSTUME_HEAD_TOP   = 0x000400, //1024
-	EQP_COSTUME_HEAD_MID   = 0x000800, //2048
-	EQP_COSTUME_HEAD_LOW   = 0x001000, //4096
-	EQP_COSTUME_GARMENT    = 0x002000, //8192
-	//UNUSED_COSTUME_FLOOR = 0x004000, //16384
-	EQP_AMMO               = 0x008000, //32768
-	EQP_SHADOW_ARMOR       = 0x010000, //65536
-	EQP_SHADOW_WEAPON      = 0x020000, //131072
-	EQP_SHADOW_SHIELD      = 0x040000, //262144
-	EQP_SHADOW_SHOES       = 0x080000, //524288
-	EQP_SHADOW_ACC_R       = 0x100000, //1048576
-	EQP_SHADOW_ACC_L       = 0x200000, //2097152
-};
-
 #define EQP_WEAPON EQP_HAND_R
 #define EQP_SHIELD EQP_HAND_L
 #define EQP_ARMS (EQP_HAND_R|EQP_HAND_L)
@@ -615,7 +589,7 @@ enum equip_pos {
 #define pc_isinvisible(sd)    ( (sd)->sc.option&OPTION_INVISIBLE )
 #define pc_is50overweight(sd) ( (sd)->weight*100 >= (sd)->max_weight*battle_config.natural_heal_weight_rate )
 #define pc_is90overweight(sd) ( (sd)->weight*10 >= (sd)->max_weight*9 )
-#define pc_maxparameter(sd)   ( ((((sd)->class_&MAPID_UPPERMASK) == MAPID_KAGEROUOBORO) || (((sd)->class_&MAPID_UPPERMASK) == MAPID_REBELLION) || (sd)->class_&JOBL_THIRD ? ((sd)->class_&JOBL_BABY ? battle_config.max_baby_third_parameter : battle_config.max_third_parameter) : ((sd)->class_&JOBL_BABY ? battle_config.max_baby_parameter : battle_config.max_parameter)) )
+#define pc_maxparameter(sd)   ( (((sd)->class_&MAPID_UPPERMASK) == MAPID_KAGEROUOBORO || ((sd)->class_&MAPID_UPPERMASK) == MAPID_REBELLION || ((sd)->class_&MAPID_THIRDMASK) == MAPID_SUPER_NOVICE_E) ? battle_config.max_extended_parameter : (sd)->class_&JOBL_THIRD ? ((sd)->class_&JOBL_BABY ? battle_config.max_baby_third_parameter : battle_config.max_third_parameter) : ((sd)->class_&JOBL_BABY ? battle_config.max_baby_parameter : battle_config.max_parameter) )
 /**
  * Ranger
  **/

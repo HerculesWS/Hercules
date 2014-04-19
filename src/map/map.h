@@ -36,7 +36,7 @@ enum E_MAPSERVER_ST {
 #define NATURAL_HEAL_INTERVAL 500
 #define MIN_FLOORITEM 2
 #define MAX_FLOORITEM START_ACCOUNT_NUM
-#define MAX_LEVEL 150
+#define MAX_LEVEL 175
 #define MAX_IGNORE_LIST 20 // official is 14
 #define MAX_VENDING 12
 #define MAX_MAP_SIZE (512*512) // Wasn't there something like this already? Can't find it.. [Shinryo]

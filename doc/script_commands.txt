@@ -243,9 +243,11 @@ and to make it look southeast it's facing 5.)
 Sprite id is the sprite number used to display this particular NPC. For a 
 full list of sprite id numbers see http://kalen.s79.xrea.com/npc/npce.shtml
 You may also use a monster's ID number instead to display a monster sprite 
-for this NPC. It is possible to use a job sprite as well, but you must 
-first define it as a monster sprite in 'mob_avail.txt', a full description 
-on how to do this is not in the scope of this manual.
+for this NPC, in npcs that have view ids of mobs it's encouraged to use
+OnTouch events with a 2,2 range and with an 'end' after the header to avoid
+bugs (for more info on why see npc_click@map/npc.c). It is possible to use a job
+sprite as well, but you must first define it as a monster sprite in 'mob_avail.txt',
+a full description on how to do this is not in the scope of this manual.
 A '-1' sprite id will make the NPC invisible (and unclickable). 
 A '111' sprite id will make an NPC which does not have a sprite, but is 
 still clickable, which is useful if you want to make a clickable object of 
@@ -5296,6 +5298,10 @@ re-apply).
 You can see the full list of status effects caused by skills in 
 'src/map/status.h' - they are currently not fully documented, but most of 
 that should be rather obvious.
+Note: to use SC_NOCHAT you should alter Manner
+	set Manner, -5;	// Will mute a user for 5 minutes
+	set Manner, 0;	// Will unmute a user
+	set Manner, 5;	// Will unmute a user and prevent the next use of 'Manner'
 
 ---------------------------------------
 
