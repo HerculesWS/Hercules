@@ -111,6 +111,7 @@ CREATE TABLE IF NOT EXISTS `char` (
   `char_opt` INT( 11 ) unsigned NOT NULL default '0',
   `font` TINYINT( 3 ) UNSIGNED NOT NULL DEFAULT  '0',
   `unban_time` int(11) unsigned NOT NULL default '0',
+  `uniqueitem_counter` bigint(20) NOT NULL,
   PRIMARY KEY  (`char_id`),
   UNIQUE KEY `name_key` (`name`),
   KEY `account_id` (`account_id`),
@@ -709,8 +710,6 @@ CREATE TABLE IF NOT EXISTS `interreg` (
   `value` varchar(20) NOT NULL,
    PRIMARY KEY (`varname`)
 ) ENGINE=InnoDB;
-INSERT INTO `interreg` (`varname`, `value`) VALUES
-('unique_id', '0');
 
 --
 -- Table structure for table `account_data`

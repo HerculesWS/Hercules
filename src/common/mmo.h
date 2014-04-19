@@ -461,6 +461,8 @@ struct mmo_charstatus {
 	unsigned short mod_exp,mod_drop,mod_death;
 	
 	unsigned char font;
+
+	uint32 uniqueitem_counter;
 };
 
 typedef enum mail_status {
