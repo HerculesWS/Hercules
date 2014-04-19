@@ -13,6 +13,7 @@
 #include "../common/console.h"
 #include "../common/strlib.h"
 #include "../common/sql.h"
+#include "../common/sysinfo.h"
 #include "HPM.h"
 
 #include <stdio.h>
@@ -717,6 +718,8 @@ void hplugins_share_defaults(void) {
 	HPM->share(timer,"timer");
 	/* libconfig */
 	HPM->share(libconfig,"libconfig");
+	/* sysinfo */
+	HPM->share(sysinfo,"sysinfo");
 }
 
 void hpm_init(void) {
