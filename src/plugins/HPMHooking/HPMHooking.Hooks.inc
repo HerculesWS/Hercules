@@ -50899,14 +50899,14 @@ int HP_pet_catch_process2(struct map_session_data *sd, int target_id) {
 	}
 	return retVal___;
 }
-int HP_pet_get_egg(int account_id, int pet_id, int flag) {
+bool HP_pet_get_egg(int account_id, short pet_class, int pet_id) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_pet_get_egg_pre ) {
-		int (*preHookFunc) (int *account_id, int *pet_id, int *flag);
+		bool (*preHookFunc) (int *account_id, short *pet_class, int *pet_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_get_egg_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pet_get_egg_pre[hIndex].func;
-			retVal___ = preHookFunc(&account_id, &pet_id, &flag);
+			retVal___ = preHookFunc(&account_id, &pet_class, &pet_id);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -50914,13 +50914,13 @@ int HP_pet_get_egg(int account_id, int pet_id, int flag) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pet.get_egg(account_id, pet_id, flag);
+		retVal___ = HPMHooks.source.pet.get_egg(account_id, pet_class, pet_id);
 	}
 	if( HPMHooks.count.HP_pet_get_egg_post ) {
-		int (*postHookFunc) (int retVal___, int *account_id, int *pet_id, int *flag);
+		bool (*postHookFunc) (bool retVal___, int *account_id, short *pet_class, int *pet_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_get_egg_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pet_get_egg_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &account_id, &pet_id, &flag);
+			retVal___ = postHookFunc(retVal___, &account_id, &pet_class, &pet_id);
 		}
 	}
 	return retVal___;
