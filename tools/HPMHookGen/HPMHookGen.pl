@@ -217,6 +217,8 @@ sub parse($$) {
 			$rtinit = ' = BL_NUL';
 		} elsif ($x =~ /^enum\s+homun_type$/) { # Known enum homun_type
 			$rtinit = ' = HT_INVALID';
+		} elsif ($x =~ /^enum\s+bg_queue_types$/) { # Known enum bg_queue_types
+			$rtinit = ' = BGQT_INVALID';
 		} elsif ($x =~ /^struct\s+.*$/ or $x eq 'DBData') { # Structs
 			$rtinit = '';
 			$rtmemset = 1;
