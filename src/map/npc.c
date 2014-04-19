@@ -1146,13 +1146,24 @@ int npc_click(struct map_session_data* sd, struct npc_data* nd)
 {
 	nullpo_retr(1, sd);
 
+	// This usually happens when the player clicked on a NPC that has the view id
+	// of a mob, to activate this kind of npc it's needed to be in a 2,2 range
+	// from it. If the OnTouch area of a npc, coincides with the 2,2 range of 
+	// another it's expected that the OnTouch event be put first in stack, because
+	// unit_walktoxy_timer is executed before any other function in this case.
+	// So it's best practice to put an 'end;' before OnTouch events in npcs that 
+	// have view ids of mobs to avoid this "issue" [Panikon]
 	if (sd->npc_id != 0) {
-		ShowError("npc_click: npc_id != 0\n");
+		// The player clicked a npc after entering an OnTouch area
+		if( sd->areanpc_id != sd->npc_id )
+			ShowError("npc_click: npc_id != 0\n");
+
 		return 1;
 	}
 
-	if(!nd) return 1;
-	
+	if( !nd )
+		return 1;
+
 	if ((nd = npc->checknear(sd,&nd->bl)) == NULL)
 		return 1;
 	

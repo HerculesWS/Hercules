@@ -1,12 +1,12 @@
+# Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+# See the LICENSE file
 
 CONFIG_D = ../config
 CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
 
 COMMON_D = ../common
-COMMON_OBJ = $(addprefix $(COMMON_D)/obj_all/, des.o grfio.o malloc.o \
-             nullpo.o miniconsole.o minicore.o showmsg.o strlib.o utils.o)
-COMMON_H = $(addprefix $(COMMON_D)/, cbasetypes.h console.h core.h des.h \
-           grfio.h malloc.h mmo.h nullpo.h showmsg.h strlib.h utils.h)
+COMMON_H = $(wildcard $(COMMON_D)/*.h)
+SYSINFO_INC = $(COMMON_D)/sysinfo.inc
 
 LIBCONFIG_D = ../../3rdparty/libconfig
 LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
@@ -16,6 +16,9 @@ LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
 LIBCONFIG_INCLUDE = -I$(LIBCONFIG_D)
 
 MAPCACHE_OBJ = obj_all/mapcache.o
+MAPCACHE_C = mapcache.c
+MAPCACHE_H =
+MAPCACHE_DEPENDS = $(MAPCACHE_OBJ) $(COMMON_D)/obj_all/common_mini.a $(LIBCONFIG_OBJ $(SYSINFO_INC))
 
 @SET_MAKE@
 
@@ -29,9 +32,9 @@ all: mapcache Makefile
 
 mapcache: ../../mapcache@EXEEXT@
 
-../../mapcache@EXEEXT@: $(MAPCACHE_OBJ) $(COMMON_OBJ) $(LIBCONFIG_OBJ) Makefile
+../../mapcache@EXEEXT@: $(MAPCACHE_DEPENDS) Makefile
 	@echo "	LD	$(notdir $@)"
-	@$(CC) @LDFLAGS@ $(LIBCONFIG_INCLUDE) -o ../../mapcache@EXEEXT@ $(MAPCACHE_OBJ) $(COMMON_OBJ) $(LIBCONFIG_OBJ) @LIBS@
+	@$(CC) @LDFLAGS@ -o ../../mapcache@EXEEXT@ $(MAPCACHE_DEPENDS) @LIBS@
 
 buildclean:
 	@echo "	CLEAN	tool (build temp files)"
@@ -55,22 +58,22 @@ help:
 Makefile: Makefile.in
 	@$(MAKE) -C ../.. src/tool/Makefile
 
+$(SYSINFO_INC): $(MAPCACHE_C) $(MAPCACHE_H) $(COMMON_H) $(CONFIG_H) $(LIBCONFIG_H)
+	@echo "	MAKE	$@"
+	@$(MAKE) -C ../.. sysinfo
+
 obj_all:
 	@echo "	MKDIR	obj_all"
 	@-mkdir obj_all
 
-obj_all/%.o: %.c $(COMMON_H) $(CONFIG_H) $(LIBCONFIG_H) | obj_all
+obj_all/%.o: %.c $(MAPCACHE_H) $(COMMON_H) $(CONFIG_H) $(LIBCONFIG_H) | obj_all
 	@echo "	CC	$<"
 	@$(CC) @CFLAGS@ $(LIBCONFIG_INCLUDE) @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
 # missing common object files
-$(COMMON_D)/obj_all/%.o:
+$(COMMON_D)/obj_all/common_mini.a:
 	@echo "	MAKE	$@"
-	@$(MAKE) -C $(COMMON_D) sql
-
-$(COMMON_D)/obj_all/mini%.o:
-	@echo "	MAKE	$@"
-	@$(MAKE) -C $(COMMON_D) sql
+	@$(MAKE) -C $(COMMON_D) common_mini
 
 $(LIBCONFIG_OBJ):
 	@echo "	MAKE	$@"

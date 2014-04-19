@@ -1,9 +1,12 @@
+# Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+# See the LICENSE file
 
 CONFIG_D = ../config
 CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
 
 COMMON_D = ../common
 COMMON_H = $(wildcard $(COMMON_D)/*.h)
+SYSINFO_INC = $(COMMON_D)/sysinfo.inc
 
 LIBCONFIG_D = ../../3rdparty/libconfig
 LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
@@ -17,9 +20,10 @@ MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
 MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
 MT19937AR_INCLUDE = -I$(MT19937AR_D)
 
-TEST_SPINLOCK_OBJ=obj/test_spinlock.o
-TEST_SPINLOCK_H=
-TEST_SPINLOCK_DEPENDS=$(TEST_SPINLOCK_OBJ) $(COMMON_D)/obj_sql/common_sql.a $(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ)
+TEST_SPINLOCK_OBJ = obj/test_spinlock.o
+TEST_SPINLOCK_C = test_spinlock.c
+TEST_SPINLOCK_H =
+TEST_SPINLOCK_DEPENDS = $(TEST_SPINLOCK_OBJ) $(COMMON_D)/obj_sql/common_sql.a $(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ $(SYSINFO_INC))
 
 @SET_MAKE@
 
@@ -44,22 +48,25 @@ clean: buildclean
 Makefile: Makefile.in
 	@$(MAKE) -C ../.. src/test/Makefile
 
+$(SYSINFO_INC): $(TEST_SPINLOCK_C) $(TEST_SPINLOCK_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H)
+	@echo "	MAKE	$@"
+	@$(MAKE) -C ../.. sysinfo
+
 # object directories
 
 obj:
 	@echo "	MKDIR	obj"
 	@-mkdir obj
-	
+
 #executables
 
 test_spinlock: $(TEST_SPINLOCK_DEPENDS) Makefile
 	@echo "	LD	$@"
-	@$(CC) @LDFLAGS@ -o ../../test_spinlock@EXEEXT@ $(TEST_SPINLOCK_OBJ) $(COMMON_D)/obj_sql/common_sql.a \
-		$(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
+	@$(CC) @LDFLAGS@ -o ../../test_spinlock@EXEEXT@ $(TEST_SPINLOCK_DEPENDS) @LIBS@ @MYSQL_LIBS@
 
-# login object files
+# object files
 
-obj/%.o: %.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj
+obj/%.o: %.c $(TEST_SPINLOCK_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj
 	@echo "	CC	$<"
 	@$(CC) @CFLAGS@ $(MT19937AR_INCLUDE) $(LIBCONFIG_INCLUDE) -DWITH_SQL @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
@@ -67,7 +74,7 @@ obj/%.o: %.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj
 $(COMMON_D)/obj_all/common.a:
 	@echo "	MAKE	$@"
 	@$(MAKE) -C $(COMMON_D) sql
-	
+
 $(COMMON_D)/obj_sql/common_sql.a:
 	@echo "	MAKE	$@"
 	@$(MAKE) -C $(COMMON_D) sql

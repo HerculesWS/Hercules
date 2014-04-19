@@ -2863,9 +2863,8 @@ int HP_bg_afk_timer(int tid, int64 tick, int id, intptr_t data) {
 	return retVal___;
 }
 enum bg_queue_types HP_bg_str2teamtype(const char *str) {
-/* Unknown return type 'enum bg_queue_types'. Initializing to '0'. */
 	int hIndex = 0;
-	enum bg_queue_types retVal___ = 0;
+	enum bg_queue_types retVal___ = BGQT_INVALID;
 	if( HPMHooks.count.HP_bg_str2teamtype_pre ) {
 		enum bg_queue_types (*preHookFunc) (const char *str);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_str2teamtype_pre; hIndex++ ) {

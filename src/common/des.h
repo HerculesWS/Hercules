@@ -1,8 +1,9 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
-#ifndef	_COMMON_DES_H_
-#define	_COMMON_DES_H_
+#ifndef _COMMON_DES_H_
+#define _COMMON_DES_H_
 
+#include "../common/cbasetypes.h"
 
 /// One 64-bit block.
 typedef struct BIT64 { uint8_t b[8]; } BIT64;

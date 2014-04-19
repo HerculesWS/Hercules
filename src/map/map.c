@@ -3765,10 +3765,9 @@ struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct map_zone
 	
 	CREATE(zone->capped_skills, struct map_zone_skill_damage_cap_entry *, zone->capped_skills_count);
 	
-	
 	for(i = 0, cursor = 0; i < main->capped_skills_count; i++, cursor++ ) {
 		CREATE(zone->capped_skills[cursor], struct map_zone_skill_damage_cap_entry, 1);
-		memcpy(zone->capped_skills[cursor], main->disabled_commands[i], sizeof(struct map_zone_skill_damage_cap_entry));
+		memcpy(zone->capped_skills[cursor], main->capped_skills[i], sizeof(struct map_zone_skill_damage_cap_entry));
 	}
 	
 	for(i = 0; i < other->capped_skills_count; i++, cursor++ ) {
@@ -5373,9 +5372,6 @@ void map_helpscreen(bool do_exit)
  * Map-Server Version Screen [MC Cameri]
  *------------------------------------------------------*/
 void map_versionscreen(bool do_exit) {
-	const char *svn = get_svn_revision();
-	const char *git = get_git_hash();
-	ShowInfo(CL_WHITE"Hercules version: %s" CL_RESET"\n", git[0] != HERC_UNKNOWN_VER ? git : svn[0] != HERC_UNKNOWN_VER ? svn : "Unknown");
 	ShowInfo(CL_GREEN"Website/Forum:"CL_RESET"\thttp://hercules.ws/\n");
 	ShowInfo(CL_GREEN"IRC Channel:"CL_RESET"\tirc://irc.rizon.net/#Hercules\n");
 	ShowInfo("Open "CL_WHITE"readme.txt"CL_RESET" for more information.\n");
@@ -5808,7 +5804,7 @@ int do_init(int argc, char *argv[])
 	if (load_extras) {
 		aFree(load_extras);
 		load_extras = NULL;
-		load_extras_count = 0;
+		//load_extras_count = 0; // Dead store. Uncomment if needed again.
 	}
 
 	if( minimal ) {

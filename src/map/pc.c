@@ -14,6 +14,7 @@
 #include "../common/utils.h"
 #include "../common/conf.h"
 #include "../common/mmo.h" //NAME_LENGTH
+#include "../common/sysinfo.h"
 
 #include "pc.h"
 #include "atcommand.h" // get_atcommand_level()
@@ -1147,15 +1148,8 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	if( !changing_mapservers ) {
 
 		if (battle_config.display_version == 1) {
-			const char* svn = get_svn_revision();
-			const char* git = get_git_hash();
 			char buf[256];
-			if( git[0] != HERC_UNKNOWN_VER )
-				sprintf(buf,"Git Hash: %s", git);
-			else if( svn[0] != HERC_UNKNOWN_VER )
-				sprintf(buf,"SVN Revision: %s", svn);
-			else
-				sprintf(buf,"Unknown Version");
+			sprintf(buf, msg_txt(1295), sysinfo->vcstype(), sysinfo->vcsrevision_src(), sysinfo->vcsrevision_scripts()); // %s revision '%s' (src) / '%s' (scripts)
 			clif->message(sd->fd, buf);
 		}
 		
@@ -1758,6 +1752,13 @@ int pc_disguise(struct map_session_data *sd, int class_) {
 
 	status->set_viewdata(&sd->bl, class_);
 	clif->changeoption(&sd->bl);
+	// We need to update the client so it knows that a costume is being used
+	if( sd->sc.option&OPTION_COSTUME ) {
+		clif->changelook(&sd->bl,LOOK_BASE,sd->vd.class_);
+		clif->changelook(&sd->bl,LOOK_WEAPON,0);
+		clif->changelook(&sd->bl,LOOK_SHIELD,0);
+		clif->changelook(&sd->bl,LOOK_CLOTHES_COLOR,sd->vd.cloth_color);
+	}
 
 	if (sd->bl.prev != NULL) {
 		clif->spawn(&sd->bl);
@@ -6832,13 +6833,14 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	int i=0,j=0;
 	int64 tick = timer->gettick();
 
-	for(j = 0; j < 5; j++)
+	for(j = 0; j < 5; j++) {
 		if (sd->devotion[j]){
 			struct map_session_data *devsd = map->id2sd(sd->devotion[j]);
 			if (devsd)
 				status_change_end(&devsd->bl, SC_DEVOTION, INVALID_TIMER);
 			sd->devotion[j] = 0;
 		}
+	}
 
 	if(sd->status.pet_id > 0 && sd->pd) {
 		struct pet_data *pd = sd->pd;
@@ -7136,6 +7138,17 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 			}
 		}
 	}
+
+	// Remove autotrade to prevent autotrading from save point
+	if( (sd->state.standalone || sd->state.autotrade)
+	 && (map->list[sd->bl.m].flag.pvp || map->list[sd->bl.m].flag.gvg)
+	  ) {
+		sd->state.autotrade = 0;
+		sd->state.standalone = 0;
+		pc->autotrade_update(sd,PAUC_REMOVE);
+		map->quit(sd);
+	}
+
 	// pvp
 	// disable certain pvp functions on pk_mode [Valaris]
 	if( map->list[sd->bl.m].flag.pvp && !battle_config.pk_mode && !map->list[sd->bl.m].flag.pvp_nocalcrank ) {
@@ -7165,10 +7178,10 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 		}
 	}
 
-
 	//Reset "can log out" tick.
 	if( battle_config.prevent_logout )
 		sd->canlog_tick = timer->gettick() - battle_config.prevent_logout;
+
 	return 1;
 }
 
