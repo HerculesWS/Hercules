@@ -8480,6 +8480,26 @@ void clif_refresh(struct map_session_data *sd)
 		pc->disguise(sd, disguise);
 	}
 
+	// Notify the client that the storage is open
+	if( sd->state.storage_flag == 1 ) {
+		storage->sortitem(sd->status.storage.items, ARRAYLENGTH(sd->status.storage.items));
+		clif->storagelist(sd, sd->status.storage.items, ARRAYLENGTH(sd->status.storage.items));
+		clif->updatestorageamount(sd, sd->status.storage.storage_amount, MAX_STORAGE);
+	}
+	// Notify the client that the gstorage is open otherwise it will
+	// remain locked forever and nobody will be able to access it
+	if( sd->state.storage_flag == 2 ) {
+		struct guild_storage *gstor;
+		if( (gstor = gstorage->id2storage2(sd->status.guild_id)) == NULL) {
+			// Shouldn't happen... The information should already be at the map-server
+			intif->request_guild_storage(sd->status.account_id,sd->status.guild_id);
+		} else {
+			storage->sortitem(gstor->items, ARRAYLENGTH(gstor->items));
+			clif->storagelist(sd, gstor->items, ARRAYLENGTH(gstor->items));
+			clif->updatestorageamount(sd, gstor->storage_amount, MAX_GUILD_STORAGE);
+		}
+	}
+
 }
 
 
