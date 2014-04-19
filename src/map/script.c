@@ -6467,7 +6467,7 @@ BUILDIN(checkweight2)
  * getitembound "<item id>",<amount>,<type>{,<account ID>};
  *------------------------------------------*/
 BUILDIN(getitem) {
-	int nameid,amount,get_count,i,flag = 0, offset = 0;
+	int nameid, amount,get_count,i,flag = 0, offset = 0;
 	struct item it;
 	TBL_PC *sd;
 	struct item_data *item_data;
@@ -6552,7 +6552,7 @@ BUILDIN(getitem) {
  *
  *------------------------------------------*/
 BUILDIN(getitem2) {
-	int nameid,amount,i,flag = 0, offset = 0;
+	int nameid, amount,i,flag = 0, offset = 0;
 	int iden,ref,attr,c1,c2,c3,c4, bound = 0;
 	TBL_PC *sd;
 
@@ -14981,8 +14981,7 @@ BUILDIN(npcshopdelitem)
 {
 	const char* npcname = script_getstr(st,2);
 	struct npc_data* nd = npc->name2id(npcname);
-	unsigned int nameid;
-	int n, i;
+	int nameid, n, i;
 	int amount;
 	int size;
 

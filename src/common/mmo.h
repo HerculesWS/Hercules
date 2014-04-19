@@ -217,7 +217,11 @@ struct quest {
 
 struct item {
 	int id;
-	short nameid;
+	#ifdef ITEMDB_OVER65K
+		int nameid;
+	#else
+		unsigned short nameid;
+	#endif
 	short amount;
 	unsigned int equip; // Location(s) where item is equipped (using enum equip_pos for bitmasking).
 	char identify;

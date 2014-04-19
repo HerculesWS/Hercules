@@ -316,7 +316,11 @@ struct packet_additem {
 	short PacketType;
 	unsigned short Index;
 	unsigned short count;
-	unsigned short nameid;
+	#ifdef ITEMDB_OVER65K
+		int nameid;
+	#else
+		unsigned short nameid;
+	#endif
 	uint8 IsIdentified;
 	uint8 IsDamaged;
 	unsigned char refiningLevel;
@@ -938,7 +942,11 @@ struct packet_npc_market_open {
 	short PacketLength;
 	/* inner struct figured by Ind after some annoying hour of debugging (data Thanks to Yommy) */
 	struct {
-		unsigned short nameid;
+		#ifdef ITEMDB_OVER65K
+			int nameid;
+		#else
+			unsigned short nameid;
+		#endif
 		unsigned char type;
 		unsigned int price;
 		unsigned int qty;

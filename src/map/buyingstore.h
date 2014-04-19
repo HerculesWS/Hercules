@@ -40,7 +40,11 @@ enum e_buyingstore_failure {
 struct s_buyingstore_item {
 	int price;
 	unsigned short amount;
-	unsigned short nameid;
+	#ifdef ITEMDB_OVER65K
+		int nameid;
+	#else
+		unsigned short nameid;
+	#endif
 };
 
 struct s_buyingstore {

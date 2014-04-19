@@ -1192,7 +1192,7 @@ int read_petdb()
 {
 	char* filename[] = {"pet_db.txt","pet_db2.txt"};
 	FILE *fp;
-	int nameid,i,j,k; 
+	int nameid,i,j,k;
 
 	// Remove any previous scripts in case reloaddb was invoked.
 	for( j = 0; j < MAX_PET_DB; j++ )

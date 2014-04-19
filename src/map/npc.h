@@ -37,7 +37,11 @@ struct npc_label_list {
 	int pos;
 };
 struct npc_item_list {
-	unsigned short nameid;
+	#ifdef ITEMDB_OVER65K
+		int nameid;
+	#else
+		unsigned short nameid;
+	#endif
 	unsigned int value;
 	unsigned int qty;
 };
