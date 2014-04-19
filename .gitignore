@@ -3,6 +3,8 @@
 .DS_Store
 ._*
 .clang_complete
+.local.vimrc
+.ycm_extra_conf.py*
 Thumbs.db
 
 # /
