@@ -1302,7 +1302,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(itemdb->readdb_libconfig, HP_itemdb_readdb_libconfig) },
 	{ HP_POP(itemdb->readdb_sql, HP_itemdb_readdb_sql) },
 	{ HP_POP(itemdb->unique_id, HP_itemdb_unique_id) },
-	{ HP_POP(itemdb->uid_load, HP_itemdb_uid_load) },
 	{ HP_POP(itemdb->read, HP_itemdb_read) },
 	{ HP_POP(itemdb->destroy_item_data, HP_itemdb_destroy_item_data) },
 	{ HP_POP(itemdb->final_sub, HP_itemdb_final_sub) },

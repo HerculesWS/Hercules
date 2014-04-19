@@ -2567,8 +2567,6 @@ struct {
 	struct HPMHookPoint *HP_itemdb_readdb_sql_post;
 	struct HPMHookPoint *HP_itemdb_unique_id_pre;
 	struct HPMHookPoint *HP_itemdb_unique_id_post;
-	struct HPMHookPoint *HP_itemdb_uid_load_pre;
-	struct HPMHookPoint *HP_itemdb_uid_load_post;
 	struct HPMHookPoint *HP_itemdb_read_pre;
 	struct HPMHookPoint *HP_itemdb_read_post;
 	struct HPMHookPoint *HP_itemdb_destroy_item_data_pre;
@@ -7606,8 +7604,6 @@ struct {
 	int HP_itemdb_readdb_sql_post;
 	int HP_itemdb_unique_id_pre;
 	int HP_itemdb_unique_id_post;
-	int HP_itemdb_uid_load_pre;
-	int HP_itemdb_uid_load_post;
 	int HP_itemdb_read_pre;
 	int HP_itemdb_read_post;
 	int HP_itemdb_destroy_item_data_pre;
