@@ -7140,9 +7140,9 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	}
 
 	// Remove autotrade to prevent autotrading from save point
-	if( sd->state.standalone || sd->state.autotrade 
-		&& (map->list[sd->bl.m].flag.pvp || map->list[sd->bl.m].flag.gvg)
-		) {
+	if( (sd->state.standalone || sd->state.autotrade)
+	 && (map->list[sd->bl.m].flag.pvp || map->list[sd->bl.m].flag.gvg)
+	  ) {
 		sd->state.autotrade = 0;
 		sd->state.standalone = 0;
 		pc->autotrade_update(sd,PAUC_REMOVE);

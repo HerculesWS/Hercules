@@ -466,14 +466,9 @@ ACMD(where) {
  *------------------------------------------*/
 ACMD(jumpto) {
 	struct map_session_data *pl_sd = NULL;
-		
+
 	if (!message || !*message) {
 		clif->message(fd, msg_txt(911)); // Please enter a player name (usage: @jumpto/@warpto/@goto <char name/ID>).
-		return false;
-	}
-
-	if( message == sd->status.name || (atoi(message)) == sd->status.char_id ) {
-		clif->message(fd, msg_txt(253)); // You already are at your destination!
 		return false;
 	}
 
@@ -486,7 +481,7 @@ ACMD(jumpto) {
 		clif->message(fd, msg_txt(864)); // "You cannot use this command when dead."
 		return false;
 	}
-	
+
 	if((pl_sd=map->nick2sd((char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_txt(3)); // Character not found.
 		return false;
@@ -499,13 +494,13 @@ ACMD(jumpto) {
 
 	if( pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y ) {
 		clif->message(fd, msg_txt(253)); // You already are at your destination!
- 		return false;
- 	}
-	
+		return false;
+	}
+
 	pc->setpos(sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
 	sprintf(atcmd_output, msg_txt(4), pl_sd->status.name); // Jumped to %s
- 	clif->message(fd, atcmd_output);
-	
+	clif->message(fd, atcmd_output);
+
 	return true;
 }
 
