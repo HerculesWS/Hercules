@@ -101,7 +101,12 @@ struct s_addeffectonskill {
 	unsigned char target;
 };
 struct s_add_drop {
-	short id, group;
+	#ifdef ITEMDB_OVER65K
+		unsigned int id;
+	#else
+		unsigned short id;
+	#endif
+	short group;
 	int race, rate;
 };
 struct s_autobonus {
@@ -254,7 +259,11 @@ struct map_session_data {
 	int64 cansendmail_tick;     /// Mail System Flood Protection
 	int64 ks_floodprotect_tick; /// [Kill Steal Protection]
 	struct {
-		short nameid;
+		#ifdef ITEMDB_OVER65K
+			int nameid;
+		#else
+			unsigned short nameid;
+		#endif
 		int64 tick;
 	} item_delay[MAX_ITEMDELAYS]; // [Paradox924X]
 	short weapontype1,weapontype2;
@@ -304,8 +313,7 @@ struct map_session_data {
 	}	add_def[MAX_PC_BONUS], add_mdef[MAX_PC_BONUS], add_mdmg[MAX_PC_BONUS];
 	struct s_add_drop add_drop[MAX_PC_BONUS];
 	struct {
-		int nameid;
-		int rate;
+		int nameid, rate;
 	} itemhealrate[MAX_PC_BONUS];
 	struct {
 		short flag, rate;
@@ -435,7 +443,11 @@ struct map_session_data {
 
 	// Mail System [Zephyrus]
 	struct {
-		short nameid;
+		#ifdef ITEMDB_OVER65K
+			int nameid;
+		#else
+			unsigned short nameid;
+		#endif
 		int index, amount, zeny;
 		struct mail_data inbox;
 		bool changed; // if true, should sync with charserver on next mailbox request
@@ -980,7 +992,7 @@ struct pc_interface {
 	int (*bonus_autospell_onskill) (struct s_autospell *spell, int max, short src_skill, short id, short lv, short rate, short card_id);
 	int (*bonus_addeff) (struct s_addeffect* effect, int max, enum sc_type id, short rate, short arrow_rate, unsigned char flag);
 	int (*bonus_addeff_onskill) (struct s_addeffectonskill* effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target);
-	int (*bonus_item_drop) (struct s_add_drop *drop, const short max, short id, short group, int race, int rate);
+	int (*bonus_item_drop) (struct s_add_drop *drop, const short max, int id, short group, int race, int rate);
 	void (*calcexp) (struct map_session_data *sd, unsigned int *base_exp, unsigned int *job_exp, struct block_list *src);
 	int (*respawn_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*jobchange_killclone) (struct block_list *bl, va_list ap);

@@ -1887,7 +1887,7 @@ int pc_bonus_addeff_onskill(struct s_addeffectonskill* effect, int max, enum sc_
 	return 1;
 }
 
-int pc_bonus_item_drop(struct s_add_drop *drop, const short max, short id, short group, int race, int rate) {
+int pc_bonus_item_drop(struct s_add_drop *drop, const short max, int id, short group, int race, int rate) {
 	int i;
 
 	//Apply config rate adjustment settings.

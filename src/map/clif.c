@@ -17082,7 +17082,11 @@ void clif_parse_CloseSearchStoreInfo(int fd, struct map_session_data* sd)
 /// 083c <account id>.L <store id>.L <nameid>.W
 void clif_parse_SearchStoreInfoListItemClick(int fd, struct map_session_data* sd)
 {
-	unsigned short nameid;
+	#ifdef ITEMDB_OVER65K
+		int nameid;
+	#else
+		unsigned short nameid;
+	#endif
 	int account_id, store_id;
 	struct s_packet_db* info = &packet_db[RFIFOW(fd,0)];
 

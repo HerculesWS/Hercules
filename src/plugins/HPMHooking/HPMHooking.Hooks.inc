@@ -49568,11 +49568,11 @@ int HP_pc_bonus_addeff_onskill(struct s_addeffectonskill *effect, int max, enum 
 	}
 	return retVal___;
 }
-int HP_pc_bonus_item_drop(struct s_add_drop *drop, const short max, short id, short group, int race, int rate) {
+int HP_pc_bonus_item_drop(struct s_add_drop *drop, const short max, int id, short group, int race, int rate) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_bonus_item_drop_pre ) {
-		int (*preHookFunc) (struct s_add_drop *drop, const short *max, short *id, short *group, int *race, int *rate);
+		int (*preHookFunc) (struct s_add_drop *drop, const short *max, int *id, short *group, int *race, int *rate);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus_item_drop_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_bonus_item_drop_pre[hIndex].func;
 			retVal___ = preHookFunc(drop, &max, &id, &group, &race, &rate);
@@ -49586,7 +49586,7 @@ int HP_pc_bonus_item_drop(struct s_add_drop *drop, const short max, short id, sh
 		retVal___ = HPMHooks.source.pc.bonus_item_drop(drop, max, id, group, race, rate);
 	}
 	if( HPMHooks.count.HP_pc_bonus_item_drop_post ) {
-		int (*postHookFunc) (int retVal___, struct s_add_drop *drop, const short *max, short *id, short *group, int *race, int *rate);
+		int (*postHookFunc) (int retVal___, struct s_add_drop *drop, const short *max, int *id, short *group, int *race, int *rate);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus_item_drop_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_bonus_item_drop_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, drop, &max, &id, &group, &race, &rate);

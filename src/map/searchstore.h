@@ -50,7 +50,11 @@ struct s_search_store_info_item {
 	unsigned int store_id;
 	int account_id;
 	char store_name[MESSAGE_SIZE];
-	unsigned short nameid;
+	#ifdef ITEMDB_OVER65K
+		int nameid;
+	#else
+		unsigned short nameid;
+	#endif
 	unsigned short amount;
 	unsigned int price;
 	short card[MAX_SLOTS];

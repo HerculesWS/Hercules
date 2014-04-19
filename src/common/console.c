@@ -56,6 +56,14 @@ void display_title(void) {
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                                                      "CL_CLL""CL_NORMAL"\n");
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                    http://hercules.ws/board/                         "CL_CLL""CL_NORMAL"\n");
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                                                      "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                AND                                   "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                    ragnaBR e [ADM]Frey Dev Team                      "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                            ____   ____               "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"           _ __  __ _   __ _  _ __    __ _ | __ ) |  _ \\              "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"          | '__|/ _` | / _` || '_ \\  / _` ||  _ \\ | |_) |             "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"          | |  | (_| || (_| || | | || (_| || |_) ||  _ <              "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"          |_|   \\__,_| \\__, ||_| |_| \\__,_||____/ |_| \\_\\             "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                       |___/                                          "CL_CLL""CL_NORMAL"\n");
 
 	ShowInfo("Hercules %d-bit for %s\n", sysinfo->is64bit() ? 64 : 32, sysinfo->platform());
 	ShowInfo("%s revision (src): '"CL_WHITE"%s"CL_RESET"'\n", vcstype, sysinfo->vcsrevision_src());
