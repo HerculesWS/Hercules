@@ -3765,10 +3765,9 @@ struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct map_zone
 	
 	CREATE(zone->capped_skills, struct map_zone_skill_damage_cap_entry *, zone->capped_skills_count);
 	
-	
 	for(i = 0, cursor = 0; i < main->capped_skills_count; i++, cursor++ ) {
 		CREATE(zone->capped_skills[cursor], struct map_zone_skill_damage_cap_entry, 1);
-		memcpy(zone->capped_skills[cursor], main->disabled_commands[i], sizeof(struct map_zone_skill_damage_cap_entry));
+		memcpy(zone->capped_skills[cursor], main->capped_skills[i], sizeof(struct map_zone_skill_damage_cap_entry));
 	}
 	
 	for(i = 0; i < other->capped_skills_count; i++, cursor++ ) {
