@@ -2138,11 +2138,14 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 				trade->cancel(sd);
 			buyingstore->close(sd);
 			searchstore->close(sd);
-			if(sd->state.storage_flag == 1)
-				storage->pc_quit(sd,0);
-			else if (sd->state.storage_flag == 2)
-				gstorage->pc_quit(sd,0);
-			sd->state.storage_flag = 0; //Force close it when being warped.
+			if( sd->menuskill_id != AL_TELEPORT ) { // issue: 8027
+				if(sd->state.storage_flag == 1)
+					storage->pc_quit(sd,0);
+				else if (sd->state.storage_flag == 2)
+					gstorage->pc_quit(sd,0);
+
+				sd->state.storage_flag = 0; //Force close it when being warped.
+			}
 			if(sd->party_invite>0)
 				party->reply_invite(sd,sd->party_invite,0);
 			if(sd->guild_invite>0)

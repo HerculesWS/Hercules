@@ -1316,7 +1316,7 @@ void intif_parse_GuildMasterChanged(int fd) {
 
 // Request pet creation
 void intif_parse_CreatePet(int fd) {
-	pet->get_egg(RFIFOL(fd,2), RFIFOL(fd,6), RFIFOB(fd,8));
+	pet->get_egg(RFIFOL(fd,2), RFIFOW(fd,6), RFIFOL(fd,8));
 }
 
 // ACK pet data
