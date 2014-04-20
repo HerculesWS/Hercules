@@ -7668,6 +7668,31 @@ void HP_clif_arrow_create_list(struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_clif_refresh_storagewindow(struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_refresh_storagewindow_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_refresh_storagewindow_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_refresh_storagewindow_pre[hIndex].func;
+			preHookFunc(sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.refresh_storagewindow(sd);
+	}
+	if( HPMHooks.count.HP_clif_refresh_storagewindow_post ) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_refresh_storagewindow_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_refresh_storagewindow_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
 void HP_clif_refresh(struct map_session_data *sd) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_refresh_pre ) {

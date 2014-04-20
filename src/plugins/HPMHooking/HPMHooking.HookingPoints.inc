@@ -308,6 +308,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->sitting, HP_clif_sitting) },
 	{ HP_POP(clif->standing, HP_clif_standing) },
 	{ HP_POP(clif->arrow_create_list, HP_clif_arrow_create_list) },
+	{ HP_POP(clif->refresh_storagewindow, HP_clif_refresh_storagewindow) },
 	{ HP_POP(clif->refresh, HP_clif_refresh) },
 	{ HP_POP(clif->fame_blacksmith, HP_clif_fame_blacksmith) },
 	{ HP_POP(clif->fame_alchemist, HP_clif_fame_alchemist) },

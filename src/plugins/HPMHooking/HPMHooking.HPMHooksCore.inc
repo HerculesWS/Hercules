@@ -597,6 +597,8 @@ struct {
 	struct HPMHookPoint *HP_clif_standing_post;
 	struct HPMHookPoint *HP_clif_arrow_create_list_pre;
 	struct HPMHookPoint *HP_clif_arrow_create_list_post;
+	struct HPMHookPoint *HP_clif_refresh_storagewindow_pre;
+	struct HPMHookPoint *HP_clif_refresh_storagewindow_post;
 	struct HPMHookPoint *HP_clif_refresh_pre;
 	struct HPMHookPoint *HP_clif_refresh_post;
 	struct HPMHookPoint *HP_clif_fame_blacksmith_pre;
@@ -5634,6 +5636,8 @@ struct {
 	int HP_clif_standing_post;
 	int HP_clif_arrow_create_list_pre;
 	int HP_clif_arrow_create_list_post;
+	int HP_clif_refresh_storagewindow_pre;
+	int HP_clif_refresh_storagewindow_post;
 	int HP_clif_refresh_pre;
 	int HP_clif_refresh_post;
 	int HP_clif_fame_blacksmith_pre;
