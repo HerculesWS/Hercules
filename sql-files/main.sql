@@ -666,6 +666,7 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1388854043); -- 2014-01-04--16-4
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1389028967); -- 2014-01-06--17-22.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1392832626); -- 2014-02-19--17-57.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1395789302); -- 2014-03-25--23-57.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1396893866); -- 2014-04-07--22-04.sql
 
 --
 -- Table structure for table `sstatus`
@@ -837,4 +838,3 @@ CREATE TABLE IF NOT EXISTS `autotrade_data` (
   `price` int(11) NOT NULL default '0',
   PRIMARY KEY  (`char_id`,`itemkey`)
 ) ENGINE=MyISAM; 
-
