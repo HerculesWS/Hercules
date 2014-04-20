@@ -3217,6 +3217,8 @@ void script_free_vars(struct DBMap* var_storage) {
 
 void script_free_code(struct script_code* code)
 {
+	nullpo_retv(code);
+
 	if( code->instances )
 		script->stop_instances(code);
 	else {

@@ -2077,9 +2077,10 @@ int itemdb_final_sub(DBKey key, DBData *data, va_list ap)
 void itemdb_clear(bool total) {
 	int i;
 	// clear the previous itemdb data
-	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i )
+	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i ) {
 		if( itemdb->array[i] )
 			itemdb->destroy_item_data(itemdb->array[i], 1);
+	}
 	
 	for( i = 0; i < itemdb->group_count; i++ ) {
 		if( itemdb->groups[i].nameid )
@@ -2120,7 +2121,8 @@ void itemdb_clear(bool total) {
 	itemdb->package_count = 0;
 	
 	for(i = 0; i < itemdb->combo_count; i++) {
-		script->free_code(itemdb->combos[i]->script);
+		if( itemdb->combos[i]->script ) // Check if script was loaded
+			script->free_code(itemdb->combos[i]->script);
 		aFree(itemdb->combos[i]);
 	}
 	if( itemdb->combos )
