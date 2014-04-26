@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `char` (
   `char_opt` INT( 11 ) unsigned NOT NULL default '0',
   `font` TINYINT( 3 ) UNSIGNED NOT NULL DEFAULT  '0',
   `unban_time` int(11) unsigned NOT NULL default '0',
-  `uniqueitem_counter` bigint(20) NOT NULL,
+  `uniqueitem_counter` bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (`char_id`),
   UNIQUE KEY `name_key` (`name`),
   KEY `account_id` (`account_id`),
@@ -667,6 +667,7 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1389028967); -- 2014-01-06--17-2
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1392832626); -- 2014-02-19--17-57.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1395789302); -- 2014-03-25--23-57.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1396893866); -- 2014-04-07--22-04.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1398477600); -- 2014-04-26--10-00.sql
 
 --
 -- Table structure for table `sstatus`
