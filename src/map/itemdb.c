@@ -1966,44 +1966,10 @@ int itemdb_readdb_sql(const char *tablename) {
 /*==========================================
 * Unique item ID function
 * Only one operation by once
-* Flag:
-* 0 return new id
-* 1 set new value, checked with current value
-* 2 set new value bypassing anything
-* 3/other return last value
 *------------------------------------------*/
-uint64 itemdb_unique_id(int8 flag, int64 value) {
-	static uint64 item_uid = 0;
-	
-	if(flag)
-	{
-		if(flag == 1)
-		{	if(item_uid < value)
-				return (item_uid = value);
-		}else if(flag == 2)
-			return (item_uid = value);
-			
-		return item_uid;
-	}
+uint64 itemdb_unique_id(struct map_session_data *sd) {
 
-	return ++item_uid;
-}
-int itemdb_uid_load() {
-	char * uid;
-	if (SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT `value` FROM `%s` WHERE `varname`='unique_id'",map->interreg_db))
-		Sql_ShowDebug(map->mysql_handle);
-
-	if( SQL_SUCCESS != SQL->NextRow(map->mysql_handle) ) {
-		ShowError("itemdb_uid_load: Unable to fetch unique_id data\n");
-		SQL->FreeResult(map->mysql_handle);
-		return -1;
-	}
-
-	SQL->GetData(map->mysql_handle, 0, &uid, NULL);
-	itemdb->unique_id(1, (uint64)strtoull(uid, NULL, 10));
-	SQL->FreeResult(map->mysql_handle);
-
-	return 0;
+	return ((uint64)sd->status.char_id << 32) | sd->status.uniqueitem_counter++;
 }
 
 /**
@@ -2057,8 +2023,7 @@ void itemdb_read(bool minimal) {
 	sv->readdb(map->db_path, "item_stack.txt",             ',', 3, 3, -1, itemdb->read_stack);
 	sv->readdb(map->db_path, DBPATH"item_buyingstore.txt", ',', 1, 1, -1, itemdb->read_buyingstore);
 	sv->readdb(map->db_path, "item_nouse.txt",             ',', 3, 3, -1, itemdb->read_nouse);
-	
-	itemdb->uid_load();
+
 }
 
 /**
@@ -2112,9 +2077,10 @@ int itemdb_final_sub(DBKey key, DBData *data, va_list ap)
 void itemdb_clear(bool total) {
 	int i;
 	// clear the previous itemdb data
-	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i )
+	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i ) {
 		if( itemdb->array[i] )
 			itemdb->destroy_item_data(itemdb->array[i], 1);
+	}
 	
 	for( i = 0; i < itemdb->group_count; i++ ) {
 		if( itemdb->groups[i].nameid )
@@ -2155,7 +2121,8 @@ void itemdb_clear(bool total) {
 	itemdb->package_count = 0;
 	
 	for(i = 0; i < itemdb->combo_count; i++) {
-		script->free_code(itemdb->combos[i]->script);
+		if( itemdb->combos[i]->script ) // Check if script was loaded
+			script->free_code(itemdb->combos[i]->script);
 		aFree(itemdb->combos[i]);
 	}
 	if( itemdb->combos )
@@ -2348,7 +2315,6 @@ void itemdb_defaults(void) {
 	itemdb->readdb_libconfig = itemdb_readdb_libconfig;
 	itemdb->readdb_sql = itemdb_readdb_sql;
 	itemdb->unique_id = itemdb_unique_id;
-	itemdb->uid_load = itemdb_uid_load;
 	itemdb->read = itemdb_read;
 	itemdb->destroy_item_data = destroy_item_data;
 	itemdb->final_sub = itemdb_final_sub;

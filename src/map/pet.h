@@ -127,7 +127,7 @@ struct pet_interface {
 	int (*select_egg) (struct map_session_data *sd, short egg_index);
 	int (*catch_process1) (struct map_session_data *sd, int target_class);
 	int (*catch_process2) (struct map_session_data *sd, int target_id);
-	int (*get_egg) (int account_id, int pet_id, int flag);
+	bool (*get_egg) (int account_id, short pet_class, int pet_id );
 	int (*unequipitem) (struct map_session_data *sd, struct pet_data *pd);
 	int (*food) (struct map_session_data *sd, struct pet_data *pd);
 	int (*ai_sub_hard_lootsearch) (struct block_list *bl, va_list ap);

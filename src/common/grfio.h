@@ -1,8 +1,8 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef	_COMMON_GRFIO_H_
-#define	_COMMON_GRFIO_H_
+#ifndef _COMMON_GRFIO_H_
+#define _COMMON_GRFIO_H_
 
 void grfio_init(const char* fname);
 void grfio_final(void);

@@ -2863,9 +2863,8 @@ int HP_bg_afk_timer(int tid, int64 tick, int id, intptr_t data) {
 	return retVal___;
 }
 enum bg_queue_types HP_bg_str2teamtype(const char *str) {
-/* Unknown return type 'enum bg_queue_types'. Initializing to '0'. */
 	int hIndex = 0;
-	enum bg_queue_types retVal___ = 0;
+	enum bg_queue_types retVal___ = BGQT_INVALID;
 	if( HPMHooks.count.HP_bg_str2teamtype_pre ) {
 		enum bg_queue_types (*preHookFunc) (const char *str);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_str2teamtype_pre; hIndex++ ) {
@@ -7664,6 +7663,31 @@ void HP_clif_arrow_create_list(struct map_session_data *sd) {
 		void (*postHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_arrow_create_list_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_clif_arrow_create_list_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
+void HP_clif_refresh_storagewindow(struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_refresh_storagewindow_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_refresh_storagewindow_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_refresh_storagewindow_pre[hIndex].func;
+			preHookFunc(sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.refresh_storagewindow(sd);
+	}
+	if( HPMHooks.count.HP_clif_refresh_storagewindow_post ) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_refresh_storagewindow_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_refresh_storagewindow_post[hIndex].func;
 			postHookFunc(sd);
 		}
 	}
@@ -32694,14 +32718,14 @@ int HP_itemdb_readdb_sql(const char *tablename) {
 	}
 	return retVal___;
 }
-uint64 HP_itemdb_unique_id(int8 flag, int64 value) {
+uint64 HP_itemdb_unique_id(struct map_session_data *sd) {
 	int hIndex = 0;
 	uint64 retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_unique_id_pre ) {
-		uint64 (*preHookFunc) (int8 *flag, int64 *value);
+		uint64 (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_unique_id_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_itemdb_unique_id_pre[hIndex].func;
-			retVal___ = preHookFunc(&flag, &value);
+			retVal___ = preHookFunc(sd);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -32709,39 +32733,13 @@ uint64 HP_itemdb_unique_id(int8 flag, int64 value) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.itemdb.unique_id(flag, value);
+		retVal___ = HPMHooks.source.itemdb.unique_id(sd);
 	}
 	if( HPMHooks.count.HP_itemdb_unique_id_post ) {
-		uint64 (*postHookFunc) (uint64 retVal___, int8 *flag, int64 *value);
+		uint64 (*postHookFunc) (uint64 retVal___, struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_unique_id_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_itemdb_unique_id_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &flag, &value);
-		}
-	}
-	return retVal___;
-}
-int HP_itemdb_uid_load(void) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if( HPMHooks.count.HP_itemdb_uid_load_pre ) {
-		int (*preHookFunc) (void);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_uid_load_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_itemdb_uid_load_pre[hIndex].func;
-			retVal___ = preHookFunc();
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.itemdb.uid_load();
-	}
-	if( HPMHooks.count.HP_itemdb_uid_load_post ) {
-		int (*postHookFunc) (int retVal___);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_uid_load_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_itemdb_uid_load_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___);
+			retVal___ = postHookFunc(retVal___, sd);
 		}
 	}
 	return retVal___;
@@ -50926,14 +50924,14 @@ int HP_pet_catch_process2(struct map_session_data *sd, int target_id) {
 	}
 	return retVal___;
 }
-int HP_pet_get_egg(int account_id, int pet_id, int flag) {
+bool HP_pet_get_egg(int account_id, short pet_class, int pet_id) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_pet_get_egg_pre ) {
-		int (*preHookFunc) (int *account_id, int *pet_id, int *flag);
+		bool (*preHookFunc) (int *account_id, short *pet_class, int *pet_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_get_egg_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pet_get_egg_pre[hIndex].func;
-			retVal___ = preHookFunc(&account_id, &pet_id, &flag);
+			retVal___ = preHookFunc(&account_id, &pet_class, &pet_id);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -50941,13 +50939,13 @@ int HP_pet_get_egg(int account_id, int pet_id, int flag) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pet.get_egg(account_id, pet_id, flag);
+		retVal___ = HPMHooks.source.pet.get_egg(account_id, pet_class, pet_id);
 	}
 	if( HPMHooks.count.HP_pet_get_egg_post ) {
-		int (*postHookFunc) (int retVal___, int *account_id, int *pet_id, int *flag);
+		bool (*postHookFunc) (bool retVal___, int *account_id, short *pet_class, int *pet_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_get_egg_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pet_get_egg_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &account_id, &pet_id, &flag);
+			retVal___ = postHookFunc(retVal___, &account_id, &pet_class, &pet_id);
 		}
 	}
 	return retVal___;

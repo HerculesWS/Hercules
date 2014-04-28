@@ -4,7 +4,7 @@
 -- Remember to make a backup before applying.
 -- We are not liable for any data loss this may cause.
 -- Apply in the same database you applied your logs.sql
--- Last revision: November 10, 2013, 19:00
+-- Last revised: March 21, 2014 20:30 GMT
 
 -- Upgrades to table `picklog`
 ALTER TABLE `picklog` MODIFY `type` enum('M','P','L','T','V','S','N','C','A','R','G','E','B','O','I','X','D','U') NOT NULL default 'P';

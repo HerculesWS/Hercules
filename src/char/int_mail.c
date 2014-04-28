@@ -117,10 +117,6 @@ int mail_savemessage(struct mail_message* msg)
 	for (j = 0; j < MAX_SLOTS; j++)
 		StrBuf->Printf(&buf, ", '%d'", msg->item.card[j]);
 	StrBuf->AppendStr(&buf, ")");
-	
-	//Unique Non Stackable Item ID
-	updateLastUid(msg->item.unique_id);
-	dbUpdateUid(sql_handle);
 
 	// prepare and execute query
 	stmt = SQL->StmtMalloc(sql_handle);

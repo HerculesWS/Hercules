@@ -14,6 +14,7 @@
 #include "../common/utils.h"
 #include "../common/conf.h"
 #include "../common/mmo.h" //NAME_LENGTH
+#include "../common/sysinfo.h"
 
 #include "pc.h"
 #include "atcommand.h" // get_atcommand_level()
@@ -1147,15 +1148,8 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	if( !changing_mapservers ) {
 
 		if (battle_config.display_version == 1) {
-			const char* svn = get_svn_revision();
-			const char* git = get_git_hash();
 			char buf[256];
-			if( git[0] != HERC_UNKNOWN_VER )
-				sprintf(buf,"Git Hash: %s", git);
-			else if( svn[0] != HERC_UNKNOWN_VER )
-				sprintf(buf,"SVN Revision: %s", svn);
-			else
-				sprintf(buf,"Unknown Version");
+			sprintf(buf, msg_txt(1295), sysinfo->vcstype(), sysinfo->vcsrevision_src(), sysinfo->vcsrevision_scripts()); // %s revision '%s' (src) / '%s' (scripts)
 			clif->message(sd->fd, buf);
 		}
 		
@@ -1758,6 +1752,13 @@ int pc_disguise(struct map_session_data *sd, int class_) {
 
 	status->set_viewdata(&sd->bl, class_);
 	clif->changeoption(&sd->bl);
+	// We need to update the client so it knows that a costume is being used
+	if( sd->sc.option&OPTION_COSTUME ) {
+		clif->changelook(&sd->bl,LOOK_BASE,sd->vd.class_);
+		clif->changelook(&sd->bl,LOOK_WEAPON,0);
+		clif->changelook(&sd->bl,LOOK_SHIELD,0);
+		clif->changelook(&sd->bl,LOOK_CLOTHES_COLOR,sd->vd.cloth_color);
+	}
 
 	if (sd->bl.prev != NULL) {
 		clif->spawn(&sd->bl);
@@ -2705,9 +2706,7 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 			break;
 		case SP_ADD_VARIABLECAST:
 			if(sd->state.lr_flag != 2)
-
 				sd->bonus.add_varcast += val;
-
 			break;
 	#endif
 		case SP_ADD_MONSTER_DROP_CHAINITEM:
@@ -3993,10 +3992,10 @@ int pc_additem(struct map_session_data *sd,struct item *item_data,int amount,e_l
 		sd->inventory_data[i] = data;
 		clif->additem(sd,i,amount,0);
 	}
-#ifdef NSI_UNIQUE_ID
+
 	if( !itemdb->isstackable2(data) && !item_data->unique_id )
-		sd->status.inventory[i].unique_id = itemdb->unique_id(0,0);
-#endif
+		sd->status.inventory[i].unique_id = itemdb->unique_id(sd);
+
 	logs->pick_pc(sd, log_type, amount, &sd->status.inventory[i],sd->inventory_data[i]);
 
 	sd->weight += w;
@@ -6221,14 +6220,15 @@ int pc_maxparameterincrease(struct map_session_data* sd, int type) {
 
 /**
  * Raises a stat by the specified amount.
+ *
  * Obeys max_parameter limits.
- * Subtracts stat points.
+ * Subtracts status points according to the cost of the increased stat points.
  *
  * @param sd       The target character.
  * @param type     The stat to change (see enum _sp)
- * @param increase The stat increase amount.
- * @return true if the stat was increased by any amount, false if there were no
- *         changes.
+ * @param increase The stat increase (strictly positive) amount.
+ * @retval true  if the stat was increased by any amount.
+ * @retval false if there were no changes.
  */
 bool pc_statusup(struct map_session_data* sd, int type, int increase) {
 	int max_increase = 0, current = 0, needed_points = 0, final_value = 0;
@@ -6277,12 +6277,18 @@ bool pc_statusup(struct map_session_data* sd, int type, int increase) {
 	return true;
 }
 
-/// Raises a stat by the specified amount.
-/// Obeys max_parameter limits.
-/// Does not subtract stat points.
-///
-/// @param type The stat to change (see enum _sp)
-/// @param val The stat increase amount.
+/**
+ * Raises a stat by the specified amount.
+ *
+ * Obeys max_parameter limits.
+ * Does not subtract status points for the cost of the modified stat points.
+ *
+ * @param sd   The target character.
+ * @param type The stat to change (see enum _sp)
+ * @param val  The stat increase (or decrease) amount.
+ * @return the stat increase amount.
+ * @retval 0 if no changes were made.
+ */
 int pc_statusup2(struct map_session_data* sd, int type, int val)
 {
 	int max, need;
@@ -6291,7 +6297,7 @@ int pc_statusup2(struct map_session_data* sd, int type, int val)
 	if( type < SP_STR || type > SP_LUK )
 	{
 		clif->statusupack(sd,type,0,0);
-		return 1;
+		return 0;
 	}
 
 	need = pc->need_status_point(sd,type,1);
@@ -6311,7 +6317,7 @@ int pc_statusup2(struct map_session_data* sd, int type, int val)
 	if( val > 255 )
 		clif->updatestatus(sd,type); // send after the 'ack' to override the truncated value
 
-	return 0;
+	return val;
 }
 
 /*==========================================
@@ -6827,13 +6833,14 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	int i=0,j=0;
 	int64 tick = timer->gettick();
 
-	for(j = 0; j < 5; j++)
+	for(j = 0; j < 5; j++) {
 		if (sd->devotion[j]){
 			struct map_session_data *devsd = map->id2sd(sd->devotion[j]);
 			if (devsd)
 				status_change_end(&devsd->bl, SC_DEVOTION, INVALID_TIMER);
 			sd->devotion[j] = 0;
 		}
+	}
 
 	if(sd->status.pet_id > 0 && sd->pd) {
 		struct pet_data *pd = sd->pd;
@@ -6887,7 +6894,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	npc->script_event(sd,NPCE_DIE);
 		
 	// Clear anything NPC-related when you die and was interacting with one.
-	if (sd->npc_id || sd->npc_shopid) {
+	if ( (sd->npc_id || sd->npc_shopid) && sd->state.dialog) {
 		if (sd->state.using_fake_npc) {
 			clif->clearunit_single(sd->npc_id, CLR_OUTSIGHT, sd->fd);
 			sd->state.using_fake_npc = 0;
@@ -7131,6 +7138,17 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 			}
 		}
 	}
+
+	// Remove autotrade to prevent autotrading from save point
+	if( (sd->state.standalone || sd->state.autotrade)
+	 && (map->list[sd->bl.m].flag.pvp || map->list[sd->bl.m].flag.gvg)
+	  ) {
+		sd->state.autotrade = 0;
+		sd->state.standalone = 0;
+		pc->autotrade_update(sd,PAUC_REMOVE);
+		map->quit(sd);
+	}
+
 	// pvp
 	// disable certain pvp functions on pk_mode [Valaris]
 	if( map->list[sd->bl.m].flag.pvp && !battle_config.pk_mode && !map->list[sd->bl.m].flag.pvp_nocalcrank ) {
@@ -7160,10 +7178,10 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 		}
 	}
 
-
 	//Reset "can log out" tick.
 	if( battle_config.prevent_logout )
 		sd->canlog_tick = timer->gettick() - battle_config.prevent_logout;
+
 	return 1;
 }
 
@@ -7461,7 +7479,13 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 		break;
 	case SP_MANNER:
 		sd->status.manner = val;
-		break;
+		if( val < 0 )
+			sc_start(NULL, &sd->bl, SC_NOCHAT, 100, 0, 0);
+		else {
+			status_change_end(&sd->bl, SC_NOCHAT, INVALID_TIMER);
+			clif->manner_message(sd, 5);
+		}
+		return 1; // status_change_start/status_change_end already sends packets warning the client
 	case SP_FAME:
 		sd->status.fame = val;
 		break;

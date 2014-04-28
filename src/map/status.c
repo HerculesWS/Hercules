@@ -5425,6 +5425,8 @@ short status_calc_aspd(struct block_list *bl, struct status_change *sc, short fl
 		skills2 -= 25;
 	if( sc->data[SC_MELON_BOMB] )
 		skills2 -= sc->data[SC_MELON_BOMB]->val1;
+	if( sc->data[SC_PAIN_KILLER] )
+		skills2 -= sc->data[SC_PAIN_KILLER]->val2;
 
 	if( sc->data[SC_SWING] )
 		skills2 += sc->data[SC_SWING]->val3;
@@ -7755,7 +7757,10 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				unit->stop_attack(bl);
 				break;
 			case SC_NOCHAT:
-				// [GodLesZ] FIXME: is this correct? a hardcoded interval of 60sec? what about configuration ?_?
+				// A hardcoded interval of 60 seconds is expected, as the time that SC_NOCHAT uses is defined by
+				// mmocharstatus.manner, each negative point results in 1 minute with this status activated
+				// This is done this way because the message that the client displays is hardcoded, and only
+				// shows how many minutes are remaining. [Panikon]
 				tick = 60000;
 				val1 = battle_config.manner_system; //Mute filters.
 				if (sd)
@@ -9206,8 +9211,12 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_ITEMSCRIPT:
 			if( sd ) {
 				switch( val1 ) {
-					//case ITEMID_PHREEONI_CARD:
-					//case ITEMID_GHOSTRING_CARD:
+					case ITEMID_PHREEONI_CARD:
+						clif->status_change(bl, SI_FOOD_BASICHIT, 1, tick, 0, 0, 0);
+						break;
+					case ITEMID_GHOSTRING_CARD:
+						clif->status_change(bl,SI_ARMOR_PROPERTY,1,tick,0,0,0);
+						break;
 					case ITEMID_TAO_GUNKA_CARD:
 						clif->status_change(bl,SI_MVPCARD_TAOGUNKA,1,tick,0,0,0);
 						break;
@@ -9384,6 +9393,10 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			break;
 		case SC_OKTOBERFEST:
 			sc->option |= OPTION_OKTOBERFEST;
+			opt_flag |= 0x4;
+			break;
+		case SC__FEINTBOMB_MASTER:
+			sc->option |= OPTION_INVISIBLE;
 			opt_flag |= 0x4;
 			break;
 		default:
@@ -10080,8 +10093,12 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		case SC_ITEMSCRIPT:
 			if( sd ) {
 				switch( sce->val1 ) {
-				//case ITEMID_PHREEONI_CARD:
-				//case ITEMID_GHOSTRING_CARD:
+				case ITEMID_PHREEONI_CARD:
+					clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_FOOD_BASICHIT);
+					break;
+				case ITEMID_GHOSTRING_CARD:
+					clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_ARMOR_PROPERTY);
+					break;
 				case ITEMID_TAO_GUNKA_CARD:
 					clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_MVPCARD_TAOGUNKA);
 					break;
@@ -10161,6 +10178,10 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 			break;
 		case SC_OKTOBERFEST:
 			sc->option &= ~OPTION_OKTOBERFEST;
+			opt_flag |= 0x4;
+			break;
+		case SC__FEINTBOMB_MASTER:
+			sc->option &= ~OPTION_INVISIBLE;
 			opt_flag |= 0x4;
 			break;
 		case SC_ORCISH:

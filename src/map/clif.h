@@ -650,6 +650,7 @@ struct clif_interface {
 	void (*sitting) (struct block_list* bl);
 	void (*standing) (struct block_list* bl);
 	void (*arrow_create_list) (struct map_session_data *sd);
+	void (*refresh_storagewindow) (struct map_session_data *sd);
 	void (*refresh) (struct map_session_data *sd);
 	void (*fame_blacksmith) (struct map_session_data *sd, int points);
 	void (*fame_alchemist) (struct map_session_data *sd, int points);

@@ -2201,12 +2201,12 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		 **/
 		#if MAGIC_REFLECTION_TYPE
 
-		#if defined(DISABLE_RENEWAL)
+		#ifdef RENEWAL
+			if( dmg.dmg_lv != ATK_MISS ) //Wiz SL cancelled and consumed fragment
+		#else
 			// issue:6415 in pre-renewal Kaite reflected the entire damage received
 			// regardless of caster's equipament (Aegis 11.1)
 			if( dmg.dmg_lv != ATK_MISS && type == 1 ) //Wiz SL cancelled and consumed fragment
-		#else
-			if( dmg.dmg_lv != ATK_MISS ) //Wiz SL cancelled and consumed fragment
 		#endif
 			{
 				short s_ele = skill->get_ele(skill_id, skill_lv);
@@ -2628,6 +2628,9 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 				break;
 			case WL_CRIMSONROCK:
 				dir = map->calc_dir(bl,skill->area_temp[4],skill->area_temp[5]);
+				break;
+			case MC_CARTREVOLUTION:
+				dir = 6; // Official servers push target to the West
 				break;
 
 		}
@@ -9073,21 +9076,25 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case SO_EL_ACTION:
 			if( sd ) {
 				int duration = 3000;
-				if( !sd->ed )	break;
+				if( !sd->ed )
+					break;
+				
+				switch(sd->ed->db->class_){
+					case 2115:case 2124:
+					case 2118:case 2121:
+						duration = 6000;
+						break;
+					case 2116:case 2119:
+					case 2122:case 2125:
+						duration = 9000;
+						break;
+				}
+				
 				sd->skill_id_old = skill_id;
 				elemental->action(sd->ed, bl, tick);
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-					switch(sd->ed->db->class_){
-						case 2115:case 2124:
-						case 2118:case 2121:
-							duration = 6000;
-							break;
-						case 2116:case 2119:
-						case 2122:case 2125:
-							duration = 9000;
-							break;
-					}
-					skill->blockpc_start(sd, skill_id, duration);
+												
+				skill->blockpc_start(sd, skill_id, duration);
 			}
 			break;
 
@@ -9489,6 +9496,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				skill->blockhomun_start(hd, skill_id, skill->get_cooldown(skill_id, skill_lv));
 		}
 			break;
+		case SO_ELEMENTAL_SHIELD:/* somehow its handled outside this switch, so we need a empty case otherwise default would be triggered. */
+			break;
 		default:
 			ShowWarning("skill_castend_nodamage_id: Unknown skill used:%d\n",skill_id);
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
@@ -9750,10 +9759,15 @@ int skill_castend_map (struct map_session_data *sd, uint16 skill_id, const char 
 
 	switch(skill_id) {
 		case AL_TELEPORT:
+			// The storage window is closed automatically by the client when there's
+			// any kind of map change, so we need to restore it automatically
+			// issue: 8027
 			if(strcmp(mapname,"Random")==0)
 				pc->randomwarp(sd,CLR_TELEPORT);
 			else if (sd->menuskill_val > 1) //Need lv2 to be able to warp here.
 				pc->setpos(sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
+
+			clif->refresh_storagewindow(sd);
 			break;
 
 		case AL_WARP:
@@ -10413,9 +10427,8 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case SC_FEINTBOMB:
 			skill->unitsetting(src, skill_id, skill_lv, x, y, 0); // Set bomb on current Position
 			clif->skill_nodamage(src, src, skill_id, skill_lv, 1);
-			if( skill->blown(src, src, 3 * skill_lv, unit->getdir(src), 0) && sc){
-				sc->option |= OPTION_INVISIBLE;
-				clif->changeoption(src);
+			if( skill->blown(src, src, 3 * skill_lv, unit->getdir(src), 0) && sc) {
+				sc_start(src, src, SC__FEINTBOMB_MASTER, 100, 0, skill->get_unit_interval(SC_FEINTBOMB));
 			}
 			break;
 
@@ -15878,13 +15891,9 @@ int skill_unit_timer_sub(DBKey key, DBData *data, va_list ap) {
 
 			case UNT_FEINTBOMB: {
 				struct block_list *src = map->id2bl(group->src_id);
-				if( src ){
-					struct status_change *sc = status->get_sc(src);
+				if( src ) {
 					map->foreachinrange(skill->area_sub, &group->unit->bl, su->range, splash_target(src), src, SC_FEINTBOMB, group->skill_lv, tick, BCT_ENEMY|SD_ANIMATION|1, skill->castend_damage_id);
-					if(sc){
-						sc->option &= ~OPTION_INVISIBLE;
-						clif->changeoption(src);
-					}
+					status_change_end(src, SC__FEINTBOMB_MASTER, INVALID_TIMER);
 				}
 				skill->delunit(su);
 				break;

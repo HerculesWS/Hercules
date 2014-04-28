@@ -12,6 +12,7 @@
 #include "../common/socket.h"
 #include "../common/strlib.h"
 #include "../common/utils.h"
+#include "../common/sysinfo.h"
 #include "../common/HPM.h"
 
 #include "map.h"
@@ -3726,8 +3727,6 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 				md.damage = 7 * targetVit * skill_lv * (atk + matk) / 100;
 				/*
 				// Pending [malufett]
-				if( unknown condition )
-					md.damage >>= 1;
 				if( unknown condition ){
 					md.damage = 7 * md.damage % 20;
 					md.damage = 7 * md.damage / 20;
@@ -3739,6 +3738,8 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 					vitfactor = (vitfactor * (matk + atk) / 10) / status_get_vit(target);
 				ftemp = max(0, vitfactor) + (targetVit * (matk + atk)) / 10;
 				md.damage = (int64)(ftemp * 70 * skill_lv / 100);
+				if (target->type == BL_PC)
+					md.damage >>= 1;
 			}
 			md.damage -= totaldef;
 		}
@@ -3750,7 +3751,10 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 			md.damage = 0;
 		if (tsd) md.damage>>=1;
 #endif
-		if (md.damage < 0 || md.damage > INT_MAX>>1)
+		// Some monsters have totaldef higher than md.damage in some cases, leading to md.damage < 0
+		if( md.damage < 0 )
+			md.damage = 0;
+		if( md.damage > INT_MAX>>1 )
 	  	//Overflow prevention, will anyone whine if I cap it to a few billion?
 		//Not capped to INT_MAX to give some room for further damage increase.
 			md.damage = INT_MAX>>1;
@@ -5322,7 +5326,7 @@ void battle_reflect_damage(struct block_list *target, struct block_list *src, st
 				//ATK [{(Target HP / 100) x Skill Level} x Caster Base Level / 125] % + [Received damage x {1 + (Skill Level x 0.2)}]
 				int ratio = (status_get_hp(src) / 100) * sc->data[SC_CRESCENTELBOW]->val1 * status->get_lv(target) / 125;
 				if (ratio > 5000) ratio = 5000; // Maximum of 5000% ATK
-				rdamage = rdamage * ratio / 100 + (damage) * (10 + sc->data[SC_CRESCENTELBOW]->val1 * 20 / 10) / 10;
+				rdamage = ratio + (damage)* (10 + sc->data[SC_CRESCENTELBOW]->val1 * 20 / 10) / 10;
 				skill->blown(target, src, skill->get_blewcount(SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1), unit->getdir(src), 0);
 				clif->skill_damage(target, src, tick, status_get_amotion(src), 0, rdamage,
 						   1, SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1, 6); // This is how official does
@@ -6708,8 +6712,9 @@ static const struct _battle_data {
 	/**
 	 * rAthena
 	 **/
-	{ "max_third_parameter",                &battle_config.max_third_parameter,             120,    10,     10000,          },
-	{ "max_baby_third_parameter",           &battle_config.max_baby_third_parameter,        108,    10,     10000,          },
+	{ "max_third_parameter",                &battle_config.max_third_parameter,             130,    10,     10000,          },
+	{ "max_baby_third_parameter",           &battle_config.max_baby_third_parameter,        117,    10,     10000,          },
+	{ "max_extended_parameter",             &battle_config.max_extended_parameter,          125,    10,     10000,          },
 	{ "atcommand_max_stat_bypass",          &battle_config.atcommand_max_stat_bypass,       0,      0,      100,            },
 	{ "skill_amotion_leniency",             &battle_config.skill_amotion_leniency,          90,     0,      300             },
 	{ "mvp_tomb_enabled",                   &battle_config.mvp_tomb_enabled,                1,      0,      1               },
@@ -6745,8 +6750,6 @@ static const struct _battle_data {
 void Hercules_report(char* date, char *time_c) {
 	int i, bd_size = ARRAYLENGTH(battle_data);
 	unsigned int config = 0;
-	const char *svn = get_svn_revision();
-	const char *git = get_git_hash();
 	char timestring[25];
 	time_t curtime;
 	char* buf;
@@ -6754,7 +6757,7 @@ void Hercules_report(char* date, char *time_c) {
 	enum config_table {
 		C_CIRCULAR_AREA         = 0x0001,
 		C_CELLNOSTACK           = 0x0002,
-		C_CONSOLE_INPUT			= 0x0004,
+		C_CONSOLE_INPUT         = 0x0004,
 		C_SCRIPT_CALLFUNC_CHECK = 0x0008,
 		C_OFFICIAL_WALKPATH     = 0x0010,
 		C_RENEWAL               = 0x0020,
@@ -6765,12 +6768,15 @@ void Hercules_report(char* date, char *time_c) {
 		C_RENEWAL_EDP           = 0x0400,
 		C_RENEWAL_ASPD          = 0x0800,
 		C_SECURE_NPCTIMEOUT     = 0x1000,
-		C_SQL_DBS               = 0x2000,
+		C_SQL_DB_ITEM           = 0x2000,
 		C_SQL_LOGS              = 0x4000,
-		C_MEMWATCH				= 0x8000,
-		C_DMALLOC				= 0x10000,
-		C_GCOLLECT				= 0x20000,
-		C_SEND_SHORTLIST		= 0x40000,
+		C_MEMWATCH              = 0x8000,
+		C_DMALLOC               = 0x10000,
+		C_GCOLLECT              = 0x20000,
+		C_SEND_SHORTLIST        = 0x40000,
+		C_SQL_DB_MOB            = 0x80000,
+		C_SQL_DB_MOBSKILL       = 0x100000,
+		C_PACKETVER_RE          = 0x200000,
 	};
 
 	/* we get the current time */
@@ -6828,10 +6834,18 @@ void Hercules_report(char* date, char *time_c) {
 #ifdef SECURE_NPCTIMEOUT
 	config |= C_SECURE_NPCTIMEOUT;
 #endif
+
+#ifdef PACKETVER_RE
+	config |= C_PACKETVER_RE;
+#endif
 	
 	/* non-define part */
-	if( map->db_use_sql_item_db || map->db_use_sql_mob_db || map->db_use_sql_mob_skill_db )
-		config |= C_SQL_DBS; //TODO: split this config into three.
+	if( map->db_use_sql_item_db )
+		config |= C_SQL_DB_ITEM;
+	if( map->db_use_sql_mob_db )
+		config |= C_SQL_DB_MOB;
+	if( map->db_use_sql_mob_skill_db )
+		config |= C_SQL_DB_MOBSKILL;
 
 	if( logs->config.sql_logs )
 		config |= C_SQL_LOGS;
@@ -6852,30 +6866,40 @@ void Hercules_report(char* date, char *time_c) {
 
 #define BFLAG_LENGTH 35
 
-	CREATE(buf, char, 6 + 12 + 9 + 24 + 41 + 4 + 4 + 4 + ( bd_size * ( BFLAG_LENGTH + 4 ) ) + 1 );
+	CREATE(buf, char, 262 + ( bd_size * ( BFLAG_LENGTH + 4 ) ) + 1 );
 
 	/* build packet */
 
 	WBUFW(buf,0) = 0x3000;
-	WBUFW(buf,2) = 6 + 12 + 9 + 24 + 41 + 4 + 4 + 4 + ( bd_size * ( BFLAG_LENGTH + 4 ) );
-	WBUFW(buf,4) = 0x9e;
+	WBUFW(buf,2) = 262 + ( bd_size * ( BFLAG_LENGTH + 4 ) );
+	WBUFW(buf,4) = 0x9f;
 
 	safestrncpy((char*)WBUFP(buf,6), date, 12);
-	safestrncpy((char*)WBUFP(buf,6 + 12), time_c, 9);
-	safestrncpy((char*)WBUFP(buf,6 + 12 + 9), timestring, 24);
+	safestrncpy((char*)WBUFP(buf,18), time_c, 9);
+	safestrncpy((char*)WBUFP(buf,27), timestring, 24);
 
-	safestrncpy((char*)WBUFP(buf,6 + 12 + 9 + 24), git[0] != HERC_UNKNOWN_VER ? git : svn[0] != HERC_UNKNOWN_VER ? svn : "Unknown", 41);
-	WBUFL(buf,6 + 12 + 9 + 24 + 41) = map->getusers();
+	safestrncpy((char*)WBUFP(buf,51), sysinfo->platform(), 16);
+	safestrncpy((char*)WBUFP(buf,67), sysinfo->osversion(), 50);
+	safestrncpy((char*)WBUFP(buf,117), sysinfo->cpu(), 32);
+	WBUFL(buf,149) = sysinfo->cpucores();
+	safestrncpy((char*)WBUFP(buf,153), sysinfo->arch(), 8);
+	WBUFB(buf,161) = sysinfo->vcstypeid();
+	WBUFB(buf,162) = sysinfo->is64bit();
+	safestrncpy((char*)WBUFP(buf,163), sysinfo->vcsrevision_src(), 41);
+	safestrncpy((char*)WBUFP(buf,204), sysinfo->vcsrevision_scripts(), 41);
+	WBUFB(buf,245) = (sysinfo->is_superuser()? 1 : 0);
+	WBUFL(buf,246) = map->getusers();
 
-	WBUFL(buf,6 + 12 + 9 + 24 + 41 + 4) = config;
-	WBUFL(buf,6 + 12 + 9 + 24 + 41 + 4 + 4) = bd_size;
+	WBUFL(buf,250) = config;
+	WBUFL(buf,254) = PACKETVER;
 
+	WBUFL(buf,258) = bd_size;
 	for( i = 0; i < bd_size; i++ ) {
-		safestrncpy((char*)WBUFP(buf,6 + 12 + 9 + 24 + 41 + 4 + 4 + 4 + ( i * ( BFLAG_LENGTH + 4 ) ) ), battle_data[i].str, 35);
-		WBUFL(buf,6 + 12 + 9 + 24 + 41 + 4 + 4 + 4 + BFLAG_LENGTH + ( i * ( BFLAG_LENGTH + 4 )  )  ) = *battle_data[i].val;
+		safestrncpy((char*)WBUFP(buf,262 + ( i * ( BFLAG_LENGTH + 4 ) ) ), battle_data[i].str, BFLAG_LENGTH);
+		WBUFL(buf,262 + BFLAG_LENGTH + ( i * ( BFLAG_LENGTH + 4 )  )  ) = *battle_data[i].val;
 	}
 
-	chrif->send_report(buf,  6 + 12 + 9 + 24 + 41 + 4 + 4 + 4 + ( bd_size * ( BFLAG_LENGTH + 4 ) ) );
+	chrif->send_report(buf, 262 + ( bd_size * ( BFLAG_LENGTH + 4 ) ) );
 
 	aFree(buf);
 

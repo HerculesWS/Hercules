@@ -107,7 +107,7 @@ enum packet_headers {
 	bgqueue_notify_entryType = 0x8d9,
 	bgqueue_battlebeginsType = 0x8df,
 	notify_bounditemType = 0x2d3,
-#if PACKETVER < 3
+#if PACKETVER < 20110718
 	skill_entryType = 0x11f,
 #elif PACKETVER < 20121212
 	skill_entryType = 0x8c7,

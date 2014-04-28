@@ -702,6 +702,9 @@ typedef enum sc_type {
 	
 	SC__MAELSTROM,
 	SC__CHAOS,
+	
+	SC__FEINTBOMB_MASTER,
+	
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
 // Official status change ids, used to display status icons on the client.

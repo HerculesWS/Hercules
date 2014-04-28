@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef	_COMMON_MMO_H_
-#define	_COMMON_MMO_H_
+#ifndef _COMMON_MMO_H_
+#define _COMMON_MMO_H_
 
 #include "cbasetypes.h"
 #include "../common/db.h"
@@ -60,7 +60,7 @@
 
 // Client support for experimental RagexeRE UI present in 2012-04-10 and 2012-04-18
 #if defined(PACKETVER_RE) && ( PACKETVER == 20120410 || PACKETVER == 20120418 )
-#define	PARTY_RECRUIT
+#define PARTY_RECRUIT
 #endif // PACKETVER_RE && (PACKETVER == 20120410 || PACKETVER == 10120418)
 
 // Comment the following line to disable sc_data saving. [Skotlex]
@@ -113,11 +113,11 @@
 #define MAX_GUILDPOSITION 20    // Increased max guild positions to accomodate for all members [Valaris] (removed) [PoW]
 #define MAX_GUILDEXPULSION 32
 #define MAX_GUILDALLIANCE 16
-#define MAX_GUILDSKILL	15      // Increased max guild skills because of new skills [Sara-chan]
+#define MAX_GUILDSKILL 15       // Increased max guild skills because of new skills [Sara-chan]
 #define MAX_GUILDLEVEL 50
 #define MAX_GUARDIANS 8         // Local max per castle. [Skotlex]
 #define MAX_QUEST_OBJECTIVES 3  // Max quest objectives for a quest
-#define MAX_START_ITEMS 32	    // Max number of items allowed to be given to a char whenever it's created. [mkbu95]
+#define MAX_START_ITEMS 32      // Max number of items allowed to be given to a char whenever it's created. [mkbu95]
 
 // for produce
 #define MIN_ATTRIBUTE 0
@@ -158,7 +158,7 @@
 // Base Homun skill.
 #define HM_SKILLBASE 8001
 #define MAX_HOMUNSKILL 43
-#define MAX_HOMUNCULUS_CLASS	52	// [orn] Increased to 60 from 16 to allow new Homun-S.
+#define MAX_HOMUNCULUS_CLASS 52 // [orn] Increased to 60 from 16 to allow new Homun-S.
 #define HM_CLASS_BASE 6001
 #define HM_CLASS_MAX (HM_CLASS_BASE+MAX_HOMUNCULUS_CLASS-1)
 
@@ -230,6 +230,32 @@ struct item {
 	uint64 unique_id;
 };
 
+//Equip position constants
+enum equip_pos {
+	EQP_HEAD_LOW           = 0x000001,
+	EQP_HEAD_MID           = 0x000200, //512
+	EQP_HEAD_TOP           = 0x000100, //256
+	EQP_HAND_R             = 0x000002, //2
+	EQP_HAND_L             = 0x000020, //32
+	EQP_ARMOR              = 0x000010, //16
+	EQP_SHOES              = 0x000040, //64
+	EQP_GARMENT            = 0x000004, //4
+	EQP_ACC_L              = 0x000008, //8
+	EQP_ACC_R              = 0x000080, //128
+	EQP_COSTUME_HEAD_TOP   = 0x000400, //1024
+	EQP_COSTUME_HEAD_MID   = 0x000800, //2048
+	EQP_COSTUME_HEAD_LOW   = 0x001000, //4096
+	EQP_COSTUME_GARMENT    = 0x002000, //8192
+	//UNUSED_COSTUME_FLOOR = 0x004000, //16384
+	EQP_AMMO               = 0x008000, //32768
+	EQP_SHADOW_ARMOR       = 0x010000, //65536
+	EQP_SHADOW_WEAPON      = 0x020000, //131072
+	EQP_SHADOW_SHIELD      = 0x040000, //262144
+	EQP_SHADOW_SHOES       = 0x080000, //524288
+	EQP_SHADOW_ACC_R       = 0x100000, //1048576
+	EQP_SHADOW_ACC_L       = 0x200000, //2097152
+};
+
 struct point {
 	unsigned short map;
 	short x,y;
@@ -240,17 +266,17 @@ enum e_skill_flag
 	SKILL_FLAG_PERMANENT,
 	SKILL_FLAG_TEMPORARY,
 	SKILL_FLAG_PLAGIARIZED,
-	SKILL_FLAG_UNUSED,			/* needed to maintain the order since the values are saved, can be renamed and used if a new flag is necessary */
-	SKILL_FLAG_PERM_GRANTED,    // Permanent, granted through someway (e.g. script).
+	SKILL_FLAG_UNUSED,       ///< needed to maintain the order since the values are saved, can be renamed and used if a new flag is necessary
+	SKILL_FLAG_PERM_GRANTED, ///< Permanent, granted through someway (e.g. script).
 	/* */
 	/* MUST be the last, because with it the flag value stores a dynamic value (flag+lv) */
 	SKILL_FLAG_REPLACED_LV_0,   // Temporary skill overshadowing permanent skill of level 'N - SKILL_FLAG_REPLACED_LV_0',
 };
 
 enum e_mmo_charstatus_opt {
-	OPT_NONE		= 0x0,
-	OPT_SHOW_EQUIP	= 0x1,
-	OPT_ALLOW_PARTY	= 0x2,
+	OPT_NONE        = 0x0,
+	OPT_SHOW_EQUIP  = 0x1,
+	OPT_ALLOW_PARTY = 0x2,
 };
 
 enum e_item_bound_type {
@@ -319,14 +345,14 @@ struct s_pet {
 	char incuvate;
 };
 
-struct s_homunculus {	//[orn]
+struct s_homunculus { //[orn]
 	char name[NAME_LENGTH];
 	int hom_id;
 	int char_id;
 	short class_;
 	short prev_class;
 	int hp,max_hp,sp,max_sp;
-	unsigned int intimacy;	//[orn]
+	unsigned int intimacy;
 	short hunger;
 	struct s_skill hskill[MAX_HOMUNSKILL]; //albator
 	short skillpts;
@@ -392,7 +418,7 @@ struct mmo_charstatus {
 	unsigned int status_point,skill_point;
 	int hp,max_hp,sp,max_sp;
 	unsigned int option;
-	short manner;
+	short manner; // Defines how many minutes a char will be muted, each negative point is equivalent to a minute.
 	unsigned char karma;
 	short hair,hair_color,clothes_color;
 	int party_id,guild_id,pet_id,hom_id,mer_id,ele_id;
@@ -435,6 +461,8 @@ struct mmo_charstatus {
 	unsigned short mod_exp,mod_drop,mod_death;
 	
 	unsigned char font;
+
+	uint32 uniqueitem_counter;
 };
 
 typedef enum mail_status {
@@ -501,7 +529,7 @@ struct party {
 	unsigned char count; //Count of online characters.
 	unsigned exp : 1,
 				item : 2; //&1: Party-Share (round-robin), &2: pickup style: shared.
-	struct party_member member[MAX_PARTY];	
+	struct party_member member[MAX_PARTY];
 };
 
 struct map_session_data;
@@ -605,14 +633,14 @@ enum fame_list_type {
 };
 
 enum { //Change Guild Infos
-	GBI_EXP	=1,		// Guild Experience (EXP)
-	GBI_GUILDLV,		// Guild level
-	GBI_SKILLPOINT,		// Guild skillpoints
-	GBI_SKILLLV,		// Guild skill_lv ?? seem unused
+	GBI_EXP = 1,    ///< Guild Experience (EXP)
+	GBI_GUILDLV,    ///< Guild level
+	GBI_SKILLPOINT, ///< Guild skillpoints
+	GBI_SKILLLV,    ///< Guild skill_lv ?? seem unused
 };
 
 enum { //Change Member Infos
-	GMI_POSITION	=0,
+	GMI_POSITION = 0,
 	GMI_EXP,
 	GMI_HAIR,
 	GMI_HAIR_COLOR,
@@ -809,50 +837,50 @@ enum {
 };
 
 enum weapon_type {
-	W_FIST,	//Bare hands
-	W_DAGGER,	//1
-	W_1HSWORD,	//2
-	W_2HSWORD,	//3
-	W_1HSPEAR,	//4
-	W_2HSPEAR,	//5
-	W_1HAXE,	//6
-	W_2HAXE,	//7
-	W_MACE,	//8
-	W_2HMACE,	//9 (unused)
-	W_STAFF,	//10
-	W_BOW,	//11
-	W_KNUCKLE,	//12
-	W_MUSICAL,	//13
-	W_WHIP,	//14
-	W_BOOK,	//15
-	W_KATAR,	//16
-	W_REVOLVER,	//17
-	W_RIFLE,	//18
-	W_GATLING,	//19
-	W_SHOTGUN,	//20
-	W_GRENADE,	//21
-	W_HUUMA,	//22
-	W_2HSTAFF,	//23
+	W_FIST,      ///< Bare hands
+	W_DAGGER,    //1
+	W_1HSWORD,   //2
+	W_2HSWORD,   //3
+	W_1HSPEAR,   //4
+	W_2HSPEAR,   //5
+	W_1HAXE,     //6
+	W_2HAXE,     //7
+	W_MACE,      //8
+	W_2HMACE,    //9 (unused)
+	W_STAFF,     //10
+	W_BOW,       //11
+	W_KNUCKLE,   //12
+	W_MUSICAL,   //13
+	W_WHIP,      //14
+	W_BOOK,      //15
+	W_KATAR,     //16
+	W_REVOLVER,  //17
+	W_RIFLE,     //18
+	W_GATLING,   //19
+	W_SHOTGUN,   //20
+	W_GRENADE,   //21
+	W_HUUMA,     //22
+	W_2HSTAFF,   //23
 	MAX_WEAPON_TYPE,
 	// dual-wield constants
-	W_DOUBLE_DD, // 2 daggers
-	W_DOUBLE_SS, // 2 swords
-	W_DOUBLE_AA, // 2 axes
-	W_DOUBLE_DS, // dagger + sword
-	W_DOUBLE_DA, // dagger + axe
-	W_DOUBLE_SA, // sword + axe
+	W_DOUBLE_DD, ///< 2 daggers
+	W_DOUBLE_SS, ///< 2 swords
+	W_DOUBLE_AA, ///< 2 axes
+	W_DOUBLE_DS, ///< dagger + sword
+	W_DOUBLE_DA, ///< dagger + axe
+	W_DOUBLE_SA, ///< sword + axe
 };
 
 enum ammo_type {
-	A_ARROW = 1,
-	A_DAGGER,   //2
-	A_BULLET,   //3
-	A_SHELL,    //4
-	A_GRENADE,  //5
-	A_SHURIKEN, //6
-	A_KUNAI,     //7
-	A_CANNONBALL,	//8
-	A_THROWWEAPON	//9
+	A_ARROW        = 1,
+	A_DAGGER,      //2
+	A_BULLET,      //3
+	A_SHELL,       //4
+	A_GRENADE,     //5
+	A_SHURIKEN,    //6
+	A_KUNAI,       //7
+	A_CANNONBALL,  //8
+	A_THROWWEAPON, //9
 };
 
 enum e_char_server_type {

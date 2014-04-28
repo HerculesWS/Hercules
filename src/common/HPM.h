@@ -1,7 +1,7 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 
-#ifndef	_COMMON_HPM_H_
+#ifndef _COMMON_HPM_H_
 #define _COMMON_HPM_H_
 
 #include "../common/cbasetypes.h"
