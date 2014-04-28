@@ -6836,7 +6836,7 @@ void Hercules_report(char* date, char *time_c) {
 #endif
 
 #ifdef PACKETVER_RE
-	config |= C_PACKETVER_RE
+	config |= C_PACKETVER_RE;
 #endif
 	
 	/* non-define part */
