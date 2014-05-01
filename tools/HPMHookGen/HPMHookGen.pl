@@ -550,6 +550,7 @@ $if->{handlerdef} {$if->{notes}
 	int hIndex = 0;${initialization}
 	if( HPMHooks.count.$if->{hname}_pre ) {
 		$if->{predef}
+		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.$if->{hname}_pre; hIndex++ ) {$beforeblock3
 			preHookFunc = HPMHooks.list.$if->{hname}_pre[hIndex].func;
 			$if->{precall}$afterblock3
