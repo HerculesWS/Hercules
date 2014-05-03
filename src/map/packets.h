@@ -2662,7 +2662,7 @@ packet(0x020d,-1);
 	packet(0x023B,26,clif->pFriendsListAdd,2);
 	packet(0x0361,5,clif->pHomMenu,2,4);
 	packet(0x0938,36,clif->pStoragePassword,0);
-	packet(0x09df,7);
+	packet(0x09DF,7);
 #endif
 
 // 2014-03-05bRagexe - Themon
@@ -2696,7 +2696,75 @@ packet(0x020d,-1);
 	packet(0x07E4,26,clif->pFriendsListAdd,2);
 	packet(0x0934,5,clif->pHomMenu,2,4);
 	packet(0x095e,36,clif->pStoragePassword,0);
-	packet(0x09df,7);
+	packet(0x09DF,7);
+#endif
+
+// 2014-04-02gRagexe - Themon
+#if PACKETVER >= 20140402 
+	packet(0x0946,7,clif->pActionRequest,2,6);
+	packet(0x0868,10,clif->pUseSkillToId,2,4,6);
+	packet(0x093F,5,clif->pWalkToXY,2);
+	packet(0x0950,6,clif->pTickSend,2);
+	packet(0x0360,5,clif->pChangeDir,2,4);
+	packet(0x0958,6,clif->pTakeItem,2);
+	packet(0x0882,6,clif->pDropItem,2,4);
+	packet(0x095C,8,clif->pMoveToKafra,2,4);
+	packet(0x085B,8,clif->pMoveFromKafra,2,4);
+	packet(0x0364,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x092D,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x088A,6,clif->pGetCharNameRequest,2);
+	packet(0x07EC,6,clif->pSolveCharName,2);
+	packet(0x0965,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x085D,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x0933,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x091F,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x023B,6,clif->pReqClickBuyingStore,2);
+	packet(0x0867,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0944,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x08AC,18,clif->pPartyBookingRegisterReq,2,4);
+	// packet(0x094C,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x0883,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x0920,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x0890,26,clif->pPartyInvite2,2);
+	// packet(0x088C,4); // CZ_GANGSI_RANK
+	packet(0x089A,26,clif->pFriendsListAdd,2);
+	packet(0x0896,5,clif->pHomMenu,2,4);
+	packet(0x0926,36,clif->pStoragePassword,0);
+	packet(0x09DF,7);
+#endif
+
+// 2014-04-16aRagexe - Themon
+#if PACKETVER >= 20140416 
+	packet(0x0369,7,clif->pActionRequest,2,6);
+	packet(0x083C,10,clif->pUseSkillToId,2,4,6);
+	packet(0x0437,5,clif->pWalkToXY,2);
+	packet(0x035F,6,clif->pTickSend,2);
+	packet(0x0202,5,clif->pChangeDir,2,4);
+	packet(0x07E4,6,clif->pTakeItem,2);
+	packet(0x0362,6,clif->pDropItem,2,4);
+	packet(0x07EC,8,clif->pMoveToKafra,2,4);
+	packet(0x0364,8,clif->pMoveFromKafra,2,4);
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x096A,6,clif->pGetCharNameRequest,2);
+	packet(0x0368,6,clif->pSolveCharName,2);
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);
+	// packet(0x0363,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x022D,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x0802,26,clif->pPartyInvite2,2);
+	// packet(0x0436,4); // CZ_GANGSI_RANK
+	packet(0x023B,26,clif->pFriendsListAdd,2);
+	packet(0x0361,5,clif->pHomMenu,2,4);
+	packet(0x095C,36,clif->pStoragePassword,0);
+	packet(0x09DF,7);
 #endif
 
 /* PacketKeys: http://hercules.ws/board/topic/1105-hercules-wpe-free-june-14th-patch/ */
@@ -2920,6 +2988,14 @@ packet(0x020d,-1);
 
 #if PACKETVER >= 20140305
 	packetKeys(0x116763F2,0x41117DAC,0x7FD13C45); /* Themon */
+#endif
+
+#if PACKETVER >= 20140402
+	packetKeys(0x15D3271C,0x004D725B,0x111A3A37); /* Themon */
+#endif
+
+#if PACKETVER >= 20140416
+	packetKeys(0x04810281,0x42814281,0x42814281); /* Themon */
 #endif
 
 #if defined(OBFUSCATIONKEY1) && defined(OBFUSCATIONKEY2) && defined(OBFUSCATIONKEY3)
