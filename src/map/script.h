@@ -5,17 +5,19 @@
 #ifndef _MAP_SCRIPT_H_
 #define _MAP_SCRIPT_H_
 
-#include "../common/strlib.h" //StringBuf
-#include "../common/cbasetypes.h"
-#include "map.h" //EVENT_NAME_LENGTH
-
 #include <setjmp.h>
 #include <errno.h>
+
+#include "map.h" //EVENT_NAME_LENGTH
+#include "../common/cbasetypes.h"
+#include "../common/db.h"
+#include "../common/mmo.h" // struct item
+#include "../common/sql.h" // Sql
+#include "../common/strlib.h" //StringBuf
 
 /**
  * Declarations
  **/
-struct map_session_data;
 struct eri;
 
 /**

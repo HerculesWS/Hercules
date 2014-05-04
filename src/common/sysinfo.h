@@ -13,23 +13,7 @@
 
 #include "../common/cbasetypes.h"
 
-#ifdef _COMMON_SYSINFO_P_
-struct sysinfo_private {
-	char *platform;
-	char *osversion;
-	char *cpu;
-	int cpucores;
-	char *arch;
-	char *compiler;
-	char *cflags;
-	char *vcstype_name;
-	int vcstype;
-	char *vcsrevision_src;
-	char *vcsrevision_scripts;
-};
-#else
 struct sysinfo_private;
-#endif
 
 /**
  * sysinfo.c interface

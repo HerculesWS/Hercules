@@ -7,11 +7,10 @@
 
 #include "../common/db.h"
 #include "../common/mmo.h"
-#include "../config/core.h"
 
 /* so that developers with --enable-debug can raise signals from any section of the code they'd like */
 #ifdef DEBUG
-	#include <signal.h>
+#	include <signal.h>
 #endif
 
 extern int arg_c;

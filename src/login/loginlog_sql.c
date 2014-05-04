@@ -2,13 +2,18 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#include "loginlog.h"
+
+#include <string.h>
+#include <stdlib.h> // exit
+
 #include "../common/cbasetypes.h"
 #include "../common/mmo.h"
 #include "../common/socket.h"
 #include "../common/sql.h"
 #include "../common/strlib.h"
-#include <string.h>
-#include <stdlib.h> // exit
 
 // global sql settings (in ipban_sql.c)
 static char   global_db_hostname[32] = "127.0.0.1";

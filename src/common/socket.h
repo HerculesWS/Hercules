@@ -5,18 +5,18 @@
 #ifndef _COMMON_SOCKET_H_
 #define _COMMON_SOCKET_H_
 
+#include <time.h>
+
 #include "../common/cbasetypes.h"
 
 #ifdef WIN32
-	#include "../common/winapi.h"
+#	include "../common/winapi.h"
 	typedef long in_addr_t;
 #else
-	#include <sys/types.h>
-	#include <sys/socket.h>
-	#include <netinet/in.h>
+#	include <netinet/in.h>
+#	include <sys/socket.h>
+#	include <sys/types.h>
 #endif
-
-#include <time.h>
 
 struct HPluginData;
 

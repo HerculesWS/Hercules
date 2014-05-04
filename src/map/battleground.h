@@ -5,9 +5,9 @@
 #ifndef _MAP_BATTLEGROUND_H_
 #define _MAP_BATTLEGROUND_H_
 
-#include "../common/mmo.h" // struct party
 #include "clif.h"
 #include "guild.h"
+#include "../common/mmo.h" // struct party
 
 /**
  * Defines

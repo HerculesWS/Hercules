@@ -2,16 +2,19 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#define _H_STRLIB_C_
+#include "strlib.h"
+#undef _H_STRLIB_C_
+
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "../common/cbasetypes.h"
 #include "../common/malloc.h"
 #include "../common/showmsg.h"
-#define STRLIB_C
-#include "strlib.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
-
 
 #define J_MAX_MALLOC_SIZE 65535
 

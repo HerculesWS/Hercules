@@ -2,22 +2,27 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/nullpo.h"
-#include "../common/malloc.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../common/utils.h"
-#include "../common/conf.h"
+#define HERCULES_CORE
+
+#include "../config/core.h" // DBPATH, RENEWAL
 #include "itemdb.h"
-#include "map.h"
-#include "battle.h" // struct battle_config
-#include "script.h" // item script processing
-#include "pc.h"     // W_MUSICAL, W_WHIP
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "battle.h" // struct battle_config
+#include "map.h"
+#include "mob.h"    // MAX_MOB_DB
+#include "pc.h"     // W_MUSICAL, W_WHIP
+#include "script.h" // item script processing
+#include "../common/conf.h"
+#include "../common/malloc.h"
+#include "../common/nullpo.h"
+#include "../common/random.h"
+#include "../common/showmsg.h"
+#include "../common/strlib.h"
+#include "../common/utils.h"
 
 struct itemdb_interface itemdb_s;
 

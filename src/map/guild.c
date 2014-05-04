@@ -2,34 +2,37 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/timer.h"
-#include "../common/nullpo.h"
-#include "../common/malloc.h"
-#include "../common/mapindex.h"
-#include "../common/showmsg.h"
-#include "../common/ers.h"
-#include "../common/strlib.h"
-#include "../common/utils.h"
-#include "../common/HPM.h"
+#define HERCULES_CORE
 
-#include "map.h"
+#include "../config/core.h" // GP_BOUND_ITEMS
 #include "guild.h"
-#include "storage.h"
-#include "battle.h"
-#include "npc.h"
-#include "pc.h"
-#include "status.h"
-#include "mob.h"
-#include "intif.h"
-#include "clif.h"
-#include "skill.h"
-#include "log.h"
-#include "instance.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "battle.h"
+#include "clif.h"
+#include "instance.h"
+#include "intif.h"
+#include "log.h"
+#include "map.h"
+#include "mob.h"
+#include "npc.h"
+#include "pc.h"
+#include "skill.h"
+#include "status.h"
+#include "storage.h"
+#include "../common/HPM.h"
+#include "../common/cbasetypes.h"
+#include "../common/ers.h"
+#include "../common/malloc.h"
+#include "../common/mapindex.h"
+#include "../common/nullpo.h"
+#include "../common/showmsg.h"
+#include "../common/strlib.h"
+#include "../common/timer.h"
+#include "../common/utils.h"
 
 struct guild_interface guild_s;
 

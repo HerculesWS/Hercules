@@ -6,6 +6,7 @@
 #define _MAP_PATH_H_
 
 #include "map.h" // enum cell_chk
+#include "../common/cbasetypes.h"
 
 #define MOVE_COST 10
 #define MOVE_DIAGONAL_COST 14

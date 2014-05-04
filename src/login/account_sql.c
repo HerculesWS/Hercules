@@ -2,17 +2,22 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#include "../config/core.h" // CONSOLE_INPUT
+#include "account.h"
+
+#include <stdlib.h>
+#include <string.h>
+
+#include "../common/console.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h"
 #include "../common/showmsg.h"
+#include "../common/socket.h"
 #include "../common/sql.h"
 #include "../common/strlib.h"
 #include "../common/timer.h"
-#include "../common/console.h"
-#include "../common/socket.h"
-#include "account.h"
-#include <stdlib.h>
-#include <string.h>
 
 /// global defines
 #define ACCOUNT_SQL_DB_VERSION 20110114
@@ -652,7 +657,7 @@ Sql* account_db_sql_up(AccountDB* self) {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
 	Sql_HerculesUpdateCheck(db->accounts);
 #ifdef CONSOLE_INPUT
-	console->setSQL(db->accounts);
+	console->input->setSQL(db->accounts);
 #endif
 	return db->accounts;
 }

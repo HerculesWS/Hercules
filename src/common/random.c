@@ -1,17 +1,23 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
+#define HERCULES_CORE
+
+#include "random.h"
+
+#include <time.h> // time
+
+#include <mt19937ar.h> // init_genrand, genrand_int32, genrand_res53
+
 #include "../common/showmsg.h"
 #include "../common/timer.h" // gettick
-#include "random.h"
+
 #if defined(WIN32)
-	#include "../common/winapi.h"
+#	include "../common/winapi.h"
 #elif defined(HAVE_GETPID) || defined(HAVE_GETTID)
-	#include <sys/types.h>
-	#include <unistd.h>
+#	include <sys/types.h>
+#	include <unistd.h>
 #endif
-#include <time.h> // time
-#include <mt19937ar.h> // init_genrand, genrand_int32, genrand_res53
 
 
 /// Initializes the random number generator with an appropriate seed.

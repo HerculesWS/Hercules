@@ -5,15 +5,13 @@
 #ifndef _MAP_UNIT_H_
 #define _MAP_UNIT_H_
 
-//#include "map.h"
-struct block_list;
-struct unit_data;
-struct map_session_data;
-
 #include "clif.h"  // clr_type
-#include "map.h" // struct block_list
 #include "path.h" // struct walkpath_data
-#include "skill.h" // struct skill_timerskill, struct skill_unit_group, struct skill_unit_group_tickset
+#include "skill.h" // 'MAX_SKILLTIMERSKILL, struct skill_timerskill, struct skill_unit_group, struct skill_unit_group_tickset
+#include "../common/cbasetypes.h"
+
+struct map_session_data;
+struct block_list;
 
 struct unit_data {
 	struct block_list *bl;

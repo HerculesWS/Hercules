@@ -5,9 +5,10 @@
 #ifndef _COMMON_MMO_H_
 #define _COMMON_MMO_H_
 
-#include "cbasetypes.h"
-#include "../common/db.h"
 #include <time.h>
+
+#include "../common/cbasetypes.h"
+#include "../common/db.h"
 
 // server->client protocol version
 //        0 - pre-?
@@ -96,6 +97,7 @@
 //Official Limit: 2.1b ( the var that stores the money doesn't go much higher than this by default )
 #define MAX_BANK_ZENY 2100000000
 
+#define MAX_LEVEL 175
 #define MAX_FAME 1000000000
 #define MAX_CART 100
 #define MAX_SKILL 1478

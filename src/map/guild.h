@@ -5,18 +5,10 @@
 #ifndef _MAP_GUILD_H_
 #define _MAP_GUILD_H_
 
-//#include "../common/mmo.h"
-#include "map.h" // NAME_LENGTH
-
-/**
- * Declarations
- **/
-struct guild;
-struct guild_member;
-struct guild_position;
-struct guild_castle;
-struct map_session_data;
-struct mob_data;
+#include "map.h" // EVENT_NAME_LENGTH, TBL_PC
+#include "../common/cbasetypes.h"
+#include "../common/db.h"
+#include "../common/mmo.h"
 
 /**
  * Defines

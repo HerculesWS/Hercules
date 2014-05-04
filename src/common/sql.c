@@ -2,19 +2,23 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#include "sql.h"
+
+#include <stdlib.h> // strtoul
+#include <string.h> // strlen/strnlen/memcpy/memset
+
 #include "../common/cbasetypes.h"
 #include "../common/malloc.h"
 #include "../common/showmsg.h"
 #include "../common/strlib.h"
 #include "../common/timer.h"
-#include "sql.h"
 
 #ifdef WIN32
-#include "../common/winapi.h"
+#	include "../common/winapi.h" // Needed before mysql.h
 #endif
 #include <mysql.h>
-#include <string.h>// strlen/strnlen/memcpy/memset
-#include <stdlib.h>// strtoul
 
 void hercules_mysql_error_handler(unsigned int ecode);
 

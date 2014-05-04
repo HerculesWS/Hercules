@@ -2,16 +2,19 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/malloc.h"
-#include "../common/strlib.h"
-#include "../common/db.h"
+#define HERCULES_CORE
+
 #include "mapindex.h"
 
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#include "../common/db.h"
+#include "../common/malloc.h"
+#include "../common/mmo.h"
+#include "../common/showmsg.h"
+#include "../common/strlib.h"
 
 /* mapindex.c interface source */
 struct mapindex_interface mapindex_s;

@@ -5,6 +5,10 @@
 #ifndef _MAP_DUEL_H_
 #define _MAP_DUEL_H_
 
+#include "../common/cbasetypes.h"
+
+struct map_session_data;
+
 struct duel {
 	int members_count;
 	int invites_count;

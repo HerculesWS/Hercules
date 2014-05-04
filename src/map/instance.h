@@ -6,8 +6,11 @@
 #define _MAP_INSTANCE_H_
 
 #include "script.h" // struct reg_db
+#include "../common/cbasetypes.h"
 #include "../common/mmo.h" // struct point
+
 struct block_list;
+struct map_session_data;
 
 #define INSTANCE_NAME_LENGTH (60+1)
 

@@ -2,27 +2,29 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/nullpo.h"
-#include "../common/malloc.h"
-#include "../common/showmsg.h"
+#define HERCULES_CORE
 
-#include "map.h" // struct map_session_data
 #include "storage.h"
-#include "chrif.h"
-#include "itemdb.h"
-#include "clif.h"
-#include "intif.h"
-#include "pc.h"
-#include "guild.h"
-#include "battle.h"
-#include "atcommand.h"
-#include "log.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "atcommand.h"
+#include "battle.h"
+#include "chrif.h"
+#include "clif.h"
+#include "guild.h"
+#include "intif.h"
+#include "itemdb.h"
+#include "log.h"
+#include "map.h" // struct map_session_data
+#include "pc.h"
+#include "../common/cbasetypes.h"
+#include "../common/db.h"
+#include "../common/malloc.h"
+#include "../common/nullpo.h"
+#include "../common/showmsg.h"
 
 struct storage_interface storage_s;
 struct guild_storage_interface gstorage_s;

@@ -2,34 +2,37 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/timer.h"
-#include "../common/socket.h" // last_tick
-#include "../common/nullpo.h"
-#include "../common/malloc.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/utils.h"
-#include "../common/strlib.h"
-#include "../common/HPM.h"
+#define HERCULES_CORE
 
+#include "../config/core.h" // GP_BOUND_ITEMS, RENEWAL_EXP
 #include "party.h"
-#include "atcommand.h"	//msg_txt()
-#include "pc.h"
-#include "map.h"
-#include "instance.h"
-#include "battle.h"
-#include "intif.h"
-#include "clif.h"
-#include "log.h"
-#include "skill.h"
-#include "status.h"
-#include "itemdb.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "atcommand.h"	//msg_txt()
+#include "battle.h"
+#include "clif.h"
+#include "instance.h"
+#include "intif.h"
+#include "itemdb.h"
+#include "log.h"
+#include "map.h"
+#include "mob.h" // struct mob_data
+#include "pc.h"
+#include "skill.h"
+#include "status.h"
+#include "../common/HPM.h"
+#include "../common/cbasetypes.h"
+#include "../common/malloc.h"
+#include "../common/nullpo.h"
+#include "../common/random.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h" // last_tick
+#include "../common/strlib.h"
+#include "../common/timer.h"
+#include "../common/utils.h"
 
 struct party_interface party_s;
 

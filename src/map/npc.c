@@ -2,41 +2,44 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/timer.h"
-#include "../common/nullpo.h"
-#include "../common/malloc.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../common/utils.h"
-#include "../common/ers.h"
-#include "../common/db.h"
-#include "../common/socket.h"
-#include "../common/HPM.h"
+#define HERCULES_CORE
 
-#include "map.h"
-#include "log.h"
-#include "clif.h"
-#include "intif.h"
-#include "pc.h"
-#include "status.h"
-#include "itemdb.h"
-#include "script.h"
-#include "mob.h"
-#include "pet.h"
-#include "instance.h"
-#include "battle.h"
-#include "skill.h"
-#include "unit.h"
+#include "../config/core.h" // NPC_SECURE_TIMEOUT_INPUT, NPC_SECURE_TIMEOUT_MENU, NPC_SECURE_TIMEOUT_NEXT, SECURE_NPCTIMEOUT, SECURE_NPCTIMEOUT_INTERVAL
 #include "npc.h"
-#include "chat.h"
 
+#include <errno.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 #include <time.h>
-#include <errno.h>
+
+#include "battle.h"
+#include "chat.h"
+#include "clif.h"
+#include "instance.h"
+#include "intif.h"
+#include "itemdb.h"
+#include "log.h"
+#include "map.h"
+#include "mob.h"
+#include "pc.h"
+#include "pet.h"
+#include "script.h"
+#include "skill.h"
+#include "status.h"
+#include "unit.h"
+#include "../common/HPM.h"
+#include "../common/cbasetypes.h"
+#include "../common/db.h"
+#include "../common/ers.h"
+#include "../common/malloc.h"
+#include "../common/nullpo.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
+#include "../common/strlib.h"
+#include "../common/timer.h"
+#include "../common/utils.h"
 
 struct npc_interface npc_s;
 

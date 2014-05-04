@@ -2,6 +2,15 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#include "mapreg.h"
+
+#include <stdlib.h>
+#include <string.h>
+
+#include "map.h" // map->mysql_handle
+#include "script.h"
 #include "../common/cbasetypes.h"
 #include "../common/db.h"
 #include "../common/ers.h"
@@ -10,11 +19,6 @@
 #include "../common/sql.h"
 #include "../common/strlib.h"
 #include "../common/timer.h"
-#include "map.h" // map->mysql_handle
-#include "script.h"
-#include "mapreg.h"
-#include <stdlib.h>
-#include <string.h>
 
 struct mapreg_interface mapreg_s;
 

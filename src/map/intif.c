@@ -1,37 +1,40 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/timer.h"
-#include "../common/nullpo.h"
-#include "../common/malloc.h"
-#include "../common/strlib.h"
-#include "map.h"
+#define HERCULES_CORE
+
+#include "../config/core.h" // GP_BOUND_ITEMS
+#include "intif.h"
+
+#include <fcntl.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+
+#include "atcommand.h"
 #include "battle.h"
 #include "chrif.h"
 #include "clif.h"
-#include "pc.h"
-#include "intif.h"
-#include "log.h"
-#include "storage.h"
-#include "party.h"
-#include "guild.h"
-#include "pet.h"
-#include "atcommand.h"
-#include "mercenary.h"
-#include "homunculus.h"
 #include "elemental.h"
+#include "guild.h"
+#include "homunculus.h"
+#include "log.h"
 #include "mail.h"
+#include "map.h"
+#include "mercenary.h"
+#include "party.h"
+#include "pc.h"
+#include "pet.h"
 #include "quest.h"
-
-#include <sys/types.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <fcntl.h>
-#include <string.h>
-
+#include "storage.h"
+#include "../common/malloc.h"
+#include "../common/nullpo.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
+#include "../common/strlib.h"
+#include "../common/timer.h"
 
 struct intif_interface intif_s;
 

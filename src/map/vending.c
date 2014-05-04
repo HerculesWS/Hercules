@@ -2,24 +2,27 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/nullpo.h"
-#include "../common/strlib.h"
-#include "../common/utils.h"
-#include "clif.h"
-#include "itemdb.h"
-#include "atcommand.h"
-#include "map.h"
-#include "path.h"
-#include "chrif.h"
+#define HERCULES_CORE
+
 #include "vending.h"
-#include "pc.h"
-#include "npc.h"
-#include "skill.h"
-#include "battle.h"
-#include "log.h"
 
 #include <stdio.h>
 #include <string.h>
+
+#include "atcommand.h"
+#include "battle.h"
+#include "chrif.h"
+#include "clif.h"
+#include "itemdb.h"
+#include "log.h"
+#include "map.h"
+#include "npc.h"
+#include "path.h"
+#include "pc.h"
+#include "skill.h"
+#include "../common/nullpo.h"
+#include "../common/strlib.h"
+#include "../common/utils.h"
 
 struct vending_interface vending_s;
 

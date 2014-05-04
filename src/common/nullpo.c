@@ -2,10 +2,14 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#include "nullpo.h"
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
-#include "../common/nullpo.h"
+
 #include "../common/showmsg.h"
 
 /**

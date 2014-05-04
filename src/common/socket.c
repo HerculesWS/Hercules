@@ -2,48 +2,50 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h"
-#include "../common/timer.h"
-#include "../common/malloc.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../config/core.h"
-#include "../common/HPM.h"
+#define HERCULES_CORE
 
+#include "../config/core.h" // SHOW_SERVER_STATS
 #define _H_SOCKET_C_
-
 #include "socket.h"
+#undef _H_SOCKET_C_
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 
+#include "../common/HPM.h"
+#include "../common/cbasetypes.h"
+#include "../common/malloc.h"
+#include "../common/mmo.h"
+#include "../common/showmsg.h"
+#include "../common/strlib.h"
+#include "../common/timer.h"
+
 #ifdef WIN32
-	#include "../common/winapi.h"
+#	include "../common/winapi.h"
 #else
-	#include <errno.h>
-	#include <sys/socket.h>
-	#include <netinet/in.h>
-	#include <netinet/tcp.h>
-	#include <net/if.h>
-	#include <unistd.h>
-	#include <sys/time.h>
-	#include <sys/ioctl.h>
-	#include <netdb.h>
-	#include <arpa/inet.h>
+#	include <arpa/inet.h>
+#	include <errno.h>
+#	include <net/if.h>
+#	include <netdb.h>
+#	include <netinet/in.h>
+#	include <netinet/tcp.h>
+#	include <sys/ioctl.h>
+#	include <sys/socket.h>
+#	include <sys/time.h>
+#	include <unistd.h>
 
-	#ifndef SIOCGIFCONF
-	#include <sys/sockio.h> // SIOCGIFCONF on Solaris, maybe others? [Shinomori]
-	#endif
-	#ifndef FIONBIO
-	#include <sys/filio.h> // FIONBIO on Solaris [FlavioJS]
-	#endif
+#	ifndef SIOCGIFCONF
+#		include <sys/sockio.h> // SIOCGIFCONF on Solaris, maybe others? [Shinomori]
+#	endif
+#	ifndef FIONBIO
+#		include <sys/filio.h> // FIONBIO on Solaris [FlavioJS]
+#	endif
 
-	#ifdef HAVE_SETRLIMIT
-	#include <sys/resource.h>
-	#endif
+#	ifdef HAVE_SETRLIMIT
+#		include <sys/resource.h>
+#	endif
 #endif
 
 /**

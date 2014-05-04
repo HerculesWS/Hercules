@@ -8,10 +8,10 @@
 #include "map.h" // struct block_list
 #include "status.h" // struct status_change
 #include "unit.h" // struct unit_data
+#include "../common/cbasetypes.h"
+#include "../common/db.h"
 
 struct HPluginData;
-struct block_list;
-struct npc_data;
 struct view_data;
 
 enum npc_parse_options {

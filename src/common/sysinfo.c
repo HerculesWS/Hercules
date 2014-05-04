@@ -4,23 +4,39 @@
 
 /// See sysinfo.h for a description of this file
 
-#define _COMMON_SYSINFO_P_
+#define HERCULES_CORE
+
 #include "sysinfo.h"
-#undef _COMMON_SYSINFO_P_
+
+#include <stdio.h> // fopen
+#include <stdlib.h> // atoi
 
 #include "../common/cbasetypes.h"
 #include "../common/core.h"
-#include "../common/strlib.h"
 #include "../common/malloc.h"
+#include "../common/strlib.h"
 
 #ifdef WIN32
-#include <windows.h>
-#include <string.h> // strlen
+#	include <string.h> // strlen
+#	include <windows.h>
 #else
-#include <unistd.h>
+#	include <unistd.h>
 #endif
-#include <stdio.h> // fopen
-#include <stdlib.h> // atoi
+
+/// Private interface fields
+struct sysinfo_private {
+	char *platform;
+	char *osversion;
+	char *cpu;
+	int cpucores;
+	char *arch;
+	char *compiler;
+	char *cflags;
+	char *vcstype_name;
+	int vcstype;
+	char *vcsrevision_src;
+	char *vcsrevision_scripts;
+};
 
 /// sysinfo.c interface source
 struct sysinfo_interface sysinfo_s;

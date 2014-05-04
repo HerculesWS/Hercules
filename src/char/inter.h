@@ -5,9 +5,10 @@
 #ifndef _CHAR_INTER_H_
 #define _CHAR_INTER_H_
 
-struct accreg;
-#include "../common/sql.h"
 #include "char.h"
+#include "../common/sql.h"
+
+struct accreg;
 
 int inter_init_sql(const char *file);
 void inter_final(void);
