@@ -294,7 +294,7 @@ create differing prices for items in different shops.
 
 You can alternatively use "cashshop" in place of "shop" to use the Cash 
 Shop interface, allowing you to buy items with special points (Currently 
-stored as account vars in global_reg #CASHPOINTS and #KAFRAPOINTS). This 
+stored as account vars in #CASHPOINTS and #KAFRAPOINTS). This 
 type of shop will not allow you to sell items at it, you may only purchase 
 items here. The layout used to define sale items still count, and 
 "<price>" refers to how many points will be spent purchasing the them.
@@ -440,8 +440,7 @@ temporary - They cease to exist when the server resets.
 
 Prefix: scope and extent
 nothing  - A permanent variable attached to the character, the default 
-           variable type. They are stored with all the account data in the 
-           `global_reg_value` table using type 3.
+           variable type.
 "@"      - A temporary variable attached to the character. 
            They disappear when the character logs out.
 "$"      - A global permanent variable. 
@@ -466,9 +465,7 @@ nothing  - A permanent variable attached to the character, the default
            These are used with the instancing system, and are unique to 
            each party's instance.
 "#"      - A permanent local account variable.
-           They are stored in the 'global_reg_value' table using type 2.
 "##"     - A permanent global account variable stored by the login server. 
-           They are stored in the 'global_reg_value' table, using type 1. 
            The only difference you will note from normal # variables is 
            when you have multiple char-servers connected to the same 
            login-server. The # variables are unique to each char-server, 
