@@ -2935,7 +2935,8 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 /// shop/cashshop/npc: <map name>,<x>,<y>,<facing>%TAB%duplicate(<name of target>)%TAB%<NPC Name>%TAB%<sprite id>
 /// npc: -%TAB%duplicate(<name of target>)%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>
 /// npc: <map name>,<x>,<y>,<facing>%TAB%duplicate(<name of target>)%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>
-const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath)
+/// !!Only NPO_ONINIT is available trough options!!
+const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int options)
 {
 	int x, y, dir, m, xs = -1, ys = -1;
 	char mapname[32];
@@ -3074,6 +3075,20 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 
 	nd->u.scr.timerid = INVALID_TIMER;
 
+	if( type == SCRIPT && options&NPO_ONINIT ) {
+		// From npc_parse_script
+		char evname[EVENT_NAME_LENGTH];
+		struct event_data *ev;
+
+		snprintf(evname, ARRAYLENGTH(evname), "%s::OnInit", nd->exname);
+
+		if( ( ev = (struct event_data*)strdb_get(npc->ev_db, evname) ) ) {
+
+			//Execute OnInit
+			script->run(nd->u.scr.script,ev->pos,0,nd->bl.id);
+
+		}
+	}
 	return end;
 }
 
@@ -3137,7 +3152,7 @@ int npc_duplicate4instance(struct npc_data *snd, int16 m) {
 		else
 			snprintf(w4, sizeof(w4), "%d", snd->class_);
 
-		npc->parse_duplicate(w1, w2, w3, w4, stat_buf, stat_buf, "INSTANCING");
+		npc->parse_duplicate(w1, w2, w3, w4, stat_buf, stat_buf, "INSTANCING", NPO_NONE);
 	}
 
 	return 0;
@@ -4094,7 +4109,7 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 		}
 		else if( (i=0, sscanf(w2,"duplicate%n",&i), (i > 0 && w2[i] == '(')) && count > 3 )
 		{
-			p = npc->parse_duplicate(w1,w2,w3,w4, p, buffer, filepath);
+			p = npc->parse_duplicate(w1,w2,w3,w4, p, buffer, filepath, (runOnInit?NPO_ONINIT:NPO_NONE));
 		}
 		else if( (strcmp(w2,"monster") == 0 || strcmp(w2,"boss_monster") == 0) && count > 3 )
 		{

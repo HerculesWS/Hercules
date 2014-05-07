@@ -1421,29 +1421,61 @@ int mapif_parse_GuildMessage(int fd,int guild_id,int account_id,char *mes,int le
 	return mapif_guild_message(guild_id,account_id,mes,len, fd);
 }
 
-// Modification of the guild
+/**
+ * Changes basic guild information
+ * The types are available in mmo.h::guild_basic_info
+ **/
 int mapif_parse_GuildBasicInfoChange(int fd, int guild_id, int type, const void *data, int len) {
 	struct guild *g;
-	short value = *((const int16 *)data);
+	struct guild_skill gd_skill;
+	short value;
 	g = inter_guild_fromsql(guild_id);
-	if(g==NULL)
+
+	if( g == NULL )
 		return 0;
 
 	switch(type) {
+		case GBI_EXP:
+			value = *((const int16 *)data);
+			if( g->exp+value < 0 )
+				return 0;
+			g->exp += value;
+			guild_calcinfo(g);
+			break;
+
 		case GBI_GUILDLV:
+			value = *((const int16 *)data);
 			if (value > 0 && g->guild_lv + value <= MAX_GUILDLEVEL) {
 				g->guild_lv += value;
 				g->skill_point += value;
 			} else if (value < 0 && g->guild_lv + value >= 1)
 				g->guild_lv += value;
-			mapif_guild_info(-1,g);
-			g->save_flag |= GS_LEVEL;
-			return 0;
-		default:
-			ShowError("int_guild: GuildBasicInfoChange: Unknown type %d\n",type);
 			break;
+
+		case GBI_SKILLPOINT:
+			value = *((const int16 *)data);
+			if( g->skill_point+value < 0 )
+				return 0;
+			g->skill_point += value;
+			break;
+
+		case GBI_SKILLLV:
+			gd_skill = *((const struct guild_skill*)data);
+			memcpy(&(g->skill[(gd_skill.id - GD_SKILLBASE)]), &gd_skill, sizeof(gd_skill));
+			if( !guild_calcinfo(g) )
+				mapif_guild_info(-1,g);
+			g->save_flag |= GS_SKILL;
+			mapif_guild_skillupack(g->guild_id, gd_skill.id, 0);
+			break;
+
+		default:
+			ShowError("int_guild: GuildBasicInfoChange: Unknown type %d, see mmo.h::guild_basic_info for more information\n",type);
+			return 0;
 	}
-	mapif_guild_basicinfochanged(guild_id,type,data,len);
+	mapif_guild_info(-1,g);
+	g->save_flag |= GS_LEVEL;
+	// Information is already sent in mapif_guild_info
+	//mapif_guild_basicinfochanged(guild_id,type,data,len);
 	return 0;
 }
 

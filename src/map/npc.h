@@ -237,7 +237,7 @@ struct npc_interface {
 	void (*convertlabel_db) (struct npc_label_list *label_list, const char *filepath);
 	const char* (*skip_script) (const char *start, const char *buffer, const char *filepath);
 	const char* (*parse_script) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int options);
-	const char* (*parse_duplicate) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
+	const char* (*parse_duplicate) (char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int options);
 	int (*duplicate4instance) (struct npc_data *snd, int16 m);
 	void (*setcells) (struct npc_data *nd);
 	int (*unsetcells_sub) (struct block_list *bl, va_list ap);

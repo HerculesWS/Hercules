@@ -370,7 +370,11 @@ const char* job_name(int class_) {
 }
 
 /* [Dekamaster/Nightroad] */
-const char * geoip_countryname[253] = {"Unknown","Asia/Pacific Region","Europe","Andorra","United Arab Emirates","Afghanistan","Antigua and Barbuda","Anguilla","Albania","Armenia","Netherlands Antilles",
+#define GEOIP_MAX_COUNTRIES 255
+#define GEOIP_STRUCTURE_INFO_MAX_SIZE 20
+#define GEOIP_COUNTRY_BEGIN 16776960
+
+const char * geoip_countryname[GEOIP_MAX_COUNTRIES] = {"Unknown","Asia/Pacific Region","Europe","Andorra","United Arab Emirates","Afghanistan","Antigua and Barbuda","Anguilla","Albania","Armenia","Netherlands Antilles",
 		"Angola","Antarctica","Argentina","American Samoa","Austria","Australia","Aruba","Azerbaijan","Bosnia and Herzegovina","Barbados",
 		"Bangladesh","Belgium","Burkina Faso","Bulgaria","Bahrain","Burundi","Benin","Bermuda","Brunei Darussalam","Bolivia",
 		"Brazil","Bahamas","Bhutan","Bouvet Island","Botswana","Belarus","Belize","Canada","Cocos (Keeling) Islands","Congo, The Democratic Republic of the",
@@ -395,17 +399,15 @@ const char * geoip_countryname[253] = {"Unknown","Asia/Pacific Region","Europe",
 		"Tanzania, United Republic of","Ukraine","Uganda","United States Minor Outlying Islands","United States","Uruguay","Uzbekistan","Holy See (Vatican City State)","Saint Vincent and the Grenadines","Venezuela",
 		"Virgin Islands, British","Virgin Islands, U.S.","Vietnam","Vanuatu","Wallis and Futuna","Samoa","Yemen","Mayotte","Serbia","South Africa",
 		"Zambia","Montenegro","Zimbabwe","Anonymous Proxy","Satellite Provider","Other","Aland Islands","Guernsey","Isle of Man","Jersey",
-		"Saint Barthelemy","Saint Martin"};
-unsigned char *geoip_cache;
-void geoip_readdb(void){
-	struct stat bufa;
-	FILE *db=fopen("./db/GeoIP.dat","rb");
-	fstat(fileno(db), &bufa);
-	geoip_cache = (unsigned char *) malloc(sizeof(unsigned char) * bufa.st_size);
-	if(fread(geoip_cache, sizeof(unsigned char), bufa.st_size, db) != bufa.st_size) { ShowError("geoip_cache reading didn't read all elements \n"); }
-	fclose(db);
-	ShowStatus("Finished Reading "CL_GREEN"GeoIP"CL_RESET" Database.\n");
-}
+		"Saint Barthelemy", "Saint Martin", "Bonaire, Saint Eustatius and Saba", "South Sudan"};
+/**
+ * GeoIP information
+ **/
+struct s_geoip {
+	unsigned char *cache; // GeoIP.dat information see geoip_init()
+	bool active;
+} geoip;
+
 /* [Dekamaster/Nightroad] */
 /* WHY NOT A DBMAP: There are millions of entries in GeoIP and it has its own algorithm to go quickly through them, a DBMap wouldn't be efficient */
 const char* geoip_getcountry(uint32 ipnum){
@@ -414,8 +416,11 @@ const char* geoip_getcountry(uint32 ipnum){
 	const unsigned char *buf;
 	unsigned int offset = 0;
 
+	if( geoip.active == false )
+		return geoip_countryname[0];
+
 	for (depth = 31; depth >= 0; depth--) {
-		buf = geoip_cache + (long)6 *offset;
+		buf = geoip.cache + (long)6 *offset;
 		if (ipnum & (1 << depth)) {
 			/* Take the right-hand branch */
 			x =   (buf[3*1 + 0] << (0*8))
@@ -427,13 +432,94 @@ const char* geoip_getcountry(uint32 ipnum){
 				+ (buf[3*0 + 1] << (1*8))
 				+ (buf[3*0 + 2] << (2*8));
 		}
-		if (x >= 16776960) {
-			x=x-16776960;
+		if (x >= GEOIP_COUNTRY_BEGIN) {
+			x = x-GEOIP_COUNTRY_BEGIN;
+
+			if( x > GEOIP_MAX_COUNTRIES )
+				return geoip_countryname[0];
+
 			return geoip_countryname[x];
 		}
 		offset = x;
 	}
+	ShowError("geoip_getcountry(): Error traversing database for ipnum %d\n", ipnum);
+	ShowWarning("geoip_getcountry(): Possible database corruption!\n");
+
 	return geoip_countryname[0];
+}
+
+/**
+ * Disables GeoIP
+ * frees geoip.cache
+ **/
+void geoip_final( void ) {
+	if( geoip.cache )
+		aFree(geoip.cache);
+
+	if( geoip.active ) {
+		ShowStatus("GeoIP "CL_RED"disabled"CL_RESET".\n");
+		geoip.active = false;
+	}
+}
+
+/**
+ * Reads GeoIP database and stores it into memory
+ * geoip.cache should be freed after use!
+ * http://dev.maxmind.com/geoip/legacy/geolite/
+ **/
+void geoip_init(void) {
+	int i, fno;
+	char db_type = 1;
+	unsigned char delim[3];
+	struct stat bufa;
+	FILE *db;
+
+	geoip.active = true;
+
+	db = fopen("./db/GeoIP.dat","rb");
+	if( db == NULL ) {
+		ShowError("geoip_readdb: Error reading GeoIP.dat!\n");
+		geoip_final();
+		return;
+	}
+	fno = fileno(db);
+	if( fstat(fno, &bufa) < 0 ) {
+		ShowError("geoip_readdb: Error stating GeoIP.dat! Error %d\n", errno);
+		geoip_final();
+		return;
+	}
+	geoip.cache = aMalloc( (sizeof(geoip.cache) * bufa.st_size) );
+	if( fread(geoip.cache, sizeof(unsigned char), bufa.st_size, db) != bufa.st_size ) {
+		ShowError("geoip_cache: Couldn't read all elements!\n");
+		fclose(db);
+		geoip_final();
+		return;
+	}
+
+	// Search database type
+	lseek(fno, -3l, SEEK_END);
+	for( i = 0; i < GEOIP_STRUCTURE_INFO_MAX_SIZE; i++ ) {
+		read(fno, delim, 3);
+		if( delim[0] == 255 && delim[1] == 255 && delim[2] == 255 ) {
+			read(fno, &db_type, 1);
+			break;
+		} else {
+			lseek(fno, -4l, SEEK_CUR);
+		}
+	}
+	
+	fclose(db);
+
+	if( db_type != 1 ) {
+		if( db_type )
+			ShowError("geoip_init(): Database type is not supported %d!\n", db_type);
+		else
+			ShowError("geoip_init(): GeoIP is corrupted!\n");
+
+		geoip_final();
+		return;
+	}
+	ShowStatus("Finished Reading "CL_GREEN"GeoIP"CL_RESET" Database.\n");
 }
 
 /**
@@ -934,7 +1020,7 @@ int inter_init_sql(const char *file)
 	inter_mail_sql_init();
 	inter_auction_sql_init();
 
-	geoip_readdb();
+	geoip_init();
 	msg_config_read("conf/messages.conf", false);
 	return 0;
 }
@@ -954,6 +1040,7 @@ void inter_final(void)
 	inter_mail_sql_final();
 	inter_auction_sql_final();
 
+	geoip_final();
 	do_final_msg();
 	return;
 }

@@ -2846,6 +2846,7 @@ int map_eraseipport(unsigned short map_index, uint32 ip, uint16 port) {
  * [Shinryo]: Init the mapcache
  *------------------------------------------*/
 char *map_init_mapcache(FILE *fp) {
+	struct map_cache_main_header header;
 	size_t size = 0;
 	char *buffer;
 
@@ -2866,6 +2867,19 @@ char *map_init_mapcache(FILE *fp) {
 	// Read file into buffer..
 	if(fread(buffer, sizeof(char), size, fp) != size) {
 		ShowError("map_init_mapcache: Could not read entire mapcache file\n");
+		return NULL;
+	}
+
+	rewind(fp);
+
+	// Get main header to verify if data is corrupted
+	if( fread(&header, sizeof(header), 1, fp) != 1 ) {
+		ShowError("map_init_mapcache: Error obtaining main header!\n");
+		return NULL;
+	}
+	ShowError("Map cache is corrupted!\r"); // If the file is totally corrupted this will allow us to warn the user
+	if( GetULong((unsigned char *)&(header.file_size)) != size ) {
+		ShowError("map_init_mapcache: Map cache is corrupted!\n");
 		return NULL;
 	}
 

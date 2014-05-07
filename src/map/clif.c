@@ -18179,6 +18179,7 @@ void clif_parse_NPCShopClosed(int fd, struct map_session_data *sd) {
 }
 /* NPC Market (by Ind after an extensive debugging of the packet, only possible thanks to Yommy <3) */
 void clif_npc_market_open(struct map_session_data *sd, struct npc_data *nd) {
+#if PACKETVER >= 20131223
 	struct npc_item_list *shop = nd->u.scr.shop->item;
 	unsigned short shop_size = nd->u.scr.shop->items, i, c;
 	struct item_data *id = NULL;
@@ -18199,12 +18200,14 @@ void clif_npc_market_open(struct map_session_data *sd, struct npc_data *nd) {
 	npcmarket_open.PacketLength = 4 + ( sizeof(npcmarket_open.list[0]) * c );
 
 	clif->send(&npcmarket_open,npcmarket_open.PacketLength,&sd->bl,SELF);
+#endif
 }
 void clif_parse_NPCMarketClosed(int fd, struct map_session_data *sd) {
 	/* TODO track the state <3~ */
 	sd->npc_shopid = 0;
 }
 void clif_npc_market_purchase_ack(struct map_session_data *sd, struct packet_npc_market_purchase *req, unsigned char response) {
+#if PACKETVER >= 20131223
 	unsigned short c = 0;
 
 	npcmarket_result.PacketType = npcmarketresultackType;
@@ -18237,11 +18240,14 @@ void clif_npc_market_purchase_ack(struct map_session_data *sd, struct packet_npc
 	npcmarket_result.PacketLength = 5 + ( sizeof(npcmarket_result.list[0]) * c );;
 
 	clif->send(&npcmarket_result,npcmarket_result.PacketLength,&sd->bl,SELF);
+#endif
 }
 void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd) {
+#if PACKETVER >= 20131223
 	struct packet_npc_market_purchase *p = P2PTR(fd);
 
 	clif->npc_market_purchase_ack(sd,p,npc->market_buylist(sd,(p->PacketLength - 4) / sizeof(p->list[0]),p));
+#endif
 }
 /* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {

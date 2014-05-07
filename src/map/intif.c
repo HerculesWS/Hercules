@@ -692,7 +692,10 @@ int intif_guild_message(int guild_id,int account_id,const char *mes,int len)
 	return 0;
 }
 
-// Request a change of Guild basic information
+/**
+ * Requests to change a basic guild information, it is parsed via mapif_parse_GuildBasicInfoChange
+ * To see the information types that can be changed see mmo.h::guild_basic_info
+ **/
 int intif_guild_change_basicinfo(int guild_id,int type,const void *data,int len)
 {
 	if (intif->CheckForCharServer())
@@ -1237,6 +1240,21 @@ void intif_parse_GuildBasicInfoChanged(int fd) {
 		case GBI_EXP:        g->exp = RFIFOQ(fd,10); break;
 		case GBI_GUILDLV:    g->guild_lv = RFIFOW(fd,10); break;
 		case GBI_SKILLPOINT: g->skill_point = RFIFOL(fd,10); break;
+		case GBI_SKILLLV: {
+			int idx, max;
+			struct guild_skill *gs = (struct guild_skill *)RFIFOP(fd,10);
+
+			if( gs == NULL )
+				return;
+
+			idx = gs->id - GD_SKILLBASE;
+			max = guild->skill_get_max(gs->id);
+			if( gs->lv > max )
+				gs->lv = max;
+
+			memcpy(&(g->skill[idx]), gs, sizeof(g->skill[idx]));
+			break;
+		}
 	}
 }
 

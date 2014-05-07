@@ -632,11 +632,21 @@ enum fame_list_type {
 	RANKTYPE_PK         = 3, //Not supported yet
 };
 
-enum { //Change Guild Infos
+/**
+ * Guild Basic Information
+ * It is used to request changes via intif_guild_change_basicinfo in map-server and to
+ * signalize changes made in char-server via mapif_parse_GuildMemberInfoChange
+ **/
+enum guild_basic_info {
 	GBI_EXP = 1,    ///< Guild Experience (EXP)
 	GBI_GUILDLV,    ///< Guild level
 	GBI_SKILLPOINT, ///< Guild skillpoints
-	GBI_SKILLLV,    ///< Guild skill_lv ?? seem unused
+
+	/**
+	 * Changes a skill level, struct guild_skill should be sent.
+	 * All checks regarding max skill level should be done in _map-server_
+	 **/
+	GBI_SKILLLV,    ///< Guild skill_lv
 };
 
 enum { //Change Member Infos
