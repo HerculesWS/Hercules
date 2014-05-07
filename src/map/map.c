@@ -2867,6 +2867,7 @@ char *map_init_mapcache(FILE *fp) {
 	// Read file into buffer..
 	if(fread(buffer, sizeof(char), size, fp) != size) {
 		ShowError("map_init_mapcache: Could not read entire mapcache file\n");
+		aFree(buffer);
 		return NULL;
 	}
 
@@ -2875,11 +2876,13 @@ char *map_init_mapcache(FILE *fp) {
 	// Get main header to verify if data is corrupted
 	if( fread(&header, sizeof(header), 1, fp) != 1 ) {
 		ShowError("map_init_mapcache: Error obtaining main header!\n");
+		aFree(buffer);
 		return NULL;
 	}
 	ShowError("Map cache is corrupted!\r"); // If the file is totally corrupted this will allow us to warn the user
 	if( GetULong((unsigned char *)&(header.file_size)) != size ) {
 		ShowError("map_init_mapcache: Map cache is corrupted!\n");
+		aFree(buffer);
 		return NULL;
 	}
 

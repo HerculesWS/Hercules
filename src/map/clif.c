@@ -61,8 +61,10 @@ static struct packet_itemlist_equip itemlist_equip;
 static struct packet_storelist_normal storelist_normal;
 static struct packet_storelist_equip storelist_equip;
 static struct packet_viewequip_ack viewequip_list;
+#if PACKETVER >= 20131223
 static struct packet_npc_market_result_ack npcmarket_result;
 static struct packet_npc_market_open npcmarket_open;
+#endif
 //#define DUMP_UNKNOWN_PACKET
 //#define DUMP_INVALID_PACKET
 

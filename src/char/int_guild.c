@@ -1437,7 +1437,7 @@ int mapif_parse_GuildBasicInfoChange(int fd, int guild_id, int type, const void 
 	switch(type) {
 		case GBI_EXP:
 			value = *((const int16 *)data);
-			if( g->exp+value < 0 )
+			if( value < 0 && abs(value) > g->exp )
 				return 0;
 			g->exp += value;
 			guild_calcinfo(g);

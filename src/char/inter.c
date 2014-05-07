@@ -453,8 +453,10 @@ const char* geoip_getcountry(uint32 ipnum){
  * frees geoip.cache
  **/
 void geoip_final( void ) {
-	if( geoip.cache )
+	if( geoip.cache ) {
 		aFree(geoip.cache);
+		geoip.cache = NULL;
+	}
 
 	if( geoip.active ) {
 		ShowStatus("GeoIP "CL_RED"disabled"CL_RESET".\n");
@@ -497,14 +499,14 @@ void geoip_init(void) {
 	}
 
 	// Search database type
-	lseek(fno, -3l, SEEK_END);
+	fseek(db, -3l, SEEK_END);
 	for( i = 0; i < GEOIP_STRUCTURE_INFO_MAX_SIZE; i++ ) {
-		read(fno, delim, 3);
+		fread(delim, sizeof(delim[0]), 3, db);
 		if( delim[0] == 255 && delim[1] == 255 && delim[2] == 255 ) {
-			read(fno, &db_type, 1);
+			fread(&db_type, sizeof(db_type), 1, db);
 			break;
 		} else {
-			lseek(fno, -4l, SEEK_CUR);
+			fseek(db, -4l, SEEK_CUR);
 		}
 	}
 	
