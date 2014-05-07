@@ -5091,6 +5091,16 @@ Example:
 	searchstores 10,1;
 
 ---------------------------------------
+
+*delequip <equipment slot>;
+
+This command will destroy whatever is currently equipped in the invoking
+character's specified equipment slot. For a full list of possible equipment 
+slots see 'getequipid'.
+
+This command will return 1 if an item was deleted and 0 otherwise.
+
+---------------------------------------
 //=====================================
 4.1 - End of Player Item-Related Commands
 //=====================================

@@ -7969,6 +7969,9 @@ BUILDIN(delequip)
 	if(i >= 0) {
 		pc->unequipitem(sd,i,3); //recalculate bonus
 		pc->delitem(sd,i,1,0,2,LOG_TYPE_SCRIPT);
+		script_pushint(st,1);
+	} else {
+		script_pushint(st,0);
 	}
 
 	return true;
