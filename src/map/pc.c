@@ -6855,7 +6855,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	}
 
 	if (sd->status.hom_id > 0){
-	    if(battle_config.homunculus_auto_vapor && sd->hd && !sd->hd->sc.data[SC_LIGHT_OF_REGENE])
+	    if(battle_config.homunculus_auto_vapor && sd->hd)
 		    homun->vaporize(sd, HOM_ST_REST);
 	}
 

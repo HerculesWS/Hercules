@@ -1721,9 +1721,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					skillratio += 1100;
 					break;
 				case MH_ERASER_CUTTER:
-					if(skill_lv%2) skillratio += 400; //600:800:1000
-					else skillratio += 700; //1000:1200
-					skillratio += 100 * skill_lv;
+					skillratio += 400 + 100 * skill_lv + (skill_lv%2 > 0 ? 0 : 300);
 					break;
 				case MH_XENO_SLASHER:
 					if(skill_lv%2) skillratio += 350 + 50 * skill_lv; //500:600:700
@@ -2107,15 +2105,6 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					skillratio = skillratio * status->get_lv(src) / 100;
 					if( st->rhw.ele == ELE_FIRE )
 						skillratio += 100 * skill_lv;
-					break;
-				case RK_CRUSHSTRIKE:
-					if( sd )
-					{//ATK [{Weapon Level * (Weapon Upgrade Level + 6) * 100} + (Weapon ATK) + (Weapon Weight)]%
-						short index = sd->equip_index[EQI_HAND_R];
-						if( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON )
-							skillratio += -100 + sd->inventory_data[index]->weight/10 + st->rhw.atk +
-								100 * sd->inventory_data[index]->wlv * (sd->status.inventory[index].refine + 6);
-					}
 					break;
 				case RK_STORMBLAST:
 					skillratio = ((sd ? pc->checkskill(sd,RK_RUNEMASTERY) : 1) + status_get_int(src) / 8) * 100;
@@ -2546,7 +2535,18 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					skillratio += sc->data[SC_LKCONCENTRATION]->val2;
 				if( sd && sd->status.weapon == W_KATAR && (i=pc->checkskill(sd,ASC_KATAR)) > 0 )
 					skillratio += skillratio * (10 + 2 * i) / 100;
-#endif
+#endif	
+				if( sc && sc->data[SC_CRUSHSTRIKE] ){
+					if( sd )
+					{//ATK [{Weapon Level * (Weapon Upgrade Level + 6) * 100} + (Weapon ATK) + (Weapon Weight)]%
+						short index = sd->equip_index[EQI_HAND_R];
+						if( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON )
+							skillratio += -100 + sd->inventory_data[index]->weight/10 + st->rhw.atk +
+								100 * sd->inventory_data[index]->wlv * (sd->status.inventory[index].refine + 6);
+					}
+					status_change_end(src, SC_CRUSHSTRIKE, INVALID_TIMER);
+					skill->break_equip(src,EQP_WEAPON,2000,BCT_SELF); // 20% chance to destroy the weapon.
+				}
 			}
 	}
 	if( skillratio < 1 )
@@ -4304,6 +4304,10 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			cri <<= 1;
 		}
 		switch (skill_id) {
+			case 0:
+				if(!(sc && sc->data[SC_AUTOCOUNTER]))
+					break;
+				status_change_end(src, SC_AUTOCOUNTER, INVALID_TIMER);
 			case KN_AUTOCOUNTER:
 				if(battle_config.auto_counter_type &&
 					(battle_config.auto_counter_type&src->type))
@@ -4653,6 +4657,8 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			ATK_ADDRATE(sc->data[SC_EXEEDBREAK]->val1);
 			status_change_end(src, SC_EXEEDBREAK, INVALID_TIMER);
 		}
+
+
 	#ifdef RENEWAL
 		if( sd && skill_id == NJ_KUNAI ){
 			flag.tdef = 1;
@@ -5647,7 +5653,6 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 			return ATK_BLOCK;
 		}
 	}
-
 	if( tsc && tsc->data[SC_BLADESTOP_WAIT] && !is_boss(src) && (src->type == BL_PC || tsd == NULL || distance_bl(src, target) <= (tsd->status.weapon == W_FIST ? 1 : 2)) )
 	{
 		uint16 skill_lv = tsc->data[SC_BLADESTOP_WAIT]->val1;
@@ -5711,13 +5716,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 								 skill->get_time(MO_CALLSPIRITS, tsc->data[SC_GENTLETOUCH_ENERGYGAIN]->val1),
 								 tsc->data[SC_GENTLETOUCH_ENERGYGAIN]->val1);
 		}
-		if( sc && sc->data[SC_CRUSHSTRIKE] ){
-			uint16 skill_lv = sc->data[SC_CRUSHSTRIKE]->val1;
-			status_change_end(src, SC_CRUSHSTRIKE, INVALID_TIMER);
-			if( skill->attack(BF_WEAPON,src,src,target,RK_CRUSHSTRIKE,skill_lv,tick,0) )
-				return ATK_DEF;
-			return ATK_MISS;
-		}
+
 		if( tsc && tsc->data[SC_MTF_MLEATKED] && rnd()%100 < 20 )
 			clif->skill_nodamage(target, target, SM_ENDURE, 5,
 				sc_start(target,target, SC_ENDURE, 100, 5, skill->get_time(SM_ENDURE, 5)));

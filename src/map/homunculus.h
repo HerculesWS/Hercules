@@ -140,6 +140,7 @@ struct homunculus_interface {
 	void (*exp_db_read) (void);
 	void (*addspiritball) (struct homun_data *hd, int max);
 	void (*delspiritball) (struct homun_data *hd, int count, int type);
+	int8 (*get_intimacy_grade) (struct homun_data *hd);
 };
 
 struct homunculus_interface *homun;

@@ -10109,7 +10109,7 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 
 	if (sd->sc.count &&
 		(sd->sc.data[SC_TRICKDEAD] ||
-		sd->sc.data[SC_AUTOCOUNTER] ||
+		(sd->sc.data[SC_AUTOCOUNTER] && action_type != 0x07) ||
 		 sd->sc.data[SC_BLADESTOP] ||
 		 sd->sc.data[SC_DEEP_SLEEP] ||
 		 sd->sc.data[SC__MANHOLE] ||
@@ -14609,18 +14609,27 @@ void clif_parse_HomMenu(int fd, struct map_session_data *sd) { //[orn]
 /// 0292
 void clif_parse_AutoRevive(int fd, struct map_session_data *sd) {
 	int item_position = pc->search_inventory(sd, ITEMID_TOKEN_OF_SIEGFRIED);
+	int hpsp = 100;
 
-	if (item_position < 0)
-		return;
+	if (item_position < 0){
+		if (sd->sc.data[SC_LIGHT_OF_REGENE])
+			hpsp = 20 * sd->sc.data[SC_LIGHT_OF_REGENE]->val1;
+		else
+			return;
+	}
 
 	if (sd->sc.data[SC_HELLPOWER]) //Cannot res while under the effect of SC_HELLPOWER.
 		return;
 
-	if (!status->revive(&sd->bl, 100, 100))
+	if (!status->revive(&sd->bl, hpsp, hpsp))
 		return;
 
+	if ( item_position > 0)
+		pc->delitem(sd, item_position, 1, 0, 1, LOG_TYPE_CONSUME);
+	else
+		status_change_end(&sd->bl,SC_LIGHT_OF_REGENE,INVALID_TIMER);
+
 	clif->skill_nodamage(&sd->bl,&sd->bl,ALL_RESURRECTION,4,1);
-	pc->delitem(sd, item_position, 1, 0, 1, LOG_TYPE_CONSUME);
 }
 
 

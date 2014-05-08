@@ -1182,6 +1182,24 @@ bool homunculus_read_skill_db_sub(char* split[], int columns, int current) {
 	return true;
 }
 
+int8 homunculus_get_intimacy_grade(struct homun_data *hd) {
+	unsigned int val = hd->homunculus.intimacy / 100;
+	if( val > 100 ) {
+		if( val > 250 ) {
+			if( val > 750 ) {
+				if ( val > 900 )
+					return 4;
+				else
+					return 3;
+			} else
+				return 2;
+		} else
+			return 1;
+	}
+
+	return 0;
+}
+
 void homunculus_skill_db_read(void) {
 	memset(homun->skill_tree,0,sizeof(homun->skill_tree));
 	sv->readdb(map->db_path, "homun_skill_tree.txt", ',', 13, 15, -1, homun->read_skill_db_sub);
@@ -1303,4 +1321,5 @@ void homunculus_defaults(void) {
 	homun->exp_db_read = homunculus_exp_db_read;
 	homun->addspiritball = homunculus_addspiritball;
 	homun->delspiritball = homunculus_delspiritball;
+	homun->get_intimacy_grade = homunculus_get_intimacy_grade;
 }
