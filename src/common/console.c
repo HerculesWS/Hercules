@@ -5,6 +5,7 @@
 #include "../common/cbasetypes.h"
 #include "../common/showmsg.h"
 #include "../common/core.h"
+#include "../common/sysinfo.h"
 #include "../config/core.h"
 #include "console.h"
 
@@ -41,8 +42,7 @@ struct console_interface console_s;
  *	CORE : Display title
  *--------------------------------------*/
 void display_title(void) {
-	const char* svn = get_svn_revision();
-	const char* git = get_git_hash();
+	const char *vcstype = sysinfo->vcstype();
 
 	ShowMessage("\n");
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                                                      "CL_CLL""CL_NORMAL"\n");
@@ -57,10 +57,13 @@ void display_title(void) {
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                    http://hercules.ws/board/                         "CL_CLL""CL_NORMAL"\n");
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                                                      "CL_CLL""CL_NORMAL"\n");
 
-	if( git[0] != HERC_UNKNOWN_VER )
-		ShowInfo("Git Hash: '"CL_WHITE"%s"CL_RESET"'\n", git);
-	else if( svn[0] != HERC_UNKNOWN_VER )
-		ShowInfo("SVN Revision: '"CL_WHITE"%s"CL_RESET"'\n", svn);
+	ShowInfo("Hercules %d-bit for %s\n", sysinfo->is64bit() ? 64 : 32, sysinfo->platform());
+	ShowInfo("%s revision (src): '"CL_WHITE"%s"CL_RESET"'\n", vcstype, sysinfo->vcsrevision_src());
+	ShowInfo("%s revision (scripts): '"CL_WHITE"%s"CL_RESET"'\n", vcstype, sysinfo->vcsrevision_scripts());
+	ShowInfo("OS version: '"CL_WHITE"%s"CL_RESET" [%s]'\n", sysinfo->osversion(), sysinfo->arch());
+	ShowInfo("CPU: '"CL_WHITE"%s [%d]"CL_RESET"'\n", sysinfo->cpu(), sysinfo->cpucores());
+	ShowInfo("Compiled with %s\n", sysinfo->compiler());
+	ShowInfo("Compile Flags: %s\n", sysinfo->cflags());
 }
 #ifdef CONSOLE_INPUT
 #if defined(WIN32)

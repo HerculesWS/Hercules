@@ -217,6 +217,8 @@ sub parse($$) {
 			$rtinit = ' = BL_NUL';
 		} elsif ($x =~ /^enum\s+homun_type$/) { # Known enum homun_type
 			$rtinit = ' = HT_INVALID';
+		} elsif ($x =~ /^enum\s+bg_queue_types$/) { # Known enum bg_queue_types
+			$rtinit = ' = BGQT_INVALID';
 		} elsif ($x =~ /^struct\s+.*$/ or $x eq 'DBData') { # Structs
 			$rtinit = '';
 			$rtmemset = 1;
@@ -548,6 +550,7 @@ $if->{handlerdef} {$if->{notes}
 	int hIndex = 0;${initialization}
 	if( HPMHooks.count.$if->{hname}_pre ) {
 		$if->{predef}
+		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.$if->{hname}_pre; hIndex++ ) {$beforeblock3
 			preHookFunc = HPMHooks.list.$if->{hname}_pre[hIndex].func;
 			$if->{precall}$afterblock3

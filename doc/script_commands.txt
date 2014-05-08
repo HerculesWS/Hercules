@@ -243,9 +243,11 @@ and to make it look southeast it's facing 5.)
 Sprite id is the sprite number used to display this particular NPC. For a 
 full list of sprite id numbers see http://kalen.s79.xrea.com/npc/npce.shtml
 You may also use a monster's ID number instead to display a monster sprite 
-for this NPC. It is possible to use a job sprite as well, but you must 
-first define it as a monster sprite in 'mob_avail.txt', a full description 
-on how to do this is not in the scope of this manual.
+for this NPC, in npcs that have view ids of mobs it's encouraged to use
+OnTouch events with a 2,2 range and with an 'end' after the header to avoid
+bugs (for more info on why see npc_click@map/npc.c). It is possible to use a job
+sprite as well, but you must first define it as a monster sprite in 'mob_avail.txt',
+a full description on how to do this is not in the scope of this manual.
 A '-1' sprite id will make the NPC invisible (and unclickable). 
 A '111' sprite id will make an NPC which does not have a sprite, but is 
 still clickable, which is useful if you want to make a clickable object of 
@@ -292,7 +294,7 @@ create differing prices for items in different shops.
 
 You can alternatively use "cashshop" in place of "shop" to use the Cash 
 Shop interface, allowing you to buy items with special points (Currently 
-stored as account vars in global_reg #CASHPOINTS and #KAFRAPOINTS). This 
+stored as account vars in #CASHPOINTS and #KAFRAPOINTS). This 
 type of shop will not allow you to sell items at it, you may only purchase 
 items here. The layout used to define sale items still count, and 
 "<price>" refers to how many points will be spent purchasing the them.
@@ -438,8 +440,7 @@ temporary - They cease to exist when the server resets.
 
 Prefix: scope and extent
 nothing  - A permanent variable attached to the character, the default 
-           variable type. They are stored with all the account data in the 
-           `global_reg_value` table using type 3.
+           variable type.
 "@"      - A temporary variable attached to the character. 
            They disappear when the character logs out.
 "$"      - A global permanent variable. 
@@ -464,9 +465,7 @@ nothing  - A permanent variable attached to the character, the default
            These are used with the instancing system, and are unique to 
            each party's instance.
 "#"      - A permanent local account variable.
-           They are stored in the 'global_reg_value' table using type 2.
 "##"     - A permanent global account variable stored by the login server. 
-           They are stored in the 'global_reg_value' table, using type 1. 
            The only difference you will note from normal # variables is 
            when you have multiple char-servers connected to the same 
            login-server. The # variables are unique to each char-server, 
@@ -5092,6 +5091,16 @@ Example:
 	searchstores 10,1;
 
 ---------------------------------------
+
+*delequip <equipment slot>;
+
+This command will destroy whatever is currently equipped in the invoking
+character's specified equipment slot. For a full list of possible equipment 
+slots see 'getequipid'.
+
+This command will return 1 if an item was deleted and 0 otherwise.
+
+---------------------------------------
 //=====================================
 4.1 - End of Player Item-Related Commands
 //=====================================
@@ -5182,9 +5191,10 @@ This command will bump up the specified guild skill by the specified
 number of levels. This refers to the invoking character and will only work 
 if the invoking character is a member of a guild AND it's guild master, 
 otherwise no failure message will be given and no error will occur, but 
-nothing will happen - same about the guild skill trying to exceed the 
-possible maximum. The full list of guild skills is available in 
+nothing will happen. The full list of guild skills is available in 
 'db/(pre-)re/skill_db.txt', these are all the GD_ skills at the end.
+If a level higher than the maximum is given as parameter the skill will be
+leveled to the maximum and not above.
 
 // This would give your character's guild one level of Approval 
 // (GD_APPROVAL ID 10000). Notice that if you try to add two levels of 

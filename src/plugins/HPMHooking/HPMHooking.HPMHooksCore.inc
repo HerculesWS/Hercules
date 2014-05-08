@@ -597,6 +597,8 @@ struct {
 	struct HPMHookPoint *HP_clif_standing_post;
 	struct HPMHookPoint *HP_clif_arrow_create_list_pre;
 	struct HPMHookPoint *HP_clif_arrow_create_list_post;
+	struct HPMHookPoint *HP_clif_refresh_storagewindow_pre;
+	struct HPMHookPoint *HP_clif_refresh_storagewindow_post;
 	struct HPMHookPoint *HP_clif_refresh_pre;
 	struct HPMHookPoint *HP_clif_refresh_post;
 	struct HPMHookPoint *HP_clif_fame_blacksmith_pre;
@@ -2567,8 +2569,6 @@ struct {
 	struct HPMHookPoint *HP_itemdb_readdb_sql_post;
 	struct HPMHookPoint *HP_itemdb_unique_id_pre;
 	struct HPMHookPoint *HP_itemdb_unique_id_post;
-	struct HPMHookPoint *HP_itemdb_uid_load_pre;
-	struct HPMHookPoint *HP_itemdb_uid_load_post;
 	struct HPMHookPoint *HP_itemdb_read_pre;
 	struct HPMHookPoint *HP_itemdb_read_post;
 	struct HPMHookPoint *HP_itemdb_destroy_item_data_pre;
@@ -5636,6 +5636,8 @@ struct {
 	int HP_clif_standing_post;
 	int HP_clif_arrow_create_list_pre;
 	int HP_clif_arrow_create_list_post;
+	int HP_clif_refresh_storagewindow_pre;
+	int HP_clif_refresh_storagewindow_post;
 	int HP_clif_refresh_pre;
 	int HP_clif_refresh_post;
 	int HP_clif_fame_blacksmith_pre;
@@ -7606,8 +7608,6 @@ struct {
 	int HP_itemdb_readdb_sql_post;
 	int HP_itemdb_unique_id_pre;
 	int HP_itemdb_unique_id_post;
-	int HP_itemdb_uid_load_pre;
-	int HP_itemdb_uid_load_post;
 	int HP_itemdb_read_pre;
 	int HP_itemdb_read_post;
 	int HP_itemdb_destroy_item_data_pre;

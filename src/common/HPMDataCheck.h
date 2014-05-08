@@ -51,6 +51,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define _COMMON_STRLIB_H_
 	#endif // _COMMON_STRLIB_H_
+	#ifdef _COMMON_SYSINFO_H_
+		{ "sysinfo_interface", sizeof(struct sysinfo_interface) },
+	#else
+		#define _COMMON_SYSINFO_H_
+	#endif // _COMMON_SYSINFO_H_
 	#ifdef _MAP_ATCOMMAND_H_
 		{ "AliasInfo", sizeof(struct AliasInfo) },
 		{ "atcommand_interface", sizeof(struct atcommand_interface) },

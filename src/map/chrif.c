@@ -841,57 +841,18 @@ bool chrif_char_ask_name_answer(int acc, const char* player_name, uint16 type, u
  * Request char server to change sex of char (modified by Yor)
  *------------------------------------------*/
 void chrif_changedsex(int fd) {
-	int acc, sex;
-	struct map_session_data *sd;
-
-	acc = RFIFOL(fd,2);
-	sex = RFIFOL(fd,6);
+	int acc = RFIFOL(fd,2);
+	//int sex = RFIFOL(fd,6); // Dead store. Uncomment if needed again.
 	
 	if ( battle_config.etc_log )
 		ShowNotice("chrif_changedsex %d.\n", acc);
-	
-	sd = map->id2sd(acc);
-	if ( sd ) { //Normally there should not be a char logged on right now!
-		if ( sd->status.sex == sex ) 
-			return; //Do nothing? Likely safe.
-		sd->status.sex = !sd->status.sex;
 
-		// reset skill of some job
-		if ((sd->class_&MAPID_UPPERMASK) == MAPID_BARDDANCER) {
-			int i, idx = 0;
-			// remove specifical skills of Bard classes 
-			for(i = 315; i <= 322; i++) {
-				idx = skill->get_index(i);
-				if (sd->status.skill[idx].id > 0 && sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT) {
-					sd->status.skill_point += sd->status.skill[idx].lv;
-					sd->status.skill[idx].id = 0;
-					sd->status.skill[idx].lv = 0;
-				}
-			}
-			// remove specifical skills of Dancer classes 
-			for(i = 323; i <= 330; i++) {
-				idx = skill->get_index(i);
-				if (sd->status.skill[idx].id > 0 && sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT) {
-					sd->status.skill_point += sd->status.skill[idx].lv;
-					sd->status.skill[idx].id = 0;
-					sd->status.skill[idx].lv = 0;
-				}
-			}
-			clif->updatestatus(sd, SP_SKILLPOINT);
-			// change job if necessary
-			if (sd->status.sex) //Changed from Dancer
-				sd->status.class_ -= 1;
-			else	//Changed from Bard
-				sd->status.class_ += 1;
-			//sd->class_ needs not be updated as both Dancer/Bard are the same.
-		}
-		// save character
-		sd->login_id1++; // change identify, because if player come back in char within the 5 seconds, he can change its characters
-							  // do same modify in login-server for the account, but no in char-server (it ask again login_id1 to login, and don't remember it)
-		clif->message(sd->fd, msg_txt(409)); //"Your sex has been changed (disconnection required to complete the process)..."
-		set_eof(sd->fd); // forced to disconnect for the change
-		map->quit(sd); // Remove leftovers (e.g. autotrading) [Paradox924X]
-	}
+	// Path to activate this response:
+	// Map(start) (0x2b0e) -> Char(0x2727) -> Login
+	// Login(0x2723) [ALL] -> Char (0x2b0d)[ALL] -> Map (HERE)
+	// Char will usually be "logged in" despite being forced to log-out in the begining
+	// of this process, but there's no need to perform map-server specific response
+	// as everything should've been changed through char-server [Panikon]
 }
 /*==========================================
  * Request Char Server to Divorce Players

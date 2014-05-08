@@ -568,9 +568,9 @@ int guild_recv_info(struct guild *sg) {
         if (before.skill_point != g->skill_point)
             clif->guild_skillinfo(sd); //Submit information skills
 
-        if (guild_new) { // Send information and affiliation if unsent
+		if (guild_new) { // Send information and affiliation if unsent
             clif->guild_belonginfo(sd, g);
-            clif->guild_notice(sd, g);
+            //clif->guild_notice(sd, g); Is already sent in clif_parse_LoadEndAck
             sd->guild_emblem_id = g->emblem_id;
         }
     }
@@ -954,7 +954,6 @@ int guild_send_memberinfoshort(struct map_session_data *sd,int online)
 	if(sd->state.connect_new)
 	{	//Note that this works because it is invoked in parse_LoadEndAck before connect_new is cleared.
 		clif->guild_belonginfo(sd,g);
-		clif->guild_notice(sd,g);
 		sd->guild_emblem_id = g->emblem_id;
 	}
 	return 0;

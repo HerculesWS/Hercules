@@ -576,8 +576,7 @@ struct itemdb_interface {
 	int (*readdb_libconfig_sub) (config_setting_t *it, int n, const char *source);
 	int (*readdb_libconfig) (const char *filename);
 	int (*readdb_sql) (const char *tablename);
-	uint64 (*unique_id) (int8 flag, int64 value);
-	int (*uid_load) ();
+	uint64 (*unique_id) (struct map_session_data *sd);
 	void (*read) (bool minimal);
 	void (*destroy_item_data) (struct item_data *self, int free_self);
 	int (*final_sub) (DBKey key, DBData *data, va_list ap);

@@ -4,7 +4,7 @@
 -- Remember to make a backup before applying.
 -- We are not liable for any data loss this may cause.
 -- Apply in the same database you applied your main.sql
--- Last revised: March 26, 2014 12:57 GMT
+-- Last revised: April 26, 2014 12:29 GMT
 
 -- Drop table contents from ´sc_data´ since we use a different status order than rAthena
 -- /!\ WARNING /!\ This will remove _ALL_ of the status effects active on the server
@@ -23,7 +23,8 @@ ALTER TABLE `cart_inventory` MODIFY `bound` tinyint(1) unsigned NOT NULL default
 -- Upgrades for table `char`
 ALTER TABLE `char` CHANGE `moves` `slotchange` SMALLINT(3) UNSIGNED NOT NULL default '0',
 	ADD `char_opt` INT( 11 ) UNSIGNED NOT NULL default '0' AFTER `slotchange`,
-	ADD `font` TINYINT( 3 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `char_opt`;
+	ADD `font` TINYINT( 3 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `char_opt`,
+	MODIFY `uniqueitem_counter` BIGINT(20) UNSIGNED NOT NULL DEFAULT '0';
 
 
 -- Upgrades for table `charlog`
@@ -88,6 +89,8 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1388854043); -- 2014-01-04--16-4
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1389028967); -- 2014-01-06--17-22.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1392832626); -- 2014-02-19--17-57.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1395789302); -- 2014-03-25--23-57.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1396893866); -- 2014-04-07--22-04.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1398477600); -- 2014-04-26--10-00.sql
 
 
 -- Updates to table `storage`

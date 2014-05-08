@@ -2,7 +2,7 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef	_COMMON_SOCKET_H_
+#ifndef _COMMON_SOCKET_H_
 #define _COMMON_SOCKET_H_
 
 #include "../common/cbasetypes.h"

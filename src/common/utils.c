@@ -263,7 +263,59 @@ uint32 MakeDWord(uint16 word0, uint16 word1)
 		( (uint32)(word0        ) )|
 		( (uint32)(word1 << 0x10) );
 }
+/*************************************
+* Big-endian compatibility functions * 
+* From mapcache.c                    *
+*************************************/
 
+// Converts an int16 from current machine order to little-endian
+int16 MakeShortLE(int16 val)
+{
+	unsigned char buf[2];
+	buf[0] = (unsigned char)( (val & 0x00FF)         );
+	buf[1] = (unsigned char)( (val & 0xFF00) >> 0x08 );
+	return *((int16*)buf);
+}
+
+// Converts an int32 from current machine order to little-endian
+int32 MakeLongLE(int32 val)
+{
+	unsigned char buf[4];
+	buf[0] = (unsigned char)( (val & 0x000000FF)         );
+	buf[1] = (unsigned char)( (val & 0x0000FF00) >> 0x08 );
+	buf[2] = (unsigned char)( (val & 0x00FF0000) >> 0x10 );
+	buf[3] = (unsigned char)( (val & 0xFF000000) >> 0x18 );
+	return *((int32*)buf);
+}
+
+// Reads an uint16 in little-endian from the buffer
+uint16 GetUShort(const unsigned char* buf)
+{
+	return	 ( ((uint16)(buf[0]))         )
+			|( ((uint16)(buf[1])) << 0x08 );
+}
+
+// Reads an uint32 in little-endian from the buffer
+uint32 GetULong(const unsigned char* buf)
+{
+	return	 ( ((uint32)(buf[0]))         )
+			|( ((uint32)(buf[1])) << 0x08 )
+			|( ((uint32)(buf[2])) << 0x10 )
+			|( ((uint32)(buf[3])) << 0x18 );
+}
+
+// Reads an int32 in little-endian from the buffer
+int32 GetLong(const unsigned char* buf)
+{
+	return (int32)GetULong(buf);
+}
+
+// Reads a float (32 bits) from the buffer
+float GetFloat(const unsigned char* buf)
+{
+	uint32 val = GetULong(buf);
+	return *((float*)(void*)&val);
+}
 
 /// calculates the value of A / B, in percent (rounded down)
 unsigned int get_percentage(const unsigned int A, const unsigned int B)

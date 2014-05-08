@@ -90,10 +90,6 @@ unsigned int auction_create(struct auction_data *auction)
 	for( j = 0; j < MAX_SLOTS; j++ )
 		StrBuf->Printf(&buf, ",'%d'", auction->item.card[j]);
 	StrBuf->AppendStr(&buf, ")");
-	
-	//Unique Non Stackable Item ID
-	updateLastUid(auction->item.unique_id);
-	dbUpdateUid(sql_handle);
 
 	stmt = SQL->StmtMalloc(sql_handle);
 	if( SQL_SUCCESS != SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))

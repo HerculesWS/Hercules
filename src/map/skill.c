@@ -8526,7 +8526,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				//First we set the success chance based on the caster's build which increases the chance.
 				rate = 10 * skill_lv + rnd_value( sstatus->dex / 12, sstatus->dex / 4 ) + joblvbonus + status->get_lv(src) / 10;
 				// We then reduce the success chance based on the target's build.
-				rate -= rnd_value( tstatus->agi / 6, tstatus->agi / 3 ) - tstatus->luk / 10 - ( dstsd ? (dstsd->max_weight / 10 - dstsd->weight / 10 ) / 100 : 0 ) - status->get_lv(bl) / 10;
+				rate -= rnd_value( tstatus->agi / 6, tstatus->agi / 3 ) + tstatus->luk / 10 + ( dstsd ? (dstsd->max_weight / 10 - dstsd->weight / 10 ) / 100 : 0 ) + status->get_lv(bl) / 10;
 				//Finally we set the minimum success chance cap based on the caster's skill level and DEX.
 				rate = cap_value( rate, skill_lv + sstatus->dex / 20, 100);
 				clif->skill_nodamage(src,bl,skill_id,0,sc_start(src,bl,type,rate,skill_lv,skill->get_time(skill_id,skill_lv)));
@@ -9759,10 +9759,15 @@ int skill_castend_map (struct map_session_data *sd, uint16 skill_id, const char 
 
 	switch(skill_id) {
 		case AL_TELEPORT:
+			// The storage window is closed automatically by the client when there's
+			// any kind of map change, so we need to restore it automatically
+			// issue: 8027
 			if(strcmp(mapname,"Random")==0)
 				pc->randomwarp(sd,CLR_TELEPORT);
 			else if (sd->menuskill_val > 1) //Need lv2 to be able to warp here.
 				pc->setpos(sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
+
+			clif->refresh_storagewindow(sd);
 			break;
 
 		case AL_WARP:

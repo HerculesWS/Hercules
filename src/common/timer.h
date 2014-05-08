@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef	_COMMON_TIMER_H_
-#define	_COMMON_TIMER_H_
+#ifndef _COMMON_TIMER_H_
+#define _COMMON_TIMER_H_
 
 #include "../common/cbasetypes.h"
 

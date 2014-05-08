@@ -14,6 +14,7 @@
 #include "../common/strlib.h"
 #include "../common/utils.h"
 #include "../common/conf.h"
+#include "../common/sysinfo.h"
 
 #include "atcommand.h"
 #include "battle.h"
@@ -403,6 +404,11 @@ ACMD(mapmove) {
 		clif->message(fd, msg_txt(1)); // Map not found.
 		return false;
 	}
+
+	if( sd->bl.m == m && sd->bl.x == x && sd->bl.y == y ) {
+		clif->message(fd, msg_txt(253)); // You already are at your destination!
+		return false;
+	}
 	
 	if ((x || y) && map->getcell(m, x, y, CELL_CHKNOPASS) && pc_get_group_level(sd) < battle_config.gm_ignore_warpable_area) {
 		//This is to prevent the pc->setpos call from printing an error.
@@ -460,12 +466,22 @@ ACMD(where) {
  *------------------------------------------*/
 ACMD(jumpto) {
 	struct map_session_data *pl_sd = NULL;
-		
+
 	if (!message || !*message) {
 		clif->message(fd, msg_txt(911)); // Please enter a player name (usage: @jumpto/@warpto/@goto <char name/ID>).
 		return false;
 	}
-	
+
+	if (sd->bl.m >= 0 && map->list[sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
+		clif->message(fd, msg_txt(248)); // You are not authorized to warp from your current map.
+		return false;
+	}
+
+	if( pc_isdead(sd) ) {
+		clif->message(fd, msg_txt(864)); // "You cannot use this command when dead."
+		return false;
+	}
+
 	if((pl_sd=map->nick2sd((char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_txt(3)); // Character not found.
 		return false;
@@ -475,21 +491,16 @@ ACMD(jumpto) {
 		clif->message(fd, msg_txt(247)); // You are not authorized to warp to this map.
 		return false;
 	}
-	
-	if (sd->bl.m >= 0 && map->list[sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
-		clif->message(fd, msg_txt(248)); // You are not authorized to warp from your current map.
+
+	if( pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y ) {
+		clif->message(fd, msg_txt(253)); // You already are at your destination!
 		return false;
 	}
-	
-	if( pc_isdead(sd) ) {
-		clif->message(fd, msg_txt(864)); // "You cannot use this command when dead."
-		return false;
-	}
-	
+
 	pc->setpos(sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
 	sprintf(atcmd_output, msg_txt(4), pl_sd->status.name); // Jumped to %s
- 	clif->message(fd, atcmd_output);
-	
+	clif->message(fd, atcmd_output);
+
 	return true;
 }
 
@@ -519,6 +530,11 @@ ACMD(jump)
 		clif->message(fd, msg_txt(2));
 		if (!map->search_freecell(NULL, sd->bl.m, &x, &y, 10, 10, 1))
 			x = y = 0; //Invalid cell, use random spot.
+	}
+
+	if( x && y && sd->bl.x == x && sd->bl.y == y ) {
+		clif->message(fd, msg_txt(253)); // You already are at your destination!
+		return false;
 	}
 	
 	pc->setpos(sd, sd->mapindex, x, y, CLR_TELEPORT);
@@ -824,7 +840,11 @@ ACMD(guildstorage)
 		return false;
 	}
 	
-	gstorage->open(sd);
+	if( gstorage->open(sd) ) {
+		clif->message(fd, msg_txt(1201)); // Your guild's storage has already been opened by another member, try again later.
+		return false;
+	}
+
 	clif->message(fd, msg_txt(920)); // Guild storage opened.
 	return true;
 }
@@ -2353,7 +2373,11 @@ ACMD(zeny)
 	    if((ret=pc->payzeny(sd,-zeny,LOG_TYPE_COMMAND,NULL)) == 1)
 			clif->message(fd, msg_txt(41)); // Unable to decrease the number/value.
 	}
-	if(!ret) clif->message(fd, msg_txt(176)); //ret=0 mean cmd success
+
+	if( ret ) //ret != 0 means cmd failure
+		return false;
+
+	clif->message(fd, msg_txt(176));
 	return true;
 }
 
@@ -5183,9 +5207,10 @@ ACMD(clearcart)
 		return false;
 	}
 	
-	if (sd->state.vending == 1) { //Somehow...
-		return false;
-	}
+	if( sd->state.vending == 1 ) {
+		clif->message(fd, msg_txt(548)); // You can't clean a cart while vending!
+ 		return false;
+ 	}
 	
 	for( i = 0; i < MAX_CART; i++ )
 		if(sd->status.cart[i].nameid > 0)
@@ -6673,20 +6698,29 @@ ACMD(showmobs)
 	int number = 0;
 	struct s_mapiterator* it;
 		
-	if(sscanf(message, "%99[^\n]", mob_name) < 0)
+	if( sscanf(message, "%99[^\n]", mob_name) < 0 ) {
+		clif->message(fd, msg_txt(546)); // Please enter a mob name/id (usage: @showmobs <mob name/id>)
 		return false;
-	
-	if((mob_id = atoi(mob_name)) == 0)
+	}
+
+	if( (mob_id = atoi(mob_name)) == 0 )
 		mob_id = mob->db_searchname(mob_name);
+
+	if( mob_id == 0 ) {
+		snprintf(atcmd_output, sizeof atcmd_output, msg_txt(547), mob_name); // Invalid mob name %s!
+		clif->message(fd, atcmd_output);
+		return false;
+	}
+
 	if(mob_id > 0 && mob->db_checkid(mob_id) == 0){
 		snprintf(atcmd_output, sizeof atcmd_output, msg_txt(1250),mob_name); // Invalid mob id %s!
 		clif->message(fd, atcmd_output);
-		return true;
+		return false;
 	}
 	
 	if(mob->db(mob_id)->status.mode&MD_BOSS && !pc_has_permission(sd, PC_PERM_SHOW_BOSS)){	// If player group does not have access to boss mobs.
 		clif->message(fd, msg_txt(1251)); // Can't show boss mobs!
-		return true;
+		return false;
 	}
 	
 	if(mob_id == atoi(mob_name) && mob->db(mob_id)->jname)
@@ -7208,18 +7242,11 @@ ACMD(whereis)
 }
 
 ACMD(version) {
-	const char *git = get_git_hash();
-	const char *svn = get_svn_revision();
-	
-	if ( git[0] != HERC_UNKNOWN_VER ) {
-		sprintf(atcmd_output,msg_txt(1295),git); // Git Hash '%s'
-		clif->message(fd,atcmd_output);
-	} else if ( svn[0] != HERC_UNKNOWN_VER ) {
-		sprintf(atcmd_output,msg_txt(1294),git); // SVN r%s
-		clif->message(fd,atcmd_output);
-	} else
-		clif->message(fd,msg_txt(1296)); // Cannot determine version
-	
+	sprintf(atcmd_output, msg_txt(1296), sysinfo->is64bit() ? 64 : 32, sysinfo->platform()); // Hercules %d-bit for %s
+	clif->message(fd, atcmd_output);
+	sprintf(atcmd_output, msg_txt(1295), sysinfo->vcstype(), sysinfo->vcsrevision_src(), sysinfo->vcsrevision_scripts()); // %s revision '%s' (src) / '%s' (scripts)
+	clif->message(fd, atcmd_output);
+
 	return true;
 }
 
@@ -9954,6 +9981,11 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 
 	//Attempt to use the command
 	if ( (info->func(fd, (*atcmd_msg == atcommand->at_symbol) ? sd : ssd, command, params,info) != true) ) {
+#ifdef AUTOTRADE_PERSISTENCY
+		// Autotrade was successful if standalone is set
+		if( ((*atcmd_msg == atcommand->at_symbol) ? sd->state.standalone : ssd->state.standalone) )
+			return true;
+#endif
 		sprintf(output,msg_txt(154), command); // %s failed.
 		clif->message(fd, output);
 		return true;

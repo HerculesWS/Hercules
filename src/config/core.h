@@ -57,10 +57,6 @@
 /// When uncommented the cap takes place after modifiers.
 //#define HMAP_ZONE_DAMAGE_CAP_TYPE
 
-/// Uncomment to enable Non Stackable items unique ID
-/// By enabling it, the system will create an unique id for each new non stackable item created
-//#define NSI_UNIQUE_ID
-
 /// Comment to disable Guild/Party Bound item system
 #define GP_BOUND_ITEMS
 

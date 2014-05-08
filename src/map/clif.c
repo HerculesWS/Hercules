@@ -61,8 +61,10 @@ static struct packet_itemlist_equip itemlist_equip;
 static struct packet_storelist_normal storelist_normal;
 static struct packet_storelist_equip storelist_equip;
 static struct packet_viewequip_ack viewequip_list;
+#if PACKETVER >= 20131223
 static struct packet_npc_market_result_ack npcmarket_result;
 static struct packet_npc_market_open npcmarket_open;
+#endif
 //#define DUMP_UNKNOWN_PACKET
 //#define DUMP_INVALID_PACKET
 
@@ -3204,6 +3206,12 @@ void clif_changelook(struct block_list *bl,int type,int val)
 			break;
 			case LOOK_BASE:
 				if( !sd ) break;
+				// We shouldn't update LOOK_BASE if the player is disguised
+				// if we do so the client will think that the player class
+				// is really a mob and issues like 7725 will happen in every
+				// SC_ that alters class_ in any way [Panikon]
+				if( sd->disguise != -1 )
+					return;
 
 				if( sd->sc.option&OPTION_COSTUME )
 					vd->weapon = vd->shield = 0;
@@ -8414,6 +8422,34 @@ void clif_message(struct block_list* bl, const char* msg) {
 	clif->send(buf, WBUFW(buf,2), bl, AREA_CHAT_WOC);
 }
 
+/**
+ * Notifies the client that the storage window is still open
+ *
+ * Should only be used in cases where the client closed the 
+ * storage window without server's consent
+ **/
+void clif_refresh_storagewindow( struct map_session_data *sd ) {
+	// Notify the client that the storage is open
+	if( sd->state.storage_flag == 1 ) {
+		storage->sortitem(sd->status.storage.items, ARRAYLENGTH(sd->status.storage.items));
+		clif->storagelist(sd, sd->status.storage.items, ARRAYLENGTH(sd->status.storage.items));
+		clif->updatestorageamount(sd, sd->status.storage.storage_amount, MAX_STORAGE);
+	}
+	// Notify the client that the gstorage is open otherwise it will
+	// remain locked forever and nobody will be able to access it
+	if( sd->state.storage_flag == 2 ) {
+		struct guild_storage *gstor;
+		if( (gstor = gstorage->id2storage2(sd->status.guild_id)) == NULL) {
+			// Shouldn't happen... The information should already be at the map-server
+			intif->request_guild_storage(sd->status.account_id,sd->status.guild_id);
+		} else {
+			storage->sortitem(gstor->items, ARRAYLENGTH(gstor->items));
+			clif->storagelist(sd, gstor->items, ARRAYLENGTH(gstor->items));
+			clif->updatestorageamount(sd, gstor->storage_amount, MAX_GUILD_STORAGE);
+		}
+	}
+}
+
 // refresh the client's screen, getting rid of any effects
 void clif_refresh(struct map_session_data *sd)
 {
@@ -8474,6 +8510,7 @@ void clif_refresh(struct map_session_data *sd)
 		pc->disguise(sd, disguise);
 	}
 
+	clif->refresh_storagewindow(sd);
 }
 
 
@@ -9231,6 +9268,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 #if PACKETVER >= 20090218
 	int i;
 #endif
+	bool first_time = false;
 
 	if(sd->bl.prev != NULL)
 		return;
@@ -9391,6 +9429,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 
 	if(sd->state.connect_new) {
 		int lv;
+		first_time = true;
 		sd->state.connect_new = 0;
 		clif->skillinfoblock(sd);
 		clif->hotkeys(sd);
@@ -9530,6 +9569,10 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 	}
 
 	clif->weather_check(sd);
+
+	// This should be displayed last
+	if( sd->guild && first_time )
+		clif->guild_notice(sd, sd->guild);
 
 	// For automatic triggering of NPCs after map loading (so you don't need to walk 1 step first)
 	if (map->getcell(sd->bl.m,sd->bl.x,sd->bl.y,CELL_CHKNPC))
@@ -10089,7 +10132,7 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 				return;
 			}
 			
-			if( pc_cant_act(sd) || sd->sc.option&OPTION_HIDE )
+			if( pc_cant_act(sd) || pc_issit(sd) || sd->sc.option&OPTION_HIDE )
 				return;
 
 			if( sd->sc.option&OPTION_COSTUME )
@@ -11321,8 +11364,14 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 #endif
 		return;
 	}
-	if( pc_cant_act(sd) && skill_id != RK_REFRESH && !(skill_id == SR_GENTLETOUCH_CURE && (sd->sc.opt1 == OPT1_STONE || sd->sc.opt1 == OPT1_FREEZE || sd->sc.opt1 == OPT1_STUN)) )
+
+	if( pc_cant_act(sd)
+	&& skill_id != RK_REFRESH
+	&& !(skill_id == SR_GENTLETOUCH_CURE && (sd->sc.opt1 == OPT1_STONE || sd->sc.opt1 == OPT1_FREEZE || sd->sc.opt1 == OPT1_STUN))
+	&& ( sd->state.storage_flag && !(tmp&INF_SELF_SKILL) ) // SELF skills can be used with the storage open, issue: 8027
+	)
 		return;
+
 	if( pc_issit(sd) )
 		return;
 
@@ -11523,7 +11572,8 @@ void clif_parse_UseSkillMap(int fd, struct map_session_data* sd)
 	if(skill_id != sd->menuskill_id)
 		return;
 
-	if( pc_cant_act(sd) ) {
+	// It is possible to use teleport with the storage window open issue:8027
+	if( pc_cant_act(sd) && (!sd->state.storage_flag && skill_id != AL_TELEPORT) ) {
 		clif_menuskill_clear(sd);
 		return;
 	}
@@ -18131,6 +18181,7 @@ void clif_parse_NPCShopClosed(int fd, struct map_session_data *sd) {
 }
 /* NPC Market (by Ind after an extensive debugging of the packet, only possible thanks to Yommy <3) */
 void clif_npc_market_open(struct map_session_data *sd, struct npc_data *nd) {
+#if PACKETVER >= 20131223
 	struct npc_item_list *shop = nd->u.scr.shop->item;
 	unsigned short shop_size = nd->u.scr.shop->items, i, c;
 	struct item_data *id = NULL;
@@ -18151,12 +18202,14 @@ void clif_npc_market_open(struct map_session_data *sd, struct npc_data *nd) {
 	npcmarket_open.PacketLength = 4 + ( sizeof(npcmarket_open.list[0]) * c );
 
 	clif->send(&npcmarket_open,npcmarket_open.PacketLength,&sd->bl,SELF);
+#endif
 }
 void clif_parse_NPCMarketClosed(int fd, struct map_session_data *sd) {
 	/* TODO track the state <3~ */
 	sd->npc_shopid = 0;
 }
 void clif_npc_market_purchase_ack(struct map_session_data *sd, struct packet_npc_market_purchase *req, unsigned char response) {
+#if PACKETVER >= 20131223
 	unsigned short c = 0;
 
 	npcmarket_result.PacketType = npcmarketresultackType;
@@ -18189,11 +18242,14 @@ void clif_npc_market_purchase_ack(struct map_session_data *sd, struct packet_npc
 	npcmarket_result.PacketLength = 5 + ( sizeof(npcmarket_result.list[0]) * c );;
 
 	clif->send(&npcmarket_result,npcmarket_result.PacketLength,&sd->bl,SELF);
+#endif
 }
 void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd) {
+#if PACKETVER >= 20131223
 	struct packet_npc_market_purchase *p = P2PTR(fd);
 
 	clif->npc_market_purchase_ack(sd,p,npc->market_buylist(sd,(p->PacketLength - 4) / sizeof(p->list[0]),p));
+#endif
 }
 /* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
@@ -18624,6 +18680,7 @@ void clif_defaults(void) {
 	clif->sitting = clif_sitting;
 	clif->standing = clif_standing;
 	clif->arrow_create_list = clif_arrow_create_list;
+	clif->refresh_storagewindow = clif_refresh_storagewindow;
 	clif->refresh = clif_refresh;
 	clif->fame_blacksmith = clif_fame_blacksmith;
 	clif->fame_alchemist = clif_fame_alchemist;
