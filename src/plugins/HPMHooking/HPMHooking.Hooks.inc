@@ -28094,6 +28094,33 @@ void HP_homun_delspiritball(struct homun_data *hd, int count, int type) {
 	}
 	return;
 }
+int8 HP_homun_get_intimacy_grade(struct homun_data *hd) {
+	int hIndex = 0;
+	int8 retVal___ = 0;
+	if( HPMHooks.count.HP_homun_get_intimacy_grade_pre ) {
+		int8 (*preHookFunc) (struct homun_data *hd);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_get_intimacy_grade_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_homun_get_intimacy_grade_pre[hIndex].func;
+			retVal___ = preHookFunc(hd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.homun.get_intimacy_grade(hd);
+	}
+	if( HPMHooks.count.HP_homun_get_intimacy_grade_post ) {
+		int8 (*postHookFunc) (int8 retVal___, struct homun_data *hd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_get_intimacy_grade_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_homun_get_intimacy_grade_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, hd);
+		}
+	}
+	return retVal___;
+}
 /* instance */
 void HP_instance_init(bool minimal) {
 	int hIndex = 0;
@@ -44228,15 +44255,15 @@ const char* HP_npc_parse_script(char *w1, char *w2, char *w3, char *w4, const ch
 	}
 	return retVal___;
 }
-const char* HP_npc_parse_duplicate(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath) {
+const char* HP_npc_parse_duplicate(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int options) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
 	if( HPMHooks.count.HP_npc_parse_duplicate_pre ) {
-		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
+		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *options);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_duplicate_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_npc_parse_duplicate_pre[hIndex].func;
-			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath);
+			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath, &options);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -44244,13 +44271,13 @@ const char* HP_npc_parse_duplicate(char *w1, char *w2, char *w3, char *w4, const
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.npc.parse_duplicate(w1, w2, w3, w4, start, buffer, filepath);
+		retVal___ = HPMHooks.source.npc.parse_duplicate(w1, w2, w3, w4, start, buffer, filepath, options);
 	}
 	if( HPMHooks.count.HP_npc_parse_duplicate_post ) {
-		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
+		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *options);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_duplicate_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_npc_parse_duplicate_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath);
+			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath, &options);
 		}
 	}
 	return retVal___;
