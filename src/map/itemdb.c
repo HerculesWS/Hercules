@@ -818,7 +818,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 		hread(&random_qty,sizeof(random_qty),1,file);
 		
 		if( !(pdata = itemdb->exists(id)) )
-			ShowWarning("itemdb_read_packages: unknown package item '%d', skipping..\n",id);
+			ShowWarning("itemdb_read_cached_packages: unknown package item '%d', skipping..\n",id);
 		else
 			pdata->package = &itemdb->packages[i];
 		
@@ -848,7 +848,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 				hread(&named,sizeof(announce),1,file);
 				
 				if( !(data = itemdb->exists(mid)) )
-					ShowWarning("itemdb_read_packages: unknown item '%d' in package '%s'!\n",mid,itemdb_name(package->id));
+					ShowWarning("itemdb_read_cached_packages: unknown item '%d' in package '%s'!\n",mid,itemdb_name(package->id));
 
 				entry->id = data ? data->nameid : 0;
 				entry->hours = hours;
@@ -893,7 +893,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 					hread(&named,sizeof(announce),1,file);
 					
 					if( !(data = itemdb->exists(mid)) )
-						ShowWarning("itemdb_read_packages: unknown item '%d' in package '%s'!\n",mid,itemdb_name(package->id));
+						ShowWarning("itemdb_read_cached_packages: unknown item '%d' in package '%s'!\n",mid,itemdb_name(package->id));
 					
 					entry->id = data ? data->nameid : 0;
 					entry->rate = rate;
