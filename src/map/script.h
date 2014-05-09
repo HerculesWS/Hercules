@@ -564,7 +564,7 @@ struct script_interface {
 	void (*final) (void);
 	int  (*reload) (void);
 	/* parse */
-	struct script_code* (*parse) (const char* src,const char* file,int line,int options);
+	struct script_code* (*parse) (const char* src,const char* file,int line,int options, int *retval);
 	bool (*add_builtin) (const struct script_function *buildin, bool override);
 	void (*parse_builtin) (void);
 	const char* (*parse_subexpr) (const char* p,int limit);

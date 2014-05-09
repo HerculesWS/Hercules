@@ -3841,7 +3841,7 @@ void map_zone_remove(int m) {
 			}
 		}
 
-		npc->parse_mapflag(map->list[m].name,empty,flag,params,empty,empty,empty);
+		npc->parse_mapflag(map->list[m].name,empty,flag,params,empty,empty,empty, NULL);
 		aFree(map->list[m].zone_mf[k]);
 		map->list[m].zone_mf[k] = NULL;
 	}
@@ -4573,7 +4573,7 @@ void map_zone_apply(int m, struct map_zone_data *zone, const char* start, const 
 		if( map->zone_mf_cache(m,flag,params) )
 			continue;
 
-		npc->parse_mapflag(map->list[m].name,empty,flag,params,start,buffer,filepath);
+		npc->parse_mapflag(map->list[m].name, empty, flag, params, start, buffer, filepath, NULL);
 	}
 }
 /* used on npc load and reload to apply all "Normal" and "PK Mode" zones */
@@ -4601,7 +4601,7 @@ void map_zone_init(void) {
 			if( map->list[j].zone == zone ) {
 				if( map->zone_mf_cache(j,flag,params) )
 					break;
-				npc->parse_mapflag(map->list[j].name,empty,flag,params,empty,empty,empty);
+				npc->parse_mapflag(map->list[j].name, empty, flag, params, empty, empty, empty, NULL);
 			}
 		}
 	}
@@ -4623,7 +4623,7 @@ void map_zone_init(void) {
 				if( map->list[j].zone == zone ) {
 					if( map->zone_mf_cache(j,flag,params) )
 						break;
-					npc->parse_mapflag(map->list[j].name,empty,flag,params,empty,empty,empty);
+					npc->parse_mapflag(map->list[j].name, empty, flag, params, empty, empty, empty, NULL);
 				}
 			}
 		}
@@ -5810,7 +5810,7 @@ int do_init(int argc, char *argv[])
 	if (scriptcheck) {
 		bool failed = load_extras_count > 0 ? false : true;
 		for (i = 0; i < load_extras_count; i++) {
-			if (npc->parsesrcfile(load_extras[i], false) != 0)
+			if (npc->parsesrcfile(load_extras[i], false) != EXIT_SUCCESS)
 				failed = true;
 		}
 		if (failed)

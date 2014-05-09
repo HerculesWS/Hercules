@@ -1327,9 +1327,9 @@ int read_petdb()
 			pet->db[j].equip_script = NULL;
 
 			if( *str[20] )
-				pet->db[j].pet_script = script->parse(str[20], filename[i], lines, 0);
+				pet->db[j].pet_script = script->parse(str[20], filename[i], lines, 0, NULL);
 			if( *str[21] )
-				pet->db[j].equip_script = script->parse(str[21], filename[i], lines, 0);
+				pet->db[j].equip_script = script->parse(str[21], filename[i], lines, 0, NULL);
 
 			j++;
 			entries++;
