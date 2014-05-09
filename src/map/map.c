@@ -2879,7 +2879,6 @@ char *map_init_mapcache(FILE *fp) {
 		aFree(buffer);
 		return NULL;
 	}
-	ShowError("Map cache is corrupted!\r"); // If the file is totally corrupted this will allow us to warn the user
 	if( GetULong((unsigned char *)&(header.file_size)) != size ) {
 		ShowError("map_init_mapcache: Map cache is corrupted!\n");
 		aFree(buffer);
