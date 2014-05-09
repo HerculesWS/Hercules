@@ -183,6 +183,7 @@ void core_defaults(void) {
  *	CORE : MAINROUTINE
  *--------------------------------------*/
 int main (int argc, char **argv) {
+	int retval = EXIT_SUCCESS;
 	{// initialize program arguments
 		char *p1 = SERVER_NAME = argv[0];
 		char *p2 = p1;
@@ -253,7 +254,7 @@ int main (int argc, char **argv) {
 
 	console->final();
 	
-	do_final();
+	retval = do_final();
 	HPM->final();
 	timer->final();
 	sockt->final();
@@ -265,5 +266,5 @@ int main (int argc, char **argv) {
 
 	iMalloc->final();
 
-	return 0;
+	return retval;
 }

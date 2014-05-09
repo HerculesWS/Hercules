@@ -5228,8 +5228,7 @@ int cleanup_db_sub(DBKey key, DBData *data, va_list va) {
 /*==========================================
  * map destructor
  *------------------------------------------*/
-void do_final(void)
-{
+int do_final(void) {
 	int i;
 	struct map_session_data* sd;
 	struct s_mapiterator* iter;
@@ -5324,6 +5323,7 @@ void do_final(void)
 	HPM->event(HPET_POST_FINAL);
 	
 	ShowStatus("Finished.\n");
+	return map->retval;
 }
 
 int map_abort_sub(struct map_session_data* sd, va_list ap) {
@@ -5865,6 +5865,7 @@ void map_defaults(void) {
 	/* */
 	map->minimal = false;
 	map->count = 0;
+	map->retval = EXIT_SUCCESS;
 	
 	sprintf(map->db_path ,"db");
 	sprintf(map->help_txt ,"conf/help.txt");

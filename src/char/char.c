@@ -5336,7 +5336,7 @@ int char_config_read(const char* cfgName)
 	return 0;
 }
 
-void do_final(void) {
+int do_final(void) {
 	int i;
 	
 	ShowStatus("Terminating...\n");
@@ -5373,6 +5373,7 @@ void do_final(void) {
 			aFree(server[i].map);
 	
 	ShowStatus("Finished.\n");
+	return EXIT_SUCCESS;
 }
 
 //------------------------------

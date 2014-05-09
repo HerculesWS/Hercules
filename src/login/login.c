@@ -1689,8 +1689,7 @@ int login_config_read(const char* cfgName)
 //--------------------------------------
 // Function called at exit of the server
 //--------------------------------------
-void do_final(void)
-{
+int do_final(void) {
 	int i;
 	struct client_hash_node *hn = login_config.client_hash_nodes;
 
@@ -1730,6 +1729,7 @@ void do_final(void)
 	}
 
 	ShowStatus("Finished.\n");
+	return EXIT_SUCCESS;
 }
 
 //------------------------------

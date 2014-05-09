@@ -805,6 +805,7 @@ struct map_interface {
 
 	/* vars */
 	bool minimal;
+	int retval;
 	int count;
 
 	int autosave_interval;
