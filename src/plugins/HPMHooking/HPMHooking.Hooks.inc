@@ -14350,14 +14350,14 @@ void HP_clif_friendlist_req(struct map_session_data *sd, int account_id, int cha
 	}
 	return;
 }
-void HP_clif_GM_kickack(struct map_session_data *sd, int id) {
+void HP_clif_GM_kickack(struct map_session_data *sd, int result) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_GM_kickack_pre ) {
-		void (*preHookFunc) (struct map_session_data *sd, int *id);
+		void (*preHookFunc) (struct map_session_data *sd, int *result);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_GM_kickack_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_clif_GM_kickack_pre[hIndex].func;
-			preHookFunc(sd, &id);
+			preHookFunc(sd, &result);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -14365,13 +14365,13 @@ void HP_clif_GM_kickack(struct map_session_data *sd, int id) {
 		}
 	}
 	{
-		HPMHooks.source.clif.GM_kickack(sd, id);
+		HPMHooks.source.clif.GM_kickack(sd, result);
 	}
 	if( HPMHooks.count.HP_clif_GM_kickack_post ) {
-		void (*postHookFunc) (struct map_session_data *sd, int *id);
+		void (*postHookFunc) (struct map_session_data *sd, int *result);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_GM_kickack_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_clif_GM_kickack_post[hIndex].func;
-			postHookFunc(sd, &id);
+			postHookFunc(sd, &result);
 		}
 	}
 	return;
