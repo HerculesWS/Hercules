@@ -2,46 +2,49 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/timer.h"
-#include "../common/db.h"
-#include "../common/nullpo.h"
-#include "../common/malloc.h"
-#include "../common/showmsg.h"
-#include "../common/ers.h"
-#include "../common/random.h"
-#include "../common/strlib.h"
-#include "../common/utils.h"
-#include "../common/socket.h"
+#define HERCULES_CORE
 
-#include "map.h"
-#include "path.h"
-#include "clif.h"
-#include "intif.h"
-#include "pc.h"
-#include "pet.h"
-#include "status.h"
+#include "../config/core.h" // AUTOLOOT_DISTANCE, DBPATH, DEFTYPE_MAX, DEFTYPE_MIN, RENEWAL_DROP, RENEWAL_EXP
 #include "mob.h"
-#include "homunculus.h"
-#include "mercenary.h"
-#include "elemental.h"
-#include "guild.h"
-#include "itemdb.h"
-#include "skill.h"
-#include "battle.h"
-#include "party.h"
-#include "npc.h"
-#include "log.h"
-#include "script.h"
-#include "atcommand.h"
-#include "date.h"
-#include "quest.h"
 
+#include <math.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
 #include <string.h>
-#include <math.h>
+
+#include "atcommand.h"
+#include "battle.h"
+#include "clif.h"
+#include "date.h"
+#include "elemental.h"
+#include "guild.h"
+#include "homunculus.h"
+#include "intif.h"
+#include "itemdb.h"
+#include "log.h"
+#include "map.h"
+#include "mercenary.h"
+#include "npc.h"
+#include "party.h"
+#include "path.h"
+#include "pc.h"
+#include "pet.h"
+#include "quest.h"
+#include "script.h"
+#include "skill.h"
+#include "status.h"
+#include "../common/cbasetypes.h"
+#include "../common/db.h"
+#include "../common/ers.h"
+#include "../common/malloc.h"
+#include "../common/nullpo.h"
+#include "../common/random.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
+#include "../common/strlib.h"
+#include "../common/timer.h"
+#include "../common/utils.h"
 
 struct mob_interface mob_s;
 

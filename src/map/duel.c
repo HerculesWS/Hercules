@@ -2,17 +2,19 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
+#define HERCULES_CORE
 
-#include "atcommand.h"  // msg_txt
-#include "clif.h"
 #include "duel.h"
-#include "pc.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
+#include "atcommand.h"  // msg_txt
+#include "clif.h"
+#include "pc.h"
+#include "../common/cbasetypes.h"
 
 /*==========================================
  * Duel organizing functions [LuzZza]

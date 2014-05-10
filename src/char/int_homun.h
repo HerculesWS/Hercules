@@ -4,6 +4,8 @@
 #ifndef _CHAR_INT_HOMUN_H_
 #define _CHAR_INT_HOMUN_H_
 
+#include "../common/cbasetypes.h"
+
 struct s_homunculus;
 
 int inter_homunculus_sql_init(void);

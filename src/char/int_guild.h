@@ -20,9 +20,6 @@ enum {
 	GS_REMOVE = 0x8000,
 };
 
-struct guild;
-struct guild_castle;
-
 int inter_guild_parse_frommap(int fd);
 int inter_guild_sql_init(void);
 void inter_guild_sql_final(void);

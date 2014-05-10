@@ -2,32 +2,34 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h"
-#include "../common/malloc.h"
-#include "../common/showmsg.h"
-#include "../common/core.h"
-#include "socket.h"
+#define HERCULES_CORE
+
 #include "utils.h"
 
-#include <stdio.h>
+#include <math.h> // floor()
 #include <stdarg.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h> // floor()
+#include <sys/stat.h> // cache purposes [Ind/Hercules]
+
+#include "../common/cbasetypes.h"
+#include "../common/core.h"
+#include "../common/malloc.h"
+#include "../common/mmo.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
 
 #ifdef WIN32
-	#include "../common/winapi.h"
-	#ifndef F_OK
-		#define F_OK   0x0
-	#endif  /* F_OK */
+#	include "../common/winapi.h"
+#	ifndef F_OK
+#		define F_OK   0x0
+#	endif  /* F_OK */
 #else
-	#include <unistd.h>
-	#include <dirent.h>
-	#include <sys/stat.h>
+#	include <dirent.h>
+#	include <sys/stat.h>
+#	include <unistd.h>
 #endif
-
-#include <sys/stat.h> // cache purposes [Ind/Hercules]
 
 struct HCache_interface HCache_s;
 

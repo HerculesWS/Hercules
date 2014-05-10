@@ -2,12 +2,13 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../common/mmo.h"
+#define HERCULES_CORE
+
+#include "chat.h"
+
+#include <stdio.h>
+#include <string.h>
+
 #include "atcommand.h" // msg_txt()
 #include "battle.h" // struct battle_config
 #include "clif.h"
@@ -15,10 +16,12 @@
 #include "npc.h" // npc_event_do()
 #include "pc.h"
 #include "skill.h" // ext_skill_unit_onplace()
-#include "chat.h"
-
-#include <stdio.h>
-#include <string.h>
+#include "../common/cbasetypes.h"
+#include "../common/malloc.h"
+#include "../common/mmo.h"
+#include "../common/nullpo.h"
+#include "../common/showmsg.h"
+#include "../common/strlib.h"
 
 struct chat_interface chat_s;
 

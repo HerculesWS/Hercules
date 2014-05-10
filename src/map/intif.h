@@ -5,19 +5,22 @@
 #ifndef _MAP_INTIF_H_
 #define _MAP_INTIF_H_
 
+#include "../common/cbasetypes.h"
 
 /**
  * Declarations
  **/
-struct party_member;
+struct auction_data;
 struct guild_member;
 struct guild_position;
-struct s_pet;
+struct guild_storage;
+struct mail_message;
+struct map_session_data;
+struct party_member;
+struct s_elemental;
 struct s_homunculus;
 struct s_mercenary;
-struct s_elemental;
-struct mail_message;
-struct auction_data;
+struct s_pet;
 
 /**
  * Defines

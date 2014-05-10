@@ -442,5 +442,11 @@ void SET_FUNCPOINTER(T1& var, T2 p)
 #define SET_FUNCPOINTER(var,p) ((var) = (p))
 #endif
 
+/* pointer size fix which fixes several gcc warnings */
+#ifdef __64BIT__
+	#define __64BPTRSIZE(y) ((intptr)(y))
+#else
+	#define __64BPTRSIZE(y) (y)
+#endif
 
 #endif /* _COMMON_CBASETYPES_H_ */

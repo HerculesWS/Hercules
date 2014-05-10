@@ -39,14 +39,18 @@
  * @encoding US-ASCII                                                        *
  * @see common#ers.h                                                         *
 \*****************************************************************************/
+
+#define HERCULES_CORE
+
+#include "ers.h"
+
 #include <stdlib.h>
 #include <string.h>
 
 #include "../common/cbasetypes.h"
 #include "../common/malloc.h" // CREATE, RECREATE, aMalloc, aFree
-#include "../common/showmsg.h" // ShowMessage, ShowError, ShowFatalError, CL_BOLD, CL_NORMAL
 #include "../common/nullpo.h"
-#include "ers.h"
+#include "../common/showmsg.h" // ShowMessage, ShowError, ShowFatalError, CL_BOLD, CL_NORMAL
 
 #ifndef DISABLE_ERS
 

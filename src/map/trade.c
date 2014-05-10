@@ -2,25 +2,27 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/nullpo.h"
-#include "../common/socket.h"
+#define HERCULES_CORE
 
 #include "trade.h"
-#include "clif.h"
-#include "itemdb.h"
-#include "map.h"
-#include "path.h"
-#include "pc.h"
-#include "npc.h"
-#include "battle.h"
-#include "chrif.h"
-#include "storage.h"
-#include "intif.h"
-#include "atcommand.h"
-#include "log.h"
 
 #include <stdio.h>
 #include <string.h>
+
+#include "atcommand.h"
+#include "battle.h"
+#include "chrif.h"
+#include "clif.h"
+#include "intif.h"
+#include "itemdb.h"
+#include "log.h"
+#include "map.h"
+#include "npc.h"
+#include "path.h"
+#include "pc.h"
+#include "storage.h"
+#include "../common/nullpo.h"
+#include "../common/socket.h"
 
 struct trade_interface trade_s;
 

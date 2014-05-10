@@ -5,8 +5,8 @@
 #ifndef _MAP_BATTLE_H_
 #define _MAP_BATTLE_H_
 
-#include "../common/cbasetypes.h"
 #include "map.h" //ELE_MAX
+#include "../common/cbasetypes.h"
 
 /**
  * Declarations

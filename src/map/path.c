@@ -2,19 +2,22 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#include "../config/core.h" // CELL_NOSTACK, CIRCULAR_AREA
+#include "path.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "map.h"
 #include "../common/cbasetypes.h"
 #include "../common/db.h"
 #include "../common/malloc.h"
 #include "../common/nullpo.h"
 #include "../common/random.h"
 #include "../common/showmsg.h"
-
-#include "path.h"
-#include "map.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define SET_OPEN 0
 #define SET_CLOSED 1

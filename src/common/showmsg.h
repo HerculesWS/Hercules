@@ -5,11 +5,13 @@
 #ifndef _COMMON_SHOWMSG_H_
 #define _COMMON_SHOWMSG_H_
 
-#ifndef _COMMON_HPMI_H_
-	#include "../../3rdparty/libconfig/libconfig.h"
-#endif
-
 #include <stdarg.h>
+
+#ifdef HERCULES_CORE
+#	include "../../3rdparty/libconfig/libconfig.h"
+#else
+#	include "../common/HPMi.h"
+#endif
 
 // for help with the console colors look here:
 // http://www.edoceo.com/liberum/?doc=printf-with-color
@@ -90,7 +92,7 @@ enum msg_type {
 };
 
 extern void ClearScreen(void);
-#ifndef _COMMON_HPMI_H_
+#ifdef HERCULES_CORE
 	extern void ShowMessage(const char *, ...);
 	extern void ShowStatus(const char *, ...);
 	extern void ShowSQL(const char *, ...);
@@ -101,7 +103,18 @@ extern void ClearScreen(void);
 	extern void ShowError(const char *, ...);
 	extern void ShowFatalError(const char *, ...);
 	extern void ShowConfigWarning(config_setting_t *config, const char *string, ...);
+#else
+	HPExport void (*ShowMessage) (const char *, ...);
+	HPExport void (*ShowStatus) (const char *, ...);
+	HPExport void (*ShowSQL) (const char *, ...);
+	HPExport void (*ShowInfo) (const char *, ...);
+	HPExport void (*ShowNotice) (const char *, ...);
+	HPExport void (*ShowWarning) (const char *, ...);
+	HPExport void (*ShowDebug) (const char *, ...);
+	HPExport void (*ShowError) (const char *, ...);
+	HPExport void (*ShowFatalError) (const char *, ...);
 #endif
+
 extern int _vShowMessage(enum msg_type flag, const char *string, va_list ap);
 
 #endif /* _COMMON_SHOWMSG_H_ */

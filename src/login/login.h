@@ -5,8 +5,8 @@
 #ifndef _LOGIN_LOGIN_H_
 #define _LOGIN_LOGIN_H_
 
-#include "../common/mmo.h" // NAME_LENGTH,SEX_*
 #include "../common/core.h" // CORE_ST_LAST
+#include "../common/mmo.h" // NAME_LENGTH,SEX_*
 
 enum E_LOGINSERVER_ST
 {

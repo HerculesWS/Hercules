@@ -2,36 +2,37 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/socket.h"
-#include "../common/timer.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../common/utils.h"
+#define HERCULES_CORE
 
-#include "map.h"
-#include "pc.h"
-#include "npc.h"
-#include "itemdb.h"
-#include "script.h"
-#include "intif.h"
-#include "battle.h"
-#include "mob.h"
-#include "party.h"
-#include "unit.h"
-#include "log.h"
-#include "clif.h"
 #include "quest.h"
-#include "chrif.h"
 
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdarg.h>
 #include <time.h>
 
+#include "battle.h"
+#include "chrif.h"
+#include "clif.h"
+#include "intif.h"
+#include "itemdb.h"
+#include "log.h"
+#include "map.h"
+#include "mob.h"
+#include "npc.h"
+#include "party.h"
+#include "pc.h"
+#include "script.h"
+#include "unit.h"
+#include "../common/cbasetypes.h"
+#include "../common/malloc.h"
+#include "../common/nullpo.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
+#include "../common/strlib.h"
+#include "../common/timer.h"
+#include "../common/utils.h"
 
 struct quest_interface quest_s;
 

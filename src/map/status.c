@@ -2,43 +2,46 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/timer.h"
-#include "../common/nullpo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/malloc.h"
-#include "../common/utils.h"
-#include "../common/ers.h"
-#include "../common/strlib.h"
+#define HERCULES_CORE
 
+#include "../config/core.h" // ANTI_MAYAP_CHEAT, DBPATH, DEFTYPE_MAX, DEFTYPE_MIN, DEVOTION_REFLECT_DAMAGE, RENEWAL, RENEWAL_ASPD, RENEWAL_EDP
+#include "status.h"
+
+#include <math.h>
+#include <memory.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#include "battle.h"
+#include "chrif.h"
+#include "clif.h"
+#include "elemental.h"
+#include "guild.h"
+#include "homunculus.h"
+#include "itemdb.h"
 #include "map.h"
+#include "mercenary.h"
+#include "mob.h"
+#include "npc.h"
 #include "path.h"
 #include "pc.h"
 #include "pet.h"
-#include "npc.h"
-#include "mob.h"
-#include "clif.h"
-#include "guild.h"
-#include "skill.h"
-#include "itemdb.h"
-#include "battle.h"
-#include "chrif.h"
-#include "skill.h"
-#include "status.h"
 #include "script.h"
+#include "skill.h"
+#include "skill.h"
 #include "unit.h"
-#include "homunculus.h"
-#include "mercenary.h"
-#include "elemental.h"
 #include "vending.h"
-
-#include <time.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <memory.h>
-#include <string.h>
-#include <math.h>
+#include "../common/cbasetypes.h"
+#include "../common/ers.h"
+#include "../common/malloc.h"
+#include "../common/nullpo.h"
+#include "../common/random.h"
+#include "../common/showmsg.h"
+#include "../common/strlib.h"
+#include "../common/timer.h"
+#include "../common/utils.h"
 
 struct status_interface status_s;
 

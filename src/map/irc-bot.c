@@ -2,22 +2,24 @@
 // See the LICENSE file
 // Base Author: shennetsind @ http://hercules.ws
 
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h"
-#include "../common/strlib.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/timer.h"
-#include "../common/random.h"
+#define HERCULES_CORE
 
-#include "map.h"
-#include "pc.h"
-#include "clif.h"
 #include "irc-bot.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "clif.h"
+#include "map.h"
+#include "pc.h"
+#include "../common/cbasetypes.h"
+#include "../common/malloc.h"
+#include "../common/random.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
+#include "../common/strlib.h"
+#include "../common/timer.h"
 
 //#define IRCBOT_DEBUG
 

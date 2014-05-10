@@ -5,18 +5,18 @@
 #ifndef _MAP_MAP_H_
 #define _MAP_MAP_H_
 
+#include <stdarg.h>
+
+#include "atcommand.h"
 #include "../common/cbasetypes.h"
 #include "../common/core.h" // CORE_ST_LAST
 #include "../common/mmo.h"
 #include "../common/mapindex.h"
 #include "../common/db.h"
-#include "../config/core.h"
 #include "../common/sql.h"
-#include "atcommand.h"
-#include <stdarg.h>
 
+struct mob_data;
 struct npc_data;
-struct item_data;
 struct hChSysCh;
 
 enum E_MAPSERVER_ST {
@@ -36,7 +36,6 @@ enum E_MAPSERVER_ST {
 #define NATURAL_HEAL_INTERVAL 500
 #define MIN_FLOORITEM 2
 #define MAX_FLOORITEM START_ACCOUNT_NUM
-#define MAX_LEVEL 175
 #define MAX_IGNORE_LIST 20 // official is 14
 #define MAX_VENDING 12
 #define MAX_MAP_SIZE (512*512) // Wasn't there something like this already? Can't find it.. [Shinryo]

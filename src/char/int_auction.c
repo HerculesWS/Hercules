@@ -2,22 +2,25 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/mmo.h"
-#include "../common/malloc.h"
-#include "../common/db.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/sql.h"
-#include "../common/timer.h"
-#include "char.h"
-#include "inter.h"
-#include "int_mail.h"
+#define HERCULES_CORE
+
 #include "int_auction.h"
 
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
+
+#include "char.h"
+#include "int_mail.h"
+#include "inter.h"
+#include "../common/db.h"
+#include "../common/malloc.h"
+#include "../common/mmo.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
+#include "../common/sql.h"
+#include "../common/strlib.h"
+#include "../common/timer.h"
 
 static DBMap* auction_db_ = NULL; // int auction_id -> struct auction_data*
 

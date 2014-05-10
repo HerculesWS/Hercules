@@ -1,9 +1,13 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#include "../common/cbasetypes.h"
+#define HERCULES_CORE
+
 #include "date.h"
+
 #include <time.h>
+
+#include "../common/cbasetypes.h"
 
 int date_get_year(void)
 {

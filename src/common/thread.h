@@ -1,7 +1,6 @@
 // Copyright (c) rAthena Project (www.rathena.org) - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#pragma once 
 #ifndef _COMMON_THREAD_H_
 #define _COMMON_THREAD_H_
 

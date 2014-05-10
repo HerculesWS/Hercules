@@ -6,6 +6,8 @@
 #ifndef _MAP_IRC_BOT_H_
 #define _MAP_IRC_BOT_H_
 
+#include "../common/cbasetypes.h"
+
 #define IRC_NICK_LENGTH 40
 #define IRC_IDENT_LENGTH 40
 #define IRC_HOST_LENGTH 63

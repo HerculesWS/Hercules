@@ -2,23 +2,26 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/strlib.h" // StringBuf
-#include "showmsg.h"
-#include "core.h" //[Ind] - For SERVER_TYPE
+#define HERCULES_CORE
 
-#include <stdio.h>
-#include <string.h>
+#include "showmsg.h"
+
 #include <stdarg.h>
-#include <time.h>
+#include <stdio.h>
 #include <stdlib.h> // atexit
+#include <string.h>
+#include <time.h>
 
 #include "../../3rdparty/libconfig/libconfig.h"
 
+#include "../common/cbasetypes.h"
+#include "../common/core.h" //[Ind] - For SERVER_TYPE
+#include "../common/strlib.h" // StringBuf
+
 #ifdef WIN32
-#include "../common/winapi.h"
+#	include "../common/winapi.h"
 #else // not WIN32
-#include <unistd.h>
+#	include <unistd.h>
 #endif // WIN32
 
 #if defined(DEBUGLOGMAP)

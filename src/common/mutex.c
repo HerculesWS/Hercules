@@ -1,6 +1,10 @@
 // Copyright (c) rAthena Project (www.rathena.org) - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
+#define HERCULES_CORE
+
+#include "mutex.h"
+
 #ifdef WIN32
 #include "../common/winapi.h"
 #else
@@ -13,7 +17,6 @@
 #include "../common/malloc.h"
 #include "../common/showmsg.h"
 #include "../common/timer.h"
-#include "../common/mutex.h"
 
 struct ramutex{
 #ifdef WIN32

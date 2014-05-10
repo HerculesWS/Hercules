@@ -2,14 +2,17 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#include "searchstore.h"  // struct s_search_store_info
+
+#include "battle.h"  // battle_config.*
+#include "clif.h"  // clif->open_search_store_info, clif->search_store_info_*
+#include "pc.h"  // struct map_session_data
 #include "../common/cbasetypes.h"
 #include "../common/malloc.h"  // aMalloc, aRealloc, aFree
 #include "../common/showmsg.h"  // ShowError, ShowWarning
 #include "../common/strlib.h"  // safestrncpy
-#include "battle.h"  // battle_config.*
-#include "clif.h"  // clif->open_search_store_info, clif->search_store_info_*
-#include "pc.h"  // struct map_session_data
-#include "searchstore.h"  // struct s_search_store_info
 
 struct searchstore_interface searchstore_s;
 

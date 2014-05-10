@@ -2,16 +2,19 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#include "pincode.h"
+
+#include <stdlib.h>
+
+#include "char.h"
 #include "../common/cbasetypes.h"
 #include "../common/mmo.h"
 #include "../common/random.h"
 #include "../common/showmsg.h"
 #include "../common/socket.h"
 #include "../common/strlib.h"
-#include "char.h"
-#include "pincode.h"
-
-#include <stdlib.h>
 
 int enabled = PINCODE_OK;
 int changetime = 0;

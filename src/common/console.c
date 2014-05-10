@@ -2,41 +2,45 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/showmsg.h"
-#include "../common/core.h"
-#include "../common/sysinfo.h"
-#include "../config/core.h"
-#include "console.h"
+#define HERCULES_CORE
 
-#ifndef MINICORE
-	#include "../common/ers.h"
-	#include "../common/malloc.h"
-	#include "../common/atomic.h"
-	#include "../common/spinlock.h"
-	#include "../common/thread.h"
-	#include "../common/mutex.h"
-	#include "../common/timer.h"
-	#include "../common/strlib.h"
-	#include "../common/sql.h"
-#endif
+#include "../config/core.h" // CONSOLE_INPUT, MAX_CONSOLE_INPUT
+#include "console.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-#if !defined(WIN32)
-	#include <unistd.h>
-	#include <sys/time.h>
-#else
-	#include "../common/winapi.h" // Console close event handling
+
+#include "../common/cbasetypes.h"
+#include "../common/core.h"
+#include "../common/showmsg.h"
+#include "../common/sysinfo.h"
+
+#ifndef MINICORE
+#	include "../common/atomic.h"
+#	include "../common/ers.h"
+#	include "../common/malloc.h"
+#	include "../common/mutex.h"
+#	include "../common/spinlock.h"
+#	include "../common/sql.h"
+#	include "../common/strlib.h"
+#	include "../common/thread.h"
+#	include "../common/timer.h"
 #endif
 
-#ifdef CONSOLE_INPUT
-	#if defined(WIN32)
-		#include <conio.h> /* _kbhit() */
-	#endif
+#if !defined(WIN32)
+#	include <sys/time.h>
+#	include <unistd.h>
+#else
+#	include "../common/winapi.h" // Console close event handling
+#	ifdef CONSOLE_INPUT
+#		include <conio.h> /* _kbhit() */
+#	endif
 #endif
 
 struct console_interface console_s;
+#ifdef CONSOLE_INPUT
+struct console_input_interface console_input_s;
+#endif
 
 /*======================================
  *	CORE : Display title
@@ -116,12 +120,12 @@ CPCMD_C(mem_report,server) {
  **/
 CPCMD(help) {
 	unsigned int i = 0;
-	for ( i = 0; i < console->cmd_list_count; i++ ) {
-		if( console->cmd_list[i]->next_count ) {
-			ShowInfo("- '"CL_WHITE"%s"CL_RESET"' subs\n",console->cmd_list[i]->cmd);
-			console->parse_list_subs(console->cmd_list[i],2);
+	for ( i = 0; i < console->input->cmd_list_count; i++ ) {
+		if( console->input->cmd_list[i]->next_count ) {
+			ShowInfo("- '"CL_WHITE"%s"CL_RESET"' subs\n",console->input->cmd_list[i]->cmd);
+			console->input->parse_list_subs(console->input->cmd_list[i],2);
 		} else {
-			ShowInfo("- '"CL_WHITE"%s"CL_RESET"'\n",console->cmd_list[i]->cmd);
+			ShowInfo("- '"CL_WHITE"%s"CL_RESET"'\n",console->input->cmd_list[i]->cmd);
 		}
 	}
 }
@@ -144,7 +148,7 @@ CPCMD_C(skip,update) {
 		ShowDebug("usage example: sql update skip 2013-02-14--16-15.sql\n");
 		return;
 	}
-	Sql_HerculesUpdateSkip(console->SQL, line);
+	Sql_HerculesUpdateSkip(console->input->SQL, line);
 }
 
 /**
@@ -206,7 +210,7 @@ void console_load_defaults(void) {
 	unsigned int i, len = ARRAYLENGTH(default_list);
 	struct CParseEntry *cmd;
 	
-	RECREATE(console->cmds,struct CParseEntry *, len);
+	RECREATE(console->input->cmds,struct CParseEntry *, len);
 	
 	for(i = 0; i < len; i++) {
 		CREATE(cmd, struct CParseEntry, 1);
@@ -220,12 +224,12 @@ void console_load_defaults(void) {
 		
 		cmd->next_count = 0;
 		
-		console->cmd_count++;
-		console->cmds[i] = cmd;
+		console->input->cmd_count++;
+		console->input->cmds[i] = cmd;
 		default_list[i].self = cmd;
 		if( !default_list[i].connect ) {
-			RECREATE(console->cmd_list,struct CParseEntry *, ++console->cmd_list_count);
-			console->cmd_list[console->cmd_list_count - 1] = cmd;
+			RECREATE(console->input->cmd_list,struct CParseEntry *, ++console->input->cmd_list_count);
+			console->input->cmd_list[console->input->cmd_list_count - 1] = cmd;
 		}
 	}
 	
@@ -233,11 +237,11 @@ void console_load_defaults(void) {
 		unsigned int k;
 		if( !default_list[i].connect )
 			continue;
-		for(k = 0; k < console->cmd_count; k++) {
-			if( strcmpi(default_list[i].connect,console->cmds[k]->cmd) == 0 ) {
+		for(k = 0; k < console->input->cmd_count; k++) {
+			if( strcmpi(default_list[i].connect,console->input->cmds[k]->cmd) == 0 ) {
 				cmd = default_list[i].self;
-				RECREATE(console->cmds[k]->u.next, struct CParseEntry *, ++console->cmds[k]->next_count);
-				console->cmds[k]->u.next[console->cmds[k]->next_count - 1] = cmd;
+				RECREATE(console->input->cmds[k]->u.next, struct CParseEntry *, ++console->input->cmds[k]->next_count);
+				console->input->cmds[k]->u.next[console->input->cmds[k]->next_count - 1] = cmd;
 				break;
 			}
 		}
@@ -256,23 +260,23 @@ void console_parse_create(char *name, CParseFunc func) {
 	safestrncpy(sublist, name, CP_CMD_LENGTH * 5);
 	tok = strtok(sublist,":");
 	
-	for ( i = 0; i < console->cmd_list_count; i++ ) {
-		if( strcmpi(tok,console->cmd_list[i]->cmd) == 0 )
+	for ( i = 0; i < console->input->cmd_list_count; i++ ) {
+		if( strcmpi(tok,console->input->cmd_list[i]->cmd) == 0 )
 			break;
 	}
 
-	if( i == console->cmd_list_count ) {
-		RECREATE(console->cmds,struct CParseEntry *, ++console->cmd_count);
+	if( i == console->input->cmd_list_count ) {
+		RECREATE(console->input->cmds,struct CParseEntry *, ++console->input->cmd_count);
 		CREATE(cmd, struct CParseEntry, 1);
 		safestrncpy(cmd->cmd, tok, CP_CMD_LENGTH);
 		cmd->next_count = 0;
-		console->cmds[console->cmd_count - 1] = cmd;
-		RECREATE(console->cmd_list,struct CParseEntry *, ++console->cmd_list_count);
-		console->cmd_list[console->cmd_list_count - 1] = cmd;
-		i = console->cmd_list_count - 1;
+		console->input->cmds[console->input->cmd_count - 1] = cmd;
+		RECREATE(console->input->cmd_list,struct CParseEntry *, ++console->input->cmd_list_count);
+		console->input->cmd_list[console->input->cmd_list_count - 1] = cmd;
+		i = console->input->cmd_list_count - 1;
 	}
 
-	cmd = console->cmd_list[i];
+	cmd = console->input->cmd_list[i];
 	while( ( tok = strtok(NULL, ":") ) != NULL ) {
 		
 		for(i = 0; i < cmd->next_count; i++) {
@@ -281,13 +285,13 @@ void console_parse_create(char *name, CParseFunc func) {
 		}
 		
 		if ( i == cmd->next_count ) {
-			RECREATE(console->cmds,struct CParseEntry *, ++console->cmd_count);
-			CREATE(console->cmds[console->cmd_count-1], struct CParseEntry, 1);
-			safestrncpy(console->cmds[console->cmd_count-1]->cmd, tok, CP_CMD_LENGTH);
-			console->cmds[console->cmd_count-1]->next_count = 0;
+			RECREATE(console->input->cmds,struct CParseEntry *, ++console->input->cmd_count);
+			CREATE(console->input->cmds[console->input->cmd_count-1], struct CParseEntry, 1);
+			safestrncpy(console->input->cmds[console->input->cmd_count-1]->cmd, tok, CP_CMD_LENGTH);
+			console->input->cmds[console->input->cmd_count-1]->next_count = 0;
 			RECREATE(cmd->u.next, struct CParseEntry *, ++cmd->next_count);
-			cmd->u.next[cmd->next_count - 1] = console->cmds[console->cmd_count-1];
-			cmd = console->cmds[console->cmd_count-1];
+			cmd->u.next[cmd->next_count - 1] = console->input->cmds[console->input->cmd_count-1];
+			cmd = console->input->cmds[console->input->cmd_count-1];
 			continue;
 		}
 		
@@ -302,7 +306,7 @@ void console_parse_list_subs(struct CParseEntry *cmd, unsigned char depth) {
 			memset(msg, '-', depth);
 			snprintf(msg + depth,CP_CMD_LENGTH * 2, " '"CL_WHITE"%s"CL_RESET"'",cmd->u.next[i]->cmd);
 			ShowInfo("%s subs\n",msg);
-			console->parse_list_subs(cmd->u.next[i],depth + 1);
+			console->input->parse_list_subs(cmd->u.next[i],depth + 1);
 		} else {
 			memset(msg, '-', depth);
 			snprintf(msg + depth,CP_CMD_LENGTH * 2, " %s",cmd->u.next[i]->cmd);
@@ -320,21 +324,21 @@ void console_parse_sub(char *line) {
 	memcpy(bline, line, 200);
 	tok = strtok(line, " ");
 	
-	for ( i = 0; i < console->cmd_list_count; i++ ) {
-		if( strcmpi(tok,console->cmd_list[i]->cmd) == 0 )
+	for ( i = 0; i < console->input->cmd_list_count; i++ ) {
+		if( strcmpi(tok,console->input->cmd_list[i]->cmd) == 0 )
 			break;
 	}
 	
-	if( i == console->cmd_list_count ) {
+	if( i == console->input->cmd_list_count ) {
 		ShowError("'"CL_WHITE"%s"CL_RESET"' is not a known command, type '"CL_WHITE"help"CL_RESET"' to list all commands\n",line);
 		return;
 	}
 	
-	cmd = console->cmd_list[i];
+	cmd = console->input->cmd_list[i];
 	
 	len += snprintf(sublist,CP_CMD_LENGTH * 5,"%s", cmd->cmd) + 1;
 	
-	if( cmd->next_count == 0 && console->cmd_list[i]->u.func ) {
+	if( cmd->next_count == 0 && console->input->cmd_list[i]->u.func ) {
 		char *r = NULL;
 		if( (tok = strtok(NULL, " ")) ) {
 			r = bline;
@@ -351,7 +355,7 @@ void console_parse_sub(char *line) {
 				if( strcmpi("help",tok) == 0 ) {
 					if( cmd->next_count ) {
 						ShowInfo("- '"CL_WHITE"%s"CL_RESET"' subs\n",sublist);
-						console->parse_list_subs(cmd,2);
+						console->input->parse_list_subs(cmd,2);
 					} else {
 						ShowError("'"CL_WHITE"%s"CL_RESET"' doesn't possess any subcommands\n",sublist);
 					}
@@ -392,95 +396,95 @@ void console_parse(char* line) {
 }
 void *cThread_main(void *x) {
 		
-	while( console->ptstate ) {/* loopx */
-		if( console->key_pressed() ) {
+	while( console->input->ptstate ) {/* loopx */
+		if( console->input->key_pressed() ) {
 			char input[MAX_CONSOLE_INPUT];
 					
-			console->parse(input);
+			console->input->parse(input);
 			if( input[0] != '\0' ) {/* did we get something? */
-				EnterSpinLock(&console->ptlock);
+				EnterSpinLock(&console->input->ptlock);
 				
 				if( cinput.count == CONSOLE_PARSE_SIZE ) {
-					LeaveSpinLock(&console->ptlock);
+					LeaveSpinLock(&console->input->ptlock);
 					continue;/* drop */
 				}
 				
 				safestrncpy(cinput.queue[cinput.count++],input,MAX_CONSOLE_INPUT);
-				LeaveSpinLock(&console->ptlock);
+				LeaveSpinLock(&console->input->ptlock);
 			}
 		}
-		ramutex_lock( console->ptmutex );
-		racond_wait( console->ptcond,	console->ptmutex,  -1 );
-		ramutex_unlock( console->ptmutex );
+		ramutex_lock( console->input->ptmutex );
+		racond_wait( console->input->ptcond,	console->input->ptmutex,  -1 );
+		ramutex_unlock( console->input->ptmutex );
 	}
 		
 	return NULL;
 }
 int console_parse_timer(int tid, int64 tick, int id, intptr_t data) {
 	int i;
-	EnterSpinLock(&console->ptlock);
+	EnterSpinLock(&console->input->ptlock);
 	for(i = 0; i < cinput.count; i++) {
-		console->parse_sub(cinput.queue[i]);
+		console->input->parse_sub(cinput.queue[i]);
 	}
 	cinput.count = 0;
-	LeaveSpinLock(&console->ptlock);
-	racond_signal(console->ptcond);
+	LeaveSpinLock(&console->input->ptlock);
+	racond_signal(console->input->ptcond);
 	return 0;
 }
 void console_parse_final(void) {
-	if( console->ptstate ) {
-		InterlockedDecrement(&console->ptstate);
-		racond_signal(console->ptcond);
+	if( console->input->ptstate ) {
+		InterlockedDecrement(&console->input->ptstate);
+		racond_signal(console->input->ptcond);
 		
 		/* wait for thread to close */
-		rathread_wait(console->pthread, NULL);
+		rathread_wait(console->input->pthread, NULL);
 
-		racond_destroy(console->ptcond);
-		ramutex_destroy(console->ptmutex);
+		racond_destroy(console->input->ptcond);
+		ramutex_destroy(console->input->ptmutex);
 	}
 }
 void console_parse_init(void) {
 	cinput.count = 0;
 	
-	console->ptstate = 1;
+	console->input->ptstate = 1;
 
-	InitializeSpinLock(&console->ptlock);
+	InitializeSpinLock(&console->input->ptlock);
 	
-	console->ptmutex = ramutex_create();
-	console->ptcond = racond_create();
+	console->input->ptmutex = ramutex_create();
+	console->input->ptcond = racond_create();
 	
-	if( (console->pthread = rathread_create(console->pthread_main, NULL)) == NULL ){
+	if( (console->input->pthread = rathread_create(console->input->pthread_main, NULL)) == NULL ){
 		ShowFatalError("console_parse_init: failed to spawn console_parse thread.\n");
 		exit(EXIT_FAILURE);
 	}
 	
-	timer->add_func_list(console->parse_timer, "console_parse_timer");
-	timer->add_interval(timer->gettick() + 1000, console->parse_timer, 0, 0, 500);/* start listening in 1s; re-try every 0.5s */
+	timer->add_func_list(console->input->parse_timer, "console_parse_timer");
+	timer->add_interval(timer->gettick() + 1000, console->input->parse_timer, 0, 0, 500);/* start listening in 1s; re-try every 0.5s */
 	
 }
 void console_setSQL(Sql *SQL_handle) {
-	console->SQL = SQL_handle;
+	console->input->SQL = SQL_handle;
 }
 #endif /* CONSOLE_INPUT */
 
 void console_init (void) {
 #ifdef CONSOLE_INPUT
-	console->cmd_count = console->cmd_list_count = 0;
-	console->load_defaults();
-	console->parse_init();
+	console->input->cmd_count = console->input->cmd_list_count = 0;
+	console->input->load_defaults();
+	console->input->parse_init();
 #endif
 }
 void console_final(void) {
 #ifdef CONSOLE_INPUT
 	unsigned int i;
-	console->parse_final();
-	for( i = 0; i < console->cmd_count; i++ ) {
-		if( console->cmds[i]->next_count )
-			aFree(console->cmds[i]->u.next);
-		aFree(console->cmds[i]);
+	console->input->parse_final();
+	for( i = 0; i < console->input->cmd_count; i++ ) {
+		if( console->input->cmds[i]->next_count )
+			aFree(console->input->cmds[i]->u.next);
+		aFree(console->input->cmds[i]);
 	}
-	aFree(console->cmds);
-	aFree(console->cmd_list);
+	aFree(console->input->cmds);
+	aFree(console->input->cmd_list);
 #endif
 }
 void console_defaults(void) {
@@ -489,17 +493,20 @@ void console_defaults(void) {
 	console->final = console_final;
 	console->display_title = display_title;
 #ifdef CONSOLE_INPUT
-	console->parse_init = console_parse_init;
-	console->parse_final = console_parse_final;
-	console->parse_timer = console_parse_timer;
-	console->pthread_main = cThread_main;
-	console->parse = console_parse;
-	console->parse_sub = console_parse_sub;
-	console->key_pressed = console_parse_key_pressed;
-	console->load_defaults = console_load_defaults;
-	console->parse_list_subs = console_parse_list_subs;
-	console->addCommand = console_parse_create;
-	console->setSQL = console_setSQL;
-	console->SQL = NULL;
+	console->input = &console_input_s;
+	console->input->parse_init = console_parse_init;
+	console->input->parse_final = console_parse_final;
+	console->input->parse_timer = console_parse_timer;
+	console->input->pthread_main = cThread_main;
+	console->input->parse = console_parse;
+	console->input->parse_sub = console_parse_sub;
+	console->input->key_pressed = console_parse_key_pressed;
+	console->input->load_defaults = console_load_defaults;
+	console->input->parse_list_subs = console_parse_list_subs;
+	console->input->addCommand = console_parse_create;
+	console->input->setSQL = console_setSQL;
+	console->input->SQL = NULL;
+#else
+	console->input = NULL;
 #endif
 }

@@ -2,36 +2,40 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/malloc.h"
-#include "../common/strlib.h"
+#define HERCULES_CORE
+
+#include "../config/core.h"
 #include "core.h"
+
+#include "../common/cbasetypes.h"
 #include "../common/console.h"
+#include "../common/malloc.h"
+#include "../common/mmo.h"
 #include "../common/random.h"
+#include "../common/showmsg.h"
+#include "../common/strlib.h"
 #include "../common/sysinfo.h"
 
 #ifndef MINICORE
-	#include "../common/db.h"
-	#include "../common/socket.h"
-	#include "../common/timer.h"
-	#include "../common/thread.h"
-	#include "../common/sql.h"
-	#include "../config/core.h"
-	#include "../common/HPM.h"
-	#include "../common/utils.h"
-	#include "../common/conf.h"
-	#include "../common/ers.h"
+#	include "../common/HPM.h"
+#	include "../common/conf.h"
+#	include "../common/db.h"
+#	include "../common/ers.h"
+#	include "../common/socket.h"
+#	include "../common/sql.h"
+#	include "../common/thread.h"
+#	include "../common/timer.h"
+#	include "../common/utils.h"
 #endif
 
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <signal.h>
 #include <string.h>
 #ifndef _WIN32
-#include <unistd.h>
+#	include <unistd.h>
 #else
-#include "../common/winapi.h" // Console close event handling
+#	include "../common/winapi.h" // Console close event handling
 #endif
 
 /// Called when a terminate signal is received.

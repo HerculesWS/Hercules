@@ -5,9 +5,10 @@
 #ifndef _COMMON_UTILS_H_
 #define _COMMON_UTILS_H_
 
-#include "../common/cbasetypes.h"
 #include <stdio.h> // FILE*
 #include <time.h>
+
+#include "../common/cbasetypes.h"
 
 /* [HCache] 1-byte key to ensure our method is the latest, we can modify to ensure the method matches */
 #define HCACHE_KEY 'k'

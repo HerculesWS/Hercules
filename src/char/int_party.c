@@ -2,22 +2,25 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/strlib.h"
-#include "../common/socket.h"
-#include "../common/showmsg.h"
-#include "../common/mapindex.h"
-#include "../common/sql.h"
-#include "char.h"
-#include "inter.h"
+#define HERCULES_CORE
+
 #include "int_party.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "char.h"
+#include "inter.h"
+#include "../common/cbasetypes.h"
+#include "../common/db.h"
+#include "../common/malloc.h"
+#include "../common/mapindex.h"
+#include "../common/mmo.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
+#include "../common/sql.h"
+#include "../common/strlib.h"
 
 struct party_data {
 	struct party party;

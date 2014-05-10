@@ -2,21 +2,16 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/core.h" // get_svn_revision()
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h" // session[]
-#include "../common/strlib.h" // safestrncpy()
-#include "../common/timer.h"
-#include "../common/utils.h"
-#include "../common/conf.h"
-#include "../common/mmo.h" //NAME_LENGTH
-#include "../common/sysinfo.h"
+#define HERCULES_CORE
 
+#include "../config/core.h" // DBPATH, GP_BOUND_ITEMS, MAX_CARTS, MAX_SPIRITBALL, NEW_CARTS, RENEWAL, RENEWAL_ASPD, RENEWAL_CAST, RENEWAL_DROP, RENEWAL_EXP, SECURE_NPCTIMEOUT
 #include "pc.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
 #include "atcommand.h" // get_atcommand_level()
 #include "battle.h" // battle_config
 #include "battleground.h"
@@ -25,32 +20,40 @@
 #include "clif.h"
 #include "date.h" // is_day_of_*()
 #include "duel.h"
+#include "elemental.h"
+#include "guild.h" // guild->search(), guild_request_info()
+#include "homunculus.h"
+#include "instance.h"
 #include "intif.h"
 #include "itemdb.h"
 #include "log.h"
 #include "mail.h"
 #include "map.h"
-#include "path.h"
-#include "homunculus.h"
-#include "instance.h"
 #include "mercenary.h"
-#include "elemental.h"
+#include "mob.h" // struct mob_data
 #include "npc.h" // fake_nd
-#include "pet.h" // pet_unlocktarget()
 #include "party.h" // party->search()
-#include "guild.h" // guild->search(), guild_request_info()
+#include "path.h"
+#include "pc_groups.h"
+#include "pet.h" // pet_unlocktarget()
+#include "quest.h"
 #include "script.h" // script_config
 #include "skill.h"
 #include "status.h" // struct status_data
 #include "storage.h"
-#include "pc_groups.h"
-#include "quest.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-
+#include "../common/cbasetypes.h"
+#include "../common/conf.h"
+#include "../common/core.h" // get_svn_revision()
+#include "../common/malloc.h"
+#include "../common/mmo.h" //NAME_LENGTH
+#include "../common/nullpo.h"
+#include "../common/random.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h" // session[]
+#include "../common/strlib.h" // safestrncpy()
+#include "../common/sysinfo.h"
+#include "../common/timer.h"
+#include "../common/utils.h"
 
 struct pc_interface pc_s;
 
@@ -10651,9 +10654,7 @@ void pc_defaults(void) {
 	memset(pc->exp_table, 0, sizeof(pc->exp_table)
 		   + sizeof(pc->max_level)
 		   + sizeof(pc->statp)
-#if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 		   + sizeof(pc->level_penalty)
-#endif
 		   + sizeof(pc->skill_tree)
 		   + sizeof(pc->smith_fame_list)
 		   + sizeof(pc->chemist_fame_list)

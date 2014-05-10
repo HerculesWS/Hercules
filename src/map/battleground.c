@@ -2,29 +2,32 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#include "battleground.h"
+
+#include <string.h>
+#include <stdio.h>
+
+#include "battle.h"
+#include "clif.h"
+#include "homunculus.h"
+#include "map.h"
+#include "mapreg.h"
+#include "mercenary.h"
+#include "mob.h" // struct mob_data
+#include "npc.h"
+#include "party.h"
+#include "pc.h"
+#include "pet.h"
 #include "../common/cbasetypes.h"
-#include "../common/timer.h"
+#include "../common/conf.h"
 #include "../common/malloc.h"
 #include "../common/nullpo.h"
 #include "../common/showmsg.h"
 #include "../common/socket.h"
 #include "../common/strlib.h"
-#include "../common/conf.h"
-
-#include "battleground.h"
-#include "battle.h"
-#include "clif.h"
-#include "map.h"
-#include "npc.h"
-#include "pc.h"
-#include "party.h"
-#include "pet.h"
-#include "homunculus.h"
-#include "mercenary.h"
-#include "mapreg.h"
-
-#include <string.h>
-#include <stdio.h>
+#include "../common/timer.h"
 
 struct battleground_interface bg_s;
 

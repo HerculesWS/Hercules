@@ -2,15 +2,16 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h"
-#include "../common/socket.h"
-#include "../common/timer.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../common/ers.h"
-#include "../common/HPM.h"
+#define HERCULES_CORE
+
+#include "../config/core.h" // AUTOTRADE_PERSISTENCY, STATS_OPT_OUT
+#include "chrif.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <time.h>
 
 #include "map.h"
 #include "battle.h"
@@ -25,15 +26,17 @@
 #include "instance.h"
 #include "mercenary.h"
 #include "elemental.h"
-#include "chrif.h"
 #include "quest.h"
 #include "storage.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
-#include <time.h>
+#include "../common/HPM.h"
+#include "../common/cbasetypes.h"
+#include "../common/ers.h"
+#include "../common/malloc.h"
+#include "../common/nullpo.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
+#include "../common/strlib.h"
+#include "../common/timer.h"
 
 struct chrif_interface chrif_s;
 

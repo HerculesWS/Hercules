@@ -2,20 +2,23 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/mmo.h"
-#include "../common/malloc.h"
-#include "../common/strlib.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/utils.h"
-#include "../common/sql.h"
-#include "char.h"
-#include "inter.h"
+#define HERCULES_CORE
+
+#include "int_homun.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "char.h"
+#include "inter.h"
+#include "../common/malloc.h"
+#include "../common/mmo.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
+#include "../common/sql.h"
+#include "../common/strlib.h"
+#include "../common/utils.h"
 
 int inter_homunculus_sql_init(void)
 {

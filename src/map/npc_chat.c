@@ -2,25 +2,27 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
 #ifdef PCRE_SUPPORT
 
-#include "../common/timer.h"
+#include "npc.h" // struct npc_data
+
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "../../3rdparty/pcre/include/pcre.h"
+
+#include "mob.h" // struct mob_data
+#include "pc.h" // struct map_session_data
+#include "script.h" // set_var()
 #include "../common/malloc.h"
 #include "../common/nullpo.h"
 #include "../common/showmsg.h"
 #include "../common/strlib.h"
-
-#include "mob.h" // struct mob_data
-#include "npc.h" // struct npc_data
-#include "pc.h" // struct map_session_data
-#include "script.h" // set_var()
-
-#include "../../3rdparty/pcre/include/pcre.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdarg.h>
+#include "../common/timer.h"
 
 /**
  * interface sources

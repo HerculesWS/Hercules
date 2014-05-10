@@ -2,6 +2,46 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#include "../config/core.h" // NEW_CARTS, RENEWAL, RENEWAL_ASPD, RENEWAL_CAST, RENEWAL_DROP, RENEWAL_EDP, RENEWAL_EXP, RENEWAL_LVDMG, SCRIPT_CALLFUNC_CHECK, SECURE_NPCTIMEOUT, SECURE_NPCTIMEOUT_INTERVAL
+#include "script.h"
+
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "atcommand.h"
+#include "battle.h"
+#include "battleground.h"
+#include "chat.h"
+#include "chrif.h"
+#include "clif.h"
+#include "elemental.h"
+#include "guild.h"
+#include "homunculus.h"
+#include "instance.h"
+#include "intif.h"
+#include "itemdb.h"
+#include "log.h"
+#include "mail.h"
+#include "map.h"
+#include "mapreg.h"
+#include "mercenary.h"
+#include "mob.h"
+#include "npc.h"
+#include "party.h"
+#include "path.h"
+#include "pc.h"
+#include "pet.h"
+#include "pet.h"
+#include "quest.h"
+#include "skill.h"
+#include "status.h"
+#include "status.h"
+#include "storage.h"
+#include "unit.h"
 #include "../common/cbasetypes.h"
 #include "../common/malloc.h"
 #include "../common/md5calc.h"
@@ -10,47 +50,10 @@
 #include "../common/showmsg.h"
 #include "../common/socket.h" // usage: getcharip
 #include "../common/strlib.h"
+#include "../common/sysinfo.h"
 #include "../common/timer.h"
 #include "../common/utils.h"
-#include "../common/sysinfo.h"
 
-#include "map.h"
-#include "path.h"
-#include "clif.h"
-#include "chrif.h"
-#include "itemdb.h"
-#include "pc.h"
-#include "status.h"
-#include "storage.h"
-#include "mob.h"
-#include "npc.h"
-#include "pet.h"
-#include "mapreg.h"
-#include "homunculus.h"
-#include "instance.h"
-#include "mercenary.h"
-#include "intif.h"
-#include "skill.h"
-#include "status.h"
-#include "chat.h"
-#include "battle.h"
-#include "battleground.h"
-#include "party.h"
-#include "guild.h"
-#include "atcommand.h"
-#include "log.h"
-#include "unit.h"
-#include "pet.h"
-#include "mail.h"
-#include "script.h"
-#include "quest.h"
-#include "elemental.h"
-#include "../config/core.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
 #ifndef WIN32
 	#include <sys/time.h>
 #endif

@@ -6,9 +6,12 @@
 #define _MAP_CHAT_H_
 
 #include "map.h" // struct block_list, CHATROOM_TITLE_SIZE
+#include "../common/cbasetypes.h"
+#include "../common/db.h"
 
-struct map_session_data;
 struct chat_data;
+struct map_session_data;
+struct npc_data;
 
 #define MAX_CHAT_USERS 20
 

@@ -14,8 +14,6 @@ enum {
 	PS_BREAK = 0x20, //Specify that this party must be deleted.
 };
 
-struct party;
-
 int inter_party_parse_frommap(int fd);
 int inter_party_sql_init(void);
 void inter_party_sql_final(void);
