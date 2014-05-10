@@ -450,14 +450,17 @@ int npc_event_do_clock(int tid, int64 tick, int id, intptr_t data) {
 	return c;
 }
 
-/*==========================================
- * OnInit Event execution (the start of the event and watch)
- *------------------------------------------*/
-void npc_event_do_oninit(void)
+/**
+ * OnInit event execution (the start of the event and watch)
+ * @param reload Is the server reloading?
+ **/
+void npc_event_do_oninit( bool reload )
 {
 	ShowStatus("Event '"CL_WHITE"OnInit"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs."CL_CLL"\n", npc->event_doall("OnInit"));
 
-	timer->add_interval(timer->gettick()+100,npc->event_do_clock,0,0,1000);
+	// This interval has already been added on startup
+	if( !reload )
+		timer->add_interval(timer->gettick()+100,npc->event_do_clock,0,0,1000);
 }
 
 /*==========================================
@@ -4294,9 +4297,30 @@ int npc_ev_label_db_clear_sub(DBKey key, DBData *data, va_list args)
 	return 0;
 }
 
+/**
+ * Main npc file processing
+ * @param npc_min Minimum npc id - used to know how many NPCs were loaded
+ **/
+void npc_process_files( int npc_min ) {
+	struct npc_src_list *file; // Current file
+
+	ShowStatus("Loading NPCs...\r");
+	for( file = npc->src_files; file != NULL; file = file->next ) {
+		ShowStatus("Loading NPC file: %s"CL_CLL"\r", file->name);
+		npc->parsesrcfile(file->name, false);
+	}
+	ShowInfo ("Done loading '"CL_WHITE"%d"CL_RESET"' NPCs:"CL_CLL"\n"
+		"\t-'"CL_WHITE"%d"CL_RESET"' Warps\n"
+		"\t-'"CL_WHITE"%d"CL_RESET"' Shops\n"
+		"\t-'"CL_WHITE"%d"CL_RESET"' Scripts\n"
+		"\t-'"CL_WHITE"%d"CL_RESET"' Spawn sets\n"
+		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Cached\n"
+		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Not Cached\n",
+		npc_id - npc_min, npc_warp, npc_shop, npc_script, npc_mob, npc_cache_mob, npc_delay_mob);
+}
+
 //Clear then reload npcs files
 int npc_reload(void) {
-	struct npc_src_list *nsl;
 	int16 m, i;
 	int npc_new_min = npc_id;
 	struct s_mapiterator* iter;
@@ -4358,46 +4382,35 @@ int npc_reload(void) {
 	// reset mapflags
 	map->flags_init();
 
-	//TODO: the following code is copy-pasted from do_init_npc(); clean it up
-	// Reloading npcs now
-	for (nsl = npc->src_files; nsl; nsl = nsl->next) {
-		ShowStatus("Loading NPC file: %s"CL_CLL"\r", nsl->name);
-		npc->parsesrcfile(nsl->name,false);
-	}
-	ShowInfo ("Done loading '"CL_WHITE"%d"CL_RESET"' NPCs:"CL_CLL"\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Warps\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Shops\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Scripts\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Spawn sets\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Cached\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Not Cached\n",
-		npc_id - npc_new_min, npc_warp, npc_shop, npc_script, npc_mob, npc_cache_mob, npc_delay_mob);
-		
+	// Reprocess npc files and reload constants
 	itemdb->name_constants();
-	
+	npc_process_files( npc_new_min );
+
 	instance->reload();
 
 	map->zone_init();
-	
+
 	npc->motd = npc->name2id("HerculesMOTD"); /* [Ind/Hercules] */
-	
+
 	//Re-read the NPC Script Events cache.
 	npc->read_event_script();
 
-	/* refresh guild castle flags on both woe setups */
-	npc->event_doall("OnAgitInit");
-	npc->event_doall("OnAgitInit2");
-
-	//Execute the OnInit event for freshly loaded npcs. [Skotlex]
-	ShowStatus("Event '"CL_WHITE"OnInit"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs.\n",npc->event_doall("OnInit"));
-
-	npc->market_fromsql();/* after OnInit */
-	
+	// Execute main initialisation events
+	// The correct initialisation order is:
+	// OnInit -> OnInterIfInit -> OnInterIfInitOnce -> OnAgitInit -> OnAgitInit2
+	npc->event_do_oninit( true );
+	npc->market_fromsql();
 	// Execute rest of the startup events if connected to char-server. [Lance]
-	if(!intif->CheckForCharServer()){
+	// Executed when connection is established with char-server in chrif_connectack
+	if( !intif->CheckForCharServer() ) {
 		ShowStatus("Event '"CL_WHITE"OnInterIfInit"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs.\n", npc->event_doall("OnInterIfInit"));
 		ShowStatus("Event '"CL_WHITE"OnInterIfInitOnce"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs.\n", npc->event_doall("OnInterIfInitOnce"));
 	}
+	// Refresh guild castle flags on both woe setups
+	// These events are only executed after receiving castle information from char-server
+	npc->event_doall("OnAgitInit");
+	npc->event_doall("OnAgitInit2");
+
 	return 0;
 }
 
@@ -4479,7 +4492,6 @@ static void npc_debug_warps(void) {
  * npc initialization
  *------------------------------------------*/
 int do_init_npc(bool minimal) {
-	struct npc_src_list *file;
 	int i;
 
 	memset(&npc->base_ud, 0, sizeof( struct unit_data) );
@@ -4508,28 +4520,17 @@ int do_init_npc(bool minimal) {
 	npc_last_npd = NULL;
 	npc_last_path = NULL;
 	npc_last_ref = NULL;
-	
+
+	// Should be loaded before npc processing, otherwise labels could overwrite constant values
+	// and lead to undefined behavior [Panikon]
+	itemdb->name_constants();
+
 	if (!minimal) {
 		npc->timer_event_ers = ers_new(sizeof(struct timer_event_data),"clif.c::timer_event_ers",ERS_OPT_NONE);
 
-		// process all npc files
-		ShowStatus("Loading NPCs...\r");
-		for( file = npc->src_files; file != NULL; file = file->next ) {
-			ShowStatus("Loading NPC file: %s"CL_CLL"\r", file->name);
-			npc->parsesrcfile(file->name,false);
-		}
-		ShowInfo ("Done loading '"CL_WHITE"%d"CL_RESET"' NPCs:"CL_CLL"\n"
-			"\t-'"CL_WHITE"%d"CL_RESET"' Warps\n"
-			"\t-'"CL_WHITE"%d"CL_RESET"' Shops\n"
-			"\t-'"CL_WHITE"%d"CL_RESET"' Scripts\n"
-			"\t-'"CL_WHITE"%d"CL_RESET"' Spawn sets\n"
-			"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Cached\n"
-			"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Not Cached\n",
-			npc_id - START_NPC_NUM, npc_warp, npc_shop, npc_script, npc_mob, npc_cache_mob, npc_delay_mob);
+		npc_process_files(START_NPC_NUM);
 	}
 	
-	itemdb->name_constants();
-
 	if (!minimal) {
 		map->zone_init();
 	

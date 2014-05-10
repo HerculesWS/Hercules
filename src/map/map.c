@@ -5832,7 +5832,7 @@ int do_init(int argc, char *argv[])
 		exit(EXIT_SUCCESS);
 	}
 	
-	npc->event_do_oninit();	// Init npcs (OnInit)
+	npc->event_do_oninit( false );	// Init npcs (OnInit)
 	npc->market_fromsql(); /* after OnInit */
 	
 	if (battle_config.pk_mode)

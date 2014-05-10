@@ -193,7 +193,7 @@ struct npc_interface {
 	int (*event_doall_id) (const char *name, int rid);
 	int (*event_doall) (const char *name);
 	int (*event_do_clock) (int tid, int64 tick, int id, intptr_t data);
-	void (*event_do_oninit) (void);
+	void (*event_do_oninit) ( bool reload );
 	int (*timerevent_export) (struct npc_data *nd, int i);
 	int (*timerevent) (int tid, int64 tick, int id, intptr_t data);
 	int (*timerevent_start) (struct npc_data *nd, int rid);

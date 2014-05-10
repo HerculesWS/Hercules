@@ -1013,7 +1013,8 @@ OnInit will execute every time the scripts loading is complete, including
 when they are reloaded with @reloadscript command. OnInterIfInit will 
 execute when the map server connects to a char server, OnInterIfInitOnce 
 will only execute once and will not execute if the map server reconnects 
-to the char server later.
+to the char server later. Note that all those events will be executed upon
+scripts reloading.
 
 OnAgitStart:
 OnAgitEnd:
