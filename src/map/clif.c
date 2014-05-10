@@ -4,7 +4,7 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // ANTI_MAYAP_CHEAT, NEW_CARTS, RENEWAL, SECURE_NPCTIMEOUT
+#include "../config/core.h" // ANTI_MAYAP_CHEAT, RENEWAL, SECURE_NPCTIMEOUT
 #include "clif.h"
 
 #include <stdio.h>
@@ -48,6 +48,7 @@
 #include "../common/ers.h"
 #include "../common/grfio.h"
 #include "../common/malloc.h"
+#include "../common/mmo.h" // NEW_CARTS
 #include "../common/nullpo.h"
 #include "../common/random.h"
 #include "../common/showmsg.h"

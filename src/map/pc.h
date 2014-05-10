@@ -21,7 +21,7 @@
 #include "vending.h" // struct s_vending
 #include "../common/cbasetypes.h"
 #include "../common/ers.h" // struct eri
-#include "../common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus
+#include "../common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus, NEW_CARTS
 
 /**
  * Defines

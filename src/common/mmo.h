@@ -84,6 +84,14 @@
 #endif // 20090603
 #endif // 20070227
 
+/* Feb 1st 2012 */
+#if PACKETVER >= 20120201
+#	define NEW_CARTS
+#	define MAX_CARTS 9
+#else
+#	define MAX_CARTS 5
+#endif
+
 #define MAX_INVENTORY 100
 //Max number of characters per account. Note that changing this setting alone is not enough if the client is not hexed to support more characters as well.
 #define MAX_CHARS 9

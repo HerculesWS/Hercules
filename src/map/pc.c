@@ -4,7 +4,7 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // DBPATH, GP_BOUND_ITEMS, MAX_CARTS, MAX_SPIRITBALL, NEW_CARTS, RENEWAL, RENEWAL_ASPD, RENEWAL_CAST, RENEWAL_DROP, RENEWAL_EXP, SECURE_NPCTIMEOUT
+#include "../config/core.h" // DBPATH, GP_BOUND_ITEMS, MAX_SPIRITBALL, RENEWAL, RENEWAL_ASPD, RENEWAL_CAST, RENEWAL_DROP, RENEWAL_EXP, SECURE_NPCTIMEOUT
 #include "pc.h"
 
 #include <stdio.h>
@@ -45,7 +45,7 @@
 #include "../common/conf.h"
 #include "../common/core.h" // get_svn_revision()
 #include "../common/malloc.h"
-#include "../common/mmo.h" //NAME_LENGTH
+#include "../common/mmo.h" // NAME_LENGTH, MAX_CARTS, NEW_CARTS
 #include "../common/nullpo.h"
 #include "../common/random.h"
 #include "../common/showmsg.h"
@@ -8039,7 +8039,7 @@ int pc_setoption(struct map_session_data *sd,int type)
  *------------------------------------------*/
 int pc_setcart(struct map_session_data *sd,int type) {
 #ifndef NEW_CARTS
-	int cart[6] = {0x0000,OPTION_CART1,OPTION_CART2,OPTION_CART3,OPTION_CART4,OPTION_CART5};
+	int cart[6] = {OPTION_NOTHING,OPTION_CART1,OPTION_CART2,OPTION_CART3,OPTION_CART4,OPTION_CART5};
 	int option;
 #endif
 	nullpo_ret(sd);

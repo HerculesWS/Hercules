@@ -4,7 +4,7 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // AUTOLOOTITEM_SIZE, AUTOTRADE_PERSISTENCY, MAX_CARTS, MAX_SUGGESTIONS, MOB_FLEE(), MOB_HIT(), RENEWAL, RENEWAL_DROP, RENEWAL_EXP
+#include "../config/core.h" // AUTOLOOTITEM_SIZE, AUTOTRADE_PERSISTENCY, MAX_SUGGESTIONS, MOB_FLEE(), MOB_HIT(), RENEWAL, RENEWAL_DROP, RENEWAL_EXP
 #include "atcommand.h"
 
 #include <math.h>
@@ -45,7 +45,7 @@
 #include "../common/conf.h"
 #include "../common/core.h"
 #include "../common/malloc.h"
-#include "../common/mmo.h"
+#include "../common/mmo.h" // MAX_CARTS
 #include "../common/nullpo.h"
 #include "../common/random.h"
 #include "../common/showmsg.h"
