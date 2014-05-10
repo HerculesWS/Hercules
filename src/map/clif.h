@@ -926,7 +926,7 @@ struct clif_interface {
 	void (*friendslist_toggle) (struct map_session_data *sd,int account_id, int char_id, int online);
 	void (*friendlist_req) (struct map_session_data* sd, int account_id, int char_id, const char* name);
 	/* gm-related */
-	void (*GM_kickack) (struct map_session_data *sd, int id);
+	void (*GM_kickack) (struct map_session_data *sd, int result);
 	void (*GM_kick) (struct map_session_data *sd,struct map_session_data *tsd);
 	void (*manner_message) (struct map_session_data* sd, uint32 type);
 	void (*GM_silence) (struct map_session_data* sd, struct map_session_data* tsd, uint8 type);

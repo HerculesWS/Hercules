@@ -3656,6 +3656,8 @@ int inter_config_read(char *cfgName) {
 			strcpy(map->autotrade_merchants_db, w2);
 		else if(strcmpi(w1,"autotrade_data_db")==0)
 			strcpy(map->autotrade_data_db, w2);
+		else if(strcmpi(w1,"npc_market_data_db")==0)
+			strcpy(map->npc_market_data_db, w2);
 		/* sql log db */
 		else if(strcmpi(w1,"log_db_ip")==0)
 			strcpy(logs->db_ip, w2);

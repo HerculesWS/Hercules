@@ -8136,7 +8136,7 @@ void clif_disp_message(struct block_list* src, const char* mes, size_t len, enum
 /// result:
 ///     0 = failure
 ///     1 = success
-void clif_GM_kickack(struct map_session_data *sd, int id)
+void clif_GM_kickack(struct map_session_data *sd, int result)
 {
 	int fd;
 
@@ -8145,7 +8145,7 @@ void clif_GM_kickack(struct map_session_data *sd, int id)
 	fd = sd->fd;
 	WFIFOHEAD(fd,packet_len(0xcd));
 	WFIFOW(fd,0) = 0xcd;
-	WFIFOB(fd,2) = id;  // FIXME: this is not account id
+	WFIFOB(fd,2) = result;
 	WFIFOSET(fd, packet_len(0xcd));
 }
 
@@ -8159,7 +8159,7 @@ void clif_GM_kick(struct map_session_data *sd,struct map_session_data *tsd) {
 		map->quit(tsd);
 
 	if( sd )
-		clif->GM_kickack(sd,tsd->status.account_id);
+		clif->GM_kickack(sd, 1);
 }
 
 

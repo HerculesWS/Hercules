@@ -2914,6 +2914,8 @@ int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, co
 				return pc_setglobalreg_str(sd, num, str);
 		}
 	} else {// integer variable
+		// FIXME: This isn't safe, in 32bits systems we're converting a 64bit pointer
+		// to a 32bit int, this will lead to overflows! [Panikon]
 		int val = (int)__64BPTRSIZE(value);
 
 		if(script->str_data[script_getvarid(num)].type == C_PARAM) {

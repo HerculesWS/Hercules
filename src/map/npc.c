@@ -1426,8 +1426,7 @@ void npc_market_fromsql(void) {
 	int itemid;
 	int amount;
 	
-	/* TODO inter-server.conf npc_market_data */
-	if ( SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `name`, `itemid`, `amount` FROM `npc_market_data`")
+	if ( SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `name`, `itemid`, `amount` FROM `%s`", map->npc_market_data_db)
 		|| SQL_ERROR == SQL->StmtExecute(stmt)
 		) {
 		SqlStmt_ShowDebug(stmt);
@@ -1474,20 +1473,20 @@ void npc_market_fromsql(void) {
  * Saves persistent NPC Market Data into SQL
  **/
 void npc_market_tosql(struct npc_data *nd, unsigned short index) {
-	/* TODO inter-server.conf npc_market_data */
-	if( SQL_ERROR == SQL->Query(map->mysql_handle, "REPLACE INTO `npc_market_data` VALUES ('%s','%d','%d')", nd->exname, nd->u.scr.shop->item[index].nameid, nd->u.scr.shop->item[index].qty) )
+	if( SQL_ERROR == SQL->Query(map->mysql_handle, "REPLACE INTO `%s` VALUES ('%s','%d','%d')",
+		map->npc_market_data_db, nd->exname, nd->u.scr.shop->item[index].nameid, nd->u.scr.shop->item[index].qty) )
 		Sql_ShowDebug(map->mysql_handle);
 }
 /**
  * Removes persistent NPC Market Data from SQL
  */
 void npc_market_delfromsql_sub(const char *npcname, unsigned short index) {
-	/* TODO inter-server.conf npc_market_data */
 	if( index == USHRT_MAX ) {
-		if( SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `npc_market_data` WHERE `name`='%s'", npcname) )
+		if( SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `name`='%s'", map->npc_market_data_db, npcname) )
 			Sql_ShowDebug(map->mysql_handle);
 	} else {
-		if( SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `npc_market_data` WHERE `name`='%s' AND `itemid`='%d' LIMIT 1", npcname, index) )
+		if( SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `name`='%s' AND `itemid`='%d' LIMIT 1",
+			map->npc_market_data_db, npcname, index) )
 			Sql_ShowDebug(map->mysql_handle);
 	}
 }
@@ -1520,7 +1519,7 @@ bool npc_trader_open(struct map_session_data *sd, struct npc_data *nd) {
 			
 				/* nothing to display, no items available */
 				if( i == nd->u.scr.shop->items ) {
-					clif->colormes(sd->fd,COLOR_RED,"Shop is out of stock! Come again later!");/* TODO messages.conf-it */
+					clif->colormes(sd->fd,COLOR_RED, msg_txt(881));
 					return false;
 				}
 
