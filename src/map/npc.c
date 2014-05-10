@@ -4306,7 +4306,8 @@ void npc_process_files( int npc_min ) {
 	ShowStatus("Loading NPCs...\r");
 	for( file = npc->src_files; file != NULL; file = file->next ) {
 		ShowStatus("Loading NPC file: %s"CL_CLL"\r", file->name);
-		npc->parsesrcfile(file->name, false);
+		if (npc->parsesrcfile(file->name, false) != EXIT_SUCCESS)
+			map->retval = EXIT_FAILURE;
 	}
 	ShowInfo ("Done loading '"CL_WHITE"%d"CL_RESET"' NPCs:"CL_CLL"\n"
 		"\t-'"CL_WHITE"%d"CL_RESET"' Warps\n"
@@ -4324,6 +4325,9 @@ int npc_reload(void) {
 	int npc_new_min = npc_id;
 	struct s_mapiterator* iter;
 	struct block_list* bl;
+
+	if (map->retval == EXIT_FAILURE)
+		map->retval = EXIT_SUCCESS; // Clear return status in case something failed before.
 
 	/* clear guild flag cache */
 	guild->flags_clear();
