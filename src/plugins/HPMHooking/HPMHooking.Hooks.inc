@@ -43052,14 +43052,14 @@ int HP_npc_event_do_clock(int tid, int64 tick, int id, intptr_t data) {
 	}
 	return retVal___;
 }
-void HP_npc_event_do_oninit(void) {
+void HP_npc_event_do_oninit(bool reload) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_npc_event_do_oninit_pre ) {
-		void (*preHookFunc) (void);
+		void (*preHookFunc) (bool *reload);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_event_do_oninit_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_npc_event_do_oninit_pre[hIndex].func;
-			preHookFunc();
+			preHookFunc(&reload);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -43067,13 +43067,13 @@ void HP_npc_event_do_oninit(void) {
 		}
 	}
 	{
-		HPMHooks.source.npc.event_do_oninit();
+		HPMHooks.source.npc.event_do_oninit(reload);
 	}
 	if( HPMHooks.count.HP_npc_event_do_oninit_post ) {
-		void (*postHookFunc) (void);
+		void (*postHookFunc) (bool *reload);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_event_do_oninit_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_npc_event_do_oninit_post[hIndex].func;
-			postHookFunc();
+			postHookFunc(&reload);
 		}
 	}
 	return;
