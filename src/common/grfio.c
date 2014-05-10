@@ -2,8 +2,13 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#define HERCULES_CORE
-
+#include "../common/cbasetypes.h"
+#include "../common/des.h"
+#include "../common/malloc.h"
+#include "../common/showmsg.h"
+#include "../common/strlib.h"
+#include "../common/utils.h"
+#include "../common/nullpo.h"
 #include "grfio.h"
 
 #include <stdio.h>
@@ -11,14 +16,6 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <zlib.h>
-
-#include "../common/cbasetypes.h"
-#include "../common/des.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../common/utils.h"
 
 //----------------------------
 //	file entry table struct

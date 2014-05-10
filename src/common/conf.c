@@ -2,10 +2,7 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#define HERCULES_CORE
-
 #include "conf.h"
-
 #include "../../3rdparty/libconfig/libconfig.h"
 
 #include "../common/showmsg.h" // ShowError

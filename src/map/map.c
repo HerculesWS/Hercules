@@ -2,66 +2,62 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#define HERCULES_CORE
-
-#include "../config/core.h" // CELL_NOSTACK, CIRCULAR_AREA, CONSOLE_INPUT, DBPATH, RENEWAL
-#include "map.h"
-
-#include <math.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "HPMmap.h"
-#include "atcommand.h"
-#include "battle.h"
-#include "battleground.h"
-#include "chat.h"
-#include "chrif.h"
-#include "clif.h"
-#include "duel.h"
-#include "elemental.h"
-#include "guild.h"
-#include "homunculus.h"
-#include "instance.h"
-#include "intif.h"
-#include "irc-bot.h"
-#include "itemdb.h"
-#include "log.h"
-#include "mail.h"
-#include "mapreg.h"
-#include "mercenary.h"
-#include "mob.h"
-#include "npc.h"
-#include "npc.h" // npc_setcells(), npc_unsetcells()
-#include "party.h"
-#include "path.h"
-#include "pc.h"
-#include "pet.h"
-#include "quest.h"
-#include "script.h"
-#include "skill.h"
-#include "status.h"
-#include "storage.h"
-#include "trade.h"
-#include "unit.h"
-#include "../common/HPM.h"
 #include "../common/cbasetypes.h"
-#include "../common/conf.h"
-#include "../common/console.h"
 #include "../common/core.h"
+#include "../common/timer.h"
 #include "../common/ers.h"
 #include "../common/grfio.h"
 #include "../common/malloc.h"
+#include "../common/socket.h" // WFIFO*()
+#include "../common/showmsg.h"
 #include "../common/nullpo.h"
 #include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h" // WFIFO*()
 #include "../common/strlib.h"
-#include "../common/timer.h"
 #include "../common/utils.h"
+#include "../common/conf.h"
+#include "../common/console.h"
+#include "../common/HPM.h"
 
+#include "map.h"
+#include "path.h"
+#include "chrif.h"
+#include "clif.h"
+#include "duel.h"
+#include "intif.h"
+#include "npc.h"
+#include "pc.h"
+#include "status.h"
+#include "mob.h"
+#include "npc.h" // npc_setcells(), npc_unsetcells()
+#include "chat.h"
+#include "itemdb.h"
+#include "storage.h"
+#include "skill.h"
+#include "trade.h"
+#include "party.h"
+#include "unit.h"
+#include "battle.h"
+#include "battleground.h"
+#include "quest.h"
+#include "script.h"
+#include "mapreg.h"
+#include "guild.h"
+#include "pet.h"
+#include "homunculus.h"
+#include "instance.h"
+#include "mercenary.h"
+#include "elemental.h"
+#include "atcommand.h"
+#include "log.h"
+#include "mail.h"
+#include "irc-bot.h"
+#include "HPMmap.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
+#include <math.h>
 #ifndef _WIN32
 #include <unistd.h>
 #endif
@@ -5486,8 +5482,8 @@ void map_cp_defaults(void) {
 	map->cpsd->bl.y = MAP_DEFAULT_Y;
 	map->cpsd->bl.m = map->mapname2mapid(MAP_DEFAULT);
 
-	console->input->addCommand("gm:info",CPCMD_A(gm_position));
-	console->input->addCommand("gm:use",CPCMD_A(gm_use));
+	console->addCommand("gm:info",CPCMD_A(gm_position));
+	console->addCommand("gm:use",CPCMD_A(gm_use));
 #endif
 }
 /* Hercules Plugin Mananger */
@@ -5843,7 +5839,7 @@ int do_init(int argc, char *argv[])
 	Sql_HerculesUpdateCheck(map->mysql_handle);
 	
 #ifdef CONSOLE_INPUT
-	console->input->setSQL(map->mysql_handle);
+	console->setSQL(map->mysql_handle);
 #endif
 	
 	ShowStatus("Server is '"CL_GREEN"ready"CL_RESET"' and listening on port '"CL_WHITE"%d"CL_RESET"'.\n\n", map->port);

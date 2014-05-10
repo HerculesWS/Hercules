@@ -6,26 +6,23 @@
 // Copyright (c) rAthena Project (www.rathena.org) - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#define HERCULES_CORE
-
-#include "thread.h"
-
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h"
-#include "../common/showmsg.h"
-
 #ifdef WIN32
-#	include "../common/winapi.h"
-#	define getpagesize() 4096 // @TODO: implement this properly (GetSystemInfo .. dwPageSize..). (Atm as on all supported win platforms its 4k its static.)
-#	define __thread __declspec( thread ) 
+#include "../common/winapi.h"
+#define getpagesize() 4096 // @TODO: implement this properly (GetSystemInfo .. dwPageSize..). (Atm as on all supported win platforms its 4k its static.)
+#define __thread __declspec( thread ) 
 #else
-#	include <stdlib.h>
-#	include <unistd.h>
-#	include <string.h>
-#	include <signal.h>
-#	include <pthread.h>
-#	include <sched.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <signal.h>
+#include <pthread.h>
+#include <sched.h>
 #endif
+
+#include "cbasetypes.h"
+#include "malloc.h"
+#include "showmsg.h"
+#include "thread.h"
 
 // When Compiling using MSC (on win32..) we know we have support in any case!
 #ifdef _MSC_VER 

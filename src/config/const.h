@@ -52,6 +52,13 @@
 	#define DEFTYPE_MAX CHAR_MAX
 #endif
 
+/* pointer size fix which fixes several gcc warnings */
+#ifdef __64BIT__
+	#define __64BPTRSIZE(y) ((intptr)(y))
+#else
+	#define __64BPTRSIZE(y) (y)
+#endif
+
 /* ATCMD_FUNC(mobinfo) HIT and FLEE calculations */
 #ifdef RENEWAL
 	#define MOB_FLEE(mobdata) ( (mobdata)->lv + (mobdata)->status.agi + 100 )

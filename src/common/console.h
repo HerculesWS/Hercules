@@ -4,13 +4,11 @@
 #ifndef _COMMON_CONSOLE_H_
 #define _COMMON_CONSOLE_H_
 
-#include "../config/core.h" // MAX_CONSOLE_INPUT
-
-#include "../common/cbasetypes.h"
+#include "../common/thread.h"
 #include "../common/mutex.h"
 #include "../common/spinlock.h"
 #include "../common/sql.h"
-#include "../common/thread.h"
+#include "../config/core.h"
 
 /**
  * Queue Max
@@ -49,8 +47,11 @@ struct {
 	unsigned short count;
 } cinput;
 
+struct console_interface {
+	void (*init) (void);
+	void (*final) (void);
+	void (*display_title) (void);
 #ifdef CONSOLE_INPUT
-struct console_input_interface {
 	/* vars */
 	SPIN_LOCK ptlock;/* parse thread lock */
 	rAthread pthread;/* parse thread */
@@ -76,17 +77,7 @@ struct console_input_interface {
 	void (*parse_list_subs) (struct CParseEntry *cmd, unsigned char depth);
 	void (*addCommand) (char *name, CParseFunc func);
 	void (*setSQL) (Sql *SQL_handle);
-};
-#else
-struct console_input_interface;
 #endif
-
-struct console_interface {
-	void (*init) (void);
-	void (*final) (void);
-	void (*display_title) (void);
-
-	struct console_input_interface *input;
 };
 
 struct console_interface *console;

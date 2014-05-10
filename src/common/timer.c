@@ -2,8 +2,11 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#define HERCULES_CORE
-
+#include "../common/cbasetypes.h"
+#include "../common/db.h"
+#include "../common/malloc.h"
+#include "../common/showmsg.h"
+#include "../common/utils.h"
 #include "timer.h"
 
 #include <stdio.h>
@@ -11,17 +14,11 @@
 #include <string.h>
 #include <time.h>
 
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/showmsg.h"
-#include "../common/utils.h"
-
 #ifdef WIN32
-#	include "../common/winapi.h" // GetTickCount()
+#include "../common/winapi.h" // GetTickCount()
 #else
-#	include <sys/time.h> // struct timeval, gettimeofday()
-#	include <unistd.h>
+#include <unistd.h>
+#include <sys/time.h> // struct timeval, gettimeofday()
 #endif
 
 struct timer_interface timer_s;

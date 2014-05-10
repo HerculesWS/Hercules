@@ -5,9 +5,10 @@
 #ifndef _COMMON_SQL_H_
 #define _COMMON_SQL_H_
 
+#include "../common/cbasetypes.h"
 #include <stdarg.h>// va_list
 
-#include "../common/cbasetypes.h"
+
 
 // Return codes
 #define SQL_ERROR (-1)

@@ -2,30 +2,7 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#define HERCULES_CORE
-
-#include "../config/core.h" // CONSOLE_INPUT
-#include "char.h"
-
-#include <signal.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
-#include <time.h>
-
-#include "int_elemental.h"
-#include "int_guild.h"
-#include "int_homun.h"
-#include "int_mercenary.h"
-#include "int_party.h"
-#include "int_storage.h"
-#include "inter.h"
-#include "pincode.h"
-#include "../common/HPM.h"
 #include "../common/cbasetypes.h"
-#include "../common/console.h"
 #include "../common/core.h"
 #include "../common/db.h"
 #include "../common/malloc.h"
@@ -36,6 +13,25 @@
 #include "../common/strlib.h"
 #include "../common/timer.h"
 #include "../common/utils.h"
+#include "../common/console.h"
+#include "../common/HPM.h"
+#include "int_guild.h"
+#include "int_homun.h"
+#include "int_mercenary.h"
+#include "int_elemental.h"
+#include "int_party.h"
+#include "int_storage.h"
+#include "char.h"
+#include "inter.h"
+#include "pincode.h"
+
+#include <sys/types.h>
+#include <time.h>
+#include <signal.h>
+#include <string.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 // private declarations
 #define CHAR_CONF_NAME	"conf/char-server.conf"
@@ -5501,7 +5497,7 @@ int do_init(int argc, char **argv) {
 	
 	Sql_HerculesUpdateCheck(sql_handle);
 #ifdef CONSOLE_INPUT
-	console->input->setSQL(sql_handle);
+	console->setSQL(sql_handle);
 #endif
 	ShowStatus("The char-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %d).\n\n", char_port);
 	

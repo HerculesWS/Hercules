@@ -5,16 +5,15 @@
 #ifndef _COMMON_STRLIB_H_
 #define _COMMON_STRLIB_H_
 
+#include "../common/cbasetypes.h"
 #include <stdarg.h>
 
-#include "../common/cbasetypes.h"
-
 #ifndef __USE_GNU
-#	define __USE_GNU  // required to enable strnlen on some platforms
-#	include <string.h>
-#	undef __USE_GNU
+	#define __USE_GNU  // required to enable strnlen on some platforms
+	#include <string.h>
+	#undef __USE_GNU
 #else
-#	include <string.h>
+	#include <string.h>
 #endif
 
 #ifdef WIN32
@@ -166,7 +165,7 @@ struct sv_interface *sv;
 void strlib_defaults(void);
 
 /* the purpose of these macros is simply to not make calling them be an annoyance */
-#ifndef _H_STRLIB_C_
+#ifndef STRLIB_C
 	#define jstrescape(pt)             (strlib->jstrescape(pt))
 	#define jstrescapecpy(pt,spt)      (strlib->jstrescapecpy((pt),(spt)))
 	#define jmemescapecpy(pt,spt,size) (strlib->jmemescapecpy((pt),(spt),(size)))
@@ -190,6 +189,6 @@ void strlib_defaults(void);
 	#define safesnprintf(buf,sz,fmt,...) (strlib->safesnprintf((buf),(sz),(fmt),##__VA_ARGS__))
 	#define strline(str,pos)             (strlib->strline((str),(pos)))
 	#define bin2hex(output,input,count)  (strlib->bin2hex((output),(input),(count)))
-#endif /* _H_STRLIB_C_ */
+#endif /* STRLIB_C */
 
 #endif /* _COMMON_STRLIB_H_ */

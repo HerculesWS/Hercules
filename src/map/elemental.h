@@ -7,7 +7,6 @@
 
 #include "status.h" // struct status_data, struct status_change
 #include "unit.h" // struct unit_data
-#include "../common/mmo.h" // NAME_LENGTH
 
 /**
  * Defines

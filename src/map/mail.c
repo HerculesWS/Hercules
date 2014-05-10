@@ -2,20 +2,18 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#define HERCULES_CORE
+#include "../common/nullpo.h"
+#include "../common/showmsg.h"
 
 #include "mail.h"
+#include "atcommand.h"
+#include "itemdb.h"
+#include "clif.h"
+#include "pc.h"
+#include "log.h"
 
 #include <time.h>
 #include <string.h>
-
-#include "atcommand.h"
-#include "clif.h"
-#include "itemdb.h"
-#include "log.h"
-#include "pc.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
 
 struct mail_interface mail_s;
 

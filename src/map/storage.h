@@ -5,12 +5,11 @@
 #ifndef _MAP_STORAGE_H_
 #define _MAP_STORAGE_H_
 
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-
+struct storage_data;
 struct guild_storage;
 struct item;
 struct map_session_data;
+struct DBMap;
 
 struct storage_interface {
 	/* */

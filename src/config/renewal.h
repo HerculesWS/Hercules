@@ -74,6 +74,5 @@
 #define RENEWAL_ASPD
 
 #endif // DISABLE_RENEWAL
-#undef DISABLE_RENEWAL
 
 #endif // _CONFIG_RENEWAL_H_

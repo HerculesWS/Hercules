@@ -1,15 +1,25 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 
-#define HERCULES_CORE
+#include "../common/cbasetypes.h"
+#include "../common/malloc.h"
+#include "../common/showmsg.h"
+#include "../common/HPM.h"
+#include "../common/conf.h"
+#include "../common/db.h"
+#include "../common/des.h"
+#include "../common/ers.h"
+#include "../common/mapindex.h"
+#include "../common/mmo.h"
+#include "../common/socket.h"
+#include "../common/strlib.h"
+
 
 #include "HPMmap.h"
+#include "pc.h"
+#include "map.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-
+//
 #include "atcommand.h"
 #include "battle.h"
 #include "battleground.h"
@@ -27,14 +37,12 @@
 #include "itemdb.h"
 #include "log.h"
 #include "mail.h"
-#include "map.h"
 #include "mapreg.h"
 #include "mercenary.h"
 #include "mob.h"
 #include "npc.h"
 #include "party.h"
 #include "path.h"
-#include "pc.h"
 #include "pc_groups.h"
 #include "pet.h"
 #include "quest.h"
@@ -46,19 +54,11 @@
 #include "trade.h"
 #include "unit.h"
 #include "vending.h"
-#include "../common/HPM.h"
-#include "../common/cbasetypes.h"
-#include "../common/conf.h"
-#include "../common/db.h"
-#include "../common/des.h"
-#include "../common/ers.h"
-#include "../common/malloc.h"
-#include "../common/mapindex.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/sysinfo.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 #include "../common/HPMDataCheck.h"
 

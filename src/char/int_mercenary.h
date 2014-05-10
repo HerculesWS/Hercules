@@ -4,9 +4,7 @@
 #ifndef _CHAR_INT_MERCENARY_H_
 #define _CHAR_INT_MERCENARY_H_
 
-#include "../common/cbasetypes.h"
-
-struct mmo_charstatus;
+struct s_mercenary;
 
 int inter_mercenary_sql_init(void);
 void inter_mercenary_sql_final(void);

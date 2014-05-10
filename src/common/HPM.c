@@ -1,31 +1,26 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 
-#define HERCULES_CORE
-
-#include "../config/core.h" // CONSOLE_INPUT
+#include "../common/cbasetypes.h"
+#include "../common/mmo.h"
+#include "../common/core.h"
+#include "../common/malloc.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
+#include "../common/timer.h"
+#include "../common/conf.h"
+#include "../common/utils.h"
+#include "../common/console.h"
+#include "../common/strlib.h"
+#include "../common/sql.h"
+#include "../common/sysinfo.h"
 #include "HPM.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "../common/cbasetypes.h"
-#include "../common/conf.h"
-#include "../common/console.h"
-#include "../common/core.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/sql.h"
-#include "../common/strlib.h"
-#include "../common/sysinfo.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
-
 #ifndef WIN32
-#	include <unistd.h>
+#include <unistd.h>
 #endif
 
 struct malloc_interface iMalloc_HPM;
@@ -691,7 +686,7 @@ bool hplugins_parse_conf(const char *w1, const char *w2, enum HPluginConfType po
 void hplugins_share_defaults(void) {
 	/* console */
 #ifdef CONSOLE_INPUT
-	HPM->share(console->input->addCommand,"addCPCommand");
+	HPM->share(console->addCommand,"addCPCommand");
 #endif
 	/* our own */
 	HPM->share(hplugins_addpacket,"addPacket");
@@ -760,7 +755,7 @@ void hpm_init(void) {
 	HPM->symbol_defaults();
 	
 #ifdef CONSOLE_INPUT
-	console->input->addCommand("plugins",CPCMD_A(plugins));
+	console->addCommand("plugins",CPCMD_A(plugins));
 #endif
 	return;
 }

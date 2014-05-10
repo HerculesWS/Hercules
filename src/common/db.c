@@ -67,18 +67,14 @@
  * @encoding US-ASCII
  * @see #db.h
 \*****************************************************************************/
-
-#define HERCULES_CORE
-
-#include "db.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../common/ers.h"
-#include "../common/malloc.h"
+#include "db.h"
 #include "../common/mmo.h"
+#include "../common/malloc.h"
 #include "../common/showmsg.h"
+#include "../common/ers.h"
 #include "../common/strlib.h"
 
 /*****************************************************************************\

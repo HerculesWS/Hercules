@@ -5,6 +5,7 @@
 #ifndef _COMMON_CHAR_H_
 #define _COMMON_CHAR_H_
 
+#include "../config/core.h"
 #include "../common/core.h" // CORE_ST_LAST
 #include "../common/db.h"
 

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _COMMON_SPINLOCK_H_
 #define _COMMON_SPINLOCK_H_
 
@@ -14,13 +15,13 @@
 //
 //
  
-#include "../common/atomic.h"
-#include "../common/cbasetypes.h"
-#include "../common/thread.h"
-
 #ifdef WIN32
 #include "../common/winapi.h"
 #endif
+
+#include "../common/cbasetypes.h"
+#include "../common/atomic.h"
+#include "../common/thread.h"
 
 #ifdef WIN32
 

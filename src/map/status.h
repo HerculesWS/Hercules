@@ -5,18 +5,14 @@
 #ifndef _MAP_STATUS_H_
 #define _MAP_STATUS_H_
 
-#include "../config/core.h" // defType, NEW_CARTS, RENEWAL, RENEWAL_ASPD
-
-#include "../common/cbasetypes.h"
 #include "../common/mmo.h"
 
 struct block_list;
-struct elemental_data;
+struct mob_data;
+struct pet_data;
 struct homun_data;
 struct mercenary_data;
-struct mob_data;
-struct npc_data;
-struct pet_data;
+struct status_change;
 
 //Change the equation when the values are high enough to discard the
 //imprecision in exchange of overflow protection [Skotlex]
@@ -1882,7 +1878,11 @@ struct status_interface {
 	int hp_coefficient2[CLASS_COUNT];
 	int hp_sigma_val[CLASS_COUNT][MAX_LEVEL+1];
 	int sp_coefficient[CLASS_COUNT];
-	int aspd_base[CLASS_COUNT][MAX_WEAPON_TYPE+1]; // +1 for RENEWAL_ASPD
+#ifdef RENEWAL_ASPD
+	int aspd_base[CLASS_COUNT][MAX_WEAPON_TYPE+1];
+#else
+	int aspd_base[CLASS_COUNT][MAX_WEAPON_TYPE]; //[blackhole89]
+#endif
 	sc_type Skill2SCTable[MAX_SKILL];  // skill  -> status
 	int IconChangeTable[SC_MAX];          // status -> "icon" (icon is a bit of a misnomer, since there exist values with no icon associated)
 	unsigned int ChangeFlagTable[SC_MAX]; // status -> flags

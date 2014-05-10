@@ -11,10 +11,11 @@
 /**
  * Declarations
  **/
-struct item;
-struct item_data;
+struct block_list;
 struct map_session_data;
 struct mob_data;
+struct item;
+struct item_data;
 
 /**
  * Defines

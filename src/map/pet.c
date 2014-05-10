@@ -2,39 +2,37 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#define HERCULES_CORE
+#include "../common/db.h"
+#include "../common/timer.h"
+#include "../common/nullpo.h"
+#include "../common/malloc.h"
+#include "../common/random.h"
+#include "../common/showmsg.h"
+#include "../common/strlib.h"
+#include "../common/utils.h"
+#include "../common/ers.h"
 
+#include "pc.h"
+#include "status.h"
+#include "map.h"
+#include "path.h"
+#include "intif.h"
+#include "clif.h"
+#include "chrif.h"
 #include "pet.h"
+#include "itemdb.h"
+#include "battle.h"
+#include "mob.h"
+#include "npc.h"
+#include "script.h"
+#include "skill.h"
+#include "unit.h"
+#include "atcommand.h" // msg_txt()
+#include "log.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "atcommand.h" // msg_txt()
-#include "battle.h"
-#include "chrif.h"
-#include "clif.h"
-#include "intif.h"
-#include "itemdb.h"
-#include "log.h"
-#include "map.h"
-#include "mob.h"
-#include "npc.h"
-#include "path.h"
-#include "pc.h"
-#include "script.h"
-#include "skill.h"
-#include "status.h"
-#include "unit.h"
-#include "../common/db.h"
-#include "../common/ers.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
 
 struct pet_interface pet_s;
 

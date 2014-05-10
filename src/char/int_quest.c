@@ -2,24 +2,22 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#define HERCULES_CORE
-
-#include "int_quest.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "../common/mmo.h"
+#include "../common/db.h"
+#include "../common/malloc.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
+#include "../common/strlib.h"
+#include "../common/sql.h"
+#include "../common/timer.h"
 
 #include "char.h"
 #include "inter.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/sql.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
+#include "int_quest.h"
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 /**
  * Loads the entire questlog for a character.

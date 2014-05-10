@@ -5,23 +5,19 @@
 #ifndef _MAP_SKILL_H_
 #define _MAP_SKILL_H_
 
-#include "../config/core.h" // RENEWAL_CAST
-
-#include "map.h" // struct block_list
-#include "status.h" // enum sc_type
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
 #include "../common/mmo.h" // MAX_SKILL, struct square
+#include "../common/db.h"
+#include "map.h" // struct block_list
 
 /**
  * Declarations
  **/
-struct homun_data;
 struct map_session_data;
-struct mercenary_data;
+struct homun_data;
 struct skill_unit;
-struct square;
+struct skill_unit_group;
 struct status_change_entry;
+struct square;
 
 /**
  * Defines

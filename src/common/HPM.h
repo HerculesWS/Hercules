@@ -4,12 +4,8 @@
 #ifndef _COMMON_HPM_H_
 #define _COMMON_HPM_H_
 
-#ifndef HERCULES_CORE
-#error You should never include HPM.h from a plugin.
-#endif
-
-#include "../common/HPMi.h"
 #include "../common/cbasetypes.h"
+#include "../common/HPMi.h"
 
 #ifdef WIN32
 	#ifndef WIN32_LEAN_AND_MEAN

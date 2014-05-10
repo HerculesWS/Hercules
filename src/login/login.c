@@ -2,18 +2,6 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#define HERCULES_CORE
-
-#include "login.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "account.h"
-#include "ipban.h"
-#include "loginlog.h"
-#include "../common/HPM.h"
 #include "../common/core.h"
 #include "../common/db.h"
 #include "../common/malloc.h"
@@ -24,6 +12,15 @@
 #include "../common/strlib.h"
 #include "../common/timer.h"
 #include "../common/utils.h"
+#include "../common/HPM.h"
+#include "account.h"
+#include "ipban.h"
+#include "login.h"
+#include "loginlog.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 struct Login_Config login_config;
 

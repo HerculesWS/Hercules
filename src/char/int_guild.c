@@ -2,25 +2,21 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#define HERCULES_CORE
-
-#include "../config/core.h" // DBPATH
-#include "int_guild.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "char.h"
-#include "inter.h"
 #include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
 #include "../common/mmo.h"
-#include "../common/showmsg.h"
+#include "../common/malloc.h"
 #include "../common/socket.h"
+#include "../common/db.h"
+#include "../common/showmsg.h"
 #include "../common/strlib.h"
 #include "../common/timer.h"
+#include "char.h"
+#include "inter.h"
+#include "int_guild.h"
+
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define GS_MEMBER_UNMODIFIED 0x00
 #define GS_MEMBER_MODIFIED 0x01

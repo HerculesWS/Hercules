@@ -4,7 +4,7 @@
 #ifndef _CHAR_INT_ELEMENTAL_H_
 #define _CHAR_INT_ELEMENTAL_H_
 
-#include "../common/cbasetypes.h"
+struct s_elemental;
 
 void inter_elemental_sql_init(void);
 void inter_elemental_sql_final(void);

@@ -6,7 +6,6 @@
 #define _COMMON_CONF_H_
 
 #include "../common/cbasetypes.h"
-
 #include "../../3rdparty/libconfig/libconfig.h"
 
 /**

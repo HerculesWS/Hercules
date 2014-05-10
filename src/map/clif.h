@@ -5,13 +5,13 @@
 #ifndef _MAP_CLIF_H_
 #define _MAP_CLIF_H_
 
-#include <stdarg.h>
-
-#include "map.h"
-#include "packets_struct.h"
 #include "../common/cbasetypes.h"
 #include "../common/db.h"
 #include "../common/mmo.h"
+#include "../common/socket.h"
+#include "../map/map.h"
+#include "../map/packets_struct.h"
+#include <stdarg.h>
 
 /**
  * Declarations
@@ -20,6 +20,7 @@ struct item;
 struct item_data;
 struct storage_data;
 struct guild_storage;
+struct block_list;
 struct unit_data;
 struct map_session_data;
 struct homun_data;
