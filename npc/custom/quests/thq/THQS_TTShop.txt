@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= Fredzilla
 //===== Current Version: =====================================
-//= 1.1
+//= 1.2a
 //===== Description: =========================================
 //= Start for Treasure hunter quests
 //===== Additional Comments: =================================
@@ -13,6 +13,7 @@
 //= 1.1 - balanced some prices, fixed 1 missing label
 //=       removed Executioner&Mysteltain swords [Lupus]
 //= 1.2 - Optmized and fixed small error [Panikon]
+//= 1.2a - Fixed zeny formula [Panikon]
 //============================================================
 
 prt_in,159,172,0	warp	thqwrp	3,3,yuno_in01,123,155
@@ -60,21 +61,30 @@ OnInit:
 // Trades tokens
 // getarg(0) - number of tokens to be traded
 function	script	thqs_trade_token	{
-	.@type = getarg(0);
-	if( .@type == 4 )
+	@type = getarg(0);
+	if( @type == 4 )
 		close;
-	// 10^3, 10^4, 10^5
-	.@type += 2; // So we can use pow later to determine the qt of Zeny
 
-	if( #Treasure_Token < .@type ) {
+	// 10^0, 10^1, 10^2
+	@type -= 1;
+	@price = pow(10, @type);
+
+	// 10^3, 10^4, 10^5
+	@type += 3; // So we can use pow later to determine the qt of Zeny
+	@prize = pow(1000, @type);
+
+	if( #Treasure_Token < @price ) {
 		mes "You don't have enough tokens!";
 		close;
 	}
-	mes ".@type "+.@type;
-	
-	mes "pow(1000,.@type);" + pow(10,.@type);
-	#Treasure_Token -= .@type;
-	Zeny += pow(1000,.@type);
+
+	if( Zeny == MAX_ZENY ) {
+		mes "You can't add more zeny to your character";
+		close;
+	}
+
+	Zeny += @prize;
+	#Treasure_Token -= @price;
 	close;
 }
 

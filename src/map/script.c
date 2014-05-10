@@ -2924,7 +2924,11 @@ int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, co
 				if( st != NULL ) {
 					ShowError("script:set_reg: failed to set param '%s' to %d.\n", name, val);
 					script->reportsrc(st);
-					st->state = END;
+					// Instead of just stop the script execution we let the character close
+					// the window if it was open.
+					st->state = (sd->state.dialog) ? CLOSE : END;
+					if( st->state == CLOSE )
+						clif->scriptclose(sd, st->oid);
 				}
 				return 0;
 			}
