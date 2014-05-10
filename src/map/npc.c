@@ -1298,23 +1298,23 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 	unsigned short shop_size = 0;
 
 	if( sd->state.trading )
-		return 4;
+		return ERROR_TYPE_EXCHANGE;
 
 	if( count <= 0 )
-		return 5;
+		return ERROR_TYPE_ITEM_ID;
 	
 	if( points < 0 )
-		return 6;
+		return ERROR_TYPE_MONEY;
 	
 	if( !(nd = (struct npc_data *)map->id2bl(sd->npc_shopid)) )
-		return 1;
+		return ERROR_TYPE_NPC;
 	
 	if( nd->subtype != CASHSHOP ) {
 		if( nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->type != NST_ZENY && nd->u.scr.shop->type != NST_MARKET ) {
 			shop = nd->u.scr.shop->item;
 			shop_size = nd->u.scr.shop->items;
 		} else
-			return 1;
+			return ERROR_TYPE_NPC;
 	} else {
 		shop = nd->u.shop.shop_item;
 		shop_size = nd->u.shop.count;
@@ -1330,11 +1330,11 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 		amount = item_list[i*2+0];
 
 		if( !itemdb->exists(nameid) || amount <= 0 )
-			return 5;
+			return ERROR_TYPE_ITEM_ID;
 
 		ARR_FIND(0,shop_size,j,shop[j].nameid == nameid);
 		if( j == shop_size || shop[j].value <= 0 )
-			return 5;
+			return ERROR_TYPE_ITEM_ID;
 
 		if( !itemdb->isstackable(nameid) && amount > 1 ) {
 			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of nonstackable item %d!\n",
@@ -1347,7 +1347,7 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 				new_++;
 				break;
 			case ADDITEM_OVERAMOUNT:
-				return 3;
+				return ERROR_TYPE_INVENTORY_WEIGHT;
 		}
 
 		vt += shop[j].value * amount;
@@ -1355,20 +1355,20 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 	}
 
 	if( w + sd->weight > sd->max_weight )
-		return 3;
+		return ERROR_TYPE_INVENTORY_WEIGHT;
 	
 	if( pc->inventoryblank(sd) < new_ )
-		return 3;
+		return ERROR_TYPE_INVENTORY_WEIGHT;
 	
 	if( points > vt ) points = vt;
 
 	// Payment Process ----------------------------------------------------
 	if( nd->subtype == SCRIPT && nd->u.scr.shop->type == NST_CUSTOM ) {
 		if( !npc->trader_pay(nd,sd,vt,points) )
-			return 6;
+			return ERROR_TYPE_MONEY;
 	} else {
 		if( sd->kafraPoints < points || sd->cashPoints < (vt - points) )
-			return 6;
+			return ERROR_TYPE_MONEY;
 		pc->paycash(sd,vt,points);
 	}
 	// Delivery Process ----------------------------------------------------
@@ -1387,7 +1387,7 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 		}
 	}
 
-	return 0;
+	return ERROR_TYPE_NONE;
 }
 
 //npc_buylist for script-controlled shops.
@@ -1631,26 +1631,26 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	unsigned short shop_size = 0;
 	
 	if( amount <= 0 )
-		return 5;
+		return ERROR_TYPE_ITEM_ID;
 
 	if( points < 0 )
-		return 6;
+		return ERROR_TYPE_MONEY;
 
 	if( sd->state.trading )
-		return 4;
+		return ERROR_TYPE_EXCHANGE;
 	
 	if( !(nd = (struct npc_data *)map->id2bl(sd->npc_shopid)) )
-		return 1;
+		return ERROR_TYPE_NPC;
 
 	if( (item = itemdb->exists(nameid)) == NULL )
-		return 5; // Invalid Item
+		return ERROR_TYPE_ITEM_ID; // Invalid Item
 
 	if( nd->subtype != CASHSHOP ) {
 		if( nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->type != NST_ZENY && nd->u.scr.shop->type != NST_MARKET ) {
 			shop = nd->u.scr.shop->item;
 			shop_size = nd->u.scr.shop->items;
 		} else
-			return 1;
+			return ERROR_TYPE_NPC;
 	} else {
 		shop = nd->u.shop.shop_item;
 		shop_size = nd->u.shop.count;
@@ -1659,10 +1659,10 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	ARR_FIND(0, shop_size, i, shop[i].nameid == nameid);
 	
 	if( i == shop_size )
-		return 5;
+		return ERROR_TYPE_ITEM_ID;
 	
 	if( shop[i].value <= 0 )
-		return 5;
+		return ERROR_TYPE_ITEM_ID;
 
 	if(!itemdb->isstackable(nameid) && amount > 1) {
 		ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of nonstackable item %d!\n",
@@ -1673,15 +1673,15 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	switch( pc->checkadditem(sd, nameid, amount) ) {
 		case ADDITEM_NEW:
 			if( pc->inventoryblank(sd) == 0 )
-				return 3;
+				return ERROR_TYPE_INVENTORY_WEIGHT;
 			break;
 		case ADDITEM_OVERAMOUNT:
-			return 3;
+			return ERROR_TYPE_INVENTORY_WEIGHT;
 	}
 
 	w = item->weight * amount;
 	if( w + sd->weight > sd->max_weight )
-		return 3;
+		return ERROR_TYPE_INVENTORY_WEIGHT;
 
 	if( (double)shop[i].value * amount > INT_MAX ) {
 		ShowWarning("npc_cashshop_buy: Item '%s' (%d) price overflow attempt!\n", item->name, nameid);
@@ -1689,7 +1689,7 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 				nd->exname, map->list[nd->bl.m].name, nd->bl.x, nd->bl.y,
 				sd->status.name, sd->status.account_id, sd->status.char_id,
 				shop[i].value, amount);
-		return 5;
+		return ERROR_TYPE_ITEM_ID;
 	}
 
 	price = shop[i].value * amount;
@@ -1699,10 +1699,10 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 
 	if( nd->subtype == SCRIPT && nd->u.scr.shop->type == NST_CUSTOM ) {
 		if( !npc->trader_pay(nd,sd,price,points) )
-			return 6;
+			return ERROR_TYPE_MONEY;
 	} else {
 		if( (sd->kafraPoints < points) || (sd->cashPoints < price - points) )
-			return 6;
+			return ERROR_TYPE_MONEY;
 			
 		pc->paycash(sd, price, points);
 	}
@@ -1716,7 +1716,7 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 		pc->additem(sd,&item_tmp, amount, LOG_TYPE_NPC);
 	}
 
-	return 0;
+	return ERROR_TYPE_NONE;
 }
 
 /// Player item purchase from npc shop.
@@ -2612,7 +2612,7 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 	enum npc_subtype type;
 
 	if( strcmp(w1,"-") == 0 ) {
-		// 'floating' shop?
+		// 'floating' shop
 		x = y = dir = 0;
 		m = -1;
 	} else {// w1=<map name>,<x>,<y>,<facing>
@@ -2711,7 +2711,7 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 		nd->dir = dir;
 		if( map->list[nd->bl.m].users )
 			clif->spawn(&nd->bl);
-	} else {// 'floating' shop?
+	} else {// 'floating' shop
 		map->addiddb(&nd->bl);
 	}
 	strdb_put(npc->name_db, nd->exname, nd);

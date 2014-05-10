@@ -15561,20 +15561,10 @@ void clif_cashshop_show(struct map_session_data *sd, struct npc_data *nd) {
 	WFIFOSET(fd,WFIFOW(fd,2));
 }
 
-
 /// Cashshop Buy Ack (ZC_PC_CASH_POINT_UPDATE).
 /// 0289 <cash point>.L <error>.W
 /// 0289 <cash point>.L <kafra point>.L <error>.W (PACKETVER >= 20070711)
-/// error:
-///     0 = The deal has successfully completed. (ERROR_TYPE_NONE)
-///     1 = The Purchase has failed because the NPC does not exist. (ERROR_TYPE_NPC)
-///     2 = The Purchase has failed because the Kafra Shop System is not working correctly. (ERROR_TYPE_SYSTEM)
-///     3 = You are over your Weight Limit. (ERROR_TYPE_INVENTORY_WEIGHT)
-///     4 = You cannot purchase items while you are in a trade. (ERROR_TYPE_EXCHANGE)
-///     5 = The Purchase has failed because the Item Information was incorrect. (ERROR_TYPE_ITEM_ID)
-///     6 = You do not have enough Kafra Credit Points. (ERROR_TYPE_MONEY)
-///     7 = You can purchase up to 10 items.
-///     8 = Some items could not be purchased.
+/// For error return codes see enum cashshop_error@clif.h
 void clif_cashshop_ack(struct map_session_data* sd, int error) {
 	struct npc_data *nd;
     int fd = sd->fd;

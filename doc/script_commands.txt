@@ -299,6 +299,29 @@ type of shop will not allow you to sell items at it, you may only purchase
 items here. The layout used to define sale items still count, and 
 "<price>" refers to how many points will be spent purchasing the them.
 
+** Define a trader NPC
+<map name>,<x>,<y>,<facing>%TAB%trader%TAB%<NPC Name>%TAB%<sprite id>,{<code>}
+-%TAB%trader%TAB%<NPC Name>%TAB%-1,{<code>}
+
+All the standards that are valid to script objects are also valid for trader objects
+(see ** Define an NPC object for more information).
+This will define a trader NPC, which can cause a shop, cashshop or market window
+to come up when clicked or called by other means. Unlike shop/cashshop NPCs this
+type will run a code and can change the items that are being sold over time without
+other NPC objects.
+The types that a trader object can have are the following:
+- NST_ZENY	(0) Normal Zeny Shop (shop)
+- NST_CASH	(1) Normal Cash Shop (cashshop)
+- NST_MARKET	(2) Normal NPC Market Shop (where items have limited availability
+		    and need to be refurbished)
+- NST_CUSTOM	(3) Custom Shop (any currency, item/var/etca, check sample)
+Unless otherwise specified via *tradertype an trader object will be defined as
+NST_ZENY.
+
+Note: NST_MARKET is only available with PACKETVER 20131223 or newer.
+See '12 - NPC Trader-Related Commands' and /doc/sample/npc_trader_sample.txt for
+more information regarding how to use this NPC type.
+
 ** Define an warp/shop/cashshop/NPC duplicate.
 
 warp: <map name>,<x>,<y>{,<facing>}%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<spanx>,<spany>
@@ -1060,6 +1083,21 @@ server load with 1,000 players (oh the pain...)
 Only the special labels which are not associated with any script command 
 are listed here. There are other kinds of labels which may be triggered in 
 a similar manner, but they are described with their associated commands.
+
+OnCountFunds:
+
+This special label is triggered when a player opens a trader NPC object that
+is NST_CUSTOM. It is used to define different currency types to the trader via
+*setcurrency. Should be used along with OnPayFunds, see /doc/sample/npc_trader_sample.txt
+for more information.
+
+OnPayFunds:
+
+This special label is triggered when a purchase is made on a trader NPC object
+that is NST_CUSTOM. Receives @price, total cost and @points, secondary input
+field for cash windows. It is used to remove items that are set as currency.
+Should be used along with OnCountFunds, see /doc/sample/npc_trader_sample.txt
+for more information.
 
 On<label name>:
 
