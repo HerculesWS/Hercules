@@ -71,7 +71,7 @@ function	script	thqs_trade_token	{
 
 	// 10^3, 10^4, 10^5
 	@type += 3; // So we can use pow later to determine the qt of Zeny
-	@prize = pow(1000, @type);
+	@prize = pow(10, @type);
 
 	if( #Treasure_Token < @price ) {
 		mes "You don't have enough tokens!";
