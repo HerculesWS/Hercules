@@ -708,7 +708,7 @@ OnReportError:
 	if (.errors == 1)
 		debugmes "**** WARNING: Any self-test results past this point are unreliable because of previous errors. ****";
 	debugmes "Error: "+.@msg$+": '"+.@val$+"' (found) != '"+.@ref$+"' (expected)";
-	.errors++;
+	++.errors;
 	//end;
 	return;
 
