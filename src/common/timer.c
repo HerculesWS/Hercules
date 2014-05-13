@@ -180,7 +180,7 @@ static int64 sys_tick(void) {
 	// Monotinic clock: Implementation-defined.
 	//   Clock that cannot be set and represents monotonic time since some
 	//   unspecified starting point.  This clock is not affected by
-	//   discontin‐uous jumps in the system time (e.g., if the system
+	//   discontinuous jumps in the system time (e.g., if the system
 	//   administrator manually changes the  clock),  but  is  affected by
 	//   the  incremental adjustments performed by adjtime(3) and NTP.
 	struct timespec tval;

@@ -4,6 +4,8 @@
 //= SinSloth, MasterOfMuppets, Kargha
 //===== Current Version: =====================================
 //= 3.9
+//===== File Encoding ========================================
+//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //===== Description: =========================================
 //= [Official Conversion]
 //= Quest for opening the doors to Geffenia.
@@ -3090,13 +3092,11 @@ OnTouch:
 	end;
 }
 
-/* Currently broken.
 prt_maze02,25,161,0	script	#music	-1,7,7,{
 OnTouch:
-	soundeffect "effect\\Â¼Â®Â¾Ã§Ã€Ã‡ Â¾Ã®Â½Ã˜Â½Ã….wav",1;
+	soundeffect "effect\\¼®¾çÀÇ ¾î½Ø½Å.wav",1;
 	end;
 }
-*/
 
 prt_maze02,132,132,0	script	#skill	-1,{
 OnEnable:

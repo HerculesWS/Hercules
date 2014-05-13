@@ -4,6 +4,8 @@
 //= Gennosuke Kouga, Muad_Dib
 //===== Current Version: =====================================
 //= 2.3
+//===== File Encoding ========================================
+//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //===== Description: =========================================
 //= [Official Conversion]
 //= Quest NPCs related to Dewata:

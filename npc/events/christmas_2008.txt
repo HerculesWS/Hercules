@@ -4,6 +4,8 @@
 //= Kisuka
 //===== Current Version: =====================================
 //= 1.1
+//===== File Encoding ========================================
+//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //===== Description: =========================================
 //= iRO Christmas Event. (2008)
 //= Create Music Box and Cake.

@@ -4,6 +4,8 @@
 //= Kisuka
 //===== Current Version: =====================================
 //= 2.3
+//===== File Encoding ========================================
+//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //===== Description: =========================================
 //= Quests for Moscovia.
 //= The Moving Island, Help Mikhail, Acorn Exchange,

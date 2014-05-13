@@ -4,6 +4,8 @@
 //= Kisuka (1.0)
 //===== Current Version: =======================================================
 //= 1.0.0
+//===== File Encoding ==========================================================
+//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //===== Description: ===========================================================
 //= Defeat Wolfchev's human experimentations.
 //===== Additional Comments: ===================================================
@@ -566,6 +568,7 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					break;
 				case 4:
 					mes "<<Ygnus Stale[1]>>";
+					// FIXME[Haru]: Anyone knows what ¹ßÈ­ means?
 					mes "When doing short distance attack, cast ¹ßÈ­ to the player and to the enemy with a certain chance.";
 					mes "Two-Handed Axe / ATK 250 / Weight 190 / Fire Property / Weapon Lv 4 / Required Lv 95 / Socket 1 / for High Swordman/Merchant Classes";
 					callsub L_Reward, Ygnus_Stale, 50, 100, 35;
