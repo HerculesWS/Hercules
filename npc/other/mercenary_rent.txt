@@ -271,7 +271,7 @@ pay_arche,99,167,4	duplicate(Mercenary Manager#main)	Mercenary Manager#Bow	4_M_J
 		close;
 	}
 	mes "[Mercenary Goods Merchant]";
-	if (.@input == 1) 
+	if (.@input == 1)
 		mes "Here's your " + getitemname(.@item[.@m]) + ".";
 	else {
 		mes "Here you are, this is exactly";

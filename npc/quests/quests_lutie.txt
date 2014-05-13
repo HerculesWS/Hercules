@@ -227,7 +227,7 @@ xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 		}
 		break;
 	case 5:
-		if ((countitem(5015) > 0) && (countitem(978) > 0) && (countitem(7030) > 49)){ 
+		if ((countitem(5015) > 0) && (countitem(978) > 0) && (countitem(7030) > 49)){
 			mes "^3355FFYou gingerly place the items into the snowman's mouth.^000000";
 			next;
 			delitem 5015,1;  //Egg_Shell
@@ -315,7 +315,7 @@ xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 		}
 		break;
 	case 9:
-		if ((countitem(529) > 9) && (countitem(530) > 4) && (countitem(538) > 14) && (countitem(539) > 19) && (countitem(999) > 9)) { 
+		if ((countitem(529) > 9) && (countitem(530) > 4) && (countitem(538) > 14) && (countitem(539) > 19) && (countitem(999) > 9)) {
 			mes "^3355FFYou gingerly place the items into the snowman's mouth.^000000";
 			next;
 			delitem 529,10;  //Candy

@@ -434,13 +434,13 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 			mes "These are the armors I have.";
 			next;
 			for(.@i = 1; .@i < 8; .@i++) {
-				if(((.@i == 1 || .@i == 5) && (countitem(Will_Of_Warrior) >= 100) && (countitem(Blood_Thirst) >= 50) && 
-				(countitem(Goast_Chill) >= 35)) || 
-				((.@i == 2 || .@i == 3) && (countitem(Will_Of_Warrior) >= 100) && (countitem(Blood_Thirst) >= 50) && 
+				if(((.@i == 1 || .@i == 5) && (countitem(Will_Of_Warrior) >= 100) && (countitem(Blood_Thirst) >= 50) &&
+				(countitem(Goast_Chill) >= 35)) ||
+				((.@i == 2 || .@i == 3) && (countitem(Will_Of_Warrior) >= 100) && (countitem(Blood_Thirst) >= 50) &&
 				(countitem(Goast_Chill) >= 22)) ||
-				((.@i == 4 || .@i == 7) && (countitem(Will_Of_Warrior) >= 300) && (countitem(Blood_Thirst) >= 300) && 
+				((.@i == 4 || .@i == 7) && (countitem(Will_Of_Warrior) >= 300) && (countitem(Blood_Thirst) >= 300) &&
 				(countitem(Goast_Chill) >= 400)) ||
-				((.@i == 6) && (countitem(Will_Of_Warrior) >= 100) && (countitem(Blood_Thirst) >= 50) && 
+				((.@i == 6) && (countitem(Will_Of_Warrior) >= 100) && (countitem(Blood_Thirst) >= 50) &&
 				(countitem(Goast_Chill) >= 30))) {
 					.@armor$[.@i] = "^0000FF";
 				} else {
@@ -465,8 +465,8 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					break;
 				case 2:
 					mes "<<Giant Shield[1]>>";
-			    	mes "Decrease 5% of Damage from Large Monsters, if Refine Lv is 9, decrease 5% more of the Damage.";
-			    	mes "Shield / Def 130 / Weight 280 / Required Lv 100 / Socket 1 / for 3rd Swordman Classes";
+					mes "Decrease 5% of Damage from Large Monsters, if Refine Lv is 9, decrease 5% more of the Damage.";
+					mes "Shield / Def 130 / Weight 280 / Required Lv 100 / Socket 1 / for 3rd Swordman Classes";
 					callsub L_Reward, Giant_Shield, 100, 50, 35;
 					break;
 				case 3:
@@ -516,15 +516,15 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 			mes "These are the Weapons I got.";
 			next;
 			for(.@i = 1; .@i < 15; .@i++) {
-				if(((.@i == 1) && (countitem(Will_Of_Warrior) >= 50) && (countitem(Blood_Thirst) >= 100) && 
+				if(((.@i == 1) && (countitem(Will_Of_Warrior) >= 50) && (countitem(Blood_Thirst) >= 100) &&
 				(countitem(Goast_Chill) >= 10)) ||
-				((.@i == 2) && (countitem(Will_Of_Warrior) >= 50) && (countitem(Blood_Thirst) >= 100) && 
+				((.@i == 2) && (countitem(Will_Of_Warrior) >= 50) && (countitem(Blood_Thirst) >= 100) &&
 				(countitem(Goast_Chill) >= 85)) ||
-				((.@i == 3 || .@i == 4 || (.@i >= 8 && .@i < 11) || .@i >= 12) && (countitem(Will_Of_Warrior) >= 50) && 
+				((.@i == 3 || .@i == 4 || (.@i >= 8 && .@i < 11) || .@i >= 12) && (countitem(Will_Of_Warrior) >= 50) &&
 				(countitem(Blood_Thirst) >= 100) && (countitem(Goast_Chill) >= 35)) ||
 				((.@i == 5 || .@i == 7 || .@i == 11) && (countitem(Will_Of_Warrior) >= 50) && (countitem(Blood_Thirst) >= 100)
 				&& (countitem(Goast_Chill) >= 40)) ||
-				((.@i == 6) && (countitem(Will_Of_Warrior) >= 300) && (countitem(Blood_Thirst) >= 300) && 
+				((.@i == 6) && (countitem(Will_Of_Warrior) >= 300) && (countitem(Blood_Thirst) >= 300) &&
 				(countitem(Goast_Chill) >= 400))) {
 						.@weapon$[.@i] = "^0000FF";
 				} else {
@@ -865,7 +865,7 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 			.@equipped$[.@i] = getequipname(.@parts[.@i]);
 		}
 	}
-	switch(select("I changed my mind.", .@equipped$[0], .@equipped$[1], .@equipped$[2], .@equipped$[3], .@equipped$[4], 
+	switch(select("I changed my mind.", .@equipped$[0], .@equipped$[1], .@equipped$[2], .@equipped$[3], .@equipped$[4],
 	.@equipped$[5], .@equipped$[6])) {
 	case 1:
 		mes "[Pudding]";
@@ -947,8 +947,8 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 	.@refine_count = getequiprefinerycnt(.@position);
 	.@equip_item = getequipid(.@position);
 	.@lhz_max_num = 4000;
-	if(.@equip_item == Agent_Katar || .@equip_item == Guillotine_Katar || .@equip_item == Ygnus_Stale || 
-	.@equip_item == End_Sektura || .@equip_item = Cannon_Spear || .@equip_item == Giant_Lance || 
+	if(.@equip_item == Agent_Katar || .@equip_item == Guillotine_Katar || .@equip_item == Ygnus_Stale ||
+	.@equip_item == End_Sektura || .@equip_item = Cannon_Spear || .@equip_item == Giant_Lance ||
 	.@equip_item == Aztoe_Nail || .@equip_item == Scarletto_Nail || .@equip_item == Bloody_Cross) {
 	  .@type = 1;
 	  if(.@equip_item == Giant_Lance)
@@ -958,7 +958,7 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 	} else if(.@equip_item == Chilly_Spell_Book || .@equip_item == Recovery_Light) {
 		.@type = 3;
 	} else if(.@equip_item== Giant_Shield || .@equip_item == Geffenia_Book_Water || .@equip_item == Bible_Of_Promise2 ||
-	.@equip_item == Salvage_Cape || .@equip_item == Assassin_Handcuffs || .@equip_item == Green_Operation_Coat || 
+	.@equip_item == Salvage_Cape || .@equip_item == Assassin_Handcuffs || .@equip_item == Green_Operation_Coat ||
 	.@equip_item == Ancient_Gold_Deco) {
 	  if(.@equip_item == Salvage_Cape || .@equip_item == Ancient_Gold_Deco)
 		.@lhz_max_num = 4200;
@@ -2020,7 +2020,7 @@ lhz_dun04,151,276,3	script	Researcher#memo	4_LGTSCIENCE,{
 							mes "Now, your party is free to pass the entrance.";
 						} else {
 							instance_destroy(.@instance);
-						}					
+						}
 					}
 					close;
 				} else {
@@ -2249,7 +2249,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 	OnEnable:
 		specialeffect EF_LIGHTSPHERE;
 		enablenpc instance_npcname("Manual Sheet#1_1");
-		end; 
+		end;
 }
 
 // Left Valve
@@ -2865,7 +2865,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		monster .@map$,85,58,"Starving Lab animal",MD_DESERT_WOLF,1,.@label$;
 		monster .@map$,82,60,"Starving Lab animal",MD_DESERT_WOLF_B,1,.@label$;
 		monster .@map$,83,58,"Starving Lab animal",MD_DESERT_WOLF_B,1,.@label$;
-		monster .@map$,85,56,"Starving Lab animal",MD_DESERT_WOLF_B,1,.@label$;		
+		monster .@map$,85,56,"Starving Lab animal",MD_DESERT_WOLF_B,1,.@label$;
 		monster .@map$,86,60,"Starving Lab animal",MD_DESERT_WOLF_B,1,.@label$;
 		monster .@map$,87,58,"Starving Lab animal",MD_DESERT_WOLF_B,1,.@label$;
 		end;
@@ -3135,7 +3135,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 			end;
 		case 13:
 			donpcevent instance_npcname("Howard Alt-Eisen#boss13")+"::OnEnable";
-			end; 
+			end;
 		}
 
 	OnDisable:

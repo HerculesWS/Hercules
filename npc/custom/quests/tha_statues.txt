@@ -47,7 +47,7 @@ tha_t09,84,99,4	script	Mediane	HIDDEN_NPC,{
 	mes "Okay, i am warping you to the next floor now.";
 	next;
 	set TSQ_CHK,0;
-	warp "tha_t10",	165,	138; 
+	warp "tha_t10",	165,	138;
 	close;
 nook:
 	mes "[Mediane]";

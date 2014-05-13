@@ -247,7 +247,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 		mes "is the most necessary";
 		mes "skill for an Acolyte?";
 		next;
-		switch(select("Heal:Aqua Benedicta:Teleport")){ 
+		switch(select("Heal:Aqua Benedicta:Teleport")){
 		case 1:
 			mes "[Asthe]";
 			mes "Ah, yes.";
@@ -399,7 +399,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 				next;
 				mes "[Asthe]";
 				mes "But you must have forgotten the Mace I've lent you. Would you bring it back so that I can return it to the church?";
-				close;  
+				close;
 			}
 		}
 		mes "Are you having";
@@ -1110,7 +1110,7 @@ prt_monk,226,257,6	script	Ill Girl#tu	4_F_04,{
 			mes "^3355FFNothing happened.";
 			mes "It doesn't look like";
 			mes "that skill will work.^000000";
-			close; 
+			close;
 			break;
 		case 2:
 			if(getskilllv("AL_BLESSING") > 0){
@@ -1422,7 +1422,7 @@ prt_monk,153,210,3	script	Cleope Verce	4_F_SISTER,{
 	if(BaseJob != Job_Acolyte){
 		if (JobLevel < 40) {
 			if (BaseLevel < 26) {
-				mes "Oh my.. "; 
+				mes "Oh my.. ";
 				mes "A newbie Acolyte?";
 				mes "It doesn't even seem";
 				mes "like you've learned";
@@ -1464,7 +1464,7 @@ prt_monk,153,210,3	script	Cleope Verce	4_F_SISTER,{
 				mes "Rookie.";
 				close;
 			} else if(BaseLevel < 36){
-				mes "Oh my.. "; 
+				mes "Oh my.. ";
 				mes "A young Acolyte?";
 				mes "You seem to have just";
 				mes "started learning your skills?";
@@ -1515,7 +1515,7 @@ prt_monk,153,210,3	script	Cleope Verce	4_F_SISTER,{
 				mes "young friend.";
 				close;
 			} else if(BaseLevel < 46){
-				mes "Well, well, well~"; 
+				mes "Well, well, well~";
 				mes "Hello, young Acolyte.";
 				mes "You're still kind of";
 				mes "green, but I guess you're";

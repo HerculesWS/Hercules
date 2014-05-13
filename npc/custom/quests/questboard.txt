@@ -286,12 +286,12 @@ function AddCollection {
 	setd ("." +.collectionquestcount+"_collectionzeny", getarg(5));
 	set .@argcount, 6;
 	set .@size, getarraysize(getd("."+ .collectionquestcount + "_collectionexp"));
-	setd ("." +.collectionquestcount+"_collectionexp["+.@size+"]",getarg(.@argcount)); 
-	setd ("." +.collectionquestcount+"_collectionexp["+(.@size+1)+"]",getarg(.@argcount+1)); 
+	setd ("." +.collectionquestcount+"_collectionexp["+.@size+"]",getarg(.@argcount));
+	setd ("." +.collectionquestcount+"_collectionexp["+(.@size+1)+"]",getarg(.@argcount+1));
 	set .@argcount, .@argcount+2;
 	while(getarg(.@argcount,-1)!=-1 && getarg(.@argcount+1,-1)!=-1) {
 		set .@size, getarraysize(getd("."+ .collectionquestcount + "_collectionitem"));
-		setd ("."+.collectionquestcount+"_collectionitem["+.@size+"]",getarg(.@argcount)); 
+		setd ("."+.collectionquestcount+"_collectionitem["+.@size+"]",getarg(.@argcount));
 		setd ("."+.collectionquestcount+"_collectionitem["+(.@size+1)+"]",getarg(.@argcount+1));
 		set .@argcount,.@argcount+2;
 	}
@@ -309,11 +309,11 @@ function AddHunting {
 	set .@size, getarraysize(getd("."+ .huntingquestcount + "_huntingexp"));
 	set .@argcount, 6;
 	setd ("." +.huntingquestcount+"_huntingexp["+.@size+"]",getarg(.@argcount));
-	setd ("." +.huntingquestcount+"_huntingexp["+(.@size+1)+"]",getarg(.@argcount+1)); 
+	setd ("." +.huntingquestcount+"_huntingexp["+(.@size+1)+"]",getarg(.@argcount+1));
 	set .@argcount, .@argcount+2;
 	while(getarg(.@argcount,-1)!=-1 && getarg(.@argcount+1,-1)!=-1) {
 		set .@size, getarraysize(getd("."+ .huntingquestcount + "_huntingmob"));
-		setd ("."+.huntingquestcount+"_huntingmob["+.@size+"]",getarg(.@argcount)); 
+		setd ("."+.huntingquestcount+"_huntingmob["+.@size+"]",getarg(.@argcount));
 		setd ("."+.huntingquestcount+"_huntingmob["+(.@size+1)+"]",getarg(.@argcount+1));
 		set .@argcount, .@argcount+2;
 	}

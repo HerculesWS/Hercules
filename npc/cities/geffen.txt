@@ -77,7 +77,7 @@ geffen_in,164,109,0	script	Wizard Stanza	1_M_WIZARD,{
 	}
 	else if (Class == Job_Novice)
 		mes "Although you may not be able to use magic or any other kind of powerful skills for now, this knowledge may be helpful in the future, young Novice...";
-	else 
+	else
 		mes "Although you are not formally trained in the use of magic, you use skills which draw upon otherworldly energies, whether you know it or not...";
 	next;
 	mes "[Stanza]";
@@ -1351,7 +1351,7 @@ geffen_in,109,72,2	script	Monster Scholar	4_F_01,{
 		mes "[Estheres]";
 		if (BaseLevel > 40)
 			mes "You look strong enough for that kind of challenge. But if you see anyone more reckless cross the Western bridge, you might want to give them a warning.";
-		else 
+		else
 			mes "Um, but if you're planning to go there, you better not go alone. I really recommend that you be well prepared if you're gonna fight those kinds of monsters.";
 		break;
 	case 2:

@@ -9,7 +9,7 @@
 //= Quests to create the eight colored Dyestuffs.
 //===== Additional Comments: =================================
 //= 1.0 Fully working [kobra_k88]
-//= 1.1 Spell Checked [Nexon] 
+//= 1.1 Spell Checked [Nexon]
 //= 1.2 Rescripted to Aegis 10.3 standard. [L0ne_W0lf]
 //= 1.2b Fixed typos in variable names [ultramage]
 //= 1.3 Made the checks more dynamic [ultramage]
@@ -146,7 +146,7 @@ S_MakeDye:
 	case 7:
 		mes "Mmm... I need 30 White Herbs, 1 Counteragent, and 1 Empty bottle to make White Dyestuffs. The fee will be 3000 zeny.";
 		setarray .@item[0], 509, 973, 713;
-		setarray .@count[0], 30,   1,   1; 
+		setarray .@count[0], 30,   1,   1;
 		set .@cost,3000;
 		set .@dyestuff,982;
 		break;

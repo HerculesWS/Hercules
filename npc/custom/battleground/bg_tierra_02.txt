@@ -328,9 +328,7 @@ bat_a02,45,19,3	script	Croix Vintenar#tv2	4_M_CRU_HEAD,{
 			mes "Let's enjoy our glorious victory!";
 			mes "" + strcharinfo(0) + ", its a sign reflecting victory";
 			close2;
-		}
-		else
-		{ // 
+		} else {
 			set .@reward, 1;
 			mes "[Swandery]";
 			mes "Oh, " + strcharinfo(0) + ". Don't be sad.";
@@ -359,9 +357,7 @@ bat_a02,53,377,3	script	Guillaume Vintenar#tv2	4_M_KY_HEAD,{
 			mes "Let's enjoy our glorious victory!";
 			mes "" + strcharinfo(0) + ", its a sign reflecting victory";
 			close2;
-		}
-		else
-		{ // 
+		} else {
 			set .@reward, 1;
 			mes "[Swandery]";
 			mes "You lost, but you're dedicated to this battle.";

@@ -142,7 +142,7 @@ OnTouch:
 			setquest 4229;
 			warp "1@ma_c",35,57;
 			end;
-		}	
+		}
 	case 2:
 		mes "[Guard]";
 		mes "You must value your life.";

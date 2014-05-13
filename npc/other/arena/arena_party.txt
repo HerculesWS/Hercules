@@ -1,5 +1,5 @@
 //===== Hercules Script ======================================
-//= Izlude Party Arena 
+//= Izlude Party Arena
 //===== By: ==================================================
 //= SinSloth
 //===== Current Version: =====================================
@@ -1139,7 +1139,7 @@ OnTimer4000:
 	end;
 
 OnTimer60000:
- 	donpcevent "cast#pt::OnTimeOver2";
+	donpcevent "cast#pt::OnTimeOver2";
 	donpcevent "arn_warp_pt::OnOut";
 	donpcevent "#arn_timer_pt::OnStop";
 	donpcevent "alloff#pt::OnEnable";
@@ -1148,7 +1148,7 @@ OnTimer60000:
 
 OnStop:
 	stopnpctimer;
-	end; 
+	end;
 }
 
 -	script	arn_warp_pt	-1,{

@@ -97,7 +97,7 @@ L_NOITEMS:
 	mes "Here is the list again:";
 	emotion 23;
 	goto L_List;
-}  
+}
 
 //Master Tailor----------
 izlude_in,123,175,4	script	Master Tailor#bandit	1_M_04,{

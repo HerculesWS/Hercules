@@ -1983,7 +1983,7 @@ alde_alche,145,19,1	script	Chief Researcher#am	1_M_LIBRARYMASTER,{
 //= 1.0 Working.
 //=     npc/quests/counteragent_mixture.txt Also Needed
 //=     npc/quests/quests_yuno.txt Also Needed [Darkchild]
-//= 1.1 Fixed some minor bugs.  Optimized some lines. Re-organized the script a bit. 
+//= 1.1 Fixed some minor bugs.  Optimized some lines. Re-organized the script a bit.
 //=     Giving Parmry NPC, Hammer and Old Book now waves the 50000 fee. (based of mRO website)
 //=     Having a joblvl of 50 allows you to skip Rasputin's test. (based of mRO website) [kobra_k88]
 //= 1.2 fixed a few typos (have to hunt more) [Lupus]

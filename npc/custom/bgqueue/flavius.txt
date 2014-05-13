@@ -86,7 +86,7 @@ OnPlayerListReady:
 	}
 	
 	// Add the groups to the queues! :D
-	for (set .@i, 0; .@i < getarraysize(.@bg_groups); set .@i, .@i + 1){ 
+	for (set .@i, 0; .@i < getarraysize(.@bg_groups); set .@i, .@i + 1){
 		if (queuesize($@Croix_QueueBG1) <= queuesize($@Guill_QueueBG1)){ // Catch'em all and add to the queue!
 			for (set .@j, 0; .@j < getarraysize(.@bg_member); set .@j, .@j + 1) {
 				if ( (.@bg_groups[.@i] == .@bg_member_group[.@j]) && (.@bg_types[.@i] == .@bg_member_type[.@j]) ) {
@@ -177,7 +177,7 @@ OnCroixQuit:
 	end;
 
 OnGuillaumeQuit:
-	queueremove($@Guill_QueueBG1,getcharid(3));	
+	queueremove($@Guill_QueueBG1,getcharid(3));
 	callsub L_OnPlayerQuit;
 	end;
 	

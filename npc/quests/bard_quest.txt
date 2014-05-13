@@ -16,8 +16,8 @@
 //= 1.1 Fixed bug, optimized. Not yet final version [Lupus]
 //=
 //= Variables:
-//=		.@random : temp var 
-//=		.@inputstr$ : temp var 
+//=		.@random : temp var
+//=		.@inputstr$ : temp var
 //=
 //= This Quest has relation with brisingamen_seal.txt (Seals)
 //= 1.2 Changed variable to "gef_bards_q" to avoid job quest conflict. [L0ne_W0lf]

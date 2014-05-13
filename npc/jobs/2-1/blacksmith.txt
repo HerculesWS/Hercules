@@ -269,7 +269,7 @@ ein_in01,18,28,4	script	Guildsman#BLS	4_M_JOB_BLACKSMITH,{
 			mes "Congratulations!!!";
 			if (.@joblvl > 48)
 				getitem 999,30; //Steel
-			else 
+			else
 				getitem 999,5; //Steel
 			close;
 		}

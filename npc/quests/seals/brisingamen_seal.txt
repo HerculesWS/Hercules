@@ -2067,8 +2067,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 				close;
 			}
 		}
-	} 
-	else {
+	} else {
 		mes "[Sad-looking Man]";
 		mes "...";
 		mes "^333333*Sob...*";
@@ -2438,7 +2437,7 @@ prt_castle,84,51,5	script	Librarian#2	8W_SOLDIER,{
 }
 
 prontera,260,354,4	script	Woman#Rosa Ellenen	4W_F_01,{
-	if ($God2 < $@god_check1){ 
+	if ($God2 < $@god_check1){
 		mes "[Woman]";
 		mes "Hm?";
 		mes "What brings";
@@ -2649,8 +2648,7 @@ gef_dun01,89,192,0	script	#lowentrace	HIDDEN_NPC,3,3,{
 					mes "This place is too dangerous.^000000";
 					close;
 				}
-			} 
-			else {
+			} else {
 				close;
 			}
 		case 2:

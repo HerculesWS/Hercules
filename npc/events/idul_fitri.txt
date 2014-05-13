@@ -39,7 +39,7 @@ prontera,146,92,3	script	Cellerb	1_M_MERCHANT,{
 		mes "^000088~2 Green Herb, 5 Stem~.^000000";
 		next;
 		mes "[Staff Idul Fitri]";
-		if ( (countitem(552)<5 || countitem(515)<5 ||countitem(516)<5 || countitem(517)<10 || countitem(511)<2 || countitem(905)<5) ) { 
+		if ( (countitem(552)<5 || countitem(515)<5 ||countitem(516)<5 || countitem(517)<10 || countitem(511)<2 || countitem(905)<5) ) {
 			mes "You don't have enough items.";
 			mes "Come back when you have them all.";
 			close;

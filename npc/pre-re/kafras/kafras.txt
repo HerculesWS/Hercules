@@ -9,7 +9,7 @@
 //=  arg(0): 0 - Default Kafra message
 //=          1 - Niflhiem Kafra message
 //=          2 - Guild Kafra message
-//=  arg(1): 1 - Disable teleport menu 
+//=  arg(1): 1 - Disable teleport menu
 //=  arg(2): 1 - Disable info menu
 //=  arg(3): Cost of Storage service
 //=  arg(4): Cost of Rent a Pushcart service

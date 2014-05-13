@@ -2170,7 +2170,7 @@ lhz_in02,147,222,3	script	Officer Guo#06::off_guo	4_M_03,{
 
 lhz_in02,142,222,6	duplicate(off_guo)	Suspect#6	4_M_LGTPOOR
 
-// New ----------------------------------------------------------------------- 
+// New -----------------------------------------------------------------------
 
 lhz_in01,14,28,3	script	Banquet Staff	4_M_MANAGER,{
 	mes "[Banquet Staff]";
@@ -3205,7 +3205,7 @@ lhz_in01,157,54,0,0	monster	Red Mushroom	1085,1,120000,100000,0
 //= 1.5 Fixed bad NPC header data to comply with rev. 11603. [L0ne_W0lf]
 //= 1.6 Massive NPC clean up, includes corrected dialogs and [L0ne_W0lf]
 //=	added missing dialogs, fixed indentation, corrected some NPC
-//=	facing positions, NPC names are more unique now. Removed 
+//=	facing positions, NPC names are more unique now. Removed
 //=	whitespace (empty lines after header and before end curly)
 //=	reduced usage of the command "goto", grammatical corrections.
 //=	Added additional missing NPCs.

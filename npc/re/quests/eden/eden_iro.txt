@@ -340,7 +340,7 @@ moc_para01,50,39,4	script	Eve Natalia	4_F_SITDOWN,{
 moc_para01,48,184,2	script	Gum & Manual Exchanger	2_DROP_MACHINE,{
 	if (Weight < MaxWeight / 2) {
 		mes "You're carrying too many items right now.";
-		close;	
+		close;
 	}
 	mes "[Trader Machine]";
 	mes "Insert Bubble Gums and/or Battle Manuals to trade for higher efficiency Gums and Manuals.";

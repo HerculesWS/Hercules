@@ -5,7 +5,7 @@
 //===== Current Version: =====================================
 //= 1.8
 //===== Description: =========================================
-//= Quests for skills: Sand Attack, Back Slide, Find Stone, 
+//= Quests for skills: Sand Attack, Back Slide, Find Stone,
 //= Stone Fling.
 //===== Additional Comments: =================================
 //= 1.5 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]

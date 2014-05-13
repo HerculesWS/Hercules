@@ -612,7 +612,7 @@ OnTouch:
 
 bat_a02,194,265,0	script	barri_warp_down#bat_a02a	-1,7,0,{
 OnTouch:
-	if (getcharid(4) == $@TierraBG2_id1) 
+	if (getcharid(4) == $@TierraBG2_id1)
 		warp "bat_a02",194,270;
 	end;
 }

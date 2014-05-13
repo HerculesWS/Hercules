@@ -232,7 +232,7 @@ prontera,153,286,4	script	Memorial Plaque#Memorial	4_BOARD3,{
 		mes "-I may not have gone where I intended to go,-";
 		mes "-but I think I have ended up where I needed to be.-";
 		mes "- Douglas Adams.-";
-		if (Memorial08 == 9) { 
+		if (Memorial08 == 9) {
 			getexp 93750,43750;
 		}
 		next;
@@ -242,7 +242,7 @@ prontera,153,286,4	script	Memorial Plaque#Memorial	4_BOARD3,{
 		mes "-It is not the urge to surpass all others at whatever cost,-";
 		mes "- but the urge to serve others at whatever cost. -";
 		mes "- Arthur Ashe -";
-		if (Memorial08 == 9) { 
+		if (Memorial08 == 9) {
 			getexp 93750,43750;
 			set Memorial08,10;
 		}

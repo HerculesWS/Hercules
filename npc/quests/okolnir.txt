@@ -298,7 +298,7 @@ que_qsch05,345,23,0	warp	Gate02#gq_sch05	1,1,schg_cas05,369,306
 					next;
 					mes "[Wish Maiden]";
 					mes "You must bring those six things, 10 Gold, and 20 Elunium.";
-					mes "Many Valhala's Flowers are also required as an offering.";				
+					mes "Many Valhala's Flowers are also required as an offering.";
 				}
 				next;
 				mes "[Wish Maiden]";
@@ -1283,8 +1283,8 @@ OnTouch:
 		case 2: setarray .@n$, "113","111","3","Piamette : One bird has died trapped in it's cage."; break;
 		case 3: setarray .@n$, "161","105","4","Piamette : One bird was poisoned to death."; break;
 		case 4: setarray .@n$, "168","135","5","Piamette : One bird vomited blood while singing seven days and seven nights."; break;
-		case 5: 
-			setarray .@n$, "150","159","6","Piamette : The last one broke her neck wriggling to get out of from it's eggshell!"; 
+		case 5:
+			setarray .@n$, "150","159","6","Piamette : The last one broke her neck wriggling to get out of from it's eggshell!";
 			donpcevent "#gdtimer02_"+.@sub$+"::OnEnable";
 			donpcevent "#gdtimer01_"+.@sub$+"::OnStop";
 			break;
@@ -1297,7 +1297,7 @@ OnTouch:
 
 OnInit:
 	set .@sub$,callfunc("F_Okolnir");
-	for (set .@i, 1; .@i <= 8; set .@i, .@i + 1) 
+	for (set .@i, 1; .@i <= 8; set .@i, .@i + 1)
 		disablenpc "#getspell0"+.@i+"_"+.@sub$;
 	end;
 }
@@ -1646,7 +1646,7 @@ OnTimer120000:
 	set .@sub$,callfunc("F_Okolnir");
 	setarray .@xy2, 226,294,227,294,228,294,229,294,230,295,231,296,231,297,231,298,231,299,230,300,229,301,228,301,227,301,226,301,225,300,224,299,224,298,224,297,224,296,225,295;
 	for (set .@i, 0; .@i < getarraysize(.@xy2); set .@i, .@i + 2)
-		monster "que_q"+.@sub$,.@xy2[.@i],.@xy2[.@i+1],"Guard of Shadow",1752,1,"#nmsom"+.@sub$+"_jin01::OnMyMobDead";	
+		monster "que_q"+.@sub$,.@xy2[.@i],.@xy2[.@i+1],"Guard of Shadow",1752,1,"#nmsom"+.@sub$+"_jin01::OnMyMobDead";
 	end;
 
 OnTimer180000:
@@ -1730,7 +1730,7 @@ OnTimer120000:
 	set .@sub$,callfunc("F_Okolnir");
 	setarray .@xy2, 274,301,275,301,276,301,277,301,278,300,279,299,279,298,279,297,279,296,278,295,277,294,276,294,275,294,274,294,273,295,272,296,272,297,272,298,272,299,273,300;
 	for (set .@i, 0; .@i < getarraysize(.@xy2); set .@i, .@i + 2)
-		monster "que_q"+.@sub$,.@xy2[.@i],.@xy2[.@i+1],"Bloody Hunter",1753,1,"#nmsom"+.@sub$+"_jin02::OnMyMobDead";	
+		monster "que_q"+.@sub$,.@xy2[.@i],.@xy2[.@i+1],"Bloody Hunter",1753,1,"#nmsom"+.@sub$+"_jin02::OnMyMobDead";
 	end;
 
 OnTimer180000:
@@ -1910,7 +1910,7 @@ OnMyMobDead:
 	
 OnInit:
 	set .@sub$,callfunc("F_Okolnir");
-	for (set .@i, 1; .@i <= 4; set .@i, .@i + 1) 
+	for (set .@i, 1; .@i <= 4; set .@i, .@i + 1)
 		disablenpc "Guard of Shadow#"+.@sub$+"_0"+.@i;
 	end;
 }
@@ -1984,7 +1984,7 @@ OnMyMobDead:
 	
 OnInit:
 	set .@sub$,callfunc("F_Okolnir");
-	for (set .@i, 1; .@i <= 4; set .@i, .@i + 1) 
+	for (set .@i, 1; .@i <= 4; set .@i, .@i + 1)
 		disablenpc "Bloody Hunter#"+.@sub$+"_ac0"+.@i;
 	end;
 }
@@ -2125,7 +2125,7 @@ OnMyMobDead:
 	
 OnInit:
 	set .@sub$,callfunc("F_Okolnir");
-		hideonnpc "Wish Maiden#"+.@sub$+"_boss";	
+		hideonnpc "Wish Maiden#"+.@sub$+"_boss";
 	end;
 }
 que_qaru01,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#aru01_boss	WISH_MAIDEN

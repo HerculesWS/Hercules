@@ -795,7 +795,7 @@ function	script	F_Cherno	{
 	next;
 	specialeffect EF_POISONATTACK,AREA,"#exp_ein";
 	mes "^33355F*Crash!*^000000";
-	mes "....."; 
+	mes ".....";
 	emotion e_swt,0,"Theo Cherno";
 	emotion e_swt,0,"Tarsha Cherno";
 	next;

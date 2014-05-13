@@ -6,7 +6,7 @@
 //= 2.5
 //===== Description: =========================================
 //= [Official Conversion]
-//= Collection of Veins Quests 
+//= Collection of Veins Quests
 //= Stone Quest:
 //= - Help an Old Man with his job.
 //= - Dialog obtained from iRO.

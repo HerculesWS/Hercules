@@ -1,5 +1,5 @@
 //===== Hercules Script ======================================
-//= Niflheim Script 
+//= Niflheim Script
 //===== By: ==================================================
 //= Fyrien, Dizzy, PKGINGO
 //= Official NPCs translated and re-edited by Celest
@@ -15,7 +15,7 @@
 //=     fixed zeny/item, exploit in Sairin, some optimizations [Lupus]
 //= 1.06 some typos in some variables fixed (thx 2 Dr.Evil) [Lupus]
 //= 1.07 Fixed typos [Nexon]
-//= 1.08 Commented "Traveler" out as it is not official & we have correct Bungee quest in. 
+//= 1.08 Commented "Traveler" out as it is not official & we have correct Bungee quest in.
 //=     Also removed TODO, as they are already done. [Vicious_Pucca]
 //= 1.1 Replaced nif_q_done with MISC_QUEST & 32. nif_t -> @nif_t [Lupus]
 //= 1.2 Removed Duplicates [Silent]

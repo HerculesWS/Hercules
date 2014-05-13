@@ -480,7 +480,7 @@ OnTimer35000:
 	end;
 OnTimer45000:
 	donpcevent instance_npcname("Himmelmez#ghinstance1")+"::OnTalk4";
-	end;	
+	end;
 OnTimer50000:
 	donpcevent instance_npcname("Himmelmez#ghinstance1")+"::OnTalk5";
 	end;
@@ -517,7 +517,7 @@ OnTimer85000:
 	hideonnpc instance_npcname("Khalitzburg Crusader#22");
 
 	set .@map$, instance_mapname("1@gl_k");
-	set .@label$, instance_npcname("#talkinstance1")+"::OnMyMobDead"; 
+	set .@label$, instance_npcname("#talkinstance1")+"::OnMyMobDead";
 	monster .@map$,145,59,"Abyss Knight",2470,1,.@label$;
 	monster .@map$,154,59,"Abyss Knight",2470,1,.@label$;
 	monster .@map$,145,69,"Abyss Knight",2470,1,.@label$;
@@ -558,7 +558,7 @@ OnTimer88000:
 	hideonnpc instance_npcname(".#ghinstance22");
 
 	set .@map$, instance_mapname("1@gl_k");
-	set .@label$, instance_npcname("#talkinstance1")+"::OnMyMobDead"; 
+	set .@label$, instance_npcname("#talkinstance1")+"::OnMyMobDead";
 	monster .@map$,145,54,"Khalitzburg",2471,1,.@label$;
 	monster .@map$,154,54,"Khalitzburg",2471,1,.@label$;
 	monster .@map$,145,64,"Khalitzburg",2471,1,.@label$;
@@ -1771,7 +1771,7 @@ OnTalk1:
 }
 
 2@gl_k,158,252,3	script	Himmelmez#ghinstance4	4_F_HIMEL,4,4,{
-	end;	
+	end;
 OnInstanceInit:
 	donpcevent instance_npcname("Himmelmez#ghinstance4")+"::OnDisable";
 	end;

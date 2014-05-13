@@ -286,15 +286,15 @@ job_duncer,43,93,4	script	Aile#da	4_F_07,{
 	}
 	else if (DANC_Q >= 2 && DANC_Q <= 4) {
 		switch(DANC_Q) {
-		case 2: 
+		case 2:
 			setarray .@item[0], 938,909,501,2403;
 			setarray .@count[0], 20,3,5,1;
 			break;
-		case 3: 
+		case 3:
 			setarray .@item[0], 1055,2405;
 			setarray .@count[0], 5,1;
 			break;
-		case 4: 
+		case 4:
 			setarray .@item[0], 965,503,909,1020,2401;
 			setarray .@count[0], 2,5,20,10,1;
 			break;
@@ -889,7 +889,7 @@ job_duncer,95,93,4	script	Bijou#da	4W_F_01,{
 			getitem 1950,1; //Rope
 		close;
 	}
-} 
+}
 
 // Waiting Room
 //============================================================
@@ -1379,7 +1379,7 @@ OnOmg:
 //============================================================
 // Old changelog
 //============================================================
-//= 1.1 Removed the warp I left here my accident, added a check for using 
+//= 1.1 Removed the warp I left here my accident, added a check for using
 //=     Improved Concentration and arrow shower, people could get away with it
 //=     [Fredzilla]
 //= 1.0 I tried to keep as much the same from the Jap version as possible

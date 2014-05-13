@@ -53,11 +53,11 @@ bat_room,225,211,0	warp	#kvm702	2,2,bat_room,154,150
 -	script	KVM03::CellEffect3	-1,{
 	end;
 
-OnKvM03One: 
+OnKvM03One:
 	specialeffect EF_CHANGECOLD;
 	end;
 
-OnKvM03Two: 
+OnKvM03Two:
 	specialeffect EF_CHANGEPOISON;
 	end;
 }
@@ -381,9 +381,7 @@ bat_c03,51,130,5	script	KVM Officer#KVM03A	4_M_KY_HEAD,{
 			mes "May the glory of KVM be with you.";
 			mes "You aquire the winning points: 2";
 			close2;
-		}
-		else
-		{ // 
+		} else {
 			set kvm_point,kvm_point + 1;
 			mes "[KVM Officer]";
 			mes "I am so sorry.";
@@ -410,9 +408,7 @@ bat_c03,148,53,1	script	KVM Officer#KVM03B	4_M_CRU_HEAD,{
 			mes "May the glory of KVM be with you.";
 			mes "You aquire the winning points: 2";
 			close2;
-		}
-		else
-		{ // 
+		} else {
 			set kvm_point,kvm_point + 1;
 			mes "[KVM Officer]";
 			mes "I am so sorry.";

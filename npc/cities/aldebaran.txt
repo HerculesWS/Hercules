@@ -11,7 +11,7 @@
 //= 1.1 Added RS125 NPC.  Added another Kafra Reserve points agent.
 //=     The 2nd reserve points agent is not complete yet.
 //= 1.2 Lottery input number fix [Lupus], 1.2a - label typo fixed
-//= 1.3 Gatekeeper's bug fixed (wrong check and wrong item ID 
+//= 1.3 Gatekeeper's bug fixed (wrong check and wrong item ID
 //=     for underground), fixed some typos [Lupus]
 //= 1.4 Fixed Typos & Spellcheck [massdriller]
 //= 1.5 Finally added the Special Reserve 2 Lotto 8))
@@ -1250,7 +1250,7 @@ aldeba_in,88,161,3	script	Kafra#05	4_F_KAFRA3,{
 		mes "You have the following amount of special reserve points: ^5544FF"+RESRVPTS+"^000000.";
 		mes "Make a choice and test your luck!";
 		next;
-		menu "5000pts = 1st Lottery Chance!",sM_1st, "7000pts = 2nd Lottery Chance!",sM_2nd, "10000pts = 3rd Lottery Chance!",sM_3rd, "Cancel",M_End; 
+		menu "5000pts = 1st Lottery Chance!",sM_1st, "7000pts = 2nd Lottery Chance!",sM_2nd, "10000pts = 3rd Lottery Chance!",sM_3rd, "Cancel",M_End;
 
 		sM_1st:
 			if(RESRVPTS < 5000) goto sL_NotEnuf;
@@ -1379,12 +1379,12 @@ sF_Spin:
 //============================================================
 c_tower3,10,249,4	script	Gatekeeper#ct	4_M_02,{
 	//Key_Of_Clock_Tower
-	callfunc "F_ClockTowerGate","4th",7026,"c_tower4",185,44; 
+	callfunc "F_ClockTowerGate","4th",7026,"c_tower4",185,44;
 }
 
 alde_dun03,264,16,4	script	Gatekeeper#ct1	4W_F_01,{
 	//Underground_Key
-	callfunc "F_ClockTowerGate","B4th",7027,"alde_dun04",79,267; 
+	callfunc "F_ClockTowerGate","B4th",7027,"alde_dun04",79,267;
 }
 
 function	script	F_ClockTowerGate	{
@@ -1463,7 +1463,7 @@ function	script	F_ClockTowerGate	{
 			mes "Please,You may enter.";
 			mes "May God bless you ..";
 			close2;
-			delitem getarg(1),1; 
+			delitem getarg(1),1;
 			warp getarg(2),getarg(3),getarg(4);
 			end;
 		}

@@ -1242,7 +1242,7 @@ pay_arche,84,139,3	script	Seisner	4_F_JOB_HUNTER,{
 				mes "[Seisner]";
 				mes "Hunters can ultimately transcend into ^3131FFSnipers^000000, Bards into ^3131FFMinstrels^000000, and Dancers into ^3131FFGypsies^000000. I know that's pretty complex.";
 				if(tu_archer01 == 1) set tu_archer01, 2;
-				next;  
+				next;
 				break;
 			case 2:
 				mes "[Seisner]";
@@ -1911,7 +1911,7 @@ prt_castle,76,165,6	script	Minister#tu	1_M_JOBTESTER,{
 		next;
 		mes "[Minister]";
 		mes "As a holy servant, I'm sure that you'll find plenty of other people who have need of your help and abilities outside of the palace.";
-	} 
+	}
 	close;
 }
 

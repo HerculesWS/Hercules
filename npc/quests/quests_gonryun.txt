@@ -3107,7 +3107,7 @@ geffen_in,106,106,7	script	Girl#gnbs2	4_M_KID2,{
 	mes "Heehehe...";
 	if (Sex == 0)
 		mes "Thank you my pretty sister.";
-	else 
+	else
 		mes "Thank you handsome brother~";
 	mes "I'll get my health back";
 	mes "and be a strong girl!";

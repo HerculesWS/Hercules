@@ -1117,7 +1117,7 @@ prt_in,79,94,4	script	Sir Windsor#knt	4_M_JOB_KNIGHT1,{
 			mes "......";
 			next;
 			mes "[Sir Windsor]";
-			if (KNIGHT_Q == 6) 
+			if (KNIGHT_Q == 6)
 				mes "...Follow me.";
 			else {
 				mes "...Fine.";

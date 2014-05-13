@@ -1065,7 +1065,7 @@ function	script	QWS_Darray	{
 	QWS_Make_Dungeon_Menu 1;
 
 //----------------ANT HELL
-	setarray @pDmenuitems$[@Di], "Ant Hell Dungeon"; 
+	setarray @pDmenuitems$[@Di], "Ant Hell Dungeon";
 	setarray @pDprice[@Di], $QW_BW_PRICE;
 	setarray @pDfee$[@Di], "$QW_BW_FEE";
 	setarray @DLevels[2], 2;

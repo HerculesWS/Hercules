@@ -3820,7 +3820,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	
 	delitem 6499,20; //Ancient_Grudge
 	delequip .@part;
-	getitem .@newItem, 1; 
+	getitem .@newItem, 1;
 	
 	mes "[Bayani]";
 	mes "Ha ha. Perfect.";

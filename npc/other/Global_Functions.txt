@@ -215,7 +215,7 @@ function	script	F_ItemName	{
 }
 
 //////////////////////////////////////////////////////////////////////////////////
-// *** Function "F_SaveQuestSkills": Store learnt quest skills 
+// *** Function "F_SaveQuestSkills": Store learnt quest skills
 //////////////////////////////////////////////////////////////////////////////////
 function	script	F_SaveQuestSkills	{
 	set ADV_QSK,0; set ADV_QSK2,0;

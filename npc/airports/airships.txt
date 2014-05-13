@@ -654,7 +654,7 @@ airplane_01,243,73,0	script	#AirshipWarp-3	WARPNPC,1,1,{
 OnTouch:
 	switch ($@airplanelocation2) {
 	case 0: warp "ra_fild12",292,204; end;
-	case 1: 
+	case 1:
 		if(checkre(0))
 			warp "izlude",200,73;
 		else

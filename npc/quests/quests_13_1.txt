@@ -1728,8 +1728,8 @@ moc_fild22b,230,197,5	script	Munkenro#2	4_M_RUSMAN1,{
 			mes "Ok, just have a good adventure.";
 			next;
 			set ep13_ryu,22;
-			changequest 10077,10078; 
-			donpcevent "Head of the Alliance#moo::OnEnable"; 
+			changequest 10077,10078;
+			donpcevent "Head of the Alliance#moo::OnEnable";
 			mes "[Munkenro]";
 			mes "If you are too late,";
 			mes "it will be considered as a failure, so come back soon.";

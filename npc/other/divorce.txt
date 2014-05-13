@@ -38,8 +38,8 @@ nif_in,190,112,5	script	Deviruchi#divorce	4_DEVIRUCHI,{
 //		mes "popular nowadays, heh heh~";
 //		close;
 //	}
-//	else 
-  	if (!getpartnerid()) {
+//	else
+	if (!getpartnerid()) {
 		mes "Bwah hah hah~!";
 		mes "That look in your eyes~!";
 		if (Sex) {
