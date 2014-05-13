@@ -1004,7 +1004,7 @@ int guild_recv_memberinfoshort(int guild_id,int account_id,int char_id,int onlin
 	//Ensure validity of pointer (ie: player logs in/out, changes map-server)
 	g->member[idx].sd = guild->sd_check(guild_id, account_id, char_id);
 
-	if(oldonline!=online) 
+	if(oldonline!=online)
 		clif->guild_memberlogin_notice(g, idx, online);
 	
 	if(!g->member[idx].sd)
@@ -2008,7 +2008,7 @@ void guild_castle_reconnect_sub(void *key, void *data, va_list ap)
 }
 
 /**
- * Saves pending guild castle data changes when char-server is 
+ * Saves pending guild castle data changes when char-server is
  * disconnected.
  * On reconnect pushes all changes to char-server for saving.
  */
@@ -2363,7 +2363,7 @@ void guild_defaults(void) {
 	guild->flag_add = guild_flag_add;
 	guild->flag_remove = guild_flag_remove;
 	guild->flags_clear = guild_flags_clear;
-	/* guild aura */ 
+	/* guild aura */
 	guild->aura_refresh = guild_guildaura_refresh;
 	/* */
 	guild->payexp_timer = guild_payexp_timer;

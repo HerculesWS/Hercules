@@ -446,7 +446,7 @@ int64 battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, u
 	if( sc && sc->count ){
 		if( sc->data[SC_ZENKAI] && watk->ele == sc->data[SC_ZENKAI]->val2 )
 			eatk += 200;
-	#ifdef RENEWAL_EDP	
+	#ifdef RENEWAL_EDP
 		if( sc->data[SC_EDP] && skill_id != AS_GRIMTOOTH && skill_id != AS_VENOMKNIFE && skill_id != ASC_BREAKER ){
 			eatk = eatk * (sc->data[SC_EDP]->val4 / 100 - 1);
 			damage = damage * (sc->data[SC_EDP]->val4 / 100);
@@ -655,7 +655,7 @@ int64 battle_addmastery(struct map_session_data *sd,struct block_list *target,in
 					damage += (skill_lv * 10);
 				else if(pc_isriding(sd))
 					damage += (skill_lv * 5);
-				else 
+				else
 					damage += (skill_lv * 4);
 			}
 			break;
@@ -737,7 +737,7 @@ int64 battle_calc_masteryfix(struct block_list *src, struct block_list *target, 
 #endif
 				)
 				damage += 3 * skill2_lv;
-			break;	
+			break;
 #ifndef RENEWAL
 		case NJ_KUNAI:
 			if( weapon )
@@ -748,7 +748,7 @@ int64 battle_calc_masteryfix(struct block_list *src, struct block_list *target, 
 			if( sd->weight )
 				damage += sd->weight / 8 ;
 		case RA_WUGSTRIKE:
-		case RA_WUGBITE:	
+		case RA_WUGBITE:
 			damage += 30*pc->checkskill(sd, RA_TOOTHOFWUG);
 			break;
 		case HT_FREEZINGTRAP:
@@ -999,7 +999,7 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 							cardfix = cardfix * (100 + sd->right_weapon.addrace[RC_NONDEMIHUMAN]+sd->arrow_addrace[RC_NONDEMIHUMAN]) / 100;
 					}else{ // Melee attack
 						if( !battle_config.left_cardfix_to_right ){
-							cardfix=cardfix*(100+sd->right_weapon.addrace[tstatus->race])/100;					
+							cardfix=cardfix*(100+sd->right_weapon.addrace[tstatus->race])/100;
 							if( !(nk&NK_NO_ELEFIX) ){
 								int ele_fix = sd->right_weapon.addele[tstatus->def_ele];
 								for (i = 0; ARRAYLENGTH(sd->right_weapon.addele2) > i && sd->right_weapon.addele2[i].rate != 0; i++) {
@@ -1019,9 +1019,9 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 								cardfix = cardfix * (100 + sd->right_weapon.addrace[RC_NONDEMIHUMAN]) / 100;
 
 							if( cflag&1 ){
-								cardfix_ = cardfix_*(100+sd->left_weapon.addrace[tstatus->race])/100;						
+								cardfix_ = cardfix_*(100+sd->left_weapon.addrace[tstatus->race])/100;
 								if (!(nk&NK_NO_ELEFIX)){
-									int ele_fix_lh = sd->left_weapon.addele[tstatus->def_ele];							
+									int ele_fix_lh = sd->left_weapon.addele[tstatus->def_ele];
 									for (i = 0; ARRAYLENGTH(sd->left_weapon.addele2) > i && sd->left_weapon.addele2[i].rate != 0; i++) {
 										if (sd->left_weapon.addele2[i].ele != tstatus->def_ele) continue;
 										if(!(sd->left_weapon.addele2[i].flag&wflag&BF_WEAPONMASK &&
@@ -1221,7 +1221,7 @@ int64 battle_calc_defense(int attack_type, struct block_list *src, struct block_
 			 **/
 			defType def1 = status->get_def(target); //Don't use tstatus->def1 due to skill timer reductions.
 			short def2 = tstatus->def2, vit_def;
-#ifdef RENEWAL			
+#ifdef RENEWAL
 			def1 = status->calc_def2(target, tsc, def1, false); // equip def(RE)
 			def2 = status->calc_def(target, tsc, def2, false); // status def(RE)
 #else
@@ -1301,7 +1301,7 @@ int64 battle_calc_defense(int attack_type, struct block_list *src, struct block_
 
 			if( def1 < -399 ) // it stops at -399
 				def1 = 399; // in aegis it set to 1 but in our case it may lead to exploitation so limit it to 399
-				//return 1; 
+				//return 1;
 
 			if( flag&2 )
 				damage += def1 >> 1;
@@ -1357,7 +1357,7 @@ int64 battle_calc_defense(int attack_type, struct block_list *src, struct block_
 			 **/
 			if( mdef < -99 ) // it stops at -99
 				mdef = 99; // in aegis it set to 1 but in our case it may lead to exploitation so limit it to 99
-				//return 1; 
+				//return 1;
 
 			damage = (int)((100.0f - mdef / (mdef + 100.0f) * 90.0f) / 100.0f * damage - mdef2);
 		#else
@@ -2538,7 +2538,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					skillratio += sc->data[SC_LKCONCENTRATION]->val2;
 				if( sd && sd->status.weapon == W_KATAR && (i=pc->checkskill(sd,ASC_KATAR)) > 0 )
 					skillratio += skillratio * (10 + 2 * i) / 100;
-#endif	
+#endif
 				if( sc && sc->data[SC_CRUSHSTRIKE] ){
 					if( sd )
 					{//ATK [{Weapon Level * (Weapon Upgrade Level + 6) * 100} + (Weapon ATK) + (Weapon Weight)]%
@@ -2985,7 +2985,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			rnd()%100 < sce->val3)
 			status->heal(src, damage*sce->val4/100, 0, 3);
 
-		if( (sce = sc->data[SC_FORCEOFVANGUARD]) && flag&BF_WEAPON 
+		if( (sce = sc->data[SC_FORCEOFVANGUARD]) && flag&BF_WEAPON
 			&& rnd()%100 < sce->val2 && sc->fv_counter <= sce->val3 )
 				clif->millenniumshield(bl, sc->fv_counter++);
 
@@ -4517,7 +4517,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 						ATK_RATE(50);
 					RE_SKILL_REDUCTION();
 				}
-				break;	
+				break;
 			case NJ_SYURIKEN: // [malufett]
 				GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0) );
 				wd.damage += battle->calc_masteryfix(src, target, skill_id, skill_lv, 4 * skill_lv + (sd ? sd->bonus.arrow_atk : 0), wd.div_, 0, flag.weapon) - status->get_total_def(target);
@@ -4886,7 +4886,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				ATK_ADDRATE(sd->bonus.long_attack_atk_rate);
 			if( sc && sc->data[SC_MTF_RANGEATK] )
 				ATK_ADDRATE(25);// temporary it should be 'bonus.long_attack_atk_rate'
-	#endif	
+	#endif
 			if( (i=pc->checkskill(sd,AB_EUCHARISTICA)) > 0 &&
 				(tstatus->race == RC_DEMON || tstatus->def_ele == ELE_DARK) )
 				ATK_ADDRATE(-i);
@@ -5124,12 +5124,13 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			temp = pc->checkskill(sd,TF_DOUBLE);
 			wd.damage2 = wd.damage * (1 + (temp * 2))/100;
 
-			if(wd.damage && !wd.damage2) wd.damage2 = 
+			if(wd.damage && !wd.damage2) {
 #ifdef RENEWAL
-				0;
+				wd.damage2 = 0;
 #else
-				1;
+				wd.damage2 = 1;
 #endif
+			}
 			flag.lh = 1;
 		}
 	}

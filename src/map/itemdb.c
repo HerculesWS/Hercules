@@ -27,7 +27,7 @@
 struct itemdb_interface itemdb_s;
 
 /**
- * Search for item name 
+ * Search for item name
  * name = item alias, so we should find items aliases first. if not found then look for "jname" (full name)
  * @see DBApply
  */
@@ -55,7 +55,7 @@ int itemdb_searchname_sub(DBKey key, DBData *data, va_list ap)
 }
 
 /*==========================================
- * Return item data from item name. (lookup) 
+ * Return item data from item name. (lookup)
  *------------------------------------------*/
 struct item_data* itemdb_searchname(const char *str) {
 	struct item_data* item;
@@ -256,7 +256,7 @@ void itemdb_package_item(struct map_session_data *sd, struct item_package *packa
 	return;
 }
 /*==========================================
- * Return a random item id from group. (takes into account % chance giving/tot group) 
+ * Return a random item id from group. (takes into account % chance giving/tot group)
  *------------------------------------------*/
 int itemdb_searchrandomid(struct item_group *group) {
 
@@ -312,7 +312,7 @@ const char* itemdb_typename(int type)
 }
 
 /*==========================================
- * Converts the jobid from the format in itemdb 
+ * Converts the jobid from the format in itemdb
  * to the format used by the map server. [Skotlex]
  *------------------------------------------*/
 void itemdb_jobid2mapid(unsigned int *bclass, unsigned int jobmask)
@@ -470,8 +470,7 @@ int itemdb_isequip(int nameid)
 /*==========================================
  * Alternate version of itemdb_isequip
  *------------------------------------------*/
-int itemdb_isequip2(struct item_data *data)
-{ 
+int itemdb_isequip2(struct item_data *data) {
 	nullpo_ret(data);
 	switch(data->type) {
 		case IT_WEAPON:
@@ -937,7 +936,7 @@ void itemdb_read_packages(void) {
 	if( HCache->check(config_filename) ) {
 		if( itemdb->read_cached_packages(config_filename) )
 			return;
-	}		
+	}
 	
 	if (libconfig->read_file(&item_packages_conf, config_filename)) {
 		ShowError("can't read %s\n", config_filename);
@@ -1445,7 +1444,7 @@ void itemdb_read_combos() {
 		p++;
 
 		str[1] = p;
-		p = strchr(p,',');		
+		p = strchr(p,',');
 		p++;
 		
 		if (str[1][0] != '{') {
@@ -2217,7 +2216,7 @@ void itemdb_name_constants(void) {
 	script->parser_current_file = NULL;
 #endif // ENABLE_CASE_CHECK
 
-	dbi_destroy(iter);	
+	dbi_destroy(iter);
 }
 void do_final_itemdb(void) {
 	itemdb->clear(true);

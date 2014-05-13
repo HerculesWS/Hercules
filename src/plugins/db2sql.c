@@ -198,7 +198,7 @@ HPExport void server_preinit (void) {
 	libconfig = GET_SYMBOL("libconfig");
 
 	
-	addArg("--db2sql",false,db2sql_arg,NULL);	
+	addArg("--db2sql",false,db2sql_arg,NULL);
 }
 HPExport void plugin_init (void) {
 	addCPCommand("server:tools:db2sql",db2sql);

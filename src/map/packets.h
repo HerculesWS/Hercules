@@ -2600,19 +2600,19 @@ packet(0x020d,-1);
 
 // 2014-01-15eRagexe - YomRawr
 #if PACKETVER >= 20140115
-	packet(0x0369,7,clif->pActionRequest,2,6); 
-	packet(0x083C,10,clif->pUseSkillToId,2,4,6); 
-	packet(0x0437,5,clif->pWalkToXY,2); 
-	packet(0x035F,6,clif->pTickSend,2); 
-	packet(0x08A7,5,clif->pChangeDir,2,4); 
-	packet(0x0940,6,clif->pTakeItem,2); 
-	packet(0x0361,6,clif->pDropItem,2,4); 
-	packet(0x088E,8,clif->pMoveToKafra,2,4); 
-	packet(0x0367,8,clif->pMoveFromKafra,2,4); 
-	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8); 
-	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10); 
-	packet(0x0802,6,clif->pGetCharNameRequest,2); 
-	packet(0x0368,6,clif->pSolveCharName,2); 
+	packet(0x0369,7,clif->pActionRequest,2,6);
+	packet(0x083C,10,clif->pUseSkillToId,2,4,6);
+	packet(0x0437,5,clif->pWalkToXY,2);
+	packet(0x035F,6,clif->pTickSend,2);
+	packet(0x08A7,5,clif->pChangeDir,2,4);
+	packet(0x0940,6,clif->pTakeItem,2);
+	packet(0x0361,6,clif->pDropItem,2,4);
+	packet(0x088E,8,clif->pMoveToKafra,2,4);
+	packet(0x0367,8,clif->pMoveFromKafra,2,4);
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x0802,6,clif->pGetCharNameRequest,2);
+	packet(0x0368,6,clif->pSolveCharName,2);
 	packet(0x0360,12,clif->pSearchStoreInfoListItemClick,2,6,10);
 	packet(0x0817,2,clif->pSearchStoreInfoNextPage,0);
 	packet(0x0815,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);

@@ -192,7 +192,7 @@ char* normalize_name(char* str,const char* delims)
 	return str;
 }
 
-//stristr: Case insensitive version of strstr, code taken from 
+//stristr: Case insensitive version of strstr, code taken from
 //http://www.daniweb.com/code/snippet313.html, Dave Sinkula
 //
 const char* stristr(const char* haystack, const char* needle)
@@ -618,13 +618,13 @@ int sv_parse_next(struct s_svstate* svstate)
 /// out_pos[0] and out_pos[1] are the start and end of line.
 /// Other position pairs are the start and end of fields.
 /// Returns the number of fields found or -1 if an error occurs.
-/// 
+///
 /// out_pos can be NULL.
 /// If a line terminator is found, the end position is placed there.
-/// out_pos[2] and out_pos[3] for the first field, out_pos[4] and out_pos[5] 
+/// out_pos[2] and out_pos[3] for the first field, out_pos[4] and out_pos[5]
 /// for the seconds field and so on.
 /// Unfilled positions are set to -1.
-/// 
+///
 /// @param str String to parse
 /// @param len Length of the string
 /// @param startoff Where to start parsing
@@ -668,11 +668,11 @@ int sv_parse(const char* str, int len, int startoff, char delim, int* out_pos, i
 /// out_fields[0] is the start of the next line.
 /// Other entries are the start of fields (nul-teminated).
 /// Returns the number of fields found or -1 if an error occurs.
-/// 
+///
 /// out_fields can be NULL.
 /// Fields that don't fit in out_fields are not nul-terminated.
 /// Extra entries in out_fields are filled with the end of the last field (empty string).
-/// 
+///
 /// @param str String to parse
 /// @param len Length of the string
 /// @param startoff Where to start parsing

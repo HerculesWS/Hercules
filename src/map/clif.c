@@ -1105,7 +1105,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 		p.accessory = status->get_emblem_id(bl);
 		p.accessory2 = GetWord(g_id, 1);
 		p.accessory3 = GetWord(g_id, 0);
-	}	
+	}
 	p.headpalette = vd->hair_color;
 	p.bodypalette = vd->cloth_color;
 	p.headDir = (sd)? sd->head_dir : 0;
@@ -1225,7 +1225,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 		p.GID = -bl->id;
 #else
 		p.GID = -bl->id;
-#endif 
+#endif
 		clif->send(&p,sizeof(p),bl,SELF);
 	}
 }
@@ -5639,7 +5639,7 @@ void clif_displaymessage2(const int fd, const char* mes) {
 			}
 			line = strtok(NULL, "\n");
 		}
-		aFree(message);		
+		aFree(message);
 	}
 }
 /* oh noo! another version of 0x8e! */
@@ -6170,7 +6170,7 @@ void clif_item_refine_list(struct map_session_data *sd)
 	WFIFOHEAD(fd, MAX_INVENTORY * 13 + 4);
 	WFIFOW(fd,0)=0x221;
 	for(i=c=0;i<MAX_INVENTORY;i++){
-		if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].identify 
+		if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].identify
 			&& (wlv=itemdb_wlv(sd->status.inventory[i].nameid)) >=1
 			&& !sd->inventory_data[i]->flag.no_refine
 			&& !(sd->status.inventory[i].equip&EQP_ARMS)){
@@ -8429,7 +8429,7 @@ void clif_message(struct block_list* bl, const char* msg) {
 /**
  * Notifies the client that the storage window is still open
  *
- * Should only be used in cases where the client closed the 
+ * Should only be used in cases where the client closed the
  * storage window without server's consent
  **/
 void clif_refresh_storagewindow( struct map_session_data *sd ) {
@@ -10312,7 +10312,7 @@ void clif_hercules_chsys_quit(struct map_session_data *sd) {
 
 	sd->channel_count = 0;
 	aFree(sd->channels);
-	sd->channels = NULL;	
+	sd->channels = NULL;
 }
 
 /// Request for an action.
@@ -11163,8 +11163,8 @@ void clif_parse_GetItemFromCart(int fd,struct map_session_data *sd)
 /// 012a
 void clif_parse_RemoveOption(int fd,struct map_session_data *sd)
 {
-	if( !(sd->sc.option&(OPTION_RIDING|OPTION_FALCON|OPTION_DRAGON|OPTION_MADOGEAR)) 
-#ifdef NEW_CARTS		
+	if( !(sd->sc.option&(OPTION_RIDING|OPTION_FALCON|OPTION_DRAGON|OPTION_MADOGEAR))
+#ifdef NEW_CARTS
 		&& sd->sc.data[SC_PUSH_CART] ){
 		pc->setcart(sd,0);
 #else
@@ -13716,7 +13716,7 @@ void clif_parse_GMReqNoChat(int fd,struct map_session_data *sd) {
 			return;
 
 		value = battle_config.client_accept_chatdori;
-		dstsd = sd;	
+		dstsd = sd;
 	} else {
 		dstsd = map->id2sd(id);
 		if( dstsd == NULL )
@@ -17557,7 +17557,7 @@ void clif_parse_CashShopOpen(int fd, struct map_session_data *sd) {
 	WFIFOW(fd, 0) = 0x845;
 	WFIFOL(fd, 2) = sd->cashPoints; //[Ryuuzaki] - switched positions to reflect proper values
 	WFIFOL(fd, 6) = sd->kafraPoints;
-	WFIFOSET(fd, 10);			
+	WFIFOSET(fd, 10);
 }
 
 void clif_parse_CashShopClose(int fd, struct map_session_data *sd) {
@@ -17792,7 +17792,7 @@ void clif_bgqueue_ack(struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK 
 			clif->send(&p,sizeof(p), &sd->bl, SELF);
 		}
 			break;
-	}	
+	}
 }
 
 
@@ -17824,7 +17824,7 @@ void clif_parse_bgqueue_register(int fd, struct map_session_data *sd) {
 		default:
 			clif->bgqueue_ack(sd,BGQA_FAIL_TYPE_INVALID, arena->id);
 			return;
-	}	
+	}
 
 	bg->queue_add(sd, arena, (enum bg_queue_types)p->type);
 }
@@ -19024,7 +19024,7 @@ void clif_defaults(void) {
 	clif->search_store_info_failed = clif_search_store_info_failed;
 	clif->open_search_store_info = clif_open_search_store_info;
 	clif->search_store_info_click_ack = clif_search_store_info_click_ack;
-	/* elemental-related */ 
+	/* elemental-related */
 	clif->elemental_info = clif_elemental_info;
 	clif->elemental_updatestatus = clif_elemental_updatestatus;
 	/* bgqueue */
@@ -19034,7 +19034,7 @@ void clif_defaults(void) {
 	clif->bgqueue_joined = clif_bgqueue_joined;
 	clif->bgqueue_pcleft = clif_bgqueue_pcleft;
 	clif->bgqueue_battlebegins = clif_bgqueue_battlebegins;
-	/* misc-handling */ 
+	/* misc-handling */
 	clif->adopt_reply = clif_Adopt_reply;
 	clif->adopt_request = clif_Adopt_request;
 	clif->readbook = clif_readbook;
@@ -19071,7 +19071,7 @@ void clif_defaults(void) {
 	clif->npc_market_purchase_ack = clif_npc_market_purchase_ack;
 	/*------------------------
 	 *- Parse Incoming Packet
-	 *------------------------*/ 
+	 *------------------------*/
 	clif->pWantToConnection = clif_parse_WantToConnection;
 	clif->pLoadEndAck = clif_parse_LoadEndAck;
 	clif->pTickSend = clif_parse_TickSend;
@@ -19125,7 +19125,7 @@ void clif_defaults(void) {
 	clif->pUseSkillToPos = clif_parse_UseSkillToPos;
 	clif->pUseSkillToPosSub = clif_parse_UseSkillToPosSub;
 	clif->pUseSkillToPos_homun = clif_parse_UseSkillToPos_homun;
-	clif->pUseSkillToPos_mercenary = clif_parse_UseSkillToPos_mercenary;	
+	clif->pUseSkillToPos_mercenary = clif_parse_UseSkillToPos_mercenary;
 	clif->pUseSkillToPosMoreInfo = clif_parse_UseSkillToPosMoreInfo;
 	clif->pUseSkillMap = clif_parse_UseSkillMap;
 	clif->pRequestMemo = clif_parse_RequestMemo;

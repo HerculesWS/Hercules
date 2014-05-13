@@ -505,7 +505,7 @@ bool hplugins_addpacket(unsigned short cmd, short length,void (*receive) (int fd
 	
 	return true;
 }
-/* 
+/*
  0 = unknown
  1 = OK
  2 = incomplete
@@ -635,7 +635,7 @@ bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, void (*func)
 	
 	CREATE(data, struct HPMArgData, 1);
 	
-	data->pluginID = pluginID;	
+	data->pluginID = pluginID;
 	data->name = aStrdup(name);
 	data->func = func;
 	data->help = help;

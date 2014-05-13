@@ -173,7 +173,7 @@ static int online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
 static int online_data_cleanup(int tid, int64 tick, int id, intptr_t data) {
 	online_db->foreach(online_db, online_data_cleanup_sub);
 	return 0;
-} 
+}
 
 
 //--------------------------------------------------------------------
@@ -1109,7 +1109,7 @@ void login_auth_ok(struct login_session_data* sd)
 		WFIFOW(fd,0) = 0x81;
 		WFIFOB(fd,2) = 1; // 01 = Server closed
 		WFIFOSET(fd,3);
-		return;		
+		return;
 	}
 
 	server_num = 0;
@@ -1827,7 +1827,7 @@ int do_init(int argc, char** argv)
 	HPM->config_read(NULL, 0);
 	HPM->event(HPET_INIT);
 	
-	// server port open & binding	
+	// server port open & binding
 	if( (login_fd = make_listen_bind(login_config.login_ip,login_config.login_port)) == -1 ) {
 		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",login_config.login_port);
 		exit(EXIT_FAILURE);

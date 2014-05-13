@@ -183,7 +183,7 @@ static void read_config(void) {
 				int j, inherit_count = 0, done = 0;
 				
 				if (group_settings->inheritance_done) // group already processed
-					continue; 
+					continue;
 
 				if ((inherit = group_settings->inherit) == NULL ||
 				    (inherit_count = libconfig->setting_length(inherit)) <= 0) { // this group does not inherit from others

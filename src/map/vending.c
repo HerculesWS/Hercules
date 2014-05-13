@@ -60,7 +60,7 @@ void vending_vendinglistreq(struct map_session_data* sd, unsigned int id) {
 		// GM is not allowed to trade
 		clif->message(sd->fd, msg_txt(246));
 		return;
-	} 
+	}
 
 	sd->vended_id = vsd->vender_id;  // register vending uid
 

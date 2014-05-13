@@ -1123,14 +1123,14 @@ ACMD(item)
 	memset(item_name, '\0', sizeof(item_name));
 
 	if (!strcmpi(info->command,"itembound") && (!message || !*message || (
-		sscanf(message, "\"%99[^\"]\" %d %d", item_name, &number, &bound) < 2 && 
-		sscanf(message, "%99s %d %d", item_name, &number, &bound) < 2 
+		sscanf(message, "\"%99[^\"]\" %d %d", item_name, &number, &bound) < 2 &&
+		sscanf(message, "%99s %d %d", item_name, &number, &bound) < 2
 	))) {
 		clif->message(fd, msg_txt(295)); // Please enter an item name or ID (usage: @itembound <item name/ID> <quantity> <bound_type>).
 		return false;
 	} else if (!message || !*message || (
-		sscanf(message, "\"%99[^\"]\" %d", item_name, &number) < 1 && 
-		sscanf(message, "%99s %d", item_name, &number) < 1 )) 
+		sscanf(message, "\"%99[^\"]\" %d", item_name, &number) < 1 &&
+		sscanf(message, "%99s %d", item_name, &number) < 1 ))
 		{
  		clif->message(fd, msg_txt(983)); // Please enter an item name or ID (usage: @item <item name/ID> <quantity>).
 		return false;
@@ -10088,7 +10088,7 @@ void atcommand_config_read(const char* config_filename) {
 			}
 			commandinfo->log = false;
 		}
-	}	
+	}
 	
 	// Commands help
 	// We only check if all commands exist
@@ -10135,7 +10135,7 @@ static inline int AtCommandType2idx(AtCommandType type) { return (type-1); }
 
 /**
  * Loads permissions for groups to use commands.
- * 
+ *
  */
 void atcommand_db_load_groups(GroupSettings **groups, config_setting_t **commands_, size_t sz)
 {

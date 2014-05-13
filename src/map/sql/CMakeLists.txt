@@ -18,7 +18,7 @@ set( SQL_MAP_HEADERS
 	"${SQL_MAP_SOURCE_DIR}/guild.h"
 	"${SQL_MAP_SOURCE_DIR}/homunculus.h"
 	"${SQL_MAP_SOURCE_DIR}/HPMmap.h"
-	"${SQL_MAP_SOURCE_DIR}/instance.h"	
+	"${SQL_MAP_SOURCE_DIR}/instance.h"
 	"${SQL_MAP_SOURCE_DIR}/intif.h"
 	"${SQL_MAP_SOURCE_DIR}/irc-bot.h"
 	"${SQL_MAP_SOURCE_DIR}/itemdb.h"

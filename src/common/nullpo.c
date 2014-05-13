@@ -14,7 +14,7 @@
 
 /**
  * Reports failed assertions or NULL pointers
- * 
+ *
  * @param file       Source file where the error was detected
  * @param line       Line
  * @param func       Function

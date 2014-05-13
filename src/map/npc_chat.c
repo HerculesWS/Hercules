@@ -49,7 +49,7 @@ struct pcre_interface libpcre_s;
  *
  *    defpattern 1, "[^:]+: (.*) loves (.*)", "label";
  *
- *  this defines a new pattern in set 1 using perl syntax 
+ *  this defines a new pattern in set 1 using perl syntax
  *    (http://www.troubleshooters.com/codecorn/littperl/perlreg.htm)
  *  and tells it to jump to the supplied label when the pattern
  *  is matched.
@@ -59,7 +59,7 @@ struct pcre_interface libpcre_s;
  *  before the script gets executed.
  *
  *    activatepset 1;
- * 
+ *
  *  This activates a set of patterns.. You can have many pattern
  *  sets defined and many active all at once.  This feature allows
  *  you to set up "conversations" and ever changing expectations of
@@ -95,11 +95,10 @@ void finalize_pcrematch_entry(struct pcrematch_entry* e)
 /**
  * Lookup (and possibly create) a new set of patterns by the set id
  */
-struct pcrematch_set* lookup_pcreset(struct npc_data* nd, int setid) 
-{
+struct pcrematch_set* lookup_pcreset(struct npc_data* nd, int setid) {
 	struct pcrematch_set *pcreset;
 	struct npc_parse *npcParse = nd->chatdb;
-	if (npcParse == NULL) 
+	if (npcParse == NULL)
 		nd->chatdb = npcParse = (struct npc_parse *)aCalloc(sizeof(struct npc_parse), 1);
 	
 	pcreset = npcParse->active;
@@ -109,7 +108,7 @@ struct pcrematch_set* lookup_pcreset(struct npc_data* nd, int setid)
 		break;
 		pcreset = pcreset->next;
 	}
-	if (pcreset == NULL) 
+	if (pcreset == NULL)
 		pcreset = npcParse->inactive;
 	
 	while (pcreset != NULL) {
@@ -140,7 +139,7 @@ void activate_pcreset(struct npc_data* nd, int setid)
 {
 	struct pcrematch_set *pcreset;
 	struct npc_parse *npcParse = nd->chatdb;
-	if (npcParse == NULL) 
+	if (npcParse == NULL)
 		return; // Nothing to activate...
 	pcreset = npcParse->inactive;
 	while (pcreset != NULL) {
@@ -154,7 +153,7 @@ void activate_pcreset(struct npc_data* nd, int setid)
 		pcreset->next->prev = pcreset->prev;
 	if (pcreset->prev != NULL)
 		pcreset->prev->next = pcreset->next;
-	else 
+	else
 		npcParse->inactive = pcreset->next;
 	
 	pcreset->prev = NULL;
@@ -173,7 +172,7 @@ void deactivate_pcreset(struct npc_data* nd, int setid)
 {
 	struct pcrematch_set *pcreset;
 	struct npc_parse *npcParse = nd->chatdb;
-	if (npcParse == NULL) 
+	if (npcParse == NULL)
 		return; // Nothing to deactivate...
 	if (setid == -1) {
 		while(npcParse->active != NULL)
@@ -192,7 +191,7 @@ void deactivate_pcreset(struct npc_data* nd, int setid)
 		pcreset->next->prev = pcreset->prev;
 	if (pcreset->prev != NULL)
 		pcreset->prev->next = pcreset->next;
-	else 
+	else
 		npcParse->active = pcreset->next;
 	
 	pcreset->prev = NULL;
@@ -210,7 +209,7 @@ void delete_pcreset(struct npc_data* nd, int setid)
 	int active = 1;
 	struct pcrematch_set *pcreset;
 	struct npc_parse *npcParse = nd->chatdb;
-	if (npcParse == NULL) 
+	if (npcParse == NULL)
 		return; // Nothing to deactivate...
 	pcreset = npcParse->active;
 	while (pcreset != NULL) {
@@ -227,7 +226,7 @@ void delete_pcreset(struct npc_data* nd, int setid)
 			pcreset = pcreset->next;
 		}
 	}
-	if (pcreset == NULL) 
+	if (pcreset == NULL)
 		return;
 	
 	if (pcreset->next != NULL)
@@ -254,7 +253,7 @@ void delete_pcreset(struct npc_data* nd, int setid)
 }
 
 /**
- * create a new pattern entry 
+ * create a new pattern entry
  */
 struct pcrematch_entry* create_pcrematch_entry(struct pcrematch_set* set)
 {
@@ -300,7 +299,7 @@ void npc_chat_def_pattern(struct npc_data* nd, int setid, const char* pattern, c
 
 /**
  * Delete everything associated with a NPC concerning the pattern
- * matching code 
+ * matching code
  *
  * this could be more efficent but.. how often do you do this?
  */

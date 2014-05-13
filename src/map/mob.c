@@ -3880,7 +3880,7 @@ bool mob_parse_dbrow(char** str) {
 		mob->db_data[class_] = (struct mob_db*)aMalloc(sizeof(struct mob_db));
 	else
 		//Copy over spawn data
-		memcpy(&db->spawn, mob->db_data[class_]->spawn, sizeof(db->spawn));		
+		memcpy(&db->spawn, mob->db_data[class_]->spawn, sizeof(db->spawn));
 
 	memcpy(mob->db_data[class_], db, sizeof(struct mob_db));
 	return true;

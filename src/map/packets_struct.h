@@ -596,7 +596,7 @@ struct packet_status_change {
 #if PACKETVER >= 20120618
 	unsigned int Total;
 #endif
-#if PACKETVER >= 20090121	
+#if PACKETVER >= 20090121
 	unsigned int Left;
 	int val1;
 	int val2;

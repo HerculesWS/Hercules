@@ -797,7 +797,7 @@ int memitemdata_to_sql(const struct item items[], int max, int id, int tableswit
 					StrBuf->Printf(&buf, "UPDATE `%s` SET `amount`='%d', `equip`='%d', `identify`='%d', `refine`='%d',`attribute`='%d', `expire_time`='%u', `bound`='%d'",
 						tablename, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].bound);
  					for( j = 0; j < MAX_SLOTS; ++j )for( j = 0; j < MAX_SLOTS; ++j )
-						StrBuf->Printf(&buf, ", `card%d`=%d", j, items[i].card[j]);	
+						StrBuf->Printf(&buf, ", `card%d`=%d", j, items[i].card[j]);
  					StrBuf->Printf(&buf, " WHERE `id`='%d' LIMIT 1", item.id);
 
 					if( SQL_ERROR == SQL->QueryStr(sql_handle, StrBuf->Value(&buf)) )
@@ -1674,7 +1674,7 @@ int make_new_char_sql(struct char_session_data* sd, char* name_, int str, int ag
 			{
 				if( SQL_ERROR == SQL->Query(sql_handle,
 					"INSERT INTO `%s` (`char_id`,`nameid`, `amount`, `identify`) VALUES ('%d', '%d', '%d', '%d')",
-					inventory_db, char_id, start_items[k], 1, 1) 
+					inventory_db, char_id, start_items[k], 1, 1)
 					)
 					Sql_ShowDebug(sql_handle);
 			}
@@ -2048,7 +2048,7 @@ int mmo_char_send006b(int fd, struct char_session_data* sd)
 	int j, offset = 0;
 #if PACKETVER >= 20100413
 	offset += 3;
-#endif	
+#endif
 	if (save_log)
 		ShowInfo("Loading Char Data ("CL_BOLD"%d"CL_RESET")\n",sd->account_id);
 	
@@ -3978,7 +3978,7 @@ static void char_delete2_req(int fd, struct char_session_data* sd)
 	// see issue: 7338
 	if( char_aegis_delete )
 	{
-		if( SQL_SUCCESS != SQL->Query(sql_handle, "SELECT `party_id`, `guild_id` FROM `%s` WHERE `char_id`='%d'", char_db, char_id) 
+		if( SQL_SUCCESS != SQL->Query(sql_handle, "SELECT `party_id`, `guild_id` FROM `%s` WHERE `char_id`='%d'", char_db, char_id)
 		|| SQL_SUCCESS != SQL->NextRow(sql_handle)
 		)
 		{
@@ -4268,7 +4268,7 @@ int parse_char(int fd)
 				
 #if PACKETVER >= 20110309
 				if( *pincode->enabled ){ // hack check
-					struct online_char_data* character;	
+					struct online_char_data* character;
 					character = (struct online_char_data*)idb_get(online_char_db, sd->account_id);
 					if( character && character->pincode_enable == -1){
 						WFIFOHEAD(fd,3);
@@ -4508,7 +4508,7 @@ int parse_char(int fd)
 				int i;
 #if PACKETVER >= 20110309
 				if( *pincode->enabled ){ // hack check
-					struct online_char_data* character;	
+					struct online_char_data* character;
 					character = (struct online_char_data*)idb_get(online_char_db, sd->account_id);
 					if( character && character->pincode_enable == -1 ){
 						WFIFOHEAD(fd,3);

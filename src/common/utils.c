@@ -265,9 +265,9 @@ uint32 MakeDWord(uint16 word0, uint16 word1)
 		( (uint32)(word0        ) )|
 		( (uint32)(word1 << 0x10) );
 }
+
 /*************************************
-* Big-endian compatibility functions * 
-* From mapcache.c                    *
+* Big-endian compatibility functions *
 *************************************/
 
 // Converts an int16 from current machine order to little-endian

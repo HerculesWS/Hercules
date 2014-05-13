@@ -94,7 +94,7 @@
 \*****************************************************************************/
 
 /**
- * If defined statistics about database nodes, database creating/destruction 
+ * If defined statistics about database nodes, database creating/destruction
  * and function usage are keept and displayed when finalizing the database
  * system.
  * WARNING: This adds overhead to every database operation (not shure how much).
@@ -522,7 +522,7 @@ static void db_rebalance_erase(DBNode node, DBNode *root)
 			x_parent = y->parent;
 			if (x) x->parent = y->parent;
 			y->parent->left = x;
-			// put the right of 'node' in 'y' 
+			// put the right of 'node' in 'y'
 			y->right = node->right;
 			node->right->parent = y;
 			// 'y' is a direct child of 'node'
@@ -1409,7 +1409,7 @@ DBData* dbit_obj_prev(DBIterator* self, DBKey* out_key)
 
 /**
  * Returns true if the fetched entry exists.
- * The databases entries might have NULL data, so use this to to test if 
+ * The databases entries might have NULL data, so use this to to test if
  * the iterator is done.
  * @param self Iterator
  * @return true if the entry exists
@@ -1426,7 +1426,7 @@ bool dbit_obj_exists(DBIterator* self)
 
 /**
  * Removes the current entry from the database.
- * NOTE: {@link DBIterator#exists} will return false until another entry 
+ * NOTE: {@link DBIterator#exists} will return false until another entry
  *       is fetched
  * Puts data of the removed entry in out_data, if out_data is not NULL.
  * @param self Iterator
@@ -1477,7 +1477,7 @@ void dbit_obj_destroy(DBIterator* self)
 /**
  * Returns a new iterator for this database.
  * The iterator keeps the database locked until it is destroyed.
- * The database will keep functioning normally but will only free internal 
+ * The database will keep functioning normally but will only free internal
  * memory when unlocked, so destroy the iterator as soon as possible.
  * @param self Database
  * @return New iterator
@@ -1615,7 +1615,7 @@ static DBData* db_obj_get(DBMap* self, DBKey key)
  * It puts a maximum of <code>max</code> entries into <code>buf</code>.
  * If <code>buf</code> is NULL, it only counts the matches.
  * Returns the number of entries that matched.
- * NOTE: if the value returned is greater than <code>max</code>, only the 
+ * NOTE: if the value returned is greater than <code>max</code>, only the
  * first <code>max</code> entries found are put into the buffer.
  * @param self Interface of the database
  * @param buf Buffer to put the data of the matched entries
@@ -1686,7 +1686,7 @@ static unsigned int db_obj_vgetall(DBMap* self, DBData **buf, unsigned int max, 
  * It puts a maximum of <code>max</code> entries into <code>buf</code>.
  * If <code>buf</code> is NULL, it only counts the matches.
  * Returns the number of entries that matched.
- * NOTE: if the value returned is greater than <code>max</code>, only the 
+ * NOTE: if the value returned is greater than <code>max</code>, only the
  * first <code>max</code> entries found are put into the buffer.
  * @param self Interface of the database
  * @param buf Buffer to put the data of the matched entries
@@ -1714,7 +1714,7 @@ static unsigned int db_obj_getall(DBMap* self, DBData **buf, unsigned int max, D
 
 /**
  * Get the data of the entry identified by the key.
- * If the entry does not exist, an entry is added with the data returned by 
+ * If the entry does not exist, an entry is added with the data returned by
  * <code>create</code>.
  * @param self Interface of the database
  * @param key Key that identifies the entry
@@ -1813,7 +1813,7 @@ static DBData* db_obj_vensure(DBMap* self, DBKey key, DBCreateData create, va_li
 /**
  * Just calls {@link DBMap#vensure}.
  * Get the data of the entry identified by the key.
- * If the entry does not exist, an entry is added with the data returned by 
+ * If the entry does not exist, an entry is added with the data returned by
  * <code>create</code>.
  * @param self Interface of the database
  * @param key Key that identifies the entry
@@ -2163,7 +2163,7 @@ static int db_obj_vclear(DBMap* self, DBApply func, va_list args)
  * Before deleting an entry, func is applied to it.
  * Releases the key and the data.
  * Returns the sum of values returned by func, if it exists.
- * NOTE: This locks the database globally. Any attempt to insert or remove 
+ * NOTE: This locks the database globally. Any attempt to insert or remove
  * a database entry will give an error and be aborted (except for clearing).
  * @param self Interface of the database
  * @param func Function to be applied to every entry before deleting
@@ -2191,7 +2191,7 @@ static int db_obj_clear(DBMap* self, DBApply func, ...)
  * Finalize the database, feeing all the memory it uses.
  * Before deleting an entry, func is applied to it.
  * Returns the sum of values returned by func, if it exists.
- * NOTE: This locks the database globally. Any attempt to insert or remove 
+ * NOTE: This locks the database globally. Any attempt to insert or remove
  * a database entry will give an error and be aborted (except for clearing).
  * @param self Interface of the database
  * @param func Function to be applied to every entry before deleting
@@ -2246,7 +2246,7 @@ static int db_obj_vdestroy(DBMap* self, DBApply func, va_list args)
  * Before deleting an entry, func is applied to it.
  * Releases the key and the data.
  * Returns the sum of values returned by func, if it exists.
- * NOTE: This locks the database globally. Any attempt to insert or remove 
+ * NOTE: This locks the database globally. Any attempt to insert or remove
  * a database entry will give an error and be aborted.
  * @param self Database
  * @param func Function to be applied to every entry before deleting
@@ -2448,7 +2448,7 @@ DBHasher db_default_hash(DBType type)
 }
 
 /**
- * Returns the default releaser for the specified type of database with the 
+ * Returns the default releaser for the specified type of database with the
  * specified options.
  * NOTE: the options are fixed with {@link #db_fix_options(DBType,DBOptions)}
  * before choosing the releaser.
@@ -2509,7 +2509,7 @@ DBReleaser db_custom_release(DBRelease which)
  * @param line Line of the file where the database is being allocated
  * @param type Type of database
  * @param options Options of the database
- * @param maxlen Maximum length of the string to be used as key in string 
+ * @param maxlen Maximum length of the string to be used as key in string
  *          databases. If 0, the maximum number of maxlen is used (64K).
  * @return The interface of the database
  * @public

@@ -55,7 +55,7 @@
 /**
  * Define this to disable the Entry Reusage System.
  * All code except the typedef of ERInterface will be disabled.
- * To allow a smooth transition, 
+ * To allow a smooth transition,
  */
 //#define DISABLE_ERS
 
@@ -63,7 +63,7 @@
  * Entries are aligned to ERS_ALIGNED bytes in the blocks of entries.
  * By default it aligns to one byte, using the "natural order" of the entries.
  * This should NEVER be set to zero or less.
- * If greater than one, some memory can be wasted. This should never be needed 
+ * If greater than one, some memory can be wasted. This should never be needed
  * but is here just in case some aligment issues arise.
  */
 #ifndef ERS_ALIGNED
@@ -118,7 +118,7 @@ typedef struct eri {
 	/**
 	 * Destroy this instance of the manager.
 	 * The manager is actually only destroyed when all the instances are destroyed.
-	 * When destroying the manager a warning is shown if the manager has 
+	 * When destroying the manager a warning is shown if the manager has
 	 * missing/extra entries.
 	 * @param self Interface of the entry manager
 	 */
@@ -140,7 +140,7 @@ typedef struct eri {
 #	define ers_report()
 #	define ers_final()
 #else /* not DISABLE_ERS */
-// These defines should be used to allow the code to keep working whenever 
+// These defines should be used to allow the code to keep working whenever
 // the system is disabled
 #	define ers_alloc(obj,type) ((type *)(obj)->alloc(obj))
 #	define ers_free(obj,entry) ((obj)->free((obj),(entry)))
@@ -151,9 +151,9 @@ typedef struct eri {
 /**
  * Get a new instance of the manager that handles the specified entry size.
  * Size has to greater than 0.
- * If the specified size is smaller than a pointer, the size of a pointer is 
+ * If the specified size is smaller than a pointer, the size of a pointer is
  * used instead.
- * It's also aligned to ERS_ALIGNED bytes, so the smallest multiple of 
+ * It's also aligned to ERS_ALIGNED bytes, so the smallest multiple of
  * ERS_ALIGNED that is greater or equal to size is what's actually used.
  * @param The requested size of the entry in bytes
  * @return Interface of the object

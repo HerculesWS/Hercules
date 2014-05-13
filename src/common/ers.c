@@ -78,7 +78,7 @@ typedef struct ers_cache
 	// Memory blocks array
 	unsigned char **Blocks;
 
-	// Max number of blocks 
+	// Max number of blocks
 	unsigned int Max;
 
 	// Free objects count
@@ -190,26 +190,19 @@ static void *ers_obj_alloc_entry(ERS self)
 	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 	void *ret;
 
-	if (instance == NULL) 
-	{
+	if (instance == NULL) {
 		ShowError("ers_obj_alloc_entry: NULL object, aborting entry freeing.\n");
 		return NULL;
 	}
 
-	if (instance->Cache->ReuseList != NULL)
-	{
+	if (instance->Cache->ReuseList != NULL) {
 		ret = (void *)((unsigned char *)instance->Cache->ReuseList + sizeof(struct ers_list));
 		instance->Cache->ReuseList = instance->Cache->ReuseList->Next;
-	} 
-	else if (instance->Cache->Free > 0) 
-	{
+	} else if (instance->Cache->Free > 0) {
 		instance->Cache->Free--;
 		ret = &instance->Cache->Blocks[instance->Cache->Used - 1][instance->Cache->Free * instance->Cache->ObjectSize + sizeof(struct ers_list)];
-	} 
-	else 
-	{
-		if (instance->Cache->Used == instance->Cache->Max) 
-		{
+	} else {
+		if (instance->Cache->Used == instance->Cache->Max) {
 			instance->Cache->Max = (instance->Cache->Max * 4) + 3;
 			RECREATE(instance->Cache->Blocks, unsigned char *, instance->Cache->Max);
 		}
@@ -237,13 +230,10 @@ static void ers_obj_free_entry(ERS self, void *entry)
 	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 	struct ers_list *reuse = (struct ers_list *)((unsigned char *)entry - sizeof(struct ers_list));
 
-	if (instance == NULL) 
-	{
+	if (instance == NULL) {
 		ShowError("ers_obj_free_entry: NULL object, aborting entry freeing.\n");
 		return;
-	} 
-	else if (entry == NULL) 
-	{
+	} else if (entry == NULL) {
 		ShowError("ers_obj_free_entry: NULL entry, nothing to free.\n");
 		return;
 	}
@@ -261,11 +251,10 @@ static size_t ers_obj_entry_size(ERS self)
 {
 	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 
-	if (instance == NULL) 
-	{
+	if (instance == NULL) {
 		ShowError("ers_obj_entry_size: NULL object, aborting entry freeing.\n");
 		return 0;
-	} 
+	}
 
 	return instance->Cache->ObjectSize;
 }
@@ -274,8 +263,7 @@ static void ers_obj_destroy(ERS self)
 {
 	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 
-	if (instance == NULL) 
-	{
+	if (instance == NULL) {
 		ShowError("ers_obj_destroy: NULL object, aborting entry freeing.\n");
 		return;
 	}

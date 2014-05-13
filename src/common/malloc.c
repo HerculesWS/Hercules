@@ -21,7 +21,7 @@ struct malloc_interface iMalloc_s;
 
 #if defined(MEMWATCH)
 
-#	include <string.h> 
+#	include <string.h>
 #	include "memwatch.h"
 #	define MALLOC(n,file,line,func)    mwMalloc((n),(file),(line))
 #	define CALLOC(m,n,file,line,func)  mwCalloc((m),(n),(file),(line))
@@ -421,7 +421,7 @@ void _mfree(void *ptr, const char *file, int line, const char *func )
 	struct unit_head *head;
 
 	if (ptr == NULL)
-		return; 
+		return;
 
 	head = (struct unit_head *)((char *)ptr - sizeof(struct unit_head) + sizeof(long));
 	if(head->size == 0) {

@@ -1180,8 +1180,8 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 
 		if( (skill->get_inf2(skill_id)&INF2_ENSEMBLE_SKILL) && skill->check_pc_partner(sd, skill_id, &skill_lv, 1, 0) < 1 ) {
 			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0; 
-        }
+			return 0;
+		}
 		
 		switch(skill_id){
 			case SA_CASTCANCEL:
@@ -1371,7 +1371,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	// in official this is triggered even if no cast time.
 	clif->skillcasting(src, src->id, target_id, 0,0, skill_id, skill->get_ele(skill_id, skill_lv), casttime);
 	if( casttime > 0 || temp )
-	{		
+	{
 		if (sd && target->type == BL_MOB)
 		{
 			TBL_MOB *md = (TBL_MOB*)target;
@@ -1555,7 +1555,7 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 	if( casttime > 0 ) {
 		ud->skilltimer = timer->add( tick+casttime, skill->castend_pos, src->id, 0 );
 		if( (sd && pc->checkskill(sd,SA_FREECAST) > 0) || skill_id == LG_EXEEDBREAK)
-			status_calc_bl(&sd->bl, SCB_SPEED);	
+			status_calc_bl(&sd->bl, SCB_SPEED);
 	} else {
 		ud->skilltimer = INVALID_TIMER;
 		skill->castend_pos(ud->skilltimer,tick,src->id,0);

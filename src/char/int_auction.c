@@ -268,7 +268,7 @@ static void mapif_parse_Auction_requestlist(int fd)
 
 	for( auction = dbi_first(iter); dbi_exists(iter); auction = dbi_next(iter) )
 	{
-		if( (type == 0 && auction->type != IT_ARMOR && auction->type != IT_PETARMOR) || 
+		if( (type == 0 && auction->type != IT_ARMOR && auction->type != IT_PETARMOR) ||
 			(type == 1 && auction->type != IT_WEAPON) ||
 			(type == 2 && auction->type != IT_CARD) ||
 			(type == 3 && auction->type != IT_ETC) ||

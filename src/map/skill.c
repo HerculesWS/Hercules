@@ -2234,7 +2234,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 						status_change_end(bl, SC_ENERGYCOAT, INVALID_TIMER);
 					//Reduction: 6% + 6% every 20%
 					dmg.damage -= dmg.damage * (6 * (1+per)) / 100;
-				}	
+				}
 			}
 		#endif /* MAGIC_REFLECTION_TYPE */
 		}
@@ -2647,7 +2647,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		//blown-specific handling
 		switch( skill_id ) {
 			case LG_OVERBRAND_BRANDISH:
-				if( skill->blown(dsrc,bl,dmg.blewcount,dir,0) < dmg.blewcount ) 
+				if( skill->blown(dsrc,bl,dmg.blewcount,dir,0) < dmg.blewcount )
 					skill->addtimerskill(src, tick + status_get_amotion(src), bl->id, 0, 0, LG_OVERBRAND_PLUSATK, skill_lv, BF_WEAPON, flag|SD_ANIMATION);
 				break;
 			case SR_KNUCKLEARROW:
@@ -3165,7 +3165,7 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 									BL_CHAR|BL_SKILL, target->id); // Search for a new Target around current one...
 							if( nbl == NULL)
 								skl->x++;
-							else 
+							else
 								skl->x = 0;
 							
 							skill->addtimerskill(src, tick + 651, (nbl?nbl:target)->id, skl->x, 0, WL_CHAINLIGHTNING_ATK, skl->skill_lv, skl->type + 1, skl->flag);
@@ -3177,9 +3177,9 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 				case WL_TETRAVORTEX_WIND:
 				case WL_TETRAVORTEX_GROUND:
 					clif->skill_nodamage(src, target, skl->skill_id, skl->skill_lv, 1);
-					skill->attack(BF_MAGIC, src, src, target, skl->skill_id, skl->skill_lv, tick, skl->flag); 
+					skill->attack(BF_MAGIC, src, src, target, skl->skill_id, skl->skill_lv, tick, skl->flag);
 					skill->toggle_magicpower(src, skl->skill_id); // only the first hit will be amplify
-					if( skl->type == 4 ){ 
+					if( skl->type == 4 ){
 						const enum sc_type scs[] = { SC_BURNING, SC_BLOODING, SC_FROSTMISTY, SC_STUN }; // status inflicts are depend on what summoned element is used.
 						int rate = skl->y, index = skl->x-1;
 						sc_start2(src,target, scs[index], rate, skl->skill_lv, src->id, skill->get_time(WL_TETRAVORTEX,index+1));
@@ -4196,7 +4196,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 		case WL_TETRAVORTEX:
 			if( sc ){
 				int i = SC_SUMMON5, x = 0;
-				int types[][2] = {{0, 0}, {0, 0}, {0, 0}, {0, 0}}; 
+				int types[][2] = {{0, 0}, {0, 0}, {0, 0}, {0, 0}};
 				for(; i >= SC_SUMMON1; i--){
 					if( sc->data[i] ){
 						int skillid = WL_TETRAVORTEX_FIRE + (sc->data[i]->val1 - WLS_FIRE) + (sc->data[i]->val1 == WLS_WIND) - (sc->data[i]->val1 == WLS_WATER), sc_index = 0, rate = 0;
@@ -4272,7 +4272,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 						if (sd->skillcooldown[i].id == spell_skill_id){
 							cooldown += sd->skillcooldown[i].val;
 							break;
-						}					
+						}
 					}
 					if(cooldown)
 						skill->blockpc_start(sd, spell_skill_id, cooldown);
@@ -4769,10 +4769,10 @@ int skill_castend_id(int tid, int64 tick, int id, intptr_t data) {
 				inf &= ~BCT_NEUTRAL;
 			}
 
-			if( sd && (inf2&INF2_CHORUS_SKILL) && skill->check_pc_partner(sd, ud->skill_id, &ud->skill_lv, 1, 0) < 1 ) { 
-				clif->skill_fail(sd, ud->skill_id, USESKILL_FAIL_NEED_HELPER, 0); 
-				break; 
-			} 
+			if( sd && (inf2&INF2_CHORUS_SKILL) && skill->check_pc_partner(sd, ud->skill_id, &ud->skill_lv, 1, 0) < 1 ) {
+				clif->skill_fail(sd, ud->skill_id, USESKILL_FAIL_NEED_HELPER, 0);
+				break;
+			}
 
 			if( ud->skill_id >= SL_SKE && ud->skill_id <= SL_SKA && target->type == BL_MOB )
 			{
@@ -5036,7 +5036,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		 **/
 		case AB_RENOVATIO:
 		case AB_HIGHNESSHEAL:
-		case AL_INCAGI:	
+		case AL_INCAGI:
 			if( sd && dstsd && pc_ismadogear(dstsd) ){
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_TOTARGET,0);
 				return 0;
@@ -5674,7 +5674,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			
 		case KN_AUTOCOUNTER:
 				sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
-				skill->addtimerskill(src, tick + 100, bl->id, 0, 0, skill_id, skill_lv, BF_WEAPON, flag);				
+				skill->addtimerskill(src, tick + 100, bl->id, 0, 0, skill_id, skill_lv, BF_WEAPON, flag);
 			break;
 
 		case SO_STRIKING:
@@ -10315,7 +10315,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case WM_SOUND_OF_DESTRUCTION:
 			r = skill->get_splash(skill_id,skill_lv);
 			map->foreachinarea(skill->area_sub,src->m,x-r,y-r,x+r,y+r,BL_CHAR,src,skill_id,skill_lv,tick,flag|BCT_ENEMY|1,skill->castend_damage_id);
-			break;	
+			break;
 
 		case WM_LULLABY_DEEPSLEEP:
 			r = skill->get_splash(skill_id,skill_lv);
@@ -11669,7 +11669,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 		case UNT_FIREPILLAR_ACTIVE:
 		case UNT_CLAYMORETRAP:
 			if( sg->unit_id == UNT_FIRINGTRAP || sg->unit_id == UNT_ICEBOUNDTRAP || sg->unit_id == UNT_CLAYMORETRAP )
-				map->foreachinrange(skill->trap_splash,&src->bl, skill->get_splash(sg->skill_id, sg->skill_lv), sg->bl_flag|BL_SKILL|~BCT_SELF, &src->bl,tick);	
+				map->foreachinrange(skill->trap_splash,&src->bl, skill->get_splash(sg->skill_id, sg->skill_lv), sg->bl_flag|BL_SKILL|~BCT_SELF, &src->bl,tick);
 			else
 				map->foreachinrange(skill->trap_splash,&src->bl, skill->get_splash(sg->skill_id, sg->skill_lv), sg->bl_flag, &src->bl,tick);
 			if (sg->unit_id != UNT_FIREPILLAR_ACTIVE)
@@ -13054,7 +13054,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			{
 				int j, i = 0;
 				for(j = SC_SUMMON1; j <= SC_SUMMON5; j++)
-					if( sc && sc->data[j] )	
+					if( sc && sc->data[j] )
 						i++;
 
 				switch(skill_id){
@@ -14124,9 +14124,9 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 		if( sd->bonus.varcastrate < 0 )
 			VARCAST_REDUCTION(sd->bonus.varcastrate);
 		if( sd->bonus.add_varcast != 0 ) // bonus bVariableCast
-			time += sd->bonus.add_varcast; 
+			time += sd->bonus.add_varcast;
 		if( sd->bonus.add_fixcast != 0 ) // bonus bFixedCast
-			fixed += sd->bonus.add_fixcast; 
+			fixed += sd->bonus.add_fixcast;
 		for (i = 0; i < ARRAYLENGTH(sd->skillfixcast) && sd->skillfixcast[i].id; i++)
 			if (sd->skillfixcast[i].id == skill_id){ // bonus2 bSkillFixedCast
 				fixed += sd->skillfixcast[i].val;
@@ -14197,7 +14197,7 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 			fixcast_r = max(fixcast_r, sc->data[SC_DANCE_WITH_WUG]->val4);
 		if( sc->data[SC_SECRAMENT] )
 			fixcast_r = max(fixcast_r, sc->data[SC_SECRAMENT]->val2);
-		if( sd && ( skill_lv = pc->checkskill(sd, WL_RADIUS) ) && (skill_id >= WL_WHITEIMPRISON && skill_id < WL_FREEZE_SP) ) 
+		if( sd && ( skill_lv = pc->checkskill(sd, WL_RADIUS) ) && (skill_id >= WL_WHITEIMPRISON && skill_id < WL_FREEZE_SP) )
 			fixcast_r = max(fixcast_r, (status_get_int(bl) + status->get_lv(bl)) / 15 + skill_lv * 5); // [{(Caster?s INT / 15) + (Caster?s Base Level / 15) + (Radius Skill Level x 5)}] %
 		// Fixed cast non percentage bonuses
 		if( sc->data[SC_MANDRAGORA] )
@@ -15323,7 +15323,7 @@ bool skill_check_shadowform(struct block_list *bl, int64 damage, int hit){
 	if( sc && sc->data[SC__SHADOWFORM] && damage ) {
 		src = map->id2bl(sc->data[SC__SHADOWFORM]->val2);
 
-		if( !src || src->m != bl->m ) { 
+		if( !src || src->m != bl->m ) {
 			status_change_end(bl, SC__SHADOWFORM, INVALID_TIMER);
 			return false;
 		}
@@ -18515,7 +18515,7 @@ void skill_defaults(void) {
 	skill->unit_onplace = skill_unit_onplace;
 	skill->unit_ondamaged = skill_unit_ondamaged;
 	skill->cast_fix = skill_castfix;
-	skill->cast_fix_sc = skill_castfix_sc;	
+	skill->cast_fix_sc = skill_castfix_sc;
 	skill->vf_cast_fix = skill_vfcastfix;
 	skill->delay_fix = skill_delay_fix;
 	skill->check_condition_castbegin = skill_check_condition_castbegin;

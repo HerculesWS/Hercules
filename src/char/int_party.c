@@ -652,7 +652,7 @@ int mapif_parse_PartyChangeMap(int fd, int party_id, int account_id, int char_id
 	if (p == NULL)
 		return 0;
 
-	for(i = 0; i < MAX_PARTY && 
+	for(i = 0; i < MAX_PARTY &&
 		(p->party.member[i].account_id != account_id ||
 		p->party.member[i].char_id != char_id); i++);
 
@@ -666,7 +666,7 @@ int mapif_parse_PartyChangeMap(int fd, int party_id, int account_id, int char_id
 		else
 			p->party.count--;
 		// Even share check situations: Family state (always breaks)
-		// character logging on/off is max/min level (update level range) 
+		// character logging on/off is max/min level (update level range)
 		// or character logging on/off has a different level (update level range using new level)
 		if (p->family ||
 			(p->party.member[i].lv <= p->min_lv || p->party.member[i].lv >= p->max_lv) ||
@@ -731,7 +731,7 @@ int mapif_parse_PartyLeaderChange(int fd,int party_id,int account_id,int char_id
 
 	for (i = 0; i < MAX_PARTY; i++)
 	{
-		if(p->party.member[i].leader) 
+		if(p->party.member[i].leader)
 			p->party.member[i].leader = 0;
 		if(p->party.member[i].account_id == account_id &&
 			p->party.member[i].char_id == char_id)
