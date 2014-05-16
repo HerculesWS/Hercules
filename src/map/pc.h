@@ -7,7 +7,7 @@
 
 #include "../config/core.h" // AUTOLOOTITEM_SIZE, RENEWAL, SECURE_NPCTIMEOUT
 
-#include "battle.h" // battle_config
+#include "battle.h" // battle
 #include "battleground.h" // enum bg_queue_types
 #include "buyingstore.h"  // struct s_buyingstore
 #include "itemdb.h" // MAX_ITEMDELAYS
@@ -565,7 +565,7 @@ struct map_session_data {
 #define pc_setsit(sd)         ( (sd)->state.dead_sit = (sd)->vd.dead_sit = 2 )
 #define pc_isdead(sd)         ( (sd)->state.dead_sit == 1 )
 #define pc_issit(sd)          ( (sd)->vd.dead_sit == 2 )
-#define pc_isidle(sd)         ( (sd)->chatID || (sd)->state.vending || (sd)->state.buyingstore || DIFF_TICK(sockt->last_tick, (sd)->idletime) >= battle_config.idle_no_share )
+#define pc_isidle(sd)         ( (sd)->chatID || (sd)->state.vending || (sd)->state.buyingstore || DIFF_TICK(sockt->last_tick, (sd)->idletime) >= battle->bc->idle_no_share )
 #define pc_istrading(sd)      ( (sd)->npc_id || (sd)->state.vending || (sd)->state.buyingstore || (sd)->state.trading )
 #define pc_cant_act(sd)       ( (sd)->npc_id || (sd)->state.vending || (sd)->state.buyingstore || (sd)->chatID || ((sd)->sc.opt1 && (sd)->sc.opt1 != OPT1_BURNING) || (sd)->state.trading || (sd)->state.storage_flag || (sd)->state.prevend )
 
@@ -587,9 +587,9 @@ struct map_session_data {
 #define pc_isfalcon(sd)       ( (sd)->sc.option&OPTION_FALCON )
 #define pc_isriding(sd)       ( (sd)->sc.option&OPTION_RIDING )
 #define pc_isinvisible(sd)    ( (sd)->sc.option&OPTION_INVISIBLE )
-#define pc_is50overweight(sd) ( (sd)->weight*100 >= (sd)->max_weight*battle_config.natural_heal_weight_rate )
+#define pc_is50overweight(sd) ( (sd)->weight*100 >= (sd)->max_weight*battle->bc->natural_heal_weight_rate )
 #define pc_is90overweight(sd) ( (sd)->weight*10 >= (sd)->max_weight*9 )
-#define pc_maxparameter(sd)   ( (((sd)->class_&MAPID_UPPERMASK) == MAPID_KAGEROUOBORO || ((sd)->class_&MAPID_UPPERMASK) == MAPID_REBELLION || ((sd)->class_&MAPID_THIRDMASK) == MAPID_SUPER_NOVICE_E) ? battle_config.max_extended_parameter : (sd)->class_&JOBL_THIRD ? ((sd)->class_&JOBL_BABY ? battle_config.max_baby_third_parameter : battle_config.max_third_parameter) : ((sd)->class_&JOBL_BABY ? battle_config.max_baby_parameter : battle_config.max_parameter) )
+#define pc_maxparameter(sd)   ( (((sd)->class_&MAPID_UPPERMASK) == MAPID_KAGEROUOBORO || ((sd)->class_&MAPID_UPPERMASK) == MAPID_REBELLION || ((sd)->class_&MAPID_THIRDMASK) == MAPID_SUPER_NOVICE_E) ? battle->bc->max_extended_parameter : (sd)->class_&JOBL_THIRD ? ((sd)->class_&JOBL_BABY ? battle->bc->max_baby_third_parameter : battle->bc->max_third_parameter) : ((sd)->class_&JOBL_BABY ? battle->bc->max_baby_parameter : battle->bc->max_parameter) )
 /**
  * Ranger
  **/
