@@ -303,7 +303,7 @@ int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 		clif->additem(sd,0,0,flag);
 		map->addflooritem(&tmp_item,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 	}
-	pd->pet.incuvate = 1;
+	pd->pet.incubate = 1;
 	unit->free(&pd->bl,CLR_OUTSIGHT);
 
 	status_calc_pc(sd,SCO_NONE);
@@ -327,8 +327,8 @@ int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 	}
 	if (sd->status.pet_id != petinfo->pet_id) {
 		if (sd->status.pet_id) {
-			//Wrong pet?? Set incuvate to no and send it back for saving.
-			petinfo->incuvate = 1;
+			//Wrong pet?? Set incubate to no and send it back for saving.
+			petinfo->incubate = 1;
 			intif->save_petdata(sd->status.account_id,petinfo);
 			sd->status.pet_id = 0;
 			return 1;
@@ -392,12 +392,12 @@ int pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo)
 
 	Assert((sd->status.pet_id == 0 || sd->pd == 0) || sd->pd->msd == sd);
 
-	if(sd->status.pet_id && petinfo->incuvate == 1) {
+	if(sd->status.pet_id && petinfo->incubate == 1) {
 		sd->status.pet_id = 0;
 		return 1;
 	}
 
-	petinfo->incuvate = 0;
+	petinfo->incubate = 0;
 	petinfo->account_id = sd->status.account_id;
 	petinfo->char_id = sd->status.char_id;
 	sd->status.pet_id = petinfo->pet_id;
@@ -433,7 +433,7 @@ int pet_recv_petdata(int account_id,struct s_pet *p,int flag) {
 		sd->status.pet_id = 0;
 		return 1;
 	}
-	if(p->incuvate == 1) {
+	if(p->incubate == 1) {
 		int i;
 		//Delete egg from inventory. [Skotlex]
 		for (i = 0; i < MAX_INVENTORY; i++) {
@@ -596,7 +596,7 @@ int pet_menu(struct map_session_data *sd,int menunum)
 		return 1;
 	
 	//You lost the pet already.
-	if(!sd->status.pet_id || sd->pd->pet.intimate <= 0 || sd->pd->pet.incuvate)
+	if(!sd->status.pet_id || sd->pd->pet.intimate <= 0 || sd->pd->pet.incubate)
 		return 1;
 		
 	egg_id = itemdb->exists(sd->pd->petDB->EggID);
