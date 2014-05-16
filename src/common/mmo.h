@@ -5,9 +5,10 @@
 #ifndef _COMMON_MMO_H_
 #define _COMMON_MMO_H_
 
-#include "cbasetypes.h"
-#include "../common/db.h"
 #include <time.h>
+
+#include "../common/cbasetypes.h"
+#include "../common/db.h"
 
 // server->client protocol version
 //        0 - pre-?
@@ -83,6 +84,14 @@
 #endif // 20090603
 #endif // 20070227
 
+/* Feb 1st 2012 */
+#if PACKETVER >= 20120201
+#	define NEW_CARTS
+#	define MAX_CARTS 9
+#else
+#	define MAX_CARTS 5
+#endif
+
 #define MAX_INVENTORY 100
 //Max number of characters per account. Note that changing this setting alone is not enough if the client is not hexed to support more characters as well.
 #define MAX_CHARS 9
@@ -96,6 +105,7 @@
 //Official Limit: 2.1b ( the var that stores the money doesn't go much higher than this by default )
 #define MAX_BANK_ZENY 2100000000
 
+#define MAX_LEVEL 175
 #define MAX_FAME 1000000000
 #define MAX_CART 100
 #define MAX_SKILL 1478

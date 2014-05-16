@@ -34,7 +34,7 @@
 //=     Added support NPCs required to finish Gaebolg quest.
 //= 2.5 Fixed Group of Evil never re-enabling. [L0ne_W0lf]
 //= 2.6 Added quest log commands for Resurrection of Satan Morroc. [L0ne_W0lf]
-//=     Added the two remaining episode 12.1 quests. 
+//=     Added the two remaining episode 12.1 quests.
 //=     Updated Satan Morroc Quest to allow peopel who have
 //=     finished it to return to the previous map.
 //= 2.7 Corrected weight checks, they only check for inventory slots. [L0ne_W0lf]

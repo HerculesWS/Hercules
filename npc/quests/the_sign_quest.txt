@@ -4,6 +4,8 @@
 //= SinSloth, MasterOfMuppets, Kargha
 //===== Current Version: =====================================
 //= 3.9
+//===== File Encoding ========================================
+//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //===== Description: =========================================
 //= [Official Conversion]
 //= Quest for opening the doors to Geffenia.
@@ -3090,13 +3092,11 @@ OnTouch:
 	end;
 }
 
-/* Currently broken.
 prt_maze02,25,161,0	script	#music	-1,7,7,{
 OnTouch:
-	soundeffect "effect\\Â¼Â®Â¾Ã§Ã€Ã‡ Â¾Ã®Â½Ã˜Â½Ã….wav",1;
+	soundeffect "effect\\¼®¾çÀÇ ¾î½Ø½Å.wav",1;
 	end;
 }
-*/
 
 prt_maze02,132,132,0	script	#skill	-1,{
 OnEnable:
@@ -12555,7 +12555,7 @@ function	script	F_UpdateSignVars	{
 		// Because of the horrible way this was scripted, it's incompatable
 		// With the new script, So I am resetting the quest to the start
 		// of this step.
-		if (signlaichin >= 1) { 
+		if (signlaichin >= 1) {
 			mes "^FF0000You stumble and drop the your^000000";
 			if (countitem(7306)) {
 				mes "^FF0000"+getitemname(7306)+"^000000";
@@ -12569,11 +12569,11 @@ function	script	F_UpdateSignVars	{
 			mes "^FF0000pieces on the ground and they vanish! Perhaps you should talk to Lachin.^000000";
 			delitem 7306,countitem(7306); //Fragment_Of_Soul
 			delitem 7307,countitem(7307); //Whisper_Of_Soul
-			set sign_q,rand(97,100); 
+			set sign_q,rand(97,100);
 		}
 
 		// Same BS as above, unable to save pickup time for 'The Sign' from Engel.
-		if (signengelhour) { 
+		if (signengelhour) {
 			mes "^FF0000You see that Engel has forgotten to look at 'The Sign', how you got it back is a mystery too you, but you should remind Engel that he needs to look at it.^000000";
 			getitem 7314,1; //The_Sign
 			set sign_q,139;
@@ -12598,7 +12598,7 @@ function	script	F_UpdateSignVars	{
 		}
 
 		// Unable to save when the Sign should be picked up from Metz
-		if (signmetzhour) { 
+		if (signmetzhour) {
 			mes "^FF0000You see that Metz has forgotten to look at 'The Sign', how you got it back is a mystery too you, but you should remind Metz that he needs to look at it.^000000";
 			getitem 7314,1; //The_Sign
 			set sign_q,138;

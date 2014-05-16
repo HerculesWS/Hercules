@@ -1,26 +1,31 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h"
-#include "../common/core.h"
-#include "../common/malloc.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/timer.h"
-#include "../common/conf.h"
-#include "../common/utils.h"
-#include "../common/console.h"
-#include "../common/strlib.h"
-#include "../common/sql.h"
-#include "../common/sysinfo.h"
+#define HERCULES_CORE
+
+#include "../config/core.h" // CONSOLE_INPUT
 #include "HPM.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "../common/cbasetypes.h"
+#include "../common/conf.h"
+#include "../common/console.h"
+#include "../common/core.h"
+#include "../common/malloc.h"
+#include "../common/mmo.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
+#include "../common/sql.h"
+#include "../common/strlib.h"
+#include "../common/sysinfo.h"
+#include "../common/timer.h"
+#include "../common/utils.h"
+
 #ifndef WIN32
-#include <unistd.h>
+#	include <unistd.h>
 #endif
 
 struct malloc_interface iMalloc_HPM;
@@ -500,7 +505,7 @@ bool hplugins_addpacket(unsigned short cmd, short length,void (*receive) (int fd
 	
 	return true;
 }
-/* 
+/*
  0 = unknown
  1 = OK
  2 = incomplete
@@ -630,7 +635,7 @@ bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, void (*func)
 	
 	CREATE(data, struct HPMArgData, 1);
 	
-	data->pluginID = pluginID;	
+	data->pluginID = pluginID;
 	data->name = aStrdup(name);
 	data->func = func;
 	data->help = help;
@@ -686,7 +691,7 @@ bool hplugins_parse_conf(const char *w1, const char *w2, enum HPluginConfType po
 void hplugins_share_defaults(void) {
 	/* console */
 #ifdef CONSOLE_INPUT
-	HPM->share(console->addCommand,"addCPCommand");
+	HPM->share(console->input->addCommand,"addCPCommand");
 #endif
 	/* our own */
 	HPM->share(hplugins_addpacket,"addPacket");
@@ -755,7 +760,7 @@ void hpm_init(void) {
 	HPM->symbol_defaults();
 	
 #ifdef CONSOLE_INPUT
-	console->addCommand("plugins",CPCMD_A(plugins));
+	console->input->addCommand("plugins",CPCMD_A(plugins));
 #endif
 	return;
 }

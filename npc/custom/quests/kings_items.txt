@@ -44,7 +44,7 @@ prt_castle,80,170,4	script	King of Prontera	1_M_PRON_KING,{
 			for(set .@j,1; .@j<getarraysize(getd(".@items"+.@i)); set .@j,.@j+2)
 				if (countitem(getd(".@items"+.@i+"["+.@j+"]")) < getd(".@items"+.@i+"["+(.@j+1)+"]")) set .@nr,1;
 			mes "[King of Prontera]";
-			if (.@nr) { 
+			if (.@nr) {
 				mes "You're missing something.";
 				mes "Come back after you get ALL the items.";
 				close; }

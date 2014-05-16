@@ -414,7 +414,7 @@ jawaii,214,168,5	script	Honeymoon Helper#Jawaii	1_F_LIBRARYGIRL,{
 		mes "[Helper]";
 		if (Zeny > 49999) {
 			Zeny -= 50000;
-			getitem 681,1; //Memory_Of_Wedding 
+			getitem 681,1; //Memory_Of_Wedding
 			mes "Thank you very much~!";
 			mes "Please remember, you";
 			mes "should use this with your";

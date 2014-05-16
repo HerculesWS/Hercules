@@ -536,7 +536,7 @@ S_DelItems:
 	mes "I don't know if we can do anything else,";
 	if (getarg(2) == 1)
 		mes "but this time we have created "+getarg(1);
-	else 
+	else
 		mes "but this time we have created";
 	mes "^FF0000"+getitemname(getarg(0))+"^000000 !";
 	next;
@@ -664,7 +664,7 @@ S_DelItems:
 	mes "I don't know if we can do anything else,";
 	if (getarg(2) == 1)
 		mes "but this time we have created "+getarg(1);
-	else 
+	else
 		mes "but this time we have created";
 	mes "^FF0000"+getitemname(getarg(0))+"^000000 !";
 	next;

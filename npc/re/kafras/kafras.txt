@@ -9,12 +9,12 @@
 //=  arg(0): 0 - Default Kafra message
 //=          1 - Niflhiem Kafra message
 //=          2 - Guild Kafra message
-//=  arg(1): 1 - Disable teleport menu 
+//=  arg(1): 1 - Disable teleport menu
 //=  arg(2): 1 - Disable info menu
 //=  arg(3): Cost of Storage service
 //=  arg(4): Cost of Rent a Pushcart service
 //===== Additional Comments: =================================
-//= 0.x Previous Authors: 
+//= 0.x Previous Authors:
 //=     - L0ne_W0lf, Daegaladh
 //= 1.0 Merged and cleaned up Kafras. [Euphy]
 //= 1.1 Added Dewata Kafra. [Lemongrass]

@@ -175,7 +175,7 @@ new_1-2,100,29,4	script	Receptionist#nv1	4_M_04,{
 			close;
 		}
 	}
-}	
+}
 
 new_1-1,53,114,4	script	Shion#nv1	4_F_JOB_HUNTER,{
 	if (nov_get_item04 > 9 || nov_get_item05 > 9) {
@@ -2654,7 +2654,7 @@ new_1-3,95,30,4	script	Trainer#nv1::NovHoffman	4_M_02,{
 		}
 		else {
 			warp "new_1-3",96,21;
-		}	
+		}
 		end;
 	case 2:
 		mes "[Hoffman]";
@@ -3859,7 +3859,7 @@ S_UserJobchoice:
 		mes "[Hanson]";
 		mes "The Mage Academy is located in the NorthWest in town. Please remember this.";
 	}
-	else if (@menu == 3) {					
+	else if (@menu == 3) {
 		mes "to become a Merchant.";
 		mes "You will be sent to";
 		mes "the town of Alberta.";

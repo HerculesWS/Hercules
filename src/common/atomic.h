@@ -4,16 +4,16 @@
 #ifndef _COMMON_ATOMIC_H_
 #define _COMMON_ATOMIC_H_
 
-// Atomic Operations 
+// Atomic Operations
 // (Interlocked CompareExchange, Add .. and so on ..)
-// 
+//
 // Implementation varies / depends on:
 //	- Architecture
 //	- Compiler
 //	- Operating System
 //
 // our Abstraction is fully API-Compatible to Microsofts implementation @ NT5.0+
-// 
+//
 #include "../common/cbasetypes.h"
 
 #if defined(_MSC_VER)
@@ -36,7 +36,7 @@ forceinline int64 InterlockedCompareExchange64(volatile int64 *dest, int64 exch,
 		mov ecx,4[edi];
 		mov esi,dest;
 		
-		lock CMPXCHG8B [esi];					
+		lock CMPXCHG8B [esi];
 	}
 }
 

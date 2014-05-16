@@ -57,7 +57,7 @@ OnAgitInit:
 	// end time checks
 	if ((gettime(4)==2) && (gettime(3)==23) ||
 	    (gettime(4)==4) && (gettime(3)==23) ||
-	    (gettime(4)==6) && (gettime(3)==18)) { 
+	    (gettime(4)==6) && (gettime(3)==18)) {
 		if (agitcheck()) {
 			agitend;
 			callsub S_DisplayOwners;

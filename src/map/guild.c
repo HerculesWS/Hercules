@@ -2,34 +2,37 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/timer.h"
-#include "../common/nullpo.h"
-#include "../common/malloc.h"
-#include "../common/mapindex.h"
-#include "../common/showmsg.h"
-#include "../common/ers.h"
-#include "../common/strlib.h"
-#include "../common/utils.h"
-#include "../common/HPM.h"
+#define HERCULES_CORE
 
-#include "map.h"
+#include "../config/core.h" // GP_BOUND_ITEMS
 #include "guild.h"
-#include "storage.h"
-#include "battle.h"
-#include "npc.h"
-#include "pc.h"
-#include "status.h"
-#include "mob.h"
-#include "intif.h"
-#include "clif.h"
-#include "skill.h"
-#include "log.h"
-#include "instance.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "battle.h"
+#include "clif.h"
+#include "instance.h"
+#include "intif.h"
+#include "log.h"
+#include "map.h"
+#include "mob.h"
+#include "npc.h"
+#include "pc.h"
+#include "skill.h"
+#include "status.h"
+#include "storage.h"
+#include "../common/HPM.h"
+#include "../common/cbasetypes.h"
+#include "../common/ers.h"
+#include "../common/malloc.h"
+#include "../common/mapindex.h"
+#include "../common/nullpo.h"
+#include "../common/showmsg.h"
+#include "../common/strlib.h"
+#include "../common/timer.h"
+#include "../common/utils.h"
 
 struct guild_interface guild_s;
 
@@ -1001,7 +1004,7 @@ int guild_recv_memberinfoshort(int guild_id,int account_id,int char_id,int onlin
 	//Ensure validity of pointer (ie: player logs in/out, changes map-server)
 	g->member[idx].sd = guild->sd_check(guild_id, account_id, char_id);
 
-	if(oldonline!=online) 
+	if(oldonline!=online)
 		clif->guild_memberlogin_notice(g, idx, online);
 	
 	if(!g->member[idx].sd)
@@ -2005,7 +2008,7 @@ void guild_castle_reconnect_sub(void *key, void *data, va_list ap)
 }
 
 /**
- * Saves pending guild castle data changes when char-server is 
+ * Saves pending guild castle data changes when char-server is
  * disconnected.
  * On reconnect pushes all changes to char-server for saving.
  */
@@ -2360,7 +2363,7 @@ void guild_defaults(void) {
 	guild->flag_add = guild_flag_add;
 	guild->flag_remove = guild_flag_remove;
 	guild->flags_clear = guild_flags_clear;
-	/* guild aura */ 
+	/* guild aura */
 	guild->aura_refresh = guild_guildaura_refresh;
 	/* */
 	guild->payexp_timer = guild_payexp_timer;

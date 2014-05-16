@@ -710,9 +710,9 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 						mes "[Union Staff Kay]";
 						mes "Hey hey. That number's not valid! Enter a value from 1000000 to 5000000. got it?";
 						next;
-					}
-					else 
+					} else {
 						break;
+					}
 				}
 				mes "[Union Staff Kay]";
 				if (.@where_village == 1)

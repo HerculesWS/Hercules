@@ -11,7 +11,7 @@
 //============================================================
 
 //==================================================
-// um_fild01 - Luluka Forest 
+// um_fild01 - Luluka Forest
 //==================================================
 um_fild01,0,0,0,0	monster	Dryad	1493,70,5000,0,0
 um_fild01,0,0,0,0	monster	Stone Shooter	1495,15,5000,0,0
@@ -23,7 +23,7 @@ um_fild01,0,0,0,0	monster	Yellow Plant	1081,10,180000,90000,1
 um_fild01,0,0,0,0	monster	Shining Plant	1083,5,180000,90000,1
 
 //==================================================
-// um_fild02 - Hoomga Forest 
+// um_fild02 - Hoomga Forest
 //==================================================
 um_fild02,0,0,0,0	monster	Wootan Fighter	1499,40,5000,0,0
 um_fild02,0,0,0,0	monster	Stone Shooter	1495,15,5000,0,0
@@ -33,7 +33,7 @@ um_fild02,0,0,0,0	monster	Red Plant	1078,5,180000,90000,1
 um_fild02,0,0,0,0	monster	Yellow Plant	1081,5,180000,90000,1
 
 //==================================================
-// um_fild03 - Kalala Swamp 
+// um_fild03 - Kalala Swamp
 //==================================================
 um_fild03,0,0,0,0	monster	Parasite	1500,60,5000,0,0
 um_fild03,0,0,0,0	monster	Stone Shooter	1495,15,5000,0,0
@@ -44,7 +44,7 @@ um_fild03,0,0,0,0	monster	Green Plant	1080,10,180000,90000,1
 um_fild03,0,0,0,0	monster	Shining Plant	1083,2,180000,90000,1
 
 //==================================================
-// um_fild04 - Hoomga Jungle 
+// um_fild04 - Hoomga Jungle
 //==================================================
 um_fild04,0,0,0,0	monster	Wild Rose	1261,30,5000,0,0
 um_fild04,0,0,0,0	monster	Stone Shooter	1495,10,5000,0,0

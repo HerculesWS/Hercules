@@ -2,6 +2,18 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#include "login.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "account.h"
+#include "ipban.h"
+#include "loginlog.h"
+#include "../common/HPM.h"
 #include "../common/core.h"
 #include "../common/db.h"
 #include "../common/malloc.h"
@@ -12,15 +24,6 @@
 #include "../common/strlib.h"
 #include "../common/timer.h"
 #include "../common/utils.h"
-#include "../common/HPM.h"
-#include "account.h"
-#include "ipban.h"
-#include "login.h"
-#include "loginlog.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 struct Login_Config login_config;
 
@@ -170,7 +173,7 @@ static int online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
 static int online_data_cleanup(int tid, int64 tick, int id, intptr_t data) {
 	online_db->foreach(online_db, online_data_cleanup_sub);
 	return 0;
-} 
+}
 
 
 //--------------------------------------------------------------------
@@ -1106,7 +1109,7 @@ void login_auth_ok(struct login_session_data* sd)
 		WFIFOW(fd,0) = 0x81;
 		WFIFOB(fd,2) = 1; // 01 = Server closed
 		WFIFOSET(fd,3);
-		return;		
+		return;
 	}
 
 	server_num = 0;
@@ -1689,8 +1692,7 @@ int login_config_read(const char* cfgName)
 //--------------------------------------
 // Function called at exit of the server
 //--------------------------------------
-void do_final(void)
-{
+int do_final(void) {
 	int i;
 	struct client_hash_node *hn = login_config.client_hash_nodes;
 
@@ -1730,6 +1732,7 @@ void do_final(void)
 	}
 
 	ShowStatus("Finished.\n");
+	return EXIT_SUCCESS;
 }
 
 //------------------------------
@@ -1824,7 +1827,7 @@ int do_init(int argc, char** argv)
 	HPM->config_read(NULL, 0);
 	HPM->event(HPET_INIT);
 	
-	// server port open & binding	
+	// server port open & binding
 	if( (login_fd = make_listen_bind(login_config.login_ip,login_config.login_port)) == -1 ) {
 		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",login_config.login_port);
 		exit(EXIT_FAILURE);

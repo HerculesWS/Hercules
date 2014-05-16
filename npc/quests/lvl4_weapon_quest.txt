@@ -9,7 +9,7 @@
 //= Grade A and Grade S weapon quests
 //===== Additional Comments: =================================
 //= 1.0 First Version, Credits goes to Vicious_Pucca for converting [MasterOfMuppets]
-//=     the quest from aegis format to eA format. Also thanks to 
+//=     the quest from aegis format to eA format. Also thanks to
 //=     reddozen for fixing bugs.
 //= 1.1 Many fixes to spelling, grammar, and sentence order. [Silent]
 //= 1.2 A small fix, thanks to vicious_pucca [MasterOfMuppets]

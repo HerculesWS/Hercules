@@ -24,9 +24,9 @@
 //=     hacker that can change item [dafide18]
 //= 1.5 Fixed crashing due to badly used callfunc's [Skotlex]
 //=     Lupus, don't rollback this important fix again! >.<
-//= 1.5a Corrected an unneeded callfunc, fixed the anti-bot 
+//= 1.5a Corrected an unneeded callfunc, fixed the anti-bot
 //=     exploit ruining the safe refine loop. [Skotlex]
-//= 1.5b Fixed Spelling mistakes. [Nexon] 
+//= 1.5b Fixed Spelling mistakes. [Nexon]
 //= 1.6 Replaced all breaks for ends as per the new script engine [Skotlex]
 //= 1.7 Added Einbroch Refiners (Custom names ^^;) and a duplicated BS Shop. [Poki#3]
 //= 1.8 Added Lighthalzen Refiners (Custom names again ^^;) [Poki#3]
@@ -661,27 +661,27 @@ function	script	refinemain	{
 	case 1: 	//Refine Level 1 Weapon
 		set .@price,50;
 		set .@material,1010;
-		set .@safe,7; 
+		set .@safe,7;
 		break;
 	case 2: 	//Refine Level 2 Weapon
 		set .@price,200;
 		set .@material,1011;
-		set .@safe,6; 
+		set .@safe,6;
 		break;
 	case 3: 	//Refine Level 3 Weapon
 		set .@price,5000;
 		set .@material,984;
-		set .@safe,5; 
+		set .@safe,5;
 		break;
 	case 4: 	//Refine Level 4 Weapon
 		set .@price,20000;
 		set .@material,984;
-		set .@safe,4; 
+		set .@safe,4;
 		break;
 	case 5: 	//Refine other stuff?
 		set .@price,2000;
 		set .@material,985;
-		set .@safe,4; 
+		set .@safe,4;
 		break;
 	}
 	if(.@features != 1) {
@@ -809,7 +809,7 @@ function	script	refinemain	{
 	} else
 		set .@menu2,2;
 	switch(.@menu2){
-	case 1: 
+	case 1:
 		set .@refinecnt,.@safe - getequiprefinerycnt(.@part);
 		break;
 	case 2:
@@ -870,7 +870,7 @@ function	script	refinemain	{
 			mes "You changed it...";
 			mes "Get out before I stun you with my Hammer!!";
 			close;
-		} 
+		}
 		mes "Clang, clang!!!";
 		if(.@menu2 == 2 && getequippercentrefinery(.@part) <= rand(100)) {
 			failedrefitem .@part;

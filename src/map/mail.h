@@ -5,7 +5,11 @@
 #ifndef _MAP_MAIL_H_
 #define _MAP_MAIL_H_
 
-#include "../common/mmo.h"
+#include "../common/cbasetypes.h"
+
+struct item;
+struct mail_message;
+struct map_session_data;
 
 struct mail_interface {
 	void (*clear) (struct map_session_data *sd);

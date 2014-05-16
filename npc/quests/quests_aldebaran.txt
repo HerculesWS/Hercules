@@ -1,5 +1,5 @@
 //===== Hercules Script ======================================
-//= Quest NPCs related to Aldebaran 
+//= Quest NPCs related to Aldebaran
 //===== By: ==================================================
 //= rAthena Dev Team
 //===== Current Version: =====================================
@@ -74,7 +74,7 @@ aldeba_in,152,166,4	script	Trader#01	4_M_04,{
 			close;
 		}
 	case 3:
-		if ((countitem(998) > 19) && (countitem(707) > 0) && (Zeny > 4999)){ //Iron Singing_Plant 
+		if ((countitem(998) > 19) && (countitem(707) > 0) && (Zeny > 4999)){ //Iron Singing_Plant
 			delitem 998,20; //Iron
 			delitem 707,1; //Singing_Plant
 			Zeny -= 5000;
@@ -89,7 +89,7 @@ aldeba_in,152,166,4	script	Trader#01	4_M_04,{
 			close;
 		}
 	case 4:
-		if ((countitem(1019) > 119) && (Zeny > 9999)){ //Wooden_Block 
+		if ((countitem(1019) > 119) && (Zeny > 9999)){ //Wooden_Block
 			delitem 1019,120; //Wooden_Block
 			Zeny -= 10000;
 			mes "[Trader]";

@@ -5,6 +5,10 @@
 #ifndef _MAP_PC_GROUPS_H_
 #define _MAP_PC_GROUPS_H_
 
+#include "../common/cbasetypes.h"
+#include "../common/conf.h"
+#include "../common/db.h"
+
 /// PC permissions
 enum e_pc_permission {
 	PC_PERM_NONE                = 0,        //  #0

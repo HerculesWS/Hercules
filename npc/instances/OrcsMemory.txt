@@ -13,7 +13,7 @@
 //===== Additional Comments: =================================
 //= 1.0 First version. [L0ne_W0lf]
 //= 1.1 First round of bugfixes. (bugreport:3928) [L0ne_W0lf]
-//=     Fixed some npcs calling wrong events. 
+//=     Fixed some npcs calling wrong events.
 //=     Fixed Depraved Orc Spirit spawn point
 //=     Fixed an NPC that was never being enabled.
 //= 1.1a Second round from bugreport. (bugreport:3928) [L0ne_W0lf]

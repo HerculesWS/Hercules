@@ -14350,14 +14350,14 @@ void HP_clif_friendlist_req(struct map_session_data *sd, int account_id, int cha
 	}
 	return;
 }
-void HP_clif_GM_kickack(struct map_session_data *sd, int id) {
+void HP_clif_GM_kickack(struct map_session_data *sd, int result) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_GM_kickack_pre ) {
-		void (*preHookFunc) (struct map_session_data *sd, int *id);
+		void (*preHookFunc) (struct map_session_data *sd, int *result);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_GM_kickack_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_clif_GM_kickack_pre[hIndex].func;
-			preHookFunc(sd, &id);
+			preHookFunc(sd, &result);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -14365,13 +14365,13 @@ void HP_clif_GM_kickack(struct map_session_data *sd, int id) {
 		}
 	}
 	{
-		HPMHooks.source.clif.GM_kickack(sd, id);
+		HPMHooks.source.clif.GM_kickack(sd, result);
 	}
 	if( HPMHooks.count.HP_clif_GM_kickack_post ) {
-		void (*postHookFunc) (struct map_session_data *sd, int *id);
+		void (*postHookFunc) (struct map_session_data *sd, int *result);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_GM_kickack_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_clif_GM_kickack_post[hIndex].func;
-			postHookFunc(sd, &id);
+			postHookFunc(sd, &result);
 		}
 	}
 	return;
@@ -28093,6 +28093,33 @@ void HP_homun_delspiritball(struct homun_data *hd, int count, int type) {
 		}
 	}
 	return;
+}
+int8 HP_homun_get_intimacy_grade(struct homun_data *hd) {
+	int hIndex = 0;
+	int8 retVal___ = 0;
+	if( HPMHooks.count.HP_homun_get_intimacy_grade_pre ) {
+		int8 (*preHookFunc) (struct homun_data *hd);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_get_intimacy_grade_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_homun_get_intimacy_grade_pre[hIndex].func;
+			retVal___ = preHookFunc(hd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.homun.get_intimacy_grade(hd);
+	}
+	if( HPMHooks.count.HP_homun_get_intimacy_grade_post ) {
+		int8 (*postHookFunc) (int8 retVal___, struct homun_data *hd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_get_intimacy_grade_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_homun_get_intimacy_grade_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, hd);
+		}
+	}
+	return retVal___;
 }
 /* instance */
 void HP_instance_init(bool minimal) {
@@ -43025,14 +43052,14 @@ int HP_npc_event_do_clock(int tid, int64 tick, int id, intptr_t data) {
 	}
 	return retVal___;
 }
-void HP_npc_event_do_oninit(void) {
+void HP_npc_event_do_oninit(bool reload) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_npc_event_do_oninit_pre ) {
-		void (*preHookFunc) (void);
+		void (*preHookFunc) (bool *reload);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_event_do_oninit_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_npc_event_do_oninit_pre[hIndex].func;
-			preHookFunc();
+			preHookFunc(&reload);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -43040,13 +43067,13 @@ void HP_npc_event_do_oninit(void) {
 		}
 	}
 	{
-		HPMHooks.source.npc.event_do_oninit();
+		HPMHooks.source.npc.event_do_oninit(reload);
 	}
 	if( HPMHooks.count.HP_npc_event_do_oninit_post ) {
-		void (*postHookFunc) (void);
+		void (*postHookFunc) (bool *reload);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_event_do_oninit_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_npc_event_do_oninit_post[hIndex].func;
-			postHookFunc();
+			postHookFunc(&reload);
 		}
 	}
 	return;
@@ -44094,15 +44121,15 @@ struct npc_data* HP_npc_add_warp(char *name, short from_mapid, short from_x, sho
 	}
 	return retVal___;
 }
-const char* HP_npc_parse_warp(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath) {
+const char* HP_npc_parse_warp(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
 	if( HPMHooks.count.HP_npc_parse_warp_pre ) {
-		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
+		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_warp_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_npc_parse_warp_pre[hIndex].func;
-			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath);
+			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath, retval);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -44110,26 +44137,26 @@ const char* HP_npc_parse_warp(char *w1, char *w2, char *w3, char *w4, const char
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.npc.parse_warp(w1, w2, w3, w4, start, buffer, filepath);
+		retVal___ = HPMHooks.source.npc.parse_warp(w1, w2, w3, w4, start, buffer, filepath, retval);
 	}
 	if( HPMHooks.count.HP_npc_parse_warp_post ) {
-		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
+		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_warp_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_npc_parse_warp_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath);
+			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath, retval);
 		}
 	}
 	return retVal___;
 }
-const char* HP_npc_parse_shop(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath) {
+const char* HP_npc_parse_shop(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
 	if( HPMHooks.count.HP_npc_parse_shop_pre ) {
-		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
+		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_shop_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_npc_parse_shop_pre[hIndex].func;
-			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath);
+			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath, retval);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -44137,13 +44164,13 @@ const char* HP_npc_parse_shop(char *w1, char *w2, char *w3, char *w4, const char
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.npc.parse_shop(w1, w2, w3, w4, start, buffer, filepath);
+		retVal___ = HPMHooks.source.npc.parse_shop(w1, w2, w3, w4, start, buffer, filepath, retval);
 	}
 	if( HPMHooks.count.HP_npc_parse_shop_post ) {
-		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
+		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_shop_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_npc_parse_shop_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath);
+			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath, retval);
 		}
 	}
 	return retVal___;
@@ -44174,15 +44201,15 @@ void HP_npc_convertlabel_db(struct npc_label_list *label_list, const char *filep
 	}
 	return;
 }
-const char* HP_npc_skip_script(const char *start, const char *buffer, const char *filepath) {
+const char* HP_npc_skip_script(const char *start, const char *buffer, const char *filepath, int *retval) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
 	if( HPMHooks.count.HP_npc_skip_script_pre ) {
-		const char* (*preHookFunc) (const char *start, const char *buffer, const char *filepath);
+		const char* (*preHookFunc) (const char *start, const char *buffer, const char *filepath, int *retval);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_skip_script_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_npc_skip_script_pre[hIndex].func;
-			retVal___ = preHookFunc(start, buffer, filepath);
+			retVal___ = preHookFunc(start, buffer, filepath, retval);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -44190,26 +44217,26 @@ const char* HP_npc_skip_script(const char *start, const char *buffer, const char
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.npc.skip_script(start, buffer, filepath);
+		retVal___ = HPMHooks.source.npc.skip_script(start, buffer, filepath, retval);
 	}
 	if( HPMHooks.count.HP_npc_skip_script_post ) {
-		const char* (*postHookFunc) (const char* retVal___, const char *start, const char *buffer, const char *filepath);
+		const char* (*postHookFunc) (const char* retVal___, const char *start, const char *buffer, const char *filepath, int *retval);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_skip_script_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_npc_skip_script_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, start, buffer, filepath);
+			retVal___ = postHookFunc(retVal___, start, buffer, filepath, retval);
 		}
 	}
 	return retVal___;
 }
-const char* HP_npc_parse_script(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int options) {
+const char* HP_npc_parse_script(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int options, int *retval) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
 	if( HPMHooks.count.HP_npc_parse_script_pre ) {
-		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *options);
+		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *options, int *retval);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_script_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_npc_parse_script_pre[hIndex].func;
-			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath, &options);
+			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath, &options, retval);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -44217,26 +44244,26 @@ const char* HP_npc_parse_script(char *w1, char *w2, char *w3, char *w4, const ch
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.npc.parse_script(w1, w2, w3, w4, start, buffer, filepath, options);
+		retVal___ = HPMHooks.source.npc.parse_script(w1, w2, w3, w4, start, buffer, filepath, options, retval);
 	}
 	if( HPMHooks.count.HP_npc_parse_script_post ) {
-		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *options);
+		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *options, int *retval);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_script_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_npc_parse_script_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath, &options);
+			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath, &options, retval);
 		}
 	}
 	return retVal___;
 }
-const char* HP_npc_parse_duplicate(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath) {
+const char* HP_npc_parse_duplicate(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int options, int *retval) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
 	if( HPMHooks.count.HP_npc_parse_duplicate_pre ) {
-		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
+		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *options, int *retval);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_duplicate_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_npc_parse_duplicate_pre[hIndex].func;
-			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath);
+			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath, &options, retval);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -44244,13 +44271,13 @@ const char* HP_npc_parse_duplicate(char *w1, char *w2, char *w3, char *w4, const
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.npc.parse_duplicate(w1, w2, w3, w4, start, buffer, filepath);
+		retVal___ = HPMHooks.source.npc.parse_duplicate(w1, w2, w3, w4, start, buffer, filepath, options, retval);
 	}
 	if( HPMHooks.count.HP_npc_parse_duplicate_post ) {
-		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
+		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *options, int *retval);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_duplicate_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_npc_parse_duplicate_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath);
+			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath, &options, retval);
 		}
 	}
 	return retVal___;
@@ -44472,15 +44499,15 @@ int HP_npc_do_atcmd_event(struct map_session_data *sd, const char *command, cons
 	}
 	return retVal___;
 }
-const char* HP_npc_parse_function(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath) {
+const char* HP_npc_parse_function(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
 	if( HPMHooks.count.HP_npc_parse_function_pre ) {
-		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
+		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_function_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_npc_parse_function_pre[hIndex].func;
-			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath);
+			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath, retval);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -44488,13 +44515,13 @@ const char* HP_npc_parse_function(char *w1, char *w2, char *w3, char *w4, const 
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.npc.parse_function(w1, w2, w3, w4, start, buffer, filepath);
+		retVal___ = HPMHooks.source.npc.parse_function(w1, w2, w3, w4, start, buffer, filepath, retval);
 	}
 	if( HPMHooks.count.HP_npc_parse_function_post ) {
-		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
+		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_function_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_npc_parse_function_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath);
+			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath, retval);
 		}
 	}
 	return retVal___;
@@ -44525,15 +44552,15 @@ void HP_npc_parse_mob2(struct spawn_data *mobspawn) {
 	}
 	return;
 }
-const char* HP_npc_parse_mob(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath) {
+const char* HP_npc_parse_mob(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
 	if( HPMHooks.count.HP_npc_parse_mob_pre ) {
-		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
+		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_mob_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_npc_parse_mob_pre[hIndex].func;
-			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath);
+			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath, retval);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -44541,26 +44568,26 @@ const char* HP_npc_parse_mob(char *w1, char *w2, char *w3, char *w4, const char 
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.npc.parse_mob(w1, w2, w3, w4, start, buffer, filepath);
+		retVal___ = HPMHooks.source.npc.parse_mob(w1, w2, w3, w4, start, buffer, filepath, retval);
 	}
 	if( HPMHooks.count.HP_npc_parse_mob_post ) {
-		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
+		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_mob_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_npc_parse_mob_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath);
+			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath, retval);
 		}
 	}
 	return retVal___;
 }
-const char* HP_npc_parse_mapflag(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath) {
+const char* HP_npc_parse_mapflag(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
 	if( HPMHooks.count.HP_npc_parse_mapflag_pre ) {
-		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
+		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_mapflag_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_npc_parse_mapflag_pre[hIndex].func;
-			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath);
+			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath, retval);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -44568,13 +44595,13 @@ const char* HP_npc_parse_mapflag(char *w1, char *w2, char *w3, char *w4, const c
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.npc.parse_mapflag(w1, w2, w3, w4, start, buffer, filepath);
+		retVal___ = HPMHooks.source.npc.parse_mapflag(w1, w2, w3, w4, start, buffer, filepath, retval);
 	}
 	if( HPMHooks.count.HP_npc_parse_mapflag_post ) {
-		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
+		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_mapflag_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_npc_parse_mapflag_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath);
+			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath, retval);
 		}
 	}
 	return retVal___;
@@ -53882,15 +53909,15 @@ int HP_script_reload(void) {
 	}
 	return retVal___;
 }
-struct script_code* HP_script_parse(const char *src, const char *file, int line, int options) {
+struct script_code* HP_script_parse(const char *src, const char *file, int line, int options, int *retval) {
 	int hIndex = 0;
 	struct script_code* retVal___ = NULL;
 	if( HPMHooks.count.HP_script_parse_pre ) {
-		struct script_code* (*preHookFunc) (const char *src, const char *file, int *line, int *options);
+		struct script_code* (*preHookFunc) (const char *src, const char *file, int *line, int *options, int *retval);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_parse_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_script_parse_pre[hIndex].func;
-			retVal___ = preHookFunc(src, file, &line, &options);
+			retVal___ = preHookFunc(src, file, &line, &options, retval);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -53898,13 +53925,13 @@ struct script_code* HP_script_parse(const char *src, const char *file, int line,
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.script.parse(src, file, line, options);
+		retVal___ = HPMHooks.source.script.parse(src, file, line, options, retval);
 	}
 	if( HPMHooks.count.HP_script_parse_post ) {
-		struct script_code* (*postHookFunc) (struct script_code* retVal___, const char *src, const char *file, int *line, int *options);
+		struct script_code* (*postHookFunc) (struct script_code* retVal___, const char *src, const char *file, int *line, int *options, int *retval);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_parse_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_script_parse_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, src, file, &line, &options);
+			retVal___ = postHookFunc(retVal___, src, file, &line, &options, retval);
 		}
 	}
 	return retVal___;

@@ -5,7 +5,7 @@
 //===== Current Version: =====================================
 //= 3.6
 //===== Description: =========================================
-//= Collection of Rachel Quests 
+//= Collection of Rachel Quests
 //= Lost Child Quest:
 //= - End of quest coincides with opening the Sanctuary.
 //= - Variable in use: lost_boy (max 13)
@@ -3200,7 +3200,7 @@ ice_dun02,120,105,3	script	Man Stuck in Ice#cave	4_M_FROZEN1,5,5,{
 OnTouch:
 	end;
 
-OnTouchNPC: 
+OnTouchNPC:
 	emotion e_an;
 	//emotion e_gg,1; //Emote on monster - unsupported
 	end;
@@ -3300,7 +3300,7 @@ rachel,265,98,3	script	Hamion#aru	4_M_RACHMAN2,{
 		close;
 	}
 	else if (ice_necklace_q == 3) {
-		if ((countitem(996) < 5) || (countitem(1354) < 1) || (countitem(7433) < 1)) { 
+		if ((countitem(996) < 5) || (countitem(1354) < 1) || (countitem(7433) < 1)) {
 			mes "[Hamion]";
 			mes "I need to create";
 			mes "a magical artifact";

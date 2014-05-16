@@ -2,27 +2,32 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/nullpo.h"
-#include "../common/malloc.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../common/utils.h"
-#include "../common/conf.h"
+#define HERCULES_CORE
+
+#include "../config/core.h" // DBPATH, RENEWAL
 #include "itemdb.h"
-#include "map.h"
-#include "battle.h" // struct battle_config
-#include "script.h" // item script processing
-#include "pc.h"     // W_MUSICAL, W_WHIP
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "battle.h" // struct battle_config
+#include "map.h"
+#include "mob.h"    // MAX_MOB_DB
+#include "pc.h"     // W_MUSICAL, W_WHIP
+#include "script.h" // item script processing
+#include "../common/conf.h"
+#include "../common/malloc.h"
+#include "../common/nullpo.h"
+#include "../common/random.h"
+#include "../common/showmsg.h"
+#include "../common/strlib.h"
+#include "../common/utils.h"
+
 struct itemdb_interface itemdb_s;
 
 /**
- * Search for item name 
+ * Search for item name
  * name = item alias, so we should find items aliases first. if not found then look for "jname" (full name)
  * @see DBApply
  */
@@ -50,7 +55,7 @@ int itemdb_searchname_sub(DBKey key, DBData *data, va_list ap)
 }
 
 /*==========================================
- * Return item data from item name. (lookup) 
+ * Return item data from item name. (lookup)
  *------------------------------------------*/
 struct item_data* itemdb_searchname(const char *str) {
 	struct item_data* item;
@@ -251,7 +256,7 @@ void itemdb_package_item(struct map_session_data *sd, struct item_package *packa
 	return;
 }
 /*==========================================
- * Return a random item id from group. (takes into account % chance giving/tot group) 
+ * Return a random item id from group. (takes into account % chance giving/tot group)
  *------------------------------------------*/
 int itemdb_searchrandomid(struct item_group *group) {
 
@@ -307,7 +312,7 @@ const char* itemdb_typename(int type)
 }
 
 /*==========================================
- * Converts the jobid from the format in itemdb 
+ * Converts the jobid from the format in itemdb
  * to the format used by the map server. [Skotlex]
  *------------------------------------------*/
 void itemdb_jobid2mapid(unsigned int *bclass, unsigned int jobmask)
@@ -465,8 +470,7 @@ int itemdb_isequip(int nameid)
 /*==========================================
  * Alternate version of itemdb_isequip
  *------------------------------------------*/
-int itemdb_isequip2(struct item_data *data)
-{ 
+int itemdb_isequip2(struct item_data *data) {
 	nullpo_ret(data);
 	switch(data->type) {
 		case IT_WEAPON:
@@ -818,7 +822,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 		hread(&random_qty,sizeof(random_qty),1,file);
 		
 		if( !(pdata = itemdb->exists(id)) )
-			ShowWarning("itemdb_read_packages: unknown package item '%d', skipping..\n",id);
+			ShowWarning("itemdb_read_cached_packages: unknown package item '%d', skipping..\n",id);
 		else
 			pdata->package = &itemdb->packages[i];
 		
@@ -848,7 +852,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 				hread(&named,sizeof(announce),1,file);
 				
 				if( !(data = itemdb->exists(mid)) )
-					ShowWarning("itemdb_read_packages: unknown item '%d' in package '%s'!\n",mid,itemdb_name(package->id));
+					ShowWarning("itemdb_read_cached_packages: unknown item '%d' in package '%s'!\n",mid,itemdb_name(package->id));
 
 				entry->id = data ? data->nameid : 0;
 				entry->hours = hours;
@@ -893,7 +897,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 					hread(&named,sizeof(announce),1,file);
 					
 					if( !(data = itemdb->exists(mid)) )
-						ShowWarning("itemdb_read_packages: unknown item '%d' in package '%s'!\n",mid,itemdb_name(package->id));
+						ShowWarning("itemdb_read_cached_packages: unknown item '%d' in package '%s'!\n",mid,itemdb_name(package->id));
 					
 					entry->id = data ? data->nameid : 0;
 					entry->rate = rate;
@@ -932,7 +936,7 @@ void itemdb_read_packages(void) {
 	if( HCache->check(config_filename) ) {
 		if( itemdb->read_cached_packages(config_filename) )
 			return;
-	}		
+	}
 	
 	if (libconfig->read_file(&item_packages_conf, config_filename)) {
 		ShowError("can't read %s\n", config_filename);
@@ -1440,7 +1444,7 @@ void itemdb_read_combos() {
 		p++;
 
 		str[1] = p;
-		p = strchr(p,',');		
+		p = strchr(p,',');
 		p++;
 		
 		if (str[1][0] != '{') {
@@ -1478,7 +1482,7 @@ void itemdb_read_combos() {
 			CREATE(combo, struct item_combo, 1);
 			
 			combo->count = retcount;
-			combo->script = script->parse(str[1], filepath, lines, 0);
+			combo->script = script->parse(str[1], filepath, lines, 0, NULL);
 			combo->id = itemdb->combo_count - 1;
 			/* populate ->nameid field */
 			for( v = 0; v < retcount; v++ ) {
@@ -1707,9 +1711,9 @@ int itemdb_readdb_sql_sub(Sql *handle, int n, const char *source) {
 	SQL->GetData(handle, 19, &data, NULL); id.flag.no_refine = data && atoi(data) ? 0 : 1;
 	SQL->GetData(handle, 20, &data, NULL); id.look = data ? atoi(data) : 0;
 	SQL->GetData(handle, 21, &data, NULL); id.flag.bindonequip = data && atoi(data) ? 1 : 0;
-	SQL->GetData(handle, 22, &data, NULL); id.script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
-	SQL->GetData(handle, 23, &data, NULL); id.equip_script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
-	SQL->GetData(handle, 24, &data, NULL); id.unequip_script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
+	SQL->GetData(handle, 22, &data, NULL); id.script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	SQL->GetData(handle, 23, &data, NULL); id.equip_script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	SQL->GetData(handle, 24, &data, NULL); id.unequip_script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
 
 	return itemdb->validate_entry(&id, n, source);
 }
@@ -1875,13 +1879,13 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 		id.flag.bindonequip = libconfig->setting_get_bool(t) ? 1 : 0;
 	
 	if( libconfig->setting_lookup_string(it, "Script", &str) )
-		id.script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
+		id.script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
 
 	if( libconfig->setting_lookup_string(it, "OnEquipScript", &str) )
-		id.equip_script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
+		id.equip_script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
 
 	if( libconfig->setting_lookup_string(it, "OnUnequipScript", &str) )
-		id.unequip_script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
+		id.unequip_script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
 
 	return itemdb->validate_entry(&id, n, source);
 }
@@ -2212,7 +2216,7 @@ void itemdb_name_constants(void) {
 	script->parser_current_file = NULL;
 #endif // ENABLE_CASE_CHECK
 
-	dbi_destroy(iter);	
+	dbi_destroy(iter);
 }
 void do_final_itemdb(void) {
 	itemdb->clear(true);

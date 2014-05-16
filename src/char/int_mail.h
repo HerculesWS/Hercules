@@ -4,6 +4,9 @@
 #ifndef _CHAR_INT_MAIL_H_
 #define _CHAR_INT_MAIL_H_
 
+struct item;
+struct mail_message;
+
 int inter_mail_parse_frommap(int fd);
 void mail_sendmail(int send_id, const char* send_name, int dest_id, const char* dest_name, const char* title, const char* body, int zeny, struct item *item);
 

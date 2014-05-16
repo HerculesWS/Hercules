@@ -392,7 +392,7 @@ OnInstanceInit:
 	disablenpc instance_npcname("#Memorial Start_time");
 	end;
 OnEnable:
-	specialeffect EF_BAT2,AREA,instance_npcname("#Memorial Start"); 
+	specialeffect EF_BAT2,AREA,instance_npcname("#Memorial Start");
 	initnpctimer;
 	end;
 OnDisable:

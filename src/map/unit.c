@@ -2,45 +2,48 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/showmsg.h"
-#include "../common/timer.h"
-#include "../common/nullpo.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/random.h"
-#include "../common/HPM.h"
+#define HERCULES_CORE
 
-#include "map.h"
-#include "path.h"
-#include "pc.h"
-#include "mob.h"
-#include "pet.h"
-#include "homunculus.h"
-#include "instance.h"
-#include "mercenary.h"
-#include "elemental.h"
-#include "skill.h"
-#include "clif.h"
-#include "duel.h"
-#include "npc.h"
-#include "guild.h"
-#include "status.h"
+#include "../config/core.h" // RENEWAL_CAST
 #include "unit.h"
-#include "battle.h"
-#include "battleground.h"
-#include "chat.h"
-#include "trade.h"
-#include "vending.h"
-#include "party.h"
-#include "intif.h"
-#include "chrif.h"
-#include "script.h"
-#include "storage.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "battle.h"
+#include "battleground.h"
+#include "chat.h"
+#include "chrif.h"
+#include "clif.h"
+#include "duel.h"
+#include "elemental.h"
+#include "guild.h"
+#include "homunculus.h"
+#include "instance.h"
+#include "intif.h"
+#include "map.h"
+#include "mercenary.h"
+#include "mob.h"
+#include "npc.h"
+#include "party.h"
+#include "path.h"
+#include "pc.h"
+#include "pet.h"
+#include "script.h"
+#include "skill.h"
+#include "status.h"
+#include "storage.h"
+#include "trade.h"
+#include "vending.h"
+#include "../common/HPM.h"
+#include "../common/db.h"
+#include "../common/malloc.h"
+#include "../common/nullpo.h"
+#include "../common/random.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
+#include "../common/timer.h"
 
 const short dirx[8]={0,-1,-1,-1,0,1,1,1};
 const short diry[8]={1,1,0,-1,-1,-1,0,1};
@@ -1177,8 +1180,8 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 
 		if( (skill->get_inf2(skill_id)&INF2_ENSEMBLE_SKILL) && skill->check_pc_partner(sd, skill_id, &skill_lv, 1, 0) < 1 ) {
 			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0; 
-        }
+			return 0;
+		}
 		
 		switch(skill_id){
 			case SA_CASTCANCEL:
@@ -1368,7 +1371,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	// in official this is triggered even if no cast time.
 	clif->skillcasting(src, src->id, target_id, 0,0, skill_id, skill->get_ele(skill_id, skill_lv), casttime);
 	if( casttime > 0 || temp )
-	{		
+	{
 		if (sd && target->type == BL_MOB)
 		{
 			TBL_MOB *md = (TBL_MOB*)target;
@@ -1552,7 +1555,7 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 	if( casttime > 0 ) {
 		ud->skilltimer = timer->add( tick+casttime, skill->castend_pos, src->id, 0 );
 		if( (sd && pc->checkskill(sd,SA_FREECAST) > 0) || skill_id == LG_EXEEDBREAK)
-			status_calc_bl(&sd->bl, SCB_SPEED);	
+			status_calc_bl(&sd->bl, SCB_SPEED);
 	} else {
 		ud->skilltimer = INVALID_TIMER;
 		skill->castend_pos(ud->skilltimer,tick,src->id,0);

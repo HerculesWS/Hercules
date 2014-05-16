@@ -5,6 +5,11 @@
 #ifndef _MAP_BUYINGSTORE_H_
 #define _MAP_BUYINGSTORE_H_
 
+#include "../common/cbasetypes.h"
+#include "../common/mmo.h" // MAX_SLOTS
+
+struct map_session_data;
+
 /**
  * Declarations
  **/

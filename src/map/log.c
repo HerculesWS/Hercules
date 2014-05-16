@@ -2,21 +2,24 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/sql.h" // SQL_INNODB
-#include "../common/strlib.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "battle.h"
-#include "itemdb.h"
+#define HERCULES_CORE
+
 #include "log.h"
-#include "map.h"
-#include "mob.h"
-#include "pc.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "battle.h"
+#include "itemdb.h"
+#include "map.h"
+#include "mob.h"
+#include "pc.h"
+#include "../common/cbasetypes.h"
+#include "../common/nullpo.h"
+#include "../common/showmsg.h"
+#include "../common/sql.h" // SQL_INNODB
+#include "../common/strlib.h"
 
 struct log_interface log_s;
 

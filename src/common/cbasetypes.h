@@ -313,7 +313,7 @@ typedef char bool;
 #undef swap
 #endif
 // hmm only ints?
-//#define swap(a,b) { int temp=a; a=b; b=temp;} 
+//#define swap(a,b) { int temp=a; a=b; b=temp;}
 // if using macros then something that is type independent
 //#define swap(a,b) ((a == b) || ((a ^= b), (b ^= a), (a ^= b)))
 // Avoid "value computed is not used" warning and generates the same assembly code
@@ -442,5 +442,11 @@ void SET_FUNCPOINTER(T1& var, T2 p)
 #define SET_FUNCPOINTER(var,p) ((var) = (p))
 #endif
 
+/* pointer size fix which fixes several gcc warnings */
+#ifdef __64BIT__
+	#define __64BPTRSIZE(y) ((intptr)(y))
+#else
+	#define __64BPTRSIZE(y) (y)
+#endif
 
 #endif /* _COMMON_CBASETYPES_H_ */

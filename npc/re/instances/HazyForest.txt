@@ -111,8 +111,9 @@ bif_fild01,158,340,5	script	Laphine Soldier#mist	4_M_FAIRYSOLDIER,{
 				mes "but maybe you humans can.";
 				mes "Good luck!";
 				close;
-			} else 
+			} else {
 				instance_destroy(.@instance);
+			}
 		case 2:
 			mes "[Laphine Soldier]";
 			mes "Well, you've made the right decision.";
@@ -156,13 +157,13 @@ bif_fild01,161,355,0	script	Log Tunnel	CLEAR_NPC,{
 		mes "The world beyond the log tunnel looks dark and suffocating.";
 		mes "Your instinct is screaming that this forest is dangerous.";
 		close;
-	} else {		
+	} else {
 		if (checkquest(7211,PLAYTIME) == 2) erasequest 7211;
 		if (checkquest(7211,PLAYTIME) == -1) setquest 7211;
 		mapannounce "bif_fild01",getpartyname(getcharid(1))+" party's "+strcharinfo(0)+" member is entering the Mistwood Maze.",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
 		warp "1@mist",89,29;
 		close;
-	}	
+	}
 }
 
 // Instance Scripts

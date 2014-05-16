@@ -31,7 +31,7 @@
 //= 1.7 Added daily quest 'Dragon Egg collection.'
 //= 1.7a Fixed a translation typo. Tabb -> Taab.
 //= 1.8 Added a missing " in the GM only NPC.
-//= 1.9 Added Monster Suppression, Bradium Collection, and 
+//= 1.9 Added Monster Suppression, Bradium Collection, and
 //=     Laphine Craftsman quests.
 //= 2.0 Added missing global var check in Yggdrasil Dungeon
 //=     floor 2 puzzle. Fixed a typo. Commented out untranslated

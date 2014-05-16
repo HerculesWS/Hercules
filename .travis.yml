@@ -2,14 +2,23 @@ language: c
 compiler:
   - clang
   - gcc
+
+install:
+  - ./travis.sh getplugins || true
   
 before_script:
-  - uname -a  
+  - uname -a
+  - ./travis.sh createdb ragnarok root
+  - ./travis.sh importdb ragnarok travis
+  - mysql -u root -e "SET PASSWORD FOR 'travis'@'localhost' = PASSWORD('travis');"
 
 script: 
-  - ./configure --enable-debug && make sql -j3 && ./map-server --version
-  - make clean
-  - ./configure --disable-renewal --enable-debug && make sql -j3 && ./map-server --version
+  - ./travis.sh build $CONFIGURE_FLAGS
+  - ./travis.sh test ragnarok travis travis
+
+env:
+  - CONFIGURE_FLAGS="--enable-debug"
+  - CONFIGURE_FLAGS="--disable-renewal --enable-debug"
   
 notifications:
   email: false

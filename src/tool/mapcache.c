@@ -1,18 +1,20 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
+#define HERCULES_CORE
+
+#include "../config/core.h" // RENEWAL
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "../common/cbasetypes.h"
 #include "../common/grfio.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h"
 #include "../common/showmsg.h"
 #include "../common/utils.h"
-
-#include "../config/renewal.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #ifndef _WIN32
 #include <unistd.h>

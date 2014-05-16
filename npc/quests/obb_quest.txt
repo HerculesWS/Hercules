@@ -9,7 +9,7 @@
 //= Old Blue Box quest (?)
 //= Officially this quest gave an OBB in exhange for a the
 //= required items unlimitedly, however this was changed by
-//= Gravity, who claimed this behavior as a bug. 
+//= Gravity, who claimed this behavior as a bug.
 //= The exact purpose of this quest is undetermined, but
 //= Gravity claimed that another quest would eventually
 //= branch from this one.

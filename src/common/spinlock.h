@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _COMMON_SPINLOCK_H_
 #define _COMMON_SPINLOCK_H_
 
@@ -15,13 +14,13 @@
 //
 //
  
+#include "../common/atomic.h"
+#include "../common/cbasetypes.h"
+#include "../common/thread.h"
+
 #ifdef WIN32
 #include "../common/winapi.h"
 #endif
-
-#include "../common/cbasetypes.h"
-#include "../common/atomic.h"
-#include "../common/thread.h"
 
 #ifdef WIN32
 
@@ -58,7 +57,7 @@ static forceinline void FinalizeSpinLock(PSPIN_LOCK lck){
 static forceinline void EnterSpinLock(PSPIN_LOCK lck){
 		int tid = rathread_get_tid();
 		
-		// Get Sync Lock && Check if the requester thread already owns the lock. 
+		// Get Sync Lock && Check if the requester thread already owns the lock.
 		// if it owns, increase nesting level
 		getsynclock(&lck->sync_lock);
 		if(InterlockedCompareExchange(&lck->lock, tid, tid) == tid){
@@ -70,7 +69,7 @@ static forceinline void EnterSpinLock(PSPIN_LOCK lck){
 		dropsynclock(&lck->sync_lock);
 		
 		
-		// Spin until we've got it ! 
+		// Spin until we've got it !
 		while(1){
 				
 				if(InterlockedCompareExchange(&lck->lock, tid, 0) == 0){

@@ -477,7 +477,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		nude;
 		callfunc "F_ClearJobVar"; // -- Clears all job variables for the current player
 		jobchange roclass(eaclass()|EAJL_THIRD);
-		set EXSUPNOV_Q,5;	
+		set EXSUPNOV_Q,5;
 		emotion e_heh;
 		mes "[Nodor]";
 		mes "Puhahahahahahahahahahah!!";

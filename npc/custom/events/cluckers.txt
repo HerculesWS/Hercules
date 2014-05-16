@@ -5,8 +5,8 @@
 //===== Current Version: =====================================
 //= 1.2a
 //===== Description: =========================================
-//= Click the chicken and try retrieve the item at a low 
-//= chance. If you fail he will nuke, freeze, stone, 
+//= Click the chicken and try retrieve the item at a low
+//= chance. If you fail he will nuke, freeze, stone,
 //= stun, or make you fall asleep.
 //= The prize is configurable and triggered by the NPC.
 //===== Additional Comments: =================================

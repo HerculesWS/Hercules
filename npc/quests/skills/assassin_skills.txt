@@ -4,6 +4,8 @@
 //= Lupus, Reddozen
 //===== Current Version: =====================================
 //= 1.5
+//===== File Encoding ========================================
+//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //===== Description: =========================================
 //= [Official Conversion]
 //= Quests for skills: Venom Knife, Sonic Acceleration
@@ -950,6 +952,8 @@ OnTouch:
 	}
 }
 
+// FIXME[Haru]: Why do we have a Korean name here? Can anyone translate it?
+//      Google translate says ¡¡ (jingjing) = Whining, but it doesn't make much sense to me.
 moc_pryd04,85,96,0	script	¡¡#crypt	-1,3,3,{
 OnTouch:
 	if (ASSN_SK == 4) {
@@ -992,7 +996,7 @@ OnTouch:
 //= Somehow eA engine doesn't let you keep learn't skill V_V'
 //= 1.2 Added to correct locations, correct NPC's, fixed
 //= some of the items required and made them into real
-//= quests. [Reddozen] 
+//= quests. [Reddozen]
 //= 1.3 Fixed bugs and minor typos. Optimized [Lupus]
 //= 1.3a fixed an item ID typo, thx 2Spiritual Kid
 //= 1.3b Splitted into different files [DracoRPG]

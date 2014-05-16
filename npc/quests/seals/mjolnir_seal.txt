@@ -492,7 +492,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 					mes "...";
 					close;
 				case 2:
-					if (countitem(1005) > 0) { //Hammer_Of_Blacksmith 
+					if (countitem(1005) > 0) { //Hammer_Of_Blacksmith
 						mes "[Austri]";
 						mes "Ah, I see that the entire human race is not worthy of scorn. Unlike many of your kind, I see that you respect your elders.";
 						next;

@@ -8,10 +8,10 @@
 #include "map.h" // struct block_list
 #include "status.h" // struct status_change
 #include "unit.h" // struct unit_data
+#include "../common/cbasetypes.h"
+#include "../common/db.h"
 
 struct HPluginData;
-struct block_list;
-struct npc_data;
 struct view_data;
 
 enum npc_parse_options {
@@ -193,7 +193,7 @@ struct npc_interface {
 	int (*event_doall_id) (const char *name, int rid);
 	int (*event_doall) (const char *name);
 	int (*event_do_clock) (int tid, int64 tick, int id, intptr_t data);
-	void (*event_do_oninit) (void);
+	void (*event_do_oninit) ( bool reload );
 	int (*timerevent_export) (struct npc_data *nd, int i);
 	int (*timerevent) (int tid, int64 tick, int id, intptr_t data);
 	int (*timerevent_start) (struct npc_data *nd, int rid);
@@ -232,12 +232,12 @@ struct npc_interface {
 	int (*parseview) (const char *w4, const char *start, const char *buffer, const char *filepath);
 	bool (*viewisid) (const char *viewid);
 	struct npc_data* (*add_warp) (char *name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y);
-	const char* (*parse_warp) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
-	const char* (*parse_shop) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
+	const char* (*parse_warp) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
+	const char* (*parse_shop) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	void (*convertlabel_db) (struct npc_label_list *label_list, const char *filepath);
-	const char* (*skip_script) (const char *start, const char *buffer, const char *filepath);
-	const char* (*parse_script) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int options);
-	const char* (*parse_duplicate) (char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int options);
+	const char* (*skip_script) (const char *start, const char *buffer, const char *filepath, int *retval);
+	const char* (*parse_script) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int options, int *retval);
+	const char* (*parse_duplicate) (char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int options, int *retval);
 	int (*duplicate4instance) (struct npc_data *snd, int16 m);
 	void (*setcells) (struct npc_data *nd);
 	int (*unsetcells_sub) (struct block_list *bl, va_list ap);
@@ -246,10 +246,10 @@ struct npc_interface {
 	void (*setdisplayname) (struct npc_data *nd, const char *newname);
 	void (*setclass) (struct npc_data *nd, short class_);
 	int (*do_atcmd_event) (struct map_session_data *sd, const char *command, const char *message, const char *eventname);
-	const char* (*parse_function) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
+	const char* (*parse_function) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	void (*parse_mob2) (struct spawn_data *mobspawn);
-	const char* (*parse_mob) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
-	const char* (*parse_mapflag) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
+	const char* (*parse_mob) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
+	const char* (*parse_mapflag) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	int (*parsesrcfile) (const char *filepath, bool runOnInit);
 	int (*script_event) (struct map_session_data *sd, enum npce_event type);
 	void (*read_event_script) (void);

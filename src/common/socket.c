@@ -2,48 +2,50 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h"
-#include "../common/timer.h"
-#include "../common/malloc.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../config/core.h"
-#include "../common/HPM.h"
+#define HERCULES_CORE
 
+#include "../config/core.h" // SHOW_SERVER_STATS
 #define _H_SOCKET_C_
-
 #include "socket.h"
+#undef _H_SOCKET_C_
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 
+#include "../common/HPM.h"
+#include "../common/cbasetypes.h"
+#include "../common/malloc.h"
+#include "../common/mmo.h"
+#include "../common/showmsg.h"
+#include "../common/strlib.h"
+#include "../common/timer.h"
+
 #ifdef WIN32
-	#include "../common/winapi.h"
+#	include "../common/winapi.h"
 #else
-	#include <errno.h>
-	#include <sys/socket.h>
-	#include <netinet/in.h>
-	#include <netinet/tcp.h>
-	#include <net/if.h>
-	#include <unistd.h>
-	#include <sys/time.h>
-	#include <sys/ioctl.h>
-	#include <netdb.h>
-	#include <arpa/inet.h>
+#	include <arpa/inet.h>
+#	include <errno.h>
+#	include <net/if.h>
+#	include <netdb.h>
+#	include <netinet/in.h>
+#	include <netinet/tcp.h>
+#	include <sys/ioctl.h>
+#	include <sys/socket.h>
+#	include <sys/time.h>
+#	include <unistd.h>
 
-	#ifndef SIOCGIFCONF
-	#include <sys/sockio.h> // SIOCGIFCONF on Solaris, maybe others? [Shinomori]
-	#endif
-	#ifndef FIONBIO
-	#include <sys/filio.h> // FIONBIO on Solaris [FlavioJS]
-	#endif
+#	ifndef SIOCGIFCONF
+#		include <sys/sockio.h> // SIOCGIFCONF on Solaris, maybe others? [Shinomori]
+#	endif
+#	ifndef FIONBIO
+#		include <sys/filio.h> // FIONBIO on Solaris [FlavioJS]
+#	endif
 
-	#ifdef HAVE_SETRLIMIT
-	#include <sys/resource.h>
-	#endif
+#	ifdef HAVE_SETRLIMIT
+#		include <sys/resource.h>
+#	endif
 #endif
 
 /**
@@ -62,7 +64,7 @@ struct socket_interface sockt_s;
 /////////////////////////////////////////////////////////////////////
 #if defined(WIN32)
 /////////////////////////////////////////////////////////////////////
-// windows portability layer 
+// windows portability layer
 
 typedef int socklen_t;
 
@@ -108,7 +110,7 @@ int sock2fd(SOCKET s)
 
 /// Inserts the socket into the global array of sockets.
 /// Returns a new fd associated with the socket.
-/// If there are too many sockets it closes the socket, sets an error and 
+/// If there are too many sockets it closes the socket, sets an error and
 //  returns -1 instead.
 /// Since fd 0 is reserved, it returns values in the range [1,FD_SETSIZE[.
 ///
@@ -291,8 +293,8 @@ void set_defaultparse(ParseFunc defaultparse)
  *--------------------------------------*/
 void set_nonblocking(int fd, unsigned long yes)
 {
-	// FIONBIO Use with a nonzero argp parameter to enable the nonblocking mode of socket s. 
-	// The argp parameter is zero if nonblocking is to be disabled. 
+	// FIONBIO Use with a nonzero argp parameter to enable the nonblocking mode of socket s.
+	// The argp parameter is zero if nonblocking is to be disabled.
 	if( sIoctl(fd, FIONBIO, &yes) != 0 )
 		ShowError("set_nonblocking: Failed to set socket #%d to non-blocking mode (%s) - Please report this!!!\n", fd, error_msg());
 }

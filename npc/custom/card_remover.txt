@@ -50,7 +50,7 @@ prt_in,28,73,4	script	Wise Old Woman#eAcustom	1_F_ORIENT_04,{
 		}
 		set .@cardcount,getequipcardcnt(.@part);
 		
-		if (!checkweight(1202,(.@cardcount+1))) { 
+		if (!checkweight(1202,(.@cardcount+1))) {
 			mes "^3355FFJust a minute!";
 			mes "I can't offer any of my";
 			mes "services to you because";

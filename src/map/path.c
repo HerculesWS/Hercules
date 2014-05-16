@@ -2,19 +2,22 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#include "../config/core.h" // CELL_NOSTACK, CIRCULAR_AREA
+#include "path.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "map.h"
 #include "../common/cbasetypes.h"
 #include "../common/db.h"
 #include "../common/malloc.h"
 #include "../common/nullpo.h"
 #include "../common/random.h"
 #include "../common/showmsg.h"
-
-#include "path.h"
-#include "map.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define SET_OPEN 0
 #define SET_CLOSED 1
@@ -202,7 +205,7 @@ static int add_path(struct node_heap *heap, struct path_node *tp, int16 x, int16
 		if (g_cost < tp[i].g_cost) { // New path to this node is better than old one
 			// Update costs and parent
 			tp[i].g_cost = g_cost;
-			tp[i].parent = parent; 
+			tp[i].parent = parent;
 			tp[i].f_cost = g_cost + h_cost;
 			if (tp[i].flag == SET_CLOSED) {
 				heap_push_node(heap, &tp[i]); // Put it in open set again
@@ -296,7 +299,7 @@ bool path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x
 			return true;
 		}
 
-		return false; // easy path unsuccessful 
+		return false; // easy path unsuccessful
 	}
 	else { // !(flag&1)
 		// A* (A-star) pathfinding

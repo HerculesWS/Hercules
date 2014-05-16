@@ -1624,13 +1624,13 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 		emotion e_sob;
 
 		if(!(
-			countitem(1950) || countitem(1951) || countitem(1952) || 
-			countitem(1953) || countitem(1954) || countitem(1955) || 
-			countitem(1956) || countitem(1957) || countitem(1958) || 
-			countitem(1959) || countitem(1960) || countitem(1961) || 
-			countitem(1962) || countitem(1963) || countitem(1964) || 
-			countitem(1965) || countitem(1966) || countitem(1967) || 
-			countitem(1968) || countitem(1969) || countitem(1970) || 
+			countitem(1950) || countitem(1951) || countitem(1952) ||
+			countitem(1953) || countitem(1954) || countitem(1955) ||
+			countitem(1956) || countitem(1957) || countitem(1958) ||
+			countitem(1959) || countitem(1960) || countitem(1961) ||
+			countitem(1962) || countitem(1963) || countitem(1964) ||
+			countitem(1965) || countitem(1966) || countitem(1967) ||
+			countitem(1968) || countitem(1969) || countitem(1970) ||
 			countitem(1971)
 		))
 			close; // no whip equipped or in inventory

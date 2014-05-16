@@ -947,7 +947,7 @@ OnTimer4000:
 	end;
 
 OnTimer60000:
- 	donpcevent "cast#60::OnTimeOver2";
+	donpcevent "cast#60::OnTimeOver2";
 	donpcevent "arn_warp_60::OnOut";
 	donpcevent "#arn_timer_60::OnStop";
 	donpcevent "alloff#60::OnEnable";
@@ -956,7 +956,7 @@ OnTimer60000:
 
 OnStop:
 	stopnpctimer;
-	end; 
+	end;
 }
 
 -	script	arn_warp_60	-1,{

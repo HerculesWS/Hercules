@@ -11,7 +11,7 @@
 //= Currently does not support same-Sex marriages.
 //= Old script located in: npc/custom/marriage.txt
 //= - Variable in use: wedding_sign (max 1)
-//= - Variable in use: $@wedding (max 1) 
+//= - Variable in use: $@wedding (max 1)
 //= - Variable in use: $@wed_groom$ $@wed_bride$
 //===== Additional Comments: =================================
 //= 1.0 First version. [L0ne_W0lf]
@@ -315,17 +315,15 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 			next;
 			while(1) {
 				input .@name$;
-				if (.@name$ != strcharinfo(0)) {
-					mes "[Marry Happy]";
-					mes "Hmmm, you have to write";
-					mes "down your name exactly as";
-					mes "it is displayed. Maybe you";
-					mes "need to copy and paste it?";
-					mes "Anyway, let's try it again.";
-					next;
-				}
-				else 
+				if (.@name$ == strcharinfo(0))
 					break;
+				mes "[Marry Happy]";
+				mes "Hmmm, you have to write";
+				mes "down your name exactly as";
+				mes "it is displayed. Maybe you";
+				mes "need to copy and paste it?";
+				mes "Anyway, let's try it again.";
+				next;
 			}
 			mes "[Marry Happy]";
 			mes "Great, it looks like we";

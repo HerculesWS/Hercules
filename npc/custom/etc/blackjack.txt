@@ -12,7 +12,7 @@
 //= Currently does not allow for "insurance", or "splitting"
 //= of pairs.
 //===== Additional Comments: =================================
-//= 
+//=
 //============================================================
 
 cmd_in02,188,89,1	script	Black Jack Dealer	1_M_LIBRARYMASTER,{

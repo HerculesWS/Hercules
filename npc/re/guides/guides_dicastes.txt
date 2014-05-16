@@ -84,7 +84,7 @@ dicastes01,181,191,5	script	Traveler Ichack#info	4_M_SHADOWCHASER,2,2,{
 		close;
 	}
 OnTouch:
-	if (ep13_3_invite == 6) 
+	if (ep13_3_invite == 6)
 		emotion e_gasp,0;
 	end;
 }

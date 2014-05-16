@@ -2,55 +2,59 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#include "../config/core.h" // RENEWAL, RENEWAL_ASPD, RENEWAL_CAST, RENEWAL_DROP, RENEWAL_EDP, RENEWAL_EXP, RENEWAL_LVDMG, SCRIPT_CALLFUNC_CHECK, SECURE_NPCTIMEOUT, SECURE_NPCTIMEOUT_INTERVAL
+#include "script.h"
+
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "atcommand.h"
+#include "battle.h"
+#include "battleground.h"
+#include "chat.h"
+#include "chrif.h"
+#include "clif.h"
+#include "elemental.h"
+#include "guild.h"
+#include "homunculus.h"
+#include "instance.h"
+#include "intif.h"
+#include "itemdb.h"
+#include "log.h"
+#include "mail.h"
+#include "map.h"
+#include "mapreg.h"
+#include "mercenary.h"
+#include "mob.h"
+#include "npc.h"
+#include "party.h"
+#include "path.h"
+#include "pc.h"
+#include "pet.h"
+#include "pet.h"
+#include "quest.h"
+#include "skill.h"
+#include "status.h"
+#include "status.h"
+#include "storage.h"
+#include "unit.h"
 #include "../common/cbasetypes.h"
 #include "../common/malloc.h"
 #include "../common/md5calc.h"
+#include "../common/mmo.h" // NEW_CARTS
 #include "../common/nullpo.h"
 #include "../common/random.h"
 #include "../common/showmsg.h"
 #include "../common/socket.h" // usage: getcharip
 #include "../common/strlib.h"
+#include "../common/sysinfo.h"
 #include "../common/timer.h"
 #include "../common/utils.h"
-#include "../common/sysinfo.h"
 
-#include "map.h"
-#include "path.h"
-#include "clif.h"
-#include "chrif.h"
-#include "itemdb.h"
-#include "pc.h"
-#include "status.h"
-#include "storage.h"
-#include "mob.h"
-#include "npc.h"
-#include "pet.h"
-#include "mapreg.h"
-#include "homunculus.h"
-#include "instance.h"
-#include "mercenary.h"
-#include "intif.h"
-#include "skill.h"
-#include "status.h"
-#include "chat.h"
-#include "battle.h"
-#include "battleground.h"
-#include "party.h"
-#include "guild.h"
-#include "atcommand.h"
-#include "log.h"
-#include "unit.h"
-#include "pet.h"
-#include "mail.h"
-#include "script.h"
-#include "quest.h"
-#include "elemental.h"
-#include "../config/core.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
 #ifndef WIN32
 	#include <sys/time.h>
 #endif
@@ -2242,8 +2246,7 @@ void script_warning(const char* src, const char* file, int start_line, const cha
 /*==========================================
  * Analysis of the script
  *------------------------------------------*/
-struct script_code* parse_script(const char *src,const char *file,int line,int options)
-{
+struct script_code* parse_script(const char *src,const char *file,int line,int options, int *retval) {
 	const char *p,*tmpp;
 	int i;
 	struct script_code* code = NULL;
@@ -2289,6 +2292,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 		script->parser_current_file = NULL;
 		script->parser_current_line = 0;
 #endif // ENABLE_CASE_CHECK
+		if (retval) *retval = EXIT_FAILURE;
 		return NULL;
 	}
 
@@ -2315,8 +2319,10 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 	}
 	else
 	{// requires brackets around the script
-		if( *p != '{' )
+		if( *p != '{' ) {
 			disp_error_message("not found '{'",p);
+			if (retval) *retval = EXIT_FAILURE;
+		}
 		p = script->skip_space(p+1);
 		if( *p == '}' && !(options&SCRIPT_RETURN_EMPTY_SCRIPT) )
 		{// empty script and can return NULL
@@ -2391,13 +2397,14 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 		else if( script->str_data[i].type == C_USERFUNC )
 		{// 'function name;' without follow-up code
 			ShowError("parse_script: function '%s' declared but not defined.\n", script->str_buf+script->str_data[i].str);
+			if (retval) *retval = EXIT_FAILURE;
 			unresolved_names = true;
 		}
 	}
 
-	if( unresolved_names )
-	{
+	if( unresolved_names ) {
 		disp_error_message("parse_script: unresolved function references", p);
+		if (retval) *retval = EXIT_FAILURE;
 	}
 
 #ifdef SCRIPT_DEBUG_DISP
@@ -2908,6 +2915,8 @@ int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, co
 				return pc_setglobalreg_str(sd, num, str);
 		}
 	} else {// integer variable
+		// FIXME: This isn't safe, in 32bits systems we're converting a 64bit pointer
+		// to a 32bit int, this will lead to overflows! [Panikon]
 		int val = (int)__64BPTRSIZE(value);
 
 		if(script->str_data[script_getvarid(num)].type == C_PARAM) {
@@ -2915,7 +2924,11 @@ int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, co
 				if( st != NULL ) {
 					ShowError("script:set_reg: failed to set param '%s' to %d.\n", name, val);
 					script->reportsrc(st);
-					st->state = END;
+					// Instead of just stop the script execution we let the character close
+					// the window if it was open.
+					st->state = (sd->state.dialog) ? CLOSE : END;
+					if( st->state == CLOSE )
+						clif->scriptclose(sd, st->oid);
 				}
 				return 0;
 			}
@@ -4203,7 +4216,7 @@ void script_run_autobonus(const char *autobonus, int id, int pos)
 void script_add_autobonus(const char *autobonus)
 {
 	if( strdb_get(script->autobonus_db, autobonus) == NULL ) {
-		struct script_code *scriptroot = script->parse(autobonus, "autobonus", 0, 0);
+		struct script_code *scriptroot = script->parse(autobonus, "autobonus", 0, 0, NULL);
 
 		if( scriptroot )
 			strdb_put(script->autobonus_db, autobonus, scriptroot);
@@ -11041,7 +11054,7 @@ BUILDIN(setmapflag) {
 					char empty[1] = "\0";
 					char params[MAP_ZONE_MAPFLAG_LENGTH];
 					memcpy(params, val2, MAP_ZONE_MAPFLAG_LENGTH);
-					npc->parse_mapflag(map->list[m].name, empty, zone, params, empty, empty, empty);
+					npc->parse_mapflag(map->list[m].name, empty, zone, params, empty, empty, empty, NULL);
 				}
 				break;
 			case MF_NOCOMMAND:          map->list[m].nocommand = (val <= 0) ? 100 : val; break;
@@ -15100,7 +15113,7 @@ BUILDIN(setitemscript)
 	if(*dstscript)
 		script->free_code(*dstscript);
 
-	*dstscript = new_bonus_script[0] ? script->parse(new_bonus_script, "script_setitemscript", 0, 0) : NULL;
+	*dstscript = new_bonus_script[0] ? script->parse(new_bonus_script, "script_setitemscript", 0, 0, NULL) : NULL;
 	script_pushint(st,1);
 	return true;
 }

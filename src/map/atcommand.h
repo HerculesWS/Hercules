@@ -5,9 +5,9 @@
 #ifndef _MAP_ATCOMMAND_H_
 #define _MAP_ATCOMMAND_H_
 
+#include "pc_groups.h"
 #include "../common/conf.h"
 #include "../common/db.h"
-#include "pc_groups.h"
 
 /**
  * Declarations

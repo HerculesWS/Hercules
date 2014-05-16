@@ -5,7 +5,7 @@
 //===== Current Version: =====================================
 //= 1.0
 //===== Description: =========================================
-//= This mapflag allows you to modify the damage of any skill 
+//= This mapflag allows you to modify the damage of any skill
 //= in any map.
 //= Example (1):
 //= prontera	mapflag	adjust_skill_damage	MG_FIREBOLT	50

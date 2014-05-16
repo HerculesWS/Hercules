@@ -701,7 +701,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				if(.@skill_e6) getexp 300,100;
 				if(.@skill_e7) getexp 300,100;
 				close;
-			default: 
+			default:
 				break;
 			}
 		}

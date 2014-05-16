@@ -5,9 +5,10 @@
 #ifndef _MAP_HOMUNCULUS_H_
 #define _MAP_HOMUNCULUS_H_
 
+#include "pc.h"
 #include "status.h" // struct status_data, struct status_change
 #include "unit.h" // struct unit_data
-#include "pc.h"
+#include "../common/mmo.h"
 
 #define MAX_HOM_SKILL_REQUIRE 5
 #define homdb_checkid(id) ((id) >=  HM_CLASS_BASE && (id) <= HM_CLASS_MAX)
@@ -140,6 +141,7 @@ struct homunculus_interface {
 	void (*exp_db_read) (void);
 	void (*addspiritball) (struct homun_data *hd, int max);
 	void (*delspiritball) (struct homun_data *hd, int count, int type);
+	int8 (*get_intimacy_grade) (struct homun_data *hd);
 };
 
 struct homunculus_interface *homun;

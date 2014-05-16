@@ -158,7 +158,7 @@ function	script	cute_pet_manager	{
 	next;
 	
 	// Create Menu System
-	for (set .@a, 0; .@a < getarraysize(getarg(0)); set .@a, .@a + 1) { 
+	for (set .@a, 0; .@a < getarraysize(getarg(0)); set .@a, .@a + 1) {
 		set .@menu$, .@menu$ + (.@menu$ == "" ? "" : ":") + getitemname(getelementofarray(getarg(0), .@a));
 	}
 	
@@ -193,7 +193,7 @@ function	script	cute_pet_manager	{
 		mes "Do you want to exchange with me?";
 		next;
 		
-		if  (select("Exchange:Don't Exchange") == 2) { 
+		if  (select("Exchange:Don't Exchange") == 2) {
 			mes "[Cute Pet Manager]";
 			mes "You don't? You will come back again.";
 			close;

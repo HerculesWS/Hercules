@@ -158,6 +158,10 @@
 		A58A5A281858025D0099683E /* HPMHooking.c in Sources */ = {isa = PBXBuildFile; fileRef = A58A5A271858025D0099683E /* HPMHooking.c */; };
 		A5AA94EE185796CB00C940C8 /* sample.c in Sources */ = {isa = PBXBuildFile; fileRef = A5AA94ED185796CB00C940C8 /* sample.c */; };
 		A5AA94FA185799E400C940C8 /* db2sql.c in Sources */ = {isa = PBXBuildFile; fileRef = A5AA94F8185799DF00C940C8 /* db2sql.c */; };
+		A5F7946C191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
+		A5F7946D191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
+		A5F7946E191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
+		A5F7946F191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -396,6 +400,11 @@
 		A5AA94ED185796CB00C940C8 /* sample.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sample.c; path = src/plugins/sample.c; sourceTree = "<group>"; };
 		A5AA94F3185799B700C940C8 /* db2sql.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = db2sql.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5AA94F8185799DF00C940C8 /* db2sql.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = db2sql.c; path = src/plugins/db2sql.c; sourceTree = "<group>"; };
+		A5F79468191CA34E002293AB /* HPMDataCheck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HPMDataCheck.h; path = src/common/HPMDataCheck.h; sourceTree = "<group>"; };
+		A5F79469191CA34E002293AB /* sysinfo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sysinfo.c; path = src/common/sysinfo.c; sourceTree = "<group>"; };
+		A5F7946A191CA34E002293AB /* sysinfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sysinfo.h; path = src/common/sysinfo.h; sourceTree = "<group>"; };
+		A5F7946B191CA34E002293AB /* sysinfo.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = sysinfo.inc; path = src/common/sysinfo.inc; sourceTree = "<group>"; };
+		A5F79476191CA3F4002293AB /* sysinfogen.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = sysinfogen.sh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -621,6 +630,10 @@
 		A56CC68D1856439A009EB79C /* common */ = {
 			isa = PBXGroup;
 			children = (
+				A5F79468191CA34E002293AB /* HPMDataCheck.h */,
+				A5F79469191CA34E002293AB /* sysinfo.c */,
+				A5F7946A191CA34E002293AB /* sysinfo.h */,
+				A5F7946B191CA34E002293AB /* sysinfo.inc */,
 				A56CC68E185643BB009EB79C /* atomic.h */,
 				A56CC68F185643BB009EB79C /* cbasetypes.h */,
 				A56CC690185643BB009EB79C /* conf.c */,
@@ -725,6 +738,7 @@
 		A58A5A1C185801490099683E /* core */ = {
 			isa = PBXGroup;
 			children = (
+				A5F79476191CA3F4002293AB /* sysinfogen.sh */,
 				A5380CC81856CDF70090CBC4 /* tools */,
 				A56CC71A18564AC7009EB79C /* config */,
 				A56CC68D1856439A009EB79C /* common */,
@@ -805,6 +819,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A5380CD31856CE190090CBC4 /* Build configuration list for PBXNativeTarget "mapcache" */;
 			buildPhases = (
+				A5F79479191CA5BC002293AB /* ShellScript */,
 				A5380CC91856CE180090CBC4 /* Sources */,
 				A5380CCA1856CE180090CBC4 /* Frameworks */,
 				A5380CCB1856CE180090CBC4 /* CopyFiles */,
@@ -822,6 +837,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A56CC66C18564315009EB79C /* Build configuration list for PBXNativeTarget "login-server" */;
 			buildPhases = (
+				A5F79475191CA3DE002293AB /* ShellScript */,
 				A56CC66618564315009EB79C /* Sources */,
 				A56CC66718564315009EB79C /* Frameworks */,
 				A56CC66818564315009EB79C /* CopyFiles */,
@@ -839,6 +855,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A56CC6751856434D009EB79C /* Build configuration list for PBXNativeTarget "char-server" */;
 			buildPhases = (
+				A5F79477191CA5A0002293AB /* ShellScript */,
 				A56CC66F1856434D009EB79C /* Sources */,
 				A56CC6701856434D009EB79C /* Frameworks */,
 				A56CC6711856434D009EB79C /* CopyFiles */,
@@ -856,6 +873,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A56CC67E18564357009EB79C /* Build configuration list for PBXNativeTarget "map-server" */;
 			buildPhases = (
+				A5F79478191CA5AF002293AB /* ShellScript */,
 				A56CC67818564356009EB79C /* Sources */,
 				A56CC67918564356009EB79C /* Frameworks */,
 				A56CC67A18564356009EB79C /* CopyFiles */,
@@ -952,12 +970,68 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		A5F79475191CA3DE002293AB /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./sysinfogen.sh src/common/sysinfo_new.inc ${WARNING_CFLAGS} ${OTHER_CFLAGS} ${OTHER_LDFLAGS}\nif cmp -s src/common/sysinfo.inc src/common/sysinfo_new.inc; then\n    rm src/common/sysinfo_new.inc ;\nelse\n    mv src/common/sysinfo_new.inc src/common/sysinfo.inc ;\nfi\n";
+		};
+		A5F79477191CA5A0002293AB /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./sysinfogen.sh src/common/sysinfo_new.inc ${WARNING_CFLAGS} ${OTHER_CFLAGS} ${OTHER_LDFLAGS}\nif cmp -s src/common/sysinfo.inc src/common/sysinfo_new.inc; then\nrm src/common/sysinfo_new.inc ;\nelse\nmv src/common/sysinfo_new.inc src/common/sysinfo.inc ;\nfi\n";
+		};
+		A5F79478191CA5AF002293AB /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./sysinfogen.sh src/common/sysinfo_new.inc ${WARNING_CFLAGS} ${OTHER_CFLAGS} ${OTHER_LDFLAGS}\nif cmp -s src/common/sysinfo.inc src/common/sysinfo_new.inc; then\nrm src/common/sysinfo_new.inc ;\nelse\nmv src/common/sysinfo_new.inc src/common/sysinfo.inc ;\nfi\n";
+		};
+		A5F79479191CA5BC002293AB /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./sysinfogen.sh src/common/sysinfo_new.inc ${WARNING_CFLAGS} ${OTHER_CFLAGS} ${OTHER_LDFLAGS}\nif cmp -s src/common/sysinfo.inc src/common/sysinfo_new.inc; then\nrm src/common/sysinfo_new.inc ;\nelse\nmv src/common/sysinfo_new.inc src/common/sysinfo.inc ;\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A5380CC91856CE180090CBC4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				A58A5A1A185800CD0099683E /* strlib.c in Sources */,
+				A5F7946F191CA34E002293AB /* sysinfo.c in Sources */,
 				A5380CD91856CF4A0090CBC4 /* core.c in Sources */,
 				A567612D185D11D700997C0D /* nullpo.c in Sources */,
 				A5380CD81856CE8A0090CBC4 /* console.c in Sources */,
@@ -980,6 +1054,7 @@
 				A56CC6D8185643BB009EB79C /* ers.c in Sources */,
 				A56CC73718564C05009EB79C /* scanner.c in Sources */,
 				A56CC6EA185643BB009EB79C /* md5calc.c in Sources */,
+				A5F7946C191CA34E002293AB /* sysinfo.c in Sources */,
 				A56CC74018564C23009EB79C /* mt19937ar.c in Sources */,
 				A56CC6DE185643BB009EB79C /* grfio.c in Sources */,
 				A56CC68C18564387009EB79C /* loginlog_sql.c in Sources */,
@@ -1043,6 +1118,7 @@
 				A56CC6E8185643BB009EB79C /* mapindex.c in Sources */,
 				A56CC73218564C05009EB79C /* libconfig.c in Sources */,
 				A56CC74118564C23009EB79C /* mt19937ar.c in Sources */,
+				A5F7946D191CA34E002293AB /* sysinfo.c in Sources */,
 				A56CC73518564C05009EB79C /* scanctx.c in Sources */,
 				A56CC712185643BB009EB79C /* thread.c in Sources */,
 				A56CC6D0185643BB009EB79C /* core.c in Sources */,
@@ -1088,6 +1164,7 @@
 				A56CC7DF18565812009EB79C /* vending.c in Sources */,
 				A56CC7BA18565812009EB79C /* battle.c in Sources */,
 				A56CC7BF18565812009EB79C /* clif.c in Sources */,
+				A5F7946E191CA34E002293AB /* sysinfo.c in Sources */,
 				A56CC7D018565812009EB79C /* npc_chat.c in Sources */,
 				A56CC6CE185643BB009EB79C /* console.c in Sources */,
 				A56CC73018564C05009EB79C /* grammar.c in Sources */,

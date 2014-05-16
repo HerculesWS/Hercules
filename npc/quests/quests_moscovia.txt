@@ -4,6 +4,8 @@
 //= Kisuka
 //===== Current Version: =====================================
 //= 2.3
+//===== File Encoding ========================================
+//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //===== Description: =========================================
 //= Quests for Moscovia.
 //= The Moving Island, Help Mikhail, Acorn Exchange,
@@ -1146,9 +1148,9 @@ S_Rud1:
 			set $@mos1_edq,$@mos1_edq+1;
 			donpcevent "Baehideun3#ship::OnEnable";
 		}
-		set mos_whale_edq,(getarg(1) == 2)?((mos_whale_edq >= 241)?((.@r != 3)?26:25):((.@r != 3)?10:11)):mos_whale_edq + 1;			
+		set mos_whale_edq,(getarg(1) == 2)?((mos_whale_edq >= 241)?((.@r != 3)?26:25):((.@r != 3)?10:11)):mos_whale_edq + 1;
 		close;
-	}	
+	}
 	mes "[Mr. Ibanoff]";
 	mes "I said that we should go "+.@d$[getarg(0)]+"!";
 	mes "You should sail in the right";
@@ -1164,7 +1166,7 @@ S_Rud1:
 			donpcevent "Baehideun1#ship::OnEnable";
 		}
 	}
-	close;	
+	close;
 }
 
 //----------------------------------------------------------------------------
@@ -1536,7 +1538,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 			mes "[Aged Stranger]";
 			mes "Okay, it's time for your turn. Play it. Play the song that I played.";
 			next;
-			callsub S_AS_1;		
+			callsub S_AS_1;
 		}
 		mes "[Aged Stranger]";
 		mes "Um... Your preparations are not";
@@ -1755,7 +1757,7 @@ S_AS_2:
 			mes "Okay. If you are ready to play the";
 			mes "Gusli, let me know.";
 			set mos_whale_edq,36;
-			close;	
+			close;
 		case 3:
 			mes "[Aged Stranger]";
 			mes "I see. Okay, let's go.";
@@ -2960,7 +2962,7 @@ mosk_in,136,279,3	script	Bed#mos1	HIDDEN_NPC,{
 	mes "- You come near the bed to look it over. -";
 	next;
 	while (.@c < 2) {
-		for (set .@i, 0; .@i < 4; set .@i, .@i + 1) 
+		for (set .@i, 0; .@i < 4; set .@i, .@i + 1)
 			mes " .............. ";
 		set .@c, .@c + 1;
 		next;
@@ -2999,7 +3001,7 @@ mosk_in,205,268,3	script	Fire pot#mos	HIDDEN_NPC,{
 		mes "- You come near the pot to look it over. -";
 		next;
 		while (.@c < 2) {
-			for (set .@i, 0; .@i < 4; set .@i, .@i + 1) 
+			for (set .@i, 0; .@i < 4; set .@i, .@i + 1)
 				mes " .............. ";
 			set .@c, .@c + 1;
 			next;
@@ -4078,9 +4080,9 @@ OnTouch:
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
 					else if (.@stworld > 89 && .@stworld < 100) getitem 732,1;
 					else getitem 7297,1;
-				} else if (.@cyworld == 1000) getitem 727,1;	
+				} else if (.@cyworld == 1000) getitem 727,1;
 				else if (.@cyworld > 100 && .@cyworld < 500) getitem 733,1;
-				else if (.@cyworld > 500 && .@cyworld < 900) getitem 724,1;					
+				else if (.@cyworld > 500 && .@cyworld < 900) getitem 724,1;
 				else getitem 724,1;
 				close;
 			case 2:
@@ -4521,7 +4523,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 				set .@f, 1;
 				break;
 			}
-		}	
+		}
 		if (!.@f && (countitem(730) || countitem(731) || countitem(732))) {
 			for (set .@i, 0; .@i < getarraysize(.@n); set .@i, .@i + 2)
 				delitem .@n[.@i],.@n[.@i+1];
@@ -5279,7 +5281,7 @@ mosk_in,221,43,0	script	#bowl	HIDDEN_NPC,{
 		next;
 		switch(select("Put the materials in it.:Pour water in it.:Stir it up.:It is over!")) {
 		case 1:
-			set .@m, select (implode(.@m$,":")) - 1; 
+			set .@m, select (implode(.@m$,":")) - 1;
 			if (.@m >= 3) {
 				if (.@nankai == 5 || .@nankai == 6) {
 					if ((.@m == 3 && .@star) || (.@m == 4 && .@sand)) specialeffect EF_POISONHIT;
@@ -5407,8 +5409,8 @@ mosk_in,221,43,0	script	#bowl	HIDDEN_NPC,{
 					set .@m, select (implode(.@m3$,":")) - 1;
 					if (.@m != 5) specialeffect EF_POISONHIT;
 					else {
-						set .@maho,.@maho+1; 
-						specialeffect EF_SMOKE; 
+						set .@maho,.@maho+1;
+						specialeffect EF_SMOKE;
 					}
 					set .@nankai,.@nankai+1;
 					mes "-I put "+((.@m == 5)?"a":"the")+" "+.@m3$[.@m]+" in the pot.";
@@ -8109,7 +8111,7 @@ moscovia,213,216,3	script	Ryubaba#rus08	4_F_RUSWOMAN2,{
 				mes "[Ryubaba]";
 				mes "A Red Ring?!";
 				next;
-			} else { 
+			} else {
 				mes "[Ryubaba]";
 				mes "Heh, what are you talking about? What is that?";
 				close;
@@ -9286,7 +9288,7 @@ moc_pryd04,126,120,0	script	Soldier#rus26	4_M_RUSMAN1,{
 			mes "[A gloomy looking soldier]";
 			mes "Before the full moon, I will be back to Moscovia and meet her. I will come back so strong and happy that when I go to see her she will not suffer anymore.";
 			close;
-		} 
+		}
 	}
 	mes "[A gloomy looking soldier]";
 	mes "... I feel like I lost something precious.";
@@ -9584,7 +9586,7 @@ mosk_fild02,243,270,0	script	Marozka#rus31	4_M_LGTGRAND,{
 			mes "[Marozka]";
 			mes "What is deaf, dumb, and blind and always tells the truth?";
 			next;
-			set .@j,select("A Poring:A Picky:A Mirror:A Tree"); 
+			set .@j,select("A Poring:A Picky:A Mirror:A Tree");
 			set .@rus_quiz01,(.@j==3)?.@rus_quiz01+1:.@rus_quiz01;
 			mes "[Marozka]";
 			mes "If 4 cats can catch 4 mice every 4 minutes, what is the minimum number of cats needed to get 10 mice in 10 minutes?";
@@ -10541,7 +10543,7 @@ OnTouch:
 			mes "Akkkk?! Eh!? The s-spell...";
 			next;
 			mes "- You hesitate, the cow, seems to gibe at you, passes by you and runs to bushes !! -";
-			if (rand(1,2) == 1) {	
+			if (rand(1,2) == 1) {
 				donpcevent "Cow#rus34::OnDisable";
 				donpcevent "Cow#rus34::OnEnable";
 			} else {

@@ -4562,7 +4562,7 @@ moc_para01,111,83,3	script	Toren	2_M_OLDBLSMITH,{
 		if (para_suv02 == 14) {
 			setarray .@check[0],18514,2571,2473,15031;
 			setarray .@item$[0],"Hat","Mantle","Boots","Uniform";
-			for(set .@i,0; .@i<4; set .@i,.@i+1) 
+			for(set .@i,0; .@i<4; set .@i,.@i+1)
 				if (countitem(.@check[.@i]) < 1) {
 					mes "[Toren]";
 					mes "Where is the Paradise "+.@item$[.@i]+" I gave you?";

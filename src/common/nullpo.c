@@ -2,15 +2,19 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#include "nullpo.h"
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
-#include "../common/nullpo.h"
+
 #include "../common/showmsg.h"
 
 /**
  * Reports failed assertions or NULL pointers
- * 
+ *
  * @param file       Source file where the error was detected
  * @param line       Line
  * @param func       Function

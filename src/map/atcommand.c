@@ -2,56 +2,59 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h"
-#include "../common/timer.h"
-#include "../common/nullpo.h"
-#include "../common/core.h"
-#include "../common/showmsg.h"
-#include "../common/malloc.h"
-#include "../common/random.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/utils.h"
-#include "../common/conf.h"
-#include "../common/sysinfo.h"
+#define HERCULES_CORE
 
+#include "../config/core.h" // AUTOLOOTITEM_SIZE, AUTOTRADE_PERSISTENCY, MAX_SUGGESTIONS, MOB_FLEE(), MOB_HIT(), RENEWAL, RENEWAL_DROP, RENEWAL_EXP
 #include "atcommand.h"
-#include "battle.h"
-#include "chat.h"
-#include "clif.h"
-#include "chrif.h"
-#include "duel.h"
-#include "intif.h"
-#include "itemdb.h"
-#include "log.h"
-#include "map.h"
-#include "pc.h"
-#include "pc_groups.h" // groupid2name
-#include "status.h"
-#include "skill.h"
-#include "mob.h"
-#include "npc.h"
-#include "pet.h"
-#include "homunculus.h"
-#include "mail.h"
-#include "mercenary.h"
-#include "elemental.h"
-#include "party.h"
-#include "guild.h"
-#include "script.h"
-#include "storage.h"
-#include "trade.h"
-#include "unit.h"
-#include "mapreg.h"
-#include "quest.h"
-#include "searchstore.h"
-#include "HPMmap.h"
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
+
+#include "battle.h"
+#include "chat.h"
+#include "chrif.h"
+#include "clif.h"
+#include "duel.h"
+#include "elemental.h"
+#include "guild.h"
+#include "homunculus.h"
+#include "intif.h"
+#include "itemdb.h"
+#include "log.h"
+#include "mail.h"
+#include "map.h"
+#include "mapreg.h"
+#include "mercenary.h"
+#include "mob.h"
+#include "npc.h"
+#include "party.h"
+#include "pc.h"
+#include "pc_groups.h" // groupid2name
+#include "pet.h"
+#include "quest.h"
+#include "script.h"
+#include "searchstore.h"
+#include "skill.h"
+#include "status.h"
+#include "storage.h"
+#include "trade.h"
+#include "unit.h"
+#include "../common/cbasetypes.h"
+#include "../common/conf.h"
+#include "../common/core.h"
+#include "../common/malloc.h"
+#include "../common/mmo.h" // MAX_CARTS
+#include "../common/nullpo.h"
+#include "../common/random.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
+#include "../common/strlib.h"
+#include "../common/sysinfo.h"
+#include "../common/timer.h"
+#include "../common/utils.h"
+#include "HPMmap.h"
 
 struct atcommand_interface atcommand_s;
 
@@ -1120,14 +1123,14 @@ ACMD(item)
 	memset(item_name, '\0', sizeof(item_name));
 
 	if (!strcmpi(info->command,"itembound") && (!message || !*message || (
-		sscanf(message, "\"%99[^\"]\" %d %d", item_name, &number, &bound) < 2 && 
-		sscanf(message, "%99s %d %d", item_name, &number, &bound) < 2 
+		sscanf(message, "\"%99[^\"]\" %d %d", item_name, &number, &bound) < 2 &&
+		sscanf(message, "%99s %d %d", item_name, &number, &bound) < 2
 	))) {
 		clif->message(fd, msg_txt(295)); // Please enter an item name or ID (usage: @itembound <item name/ID> <quantity> <bound_type>).
 		return false;
 	} else if (!message || !*message || (
-		sscanf(message, "\"%99[^\"]\" %d", item_name, &number) < 1 && 
-		sscanf(message, "%99s %d", item_name, &number) < 1 )) 
+		sscanf(message, "\"%99[^\"]\" %d", item_name, &number) < 1 &&
+		sscanf(message, "%99s %d", item_name, &number) < 1 ))
 		{
  		clif->message(fd, msg_txt(983)); // Please enter an item name or ID (usage: @item <item name/ID> <quantity>).
 		return false;
@@ -10085,7 +10088,7 @@ void atcommand_config_read(const char* config_filename) {
 			}
 			commandinfo->log = false;
 		}
-	}	
+	}
 	
 	// Commands help
 	// We only check if all commands exist
@@ -10132,7 +10135,7 @@ static inline int AtCommandType2idx(AtCommandType type) { return (type-1); }
 
 /**
  * Loads permissions for groups to use commands.
- * 
+ *
  */
 void atcommand_db_load_groups(GroupSettings **groups, config_setting_t **commands_, size_t sz)
 {

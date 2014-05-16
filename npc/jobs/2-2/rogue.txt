@@ -11,7 +11,7 @@
 //= 2.4 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
 //=     No longer uses function "F_BlockHigh"
 //= 2.4a Deleted unused variables. [Samuray22]
-//= 2.4b Changed a Problem with JobLevel what made 
+//= 2.4b Changed a Problem with JobLevel what made
 //=     impossible get a Gladius [3]. (bugreport:481) [Samuray22]
 //= 2.4c Corrected a Typo error ";;" and a typo error with "rouge". (bugreport:909) [Samuray22]
 //= 2.5 Added dummy "OnMyMobDead" labels. (bugreport:1100) [L0ne_W0lf]
@@ -1172,7 +1172,7 @@ OnTouch:
 		break;
 	case 4:
 		mes "[" + strcharinfo(0) + "]";
-		mes "Hollgrehenn"; 
+		mes "Hollgrehenn";
 		break;
 	}
 	switch(select("enjoys:doesn't enjoy:likes:doesn't like")) {
@@ -1277,7 +1277,7 @@ OnTouch:
 	if (.@input < 1 || .@input > 10000) {
 		if (ROGUE_Q == 12)
 			mes "^3355FFIt didn't work. Please re-enter the four number combination.^000000";
-		else 
+		else
 			mes "^3355FFPlease enter a combination of four numbers.^000000";
 		close;
 	}

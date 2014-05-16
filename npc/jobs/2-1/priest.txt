@@ -6,6 +6,8 @@
 //= Further bugfixed and tested by Lupus
 //===== Current Version: =====================================
 //= 2.6
+//===== File Encoding ========================================
+//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //===== Description: =========================================
 //= [Official Conversion]
 //= Job Change quest for Priest class.
@@ -1706,7 +1708,7 @@ job_prist,98,105,4	script	prst3_1	WARPNPC,3,3,{
 OnTouch:
 	if (BaseJob == Job_Priest) {
 		warp "prt_church",15,36;
-		end; 
+		end;
 	}
 	else if (BaseClass == Job_Acolyte) {
 		set PRIEST_Q,7;

@@ -237,7 +237,7 @@ monk_test,306,151,3	script	Grave of Baphomet#edq	HIDDEN_NPC,{
 			setquest 3040;
 			warp "1@cata",100,224;
 			end;
-		}		
+		}
 	} else if (.@ins_bapho_check == 0 || .@ins_bapho_check == 1) {
 		mes "[Friar Patrick]";
 		mes "It seems you have entered this shrine recently... You cannot reenter because the curse of Baphomet still remains.";

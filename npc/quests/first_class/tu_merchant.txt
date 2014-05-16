@@ -579,7 +579,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 				mes "I'll talk about the Mammonite skill. For now, let me take a little bit of a break from all of this arduous lecture. ^666666*Whew!*^000000";
 				close;
 			}
-		} else { 
+		} else {
 			mes "No? That's fine.";
 			mes "But I can't teach you";
 			mes "much more if you can't grasp these simple basics, so hurry and learn those skills, okay?";
@@ -861,7 +861,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 				mes "...Huh?";
 				mes "You better put some of your stuff in Kafra Storage, you can't carry much else!";
 				close;
-			} else { 
+			} else {
 				Zeny -= 340;
 				set tu_merchant, 10;
 				getitem 569,10; //Novice_Potion
@@ -900,7 +900,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 				mes "...Huh?";
 				mes "You better put some of your stuff in Kafra Storage, you can't carry much else!";
 				close;
-			} else { 
+			} else {
 				Zeny -= 390;
 				set tu_merchant, 9;
 				getitem 501,10; //Red_Potion
@@ -939,7 +939,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 				mes "...Huh?";
 				mes "You better put some of your stuff in Kafra Storage, you can't carry much else!";
 				close;
-			} else { 
+			} else {
 				Zeny -= 400;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion

@@ -4,6 +4,8 @@
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.0
+//===== File Encoding ========================================
+//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //===== Description: =========================================
 //= [Official Conversion]
 //= Fortune teller NPC. Displays random Card image.

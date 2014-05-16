@@ -13,7 +13,7 @@
 //=     in the cities/payon.txt
 //= 1.1 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
 //= 1.2 Updated input with min/max values. [L0ne_W0lf]
-//=     Added a checkweight. 
+//=     Added a checkweight.
 //= 1.3 Fixed checks. [Euphy]
 //============================================================
 

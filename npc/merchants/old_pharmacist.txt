@@ -212,7 +212,7 @@ L_Making:
 		Zeny -= (.@max*getarg(1));
 		delitem getarg(0),.@max*2;
 		delitem 713,.@max; //Empty_Bottle
-		getitem getarg(2),.@max; 
+		getitem getarg(2),.@max;
 		break;
 	case 2:
 		next;
@@ -238,7 +238,7 @@ L_Making:
 		Zeny -= (.@amount*getarg(1));
 		delitem getarg(0),.@amount*2;
 		delitem 713,.@amount; //Empty_Bottle
-		getitem getarg(2),.@amount; 
+		getitem getarg(2),.@amount;
 		break;
 	case 3:
 		next;

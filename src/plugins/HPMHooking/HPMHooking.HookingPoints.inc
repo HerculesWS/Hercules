@@ -1077,6 +1077,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(homun->exp_db_read, HP_homun_exp_db_read) },
 	{ HP_POP(homun->addspiritball, HP_homun_addspiritball) },
 	{ HP_POP(homun->delspiritball, HP_homun_delspiritball) },
+	{ HP_POP(homun->get_intimacy_grade, HP_homun_get_intimacy_grade) },
 /* instance */
 	{ HP_POP(instance->init, HP_instance_init) },
 	{ HP_POP(instance->final, HP_instance_final) },

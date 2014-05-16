@@ -6,7 +6,7 @@
 //= 1.2
 //===== Description: =========================================
 //= [Official Conversion]
-//= Turbo Track Course: 
+//= Turbo Track Course:
 //= - Solo Mode/Time Attack
 //= - Normal (Non-PVP) - 4/8/16 Person
 //= - Expert (PVP) - 4/8/16 Person
@@ -1216,14 +1216,14 @@ OnTouch:
 			mes "I wouldn't be able to do business without the Kafra Services. Thank you, Kafra!";
 			mes " ";
 			mes "[Chief Mahnsoo]";
-			mes "I looove you Kafra!^000000";				
+			mes "I looove you Kafra!^000000";
 		} else {
 			mes "^4d4dff[Karkatan]";
 			mes "My land suffered from poor customer service...until Kafra came along!";
 			mes " ";
 			mes "[Curator Guiss]";
 			mes "Oh, Kafra is simply the best!^000000";
-		}			
+		}
 		next;
 		mes "^ff0000Turbo Track";
 		mes "^ff0000Traps in the Cursed Desert!";
@@ -1730,7 +1730,7 @@ OnTouch:
 		case 2:
 			mapannounce strnpcinfo(4),strcharinfo(0) +" has just passed the Cube Hills course!",bc_map,"0x70DBDB";
 			warp strnpcinfo(4),316,365;
-			end;		
+			end;
 		case 3:
 			mapannounce strnpcinfo(4),strcharinfo(0) +" has just passed the Cursed Desert!",bc_map,"0x70DBDB";
 			switch (rand(1,4)) {
@@ -1951,9 +1951,9 @@ OnTouch:
 	function	GetNumber	{
 		setarray .@w_n$[1], "n4","n8","n16","e4","e8","e16";
 		for (set .@i, 1; .@i <= getarraysize(.@w_n$); set .@i, .@i + 1) {
-			if (getarg(0) == .@w_n$[.@i]) 
+			if (getarg(0) == .@w_n$[.@i])
 				return .@i;
-		}		
+		}
 	}
 	
 OnInit:
@@ -2089,7 +2089,7 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 			mes "However, you cannot receive";
 			mes "any points if you exceed the";
 			mes "point limit. You now have a total of " + my_point + " Turbo Track points.";
-		} 
+		}
 		set tt_rank,tt_rank+1;
 		next;
 		if (tt_rank > $ttranks[1]) {
@@ -2300,7 +2300,7 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 					mes "you any Turbo Track Points";
 					mes "since you would exceed the";
 					mes "maximum limit. Sorry...";
-				} 
+				}
 			} else {
 				mes "Oh right, your current";
 				set my_point,tt_point;
@@ -2430,7 +2430,7 @@ OnTimer36000:
 
 OnTimer40000:
 	set .@w$,callfunc("F_tt");
-	if (compare(.@w$,"4")) 
+	if (compare(.@w$,"4"))
 		mapannounce strnpcinfo(4),"[Blacksmith Union]",bc_map,"0x33FF66";
 	else
 		mapannounce strnpcinfo(4),"[Al De Baran Kafra Corporation Headquarters]",bc_map,"0x33FF66";

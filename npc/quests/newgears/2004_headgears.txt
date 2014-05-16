@@ -19,7 +19,7 @@
 //= 10) Model Training Hat (payon_in03 8 193)
 //= 11) Tulip Haipin (geffen 83 189)
 //= 12) Party Hat, Straw Hat, Cowboy Hat, (xmas_in 35 30)
-//=     Sombrero, Beanie 
+//=     Sombrero, Beanie
 //= 13) Decorative Golden Bell, (yuno_in03 20 18)
 //=     Crown of Ancient Queen, Crown of Mistress
 //= 14) Alarm Mask (alde_alche 88 180)

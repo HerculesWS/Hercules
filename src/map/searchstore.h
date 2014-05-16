@@ -5,6 +5,12 @@
 #ifndef _MAP_SEARCHSTORE_H_
 #define _MAP_SEARCHSTORE_H_
 
+#include <time.h>
+
+#include "map.h" // MESSAGE_SIZE
+#include "../common/cbasetypes.h"
+#include "../common/mmo.h" // MAX_SLOTS
+
 /**
  * Defines
  **/

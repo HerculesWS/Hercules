@@ -3,7 +3,11 @@
 //===== By: ==================================================
 //= Haru
 //===== Current Version: =====================================
-//= 1.0
+//= 2.0
+//===== Version History: =====================================
+//= 1.0 Initial version.
+//= 2.0 Moved tests to a function to allow them to be called
+//      externally.
 //===== Description: =========================================
 //= Script to test operators and possibly other elements of
 //= the script engine, useful for regression testing.
@@ -82,69 +86,10 @@ function	script	F_TestNPCArrays	{
 	return getarraysize(.y);
 }
 
--	script	HerculesSelfTest	-1,{
-	end;
-
-OnTestReturnValue:
-	return getarg(0);
-
-OnTestScopeVars:
-	.@x = 2;
-	return .@x+1;
-
-OnTestDeepNestedScope:
-	if (getarg(0) <= 0)
-		return getarg(1); // Stop recursion
-	if (getarg(1))
-		return callsub(OnTestDeepNestedScope, getarg(0)-1, getarg(1)); // Recursion step
-	.@x = 1;
-	return callsub(OnTestDeepNestedScope, getarg(0)-1, .@x); // First step
-
-OnTestNestedScope:
-	.@x = 1;
-	.@y = callsub(OnTestReturnValue, .@x);
-	return .@y;
-
-OnTestArrayRefs:
-	return getelementofarray(getarg(0), getarraysize(getarg(0)) - 1);
-
-OnTestReturnArrayRef:
-	setarray getarg(0), 5, 6, 7, 8;
-	return getarraysize(getarg(0));
-
-OnTestScopeArrays:
-	setarray .@x, 1, 2, 3, 4;
-	copyarray .@y, getarg(0), getarraysize(getarg(0));
-	return getarraysize(.@y);
-
-OnReportError:
-	.@msg$ = getarg(0,"Unknown Error");
-	.@val$ = getarg(1,"");
-	.@ref$ = getarg(2,"");
-	if (.errors == 1)
-		debugmes "**** WARNING: Any self-test results past this point are unreliable because of previous errors. ****";
-	debugmes "Error: "+.@msg$+": '"+.@val$+"' (found) != '"+.@ref$+"' (expected)";
-	.errors++;
-	//end;
-	return;
-
-OnCheck:
-	.@msg$ = getarg(0,"Unknown Error");
-	.@val = getarg(1,0);
-	.@ref = getarg(2,1);
-	if (.@val != .@ref) {
-		callsub(OnReportError, .@msg$, ""+.@val, ""+.@ref); // String coercion
-	}
-	return;
-OnCheckStr:
-	.@msg$ = getarg(0,"Unknown Error");
-	.@val$ = getarg(1,"");
-	.@ref$ = getarg(2,"");
-	if (.@val$ != .@ref$) {
-		callsub(OnReportError, .@msg$, .@val$, .@ref$);
-	}
-	return;
-OnInit:
+function	script	HerculesSelfTestHelper	{
+	if (.once > 0)
+		return .errors;
+	.once = 1;
 	.errors = 0;
 
 	// Callsub (basic)
@@ -694,13 +639,13 @@ OnInit:
 	deletearray .@x;
 	deletearray .@y;
 	.x = 1;
-	callsub(OnCheck, "Callfunc return with NPC variables", callfunc("F_TestNPCVars"), 3); // FIXME: segfault
+	callsub(OnCheck, "Callfunc return with NPC variables", callfunc("F_TestNPCVars"), 3);
 	callsub(OnCheck, "Callfunc (parent NPC vars isolation)", .x, 1);
-	callsub(OnCheck, "Callfunc (nested scopes and NPC variables)", callfunc("F_TestNestedScopeNPC"), 1); // FIXME: segfault
-	callsub(OnCheck, "Callfunc (deeply nested scopes and NPC variables)", callfunc("F_TestDeepNestedScopeNPC", 30, 0), 1); // FIXME: segfault
+	callsub(OnCheck, "Callfunc (nested scopes and NPC variables)", callfunc("F_TestNestedScopeNPC"), 1);
+	callsub(OnCheck, "Callfunc (deeply nested scopes and NPC variables)", callfunc("F_TestDeepNestedScopeNPC", 30, 0), 1);
 	deletearray .x;
 	setarray .x, 1, 2, 3, 4;
-	callsub(OnCheck, "Callfunc (array references and NPC variables)", callfunc("F_TestArrayRefs", .x), 4); // FIXME: segfault
+	callsub(OnCheck, "Callfunc (array references and NPC variables)", callfunc("F_TestArrayRefs", .x), 4);
 	deletearray .x;
 	.y = callfunc("F_TestReturnArrayRef", .x);
 	callsub(OnCheck, "Callfunc return array references with NPC variables (size check)", getarraysize(.x), .y);
@@ -710,7 +655,7 @@ OnInit:
 	setarray .x, 1, 2;
 	.@z = getarraysize(.@x);
 	setarray .y, 5, 6, 7, 8, 9;
-	callsub(OnCheck, "Callfunc (copyarray from NPC variable reference with the same name)", getarraysize(.@y), callfunc("F_TestNPCArrays", .@y)); // FIXME: segfault
+	callsub(OnCheck, "Callfunc (copyarray from NPC variable reference with the same name)", getarraysize(.@y), callfunc("F_TestNPCArrays", .@y));
 	callsub(OnCheck, "Callfunc (parent array NPC vars isolation)", getarraysize(.@x), .@z);
 	deletearray .x;
 	deletearray .y;
@@ -721,6 +666,74 @@ OnInit:
 	} else {
 		debugmes "Script engine self-test   [ \033[0;32mPASSED\033[0m ]";
 	}
+	return .errors;
 	end;
+
+OnTestReturnValue:
+	return getarg(0);
+
+OnTestScopeVars:
+	.@x = 2;
+	return .@x+1;
+
+OnTestDeepNestedScope:
+	if (getarg(0) <= 0)
+		return getarg(1); // Stop recursion
+	if (getarg(1))
+		return callsub(OnTestDeepNestedScope, getarg(0)-1, getarg(1)); // Recursion step
+	.@x = 1;
+	return callsub(OnTestDeepNestedScope, getarg(0)-1, .@x); // First step
+
+OnTestNestedScope:
+	.@x = 1;
+	.@y = callsub(OnTestReturnValue, .@x);
+	return .@y;
+
+OnTestArrayRefs:
+	return getelementofarray(getarg(0), getarraysize(getarg(0)) - 1);
+
+OnTestReturnArrayRef:
+	setarray getarg(0), 5, 6, 7, 8;
+	return getarraysize(getarg(0));
+
+OnTestScopeArrays:
+	setarray .@x, 1, 2, 3, 4;
+	copyarray .@y, getarg(0), getarraysize(getarg(0));
+	return getarraysize(.@y);
+
+OnReportError:
+	.@msg$ = getarg(0,"Unknown Error");
+	.@val$ = getarg(1,"");
+	.@ref$ = getarg(2,"");
+	if (.errors == 1)
+		debugmes "**** WARNING: Any self-test results past this point are unreliable because of previous errors. ****";
+	debugmes "Error: "+.@msg$+": '"+.@val$+"' (found) != '"+.@ref$+"' (expected)";
+	++.errors;
+	//end;
+	return;
+
+OnCheck:
+	.@msg$ = getarg(0,"Unknown Error");
+	.@val = getarg(1,0);
+	.@ref = getarg(2,1);
+	if (.@val != .@ref) {
+		callsub(OnReportError, .@msg$, ""+.@val, ""+.@ref); // String coercion
+	}
+	return;
+OnCheckStr:
+	.@msg$ = getarg(0,"Unknown Error");
+	.@val$ = getarg(1,"");
+	.@ref$ = getarg(2,"");
+	if (.@val$ != .@ref$) {
+		callsub(OnReportError, .@msg$, .@val$, .@ref$);
+	}
+	return;
 }
 
+-	script	HerculesSelfTest	-1,{
+	end;
+
+OnInit:
+	callfunc("HerculesSelfTestHelper");
+	end;
+}

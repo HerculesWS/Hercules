@@ -5524,7 +5524,7 @@ hu_in01,15,372,3	script	Cellette Lavit	1_F_MERCHANT_02,{
 				mes "since I helped him start his^FFFFFF ^000000 business. Nice of him, isn't it?";
 				set hg_odeng,2;
 				setquest 8065;
-				getitem 584,1; //Fish_Ball_Soup 
+				getitem 584,1; //Fish_Ball_Soup
 				close;
 			case 3:
 				mes "[Cellette]";
@@ -5536,7 +5536,7 @@ hu_in01,15,372,3	script	Cellette Lavit	1_F_MERCHANT_02,{
 				mes "Just try not to be late...";
 				set hg_odeng,3;
 				setquest 8066;
-				getitem 584,1; //Fish_Ball_Soup 
+				getitem 584,1; //Fish_Ball_Soup
 				close;
 			case 4:
 				mes "[Cellette]";
@@ -5548,7 +5548,7 @@ hu_in01,15,372,3	script	Cellette Lavit	1_F_MERCHANT_02,{
 				mes "and such and order...";
 				set hg_odeng,4;
 				setquest 8067;
-				getitem 584,1; //Fish_Ball_Soup 
+				getitem 584,1; //Fish_Ball_Soup
 				close;
 			}
 		case 2:
@@ -5568,7 +5568,7 @@ hu_in01,15,372,3	script	Cellette Lavit	1_F_MERCHANT_02,{
 					mes "I hope you come and ";
 					mes "visit me again, okay?";
 					Zeny -= 100;
-					getitem 584,1; //Fish_Ball_Soup 
+					getitem 584,1; //Fish_Ball_Soup
 					close;
 				} else {
 					mes "[Cellette]";
@@ -5626,7 +5626,7 @@ hu_in01,15,372,3	script	Cellette Lavit	1_F_MERCHANT_02,{
 				mes "from you. That's fair, so";
 				mes "please don't lose it this time.";
 				Zeny -= 100;
-				getitem 584,1; //Fish_Ball_Soup 
+				getitem 584,1; //Fish_Ball_Soup
 				close;
 			} else {
 				mes "[Cellette]";
@@ -5667,7 +5667,7 @@ hu_in01,15,372,3	script	Cellette Lavit	1_F_MERCHANT_02,{
 				mes "from you. That's fair, so";
 				mes "please don't lose it this time.";
 				Zeny -= 100;
-				getitem 584,1; //Fish_Ball_Soup 
+				getitem 584,1; //Fish_Ball_Soup
 				close;
 			} else {
 				mes "[Cellette]";
@@ -5709,7 +5709,7 @@ hu_in01,15,372,3	script	Cellette Lavit	1_F_MERCHANT_02,{
 				mes "from you. That's fair, so";
 				mes "please don't lose it this time.";
 				Zeny -= 100;
-				getitem 584,1; //Fish_Ball_Soup 
+				getitem 584,1; //Fish_Ball_Soup
 				close;
 			} else {
 				mes "[Cellette]";

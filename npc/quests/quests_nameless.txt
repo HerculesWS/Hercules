@@ -25,7 +25,7 @@
 //- - Help to aprehend the infamous Z-Gang.
 //= - Variable in use: zdan_edq (Max: 19)
 //= Unlucky Emerald:
-//- - Help a treasure hunter from Prontera get home, and 
+//- - Help a treasure hunter from Prontera get home, and
 //=   learn the origins of the Unlucky Emerald.
 //= - Variable in use: treasure_nd (Max: 12)
 //= - Variable in use: jewel_nd (Max: 31)
@@ -973,7 +973,7 @@ OnTouch:
 }
 
 nameless_i,127,207,0	script	Dead Crow#Aru	HIDDEN_NPC,{
-	if (aru_monas < 17) { 
+	if (aru_monas < 17) {
 		mes "^3355FFThere is a dead crow on the ground.";
 		close;
 	}
@@ -13067,10 +13067,10 @@ comodo,233,199,5	script	Rogue Guild Agent#nd3	1_M_SIGNROGUE,{
 			mes "[Agent]";
 			mes "Okay, let me check.";
 			next;
-			if ((countitem(2278) > 0) || (countitem(2281) > 0) || (countitem(5043) > 0) || (countitem(2288) > 0) || 
-			(countitem(2292) > 0) || (countitem(2297) > 0) || (countitem(5005) > 0) || (countitem(5086) > 0) || 
-			(countitem(5087) > 0) || (countitem(5088) > 0) || (countitem(5089) > 0) || (countitem(5090) > 0) || 
-			(countitem(5176) > 0) || (countitem(5203) > 0) || (countitem(5098) > 0) || (countitem(5121) > 0) || 
+			if ((countitem(2278) > 0) || (countitem(2281) > 0) || (countitem(5043) > 0) || (countitem(2288) > 0) ||
+			(countitem(2292) > 0) || (countitem(2297) > 0) || (countitem(5005) > 0) || (countitem(5086) > 0) ||
+			(countitem(5087) > 0) || (countitem(5088) > 0) || (countitem(5089) > 0) || (countitem(5090) > 0) ||
+			(countitem(5176) > 0) || (countitem(5203) > 0) || (countitem(5098) > 0) || (countitem(5121) > 0) ||
 			(countitem(5130) > 0) || (countitem(5177) > 0) || (countitem(5169) > 0) || (countitem(5143) > 0)) {
 				mes "[Agent]";
 				mes "Excellent!";

@@ -19,7 +19,7 @@
 //= 1.6 Updated experience rewards. [L0ne_W0lf]
 //= 1.7 Optimization, -4000 lines (more can still be done). [Euphy]
 //= 1.8 Optimized.
-//=     Fixed Medal Distributor (Dual Race) disappears accordingly. [Joseph] 
+//=     Fixed Medal Distributor (Dual Race) disappears accordingly. [Joseph]
 //= 1.9 Updated RE/Pre-RE EXP. [Euphy]
 //= 2.0 Added GM management NPC. [Euphy]
 //============================================================
@@ -293,7 +293,7 @@ OnTimer9000:
 	function	WN	{
 		set .@n, charat(strnpcinfo(0),getstrlen(strnpcinfo(0))-1);
 		if (!getarg(0)) return .@n;
-		return ((.@n <= 3)?((.@n == 1)?"1st":((.@n == 2)?"2nd":"3rd")):.@n+"th"); 
+		return ((.@n <= 3)?((.@n == 1)?"1st":((.@n == 2)?"2nd":"3rd")):.@n+"th");
 	}
 	
 OnInit:
@@ -334,7 +334,7 @@ p_track01,67,45,5	script	Medal Distributor#single	4_F_RACING,{
 		mes "after the race finishes. Prize";
 		mes "Medals may be given to Wayne";
 		mes "in Hugel in exchange for items.";
-		next; 
+		next;
 		if ($@monster_race) {
 			if (monster_race_1 == $@monster_race) {
 				mes "[Medal Distributor]";
@@ -670,7 +670,7 @@ hugel,58,72,6	script	Eckar Ellebird#single	4_M_NFMAN,{
 			mes "we ask that you please";
 			mes "wait a little while longer.";
 			close;
-		} 
+		}
 	} else {
 		if ($@mon_time_1_1 == 1) {
 			mes "[Eckar Ellebird]";
@@ -1437,7 +1437,7 @@ p_track02,73,22,1	script	Ticket Helper#2	4_M_HUMAN_02,{
 				mes "^0000FFMonster "+.@m+"^000000, "+.@w$[0];
 				mes .@w$[1]+".";
 				mes "Are you sure you want";
-				mes "to choose this monster?";			
+				mes "to choose this monster?";
 				if (select("Yes:No") == 2) {
 					mes "[Ticket Helper]";
 					mes "You have canceled";
@@ -1445,7 +1445,7 @@ p_track02,73,22,1	script	Ticket Helper#2	4_M_HUMAN_02,{
 					mes "I understand. Perhaps";
 					mes "you'd feel more comfortable";
 					mes "checking the monsters first?";
-					close;			
+					close;
 				}
 				next;
 				if (!.@m1) {
@@ -1542,7 +1542,7 @@ p_track02,73,22,1	script	Ticket Helper#2	4_M_HUMAN_02,{
 			mes "^0000FFMonster " + monster_race_2_1 + "^000000 and ^0000FFMonster " + monster_race_2_2 + "^000000";
 			mes "for this Dual Monster Race.";
 			next;
-		} 
+		}
 		mes "[Ticket Helper]";
 		mes "The start of the race will be";
 		mes "announced through a broadcast.";
@@ -1551,7 +1551,7 @@ p_track02,73,22,1	script	Ticket Helper#2	4_M_HUMAN_02,{
 		mes "positions. Thank you, and";
 		mes "have a good time!";
 		viewpoint 1,43,35,0,0xFF0000;
-		close;	
+		close;
 	}
 
 OnInit:
@@ -1841,10 +1841,10 @@ OnMyMobDead:
 	function	MN	{
 		setarray .@n$[1], "poring","lunatic","savagebebe","desertwolf","deviruchi","baphomet";
 		for (set .@i, 1; .@i <= getarraysize(.@n$); set .@i, .@i + 1) {
-			if (compare(strnpcinfo(0),.@n$[.@i])) 
+			if (compare(strnpcinfo(0),.@n$[.@i]))
 				break;
 		}
-		return .@i;	
+		return .@i;
 	}
 
 OnInit:
@@ -2302,7 +2302,7 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 				setarray .@mw$, "Nagan:Immaterial Sword:Mysteltainn:Byeollungum:Star Dust Blade:Caesar's Sword:Ice Falchion:Excalibur:Edge:Cutlus:Solar Sword:Tirfing:Fireblend";
 				setarray .@mw, 1130,1141,1138,1140,1148,1134,1131,1137,1132,1135,1136,1139,1133;
 				break;
-			case 2:	
+			case 2:
 				setarray .@mw$, "Dragon Slayer:Masamune:Muramasa:Schweizersabel:Executioner:Zweihander:Katzbalger";
 				setarray .@mw, 1166,1165,1164,1167,1169,1168,1170;
 				break;
@@ -2344,7 +2344,7 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 			case 12:
 				setarray .@mw$, "Oriental Lute:Electric Guitar";
 				setarray .@mw, 1918,1913;
-				break;		
+				break;
 		}
 		set .@j, select (.@mw$+":Cancel") - 1;
 		explode(.@mw$,.@mw$,":");
@@ -2804,7 +2804,7 @@ hugel,71,83,4	script	Wayne	4_M_HUMERCHANT,{
 			set .@m$, .@m$ + .@pm[.@i] + " Prize medal:";
 		set .@m, select (.@m$) - 1;
 		switch (.@m) {
-			case 0: 
+			case 0:
 				setarray .@mr$, "2 Hinale Leaflets:2 Aloe Leaflets:1 Mastela Fruit:5 Witch Starsands:4 Condensed Red Potions";
 				setarray .@mr, 520,2,521,2,522,1,1061,5,545,4;
 				break;
@@ -2862,7 +2862,7 @@ hugel,71,83,4	script	Wayne	4_M_HUMERCHANT,{
 		mes "races, fair adventurer~";
 		delitem 7515,.@pm[.@m];
 		getitem .@mr[.@m2*2],.@mr[((.@m2*2)+1)];
-		close;		
+		close;
 	}
 }
 
@@ -2968,7 +2968,7 @@ p_track02,69,31,1	script	Blacksmith Guildsman#dou	4_F_JOB_BLACKSMITH,{
 		mes "It's too hard for me to win~!";
 		emotion e_swt2;
 		close;
-	} 
+	}
 	mes "[Blacksmith Guildsman]";
 	mes "Run! Go go go!";
 	mes "I need to win some";

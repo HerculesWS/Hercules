@@ -15,7 +15,7 @@
  */
 
 /**
- * "Sane Checks" to save you from compiling with cool bugs 
+ * "Sane Checks" to save you from compiling with cool bugs
  **/
 #if SECURE_NPCTIMEOUT_INTERVAL <= 0
 	#error SECURE_NPCTIMEOUT_INTERVAL should be at least 1 (1s)
@@ -52,13 +52,6 @@
 	#define DEFTYPE_MAX CHAR_MAX
 #endif
 
-/* pointer size fix which fixes several gcc warnings */
-#ifdef __64BIT__
-	#define __64BPTRSIZE(y) ((intptr)(y))
-#else
-	#define __64BPTRSIZE(y) (y)
-#endif
-
 /* ATCMD_FUNC(mobinfo) HIT and FLEE calculations */
 #ifdef RENEWAL
 	#define MOB_FLEE(mobdata) ( (mobdata)->lv + (mobdata)->status.agi + 100 )
@@ -92,14 +85,6 @@
 	#define RE_LVL_DMOD(val)
 	#define RE_LVL_MDMOD(val)
 	#define RE_LVL_TMDMOD()
-#endif
-
-/* Feb 1st 2012 */
-#if PACKETVER >= 20120201
-	#define NEW_CARTS
-	#define MAX_CARTS 9
-#else
-	#define MAX_CARTS 5
 #endif
 
 // Renewal variable cast time reduction

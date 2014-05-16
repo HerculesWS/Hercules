@@ -2,19 +2,23 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#include "sql.h"
+
+#include <stdlib.h> // strtoul
+#include <string.h> // strlen/strnlen/memcpy/memset
+
 #include "../common/cbasetypes.h"
 #include "../common/malloc.h"
 #include "../common/showmsg.h"
 #include "../common/strlib.h"
 #include "../common/timer.h"
-#include "sql.h"
 
 #ifdef WIN32
-#include "../common/winapi.h"
+#	include "../common/winapi.h" // Needed before mysql.h
 #endif
 #include <mysql.h>
-#include <string.h>// strlen/strnlen/memcpy/memset
-#include <stdlib.h>// strtoul
 
 void hercules_mysql_error_handler(unsigned int ecode);
 
@@ -398,8 +402,7 @@ void Sql_ShowDebug_(Sql* self, const char* debug_file, const unsigned long debug
 
 
 /// Frees a Sql handle returned by Sql_Malloc.
-void Sql_Free(Sql* self) 
-{
+void Sql_Free(Sql* self) {
 	if( self )
 	{
 		SQL->FreeResult(self);
@@ -545,7 +548,7 @@ static void Sql_P_ShowDebugMysqlFieldInfo(const char* prefix, enum enum_field_ty
 		SHOW_DEBUG_OF(MYSQL_TYPE_NULL);
 #undef SHOW_DEBUG_TYPE_OF
 	}
-	ShowDebug("%stype=%s%s, length=%d%s\n", prefix, sign, type_string, length, length_postfix); 
+	ShowDebug("%stype=%s%s, length=%d%s\n", prefix, sign, type_string, length, length_postfix);
 }
 
 

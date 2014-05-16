@@ -48,7 +48,7 @@ function	script	F_GldTreas	{
 }
 
 //==============================================================
-//  Treasure Room Switch 
+//  Treasure Room Switch
 //===============================================================
 function	script	F_GldTreasSw	{
 	mes " ";
