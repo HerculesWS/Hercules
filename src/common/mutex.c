@@ -5,6 +5,8 @@
 
 #include "mutex.h"
 
+#include "../common/cbasetypes.h" // for WIN32
+
 #ifdef WIN32
 #include "../common/winapi.h"
 #else
@@ -13,7 +15,6 @@
 #include <sys/time.h>
 #endif
 
-#include "../common/cbasetypes.h"
 #include "../common/malloc.h"
 #include "../common/showmsg.h"
 #include "../common/timer.h"

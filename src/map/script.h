@@ -5,8 +5,8 @@
 #ifndef _MAP_SCRIPT_H_
 #define _MAP_SCRIPT_H_
 
-#include <setjmp.h>
 #include <errno.h>
+#include <setjmp.h>
 
 #include "map.h" //EVENT_NAME_LENGTH
 #include "../common/cbasetypes.h"

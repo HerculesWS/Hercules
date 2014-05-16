@@ -10,9 +10,9 @@
 #include "atcommand.h"
 #include "../common/cbasetypes.h"
 #include "../common/core.h" // CORE_ST_LAST
-#include "../common/mmo.h"
-#include "../common/mapindex.h"
 #include "../common/db.h"
+#include "../common/mapindex.h"
+#include "../common/mmo.h"
 #include "../common/sql.h"
 
 struct mob_data;

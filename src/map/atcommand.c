@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "HPMmap.h"
 #include "battle.h"
 #include "chat.h"
 #include "chrif.h"
@@ -54,7 +55,6 @@
 #include "../common/sysinfo.h"
 #include "../common/timer.h"
 #include "../common/utils.h"
-#include "HPMmap.h"
 
 struct atcommand_interface atcommand_s;
 

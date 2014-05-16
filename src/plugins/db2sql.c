@@ -1,20 +1,22 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 
-#include "../common/cbasetypes.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "../common/HPMi.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/conf.h"
 #include "../config/core.h"
-#include "../map/clif.h"
-#include "../map/pc.h"
-#include "../map/map.h"
-#include "../map/itemdb.h"
+
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "../common/HPMi.h"
+#include "../common/cbasetypes.h"
+#include "../common/conf.h"
+#include "../common/malloc.h"
+#include "../common/mmo.h"
+#include "../common/strlib.h"
+#include "../common/timer.h"
+#include "../map/clif.h"
+#include "../map/itemdb.h"
+#include "../map/map.h"
+#include "../map/pc.h"
 
 #include "../common/HPMDataCheck.h"
 
