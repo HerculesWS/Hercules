@@ -3,13 +3,14 @@
 //===== By: ====================================================================
 //= Kisuka (1.0)
 //===== Current Version: =======================================================
-//= 1.0.0
+//= 1.0.1
 //===== File Encoding ==========================================================
 //= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //===== Description: ===========================================================
 //= Defeat Wolfchev's human experimentations.
 //===== Additional Comments: ===================================================
 //= 1.0.0 Initial Release. [Kisuka]
+//= 1.0.1 Some Clean-Up and Fixes. [Euphy]
 //==============================================================================
 
 1@lhz	mapflag	src4instance
@@ -236,7 +237,6 @@ lighthalzen,303,303,6	script	Giacomo Girolamo#kiup2	4_M_KHMAN,3,3,{
 			mes "[Giacomo Girolamo]";
 			switch(rand(1,10)) {
 			case 1:
-				mes "[Giacomo Girolamo]";
 				mes "Wasn't it painful when you fell down from Heaven, my Angel?";
 				next;
 				break;
@@ -428,20 +428,16 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 			close;
 		case 2:
 			mes "[Weird old man]";
-			mes "So, You are interested in armors.";
+			mes "So, you are interested in armors.";
 			next;
 			mes "[Weird old man]";
 			mes "These are the armors I have.";
 			next;
 			for(.@i = 1; .@i < 8; .@i++) {
-				if(((.@i == 1 || .@i == 5) && (countitem(Will_Of_Warrior) >= 100) && (countitem(Blood_Thirst) >= 50) &&
-				(countitem(Goast_Chill) >= 35)) ||
-				((.@i == 2 || .@i == 3) && (countitem(Will_Of_Warrior) >= 100) && (countitem(Blood_Thirst) >= 50) &&
-				(countitem(Goast_Chill) >= 22)) ||
-				((.@i == 4 || .@i == 7) && (countitem(Will_Of_Warrior) >= 300) && (countitem(Blood_Thirst) >= 300) &&
-				(countitem(Goast_Chill) >= 400)) ||
-				((.@i == 6) && (countitem(Will_Of_Warrior) >= 100) && (countitem(Blood_Thirst) >= 50) &&
-				(countitem(Goast_Chill) >= 30))) {
+				if(((.@i == 1 || .@i == 5) && (countitem(Will_Of_Warrior) >= 100) && (countitem(Blood_Thirst) >= 50) && (countitem(Goast_Chill) >= 35)) ||
+				((.@i == 2 || .@i == 3) && (countitem(Will_Of_Warrior) >= 100) && (countitem(Blood_Thirst) >= 50) && (countitem(Goast_Chill) >= 22)) ||
+				((.@i == 4 || .@i == 7) && (countitem(Will_Of_Warrior) >= 300) && (countitem(Blood_Thirst) >= 300) && (countitem(Goast_Chill) >= 400)) ||
+				((.@i == 6) && (countitem(Will_Of_Warrior) >= 100) && (countitem(Blood_Thirst) >= 50) && (countitem(Goast_Chill) >= 30))) {
 					.@armor$[.@i] = "^0000FF";
 				} else {
 					.@armor$[.@i] = "^FF0000";
@@ -462,6 +458,7 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					mes "[Weird old man]";
 					mes "Have a look.";
 					next;
+					.@break = 1;
 					break;
 				case 2:
 					mes "<<Giant Shield[1]>>";
@@ -507,13 +504,15 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					callsub L_Reward, Ancient_Gold_Deco, 300, 300, 400;
 					break;
 				}
+				if(.@break)
+					break;
 			}
 		case 3:
 			mes "[Weird old man]";
-			mes "So, You are interested in Weapon.";
+			mes "So, you are interested in weapons.";
 			next;
 			mes "[Weird old man]";
-			mes "These are the Weapons I got.";
+			mes "These are the weapons I've got.";
 			next;
 			for(.@i = 1; .@i < 15; .@i++) {
 				if(((.@i == 1) && (countitem(Will_Of_Warrior) >= 50) && (countitem(Blood_Thirst) >= 100) &&
@@ -553,6 +552,7 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					mes "[Weird old man]";
 					mes "Have a look.";
 					next;
+					.@break = 1;
 					break;
 				case 2:
 					mes "<<Agent Katar[1]>>";
@@ -640,6 +640,8 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					callsub L_Reward, Creeper_Bow, 50, 100, 35;
 					break;
 				}
+				if(.@break)
+					break;
 			}
 		}
 	}
@@ -782,7 +784,11 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 		while(1) {
 			switch(select("Ok, I don't have to know more.", "6 Armors", "14 Weapons")) {
 			case 1:
-				break;
+				mes "[Pudding]";
+				mes "If you obtain '^F2766EWill of Warrior^000000' or '^952420Thirst for Blood^000000', and obtain also equipment which is capable to accept their power, bring them to me. I will be waiting.";
+				close2;
+				enable_items;
+				end;
 			case 2:
 				mes "< Armor List >";
 				mes "Giant Shield[1]";
@@ -820,11 +826,6 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 				break;
 			}
 		}
-		mes "[Pudding]";
-		mes "If you obtain '^F2766EWill of Warrior^000000' or '^952420Thirst for Blood^000000', and obtain also equipment which is capable to accept their power, bring them to me. I will be waiting.";
-		close2;
-		enable_items;
-		end;
 	case 4:
 		emotion e_flash;
 		mes "[Pudding]";
@@ -953,11 +954,11 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 	  .@type = 1;
 	  if(.@equip_item == Giant_Lance)
 		.@lhz_max_num = 4200;
-	} else if(.@equip_item == Catapult || .@equip_item == Big_CrossBow || .@equip_item == Creeper_Bow) {
+	} else if (.@equip_item == Catapult || .@equip_item == Big_CrossBow || .@equip_item == Creeper_Bow) {
 		.@type = 2;
-	} else if(.@equip_item == Chilly_Spell_Book || .@equip_item == Recovery_Light) {
+	} else if (.@equip_item == Chilly_Spell_Book || .@equip_item == Recovery_Light) {
 		.@type = 3;
-	} else if(.@equip_item== Giant_Shield || .@equip_item == Geffenia_Book_Water || .@equip_item == Bible_Of_Promise2 ||
+	} else if (.@equip_item== Giant_Shield || .@equip_item == Geffenia_Book_Water || .@equip_item == Bible_Of_Promise2 ||
 	.@equip_item == Salvage_Cape || .@equip_item == Assassin_Handcuffs || .@equip_item == Green_Operation_Coat ||
 	.@equip_item == Ancient_Gold_Deco) {
 	  if(.@equip_item == Salvage_Cape || .@equip_item == Ancient_Gold_Deco)
@@ -1135,293 +1136,153 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 			case 1:
 				// Short Distance
 				.@i = rand(1, .@lhz_max_num);
-				if (.@i < 401) {
-					.@enchant = Strength1;
-				} else if(.@i < 441) {
-					.@enchant = Strength2;
-				} else if(.@i < 445) {
-					.@enchant = Strength3;
-				} else if(.@i < 845) {
-					.@enchant = Agility1;
-				} else if(.@i < 885) {
-					.@enchant = Agility2;
-				} else if(.@i < 889) {
-					.@enchant = Agility3;
-				} else if(.@i < 1289) {
-					.@enchant = Vitality1;
-				} else if(.@i < 1329) {
-					.@enchant = Vitality2;
-				} else if(.@i < 1333) {
-					.@enchant = Vitality3;
-				} else if(.@i < 1523) {
-					.@enchant = Inteligence1;
-				} else if(.@i < 1542) {
-					.@enchant = Inteligence2;
-				} else if(.@i < 1544) {
-					.@enchant = Inteligence3;
-				} else if(.@i < 1844) {
-					.@enchant = Dexterity1;
-				} else if(.@i < 1874) {
-					.@enchant = Dexterity2;
-				} else if(.@i < 1877) {
-					.@enchant = Dexterity3;
-				} else if(.@i < 2067) {
-					.@enchant = Luck1;
-				} else if(.@i < 2086) {
-					.@enchant = Luck2;
-				} else if(.@i < 2088) {
-					.@enchant = Luck3;
-				} else if(.@i < 2491) {
-					.@enchant = 0;
-				} else if(.@i < 2891) {
-					.@enchant = Fighting_Spirit1;
-				} else if(.@i < 2931) {
-					.@enchant = Fighting_Spirit2;
-				} else if(.@i < 2935) {
-					.@enchant = Fighting_Spirit3;
-				} else if(.@i < 3125) {
-					.@enchant = Spell1;
-				} else if(.@i < 3144) {
-					.@enchant = Spell2;
-				} else if(.@i < 3146) {
-					.@enchant = Spell3;
-				} else if(.@i < 3148) {
-					.@enchant = Atk_Speed1;
-				} else if(.@i < 3348) {
-					.@enchant = Sharp1;
-				} else if(.@i < 3368) {
-					.@enchant = Sharp2;
-				} else if(.@i < 3370) {
-					.@enchant = Sharp3;
-				} else if(.@i < 3560) {
-					.@enchant = Expert_Archer1;
-				} else if(.@i < 3579) {
-					.@enchant = Expert_Archer2;
-				} else if(.@i < 3581) {
-					.@enchant = Expert_Archer3;
-				} else {
-					.@enchant = 0;
-				}
+				if (.@i < 401)	 .@enchant = Strength1;
+				else if (.@i < 441) .@enchant = Strength2;
+				else if (.@i < 445) .@enchant = Strength3;
+				else if (.@i < 845) .@enchant = Agility1;
+				else if (.@i < 885) .@enchant = Agility2;
+				else if (.@i < 889) .@enchant = Agility3;
+				else if (.@i < 1289) .@enchant = Vitality1;
+				else if (.@i < 1329) .@enchant = Vitality2;
+				else if (.@i < 1333) .@enchant = Vitality3;
+				else if (.@i < 1523) .@enchant = Inteligence1;
+				else if (.@i < 1542) .@enchant = Inteligence2;
+				else if (.@i < 1544) .@enchant = Inteligence3;
+				else if (.@i < 1844) .@enchant = Dexterity1;
+				else if (.@i < 1874) .@enchant = Dexterity2;
+				else if (.@i < 1877) .@enchant = Dexterity3;
+				else if (.@i < 2067) .@enchant = Luck1;
+				else if (.@i < 2086) .@enchant = Luck2;
+				else if (.@i < 2088) .@enchant = Luck3;
+				else if (.@i < 2491) .@enchant = 0;
+				else if (.@i < 2891) .@enchant = Fighting_Spirit1;
+				else if (.@i < 2931) .@enchant = Fighting_Spirit2;
+				else if (.@i < 2935) .@enchant = Fighting_Spirit3;
+				else if (.@i < 3125) .@enchant = Spell1;
+				else if (.@i < 3144) .@enchant = Spell2;
+				else if (.@i < 3146) .@enchant = Spell3;
+				else if (.@i < 3148) .@enchant = Atk_Speed1;
+				else if (.@i < 3348) .@enchant = Sharp1;
+				else if (.@i < 3368) .@enchant = Sharp2;
+				else if (.@i < 3370) .@enchant = Sharp3;
+				else if (.@i < 3560) .@enchant = Expert_Archer1;
+				else if (.@i < 3579) .@enchant = Expert_Archer2;
+				else if (.@i < 3581) .@enchant = Expert_Archer3;
+				else .@enchant = 0;
 				break;
 			case 2:
 				// Long Distance
 				.@i = rand(1, .@lhz_max_num);
-				if (.@i < 191) {
-					.@enchant = Strength1;
-				} else if(.@i < 210) {
-					.@enchant = Strength2;
-				} else if(.@i < 212) {
-					.@enchant = Strength3;
-				} else if(.@i < 612) {
-					.@enchant = Agility1;
-				} else if(.@i < 652) {
-					.@enchant = Agility2;
-				} else if(.@i < 656) {
-					.@enchant = Agility3;
-				} else if(.@i < 846) {
-					.@enchant = Vitality1;
-				} else if(.@i < 865) {
-					.@enchant = Vitality2;
-				} else if(.@i < 867) {
-					.@enchant = Vitality3;
-				} else if(.@i < 1167) {
-					.@enchant = Inteligence1;
-				} else if(.@i < 1197) {
-					.@enchant = Inteligence2;
-				} else if(.@i < 1200) {
-					.@enchant = Inteligence3;
-				} else if(.@i < 1600) {
-					.@enchant = Dexterity1;
-				} else if(.@i < 1640) {
-					.@enchant = Dexterity2;
-				} else if(.@i < 1644) {
-					.@enchant = Dexterity3;
-				} else if(.@i < 1834) {
-					.@enchant = Luck1;
-				} else if(.@i < 1853) {
-					.@enchant = Luck2;
-				} else if(.@i < 1855) {
-					.@enchant = Luck3;
-				} else if(.@i < 2258) {
-					.@enchant = 0;
-				} else if(.@i < 2448) {
-					.@enchant = Fighting_Spirit1;
-				} else if(.@i < 2467) {
-					.@enchant = Fighting_Spirit2;
-				} else if(.@i < 2469) {
-					.@enchant = Fighting_Spirit3;
-				} else if(.@i < 2669) {
-					.@enchant = Spell1;
-				} else if(.@i < 2689) {
-					.@enchant = Spell2;
-				} else if(.@i < 2691) {
-					.@enchant = Spell3;
-				} else if(.@i < 2693) {
-					.@enchant = Atk_Speed1;
-				} else if(.@i < 3093) {
-					.@enchant = Sharp1;
-				} else if(.@i < 3133) {
-					.@enchant = Sharp2;
-				} else if(.@i < 3137) {
-					.@enchant = Sharp3;
-				} else if(.@i < 3537) {
-					.@enchant = Expert_Archer1;
-				} else if(.@i < 3577) {
-					.@enchant = Expert_Archer2;
-				} else if(.@i < 3581) {
-					.@enchant = Expert_Archer3;
-				} else {
-					.@enchant = 0;
-				}
+				if (.@i < 191)	 .@enchant = Strength1;
+				else if (.@i < 210) .@enchant = Strength2;
+				else if (.@i < 212) .@enchant = Strength3;
+				else if (.@i < 612) .@enchant = Agility1;
+				else if (.@i < 652) .@enchant = Agility2;
+				else if (.@i < 656) .@enchant = Agility3;
+				else if (.@i < 846) .@enchant = Vitality1;
+				else if (.@i < 865) .@enchant = Vitality2;
+				else if (.@i < 867) .@enchant = Vitality3;
+				else if (.@i < 1167) .@enchant = Inteligence1;
+				else if (.@i < 1197) .@enchant = Inteligence2;
+				else if (.@i < 1200) .@enchant = Inteligence3;
+				else if (.@i < 1600) .@enchant = Dexterity1;
+				else if (.@i < 1640) .@enchant = Dexterity2;
+				else if (.@i < 1644) .@enchant = Dexterity3;
+				else if (.@i < 1834) .@enchant = Luck1;
+				else if (.@i < 1853) .@enchant = Luck2;
+				else if (.@i < 1855) .@enchant = Luck3;
+				else if (.@i < 2258) .@enchant = 0;
+				else if (.@i < 2448) .@enchant = Fighting_Spirit1;
+				else if (.@i < 2467) .@enchant = Fighting_Spirit2;
+				else if (.@i < 2469) .@enchant = Fighting_Spirit3;
+				else if (.@i < 2669) .@enchant = Spell1;
+				else if (.@i < 2689) .@enchant = Spell2;
+				else if (.@i < 2691) .@enchant = Spell3;
+				else if (.@i < 2693) .@enchant = Atk_Speed1;
+				else if (.@i < 3093) .@enchant = Sharp1;
+				else if (.@i < 3133) .@enchant = Sharp2;
+				else if (.@i < 3137) .@enchant = Sharp3;
+				else if (.@i < 3537) .@enchant = Expert_Archer1;
+				else if (.@i < 3577) .@enchant = Expert_Archer2;
+				else if (.@i < 3581) .@enchant = Expert_Archer3;
+				else .@enchant = 0;
 				break;
 			case 3:
 				.@i = rand(1, .@lhz_max_num);
-				if (.@i < 301) {
-					.@enchant = Strength1;
-				} else if(.@i < 331) {
-					.@enchant = Strength2;
-				} else if(.@i < 334) {
-					.@enchant = Strength3;
-				} else if(.@i < 534) {
-					.@enchant = Agility1;
-				} else if(.@i < 554) {
-					.@enchant = Agility2;
-				} else if(.@i < 556) {
-					.@enchant = Agility3;
-				} else if(.@i < 956) {
-					.@enchant = Vitality1;
-				} else if(.@i < 996) {
-					.@enchant = Vitality2;
-				} else if(.@i < 1000) {
-					.@enchant = Vitality3;
-				} else if(.@i < 1400) {
-					.@enchant = Inteligence1;
-				} else if(.@i < 1440) {
-					.@enchant = Inteligence2;
-				} else if(.@i < 1444) {
-					.@enchant = Inteligence3;
-				} else if(.@i < 1844) {
-					.@enchant = Dexterity1;
-				} else if(.@i < 1884) {
-					.@enchant = Dexterity2;
-				} else if(.@i < 1888) {
-					.@enchant = Dexterity3;
-				} else if(.@i < 2078) {
-					.@enchant = Luck1;
-				} else if(.@i < 2097) {
-					.@enchant = Luck2;
-				} else if(.@i < 2099) {
-					.@enchant = Luck3;
-				} else if(.@i < 2502) {
-					.@enchant = 0;
-				} else if(.@i < 2692) {
-					.@enchant = Fighting_Spirit1;
-				} else if(.@i < 2711) {
-					.@enchant = Fighting_Spirit2;
-				} else if(.@i < 2713) {
-					.@enchant = Fighting_Spirit3;
-				} else if(.@i < 3113) {
-					.@enchant = Spell1;
-				} else if(.@i < 3153) {
-					.@enchant = Spell2;
-				} else if(.@i < 3157) {
-					.@enchant = Spell3;
-				} else if(.@i < 3159) {
-					.@enchant = Atk_Speed1;
-				} else if(.@i < 3349) {
-					.@enchant = Sharp1;
-				} else if(.@i < 3368) {
-					.@enchant = Sharp2;
-				} else if(.@i < 3370) {
-					.@enchant = Sharp3;
-				} else if(.@i < 3560) {
-					.@enchant = Expert_Archer1;
-				} else if(.@i < 3579) {
-					.@enchant = Expert_Archer2;
-				} else if(.@i < 3581) {
-					.@enchant = Expert_Archer3;
-				} else {
-					.@enchant = 0;
-				}
+				if (.@i < 301)	 .@enchant = Strength1;
+				else if (.@i < 331) .@enchant = Strength2;
+				else if (.@i < 334) .@enchant = Strength3;
+				else if (.@i < 534) .@enchant = Agility1;
+				else if (.@i < 554) .@enchant = Agility2;
+				else if (.@i < 556) .@enchant = Agility3;
+				else if (.@i < 956) .@enchant = Vitality1;
+				else if (.@i < 996) .@enchant = Vitality2;
+				else if (.@i < 1000) .@enchant = Vitality3;
+				else if (.@i < 1400) .@enchant = Inteligence1;
+				else if (.@i < 1440) .@enchant = Inteligence2;
+				else if (.@i < 1444) .@enchant = Inteligence3;
+				else if (.@i < 1844) .@enchant = Dexterity1;
+				else if (.@i < 1884) .@enchant = Dexterity2;
+				else if (.@i < 1888) .@enchant = Dexterity3;
+				else if (.@i < 2078) .@enchant = Luck1;
+				else if (.@i < 2097) .@enchant = Luck2;
+				else if (.@i < 2099) .@enchant = Luck3;
+				else if (.@i < 2502) .@enchant = 0;
+				else if (.@i < 2692) .@enchant = Fighting_Spirit1;
+				else if (.@i < 2711) .@enchant = Fighting_Spirit2;
+				else if (.@i < 2713) .@enchant = Fighting_Spirit3;
+				else if (.@i < 3113) .@enchant = Spell1;
+				else if (.@i < 3153) .@enchant = Spell2;
+				else if (.@i < 3157) .@enchant = Spell3;
+				else if (.@i < 3159) .@enchant = Atk_Speed1;
+				else if (.@i < 3349) .@enchant = Sharp1;
+				else if (.@i < 3368) .@enchant = Sharp2;
+				else if (.@i < 3370) .@enchant = Sharp3;
+				else if (.@i < 3560) .@enchant = Expert_Archer1;
+				else if (.@i < 3579) .@enchant = Expert_Archer2;
+				else if (.@i < 3581) .@enchant = Expert_Archer3;
+				else .@enchant = 0;
 				break;
 			case 4:
 				// Armor
 				.@i = rand(1, .@lhz_max_num);
-				if (.@i < 301) {
-					.@enchant = Strength1;
-				} else if(.@i < 331) {
-					.@enchant = Strength2;
-				} else if(.@i < 334) {
-					.@enchant = Strength3;
-				} else if(.@i < 634) {
-					.@enchant = Agility1;
-				} else if(.@i < 664) {
-					.@enchant = Agility2;
-				} else if(.@i < 667) {
-					.@enchant = Agility3;
-				} else if(.@i < 967) {
-					.@enchant = Vitality1;
-				} else if(.@i < 997) {
-					.@enchant = Vitality2;
-				} else if(.@i < 1000) {
-					.@enchant = Vitality3;
-				} else if(.@i < 1300) {
-					.@enchant = Inteligence1;
-				} else if(.@i < 1330) {
-					.@enchant = Inteligence2;
-				} else if(.@i < 1333) {
-					.@enchant = Inteligence3;
-				} else if(.@i < 1633) {
-					.@enchant = Dexterity1;
-				} else if(.@i < 1663) {
-					.@enchant = Dexterity2;
-				} else if(.@i < 1666) {
-					.@enchant = Dexterity3;
-				} else if(.@i < 1966) {
-					.@enchant = Luck1;
-				} else if(.@i < 1996) {
-					.@enchant = Luck2;
-				} else if(.@i < 1999) {
-					.@enchant = Luck3;
-				} else if(.@i < 2399) {
-					.@enchant = 0;
-				} else if(.@i < 2549) {
-					.@enchant = Mdef2;
-				} else if(.@i < 2599) {
-					.@enchant = Mdef4;
-				} else if(.@i < 2609) {
-					.@enchant = Mdef6;
-				} else if(.@i < 2614) {
-					.@enchant = Mdef8;
-				} else if(.@i < 2616) {
-					.@enchant = Mdef10;
-				} else if(.@i < 2766) {
-					.@enchant = Def3;
-				} else if(.@i < 2866) {
-					.@enchant = Def6;
-				} else if(.@i < 2876) {
-					.@enchant = Def9;
-				} else if(.@i < 2878) {
-					.@enchant = Def12;
-				} else if(.@i < 3278) {
-					.@enchant = 0;
-				} else if(.@i < 3428) {
-					.@enchant = Evasion1;
-				} else if(.@i < 3478) {
-					.@enchant = Evasion3;
-				} else if(.@i < 3488) {
-					.@enchant = Evasion6;
-				} else if(.@i < 3498) {
-					.@enchant = SP50;
-				} else if(.@i < 3734) {
-					.@enchant = HP100;
-				} else if(.@i < 3834) {
-					.@enchant = HP200;
-				} else if(.@i < 3884) {
-					.@enchant = HP300;
-				} else {
-					.@enchant = 0;
-				}
+				if (.@i < 301)	 .@enchant = Strength1;
+				else if (.@i < 331) .@enchant = Strength2;
+				else if (.@i < 334) .@enchant = Strength3;
+				else if (.@i < 634) .@enchant = Agility1;
+				else if (.@i < 664) .@enchant = Agility2;
+				else if (.@i < 667) .@enchant = Agility3;
+				else if (.@i < 967) .@enchant = Vitality1;
+				else if (.@i < 997) .@enchant = Vitality2;
+				else if (.@i < 1000) .@enchant = Vitality3;
+				else if (.@i < 1300) .@enchant = Inteligence1;
+				else if (.@i < 1330) .@enchant = Inteligence2;
+				else if (.@i < 1333) .@enchant = Inteligence3;
+				else if (.@i < 1633) .@enchant = Dexterity1;
+				else if (.@i < 1663) .@enchant = Dexterity2;
+				else if (.@i < 1666) .@enchant = Dexterity3;
+				else if (.@i < 1966) .@enchant = Luck1;
+				else if (.@i < 1996) .@enchant = Luck2;
+				else if (.@i < 1999) .@enchant = Luck3;
+				else if (.@i < 2399) .@enchant = 0;
+				else if (.@i < 2549) .@enchant = Mdef2;
+				else if (.@i < 2599) .@enchant = Mdef4;
+				else if (.@i < 2609) .@enchant = Mdef6;
+				else if (.@i < 2614) .@enchant = Mdef8;
+				else if (.@i < 2616) .@enchant = Mdef10;
+				else if (.@i < 2766) .@enchant = Def3;
+				else if (.@i < 2866) .@enchant = Def6;
+				else if (.@i < 2876) .@enchant = Def9;
+				else if (.@i < 2878) .@enchant = Def12;
+				else if (.@i < 3278) .@enchant = 0;
+				else if (.@i < 3428) .@enchant = Evasion1;
+				else if (.@i < 3478) .@enchant = Evasion3;
+				else if (.@i < 3488) .@enchant = Evasion6;
+				else if (.@i < 3498) .@enchant = SP50;
+				else if (.@i < 3734) .@enchant = HP100;
+				else if (.@i < 3834) .@enchant = HP200;
+				else if (.@i < 3884) .@enchant = HP300;
+				else .@enchant = 0;
 			break;
 		}
 		setarray .@equip_card[0], getequipcardid(.@position,0),getequipcardid(.@position,1),getequipcardid(.@position,2),getequipcardid(.@position,3);
@@ -1429,11 +1290,12 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 		.@equip_item = getequipid(.@position);
 		specialeffect EF_BEGINSPELL3, AREA, "Sorcerer#Bio4Reward";
 		progressbar "ffff00", 2;
-		if (.@socket_type==3){ delitem Blood_Thirst, 10; }
-		else{ delitem Will_Of_Warrior, 10; }
+		if (.@socket_type == 3)
+			delitem Blood_Thirst, 10;
+		else
+			delitem Will_Of_Warrior, 10;
 		delequip .@position;
-		
-		if (.@enchant == 0){
+		if (.@enchant == 0) {
 			specialeffect2 EF_SUI_EXPLOSION;
 			emotion e_otl;
 			mes "[Pudding]";
@@ -1444,12 +1306,6 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 		} else {
 			specialeffect2 EF_FIREHIT;
 			getitem2 .@equip_item, 1, 1, .@refine_count, 0, .@equip_card[0], .@equip_card[1], .@equip_card[2], .@equip_card[3];
-			dispbottom "1:"+ .@equip_item;
-			dispbottom "1:"+ .@refine_count;
-			dispbottom "1:"+ .@equip_card[0];
-			dispbottom "1:"+ .@equip_card[1];
-			dispbottom "1:"+ .@equip_card[2];
-			dispbottom "1:"+ .@equip_card[3];
 			emotion e_ho;
 			mes "[Pudding]";
 			mes "Fortunately the power of "+((.@socket_type==3)?"'^952420Thirst for Blood^000000'":"'^F2766EWill of Warrior^000000'")+" has been dwelt well in your equipment..";
@@ -1719,7 +1575,7 @@ que_lhz,148,251,0	script	#Move2lab	-1,12,0,{
 			warp "lhz_dun04", 148, 269;
 			end;
 		} else {
-			mes "Still I have something to do with Wolfchev.";
+			mes "I still have something to do with Wolfchev.";
 			close;
 		}
 }
@@ -1801,12 +1657,11 @@ que_lhz,139,224,0	script	#08	-1,{ end; }
 
 // Human Guinea pigs
 //==============================================================================
--	script	::GuineaPig	-1,{
+que_lhz,140,231,1	script	Human Guinea pig#01	CHEN,{
 	end;
 
 	OnInit:
-		for(.@i = 1; .@i < 9; .@i++)
-			disablenpc "Human Guinea pig#0"+.@i+"";
+		disablenpc strnpcinfo(0);
 		end;
 
 	OnEnable:
@@ -1819,14 +1674,13 @@ que_lhz,139,224,0	script	#08	-1,{ end; }
 		end;
 }
 
-que_lhz,140,231,1	duplicate(GuineaPig)	Human Guinea pig#01	CHEN
-que_lhz,147,231,0	duplicate(GuineaPig)	Human Guinea pig#02	CHEN
-que_lhz,155,231,7	duplicate(GuineaPig)	Human Guinea pig#03	CHEN
-que_lhz,155,224,6	duplicate(GuineaPig)	Human Guinea pig#04	CHEN
-que_lhz,155,216,5	duplicate(GuineaPig)	Human Guinea pig#05	CHEN
-que_lhz,147,216,4	duplicate(GuineaPig)	Human Guinea pig#06	CHEN
-que_lhz,140,216,3	duplicate(GuineaPig)	Human Guinea pig#07	CHEN
-que_lhz,140,224,2	duplicate(GuineaPig)	Human Guinea pig#08	CHEN
+que_lhz,147,231,0	duplicate(Human Guinea pig#01)	Human Guinea pig#02	CHEN
+que_lhz,155,231,7	duplicate(Human Guinea pig#01)	Human Guinea pig#03	CHEN
+que_lhz,155,224,6	duplicate(Human Guinea pig#01)	Human Guinea pig#04	CHEN
+que_lhz,155,216,5	duplicate(Human Guinea pig#01)	Human Guinea pig#05	CHEN
+que_lhz,147,216,4	duplicate(Human Guinea pig#01)	Human Guinea pig#06	CHEN
+que_lhz,140,216,3	duplicate(Human Guinea pig#01)	Human Guinea pig#07	CHEN
+que_lhz,140,224,2	duplicate(Human Guinea pig#01)	Human Guinea pig#08	CHEN
 
 // Wolfchev
 //==============================================================================
@@ -1932,7 +1786,8 @@ lhz_dun04,151,276,3	script	Researcher#memo	4_LGTSCIENCE,{
 				} else {
 					//if (.@quest_time == 2)
 						//recall_completequest 5112;
-					erasequest 5112;
+					if (.@quest_time >= 0)
+						erasequest 5112;
 					if (!.@killed_bosses) {
 						if (lght_duk01 == 9) {
 							mes "[Wolfchev]";
@@ -2385,16 +2240,13 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 	end;
 
 	OnInstanceInit:
+	OnDisable:
 		disablenpc instance_npcname("#potal_01");
 		end;
 
 	OnEnable:
 		mapannounce instance_mapname("1@lhz"),"[Management System] The door which connects to the Lab No.2 is now open.",bc_map,"0xff9977";
 		enablenpc instance_npcname("#potal_01");
-		end;
-
-	OnDisable:
-		disablenpc instance_npcname("#potal_01");
 		end;
 
 	OnTouch:
@@ -2427,15 +2279,12 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 	end;
 
 	OnInstanceInit:
+	OnDisable:
 		stopnpctimer;
 		end;
 
 	OnEnable:
 		initnpctimer;
-		end;
-
-	OnDisable:
-		stopnpctimer;
 		end;
 
 	OnTimer1000:
@@ -2540,7 +2389,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 	end;
 
 	OnInstanceInit:
-		.@broken_pipes = 0;
+		'broken_pipes = 0;
 		stopnpctimer;
 		end;
 
@@ -2560,10 +2409,10 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 			donpcevent instance_npcname("MobCtrl2#mob02")+"::On2_04";
 		case 5:
 			donpcevent instance_npcname("Valve#2_5")+"::OnEnable";
-			donpcevent instance_npcname("MobCtrl2#mob02")+"::On2_06";
+			donpcevent instance_npcname("MobCtrl2#mob02")+"::On2_05";
 		case 6:
 			donpcevent instance_npcname("Valve#2_6")+"::OnEnable";
-			donpcevent instance_npcname("MobCtrl2#mob02")+"::On2_07";
+			donpcevent instance_npcname("MobCtrl2#mob02")+"::On2_06";
 		}
 		initnpctimer;
 		end;
@@ -2603,12 +2452,12 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 			specialeffect EF_SUI_EXPLOSION, AREA, instance_npcname("Valve#2_"+.@i+"");
 			disablenpc instance_npcname("Valve#2_"+.@i+"");
 		}
-		.@broken_pipes += 1;
-		if (.@broken_pipes == 3) {
+		'broken_pipes += 1;
+		if ('broken_pipes == 3) {
 			donpcevent instance_npcname("#2_3")+"::OnEnable";
 			stopnpctimer;
 		} else {
-			mapannounce instance_mapname("1@lhz"),"[Management System] Pipe explosion detected! When "+ (3 - .@broken_pipes) +" more break, the system will stop.",bc_map,"0xff99ff";
+			mapannounce instance_mapname("1@lhz"),"[Management System] Pipe explosion detected! When "+ (3 - 'broken_pipes) +" more break, the system will stop.",bc_map,"0xff99ff";
 		}
 		end;
 }
@@ -3202,52 +3051,40 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 
   OnDisable:
 	killmonster instance_mapname("1@lhz"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
-	enablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(0));
 	end;
 
 	OnMyMobDead:
 		if (mobcount(instance_mapname("1@lhz"), instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1) {
 			.@map$ = instance_mapname("1@lhz");
-			if(strnpcinfo(0) == "Seyren Windsor#boss01") {
+			if(strnpcinfo(0) == "Seyren Windsor#boss01")
 				mapannounce .@map$,"Awww... Where are all my fellows....",bc_map,"0xFD3B02";
-			}
-			if(strnpcinfo(0) == "Cecile Damon#boss02") {
+			else if (strnpcinfo(0) == "Cecile Damon#boss02")
 				mapannounce .@map$,"Any..one, please help.. please.....",bc_map,"0xFD3B02";
-			}
-			if(strnpcinfo(0) == "Gertie Wie#boss03") {
+			else if (strnpcinfo(0) == "Gertie Wie#boss03")
 				mapannounce .@map$,".. did I act too.. rashly...?",bc_map,"0xFD3B02";
-			}
-			if(strnpcinfo(0) == "Eremes Guile#boss04") {
+			else if (strnpcinfo(0) == "Eremes Guile#boss04")
 				mapannounce .@map$,"Ah..... I am absolutely defeated....",bc_map,"0xFD3B02";
-			}
-			if(strnpcinfo(0) == "Trentini#boss05") {
+			else if (strnpcinfo(0) == "Trentini#boss05")
 				mapannounce .@map$,"ah.. If I.. ever can ... dance and.... sing...happily....",bc_map,"0xFD3B02";
-			}
-			if(strnpcinfo(0) == "Chen Liu#boss06") {
+			else if (strnpcinfo(0) == "Chen Liu#boss06")
 				mapannounce .@map$,"I.... am so .. sorry....",bc_map,"0xFD3B02";
-			}
-			if(strnpcinfo(0) == "Alphochio Basil#boss07") {
+			else if (strnpcinfo(0) == "Alphochio Basil#boss07")
 				mapannounce .@map$,"...the new song......was ....for.....her....",bc_map,"0xFD3B02";
-			}
-			if(strnpcinfo(0) == "Flamel Emul#boss08") {
+			else if (strnpcinfo(0) == "Flamel Emul#boss08")
 				mapannounce .@map$,"Ha...I wanted to show.... the new potion....",bc_map,"0xFD3B02";
-			}
-			if(strnpcinfo(0) == "Randel Lawrence#boss09") {
+			else if (strnpcinfo(0) == "Randel Lawrence#boss09")
 				mapannounce .@map$,"Wooooo.. everyone got defeated.....??",bc_map,"0xFD3B02";
-			}
-			if(strnpcinfo(0) == "Celia Alde#boss10") {
+			else if (strnpcinfo(0) == "Celia Alde#boss10")
 				mapannounce .@map$,"No..... this experiment is.....dang...",bc_map,"0xFD3B02";
-			}
-			if(strnpcinfo(0) == "Kathryne Keyron#boss11") {
+			else if (strnpcinfo(0) == "Kathryne Keyron#boss11")
 				mapannounce .@map$,"awww.. is everyone Ok....?",bc_map,"0xFD3B02";
-			}
-			if(strnpcinfo(0) == "Margaretha Sorin#boss12") {
+			else if (strnpcinfo(0) == "Margaretha Sorin#boss12")
 				mapannounce .@map$,"My good boy.. Don't cry... ah.... our Great Odin.. please save us...",bc_map,"0xFD3B02";
-			}
-			if(strnpcinfo(0) == "Howard Alt-Eisen#boss13") {
+			else if (strnpcinfo(0) == "Howard Alt-Eisen#boss13")
 				mapannounce .@map$,"oh...no.... can't breath.... and my sister...?? sister!!",bc_map,"0xFD3B02";
-			}
 			donpcevent instance_npcname("Wolfchev#last")+"::OnEnable";
+			donpcevent instance_npcname(strnpcinfo(0))+"::OnDisable";
 		}
 		end;
 }
@@ -3449,14 +3286,11 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 	}
 
 	OnInstanceInit:
+	OnDisable:
 		disablenpc instance_npcname("Wolfchev#last");
 		end;
 
 	OnEnable:
 		enablenpc instance_npcname("Wolfchev#last");
-		end;
-
-	OnDisable:
-		disablenpc instance_npcname("Wolfchev#last");
 		end;
 }
