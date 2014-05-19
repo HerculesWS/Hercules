@@ -60303,6 +60303,66 @@ bool HP_skill_check_cloaking(struct block_list *bl, struct status_change_entry *
 	}
 	return retVal___;
 }
+int HP_skill_check_cloaking_end(struct block_list *bl, va_list p1) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_skill_check_cloaking_end_pre ) {
+		int (*preHookFunc) (struct block_list *bl, va_list p1);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_cloaking_end_pre; hIndex++ ) {
+			va_list p1___copy; va_copy(p1___copy, p1);
+			preHookFunc = HPMHooks.list.HP_skill_check_cloaking_end_pre[hIndex].func;
+			retVal___ = preHookFunc(bl, p1___copy);
+			va_end(p1___copy);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		va_list p1___copy; va_copy(p1___copy, p1);
+		retVal___ = HPMHooks.source.skill.check_cloaking_end(bl, p1___copy);
+		va_end(p1___copy);
+	}
+	if( HPMHooks.count.HP_skill_check_cloaking_end_post ) {
+		int (*postHookFunc) (int retVal___, struct block_list *bl, va_list p1);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_cloaking_end_post; hIndex++ ) {
+			va_list p1___copy; va_copy(p1___copy, p1);
+			postHookFunc = HPMHooks.list.HP_skill_check_cloaking_end_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, p1___copy);
+			va_end(p1___copy);
+		}
+	}
+	return retVal___;
+}
+bool HP_skill_can_cloak(struct map_session_data *sd, struct block_list *bl) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_skill_can_cloak_pre ) {
+		bool (*preHookFunc) (struct map_session_data *sd, struct block_list *bl);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_can_cloak_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_can_cloak_pre[hIndex].func;
+			retVal___ = preHookFunc(sd, bl);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.skill.can_cloak(sd, bl);
+	}
+	if( HPMHooks.count.HP_skill_can_cloak_post ) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct block_list *bl);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_can_cloak_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_can_cloak_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, bl);
+		}
+	}
+	return retVal___;
+}
 int HP_skill_enchant_elemental_end(struct block_list *bl, int type) {
 	int hIndex = 0;
 	int retVal___ = 0;
