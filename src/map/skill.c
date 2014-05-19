@@ -8122,7 +8122,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				if( dstsd && dstsd->special_state.no_magic_damage )
 					break;
 
-				if ( sd && sd->status.party_id == 0 )
+				if ( sd == NULL || (sd && sd->status.party_id == 0 ) )
 					count = 1;
 				else
 					count = party->foreachsamemap(party->sub_count, sd, 0);
