@@ -15285,6 +15285,40 @@ bool skill_check_cloaking(struct block_list *bl, struct status_change_entry *sce
 
 	return wall;
 }
+
+/**
+ * Verifies if an user can use SC_CLOAKING
+ **/
+bool skill_can_cloak(struct map_session_data *sd, struct block_list *bl) {
+	nullpo_retr(false, sd);
+	nullpo_retr(false, bl);
+
+	//Avoid cloaking with no wall and low skill level. [Skotlex]
+	//Due to the cloaking card, we have to check the wall versus to known
+	//skill level rather than the used one. [Skotlex]
+	//if (sd && val1 < 3 && skill_check_cloaking(bl,NULL))
+	if( sd && pc->checkskill(sd, AS_CLOAKING) < 3 && !skill->check_cloaking(bl,NULL) )
+		return false;
+
+	return true;
+}
+
+/**
+ * Verifies if an user can still be cloaked (AS_CLOAKING)
+ * Is called via map->foreachinrange when any kind of wall disapears
+ **/
+int skill_check_cloaking_end(struct block_list *bl, va_list ap) {
+	TBL_PC *sd = (TBL_PC*)bl;
+
+	if( bl == NULL || sd == NULL )
+		return 0;
+
+	if( sd->sc.data[SC_CLOAKING] && !skill_can_cloak(sd, bl) )
+		status_change_end(bl, SC_CLOAKING, INVALID_TIMER);
+
+	return 0;
+}
+
 bool skill_check_camouflage(struct block_list *bl, struct status_change_entry *sce)
 {
 	static int dx[] = { 0, 1, 0, -1, -1,  1, 1, -1};
@@ -15433,6 +15467,13 @@ int skill_delunit (struct skill_unit* su) {
 			clif->changemapcell(0,su->bl.m,su->bl.x,su->bl.y,su->val2,ALL_SAMEMAP); // hack to avoid clientside cell bug
 			skill->unitsetmapcell(su,WZ_ICEWALL,group->skill_lv,CELL_ICEWALL,false);
 			map->list[su->bl.m].icewall_num--;
+			// AS_CLOAKING in low levels requires a wall to be cast, thus it needs to be
+			// checked again when a wall disapears! issue:8182 [Panikon]
+			map->foreachinarea(skill->check_cloaking_end, su->bl.m,
+								// Use 3x3 area to check for users near cell
+								su->bl.x - 1, su->bl.y - 1,
+								su->bl.x + 1, su->bl.x + 1,
+								BL_PC);
 			break;
 		case SA_LANDPROTECTOR:
 			skill->unitsetmapcell(su,SA_LANDPROTECTOR,group->skill_lv,CELL_LANDPROTECTOR,false);
@@ -18535,6 +18576,8 @@ void skill_defaults(void) {
 	skill->autospell = skill_autospell;
 	skill->calc_heal = skill_calc_heal;
 	skill->check_cloaking = skill_check_cloaking;
+	skill->check_cloaking_end = skill_check_cloaking_end;
+	skill->can_cloak = skill_can_cloak;
 	skill->enchant_elemental_end = skill_enchant_elemental_end;
 	skill->not_ok = skillnotok;
 	skill->not_ok_hom = skillnotok_hom;

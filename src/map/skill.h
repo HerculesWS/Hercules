@@ -1918,6 +1918,8 @@ struct skill_interface {
 	int (*autospell) (struct map_session_data *md,uint16 skill_id);
 	int (*calc_heal) (struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, bool heal);
 	bool (*check_cloaking) (struct block_list *bl, struct status_change_entry *sce);
+	int (*check_cloaking_end) (struct block_list *bl, va_list);
+	bool (*can_cloak) (struct map_session_data *sd, struct block_list *bl);
 	int (*enchant_elemental_end) (struct block_list *bl, int type);
 	int (*not_ok) (uint16 skill_id, struct map_session_data *sd);
 	int (*not_ok_hom) (uint16 skill_id, struct homun_data *hd);

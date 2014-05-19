@@ -1140,7 +1140,7 @@ From here on, we will have the commands sorted as followed:
     -- 5.1: Time-Related Commands
     -- 5.2: Guild-Related Commands
 6 - Other Commands
-7 - Instance Commands
+7 - Instance-Related Commands
 8 - Quest Log Commands
 9 - Battleground Commands
 10 - Mercenary Commands
