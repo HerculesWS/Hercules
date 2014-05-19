@@ -7,6 +7,11 @@
 #include "../config/core.h"
 #include "core.h"
 
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "../common/cbasetypes.h"
 #include "../common/console.h"
 #include "../common/malloc.h"
@@ -28,10 +33,6 @@
 #	include "../common/utils.h"
 #endif
 
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #ifndef _WIN32
 #	include <unistd.h>
 #else

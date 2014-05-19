@@ -21,12 +21,12 @@ struct status_data;
 /**
  * Defines
  **/
-#define MIN_HAIR_STYLE  (battle_config.min_hair_style)
-#define MAX_HAIR_STYLE  (battle_config.max_hair_style)
-#define MIN_HAIR_COLOR  (battle_config.min_hair_color)
-#define MAX_HAIR_COLOR  (battle_config.max_hair_color)
-#define MIN_CLOTH_COLOR (battle_config.min_cloth_color)
-#define MAX_CLOTH_COLOR (battle_config.max_cloth_color)
+#define MIN_HAIR_STYLE  (battle->bc->min_hair_style)
+#define MAX_HAIR_STYLE  (battle->bc->max_hair_style)
+#define MIN_HAIR_COLOR  (battle->bc->min_hair_color)
+#define MAX_HAIR_COLOR  (battle->bc->max_hair_color)
+#define MIN_CLOTH_COLOR (battle->bc->min_cloth_color)
+#define MAX_CLOTH_COLOR (battle->bc->max_cloth_color)
 
 #define	is_boss(bl)     (status_get_mode(bl)&MD_BOSS)	// Can refine later [Aru]
 
@@ -469,7 +469,9 @@ struct Battle_Config {
 	int mon_trans_disable_in_gvg;
 
 	int case_sensitive_aegisnames;
-} battle_config;
+};
+
+extern struct Battle_Config battle_config;
 
 /* criteria for battle_config.idletime_critera */
 enum e_battle_config_idletime {

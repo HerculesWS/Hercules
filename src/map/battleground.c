@@ -6,8 +6,8 @@
 
 #include "battleground.h"
 
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "battle.h"
 #include "clif.h"

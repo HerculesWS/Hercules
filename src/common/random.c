@@ -9,6 +9,7 @@
 
 #include <mt19937ar.h> // init_genrand, genrand_int32, genrand_res53
 
+#include "../common/cbasetypes.h" // for WIN32
 #include "../common/showmsg.h"
 #include "../common/timer.h" // gettick
 

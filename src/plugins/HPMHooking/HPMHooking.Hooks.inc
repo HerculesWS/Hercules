@@ -28639,15 +28639,15 @@ int HP_intif_parse(int fd) {
 	}
 	return retVal___;
 }
-int HP_intif_create_pet(int account_id, int char_id, short pet_type, short pet_lv, short pet_egg_id, short pet_equip, short intimate, short hungry, char rename_flag, char incuvate, char *pet_name) {
+int HP_intif_create_pet(int account_id, int char_id, short pet_type, short pet_lv, short pet_egg_id, short pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_create_pet_pre ) {
-		int (*preHookFunc) (int *account_id, int *char_id, short *pet_type, short *pet_lv, short *pet_egg_id, short *pet_equip, short *intimate, short *hungry, char *rename_flag, char *incuvate, char *pet_name);
+		int (*preHookFunc) (int *account_id, int *char_id, short *pet_type, short *pet_lv, short *pet_egg_id, short *pet_equip, short *intimate, short *hungry, char *rename_flag, char *incubate, char *pet_name);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_create_pet_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_intif_create_pet_pre[hIndex].func;
-			retVal___ = preHookFunc(&account_id, &char_id, &pet_type, &pet_lv, &pet_egg_id, &pet_equip, &intimate, &hungry, &rename_flag, &incuvate, pet_name);
+			retVal___ = preHookFunc(&account_id, &char_id, &pet_type, &pet_lv, &pet_egg_id, &pet_equip, &intimate, &hungry, &rename_flag, &incubate, pet_name);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -28655,13 +28655,13 @@ int HP_intif_create_pet(int account_id, int char_id, short pet_type, short pet_l
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.intif.create_pet(account_id, char_id, pet_type, pet_lv, pet_egg_id, pet_equip, intimate, hungry, rename_flag, incuvate, pet_name);
+		retVal___ = HPMHooks.source.intif.create_pet(account_id, char_id, pet_type, pet_lv, pet_egg_id, pet_equip, intimate, hungry, rename_flag, incubate, pet_name);
 	}
 	if( HPMHooks.count.HP_intif_create_pet_post ) {
-		int (*postHookFunc) (int retVal___, int *account_id, int *char_id, short *pet_type, short *pet_lv, short *pet_egg_id, short *pet_equip, short *intimate, short *hungry, char *rename_flag, char *incuvate, char *pet_name);
+		int (*postHookFunc) (int retVal___, int *account_id, int *char_id, short *pet_type, short *pet_lv, short *pet_egg_id, short *pet_equip, short *intimate, short *hungry, char *rename_flag, char *incubate, char *pet_name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_create_pet_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_intif_create_pet_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &account_id, &char_id, &pet_type, &pet_lv, &pet_egg_id, &pet_equip, &intimate, &hungry, &rename_flag, &incuvate, pet_name);
+			retVal___ = postHookFunc(retVal___, &account_id, &char_id, &pet_type, &pet_lv, &pet_egg_id, &pet_equip, &intimate, &hungry, &rename_flag, &incubate, pet_name);
 		}
 	}
 	return retVal___;

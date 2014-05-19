@@ -3,17 +3,17 @@
 // Sample Hercules Plugin
 
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "../common/HPMi.h"
+#include "../common/malloc.h"
 #include "../common/mmo.h"
 #include "../common/socket.h"
-#include "../common/malloc.h"
-#include "../map/script.h"
-#include "../map/pc.h"
-#include "../map/clif.h"
 #include "../common/strlib.h"
+#include "../map/clif.h"
+#include "../map/pc.h"
+#include "../map/script.h"
 
 #include "../common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
 

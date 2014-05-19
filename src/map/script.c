@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "atcommand.h"
 #include "battle.h"
@@ -58,7 +59,6 @@
 #ifndef WIN32
 	#include <sys/time.h>
 #endif
-#include <time.h>
 
 static inline int GETVALUE(const unsigned char* buf, int i) {
 	return (int)MakeDWord(MakeWord(buf[i], buf[i+1]), MakeWord(buf[i+2], 0));
