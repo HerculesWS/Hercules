@@ -589,12 +589,6 @@ struct itemdb_interface {
 	int (*isrestricted) (struct item *item, int gmlv, int gmlv2, int(*func)(struct item_data *, int, int));
 	int (*isidentified) (int nameid);
 	int (*isidentified2) (struct item_data *data);
-	bool (*read_itemavail) (char *str[], int columns, int current);
-	bool (*read_itemtrade) (char *str[], int columns, int current);
-	bool (*read_itemdelay) (char *str[], int columns, int current);
-	bool (*read_stack) (char *fields[], int columns, int current);
-	bool (*read_buyingstore) (char *fields[], int columns, int current);
-	bool (*read_nouse) (char *fields[], int columns, int current);
 	int (*combo_split_atoi) (char *str, int *val);
 	void (*read_combos) ();
 	int (*gendercheck) (struct item_data *id);
