@@ -6944,7 +6944,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				return 0;
 			break;
 		case SC_CLOAKING:
-			if( !skill->can_cloak(sd, bl) )
+			if (sd && !skill->can_cloak(sd))
 				return 0;
 			break;
 		case SC_MODECHANGE:

@@ -15289,15 +15289,14 @@ bool skill_check_cloaking(struct block_list *bl, struct status_change_entry *sce
 /**
  * Verifies if an user can use SC_CLOAKING
  **/
-bool skill_can_cloak(struct map_session_data *sd, struct block_list *bl) {
+bool skill_can_cloak(struct map_session_data *sd) {
 	nullpo_retr(false, sd);
-	nullpo_retr(false, bl);
 
 	//Avoid cloaking with no wall and low skill level. [Skotlex]
 	//Due to the cloaking card, we have to check the wall versus to known
 	//skill level rather than the used one. [Skotlex]
 	//if (sd && val1 < 3 && skill_check_cloaking(bl,NULL))
-	if( sd && pc->checkskill(sd, AS_CLOAKING) < 3 && !skill->check_cloaking(bl,NULL) )
+	if (pc->checkskill(sd, AS_CLOAKING) < 3 && !skill->check_cloaking(&sd->bl,NULL))
 		return false;
 
 	return true;
@@ -15308,12 +15307,9 @@ bool skill_can_cloak(struct map_session_data *sd, struct block_list *bl) {
  * Is called via map->foreachinrange when any kind of wall disapears
  **/
 int skill_check_cloaking_end(struct block_list *bl, va_list ap) {
-	TBL_PC *sd = (TBL_PC*)bl;
+	TBL_PC *sd = BL_CAST(BL_PC, bl);
 
-	if( bl == NULL || sd == NULL )
-		return 0;
-
-	if( sd->sc.data[SC_CLOAKING] && !skill_can_cloak(sd, bl) )
+	if (sd && sd->sc.data[SC_CLOAKING] && !skill->can_cloak(sd))
 		status_change_end(bl, SC_CLOAKING, INVALID_TIMER);
 
 	return 0;
