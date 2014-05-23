@@ -1,3 +1,3 @@
 #1400256139
-RENAME TABLE `incuvate` TO `incubate`;
+ALTER TABLE `pet` CHANGE `incuvate` `incubate` int(11) unsigned NOT NULL default '0';
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1400256139);

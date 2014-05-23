@@ -4493,6 +4493,10 @@ struct {
 	struct HPMHookPoint *HP_skill_calc_heal_post;
 	struct HPMHookPoint *HP_skill_check_cloaking_pre;
 	struct HPMHookPoint *HP_skill_check_cloaking_post;
+	struct HPMHookPoint *HP_skill_check_cloaking_end_pre;
+	struct HPMHookPoint *HP_skill_check_cloaking_end_post;
+	struct HPMHookPoint *HP_skill_can_cloak_pre;
+	struct HPMHookPoint *HP_skill_can_cloak_post;
 	struct HPMHookPoint *HP_skill_enchant_elemental_end_pre;
 	struct HPMHookPoint *HP_skill_enchant_elemental_end_post;
 	struct HPMHookPoint *HP_skill_not_ok_pre;
@@ -9534,6 +9538,10 @@ struct {
 	int HP_skill_calc_heal_post;
 	int HP_skill_check_cloaking_pre;
 	int HP_skill_check_cloaking_post;
+	int HP_skill_check_cloaking_end_pre;
+	int HP_skill_check_cloaking_end_post;
+	int HP_skill_can_cloak_pre;
+	int HP_skill_can_cloak_post;
 	int HP_skill_enchant_elemental_end_pre;
 	int HP_skill_enchant_elemental_end_post;
 	int HP_skill_not_ok_pre;

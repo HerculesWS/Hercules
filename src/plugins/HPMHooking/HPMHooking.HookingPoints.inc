@@ -2282,6 +2282,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->autospell, HP_skill_autospell) },
 	{ HP_POP(skill->calc_heal, HP_skill_calc_heal) },
 	{ HP_POP(skill->check_cloaking, HP_skill_check_cloaking) },
+	{ HP_POP(skill->check_cloaking_end, HP_skill_check_cloaking_end) },
+	{ HP_POP(skill->can_cloak, HP_skill_can_cloak) },
 	{ HP_POP(skill->enchant_elemental_end, HP_skill_enchant_elemental_end) },
 	{ HP_POP(skill->not_ok, HP_skill_not_ok) },
 	{ HP_POP(skill->not_ok_hom, HP_skill_not_ok_hom) },
