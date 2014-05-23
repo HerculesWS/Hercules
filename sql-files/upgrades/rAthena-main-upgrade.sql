@@ -51,6 +51,10 @@ ALTER TABLE `mapreg` MODIFY `varname` varchar(32) BINARY NOT NULL,
 
 
 -- Upgrades for table `sc_data`
+ALTER TABLE `pet` CHANGE `incuvate` `incubate` int(11) unsigned NOT NULL default '0';
+
+
+-- Upgrades for table `sc_data`
 ALTER TABLE `sc_data` ADD PRIMARY KEY  (`account_id`,`char_id`,`type`);
 
 
@@ -91,6 +95,7 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1392832626); -- 2014-02-19--17-5
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1395789302); -- 2014-03-25--23-57.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1396893866); -- 2014-04-07--22-04.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1398477600); -- 2014-04-26--10-00.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1400256139); -- 2014-05-17--00-06.sql
 
 
 -- Updates to table `storage`
