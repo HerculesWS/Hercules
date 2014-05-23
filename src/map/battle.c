@@ -2539,7 +2539,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				if( sd && sd->status.weapon == W_KATAR && (i=pc->checkskill(sd,ASC_KATAR)) > 0 )
 					skillratio += skillratio * (10 + 2 * i) / 100;
 #endif
-				if( sc && sc->data[SC_CRUSHSTRIKE] ){
+				if( (!skill_id || skill_id == KN_AUTOCOUNTER) && sc->data[SC_CRUSHSTRIKE] ){
 					if( sd )
 					{//ATK [{Weapon Level * (Weapon Upgrade Level + 6) * 100} + (Weapon ATK) + (Weapon Weight)]%
 						short index = sd->equip_index[EQI_HAND_R];
