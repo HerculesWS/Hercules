@@ -1,6 +1,8 @@
 # Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 # See the LICENSE file
 
+# @configure_input@
+
 CONFIG_D = ../config
 CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
 
@@ -109,7 +111,7 @@ map-server: ../../map-server@EXEEXT@
 
 obj_sql/%.o: %.c $(MAP_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj_sql
 	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ $(MT19937AR_INCLUDE) $(LIBCONFIG_INCLUDE) $(PCRE_CFLAGS) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
+	@$(CC) @CFLAGS@ @DEFS@ $(MT19937AR_INCLUDE) $(LIBCONFIG_INCLUDE) $(PCRE_CFLAGS) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
 # missing object files
 $(COMMON_D)/obj_all/common.a:

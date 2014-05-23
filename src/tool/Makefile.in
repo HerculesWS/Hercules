@@ -1,6 +1,8 @@
 # Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 # See the LICENSE file
 
+# @configure_input@
+
 CONFIG_D = ../config
 CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
 
@@ -68,7 +70,7 @@ obj_all:
 
 obj_all/%.o: %.c $(MAPCACHE_H) $(COMMON_H) $(CONFIG_H) $(LIBCONFIG_H) | obj_all
 	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ $(LIBCONFIG_INCLUDE) @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
+	@$(CC) @CFLAGS@ @DEFS@ $(LIBCONFIG_INCLUDE) @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
 # missing common object files
 $(COMMON_D)/obj_all/common_mini.a:
