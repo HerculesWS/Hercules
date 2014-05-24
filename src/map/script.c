@@ -8307,7 +8307,7 @@ BUILDIN(guildskill) {
 	if( (gd->skill[id].lv + level) > max_points )
 		level = max_points - gd->skill[id].lv;
 
-	if( level == 0 )
+	if( level <= 0 )
 		return true;
 
 	memcpy(&gd_skill, &(gd->skill[id]), sizeof(gd->skill[id]));
