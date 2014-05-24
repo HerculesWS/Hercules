@@ -8243,7 +8243,14 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				tick_time = 1000; // [GodLesZ] tick time
 				break;
 			case SC_JAILED:
-				//Val1 is duration in minutes. Use INT_MAX to specify 'unlimited' time.
+				// val1 is duration in minutes. Use INT_MAX to specify 'unlimited' time.
+				// When first called:
+				// val2 Jail map_index
+				// val3 x
+				// val4 y
+				// When renewing status' information
+				// val3 Return map_index
+				// val4 return coordinates
 				tick = val1>0?1000:250;
 				if (sd)
 				{
@@ -8256,7 +8263,10 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 						//2. Set restore point (val3 -> return map, val4 return coords
 						val3 = map_index;
 						val4 = pos;
-					} else if (!val3 || val3 == sd->mapindex) { //Use save point.
+					} else if (!val3 
+						|| val3 == sd->mapindex
+						|| !sd->sc.data[SC_JAILED] // If player is being jailed and is already in jail (issue: 8206)
+					) { //Use save point.
 						val3 = sd->status.save_point.map;
 						val4 = (sd->status.save_point.x&0xFFFF)
 							|(sd->status.save_point.y<<16);
