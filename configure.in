@@ -12,7 +12,11 @@ AC_CONFIG_FILES([src/map/Makefile src/plugins/Makefile src/tool/Makefile])
 AC_CONFIG_FILES([src/test/Makefile])
 AC_CONFIG_FILES([tools/HPMHookGen/Makefile])
 
-AC_GNU_SOURCE
+dnl AC_USE_SYSTEM_EXTENSIONS requires autoconf 2.60 or newer. Fall back to AC_GNU_SOURCE otherwise.
+m4_ifdef([AC_USE_SYSTEM_EXTENSIONS],
+	[AC_USE_SYSTEM_EXTENSIONS],
+	[AC_GNU_SOURCE]
+)
 
 #
 # Memory managers
@@ -302,18 +306,18 @@ AC_ARG_WITH(
 	),
 	[
 		if test "$withval" == "no";	 then
-			CFLAGS="$CFLAGS -DMAXCONN=16384"	
+			CPPFLAGS="$CPPFLAGS -DMAXCONN=16384"
 		else
 			
 			if ! test "$withval" -ge 0 -o "$withval" -lt 0 2>&- ; then
 				AC_MSG_ERROR([Invalid argument --with-maxconn=$withval ... stopping])
 			else
-				CFLAGS="$CFLAGS -DMAXCONN=$withval"
+				CPPFLAGS="$CPPFLAGS -DMAXCONN=$withval"
 			fi
 		fi
 	],
 	[
-		CFLAGS="$CFLAGS -DMAXCONN=16384"
+		CPPFLAGS="$CPPFLAGS -DMAXCONN=16384"
 	]
 )
 
@@ -530,7 +534,7 @@ AC_RUN_IFELSE(
 	])],
 	[
 		AC_MSG_RESULT([yes])
-		CFLAGS="$CFLAGS -DHAS_TLS"
+		CPPFLAGS="$CPPFLAGS -DHAS_TLS"
 	],
 	[
 		AC_MSG_RESULT([no])
@@ -894,13 +898,13 @@ AC_COMPILE_IFELSE(
 #
 # setrlimit - used to set the socket limit
 #
-AC_CHECK_FUNC([setrlimit],[CFLAGS="$CFLAGS -DHAVE_SETRLIMIT"])
+AC_CHECK_FUNC([setrlimit],[CPPFLAGS="$CPPFLAGS -DHAVE_SETRLIMIT"])
 
 
 #
 # strnlen - string length with upper scan bound
 #
-AC_CHECK_FUNC([strnlen],[CFLAGS="$CFLAGS -DHAVE_STRNLEN"])
+AC_CHECK_FUNC([strnlen],[CPPFLAGS="$CPPFLAGS -DHAVE_STRNLEN"])
 
 # libconfig
 AC_CHECK_FUNCS([uselocale])
@@ -913,27 +917,27 @@ AC_CHECK_HEADERS([xlocale.h])
 #
 case $enable_manager in
 	"no")
-		CFLAGS="$CFLAGS -DNO_MEMMGR"
+		CPPFLAGS="$CPPFLAGS -DNO_MEMMGR"
 		;;
 	"builtin")
 		# enabled by default
 		;;
 	"memwatch")
-		CFLAGS="$CFLAGS -DMEMWATCH"
+		CPPFLAGS="$CPPFLAGS -DMEMWATCH"
 		AC_CHECK_HEADER([memwatch.h], , [AC_MSG_ERROR([memwatch header not found... stopping])])
 		;;
 	"dmalloc")
-		CFLAGS="$CFLAGS -DDMALLOC -DDMALLOC_FUNC_CHECK"
+		CPPFLAGS="$CPPFLAGS -DDMALLOC -DDMALLOC_FUNC_CHECK"
 		LIBS="$LIBS -ldmalloc"
 		AC_CHECK_HEADER([dmalloc.h], , [AC_MSG_ERROR([dmalloc header not found... stopping])])
 		;;
 	"gcollect")
-		CFLAGS="$CFLAGS -DGCOLLECT"
+		CPPFLAGS="$CPPFLAGS -DGCOLLECT"
 		LIBS="$LIBS -lgc"
 		AC_CHECK_HEADER([gc.h], , [AC_MSG_ERROR([gcollect header not found... stopping])])
 		;;
 	"bcheck")
-		CFLAGS="$CFLAGS -DBCHECK"
+		CPPFLAGS="$CPPFLAGS -DBCHECK"
 		;;
 esac
 
@@ -942,7 +946,7 @@ esac
 # Packetver
 #
 if test -n "$enable_packetver" ; then
-	CFLAGS="$CFLAGS -DPACKETVER=$enable_packetver"
+	CPPFLAGS="$CPPFLAGS -DPACKETVER=$enable_packetver"
 fi
 
 #
@@ -950,7 +954,7 @@ fi
 #
 case $enable_packetver_re in
 	"yes")
-		CFLAGS="$CFLAGS -DENABLE_PACKETVER_RE"
+		CPPFLAGS="$CPPFLAGS -DENABLE_PACKETVER_RE"
 		;;
 	"no")
 		# default value
@@ -961,7 +965,7 @@ esac
 # Obfuscation keys
 #
 if test -n "$obfuscationkey1" -a -n "$obfuscationkey2" -a -n "$obfuscationkey3"; then
-	CFLAGS="$CFLAGS -DOBFUSCATIONKEY1=$obfuscationkey1 -DOBFUSCATIONKEY2=$obfuscationkey2 -DOBFUSCATIONKEY3=$obfuscationkey3"
+	CPPFLAGS="$CPPFLAGS -DOBFUSCATIONKEY1=$obfuscationkey1 -DOBFUSCATIONKEY2=$obfuscationkey2 -DOBFUSCATIONKEY3=$obfuscationkey3"
 fi
 
 #
@@ -973,10 +977,12 @@ case $enable_debug in
 #		CFLAGS="$CFLAGS -Wno-unused -Wno-parentheses"
 		;;
 	"yes")
-		CFLAGS="$CFLAGS -g -DDEBUG"
+		CFLAGS="$CFLAGS -g"
+		CPPFLAGS="$CPPFLAGS -DDEBUG"
 		;;
 	"gdb")
-		CFLAGS="$CFLAGS -ggdb -DDEBUG"
+		CFLAGS="$CFLAGS -ggdb"
+		CPPFLAGS="$CPPFLAGS -DDEBUG"
 		;;
 esac
 
@@ -988,7 +994,7 @@ case $enable_buildbot in
 		# default value
 		;;
 	"yes")
-		CFLAGS="$CFLAGS -DBUILDBOT"
+		CPPFLAGS="$CPPFLAGS -DBUILDBOT"
 		;;
 esac
 
@@ -1000,7 +1006,7 @@ case $enable_rdtsc in
 		#default value
 		;;
 	1)
-		CFLAGS="$CFLAGS -DENABLE_RDTSC"
+		CPPFLAGS="$CPPFLAGS -DENABLE_RDTSC"
 		;;
 esac
 
@@ -1023,7 +1029,7 @@ esac
 #
 case $enable_renewal in
 	"no")
-		CFLAGS="$CFLAGS -DDISABLE_RENEWAL"
+		CPPFLAGS="$CPPFLAGS -DDISABLE_RENEWAL"
 		;;
 	"yes")
 		# default value
@@ -1037,7 +1043,7 @@ if test -n "${ZLIB_HOME}" ; then
 	LDFLAGS="$LDFLAGS -L${ZLIB_HOME}/lib"
 	CPPFLAGS="$CPPFLAGS -I${ZLIB_HOME}/include"
 fi
-AC_CHECK_LIB([z], [inflateEnd], [],[AC_MSG_ERROR([zlib library not found or incompatible, please specify the correct path with --with-zlib=DIR... stopping])])
+AC_SEARCH_LIBS([inflateEnd], [z], [],[AC_MSG_ERROR([zlib library not found or incompatible, please specify the correct path with --with-zlib=DIR... stopping])])
 AC_CHECK_HEADER([zlib.h], [], [AC_MSG_ERROR([zlib header not found, please specify the correct path with --with-zlib=DIR... stopping])])
 
 
@@ -1077,7 +1083,7 @@ if test "$ac_cv_search_clock_gettime" != "no" ; then
 		])],
 		[
 			AC_MSG_RESULT([yes])
-			CFLAGS="$CFLAGS -DHAVE_MONOTONIC_CLOCK"
+			CPPFLAGS="$CPPFLAGS -DHAVE_MONOTONIC_CLOCK"
 		],
 		[
 			# either it failed to compile (CLOCK_MONOTONIC undefined)
@@ -1094,15 +1100,13 @@ fi
 #
 # pthread
 #
-AC_CHECK_LIB([pthread], [pthread_create], [], [AC_MSG_ERROR([pthread library not found or incompatible])])
-AC_CHECK_LIB([pthread], [pthread_sigmask], [], [AC_MSG_ERROR([pthread library not found or incompatible])])
-AC_CHECK_LIB([pthread], [pthread_attr_init], [], [AC_MSG_ERROR([pthread library not found or incompatible])])
-AC_CHECK_LIB([pthread], [pthread_attr_setstacksize], [], [AC_MSG_ERROR([pthread library not found or incompatible])])
-AC_CHECK_LIB([pthread], [pthread_attr_destroy], [], [AC_MSG_ERROR([pthread library not found or incompatible])])
-AC_CHECK_LIB([pthread], [pthread_cancel], [], [AC_MSG_ERROR([pthread library not found or incompatible])])
-AC_CHECK_LIB([pthread], [pthread_join], [], [AC_MSG_ERROR([pthread library not found or incompatible])])
-
-LDFLAGS="$LDFLAGS -lpthread"
+AC_SEARCH_LIBS([pthread_create], [pthread], [], [AC_MSG_ERROR([pthread library not found or incompatible])])
+AC_SEARCH_LIBS([pthread_sigmask], [pthread], [], [AC_MSG_ERROR([pthread library not found or incompatible])])
+AC_SEARCH_LIBS([pthread_attr_init], [pthread], [], [AC_MSG_ERROR([pthread library not found or incompatible])])
+AC_SEARCH_LIBS([pthread_attr_setstacksize], [pthread], [], [AC_MSG_ERROR([pthread library not found or incompatible])])
+AC_SEARCH_LIBS([pthread_attr_destroy], [pthread], [], [AC_MSG_ERROR([pthread library not found or incompatible])])
+AC_SEARCH_LIBS([pthread_cancel], [pthread], [], [AC_MSG_ERROR([pthread library not found or incompatible])])
+AC_SEARCH_LIBS([pthread_join], [pthread], [], [AC_MSG_ERROR([pthread library not found or incompatible])])
 
 
 #

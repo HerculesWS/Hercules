@@ -6,16 +6,9 @@
 #define _COMMON_STRLIB_H_
 
 #include <stdarg.h>
+#include <string.h>
 
 #include "../common/cbasetypes.h"
-
-#ifndef __USE_GNU
-#	define __USE_GNU  // required to enable strnlen on some platforms
-#	include <string.h>
-#	undef __USE_GNU
-#else
-#	include <string.h>
-#endif
 
 #ifdef WIN32
 	#define HAVE_STRTOK_R
