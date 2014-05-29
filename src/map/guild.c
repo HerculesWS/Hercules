@@ -487,21 +487,27 @@ int guild_recv_info(struct guild *sg) {
 				}
 
 				for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
-					if( sd->status.guild_id ) {
-						if( sd->status.guild_id == sg->guild_id ) {
-							clif->chsys_join(channel,sd);
-							sd->guild = g;
-						}
-						
+					if (!sd->status.guild_id)
+						continue; // Not interested in guildless users
+
+					if (sd->status.guild_id == sg->guild_id) {
+						// Guild member
+						clif->chsys_join(channel,sd);
+						sd->guild = g;
+
 						for (i = 0; i < MAX_GUILDALLIANCE; i++) {
-							if( sg->alliance[i].opposition == 0 && sg->alliance[i].guild_id ) {
-								if( sg->alliance[i].guild_id == sd->status.guild_id ) {
-									clif->chsys_join(channel,sd);
-								} else if( tg[i] != NULL ) {
-									if( !(tg[i]->channel->banned && idb_exists(tg[i]->channel->banned, sd->status.account_id)))
-										clif->chsys_join(tg[i]->channel,sd);
-								}
-							}
+							// Join channels from allied guilds
+							if (tg[i] && !(tg[i]->channel->banned && idb_exists(tg[i]->channel->banned, sd->status.account_id)))
+								clif->chsys_join(tg[i]->channel, sd);
+						}
+						continue;
+					}
+
+					for (i = 0; i < MAX_GUILDALLIANCE; i++) {
+						if (tg[i] && sd->status.guild_id == tg[i]->guild_id) { // Shortcut to skip the alliance checks again
+							// Alliance member
+							if( !(channel->banned && idb_exists(channel->banned, sd->status.account_id)))
+								clif->chsys_join(channel, sd);
 						}
 					}
 				}
