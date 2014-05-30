@@ -190,38 +190,3 @@ needs_mysql:
 no_plugins:
 	@echo "Plugins disabled by the configure script"
 	@exit 1
-
-#####################################################################
-# TODO
-
-#install: conf/%.conf conf/%.txt
-#	@read -p "WARNING: This target does not work properly yet. Press Ctrl+C to cancel or Enter to continue."
-#	@mkdir -p /opt/hercules/bin/
-#	@mkdir -p /opt/hercules/etc/hercules/
-#	@mkdir -p /opt/hercules/var/log/hercules/
-#	@mv save /opt/hercules/etc/hercules/save
-#	@mv db /opt/hercules/etc/hercules/db
-#	@mv conf /opt/hercules/etc/hercules/conf
-#	@mv npc /opt/hercules/etc/hercules/npc
-#	@mv log/* /opt/hercules/var/log/hercules/
-#	@cp *-server /opt/hercules/bin/
-#	@ln -s /opt/hercules/etc/hercules/save/ /opt/hercules/bin/
-#	@ln -s /opt/hercules/etc/hercules/db/ /opt/hercules/bin/
-#	@ln -s /opt/hercules/etc/hercules/conf/ /opt/hercules/bin/
-#	@ln -s /opt/hercules/etc/hercules/npc/ /opt/hercules/bin/
-#	@ln -s /opt/hercules/var/log/hercules/ /opt/hercules/bin/log
-
-#bin-clean:
-#	@rm /opt/hercules/bin/login-server
-#	@rm /opt/hercules/bin/char-server
-#	@rm /opt/hercules/bin/map-server
-
-#uninstall: bin-clean
-#	@read -p "WARNING: This target does not work properly yet. Press Ctrl+C to cancel or Enter to continue."
-#	@rm /opt/hercules/bin/save
-#	@rm /opt/hercules/bin/db
-#	@rm /opt/hercules/bin/conf
-#	@rm /opt/hercules/bin/npc
-#	@rm /opt/hercules/bin/log
-#	@rm -rf /opt/hercules/etc/hercules
-#	@rm -rf /opt/hercules/var/log/hercules
