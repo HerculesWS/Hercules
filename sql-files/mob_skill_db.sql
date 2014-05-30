@@ -1,93 +1,93 @@
-#
-# Table structure for table `mob_skill_db`
-#
+--
+-- Table structure for table `mob_skill_db`
+--
 
 DROP TABLE IF EXISTS `mob_skill_db`;
 CREATE TABLE IF NOT EXISTS `mob_skill_db` (
-  `MOB_ID` smallint(6) NOT NULL,
-  `INFO` text NOT NULL,
-  `STATE` text NOT NULL,
-  `SKILL_ID` smallint(6) NOT NULL,
-  `SKILL_LV` tinyint(4) NOT NULL,
-  `RATE` smallint(4) NOT NULL,
-  `CASTTIME` mediumint(9) NOT NULL,
-  `DELAY` int(9) NOT NULL,
-  `CANCELABLE` text NOT NULL,
-  `TARGET` text NOT NULL,
-  `CONDITION` text NOT NULL,
-  `CONDITION_VALUE` text,
-  `VAL1` mediumint(9) DEFAULT NULL,
-  `VAL2` mediumint(9) DEFAULT NULL,
-  `VAL3` mediumint(9) DEFAULT NULL,
-  `VAL4` mediumint(9) DEFAULT NULL,
-  `VAL5` mediumint(9) DEFAULT NULL,
-  `EMOTION` text,
-  `CHAT` text
+  `MOB_ID` SMALLINT(6) NOT NULL,
+  `INFO` TEXT NOT NULL,
+  `STATE` TEXT NOT NULL,
+  `SKILL_ID` SMALLINT(6) NOT NULL,
+  `SKILL_LV` TINYINT(4) NOT NULL,
+  `RATE` SMALLINT(4) NOT NULL,
+  `CASTTIME` MEDIUMINT(9) NOT NULL,
+  `DELAY` INT(9) NOT NULL,
+  `CANCELABLE` TEXT NOT NULL,
+  `TARGET` TEXT NOT NULL,
+  `CONDITION` TEXT NOT NULL,
+  `CONDITION_VALUE` TEXT,
+  `VAL1` MEDIUMINT(9) DEFAULT NULL,
+  `VAL2` MEDIUMINT(9) DEFAULT NULL,
+  `VAL3` MEDIUMINT(9) DEFAULT NULL,
+  `VAL4` MEDIUMINT(9) DEFAULT NULL,
+  `VAL5` MEDIUMINT(9) DEFAULT NULL,
+  `EMOTION` TEXT,
+  `CHAT` TEXT
 ) ENGINE=MyISAM;
 
-# Based on Aegis Episode 11.3
-#
-# REPLACE INTO `mob_skill_db` VALUES (MOB_ID,'dummy value (info only)','STATE',SKILL_ID,SKILL_LV,rate (10000 = 100%),casttime,delay,'cancelable','target','condition type','condition value',val1,val2,val3,val4,val5,'emotion','chat');
-#Example
-#1001,Poring@TF_POISON,attack,52,3,100,1500,10000,no,target,always,0,,,,,7,
-#
-#rate refers to the chance of the skill being casted when the condition is fulfilled.
-#delay is the time in milliseconds that has to be pass before recasting the same skill.
-#
-#STATE:
-# any (except dead) / idle (in standby) / walk (in movement) / dead (on killed) /
-# loot /attack / angry (like attack, except player has not attacked mob yet) /
-# chase (following target, after being attacked) / follow (following
-# target, without being attacked)
-# anytarget (attack+angry+chase+follow)
-#
-#target: The target of the skill can be: target (current target) / self / friend /
-# master / randomtarget (any enemy within skill's range)
-# (the following are for ground-skills, a random target tile is selected from
-# the specified area):
-# around1 (3x3 area around self) / around2 (5x5 area around self) /
-# around3 (7x7 area around self) / around4 (9x9 area around self) /
-# around5 (3x3 area around target) / around6 (5x5 area around target) /
-# around7 (7x7 area around target) / around8 (9x9 area around target) /
-# around = around4
-#
-#conditions: (condition type) (value which specifies a condition value)
-#	always			unconditional
-#	onspawn			when the mob spawns/respawns.
-#	myhpltmaxrate		when the mob's hp drops to a certain %
-#	myhpinrate		when the mob's hp is in a certain % range ('a condition value'
-#                is the lower cap, while 'a value 1' is the upper cap).
-#	mystatuson		If the mob has any abnormalities in status (condition value)
-#	mystatusoff		If the mob has ended any abnormalities in status (condition value)
-#	friendhpltmaxrate	when the mob's friend's hp drops to a certain %
-#	friendhpinrate		when the mob's friend's hp is in a certain % range (range
-#                   defined the same way as in myhpinrate)
-#	friendstatuson		If the friend has any abnormalities in status (condition value)
-#	friendstatusoff		If the friend has ended any abnormalities in status (condition value)
-#	attackpcgt		Attack PC becomes more than the  number of specification
-#	attackpcge		Attack PC becomes equal or more than the number of specification.
-#	slavelt			when the number of slaves is lower than the original number of specification.
-#	slavele			when the number of slaves is lower or equal than the original number of specification.
-#	closedattacked		when melee attacked (close range attack)
-#	longrangeattacked	when long ranged attacked (like bows and far range weapons)
-#	skillused		when a skill is used on the mob
-#	afterskill		after the mob used certain skill.
-#	casttargeted		when a target is in cast range.
-#	rudeattacked		when a target is rude attacked
-#
-# The character's state which can be specified to be a condition value by the statuson/statusoff system
-#	anybad		any type of state change
-#	stone		condition of being in stone state
-#	freeze		condition of being in frozen state
-#	stun		condition of being in stunned state
-#	sleep		condition of being in sleep state
-#	poison		condition of being in poisoned state
-#	curse		condition of being in cursed state
-#	silence		condition of being in silenced state
-#	confusion	condition of being in confusion state
-#	blind		condition of being in blind state
-#	hiding		condition of being in hidden state
-#	sight		condition of being in unhidden state
+-- Based on Aegis Episode 11.3
+--
+-- REPLACE INTO `mob_skill_db` VALUES (MOB_ID,'dummy value (info only)','STATE',SKILL_ID,SKILL_LV,rate (10000 = 100%),casttime,delay,'cancelable','target','condition type','condition value',val1,val2,val3,val4,val5,'emotion','chat');
+-- Example
+-- 1001,Poring@TF_POISON,attack,52,3,100,1500,10000,no,target,always,0,,,,,7,
+--
+-- rate refers to the chance of the skill being casted when the condition is fulfilled.
+-- delay is the time in milliseconds that has to be pass before recasting the same skill.
+-- 
+-- STATE:
+--  any (except dead) / idle (in standby) / walk (in movement) / dead (on killed) /
+--  loot /attack / angry (like attack, except player has not attacked mob yet) /
+--  chase (following target, after being attacked) / follow (following
+--  target, without being attacked)
+--  anytarget (attack+angry+chase+follow)
+-- 
+-- target: The target of the skill can be: target (current target) / self / friend /
+--  master / randomtarget (any enemy within skill's range)
+--  (the following are for ground-skills, a random target tile is selected from
+--  the specified area):
+--  around1 (3x3 area around self) / around2 (5x5 area around self) /
+--  around3 (7x7 area around self) / around4 (9x9 area around self) /
+--  around5 (3x3 area around target) / around6 (5x5 area around target) /
+--  around7 (7x7 area around target) / around8 (9x9 area around target) /
+--  around = around4
+-- 
+-- conditions: (condition type) (value which specifies a condition value)
+-- 	always			unconditional
+-- 	onspawn			when the mob spawns/respawns.
+-- 	myhpltmaxrate		when the mob's hp drops to a certain %
+-- 	myhpinrate		when the mob's hp is in a certain % range ('a condition value'
+--                 is the lower cap, while 'a value 1' is the upper cap).
+-- 	mystatuson		If the mob has any abnormalities in status (condition value)
+-- 	mystatusoff		If the mob has ended any abnormalities in status (condition value)
+-- 	friendhpltmaxrate	when the mob's friend's hp drops to a certain %
+-- 	friendhpinrate		when the mob's friend's hp is in a certain % range (range
+--                    defined the same way as in myhpinrate)
+-- 	friendstatuson		If the friend has any abnormalities in status (condition value)
+-- 	friendstatusoff		If the friend has ended any abnormalities in status (condition value)
+-- 	attackpcgt		Attack PC becomes more than the  number of specification
+-- 	attackpcge		Attack PC becomes equal or more than the number of specification.
+-- 	slavelt			when the number of slaves is lower than the original number of specification.
+-- 	slavele			when the number of slaves is lower or equal than the original number of specification.
+-- 	closedattacked		when melee attacked (close range attack)
+-- 	longrangeattacked	when long ranged attacked (like bows and far range weapons)
+-- 	skillused		when a skill is used on the mob
+-- 	afterskill		after the mob used certain skill.
+-- 	casttargeted		when a target is in cast range.
+-- 	rudeattacked		when a target is rude attacked
+-- 
+--  The character's state which can be specified to be a condition value by the statuson/statusoff system
+-- 	anybad		any type of state change
+-- 	stone		condition of being in stone state
+-- 	freeze		condition of being in frozen state
+-- 	stun		condition of being in stunned state
+-- 	sleep		condition of being in sleep state
+-- 	poison		condition of being in poisoned state
+-- 	curse		condition of being in cursed state
+-- 	silence		condition of being in silenced state
+-- 	confusion	condition of being in confusion state
+-- 	blind		condition of being in blind state
+-- 	hiding		condition of being in hidden state
+-- 	sight		condition of being in unhidden state
 
 REPLACE INTO `mob_skill_db` VALUES (1001,'Scorpion@NPC_FIREATTACK','attack',186,1,2000,0,5000,'yes','target','always',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `mob_skill_db` VALUES (1001,'Scorpion@NPC_POISON','attack',176,3,500,800,5000,'no','target','always',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
