@@ -88,7 +88,7 @@ int console_msg_log = 0;//[Ind] msg error logging
 // XXX adapted from eApp (comments are left untouched) [flaviojs]
 
 ///////////////////////////////////////////////////////////////////////////////
-//  ansi compatible printf with control sequence parser for windows
+//  ANSI compatible printf with control sequence parser for windows
 //  fast hack, handle with care, not everything implemented
 //
 // \033[#;...;#m - Set Graphics Rendition (SGR)
@@ -147,7 +147,7 @@ int console_msg_log = 0;//[Ind] msg error logging
 //
 // \033[u - Restore cursor position (RCP)
 //    Restores the cursor position saved with the (SCP) sequence \033[s.
-//    (addition, restore to 0,0 if nothinh was saved before)
+//    (addition, restore to 0,0 if nothing was saved before)
 //
 
 // \033[#J - Erase Display (ED)
@@ -282,7 +282,7 @@ int	VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 							}
 							//case '2': // not existing
 							//case '3':	// blinking (not implemented)
-							//case '4':	// unterline (not implemented)
+							//case '4':	// underline (not implemented)
 							//case '6': // not existing
 							//case '8': // concealed (not implemented)
 							//case '9': // not existing

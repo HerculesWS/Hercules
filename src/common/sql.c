@@ -38,7 +38,7 @@ struct Sql {
 
 
 // Column length receiver.
-// Takes care of the possible size missmatch between uint32 and unsigned long.
+// Takes care of the possible size mismatch between uint32 and unsigned long.
 struct s_column_length {
 	uint32* out_length;
 	unsigned long length;
@@ -569,7 +569,7 @@ static void SqlStmt_P_ShowDebugTruncatedColumn(SqlStmt* self, size_t i)
 	Sql_P_ShowDebugMysqlFieldInfo("data   - ", field->type, field->flags&UNSIGNED_FLAG, self->column_lengths[i].length, "");
 	column = &self->columns[i];
 	if( column->buffer_type == MYSQL_TYPE_STRING )
-		Sql_P_ShowDebugMysqlFieldInfo("buffer - ", column->buffer_type, column->is_unsigned, column->buffer_length, "+1(nul-terminator)");
+		Sql_P_ShowDebugMysqlFieldInfo("buffer - ", column->buffer_type, column->is_unsigned, column->buffer_length, "+1(null-terminator)");
 	else
 		Sql_P_ShowDebugMysqlFieldInfo("buffer - ", column->buffer_type, column->is_unsigned, column->buffer_length, "");
 	mysql_free_result(meta);
@@ -765,10 +765,10 @@ int SqlStmt_BindColumn(SqlStmt* self, size_t idx, enum SqlDataType buffer_type, 
 	{
 		if( buffer_len < 1 )
 		{
-			ShowDebug("SqlStmt_BindColumn: buffer_len(%d) is too small, no room for the nul-terminator\n", buffer_len);
+			ShowDebug("SqlStmt_BindColumn: buffer_len(%d) is too small, no room for the null-terminator\n", buffer_len);
 			return SQL_ERROR;
 		}
-		--buffer_len;// nul-terminator
+		--buffer_len;// null-terminator
 	}
 	if( !self->bind_columns )
 	{// initialize the bindings
@@ -891,7 +891,7 @@ int SqlStmt_NextRow(SqlStmt* self)
 		if( self->column_lengths[i].out_length )
 			*self->column_lengths[i].out_length = (uint32)length;
 		if( column->buffer_type == MYSQL_TYPE_STRING )
-		{// clear unused part of the string/enum buffer (and nul-terminate)
+		{// clear unused part of the string/enum buffer (and null-terminate)
 			memset((char*)column->buffer + length, 0, column->buffer_length - length + 1);
 		}
 		else if( column->buffer_type == MYSQL_TYPE_BLOB && length < column->buffer_length )

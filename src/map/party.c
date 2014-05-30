@@ -213,7 +213,7 @@ void party_check_state(struct party_data *p) {
 	int i;
 	memset(&p->state, 0, sizeof(p->state));
 	for (i = 0; i < MAX_PARTY; i ++) {
-		if (!p->party.member[i].online) continue; //Those not online shouldn't aport to skill usage and all that.
+		if (!p->party.member[i].online) continue; //Those not online shouldn't apart to skill usage and all that.
 		switch (p->party.member[i].class_) {
 			case JOB_MONK:
 			case JOB_BABY_MONK:
@@ -1132,7 +1132,7 @@ int party_sub_count_chorus(struct block_list *bl, va_list ap) {
  * @param func  Function to execute
  * @param sd    Reference character for party, map, area center
  * @param range Area size (0 = whole map)
- * @param ...   Adidtional parameters to pass to func()
+ * @param ...   Additional parameters to pass to func()
  * @return Sum of the return values from func()
  */
 int party_foreachsamemap(int (*func)(struct block_list*,va_list), struct map_session_data *sd, int range, ...) {

@@ -244,7 +244,7 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 	  	{
 			if (!(ud->skill_id == NPC_SELFDESTRUCTION && ud->skilltimer != INVALID_TIMER))
 			{	//Skill used, abort walking
-				clif->fixpos(bl); //Fix position as walk has been cancelled.
+				clif->fixpos(bl); //Fix position as walk has been canceled.
 				return 0;
 			}
 			//Resend walk packet for proper Self Destruction display.
@@ -869,7 +869,7 @@ int unit_stop_walking(struct block_list *bl,int type)
 		return 0;
 	//NOTE: We are using timer data after deleting it because we know the
 	//timer->delete function does not messes with it. If the function's
-	//behaviour changes in the future, this code could break!
+	//behavior changes in the future, this code could break!
 	td = timer->get(ud->walktimer);
 	timer->delete(ud->walktimer, unit->walktoxy_timer);
 	ud->walktimer = INVALID_TIMER;
@@ -892,7 +892,7 @@ int unit_stop_walking(struct block_list *bl,int type)
 	if(bl->type == BL_PET && type&~0xff)
 		ud->canmove_tick = timer->gettick() + (type>>8);
 
-	//Readded, the check in unit_set_walkdelay means dmg during running won't fall through to this place in code [Kevin]
+	//Read, the check in unit_set_walkdelay means dmg during running won't fall through to this place in code [Kevin]
 	if (ud->state.running) {
 		status_change_end(bl, SC_RUN, INVALID_TIMER);
 		status_change_end(bl, SC_WUGDASH, INVALID_TIMER);
@@ -1250,7 +1250,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 
 	if (!temp) //Stop attack on non-combo skills [Skotlex]
 		unit->stop_attack(src);
-	else if(ud->attacktimer != INVALID_TIMER) //Elsewise, delay current attack sequence
+	else if(ud->attacktimer != INVALID_TIMER) //Else-wise, delay current attack sequence
 		ud->attackabletime = tick + status_get_adelay(src);
 
 	ud->state.skillcastcancel = castcancel;
@@ -1366,7 +1366,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	}
 	
 	if(!ud->state.running) //need TK_RUN or WUGDASH handler to be done before that, see bugreport:6026
-		unit->stop_walking(src,1);// eventhough this is not how official works but this will do the trick. bugreport:6829
+		unit->stop_walking(src,1);// even though this is not how official works but this will do the trick. bugreport:6829
 	
 	// in official this is triggered even if no cast time.
 	clif->skillcasting(src, src->id, target_id, 0,0, skill_id, skill->get_ele(skill_id, skill_lv), casttime);
@@ -1375,7 +1375,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 		if (sd && target->type == BL_MOB)
 		{
 			TBL_MOB *md = (TBL_MOB*)target;
-			mob->skill_event(md, src, tick, -1); //Cast targetted skill event.
+			mob->skill_event(md, src, tick, -1); //Cast targeted skill event.
 			if (tstatus->mode&(MD_CASTSENSOR_IDLE|MD_CASTSENSOR_CHASE) &&
 				battle->check_target(target, src, BCT_ENEMY) > 0)
 			{
@@ -1470,7 +1470,7 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 		if( skill->not_ok(skill_id, sd) || !skill->check_condition_castbegin(sd, skill_id, skill_lv) )
 			return 0;
 		/**
-		 * "WHY IS IT HEREE": pneuma cannot be cancelled past this point, the client displays the animation even,
+		 * "WHY IS IT HEREE": pneuma cannot be canceled past this point, the client displays the animation even,
 		 * if we cancel it from nodamage_id, so it has to be here for it to not display the animation.
 		 **/
 		if( skill_id == AL_PNEUMA && map->getcell(src->m, skill_x, skill_y, CELL_CHKLANDPROTECTOR) ) {
@@ -1648,7 +1648,7 @@ int unit_attack(struct block_list *src,int target_id,int continuous) {
 	ud->state.attack_continue = continuous;
 	unit->set_target(ud, target_id);
 
-	if (continuous) //If you're to attack continously, set to auto-case character
+	if (continuous) //If you're to attack continuously, set to auto-case character
 		ud->chaserange = status_get_range(src);
 
 	//Just change target/type. [Skotlex]
@@ -1938,7 +1938,7 @@ int unit_attack_timer(int tid, int64 tick, int id, intptr_t data) {
 /*==========================================
  * Cancels an ongoing skill cast.
  * flag&1: Cast-Cancel invoked.
- * flag&2: Cancel only if skill is cancellable.
+ * flag&2: Cancel only if skill is can be cancel.
  *------------------------------------------*/
 int unit_skillcastcancel(struct block_list *bl,int type)
 {
@@ -1954,7 +1954,7 @@ int unit_skillcastcancel(struct block_list *bl,int type)
 	sd = BL_CAST(BL_PC, bl);
 
 	if (type&2) {
-		//See if it can be cancelled.
+		//See if it can be canceled.
 		if (!ud->state.skillcastcancel)
 			return 0;
 
@@ -2057,7 +2057,7 @@ int unit_changeviewsize(struct block_list *bl,short size)
 /*==========================================
  * Removes a bl/ud from the map.
  * Returns 1 on success. 0 if it couldn't be removed or the bl was free'd
- * if clrtype is 1 (death), appropiate cleanup is performed.
+ * if clrtype is 1 (death), appropriate cleanup is performed.
  * Otherwise it is assumed bl is being warped.
  * On-Kill specific stuff is not performed here, look at status->damage for that.
  *------------------------------------------*/

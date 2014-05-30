@@ -106,7 +106,7 @@ typedef enum DBType {
 } DBType;
 
 /**
- * Bitfield of options that define the behaviour of the database.
+ * Bitfield of options that define the behavior of the database.
  * See {@link #db_fix_options(DBType,DBOptions)} for restrictions of the
  * types of databases.
  * @param DB_OPT_BASE Base options: does not duplicate keys, releases nothing
@@ -116,7 +116,7 @@ typedef enum DBType {
  * @param DB_OPT_RELEASE_KEY Releases the key.
  * @param DB_OPT_RELEASE_DATA Releases the data whenever an entry is removed
  *          from the database.
- *          WARNING: for funtions that return the data (like DBMap::remove),
+ *          WARNING: for functions that return the data (like DBMap::remove),
  *          a dangling pointer will be returned.
  * @param DB_OPT_RELEASE_BOTH Releases both key and data.
  * @param DB_OPT_ALLOW_NULL_KEY Allow NULL keys in the database.
@@ -365,7 +365,7 @@ struct DBIterator
 };
 
 /**
- * Public interface of a database. Only contains funtions.
+ * Public interface of a database. Only contains functions.
  * All the functions take the interface as the first argument.
  * @public
  * @see #db_alloc(const char*,int,DBType,DBOptions,unsigned short)

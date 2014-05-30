@@ -809,7 +809,7 @@ bool homunculus_call(struct map_session_data *sd) {
 	return true;
 }
 
-// Recv homunculus data from char server
+// Receive homunculus data from char server
 bool homunculus_recv_data(int account_id, struct s_homunculus *sh, int flag) {
 	struct map_session_data *sd;
 	struct homun_data *hd;
@@ -1157,7 +1157,7 @@ bool homunculus_read_skill_db_sub(char* split[], int columns, int current) {
 	classid = atoi(split[0]) - HM_CLASS_BASE;
 	
 	if ( classid >= MAX_HOMUNCULUS_CLASS ) {
-		ShowWarning("homunculus_read_skill_db_sub: Invalud homunculus class %d.\n", atoi(split[0]));
+		ShowWarning("homunculus_read_skill_db_sub: Invalid homunculus class %d.\n", atoi(split[0]));
 		return false;
 	}
 

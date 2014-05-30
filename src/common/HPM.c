@@ -410,7 +410,7 @@ void hplugins_addToHPData(enum HPluginDataTypes type, unsigned int pluginID, voi
 	*(action.hdatac) += 1;
 	RECREATE(*(action.HPDataSRCPtr),struct HPluginData *,*(action.hdatac));
 	
-	/* RECREATE modified the addresss */
+	/* RECREATE modified the address */
 	HPDataSRC = *(action.HPDataSRCPtr);
 	HPDataSRC[*(action.hdatac) - 1] = HPData;
 }
@@ -578,7 +578,7 @@ void* HPM_reallocz(void *p, size_t size, const char *file, int line, const char 
 char* HPM_astrdup(const char *p, const char *file, int line, const char *func) {
 	return iMalloc->astrdup(p,HPM_file2ptr(file),line,func);
 }
-/* todo: add ability for tracking using pID for the upcoming runtime load/unload support. */
+/* TODO: add ability for tracking using pID for the upcoming runtime load/unload support. */
 bool HPM_AddHook(enum HPluginHookType type, const char *target, void *hook, unsigned int pID) {
 	if( !HPM->hooking ) {
 		ShowError("HPM:AddHook Fail! '%s' tried to hook to '%s' but HPMHooking is disabled!\n",HPM->pid2name(pID),target);

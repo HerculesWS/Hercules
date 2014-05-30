@@ -24,7 +24,7 @@
 	#define DLL                   HINSTANCE
 #else // ! WIN32
 	#include <dlfcn.h>
-	#ifdef RTLD_DEEPBIND // Certain linux ditributions require this, but it's not available everywhere
+	#ifdef RTLD_DEEPBIND // Certain linux distributions require this, but it's not available everywhere
 		#define plugin_open(x) dlopen((x),RTLD_NOW|RTLD_DEEPBIND)
 	#else // ! RTLD_DEEPBIND
 		#define plugin_open(x) dlopen((x),RTLD_NOW)

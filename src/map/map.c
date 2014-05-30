@@ -254,7 +254,7 @@ int map_delblock(struct block_list* bl)
 	// blocklist (2ways chainlist)
 	if (bl->prev == NULL) {
 		if (bl->next != NULL) {
-			// can't delete block (already at the begining of the chain)
+			// can't delete block (already at the beginning of the chain)
 			ShowError("map_delblock error : bl->next!=NULL\n");
 		}
 		return 0;
@@ -468,7 +468,7 @@ static int bl_vforeach(int (*func)(struct block_list*, va_list), int blockcount,
 
 	map->freeblock_lock();
 	for (i = blockcount; i < map->bl_list_count && returnCount < max; i++) {
-		if (map->bl_list[i]->prev) { //func() may delete this bl_list[] slot, checking for prev ensures it wasnt queued for deletion.
+		if (map->bl_list[i]->prev) { //func() may delete this bl_list[] slot, checking for prev ensures it wasn't queued for deletion.
 			va_list argscopy;
 			va_copy(argscopy, args);
 			returnCount += func(map->bl_list[i], argscopy);
@@ -2037,7 +2037,7 @@ void map_foreachnpc(int (*func)(struct npc_data* nd, va_list args), ...) {
 }
 
 /// Applies func to everything in the db.
-/// Stops iteratin gif func returns -1.
+/// Stops iterating gif func returns -1.
 void map_vforeachregen(int (*func)(struct block_list* bl, va_list args), va_list args) {
 	DBIterator* iter;
 	struct block_list* bl;
@@ -2057,7 +2057,7 @@ void map_vforeachregen(int (*func)(struct block_list* bl, va_list args), va_list
 }
 
 /// Applies func to everything in the db.
-/// Stops iteratin gif func returns -1.
+/// Stops iterating gif func returns -1.
 /// @see map_vforeachregen
 void map_foreachregen(int (*func)(struct block_list* bl, va_list args), ...) {
 	va_list args;
@@ -4402,7 +4402,7 @@ bool map_zone_mf_cache(int m, char *flag, char *params) {
 		}
 
 		if( modifier[0] == '\0' || !( skill_id = skill->name2id(skill_name) ) || !skill->get_unit_id( skill->name2id(skill_name), 0) || atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX ) {
-			;/* we dont mind it, the server will take care of it next. */
+			;/* we don't mind it, the server will take care of it next. */
 		} else {
 			int idx = map->list[m].unit_count;
 
@@ -4435,7 +4435,7 @@ bool map_zone_mf_cache(int m, char *flag, char *params) {
 		}
 
 		if( modifier[0] == '\0' || !( skill_id = skill->name2id(skill_name) ) || atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX ) {
-			;/* we dont mind it, the server will take care of it next. */
+			;/* we don't mind it, the server will take care of it next. */
 		} else {
 			int idx = map->list[m].skill_count;
 
@@ -4792,7 +4792,7 @@ void read_map_zone_db(void) {
 						--h;
 						continue;
 					}
-					if( !map->zone_bl_type(libconfig->setting_get_string_elem(skills,h),&subtype) )/* we dont remove it from the three due to inheritance */
+					if( !map->zone_bl_type(libconfig->setting_get_string_elem(skills,h),&subtype) )/* we don't remove it from the three due to inheritance */
 						--disabled_skills_count;
 				}
 				/* all ok, process */
@@ -4830,7 +4830,7 @@ void read_map_zone_db(void) {
 						--h;
 						continue;
 					}
-					if( !libconfig->setting_get_bool(item) )/* we dont remove it from the three due to inheritance */
+					if( !libconfig->setting_get_bool(item) )/* we don't remove it from the three due to inheritance */
 						--disabled_items_count;
 				}
 				/* all ok, process */
@@ -4875,7 +4875,7 @@ void read_map_zone_db(void) {
 						--h;
 						continue;
 					}
-					if( !libconfig->setting_get_int(command) )/* we dont remove it from the three due to inheritance */
+					if( !libconfig->setting_get_int(command) )/* we don't remove it from the three due to inheritance */
 						--disabled_commands_count;
 				}
 				/* all ok, process */
@@ -4911,7 +4911,7 @@ void read_map_zone_db(void) {
 						--h;
 						continue;
 					}
-					if( !map->zone_bl_type(libconfig->setting_get_string_elem(cap,1),&subtype) )/* we dont remove it from the three due to inheritance */
+					if( !map->zone_bl_type(libconfig->setting_get_string_elem(cap,1),&subtype) )/* we don't remove it from the three due to inheritance */
 						--capped_skills_count;
 				}
 				/* all ok, process */
@@ -5712,7 +5712,7 @@ int do_init(int argc, char *argv[])
 			char ip_str[16];
 			ip2str(sockt->addr_[0], ip_str);
 
-			ShowWarning("Not all IP addresses in /conf/map-server.conf configured, autodetecting...\n");
+			ShowWarning("Not all IP addresses in /conf/map-server.conf configured, auto-detecting...\n");
 
 			if (sockt->naddr_ == 0)
 				ShowError("Unable to determine your IP address...\n");
@@ -5736,7 +5736,7 @@ int do_init(int argc, char *argv[])
 
 	map->id_db     = idb_alloc(DB_OPT_BASE);
 	map->pc_db     = idb_alloc(DB_OPT_BASE); //Added for reliable map->id2sd() use. [Skotlex]
-	map->mobid_db  = idb_alloc(DB_OPT_BASE); //Added to lower the load of the lazy mob ai. [Skotlex]
+	map->mobid_db  = idb_alloc(DB_OPT_BASE); //Added to lower the load of the lazy mob AI. [Skotlex]
 	map->bossid_db = idb_alloc(DB_OPT_BASE); // Used for Convex Mirror quick MVP search
 	map->map_db    = uidb_alloc(DB_OPT_BASE);
 	map->nick_db   = idb_alloc(DB_OPT_BASE);
@@ -5795,7 +5795,7 @@ int do_init(int argc, char *argv[])
 	itemdb->init(minimal);
 	skill->init(minimal);
 	if (!minimal)
-		map->read_zone_db();/* read after item and skill initalization */
+		map->read_zone_db();/* read after item and skill initialization */
 	mob->init(minimal);
 	pc->init(minimal);
 	status->init(minimal);

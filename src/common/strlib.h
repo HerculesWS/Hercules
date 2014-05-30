@@ -16,7 +16,7 @@
 	char *_strtok_r(char* s1, const char* s2, char** lasts);
 #endif
 
-/// Bitfield determining the behaviour of sv_parse and sv_split.
+/// Bitfield determining the behavior of sv_parse and sv_split.
 typedef enum e_svopt {
 	// default: no escapes and no line terminator
 	SV_NOESCAPE_NOTERMINATE = 0,
@@ -73,14 +73,14 @@ struct strlib_interface {
 	int (*e_mail_check) (char* email);
 	int (*config_switch) (const char* str);
 	
-	/// strncpy that always nul-terminates the string
+	/// strncpy that always null-terminates the string
 	char *(*safestrncpy) (char* dst, const char* src, size_t n);
 	
 	/// doesn't crash on null pointer
 	size_t (*safestrnlen) (const char* string, size_t maxlen);
 	
-	/// Works like snprintf, but always nul-terminates the buffer.
-	/// Returns the size of the string (without nul-terminator)
+	/// Works like snprintf, but always null-terminates the buffer.
+	/// Returns the size of the string (without null-terminator)
 	/// or -1 if the buffer is too small.
 	int (*safesnprintf) (char* buf, size_t sz, const char* fmt, ...);
 	
@@ -131,7 +131,7 @@ struct sv_interface {
 	/// WARNING: this function modifies the input string
 	/// Starts splitting at startoff and fills the out_fields array.
 	/// out_fields[0] is the start of the next line.
-	/// Other entries are the start of fields (nul-teminated).
+	/// Other entries are the start of fields (null-terminated).
 	/// Returns the number of fields found or -1 if an error occurs.
 	int (*split) (char* str, int len, int startoff, char delim, char** out_fields, int nfields, enum e_svopt opt);
 	

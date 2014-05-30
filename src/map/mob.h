@@ -13,7 +13,7 @@
 
 #define MAX_RANDOMMONSTER 5
 
-// Change this to increase the table size in your mob_db to accomodate a larger mob database.
+// Change this to increase the table size in your mob_db to accommodate a larger mob database.
 // Be sure to note that IDs 4001 to 4048 are reserved for advanced/baby/expanded classes.
 // Notice that the last 1000 entries are used for player clones, so always set this to desired value +1000
 #define MAX_MOB_DB 4000
@@ -35,7 +35,7 @@
 #define MOB_CLONE_START (MAX_MOB_DB-999)
 #define MOB_CLONE_END MAX_MOB_DB
 
-//Used to determine default enemy type of mobs (for use in eachinrange calls)
+//Used to determine default enemy type of mobs (for use in each in range calls)
 #define DEFAULT_ENEMY_TYPE(md) ((md)->special_state.ai?BL_CHAR:BL_MOB|BL_PC|BL_HOM|BL_MER)
 
 #define MAX_MOB_CHAT 250 //Max Skill's messages
@@ -127,7 +127,7 @@ struct mob_data {
 	char name[NAME_LENGTH];
 	struct {
 		unsigned int size : 2; //Small/Big monsters.
-		unsigned int ai : 4; //Special ai for summoned monsters.
+		unsigned int ai : 4; //Special AI for summoned monsters.
 							//0: Normal mob.
 							//1: Standard summon, attacks mobs.
 							//2: Alchemist Marine Sphere

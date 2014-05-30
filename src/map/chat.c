@@ -32,7 +32,7 @@ struct chat_data* chat_createchat(struct block_list* bl, const char* title, cons
 	struct chat_data* cd;
 	nullpo_retr(NULL, bl);
 
-	/* Given the overhead and the numerous instances (npc allocatted or otherwise) wouldn't it be benefitial to have it use ERS? [Ind] */
+	/* Given the overhead and the numerous instances (npc allocated or otherwise) wouldn't it be beneficial to have it use ERS? [Ind] */
 	cd = (struct chat_data *) aMalloc(sizeof(struct chat_data));
 
 	safestrncpy(cd->title, title, sizeof(cd->title));

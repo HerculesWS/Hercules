@@ -589,7 +589,7 @@ void mapif_parse_accinfo(int fd) {
 				inter_msg_to_fd(fd, u_fd, aid, "No matches were found for your criteria, '%s'",query);
 			} else {
 				Sql_ShowDebug(sql_handle);
-				inter_msg_to_fd(fd, u_fd, aid, "An error occured, bother your admin about it.");
+				inter_msg_to_fd(fd, u_fd, aid, "An error occurred, bother your admin about it.");
 			}
 			SQL->FreeResult(sql_handle);
 			return;
@@ -658,7 +658,7 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
 		if (SQL->NumRows(sql_handle) == 0) {
 			inter_msg_to_fd(map_fd, u_fd, u_aid, "This account doesn't have characters.");
 		} else {
-			inter_msg_to_fd(map_fd, u_fd, u_aid, "An error occured, bother your admin about it.");
+			inter_msg_to_fd(map_fd, u_fd, u_aid, "An error occurred, bother your admin about it.");
 			Sql_ShowDebug(sql_handle);
 		}
 	} else {
@@ -1165,7 +1165,7 @@ int check_ttl_wisdata(void)
 			struct WisData *wd = (struct WisData*)idb_get(wis_db, wis_dellist[i]);
 			ShowWarning("inter: wis data id=%d time out : from %s to %s\n", wd->id, wd->src, wd->dst);
 			// removed. not send information after a timeout. Just no answer for the player
-			//mapif_wis_end(wd, 1); // flag: 0: success to send wisper, 1: target character is not loged in?, 2: ignored by target
+			//mapif_wis_end(wd, 1); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
 			idb_remove(wis_db, wd->id);
 		}
 	} while(wis_delnum >= WISDELLIST_MAX);
@@ -1199,7 +1199,7 @@ int mapif_parse_WisRequest(int fd)
 	if (RFIFOW(fd,2)-52 >= sizeof(wd->msg)) {
 		ShowWarning("inter: Wis message size too long.\n");
 		return 0;
-	} else if (RFIFOW(fd,2)-52 <= 0) { // normaly, impossible, but who knows...
+	} else if (RFIFOW(fd,2)-52 <= 0) { // normally, impossible, but who knows...
 		ShowError("inter: Wis message doesn't exist.\n");
 		return 0;
 	}
@@ -1216,7 +1216,7 @@ int mapif_parse_WisRequest(int fd)
 		unsigned char buf[27];
 		WBUFW(buf, 0) = 0x3802;
 		memcpy(WBUFP(buf, 2), RFIFOP(fd, 4), NAME_LENGTH);
-		WBUFB(buf,26) = 1; // flag: 0: success to send wisper, 1: target character is not loged in?, 2: ignored by target
+		WBUFB(buf,26) = 1; // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
 		mapif_send(fd, buf, 27);
 	}
 	else
@@ -1231,7 +1231,7 @@ int mapif_parse_WisRequest(int fd)
 			uint8 buf[27];
 			WBUFW(buf, 0) = 0x3802;
 			memcpy(WBUFP(buf, 2), RFIFOP(fd, 4), NAME_LENGTH);
-			WBUFB(buf,26) = 1; // flag: 0: success to send wisper, 1: target character is not loged in?, 2: ignored by target
+			WBUFB(buf,26) = 1; // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
 			mapif_send(fd, buf, 27);
 		}
 		else
@@ -1272,7 +1272,7 @@ int mapif_parse_WisReply(int fd)
 		return 0;	// This wisp was probably suppress before, because it was timeout of because of target was found on another map-server
 
 	if ((--wd->count) <= 0 || flag != 1) {
-		mapif_wis_end(wd, flag); // flag: 0: success to send wisper, 1: target character is not loged in?, 2: ignored by target
+		mapif_wis_end(wd, flag); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
 		idb_remove(wis_db, id);
 	}
 
@@ -1376,8 +1376,8 @@ int mapif_parse_NameChangeRequest(int fd)
 	type = RFIFOB(fd,10);
 	name = (char*)RFIFOP(fd,11);
 
-	// Check Authorised letters/symbols in the name
-	if (char_name_option == 1) { // only letters/symbols in char_name_letters are authorised
+	// Check Authorized letters/symbols in the name
+	if (char_name_option == 1) { // only letters/symbols in char_name_letters are authorized
 		for (i = 0; i < NAME_LENGTH && name[i]; i++)
 		if (strchr(char_name_letters, name[i]) == NULL) {
 			mapif_namechange_ack(fd, account_id, char_id, type, 0, name);

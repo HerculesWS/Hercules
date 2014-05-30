@@ -66,7 +66,7 @@ typedef enum send_target {
 	AREA,               // area
 	AREA_WOS,           // area, without self
 	AREA_WOC,           // area, without chatrooms
-	AREA_WOSC,          // area, without own chatroom
+	AREA_WOSC,          // area, without own chatrooms
 	AREA_CHAT_WOC,      // hearable area, without chatrooms
 	CHAT,               // current chatroom
 	CHAT_WOS,           // current chatroom, without self

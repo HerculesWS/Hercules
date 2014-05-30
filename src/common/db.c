@@ -3,7 +3,7 @@
  *  For more information, see LICENCE in the main folder
  *
  *  This file is separated in five sections:
- *  (1) Private typedefs, enums, structures, defines and gblobal variables
+ *  (1) Private typedefs, enums, structures, defines and global variables
  *  (2) Private functions
  *  (3) Protected functions used internally
  *  (4) Protected functions used in the interface of the database
@@ -89,15 +89,15 @@
  *  DBNColor        - Enumeration of colors of the nodes.                    *
  *  DBNode          - Structure of a node in RED-BLACK trees.                *
  *  struct db_free  - Structure that holds a deleted node to be freed.       *
- *  DBMap_impl      - Struture of the database.                              *
+ *  DBMap_impl      - Structure of the database.                              *
  *  stats           - Statistics about the database system.                  *
 \*****************************************************************************/
 
 /**
  * If defined statistics about database nodes, database creating/destruction
- * and function usage are keept and displayed when finalizing the database
+ * and function usage are kept and displayed when finalizing the database
  * system.
- * WARNING: This adds overhead to every database operation (not shure how much).
+ * WARNING: This adds overhead to every database operation (not sure how much).
  * @private
  * @see #DBStats
  * @see #stats
@@ -511,7 +511,7 @@ static void db_rebalance_erase(DBNode node, DBNode *root)
 	}
 
 	// Remove the node from the tree
-	if (y != node) { // both childs existed
+	if (y != node) { // both child existed
 		// put the left of 'node' in the left of 'y'
 		node->left->parent = y;
 		y->left = node->left;
@@ -2066,7 +2066,7 @@ static int db_obj_vforeach(DBMap* self, DBApply func, va_list args)
  * Apply <code>func</code> to every entry in the database.
  * Returns the sum of values returned by func.
  * @param self Interface of the database
- * @param func Function to be applyed
+ * @param func Function to be applied
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  * @protected
@@ -2345,7 +2345,7 @@ static DBOptions db_obj_options(DBMap* self)
  *  db_default_cmp     - Get the default comparator for a type of database.
  *  db_default_hash    - Get the default hasher for a type of database.
  *  db_default_release - Get the default releaser for a type of database with the specified options.
- *  db_custom_release  - Get a releaser that behaves a certains way.
+ *  db_custom_release  - Get a releaser that behaves a certain way.
  *  db_alloc           - Allocate a new database.
  *  db_i2key           - Manual cast from 'int' to 'DBKey'.
  *  db_ui2key          - Manual cast from 'unsigned int' to 'DBKey'.
