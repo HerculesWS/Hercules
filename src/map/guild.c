@@ -487,21 +487,27 @@ int guild_recv_info(struct guild *sg) {
 				}
 
 				for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
-					if( sd->status.guild_id ) {
-						if( sd->status.guild_id == sg->guild_id ) {
-							clif->chsys_join(channel,sd);
-							sd->guild = g;
-						}
-						
+					if (!sd->status.guild_id)
+						continue; // Not interested in guildless users
+
+					if (sd->status.guild_id == sg->guild_id) {
+						// Guild member
+						clif->chsys_join(channel,sd);
+						sd->guild = g;
+
 						for (i = 0; i < MAX_GUILDALLIANCE; i++) {
-							if( sg->alliance[i].opposition == 0 && sg->alliance[i].guild_id ) {
-								if( sg->alliance[i].guild_id == sd->status.guild_id ) {
-									clif->chsys_join(channel,sd);
-								} else if( tg[i] != NULL ) {
-									if( !(tg[i]->channel->banned && idb_exists(tg[i]->channel->banned, sd->status.account_id)))
-										clif->chsys_join(tg[i]->channel,sd);
-								}
-							}
+							// Join channels from allied guilds
+							if (tg[i] && !(tg[i]->channel->banned && idb_exists(tg[i]->channel->banned, sd->status.account_id)))
+								clif->chsys_join(tg[i]->channel, sd);
+						}
+						continue;
+					}
+
+					for (i = 0; i < MAX_GUILDALLIANCE; i++) {
+						if (tg[i] && sd->status.guild_id == tg[i]->guild_id) { // Shortcut to skip the alliance checks again
+							// Alliance member
+							if( !(channel->banned && idb_exists(channel->banned, sd->status.account_id)))
+								clif->chsys_join(channel, sd);
 						}
 					}
 				}
@@ -621,9 +627,12 @@ int guild_invite(struct map_session_data *sd, struct map_session_data *tsd) {
 		return 0;
 	}
 
-	if( tsd->status.guild_id > 0
-	 || tsd->guild_invite > 0
-	 || ((map->agit_flag || map->agit2_flag) && map->list[tsd->bl.m].flag.gvg_castle)
+ 	if( tsd->status.guild_id > 0
+ 	 || tsd->guild_invite > 0
+	 || ( (map->agit_flag || map->agit2_flag)
+		   && map->list[tsd->bl.m].flag.gvg_castle
+		   && !battle_config.guild_castle_invite
+		   )
 	) {
 		//Can't invite people inside castles. [Skotlex]
 		clif->guild_inviteack(sd,0);
@@ -806,10 +815,13 @@ int guild_leave(struct map_session_data* sd, int guild_id, int account_id, int c
 		return 0;
 
 	if( sd->status.account_id != account_id
-	 || sd->status.char_id != char_id
-	 || sd->status.guild_id != guild_id
-	 || ((map->agit_flag || map->agit2_flag) && map->list[sd->bl.m].flag.gvg_castle)
-	)
+ 	 || sd->status.char_id != char_id
+ 	 || sd->status.guild_id != guild_id
+	 // Can't leave inside castles
+	 || ((map->agit_flag || map->agit2_flag)
+			&& map->list[sd->bl.m].flag.gvg_castle
+			&& !battle_config.guild_castle_expulsion)
+		)
 		return 0;
 
 	intif->guild_leave(sd->status.guild_id, sd->status.account_id, sd->status.char_id,0,mes);
@@ -838,10 +850,12 @@ int guild_expulsion(struct map_session_data* sd, int guild_id, int account_id, i
 		return 0;	//Expulsion permission
 
 	//Can't leave inside guild castles.
-	if ((tsd = map->id2sd(account_id))
-	 && tsd->status.char_id == char_id
-	 && ((map->agit_flag || map->agit2_flag) && map->list[tsd->bl.m].flag.gvg_castle)
-	)
+ 	if ((tsd = map->id2sd(account_id))
+ 	 && tsd->status.char_id == char_id
+	 && ((map->agit_flag || map->agit2_flag)
+			&& map->list[sd->bl.m].flag.gvg_castle
+			&& !battle_config.guild_castle_expulsion)
+			)
 		return 0;
 
 	// find the member and perform expulsion

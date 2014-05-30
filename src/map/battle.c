@@ -6745,6 +6745,8 @@ static const struct _battle_data {
 
 	{ "mon_trans_disable_in_gvg",           &battle_config.mon_trans_disable_in_gvg,        0,      0,      1,              },
 	{ "case_sensitive_aegisnames",          &battle_config.case_sensitive_aegisnames,       1,      0,      1,              },
+	{ "guild_castle_invite",				&battle_config.guild_castle_invite,				0,		0,		1,				},
+	{ "guild_castle_expulsion",				&battle_config.guild_castle_expulsion,			0,		0,		1,				},
 };
 #ifndef STATS_OPT_OUT
 /**
