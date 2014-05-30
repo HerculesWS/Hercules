@@ -200,7 +200,7 @@ void findfile(const char *p, const char *pat, void (func)(const char*))
 
 		sprintf(tmppath,"%s%c%s",path, PATHSEP, entry->d_name);
 
-		// check if the pattern matchs.
+		// check if the pattern matches.
 		if (entry->d_name && strstr(entry->d_name, pattern)) {
 			func( tmppath );
 		}
@@ -211,7 +211,7 @@ void findfile(const char *p, const char *pat, void (func)(const char*))
 		}
 		// is this a directory?
 		if (S_ISDIR(dir_stat.st_mode)) {
-			// decent recursivly
+			// decent recursively
 			findfile(tmppath, pat, func);
 		}
 	}//end while
@@ -326,7 +326,7 @@ unsigned int get_percentage(const unsigned int A, const unsigned int B)
 
 	if( B == 0 )
 	{
-		ShowError("get_percentage(): divison by zero! (A=%u,B=%u)\n", A, B);
+		ShowError("get_percentage(): division by zero! (A=%u,B=%u)\n", A, B);
 		return ~0U;
 	}
 

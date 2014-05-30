@@ -1123,7 +1123,7 @@ void itemdb_read_packages(void) {
 		
 		for( r = 0; r < itemdb->packages[count].random_qty; r++  ) {
 			if( itemdb->packages[count].random_groups[r].random_qty == 1 ) {
-				//item packages dont stop looping until something comes out of them, so if you have only one item in it the drop is guaranteed.
+				//item packages don't stop looping until something comes out of them, so if you have only one item in it the drop is guaranteed.
 				ShowWarning("itemdb_read_packages: in '%s' 'Random: %d' group has only 1 random option, drop rate will be 100%!\n",itemdb_name(itemdb->packages[count].id),r+1);
 				itemdb->packages[count].random_groups[r].random_list[0].rate = 10000;
 			}

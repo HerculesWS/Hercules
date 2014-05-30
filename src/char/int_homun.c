@@ -248,9 +248,9 @@ bool mapif_homunculus_rename(char *name)
 {
 	int i;
 
-	// Check Authorised letters/symbols in the name of the homun
+	// Check Authorized letters/symbols in the name of the homun
 	if( char_name_option == 1 )
-	{// only letters/symbols in char_name_letters are authorised
+	{// only letters/symbols in char_name_letters are authorized
 		for( i = 0; i < NAME_LENGTH && name[i]; i++ )
 			if( strchr(char_name_letters, name[i]) == NULL )
 				return false;

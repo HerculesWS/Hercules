@@ -10,7 +10,7 @@
 #include "../../3rdparty/libconfig/libconfig.h"
 
 /**
- * The libconfig interface -- specially for plugins, but we enforce it throughought the core to be consistent
+ * The libconfig interface -- specially for plugins, but we enforce it throughout the core to be consistent
  **/
 struct libconfig_interface {
 	int (*read) (config_t *config, FILE *stream);

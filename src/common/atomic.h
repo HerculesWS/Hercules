@@ -12,7 +12,7 @@
 //	- Compiler
 //	- Operating System
 //
-// our Abstraction is fully API-Compatible to Microsofts implementation @ NT5.0+
+// our Abstraction is fully API-Compatible to Microsoft's implementation @ NT5.0+
 //
 #include "../common/cbasetypes.h"
 
@@ -23,7 +23,7 @@
 #if _MSC_VER < 1800
 
 #if !defined(_M_X64)
-// When compiling for windows 32bit, the 8byte interlocked operations are not provided by microsoft
+// When compiling for windows 32bit, the 8byte interlocked operations are not provided by Microsoft
 // (because they need at least i586 so its not generic enough.. ... )
 forceinline int64 InterlockedCompareExchange64(volatile int64 *dest, int64 exch, int64 _cmp){
 	_asm{
@@ -143,7 +143,7 @@ static forceinline int32 InterlockedExchange(volatile int32 *target, int32 val){
 }//end: InterlockedExchange()
 
 
-#endif //endif compiler decission
+#endif //endif compiler decision
 
 
 #endif /* _COMMON_ATOMIC_H_ */

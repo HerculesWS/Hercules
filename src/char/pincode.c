@@ -33,7 +33,7 @@ void pincode_handle ( int fd, struct char_session_data* sd ) {
 	}
 	
 	if( strlen(sd->pincode) == 4 ){
-		if( *pincode->changetime && time(NULL) > (sd->pincode_change+*pincode->changetime) ){ // User hasnt changed his PIN code for a long time
+		if( *pincode->changetime && time(NULL) > (sd->pincode_change+*pincode->changetime) ){ // User hasn't changed his PIN code for a long time
 			pincode->sendstate( fd, sd, PINCODE_EXPIRED );
 		} else { // Ask user for his PIN code
 			pincode->sendstate( fd, sd, PINCODE_ASK );

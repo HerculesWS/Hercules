@@ -53,7 +53,7 @@ struct chrif_interface {
 	int other_mapserver_count; //Holds count of how many other map servers are online (apart of this instance) [Skotlex]
 
 	/* */
-	struct eri *auth_db_ers; //For reutilizing player login structures.
+	struct eri *auth_db_ers; //For re-utilizing player login structures.
 	DBMap* auth_db; // int id -> struct auth_node*
 	/* */
 	int packet_len_table[CHRIF_PACKET_LEN_TABLE_SIZE];

@@ -454,7 +454,7 @@ static bool account_db_sql_load_str(AccountDB* self, struct mmo_account* acc, co
 	}
 
 	if( SQL->NumRows(sql_handle) > 1 )
-	{// serious problem - duplicit account
+	{// serious problem - duplicate account
 		ShowError("account_db_sql_load_str: multiple accounts found when retrieving data for account '%s'!\n", userid);
 		SQL->FreeResult(sql_handle);
 		return false;

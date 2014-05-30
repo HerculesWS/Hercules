@@ -57,23 +57,23 @@ racond racond_create();
 /**
  * Destroy a Condition variable
  *
- * @param c - the condition varaible to destroy
+ * @param c - the condition variable to destroy
  */
 void racond_destroy( racond c );
 
 /**
- * Waits Until state is signalled
+ * Waits Until state is signaled
  *
- * @param c - the condition var to wait for signalled state
- * @param m - the mutex used for syncronization
+ * @param c - the condition var to wait for signaled state
+ * @param m - the mutex used for synchronization
  * @param timeout_ticks - timeout in ticks ( -1 = INFINITE )
  */
 void racond_wait( racond c,  ramutex m,  sysint timeout_ticks);
 
 /**
- * Sets the given condition var to signalled state
+ * Sets the given condition var to signaled state
  *
- * @param c - condition var to set in signalled state.
+ * @param c - condition var to set in signaled state.
  *
  * @note:
  *  Only one waiter gets notified.
@@ -81,8 +81,8 @@ void racond_wait( racond c,  ramutex m,  sysint timeout_ticks);
 void racond_signal( racond c );
 
 /**
- * Sets notifys all waiting threads thats signalled.
- * @param c - condition var to set in signalled state
+ * Sets notifies all waiting threads thats signaled.
+ * @param c - condition var to set in signaled state
  *
  * @note:
  *  All Waiters getting notified.

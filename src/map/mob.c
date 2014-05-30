@@ -356,7 +356,7 @@ bool mob_ksprotected(struct block_list *src, struct block_list *target) {
 		return false; // KS Protection Disabled
 
 	if( !(md = BL_CAST(BL_MOB,target)) )
-		return false; // Tarjet is not MOB
+		return false; // Target is not MOB
 
 	if( (s_bl = battle->get_master(src)) == NULL )
 		s_bl = src;
@@ -1073,7 +1073,7 @@ int mob_ai_sub_hard_activesearch(struct block_list *bl,va_list ap)
 		default:
 			if (battle_config.hom_setting&0x4 &&
 				(*target) && (*target)->type == BL_HOM && bl->type != BL_HOM)
-				return 0; //For some reason Homun targets are never overriden.
+				return 0; //For some reason Homun targets are never overridden.
 
 			dist = distance_bl(&md->bl, bl);
 			if(
@@ -1443,7 +1443,7 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 			//Unlock current target.
 			if (mob->warpchase(md, tbl))
 				return true; //Chasing this target.
-			mob->unlocktarget(md, tick-(battle_config.mob_ai&0x8?3000:0)); //Imediately do random walk.
+			mob->unlocktarget(md, tick-(battle_config.mob_ai&0x8?3000:0)); //Immediately do random walk.
 			tbl = NULL;
 		}
 	}
@@ -2084,7 +2084,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		unsigned int base_exp,job_exp;
 	} pt[DAMAGELOG_SIZE];
 	int i, temp, count, m = md->bl.m, pnum = 0;
-	int dmgbltypes = 0;  // bitfield of all bl types, that caused damage to the mob and are elligible for exp distribution
+	int dmgbltypes = 0;  // bitfield of all bl types, that caused damage to the mob and are eligible for exp distribution
 	unsigned int mvp_damage;
 	int64 tick = timer->gettick();
 	bool rebirth, homkillonly;
@@ -2302,7 +2302,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		int drop_modifier = mvp_sd    ? pc->level_penalty_mod( md->level - mvp_sd->status.base_level, md->status.race, md->status.mode, 2)   :
 							second_sd ? pc->level_penalty_mod( md->level - second_sd->status.base_level, md->status.race, md->status.mode, 2):
 							third_sd  ? pc->level_penalty_mod( md->level - third_sd->status.base_level, md->status.race, md->status.mode, 2) :
-							100;/* no player was attached, we dont use any modifier (100 = rates are not touched) */
+							100;/* no player was attached, we don't use any modifier (100 = rates are not touched) */
 #endif
 		dlist->m = md->bl.m;
 		dlist->x = md->bl.x;
@@ -2613,7 +2613,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 	if( !rebirth ) {
 
 		if( pcdb_checkid(md->vd->class_) ) {//Player mobs are not removed automatically by the client.
-			/* first we set them dead, then we delay the outsight effect */
+			/* first we set them dead, then we delay the out sight effect */
 			clif->clearunit_area(&md->bl,CLR_DEAD);
 			clif->clearunit_delayed(&md->bl, CLR_OUTSIGHT,tick+3000);
 		} else
@@ -2842,7 +2842,7 @@ int mob_warpslave(struct block_list *bl, int range) {
 }
 
 /*==========================================
- *  Counts slave sub, curently checking if mob master is the given ID.
+ *  Counts slave sub, currently checking if mob master is the given ID.
  *------------------------------------------*/
 int mob_countslave_sub(struct block_list *bl,va_list ap)
 {
@@ -3231,7 +3231,7 @@ int mobskill_use(struct mob_data *md, int64 tick, int event) {
 				continue;
 			}
 		} else {
-			//Targetted skill
+			//Targeted skill
 			switch (skill_target) {
 				case MST_RANDOM: //Pick a random enemy within skill range.
 					bl = battle->get_enemy(&md->bl, DEFAULT_ENEMY_TYPE(md),
@@ -3335,7 +3335,7 @@ int mob_is_clone(int class_)
 }
 
 //Flag values:
-//&1: Set special ai (fight mobs, not players)
+//&1: Set special AI (fight mobs, not players)
 //If mode is not passed, a default aggressive mode is used.
 //If master_id is passed, clone is attached to him.
 //Returns: ID of newly crafted copy.
@@ -3621,7 +3621,7 @@ unsigned int mob_drop_adjust(int baserate, int rate_adjust, unsigned short rate_
 }
 
 /**
- * Check if global item drop rate is overriden for given item
+ * Check if global item drop rate is overridden for given item
  * in db/mob_item_ratio.txt
  * @param nameid ID of the item
  * @param mob_id ID of the monster
@@ -3773,7 +3773,7 @@ bool mob_parse_dbrow(char** str) {
 	status->calc_misc(&data.bl, mstatus, db->lv);
 
 	// MVP EXP Bonus: MEXP
-	// Some new MVP's MEXP multipled by high exp-rate cause overflow. [LuzZza]
+	// Some new MVP's MEXP multiple by high exp-rate cause overflow. [LuzZza]
 	exp = (double)atoi(str[30]) * (double)battle_config.mvp_exp_rate / 100.;
 	db->mexp = (unsigned int)cap_value(exp, 0, UINT_MAX);
 
@@ -3835,7 +3835,7 @@ bool mob_parse_dbrow(char** str) {
 			ratemax = battle_config.item_drop_treasure_max;
 		}
 		else switch (type)
-		{ // Added suport to restrict normal drops of MVP's [Reddozen]
+		{ // Added support to restrict normal drops of MVP's [Reddozen]
 		case IT_HEALING:
 			rate_adjust = (mstatus->mode&MD_BOSS) ? battle_config.item_rate_heal_boss : battle_config.item_rate_heal;
 			ratemin = battle_config.item_drop_heal_min;

@@ -4,7 +4,7 @@
 //
 // CAS based Spinlock Implementation
 //
-// CamelCase names are choosen to be consistent with microsofts winapi
+// CamelCase names are chosen to be consistent with Microsoft's WinAPI
 // which implements CriticalSection by this naming...
 //
 // Author: Florian Wilkemeyer <fw@f-ws.de>

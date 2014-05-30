@@ -117,7 +117,7 @@ int inter_guild_tosql(struct guild *g,int flag)
 	// GS_EXPULSION `guild_expulsion` (`guild_id`,`account_id`,`name`,`mes`)
 	// GS_SKILL `guild_skill` (`guild_id`,`id`,`lv`)
 
-	// temporary storage for str convertion. They must be twice the size of the
+	// temporary storage for str conversion. They must be twice the size of the
 	// original string to ensure no overflows will occur. [Skotlex]
 	char t_info[256];
 	char esc_name[NAME_LENGTH*2+1];
@@ -836,7 +836,7 @@ int guild_calcinfo(struct guild *g)
 	// Save next exp step
 	g->next_exp = nextexp;
 
-	// Set the max number of members, Guild Extention skill - currently adds 6 to max per skill lv.
+	// Set the max number of members, Guild Extension skill - currently adds 6 to max per skill lv.
 	g->max_member = 16 + guild_checkskill(g, GD_EXTENSION) * 6;
 	if(g->max_member > MAX_GUILD)
 	{
@@ -1142,8 +1142,8 @@ int mapif_parse_CreateGuild(int fd,int account_id,char *name,struct guild_member
 		mapif_guild_created(fd,account_id,NULL);
 		return 0;
 	}
-	// Check Authorised letters/symbols in the name of the character
-	if (char_name_option == 1) { // only letters/symbols in char_name_letters are authorised
+	// Check Authorized letters/symbols in the name of the character
+	if (char_name_option == 1) { // only letters/symbols in char_name_letters are authorized
 		for (i = 0; i < NAME_LENGTH && name[i]; i++)
 			if (strchr(char_name_letters, name[i]) == NULL) {
 				mapif_guild_created(fd,account_id,NULL);
@@ -1212,7 +1212,7 @@ int mapif_parse_CreateGuild(int fd,int account_id,char *name,struct guild_member
 // Return guild info to client
 int mapif_parse_GuildInfo(int fd,int guild_id)
 {
-	struct guild * g = inter_guild_fromsql(guild_id); //We use this because on start-up the info of castle-owned guilds is requied. [Skotlex]
+	struct guild * g = inter_guild_fromsql(guild_id); //We use this because on start-up the info of castle-owned guilds is required. [Skotlex]
 	if(g)
 	{
 		if (!guild_calcinfo(g))

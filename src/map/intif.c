@@ -238,7 +238,7 @@ int intif_wis_replay(int id, int flag)
 	WFIFOHEAD(inter_fd,7);
 	WFIFOW(inter_fd,0) = 0x3002;
 	WFIFOL(inter_fd,2) = id;
-	WFIFOB(inter_fd,6) = flag; // flag: 0: success to send wisper, 1: target character is not loged in?, 2: ignored by target
+	WFIFOB(inter_fd,6) = flag; // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
 	WFIFOSET(inter_fd,7);
 
 	if (battle_config.etc_log)
@@ -387,7 +387,7 @@ int intif_request_registry(struct map_session_data *sd, int flag)
 {
 	nullpo_ret(sd);
 
-	/* if char server aint online it doesn't load, shouldn't we kill the session then? */
+	/* if char server ain't online it doesn't load, shouldn't we kill the session then? */
 	if (intif->CheckForCharServer())
 		return 0;
 
@@ -931,7 +931,7 @@ void intif_parse_WisMessage(int fd) {
 	}
 	//Success to send whisper.
 	clif->wis_message(sd->fd, wisp_source, (char*)RFIFOP(fd,56),RFIFOW(fd,2)-56);
-	intif_wis_replay(id,0);   // succes
+	intif_wis_replay(id,0);   // success
 }
 
 // Wisp/page transmission result reception
@@ -939,7 +939,7 @@ void intif_parse_WisEnd(int fd) {
 	struct map_session_data* sd;
 
 	if (battle_config.etc_log)
-		ShowInfo("intif_parse_wisend: player: %s, flag: %d\n", RFIFOP(fd,2), RFIFOB(fd,26)); // flag: 0: success to send wisper, 1: target character is not loged in?, 2: ignored by target
+		ShowInfo("intif_parse_wisend: player: %s, flag: %d\n", RFIFOP(fd,2), RFIFOB(fd,26)); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
 	sd = (struct map_session_data *)map->nick2sd((char *) RFIFOP(fd,2));
 	if (sd != NULL)
 		clif->wis_end(sd->fd, RFIFOB(fd,26));
@@ -1366,7 +1366,7 @@ void intif_parse_DeletePetOk(int fd) {
 		ShowError("pet data delete failure\n");
 }
 
-// ACK changing name resquest, players,pets,hommon
+// ACK changing name request, players,pets,homun
 void intif_parse_ChangeNameOk(int fd)
 {
 	struct map_session_data *sd = NULL;

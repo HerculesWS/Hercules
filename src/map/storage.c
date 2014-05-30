@@ -544,7 +544,7 @@ int storage_guild_storageadd(struct map_session_data* sd, int index, int amount)
 * @index : storage idx
 * return
 * 	0 : fail
-* 	1 : succes
+* 	1 : success
  *------------------------------------------*/
 int storage_guild_storageget(struct map_session_data* sd, int index, int amount)
 {
@@ -585,7 +585,7 @@ int storage_guild_storageget(struct map_session_data* sd, int index, int amount)
 * @index : cart inventory idx
 * return
 * 	0 : fail
-* 	1 : succes
+* 	1 : success
  *------------------------------------------*/
 int storage_guild_storageaddfromcart(struct map_session_data* sd, int index, int amount)
 {
@@ -617,7 +617,7 @@ int storage_guild_storageaddfromcart(struct map_session_data* sd, int index, int
 * @index : storage idx
 * return
 * 	0 : fail
-* 	1 : succes
+* 	1 : success
  *------------------------------------------*/
 int storage_guild_storagegettocart(struct map_session_data* sd, int index, int amount)
 {
@@ -648,7 +648,7 @@ int storage_guild_storagegettocart(struct map_session_data* sd, int index, int a
 * Request to save guild storage
 * return
 * 	0 : fail (no storage)
-* 	1 : succes
+* 	1 : success
  *------------------------------------------*/
 int storage_guild_storagesave(int account_id, int guild_id, int flag)
 {
@@ -669,7 +669,7 @@ int storage_guild_storagesave(int account_id, int guild_id, int flag)
 * ACK save of guild storage
 * return
 * 	0 : fail (no storage)
-* 	1 : succes
+* 	1 : success
  *------------------------------------------*/
 int storage_guild_storagesaved(int guild_id)
 {

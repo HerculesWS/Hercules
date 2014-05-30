@@ -68,7 +68,7 @@ void rathread_init(){
 		l_threads[i].myID = i;
 	}
 
-	// now lets init thread id 0, which represnts the main thread
+	// now lets init thread id 0, which represents the main thread
 #ifdef HAS_TLS
 	g_rathread_ID = 0;
 #endif
@@ -83,7 +83,7 @@ void rathread_final(){
 	register unsigned int i;
 	
 	// Unterminated Threads Left?
-	// Should'nt happen ..
+	// Shouldn't happen ..
 	// Kill 'em all!
 	//
 	for(i = 1; i < RA_THREADS_MAX; i++){
@@ -121,9 +121,9 @@ static void *_raThreadMainRedirector( void *p ){
 
 #ifndef WIN32
 	// When using posix threads
-	// the threads inherits the Signal mask from the thread which's spawned
+	// the threads inherits the Signal mask from the thread which spawned
 	// this thread
-	// so we've to block everything we dont care about.
+	// so we've to block everything we don't care about.
 	sigemptyset(&set);
 	sigaddset(&set, SIGINT);
 	sigaddset(&set, SIGTERM);
@@ -222,10 +222,10 @@ void rathread_destroy ( rAthread handle ){
 #else
 	if( pthread_cancel( handle->hThread ) == 0){
 	
-		// We have to join it, otherwise pthread wont re-cycle its internal ressources assoc. with this thread.
+		// We have to join it, otherwise pthread wont re-cycle its internal resources assoc. with this thread.
 		pthread_join( handle->hThread, NULL );
 		
-		// Tell our manager to release ressources ;)
+		// Tell our manager to release resources ;)
 		rat_thread_terminated(handle);
 	}
 #endif
@@ -265,7 +265,7 @@ int rathread_get_tid(){
 #ifdef HAS_TLS
 	return g_rathread_ID;
 #else
-	// todo
+	// TODO
 	#ifdef WIN32
 		return (int)GetCurrentThreadId();
 	#else

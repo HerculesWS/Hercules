@@ -170,14 +170,14 @@ static int64 sys_tick(void) {
 	}
 	if (pGetTickCount64)
 		return (int64)pGetTickCount64();
-	// 32-bit fallback. Note: This will wrap around every ~49 days since system startup!!!
+	// 32-bit fall back. Note: This will wrap around every ~49 days since system startup!!!
 	return (int64)GetTickCount();
 #elif defined(ENABLE_RDTSC)
 	// RDTSC: Returns the number of CPU cycles since reset. Unreliable if
 	//   the CPU frequency is variable.
 	return (int64)((_rdtsc() - RDTSC_BEGINTICK) / RDTSC_CLOCK);
 #elif defined(HAVE_MONOTONIC_CLOCK)
-	// Monotinic clock: Implementation-defined.
+	// Monotonic clock: Implementation-defined.
 	//   Clock that cannot be set and represents monotonic time since some
 	//   unspecified starting point.  This clock is not affected by
 	//   discontinuous jumps in the system time (e.g., if the system
@@ -188,7 +188,7 @@ static int64 sys_tick(void) {
 	// int64 cast to avoid overflows on platforms where time_t is 32 bit
 	return (int64)tval.tv_sec * 1000 + tval.tv_nsec / 1000000;
 #else
-	// Fallback, regular clock: Number of milliseconds since epoch.
+	// Fall back, regular clock: Number of milliseconds since epoch.
 	//   The time returned by gettimeofday() is affected by discontinuous
 	//   jumps in the system time (e.g., if the system  administrator
 	//   manually  changes  the system time).  If you need a monotonically
