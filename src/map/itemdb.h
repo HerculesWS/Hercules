@@ -319,10 +319,6 @@ enum geneticist_item_list {
 	ITEMID_BLACK_THING_TO_THROW,   // 13290
 };
 
-enum item_nouse_list {
-	NOUSE_SITTING = 0x01,
-};
-
 //
 enum e_chain_cache {
 	ECC_ORE,
@@ -357,6 +353,16 @@ enum ItemTradeRestrictions {
 	ITR_NOAUCTION       = 0x100, ///< Item can't be auctioned
 
 	ITR_ALL             = 0x1ff  ///< Sum of all the above values
+};
+
+/**
+ * Iten No-use restrictions
+ */
+enum ItemNouseRestrictions {
+	INR_NONE    = 0x0, ///< No restrictions
+	INR_SITTING = 0x1, ///< Item can't be used while sitting
+
+	INR_ALL     = 0x1 ///< Sum of all the above values
 };
 
 struct item_data {
@@ -398,7 +404,7 @@ struct item_data {
 		unsigned available : 1;
 		unsigned no_refine : 1;	// [celest]
 		unsigned delay_consume : 1;	// Signifies items that are not consumed immediately upon double-click [Skotlex]
-		unsigned trade_restriction : 9;	///< Item restrictions mask (@see enum ItemTradeRestrictions)
+		unsigned trade_restriction : 9;	///< Item trade restrictions mask (@see enum ItemTradeRestrictions)
 		unsigned autoequip: 1;
 		unsigned buyingstore : 1;
 		unsigned bindonequip : 1;
@@ -410,8 +416,8 @@ struct item_data {
 		unsigned int storage:1;
 		unsigned int guildstorage:1;
 	} stack;
-	struct {// used by item_nouse.txt
-		unsigned int flag;
+	struct {
+		unsigned int flag; ///< Item nouse restriction mask (@see enum ItemNouseRestrictions)
 		unsigned short override;
 	} item_usage;
 	short gm_lv_trade_override;	//GM-level to override trade_restriction
