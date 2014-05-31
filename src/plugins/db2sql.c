@@ -140,6 +140,54 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 		// bindonequip
 		StrBuf->Printf(&buf, "'%u',", it->flag.bindonequip?1:0);
 
+		// buyingstore
+		StrBuf->Printf(&buf, "'%u',", it->flag.buyingstore?1:0);
+
+		// delay
+		StrBuf->Printf(&buf, "'%u',", it->delay);
+
+		// trade_flag
+		StrBuf->Printf(&buf, "'%u',", it->flag.trade_restriction);
+
+		// trade_group
+		if (it->flag.trade_restriction != ITR_NONE && it->gm_lv_trade_override > 0 && it->gm_lv_trade_override < 100) {
+			StrBuf->Printf(&buf, "'%u',", it->gm_lv_trade_override);
+		} else {
+			StrBuf->AppendStr(&buf, "NULL,");
+		}
+
+		// nouse_flag
+		StrBuf->Printf(&buf, "'%u',", it->item_usage.flag);
+
+		// nouse_group
+		if (it->item_usage.flag != INR_NONE && it->item_usage.override > 0 && it->item_usage.override < 100) {
+			StrBuf->Printf(&buf, "'%u',", it->item_usage.override);
+		} else {
+			StrBuf->AppendStr(&buf, "NULL,");
+		}
+
+		// stack_amount
+		StrBuf->Printf(&buf, "'%u',", it->stack.amount);
+
+		// stack_flag
+		if (it->stack.amount) {
+			uint32 value = 0; // FIXME: Use an enum
+			value |= it->stack.inventory ? 1 : 0;
+			value |= it->stack.cart ? 2 : 0;
+			value |= it->stack.storage ? 4 : 0;
+			value |= it->stack.guildstorage ? 8 : 0;
+			StrBuf->Printf(&buf, "'%u',", value);
+		} else {
+			StrBuf->AppendStr(&buf, "NULL,");
+		}
+
+		// sprite
+		if (it->flag.available) {
+			StrBuf->Printf(&buf, "'%u',", it->view_id);
+		} else {
+			StrBuf->AppendStr(&buf, "NULL,");
+		}
+
 		// script
 		if (it->script) {
 			libconfig->setting_lookup_string(entry, "Script", &bonus);
@@ -221,6 +269,15 @@ void totable(void) {
 			"  `refineable` tinyint(1) UNSIGNED DEFAULT NULL,\n"
 			"  `view` smallint(3) UNSIGNED DEFAULT NULL,\n"
 			"  `bindonequip` tinyint(1) UNSIGNED DEFAULT NULL,\n"
+			"  `buyingstore` tinyint(1) UNSIGNED DEFAULT NULL,\n"
+			"  `delay` mediumint(9) UNSIGNED DEFAULT NULL,\n"
+			"  `trade_flag` smallint(4) UNSIGNED DEFAULT NULL,\n"
+			"  `trade_group` smallint(3) UNSIGNED DEFAULT NULL,\n"
+			"  `nouse_flag` smallint(4) UNSIGNED DEFAULT NULL,\n"
+			"  `nouse_group` smallint(4) UNSIGNED DEFAULT NULL,\n"
+			"  `stack_amount` mediumint(6) UNSIGNED DEFAULT NULL,\n"
+			"  `stack_flag` tinyint(2) UNSIGNED DEFAULT NULL,\n"
+			"  `sprite` mediumint(6) UNSIGNED DEFAULT NULL,\n"
 			"  `script` text,\n"
 			"  `equip_script` text,\n"
 			"  `unequip_script` text,\n"
