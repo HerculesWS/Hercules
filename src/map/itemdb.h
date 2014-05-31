@@ -341,6 +341,24 @@ enum item_class_upper {
 	ITEMUPPER_ALL        = 0x3f, // Sum of all the above
 };
 
+/**
+ * Item Trade restrictions
+ */
+enum ItemTradeRestrictions {
+	ITR_NONE            = 0x000, ///< No restrictions
+	ITR_NODROP          = 0x001, ///< Item can't be dropped
+	ITR_NOTRADE         = 0x002, ///< Item can't be traded (nor vended)
+	ITR_PARTNEROVERRIDE = 0x004, ///< Wedded partner can override ITR_NOTRADE restriction
+	ITR_NOSELLTONPC     = 0x008, ///< Item can't be sold to NPCs
+	ITR_NOCART          = 0x010, ///< Item can't be placed in the cart
+	ITR_NOSTORAGE       = 0x020, ///< Item can't be placed in the storage
+	ITR_NOGSTORAGE      = 0x040, ///< Item can't be placed in the guild storage
+	ITR_NOMAIL          = 0x080, ///< Item can't be attached to mail messages
+	ITR_NOAUCTION       = 0x100, ///< Item can't be auctioned
+
+	ITR_ALL             = 0x1ff  ///< Sum of all the above values
+};
+
 struct item_data {
 	uint16 nameid;
 	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
@@ -380,7 +398,7 @@ struct item_data {
 		unsigned available : 1;
 		unsigned no_refine : 1;	// [celest]
 		unsigned delay_consume : 1;	// Signifies items that are not consumed immediately upon double-click [Skotlex]
-		unsigned trade_restriction : 9;	//Item restrictions mask [Skotlex]
+		unsigned trade_restriction : 9;	///< Item restrictions mask (@see enum ItemTradeRestrictions)
 		unsigned autoequip: 1;
 		unsigned buyingstore : 1;
 		unsigned bindonequip : 1;

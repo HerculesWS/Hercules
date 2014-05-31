@@ -521,39 +521,39 @@ int itemdb_isstackable2(struct item_data *data)
  * Trade Restriction functions [Skotlex]
  *------------------------------------------*/
 int itemdb_isdropable_sub(struct item_data *item, int gmlv, int unused) {
-	return (item && (!(item->flag.trade_restriction&1) || gmlv >= item->gm_lv_trade_override));
+	return (item && (!(item->flag.trade_restriction&ITR_NODROP) || gmlv >= item->gm_lv_trade_override));
 }
 
 int itemdb_cantrade_sub(struct item_data* item, int gmlv, int gmlv2) {
-	return (item && (!(item->flag.trade_restriction&2) || gmlv >= item->gm_lv_trade_override || gmlv2 >= item->gm_lv_trade_override));
+	return (item && (!(item->flag.trade_restriction&ITR_NOTRADE) || gmlv >= item->gm_lv_trade_override || gmlv2 >= item->gm_lv_trade_override));
 }
 
 int itemdb_canpartnertrade_sub(struct item_data* item, int gmlv, int gmlv2) {
-	return (item && (item->flag.trade_restriction&4 || gmlv >= item->gm_lv_trade_override || gmlv2 >= item->gm_lv_trade_override));
+	return (item && (item->flag.trade_restriction&ITR_PARTNEROVERRIDE || gmlv >= item->gm_lv_trade_override || gmlv2 >= item->gm_lv_trade_override));
 }
 
 int itemdb_cansell_sub(struct item_data* item, int gmlv, int unused) {
-	return (item && (!(item->flag.trade_restriction&8) || gmlv >= item->gm_lv_trade_override));
+	return (item && (!(item->flag.trade_restriction&ITR_NOSELLTONPC) || gmlv >= item->gm_lv_trade_override));
 }
 
 int itemdb_cancartstore_sub(struct item_data* item, int gmlv, int unused) {
-	return (item && (!(item->flag.trade_restriction&16) || gmlv >= item->gm_lv_trade_override));
+	return (item && (!(item->flag.trade_restriction&ITR_NOCART) || gmlv >= item->gm_lv_trade_override));
 }
 
 int itemdb_canstore_sub(struct item_data* item, int gmlv, int unused) {
-	return (item && (!(item->flag.trade_restriction&32) || gmlv >= item->gm_lv_trade_override));
+	return (item && (!(item->flag.trade_restriction&ITR_NOSTORAGE) || gmlv >= item->gm_lv_trade_override));
 }
 
 int itemdb_canguildstore_sub(struct item_data* item, int gmlv, int unused) {
-	return (item && (!(item->flag.trade_restriction&64) || gmlv >= item->gm_lv_trade_override));
+	return (item && (!(item->flag.trade_restriction&ITR_NOGSTORAGE) || gmlv >= item->gm_lv_trade_override));
 }
 
 int itemdb_canmail_sub(struct item_data* item, int gmlv, int unused) {
-	return (item && (!(item->flag.trade_restriction&128) || gmlv >= item->gm_lv_trade_override));
+	return (item && (!(item->flag.trade_restriction&ITR_NOMAIL) || gmlv >= item->gm_lv_trade_override));
 }
 
 int itemdb_canauction_sub(struct item_data* item, int gmlv, int unused) {
-	return (item && (!(item->flag.trade_restriction&256) || gmlv >= item->gm_lv_trade_override));
+	return (item && (!(item->flag.trade_restriction&ITR_NOAUCTION) || gmlv >= item->gm_lv_trade_override));
 }
 
 int itemdb_isrestricted(struct item* item, int gmlv, int gmlv2, int (*func)(struct item_data*, int, int))
@@ -1240,7 +1240,7 @@ bool itemdb_read_itemtrade(char* str[], int columns, int current)
 	flag = atoi(str[1]);
 	gmlv = atoi(str[2]);
 
-	if( flag < 0 || flag > 511 ) {//Check range
+	if( flag < 0 || flag > ITR_ALL ) {//Check range
 		ShowWarning("itemdb_read_itemtrade: Invalid trading mask %d for item id %d.\n", flag, nameid);
 		return false;
 	}
