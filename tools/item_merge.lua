@@ -29,7 +29,7 @@ local tab = {  -- tab[i][j] = xor(i-1, j-1)
 function bxor (a,b)
   local res, c = 0, 1
   while a > 0 and b > 0 do
-    local a2, b2 = math.mod(a, 16), math.mod(b, 16)
+    local a2, b2 = math.fmod(a, 16), math.fmod(b, 16)
     res = res + tab[a2+1][b2+1]*c
     a = (a-a2)/16
     b = (b-b2)/16
@@ -43,21 +43,19 @@ function bnot (a) return (ff - a) end
 function band (a,b) return ((a+b) - bxor(a,b))/2 end
 function bor (a,b) return (ff - band(ff - a, ff - b)) end
 
+function default_value(input,default)
+	if (input==nil) then
+		return default
+	else
+		return input
+	end
+end
+
 print("-----------------------------------------------------------------")
 print("----------------- item_*.txt to  ItemDB.conf --------------------")
 print("------------------- By Dastgir[Hercules] ------------------------")
 print("-----------------------------------------------------------------")
-if (
-    arg[1]==nil
- or arg[2]==nil
- or arg[3]==nil
- or arg[4]==nil
- or arg[5]==nil
- or arg[6]==nil
- or arg[7]==nil
- or arg[8]==nil
- --or arg[9]==nil
-  ) then --If any argument is missing, error
+if (arg[1]==nil) then --If any argument is missing, error
 	print("Invalid Command:")
 	print('Usage: item_merge.lua'
 		..' {item_db.conf}'
@@ -70,8 +68,17 @@ if (
 		..' {output.conf}'
 		--..' {sql_update_file.sql}'
 	)
+	print("","If you have default names of *.txt files, then just run this tool")
+	print("","","","\"item_merge.lua item_db.conf\"")
 	os.exit()
 end
+arg[2] = default_value(arg[2],"item_trade.txt")
+arg[3] = default_value(arg[3],"item_buyingstore.txt")
+arg[4] = default_value(arg[4],"item_delay.txt")
+arg[5] = default_value(arg[5],"item_nouse.txt")
+arg[6] = default_value(arg[6],"item_stack.txt")
+arg[7] = default_value(arg[7],"item_avail.txt")
+arg[8] = default_value(arg[8],string.sub(arg[1],1,-6).."_converted.conf")
 
 function replace_char(pos, str, r)
     return str:sub(1, pos-1) .. r .. str:sub(pos+1)
@@ -264,9 +271,6 @@ function parse_line(line2,typl)	--1=trade
 			os.exit()
 			--]]
 		end
-		t_l = 0
-	else
-		t_l = t_l+1
 	end
 	
 	return
@@ -311,15 +315,8 @@ end
 
 
 function item_db_write(s)	--Write into item_db
-	for i=1,1000000 do
-		if (t_l_l == 10000) then
-			break
-		end
-		if (s[i]==nil) then
-			t_l_l = t_l_l+1
-		else
-			t_l_l = 0
-			
+	for i=1,65535 do	----Last ID till now
+		if (s[i]~=nil) then
 			s[i].Atk = check_val(s[i].Atk)
 			s[i].Matk = check_val(s[i].Matk)
 			s[i].EquipLv = check_val(s[i].EquipLv)
@@ -522,7 +519,6 @@ a()	--Execute it so it gets loaded into item_db table
 e_time = os.difftime((os.time())-start_time)	--Time Taken
 print("---- Total Items Found"," = ",#item_db,"(".. e_time .."s)")
 csv = {}
-t_l_l = 0
 item_db2 = {}
 
 for i=1,#item_db do
@@ -544,7 +540,6 @@ line = ""
 for m=2,7 do	--arg[2] to arg[7] = item_*.txt
 	line_number = 0
 	sp_file = assert(io.open(arg[m]))
-	local t_l =0
 	for line in sp_file:lines() do
 		if ( line ~= "" and line:sub(1,2)~="//")  then	--If Line is comment or empty, don't parse it
 			parse_line(line,m)
