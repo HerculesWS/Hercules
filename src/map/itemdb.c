@@ -1430,7 +1430,7 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 		entry->flag.trade_restriction = ITR_NONE;
 	}
 
-	if (entry->gm_lv_trade_override < 0) {
+	if (entry->gm_lv_trade_override < 0 || entry->gm_lv_trade_override > 100) {
 		ShowWarning("itemdb_validate_entry: Invalid trade-override GM level %d for item %d (%s) in '%s', defaulting to none.\n",
 		            entry->gm_lv_trade_override, entry->nameid, entry->jname, source);
 		entry->gm_lv_trade_override = 0;
@@ -1446,7 +1446,7 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 		entry->item_usage.flag = INR_NONE;
 	}
 
-	if (entry->item_usage.override < 0) {
+	if (entry->item_usage.override > 100) {
 		ShowWarning("itemdb_validate_entry: Invalid nouse-override GM level %d for item %d (%s) in '%s', defaulting to none.\n",
 		            entry->item_usage.override, entry->nameid, entry->jname, source);
 		entry->item_usage.override = 0;
