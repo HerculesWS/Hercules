@@ -197,7 +197,7 @@ int mapif_parse_quest_save(int fd) {
 		if (j < old_n) {
 			// Update existing quests
 
-			// Only states and counts are changable.
+			// Only states and counts are changeable.
 			ARR_FIND( 0, MAX_QUEST_OBJECTIVES, k, new_qd[i].count[k] != old_qd[j].count[k] );
 			if (k != MAX_QUEST_OBJECTIVES || new_qd[i].state != old_qd[j].state)
 				success &= mapif_quest_update(char_id, new_qd[i]);

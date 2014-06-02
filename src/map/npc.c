@@ -666,7 +666,7 @@ void npc_timerevent_quit(struct map_session_data* sd)
 	struct npc_data* nd;
 	struct timer_event_data *ted;
 
-	// Check timer existance
+	// Check timer existence
 	if( sd->npc_timer_id == INVALID_TIMER )
 		return;
 	if( !(td = timer->get(sd->npc_timer_id)) )
@@ -1340,7 +1340,7 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 			return ERROR_TYPE_ITEM_ID;
 
 		if( !itemdb->isstackable(nameid) && amount > 1 ) {
-			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of nonstackable item %d!\n",
+			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
 						sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
 			amount = item_list[i*2+0] = 1;
 		}
@@ -1667,7 +1667,7 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 		return ERROR_TYPE_ITEM_ID;
 
 	if(!itemdb->isstackable(nameid) && amount > 1) {
-		ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of nonstackable item %d!\n",
+		ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
 			sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
 		amount = 1;
 	}
@@ -1775,7 +1775,7 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 		
 		if( !itemdb->isstackable(nameid) && amount > 1 ) {
 			//Exploit? You can't buy more than 1 of equipment types o.O
-			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of nonstackable item %d!\n",
+			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
 						sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
 			amount = item_list[i*2+0] = 1;
 		}
@@ -1898,7 +1898,7 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 		
 		if( !itemdb->isstackable(nameid) && amount > 1 ) {
 			//Exploit? You can't buy more than 1 of equipment types o.O
-			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of nonstackable item %d!\n",
+			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
 						sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
 			amount = p->list[i].qty = 1;
 		}

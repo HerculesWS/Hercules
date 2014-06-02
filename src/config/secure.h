@@ -49,7 +49,7 @@
 
 /**
  * Uncomment to disable
- * while enabled, movement of invisible (cloaking, hide, etca [not chase walk]) units is not informed to nearby foes,
+ * while enabled, movement of invisible (cloaking, hide, etc [not chase walk]) units is not informed to nearby foes,
  * rendering any client-side cheat, that would otherwise make these units visible, to not function.
  * - "Why is this a setting?" because theres a cost, while enabled if a hidden character uses a skill with cast time,
  * - for example "cloaking -> walk a bit -> soul break another player" the character display will be momentarily abrupted

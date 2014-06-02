@@ -5675,8 +5675,8 @@ Examples:
 //=====================================
 ---------------------------------------
 
-*monster     "<map name>",<x>,<y>,"<name to show>",<mob id>,<amount>{,"<event label>",<size>,<ai>};
-*areamonster "<map name>",<x1>,<y1>,<x2>,<y2>,"<name to show>",<mob id>,<amount>{,"<event label>",<size>,<ai>};
+*monster     "<map name>",<x>,<y>,"<name to show>",<mob id>,<amount>{,"<event label>"{,<size>{,<ai>}}};
+*areamonster "<map name>",<x1>,<y1>,<x2>,<y2>,"<name to show>",<mob id>,<amount>{,"<event label>"{,<size>{,<ai>}}};
 
 This command will spawn a monster on the specified coordinates on the 
 specified map. If the script is invoked by a character, a special map 
@@ -7648,7 +7648,7 @@ Example:
 
 ---------------------------------------
 
-*sprintf(<format>[,param[,param[,...]]])
+*sprintf(<format>{,param{,param{,...}}})
 
 C style sprintf. The resulting string is returned same as in PHP. All C 
 format specifiers are supported except %n. For more info check sprintf 
@@ -7656,7 +7656,7 @@ function at www.cplusplus.com
 Number of params is only limited by Hercules' script engine.
 
 Example:
-	.@format$ = 'The %s contains %d monkeys';
+	.@format$ = "The %s contains %d monkeys";
 	dispbottom(sprintf(.@format$, "zoo", 5));
 	//prints "The zoo contains 5 monkeys"
 
@@ -7665,7 +7665,7 @@ Example:
 
 ---------------------------------------
 
-*sscanf(<string>,<format>[,param[,param[,...]]])
+*sscanf(<string>,<format>{,param{,param{,...}}})
 	
 C style sscanf. All C format specifiers are supported. 
 More info: sscanf @ www.cplusplus.com. The number of params is only 

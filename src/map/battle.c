@@ -58,7 +58,7 @@ int battle_getcurrentskill(struct block_list *bl) { //Returns the current/last s
 }
 
 /*==========================================
- * Get random targetting enemy
+ * Get random targeting enemy
  *------------------------------------------*/
 int battle_gettargeted_sub(struct block_list *bl, va_list ap) {
 	struct block_list **bl_list;
@@ -102,7 +102,7 @@ struct block_list* battle_gettargeted(struct block_list *target) {
 }
 
 
-//Returns the id of the current targetted character of the passed bl. [Skotlex]
+//Returns the id of the current targeted character of the passed bl. [Skotlex]
 int battle_gettarget(struct block_list* bl) {
 
 	switch (bl->type) {
@@ -262,7 +262,7 @@ int battle_delay_damage(int64 tick, int amotion, struct block_list *src, struct 
 
 	if ( !battle_config.delay_battle_damage || amotion <= 1 ) {
 		map->freeblock_lock();
-		status_fix_damage(src, target, damage, ddelay); // We have to seperate here between reflect damage and others [icescope]
+		status_fix_damage(src, target, damage, ddelay); // We have to separate here between reflect damage and others [icescope]
 		if( attack_type && !status->isdead(target) && additional_effects )
 			skill->additional_effect(src, target, skill_id, skill_lv, attack_type, dmg_lv, timer->gettick());
 		if( dmg_lv > ATK_BLOCK && attack_type )
@@ -358,7 +358,7 @@ int64 battle_attr_fix(struct block_list *src, struct block_list *target, int64 d
 			}
 		}
 	}
-	if( tsc && tsc->count ) { //since an atk can only have one type let's optimise this a bit
+	if( tsc && tsc->count ) { //since an atk can only have one type let's optimize this a bit
 		switch(atk_elem){
 		case ELE_FIRE:
 			if( tsc->data[SC_SPIDERWEB]) {
@@ -463,7 +463,7 @@ int64 battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, u
 	damage = battle->calc_elefix(src, bl, skill_id, skill_lv, damage + eatk, nk, n_ele, s_ele, s_ele_, type == EQI_HAND_L, flag);
 
 	/**
-	 * In RE Shield Bommerang takes weapon element only for damage calculation,
+	 * In RE Shield Boomerang takes weapon element only for damage calculation,
 	 * - resist calculation is always against neutral
 	**/
 	if ( skill_id == CR_SHIELDBOOMERANG )
@@ -482,7 +482,7 @@ int64 battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, u
 }
 /*==========================================
  * Calculates the standard damage of a normal attack assuming it hits,
- * it calculates nothing extra fancy, is needed for magnum break's WATK_ELEMENT bonus. [Skotlex]
+ * it calculates nothing extra fancy, is needed for magnum breaks WATK_ELEMENT bonus. [Skotlex]
  *------------------------------------------
  * Pass damage2 as NULL to not calc it.
  * Flag values:
@@ -567,7 +567,7 @@ int64 battle_calc_base_damage2(struct status_data *st, struct weapon_atk *wa, st
 	else
 		damage += st->batk;
 
-	//rodatazone says that Overrefine bonuses are part of baseatk
+	//rodatazone says that Overrefined bonuses are part of baseatk
 	//Here we also apply the weapon_atk_rate bonus so it is correctly applied on left/right hands.
 	if(sd) {
 		if (type == EQI_HAND_L) {
@@ -604,7 +604,7 @@ int64 battle_addmastery(struct map_session_data *sd,struct block_list *target,in
 	nullpo_ret(sd);
 
 	if((skill_lv = pc->checkskill(sd,AL_DEMONBANE)) > 0 &&
-		target->type == BL_MOB && //This bonus doesnt work against players.
+		target->type == BL_MOB && //This bonus doesn't work against players.
 		(battle->check_undead(st->race,st->def_ele) || st->race==RC_DEMON) )
 		damage += (int)(skill_lv*(3+sd->status.base_level/20.0));
 		//damage += (skill_lv * 3);
@@ -676,7 +676,7 @@ int64 battle_addmastery(struct map_session_data *sd,struct block_list *target,in
 		case W_FIST:
 			if((skill_lv = pc->checkskill(sd,TK_RUN)) > 0)
 				damage += (skill_lv * 10);
-			// No break, fallthrough to Knuckles
+			// No break, fall through to Knuckles
 		case W_KNUCKLE:
 			if((skill_lv = pc->checkskill(sd,MO_IRONHAND)) > 0)
 				damage += (skill_lv * 3);
@@ -1272,9 +1272,9 @@ int64 battle_calc_defense(int attack_type, struct block_list *src, struct block_
 #else
 				vit_def = def2;
 #endif
-				if((battle->check_undead(sstatus->race,sstatus->def_ele) || sstatus->race==RC_DEMON) && //This bonus already doesnt work vs players
+				if((battle->check_undead(sstatus->race,sstatus->def_ele) || sstatus->race==RC_DEMON) && //This bonus already doesn't work vs players
 					src->type == BL_MOB && (i=pc->checkskill(tsd,AL_DP)) > 0)
-					vit_def += i*(int)(3 +(tsd->status.base_level+1)*0.04);   // submitted by orn
+					vit_def += i*(int)(3 +(tsd->status.base_level+1)*0.04);   // [orn]
 				if( src->type == BL_MOB && (i=pc->checkskill(tsd,RA_RANGERMAIN))>0 &&
 					(sstatus->race == RC_BRUTE || sstatus->race == RC_FISH || sstatus->race == RC_PLANT) )
 					vit_def += i*5;
@@ -1296,7 +1296,7 @@ int64 battle_calc_defense(int attack_type, struct block_list *src, struct block_
 		#ifdef RENEWAL
 			/**
 			* RE DEF Reduction
-			* Pierce defence gains 1 atk per def/2
+			* Pierce defense gains 1 atk per def/2
 			**/
 
 			if( def1 < -399 ) // it stops at -399
@@ -1384,7 +1384,7 @@ int battle_calc_chorusbonus(struct map_session_data *sd) {
 	if (members < 3)
 		return 0; // Bonus remains 0 unless 3 or more Minstrel's/Wanderer's are in the party.
 	if (members > 7)
-		return 5; // Maximum effect possiable from 7 or more Minstrel's/Wanderer's
+		return 5; // Maximum effect possible from 7 or more Minstrel's/Wanderer's
 	return members - 2; // Effect bonus from additional Minstrel's/Wanderer's if not above the max possible
 }
 
@@ -2005,7 +2005,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					skillratio += 50 * skill_lv;
 					break;
 				case GS_BULLSEYE:
-					//Only works well against brute/demihumans non bosses.
+					//Only works well against brute/demi-humans non bosses.
 					if((tst->race == RC_BRUTE || tst->race == RC_DEMIHUMAN)
 						&& !(tst->mode&MD_BOSS))
 						skillratio += 400;
@@ -2117,7 +2117,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					RE_LVL_DMOD(150);
 					break;
 				/**
-					* GC Guilotine Cross
+					* GC Guillotine Cross
 					**/
 				case GC_CROSSIMPACT:
 					skillratio += 900 + 100 * skill_lv;
@@ -2401,7 +2401,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				{
 					int chorusbonus = battle->calc_chorusbonus(sd);
 					skillratio += 300 + 200 * skill_lv;
-					//Chorus bonus dont count the first 2 Minstrel's/Wanderer's and only increases when their's 3 or more. [Rytech]
+					//Chorus bonus don't count the first 2 Minstrel's/Wanderer's and only increases when their's 3 or more. [Rytech]
 					if (chorusbonus >= 1 && chorusbonus <= 5)
 						skillratio += 100<<(chorusbonus-1); // 1->100; 2->200; 3->400; 4->800; 5->1600
 					RE_LVL_DMOD(100);
@@ -2454,7 +2454,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					if( sc && sc->data[SC_BLAST_OPTION] )
 						skillratio += (sd ? sd->status.job_level * 5 : 0);
 					break;
-					// Physical Elemantal Spirits Attack Skills
+					// Physical Elemental Spirits Attack Skills
 				case EL_CIRCLE_OF_FIRE:
 				case EL_FIRE_BOMB_ATK:
 				case EL_STONE_RAIN:
@@ -2557,8 +2557,8 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 	return skillratio;
 }
 /*==========================================
- * Check dammage trough status.
- * ATK may be MISS, BLOCKED FAIL, reduc, increase, end status...
+ * Check damage trough status.
+ * ATK may be MISS, BLOCKED FAIL, reduce, increase, end status...
  * After this we apply bg/gvg reduction
  *------------------------------------------*/
 int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damage *d,int64 damage,uint16 skill_id,uint16 skill_lv) {
@@ -2715,7 +2715,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			clif->skill_nodamage(bl, bl, RK_MILLENNIUMSHIELD, 1, 1);
 			sce->val3 -= (int)cap_value(damage,INT_MIN,INT_MAX); // absorb damage
 			d->dmg_lv = ATK_BLOCK;
-			sc_start(src,bl,SC_STUN,15,0,skill->get_time2(RK_MILLENNIUMSHIELD,sce->val1)); // There is a chance to be stuned when one shield is broken.
+			sc_start(src,bl,SC_STUN,15,0,skill->get_time2(RK_MILLENNIUMSHIELD,sce->val1)); // There is a chance to be stunned when one shield is broken.
 			if( sce->val3 <= 0 ) { // Shield Down
 				sce->val2--;
 				if( sce->val2 > 0 ) {
@@ -3029,7 +3029,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			short rate = 100;
 			struct status_data *tstatus = status->get_status_data(bl);
 			if ( !(flag&BF_SKILL) && (flag&BF_WEAPON) && damage > 0 && rnd()%100 < tsc->data[SC_POISONINGWEAPON]->val3 ) {
-				if ( tsc->data[SC_POISONINGWEAPON]->val1 == 9 ) // Oblivion Curse gives a 2nd success chance after the 1st one passes which is reduceable. [Rytech]
+				if ( tsc->data[SC_POISONINGWEAPON]->val1 == 9 ) // Oblivion Curse gives a 2nd success chance after the 1st one passes which is reducible. [Rytech]
 					rate = 100 - tstatus->int_ * 4 / 5;
 				sc_start(src,bl,tsc->data[SC_POISONINGWEAPON]->val2,rate,tsc->data[SC_POISONINGWEAPON]->val1,skill->get_time2(GC_POISONINGWEAPON,1) - (tstatus->vit + tstatus->luk) / 2 * 1000);
 			}
@@ -3046,7 +3046,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 	/* no data claims these settings affect anything other than players */
 	if( damage && sd && bl->type == BL_PC ) {
 		switch( skill_id ) {
-			//case PA_PRESSURE: /* pressure also belongs to this list but it doesn't reach this area -- so dont worry about it */
+			//case PA_PRESSURE: /* pressure also belongs to this list but it doesn't reach this area -- so don't worry about it */
 			case HW_GRAVITATION:
 			case NJ_ZENYNAGE:
 			case KO_MUCHANAGE:
@@ -3254,7 +3254,7 @@ int battle_blewcount_bonus(struct map_session_data *sd, uint16 skill_id) {
 	int i;
 	if (!sd->skillblown[0].id)
 		return 0;
-	//Apply the bonus blewcount. [Skotlex]
+	//Apply the bonus blow count. [Skotlex]
 	for (i = 0; i < ARRAYLENGTH(sd->skillblown) && sd->skillblown[i].id; i++) {
 		if (sd->skillblown[i].id == skill_id)
 			return sd->skillblown[i].val;
@@ -3335,7 +3335,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 	ad.flag |= battle->range_type(src, target, skill_id, skill_lv);
 	flag.infdef=(tstatus->mode&MD_PLANT?1:0);
 	if( !flag.infdef && target->type == BL_SKILL && ((TBL_SKILL*)target)->group->unit_id == UNT_REVERBERATION )
-		flag.infdef = 1; // Reberberation takes 1 damage
+		flag.infdef = 1; // Reverberation takes 1 damage
 
 	switch(skill_id) {
 		case MG_FIREWALL:
@@ -3600,7 +3600,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 }
 
 /*==========================================
- * Calculate Misc dammage for skill_id
+ * Calculate Misc damage for skill_id
  *------------------------------------------*/
 struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *target,uint16 skill_id,uint16 skill_lv,int mflag) {
 	int temp;
@@ -3908,7 +3908,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 				{
 					if (battle_config.agi_penalty_type == 1)
 						flee = (flee * (100 - (attacker_count - (battle_config.agi_penalty_count - 1))*battle_config.agi_penalty_num))/100;
-					else //asume type 2: absolute reduction
+					else // assume type 2: absolute reduction
 						flee -= (attacker_count - (battle_config.agi_penalty_count - 1))*battle_config.agi_penalty_num;
 					if(flee < 1) flee = 1;
 				}
@@ -4046,7 +4046,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		unsigned lh : 1;		//Attack considers left hand (wd.damage2)
 		unsigned weapon : 1; //It's a weapon attack (consider VVS, and all that)
 #ifdef RENEWAL
-		unsigned tdef : 1; //Total defence reduction
+		unsigned tdef : 1; //Total defense reduction
 #endif
 	}	flag;
 
@@ -4065,7 +4065,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 #endif
 		?1:0);
 	if( !flag.infdef && target->type == BL_SKILL && ((TBL_SKILL*)target)->group->unit_id == UNT_REVERBERATION )
-		flag.infdef = 1; // Reberberation takes 1 damage
+		flag.infdef = 1; // Reverberation takes 1 damage
 
 	//Initial Values
 	wd.type=0; //Normal attack
@@ -5694,7 +5694,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 
 			/**
 			 * We need to calculate the DMG before the hp reduction, because it can kill the source.
-			 * For futher information: bugreport:4950
+			 * For further information: bugreport:4950
 			 **/
 			ret_val = (damage_lv)skill->attack(BF_WEAPON,src,src,target,PA_SACRIFICE,skill_lv,tick,0);
 
@@ -6058,7 +6058,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 			if(((((TBL_MOB*)target)->special_state.ai == 2 || //Marine Spheres
 				(((TBL_MOB*)target)->special_state.ai == 3 && battle_config.summon_flora&1)) && //Floras
 				s_bl->type == BL_PC && src->type != BL_MOB) || (((TBL_MOB*)target)->special_state.ai == 4 && t_bl->id != s_bl->id)) //Zanzoe
-			{	//Targettable by players
+			{	//Targetable by players
 				state |= BCT_ENEMY;
 				strip_enemy = 0;
 			}
@@ -6137,7 +6137,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 			sd = BL_CAST(BL_PC, t_bl);
 
 			if( sd->state.monster_ignore && flag&BCT_ENEMY )
-				return 0; // Global inminuty only to Attacks
+				return 0; // Global immunity only to Attacks
 			if( sd->status.karma && s_bl->type == BL_PC && ((TBL_PC*)s_bl)->status.karma )
 				state |= BCT_ENEMY; // Characters with bad karma may fight amongst them
 			if( sd->state.killable ) {
@@ -6231,7 +6231,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 			break;
 		}
 		default:
-		//Need some sort of default behaviour for unhandled types.
+		//Need some sort of default behavior for unhandled types.
 			if (t_bl->type != s_bl->type)
 				state |= BCT_ENEMY;
 			break;
@@ -6351,7 +6351,7 @@ bool battle_check_range(struct block_list *src, struct block_list *bl, int range
 		return true;  // No need for path checking.
 
 	if( d > AREA_SIZE )
-		return false; // Avoid targetting objects beyond your range of sight.
+		return false; // Avoid targeting objects beyond your range of sight.
 
 	return path->search_long(NULL,src->m,src->x,src->y,bl->x,bl->y,CELL_CHKWALL);
 }

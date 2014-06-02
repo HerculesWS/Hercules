@@ -147,15 +147,15 @@ char* trim(char* str)
 	if( start == end )
 		*str = '\0';// empty string
 	else
-	{// move string with nul terminator
+	{// move string with null-terminator
 		str[end] = '\0';
 		memmove(str,str+start,end-start+1);
 	}
 	return str;
 }
 
-// Converts one or more consecutive occurences of the delimiters into a single space
-// and removes such occurences from the beginning and end of string
+// Converts one or more consecutive occurrences of the delimiters into a single space
+// and removes such occurrences from the beginning and end of string
 // NOTE: make sure the string is not const!!
 char* normalize_name(char* str,const char* delims)
 {
@@ -358,18 +358,18 @@ int config_switch(const char* str) {
 	return (int)strtol(str, NULL, 0);
 }
 
-/// strncpy that always nul-terminates the string
+/// strncpy that always null-terminates the string
 char* safestrncpy(char* dst, const char* src, size_t n)
 {
 	if( n > 0 )
 	{
 		char* d = dst;
 		const char* s = src;
-		d[--n] = '\0';/* nul-terminate string */
+		d[--n] = '\0';/* null-terminate string */
 		for( ; n > 0; --n )
 		{
 			if( (*d++ = *s++) == '\0' )
-			{/* nul-pad remaining bytes */
+			{/* null-pad remaining bytes */
 				while( --n > 0 )
 					*d++ = '\0';
 				break;
@@ -385,12 +385,12 @@ size_t safestrnlen(const char* string, size_t maxlen)
 	return ( string != NULL ) ? strnlen(string, maxlen) : 0;
 }
 
-/// Works like snprintf, but always nul-terminates the buffer.
-/// Returns the size of the string (without nul-terminator)
+/// Works like snprintf, but always null-terminates the buffer.
+/// Returns the size of the string (without null-terminator)
 /// or -1 if the buffer is too small.
 ///
 /// @param buf Target buffer
-/// @param sz Size of the buffer (including nul-terminator)
+/// @param sz Size of the buffer (including null-terminator)
 /// @param fmt Format string
 /// @param ... Format arguments
 /// @return The size of the string or -1 if the buffer is too small
@@ -404,7 +404,7 @@ int safesnprintf(char* buf, size_t sz, const char* fmt, ...)
 	va_end(ap);
 	if( ret < 0 || (size_t)ret >= sz )
 	{// overflow
-		buf[sz-1] = '\0';// always nul-terminate
+		buf[sz-1] = '\0';// always null-terminate
 		return -1;
 	}
 	return ret;
@@ -631,8 +631,8 @@ int sv_parse_next(struct s_svstate* svstate)
 /// @param delim Field delimiter
 /// @param out_pos Array of resulting positions
 /// @param npos Size of the pos array
-/// @param opt Options that determine the parsing behaviour
-/// @return Number of fields found in the string or -1 if an error occured
+/// @param opt Options that determine the parsing behavior
+/// @return Number of fields found in the string or -1 if an error occurred
 int sv_parse(const char* str, int len, int startoff, char delim, int* out_pos, int npos, enum e_svopt opt) {
 	struct s_svstate svstate;
 	int count;
@@ -666,11 +666,11 @@ int sv_parse(const char* str, int len, int startoff, char delim, int* out_pos, i
 /// WARNING: this function modifies the input string
 /// Starts splitting at startoff and fills the out_fields array.
 /// out_fields[0] is the start of the next line.
-/// Other entries are the start of fields (nul-teminated).
+/// Other entries are the start of fields (null-terminated).
 /// Returns the number of fields found or -1 if an error occurs.
 ///
 /// out_fields can be NULL.
-/// Fields that don't fit in out_fields are not nul-terminated.
+/// Fields that don't fit in out_fields are not null-terminated.
 /// Extra entries in out_fields are filled with the end of the last field (empty string).
 ///
 /// @param str String to parse
@@ -679,8 +679,8 @@ int sv_parse(const char* str, int len, int startoff, char delim, int* out_pos, i
 /// @param delim Field delimiter
 /// @param out_fields Array of resulting fields
 /// @param nfields Size of the field array
-/// @param opt Options that determine the parsing behaviour
-/// @return Number of fields found in the string or -1 if an error occured
+/// @param opt Options that determine the parsing behavior
+/// @return Number of fields found in the string or -1 if an error occurred
 int sv_split(char* str, int len, int startoff, char delim, char** out_fields, int nfields, enum e_svopt opt) {
 	int pos[1024];
 	int i;

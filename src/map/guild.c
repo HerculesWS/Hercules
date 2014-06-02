@@ -61,7 +61,7 @@ int guild_skill_get_max (int id) {
 	return guild->skill_tree[id-GD_SKILLBASE].max;
 }
 
-// Retrive skill_lv learned by guild
+// Retrieve skill_lv learned by guild
 int guild_checkskill(struct guild *g, int id) {
     int idx = id - GD_SKILLBASE;
     if (idx < 0 || idx >= MAX_GUILDSKILL)
@@ -764,7 +764,7 @@ int guild_member_added(int guild_id,int account_id,int char_id,int flag) {
 		return 0;
 
 	if(sd==NULL || sd->guild_invite==0){
-		// cancel if player not present or invalide guild_id invitation
+		// cancel if player not present or invalid guild_id invitation
 		if (flag == 0) {
 			ShowError("guild: member added error %d is not online\n",account_id);
 			intif->guild_leave(guild_id,account_id,char_id,0,"** Data Error **");
@@ -882,7 +882,7 @@ int guild_member_withdraw(int guild_id, int account_id, int char_id, int flag, c
 
 	online_member_sd = guild->getavailablesd(g);
 	if(online_member_sd == NULL)
-		return 0; // noone online to inform
+		return 0; // no one online to inform
 		
 #ifdef GP_BOUND_ITEMS
 	//Guild bound item check
@@ -2373,7 +2373,7 @@ void guild_defaults(void) {
 	guild->agit_end = guild_agit_end;
 	guild->agit2_start = guild_agit2_start;
 	guild->agit2_end = guild_agit2_end;
-	/* guild flag cachin */
+	/* guild flag caching */
 	guild->flag_add = guild_flag_add;
 	guild->flag_remove = guild_flag_remove;
 	guild->flags_clear = guild_flags_clear;

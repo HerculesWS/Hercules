@@ -80,7 +80,7 @@ struct pcre_interface libpcre_s;
 
 
 /**
- * delete everythign associated with a entry
+ * delete everything associated with a entry
  *
  * This does NOT do the list management
  */
@@ -245,7 +245,7 @@ void delete_pcreset(struct npc_data* nd, int setid)
 	while (pcreset->head) {
 		struct pcrematch_entry* n = pcreset->head->next;
 		npc_chat->finalize_pcrematch_entry(pcreset->head);
-		aFree(pcreset->head); // Cleanin' the last ones.. [Lance]
+		aFree(pcreset->head); // Cleaning the last ones.. [Lance]
 		pcreset->head = n;
 	}
 	
@@ -301,7 +301,7 @@ void npc_chat_def_pattern(struct npc_data* nd, int setid, const char* pattern, c
  * Delete everything associated with a NPC concerning the pattern
  * matching code
  *
- * this could be more efficent but.. how often do you do this?
+ * this could be more efficient but.. how often do you do this?
  */
 void npc_chat_finalize(struct npc_data* nd)
 {
@@ -344,10 +344,10 @@ int npc_chat_sub(struct block_list* bl, va_list ap)
 	// iterate across all active sets
 	for (pcreset = npcParse->active; pcreset != NULL; pcreset = pcreset->next)
 	{
-		// interate across all patterns in that set
+		// n across all patterns in that set
 		for (e = pcreset->head; e != NULL; e = e->next)
 		{
-			int offsets[2*10 + 10]; // 1/3 reserved for temp space requred by pcre_exec
+			int offsets[2*10 + 10]; // 1/3 reserved for temp space required by pcre_exec
 			
 			// perform pattern match
 			int r = libpcre->exec(e->pcre_, e->pcre_extra_, msg, len, 0, 0, offsets, ARRAYLENGTH(offsets));
@@ -380,7 +380,7 @@ int npc_chat_sub(struct block_list* bl, va_list ap)
 	return 0;
 }
 
-// Various script builtins used to support these functions
+// Various script built-ins used to support these functions
 BUILDIN(defpattern) {
 	int setid = script_getnum(st,2);
 	const char* pattern = script_getstr(st,3);

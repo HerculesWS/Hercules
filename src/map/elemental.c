@@ -505,7 +505,7 @@ int elemental_change_mode_ack(struct elemental_data *ed, int mode) {
 	else
 		unit->skilluse_id(&ed->bl,bl->id,skill_id,skill_lv);
 
-	ed->target_id = 0;	// Reset target after casting the skill  to avoid continious attack.
+	ed->target_id = 0;	// Reset target after casting the skill  to avoid continuous attack.
 
 	return 1;
 }
@@ -529,7 +529,7 @@ int elemental_change_mode(struct elemental_data *ed, int mode) {
 	else if( mode == EL_MODE_ASSIST ) mode = EL_SKILLMODE_ASSIST;		// Assist spirit mode -> Assist spirit skill.
 	else mode = EL_SKILLMODE_PASIVE;									// Passive spirit mode -> Passive spirit skill.
 
-	// Use a skill inmediately after every change mode.
+	// Use a skill immediately after every change mode.
 	if( mode != EL_SKILLMODE_AGGRESSIVE )
 		elemental->change_mode_ack(ed,mode);
 	return 1;

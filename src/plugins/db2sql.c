@@ -51,76 +51,236 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 	struct item_data *it = NULL;
 	
 	if( (it = itemdb->exists(itemdb_readdb_libconfig_sub(entry,n,source))) ) {
-		char e_name[ITEM_NAME_LENGTH*2+1], e_jname[ITEM_NAME_LENGTH*2+1];
+		char e_name[ITEM_NAME_LENGTH*2+1];
 		const char *bonus = NULL;
 		char *str;
 		int i32;
-		unsigned int ui32, job = 0, upper = 0;
+		unsigned int ui32;
 		config_setting_t *t = NULL;
+		StringBuf buf;
 
+		StrBuf->Init(&buf);
+
+		// id
+		StrBuf->Printf(&buf, "'%u',", it->nameid);
+
+		// name_english
 		SQL->EscapeString(NULL, e_name, it->name);
-		SQL->EscapeString(NULL, e_jname, it->jname);
-		if( it->script )  { libconfig->setting_lookup_string(entry, "Script", &bonus); hstr(bonus); str = tosql.buf[3].p; if ( strlen(str) > tosql.buf[0].len ) { tosql.buf[0].len = tosql.buf[0].len + strlen(str) + 1000; RECREATE(tosql.buf[0].p,char,tosql.buf[0].len); } SQL->EscapeString(NULL, tosql.buf[0].p, str); }
-		if( it->equip_script ) { libconfig->setting_lookup_string(entry, "OnEquipScript", &bonus); hstr(bonus); str = tosql.buf[3].p; if ( strlen(str) > tosql.buf[1].len ) { tosql.buf[1].len = tosql.buf[1].len + strlen(str) + 1000; RECREATE(tosql.buf[1].p,char,tosql.buf[1].len); } SQL->EscapeString(NULL, tosql.buf[1].p, str); }
-		if( it->unequip_script ) { libconfig->setting_lookup_string(entry, "OnUnequipScript", &bonus); hstr(bonus); str = tosql.buf[3].p; if ( strlen(str) > tosql.buf[2].len ) { tosql.buf[2].len = tosql.buf[2].len + strlen(str) + 1000; RECREATE(tosql.buf[2].p,char,tosql.buf[2].len); } SQL->EscapeString(NULL, tosql.buf[2].p, str); }
+		StrBuf->Printf(&buf, "'%s',", e_name);
 		
+		// name_japanese
+		SQL->EscapeString(NULL, e_name, it->jname);
+		StrBuf->Printf(&buf, "'%s',", e_name);
+
+		// type
+		StrBuf->Printf(&buf, "'%u',", it->flag.delay_consume?IT_DELAYCONSUME:it->type);
+
+		// price_buy
+		StrBuf->Printf(&buf, "'%u',", it->value_buy);
+
+		// price_sell
+		StrBuf->Printf(&buf, "'%u',", it->value_sell);
+
+		// weight
+		StrBuf->Printf(&buf, "'%u',", it->weight);
+
+		// atk
+		StrBuf->Printf(&buf, "'%u',", it->atk);
+
+		// matk
+		StrBuf->Printf(&buf, "'%u',", it->matk);
+
+		// defence
+		StrBuf->Printf(&buf, "'%u',", it->def);
+
+		// range
+		StrBuf->Printf(&buf, "'%u',", it->range);
+
+		// slots
+		StrBuf->Printf(&buf, "'%u',", it->slot);
+
+		// equip_jobs
 		if( libconfig->setting_lookup_int(entry, "Job", &i32) ) // This is an unsigned value, do not check for >= 0
 			ui32 = (unsigned int)i32;
 		else
 			ui32 = UINT_MAX;
-		
-		job = ui32;
-		
+		StrBuf->Printf(&buf, "'%u',", ui32);
+
+		// equip_upper
 		if( libconfig->setting_lookup_int(entry, "Upper", &i32) && i32 >= 0 )
 			ui32 = (unsigned int)i32;
 		else
 			ui32 = ITEMUPPER_ALL;
+		StrBuf->Printf(&buf, "'%u',", ui32);
 
-		upper = ui32;
-		
-		/* check if we have the equip_level_max, if so we send it -- otherwise we send NULL */
+		// equip_genders
+		StrBuf->Printf(&buf, "'%u',", it->sex);
+
+		// equip_locations
+		StrBuf->Printf(&buf, "'%u',", it->equip);
+
+		// weapon_level
+		StrBuf->Printf(&buf, "'%u',", it->wlv);
+
+		// equip_level_min
+		StrBuf->Printf(&buf, "'%u',", it->elv);
+
+		// equip_level_max
 		if( (t = libconfig->setting_get_member(entry, "EquipLv")) && config_setting_is_aggregate(t) && libconfig->setting_length(t) >= 2 )
-			fprintf(tosql.fp,"REPLACE INTO `%s` VALUES ('%u','%s','%s','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%s','%s','%s');\n",
-					tosql.db_name,it->nameid,e_name,e_jname,it->flag.delay_consume?IT_DELAYCONSUME:it->type,it->value_buy,it->value_sell,it->weight,it->atk,it->matk,it->def,it->range,it->slot,job,upper,it->sex,it->equip,it->wlv,it->elv,it->elvmax,it->flag.no_refine?0:1,it->look,it->flag.bindonequip?1:0,it->script?tosql.buf[0].p:"",it->equip_script?tosql.buf[1].p:"",it->unequip_script?tosql.buf[2].p:"");
+			StrBuf->Printf(&buf, "'%u',", it->elvmax);
 		else
-			fprintf(tosql.fp,"REPLACE INTO `%s` VALUES ('%u','%s','%s','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u',NULL,'%u','%u','%u','%s','%s','%s');\n",
-					tosql.db_name,it->nameid,e_name,e_jname,it->flag.delay_consume?IT_DELAYCONSUME:it->type,it->value_buy,it->value_sell,it->weight,it->atk,it->matk,it->def,it->range,it->slot,job,upper,it->sex,it->equip,it->wlv,it->elv,it->flag.no_refine?0:1,it->look,it->flag.bindonequip?1:0,it->script?tosql.buf[0].p:"",it->equip_script?tosql.buf[1].p:"",it->unequip_script?tosql.buf[2].p:"");
+			StrBuf->AppendStr(&buf, "NULL,");
+
+		// refineable
+		StrBuf->Printf(&buf, "'%u',", it->flag.no_refine?0:1);
+
+		// view
+		StrBuf->Printf(&buf, "'%u',", it->look);
+
+		// bindonequip
+		StrBuf->Printf(&buf, "'%u',", it->flag.bindonequip?1:0);
+
+		// buyingstore
+		StrBuf->Printf(&buf, "'%u',", it->flag.buyingstore?1:0);
+
+		// delay
+		StrBuf->Printf(&buf, "'%u',", it->delay);
+
+		// trade_flag
+		StrBuf->Printf(&buf, "'%u',", it->flag.trade_restriction);
+
+		// trade_group
+		if (it->flag.trade_restriction != ITR_NONE && it->gm_lv_trade_override > 0 && it->gm_lv_trade_override < 100) {
+			StrBuf->Printf(&buf, "'%u',", it->gm_lv_trade_override);
+		} else {
+			StrBuf->AppendStr(&buf, "NULL,");
+		}
+
+		// nouse_flag
+		StrBuf->Printf(&buf, "'%u',", it->item_usage.flag);
+
+		// nouse_group
+		if (it->item_usage.flag != INR_NONE && it->item_usage.override > 0 && it->item_usage.override < 100) {
+			StrBuf->Printf(&buf, "'%u',", it->item_usage.override);
+		} else {
+			StrBuf->AppendStr(&buf, "NULL,");
+		}
+
+		// stack_amount
+		StrBuf->Printf(&buf, "'%u',", it->stack.amount);
+
+		// stack_flag
+		if (it->stack.amount) {
+			uint32 value = 0; // FIXME: Use an enum
+			value |= it->stack.inventory ? 1 : 0;
+			value |= it->stack.cart ? 2 : 0;
+			value |= it->stack.storage ? 4 : 0;
+			value |= it->stack.guildstorage ? 8 : 0;
+			StrBuf->Printf(&buf, "'%u',", value);
+		} else {
+			StrBuf->AppendStr(&buf, "NULL,");
+		}
+
+		// sprite
+		if (it->flag.available) {
+			StrBuf->Printf(&buf, "'%u',", it->view_id);
+		} else {
+			StrBuf->AppendStr(&buf, "NULL,");
+		}
+
+		// script
+		if (it->script) {
+			libconfig->setting_lookup_string(entry, "Script", &bonus);
+			hstr(bonus);
+			str = tosql.buf[3].p;
+			if (strlen(str) > tosql.buf[0].len) {
+				tosql.buf[0].len = tosql.buf[0].len + strlen(str) + 1000;
+				RECREATE(tosql.buf[0].p,char,tosql.buf[0].len);
+			}
+			SQL->EscapeString(NULL, tosql.buf[0].p, str);
+		}
+		StrBuf->Printf(&buf, "'%s',", it->script?tosql.buf[0].p:"");
+		
+		// equip_script
+		if (it->equip_script) {
+			libconfig->setting_lookup_string(entry, "OnEquipScript", &bonus);
+			hstr(bonus);
+			str = tosql.buf[3].p;
+			if (strlen(str) > tosql.buf[1].len) {
+				tosql.buf[1].len = tosql.buf[1].len + strlen(str) + 1000;
+				RECREATE(tosql.buf[1].p,char,tosql.buf[1].len);
+			}
+			SQL->EscapeString(NULL, tosql.buf[1].p, str);
+		}
+		StrBuf->Printf(&buf, "'%s',", it->equip_script?tosql.buf[1].p:"");
+
+		// unequip_script
+		if (it->unequip_script) {
+			libconfig->setting_lookup_string(entry, "OnUnequipScript", &bonus);
+			hstr(bonus);
+			str = tosql.buf[3].p;
+			if (strlen(str) > tosql.buf[2].len) {
+				tosql.buf[2].len = tosql.buf[2].len + strlen(str) + 1000;
+				RECREATE(tosql.buf[2].p,char,tosql.buf[2].len);
+			}
+			SQL->EscapeString(NULL, tosql.buf[2].p, str);
+		}
+		StrBuf->Printf(&buf, "'%s'", it->unequip_script?tosql.buf[2].p:"");
+
+		fprintf(tosql.fp, "REPLACE INTO `%s` VALUES (%s);\n", tosql.db_name, StrBuf->Value(&buf));
+
+		StrBuf->Destroy(&buf);
 	}
-	
+
 	return it?it->nameid:0;
 }
 void totable(void) {
-	fprintf(tosql.fp,"#\n"
-			"# Table structure for table `%s`\n"
-			"#\n"
+	fprintf(tosql.fp,
+			"-- NOTE: This file was auto-generated and should never be manually edited,\n"
+			"--       as it will get overwritten. If you need to modify this file,\n"
+			"--       please consider modifying the corresponding .conf file inside\n"
+			"--       the db folder, and then re-run the db2sql plugin.\n"
+			"\n"
+			"--\n"
+			"-- Table structure for table `%s`\n"
+			"--\n"
 			"\n"
 			"DROP TABLE IF EXISTS `%s`;\n"
 			"CREATE TABLE `%s` (\n"
-			"   `id` smallint(5) unsigned NOT NULL DEFAULT '0',\n"
-			"   `name_english` varchar(50) NOT NULL DEFAULT '',\n"
-			"   `name_japanese` varchar(50) NOT NULL DEFAULT '',\n"
-			"   `type` tinyint(2) unsigned NOT NULL DEFAULT '0',\n"
-			"   `price_buy` mediumint(10) DEFAULT NULL,\n"
-			"   `price_sell` mediumint(10) DEFAULT NULL,\n"
-			"   `weight` smallint(5) unsigned DEFAULT NULL,\n"
-			"   `atk` smallint(5) unsigned DEFAULT NULL,\n"
-			"   `matk` smallint(5) unsigned DEFAULT NULL,\n"
-			"   `defence` smallint(5) unsigned DEFAULT NULL,\n"
-			"   `range` tinyint(2) unsigned DEFAULT NULL,\n"
-			"   `slots` tinyint(2) unsigned DEFAULT NULL,\n"
-			"   `equip_jobs` int(12) unsigned DEFAULT NULL,\n"
-			"   `equip_upper` tinyint(8) unsigned DEFAULT NULL,\n"
-			"   `equip_genders` tinyint(2) unsigned DEFAULT NULL,\n"
-			"   `equip_locations` smallint(4) unsigned DEFAULT NULL,\n"
-			"   `weapon_level` tinyint(2) unsigned DEFAULT NULL,\n"
-			"   `equip_level_min` smallint(5) unsigned DEFAULT NULL,\n"
-			"   `equip_level_max` smallint(5) unsigned DEFAULT NULL,\n"
-			"   `refineable` tinyint(1) unsigned DEFAULT NULL,\n"
-			"   `view` smallint(3) unsigned DEFAULT NULL,\n"
-			"   `bindonequip` tinyint(1) unsigned DEFAULT NULL,\n"
-			"   `script` text,\n"
-			"   `equip_script` text,\n"
-			"   `unequip_script` text,\n"
+			"  `id` smallint(5) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `name_english` varchar(50) NOT NULL DEFAULT '',\n"
+			"  `name_japanese` varchar(50) NOT NULL DEFAULT '',\n"
+			"  `type` tinyint(2) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `price_buy` mediumint(10) DEFAULT NULL,\n"
+			"  `price_sell` mediumint(10) DEFAULT NULL,\n"
+			"  `weight` smallint(5) UNSIGNED DEFAULT NULL,\n"
+			"  `atk` smallint(5) UNSIGNED DEFAULT NULL,\n"
+			"  `matk` smallint(5) UNSIGNED DEFAULT NULL,\n"
+			"  `defence` smallint(5) UNSIGNED DEFAULT NULL,\n"
+			"  `range` tinyint(2) UNSIGNED DEFAULT NULL,\n"
+			"  `slots` tinyint(2) UNSIGNED DEFAULT NULL,\n"
+			"  `equip_jobs` int(12) UNSIGNED DEFAULT NULL,\n"
+			"  `equip_upper` tinyint(8) UNSIGNED DEFAULT NULL,\n"
+			"  `equip_genders` tinyint(2) UNSIGNED DEFAULT NULL,\n"
+			"  `equip_locations` smallint(4) UNSIGNED DEFAULT NULL,\n"
+			"  `weapon_level` tinyint(2) UNSIGNED DEFAULT NULL,\n"
+			"  `equip_level_min` smallint(5) UNSIGNED DEFAULT NULL,\n"
+			"  `equip_level_max` smallint(5) UNSIGNED DEFAULT NULL,\n"
+			"  `refineable` tinyint(1) UNSIGNED DEFAULT NULL,\n"
+			"  `view` smallint(3) UNSIGNED DEFAULT NULL,\n"
+			"  `bindonequip` tinyint(1) UNSIGNED DEFAULT NULL,\n"
+			"  `buyingstore` tinyint(1) UNSIGNED DEFAULT NULL,\n"
+			"  `delay` mediumint(9) UNSIGNED DEFAULT NULL,\n"
+			"  `trade_flag` smallint(4) UNSIGNED DEFAULT NULL,\n"
+			"  `trade_group` smallint(3) UNSIGNED DEFAULT NULL,\n"
+			"  `nouse_flag` smallint(4) UNSIGNED DEFAULT NULL,\n"
+			"  `nouse_group` smallint(4) UNSIGNED DEFAULT NULL,\n"
+			"  `stack_amount` mediumint(6) UNSIGNED DEFAULT NULL,\n"
+			"  `stack_flag` tinyint(2) UNSIGNED DEFAULT NULL,\n"
+			"  `sprite` mediumint(6) UNSIGNED DEFAULT NULL,\n"
+			"  `script` text,\n"
+			"  `equip_script` text,\n"
+			"  `unequip_script` text,\n"
 			" PRIMARY KEY (`id`)\n"
 			") ENGINE=MyISAM;\n"
 			"\n",tosql.db_name,tosql.db_name,tosql.db_name);
@@ -198,7 +358,7 @@ HPExport void server_preinit (void) {
 	strlib = GET_SYMBOL("strlib");
 	iMalloc = GET_SYMBOL("iMalloc");
 	libconfig = GET_SYMBOL("libconfig");
-
+	StrBuf = GET_SYMBOL("StrBuf");
 	
 	addArg("--db2sql",false,db2sql_arg,NULL);
 }

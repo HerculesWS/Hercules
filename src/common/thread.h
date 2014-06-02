@@ -20,7 +20,7 @@ typedef enum RATHREAD_PRIO {
  * Creates a new Thread
  *
  * @param entyPoint  - entryProc,
- * @param param - general purpose parameter, would be given as parameter to the thread's entrypoint.
+ * @param param - general purpose parameter, would be given as parameter to the thread's entry point.
  *
  * @return not NULL if success
  */
@@ -31,7 +31,7 @@ rAthread rathread_create( rAthreadProc entryPoint,  void *param );
  * Creates a new Thread (with more creation options)
  *
  * @param entyPoint  - entryProc,
- * @param param - general purpose parameter, would be given as parameter to the thread's entrypoint
+ * @param param - general purpose parameter, would be given as parameter to the thread's entry point
  * @param szStack - stack Size in bytes
  * @param prio - Priority of the Thread @ OS Scheduler..
  *
@@ -41,9 +41,9 @@ rAthread rathread_createEx( rAthreadProc entryPoint,  void *param,  size_t szSta
 
 
 /**
- * Destroys the given Thread immediatly
+ * Destroys the given Thread immediately
  *
- * @note The Handle gets invalid after call! dont use it afterwards.
+ * @note The Handle gets invalid after call! don't use it afterwards.
  *
  * @param handle - thread to destroy.
  */
@@ -53,7 +53,7 @@ void rathread_destroy ( rAthread handle );
 /**
  * Returns the thread handle of the thread calling this function
  *
- * @note this wont work @ programms main thread
+ * @note this wont work @ programs main thread
  * @note the underlying implementation might not perform very well, cache the value received!
  *
  * @return not NULL if success
@@ -62,10 +62,10 @@ rAthread rathread_self( );
 
 
 /**
- * Returns own thrad id (TID)
+ * Returns own thread id (TID)
  *
  * @note this is an unique identifier for the calling thread, and
- *        depends on platfrom / compiler, and may not be the systems Thread ID!
+ *        depends on platform/ compiler, and may not be the systems Thread ID!
  *
  * @return -1 when fails, otherwise >= 0
  */
@@ -93,7 +93,7 @@ void rathread_prio_set( rAthread handle, RATHREAD_PRIO prio );
 
 
 /**
- * Gets the current Prio of the given trhead
+ * Gets the current Prio of the given thread
  *
  * @param handle - the thread to get the prio for.
  */

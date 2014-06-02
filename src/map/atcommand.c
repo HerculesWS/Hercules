@@ -947,7 +947,7 @@ ACMD(jobchange) {
 				}
 			}
 			
-			// High Jobs, Babys and Third
+			// High Jobs, Babies and Third
 			for( i = JOB_NOVICE_HIGH; i < JOB_MAX && !found; i++ ){
 				if (strncmpi(message, pc->job_name(i), 16) == 0) {
 					job = i;
@@ -1329,7 +1329,7 @@ ACMD(baselevelup)
 			clif->message(fd, msg_txt(47)); // Base level can't go any higher.
 			return false;
 		} // End Addition
-		if ((unsigned int)level > pc->maxbaselv(sd) || (unsigned int)level > pc->maxbaselv(sd) - sd->status.base_level) // fix positiv overflow
+		if ((unsigned int)level > pc->maxbaselv(sd) || (unsigned int)level > pc->maxbaselv(sd) - sd->status.base_level) // fix positive overflow
 			level = pc->maxbaselv(sd) - sd->status.base_level;
 		for (i = 0; i < level; i++)
 			status_point += pc->gets_status_point(sd->status.base_level + i);
@@ -1389,7 +1389,7 @@ ACMD(joblevelup)
 			clif->message(fd, msg_txt(23)); // Job level can't go any higher.
 			return false;
 		}
-		if ((unsigned int)level > pc->maxjoblv(sd) || (unsigned int)level > pc->maxjoblv(sd) - sd->status.job_level) // fix positiv overflow
+		if ((unsigned int)level > pc->maxjoblv(sd) || (unsigned int)level > pc->maxjoblv(sd) - sd->status.job_level) // fix positive overflow
 			level = pc->maxjoblv(sd) - sd->status.job_level;
 		sd->status.job_level += (unsigned int)level;
 		sd->status.skill_point += level;
@@ -1401,11 +1401,11 @@ ACMD(joblevelup)
 			return false;
 		}
 		level *=-1;
-		if ((unsigned int)level >= sd->status.job_level) // fix negativ overflow
+		if ((unsigned int)level >= sd->status.job_level) // fix negative overflow
 			level = sd->status.job_level-1;
 		sd->status.job_level -= (unsigned int)level;
 		if (sd->status.skill_point < level)
-			pc->resetskill(sd,0);	//Reset skills since we need to substract more points.
+			pc->resetskill(sd,0);	//Reset skills since we need to subtract more points.
 		if (sd->status.skill_point < level)
 			sd->status.skill_point = 0;
 		else
@@ -1631,7 +1631,7 @@ ACMD(model)
 		pc->changelook(sd, LOOK_HAIR, hair_style);
 		pc->changelook(sd, LOOK_HAIR_COLOR, hair_color);
 		pc->changelook(sd, LOOK_CLOTHES_COLOR, cloth_color);
-		clif->message(fd, msg_txt(36)); // Appearence changed.
+		clif->message(fd, msg_txt(36)); // Appearance changed.
 	} else {
 		clif->message(fd, msg_txt(37)); // An invalid number was specified.
 		return false;
@@ -1657,7 +1657,7 @@ ACMD(dye)
 	
 	if (cloth_color >= MIN_CLOTH_COLOR && cloth_color <= MAX_CLOTH_COLOR) {
 		pc->changelook(sd, LOOK_CLOTHES_COLOR, cloth_color);
-		clif->message(fd, msg_txt(36)); // Appearence changed.
+		clif->message(fd, msg_txt(36)); // Appearance changed.
 	} else {
 		clif->message(fd, msg_txt(37)); // An invalid number was specified.
 		return false;
@@ -1683,7 +1683,7 @@ ACMD(hair_style)
 	
 	if (hair_style >= MIN_HAIR_STYLE && hair_style <= MAX_HAIR_STYLE) {
 		pc->changelook(sd, LOOK_HAIR, hair_style);
-		clif->message(fd, msg_txt(36)); // Appearence changed.
+		clif->message(fd, msg_txt(36)); // Appearance changed.
 	} else {
 		clif->message(fd, msg_txt(37)); // An invalid number was specified.
 		return false;
@@ -1709,7 +1709,7 @@ ACMD(hair_color)
 	
 	if (hair_color >= MIN_HAIR_COLOR && hair_color <= MAX_HAIR_COLOR) {
 		pc->changelook(sd, LOOK_HAIR_COLOR, hair_color);
-		clif->message(fd, msg_txt(36)); // Appearence changed.
+		clif->message(fd, msg_txt(36)); // Appearance changed.
 	} else {
 		clif->message(fd, msg_txt(37)); // An invalid number was specified.
 		return false;
@@ -1896,7 +1896,7 @@ ACMD(monster)
 		return false;
 	}
 	
-	if ((mob_id = mob->db_searchname(monster)) == 0) // check name first (to avoid possible name begining by a number)
+	if ((mob_id = mob->db_searchname(monster)) == 0) // check name first (to avoid possible name beginning by a number)
 		mob_id = mob->db_checkid(atoi(monster));
 	
 	if (mob_id == 0) {
@@ -2711,7 +2711,7 @@ ACMD(char_block)
  *     mn: minute
  *     s:  second
  * <example> @ban +1m-2mn1s-6y test_player
- *           this example adds 1 month and 1 second, and substracts 2 minutes and 6 years at the same time.
+ *           this example adds 1 month and 1 second, and subtracts 2 minutes and 6 years at the same time.
  *------------------------------------------*/
 ACMD(char_ban)
 {
@@ -2879,12 +2879,12 @@ ACMD(doom)
 		{
 			status_kill(&pl_sd->bl);
 			clif->specialeffect(&pl_sd->bl,450,AREA);
-			clif->message(pl_sd->fd, msg_txt(61)); // The holy messenger has given judgement.
+			clif->message(pl_sd->fd, msg_txt(61)); // The holy messenger has given judgment.
 		}
 	}
 	mapit->free(iter);
 	
-	clif->message(fd, msg_txt(62)); // Judgement was made.
+	clif->message(fd, msg_txt(62)); // Judgment was made.
 	
 	return true;
 }
@@ -2904,12 +2904,12 @@ ACMD(doommap)
 		{
 			status_kill(&pl_sd->bl);
 			clif->specialeffect(&pl_sd->bl,450,AREA);
-			clif->message(pl_sd->fd, msg_txt(61)); // The holy messenger has given judgement.
+			clif->message(pl_sd->fd, msg_txt(61)); // The holy messenger has given judgment.
 		}
 	}
 	mapit->free(iter);
 	
-	clif->message(fd, msg_txt(62)); // Judgement was made.
+	clif->message(fd, msg_txt(62)); // Judgment was made.
 	
 	return true;
 }
@@ -2984,7 +2984,7 @@ ACMD(kick)
 	
 	if ( pc_get_group_level(sd) < pc_get_group_level(pl_sd) )
 	{
-		clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
+		clif->message(fd, msg_txt(81)); // Your GM level don't authorize you to do this action on this player.
 		return false;
 	}
 	
@@ -3287,7 +3287,7 @@ ACMD(mapexit) {
 }
 
 /*==========================================
- * idsearch <part_of_name>: revrited by [Yor]
+ * idsearch <part_of_name>: rewrite by [Yor]
  *------------------------------------------*/
 ACMD(idsearch)
 {
@@ -3333,7 +3333,7 @@ ACMD(recallall)
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 	
 	if (sd->bl.m >= 0 && map->list[sd->bl.m].flag.nowarpto && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
-		clif->message(fd, msg_txt(1032)); // You are not authorized to warp somenone to your current map.
+		clif->message(fd, msg_txt(1032)); // You are not authorized to warp someone to your current map.
 		return false;
 	}
 	
@@ -3385,7 +3385,7 @@ ACMD(guildrecall)
 	}
 	
 	if (sd->bl.m >= 0 && map->list[sd->bl.m].flag.nowarpto && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
-		clif->message(fd, msg_txt(1032)); // You are not authorized to warp somenone to your current map.
+		clif->message(fd, msg_txt(1032)); // You are not authorized to warp someone to your current map.
 		return false;
 	}
 	
@@ -3442,7 +3442,7 @@ ACMD(partyrecall)
 	}
 	
 	if (sd->bl.m >= 0 && map->list[sd->bl.m].flag.nowarpto && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
-		clif->message(fd, msg_txt(1032)); // You are not authorized to warp somenone to your current map.
+		clif->message(fd, msg_txt(1032)); // You are not authorized to warp someone to your current map.
 		return false;
 	}
 	
@@ -4089,7 +4089,7 @@ ACMD(nuke) {
 			skill->castend_nodamage_id(&pl_sd->bl, &pl_sd->bl, NPC_SELFDESTRUCTION, 99, timer->gettick(), 0);
 			clif->message(fd, msg_txt(109)); // Player has been nuked!
 		} else {
-			clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
+			clif->message(fd, msg_txt(81)); // Your GM level don't authorize you to do this action on this player.
 			return false;
 		}
 	} else {
@@ -4286,7 +4286,7 @@ ACMD(servertime) {
 		const struct TimerData * timer_data2 = timer->get(pc->day_timer_tid);
 		
 		if (map->night_flag == 0) {
-			sprintf(temp, msg_txt(235), // Game time: The game is actualy in daylight for %s.
+			sprintf(temp, msg_txt(235), // Game time: The game is actually in daylight for %s.
 			        txt_time((unsigned int)(DIFF_TICK(timer_data->tick,timer->gettick())/1000)));
 			clif->message(fd, temp);
 			if (DIFF_TICK(timer_data->tick, timer_data2->tick) > 0)
@@ -4297,7 +4297,7 @@ ACMD(servertime) {
 				        txt_time((unsigned int)(DIFF_TICK(timer_data2->tick,timer_data->tick)/1000)));
 			clif->message(fd, temp);
 		} else {
-			sprintf(temp, msg_txt(233), // Game time: The game is actualy in night for %s.
+			sprintf(temp, msg_txt(233), // Game time: The game is actually in night for %s.
 			        txt_time((unsigned int)(DIFF_TICK(timer_data2->tick,timer->gettick()) / 1000)));
 			clif->message(fd, temp);
 			if (DIFF_TICK(timer_data2->tick,timer_data->tick) > 0)
@@ -4371,7 +4371,7 @@ ACMD(jail) {
 	
 	if (pc_get_group_level(sd) < pc_get_group_level(pl_sd))
   	{ // you can jail only lower or same GM
-		clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
+		clif->message(fd, msg_txt(81)); // Your GM level don't authorize you to do this action on this player.
 		return false;
 	}
 	
@@ -4422,7 +4422,7 @@ ACMD(unjail) {
 	
 	if (pc_get_group_level(sd) < pc_get_group_level(pl_sd)) { // you can jail only lower or same GM
 		
-		clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
+		clif->message(fd, msg_txt(81)); // Your GM level don't authorize you to do this action on this player.
 		return false;
 	}
 	
@@ -4499,7 +4499,7 @@ ACMD(jailfor) {
 	}
 	
 	if (pc_get_group_level(pl_sd) > pc_get_group_level(sd)) {
-		clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
+		clif->message(fd, msg_txt(81)); // Your GM level don't authorize you to do this action on this player.
 		return false;
 	}
 	
@@ -5245,7 +5245,7 @@ ACMD(useskill) {
 	
 	if ( pc_get_group_level(sd) < pc_get_group_level(pl_sd) )
 	{
-		clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
+		clif->message(fd, msg_txt(81)); // Your GM level don't authorized you to do this action on this player.
 		return false;
 	}
 	
@@ -5460,7 +5460,7 @@ ACMD(autotrade) {
 		status->change_start(NULL,&sd->bl, SC_AUTOTRADE, 10000, 0, 0, 0, 0, ((timeout > 0) ? min(timeout,battle_config.at_timeout) : battle_config.at_timeout) * 60000, 0);
 	}
 
-	/* currently standalones are not supporting buyingstores, so we rely on the previous method */
+	/* currently standalone is not supporting buyingstores, so we rely on the previous method */
 	if( sd->state.buyingstore ) {
 		clif->authfail_fd(fd, 15);
 		return true;
@@ -6385,7 +6385,7 @@ ACMD(changesex)
 	int i;
 
 	pc->resetskill(sd,4);
-	// to avoid any problem with equipment and invalid sex, equipment is unequiped.
+	// to avoid any problem with equipment and invalid sex, equipment is unequipped.
 	for( i=0; i<EQI_MAX; i++ )
 		if( sd->equip_index[i] >= 0 ) pc->unequipitem(sd, sd->equip_index[i], 3);
 	chrif->changesex(sd);
@@ -6411,7 +6411,7 @@ ACMD(mute) {
 	
 	if ( pc_get_group_level(sd) < pc_get_group_level(pl_sd) )
 	{
-		clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
+		clif->message(fd, msg_txt(81)); // Your GM level don't authorize you to do this action on this player.
 		return false;
 	}
 	
@@ -7700,7 +7700,7 @@ ACMD(accept) {
 	}
 	
 	if(sd->duel_invite <= 0) {
-		// "Duel: @accept without invititation."
+		// "Duel: @accept without invitation."
 		clif->message(fd, msg_txt(360));
 		return false;
 	}
@@ -7720,7 +7720,7 @@ ACMD(accept) {
 
 ACMD(reject) {
 	if(sd->duel_invite <= 0) {
-		// "Duel: @reject without invititation."
+		// "Duel: @reject without invitation."
 		clif->message(fd, msg_txt(362));
 		return false;
 	}
@@ -8632,7 +8632,7 @@ ACMD(join) {
 	if( hChSys.local && strcmpi(name + 1, hChSys.local_name) == 0 ) {
 		if( !map->list[sd->bl.m].channel ) {
 			clif->chsys_mjoin(sd);
-			if( map->list[sd->bl.m].channel ) /* mjoin might have refused, map has chatting capabilities disabled */
+			if( map->list[sd->bl.m].channel ) /* join might have refused, map has chatting capabilities disabled */
 				return true;
 		} else
 			channel = map->list[sd->bl.m].channel;

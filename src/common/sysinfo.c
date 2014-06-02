@@ -226,7 +226,7 @@ bool sysinfo_svn_get_revision(char **out) {
 	// - since it's a cache column, the data might not even exist
 	if ((fp = fopen(".svn"PATHSEP_STR"wc.db", "rb")) != NULL || (fp = fopen(".."PATHSEP_STR".svn"PATHSEP_STR"wc.db", "rb")) != NULL) {
 
-#ifndef SVNNODEPATH //not sure how to handle branches, so i'll leave this overridable define until a better solution comes up
+#ifndef SVNNODEPATH //not sure how to handle branches, so I'll leave this overridable define until a better solution comes up
 #define SVNNODEPATH trunk
 #endif // SVNNODEPATH
 
@@ -709,7 +709,7 @@ void sysinfo_vcsrevision_src_retrieve(void) {
 #endif // WIN32
 
 /**
- * Retrieevs the VCS type name.
+ * Retrieves the VCS type name.
  *
  * Once retrieved, the value is stored in sysinfo->p->vcstype_name.
  */

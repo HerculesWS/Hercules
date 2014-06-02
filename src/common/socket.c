@@ -360,7 +360,7 @@ int recv_to_fifo(int fd)
 	len = sRecv(fd, (char *) session[fd]->rdata + session[fd]->rdata_size, (int)RFIFOSPACE(fd), 0);
 
 	if( len == SOCKET_ERROR )
-	{//An exception has occured
+	{//An exception has occurred
 		if( sErrno != S_EWOULDBLOCK ) {
 			//ShowDebug("recv_to_fifo: %s, closing connection #%d\n", error_msg(), fd);
 			set_eof(fd);
@@ -400,7 +400,7 @@ int send_from_fifo(int fd)
 	len = sSend(fd, (const char *) session[fd]->wdata, (int)session[fd]->wdata_size, MSG_NOSIGNAL);
 
 	if( len == SOCKET_ERROR )
-	{//An exception has occured
+	{//An exception has occurred
 		if( sErrno != S_EWOULDBLOCK ) {
 			//ShowDebug("send_from_fifo: %s, ending connection #%d\n", error_msg(), fd);
 #ifdef SHOW_SERVER_STATS
@@ -845,7 +845,7 @@ int do_sockets(int next)
 			session[i]->func_send(i);
 
 		if(session[i]->flag.eof) //func_send can't free a session, this is safe.
-		{	//Finally, even if there is no data to parse, connections signalled eof should be closed, so we call parse_func [Skotlex]
+		{	//Finally, even if there is no data to parse, connections signaled eof should be closed, so we call parse_func [Skotlex]
 			session[i]->func_parse(i); //This should close the session immediately.
 		}
 	}
@@ -1234,7 +1234,7 @@ void socket_final(void)
 		if(session[i])
 			sockt->close(i);
 
-	// session[0] のダミーデータを削除
+	// session[0]
 	aFree(session[0]->rdata);
 	aFree(session[0]->wdata);
 	aFree(session[0]);
@@ -1364,7 +1364,7 @@ void socket_init(void)
 		}
 	}
 #elif defined(HAVE_SETRLIMIT) && !defined(CYGWIN)
-	// NOTE: getrlimit and setrlimit have bogus behaviour in cygwin.
+	// NOTE: getrlimit and setrlimit have bogus behavior in cygwin.
 	//       "Number of fds is virtually unlimited in cygwin" (sys/param.h)
 	{// set socket limit to FD_SETSIZE
 		struct rlimit rlp;
@@ -1405,7 +1405,7 @@ void socket_init(void)
 	
 	socket_config_read(SOCKET_CONF_FILENAME);
 
-	// initialise last send-receive tick
+	// initialize last send-receive tick
 	sockt->last_tick = time(NULL);
 
 	// session[0] is now currently used for disconnected sessions of the map server, and as such,
@@ -1458,7 +1458,7 @@ uint32 str2ip(const char* ip_str)
 }
 
 // Reorders bytes from network to little endian (Windows).
-// Neccessary for sending port numbers to the RO client until Gravity notices that they forgot ntohs() calls.
+// Necessary for sending port numbers to the RO client until Gravity notices that they forgot ntohs() calls.
 uint16 ntows(uint16 netshort)
 {
 	return ((netshort & 0xFF) << 8) | ((netshort & 0xFF00) >> 8);

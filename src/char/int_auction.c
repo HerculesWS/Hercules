@@ -230,7 +230,7 @@ void inter_auctions_fromsql(void)
 		if( auction->timestamp > now )
 			endtick = ((int64)(auction->timestamp - now) * 1000) + tick;
 		else
-			endtick = tick + 10000; // 10 Second's to process ended auctions
+			endtick = tick + 10000; // 10 seconds to process ended auctions
 
 		auction->auction_end_timer = timer->add(endtick, auction_end_timer, auction->auction_id, 0);
 		idb_put(auction_db_, auction->auction_id, auction);

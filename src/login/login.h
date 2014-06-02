@@ -72,7 +72,7 @@ struct Login_Config {
 	unsigned int ip_sync_interval;                  // interval (in minutes) to execute a DNS/IP update (for dynamic IPs)
 	bool log_login;                                 // whether to log login server actions or not
 	char date_format[32];                           // date format used in messages
-	bool new_account_flag,new_acc_length_limit;     // autoregistration via _M/_F ? / if yes minimum length is 4?
+	bool new_account_flag,new_acc_length_limit;     // auto-registration via _M/_F ? / if yes minimum length is 4?
 	int start_limited_time;                         // new account expiration time (-1: unlimited)
 	bool use_md5_passwds;                           // work with password hashes instead of plaintext passwords?
 	int group_id_to_connect;                        // required group id to connect

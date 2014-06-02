@@ -541,7 +541,7 @@ void bg_match_over(struct bg_arena *arena, bool canceled) {
 				bg->queue_pc_cleanup(sd);
 			}
 			if( canceled )
-				clif->colormes(sd->fd,COLOR_RED,"BG Match Cancelled: not enough players");
+				clif->colormes(sd->fd,COLOR_RED,"BG Match Canceled: not enough players");
 			else {
 				pc_setglobalreg(sd, script->add_str(arena->delay_var), (unsigned int)time(NULL));
 			}
@@ -579,7 +579,7 @@ void bg_begin(struct bg_arena *arena) {
 		if( bg->afk_timer_id == INVALID_TIMER && bg->mafksec > 0 )
 			bg->afk_timer_id = timer->add(timer->gettick()+10000,bg->afk_timer,0,0);
 		
-		/* TODO: make this a arena-independant var? or just .@? */
+		/* TODO: make this a arena-independent var? or just .@? */
 		mapreg->setreg(script->add_str("$@bg_queue_id"),arena->queue_id);
 		mapreg->setregstr(script->add_str("$@bg_delay_var$"),bg->gdelay_var);
 		

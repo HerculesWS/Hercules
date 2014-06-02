@@ -324,7 +324,7 @@ struct spawn_data {
 	unsigned int level;
 	struct {
 		unsigned int size : 2; //Holds if mob has to be tiny/large
-		unsigned int ai : 4; //Special ai for summoned monsters.
+		unsigned int ai : 4; //Special AI for summoned monsters.
 		//0: Normal mob | 1: Standard summon, attacks mobs
 		//2: Alchemist Marine Sphere | 3: Alchemist Summon Flora | 4: Summon Zanzou
 		unsigned int dynamic : 1; //Whether this data is indexed by a map's dynamic mob list
@@ -659,8 +659,8 @@ struct map_data {
 	int nocommand; //Blocks @/# commands for non-gms. [Skotlex]
 	/**
 	* Ice wall reference counter for bugreport:3574
-	* - since there are a thounsand mobs out there in a lot of maps checking on,
-	* - every targetting for icewall on attack path would just be a waste, so,
+	* - since there are a thousand mobs out there in a lot of maps checking on,
+	* - every targeting for icewall on attack path would just be a waste, so,
 	* - this counter allows icewall checking be only run when there is a actual ice wall on the map
 	**/
 	int icewall_num;
@@ -732,7 +732,7 @@ struct map_data_other_server {
 /// Bitfield of flags for the iterator.
 enum e_mapitflags {
 	MAPIT_NORMAL = 0,
-	//	MAPIT_PCISPLAYING = 1,// Unneeded as pc_db/id_db will only hold auth'ed, active players.
+	//	MAPIT_PCISPLAYING = 1,// Unneeded as pc_db/id_db will only hold authed, active players.
 };
 
 struct s_mapiterator;

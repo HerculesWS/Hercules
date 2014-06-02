@@ -1121,8 +1121,8 @@ int status_charge(struct block_list* bl, int64 hp, int64 sp) {
 }
 
 //Inflicts damage on the target with the according walkdelay.
-//If flag&1, damage is passive and does not triggers cancelling status changes.
-//If flag&2, fail if target does not has enough to substract.
+//If flag&1, damage is passive and does not triggers canceling status changes.
+//If flag&2, fail if target does not has enough to subtract.
 //If flag&4, if killed, mob must not give exp/loot.
 //flag will be set to &8 when damaging sp of a dead character
 int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, int64 in_sp, int walkdelay, int flag) {
@@ -1269,7 +1269,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 
 	st->hp = 1; //To let the dead function cast skills and all that.
 	//NOTE: These dead functions should return: [Skotlex]
-	//0: Death cancelled, auto-revived.
+	//0: Death canceled, auto-revived.
 	//Non-zero: Standard death. Clear status, cancel move/attack, etc
 	//&2: Also remove object from map.
 	//&4: Also delete object from memory.
@@ -1284,7 +1284,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 		break;
 	}
 
-	if(!flag) //Death cancelled.
+	if(!flag) //Death canceled.
 		return (int)(hp+sp);
 
 	//Normal death
@@ -1429,7 +1429,7 @@ int status_heal(struct block_list *bl,int64 in_hp,int64 in_sp, int flag) {
 //If rates are > 0, percent is of current HP/SP
 //If rates are < 0, percent is of max HP/SP
 //If !flag, this is heal, otherwise it is damage.
-//Furthermore, if flag==2, then the target must not die from the substraction.
+//Furthermore, if flag==2, then the target must not die from the subtraction.
 int status_percent_change(struct block_list *src,struct block_list *target,signed char hp_rate, signed char sp_rate, int flag) {
 	struct status_data *st;
 	unsigned int hp = 0, sp = 0;
@@ -1633,11 +1633,11 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 
 	if( sc && sc->count ) {
 
-		if (skill_id != RK_REFRESH && sc->opt1 >0 && !(sc->opt1 == OPT1_CRYSTALIZE && src->type == BL_MOB) && sc->opt1 != OPT1_BURNING && skill_id != SR_GENTLETOUCH_CURE) { //Stuned/Frozen/etc
+		if (skill_id != RK_REFRESH && sc->opt1 >0 && !(sc->opt1 == OPT1_CRYSTALIZE && src->type == BL_MOB) && sc->opt1 != OPT1_BURNING && skill_id != SR_GENTLETOUCH_CURE) { //Stunned/Frozen/etc
 			if (flag != 1) //Can't cast, casted stuff can't damage.
 				return 0;
 			if (!(skill->get_inf(skill_id)&INF_GROUND_SKILL))
-				return 0; //Targetted spells can't come off.
+				return 0; //Targeted spells can't come off.
 		}
 
 		if (
@@ -1782,7 +1782,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 		if( ( tsc->data[SC_STEALTHFIELD] || tsc->data[SC_CAMOUFLAGE] ) && !(st->mode&(MD_BOSS|MD_DETECTOR)) && flag == 4 )
 			return 0;
 	}
-	//If targetting, cloak+hide protect you, otherwise only hiding does.
+	//If targeting, cloak+hide protect you, otherwise only hiding does.
 	hide_flag = flag?OPTION_HIDE:(OPTION_HIDE|OPTION_CLOAK|OPTION_CHASEWALK);
 
 	//You cannot hide from ground skills.
@@ -1815,7 +1815,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 				}
 			}
 			break;
-		case BL_ITEM:	//Allow targetting of items to pick'em up (or in the case of mobs, to loot them).
+		case BL_ITEM:	//Allow targeting of items to pick'em up (or in the case of mobs, to loot them).
 			//TODO: Would be nice if this could be used to judge whether the player can or not pick up the item it targets. [Skotlex]
 			if (st->mode&MD_LOOTER)
 				return 1;
@@ -1891,7 +1891,7 @@ int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st) 
 #ifdef RENEWAL_ASPD
 	short mod = -1;
 
-	switch( sd->weapontype2 ){ // adjustment for dual weilding
+	switch( sd->weapontype2 ){ // adjustment for dual wielding
 		case W_DAGGER:	mod = 0;	break; // 0, 1, 1
 		case W_1HSWORD:
 		case W_1HAXE:	mod = 1;
@@ -2555,7 +2555,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 				return 1;
 		}
 
-		// sanitize the refine level in case someone decreased the value inbetween
+		// sanitize the refine level in case someone decreased the value in between
 		if (sd->status.inventory[index].refine > MAX_REFINE)
 			sd->status.inventory[index].refine = MAX_REFINE;
 
@@ -2583,7 +2583,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 				wa->matk += status->refine_info[wlv].bonus[r-1] / 100;
 #endif
 
-			//Overrefine bonus.
+			//Overrefined bonus.
 			if (r)
 				wd->overrefine = status->refine_info[wlv].randombonus_max[r-1] / 100;
 

@@ -35,7 +35,7 @@ static Sql* sql_handle = NULL;
 static bool enabled = false;
 
 
-// Returns the number of failed login attemps by the ip in the last minutes.
+// Returns the number of failed login attempts by the ip in the last minutes.
 unsigned long loginlog_failedattempts(uint32 ip, unsigned int minutes)
 {
 	unsigned long failures = 0;

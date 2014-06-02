@@ -13,8 +13,8 @@ struct s_search_store_search;
 
 struct s_vending {
 	short index; //cart index (return item data)
-	short amount; //amout of the item for vending
-	unsigned int value; //at wich price
+	short amount; //amount of the item for vending
+	unsigned int value; //at which price
 };
 
 struct vending_interface {
