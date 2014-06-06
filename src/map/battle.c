@@ -2621,8 +2621,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			}
 		}
 
-		if(sc->data[SC_ZEPHYR] &&
-			flag&(BF_LONG|BF_SHORT)){
+		if( sc->data[SC_ZEPHYR] && ((flag&BF_LONG) || rand()%100 < 10) ) {
 				d->dmg_lv = ATK_BLOCK;
 				return 0;
 		}
