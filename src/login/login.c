@@ -845,18 +845,20 @@ int parse_fromchar(int fd)
 					WFIFOHEAD(fd,183);
 					WFIFOW(fd,0) = 0x2737;
 					safestrncpy((char*)WFIFOP(fd,2), acc.userid, NAME_LENGTH);
-					if (u_group >= acc.group_id) {
+					if (u_group >= acc.group_id)
 						safestrncpy((char*)WFIFOP(fd,26), acc.pass, 33);
-					}
+					else
+						memset(WFIFOP(fd,26), '\0', 33);
 					safestrncpy((char*)WFIFOP(fd,59), acc.email, 40);
 					safestrncpy((char*)WFIFOP(fd,99), acc.last_ip, 16);
 					WFIFOL(fd,115) = acc.group_id;
 					safestrncpy((char*)WFIFOP(fd,119), acc.lastlogin, 24);
 					WFIFOL(fd,143) = acc.logincount;
 					WFIFOL(fd,147) = acc.state;
-					if (u_group >= acc.group_id) {
+					if (u_group >= acc.group_id) 
 						safestrncpy((char*)WFIFOP(fd,151), acc.pincode, 5);
-					}
+					else
+						memset(WFIFOP(fd,151), '\0', 5);
 					safestrncpy((char*)WFIFOP(fd,156), acc.birthdate, 11);
 					WFIFOL(fd,167) = map_fd;
 					WFIFOL(fd,171) = u_fd;
