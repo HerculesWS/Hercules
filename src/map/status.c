@@ -8830,16 +8830,34 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_STONE_SHIELD_OPTION:
 				val2 = 100;	// Elemental modifier.
 				break;
+			case SC_TROPIC:
+			case SC_CHILLY_AIR:
+			case SC_WILD_STORM:
+			case SC_UPHEAVAL:
+				val2 += 10;
+			case SC_HEATER:
+			case SC_COOLER:
+			case SC_BLAST:
+			case SC_CURSED_SOIL:
+				val2 += 10;
+			case SC_PYROTECHNIC:
+			case SC_AQUAPLAY:
+			case SC_GUST:
+			case SC_PETROLOGY:
+				val2 += 5;
+				val3 += 9000;
 			case SC_CIRCLE_OF_FIRE:
+			case SC_WATER_SCREEN:
+			case SC_WIND_STEP:
+			case SC_SOLID_SKIN:
 			case SC_FIRE_CLOAK:
 			case SC_WATER_DROP:
-			case SC_WATER_SCREEN:
 			case SC_WIND_CURTAIN:
-			case SC_WIND_STEP:
 			case SC_STONE_SHIELD:
-			case SC_SOLID_SKIN:
-				val2 = 10;
-				tick_time = 2000; // [GodLesZ] tick time
+				val2 += 5;
+				val3 += 1000;
+				val4 = tick;
+				tick_time = val3;
 				break;
 			case SC_WATER_BARRIER:
 				val2 = 40;	// Increasement. Mdef1 ???
@@ -11125,22 +11143,31 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 			}
 			break;
 
+		case SC_TROPIC:
+		case SC_CHILLY_AIR:
+		case SC_WILD_STORM:
+		case SC_UPHEAVAL:
+		case SC_HEATER:
+		case SC_COOLER:
+		case SC_BLAST:
+		case SC_CURSED_SOIL:
+		case SC_PYROTECHNIC:
+		case SC_AQUAPLAY:
+		case SC_GUST:
+		case SC_PETROLOGY:
 		case SC_CIRCLE_OF_FIRE:
+		case SC_WATER_SCREEN:
+		case SC_WIND_STEP:
+		case SC_SOLID_SKIN:
 		case SC_FIRE_CLOAK:
 		case SC_WATER_DROP:
-		case SC_WATER_SCREEN:
 		case SC_WIND_CURTAIN:
-		case SC_WIND_STEP:
 		case SC_STONE_SHIELD:
-		case SC_SOLID_SKIN:
-			if( !status->charge(bl,0,sce->val2) ){
-				struct block_list *s_bl = battle->get_master(bl);
-				if( s_bl )
-					status_change_end(s_bl,type+1,INVALID_TIMER);
-				status_change_end(bl,type,INVALID_TIMER);
-				break;
-			}
-			sc_timer_next(2000 + tick, status->change_timer, bl->id, data);
+			if(status->charge(bl, 0, sce->val2) && (sce->val4==-1 || (sce->val4-=sce->val3)>=0))
+				sc_timer_next(sce->val3 + tick, status->change_timer, bl->id, data);
+			else
+				if (bl->type == BL_ELEM)
+					elemental->change_mode(BL_CAST(BL_ELEM,bl),MAX_ELESKILLTREE);
 			return 0;
 
 		case SC_STOMACHACHE:

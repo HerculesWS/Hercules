@@ -2436,6 +2436,8 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		case EL_ROCK_CRUSHER_ATK:
 		case EL_HURRICANE:
 		case EL_HURRICANE_ATK:
+		case EL_TYPOON_MIS:
+		case EL_TYPOON_MIS_ATK:
 		case KO_BAKURETSU:
 		case NC_MAGMA_ERUPTION:
 			dmg.dmotion = clif->skill_damage(src,bl,tick,dmg.amotion,dmg.dmotion,damage,dmg.div_,skill_id,-1,5);
@@ -8812,7 +8814,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case SR_GENTLETOUCH_CHANGE:
 		case SR_GENTLETOUCH_REVITALIZE:
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,
-				sc_start2(src,bl,type,100,skill_lv,src->id,skill->get_time(skill_id,skill_lv)));
+				sc_start2(src,bl,type,100,skill_lv,bl->id,skill->get_time(skill_id,skill_lv)));
 			break;
 		case SR_FLASHCOMBO:
 		{

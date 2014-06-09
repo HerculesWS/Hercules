@@ -6155,7 +6155,7 @@ Size is 0 = normal 1 = small 2 = big.
 
 *addtimer <ticks>,"NPC::OnLabel";
 *deltimer "NPC::OnLabel";
-*addtimercount <ticks>,"NPC::OnLabel";
+*addtimercount "NPC::OnLabel",<ticks>;
 
 These commands will create, destroy, and delay a countdown timer - 
 'addtimer' to create, 'deltimer' to destroy and 'addtimercount' to delay 
