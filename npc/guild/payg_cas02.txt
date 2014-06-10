@@ -91,8 +91,8 @@ payg_cas02,70,282,4	duplicate(InsideFlagsPA2)	Scarlet Palace#10	GUILD_FLAG
 
 // Guild Flag (Town)
 //============================================================
-payon,97,322,4	duplicate(InsideFlagsPA2)	Scarlet Palace#11	GUILD_FLAG
-payon,166,173,3	duplicate(InsideFlagsPA2)	Scarlet Palace#12	GUILD_FLAG
+payon,79,35,4	duplicate(InsideFlagsPA2)	Scarlet Palace#11	GUILD_FLAG
+payon,82,155,4	duplicate(InsideFlagsPA2)	Scarlet Palace#12	GUILD_FLAG
 
 // Kafra Employee
 //============================================================

@@ -2049,7 +2049,7 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage) {
 
 	if (!src)
 		return;
-
+/*
 #if PACKETVER >= 20120404
 	if( !(md->status.mode&MD_BOSS) ){
 		int i;
@@ -2062,6 +2062,7 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage) {
 		}
 	}
 #endif
+*/
 
 	if( md->special_state.ai == 2 ) {//LOne WOlf explained that ANYONE can trigger the marine countdown skill. [Skotlex]
 		md->state.alchemist = 1;
@@ -2385,7 +2386,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 			 * so while we discuss, for a small period of time, the list is hardcoded (yes officially only those 2 use it,
 			 * thus why we're unsure on how to best place the setting) */
 			/* temp, will not be hardcoded for long thudu. */
-			if( it->nameid == 7782 || it->nameid == 7783 ) /* for when not hardcoded: add a check on mvp bonus drop as well */
+			if( it->nameid >= 4001 && it->nameid <= 4128 ) /* for when not hardcoded: add a check on mvp bonus drop as well */
 				clif->item_drop_announce(mvp_sd, it->nameid, md->name);
 			
 			// Announce first, or else ditem will be freed. [Lance]
@@ -2796,7 +2797,7 @@ void mob_heal(struct mob_data *md,unsigned int heal)
 {
 	if (battle_config.show_mob_info&3)
 		clif->charnameack (0, &md->bl);
-	
+/*
 #if PACKETVER >= 20120404
 	if( !(md->status.mode&MD_BOSS) ){
 		int i;
@@ -2809,6 +2810,7 @@ void mob_heal(struct mob_data *md,unsigned int heal)
 		}
 	}
 #endif
+*/
 }
 
 /*==========================================

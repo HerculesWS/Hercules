@@ -4356,6 +4356,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 					clif->specialeffect_single(bl,423,sd->fd);
 				else if(md->special_state.size==SZ_SMALL)
 					clif->specialeffect_single(bl,421,sd->fd);
+/*
 #if PACKETVER >= 20120404
 				if( !(md->status.mode&MD_BOSS) ){
 					int i;
@@ -4367,6 +4368,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 					}
 				}
 #endif
+*/
 			}
 			break;
 		case BL_PET:
@@ -17531,7 +17533,7 @@ void clif_snap( struct block_list *bl, short x, short y ) {
 
 	clif->send(buf,packet_len(0x8d2),bl,AREA);
 }
-
+/*
 void clif_monster_hp_bar( struct mob_data* md, struct map_session_data *sd ) {
 	struct packet_monster_hp p;
 
@@ -17542,6 +17544,7 @@ void clif_monster_hp_bar( struct mob_data* md, struct map_session_data *sd ) {
 
 	clif->send(&p,sizeof(p),&sd->bl,SELF);
 }
+*/
 /* [Ind/Hercules] placeholder for unsupported incoming packets (avoids server disconnecting client) */
 void __attribute__ ((unused)) clif_parse_dull(int fd,struct map_session_data *sd) {
 	return;
@@ -18722,7 +18725,7 @@ void clif_defaults(void) {
 	clif->mvp_noitem = clif_mvp_noitem;
 	clif->changed_dir = clif_changed_dir;
 	clif->charnameack = clif_charnameack;
-	clif->monster_hp_bar = clif_monster_hp_bar;
+	/*clif->monster_hp_bar = clif_monster_hp_bar;*/
 	clif->hpmeter = clif_hpmeter;
 	clif->hpmeter_single = clif_hpmeter_single;
 	clif->hpmeter_sub = clif_hpmeter_sub;

@@ -90,8 +90,8 @@ payg_cas01,212,108,4	duplicate(InsideFlagsPA1)	Bright Arbor#10	GUILD_FLAG
 
 // Guild Flag (Town)
 //============================================================
-payon,90,322,4	duplicate(InsideFlagsPA1)	Bright Arbor#11	GUILD_FLAG
-payon,166,177,3	duplicate(InsideFlagsPA1)	Bright Arbor#12	GUILD_FLAG
+payon,79,31,4	duplicate(InsideFlagsPA1)	Bright Arbor#11	GUILD_FLAG
+payon,89,155,4	duplicate(InsideFlagsPA1)	Bright Arbor#12	GUILD_FLAG
 
 // Kafra Employee
 //============================================================

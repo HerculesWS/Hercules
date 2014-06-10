@@ -28,7 +28,7 @@
 
 // Payon
 //============================================================
-payon,246,154,0	script	Lady#payon	4_F_01,{
+payon,163,139,0	script	Lady#payon	4_F_01,{
 	mes "[Lady]";
 	mes "A long time ago,";
 	mes "when Payon was still";
@@ -56,7 +56,7 @@ payon,246,154,0	script	Lady#payon	4_F_01,{
 	close;
 }
 
-payon,134,211,4	script	Young Man#payon	1_M_ORIENT01,{
+payon_in01,171,138,4	script	Young Man#payon	1_M_ORIENT01,{
 	mes "[Young Man]";
 	mes "From your attire,";
 	mes "I can see that you";
@@ -77,7 +77,7 @@ payon,134,211,4	script	Young Man#payon	1_M_ORIENT01,{
 	close;
 }
 
-payon,173,82,0	script	Young Man#2payon	4_M_ORIENT01,{
+payon,29,115,0	script	Young Man#2payon	4_M_ORIENT01,{
 	mes "[Young Man]";
 	mes "I remember the story my dearly departed grandfather has told me.";
 	next;
@@ -110,7 +110,7 @@ payon,173,82,0	script	Young Man#2payon	4_M_ORIENT01,{
 	close;
 }
 
-payon,158,246,3	script	Guardsman#payon	4_M_PAY_SOLDIER,3,3,{
+payon,93,162,3	script	Guardsman#payon	4_M_PAY_SOLDIER,3,3,{
 	end;
 
 OnTouch:
@@ -125,7 +125,7 @@ OnTouch:
 	close;
 }
 
-payon,249,156,1	script	Woman#payon	1_F_01,{
+payon,166,140,1	script	Woman#payon	1_F_01,{
 	mes "[Woman]";
 	mes "Welcome to Payon.";
 	mes "You must have had";
@@ -159,7 +159,7 @@ payon,249,156,1	script	Woman#payon	1_F_01,{
 		break;
 	case 2:
 		mes "[Woman]";
-		mes "Oh don't worry about any preparations. There's a Tool Dealer right in front of the cave, so you can purchase anything you need from my husban, er, that guy~";
+		mes "Oh don't worry about any preparations. There's a Tool Dealer right in front of the cave, so you can purchase anything you need from my husband, er, that guy~";
 		break;
 	case 3:
 		mes "[Woman]";
@@ -177,7 +177,7 @@ payon,249,156,1	script	Woman#payon	1_F_01,{
 	close;
 }
 
-payon,246,158,5	script	Woman#2payon	1_F_01,0,0,{
+payon,163,142,5	script	Woman#2payon	1_F_01,0,0,{
 	mes "[Jim's Mother]";
 	mes "Oh boy~";
 	mes "There she goes again.";
@@ -224,7 +224,7 @@ payon,246,158,5	script	Woman#2payon	1_F_01,0,0,{
 	close;
 }
 
-payon,210,110,1	script	Drunkard#payon	2_M_PHARMACIST,{
+payon_in01,95,181,1	script	Drunkard#payon	2_M_PHARMACIST,{
 	if (Class != Job_Archer) {
 		mes "[Drunkard]";
 		mes "Hey...";
@@ -296,7 +296,7 @@ payon,210,110,1	script	Drunkard#payon	2_M_PHARMACIST,{
 	close;
 }
 
-payon,132,235,3	script	Monster Scholar#02	4W_M_02,{
+payon_in01,164,165,2	script	Monster Scholar#02	4W_M_02,{
 	mes "[Monster Scholar Vuicokk]";
 	mes "Nice to meet you.";
 	mes "I am called Vuicokk.";
@@ -371,7 +371,7 @@ payon,132,235,3	script	Monster Scholar#02	4W_M_02,{
 
 // Inside Payon
 //============================================================
-payon_in01,180,7,2	script	Waitress#payon	4_F_01,{
+payon_in01,104,182,2	script	Waitress#payon	4_F_01,{
 	mes "[Pub Lady]";
 	mes "This place is always bustling with busy people. Little Novices come and go to become Archers, and everyone else is buying arrows while I have to stay here in this small shop.";
 	next;
@@ -463,7 +463,7 @@ payon_in01,180,7,2	script	Waitress#payon	4_F_01,{
 	close;
 }
 
-payon_in03,96,116,3	script	Chief Guardsman#payon	4_M_PAY_SOLDIER,3,3,{
+payon_in02,69,90,3	script	Chief Guardsman#payon	4_M_PAY_SOLDIER,3,3,{
 	end;
 
 OnTouch:
@@ -481,7 +481,7 @@ OnTouch:
 	close;
 }
 
-payon_in01,66,64,5	script	Archer Zakk#payon	4_M_ORIENT01,{
+payon_in01,95,179,5	script	Archer Zakk#payon	4_M_ORIENT01,{
 	mes "[Archer Zakk]";
 	mes "I'm kind of worried";
 	mes "about one of my pals.";
@@ -536,7 +536,7 @@ payon_in01,66,64,5	script	Archer Zakk#payon	4_M_ORIENT01,{
 	close;
 }
 
-payon_in01,47,59,2	script	Archer Wolt#payon	4_M_ORIENT01,{
+payon_in01,176,176,2	script	Archer Wolt#payon	4_M_ORIENT01,{
 	mes "[Archer Wolt]";
 	mes "Archers should";
 	mes "practice as much";
@@ -827,7 +827,7 @@ payon_in01,47,59,2	script	Archer Wolt#payon	4_M_ORIENT01,{
 	close;
 }
 
-payon_in03,99,190,4	script	Chief#payon	1_M_PAY_ELDER,2,2,{
+payon_in01,136,147,2	script	Chief#payon	1_M_PAY_ELDER,2,2,{
 	end;
 
 OnTouch:
@@ -968,7 +968,7 @@ OnTouch:
 	end;
 }
 
-payon_in03,102,185,5	script	Guard#payon	4_M_PAY_SOLDIER,{
+payon_in01,129,140,2	script	Guard#payon	4_M_PAY_SOLDIER,{
 	if (BaseLevel < 30) {
 		mes "[Guard]";
 		mes "Hey...!";
