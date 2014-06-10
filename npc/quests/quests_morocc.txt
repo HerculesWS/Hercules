@@ -886,6 +886,7 @@ que_job01,70,84,1	script	Girl#moc_ex002	4_F_SITDOWN,{
 	close;
 }
 
+/*
 // Resurrection of Satan Morroc
 // ============================================================
 moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,3,{
@@ -7877,3 +7878,4 @@ OnTouch:
 	}
 	end;
 }
+*/

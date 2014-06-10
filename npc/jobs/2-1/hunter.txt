@@ -53,30 +53,9 @@
 //= 3.7 Modified the quest to renewal. [Vali] (Thanks to Muad_Dib for the necessary info).
 //============================================================
 
-// Notices in the old Hunter Guild.
-//============================================================
-in_hunter,99,99,4	script	Hunter Info#hnt::HntNotice	4_F_JOB_HUNTER,{
-	mes "============Notice ============";
-	mes "We would like to inform that the Hunter Job Change Location";
-	mes "has been moved to ^ff0000Hugel^000000 in the Schwaltzvalt Republic.";
-	next;
-	mes "You can now use the Hugel airline, so please use the airship to visit Hugel.";
-	next;
-	mes "You will find the new Job Change Location at ^ff0000 Hugel 208 222 ^000000.";
-	next;
-	mes "^804000(You found a tiny line written at the end of the notice.)^000000";
-	mes " ";
-	mes " ";
-	mes " ";
-	mes "I, the Falcon breeder have moved out as well.";
-	close;
-}
-
-pay_fild10,148,252,3	duplicate(HntNotice)	Job Change Location#hu	4_BOARD3
-
 // Actual Job quest start
 //============================================================
-hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
+in_hunter,99,99,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 	if (Upper == 1) {
 		mes "[Hunter Sherin]";
 		mes "Oh, how have you been? It's been a long time, hasn't it?";
@@ -468,7 +447,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 	close;
 }
 
-hu_in01,382,382,4	script	Guild Receptionist#hnt	4_M_JOB_HUNTER,{
+in_hunter,55,99,4	script	Guild Receptionist#hnt	4_M_JOB_HUNTER,{
 	if (HNTR_Q == 2) {
 		mes "[Guild Receptionist]";
 		mes "Greetings. They call me... ^660000The Demon Hunter^000000. I am the one in charge of processing applications. Your name is ... " + strcharinfo(0) + ", correct?";
@@ -612,7 +591,7 @@ hu_in01,382,382,4	script	Guild Receptionist#hnt	4_M_JOB_HUNTER,{
 	}
 }
 
-payon_in03,131,7,3	script	Hunter#htnGM	1_M_ORIENT01,{
+payon_in01,25,100,1	script	Hunter#htnGM	1_M_ORIENT01,{
 	if (HNTR_Q == 10) {
 		mes "[Hunter Guildmaster]";
 		mes "Hmpf. You must be here for the Hunter job test. Let me tell you about the testing process. What would you like to know?";
@@ -1023,7 +1002,7 @@ OnTouch:
 	end;
 }
 
-job_hunte,178,38,1	script	Waiting Room#hnt	1_F_01,{
+job_hunte,176,38,1	script	Waiting Room#hnt	1_F_01,{
 	end;
 
 OnInit:

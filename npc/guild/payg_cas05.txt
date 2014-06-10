@@ -90,8 +90,8 @@ payg_cas05,55,260,2	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#10	GUILD_FLAG
 
 // Guild Flag (Town)
 //============================================================
-payon,123,322,4	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#11	GUILD_FLAG
-payon,166,161,3	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#12	GUILD_FLAG
+payon,79,47,4	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#11	GUILD_FLAG
+payon,75,155,4	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#12	GUILD_FLAG
 
 // Kafra Employee
 //============================================================

@@ -167,7 +167,7 @@ prt_in,47,173,3	script	Morrison#juice	4W_M_01,{
 	close;
 }
 
-payon_in03,188,146,5	script	Marx Hansen#juice	4_M_04,{
+payon_in01,174,113,3	script	Marx Hansen#juice	4_M_04,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you're carrying -";

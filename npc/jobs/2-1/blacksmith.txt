@@ -40,7 +40,7 @@
 //= 2.8 Removed the need for use of 'goto.' [L0ne_W0lf]
 //==============================================================
 
-ein_in01,18,28,4	script	Guildsman#BLS	4_M_JOB_BLACKSMITH,{
+geffen_in,110,169,1	script	Guildsman#BLS	4_M_JOB_BLACKSMITH,{
 	if (Upper == 1) {
 		mes "[Altiregen]";
 		mes "Hey hey. I don't have time for chit-chat, I'm a pretty busy guy. There's all these Merchants working hard to become Blacksmiths.";
@@ -276,7 +276,7 @@ ein_in01,18,28,4	script	Guildsman#BLS	4_M_JOB_BLACKSMITH,{
 	}
 }
 
-ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
+alberta_in,172,22,1	script	Guildsman#alberta	1_M_SMITH,{
 	mes "[Geschupenschte]";
 	mes "Hello there!";
 	mes "I'm ^8E6B23Geschupenschte^000000,";
@@ -701,7 +701,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 					mes "to ^8E6B23Wickebine^000000 in Morroc of Rune-Midgarts Kingdom,";
 					break;
 				case 11:
-					mes "Okay, now take this to ^8E6B23Krongast^000000 in Lighthalzen. Simply deliver it and bring me the receipt.";
+					mes "Okay, now take this to ^8E6B23Krongast^000000 in Izlude. Simply deliver it and bring me the receipt.";
 					getitem 1119,1; //Tsurugi
 					if (checkquest(2005) != -1) {
 						changequest 2005,2010;
@@ -724,7 +724,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 					next;
 					mes "[Geschupenschte]";
 					mes "Anyway, take this";
-					mes "to ^8E6B23Krongast^000000 in Lighthalzen";
+					mes "to ^8E6B23Krongast^000000 in Izlude.";
 					break;
 				case 12:
 					mes "Okay, now take this to ^8E6B23Talpiz^000000 in Payon of Rune-Midgarts Kingdom. Simply deliver this and bring me the receipt.";
@@ -751,7 +751,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 					mes "to ^8E6B23Talpiz^000000 in Payon of Rune-Midgarts Kindgom,";
 					break;
 				case 13:
-					mes "Okay, now take this to ^8E6B23Bismarc^000000 in Hugel. Simply deliver this and bring back the receipt.";
+					mes "Okay, now take this to ^8E6B23Bismarc^000000 in comodo. Simply deliver this and bring back the receipt.";
 					getitem 1122,1; //Ring_Pommel_Saber
 					if (checkquest(2007) != -1) {
 						changequest 2007,2012;
@@ -778,7 +778,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 					next;
 					mes "[Geschupenschte]";
 					mes "Anyway, take this";
-					mes "to ^8E6B23Bismarc^000000 in Hugel";
+					mes "to ^8E6B23Bismarc^000000 in Comodo.";
 				}
 				mes "and don't forget";
 				mes "the receipt!";
@@ -828,13 +828,13 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 				mes "dealer ^8E6B23Wickebine^000000 in Morroc. And don't forget the receipt.";
 			}
 			else if (BSMITH_Q == 11) {
-				mes "In Lighthalzen, 6 o'clock direction from the town center, you will find ^8E6B23Krongast^000000 near the weapon shop. And don't forget the receipt.";
+				mes "In Izlude, 11 o'clock direction from the town center, you will find ^8E6B23Krongast^000000 near the weapon shop. And don't forget the receipt.";
 			}
 			else if (BSMITH_Q == 12) {
 				mes "In Payon, at the 5 o'clock direction from the town center, you will find ^8E6B23Talpiz^000000. And don't forget the receipt.";
 			}
 			else {
-				mes "In Hugel, at the 1 o'clock direction from the town center, you will find ^8E6B23Bismarc^000000 near the airship. And don't forget the receipt.";
+				mes "In Comodo, at the 12 o'clock direction from the town center, you will find ^8E6B23Bismarc^000000 near the airship. And don't forget the receipt.";
 			}
 			close;
 		}
@@ -1107,7 +1107,7 @@ morocc,27,112,4	script	Wickebine#BLS	4_F_JOB_ASSASSIN,{
 	}
 }
 
-lighthalzen,209,80,4	script	Krongast#BLS	4_M_JOB_KNIGHT2,{
+izlude,69,181,4	script	Krongast#BLS	4_M_JOB_KNIGHT2,{
 	if (BSMITH_Q == 11 && countitem(1119) > 0) {
 		mes "[Krongast]";
 		mes "Ohhhhhh~";
@@ -1155,7 +1155,7 @@ lighthalzen,209,80,4	script	Krongast#BLS	4_M_JOB_KNIGHT2,{
 		mes "your receipt.";
 		mes "Thank you for";
 		mes "your business!";
-		mapannounce "lighthalzen",strcharinfo(0)+"... Thank you for the delivery.",bc_map;
+		mapannounce "izlude",strcharinfo(0)+"... Thank you for the delivery.",bc_map;
 		close;
 	}
 	else if (BSMITH_Q == 14) {
@@ -1185,7 +1185,7 @@ lighthalzen,209,80,4	script	Krongast#BLS	4_M_JOB_KNIGHT2,{
 	}
 }
 
-payon,214,79,4	script	Talpiz#BLS	1_M_ORIENT01,{
+payon,151,39,1	script	Talpiz#BLS	1_M_ORIENT01,{
 	if (BSMITH_Q == 12 && countitem(1713) > 0) {
 		mes "[Talpiz]";
 		mes "Oh~";
@@ -1259,7 +1259,7 @@ payon,214,79,4	script	Talpiz#BLS	1_M_ORIENT01,{
 	}
 }
 
-hugel,168,183,1	script	Bismarc#BLS	2_M_THIEFMASTER,{
+comodo,158,342,1	script	Bismarc#BLS	2_M_THIEFMASTER,{
 	if (BSMITH_Q == 13 && countitem(1122) > 0) {
 		mes "[Bismarc]";
 		mes "Sweet God...";
@@ -1326,7 +1326,7 @@ hugel,168,183,1	script	Bismarc#BLS	2_M_THIEFMASTER,{
 		mes "your receipt.";
 		mes "T-take it...!";
 		mes "It's yours!";
-		mapannounce "hugel","Thanks, " +strcharinfo(0)+ ", for the delivery. You saved my life...",bc_map;
+		mapannounce "comodo","Thanks, " +strcharinfo(0)+ ", for the delivery. You saved my life...",bc_map;
 		close;
 	}
 	else if (BSMITH_Q == 14) {
@@ -1356,7 +1356,7 @@ hugel,168,183,1	script	Bismarc#BLS	2_M_THIEFMASTER,{
 	}
 }
 
-ein_in01,24,41,5	script	Blacksmith Guildsman#moc	4_F_JOB_BLACKSMITH,{
+morocc,95,133,4	script	Blacksmith Guildsman#moc	4_F_JOB_BLACKSMITH,{
 	if (BSMITH_Q == 16) {
 		emotion e_hmm;
 		mes "[Mitehmaeeuh]";
@@ -1578,6 +1578,7 @@ ein_in01,24,41,5	script	Blacksmith Guildsman#moc	4_F_JOB_BLACKSMITH,{
 	}
 }
 
+/*
 geffen_in,109,170,3	script	Blacksmith Guildsman#gef	4_F_JOB_BLACKSMITH,{
 	mes "[Blacksmith Guildsman]";
 	mes "Good day, are you here to visit Blacksmith Guild?";
@@ -1625,3 +1626,4 @@ geffen_in,109,170,3	script	Blacksmith Guildsman#gef	4_F_JOB_BLACKSMITH,{
 		close;
 	}
 }
+*/

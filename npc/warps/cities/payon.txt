@@ -18,119 +18,98 @@
 //= 1.7 Moved Castle Map warps to warps/guild/guildcastles.txt. [Masao]
 //============================================================
 
-// == Official Warps From kRO Screenshots ==
+// Entrance
+payon,90,25,0	warp	payon_warp1-1	5,3,pay_fild01,333,356
+pay_fild01,333,361,0	warp	payon_warp1-2	5,3,payon,90,29
+payon,189,69,0	warp	payon_warp1-3	2,2,pay_fild08,20,74
 
-// -- Entrance / Exit --
-payon,122,27,0	warp	payonwarp003	5,3,pay_fild01,333,356
-pay_fild01,333,360,0	warp	payonwarp004	5,3,payon,122,31
-payon,267,89,0	warp	payonwarp005	1,1,pay_fild08,20,74
-payon,228,330,0	warp	payonwarp007	4,2,pay_arche,81,22
-pay_arche,81,18,0	warp	payonwarp008	5,2,payon,228,326
+// Pub
+payon,141,91,0	warp	payon_warp1-4	2,2,payon_in01,98,173
+payon_in01,98,170,0	warp	payon_warp1-5	3,1,payon,141,95
+payon,133,81,0	warp	payon_warp1-6	2,2,payon_in01,134,171
+payon_in01,134,168,0	warp	payon_warp1-7	3,1,payon,129,81
+payon_in01,143,179,0	warp	payon_warp1-8	1,3,payon_in01,167,179
+payon_in01,164,179,0	warp	payon_warp1-9	1,2,payon_in01,140,179
+payon_in01,111,177,0	warp	payon_warp1-10	2,3,payon_in01,129,177
+payon_in01,126,177,0	warp	payon_warp1-11	2,3,payon_in01,108,177
 
-// -- Inn --
-payon,223,117,0	warp	payonwarp009	2,2,payon_in01,175,11
-payon_in01,172,11,0	warp	payonwarp010	2,2,payon,219,117
-payon_in01,180,43,0	warp	payonwarp011	2,2,payon_in01,181,73
-payon_in01,181,70,0	warp	payonwarp012	2,2,payon_in01,180,40
-payon_in01,193,92,0	warp	payonwarp013	2,2,payon_in01,143,61
-payon_in01,146,61,0	warp	payonwarp014	2,2,payon_in01,193,89
-payon_in01,133,42,0	warp	payonwarp015	2,2,payon_in01,133,18
-payon_in01,133,21,0	warp	payonwarp016	2,2,payon_in01,133,45
+// Palace
+payon_in01,72,86,0	warp	payon_warp1-12	3,1,payon,90,164
+payon,90,167,0	warp	payon_warp1-13	2,1,payon_in01,72,89
+payon_in01,83,99,0	warp	payon_warp1-14	1,2,payon_in01,124,77
+payon_in01,122,77,0	warp	payon_warp1-15	1,2,payon_in01,80,99
+payon_in01,83,107,0	warp	payon_warp1-16	1,2,payon_in01,125,107
+payon_in01,122,107,0	warp	payon_warp1-17	1,2,payon_in01,80,107
+payon_in01,60,99,0	warp	payon_warp1-18	1,2,payon_in01,110,77
+payon_in01,113,77,0	warp	payon_warp1-19	1,2,payon_in01,63,99
+payon_in01,60,107,0	warp	payon_warp1-20	1,2,payon_in01,110,107
+payon_in01,113,107,0	warp	payon_warp1-21	1,2,payon_in01,63,107
+payon_in01,72,121,0	warp	payon_warp1-22	3,1,payon_in01,72,137
+payon_in01,72,134,0	warp	payon_warp1-23	1,2,payon_in01,72,118
+payon_in01,60,145,0	warp	payon_warp1-24	1,2,payon_in01,110,143
+payon_in01,113,143,0	warp	payon_warp1-25	1,2,payon_in01,63,145
+payon_in01,83,145,0	warp	payon_warp1-26	1,2,payon_in01,127,143
+payon_in01,124,143,0	warp	payon_warp1-27	1,2,payon_in01,80,145
+payon_in01,72,159,0	warp	payon_warp1-28	3,1,payon_in01,60,173
+payon_in01,60,170,0	warp	payon_warp1-29	3,1,payon_in01,72,156
 
-// -- Sort of Mill --
-payon,140,85,0	warp	payonwarp017	2,2,payon_in01,14,51
-payon_in01,17,51,0	warp	payonwarp018	2,2,payon,143,85
-payon_in01,10,59,0	warp	payonwarp019	2,2,payon_in01,10,83
-payon_in01,10,80,0	warp	payonwarp021	2,2,payon_in01,10,56
-payon_in01,10,38,0	warp	payonwarp022	2,2,payon_in01,10,14
-payon_in01,10,17,0	warp	payonwarp023	2,2,payon_in01,10,41
+// Central Palace 2 - Inside
+payon_in01,47,138,0	warp	payon_warp1-30	1,3,payon,71,173
+payon,68,173,0	warp	payon_warp1-31	1,2,payon_in01,44,138
+payon_in01,30,151,0	warp	payon_warp1-32	3,2,payon_in01,26,167
+payon_in01,26,164,0	warp	payon_warp1-33	3,2,payon_in01,30,148
+payon_in01,30,126,0	warp	payon_warp1-34	3,2,payon_in01,26,112
+payon_in01,26,115,0	warp	payon_warp1-35	3,2,payon_in01,30,129
 
-// -- Weaponshop --
-payon,135,158,0	warp	payonwarp024	2,2,payon_in01,20,129
-payon_in01,23,129,0	warp	payonwarp025	2,2,payon,138,158
-payon,130,169,0	warp	payonwarp026	2,2,payon_in01,13,136
-payon_in01,13,139,0	warp	payonwarp027	2,2,payon,130,172
+// Central Palace 1 - Inside
+payon_in01,12,68,0	warp	payon_warp1-36	1,3,payon,108,173
+payon,111,173,0	warp	payon_warp1-37	1,2,payon_in01,15,68
+payon_in01,30,81,0	warp	payon_warp1-38	3,2,payon_in01,22,29
+payon_in01,22,26,0	warp	payon_warp1-39	3,2,payon_in01,30,78
+payon_in01,30,59,0	warp	payon_warp1-40	3,1,payon_in01,52,32
+payon_in01,52,35,0	warp	payon_warp1-41	3,1,payon_in01,30,62
 
-// -- House --
-payon,151,127,0	warp	payonwarp028	2,2,payon_in01,56,53
-payon_in01,56,50,0	warp	payonwarp029	2,2,payon,151,124
+// Armory
+payon_in01,83,63,0	warp	payon_warp1-42	1,3,payon,30,173
+payon,30,176,0	warp	payon_warp1-43	2,1,payon_in01,80,63
+payon_in01,70,75,0	warp	payon_warp1-44	3,2,payon_in01,130,39
+payon_in01,130,36,0	warp	payon_warp1-45	3,2,payon_in01,70,72
+payon_in01,145,45,0	warp	payon_warp1-46	1,3,payon,38,171
+payon_in01,38,174,0	warp	payon_warp1-47	2,1,payon_in01,142,45
+payon_in01,70,52,0	warp	payon_warp1-48	3,2,payon_in01,86,34
+payon_in01,86,37,0	warp	payon_warp1-49	3,2,payon_in01,70,55
+payon_in01,101,25,0	warp	payon_warp1-50	1,3,payon,22,171
+payon,22,174,0	warp	payon_warp1-51	2,1,payon_in01,98,25
+payon,38,174,0	warp	payon_warp1-52	2,1,payon_in01,141,45
 
-// -- Middle Castle --
-payon,155,248,0	warp	payonwarp030	4,1,payon_in03,98,117
-payon_in03,98,114,0	warp	payonwarp031	5,1,payon,155,245
-payon_in03,90,124,0	warp	payonwarp032	2,2,payon_in03,80,124
-payon_in03,83,124,0	warp	payonwarp033	2,2,payon_in03,93,124
-payon_in03,99,133,0	warp	payonwarp034	2,2,payon_in03,99,151
-payon_in03,99,148,0	warp	payonwarp035	2,2,payon_in03,99,130
-payon_in03,107,124,0	warp	payonwarp036	2,2,payon_in03,117,124
-payon_in03,114,124,0	warp	payonwarp037	2,2,payon_in03,104,124
+// Inn - Inside
+payon_in01,160,108,0	warp	payon_warp1-53	1,3,payon,169,133
+payon,172,133,0	warp	payon_warp1-54	1,2,payon_in01,163,108
+payon_in01,170,119,0	warp	payon_warp1-55	1,2,payon_in01,170,136
+payon_in01,170,132,0	warp	payon_warp1-56	1,2,payon_in01,170,115
+payon_in01,170,100,0	warp	payon_warp1-57	1,2,payon_in01,170,83
+payon_in01,170,87,0	warp	payon_warp1-58	1,2,payon_in01,170,104
+payon_in01,167,74,0	warp	payon_warp1-59	1,2,payon_in01,168,50
+payon_in01,168,53,0	warp	payon_warp1-60	1,2,payon_in01,167,77
 
-// -- Weapon Storage Building --
-payon,189,233,0	warp	payonwarp038	2,2,payon_in03,149,39
-payon_in03,146,39,0	warp	payonwarp039	2,2,payon,186,233
-payon_in03,158,32,0	warp	payonwarp040	2,2,payon_in03,130,14
-payon_in03,130,17,0	warp	payonwarp041	2,2,payon_in03,158,35
-payon_in03,172,32,0	warp	payonwarp042	2,2,payon_in03,160,14
-payon_in03,160,17,0	warp	payonwarp043	2,2,payon_in03,172,35
-payon_in03,186,32,0	warp	payonwarp044	2,2,payon_in03,190,13
-payon_in03,190,17,0	warp	payonwarp045	2,2,payon_in03,186,35
+// Archer Village
+payon,175,189,0	warp	payon_warp1-61	4,2,pay_arche,81,22
+pay_arche,81,17,0	warp	payon_warp1-62	5,2,payon,175,185
 
-// -- House --
-payon,256,285,0	warp	payonwarp046	2,2,payon_in01,45,11
-payon_in01,42,11,0	warp	payonwarp047	2,2,payon,253,285
+// Archer Guild	- Inside
+payon_in02,64,56,0	warp	payon_warp1-63	2,2,pay_arche,141,161
+pay_arche,145,165,0	warp	payon_warp1-64	2,2,payon_in02,64,60
+payon_in02,52,67,0	warp	payon_Warp1-65	2,2,payon_in02,32,67
+payon_in02,35,67,0	warp	payon_warp1-66	2,2,payon_in02,55,67
+payon_in02,75,67,0	warp	payon_warp1-67	2,2,payon_in02,13,25
+payon_in02,10,25,0	warp	payon_warp1-68	2,2,payon_in02,72,67
 
-// -- Old Archer Village Warps --
-pay_arche,36,131,0	warp	payonwarp048	2,2,pay_dun00,21,183
-pay_arche,71,156,0	warp	payonwarp049	2,2,payon_in02,82,41
-pay_arche,92,170,0	warp	payonwarp050	2,2,payon_in02,50,7
-pay_arche,145,165,0	warp	payonwarp051	2,2,payon_in02,64,60
-payon_in02,10,25,0	warp	payonwarp052	2,2,payon_in02,72,67
-payon_in02,35,67,0	warp	payonwarp053	2,2,payon_in02,55,67
-payon_in02,50,4,0	warp	payonwarp054	3,1,pay_arche,92,166
-payon_in02,52,67,0	warp	payonwarp055	2,2,payon_in02,32,67
-payon_in02,61,33,0	warp	payonwarp056	2,2,payon_in02,73,33
-payon_in02,64,56,0	warp	payonwarp057	2,2,pay_arche,141,161
-payon_in02,70,33,0	warp	payonwarp058	2,2,payon_in02,58,33
-payon_in02,75,67,0	warp	payonwarp059	2,2,payon_in02,13,25
-payon_in02,82,45,0	warp	payonwarp060	2,2,pay_arche,74,153
+// Archer Village - Dwelling
+payon_in02,50,4,0	warp	payon_warp1-69	3,1,pay_arche,92,166
+pay_arche,92,170,0	warp	payon_warp1-70	2,2,payon_in02,50,7
 
-
-// == Self Made Warps, No Screen Availble ==
-
-// -- Large West House --
-payon,127,204,0	warp	payonwarp061	2,2,payon_in03,81,19
-payon_in03,85,19,0	warp	payonwarp062	2,2,payon,131,204
-payon_in03,74,18,0	warp	payonwarp063	2,2,payon_in03,62,18
-payon_in03,67,18,0	warp	payonwarp064	2,2,payon_in03,78,18
-payon_in03,46,18,0	warp	payonwarp065	2,2,payon_in03,35,18
-payon_in03,39,18,0	warp	payonwarp066	2,2,payon_in03,51,18
-payon_in03,28,18,0	warp	payonwarp067	2,2,payon_in03,17,18
-payon_in03,21,18,0	warp	payonwarp068	2,2,payon_in03,32,18
-
-// -- Big Kitchen --
-payon,155,327,0	warp	payonwarp069	2,2,payon_in03,165,143
-payon_in03,165,140,0	warp	payonwarp070	2,2,payon,155,324
-payon_in03,185,178,0	warp	payonwarp071	2,2,payon_in03,185,149
-payon_in03,185,153,0	warp	payonwarp072	2,2,payon_in03,185,182
-
-// -- Upper Castle --
-payon,107,327,0	warp	payonwarp073	2,2,payon_in03,19,64
-payon_in03,19,60,0	warp	payonwarp074	2,2,payon,107,323
-payon_in03,19,73,0	warp	payonwarp075	2,2,payon_in03,19,90
-payon_in03,19,86,0	warp	payonwarp076	2,2,payon_in03,19,69
-payon_in03,19,103,0	warp	payonwarp077	2,2,payon_in03,19,122
-payon_in03,19,118,0	warp	payonwarp078	2,2,payon_in03,19,99
-payon_in03,11,131,0	warp	payonwarp079	2,2,payon_in03,11,146
-payon_in03,11,142,0	warp	payonwarp080	2,2,payon_in03,11,127
-payon_in03,27,131,0	warp	payonwarp081	2,2,payon_in03,27,146
-payon_in03,27,142,0	warp	payonwarp082	2,2,payon_in03,27,127
-payon_in03,11,161,0	warp	payonwarp083	2,2,payon_in03,11,176
-payon_in03,11,172,0	warp	payonwarp084	2,2,payon_in03,11,157
-payon_in03,27,161,0	warp	payonwarp085	2,2,payon_in03,27,176
-payon_in03,27,172,0	warp	payonwarp086	2,2,payon_in03,27,157
-
-// -- House --
-payon_in01,86,9,0	warp	payonwarp087	2,2,payon,266,152
-payon,270,152,0	warp	payonwarp088	2,2,payon_in01,90,9
-payon_in01,107,71,0	warp	payonwarp089	2,2,payon_in01,96,37
-payon_in01,93,37,0	warp	payonwarp090	2,2,payon_in01,104,71
+// Kit Shop
+payon_in02,82,45,0	warp	payon_warp1-71	2,2,pay_arche,74,153
+pay_arche,71,156,0	warp	payon_warp1-72	2,2,payon_in02,82,41
+payon_in02,70,33,0	warp	payon_warp1-73	2,2,payon_in02,58,33
+payon_in02,61,33,0	warp	payon_warp1-74	2,2,payon_in02,73,33

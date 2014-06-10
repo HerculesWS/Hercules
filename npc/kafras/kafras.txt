@@ -185,7 +185,7 @@ morocc,160,258,4	script	Kafra::kaf_morocc2	4_F_KAFRA4,{
 
 // Payon
 //============================================================
-payon,181,104,4	script	Kafra Employee::kaf_payon	4_F_KAFRA5,{
+payon,99,116,4	script	Kafra Employee::kaf_payon	4_F_KAFRA5,{
 	cutin "kafra_05",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -194,21 +194,7 @@ payon,181,104,4	script	Kafra Employee::kaf_payon	4_F_KAFRA5,{
 	mes "you with convenient services.";
 	mes "How may I be of assistance?";
 	callfunc "F_Kafra",5,0,1,60,930;
-	savepoint "payon",160,58;
-	callfunc "F_KafEnd",0,1,"in the city of Payon";
-}
-
-payon,175,226,4	script	Kafra Employee::kaf_payon2	4_F_KAFRA2,{
-	cutin "kafra_02",2;
-	callfunc "F_KafSet";
-	mes "[Kafra Employee]";
-	mes "Welcome to the";
-	mes "Kafra Corporation.";
-	mes "The Kafra services are";
-	mes "always on your side.";
-	mes "How may I assist you?";
-	callfunc "F_Kafra",5,0,1,60,930;
-	savepoint "payon",257,242;
+	savepoint "payon",69,100;
 	callfunc "F_KafEnd",0,1,"in the city of Payon";
 }
 
