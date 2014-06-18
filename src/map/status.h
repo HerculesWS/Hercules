@@ -1993,6 +1993,7 @@ struct status_interface {
 	int (*get_total_mdef) (struct block_list *src);
 	int (*get_total_def) (struct block_list *src);
 	int (*get_matk) (struct block_list *src, int flag);
+	void (*update_matk) ( struct block_list *bl );
 	int (*readdb) (void);
 	
 	void (*initChangeTables) (void);

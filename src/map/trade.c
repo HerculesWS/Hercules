@@ -166,11 +166,13 @@ void trade_tradeack(struct map_session_data *sd, int type) {
 	clif->tradestart(sd, type);
 }
 
-/*==========================================
- * Check here hacker for duplicate item in trade
- * normal client refuse to have 2 same types of item (except equipment) in same trade window
- * normal client authorize only no equipped item and only from inventory
- *------------------------------------------*/
+/**
+ * Checks if an impossible trade will occur
+ *  Normal clients refuse to have 2 items of the same type (except equipment) in the same trade window
+ *  Normal clients authorize only no equipped items and only items from inventory
+ * @retval 0 The trade can continue
+ * @retval 1 Hack attempt
+ **/
 int impossible_trade_check(struct map_session_data *sd)
 {
 	struct item inventory[MAX_INVENTORY];
@@ -179,10 +181,8 @@ int impossible_trade_check(struct map_session_data *sd)
 
 	nullpo_retr(1, sd);
 
-	if(sd->deal.zeny > sd->status.zeny) {
-		pc_setglobalreg(sd,script->add_str("ZENY_HACKER"),1);
-		return -1;
-	}
+	if( sd->deal.zeny > sd->status.zeny )
+		return 1;
 
 	// get inventory of player
 	memcpy(&inventory, &sd->status.inventory, sizeof(struct item) * MAX_INVENTORY);

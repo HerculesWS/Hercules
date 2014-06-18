@@ -1627,8 +1627,11 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 			int search_size = (view_range < md->status.rhw.range) ? view_range : md->status.rhw.range;
 			unit->attack(&md->bl,tbl->id,0);
 			tbl = battle->get_enemy(&md->bl, DEFAULT_ENEMY_TYPE(md), search_size);
-			md->target_id = tbl->id;
-			md->min_chase = md->db->range3;
+			// If no target was found, keep atacking the old one
+			if( tbl ) {
+				md->target_id = tbl->id;
+				md->min_chase = md->db->range3;
+			}
 		}
 		return true;
 	}

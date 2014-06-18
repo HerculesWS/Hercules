@@ -4799,6 +4799,8 @@ struct {
 	struct HPMHookPoint *HP_status_get_total_def_post;
 	struct HPMHookPoint *HP_status_get_matk_pre;
 	struct HPMHookPoint *HP_status_get_matk_post;
+	struct HPMHookPoint *HP_status_update_matk_pre;
+	struct HPMHookPoint *HP_status_update_matk_post;
 	struct HPMHookPoint *HP_status_readdb_pre;
 	struct HPMHookPoint *HP_status_readdb_post;
 	struct HPMHookPoint *HP_status_initChangeTables_pre;
@@ -9832,6 +9834,8 @@ struct {
 	int HP_status_get_total_def_post;
 	int HP_status_get_matk_pre;
 	int HP_status_get_matk_post;
+	int HP_status_update_matk_pre;
+	int HP_status_update_matk_post;
 	int HP_status_readdb_pre;
 	int HP_status_readdb_post;
 	int HP_status_initChangeTables_pre;
