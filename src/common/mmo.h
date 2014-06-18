@@ -49,7 +49,7 @@
 // 20120307 - 2012-03-07aRagexeRE+ - 0x970
 
 #ifndef PACKETVER
-	#define PACKETVER 20131223
+	#define PACKETVER 20131230
 #endif // PACKETVER
 
 //Uncomment the following line if your client is ragexeRE instead of ragexe (required because of conflicting packets in ragexe vs ragexeRE).
@@ -100,7 +100,7 @@
 #define MAX_SLOTS 4
 //Max amount of a single stacked item
 #define MAX_AMOUNT 30000
-#define MAX_ZENY 1000000000
+#define MAX_ZENY 2147483647
 
 //Official Limit: 2.1b ( the var that stores the money doesn't go much higher than this by default )
 #define MAX_BANK_ZENY 2100000000
@@ -118,8 +118,8 @@
 #define MAX_WALK_SPEED 1000
 #define MAX_STORAGE 600
 #define MAX_GUILD_STORAGE 600
-#define MAX_PARTY 12
-#define MAX_GUILD (16+10*6)     // Increased max guild members +6 per 1 extension levels [Lupus]
+#define MAX_PARTY 18
+#define MAX_GUILD (16+10*2)     // Increased max guild members +6 per 1 extension levels [Lupus]
 #define MAX_GUILDPOSITION 20    // Increased max guild positions to accommodate for all members [Valaris] (removed) [PoW]
 #define MAX_GUILDEXPULSION 32
 #define MAX_GUILDALLIANCE 16
