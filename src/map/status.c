@@ -11427,11 +11427,10 @@ void status_get_matk_sub( struct block_list *bl, int flag, unsigned short *matk_
 
 #ifdef RENEWAL
 	if( sd && sd->right_weapon.overrefine > 0 ) {
-		*matk_min++;
+		(*matk_min)++;
 		*matk_max += sd->right_weapon.overrefine - 1;
 	}
 #endif
-
 	return;
 }
 
