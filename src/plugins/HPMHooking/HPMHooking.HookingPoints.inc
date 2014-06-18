@@ -2436,6 +2436,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(status->get_total_mdef, HP_status_get_total_mdef) },
 	{ HP_POP(status->get_total_def, HP_status_get_total_def) },
 	{ HP_POP(status->get_matk, HP_status_get_matk) },
+	{ HP_POP(status->update_matk, HP_status_update_matk) },
 	{ HP_POP(status->readdb, HP_status_readdb) },
 	{ HP_POP(status->initChangeTables, HP_status_initChangeTables) },
 	{ HP_POP(status->initDummyData, HP_status_initDummyData) },

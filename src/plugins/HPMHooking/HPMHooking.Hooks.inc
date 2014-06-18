@@ -64575,6 +64575,32 @@ int HP_status_get_matk(struct block_list *src, int flag) {
 	}
 	return retVal___;
 }
+void HP_status_update_matk(struct block_list *bl) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_status_update_matk_pre ) {
+		void (*preHookFunc) (struct block_list *bl);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_update_matk_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_status_update_matk_pre[hIndex].func;
+			preHookFunc(bl);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.status.update_matk(bl);
+	}
+	if( HPMHooks.count.HP_status_update_matk_post ) {
+		void (*postHookFunc) (struct block_list *bl);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_update_matk_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_status_update_matk_post[hIndex].func;
+			postHookFunc(bl);
+		}
+	}
+	return;
+}
 int HP_status_readdb(void) {
 	int hIndex = 0;
 	int retVal___ = 0;
