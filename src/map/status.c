@@ -3878,7 +3878,7 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
 	}
 
 	if(flag&SCB_MATK) {
-		status->get_matk(bl, 0);
+		status->update_matk(bl);
 	}
 
 	if(flag&SCB_ASPD) {
@@ -11351,88 +11351,150 @@ int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk, int fl
 #endif
 }
 
-#define GETRANDMATK(st) do {\
-	if( (st)->matk_max > (st)->matk_min ) \
-		return (st)->matk_min + rnd()%((st)->matk_max - (st)->matk_min); \
-	else \
-		return (st)->matk_min; \
-	} while(0)
+/**
+ * Gets a random matk value depending on min matk and max matk
+ **/
+unsigned short status_get_rand_matk( unsigned short matk_max, unsigned short matk_min ) {
+		if( matk_max > matk_min )
+			return matk_min + rnd()%(matk_max - matk_min);
+		else
+			return matk_min;
+}
 
-/*==========================================
-*  flag [malufett]
-*	0 - update matk values
-*	1 - get matk w/o SC bonuses
-*	2 - get modified matk
-*	3 - get matk w/o eatk & SC bonuses
-*------------------------------------------*/
-int status_get_matk(struct block_list *bl, int flag) {
+/**
+ * Get bl's matk_max and matk_min values depending on flag
+ * @param flag
+ *			0 - Get MATK
+ *			1 - Get MATK w/o SC bonuses
+ *			3 - Get MATK w/o EATK & SC bonuses
+ **/
+void status_get_matk_sub( struct block_list *bl, int flag, unsigned short *matk_max, unsigned short *matk_min ) {
 	struct status_data *st;
 	struct status_change *sc;
 	struct map_session_data *sd;
 
 	if( bl == NULL )
-		return 1;
+		return;
+
+	if( flag != 0 && flag != 1 && flag != 3 ) {
+		ShowError("status_get_matk_sub: Unknown flag %d!\n", flag);
+		return;
+	}
 
 	st = status->get_status_data(bl);
 	sc = status->get_sc(bl);
 	sd = BL_CAST(BL_PC, bl);
-
-	if( flag == 2 ) // just get matk
-		GETRANDMATK(st);
 
 #ifdef RENEWAL
 	/**
 	 * RE MATK Formula (from irowiki:http://irowiki.org/wiki/MATK)
 	 * MATK = (sMATK + wMATK + eMATK) * Multiplicative Modifiers
 	 **/
-	st->matk_min = status->base_matk(st, status->get_lv(bl));
+	*matk_min = status->base_matk(st, status->get_lv(bl));
 
 	//  Any +MATK you get from skills and cards, including cards in weapon, is added here.
 	if( sd && sd->bonus.ematk > 0 && flag != 3 )
-		st->matk_min += sd->bonus.ematk;
+		*matk_min += sd->bonus.ematk;
 	if( flag != 3 )
-		st->matk_min = status->calc_ematk(bl, sc, st->matk_min);
+		*matk_min = status->calc_ematk(bl, sc, *matk_min);
 
-	st->matk_max = st->matk_min;
+	*matk_max = *matk_min;
 
 	//This is the only portion in MATK that varies depending on the weapon level and refinement rate.
 	if( bl->type&BL_PC && (st->rhw.matk + st->lhw.matk) > 0 ) {
 		int wMatk = st->rhw.matk + st->lhw.matk; // Left and right matk stacks
 		int variance = wMatk * st->rhw.wlv / 10; // Only use right hand weapon level
-		st->matk_min += wMatk - variance;
-		st->matk_max += wMatk + variance;
+		*matk_min += wMatk - variance;
+		*matk_max += wMatk + variance;
 	} else if( bl->type&BL_MOB ) {
-		st->matk_min = st->matk_max = status_get_int(bl) + status->get_lv(bl);
-		st->matk_min += 70 * ((TBL_MOB*)bl)->status.rhw.atk2 / 100;
-		st->matk_max += 130 * ((TBL_MOB*)bl)->status.rhw.atk2 / 100;
+		*matk_min = *matk_max = status_get_int(bl) + status->get_lv(bl);
+		*matk_min += 70 * ((TBL_MOB*)bl)->status.rhw.atk2 / 100;
+		*matk_max += 130 * ((TBL_MOB*)bl)->status.rhw.atk2 / 100;
 	}
 #else // not RENEWAL
-	st->matk_min = status_base_matk_min(st) + (sd?sd->bonus.ematk:0);
-	st->matk_max = status_base_matk_max(st) + (sd?sd->bonus.ematk:0);
+	*matk_min = status_base_matk_min(st) + (sd?sd->bonus.ematk:0);
+	*matk_max = status_base_matk_max(st) + (sd?sd->bonus.ematk:0);
 #endif
+
 	if (sd && sd->matk_rate != 100) {
-		st->matk_max = st->matk_max * sd->matk_rate/100;
-		st->matk_min = st->matk_min * sd->matk_rate/100;
+		*matk_max = (*matk_max) * sd->matk_rate/100;
+		*matk_min = (*matk_min) * sd->matk_rate/100;
 	}
 
 	if ((bl->type&BL_HOM && battle_config.hom_setting&0x20)  //Hom Min Matk is always the same as Max Matk
 		|| (sc && sc->data[SC_RECOGNIZEDSPELL]))
-		st->matk_min = st->matk_max;
+		*matk_min = *matk_max;
 
 #ifdef RENEWAL
-	if( sd && sd->right_weapon.overrefine > 0){
-		st->matk_min++;
-		st->matk_max += sd->right_weapon.overrefine - 1;
+	if( sd && sd->right_weapon.overrefine > 0 ) {
+		*matk_min++;
+		*matk_max += sd->right_weapon.overrefine - 1;
 	}
 #endif
 
-	if( flag ) // get unmodified from sc matk
-		GETRANDMATK(st);
+	return;
+}
 
-	st->matk_min = status->calc_matk(bl, sc, st->matk_min, true);
-	st->matk_max = status->calc_matk(bl, sc, st->matk_max, true);
+/**
+ * Get bl's matk value depending on flag
+ * @param flag [malufett]
+ *			1 - Get MATK w/o SC bonuses
+ *			2 - Get modified MATK
+ *			3 - Get MATK w/o eATK & SC bonuses
+ * @retval 1 failure
+ * @retval MATK success
+ *
+ * Shouldn't change _any_ value! [Panikon]
+ **/
+int status_get_matk( struct block_list *bl, int flag ) {
+	struct status_data *st;
+	unsigned short matk_max, matk_min;
 
-	return 0;
+	if( bl == NULL )
+		return 1;
+
+	if( flag < 1 || flag > 3 ) {
+		ShowError("status_get_matk: Unknown flag %d!\n", flag);
+		return 1;
+	}
+
+	if( (st = status->get_status_data(bl)) == NULL )
+		return 0;
+
+	// Just get matk
+	if( flag == 2 )
+		return status_get_rand_matk(st->matk_max, st->matk_min);
+
+	status_get_matk_sub( bl, flag, &matk_max, &matk_min );
+
+	// Get unmodified from sc matk
+	return status_get_rand_matk(matk_max, matk_min);
+}
+
+/**
+ * Updates bl's MATK values
+ **/
+void status_update_matk( struct block_list *bl ) {
+	struct status_data *st;
+	struct status_change *sc;
+	unsigned short matk_max, matk_min;
+
+	if( bl == NULL )
+		return;
+
+	if( (st = status->get_status_data(bl)) == NULL )
+		return;
+
+	if( (sc = status->get_sc(bl)) == NULL )
+		return;
+
+	status_get_matk_sub( bl, 0, &matk_max, &matk_min );
+
+	// Update matk
+	st->matk_min = status->calc_matk(bl, sc, matk_min, true);
+	st->matk_max = status->calc_matk(bl, sc, matk_max, true);
+
+	return;
 }
 
 /*==========================================
@@ -12106,6 +12168,7 @@ void status_defaults(void) {
 	status->get_total_def = status_get_total_def;
 
 	status->get_matk = status_get_matk;
+	status->update_matk = status_update_matk;
 
 	status->readdb = status_readdb;
 	status->init = do_init_status;
