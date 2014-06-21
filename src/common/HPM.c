@@ -126,20 +126,20 @@ struct hplugin *hplugin_load(const char* filename) {
 	struct s_HPMDataCheck *HPMDataCheck;
 		
 	if( HPM->exists(filename) ) {
-		ShowWarning("HPM:plugin_load: attempting to load duplicate '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
+		ShowWarning("HPM:%s: attempting to load duplicate '"CL_WHITE"%s"CL_RESET"', skipping...\n", __func__, filename);
 		return NULL;
 	}
 	
 	plugin = HPM->create();
 	
 	if( !( plugin->dll = plugin_open(filename) ) ){
-		ShowWarning("HPM:plugin_load: failed to load '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
+		ShowWarning("HPM:%s: failed to load '"CL_WHITE"%s"CL_RESET"', skipping...\n", __func__, filename);
 		HPM->unload(plugin);
 		return NULL;
 	}
 	
 	if( !( info = plugin_import(plugin->dll, "pinfo",struct hplugin_info*) ) ) {
-		ShowDebug("HPM:plugin_load: failed to retrieve 'plugin_info' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
+		ShowDebug("HPM:%s: failed to retrieve 'plugin_info' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", __func__, filename);
 		HPM->unload(plugin);
 		return NULL;
 	}
@@ -150,7 +150,7 @@ struct hplugin *hplugin_load(const char* filename) {
 	}
 	
 	if( !HPM->iscompatible(info->req_version) ) {
-		ShowWarning("HPM:plugin_load: '"CL_WHITE"%s"CL_RESET"' incompatible version '%s' -> '%s', skipping...\n", filename, info->req_version, HPM_VERSION);
+		ShowWarning("HPM:%s: '"CL_WHITE"%s"CL_RESET"' incompatible version '%s' -> '%s', skipping...\n", __func__, filename, info->req_version, HPM_VERSION);
 		HPM->unload(plugin);
 		return NULL;
 	}
@@ -159,7 +159,7 @@ struct hplugin *hplugin_load(const char* filename) {
 	plugin->filename = aStrdup(filename);
 	
 	if( !( import_symbol_ref = plugin_import(plugin->dll, "import_symbol",void **) ) ) {
-		ShowWarning("HPM:plugin_load: failed to retrieve 'import_symbol' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
+		ShowWarning("HPM:%s: failed to retrieve 'import_symbol' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", __func__, filename);
 		HPM->unload(plugin);
 		return NULL;
 	}
@@ -167,7 +167,7 @@ struct hplugin *hplugin_load(const char* filename) {
 	*import_symbol_ref = HPM->import_symbol;
 	
 	if( !( sql_handle = plugin_import(plugin->dll, "mysql_handle",Sql **) ) ) {
-		ShowWarning("HPM:plugin_load: failed to retrieve 'mysql_handle' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
+		ShowWarning("HPM:%s: failed to retrieve 'mysql_handle' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", __func__, filename);
 		HPM->unload(plugin);
 		return NULL;
 	}
@@ -175,13 +175,13 @@ struct hplugin *hplugin_load(const char* filename) {
 	*sql_handle = HPM->import_symbol("sql_handle",plugin->idx);
 
 	if( !( HPMi = plugin_import(plugin->dll, "HPMi",struct HPMi_interface **) ) ) {
-		ShowWarning("HPM:plugin_load: failed to retrieve 'HPMi' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
+		ShowWarning("HPM:%s: failed to retrieve 'HPMi' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", __func__, filename);
 		HPM->unload(plugin);
 		return NULL;
 	}
 	
 	if( !( *HPMi = plugin_import(plugin->dll, "HPMi_s",struct HPMi_interface *) ) ) {
-		ShowWarning("HPM:plugin_load: failed to retrieve 'HPMi_s' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
+		ShowWarning("HPM:%s: failed to retrieve 'HPMi_s' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", __func__, filename);
 		HPM->unload(plugin);
 		return NULL;
 	}
@@ -203,7 +203,7 @@ struct hplugin *hplugin_load(const char* filename) {
 		anyEvent = true;
 	
 	if( !anyEvent ) {
-		ShowWarning("HPM:plugin_load: no events found for '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
+		ShowWarning("HPM:%s: no events found for '"CL_WHITE"%s"CL_RESET"', skipping...\n", __func__, filename);
 		HPM->unload(plugin);
 		return NULL;
 	}
@@ -212,19 +212,19 @@ struct hplugin *hplugin_load(const char* filename) {
 		return NULL;
 	
 	if( !( HPMDataCheckLen = plugin_import(plugin->dll, "HPMDataCheckLen", unsigned int *) ) ) {
-		ShowWarning("HPM:plugin_load: failed to retrieve 'HPMDataCheckLen' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h, skipping...\n", filename);
+		ShowWarning("HPM:%s: failed to retrieve 'HPMDataCheckLen' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h, skipping...\n", __func__, filename);
 		HPM->unload(plugin);
 		return NULL;
 	}
 	
 	if( !( HPMDataCheck = plugin_import(plugin->dll, "HPMDataCheck", struct s_HPMDataCheck *) ) ) {
-		ShowWarning("HPM:plugin_load: failed to retrieve 'HPMDataCheck' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h, skipping...\n", filename);
+		ShowWarning("HPM:%s: failed to retrieve 'HPMDataCheck' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h, skipping...\n", __func__, filename);
 		HPM->unload(plugin);
 		return NULL;
 	}
 	
 	if( HPM->DataCheck && !HPM->DataCheck(HPMDataCheck,*HPMDataCheckLen,plugin->info->name) ) {
-		ShowWarning("HPM:plugin_load: '"CL_WHITE"%s"CL_RESET"' failed DataCheck, out of sync from the core (recompile plugin), skipping...\n", filename);
+		ShowWarning("HPM:%s: '"CL_WHITE"%s"CL_RESET"' failed DataCheck, out of sync from the core (recompile plugin), skipping...\n", __func__, filename);
 		HPM->unload(plugin);
 		return NULL;
 	}

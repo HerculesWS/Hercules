@@ -418,7 +418,7 @@ void* grfio_reads(const char* fname, int* size)
 			declen = (int)ftell(in);
 			fseek(in,0,SEEK_SET);
 			buf2 = (unsigned char *)aMalloc(declen+1);  // +1 for resnametable zero-termination
-			if(fread(buf2, 1, declen, in) != (size_t)declen) ShowError("An error occurred in fread grfio_reads, fname=%s \n",fname);
+			if(fread(buf2, 1, declen, in) != (size_t)declen) ShowError("An error occurred in fread %s, fname=%s \n", __func__, fname);
 			fclose(in);
 
 			if( size )
@@ -427,7 +427,7 @@ void* grfio_reads(const char* fname, int* size)
 			if (entry != NULL && entry->gentry < 0) {
 				entry->gentry = -entry->gentry;	// local file checked
 			} else {
-				ShowError("grfio_reads: %s not found (local file: %s)\n", fname, lfname);
+				ShowError("%s: %s not found (local file: %s)\n", __func__, fname, lfname);
 				return NULL;
 			}
 		}
@@ -440,7 +440,7 @@ void* grfio_reads(const char* fname, int* size)
 			int fsize = entry->srclen_aligned;
 			unsigned char *buf = (unsigned char *)aMalloc(fsize);
 			fseek(in, entry->srcpos, 0);
-			if(fread(buf, 1, fsize, in) != (size_t)fsize) ShowError("An error occurred in fread in grfio_reads, grfname=%s\n",grfname);
+			if(fread(buf, 1, fsize, in) != (size_t)fsize) ShowError("An error occurred in fread in %s, grfname=%s\n", __func__, grfname);
 			fclose(in);
 
 			buf2 = (unsigned char *)aMalloc(entry->declen+1);  // +1 for resnametable zero-termination
@@ -465,7 +465,7 @@ void* grfio_reads(const char* fname, int* size)
 
 			aFree(buf);
 		} else {
-			ShowError("grfio_reads: %s not found (GRF file: %s)\n", fname, grfname);
+			ShowError("%s: %s not found (GRF file: %s)\n", __func__, fname, grfname);
 			return NULL;
 		}
 	}

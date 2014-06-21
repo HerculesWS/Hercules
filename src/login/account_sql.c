@@ -455,7 +455,7 @@ static bool account_db_sql_load_str(AccountDB* self, struct mmo_account* acc, co
 
 	if( SQL->NumRows(sql_handle) > 1 )
 	{// serious problem - duplicate account
-		ShowError("account_db_sql_load_str: multiple accounts found when retrieving data for account '%s'!\n", userid);
+		ShowError("%s: multiple accounts found when retrieving data for account '%s'!\n", __func__, userid);
 		SQL->FreeResult(sql_handle);
 		return false;
 	}
@@ -702,7 +702,7 @@ void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id) {
 					break;
 					
 				default:
-					ShowError("mmo_save_accreg2: DA HOO UNKNOWN TYPE %d\n",RFIFOB(fd, cursor - 1));
+					ShowError("%s: DA HOO UNKNOWN TYPE %d\n", __func__, RFIFOB(fd, cursor - 1));
 					return;
 			}
 			

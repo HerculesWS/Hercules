@@ -488,12 +488,12 @@ int sv_parse_next(struct s_svstate* svstate)
 	// check opt
 	if( delim == '\n' && (opt&(SV_TERMINATE_CRLF|SV_TERMINATE_LF)) )
 	{
-		ShowError("sv_parse_next: delimiter '\\n' is not compatible with options SV_TERMINATE_LF or SV_TERMINATE_CRLF.\n");
+		ShowError("%s: delimiter '\\n' is not compatible with options SV_TERMINATE_LF or SV_TERMINATE_CRLF.\n", __func__);
 		return -1;// error
 	}
 	if( delim == '\r' && (opt&(SV_TERMINATE_CRLF|SV_TERMINATE_CR)) )
 	{
-		ShowError("sv_parse_next: delimiter '\\r' is not compatible with options SV_TERMINATE_CR or SV_TERMINATE_CRLF.\n");
+		ShowError("%s: delimiter '\\r' is not compatible with options SV_TERMINATE_CR or SV_TERMINATE_CRLF.\n", __func__);
 		return -1;// error
 	}
 
@@ -538,7 +538,7 @@ int sv_parse_next(struct s_svstate* svstate)
 				++i;// '\\'
 				if( IS_END() )
 				{
-					ShowError("sv_parse_next: empty escape sequence\n");
+					ShowError("%s: empty escape sequence\n", __func__);
 					return -1;
 				}
 				if( str[i] == 'x' )
@@ -546,7 +546,7 @@ int sv_parse_next(struct s_svstate* svstate)
 					++i;// 'x'
 					if( IS_END() || !ISXDIGIT(str[i]) )
 					{
-						ShowError("sv_parse_next: \\x with no following hex digits\n");
+						ShowError("%s: \\x with no following hex digits\n", __func__);
 						return -1;
 					}
 					do{
@@ -567,7 +567,7 @@ int sv_parse_next(struct s_svstate* svstate)
 				}
 				else
 				{
-					ShowError("sv_parse_next: unknown escape sequence \\%c\n", str[i]);
+					ShowError("%s: unknown escape sequence \\%c\n", __func__, str[i]);
 					return -1;
 				}
 				state = PARSING_FIELD;
@@ -708,7 +708,7 @@ int sv_split(char* str, int len, int startoff, char delim, char** out_fields, in
 			end[0] = '\0';
 		*out_fields = end + 1;
 	} else {
-		ShowError("sv_split: unknown line delimiter 0x02%x.\n", (unsigned char)end[0]);
+		ShowError("%s: unknown line delimiter 0x02%x.\n", __func__, (unsigned char)end[0]);
 		return -1;// error
 	}
 	++out_fields;
@@ -840,19 +840,19 @@ size_t sv_unescape_c(char* out_dest, const char* src, size_t len) {
 		if( src[i] == '\\' ) {
 			++i;// '\\'
 			if( i >= len )
-				ShowWarning("sv_unescape_c: empty escape sequence\n");
+				ShowWarning("%s: empty escape sequence\n", __func__);
 			else if( src[i] == 'x' ) {// hex escape sequence
 				unsigned char c = 0;
 				unsigned char inrange = 1;
 
 				++i;// 'x'
 				if( i >= len || !ISXDIGIT(src[i]) ) {
-					ShowWarning("sv_unescape_c: \\x with no following hex digits\n");
+					ShowWarning("%s: \\x with no following hex digits\n", __func__);
 					continue;
 				}
 				do {
 					if( c > 0x0F && inrange ) {
-						ShowWarning("sv_unescape_c: hex escape sequence out of range\n");
+						ShowWarning("%s: hex escape sequence out of range\n", __func__);
 						inrange = 0;
 					}
 					c = (c<<4)|low2hex[(unsigned char)src[i]];// hex digit
@@ -873,7 +873,7 @@ size_t sv_unescape_c(char* out_dest, const char* src, size_t len) {
 				out_dest[j++] = (char)c;
 			} else { // other escape sequence
 				if( strchr(SV_ESCAPE_C_SUPPORTED, src[i]) == NULL )
-					ShowWarning("sv_unescape_c: unknown escape sequence \\%c\n", src[i]);
+					ShowWarning("%s: unknown escape sequence \\%c\n", __func__, src[i]);
 				switch( src[i] ) {
 					case 'a': out_dest[j++] = '\a'; break;
 					case 'b': out_dest[j++] = '\b'; break;
@@ -947,7 +947,7 @@ bool sv_readdb(const char* directory, const char* filename, char delim, int minc
 
 	// open file
 	if( (fp = fopen(path, "r")) == NULL ) {
-		ShowError("sv_readdb: can't read %s\n", path);
+		ShowError("%s: can't read %s\n", __func__, path);
 		return false;
 	}
 
@@ -970,21 +970,21 @@ bool sv_readdb(const char* directory, const char* filename, char delim, int minc
 		columns = sv_split(line, (int)strlen(line), 0, delim, fields, fields_length, (e_svopt)(SV_TERMINATE_LF|SV_TERMINATE_CRLF));
 
 		if( columns < mincols ) {
-			ShowError("sv_readdb: Insufficient columns in line %d of \"%s\" (found %d, need at least %d).\n", lines, path, columns, mincols);
+			ShowError("%s: Insufficient columns in line %d of \"%s\" (found %d, need at least %d).\n", __func__, lines, path, columns, mincols);
 			continue; // not enough columns
 		}
 		if( columns > maxcols ) {
-			ShowError("sv_readdb: Too many columns in line %d of \"%s\" (found %d, maximum is %d).\n", lines, path, columns, maxcols );
+			ShowError("%s: Too many columns in line %d of \"%s\" (found %d, maximum is %d).\n", __func__, lines, path, columns, maxcols );
 			continue; // too many columns
 		}
 		if( entries == maxrows ) {
-			ShowError("sv_readdb: Reached the maximum allowed number of entries (%d) when parsing file \"%s\".\n", maxrows, path);
+			ShowError("%s: Reached the maximum allowed number of entries (%d) when parsing file \"%s\".\n", __func__, maxrows, path);
 			break;
 		}
 
 		// parse this row
 		if( !parseproc(fields+1, columns, entries) ) {
-			ShowError("sv_readdb: Could not process contents of line %d of \"%s\".\n", lines, path);
+			ShowError("%s: Could not process contents of line %d of \"%s\".\n", __func__, lines, path);
 			continue; // invalid row contents
 		}
 

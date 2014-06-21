@@ -454,7 +454,7 @@ void console_parse_init(void) {
 	console->input->ptcond = racond_create();
 	
 	if( (console->input->pthread = rathread_create(console->input->pthread_main, NULL)) == NULL ){
-		ShowFatalError("console_parse_init: failed to spawn console_parse thread.\n");
+		ShowFatalError("%s: failed to spawn console_parse thread.\n", __func__);
 		exit(EXIT_FAILURE);
 	}
 	

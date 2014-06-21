@@ -347,7 +347,7 @@ int parse_fromchar(int fd)
 	ARR_FIND( 0, ARRAYLENGTH(server), id, server[id].fd == fd );
 	if( id == ARRAYLENGTH(server) )
 	{// not a char server
-		ShowDebug("parse_fromchar: Disconnecting invalid session #%d (is not a char-server)\n", fd);
+		ShowDebug("%s: Disconnecting invalid session #%d (is not a char-server)\n", __func__, fd);
 		set_eof(fd);
 		do_close(fd);
 		return 0;
@@ -878,7 +878,7 @@ int parse_fromchar(int fd)
 			}
 		break;
 		default:
-			ShowError("parse_fromchar: Unknown packet 0x%x from a char-server! Disconnecting!\n", command);
+			ShowError("%s: Unknown packet 0x%x from a char-server! Disconnecting!\n", __func__, command);
 			set_eof(fd);
 			return 0;
 		} // switch
@@ -1816,12 +1816,12 @@ int do_init(int argc, char** argv)
 	// Account database init
 	accounts = account_engine[0].db;
 	if( accounts == NULL ) {
-		ShowFatalError("do_init: account engine 'sql' not found.\n");
+		ShowFatalError("%s: account engine 'sql' not found.\n", __func__);
 		exit(EXIT_FAILURE);
 	} else {
 
 		if(!accounts->init(accounts)) {
-			ShowFatalError("do_init: Failed to initialize account engine 'sql'.\n");
+			ShowFatalError("%s: Failed to initialize account engine 'sql'.\n", __func__);
 			exit(EXIT_FAILURE);
 		}
 	}

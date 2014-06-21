@@ -444,8 +444,8 @@ const char* geoip_getcountry(uint32 ipnum){
 		}
 		offset = x;
 	}
-	ShowError("geoip_getcountry(): Error traversing database for ipnum %d\n", ipnum);
-	ShowWarning("geoip_getcountry(): Possible database corruption!\n");
+	ShowError("%s(): Error traversing database for ipnum %d\n", __func__, ipnum);
+	ShowWarning("%s(): Possible database corruption!\n", __func__);
 
 	return geoip_countryname[0];
 }
@@ -517,9 +517,9 @@ void geoip_init(void) {
 
 	if( db_type != 1 ) {
 		if( db_type )
-			ShowError("geoip_init(): Database type is not supported %d!\n", db_type);
+			ShowError("%s(): Database type is not supported %d!\n", __func__, db_type);
 		else
-			ShowError("geoip_init(): GeoIP is corrupted!\n");
+			ShowError("%s(): GeoIP is corrupted!\n", __func__);
 
 		geoip_final(false);
 		return;
@@ -750,10 +750,10 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 				Sql_ShowDebug(sql_handle);
 			break;
 		case 1: //account2 reg
-			ShowError("inter_accreg_fromsql: Char server shouldn't handle type 1 registry values (##). That is the login server's work!\n");
+			ShowError("%s: Char server shouldn't handle type 1 registry values (##). That is the login server's work!\n", __func__);
 			return 0;
 		default:
-			ShowError("inter_accreg_fromsql: Invalid type %d\n", type);
+			ShowError("%s: Invalid type %d\n", __func__, type);
 			return 0;
 	}
 	
@@ -833,7 +833,7 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 				Sql_ShowDebug(sql_handle);
 			break;
 		case 1: //account2 reg
-			ShowError("inter_accreg_fromsql: Char server shouldn't handle type 1 registry values (##). That is the login server's work!\n");
+			ShowError("%s: Char server shouldn't handle type 1 registry values (##). That is the login server's work!\n", __func__);
 			return 0;
 	}
 
@@ -1330,7 +1330,7 @@ int mapif_parse_Registry(int fd)
 					break;
 					
 				default:
-					ShowError("mapif_parse_Registry: unknown type %d\n",RFIFOB(fd, cursor - 1));
+					ShowError("%s: unknown type %d\n", __func__, RFIFOB(fd, cursor - 1));
 					return 1;
 			}
 

@@ -251,8 +251,8 @@ void set_char_online(int map_id, int char_id, int account_id)
 	character = (struct online_char_data*)idb_ensure(online_char_db, account_id, create_online_char_data);
 	if( character->char_id != -1 && character->server > -1 && character->server != map_id )
 	{
-		ShowNotice("set_char_online: Character %d:%d marked in map server %d, but map server %d claims to have (%d:%d) online!\n",
-			character->account_id, character->char_id, character->server, map_id, account_id, char_id);
+		ShowNotice("%s: Character %d:%d marked in map server %d, but map server %d claims to have (%d:%d) online!\n",
+			__func__, character->account_id, character->char_id, character->server, map_id, account_id, char_id);
 		mapif_disconnectplayer(server[character->server].fd, character->account_id, character->char_id, 2);
 	}
 
@@ -2250,7 +2250,7 @@ int parse_fromlogin(int fd) {
 
 	// only process data from the login-server
 	if( fd != login_fd ) {
-		ShowDebug("parse_fromlogin: Disconnecting invalid session #%d (is not the login-server)\n", fd);
+		ShowDebug("%s: Disconnecting invalid session #%d (is not the login-server)\n", __func__, fd);
 		do_close(fd);
 		return 0;
 	}
@@ -2934,7 +2934,7 @@ int parse_frommap(int fd)
 
 	ARR_FIND( 0, ARRAYLENGTH(server), id, server[id].fd == fd );
 	if( id == ARRAYLENGTH(server) ) {// not a map server
-		ShowDebug("parse_frommap: Disconnecting invalid session #%d (is not a map-server)\n", fd);
+		ShowDebug("%s: Disconnecting invalid session #%d (is not a map-server)\n", __func__, fd);
 		do_close(fd);
 		return 0;
 	}
@@ -3148,7 +3148,7 @@ int parse_frommap(int fd)
 
 				if (size - 13 != sizeof(struct mmo_charstatus))
 				{
-					ShowError("parse_from_map (save-char): Size mismatch! %d != %d\n", size-13, sizeof(struct mmo_charstatus));
+					ShowError("%s (save-char): Size mismatch! %d != %d\n", __func__, size-13, sizeof(struct mmo_charstatus));
 					RFIFOSKIP(fd,size);
 					break;
 				}
@@ -3161,7 +3161,7 @@ int parse_frommap(int fd)
 					memcpy(&char_dat, RFIFOP(fd,13), sizeof(struct mmo_charstatus));
 					mmo_char_tosql(cid, &char_dat);
 				} else {	//This may be valid on char-server reconnection, when re-sending characters that already logged off.
-					ShowError("parse_from_map (save-char): Received data for non-existing/offline character (%d:%d).\n", aid, cid);
+					ShowError("%s (save-char): Received data for non-existing/offline character (%d:%d).\n", __func__, aid, cid);
 					set_char_online(id, cid, aid);
 				}
 
@@ -4394,7 +4394,7 @@ int parse_char(int fd)
 				//FIXME: is this case even possible? [ultramage]
 				if ((map_fd = server[i].fd) < 1 || session[map_fd] == NULL)
 				{
-					ShowError("parse_char: Attempting to write to invalid session %d! Map Server #%d disconnected.\n", map_fd, i);
+					ShowError("%s: Attempting to write to invalid session %d! Map Server #%d disconnected.\n", __func__, map_fd, i);
 					server[i].fd = -1;
 					memset(&server[i], 0, sizeof(struct mmo_map_server));
 					//Send server closed.
@@ -4469,7 +4469,7 @@ int parse_char(int fd)
 						case -5: WFIFOB(fd,2) = 0x02; break; // 'Symbols in Character Names are forbidden'
 
 						default:
-							ShowWarning("parse_char: Unknown result received from make_new_char_sql!\n");
+							ShowWarning("%s: Unknown result received from make_new_char_sql!\n", __func__);
 							WFIFOB(fd,2) = 0xFF;
 							break;
 					}
@@ -4815,7 +4815,7 @@ int parse_char(int fd)
 				
 			// unknown packet received
 			default:
-				ShowError("parse_char: Received unknown packet "CL_WHITE"0x%x"CL_RESET" from ip '"CL_WHITE"%s"CL_RESET"'! Disconnecting!\n", RFIFOW(fd,0), ip2str(ipl, NULL));
+				ShowError("%s: Received unknown packet "CL_WHITE"0x%x"CL_RESET" from ip '"CL_WHITE"%s"CL_RESET"'! Disconnecting!\n", __func__, RFIFOW(fd,0), ip2str(ipl, NULL));
 				set_eof(fd);
 				return 0;
 			}
@@ -5278,7 +5278,7 @@ int char_config_read(const char* cfgName)
 			// Format is: id1,quantity1,stackable1,idN,quantityN,stackableN
 			if( i%3 )
 			{
-				ShowWarning("char_config_read: There are not enough parameters in start_items, ignoring last item...\n");
+				ShowWarning("%s: There are not enough parameters in start_items, ignoring last item...\n", __func__);
 				if( i%3 == 1 )
 					start_items[i-1] = 0;
 				else

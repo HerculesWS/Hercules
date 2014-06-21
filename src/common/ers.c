@@ -191,7 +191,7 @@ static void *ers_obj_alloc_entry(ERS *self)
 	void *ret;
 
 	if (instance == NULL) {
-		ShowError("ers_obj_alloc_entry: NULL object, aborting entry freeing.\n");
+		ShowError("%s: NULL object, aborting entry freeing.\n", __func__);
 		return NULL;
 	}
 
@@ -231,10 +231,10 @@ static void ers_obj_free_entry(ERS *self, void *entry)
 	struct ers_list *reuse = (struct ers_list *)((unsigned char *)entry - sizeof(struct ers_list));
 
 	if (instance == NULL) {
-		ShowError("ers_obj_free_entry: NULL object, aborting entry freeing.\n");
+		ShowError("%s: NULL object, aborting entry freeing.\n", __func__);
 		return;
 	} else if (entry == NULL) {
-		ShowError("ers_obj_free_entry: NULL entry, nothing to free.\n");
+		ShowError("%s: NULL entry, nothing to free.\n", __func__);
 		return;
 	}
 
@@ -252,7 +252,7 @@ static size_t ers_obj_entry_size(ERS *self)
 	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 
 	if (instance == NULL) {
-		ShowError("ers_obj_entry_size: NULL object, aborting entry freeing.\n");
+		ShowError("%s: NULL object, aborting entry freeing.\n", __func__);
 		return 0;
 	}
 
@@ -264,7 +264,7 @@ static void ers_obj_destroy(ERS *self)
 	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 
 	if (instance == NULL) {
-		ShowError("ers_obj_destroy: NULL object, aborting entry freeing.\n");
+		ShowError("%s: NULL object, aborting entry freeing.\n", __func__);
 		return;
 	}
 
@@ -295,7 +295,7 @@ void ers_cache_size(ERS *self, unsigned int new_size) {
 	nullpo_retv(instance);
 	
 	if( !(instance->Cache->Options&ERS_OPT_FLEX_CHUNK) ) {
-		ShowWarning("ers_cache_size: '%s' has adjusted its chunk size to '%d', however ERS_OPT_FLEX_CHUNK is missing!\n",instance->Name,new_size);
+		ShowWarning("%s: '%s' has adjusted its chunk size to '%d', however ERS_OPT_FLEX_CHUNK is missing!\n", __func__, instance->Name,new_size);
 	}
 	
 	instance->Cache->ChunkSize = new_size;
@@ -372,11 +372,11 @@ void ers_report(void) {
 		memory_t += (cache->UsedObjs+cache->Free) * cache->ObjectSize;
 	}
 #ifdef DEBUG
-	ShowInfo("ers_report: '"CL_WHITE"%u"CL_NORMAL"' instances in use, '"CL_WHITE"%u"CL_NORMAL"' displayed\n",instance_c,instance_c_d);
+	ShowInfo("%s: '"CL_WHITE"%u"CL_NORMAL"' instances in use, '"CL_WHITE"%u"CL_NORMAL"' displayed\n", __func__, instance_c,instance_c_d);
 #endif
-	ShowInfo("ers_report: '"CL_WHITE"%u"CL_NORMAL"' caches in use\n",cache_c);
-	ShowInfo("ers_report: '"CL_WHITE"%u"CL_NORMAL"' blocks in use, consuming '"CL_WHITE"%.2f MB"CL_NORMAL"'\n",blocks_u,(double)((memory_b)/1024)/1024);
-	ShowInfo("ers_report: '"CL_WHITE"%u"CL_NORMAL"' blocks total, consuming '"CL_WHITE"%.2f MB"CL_NORMAL"' \n",blocks_a,(double)((memory_t)/1024)/1024);
+	ShowInfo("%s: '"CL_WHITE"%u"CL_NORMAL"' caches in use\n", __func__, cache_c);
+	ShowInfo("%s: '"CL_WHITE"%u"CL_NORMAL"' blocks in use, consuming '"CL_WHITE"%.2f MB"CL_NORMAL"'\n", __func__, blocks_u,(double)((memory_b)/1024)/1024);
+	ShowInfo("%s: '"CL_WHITE"%u"CL_NORMAL"' blocks total, consuming '"CL_WHITE"%.2f MB"CL_NORMAL"' \n", __func__, blocks_a,(double)((memory_t)/1024)/1024);
 }
 
 /**
