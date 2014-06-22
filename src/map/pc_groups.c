@@ -367,7 +367,7 @@ unsigned int pc_groups_add_permission(const char *name) {
 	
 	for(i = 0; i < pcg->permission_count; i++) {
 		if( strcmpi(name,pcg->permissions[i].name) == 0 ) {
-			ShowError("pc_groups_add_permission(%s): failed! duplicate permission name!\n",name);
+			ShowError("%s(%s): failed! duplicate permission name!\n", __func__, name);
 			return 0;
 		}
 	}
@@ -376,7 +376,7 @@ unsigned int pc_groups_add_permission(const char *name) {
 		key = (uint64)pcg->permissions[i - 1].permission << 1;
 	
 	if( key >= UINT_MAX ) {
-		ShowError("pc_groups_add_permission(%s): failed! not enough room, too many permissions!\n",name);
+		ShowError("%s(%s): failed! not enough room, too many permissions!\n", __func__, name);
 		return 0;
 	}
 	
@@ -426,7 +426,7 @@ void do_init_pc_groups(void) {
 	for(i = 0; i < len; i++) {
 		unsigned int p;
 		if( ( p = pc_groups_add_permission(pc_g_defaults[i].name) ) != pc_g_defaults[i].permission )
-			ShowError("do_init_pc_groups: %s error : %d != %d\n",pc_g_defaults[i].name,p,pc_g_defaults[i].permission);
+			ShowError("%s: %s error : %d != %d\n", __func__, pc_g_defaults[i].name,p, pc_g_defaults[i].permission);
 	}
 	
 	/**
@@ -490,8 +490,8 @@ void pc_groups_reload(void) {
 	iter = mapit_getallusers();
 	for (sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter)) {
 		if (pc->set_group(sd, sd->group_id) != 0) {
-			ShowWarning("pc_groups_reload: %s (AID:%d) has unknown group id (%d)! kicking...\n",
-				sd->status.name, sd->status.account_id, pc_get_group_id(sd));
+			ShowWarning("%s: %s (AID:%d) has unknown group id (%d)! kicking...\n",
+				__func__, sd->status.name, sd->status.account_id, pc_get_group_id(sd));
 			clif->GM_kick(NULL, sd);
 		}
 	}

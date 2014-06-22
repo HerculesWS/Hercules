@@ -283,7 +283,7 @@ enum bg_queue_types bg_str2teamtype (const char *str) {
 		else if( strcmpi(parse,"solo") == 0 )
 			type |= BGQT_INDIVIDUAL;
 		else {
-			ShowError("bg_str2teamtype: '%s' unknown type, skipping...\n",parse);
+			ShowError("%s: '%s' unknown type, skipping...\n", __func__, parse);
 		}
 		parse = strtok(NULL,"|");
 	}
@@ -336,12 +336,12 @@ void bg_config_read(void) {
 				bg->arena[i] = NULL;
 				
 				if( !libconfig->setting_lookup_string(arena, "name", &aName) ) {
-					ShowError("bg_config_read: failed to find 'name' for arena #%d\n",i);
+					ShowError("%s: failed to find 'name' for arena #%d\n", __func__, i);
 					continue;
 				}
 				
 				if( !libconfig->setting_lookup_string(arena, "event", &aEvent) ) {
-					ShowError("bg_config_read: failed to find 'event' for arena #%d\n",i);
+					ShowError("%s: failed to find 'event' for arena #%d\n", __func__, i);
 					continue;
 				}
 
@@ -349,16 +349,16 @@ void bg_config_read(void) {
 				libconfig->setting_lookup_int(arena, "maxLevel", &maxLevel);
 				
 				if( minLevel < 0 ) {
-					ShowWarning("bg_config_read: invalid %d value for arena '%s' minLevel\n",minLevel,aName);
+					ShowWarning("%s: invalid %d value for arena '%s' minLevel\n", __func__, minLevel,aName);
 					minLevel = 0;
 				}
 				if( maxLevel > MAX_LEVEL ) {
-					ShowWarning("bg_config_read: invalid %d value for arena '%s' maxLevel\n",maxLevel,aName);
+					ShowWarning("%s: invalid %d value for arena '%s' maxLevel\n", __func__, maxLevel,aName);
 					maxLevel = MAX_LEVEL;
 				}
 				
 				if( !(reward = libconfig->setting_get_member(arena, "reward")) ) {
-					ShowError("bg_config_read: failed to find 'reward' for arena '%s'/#%d\n",aName,i);
+					ShowError("%s: failed to find 'reward' for arena '%s'/#%d\n", __func__, aName,i);
 					continue;
 				}
 				
@@ -367,15 +367,15 @@ void bg_config_read(void) {
 				libconfig->setting_lookup_int(reward, "draw", &prizeDraw);
 				
 				if( prizeWin < 0 ) {
-					ShowWarning("bg_config_read: invalid %d value for arena '%s' reward:win\n",prizeWin,aName);
+					ShowWarning("%s: invalid %d value for arena '%s' reward:win\n", __func__, prizeWin,aName);
 					prizeWin = 0;
 				}
 				if( prizeLoss < 0 ) {
-					ShowWarning("bg_config_read: invalid %d value for arena '%s' reward:loss\n",prizeLoss,aName);
+					ShowWarning("%s: invalid %d value for arena '%s' reward:loss\n", __func__, prizeLoss,aName);
 					prizeLoss = 0;
 				}
 				if( prizeDraw < 0 ) {
-					ShowWarning("bg_config_read: invalid %d value for arena '%s' reward:draw\n",prizeDraw,aName);
+					ShowWarning("%s: invalid %d value for arena '%s' reward:draw\n", __func__, prizeDraw,aName);
 					prizeDraw = 0;
 				}
 				
@@ -384,33 +384,33 @@ void bg_config_read(void) {
 				libconfig->setting_lookup_int(arena, "minTeamPlayers", &minTeamPlayers);
 				
 				if( minPlayers < 0 ) {
-					ShowWarning("bg_config_read: invalid %d value for arena '%s' minPlayers\n",minPlayers,aName);
+					ShowWarning("%s: invalid %d value for arena '%s' minPlayers\n", __func__, minPlayers,aName);
 					minPlayers = 0;
 				}
 				if( maxPlayers > MAX_BG_MEMBERS * 2 ) {
-					ShowWarning("bg_config_read: invalid %d value for arena '%s' maxPlayers, change #define MAX_BG_MEMBERS\n",maxPlayers,aName);
+					ShowWarning("%s: invalid %d value for arena '%s' maxPlayers, change #define MAX_BG_MEMBERS\n", __func__, maxPlayers,aName);
 					maxPlayers = 0;
 				}
 				if( minTeamPlayers < 0 ) {
-					ShowWarning("bg_config_read: invalid %d value for arena '%s' minTeamPlayers\n",minTeamPlayers,aName);
+					ShowWarning("%s: invalid %d value for arena '%s' minTeamPlayers\n", __func__, minTeamPlayers,aName);
 					minTeamPlayers = 0;
 				}
 
 				if( !libconfig->setting_lookup_string(arena, "delay_var", &aDelayVar) ) {
-					ShowError("bg_config_read: failed to find 'delay_var' for arena '%s'/#%d\n",aName,i);
+					ShowError("%s: failed to find 'delay_var' for arena '%s'/#%d\n", __func__, aName,i);
 					continue;
 				}
 				
 				
 				if( !libconfig->setting_lookup_string(arena, "allowedTypes", &aTeamTypes) ) {
-					ShowError("bg_config_read: failed to find 'allowedTypes' for arena '%s'/#%d\n",aName,i);
+					ShowError("%s: failed to find 'allowedTypes' for arena '%s'/#%d\n", __func__, aName,i);
 					continue;
 				}
 				
 				libconfig->setting_lookup_int(arena, "maxDuration", &maxDuration);
 				
 				if( maxDuration < 0 ) {
-					ShowWarning("bg_config_read: invalid %d value for arena '%s' maxDuration\n",maxDuration,aName);
+					ShowWarning("%s: invalid %d value for arena '%s' maxDuration\n", __func__, maxDuration,aName);
 					maxDuration = 30;
 				}
 				
@@ -418,12 +418,12 @@ void bg_config_read(void) {
 				libconfig->setting_lookup_int(arena, "pGameDuration", &pregame_duration);
 
 				if( fillup_duration < 20 ) {
-					ShowWarning("bg_config_read: invalid %d value for arena '%s' fillDuration, minimum has to be 20, defaulting to 20.\n",fillup_duration,aName);
+					ShowWarning("%s: invalid %d value for arena '%s' fillDuration, minimum has to be 20, defaulting to 20.\n", __func__, fillup_duration,aName);
 					fillup_duration = 20;
 				}
 
 				if( pregame_duration < 20 ) {
-					ShowWarning("bg_config_read: invalid %d value for arena '%s' pGameDuration, minimum has to be 20, defaulting to 20.\n",pregame_duration,aName);
+					ShowWarning("%s: invalid %d value for arena '%s' pGameDuration, minimum has to be 20, defaulting to 20.\n", __func__, pregame_duration,aName);
 					pregame_duration = 20;
 				}
 
@@ -849,7 +849,7 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 		case BGQT_INDIVIDUAL:/* already did */
 			break;
 		default:
-			ShowDebug("bg_canqueue: unknown/unsupported type %d\n",type);
+			ShowDebug("%s: unknown/unsupported type %d\n", __func__, type);
 			return BGQA_DUPLICATE_REQUEST;
 	}
 	

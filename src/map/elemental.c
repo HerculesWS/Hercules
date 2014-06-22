@@ -181,7 +181,7 @@ int elemental_summon_end_timer(int tid, int64 tick, int id, intptr_t data) {
 		return 1;
 
 	if( ed->summon_timer != tid ) {
-		ShowError("elemental_summon_end_timer %d != %d.\n", ed->summon_timer, tid);
+		ShowError("%s: %d != %d.\n", __func__, ed->summon_timer, tid);
 		return 0;
 	}
 
@@ -775,7 +775,7 @@ int read_elementaldb(void) {
 
 	fp = fopen(line, "r");
 	if( !fp ) {
-		ShowError("read_elementaldb : can't read elemental_db.txt\n");
+		ShowError("%s : can't read elemental_db.txt\n", __func__);
 		return -1;
 	}
 
@@ -794,7 +794,7 @@ int read_elementaldb(void) {
 			p = strtok(NULL, ",");
 		}
 		if( i < 26 ) {
-			ShowError("read_elementaldb : Incorrect number of columns at elemental_db.txt line %d.\n", k);
+			ShowError("%s : Incorrect number of columns at elemental_db.txt line %d.\n", __func__, k);
 			continue;
 		}
 
@@ -864,7 +864,7 @@ int read_elemental_skilldb(void) {
 	sprintf(line, "%s/%s", map->db_path, "elemental_skill_db.txt");
 	fp = fopen(line, "r");
 	if( !fp ) {
-		ShowError("read_elemental_skilldb : can't read elemental_skill_db.txt\n");
+		ShowError("%s : can't read elemental_skill_db.txt\n", __func__);
 		return -1;
 	}
 
@@ -883,20 +883,20 @@ int read_elemental_skilldb(void) {
 			p = strtok(NULL, ",");
 		}
 		if( i < 4 ) {
-			ShowError("read_elemental_skilldb : Incorrect number of columns at elemental_skill_db.txt line %d.\n", k);
+			ShowError("%s : Incorrect number of columns at elemental_skill_db.txt line %d.\n", __func__, k);
 			continue;
 		}
 
 		class_ = atoi(str[0]);
 		ARR_FIND(0, MAX_ELEMENTAL_CLASS, i, class_ == elemental->db[i].class_);
 		if( i == MAX_ELEMENTAL_CLASS ) {
-			ShowError("read_elemental_skilldb : Class not found in elemental_db for skill entry, line %d.\n", k);
+			ShowError("%s : Class not found in elemental_db for skill entry, line %d.\n", __func__, k);
 			continue;
 		}
 
 		skill_id = atoi(str[1]);
 		if( skill_id < EL_SKILLBASE || skill_id >= EL_SKILLBASE + MAX_ELEMENTALSKILL ) {
-			ShowError("read_elemental_skilldb : Skill out of range, line %d.\n", k);
+			ShowError("%s : Skill out of range, line %d.\n", __func__, k);
 			continue;
 		}
 
@@ -905,7 +905,7 @@ int read_elemental_skilldb(void) {
 
 		skillmode = atoi(str[3]);
 		if( skillmode < EL_SKILLMODE_PASIVE || skillmode > EL_SKILLMODE_AGGRESSIVE ) {
-			ShowError("read_elemental_skilldb : Skillmode out of range, line %d.\n",k);
+			ShowError("%s : Skillmode out of range, line %d.\n", __func__, k);
 			continue;
 		}
 		ARR_FIND( 0, MAX_ELESKILLTREE, i, db->skill[i].id == 0 || db->skill[i].id == skill_id );

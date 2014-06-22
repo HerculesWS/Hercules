@@ -230,7 +230,7 @@ int merc_contract_end_timer(int tid, int64 tick, int id, intptr_t data) {
 
 	if( md->contract_timer != tid )
 	{
-		ShowError("merc_contract_end_timer %d != %d.\n", md->contract_timer, tid);
+		ShowError("%s: %d != %d.\n", __func__, md->contract_timer, tid);
 		return 0;
 	}
 

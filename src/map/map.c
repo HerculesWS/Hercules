@@ -148,7 +148,7 @@ int map_freeblock_unlock (void) {
 		}
 		map->block_free_count = 0;
 	} else if (map->block_free_lock < 0) {
-		ShowError("map_freeblock_unlock: lock count < 0 !\n");
+		ShowError("%s: lock count < 0 !\n", __func__);
 		map->block_free_lock = 0;
 	}
 
@@ -159,7 +159,7 @@ int map_freeblock_unlock (void) {
 // Called each 1s
 int map_freeblock_timer(int tid, int64 tick, int id, intptr_t data) {
 	if (map->block_free_lock > 0) {
-		ShowError("map_freeblock_timer: block_free_lock(%d) is invalid.\n", map->block_free_lock);
+		ShowError("%s: block_free_lock(%d) is invalid.\n", __func__, map->block_free_lock);
 		map->block_free_lock = 1;
 		map->freeblock_unlock();
 	}
@@ -206,7 +206,7 @@ int map_addblock(struct block_list* bl)
 	nullpo_ret(bl);
 
 	if (bl->prev != NULL) {
-		ShowError("map_addblock: bl->prev != NULL\n");
+		ShowError("%s: bl->prev != NULL\n", __func__);
 		return 1;
 	}
 
@@ -214,11 +214,11 @@ int map_addblock(struct block_list* bl)
 	x = bl->x;
 	y = bl->y;
 	if( m < 0 || m >= map->count ) {
-		ShowError("map_addblock: invalid map id (%d), only %d are loaded.\n", m, map->count);
+		ShowError("%s: invalid map id (%d), only %d are loaded.\n", __func__, m, map->count);
 		return 1;
 	}
 	if( x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys ) {
-		ShowError("map_addblock: out-of-bounds coordinates (\"%s\",%d,%d), map is %dx%d\n", map->list[m].name, x, y, map->list[m].xs, map->list[m].ys);
+		ShowError("%s: out-of-bounds coordinates (\"%s\",%d,%d), map is %dx%d\n", __func__, map->list[m].name, x, y, map->list[m].xs, map->list[m].ys);
 		return 1;
 	}
 
@@ -255,7 +255,7 @@ int map_delblock(struct block_list* bl)
 	if (bl->prev == NULL) {
 		if (bl->next != NULL) {
 			// can't delete block (already at the beginning of the chain)
-			ShowError("map_delblock error : bl->next!=NULL\n");
+			ShowError("%s error : bl->next!=NULL\n", __func__);
 		}
 		return 0;
 	}
@@ -1330,7 +1330,7 @@ int map_clearflooritem_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct flooritem_data* fitem = (struct flooritem_data*)idb_get(map->id_db, id);
 
 	if (fitem == NULL || fitem->bl.type != BL_ITEM || (fitem->cleartimer != tid)) {
-		ShowError("map_clearflooritem_timer : error\n");
+		ShowError("%s : error\n", __func__);
 		return 1;
 	}
 
@@ -1418,7 +1418,7 @@ int map_search_freecell(struct block_list *src, int16 m, int16 *x,int16 *y, int1
 
 	if( !src && (!(flag&1) || flag&2) )
 	{
-		ShowDebug("map_search_freecell: Incorrect usage! When src is NULL, flag has to be &1 and can't have &2\n");
+		ShowDebug("%s: Incorrect usage! When src is NULL, flag has to be &1 and can't have &2\n", __func__);
 		return 0;
 	}
 
@@ -2317,11 +2317,11 @@ int map_removemobs_timer(int tid, int64 tick, int id, intptr_t data) {
 	const int16 m = id;
 
 	if (m < 0 || m >= map->count) { //Incorrect map id!
-		ShowError("map_removemobs_timer error: timer %d points to invalid map %d\n",tid, m);
+		ShowError("%s error: timer %d points to invalid map %d\n", __func__, tid, m);
 		return 0;
 	}
 	if (map->list[m].mob_delete_timer != tid) { //Incorrect timer call!
-		ShowError("map_removemobs_timer mismatch: %d != %d (map %s)\n",map->list[m].mob_delete_timer, tid, map->list[m].name);
+		ShowError("%s mismatch: %d != %d (map %s)\n", __func__, map->list[m].mob_delete_timer, tid, map->list[m].name);
 		return 0;
 	}
 	map->list[m].mob_delete_timer = INVALID_TIMER;
@@ -2491,7 +2491,7 @@ inline static struct mapcell map_gat2cell(int gat) {
 		case 5: cell.walkable = 0; cell.shootable = 1; cell.water = 0; break; // gap (snipable)
 		case 6: cell.walkable = 1; cell.shootable = 1; cell.water = 0; break; // ???
 	default:
-		ShowWarning("map_gat2cell: unrecognized gat type '%d'\n", gat);
+		ShowWarning("%s: unrecognized gat type '%d'\n", __func__, gat);
 		break;
 	}
 
@@ -2504,7 +2504,7 @@ int map_cell2gat(struct mapcell cell) {
 	if( cell.walkable == 1 && cell.shootable == 1 && cell.water == 1 ) return 3;
 	if( cell.walkable == 0 && cell.shootable == 1 && cell.water == 0 ) return 5;
 
-	ShowWarning("map_cell2gat: cell has no matching gat type\n");
+	ShowWarning("%s: cell has no matching gat type\n", __func__);
 	return 1; // default to 'wall'
 }
 void map_cellfromcache(struct map_data *m) {
@@ -2640,7 +2640,7 @@ void map_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag) {
 	case CELL_NOCHAT:        map->list[m].cell[j].nochat = flag;        break;
 	case CELL_ICEWALL:       map->list[m].cell[j].icewall = flag;       break;
 	default:
-		ShowWarning("map_setcell: invalid cell type '%d'\n", (int)cell);
+		ShowWarning("%s: invalid cell type '%d'\n", __func__, (int)cell);
 		break;
 	}
 }
@@ -2801,7 +2801,7 @@ int map_setipport(unsigned short map_index, uint32 ip, uint16 port)
 		return 0;
 	if(ip == clif->map_ip && port == clif->map_port) {
 		//That's odd, we received info that we are the ones with this map, but... we don't have it.
-		ShowFatalError("map_setipport : received info that this map-server SHOULD have map '%s', but it is not loaded.\n",mapindex_id2name(map_index));
+		ShowFatalError("%s : received info that this map-server SHOULD have map '%s', but it is not loaded.\n", __func__, mapindex_id2name(map_index));
 		exit(EXIT_FAILURE);
 	}
 	mdos->ip   = ip;
@@ -2870,7 +2870,7 @@ char *map_init_mapcache(FILE *fp) {
 
 	// Read file into buffer..
 	if(fread(buffer, sizeof(char), size, fp) != size) {
-		ShowError("map_init_mapcache: Could not read entire mapcache file\n");
+		ShowError("%s: Could not read entire mapcache file\n", __func__);
 		aFree(buffer);
 		return NULL;
 	}
@@ -2879,12 +2879,12 @@ char *map_init_mapcache(FILE *fp) {
 
 	// Get main header to verify if data is corrupted
 	if( fread(&header, sizeof(header), 1, fp) != 1 ) {
-		ShowError("map_init_mapcache: Error obtaining main header!\n");
+		ShowError("%s: Error obtaining main header!\n", __func__);
 		aFree(buffer);
 		return NULL;
 	}
 	if( GetULong((unsigned char *)&(header.file_size)) != size ) {
-		ShowError("map_init_mapcache: Map cache is corrupted!\n");
+		ShowError("%s: Map cache is corrupted!\n", __func__);
 		aFree(buffer);
 		return NULL;
 	}
@@ -2923,7 +2923,7 @@ int map_readfromcache(struct map_data *m, char *buffer) {
 		size = (unsigned long)info->xs*(unsigned long)info->ys;
 
 		if(size > MAX_MAP_SIZE) {
-			ShowWarning("map_readfromcache: %s exceeded MAX_MAP_SIZE of %d\n", info->name, MAX_MAP_SIZE);
+			ShowWarning("%s: %s exceeded MAX_MAP_SIZE of %d\n", __func__, info->name, MAX_MAP_SIZE);
 			return 0; // Say not found to remove it from list.. [Shinryo]
 		}
 
@@ -4706,7 +4706,7 @@ enum bl_type map_zone_bl_type(const char *entry, enum map_zone_skill_subtype *su
 		} else if( strcmpi(parse,"none") == 0 ) {
 			bl = BL_NUL;
 		} else {
-			ShowError("map_zone_db: '%s' unknown type, skipping...\n",parse);
+			ShowError("%s: '%s' unknown type, skipping...\n", __func__, parse);
 		}
 		parse = strtok(NULL,"|");
 	}

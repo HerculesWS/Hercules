@@ -442,7 +442,7 @@ int pet_recv_petdata(int account_id,struct s_pet *p,int flag) {
 				break;
 		}
 		if(i >= MAX_INVENTORY) {
-			ShowError("pet_recv_petdata: Hatching pet (%d:%s) aborted, couldn't find egg in inventory for removal!\n",p->pet_id, p->name);
+			ShowError("%s: Hatching pet (%d:%s) aborted, couldn't find egg in inventory for removal!\n", __func__, p->pet_id, p->name);
 			sd->status.pet_id = 0;
 			return 1;
 		}
@@ -1063,7 +1063,7 @@ int pet_skill_bonus_timer(int tid, int64 tick, int id, intptr_t data) {
 	pd=sd->pd;
 	
 	if(pd->bonus->timer != tid) {
-		ShowError("pet_skill_bonus_timer %d != %d\n",pd->bonus->timer,tid);
+		ShowError("%s %d != %d\n", __func__, pd->bonus->timer, tid);
 		pd->bonus->timer = INVALID_TIMER;
 		return 0;
 	}
@@ -1102,7 +1102,7 @@ int pet_recovery_timer(int tid, int64 tick, int id, intptr_t data) {
 	pd=sd->pd;
 
 	if(pd->recovery->timer != tid) {
-		ShowError("pet_recovery_timer %d != %d\n",pd->recovery->timer,tid);
+		ShowError("%s %d != %d\n", __func__, pd->recovery->timer, tid);
 		return 0;
 	}
 
@@ -1131,7 +1131,7 @@ int pet_heal_timer(int tid, int64 tick, int id, intptr_t data) {
 	pd=sd->pd;
 	
 	if(pd->s_skill->timer != tid) {
-		ShowError("pet_heal_timer %d != %d\n",pd->s_skill->timer,tid);
+		ShowError("%s %d != %d\n", __func__, pd->s_skill->timer, tid);
 		return 0;
 	}
 	
@@ -1167,7 +1167,7 @@ int pet_skill_support_timer(int tid, int64 tick, int id, intptr_t data) {
 	pd=sd->pd;
 	
 	if(pd->s_skill->timer != tid) {
-		ShowError("pet_skill_support_timer %d != %d\n",pd->s_skill->timer,tid);
+		ShowError("%s %d != %d\n", __func__, pd->s_skill->timer, tid);
 		return 0;
 	}
 	
@@ -1265,14 +1265,14 @@ int read_petdb()
 
 			if( p == NULL )
 			{
-				ShowError("read_petdb: Insufficient columns in line %d, skipping.\n", lines);
+				ShowError("%s: Insufficient columns in line %d, skipping.\n", __func__, lines);
 				continue;
 			}
 
 			// Pet Script
 			if( *p != '{' )
 			{
-				ShowError("read_petdb: Invalid format (Pet Script column) in line %d, skipping.\n", lines);
+				ShowError("%s: Invalid format (Pet Script column) in line %d, skipping.\n", __func__, lines);
 				continue;
 			}
 
@@ -1280,7 +1280,7 @@ int read_petdb()
 			p = strstr(p+1,"},");
 			if( p == NULL )
 			{
-				ShowError("read_petdb: Invalid format (Pet Script column) in line %d, skipping.\n", lines);
+				ShowError("%s: Invalid format (Pet Script column) in line %d, skipping.\n", __func__, lines);
 				continue;
 			}
 			p[1] = '\0';
@@ -1289,7 +1289,7 @@ int read_petdb()
 			// Equip Script
 			if( *p != '{' )
 			{
-				ShowError("read_petdb: Invalid format (Equip Script column) in line %d, skipping.\n", lines);
+				ShowError("%s: Invalid format (Equip Script column) in line %d, skipping.\n", __func__, lines);
 				continue;
 			}
 			str[21] = p;
@@ -1338,7 +1338,7 @@ int read_petdb()
 		}
 
 		if( j >= MAX_PET_DB )
-			ShowWarning("read_petdb: Reached max number of pets [%d]. Remaining pets were not read.\n ", MAX_PET_DB);
+			ShowWarning("%s: Reached max number of pets [%d]. Remaining pets were not read.\n ", __func__, MAX_PET_DB);
 		fclose(fp);
 		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' pets in '"CL_WHITE"%s"CL_RESET"'.\n", entries, filename[i]);
 	}

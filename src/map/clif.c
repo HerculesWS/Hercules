@@ -597,7 +597,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 			break;
 
 		default:
-			ShowError("clif_send: Unrecognized type %d\n",type);
+			ShowError("%s: Unrecognized type %d\n", __func__, type);
 			return false;
 	}
 
@@ -3166,7 +3166,7 @@ void clif_changestatus(struct map_session_data* sd,int type,int val)
 			WBUFL(buf,8)=val;
 			break;
 		default:
-			ShowError("clif_changestatus : unrecognized type %d.\n",type);
+			ShowError("%s : unrecognized type %d.\n", __func__, type);
 			return;
 	}
 
@@ -5067,7 +5067,7 @@ void clif_skill_fail(struct map_session_data *sd,uint16 skill_id,enum useskill_f
 	int fd;
 
 	if (!sd) {	//Since this is the most common nullpo....
-		ShowDebug("clif_skill_fail: Error, received NULL sd for skill %d\n", skill_id);
+		ShowDebug("%s: Error, received NULL sd for skill %d\n", __func__, skill_id);
 		return;
 	}
 
@@ -5711,7 +5711,7 @@ void clif_GlobalMessage(struct block_list* bl, const char* message) {
 	len = strlen(message)+1;
 
 	if( len > sizeof(buf)-8 ) {
-		ShowWarning("clif_GlobalMessage: Truncating too long message '%s' (len=%d).\n", message, len);
+		ShowWarning("%s: Truncating too long message '%s' (len=%d).\n", __func__, message, len);
 		len = sizeof(buf)-8;
 	}
 
@@ -6745,7 +6745,7 @@ void clif_party_message(struct party_data* p, int account_id, const char* mes, i
 
 		if( len > sizeof(buf)-8 )
 		{
-			ShowWarning("clif_party_message: Truncated message '%s' (len=%d, max=%d, party_id=%d).\n", mes, len, sizeof(buf)-8, p->party.party_id);
+			ShowWarning("%s: Truncated message '%s' (len=%d, max=%d, party_id=%d).\n", __func__, mes, len, sizeof(buf)-8, p->party.party_id);
 			len = sizeof(buf)-8;
 		}
 
@@ -7864,7 +7864,7 @@ void clif_guild_message(struct guild *g,int account_id,const char *mes,int len)
 	}
 	else if( len > sizeof(buf)-5 )
 	{
-		ShowWarning("clif_guild_message: Truncated message '%s' (len=%d, max=%d, guild_id=%d).\n", mes, len, sizeof(buf)-5, g->guild_id);
+		ShowWarning("%s: Truncated message '%s' (len=%d, max=%d, guild_id=%d).\n", __func__, mes, len, sizeof(buf)-5, g->guild_id);
 		len = sizeof(buf)-5;
 	}
 
@@ -8122,7 +8122,7 @@ void clif_disp_message(struct block_list* src, const char* mes, size_t len, enum
 	if( len == 0 ) {
 		return;
 	} else if( len > sizeof(buf)-5 ) {
-		ShowWarning("clif_disp_message: Truncated message '%s' (len=%d, max=%d, aid=%d).\n", mes, len, sizeof(buf)-5, src->id);
+		ShowWarning("%s: Truncated message '%s' (len=%d, max=%d, aid=%d).\n", __func__, mes, len, sizeof(buf)-5, src->id);
 		len = sizeof(buf)-5;
 	}
 
@@ -8395,7 +8395,7 @@ void clif_messagecolor(struct block_list* bl, unsigned int color, const char* ms
 	nullpo_retv(bl);
 
 	if( msg_len > sizeof(buf)-12 ) {
-		ShowWarning("clif_messagecolor: Truncating too long message '%s' (len=%u).\n", msg, msg_len);
+		ShowWarning("%s: Truncating too long message '%s' (len=%u).\n", __func__, msg, msg_len);
 		msg_len = sizeof(buf)-12;
 	}
 
@@ -8416,7 +8416,7 @@ void clif_message(struct block_list* bl, const char* msg) {
 	nullpo_retv(bl);
 
 	if( msg_len > sizeof(buf)-8 ) {
-		ShowWarning("clif_message: Truncating too long message '%s' (len=%u).\n", msg, msg_len);
+		ShowWarning("%s: Truncating too long message '%s' (len=%u).\n", __func__, msg, msg_len);
 		msg_len = sizeof(buf)-8;
 	}
 
@@ -8641,7 +8641,7 @@ void clif_charnameack (int fd, struct block_list *bl)
 			memcpy(WBUFP(buf,6), ((TBL_ELEM*)bl)->db->name, NAME_LENGTH);
 			break;
 		default:
-			ShowError("clif_charnameack: bad type %d(%d)\n", bl->type, bl->id);
+			ShowError("%s: bad type %d(%d)\n", __func__, bl->type, bl->id);
 			return;
 	}
 
@@ -8744,7 +8744,7 @@ void clif_disp_overhead(struct block_list *bl, const char* mes)
 	size_t len_mes = strlen(mes)+1; //Account for \0
 
 	if (len_mes > sizeof(buf)-8) {
-		ShowError("clif_disp_overhead: Message too long (length %d)\n", len_mes);
+		ShowError("%s: Message too long (length %d)\n", __func__, len_mes);
 		len_mes = sizeof(buf)-8; //Trunk it to avoid problems.
 	}
 	// send message to others
@@ -8870,7 +8870,7 @@ void clif_hate_info(struct map_session_data *sd, unsigned char hate_level,int cl
 	} else if( mob->db_checkid(class_) ) {
 		clif->starskill(sd, mob->db(class_)->jname, class_, hate_level, type ? 10 : 11);
 	} else {
-		ShowWarning("clif_hate_info: Received invalid class %d for this packet (char_id=%d, hate_level=%u, type=%u).\n", class_, sd->status.char_id, (unsigned int)hate_level, (unsigned int)type);
+		ShowWarning("%s: Received invalid class %d for this packet (char_id=%d, hate_level=%u, type=%u).\n", __func__, class_, sd->status.char_id, (unsigned int)hate_level, (unsigned int)type);
 	}
 }
 
@@ -9037,7 +9037,7 @@ bool clif_process_message(struct map_session_data *sd, int format, char **name_,
 	// basic structure checks
 	if( packetlen < 4 + 1 )
 	{	// 4-byte header and at least an empty string is expected
-		ShowWarning("clif_process_message: Received malformed packet from player '%s' (no message data)!\n", sd->status.name);
+		ShowWarning("%s: Received malformed packet from player '%s' (no message data)!\n", __func__, sd->status.name);
 		return false;
 	}
 
@@ -9055,7 +9055,7 @@ bool clif_process_message(struct map_session_data *sd, int format, char **name_,
 			name[namelen] != ' ' || name[namelen+1] != ':' || name[namelen+2] != ' ' ) // followed by ' : '
 		{
 			//Hacked message, or infamous "client desynchronize" issue where they pick one char while loading another.
-			ShowWarning("clif_process_message: Player '%s' sent a message using an incorrect name! Forcing a relog...\n", sd->status.name);
+			ShowWarning("%s: Player '%s' sent a message using an incorrect name! Forcing a relog...\n", __func__, sd->status.name);
 			set_eof(fd); // Just kick them out to correct it.
 			return false;
 		}
@@ -9067,7 +9067,7 @@ bool clif_process_message(struct map_session_data *sd, int format, char **name_,
 	{// name has fixed width
 		if( textlen < NAME_LENGTH + 1 )
 		{
-			ShowWarning("clif_process_message: Received malformed packet from player '%s' (packet length is incorrect)!\n", sd->status.name);
+			ShowWarning("%s: Received malformed packet from player '%s' (packet length is incorrect)!\n", __func__, sd->status.name);
 			return false;
 		}
 
@@ -9077,7 +9077,7 @@ bool clif_process_message(struct map_session_data *sd, int format, char **name_,
 
 		if( name[namelen] != '\0' )
 		{	// only restriction is that the name must be zero-terminated
-			ShowWarning("clif_process_message: Player '%s' sent an unterminated name!\n", sd->status.name);
+			ShowWarning("%s: Player '%s' sent an unterminated name!\n", __func__, sd->status.name);
 			return false;
 		}
 
@@ -9087,13 +9087,13 @@ bool clif_process_message(struct map_session_data *sd, int format, char **name_,
 
 	if( messagelen != strnlen(message, messagelen)+1 )
 	{	// the declared length must match real length
-		ShowWarning("clif_process_message: Received malformed packet from player '%s' (length is incorrect)!\n", sd->status.name);
+		ShowWarning("%s: Received malformed packet from player '%s' (length is incorrect)!\n", __func__, sd->status.name);
 		return false;
 	}
 	// verify <message> part of the packet
 	if( message[messagelen-1] != '\0' )
 	{	// message must be zero-terminated
-		ShowWarning("clif_process_message: Player '%s' sent an unterminated message string!\n", sd->status.name);
+		ShowWarning("%s: Player '%s' sent an unterminated message string!\n", __func__, sd->status.name);
 		return false;
 	}
 	if( messagelen > CHAT_SIZE_MAX-1 )
@@ -9102,7 +9102,7 @@ bool clif_process_message(struct map_session_data *sd, int format, char **name_,
 		// Also, the physical size of strings that use multibyte encoding can go multiple times over the chatbox capacity.
 		// Neither the official client nor server place any restriction on the length of the data in the packet,
 		// but we'll only allow reasonably long strings here. This also makes sure that they fit into the `chatlog` table.
-		ShowWarning("clif_process_message: Player '%s' sent a message too long ('%.*s')!\n", sd->status.name, CHAT_SIZE_MAX-1, message);
+		ShowWarning("%s: Player '%s' sent a message too long ('%.*s')!\n", __func__, sd->status.name, CHAT_SIZE_MAX-1, message);
 		return false;
 	}
 
@@ -9176,7 +9176,7 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 	unsigned int client_tick; //The client tick is a tick, therefore it needs be unsigned. [Skotlex]
 
 	if (sd) {
-		ShowError("clif_parse_WantToConnection : invalid request (character already logged in)\n");
+		ShowError("%s : invalid request (character already logged in)\n", __func__);
 		return;
 	}
 
@@ -9197,7 +9197,7 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 	//Check for double login.
 	bl = map->id2bl(account_id);
 	if(bl && bl->type != BL_PC) {
-		ShowError("clif_parse_WantToConnection: a non-player object already has id %d, please increase the starting account number\n", account_id);
+		ShowError("%s: a non-player object already has id %d, please increase the starting account number\n", __func__, account_id);
 		WFIFOHEAD(fd,packet_len(0x6a));
 		WFIFOW(fd,0) = 0x6a;
 		WFIFOB(fd,2) = 3; // Rejected by server
@@ -11228,8 +11228,8 @@ void clif_parse_StatusUp(int fd,struct map_session_data *sd) {
 	increase_amount = RFIFOB(fd,4);
 	if( increase_amount < 0 )
 	{
-		ShowDebug("clif_parse_StatusUp: Negative 'increase' value sent by client! (fd: %d, value: %d)\n",
-			fd, increase_amount);
+		ShowDebug("%d: Negative 'increase' value sent by client! (fd: %d, value: %d)\n",
+			__func__, fd, increase_amount);
 	}
 	pc->statusup(sd, RFIFOW(fd,2), increase_amount);
 }
@@ -13152,7 +13152,8 @@ void clif_parse_GuildChangeEmblem(int fd,struct map_session_data *sd)
 		return;
 
 	if( !clif->validate_emblem(emblem, emblem_len) ) {
-		ShowWarning("clif_parse_GuildChangeEmblem: Rejected malformed guild emblem (size=%lu, accound_id=%d, char_id=%d, guild_id=%d).\n", emblem_len, sd->status.account_id, sd->status.char_id, sd->status.guild_id);
+		ShowWarning("%s: Rejected malformed guild emblem (size=%lu, accound_id=%d, char_id=%d, guild_id=%d).\n",
+			__func__, emblem_len, sd->status.account_id, sd->status.char_id, sd->status.guild_id);
 		return;
 	}
 
@@ -16665,7 +16666,7 @@ void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data* sd) {
 	// TODO: Make this check global for all variable length packets.
 	if( packet_len < 89 )
 	{// minimum packet length
-		ShowError("clif_parse_ReqOpenBuyingStore: Malformed packet (expected length=%u, length=%u, account_id=%d).\n", 89, packet_len, sd->bl.id);
+		ShowError("%s: Malformed packet (expected length=%u, length=%u, account_id=%d).\n", __func__, 89, packet_len, sd->bl.id);
 		return;
 	}
 
@@ -16679,7 +16680,7 @@ void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data* sd) {
 
 	if( packet_len%blocksize )
 	{
-		ShowError("clif_parse_ReqOpenBuyingStore: Unexpected item list size %u (account_id=%d, block size=%u)\n", packet_len, sd->bl.id, blocksize);
+		ShowError("%s: Unexpected item list size %u (account_id=%d, block size=%u)\n", __func__, packet_len, sd->bl.id, blocksize);
 		return;
 	}
 	count = packet_len/blocksize;
@@ -16836,7 +16837,7 @@ void clif_parse_ReqTradeBuyingStore(int fd, struct map_session_data* sd) {
 
 	if( packet_len < 12 )
 	{// minimum packet length
-		ShowError("clif_parse_ReqTradeBuyingStore: Malformed packet (expected length=%u, length=%u, account_id=%d).\n", 12, packet_len, sd->bl.id);
+		ShowError("%s: Malformed packet (expected length=%u, length=%u, account_id=%d).\n", __func__, 12, packet_len, sd->bl.id);
 		return;
 	}
 
@@ -16849,7 +16850,7 @@ void clif_parse_ReqTradeBuyingStore(int fd, struct map_session_data* sd) {
 
 	if( packet_len%blocksize )
 	{
-		ShowError("clif_parse_ReqTradeBuyingStore: Unexpected item list size %u (account_id=%d, buyer_id=%u, block size=%u)\n", packet_len, sd->bl.id, account_id, blocksize);
+		ShowError("%s: Unexpected item list size %u (account_id=%d, buyer_id=%u, block size=%u)\n", __func__, packet_len, sd->bl.id, account_id, blocksize);
 		return;
 	}
 	count = packet_len/blocksize;
@@ -16952,7 +16953,7 @@ void clif_parse_SearchStoreInfo(int fd, struct map_session_data* sd) {
 
 	if( packet_len < 15 )
 	{// minimum packet length
-		ShowError("clif_parse_SearchStoreInfo: Malformed packet (expected length=%u, length=%u, account_id=%d).\n", 15, packet_len, sd->bl.id);
+		ShowError("%s: Malformed packet (expected length=%u, length=%u, account_id=%d).\n", __func__, 15, packet_len, sd->bl.id);
 		return;
 	}
 
@@ -16969,14 +16970,14 @@ void clif_parse_SearchStoreInfo(int fd, struct map_session_data* sd) {
 
 	if( packet_len%blocksize )
 	{
-		ShowError("clif_parse_SearchStoreInfo: Unexpected item list size %u (account_id=%d, block size=%u)\n", packet_len, sd->bl.id, blocksize);
+		ShowError("%s: Unexpected item list size %u (account_id=%d, block size=%u)\n", __func__, packet_len, sd->bl.id, blocksize);
 		return;
 	}
 	count = packet_len/blocksize;
 
 	if( count < item_count+card_count )
 	{
-		ShowError("clif_parse_SearchStoreInfo: Malformed packet (expected count=%u, count=%u, account_id=%d).\n", item_count+card_count, count, sd->bl.id);
+		ShowError("%s: Malformed packet (expected count=%u, count=%u, account_id=%d).\n", __func__, item_count+card_count, count, sd->bl.id);
 		return;
 	}
 
@@ -17750,7 +17751,7 @@ void clif_ShowScript(struct block_list* bl, const char* message) {
 	len = strlen(message)+1;
 
 	if( len > sizeof(buf)-8 ) {
-		ShowWarning("clif_ShowScript: Truncating too long message '%s' (len=%d).\n", message, len);
+		ShowWarning("%s: Truncating too long message '%s' (len=%d).\n", __func__, message, len);
 		len = sizeof(buf)-8;
 	}
 
@@ -18348,7 +18349,7 @@ int clif_parse(int fd) {
 
 		// filter out invalid / unsupported packets
 		if( cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packet_db[cmd].len == 0 ) {
-			ShowWarning("clif_parse: Received unsupported packet (packet 0x%04x (0x%04x), %d bytes received), disconnecting session #%d.\n", cmd, RFIFOW(fd,0), RFIFOREST(fd), fd);
+			ShowWarning("%s: Received unsupported packet (packet 0x%04x (0x%04x), %d bytes received), disconnecting session #%d.\n", __func__, cmd, RFIFOW(fd,0), RFIFOREST(fd), fd);
 #ifdef DUMP_INVALID_PACKET
 			ShowDump(RFIFOP(fd,0), RFIFOREST(fd));
 #endif
@@ -18364,7 +18365,7 @@ int clif_parse(int fd) {
 
 			packet_len = RFIFOW(fd,2);
 			if (packet_len < 4 || packet_len > 32768) {
-				ShowWarning("clif_parse: Received packet 0x%04x specifies invalid packet_len (%d), disconnecting session #%d.\n", cmd, packet_len, fd);
+				ShowWarning("%s: Received packet 0x%04x specifies invalid packet_len (%d), disconnecting session #%d.\n", __func__, cmd, packet_len, fd);
 #ifdef DUMP_INVALID_PACKET
 				ShowDump(RFIFOP(fd,0), RFIFOREST(fd));
 #endif

@@ -290,7 +290,7 @@ void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 		irc_privmsg_ctcp(fd, command, source, target, message);
 #ifdef IRCBOT_DEBUG
 	} else if( strcmpi(target,hChSys.irc_nick) == 0 ) {
-		ShowDebug("irc_privmsg: Received message from %s: '%s'\n", source ? source : "(null)", msg);
+		ShowDebug("%s: Received message from %s: '%s'\n", __func__, source ? source : "(null)", msg);
 #endif // IRCBOT_DEBUG
 	} else if( msg && strcmpi(target,hChSys.irc_channel) == 0 ) {
 		char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];

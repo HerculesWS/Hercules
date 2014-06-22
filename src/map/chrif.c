@@ -259,7 +259,7 @@ bool chrif_save(struct map_session_data *sd, int flag) {
 		if ( chrif->isconnected() )
 			chrif->save_scdata(sd);
 		if ( !chrif->auth_logout(sd,flag == 1 ? ST_LOGOUT : ST_MAPCHANGE) )
-			ShowError("chrif_save: Failed to set up player %d:%d for proper quitting!\n", sd->status.account_id, sd->status.char_id);
+			ShowError("%s: Failed to set up player %d:%d for proper quitting!\n", __func__, sd->status.account_id, sd->status.char_id);
 	}
 
 	chrif_check(false); //Character is saved on reconnect.
@@ -402,7 +402,7 @@ bool chrif_changemapserverack(int account_id, int login_id1, int login_id2, int 
 		return false;
 
 	if ( !login_id1 ) {
-		ShowError("chrif_changemapserverack: map server change failed.\n");
+		ShowError("%s: map server change failed.\n", __func__);
 		clif->authfail_fd(node->fd, 0);
 	} else
 		clif->changemapserver(node->sd, map_index, x, y, ntohl(ip), ntohs(port));
@@ -576,7 +576,7 @@ void chrif_authok(int fd) {
 
 	//Check if both servers agree on the struct's size
 	if( RFIFOW(fd,2) - 25 != sizeof(struct mmo_charstatus) ) {
-		ShowError("chrif_authok: Data size mismatch! %d != %d\n", RFIFOW(fd,2) - 25, sizeof(struct mmo_charstatus));
+		ShowError("%s: Data size mismatch! %d != %d\n", __func__, RFIFOW(fd,2) - 25, sizeof(struct mmo_charstatus));
 		return;
 	}
 
@@ -733,7 +733,7 @@ bool chrif_searchcharid(int char_id) {
 bool chrif_changeemail(int id, const char *actual_email, const char *new_email) {
 	
 	if (battle_config.etc_log)
-		ShowInfo("chrif_changeemail: account: %d, actual_email: '%s', new_email: '%s'.\n", id, actual_email, new_email);
+		ShowInfo("%s: account: %d, actual_email: '%s', new_email: '%s'.\n", __func__, id, actual_email, new_email);
 
 	chrif_check(false);
 
@@ -815,7 +815,7 @@ bool chrif_char_ask_name_answer(int acc, const char* player_name, uint16 type, u
 	sd = map->id2sd(acc);
 	
 	if( acc < 0 || sd == NULL ) {
-		ShowError("chrif_char_ask_name_answer failed - player not online.\n");
+		ShowError("%s: failed - player not online.\n", __func__);
 		return false;
 	}
 
@@ -848,7 +848,7 @@ void chrif_changedsex(int fd) {
 	//int sex = RFIFOL(fd,6); // Dead store. Uncomment if needed again.
 	
 	if ( battle_config.etc_log )
-		ShowNotice("chrif_changedsex %d.\n", acc);
+		ShowNotice("%s: %d.\n", __func__, acc);
 
 	// Path to activate this response:
 	// Map(start) (0x2b0e) -> Char(0x2727) -> Login
@@ -934,7 +934,7 @@ void chrif_idbanned(int fd) {
 	id = RFIFOL(fd,2);
 	
 	if ( battle_config.etc_log )
-		ShowNotice("chrif_idbanned %d.\n", id);
+		ShowNotice("%s: %d.\n", __func__, id);
 	
 	sd = ( RFIFOB(fd,6) == 2 ) ? map->charid2sd(id) : map->id2sd(id);
 
@@ -1165,12 +1165,12 @@ bool chrif_load_scdata(int fd) {
 	sd = map->id2sd(aid);
 	
 	if ( !sd ) {
-		ShowError("chrif_load_scdata: Player of AID %d not found!\n", aid);
+		ShowError("%s: Player of AID %d not found!\n", __func__, aid);
 		return false;
 	}
 	
 	if ( sd->status.char_id != cid ) {
-		ShowError("chrif_load_scdata: Receiving data for account %d, char id does not matches (%d != %d)!\n", aid, sd->status.char_id, cid);
+		ShowError("%s: Receiving data for account %d, char id does not matches (%d != %d)!\n", __func__, aid, sd->status.char_id, cid);
 		return false;
 	}
 	
@@ -1333,7 +1333,7 @@ int chrif_parse(int fd) {
 
 	// only process data from the char-server
 	if ( fd != chrif->fd ) {
-		ShowDebug("chrif_parse: Disconnecting invalid session #%d (is not the char-server)\n", fd);
+		ShowDebug("%s: Disconnecting invalid session #%d (is not the char-server)\n", __func__, fd);
 		do_close(fd);
 		return 0;
 	}
@@ -1370,7 +1370,7 @@ int chrif_parse(int fd) {
 			if (r == 1) continue;	// Treated in intif
 			if (r == 2) return 0;	// Didn't have enough data (len==-1)
 
-			ShowWarning("chrif_parse: session #%d, intif->parse failed (unrecognized command 0x%.4x).\n", fd, cmd);
+			ShowWarning("%s: session #%d, intif->parse failed (unrecognized command 0x%.4x).\n", __func__, fd, cmd);
 			set_eof(fd);
 			return 0;
 		}
@@ -1411,7 +1411,7 @@ int chrif_parse(int fd) {
 			case 0x2b25: chrif->deadopt(RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10)); break;
 			case 0x2b27: chrif->authfail(fd); break;
 			default:
-				ShowError("chrif_parse : unknown packet (session #%d): 0x%x. Disconnecting.\n", fd, cmd);
+				ShowError("%s: unknown packet (session #%d): 0x%x. Disconnecting.\n", __func__ ,fd, cmd);
 				set_eof(fd);
 				return 0;
 		}

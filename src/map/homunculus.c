@@ -291,7 +291,7 @@ bool homunculus_levelup(struct homun_data *hd) {
 	enum homun_type htype;
 
 	if( (htype = homun->class2type(hd->homunculus.class_)) == HT_INVALID ) {
-		ShowError("homunculus_levelup: Invalid class %d. \n", hd->homunculus.class_);
+		ShowError("%s: Invalid class %d. \n", __func__, hd->homunculus.class_);
 		return false;
 	}
 	
@@ -387,7 +387,7 @@ bool homunculus_evolve(struct homun_data *hd) {
 	}
 
 	if (!homun->change_class(hd, hd->homunculusDB->evo_class)) {
-		ShowError("homunculus_evolve: Can't evolve homunc from %d to %d", hd->homunculus.class_, hd->homunculusDB->evo_class);
+		ShowError("%s: Can't evolve homunc from %d to %d", __func__, hd->homunculus.class_, hd->homunculusDB->evo_class);
 		return false;
 	}
 
@@ -445,7 +445,7 @@ bool homunculus_mutate(struct homun_data *hd, int homun_id) {
 	prev_class = hd->homunculus.class_;
 
 	if( !homun->change_class(hd, homun_id) ) {
-		ShowError("homunculus_mutate: Can't evolve homunc from %d to %d", hd->homunculus.class_, homun_id);
+		ShowError("%s: Can't evolve homunc from %d to %d", __func__, hd->homunculus.class_, homun_id);
 		return false;
 	}
 
@@ -477,7 +477,7 @@ int homunculus_gainexp(struct homun_data *hd,unsigned int exp) {
 		return 1;
 	
 	if( (htype = homun->class2type(hd->homunculus.class_)) == HT_INVALID ) {
-		ShowError("homunculus_gainexp: Invalid class %d. \n", hd->homunculus.class_);
+		ShowError("%s: Invalid class %d. \n", __func__, hd->homunculus.class_);
 		return 0;
 	}
 	
@@ -564,7 +564,7 @@ unsigned char homunculus_menu(struct map_session_data *sd,unsigned char menu_num
 			homun->delete(sd->hd, -1);
 			break;
 		default:
-			ShowError("homunculus_menu : unknown menu choice : %d\n", menu_num) ;
+			ShowError("%s : unknown menu choice : %d\n", __func__, menu_num) ;
 			break;
 	}
 	return 0;
@@ -625,7 +625,7 @@ int homunculus_hunger_timer(int tid, int64 tick, int id, intptr_t data) {
 		return 1;
 
 	if(hd->hungry_timer != tid){
-		ShowError("homunculus_hunger_timer %d != %d\n",hd->hungry_timer,tid);
+		ShowError("%s %d != %d\n", __func__, hd->hungry_timer,tid);
 		return 0;
 	}
 
@@ -731,7 +731,7 @@ bool homunculus_create(struct map_session_data *sd, struct s_homunculus *hom) {
 
 	i = homun->db_search(hom->class_,HOMUNCULUS_CLASS);
 	if(i < 0) {
-		ShowError("homunculus_create: unknown class [%d] for homunculus '%s', requesting deletion.\n", hom->class_, hom->name);
+		ShowError("%s: unknown class [%d] for homunculus '%s', requesting deletion.\n", __func__, hom->class_, hom->name);
 		sd->status.hom_id = 0;
 		intif->homunculus_requestdelete(hom->hom_id);
 		return false;
@@ -1021,7 +1021,7 @@ bool homunculus_read_db_sub(char* str[], int columns, int current) {
 	//Base Class,Evo Class
 	classid = atoi(str[0]);
 	if (classid < HM_CLASS_BASE || classid > HM_CLASS_MAX) {
-		ShowError("homunculus_read_db_sub : Invalid class %d\n", classid);
+		ShowError("%s : Invalid class %d\n", __func__, classid);
 		return false;
 	}
 	db = &homun->db[current];
@@ -1029,7 +1029,7 @@ bool homunculus_read_db_sub(char* str[], int columns, int current) {
 	classid = atoi(str[1]);
 	if (classid < HM_CLASS_BASE || classid > HM_CLASS_MAX) {
 		db->base_class = 0;
-		ShowError("homunculus_read_db_sub : Invalid class %d\n", classid);
+		ShowError("%s : Invalid class %d\n", __func__, classid);
 		return false;
 	}
 	db->evo_class = classid;
@@ -1157,7 +1157,7 @@ bool homunculus_read_skill_db_sub(char* split[], int columns, int current) {
 	classid = atoi(split[0]) - HM_CLASS_BASE;
 	
 	if ( classid >= MAX_HOMUNCULUS_CLASS ) {
-		ShowWarning("homunculus_read_skill_db_sub: Invalid homunculus class %d.\n", atoi(split[0]));
+		ShowWarning("%s: Invalid homunculus class %d.\n", __func__, atoi(split[0]));
 		return false;
 	}
 
@@ -1234,7 +1234,7 @@ void homunculus_exp_db_read(void) {
 		}
 		// Last permitted level have to be 0!
 		if (homun->exptable[MAX_LEVEL - 1]) {
-			ShowWarning("homunculus_exp_db_read: Reached max level in exp_homun [%d]. Remaining lines were not read.\n ", MAX_LEVEL);
+			ShowWarning("%s: Reached max level in exp_homun [%d]. Remaining lines were not read.\n ", __func__, MAX_LEVEL);
 			homun->exptable[MAX_LEVEL - 1] = 0;
 		}
 		fclose(fp);

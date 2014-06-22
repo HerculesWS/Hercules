@@ -9635,7 +9635,7 @@ void atcommand_basecommands(void) {
 	
 	for( i = 0; i < ARRAYLENGTH(atcommand_base); i++ ) {
 		if(!atcommand->add(atcommand_base[i].command,atcommand_base[i].func,false)) { // Should not happen if atcommand_base[] array is OK
-			ShowDebug("atcommand_basecommands: duplicate ACMD_DEF for '%s'.\n", atcommand_base[i].command);
+			ShowDebug("%s: duplicate ACMD_DEF for '%s'.\n", __func__, atcommand_base[i].command);
 			continue;
 		}
 	}
@@ -10011,7 +10011,7 @@ void atcommand_config_read(const char* config_filename) {
 				continue;
 			commandname = config_setting_name(command);
 			if ( !( commandinfo = atcommand_exists(commandname) ) ) {
-				ShowConfigWarning(command, "atcommand_config_read: can not set alias for non-existent command %s", commandname);
+				ShowConfigWarning(command, "%s: can not set alias for non-existent command %s", __func__,commandname);
 				continue;
 			}
 			alias_count = libconfig->setting_length(command);
@@ -10020,7 +10020,7 @@ void atcommand_config_read(const char* config_filename) {
 				if (alias != NULL) {
 					AliasInfo *alias_info;
 					if (strdb_exists(atcommand->alias_db, alias)) {
-						ShowConfigWarning(command, "atcommand_config_read: alias %s already exists", alias);
+						ShowConfigWarning(command, "%s: alias %s already exists", __func__, alias);
 						continue;
 					}
 					CREATE(alias_info, AliasInfo, 1);
@@ -10046,7 +10046,7 @@ void atcommand_config_read(const char* config_filename) {
 			command = libconfig->setting_get_elem(nolog, i);
 			commandname = config_setting_name(command);
 			if ( !( commandinfo = atcommand_exists(commandname) ) ) {
-				ShowConfigWarning(command, "atcommand_config_read: can not disable logging for non-existent command %s", commandname);
+				ShowConfigWarning(command, "%s: can not disable logging for non-existent command %s", __func__, commandname);
 				continue;
 			}
 			commandinfo->log = false;
@@ -10068,7 +10068,7 @@ void atcommand_config_read(const char* config_filename) {
 			command = libconfig->setting_get_elem(help, i);
 			commandname = config_setting_name(command);
 			if ( !( commandinfo = atcommand_exists(commandname) ) )
-				ShowConfigWarning(command, "atcommand_config_read: command %s does not exist", commandname);
+				ShowConfigWarning(command, "%s: command %s does not exist", __func__, commandname);
 			else {
 				if( commandinfo->help == NULL ) {
 					const char *str = libconfig->setting_get_string(command);
@@ -10116,13 +10116,13 @@ void atcommand_db_load_groups(GroupSettings **groups, config_setting_t **command
 			int idx = -1;
 			
 			if (group == NULL) {
-				ShowError("atcommand_db_load_groups: group is NULL\n");
+				ShowError("%s: group is NULL\n", __func__);
 				continue;
 			}
 
 			idx = pcg->get_idx(group);
 			if (idx < 0 || idx >= sz) {
-				ShowError("atcommand_db_load_groups: index (%d) out of bounds [0,%d]\n", idx, sz - 1);
+				ShowError("%s: index (%d) out of bounds [0,%d]\n", __func__, idx, sz - 1);
 				continue;
 			}
 			
@@ -10188,7 +10188,7 @@ bool atcommand_hp_add(char *name, AtCommandFunc func) {
 	/* if commands are added after group permissions are thrown in, they end up with no permissions */
 	/* so we restrict commands to be linked in during boot */
 	if( runflag == MAPSERVER_ST_RUNNING ) {
-		ShowDebug("atcommand_hp_add: Commands can't be added after server is ready, skipping '%s'...\n",name);
+		ShowDebug("%s: Commands can't be added after server is ready, skipping '%s'...\n", __func__, name);
 		return false;
 	}
 	

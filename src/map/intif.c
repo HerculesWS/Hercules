@@ -225,7 +225,7 @@ int intif_wis_message(struct map_session_data *sd, char *nick, char *mes, size_t
 	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
 
 	if (battle_config.etc_log)
-		ShowInfo("intif_wis_message from %s to %s (message: '%s')\n", sd->status.name, nick, mes);
+		ShowInfo("%s: from %s to %s (message: '%s')\n", __func__, sd->status.name, nick, mes);
 
 	return 0;
 }
@@ -242,7 +242,7 @@ int intif_wis_replay(int id, int flag)
 	WFIFOSET(inter_fd,7);
 
 	if (battle_config.etc_log)
-		ShowInfo("intif_wis_replay: id: %d, flag:%d\n", id, flag);
+		ShowInfo("%s: id: %d, flag:%d\n", __func__, id, flag);
 
 	return 0;
 }
@@ -263,7 +263,7 @@ int intif_wis_message_to_gm(char *wisp_name, int permission, char *mes)
 	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
 
 	if (battle_config.etc_log)
-		ShowNotice("intif_wis_message_to_gm: from: '%s', required permission: %d, message: '%s'.\n", wisp_name, permission, mes);
+		ShowNotice("%s: from: '%s', required permission: %d, message: '%s'.\n", __func__, wisp_name, permission, mes);
 
 	return 0;
 }
@@ -939,7 +939,7 @@ void intif_parse_WisEnd(int fd) {
 	struct map_session_data* sd;
 
 	if (battle_config.etc_log)
-		ShowInfo("intif_parse_wisend: player: %s, flag: %d\n", RFIFOP(fd,2), RFIFOB(fd,26)); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
+		ShowInfo("%s: player: %s, flag: %d\n", __func__, RFIFOP(fd,2), RFIFOB(fd,26)); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
 	sd = (struct map_session_data *)map->nick2sd((char *) RFIFOP(fd,2));
 	if (sd != NULL)
 		clif->wis_end(sd->fd, RFIFOB(fd,26));
@@ -1018,7 +1018,7 @@ void intif_parse_Registers(int fd)
 		case 0:
 			break;
 		default:
-			ShowError("intif_parse_Registers: Unrecognized type %d\n",RFIFOB(fd,12));
+			ShowError("%s: Unrecognized type %d\n", __func__, RFIFOB(fd,12));
 			return;
 	}
 	/* have it not complain about insertion of vars before loading, and not set those vars as new or modified */
@@ -1094,25 +1094,25 @@ void intif_parse_LoadGuildStorage(int fd)
 	sd=map->id2sd( RFIFOL(fd,4) );
 	if( flag ){ //If flag != 0, we attach a player and open the storage
 		if(sd==NULL){
-			ShowError("intif_parse_LoadGuildStorage: user not found %d\n",RFIFOL(fd,4));
+			ShowError("%s: user not found %d\n", __func__, RFIFOL(fd,4));
 			return;
 		}
 	}
 	gstor=gstorage->id2storage(guild_id);
 	if(!gstor) {
-		ShowWarning("intif_parse_LoadGuildStorage: error guild_id %d not exist\n",guild_id);
+		ShowWarning("%s: error guild_id %d not exist\n", __func__, guild_id);
 		return;
 	}
 	if (gstor->storage_status == 1) { // Already open.. lets ignore this update
-		ShowWarning("intif_parse_LoadGuildStorage: storage received for a client already open (User %d:%d)\n", flag?sd->status.account_id:0, flag?sd->status.char_id:0);
+		ShowWarning("%s: storage received for a client already open (User %d:%d)\n", __func__, flag?sd->status.account_id:0, flag?sd->status.char_id:0);
 		return;
 	}
 	if (gstor->dirty) { // Already have storage, and it has been modified and not saved yet! Exploit! [Skotlex]
-		ShowWarning("intif_parse_LoadGuildStorage: received storage for an already modified non-saved storage! (User %d:%d)\n", flag?sd->status.account_id:0, flag?sd->status.char_id:0);
+		ShowWarning("%s: received storage for an already modified non-saved storage! (User %d:%d)\n", __func__, flag?sd->status.account_id:0, flag?sd->status.char_id:0);
 		return;
 	}
 	if( RFIFOW(fd,2)-13 != sizeof(struct guild_storage) ){
-		ShowError("intif_parse_LoadGuildStorage: data size error %d %d\n",RFIFOW(fd,2)-13 , sizeof(struct guild_storage));
+		ShowError("%s: data size error %d %d\n", __func__, RFIFOW(fd,2)-13 , sizeof(struct guild_storage));
  		gstor->storage_status = 0;
 		return;
 	}
@@ -1473,7 +1473,7 @@ void intif_parse_QuestLog(int fd) {
 
 		for (i = 0; i < num_received; i++) {
 			if( quest->db(received[i].quest_id) == &quest->dummy ) {
-				ShowError("intif_parse_QuestLog: quest %d not found in DB.\n", received[i].quest_id);
+				ShowError("%s: quest %d not found in DB.\n", __func__, received[i].quest_id);
 				continue;
 			}
 			if (received[i].state != Q_COMPLETE) {
@@ -1508,7 +1508,7 @@ void intif_parse_QuestSave(int fd) {
 	TBL_PC *sd = map->id2sd(cid);
 
 	if( !RFIFOB(fd, 6) )
-		ShowError("intif_parse_QuestSave: Failed to save quest(s) for character %d!\n", cid);
+		ShowError("%s: Failed to save quest(s) for character %d!\n", __func__, cid);
 	else if( sd )
 		sd->save_quest = false;
 }
@@ -1566,12 +1566,12 @@ void intif_parse_MailInboxReceived(int fd) {
 	sd = map->charid2sd(RFIFOL(fd,4));
 
 	if (sd == NULL) {
-		ShowError("intif_parse_MailInboxReceived: char not found %d\n",RFIFOL(fd,4));
+		ShowError("%s: char not found %d\n", __func__, RFIFOL(fd,4));
 		return;
 	}
 
 	if (RFIFOW(fd,2) - 9 != sizeof(struct mail_data)) {
-		ShowError("intif_parse_MailInboxReceived: data size error %d %d\n", RFIFOW(fd,2) - 9, sizeof(struct mail_data));
+		ShowError("%s: data size error %d %d\n", __func__, RFIFOW(fd,2) - 9, sizeof(struct mail_data));
 		return;
 	}
 
@@ -1627,12 +1627,12 @@ void intif_parse_MailGetAttach(int fd) {
 	sd = map->charid2sd( RFIFOL(fd,4) );
 
 	if (sd == NULL) {
-		ShowError("intif_parse_MailGetAttach: char not found %d\n",RFIFOL(fd,4));
+		ShowError("%s: char not found %d\n", __func__, RFIFOL(fd,4));
 		return;
 	}
 
 	if (RFIFOW(fd,2) - 12 != sizeof(struct item)) {
-		ShowError("intif_parse_MailGetAttach: data size error %d %d\n", RFIFOW(fd,2) - 16, sizeof(struct item));
+		ShowError("%s: data size error %d %d\n", __func__, RFIFOW(fd,2) - 16, sizeof(struct item));
 		return;
 	}
 
@@ -1664,7 +1664,7 @@ void intif_parse_MailDelete(int fd) {
 	bool failed = RFIFOB(fd,10);
 	
 	if ( (sd = map->charid2sd(char_id)) == NULL) {
-		ShowError("intif_parse_MailDelete: char not found %d\n", char_id);
+		ShowError("%s: char not found %d\n", __func__, char_id);
 		return;
 	}
 
@@ -1705,7 +1705,7 @@ void intif_parse_MailReturn(int fd) {
 	short fail = RFIFOB(fd,10);
 
 	if( sd == NULL ) {
-		ShowError("intif_parse_MailReturn: char not found %d\n",RFIFOL(fd,2));
+		ShowError("%s: char not found %d\n", __func__, RFIFOL(fd,2));
 		return;
 	}
 
@@ -1749,7 +1749,7 @@ void intif_parse_MailSend(int fd) {
 	bool fail;
 
 	if( RFIFOW(fd,2) - 4 != sizeof(struct mail_message) ) {
-		ShowError("intif_parse_MailSend: data size error %d %d\n", RFIFOW(fd,2) - 4, sizeof(struct mail_message));
+		ShowError("%s: data size error %d %d\n", __func__, RFIFOW(fd,2) - 4, sizeof(struct mail_message));
 		return;
 	}
 
@@ -1839,7 +1839,7 @@ void intif_parse_AuctionRegister(int fd) {
 	struct auction_data auction;
 
 	if( RFIFOW(fd,2) - 4 != sizeof(struct auction_data) ) {
-		ShowError("intif_parse_AuctionRegister: data size error %d %d\n", RFIFOW(fd,2) - 4, sizeof(struct auction_data));
+		ShowError("%s: data size error %d %d\n", __func__, RFIFOW(fd,2) - 4, sizeof(struct auction_data));
 		return;
 	}
 
@@ -2275,7 +2275,7 @@ int intif_parse(int fd)
 #ifdef GP_BOUND_ITEMS
 			intif->pItembound_ack(fd);
 #else
-			ShowWarning("intif_parse: Received 0x3856 with GP_BOUND_ITEMS disabled !!!\n");
+			ShowWarning("%s: Received 0x3856 with GP_BOUND_ITEMS disabled !!!\n", __func__);
 #endif
 			break;
 		// Mercenary System
@@ -2296,7 +2296,7 @@ int intif_parse(int fd)
 		case 0x3892:	intif->pSaveHomunculusOk(fd); break;
 		case 0x3893:	intif->pDeleteHomunculusOk(fd); break;
 	default:
-		ShowError("intif_parse : unknown packet %d %x\n",fd,RFIFOW(fd,0));
+		ShowError("%s : unknown packet %d %x\n", __func__, fd, RFIFOW(fd,0));
 		return 0;
 	}
     // Skip packet

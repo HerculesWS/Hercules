@@ -123,7 +123,7 @@ const char* script_op2name(int op) {
 #endif // PCRE_SUPPORT
 
 	default:
-		ShowDebug("script_op2name: unexpected op=%d\n", op);
+		ShowDebug("%s: unexpected op=%d\n", __func__, op);
 		return "???";
 	}
 #undef RETURN_OP_NAME
@@ -1130,7 +1130,7 @@ const char* parse_simpleexpr(const char *p) {
 					size_t len = sv->skip_escaped_c(p) - p;
 					size_t n = sv->unescape_c(buf, p, len);
 					if( n != 1 )
-						ShowDebug("parse_simpleexpr: unexpected length %d after unescape (\"%.*s\" -> %.*s)\n", (int)n, (int)len, p, (int)n, buf);
+						ShowDebug("%s: unexpected length %d after unescape (\"%.*s\" -> %.*s)\n", __func__, (int)n, (int)len, p, (int)n, buf);
 					p += len;
 					script->addb(*buf);
 					continue;
@@ -2072,9 +2072,11 @@ void script_set_constant(const char* name, int value, bool isparameter) {
 		script->str_data[n].type = isparameter ? C_PARAM : C_INT;
 		script->str_data[n].val  = value;
 	} else if( script->str_data[n].type == C_PARAM || script->str_data[n].type == C_INT ) {// existing parameter or constant
-		ShowError("script_set_constant: Attempted to overwrite existing %s '%s' (old value=%d, new value=%d).\n", ( script->str_data[n].type == C_PARAM ) ? "parameter" : "constant", name, script->str_data[n].val, value);
+		ShowError("%s: Attempted to overwrite existing %s '%s' (old value=%d, new value=%d).\n",
+			__func__, ( script->str_data[n].type == C_PARAM ) ? "parameter" : "constant", name, script->str_data[n].val, value);
 	} else {// existing name
-		ShowError("script_set_constant: Invalid name for %s '%s' (already defined as %s).\n", isparameter ? "parameter" : "constant", name, script->op2name(script->str_data[n].type));
+		ShowError("%s: Invalid name for %s '%s' (already defined as %s).\n",
+			__func__, isparameter ? "parameter" : "constant", name, script->op2name(script->str_data[n].type));
 	}
 }
 /* adds data to a existent constant in the database, inserted normally via parse */
@@ -2082,17 +2084,17 @@ void script_set_constant2(const char *name, int value, bool isparameter) {
 	int n = script->add_str(name);
 
 	if( script->str_data[n].type == C_PARAM ) {
-		ShowError("script_set_constant2: Attempted to overwrite existing parameter '%s' with a constant (value=%d).\n", name, value);
+		ShowError("%s: Attempted to overwrite existing parameter '%s' with a constant (value=%d).\n", __func__, name, value);
 		return;
 	}
 
 	if( script->str_data[n].type == C_NAME && script->str_data[n].val ) {
-		ShowWarning("script_set_constant2: Attempted to overwrite existing variable '%s' with a constant (value=%d).\n", name, value);
+		ShowWarning("%s: Attempted to overwrite existing variable '%s' with a constant (value=%d).\n", __func__, name, value);
 		return;
 	}
 
 	if( script->str_data[n].type == C_INT && value && value != script->str_data[n].val ) { // existing constant
-		ShowWarning("script_set_constant2: Attempted to overwrite existing constant '%s' (old value=%d, new value=%d).\n", name, script->str_data[n].val, value);
+		ShowWarning("%s: Attempted to overwrite existing constant '%s' (old value=%d, new value=%d).\n", __func__, name, script->str_data[n].val, value);
 		return;
 	}
 
@@ -2396,7 +2398,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 		}
 		else if( script->str_data[i].type == C_USERFUNC )
 		{// 'function name;' without follow-up code
-			ShowError("parse_script: function '%s' declared but not defined.\n", script->str_buf+script->str_data[i].str);
+			ShowError("%s: function '%s' declared but not defined.\n", __func__, script->str_buf+script->str_data[i].str);
 			if (retval) *retval = EXIT_FAILURE;
 			unresolved_names = true;
 		}
@@ -2466,7 +2468,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 TBL_PC *script_rid2sd(struct script_state *st) {
 	TBL_PC *sd;
 	if( !( sd = map->id2sd(st->rid) ) ) {
-		ShowError("script_rid2sd: fatal error ! player not attached!\n");
+		ShowError("%s: fatal error ! player not attached!\n", __func__);
 		script->reportfunc(st);
 		script->reportsrc(st);
 		st->state = END;
@@ -3297,7 +3299,8 @@ void script_free_state(struct script_state* st) {
 		struct map_session_data *sd = st->rid ? map->id2sd(st->rid) : NULL;
 		
 		if(st->bk_st) {// backup was not restored
-			ShowDebug("script_free_state: Previous script state lost (rid=%d, oid=%d, state=%d, bk_npcid=%d).\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
+			ShowDebug("%s: Previous script state lost (rid=%d, oid=%d, state=%d, bk_npcid=%d).\n",
+				__func__, st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
 		}
 		
 		if(sd && sd->st == st) { //Current script is aborted.
@@ -3952,7 +3955,8 @@ void script_detach_state(struct script_state* st, bool dequeue_event) {
 			npc->event_dequeue(sd);
 		}
 	} else if(st->bk_st) { // rid was set to 0, before detaching the script state
-		ShowError("script_detach_state: Found previous script state without attached player (rid=%d, oid=%d, state=%d, bk_npcid=%d)\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
+		ShowError("%s: Found previous script state without attached player (rid=%d, oid=%d, state=%d, bk_npcid=%d)\n",
+			__func__, st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
 		script->reportsrc(st->bk_st);
 
 		script->free_state(st->bk_st);
@@ -4101,7 +4105,7 @@ void run_script_main(struct script_state *st) {
 				break;
 		}
 		if( !st->freeloop && cmdcount>0 && (--cmdcount)<=0 ) {
-			ShowError("run_script: too many opeartions being processed non-stop !\n");
+			ShowError("run_script: too many operations being processed non-stop !\n");
 			script->reportsrc(st);
 			st->state=END;
 		}
@@ -4257,7 +4261,7 @@ void script_setarray_pc(struct map_session_data* sd, const char* varname, uint32
 	int key;
 	
 	if( idx >= SCRIPT_MAX_ARRAYSIZE ) {
-		ShowError("script_setarray_pc: Variable '%s' has invalid index '%u' (char_id=%d).\n", varname, idx, sd->status.char_id);
+		ShowError("%s: Variable '%s' has invalid index '%u' (char_id=%d).\n", __func__, varname, idx, sd->status.char_id);
 		return;
 	}
 
