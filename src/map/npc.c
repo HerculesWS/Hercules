@@ -4138,15 +4138,16 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 			}
 		}
 
-		if( strcmp(w2,"warp") == 0 && count > 3 )
+		if( strcmp(w2,"mapflag") == 0 && count >= 3 )
 		{
-			p = npc->parse_warp(w1,w2,w3,w4, p, buffer, filepath, &success);
+			p = npc->parse_mapflag(w1, w2, trim(w3), trim(w4), p, buffer, filepath, &success);
 		}
-		else if( (strcmp(w2,"shop") == 0 || strcmp(w2,"cashshop") == 0) && count > 3 )
-		{
-			p = npc->parse_shop(w1,w2,w3,w4, p, buffer, filepath, &success);
+		else if( count == 3 ) {
+			ShowError("npc_parsesrcfile: Unable to parse, probably a missing TAB in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,p-buffer), w1, w2, w3, w4);
+			p = strchr(p,'\n');// skip and continue
+			success = EXIT_FAILURE;
 		}
-		else if( strcmp(w2,"script") == 0 && count > 3 )
+		else if( strcmp(w2,"script") == 0 )
 		{
 			if( strcmp(w1,"function") == 0 ) {
 				p = npc->parse_function(w1, w2, w3, w4, p, buffer, filepath, &success);
@@ -4157,20 +4158,24 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 				p = npc->parse_script(w1,w2,w3,w4, p, buffer, filepath,runOnInit?NPO_ONINIT:NPO_NONE, &success);
 			}
 		}
-		else if( strcmp(w2,"trader") == 0 && count > 3 ) {
+		else if( strcmp(w2,"trader") == 0 ) {
 			p = npc->parse_script(w1,w2,w3,w4, p, buffer, filepath,(runOnInit?NPO_ONINIT:NPO_NONE)|NPO_TRADER, &success);
 		}
-		else if( (i=0, sscanf(w2,"duplicate%n",&i), (i > 0 && w2[i] == '(')) && count > 3 )
+		else if( strcmp(w2,"warp") == 0 )
+		{
+			p = npc->parse_warp(w1,w2,w3,w4, p, buffer, filepath, &success);
+		}
+		else if( (i=0, sscanf(w2,"duplicate%n",&i), (i > 0 && w2[i] == '(')) )
 		{
 			p = npc->parse_duplicate(w1,w2,w3,w4, p, buffer, filepath, (runOnInit?NPO_ONINIT:NPO_NONE), &success);
 		}
-		else if( (strcmp(w2,"monster") == 0 || strcmp(w2,"boss_monster") == 0) && count > 3 )
+		else if( (strcmp(w2,"monster") == 0 || strcmp(w2,"boss_monster") == 0) )
 		{
 			p = npc->parse_mob(w1, w2, w3, w4, p, buffer, filepath, &success);
 		}
-		else if( strcmp(w2,"mapflag") == 0 && count >= 3 )
+		else if( (strcmp(w2,"shop") == 0 || strcmp(w2,"cashshop") == 0) )
 		{
-			p = npc->parse_mapflag(w1, w2, trim(w3), trim(w4), p, buffer, filepath, &success);
+			p = npc->parse_shop(w1,w2,w3,w4, p, buffer, filepath, &success);
 		}
 		else
 		{
