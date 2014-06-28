@@ -24,7 +24,6 @@
 #include "../common/db.h"
 #include "../common/malloc.h"
 #include "../common/nullpo.h"
-#include "../common/showmsg.h"
 
 struct storage_interface storage_s;
 struct guild_storage_interface gstorage_s;
