@@ -2690,8 +2690,8 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 
 		if( value < 0 ) {
 			if( value != -1 )
-				ShowWarning("npc_parse_shop: Item %s [%d] with invalid selling value '%d' in file '%s', line '%d', defaulting to buy price...\n",
-					id->name, nameid, value, filepath, strline(buffer,start-buffer));
+				ShowWarning("%s: Item %s [%d] with invalid selling value '%d' in file '%s', line '%d', defaulting to buy price...\n",
+					__func__, id->name, nameid, value, filepath, strline(buffer,start-buffer));
 
 			if( type == SHOP ) value = id->value_buy;
 			else value = 0; // Cashshop doesn't have a "buy price" in the item_db
@@ -4212,7 +4212,8 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 			p = npc->parse_mapflag(w1, w2, trim(w3), trim(w4), p, buffer, filepath, &success);
 		}
 		else if( count == 3 ) {
-			ShowError("npc_parsesrcfile: Unable to parse, probably a missing TAB in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,p-buffer), w1, w2, w3, w4);
+			ShowError("%s: Unable to parse, probably a missing TAB in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n",
+				__func__, filepath, strline(buffer,p-buffer), w1, w2, w3, w4);
 			p = strchr(p,'\n');// skip and continue
 			success = EXIT_FAILURE;
 		}
