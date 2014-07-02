@@ -8589,9 +8589,11 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 
 		case LG_SHIELDSPELL:
+			if( !sd )
+				break;
 			if( flag&1 ) {
 				sc_start(src,bl,SC_SILENCE,100,skill_lv,sd->bonus.shieldmdef * 30000);
-			} else if( sd ) {
+			} else {
 				int opt = 0, val = 0, splashrange = 0;
 				struct item_data *shield_data = sd->inventory_data[sd->equip_index[EQI_HAND_L]];
 				if( !shield_data || shield_data->type != IT_ARMOR ) {
