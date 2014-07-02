@@ -2141,6 +2141,14 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 	sd = BL_CAST(BL_PC, src);
 	tsd = BL_CAST(BL_PC, bl);
 
+	// To block skills that aren't called via battle_check_target [Panikon]
+	// issue: 8203
+	if( sd
+		&& ( (bl->type == BL_MOB && pc_has_permission(sd, PC_PERM_DISABLE_PVM))
+			|| (bl->type == BL_PC && pc_has_permission(sd, PC_PERM_DISABLE_PVP)) )
+			)
+		return 0;
+
 	sstatus = status->get_status_data(src);
 	tstatus = status->get_status_data(bl);
 	sc = status->get_sc(bl);
