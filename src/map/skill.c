@@ -8134,15 +8134,12 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				if( dstsd && dstsd->special_state.no_magic_damage )
 					break;
 
-				if ( sd == NULL || (sd && sd->status.party_id == 0 ) )
-					count = 1;
-				else
-					count = party->foreachsamemap(party->sub_count, sd, 0);
+				if( sd && sd->status.party_id != 0 )
+						count = party->foreachsamemap(party->sub_count, sd, 0);
 
-				if (count > 0)
-					clif->skill_nodamage(bl, bl, skill_id, skill_lv,
-						sc_start4(src, bl, type, 100, skill_lv, 0, 0, count, skill->get_time(skill_id, skill_lv)));
-			} else
+				clif->skill_nodamage(bl, bl, skill_id, skill_lv,
+					sc_start4(src, bl, type, 100, skill_lv, 0, 0, count, skill->get_time(skill_id, skill_lv)));
+			} else if( sd )
 				party->foreachsamemap(skill->area_sub, sd, skill->get_splash(skill_id, skill_lv), src, skill_id, skill_lv, tick, flag|BCT_PARTY|1, skill->castend_nodamage_id);
 			break;
 		case AB_CHEAL:
@@ -8874,7 +8871,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			if ( flag&1 )
 				sc_start2(src,bl,type,100,skill_lv,src->id,skill->get_time(skill_id,skill_lv));
 			else if ( sd ) {
-				int rate = 4 * skill_lv + 2 * (sd ? pc->checkskill(sd,WM_LESSON) : 1) + status->get_lv(src) / 15 + (sd? sd->status.job_level:0) / 5;
+				int rate = 4 * skill_lv + 2 * pc->checkskill(sd,WM_LESSON) + status->get_lv(src)/15 + sd->status.job_level/5;
 				if ( rnd()%100 < rate ) {
 					flag |= BCT_PARTY|BCT_GUILD;
 					map->foreachinrange(skill->area_sub, src, skill->get_splash(skill_id,skill_lv),BL_CHAR|BL_NPC|BL_SKILL, src, skill_id, skill_lv, tick, flag|BCT_ENEMY|1, skill->castend_nodamage_id);
@@ -8891,7 +8888,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			if( flag&1 ) {
 				sc_start2(src,bl,type,100,skill_lv,(skill_id==WM_VOICEOFSIREN)?src->id:0,skill->get_time(skill_id,skill_lv));
 			} else if( sd ) {
-				int rate = 6 * skill_lv + (sd ? pc->checkskill(sd,WM_LESSON) : 1) + (sd? sd->status.job_level:0) / 2;
+				int rate = 6 * skill_lv + pc->checkskill(sd,WM_LESSON) + sd->status.job_level/2;
 				if ( rnd()%100 < rate ) {
 					flag |= BCT_PARTY|BCT_GUILD;
 					map->foreachinrange(skill->area_sub, src, skill->get_splash(skill_id,skill_lv),(skill_id==WM_VOICEOFSIREN)?BL_CHAR|BL_NPC|BL_SKILL:BL_PC, src, skill_id, skill_lv, tick, flag|BCT_ENEMY|1, skill->castend_nodamage_id);
