@@ -3,6 +3,7 @@
 // Portions Copyright (c) Athena Dev Teams
 
 // Ported from eAthena Dev Team's version @ http://eathena-project.googlecode.com/svn/trunk/src/plugins/dbghelpplug.c
+// Currently supported dbghelp 5.1
 
 #include <stdio.h>
 #include <string.h>
@@ -219,6 +220,10 @@ typedef struct _InternalData {
 		"Please report the crash in the bug tracker:\n" \
 		"http://hercules.ws/board/tracker/\n"
 
+// Print object children?
+// WARNING: This will generate huge dump files!
+//#define DBG_PRINT_CHILDREN
+
 /////////////////////////////////////////////////////////////////////
 // Global variables
 
@@ -354,10 +359,12 @@ Dhp__PrintProcessInfo(
 		cmd_line);
 
 	// Print system information
-	fprintf(log_file,
-		"Platform: %s\n CPU: %s\nApplication architecture: %s\nCompiler: %s\n%s: %s\n",
-		sysinfo->osversion(), sysinfo->cpu(), (sysinfo->is64bit())?"x64":"x86",
-		sysinfo->compiler(), sysinfo->vcstype(), sysinfo->vcsrevision_src());
+	if( sysinfo ) {
+		fprintf(log_file,
+			"Platform: %s\n CPU: %s\nApplication architecture: %s\nCompiler: %s\n%s: %s\n",
+			sysinfo->osversion(), sysinfo->cpu(), (sysinfo->is64bit())?"x64":"x86",
+			sysinfo->compiler(), sysinfo->vcstype(), sysinfo->vcsrevision_src());
+	}
 
 	// print the exception code
 	if( exception )
@@ -948,6 +955,12 @@ Dhp__PrintDataValue(
 		BYTE b = 0;
 		for( i = 0; i < length; ++i )
 			b += p[i];	// add to make sure it's not optimized out in release mode
+
+		// Don't continue if there's no valid data
+		if( b == 0 ) {
+			fprintf(log_file, "<no data>");
+			return;
+		}
 	}
 	__except( EXCEPTION_EXECUTE_HANDLER )
 	{
@@ -1050,6 +1063,7 @@ Dhp__PrintDataValue(
 				Dhp__PrintValueBytes(log_file, (BYTE*)pVariable, length);
 				break;
 			}
+			LocalFree(&childSymtag);
 			if( !SymGetTypeInfo_( hProcess, modBase, typeIndex, TI_GET_COUNT, &count) )
 			{
 				fprintf(log_file, "<count not found>");
@@ -1069,29 +1083,30 @@ Dhp__PrintDataValue(
 		}
 		break;
 	default:
-#if 0
-		{//## TODO show children of structs/unions
-			TI_FINDCHILDREN_PARAMS* children;
-			DWORD childCount;
+#ifdef DBG_PRINT_CHILDREN
+		{
+			TI_FINDCHILDREN_PARAMS *children = NULL;
+			size_t childrenSize;
+			DWORD childCount = 0;
 			DWORD i;
 
 			// count children
-			if( !SymGetTypeInfo_(hProcess, modBase, typeIndex, TI_GET_CHILDRENCOUNT, &childCount) )
-			{
-				fprintf(log_file, "<child count not found>");
+			if( !SymGetTypeInfo_(hProcess, modBase, typeIndex, TI_GET_CHILDRENCOUNT, &childCount) 
+				|| !childCount ) {
+				fprintf(log_file, "<no children found>");
 				Dhp__PrintValueBytes(log_file, (BYTE*)pVariable, length);
-				break;
+				return;
 			}
 
 			// Prepare to get an array of "TypeIds", representing each of the children.
 			// SymGetTypeInfo(TI_FINDCHILDREN) expects more memory than just a
 			// TI_FINDCHILDREN_PARAMS struct has.  Use derivation to accomplish this.
-			children = (TI_FINDCHILDREN_PARAMS*)LocalAlloc(LMEM_FIXED, sizeof(TI_FINDCHILDREN_PARAMS)+childCount*sizeof(ULONG));
+			childrenSize = sizeof(TI_FINDCHILDREN_PARAMS)+childCount*sizeof(ULONG);
+			children = (TI_FINDCHILDREN_PARAMS*)LocalAlloc(LMEM_ZEROINIT, childrenSize);
 			children->Count = childCount;
-			children->Start= 0;
 
 			// Get the array of TypeIds, one for each child type
-			if( !SymGetTypeInfo_(hProcess, modBase, typeIndex, TI_FINDCHILDREN, &children) )
+			if( !SymGetTypeInfo_(hProcess, modBase, typeIndex, TI_FINDCHILDREN, children) || !children )
 			{
 				fprintf(log_file, "<children not found>");
 				Dhp__PrintValueBytes(log_file, (BYTE*)pVariable, length);
@@ -1100,15 +1115,15 @@ Dhp__PrintDataValue(
 			}
 
 			// Iterate through each of the children
-			fprintf(log_file, "{");
+			fprintf(log_file, "\n{");
 			for( i = 0; i < childCount; ++i )
 			{
 				DWORD childOffset;
-				DWORD childTypeid;
-				WCHAR* childName;
+				WCHAR *childName = NULL;
+				DWORD childTypeId;
 				DWORD_PTR pData;
 
-				if( i > 0 ) fprintf(log_file, ",");
+				fprintf(log_file, "\n\t");
 
 				// Get the offset of the child member, relative to its parent
 				if( !SymGetTypeInfo_(hProcess, modBase, children->ChildId[i], TI_GET_OFFSET, &childOffset) )
@@ -1117,30 +1132,26 @@ Dhp__PrintDataValue(
 					continue;
 				}
 
-				// Get the real "TypeId" of the child.
-				if( !SymGetTypeInfo_(hProcess, modBase, children->ChildId[i], TI_GET_TYPEID, &childTypeid) )
-				{
-					fprintf(log_file, "<child typeid not found>");
-					continue;
-				}
-
 				// Calculate the address of the member
 				pData = (DWORD_PTR)pVariable;
 				pData += childOffset;
 
-				// print name of the child
-				if( !SymGetTypeInfo_(hProcess, modBase, childTypeid, TI_GET_SYMNAME, &childName) )
-				{
-					fprintf(log_file, "<child symname not found>");
-					continue;
+				if( !SymGetTypeInfo_(hProcess, modBase, children->ChildId[i], TI_GET_SYMNAME, &childName) ) {
+						fprintf(log_file, "<child symbol name not found>");
+						continue;
 				}
 				fprintf(log_file, "%ws=", childName);
 				LocalFree(childName);
 
+				if( !SymGetTypeInfo_(hProcess, modBase, children->ChildId[i], TI_GET_TYPEID, &childTypeId) ) {
+					fprintf(log_file, "<child type id not found>");
+					continue;
+				}
+
 				// print contents of the child
-				Dhp__PrintDataContents(childTypeid, (PVOID)pData, interData);
+				Dhp__PrintDataContents(childTypeId, (PVOID)pData, pInterData);
 			}
-			fprintf(log_file, "}");
+			fprintf(log_file, "\n}");
 
 			LocalFree(children);
 		}
@@ -1434,7 +1445,8 @@ Dhp__PrintFunctionDetails(
 		pInterData->log_locals = FALSE;
 		pInterData->log_globals = FALSE;
 		pInterData->nr_of_var = 0;
-		SymEnumSymbols_(hProcess, 0, 0, Dhp__EnumSymbolsCallback, pInterData);
+		if( !SymEnumSymbols_(hProcess, 0, 0, Dhp__EnumSymbolsCallback, pInterData) )
+			fprintf(log_file, "<failed enumerating symbols>");
 
 		fprintf(log_file,
 			")");
@@ -1466,7 +1478,8 @@ Dhp__PrintFunctionDetails(
 	pInterData->log_locals = TRUE;
 	pInterData->log_globals = FALSE;
 	pInterData->nr_of_var = 0;
-	SymEnumSymbols_(hProcess, 0, 0, Dhp__EnumSymbolsCallback, pInterData);
+	if( !SymEnumSymbols_(hProcess, 0, 0, Dhp__EnumSymbolsCallback, pInterData) )
+		fprintf(log_file, "!!failed enumerating symbols!!");
 
 	pInterData->nr_of_frame = ++nr_of_frame;
 	LocalFree(pSymbolInfo);
@@ -1614,7 +1627,10 @@ Dhp__LoadDbghelpDll()
 
 			// Initialize the dbghelp DLL with the default path and automatic
 			// module enumeration (and loading of symbol tables) for this process.
-			SymInitialize_(GetCurrentProcess(), NULL, TRUE);
+			if( !SymInitialize_(GetCurrentProcess(), NULL, TRUE) ) {
+				printf("Failed to initialize symbols. Error: %u\n", GetLastError());
+				return FALSE;
+			}
 
 			return TRUE;
 		}
@@ -1633,7 +1649,8 @@ Dhp__LoadDbghelpDll()
 static VOID
 Dhp__UnloadDbghlpDll()
 {
-	SymCleanup_(GetCurrentProcess());
+	if( !SymCleanup_(GetCurrentProcess()) )
+		printf("Failed to cleanup symbols! Error: %u\n", GetLastError());
 
 	FreeLibrary(dbghelp_dll);
 	dbghelp_dll = NULL;
