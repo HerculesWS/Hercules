@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "../common/sysinfo.h"
 #include "../common/HPMi.h"
 
 #include "../common/HPMDataCheck.h"
@@ -16,13 +17,9 @@
 HPExport struct hplugin_info pinfo = {
 	"Debug Help",
 	SERVER_TYPE_ALL,
-	"0.4",
+	"0.5",
 	HPM_VERSION,
 };
-
-#ifndef WIN32
-#error This plugin is only compatible with windows!
-#endif
 
 /////////////////////////////////////////////////////////////////////
 // Include files
@@ -109,6 +106,7 @@ typedef enum _SymTag {
 */
 #endif /* _NO_CVCONST_H */
 
+struct sysinfo_interface *sysinfo;
 
 /////////////////////////////////////////////////////////////////////
 // dbghelp function prototypes
@@ -343,25 +341,23 @@ Dhp__PrintProcessInfo(
 	CONTEXT*            context,
 	FILE*               log_file)
 {
-	OSVERSIONINFOA oi;
 	LPSTR cmd_line;
 
 	fprintf(log_file,
-		"\nProcess info:\n");
+		"\nProcess information:\n");
 
 	// print the command line
 	cmd_line = GetCommandLineA();
 	if( cmd_line )
 	fprintf(log_file,
-		"Cmd line: %s\n",
+		"Command line: %s\n",
 		cmd_line);
 
-	// print information about the OS
-	oi.dwOSVersionInfoSize = sizeof(oi);
-	GetVersionExA(&oi);
+	// Print system information
 	fprintf(log_file,
-		"Platform: Windows OS version %d.%d build %d %s\n",
-		oi.dwMajorVersion, oi.dwMinorVersion, oi.dwBuildNumber, oi.szCSDVersion);
+		"Platform: %s\n CPU: %s\nApplication architecture: %s\nCompiler: %s\n%s: %s\n",
+		sysinfo->osversion(), sysinfo->cpu(), (sysinfo->is64bit())?"x64":"x86",
+		sysinfo->compiler(), sysinfo->vcstype(), sysinfo->vcsrevision_src());
 
 	// print the exception code
 	if( exception )
@@ -1787,6 +1783,7 @@ static LPTOP_LEVEL_EXCEPTION_FILTER previousFilter;
  **/
 HPExport void plugin_init (void) {
 	previousFilter = SetUnhandledExceptionFilter(Dhp__UnhandledExceptionFilter);
+	sysinfo = GET_SYMBOL("sysinfo");
 }
 
 /**
