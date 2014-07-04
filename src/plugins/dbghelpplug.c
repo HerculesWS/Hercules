@@ -1,20 +1,28 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// Ported from eAthena Dev Team's version @ http://eathena-project.googlecode.com/svn/trunk/src/plugins/dbghelpplug.c
 // See the LICENSE file
-// dbghelpplug.dll Hercules Plugin
+// Portions Copyright (c) Athena Dev Teams
+
+// Ported from eAthena Dev Team's version @ http://eathena-project.googlecode.com/svn/trunk/src/plugins/dbghelpplug.c
 
 #include <stdio.h>
 #include <string.h>
 #include "../common/HPMi.h"
 
+#include "../common/HPMDataCheck.h"
+
+/**
+ * Plugin basic information
+ **/
 HPExport struct hplugin_info pinfo = {
-	"DBGHelpPlug",		// Plugin name
-	SERVER_TYPE_MAP,// Which server types this plugin works with?
-	"0.3",			// Plugin version
-	HPM_VERSION,	// HPM Version (don't change, macro is automatically updated)
+	"Debug Help",
+	SERVER_TYPE_ALL,
+	"0.4",
+	HPM_VERSION,
 };
 
-#ifdef _WIN32
+#ifndef WIN32
+#error This plugin is only compatible with windows!
+#endif
 
 /////////////////////////////////////////////////////////////////////
 // Include files
@@ -1767,49 +1775,24 @@ Dhp__UnhandledExceptionFilter(PEXCEPTION_POINTERS ptrs)
 	return EXCEPTION_EXECUTE_HANDLER;
 }
 
-
 /////////////////////////////////////////////////////////////////////
-// DLL stuff
-#if !defined(DBG_EMBEDDED)
+// Plugin
 
 /// Previous exception filter.
 static LPTOP_LEVEL_EXCEPTION_FILTER previousFilter;
 
-#if defined(__GNUC__)
-// GNU : define DLL load/unload functions
-static void Dhp__OnStartup(void) __attribute__((constructor));
-static void Dhp__OnExit(void) __attribute__((destructor));
-#endif /* defined(__GNUC__) */
-
-/// Installs as the unhandled exception handler.
-void Dhp__OnStartup(void)
-{
-	// Install the unhandled exception filter function
+/**
+ * Initializes plugin
+ * Installs a new unhandled exception filter (Dhp__UnhandledExceptionFilter)
+ **/
+HPExport void plugin_init (void) {
 	previousFilter = SetUnhandledExceptionFilter(Dhp__UnhandledExceptionFilter);
 }
 
-/// Uninstalls the handler.
-void Dhp__OnExit(void)
-{
+/**
+ * Finalizes plugin
+ * Uninstalls the handler
+ **/
+HPExport void plugin_final (void) {
 	SetUnhandledExceptionFilter(previousFilter);
 }
-
-#if !defined(__GNUC__)
-// Windows : invoke DLL load/unload functions
-BOOL APIENTRY DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
-{
-	switch( dwReason )
-	{
-		case DLL_PROCESS_ATTACH: Dhp__OnStartup(); break;
-		case DLL_PROCESS_DETACH: Dhp__OnExit(); break;
-	}
-	return TRUE;
-}
-#endif /* !defined(__GNUC__) */
-#endif /* !defined(DBG_EMBEDDED) */
-
-HPExport void plugin_init (void) {
-}
-
-#endif /* _WIN32 */
-
