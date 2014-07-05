@@ -8657,24 +8657,25 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					case 3:
 					{
 						int rate = 0;
+						struct item *shield = &sd->status.inventory[sd->equip_index[EQI_HAND_L]];
 
-						if( shield_data->refine == 0 )
+						if( shield->refine == 0 )
 							break; // Nothing should happen if the shield has no refine, not even displaying a message
 
 						switch( opt ) {
 							case 1:
-								sc_start(src,bl,SC_SHIELDSPELL_REF,100,opt,shield_data->refine * 30000); //Now breaks Armor at 100% rate
+								sc_start(src,bl,SC_SHIELDSPELL_REF,100,opt,shield->refine * 30000); //Now breaks Armor at 100% rate
 								break;
 							case 2:
 								val = shield->refine * 10 * status->get_lv(src) / 100; //DEF Increase
 								rate = (shield->refine * 2) + (status_get_luk(src) / 10); //Status Resistance Rate
-								if( sc_start2(src,bl,SC_SHIELDSPELL_REF,100,opt,val,shield_data->refine * 20000))
+								if( sc_start2(src,bl,SC_SHIELDSPELL_REF,100,opt,val,shield->refine * 20000))
 									clif->skill_nodamage(src,bl,SC_SCRESIST,skill_lv,
-											sc_start(src,bl,SC_SCRESIST,100,rate,shield_data->refine * 30000));
+											sc_start(src,bl,SC_SCRESIST,100,rate,shield->refine * 30000));
 								break;
 							case 3:
 								sc_start(src,bl,SC_SHIELDSPELL_REF,100,opt,INVALID_TIMER); //HP Recovery
-								val = sstatus->max_hp * ((status->get_lv(src) / 10) + (shield_data->refine + 1)) / 100;
+								val = sstatus->max_hp * ((status->get_lv(src) / 10) + (shield->refine + 1)) / 100;
 								status->heal(bl, val, 0, 2);
 								status_change_end(bl,SC_SHIELDSPELL_REF,INVALID_TIMER);
 								break;
