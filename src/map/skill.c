@@ -13054,14 +13054,17 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 		case WL_COMET:
 		{
 			int idx;
+
+			if( !require.itemid[0] ) // issue: 7935
+				break;
 			if( skill->check_pc_partner(sd,skill_id,&skill_lv,1,0) <= 0 && ((idx = pc->search_inventory(sd,require.itemid[0])) < 0 || sd->status.inventory[idx].amount < require.amount[0]) )
 			{
 				//clif->skill_fail(sd,skill_id,USESKILL_FAIL_NEED_ITEM,require.amount[0],require.itemid[0]);
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return 0;
 			}
-		}
 			break;
+		}
 		case WL_SUMMONFB:
 		case WL_SUMMONBL:
 		case WL_SUMMONWB:
