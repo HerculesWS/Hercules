@@ -73,15 +73,13 @@
 #define DEBUG
 #endif
 
-// debug function name
-#ifndef __NETBSD__
+// Return FunctionName
 #if __STDC_VERSION__ < 199901L
-#	if __GNUC__ >= 2
+#	if __GNUC__ >= 2 || ( defined(_MSC_VER) && defined(__FUNCTION__) )
 #		define __func__ __FUNCTION__
 #	else
-#		define __func__ ""
+#		define __func__ "<Unknown>"
 #	endif
-#endif
 #endif
 
 
