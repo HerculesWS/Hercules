@@ -380,8 +380,12 @@ int unit_walktoxy( struct block_list *bl, short x, short y, int flag)
 	unit->set_target(ud, 0);
 
 	sc = status->get_sc(bl);
-	if (sc && (sc->data[SC_CONFUSION] || sc->data[SC__CHAOS])) //Randomize the target position
-		map->random_dir(bl, &ud->to_x, &ud->to_y);
+	if( sc ) {
+		if( sc->data[SC_CONFUSION] || sc->data[SC__CHAOS] ) //Randomize the target position
+			map->random_dir(bl, &ud->to_x, &ud->to_y);
+		if( sc->data[SC_COMBOATTACK] )
+			status_change_end(bl, SC_COMBOATTACK, INVALID_TIMER);
+	}
 
 	if(ud->walktimer != INVALID_TIMER) {
 		// When you come to the center of the grid because the change of destination while you're walking right now
@@ -1103,7 +1107,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	) {
 		if (sc->data[SC_COMBOATTACK]->val2)
 			target_id = sc->data[SC_COMBOATTACK]->val2;
-		else
+		else if( skill->get_inf(skill_id) != 1 ) // Only non-targetable skills should use auto target
 			target_id = ud->target;
 
 		if( skill->get_inf(skill_id)&INF_SELF_SKILL && skill->get_nk(skill_id)&NK_NO_DAMAGE )// exploit fix
