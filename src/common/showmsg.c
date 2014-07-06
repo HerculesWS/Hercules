@@ -658,9 +658,6 @@ int _vShowMessage(enum msg_type flag, const char *string, va_list ap)
 {
 	va_list apcopy;
 	char prefix[100];
-#if defined(DEBUGLOGMAP) || defined(DEBUGLOGCHAR) || defined(DEBUGLOGLOGIN)
-	FILE *fp;
-#endif
 	
 	if (!string || *string == '\0') {
 		ShowError("Empty string passed to _vShowMessage().\n");
@@ -756,6 +753,7 @@ int _vShowMessage(enum msg_type flag, const char *string, va_list ap)
 
 #if defined(DEBUGLOGMAP) || defined(DEBUGLOGCHAR) || defined(DEBUGLOGLOGIN)
 	if(strlen(DEBUGLOGPATH) > 0) {
+		FILE *fp;
 		fp=fopen(DEBUGLOGPATH,"a");
 		if (fp == NULL)	{
 			FPRINTF(STDERR, CL_RED"[ERROR]"CL_RESET": Could not open '"CL_WHITE"%s"CL_RESET"', access denied.\n", DEBUGLOGPATH);

@@ -491,7 +491,6 @@ void _mfree(void *ptr, const char *file, int line, const char *func )
 /* Allocating blocks */
 static struct block* block_malloc(unsigned short hash)
 {
-	int i;
 	struct block *p;
 	if(hash_unfill[0] != NULL) {
 		/* Space for the block has already been secured */
@@ -512,6 +511,7 @@ static struct block* block_malloc(unsigned short hash)
 		} else {
 			block_last->block_next = p;
 		}
+		int i;
 		block_last = &p[BLOCK_ALLOC - 1];
 		block_last->block_next = NULL;
 		/* Linking the block */
