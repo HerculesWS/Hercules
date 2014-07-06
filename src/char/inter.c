@@ -107,7 +107,7 @@ bool msg_config_read(const char *cfg_name, bool allow_override) {
 	while(fgets(line, sizeof(line), fp) ) {
 		if (line[0] == '/' && line[1] == '/')
 			continue;
-		if (sscanf(line, "%[^:]: %[^\r\n]", w1, w2) != 2)
+		if (sscanf(line, "%1024[^:]: %1024[^\r\n]", w1, w2) != 2)
 			continue;
 
 		if (strcmpi(w1, "import") == 0)
@@ -919,7 +919,7 @@ static int inter_config_read(const char* cfgName)
 
 	while(fgets(line, sizeof(line), fp))
 	{
-		i = sscanf(line, "%[^:]: %[^\r\n]", w1, w2);
+		i = sscanf(line, "%1024[^:]: %1024[^\r\n]", w1, w2);
 		if(i != 2)
 			continue;
 
@@ -1187,7 +1187,6 @@ int mapif_parse_broadcast(int fd)
 int mapif_parse_WisRequest(int fd)
 {
 	struct WisData* wd;
-	static int wisid = 0;
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];// escaped name
 	char* data;
@@ -1236,7 +1235,7 @@ int mapif_parse_WisRequest(int fd)
 		}
 		else
 		{
-
+			static int wisid = 0;
 			CREATE(wd, struct WisData, 1);
 
 			// Whether the failure of previous wisp/page transmission (timeout)

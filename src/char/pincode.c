@@ -130,8 +130,8 @@ void pincode_notifyLoginPinError(int account_id) {
 }
 
 void pincode_decrypt(unsigned int userSeed, char* pin) {
-	int i, pos;
 	char tab[10] = {0,1,2,3,4,5,6,7,8,9};
+	int i, pos;
 	
 	for( i = 1; i < 10; i++ ){
 		userSeed = *pincode->baseSeed + userSeed * *pincode->multiplier;

@@ -154,7 +154,6 @@ bool mapif_homunculus_save(struct s_homunculus* hd)
 // Load an homunculus
 bool mapif_homunculus_load(int homun_id, struct s_homunculus* hd)
 {
-	int i;
 	char* data;
 	size_t len;
 
@@ -211,6 +210,8 @@ bool mapif_homunculus_load(int homun_id, struct s_homunculus* hd)
 		Sql_ShowDebug(sql_handle);
 		return false;
 	}
+
+	int i;
 	while( SQL_SUCCESS == SQL->NextRow(sql_handle) )
 	{
 		// id
