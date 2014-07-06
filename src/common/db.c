@@ -495,7 +495,6 @@ static void db_rebalance_erase(DBNode node, DBNode *root)
 	DBNode y = node;
 	DBNode x = NULL;
 	DBNode x_parent = NULL;
-	DBNode w;
 
 	DB_COUNTSTAT(db_rebalance_erase);
 	// Select where to change the tree
@@ -562,6 +561,7 @@ static void db_rebalance_erase(DBNode node, DBNode *root)
 
 	// Restore the RED-BLACK properties
 	if (y->color != RED) {
+		DBNode w;
 		while (x != *root && (x == NULL || x->color == BLACK)) {
 			if (x == x_parent->left) {
 				w = x_parent->right;

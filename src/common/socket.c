@@ -1156,7 +1156,7 @@ int socket_config_read(const char* cfgName)
 	{
 		if(line[0] == '/' && line[1] == '/')
 			continue;
-		if(sscanf(line, "%[^:]: %[^\r\n]", w1, w2) != 2)
+		if(sscanf(line, "%1024[^:]: %1024[^\r\n]", w1, w2) != 2)
 			continue;
 
 		if (!strcmpi(w1, "stall_time")) {
@@ -1267,8 +1267,6 @@ int socket_getips(uint32* ips, int max)
 #ifdef WIN32
 	{
 		char fullhost[255];
-		u_long** a;
-		struct hostent* hent;
 
 		// XXX This should look up the local IP addresses in the registry
 		// instead of calling gethostbyname. However, the way IP addresses
@@ -1281,11 +1279,13 @@ int socket_getips(uint32* ips, int max)
 		}
 		else
 		{
+			struct hostent* hent;
 			hent = gethostbyname(fullhost);
 			if( hent == NULL ){
 				ShowError("socket_getips: Cannot resolve our own hostname to an IP address\n");
 				return 0;
 			}
+			u_long** a;
 			a = (u_long**)hent->h_addr_list;
 			for( ; a[num] != NULL && num < max; ++num)
 				ips[num] = (uint32)ntohl(*a[num]);
@@ -1293,12 +1293,9 @@ int socket_getips(uint32* ips, int max)
 	}
 #else // not WIN32
 	{
-		int pos;
 		int fd;
 		char buf[2*16*sizeof(struct ifreq)];
 		struct ifconf ic;
-		struct ifreq* ir;
-		struct sockaddr_in* a;
 		u_long ad;
 
 		fd = sSocket(AF_INET, SOCK_STREAM, 0);
@@ -1316,6 +1313,9 @@ int socket_getips(uint32* ips, int max)
 		}
 		else
 		{
+			int pos;
+			struct ifreq* ir;
+			struct sockaddr_in* a;
 			for( pos=0; pos < ic.ifc_len && num < max; )
 			{
 				ir = (struct ifreq*)(buf+pos);

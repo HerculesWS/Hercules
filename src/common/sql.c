@@ -818,8 +818,6 @@ int SqlStmt_NextRow(SqlStmt* self)
 	int err;
 	size_t i;
 	size_t cols;
-	MYSQL_BIND* column;
-	unsigned long length;
 
 	if( self == NULL )
 		return SQL_ERROR;
@@ -833,6 +831,8 @@ int SqlStmt_NextRow(SqlStmt* self)
 	// check for errors
 	if( err == MYSQL_NO_DATA )
 		return SQL_NO_DATA;
+		
+	MYSQL_BIND* column;
 #if defined(MYSQL_DATA_TRUNCATED)
 	// MySQL 5.0/5.1 defines and returns MYSQL_DATA_TRUNCATED [FlavioJS]
 	if( err == MYSQL_DATA_TRUNCATED )
@@ -870,6 +870,7 @@ int SqlStmt_NextRow(SqlStmt* self)
 		return SQL_ERROR;
 	}
 
+	unsigned long length;
 	// propagate column lengths and clear unused parts of string/enum/blob buffers
 	cols = SQL->StmtNumColumns(self);
 	for( i = 0; i < cols; ++i )
@@ -947,10 +948,10 @@ void SqlStmt_Free(SqlStmt* self)
 }
 /* receives mysql error codes during runtime (not on first-time-connects) */
 void hercules_mysql_error_handler(unsigned int ecode) {
-	static unsigned int retry = 1;
 	switch( ecode ) {
 	case 2003:/* Can't connect to MySQL (this error only happens here when failing to reconnect) */
 		if( mysql_reconnect_type == 1 ) {
+			static unsigned int retry = 1;
 			if( ++retry > mysql_reconnect_count ) {
 				ShowFatalError("MySQL has been unreachable for too long, %d reconnects were attempted. Shutting Down\n", retry);
 				exit(EXIT_FAILURE);
@@ -975,7 +976,7 @@ void Sql_inter_server_read(const char* cfgName, bool first) {
 	}
 
 	while(fgets(line, sizeof(line), fp)) {
-		i = sscanf(line, "%[^:]: %[^\r\n]", w1, w2);
+		i = sscanf(line, "%1024[^:]: %1024[^\r\n]", w1, w2);
 		if(i != 2)
 			continue;
 

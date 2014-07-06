@@ -86,7 +86,6 @@ struct hplugin *hplugin_create(void) {
 }
 #define HPM_POP(x) { #x , x }
 bool hplugin_populate(struct hplugin *plugin, const char *filename) {
-	void **Link;
 	struct {
 		const char* name;
 		void *Ref;
@@ -102,7 +101,8 @@ bool hplugin_populate(struct hplugin *plugin, const char *filename) {
 		HPM_POP(ShowFatalError),
 	};
 	int i, length = ARRAYLENGTH(ToLink);
-	
+	void **Link;
+
 	for(i = 0; i < length; i++) {
 		if( !( Link = plugin_import(plugin->dll, ToLink[i].name,void **) ) ) {
 			ShowWarning("HPM:plugin_load: failed to retrieve '%s' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", ToLink[i].name, filename);
@@ -250,7 +250,7 @@ struct hplugin *hplugin_load(const char* filename) {
 }
 
 void hplugin_unload(struct hplugin* plugin) {
-	unsigned int i = plugin->idx, cursor = 0;
+	unsigned int i = plugin->idx;
 	
 	if( plugin->filename )
 		aFree(plugin->filename);
@@ -261,6 +261,7 @@ void hplugin_unload(struct hplugin* plugin) {
 	aFree(plugin);
 	if( !HPM->off ) {
 		HPM->plugins[i] = NULL;
+		int cursor = 0;
 		for(i = 0; i < HPM->plugin_count; i++) {
 			if( HPM->plugins[i] == NULL )
 				continue;

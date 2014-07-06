@@ -3007,11 +3007,10 @@ int parse_frommap(int fd)
 				char_send_fame_list(fd); //Send fame list.
 
 				{
-				unsigned char buf[16384];
-				int x;
 				if (j == 0) {
 					ShowWarning("Map-server %d has NO maps.\n", id);
 				} else {
+					unsigned char buf[16384];
 					// Transmitting maps information to the other map-servers
 					WBUFW(buf,0) = 0x2b04;
 					WBUFW(buf,2) = j * 4 + 10;
@@ -3020,6 +3019,7 @@ int parse_frommap(int fd)
 					memcpy(WBUFP(buf,10), RFIFOP(fd,4), j * 4);
 					mapif_sendallwos(fd, buf, WBUFW(buf,2));
 				}
+				int x;
 				// Transmitting the maps of the other map-servers to the new map-server
 				for(x = 0; x < ARRAYLENGTH(server); x++) {
 					if (server[x].fd > 0 && x != id) {
@@ -3946,7 +3946,7 @@ void char_delete2_cancel_ack(int fd, int char_id, uint32 result)
 
 static void char_delete2_req(int fd, struct char_session_data* sd)
 {// CH: <0827>.W <char id>.L
-	int char_id, party_id, guild_id, i;
+	int char_id, i;
 	char* data;
 	time_t delete_date;
 
@@ -3986,6 +3986,8 @@ static void char_delete2_req(int fd, struct char_session_data* sd)
 			char_delete2_ack(fd, char_id, 3, 0);
 			return;
 		}
+		int party_id, guild_id;
+
 		SQL->GetData(sql_handle, 0, &data, NULL); party_id = atoi(data);
 		SQL->GetData(sql_handle, 1, &data, NULL); guild_id = atoi(data);
 
@@ -5025,7 +5027,7 @@ int char_lan_config_read(const char *lancfgName)
 		if ((line[0] == '/' && line[1] == '/') || line[0] == '\n' || line[1] == '\n')
 			continue;
 
-		if(sscanf(line,"%[^:]: %[^:]:%[^:]:%[^\r\n]", w1, w2, w3, w4) != 4) {
+		if(sscanf(line,"%64[^:]: %64[^:]:%64[^:]:%64[^\r\n]", w1, w2, w3, w4) != 4) {
 
 			ShowWarning("Error syntax of configuration file %s in line %d.\n", lancfgName, line_num);
 			continue;
@@ -5074,7 +5076,7 @@ void sql_config_read(const char* cfgName)
 		if(line[0] == '/' && line[1] == '/')
 			continue;
 
-		if (sscanf(line, "%[^:]: %[^\r\n]", w1, w2) != 2)
+		if (sscanf(line, "%1024[^:]: %1024[^\r\n]", w1, w2) != 2)
 			continue;
 
 		if(!strcmpi(w1,"char_db"))
@@ -5182,7 +5184,7 @@ int char_config_read(const char* cfgName)
 		if (line[0] == '/' && line[1] == '/')
 			continue;
 
-		if (sscanf(line, "%[^:]: %[^\r\n]", w1, w2) != 2)
+		if (sscanf(line, "%1024[^:]: %1024[^\r\n]", w1, w2) != 2)
 			continue;
 
 		remove_control_chars(w1);
