@@ -762,15 +762,18 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 				// Chance to trigger Taekwon kicks [Dralnu]
 				if(sc && !sc->data[SC_COMBOATTACK]) {
 					if(sc->data[SC_STORMKICK_READY] &&
-						sc_start(src,src,SC_COMBOATTACK, 15, TK_STORMKICK,
+						sc_start4(src,src,SC_COMBOATTACK, 15, TK_STORMKICK,
+							bl->id, 2, 0,
 							(2000 - 4*sstatus->agi - 2*sstatus->dex)))
 						; //Stance triggered
 					else if(sc->data[SC_DOWNKICK_READY] &&
-						sc_start(src,src,SC_COMBOATTACK, 15, TK_DOWNKICK,
+						sc_start4(src,src,SC_COMBOATTACK, 15, TK_DOWNKICK,
+							bl->id, 2, 0,
 							(2000 - 4*sstatus->agi - 2*sstatus->dex)))
 						; //Stance triggered
 					else if(sc->data[SC_TURNKICK_READY] &&
-						sc_start(src,src,SC_COMBOATTACK, 15, TK_TURNKICK,
+						sc_start4(src,src,SC_COMBOATTACK, 15, TK_TURNKICK,
+							bl->id, 2, 0,
 							(2000 - 4*sstatus->agi - 2*sstatus->dex)))
 						; //Stance triggered
 						else if (sc->data[SC_COUNTERKICK_READY]) { //additional chance from SG_FRIEND [Komurka]
@@ -2141,6 +2144,14 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 	sd = BL_CAST(BL_PC, src);
 	tsd = BL_CAST(BL_PC, bl);
 
+	// To block skills that aren't called via battle_check_target [Panikon]
+	// issue: 8203
+	if( sd
+		&& ( (bl->type == BL_MOB && pc_has_permission(sd, PC_PERM_DISABLE_PVM))
+			|| (bl->type == BL_PC && pc_has_permission(sd, PC_PERM_DISABLE_PVP)) )
+			)
+		return 0;
+
 	sstatus = status->get_status_data(src);
 	tstatus = status->get_status_data(bl);
 	sc = status->get_sc(bl);
@@ -2331,10 +2342,11 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 					combo=1;
 				break;
 			case AC_DOUBLE:
-				if( (tstatus->race == RC_BRUTE || tstatus->race == RC_INSECT) && pc->checkskill(sd, HT_POWER))
-				{
-					//TODO: This code was taken from Triple Blows, is this even how it should be? [Skotlex]
-					sc_start2(NULL,src,SC_COMBOATTACK,100,HT_POWER,bl->id,2000);
+				// AC_DOUBLE can start the combo with other monster types, but the
+				// monster that's going to be hit by HT_POWER should be RC_BRUTE or RC_INSECT [Panikon]
+				if( pc->checkskill(sd, HT_POWER) )
+				{					
+					sc_start4(NULL,src,SC_COMBOATTACK,100,HT_POWER,0,1,0,2000);
 					clif->combo_delay(src,2000);
 				}
 				break;
@@ -3501,7 +3513,6 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 		case WS_CARTTERMINATION:	// Cart Termination
 		case AS_VENOMKNIFE:
 		case HT_PHANTASMIC:
-		case HT_POWER:
 		case TK_DOWNKICK:
 		case TK_COUNTER:
 		case GS_CHAINACTION:
@@ -3721,6 +3732,11 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 					clif->spiritball(src);
 				}
 			}
+			break;
+
+		case HT_POWER:
+			if( tstatus->race == RC_BRUTE || tstatus->race == RC_INSECT )
+				skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
 			break;
 
 		//Splash attack skills.
@@ -8126,15 +8142,12 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				if( dstsd && dstsd->special_state.no_magic_damage )
 					break;
 
-				if ( sd == NULL || (sd && sd->status.party_id == 0 ) )
-					count = 1;
-				else
-					count = party->foreachsamemap(party->sub_count, sd, 0);
+				if( sd && sd->status.party_id != 0 )
+						count = party->foreachsamemap(party->sub_count, sd, 0);
 
-				if (count > 0)
-					clif->skill_nodamage(bl, bl, skill_id, skill_lv,
-						sc_start4(src, bl, type, 100, skill_lv, 0, 0, count, skill->get_time(skill_id, skill_lv)));
-			} else
+				clif->skill_nodamage(bl, bl, skill_id, skill_lv,
+					sc_start4(src, bl, type, 100, skill_lv, 0, 0, count, skill->get_time(skill_id, skill_lv)));
+			} else if( sd )
 				party->foreachsamemap(skill->area_sub, sd, skill->get_splash(skill_id, skill_lv), src, skill_id, skill_lv, tick, flag|BCT_PARTY|1, skill->castend_nodamage_id);
 			break;
 		case AB_CHEAL:
@@ -8581,9 +8594,11 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 
 		case LG_SHIELDSPELL:
+			if( !sd )
+				break;
 			if( flag&1 ) {
 				sc_start(src,bl,SC_SILENCE,100,skill_lv,sd->bonus.shieldmdef * 30000);
-			} else if( sd ) {
+			} else {
 				int opt = 0, val = 0, splashrange = 0;
 				struct item_data *shield_data = sd->inventory_data[sd->equip_index[EQI_HAND_L]];
 				if( !shield_data || shield_data->type != IT_ARMOR ) {
@@ -8620,6 +8635,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 						}
 						break;
 					case 2:
+						if( sd->bonus.shieldmdef == 0 )
+							break; // Nothing should happen if the shield has no mdef, not even displaying a message
 						if ( sd->bonus.shieldmdef >= 1 && sd->bonus.shieldmdef <= 3 )
 							splashrange = 1;
 						else if ( sd->bonus.shieldmdef >= 4 && sd->bonus.shieldmdef <= 5 )
@@ -8647,8 +8664,12 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 						break;
 					case 3:
 					{
-						struct item *shield = &sd->status.inventory[sd->equip_index[EQI_HAND_L]];
 						int rate = 0;
+						struct item *shield = &sd->status.inventory[sd->equip_index[EQI_HAND_L]];
+
+						if( shield->refine == 0 )
+							break; // Nothing should happen if the shield has no refine, not even displaying a message
+
 						switch( opt ) {
 							case 1:
 								sc_start(src,bl,SC_SHIELDSPELL_REF,100,opt,shield->refine * 30000); //Now breaks Armor at 100% rate
@@ -8762,8 +8783,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				{
 					sp = dstsd->spiritball; //1%sp per spiritball.
 					pc->delspiritball(dstsd, dstsd->spiritball, 0);
+					status_percent_heal(src, 0, sp);
 				}
-				if( sp ) status_percent_heal(src, 0, sp);
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, sp ? 1:0);
 			} else {
 				clif->skill_damage(src,bl,tick, status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, 6);
@@ -8864,7 +8885,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			if ( flag&1 )
 				sc_start2(src,bl,type,100,skill_lv,src->id,skill->get_time(skill_id,skill_lv));
 			else if ( sd ) {
-				int rate = 4 * skill_lv + 2 * (sd ? pc->checkskill(sd,WM_LESSON) : 1) + status->get_lv(src) / 15 + (sd? sd->status.job_level:0) / 5;
+				int rate = 4 * skill_lv + 2 * pc->checkskill(sd,WM_LESSON) + status->get_lv(src)/15 + sd->status.job_level/5;
 				if ( rnd()%100 < rate ) {
 					flag |= BCT_PARTY|BCT_GUILD;
 					map->foreachinrange(skill->area_sub, src, skill->get_splash(skill_id,skill_lv),BL_CHAR|BL_NPC|BL_SKILL, src, skill_id, skill_lv, tick, flag|BCT_ENEMY|1, skill->castend_nodamage_id);
@@ -8881,7 +8902,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			if( flag&1 ) {
 				sc_start2(src,bl,type,100,skill_lv,(skill_id==WM_VOICEOFSIREN)?src->id:0,skill->get_time(skill_id,skill_lv));
 			} else if( sd ) {
-				int rate = 6 * skill_lv + (sd ? pc->checkskill(sd,WM_LESSON) : 1) + (sd? sd->status.job_level:0) / 2;
+				int rate = 6 * skill_lv + pc->checkskill(sd,WM_LESSON) + sd->status.job_level/2;
 				if ( rnd()%100 < rate ) {
 					flag |= BCT_PARTY|BCT_GUILD;
 					map->foreachinrange(skill->area_sub, src, skill->get_splash(skill_id,skill_lv),(skill_id==WM_VOICEOFSIREN)?BL_CHAR|BL_NPC|BL_SKILL:BL_PC, src, skill_id, skill_lv, tick, flag|BCT_ENEMY|1, skill->castend_nodamage_id);
@@ -13041,14 +13062,17 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 		case WL_COMET:
 		{
 			int idx;
+
+			if( !require.itemid[0] ) // issue: 7935
+				break;
 			if( skill->check_pc_partner(sd,skill_id,&skill_lv,1,0) <= 0 && ((idx = pc->search_inventory(sd,require.itemid[0])) < 0 || sd->status.inventory[idx].amount < require.amount[0]) )
 			{
 				//clif->skill_fail(sd,skill_id,USESKILL_FAIL_NEED_ITEM,require.amount[0],require.itemid[0]);
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return 0;
 			}
-		}
 			break;
+		}
 		case WL_SUMMONFB:
 		case WL_SUMMONBL:
 		case WL_SUMMONWB:

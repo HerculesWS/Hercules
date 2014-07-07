@@ -7415,6 +7415,8 @@ ACMD(fakename){
 		{
 			sd->fakename[0] = '\0';
 			clif->charnameack(0, &sd->bl);
+			if( sd->disguise )
+				clif->charnameack(sd->fd, &sd->bl);
 			clif->message(sd->fd, msg_txt(1307)); // Returned to real name.
 			return true;
 		}
@@ -7431,6 +7433,8 @@ ACMD(fakename){
 	
 	safestrncpy(sd->fakename, message, sizeof(sd->fakename));
 	clif->charnameack(0, &sd->bl);
+	if( sd->disguise ) // Another packet should be sent so the client updates the name for sd
+		clif->charnameack(sd->fd, &sd->bl);
 	clif->message(sd->fd, msg_txt(1310)); // Fake name enabled.
 	
 	return true;

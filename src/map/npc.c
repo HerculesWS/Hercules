@@ -2602,12 +2602,19 @@ const char* npc_parse_warp(char* w1, char* w2, char* w3, char* w4, const char* s
 	return strchr(start,'\n');// continue
 }
 
-/// Parses a shop/cashshop npc.
+/**
+ * Parses a SHOP/CASHSHOP npc
+ * @param retval Pointer to the status, used to know whether there was an error or not, if so it will be EXIT_FAILURE
+ * @retval Parsing position (currently only '\n')
+ **/
 const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int *retval) {
 	//TODO: could be rewritten to NOT need this temp array [ultramage]
-#define MAX_SHOPITEM 100
-	struct npc_item_list items[MAX_SHOPITEM];
-#undef MAX_SHOPITEM
+	// We could use nd->u.shop.shop_item to store directly the items, but this could lead
+	// to unecessary memory usage by the server, using a temp dynamic array is the
+	// best way to do this without having to do multiple reallocs [Panikon]
+	struct npc_item_list *items = NULL;
+	size_t items_count = 40; // Starting items size
+
 	char *p;
 	int x, y, dir, m, i;
 	struct npc_data *nd;
@@ -2633,7 +2640,7 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 	if( m != -1 && ( x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys ) ) {
 		ShowError("npc_parse_shop: out-of-bounds coordinates (\"%s\",%d,%d), map is %dx%d, in file '%s', line '%d'\n", map->list[m].name, x, y, map->list[m].xs, map->list[m].ys,filepath,strline(buffer,start-buffer));
 		if (retval) *retval = EXIT_FAILURE;
-		return strchr(start,'\n');;//try next
+		return strchr(start,'\n');//try next
 	}
 	
 	if( strcmp(w2,"cashshop") == 0 )
@@ -2641,10 +2648,18 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 	else
 		type = SHOP;
 
+	items = aMalloc(sizeof(items[0])*items_count);
+
 	p = strchr(w4,',');
-	for( i = 0; i < ARRAYLENGTH(items) && p; ++i ) {
+	for( i = 0; p; ++i ) {
 		int nameid, value;
 		struct item_data* id;
+
+		if( i == items_count-1 ) { // Grow array
+			items_count *= 2;
+			items = aRealloc(items, sizeof(items[0])*items_count);
+		}
+
 		if( sscanf(p, ",%d:%d", &nameid, &value) != 2 ) {
 			ShowError("npc_parse_shop: Invalid item definition in file '%s', line '%d'. Ignoring the rest of the line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 			if (retval) *retval = EXIT_FAILURE;
@@ -2659,6 +2674,10 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 		}
 
 		if( value < 0 ) {
+			if( value != -1 )
+				ShowWarning("npc_parse_shop: Item %s [%d] with invalid selling value '%d' in file '%s', line '%d', defaulting to buy price...\n",
+					id->name, nameid, value, filepath, strline(buffer,start-buffer));
+
 			if( type == SHOP ) value = id->value_buy;
 			else value = 0; // Cashshop doesn't have a "buy price" in the item_db
 		}
@@ -2685,13 +2704,16 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 	}
 	if( i == 0 ) {
 		ShowWarning("npc_parse_shop: Ignoring empty shop in file '%s', line '%d'.\n", filepath, strline(buffer,start-buffer));
+		aFree(items);
 		if (retval) *retval = EXIT_FAILURE;
 		return strchr(start,'\n');// continue
 	}
 
 	CREATE(nd, struct npc_data, 1);
 	CREATE(nd->u.shop.shop_item, struct npc_item_list, i);
-	memcpy(nd->u.shop.shop_item, items, sizeof(struct npc_item_list)*i);
+	memcpy(nd->u.shop.shop_item, items, sizeof(items[0])*i);
+	aFree(items);
+
 	nd->u.shop.count = i;
 	nd->bl.prev = nd->bl.next = NULL;
 	nd->bl.m = m;
@@ -4138,15 +4160,16 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 			}
 		}
 
-		if( strcmp(w2,"warp") == 0 && count > 3 )
+		if( strcmp(w2,"mapflag") == 0 && count >= 3 )
 		{
-			p = npc->parse_warp(w1,w2,w3,w4, p, buffer, filepath, &success);
+			p = npc->parse_mapflag(w1, w2, trim(w3), trim(w4), p, buffer, filepath, &success);
 		}
-		else if( (strcmp(w2,"shop") == 0 || strcmp(w2,"cashshop") == 0) && count > 3 )
-		{
-			p = npc->parse_shop(w1,w2,w3,w4, p, buffer, filepath, &success);
+		else if( count == 3 ) {
+			ShowError("npc_parsesrcfile: Unable to parse, probably a missing TAB in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,p-buffer), w1, w2, w3, w4);
+			p = strchr(p,'\n');// skip and continue
+			success = EXIT_FAILURE;
 		}
-		else if( strcmp(w2,"script") == 0 && count > 3 )
+		else if( strcmp(w2,"script") == 0 )
 		{
 			if( strcmp(w1,"function") == 0 ) {
 				p = npc->parse_function(w1, w2, w3, w4, p, buffer, filepath, &success);
@@ -4157,20 +4180,24 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 				p = npc->parse_script(w1,w2,w3,w4, p, buffer, filepath,runOnInit?NPO_ONINIT:NPO_NONE, &success);
 			}
 		}
-		else if( strcmp(w2,"trader") == 0 && count > 3 ) {
+		else if( strcmp(w2,"trader") == 0 ) {
 			p = npc->parse_script(w1,w2,w3,w4, p, buffer, filepath,(runOnInit?NPO_ONINIT:NPO_NONE)|NPO_TRADER, &success);
 		}
-		else if( (i=0, sscanf(w2,"duplicate%n",&i), (i > 0 && w2[i] == '(')) && count > 3 )
+		else if( strcmp(w2,"warp") == 0 )
+		{
+			p = npc->parse_warp(w1,w2,w3,w4, p, buffer, filepath, &success);
+		}
+		else if( (i=0, sscanf(w2,"duplicate%n",&i), (i > 0 && w2[i] == '(')) )
 		{
 			p = npc->parse_duplicate(w1,w2,w3,w4, p, buffer, filepath, (runOnInit?NPO_ONINIT:NPO_NONE), &success);
 		}
-		else if( (strcmp(w2,"monster") == 0 || strcmp(w2,"boss_monster") == 0) && count > 3 )
+		else if( (strcmp(w2,"monster") == 0 || strcmp(w2,"boss_monster") == 0) )
 		{
 			p = npc->parse_mob(w1, w2, w3, w4, p, buffer, filepath, &success);
 		}
-		else if( strcmp(w2,"mapflag") == 0 && count >= 3 )
+		else if( (strcmp(w2,"shop") == 0 || strcmp(w2,"cashshop") == 0) )
 		{
-			p = npc->parse_mapflag(w1, w2, trim(w3), trim(w4), p, buffer, filepath, &success);
+			p = npc->parse_shop(w1,w2,w3,w4, p, buffer, filepath, &success);
 		}
 		else
 		{

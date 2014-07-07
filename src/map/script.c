@@ -13211,6 +13211,8 @@ BUILDIN(getlook)
 	int type,val;
 	TBL_PC *sd;
 	sd=script->rid2sd(st);
+	if( sd == NULL )
+		return false;
 
 	type=script_getnum(st,2);
 	val = -1;
