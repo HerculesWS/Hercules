@@ -24,13 +24,15 @@ struct eventlist {
 	char name[EVENT_NAME_LENGTH];
 	struct eventlist *next;
 };
-//For quick linking to a guardian's info. [Skotlex]
+
+/**
+ * Guardian data
+ * For quick linking to a guardian's info. [Skotlex]
+ **/
 struct guardian_data {
 	int number; //0-MAX_GUARDIANS-1 = Guardians. MAX_GUARDIANS = Emperium.
-	int guild_id;
-	int emblem_id;
-	int guardup_lv; //Level of GD_GUARDUP skill.
-	char guild_name[NAME_LENGTH];
+
+	struct guild *g;
 	struct guild_castle* castle;
 };
 struct guild_expcache {

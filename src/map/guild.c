@@ -1213,7 +1213,7 @@ int guild_emblem_changed(int len,int guild_id,int emblem_id,const char *data)
 				TBL_MOB* md = (gc->guardian[i].id ? map->id2md(gc->guardian[i].id) : NULL);
 				if( md == NULL || md->guardian_data == NULL )
 					continue;
-				md->guardian_data->emblem_id = emblem_id;
+
 				clif->guild_emblem_area(&md->bl);
 			}
 			// update temporary guardians
@@ -1221,7 +1221,7 @@ int guild_emblem_changed(int len,int guild_id,int emblem_id,const char *data)
 				TBL_MOB* md = (gc->temp_guardians[i] ? map->id2md(gc->temp_guardians[i]) : NULL);
 				if( md == NULL || md->guardian_data == NULL )
 					continue;
-				md->guardian_data->emblem_id = emblem_id;
+
 				clif->guild_emblem_area(&md->bl);
 			}
 		}
