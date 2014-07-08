@@ -91,6 +91,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#endif // _MAP_ELEMENTAL_H_
 	#ifdef _MAP_GUILD_H_
 		{ "eventlist", sizeof(struct eventlist) },
+		{ "guardian_data", sizeof(struct guardian_data) },
 	#else
 		#define _MAP_GUILD_H_
 	#endif // _MAP_GUILD_H_
