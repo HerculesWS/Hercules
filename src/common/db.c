@@ -330,7 +330,7 @@ static struct db_stats {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0
 };
-#define DB_COUNTSTAT(token) do { if (stats. ## token != UINT32_MAX) ++stats. ## token ; } while(0)
+#define DB_COUNTSTAT(token) do { if ((stats.token) != UINT32_MAX) ++(stats.token); } while(0)
 #else /* !defined(DB_ENABLE_STATS) */
 #define DB_COUNTSTAT(token)
 #endif /* !defined(DB_ENABLE_STATS) */
@@ -2780,15 +2780,15 @@ void db_final(void)
 			"DB_INT     : allocated %10u, destroyed %10u\n"
 			"DB_UINT    : allocated %10u, destroyed %10u\n"
 			"DB_STRING  : allocated %10u, destroyed %10u\n"
-			"DB_ISTRING : allocated %10u, destroyed %10u\n",
+			"DB_ISTRING : allocated %10u, destroyed %10u\n"
 			"DB_INT64   : allocated %10u, destroyed %10u\n"
-			"DB_UINT64  : allocated %10u, destroyed %10u\n"
+			"DB_UINT64  : allocated %10u, destroyed %10u\n",
 			stats.db_int_alloc,     stats.db_int_destroy,
 			stats.db_uint_alloc,    stats.db_uint_destroy,
 			stats.db_string_alloc,  stats.db_string_destroy,
 			stats.db_istring_alloc, stats.db_istring_destroy,
 			stats.db_int64_alloc,   stats.db_int64_destroy,
-			stats.db_uint64_alloc,  stats.db_uint64_destroy,);
+			stats.db_uint64_alloc,  stats.db_uint64_destroy);
 	ShowInfo(CL_WHITE"Database function counters"CL_RESET":\n"
 			"db_rotate_left     %10u, db_rotate_right    %10u,\n"
 			"db_rebalance       %10u, db_rebalance_erase %10u,\n"
