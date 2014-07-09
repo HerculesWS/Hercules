@@ -3414,6 +3414,7 @@ void status_calc_regen(struct block_list *bl, struct status_data *st, struct reg
 	struct map_session_data *sd;
 	int val, skill_lv, reg_flag;
 	nullpo_retv(bl);
+	nullpo_retv(st);
 
 	if( !(bl->type&BL_REGEN) || !regen )
 		return;

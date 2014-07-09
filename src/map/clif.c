@@ -4622,6 +4622,8 @@ void clif_graffiti_entry(struct block_list *bl, struct skill_unit *su, enum send
 /// 099f <lenght>.W <id> L <creator id>.L <x>.W <y>.W <unit id>.L <range>.W <visible>.B (ZC_SKILL_ENTRY4)
 void clif_getareachar_skillunit(struct block_list *bl, struct skill_unit *su, enum send_target target) {
 	struct packet_skill_entry p;
+	nullpo_retv(bl);
+	nullpo_retv(su);
 
 	if( su->group->state.guildaura )
 		return;
