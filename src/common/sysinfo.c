@@ -1040,7 +1040,7 @@ void sysinfo_defaults(void) {
 #if defined(WIN32) && !defined(__CYGWIN__)
 	sysinfo->getpagesize = sysinfo_getpagesize;
 #else
-	sysinfo->getpagesize = getpagesize();
+	sysinfo->getpagesize = getpagesize;
 #endif
 	sysinfo->platform = sysinfo_platform;
 	sysinfo->osversion = sysinfo_osversion;
