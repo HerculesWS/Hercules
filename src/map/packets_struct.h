@@ -943,6 +943,9 @@ struct packet_npc_market_open {
 		unsigned int price;
 		unsigned int qty;
 		unsigned short view;
+	// It seems that the client doesn't have any hard-coded limit for this list
+	// it's possible to send up to 1890 items without dropping a packet that's
+	// too large [Panikon]
 	} list[1000];/* TODO: whats the actual max of this? */
 } __attribute__((packed));
 

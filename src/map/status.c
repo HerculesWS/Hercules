@@ -3413,6 +3413,7 @@ int status_calc_npc_(struct npc_data *nd, enum e_status_calc_opt opt) {
 void status_calc_regen(struct block_list *bl, struct status_data *st, struct regen_data *regen) {
 	struct map_session_data *sd;
 	int val, skill_lv, reg_flag;
+	nullpo_retv(bl);
 
 	if( !(bl->type&BL_REGEN) || !regen )
 		return;
