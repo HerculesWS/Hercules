@@ -96,10 +96,14 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1395789302); -- 2014-03-25--23-5
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1396893866); -- 2014-04-07--22-04.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1398477600); -- 2014-04-26--10-00.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1400256139); -- 2014-05-17--00-06.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1404905340); -- 2014-07-09--11-29.sql
 
 
 -- Updates to table `storage`
 ALTER TABLE `storage` MODIFY `bound` tinyint(1) unsigned NOT NULL default '0';
+
+-- Updates to table `guild_position`
+ALTER TABLE  `guild_position` CHANGE  `mode`  `mode` SMALLINT(5) UNSIGNED NOT NULL DEFAULT  '0'
 
 
 --

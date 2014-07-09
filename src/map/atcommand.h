@@ -20,7 +20,7 @@ struct block_list;
  * Defines
  **/
 #define ATCOMMAND_LENGTH 50
-#define MAX_MSG 1500
+#define MAX_MSG 1502
 #define msg_txt(idx) atcommand->msg(idx)
 /**
  * Enumerations

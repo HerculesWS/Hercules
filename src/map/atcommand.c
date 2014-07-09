@@ -844,7 +844,6 @@ ACMD(guildstorage)
 	}
 	
 	if( gstorage->open(sd) ) {
-		clif->message(fd, msg_txt(1201)); // Your guild's storage has already been opened by another member, try again later.
 		return false;
 	}
 

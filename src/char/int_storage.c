@@ -81,7 +81,7 @@ int storage_fromsql(int account_id, struct storage_data* p)
 /// Save guild_storage data to sql
 int guild_storage_tosql(int guild_id, struct guild_storage* p)
 {
-	memitemdata_to_sql(p->items, MAX_GUILD_STORAGE, guild_id, TABLE_GUILD_STORAGE);
+	memitemdata_to_sql(p->items, p->max_item, guild_id, TABLE_GUILD_STORAGE);
 	ShowInfo ("guild storage save to DB - guild: %d\n", guild_id);
 	return 0;
 }

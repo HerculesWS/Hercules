@@ -7548,8 +7548,9 @@ void clif_guild_positionnamelist(struct map_session_data *sd) {
 /// Guild position information (ZC_POSITION_INFO).
 /// 0160 <packet len>.W { <position id>.L <mode>.L <ranking>.L <pay rate>.L }*
 /// mode:
-///     &0x01 = allow invite
-///     &0x10 = allow expel
+///     &0x001 = allow invite
+///     &0x010 = allow expel
+///     &0x100 = allow guild storage
 /// ranking:
 ///     TODO
 void clif_guild_positioninfolist(struct map_session_data *sd) {
@@ -7578,8 +7579,9 @@ void clif_guild_positioninfolist(struct map_session_data *sd) {
 /// Notifies clients in a guild about updated position information (ZC_ACK_CHANGE_GUILD_POSITIONINFO).
 /// 0174 <packet len>.W { <position id>.L <mode>.L <ranking>.L <pay rate>.L <position name>.24B }*
 /// mode:
-///     &0x01 = allow invite
-///     &0x10 = allow expel
+///     &0x001 = allow invite
+///     &0x010 = allow expel
+///     &0x100 = allow guild storage
 /// ranking:
 ///     TODO
 void clif_guild_positionchanged(struct guild *g,int idx)
@@ -8451,7 +8453,7 @@ void clif_refresh_storagewindow( struct map_session_data *sd ) {
 		} else {
 			storage->sortitem(gstor->items, ARRAYLENGTH(gstor->items));
 			clif->storagelist(sd, gstor->items, ARRAYLENGTH(gstor->items));
-			clif->updatestorageamount(sd, gstor->storage_amount, MAX_GUILD_STORAGE);
+			clif->updatestorageamount(sd, gstor->storage_amount, gstor->max_item);
 		}
 	}
 }
