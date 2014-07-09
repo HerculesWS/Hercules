@@ -9502,7 +9502,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			{
 				struct unit_data *ud = unit->bl2ud(bl);
 				if( ud )
-					ud->state.running = unit->run(bl);
+					ud->state.running = unit->run(bl, NULL, SC_RUN);
 			}
 			break;
 		case SC_CASH_BOSS_ALARM:
@@ -9521,7 +9521,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			{
 				struct unit_data *ud = unit->bl2ud(bl);
 				if( ud )
-					ud->state.running = unit->wugdash(bl, sd);
+					ud->state.running = unit->run(bl, sd, SC_WUGDASH);
 			}
 			break;
 		case SC_COMBOATTACK:

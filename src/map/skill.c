@@ -10630,14 +10630,22 @@ int skill_dance_overlap(struct skill_unit* su, int flag) {
 	return map->foreachincell(skill->dance_overlap_sub, su->bl.m,su->bl.x,su->bl.y,BL_SKILL, su,flag);
 }
 
-/*==========================================
+/**
  * Converts this group information so that it is handled as a Dissonance or Ugly Dance cell.
- * Flag: 0 - Convert, 1 - Revert.
- *------------------------------------------*/
+ * This function is safe to call even when the unit or the group were freed by other function
+ * previously.
+ * @param su Skill unit data (from BA_DISSONANCE or DC_UGLYDANCE)
+ * @param flag 0 Convert
+ * @param flag 1 Revert
+ * @retval true success
+ **/
 bool skill_dance_switch(struct skill_unit* su, int flag) {
 	static int prevflag = 1;  // by default the backup is empty
 	static struct skill_unit_group backup;
-	struct skill_unit_group* group = su->group;
+	struct skill_unit_group* group;
+
+	if( su == NULL || (group = su->group) == NULL )
+		return false;
 
 	// val2&UF_ENSEMBLE is a hack to indicate dissonance
 	if ( !(group->state.song_dance&0x1 && su->val2&UF_ENSEMBLE) )
@@ -16133,9 +16141,6 @@ int skill_unit_move_sub(struct block_list* bl, va_list ap) {
 			}
 		}
 
-		//TODO: Normally, this is dangerous since the unit and group could be freed
-		//inside the onout/onplace functions. Currently it is safe because we know song/dance
-		//cells do not get deleted within them. [Skotlex]
 		if( dissonance ) skill->dance_switch(su, 1);
 
 		if( flag&4 )

@@ -7982,22 +7982,21 @@ int pc_setoption(struct map_session_data *sd,int type)
 	else if (!(type&OPTION_FALCON) && p_type&OPTION_FALCON) //Falcon OFF
 		clif->sc_end(&sd->bl,sd->bl.id,AREA,SI_FALCON);
 
-	if( (sd->class_&MAPID_THIRDMASK) == MAPID_RANGER ) {
-		if( type&OPTION_WUGRIDER && !(p_type&OPTION_WUGRIDER) ) { // Mounting
-			clif->sc_load(&sd->bl,sd->bl.id,AREA,SI_WUGRIDER, 0, 0, 0);
-			status_calc_pc(sd,SCO_NONE);
-		} else if( !(type&OPTION_WUGRIDER) && p_type&OPTION_WUGRIDER ) { // Dismount
-			clif->sc_end(&sd->bl,sd->bl.id,AREA,SI_WUGRIDER);
-			status_calc_pc(sd,SCO_NONE);
-		}
+	if( type&OPTION_WUGRIDER && !(p_type&OPTION_WUGRIDER) ) { // Mounting
+		clif->sc_load(&sd->bl,sd->bl.id,AREA,SI_WUGRIDER, 0, 0, 0);
+		status_calc_pc(sd,SCO_NONE);
+	} else if( !(type&OPTION_WUGRIDER) && p_type&OPTION_WUGRIDER ) { // Dismount
+		clif->sc_end(&sd->bl,sd->bl.id,AREA,SI_WUGRIDER);
+		status_calc_pc(sd,SCO_NONE);
 	}
-	if( (sd->class_&MAPID_THIRDMASK) == MAPID_MECHANIC ) {
+
+	if( (type&OPTION_MADOGEAR && !(p_type&OPTION_MADOGEAR))
+	|| (!(type&OPTION_MADOGEAR) && p_type&OPTION_MADOGEAR) ) {
 		int i;
-		if( type&OPTION_MADOGEAR && !(p_type&OPTION_MADOGEAR) )
-			status_calc_pc(sd, SCO_NONE);
-		else if( !(type&OPTION_MADOGEAR) && p_type&OPTION_MADOGEAR )
-			status_calc_pc(sd, SCO_NONE);
-		for( i = 0; i < SC_MAX; i++ ){
+		status_calc_pc(sd, SCO_NONE);
+
+		// End all SCs that can be reset when mado is taken off
+		for( i = 0; i < SC_MAX; i++ ) {
 			if ( !sd->sc.data[i] || !status->get_sc_type(i) )
 				continue;
 			if ( status->get_sc_type(i)&SC_MADO_NO_RESET )

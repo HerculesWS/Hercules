@@ -52,6 +52,10 @@ enum refine_type {
 	REFINE_TYPE_MAX     = 5
 };
 
+/**
+ * SC configuration type
+ * @see db/sc_config.txt for more information
+ **/
 typedef enum sc_conf_type {
 	SC_NO_REM_DEATH  = 0x01,
 	SC_NO_SAVE       = 0x02,
