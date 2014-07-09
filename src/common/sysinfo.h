@@ -21,6 +21,7 @@ struct sysinfo_private;
 struct sysinfo_interface {
 	struct sysinfo_private *p;
 
+	long (*getpagesize) (void);
 	const char *(*platform) (void);
 	const char *(*osversion) (void);
 	const char *(*cpu) (void);

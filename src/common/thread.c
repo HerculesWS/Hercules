@@ -10,13 +10,13 @@
 
 #include "thread.h"
 
+#include "../common/sysinfo.h" // sysinfo->getpagesize()
 #include "../common/cbasetypes.h"
 #include "../common/malloc.h"
 #include "../common/showmsg.h"
 
 #ifdef WIN32
 #	include "../common/winapi.h"
-#	define getpagesize() 4096 // @TODO: implement this properly (GetSystemInfo .. dwPageSize..). (Atm as on all supported win platforms its 4k its static.)
 #	define __thread __declspec( thread )
 #else
 #	include <pthread.h>
@@ -31,7 +31,6 @@
 #ifdef _MSC_VER
 #define HAS_TLS
 #endif
-
 
 #define RA_THREADS_MAX 64
 
@@ -170,7 +169,7 @@ rAthread rathread_createEx( rAthreadProc entryPoint,  void *param,  size_t szSta
 
 
 	// given stacksize aligned to systems pagesize?
-	tmp = szStack % getpagesize();
+	tmp = szStack % sysinfo->getpagesize();
 	if(tmp != 0)
 		szStack += tmp;
 
