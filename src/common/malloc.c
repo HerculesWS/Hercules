@@ -642,12 +642,11 @@ static void memmgr_final (void)
 	struct block *block = block_first;
 	struct unit_head_large *large = unit_head_large_first;
 	char vcsinfo[256];
-	snprintf(vcsinfo, sizeof(vcsinfo), "%s rev '%s'", sysinfo->vcstype(), sysinfo->vcsrevision_src()); // Cache VCS info before we free() it
-	sysinfo->final();
-
 #ifdef LOG_MEMMGR
 	int count = 0;
 #endif /* LOG_MEMMGR */
+	snprintf(vcsinfo, sizeof(vcsinfo), "%s rev '%s'", sysinfo->vcstype(), sysinfo->vcsrevision_src()); // Cache VCS info before we free() it
+	sysinfo->final();
 
 	while (block) {
 		if (block->unit_used) {
