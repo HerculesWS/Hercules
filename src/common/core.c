@@ -99,7 +99,7 @@ static BOOL WINAPI console_handler(DWORD c_event) {
 	return TRUE;
 }
 
-static void cevents_init() {
+static void cevents_init(void) {
 	if (SetConsoleCtrlHandler(console_handler,TRUE)==FALSE)
 		ShowWarning ("Unable to install the console handler!\n");
 }

@@ -107,7 +107,7 @@ char* search_timer_func_list(TimerFunc func)
 #if defined(ENABLE_RDTSC)
 static uint64 RDTSC_BEGINTICK = 0,   RDTSC_CLOCK = 0;
 
-static __inline uint64 rdtsc_() {
+static __inline uint64 rdtsc_(void) {
 	register union{
 		uint64	qw;
 		uint32 	dw[2];
@@ -118,7 +118,7 @@ static __inline uint64 rdtsc_() {
 	return t.qw;
 }
 
-static void rdtsc_calibrate(){
+static void rdtsc_calibrate(void){
 	uint64 t1, t2;
 	int32 i;
 	

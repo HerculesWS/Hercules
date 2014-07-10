@@ -59,7 +59,7 @@ __thread int g_rathread_ID = -1;
 ///
 static struct rAthread l_threads[RA_THREADS_MAX];
 
-void rathread_init(){
+void rathread_init(void) {
 	register unsigned int i;
 	memset(&l_threads, 0x00, RA_THREADS_MAX * sizeof(struct rAthread) );
 	
@@ -78,7 +78,7 @@ void rathread_init(){
 
 
 
-void rathread_final(){
+void rathread_final(void) {
 	register unsigned int i;
 	
 	// Unterminated Threads Left?
@@ -230,7 +230,7 @@ void rathread_destroy(rAthread *handle) {
 #endif
 }//end: rathread_destroy()
 
-rAthread *rathread_self() {
+rAthread *rathread_self(void) {
 #ifdef HAS_TLS
 	rAthread *handle = &l_threads[g_rathread_ID];
 	
@@ -259,7 +259,7 @@ rAthread *rathread_self() {
 }//end: rathread_self()
 
 
-int rathread_get_tid(){
+int rathread_get_tid(void) {
 
 #ifdef HAS_TLS
 	return g_rathread_ID;
@@ -305,7 +305,7 @@ RATHREAD_PRIO rathread_prio_get(rAthread *handle) {
 }//end: rathread_prio_get()
 
 
-void rathread_yield(){
+void rathread_yield(void) {
 #ifdef WIN32
 	SwitchToThread();
 #else

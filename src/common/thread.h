@@ -58,7 +58,7 @@ void rathread_destroy(rAthread *handle);
  *
  * @return not NULL if success
  */
-rAthread *rathread_self();
+rAthread *rathread_self(void);
 
 
 /**
@@ -69,7 +69,7 @@ rAthread *rathread_self();
  *
  * @return -1 when fails, otherwise >= 0
  */
-int rathread_get_tid();
+int rathread_get_tid(void);
 
 
 /**
@@ -107,12 +107,12 @@ RATHREAD_PRIO rathread_prio_get(rAthread *handle);
  *			it just allows the OS to spent the remaining time
  *			of the slice to another thread.
  */
-void rathread_yield();
+void rathread_yield(void);
 
 
 
-void rathread_init();
-void rathread_final();
+void rathread_init(void);
+void rathread_final(void);
 
 
 #endif /* COMMON_THREAD_H */

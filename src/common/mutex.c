@@ -50,7 +50,7 @@ struct racond{
 //
 
 
-ramutex *ramutex_create() {
+ramutex *ramutex_create(void) {
 	struct ramutex *m;
 	
 	m = (struct ramutex*)aMalloc( sizeof(struct ramutex) );
@@ -124,7 +124,7 @@ void ramutex_unlock(ramutex *m) {
 // Implementation:
 //
 
-racond *racond_create() {
+racond *racond_create(void) {
 	struct racond *c;
 	
 	c = (struct racond*)aMalloc( sizeof(struct racond) );
