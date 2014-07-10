@@ -109,7 +109,7 @@
 #define MAX_FAME 1000000000
 #define MAX_CART 100
 #define MAX_SKILL 1478
-#define MAX_SKILL_ID 10015   // [Ind/Hercules] max used skill ID
+#define MAX_SKILL_ID 10017   // [Ind/Hercules] max used skill ID
 // Update this max as necessary. 86 is the value needed for Expanded Super Novice.
 #define MAX_SKILL_TREE 86
 #define DEFAULT_WALK_SPEED 150
@@ -122,7 +122,7 @@
 #define MAX_GUILDPOSITION 20    // Increased max guild positions to accommodate for all members [Valaris] (removed) [PoW]
 #define MAX_GUILDEXPULSION 32
 #define MAX_GUILDALLIANCE 16
-#define MAX_GUILDSKILL 15       // Increased max guild skills because of new skills [Sara-chan]
+#define MAX_GUILDSKILL 17       // Increased max guild skills because of new skills [Sara-chan]
 #define MAX_GUILDLEVEL 50
 #define MAX_GUARDIANS 8         // Local max per castle. [Skotlex]
 #define MAX_QUEST_OBJECTIVES 3  // Max quest objectives for a quest
@@ -335,6 +335,7 @@ struct guild_storage {
 	int guild_id;
 	short storage_status;
 	short storage_amount;
+	short max_item;
 	struct item items[MAX_GUILD_STORAGE];
 	unsigned short lock;
 };
@@ -685,6 +686,8 @@ enum {
 	GD_RESTORE=10012,
 	GD_EMERGENCYCALL=10013,
 	GD_DEVELOPMENT=10014,
+	GD_ITEMEMERGENCYCALL = 10015,
+	GD_GUILD_STORAGE = 10016,
 	GD_MAX,
 };
 
