@@ -267,7 +267,7 @@ int main (int argc, char **argv) {
 	rathread_final();
 	ers_final();
 #endif
-	sysinfo->final();
+	//sysinfo->final(); Called by iMalloc->final()
 
 	iMalloc->final();
 

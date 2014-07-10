@@ -573,8 +573,7 @@ size_t memmgr_usage (void)
 static char memmer_logfile[128];
 static FILE *log_fp;
 
-static void memmgr_log (char *buf)
-{
+static void memmgr_log(char *buf, char *vcsinfo) {
 	if( !log_fp ) {
 		time_t raw;
 		struct tm* t;
@@ -584,8 +583,8 @@ static void memmgr_log (char *buf)
 
 		time(&raw);
 		t = localtime(&raw);
-		fprintf(log_fp, "\nMemory manager: Memory leaks found at %d/%02d/%02d %02dh%02dm%02ds (%s rev '%s').\n",
-			(t->tm_year+1900), (t->tm_mon+1), t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, sysinfo->vcstype(), sysinfo->vcsrevision_src());
+		fprintf(log_fp, "\nMemory manager: Memory leaks found at %d/%02d/%02d %02dh%02dm%02ds (%s).\n",
+			(t->tm_year+1900), (t->tm_mon+1), t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec, vcsinfo);
 	}
 	fprintf(log_fp, "%s", buf);
 	return;
@@ -642,6 +641,9 @@ static void memmgr_final (void)
 {
 	struct block *block = block_first;
 	struct unit_head_large *large = unit_head_large_first;
+	char vcsinfo[256];
+	snprintf(vcsinfo, sizeof(vcsinfo), "%s rev '%s'", sysinfo->vcstype(), sysinfo->vcsrevision_src()); // Cache VCS info before we free() it
+	sysinfo->final();
 
 #ifdef LOG_MEMMGR
 	int count = 0;
@@ -659,7 +661,7 @@ static void memmgr_final (void)
 					sprintf (buf,
 						"%04d : %s line %d size %lu address 0x%p\n", ++count,
 						head->file, head->line, (unsigned long)head->size, ptr);
-					memmgr_log (buf);
+					memmgr_log(buf, vcsinfo);
 #endif /* LOG_MEMMGR */
 					// get block pointer and free it [celest]
 					iMalloc->free(ptr, ALC_MARK);
@@ -676,7 +678,7 @@ static void memmgr_final (void)
 		sprintf (buf,
 			"%04d : %s line %d size %lu address 0x%p\n", ++count,
 			large->unit_head.file, large->unit_head.line, (unsigned long)large->size, &large->unit_head.checksum);
-		memmgr_log (buf);
+		memmgr_log(buf, vcsinfo);
 #endif /* LOG_MEMMGR */
 		large2 = large->next;
 		FREE(large,file,line,func);
