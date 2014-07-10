@@ -43,7 +43,7 @@ static  void *worker(void *p){
 
 
 int do_init(int argc, char **argv){
-	rAthread t[THRC];
+	rAthread *t[THRC];
 	int j, i;
 	int ok;
 	

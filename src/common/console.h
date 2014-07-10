@@ -53,10 +53,10 @@ struct {
 struct console_input_interface {
 	/* vars */
 	SPIN_LOCK ptlock;/* parse thread lock */
-	rAthread pthread;/* parse thread */
+	rAthread *pthread;/* parse thread */
 	volatile int32 ptstate;/* parse thread state */
-	ramutex ptmutex;/* parse thread mutex */
-	racond ptcond;/* parse thread cond */
+	ramutex *ptmutex;/* parse thread mutex */
+	racond *ptcond;/* parse thread cond */
 	/* */
 	struct CParseEntry **cmd_list;
 	struct CParseEntry **cmds;
