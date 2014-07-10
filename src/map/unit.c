@@ -909,6 +909,7 @@ int unit_can_move(struct block_list *bl) {
 	))
 		return 0; //Can't move
 
+	// Status changes that block movement
 	if (sc) {
 		if( sc->count
 		 && (
@@ -1602,6 +1603,10 @@ int unit_attack(struct block_list *src,int target_id,int continuous) {
 			unit->stop_attack(src);
 			return 0;
 		}
+		if( !pc->can_attack(sd, target_id) ) {
+			unit->stop_attack(src);
+			return 0;
+		}
 	}
 	if( battle->check_target(src,target,BCT_ENEMY) <= 0 || !status->check_skilluse(src, target, 0, 0) ) {
 		unit->unattackable(src);
@@ -1791,6 +1796,7 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick) {
 #ifdef OFFICIAL_WALKPATH
 	 || !path->search_long(NULL, src->m, src->x, src->y, target->x, target->y, CELL_CHKWALL)
 #endif
+	 || (sd && !pc->can_attack(sd, ud->target) )
 	)
 		return 0; // can't attack under these conditions
 

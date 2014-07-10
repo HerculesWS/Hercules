@@ -3933,7 +3933,7 @@ ACMD(mount_peco)
 		return true;
 	}
 	if( (sd->class_&MAPID_THIRDMASK) == MAPID_RANGER ) {
-		if( !pc->checkskill(sd,RA_WUGRIDER) > 0 ) {
+		if( !pc->checkskill(sd,RA_WUGRIDER) ) {
 			sprintf(atcmd_output, msg_txt(213), skill->get_desc(RA_WUGRIDER)); // You need %s to mount!
 			clif->message(fd, atcmd_output);
 			return false;

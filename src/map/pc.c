@@ -4384,6 +4384,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	if (nameid != ITEMID_NAUTHIZ && sd->sc.opt1 > 0 && sd->sc.opt1 != OPT1_STONEWAIT && sd->sc.opt1 != OPT1_BURNING)
 		return 0;
 
+	// Statuses that don't let the player use items
 	if (sd->sc.count && (
 		sd->sc.data[SC_BERSERK] ||
 		(sd->sc.data[SC_GRAVITATION] && sd->sc.data[SC_GRAVITATION]->val3 == BCT_SELF) ||
@@ -4396,6 +4397,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 		sd->sc.data[SC_WHITEIMPRISON] ||
 		sd->sc.data[SC_DEEP_SLEEP] ||
 		sd->sc.data[SC_SATURDAY_NIGHT_FEVER] ||
+		sd->sc.data[SC_COLD] ||
 		(sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOITEM)
 	    ))
 		return 0;
@@ -8131,6 +8133,49 @@ int pc_setmadogear(TBL_PC* sd, int flag)
 	return 0;
 }
 
+/**
+ * Determines whether a player can attack based on status changes
+ *  Why not use status_check_skilluse?
+ *  "src MAY be null to indicate we shouldn't check it, this is a ground-based skill attack."
+ *  Even ground-based attacks should be blocked by these statuses
+ * Called from unit_attack and unit_attack_timer_sub
+ * @retval true Can attack
+ **/
+bool pc_can_attack( struct map_session_data *sd, int target_id ) {
+	nullpo_retr(false, sd);
+
+	if( sd->sc.data[SC_BASILICA] ||
+		sd->sc.data[SC__SHADOWFORM] ||
+		sd->sc.data[SC__MANHOLE] ||
+		sd->sc.data[SC_CURSEDCIRCLE_ATKER] ||
+		sd->sc.data[SC_CURSEDCIRCLE_TARGET] ||
+		sd->sc.data[SC_COLD] ||
+		sd->sc.data[SC_ALL_RIDING] || // The client doesn't let you, this is to make cheat-safe
+		sd->sc.data[SC_TRICKDEAD] ||
+		(sd->sc.data[SC_SIREN] && sd->sc.data[SC_SIREN]->val2 == target_id) ||
+		sd->sc.data[SC_BLADESTOP] ||
+		sd->sc.data[SC_DEEP_SLEEP] )
+			return false;
+
+	return true;
+}
+
+/**
+ * Determines whether a player can talk/whisper based on status changes
+ * Called from clif_parse_GlobalMessage and clif_parse_WisMessage
+ * @retval true Can talk
+ **/
+bool pc_can_talk( struct map_session_data *sd ) {
+	nullpo_retr(false, sd);
+
+	if( sd->sc.data[SC_BERSERK] ||
+		(sd->sc.data[SC_DEEP_SLEEP] && sd->sc.data[SC_DEEP_SLEEP]->val2) ||
+		(sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
+		return false;
+
+	return true;
+}
+
 /*==========================================
  * Check if player can drop an item
  *------------------------------------------*/
@@ -10835,6 +10880,8 @@ void pc_defaults(void) {
 	
 	pc->setstand = pc_setstand;
 	pc->candrop = pc_candrop;
+	pc->can_talk = pc_can_talk;
+	pc->can_attack = pc_can_attack;
 	
 	pc->jobid2mapid = pc_jobid2mapid; // Skotlex
 	pc->mapid2jobid = pc_mapid2jobid; // Skotlex
