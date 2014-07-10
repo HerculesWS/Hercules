@@ -2015,8 +2015,8 @@ int guild_castledatasave(int castle_id, int index, int value)
 
 void guild_castle_reconnect_sub(void *key, void *data, va_list ap)
 {
-	int castle_id = GetWord((int)__64BPTRSIZE(key), 0);
-	int index = GetWord((int)__64BPTRSIZE(key), 1);
+	int castle_id = GetWord((int)h64BPTRSIZE(key), 0);
+	int index = GetWord((int)h64BPTRSIZE(key), 1);
 	intif->guild_castle_datasave(castle_id, index, *(int *)data);
 	aFree(data);
 }
@@ -2037,7 +2037,7 @@ void guild_castle_reconnect(int castle_id, int index, int value)
 		int *data;
 		CREATE(data, int, 1);
 		*data = value;
-		linkdb_replace(&gc_save_pending, (void*)__64BPTRSIZE((MakeDWord(castle_id, index))), data);
+		linkdb_replace(&gc_save_pending, (void*)h64BPTRSIZE((MakeDWord(castle_id, index))), data);
 	}
 }
 

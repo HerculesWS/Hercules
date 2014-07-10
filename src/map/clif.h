@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_CLIF_H_
-#define _MAP_CLIF_H_
+#ifndef MAP_CLIF_H
+#define MAP_CLIF_H
 
 #include <stdarg.h>
 
@@ -1290,4 +1290,4 @@ struct clif_interface *clif;
 
 void clif_defaults(void);
 
-#endif /* _MAP_CLIF_H_ */
+#endif /* MAP_CLIF_H */

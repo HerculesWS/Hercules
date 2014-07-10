@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_GUILD_H_
-#define _MAP_GUILD_H_
+#ifndef MAP_GUILD_H
+#define MAP_GUILD_H
 
 #include "map.h" // EVENT_NAME_LENGTH, TBL_PC
 #include "../common/cbasetypes.h"
@@ -167,4 +167,4 @@ struct guild_interface *guild;
 
 void guild_defaults(void);
 
-#endif /* _MAP_GUILD_H_ */
+#endif /* MAP_GUILD_H */

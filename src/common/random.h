@@ -1,8 +1,8 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _COMMON_RANDOM_H_
-#define _COMMON_RANDOM_H_
+#ifndef COMMON_RANDOM_H
+#define COMMON_RANDOM_H
 
 #include "../common/cbasetypes.h"
 
@@ -15,4 +15,4 @@ int32 rnd_value(int32 min, int32 max);// [min, max]
 double rnd_uniform(void);// [0.0, 1.0)
 double rnd_uniform53(void);// [0.0, 1.0)
 
-#endif /* _COMMON_RANDOM_H_ */
+#endif /* COMMON_RANDOM_H */

@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_ITEMDB_H_
-#define _MAP_ITEMDB_H_
+#ifndef MAP_ITEMDB_H
+#define MAP_ITEMDB_H
 
 #include "map.h"
 #include "../common/cbasetypes.h"
@@ -609,4 +609,4 @@ struct itemdb_interface *itemdb;
 
 void itemdb_defaults(void);
 
-#endif /* _MAP_ITEMDB_H_ */
+#endif /* MAP_ITEMDB_H */

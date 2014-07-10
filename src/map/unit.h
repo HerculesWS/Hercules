@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_UNIT_H_
-#define _MAP_UNIT_H_
+#ifndef MAP_UNIT_H
+#define MAP_UNIT_H
 
 #include "clif.h"  // clr_type
 #include "path.h" // struct walkpath_data
@@ -124,4 +124,4 @@ struct unit_interface *unit;
 
 void unit_defaults(void);
 
-#endif /* _MAP_UNIT_H_ */
+#endif /* MAP_UNIT_H */

@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_STATUS_H_
-#define _MAP_STATUS_H_
+#ifndef MAP_STATUS_H
+#define MAP_STATUS_H
 
 #include "../config/core.h" // defType, RENEWAL, RENEWAL_ASPD
 
@@ -2047,4 +2047,4 @@ struct status_interface *status;
 
 void status_defaults(void);
 
-#endif /* _MAP_STATUS_H_ */
+#endif /* MAP_STATUS_H */

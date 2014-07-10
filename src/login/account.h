@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _LOGIN_ACCOUNT_H_
-#define _LOGIN_ACCOUNT_H_
+#ifndef LOGIN_ACCOUNT_H
+#define LOGIN_ACCOUNT_H
 
 #include "../common/cbasetypes.h"
 #include "../common/mmo.h" // ACCOUNT_REG2_NUM
@@ -140,4 +140,4 @@ Sql *account_db_sql_up(AccountDB* self);
 void mmo_send_accreg2(AccountDB* self, int fd, int account_id, int char_id);
 void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id);
 
-#endif /* _LOGIN_ACCOUNT_H_ */
+#endif /* LOGIN_ACCOUNT_H */

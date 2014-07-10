@@ -1,8 +1,8 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
-#ifndef _CONFIG_RENEWAL_H_
-#define _CONFIG_RENEWAL_H_
+#ifndef CONFIG_RENEWAL_H
+#define CONFIG_RENEWAL_H
 
 /**
  * Hercules configuration file (http://hercules.ws)
@@ -86,4 +86,4 @@
 #endif // DISABLE_RENEWAL
 #undef DISABLE_RENEWAL
 
-#endif // _CONFIG_RENEWAL_H_
+#endif // CONFIG_RENEWAL_H

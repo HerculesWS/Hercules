@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Base Author: Haru @ http://hercules.ws
 
-#ifndef _COMMON_SYSINFO_H_
-#define _COMMON_SYSINFO_H_
+#ifndef COMMON_SYSINFO_H
+#define COMMON_SYSINFO_H
 
 /**
  * Provides various bits of information about the system Hercules is running on
@@ -48,4 +48,4 @@ struct sysinfo_interface *sysinfo;
 
 void sysinfo_defaults(void);
 
-#endif /* _COMMON_SYSINFO_H_ */
+#endif /* COMMON_SYSINFO_H */

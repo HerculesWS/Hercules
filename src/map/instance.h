@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_INSTANCE_H_
-#define _MAP_INSTANCE_H_
+#ifndef MAP_INSTANCE_H
+#define MAP_INSTANCE_H
 
 #include "script.h" // struct reg_db
 #include "../common/cbasetypes.h"
@@ -88,4 +88,4 @@ struct instance_interface *instance;
 
 void instance_defaults(void);
 
-#endif /* _MAP_INSTANCE_H_ */
+#endif /* MAP_INSTANCE_H */

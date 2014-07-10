@@ -1,8 +1,8 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _LOGIN_LOGINLOG_H_
-#define _LOGIN_LOGINLOG_H_
+#ifndef LOGIN_LOGINLOG_H
+#define LOGIN_LOGINLOG_H
 
 #include "../common/cbasetypes.h"
 
@@ -12,4 +12,4 @@ bool loginlog_init(void);
 bool loginlog_final(void);
 bool loginlog_config_read(const char* w1, const char* w2);
 
-#endif /* _LOGIN_LOGINLOG_H_ */
+#endif /* LOGIN_LOGINLOG_H */

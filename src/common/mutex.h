@@ -1,8 +1,8 @@
 // Copyright (c) rAthena Project (www.rathena.org) - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _COMMON_MUTEX_H_
-#define _COMMON_MUTEX_H_
+#ifndef COMMON_MUTEX_H
+#define COMMON_MUTEX_H
 
 #include "../common/cbasetypes.h"
 
@@ -90,4 +90,4 @@ void racond_signal(racond *c);
 void racond_broadcast(racond *c);
 
 
-#endif /* _COMMON_MUTEX_H_ */
+#endif /* COMMON_MUTEX_H */

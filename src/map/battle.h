@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_BATTLE_H_
-#define _MAP_BATTLE_H_
+#ifndef MAP_BATTLE_H
+#define MAP_BATTLE_H
 
 #include "map.h" //ELE_MAX
 #include "../common/cbasetypes.h"
@@ -603,4 +603,4 @@ struct battle_interface {
 struct battle_interface *battle;
 
 void battle_defaults(void);
-#endif /* _MAP_BATTLE_H_ */
+#endif /* MAP_BATTLE_H */

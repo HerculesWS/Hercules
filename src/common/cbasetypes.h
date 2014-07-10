@@ -1,5 +1,5 @@
-#ifndef _COMMON_CBASETYPES_H_
-#define _COMMON_CBASETYPES_H_
+#ifndef COMMON_CBASETYPES_H
+#define COMMON_CBASETYPES_H
 
 /*              +--------+-----------+--------+---------+
  *              | ILP32  |   LP64    |  ILP64 | (LL)P64 |
@@ -444,9 +444,9 @@ void SET_FUNCPOINTER(T1& var, T2 p)
 
 /* pointer size fix which fixes several gcc warnings */
 #ifdef __64BIT__
-	#define __64BPTRSIZE(y) ((intptr)(y))
+	#define h64BPTRSIZE(y) ((intptr)(y))
 #else
-	#define __64BPTRSIZE(y) (y)
+	#define h64BPTRSIZE(y) (y)
 #endif
 
-#endif /* _COMMON_CBASETYPES_H_ */
+#endif /* COMMON_CBASETYPES_H */

@@ -1,8 +1,8 @@
 // Copyright (c) rAthena Project (www.rathena.org) - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _COMMON_THREAD_H_
-#define _COMMON_THREAD_H_
+#ifndef COMMON_THREAD_H
+#define COMMON_THREAD_H
 
 #include "../common/cbasetypes.h"
 
@@ -115,4 +115,4 @@ void rathread_init();
 void rathread_final();
 
 
-#endif /* _COMMON_THREAD_H_ */
+#endif /* COMMON_THREAD_H */

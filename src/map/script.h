@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_SCRIPT_H_
-#define _MAP_SCRIPT_H_
+#ifndef MAP_SCRIPT_H
+#define MAP_SCRIPT_H
 
 #include <errno.h>
 #include <setjmp.h>
@@ -715,4 +715,4 @@ struct script_interface *script;
 
 void script_defaults(void);
 
-#endif /* _MAP_SCRIPT_H_ */
+#endif /* MAP_SCRIPT_H */

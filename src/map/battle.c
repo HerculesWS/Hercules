@@ -6357,7 +6357,7 @@ bool battle_check_range(struct block_list *src, struct block_list *bl, int range
 	return path->search_long(NULL,src->m,src->x,src->y,bl->x,bl->y,CELL_CHKWALL);
 }
 
-static const struct _battle_data {
+static const struct battle_data {
 	const char* str;
 	int* val;
 	int defval;

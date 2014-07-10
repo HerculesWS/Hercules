@@ -1502,9 +1502,9 @@ const char* parse_syntax(const char* p)
 					script->set_label(l,script->pos,p);
 				}
 				// check duplication of case label [Rayce]
-				if(linkdb_search(&script->syntax.curly[pos].case_label, (void*)__64BPTRSIZE(v)) != NULL)
+				if(linkdb_search(&script->syntax.curly[pos].case_label, (void*)h64BPTRSIZE(v)) != NULL)
 					disp_error_message("parse_syntax: dup 'case'",p);
-				linkdb_insert(&script->syntax.curly[pos].case_label, (void*)__64BPTRSIZE(v), (void*)1);
+				linkdb_insert(&script->syntax.curly[pos].case_label, (void*)h64BPTRSIZE(v), (void*)1);
 
 				sprintf(label,"set $@__SW%x_VAL,0;",script->syntax.curly[pos].index);
 				script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
@@ -2627,7 +2627,7 @@ void* get_val2(struct script_state* st, int64 uid, struct reg_db *ref) {
 	script->push_val(st->stack, C_NAME, uid, ref);
 	data = script_getdatatop(st, -1);
 	script->get_val(st, data);
-	return (data->type == C_INT ? (void*)__64BPTRSIZE((int32)data->u.num) : (void*)__64BPTRSIZE(data->u.str)); // u.num is int32 because it comes from script->get_val
+	return (data->type == C_INT ? (void*)h64BPTRSIZE((int32)data->u.num) : (void*)h64BPTRSIZE(data->u.str)); // u.num is int32 because it comes from script->get_val
 }
 /**
  * Because, currently, array members with key 0 are indifferenciable from normal variables, we should ensure its actually in
@@ -2648,7 +2648,7 @@ void script_array_ensure_zero(struct script_state *st, struct map_session_data *
 				insert = true;
 			script_removetop(st, -1, 0);
 		} else {
-			int32 num = (int32)__64BPTRSIZE(script->get_val2(st, uid, ref));
+			int32 num = (int32)h64BPTRSIZE(script->get_val2(st, uid, ref));
 			if( num )
 				insert = true;
 			script_removetop(st, -1, 0);
@@ -2917,7 +2917,7 @@ int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, co
 	} else {// integer variable
 		// FIXME: This isn't safe, in 32bits systems we're converting a 64bit pointer
 		// to a 32bit int, this will lead to overflows! [Panikon]
-		int val = (int)__64BPTRSIZE(value);
+		int val = (int)h64BPTRSIZE(value);
 
 		if(script->str_data[script_getvarid(num)].type == C_PARAM) {
 			if( pc->setparam(sd, script->str_data[script_getvarid(num)].val, val) == 0 ) {
@@ -5665,7 +5665,7 @@ BUILDIN(input)
 		else
 		{
 			int amount = sd->npc_amount;
-			script->set_reg(st, sd, uid, name, (void*)__64BPTRSIZE(cap_value(amount,min,max)), script_getref(st,2));
+			script->set_reg(st, sd, uid, name, (void*)h64BPTRSIZE(cap_value(amount,min,max)), script_getref(st,2));
 			script_pushint(st, (amount > max ? 1 : amount < min ? -1 : 0));
 		}
 		st->state = RUN;
@@ -5753,7 +5753,7 @@ BUILDIN(setr) {
 	if( is_string_variable(name) )
 		script->set_reg(st,sd,num,name,(void*)script_getstr(st,3),script_getref(st,2));
 	else
-		script->set_reg(st,sd,num,name,(void*)__64BPTRSIZE(script_getnum(st,3)),script_getref(st,2));
+		script->set_reg(st,sd,num,name,(void*)h64BPTRSIZE(script_getnum(st,3)),script_getref(st,2));
 
 	return true;
 }
@@ -5808,7 +5808,7 @@ BUILDIN(setarray)
 	else
 	{// int array
 		for( i = 3; start < end; ++start, ++i )
-			script->set_reg(st, sd, reference_uid(id, start), name, (void*)__64BPTRSIZE(script_getnum(st,i)), reference_getref(data));
+			script->set_reg(st, sd, reference_uid(id, start), name, (void*)h64BPTRSIZE(script_getnum(st,i)), reference_getref(data));
 	}
 	return true;
 }
@@ -5850,7 +5850,7 @@ BUILDIN(cleararray)
 	if( is_string_variable(name) )
 		v = (void*)script_getstr(st, 3);
 	else
-		v = (void*)__64BPTRSIZE(script_getnum(st, 3));
+		v = (void*)h64BPTRSIZE(script_getnum(st, 3));
 
 	end = start + script_getnum(st, 4);
 	if( end > SCRIPT_MAX_ARRAYSIZE )
@@ -6425,9 +6425,9 @@ BUILDIN(checkweight2)
 
 	slots = pc->inventoryblank(sd);
 	for(i=0; i<nb_it; i++) {
-		nameid = (int32)__64BPTRSIZE(script->get_val2(st,reference_uid(id_it,idx_it+i),reference_getref(data_it)));
+		nameid = (int32)h64BPTRSIZE(script->get_val2(st,reference_uid(id_it,idx_it+i),reference_getref(data_it)));
 		script_removetop(st, -1, 0);
-		amount = (int32)__64BPTRSIZE(script->get_val2(st,reference_uid(id_nb,idx_nb+i),reference_getref(data_nb)));
+		amount = (int32)h64BPTRSIZE(script->get_val2(st,reference_uid(id_nb,idx_nb+i),reference_getref(data_nb)));
 		script_removetop(st, -1, 0);
 		if(fail) continue; //cpntonie to depop rest
 
@@ -12412,18 +12412,18 @@ BUILDIN(undisguise)
 }
 
 /*==========================================
- * Transform a bl to another _class,
+ * Transform a bl to another class,
  * @type unused
  *------------------------------------------*/
 BUILDIN(classchange) {
-	int _class,type;
+	int class_,type;
 	struct block_list *bl=map->id2bl(st->oid);
 
 	if(bl==NULL) return true;
 
-	_class=script_getnum(st,2);
+	class_=script_getnum(st,2);
 	type=script_getnum(st,3);
-	clif->class_change(bl,_class,type);
+	clif->class_change(bl,class_,type);
 	return true;
 }
 
@@ -13439,7 +13439,7 @@ BUILDIN(getmapxy)
 		sd=script->rid2sd(st);
 	else
 		sd=NULL;
-	script->set_reg(st,sd,num,name,(void*)__64BPTRSIZE(x),script_getref(st,3));
+	script->set_reg(st,sd,num,name,(void*)h64BPTRSIZE(x),script_getref(st,3));
 
 	//Set MapY
 	num=st->stack->stack_data[st->start+4].u.num;
@@ -13450,7 +13450,7 @@ BUILDIN(getmapxy)
 		sd=script->rid2sd(st);
 	else
 		sd=NULL;
-	script->set_reg(st,sd,num,name,(void*)__64BPTRSIZE(y),script_getref(st,4));
+	script->set_reg(st,sd,num,name,(void*)h64BPTRSIZE(y),script_getref(st,4));
 
 	//Return Success value
 	script_pushint(st,0);
@@ -13476,7 +13476,7 @@ BUILDIN(logmes)
 
 BUILDIN(summon)
 {
-	int _class, timeout=0;
+	int class_, timeout=0;
 	const char *str,*event="";
 	TBL_PC *sd;
 	struct mob_data *md;
@@ -13486,7 +13486,7 @@ BUILDIN(summon)
 	if (!sd) return true;
 
 	str    = script_getstr(st,2);
-	_class = script_getnum(st,3);
+	class_ = script_getnum(st,3);
 	if( script_hasdata(st,4) )
 		timeout=script_getnum(st,4);
 	if( script_hasdata(st,5) ) {
@@ -13496,7 +13496,7 @@ BUILDIN(summon)
 
 	clif->skill_poseffect(&sd->bl,AM_CALLHOMUN,1,sd->bl.x,sd->bl.y,tick);
 
-	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, sd->bl.x, sd->bl.y, str, _class, event, SZ_MEDIUM, AI_NONE);
+	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, sd->bl.x, sd->bl.y, str, class_, event, SZ_MEDIUM, AI_NONE);
 	if (md) {
 		md->master_id=sd->bl.id;
 		md->special_state.ai = AI_ATTACK;
@@ -14400,7 +14400,7 @@ BUILDIN(sscanf) {
 			if(sscanf(str, buf, &ref_int)==0) {
 				break;
 			}
-			script->set_reg(st, sd, reference_uid( reference_getid(data), reference_getindex(data) ), buf_p, (void *)__64BPTRSIZE(ref_int), reference_getref(data));
+			script->set_reg(st, sd, reference_uid( reference_getid(data), reference_getindex(data) ), buf_p, (void *)h64BPTRSIZE(ref_int), reference_getref(data));
 		}
 		arg++;
 
@@ -14767,7 +14767,7 @@ BUILDIN(setd)
 	if( is_string_variable(varname) ) {
 		script->setd_sub(st, sd, varname, elem, (void *)script_getstr(st, 3), NULL);
 	} else {
-		script->setd_sub(st, sd, varname, elem, (void *)__64BPTRSIZE(script_getnum(st, 3)), NULL);
+		script->setd_sub(st, sd, varname, elem, (void *)h64BPTRSIZE(script_getnum(st, 3)), NULL);
 	}
 
 	return true;
@@ -14841,7 +14841,7 @@ int buildin_query_sql_sub(struct script_state* st, Sql* handle)
 			if( is_string_variable(name) )
 				script->setd_sub(st, sd, name, i, (void *)(str?str:""), reference_getref(data));
 			else
-				script->setd_sub(st, sd, name, i, (void *)__64BPTRSIZE((str?atoi(str):0)), reference_getref(data));
+				script->setd_sub(st, sd, name, i, (void *)h64BPTRSIZE((str?atoi(str):0)), reference_getref(data));
 		}
 	}
 	if( i == max_rows && max_rows < SQL->NumRows(handle) ) {
@@ -15395,7 +15395,7 @@ BUILDIN(searchitem)
 
 	for( i = 0; i < count; ++start, ++i )
 	{// Set array
-		void* v = (void*)__64BPTRSIZE((int)items[i]->nameid);
+		void* v = (void*)h64BPTRSIZE((int)items[i]->nameid);
 		script->set_reg(st, sd, reference_uid(id, start), name, v, reference_getref(data));
 	}
 

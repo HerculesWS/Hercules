@@ -235,14 +235,13 @@ static size_t hash2size( unsigned short hash )
 	}
 }
 
-void* _mmalloc(size_t size, const char *file, int line, const char *func )
-{
+void *mmalloc_(size_t size, const char *file, int line, const char *func) {
 	struct block *block;
 	short size_hash = size2hash( size );
 	struct unit_head *head;
 
 	if (((long) size) < 0) {
-		ShowError("_mmalloc: %d\n", size);
+		ShowError("mmalloc_: %d\n", size);
 		return NULL;
 	}
 
@@ -341,15 +340,13 @@ void* _mmalloc(size_t size, const char *file, int line, const char *func )
 	return (char *)head + sizeof(struct unit_head) - sizeof(long);
 }
 
-void* _mcalloc(size_t num, size_t size, const char *file, int line, const char *func )
-{
+void *mcalloc_(size_t num, size_t size, const char *file, int line, const char *func) {
 	void *p = iMalloc->malloc(num * size,file,line,func);
 	memset(p,0,num * size);
 	return p;
 }
 
-void* _mrealloc(void *memblock, size_t size, const char *file, int line, const char *func )
-{
+void *mrealloc_(void *memblock, size_t size, const char *file, int line, const char *func) {
 	size_t old_size;
 	if(memblock == NULL) {
 		return iMalloc->malloc(size,file,line,func);
@@ -373,8 +370,8 @@ void* _mrealloc(void *memblock, size_t size, const char *file, int line, const c
 	}
 }
 
-/* a _mrealloc clone with the difference it 'z'eroes the newly created memory */
-void* _mreallocz(void *memblock, size_t size, const char *file, int line, const char *func ) {
+/* a mrealloc_ clone with the difference it 'z'eroes the newly created memory */
+void *mreallocz_(void *memblock, size_t size, const char *file, int line, const char *func) {
 	size_t old_size;
 	void *p = NULL;
 	
@@ -404,8 +401,7 @@ void* _mreallocz(void *memblock, size_t size, const char *file, int line, const 
 }
 
 
-char* _mstrdup(const char *p, const char *file, int line, const char *func )
-{
+char *mstrdup_(const char *p, const char *file, int line, const char *func) {
 	if(p == NULL) {
 		return NULL;
 	} else {
@@ -416,8 +412,7 @@ char* _mstrdup(const char *p, const char *file, int line, const char *func )
 	}
 }
 
-void _mfree(void *ptr, const char *file, int line, const char *func )
-{
+void mfree_(void *ptr, const char *file, int line, const char *func) {
 	struct unit_head *head;
 
 	if (ptr == NULL)
@@ -852,12 +847,12 @@ void malloc_defaults(void) {
 
 // Athena's built-in Memory Manager
 #ifdef USE_MEMMGR
-	iMalloc->malloc  =	 _mmalloc;
-	iMalloc->calloc  =	 _mcalloc;
-	iMalloc->realloc =	 _mrealloc;
-	iMalloc->reallocz=	 _mreallocz;
-	iMalloc->astrdup =	 _mstrdup;
-	iMalloc->free    =	 _mfree;
+	iMalloc->malloc  =	 mmalloc_;
+	iMalloc->calloc  =	 mcalloc_;
+	iMalloc->realloc =	 mrealloc_;
+	iMalloc->reallocz=	 mreallocz_;
+	iMalloc->astrdup =	 mstrdup_;
+	iMalloc->free    =	 mfree_;
 #else
 	iMalloc->malloc  =	aMalloc_;
 	iMalloc->calloc  =	aCalloc_;

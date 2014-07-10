@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_ELEMENTAL_H_
-#define _MAP_ELEMENTAL_H_
+#ifndef MAP_ELEMENTAL_H
+#define MAP_ELEMENTAL_H
 
 #include "status.h" // struct status_data, struct status_change
 #include "unit.h" // struct unit_data
@@ -121,4 +121,4 @@ struct elemental_interface *elemental;
 
 void elemental_defaults(void);
 
-#endif /* _MAP_ELEMENTAL_H_ */
+#endif /* MAP_ELEMENTAL_H */

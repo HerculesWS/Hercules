@@ -8434,7 +8434,7 @@ ACMD(set) {
 		if( is_str )
 			script->set_var(sd, reg, (void*) val);
 		else
-			script->set_var(sd, reg, (void*)__64BPTRSIZE((atoi(val))));
+			script->set_var(sd, reg, (void*)h64BPTRSIZE((atoi(val))));
 		
 	}
 	

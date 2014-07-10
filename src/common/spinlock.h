@@ -1,5 +1,5 @@
-#ifndef _COMMON_SPINLOCK_H_
-#define _COMMON_SPINLOCK_H_
+#ifndef COMMON_SPINLOCK_H
+#define COMMON_SPINLOCK_H
 
 //
 // CAS based Spinlock Implementation
@@ -100,4 +100,4 @@ static forceinline void LeaveSpinLock(SPIN_LOCK *lck){
 
 
 
-#endif /* _COMMON_SPINLOCK_H_ */
+#endif /* COMMON_SPINLOCK_H */

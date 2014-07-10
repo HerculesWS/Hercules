@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_HOMUNCULUS_H_
-#define _MAP_HOMUNCULUS_H_
+#ifndef MAP_HOMUNCULUS_H
+#define MAP_HOMUNCULUS_H
 
 #include "pc.h"
 #include "status.h" // struct status_data, struct status_change
@@ -148,4 +148,4 @@ struct homunculus_interface *homun;
 
 void homunculus_defaults(void);
 
-#endif /* _MAP_HOMUNCULUS_H_ */
+#endif /* MAP_HOMUNCULUS_H */

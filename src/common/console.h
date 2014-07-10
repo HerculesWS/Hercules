@@ -1,8 +1,8 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 
-#ifndef _COMMON_CONSOLE_H_
-#define _COMMON_CONSOLE_H_
+#ifndef COMMON_CONSOLE_H
+#define COMMON_CONSOLE_H
 
 #include "../config/core.h" // MAX_CONSOLE_INPUT
 
@@ -93,4 +93,4 @@ struct console_interface *console;
 
 void console_defaults(void);
 
-#endif /* _COMMON_CONSOLE_H_ */
+#endif /* COMMON_CONSOLE_H */

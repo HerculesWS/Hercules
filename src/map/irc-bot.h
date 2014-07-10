@@ -3,8 +3,8 @@
 // Base Author: shennetsind @ http://hercules.ws
 
 
-#ifndef _MAP_IRC_BOT_H_
-#define _MAP_IRC_BOT_H_
+#ifndef MAP_IRC_BOT_H
+#define MAP_IRC_BOT_H
 
 #include "../common/cbasetypes.h"
 
@@ -63,4 +63,4 @@ struct irc_bot_interface *ircbot;
 
 void ircbot_defaults(void);
 
-#endif /* _MAP_IRC_BOT_H_ */
+#endif /* MAP_IRC_BOT_H */

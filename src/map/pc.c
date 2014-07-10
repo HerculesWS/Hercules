@@ -6230,7 +6230,7 @@ int pc_maxparameterincrease(struct map_session_data* sd, int type) {
  * Subtracts status points according to the cost of the increased stat points.
  *
  * @param sd       The target character.
- * @param type     The stat to change (see enum _sp)
+ * @param type     The stat to change (see enum status_point_types)
  * @param increase The stat increase (strictly positive) amount.
  * @retval true  if the stat was increased by any amount.
  * @retval false if there were no changes.
@@ -6289,7 +6289,7 @@ bool pc_statusup(struct map_session_data* sd, int type, int increase) {
  * Does not subtract status points for the cost of the modified stat points.
  *
  * @param sd   The target character.
- * @param type The stat to change (see enum _sp)
+ * @param type The stat to change (see enum status_point_types)
  * @param val  The stat increase (or decrease) amount.
  * @return the stat increase amount.
  * @retval 0 if no changes were made.

@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_ATCOMMAND_H_
-#define _MAP_ATCOMMAND_H_
+#ifndef MAP_ATCOMMAND_H
+#define MAP_ATCOMMAND_H
 
 #include "pc_groups.h"
 #include "../common/conf.h"
@@ -121,4 +121,4 @@ void atcommand_defaults(void);
 /* stay here */
 #define ACMD(x) static bool atcommand_ ## x (const int fd, struct map_session_data* sd, const char* command, const char* message, struct AtCommandInfo *info)
 
-#endif /* _MAP_ATCOMMAND_H_ */
+#endif /* MAP_ATCOMMAND_H */

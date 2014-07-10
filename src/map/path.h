@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_PATH_H_
-#define _MAP_PATH_H_
+#ifndef MAP_PATH_H
+#define MAP_PATH_H
 
 #include "map.h" // enum cell_chk
 #include "../common/cbasetypes.h"
@@ -47,4 +47,4 @@ struct path_interface *path;
 
 void path_defaults(void);
 
-#endif /* _MAP_PATH_H_ */
+#endif /* MAP_PATH_H */

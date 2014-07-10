@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_MAP_H_
-#define _MAP_MAP_H_
+#ifndef MAP_MAP_H
+#define MAP_MAP_H
 
 #include <stdarg.h>
 
@@ -342,7 +342,7 @@ struct flooritem_data {
 	struct item item_data;
 };
 
-enum _sp {
+enum status_point_types {
 	SP_SPEED,SP_BASEEXP,SP_JOBEXP,SP_KARMA,SP_MANNER,SP_HP,SP_MAXHP,SP_SP,	// 0-7
 	SP_MAXSP,SP_STATUSPOINT,SP_0a,SP_BASELEVEL,SP_SKILLPOINT,SP_STR,SP_AGI,SP_VIT,	// 8-15
 	SP_INT,SP_DEX,SP_LUK,SP_CLASS,SP_ZENY,SP_SEX,SP_NEXTBASEEXP,SP_NEXTJOBEXP,	// 16-23
@@ -415,7 +415,7 @@ enum _sp {
 	SP_LAST_KNOWN,
 };
 
-enum _look {
+enum look {
 	LOOK_BASE,
 	LOOK_HAIR,
 	LOOK_WEAPON,
@@ -1071,4 +1071,4 @@ struct map_interface *map;
 
 void map_defaults(void);
 
-#endif /* _MAP_MAP_H_ */
+#endif /* MAP_MAP_H */

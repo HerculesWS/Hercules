@@ -3,8 +3,8 @@
 
 /* Hercules Renewal: Phase Two http://hercules.ws/board/topic/383-hercules-renewal-phase-two/ */
 
-#ifndef _MAP_PACKETS_STRUCT_H_
-#define _MAP_PACKETS_STRUCT_H_
+#ifndef MAP_PACKETS_STRUCT_H
+#define MAP_PACKETS_STRUCT_H
 
 #include "../common/mmo.h"
 
@@ -962,4 +962,4 @@ struct packet_wis_end {
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
 
-#endif /* _MAP_PACKETS_STRUCT_H_ */
+#endif /* MAP_PACKETS_STRUCT_H */

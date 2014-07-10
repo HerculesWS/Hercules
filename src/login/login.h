@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _LOGIN_LOGIN_H_
-#define _LOGIN_LOGIN_H_
+#ifndef LOGIN_LOGIN_H
+#define LOGIN_LOGIN_H
 
 #include "../common/core.h" // CORE_ST_LAST
 #include "../common/mmo.h" // NAME_LENGTH,SEX_*
@@ -100,4 +100,4 @@ extern struct mmo_char_server server[MAX_SERVERS];
 extern struct Login_Config login_config;
 
 
-#endif /* _LOGIN_LOGIN_H_ */
+#endif /* LOGIN_LOGIN_H */

@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_MAPREG_H_
-#define _MAP_MAPREG_H_
+#ifndef MAP_MAPREG_H
+#define MAP_MAPREG_H
 
 #include "script.h" // struct reg_db
 #include "../common/cbasetypes.h"
@@ -50,4 +50,4 @@ struct mapreg_interface *mapreg;
 
 void mapreg_defaults(void);
 
-#endif /* _MAP_MAPREG_H_ */
+#endif /* MAP_MAPREG_H */

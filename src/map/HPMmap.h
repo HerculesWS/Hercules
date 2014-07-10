@@ -1,8 +1,8 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 
-#ifndef _MAP_HPMMAP_H_
-#define _MAP_HPMMAP_H_
+#ifndef MAP_HPMMAP_H
+#define MAP_HPMMAP_H
 
 #include "../common/cbasetypes.h"
 #include "../map/atcommand.h"
@@ -26,4 +26,4 @@ bool HPM_map_DataCheck(struct s_HPMDataCheck *src, unsigned int size, char *name
 
 void HPM_map_do_init(void);
 
-#endif /* _MAP_HPMMAP_H_ */
+#endif /* MAP_HPMMAP_H */

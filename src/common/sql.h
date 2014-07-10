@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _COMMON_SQL_H_
-#define _COMMON_SQL_H_
+#ifndef COMMON_SQL_H
+#define COMMON_SQL_H
 
 #include <stdarg.h>// va_list
 
@@ -291,4 +291,4 @@ void Sql_HerculesUpdateSkip(Sql* self,const char *filename);
 
 void Sql_Init(void);
 
-#endif /* _COMMON_SQL_H_ */
+#endif /* COMMON_SQL_H */

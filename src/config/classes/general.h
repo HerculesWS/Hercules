@@ -1,8 +1,8 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
-#ifndef _CONFIG_GENERAL_H_
-#define _CONFIG_GENERAL_H_
+#ifndef CONFIG_GENERAL_H
+#define CONFIG_GENERAL_H
 
 /**
  * Hercules configuration file (http://hercules.ws)
@@ -31,4 +31,4 @@
  * No settings past this point
  **/
 
-#endif // _CONFIG_GENERAL_H_
+#endif // CONFIG_GENERAL_H

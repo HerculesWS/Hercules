@@ -23,7 +23,7 @@
 //----------------------------
 //	file entry table struct
 //----------------------------
-typedef struct _FILELIST {
+typedef struct FILELIST {
 	int srclen;         ///< compressed size
 	int srclen_aligned;
 	int declen;         ///< original size

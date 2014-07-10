@@ -5651,7 +5651,7 @@ void clif_displaymessage_sprintf(const int fd, const char* mes, ...) {
 	if( map->cpsd_active && fd == 0 ) {
 		ShowInfo("HCP: ");
 		va_start(ap,mes);
-		_vShowMessage(MSG_NONE,mes,ap);
+		vShowMessage_(MSG_NONE,mes,ap);
 		va_end(ap);
 		ShowMessage("\n");
 	} else if ( fd > 0 ) {

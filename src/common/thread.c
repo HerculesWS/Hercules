@@ -106,9 +106,9 @@ static void rat_thread_terminated(rAthread *handle) {
 }//end: rat_thread_terminated()
 
 #ifdef WIN32
-DWORD WINAPI _raThreadMainRedirector(LPVOID p){
+DWORD WINAPI raThreadMainRedirector(LPVOID p){
 #else
-static void *_raThreadMainRedirector( void *p ){
+static void *raThreadMainRedirector( void *p ){
 	sigset_t set; // on Posix Thread platforms
 #endif
 	void *ret;
@@ -145,7 +145,7 @@ static void *_raThreadMainRedirector( void *p ){
 #else
 	return ret;
 #endif
-}//end: _raThreadMainRedirector()
+}//end: raThreadMainRedirector()
 
 
 
@@ -193,12 +193,12 @@ rAthread *rathread_createEx(rAthreadProc entryPoint, void *param, size_t szStack
 	handle->param = param;
 
 #ifdef WIN32
-	handle->hThread = CreateThread(NULL, szStack, _raThreadMainRedirector, (void*)handle, 0, NULL);
+	handle->hThread = CreateThread(NULL, szStack, raThreadMainRedirector, (void*)handle, 0, NULL);
 #else
 	pthread_attr_init(&attr);
 	pthread_attr_setstacksize(&attr, szStack);
 	
-	if(pthread_create(&handle->hThread, &attr, _raThreadMainRedirector, (void*)handle) != 0){
+	if(pthread_create(&handle->hThread, &attr, raThreadMainRedirector, (void*)handle) != 0){
 		handle->proc = NULL;
 		handle->param = NULL;
 		return NULL;

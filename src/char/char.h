@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _COMMON_CHAR_H_
-#define _COMMON_CHAR_H_
+#ifndef COMMON_CHAR_H
+#define COMMON_CHAR_H
 
 #include "../common/core.h" // CORE_ST_LAST
 #include "../common/db.h"
@@ -123,4 +123,4 @@ void global_accreg_to_login_start (int account_id, int char_id);
 void global_accreg_to_login_send (void);
 void global_accreg_to_login_add (const char *key, unsigned int index, intptr_t val, bool is_string);
 
-#endif /* _COMMON_CHAR_H_ */
+#endif /* COMMON_CHAR_H */

@@ -1,8 +1,8 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
-#ifndef _CONFIG_SECURE_H_
-#define _CONFIG_SECURE_H_
+#ifndef CONFIG_SECURE_H
+#define CONFIG_SECURE_H
 
 /**
  * Hercules configuration file (http://hercules.ws)
@@ -58,4 +58,4 @@
  **/
 #define ANTI_MAYAP_CHEAT
 
-#endif // _CONFIG_SECURE_H_
+#endif // CONFIG_SECURE_H

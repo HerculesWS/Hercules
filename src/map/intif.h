@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_INTIF_H_
-#define _MAP_INTIF_H_
+#ifndef MAP_INTIF_H
+#define MAP_INTIF_H
 
 #include "../common/cbasetypes.h"
 
@@ -186,4 +186,4 @@ struct intif_interface *intif;
 
 void intif_defaults(void);
 
-#endif /* _MAP_INTIF_H_ */
+#endif /* MAP_INTIF_H */

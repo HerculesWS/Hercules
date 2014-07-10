@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_PC_H_
-#define _MAP_PC_H_
+#ifndef MAP_PC_H
+#define MAP_PC_H
 
 #include "../config/core.h" // AUTOLOOTITEM_SIZE, RENEWAL, SECURE_NPCTIMEOUT
 
@@ -1026,4 +1026,4 @@ struct pc_interface *pc;
 
 void pc_defaults(void);
 
-#endif /* _MAP_PC_H_ */
+#endif /* MAP_PC_H */

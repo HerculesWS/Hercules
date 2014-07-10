@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_PARTY_H_
-#define _MAP_PARTY_H_
+#ifndef MAP_PARTY_H
+#define MAP_PARTY_H
 
 #include <stdarg.h>
 
@@ -143,4 +143,4 @@ struct party_interface *party;
 
 void party_defaults(void);
 
-#endif /* _MAP_PARTY_H_ */
+#endif /* MAP_PARTY_H */
