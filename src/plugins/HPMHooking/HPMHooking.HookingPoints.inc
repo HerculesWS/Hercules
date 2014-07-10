@@ -1784,6 +1784,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->class2idx, HP_pc_class2idx) },
 	{ HP_POP(pc->can_give_items, HP_pc_can_give_items) },
 	{ HP_POP(pc->can_give_bound_items, HP_pc_can_give_bound_items) },
+	{ HP_POP(pc->can_talk, HP_pc_can_talk) },
+	{ HP_POP(pc->can_attack, HP_pc_can_attack) },
 	{ HP_POP(pc->can_use_command, HP_pc_can_use_command) },
 	{ HP_POP(pc->set_group, HP_pc_set_group) },
 	{ HP_POP(pc->should_log_commands, HP_pc_should_log_commands) },

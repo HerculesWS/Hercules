@@ -3507,6 +3507,10 @@ struct {
 	struct HPMHookPoint *HP_pc_can_give_items_post;
 	struct HPMHookPoint *HP_pc_can_give_bound_items_pre;
 	struct HPMHookPoint *HP_pc_can_give_bound_items_post;
+	struct HPMHookPoint *HP_pc_can_talk_pre;
+	struct HPMHookPoint *HP_pc_can_talk_post;
+	struct HPMHookPoint *HP_pc_can_attack_pre;
+	struct HPMHookPoint *HP_pc_can_attack_post;
 	struct HPMHookPoint *HP_pc_can_use_command_pre;
 	struct HPMHookPoint *HP_pc_can_use_command_post;
 	struct HPMHookPoint *HP_pc_set_group_pre;
@@ -8542,6 +8546,10 @@ struct {
 	int HP_pc_can_give_items_post;
 	int HP_pc_can_give_bound_items_pre;
 	int HP_pc_can_give_bound_items_post;
+	int HP_pc_can_talk_pre;
+	int HP_pc_can_talk_post;
+	int HP_pc_can_attack_pre;
+	int HP_pc_can_attack_post;
 	int HP_pc_can_use_command_pre;
 	int HP_pc_can_use_command_post;
 	int HP_pc_set_group_pre;
