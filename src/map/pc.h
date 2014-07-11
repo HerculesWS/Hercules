@@ -858,7 +858,7 @@ struct pc_interface {
 	unsigned int (*maxjoblv) (struct map_session_data *sd);
 	int (*checkbaselevelup) (struct map_session_data *sd);
 	int (*checkjoblevelup) (struct map_session_data *sd);
-	int (*gainexp) (struct map_session_data *sd, struct block_list *src, unsigned int base_exp, unsigned int job_exp, bool is_quest);
+	bool (*gainexp) (struct map_session_data *sd, struct block_list *src, unsigned int base_exp, unsigned int job_exp, bool is_quest);
 	unsigned int (*nextbaseexp) (struct map_session_data *sd);
 	unsigned int (*thisbaseexp) (struct map_session_data *sd);
 	unsigned int (*nextjobexp) (struct map_session_data *sd);

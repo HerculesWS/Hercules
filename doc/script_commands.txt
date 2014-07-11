@@ -4383,14 +4383,14 @@ they will also have their skills reset upon 'changesex'.
 *getexp <base xp>,<job xp>;
 
 This command will give the invoking character a specified number of base 
-and job experience points. Can be used as a quest reward. Negative values 
+and job experience points. Should be used as a quest reward. Negative values 
 won't work.
+Is subject to EXP bonuses and to the `quest_exp_rate` config option.
 
 	getexp 10000,5000;
 
-You can also assign directly to the constants defined in 'db/const.txt':
+You can also assign directly to the parameters defined in 'db/const.txt':
 
-	// These 2 combined has the same effect as the above command
 	BaseExp += 10000;
 	JobExp += 5000;
 
@@ -4398,9 +4398,7 @@ You can also reduce the amount of experience points:
 
 	BaseExp -= 10000;
 
-Note that 'getexp' is now subject to the 'quest_exp_rate' config option, 
-which adjusts the gained value. If you want to bypass this, use the 'set' 
-method.
+When setting the parameters directly no bonuses or config options are applied.
 
 ---------------------------------------
 

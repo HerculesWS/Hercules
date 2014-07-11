@@ -8966,7 +8966,7 @@ BUILDIN(getexp)
 	base = (int) cap_value(base * bonus, 0, INT_MAX);
 	job = (int) cap_value(job * bonus, 0, INT_MAX);
 
-	pc->gainexp(sd, NULL, base, job, true);
+	pc->gainexp(sd, &sd->bl, base, job, true);
 
 	return true;
 }
