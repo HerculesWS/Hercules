@@ -12674,6 +12674,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 	// Check the skills that can be used while mounted on a warg
 	if( pc_isridingwug(sd) ) {
 		switch( skill_id ) {
+			// Hunter skills
 			case HT_SKIDTRAP:
 			case HT_LANDMINE:
 			case HT_ANKLESNARE:
@@ -12683,15 +12684,22 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			case HT_FREEZINGTRAP:
 			case HT_BLASTMINE:
 			case HT_CLAYMORETRAP:
-			case HT_SPRINGTRAP:
-			case RA_DETONATOR:
-			case RA_CLUSTERBOMB:
 			case HT_TALKIEBOX:
+			// Ranger skills
+			case RA_DETONATOR:
+			case RA_ELECTRICSHOCKER:
+			case RA_CLUSTERBOMB:
+			case RA_MAGENTATRAP:
+			case RA_COBALTTRAP:
+			case RA_MAIZETRAP:
+			case RA_VERDURETRAP:
 			case RA_FIRINGTRAP:
 			case RA_ICEBOUNDTRAP:
 			case RA_WUGDASH:
 			case RA_WUGRIDER:
 			case RA_WUGSTRIKE:
+			// Other
+			case BS_GREED:
 				break;
 			default: // in official there is no message.
 				return 0;
