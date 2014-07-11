@@ -1,8 +1,8 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _CHAR_INT_PET_H_
-#define _CHAR_INT_PET_H_
+#ifndef CHAR_INT_PET_H
+#define CHAR_INT_PET_H
 
 struct s_pet;
 
@@ -18,4 +18,4 @@ int inter_pet_sql_init(void);
 //Exported for use in the TXT-SQL converter.
 int inter_pet_tosql(int pet_id, struct s_pet *p);
 
-#endif /* _CHAR_INT_PET_H_ */
+#endif /* CHAR_INT_PET_H */

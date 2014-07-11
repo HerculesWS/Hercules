@@ -5,9 +5,9 @@
 #define HERCULES_CORE
 
 #include "../config/core.h" // SHOW_SERVER_STATS
-#define _H_SOCKET_C_
+#define H_SOCKET_C
 #include "socket.h"
-#undef _H_SOCKET_C_
+#undef H_SOCKET_C
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -909,20 +909,20 @@ int do_sockets(int next)
 //////////////////////////////
 // IP rules and DDoS protection
 
-typedef struct _connect_history {
-	struct _connect_history* next;
+typedef struct connect_history {
+	struct connect_history* next;
 	uint32 ip;
 	int64 tick;
 	int count;
 	unsigned ddos : 1;
 } ConnectHistory;
 
-typedef struct _access_control {
+typedef struct access_control {
 	uint32 ip;
 	uint32 mask;
 } AccessControl;
 
-enum _aco {
+enum aco {
 	ACO_DENY_ALLOW,
 	ACO_ALLOW_DENY,
 	ACO_MUTUAL_FAILURE

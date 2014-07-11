@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_SKILL_H_
-#define _MAP_SKILL_H_
+#ifndef MAP_SKILL_H
+#define MAP_SKILL_H
 
 #include "../config/core.h" // RENEWAL_CAST
 
@@ -2021,4 +2021,4 @@ struct skill_interface *skill;
 
 void skill_defaults(void);
 
-#endif /* _MAP_SKILL_H_ */
+#endif /* MAP_SKILL_H */

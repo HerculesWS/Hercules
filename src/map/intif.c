@@ -1067,7 +1067,7 @@ void intif_parse_Registers(int fd)
 				ival = RFIFOL(fd, cursor);
 				cursor += 4;
 								
-				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, (void*)__64BPTRSIZE(ival), NULL);
+				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, (void*)h64BPTRSIZE(ival), NULL);
 			}
 		}
 		

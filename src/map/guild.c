@@ -1213,7 +1213,7 @@ int guild_emblem_changed(int len,int guild_id,int emblem_id,const char *data)
 				TBL_MOB* md = (gc->guardian[i].id ? map->id2md(gc->guardian[i].id) : NULL);
 				if( md == NULL || md->guardian_data == NULL )
 					continue;
-				md->guardian_data->emblem_id = emblem_id;
+
 				clif->guild_emblem_area(&md->bl);
 			}
 			// update temporary guardians
@@ -1221,7 +1221,7 @@ int guild_emblem_changed(int len,int guild_id,int emblem_id,const char *data)
 				TBL_MOB* md = (gc->temp_guardians[i] ? map->id2md(gc->temp_guardians[i]) : NULL);
 				if( md == NULL || md->guardian_data == NULL )
 					continue;
-				md->guardian_data->emblem_id = emblem_id;
+
 				clif->guild_emblem_area(&md->bl);
 			}
 		}
@@ -2015,8 +2015,8 @@ int guild_castledatasave(int castle_id, int index, int value)
 
 void guild_castle_reconnect_sub(void *key, void *data, va_list ap)
 {
-	int castle_id = GetWord((int)__64BPTRSIZE(key), 0);
-	int index = GetWord((int)__64BPTRSIZE(key), 1);
+	int castle_id = GetWord((int)h64BPTRSIZE(key), 0);
+	int index = GetWord((int)h64BPTRSIZE(key), 1);
 	intif->guild_castle_datasave(castle_id, index, *(int *)data);
 	aFree(data);
 }
@@ -2037,7 +2037,7 @@ void guild_castle_reconnect(int castle_id, int index, int value)
 		int *data;
 		CREATE(data, int, 1);
 		*data = value;
-		linkdb_replace(&gc_save_pending, (void*)__64BPTRSIZE((MakeDWord(castle_id, index))), data);
+		linkdb_replace(&gc_save_pending, (void*)h64BPTRSIZE((MakeDWord(castle_id, index))), data);
 	}
 }
 

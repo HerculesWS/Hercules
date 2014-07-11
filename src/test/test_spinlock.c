@@ -43,7 +43,7 @@ static  void *worker(void *p){
 
 
 int do_init(int argc, char **argv){
-	rAthread t[THRC];
+	rAthread *t[THRC];
 	int j, i;
 	int ok;
 	
@@ -98,16 +98,16 @@ return 0;
 }//end: do_init()
 
 
-void do_abort(){
+void do_abort(void) {
 }//end: do_abort()
 
 
-void set_server_type(){
+void set_server_type(void) {
 	SERVER_TYPE = SERVER_TYPE_UNKNOWN;
 }//end: set_server_type()
 
 
-int do_final(){
+int do_final(void) {
 	return EXIT_SUCCESS;
 }//end: do_final()
 

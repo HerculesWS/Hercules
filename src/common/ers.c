@@ -185,7 +185,7 @@ static void ers_free_cache(ers_cache_t *cache, bool remove)
 	aFree(cache);
 }
 
-static void *ers_obj_alloc_entry(ERS self)
+static void *ers_obj_alloc_entry(ERS *self)
 {
 	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 	void *ret;
@@ -225,7 +225,7 @@ static void *ers_obj_alloc_entry(ERS self)
 	return ret;
 }
 
-static void ers_obj_free_entry(ERS self, void *entry)
+static void ers_obj_free_entry(ERS *self, void *entry)
 {
 	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 	struct ers_list *reuse = (struct ers_list *)((unsigned char *)entry - sizeof(struct ers_list));
@@ -247,7 +247,7 @@ static void ers_obj_free_entry(ERS self, void *entry)
 	instance->Cache->UsedObjs--;
 }
 
-static size_t ers_obj_entry_size(ERS self)
+static size_t ers_obj_entry_size(ERS *self)
 {
 	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 
@@ -259,7 +259,7 @@ static size_t ers_obj_entry_size(ERS self)
 	return instance->Cache->ObjectSize;
 }
 
-static void ers_obj_destroy(ERS self)
+static void ers_obj_destroy(ERS *self)
 {
 	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 
@@ -289,7 +289,7 @@ static void ers_obj_destroy(ERS self)
 	aFree(instance);
 }
 
-void ers_cache_size(ERS self, unsigned int new_size) {
+void ers_cache_size(ERS *self, unsigned int new_size) {
 	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 	
 	nullpo_retv(instance);
@@ -302,7 +302,7 @@ void ers_cache_size(ERS self, unsigned int new_size) {
 }
 
 
-ERS ers_new(uint32 size, char *name, enum ERSOptions options)
+ERS *ers_new(uint32 size, char *name, enum ERSOptions options)
 {
 	struct ers_instance_t *instance;
 	CREATE(instance,struct ers_instance_t, 1);
@@ -387,7 +387,7 @@ void ers_final(void) {
 	
 	while( instance ) {
 		next = instance->Next;
-		ers_obj_destroy((ERS)instance);
+		ers_obj_destroy((ERS*)instance);
 		instance = next;
 	}
 }

@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_VENDING_H_
-#define _MAP_VENDING_H_
+#ifndef MAP_VENDING_H
+#define MAP_VENDING_H
 
 #include "../common/cbasetypes.h"
 #include "../common/db.h"
@@ -36,4 +36,4 @@ struct vending_interface *vending;
 
 void vending_defaults(void);
 
-#endif /* _MAP_VENDING_H_ */
+#endif /* MAP_VENDING_H */

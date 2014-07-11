@@ -686,7 +686,26 @@ Variable References
 
 //##TODO
 
+Hard-coded constants
+--------------------
+Most of the constants defined by the scripting engine can be found in
+'db/const.txt' and have the same value independently of settings that
+are core related, but there are constants that can be used to retrieve
+core information that's set when the server is compiled.
 
+PACKETVER			- Server packet version
+MAX_LEVEL			- Maximum level
+MAX_STORAGE			- Maximum storage items
+MAX_GUILD_STORAGE	- Maximum guild storage items
+MAX_CART			- Maximum cart items
+MAX_INVENTORY		- Maximum inventory items
+MAX_ZENY			- Maximum Zeny
+MAX_BG_MEMBERS		- Maximum BattleGround members 
+MAX_CHAT_USERS		- Maximum Chat users
+
+Send targets and status options are also hard-coded and can be found
+in src/map/script.c::script_hardcoded_constants or in functions that
+currently use them.
 
 Operators
 ---------
@@ -1117,9 +1136,7 @@ multiple commands on one line if you properly terminate them with a ';',
 but it's better if you don't, since it is not certain just whether the 
 scripting engine will behave nicely if you do.
 
-Please note that command and function names are case sensitive. Even though at
-the current time the script engine accepts them with the incorrect case, it is
-not advised to rely on this behavior as it may change at any time.
+Please note that command and function names are case sensitive.
 
 -------------------------
 
@@ -1128,17 +1145,17 @@ From here on, we will have the commands sorted as followed:
 
 1 - Basic Commands
 2 - Information-Retrieving Commands
-    -- 2.1: Information Item-Related Commands
-    -- 2.2: Information Guild-Related Commands
+    -- 2.1 - Item-Related Commands
+    -- 2.2 - Guild-Related Commands
 3 - Checking Commands
-    -- 3.1: Checking Item-Related Commands
+    -- 3.1 - Checking Item-Related Commands
 4 - Player-Related Commands
-    -- 4.1: Player Item-Related Commands
-    -- 4.2: Guild-Related Commands
-    -- 4.3: Marriage-Related Commands
+    -- 4.1 - Player Item-Related Commands
+    -- 4.2 - Guild-Related Commands
+    -- 4.3 - Marriage-Related Commands
 5 - Mob / NPC Related commands
-    -- 5.1: Time-Related Commands
-    -- 5.2: Guild-Related Commands
+    -- 5.1 - Time-Related Commands
+    -- 5.2 - Guild-Related Commands
 6 - Other Commands
 7 - Instance-Related Commands
 8 - Quest Log Commands
@@ -2285,14 +2302,16 @@ deleted.
 
 This function will return either the name, party name or guild name for 
 the invoking character. Whatever it returns is determined by type.
-
- 0 - Character's name.
- 1 - The name of the party they're in if any.
- 2 - The name of the guild they're in if any.
- 3 - The name of the map the character is in.
+(0) PC_NAME		- Character's name.
+(1) PC_PARTY	- The name of the party they're in if any.
+(2) PC_GUILD	- The name of the guild they're in if any.
+(3) PC_MAP		- The name of the map the character is in.
  
 If a character is not a member of any party or guild, an empty string will 
 be returned when requesting that information.
+
+Note: Numbers can also be used in <type>, but their usage is disncouraged as
+using only numbers reduces script readability
 
 ---------------------------------------
 

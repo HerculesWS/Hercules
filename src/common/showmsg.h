@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _COMMON_SHOWMSG_H_
-#define _COMMON_SHOWMSG_H_
+#ifndef COMMON_SHOWMSG_H
+#define COMMON_SHOWMSG_H
 
 #include <stdarg.h>
 
@@ -115,6 +115,6 @@ extern void ClearScreen(void);
 	HPExport void (*ShowFatalError) (const char *, ...);
 #endif
 
-extern int _vShowMessage(enum msg_type flag, const char *string, va_list ap);
+extern int vShowMessage_(enum msg_type flag, const char *string, va_list ap);
 
-#endif /* _COMMON_SHOWMSG_H_ */
+#endif /* COMMON_SHOWMSG_H */

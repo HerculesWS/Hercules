@@ -145,7 +145,7 @@ typedef struct dbn {
 	// Other
 	node_color color;
 	unsigned deleted : 1;
-} *DBNode;
+} DBNode;
 
 /**
  * Structure that holds a deleted node.
@@ -155,8 +155,8 @@ typedef struct dbn {
  * @see DBMap_impl#free_list
  */
 struct db_free {
-	DBNode node;
-	DBNode *root;
+	DBNode *node;
+	DBNode **root;
 };
 
 /**
@@ -193,12 +193,12 @@ typedef struct DBMap_impl {
 	unsigned int free_max;
 	unsigned int free_lock;
 	// Other
-	ERS nodes;
+	ERS *nodes;
 	DBComparator cmp;
 	DBHasher hash;
 	DBReleaser release;
-	DBNode ht[HASH_SIZE];
-	DBNode cache;
+	DBNode *ht[HASH_SIZE];
+	DBNode *cache;
 	DBType type;
 	DBOptions options;
 	uint32 item_count;
@@ -222,7 +222,7 @@ typedef struct DBIterator_impl {
 	struct DBIterator vtable;
 	DBMap_impl* db;
 	int ht_index;
-	DBNode node;
+	DBNode *node;
 } DBIterator_impl;
 
 #if defined(DB_ENABLE_STATS)
@@ -330,7 +330,7 @@ static struct db_stats {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0
 };
-#define DB_COUNTSTAT(token) do { if (stats. ## token != UINT32_MAX) ++stats. ## token ; } while(0)
+#define DB_COUNTSTAT(token) do { if ((stats.token) != UINT32_MAX) ++(stats.token); } while(0)
 #else /* !defined(DB_ENABLE_STATS) */
 #define DB_COUNTSTAT(token)
 #endif /* !defined(DB_ENABLE_STATS) */
@@ -361,12 +361,12 @@ struct eri *db_alloc_ers;
  * @param node Node to be rotated
  * @param root Pointer to the root of the tree
  * @private
- * @see #db_rebalance(DBNode,DBNode *)
- * @see #db_rebalance_erase(DBNode,DBNode *)
+ * @see #db_rebalance(DBNode *,DBNode **)
+ * @see #db_rebalance_erase(DBNode *,DBNode **)
  */
-static void db_rotate_left(DBNode node, DBNode *root)
+static void db_rotate_left(DBNode *node, DBNode **root)
 {
-	DBNode y = node->right;
+	DBNode *y = node->right;
 
 	DB_COUNTSTAT(db_rotate_left);
 	// put the left of y at the right of node
@@ -392,12 +392,12 @@ static void db_rotate_left(DBNode node, DBNode *root)
  * @param node Node to be rotated
  * @param root Pointer to the root of the tree
  * @private
- * @see #db_rebalance(DBNode,DBNode *)
- * @see #db_rebalance_erase(DBNode,DBNode *)
+ * @see #db_rebalance(DBNode *,DBNode **)
+ * @see #db_rebalance_erase(DBNode *,DBNode **)
  */
-static void db_rotate_right(DBNode node, DBNode *root)
+static void db_rotate_right(DBNode *node, DBNode **root)
 {
-	DBNode y = node->left;
+	DBNode *y = node->left;
 
 	DB_COUNTSTAT(db_rotate_right);
 	// put the right of y at the left of node
@@ -424,13 +424,13 @@ static void db_rotate_right(DBNode node, DBNode *root)
  * @param node Node to be rebalanced
  * @param root Pointer to the root of the tree
  * @private
- * @see #db_rotate_left(DBNode,DBNode *)
- * @see #db_rotate_right(DBNode,DBNode *)
+ * @see #db_rotate_left(DBNode *,DBNode **)
+ * @see #db_rotate_right(DBNode *,DBNode **)
  * @see #db_obj_put(DBMap*,DBKey,DBData)
  */
-static void db_rebalance(DBNode node, DBNode *root)
+static void db_rebalance(DBNode *node, DBNode **root)
 {
-	DBNode y;
+	DBNode *y;
 
 	DB_COUNTSTAT(db_rebalance);
 	// Restore the RED-BLACK properties
@@ -486,16 +486,16 @@ static void db_rebalance(DBNode node, DBNode *root)
  * @param node Node to be erased from the tree
  * @param root Root of the tree
  * @private
- * @see #db_rotate_left(DBNode,DBNode *)
- * @see #db_rotate_right(DBNode,DBNode *)
+ * @see #db_rotate_left(DBNode *,DBNode **)
+ * @see #db_rotate_right(DBNode *,DBNode **)
  * @see #db_free_unlock(DBMap_impl*)
  */
-static void db_rebalance_erase(DBNode node, DBNode *root)
+static void db_rebalance_erase(DBNode *node, DBNode **root)
 {
-	DBNode y = node;
-	DBNode x = NULL;
-	DBNode x_parent = NULL;
-	DBNode w;
+	DBNode *y = node;
+	DBNode *x = NULL;
+	DBNode *x_parent = NULL;
+	DBNode *w;
 
 	DB_COUNTSTAT(db_rebalance_erase);
 	// Select where to change the tree
@@ -650,8 +650,8 @@ static int db_is_key_null(DBType type, DBKey key)
  * @param key Key to be duplicated
  * @param Duplicated key
  * @private
- * @see #db_free_add(DBMap_impl*,DBNode,DBNode *)
- * @see #db_free_remove(DBMap_impl*,DBNode)
+ * @see #db_free_add(DBMap_impl*,DBNode *,DBNode **)
+ * @see #db_free_remove(DBMap_impl*,DBNode *)
  * @see #db_obj_put(DBMap*,DBKey,void *)
  * @see #db_dup_key_free(DBMap_impl*,DBKey)
  */
@@ -710,9 +710,9 @@ static void db_dup_key_free(DBMap_impl* db, DBKey key)
  * @see DBMap_impl#free_count
  * @see DBMap_impl#free_max
  * @see #db_obj_remove(DBMap*,DBKey)
- * @see #db_free_remove(DBMap_impl*,DBNode)
+ * @see #db_free_remove(DBMap_impl*,DBNode *)
  */
-static void db_free_add(DBMap_impl* db, DBNode node, DBNode *root)
+static void db_free_add(DBMap_impl* db, DBNode *node, DBNode **root)
 {
 	DBKey old_key;
 
@@ -759,9 +759,9 @@ static void db_free_add(DBMap_impl* db, DBNode node, DBNode *root)
  * @see DBMap_impl#free_list
  * @see DBMap_impl#free_count
  * @see #db_obj_put(DBMap*,DBKey,DBData)
- * @see #db_free_add(DBMap_impl*,DBNode*,DBNode)
+ * @see #db_free_add(DBMap_impl*,DBNode**,DBNode*)
  */
-static void db_free_remove(DBMap_impl* db, DBNode node)
+static void db_free_remove(DBMap_impl* db, DBNode *node)
 {
 	unsigned int i;
 
@@ -810,7 +810,7 @@ static void db_free_lock(DBMap_impl* db)
  * @param db Target database
  * @private
  * @see DBMap_impl#free_lock
- * @see #db_free_dbn(DBNode)
+ * @see #db_free_dbn(DBNode*)
  * @see #db_lock(DBMap_impl*)
  */
 static void db_free_unlock(DBMap_impl* db)
@@ -1267,8 +1267,8 @@ DBData* dbit_obj_last(DBIterator* self, DBKey* out_key)
 DBData* dbit_obj_next(DBIterator* self, DBKey* out_key)
 {
 	DBIterator_impl* it = (DBIterator_impl*)self;
-	DBNode node;
-	DBNode parent;
+	DBNode *node;
+	DBNode *parent;
 	struct dbn fake;
 
 	DB_COUNTSTAT(dbit_next);
@@ -1343,8 +1343,8 @@ DBData* dbit_obj_next(DBIterator* self, DBKey* out_key)
 DBData* dbit_obj_prev(DBIterator* self, DBKey* out_key)
 {
 	DBIterator_impl* it = (DBIterator_impl*)self;
-	DBNode node;
-	DBNode parent;
+	DBNode *node;
+	DBNode *parent;
 	struct dbn fake;
 
 	DB_COUNTSTAT(dbit_prev);
@@ -1439,7 +1439,7 @@ bool dbit_obj_exists(DBIterator* self)
 int dbit_obj_remove(DBIterator* self, DBData *out_data)
 {
 	DBIterator_impl* it = (DBIterator_impl*)self;
-	DBNode node;
+	DBNode *node;
 	int retval = 0;
 
 	DB_COUNTSTAT(dbit_remove);
@@ -1518,7 +1518,7 @@ static DBIterator* db_obj_iterator(DBMap* self)
 static bool db_obj_exists(DBMap* self, DBKey key)
 {
 	DBMap_impl* db = (DBMap_impl*)self;
-	DBNode node;
+	DBNode *node;
 	int c;
 	bool found = false;
 
@@ -1569,7 +1569,7 @@ static bool db_obj_exists(DBMap* self, DBKey key)
 static DBData* db_obj_get(DBMap* self, DBKey key)
 {
 	DBMap_impl* db = (DBMap_impl*)self;
-	DBNode node;
+	DBNode *node;
 	int c;
 	DBData *data = NULL;
 
@@ -1630,8 +1630,8 @@ static unsigned int db_obj_vgetall(DBMap* self, DBData **buf, unsigned int max, 
 {
 	DBMap_impl* db = (DBMap_impl*)self;
 	unsigned int i;
-	DBNode node;
-	DBNode parent;
+	DBNode *node;
+	DBNode *parent;
 	unsigned int ret = 0;
 
 	DB_COUNTSTAT(db_vgetall);
@@ -1727,8 +1727,8 @@ static unsigned int db_obj_getall(DBMap* self, DBData **buf, unsigned int max, D
 static DBData* db_obj_vensure(DBMap* self, DBKey key, DBCreateData create, va_list args)
 {
 	DBMap_impl* db = (DBMap_impl*)self;
-	DBNode node;
-	DBNode parent = NULL;
+	DBNode *node;
+	DBNode *parent = NULL;
 	unsigned int hash;
 	int c = 0;
 	DBData *data = NULL;
@@ -1856,8 +1856,8 @@ static DBData* db_obj_ensure(DBMap* self, DBKey key, DBCreateData create, ...)
 static int db_obj_put(DBMap* self, DBKey key, DBData data, DBData *out_data)
 {
 	DBMap_impl* db = (DBMap_impl*)self;
-	DBNode node;
-	DBNode parent = NULL;
+	DBNode *node;
+	DBNode *parent = NULL;
 	int c = 0, retval = 0;
 	unsigned int hash;
 
@@ -1949,19 +1949,19 @@ static int db_obj_put(DBMap* self, DBKey key, DBData data, DBData *out_data)
 /**
  * Remove an entry from the database.
  * Puts the previous data in out_data, if out_data is not NULL.
- * NOTE: The key (of the database) is released in {@link #db_free_add(DBMap_impl*,DBNode,DBNode *)}.
+ * NOTE: The key (of the database) is released in {@link #db_free_add(DBMap_impl*,DBNode*,DBNode **)}.
  * @param self Interface of the database
  * @param key Key that identifies the entry
  * @param out_data Previous data if the entry exists
  * @return 1 if if the entry already exists, 0 otherwise
  * @protected
- * @see #db_free_add(DBMap_impl*,DBNode,DBNode *)
+ * @see #db_free_add(DBMap_impl*,DBNode*,DBNode **)
  * @see DBMap#remove
  */
 static int db_obj_remove(DBMap* self, DBKey key, DBData *out_data)
 {
 	DBMap_impl* db = (DBMap_impl*)self;
-	DBNode node;
+	DBNode *node;
 	unsigned int hash;
 	int c = 0, retval = 0;
 
@@ -2018,8 +2018,8 @@ static int db_obj_vforeach(DBMap* self, DBApply func, va_list args)
 	DBMap_impl* db = (DBMap_impl*)self;
 	unsigned int i;
 	int sum = 0;
-	DBNode node;
-	DBNode parent;
+	DBNode *node;
+	DBNode *parent;
 
 	DB_COUNTSTAT(db_vforeach);
 	if (db == NULL) return 0; // nullpo candidate
@@ -2104,8 +2104,8 @@ static int db_obj_vclear(DBMap* self, DBApply func, va_list args)
 	DBMap_impl* db = (DBMap_impl*)self;
 	int sum = 0;
 	unsigned int i;
-	DBNode node;
-	DBNode parent;
+	DBNode *node;
+	DBNode *parent;
 
 	DB_COUNTSTAT(db_vclear);
 	if (db == NULL) return 0; // nullpo candidate
@@ -2780,15 +2780,15 @@ void db_final(void)
 			"DB_INT     : allocated %10u, destroyed %10u\n"
 			"DB_UINT    : allocated %10u, destroyed %10u\n"
 			"DB_STRING  : allocated %10u, destroyed %10u\n"
-			"DB_ISTRING : allocated %10u, destroyed %10u\n",
+			"DB_ISTRING : allocated %10u, destroyed %10u\n"
 			"DB_INT64   : allocated %10u, destroyed %10u\n"
-			"DB_UINT64  : allocated %10u, destroyed %10u\n"
+			"DB_UINT64  : allocated %10u, destroyed %10u\n",
 			stats.db_int_alloc,     stats.db_int_destroy,
 			stats.db_uint_alloc,    stats.db_uint_destroy,
 			stats.db_string_alloc,  stats.db_string_destroy,
 			stats.db_istring_alloc, stats.db_istring_destroy,
 			stats.db_int64_alloc,   stats.db_int64_destroy,
-			stats.db_uint64_alloc,  stats.db_uint64_destroy,);
+			stats.db_uint64_alloc,  stats.db_uint64_destroy);
 	ShowInfo(CL_WHITE"Database function counters"CL_RESET":\n"
 			"db_rotate_left     %10u, db_rotate_right    %10u,\n"
 			"db_rebalance       %10u, db_rebalance_erase %10u,\n"

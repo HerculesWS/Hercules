@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_STATUS_H_
-#define _MAP_STATUS_H_
+#ifndef MAP_STATUS_H
+#define MAP_STATUS_H
 
 #include "../config/core.h" // defType, RENEWAL, RENEWAL_ASPD
 
@@ -52,6 +52,10 @@ enum refine_type {
 	REFINE_TYPE_MAX     = 5
 };
 
+/**
+ * SC configuration type
+ * @see db/sc_config.txt for more information
+ **/
 typedef enum sc_conf_type {
 	SC_NO_REM_DEATH  = 0x01,
 	SC_NO_SAVE       = 0x02,
@@ -708,7 +712,8 @@ typedef enum sc_type {
 	SC__CHAOS,
 	
 	SC__FEINTBOMB_MASTER,
-	
+	SC_FALLENEMPIRE,
+
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
 
@@ -2043,4 +2048,4 @@ struct status_interface *status;
 
 void status_defaults(void);
 
-#endif /* _MAP_STATUS_H_ */
+#endif /* MAP_STATUS_H */

@@ -1,5 +1,5 @@
-#ifndef _COMMON_SPINLOCK_H_
-#define _COMMON_SPINLOCK_H_
+#ifndef COMMON_SPINLOCK_H
+#define COMMON_SPINLOCK_H
 
 //
 // CAS based Spinlock Implementation
@@ -28,25 +28,25 @@ typedef struct __declspec( align(64) ) SPIN_LOCK{
 	volatile LONG lock;
 	volatile LONG nest;
 	volatile LONG sync_lock;
-}  SPIN_LOCK, *PSPIN_LOCK;
+}  SPIN_LOCK;
 #else
 typedef struct SPIN_LOCK{
 		volatile int32 lock;
 		volatile int32 nest; // nesting level.
 		
 		volatile int32 sync_lock;
-} __attribute__((aligned(64))) SPIN_LOCK, *PSPIN_LOCK;
+} __attribute__((aligned(64))) SPIN_LOCK;
 #endif
 
 
 
-static forceinline void InitializeSpinLock(PSPIN_LOCK lck){
+static forceinline void InitializeSpinLock(SPIN_LOCK *lck){
 		lck->lock = 0;
 		lck->nest = 0;
 		lck->sync_lock = 0;
 }
 
-static forceinline void FinalizeSpinLock(PSPIN_LOCK lck){
+static forceinline void FinalizeSpinLock(SPIN_LOCK *lck){
 		return;
 }
 
@@ -54,7 +54,7 @@ static forceinline void FinalizeSpinLock(PSPIN_LOCK lck){
 #define getsynclock(l) do { if(InterlockedCompareExchange((l), 1, 0) == 0) break; rathread_yield(); } while(/*always*/1)
 #define dropsynclock(l) do { InterlockedExchange((l), 0); } while(0)
 
-static forceinline void EnterSpinLock(PSPIN_LOCK lck){
+static forceinline void EnterSpinLock(SPIN_LOCK *lck){
 		int tid = rathread_get_tid();
 		
 		// Get Sync Lock && Check if the requester thread already owns the lock.
@@ -84,7 +84,7 @@ static forceinline void EnterSpinLock(PSPIN_LOCK lck){
 }
 
 
-static forceinline void LeaveSpinLock(PSPIN_LOCK lck){
+static forceinline void LeaveSpinLock(SPIN_LOCK *lck){
 		int tid = rathread_get_tid();
 
 		getsynclock(&lck->sync_lock);
@@ -100,4 +100,4 @@ static forceinline void LeaveSpinLock(PSPIN_LOCK lck){
 
 
 
-#endif /* _COMMON_SPINLOCK_H_ */
+#endif /* COMMON_SPINLOCK_H */

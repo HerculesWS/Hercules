@@ -1,8 +1,8 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _CHAR_INT_MERCENARY_H_
-#define _CHAR_INT_MERCENARY_H_
+#ifndef CHAR_INT_MERCENARY_H
+#define CHAR_INT_MERCENARY_H
 
 #include "../common/cbasetypes.h"
 
@@ -19,4 +19,4 @@ bool mercenary_owner_delete(int char_id);
 
 bool mapif_mercenary_delete(int merc_id);
 
-#endif /* _CHAR_INT_MERCENARY_H_ */
+#endif /* CHAR_INT_MERCENARY_H */

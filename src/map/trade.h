@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_TRADE_H_
-#define _MAP_TRADE_H_
+#ifndef MAP_TRADE_H
+#define MAP_TRADE_H
 
 //Max distance from traders to enable a trade to take place.
 //TODO: battle_config candidate?
@@ -27,4 +27,4 @@ struct trade_interface *trade;
 
 void trade_defaults(void);
 
-#endif /* _MAP_TRADE_H_ */
+#endif /* MAP_TRADE_H */

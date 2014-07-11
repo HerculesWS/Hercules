@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_DUEL_H_
-#define _MAP_DUEL_H_
+#ifndef MAP_DUEL_H
+#define MAP_DUEL_H
 
 #include "../common/cbasetypes.h"
 
@@ -46,4 +46,4 @@ struct duel_interface *duel;
 
 void duel_defaults(void);
 
-#endif /* _MAP_DUEL_H_ */
+#endif /* MAP_DUEL_H */

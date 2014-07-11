@@ -1,8 +1,8 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _CHAR_INT_MAIL_H_
-#define _CHAR_INT_MAIL_H_
+#ifndef CHAR_INT_MAIL_H
+#define CHAR_INT_MAIL_H
 
 struct item;
 struct mail_message;
@@ -16,4 +16,4 @@ void inter_mail_sql_final(void);
 int mail_savemessage(struct mail_message* msg);
 void mapif_Mail_new(struct mail_message *msg);
 
-#endif /* _CHAR_INT_MAIL_H_ */
+#endif /* CHAR_INT_MAIL_H */

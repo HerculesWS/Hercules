@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _COMMON_NULLPO_H_
-#define _COMMON_NULLPO_H_
+#ifndef COMMON_NULLPO_H
+#define COMMON_NULLPO_H
 
 #include "../common/cbasetypes.h"
 
@@ -125,4 +125,4 @@
 
 void assert_report(const char *file, int line, const char *func, const char *targetname, const char *title);
 
-#endif /* _COMMON_NULLPO_H_ */
+#endif /* COMMON_NULLPO_H */

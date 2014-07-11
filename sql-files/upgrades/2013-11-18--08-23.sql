@@ -4,7 +4,7 @@
 --       you'll need to run the following queries manually:
 --
 -- [ Both Pre-Renewal and Renewal ]
--- ALTER TABLE item_db2 ADD COLUMN `bindonequip` tinyint(1) unsigned DEFAULT NULL AFTER `view`;
+-- ALTER TABLE item_db2 ADD COLUMN `bindonequip` TINYINT(1) UNSIGNED DEFAULT NULL AFTER `view`;
 -- INSERT INTO `sql_updates` (`timestamp`) VALUES (1384763034);
 --
 -- [ End ]
@@ -55,7 +55,7 @@ BEGIN
 
 END $$
 
-CALL alter_if_not_exists('item_db2', 'bindonequip', 'ADD COLUMN', 'tinyint(1) unsigned DEFAULT NULL AFTER `view`') $$
+CALL alter_if_not_exists('item_db2', 'bindonequip', 'ADD COLUMN', 'TINYINT(1) UNSIGNED DEFAULT NULL AFTER `view`') $$
 
 DROP PROCEDURE IF EXISTS alter_if_not_exists $$
 DROP PROCEDURE IF EXISTS alter_if_exists $$

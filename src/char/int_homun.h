@@ -1,8 +1,8 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _CHAR_INT_HOMUN_H_
-#define _CHAR_INT_HOMUN_H_
+#ifndef CHAR_INT_HOMUN_H
+#define CHAR_INT_HOMUN_H
 
 #include "../common/cbasetypes.h"
 
@@ -17,4 +17,4 @@ bool mapif_homunculus_load(int homun_id, struct s_homunculus* hd);
 bool mapif_homunculus_delete(int homun_id);
 bool mapif_homunculus_rename(char *name);
 
-#endif /* _CHAR_INT_HOMUN_H_ */
+#endif /* CHAR_INT_HOMUN_H */

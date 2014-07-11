@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _COMMON_MMO_H_
-#define _COMMON_MMO_H_
+#ifndef COMMON_MMO_H
+#define COMMON_MMO_H
 
 #include <time.h>
 
@@ -932,4 +932,4 @@ enum e_pc_reg_loading {
 #error MAX_ZENY is too big
 #endif
 
-#endif /* _COMMON_MMO_H_ */
+#endif /* COMMON_MMO_H */

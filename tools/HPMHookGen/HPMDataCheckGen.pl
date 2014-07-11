@@ -24,7 +24,7 @@ foreach my $file (@files) {
 	my @filepath = split(/[\/\\]/, $data->{compounddef}->{location}->{file});
 	my $foldername = uc($filepath[-2]);
 	my $filename = uc($filepath[-1]); $filename =~ s/-/_/g; $filename =~ s/\.[^.]*$//;
-	my $name = "_${foldername}_${filename}_H_";
+	my $name = "${foldername}_${filename}_H";
 	push @{ $out{$name} }, $data->{compounddef}->{compoundname};
 }
 
@@ -37,8 +37,8 @@ print FH <<"EOF";
 //
 // NOTE: This file was auto-generated and should never be manually edited,
 //       as it will get overwritten.
-#ifndef _HPM_DATA_CHECK_H_
-#define _HPM_DATA_CHECK_H_
+#ifndef HPM_DATA_CHECK_H
+#define HPM_DATA_CHECK_H
 
 
 HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
@@ -63,6 +63,6 @@ print FH <<"EOF";
 };
 HPExport unsigned int HPMDataCheckLen = ARRAYLENGTH(HPMDataCheck);
 
-#endif /* _HPM_DATA_CHECK_H_ */
+#endif /* HPM_DATA_CHECK_H */
 EOF
 close(FH);

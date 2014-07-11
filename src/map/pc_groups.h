@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_PC_GROUPS_H_
-#define _MAP_PC_GROUPS_H_
+#ifndef MAP_PC_GROUPS_H
+#define MAP_PC_GROUPS_H
 
 #include "../common/cbasetypes.h"
 #include "../common/conf.h"
@@ -96,4 +96,4 @@ struct pc_groups_interface *pcg;
 
 void pc_groups_defaults(void);
 
-#endif /* _MAP_PC_GROUPS_H_ */
+#endif /* MAP_PC_GROUPS_H */

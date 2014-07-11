@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Base Author: Haru @ http://hercules.ws
 
-#ifndef _COMMON_SYSINFO_H_
-#define _COMMON_SYSINFO_H_
+#ifndef COMMON_SYSINFO_H
+#define COMMON_SYSINFO_H
 
 /**
  * Provides various bits of information about the system Hercules is running on
@@ -21,6 +21,11 @@ struct sysinfo_private;
 struct sysinfo_interface {
 	struct sysinfo_private *p;
 
+#if defined(WIN32) && !defined(__CYGWIN__)
+	long (*getpagesize) (void);
+#else
+	int (*getpagesize) (void);
+#endif
 	const char *(*platform) (void);
 	const char *(*osversion) (void);
 	const char *(*cpu) (void);
@@ -43,4 +48,4 @@ struct sysinfo_interface *sysinfo;
 
 void sysinfo_defaults(void);
 
-#endif /* _COMMON_SYSINFO_H_ */
+#endif /* COMMON_SYSINFO_H */

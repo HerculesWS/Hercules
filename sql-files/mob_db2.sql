@@ -1,88 +1,88 @@
-#
-# Table structure for table `mob_db2`
-#
+--
+-- Table structure for table `mob_db2`
+--
 
 DROP TABLE IF EXISTS `mob_db2`;
 CREATE TABLE `mob_db2` (
-  `ID` mediumint(9) unsigned NOT NULL default '0',
-  `Sprite` text NOT NULL,
-  `kName` text NOT NULL,
-  `iName` text NOT NULL,
-  `LV` tinyint(6) unsigned NOT NULL default '0',
-  `HP` int(9) unsigned NOT NULL default '0',
-  `SP` mediumint(9) unsigned NOT NULL default '0',
-  `EXP` mediumint(9) unsigned NOT NULL default '0',
-  `JEXP` mediumint(9) unsigned NOT NULL default '0',
-  `Range1` tinyint(4) unsigned NOT NULL default '0',
-  `ATK1` smallint(6) unsigned NOT NULL default '0',
-  `ATK2` smallint(6) unsigned NOT NULL default '0',
-  `DEF` smallint(6) unsigned NOT NULL default '0',
-  `MDEF` smallint(6) unsigned NOT NULL default '0',
-  `STR` smallint(6) unsigned NOT NULL default '0',
-  `AGI` smallint(6) unsigned NOT NULL default '0',
-  `VIT` smallint(6) unsigned NOT NULL default '0',
-  `INT` smallint(6) unsigned NOT NULL default '0',
-  `DEX` smallint(6) unsigned NOT NULL default '0',
-  `LUK` smallint(6) unsigned NOT NULL default '0',
-  `Range2` tinyint(4) unsigned NOT NULL default '0',
-  `Range3` tinyint(4) unsigned NOT NULL default '0',
-  `Scale` tinyint(4) unsigned NOT NULL default '0',
-  `Race` tinyint(4) unsigned NOT NULL default '0',
-  `Element` tinyint(4) unsigned NOT NULL default '0',
-  `Mode` smallint(6) unsigned NOT NULL default '0',
-  `Speed` smallint(6) unsigned NOT NULL default '0',
-  `aDelay` smallint(6) unsigned NOT NULL default '0',
-  `aMotion` smallint(6) unsigned NOT NULL default '0',
-  `dMotion` smallint(6) unsigned NOT NULL default '0',
-  `MEXP` mediumint(9) unsigned NOT NULL default '0',
-  `MVP1id` smallint(9) unsigned NOT NULL default '0',
-  `MVP1per` smallint(9) unsigned NOT NULL default '0',
-  `MVP2id` smallint(9) unsigned NOT NULL default '0',
-  `MVP2per` smallint(9) unsigned NOT NULL default '0',
-  `MVP3id` smallint(9) unsigned NOT NULL default '0',
-  `MVP3per` smallint(9) unsigned NOT NULL default '0',
-  `Drop1id` smallint(9) unsigned NOT NULL default '0',
-  `Drop1per` smallint(9) unsigned NOT NULL default '0',
-  `Drop2id` smallint(9) unsigned NOT NULL default '0',
-  `Drop2per` smallint(9) unsigned NOT NULL default '0',
-  `Drop3id` smallint(9) unsigned NOT NULL default '0',
-  `Drop3per` smallint(9) unsigned NOT NULL default '0',
-  `Drop4id` smallint(9) unsigned NOT NULL default '0',
-  `Drop4per` smallint(9) unsigned NOT NULL default '0',
-  `Drop5id` smallint(9) unsigned NOT NULL default '0',
-  `Drop5per` smallint(9) unsigned NOT NULL default '0',
-  `Drop6id` smallint(9) unsigned NOT NULL default '0',
-  `Drop6per` smallint(9) unsigned NOT NULL default '0',
-  `Drop7id` smallint(9) unsigned NOT NULL default '0',
-  `Drop7per` smallint(9) unsigned NOT NULL default '0',
-  `Drop8id` smallint(9) unsigned NOT NULL default '0',
-  `Drop8per` smallint(9) unsigned NOT NULL default '0',
-  `Drop9id` smallint(9) unsigned NOT NULL default '0',
-  `Drop9per` smallint(9) unsigned NOT NULL default '0',
-  `DropCardid` smallint(9) unsigned NOT NULL default '0',
-  `DropCardper` smallint(9) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`ID`)
+  `ID` MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Sprite` TEXT NOT NULL,
+  `kName` TEXT NOT NULL,
+  `iName` TEXT NOT NULL,
+  `LV` TINYINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `HP` INT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `SP` MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `EXP` MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `JEXP` MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Range1` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
+  `ATK1` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `ATK2` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `DEF` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `MDEF` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `STR` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `AGI` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `VIT` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `INT` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `DEX` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `LUK` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `Range2` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
+  `Range3` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
+  `Scale` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
+  `Race` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
+  `Element` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
+  `Mode` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `Speed` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `aDelay` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `aMotion` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `dMotion` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `MEXP` MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `MVP1id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `MVP1per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `MVP2id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `MVP2per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `MVP3id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `MVP3per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Drop1id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Drop1per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Drop2id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Drop2per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Drop3id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Drop3per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Drop4id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Drop4per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Drop5id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Drop5per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Drop6id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Drop6per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Drop7id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Drop7per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Drop8id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Drop8per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Drop9id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `Drop9per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `DropCardid` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `DropCardper` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM;
 
-#  Monsters Additional Database
-# 
-#  Structure of Database :
-# REPLACE INTO `mob_db2` VALUES ( ID,'Sprite_Name','kROName','iROName',LV,HP,SP,EXP,JEXP,Range1,ATK1,ATK2,DEF,MDEF,STR,AGI,VIT,INT,DEX,LUK,Range2,Range3,Scale,Race,Element,Mode,Speed,aDelay,aMotion,dMotion,MEXP,MVP1id,MVP1per,MVP2id,MVP2per,MVP3id,MVP3per,Drop1id,Drop1per,Drop2id,Drop2per,Drop3id,Drop3per,Drop4id,Drop4per,Drop5id,Drop5per,Drop6id,Drop6per,Drop7id,Drop7per,Drop8id,Drop8per,Drop9id,Drop9per,DropCardid,DropCardper);
+-- Monsters Additional Database
+--
+-- Structure of Database :
+-- REPLACE INTO `mob_db2` VALUES (ID,'Sprite_Name','kROName','iROName',LV,HP,SP,EXP,JEXP,Range1,ATK1,ATK2,DEF,MDEF,STR,AGI,VIT,INT,DEX,LUK,Range2,Range3,Scale,Race,Element,Mode,Speed,aDelay,aMotion,dMotion,MEXP,MVP1id,MVP1per,MVP2id,MVP2per,MVP3id,MVP3per,Drop1id,Drop1per,Drop2id,Drop2per,Drop3id,Drop3per,Drop4id,Drop4per,Drop5id,Drop5per,Drop6id,Drop6per,Drop7id,Drop7per,Drop8id,Drop8per,Drop9id,Drop9per,DropCardid,DropCardper);
 
-# rAthena Dev Team
+-- rAthena Dev Team
 #REPLACE INTO `mob_db2` VALUES (1900,'VALARIS','Valaris','Valaris',99,668000,0,107250,37895,2,3220,4040,35,45,1,152,96,85,120,95,10,10,2,6,67,0x1973,100,1068,768,576,13000,608,1000,750,400,923,3800,1466,200,2256,200,2607,800,714,500,617,3000,984,4300,985,5600,0,0,0,0,4147,1);
 #REPLACE INTO `mob_db2` VALUES (1901,'VALARIS_WORSHIPPER','Valaris\'s Worshipper','Valaris\'s Worshipper',50,8578,0,2706,1480,1,487,590,15,25,1,75,55,1,93,45,10,12,0,6,27,0x1685,100,868,480,120,0,0,0,0,0,0,0,923,500,984,63,1464,2,607,50,610,100,503,300,2405,50,0,0,0,0,4129,1);
 #REPLACE INTO `mob_db2` VALUES (1902,'MC_CAMERI','MC Cameri','MC Cameri',99,668000,0,107250,37895,2,3220,4040,35,45,1,152,96,85,120,95,10,10,2,6,67,0x1973,100,1068,768,576,13000,608,1000,750,400,923,3800,1466,200,2256,200,2607,800,714,500,617,3000,984,4300,985,5600,0,0,0,0,4147,1);
 #REPLACE INTO `mob_db2` VALUES (1903,'POKI','Poki#3','Poki#3',99,1349000,0,4093000,1526000,9,4892,9113,22,35,1,180,39,67,193,130,10,12,1,7,64,0x1973,120,500,672,480,92100,603,5500,617,3000,1723,1000,1228,100,1236,500,617,2500,1234,75,1237,125,1722,250,1724,100,1720,50,0,0,0,0);
 #REPLACE INTO `mob_db2` VALUES (1904,'SENTRY','Sentry','Sentry',99,668000,0,107250,37895,2,3220,4040,35,45,1,152,96,85,120,95,10,10,2,6,67,0x1973,100,1068,768,576,13000,608,1000,750,400,923,3800,1466,200,2256,200,2607,800,714,500,617,3000,984,4300,985,5600,0,0,0,0,4147,1);
 
-# Custom Hollow Poring (overrrides/collides with META_ANDRE)
+-- Custom Hollow Poring (overrrides/collides with META_ANDRE)
 #REPLACE INTO `mob_db2` VALUES (1237,'HOLLOW_PORING','Hollow Poring','Hollow Poring',1,50,0,2,1,1,7,10,0,5,1,1,1,0,6,30,10,12,1,3,21,0x83,400,1872,672,480,0,0,0,0,0,0,0,909,7000,1202,100,938,400,512,1000,713,1500,512,150,619,20,0,0,0,0,4001,10);
-# Custom Fire Poring. Warning, Colides with META_DENIRO
+-- Custom Fire Poring. Warning, Colides with META_DENIRO
 #REPLACE INTO `mob_db2` VALUES (1239,'FIRE_PORING','Fire Poring','Fire Poring',1,50,0,2,1,1,7,10,0,5,1,1,1,1,6,30,10,12,1,3,21,0x131,400,1872,672,480,0,0,0,0,0,0,0,909,7000,1202,100,938,400,512,1000,713,1500,741,5,619,20,0,0,0,0,4001,20);
 
-# Lunar New Year 2008 Event Monster overrides
-# Uncomment if event is enabled, as these drops modifications are nessecary.
+-- Lunar New Year 2008 Event Monster overrides
+-- Uncomment if event is enabled, as these drops modifications are nessecary.
 #REPLACE INTO `mob_db2` VALUES (1145,'MARTIN','Martin','Martin',18,1109,0,134,86,1,52,63,0,5,12,18,30,15,15,5,10,12,0,2,42,0x81,300,1480,480,480,0,0,0,0,0,0,0,1017,9000,1018,500,1251,10,2225,5,5009,1,10010,10,2224,15,7869,1500,0,0,4046,1);
 #REPLACE INTO `mob_db2` VALUES (1175,'TAROU','Tarou','Tarou',11,284,0,57,28,1,34,45,0,0,1,20,11,10,24,5,10,12,0,2,27,0x91,150,1744,1044,684,0,0,0,0,0,0,0,1016,9000,919,3000,949,800,528,1000,701,2,7869,2500,0,0,0,0,0,0,4028,1);
 #REPLACE INTO `mob_db2` VALUES (1209,'CRAMP','Cramp','Cramp',56,4720,0,2300,1513,1,395,465,0,5,1,85,35,5,65,60,10,12,0,2,45,0x3095,100,1000,500,1000,0,0,0,0,0,0,0,7007,4656,528,1000,726,80,746,110,568,250,510,70,984,95,7869,1500,0,0,4296,1);

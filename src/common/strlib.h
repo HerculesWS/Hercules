@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _COMMON_STRLIB_H_
-#define _COMMON_STRLIB_H_
+#ifndef COMMON_STRLIB_H
+#define COMMON_STRLIB_H
 
 #include <stdarg.h>
 #include <string.h>
@@ -12,8 +12,8 @@
 
 #ifdef WIN32
 	#define HAVE_STRTOK_R
-	#define strtok_r(s,delim,save_ptr) _strtok_r((s),(delim),(save_ptr))
-	char *_strtok_r(char* s1, const char* s2, char** lasts);
+	#define strtok_r(s,delim,save_ptr) strtok_r_((s),(delim),(save_ptr))
+	char *strtok_r_(char* s1, const char* s2, char** lasts);
 #endif
 
 /// Bitfield determining the behavior of sv_parse and sv_split.
@@ -159,7 +159,7 @@ struct sv_interface *sv;
 void strlib_defaults(void);
 
 /* the purpose of these macros is simply to not make calling them be an annoyance */
-#ifndef _H_STRLIB_C_
+#ifndef H_STRLIB_C
 	#define jstrescape(pt)             (strlib->jstrescape(pt))
 	#define jstrescapecpy(pt,spt)      (strlib->jstrescapecpy((pt),(spt)))
 	#define jmemescapecpy(pt,spt,size) (strlib->jmemescapecpy((pt),(spt),(size)))
@@ -183,6 +183,6 @@ void strlib_defaults(void);
 	#define safesnprintf(buf,sz,fmt,...) (strlib->safesnprintf((buf),(sz),(fmt),##__VA_ARGS__))
 	#define strline(str,pos)             (strlib->strline((str),(pos)))
 	#define bin2hex(output,input,count)  (strlib->bin2hex((output),(input),(count)))
-#endif /* _H_STRLIB_C_ */
+#endif /* H_STRLIB_C */
 
-#endif /* _COMMON_STRLIB_H_ */
+#endif /* COMMON_STRLIB_H */

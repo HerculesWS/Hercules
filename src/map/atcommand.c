@@ -3917,7 +3917,12 @@ ACMD(mount_peco)
 		return false;
 	}
 	
-	if( (sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT && pc->checkskill(sd,RK_DRAGONTRAINING) > 0 ) {
+	if( (sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT ) {
+		if( !pc->checkskill(sd,RK_DRAGONTRAINING) ) {
+			sprintf(atcmd_output, msg_txt(213), skill->get_desc(RK_DRAGONTRAINING)); // You need %s to mount!
+			clif->message(fd, atcmd_output);
+			return false;
+		}
 		if( !(sd->sc.option&OPTION_DRAGON1) ) {
 			clif->message(sd->fd,msg_txt(1119)); // You have mounted your Dragon.
 			pc->setoption(sd, sd->sc.option|OPTION_DRAGON1);
@@ -3927,7 +3932,12 @@ ACMD(mount_peco)
 		}
 		return true;
 	}
-	if( (sd->class_&MAPID_THIRDMASK) == MAPID_RANGER && pc->checkskill(sd,RA_WUGRIDER) > 0 ) {
+	if( (sd->class_&MAPID_THIRDMASK) == MAPID_RANGER ) {
+		if( !pc->checkskill(sd,RA_WUGRIDER) ) {
+			sprintf(atcmd_output, msg_txt(213), skill->get_desc(RA_WUGRIDER)); // You need %s to mount!
+			clif->message(fd, atcmd_output);
+			return false;
+		}
 		if( !pc_isridingwug(sd) ) {
 			clif->message(sd->fd,msg_txt(1121)); // You have mounted your Warg.
 			pc->setoption(sd, sd->sc.option|OPTION_WUGRIDER);
@@ -3947,21 +3957,23 @@ ACMD(mount_peco)
 		}
 		return true;
 	}
-	if (!pc_isriding(sd)) { // if actually no peco
-		
-		if (!pc->checkskill(sd, KN_RIDING)) {
-			clif->message(fd, msg_txt(213)); // You can not mount a Peco Peco with your current job.
-			return false;
+	if( sd->class_&MAPID_SWORDMAN && sd->class_&JOBL_2 ) {
+		if( !pc_isriding(sd) ) { // if actually no peco
+			if (!pc->checkskill(sd, KN_RIDING)) {
+				sprintf(atcmd_output, msg_txt(213), skill->get_desc(KN_RIDING)); // You need %s to mount!
+				clif->message(fd, atcmd_output);
+				return false;
+			}
+			pc->setoption(sd, sd->sc.option | OPTION_RIDING);
+			clif->message(fd, msg_txt(102)); // You have mounted a Peco Peco.
+		} else {//Dismount
+			pc->setoption(sd, sd->sc.option & ~OPTION_RIDING);
+			clif->message(fd, msg_txt(214)); // You have released your Peco Peco.
 		}
-		
-		pc->setoption(sd, sd->sc.option | OPTION_RIDING);
-		clif->message(fd, msg_txt(102)); // You have mounted a Peco Peco.
-	} else {//Dismount
-		pc->setoption(sd, sd->sc.option & ~OPTION_RIDING);
-		clif->message(fd, msg_txt(214)); // You have released your Peco Peco.
+		return true;
 	}
-	
-	return true;
+	clif->message(fd, msg_txt(215)); // Your class can't mount!
+	return false;
 }
 
 /*==========================================
@@ -8422,7 +8434,7 @@ ACMD(set) {
 		if( is_str )
 			script->set_var(sd, reg, (void*) val);
 		else
-			script->set_var(sd, reg, (void*)__64BPTRSIZE((atoi(val))));
+			script->set_var(sd, reg, (void*)h64BPTRSIZE((atoi(val))));
 		
 	}
 	

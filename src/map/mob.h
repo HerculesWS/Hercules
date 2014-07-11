@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_MOB_H_
-#define _MAP_MOB_H_
+#ifndef MAP_MOB_H
+#define MAP_MOB_H
 
 #include "map.h" // struct status_data, struct view_data, struct mob_skill
 #include "status.h" // struct status_data, struct status_change
@@ -363,4 +363,4 @@ struct mob_interface *mob;
 
 void mob_defaults(void);
 
-#endif /* _MAP_MOB_H_ */
+#endif /* MAP_MOB_H */

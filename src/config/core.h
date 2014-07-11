@@ -1,8 +1,8 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
-#ifndef _CONFIG_CORE_H_
-#define _CONFIG_CORE_H_
+#ifndef CONFIG_CORE_H
+#define CONFIG_CORE_H
 
 /// Max number of items on @autolootid list
 #define AUTOLOOTITEM_SIZE 10
@@ -79,4 +79,4 @@
  **/
 #include "./const.h"
 
-#endif // _CONFIG_CORE_H_
+#endif // CONFIG_CORE_H

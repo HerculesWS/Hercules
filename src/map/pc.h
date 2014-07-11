@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_PC_H_
-#define _MAP_PC_H_
+#ifndef MAP_PC_H
+#define MAP_PC_H
 
 #include "../config/core.h" // AUTOLOOTITEM_SIZE, RENEWAL, SECURE_NPCTIMEOUT
 
@@ -771,6 +771,8 @@ struct pc_interface {
 	//int (*getrefinebonus) (int lv,int type); FIXME: This function does not exist, nor it is ever called
 	bool (*can_give_items) (struct map_session_data *sd);
 	bool (*can_give_bound_items) (struct map_session_data *sd);
+	bool (*can_talk) (struct map_session_data *sd);
+	bool (*can_attack) ( struct map_session_data *sd, int target_id );
  	
 	bool (*can_use_command) (struct map_session_data *sd, const char *command);
 	int (*set_group) (struct map_session_data *sd, int group_id);
@@ -893,7 +895,7 @@ struct pc_interface {
 	int (*setcart) (struct map_session_data* sd, int type);
 	int (*setfalcon) (struct map_session_data* sd, int flag);
 	int (*setriding) (struct map_session_data* sd, int flag);
-	int (*setmadogear) (struct map_session_data* sd, int flag);
+	void (*setmadogear) (struct map_session_data* sd, int flag);
 	int (*changelook) (struct map_session_data *sd,int type,int val);
 	int (*equiplookall) (struct map_session_data *sd);
 	
@@ -1024,4 +1026,4 @@ struct pc_interface *pc;
 
 void pc_defaults(void);
 
-#endif /* _MAP_PC_H_ */
+#endif /* MAP_PC_H */

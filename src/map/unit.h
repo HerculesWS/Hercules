@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_UNIT_H_
-#define _MAP_UNIT_H_
+#ifndef MAP_UNIT_H
+#define MAP_UNIT_H
 
 #include "clif.h"  // clr_type
 #include "path.h" // struct walkpath_data
@@ -83,8 +83,8 @@ struct unit_interface {
 	int (*walktoxy) (struct block_list *bl, short x, short y, int flag);
 	int (*walktobl_sub) (int tid, int64 tick, int id, intptr_t data);
 	int (*walktobl) (struct block_list *bl, struct block_list *tbl, int range, int flag);
-	int (*run) (struct block_list *bl);
-	int (*wugdash) (struct block_list *bl, struct map_session_data *sd);
+	bool (*run) (struct block_list *bl, struct map_session_data *sd, enum sc_type type);
+	void (*run_hit) (struct block_list *bl, struct status_change *sc, struct map_session_data *sd, enum sc_type type);
 	int (*escape) (struct block_list *bl, struct block_list *target, short dist);
 	int (*movepos) (struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath);
 	int (*setdir) (struct block_list *bl, unsigned char dir);
@@ -124,4 +124,4 @@ struct unit_interface *unit;
 
 void unit_defaults(void);
 
-#endif /* _MAP_UNIT_H_ */
+#endif /* MAP_UNIT_H */

@@ -292,7 +292,7 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 			clif->move(ud);
 	} else if(ud->state.running) {
 		//Keep trying to run.
-		if ( !(unit->run(bl) || unit->wugdash(bl,sd)) )
+		if ( !(unit->run(bl, NULL, SC_RUN) || unit->run(bl, sd, SC_WUGDASH)) )
 			ud->state.running = 0;
 	} else if (ud->target_to) {
 		//Update target trajectory.
@@ -486,137 +486,95 @@ int unit_walktobl(struct block_list *bl, struct block_list *tbl, int range, int 
 	return 0;
 }
 
-int unit_run(struct block_list *bl) {
-	struct status_change *sc = status->get_sc(bl);
+
+/**
+ * Called by unit_run when an object was hit
+ * @param sd Required only when using SC_WUGDASH
+ **/
+void unit_run_hit( struct block_list *bl, struct status_change *sc, struct map_session_data *sd, enum sc_type type ) {
+	int lv = sc->data[type]->val1;
+
+	//If you can't run forward, you must be next to a wall, so bounce back. [Skotlex]
+	if( type == SC_RUN )
+		clif->sc_load(bl,bl->id,AREA,SI_TING,0,0,0);
+
+	//Set running to 0 beforehand so status_change_end knows not to enable spurt [Kevin]
+	unit->bl2ud(bl)->state.running = 0;
+	status_change_end(bl, type, INVALID_TIMER);
+
+	if( type == SC_RUN ) {
+		skill->blown(bl,bl,skill->get_blewcount(TK_RUN,lv),unit->getdir(bl),0);
+		clif->fixpos(bl); //Why is a clif->slide (skill->blown) AND a fixpos needed? Ask Aegis.
+		clif->sc_end(bl,bl->id,AREA,SI_TING);
+	} else if( sd ) {
+		clif->fixpos(bl);
+		skill->castend_damage_id(bl, &sd->bl, RA_WUGDASH, lv, timer->gettick(), SD_LEVEL);
+	}
+	return;
+}
+
+/**
+ * Makes character run, used for SC_RUN and SC_WUGDASH
+ * @param sd Required only when using SC_WUGDASH
+ * @retval true Finished running
+ * @retval false Hit an object/Couldn't run
+ **/
+bool unit_run( struct block_list *bl, struct map_session_data *sd, enum sc_type type ) {
+	struct status_change *sc;
 	short to_x,to_y,dir_x,dir_y;
-	int lv;
 	int i;
 
-	if (!(sc && sc->data[SC_RUN]))
-		return 0;
+	nullpo_retr(false, bl);
+	sc = status->get_sc(bl);
 
-	if (!unit->can_move(bl)) {
-		status_change_end(bl, SC_RUN, INVALID_TIMER);
-		return 0;
+	if( !(sc && sc->data[type]) )
+		return false;
+
+	if( !unit->can_move(bl) ) {
+		status_change_end(bl, type, INVALID_TIMER);
+		return false;
 	}
 
-	lv = sc->data[SC_RUN]->val1;
-	dir_x = dirx[sc->data[SC_RUN]->val2];
-	dir_y = diry[sc->data[SC_RUN]->val2];
+	dir_x = dirx[sc->data[type]->val2];
+	dir_y = diry[sc->data[type]->val2];
 
 	// determine destination cell
 	to_x = bl->x;
 	to_y = bl->y;
-	for(i=0;i<AREA_SIZE;i++) {
+
+	// Search for available path
+	for(i = 0; i < AREA_SIZE; i++) {
 		if(!map->getcell(bl->m,to_x+dir_x,to_y+dir_y,CELL_CHKPASS))
 			break;
 
 		//if sprinting and there's a PC/Mob/NPC, block the path [Kevin]
-		if(sc->data[SC_RUN] && map->count_oncell(bl->m, to_x+dir_x, to_y+dir_y, BL_PC|BL_MOB|BL_NPC))
+		if( map->count_oncell(bl->m, to_x+dir_x, to_y+dir_y, BL_PC|BL_MOB|BL_NPC) )
 			break;
 
 		to_x += dir_x;
 		to_y += dir_y;
 	}
 
+	// Can't run forward
 	if( (to_x == bl->x && to_y == bl->y ) || (to_x == (bl->x+1) || to_y == (bl->y+1)) || (to_x == (bl->x-1) || to_y == (bl->y-1))) {
-		//If you can't run forward, you must be next to a wall, so bounce back. [Skotlex]
-		clif->sc_load(bl,bl->id,AREA,SI_TING,0,0,0);
-
-		//Set running to 0 beforehand so status_change_end knows not to enable spurt [Kevin]
-		unit->bl2ud(bl)->state.running = 0;
-		status_change_end(bl, SC_RUN, INVALID_TIMER);
-
-		skill->blown(bl,bl,skill->get_blewcount(TK_RUN,lv),unit->getdir(bl),0);
-		clif->fixpos(bl); //Why is a clif->slide (skill->blown) AND a fixpos needed? Ask Aegis.
-		clif->sc_end(bl,bl->id,AREA,SI_TING);
-		return 0;
+		unit->run_hit(bl, sc, sd, type);
+		return false;
 	}
-	if (unit->walktoxy(bl, to_x, to_y, 1))
-		return 1;
+
+	if( unit->walktoxy(bl, to_x, to_y, 1) )
+		return true;
+
 	//There must be an obstacle nearby. Attempt walking one cell at a time.
 	do {
 		to_x -= dir_x;
 		to_y -= dir_y;
 	} while (--i > 0 && !unit->walktoxy(bl, to_x, to_y, 1));
+
 	if ( i == 0 ) {
-		// copy-paste from above
-		clif->sc_load(bl,bl->id,AREA,SI_TING,0,0,0);
-
-		//Set running to 0 beforehand so status_change_end knows not to enable spurt [Kevin]
-		unit->bl2ud(bl)->state.running = 0;
-		status_change_end(bl, SC_RUN, INVALID_TIMER);
-
-		skill->blown(bl,bl,skill->get_blewcount(TK_RUN,lv),unit->getdir(bl),0);
-		clif->fixpos(bl);
-		clif->sc_end(bl,bl->id,AREA,SI_TING);
-		return 0;
-	}
-	return 1;
-}
-
-//Exclusive function to Wug Dash state. [Jobbie/3CeAM]
-int unit_wugdash(struct block_list *bl, struct map_session_data *sd) {
-	struct status_change *sc = status->get_sc(bl);
-	short to_x,to_y,dir_x,dir_y;
-	int lv;
-	int i;
-	if (!(sc && sc->data[SC_WUGDASH]))
-		return 0;
-
-	nullpo_ret(sd);
-	nullpo_ret(bl);
-
-	if (!unit->can_move(bl)) {
-		status_change_end(bl,SC_WUGDASH,INVALID_TIMER);
-		return 0;
+		unit->run_hit(bl, sc, sd, type);
+		return false;
 	}
 
-	lv = sc->data[SC_WUGDASH]->val1;
-	dir_x = dirx[sc->data[SC_WUGDASH]->val2];
-	dir_y = diry[sc->data[SC_WUGDASH]->val2];
-
-	to_x = bl->x;
-	to_y = bl->y;
-	for(i=0;i<AREA_SIZE;i++) {
-		if(!map->getcell(bl->m,to_x+dir_x,to_y+dir_y,CELL_CHKPASS))
-			break;
-
-		if(sc->data[SC_WUGDASH] && map->count_oncell(bl->m, to_x+dir_x, to_y+dir_y, BL_PC|BL_MOB|BL_NPC))
-			break;
-
-		to_x += dir_x;
-		to_y += dir_y;
-	}
-
-	if(to_x == bl->x && to_y == bl->y) {
-
-		unit->bl2ud(bl)->state.running = 0;
-		status_change_end(bl,SC_WUGDASH,INVALID_TIMER);
-
-		if( sd ){
-			clif->fixpos(bl);
-			skill->castend_damage_id(bl, &sd->bl, RA_WUGDASH, lv, timer->gettick(), SD_LEVEL);
-		}
-		return 0;
-	}
-	if (unit->walktoxy(bl, to_x, to_y, 1))
-		return 1;
-	do {
-		to_x -= dir_x;
-		to_y -= dir_y;
-	} while (--i > 0 && !unit->walktoxy(bl, to_x, to_y, 1));
-	if (i==0) {
-
-		unit->bl2ud(bl)->state.running = 0;
-		status_change_end(bl,SC_WUGDASH,INVALID_TIMER);
-
-		if( sd ){
-			clif->fixpos(bl);
-			skill->castend_damage_id(bl, &sd->bl, RA_WUGDASH, lv, timer->gettick(), SD_LEVEL);
-		}
-		return 0;
-	}
 	return 1;
 }
 
@@ -951,6 +909,7 @@ int unit_can_move(struct block_list *bl) {
 	))
 		return 0; //Can't move
 
+	// Status changes that block movement
 	if (sc) {
 		if( sc->count
 		 && (
@@ -962,6 +921,7 @@ int unit_can_move(struct block_list *bl) {
 		    || (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_SELF) // cannot move while gospel is in effect
 		    || (sc->data[SC_BASILICA] && sc->data[SC_BASILICA]->val4 == bl->id) // Basilica caster cannot move
 		    ||  sc->data[SC_STOP]
+			|| sc->data[SC_FALLENEMPIRE]
 		    ||  sc->data[SC_RG_CCONFINE_M]
 		    ||  sc->data[SC_RG_CCONFINE_S]
 		    ||  sc->data[SC_GS_MADNESSCANCEL]
@@ -1644,6 +1604,10 @@ int unit_attack(struct block_list *src,int target_id,int continuous) {
 			unit->stop_attack(src);
 			return 0;
 		}
+		if( !pc->can_attack(sd, target_id) ) {
+			unit->stop_attack(src);
+			return 0;
+		}
 	}
 	if( battle->check_target(src,target,BCT_ENEMY) <= 0 || !status->check_skilluse(src, target, 0, 0) ) {
 		unit->unattackable(src);
@@ -1833,6 +1797,7 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick) {
 #ifdef OFFICIAL_WALKPATH
 	 || !path->search_long(NULL, src->m, src->x, src->y, target->x, target->y, CELL_CHKWALL)
 #endif
+	 || (sd && !pc->can_attack(sd, ud->target) )
 	)
 		return 0; // can't attack under these conditions
 
@@ -2620,7 +2585,7 @@ void unit_defaults(void) {
 	unit->walktobl_sub = unit_walktobl_sub;
 	unit->walktobl = unit_walktobl;
 	unit->run = unit_run;
-	unit->wugdash = unit_wugdash;
+	unit->run_hit = unit_run_hit;
 	unit->escape = unit_escape;
 	unit->movepos = unit_movepos;
 	unit->setdir = unit_setdir;

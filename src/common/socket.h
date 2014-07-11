@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _COMMON_SOCKET_H_
-#define _COMMON_SOCKET_H_
+#ifndef COMMON_SOCKET_H
+#define COMMON_SOCKET_H
 
 #include <time.h>
 
@@ -174,7 +174,7 @@ struct socket_interface *sockt;
 void socket_defaults(void);
 
 /* the purpose of these macros is simply to not make calling them be an annoyance */
-#ifndef _H_SOCKET_C_
+#ifndef H_SOCKET_C
 	#define make_listen_bind(ip, port) ( sockt->make_listen_bind(ip, port) )
 	#define make_connection(ip, port, opt) ( sockt->make_connection(ip, port, opt) )
 	#define realloc_fifo(fd, rfifo_size, wfifo_size) ( sockt->realloc_fifo(fd, rfifo_size, wfifo_size) )
@@ -194,6 +194,6 @@ void socket_defaults(void);
 	#define ntows(netshort) ( sockt->ntows(netshort) )
 	#define getips(ips, max) ( sockt->getips(ips, max) )
 	#define set_eof(fd) ( sockt->set_eof(fd) )
-#endif /* _H_SOCKET_C_ */
+#endif /* H_SOCKET_C */
 
-#endif /* _COMMON_SOCKET_H_ */
+#endif /* COMMON_SOCKET_H */

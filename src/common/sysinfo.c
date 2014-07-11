@@ -607,6 +607,37 @@ void sysinfo_osversion_retrieve(void) {
 }
 
 typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO);
+
+/**
+ * Retrieves SYSTEM_INFO (Windows only)
+ * System info is not stored anywhere after retrieval
+ * @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms724958(v=vs.85).aspx
+ **/
+void sysinfo_systeminfo_retrieve( LPSYSTEM_INFO info ) {
+	PGNSI pGNSI;
+
+	// Call GetNativeSystemInfo if supported or GetSystemInfo otherwise.
+	pGNSI = (PGNSI) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo");
+	if (NULL != pGNSI)
+		pGNSI(info);
+	else
+		GetSystemInfo(info);
+
+	return;
+}
+
+/**
+ * Returns number of bytes in a memory page
+ * Only needed when compiling with MSVC
+ **/
+long sysinfo_getpagesize( void ) {
+	SYSTEM_INFO si;
+	ZeroMemory(&si, sizeof(SYSTEM_INFO));
+
+	sysinfo_systeminfo_retrieve(&si);
+	return si.dwPageSize;
+}
+
 /**
  * Retrieves the CPU type (Windows only).
  *
@@ -615,7 +646,6 @@ typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO);
  */
 void sysinfo_cpu_retrieve(void) {
 	StringBuf buf;
-	PGNSI pGNSI;
 	SYSTEM_INFO si;
 	ZeroMemory(&si, sizeof(SYSTEM_INFO));
 	StrBuf->Init(&buf);
@@ -625,12 +655,7 @@ void sysinfo_cpu_retrieve(void) {
 		sysinfo->p->cpu = NULL;
 	}
 
-	// Call GetNativeSystemInfo if supported or GetSystemInfo otherwise.
-	pGNSI = (PGNSI) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo");
-	if (NULL != pGNSI)
-		pGNSI(&si);
-	else
-		GetSystemInfo(&si);
+	sysinfo_systeminfo_retrieve(&si);
 
 	if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL
 	 || si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64
@@ -656,7 +681,6 @@ void sysinfo_cpu_retrieve(void) {
  * Once retrieved, the name is stored into sysinfo->p->arch.
  */
 void sysinfo_arch_retrieve(void) {
-	PGNSI pGNSI;
 	SYSTEM_INFO si;
 	ZeroMemory(&si, sizeof(SYSTEM_INFO));
 
@@ -665,12 +689,7 @@ void sysinfo_arch_retrieve(void) {
 		sysinfo->p->arch = NULL;
 	}
 
-	// Call GetNativeSystemInfo if supported or GetSystemInfo otherwise.
-	pGNSI = (PGNSI) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo");
-	if (NULL != pGNSI)
-		pGNSI(&si);
-	else
-		GetSystemInfo(&si);
+	sysinfo_systeminfo_retrieve(&si);
 
 	if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64) // x64
 		sysinfo->p->arch = aStrdup("x86_64");
@@ -1018,7 +1037,11 @@ void sysinfo_defaults(void) {
 	sysinfo = &sysinfo_s;
 	memset(&sysinfo_p, '\0', sizeof(sysinfo_p));
 	sysinfo->p = &sysinfo_p;
-
+#if defined(WIN32) && !defined(__CYGWIN__)
+	sysinfo->getpagesize = sysinfo_getpagesize;
+#else
+	sysinfo->getpagesize = getpagesize;
+#endif
 	sysinfo->platform = sysinfo_platform;
 	sysinfo->osversion = sysinfo_osversion;
 	sysinfo->cpu = sysinfo_cpu;

@@ -1,8 +1,8 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 
-#ifndef _COMMON_HPM_H_
-#define _COMMON_HPM_H_
+#ifndef COMMON_HPM_H
+#define COMMON_HPM_H
 
 #ifndef HERCULES_CORE
 #error You should never include HPM.h from a plugin.
@@ -158,4 +158,4 @@ struct HPM_interface *HPM;
 
 void hpm_defaults(void);
 
-#endif /* _COMMON_HPM_H_ */
+#endif /* COMMON_HPM_H */

@@ -1,8 +1,8 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 
-#ifndef _COMMON_CONSOLE_H_
-#define _COMMON_CONSOLE_H_
+#ifndef COMMON_CONSOLE_H
+#define COMMON_CONSOLE_H
 
 #include "../config/core.h" // MAX_CONSOLE_INPUT
 
@@ -53,10 +53,10 @@ struct {
 struct console_input_interface {
 	/* vars */
 	SPIN_LOCK ptlock;/* parse thread lock */
-	rAthread pthread;/* parse thread */
+	rAthread *pthread;/* parse thread */
 	volatile int32 ptstate;/* parse thread state */
-	ramutex ptmutex;/* parse thread mutex */
-	racond ptcond;/* parse thread cond */
+	ramutex *ptmutex;/* parse thread mutex */
+	racond *ptcond;/* parse thread cond */
 	/* */
 	struct CParseEntry **cmd_list;
 	struct CParseEntry **cmds;
@@ -93,4 +93,4 @@ struct console_interface *console;
 
 void console_defaults(void);
 
-#endif /* _COMMON_CONSOLE_H_ */
+#endif /* COMMON_CONSOLE_H */

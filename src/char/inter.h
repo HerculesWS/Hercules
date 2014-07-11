@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _CHAR_INTER_H_
-#define _CHAR_INTER_H_
+#ifndef CHAR_INTER_H
+#define CHAR_INTER_H
 
 #include "char.h"
 #include "../common/sql.h"
@@ -30,4 +30,4 @@ extern Sql* lsql_handle;
 
 int inter_accreg_tosql(int account_id, int char_id, struct accreg *reg, int type);
 
-#endif /* _CHAR_INTER_H_ */
+#endif /* CHAR_INTER_H */

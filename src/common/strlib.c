@@ -4,9 +4,9 @@
 
 #define HERCULES_CORE
 
-#define _H_STRLIB_C_
+#define H_STRLIB_C
 #include "strlib.h"
-#undef _H_STRLIB_C_
+#undef H_STRLIB_C
 
 #include <errno.h>
 #include <stdio.h>
@@ -224,7 +224,7 @@ const char* stristr(const char* haystack, const char* needle)
 }
 
 #ifdef __WIN32
-char* _strtok_r(char *s1, const char *s2, char **lasts) {
+char* strtok_r_(char *s1, const char *s2, char **lasts) {
 	char *ret;
 
 	if (s1 == NULL)

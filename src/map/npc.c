@@ -3368,7 +3368,7 @@ int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const c
 		}
 	}
 
-	script->setd_sub(st, NULL, ".@atcmd_numparameters", 0, (void *)__64BPTRSIZE(j), NULL);
+	script->setd_sub(st, NULL, ".@atcmd_numparameters", 0, (void *)h64BPTRSIZE(j), NULL);
 	aFree(temp);
 
 	script->run_main(st);

@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _COMMON_MAPINDEX_H_
-#define _COMMON_MAPINDEX_H_
+#ifndef COMMON_MAPINDEX_H
+#define COMMON_MAPINDEX_H
 
 #include "../common/db.h"
 #include "../common/mmo.h"
@@ -90,4 +90,4 @@ struct mapindex_interface *mapindex;
 
 void mapindex_defaults(void);
 
-#endif /* _COMMON_MAPINDEX_H_ */
+#endif /* COMMON_MAPINDEX_H */

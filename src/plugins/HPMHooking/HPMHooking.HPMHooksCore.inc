@@ -3507,6 +3507,10 @@ struct {
 	struct HPMHookPoint *HP_pc_can_give_items_post;
 	struct HPMHookPoint *HP_pc_can_give_bound_items_pre;
 	struct HPMHookPoint *HP_pc_can_give_bound_items_post;
+	struct HPMHookPoint *HP_pc_can_talk_pre;
+	struct HPMHookPoint *HP_pc_can_talk_post;
+	struct HPMHookPoint *HP_pc_can_attack_pre;
+	struct HPMHookPoint *HP_pc_can_attack_post;
 	struct HPMHookPoint *HP_pc_can_use_command_pre;
 	struct HPMHookPoint *HP_pc_can_use_command_post;
 	struct HPMHookPoint *HP_pc_set_group_pre;
@@ -4953,8 +4957,8 @@ struct {
 	struct HPMHookPoint *HP_unit_walktobl_post;
 	struct HPMHookPoint *HP_unit_run_pre;
 	struct HPMHookPoint *HP_unit_run_post;
-	struct HPMHookPoint *HP_unit_wugdash_pre;
-	struct HPMHookPoint *HP_unit_wugdash_post;
+	struct HPMHookPoint *HP_unit_run_hit_pre;
+	struct HPMHookPoint *HP_unit_run_hit_post;
 	struct HPMHookPoint *HP_unit_escape_pre;
 	struct HPMHookPoint *HP_unit_escape_post;
 	struct HPMHookPoint *HP_unit_movepos_pre;
@@ -8542,6 +8546,10 @@ struct {
 	int HP_pc_can_give_items_post;
 	int HP_pc_can_give_bound_items_pre;
 	int HP_pc_can_give_bound_items_post;
+	int HP_pc_can_talk_pre;
+	int HP_pc_can_talk_post;
+	int HP_pc_can_attack_pre;
+	int HP_pc_can_attack_post;
 	int HP_pc_can_use_command_pre;
 	int HP_pc_can_use_command_post;
 	int HP_pc_set_group_pre;
@@ -9988,8 +9996,8 @@ struct {
 	int HP_unit_walktobl_post;
 	int HP_unit_run_pre;
 	int HP_unit_run_post;
-	int HP_unit_wugdash_pre;
-	int HP_unit_wugdash_post;
+	int HP_unit_run_hit_pre;
+	int HP_unit_run_hit_post;
 	int HP_unit_escape_pre;
 	int HP_unit_escape_post;
 	int HP_unit_movepos_pre;

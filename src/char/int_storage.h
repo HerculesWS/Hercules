@@ -1,8 +1,8 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _CHAR_INT_STORAGE_H_
-#define _CHAR_INT_STORAGE_H_
+#ifndef CHAR_INT_STORAGE_H
+#define CHAR_INT_STORAGE_H
 
 struct storage_data;
 struct guild_storage;
@@ -19,4 +19,4 @@ int storage_fromsql(int account_id, struct storage_data* p);
 int storage_tosql(int account_id,struct storage_data *p);
 int guild_storage_tosql(int guild_id, struct guild_storage *p);
 
-#endif /* _CHAR_INT_STORAGE_H_ */
+#endif /* CHAR_INT_STORAGE_H */

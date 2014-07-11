@@ -99,7 +99,7 @@ static BOOL WINAPI console_handler(DWORD c_event) {
 	return TRUE;
 }
 
-static void cevents_init() {
+static void cevents_init(void) {
 	if (SetConsoleCtrlHandler(console_handler,TRUE)==FALSE)
 		ShowWarning ("Unable to install the console handler!\n");
 }
@@ -267,7 +267,7 @@ int main (int argc, char **argv) {
 	rathread_final();
 	ers_final();
 #endif
-	sysinfo->final();
+	//sysinfo->final(); Called by iMalloc->final()
 
 	iMalloc->final();
 

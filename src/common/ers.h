@@ -37,8 +37,8 @@
  * @author Flavio @ Amazon Project                                           *
  * @encoding US-ASCII                                                        *
 \*****************************************************************************/
-#ifndef _COMMON_ERS_H_
-#define _COMMON_ERS_H_
+#ifndef COMMON_ERS_H
+#define COMMON_ERS_H
 
 #include "../common/cbasetypes.h"
 
@@ -126,7 +126,7 @@ typedef struct eri {
 
 	/* */
 	void (*chunk_size) (struct eri *self, unsigned int new_size);
-} *ERS;
+} ERS;
 
 #ifdef DISABLE_ERS
 // Use memory manager to allocate/free and disable other interface functions
@@ -158,7 +158,7 @@ typedef struct eri {
  * @param The requested size of the entry in bytes
  * @return Interface of the object
  */
-ERS ers_new(uint32 size, char *name, enum ERSOptions options);
+ERS *ers_new(uint32 size, char *name, enum ERSOptions options);
 
 /**
  * Print a report about the current state of the Entry Reusage System.
@@ -175,4 +175,4 @@ void ers_report(void);
 void ers_final(void);
 #endif /* DISABLE_ERS / not DISABLE_ERS */
 
-#endif /* _COMMON_ERS_H_ */
+#endif /* COMMON_ERS_H */

@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_STORAGE_H_
-#define _MAP_STORAGE_H_
+#ifndef MAP_STORAGE_H
+#define MAP_STORAGE_H
 
 #include "../common/cbasetypes.h"
 #include "../common/db.h"
@@ -25,7 +25,7 @@ struct storage_interface {
 	int (*gettocart) (struct map_session_data *sd,int index,int amount);
 	void (*close) (struct map_session_data *sd);
 	void (*pc_quit) (struct map_session_data *sd, int flag);
-	int (*comp_item) (const void *_i1, const void *_i2);
+	int (*comp_item) (const void *i1_, const void *i2_);
 	void (*sortitem) (struct item* items, unsigned int size);
 	int (*reconnect_sub) (DBKey key, DBData *data, va_list ap);
 };
@@ -60,4 +60,4 @@ struct guild_storage_interface *gstorage;
 void storage_defaults(void);
 void gstorage_defaults(void);
 
-#endif /* _MAP_STORAGE_H_ */
+#endif /* MAP_STORAGE_H */

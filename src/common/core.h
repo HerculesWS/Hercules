@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _COMMON_CORE_H_
-#define _COMMON_CORE_H_
+#ifndef COMMON_CORE_H
+#define COMMON_CORE_H
 
 #include "../common/db.h"
 #include "../common/mmo.h"
@@ -47,4 +47,4 @@ enum E_CORE_ST {
 /// If NULL, runflag is set to CORE_ST_STOP instead.
 extern void (*shutdown_callback)(void);
 
-#endif /* _COMMON_CORE_H_ */
+#endif /* COMMON_CORE_H */

@@ -31,10 +31,10 @@ struct guild_storage_interface gstorage_s;
 /*==========================================
  * Sort items in the warehouse
  *------------------------------------------*/
-int storage_comp_item(const void *_i1, const void *_i2)
+int storage_comp_item(const void *i1_, const void *i2_)
 {
-	struct item *i1 = (struct item *)_i1;
-	struct item *i2 = (struct item *)_i2;
+	struct item *i1 = (struct item *)i1_;
+	struct item *i2 = (struct item *)i2_;
 
 	if (i1->nameid == i2->nameid)
 		return 0;

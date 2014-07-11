@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _COMMON_TIMER_H_
-#define _COMMON_TIMER_H_
+#ifndef COMMON_TIMER_H
+#define COMMON_TIMER_H
 
 #include "../common/cbasetypes.h"
 
@@ -67,4 +67,4 @@ struct timer_interface *timer;
 
 void timer_defaults(void);
 
-#endif /* _COMMON_TIMER_H_ */
+#endif /* COMMON_TIMER_H */
