@@ -485,10 +485,10 @@ void initChangeTables(void) {
 	add_sc(MH_POISON_MIST, SC_BLIND);
 	set_sc(MH_PAIN_KILLER, SC_PAIN_KILLER, SI_PAIN_KILLER, SCB_ASPD);
 
-	add_sc(MH_STYLE_CHANGE		 , SC_STYLE_CHANGE);
-	set_sc( MH_TINDER_BREAKER      , SC_RG_CCONFINE_S   , SI_RG_CCONFINE_S   , SCB_NONE );
+	set_sc( MH_SILENT_BREEZE       , SC_SILENCE         , SI_SILENT_BREEZE    , SCB_NONE );
+	add_sc( MH_STYLE_CHANGE        , SC_STYLE_CHANGE);
+	set_sc( MH_TINDER_BREAKER      , SC_RG_CCONFINE_S    , SI_RG_CCONFINE_S    , SCB_NONE );
 	set_sc( MH_TINDER_BREAKER      , SC_RG_CCONFINE_M    , SI_RG_CCONFINE_M    , SCB_FLEE );
-
 
 	add_sc( MER_CRASH            , SC_STUN            );
 	set_sc( MER_PROVOKE          , SC_PROVOKE         , SI_PROVOKE         , SCB_DEF|SCB_DEF2|SCB_BATK|SCB_WATK );
@@ -636,6 +636,7 @@ void initChangeTables(void) {
 	**/
 	add_sc( SR_DRAGONCOMBO           , SC_STUN            );
 	add_sc( SR_EARTHSHAKER           , SC_STUN            );
+	set_sc( SR_FALLENEMPIRE          , SC_STOP/*SC_FALLENEMPIRE*/ , SI_FALLENEMPIRE          , SCB_NONE );
 	set_sc( SR_CRESCENTELBOW         , SC_CRESCENTELBOW      , SI_CRESCENTELBOW         , SCB_NONE );
 	set_sc_with_vfx( SR_CURSEDCIRCLE          , SC_CURSEDCIRCLE_TARGET, SI_CURSEDCIRCLE_TARGET   , SCB_NONE );
 	set_sc( SR_LIGHTNINGWALK         , SC_LIGHTNINGWALK      , SI_LIGHTNINGWALK         , SCB_NONE );

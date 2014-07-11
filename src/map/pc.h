@@ -895,7 +895,7 @@ struct pc_interface {
 	int (*setcart) (struct map_session_data* sd, int type);
 	int (*setfalcon) (struct map_session_data* sd, int flag);
 	int (*setriding) (struct map_session_data* sd, int flag);
-	int (*setmadogear) (struct map_session_data* sd, int flag);
+	void (*setmadogear) (struct map_session_data* sd, int flag);
 	int (*changelook) (struct map_session_data *sd,int type,int val);
 	int (*equiplookall) (struct map_session_data *sd);
 	

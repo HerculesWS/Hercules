@@ -8118,19 +8118,18 @@ int pc_setriding(TBL_PC* sd, int flag)
 	return 0;
 }
 
-/*==========================================
- * Give player a mado
- *------------------------------------------*/
-int pc_setmadogear(TBL_PC* sd, int flag)
-{
-	if( flag ){
-		if( pc->checkskill(sd,NC_MADOLICENCE) > 0 )
+/**
+ * Gives player a mado
+ * @param flag 1 Set mado
+ **/
+void pc_setmadogear( struct map_session_data *sd, int flag ) {
+	if( flag ) {
+		if( (sd->class_&MAPID_THIRDMASK) == MAPID_MECHANIC )
 			pc->setoption(sd, sd->sc.option|OPTION_MADOGEAR);
-	} else if( pc_ismadogear(sd) ){
-			pc->setoption(sd, sd->sc.option&~OPTION_MADOGEAR);
-	}
+	} else if( pc_ismadogear(sd) )
+		pc->setoption(sd, sd->sc.option&~OPTION_MADOGEAR);
 
-	return 0;
+	return;
 }
 
 /**
@@ -8154,7 +8153,8 @@ bool pc_can_attack( struct map_session_data *sd, int target_id ) {
 		sd->sc.data[SC_TRICKDEAD] ||
 		(sd->sc.data[SC_SIREN] && sd->sc.data[SC_SIREN]->val2 == target_id) ||
 		sd->sc.data[SC_BLADESTOP] ||
-		sd->sc.data[SC_DEEP_SLEEP] )
+		sd->sc.data[SC_DEEP_SLEEP] /*||
+		sd->sc.data[SC_FALLENEMPIRE]TODO*/)
 			return false;
 
 	return true;
