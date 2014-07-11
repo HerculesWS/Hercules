@@ -1,35 +1,35 @@
-#
-#  Table structure for table `mob_skill_db2`
-#
+--
+-- Table structure for table `mob_skill_db2`
+--
 
 DROP TABLE IF EXISTS `mob_skill_db2`;
 CREATE TABLE IF NOT EXISTS `mob_skill_db2` (
-  `MOB_ID` smallint(6) NOT NULL,
-  `INFO` text NOT NULL,
-  `STATE` text NOT NULL,
-  `SKILL_ID` smallint(6) NOT NULL,
+  `MOB_ID` SMALLINT(6) NOT NULL,
+  `INFO` TEXT NOT NULL,
+  `STATE` TEXT NOT NULL,
+  `SKILL_ID` SMALLINT(6) NOT NULL,
   `SKILL_LV` tinyint(4) NOT NULL,
-  `RATE` smallint(4) NOT NULL,
-  `CASTTIME` mediumint(9) NOT NULL,
-  `DELAY` int(9) NOT NULL,
-  `CANCELABLE` text NOT NULL,
-  `TARGET` text NOT NULL,
-  `CONDITION` text NOT NULL,
-  `CONDITION_VALUE` text,
-  `VAL1` mediumint(9) DEFAULT NULL,
-  `VAL2` mediumint(9) DEFAULT NULL,
-  `VAL3` mediumint(9) DEFAULT NULL,
-  `VAL4` mediumint(9) DEFAULT NULL,
-  `VAL5` mediumint(9) DEFAULT NULL,
-  `EMOTION` text,
-  `CHAT` text
+  `RATE` SMALLINT(4) NOT NULL,
+  `CASTTIME` MEDIUMINT(9) NOT NULL,
+  `DELAY` INT(9) NOT NULL,
+  `CANCELABLE` TEXT NOT NULL,
+  `TARGET` TEXT NOT NULL,
+  `CONDITION` TEXT NOT NULL,
+  `CONDITION_VALUE` TEXT,
+  `VAL1` MEDIUMINT(9) DEFAULT NULL,
+  `VAL2` MEDIUMINT(9) DEFAULT NULL,
+  `VAL3` MEDIUMINT(9) DEFAULT NULL,
+  `VAL4` MEDIUMINT(9) DEFAULT NULL,
+  `VAL5` MEDIUMINT(9) DEFAULT NULL,
+  `EMOTION` TEXT,
+  `CHAT` TEXT
 ) ENGINE=MyISAM;
 
-#  Mob Skill Database
-# 
-#  Structure of Database:
-#  INSERT INTO `mob_skill_db2` (`MOB_ID`, `INFO`, `STATE`, `SKILL_ID`, `SKILL_LV`, `RATE`, `CASTTIME`, `DELAY`, `CANCELABLE`, `TARGET`, `CONDITION`, `CONDITION_VALUE`, `VAL1`, `VAL2`, `VAL3`, `VAL4`, `VAL5`, `EMOTION`, `CHAT`);
-#
+-- Mob Skill Database
+-- 
+-- Structure of Database:
+-- INSERT INTO `mob_skill_db2` (`MOB_ID`, `INFO`, `STATE`, `SKILL_ID`, `SKILL_LV`, `RATE`, `CASTTIME`, `DELAY`, `CANCELABLE`, `TARGET`, `CONDITION`, `CONDITION_VALUE`, `VAL1`, `VAL2`, `VAL3`, `VAL4`, `VAL5`, `EMOTION`, `CHAT`);
+
 # REPLACE INTO mob_skill_db2 VALUES(1900, "Valaris@AL_TELEPORT", "idle", 26, 1, 10000, 0, 0, "yes", "self", "rudeattacked", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 # REPLACE INTO mob_skill_db2 VALUES(1900, "Valaris@AL_TELEPORT", "walk", 26, 1, 500, 0, 5000, "yes", "self", "rudeattacked", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 # REPLACE INTO mob_skill_db2 VALUES(1900, "Valaris@KN_BRANDISHSPEAR", "attack", 57, 10, 2000, 500, 5000, "no", "target", "always", 0, NULL, NULL, NULL, NULL, NULL, 29, NULL);
