@@ -49660,32 +49660,31 @@ int HP_pc_setriding(struct map_session_data *sd, int flag) {
 	}
 	return retVal___;
 }
-int HP_pc_setmadogear(struct map_session_data *sd, int flag) {
+void HP_pc_setmadogear(struct map_session_data *sd, int flag) {
 	int hIndex = 0;
-	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_setmadogear_pre ) {
-		int (*preHookFunc) (struct map_session_data *sd, int *flag);
+		void (*preHookFunc) (struct map_session_data *sd, int *flag);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setmadogear_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_setmadogear_pre[hIndex].func;
-			retVal___ = preHookFunc(sd, &flag);
+			preHookFunc(sd, &flag);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
-			return retVal___;
+			return;
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.setmadogear(sd, flag);
+		HPMHooks.source.pc.setmadogear(sd, flag);
 	}
 	if( HPMHooks.count.HP_pc_setmadogear_post ) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int *flag);
+		void (*postHookFunc) (struct map_session_data *sd, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setmadogear_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_setmadogear_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, &flag);
+			postHookFunc(sd, &flag);
 		}
 	}
-	return retVal___;
+	return;
 }
 int HP_pc_changelook(struct map_session_data *sd, int type, int val) {
 	int hIndex = 0;
