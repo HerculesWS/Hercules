@@ -8153,8 +8153,8 @@ bool pc_can_attack( struct map_session_data *sd, int target_id ) {
 		sd->sc.data[SC_TRICKDEAD] ||
 		(sd->sc.data[SC_SIREN] && sd->sc.data[SC_SIREN]->val2 == target_id) ||
 		sd->sc.data[SC_BLADESTOP] ||
-		sd->sc.data[SC_DEEP_SLEEP] /*||
-		sd->sc.data[SC_FALLENEMPIRE]TODO*/)
+		sd->sc.data[SC_DEEP_SLEEP] ||
+		sd->sc.data[SC_FALLENEMPIRE] )
 			return false;
 
 	return true;

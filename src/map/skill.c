@@ -1245,7 +1245,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			sc_start(src, bl, SC_STUN, 1 + skill_lv, skill_lv, skill->get_time(skill_id, skill_lv));
 			break;
 		case SR_FALLENEMPIRE:
-			sc_start(src, bl, SC_STOP, 100, skill_lv, skill->get_time(skill_id, skill_lv));
+			sc_start(src, bl, SC_FALLENEMPIRE, 100, skill_lv, skill->get_time(skill_id, skill_lv));
 			break;
 		case SR_WINDMILL:
 			if( dstsd )

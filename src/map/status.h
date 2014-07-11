@@ -712,7 +712,8 @@ typedef enum sc_type {
 	SC__CHAOS,
 	
 	SC__FEINTBOMB_MASTER,
-	
+	SC_FALLENEMPIRE,
+
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
 

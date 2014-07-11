@@ -636,7 +636,7 @@ void initChangeTables(void) {
 	**/
 	add_sc( SR_DRAGONCOMBO           , SC_STUN            );
 	add_sc( SR_EARTHSHAKER           , SC_STUN            );
-	set_sc( SR_FALLENEMPIRE          , SC_STOP/*SC_FALLENEMPIRE*/ , SI_FALLENEMPIRE          , SCB_NONE );
+	set_sc( SR_FALLENEMPIRE          , SC_FALLENEMPIRE       , SI_FALLENEMPIRE          , SCB_NONE );
 	set_sc( SR_CRESCENTELBOW         , SC_CRESCENTELBOW      , SI_CRESCENTELBOW         , SCB_NONE );
 	set_sc_with_vfx( SR_CURSEDCIRCLE          , SC_CURSEDCIRCLE_TARGET, SI_CURSEDCIRCLE_TARGET   , SCB_NONE );
 	set_sc( SR_LIGHTNINGWALK         , SC_LIGHTNINGWALK      , SI_LIGHTNINGWALK         , SCB_NONE );
@@ -9200,6 +9200,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			// Cancel cast when get status [LuzZza]
 			if (battle_config.sc_castcancel&bl->type)
 				unit->skillcastcancel(bl, 0);
+		case SC_FALLENEMPIRE:
 		case SC_WHITEIMPRISON:
 			unit->stop_attack(bl);
 		case SC_STOP:
