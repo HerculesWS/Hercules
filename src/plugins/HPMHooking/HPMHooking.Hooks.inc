@@ -66057,15 +66057,15 @@ void HP_storage_pc_quit(struct map_session_data *sd, int flag) {
 	}
 	return;
 }
-int HP_storage_comp_item(const void *_i1, const void *_i2) {
+int HP_storage_comp_item(const void *i1_, const void *i2_) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_storage_comp_item_pre ) {
-		int (*preHookFunc) (const void *_i1, const void *_i2);
+		int (*preHookFunc) (const void *i1_, const void *i2_);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_storage_comp_item_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_storage_comp_item_pre[hIndex].func;
-			retVal___ = preHookFunc(_i1, _i2);
+			retVal___ = preHookFunc(i1_, i2_);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -66073,13 +66073,13 @@ int HP_storage_comp_item(const void *_i1, const void *_i2) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.storage.comp_item(_i1, _i2);
+		retVal___ = HPMHooks.source.storage.comp_item(i1_, i2_);
 	}
 	if( HPMHooks.count.HP_storage_comp_item_post ) {
-		int (*postHookFunc) (int retVal___, const void *_i1, const void *_i2);
+		int (*postHookFunc) (int retVal___, const void *i1_, const void *i2_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_storage_comp_item_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_storage_comp_item_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, _i1, _i2);
+			retVal___ = postHookFunc(retVal___, i1_, i2_);
 		}
 	}
 	return retVal___;
