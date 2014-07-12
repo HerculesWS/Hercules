@@ -3096,10 +3096,11 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 					case WL_TETRAVORTEX_WATER:
 					case WL_TETRAVORTEX_WIND:
 					case WL_TETRAVORTEX_GROUND:
-					case SR_FLASHCOMBO_ATK_STEP1:
-					case SR_FLASHCOMBO_ATK_STEP2:
-					case SR_FLASHCOMBO_ATK_STEP3:
-					case SR_FLASHCOMBO_ATK_STEP4:
+					// SR_FLASHCOMBO
+					case SR_DRAGONCOMBO:
+					case SR_FALLENEMPIRE:
+					case SR_TIGERCANNON:
+					case SR_SKYNETBLOW:
 						break;
 					default:
 						continue; // Caster is Dead
@@ -3215,22 +3216,23 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 					map->foreachinrange(skill->area_sub, target, skill->get_splash(skl->skill_id, skl->skill_lv), BL_CHAR,
 					                    src, skl->skill_id, skl->skill_lv, (int64)0, skl->flag|1|BCT_ENEMY, skill->castend_damage_id);
 					break;
-				case SR_FLASHCOMBO_ATK_STEP1:
-				case SR_FLASHCOMBO_ATK_STEP2:
-				case SR_FLASHCOMBO_ATK_STEP3:
-				case SR_FLASHCOMBO_ATK_STEP4:
-					if( src->type == BL_PC ) {
-						struct map_session_data *sd = NULL;
-						const enum e_skill combos[] = {SR_DRAGONCOMBO, SR_FALLENEMPIRE, SR_TIGERCANNON, SR_SKYNETBLOW};
-						if( (sd = ((TBL_PC*)src)) ){
-							uint16 cid = combos[skl->skill_id-SR_FLASHCOMBO_ATK_STEP1];
-							if( distance_xy(src->x, src->y, target->x, target->y) >= 3 )
-								break;
-							skill->consume_requirement(sd,cid,pc->checkskill(sd, cid),1);
-							skill->castend_damage_id(src, target, cid, pc->checkskill(sd, cid), tick, 0);
-						}
+				// SR_FLASHCOMBO
+				case SR_DRAGONCOMBO:
+				case SR_FALLENEMPIRE:
+				case SR_TIGERCANNON:
+				case SR_SKYNETBLOW:
+				{
+					struct map_session_data *sd = NULL;
+
+					if( src->type == BL_PC && (sd = ((TBL_PC*)src)) ) {
+						if( distance_xy(src->x, src->y, target->x, target->y) >= 3 ) // FIXME: Don't combos ignore distance? [Panikon]
+							break;
+
+						skill->consume_requirement(sd, skl->skill_id, pc->checkskill(sd, skl->skill_id),1);
+						skill->castend_damage_id(src, target, skl->skill_id, pc->checkskill(sd, skl->skill_id), tick, 0);
 					}
 					break;
+				}
 				case SC_ESCAPE:
 					if( skl->type < 4+skl->skill_lv ){
 						clif->skill_damage(src,src,tick,0,0,-30000,1,skl->skill_id,skl->skill_lv,5);
@@ -3348,10 +3350,11 @@ int skill_cleartimerskill (struct block_list *src)
 				case WL_TETRAVORTEX_WATER:
 				case WL_TETRAVORTEX_WIND:
 				case WL_TETRAVORTEX_GROUND:
-				case SR_FLASHCOMBO_ATK_STEP1:
-				case SR_FLASHCOMBO_ATK_STEP2:
-				case SR_FLASHCOMBO_ATK_STEP3:
-				case SR_FLASHCOMBO_ATK_STEP4:
+				// SR_FLASHCOMBO
+				case SR_DRAGONCOMBO:
+				case SR_FALLENEMPIRE:
+				case SR_TIGERCANNON:
+				case SR_SKYNETBLOW:
 					continue;
 			}
 			timer->delete(ud->skilltimerskill[i]->timer, skill->timerskill);
@@ -8833,12 +8836,19 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 		case SR_FLASHCOMBO:
 		{
+			const int combo[] = {
+				SR_DRAGONCOMBO, SR_FALLENEMPIRE, SR_TIGERCANNON, SR_SKYNETBLOW
+			};
 			int i;
-			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-			for(i = SR_FLASHCOMBO_ATK_STEP1; i <= SR_FLASHCOMBO_ATK_STEP4; i++)
-				skill->addtimerskill(src, tick + 400 * (i - SR_FLASHCOMBO_ATK_STEP1), bl->id, 0, 0, i, skill_lv, BF_WEAPON, flag|SD_LEVEL);
+
+			clif->skill_nodamage(src,bl,skill_id,skill_lv,
+				sc_start2(src,bl,type,100,skill_lv,bl->id,skill->get_time(skill_id,skill_lv)));
+
+			for( i = 0; i < ARRAYLENGTH(combo); i++ )
+				skill->addtimerskill(src, tick + 400 * i, bl->id, 0, 0, combo[i], skill_lv, BF_WEAPON, flag|SD_LEVEL);
+
+ 			break;
 		}
-			break;
 		case WA_SWING_DANCE:
 		case WA_SYMPHONY_OF_LOVER:
 		case WA_MOONLIT_SERENADE:

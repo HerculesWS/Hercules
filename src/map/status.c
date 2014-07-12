@@ -644,6 +644,7 @@ void initChangeTables(void) {
 	set_sc( SR_GENTLETOUCH_ENERGYGAIN, SC_GENTLETOUCH_ENERGYGAIN      , SI_GENTLETOUCH_ENERGYGAIN, SCB_NONE );
 	set_sc( SR_GENTLETOUCH_CHANGE    , SC_GENTLETOUCH_CHANGE          , SI_GENTLETOUCH_CHANGE    , SCB_ASPD|SCB_MDEF|SCB_MAXHP );
 	set_sc( SR_GENTLETOUCH_REVITALIZE, SC_GENTLETOUCH_REVITALIZE      , SI_GENTLETOUCH_REVITALIZE, SCB_MAXHP|SCB_REGEN );
+	set_sc( SR_FLASHCOMBO            , SC_FLASHCOMBO                  , SI_FLASHCOMBO            , SCB_WATK );
 	/**
 	* Wanderer / Minstrel
 	**/
@@ -4642,6 +4643,8 @@ unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc,
 		watk += watk * sc->data[SC_TIDAL_WEAPON]->val2 / 100;
 	if(sc->data[SC_ANGRIFFS_MODUS])
 		watk += watk * sc->data[SC_ANGRIFFS_MODUS]->val2/100;
+	if( sc->data[SC_FLASHCOMBO] )
+		watk += sc->data[SC_FLASHCOMBO]->val2;
 
 	return (unsigned short)cap_value(watk,0,USHRT_MAX);
 }
@@ -9011,8 +9014,14 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 					val1 = 1002; // default poring
 				break;
 			case SC_ALL_RIDING:
-				unit->stop_attack(bl);
 				tick = -1;
+				break;
+			case SC_FLASHCOMBO:
+				/**
+				 * val1 = <IN>skill_id
+				 * val2 = <OUT>attack addition
+				 **/
+				val2 = 20+(20*val1);
 				break;
 			default:
 				if( calc_flag == SCB_NONE && status->SkillChangeTable[type] == 0 && status->IconChangeTable[type] == 0 )
@@ -9234,6 +9243,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_WEIGHTOVER90:
 		case SC_CAMOUFLAGE:
 		case SC_SIREN:
+		case SC_ALL_RIDING:
 			unit->stop_attack(bl);
 			break;
 		case SC_SILENCE:
