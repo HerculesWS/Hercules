@@ -48718,11 +48718,11 @@ int HP_pc_checkjoblevelup(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-int HP_pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned int base_exp, unsigned int job_exp, bool is_quest) {
+bool HP_pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned int base_exp, unsigned int job_exp, bool is_quest) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_pc_gainexp_pre ) {
-		int (*preHookFunc) (struct map_session_data *sd, struct block_list *src, unsigned int *base_exp, unsigned int *job_exp, bool *is_quest);
+		bool (*preHookFunc) (struct map_session_data *sd, struct block_list *src, unsigned int *base_exp, unsigned int *job_exp, bool *is_quest);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_gainexp_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_gainexp_pre[hIndex].func;
@@ -48737,7 +48737,7 @@ int HP_pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned 
 		retVal___ = HPMHooks.source.pc.gainexp(sd, src, base_exp, job_exp, is_quest);
 	}
 	if( HPMHooks.count.HP_pc_gainexp_post ) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, struct block_list *src, unsigned int *base_exp, unsigned int *job_exp, bool *is_quest);
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct block_list *src, unsigned int *base_exp, unsigned int *job_exp, bool *is_quest);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_gainexp_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_gainexp_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, src, &base_exp, &job_exp, &is_quest);

@@ -5943,9 +5943,9 @@ int pc_checkjoblevelup(struct map_session_data *sd)
 	return 1;
 }
 
-/*==========================================
- * Alters experienced based on self bonuses that do not get even shared to the party.
- *------------------------------------------*/
+/**
+ * Alters EXP based on self bonuses that do not get shared with the party
+ **/
 void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned int *job_exp, struct block_list *src) {
 	int bonus = 0;
 	struct status_data *st = status->get_status_data(src);
@@ -5976,19 +5976,23 @@ void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned in
 	
 	return;
 }
-/*==========================================
- * Give x exp at sd player and calculate remaining exp for next lvl
- *------------------------------------------*/
-int pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned int base_exp,unsigned int job_exp,bool is_quest) {
+
+/**
+ * Gives a determined EXP amount to sd and calculates remaining EXP for next level
+ * @param src if is NULL no bonuses are taken into account
+ * @param is_quest Used to let client know that the EXP was from a quest (clif->displayexp) PACKETVER >= 20091027
+ * @retval true success
+ **/
+bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned int base_exp,unsigned int job_exp,bool is_quest) {
 	float nextbp=0, nextjp=0;
 	unsigned int nextb=0, nextj=0;
 	nullpo_ret(sd);
 
 	if(sd->bl.prev == NULL || pc_isdead(sd))
-		return 0;
+		return false;
 
 	if(!battle_config.pvp_exp && map->list[sd->bl.m].flag.pvp)  // [MouseJstr]
-		return 0; // no exp on pvp maps
+		return false; // no exp on pvp maps
 
 	if(sd->status.guild_id>0)
 		base_exp-=guild->payexp(sd,base_exp);
@@ -6020,7 +6024,8 @@ int pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned int
 		}
 	}
 
-	//Cap exp to the level up requirement of the previous level when you are at max level, otherwise cap at UINT_MAX (this is required for some S. Novice bonuses). [Skotlex]
+	// Cap exp to the level up requirement of the previous level when you are at max level,
+	// otherwise cap at UINT_MAX (this is required for some S. Novice bonuses). [Skotlex]
 	if (base_exp) {
 		nextb = nextb?UINT_MAX:pc->thisbaseexp(sd);
 		if(sd->status.base_exp > nextb - base_exp)
@@ -6055,7 +6060,7 @@ int pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned int
 		clif_disp_onlyself(sd,output,strlen(output));
 	}
 
-	return 1;
+	return true;
 }
 
 /*==========================================

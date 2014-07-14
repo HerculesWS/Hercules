@@ -713,6 +713,7 @@ typedef enum sc_type {
 	
 	SC__FEINTBOMB_MASTER,
 	SC_FALLENEMPIRE,
+	SC_FLASHCOMBO,
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
@@ -1464,10 +1465,21 @@ enum si_type {
 	//SI_                                    = 735,
 	SI_CHILL                                 = 736,
 	SI_BURNT                                 = 737,
-	//...
+//	SI_PCCAFE_PLAY_TIME                      = 738,
+//	SI_TWISTED_TIME                          = 739,
 	SI_FLASHCOMBO                            = 740,
 
-	//...
+//	SI_JITTER_BUFF1                          = 741,
+//	SI_JITTER_BUFF2                          = 742,
+//	SI_JITTER_BUFF3                          = 743,
+//	SI_JITTER_BUFF4                          = 744,
+//	SI_JITTER_BUFF5                          = 745,
+//	SI_JITTER_BUFF6                          = 746,
+//	SI_JITTER_BUFF7                          = 747,
+//	SI_JITTER_BUFF8                          = 748,
+//	SI_JITTER_BUFF9                          = 749,
+//	SI_JITTER_BUFF10                         = 750,
+//	SI_CUP_OF_BOZA                           = 751,
 	SI_B_TRAP                                = 752,
 	SI_E_CHAIN                               = 753,
 	SI_E_QD_SHOT_READY                       = 754,
@@ -1493,9 +1505,38 @@ enum si_type {
 	SI_PACKING_ENVELOPE9                     = 774,
 	SI_PACKING_ENVELOPE10                    = 775,
 	SI_GLASTHEIM_TRANS                       = 776,
-	//...
+//	SI_ZONGZI_POUCH_TRANS                    = 777,
 	SI_HEAT_BARREL_AFTER                     = 778,
 	SI_DECORATION_OF_MUSIC                   = 779,
+
+//	SI_OVERSEAEXPUP                          = 780,
+//	SI_CLOWN_N_GYPSY_CARD                    = 781,
+//	SI_OPEN_NPC_MARKET                       = 782,
+//	SI_BEEF_RIB_STEW                         = 783,
+//	SI_PORK_RIB_STEW                         = 784,
+//	SI_CHUSEOK_MONDAY                        = 785,
+//	SI_CHUSEOK_TUESDAY                       = 786,
+//	SI_CHUSEOK_WEDNESDAY                     = 787,
+//	SI_CHUSEOK_THURSDAY                      = 788,
+//	SI_CHUSEOK_FRIDAY                        = 789,
+//	SI_CHUSEOK_WEEKEND                       = 790,
+//	SI_ALL_LIGHTGUARD                        = 791,
+//	SI_ALL_LIGHTGUARD_COOL_TIME              = 792,
+//	SI_MTF_MHP                               = 793,
+//	SI_MTF_MSP                               = 794,
+//	SI_MTF_PUMPKIN                           = 795,
+//	SI_MTF_HITFLEE                           = 796,
+//	SI_MTF_CRIDAMAGE2                        = 797,
+//	SI_MTF_SPDRAIN                           = 798,
+//	SI_ACUO_MINT_GUM                         = 799,
+//	...
+//	SI_GUILD_STORAGE                         = 810,
+//	...
+//	SI_JUMPINGCLAN                           = 815,
+// ...
+//	SI_MTF_RANGEATK2                         = 818,
+//	SI_MTF_ASPD2                             = 819,
+//	SI_MTF_MATK2                             = 820,
 
 	SI_MAX,
 };
