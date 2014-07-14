@@ -6617,7 +6617,7 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 		if( pc->checkskill(sd, SG_DEVIL) &&  !pc->nextjobexp(sd) ) //Remove perma blindness due to skill-reset. [Skotlex]
 			clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_DEVIL1);
 		i = sd->sc.option;
-		if( i&OPTION_RIDING && (!pc->checkskill(sd, KN_RIDING) || (sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT) )
+		if( i&OPTION_RIDING && pc->checkskill(sd, KN_RIDING) )
 			i &= ~OPTION_RIDING;
 		if( i&OPTION_FALCON && pc->checkskill(sd, HT_FALCON) )
 			i &= ~OPTION_FALCON;
@@ -6694,6 +6694,21 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 	if( flag&2 || !skill_point ) return skill_point;
 
 	sd->status.skill_point += skill_point;
+
+
+	if( !(flag&2) ) {
+		// Remove all SCs that can't be inactivated without a skill
+		if( sd->sc.data[SC_STORMKICK_READY] )
+			status_change_end(&sd->bl, SC_STORMKICK_READY, INVALID_TIMER);
+		if( sd->sc.data[SC_DOWNKICK_READY] )
+			status_change_end(&sd->bl, SC_DOWNKICK_READY, INVALID_TIMER);
+		if( sd->sc.data[SC_TURNKICK_READY] )
+			status_change_end(&sd->bl, SC_TURNKICK_READY, INVALID_TIMER);
+		if( sd->sc.data[SC_COUNTERKICK_READY] )
+			status_change_end(&sd->bl, SC_COUNTERKICK_READY, INVALID_TIMER);
+		if( sd->sc.data[SC_DODGE_READY] )
+			status_change_end(&sd->bl, SC_DODGE_READY, INVALID_TIMER);
+	}
 
 	if( flag&1 ) {
 		clif->updatestatus(sd,SP_SKILLPOINT);
