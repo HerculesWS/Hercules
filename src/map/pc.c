@@ -1391,7 +1391,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 		if( sd->status.skill[i].flag == SKILL_FLAG_PERMANENT ) {
 			switch( skill->db[i].nameid ) {
 				case NV_TRICKDEAD:
-					if( (sd->class_&MAPID_BASEMASK) != MAPID_NOVICE ) {
+					if( (sd->class_&(MAPID_BASEMASK|JOBL_2)) != MAPID_NOVICE ) {
 							sd->status.skill[i].id = 0;
 							sd->status.skill[i].lv = 0;
 							sd->status.skill[i].flag = 0;
@@ -6617,7 +6617,7 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 		if( pc->checkskill(sd, SG_DEVIL) &&  !pc->nextjobexp(sd) ) //Remove perma blindness due to skill-reset. [Skotlex]
 			clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_DEVIL1);
 		i = sd->sc.option;
-		if( i&OPTION_RIDING && (!pc->checkskill(sd, KN_RIDING) || (sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT) )
+		if( i&OPTION_RIDING && pc->checkskill(sd, KN_RIDING) )
 			i &= ~OPTION_RIDING;
 		if( i&OPTION_FALCON && pc->checkskill(sd, HT_FALCON) )
 			i &= ~OPTION_FALCON;
@@ -6656,14 +6656,14 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 		skill_id = skill->db[i].nameid;
 		
 		// Don't reset trick dead if not a novice/baby
-		if( skill_id == NV_TRICKDEAD && (sd->class_&MAPID_BASEMASK) != MAPID_NOVICE ) {
+		if( skill_id == NV_TRICKDEAD && (sd->class_&(MAPID_BASEMASK|JOBL_2)) != MAPID_NOVICE ) {
 			sd->status.skill[i].lv = 0;
 			sd->status.skill[i].flag = 0;
 			continue;
 		}
 
 		// do not reset basic skill
-		if( skill_id == NV_BASIC && (sd->class_&MAPID_BASEMASK) != MAPID_NOVICE )
+		if( skill_id == NV_BASIC && (sd->class_&(MAPID_BASEMASK|JOBL_2)) != MAPID_NOVICE )
 			continue;
 
 		if( sd->status.skill[i].flag == SKILL_FLAG_PERM_GRANTED )
@@ -6694,6 +6694,21 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 	if( flag&2 || !skill_point ) return skill_point;
 
 	sd->status.skill_point += skill_point;
+
+
+	if( !(flag&2) ) {
+		// Remove all SCs that can't be inactivated without a skill
+		if( sd->sc.data[SC_STORMKICK_READY] )
+			status_change_end(&sd->bl, SC_STORMKICK_READY, INVALID_TIMER);
+		if( sd->sc.data[SC_DOWNKICK_READY] )
+			status_change_end(&sd->bl, SC_DOWNKICK_READY, INVALID_TIMER);
+		if( sd->sc.data[SC_TURNKICK_READY] )
+			status_change_end(&sd->bl, SC_TURNKICK_READY, INVALID_TIMER);
+		if( sd->sc.data[SC_COUNTERKICK_READY] )
+			status_change_end(&sd->bl, SC_COUNTERKICK_READY, INVALID_TIMER);
+		if( sd->sc.data[SC_DODGE_READY] )
+			status_change_end(&sd->bl, SC_DODGE_READY, INVALID_TIMER);
+	}
 
 	if( flag&1 ) {
 		clif->updatestatus(sd,SP_SKILLPOINT);
@@ -9994,7 +10009,7 @@ void pc_read_skill_tree(void) {
 					if( a == MAX_SKILL_TREE ) {
 						ShowWarning("pc_read_skill_tree: '%s' can't inherit '%s', skill tree is full!\n", name,iname);
 						break;
-					} else if ( pc->skill_tree[idx][a].id || ( pc->skill_tree[idx][a].id == NV_TRICKDEAD && ((pc->jobid2mapid(jnames[k].id)&MAPID_BASEMASK)!=MAPID_NOVICE) ) ) /* we skip trickdead for non-novices */
+					} else if ( pc->skill_tree[idx][a].id || ( pc->skill_tree[idx][a].id == NV_TRICKDEAD && ((pc->jobid2mapid(jnames[k].id)&(MAPID_BASEMASK|JOBL_2))!=MAPID_NOVICE) ) ) /* we skip trickdead for non-novices */
 						continue;/* skip */
 					
 					memcpy(&pc->skill_tree[idx][a],&pc->skill_tree[fidx][f],sizeof(pc->skill_tree[fidx][f]));
