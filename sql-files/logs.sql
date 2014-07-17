@@ -1,22 +1,22 @@
 -- PickLog Types
---	(M)onsters Drop
---	(P)layers Drop/Take
---	Mobs Drop (L)oot Drop/Take
---	Players (T)rade Give/Take
---	Players (V)ending Sell/Take
---	(S)hop Sell/Take
---	(N)PC Give/Take
---	(C)onsumable Items
---	(A)dministrators Create/Delete
---	Sto(R)age
---	(G)uild Storage
---	(E)mail attachment
---	(B)uying Store
---	Pr(O)duced Items/Ingredients
---	Auct(I)oned Items
---	(X) Other
---	(D) Stolen from mobs
---	(U) MVP Prizes
+-- (M)onsters Drop
+-- (P)layers Drop/Take
+-- Mobs Drop (L)oot Drop/Take
+-- Players (T)rade Give/Take
+-- Players (V)ending Sell/Take
+-- (S)hop Sell/Take
+-- (N)PC Give/Take
+-- (C)onsumable Items
+-- (A)dministrators Create/Delete
+-- Sto(R)age
+-- (G)uild Storage
+-- (E)mail attachment
+-- (B)uying Store
+-- Pr(O)duced Items/Ingredients
+-- Auct(I)oned Items
+-- (X) Other
+-- (D) Stolen from mobs
+-- (U) MVP Prizes
 
 --
 -- Table structure for table `atcommandlog`
