@@ -112,6 +112,10 @@
 #endif
 #define MAX_CARTS (MAX_BASE_CARTS + MAX_CARTDECORATION_CARTS)
 
+#if PACKETVER >= 20131223
+	#define OFFICIAL_GUILD_STORAGE
+#endif // PACKETVER >= 20131223
+
 #define MAX_INVENTORY 100
 //Max number of characters per account. Note that changing this setting alone is not enough if the client is not hexed to support more characters as well.
 #define MAX_CHARS 9
@@ -129,21 +133,25 @@
 #define MAX_FAME 1000000000
 #define MAX_CART 100
 #define MAX_SKILL 1478
-#define MAX_SKILL_ID 10015   // [Ind/Hercules] max used skill ID
+#define MAX_SKILL_ID 10016   // [Ind/Hercules] max used skill ID
 // Update this max as necessary. 86 is the value needed for Expanded Super Novice.
 #define MAX_SKILL_TREE 86
 #define DEFAULT_WALK_SPEED 150
 #define MIN_WALK_SPEED 20 /* below 20 clips animation */
 #define MAX_WALK_SPEED 1000
 #define MAX_STORAGE 600
-#define MAX_GUILD_STORAGE 600
+#ifndef OFFICIAL_GUILD_STORAGE
+	#define MAX_GUILD_STORAGE 600
+#else // ! OFFICIAL_GUILD_STORAGE
+	#define MAX_GUILD_STORAGE (-1)
+#endif // OFFICIAL_GUILD_STORAGE
 #define MAX_PARTY 12
 #define BASE_GUILD_SIZE 16               // Base guild members (without GD_EXTENSION)
 #define MAX_GUILD (BASE_GUILD_SIZE+10*6) // Increased max guild members +6 per 1 extension levels [Lupus]
 #define MAX_GUILDPOSITION 20             // Increased max guild positions to accomodate for all members [Valaris] (removed) [PoW]
 #define MAX_GUILDEXPULSION 32
 #define MAX_GUILDALLIANCE 16
-#define MAX_GUILDSKILL 15                // Increased max guild skills because of new skills [Sara-chan]
+#define MAX_GUILDSKILL 17                // Increased max guild skills because of new skills [Sara-chan]
 #define MAX_GUILDLEVEL 50
 #define MAX_GUARDIANS 8                  // Local max per castle. [Skotlex]
 #define MAX_QUEST_OBJECTIVES 3           // Max quest objectives for a quest
@@ -781,6 +789,8 @@ enum {
 	GD_RESTORE=10012,
 	GD_EMERGENCYCALL=10013,
 	GD_DEVELOPMENT=10014,
+	GD_ITEMEMERGENCYCALL = 10015,
+	GD_GUILD_STORAGE = 10016,
 	GD_MAX,
 };
 

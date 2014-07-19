@@ -871,7 +871,12 @@ int inter_guild_calcinfo(struct guild *g)
 	g->next_exp = nextexp;
 
 	// Set the max storage size
+#ifdef OFFICIAL_GUILD_STORAGE
+	g->max_storage = inter_guild->checkskill(g, GD_GUILD_STORAGE)*100;
+#else // ! OFFICIAL_GUILD_STORAGE
 	g->max_storage = MAX_GUILD_STORAGE;
+#endif // OFFICIAL_GUILD_STORAGE
+
 	// Set the max number of members, Guild Extension skill - currently adds 6 to max per skill lv.
 	g->max_member = BASE_GUILD_SIZE + inter_guild->checkskill(g, GD_EXTENSION) * 6;
 	if(g->max_member > MAX_GUILD)
@@ -1239,7 +1244,11 @@ int mapif_parse_CreateGuild(int fd, int account_id, const char *name, const stru
 	g->average_lv = master->lv;
 	g->connect_member = 1;
 	g->guild_lv = 1;
+#ifdef OFFICIAL_GUILD_STORAGE
+	g->max_storage = 0;
+#else // ! OFFICIAL_GUILD_STORAGE
 	g->max_storage = MAX_GUILD_STORAGE;
+#endif // OFFICIAL_GUILD_STORAGE
 
 	for(i=0;i<MAX_GUILDSKILL;i++)
 		g->skill[i].id=i + GD_SKILLBASE;
