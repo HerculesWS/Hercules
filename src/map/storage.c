@@ -82,7 +82,7 @@ void storage_sortitem(struct item* items, unsigned int size)
 int storage_reconnect_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct guild_storage *stor = DB->data2ptr(data);
-	if (stor->dirty && stor->storage_status == 0) //Save closed storages.
+	if (stor->dirty && !stor->in_use) //Save closed storages.
 		gstorage->save(0, stor->guild_id,0);
 
 	return 0;
@@ -415,13 +415,14 @@ int storage_guild_storageopen(struct map_session_data* sd)
 		intif->request_guild_storage(sd->status.account_id,sd->status.guild_id);
 		return 0;
 	}
-	if(gstor->storage_status)
+
+	if (gstor->in_use)
 		return 1;
 
 	if( gstor->lock )
 		return 1;
 
-	gstor->storage_status = 1;
+	gstor->in_use = true;
 	sd->state.storage_flag = STORAGE_FLAG_GUILD;
 	storage->sortitem(gstor->items, ARRAYLENGTH(gstor->items));
 	clif->storagelist(sd, gstor->items, ARRAYLENGTH(gstor->items));
@@ -531,7 +532,7 @@ int storage_guild_storageadd(struct map_session_data* sd, int index, int amount)
 	nullpo_ret(sd);
 	nullpo_ret(stor=idb_get(gstorage->db,sd->status.guild_id));
 
-	if( !stor->storage_status || stor->storage_amount > MAX_GUILD_STORAGE )
+	if (!stor->in_use || stor->storage_amount > MAX_GUILD_STORAGE)
 		return 0;
 
 	if( index<0 || index>=MAX_INVENTORY )
@@ -571,7 +572,7 @@ int storage_guild_storageget(struct map_session_data* sd, int index, int amount)
 	nullpo_ret(sd);
 	nullpo_ret(stor=idb_get(gstorage->db,sd->status.guild_id));
 
-	if(!stor->storage_status)
+	if(!stor->in_use)
 		return 0;
 
 	if(index<0 || index>=MAX_GUILD_STORAGE)
@@ -611,7 +612,7 @@ int storage_guild_storageaddfromcart(struct map_session_data* sd, int index, int
 	nullpo_ret(sd);
 	nullpo_ret(stor=idb_get(gstorage->db,sd->status.guild_id));
 
-	if( !stor->storage_status || stor->storage_amount > MAX_GUILD_STORAGE )
+	if (!stor->in_use || stor->storage_amount > MAX_GUILD_STORAGE)
 		return 0;
 
 	if( index < 0 || index >= MAX_CART )
@@ -643,7 +644,7 @@ int storage_guild_storagegettocart(struct map_session_data* sd, int index, int a
 	nullpo_ret(sd);
 	nullpo_ret(stor=idb_get(gstorage->db,sd->status.guild_id));
 
-	if(!stor->storage_status)
+	if(!stor->in_use)
 		return 0;
 
 	if(index<0 || index>=MAX_GUILD_STORAGE)
@@ -671,10 +672,9 @@ int storage_guild_storagesave(int account_id, int guild_id, int flag)
 {
 	struct guild_storage *stor = idb_get(gstorage->db,guild_id);
 
-	if(stor)
-	{
+	if (stor != NULL) {
 		if (flag) //Char quitting, close it.
-			stor->storage_status = 0;
+			stor->in_use = false;
 		if (stor->dirty)
 			intif->send_guild_storage(account_id,stor);
 		return 1;
@@ -693,7 +693,7 @@ int storage_guild_storagesaved(int guild_id)
 	struct guild_storage *stor;
 
 	if((stor=idb_get(gstorage->db,guild_id)) != NULL) {
-		if (stor->dirty && stor->storage_status == 0) {
+		if (stor->dirty && !stor->in_use) {
 			//Storage has been correctly saved.
 			stor->dirty = 0;
 		}
@@ -710,12 +710,12 @@ int storage_guild_storageclose(struct map_session_data* sd) {
 	nullpo_ret(stor=idb_get(gstorage->db,sd->status.guild_id));
 
 	clif->storageclose(sd);
-	if (stor->storage_status) {
+	if (stor->in_use) {
 		if (map->save_settings&4)
 			chrif->save(sd, 0); //This one also saves the storage. [Skotlex]
 		else
 			gstorage->save(sd->status.account_id, sd->status.guild_id,0);
-		stor->storage_status=0;
+		stor->in_use = false;
 	}
 	sd->state.storage_flag = STORAGE_FLAG_CLOSED;
 
@@ -731,24 +731,25 @@ int storage_guild_storage_quit(struct map_session_data* sd, int flag) {
 	if(flag) {
 		//Only during a guild break flag is 1 (don't save storage)
 		sd->state.storage_flag = STORAGE_FLAG_CLOSED;
-		stor->storage_status = 0;
+		stor->in_use = false;
 		clif->storageclose(sd);
 		if (map->save_settings&4)
 			chrif->save(sd,0);
 		return 0;
 	}
 
-	if(stor->storage_status) {
+	if(stor->in_use) {
 		if (map->save_settings&4)
 			chrif->save(sd,0);
 		else
 			gstorage->save(sd->status.account_id,sd->status.guild_id,1);
 	}
 	sd->state.storage_flag = STORAGE_FLAG_CLOSED;
-	stor->storage_status = 0;
+	stor->in_use = false;
 
 	return 0;
 }
+
 void do_init_gstorage(bool minimal) {
 	if (minimal)
 		return;
