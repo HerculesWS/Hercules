@@ -63,7 +63,8 @@ struct guild_storage_interface {
 	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
-	int (*delete) (int guild_id);
+	int (*final_sub) (union DBKey key, struct DBData *data, va_list ap);
+	void (*delete) (int guild_id);
 	int (*open) (struct map_session_data *sd);
 	int (*additem) (struct map_session_data *sd,struct guild_storage *stor,struct item *item_data,int amount);
 	int (*delitem) (struct map_session_data *sd,struct guild_storage *stor,int n,int amount);
