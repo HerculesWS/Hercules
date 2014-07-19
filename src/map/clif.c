@@ -8336,9 +8336,9 @@ void clif_refresh_storagewindow(struct map_session_data *sd)
 					sd->status.account_id, sd->status.guild_id);
 				return;
 			}
-			storage->sortitem(gstor->items, ARRAYLENGTH(gstor->items));
-			clif->storagelist(sd, gstor->items, ARRAYLENGTH(gstor->items));
-			clif->updatestorageamount(sd, gstor->storage_amount, sd->guild->max_storage);
+			storage->sortitem(gstor->items.data, gstor->items.capacity);
+			clif->storagelist(sd, gstor->items.data, gstor->items.capacity);
+			clif->updatestorageamount(sd, gstor->items.amount, sd->guild->max_storage);
 		}
 	}
 }
