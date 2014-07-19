@@ -625,7 +625,7 @@ struct storage_data {
 struct guild_storage {
 	int dirty;
 	int guild_id;
-	short storage_status;
+	bool in_use;           ///< Whether storage is in use by other guild members
 	short storage_amount;
 	struct item items[MAX_GUILD_STORAGE];
 	unsigned short lock;

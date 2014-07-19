@@ -1125,7 +1125,8 @@ static void intif_parse_LoadGuildStorage(int fd)
 		ShowWarning("intif_parse_LoadGuildStorage: error guild_id %d not exist\n",guild_id);
 		return;
 	}
-	if (gstor->storage_status == 1) { // Already open.. lets ignore this update
+	if (gstor->in_use) {
+		// Already open.. lets ignore this update
 		ShowWarning("intif_parse_LoadGuildStorage: storage received for a client already open (User %d:%d)\n", flag?sd->status.account_id:0, flag?sd->status.char_id:0);
 		return;
 	}
@@ -1135,7 +1136,7 @@ static void intif_parse_LoadGuildStorage(int fd)
 	}
 	if (RFIFOW(fd,2)-13 != sizeof(struct guild_storage)) {
 		ShowError("intif_parse_LoadGuildStorage: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd,2)-13, sizeof(struct guild_storage));
-		gstor->storage_status = 0;
+		gstor->in_use = false;
 		return;
 	}
 
