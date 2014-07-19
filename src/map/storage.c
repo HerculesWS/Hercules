@@ -416,6 +416,7 @@ void guild_storage_delete(int guild_id)
  * @retval 1 storage is already open (storage_flag).
  * @retval 2 sd has no guild / guild information hasn't arrived yet.
  * @retval 3 sd's guild doesn't have GD_GUILD_STORAGE (msg_txt(335)) (if OFFICIAL_GUILD_STORAGE / PACKETVER >= 20131223)
+ * @retval 4 sd doesn't have permission to use storage (msg_txt(336)) (PACKETVER >= 20140205)
  */
 int storage_guild_storageopen(struct map_session_data *sd)
 {
@@ -433,6 +434,14 @@ int storage_guild_storageopen(struct map_session_data *sd)
 	if (!guild->checkskill(sd->guild, GD_GUILD_STORAGE))
 		return 3; // Can't open storage if guild has none
 #endif // OFFICIAL_GUILD_STORAGE
+
+#if PACKETVER >= 20140205
+	{
+		int pos;
+		if( (pos = guild->getposition(sd->guild, sd)) < 0 || !(sd->guild->position[pos].mode&GPERM_STORAGE) )
+			return 4; // Doesn't have permission
+	}
+#endif // PACKETVER >= 20140205
 
 	if (!pc_can_give_items(sd)) { // check if this GM level can open guild storage and store items [Lupus]
 		clif->message(sd->fd, msg_sd(sd,246));
