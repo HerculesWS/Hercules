@@ -626,9 +626,9 @@ struct guild_storage {
 	int guild_id;
 	bool in_use;           ///< Whether storage is in use by other guild members
 	bool dirty;            ///< Whether the struct was modified and needs to be saved
+	bool locked;           ///< Whenever item retrieval is happening and the storage can't be accessed
 	short storage_amount;
 	struct item items[MAX_GUILD_STORAGE];
-	unsigned short lock;
 };
 
 /**

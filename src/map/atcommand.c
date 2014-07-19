@@ -5581,12 +5581,12 @@ ACMD(cleargstorage)
 	}
 
 	j = guild_storage->storage_amount;
-	guild_storage->lock = 1; // Lock @gstorage: do not allow any item to be retrieved or stored from any guild member
+	guild_storage->locked = true; // Lock @gstorage: do not allow any item to be retrieved or stored from any guild member
 	for (i = 0; i < j; ++i) {
 		gstorage->delitem(sd, guild_storage, i, guild_storage->items[i].amount);
 	}
 	gstorage->close(sd);
-	guild_storage->lock = 0; // Cleaning done, release lock
+	guild_storage->locked = false; // Cleaning done, release lock
 
 	clif->message(fd, msg_fd(fd,1395)); // Your guild storage was cleaned.
 	return true;
