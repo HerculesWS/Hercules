@@ -110,22 +110,29 @@ int inter_guild_removemember_tosql(int account_id, int char_id)
 	return 0;
 }
 
-// Save guild into sql
-int inter_guild_tosql(struct guild *g,int flag)
+/**
+ * Saves the requested guild information to SQL.
+ *
+ * @param g    The guild data to save.
+ * @param flag Type of information to be saved (@see enum guild_save_types).
+ * @retval true  in case of success.
+ * @retval false in case of error.
+ *
+ * Fields saved depending on the flag type:
+ *   Table guild (GS_BASIC_MASK)
+ *   GS_EMBLEM `emblem_len`,`emblem_id`,`emblem_data`
+ *   GS_CONNECT `connect_member`,`average_lv`
+ *   GS_MES `mes1`,`mes2`
+ *   GS_LEVEL `guild_lv`,`max_member`,`exp`,`next_exp`,`skill_point`,`max_storage`
+ *   GS_BASIC `name`,`master`,`char_id`
+ *   GS_MEMBER `guild_member` (`guild_id`,`account_id`,`char_id`,`hair`,`hair_color`,`gender`,`class`,`lv`,`exp`,`exp_payper`,`online`,`position`,`name`)
+ *   GS_POSITION `guild_position` (`guild_id`,`position`,`name`,`mode`,`exp_mode`)
+ *   GS_ALLIANCE `guild_alliance` (`guild_id`,`opposition`,`alliance_id`,`name`)
+ *   GS_EXPULSION `guild_expulsion` (`guild_id`,`account_id`,`name`,`mes`)
+ *   GS_SKILL `guild_skill` (`guild_id`,`id`,`lv`)
+ */
+bool inter_guild_tosql(struct guild *g, int flag)
 {
-	// Table guild (GS_BASIC_MASK)
-	// GS_EMBLEM `emblem_len`,`emblem_id`,`emblem_data`
-	// GS_CONNECT `connect_member`,`average_lv`
-	// GS_MES `mes1`,`mes2`
-	// GS_LEVEL `guild_lv`,`max_member`,`exp`,`next_exp`,`skill_point`
-	// GS_BASIC `name`,`master`,`char_id`
-
-	// GS_MEMBER `guild_member` (`guild_id`,`account_id`,`char_id`,`hair`,`hair_color`,`gender`,`class`,`lv`,`exp`,`exp_payper`,`online`,`position`,`name`)
-	// GS_POSITION `guild_position` (`guild_id`,`position`,`name`,`mode`,`exp_mode`)
-	// GS_ALLIANCE `guild_alliance` (`guild_id`,`opposition`,`alliance_id`,`name`)
-	// GS_EXPULSION `guild_expulsion` (`guild_id`,`account_id`,`name`,`mes`)
-	// GS_SKILL `guild_skill` (`guild_id`,`id`,`lv`)
-
 	// temporary storage for str conversion. They must be twice the size of the
 	// original string to ensure no overflows will occur. [Skotlex]
 	char t_info[256];
@@ -134,8 +141,8 @@ int inter_guild_tosql(struct guild *g,int flag)
 	char new_guild = 0;
 	int i=0;
 
-	nullpo_ret(g);
-	if (g->guild_id<=0 && g->guild_id != -1) return 0;
+	nullpo_retr(false, g);
+	Assert_retr(false, g->guild_id <= 0 && g->guild_id != -1);
 
 #ifdef NOISY
 	ShowInfo("Save guild request ("CL_BOLD"%d"CL_RESET" - flag 0x%x).",g->guild_id, flag);
@@ -158,7 +165,7 @@ int inter_guild_tosql(struct guild *g,int flag)
 		{
 			Sql_ShowDebug(inter->sql_handle);
 			if (g->guild_id == -1)
-				return 0; //Failed to create guild!
+				return false; // Failed to create guild!
 		}
 		else
 		{
@@ -199,7 +206,8 @@ int inter_guild_tosql(struct guild *g,int flag)
 				StrBuf->AppendStr(&buf, ", ");
 			else
 				add_comma = true;
-			StrBuf->Printf(&buf, "`name`='%s', `master`='%s', `char_id`=%d", esc_name, esc_master, g->member[0].char_id);
+			StrBuf->Printf(&buf, "`name`='%s', `master`='%s', `char_id`=%d",
+				esc_name, esc_master, g->member[0].char_id);
 		}
 		if (flag & GS_CONNECT)
 		{
@@ -233,7 +241,8 @@ int inter_guild_tosql(struct guild *g,int flag)
 			else //last condition using add_coma setting
 				add_comma = true;
 #endif // 0
-			StrBuf->Printf(&buf, "`guild_lv`=%d, `skill_point`=%d, `exp`=%"PRIu64", `next_exp`=%u, `max_member`=%d", g->guild_lv, g->skill_point, g->exp, g->next_exp, g->max_member);
+			StrBuf->Printf(&buf, "`guild_lv`=%d, `skill_point`=%d, `exp`=%"PRIu64", `next_exp`=%u, `max_member`=%d, `max_storage`=%hd",
+				g->guild_lv, g->skill_point, g->exp, g->next_exp, g->max_member, g->max_storage);
 		}
 		StrBuf->Printf(&buf, " WHERE `guild_id`=%d", g->guild_id);
 		if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) )
@@ -344,11 +353,16 @@ int inter_guild_tosql(struct guild *g,int flag)
 
 	if (save_log)
 		ShowInfo("Saved guild (%d - %s):%s\n",g->guild_id,g->name,t_info);
-	return 1;
+	return true;
 }
 
-// Read guild from sql
-struct guild * inter_guild_fromsql(int guild_id)
+/**
+ * Retrieves a guild's information from SQL.
+ *
+ * @param guild_id The guild ID to look up.
+ * @return The guild data or NULL.
+ */
+struct guild *inter_guild_fromsql(int guild_id)
 {
 	struct guild *g;
 	char* data;
@@ -367,7 +381,9 @@ struct guild * inter_guild_fromsql(int guild_id)
 	ShowInfo("Guild load request (%d)...\n", guild_id);
 #endif
 
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT g.`name`,c.`name`,g.`guild_lv`,g.`connect_member`,g.`max_member`,g.`average_lv`,g.`exp`,g.`next_exp`,g.`skill_point`,g.`mes1`,g.`mes2`,g.`emblem_len`,g.`emblem_id`,g.`emblem_data` "
+	if( SQL_ERROR == SQL->Query(inter->sql_handle,
+		"SELECT g.`name`,c.`name`,g.`guild_lv`,g.`connect_member`,g.`max_member`,g.`max_storage`,"
+		"g.`average_lv`,g.`exp`,g.`next_exp`,g.`skill_point`,g.`mes1`,g.`mes2`,g.`emblem_len`,g.`emblem_id`,g.`emblem_data` "
 		"FROM `%s` g LEFT JOIN `%s` c ON c.`char_id` = g.`char_id` WHERE g.`guild_id`='%d'", guild_db, char_db, guild_id) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
@@ -390,15 +406,16 @@ struct guild * inter_guild_fromsql(int guild_id)
 		ShowWarning("Guild %d:%s specifies higher capacity (%d) than MAX_GUILD (%d)\n", guild_id, g->name, g->max_member, MAX_GUILD);
 		g->max_member = MAX_GUILD;
 	}
-	SQL->GetData(inter->sql_handle,  5, &data, NULL); g->average_lv = atoi(data);
-	SQL->GetData(inter->sql_handle,  6, &data, NULL); g->exp = strtoull(data, NULL, 10);
-	SQL->GetData(inter->sql_handle,  7, &data, NULL); g->next_exp = (unsigned int)strtoul(data, NULL, 10);
-	SQL->GetData(inter->sql_handle,  8, &data, NULL); g->skill_point = atoi(data);
-	SQL->GetData(inter->sql_handle,  9, &data, &len); memcpy(g->mes1, data, min(len, sizeof(g->mes1)));
-	SQL->GetData(inter->sql_handle, 10, &data, &len); memcpy(g->mes2, data, min(len, sizeof(g->mes2)));
-	SQL->GetData(inter->sql_handle, 11, &data, &len); g->emblem_len = atoi(data);
-	SQL->GetData(inter->sql_handle, 12, &data, &len); g->emblem_id = atoi(data);
-	SQL->GetData(inter->sql_handle, 13, &data, &len);
+	SQL->GetData(inter->sql_handle,  5, &data, NULL); g->max_storage = atoi(data);
+	SQL->GetData(inter->sql_handle,  6, &data, NULL); g->average_lv = atoi(data);
+	SQL->GetData(inter->sql_handle,  7, &data, NULL); g->exp = strtoull(data, NULL, 10);
+	SQL->GetData(inter->sql_handle,  8, &data, NULL); g->next_exp = (unsigned int)strtoul(data, NULL, 10);
+	SQL->GetData(inter->sql_handle,  9, &data, NULL); g->skill_point = atoi(data);
+	SQL->GetData(inter->sql_handle, 10, &data, &len); memcpy(g->mes1, data, min(len, sizeof(g->mes1)));
+	SQL->GetData(inter->sql_handle, 11, &data, &len); memcpy(g->mes2, data, min(len, sizeof(g->mes2)));
+	SQL->GetData(inter->sql_handle, 12, &data, &len); g->emblem_len = atoi(data);
+	SQL->GetData(inter->sql_handle, 13, &data, &len); g->emblem_id = atoi(data);
+	SQL->GetData(inter->sql_handle, 14, &data, &len);
 	// convert emblem data from hexadecimal to binary
 	//TODO: why not store it in the db as binary directly? [ultramage]
 	for( i = 0, p = g->emblem_data; i < g->emblem_len; ++i, ++p )
@@ -853,6 +870,8 @@ int inter_guild_calcinfo(struct guild *g)
 	// Save next exp step
 	g->next_exp = nextexp;
 
+	// Set the max storage size
+	g->max_storage = MAX_GUILD_STORAGE;
 	// Set the max number of members, Guild Extension skill - currently adds 6 to max per skill lv.
 	g->max_member = BASE_GUILD_SIZE + inter_guild->checkskill(g, GD_EXTENSION) * 6;
 	if(g->max_member > MAX_GUILD)
@@ -886,7 +905,11 @@ int inter_guild_calcinfo(struct guild *g)
 		g->average_lv /= c;
 
 	// Check if guild stats has change
-	if (g->max_member != before.max_member || g->guild_lv != before.guild_lv || g->skill_point != before.skill_point) {
+	if (g->max_member != before.max_member
+	 || g->guild_lv != before.guild_lv
+	 || g->skill_point != before.skill_point
+	 || g->max_storage != before.max_storage
+	) {
 		g->save_flag |= GS_LEVEL;
 		mapif->guild_info(-1,g);
 		return 1;
@@ -1216,6 +1239,7 @@ int mapif_parse_CreateGuild(int fd, int account_id, const char *name, const stru
 	g->average_lv = master->lv;
 	g->connect_member = 1;
 	g->guild_lv = 1;
+	g->max_storage = MAX_GUILD_STORAGE;
 
 	for(i=0;i<MAX_GUILDSKILL;i++)
 		g->skill[i].id=i + GD_SKILLBASE;
