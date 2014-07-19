@@ -10066,21 +10066,22 @@ int pc_checkitem(struct map_session_data *sd)
 		if (sd->guild) {
 			struct guild_storage *guild_storage = idb_get(gstorage->db,sd->guild->guild_id);
 			if (guild_storage) {
-				for (i = 0; i < guild_storage->storage_amount; i++) {
-					id = guild_storage->items[i].nameid;
+				for (i = 0; i < guild_storage->items.capacity; i++) {
+					id = guild_storage->items.data[i].nameid;
 
-					if (!id)
+					if (id == 0)
 						continue;
 
-					if( !itemdb_available(id) ) {
-						ShowWarning("Removed invalid/disabled item id %d from guild storage (amount=%d, char_id=%d, guild_id=%d).\n", id, guild_storage->items[i].amount, sd->status.char_id, sd->guild->guild_id);
-						gstorage->delitem(sd, guild_storage, i, guild_storage->items[i].amount);
+					if (!itemdb_available(id)) {
+						ShowWarning("Removed invalid/disabled item id %d from guild storage (amount=%d, char_id=%d, guild_id=%d).\n",
+								id, guild_storage->items.data[i].amount, sd->status.char_id, sd->guild->guild_id);
+						gstorage->delitem(sd, guild_storage, i, guild_storage->items.data[i].amount);
 						gstorage->close(sd); // force closing
 						continue;
 					}
 
-					if (!guild_storage->items[i].unique_id && !itemdb->isstackable(id))
-						guild_storage->items[i].unique_id = itemdb->unique_id(sd);
+					if (!guild_storage->items.data[i].unique_id && !itemdb->isstackable(id))
+						guild_storage->items.data[i].unique_id = itemdb->unique_id(sd);
 				}
 			}
 		}

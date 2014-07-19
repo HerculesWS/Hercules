@@ -720,7 +720,8 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 	bool found;
 	int errors = 0;
 
-	nullpo_ret(items);
+	if (max > 0)
+		nullpo_ret(items);
 
 	switch (tableswitch) {
 	case TABLE_INVENTORY:     tablename = inventory_db;     selectoption = "char_id";    has_favorite = true; break;
@@ -770,7 +771,7 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 		SQL->StmtBindColumn(stmt, 10+MAX_SLOTS, SQLDT_UCHAR, &item.favorite, 0, NULL, NULL);
 
 	// bit array indicating which inventory items have already been matched
-	flag = aCalloc(max, sizeof(bool));
+	flag = max > 0 ? aCalloc(max, sizeof(bool)) : NULL;
 
 	while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
 		found = false;
@@ -865,7 +866,8 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 	}
 
 	StrBuf->Destroy(&buf);
-	aFree(flag);
+	if (flag != NULL)
+		aFree(flag);
 
 	return errors;
 }
