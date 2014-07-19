@@ -2256,7 +2256,7 @@ void intif_itembound_req(int char_id,int aid,int guild_id) {
 	WFIFOW(inter_fd,10) = guild_id;
 	WFIFOSET(inter_fd,12);
 	if(gstor)
-		gstor->lock = 1; //Lock for retrieval process
+		gstor->locked = true; //Lock for retrieval process
 #endif
 }
 
@@ -2268,7 +2268,7 @@ void intif_parse_Itembound_ack(int fd) {
 
 	gstor = idb_get(gstorage->db,guild_id);
 	if(gstor)
-		gstor->lock = 0; //Unlock now that operation is completed
+		gstor->locked = false; //Unlock now that operation is completed
 #endif
 }
 //-----------------------------------------------------------------
