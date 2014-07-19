@@ -9443,9 +9443,14 @@ static void clif_refresh_storagewindow(struct map_session_data *sd)
 			// Shouldn't happen... The information should already be at the map-server
 			intif->request_guild_storage(sd->status.account_id,sd->status.guild_id);
 		} else {
+			if (sd->guild == NULL) {
+				ShowWarning("clif_refreshstoragewindow: Trying to open guild storage without guild information! (AID: %d, GID: %d)\n",
+					sd->status.account_id, sd->status.guild_id);
+				return;
+			}
 			storage->sortitem(gstor->items, ARRAYLENGTH(gstor->items));
 			clif->guildStorageList(sd, gstor->items, ARRAYLENGTH(gstor->items));
-			clif->updatestorageamount(sd, gstor->storage_amount, MAX_GUILD_STORAGE);
+			clif->updatestorageamount(sd, gstor->storage_amount, sd->guild->max_storage);
 		}
 	}
 }

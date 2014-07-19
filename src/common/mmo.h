@@ -923,29 +923,35 @@ struct guild_skill {
 
 struct channel_data;
 struct guild {
-	int guild_id;
-	short guild_lv, connect_member, max_member, average_lv;
-	uint64 exp;
-	unsigned int next_exp;
-	int skill_point;
-	char name[NAME_LENGTH],master[NAME_LENGTH];
-	struct guild_member member[MAX_GUILD];
-	struct guild_position position[MAX_GUILDPOSITION];
-	char mes1[MAX_GUILDMES1],mes2[MAX_GUILDMES2];
-	int emblem_len,emblem_id;
-	char emblem_data[2048];
-	struct guild_alliance alliance[MAX_GUILDALLIANCE];
-	struct guild_expulsion expulsion[MAX_GUILDEXPULSION];
-	struct guild_skill skill[MAX_GUILDSKILL];
+	int guild_id;                                         ///< Guild's unique identifier
+	int16 guild_lv;                                       ///< Guild level
+	int16 connect_member;                                 ///< Current online members
+	int16 max_member;                                     ///< Total guild member slots
+	int16 average_lv;                                     ///< Average level of guild members
+	int16 max_storage;                                    ///< Maximum guild storage size
+	uint64 exp;                                           ///< Current guild experience
+	unsigned int next_exp;                                ///< Experience needed for the next level
+	int skill_point;                                      ///< Available skill points
+	char name[NAME_LENGTH];                               ///< Guild name
+	char master[NAME_LENGTH];                             ///< Guild leader's name
+	struct guild_member member[MAX_GUILD];                ///< Guild members data
+	struct guild_position position[MAX_GUILDPOSITION];    ///< Guild positions data
+	char mes1[MAX_GUILDMES1];                             ///< Guild message (first line)
+	char mes2[MAX_GUILDMES2];                             ///< Guild message (second line)
+	int emblem_id;                                        ///< Sequential ID of the current emblem
+	int emblem_len;                                       ///< Guild emblem data length
+	char emblem_data[2048];                               ///< Guild emblem data
+	struct guild_alliance alliance[MAX_GUILDALLIANCE];    ///< Guild alliances data
+	struct guild_expulsion expulsion[MAX_GUILDEXPULSION]; ///< Guild expulsion records
+	struct guild_skill skill[MAX_GUILDSKILL];             ///< Guild skills data
 
-	/* used on char.c to state what kind of data is being saved/processed */
-	unsigned short save_flag;
+	unsigned short save_flag; ///< Flag used in char.c to state what kind of data is being saved/processed
 
-	short *instance;
-	unsigned short instances;
+	short *instance;                                      ///< Array of instances
+	unsigned short instances;                             ///< Amount of instances
 
-	struct channel_data *channel;
-	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
+	struct channel_data *channel;                         ///< Guild's `#ally` channel
+	struct hplugin_data_store *hdata;                     ///< HPM Plugin Data Store
 };
 
 struct guild_castle {

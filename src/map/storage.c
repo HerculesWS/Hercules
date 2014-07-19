@@ -513,8 +513,8 @@ static int storage_guild_storageopen(struct map_session_data *sd)
 	gstor->in_use = true;
 	sd->state.storage_flag = STORAGE_FLAG_GUILD;
 	storage->sortitem(gstor->items, ARRAYLENGTH(gstor->items));
-	clif->guildStorageList(sd, gstor->items, ARRAYLENGTH(gstor->items));
-	clif->updatestorageamount(sd, gstor->storage_amount, MAX_GUILD_STORAGE);
+	clif->guildStorageList(sd, gstor->items, gstor->storage_amount);
+	clif->updatestorageamount(sd, gstor->storage_amount, sd->guild->max_storage);
 	return 0;
 }
 
@@ -530,6 +530,7 @@ static int guild_storage_additem(struct map_session_data *sd, struct guild_stora
 	int i;
 
 	nullpo_retr(1, sd);
+	nullpo_retr(1, sd->guild);
 	nullpo_retr(1, stor);
 	nullpo_retr(1, item_data);
 
@@ -554,8 +555,8 @@ static int guild_storage_additem(struct map_session_data *sd, struct guild_stora
 		return 1;
 	}
 
-	if(itemdb->isstackable2(data)){ //Stackable
-		for(i=0;i<MAX_GUILD_STORAGE;i++){
+	if (itemdb->isstackable2(data)) { // Stackable
+		for (i = 0; i < sd->guild->max_storage; i++) {
 			if(compare_item(&stor->items[i], item_data)) {
 				if( amount > MAX_AMOUNT - stor->items[i].amount || ( data->stack.guildstorage && amount > data->stack.amount - stor->items[i].amount ) )
 					return 1;
@@ -566,17 +567,18 @@ static int guild_storage_additem(struct map_session_data *sd, struct guild_stora
 			}
 		}
 	}
-	//Add item
-	for(i=0;i<MAX_GUILD_STORAGE && stor->items[i].nameid;i++);
 
-	if(i>=MAX_GUILD_STORAGE)
+	// Add item
+	ARR_FIND(0, sd->guild->max_storage, i, stor->items[i].nameid == 0);
+
+	if (i >= sd->guild->max_storage)
 		return 1;
 
 	memcpy(&stor->items[i],item_data,sizeof(stor->items[0]));
 	stor->items[i].amount=amount;
 	stor->storage_amount++;
 	clif->storageitemadded(sd,&stor->items[i],i,amount);
-	clif->updatestorageamount(sd, stor->storage_amount, MAX_GUILD_STORAGE);
+	clif->updatestorageamount(sd, stor->storage_amount, sd->guild->max_storage);
 	stor->dirty = true;
 	return 0;
 }
@@ -600,7 +602,7 @@ static int guild_storage_delitem(struct map_session_data *sd, struct guild_stora
 	if(stor->items[n].amount==0){
 		memset(&stor->items[n],0,sizeof(stor->items[0]));
 		stor->storage_amount--;
-		clif->updatestorageamount(sd, stor->storage_amount, MAX_GUILD_STORAGE);
+		clif->updatestorageamount(sd, stor->storage_amount, sd->guild->max_storage);
 	}
 	clif->storageitemremoved(sd,n,amount);
 	stor->dirty = true;
@@ -619,9 +621,10 @@ static int storage_guild_storageadd(struct map_session_data *sd, int index, int 
 	struct guild_storage *stor;
 
 	nullpo_ret(sd);
+	nullpo_ret(sd->guild);
 	nullpo_ret(stor=idb_get(gstorage->db,sd->status.guild_id));
 
-	if (!stor->in_use || stor->storage_amount > MAX_GUILD_STORAGE)
+	if (!stor->in_use || stor->storage_amount > sd->guild->max_storage)
 		return 0;
 
 	if (index < 0 || index >= sd->status.inventorySize)
@@ -659,12 +662,13 @@ static int storage_guild_storageget(struct map_session_data *sd, int index, int 
 	int flag;
 
 	nullpo_ret(sd);
+	nullpo_ret(sd->guild);
 	nullpo_ret(stor=idb_get(gstorage->db,sd->status.guild_id));
 
 	if(!stor->in_use)
 		return 0;
 
-	if(index<0 || index>=MAX_GUILD_STORAGE)
+	if (index < 0 || index >= sd->guild->max_storage)
 		return 0;
 
 	if(stor->items[index].nameid <= 0)
@@ -699,9 +703,10 @@ static int storage_guild_storageaddfromcart(struct map_session_data *sd, int ind
 	struct guild_storage *stor;
 
 	nullpo_ret(sd);
+	nullpo_ret(sd->guild);
 	nullpo_ret(stor=idb_get(gstorage->db,sd->status.guild_id));
 
-	if (!stor->in_use || stor->storage_amount > MAX_GUILD_STORAGE)
+	if (!stor->in_use || stor->storage_amount > sd->guild->max_storage)
 		return 0;
 
 	if( index < 0 || index >= MAX_CART )
@@ -731,12 +736,13 @@ static int storage_guild_storagegettocart(struct map_session_data *sd, int index
 	struct guild_storage *stor;
 
 	nullpo_ret(sd);
+	nullpo_ret(sd->guild);
 	nullpo_ret(stor=idb_get(gstorage->db,sd->status.guild_id));
 
 	if(!stor->in_use)
 		return 0;
 
-	if(index<0 || index>=MAX_GUILD_STORAGE)
+	if (index < 0 || index >= sd->guild->max_storage)
 		return 0;
 
 	if(stor->items[index].nameid<=0)
