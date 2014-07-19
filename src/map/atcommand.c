@@ -5580,10 +5580,10 @@ ACMD(cleargstorage)
 		return false;
 	}
 
-	j = guild_storage->storage_amount;
+	j = guild_storage->items.capacity;
 	guild_storage->locked = true; // Lock @gstorage: do not allow any item to be retrieved or stored from any guild member
 	for (i = 0; i < j; ++i) {
-		gstorage->delitem(sd, guild_storage, i, guild_storage->items[i].amount);
+		gstorage->delitem(sd, guild_storage, i, guild_storage->items.data[i].amount);
 	}
 	gstorage->close(sd);
 	guild_storage->locked = false; // Cleaning done, release lock

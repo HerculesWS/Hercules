@@ -623,12 +623,15 @@ struct storage_data {
 };
 
 struct guild_storage {
-	int guild_id;
-	bool in_use;           ///< Whether storage is in use by other guild members
-	bool dirty;            ///< Whether the struct was modified and needs to be saved
-	bool locked;           ///< Whenever item retrieval is happening and the storage can't be accessed
-	short storage_amount;
-	struct item items[MAX_GUILD_STORAGE];
+	int guild_id; ///< Owner guild ID
+	bool in_use;  ///< Whether storage is in use by other guild members
+	bool dirty;   ///< Whether the struct was modified and needs to be saved
+	bool locked;  ///< Whenever item retrieval is happening and the storage can't be accessed
+	struct {
+		int amount;        ///< Currently stored items (Note: the array is not compacted!)
+		int capacity;      ///< Current size of the data array
+		struct item *data; ///< Data array
+	} items;      ///< Items
 };
 
 /**
@@ -928,7 +931,7 @@ struct guild {
 	int16 connect_member;                                 ///< Current online members
 	int16 max_member;                                     ///< Total guild member slots
 	int16 average_lv;                                     ///< Average level of guild members
-	int16 max_storage;                                    ///< Maximum guild storage size
+	int16 max_storage;                                    ///< Current guild storage capacity (note: NOT the same as gstor->items.capacity)
 	uint64 exp;                                           ///< Current guild experience
 	unsigned int next_exp;                                ///< Experience needed for the next level
 	int skill_point;                                      ///< Available skill points

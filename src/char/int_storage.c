@@ -260,7 +260,7 @@ static bool inter_storage_guild_storage_tosql(int guild_id, const struct guild_s
 	}
 	SQL->FreeResult(inter->sql_handle);
 
-	int err_count = chr->memitemdata_to_sql(gstor->items, gstor->guild_id, TABLE_GUILD_STORAGE);
+	int err_count = chr->memitemdata_to_sql(gstor->items.data, gstor->guild_id, TABLE_GUILD_STORAGE);
 	if (err_count != 0) {
 		ShowError("guild_storage_tosql: Couldn't save storage item data! (GID: %d)\n", gstor->guild_id);
 		return false;
@@ -278,12 +278,14 @@ static bool inter_storage_guild_storage_tosql(int guild_id, const struct guild_s
  * @param[out] gstor    Empty, allocated buffer to contain the loaded data.
  * @return Error code
  * @retval 0 in case of success
+ *
+ * @remark
+ *   In case of errors, gstor->items.data is left NULL.
  */
 static int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storage *gstor)
 {
 	StringBuf buf;
 	char *data;
-	int num_rows;
 	int i, j;
 
 	nullpo_retr(1, gstor);
@@ -310,14 +312,14 @@ static int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storag
 		Sql_ShowDebug(inter->sql_handle);
 
 	StrBuf->Destroy(&buf);
-	num_rows = (int)SQL->NumRows(inter->sql_handle);
-	if (num_rows > MAX_GUILD_STORAGE) {
-		ShowError("guild_storage_fromsql: Too many items in storage for guild %d!\n", guild_id);
-		num_rows = MAX_GUILD_STORAGE;
-	}
+	gstor->items.capacity = (int)SQL->NumRows(inter->sql_handle);
+	if (gstor->items.capacity > 0)
+		CREATE(gstor->items.data, struct item, gstor->items.capacity);
+	else
+		gstor->items.data = NULL;
 
-	for (i = 0; i < num_rows && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i) {
-		struct item *item = &gstor->items[i];
+	for (i = 0; i < gstor->items.capacity && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i) {
+		struct item *item = &gstor->items.data[i];
 		SQL->GetData(inter->sql_handle, 0, &data, NULL); item->id = atoi(data);
 		SQL->GetData(inter->sql_handle, 1, &data, NULL); item->nameid = atoi(data);
 		SQL->GetData(inter->sql_handle, 2, &data, NULL); item->amount = atoi(data);
@@ -341,10 +343,22 @@ static int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storag
 			item->option[j].value = atoi(data);
 		}
 	}
-	gstor->storage_amount = i;
+	gstor->items.amount = i;
 	SQL->FreeResult(inter->sql_handle);
 
-	ShowInfo("guild storage load complete from DB - id: %d (total: %d)\n", guild_id, gstor->storage_amount);
+	if (gstor->items.amount < gstor->items.capacity) {
+		if (gstor->items.amount > 0) {
+			struct item *temp;
+			temp = aRealloc(gstor->items.data, sizeof(gstor->items.data[0])*gstor->items.amount);
+			if (temp != NULL)
+				gstor->items.data = temp;
+		} else {
+			aFree(gstor->items.data);
+			gstor->items.data = NULL;
+		}
+		gstor->items.capacity = gstor->items.amount;
+	}
+	ShowInfo("guild storage load complete from DB - id: %d (total: %d)\n", guild_id, gstor->items.amount);
 	return 0;
 }
 

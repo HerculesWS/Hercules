@@ -746,12 +746,13 @@ static int char_getitemdata_from_sql(struct item *items, int max, int guid, enum
 	StringBuf buf;
 	struct item item = { 0 }; // temp storage variable
 
-	nullpo_retr(-1, items);
+	if (max > 0)
+		nullpo_retr(-1, items);
 	Assert_retr(-1, guid > 0);
-	Assert_retr(-1, max > 0);
 
 	// Initialize the array.
-	memset(items, 0x0, sizeof(struct item) * max);
+	if (max > 0)
+		memset(items, 0x0, sizeof(struct item) * max);
 
 	switch (table) {
 	case TABLE_INVENTORY:

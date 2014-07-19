@@ -448,7 +448,7 @@ static int intif_request_guild_storage(int account_id, int guild_id)
  * Sends guild storage information for saving to the character server.
  *
  * @code{.unparsed}
- *	@packet 0x3019 [out] <packet_len>.W <account_id>.L <guild_id>.L <struct guild_storage>.P
+ *	@packet 0x3019 [out] <packet_len>.W <account_id>.L <guild_id>.L {<struct item>.P} * <capacity>
  * @endcode
  *
  * @attention If the size of packet 0x3019 changes,
@@ -461,19 +461,27 @@ static int intif_request_guild_storage(int account_id, int guild_id)
  * @param[in] gstor Pointer to the guild storage data containing the information to save.
  * @return Always 0. 
  *
- **/
+ */
 static int intif_send_guild_storage(int account_id, struct guild_storage *gstor)
 {
+	int size;
+
 	if (intif->CheckForCharServer())
-		return 0;
-	nullpo_ret(gstor);
-	WFIFOHEAD(inter_fd,sizeof(struct guild_storage)+12);
+		return 1;
+
+	nullpo_retr(1, gstor);
+	size = 20 + sizeof(gstor->items.data[0])*gstor->items.capacity;
+
+	WFIFOHEAD(inter_fd, size);
 	WFIFOW(inter_fd,0) = 0x3019;
-	WFIFOW(inter_fd,2) = (unsigned short)sizeof(struct guild_storage)+12;
+	WFIFOW(inter_fd,2) = size;
 	WFIFOL(inter_fd,4) = account_id;
 	WFIFOL(inter_fd,8) = gstor->guild_id;
-	memcpy( WFIFOP(inter_fd,12),gstor, sizeof(struct guild_storage) );
-	WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
+	WFIFOL(inter_fd,12) = gstor->items.capacity;
+	WFIFOL(inter_fd,16) = gstor->items.amount;
+	if (gstor->items.data != NULL)
+		memcpy(WFIFOP(inter_fd, 20), gstor->items.data, sizeof(gstor->items.data[0])*gstor->items.capacity);
+	WFIFOSET(inter_fd, size);
 	return 0;
 }
 
@@ -1103,46 +1111,84 @@ static void intif_parse_Registers(int fd)
 		pc->reg_received(sd); //Received all registry values, execute init scripts and what-not. [Skotlex]
 }
 
+/**
+ * Loads received guild storage into memory.
+ *
+ * Expected packets:
+ * 0x3818 <len>.W <account id>.L <guild id != 0>.L <flag>.B <capacity>.L <amount>.L {<item>.P}*<capacity>
+ * 0x3818 <len>.W <account id>.L <guild id == 0>.L
+ * <flag> 0: Don't open storage
+ * <flag> 1: Open storage
+ *
+ * @param fd The receiving fd.
+ */
 static void intif_parse_LoadGuildStorage(int fd)
 {
-	struct guild_storage *gstor;
-	struct map_session_data *sd;
-	int guild_id, flag;
+	struct guild_storage *gstor = NULL;
+	struct map_session_data *sd = NULL;
 
-	guild_id = RFIFOL(fd,8);
-	flag = RFIFOL(fd,12);
-	if(guild_id <= 0)
+	int flag, storage_capacity, storage_amount, expected_size;
+	int account_id = RFIFOL(fd, 4);
+	int guild_id = RFIFOL(fd, 8);
+
+	if (guild_id <= 0)
 		return;
-	sd=map->id2sd( RFIFOL(fd,4) );
-	if( flag ){ //If flag != 0, we attach a player and open the storage
-		if(sd==NULL){
-			ShowError("intif_parse_LoadGuildStorage: user not found %u\n", RFIFOL(fd,4));
-			return;
-		}
+
+	flag = RFIFOB(fd,12);
+	storage_capacity = RFIFOL(fd, 13);
+	storage_amount = RFIFOL(fd, 17);
+	if (storage_capacity < storage_amount)
+		storage_capacity = storage_amount;
+
+	expected_size = 21 + (sizeof(gstor->items.data[0])*storage_capacity);
+	if (RFIFOW(fd,2) != expected_size) {
+		ShowError("intif_parse_LoadGuildStorage: data size mismatch! Expected: %d Received: %d\n",
+			expected_size, RFIFOW(fd,2));
+		return;
 	}
-	gstor=gstorage->ensure(guild_id);
-	if(!gstor) {
-		ShowWarning("intif_parse_LoadGuildStorage: error guild_id %d not exist\n",guild_id);
+
+	sd = map->id2sd(account_id);
+	// When flag is true a player should always be attached, otherwise it's not possible
+	// to open the storage later
+	if ((flag&1) == 1 && sd == NULL) // Player logged off/invalid data
+		return;
+
+	gstor = gstorage->ensure(guild_id);
+	if (gstor == NULL) {
+		ShowWarning("intif_parse_LoadGuildStorage: Invalid guild_id (%d)!\n", guild_id);
 		return;
 	}
 	if (gstor->in_use) {
 		// Already open.. lets ignore this update
-		ShowWarning("intif_parse_LoadGuildStorage: storage received for a client already open (User %d:%d)\n", flag?sd->status.account_id:0, flag?sd->status.char_id:0);
-		return;
-	}
-	if (gstor->dirty) { // Already have storage, and it has been modified and not saved yet! Exploit! [Skotlex]
-		ShowWarning("intif_parse_LoadGuildStorage: received storage for an already modified non-saved storage! (User %d:%d)\n", flag?sd->status.account_id:0, flag?sd->status.char_id:0);
-		return;
-	}
-	if (RFIFOW(fd,2)-13 != sizeof(struct guild_storage)) {
-		ShowError("intif_parse_LoadGuildStorage: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd,2)-13, sizeof(struct guild_storage));
-		gstor->in_use = false;
+		ShowWarning("intif_parse_LoadGuildStorage: storage received for a client was already opened (User AID %d: CID %d)\n",
+			flag?sd->status.account_id:0, flag?sd->status.char_id:0);
 		return;
 	}
 
-	memcpy(gstor,RFIFOP(fd,13),sizeof(struct guild_storage));
-	if( flag )
+	if (gstor->dirty) { // Already have storage, and it has been modified and not saved yet! Exploit! [Skotlex]
+		ShowWarning("intif_parse_LoadGuildStorage: received storage for an already modified non-saved storage! (User AID %d: CID%d)\n",
+			flag?sd->status.account_id:0, flag?sd->status.char_id:0);
+		return;
+	}
+
+	// Clear current storage information and fetch new data
+	gstor->in_use = false;
+	gstor->locked = false;
+	gstor->dirty = false;
+	gstor->items.capacity = max(storage_capacity, 1);
+	gstor->items.amount = storage_amount;
+	if (gstor->items.data != NULL) {
+		aFree(gstor->items.data);
+	}
+	gstor->items.data = aCalloc(gstor->items.capacity, sizeof(gstor->items.data[0]));
+	if (storage_capacity > 0) {
+		memcpy(gstor->items.data, RFIFOP(fd, 21), sizeof(gstor->items.data[0])*storage_capacity);
+	}
+
+	if ((flag&1) == 1)
 		gstorage->open(sd);
+
+	return;
 }
 
 // ACK guild_storage saved
