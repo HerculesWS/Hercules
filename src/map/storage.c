@@ -419,7 +419,7 @@ int storage_guild_storageopen(struct map_session_data* sd)
 	if (gstor->in_use)
 		return 1;
 
-	if( gstor->lock )
+	if (gstor->locked)
 		return 1;
 
 	gstor->in_use = true;
@@ -544,7 +544,7 @@ int storage_guild_storageadd(struct map_session_data* sd, int index, int amount)
 	if( amount < 1 || amount > sd->status.inventory[index].amount )
 		return 0;
 
-	if( stor->lock ) {
+	if (stor->locked) {
 		gstorage->close(sd);
 		return 0;
 	}
@@ -584,7 +584,7 @@ int storage_guild_storageget(struct map_session_data* sd, int index, int amount)
 	if(amount < 1 || amount > stor->items[index].amount)
 		return 0;
 
-	if( stor->lock ) {
+	if (stor->locked) {
 		gstorage->close(sd);
 		return 0;
 	}
