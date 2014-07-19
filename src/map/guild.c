@@ -1503,13 +1503,19 @@ static int guild_skillupack(int guild_id, uint16 skill_id, int account_id)
 	if( sd != NULL ) {
 		clif->skillup(sd,skill_id,g->skill[skill_id-GD_SKILLBASE].lv, 0);
 
-		/* Guild Aura handling */
 		switch( skill_id ) {
+			// Guild Aura handling
 			case GD_LEADERSHIP:
 			case GD_GLORYWOUNDS:
 			case GD_SOULCOLD:
 			case GD_HAWKEYES:
 				guild->aura_refresh(sd,skill_id,g->skill[skill_id-GD_SKILLBASE].lv);
+				break;
+			// Guild storage handling
+			case GD_GUILD_STORAGE:
+#ifdef OFFICIAL_GUILD_STORAGE
+				g->max_storage = g->skill[skill_id-GD_SKILLBASE].lv * 100;
+#endif // OFFICIAL_GUILD_STORAGE
 				break;
 		}
 	}

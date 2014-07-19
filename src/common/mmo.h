@@ -196,6 +196,10 @@
 #error FIXED_INVENTORY_SIZE must be same or smaller than MAX_INVENTORY
 #endif
 
+#if PACKETVER >= 20131223
+	#define OFFICIAL_GUILD_STORAGE
+#endif // PACKETVER >= 20131223
+
 //Max number of characters per account. Note that changing this setting alone is not enough if the client is not hexed to support more characters as well.
 #if PACKETVER >= 20100413
 #ifndef MAX_CHARS
@@ -237,7 +241,7 @@
 #define MAX_SKILL_DB 1353 ///< Maximum number of skills in the skill DB (compacted array size)
 #endif
 #ifndef MAX_SKILL_ID
-#define MAX_SKILL_ID 10015   // [Ind/Hercules] max used skill ID
+#define MAX_SKILL_ID 10016   // [Ind/Hercules] max used skill ID
 #endif
 #ifndef MAX_SKILL_TREE
 // Update this max as necessary. 86 is the value needed for Expanded Super Novice.
@@ -255,9 +259,16 @@
 #ifndef MAX_STORAGE
 #define MAX_STORAGE 600
 #endif
-#ifndef MAX_GUILD_STORAGE
-#define MAX_GUILD_STORAGE 600
-#endif
+#ifndef OFFICIAL_GUILD_STORAGE
+	#ifndef MAX_GUILD_STORAGE
+	#define MAX_GUILD_STORAGE 600
+	#endif
+#else // ! OFFICIAL_GUILD_STORAGE
+	#ifdef MAX_GUILD_STORAGE
+	#error You cannot redefine MAX_GUILD_STORAGE when using the official guild storage system.
+	#endif
+	#define MAX_GUILD_STORAGE (-1)
+#endif // OFFICIAL_GUILD_STORAGE
 #ifndef MAX_PARTY
 #define MAX_PARTY 12
 #endif
@@ -277,7 +288,7 @@
 #define MAX_GUILDALLIANCE 16
 #endif
 #ifndef MAX_GUILDSKILL
-#define MAX_GUILDSKILL 15                // Increased max guild skills because of new skills [Sara-chan]
+#define MAX_GUILDSKILL 17                // Increased max guild skills because of new skills [Sara-chan]
 #endif
 #ifndef MAX_GUILDLEVEL
 #define MAX_GUILDLEVEL 50
@@ -1148,6 +1159,8 @@ enum {
 	GD_RESTORE=10012,
 	GD_EMERGENCYCALL=10013,
 	GD_DEVELOPMENT=10014,
+	GD_ITEMEMERGENCYCALL = 10015,
+	GD_GUILD_STORAGE = 10016,
 #ifndef GD_MAX
 	GD_MAX,
 #endif
