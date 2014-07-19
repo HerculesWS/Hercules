@@ -24,7 +24,7 @@
 #include "common/db.h"
 #include "common/mmo.h"
 
-enum {
+enum guild_save_types {
 	GS_BASIC = 0x0001,
 	GS_MEMBER = 0x0002,
 	GS_POSITION = 0x0004,
@@ -50,7 +50,7 @@ struct inter_guild_interface {
 
 	int (*save_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*removemember_tosql) (int account_id, int char_id);
-	int (*tosql) (struct guild *g, int flag);
+	bool (*tosql) (struct guild *g, int flag);
 	struct guild* (*fromsql) (int guild_id);
 	int (*castle_tosql) (struct guild_castle *gc);
 	struct guild_castle* (*castle_fromsql) (int castle_id);
