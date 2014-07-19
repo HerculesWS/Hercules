@@ -924,6 +924,8 @@ ACMD(guildstorage)
 			clif->message(fd, msg_fd(fd,252)); // You are not in a guild
 		else if (retval == 3)
 			clif->message(fd, msg_fd(fd,335)); // Your guild doesn't have storage!
+		else if (retval == 4)
+			clif->message(fd, msg_fd(fd,336)); // You're not authorized to open your guild storage!
 		else // retval == 1 or unknown results
 			clif->message(fd, msg_fd(fd,1201)); // Your guild's storage has already been opened by another member, try again later.
 		return false;

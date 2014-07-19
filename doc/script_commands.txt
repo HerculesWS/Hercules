@@ -6090,6 +6090,7 @@ Expected return values:
  1 Storage is already open
  2 Player has no guild / guild information hasn't arrived yet
  3 Player's guild doesn't have GD_GUILD_STORAGE (only if OFFICIAL_GUILD_STORAGE is enabled - automatically enabled on PACKETVER >= 20131223)
+ 4 Player doesn't have permission to use storage (only on PACKETVER >= 20140205)
 
 The mapflag 'nogstorage' when set to type '2' (or 3), will not open the
 guild storage. Unless the character group has the permission 'bypass_nostorage'.

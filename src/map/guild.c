@@ -1247,16 +1247,25 @@ static int guild_memberposition_changed(struct guild *g, int idx, int pos)
 	return 0;
 }
 
-/*====================================================
- * Change guild title or member
- *---------------------------------------------------*/
-static int guild_change_position(int guild_id, int idx, int mode, int exp_mode, const char *name)
+/**
+ * Changes guild title or permission information of member with pos idx
+ *
+ * @param idx - Position id
+ * @param mode @see0x001 - Can invite
+ * @param mode 0x010 - Can expel
+ * @param mode 0x100 - Can use guild storage (PACKETVER >= 20140205)
+ * @param exp_mode - Exp tax (%)
+ * @param name - Title
+ *
+ * @retval true success
+ **/
+static bool guild_change_position(int guild_id, int idx, int mode, int exp_mode, const char *name)
 {
 	struct guild_position p;
 	nullpo_ret(name);
 
 	exp_mode = cap_value(exp_mode, 0, battle_config.guild_exp_limit);
-	p.mode=mode&GPERM_MASK;
+	p.mode = mode&GPERM_MASK;
 	p.exp_mode=exp_mode;
 	safestrncpy(p.name,name,NAME_LENGTH);
 	return intif->guild_position(guild_id,idx,&p);

@@ -967,7 +967,7 @@ static struct guild *inter_guild_create(const char *name, const struct guild_mem
 	g->member[0].modified = GS_MEMBER_MODIFIED;
 
 	// Set default positions
-	g->position[0].mode = GPERM_ALL;
+	g->position[0].mode = GPERM_DEFAULT;
 	strcpy(g->position[0].name,"GuildMaster");
 	strcpy(g->position[MAX_GUILDPOSITION-1].name,"Newbie");
 	g->position[0].modified = g->position[MAX_GUILDPOSITION-1].modified = GS_POSITION_MODIFIED;
