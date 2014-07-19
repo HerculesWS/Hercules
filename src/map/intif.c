@@ -804,11 +804,12 @@ int intif_guild_change_memberinfo(int guild_id,int account_id,int char_id,
 }
 
 // Request a change of Guild title
-int intif_guild_position(int guild_id,int idx,struct guild_position *p)
+bool intif_guild_position(int guild_id,int idx,struct guild_position *p)
 {
 	if (intif->CheckForCharServer())
-		return 0;
+		return false;
 	nullpo_ret(p);
+
 	WFIFOHEAD(inter_fd, sizeof(struct guild_position)+12);
 	WFIFOW(inter_fd,0)=0x303b;
 	WFIFOW(inter_fd,2)=sizeof(struct guild_position)+12;
@@ -816,7 +817,7 @@ int intif_guild_position(int guild_id,int idx,struct guild_position *p)
 	WFIFOL(inter_fd,8)=idx;
 	memcpy(WFIFOP(inter_fd,12),p,sizeof(struct guild_position));
 	WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
-	return 0;
+	return true;
 }
 
 // Request an update of Guildskill skill_id
