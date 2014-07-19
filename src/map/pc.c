@@ -9142,7 +9142,7 @@ int pc_checkitem(struct map_session_data *sd)
 		if (sd->guild) {
 			struct guild_storage *guild_storage = gstorage->id2storage2(sd->guild->guild_id);
 			if (guild_storage) {
-				for( i = 0; i < MAX_GUILD_STORAGE; i++ ) {
+				for( i = 0; i < guild_storage->storage_amount; i++ ) {
 					id = guild_storage->items[i].nameid;
 					if( id && !itemdb_available(id) ) {
 						ShowWarning("Removed invalid/disabled item id %d from guild storage (amount=%d, char_id=%d, guild_id=%d).\n", id, guild_storage->items[i].amount, sd->status.char_id, sd->guild->guild_id);

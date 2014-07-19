@@ -929,7 +929,7 @@ void guild_retrieveitembound(int char_id,int aid,int guild_id) {
 		pc->bound_clear(sd,IBT_GUILD);
 	} else { //Character is offline, ask char server to do the job
 		struct guild_storage *gstor = gstorage->id2storage2(guild_id);
-		if(gstor && gstor->storage_status == 1) { //Someone is in guild storage, close them
+		if( gstor && gstor->storage_status ) { //Someone is in guild storage, close them
 			struct s_mapiterator* iter = mapit_getallusers();
 			for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
 				if(sd->status.guild_id == guild_id && sd->state.storage_flag == 2) {
@@ -1093,17 +1093,27 @@ int guild_memberposition_changed(struct guild *g,int idx,int pos)
 	return 0;
 }
 
-/*====================================================
- * Change guild title or member
- *---------------------------------------------------*/
-int guild_change_position(int guild_id,int idx,int mode,int exp_mode,const char *name)
-{
+/**
+ * Changes guild title or permission information of member with pos idx
+ *
+ * @param idx - Position id
+ * @param mode 0x001 - Can invite
+ * @param mode 0x010 - Can expel
+ * @param mode 0x100 - Can use guild storage (PACKETVER >= 20140205)
+ * @param exp_mode - Exp tax (%)
+ * @param name - Title
+ *
+ * @retval true success
+ **/
+bool guild_change_position(int guild_id,int idx,int mode,int exp_mode,const char *name) {
 	struct guild_position p;
 
 	exp_mode = cap_value(exp_mode, 0, battle_config.guild_exp_limit);
-	//Mode 0x01 <- Invite
-	//Mode 0x10 <- Expel.
-	p.mode=mode&0x11;
+#if PACKETVER >= 20140205
+	p.mode=mode&0x111;
+#else
+	p.mode = mode&0x10;
+#endif
 	p.exp_mode=exp_mode;
 	safestrncpy(p.name,name,NAME_LENGTH);
 	return intif->guild_position(guild_id,idx,&p);
@@ -1343,14 +1353,20 @@ int guild_skillupack(int guild_id,uint16 skill_id,int account_id) {
 	if( sd != NULL ) {
 		clif->skillup(sd,skill_id,g->skill[skill_id-GD_SKILLBASE].lv, 0);
 
-		/* Guild Aura handling */
 		switch( skill_id ) {
+			/* Guild Aura handling */
 			case GD_LEADERSHIP:
 			case GD_GLORYWOUNDS:
 			case GD_SOULCOLD:
 			case GD_HAWKEYES:
 				guild->aura_refresh(sd,skill_id,g->skill[skill_id-GD_SKILLBASE].lv);
 				break;
+#if PACKETVER >= 20140205
+			// Guild storage handling
+			case GD_GUILD_STORAGE:
+				gstorage->grow(g);
+				break;
+#endif
 		}
 	}
 

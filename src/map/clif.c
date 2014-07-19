@@ -7296,8 +7296,9 @@ void clif_guild_created(struct map_session_data *sd,int flag)
 /// Notifies the client that it is belonging to a guild (ZC_UPDATE_GDID).
 /// 016c <guild id>.L <emblem id>.L <mode>.L <ismaster>.B <inter sid>.L <guild name>.24B
 /// mode:
-///     &0x01 = allow invite
-///     &0x10 = allow expel
+///     &0x001 = Allow invite
+///     &0x100 = Allow expel
+//		&0x100 = Can use guild storage (PACKETVER >= 20140205)
 void clif_guild_belonginfo(struct map_session_data *sd, struct guild *g)
 {
 	int ps,fd;
@@ -7548,8 +7549,9 @@ void clif_guild_positionnamelist(struct map_session_data *sd) {
 /// Guild position information (ZC_POSITION_INFO).
 /// 0160 <packet len>.W { <position id>.L <mode>.L <ranking>.L <pay rate>.L }*
 /// mode:
-///     &0x01 = allow invite
-///     &0x10 = allow expel
+///     &0x001 = allow invite
+///     &0x010 = allow expel
+///     &0x100 = allow guild storage
 /// ranking:
 ///     TODO
 void clif_guild_positioninfolist(struct map_session_data *sd) {
@@ -8449,9 +8451,14 @@ void clif_refresh_storagewindow( struct map_session_data *sd ) {
 			// Shouldn't happen... The information should already be at the map-server
 			intif->request_guild_storage(sd->status.account_id,sd->status.guild_id);
 		} else {
+			if( !sd->guild ) {
+				ShowWarning("clif_refreshstoragewindow: Trying to open guild storage without guild information! (AID: %d, GID: %d)\n",
+					sd->status.account_id, sd->status.guild_id );
+				return;
+			}
 			storage->sortitem(gstor->items, ARRAYLENGTH(gstor->items));
 			clif->storagelist(sd, gstor->items, ARRAYLENGTH(gstor->items));
-			clif->updatestorageamount(sd, gstor->storage_amount, MAX_GUILD_STORAGE);
+			clif->updatestorageamount(sd, gstor->storage_amount, sd->guild->max_storage);
 		}
 	}
 }
@@ -12985,9 +12992,9 @@ void clif_parse_GuildChangePositionInfo(int fd, struct map_session_data *sd)
 	if(!sd->state.gmaster_flag)
 		return;
 
-	for(i = 4; i < RFIFOW(fd,2); i += 40 ){
+	for(i = 4; i < RFIFOW(fd,2); i += 40 )
 		guild->change_position(sd->status.guild_id, RFIFOL(fd,i), RFIFOL(fd,i+4), RFIFOL(fd,i+12), (char*)RFIFOP(fd,i+16));
-	}
+
 }
 
 

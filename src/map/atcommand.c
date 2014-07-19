@@ -825,8 +825,10 @@ ACMD(storage)
  *------------------------------------------*/
 ACMD(guildstorage)
 {
+	int retval;
+
 	if (!sd->status.guild_id) {
-		clif->message(fd, msg_txt(252));
+		clif->message(fd, msg_txt(252)); // You are not in a guild
 		return false;
 	}
 	
@@ -834,17 +836,24 @@ ACMD(guildstorage)
 		return false;
 	
 	if (sd->state.storage_flag == 1) {
-		clif->message(fd, msg_txt(250));
+		clif->message(fd, msg_txt(250)); // You have already opened your storage. Close it first.
 		return false;
 	}
 	
 	if (sd->state.storage_flag == 2) {
-		clif->message(fd, msg_txt(251));
+		clif->message(fd, msg_txt(251)); // You have already opened your guild storage. Close it first.
 		return false;
 	}
 	
-	if( gstorage->open(sd) ) {
-		clif->message(fd, msg_txt(1201)); // Your guild's storage has already been opened by another member, try again later.
+	if( (retval = gstorage->open(sd)) ) {
+		if( retval == 2 )
+			clif->message(fd, msg_txt(252)); // You are not in a guild
+		else if( retval == 3 )
+			clif->message(fd, msg_txt(335)); // Your guild doesn't have storage!
+		else if( retval == 4 )
+			clif->message(fd, msg_txt(336)); // You're not authorized to open your guild storage!
+		else // retval == 1 or unknown results
+			clif->message(fd, msg_txt(1201)); // Your guild's storage has already been opened by another member, try again later.
 		return false;
 	}
 
