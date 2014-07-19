@@ -473,7 +473,7 @@ int guild_storage_additem(struct map_session_data* sd, struct guild_storage* sto
 					return 1;
 				stor->items[i].amount+=amount;
 				clif->storageitemadded(sd,&stor->items[i],i,amount);
-				stor->dirty = 1;
+				stor->dirty = true;
 				return 0;
 			}
 		}
@@ -489,7 +489,7 @@ int guild_storage_additem(struct map_session_data* sd, struct guild_storage* sto
 	stor->storage_amount++;
 	clif->storageitemadded(sd,&stor->items[i],i,amount);
 	clif->updatestorageamount(sd, stor->storage_amount, MAX_GUILD_STORAGE);
-	stor->dirty = 1;
+	stor->dirty = true;
 	return 0;
 }
 
@@ -514,7 +514,7 @@ int guild_storage_delitem(struct map_session_data* sd, struct guild_storage* sto
 		clif->updatestorageamount(sd, stor->storage_amount, MAX_GUILD_STORAGE);
 	}
 	clif->storageitemremoved(sd,n,amount);
-	stor->dirty = 1;
+	stor->dirty = true;
 	return 0;
 }
 
@@ -695,7 +695,7 @@ int storage_guild_storagesaved(int guild_id)
 	if((stor=idb_get(gstorage->db,guild_id)) != NULL) {
 		if (stor->dirty && !stor->in_use) {
 			//Storage has been correctly saved.
-			stor->dirty = 0;
+			stor->dirty = false;
 		}
 		return 1;
 	}
