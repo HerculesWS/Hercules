@@ -317,6 +317,7 @@ CREATE TABLE IF NOT EXISTS `guild` (
   `guild_lv` TINYINT(6) UNSIGNED NOT NULL DEFAULT '0',
   `connect_member` TINYINT(6) UNSIGNED NOT NULL DEFAULT '0',
   `max_member` TINYINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `max_storage` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
   `average_lv` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '1',
   `exp` BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
   `next_exp` INT(11) UNSIGNED NOT NULL DEFAULT '0',
@@ -413,7 +414,7 @@ CREATE TABLE IF NOT EXISTS `guild_position` (
   `guild_id` INT(9) UNSIGNED NOT NULL DEFAULT '0',
   `position` TINYINT(6) UNSIGNED NOT NULL DEFAULT '0',
   `name` VARCHAR(24) NOT NULL DEFAULT '',
-  `mode` TINYINT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `mode` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
   `exp_mode` TINYINT(11) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`guild_id`,`position`)
 ) ENGINE=MyISAM;
@@ -805,6 +806,7 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1395789302); -- 2014-03-25--23-5
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1396893866); -- 2014-04-07--22-04.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1398477600); -- 2014-04-26--10-00.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1400256139); -- 2014-05-17--00-06.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1405725120); -- 2014-07-14--23-12.sql
 
 --
 -- Table structure for table `sstatus`
