@@ -1155,7 +1155,10 @@ static void db_release_data(DBKey key, DBData data, DBRelease which)
 {
 	(void)key;//not used
 	DB_COUNTSTAT(db_release_data);
-	if (which&DB_RELEASE_DATA && data.type == DB_DATA_PTR) aFree(data.u.ptr);
+	if (which&DB_RELEASE_DATA && data.type == DB_DATA_PTR) {
+		aFree(data.u.ptr);
+		data.u.ptr = NULL;
+	}
 }
 
 /**
@@ -1174,7 +1177,10 @@ static void db_release_both(DBKey key, DBData data, DBRelease which)
 {
 	DB_COUNTSTAT(db_release_both);
 	if (which&DB_RELEASE_KEY) aFree((char*)key.str); // needs to be a pointer
-	if (which&DB_RELEASE_DATA && data.type == DB_DATA_PTR) aFree(data.u.ptr);
+	if (which&DB_RELEASE_DATA && data.type == DB_DATA_PTR) {
+		aFree(data.u.ptr);
+		data.u.ptr = NULL;
+	}
 }
 
 /*****************************************************************************\
@@ -1428,7 +1434,7 @@ bool dbit_obj_exists(DBIterator* self)
  * Removes the current entry from the database.
  * NOTE: {@link DBIterator#exists} will return false until another entry
  *       is fetched
- * Puts data of the removed entry in out_data, if out_data is not NULL.
+ * Puts data of the removed entry in out_data, if out_data is not NULL (unless data has been released)
  * @param self Iterator
  * @param out_data Data of the removed entry.
  * @return 1 if entry was removed, 0 otherwise
@@ -1449,10 +1455,10 @@ int dbit_obj_remove(DBIterator* self, DBData *out_data)
 		DBMap_impl* db = it->db;
 		if( db->cache == node )
 			db->cache = NULL;
+		db->release(node->key, node->data, DB_RELEASE_DATA);
 		if( out_data )
 			memcpy(out_data, &node->data, sizeof(DBData));
 		retval = 1;
-		db->release(node->key, node->data, DB_RELEASE_DATA);
 		db_free_add(db, node, &db->ht[it->ht_index]);
 	}
 	return retval;
@@ -1840,7 +1846,7 @@ static DBData* db_obj_ensure(DBMap* self, DBKey key, DBCreateData create, ...)
 
 /**
  * Put the data identified by the key in the database.
- * Puts the previous data in out_data, if out_data is not NULL.
+ * Puts the previous data in out_data, if out_data is not NULL. (unless data has been released)
  * NOTE: Uses the new key, the old one is released.
  * @param self Interface of the database
  * @param key Key that identifies the data
@@ -1893,9 +1899,9 @@ static int db_obj_put(DBMap* self, DBKey key, DBData data, DBData *out_data)
 			if (node->deleted) {
 				db_free_remove(db, node);
 			} else {
+				db->release(node->key, node->data, DB_RELEASE_BOTH);
 				if (out_data)
 					memcpy(out_data, &node->data, sizeof(*out_data));
-				db->release(node->key, node->data, DB_RELEASE_BOTH);
 				retval = 1;
 			}
 			break;
@@ -1948,7 +1954,7 @@ static int db_obj_put(DBMap* self, DBKey key, DBData data, DBData *out_data)
 
 /**
  * Remove an entry from the database.
- * Puts the previous data in out_data, if out_data is not NULL.
+ * Puts the previous data in out_data, if out_data is not NULL. (unless data has been released)
  * NOTE: The key (of the database) is released in {@link #db_free_add(DBMap_impl*,DBNode*,DBNode **)}.
  * @param self Interface of the database
  * @param key Key that identifies the entry
@@ -1986,10 +1992,10 @@ static int db_obj_remove(DBMap* self, DBKey key, DBData *out_data)
 			if (!(node->deleted)) {
 				if (db->cache == node)
 					db->cache = NULL;
+				db->release(node->key, node->data, DB_RELEASE_DATA);
 				if (out_data)
 					memcpy(out_data, &node->data, sizeof(*out_data));
 				retval = 1;
-				db->release(node->key, node->data, DB_RELEASE_DATA);
 				db_free_add(db, node, &db->ht[hash]);
 			}
 			break;

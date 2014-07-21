@@ -271,12 +271,12 @@ CREATE TABLE IF NOT EXISTS `friends` (
 --
 
 CREATE TABLE IF NOT EXISTS `hotkey` (
-	`char_id` INT(11) NOT NULL,
-	`hotkey` TINYINT(2) UNSIGNED NOT NULL,
-	`type` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-	`itemskill_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-	`skill_lvl` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
-	PRIMARY KEY (`char_id`,`hotkey`)
+  `char_id` INT(11) NOT NULL,
+  `hotkey` TINYINT(2) UNSIGNED NOT NULL,
+  `type` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+  `itemskill_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `skill_lvl` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`char_id`,`hotkey`)
 ) ENGINE=MyISAM;
 
 --
@@ -485,16 +485,16 @@ CREATE TABLE IF NOT EXISTS `homunculus` (
 ) ENGINE=MyISAM;
 
 -- 
--- Table structure for table `INTerlog`
+-- Table structure for table `interlog`
 --
 
-CREATE TABLE IF NOT EXISTS `INTerlog` (
+CREATE TABLE IF NOT EXISTS `interlog` (
   `time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   `log` VARCHAR(255) NOT NULL DEFAULT ''
 ) ENGINE=MyISAM; 
 
 --
--- Table structure for table `INTerreg`
+-- Table structure for table `interreg`
 --
 
 CREATE TABLE IF NOT EXISTS `interreg` (
@@ -566,7 +566,7 @@ CREATE TABLE IF NOT EXISTS `login` (
 ) ENGINE=MyISAM AUTO_INCREMENT=2000000; 
 
 -- added standard accounts for servers, VERY INSECURE!!!
--- inserted INTo the table called login which is above
+-- inserted into the table called login which is above
 
 INSERT INTO `login` (`account_id`, `userid`, `user_pass`, `sex`, `email`) VALUES ('1', 's1', 'p1', 'S','athena@athena.com');
 
@@ -710,7 +710,7 @@ CREATE TABLE IF NOT EXISTS `pet` (
   `level` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0',
   `egg_id` SMALLINT(11) UNSIGNED NOT NULL DEFAULT '0',
   `equip` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-  `INTimate` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `intimate` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
   `hungry` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',
   `rename_flag` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
   `incubate` INT(11) UNSIGNED NOT NULL DEFAULT '0',
