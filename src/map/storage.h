@@ -9,6 +9,7 @@
 #include "../common/db.h"
 
 struct guild_storage;
+struct guild;
 struct item;
 struct map_session_data;
 

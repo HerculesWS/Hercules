@@ -422,17 +422,17 @@ int intif_send_guild_storage(int account_id,struct guild_storage *gs)
 	if (intif->CheckForCharServer())
 		return 0;
 
-	size = sizeof(struct guild_storage)+16 + sizeof(gs->items[0])*gs->storage_amount;
+	size = sizeof(struct guild_storage)+14 + sizeof(gs->items[0])*gs->storage_amount;
 
 	WFIFOHEAD(inter_fd, size);
 	WFIFOW(inter_fd,0) = 0x3019; // pratically the same as 0x3818
 	WFIFOW(inter_fd,2) = size;
 	WFIFOL(inter_fd,4) = account_id;
 	WFIFOL(inter_fd,8) = gs->guild_id;
-	WFIFOL(inter_fd,12) = gs->storage_amount;
-	memcpy( WFIFOP(inter_fd,16), gs, sizeof(struct guild_storage) );
+	WFIFOW(inter_fd,12) = gs->storage_amount;
+	memcpy( WFIFOP(inter_fd,14), gs, sizeof(struct guild_storage) );
 
-	memcpy((struct item*)WFIFOP(inter_fd, sizeof(struct guild_storage)+16), gs->items, sizeof(gs->items[0])*gs->storage_amount);
+	memcpy((struct item*)WFIFOP(inter_fd, sizeof(struct guild_storage)+14), gs->items, sizeof(gs->items[0])*gs->storage_amount);
 	WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
 	return 0;
 }
@@ -1093,10 +1093,10 @@ void intif_parse_Registers(int fd)
 /**
  * Loads received guild storage into memory
  * Expected packets:
- * 0x3818 <len>.W <account id>.L <guild id>.L <flag>.B <size>.L { items }*<size>
+ * 0x3818 <len>.W <account id>.L <guild id>.L <flag>.B <size>.W { items }*<size>
  * items: { <identify>.B <refine>.B <attribute>.B <favorite>.B <bound>.B <id>.W <nameid>.W
  *            <amount>.W {<card>.W}*MAX_SLOTS <equip>.L <expire_time>.L <unique_id>.Q }
- * 0x3818 <len>.W <account id>.L <guild id>.L
+ * 0x3818 <len>.W <account id>.L <guild id>.W
  *
  * <flag> 0 Don't open storage
  * <flag> 1 Open storage
@@ -1107,7 +1107,7 @@ void intif_parse_LoadGuildStorage( int fd ) {
 	struct map_session_data *sd;
 
 	int guild_id, flag, amount; ///< Received information
-	int isize = 17; ///< Initial size before receiving item data
+	int isize = 15; ///< Initial size before receiving item data
 	int size = (27+2*MAX_SLOTS); ///< Iteration size (P*5 + W*3 + W*MAX_SLOTS + L*2 + Q)
 	int expected_size;
 	int i, j;
@@ -1117,7 +1117,7 @@ void intif_parse_LoadGuildStorage( int fd ) {
 	if( guild_id <= 0 )
 		return;
 
-	amount = RFIFOL(fd,13);
+	amount = RFIFOW(fd,13);
 	expected_size = size*amount + isize;
 	if( RFIFOW(fd,2) != expected_size ) {
 		ShowError("intif_parse_LoadGuildStorage: data size mismatch! Expected: %d Received: %d\n",
@@ -1156,7 +1156,7 @@ void intif_parse_LoadGuildStorage( int fd ) {
 	// Clear current storage information and fetch new data
 	gs->storage_status = false;
 	gs->lock = 0;
-	gs->dirty = 0;
+	gs->dirty = false;
 	gs->items = NULL;
 	gs->storage_amount = amount;
 

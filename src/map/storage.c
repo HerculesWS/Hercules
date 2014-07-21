@@ -430,7 +430,7 @@ bool storage_guild_storage_allocate_items( struct guild_storage *gs ) {
 int storage_guild_storageopen( struct map_session_data* sd ) {
 	struct guild_storage *gstor;
 
-	nullpo_retr(1,sd);
+	nullpo_retr(2,sd);
 
 	if( sd->status.guild_id <= 0 || !sd->guild )
 		return 2;
@@ -524,7 +524,7 @@ int guild_storage_additem(struct map_session_data* sd, struct guild_storage* sto
 	}
 
 	// Add item
-	for( i = 0; i < sd->guild->max_storage && stor->items[i].nameid; i++ );
+	ARR_FIND(0, sd->guild->max_storage, i, stor->items[i].nameid == 0);
 	
 	if( i >= sd->guild->max_storage )
 		return 1;
@@ -769,13 +769,13 @@ int storage_guild_storageclose(struct map_session_data* sd) {
 	return 0;
 }
 
-#if PACKETVER >= 20140205
 /**
  * Grows g->items
  * Called from guild_skillupack
  * @retval true success
  **/
 bool storage_guild_storage_grow( struct guild *g ) {
+#if PACKETVER >= 20140205
 	struct guild_storage *gs;
 	struct item *temp;
 	int new_size;
@@ -800,10 +800,9 @@ bool storage_guild_storage_grow( struct guild *g ) {
 		gs->items = temp;
 	}
 	g->max_storage = new_size;
-
+#endif
 	return true;
 }
-#endif
 
 int storage_guild_storage_quit(struct map_session_data* sd, int flag) {
 	struct guild_storage *stor;
@@ -814,7 +813,7 @@ int storage_guild_storage_quit(struct map_session_data* sd, int flag) {
 	if(flag) {
 		//Only during a guild break flag is 1 (don't save storage)
 		sd->state.storage_flag = 0;
-		stor->storage_status = 0;
+		stor->storage_status = false;
 		clif->storageclose(sd);
 		if (map->save_settings&4)
 			chrif->save(sd,0);
@@ -853,6 +852,7 @@ void do_final_gstorage( void ) {
 	}
 
 	db_destroy(gstorage->db);
+	db_destroy(iter);
 }
 
 void storage_defaults(void) {

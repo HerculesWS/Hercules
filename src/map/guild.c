@@ -1112,7 +1112,7 @@ bool guild_change_position(int guild_id,int idx,int mode,int exp_mode,const char
 #if PACKETVER >= 20140205
 	p.mode=mode&0x111;
 #else
-	p.mode = mode&0x10;
+	p.mode = mode&0x11;
 #endif
 	p.exp_mode=exp_mode;
 	safestrncpy(p.name,name,NAME_LENGTH);
@@ -1361,12 +1361,10 @@ int guild_skillupack(int guild_id,uint16 skill_id,int account_id) {
 			case GD_HAWKEYES:
 				guild->aura_refresh(sd,skill_id,g->skill[skill_id-GD_SKILLBASE].lv);
 				break;
-#if PACKETVER >= 20140205
 			// Guild storage handling
 			case GD_GUILD_STORAGE:
 				gstorage->grow(g);
 				break;
-#endif
 		}
 	}
 

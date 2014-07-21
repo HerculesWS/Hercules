@@ -7297,7 +7297,7 @@ void clif_guild_created(struct map_session_data *sd,int flag)
 /// 016c <guild id>.L <emblem id>.L <mode>.L <ismaster>.B <inter sid>.L <guild name>.24B
 /// mode:
 ///     &0x001 = Allow invite
-///     &0x100 = Allow expel
+///     &0x010 = Allow expel
 //		&0x100 = Can use guild storage (PACKETVER >= 20140205)
 void clif_guild_belonginfo(struct map_session_data *sd, struct guild *g)
 {

@@ -221,10 +221,10 @@ int mapif_load_guild_storage_sub( int fd, int isize, struct guild_storage *gs ) 
 
 /**
  * Sends loaded guild storage to fd
- * 0x3818 <len>.W <account id>.L <guild id>.L <flag>.B <size>.L { items }*<size>
+ * 0x3818 <len>.W <account id>.L <guild id>.L <flag>.B <size>.W { items }*<size>
  * items: { <identify>.B <refine>.B <attribute>.B <favorite>.B <bound>.B <id>.W <nameid>.W
  *            <amount>.W {<card>.W}*MAX_SLOTS <equip>.L <expire_time>.L <unique_id>.Q }
- * 0x3818 <len>.W <account id>.L <guild id>.L
+ * 0x3818 <len>.W <account id>.L <guild id>.W
  *
  * <flag> 0 Don't open storage
  * <flag> 1 Open storage
@@ -240,29 +240,30 @@ int mapif_load_guild_storage( int fd, int account_id, int guild_id, char flag ) 
 		gs = aCalloc(1, sizeof(struct guild_storage));
 
 		if( !guild_storage_fromsql(guild_id, gs) ) {
-			int size = mapif_load_guild_storage_sub(fd, 17, gs);
+			int size = mapif_load_guild_storage_sub(fd, 15, gs);
 			WFIFOHEAD(fd, size);
 			WFIFOW(fd,0) = 0x3818;
 			WFIFOW(fd,2) = size;
 			WFIFOL(fd,4) = account_id;
 			WFIFOL(fd,8) = guild_id;
 			WFIFOB(fd,12) = flag;
-			WFIFOL(fd,13) = gs->storage_amount;
-			// fd,17 <items>
+			WFIFOW(fd,13) = gs->storage_amount;
+			// fd,15 <items>
 			WFIFOSET(fd, WFIFOW(fd,2));
 
 			aFree(gs->items);
 			aFree(gs);
 			return 0;
 		}
+		aFree(gs);
 	}
 	// guild does not exist or there was an error
 	SQL->FreeResult(sql_handle);
-	WFIFOHEAD(fd, 12);
+	WFIFOHEAD(fd, 10);
 	WFIFOW(fd,0) = 0x3818;
 	WFIFOW(fd,2) = 12;
 	WFIFOL(fd,4) = account_id;
-	WFIFOL(fd,8) = 0;
+	WFIFOW(fd,8) = 0;
 	WFIFOSET(fd, 12);
 	return 0;
 }
@@ -297,11 +298,11 @@ int mapif_parse_SaveGuildStorage(int fd)
 	RFIFOHEAD(fd);
 	guild_id = RFIFOL(fd,8);
 	len = RFIFOW(fd,2);
-	expected = sizeof(struct guild_storage)+16 + sizeof(struct item)*RFIFOL(fd, 12);
+	expected = sizeof(struct guild_storage)+14 + sizeof(struct item)*RFIFOW(fd, 12);
 
 	if( expected != len )
 	{
-		ShowError("inter storage: data size error %d != %d\n", expected, len);
+		ShowError("mapif_parse_SaveGuildStorage: data size error %d != %d\n", expected, len);
 	}
 	else
 	{
@@ -311,9 +312,8 @@ int mapif_parse_SaveGuildStorage(int fd)
 		{// guild exists
 			struct guild_storage *gs;
 			SQL->FreeResult(sql_handle);
-			gs = (struct guild_storage *)RFIFOP(fd, 16);
-			gs->items = (struct item *)RFIFOP(fd, sizeof(struct guild_storage)+16);
-			//memcpy(gs->items, (struct item *)RFIFOP(fd, sizeof(struct guild_storage)+16), expected - (sizeof(struct guild_storage)+16));
+			gs = (struct guild_storage *)RFIFOP(fd, 14);
+			gs->items = (struct item *)RFIFOP(fd, sizeof(struct guild_storage)+14);
 			guild_storage_tosql(guild_id, gs);
 			mapif_save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 0);
 			return 0;
