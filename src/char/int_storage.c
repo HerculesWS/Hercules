@@ -78,17 +78,30 @@ int storage_fromsql(int account_id, struct storage_data* p)
 	return 1;
 }
 
-/// Save guild_storage data to sql
-int guild_storage_tosql(int guild_id, struct guild_storage* p)
-{
-	memitemdata_to_sql(p->items, p->storage_amount, guild_id, TABLE_GUILD_STORAGE);
-	ShowInfo ("guild storage save to DB - guild: %d\n", guild_id);
-	return 0;
+/**
+ * Saves guild_storage data to SQL
+ * Uses:
+ *    p->guild_id
+ *    p->storage_amount
+ *    p->items
+ * @retval Number of errors encountered when saving
+ **/
+int guild_storage_tosql( struct guild_storage* p ) {
+	int err_count;
+
+	err_count = memitemdata_to_sql(p->items, p->storage_amount, p->guild_id, TABLE_GUILD_STORAGE);
+	if( err_count )
+		ShowError("guild_storage_tosql: Couldn't save storage item data! (GID: %d)\n", p->guild_id);
+	else
+		ShowInfo("guild storage save to DB - guild: %d\n", p->guild_id);
+
+	return err_count;
 }
 
 /**
  * Loads `guild_storage` data to memory
  *  Allocates p->item using aCalloc, nothing is allocated in case of failure
+ * @param p Should be allocated using aCalloc and freed by the caller
  * @retval 0 Success
  **/
 int guild_storage_fromsql( int guild_id, struct guild_storage* p ) {
@@ -100,7 +113,6 @@ int guild_storage_fromsql( int guild_id, struct guild_storage* p ) {
 	if( p == NULL )
 		return 1;
 
-	memset(p, 0, sizeof(struct guild_storage)); //clean up memory
 	p->guild_id = guild_id;
 
 	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `guild_id` FROM `%s` WHERE `guild_id`='%d'", guild_db, guild_id) ) {
@@ -185,45 +197,8 @@ int inter_guild_storage_delete(int guild_id)
 // packet from map server
 
 /**
- * Transverses guild_storage->items and put it into wbuffer
- * @param isize Current packet size
- * @retval Packet size
- **/
-int mapif_load_guild_storage_sub( int fd, int isize, struct guild_storage *gs ) {
-	int i, j;
-	// Iteration size = P*5 + W*3 + W*MAX_SLOTS + L*2 + Q
-	int size = (27+2*MAX_SLOTS);// + initial_size;
-
-	if( gs == NULL )
-		return 0;
-	if( gs->items == NULL )
-		return isize;
-
-	for( i = 0; i < gs->storage_amount; i++ ) {
-		WFIFOB(fd, size*i + isize)   = gs->items[i].identify;
-		WFIFOB(fd, size*i + isize+1) = gs->items[i].refine;
-		WFIFOB(fd, size*i + isize+2) = gs->items[i].attribute;
-		WFIFOB(fd, size*i + isize+3) = gs->items[i].favorite;
-		WFIFOB(fd, size*i + isize+4) = gs->items[i].bound;
-
-		WFIFOW(fd, size*i + isize+5) = gs->items[i].id;
-		WFIFOW(fd, size*i + isize+7) = gs->items[i].nameid;
-		WFIFOW(fd, size*i + isize+9) = gs->items[i].amount;
-		for( j = 0; j < MAX_SLOTS; j++ )
-			WFIFOW(fd, size*i + isize+11 + 2*j) = gs->items[i].card[j];
-		WFIFOL(fd, size*i + isize+(11+2*MAX_SLOTS) ) = gs->items[i].equip;
-		WFIFOL(fd, size*i + isize+(15+2*MAX_SLOTS) ) = gs->items[i].expire_time;
-		WFIFOQ(fd, size*i + isize+(19+2*MAX_SLOTS) ) = gs->items[i].unique_id;
-	}
-
-	return size*gs->storage_amount+isize;
-}
-
-/**
  * Sends loaded guild storage to fd
- * 0x3818 <len>.W <account id>.L <guild id>.L <flag>.B <size>.W { items }*<size>
- * items: { <identify>.B <refine>.B <attribute>.B <favorite>.B <bound>.B <id>.W <nameid>.W
- *            <amount>.W {<card>.W}*MAX_SLOTS <equip>.L <expire_time>.L <unique_id>.Q }
+ * 0x3818 <len>.W <account id>.L <guild id>.L <flag>.B <size>.W {<item>.P}*<size>
  * 0x3818 <len>.W <account id>.L <guild id>.W
  *
  * <flag> 0 Don't open storage
@@ -240,7 +215,7 @@ int mapif_load_guild_storage( int fd, int account_id, int guild_id, char flag ) 
 		gs = aCalloc(1, sizeof(struct guild_storage));
 
 		if( !guild_storage_fromsql(guild_id, gs) ) {
-			int size = mapif_load_guild_storage_sub(fd, 15, gs);
+			int size = (gs->items)? (15+ (sizeof(struct item)*gs->storage_amount) ) : 15;
 			WFIFOHEAD(fd, size);
 			WFIFOW(fd,0) = 0x3818;
 			WFIFOW(fd,2) = size;
@@ -248,9 +223,9 @@ int mapif_load_guild_storage( int fd, int account_id, int guild_id, char flag ) 
 			WFIFOL(fd,8) = guild_id;
 			WFIFOB(fd,12) = flag;
 			WFIFOW(fd,13) = gs->storage_amount;
-			// fd,15 <items>
+			if( gs->items )
+				memcpy(WFIFOP(fd,15), gs->items, sizeof(struct item)*gs->storage_amount);
 			WFIFOSET(fd, WFIFOW(fd,2));
-
 			aFree(gs->items);
 			aFree(gs);
 			return 0;
@@ -289,33 +264,37 @@ int mapif_parse_LoadGuildStorage(int fd)
 	return 0;
 }
 
-int mapif_parse_SaveGuildStorage(int fd)
-{
-	int guild_id;
-	int len;
+/**
+ * Saves a storage that was received via 0x3019
+ * 0x3019 <len>.W <account id>.L <guild id>.L <storage_amount>.W {<item>.P}*<storage_amount>
+ **/
+int mapif_parse_SaveGuildStorage(int fd) {
+	int guild_id, len, storage_amount;
 	int expected;
 
 	RFIFOHEAD(fd);
 	guild_id = RFIFOL(fd,8);
+	storage_amount = RFIFOW(fd,12);
 	len = RFIFOW(fd,2);
-	expected = sizeof(struct guild_storage)+14 + sizeof(struct item)*RFIFOW(fd, 12);
 
-	if( expected != len )
-	{
+	expected = 14 + sizeof(struct item)*storage_amount;
+	if( expected != len ) {
 		ShowError("mapif_parse_SaveGuildStorage: data size error %d != %d\n", expected, len);
-	}
-	else
-	{
+	} else {
 		if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `guild_id` FROM `%s` WHERE `guild_id`='%d'", guild_db, guild_id) )
 			Sql_ShowDebug(sql_handle);
-		else if( SQL->NumRows(sql_handle) > 0 )
-		{// guild exists
+		else if( SQL->NumRows(sql_handle) ) { // guild exists
 			struct guild_storage *gs;
+
 			SQL->FreeResult(sql_handle);
-			gs = (struct guild_storage *)RFIFOP(fd, 14);
-			gs->items = (struct item *)RFIFOP(fd, sizeof(struct guild_storage)+14);
-			guild_storage_tosql(guild_id, gs);
+			gs = aCalloc(1, sizeof(struct guild_storage));
+			gs->items = (struct item *)RFIFOP(fd, 14);
+			gs->storage_amount = storage_amount;
+			gs->guild_id = guild_id;
+			guild_storage_tosql(gs);
+
 			mapif_save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 0);
+			aFree(gs);
 			return 0;
 		}
 		SQL->FreeResult(sql_handle);

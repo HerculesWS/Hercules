@@ -586,7 +586,7 @@ struct guild_skill {
 struct hChSysCh;
 struct guild {
 	int guild_id;
-	uint16 guild_lv, connect_member, max_member, average_lv;
+	int16 guild_lv, connect_member, max_member, average_lv;
 	/**
 	 * Max storage size that's sent to players, it doesn't
 	 * necessarily represent guild_storage->items size.

@@ -415,24 +415,26 @@ int intif_request_guild_storage(int account_id,int guild_id)
 	return 0;
 }
 
-int intif_send_guild_storage(int account_id,struct guild_storage *gs)
-{
+/**
+ * Sends a guild's storage to be saved
+ * 0x3019 <len>.W <account id>.L <guild id>.L <storage_amount>.W {<item>.P}*<storage_amount>
+ **/
+int intif_send_guild_storage(int account_id,struct guild_storage *gs) {
 	int size;
 
-	if (intif->CheckForCharServer())
+	if( intif->CheckForCharServer() )
 		return 0;
 
-	size = sizeof(struct guild_storage)+14 + sizeof(gs->items[0])*gs->storage_amount;
+	size = (gs->items)?(14 + (sizeof(struct item)*gs->storage_amount) ):14;
 
 	WFIFOHEAD(inter_fd, size);
-	WFIFOW(inter_fd,0) = 0x3019; // pratically the same as 0x3818
+	WFIFOW(inter_fd,0) = 0x3019;
 	WFIFOW(inter_fd,2) = size;
 	WFIFOL(inter_fd,4) = account_id;
 	WFIFOL(inter_fd,8) = gs->guild_id;
 	WFIFOW(inter_fd,12) = gs->storage_amount;
-	memcpy( WFIFOP(inter_fd,14), gs, sizeof(struct guild_storage) );
-
-	memcpy((struct item*)WFIFOP(inter_fd, sizeof(struct guild_storage)+14), gs->items, sizeof(gs->items[0])*gs->storage_amount);
+	if( gs->items )
+		memcpy((struct item*)WFIFOP(inter_fd, 14), gs->items, sizeof(struct item)*gs->storage_amount);
 	WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
 	return 0;
 }
@@ -1093,9 +1095,7 @@ void intif_parse_Registers(int fd)
 /**
  * Loads received guild storage into memory
  * Expected packets:
- * 0x3818 <len>.W <account id>.L <guild id>.L <flag>.B <size>.W { items }*<size>
- * items: { <identify>.B <refine>.B <attribute>.B <favorite>.B <bound>.B <id>.W <nameid>.W
- *            <amount>.W {<card>.W}*MAX_SLOTS <equip>.L <expire_time>.L <unique_id>.Q }
+ * 0x3818 <len>.W <account id>.L <guild id>.L <flag>.B <size>.W {<item>.P}*<size>
  * 0x3818 <len>.W <account id>.L <guild id>.W
  *
  * <flag> 0 Don't open storage
@@ -1106,23 +1106,20 @@ void intif_parse_LoadGuildStorage( int fd ) {
 	struct guild_storage *gs;
 	struct map_session_data *sd;
 
-	int guild_id, flag, amount; ///< Received information
-	int isize = 15; ///< Initial size before receiving item data
-	int size = (27+2*MAX_SLOTS); ///< Iteration size (P*5 + W*3 + W*MAX_SLOTS + L*2 + Q)
+	int guild_id, flag, storage_amount;
 	int expected_size;
-	int i, j;
 
 	guild_id = RFIFOL(fd,8);
-	flag = RFIFOL(fd,12);
+	flag = RFIFOB(fd,12);
+	storage_amount = RFIFOW(fd,13);
+
 	if( guild_id <= 0 )
 		return;
 
-	amount = RFIFOW(fd,13);
-	expected_size = size*amount + isize;
+	expected_size = 15 + (sizeof(struct item)*storage_amount);
 	if( RFIFOW(fd,2) != expected_size ) {
 		ShowError("intif_parse_LoadGuildStorage: data size mismatch! Expected: %d Received: %d\n",
 			expected_size, RFIFOW(fd,2));
-		ShowWarning("intif_parse_LoadGuildStorage: rebuild your char and map server!\n");
 		return;
 	}
 
@@ -1158,28 +1155,12 @@ void intif_parse_LoadGuildStorage( int fd ) {
 	gs->lock = 0;
 	gs->dirty = false;
 	gs->items = NULL;
-	gs->storage_amount = amount;
+	gs->storage_amount = storage_amount;
 
 	if( !gstorage->allocate_items(gs) )
 		return;
 
-	// Fetch gs->item data
-	// Total size = Iteration + initial size = sizeof(struct *item)*amount
-	for( i = 0; i < gs->storage_amount; i++ ) {
-		gs->items[i].identify  = RFIFOB(fd, size*i + isize);
-		gs->items[i].refine    = RFIFOB(fd, size*i + isize+1);
-		gs->items[i].attribute = RFIFOB(fd, size*i + isize+2);
-		gs->items[i].favorite  = RFIFOB(fd, size*i + isize+3);
-		gs->items[i].bound     = RFIFOB(fd, size*i + isize+4);
-		gs->items[i].id        = RFIFOW(fd, size*i + isize+5);
-		gs->items[i].nameid    = RFIFOW(fd, size*i + isize+7);
-		gs->items[i].amount    = RFIFOW(fd, size*i + isize+9);
-		for( j = 0; j < MAX_SLOTS; j++ )
-			gs->items[i].card[j] = RFIFOW(fd, size*i + isize+11 + 2*j);
-		gs->items[i].equip       = RFIFOL(fd, size*i + isize+(11+2*MAX_SLOTS) );
-		gs->items[i].expire_time = RFIFOL(fd, size*i + isize+(15+2*MAX_SLOTS) );
-		gs->items[i].unique_id   = RFIFOQ(fd, size*i + isize+(19+2*MAX_SLOTS) );
-	}
+	memcpy(gs->items, RFIFOP(fd, 15), sizeof(struct item)*gs->storage_amount);
 
 	if( flag )
 		gstorage->open(sd);
