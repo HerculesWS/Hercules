@@ -409,7 +409,7 @@ bool storage_guild_storage_allocate_items( struct guild_storage *gs ) {
 
 	// It is expected that g->max_storage is already available, but it doesn't hurt to
 	// re-set it to the proper value
-#if PACKETVER >= 20140205
+#if PACKETVER >= 20131223
 	g->max_storage = guild->checkskill(g, GD_GUILD_STORAGE)*100;
 #else
 	g->max_storage = MAX_GUILD_STORAGE;
@@ -424,7 +424,7 @@ bool storage_guild_storage_allocate_items( struct guild_storage *gs ) {
  * @retval 0 success (open or req to create a new one)
  * @retval 1 storage is already open (storage_flag)
  * @retval 2 sd has no guild / guild information hasn't arrived yet
- * @retval 3 sd's guild doesn't have GD_GUILD_STORAGE (msg_txt(335)) (PACKETVER >= 20140205)
+ * @retval 3 sd's guild doesn't have GD_GUILD_STORAGE (msg_txt(335)) (PACKETVER >= 20131223)
  * @retval 4 sd doesn't have permission to use storage (msg_txt(336)) (PACKETVER >= 20140205)
  **/
 int storage_guild_storageopen( struct map_session_data* sd ) {
@@ -437,10 +437,10 @@ int storage_guild_storageopen( struct map_session_data* sd ) {
 
 	if(sd->state.storage_flag)
 		return 1; // Can't open both storages at a time.
-
+#if PACKETVER >= 20131223
 	if( !guild->checkskill(sd->guild, GD_GUILD_STORAGE) )
 		return 3; // Can't open storage if guild has none
-
+#endif
 #if PACKETVER >= 20140205
 	{
 		int pos;
@@ -775,7 +775,7 @@ int storage_guild_storageclose(struct map_session_data* sd) {
  * @retval true success
  **/
 bool storage_guild_storage_grow( struct guild *g ) {
-#if PACKETVER >= 20140205
+#if PACKETVER >= 20131223
 	struct guild_storage *gs;
 	struct item *temp;
 	int new_size;
