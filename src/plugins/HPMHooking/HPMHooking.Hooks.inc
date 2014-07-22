@@ -38310,14 +38310,14 @@ bool HP_map_arg_next_value(const char *option, int i, int argc, bool must) {
 	}
 	return retVal___;
 }
-void HP_map_addblcell(struct block_list *bl) {
+void HP_map_update_cell_bl(struct block_list *bl, bool increase) {
 	int hIndex = 0;
-	if( HPMHooks.count.HP_map_addblcell_pre ) {
-		void (*preHookFunc) (struct block_list *bl);
+	if( HPMHooks.count.HP_map_update_cell_bl_pre ) {
+		void (*preHookFunc) (struct block_list *bl, bool *increase);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_addblcell_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_map_addblcell_pre[hIndex].func;
-			preHookFunc(bl);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_update_cell_bl_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_map_update_cell_bl_pre[hIndex].func;
+			preHookFunc(bl, &increase);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -38325,39 +38325,13 @@ void HP_map_addblcell(struct block_list *bl) {
 		}
 	}
 	{
-		HPMHooks.source.map.addblcell(bl);
+		HPMHooks.source.map.update_cell_bl(bl, increase);
 	}
-	if( HPMHooks.count.HP_map_addblcell_post ) {
-		void (*postHookFunc) (struct block_list *bl);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_addblcell_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_map_addblcell_post[hIndex].func;
-			postHookFunc(bl);
-		}
-	}
-	return;
-}
-void HP_map_delblcell(struct block_list *bl) {
-	int hIndex = 0;
-	if( HPMHooks.count.HP_map_delblcell_pre ) {
-		void (*preHookFunc) (struct block_list *bl);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_delblcell_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_map_delblcell_pre[hIndex].func;
-			preHookFunc(bl);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return;
-		}
-	}
-	{
-		HPMHooks.source.map.delblcell(bl);
-	}
-	if( HPMHooks.count.HP_map_delblcell_post ) {
-		void (*postHookFunc) (struct block_list *bl);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_delblcell_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_map_delblcell_post[hIndex].func;
-			postHookFunc(bl);
+	if( HPMHooks.count.HP_map_update_cell_bl_post ) {
+		void (*postHookFunc) (struct block_list *bl, bool *increase);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_update_cell_bl_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_map_update_cell_bl_post[hIndex].func;
+			postHookFunc(bl, &increase);
 		}
 	}
 	return;

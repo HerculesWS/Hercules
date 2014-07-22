@@ -2879,10 +2879,8 @@ struct {
 	struct HPMHookPoint *HP_map_versionscreen_post;
 	struct HPMHookPoint *HP_map_arg_next_value_pre;
 	struct HPMHookPoint *HP_map_arg_next_value_post;
-	struct HPMHookPoint *HP_map_addblcell_pre;
-	struct HPMHookPoint *HP_map_addblcell_post;
-	struct HPMHookPoint *HP_map_delblcell_pre;
-	struct HPMHookPoint *HP_map_delblcell_post;
+	struct HPMHookPoint *HP_map_update_cell_bl_pre;
+	struct HPMHookPoint *HP_map_update_cell_bl_post;
 	struct HPMHookPoint *HP_map_get_new_bonus_id_pre;
 	struct HPMHookPoint *HP_map_get_new_bonus_id_post;
 	struct HPMHookPoint *HP_map_add_questinfo_pre;
@@ -7918,10 +7916,8 @@ struct {
 	int HP_map_versionscreen_post;
 	int HP_map_arg_next_value_pre;
 	int HP_map_arg_next_value_post;
-	int HP_map_addblcell_pre;
-	int HP_map_addblcell_post;
-	int HP_map_delblcell_pre;
-	int HP_map_delblcell_post;
+	int HP_map_update_cell_bl_pre;
+	int HP_map_update_cell_bl_post;
 	int HP_map_get_new_bonus_id_pre;
 	int HP_map_get_new_bonus_id_post;
 	int HP_map_add_questinfo_pre;
