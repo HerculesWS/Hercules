@@ -486,7 +486,7 @@ struct mapcell {
 		icewall : 1;
 
 #ifdef CELL_NOSTACK
-	unsigned char cell_bl; //Holds amount of bls in this cell.
+	int cell_bl; //Holds amount of bls in this cell.
 #endif
 };
 
@@ -1059,8 +1059,7 @@ struct map_interface {
 	void (*helpscreen) (bool do_exit);
 	void (*versionscreen) (bool do_exit);
 	bool (*arg_next_value) (const char *option, int i, int argc, bool must);
-	void (*addblcell) (struct block_list *bl);
-	void (*delblcell) (struct block_list *bl);
+	void (*update_cell_bl) (struct block_list *bl, bool increase);
 	int (*get_new_bonus_id) (void);
 	void (*add_questinfo) (int m, struct questinfo *qi);
 	bool (*remove_questinfo) (int m, struct npc_data *nd);
