@@ -158,6 +158,10 @@ function Job_Menu {
 			jobchange .@newjob;
 			if (.@newjob == Job_Novice_High)
 				resetlvl(1);
+			if (.@newjob == Job_Baby) {
+				resetlvl(4);
+				SkillPoint = 0;
+			}
 			specialeffect2 EF_ANGEL2;
 			specialeffect2 EF_ELECTRIC;
 			if (.platinum)
