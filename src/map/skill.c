@@ -14043,7 +14043,11 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 		case SO_SUMMON_AQUA:
 		case SO_SUMMON_VENTUS:
 		case SO_SUMMON_TERA:
-			req.sp -= req.sp * (5 + 5 * pc->checkskill(sd,SO_EL_SYMPATHY)) / 100;
+		{
+			int spirit_sympathy = pc->checkskill(sd,SO_EL_SYMPATHY);
+			if (spirit_sympathy)
+				req.sp -= req.sp * (5 + 5 * spirit_sympathy) / 100;
+		}
 			break;
 		case SO_PSYCHIC_WAVE:
 			if( sc && (sc->data[SC_HEATER_OPTION] || sc->data[SC_COOLER_OPTION] || sc->data[SC_BLAST_OPTION] ||  sc->data[SC_CURSED_SOIL_OPTION] ))
