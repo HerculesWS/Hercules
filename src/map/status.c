@@ -1793,6 +1793,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 	else {
 		switch ( skill_id ) {
 			case MO_ABSORBSPIRITS: // it works when already casted and target suddenly hides.
+			case SA_DISPELL:
 				hide_flag &= ~OPTION_HIDE;
 				break;
 		}
