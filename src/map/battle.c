@@ -2847,7 +2847,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 #endif
 
 		if(sc->data[SC_DEFENDER] &&
-			(flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON))
+			((flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON) || skill_id == CR_ACIDDEMONSTRATION))
 			damage = damage * ( 100 - sc->data[SC_DEFENDER]->val2 ) / 100;
 
 		if(sc->data[SC_GS_ADJUSTMENT] &&
@@ -2855,8 +2855,10 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			damage -= damage * 20 / 100;
 
 		if(sc->data[SC_FOGWALL]) {
-			if(flag&BF_SKILL) //25% reduction
-				damage -= damage * 25 / 100;
+			if(flag&BF_SKILL) { //25% reduction
+				if ( !(skill->get_inf(skill_id)&INF_GROUND_SKILL) && !(skill->get_nk(skill_id)&NK_SPLASH) )
+					damage -= 25*damage/100;
+				}
 			else if ((flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON))
 				damage >>= 2; //75% reduction
 		}
