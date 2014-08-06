@@ -2948,7 +2948,8 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 		case SP_SP_VANISH_RATE:
 			if(sd->state.lr_flag != 2) {
 				sd->bonus.sp_vanish_rate += type2;
-				sd->bonus.sp_vanish_per += val;
+				sd->bonus.sp_vanish_per = max(sd->bonus.sp_vanish_per,val);
+				sd->bonus.sp_vanish_trigger=0;
 			}
 			break;
 		case SP_GET_ZENY_NUM:
@@ -3434,6 +3435,13 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 			if (sd->state.lr_flag != 2)
 				pc_bonus_subele(sd, (unsigned char)type2, type3, val);
 			break;
+		case SP_SP_VANISH_RATE:
+			if(sd->state.lr_flag != 2) {
+				sd->bonus.sp_vanish_rate += type2;
+				sd->bonus.sp_vanish_per = max(sd->bonus.sp_vanish_per,type3);
+				sd->bonus.sp_vanish_trigger=val;
+			}
+			break;
 
 		default:
 			ShowWarning("pc_bonus3: unknown type %d %d %d %d!\n",type,type2,type3,val);
@@ -3468,11 +3476,35 @@ int pc_bonus4(struct map_session_data *sd,int type,int type2,int type3,int type4
 
 	case SP_ADDEFF_ONSKILL:
 		if( type2 > SC_MAX ) {
-			ShowWarning("pc_bonus3 (Add Effect on skill): %d is not supported.\n", type2);
+			ShowWarning("pc_bonus4 (Add Effect on skill): %d is not supported.\n", type2);
 			break;
 		}
 		if( sd->state.lr_flag != 2 )
 			pc->bonus_addeff_onskill(sd->addeff3, ARRAYLENGTH(sd->addeff3), (sc_type)type3, type4, type2, val);
+		break;
+
+	case SP_SET_DEF_RACE: //bonus4 bSetDefRace,n,x,r,y;
+		if( type2 > RC_MAX ) {
+			ShowWarning("pc_bonus4 (DEF_SET): %d is not supported.\n", type2);
+			break;
+		}
+		if(sd->state.lr_flag == 2)
+			break;
+		sd->def_set_race[type2].rate = type3;
+		sd->def_set_race[type2].tick = type4;
+		sd->def_set_race[type2].value = val;
+		break;
+
+	case SP_SET_MDEF_RACE: //bonus4 bSetMDefRace,n,x,r,y;
+		if( type2 > RC_MAX ) {
+			ShowWarning("pc_bonus4 (MDEF_SET): %d is not supported.\n", type2);
+			break;
+		}
+		if(sd->state.lr_flag == 2)
+			break;
+		sd->mdef_set_race[type2].rate = type3;
+		sd->mdef_set_race[type2].tick = type4;
+		sd->mdef_set_race[type2].value = val;
 		break;
 
 	default:

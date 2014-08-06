@@ -586,7 +586,7 @@ void initChangeTables(void) {
 	add_sc( RA_VERDURETRAP       , SC_ARMOR_PROPERTY );
 	add_sc( RA_FIRINGTRAP        , SC_BURNING );
 	add_sc( RA_ICEBOUNDTRAP      , SC_FROSTMISTY );
-	set_sc( RA_UNLIMIT           , SC_UNLIMIT         , SI_UNLIMIT         , SCB_NONE );
+	set_sc( RA_UNLIMIT           , SC_UNLIMIT         , SI_UNLIMIT         , SCB_DEF|SCB_DEF2|SCB_MDEF|SCB_MDEF2 );
 	/**
 	* Mechanic
 	**/
@@ -1002,6 +1002,8 @@ void initChangeTables(void) {
 	status->ChangeFlagTable[SC_VITATA_500] |= SCB_REGEN;
 	status->ChangeFlagTable[SC_EXTRACT_SALAMINE_JUICE] |= SCB_ASPD;
 	status->ChangeFlagTable[SC_REBOUND] |= SCB_SPEED|SCB_REGEN;
+	status->ChangeFlagTable[SC_DEFSET] |= SCB_DEF|SCB_DEF2;
+	status->ChangeFlagTable[SC_MDEFSET] |= SCB_MDEF|SCB_MDEF2;
 
 	status->ChangeFlagTable[SC_ALL_RIDING] = SCB_SPEED;
 	status->ChangeFlagTable[SC_WEDDING] = SCB_SPEED;
@@ -2514,6 +2516,8 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 		+ sizeof(sd->skillfixcast)
 		+ sizeof(sd->skillvarcast)
 		+ sizeof(sd->skillfixcastrate)
+		+ sizeof(sd->def_set_race)
+		+ sizeof(sd->mdef_set_race)
 		);
 
 	memset (&sd->bonus, 0,sizeof(sd->bonus));
@@ -4686,6 +4690,8 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
+		if (sc->data[SC_MINDBREAKER])
+			matk += matk * sc->data[SC_MINDBREAKER]->val2/100;
 		return (unsigned short)cap_value(matk,0,USHRT_MAX);
 	}
 
@@ -4716,8 +4722,6 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 		matk += sc->data[SC_ZANGETSU]->val3;
 	if (sc->data[SC_MAGICPOWER] && sc->data[SC_MAGICPOWER]->val4)
 		matk += matk * sc->data[SC_MAGICPOWER]->val3/100;
-	if (sc->data[SC_MINDBREAKER])
-		matk += matk * sc->data[SC_MINDBREAKER]->val2/100;
 	if (sc->data[SC_INCMATKRATE])
 		matk += matk * sc->data[SC_INCMATKRATE]->val1/100;
 	if (sc->data[SC_MOONLIT_SERENADE])
@@ -4933,6 +4937,8 @@ defType status_calc_def(struct block_list *bl, struct status_change *sc, int def
 			def += 2 * sc->data[SC_GENTLETOUCH_REVITALIZE]->val4;
 		if( sc->data[SC_FORCEOFVANGUARD] )
 			def += def * 2 * sc->data[SC_FORCEOFVANGUARD]->val1 / 100;
+		if(sc->data[SC_DEFSET])
+			return sc->data[SC_DEFSET]->val1;
 		return (defType)cap_value(def,DEFTYPE_MIN,DEFTYPE_MAX);
 	}
 
@@ -5007,6 +5013,8 @@ defType status_calc_def(struct block_list *bl, struct status_change *sc, int def
 		if(status_get_race(bl)==RC_PLANT)
 			def /= 2;
 	}
+	if(sc->data[SC_UNLIMIT])
+		return 1;
 
 	return (defType)cap_value(def,DEFTYPE_MIN,DEFTYPE_MAX);
 }
@@ -5028,6 +5036,8 @@ signed short status_calc_def2(struct block_list *bl, struct status_change *sc, i
 #endif
 		if( sc && sc->data[SC_CAMOUFLAGE] )
 			def2 -= def2 * 5 * (10-sc->data[SC_CAMOUFLAGE]->val4) / 100;
+		if(sc->data[SC_DEFSET])
+			return sc->data[SC_DEFSET]->val1;
 #ifdef RENEWAL
 		return (short)cap_value(def2,SHRT_MIN,SHRT_MAX);
 #else
@@ -5074,7 +5084,8 @@ signed short status_calc_def2(struct block_list *bl, struct status_change *sc, i
 	}
 	if (sc->data[SC_NEEDLE_OF_PARALYZE])
 		def2 -= def2 * sc->data[SC_NEEDLE_OF_PARALYZE]->val2 / 100;
-
+	if (sc->data[SC_UNLIMIT])
+		return 1;
 #ifdef RENEWAL
 	return (short)cap_value(def2,SHRT_MIN,SHRT_MAX);
 #else
@@ -5090,6 +5101,8 @@ defType status_calc_mdef(struct block_list *bl, struct status_change *sc, int md
 
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
+		if(sc->data[SC_MDEFSET])
+			return sc->data[SC_MDEFSET]->val1;
 		return (defType)cap_value(mdef,DEFTYPE_MIN,DEFTYPE_MAX);
 	}
 
@@ -5129,6 +5142,8 @@ defType status_calc_mdef(struct block_list *bl, struct status_change *sc, int md
 		mdef -= 20;
 	if(sc->data[SC_BURNING])
 		mdef -= mdef *25 / 100;
+	if (sc->data[SC_UNLIMIT])
+		return 1;
 
 	return (defType)cap_value(mdef,DEFTYPE_MIN,DEFTYPE_MAX);
 }
@@ -5144,6 +5159,10 @@ signed short status_calc_mdef2(struct block_list *bl, struct status_change *sc, 
 
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
+		if(sc->data[SC_MDEFSET])
+			return sc->data[SC_MDEFSET]->val1;
+		if(sc->data[SC_MINDBREAKER])
+			mdef2 -= mdef2 * sc->data[SC_MINDBREAKER]->val3/100;
 #ifdef RENEWAL
 		if(sc && sc->data[SC_ASSUMPTIO])
 			mdef2 <<= 1;
@@ -5157,11 +5176,10 @@ signed short status_calc_mdef2(struct block_list *bl, struct status_change *sc, 
 		return 0;
 	if(sc->data[SC_SKA])
 		return 90;
-	if(sc->data[SC_MINDBREAKER])
-		mdef2 -= mdef2 * sc->data[SC_MINDBREAKER]->val3/100;
 	if(sc->data[SC_ANALYZE])
 		mdef2 -= mdef2 * ( 14 * sc->data[SC_ANALYZE]->val1 ) / 100;
-
+	if (sc->data[SC_UNLIMIT])
+		return 1;
 #ifdef RENEWAL
 	return (short)cap_value(mdef2,SHRT_MIN,SHRT_MAX);
 #else
@@ -11236,8 +11254,8 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 			}
 			break;
 		case SC_FULL_THROTTLE:
-			if( --(sce->val4) > 0 ) {
-				status_percent_damage(bl, bl, sce->val2, 0, false);
+			if( --(sce->val4) >= 0 ) {
+				status_percent_damage(bl, bl, 0, sce->val2, false);
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}

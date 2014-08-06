@@ -449,7 +449,8 @@ struct Battle_Config {
 	int atcommand_mobinfo_type;
 	
 	int mob_size_influence; // Enable modifications on earned experience, drop rates and monster status depending on monster size. [mkbu95]
-	
+	int bowling_bash_area;
+
 	/** Hercules **/
 	int skill_trap_type;
 	int item_restricted_consumption_type;
