@@ -84,12 +84,12 @@ int quest_add(TBL_PC *sd, int quest_id) {
 	struct quest_db *qi = quest->db(quest_id);
 
 	if( qi == &quest->dummy ) {
-		ShowError("quest_add: quest %d not found in DB.\n", quest_id);
+		ShowError("%s: quest %d not found in DB.\n", __func__, quest_id);
 		return -1;
 	}
 
 	if( quest->check(sd, quest_id, HAVEQUEST) >= 0 ) {
-		ShowError("quest_add: Character %d already has quest %d.\n", sd->status.char_id, quest_id);
+		ShowError("%s: Character %d already has quest %d.\n", __func__, sd->status.char_id, quest_id);
 		return -1;
 	}
 
@@ -135,23 +135,23 @@ int quest_change(TBL_PC *sd, int qid1, int qid2) {
 	struct quest_db *qi = quest->db(qid2);
 
 	if( qi == &quest->dummy ) {
-		ShowError("quest_change: quest %d not found in DB.\n", qid2);
+		ShowError("%s: quest %d not found in DB.\n", __func__, qid2);
 		return -1;
 	}
 
 	if( quest->check(sd, qid2, HAVEQUEST) >= 0 ) {
-		ShowError("quest_change: Character %d already has quest %d.\n", sd->status.char_id, qid2);
+		ShowError("%s: Character %d already has quest %d.\n", __func__, sd->status.char_id, qid2);
 		return -1;
 	}
 
 	if( quest->check(sd, qid1, HAVEQUEST) < 0 ) {
-		ShowError("quest_change: Character %d doesn't have quest %d.\n", sd->status.char_id, qid1);
+		ShowError("%s: Character %d doesn't have quest %d.\n", __func__, sd->status.char_id, qid1);
 		return -1;
 	}
 
 	ARR_FIND(0, sd->avail_quests, i, sd->quest_log[i].quest_id == qid1);
 	if( i == sd->avail_quests ) {
-		ShowError("quest_change: Character %d has completed quest %d.\n", sd->status.char_id, qid1);
+		ShowError("%s: Character %d has completed quest %d.\n", __func__, sd->status.char_id, qid1);
 		return -1;
 	}
 
@@ -187,7 +187,7 @@ int quest_delete(TBL_PC *sd, int quest_id) {
 	ARR_FIND(0, sd->num_quests, i, sd->quest_log[i].quest_id == quest_id);
 
 	if(i == sd->num_quests) {
-		ShowError("quest_delete: Character %d doesn't have quest %d.\n", sd->status.char_id, quest_id);
+		ShowError("%s: Character %d doesn't have quest %d.\n", __func__, sd->status.char_id, quest_id);
 		return -1;
 	}
 
@@ -285,7 +285,7 @@ int quest_update_status(TBL_PC *sd, int quest_id, enum quest_state qs) {
 
 	ARR_FIND(0, sd->avail_quests, i, sd->quest_log[i].quest_id == quest_id);
 	if( i == sd->avail_quests ) {
-		ShowError("quest_update_status: Character %d doesn't have quest %d.\n", sd->status.char_id, quest_id);
+		ShowError("%s: Character %d doesn't have quest %d.\n", __func__, sd->status.char_id, quest_id);
 		return -1;
 	}
 
@@ -353,7 +353,7 @@ int quest_check(TBL_PC *sd, int quest_id, enum quest_check_type type) {
 			}
 			return 0;
 		default:
-			ShowError("quest_check_quest: Unknown parameter %d",type);
+			ShowError("%s: Unknown parameter %d", __func__, type);
 			break;
 	}
 
@@ -395,7 +395,7 @@ int quest_read_db(void) {
 			} else if (str[0] == NULL) {
 				break;
 			} else {
-				ShowError("quest_read_db: insufficient columns in line %s\n", line);
+				ShowError("%s: insufficient columns in line %s\n", __func__, line);
 				continue;
 			}
 		}
@@ -407,7 +407,7 @@ int quest_read_db(void) {
 		entry.id = atoi(str[0]);
 
 		if (entry.id < 0 || entry.id >= MAX_QUEST_DB) {
-			ShowError("quest_read_db: Invalid quest ID '%d' in line '%s' (min: 0, max: %d.)\n", entry.id, line, MAX_QUEST_DB);
+			ShowError("%s: Invalid quest ID '%d' in line '%s' (min: 0, max: %d.)\n", __func__, entry.id, line, MAX_QUEST_DB);
 			continue;
 		}
 

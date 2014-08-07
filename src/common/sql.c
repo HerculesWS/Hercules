@@ -502,7 +502,7 @@ static int Sql_P_BindSqlDataType(MYSQL_BIND* bind, enum SqlDataType buffer_type,
 	case SQLDT_BLOB: bind->buffer_type = MYSQL_TYPE_BLOB;
 		break;
 	default:
-		ShowDebug("Sql_P_BindSqlDataType: unsupported buffer type (%d)\n", buffer_type);
+		ShowDebug("%s: unsupported buffer type (%d)\n", __func__, buffer_type);
 		return SQL_ERROR;
 	}
 	bind->buffer = buffer;
@@ -765,7 +765,7 @@ int SqlStmt_BindColumn(SqlStmt* self, size_t idx, enum SqlDataType buffer_type, 
 	{
 		if( buffer_len < 1 )
 		{
-			ShowDebug("SqlStmt_BindColumn: buffer_len(%d) is too small, no room for the null-terminator\n", buffer_len);
+			ShowDebug("%s: buffer_len(%d) is too small, no room for the null-terminator\n", __func__, buffer_len);
 			return SQL_ERROR;
 		}
 		--buffer_len;// null-terminator

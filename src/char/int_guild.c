@@ -1777,7 +1777,7 @@ int mapif_parse_GuildCastleDataSave(int fd, int castle_id, int index, int value)
 	struct guild_castle *gc = inter_guildcastle_fromsql(castle_id);
 
 	if (gc == NULL) {
-		ShowError("mapif_parse_GuildCastleDataSave: castle id=%d not found\n", castle_id);
+		ShowError("%s: castle id=%d not found\n", __func__, castle_id);
 		return 0;
 	}
 
@@ -1804,7 +1804,7 @@ int mapif_parse_GuildCastleDataSave(int fd, int castle_id, int index, int value)
 				gc->guardian[index-10].visible = value;
 				break;
 			}
-			ShowError("mapif_parse_GuildCastleDataSave: not found index=%d\n", index);
+			ShowError("%s: not found index=%d\n", __func__, index);
 			return 0;
 	}
 	inter_guildcastle_tosql(gc);

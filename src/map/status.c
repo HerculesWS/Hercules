@@ -53,7 +53,7 @@ struct status_interface status_s;
 sc_type status_skill2sc(int skill_id) {
 	int idx;
 	if( (idx = skill->get_index(skill_id)) == 0 ) {
-		ShowError("status_skill2sc: Unsupported skill id %d\n", skill_id);
+		ShowError("%s: Unsupported skill id %d\n", __func__, skill_id);
 		return SC_NONE;
 	}
 	return status->Skill2SCTable[idx];
@@ -68,7 +68,7 @@ sc_type status_skill2sc(int skill_id) {
 int status_sc2skill(sc_type sc)
 {
 	if( sc < 0 || sc >= SC_MAX ) {
-		ShowError("status_sc2skill: Unsupported status change id %d\n", sc);
+		ShowError("%s: Unsupported status change id %d\n", __func__, sc);
 		return 0;
 	}
 
@@ -83,7 +83,7 @@ int status_sc2skill(sc_type sc)
 unsigned int status_sc2scb_flag(sc_type sc)
 {
 	if( sc < 0 || sc >= SC_MAX ) {
-		ShowError("status_sc2scb_flag: Unsupported status change id %d\n", sc);
+		ShowError("%s: Unsupported status change id %d\n", __func__, sc);
 		return SCB_NONE;
 	}
 
@@ -98,7 +98,7 @@ unsigned int status_sc2scb_flag(sc_type sc)
 int status_type2relevant_bl_types(int type)
 {
 	if( type < 0 || type >= SI_MAX ) {
-		ShowError("status_type2relevant_bl_types: Unsupported type %d\n", type);
+		ShowError("%s: Unsupported type %d\n", __func__, type);
 		return BL_NUL;
 	}
 
@@ -108,11 +108,11 @@ int status_type2relevant_bl_types(int type)
 static void set_sc(uint16 skill_id, sc_type sc, int icon, unsigned int flag) {
 	uint16 idx;
 	if( (idx = skill->get_index(skill_id)) == 0 ) {
-		ShowError("set_sc: Unsupported skill id %d\n", skill_id);
+		ShowError("%s: Unsupported skill id %d\n", __func__, skill_id);
 		return;
 	}
 	if( sc < 0 || sc >= SC_MAX ) {
-		ShowError("set_sc: Unsupported status change id %d\n", sc);
+		ShowError("%s: Unsupported status change id %d\n", __func__, sc);
 		return;
 	}
 
@@ -6202,7 +6202,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 			} else if (vd)
 				memcpy(&sd->vd, vd, sizeof(struct view_data));
 			else
-				ShowError("status_set_viewdata (PC): No view data for class %d\n", class_);
+				ShowError("%s (PC): No view data for class %d\n", __func__, class_);
 		}
 		break;
 	case BL_MOB:
@@ -6211,7 +6211,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 			if (vd)
 				md->vd = vd;
 			else
-				ShowError("status_set_viewdata (MOB): No view data for class %d\n", class_);
+				ShowError("%s (MOB): No view data for class %d\n", __func__, class_);
 		}
 		break;
 	case BL_PET:
@@ -6228,7 +6228,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 					}
 				}
 			} else
-				ShowError("status_set_viewdata (PET): No view data for class %d\n", class_);
+				ShowError("%s (PET): No view data for class %d\n", __func__, class_);
 		}
 		break;
 	case BL_NPC:
@@ -6237,7 +6237,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 			if (vd)
 				nd->vd = vd;
 			else
-				ShowError("status_set_viewdata (NPC): No view data for class %d\n", class_);
+				ShowError("%s (NPC): No view data for class %d\n", __func__, class_);
 		}
 		break;
 	case BL_HOM:		//[blackhole89]
@@ -6246,7 +6246,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 			if (vd)
 				hd->vd = vd;
 			else
-				ShowError("status_set_viewdata (HOMUNCULUS): No view data for class %d\n", class_);
+				ShowError("%s (HOMUNCULUS): No view data for class %d\n", __func__, class_);
 		}
 		break;
 	case BL_MER:
@@ -6255,7 +6255,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 			if (vd)
 				md->vd = vd;
 			else
-				ShowError("status_set_viewdata (MERCENARY): No view data for class %d\n", class_);
+				ShowError("%s (MERCENARY): No view data for class %d\n", __func__, class_);
 		}
 		break;
 	case BL_ELEM:
@@ -6264,7 +6264,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 			if (vd)
 				ed->vd = vd;
 			else
-				ShowError("status_set_viewdata (ELEMENTAL): No view data for class %d\n", class_);
+				ShowError("%s (ELEMENTAL): No view data for class %d\n", __func__, class_);
 		}
 		break;
 	}
@@ -6772,7 +6772,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 	st = status->get_status_data(bl);
 
 	if( type <= SC_NONE || type >= SC_MAX ) {
-		ShowError("status_change_start: invalid status change (%d)!\n", type);
+		ShowError("%s: invalid status change (%d)!\n", __func__, type);
 		return 0;
 	}
 
@@ -10420,7 +10420,7 @@ int kaahi_heal_timer(int tid, int64 tick, int id, intptr_t data) {
 		return 0;
 
 	if(sce->val4 != tid) {
-		ShowError("kaahi_heal_timer: Timer mismatch: %d != %d\n", tid, sce->val4);
+		ShowError("%s: Timer mismatch: %d != %d\n", __func__, tid, sce->val4);
 		sce->val4 = INVALID_TIMER;
 		return 0;
 	}
@@ -10454,7 +10454,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 
 	bl = map->id2bl(id);
 	if(!bl) {
-		ShowDebug("status_change_timer: Null pointer id: %d data: %d\n", id, data);
+		ShowDebug("%s: Null pointer id: %d data: %d\n", __func__, id, data);
 		return 0;
 	}
 	sc = status->get_sc(bl);
@@ -10462,13 +10462,13 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 
 	if(!(sc && (sce = sc->data[type])))
 	{
-		ShowDebug("status_change_timer: Null pointer id: %d data: %d bl-type: %d\n", id, data, bl->type);
+		ShowDebug("%s: Null pointer id: %d data: %d bl-type: %d\n", __func__, id, data, bl->type);
 		return 0;
 	}
 
 	if( sce->timer != tid )
 	{
-		ShowError("status_change_timer: Mismatch for type %d: %d != %d (bl id %d)\n",type,tid,sce->timer, bl->id);
+		ShowError("%s: Mismatch for type %d: %d != %d (bl id %d)\n", __func__, type, tid, sce->timer, bl->id);
 		return 0;
 	}
 
@@ -10479,7 +10479,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 	if( (sce=sc->data[type]) ) \
 		sce->timer = timer->add((t),(f),(i),(d)); \
 	else \
-		ShowError("status_change_timer: Unexpected NULL status change id: %d data: %d\n", id, data); \
+		ShowError("%s: Unexpected NULL status change id: %d data: %d\n", __func__, id, data); \
 } while(0)
 
 	switch(type) {
@@ -11418,7 +11418,7 @@ void status_get_matk_sub( struct block_list *bl, int flag, unsigned short *matk_
 		return;
 
 	if( flag != 0 && flag != 1 && flag != 3 ) {
-		ShowError("status_get_matk_sub: Unknown flag %d!\n", flag);
+		ShowError("%s: Unknown flag %d!\n", __func__, flag);
 		return;
 	}
 
@@ -11494,7 +11494,7 @@ int status_get_matk( struct block_list *bl, int flag ) {
 		return 1;
 
 	if( flag < 1 || flag > 3 ) {
-		ShowError("status_get_matk: Unknown flag %d!\n", flag);
+		ShowError("%s: Unknown flag %d!\n", __func__, flag);
 		return 1;
 	}
 
@@ -11917,7 +11917,7 @@ bool status_readdb_job1(char* fields[], int columns, int current)
 
 	if(!pcdb_checkid(class_))
 	{
-		ShowWarning("status_readdb_job1: Invalid job class %d specified.\n", class_);
+		ShowWarning("%s: Invalid job class %d specified.\n", __func__, class_);
 		return false;
 	}
 	idx = pc->class2idx(class_);
@@ -11945,7 +11945,7 @@ bool status_readdb_job2(char* fields[], int columns, int current)
 
 	if(!pcdb_checkid(class_))
 	{
-		ShowWarning("status_readdb_job2: Invalid job class %d specified.\n", class_);
+		ShowWarning("%s: Invalid job class %d specified.\n", __func__, class_);
 		return false;
 	}
 	idx = pc->class2idx(class_);
@@ -12007,7 +12007,7 @@ bool status_readdb_scconfig(char* fields[], int columns, int current) {
 	char* type = fields[0];
 
 	if( !script->get_constant(type, &val) ){
-		ShowWarning("status_readdb_sc_conf: Invalid status type %s specified.\n", type);
+		ShowWarning("%s: Invalid status type %s specified.\n", __func__, type);
 		return false;
 	}
 

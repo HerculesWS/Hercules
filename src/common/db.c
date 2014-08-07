@@ -718,9 +718,9 @@ static void db_free_add(DBMap_impl* db, DBNode *node, DBNode **root)
 
 	DB_COUNTSTAT(db_free_add);
 	if (db->free_lock == (unsigned int)~0) {
-		ShowFatalError("db_free_add: free_lock overflow\n"
+		ShowFatalError("%s: free_lock overflow\n"
 				"Database allocated at %s:%d\n",
-				db->alloc_file, db->alloc_line);
+				__func__, db->alloc_file, db->alloc_line);
 		exit(EXIT_FAILURE);
 	}
 	if (!(db->options&DB_OPT_DUP_KEY)) { // Make sure we have a key until the node is freed
@@ -732,9 +732,9 @@ static void db_free_add(DBMap_impl* db, DBNode *node, DBNode **root)
 		db->free_max = (db->free_max<<2) +3; // = db->free_max*4 +3
 		if (db->free_max <= db->free_count) {
 			if (db->free_count == (unsigned int)~0) {
-				ShowFatalError("db_free_add: free_count overflow\n"
+				ShowFatalError("%s: free_count overflow\n"
 						"Database allocated at %s:%d\n",
-						db->alloc_file, db->alloc_line);
+						__func__, db->alloc_file, db->alloc_line);
 				exit(EXIT_FAILURE);
 			}
 			db->free_max = (unsigned int)~0;
@@ -776,7 +776,7 @@ static void db_free_remove(DBMap_impl* db, DBNode *node)
 	}
 	node->deleted = 0;
 	if (i == db->free_count) {
-		ShowWarning("db_free_remove: node was not found - database allocated at %s:%d\n", db->alloc_file, db->alloc_line);
+		ShowWarning("%s: node was not found - database allocated at %s:%d\n", __func__, db->alloc_file, db->alloc_line);
 	} else {
 		db->free_count--;
 	}
@@ -794,9 +794,9 @@ static void db_free_lock(DBMap_impl* db)
 {
 	DB_COUNTSTAT(db_free_lock);
 	if (db->free_lock == (unsigned int)~0) {
-		ShowFatalError("db_free_lock: free_lock overflow\n"
+		ShowFatalError("%s: free_lock overflow\n"
 				"Database allocated at %s:%d\n",
-				db->alloc_file, db->alloc_line);
+				__func__, db->alloc_file, db->alloc_line);
 		exit(EXIT_FAILURE);
 	}
 	db->free_lock++;
@@ -819,9 +819,9 @@ static void db_free_unlock(DBMap_impl* db)
 
 	DB_COUNTSTAT(db_free_unlock);
 	if (db->free_lock == 0) {
-		ShowWarning("db_free_unlock: free_lock was already 0\n"
+		ShowWarning("%s: free_lock was already 0\n"
 				"Database allocated at %s:%d\n",
-				db->alloc_file, db->alloc_line);
+				__func__, db->alloc_file, db->alloc_line);
 	} else {
 		db->free_lock--;
 	}
@@ -2390,7 +2390,7 @@ DBOptions db_fix_options(DBType type, DBOptions options)
 			return (DBOptions)(options&~(DB_OPT_DUP_KEY|DB_OPT_RELEASE_KEY));
 
 		default:
-			ShowError("db_fix_options: Unknown database type %u with options %x\n", type, options);
+			ShowError("%s: Unknown database type %u with options %x\n", __func__, type, options);
 		case DB_STRING:
 		case DB_ISTRING: // String databases, no fix required
 			return options;
@@ -2420,7 +2420,7 @@ DBComparator db_default_cmp(DBType type)
 		case DB_INT64:   return &db_int64_cmp;
 		case DB_UINT64:  return &db_uint64_cmp;
 		default:
-			ShowError("db_default_cmp: Unknown database type %u\n", type);
+			ShowError("%s: Unknown database type %u\n", __func__, type);
 			return NULL;
 	}
 }
@@ -2448,7 +2448,7 @@ DBHasher db_default_hash(DBType type)
 		case DB_INT64:   return &db_int64_hash;
 		case DB_UINT64:  return &db_uint64_hash;
 		default:
-			ShowError("db_default_hash: Unknown database type %u\n", type);
+			ShowError("%s: Unknown database type %u\n", __func__, type);
 			return NULL;
 	}
 }
@@ -2502,7 +2502,7 @@ DBReleaser db_custom_release(DBRelease which)
 		case DB_RELEASE_DATA:    return &db_release_data;
 		case DB_RELEASE_BOTH:    return &db_release_both;
 		default:
-			ShowError("db_custom_release: Unknown release options %u\n", which);
+			ShowError("%s: Unknown release options %u\n", __func__, which);
 			return NULL;
 	}
 }

@@ -81,7 +81,7 @@ bool guild_read_guildskill_tree_db(char* split[], int columns, int current)
 
 	if( id < 0 || id >= MAX_GUILDSKILL )
 	{
-		ShowWarning("guild_read_guildskill_tree_db: Invalid skill id %d.\n", skill_id);
+		ShowWarning("%s: Invalid skill id %d.\n", __func__, skill_id);
 		return false;
 	}
 
@@ -427,7 +427,7 @@ int guild_check_member(struct guild *g)
 		if (i < 0) {
 			sd->status.guild_id=0;
 			sd->guild_emblem_id=0;
-			ShowWarning("guild: check_member %d[%s] is not member\n",sd->status.account_id,sd->status.name);
+			ShowWarning("%s: %d[%s] is not member\n", __func__, sd->status.account_id,sd->status.name);
 		}
 	}
 	mapit->free(iter);
@@ -544,7 +544,7 @@ int guild_recv_info(struct guild *sg) {
 	g->channel = aChSysSave;
 	
 	if(g->max_member > MAX_GUILD) {
-		ShowError("guild_recv_info: Received guild with %d members, but MAX_GUILD is only %d. Extra guild-members have been lost!\n", g->max_member, MAX_GUILD);
+		ShowError("%s: Received guild with %d members, but MAX_GUILD is only %d. Extra guild-members have been lost!\n", __func__, g->max_member, MAX_GUILD);
 		g->max_member = MAX_GUILD;
 	}
 	
@@ -964,7 +964,7 @@ int guild_send_memberinfoshort(struct map_session_data *sd,int online)
 		if(i>=0)
 			g->member[i].sd=NULL;
 		else
-			ShowError("guild_send_memberinfoshort: Failed to locate member %d:%d in guild %d!\n", sd->status.account_id, sd->status.char_id, g->guild_id);
+			ShowError("%s: Failed to locate member %d:%d in guild %d!\n", __func__, sd->status.account_id, sd->status.char_id, g->guild_id);
 		return 0;
 	}
 	
@@ -1900,7 +1900,7 @@ int guild_break(struct map_session_data *sd,char *name) {
 				case GD_SOULCOLD:
 				case GD_HAWKEYES:
 					if( count == 4 )
-						ShowWarning("guild_break:'%s' got more than 4 guild aura instances! (%d)\n",sd->status.name,ud->skillunit[i]->skill_id);
+						ShowWarning("%s: '%s' got more than 4 guild aura instances! (%d)\n", __func__, sd->status.name, ud->skillunit[i]->skill_id);
 					else
 						groups[count++] = ud->skillunit[i];
 					break;
@@ -1959,7 +1959,7 @@ int guild_castledatasave(int castle_id, int index, int value)
 	struct guild_castle *gc = guild->castle_search(castle_id);
 
 	if (gc == NULL) {
-		ShowWarning("guild_castledatasave: guild castle '%d' not found\n", castle_id);
+		ShowWarning("%s: guild castle '%d' not found\n", __func__, castle_id);
 		return 0;
 	}
 
@@ -2003,7 +2003,7 @@ int guild_castledatasave(int castle_id, int index, int value)
 			gc->guardian[index-10].visible = value;
 			break;
 		}
-		ShowWarning("guild_castledatasave: index = '%d' is out of allowed range\n", index);
+		ShowWarning("%s: index = '%d' is out of allowed range\n", __func__, index);
 		return 0;
 	}
 
@@ -2061,7 +2061,7 @@ int guild_castledataloadack(int len, struct guild_castle *gc)
 		for( i = 0; i < n; i++, gc++ ) {
 			struct guild_castle *c = guild->castle_search(gc->castle_id);
 			if (!c) {
-				ShowError("guild_castledataloadack: castle id=%d not found.\n", gc->castle_id);
+				ShowError("%s: castle id=%d not found.\n", __func__, gc->castle_id);
 				continue;
 			}
 

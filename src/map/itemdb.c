@@ -160,7 +160,7 @@ int itemdb_chain_item(unsigned short chain_id, int *rate) {
 	struct item_chain_entry *entry;
 	
 	if( chain_id >= itemdb->chain_count ) {
-		ShowError("itemdb_chain_item: unknown chain id %d\n", chain_id);
+		ShowError("%s: unknown chain id %d\n", __func__, chain_id);
 		return UNKNOWN_ITEM_ID;
 	}
 	
@@ -263,7 +263,7 @@ int itemdb_searchrandomid(struct item_group *group) {
 	if (group->qty)
 		return group->nameid[rnd()%group->qty];
 	
-	ShowError("itemdb_searchrandomid: No item entries for group id %d\n", group->id);
+	ShowError("%s: No item entries for group id %d\n", __func__, group->id);
 	return UNKNOWN_ITEM_ID;
 }
 bool itemdb_in_group(struct item_group *group, int nameid) {
@@ -444,7 +444,7 @@ struct item_data* itemdb_search(int nameid)
 
 	if( id == NULL )
 	{
-		ShowWarning("itemdb_search: Item ID %d does not exists in the item_db. Using dummy data.\n", nameid);
+		ShowWarning("%s: Item ID %d does not exists in the item_db. Using dummy data.\n", __func__, nameid);
 		id = &itemdb->dummy;
 		itemdb->dummy.nameid = nameid;
 	}
@@ -628,7 +628,7 @@ void itemdb_read_groups(void) {
 		const char *name = config_setting_name(itg);
 
 		if( !itemdb->name2id(name) ) {
-			ShowWarning("itemdb_read_groups: unknown group item '%s', skipping..\n",name);
+			ShowWarning("%s: unknown group item '%s', skipping..\n", __func__, name);
 			config_setting_remove(item_group_conf.root, name);
 			--i;
 			continue;
@@ -669,9 +669,9 @@ void itemdb_read_groups(void) {
 			
 			if( itname[0] == 'I' && itname[1] == 'D' && strlen(itname) < 8 ) {
 				if( !( data = itemdb->exists(atoi(itname+2)) ) )
-					ShowWarning("itemdb_read_groups: unknown item ID '%d' in group '%s'!\n",atoi(itname+2),config_setting_name(itg));
+					ShowWarning("%s: unknown item ID '%d' in group '%s'!\n", __func__, atoi(itname+2),config_setting_name(itg));
 			} else if( !( data = itemdb->name2id(itname) ) )
-				ShowWarning("itemdb_read_groups: unknown item '%s' in group '%s'!\n",itname,config_setting_name(itg));
+				ShowWarning("%s: unknown item '%s' in group '%s'!\n", __func__, itname,config_setting_name(itg));
 			
 			itemdb->groups[count].nameid[ecount] = data ? data->nameid : 0;
 			if( repeat > 1 ) {
@@ -789,7 +789,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 		hread(&random_qty,sizeof(random_qty),1,file);
 		
 		if( !(pdata = itemdb->exists(id)) )
-			ShowWarning("itemdb_read_cached_packages: unknown package item '%d', skipping..\n",id);
+			ShowWarning("%s: unknown package item '%d', skipping..\n", __func__,id);
 		else
 			pdata->package = &itemdb->packages[i];
 		
@@ -819,7 +819,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 				hread(&named,sizeof(announce),1,file);
 				
 				if( !(data = itemdb->exists(mid)) )
-					ShowWarning("itemdb_read_cached_packages: unknown item '%d' in package '%s'!\n",mid,itemdb_name(package->id));
+					ShowWarning("%s: unknown item '%d' in package '%s'!\n", __func__, mid,itemdb_name(package->id));
 
 				entry->id = data ? data->nameid : 0;
 				entry->hours = hours;
@@ -864,7 +864,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 					hread(&named,sizeof(announce),1,file);
 					
 					if( !(data = itemdb->exists(mid)) )
-						ShowWarning("itemdb_read_cached_packages: unknown item '%d' in package '%s'!\n",mid,itemdb_name(package->id));
+						ShowWarning("%s: unknown item '%d' in package '%s'!\n", __func__, mid,itemdb_name(package->id));
 					
 					entry->id = data ? data->nameid : 0;
 					entry->rate = rate;
@@ -929,7 +929,7 @@ void itemdb_read_packages(void) {
 		const char *name = config_setting_name(itg);
 		
 		if( !itemdb->name2id(name) ) {
-			ShowWarning("itemdb_read_packages: unknown package item '%s', skipping..\n",name);
+			ShowWarning("%s: unknown package item '%s', skipping..\n", __func__, name);
 			libconfig->setting_remove(item_packages_conf.root, name);
 			--i;
 			continue;
@@ -939,7 +939,7 @@ void itemdb_read_packages(void) {
 		while( (it = libconfig->setting_get_elem(itg,c++)) ) {
 			int rval = 0;
 			if( !( t = libconfig->setting_get_member(it, "Random") ) || (rval = libconfig->setting_get_int(t)) < 0 ) {
-				ShowWarning("itemdb_read_packages: invalid 'Random' value (%d) for item '%s' in package '%s', defaulting to must!\n",rval,config_setting_name(it),name);
+				ShowWarning("%s: invalid 'Random' value (%d) for item '%s' in package '%s', defaulting to must!\n", __func__, rval,config_setting_name(it),name);
 				libconfig->setting_remove(it, config_setting_name(it));
 				--c;
 				continue;
@@ -1006,7 +1006,7 @@ void itemdb_read_packages(void) {
 			CREATE(itemdb->packages[count].random_groups, struct item_package_rand_group, itemdb->packages[count].random_qty);
 			for( c = 0; c < itemdb->packages[count].random_qty; c++ ) {
 				if( !rgroups[ i - 1 ][c] )
-					ShowError("itemdb_read_packages: package '%s' missing 'Random' field %d! there must not be gaps!\n",config_setting_name(itg),c+1);
+					ShowError("%s: package '%s' missing 'Random' field %d! there must not be gaps!\n", __func__, config_setting_name(itg),c+1);
 				else
 					CREATE(itemdb->packages[count].random_groups[c].random_list, struct item_package_rand_entry, rgroups[ i - 1 ][c]);
 				itemdb->packages[count].random_groups[c].random_qty = 0;
@@ -1024,9 +1024,9 @@ void itemdb_read_packages(void) {
 			
 			if( itname[0] == 'I' && itname[1] == 'D' && strlen(itname) < 8 ) {
 				if( !( data = itemdb->exists(atoi(itname+2)) ) )
-					ShowWarning("itemdb_read_packages: unknown item ID '%d' in package '%s'!\n",atoi(itname+2),config_setting_name(itg));
+					ShowWarning("%s: unknown item ID '%d' in package '%s'!\n", __func__, atoi(itname+2),config_setting_name(itg));
 			} else if( !( data = itemdb->name2id(itname) ) )
-				ShowWarning("itemdb_read_packages: unknown item '%s' in package '%s'!\n",itname,config_setting_name(itg));
+				ShowWarning("%s: unknown item '%s' in package '%s'!\n", __func__, itname,config_setting_name(itg));
 
 			if( ( t = libconfig->setting_get_member(it, "Count")) )
 				icount = libconfig->setting_get_int(t);
@@ -1036,7 +1036,7 @@ void itemdb_read_packages(void) {
 			
 			if( ( t = libconfig->setting_get_member(it, "Rate")) ) {
 				if( (rate = (unsigned short)libconfig->setting_get_int(t)) > 10000 ) {
-					ShowWarning("itemdb_read_packages: invalid rate (%d) for item '%s' in package '%s'!\n",rate,itname,config_setting_name(itg));
+					ShowWarning("%s: invalid rate (%d) for item '%s' in package '%s'!\n", __func__, rate,itname,config_setting_name(itg));
 					rate = 10000;
 				}
 			}
@@ -1048,7 +1048,7 @@ void itemdb_read_packages(void) {
 				named = true;
 			
 			if( !( t = libconfig->setting_get_member(it, "Random") ) ) {
-				ShowWarning("itemdb_read_packages: missing 'Random' field for item '%s' in package '%s', defaulting to must!\n",itname,config_setting_name(itg));
+				ShowWarning("%s: missing 'Random' field for item '%s' in package '%s', defaulting to must!\n", __func__, itname,config_setting_name(itg));
 				gid = 0;
 			} else
 				gid = libconfig->setting_get_int(t);
@@ -1071,7 +1071,7 @@ void itemdb_read_packages(void) {
 				itemdb->packages[count].random_groups[gidx].random_list[r].id = data ? data->nameid : 0;
 				itemdb->packages[count].random_groups[gidx].random_list[r].qty = icount;
 				if( (itemdb->packages[count].random_groups[gidx].random_list[r].rate = rate) == 10000 ) {
-					ShowWarning("itemdb_read_packages: item '%s' in '%s' has 100%% drop rate!! set this item as 'Random: 0' or other items won't drop!!!\n",itname,config_setting_name(itg));
+					ShowWarning("%s: item '%s' in '%s' has 100%% drop rate!! set this item as 'Random: 0' or other items won't drop!!!\n", __func__, itname,config_setting_name(itg));
 				}
 				itemdb->packages[count].random_groups[gidx].random_list[r].hours = expire;
 				itemdb->packages[count].random_groups[gidx].random_list[r].announce = announce == true ? 1 : 0;
@@ -1091,7 +1091,7 @@ void itemdb_read_packages(void) {
 		for( r = 0; r < itemdb->packages[count].random_qty; r++  ) {
 			if( itemdb->packages[count].random_groups[r].random_qty == 1 ) {
 				//item packages don't stop looping until something comes out of them, so if you have only one item in it the drop is guaranteed.
-				ShowWarning("itemdb_read_packages: in '%s' 'Random: %d' group has only 1 random option, drop rate will be 100%!\n",itemdb_name(itemdb->packages[count].id),r+1);
+				ShowWarning("%s: in '%s' 'Random: %d' group has only 1 random option, drop rate will be 100%!\n", __func__, itemdb_name(itemdb->packages[count].id),r+1);
 				itemdb->packages[count].random_groups[r].random_list[0].rate = 10000;
 			}
 		}
@@ -1153,9 +1153,9 @@ void itemdb_read_chains(void) {
 			const char *itname = config_setting_name(entry);
 			if( itname[0] == 'I' && itname[1] == 'D' && strlen(itname) < 8 ) {
 				if( !( data = itemdb->exists(atoi(itname+2)) ) )
-					ShowWarning("itemdb_read_chains: unknown item ID '%d' in chain '%s'!\n",atoi(itname+2),name);
+					ShowWarning("%s: unknown item ID '%d' in chain '%s'!\n", __func__, atoi(itname+2),name);
 			} else if( !( data = itemdb->name2id(itname) ) )
-				ShowWarning("itemdb_read_chains: unknown item '%s' in chain '%s'!\n",itname,name);
+				ShowWarning("%s: unknown item '%s' in chain '%s'!\n", __func__, itname,name);
 			
 			if( prev )
 				prev->next = &itemdb->chains[count].items[c - 1];
@@ -1178,7 +1178,7 @@ void itemdb_read_chains(void) {
 	libconfig->destroy(&item_chain_conf);
 	
 	if( !script->get_constant("ITMCHAIN_ORE",&i) )
-		ShowWarning("itemdb_read_chains: failed to find 'ITMCHAIN_ORE' chain to link to cache!\n");
+		ShowWarning("%s: failed to find 'ITMCHAIN_ORE' chain to link to cache!\n", __func__);
 	else
 		itemdb->chain_cache[ECC_ORE] = i;
 	
@@ -1220,7 +1220,7 @@ void itemdb_read_combos() {
 	sprintf(filepath, "%s/%s", map->db_path, DBPATH"item_combo_db.txt");
 	
 	if ((fp = fopen(filepath, "r")) == NULL) {
-		ShowError("itemdb_read_combos: File not found \"%s\".\n", filepath);
+		ShowError("%s: File not found \"%s\".\n", __func__, filepath);
 		return;
 	}
 	
@@ -1244,7 +1244,7 @@ void itemdb_read_combos() {
 		
 		if (!strchr(p,',')) {
 			/* is there even a single column? */
-			ShowError("itemdb_read_combos: Insufficient columns in line %d of \"%s\", skipping.\n", lines, filepath);
+			ShowError("%s: Insufficient columns in line %d of \"%s\", skipping.\n", __func__, lines, filepath);
 			continue;
 		}
 		
@@ -1258,13 +1258,13 @@ void itemdb_read_combos() {
 		p++;
 		
 		if (str[1][0] != '{') {
-			ShowError("itemdb_read_combos(#1): Invalid format (Script column) in line %d of \"%s\", skipping.\n", lines, filepath);
+			ShowError("%s(#1): Invalid format (Script column) in line %d of \"%s\", skipping.\n", __func__, lines, filepath);
 			continue;
 		}
 		
 		/* no ending key anywhere (missing \}\) */
 		if ( str[1][strlen(str[1])-1] != '}' ) {
-			ShowError("itemdb_read_combos(#2): Invalid format (Script column) in line %d of \"%s\", skipping.\n", lines, filepath);
+			ShowError("%s(#2): Invalid format (Script column) in line %d of \"%s\", skipping.\n", __func__, lines, filepath);
 			continue;
 		} else {
 			int items[MAX_ITEMS_PER_COMBO];
@@ -1272,14 +1272,14 @@ void itemdb_read_combos() {
 			struct item_combo *combo = NULL;
 			
 			if((retcount = itemdb->combo_split_atoi(str[0], items)) < 2) {
-				ShowError("itemdb_read_combos: line %d of \"%s\" doesn't have enough items to make for a combo (min:2), skipping.\n", lines, filepath);
+				ShowError("%s: line %d of \"%s\" doesn't have enough items to make for a combo (min:2), skipping.\n", __func__, lines, filepath);
 				continue;
 			}
 			
 			/* validate */
 			for(v = 0; v < retcount; v++) {
 				if( !itemdb->exists(items[v]) ) {
-					ShowError("itemdb_read_combos: line %d of \"%s\" contains unknown item ID %d, skipping.\n", lines, filepath,items[v]);
+					ShowError("%s: line %d of \"%s\" contains unknown item ID %d, skipping.\n", __func__, lines, filepath,items[v]);
 					break;
 				}
 			}
@@ -1367,8 +1367,8 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 	struct item_data *item;
 
 	if( entry->nameid <= 0 || entry->nameid >= MAX_ITEMDB ) {
-		ShowWarning("itemdb_validate_entry: Invalid item ID %d in entry %d of '%s', allowed values 0 < ID < %d (MAX_ITEMDB), skipping.\n",
-				entry->nameid, n, source, MAX_ITEMDB);
+		ShowWarning("%s: Invalid item ID %d in entry %d of '%s', allowed values 0 < ID < %d (MAX_ITEMDB), skipping.\n",
+				__func__, entry->nameid, n, source, MAX_ITEMDB);
 		if (entry->script) {
 			script->free_code(entry->script);
 			entry->script = NULL;
@@ -1388,8 +1388,8 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 	 || (entry->type > IT_DELAYCONSUME && entry->type < IT_CASH ) || entry->type >= IT_MAX
 	) {
 		// catch invalid item types
-		ShowWarning("itemdb_validate_entry: Invalid item type %d for item %d in '%s'. IT_ETC will be used.\n",
-		            entry->type, entry->nameid, source);
+		ShowWarning("%s: Invalid item type %d for item %d in '%s'. IT_ETC will be used.\n",
+		            __func__, entry->type, entry->nameid, source);
 		entry->type = IT_ETC;
 	} else if( entry->type == IT_DELAYCONSUME ) {
 		//Items that are consumed only after target confirmation
@@ -1407,32 +1407,32 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 		entry->value_sell = entry->value_buy / 2;
 	}
 	if( entry->value_buy/124. < entry->value_sell/75. ) {
-		ShowWarning("itemdb_validate_entry: Buying/Selling [%d/%d] price of item %d (%s) in '%s' "
+		ShowWarning("%s: Buying/Selling [%d/%d] price of item %d (%s) in '%s' "
 		            "allows Zeny making exploit through buying/selling at discounted/overcharged prices!\n",
-		            entry->value_buy, entry->value_sell, entry->nameid, entry->jname, source);
+		            __func__, entry->value_buy, entry->value_sell, entry->nameid, entry->jname, source);
 	}
 
 	if( entry->slot > MAX_SLOTS ) {
-		ShowWarning("itemdb_validate_entry: Item %d (%s) in '%s' specifies %d slots, but the server only supports up to %d. Using %d slots.\n",
-		            entry->nameid, entry->jname, source, entry->slot, MAX_SLOTS, MAX_SLOTS);
+		ShowWarning("%s: Item %d (%s) in '%s' specifies %d slots, but the server only supports up to %d. Using %d slots.\n",
+		            __func__, entry->nameid, entry->jname, source, entry->slot, MAX_SLOTS, MAX_SLOTS);
 		entry->slot = MAX_SLOTS;
 	}
 
 	if (!entry->equip && itemdb->isequip2(entry)) {
-		ShowWarning("itemdb_validate_entry: Item %d (%s) in '%s' is an equipment with no equip-field! Making it an etc item.\n",
-		            entry->nameid, entry->jname, source);
+		ShowWarning("%s: Item %d (%s) in '%s' is an equipment with no equip-field! Making it an etc item.\n",
+		            __func__, entry->nameid, entry->jname, source);
 		entry->type = IT_ETC;
 	}
 
 	if (entry->flag.trade_restriction < 0 || entry->flag.trade_restriction > ITR_ALL) {
-		ShowWarning("itemdb_validate_entry: Invalid trade restriction flag 0x%x for item %d (%s) in '%s', defaulting to none.\n",
-		            entry->flag.trade_restriction, entry->nameid, entry->jname, source);
+		ShowWarning("%s: Invalid trade restriction flag 0x%x for item %d (%s) in '%s', defaulting to none.\n",
+		            __func__, entry->flag.trade_restriction, entry->nameid, entry->jname, source);
 		entry->flag.trade_restriction = ITR_NONE;
 	}
 
 	if (entry->gm_lv_trade_override < 0 || entry->gm_lv_trade_override > 100) {
-		ShowWarning("itemdb_validate_entry: Invalid trade-override GM level %d for item %d (%s) in '%s', defaulting to none.\n",
-		            entry->gm_lv_trade_override, entry->nameid, entry->jname, source);
+		ShowWarning("%s: Invalid trade-override GM level %d for item %d (%s) in '%s', defaulting to none.\n",
+		            __func__, entry->gm_lv_trade_override, entry->nameid, entry->jname, source);
 		entry->gm_lv_trade_override = 0;
 	}
 	if (entry->gm_lv_trade_override == 0) {
@@ -1441,14 +1441,14 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 	}
 
 	if (entry->item_usage.flag > INR_ALL) {
-		ShowWarning("itemdb_validate_entry: Invalid nouse flag 0x%x for item %d (%s) in '%s', defaulting to none.\n",
-		            entry->item_usage.flag, entry->nameid, entry->jname, source);
+		ShowWarning("%s: Invalid nouse flag 0x%x for item %d (%s) in '%s', defaulting to none.\n",
+		            __func__, entry->item_usage.flag, entry->nameid, entry->jname, source);
 		entry->item_usage.flag = INR_NONE;
 	}
 
 	if (entry->item_usage.override > 100) {
-		ShowWarning("itemdb_validate_entry: Invalid nouse-override GM level %d for item %d (%s) in '%s', defaulting to none.\n",
-		            entry->item_usage.override, entry->nameid, entry->jname, source);
+		ShowWarning("%s: Invalid nouse-override GM level %d for item %d (%s) in '%s', defaulting to none.\n",
+		            __func__, entry->item_usage.override, entry->nameid, entry->jname, source);
 		entry->item_usage.override = 0;
 	}
 	if (entry->item_usage.override == 0) {
@@ -1457,8 +1457,8 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 	}
 
 	if (entry->stack.amount > 0 && !itemdb->isstackable2(entry)) {
-		ShowWarning("itemdb_validate_entry: Item %d (%s) of type %d is not stackable, ignoring stack settings in '%s'.\n",
-		            entry->nameid, entry->jname, entry->type, source);
+		ShowWarning("%s: Item %d (%s) of type %d is not stackable, ignoring stack settings in '%s'.\n",
+		            __func__, entry->nameid, entry->jname, entry->type, source);
 		memset(&entry->stack, '\0', sizeof(entry->stack));
 	}
 
@@ -1675,14 +1675,14 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 	 * Inherit: inherit or override
 	 */
 	if( !libconfig->setting_lookup_int(it, "Id", &i32) ) {
-		ShowWarning("itemdb_readdb_libconfig_sub: Invalid or missing id in \"%s\", entry #%d, skipping.\n", source, n);
+		ShowWarning("%s: Invalid or missing id in \"%s\", entry #%d, skipping.\n", __func__, source, n);
 		return 0;
 	}
 	id.nameid = (uint16)i32;
 
 	if( (t = libconfig->setting_get_member(it, "Inherit")) && (inherit = libconfig->setting_get_bool(t)) ) {
 		if( !itemdb->exists(id.nameid) ) {
-			ShowWarning("itemdb_readdb_libconfig_sub: Trying to inherit nonexistent item %d, default values will be used instead.\n", id.nameid);
+			ShowWarning("%s: Trying to inherit nonexistent item %d, default values will be used instead.\n", __func__, id.nameid);
 			inherit = false;
 		} else {
 			// Use old entry as default
@@ -1693,7 +1693,7 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 
 	if( !libconfig->setting_lookup_string(it, "AegisName", &str) || !*str ) {
 		if( !inherit ) {
-			ShowWarning("itemdb_readdb_libconfig_sub: Missing AegisName in item %d of \"%s\", skipping.\n", id.nameid, source);
+			ShowWarning("%s: Missing AegisName in item %d of \"%s\", skipping.\n", __func__, id.nameid, source);
 			return 0;
 		}
 	} else {
@@ -1702,7 +1702,7 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 
 	if( !libconfig->setting_lookup_string(it, "Name", &str) || !*str ) {
 		if( !inherit ) {
-			ShowWarning("itemdb_readdb_libconfig_sub: Missing Name in item %d of \"%s\", skipping.\n", id.nameid, source);
+			ShowWarning("%s: Missing Name in item %d of \"%s\", skipping.\n", __func__, id.nameid, source);
 			return 0;
 		}
 	} else {
@@ -2025,7 +2025,7 @@ void itemdb_read(bool minimal) {
 		if( itemdb->array[i] ) {
 			if( itemdb->names->put(itemdb->names,DB->str2key(itemdb->array[i]->name),DB->ptr2data(itemdb->array[i]),&prev) ) {
 				struct item_data *data = DB->data2ptr(&prev);
-				ShowError("itemdb_read: duplicate AegisName '%s' in item ID %d and %d\n",itemdb->array[i]->name,itemdb->array[i]->nameid,data->nameid);
+				ShowError("%s: duplicate AegisName '%s' in item ID %d and %d\n", __func__, itemdb->array[i]->name,itemdb->array[i]->nameid,data->nameid);
 			}
 		}
 	}

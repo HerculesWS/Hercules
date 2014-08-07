@@ -235,7 +235,7 @@ uint8 GetByte(uint32 val, int idx)
 	case 3: return (uint8)( (val & 0xFF000000) >> 0x18 );
 	default:
 #if defined(DEBUG)
-		ShowDebug("GetByte: invalid index (idx=%d)\n", idx);
+		ShowDebug("%s: invalid index (idx=%d)\n", __func__, idx);
 #endif
 		return 0;
 	}
@@ -249,7 +249,7 @@ uint16 GetWord(uint32 val, int idx)
 	case 1: return (uint16)( (val & 0xFFFF0000) >> 0x10 );
 	default:
 #if defined(DEBUG)
-		ShowDebug("GetWord: invalid index (idx=%d)\n", idx);
+		ShowDebug("%s: invalid index (idx=%d)\n", __func__, idx);
 #endif
 		return 0;
 	}
@@ -326,7 +326,7 @@ unsigned int get_percentage(const unsigned int A, const unsigned int B)
 
 	if( B == 0 )
 	{
-		ShowError("get_percentage(): division by zero! (A=%u,B=%u)\n", A, B);
+		ShowError("%s(): division by zero! (A=%u,B=%u)\n", __func__, A, B);
 		return ~0U;
 	}
 
@@ -334,7 +334,7 @@ unsigned int get_percentage(const unsigned int A, const unsigned int B)
 
 	if( result > UINT_MAX )
 	{
-		ShowError("get_percentage(): result percentage too high! (A=%u,B=%u,result=%g)\n", A, B, result);
+		ShowError("%s(): result percentage too high! (A=%u,B=%u,result=%g)\n", __func__, A, B, result);
 		return UINT_MAX;
 	}
 

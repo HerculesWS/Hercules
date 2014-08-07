@@ -123,7 +123,7 @@ bool HPM_map_add_atcommand(char *name, AtCommandFunc func) {
 	
 	for(i = 0; i < atcommand_list_items; i++) {
 		if( !strcmpi(atcommand_list[i].name,name) ) {
-			ShowDebug("HPM_map_add_atcommand: duplicate command '%s', skipping...\n", name);
+			ShowDebug("%s: duplicate command '%s', skipping...\n", __func__, name);
 			return false;
 		}
 	}
@@ -155,12 +155,12 @@ bool HPM_map_DataCheck (struct s_HPMDataCheck *src, unsigned int size, char *nam
 	for(i = 0; i < size; i++) {
 		
 		if( !strdb_exists(datacheck_db, src[i].name) ) {
-			ShowError("HPMDataCheck:%s: '%s' was not found\n",name,src[i].name);
+			ShowError("%s:%s: '%s' was not found\n", __func__, name,src[i].name);
 			return false;
 		} else {
 			j = strdb_uiget(datacheck_db, src[i].name);/* not double lookup; exists sets cache to found data */
 			if( src[i].size != HPMDataCheck[j].size ) {
-				ShowWarning("HPMDataCheck:%s: '%s' size mismatch %u != %u\n",name,src[i].name,src[i].size,HPMDataCheck[j].size);
+				ShowWarning("%s:%s: '%s' size mismatch %u != %u\n", __func__, name,src[i].name, src[i].size, HPMDataCheck[j].size);
 				return false;
 			}
 		}

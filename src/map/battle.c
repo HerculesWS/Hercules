@@ -323,7 +323,7 @@ int64 battle_attr_fix(struct block_list *src, struct block_list *target, int64 d
 
 	if (def_type < 0 || def_type > ELE_MAX ||
 		def_lv < 1 || def_lv > 4) {
-		ShowError("battle_attr_fix: unknown attr type: atk=%d def_type=%d def_lv=%d\n",atk_elem,def_type,def_lv);
+		ShowError("%s: unknown attr type: atk=%d def_type=%d def_lv=%d\n", __func__, atk_elem,def_type,def_lv);
 		return damage;
 	}
 
@@ -5267,7 +5267,7 @@ struct Damage battle_calc_attack(int attack_type,struct block_list *bl,struct bl
 		case BF_MAGIC:  d = battle->calc_magic_attack(bl,target,skill_id,skill_lv,count);  break;
 		case BF_MISC:   d = battle->calc_misc_attack(bl,target,skill_id,skill_lv,count);   break;
 	default:
-		ShowError("battle_calc_attack: unknown attack type! %d\n",attack_type);
+		ShowError("%s: unknown attack type! %d\n", __func__, attack_type);
 		memset(&d,0,sizeof(d));
 		break;
 	}

@@ -296,7 +296,7 @@ void set_nonblocking(int fd, unsigned long yes)
 	// FIONBIO Use with a nonzero argp parameter to enable the nonblocking mode of socket s.
 	// The argp parameter is zero if nonblocking is to be disabled.
 	if( sIoctl(fd, FIONBIO, &yes) != 0 )
-		ShowError("set_nonblocking: Failed to set socket #%d to non-blocking mode (%s) - Please report this!!!\n", fd, error_msg());
+		ShowError("%s: Failed to set socket #%d to non-blocking mode (%s) - Please report this!!!\n", __func__, fd, error_msg());
 }
 
 void setsocketopts(int fd, struct hSockOpt *opt) {
@@ -332,7 +332,7 @@ void setsocketopts(int fd, struct hSockOpt *opt) {
 	lopt.l_onoff = 0; // SO_DONTLINGER
 	lopt.l_linger = 0; // Do not care
 	if( sSetsockopt(fd, SOL_SOCKET, SO_LINGER, (char*)&lopt, sizeof(lopt)) )
-		ShowWarning("setsocketopts: Unable to set SO_LINGER mode for connection #%d!\n", fd);
+		ShowWarning("%s: Unable to set SO_LINGER mode for connection #%d!\n", __func__, fd);
 }
 
 /*======================================

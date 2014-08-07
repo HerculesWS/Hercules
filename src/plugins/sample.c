@@ -49,7 +49,7 @@ void sample_packet0f3(int fd) {
 	
 	if( !sd ) return;/* socket didn't fully log-in? this packet shouldn't do anything then! */
 	
-	ShowInfo("sample_packet0f3: Hello World! received 0xf3 for '%s', redirecting!\n",sd->status.name);
+	ShowInfo("%s: Hello World! received 0xf3 for '%s', redirecting!\n", __func__, sd->status.name);
 	
 	/* sample usage of appending data to a socket_data (session[]) entry */
 	if( !(data = getFromSession(session[fd],0)) ) {

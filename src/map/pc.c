@@ -151,7 +151,7 @@ int pc_spiritball_timer(int tid, int64 tick, int id, intptr_t data) {
 
 	if( sd->spiritball <= 0 )
 	{
-		ShowError("pc_spiritball_timer: %d spiritball's available. (aid=%d cid=%d tid=%d)\n", sd->spiritball, sd->status.account_id, sd->status.char_id, tid);
+		ShowError("%s: %d spiritball's available. (aid=%d cid=%d tid=%d)\n", __func__, sd->spiritball, sd->status.account_id, sd->status.char_id, tid);
 		sd->spiritball = 0;
 		return 0;
 	}
@@ -159,7 +159,7 @@ int pc_spiritball_timer(int tid, int64 tick, int id, intptr_t data) {
 	ARR_FIND(0, sd->spiritball, i, sd->spirit_timer[i] == tid);
 	if( i == sd->spiritball )
 	{
-		ShowError("pc_spiritball_timer: timer not found (aid=%d cid=%d tid=%d)\n", sd->status.account_id, sd->status.char_id, tid);
+		ShowError("%s: timer not found (aid=%d cid=%d tid=%d)\n", __func__, sd->status.account_id, sd->status.char_id, tid);
 		return 0;
 	}
 
@@ -412,7 +412,7 @@ int pc_inventory_rental_end(int tid, int64 tick, int id, intptr_t data) {
 		return 0;
 	if( tid != sd->rental_timer )
 	{
-		ShowError("pc_inventory_rental_end: invalid timer id.\n");
+		ShowError("%s: invalid timer id.\n", __func__);
 		return 0;
 	}
 
@@ -977,8 +977,8 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	sd->login_id2 = login_id2;
 
 	if (pc->set_group(sd, group_id) != 0) {
-		ShowWarning("pc_authok: %s (AID:%d) logged in with unknown group id (%d)! kicking...\n",
-			st->name, sd->status.account_id, group_id);
+		ShowWarning("%s: %s (AID:%d) logged in with unknown group id (%d)! kicking...\n",
+			__func__, st->name, sd->status.account_id, group_id);
 		clif->authfail_fd(sd->fd, 0);
 		return false;
 	}
@@ -993,7 +993,8 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	//Set the map-server used job id. [Skotlex]
 	i = pc->jobid2mapid(sd->status.class_);
 	if (i == -1) { //Invalid class?
-		ShowError("pc_authok: Invalid class %d for player %s (%d:%d). Class was changed to novice.\n", sd->status.class_, sd->status.name, sd->status.account_id, sd->status.char_id);
+		ShowError("%s: Invalid class %d for player %s (%d:%d). Class was changed to novice.\n",
+			__func__, sd->status.class_, sd->status.name, sd->status.account_id, sd->status.char_id);
 		sd->status.class_ = JOB_NOVICE;
 		sd->class_ = MAPID_NOVICE;
 	} else
@@ -1309,7 +1310,8 @@ int pc_reg_received(struct map_session_data *sd)
 	map->addiddb(&sd->bl);
 	map->delnickdb(sd->status.char_id, sd->status.name);
 	if (!chrif->auth_finished(sd))
-		ShowError("pc_reg_received: Failed to properly remove player %d:%d from logging db!\n", sd->status.account_id, sd->status.char_id);
+		ShowError("%s: Failed to properly remove player %d:%d from logging db!\n",
+			__func__, sd->status.account_id, sd->status.char_id);
 
 	pc->load_combo(sd);
 
@@ -1379,7 +1381,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 	c = pc->mapid2jobid(i, sd->status.sex);
 	if( c == -1 )
 	{ //Unable to normalize job??
-		ShowError("pc_calc_skilltree: Unable to normalize job %d for character %s (%d:%d)\n", i, sd->status.name, sd->status.account_id, sd->status.char_id);
+		ShowError("%s: Unable to normalize job %d for character %s (%d:%d)\n", __func__, i, sd->status.name, sd->status.account_id, sd->status.char_id);
 		return 1;
 	}
 	c = pc->class2idx(c);
@@ -1551,7 +1553,8 @@ void pc_check_skilltree(struct map_session_data *sd, int skill_id)
 	i = pc->calc_skilltree_normalize_job(sd);
 	c = pc->mapid2jobid(i, sd->status.sex);
 	if (c == -1) { //Unable to normalize job??
-		ShowError("pc_check_skilltree: Unable to normalize job %d for character %s (%d:%d)\n", i, sd->status.name, sd->status.account_id, sd->status.char_id);
+		ShowError("%s: Unable to normalize job %d for character %s (%d:%d)\n",
+			__func__, i, sd->status.name, sd->status.account_id, sd->status.char_id);
 		return;
 	}
 	c = pc->class2idx(c);
@@ -1945,7 +1948,7 @@ int pc_addautobonus(struct s_autobonus *bonus,char max,const char *bonus_script,
 	ARR_FIND(0, max, i, bonus[i].rate == 0);
 	if( i == max )
 	{
-		ShowWarning("pc_addautobonus: Reached max (%d) number of autobonus per character!\n", max);
+		ShowWarning("%s: Reached max (%d) number of autobonus per character!\n", __func__, max);
 		return 0;
 	}
 
@@ -2222,7 +2225,7 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 			break;
 		case SP_ATKELE:
 			if(val >= ELE_MAX) {
-				ShowError("pc_bonus: SP_ATKELE: Invalid element %d\n", val);
+				ShowError("%s: SP_ATKELE: Invalid element %d\n", __func__, val);
 				break;
 			}
 			switch (sd->state.lr_flag) {
@@ -2252,7 +2255,7 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 			break;
 		case SP_DEFELE:
 			if(val >= ELE_MAX) {
-				ShowError("pc_bonus: SP_DEFELE: Invalid element %d\n", val);
+				ShowError("%s: SP_DEFELE: Invalid element %d\n", __func__, val);
 				break;
 			}
 			if(sd->state.lr_flag != 2)
@@ -2366,7 +2369,7 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 			break;
 		case SP_IGNORE_DEF_ELE:
 			if(val >= ELE_MAX) {
-				ShowError("pc_bonus: SP_IGNORE_DEF_ELE: Invalid element %d\n", val);
+				ShowError("%s: SP_IGNORE_DEF_ELE: Invalid element %d\n", __func__, val);
 				break;
 			}
 			if(!sd->state.lr_flag)
@@ -2400,7 +2403,7 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 			break;
 		case SP_IGNORE_MDEF_ELE:
 			if(val >= ELE_MAX) {
-				ShowError("pc_bonus: SP_IGNORE_MDEF_ELE: Invalid element %d\n", val);
+				ShowError("%s: SP_IGNORE_MDEF_ELE: Invalid element %d\n", __func__, val);
 				break;
 			}
 			if(sd->state.lr_flag != 2)
@@ -2424,7 +2427,7 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 			break;
 		case SP_DEF_RATIO_ATK_ELE:
 			if(val >= ELE_MAX) {
-				ShowError("pc_bonus: SP_DEF_RATIO_ATK_ELE: Invalid element %d\n", val);
+				ShowError("%s: SP_DEF_RATIO_ATK_ELE: Invalid element %d\n", __func__, val);
 				break;
 			}
 			if(!sd->state.lr_flag)
@@ -2434,7 +2437,7 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 			break;
 		case SP_DEF_RATIO_ATK_RACE:
 			if(val >= RC_MAX) {
-				ShowError("pc_bonus: SP_DEF_RATIO_ATK_RACE: Invalid race %d\n", val);
+				ShowError("%s: SP_DEF_RATIO_ATK_RACE: Invalid race %d\n", __func__, val);
 				break;
 			}
 			if(!sd->state.lr_flag)
@@ -2717,7 +2720,7 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), 0, val, (1<<RC_BOSS)|(1<<RC_NONBOSS), 10000);
 		break;
 		default:
-			ShowWarning("pc_bonus: unknown type %d %d !\n",type,val);
+			ShowWarning("%s: unknown type %d %d !\n", __func__, type,val);
 			break;
 	}
 	return 0;
@@ -2735,7 +2738,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 	switch(type){
 		case SP_ADDELE:
 			if(type2 >= ELE_MAX) {
-				ShowError("pc_bonus2: SP_ADDELE: Invalid element %d\n", type2);
+				ShowError("%s: SP_ADDELE: Invalid element %d\n", __func__, type2);
 				break;
 			}
 			if(!sd->state.lr_flag)
@@ -2763,7 +2766,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			break;
 		case SP_SUBELE:
 			if(type2 >= ELE_MAX) {
-				ShowError("pc_bonus2: SP_SUBELE: Invalid element %d\n", type2);
+				ShowError("%s: SP_SUBELE: Invalid element %d\n", __func__, type2);
 				break;
 			}
 			if(sd->state.lr_flag != 2)
@@ -2775,7 +2778,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			break;
 		case SP_ADDEFF:
 			if (type2 > SC_MAX) {
-				ShowWarning("pc_bonus2 (Add Effect): %d is not supported.\n", type2);
+				ShowWarning("%s (Add Effect): %d is not supported.\n", __func__, type2);
 				break;
 			}
 			pc->bonus_addeff(sd->addeff, ARRAYLENGTH(sd->addeff), (sc_type)type2,
@@ -2783,7 +2786,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			break;
 		case SP_ADDEFF2:
 			if (type2 > SC_MAX) {
-				ShowWarning("pc_bonus2 (Add Effect2): %d is not supported.\n", type2);
+				ShowWarning("%s (Add Effect2): %d is not supported.\n", __func__, type2);
 				break;
 			}
 			pc->bonus_addeff(sd->addeff, ARRAYLENGTH(sd->addeff), (sc_type)type2,
@@ -2791,7 +2794,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			break;
 		case SP_RESEFF:
 			if (type2 < SC_COMMON_MIN || type2 > SC_COMMON_MAX) {
-				ShowWarning("pc_bonus2 (Resist Effect): %d is not supported.\n", type2);
+				ShowWarning("%s (Resist Effect): %d is not supported.\n", __func__, type2);
 				break;
 			}
 			if(sd->state.lr_flag == 2)
@@ -2801,7 +2804,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			break;
 		case SP_MAGIC_ADDELE:
 			if(type2 >= ELE_MAX) {
-				ShowError("pc_bonus2: SP_MAGIC_ADDELE: Invalid element %d\n", type2);
+				ShowError("%s: SP_MAGIC_ADDELE: Invalid element %d\n", __func__, type2);
 				break;
 			}
 			if(sd->state.lr_flag != 2)
@@ -2825,7 +2828,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				ARR_FIND(0, ARRAYLENGTH(sd->right_weapon.add_dmg), i, sd->right_weapon.add_dmg[i].rate == 0 || sd->right_weapon.add_dmg[i].class_ == type2);
 				if (i == ARRAYLENGTH(sd->right_weapon.add_dmg))
 				{
-					ShowWarning("pc_bonus2: Reached max (%d) number of add Class dmg bonuses per character!\n", ARRAYLENGTH(sd->right_weapon.add_dmg));
+					ShowWarning("%s: Reached max (%d) number of add Class dmg bonuses per character!\n", __func__, ARRAYLENGTH(sd->right_weapon.add_dmg));
 					break;
 				}
 				sd->right_weapon.add_dmg[i].class_ = type2;
@@ -2837,7 +2840,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				ARR_FIND(0, ARRAYLENGTH(sd->left_weapon.add_dmg), i, sd->left_weapon.add_dmg[i].rate == 0 || sd->left_weapon.add_dmg[i].class_ == type2);
 				if (i == ARRAYLENGTH(sd->left_weapon.add_dmg))
 				{
-					ShowWarning("pc_bonus2: Reached max (%d) number of add Class dmg bonuses per character!\n", ARRAYLENGTH(sd->left_weapon.add_dmg));
+					ShowWarning("%s: Reached max (%d) number of add Class dmg bonuses per character!\n", __func__, ARRAYLENGTH(sd->left_weapon.add_dmg));
 					break;
 				}
 				sd->left_weapon.add_dmg[i].class_ = type2;
@@ -2853,7 +2856,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			ARR_FIND(0, ARRAYLENGTH(sd->add_mdmg), i, sd->add_mdmg[i].rate == 0 || sd->add_mdmg[i].class_ == type2);
 			if (i == ARRAYLENGTH(sd->add_mdmg))
 			{
-				ShowWarning("pc_bonus2: Reached max (%d) number of add Class magic dmg bonuses per character!\n", ARRAYLENGTH(sd->add_mdmg));
+				ShowWarning("%s: Reached max (%d) number of add Class magic dmg bonuses per character!\n", __func__, ARRAYLENGTH(sd->add_mdmg));
 				break;
 			}
 			sd->add_mdmg[i].class_ = type2;
@@ -2867,7 +2870,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			ARR_FIND(0, ARRAYLENGTH(sd->add_def), i, sd->add_def[i].rate == 0 || sd->add_def[i].class_ == type2);
 			if (i == ARRAYLENGTH(sd->add_def))
 			{
-				ShowWarning("pc_bonus2: Reached max (%d) number of add Class def bonuses per character!\n", ARRAYLENGTH(sd->add_def));
+				ShowWarning("%s: Reached max (%d) number of add Class def bonuses per character!\n", __func__, ARRAYLENGTH(sd->add_def));
 				break;
 			}
 			sd->add_def[i].class_ = type2;
@@ -2881,7 +2884,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			ARR_FIND(0, ARRAYLENGTH(sd->add_mdef), i, sd->add_mdef[i].rate == 0 || sd->add_mdef[i].class_ == type2);
 			if (i == ARRAYLENGTH(sd->add_mdef))
 			{
-				ShowWarning("pc_bonus2: Reached max (%d) number of add Class mdef bonuses per character!\n", ARRAYLENGTH(sd->add_mdef));
+				ShowWarning("%s: Reached max (%d) number of add Class mdef bonuses per character!\n", __func__, ARRAYLENGTH(sd->add_mdef));
 				break;
 			}
 			sd->add_mdef[i].class_ = type2;
@@ -2966,7 +2969,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			break;
 		case SP_WEAPON_COMA_ELE:
 			if(type2 >= ELE_MAX) {
-				ShowError("pc_bonus2: SP_WEAPON_COMA_ELE: Invalid element %d\n", type2);
+				ShowError("%s: SP_WEAPON_COMA_ELE: Invalid element %d\n", __func__, type2);
 				break;
 			}
 			if(sd->state.lr_flag == 2)
@@ -2994,7 +2997,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			break;
 		case SP_ADDEFF_WHENHIT:
 			if (type2 > SC_MAX) {
-				ShowWarning("pc_bonus2 (Add Effect when hit): %d is not supported.\n", type2);
+				ShowWarning("%s (Add Effect when hit): %d is not supported.\n", __func__, type2);
 				break;
 			}
 			if(sd->state.lr_flag != 2)
@@ -3152,7 +3155,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			//Standard item bonus.
 			for(i=0; i < ARRAYLENGTH(sd->itemhealrate) && sd->itemhealrate[i].nameid && sd->itemhealrate[i].nameid != type2; i++);
 			if(i == ARRAYLENGTH(sd->itemhealrate)) {
-				ShowWarning("pc_bonus2: Reached max (%d) number of item heal bonuses per character!\n", ARRAYLENGTH(sd->itemhealrate));
+				ShowWarning("%s: Reached max (%d) number of item heal bonuses per character!\n", __func__, ARRAYLENGTH(sd->itemhealrate));
 				break;
 			}
 			sd->itemhealrate[i].nameid = type2;
@@ -3315,7 +3318,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), 0, val, 1<<type2, 10000);
 			break;
 		default:
-			ShowWarning("pc_bonus2: unknown type %d %d %d!\n",type,type2,val);
+			ShowWarning("%s: unknown type %d %d %d!\n", __func__, type, type2, val);
 			break;
 	}
 	return 0;
@@ -3393,7 +3396,7 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 			break;
 		case SP_ADDEFF:
 			if (type2 > SC_MAX) {
-				ShowWarning("pc_bonus3 (Add Effect): %d is not supported.\n", type2);
+				ShowWarning("%s (Add Effect): %d is not supported.\n", __func__, type2);
 				break;
 			}
 			pc->bonus_addeff(sd->addeff, ARRAYLENGTH(sd->addeff), (sc_type)type2,
@@ -3402,7 +3405,7 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 
 		case SP_ADDEFF_WHENHIT:
 			if (type2 > SC_MAX) {
-				ShowWarning("pc_bonus3 (Add Effect when hit): %d is not supported.\n", type2);
+				ShowWarning("%s (Add Effect when hit): %d is not supported.\n", __func__, type2);
 				break;
 			}
 			if(sd->state.lr_flag != 2)
@@ -3411,7 +3414,7 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 
 		case SP_ADDEFF_ONSKILL:
 			if( type3 > SC_MAX ) {
-				ShowWarning("pc_bonus3 (Add Effect on skill): %d is not supported.\n", type3);
+				ShowWarning("%s (Add Effect on skill): %d is not supported.\n", __func__, type3);
 				break;
 			}
 			if( sd->state.lr_flag != 2 )
@@ -3420,7 +3423,7 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 
 		case SP_ADDELE:
 			if (type2 > ELE_MAX) {
-				ShowWarning("pc_bonus3 (SP_ADDELE): element %d is out of range.\n", type2);
+				ShowWarning("%s (SP_ADDELE): element %d is out of range.\n", __func__, type2);
 				break;
 			}
 			if (sd->state.lr_flag != 2)
@@ -3429,7 +3432,7 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 
 		case SP_SUBELE:
 			if (type2 > ELE_MAX) {
-				ShowWarning("pc_bonus3 (SP_SUBELE): element %d is out of range.\n", type2);
+				ShowWarning("%s (SP_SUBELE): element %d is out of range.\n", __func__, type2);
 				break;
 			}
 			if (sd->state.lr_flag != 2)
@@ -3444,7 +3447,7 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 			break;
 
 		default:
-			ShowWarning("pc_bonus3: unknown type %d %d %d %d!\n",type,type2,type3,val);
+			ShowWarning("%s: unknown type %d %d %d %d!\n", __func__, type, type2, type3, val);
 			break;
 	}
 
@@ -3508,7 +3511,7 @@ int pc_bonus4(struct map_session_data *sd,int type,int type2,int type3,int type4
 		break;
 
 	default:
-		ShowWarning("pc_bonus4: unknown type %d %d %d %d %d!\n",type,type2,type3,type4,val);
+		ShowWarning("%s: unknown type %d %d %d %d %d!\n", __func__, type, type2, type3, type4, val);
 		break;
 	}
 
@@ -3535,7 +3538,7 @@ int pc_bonus5(struct map_session_data *sd,int type,int type2,int type3,int type4
 			break;
 
 		default:
-			ShowWarning("pc_bonus5: unknown type %d %d %d %d %d %d!\n",type,type2,type3,type4,type5,val);
+			ShowWarning("%s: unknown type %d %d %d %d %d %d!\n", __func__, type, type2, type3, type4, type5, val);
 			break;
 	}
 
@@ -3554,15 +3557,15 @@ int pc_skill(TBL_PC* sd, int id, int level, int flag) {
 	nullpo_ret(sd);
 
 	if( !(index = skill->get_index(id)) || skill->db[index].name == NULL) {
-		ShowError("pc_skill: Skill with id %d does not exist in the skill database\n", id);
+		ShowError("%s: Skill with id %d does not exist in the skill database\n", __func__, id);
 		return 0;
 	}
 	if( level > MAX_SKILL_LEVEL ) {
-		ShowError("pc_skill: Skill level %d too high. Max lv supported is %d\n", level, MAX_SKILL_LEVEL);
+		ShowError("%s: Skill level %d too high. Max lv supported is %d\n", __func__, level, MAX_SKILL_LEVEL);
 		return 0;
 	}
 	if( flag == 2 && sd->status.skill[index].lv + level > MAX_SKILL_LEVEL ) {
-		ShowError("pc_skill: Skill level bonus %d too high. Max lv supported is %d. Curr lv is %d\n", level, MAX_SKILL_LEVEL, sd->status.skill[index].lv);
+		ShowError("%s: Skill level bonus %d too high. Max lv supported is %d. Curr lv is %d\n", __func__, level, MAX_SKILL_LEVEL, sd->status.skill[index].lv);
 		return 0;
 	}
 
@@ -3772,7 +3775,7 @@ int pc_payzeny(struct map_session_data *sd,int zeny, enum e_log_pick_type type, 
 	zeny = cap_value(zeny,-MAX_ZENY,MAX_ZENY); //prevent command UB
 	if( zeny < 0 )
 	{
-		ShowError("pc_payzeny: Paying negative Zeny (zeny=%d, account_id=%d, char_id=%d).\n", zeny, sd->status.account_id, sd->status.char_id);
+		ShowError("%s: Paying negative Zeny (zeny=%d, account_id=%d, char_id=%d).\n", __func__, zeny, sd->status.account_id, sd->status.char_id);
 		return 1;
 	}
 
@@ -3804,13 +3807,15 @@ int pc_paycash(struct map_session_data *sd, int price, int points)
 	points = cap_value(points,-MAX_ZENY,MAX_ZENY); //prevent command UB
 	if( price < 0 || points < 0 )
 	{
-		ShowError("pc_paycash: Paying negative points (price=%d, points=%d, account_id=%d, char_id=%d).\n", price, points, sd->status.account_id, sd->status.char_id);
+		ShowError("%s: Paying negative points (price=%d, points=%d, account_id=%d, char_id=%d).\n",
+			__func__, price, points, sd->status.account_id, sd->status.char_id);
 		return -2;
 	}
 
 	if( points > price )
 	{
-		ShowWarning("pc_paycash: More kafra points provided than needed (price=%d, points=%d, account_id=%d, char_id=%d).\n", price, points, sd->status.account_id, sd->status.char_id);
+		ShowWarning("%s: More kafra points provided than needed (price=%d, points=%d, account_id=%d, char_id=%d).\n",
+			__func__, price, points, sd->status.account_id, sd->status.char_id);
 		points = price;
 	}
 
@@ -3818,7 +3823,8 @@ int pc_paycash(struct map_session_data *sd, int price, int points)
 
 	if( sd->cashPoints < cash || sd->kafraPoints < points )
 	{
-		ShowError("pc_paycash: Not enough points (cash=%d, kafra=%d) to cover the price (cash=%d, kafra=%d) (account_id=%d, char_id=%d).\n", sd->cashPoints, sd->kafraPoints, cash, points, sd->status.account_id, sd->status.char_id);
+		ShowError("%s: Not enough points (cash=%d, kafra=%d) to cover the price (cash=%d, kafra=%d) (account_id=%d, char_id=%d).\n",
+			__func__, sd->cashPoints, sd->kafraPoints, cash, points, sd->status.account_id, sd->status.char_id);
 		return -1;
 	}
 
@@ -3845,7 +3851,8 @@ int pc_getcash(struct map_session_data *sd, int cash, int points)
 	{
 		if( cash > MAX_ZENY-sd->cashPoints )
 		{
-			ShowWarning("pc_getcash: Cash point overflow (cash=%d, have cash=%d, account_id=%d, char_id=%d).\n", cash, sd->cashPoints, sd->status.account_id, sd->status.char_id);
+			ShowWarning("%s: Cash point overflow (cash=%d, have cash=%d, account_id=%d, char_id=%d).\n",
+				__func__, cash, sd->cashPoints, sd->status.account_id, sd->status.char_id);
 			cash = MAX_ZENY-sd->cashPoints;
 		}
 
@@ -3860,7 +3867,8 @@ int pc_getcash(struct map_session_data *sd, int cash, int points)
 	}
 	else if( cash < 0 )
 	{
-		ShowError("pc_getcash: Obtaining negative cash points (cash=%d, account_id=%d, char_id=%d).\n", cash, sd->status.account_id, sd->status.char_id);
+		ShowError("%s: Obtaining negative cash points (cash=%d, account_id=%d, char_id=%d).\n",
+			__func__, cash, sd->status.account_id, sd->status.char_id);
 		return -1;
 	}
 
@@ -3868,7 +3876,8 @@ int pc_getcash(struct map_session_data *sd, int cash, int points)
 	{
 		if( points > MAX_ZENY-sd->kafraPoints )
 		{
-			ShowWarning("pc_getcash: Kafra point overflow (points=%d, have points=%d, account_id=%d, char_id=%d).\n", points, sd->kafraPoints, sd->status.account_id, sd->status.char_id);
+			ShowWarning("%s: Kafra point overflow (points=%d, have points=%d, account_id=%d, char_id=%d).\n",
+				__func__, points, sd->kafraPoints, sd->status.account_id, sd->status.char_id);
 			points = MAX_ZENY-sd->kafraPoints;
 		}
 
@@ -3883,7 +3892,8 @@ int pc_getcash(struct map_session_data *sd, int cash, int points)
 	}
 	else if( points < 0 )
 	{
-		ShowError("pc_getcash: Obtaining negative kafra points (points=%d, account_id=%d, char_id=%d).\n", points, sd->status.account_id, sd->status.char_id);
+		ShowError("%s: Obtaining negative kafra points (points=%d, account_id=%d, char_id=%d).\n",
+			__func__, points, sd->status.account_id, sd->status.char_id);
 		return -1;
 	}
 	return -2; //shouldn't happen but jsut in case
@@ -3900,7 +3910,7 @@ int pc_getzeny(struct map_session_data *sd,int zeny, enum e_log_pick_type type, 
 	zeny = cap_value(zeny,-MAX_ZENY,MAX_ZENY); //prevent command UB
 	if( zeny < 0 )
 	{
-		ShowError("pc_getzeny: Obtaining negative Zeny (zeny=%d, account_id=%d, char_id=%d).\n", zeny, sd->status.account_id, sd->status.char_id);
+		ShowError("%s: Obtaining negative Zeny (zeny=%d, account_id=%d, char_id=%d).\n", __func__, zeny, sd->status.account_id, sd->status.char_id);
 		return 1;
 	}
 
@@ -3977,15 +3987,15 @@ int pc_additem(struct map_session_data *sd,struct item *item_data,int amount,e_l
 				break; /* no restrictions */
 			case IBT_PARTY:
 				if( !sd->status.party_id ) {
-					ShowError("pc_additem: can't add party_bound item to character without party!\n");
-					ShowError("pc_additem: %s - x%d %s (%d)\n",sd->status.name,amount,data->jname,data->nameid);
+					ShowError("%s: can't add party_bound item to character without party!\n", __func__);
+					ShowError("%s: %s - x%d %s (%d)\n", __func__, sd->status.name, amount, data->jname, data->nameid);
 					return 7;/* need proper code? */
 				}
 				break;
 			case IBT_GUILD:
 				if( !sd->status.guild_id ) {
-					ShowError("pc_additem: can't add guild_bound item to character without guild!\n");
-					ShowError("pc_additem: %s - x%d %s (%d)\n",sd->status.name,amount,data->jname,data->nameid);
+					ShowError("%s: can't add guild_bound item to character without guild!\n", __func__);
+					ShowError("%s: %s - x%d %s (%d)\n", __func__, sd->status.name, amount,data->jname, data->nameid);
 					return 7;/* need proper code? */
 				}
 				break;
@@ -4471,7 +4481,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 			if( !(nameid == ITEMID_REINS_OF_MOUNT && sd->sc.option&(OPTION_WUGRIDER|OPTION_RIDING|OPTION_DRAGON|OPTION_MADOGEAR)) )
 				sd->item_delay[i].tick = tick + sd->inventory_data[n]->delay;
 		} else {// should not happen
-			ShowError("pc_useitem: Exceeded item delay array capacity! (nameid=%d, char_id=%d)\n", nameid, sd->status.char_id);
+			ShowError("%s: Exceeded item delay array capacity! (nameid=%d, char_id=%d)\n", __func__, nameid, sd->status.char_id);
 		}
 		//clean up used delays so we can give room for more
 		for(i = 0; i < MAX_ITEMDELAYS; i++) {
@@ -4722,7 +4732,7 @@ void pc_bound_clear(struct map_session_data *sd, enum e_item_bound_type type) {
 			}
 			break;
 		case IBT_ACCOUNT:
-			ShowError("Helllo! You reached pc_bound_clear for IBT_ACCOUNT, unfortunately no scenario was expected for this!\n");
+			ShowError("Hello! You reached pc_bound_clear for IBT_ACCOUNT, unfortunately no scenario was expected for this!\n");
 			break;
 		case IBT_GUILD: {
 				struct guild_storage *gstor = gstorage->id2storage(sd->status.guild_id);
@@ -4890,7 +4900,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 	nullpo_ret(sd);
 
 	if( !map_index || !mapindex_id2name(map_index) || ( m = map->mapindex2mapid(map_index) ) == -1 ) {
-		ShowDebug("pc_setpos: Passed mapindex(%d) is invalid!\n", map_index);
+		ShowDebug("%s: Passed mapindex(%d) is invalid!\n", __func__, map_index);
 		return 1;
 	}
 
@@ -5046,7 +5056,8 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 	}
 
 	if( x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys ) {
-		ShowError("pc_setpos: attempt to place player %s (%d:%d) on invalid coordinates (%s-%d,%d)\n", sd->status.name, sd->status.account_id, sd->status.char_id, mapindex_id2name(map_index),x,y);
+		ShowError("%s: attempt to place player %s (%d:%d) on invalid coordinates (%s-%d,%d)\n",
+			__func__, sd->status.name, sd->status.account_id, sd->status.char_id, mapindex_id2name(map_index),x,y);
 		x = y = 0; // make it random
 	}
 
@@ -5201,7 +5212,7 @@ int pc_checkskill(struct map_session_data *sd,uint16 skill_id) {
 			return guild->checkskill(g,skill_id);
 		return 0;
 	} else if(!(index = skill->get_index(skill_id)) || index >= ARRAYLENGTH(sd->status.skill) ) {
-		ShowError("pc_checkskill: Invalid skill id %d (char_id=%d).\n", skill_id, sd->status.char_id);
+		ShowError("%s: Invalid skill id %d (char_id=%d).\n", __func__, skill_id, sd->status.char_id);
 		return 0;
 	}
 
@@ -5824,7 +5835,7 @@ int pc_follow_timer(int tid, int64 tick, int id, intptr_t data) {
 	nullpo_ret(sd);
 
 	if (sd->followtimer != tid) {
-		ShowError("pc_follow_timer %d != %d\n",sd->followtimer,tid);
+		ShowError("%s: %d != %d\n", __func__, sd->followtimer,tid);
 		sd->followtimer = INVALID_TIMER;
 		return 0;
 	}
@@ -6570,8 +6581,8 @@ int pc_resetstate(struct map_session_data* sd)
 	{	// New statpoint table used here - Dexity
 		if (sd->status.base_level > MAX_LEVEL)
 		{	//pc->statp[] goes out of bounds, can't reset!
-			ShowError("pc_resetstate: Can't reset stats of %d:%d, the base level (%d) is greater than the max level supported (%d)\n",
-				sd->status.account_id, sd->status.char_id, sd->status.base_level, MAX_LEVEL);
+			ShowError("%s: Can't reset stats of %d:%d, the base level (%d) is greater than the max level supported (%d)\n",
+				__func__, sd->status.account_id, sd->status.char_id, sd->status.base_level, MAX_LEVEL);
 			return 0;
 		}
 
@@ -7568,7 +7579,7 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 		sd->status.mod_death = val;
 		return 1;
 	default:
-		ShowError("pc_setparam: Attempted to set unknown parameter '%d'.\n", type);
+		ShowError("%s: Attempted to set unknown parameter '%d'.\n", __func__, type);
 		return 0;
 	}
 	clif->updatestatus(sd,type);
@@ -8316,7 +8327,7 @@ int pc_readregistry(struct map_session_data *sd, int64 reg) {
 	struct script_reg_num *p = NULL;
 	
 	if (!sd->vars_ok) {
-		ShowError("pc_readregistry: Trying to read reg %s before it's been loaded!\n", script->get_str(script_getvarid(reg)));
+		ShowError("%s: Trying to read reg %s before it's been loaded!\n", __func__, script->get_str(script_getvarid(reg)));
 		//This really shouldn't happen, so it's possible the data was lost somewhere, we should request it again.
 		//intif->request_registry(sd,type==3?4:type);
 		set_eof(sd->fd);
@@ -8337,7 +8348,7 @@ char* pc_readregistry_str(struct map_session_data *sd, int64 reg) {
 	struct script_reg_str *p = NULL;
 	
 	if (!sd->vars_ok) {
-		ShowError("pc_readregistry_str: Trying to read reg %s before it's been loaded!\n", script->get_str(script_getvarid(reg)));
+		ShowError("%s: Trying to read reg %s before it's been loaded!\n", __func__, script->get_str(script_getvarid(reg)));
 		//This really shouldn't happen, so it's possible the data was lost somewhere, we should request it again.
 		//intif->request_registry(sd,type==3?4:type);
 		set_eof(sd->fd);
@@ -8385,7 +8396,7 @@ int pc_setregistry(struct map_session_data *sd, int64 reg, int val) {
 	}
 	
 	if ( !pc->reg_load && !sd->vars_ok ) {
-		ShowError("pc_setregistry : refusing to set %s until vars are received.\n", regname);
+		ShowError("%s : refusing to set %s until vars are received.\n", __func__, regname);
 		return 0;
 	}
 	
@@ -8436,7 +8447,7 @@ int pc_setregistry_str(struct map_session_data *sd, int64 reg, const char *val) 
 	unsigned int index = script_getvaridx(reg);
 
 	if ( !pc->reg_load && !sd->vars_ok ) {
-		ShowError("pc_setregistry_str : refusing to set %s until vars are received.\n", regname);
+		ShowError("%s : refusing to set %s until vars are received.\n", __func__, regname);
 		return 0;
 	}
 
@@ -8499,7 +8510,7 @@ int pc_eventtimer(int tid, int64 tick, int id, intptr_t data) {
 		npc->event(sd,p,0);
 	}
 	else
-		ShowError("pc_eventtimer: no such event timer\n");
+		ShowError("%s: no such event timer\n", __func__);
 
 	if (p) aFree(p);
 	return 0;
@@ -9622,7 +9633,7 @@ int pc_charm_timer(int tid, int64 tick, int id, intptr_t data) {
 
 	if( sd->charm[type] <= 0 )
 	{
-		ShowError("pc_charm_timer: %d charm's available. (aid=%d cid=%d tid=%d)\n", sd->charm[type], sd->status.account_id, sd->status.char_id, tid);
+		ShowError("%s: %d charm's available. (aid=%d cid=%d tid=%d)\n", __func__, sd->charm[type], sd->status.account_id, sd->status.char_id, tid);
 		sd->charm[type] = 0;
 		return 0;
 	}
@@ -9630,7 +9641,7 @@ int pc_charm_timer(int tid, int64 tick, int id, intptr_t data) {
 	ARR_FIND(0, sd->charm[type], i, sd->charm_timer[type][i] == tid);
 	if( i == sd->charm[type] )
 	{
-		ShowError("pc_charm_timer: timer not found (aid=%d cid=%d tid=%d)\n", sd->status.account_id, sd->status.char_id, tid);
+		ShowError("%s: timer not found (aid=%d cid=%d tid=%d)\n", __func__, sd->status.account_id, sd->status.char_id, tid);
 		return 0;
 	}
 
@@ -9943,7 +9954,7 @@ void pc_read_skill_tree(void) {
 		ARR_FIND(0, jnamelen, k, strcmpi(jnames[k].name,name) == 0 );
 		
 		if( k == jnamelen ) {
-			ShowWarning("pc_read_skill_tree: '%s' unknown job name!\n",name);
+			ShowWarning("%s: '%s' unknown job name!\n", __func__, name);
 			continue;
 		}
 		
@@ -9962,10 +9973,11 @@ void pc_read_skill_tree(void) {
 					
 					ARR_FIND( 0, MAX_SKILL_TREE, skidx, pc->skill_tree[idx][skidx].id == 0 || pc->skill_tree[idx][skidx].id == skill_id );
 					if( skidx == MAX_SKILL_TREE ) {
-						ShowWarning("pc_read_skill_tree: Unable to load skill %hu (%s) into '%s's tree. Maximum number of skills per class has been reached.\n", skill_id, sk_name, name);
+						ShowWarning("%s: Unable to load skill %hu (%s) into '%s's tree. Maximum number of skills per class has been reached.\n",
+							__func__, skill_id, sk_name, name);
 						continue;
 					} else if(pc->skill_tree[idx][skidx].id) {
-						ShowNotice("pc_read_skill_tree: Overwriting %hu for '%s' (%d)\n", skill_id, name, jnames[k].id);
+						ShowNotice("%s: Overwriting %hu for '%s' (%d)\n", __func__, skill_id, name, jnames[k].id);
 					}
 					
 					pc->skill_tree[idx][skidx].id    = skill_id;
@@ -9991,14 +10003,14 @@ void pc_read_skill_tree(void) {
 							pc->skill_tree[idx][skidx].need[h].idx = skill->get_index(rskid);
 							pc->skill_tree[idx][skidx].need[h].lv  = (unsigned char)libconfig->setting_get_int(rsk);
 						} else if( rsk ) {
-							ShowWarning("pc_read_skill_tree: unknown requirement '%s' for '%s' in '%s'\n",config_setting_name(rsk),sk_name,name);
+							ShowWarning("%s: unknown requirement '%s' for '%s' in '%s'\n", __func__, config_setting_name(rsk), sk_name,name);
 						} else {
-							ShowWarning("pc_read_skill_tree: error for '%s' in '%s'\n",sk_name,name);
+							ShowWarning("%s: error for '%s' in '%s'\n", __func__, sk_name,name);
 						}
 					}
 					
 				} else {
-					ShowWarning("pc_read_skill_tree: unknown skill '%s' in '%s'\n",sk_name,name);
+					ShowWarning("%s: unknown skill '%s' in '%s'\n", __func__, sk_name,name);
 				}
 			}
 		}
@@ -10014,7 +10026,7 @@ void pc_read_skill_tree(void) {
 		ARR_FIND(0, jnamelen, k, strcmpi(jnames[k].name,name) == 0 );
 		
 		if( k == jnamelen ) {
-			ShowWarning("pc_read_skill_tree: '%s' unknown job name!\n",name);
+			ShowWarning("%s: '%s' unknown job name!\n", __func__, name);
 			continue;
 		}
 		idx = pc->class2idx(jnames[k].id);
@@ -10026,7 +10038,7 @@ void pc_read_skill_tree(void) {
 				ARR_FIND(0, jnamelen, b, strcmpi(jnames[b].name,iname) == 0 );
 				
 				if( b == jnamelen ) {
-					ShowWarning("pc_read_skill_tree: '%s' trying to inherit unknown '%s'!\n",name,iname);
+					ShowWarning("%s: '%s' trying to inherit unknown '%s'!\n", __func__, name, iname);
 					continue;
 				}
 				
@@ -10039,7 +10051,7 @@ void pc_read_skill_tree(void) {
 					ARR_FIND( 0, MAX_SKILL_TREE, a, pc->skill_tree[idx][a].id == 0 || pc->skill_tree[idx][a].id == pc->skill_tree[fidx][f].id );
 
 					if( a == MAX_SKILL_TREE ) {
-						ShowWarning("pc_read_skill_tree: '%s' can't inherit '%s', skill tree is full!\n", name,iname);
+						ShowWarning("%s: '%s' can't inherit '%s', skill tree is full!\n", __func__, name,iname);
 						break;
 					} else if ( pc->skill_tree[idx][a].id || ( pc->skill_tree[idx][a].id == NV_TRICKDEAD && ((pc->jobid2mapid(jnames[k].id)&(MAPID_BASEMASK|JOBL_2))!=MAPID_NOVICE) ) ) /* we skip trickdead for non-novices */
 						continue;/* skip */
@@ -10069,12 +10081,12 @@ bool pc_readdb_levelpenalty(char* fields[], int columns, int current) {
 	diff = atoi(fields[2]);
 
 	if( type != 1 && type != 2 ){
-		ShowWarning("pc_readdb_levelpenalty: Invalid type %d specified.\n", type);
+		ShowWarning("%s: Invalid type %d specified.\n", __func__, type);
 		return false;
 	}
 
 	if( race < 0 || race > RC_MAX ){
-		ShowWarning("pc_readdb_levelpenalty: Invalid race %d specified.\n", race);
+		ShowWarning("%s: Invalid race %d specified.\n", __func__, race);
 		return false;
 	}
 
@@ -10126,17 +10138,17 @@ int pc_readdb(void) {
 			continue;
 		job_id = jobs[0];
 		if (!pcdb_checkid(job_id)) {
-			ShowError("pc_readdb: Invalid job ID %d.\n", job_id);
+			ShowError("%s: Invalid job ID %d.\n", __func__, job_id);
 			continue;
 		}
 		type = atoi(split[2]);
 		if (type < 0 || type > 1) {
-			ShowError("pc_readdb: Invalid type %d (must be 0 for base levels, 1 for job levels).\n", type);
+			ShowError("%s: Invalid type %d (must be 0 for base levels, 1 for job levels).\n", __func__, type);
 			continue;
 		}
 		maxlv = atoi(split[0]);
 		if (maxlv > MAX_LEVEL) {
-			ShowWarning("pc_readdb: Specified max level %u for job %d is beyond server's limit (%u).\n ", maxlv, job_id, MAX_LEVEL);
+			ShowWarning("%s: Specified max level %u for job %d is beyond server's limit (%u).\n ", __func__, maxlv, job_id, MAX_LEVEL);
 			maxlv = MAX_LEVEL;
 		}
 		count++;
@@ -10150,7 +10162,7 @@ int pc_readdb(void) {
 		while ((ui = pc->max_level[job][type]) >= 2 && pc->exp_table[job][type][ui-2] <= 0)
 			pc->max_level[job][type]--;
 		if (pc->max_level[job][type] < maxlv) {
-			ShowWarning("pc_readdb: Specified max %u for job %d, but that job's exp table only goes up to level %u.\n", maxlv, job_id, pc->max_level[job][type]);
+			ShowWarning("%s: Specified max %u for job %d, but that job's exp table only goes up to level %u.\n", __func__, maxlv, job_id, pc->max_level[job][type]);
 			ShowInfo("Filling the missing values with the last exp entry.\n");
 			//Fill the requested values with the last entry.
 			ui = (pc->max_level[job][type] <= 2? 0: pc->max_level[job][type]-2);
@@ -10162,7 +10174,7 @@ int pc_readdb(void) {
 		for (i = 1; i < job_count; i++) {
 			job_id = jobs[i];
 			if (!pcdb_checkid(job_id)) {
-				ShowError("pc_readdb: Invalid job ID %d.\n", job_id);
+				ShowError("%s: Invalid job ID %d.\n", __func__, job_id);
 				continue;
 			}
 			job = pc->class2idx(job_id);

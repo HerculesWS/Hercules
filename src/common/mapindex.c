@@ -121,7 +121,7 @@ unsigned short mapindex_name2id(const char* name) {
 	if( (i = strdb_iget(mapindex->db, map_name)) )
 		return i;
 	
-	ShowDebug("mapindex_name2id: Map \"%s\" not found in index list!\n", map_name);
+	ShowDebug("%s: Map \"%s\" not found in index list!\n", __func__, map_name);
 	return 0;
 }
 
@@ -166,7 +166,7 @@ int mapindex_init(void) {
 	fclose(fp);
 
 	if( !strdb_iget(mapindex->db, MAP_DEFAULT) ) {
-		ShowError("mapindex_init: MAP_DEFAULT '%s' not found in cache! update mapindex.h MAP_DEFAULT var!!!\n",MAP_DEFAULT);
+		ShowError("%s: MAP_DEFAULT '%s' not found in cache! update mapindex.h MAP_DEFAULT var!!!\n", __func__, MAP_DEFAULT);
 	}
 	
 	return total;

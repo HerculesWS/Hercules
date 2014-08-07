@@ -93,7 +93,7 @@ void searchstore_query(struct map_session_data* sd, unsigned char type, unsigned
 	}
 
 	if( ( store_searchall = searchstore_getsearchallfunc(type) ) == NULL ) {
-		ShowError("searchstore_query: Unknown search type %u (account_id=%d).\n", (unsigned int)type, sd->bl.id);
+		ShowError("%s: Unknown search type %u (account_id=%d).\n", __func__, (unsigned int)type, sd->bl.id);
 		return;
 	}
 
@@ -112,14 +112,14 @@ void searchstore_query(struct map_session_data* sd, unsigned char type, unsigned
 	// validate lists
 	for( i = 0; i < item_count; i++ ) {
 		if( !itemdb->exists(itemlist[i]) ) {
-			ShowWarning("searchstore_query: Client resolved item %hu is not known.\n", itemlist[i]);
+			ShowWarning("%s: Client resolved item %hu is not known.\n", __func__, itemlist[i]);
 			clif->search_store_info_failed(sd, SSI_FAILED_NOTHING_SEARCH_ITEM);
 			return;
 		}
 	}
 	for( i = 0; i < card_count; i++ ) {
 		if( !itemdb->exists(cardlist[i]) ) {
-			ShowWarning("searchstore_query: Client resolved card %hu is not known.\n", cardlist[i]);
+			ShowWarning("%s: Client resolved card %hu is not known.\n", __func__, cardlist[i]);
 			clif->search_store_info_failed(sd, SSI_FAILED_NOTHING_SEARCH_ITEM);
 			return;
 		}
@@ -244,7 +244,8 @@ void searchstore_click(struct map_session_data* sd, int account_id, int store_id
 
 	ARR_FIND( 0, sd->searchstore.count, i,  sd->searchstore.items[i].store_id == store_id && sd->searchstore.items[i].account_id == account_id && sd->searchstore.items[i].nameid == nameid );
 	if( i == sd->searchstore.count ) {// no such result, crafted
-		ShowWarning("searchstore_click: Received request with item %hu of account %d, which is not part of current result set (account_id=%d, char_id=%d).\n", nameid, account_id, sd->bl.id, sd->status.char_id);
+		ShowWarning("%s: Received request with item %hu of account %d, which is not part of current result set (account_id=%d, char_id=%d).\n",
+			__func__, nameid, account_id, sd->bl.id, sd->status.char_id);
 		clif->search_store_info_failed(sd, SSI_FAILED_SSILIST_CLICK_TO_OPEN_STORE);
 		return;
 	}
@@ -292,7 +293,7 @@ void searchstore_click(struct map_session_data* sd, int account_id, int store_id
 			break;
 		default:
 			// unknown
-			ShowError("searchstore_click: Unknown search store effect %u (account_id=%d).\n", (unsigned int)sd->searchstore.effect, sd->bl.id);
+			ShowError("%s: Unknown search store effect %u (account_id=%d).\n", __func__, (unsigned int)sd->searchstore.effect, sd->bl.id);
 	}
 }
 

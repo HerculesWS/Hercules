@@ -268,7 +268,7 @@ int inter_party_sql_init(void)
 	party_db_ = idb_alloc(DB_OPT_RELEASE_DATA);
 	party_pt = (struct party_data*)aCalloc(sizeof(struct party_data), 1);
 	if (!party_pt) {
-		ShowFatalError("inter_party_sql_init: Out of Memory!\n");
+		ShowFatalError("%s: Out of Memory!\n", __func__);
 		exit(EXIT_FAILURE);
 	}
 

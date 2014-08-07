@@ -775,17 +775,17 @@ int unit_warp(struct block_list *bl,short m,short x,short y,clr_type type)
 	if (x<0 || y<0) {
 		//Random map position.
 		if (!map->search_freecell(NULL, m, &x, &y, -1, -1, 1)) {
-			ShowWarning("unit_warp failed. Unit Id:%d/Type:%d, target position map %d (%s) at [%d,%d]\n", bl->id, bl->type, m, map->list[m].name, x, y);
+			ShowWarning("%s failed. Unit Id:%d/Type:%d, target position map %d (%s) at [%d,%d]\n", __func__, bl->id, bl->type, m, map->list[m].name, x, y);
 			return 2;
 
 		}
 	} else if (map->getcell(m,x,y,CELL_CHKNOREACH)) {
 		//Invalid target cell
-		ShowWarning("unit_warp: Specified non-walkable target cell: %d (%s) at [%d,%d]\n", m, map->list[m].name, x,y);
+		ShowWarning("%s: Specified non-walkable target cell: %d (%s) at [%d,%d]\n", __func__, m, map->list[m].name, x,y);
 
 		if (!map->search_freecell(NULL, m, &x, &y, 4, 4, 1)) {
 			//Can't find a nearby cell
-			ShowWarning("unit_warp failed. Unit Id:%d/Type:%d, target position map %d (%s) at [%d,%d]\n", bl->id, bl->type, m, map->list[m].name, x, y);
+			ShowWarning("%s failed. Unit Id:%d/Type:%d, target position map %d (%s) at [%d,%d]\n", __func__, bl->id, bl->type, m, map->list[m].name, x, y);
 			return 2;
 		}
 	}
@@ -2049,7 +2049,7 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 	if (ud->skilltimer != INVALID_TIMER)
 		unit->skillcastcancel(bl,0);
 
-// Do not reset can-act delay. [Skotlex]
+	// Do not reset can-act delay. [Skotlex]
 	ud->attackabletime = ud->canmove_tick /*= ud->canact_tick*/ = timer->gettick();
 	if(sc && sc->count ) { //map-change/warp dispells.
 		status_change_end(bl, SC_BLADESTOP, INVALID_TIMER);
@@ -2161,12 +2161,12 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 					sd->debug_line = 0;
 					sd->debug_func = "";
 				}
-				ShowDebug("unit_remove_map: unexpected state when removing player AID/CID:%d/%d"
+				ShowDebug("%s: unexpected state when removing player AID/CID:%d/%d"
 					" (active=%d connect_new=%d rewarp=%d changemap=%d debug_remove_map=%d)"
 					" from map=%s (users=%d)."
 					" Previous call from %s:%d(%s), current call from %s:%d(%s)."
 					" Please report this!!!\n",
-					sd->status.account_id, sd->status.char_id,
+					__func__, sd->status.account_id, sd->status.char_id,
 					sd->state.active, sd->state.connect_new, sd->state.rewarp, sd->state.changemap, sd->state.debug_remove_map,
 					map->list[bl->m].name, map->list[bl->m].users,
 					sd->debug_file, sd->debug_line, sd->debug_func, file, line, func);

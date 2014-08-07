@@ -460,7 +460,7 @@ int party_member_added(int party_id,int account_id,int char_id, int flag) {
 	sd->party_invite_account = 0;
 
 	if (!p) {
-		ShowError("party_member_added: party %d not found.\n",party_id);
+		ShowError("%s: party %d not found.\n", __func__, party_id);
 		intif->party_leave(party_id,account_id,char_id);
 		return 0;
 	}
@@ -716,7 +716,7 @@ int party_recv_movemap(int party_id,int account_id,int char_id, unsigned short m
 	ARR_FIND( 0, MAX_PARTY, i, p->party.member[i].account_id == account_id && p->party.member[i].char_id == char_id );
 	if( i == MAX_PARTY )
 	{
-		ShowError("party_recv_movemap: char %d/%d not found in party %s (id:%d)",account_id,char_id,p->party.name,party_id);
+		ShowError("%s: char %d/%d not found in party %s (id:%d)", __func__, account_id, char_id, p->party.name, party_id);
 		return 0;
 	}
 
@@ -785,7 +785,7 @@ int party_send_logout(struct map_session_data *sd)
 	if( i < MAX_PARTY )
 		memset(&p->data[i], 0, sizeof(p->data[0]));
 	else
-		ShowError("party_send_logout: Failed to locate member %d:%d in party %d!\n", sd->status.account_id, sd->status.char_id, p->party.party_id);
+		ShowError("%s: Failed to locate member %d:%d in party %d!\n", __func__, sd->status.account_id, sd->status.char_id, p->party.party_id);
 
 	return 1;
 }
