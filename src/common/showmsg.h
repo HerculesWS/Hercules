@@ -7,6 +7,8 @@
 
 #include <stdarg.h>
 
+#include "../common/cbasetypes.h"
+
 #ifdef HERCULES_CORE
 #	include "../../3rdparty/libconfig/libconfig.h"
 #else

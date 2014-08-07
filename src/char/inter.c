@@ -23,6 +23,7 @@
 #include "int_pet.h"
 #include "int_quest.h"
 #include "int_storage.h"
+#include "../common/cbasetypes.h"
 #include "../common/db.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h"
