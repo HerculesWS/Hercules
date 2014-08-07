@@ -98,7 +98,7 @@ struct sql_interface {
 	/// The query is constructed as if it was sprintf.
 	///
 	/// @return SQL_SUCCESS or SQL_ERROR
-	int (*Query) (Sql* self, const char* query, ...);
+	int (*Query) (Sql *self, const char *query, ...) __attribute__((format(printf, 2, 3)));
 	/// Executes a query.
 	/// Any previous result is freed.
 	/// The query is constructed as if it was svprintf.
@@ -176,7 +176,7 @@ struct sql_interface {
 	/// The query is constructed as if it was sprintf.
 	///
 	/// @return SQL_SUCCESS or SQL_ERROR
-	int (*StmtPrepare)(SqlStmt* self, const char* query, ...);
+	int (*StmtPrepare) (SqlStmt *self, const char *query, ...) __attribute__((format(printf, 2, 3)));
 
 	/// Prepares the statement.
 	/// Any previous result is freed and all parameter bindings are removed.

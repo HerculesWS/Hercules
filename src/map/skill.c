@@ -17367,8 +17367,8 @@ int skill_blockpc_end(int tid, int64 tick, int id, intptr_t data) {
 				break;
 		}
 		
-		if( i == cd->cursor ) {
-			ShowError("skill_blockpc_end: '%s' : no data found for '%d'\n",sd->status.name,data);
+		if (i == cd->cursor) {
+			ShowError("skill_blockpc_end: '%s': no data found for '%"PRIdPTR"'\n", sd->status.name, data);
 		} else {
 			int cursor = 0;
 			

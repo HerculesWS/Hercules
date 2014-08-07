@@ -498,8 +498,8 @@ int	VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 	return 0;
 }
 
-int	FPRINTF(HANDLE handle, const char *fmt, ...)
-{
+int FPRINTF(HANDLE handle, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
+int FPRINTF(HANDLE handle, const char *fmt, ...) {
 	int ret;
 	va_list argptr;
 	va_start(argptr, fmt);
@@ -634,8 +634,8 @@ int	VFPRINTF(FILE *file, const char *fmt, va_list argptr)
 	FREEBUF(tempbuf);
 	return 0;
 }
-int	FPRINTF(FILE *file, const char *fmt, ...)
-{
+int FPRINTF(FILE *file, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
+int FPRINTF(FILE *file, const char *fmt, ...) {
 	int ret;
 	va_list argptr;
 	va_start(argptr, fmt);
@@ -782,8 +782,8 @@ void ClearScreen(void)
 	ShowMessage(CL_CLS);	// to prevent empty string passed messages
 #endif
 }
-int ShowMessage_(enum msg_type flag, const char *string, ...)
-{
+int ShowMessage_(enum msg_type flag, const char *string, ...) __attribute__((format(printf, 2, 3)));
+int ShowMessage_(enum msg_type flag, const char *string, ...) {
 	int ret;
 	va_list ap;
 	va_start(ap, string);
@@ -793,44 +793,50 @@ int ShowMessage_(enum msg_type flag, const char *string, ...)
 }
 
 // direct printf replacement
+void ShowMessage(const char *string, ...) __attribute__((format(printf, 1, 2)));
 void ShowMessage(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_NONE, string, ap);
 	va_end(ap);
 }
+void ShowStatus(const char *string, ...) __attribute__((format(printf, 1, 2)));
 void ShowStatus(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_STATUS, string, ap);
 	va_end(ap);
 }
+void ShowSQL(const char *string, ...) __attribute__((format(printf, 1, 2)));
 void ShowSQL(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_SQL, string, ap);
 	va_end(ap);
 }
+void ShowInfo(const char *string, ...) __attribute__((format(printf, 1, 2)));
 void ShowInfo(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_INFORMATION, string, ap);
 	va_end(ap);
 }
+void ShowNotice(const char *string, ...) __attribute__((format(printf, 1, 2)));
 void ShowNotice(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_NOTICE, string, ap);
 	va_end(ap);
 }
+void ShowWarning(const char *string, ...) __attribute__((format(printf, 1, 2)));
 void ShowWarning(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_WARNING, string, ap);
 	va_end(ap);
 }
-void ShowConfigWarning(config_setting_t *config, const char *string, ...)
-{
+void ShowConfigWarning(config_setting_t *config, const char *string, ...) __attribute__((format(printf, 2, 3)));
+void ShowConfigWarning(config_setting_t *config, const char *string, ...) {
 	StringBuf buf;
 	va_list ap;
 	StrBuf->Init(&buf);
@@ -841,18 +847,21 @@ void ShowConfigWarning(config_setting_t *config, const char *string, ...)
 	va_end(ap);
 	StrBuf->Destroy(&buf);
 }
+void ShowDebug(const char *string, ...) __attribute__((format(printf, 1, 2)));
 void ShowDebug(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_DEBUG, string, ap);
 	va_end(ap);
 }
+void ShowError(const char *string, ...) __attribute__((format(printf, 1, 2)));
 void ShowError(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_ERROR, string, ap);
 	va_end(ap);
 }
+void ShowFatalError(const char *string, ...) __attribute__((format(printf, 1, 2)));
 void ShowFatalError(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);

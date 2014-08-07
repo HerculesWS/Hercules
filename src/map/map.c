@@ -3253,13 +3253,13 @@ int map_waterheight(char* mapname)
 
 	// read & convert fn
 	rsw = (char *) grfio_read (fn);
-	if (rsw)
-	{	//Load water height from file
+	if (rsw) {
+		//Load water height from file
 		int wh = (int) *(float*)(rsw+166);
 		aFree(rsw);
 		return wh;
 	}
-	ShowWarning("Failed to find water level for (%s)\n", mapname, fn);
+	ShowWarning("Failed to find water level for %s (%s)\n", mapname, fn);
 	return NO_WATER;
 }
 
@@ -3427,14 +3427,14 @@ int map_config_read(char *cfgName) {
 		return 1;
 	}
 
-	while( fgets(line, sizeof(line), fp) ) {
+	while (fgets(line, sizeof(line), fp)) {
 		char* ptr;
 
-		if( line[0] == '/' && line[1] == '/' )
+		if (line[0] == '/' && line[1] == '/')
 			continue;
-		if( (ptr = strstr(line, "//")) != NULL )
+		if ((ptr = strstr(line, "//")) != NULL)
 			*ptr = '\n'; //Strip comments
-		if( sscanf(line, "%[^:]: %[^\t\r\n]", w1, w2) < 2 )
+		if (sscanf(line, "%1023[^:]: %1023[^\t\r\n]", w1, w2) < 2)
 			continue;
 
 		//Strip trailing spaces
@@ -3514,19 +3514,19 @@ int map_config_read_sub(char *cfgName) {
 	FILE *fp;
 
 	fp = fopen(cfgName,"r");
-	if( fp == NULL ) {
+	if (fp == NULL) {
 		ShowError("Map configuration file not found at: %s\n", cfgName);
 		return 1;
 	}
 
-	while( fgets(line, sizeof(line), fp) ) {
+	while (fgets(line, sizeof(line), fp)) {
 		char* ptr;
 
-		if( line[0] == '/' && line[1] == '/' )
+		if (line[0] == '/' && line[1] == '/')
 			continue;
-		if( (ptr = strstr(line, "//")) != NULL )
+		if ((ptr = strstr(line, "//")) != NULL)
 			*ptr = '\n'; //Strip comments
-		if( sscanf(line, "%[^:]: %[^\t\r\n]", w1, w2) < 2 )
+		if (sscanf(line, "%1023[^:]: %1023[^\t\r\n]", w1, w2) < 2)
 			continue;
 
 		//Strip trailing spaces
@@ -3546,27 +3546,24 @@ int map_config_read_sub(char *cfgName) {
 	fclose(fp);
 	return 0;
 }
-void map_reloadnpc_sub(char *cfgName)
-{
+void map_reloadnpc_sub(char *cfgName) {
 	char line[1024], w1[1024], w2[1024];
 	FILE *fp;
 
 	fp = fopen(cfgName,"r");
-	if( fp == NULL )
-	{
+	if (fp == NULL) {
 		ShowError("Map configuration file not found at: %s\n", cfgName);
 		return;
 	}
 
-	while( fgets(line, sizeof(line), fp) )
-	{
+	while (fgets(line, sizeof(line), fp)) {
 		char* ptr;
 
-		if( line[0] == '/' && line[1] == '/' )
+		if (line[0] == '/' && line[1] == '/')
 			continue;
-		if( (ptr = strstr(line, "//")) != NULL )
+		if ((ptr = strstr(line, "//")) != NULL)
 			*ptr = '\n'; //Strip comments
-		if( sscanf(line, "%[^:]: %[^\t\r\n]", w1, w2) < 2 )
+		if (sscanf(line, "%1023[^:]: %1023[^\t\r\n]", w1, w2) < 2)
 			continue;
 
 		//Strip trailing spaces
@@ -3609,15 +3606,15 @@ int inter_config_read(char *cfgName) {
 	char line[1024],w1[1024],w2[1024];
 	FILE *fp;
 
-	if( !( fp = fopen(cfgName,"r") ) ){
+	if (!(fp = fopen(cfgName,"r"))) {
 		ShowError("File not found: %s\n",cfgName);
 		return 1;
 	}
-	while(fgets(line, sizeof(line), fp)) {
-		if(line[0] == '/' && line[1] == '/')
+	while (fgets(line, sizeof(line), fp)) {
+		if (line[0] == '/' && line[1] == '/')
 			continue;
 		
-		if( sscanf(line,"%[^:]: %[^\r\n]",w1,w2) < 2 )
+		if (sscanf(line,"%1023[^:]: %1023[^\r\n]", w1, w2) < 2)
 			continue;
 		/* table names */
 		if(strcmpi(w1,"item_db_db")==0)
@@ -4040,7 +4037,7 @@ bool map_zone_mf_cache(int m, char *flag, char *params) {
 #if 0 /* not yet fully supported */
 		char drop_arg1[16], drop_arg2[16];
 		int drop_per = 0;
-		if (sscanf(w4, "%[^,],%[^,],%d", drop_arg1, drop_arg2, &drop_per) == 3) {
+		if (sscanf(w4, "%15[^,],%15[^,],%d", drop_arg1, drop_arg2, &drop_per) == 3) {
 			int drop_id = 0, drop_type = 0;
 			if (!strcmpi(drop_arg1, "random"))
 				drop_id = -1;

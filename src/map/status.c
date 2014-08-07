@@ -10453,21 +10453,19 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct status_change_entry *sce;
 
 	bl = map->id2bl(id);
-	if(!bl) {
-		ShowDebug("status_change_timer: Null pointer id: %d data: %d\n", id, data);
+	if (!bl) {
+		ShowDebug("status_change_timer: Null pointer id: %d data: %"PRIdPTR"\n", id, data);
 		return 0;
 	}
 	sc = status->get_sc(bl);
 	st = status->get_status_data(bl);
 
-	if(!(sc && (sce = sc->data[type])))
-	{
-		ShowDebug("status_change_timer: Null pointer id: %d data: %d bl-type: %d\n", id, data, bl->type);
+	if (!(sc && (sce = sc->data[type]))) {
+		ShowDebug("status_change_timer: Null pointer id: %d data: %"PRIdPTR" bl-type: %d\n", id, data, bl->type);
 		return 0;
 	}
 
-	if( sce->timer != tid )
-	{
+	if (sce->timer != tid) {
 		ShowError("status_change_timer: Mismatch for type %d: %d != %d (bl id %d)\n",type,tid,sce->timer, bl->id);
 		return 0;
 	}
@@ -10476,10 +10474,10 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 
 	// set the next timer of the sce (don't assume the status still exists)
 #define sc_timer_next(t,f,i,d) do { \
-	if( (sce=sc->data[type]) ) \
+	if ((sce=sc->data[type])) \
 		sce->timer = timer->add((t),(f),(i),(d)); \
 	else \
-		ShowError("status_change_timer: Unexpected NULL status change id: %d data: %d\n", id, data); \
+		ShowError("status_change_timer: Unexpected NULL status change id: %d data: %"PRIdPTR"\n", id, data); \
 } while(0)
 
 	switch(type) {

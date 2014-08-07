@@ -82,7 +82,7 @@ struct strlib_interface {
 	/// Works like snprintf, but always null-terminates the buffer.
 	/// Returns the size of the string (without null-terminator)
 	/// or -1 if the buffer is too small.
-	int (*safesnprintf) (char* buf, size_t sz, const char* fmt, ...);
+	int (*safesnprintf) (char *buf, size_t sz, const char *fmt, ...) __attribute__((format(printf, 3, 4)));
 	
 	/// Returns the line of the target position in the string.
 	/// Lines start at 1.
@@ -99,7 +99,7 @@ struct strlib_interface *strlib;
 struct stringbuf_interface {
 	StringBuf* (*Malloc) (void);
 	void (*Init) (StringBuf* self);
-	int (*Printf) (StringBuf* self, const char* fmt, ...);
+	int (*Printf) (StringBuf *self, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
 	int (*Vprintf) (StringBuf* self, const char* fmt, va_list args);
 	int (*Append) (StringBuf* self, const StringBuf *sbuf);
 	int (*AppendStr) (StringBuf* self, const char* str);

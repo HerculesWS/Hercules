@@ -208,7 +208,7 @@ void script_reportdata(struct script_data* data)
 			ShowDebug("Data: nothing (nil)\n");
 			break;
 		case C_INT:// number
-			ShowDebug("Data: number value=%d\n", data->u.num);
+			ShowDebug("Data: number value=%"PRId64"\n", data->u.num);
 			break;
 		case C_STR:
 		case C_CONSTSTR:// string
@@ -232,7 +232,7 @@ void script_reportdata(struct script_data* data)
 			}
 			break;
 		case C_POS:// label
-			ShowDebug("Data: label pos=%d\n", data->u.num);
+			ShowDebug("Data: label pos=%"PRId64"\n", data->u.num);
 			break;
 		default:
 			ShowDebug("Data: %s\n", script->op2name(data->type));
@@ -2121,13 +2121,13 @@ void read_constdb(void) {
 		ShowError("can't read %s\n", line);
 		return ;
 	}
-	while(fgets(line, sizeof(line), fp))
-	{
-		if(line[0]=='/' && line[1]=='/')
+	while (fgets(line, sizeof(line), fp)) {
+		if (line[0] == '/' && line[1] == '/')
 			continue;
-		type=0;
-		if(sscanf(line,"%[A-Za-z0-9_],%[-0-9xXA-Fa-f],%d",name,val,&type)>=2 ||
-		   sscanf(line,"%[A-Za-z0-9_] %[-0-9xXA-Fa-f] %d",name,val,&type)>=2) {
+		type = 0;
+		if (sscanf(line, "%1023[A-Za-z0-9_],%1023[-0-9xXA-Fa-f],%d", name, val, &type) >=2
+		 || sscanf(line, "%1023[A-Za-z0-9_] %1023[-0-9xXA-Fa-f] %d", name, val, &type) >=2
+		) {
 			script->set_constant(name, (int)strtol(val, NULL, 0), (bool)type);
 		}
 	}
@@ -2205,7 +2205,7 @@ void script_errorwarning_sub(StringBuf *buf, const char* src, const char* file, 
 	error_linepos = p;
 
 	if( line >= 0 )
-		StrBuf->Printf(buf, "script error in file '%s' line %d column %d\n", file, line, error_pos-error_linepos+1);
+		StrBuf->Printf(buf, "script error in file '%s' line %d column %"PRIdPTR"\n", file, line, error_pos-error_linepos+1);
 	else
 		StrBuf->Printf(buf, "script error in file '%s' item ID %d\n", file, -line);
 
@@ -3826,7 +3826,8 @@ int run_func(struct script_state *st)
 		if (!(script->str_data[func].func(st))) //Report error
 			script->reportsrc(st);
 	} else {
-		ShowError("script:run_func: '%s' (id=%"PRId64" type=%s) has no C function. please report this!!!\n", script->get_str(func), func, script->op2name(script->str_data[func].type));
+		ShowError("script:run_func: '%s' (id=%d type=%s) has no C function. please report this!!!\n",
+		          script->get_str(func), func, script->op2name(script->str_data[func].type));
 		script->reportsrc(st);
 		st->state = END;
 	}
@@ -4155,10 +4156,10 @@ int script_config_read(char *cfgName) {
 		ShowError("File not found: %s\n", cfgName);
 		return 1;
 	}
-	while(fgets(line, sizeof(line), fp)) {
-		if(line[0] == '/' && line[1] == '/')
+	while (fgets(line, sizeof(line), fp)) {
+		if (line[0] == '/' && line[1] == '/')
 			continue;
-		i=sscanf(line,"%[^:]: %[^\r\n]",w1,w2);
+		i = sscanf(line,"%1023[^:]: %1023[^\r\n]", w1, w2);
 		if(i!=2)
 			continue;
 
@@ -6107,9 +6108,8 @@ BUILDIN(getelementofarray)
 	id = reference_getid(data);
 
 	i = script_getnum(st, 3);
-	if( i < 0 || i >= SCRIPT_MAX_ARRAYSIZE )
-	{
-		ShowWarning("script:getelementofarray: index out of range (%lld)\n", i);
+	if (i < 0 || i >= SCRIPT_MAX_ARRAYSIZE) {
+		ShowWarning("script:getelementofarray: index out of range (%"PRId64")\n", i);
 		script->reportdata(data);
 		script_pushnil(st);
 		st->state = END;
@@ -6526,7 +6526,7 @@ BUILDIN(getitem) {
 			return false;
 		}
 		if( item_data->type == IT_PETEGG || item_data->type == IT_PETARMOR ) {
-			ShowError("script_getitembound: can't bind a pet egg/armor!\n",bound);
+			ShowError("script_getitembound: can't bind a pet egg/armor! Type=%d\n",bound);
 			return false;
 		}
 		it.bound = (unsigned char)bound;
@@ -6606,8 +6606,8 @@ BUILDIN(getitem2) {
 	c3=(short)script_getnum(st,9);
 	c4=(short)script_getnum(st,10);
 
-	if( bound && (itemdb_type(nameid) == IT_PETEGG || itemdb_type(nameid) == IT_PETARMOR) ) {
-		ShowError("script_getitembound2: can't bind a pet egg/armor!\n",bound);
+	if (bound && (itemdb_type(nameid) == IT_PETEGG || itemdb_type(nameid) == IT_PETARMOR)) {
+		ShowError("script_getitembound2: can't bind a pet egg/armor! Type=%d\n",bound);
 		return false;
 	}
 
@@ -14883,15 +14883,14 @@ BUILDIN(escape_sql)
 	return true;
 }
 
-BUILDIN(getd)
-{
+BUILDIN(getd) {
 	char varname[100];
 	const char *buffer;
 	int elem;
 
 	buffer = script_getstr(st, 2);
 
-	if(sscanf(buffer, "%[^[][%d]", varname, &elem) < 2)
+	if (sscanf(buffer, "%99[^[][%d]", varname, &elem) < 2)
 		elem = 0;
 
 	// Push the 'pointer' so it's more flexible [Lance]

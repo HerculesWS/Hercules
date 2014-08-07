@@ -690,7 +690,7 @@ void itemdb_read_groups(void) {
 	libconfig->destroy(&item_group_conf);
 	aFree(gsize);
 	
-	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
 }
 /* [Ind/Hercules] - HCache for Packages */
 void itemdb_write_cached_packages(const char *config_filename) {
@@ -883,7 +883,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 	
 	fclose(file);
 	
-	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"' ("CL_GREEN"C"CL_RESET").\n", pcount, config_filename);
+	ShowStatus("Done reading '"CL_WHITE"%hu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"' ("CL_GREEN"C"CL_RESET").\n", pcount, config_filename);
 
 	return true;
 }
@@ -1091,7 +1091,8 @@ void itemdb_read_packages(void) {
 		for( r = 0; r < itemdb->packages[count].random_qty; r++  ) {
 			if( itemdb->packages[count].random_groups[r].random_qty == 1 ) {
 				//item packages don't stop looping until something comes out of them, so if you have only one item in it the drop is guaranteed.
-				ShowWarning("itemdb_read_packages: in '%s' 'Random: %d' group has only 1 random option, drop rate will be 100%!\n",itemdb_name(itemdb->packages[count].id),r+1);
+				ShowWarning("itemdb_read_packages: in '%s' 'Random: %d' group has only 1 random option, drop rate will be 100%%!\n",
+				            itemdb_name(itemdb->packages[count].id),r+1);
 				itemdb->packages[count].random_groups[r].random_list[0].rate = 10000;
 			}
 		}
@@ -1114,7 +1115,7 @@ void itemdb_read_packages(void) {
 	if( HCache->enabled )
 		itemdb->write_cached_packages(config_filename);
 	
-	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
 }
 
 void itemdb_read_chains(void) {
@@ -1182,7 +1183,7 @@ void itemdb_read_chains(void) {
 	else
 		itemdb->chain_cache[ECC_ORE] = i;
 	
-	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
 }
 
 /**
@@ -1322,7 +1323,7 @@ void itemdb_read_combos() {
 	
 	fclose(fp);
 	
-	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"item_combo_db"CL_RESET"'.\n", count);
+	ShowStatus("Done reading '"CL_WHITE"%"PRIu32""CL_RESET"' entries in '"CL_WHITE"item_combo_db"CL_RESET"'.\n", count);
 		
 	return;
 }
@@ -1940,7 +1941,7 @@ int itemdb_readdb_libconfig(const char *filename) {
 			duplicate[nameid] = true;
 	}
 	libconfig->destroy(&item_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
 		
 	return count;
 }
@@ -1979,7 +1980,7 @@ int itemdb_readdb_sql(const char *tablename) {
 	// free the query result
 	SQL->FreeResult(map->mysql_handle);
 
-	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, tablename);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, tablename);
 
 	return count;
 }

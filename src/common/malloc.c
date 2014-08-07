@@ -241,7 +241,7 @@ void *mmalloc_(size_t size, const char *file, int line, const char *func) {
 	struct unit_head *head;
 
 	if (((long) size) < 0) {
-		ShowError("mmalloc_: %d\n", size);
+		ShowError("mmalloc_: %"PRIdS"\n", size);
 		return NULL;
 	}
 
@@ -272,7 +272,8 @@ void *mmalloc_(size_t size, const char *file, int line, const char *func) {
 			*(long*)((char*)p + sizeof(struct unit_head_large) - sizeof(long) + size) = 0xdeadbeaf;
 			return (char *)p + sizeof(struct unit_head_large) - sizeof(long);
 		} else {
-			ShowFatalError("Memory manager::memmgr_alloc failed (allocating %d+%d bytes at %s:%d).\n", sizeof(struct unit_head_large), size, file, line);
+			ShowFatalError("Memory manager::memmgr_alloc failed (allocating %"PRIuS"+%"PRIuS" bytes at %s:%d).\n",
+			               sizeof(struct unit_head_large), size, file, line);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -760,10 +761,10 @@ void memmgr_report (int extra) {
 	ShowMessage("[malloc] : reporting %u instances | %.2f MB\n",count,(double)((size)/1024)/1024);
 	ShowMessage("[malloc] : internal usage %.2f MB | %.2f MB\n",(double)((memmgr_usage_bytes_t-memmgr_usage_bytes)/1024)/1024,(double)((memmgr_usage_bytes_t)/1024)/1024);
 	
-	if( extra ) {
-		ShowMessage("[malloc] : unit_head_large: %d bytes\n",sizeof(struct unit_head_large));
-		ShowMessage("[malloc] : unit_head: %d bytes\n",sizeof(struct unit_head));
-		ShowMessage("[malloc] : block: %d bytes\n",sizeof(struct block));
+	if (extra) {
+		ShowMessage("[malloc] : unit_head_large: %"PRIuS" bytes\n", sizeof(struct unit_head_large));
+		ShowMessage("[malloc] : unit_head: %"PRIuS" bytes\n", sizeof(struct unit_head));
+		ShowMessage("[malloc] : block: %"PRIuS" bytes\n", sizeof(struct block));
 	}
 
 }

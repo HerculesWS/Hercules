@@ -220,16 +220,13 @@ int mapif_parse_SaveGuildStorage(int fd)
 	guild_id = RFIFOL(fd,8);
 	len = RFIFOW(fd,2);
 
-	if( sizeof(struct guild_storage) != len - 12 )
-	{
-		ShowError("inter storage: data size error %d != %d\n", sizeof(struct guild_storage), len - 12);
-	}
-	else
-	{
-		if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `guild_id` FROM `%s` WHERE `guild_id`='%d'", guild_db, guild_id) )
+	if (sizeof(struct guild_storage) != len - 12) {
+		ShowError("inter storage: data size mismatch: %d != %"PRIuS"\n", len - 12, sizeof(struct guild_storage));
+	} else {
+		if (SQL_ERROR == SQL->Query(sql_handle, "SELECT `guild_id` FROM `%s` WHERE `guild_id`='%d'", guild_db, guild_id)) {
 			Sql_ShowDebug(sql_handle);
-		else if( SQL->NumRows(sql_handle) > 0 )
-		{// guild exists
+		} else if(SQL->NumRows(sql_handle) > 0) {
+			// guild exists
 			SQL->FreeResult(sql_handle);
 			guild_storage_tosql(guild_id, (struct guild_storage*)RFIFOP(fd,12));
 			mapif_save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 0);
@@ -397,7 +394,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 		if( j )
 			StrBuf->AppendStr(&buf, ",");
 
-		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d'",
+		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%"PRIu64"'",
 			guild_id, items[j].nameid, items[j].amount, items[j].equip, items[j].identify, items[j].refine,
 			items[j].attribute, items[j].expire_time, items[j].bound, items[j].unique_id);
 		for( s = 0; s < MAX_SLOTS; ++s )

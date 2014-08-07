@@ -5645,16 +5645,17 @@ void clif_displaymessage2(const int fd, const char* mes) {
 	}
 }
 /* oh noo! another version of 0x8e! */
-void clif_displaymessage_sprintf(const int fd, const char* mes, ...) {
+void clif_displaymessage_sprintf(const int fd, const char *mes, ...) __attribute__((format(printf, 2, 3)));
+void clif_displaymessage_sprintf(const int fd, const char *mes, ...) {
 	va_list ap;
 
-	if( map->cpsd_active && fd == 0 ) {
+	if (map->cpsd_active && fd == 0) {
 		ShowInfo("HCP: ");
 		va_start(ap,mes);
 		vShowMessage_(MSG_NONE,mes,ap);
 		va_end(ap);
 		ShowMessage("\n");
-	} else if ( fd > 0 ) {
+	} else if (fd > 0) {
 		int len = 1;
 		char *ptr;
 
@@ -5710,8 +5711,8 @@ void clif_GlobalMessage(struct block_list* bl, const char* message) {
 
 	len = strlen(message)+1;
 
-	if( len > sizeof(buf)-8 ) {
-		ShowWarning("clif_GlobalMessage: Truncating too long message '%s' (len=%d).\n", message, len);
+	if (len > sizeof(buf)-8) {
+		ShowWarning("clif_GlobalMessage: Truncating too long message '%s' (len=%"PRIuS").\n", message, len);
 		len = sizeof(buf)-8;
 	}
 
@@ -6743,9 +6744,9 @@ void clif_party_message(struct party_data* p, int account_id, const char* mes, i
 	if(i < MAX_PARTY){
 		unsigned char buf[1024];
 
-		if( len > sizeof(buf)-8 )
-		{
-			ShowWarning("clif_party_message: Truncated message '%s' (len=%d, max=%d, party_id=%d).\n", mes, len, sizeof(buf)-8, p->party.party_id);
+		if (len > sizeof(buf)-8) {
+			ShowWarning("clif_party_message: Truncated message '%s' (len=%d, max=%"PRIuS", party_id=%d).\n",
+			            mes, len, sizeof(buf)-8, p->party.party_id);
 			len = sizeof(buf)-8;
 		}
 
@@ -7858,13 +7859,11 @@ void clif_guild_message(struct guild *g,int account_id,const char *mes,int len)
 	struct map_session_data *sd;
 	uint8 buf[256];
 
-	if( len == 0 )
-	{
+	if (len == 0)
 		return;
-	}
-	else if( len > sizeof(buf)-5 )
-	{
-		ShowWarning("clif_guild_message: Truncated message '%s' (len=%d, max=%d, guild_id=%d).\n", mes, len, sizeof(buf)-5, g->guild_id);
+
+	if (len > sizeof(buf)-5) {
+		ShowWarning("clif_guild_message: Truncated message '%s' (len=%d, max=%"PRIuS", guild_id=%d).\n", mes, len, sizeof(buf)-5, g->guild_id);
 		len = sizeof(buf)-5;
 	}
 
@@ -8119,10 +8118,11 @@ void clif_disp_message(struct block_list* src, const char* mes, size_t len, enum
 {
 	unsigned char buf[256];
 
-	if( len == 0 ) {
+	if (len == 0)
 		return;
-	} else if( len > sizeof(buf)-5 ) {
-		ShowWarning("clif_disp_message: Truncated message '%s' (len=%d, max=%d, aid=%d).\n", mes, len, sizeof(buf)-5, src->id);
+
+	if (len > sizeof(buf)-5) {
+		ShowWarning("clif_disp_message: Truncated message '%s' (len=%"PRIuS", max=%"PRIuS", aid=%d).\n", mes, len, sizeof(buf)-5, src->id);
 		len = sizeof(buf)-5;
 	}
 
@@ -8394,8 +8394,8 @@ void clif_messagecolor(struct block_list* bl, unsigned int color, const char* ms
 
 	nullpo_retv(bl);
 
-	if( msg_len > sizeof(buf)-12 ) {
-		ShowWarning("clif_messagecolor: Truncating too long message '%s' (len=%u).\n", msg, msg_len);
+	if (msg_len > sizeof(buf)-12) {
+		ShowWarning("clif_messagecolor: Truncating too long message '%s' (len=%"PRIuS").\n", msg, msg_len);
 		msg_len = sizeof(buf)-12;
 	}
 
@@ -8744,7 +8744,7 @@ void clif_disp_overhead(struct block_list *bl, const char* mes)
 	size_t len_mes = strlen(mes)+1; //Account for \0
 
 	if (len_mes > sizeof(buf)-8) {
-		ShowError("clif_disp_overhead: Message too long (length %d)\n", len_mes);
+		ShowError("clif_disp_overhead: Message too long (length %"PRIuS")\n", len_mes);
 		len_mes = sizeof(buf)-8; //Trunk it to avoid problems.
 	}
 	// send message to others
@@ -13151,8 +13151,9 @@ void clif_parse_GuildChangeEmblem(int fd,struct map_session_data *sd)
 	if( !emblem_len || !sd->state.gmaster_flag )
 		return;
 
-	if( !clif->validate_emblem(emblem, emblem_len) ) {
-		ShowWarning("clif_parse_GuildChangeEmblem: Rejected malformed guild emblem (size=%lu, accound_id=%d, char_id=%d, guild_id=%d).\n", emblem_len, sd->status.account_id, sd->status.char_id, sd->status.guild_id);
+	if (!clif->validate_emblem(emblem, emblem_len)) {
+		ShowWarning("clif_parse_GuildChangeEmblem: Rejected malformed guild emblem (size=%u, accound_id=%d, char_id=%d, guild_id=%d).\n",
+		            emblem_len, sd->status.account_id, sd->status.char_id, sd->status.guild_id);
 		return;
 	}
 
@@ -17749,8 +17750,8 @@ void clif_ShowScript(struct block_list* bl, const char* message) {
 
 	len = strlen(message)+1;
 
-	if( len > sizeof(buf)-8 ) {
-		ShowWarning("clif_ShowScript: Truncating too long message '%s' (len=%d).\n", message, len);
+	if (len > sizeof(buf)-8) {
+		ShowWarning("clif_ShowScript: Truncating too long message '%s' (len=%"PRIuS").\n", message, len);
 		len = sizeof(buf)-8;
 	}
 
@@ -18347,8 +18348,9 @@ int clif_parse(int fd) {
 		cmd = parse_cmd_func(fd,sd);
 
 		// filter out invalid / unsupported packets
-		if( cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packet_db[cmd].len == 0 ) {
-			ShowWarning("clif_parse: Received unsupported packet (packet 0x%04x (0x%04x), %d bytes received), disconnecting session #%d.\n", cmd, RFIFOW(fd,0), RFIFOREST(fd), fd);
+		if (cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packet_db[cmd].len == 0) {
+			ShowWarning("clif_parse: Received unsupported packet (packet 0x%04x (0x%04x), %"PRIuS" bytes received), disconnecting session #%d.\n",
+			            cmd, RFIFOW(fd,0), RFIFOREST(fd), fd);
 #ifdef DUMP_INVALID_PACKET
 			ShowDump(RFIFOP(fd,0), RFIFOREST(fd));
 #endif

@@ -249,22 +249,21 @@ int mapif_save_pet(int fd, int account_id, struct s_pet *data) {
 	int len;
 	RFIFOHEAD(fd);
 	len=RFIFOW(fd, 2);
-	if(sizeof(struct s_pet)!=len-8) {
-		ShowError("inter pet: data size error %d %d\n", sizeof(struct s_pet), len-8);
+	if (sizeof(struct s_pet) != len-8) {
+		ShowError("inter pet: data size mismatch: %d != %"PRIuS"\n", len-8, sizeof(struct s_pet));
+		return 0;
 	}
 
-	else{
-		if(data->hungry < 0)
-			data->hungry = 0;
-		else if(data->hungry > 100)
-			data->hungry = 100;
-		if(data->intimate < 0)
-			data->intimate = 0;
-		else if(data->intimate > 1000)
-			data->intimate = 1000;
-		inter_pet_tosql(data->pet_id,data);
-		mapif_save_pet_ack(fd, account_id, 0);
-	}
+	if (data->hungry < 0)
+		data->hungry = 0;
+	else if (data->hungry > 100)
+		data->hungry = 100;
+	if (data->intimate < 0)
+		data->intimate = 0;
+	else if (data->intimate > 1000)
+		data->intimate = 1000;
+	inter_pet_tosql(data->pet_id,data);
+	mapif_save_pet_ack(fd, account_id, 0);
 
 	return 0;
 }
