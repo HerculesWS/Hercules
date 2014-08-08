@@ -335,6 +335,8 @@ int64 battle_attr_fix(struct block_list *src, struct block_list *target, int64 d
 			ratio += skill->enchant_eff[sc->data[SC_VIOLENTGALE]->val1-1];
 		if(sc->data[SC_DELUGE] && atk_elem == ELE_WATER)
 			ratio += skill->enchant_eff[sc->data[SC_DELUGE]->val1-1];
+		if(sc->data[SC_FIRE_CLOAK_OPTION] && atk_elem == ELE_FIRE)
+			damage += damage * sc->data[SC_FIRE_CLOAK_OPTION]->val2 / 100;
 	}
 	if( target && target->type == BL_SKILL ) {
 		if( atk_elem == ELE_FIRE && battle->get_current_skill(target) == GN_WALLOFTHORN ) {
@@ -373,6 +375,8 @@ int64 battle_attr_fix(struct block_list *src, struct block_list *target, int64 d
 			if( tsc->data[SC_COLD] && target->type != BL_MOB)
 				status_change_end(target, SC_COLD, INVALID_TIMER);
 			if( tsc->data[SC_EARTH_INSIGNIA]) damage += damage/2;
+			if( tsc->data[SC_FIRE_CLOAK_OPTION])
+				damage -= damage * tsc->data[SC_FIRE_CLOAK_OPTION]->val2 / 100;
 			if( tsc->data[SC_VOLCANIC_ASH]) damage += damage/2; //150%
 			break;
 		case ELE_HOLY:
@@ -2862,6 +2866,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			else if ((flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON))
 				damage >>= 2; //75% reduction
 		}
+
+		if ( sc->data[SC_WATER_BARRIER] )
+			damage = damage * ( 100 - 20 ) / 100;
 
 		// Compressed code, fixed by map.h [Epoque]
 		if (src->type == BL_MOB) {

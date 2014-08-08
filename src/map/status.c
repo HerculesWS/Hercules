@@ -701,7 +701,7 @@ void initChangeTables(void) {
 	set_sc( EL_FIRE_CLOAK      , SC_FIRE_CLOAK_OPTION    , SI_FIRE_CLOAK_OPTION    , SCB_ALL );
 	set_sc( EL_WATER_SCREEN    , SC_WATER_SCREEN_OPTION  , SI_WATER_SCREEN_OPTION  , SCB_NONE );
 	set_sc( EL_WATER_DROP      , SC_WATER_DROP_OPTION    , SI_WATER_DROP_OPTION    , SCB_ALL );
-	set_sc( EL_WATER_BARRIER   , SC_WATER_BARRIER        , SI_WATER_BARRIER        , SCB_MDEF|SCB_WATK|SCB_MATK|SCB_FLEE );
+	set_sc( EL_WATER_BARRIER   , SC_WATER_BARRIER        , SI_WATER_BARRIER        , SCB_WATK|SCB_FLEE );
 	set_sc( EL_WIND_STEP       , SC_WIND_STEP_OPTION     , SI_WIND_STEP_OPTION     , SCB_SPEED|SCB_FLEE );
 	set_sc( EL_WIND_CURTAIN    , SC_WIND_CURTAIN_OPTION  , SI_WIND_CURTAIN_OPTION  , SCB_ALL );
 	set_sc( EL_ZEPHYR          , SC_ZEPHYR               , SI_ZEPHYR               , SCB_FLEE );
@@ -4567,8 +4567,8 @@ unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc,
 
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
-		if(sc->data[SC_STRIKING])
-			watk += sc->data[SC_STRIKING]->val2;
+		if( sc->data[SC_WATER_BARRIER] )
+			watk -= sc->data[SC_WATER_BARRIER]->val3;
 		if(sc->data[SC_GENTLETOUCH_CHANGE] && sc->data[SC_GENTLETOUCH_CHANGE]->val2)
 			watk += sc->data[SC_GENTLETOUCH_CHANGE]->val2;
 		return (unsigned short)cap_value(watk,0,USHRT_MAX);
@@ -4597,8 +4597,6 @@ unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc,
 		watk += sc->data[SC_TROPIC_OPTION]->val2;
 	if( sc->data[SC_HEATER_OPTION] )
 		watk += sc->data[SC_HEATER_OPTION]->val2;
-	if( sc->data[SC_WATER_BARRIER] )
-		watk -= sc->data[SC_WATER_BARRIER]->val3;
 	if( sc->data[SC_PYROTECHNIC_OPTION] )
 		watk += sc->data[SC_PYROTECHNIC_OPTION]->val2;
 
@@ -4613,10 +4611,6 @@ unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc,
 				watk += sc->data[SC_NIBELUNGEN]->val2;
 		}
 	}
-	if(sc->data[SC_STRIKING])
-		watk += sc->data[SC_STRIKING]->val2;
-	if(sc->data[SC_GENTLETOUCH_CHANGE] && sc->data[SC_GENTLETOUCH_CHANGE]->val2)
-		watk += sc->data[SC_GENTLETOUCH_CHANGE]->val2;
 	if(sc->data[SC_LKCONCENTRATION])
 		watk += watk * sc->data[SC_LKCONCENTRATION]->val2/100;
 #endif
@@ -4638,6 +4632,8 @@ unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc,
 		watk += sc->data[SC_RUSH_WINDMILL]->val2;
 	if (sc->data[SC_ODINS_POWER])
 		watk += 40 + 30 * sc->data[SC_ODINS_POWER]->val1;
+	if(sc->data[SC_STRIKING])
+		watk += sc->data[SC_STRIKING]->val2;
 	if((sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 2)
 		|| (sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 2)
 		|| (sc->data[SC_WIND_INSIGNIA] && sc->data[SC_WIND_INSIGNIA]->val1 == 2)
@@ -4670,8 +4666,6 @@ unsigned short status_calc_ematk(struct block_list *bl, struct status_change *sc
 		matk += sc->data[SC_CHILLY_AIR_OPTION]->val2;
 	if(sc->data[SC_COOLER_OPTION])
 		matk += sc->data[SC_COOLER_OPTION]->val2;
-	if(sc->data[SC_WATER_BARRIER])
-		matk -= sc->data[SC_WATER_BARRIER]->val3;
 	if(sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 3)
 		matk += 50;
 	if(sc->data[SC_ODINS_POWER])
@@ -4709,8 +4703,6 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 		matk += sc->data[SC_CHILLY_AIR_OPTION]->val2;
 	if(sc->data[SC_COOLER_OPTION])
 		matk += sc->data[SC_COOLER_OPTION]->val2;
-	if (sc->data[SC_WATER_BARRIER])
-		matk -= sc->data[SC_WATER_BARRIER]->val3;
 	if (sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 3)
 		matk += 50;
 	if (sc->data[SC_ODINS_POWER])
@@ -4933,6 +4925,8 @@ defType status_calc_def(struct block_list *bl, struct status_change *sc, int def
 			def -= def * 5 * (10-sc->data[SC_CAMOUFLAGE]->val4) / 100;
 		if( sc->data[SC_OVERED_BOOST]  && bl->type == BL_PC )
 			def -= def * 50 / 100;
+		if( sc->data[SC_NEUTRALBARRIER] )
+			def += def * (10 + 5*sc->data[SC_NEUTRALBARRIER]->val1) / 100;
 		if( sc && sc->data[SC_GENTLETOUCH_REVITALIZE] && sc->data[SC_GENTLETOUCH_REVITALIZE]->val4 )
 			def += 2 * sc->data[SC_GENTLETOUCH_REVITALIZE]->val4;
 		if( sc->data[SC_FORCEOFVANGUARD] )
@@ -5007,6 +5001,8 @@ defType status_calc_def(struct block_list *bl, struct status_change *sc, int def
 
 	if( sc->data[SC_POWER_OF_GAIA] )
 		def += def * sc->data[SC_POWER_OF_GAIA]->val2 / 100;
+	if( sc->data[SC_SHIELDSPELL_REF] && sc->data[SC_SHIELDSPELL_REF]->val1 == 2 )
+		def += sc->data[SC_SHIELDSPELL_REF]->val2;
 	if( sc->data[SC_PRESTIGE] )
 		def += def * sc->data[SC_PRESTIGE]->val1 / 100;
 	if(sc->data[SC_VOLCANIC_ASH] && (bl->type==BL_MOB)){
@@ -5101,6 +5097,8 @@ defType status_calc_mdef(struct block_list *bl, struct status_change *sc, int md
 
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
+		if(sc->data[SC_NEUTRALBARRIER] )
+			mdef += mdef * (5 * sc->data[SC_NEUTRALBARRIER]->val1 + 10) / 100;
 		if(sc->data[SC_MDEFSET])
 			return sc->data[SC_MDEFSET]->val1;
 		return (defType)cap_value(mdef,DEFTYPE_MIN,DEFTYPE_MAX);
@@ -5124,8 +5122,6 @@ defType status_calc_mdef(struct block_list *bl, struct status_change *sc, int md
 		mdef += (sc->data[SC_ENDURE]->val4 == 0) ? sc->data[SC_ENDURE]->val1 : 1;
 	if(sc->data[SC_STONEHARDSKIN])// Final MDEF increase divided by 10 since were using classic (pre-renewal) mechanics. [Rytech]
 		mdef += sc->data[SC_STONEHARDSKIN]->val1;
-	if(sc->data[SC_WATER_BARRIER])
-		mdef += sc->data[SC_WATER_BARRIER]->val2;
 	if(sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
 		mdef += 25*mdef/100;
 	if(sc->data[SC_FREEZE])
@@ -5136,8 +5132,6 @@ defType status_calc_mdef(struct block_list *bl, struct status_change *sc, int md
 		mdef += mdef * sc->data[SC_SYMPHONY_LOVE]->val2 / 100;
 	if(sc->data[SC_GENTLETOUCH_CHANGE] && sc->data[SC_GENTLETOUCH_CHANGE]->val4)
 		mdef -= mdef * sc->data[SC_GENTLETOUCH_CHANGE]->val4 / 100;
-	if(sc->data[SC_NEUTRALBARRIER] )
-		mdef += mdef * (5 * sc->data[SC_NEUTRALBARRIER]->val1 + 10) / 100;
 	if (sc->data[SC_ODINS_POWER])
 		mdef -= 20;
 	if(sc->data[SC_BURNING])
@@ -8893,8 +8887,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				tick_time = val3;
 				break;
 			case SC_WATER_BARRIER:
-				val2 = 40;	// Increasement. Mdef1 ???
-				val3 = 30;	// Reductions. Atk2, Flee1, Matk1 ????
+				val3 = 20;	// Reductions. Atk2, Flee1
 				break;
 			case SC_ZEPHYR:
 				val2 = 25;	// Flee.

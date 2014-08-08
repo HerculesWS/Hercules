@@ -11475,6 +11475,8 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 			break;
 
 		case UNT_REVERBERATION:
+			if (sg->src_id == bl->id)
+				break; //Does not affect the caster.
 			clif->changetraplook(&src->bl,UNT_USED_TRAPS);
 			map->foreachinrange(skill->trap_splash,&src->bl, skill->get_splash(sg->skill_id, sg->skill_lv), sg->bl_flag, &src->bl,tick);
 			sg->unit_id = UNT_USED_TRAPS;
@@ -12299,16 +12301,18 @@ int skill_unit_onleft(uint16 skill_id, struct block_list *bl, int64 tick) {
 		case EL_WATER_BARRIER:
 		case EL_ZEPHYR:
 		case EL_POWER_OF_GAIA:
-		case SO_FIRE_INSIGNIA:
-		case SO_WATER_INSIGNIA:
-		case SO_WIND_INSIGNIA:
-		case SO_EARTH_INSIGNIA:
 		case SO_ELEMENTAL_SHIELD:
 		case SC_BLOODYLUST:
 			if (sce)
 				status_change_end(bl, type, INVALID_TIMER);
 			break;
-
+		case SO_FIRE_INSIGNIA:
+		case SO_WATER_INSIGNIA:
+		case SO_WIND_INSIGNIA:
+		case SO_EARTH_INSIGNIA:
+			if (sce && bl->type != BL_ELEM)
+				status_change_end(bl, type, INVALID_TIMER);
+			break;
 		case BA_POEMBRAGI:
 		case BA_WHISTLE:
 		case BA_ASSASSINCROSS:
