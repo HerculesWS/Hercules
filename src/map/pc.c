@@ -8776,7 +8776,7 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 		return 0;
 	}
 
-	if (sd->sc.data[SC_BERSERK])
+	if (sd->sc.data[SC_BERSERK] || sd->sc.data[SC_NO_SWITCH_EQUIP])
 	{
 		clif->equipitemack(sd,n,0,EIA_FAIL);	// fail
 		return 0;
@@ -8980,7 +8980,7 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 	}
 
 	// if player is berserk then cannot unequip
-	if (!(flag & 2) && sd->sc.count && (sd->sc.data[SC_BERSERK]))
+	if (!(flag & 2) && sd->sc.count && (sd->sc.data[SC_BERSERK]) || sd->sc.data[SC_NO_SWITCH_EQUIP])
 	{
 		clif->unequipitemack(sd,n,0,UIA_FAIL);
 		return 0;

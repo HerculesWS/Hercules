@@ -722,6 +722,8 @@ typedef enum sc_type {
 	SC_DEFSET,
 	SC_MDEFSET,
 
+	SC_NO_SWITCH_EQUIP,
+
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
 
