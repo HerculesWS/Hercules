@@ -1134,7 +1134,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 				const int pos[5] = { EQP_WEAPON, EQP_HELM, EQP_SHIELD, EQP_ARMOR, EQP_ACC };
 
 				for( i = 0; i < skill_lv; i++ )
-					skill->strip_equip(bl,pos[i], 6 * skill_lv + status->get_lv(src) / 4 + status_get_dex(src) / 10,
+					skill->strip_equip(bl,pos[i], (5 + skill_lv) * skill_lv,
 						skill_lv,skill->get_time2(skill_id,skill_lv));
 			}
 			break;
@@ -10455,7 +10455,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 						case 2: sx = x - i; break;
 						case 6: sx = x + i; break;
 					}
-					skill->addtimerskill(src,timer->gettick() + (50 * i),0,sx,sy,skill_id,skill_lv,dir,flag&2);
+					skill->addtimerskill(src,timer->gettick() + (140 * i),0,sx,sy,skill_id,skill_lv,dir,flag&2);
 				}
 			}
 			break;
