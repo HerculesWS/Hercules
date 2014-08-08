@@ -409,6 +409,7 @@ enum status_point_types {
 	SP_EMATK, SP_SP_GAIN_RACE_ATTACK, SP_HP_GAIN_RACE_ATTACK, SP_SKILL_USE_SP_RATE, //2046-2049
 	SP_SKILL_COOLDOWN,SP_SKILL_FIXEDCAST, SP_SKILL_VARIABLECAST, SP_FIXCASTRATE, SP_VARCASTRATE, //2050-2054
 	SP_SKILL_USE_SP,SP_MAGIC_ATK_ELE, SP_ADD_FIXEDCAST, SP_ADD_VARIABLECAST,  //2055-2058
+	SP_SET_DEF_RACE,SP_SET_MDEF_RACE, //2059-2060
 	
 	
 	/* must be the last, plugins add bonuses from this value onwards */
@@ -486,7 +487,7 @@ struct mapcell {
 		icewall : 1;
 
 #ifdef CELL_NOSTACK
-	unsigned char cell_bl; //Holds amount of bls in this cell.
+	int cell_bl; //Holds amount of bls in this cell.
 #endif
 };
 
@@ -1059,8 +1060,7 @@ struct map_interface {
 	void (*helpscreen) (bool do_exit);
 	void (*versionscreen) (bool do_exit);
 	bool (*arg_next_value) (const char *option, int i, int argc, bool must);
-	void (*addblcell) (struct block_list *bl);
-	void (*delblcell) (struct block_list *bl);
+	void (*update_cell_bl) (struct block_list *bl, bool increase);
 	int (*get_new_bonus_id) (void);
 	void (*add_questinfo) (int m, struct questinfo *qi);
 	bool (*remove_questinfo) (int m, struct npc_data *nd);

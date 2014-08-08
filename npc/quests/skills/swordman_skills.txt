@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= kobra_k88
 //===== Current Version: =====================================
-//= 1.8
+//= 1.8.1
 //===== Description: =========================================
 //= Quests for skills: Fatal Blow, Mobile HP Recovery,
 //  Auto-Berserk
@@ -11,9 +11,10 @@
 //= 1.6 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
 //= 1.7 Updated to latest available official file. [Masao]
 //= 1.8 Fixed JobLevel requirements. [Euphy]
+//= 1.8.1 Fixed location of Kight De Thomas. [Kisuka]
 //============================================================
 
-izlude_in,175,130,2	script	Knight De Thomas	4W_M_02,4,4,{
+izlude_in,118,175,4	script	Knight De Thomas	4W_M_02,{
 	if ((BaseClass == Job_Swordman) && (sm_movingrecovery_x < 1)) {
 		mes "[De Thomas]";
 		mes "Oh, no! You must have been hurt! Are you ok?";

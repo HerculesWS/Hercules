@@ -306,8 +306,7 @@ int login_lan_config_read(const char *lancfgName)
 		if ((line[0] == '/' && line[1] == '/') || line[0] == '\n' || line[1] == '\n')
 			continue;
 
-		if(sscanf(line,"%[^:]: %[^:]:%[^:]:%[^\r\n]", w1, w2, w3, w4) != 4)
-		{
+		if (sscanf(line, "%63[^:]: %63[^:]:%63[^:]:%63[^\r\n]", w1, w2, w3, w4) != 4) {
 			ShowWarning("Error syntax of configuration file %s in line %d.\n", lancfgName, line_num);
 			continue;
 		}
@@ -618,10 +617,9 @@ int parse_fromchar(int fd)
 			int sec = (short)RFIFOW(fd,16);
 			RFIFOSKIP(fd,18);
 
-			if( !accounts->load_num(accounts, &acc, account_id) )
+			if (!accounts->load_num(accounts, &acc, account_id)) {
 				ShowNotice("Char-server '%s': Error of ban request (account: %d not found, ip: %s).\n", server[id].name, account_id, ip);
-			else
-			{
+			} else {
 				time_t timestamp;
 				struct tm *tmtime;
 				if (acc.unban_time == 0 || acc.unban_time < time(NULL))
@@ -629,24 +627,23 @@ int parse_fromchar(int fd)
 				else
 					timestamp = acc.unban_time; // add to existing ban
 				tmtime = localtime(&timestamp);
-				tmtime->tm_year = tmtime->tm_year + year;
-				tmtime->tm_mon  = tmtime->tm_mon + month;
-				tmtime->tm_mday = tmtime->tm_mday + mday;
-				tmtime->tm_hour = tmtime->tm_hour + hour;
-				tmtime->tm_min  = tmtime->tm_min + min;
-				tmtime->tm_sec  = tmtime->tm_sec + sec;
+				tmtime->tm_year += year;
+				tmtime->tm_mon  += month;
+				tmtime->tm_mday += mday;
+				tmtime->tm_hour += hour;
+				tmtime->tm_min  += min;
+				tmtime->tm_sec  += sec;
 				timestamp = mktime(tmtime);
-				if (timestamp == -1)
+				if (timestamp == -1) {
 					ShowNotice("Char-server '%s': Error of ban request (account: %d, invalid date, ip: %s).\n", server[id].name, account_id, ip);
-				else
-				if( timestamp <= time(NULL) || timestamp == 0 )
+				} else if( timestamp <= time(NULL) || timestamp == 0 ) {
 					ShowNotice("Char-server '%s': Error of ban request (account: %d, new date unbans the account, ip: %s).\n", server[id].name, account_id, ip);
-				else
-				{
+				} else {
 					uint8 buf[11];
 					char tmpstr[24];
 					timestamp2string(tmpstr, sizeof(tmpstr), timestamp, login_config.date_format);
-					ShowNotice("Char-server '%s': Ban request (account: %d, new final date of banishment: %d (%s), ip: %s).\n", server[id].name, account_id, timestamp, tmpstr, ip);
+					ShowNotice("Char-server '%s': Ban request (account: %d, new final date of banishment: %ld (%s), ip: %s).\n",
+					           server[id].name, account_id, (long)timestamp, tmpstr, ip);
 
 					acc.unban_time = timestamp;
 
@@ -1041,7 +1038,7 @@ int mmo_auth(struct login_session_data* sd, bool isServer) {
 			int i;
 
 			if( !sd->has_client_hash ) {
-				ShowNotice("Client didn't send client hash (account: %s, pass: %s, ip: %s)\n", sd->userid, sd->passwd, acc.state, ip);
+				ShowNotice("Client didn't send client hash (account: %s, pass: %s, ip: %s)\n", sd->userid, sd->passwd, ip);
 				return 5;
 			}
 
@@ -1589,7 +1586,7 @@ int login_config_read(const char* cfgName)
 		if (line[0] == '/' && line[1] == '/')
 			continue;
 
-		if (sscanf(line, "%[^:]: %[^\r\n]", w1, w2) < 2)
+		if (sscanf(line, "%1023[^:]: %1023[^\r\n]", w1, w2) < 2)
 			continue;
 
 		if(!strcmpi(w1,"timestamp_format"))

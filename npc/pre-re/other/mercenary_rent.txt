@@ -12,4 +12,4 @@
 //============================================================
 
 izlude,47,139,5	duplicate(Mercenary Manager#main)	Mercenary Manager#Sword	4_M_JOB_KNIGHT2
-izlude,56,139,4	duplicate(MercMerchant)	Mercenary Merchant#Sword	4_F_HUGRANMA
+izlude,56,139,4	duplicate(MercMerchant)	Mercenary Merchant#Sword	4_F_HUWOMAN

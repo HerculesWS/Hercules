@@ -347,6 +347,19 @@ typedef char bool;
 #endif
 
 //////////////////////////////////////////////////////////////////////////
+// Additional printf specifiers
+#if defined(_MSC_VER)
+#define PRIS_PREFIX "I"
+#else // gcc
+#define PRIS_PREFIX "z"
+#endif
+#define PRIdS PRIS_PREFIX "d"
+#define PRIxS PRIS_PREFIX "x"
+#define PRIuS PRIS_PREFIX "u"
+#define PRIXS PRIS_PREFIX "X"
+#define PRIoS PRIS_PREFIX "o"
+
+//////////////////////////////////////////////////////////////////////////
 // path separator
 
 #if defined(WIN32)

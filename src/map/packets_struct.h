@@ -6,6 +6,7 @@
 #ifndef MAP_PACKETS_STRUCT_H
 #define MAP_PACKETS_STRUCT_H
 
+#include "../common/cbasetypes.h"
 #include "../common/mmo.h"
 
 /**

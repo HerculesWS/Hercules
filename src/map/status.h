@@ -82,9 +82,12 @@ typedef enum sc_type {
 	SC_CONFUSION,
 	SC_BLIND,
 	SC_BLOODING,
-	SC_DPOISON,
-	SC_BURNING, //11
-	SC_COMMON_MAX = 11, // end
+	SC_DPOISON, //10
+	SC_FEAR,
+	SC_COLD,
+	SC_BURNING,
+	SC_DEEP_SLEEP,
+	SC_COMMON_MAX = 14, // end
 	
 	//Next up, we continue on 20, to leave enough room for additional "common" ailments in the future.
 	SC_PROVOKE = 20,
@@ -381,8 +384,8 @@ typedef enum sc_type {
 	/**
 	 * 3rd
 	 **/
-	SC_FEAR, // 310
-	SC_FROSTMISTY,
+	//SC_FEAR,
+	SC_FROSTMISTY = 311,
 	/**
 	 * Rune Knight
 	 **/
@@ -483,8 +486,8 @@ typedef enum sc_type {
 	 * Sorcerer
 	 **/
 	SC_SPELLFIST,
-	SC_COLD,
-	SC_STRIKING,
+	//SC_COLD,
+	SC_STRIKING = 389,
 	SC_WARMER, // 390
 	SC_VACUUM_EXTREME,
 	SC_PROPERTYWALK,
@@ -498,8 +501,8 @@ typedef enum sc_type {
 	SC_ECHOSONG,
 	SC_HARMONIZE,
 	SC_SIREN,
-	SC_DEEP_SLEEP, // 400
-	SC_SIRCLEOFNATURE,
+	//SC_DEEP_SLEEP, // 400
+	SC_SIRCLEOFNATURE = 401,
 	SC_GLOOMYDAY,
 	//SC_GLOOMYDAY_SK,
 	SC_SONG_OF_MANA = 404,
@@ -714,6 +717,12 @@ typedef enum sc_type {
 	SC__FEINTBOMB_MASTER,
 	SC_FALLENEMPIRE,
 	SC_FLASHCOMBO,
+
+	//Vellum Weapon reductions
+	SC_DEFSET,
+	SC_MDEFSET,
+
+	SC_NO_SWITCH_EQUIP,
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;

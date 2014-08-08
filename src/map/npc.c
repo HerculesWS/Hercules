@@ -3615,8 +3615,9 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		return strchr(start,'\n');// skip and continue
 	}
 	m = map->mapname2mapid(mapname);
-	if( m < 0 ) {
-		ShowWarning("npc_parse_mapflag: Unknown map in file '%s', line '%d' : %s\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", mapname, filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
+	if (m < 0) {
+		ShowWarning("npc_parse_mapflag: Unknown map in file '%s', line '%d': %s\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n",
+		            filepath, strline(buffer,start-buffer), mapname, w1, w2, w3, w4);
 		if (retval) *retval = EXIT_FAILURE;
 		return strchr(start,'\n');// skip and continue
 	}
@@ -3698,7 +3699,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 	else if (!strcmpi(w3, "pvp_nightmaredrop")) {
 		char drop_arg1[16], drop_arg2[16];
 		int drop_per = 0;
-		if (sscanf(w4, "%[^,],%[^,],%d", drop_arg1, drop_arg2, &drop_per) == 3) {
+		if (sscanf(w4, "%15[^,],%15[^,],%d", drop_arg1, drop_arg2, &drop_per) == 3) {
 			int drop_id = 0, drop_type = 0;
 			if (!strcmpi(drop_arg1, "random"))
 				drop_id = -1;

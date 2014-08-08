@@ -242,8 +242,8 @@ size_t Sql_EscapeStringLen(Sql* self, char *out_to, const char *from, size_t fro
 
 
 /// Executes a query.
-int Sql_Query(Sql* self, const char* query, ...)
-{
+int Sql_Query(Sql *self, const char *query, ...) __attribute__((format(printf, 2, 3)));
+int Sql_Query(Sql *self, const char *query, ...) {
 	int res;
 	va_list args;
 
@@ -517,15 +517,13 @@ static int Sql_P_BindSqlDataType(MYSQL_BIND* bind, enum SqlDataType buffer_type,
 /// Prints debug information about a field (type and length).
 ///
 /// @private
-static void Sql_P_ShowDebugMysqlFieldInfo(const char* prefix, enum enum_field_types type, int is_unsigned, unsigned long length, const char* length_postfix)
-{
-	const char* sign = (is_unsigned ? "UNSIGNED " : "");
-	const char* type_string;
-	switch( type )
-	{
-	default:
-		ShowDebug("%stype=%s%u, length=%d\n", prefix, sign, type, length);
-		return;
+static void Sql_P_ShowDebugMysqlFieldInfo(const char* prefix, enum enum_field_types type, int is_unsigned, unsigned long length, const char* length_postfix) {
+	const char *sign = (is_unsigned ? "UNSIGNED " : "");
+	const char *type_string = NULL;
+	switch (type) {
+		default:
+			ShowDebug("%stype=%s%u, length=%lu\n", prefix, sign, type, length);
+			return;
 #define SHOW_DEBUG_OF(x) case x: type_string = #x; break
 		SHOW_DEBUG_OF(MYSQL_TYPE_TINY);
 		SHOW_DEBUG_OF(MYSQL_TYPE_SHORT);
@@ -548,7 +546,7 @@ static void Sql_P_ShowDebugMysqlFieldInfo(const char* prefix, enum enum_field_ty
 		SHOW_DEBUG_OF(MYSQL_TYPE_NULL);
 #undef SHOW_DEBUG_TYPE_OF
 	}
-	ShowDebug("%stype=%s%s, length=%d%s\n", prefix, sign, type_string, length, length_postfix);
+	ShowDebug("%stype=%s%s, length=%lu%s\n", prefix, sign, type_string, length, length_postfix);
 }
 
 
@@ -607,8 +605,8 @@ SqlStmt* SqlStmt_Malloc(Sql* sql) {
 
 
 /// Prepares the statement.
-int SqlStmt_Prepare(SqlStmt* self, const char* query, ...)
-{
+int SqlStmt_Prepare(SqlStmt *self, const char *query, ...) __attribute__((format(printf, 2, 3)));
+int SqlStmt_Prepare(SqlStmt *self, const char *query, ...) {
 	int res;
 	va_list args;
 
@@ -756,16 +754,13 @@ size_t SqlStmt_NumColumns(SqlStmt* self)
 
 
 /// Binds the result of a column to a buffer.
-int SqlStmt_BindColumn(SqlStmt* self, size_t idx, enum SqlDataType buffer_type, void* buffer, size_t buffer_len, uint32* out_length, int8* out_is_null)
-{
-	if( self == NULL )
+int SqlStmt_BindColumn(SqlStmt *self, size_t idx, enum SqlDataType buffer_type, void *buffer, size_t buffer_len, uint32 *out_length, int8 *out_is_null) {
+	if (self == NULL)
 		return SQL_ERROR;
 
-	if( buffer_type == SQLDT_STRING || buffer_type == SQLDT_ENUM )
-	{
-		if( buffer_len < 1 )
-		{
-			ShowDebug("SqlStmt_BindColumn: buffer_len(%d) is too small, no room for the null-terminator\n", buffer_len);
+	if (buffer_type == SQLDT_STRING || buffer_type == SQLDT_ENUM) {
+		if (buffer_len < 1) {
+			ShowDebug("SqlStmt_BindColumn: buffer_len(%"PRIuS") is too small, no room for the null-terminator\n", buffer_len);
 			return SQL_ERROR;
 		}
 		--buffer_len;// null-terminator
@@ -974,9 +969,9 @@ void Sql_inter_server_read(const char* cfgName, bool first) {
 		return;
 	}
 
-	while(fgets(line, sizeof(line), fp)) {
-		i = sscanf(line, "%[^:]: %[^\r\n]", w1, w2);
-		if(i != 2)
+	while (fgets(line, sizeof(line), fp)) {
+		i = sscanf(line, "%1023[^:]: %1023[^\r\n]", w1, w2);
+		if (i != 2)
 			continue;
 
 		if(!strcmpi(w1,"mysql_reconnect_type")) {

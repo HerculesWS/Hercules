@@ -167,31 +167,32 @@ int map_freeblock_timer(int tid, int64 tick, int id, intptr_t data) {
 	return 0;
 }
 
-/*==========================================
- * These pair of functions update the counter of how many objects
- * lie on a tile.
- *------------------------------------------*/
-void map_addblcell(struct block_list *bl) {
+/**
+ * Updates the counter (cell.cell_bl) of how many objects are on a tile.
+ * @param add Whether the counter should be increased or decreased
+ **/
+void map_update_cell_bl( struct block_list *bl, bool increase ) {
 #ifdef CELL_NOSTACK
+	int pos;
+
 	if( bl->m < 0 || bl->x < 0 || bl->x >= map->list[bl->m].xs
 	              || bl->y < 0 || bl->y >= map->list[bl->m].ys
 	              || !(bl->type&BL_CHAR) )
 		return;
-	map->list[bl->m].cell[bl->x+bl->y*map->list[bl->m].xs].cell_bl++;
-#else
-	return;
-#endif
-}
 
-void map_delblcell(struct block_list *bl) {
-#ifdef CELL_NOSTACK
-	if( bl->m < 0 || bl->x < 0 || bl->x >= map->list[bl->m].xs
-	              || bl->y < 0 || bl->y >= map->list[bl->m].ys
-	              || !(bl->type&BL_CHAR) )
-	map->list[bl->m].cell[bl->x+bl->y*map->list[bl->m].xs].cell_bl--;
-#else
-	return;
+	// When reading from mapcache the cell isn't initialized
+	// TODO: Maybe start initializing cells when they're loaded instead of
+	// having to get them here? [Panikon]
+	if( map->list[bl->m].cell == (struct mapcell *)0xdeadbeaf )
+		map->cellfromcache(&map->list[bl->m]);
+
+	pos = bl->x + bl->y*map->list[bl->m].xs;
+	if( increase )
+		map->list[bl->m].cell[pos].cell_bl++;
+	else
+		map->list[bl->m].cell[pos].cell_bl--;
 #endif
+	return;
 }
 
 /*==========================================
@@ -237,7 +238,7 @@ int map_addblock(struct block_list* bl)
 	}
 
 #ifdef CELL_NOSTACK
-	map->addblcell(bl);
+	map->update_cell_bl(bl, true);
 #endif
 
 	return 0;
@@ -261,7 +262,7 @@ int map_delblock(struct block_list* bl)
 	}
 
 #ifdef CELL_NOSTACK
-	map->delblcell(bl);
+	map->update_cell_bl(bl, false);
 #endif
 
 	pos = bl->x/BLOCK_SIZE+(bl->y/BLOCK_SIZE)*map->list[bl->m].bxs;
@@ -319,13 +320,13 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 
 	if (moveblock) map->delblock(bl);
 #ifdef CELL_NOSTACK
-	else map->delblcell(bl);
+	else map->update_cell_bl(bl, false);
 #endif
 	bl->x = x1;
 	bl->y = y1;
 	if (moveblock) map->addblock(bl);
 #ifdef CELL_NOSTACK
-	else map->addblcell(bl);
+	else map->update_cell_bl(bl, true);
 #endif
 
 	if (bl->type&BL_CHAR) {
@@ -2521,8 +2522,13 @@ void map_cellfromcache(struct map_data *m) {
 		decode_zip(decode_buffer, &size, m->cellPos+sizeof(struct map_cache_map_info), info->len);
 		CREATE(m->cell, struct mapcell, size);
 
-		for( xy = 0; xy < size; ++xy )
+		// Set cell properties
+		for( xy = 0; xy < size; ++xy ) {
 			m->cell[xy] = map->gat2cell(decode_buffer[xy]);
+#ifdef CELL_NOSTACK
+			m->cell[xy].cell_bl = 0;
+#endif
+		}
 
 		m->getcellp = map->getcellp;
 		m->setcell  = map->setcell;
@@ -3247,13 +3253,13 @@ int map_waterheight(char* mapname)
 
 	// read & convert fn
 	rsw = (char *) grfio_read (fn);
-	if (rsw)
-	{	//Load water height from file
+	if (rsw) {
+		//Load water height from file
 		int wh = (int) *(float*)(rsw+166);
 		aFree(rsw);
 		return wh;
 	}
-	ShowWarning("Failed to find water level for (%s)\n", mapname, fn);
+	ShowWarning("Failed to find water level for %s (%s)\n", mapname, fn);
 	return NO_WATER;
 }
 
@@ -3293,6 +3299,9 @@ int map_readgat (struct map_data* m)
 			type = 3; // Cell is 0 (walkable) but under water level, set to 3 (walkable water)
 
 		m->cell[xy] = map->gat2cell(type);
+#ifdef CELL_NOSTACK
+		m->cell[xy].cell_bl = 0;
+#endif
 	}
 
 	aFree(gat);
@@ -3418,14 +3427,14 @@ int map_config_read(char *cfgName) {
 		return 1;
 	}
 
-	while( fgets(line, sizeof(line), fp) ) {
+	while (fgets(line, sizeof(line), fp)) {
 		char* ptr;
 
-		if( line[0] == '/' && line[1] == '/' )
+		if (line[0] == '/' && line[1] == '/')
 			continue;
-		if( (ptr = strstr(line, "//")) != NULL )
+		if ((ptr = strstr(line, "//")) != NULL)
 			*ptr = '\n'; //Strip comments
-		if( sscanf(line, "%[^:]: %[^\t\r\n]", w1, w2) < 2 )
+		if (sscanf(line, "%1023[^:]: %1023[^\t\r\n]", w1, w2) < 2)
 			continue;
 
 		//Strip trailing spaces
@@ -3505,19 +3514,19 @@ int map_config_read_sub(char *cfgName) {
 	FILE *fp;
 
 	fp = fopen(cfgName,"r");
-	if( fp == NULL ) {
+	if (fp == NULL) {
 		ShowError("Map configuration file not found at: %s\n", cfgName);
 		return 1;
 	}
 
-	while( fgets(line, sizeof(line), fp) ) {
+	while (fgets(line, sizeof(line), fp)) {
 		char* ptr;
 
-		if( line[0] == '/' && line[1] == '/' )
+		if (line[0] == '/' && line[1] == '/')
 			continue;
-		if( (ptr = strstr(line, "//")) != NULL )
+		if ((ptr = strstr(line, "//")) != NULL)
 			*ptr = '\n'; //Strip comments
-		if( sscanf(line, "%[^:]: %[^\t\r\n]", w1, w2) < 2 )
+		if (sscanf(line, "%1023[^:]: %1023[^\t\r\n]", w1, w2) < 2)
 			continue;
 
 		//Strip trailing spaces
@@ -3537,27 +3546,24 @@ int map_config_read_sub(char *cfgName) {
 	fclose(fp);
 	return 0;
 }
-void map_reloadnpc_sub(char *cfgName)
-{
+void map_reloadnpc_sub(char *cfgName) {
 	char line[1024], w1[1024], w2[1024];
 	FILE *fp;
 
 	fp = fopen(cfgName,"r");
-	if( fp == NULL )
-	{
+	if (fp == NULL) {
 		ShowError("Map configuration file not found at: %s\n", cfgName);
 		return;
 	}
 
-	while( fgets(line, sizeof(line), fp) )
-	{
+	while (fgets(line, sizeof(line), fp)) {
 		char* ptr;
 
-		if( line[0] == '/' && line[1] == '/' )
+		if (line[0] == '/' && line[1] == '/')
 			continue;
-		if( (ptr = strstr(line, "//")) != NULL )
+		if ((ptr = strstr(line, "//")) != NULL)
 			*ptr = '\n'; //Strip comments
-		if( sscanf(line, "%[^:]: %[^\t\r\n]", w1, w2) < 2 )
+		if (sscanf(line, "%1023[^:]: %1023[^\t\r\n]", w1, w2) < 2)
 			continue;
 
 		//Strip trailing spaces
@@ -3600,15 +3606,15 @@ int inter_config_read(char *cfgName) {
 	char line[1024],w1[1024],w2[1024];
 	FILE *fp;
 
-	if( !( fp = fopen(cfgName,"r") ) ){
+	if (!(fp = fopen(cfgName,"r"))) {
 		ShowError("File not found: %s\n",cfgName);
 		return 1;
 	}
-	while(fgets(line, sizeof(line), fp)) {
-		if(line[0] == '/' && line[1] == '/')
+	while (fgets(line, sizeof(line), fp)) {
+		if (line[0] == '/' && line[1] == '/')
 			continue;
 		
-		if( sscanf(line,"%[^:]: %[^\r\n]",w1,w2) < 2 )
+		if (sscanf(line,"%1023[^:]: %1023[^\r\n]", w1, w2) < 2)
 			continue;
 		/* table names */
 		if(strcmpi(w1,"item_db_db")==0)
@@ -4031,7 +4037,7 @@ bool map_zone_mf_cache(int m, char *flag, char *params) {
 #if 0 /* not yet fully supported */
 		char drop_arg1[16], drop_arg2[16];
 		int drop_per = 0;
-		if (sscanf(w4, "%[^,],%[^,],%d", drop_arg1, drop_arg2, &drop_per) == 3) {
+		if (sscanf(w4, "%15[^,],%15[^,],%d", drop_arg1, drop_arg2, &drop_per) == 3) {
 			int drop_id = 0, drop_type = 0;
 			if (!strcmpi(drop_arg1, "random"))
 				drop_id = -1;
@@ -6126,8 +6132,7 @@ void map_defaults(void) {
 	map->versionscreen = map_versionscreen;
 	map->arg_next_value = map_arg_next_value;
 
-	map->addblcell = map_addblcell;
-	map->delblcell = map_delblcell;
+	map->update_cell_bl = map_update_cell_bl;
 	
 	map->get_new_bonus_id = map_get_new_bonus_id;
 	

@@ -3107,8 +3107,9 @@ L_Retry:
 				}
 				set @input100,@input / 100;
 				set @input10,(@input % 100) / 10;
-				if (((@input100 > 0) && (@input10 > 0)) && ((@input % 10) > 0)) {
-					if ((@input100 != @input10) && (@input100 != (@input % 10)) && (@input10 != (@input % 10))) {
+				set @input1,@input % 10;
+				if ((@input100 > 0) && (@input10 > 0) && (@input1 > 0)) {
+					if ((@input100 != @input10) && (@input100 != @input1) && (@input10 != @input1)) {
 						break;
 					}
 					mes "[Security System]";
@@ -3124,16 +3125,16 @@ L_Retry:
 			mes "[Security System]";
 			mes "^ff0000"+strcharinfo(0)+"^000000";
 			mes "has entered the following:";
-			mes "^0000ff"+@yagu100+"^000000 - ^0000ff"+@yagu10+"^000000 - ^0000ff"+@yagu1+"^000000.";
+			mes "^0000ff"+@input100+"^000000 - ^0000ff"+@input10+"^000000 - ^0000ff"+@input1+"^000000.";
 			mes "Please wait for authorization to complete.";
 			next;
 			set @strike,0;
 			set @ball,0;
 			if (@yagu100 == @input100) set @strike,@strike+1;
 			if (@yagu10 == @input10) set @strike,@strike+1;
-			if (@yagu1 == (@input % 10)) set @strike,@strike+1;
-			if ((@yagu100 == @input10) || (@yagu100 == (@input % 10))) set .@ball,.@ball+1;
-			if ((@yagu10 == @input100) || (@yagu10 == (@input % 10))) set @ball,@ball+1;
+			if (@yagu1 == @input1) set @strike,@strike+1;
+			if ((@yagu100 == @input10) || (@yagu100 == @input1)) set @ball,@ball+1;
+			if ((@yagu10 == @input100) || (@yagu10 == @input1)) set @ball,@ball+1;
 			if ((@yagu1 == @input100) || (@yagu1 == @input10)) set @ball,@ball+1;
 			if (@strike == 3) {
 				mes "[Security System]";

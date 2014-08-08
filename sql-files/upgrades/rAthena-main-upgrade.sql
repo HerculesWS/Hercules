@@ -4,7 +4,7 @@
 -- Remember to make a backup before applying.
 -- We are not liable for any data loss this may cause.
 -- Apply in the same database you applied your main.sql
--- Last revised: April 26, 2014 12:29 GMT
+-- Last revised: July 22, 2014 21:45 GMT
 
 -- Drop table contents from `sc_data` since we use a different status order than rAthena
 -- /!\ WARNING /!\ This will remove _ALL_ of the status effects active on the server
@@ -15,26 +15,55 @@ TRUNCATE TABLE `sc_data`;
 -- Drop table `skillcooldown` since it's not used in Hercules
 DROP TABLE IF EXISTS `skillcooldown`;
 
+-- Upgrades for table `auction`
+ALTER TABLE `auction` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
+	MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0';
+
 -- Upgrades for table `cart_inventory`
-ALTER TABLE `cart_inventory` MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `cart_inventory` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
+	MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
 
 -- Upgrades for table `char`
 ALTER TABLE `char` CHANGE `moves` `slotchange` SMALLINT(3) UNSIGNED NOT NULL DEFAULT '0',
 	ADD `char_opt` INT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `slotchange`,
-	ADD `font` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `char_opt`,
-	MODIFY `uniqueitem_counter` BIGINT(20) UNSIGNED NOT NULL DEFAULT '0';
+	MODIFY `font` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `char_opt`,
+	ADD `uniqueitem_counter` BIGINT(20) UNSIGNED NOT NULL DEFAULT '0' AFTER `unban_time`;
 
 -- Upgrades for table `charlog`
 ALTER TABLE `charlog` ADD COLUMN `char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `account_id`;
 
 -- Upgrades for table `guild_storage`
-ALTER TABLE `guild_storage` MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `guild_storage` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
+	MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
 
 -- Upgrades for table `inventory`
-ALTER TABLE `inventory` MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `inventory` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
+	MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
 
 -- Login table will be upgraded at a later point on this file
 -- so that we can save the bank vault.
+
+-- Upgrades for table `mail`
+ALTER TABLE `mail` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
+	MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0';
 
 -- Upgrades for table `mapreg`
 ALTER TABLE `mapreg` MODIFY `varname` VARCHAR(32) BINARY NOT NULL,
@@ -42,8 +71,8 @@ ALTER TABLE `mapreg` MODIFY `varname` VARCHAR(32) BINARY NOT NULL,
 	DROP KEY `index`,
 	ADD PRIMARY KEY (`varname`,`index`);
 
--- Upgrades for table `sc_data`
-ALTER TABLE `pet` CHANGE `incuvate` `incubate` int(11) unsigned NOT NULL default '0';
+-- Upgrades for table `pet`
+ALTER TABLE `pet` MODIFY `egg_id` SMALLINT(11) UNSIGNED NOT NULL DEFAULT '0';
 
 
 -- Upgrades for table `sc_data`
@@ -89,7 +118,12 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1398477600); -- 2014-04-26--10-0
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1400256139); -- 2014-05-17--00-06.sql
 
 -- Updates to table `storage`
-ALTER TABLE `storage` MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `storage` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
+	MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+	MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
 
 --
 -- Table structure for table `account_data`

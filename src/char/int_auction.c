@@ -115,7 +115,7 @@ unsigned int auction_create(struct auction_data *auction)
 
 		auction->auction_id = (unsigned int)SQL->StmtLastInsertId(stmt);
 		auction->auction_end_timer = timer->add( timer->gettick() + tick , auction_end_timer, auction->auction_id, 0);
-		ShowInfo("New Auction %u | time left %u ms | By %s.\n", auction->auction_id, tick, auction->seller_name);
+		ShowInfo("New Auction %u | time left %"PRId64" ms | By %s.\n", auction->auction_id, tick, auction->seller_name);
 
 		CREATE(auction_, struct auction_data, 1);
 		memcpy(auction_, auction, sizeof(struct auction_data));
