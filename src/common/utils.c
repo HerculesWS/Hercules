@@ -64,31 +64,27 @@ void WriteDump(FILE* fp, const void* buffer, size_t length)
 
 
 /// Dumps given buffer on the console.
-void ShowDump(const void* buffer, size_t length)
-{
+void ShowDump(const void *buffer, size_t length) {
 	size_t i;
 	char hex[48+1], ascii[16+1];
 
 	ShowDebug("--- 00-01-02-03-04-05-06-07-08-09-0A-0B-0C-0D-0E-0F   0123456789ABCDEF\n");
 	ascii[16] = 0;
 
-	for( i = 0; i < length; i++ )
-	{
+	for (i = 0; i < length; i++) {
 		char c = RBUFB(buffer,i);
 
 		ascii[i%16] = ISCNTRL(c) ? '.' : c;
 		sprintf(hex+(i%16)*3, "%02X ", RBUFB(buffer,i));
 
-		if( (i%16) == 15 )
-		{
-			ShowDebug("%03X %s  %s\n", i/16, hex, ascii);
+		if ((i%16) == 15) {
+			ShowDebug("%03"PRIXS" %s  %s\n", i/16, hex, ascii);
 		}
 	}
 
-	if( (i%16) != 0 )
-	{
+	if ((i%16) != 0) {
 		ascii[i%16] = 0;
-		ShowDebug("%03X %-48s  %-16s\n", i/16, hex, ascii);
+		ShowDebug("%03"PRIXS" %-48s  %-16s\n", i/16, hex, ascii);
 	}
 }
 

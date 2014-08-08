@@ -439,6 +439,10 @@ int can_copy (struct map_session_data *sd, uint16 skill_id, struct block_list* b
 	else if( sd->sc.data[SC__REPRODUCE] && !skill->reproduce_db[skill->get_index(skill_id)] )
 		return 0;
 
+	//Never copy new 3rd class skills By OmegaRed
+	if(skill_id >= GC_DARKCROW && skill_id <= ALL_FULL_THROTTLE)
+		return 0;
+
 	return 1;
 }
 
@@ -1130,7 +1134,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 				const int pos[5] = { EQP_WEAPON, EQP_HELM, EQP_SHIELD, EQP_ARMOR, EQP_ACC };
 
 				for( i = 0; i < skill_lv; i++ )
-					skill->strip_equip(bl,pos[i], 6 * skill_lv + status->get_lv(src) / 4 + status_get_dex(src) / 10,
+					skill->strip_equip(bl,pos[i], (5 + skill_lv) * skill_lv,
 						skill_lv,skill->get_time2(skill_id,skill_lv));
 			}
 			break;
@@ -1383,6 +1387,14 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 				rate += sc->data[SC_MELTDOWN]->val3;
 			if( rate )
 				skill->break_equip(bl, EQP_ARMOR, rate, BCT_ENEMY);
+		}
+		if (sd && !skill_id && bl->type == BL_PC) { // This effect does not work with skills.
+			if (sd->def_set_race[tstatus->race].rate)
+					status->change_start(src,bl, SC_DEFSET, sd->def_set_race[tstatus->race].rate, sd->def_set_race[tstatus->race].value,
+					0, 0, 0, sd->def_set_race[tstatus->race].tick, 2);
+			if (sd->def_set_race[tstatus->race].rate)
+					status->change_start(src,bl, SC_MDEFSET, sd->mdef_set_race[tstatus->race].rate, sd->mdef_set_race[tstatus->race].value,
+					0, 0, 0, sd->mdef_set_race[tstatus->race].tick, 2);
 		}
 	}
 
@@ -3225,10 +3237,9 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 					struct map_session_data *sd = NULL;
 
 					if( src->type == BL_PC && (sd = ((TBL_PC*)src)) ) {
-						if( distance_xy(src->x, src->y, target->x, target->y) >= 3 ) // FIXME: Don't combos ignore distance? [Panikon]
+						if( distance_xy(src->x, src->y, target->x, target->y) >= 3 )
 							break;
 
-						skill->consume_requirement(sd, skl->skill_id, pc->checkskill(sd, skl->skill_id),1);
 						skill->castend_damage_id(src, target, skl->skill_id, pc->checkskill(sd, skl->skill_id), tick, 0);
 					}
 					break;
@@ -3849,30 +3860,75 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 
 		case KN_BOWLINGBASH:
 		case MS_BOWLINGBASH:
-			if(flag&1){
-				if(bl->id==skill->area_temp[1])
-					break;
-				//two hits for 500%
-				skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,SD_ANIMATION);
-				skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,SD_ANIMATION);
-			} else {
-				int i,c;
-				c = skill->get_blewcount(skill_id,skill_lv);
-				// keep moving target in the direction that src is looking, square by square
-				for(i=0;i<c;i++){
-					if (!skill->blown(src,bl,1,(unit->getdir(src)+4)%8,0x1))
-						break; //Can't knockback
-					skill->area_temp[0] = map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), BL_CHAR, src, skill_id, skill_lv, tick, flag|BCT_ENEMY, skill->area_sub_count);
-					if( skill->area_temp[0] > 1 ) break; // collision
+			{
+				int min_x,max_x,min_y,max_y,i,c,dir,tx,ty;
+				// Chain effect and check range gets reduction by recursive depth, as this can reach 0, we don't use blowcount
+				c = (skill_lv-(flag&0xFFF)+1)/2;
+				// Determine the Bowling Bash area depending on configuration
+				if (battle_config.bowling_bash_area == 0) {
+					// Gutter line system
+					min_x = ((src->x)-c) - ((src->x)-c)%40;
+					if(min_x < 0) min_x = 0;
+					max_x = min_x + 39;
+					min_y = ((src->y)-c) - ((src->y)-c)%40;
+					if(min_y < 0) min_y = 0;
+					max_y = min_y + 39;
+				} else if (battle_config.bowling_bash_area == 1) {
+					// Gutter line system without demi gutter bug
+					min_x = src->x - (src->x)%40;
+					max_x = min_x + 39;
+					min_y = src->y - (src->y)%40;
+					max_y = min_y + 39;
+				} else {
+					// Area around caster
+					min_x = src->x - battle_config.bowling_bash_area;
+					max_x = src->x + battle_config.bowling_bash_area;
+					min_y = src->y - battle_config.bowling_bash_area;
+					max_y = src->y + battle_config.bowling_bash_area;
 				}
-				clif->blown(bl); //Update target pos.
-				if (i!=c) { //Splash
-					skill->area_temp[1] = bl->id;
-					map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), splash_target(src), src, skill_id, skill_lv, tick, flag|BCT_ENEMY|1, skill->castend_damage_id);
+				// Initialization, break checks, direction
+				if((flag&0xFFF) > 0) {
+					// Ignore monsters outside area
+					if(bl->x < min_x || bl->x > max_x || bl->y < min_y || bl->y > max_y)
+						break;
+					// Ignore monsters already in list
+					if(idb_exists(skill->bowling_db, bl->id))
+						break;
+					// Random direction
+					dir = rnd()%8;
+				} else {
+					// Create an empty list of already hit targets
+					db_clear(skill->bowling_db);
+					// Direction is walkpath
+					dir = (unit->getdir(src)+4)%8;
 				}
-				//Weirdo dual-hit property, two attacks for 500%
-				skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,0);
-				skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,0);
+				// Add current target to the list of already hit targets
+				idb_put(skill->bowling_db, bl->id, bl);
+				// Keep moving target in direction square by square
+				tx = bl->x;
+				ty = bl->y;
+				for(i=0;i<c;i++) {
+					// Target coordinates (get changed even if knockback fails)
+					tx -= dirx[dir];
+					ty -= diry[dir];
+					// If target cell is a wall then break
+					if(map->getcell(bl->m,tx,ty,CELL_CHKWALL))
+						break;
+					skill_blown(src,bl,1,dir,0);
+					// Splash around target cell, but only cells inside area; we first have to check the area is not negative
+					if((max(min_x,tx-1) <= min(max_x,tx+1)) &&
+						(max(min_y,ty-1) <= min(max_y,ty+1)) &&
+						(map->foreachinarea(skill->area_sub, bl->m, max(min_x,tx-1), max(min_y,ty-1), min(max_x,tx+1), min(max_y,ty+1), splash_target(src), src, skill_id, skill_lv, tick, flag|BCT_ENEMY, skill->area_sub_count))) {
+						// Recursive call
+						map->foreachinarea(skill->area_sub, bl->m, max(min_x,tx-1), max(min_y,ty-1), min(max_x,tx+1), min(max_y,ty+1), splash_target(src), src, skill_id, skill_lv, tick, (flag|BCT_ENEMY)+1, skill->castend_damage_id);
+						// Self-collision
+						if(bl->x >= min_x && bl->x <= max_x && bl->y >= min_y && bl->y <= max_y)
+							skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,(flag&0xFFF)>0?SD_ANIMATION:0);
+						break;
+					}
+				}
+				// Original hit or chain hit depending on flag
+				skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,(flag&0xFFF)>0?SD_ANIMATION:0);
 			}
 			break;
 
@@ -5955,7 +6011,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case MO_ABSORBSPIRITS:
 		{
 			int sp = 0;
-			if (dstsd && dstsd->spiritball && (sd == dstsd || map_flag_vs(src->m)) && ((dstsd->class_&MAPID_BASEMASK)!=MAPID_GUNSLINGER || (dstsd->class_&MAPID_UPPERMASK)!=MAPID_REBELLION))
+			if (dstsd && dstsd->spiritball && (sd == dstsd || map_flag_vs(src->m) || (sd->duel_group && sd->duel_group == dstsd->duel_group)) && ((dstsd->class_&MAPID_BASEMASK)!=MAPID_GUNSLINGER || (dstsd->class_&MAPID_UPPERMASK)!=MAPID_REBELLION))
 			{	// split the if for readability, and included gunslingers in the check so that their coins cannot be removed [Reddozen]
 				sp = dstsd->spiritball * 7;
 				pc->delspiritball(dstsd,dstsd->spiritball,0);
@@ -10078,6 +10134,8 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case MH_XENO_SLASHER:
 			flag|=1;//Set flag to 1 to prevent deleting ammo (it will be deleted on group-delete).
 		case GS_GROUNDDRIFT: //Ammo should be deleted right away.
+			if ( skill_id == WM_SEVERE_RAINSTORM )
+				sc_start(src,src,SC_NO_SWITCH_EQUIP,100,0,skill->get_time(skill_id,skill_lv));
 			skill->unitsetting(src,skill_id,skill_lv,x,y,0);
 			break;
 		case RG_GRAFFITI:			/* Graffiti [Valaris] */
@@ -10399,7 +10457,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 						case 2: sx = x - i; break;
 						case 6: sx = x + i; break;
 					}
-					skill->addtimerskill(src,timer->gettick() + (50 * i),0,sx,sy,skill_id,skill_lv,dir,flag&2);
+					skill->addtimerskill(src,timer->gettick() + (140 * i),0,sx,sy,skill_id,skill_lv,dir,flag&2);
 				}
 			}
 			break;
@@ -11419,6 +11477,8 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 			break;
 
 		case UNT_REVERBERATION:
+			if (sg->src_id == bl->id)
+				break; //Does not affect the caster.
 			clif->changetraplook(&src->bl,UNT_USED_TRAPS);
 			map->foreachinrange(skill->trap_splash,&src->bl, skill->get_splash(sg->skill_id, sg->skill_lv), sg->bl_flag, &src->bl,tick);
 			sg->unit_id = UNT_USED_TRAPS;
@@ -12243,16 +12303,18 @@ int skill_unit_onleft(uint16 skill_id, struct block_list *bl, int64 tick) {
 		case EL_WATER_BARRIER:
 		case EL_ZEPHYR:
 		case EL_POWER_OF_GAIA:
-		case SO_FIRE_INSIGNIA:
-		case SO_WATER_INSIGNIA:
-		case SO_WIND_INSIGNIA:
-		case SO_EARTH_INSIGNIA:
 		case SO_ELEMENTAL_SHIELD:
 		case SC_BLOODYLUST:
 			if (sce)
 				status_change_end(bl, type, INVALID_TIMER);
 			break;
-
+		case SO_FIRE_INSIGNIA:
+		case SO_WATER_INSIGNIA:
+		case SO_WIND_INSIGNIA:
+		case SO_EARTH_INSIGNIA:
+			if (sce && bl->type != BL_ELEM)
+				status_change_end(bl, type, INVALID_TIMER);
+			break;
 		case BA_POEMBRAGI:
 		case BA_WHISTLE:
 		case BA_ASSASSINCROSS:
@@ -14043,7 +14105,11 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 		case SO_SUMMON_AQUA:
 		case SO_SUMMON_VENTUS:
 		case SO_SUMMON_TERA:
-			req.sp -= req.sp * (5 + 5 * pc->checkskill(sd,SO_EL_SYMPATHY)) / 100;
+		{
+			int spirit_sympathy = pc->checkskill(sd,SO_EL_SYMPATHY);
+			if (spirit_sympathy)
+				req.sp -= req.sp * (5 + 5 * spirit_sympathy) / 100;
+		}
 			break;
 		case SO_PSYCHIC_WAVE:
 			if( sc && (sc->data[SC_HEATER_OPTION] || sc->data[SC_COOLER_OPTION] || sc->data[SC_BLAST_OPTION] ||  sc->data[SC_CURSED_SOIL_OPTION] ))
@@ -17307,8 +17373,8 @@ int skill_blockpc_end(int tid, int64 tick, int id, intptr_t data) {
 				break;
 		}
 		
-		if( i == cd->cursor ) {
-			ShowError("skill_blockpc_end: '%s' : no data found for '%d'\n",sd->status.name,data);
+		if (i == cd->cursor) {
+			ShowError("skill_blockpc_end: '%s': no data found for '%"PRIdPTR"'\n", sd->status.name, data);
 		} else {
 			int cursor = 0;
 			
@@ -18438,7 +18504,7 @@ int do_init_skill(bool minimal) {
 	skill->unit_db = idb_alloc(DB_OPT_BASE);
 	skill->cd_db = idb_alloc(DB_OPT_BASE);
 	skill->usave_db = idb_alloc(DB_OPT_RELEASE_DATA);
-	
+	skill->bowling_db = idb_alloc(DB_OPT_BASE);
 	skill->unit_ers = ers_new(sizeof(struct skill_unit_group),"skill.c::skill_unit_ers",ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
 	skill->timer_ers  = ers_new(sizeof(struct skill_timerskill),"skill.c::skill_timer_ers",ERS_OPT_NONE|ERS_OPT_FLEX_CHUNK);
 	skill->cd_ers = ers_new(sizeof(struct skill_cd),"skill.c::skill_cd_ers",ERS_OPT_CLEAR|ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
@@ -18467,7 +18533,7 @@ int do_final_skill(void) {
 	db_destroy(skill->unit_db);
 	db_destroy(skill->cd_db);
 	db_destroy(skill->usave_db);
-	
+	db_destroy(skill->bowling_db);
 	ers_destroy(skill->unit_ers);
 	ers_destroy(skill->timer_ers);
 	ers_destroy(skill->cd_ers);
@@ -18489,6 +18555,7 @@ void skill_defaults(void) {
 	skill->name2id_db = NULL;
 	skill->unit_db = NULL;
 	skill->usave_db = NULL;
+	skill->bowling_db = NULL;
 	skill->group_db = NULL;
 	/* */
 	skill->unit_ers = NULL;

@@ -23,6 +23,7 @@
 #include "int_pet.h"
 #include "int_quest.h"
 #include "int_storage.h"
+#include "../common/cbasetypes.h"
 #include "../common/db.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h"
@@ -107,7 +108,7 @@ bool msg_config_read(const char *cfg_name, bool allow_override) {
 	while(fgets(line, sizeof(line), fp) ) {
 		if (line[0] == '/' && line[1] == '/')
 			continue;
-		if (sscanf(line, "%[^:]: %[^\r\n]", w1, w2) != 2)
+		if (sscanf(line, "%1023[^:]: %1023[^\r\n]", w1, w2) != 2)
 			continue;
 
 		if (strcmpi(w1, "import") == 0)
@@ -562,7 +563,8 @@ void inter_vmsg_to_fd(int fd, int u_fd, int aid, char* msg, va_list ap) {
  * @param msg  Message format string
  * @param ...  Additional parameters for (v)sprinf
  */
-void inter_msg_to_fd(int fd, int u_fd, int aid, char* msg, ...) {
+void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...) __attribute__((format(printf, 4, 5)));
+void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...) {
 	va_list ap;
 	va_start(ap,msg);
 	inter_vmsg_to_fd(fd, u_fd, aid, msg, ap);
@@ -917,9 +919,8 @@ static int inter_config_read(const char* cfgName)
 		return 1;
 	}
 
-	while(fgets(line, sizeof(line), fp))
-	{
-		i = sscanf(line, "%[^:]: %[^\r\n]", w1, w2);
+	while (fgets(line, sizeof(line), fp)) {
+		i = sscanf(line, "%1023[^:]: %1023[^\r\n]", w1, w2);
 		if(i != 2)
 			continue;
 

@@ -147,6 +147,7 @@ bonus2 bIgnoreMdefRate,n,x;          Disregard x% of the target's MDEF if the ta
 bonus2 bHPDrainRate,n,x;             n/10 % probability to drain x% HP when attacking
 bonus2 bSPDrainRate,n,x;             n/10 % probability to drain x% SP when attacking
 bonus2 bSPVanishRate,n,x;            Add the (n/10)% chance of decreasing enemy's SP (player) amount by x% when attacking
+bonus3 bSPVanishRate,n,x,t;		Same as bonus2 but works only if trigger t activates (see BF_* flags) when attacking.
 bonus2 bAddMonsterDropItem,n,x;      Adds a x/100% chance for item n to be dropped, when killing any monster.
 					If 'x' is negative value, then it's a part of formula
 						chance = -x*(killed_mob_level/10)+1
@@ -413,3 +414,5 @@ bonus2 bSkillFixedCast,s,x;		Increases fixed cast time of skill s by x milliseco
 bonus2 bSkillVariableCast,s,x;		Increases variable cast time of skill s by x milliseconds. (supports skill names.)
 bonus2 bVariableCastrate,s,x;		Increases variable cast time of skill s by x%. (supports skill names.)
 bonus2 bFixedCastrate,s,x;		Increases fixed cast time of skill s by x%. (supports skill names.)
+bonus4 bSetDefRace,r,n,t,y; 	Set DEF to y of an enemy of race r at n% for t milliseconds with normal attack
+bonus4 bSetMDefRace,r,n,t,y;	Set MDEF to y of an enemy of race r at n% for t milliseconds with normal attack

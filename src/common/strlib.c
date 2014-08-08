@@ -394,16 +394,15 @@ size_t safestrnlen(const char* string, size_t maxlen)
 /// @param fmt Format string
 /// @param ... Format arguments
 /// @return The size of the string or -1 if the buffer is too small
-int safesnprintf(char* buf, size_t sz, const char* fmt, ...)
-{
+int safesnprintf(char *buf, size_t sz, const char *fmt, ...) __attribute__((format(printf, 3, 4)));
+int safesnprintf(char *buf, size_t sz, const char *fmt, ...) {
 	va_list ap;
 	int ret;
 
 	va_start(ap,fmt);
 	ret = vsnprintf(buf, sz, fmt, ap);
 	va_end(ap);
-	if( ret < 0 || (size_t)ret >= sz )
-	{// overflow
+	if (ret < 0 || (size_t)ret >= sz) { // overflow
 		buf[sz-1] = '\0';// always null-terminate
 		return -1;
 	}
@@ -1020,7 +1019,8 @@ void StringBuf_Init(StringBuf* self) {
 }
 
 /// Appends the result of printf to the StringBuf
-int StringBuf_Printf(StringBuf* self, const char* fmt, ...) {
+int StringBuf_Printf(StringBuf *self, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
+int StringBuf_Printf(StringBuf *self, const char *fmt, ...) {
 	int len;
 	va_list ap;
 

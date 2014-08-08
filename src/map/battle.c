@@ -335,6 +335,8 @@ int64 battle_attr_fix(struct block_list *src, struct block_list *target, int64 d
 			ratio += skill->enchant_eff[sc->data[SC_VIOLENTGALE]->val1-1];
 		if(sc->data[SC_DELUGE] && atk_elem == ELE_WATER)
 			ratio += skill->enchant_eff[sc->data[SC_DELUGE]->val1-1];
+		if(sc->data[SC_FIRE_CLOAK_OPTION] && atk_elem == ELE_FIRE)
+			damage += damage * sc->data[SC_FIRE_CLOAK_OPTION]->val2 / 100;
 	}
 	if( target && target->type == BL_SKILL ) {
 		if( atk_elem == ELE_FIRE && battle->get_current_skill(target) == GN_WALLOFTHORN ) {
@@ -373,6 +375,8 @@ int64 battle_attr_fix(struct block_list *src, struct block_list *target, int64 d
 			if( tsc->data[SC_COLD] && target->type != BL_MOB)
 				status_change_end(target, SC_COLD, INVALID_TIMER);
 			if( tsc->data[SC_EARTH_INSIGNIA]) damage += damage/2;
+			if( tsc->data[SC_FIRE_CLOAK_OPTION])
+				damage -= damage * tsc->data[SC_FIRE_CLOAK_OPTION]->val2 / 100;
 			if( tsc->data[SC_VOLCANIC_ASH]) damage += damage/2; //150%
 			break;
 		case ELE_HOLY:
@@ -1693,19 +1697,17 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					if( sc && sc->data[SC_CURSED_SOIL_OPTION] )
 						skillratio += sc->data[SC_CURSED_SOIL_OPTION]->val3;
 					break;
-				case GN_DEMONIC_FIRE:
-					if( skill_lv > 20)
-					{	// Fire expansion Lv.2
-						skillratio += 110 + 20 * (skill_lv - 20) + status_get_int(src) * 3;	// Need official INT bonus. [LimitLine]
+				case GN_DEMONIC_FIRE: {
+						int fire_expansion_lv = skill_lv / 100;
+						skill_lv = skill_lv % 100;
+						skillratio = 110 + 20 * skill_lv;
+						if ( fire_expansion_lv == 1 )
+							skillratio += status_get_int(src) + (sd?sd->status.job_level:50);
+						else if ( fire_expansion_lv == 2 )
+							skillratio += status_get_int(src) * 10;
 					}
-					else if( skill_lv > 10 )
-					{	// Fire expansion Lv.1
-						skillratio += 110 + 20 * (skill_lv - 10) / 2;
-					}
-					else
-						skillratio += 110 + 20 * skill_lv;
 					break;
-					// Magical Elemental Spirits Attack Skills
+				// Magical Elemental Spirits Attack Skills
 				case EL_FIRE_MANTLE:
 				case EL_WATER_SCREW:
 					skillratio += 900;
@@ -2849,7 +2851,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 #endif
 
 		if(sc->data[SC_DEFENDER] &&
-			(flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON))
+			((flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON) || skill_id == CR_ACIDDEMONSTRATION))
 			damage = damage * ( 100 - sc->data[SC_DEFENDER]->val2 ) / 100;
 
 		if(sc->data[SC_GS_ADJUSTMENT] &&
@@ -2857,11 +2859,16 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			damage -= damage * 20 / 100;
 
 		if(sc->data[SC_FOGWALL]) {
-			if(flag&BF_SKILL) //25% reduction
-				damage -= damage * 25 / 100;
+			if(flag&BF_SKILL) { //25% reduction
+				if ( !(skill->get_inf(skill_id)&INF_GROUND_SKILL) && !(skill->get_nk(skill_id)&NK_SPLASH) )
+					damage -= 25*damage/100;
+				}
 			else if ((flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON))
 				damage >>= 2; //75% reduction
 		}
+
+		if ( sc->data[SC_WATER_BARRIER] )
+			damage = damage * ( 100 - 20 ) / 100;
 
 		// Compressed code, fixed by map.h [Epoque]
 		if (src->type == BL_MOB) {
@@ -4651,7 +4658,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				case RA_WUGBITE:
 					break;
 				default:
-					ATK_ADD( 50 * sc->data[SC_UNLIMIT]->val1 );
+					ATK_ADDRATE( 50 * sc->data[SC_UNLIMIT]->val1 );
 			}
 		}
 
@@ -5261,6 +5268,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 struct Damage battle_calc_attack(int attack_type,struct block_list *bl,struct block_list *target,uint16 skill_id,uint16 skill_lv,int count)
 {
 	struct Damage d;
+	struct map_session_data *sd=BL_CAST(BL_PC,bl);
 	switch(attack_type) {
 		case BF_WEAPON: d = battle->calc_weapon_attack(bl,target,skill_id,skill_lv,count); break;
 		case BF_MAGIC:  d = battle->calc_magic_attack(bl,target,skill_id,skill_lv,count);  break;
@@ -5299,6 +5307,13 @@ struct Damage battle_calc_attack(int attack_type,struct block_list *bl,struct bl
 		d.dmotion = 0;
 	} else // Some skills like Weaponry Research will cause damage even if attack is dodged
 		d.dmg_lv = ATK_DEF;
+
+	if(sd && d.damage+d.damage2>1) {
+		if(sd->bonus.sp_vanish_rate && sd->bonus.sp_vanish_trigger && rnd()%10000<sd->bonus.sp_vanish_rate &&
+			( (d.flag&sd->bonus.sp_vanish_trigger&BF_WEAPONMASK) || (d.flag&sd->bonus.sp_vanish_trigger&BF_RANGEMASK)
+			|| (d.flag&sd->bonus.sp_vanish_trigger&BF_SKILLMASK) ))
+			status_percent_damage(&sd->bl,target,0,-sd->bonus.sp_vanish_per,false);
+	}
 	return d;
 }
 //Performs reflect damage (magic (maya) is performed over skill.c).
@@ -5523,7 +5538,7 @@ void battle_drain(TBL_PC *sd, struct block_list *tbl, int64 rdamage, int64 ldama
 		}
 	}
 
-	if (sd->bonus.sp_vanish_rate && rnd()%1000 < sd->bonus.sp_vanish_rate)
+	if (sd->bonus.sp_vanish_rate && rnd()%1000 < sd->bonus.sp_vanish_rate && !sd->bonus.sp_vanish_trigger)
 		status_percent_damage(&sd->bl, tbl, 0, (unsigned char)sd->bonus.sp_vanish_per, false);
 
 	if( sd->sp_gain_race_attack[race] )
@@ -6728,6 +6743,7 @@ static const struct battle_data {
 	{ "homunculus_max_level",               &battle_config.hom_max_level,                   99,     0,      MAX_LEVEL,      },
 	{ "homunculus_S_max_level",             &battle_config.hom_S_max_level,                 150,    0,      MAX_LEVEL,      },
 	{ "mob_size_influence",                 &battle_config.mob_size_influence,              0,      0,      1,              },
+	{ "bowling_bash_area",                  &battle_config.bowling_bash_area,               0,      0,      20,             },
 	/**
 	 * Hercules
 	 **/

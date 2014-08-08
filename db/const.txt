@@ -591,6 +591,8 @@ bSkillUseSP	2055
 bMagicAtkEle 2056
 bFixedCast	2057
 bVariableCast	2058
+bSetDefRace	2059
+bSetMDefRace	2060
 
 //reference to script.c::script_defaults():equip[] array used for easy-conversion
 EQI_HEAD_TOP	1
@@ -639,7 +641,10 @@ Eff_Confusion	7
 Eff_Blind	8
 Eff_Bleeding	9
 Eff_DPoison	10
-Eff_Burning	11
+Eff_Fear	11	
+Eff_Cold	12
+Eff_Burning	13
+Eff_Deepsleep	14
 
 Ele_Neutral	0
 Ele_Water	1
