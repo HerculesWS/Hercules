@@ -11986,6 +11986,10 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 					}
 					hp = tstatus->max_hp * hp / 100;
 					sp = tstatus->max_sp * sp / 100;
+					if (tstatus->hp < tstatus->max_hp)
+						clif->skill_nodamage(&src->bl, bl, AL_HEAL, hp, 1);
+					if (tstatus->sp < tstatus->max_sp)
+						clif->skill_nodamage(&src->bl, bl, MG_SRECOVERY, sp, 1);
 					status->heal(bl, hp, sp, 2);
 					sc_start(ss, bl, type, 100, sg->skill_lv, (sg->interval * 3) + 100);
 				}
@@ -16612,7 +16616,7 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 				break;
 			    }
 			/**
-			 * Guilotine Cross
+			 * Guillotine Cross
 			 **/
 			case GC_CREATENEWPOISON:
 				{
