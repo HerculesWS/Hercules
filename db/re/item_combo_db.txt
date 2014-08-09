@@ -122,7 +122,7 @@
 2478:2578:2887:15039,{ bonus2 bAddRace,RC_NonBoss,10; bonus2 bAddRace,RC_Boss,10; bonus bMatk,10; if(readparam(bStr)>119) { bonus bBaseAtk,30; } bonus3 bAutoSpell,"ASC_BREAKER",getskilllv("ASC_BREAKER"),10; bonus bCritical,-20; }
 2479:2580:2890:15042,{ bonus bAspd,2; bonus bLongAtkRate,30; bonus3 bAutoSpell,"AC_DOUBLE",3,10; bonus2 bSkillAtk,"RA_ARROWSTORM",50; }
 2480:2581:2891:15043,{ bonus bMaxHPrate,15; bonus2 bSkillAtk,"RA_CLUSTERBOMB",20; bonus bFlee2,20; bonus bLongAtkRate,-30; bonus bAspd,-7; }
-2483:2586:15046,{ bonus2 bSubRace,RC_DemiHuman,15; }
+2483:2586:15046,{ bonus bVit,5; bonus2 bSubRace,RC_DemiHuman,15; }
 2484:2587:15047,{ bonus bDex,5; bonus2 bSubRace,RC_DemiHuman,15; }
 2485:2587:15048,{ bonus bInt,5; bonus bMdef,10; bonus2 bSubRace,RC_DemiHuman,15; }
 2518:2648:2649:5126,{ bonus bInt,5; bonus bMdef,11; bonus bMaxSPrate,20; bonus bNoCastCancel,0; bonus bVariableCastrate,25; }
