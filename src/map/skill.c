@@ -8105,7 +8105,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			}
 			break;
 		/**
-		 * Guilotine Cross
+		 * Guillotine Cross
 		 **/
 		case GC_ROLLINGCUTTER:
 			{
@@ -11132,6 +11132,7 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 		case SO_FIRE_INSIGNIA:
 		case SO_WIND_INSIGNIA:
 		case SO_EARTH_INSIGNIA:
+		case WM_SEVERE_RAINSTORM:
 			if( map->getcell(src->m, x, y, CELL_CHKLANDPROTECTOR) )
 				return NULL;
 			break;
@@ -12013,6 +12014,10 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 					}
 					hp = tstatus->max_hp * hp / 100;
 					sp = tstatus->max_sp * sp / 100;
+					if( tstatus->hp < tstatus->max_hp )
+						clif->skill_nodamage(&src->bl, bl, AL_HEAL, hp, 1);
+					if( tstatus->sp < tstatus->max_sp )
+						clif->skill_nodamage(&src->bl, bl, MG_SRECOVERY, sp, 1);
 					status->heal(bl, hp, sp, 2);
 					sc_start(ss, bl, type, 100, sg->skill_lv, (sg->interval * 3) + 100);
 				}

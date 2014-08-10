@@ -622,7 +622,7 @@ void initChangeTables(void) {
 	set_sc( SC_ENERVATION        , SC__ENERVATION     , SI_ENERVATION      , SCB_BATK  );
 	set_sc( SC_GROOMY            , SC__GROOMY         , SI_GROOMY          , SCB_ASPD|SCB_HIT|SCB_SPEED );
 	set_sc( SC_IGNORANCE         , SC__IGNORANCE      , SI_IGNORANCE       , SCB_NONE );
-	set_sc( SC_LAZINESS          , SC__LAZINESS       , SI_LAZINESS        , SCB_FLEE );
+	set_sc( SC_LAZINESS          , SC__LAZINESS       , SI_LAZINESS        , SCB_FLEE|SCB_SPEED );
 	set_sc( SC_UNLUCKY           , SC__UNLUCKY        , SI_UNLUCKY         , SCB_CRI|SCB_FLEE2 );
 	set_sc( SC_WEAKNESS          , SC__WEAKNESS       , SI_WEAKNESS        , SCB_FLEE2|SCB_MAXHP );
 	set_sc( SC_STRIPACCESSARY    , SC__STRIPACCESSARY , SI_STRIPACCESSARY  , SCB_DEX|SCB_INT|SCB_LUK );
@@ -5275,6 +5275,8 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 						val = max( val, sc->data[SC_GLOOMYDAY]->val3 );	// Should be 50 (-50% speed)
 					if( sc->data[SC_STEALTHFIELD_MASTER] )
 						val = max( val, 30 );
+					if( sc->data[SC__LAZINESS] )
+						val = max( val, 25 );
 					if( sc->data[SC_BANDING_DEFENCE] )
 						val = max( val, sc->data[SC_BANDING_DEFENCE]->val1 );//+90% walking speed.
 					if( sc->data[SC_ROCK_CRUSHER_ATK] )
@@ -11289,7 +11291,7 @@ int status_change_timer_sub(struct block_list* bl, va_list ap) {
 	tsc = status->get_sc(bl);
 
 	switch( type ) {
-		case SC_SIGHT: /* Reveal hidden ennemy on 3*3 range */
+		case SC_SIGHT: /* Reveal hidden enemy on 3*3 range */
 			if( tsc && tsc->data[SC__SHADOWFORM] && (sce && sce->val4 >0 && sce->val4%2000 == 0) && // for every 2 seconds do the checking
 				rnd()%100 < 100-tsc->data[SC__SHADOWFORM]->val1*10 ) // [100 - (Skill Level x 10)] %
 				status_change_end(bl, SC__SHADOWFORM, INVALID_TIMER);
@@ -11299,7 +11301,7 @@ int status_change_timer_sub(struct block_list* bl, va_list ap) {
 			status_change_end(bl, SC_CLOAKINGEXCEED, INVALID_TIMER);
 			status_change_end(bl, SC_CAMOUFLAGE, INVALID_TIMER);
 			break;
-		case SC_RUWACH: /* Reveal hidden target and deal little dammages if ennemy */
+		case SC_RUWACH: /* Reveal hidden target and deal little dammages if enemy */
 			if (tsc && (tsc->data[SC_HIDING] || tsc->data[SC_CLOAKING] ||
 				tsc->data[SC_CAMOUFLAGE] || tsc->data[SC_CLOAKINGEXCEED])) {
 					status_change_end(bl, SC_HIDING, INVALID_TIMER);
