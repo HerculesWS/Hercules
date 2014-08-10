@@ -6770,20 +6770,42 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			}
 			break;
 		case AM_CP_WEAPON:
-		case AM_CP_SHIELD:
-		case AM_CP_ARMOR:
-		case AM_CP_HELM:
-			{
-				unsigned int equip[] = {EQP_WEAPON, EQP_SHIELD, EQP_ARMOR, EQP_HEAD_TOP};
-
-				if( sd && ( bl->type != BL_PC || ( dstsd && pc->checkequip(dstsd,equip[skill_id - AM_CP_WEAPON]) < 0 ) ) ) {
-					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-					map->freeblock_unlock(); // Don't consume item requirements
-					return 0;
-				}
-
+			if(dstsd && dstsd->inventory_data[dstsd->equip_index[EQI_HAND_R]])
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,
 					sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv)));
+			else {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+			break;
+		case AM_CP_SHIELD: {
+				int i;
+				if(dstsd && (i=dstsd->equip_index[EQI_HAND_L])>=0 && dstsd->inventory_data[i] && 
+					dstsd->inventory_data[i]->type==IT_ARMOR)
+					clif->skill_nodamage(src,bl,skill_id,skill_lv,
+						sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv)));
+				else {
+					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+					return 0;
+				}
+			}
+			break;
+		case AM_CP_ARMOR:
+			if(dstsd && dstsd->inventory_data[dstsd->equip_index[EQI_ARMOR]])
+				clif->skill_nodamage(src,bl,skill_id,skill_lv,
+					sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv)));
+			else {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+			break;
+		case AM_CP_HELM:
+			if(dstsd && dstsd->inventory_data[dstsd->equip_index[EQI_HEAD_TOP]])
+				clif->skill_nodamage(src,bl,skill_id,skill_lv,
+					sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv)));
+			else {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
 			}
 			break;
 		case AM_TWILIGHT1:
@@ -7465,25 +7487,30 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			}
 			break;
 		// Full Chemical Protection
-		case CR_FULLPROTECTION:
-			{
-				unsigned int equip[] = {EQP_WEAPON, EQP_SHIELD, EQP_ARMOR, EQP_HEAD_TOP};
-				int i, s = 0, skilltime = skill->get_time(skill_id,skill_lv);
-
-				for (i=0 ; i<4; i++) {
-					if( bl->type != BL_PC || ( dstsd && pc->checkequip(dstsd,equip[i]) < 0 ) )
-						continue;
-					sc_start(src,bl,(sc_type)(SC_PROTECTWEAPON + i),100,skill_lv,skilltime);
-					s++;
-				}
-				if( sd && !s ){
-					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-					map->freeblock_unlock(); // Don't consume item requirements
-					return 0;
-				}
+		case CR_FULLPROTECTION: {
+			bool iused=false;
+			int i;
+			if(dstsd && dstsd->inventory_data[dstsd->equip_index[EQI_HAND_R]]) {
+				iused=true;
+				clif->skill_nodamage(src,bl,skill_id,skill_lv,sc_start(src,bl,SC_PROTECTWEAPON,100,skill_lv,skill->get_time(skill_id,skill_lv)));
+			} if(dstsd && (i=dstsd->equip_index[EQI_HAND_L])>=0 && dstsd->inventory_data[i] && 
+					dstsd->inventory_data[i]->type==IT_ARMOR) {
+				iused=true;
+				clif->skill_nodamage(src,bl,skill_id,skill_lv,sc_start(src,bl,SC_PROTECTSHIELD,100,skill_lv,skill->get_time(skill_id,skill_lv)));
+			} if(dstsd && dstsd->inventory_data[dstsd->equip_index[EQI_ARMOR]]) {
+				iused=true;
+				clif->skill_nodamage(src,bl,skill_id,skill_lv,sc_start(src,bl,SC_PROTECTARMOR,100,skill_lv,skill->get_time(skill_id,skill_lv)));
+			} if(dstsd && dstsd->inventory_data[dstsd->equip_index[EQI_HEAD_TOP]]) {
+				iused=true;
+				clif->skill_nodamage(src,bl,skill_id,skill_lv,sc_start(src,bl,SC_PROTECTHELM,100,skill_lv,skill->get_time(skill_id,skill_lv)));
+			} if(iused)
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+			else {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
 			}
-			break;
+		}
+		break;
 
 		case RG_CLEANER:	//AppleGirl
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
