@@ -2414,8 +2414,8 @@ uint8 map_calc_dir(struct block_list* src, int16 x, int16 y)
 	dy = y-src->y;
 	if( dx == 0 && dy == 0 )
 	{	// both are standing on the same spot
-		//dir = 6; // aegis-style, makes knockback default to the left
-		dir = unit->getdir(src); // athena-style, makes knockback default to behind 'src'
+		dir = 6; // aegis-style, makes knockback default to the left
+		//dir = unit->getdir(src); // athena-style, makes knockback default to behind 'src'
 	}
 	else if( dx >= 0 && dy >=0 )
 	{	// upper-right

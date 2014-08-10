@@ -6912,6 +6912,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case TF_BACKSLIDING: //This is the correct implementation as per packet logging information. [Skotlex]
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 			skill->blown(src,bl,skill->get_blewcount(skill_id,skill_lv),unit->getdir(bl),0);
+			clif->fixpos(bl);
 			break;
 
 		case TK_HIGHJUMP:
