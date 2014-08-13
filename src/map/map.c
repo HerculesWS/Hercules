@@ -2413,9 +2413,10 @@ uint8 map_calc_dir(struct block_list* src, int16 x, int16 y)
 	dx = x-src->x;
 	dy = y-src->y;
 	if( dx == 0 && dy == 0 )
-	{	// both are standing on the same spot
-		dir = 6; // aegis-style, makes knockback default to the left
-		//dir = unit->getdir(src); // athena-style, makes knockback default to behind 'src'
+	{	// both are standing on the same spot.
+		// aegis-style, makes knockback default to the left.
+		// athena-style, makes knockback default to behind 'src'.
+		dir = (battle_config.knockback_left ? 6 : unit->getdir(src));
 	}
 	else if( dx >= 0 && dy >=0 )
 	{	// upper-right
