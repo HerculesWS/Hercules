@@ -263,7 +263,7 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 			else if (DIFF_TICK(timer->gettick(), mrd->masterteleport_timer) > 3000)
 			{
 				mrd->masterteleport_timer = 0;
-				unit->warp( bl, mrd->master->bl.id, mrd->master->bl.x, mrd->master->bl.y, CLR_TELEPORT );
+				unit->warp( bl, mrd->master->bl.m, mrd->master->bl.x, mrd->master->bl.y, CLR_TELEPORT );
 			}
 		}
 		else

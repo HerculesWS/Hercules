@@ -86,9 +86,8 @@ int path_blownpos(int16 m,int16 x0,int16 y0,int16 dx,int16 dy,int count)
 	}
 
 	while( count > 0 && (dx != 0 || dy != 0) ) {
-		if( !md->getcellp(md,x0+dx,y0+dy,CELL_CHKPASS) ) {
+		if( !md->getcellp(md,x0+dx,y0+dy,CELL_CHKPASS) )
 			break;
-		}
 
 		x0 += dx;
 		y0 += dy;
