@@ -1,0 +1,37 @@
+//===== Hercules Script =======================================
+//= Sample: Skill
+//===== By: ==================================================
+//= Hercules Dev Team
+//===== Current Version: =====================================
+//= 20131225
+//===== Description: ========================================= 
+//= Demonstrates the 'skill' command.
+//============================================================
+
+// skill <skill id>,<level>{,<flag>};
+//	flag=0 Grants the skill permanently
+//	flag=1 Grants the skill temporarily
+//	flag=2 Level bonus, stackable
+//	flag=3 Grants the skill permanently even after skill resets/job changes
+// If flag is undefined, it defaults to 1
+// View db/(pre-)re/skill_db.txt for skill IDs
+
+prontera,157,182,0	script	Skills	4_F_KAFRA2,{
+	mes "What skill would you like?";
+	switch(select("First Aid:Play Dead:Heal:Sight:None")) {
+	case 1:
+		skill NV_FIRSTAID,1,0; // Permanently gives player level 1 First Aid
+		close;
+	case 2:
+		skill NV_TRICKDEAD,1,0; // Permanently gives player level 1 Play Dead
+		close;
+	case 3:
+		skill AL_HEAL,3,1; // Temporarily gives player level 3 Heal
+		close;
+	case 4:
+		skill MG_SIGHT,1,3; // Permanently gives player level 1 Sight, even after skill resets/job changes
+		close;
+	case 5:
+		close;
+	}
+}

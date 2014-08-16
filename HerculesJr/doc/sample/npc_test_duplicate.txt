@@ -1,0 +1,33 @@
+//===== Hercules Script =======================================
+//= Sample: Duplicate Test
+//===== By: ==================================================
+//= Hercules Dev Team
+//===== Current Version: =====================================
+//= 20140320
+//===== Description: =========================================
+//= An example of how duplicate NPCs are handled:
+//=  NPC variables are shared between all duplicates.
+//=  In this sample, to get the NPC coordinate, has to trigger OnTouch
+//=  Duplicates always override the source NPC's trigger area (even 0x0).
+//=  'OnInit' loads the main npc last, for some reason. (check with debugmes)
+//============================================================
+
+-	script	Test Script	-1,1,1,{
+	mes "Hi.";
+	mes "My coords are "+ .map$ +", "+ .x +"/" +.y ;
+	close;
+
+OnInit:
+	getmapxy(.map$, .x, .y, 1);
+	debugmes strnpcinfo(0);
+	end;
+
+OnTouch:
+	getmapxy(.map$, .x, .y, 1);
+	emotion e_scissors;
+	end;
+}
+
+prontera,150,175,4	duplicate(Test Script)	Test1	4_PORING
+prontera,155,175,4	duplicate(Test Script)	Test2	4_PORING,2,2
+prontera,160,175,4	duplicate(Test Script)	Test3	4_PORING,3,3

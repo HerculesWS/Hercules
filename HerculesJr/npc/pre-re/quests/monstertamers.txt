@@ -1,0 +1,13 @@
+//===== Hercules Script ======================================
+//= Monster Tamers
+//===== By: ==================================================
+//= Euphy
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= Cute pet quest items
+//===== Additional Comments: =================================
+//= 1.0 Moved Izlude NPC to pre-re/re paths.
+//============================================================
+
+izlude_in,129,64,4	duplicate(MonsterTamer_izlude)	Monster Tamer#izu	4_M_TELEPORTER

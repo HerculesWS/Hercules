@@ -1,0 +1,19 @@
+//===== Hercules Script ======================================
+//= Izlude Airport NPCs
+//===== By: ==================================================
+//= Hercules Dev Team
+//===== Current Version: =====================================
+//= 1.1
+//===== Description: =========================================
+//= [Official Conversion]
+//= Izlude Airport NPCs
+//===== Additional Comments: =================================
+//= 1.0 Updated to match the new Izlude Map. [Masao]
+//= 1.1 Added Izlude duplicates. [Euphy]
+//============================================================
+
+izlude,202,75,3	duplicate(Airship_Staff_izlude)	Airship Staff#izlude	4_F_01
+izlude_a,202,75,3	duplicate(Airship_Staff_izlude)	Airship Staff#izlude_a	4_F_01
+izlude_b,202,75,3	duplicate(Airship_Staff_izlude)	Airship Staff#izlude_b	4_F_01
+izlude_c,202,75,3	duplicate(Airship_Staff_izlude)	Airship Staff#izlude_c	4_F_01
+izlude_d,202,75,3	duplicate(Airship_Staff_izlude)	Airship Staff#izlude_d	4_F_01

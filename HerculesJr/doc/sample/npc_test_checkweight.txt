@@ -1,0 +1,158 @@
+//===== Hercules Script =======================================
+//= Sample: CheckWeight
+//===== By: ==================================================
+//= Hercules Dev Team
+//===== Current Version: =====================================
+//= 20131225
+//===== Description: =========================================
+//= Demonstrates 'checkweight' command.
+//============================================================
+
+prontera,161,181,6	script	ChkSpace	4_M_JPN,{
+	function ChkResult;
+	function FinalReport;
+
+	// Reset
+	resetlvl(1);
+	getinventorylist;
+	for (.@i = 0; .@i < @inventorylist_count; ++.@i) {
+		delitem(@inventorylist_id[.@i], @inventorylist_amount[.@i]); //clear inventory
+	}
+
+	//basic backward chk
+	.@testid = 0;
+	.@succes = 0;
+	.@ret = checkweight(Apple, 10);
+	.@succes += ChkResult(.@testid++, 1, .@ret); //should be success
+	.@ret =	checkweight("Apple", 10);
+	.@succes += ChkResult(.@testid++, 1, .@ret); //should be success
+	.@ret = checkweight(Premium_Reset_Stone, 33000);
+	.@succes += ChkResult(.@testid++, 0, .@ret); //should be failure too many item amount item weight=0
+	.@ret = checkweight("Premium_Reset_Stone", 33000);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure too many item amount
+	.@ret = checkweight(Blue_Gemstone, 500);
+	.@success += ChkResult(.@testid++, 1, .@ret); //should be success weight based on max weight=2030
+	.@ret = checkweight(Blue_Gemstone, 1000);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure weight based on max weight=2030
+	.@ret = checkweight(Magic_Stone_Ring, 100);
+	.@success += ChkResult(.@testid++, 1, .@ret); //should be success
+	.@ret = checkweight(Magic_Stone_Ring, 101);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure (with MAX_INVENTORY = 100)
+	.@ret = checkweight(-1, 1);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure invalid item id
+	.@ret = checkweight(Apple, 0);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure invalid amount
+
+	debugmes "End backward test";
+	FinalReport(.@testid, .@succes);
+
+	//update using list test
+	.@testid = 0;
+	.@succes = 0;
+
+	.@ret = checkweight(Apple, 10, Banana, 10);
+	.@success += ChkResult(.@testid++, 1, .@ret); //should be success
+	.@ret =	checkweight("Apple", 10, "Banana", 10);
+	.@success += ChkResult(.@testid++, 1, .@ret); //should be success
+	.@ret = checkweight(Apple, 80, Banana, 33000);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure
+	.@ret = checkweight("Apple", 80, "Banana", 33000);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure too many item amount
+	.@ret = checkweight("Apple", 10, "Banana", 21, Apple);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure invalid nb of args
+	.@ret = checkweight(Blue_Gemstone, 500, Red_Gemstone, 100);
+	.@success += ChkResult(.@testid++, 1, .@ret); //should be succes weight 1800/2030
+	.@ret = checkweight(Blue_Gemstone, 500, Red_Gemstone, 500);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure weight 3000/2030
+	.@ret = checkweight(Magic_Stone_Ring, 95, Green_Apple_Ring, 5);
+	.@success += ChkResult(.@testid++, 1, .@ret); //should be success
+	.@ret = checkweight(Magic_Stone_Ring, 95, Green_Apple_Ring, 10);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure (with MAX_INVENTORY = 100)
+	.@ret = checkweight(Apple, 1, -1, 1);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure invalid item id
+	.@ret = checkweight(Apple, 1, Banana, 0);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure invalid amount
+	.@ret = checkweight(Premium_Reset_Stone, 31000, Premium_Reset_Stone, 2000);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure overamount inventory
+	.@ret = checkweight(Apple, 1, Banana, 1, Grape, 1, Carrot, 1);
+	.@success += ChkResult(.@testid++, 1, .@ret); //should be sucess
+
+	debugmes "End update by list tests";
+	FinalReport(.@testid, .@succes);
+
+	//update using array tests
+	.@testid = 0;
+	.@succes = 0;
+
+	setarray .@item[0], Apple, Banana, Grape, Carrot;
+	setarray .@count[0],    1,      5,     9,     12;
+	.@ret = checkweight2(.@item, .@count);
+	.@success += ChkResult(.@testid++, 1, .@ret); //should be sucess
+	cleararray .@item[0],  0, 4;
+	cleararray .@count[0], 0, 4;
+	setarray .@item[0], Apple, Banana, Grape, Carrot;
+	setarray .@count[0],    1,      5,    -1,     12;
+	.@ret = checkweight2(.@item, .@count);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure, invalid amout
+	cleararray .@item[0],  0, 4;
+	cleararray .@count[0], 0, 4;
+	setarray .@item[0], Apple, Banana, Grape, -1;
+	setarray .@count[0],    1,      5,    15, 12;
+	.@ret = checkweight2(.@item, .@count);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure, invalid id
+	cleararray .@item[0],  0, 4;
+	cleararray .@count[0], 0, 4;
+	setarray .@item[0], Blue_Gemstone, Yellow_Gemstone, Red_Gemstone, Emperium;
+	setarray .@count[0],          300,             300,          300,      300;
+	.@ret = checkweight2(.@item, .@count);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure, total by weight
+	cleararray .@item[0],  0, 4;
+	cleararray .@count[0], 0, 4;
+	setarray .@item[0], Premium_Reset_Stone, Premium_Reset_Stone;
+	setarray .@count[0],              31000,                2000;
+	.@ret = checkweight2(.@item, .@count);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure, total by weight
+	cleararray .@item[0],  0, 2;
+	cleararray .@count[0], 0, 2;
+	setarray .@item[0], Magic_Stone_Ring, Green_Apple_Ring;
+	setarray .@count[0],              95,                5;
+	.@ret = checkweight2(.@item, .@count);
+	.@success += ChkResult(.@testid++, 1, .@ret); //should be success
+	setarray .@count[0], 95, 10;
+	.@ret = checkweight2(.@item, .@count);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure overamount item
+	cleararray .@item[0],  0, 2;
+	cleararray .@count[0], 0, 2;
+	setarray .@item[0], Premium_Reset_Stone, Premium_Reset_Stone, Apple;
+	setarray .@count[0],                  1,                   3;
+	.@ret = checkweight2(.@item, .@count);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure, size mistmatch
+	cleararray .@item[0],  0, 3;
+	cleararray .@count[0], 0, 2;
+	setarray .@item[0], Premium_Reset_Stone, Premium_Reset_Stone;
+	setarray .@count[0],                  1,                   3, 5;
+	.@ret = checkweight2(.@item, .@count);
+	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure, size mistmatch
+
+	debugmes "End update by array tests";
+	FinalReport(.@testid, .@succes);
+
+	end;
+
+	function ChkResult {
+		.@tid = getarg(0);
+		.@expected = getarg(1);
+		.@ret = getarg(2);
+		.@sucess = (.@ret==.@expected);
+		debugmes "Test "+.@tid+" = "+(.@sucess?"Sucess":"Fail");
+		return .@sucess;
+	}
+
+	function FinalReport {
+		.@tdone = getarg(0);
+		.@succes = getarg(1);
+		debugmes "Results = Pass : "+.@succes+"/"+.@tdone+" Fails : "+(.@tdone-.@succes)+"/"+.@tdone;
+		if(.@succes != .@tdone) { debugmes "Some failure as occured, enable chkresult print to found out"; }
+		return;
+	}
+}

@@ -1,0 +1,18 @@
+//===== Hercules Script ======================================
+//= Mapflag: Ignore parties.
+//===== By: ==================================================
+//= Hercules Dev Team
+//===== Current Version: =====================================
+//= 1.2
+//===== Description: =========================================
+//= Ignores party alliances on PvP-enabled maps.
+//===== Additional Comments: =================================
+//= 1.0 - Initial script.
+//============================================================
+
+// GvG Arenas =================
+guild_vs1	mapflag	pvp_noparty
+guild_vs2	mapflag	pvp_noparty
+guild_vs3	mapflag	pvp_noparty
+guild_vs4	mapflag	pvp_noparty
+guild_vs5	mapflag	pvp_noparty

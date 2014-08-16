@@ -1,0 +1,204 @@
+//===== Hercules Script ======================================
+//= Treasure Hunter Quests
+//===== By: ==================================================
+//= Fredzilla
+//===== Current Version: =====================================
+//= 1.2a
+//===== Description: =========================================
+//= Start for Treasure hunter quests
+//===== Additional Comments: =================================
+//= Event_THQS - Used to check if you have already registered
+//= #Treasure_Token - used to keep track of tokens
+//= 1.0 - Straight conversion of Aegis NPC file
+//= 1.1 - balanced some prices, fixed 1 missing label
+//=       removed Executioner&Mysteltain swords [Lupus]
+//= 1.2 - Optmized and fixed small error [Panikon]
+//= 1.2a - Fixed zeny formula [Panikon]
+//============================================================
+
+prt_in,159,172,0	warp	thqwrp	3,3,yuno_in01,123,155
+
+// Main configuration object
+-	script	THQS#Configuration	-1,{
+OnInit:
+	// Axes
+	setarray $THQS_menu_weapons_1[0], Sabbath, Slaughter, Tomahawk, Great_Axe, Guillotine;
+	setarray $THQS_menu_price_1[0], 160, 160, 180, 200, 200;
+	// One Handed Swords
+	setarray $THQS_menu_weapons_2[0], Edge, Solar_Sword, Scissores_Sword, Nagan, Immaterial_Sword, Excalibur, Byeorrun_Gum, Tale_Fing_;
+	setarray $THQS_menu_price_2[0], 130, 150, 170, 180, 200, 200, 240, 320;
+	// Two Handed Swords
+	setarray $THQS_menu_weapons_3[0],Dragon_Slayer, Schweizersabel, Katzbalger, Muramasa, Masamune, Balmung;
+	setarray $THQS_menu_price_3[0], 140,200,300,300,400,2000;
+	// Books
+	setarray $THQS_menu_weapons_4[0],Book_Of_Blazing_Sun, Book_Of_Billows, Book_Of_Gust_Of_Wind, Book_Of_Mother_Earth, Book_Of_The_Apocalypse, Bible, Tablet;
+	setarray $THQS_menu_price_4[0], 80, 80, 80, 80, 80, 90, 120;
+	// Bows
+	setarray $THQS_menu_weapons_5[0], Bow_Of_Rudra, Bow_Of_Roguemaster;
+	setarray $THQS_menu_price_5[0], 150, 150;
+	// Katars
+	setarray $THQS_menu_weapons_6[0], Katar_Of_Cold_Icicle,Katar_Of_Thornbush,Katar_Of_Raging_Blaze,Katar_Of_Piercing_Wind,Ghoul_Leg,Infiltrator;
+	setarray $THQS_menu_price_6[0],70,70,70,70,125,150;
+	// Knuckles
+	setarray $THQS_menu_weapons_7[0],Kaiser_Knuckle,Berserk;
+	setarray $THQS_menu_price_7[0],75,75;
+	// Maces
+	setarray $THQS_menu_weapons_8[0],Spike,Slash,Grand_Cross,Quadrille,Mjolnir;
+	setarray $THQS_menu_price_8[0],65,90,100,110,1000;
+	// Whips
+	setarray $THQS_menu_weapons_9[0],Rapture_Rose,Chemeti;
+	setarray $THQS_menu_price_9[0],50,65;
+	// Wands
+	setarray $THQS_menu_weapons_10[0],Mighty_Staff,Wizardy_Staff,Bone_Wand,Staff_Of_Soul;
+	setarray $THQS_menu_price_10[0],90,150,110,120;
+	// Cards
+	setarray $THQS_menu_cards[0],Poring_Card, Pasana_Card, Dokebi_Card, Sword_Fish_Card, Sand_Man_Card, Drainliar_Card,
+								Kaho_Card,Mandragora_Card,Vadon_Card,Mummy_Card,Zenorc_Card,Condor_Card, Zombie_Card;
+	setarray $THQS_menu_price[0],2,420,420,420,420,360,360,360,360,540,240,240,210;
+	end;
+}
+
+// Trades tokens
+// getarg(0) - number of tokens to be traded
+function	script	thqs_trade_token	{
+	@type = getarg(0);
+	if( @type == 4 )
+		close;
+
+	// 10^0, 10^1, 10^2
+	@type -= 1;
+	@price = pow(10, @type);
+
+	// 10^3, 10^4, 10^5
+	@type += 3; // So we can use pow later to determine the qt of Zeny
+	@prize = pow(10, @type);
+
+	if( #Treasure_Token < @price ) {
+		mes "You don't have enough tokens!";
+		close;
+	}
+
+	if( Zeny == MAX_ZENY ) {
+		mes "You can't add more zeny to your character";
+		close;
+	}
+
+	Zeny += @prize;
+	#Treasure_Token -= @price;
+	close;
+}
+
+// Creates a buying menu
+// getarg(0) - .@mw$ -> ID
+// getarg(1) - .@mp$ -> PRICE
+function	script	thqs_menu_buy	{
+	if( getargcount() != 2 ) {
+		debugmes "thqs_menu_buy: Wrong number of arguments!!";
+		close;
+	}
+
+	.@mw$ = getarg(0);
+	.@mp$ = getarg(1);
+
+	if( getarraysize( getd(.@mw$) ) != getarraysize( getd(.@mp$) ) ) {
+		debugmes "thqs_menu_buy: Missing entries in data!";
+		close;
+	}
+
+	// Dynamic menu
+	// Uses a dynamic string and then applies it to a *select
+	.@select_menu$ = "";
+	for( .@i = 0; .@i < getarraysize( getd(.@mw$) ); .@i++ ) {
+		.@price = getd(.@mp$+"["+.@i+"]");
+
+		if( .@select_menu$ != "")
+			.@select_menu$ = .@select_menu$+":"+getitemname( getd(.@mw$+"["+.@i+"]") )+" - "+.@price+"T";
+		else
+			.@select_menu$ = getitemname( getd(.@mw$+"["+.@i+"]") )+" - "+.@price+"T";
+	}
+	.@select_menu$ = .@select_menu$ + ":Nevermind";
+	select(.@select_menu$);
+
+	if( @menu == (.@i+1) )
+		close;
+
+	@index = @menu - 1; // Arrays are 0 indexed while our menu is not
+	@item_id = getd(.@mw$+"["+@index+"]");
+	@price = getd(.@mp$+"["+@index+"]");
+	if( #Treasure_Token < @price ) {
+		mes "You don't have enough tokens!";
+		close;
+	}
+	#Treasure_Token -= @price;
+	logmes "Treasure Token: Bought a "+getitemname(@item_id);
+	getitem @item_id,1;
+	close;
+}
+
+// Creates the first weapon menu
+// getarg(0) - @menu
+function	script	ths_menu_weapons	{
+	@first_option = getarg(0);
+	if( @first_option == 11 )
+		close;
+	mes "[Ash]";
+	mes "This is what we have to offer."+@first_option;
+	next;
+	// Array names so they can be used by thqs_menu_buy
+	.@mw$ = "$THQS_menu_weapons_"+@first_option;
+	.@mp$ = "$THQS_menu_price_"+@first_option;
+
+	thqs_menu_buy(.@mw$,.@mp$);
+}
+
+// Main script
+prt_in,164,174,1	script	Treasure Hunter's Shop	1_M_YOUNGKNIGHT,{
+	mes "[Ash]";
+	mes "Ahh, "+strcharinfo(0)+"! Welcome to the Offical Treasure Hunter's Guild Shop.";
+	mes "You currently have ^FF0000"+#Treasure_Token+"^000000 treasure tokens!!!";
+	next;
+	switch( select("How does this place work?","What do you have in stock?","Nevermind") ) {
+		case 1:
+			mes "[Ash]";
+			mes "Well you see here you can exchange your treasure hunter tokens for zeny or rare weapons forged by our blacksmiths.";
+			mes " ";
+			mes "Everything has its own price value and the only way you can get the tokens is by completing quests assigned to you,the system normally works like this.";
+			mes " ";
+			mes "The harder the mission the more Tokens you will earn. All red quests are worth 4-8 Tokens, and the rest are worth 1-5.";
+			mes " ";
+			mes "Hope that solves your problem and questions.";
+			close;
+		case 2:
+			break;
+		case 3:
+			close;
+	}
+
+	mes "[Ash]";
+	mes "Ok here is our Big list of goods.";
+	mes " ";
+	mes "(Note T stands for a Treasure Token.)";
+	next;
+	mes "[Ash]";
+	mes "This is what we have to offer.";
+	next;
+	switch( select("Trade for zeny", "Trade for Weapons", "Trade for Cards", "Nevermind") ) {
+		case 1:
+			select("1000z - 1T","10000z - 10T","100000z - 100T","Nevermind");
+			thqs_trade_token(@menu);
+		case 2:
+			mes "[Ash]";
+			mes "This is what we have to offer.";
+			next;
+			select("Axe's","1 Handed Swords","2 Handed Swords","Book's","Bow's","Katar's","Knuckle's","Mace's","Whips","Wands","Nevermind");
+			ths_menu_weapons(@menu);
+		case 3:
+			mes "[Ash]";
+			mes "This is what we have to offer.";
+			next;
+			thqs_menu_buy("$THQS_menu_cards","$THQS_menu_price");
+		case 4:
+			close;
+	}
+	end;
+}
