@@ -1,0 +1,262 @@
+//===== Hercules Script ======================================
+//= Job Master
+//===== By: ==================================================
+//= Euphy
+//===== Current Version: =====================================
+//= 1.4
+//===== Description: =========================================
+//= A fully functional job changer.
+//===== Additional Comments: =================================
+//= 1.1 Fixed reset on Baby job change. [Euphy]
+//= 1.2 Added Expanded Super Novice support and initial Kagerou/Oboro support. [Euphy]
+//= 1.3 Kagerou/Oboro added. [Euphy]
+//= 1.4 Improved legibility (renamed variables, replaced
+//      numbers with constants; Changed syntax to match
+//      Hercules standards; Fixed status point exploit upon
+//      Baby Novice job change. [Haru]
+//============================================================
+
+prontera,153,193,6	script	Job Master	2_F_MAGICMASTER,{
+	function Job_Menu; function A_An;
+
+	mes "[Job Master]";
+	if (Class > Job_Soul_Linker) {
+		mes "No more jobs are available.";
+		close;
+	}
+	if (checkfalcon() || checkcart() || checkriding() || ismounting()) {
+		mes "Please remove your "+((checkfalcon())?"falcon":"")+((checkcart())?"cart":"")+((checkriding())?"Peco":"")+((ismounting())?"mount":"")
+		    +" before proceeding.";
+		close;
+	}
+	if (.skill_point_check && SkillPoint > 0) {
+		mes "Please use all your skill points before proceeding.";
+		close;
+	}
+
+	.@eac = eaclass();
+	.@base = .third_classes ? roclass(.@eac&EAJ_UPPERMASK) : Class;
+	if (.@base >= Job_Knight && .@base <= Job_Crusader2) {
+		if (BaseLevel < .rebirth_blevel || JobLevel < .rebirth_jlevel) {
+			.@blvl = .rebirth_blevel - BaseLevel;
+			.@jlvl = .rebirth_jlevel - JobLevel;
+			mes "You need "
+			    + (BaseLevel < .rebirth_blevel ? ((.rebirth_blevel - BaseLevel) +" more base levels "+ (JobLevel < .rebirth_jlevel ? "and " : "")) : "")
+			    + (JobLevel < .rebirth_jlevel ? (.rebirth_jlevel - JobLevel) +" more job levels " : "")
+			    + "to continue.";
+			close;
+		}
+		if (Class > Job_Crusader2) {
+			mes "Switch to third class?";
+			next;
+			Job_Menu(roclass(.@eac|EAJL_THIRD));
+			close;
+		}
+		while (true) {
+			mes "Select an option.";
+			next;
+			.@choice = select(" ~ ^0055FFRebirth^000000:"+(.third_classes ? " ~ ^FF0000Third Class^000000" : "")+": ~ ^777777Cancel^000000");
+			if (.@choice == 3)
+				close;
+			mes "[Job Master]";
+			mes "Are you sure?";
+			next;
+			if (.@choice == 1)
+				Job_Menu(Job_Novice_High);
+			else
+				Job_Menu(roclass(.@eac|EAJL_THIRD));
+			mes "[Job Master]";
+		}
+	}
+	.@job1 = roclass(.@eac|EAJL_2_1);
+	.@job2 = roclass(.@eac|EAJL_2_2);
+	if ((.@eac&EAJ_UPPERMASK) == EAJ_SUPER_NOVICE) {
+		.@newclass = roclass(.@eac|EAJL_THIRD);
+		.@required_jlevel = 99;
+	} else if (Class == Job_Ninja) {
+		.@newclass = .@job1;
+		.@required_jlevel = 70;
+	}
+	if (.@newclass && .third_classes) {
+		if (BaseLevel < .rebirth_blevel || JobLevel < .@required_jlevel) {
+			mes "You need "
+			    + (BaseLevel < .rebirth_blevel ? ((.rebirth_blevel - BaseLevel) +" more base levels "+ (JobLevel < .@required_jlevel ? "and " : "")) : "")
+			    + (JobLevel < .@required_jlevel ? (.@required_jlevel - JobLevel) +" more job levels " : "")
+			    + "to continue.";
+			close;
+		}
+		mes "Switch to "+jobname(.@newclass)+"?";
+		next;
+		Job_Menu(.@newclass);
+		close;
+	}
+	if (.@eac&EAJL_2)
+		if (.@eac&(EAJL_UPPER|EAJL_BABY) || roclass(.@eac|EAJL_UPPER) == -1) {
+			mes "No more jobs are available.";
+			close;
+		}
+	if ((.@eac&EAJ_BASEMASK) == EAJ_NOVICE) {
+		if (JobLevel < .jobchange_first) {
+			mes "A job level of "+.jobchange_first+" is required to change into the 1st Class.";
+		} else if (Class == Job_Novice_High && .linear_jobchange && lastJob) {
+			mes "Switch classes now?";
+			next;
+			Job_Menu(roclass((eaclass(lastJob)&EAJ_BASEMASK)|EAJL_UPPER));
+		} else if (Class == Job_Novice) {
+			Job_Menu(Job_Swordman, Job_Mage, Job_Archer, Job_Acolyte, Job_Merchant, Job_Thief,
+			         Job_SuperNovice, Job_Taekwon, Job_Gunslinger, Job_Ninja, Job_Baby);
+		} else if (Class == Job_Novice_High) {
+			Job_Menu(Job_Swordman_High, Job_Mage_High, Job_Archer_High, Job_Acolyte_High, Job_Merchant_High, Job_Thief_High);
+		} else if (Class == Job_Baby) {
+			Job_Menu(Job_Baby_Swordman, Job_Baby_Mage, Job_Baby_Archer, Job_Baby_Acolyte, Job_Baby_Merchant, Job_Baby_Thief,
+			         Job_Super_Baby);
+		} else {
+			mes "An error has occurred.";
+		}
+		close;
+	}
+	if (roclass(.@eac|EAJL_2_1) == -1 || roclass(.@eac|EAJL_2_2) == -1) {
+		mes "No more jobs are available.";
+	} else if (!(.@eac&EAJL_2) && JobLevel < .jobchange_second) {
+		mes "A job level of "+.jobchange_second+" is required to change into the 2nd Class.";
+	} else if (.linear_jobchange && lastJob && (.@eac&EAJL_UPPER)) {
+		mes "Switch classes now?";
+		next;
+		Job_Menu(lastJob+Job_Novice_High);
+	} else {
+		Job_Menu(.@job1, .@job2);
+	}
+	close;
+
+function Job_Menu {
+	while (true) {
+		if (getargcount() > 1) {
+			mes "Select a job.";
+			.@menu$ = "";
+			for (.@i = 0; .@i < getargcount(); ++.@i)
+				.@menu$ += " ~ "+jobname(getarg(.@i))+":";
+			.@menu$ += " ~ ^777777Cancel^000000";
+			next;
+			.@newjob = getarg(select(.@menu$)-1, 0);
+			if (!.@newjob) close;
+			if ((.@newjob == Job_SuperNovice || .@newjob == Job_Super_Baby) && BaseLevel < .supernovice_level) {
+				mes "[Job Master]";
+				mes "A base level of "+.supernovice_level+" is required to turn into a "+jobname(.@newjob)+".";
+				close;
+			}
+			mes "[Job Master]";
+			mes "Are you sure?";
+			next;
+		} else {
+			.@newjob = getarg(0);
+		}
+		if (select(" ~ Change into ^0055FF"+jobname(.@newjob)+"^000000 class: ~ ^777777"+(getargcount() > 1 ? "Go back" : "Cancel")+"^000000") == 1) {
+			mes "[Job Master]";
+			mes "You are now "+A_An(jobname(.@newjob))+"!";
+			if (.@newjob == Job_Novice_High && .linear_jobchange)
+				lastJob = Class; // Note: This is incompatible with the Valkyrie rebirth script.
+			jobchange .@newjob;
+			if (.@newjob == Job_Novice_High)
+				resetlvl(1);
+			if (.@newjob == Job_Baby) {
+				resetlvl(4);
+				SkillPoint = 0;
+			}
+			specialeffect2 EF_ANGEL2;
+			specialeffect2 EF_ELECTRIC;
+			if (.platinum)
+				callsub Get_Platinum;
+			close;
+		}
+		if (getargcount() == 1)
+			return;
+		mes "[Job Master]";
+	}
+	end;
+}
+
+function A_An {
+	setarray .@vowels$, "a", "e", "i", "o", "u";
+	.@firstletter$ = strtolower(charat(getarg(0), 0));
+	for (.@i = 0; .@i < getarraysize(.@vowels); ++.@i) {
+		if (.@vowels$[.@i] == .@firstletter$)
+			return "an "+getarg(0);
+	}
+	return "a "+getarg(0);
+}
+
+Get_Platinum:
+	skill NV_FIRSTAID, 1, 0;
+	if (BaseClass == Job_Novice) {
+		if (Class != Job_SuperNovice)
+			skill NV_TRICKDEAD, 1, 0;
+	} else if (BaseClass == Job_Swordman) {
+		skill SM_MOVINGRECOVERY, 1, 0;
+		skill SM_FATALBLOW, 1, 0;
+		skill SM_AUTOBERSERK, 1, 0;
+	} else if (BaseClass == Job_Mage) {
+		skill MG_ENERGYCOAT, 1, 0;
+	} else if (BaseClass == Job_Archer) {
+		skill AC_MAKINGARROW, 1, 0;
+		skill AC_CHARGEARROW, 1, 0;
+	} else if (BaseClass == Job_Acolyte) {
+		skill AL_HOLYLIGHT, 1, 0;
+	} else if (BaseClass == Job_Merchant) {
+		skill MC_CARTREVOLUTION, 1, 0;
+		skill MC_CHANGECART, 1, 0;
+		skill MC_LOUD, 1, 0;
+	} else if (BaseClass == Job_Thief) {
+		skill TF_SPRINKLESAND, 1, 0;
+		skill TF_BACKSLIDING, 1, 0;
+		skill TF_PICKSTONE, 1, 0;
+		skill TF_THROWSTONE, 1, 0;
+	}
+
+	if (BaseJob == Job_Knight) {
+		skill KN_CHARGEATK, 1, 0;
+	} else if (BaseJob == Job_Priest) {
+		skill PR_REDEMPTIO, 1, 0;
+	} else if (BaseJob == Job_Wizard) {
+		skill WZ_SIGHTBLASTER, 1, 0;
+	} else if (BaseJob == Job_Blacksmith) {
+		skill BS_UNFAIRLYTRICK, 1, 0;
+		skill BS_GREED, 1, 0;
+	} else if (BaseJob == Job_Hunter) {
+		skill HT_PHANTASMIC, 1, 0;
+	} else if (BaseJob == Job_Assassin) {
+		skill AS_SONICACCEL, 1, 0;
+		skill AS_VENOMKNIFE, 1, 0;
+	} else if (BaseJob == Job_Crusader) {
+		skill CR_SHRINK, 1, 0;
+	} else if (BaseJob == Job_Monk) {
+		skill MO_KITRANSLATION, 1, 0;
+		skill MO_BALKYOUNG, 1, 0;
+	} else if (BaseJob == Job_Sage) {
+		skill SA_CREATECON, 1, 0;
+		skill SA_ELEMENTWATER, 1, 0;
+		skill SA_ELEMENTGROUND, 1, 0;
+		skill SA_ELEMENTFIRE, 1, 0;
+		skill SA_ELEMENTWIND, 1, 0;
+	} else if (BaseJob == Job_Rogue) {
+		skill RG_CLOSECONFINE, 1, 0;
+	} else if (BaseJob == Job_Alchemist) {
+		skill AM_BIOETHICS, 1, 0;
+	} else if (BaseJob == Job_Bard) {
+		skill BA_PANGVOICE, 1, 0;
+	} else if (BaseJob == Job_Dancer) {
+		skill DC_WINKCHARM, 1, 0;
+	}
+	return;
+
+OnInit:
+	.rebirth_blevel = 99;    // Minimum base level to reborn OR change to third class
+	.rebirth_jlevel = 50;    // Minimum base job level to reborn OR change to third class
+	.jobchange_first = 10;   // Minimum job level to turn into 1st class
+	.jobchange_second = 40;  // Minimum job level to turn into 2nd class
+	.third_classes = 1;      // Enable third classes? (1: yes / 0: no)
+	.supernovice_level = 45; // Minimum base level to turn into Super Novice
+	.linear_jobchange = 1;   // Enforce linear class changes? (1: yes / 0: no)
+	.skill_point_check = 1;  // Force player to use up all skill points? (1: yes / 0: no)
+	.platinum = 1;           // Get platinum skills automatically? (1: yes / 0: no)
+	end;
+}

@@ -1,0 +1,72 @@
+#!/bin/sh
+# athena starting script by rowla
+# modified by shazeya@syafi.com (NL101541)
+
+PATH=./:$PATH
+
+L_SRV=login-server
+C_SRV=char-server
+M_SRV=map-server
+
+print_start() {
+#    more << EOF
+echo "Athena Starting..."
+echo "            (c) 2003 Athena Project"
+echo "              modified by shazeya@syafi.com"
+echo ""
+#echo "Debug informations will appear,"
+#echo "since this is a test release."
+#echo ""
+echo "checking..."
+#EOF
+}
+
+check_files() {
+
+    for i in ${L_SRV} ${C_SRV} ${M_SRV}
+    do
+        if [ ! -f ./$i ]; then
+            echo "$i does not exist, or can't run."
+            echo "Stop. Check your compile."
+            exit 1;
+        fi
+    done
+
+#    more << EOF
+echo "Check complete."
+echo "Looks good, a nice Athena!"
+#EOF
+}
+
+
+case $1 in
+    'start')
+        print_start
+        check_files
+
+        exec ./${L_SRV}&
+	echo $! > .${L_SRV}.pid
+        exec ./${C_SRV}&
+	echo $! > .${C_SRV}.pid
+        exec ./${M_SRV}&
+	echo $! > .${M_SRV}.pid
+
+        echo "Now Started Athena."
+;;
+    'stop')
+	for i in .${L_SRV}.pid .${C_SRV}.pid .${M_SRV}.pid
+	    do
+		if [ -e ./$i ]; then
+		    kill $(cat $i)
+		    rm $i
+		fi
+	    done
+;;
+    'restart')
+        $0 stop
+        $0 start
+;;
+    *)
+        echo "Usage: athena-start { start | stop | restart }"
+;;
+esac

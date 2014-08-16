@@ -1,0 +1,39 @@
+# Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+# See the LICENSE file
+
+# @configure_input@
+
+LIBCONFIG_OBJ = libconfig.o grammar.o scanctx.o scanner.o strbuf.o
+LIBCONFIG_H = libconfig.h grammar.h parsectx.h scanctx.h scanner.h strbuf.h wincompat.h
+
+@SET_MAKE@
+
+CC = @CC@
+export CC
+
+#####################################################################
+.PHONY: all clean buildclean help
+
+all: $(LIBCONFIG_OBJ)
+
+buildclean:
+	@echo "	CLEAN	libconfig (build temp files)"
+	@rm -rf *.o
+
+clean: buildclean
+	@echo "	CLEAN	libconfig"
+
+help:
+	@echo "possible targets are 'all' 'clean' 'buildclean' 'help'"
+	@echo "'all'                 - builds $(LIBCONFIG_OBJ)"
+	@echo "'clean', 'buildclean' - deletes $(LIBCONFIG_OBJ)"
+	@echo "'help'                - outputs this message"
+
+#####################################################################
+
+Makefile: Makefile.in
+	@$(MAKE) -C ../.. 3rdparty/libconfig/Makefile
+
+%.o: %.c $(LIBCONFIG_H) Makefile
+	@echo "	CC	$<"
+	@$(CC) @CFLAGS@ @DEFS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<

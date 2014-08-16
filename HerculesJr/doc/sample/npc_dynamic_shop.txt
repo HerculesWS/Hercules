@@ -1,0 +1,93 @@
+//===== Hercules Script ======================================
+//= Sample: Dynamic Shop
+//===== By: ==================================================
+//= Hercules Dev Team
+//===== Current Version: =====================================
+//= 20131225
+//===== Description: =========================================
+//= Contains commands needed for a dynamic shop.
+//============================================================
+
+// Dummy shop to insert items into:
+-	shop	dyn_shop1	-1,501:50.
+
+prontera,181,200,4	script	Dynamic Shop	2_F_MAGICMASTER,{
+	callshop "dyn_shop1",0;
+	npcshopattach "dyn_shop1";
+	end;
+
+OnSellItem:
+	for (.@i = 0; .@i < getarraysize(@sold_nameid); ++.@i) {
+		if(countitem(@sold_nameid[.@i]) < @sold_quantity[.@i] || @sold_quantity[.@i] <= 0) {
+			mes "omgh4x!";
+			close;
+		} else if (@sold_nameid[.@i] == Red_Potion) {
+			delitem Red_Potion, @sold_quantity[.@i];
+			$@rpotsleft += @sold_quantity[.@i];
+			Zeny += @sold_quantity[.@i]*20;
+		} else if (@sold_nameid[.@i] == Orange_Potion){
+			delitem Orange_Potion, @sold_quantity[.@i];
+			$@opotsleft += @sold_quantity[.@i];
+			Zeny += @sold_quantity[.@i]*100;
+		} else {
+			mes "Sorry, I don't need your items.";
+			close;
+		}
+	}
+	deletearray @sold_quantity, getarraysize(@sold_quantity);
+	deletearray @sold_nameid, getarraysize(@sold_nameid);
+	mes "Deal completed.";
+	close;
+
+OnBuyItem:
+	for (.@i = 0; .@i < getarraysize(@bought_nameid); ++.@i) {
+		if (@bought_quantity[.@i] <= 0) {
+			mes "omgh4x!";
+			close;
+		} else if (@bought_nameid[.@i] == Red_Potion) {
+			if (@bought_quantity[.@i] > $@rpotsleft) {
+				if($@rpotsleft > 0) {
+					@bought_quantity[.@i] = $@rpotsleft;
+				} else {
+					mes "We are out of red potions!";
+					close;
+				}
+			}
+			if(Zeny >= 40*@bought_quantity[.@i]) {
+				Zeny -= 40*@bought_quantity[.@i];
+				getitem Red_Potion, @bought_quantity[.@i];
+				$@rpotsleft -= @bought_quantity[.@i];
+			} else {
+				mes "You have insufficient cash.";
+				close;
+			}
+		} else /*if (@bought_nameid[.@i] == Orange_Potion)*/ {
+			if(@bought_quantity[.@i] > $@opotsleft) {
+				if($@opotsleft > 0) {
+					@bought_quantity[.@i] = $@opotsleft;
+				} else {
+					mes "We are out of orange potions!";
+					close;
+				}
+			}
+			if(Zeny >= 200*@bought_quantity[.@i]) {
+				Zeny -= 200*@bought_quantity[.@i];
+				getitem Orange_Potion, @bought_quantity[.@i];
+				$@opotsleft -= @bought_quantity[.@i];
+			} else {
+				mes "You have insufficient cash.";
+				close;
+			}
+		}
+	}
+	deletearray @bought_quantity, getarraysize(@bought_quantity);
+	deletearray @bought_nameid, getarraysize(@bought_nameid);
+	mes "Trade done.";
+	close;
+
+OnInit:
+	npcshopitem "dyn_shop1", Red_Potion, 40, Orange_Potion, 200;
+	$@rpotsleft = 10;
+	$@opotsleft = 10;
+	end;
+}
