@@ -1,0 +1,19 @@
+//===== Hercules Script ======================================
+//= Mapflag: Adjust Skill Damage.
+//===== By: ==================================================
+//= Hercules Dev Team
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= This mapflag allows you to modify the damage of any skill
+//= in any map.
+//= Example (1):
+//= prontera	mapflag	adjust_skill_damage	MG_FIREBOLT	50
+//= Halves the damage of Firebolt in Prontera.
+//=
+//= Example (2):
+//= prontera	mapflag	adjust_skill_damage	MG_FIREBOLT	200
+//= Doubles the damage of Firebolt in Prontera.
+//===== Additional Comments: =================================
+//= 1.0 - Initial script.
+//============================================================

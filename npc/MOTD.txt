@@ -1,0 +1,15 @@
+//======= Hercules Script ===========================
+//=       _   _                     _                =
+//=      | | | |                   | |               =
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___      =
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|     =
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \     =
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/     =
+//=                                                  =
+//=            http://hercules.ws/board/             =
+//====================================================
+// run when any character logs in, attached to them.
+-	script	HerculesMOTD	-1,{
+	message strcharinfo(0),"Welcome to Hercules! Enjoy! Please report any bugs you find.";
+	end;
+}

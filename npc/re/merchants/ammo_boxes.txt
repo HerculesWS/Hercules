@@ -1,0 +1,19 @@
+//===== Hercules Script ======================================
+//= Magazine Dealers
+//===== By: ==================================================
+//= Euphy
+//===== Current Version: =====================================
+//= 1.1
+//===== Description: =========================================
+//= Turns bullets into magazines/packs.
+//===== Additional Comments: =================================
+//= 1.0 First version, Renewal duplicates.
+//= 1.1 Added Izlude duplicates. [Euphy]
+//============================================================
+
+que_ng,187,149,3	duplicate(mdk)	Magazine Dealer Kenny#ng	4_M_01
+izlude,74,104,3	duplicate(mdk)	Magazine Dealer Kenny#iz	4_M_01
+izlude_a,74,104,3	duplicate(mdk)	Magazine Dealer Kenny#a	4_M_01
+izlude_b,74,104,3	duplicate(mdk)	Magazine Dealer Kenny#b	4_M_01
+izlude_c,74,104,3	duplicate(mdk)	Magazine Dealer Kenny#c	4_M_01
+izlude_d,74,104,3	duplicate(mdk)	Magazine Dealer Kenny#d	4_M_01
