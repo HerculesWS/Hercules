@@ -8,14 +8,17 @@
 //             6 - holy, 7 - dark, 8 - ghost, 9 - undead, -1 - use weapon element
 //             -2 - use endowed element, -3 - use random element.)
 // 06 nk (skill damage properties):
-//    0x01 - No damage skill
-//    0x02 - Has splash area (requires source modification)
-//    0x04 - Damage should be split among targets (requires 0x02 in order to work)
-//    0x08 - Skill ignores caster's % damage cards (misc type always ignores)
-//    0x10 - Skill ignores elemental adjustments
-//    0x20 - Skill ignores target's defense (misc type always ignores)
-//    0x40 - Skill ignores target's flee (magic type always ignores)
-//    0x80 - Skill ignores target's def cards
+//    0x001 - No damage skill
+//    0x002 - Has splash area (requires source modification)
+//    0x004 - Damage should be split among targets (requires 0x02 in order to work)
+//    0x008 - Skill ignores caster's % damage cards (misc type always ignores)
+//    0x010 - Skill ignores elemental adjustments
+//    0x020 - Skill ignores target's defense (misc type always ignores)
+//    0x040 - Skill ignores target's flee (magic type always ignores)
+//    0x080 - Skill ignores target's def cards
+//    0x100 - Skill ignores target's elemental reductions
+//    0x200 - Skill ignores target's race reductions
+//    0x400 - Skill ignores target's melee/range reductions
 // 07 splash/effect range (-1 for screen-wide)
 // 08 MaxLv
 // 09 Number of hits (when positive, damage is increased by hits, 
