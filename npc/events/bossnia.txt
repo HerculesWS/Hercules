@@ -109,7 +109,6 @@ bossnia_01,0,0,0,0	monster	Drake	1112,10,1800000,0,1
 bossnia_01,0,0,0,0	monster	Detale	1719,2,7200000,0,1
 bossnia_01,0,0,0,0	monster	Maya	1147,10,1800000,0,1
 bossnia_01,0,0,0,0	monster	Mistress	1059,1,1800000,0,1
-bossnia_01,0,0,0,0	monster	Baphomet	1039,10,1800000,0,1
 bossnia_01,0,0,0,0	monster	Egnigem Cenia	1658,10,1800000,0,1
 bossnia_01,0,0,0,0	monster	Amon Ra	1511,1,1800000,0,1
 bossnia_01,0,0,0,0	monster	Atroce	1785,10,1800000,0,1
@@ -135,11 +134,12 @@ bossnia_01,0,0,0,0	monster	Golden Thief Bug	1086,10,3600000,0,1
 bossnia_01,0,0,0,0	monster	Evil Snake Lord	1418,10,7200000,0,1
 bossnia_01,0,0,0,0	monster	RSX-0806	1623,5,7200000,0,1
 bossnia_01,0,0,0,0	monster	Assassin Cross Eremes	1647,1,0,0,1
+bossnia_01,0,0,0,0	monster	Nidhoggr's Shadow	2022,1,28800000,0,1
 bossnia_01,137,118,1,1	monster	Whitesmith Howard	1648,1,0,0,1
 bossnia_01,122,195,1,1	monster	Beelzebub	1873,1,0,0,1
-bossnia_01,45,118,1,1	monster	Beelzebub	1873,1,0,0,1
-bossnia_01,196,122,1,1	monster	Valkyrie Randgris	1751,1,0,0,1
-bossnia_01,142,61,1,1	monster	Ifrit	1832,1,0,0,1
+bossnia_01,142,61,1,1	monster	Beelzebub	1873,1,0,0,1
+bossnia_01,34,34,1,1	monster	Valkyrie Randgris	1751,1,0,0,1
+bossnia_01,45,118,1,1	monster	Ifrit	1832,1,0,0,1
 
 //----------------------------------------------------------------------------
 // bossnia_02 - Bossnia
@@ -153,7 +153,6 @@ bossnia_02,0,0,0,0	monster	Drake	1112,10,1800000,0,1
 bossnia_02,0,0,0,0	monster	Detale	1719,2,7200000,0,1
 bossnia_02,0,0,0,0	monster	Maya	1147,10,1800000,0,1
 bossnia_02,0,0,0,0	monster	Mistress	1059,1,1800000,0,1
-bossnia_02,0,0,0,0	monster	Baphomet	1039,10,1800000,0,1
 bossnia_02,0,0,0,0	monster	Egnigem Cenia	1658,10,1800000,0,1
 bossnia_02,0,0,0,0	monster	Amon Ra	1511,1,1800000,0,1
 bossnia_02,0,0,0,0	monster	Atroce	1785,10,1800000,0,1
@@ -179,11 +178,12 @@ bossnia_02,0,0,0,0	monster	Golden Thief Bug	1086,10,3600000,0,1
 bossnia_02,0,0,0,0	monster	Evil Snake Lord	1418,10,7200000,0,1
 bossnia_02,0,0,0,0	monster	RSX-0806	1623,5,7200000,0,1
 bossnia_02,0,0,0,0	monster	Assassin Cross Eremes	1647,1,0,0,1
+bossnia_02,0,0,0,0	monster	Nidhoggr's Shadow	2022,1,28800000,0,1
 bossnia_02,137,118,1,1	monster	Whitesmith Howard	1648,1,0,0,1
 bossnia_02,122,195,1,1	monster	Beelzebub	1873,1,0,0,1
-bossnia_02,45,118,1,1	monster	Beelzebub	1873,1,0,0,1
-bossnia_02,196,122,1,1	monster	Valkyrie Randgris	1751,1,0,0,1
-bossnia_02,142,61,1,1	monster	Ifrit	1832,1,0,0,1
+bossnia_02,142,61,1,1	monster	Beelzebub	1873,1,0,0,1
+bossnia_02,34,34,1,1	monster	Valkyrie Randgris	1751,1,0,0,1
+bossnia_02,45,118,1,1	monster	Ifrit	1832,1,0,0,1
 
 //----------------------------------------------------------------------------
 // bossnia_03 - Bossnia
@@ -197,7 +197,6 @@ bossnia_03,0,0,0,0	monster	Drake	1112,10,1800000,0,1
 bossnia_03,0,0,0,0	monster	Detale	1719,2,7200000,0,1
 bossnia_03,0,0,0,0	monster	Maya	1147,10,1800000,0,1
 bossnia_03,0,0,0,0	monster	Mistress	1059,1,1800000,0,1
-bossnia_03,0,0,0,0	monster	Baphomet	1039,10,1800000,0,1
 bossnia_03,0,0,0,0	monster	Egnigem Cenia	1658,10,1800000,0,1
 bossnia_03,0,0,0,0	monster	Amon Ra	1511,1,1800000,0,1
 bossnia_03,0,0,0,0	monster	Atroce	1785,10,1800000,0,1
@@ -223,11 +222,12 @@ bossnia_03,0,0,0,0	monster	Golden Thief Bug	1086,10,3600000,0,1
 bossnia_03,0,0,0,0	monster	Evil Snake Lord	1418,10,7200000,0,1
 bossnia_03,0,0,0,0	monster	RSX-0806	1623,5,7200000,0,1
 bossnia_03,0,0,0,0	monster	Assassin Cross Eremes	1647,1,0,0,1
+bossnia_03,0,0,0,0	monster	Nidhoggr's Shadow	2022,1,28800000,0,1
 bossnia_03,137,118,1,1	monster	Whitesmith Howard	1648,1,0,0,1
 bossnia_03,122,195,1,1	monster	Beelzebub	1873,1,0,0,1
-bossnia_03,45,118,1,1	monster	Beelzebub	1873,1,0,0,1
-bossnia_03,196,122,1,1	monster	Valkyrie Randgris	1751,1,0,0,1
-bossnia_03,142,61,1,1	monster	Ifrit	1832,1,0,0,1
+bossnia_03,142,61,1,1	monster	Beelzebub	1873,1,0,0,1
+bossnia_03,34,34,1,1	monster	Valkyrie Randgris	1751,1,0,0,1
+bossnia_03,45,118,1,1	monster	Ifrit	1832,1,0,0,1
 
 //----------------------------------------------------------------------------
 // bossnia_04 - Bossnia
@@ -241,7 +241,6 @@ bossnia_04,0,0,0,0	monster	Drake	1112,10,1800000,0,1
 bossnia_04,0,0,0,0	monster	Detale	1719,2,7200000,0,1
 bossnia_04,0,0,0,0	monster	Maya	1147,10,1800000,0,1
 bossnia_04,0,0,0,0	monster	Mistress	1059,1,1800000,0,1
-bossnia_04,0,0,0,0	monster	Baphomet	1039,10,1800000,0,1
 bossnia_04,0,0,0,0	monster	Egnigem Cenia	1658,10,1800000,0,1
 bossnia_04,0,0,0,0	monster	Amon Ra	1511,1,1800000,0,1
 bossnia_04,0,0,0,0	monster	Atroce	1785,10,1800000,0,1
@@ -267,8 +266,9 @@ bossnia_04,0,0,0,0	monster	Golden Thief Bug	1086,10,3600000,0,1
 bossnia_04,0,0,0,0	monster	Evil Snake Lord	1418,10,7200000,0,1
 bossnia_04,0,0,0,0	monster	RSX-0806	1623,5,7200000,0,1
 bossnia_04,0,0,0,0	monster	Assassin Cross Eremes	1647,1,0,0,1
+bossnia_04,0,0,0,0	monster	Nidhoggr's Shadow	2022,1,28800000,0,1
 bossnia_04,137,118,1,1	monster	Whitesmith Howard	1648,1,0,0,1
 bossnia_04,122,195,1,1	monster	Beelzebub	1873,1,0,0,1
-bossnia_04,45,118,1,1	monster	Beelzebub	1873,1,0,0,1
-bossnia_04,196,122,1,1	monster	Valkyrie Randgris	1751,1,0,0,1
-bossnia_04,142,61,1,1	monster	Ifrit	1832,1,0,0,1
+bossnia_04,142,61,1,1	monster	Beelzebub	1873,1,0,0,1
+bossnia_04,34,34,1,1	monster	Valkyrie Randgris	1751,1,0,0,1
+bossnia_04,45,118,1,1	monster	Ifrit	1832,1,0,0,1
