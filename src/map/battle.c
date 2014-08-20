@@ -933,7 +933,7 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 
 			if( tsd && !(nk&NK_NO_CARDFIX_DEF) )
 			{ // Target cards.
-				if (!(nk&NK_NO_ELEFIX))
+				if (!(nk&NK_NO_ELEFIX) && !(nk&NK_NO_ELEREDUX))
 				{
 					int ele_fix = tsd->subele[s_ele];
 					for (i = 0; ARRAYLENGTH(tsd->subele2) > i && tsd->subele2[i].rate != 0; i++)
@@ -947,10 +947,13 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 					}
 					cardfix = cardfix * (100 - ele_fix) / 100;
 				}
+
 				cardfix = cardfix * (100 - tsd->subsize[sstatus->size]) / 100;
-				cardfix = cardfix * (100 - tsd->subrace2[s_race2]) / 100;
-				cardfix = cardfix * (100 - tsd->subrace[sstatus->race]) / 100;
-				cardfix = cardfix * (100 - tsd->subrace[is_boss(src)?RC_BOSS:RC_NONBOSS]) / 100;
+				if (!(nk&NK_NO_RACEREDUX)) {
+					cardfix = cardfix * (100 - tsd->subrace2[s_race2]) / 100;
+					cardfix = cardfix * (100 - tsd->subrace[sstatus->race]) / 100;
+					cardfix = cardfix * (100 - tsd->subrace[is_boss(src)?RC_BOSS:RC_NONBOSS]) / 100;
+				}
 				if( sstatus->race != RC_DEMIHUMAN )
 					cardfix = cardfix * (100-tsd->subrace[RC_NONDEMIHUMAN]) / 100;
 
@@ -962,9 +965,9 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 				}
 #ifndef RENEWAL
 				//It was discovered that ranged defense also counts vs magic! [Skotlex]
-				if ( wflag&BF_SHORT )
+				if ( wflag&BF_SHORT && !(nk&NK_NO_MASKREDUX))
 					cardfix = cardfix * ( 100 - tsd->bonus.near_attack_def_rate ) / 100;
-				else
+				else if (!(nk&NK_NO_MASKREDUX))
 					cardfix = cardfix * ( 100 - tsd->bonus.long_attack_def_rate ) / 100;
 #endif
 
@@ -1098,7 +1101,7 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 			}else{
 				// Target side
 				if( tsd && !(nk&NK_NO_CARDFIX_DEF) ){
-					if( !(nk&NK_NO_ELEFIX) ){
+					if( !(nk&NK_NO_ELEFIX) && !(nk&NK_NO_ELEREDUX) ){
 						int ele_fix = tsd->subele[s_ele];
 						for (i = 0; ARRAYLENGTH(tsd->subele2) > i && tsd->subele2[i].rate != 0; i++)
 						{
@@ -1124,9 +1127,11 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 						}
 					}
 					cardfix = cardfix * (100-tsd->subsize[sstatus->size]) / 100;
- 					cardfix = cardfix * (100-tsd->subrace2[s_race2]) / 100;
-					cardfix = cardfix * (100-tsd->subrace[sstatus->race]) / 100;
-					cardfix = cardfix * (100-tsd->subrace[is_boss(src)?RC_BOSS:RC_NONBOSS]) / 100;
+					if (!(nk&NK_NO_RACEREDUX)) {
+ 						cardfix = cardfix * (100-tsd->subrace2[s_race2]) / 100;
+						cardfix = cardfix * (100-tsd->subrace[sstatus->race]) / 100;
+						cardfix = cardfix * (100-tsd->subrace[is_boss(src)?RC_BOSS:RC_NONBOSS]) / 100;
+					}
 					if( sstatus->race != RC_DEMIHUMAN )
 						cardfix = cardfix * (100-tsd->subrace[RC_NONDEMIHUMAN]) / 100;
 
@@ -1138,9 +1143,9 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 						}
 					}
 
-					if( wflag&BF_SHORT )
+					if( wflag&BF_SHORT && !(nk&NK_NO_MASKREDUX))
 						cardfix = cardfix * (100 - tsd->bonus.near_attack_def_rate) / 100;
-					else // BF_LONG (there's no other choice)
+					else if (!(nk&NK_NO_MASKREDUX))// BF_LONG (there's no other choice)
 						cardfix = cardfix * (100 - tsd->bonus.long_attack_def_rate) / 100;
 
 					if( tsd->sc.data[SC_PROTECT_DEF] )
@@ -1154,7 +1159,7 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 		case BF_MISC:
 			if( tsd && !(nk&NK_NO_CARDFIX_DEF) ){
 			// misc damage reduction from equipment
-				if (!(nk&NK_NO_ELEFIX))
+				if (!(nk&NK_NO_ELEFIX) && !(nk&NK_NO_ELEREDUX))
 				{
 					int ele_fix = tsd->subele[s_ele];
 					for (i = 0; ARRAYLENGTH(tsd->subele2) > i && tsd->subele2[i].rate != 0; i++)
@@ -1169,16 +1174,18 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 					cardfix = cardfix * (100 - ele_fix) / 100;
 				}
 				cardfix = cardfix*(100-tsd->subsize[sstatus->size]) / 100;
-				cardfix = cardfix*(100-tsd->subrace2[s_race2]) / 100;
-				cardfix = cardfix*(100-tsd->subrace[sstatus->race]) / 100;
-				cardfix = cardfix*(100-tsd->subrace[is_boss(src)?RC_BOSS:RC_NONBOSS]) / 100;
+				if (!(nk&NK_NO_RACEREDUX)) {
+					cardfix = cardfix*(100-tsd->subrace2[s_race2]) / 100;
+					cardfix = cardfix*(100-tsd->subrace[sstatus->race]) / 100;
+					cardfix = cardfix*(100-tsd->subrace[is_boss(src)?RC_BOSS:RC_NONBOSS]) / 100;
+				}
 				if( sstatus->race != RC_DEMIHUMAN )
 					cardfix = cardfix * (100 - tsd->subrace[RC_NONDEMIHUMAN]) / 100;
 
 				cardfix = cardfix * ( 100 - tsd->bonus.misc_def_rate ) / 100;
-				if( wflag&BF_SHORT )
+				if( wflag&BF_SHORT && !(nk&NK_NO_MASKREDUX))
 					cardfix = cardfix * ( 100 - tsd->bonus.near_attack_def_rate ) / 100;
-				else // BF_LONG (there's no other choice)
+				else if(!(nk&NK_NO_MASKREDUX)) // BF_LONG (there's no other choice)
 					cardfix = cardfix * ( 100 - tsd->bonus.long_attack_def_rate ) / 100;
 
 				if (cardfix != 1000)

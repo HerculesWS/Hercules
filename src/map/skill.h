@@ -72,14 +72,17 @@ enum e_skill_inf {
 //The NK value applies only to non INF_GROUND_SKILL skills
 //when determining skill castend function to invoke.
 enum e_skill_nk {
-	NK_NO_DAMAGE      = 0x01,
-	NK_SPLASH         = 0x02|0x04, // 0x4 = splash & split
-	NK_SPLASHSPLIT    = 0x04,
-	NK_NO_CARDFIX_ATK = 0x08,
-	NK_NO_ELEFIX      = 0x10,
-	NK_IGNORE_DEF     = 0x20,
-	NK_IGNORE_FLEE    = 0x40,
-	NK_NO_CARDFIX_DEF = 0x80,
+	NK_NO_DAMAGE      = 0x001,
+	NK_SPLASH         = 0x002|0x004, // 0x4 = splash & split
+	NK_SPLASHSPLIT    = 0x004,
+	NK_NO_CARDFIX_ATK = 0x008,
+	NK_NO_ELEFIX      = 0x010,
+	NK_IGNORE_DEF     = 0x020,
+	NK_IGNORE_FLEE    = 0x040,
+	NK_NO_CARDFIX_DEF = 0x080,
+	NK_NO_ELEREDUX    = 0x100,
+	NK_NO_RACEREDUX   = 0x200,
+	NK_NO_MASKREDUX   = 0x400,
 };
 
 //A skill with 3 would be no damage + splash: area of effect.
