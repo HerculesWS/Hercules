@@ -14615,7 +14615,7 @@ void clif_parse_AutoRevive(int fd, struct map_session_data *sd) {
 	int item_position = pc->search_inventory(sd, ITEMID_TOKEN_OF_SIEGFRIED);
 	int hpsp = 100;
 
-	if (item_position < 0){
+	if (item_position < 0) {
 		if (sd->sc.data[SC_LIGHT_OF_REGENE])
 			hpsp = 20 * sd->sc.data[SC_LIGHT_OF_REGENE]->val1;
 		else
@@ -14628,10 +14628,10 @@ void clif_parse_AutoRevive(int fd, struct map_session_data *sd) {
 	if (!status->revive(&sd->bl, hpsp, hpsp))
 		return;
 
-	if ( item_position > 0)
-		pc->delitem(sd, item_position, 1, 0, 1, LOG_TYPE_CONSUME);
-	else
+	if ( item_position < 0)
 		status_change_end(&sd->bl,SC_LIGHT_OF_REGENE,INVALID_TIMER);
+	else
+		pc->delitem(sd, item_position, 1, 0, 1, LOG_TYPE_CONSUME);
 
 	clif->skill_nodamage(&sd->bl,&sd->bl,ALL_RESURRECTION,4,1);
 }
