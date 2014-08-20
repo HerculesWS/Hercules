@@ -1,16 +1,16 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Moscovia Quests
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Kisuka
-//===== Current Version: ===================================== 
-//= 2.0a
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== Current Version: =====================================
+//= 2.3
+//===== File Encoding ========================================
+//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
+//===== Description: =========================================
 //= Quests for Moscovia.
 //= The Moving Island, Help Mikhail, Acorn Exchange,
 //= Banish Winter, Shafka Hat, Koshei the Immortal.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First version. [Kisuka]
 //= 1.1 Small fixes on The Moving Island. [Kisuka]
 //= 1.2 Fixed a "player not attached" error. [brianluau]
@@ -23,16 +23,19 @@
 //= 1.9 Corrected NPC counting mobs for the wrong NPC. (bugreport:4736) [L0ne_W0lf]
 //= 2.0 Optimized. [Joseph]
 //= 2.0a Bug fixes. [Euphy]
-//============================================================ 
+//= 2.0b Bug fixes. [Lemongrass]
+//= 2.1 Fixed incorrect use of 'close'. [Joseph]
+//= 2.2 Updated RE/Pre-RE EXP. [Euphy]
+//= 2.3 Added GM management NPC. [Euphy]
+//============================================================
 
-//============================================================================
-// The Moving Island
-//============================================================================
+// The Moving Island :: mos_whale_edq
+//============================================================
 
 //----------------------------------------------------------------------------
 // Berbayeff - Starting Point
 //----------------------------------------------------------------------------
-moscovia,171,71,3	script	Berbayeff#npc	968,{
+moscovia,171,71,3	script	Berbayeff#npc	4_M_RUSMAN2,{
 	if (!mos_whale_edq) {
 		emotion e_an;
 		mes "[Berbayeff]";
@@ -248,7 +251,7 @@ moscovia,171,71,3	script	Berbayeff#npc	968,{
 //----------------------------------------------------------------------------
 // Bulletin Board - List Tide Times
 //----------------------------------------------------------------------------
-moscovia,135,52,0	script	Bulletin Board#npc	837,{
+moscovia,135,52,0	script	Bulletin Board#npc	2_BULLETIN_BOARD,{
 	mes "[Charabel Schedule]";
 	mes "NOTICE, due to the varying";
 	mes "tides here in Moscovia,";
@@ -268,8 +271,15 @@ moscovia,135,52,0	script	Bulletin Board#npc	837,{
 //----------------------------------------------------------------------------
 // Mr. Ibanoff - Docks
 //----------------------------------------------------------------------------
-moscovia,135,49,5	script	Mr. Ibanoff#npc	964,{
-	if (mos_whale_edq == 1 || mos_whale_edq == 2) {
+moscovia,135,49,5	script	Mr. Ibanoff#npc	4_M_RUSBALD,{
+	if (mos_whale_edq == 0) {
+		mes "[Mr. Ibanoff]";
+		mes "You are also an adventurer from another province. I also was a great adventurer.";
+		next;
+		mes "[Mr. Ibanoff]";
+		mes "Uf...I just want to be 20 years younger, so I can travel here and there with invigorating youth such as you... Time is an enemy. Hahahahaha!";
+		close;
+	} else if (mos_whale_edq == 1 || mos_whale_edq == 2) {
 		mes "["+strcharinfo(0)+"]";
 		mes "Hello. Are you Mr. Ibanoff?";
 		next;
@@ -741,13 +751,6 @@ moscovia,135,49,5	script	Mr. Ibanoff#npc	964,{
 		mes "You should ride a ship now? Let's ready to leave hurry up.";
 		set mos_whale_edq,19;
 		close;
-	} else {
-		mes "[Mr. Ibanoff]";
-		mes "You are also an adventurer from another province. I also was a great adventurer.";
-		next;
-		mes "[Mr. Ibanoff]";
-		mes "Uf...I just want to be 20 years younger, so I can travel here and there with invigorating youth such as you... Time is an enemy. Hahahahaha!";
-		close;
 	}
 	if ((gettime(3) >= 0 && gettime(3) < 3) || (gettime(3) >= 6 && gettime(3) < 9) || (gettime(3) >= 12 && gettime(3) < 15) || (gettime(3) >= 18 && gettime(3) < 21))  {
 		mes "[Mr. Ibanoff]";
@@ -777,7 +780,7 @@ moscovia,135,49,5	script	Mr. Ibanoff#npc	964,{
 //----------------------------------------------------------------------------
 // Mr. Ibanoff - Ship
 //----------------------------------------------------------------------------
-mosk_ship,98,110,3	script	Mr. Ibanoff#npc2	964,{
+mosk_ship,98,110,3	script	Mr. Ibanoff#npc2	4_M_RUSBALD,{
 	if (mos_whale_edq == 4) {
 		mes "[Mr. Ibanoff]";
 		mes "What a time for sailing!";
@@ -980,7 +983,7 @@ S_D_2:
 //----------------------------------------------------------------------------
 // Rudder
 //----------------------------------------------------------------------------
-mosk_ship,101,111,4	script	rudder#ship	111,{
+mosk_ship,101,111,4	script	rudder#ship	HIDDEN_NPC,{
 	if (mos_whale_edq == 5) {
 		callsub S_Rud1,1,0;
 	} else if (mos_whale_edq == 4) {
@@ -1096,30 +1099,10 @@ mosk_ship,101,111,4	script	rudder#ship	111,{
 		mes "We should make sure to kill any";
 		mes "monsters onboard.";
 		close;
-	} else if (mos_whale_edq == 22 && $@mos1_edq > 0) {
-		mes "[Mr. Ibanoff]";
-		mes "We should make sure to kill any";
-		mes "monsters onboard.";
-		close;
-	} else if (mos_whale_edq == 23 && $@mos1_edq > 0) {
-		mes "[Mr. Ibanoff]";
-		mes "We should make sure to kill any";
-		mes "monsters onboard.";
-		close;
-	} else if (mos_whale_edq == 25 && $@mos1_edq > 0) {
-		mes "[Mr. Ibanoff]";
-		mes "We should make sure to kill any";
-		mes "monsters onboard.";
-		close;
 	} else if (mos_whale_edq == 25 && $@mos1_edq == 0) {
 		mes "[Mr. Ibanoff]";
 		mes "You can adjust the rudder,";
 		mes "under my direction.";
-		close;
-	} else if (mos_whale_edq > 239 && mos_whale_edq < 250 && $@mos1_edq > 0) {
-		mes "[Mr. Ibanoff]";
-		mes "We should make sure to kill any";
-		mes "monsters onboard.";
 		close;
 	} else if (mos_whale_edq == 26) {
 		mes "[Mr. Ibanoff]";
@@ -1165,9 +1148,9 @@ S_Rud1:
 			set $@mos1_edq,$@mos1_edq+1;
 			donpcevent "Baehideun3#ship::OnEnable";
 		}
-		set mos_whale_edq,(getarg(1) == 2)?((mos_whale_edq >= 241)?((.@r != 3)?26:25):((.@r != 3)?10:11)):mos_whale_edq + 1;			
+		set mos_whale_edq,(getarg(1) == 2)?((mos_whale_edq >= 241)?((.@r != 3)?26:25):((.@r != 3)?10:11)):mos_whale_edq + 1;
 		close;
-	}	
+	}
 	mes "[Mr. Ibanoff]";
 	mes "I said that we should go "+.@d$[getarg(0)]+"!";
 	mes "You should sail in the right";
@@ -1183,13 +1166,13 @@ S_Rud1:
 			donpcevent "Baehideun1#ship::OnEnable";
 		}
 	}
-	close;	
+	close;
 }
 
 //----------------------------------------------------------------------------
 // Aged Stranger - Whale Island
 //----------------------------------------------------------------------------
-mosk_fild01,86,104,3	script	Aged Stranger#npc	963,{
+mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 	if ((MaxWeight-Weight) < 2000) {
 		mes "[Aged Stranger]";
 		mes "You're carrying too many items.";
@@ -1503,7 +1486,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	963,{
 			mes "This is a traditional instrument";
 			mes "which comes from a faraway land of";
 			mes "the ancestors of Moscovia.";
-			getitem 2707,1;
+			getitem GUSLI, 1;
 			set mos_whale_edq,35;
 			next;
 			mes "[Aged Stranger]";
@@ -1528,7 +1511,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	963,{
 		mes "Are you ready to learn the Gusli?";
 		mes "Please equip the Gusli.";
 		next;
-		if(getequipid(EQI_ACC_L) || getequipid(EQI_ACC_R) == 2707) {
+		if (getequipid(EQI_ACC_L) == GUSLI || getequipid(EQI_ACC_R) == GUSLI) {
 			mes "[Aged Stranger]";
 			mes "Hm... Very well.";
 			mes "At first, look at me how I play,";
@@ -1555,7 +1538,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	963,{
 			mes "[Aged Stranger]";
 			mes "Okay, it's time for your turn. Play it. Play the song that I played.";
 			next;
-			callsub S_AS_1;		
+			callsub S_AS_1;
 		}
 		mes "[Aged Stranger]";
 		mes "Um... Your preparations are not";
@@ -1571,7 +1554,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	963,{
 		mes "[Aged Stranger]";
 		mes "Are you ready to learn the Gusli?";
 		next;
-		if(getequipid(EQI_ACC_L) || getequipid(EQI_ACC_R) == 2707) {
+		if (getequipid(EQI_ACC_L) == GUSLI || getequipid(EQI_ACC_R) == GUSLI) {
 			mes "[Aged Stranger]";
 			mes "Um... You did well.";
 			next;
@@ -1652,7 +1635,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	963,{
 			warp "mosk_fild02",204,54;
 			end;
 		}
-	}else{
+	} else {
 		mes "[Aged Stranger]";
 		mes "Long time, no see!";
 		mes "You probably like the island, don't you?";
@@ -1727,7 +1710,7 @@ S_AS_2:
 	mes "So, what will you do now?";
 	next;
 	switch (select("How would I get back here?:"+((getarg(0))?"I want to learn the Gusli":"")+":Go back to the mainland.")) {
-		Case 1:
+		case 1:
 			mes "[Aged Stranger]";
 			mes "You are my friend now,";
 			mes "and you have this instrument.";
@@ -1752,7 +1735,7 @@ S_AS_2:
 			mes "with this island. Only if you are a";
 			mes "friend... heheh.";
 			close;
-		Case 2:
+		case 2:
 			mes "[Aged Stranger]";
 			mes "You really want to...";
 			mes "learn this instrument...";
@@ -1774,8 +1757,8 @@ S_AS_2:
 			mes "Okay. If you are ready to play the";
 			mes "Gusli, let me know.";
 			set mos_whale_edq,36;
-			close;	
-		Case 3:
+			close;
+		case 3:
 			mes "[Aged Stranger]";
 			mes "I see. Okay, let's go.";
 			next;
@@ -1825,7 +1808,7 @@ S_AS_3:
 //----------------------------------------------------------------------------
 // Csar Alexsay III - Moscovia Palace
 //----------------------------------------------------------------------------
-mosk_in,131,92,3	script	Csar Alexsay III#npc	965,{
+mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 	if ((MaxWeight-Weight) < 2000) {
 		mes "[Csar Alexsay III]";
 		mes "You're carrying too many items.";
@@ -2022,7 +2005,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	965,{
 		mes "Stay here as long as you want, and";
 		mes "enjoy yourself to the fullest this summer.";
 		close;
-	} if (mos_whale_edq < 16) {
+	} else if (mos_whale_edq < 16) {
 		mes "[Csar Alexsay III]";
 		mes "Welcome to Moscovia!";
 		mes "I am the ruler, Csar Aleksay III, of Moscovia.";
@@ -2033,7 +2016,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	965,{
 	} else if (mos_whale_edq == 16) {
 		mes "[Csar Alexsay III]";
 		mes "A foreign traveler...?";
-		mes " Do you have something to tell me?";
+		mes "Do you have something to tell me?";
 		next;
 		mes "[Csar Alexsay III]";
 		mes "If it is not important,";
@@ -2142,7 +2125,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	965,{
 		mes "A Gooselri? Which only exists";
 		mes "in the whale island? Let's see.";
 		next;
-		if (getequipid(EQI_ACC_L) || getequipid(EQI_ACC_R) == 2707 || countitem(2707) > 0) {
+		if (countitem(GUSLI) > 0) {
 			mes "[Csar Alexsay III]";
 			mes "Oh... Is this instrument... a Gooselri?";
 			next;
@@ -2206,8 +2189,8 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	965,{
 				next;
 				mes "[Prime Minister Dmitree]";
 				mes "Even though I regard as your effort for the time so, award you. Take it and go out.";
-				getitem 12702,1;
-				getexp 50000,0;
+				getitem 12702,1; //Old_Bleu_Box
+				getexp (checkre(3))?50000:500000,0;
 				set mos_whale_edq,39;
 				close;
 			}
@@ -2234,8 +2217,8 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	965,{
 			next;
 			mes "[Prime Minister Dmitree]";
 			mes "Even though I regard as your effort for the time so, award you. Take it.";
-			getitem 12702,1;
-			getexp 70000,0;
+			getitem 12702,1; //Old_Bleu_Box
+			getexp (checkre(3))?70000:700000,0;
 			set mos_whale_edq,40;
 			close;
 		}
@@ -2252,7 +2235,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	965,{
 		mes "something to satisfy me";
 		mes "at the whale island?";
 		next;
-		if (getequipid(EQI_ACC_L) || getequipid(EQI_ACC_R) == 2707 || countitem(2707)) {
+		if (countitem(GUSLI) > 0) {
 			mes "[Csar Alexsay III]";
 			mes "Oh... Is this instrument... a Gooselri?";
 			next;
@@ -2316,8 +2299,8 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	965,{
 			mes "of our dear Csar and all the people";
 			mes "in his palace. I will reward your";
 			mes "efforts, in the name of the Csar.";
-			getitem 617,1;
-			getexp 120000,0;
+			getitem 617,1; //Old_Violet_Box
+			getexp (checkre(3))?100000:1200000,0;
 			set mos_whale_edq,41;
 			close;
 		}
@@ -2360,7 +2343,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	965,{
 //----------------------------------------------------------------------------
 // Prime Minister Dmitree - Moscovia Palace
 //----------------------------------------------------------------------------
-mosk_in,127,89,3	script	Prime Minister Dmitree#m	967,{
+mosk_in,127,89,3	script	Prime Minister Dmitree#m	4_M_RUSMAN1,{
 	if (mos_nowinter > 11 && mos_nowinter < 14) {
 		mes "[Prime Minister Dmitree]";
 		mes "You are in trouble if";
@@ -2484,7 +2467,7 @@ mosk_in,127,89,3	script	Prime Minister Dmitree#m	967,{
 //----------------------------------------------------------------------------
 // Island Trigger - Docks
 //----------------------------------------------------------------------------
-moscovia,136,46,4	script	Find#ship	844,4,4,{
+moscovia,136,46,4	script	Find#ship	CLEAR_NPC,4,4,{
 	end;
 
 OnTouch:
@@ -2497,7 +2480,7 @@ OnTouch:
 	mes "Stop by the whale island?";
 	next;
 	if(select("Go to Whale Island.:Stay put.") == 1) {
-		if (getequipid(EQI_ACC_L) == 2707 || getequipid(EQI_ACC_R) == 2707) {
+		if (getequipid(EQI_ACC_L) == GUSLI || getequipid(EQI_ACC_R) == GUSLI) {
 			soundeffect "mos_gusli2.wav",0;
 			mes "-Slowly, your hands are on the";
 			mes "Gusli, and the playing starts...";
@@ -2515,7 +2498,7 @@ OnTouch:
 			mes "island...!!! Someday, I hope to go there! Hahaha.";
 			next;
 			warp "mosk_fild01",95,93;
-		}else{
+		} else {
 			mes "["+strcharinfo(0)+"]";
 			mes "Oh my goodness... Slipped right out";
 			mes "of my mind... to forget equipping the Gusli.";
@@ -2543,7 +2526,7 @@ OnInit:
 	end;
 }
 
-mosk_ship,81,110,0	script	#findship	844,5,5,{
+mosk_ship,81,110,0	script	#findship	CLEAR_NPC,5,5,{
 OnInit:
 	disablenpc "#findship";
 	stopnpctimer;
@@ -2597,10 +2580,10 @@ OnEnable:
 	enablenpc strnpcinfo(0);
 	set .@c,charat(strnpcinfo(0),9);
 	switch (.@c) {
-		Case 1: setarray .@m, 89,112,1425,85,110,1425; break;
-		Case 2: setarray .@m, 89,112,1425,80,110,1426,83,114,1426,85,110,1425; break;
-		Case 3: setarray .@m, 85,111,1451,89,112,1543,90,106,1543; break;
-		Case 4: setarray .@m, 85,111,1451,89,112,1543,90,106,1543; break;
+		case 1: setarray .@m, 89,112,1425,85,110,1425; break;
+		case 2: setarray .@m, 89,112,1425,80,110,1426,83,114,1426,85,110,1425; break;
+		case 3: setarray .@m, 85,111,1451,89,112,1543,90,106,1543; break;
+		case 4: setarray .@m, 85,111,1451,89,112,1543,90,106,1543; break;
 	}
 	for (set .@i, 0; .@i < getarraysize(.@m); set .@i, .@i + 3)
 		monster "mosk_ship",.@m[.@i],.@m[.@i+1],"Sea Monster",.@m[.@i+2],1,strnpcinfo(0)+"::OnMyMobDead";
@@ -2622,10 +2605,10 @@ OnMyMobDead:
 		mes "normally.";
 		set .@c,charat(strnpcinfo(0),9);
 		switch (.@c) {
-			Case 1: break;
-			Case 2: break;
-			Case 3: set mos_whale_edq,11; break;
-			Case 4: set mos_whale_edq,26; break;
+			case 1: break;
+			case 2: break;
+			case 3: set mos_whale_edq,11; break;
+			case 4: set mos_whale_edq,26; break;
 		}
 		donpcevent strnpcinfo(0)+"::OnDisable";
 		close;
@@ -2643,9 +2626,8 @@ mosk_ship,3,3,4	duplicate(Baehideun#main)	Baehideun2#ship	-1
 mosk_ship,5,5,4	duplicate(Baehideun#main)	Baehideun3#ship	-1
 mosk_ship,15,15,4	duplicate(Baehideun#main)	Baehideun4#ship	-1
 
-//============================================================================
-// Help Mikhail
-//============================================================================
+// Help Mikhail :: mos_swan & mos_swan_pt2
+//============================================================
 
 //----------------------------------------------------------------------------
 // Gallina - Starting Point
@@ -2723,7 +2705,7 @@ function	script	F_MOS_1	{
 	close;
 }
 
-mosk_in,144,279,5	script	Gallina#mos	959,{
+mosk_in,144,279,5	script	Gallina#mos	4_F_RUSWOMAN1,{
 	if (!mos_swan) {
 		callfunc("F_MOS_1");
 	} else if (mos_swan == 1) {
@@ -2774,7 +2756,7 @@ mosk_in,144,279,5	script	Gallina#mos	959,{
 		mes "Well, now I have to get to work!";
 		mes "I'll make you my hotcakes someday. Please visit me later";
 		set mos_swan,100;
-		getexp 100000,0;
+		getexp (checkre(3))?90000:1000000,0;
 		close;
 	}
 	mes "[Gallina]";
@@ -2787,7 +2769,7 @@ mosk_in,144,279,5	script	Gallina#mos	959,{
 //----------------------------------------------------------------------------
 // Anna - Sister
 //----------------------------------------------------------------------------
-mosk_in,148,274,1	script	Anna#mos	958,{
+mosk_in,148,274,1	script	Anna#mos	4_F_RUSCHILD,{
 	if (!mos_swan) {
 		callfunc("F_MOS_1");
 	} else if (mos_swan == 1) {
@@ -2806,11 +2788,11 @@ mosk_in,148,274,1	script	Anna#mos	958,{
 					mes "Where is Mikhail?";
 					mes "Do you know where he is?";
 					next;
-					emotion 39;
+					emotion e_meh;
 					mes "[Anna]";
 					mes "If I had known that, I would have already found him, you fool.";
 					next;
-					emotion 4,1;
+					emotion e_swt,1;
 					mes "["+strcharinfo(0)+"]";
 					mes "Hahaha, you're right.";
 					next;
@@ -2876,7 +2858,7 @@ mosk_in,148,274,1	script	Anna#mos	958,{
 					mes "["+strcharinfo(0)+"]";
 					mes "Is there anyone who is close to him?";
 					next;
-					emotion 32;
+					emotion e_pif;
 					mes "[Anna]";
 					mes "(giggle) He's a fool and has no friends.";
 					mes "But among our villagers, the lady of ^3131FFInn 'Sticky Herb Tree'^000000 has held Mikhail dear.";
@@ -2969,7 +2951,7 @@ mosk_in,148,274,1	script	Anna#mos	958,{
 //----------------------------------------------------------------------------
 // Bed
 //----------------------------------------------------------------------------
-mosk_in,136,279,3	script	Bed#mos1	111,{
+mosk_in,136,279,3	script	Bed#mos1	HIDDEN_NPC,{
 	mes "- There are sheets and a pillow which seem so neat and soft that I'll probably fall asleep as soon as I lie down on them. -";
 	if (mos_swan != 11) close;
 	next;
@@ -2980,7 +2962,7 @@ mosk_in,136,279,3	script	Bed#mos1	111,{
 	mes "- You come near the bed to look it over. -";
 	next;
 	while (.@c < 2) {
-		for (set .@i, 0; .@i < 4; set .@i, .@i + 1) 
+		for (set .@i, 0; .@i < 4; set .@i, .@i + 1)
 			mes " .............. ";
 		set .@c, .@c + 1;
 		next;
@@ -2989,12 +2971,12 @@ mosk_in,136,279,3	script	Bed#mos1	111,{
 	close;
 }
 
-mosk_in,161,279,3	duplicate(Bed#mos1)	Bed#mos2	111
+mosk_in,161,279,3	duplicate(Bed#mos1)	Bed#mos2	HIDDEN_NPC
 
 //----------------------------------------------------------------------------
 // Fire pot + Mikhail
 //----------------------------------------------------------------------------
-mosk_in,205,268,3	script	Fire pot#mos	111,{
+mosk_in,205,268,3	script	Fire pot#mos	HIDDEN_NPC,{
 	if (!mos_swan) {
 		mes "- It's a fire pot to heat the room or bake something -";
 		close;
@@ -3019,7 +3001,7 @@ mosk_in,205,268,3	script	Fire pot#mos	111,{
 		mes "- You come near the pot to look it over. -";
 		next;
 		while (.@c < 2) {
-			for (set .@i, 0; .@i < 4; set .@i, .@i + 1) 
+			for (set .@i, 0; .@i < 4; set .@i, .@i + 1)
 				mes " .............. ";
 			set .@c, .@c + 1;
 			next;
@@ -3175,7 +3157,7 @@ mosk_in,205,268,3	script	Fire pot#mos	111,{
 	close;
 }
 
-mosk_in,202,269,5	script	Mikhail#mos	962,{
+mosk_in,202,269,5	script	Mikhail#mos	4_M_RUSCHILD,{
 	end;
 OnInit:
 OnEnable:
@@ -3186,7 +3168,7 @@ OnEnable:
 //----------------------------------------------------------------------------
 // Sticky Herb Tree Inn NPCs
 //----------------------------------------------------------------------------
-mosk_in,135,191,5	script	Landlord#mos	961,{
+mosk_in,135,191,5	script	Landlord#mos	4_F_RUSWOMAN3,{
 	mes "[Landlord]";
 	mes "Oh, welcome to the Inn 'Sticky Herb Tree'.";
 	mes "It is the most comfortable and calmest place in all of Moscovia.";
@@ -3205,7 +3187,7 @@ mosk_in,135,191,5	script	Landlord#mos	961,{
 					mes "Ok, I'll bring you the best room.";
 					mes "Please have a rest, young adventurer.";
 					close2;
-					set Zeny,Zeny-5000;
+					Zeny -= 5000;
 					percentheal 100,100;
 					warp "mosk_in",215,181;
 					end;
@@ -3216,13 +3198,13 @@ mosk_in,135,191,5	script	Landlord#mos	961,{
 				close;
 			case 3:
 				mes "[Landlord]";
-				emotion 3;
-				mes "Oh~! You look great! Look at the "+((sex)?"solid muscle":"fair skin")+"!";
+				emotion e_lv;
+				mes "Oh~! You look great! Look at the "+((Sex)?"solid muscle":"fair skin")+"!";
 				mes "But you look tired. Is it because of a long journey?";
 				next;
 				mes "[Landlord]";
-				mes "We've got a room available just for you. "+((sex)?"It's the best in town. How about staying the night?":"It's like a princess' room.");
-				mes (sex)?"I'll charge you at reasonable price for you, handsome guy.":"How about staying the night? I'll mark down the price for you, beautiful lady.";
+				mes "We've got a room available just for you. "+((Sex)?"It's the best in town. How about staying the night?":"It's like a princess' room.");
+				mes (Sex)?"I'll charge you at reasonable price for you, handsome guy.":"How about staying the night? I'll mark down the price for you, beautiful lady.";
 				next;
 				mes "["+strcharinfo(0)+"]";
 				mes "Oh, I'm sorry but I didn't come to stay here.";
@@ -3241,7 +3223,7 @@ mosk_in,135,191,5	script	Landlord#mos	961,{
 				mes "If you promise me to stay overnight, I'll tell you about what you want to know. Deal?";
 				next;
 				if(select("Refuse.:Stay overnight and get the info. - 5000z") == 1) {
-					emotion 7;
+					emotion e_ag;
 					mes "[Landlord]";
 					mes "Well, get the info by yourself then.";
 					close;
@@ -3262,7 +3244,7 @@ mosk_in,135,191,5	script	Landlord#mos	961,{
 				mes "I wish you a good night's rest. Hohoho.";
 				set mos_swan,4;
 				close2;
-				set Zeny,Zeny-5000;
+				Zeny -= 5000;
 				percentheal 100,100;
 				warp "mosk_in",215,181;
 				end;
@@ -3352,7 +3334,7 @@ mosk_in,135,191,5	script	Landlord#mos	961,{
 		mes "[Landlord]";
 		mes "Please be comfortable.";
 		close2;
-		set Zeny,Zeny-5000;
+		Zeny -= 5000;
 		percentheal 100,100;
 		warp "mosk_in",215,181;
 		end;
@@ -3363,7 +3345,7 @@ mosk_in,135,191,5	script	Landlord#mos	961,{
 	close;
 }
 
-mosk_in,141,212,3	script	Pub Owner#mos	964,{
+mosk_in,141,212,3	script	Pub Owner#mos	4_M_RUSBALD,{
 	if ((MaxWeight-Weight) < 2000) {
 		mes "- Please stop here!! -";
 		mes "- You're carrying too many items -";
@@ -3419,7 +3401,7 @@ mosk_in,141,212,3	script	Pub Owner#mos	964,{
 			close;
 		}
 		if (Zeny > 999) {
-			set Zeny,Zeny-1000;
+			Zeny -= 1000;
 			set mos_swan,9;
 			if (!.@j) getitem 519,1; else getitem 531,1;
 			mes "[Pub Owner]";
@@ -3482,7 +3464,7 @@ mosk_in,141,212,3	script	Pub Owner#mos	964,{
 		switch(select("Milk - 1000z:Apple juice - 1000z:They are all expensive!")) {
 			case 1:
 				if (Zeny > 999) {
-					set Zeny,Zeny-1000;
+					Zeny -= 1000;
 					set mos_swan,9;
 					getitem 519,1;
 					mes "[Pub Owner]";
@@ -3496,7 +3478,7 @@ mosk_in,141,212,3	script	Pub Owner#mos	964,{
 				close;
 			case 2:
 				if (Zeny > 999) {
-					set Zeny,Zeny-1000;
+					Zeny -= 1000;
 					set mos_swan,9;
 					getitem 531,1;
 					mes "[Pub Owner]";
@@ -3525,7 +3507,7 @@ mosk_in,141,212,3	script	Pub Owner#mos	964,{
 	close;
 }
 
-mosk_in,147,202,3	script	Victor#mos	968,{
+mosk_in,147,202,3	script	Victor#mos	4_M_RUSMAN2,{
 	if ((MaxWeight-Weight) < 2000) {
 		mes "- Please stop here!! -";
 		mes "- You're carrying too many items -";
@@ -3745,7 +3727,7 @@ OnTouch:
 //----------------------------------------------------------------------------
 // Swamp
 //----------------------------------------------------------------------------
-mosk_dun03,153,90,3	script	Bubbling Swamp#mos1	844,{
+mosk_dun03,153,90,3	script	Bubbling Swamp#mos1	CLEAR_NPC,{
 	if ((MaxWeight-Weight) < 2000) {
 		mes "- Your bag is very heavy today -";
 		close;
@@ -3795,7 +3777,7 @@ mosk_dun03,153,90,3	script	Bubbling Swamp#mos1	844,{
 //----------------------------------------------------------------------------
 // Larissa - Hotcake Quests
 //----------------------------------------------------------------------------
-mosk_in,211,259,5	script	Larissa#mos_01	960,{
+mosk_in,211,259,5	script	Larissa#mos_01	4_F_RUSWOMAN2,{
 	if ((MaxWeight-Weight) < 2000) {
 		mes "- Please stop here !! -";
 		mes "- You're carrying too many items -";
@@ -3958,14 +3940,13 @@ mosk_in,211,259,5	script	Larissa#mos_01	960,{
 	close;
 }
 
-//============================================================================
-// Acorn Exchange
-//============================================================================
+// Acorn Exchange :: mos_squirrel
+//============================================================
 
 //----------------------------------------------------------------------------
 // Acorn Dealer - Sells Acorns
 //----------------------------------------------------------------------------
-moscovia,208,182,7	script	Acorn Dealer#mos	967,{
+moscovia,208,182,7	script	Acorn Dealer#mos	4_M_RUSMAN1,{
 	mes "[Acorn Dealer]";
 	mes "We have very fresh acorns. Everyone will like them!";
 	mes "You can buy one acorn for 100zeny!";
@@ -4020,7 +4001,7 @@ moscovia,208,182,7	script	Acorn Dealer#mos	967,{
 	mes "[Acorn Dealer]";
 	mes "Oh, thank you...";
 	mes "What do you think of them? They're fresh, aren't they?";
-	set Zeny,Zeny - .@price;
+	Zeny -= .@price;
 	getitem 1026,.@input;
 	close;
 }
@@ -4099,9 +4080,9 @@ OnTouch:
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
 					else if (.@stworld > 89 && .@stworld < 100) getitem 732,1;
 					else getitem 7297,1;
-				} else if (.@cyworld == 1000) getitem 727,1;	
+				} else if (.@cyworld == 1000) getitem 727,1;
 				else if (.@cyworld > 100 && .@cyworld < 500) getitem 733,1;
-				else if (.@cyworld > 500 && .@cyworld < 900) getitem 724,1;					
+				else if (.@cyworld > 500 && .@cyworld < 900) getitem 724,1;
 				else getitem 724,1;
 				close;
 			case 2:
@@ -4138,12 +4119,11 @@ S_BS_1:
 	else if (.@stworld < 90) getitem 729,1;
 	return;
 }
-mosk_fild01,113,108,3	duplicate(Squirrel#mos_main)	Big Squirrel#mos	111
-mosk_fild01,113,108,5	duplicate(Squirrel#mos_main)	#mos_sq	1104,2,2
+mosk_fild01,113,108,3	duplicate(Squirrel#mos_main)	Big Squirrel#mos	HIDDEN_NPC
+mosk_fild01,113,108,5	duplicate(Squirrel#mos_main)	#mos_sq	COCO,2,2
 
-//============================================================================
-// Banish Winter
-//============================================================================
+// Banish Winter :: mos_nowinter
+//============================================================
 
 //----------------------------------------------------------------------------
 // Baba Yaga, the Horrible - Starting Point
@@ -4239,7 +4219,7 @@ OnTouch:
 	end;
 }
 
-mosk_in,215,46,5	script	Baba Yaga, the Horrible	970,{
+mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 	if (!mos_nowinter || mos_nowinter == 1) {
 		mes "[Baba Yaga, the Horrible]";
 		mes "Hohoho";
@@ -4401,7 +4381,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	970,{
 		mes "[Baba Yaga, the Horrible]";
 		mes "Let me see...where the season spell...";
 		next;
-		mes "rummaging..";
+		mes "rummaging...";
 		next;
 		mes "[Baba Yaga, the Horrible]";
 		mes "Ah, here it is... I found it!";
@@ -4543,7 +4523,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	970,{
 				set .@f, 1;
 				break;
 			}
-		}	
+		}
 		if (!.@f && (countitem(730) || countitem(731) || countitem(732))) {
 			for (set .@i, 0; .@i < getarraysize(.@n); set .@i, .@i + 2)
 				delitem .@n[.@i],.@n[.@i+1];
@@ -4982,7 +4962,7 @@ S_BY_1:
 //----------------------------------------------------------------------------
 // Book
 //----------------------------------------------------------------------------
-mosk_in,217,45,0	script	#book_russia	111,{
+mosk_in,217,45,0	script	#book_russia	HIDDEN_NPC,{
 	if (mos_nowinter == 15) {
 		mes "-Beside the pot,";
 		mes "There is an unusually large book.";
@@ -5229,7 +5209,7 @@ mosk_in,217,45,0	script	#book_russia	111,{
 //----------------------------------------------------------------------------
 // Mixing Pot
 //----------------------------------------------------------------------------
-mosk_in,221,43,0	script	#bowl	111,{
+mosk_in,221,43,0	script	#bowl	HIDDEN_NPC,{
 	if (mos_nowinter != 16) end;
 	mes "-It is a very dirty pot.";
 	mes "Something is boiling";
@@ -5301,7 +5281,7 @@ mosk_in,221,43,0	script	#bowl	111,{
 		next;
 		switch(select("Put the materials in it.:Pour water in it.:Stir it up.:It is over!")) {
 		case 1:
-			set .@m, select (implode(.@m$,":")) - 1; 
+			set .@m, select (implode(.@m$,":")) - 1;
 			if (.@m >= 3) {
 				if (.@nankai == 5 || .@nankai == 6) {
 					if ((.@m == 3 && .@star) || (.@m == 4 && .@sand)) specialeffect EF_POISONHIT;
@@ -5429,8 +5409,8 @@ mosk_in,221,43,0	script	#bowl	111,{
 					set .@m, select (implode(.@m3$,":")) - 1;
 					if (.@m != 5) specialeffect EF_POISONHIT;
 					else {
-						set .@maho,.@maho+1; 
-						specialeffect EF_SMOKE; 
+						set .@maho,.@maho+1;
+						specialeffect EF_SMOKE;
 					}
 					set .@nankai,.@nankai+1;
 					mes "-I put "+((.@m == 5)?"a":"the")+" "+.@m3$[.@m]+" in the pot.";
@@ -5503,7 +5483,7 @@ mosk_in,221,43,0	script	#bowl	111,{
 //----------------------------------------------------------------------------
 // Center of Town
 //----------------------------------------------------------------------------
-moscovia,224,190,0	script	#nowinterplz	844,{
+moscovia,224,190,0	script	#nowinterplz	CLEAR_NPC,{
 	if (mos_nowinter != 19) end;
 	if (countitem(7765)) {
 		mes "["+strcharinfo(0)+"]";
@@ -5543,7 +5523,7 @@ moscovia,224,190,0	script	#nowinterplz	844,{
 //----------------------------------------------------------------------------
 // Villagers
 //----------------------------------------------------------------------------
-moscovia,252,203,5	script	A Little Girl#mos1	958,{
+moscovia,252,203,5	script	A Little Girl#mos1	4_F_RUSCHILD,{
 	if (mos_nowinter == 10) {
 		if (mos_kid == 1) {
 			mes "[Yosefina]";
@@ -5586,7 +5566,7 @@ moscovia,252,203,5	script	A Little Girl#mos1	958,{
 	close;
 }
 
-moscovia,233,204,3	script	A Young Man#mos2	968,{
+moscovia,233,204,3	script	A Young Man#mos2	4_M_RUSMAN2,{
 	if (mos_nowinter == 10) {
 		if (mos_middle == 1) {
 			mes "[Fedor]";
@@ -5623,7 +5603,7 @@ moscovia,233,204,3	script	A Young Man#mos2	968,{
 	close;
 }
 
-moscovia,219,229,5	script	A Middle-Aged Man#mos3	964,{
+moscovia,219,229,5	script	A Middle-Aged Man#mos3	4_M_RUSBALD,{
 	if (mos_nowinter == 10) {
 		if (mos_elder == 1) {
 			mes "[Viktor]";
@@ -5666,7 +5646,7 @@ moscovia,219,229,5	script	A Middle-Aged Man#mos3	964,{
 	close;
 }
 
-moscovia,255,203,3	script	A Little Boy#mos4	962,{
+moscovia,255,203,3	script	A Little Boy#mos4	4_M_RUSCHILD,{
 	if (mos_nowinter == 10) {
 		if (mos_kid == 1) {
 			mes "[Vasili]";
@@ -5735,7 +5715,7 @@ moscovia,255,203,3	script	A Little Boy#mos4	962,{
 	close;
 }
 
-moscovia,204,188,5	script	A Lady#mos5	959,{
+moscovia,204,188,5	script	A Lady#mos5	4_F_RUSWOMAN1,{
 	if (mos_nowinter == 10) {
 		if (mos_middle == 1) {
 			mes "[Katya]";
@@ -5776,7 +5756,7 @@ moscovia,204,188,5	script	A Lady#mos5	959,{
 	close;
 }
 
-moscovia,167,97,3	script	A Lady#mos6	961,{
+moscovia,167,97,3	script	A Lady#mos6	4_F_RUSWOMAN3,{
 	if (mos_nowinter == 10) {
 		if (mos_elder == 1) {
 			mes "[Roza]";
@@ -5823,7 +5803,7 @@ moscovia,167,97,3	script	A Lady#mos6	961,{
 	close;
 }
 
-moscovia,202,102,3	script	A Little Boy#mos7	962,{
+moscovia,202,102,3	script	A Little Boy#mos7	4_M_RUSCHILD,{
 	if (mos_nowinter == 10) {
 		if (mos_kid == 1) {
 			mes "[Feliks]";
@@ -5887,7 +5867,7 @@ moscovia,202,102,3	script	A Little Boy#mos7	962,{
 	close;
 }
 
-moscovia,220,172,3	script	A Young Man#mos8	968,{
+moscovia,220,172,3	script	A Young Man#mos8	4_M_RUSMAN2,{
 	if (mos_nowinter == 10) {
 		if (mos_middle == 1) {
 			mes "[Ilyav]";
@@ -5931,7 +5911,7 @@ moscovia,220,172,3	script	A Young Man#mos8	968,{
 	close;
 }
 
-moscovia,253,175,3	script	A Man#mos9	964,{
+moscovia,253,175,3	script	A Man#mos9	4_M_RUSBALD,{
 	if (mos_nowinter == 10) {
 		if (mos_elder == 1) {
 			mes "[Orek]";
@@ -5976,7 +5956,7 @@ moscovia,253,175,3	script	A Man#mos9	964,{
 	close;
 }
 
-moscovia,168,135,3	script	A Lady#mos10	961,{
+moscovia,168,135,3	script	A Lady#mos10	4_F_RUSWOMAN3,{
 	if (mos_nowinter == 10) {
 		if (mos_elder == 1) {
 			mes "[Kyra]";
@@ -6030,7 +6010,7 @@ moscovia,168,135,3	script	A Lady#mos10	961,{
 	close;
 }
 
-moscovia,192,80,3	script	A Lady#mos11	959,{
+moscovia,192,80,3	script	A Lady#mos11	4_F_RUSWOMAN1,{
 	if (mos_nowinter == 10) {
 		if (mos_middle == 1) {
 			mes "[Sabina]";
@@ -6078,7 +6058,7 @@ moscovia,192,80,3	script	A Lady#mos11	959,{
 	close;
 }
 
-moscovia,211,215,5	script	A Young Man#mos12	967,{
+moscovia,211,215,5	script	A Young Man#mos12	4_M_RUSMAN1,{
 	if (mos_nowinter == 10) {
 		if (mos_middle == 1) {
 			mes "[Izlof]";
@@ -6136,7 +6116,7 @@ moscovia,211,215,5	script	A Young Man#mos12	967,{
 	close;
 }
 
-moscovia,149,112,3	script	A Man#mos13	964,{
+moscovia,149,112,3	script	A Man#mos13	4_M_RUSBALD,{
 	if (mos_nowinter == 10) {
 		if (mos_elder == 1) {
 			mes "[Lev]";
@@ -6185,7 +6165,7 @@ moscovia,149,112,3	script	A Man#mos13	964,{
 	close;
 }
 
-moscovia,196,71,3	script	A Young Man#mos14	968,{
+moscovia,196,71,3	script	A Young Man#mos14	4_M_RUSMAN2,{
 	if (mos_nowinter == 10) {
 		if (mos_middle == 1) {
 			mes "[Fredek]";
@@ -6235,7 +6215,7 @@ moscovia,196,71,3	script	A Young Man#mos14	968,{
 	close;
 }
 
-moscovia,234,168,5	script	A Man#mos15	964,{
+moscovia,234,168,5	script	A Man#mos15	4_M_RUSBALD,{
 	if (mos_nowinter == 10) {
 		if (mos_elder == 1) {
 			mes "[Gavrel]";
@@ -6282,7 +6262,7 @@ moscovia,234,168,5	script	A Man#mos15	964,{
 
 }
 
-moscovia,228,80,3	script	A Little Boy#mos16	962,{
+moscovia,228,80,3	script	A Little Boy#mos16	4_M_RUSCHILD,{
 	if (mos_nowinter == 10) {
 		if (mos_kid == 1) {
 			mes "[Rurik]";
@@ -6341,7 +6321,7 @@ moscovia,228,80,3	script	A Little Boy#mos16	962,{
 //----------------------------------------------------------------------------
 // Magic Bottle
 //----------------------------------------------------------------------------
-mosk_dun03,225,233,0	script	Pile of skeletons#mosk	111,{
+mosk_dun03,225,233,0	script	Pile of skeletons#mosk	HIDDEN_NPC,{
 	if (mos_nowinter == 8) {
 		mes "-There are ugly skulls";
 		mes "all over here but, ";
@@ -6499,10 +6479,9 @@ mosk_in,131,92,3	script	#Csar	-1,7,7,{
 	end;
 }
 
-//============================================================================
-// Shafka Hat
-//============================================================================
-moscovia,211,93,3	script	Irina#edq	958,{
+// Shafka Hat :: mos_whale_edq
+//============================================================
+moscovia,211,93,3	script	Irina#edq	4_F_RUSCHILD,{
 	if (!checkweight(1201,1)) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
@@ -6609,14 +6588,13 @@ moscovia,211,93,3	script	Irina#edq	958,{
 	close;
 }
 
-//============================================================================
-// Koshei the Immortal
-//============================================================================
+// Koshei the Immortal :: mos_request
+//============================================================
 
 //----------------------------------------------------------------------------
 // Sage - Starting Point
 //----------------------------------------------------------------------------
-mosk_fild02,198,252,3	script	Sage#rus01	755,{
+mosk_fild02,198,252,3	script	Sage#rus01	4_M_SAGE_C,{
 	if (!rhea_rus_main) {
 		mes "[Sage]";
 		mes "Ah, a foreigner,";
@@ -6704,7 +6682,7 @@ mosk_fild02,198,252,3	script	Sage#rus01	755,{
 //----------------------------------------------------------------------------
 // Mysterious Stone
 //----------------------------------------------------------------------------
-mosk_dun01,169,162,0	script	Mysterious Stone#rus02	111,{
+mosk_dun01,169,162,0	script	Mysterious Stone#rus02	HIDDEN_NPC,{
 	if (!rhea_rus_main) {
 		mes "- The road forks here -";
 		close;
@@ -6730,7 +6708,7 @@ mosk_dun01,169,162,0	script	Mysterious Stone#rus02	111,{
 				percentheal -50,-50;
 				specialeffect2 EF_DARKBREATH;
 				specialeffect2 EF_HIT2;
-				emotion 23,1;
+				emotion e_omg,1;
 				next;
 				mes "- An unknown force has -";
 				mes "- drained your health -";
@@ -6745,7 +6723,7 @@ mosk_dun01,169,162,0	script	Mysterious Stone#rus02	111,{
 					mes "- You decide to go to the left -";
 					next;
 					mes "- !!!!!! -";
-					emotion 23,1;
+					emotion e_omg,1;
 					next;
 					mes "- An unknown force has -";
 					mes "- cursed your body -";
@@ -6760,7 +6738,7 @@ mosk_dun01,169,162,0	script	Mysterious Stone#rus02	111,{
 				mes "- You decide to go to the left -";
 				next;
 				mes "- !!!!!! -";
-				emotion 23,1;
+				emotion e_omg,1;
 				next;
 				mes "- Your trusty Pecopeco senses -";
 				mes "- an unknown force and tries -";
@@ -6778,7 +6756,7 @@ mosk_dun01,169,162,0	script	Mysterious Stone#rus02	111,{
 				mes "- toward the middle -";
 				next;
 				mes "- !!!!!! -";
-				emotion 23,1;
+				emotion e_omg,1;
 				donpcevent "Gray Wolf#rus03::OnEnable";
 				set rhea_rus_main,2;
 				close;
@@ -6802,7 +6780,7 @@ mosk_dun01,169,162,0	script	Mysterious Stone#rus02	111,{
 //----------------------------------------------------------------------------
 // Gray Wolf
 //----------------------------------------------------------------------------
-mosk_dun01,167,160,3	script	Gray Wolf#rus03	972,{
+mosk_dun01,167,160,3	script	Gray Wolf#rus03	4_RUS_DWOLF,{
 	if (rhea_rus_main < 2) {
 		mes "[Gray Wolf]";
 		mes "... Turn back, adventurer...";
@@ -6833,7 +6811,7 @@ mosk_dun01,167,160,3	script	Gray Wolf#rus03	972,{
 		mes "I'm warning you again!";
 		mes "Unless you want to be killed, leave now.";
 		set rhea_rus_main,3;
-		emotion 23,1;
+		emotion e_omg,1;
 		specialeffect2 EF_HIT2;
 		percentheal -50,0;
 		next;
@@ -6925,24 +6903,24 @@ OnTimer120000:
 //----------------------------------------------------------------------------
 // Wall (Maria Morebna, Gray Wolf, Koshei)
 //----------------------------------------------------------------------------
-mosk_dun01,45,259,0	script	Wall#rus04	111,{
+mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 	if (rhea_rus_main < 5) {
 		mes "["+ strcharinfo(0) +"]";
 		mes "...?!";
-		emotion 1,1;
+		emotion e_what,1;
 		close;
 	} else if (rhea_rus_main == 5) {
 		set .@speak01,rand(1,3);
 		if (.@speak01 == 3) {
 			mes "["+ strcharinfo(0) +"]";
 			mes "...?!";
-			emotion 1,1;
+			emotion e_what,1;
 			donpcevent "Gray Wolf#rus05::OnEnable";
 			next;
 		} else {
 			mes "["+ strcharinfo(0) +"]";
 			mes "...?!";
-			emotion 1,1;
+			emotion e_what,1;
 			close;
 		}
 		mes "[Girl's Voice]";
@@ -6994,8 +6972,8 @@ mosk_dun01,45,259,0	script	Wall#rus04	111,{
 		close;
 	} else if (rhea_rus_main == 8) {
 		if (rhea_rus_quiz < 3) {
-			if(getequipid(EQI_SHOES) != 2429) {
-				if(getequipid(EQI_SHOES) != 2430) {
+			if (getequipid(EQI_SHOES) != 2429) {
+				if (getequipid(EQI_SHOES) != 2430) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "...Hmm, did I forget to wear something...?";
 					close;
@@ -7112,7 +7090,7 @@ mosk_dun01,45,259,0	script	Wall#rus04	111,{
 			mes "["+ strcharinfo(0) +"]";
 			mes "Maria?! What happened?!";
 			sc_start SC_CURSE,60000,0;
-			emotion 23,1;
+			emotion e_omg,1;
 			next;
 			mes "[Koshei, the Immortal]";
 			mes "I really want to thank you, human. Maria was imprisoned in the wall so I couldn't do anything!";
@@ -7176,7 +7154,7 @@ mosk_dun01,45,259,0	script	Wall#rus04	111,{
 		next;
 		mes "[Gray Wolf]";
 		mes "No, it's not too late!";
-		emotion 0,1;
+		emotion e_gasp,1;
 		donpcevent "Gray Wolf#rus05::OnEnable";
 		next;
 		mes "[Gray Wolf]";
@@ -7325,23 +7303,36 @@ mosk_dun01,45,259,0	script	Wall#rus04	111,{
 		set rhea_rus_main,52;
 		set .@rus_food,rand(1,6);
 		switch (rand(1,6)) {
-			Case 1: getitem 12093,1; break;
-			Case 2: getitem 12088,1; break;
-			Case 3: getitem 12073,1; break;
-			Case 4: getitem 12078,1; break;
-			Case 5: getitem 12083,1; break;
-			Case 6: getitem 12098,1; break;
+			case 1: getitem 12093,1; break;
+			case 2: getitem 12088,1; break;
+			case 3: getitem 12073,1; break;
+			case 4: getitem 12078,1; break;
+			case 5: getitem 12083,1; break;
+			case 6: getitem 12098,1; break;
 		}
-		if (BaseLevel < 56) getexp 1300,350;
-		else if (BaseLevel < 61) getexp 2460,615;
-		else if (BaseLevel < 66) getexp 4242,1061;
-		else if (BaseLevel < 71) getexp 6489,1622;
-		else if (BaseLevel < 76) getexp 16491,4123;
-		else if (BaseLevel < 81) getexp 27629,6907;
-		else if (BaseLevel < 86) getexp 34041,8510;
-		else if (BaseLevel < 91) getexp 41846,10462;
-		else if (BaseLevel < 150) getexp 88814,22204;
-		else getitem 617,1;
+		if (checkre(3)) {
+			if (BaseLevel < 56) getexp 5700,500;
+			else if (BaseLevel < 61) getexp 6700,800;
+			else if (BaseLevel < 66) getexp 8000,1000;
+			else if (BaseLevel < 71) getexp 13000,1200;
+			else if (BaseLevel < 76) getexp 17000,1400;
+			else if (BaseLevel < 81) getexp 20000,1700;
+			else if (BaseLevel < 86) getexp 45000,2000;
+			else if (BaseLevel < 91) getexp 75000,3000;
+			else if (BaseLevel < 160) getexp 200000,4000;
+			else getitem 617,1; //Old_Violet_Box
+		} else {
+			if (BaseLevel < 56) getexp 13000,3500;
+			else if (BaseLevel < 61) getexp 24600,6150;
+			else if (BaseLevel < 66) getexp 42420,10605;
+			else if (BaseLevel < 71) getexp 64892,16223;
+			else if (BaseLevel < 76) getexp 164908,41227;
+			else if (BaseLevel < 81) getexp 276292,69073;
+			else if (BaseLevel < 86) getexp 340408,85102;
+			else if (BaseLevel < 91) getexp 418460,104615;
+			else if (BaseLevel < 99) getexp 888140,222035;
+			else getitem 617,1; //Old_Violet_Box
+		}
 		donpcevent "Gray Wolf#rus05::OnDisable";
 		donpcevent "Maria Morebna#rus46::OnDisable";
 		close;
@@ -7446,13 +7437,13 @@ OnTimer120000:
 	donpcevent strnpcinfo(0)+"::OnDisable";
 	end;
 }
-mosk_dun01,50,256,3	duplicate(mos_rus#main)	Gray Wolf#rus05	972
-mosk_dun01,46,256,3	duplicate(mos_rus#main)	Maria Morebna#rus46	958
+mosk_dun01,50,256,3	duplicate(mos_rus#main)	Gray Wolf#rus05	4_RUS_DWOLF
+mosk_dun01,46,256,3	duplicate(mos_rus#main)	Maria Morebna#rus46	4_F_RUSCHILD
 
 //----------------------------------------------------------------------------
 // The Blacksmith (Golden Key)
 //----------------------------------------------------------------------------
-moscovia,178,127,0	script	The Blacksmith#rus06	63,{
+moscovia,178,127,0	script	The Blacksmith#rus06	1_M_SMITH,{
 	if ((MaxWeight-Weight) < 3500) {
 		mes "[The Blacksmith]";
 		mes "Why are you carrying that much?";
@@ -7593,8 +7584,8 @@ moscovia,178,127,0	script	The Blacksmith#rus06	63,{
 	} else if (rhea_rus_main == 8) {
 		if (countitem(724) > 1 && countitem(969) > 2 && countitem(7877) && countitem(7878) > 1 && countitem(7879) > 9) {
 			if (rhea_rus_ring > 8 && rhea_rus_hair > 8 && rhea_rus_quiz > 29) {
-				if(getequipid(EQI_SHOES) != 2429) {
-					if(getequipid(EQI_SHOES) != 2430) {
+				if (getequipid(EQI_SHOES) != 2429) {
+					if (getequipid(EQI_SHOES) != 2430) {
 						mes "["+ strcharinfo(0) +"]";
 						mes "...Hmm, did I forget to wear something...?";
 						close;
@@ -7726,7 +7717,7 @@ moscovia,178,127,0	script	The Blacksmith#rus06	63,{
 //----------------------------------------------------------------------------
 // Vassili Grandpapa (Red Ring)
 //----------------------------------------------------------------------------
-moscovia,206,81,0	script	Vassili Grandpapa#rus07	712,{
+moscovia,206,81,0	script	Vassili Grandpapa#rus07	4_M_05,{
 	if ((MaxWeight-Weight) < 3500) {
 		mes "[Vassili Grandpapa]";
 		mes "Why are you carring that much?";
@@ -7749,8 +7740,8 @@ moscovia,206,81,0	script	Vassili Grandpapa#rus07	712,{
 		close;
 	} else if (rhea_rus_main == 8) {
 		if (rhea_rus_ring < 1) {
-			if(getequipid(EQI_SHOES) != 2429) {
-				if(getequipid(EQI_SHOES) != 2430) {
+			if (getequipid(EQI_SHOES) != 2429) {
+				if (getequipid(EQI_SHOES) != 2430) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "...Hmm, did I forget to wear something...?";
 					close;
@@ -7822,8 +7813,8 @@ moscovia,206,81,0	script	Vassili Grandpapa#rus07	712,{
 			mes "She disappeared soon... after Now all I have is Ryubaba. She is also pretty and smart but nothing can relieve the sadnesss in my heart from losing Mashenka...";
 			close;
 		} else if (rhea_rus_ring == 8) {
-			if(getequipid(EQI_SHOES) != 2429) {
-				if(getequipid(EQI_SHOES) != 2430) {
+			if (getequipid(EQI_SHOES) != 2429) {
+				if (getequipid(EQI_SHOES) != 2430) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "...Hmm, did I forget to wear something...?";
 					close;
@@ -7853,8 +7844,8 @@ moscovia,206,81,0	script	Vassili Grandpapa#rus07	712,{
 				mes "^ff0000Cold marsh swallowing my body^000000";
 				mes "^ff0000Red ring taken away^000000";
 				mes "^ff0000Red ring enchanted^000000";
-				emotion 23;
-				emotion 9,1;
+				emotion e_omg;
+				emotion e_dots,1;
 				next;
 				mes "[Vassili Grandpapa]";
 				mes "...W, what is this? Ehh??";
@@ -7915,8 +7906,8 @@ moscovia,206,81,0	script	Vassili Grandpapa#rus07	712,{
 				mes "^ff0000Cold marsh swallowing my body^000000";
 				mes "^ff0000Red ring taken away^000000";
 				mes "^ff0000Red ring enchanted^000000";
-				emotion 9;
-				emotion 9,1;
+				emotion e_dots;
+				emotion e_dots,1;
 				next;
 				mes "[Vassili Grandpapa]";
 				mes "It is.. It is true...";
@@ -7937,19 +7928,35 @@ moscovia,206,81,0	script	Vassili Grandpapa#rus07	712,{
 				next;
 				mes "[Vassili Grandpapa]";
 				mes "...It is my fault that this tragedy between my daughters happened. I will spend the rest of my life trying to make up for it...";
-				delitem 7883,1;
+				delitem 7883,1; //Pointed_Wooden_Flute
 				set rhea_rus_ring,10;
-				getitem 7877,1;
-				if (BaseLevel < 56) getexp 470,0;
-				else if (BaseLevel > 55 && BaseLevel < 61) getexp 615,0;
-				else if (BaseLevel > 60 && BaseLevel < 66) getexp 1061,0;
-				else if (BaseLevel > 65 && BaseLevel < 71) getexp 1622,0;
-				else if (BaseLevel > 70 && BaseLevel < 76) getexp 4123,0;
-				else if (BaseLevel > 75 && BaseLevel < 81) getexp 6907,0;
-				else if (BaseLevel > 80 && BaseLevel < 86) getexp 8510,0;
-				else if (BaseLevel > 85 && BaseLevel < 91) getexp 10462,0;
-				else if (BaseLevel > 90 && BaseLevel < 99) getexp 22204,0;
-				else getitem 607,1;
+				getitem 7877,1; //Red_Ring
+				if (checkre(3)) {
+					if (BaseLevel < 56) getexp 470,0;
+					else if (BaseLevel > 55 && BaseLevel < 61) getexp 615,0;
+					else if (BaseLevel > 60 && BaseLevel < 66) getexp 750,0;
+					else if (BaseLevel > 65 && BaseLevel < 71) getexp 1000,0;
+					else if (BaseLevel > 70 && BaseLevel < 76) getexp 1500,0;
+					else if (BaseLevel > 75 && BaseLevel < 81) getexp 2000,0;
+					else if (BaseLevel > 80 && BaseLevel < 86) getexp 4500,0;
+					else if (BaseLevel > 85 && BaseLevel < 91) getexp 8500,0;
+					else if (BaseLevel > 90 && BaseLevel < 99) getexp 30000,0;
+					else {
+						getitem 607,1; //Yggdrasilberry
+						getexp 30000,0;
+					}
+				} else {
+					if (BaseLevel < 56) getexp 4700,0;
+					else if (BaseLevel > 55 && BaseLevel < 61) getexp 6150,0;
+					else if (BaseLevel > 60 && BaseLevel < 66) getexp 10605,0;
+					else if (BaseLevel > 65 && BaseLevel < 71) getexp 16223,0;
+					else if (BaseLevel > 70 && BaseLevel < 76) getexp 41227,0;
+					else if (BaseLevel > 75 && BaseLevel < 81) getexp 69073,0;
+					else if (BaseLevel > 80 && BaseLevel < 86) getexp 85102,0;
+					else if (BaseLevel > 85 && BaseLevel < 91) getexp 104615,0;
+					else if (BaseLevel > 90 && BaseLevel < 99) getexp 222035,0;
+					else getitem 607,1; //Yggdrasilberry
+				}
 				close;
 			}
 			mes "[Vassili Grandpapa]";
@@ -7959,7 +7966,7 @@ moscovia,206,81,0	script	Vassili Grandpapa#rus07	712,{
 			next;
 			mes "["+ strcharinfo(0) +"]";
 			mes "Ehh?! This is weird. Where is the flute?!";
-			emotion 23,1;
+			emotion e_omg,1;
 			close;
 		} else if (rhea_rus_ring == 9) {
 			mes "[Vassili Grandpapa]";
@@ -7978,7 +7985,7 @@ moscovia,206,81,0	script	Vassili Grandpapa#rus07	712,{
 //----------------------------------------------------------------------------
 // Ryubaba (Red Ring)
 //----------------------------------------------------------------------------
-moscovia,213,216,3	script	Ryubaba#rus08	960,{
+moscovia,213,216,3	script	Ryubaba#rus08	4_F_RUSWOMAN2,{
 	if ((MaxWeight-Weight) < 3500) {
 		mes "[Ryubaba]";
 		mes "What on earth do you have in your bag?";
@@ -7991,7 +7998,7 @@ moscovia,213,216,3	script	Ryubaba#rus08	960,{
 		next;
 		mes "[Ryubaba]";
 		mes "Mmm, you must be an adventurer? What would you say? Have you seen somebody more beautiful than me? I doubt it. How can you find anyone more beautiful than me?";
-		emotion 18;
+		emotion e_heh;
 		close;
 	}
 	else if (rhea_rus_main == 8) {
@@ -8001,11 +8008,11 @@ moscovia,213,216,3	script	Ryubaba#rus08	960,{
 			next;
 			mes "[Ryubaba]";
 			mes "Mmm, you must be an adventurer? What would you say? Have you seen somebody more beautiful than me? I doubt it. How can you find anyone more beautiful than me?";
-			emotion 18;
+			emotion e_heh;
 			close;
 		} else if (rhea_rus_ring == 1) {
-			if(getequipid(EQI_SHOES) != 2429) {
-				if(getequipid(EQI_SHOES) != 2430) {
+			if (getequipid(EQI_SHOES) != 2429) {
+				if (getequipid(EQI_SHOES) != 2430) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "...Hmm, did I forget to wear something...?";
 					close;
@@ -8040,7 +8047,7 @@ moscovia,213,216,3	script	Ryubaba#rus08	960,{
 			}
 			mes "["+ strcharinfo(0) +"]";;
 			mes "Yes, you are really beautiful.";
-			emotion 18,1;
+			emotion e_heh,1;
 			next;
 			mes "[Ryubaba]";
 			mes "Huhu, oh you jest. You know what you're talking about. Ah, this is a Choco drink that I have made. Give it a taste, isn't it good?";
@@ -8104,7 +8111,7 @@ moscovia,213,216,3	script	Ryubaba#rus08	960,{
 				mes "[Ryubaba]";
 				mes "A Red Ring?!";
 				next;
-			} else { 
+			} else {
 				mes "[Ryubaba]";
 				mes "Heh, what are you talking about? What is that?";
 				close;
@@ -8132,8 +8139,8 @@ moscovia,213,216,3	script	Ryubaba#rus08	960,{
 			mes "Right... Let me finish talking. We tried searching for her but we couldn't find her. She must have been wearing the ring when she disappeared around the marsh.";
 			close;
 		} else if (rhea_rus_ring == 7) {
-			if(getequipid(EQI_SHOES) != 2429) {
-				if(getequipid(EQI_SHOES) != 2430) {
+			if (getequipid(EQI_SHOES) != 2429) {
+				if (getequipid(EQI_SHOES) != 2430) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "...Hmm, did I forget to wear something...?";
 					close;
@@ -8163,8 +8170,8 @@ moscovia,213,216,3	script	Ryubaba#rus08	960,{
 				mes "^ff0000Cold marsh swallowing my body^000000";
 				mes "^ff0000Red ring taken away^000000";
 				mes "^ff0000Red ring enchanted^000000";
-				emotion 23;
-				emotion 9,1;
+				emotion e_omg;
+				emotion e_dots,1;
 				next;
 				mes "[Ryubaba]";
 				mes "S, stop! You'd better stop!?";
@@ -8191,7 +8198,7 @@ moscovia,213,216,3	script	Ryubaba#rus08	960,{
 				next;
 				mes "[Ryubaba]";
 				mes "Please, I am begging you... Don't tell my father...";
-				emotion 28;
+				emotion e_sob;
 				next;
 				mes "- Suddenly, she sheds -";
 				mes "- tears and kneels down -";
@@ -8216,7 +8223,7 @@ moscovia,213,216,3	script	Ryubaba#rus08	960,{
 					mes "...Mmmm, what should I do...";
 					mes "Ok, I will do it.";
 					next;
-				}else{
+				} else {
 					mes "["+ strcharinfo(0) +"]";
 					mes "...Mmmm, what should I do...";
 					mes "No, I can't do it!";
@@ -8239,24 +8246,40 @@ moscovia,213,216,3	script	Ryubaba#rus08	960,{
 				next;
 				mes "[Ryubaba]";
 				mes "I have to repent for my sins and atone for them for the rest of my life.";
-				delitem 7883,1;
+				delitem 7883,1; //Pointed_Wooden_Flute
 				set rhea_rus_ring,9;
-				getitem 7877,1;
-				if (BaseLevel < 56) getexp 470,0;
-				else if (BaseLevel < 61) getexp 615,0;
-				else if (BaseLevel < 66) getexp 1061,0;
-				else if (BaseLevel < 71) getexp 1622,0;
-				else if (BaseLevel < 76) getexp 4123,0;
-				else if (BaseLevel < 81) getexp 6907,0;
-				else if (BaseLevel < 86) getexp 8510,0;
-				else if (BaseLevel < 91) getexp 10462,0;
-				else if (BaseLevel < 99) getexp 22204,0;
-				else getitem 607,1;
+				getitem 7877,1; //Red_Ring
+				if (checkre(3)) {
+					if (BaseLevel < 56) getexp 470,0;
+					else if (BaseLevel > 55 && BaseLevel < 61) getexp 615,0;
+					else if (BaseLevel > 60 && BaseLevel < 66) getexp 750,0;
+					else if (BaseLevel > 65 && BaseLevel < 71) getexp 1000,0;
+					else if (BaseLevel > 70 && BaseLevel < 76) getexp 1500,0;
+					else if (BaseLevel > 75 && BaseLevel < 81) getexp 2000,0;
+					else if (BaseLevel > 80 && BaseLevel < 86) getexp 4500,0;
+					else if (BaseLevel > 85 && BaseLevel < 91) getexp 8500,0;
+					else if (BaseLevel > 90 && BaseLevel < 99) getexp 30000,0;
+					else {
+						getitem 607,1; //Yggdrasilberry
+						getexp 30000,0;
+					}
+				} else {
+					if (BaseLevel < 56) getexp 4700,0;
+					else if (BaseLevel > 55 && BaseLevel < 61) getexp 6150,0;
+					else if (BaseLevel > 60 && BaseLevel < 66) getexp 10605,0;
+					else if (BaseLevel > 65 && BaseLevel < 71) getexp 16223,0;
+					else if (BaseLevel > 70 && BaseLevel < 76) getexp 41227,0;
+					else if (BaseLevel > 75 && BaseLevel < 81) getexp 69073,0;
+					else if (BaseLevel > 80 && BaseLevel < 86) getexp 85102,0;
+					else if (BaseLevel > 85 && BaseLevel < 91) getexp 104615,0;
+					else if (BaseLevel > 90 && BaseLevel < 99) getexp 222035,0;
+					else getitem 607,1; //Yggdrasilberry
+				}
 				close;
 			}
 			mes "["+ strcharinfo(0) +"]";
 			mes "...!? Where is the flute!?";
-			emotion 23,1;
+			emotion e_omg,1;
 			close;
 		} else if (rhea_rus_ring == 8) {
 			mes "[Ryubaba]";
@@ -8291,7 +8314,7 @@ moscovia,213,216,3	script	Ryubaba#rus08	960,{
 //----------------------------------------------------------------------------
 // Little Boy (Ryubaba Info)
 //----------------------------------------------------------------------------
-moscovia,223,210,3	script	Little Boy#rus09	962,{
+moscovia,223,210,3	script	Little Boy#rus09	4_M_RUSCHILD,{
 	if (rhea_rus_main < 8) {
 		mes "[Little Boy]";
 		mes "I will be an adventer and will marry the most beautiful bride!";
@@ -8356,7 +8379,7 @@ moscovia,223,210,3	script	Little Boy#rus09	962,{
 //----------------------------------------------------------------------------
 // Shepherdess (Wooden Flute for Red Ring)
 //----------------------------------------------------------------------------
-mosk_fild02,157,233,0	script	Shepherdess#rus10	69,{
+mosk_fild02,157,233,0	script	Shepherdess#rus10	1_F_04,{
 	if (rhea_rus_main < 8) {
 		mes "[Shepherdess]";
 		mes "Haaaa, boring, boring! Herding sheep is really boring!";
@@ -8373,8 +8396,8 @@ mosk_fild02,157,233,0	script	Shepherdess#rus10	69,{
 			mes "I wish that I could listen to music all the time.";
 			close;
 		} else if (rhea_rus_ring == 5) {
-			if(getequipid(EQI_SHOES) != 2429) {
-				if(getequipid(EQI_SHOES) != 2430) {
+			if (getequipid(EQI_SHOES) != 2429) {
+				if (getequipid(EQI_SHOES) != 2430) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "...Hmm, did I forget to wear something...?";
 					close;
@@ -8404,8 +8427,8 @@ mosk_fild02,157,233,0	script	Shepherdess#rus10	69,{
 			close;
 		} else if (rhea_rus_ring == 6) {
 			if (countitem(7882) > 24) {
-				if(getequipid(EQI_SHOES) != 2429) {
-					if(getequipid(EQI_SHOES) != 2430) {
+				if (getequipid(EQI_SHOES) != 2429) {
+					if (getequipid(EQI_SHOES) != 2430) {
 						mes "["+ strcharinfo(0) +"]";
 						mes "...Hmm, did I forget to wear something...?";
 						close;
@@ -8442,8 +8465,8 @@ mosk_fild02,157,233,0	script	Shepherdess#rus10	69,{
 				mes "^ff0000Cold marsh swallowing my body^000000";
 				mes "^ff0000Red ring taken away^000000";
 				mes "^ff0000Red ring enchanted^000000";
-				emotion 23;
-				emotion 23,1;
+				emotion e_omg;
+				emotion e_omg,1;
 				next;
 				mes "[Shepherdess]";
 				mes "W, what is this? Horrible! Why did this flute play a voice?";
@@ -8520,19 +8543,19 @@ OnTimer60000:
 	donpcevent "Pointed Tree#rus11::OnEnable";
 	end;
 }
-mosk_fild02,151,188,0	duplicate(PTree#rusmain)	Pointed Tree#rus11	111
-mosk_fild02,160,227,0	duplicate(PTree#rusmain)	Pointed Tree#rus12	111
-mosk_fild02,160,179,0	duplicate(PTree#rusmain)	Pointed Tree#rus13	111
-mosk_fild02,142,247,0	duplicate(PTree#rusmain)	Pointed Tree#rus14	111
-mosk_fild02,149,223,0	duplicate(PTree#rusmain)	Pointed Tree#rus15	111
-mosk_fild02,114,223,0	duplicate(PTree#rusmain)	Pointed Tree#rus16	111
-mosk_fild02,101,197,0	duplicate(PTree#rusmain)	Pointed Tree#rus17	111
-mosk_fild02,125,182,0	duplicate(PTree#rusmain)	Pointed Tree#rus18	111
+mosk_fild02,151,188,0	duplicate(PTree#rusmain)	Pointed Tree#rus11	HIDDEN_NPC
+mosk_fild02,160,227,0	duplicate(PTree#rusmain)	Pointed Tree#rus12	HIDDEN_NPC
+mosk_fild02,160,179,0	duplicate(PTree#rusmain)	Pointed Tree#rus13	HIDDEN_NPC
+mosk_fild02,142,247,0	duplicate(PTree#rusmain)	Pointed Tree#rus14	HIDDEN_NPC
+mosk_fild02,149,223,0	duplicate(PTree#rusmain)	Pointed Tree#rus15	HIDDEN_NPC
+mosk_fild02,114,223,0	duplicate(PTree#rusmain)	Pointed Tree#rus16	HIDDEN_NPC
+mosk_fild02,101,197,0	duplicate(PTree#rusmain)	Pointed Tree#rus17	HIDDEN_NPC
+mosk_fild02,125,182,0	duplicate(PTree#rusmain)	Pointed Tree#rus18	HIDDEN_NPC
 
 //----------------------------------------------------------------------------
 // Worried Mother (Lusalka's Hair)
 //----------------------------------------------------------------------------
-moscovia,166,145,1	script	Worried Mother#rus19	961,{
+moscovia,166,145,1	script	Worried Mother#rus19	4_F_RUSWOMAN3,{
 	if (rhea_rus_main < 8) {
 		mes "[Worried Mother]";
 		mes "Where is she...";
@@ -8545,8 +8568,8 @@ moscovia,166,145,1	script	Worried Mother#rus19	961,{
 		close;
 	} else if (rhea_rus_main == 8) {
 		if (rhea_rus_hair < 1) {
-			if(getequipid(EQI_SHOES) != 2429) {
-				if(getequipid(EQI_SHOES) != 2430) {
+			if (getequipid(EQI_SHOES) != 2429) {
+				if (getequipid(EQI_SHOES) != 2430) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "...Hmm, did I forget to wear something...?";
 					close;
@@ -8635,13 +8658,13 @@ moscovia,166,145,1	script	Worried Mother#rus19	961,{
 //----------------------------------------------------------------------------
 // Marsh Warning Signs
 //----------------------------------------------------------------------------
--	script	Caution#07rus::NoSwim	837,{
+-	script	Caution#07rus::NoSwim	2_BULLETIN_BOARD,{
 	mes " WARNING !! ";
 	mes "No Swimming";
 	close;
 }
-mosk_fild02,101,204,0	duplicate(NoSwim)	Caution#rus01	837
-mosk_fild02,101,200,0	duplicate(NoSwim)	Caution#rus02	837
+mosk_fild02,101,204,0	duplicate(NoSwim)	Caution#rus01	2_BULLETIN_BOARD
+mosk_fild02,101,200,0	duplicate(NoSwim)	Caution#rus02	2_BULLETIN_BOARD
 
 //----------------------------------------------------------------------------
 // Lusalka Trigger (Lusalka's Hair)
@@ -8649,90 +8672,87 @@ mosk_fild02,101,200,0	duplicate(NoSwim)	Caution#rus02	837
 mosk_fild02,116,202,3	script	Lusalka#07russai_22	-1,3,3,{
 	end;
 OnTouch:
-	if (rhea_rus_main < 8) {
-		emotion 1,1;
-		close;
-	} else if (rhea_rus_main == 8) {
-		if (rhea_rus_hair == 2) {
-			if (gettime(3)>=23 || gettime(3)<=5) {
-				mes "- Splash !! -";
-				next;
-				if (countitem(523) > 0) {
-					mes "- You hear a splashing sound -";
-					mes "- and see something gleaming -";
-					donpcevent "Lusalka#rus23::OnEnable";
-					close;
-				}
-				mes "- You hear a splashing as -";
-				mes "- something gleaming -";
-				mes "- seems to stare at you!! -";
-				next;
-				specialeffect2 EF_FLASHER;
-				percentheal -100,0;
+	if (rhea_rus_main != 8) {
+		emotion e_what,1;
+		end;
+	}
+	if (rhea_rus_hair == 2) {
+		if (gettime(3)>=23 || gettime(3)<=5) {
+			mes "- Splash !! -";
+			next;
+			if (countitem(523) > 0) {
+				mes "- You hear a splashing sound -";
+				mes "- and see something gleaming -";
+				donpcevent "Lusalka#rus23::OnEnable";
 				close;
 			}
-		} else if (rhea_rus_hair > 2 && rhea_rus_hair < 7) {
-			mes "[Lusalka's Voice]";
-			mes "His name is 'Igor'.. He has gone to the capital of Rune Midgarts. Give him my golden earrings.";
+			mes "- You hear a splashing as -";
+			mes "- something gleaming -";
+			mes "- seems to stare at you!! -";
 			next;
-			mes "[Lusalka's Voice]";
-			mes "And please, tell him to stop suffering and to be happy. This is my request.";
-			close;
-		} else if (rhea_rus_hair == 7) {
-			if (gettime(3)>=23 || gettime(3)<=5) {
-				mes "- Splash !! -";
-				next;
-				if (countitem(523) > 0) {
-					mes "-You hear splashing sound and see something gleaming-";
-					donpcevent "Lusalka#rus23::OnEnable";
-					close;
-				}
-				mes "-You seem to hear the splash but something gleaming raids on you!!-";
-				specialeffect2 EF_FLASHER;
-				percentheal -100,0;
-				close;
-			}
-		} else if (rhea_rus_hair == 8) {
-			mes "["+ strcharinfo(0) +"]";
-			mes "What was that?!";
-			mes "Why am I here?";
-			next;
-			mes "- After standing up, you see -";
-			mes "- the wet hair in front of you -";
-			next;
-			mes "["+ strcharinfo(0) +"]";
-			mes "...This.. is Lusalka's hair?";
-			mes "Ah, right.. I came here to get her hair.";
-			next;
-			mes "- You pick up the hair -";
-			next;
-			mes "- As soon as you touch the -";
-			mes "- cool damp hair, you seem -";
-			mes "- the feel the sadness within -";
-			set rhea_rus_hair,9;
-			getitem 7878,2;
-			close;
-		} else if (rhea_rus_hair > 8) {
-			mes "- You feel that someone -";
-			mes "- is watching you -";
-			next;
-			mes "["+ strcharinfo(0) +"]";
-			mes "Who's there? Anybody here?";
-			next;
-			mes "- The splashing sound -";
-			mes "- fades away, but you -";
-			mes "- still feel the sadness -";
+			specialeffect2 EF_FLASHER;
+			percentheal -100,0;
 			close;
 		}
+	} else if (rhea_rus_hair > 2 && rhea_rus_hair < 7) {
+		mes "[Lusalka's Voice]";
+		mes "His name is 'Igor'.. He has gone to the capital of Rune Midgarts. Give him my golden earrings.";
+		next;
+		mes "[Lusalka's Voice]";
+		mes "And please, tell him to stop suffering and to be happy. This is my request.";
+		close;
+	} else if (rhea_rus_hair == 7) {
+		if (gettime(3)>=23 || gettime(3)<=5) {
+			mes "- Splash !! -";
+			next;
+			if (countitem(523) > 0) {
+				mes "-You hear splashing sound and see something gleaming-";
+				donpcevent "Lusalka#rus23::OnEnable";
+				close;
+			}
+			mes "-You seem to hear the splash but something gleaming raids on you!!-";
+			specialeffect2 EF_FLASHER;
+			percentheal -100,0;
+			close;
+		}
+	} else if (rhea_rus_hair == 8) {
+		mes "["+ strcharinfo(0) +"]";
+		mes "What was that?!";
+		mes "Why am I here?";
+		next;
+		mes "- After standing up, you see -";
+		mes "- the wet hair in front of you -";
+		next;
+		mes "["+ strcharinfo(0) +"]";
+		mes "...This.. is Lusalka's hair?";
+		mes "Ah, right.. I came here to get her hair.";
+		next;
+		mes "- You pick up the hair -";
+		next;
+		mes "- As soon as you touch the -";
+		mes "- cool damp hair, you seem -";
+		mes "- the feel the sadness within -";
+		set rhea_rus_hair,9;
+		getitem 7878,2;
+		close;
+	} else if (rhea_rus_hair > 8) {
+		mes "- You feel that someone -";
+		mes "- is watching you -";
+		next;
+		mes "["+ strcharinfo(0) +"]";
+		mes "Who's there? Anybody here?";
+		next;
+		mes "- The splashing sound -";
+		mes "- fades away, but you -";
+		mes "- still feel the sadness -";
+		close;
 	}
-	emotion 1,1;
-	close;
 }
 
 //----------------------------------------------------------------------------
 // Lusalka (Lusalka's Hair)
 //----------------------------------------------------------------------------
-mosk_fild02,124,202,3	script	Lusalka#rus23	971,{
+mosk_fild02,124,202,3	script	Lusalka#rus23	4_F_RUSGREEN,{
 	if (countitem(523)) {
 		if (rhea_rus_main < 8) {
 			mes "[Lusalka]";
@@ -8747,8 +8767,8 @@ mosk_fild02,124,202,3	script	Lusalka#rus23	971,{
 				mes "What are you doing here...?";
 				close;
 			} else if (rhea_rus_hair == 2) {
-				if(getequipid(EQI_SHOES) != 2429) {
-					if(getequipid(EQI_SHOES) != 2430) {
+				if (getequipid(EQI_SHOES) != 2429) {
+					if (getequipid(EQI_SHOES) != 2430) {
 						mes "["+ strcharinfo(0) +"]";
 						mes "...Hmm, did I forget to wear something...?";
 						close;
@@ -8816,7 +8836,7 @@ mosk_fild02,124,202,3	script	Lusalka#rus23	971,{
 					next;
 					mes "[Lusalka]";
 					mes "Ah... but...";
-					emotion 28;
+					emotion e_sob;
 					donpcevent "Lusalka#rus23::OnDisable";
 					close;
 				}
@@ -8837,8 +8857,8 @@ mosk_fild02,124,202,3	script	Lusalka#rus23	971,{
 				mes "And please, tell him to stop suffering and to be happy. This is my request.";
 				close;
 			} else if (rhea_rus_hair == 7) {
-				if(getequipid(EQI_SHOES) != 2429) {
-					if(getequipid(EQI_SHOES) != 2430) {
+				if (getequipid(EQI_SHOES) != 2429) {
+					if (getequipid(EQI_SHOES) != 2430) {
 						mes "["+ strcharinfo(0) +"]";
 						mes "...Hmm, did I forget to wear something...?";
 						close;
@@ -8891,7 +8911,7 @@ mosk_fild02,124,202,3	script	Lusalka#rus23	971,{
 				mes "Aaaaaaaah!??!?!";
 				sc_start SC_CURSE,60000,0;
 				specialeffect2 EF_LORD;
-				emotion 23,1;
+				emotion e_omg,1;
 				percentheal -30,0;
 				next;
 				mes "["+ strcharinfo(0) +"]";
@@ -8959,7 +8979,7 @@ OnTimer300000:
 //----------------------------------------------------------------------------
 // Wanderer (Lusalka's Hair)
 //----------------------------------------------------------------------------
-prontera,228,279,3	script	Wanderer#rus24	968,{
+prontera,228,279,3	script	Wanderer#rus24	4_M_RUSMAN2,{
 	if (rhea_rus_main < 8) {
 		mes "[A Wanderer from a strange land]";
 		mes "Hey, there are so many adventurers around here. I can see why this is the capital of the Rune Midgarts Kingdom!";
@@ -8976,8 +8996,8 @@ prontera,228,279,3	script	Wanderer#rus24	968,{
 			mes "In your free time, come to see me! The weather here is even more favorable than our the best summer back home.";
 			close;
 		} else if (rhea_rus_hair == 3) {
-			if(getequipid(EQI_SHOES) != 2429) {
-				if(getequipid(EQI_SHOES) != 2430) {
+			if (getequipid(EQI_SHOES) != 2429) {
+				if (getequipid(EQI_SHOES) != 2430) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "...Hmm, did I forget to wear something...?";
 					close;
@@ -9022,7 +9042,7 @@ prontera,228,279,3	script	Wanderer#rus24	968,{
 			next;
 			mes "[A Wanderer from a strange land]";
 			mes "Ah, oh yes! How could I forget?";
-			emotion 5;
+			emotion e_ic;
 			next;
 			mes "[A Wanderer from a strange land]";
 			mes "We came here from Moscovia together. He called himself Igg. I came here with him but parted with him quite a while ago. He was sad because he couldn't forget about his lost lover.";
@@ -9064,7 +9084,7 @@ prontera,228,279,3	script	Wanderer#rus24	968,{
 //----------------------------------------------------------------------------
 // Morroc Villager (Lusalka's Hair)
 //----------------------------------------------------------------------------
-morocc,165,82,0	script	Morroc Villager#rus25	48,{
+morocc,165,82,0	script	Morroc Villager#rus25	1_M_02,{
 	if (rhea_rus_main < 8) {
 		mes "[Morroc Villager]";
 		mes "Huh, more and more adventurers are settling here recently, so it's hard to tell who is a villager or an adventurer.";
@@ -9081,8 +9101,8 @@ morocc,165,82,0	script	Morroc Villager#rus25	48,{
 			mes "But natives, like me, can tell the difference.";
 			close;
 		} else if (rhea_rus_hair == 4) {
-			if(getequipid(EQI_SHOES) != 2429) {
-				if(getequipid(EQI_SHOES) != 2430) {
+			if (getequipid(EQI_SHOES) != 2429) {
+				if (getequipid(EQI_SHOES) != 2430) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "...Hmm, did I forget to wear something...?";
 					close;
@@ -9137,7 +9157,7 @@ morocc,165,82,0	script	Morroc Villager#rus25	48,{
 //----------------------------------------------------------------------------
 // Soldier/Igor (Lusalka's Hair)
 //----------------------------------------------------------------------------
-moc_pryd04,126,120,0	script	Soldier#rus26	967,{
+moc_pryd04,126,120,0	script	Soldier#rus26	4_M_RUSMAN1,{
 	if (rhea_rus_main < 8) {
 		mes "[A gloomy looking soldier]";
 		mes "............................";
@@ -9148,8 +9168,8 @@ moc_pryd04,126,120,0	script	Soldier#rus26	967,{
 			mes "............................";
 			close;
 		} else if (rhea_rus_hair == 4 || rhea_rus_hair == 5) {
-			if(getequipid(EQI_SHOES) != 2429) {
-				if(getequipid(EQI_SHOES) != 2430) {
+			if (getequipid(EQI_SHOES) != 2429) {
+				if (getequipid(EQI_SHOES) != 2430) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "...Hmm, did I forget to wear something...?";
 					close;
@@ -9225,8 +9245,8 @@ moc_pryd04,126,120,0	script	Soldier#rus26	967,{
 			set rhea_rus_hair,6;
 			close;
 		} else if (rhea_rus_hair == 6) {
-			if(getequipid(EQI_SHOES) != 2429) {
-				if(getequipid(EQI_SHOES) != 2430) {
+			if (getequipid(EQI_SHOES) != 2429) {
+				if (getequipid(EQI_SHOES) != 2430) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "...Hmm, did I forget to wear something...?";
 					close;
@@ -9268,7 +9288,7 @@ moc_pryd04,126,120,0	script	Soldier#rus26	967,{
 			mes "[A gloomy looking soldier]";
 			mes "Before the full moon, I will be back to Moscovia and meet her. I will come back so strong and happy that when I go to see her she will not suffer anymore.";
 			close;
-		} 
+		}
 	}
 	mes "[A gloomy looking soldier]";
 	mes "... I feel like I lost something precious.";
@@ -9280,7 +9300,7 @@ moc_pryd04,126,120,0	script	Soldier#rus26	967,{
 //----------------------------------------------------------------------------
 // Marozka's Dungeon (Golden Thread)
 //----------------------------------------------------------------------------
-mosk_dun01,45,250,3	script	1#rus27	45,3,3,{
+mosk_dun01,45,250,3	script	1#rus27	WARPNPC,3,3,{
 	end;
 OnTouch:
 	warp "mosk_que",49,22;
@@ -9348,15 +9368,15 @@ OnTouch:
 			close;
 		}
 	}
-	emotion 1,1;
+	emotion e_what,1;
 	close;
 }
 
-mosk_que,45,131,0	script	Stone Furnace#rus28	111,{
+mosk_que,45,131,0	script	Stone Furnace#rus28	HIDDEN_NPC,{
 	if (rhea_rus_main == 8) {
 		if (rhea_rus_quiz == 1) {
-			if(getequipid(EQI_SHOES) != 2429) {
-				if(getequipid(EQI_SHOES) != 2430) {
+			if (getequipid(EQI_SHOES) != 2429) {
+				if (getequipid(EQI_SHOES) != 2430) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "...Hmm, did I forget to wear something...?";
 					close;
@@ -9383,7 +9403,7 @@ mosk_que,45,131,0	script	Stone Furnace#rus28	111,{
 				mes "["+ strcharinfo(0) +"]";
 				mes "Oops, it's hot, hot!!!";
 				specialeffect2 EF_FIREHIT;
-				emotion 23,1;
+				emotion e_omg,1;
 				percentheal -5,0;
 				close;
 			}
@@ -9404,7 +9424,7 @@ mosk_que,45,131,0	script	Stone Furnace#rus28	111,{
 			close;
 		}
 	}
-	emotion 1,1;
+	emotion e_what,1;
 	close;
 
 OnInit:
@@ -9423,11 +9443,11 @@ OnTimer300000:
 	end;
 }
 
-mosk_que,56,202,0	script	Occult Apple Tree#rus29	111,{
+mosk_que,56,202,0	script	Occult Apple Tree#rus29	HIDDEN_NPC,{
 	if (rhea_rus_main == 8) {
 		if (rhea_rus_quiz == 2) {
-			if(getequipid(EQI_SHOES) != 2429) {
-				if(getequipid(EQI_SHOES) != 2430) {
+			if (getequipid(EQI_SHOES) != 2429) {
+				if (getequipid(EQI_SHOES) != 2430) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "...Hmm, did I forget to wear something...?";
 					close;
@@ -9448,7 +9468,7 @@ mosk_que,56,202,0	script	Occult Apple Tree#rus29	111,{
 				next;
 				mes "["+ strcharinfo(0) +"]";
 				mes "Ahhhhhhhh!!!";
-				emotion 23,1;
+				emotion e_omg,1;
 				close;
 			}
 			mes "- ^0000ff You get 100 Apples !!^000000 -";
@@ -9457,7 +9477,7 @@ mosk_que,56,202,0	script	Occult Apple Tree#rus29	111,{
 			close;
 		}
 	}
-	emotion 1,1;
+	emotion e_what,1;
 	close;
 }
 
@@ -9466,7 +9486,7 @@ mosk_que,47,217,0	warp	Escape#rus30	1,1,mosk_fild02,237,266
 //----------------------------------------------------------------------------
 // Marozka (Golden Thread)
 //----------------------------------------------------------------------------
-mosk_fild02,243,270,0	script	Marozka#rus31	866,{
+mosk_fild02,243,270,0	script	Marozka#rus31	4_M_LGTGRAND,{
 	if (rhea_rus_main < 8) {
 		mes "[Marozka]";
 		mes "...........................";
@@ -9477,8 +9497,8 @@ mosk_fild02,243,270,0	script	Marozka#rus31	866,{
 			mes "...........................";
 			close;
 		} else if (rhea_rus_quiz == 3) {
-			if(getequipid(EQI_SHOES) != 2429) {
-				if(getequipid(EQI_SHOES) != 2430) {
+			if (getequipid(EQI_SHOES) != 2429) {
+				if (getequipid(EQI_SHOES) != 2430) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "...Hmm, did I forget to wear something...?";
 					close;
@@ -9544,8 +9564,8 @@ mosk_fild02,243,270,0	script	Marozka#rus31	866,{
 			set rhea_rus_quiz,29;
 			close;
 		} else if (rhea_rus_quiz == 29) {
-			if(getequipid(EQI_SHOES) != 2429) {
-				if(getequipid(EQI_SHOES) != 2430) {
+			if (getequipid(EQI_SHOES) != 2429) {
+				if (getequipid(EQI_SHOES) != 2430) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "...Hmm, did I forget to wear something...?";
 					close;
@@ -9566,7 +9586,7 @@ mosk_fild02,243,270,0	script	Marozka#rus31	866,{
 			mes "[Marozka]";
 			mes "What is deaf, dumb, and blind and always tells the truth?";
 			next;
-			set .@j,select("A Poring:A Picky:A Mirror:A Tree"); 
+			set .@j,select("A Poring:A Picky:A Mirror:A Tree");
 			set .@rus_quiz01,(.@j==3)?.@rus_quiz01+1:.@rus_quiz01;
 			mes "[Marozka]";
 			mes "If 4 cats can catch 4 mice every 4 minutes, what is the minimum number of cats needed to get 10 mice in 10 minutes?";
@@ -9624,13 +9644,13 @@ mosk_fild02,243,270,0	script	Marozka#rus31	866,{
 //----------------------------------------------------------------------------
 // Baba Yaga (Golden Key)
 //----------------------------------------------------------------------------
-mosk_dun02,48,214,5	script	Baba Yaga#rus32	970,{
+mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 	if (rhea_rus_main < 9) {
 		mes "[Baba Yaga]";
 		mes "...........................";
 		mes "If you lotter around here any longer, I will make myself some tasty human soup! Hehehehehe.";
-		emotion 29;
-		emotion 23,1;
+		emotion e_gg;
+		emotion e_omg,1;
 		close;
 	} else if (rhea_rus_main == 9) {
 		mes "[Baba Yaga]";
@@ -9647,7 +9667,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	970,{
 		mes "'Presto Change-o!!'";
 		mes "'Turn into a pig!!'";
 		specialeffect2 EF_BARRIER;
-		emotion 23;
+		emotion e_omg;
 		next;
 		mes "[Baba Yaga]";
 		mes "Hmm? You are protected by a Protection Spell?";
@@ -9866,14 +9886,14 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	970,{
 		next;
 		mes "["+ strcharinfo(0) +"]";
 		mes "Hey, I am talking...";
-		emotion 28,1;
+		emotion e_sob,1;
 		next;
 		mes "[Baba Yaga]";
 		mes "'In the corner...'";
 		next;
 		mes "["+ strcharinfo(0) +"]";
 		mes "!!!!!!!!!!!!!!!!!!!!!!!!!";
-		emotion 23;
+		emotion e_omg;
 		next;
 		mes "[Baba Yaga]";
 		mes "What, child? Do you feel bad?";
@@ -10223,7 +10243,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	970,{
 					delitem 1092,.@redtube_send;
 					delitem 7134,.@redcup_send;
 					delitem 512,.@redapple_send;
-					set Zeny,Zeny-.@redzeny_send;
+					Zeny -= .@redzeny_send;
 					getitem 545,.@total_red01;
 					close;
 				}
@@ -10310,7 +10330,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	970,{
 					delitem 1092,.@yelltube_send;
 					delitem 7134,.@yellcup_send;
 					delitem 513,.@yellbanana_send;
-					set Zeny,Zeny-.@yellzeny_send;
+					Zeny -= .@yellzeny_send;
 					getitem 546,.@total_yell01;
 					close;
 				}
@@ -10358,7 +10378,7 @@ OnMyMobDead:
 //----------------------------------------------------------------------------
 // Baba Yaga's Tasks (Golden Key)
 //----------------------------------------------------------------------------
-mosk_dun02,257,193,0	script	Cow#rus33	889,3,3,{
+mosk_dun02,257,193,0	script	Cow#rus33	4_BULL,3,3,{
 	end;
 OnInit:
 	enablenpc "Cow#rus33";
@@ -10385,7 +10405,7 @@ OnTouch:
 		next;
 		mes "["+ strcharinfo(0) +"]";
 		mes "You! Go home now!";
-		emotion 23;
+		emotion e_omg;
 		next;
 		mes "- The cow seems surprised, jumps and tries to attack you !! -";
 		next;
@@ -10408,7 +10428,7 @@ OnTouch:
 				next;
 				mes "[Cow]";
 				mes "...Moo...";
-				emotion 9;
+				emotion e_dots;
 				next;
 				mes "- The cow, seems to gibe at you, looks at you quickly and runs to bushes !! -";
 				if (rand(1,2) == 1) {
@@ -10456,7 +10476,7 @@ OnTouch:
 	close;
 }
 
-mosk_dun02,257,193,0	script	Cow#rus34	889,3,3,{
+mosk_dun02,257,193,0	script	Cow#rus34	4_BULL,3,3,{
 	end;
 OnInit:
 	enablenpc "Cow#rus34";
@@ -10483,7 +10503,7 @@ OnTouch:
 		next;
 		mes "["+ strcharinfo(0) +"]";
 		mes "You! Go home now!";
-		emotion 23;
+		emotion e_omg;
 		next;
 		mes "- The cow seems surprised, jumps and tries to attack you !! -";
 		next;
@@ -10506,7 +10526,7 @@ OnTouch:
 				next;
 				mes "[Cow]";
 				mes "...Moo...";
-				emotion 9;
+				emotion e_dots;
 				next;
 				mes "- The cow, seems to gibe at you, looks at you quickly and runs to bushes !! -";
 				if (rand(1,2) == 1) {
@@ -10523,7 +10543,7 @@ OnTouch:
 			mes "Akkkk?! Eh!? The s-spell...";
 			next;
 			mes "- You hesitate, the cow, seems to gibe at you, passes by you and runs to bushes !! -";
-			if (rand(1,2) == 1) {	
+			if (rand(1,2) == 1) {
 				donpcevent "Cow#rus34::OnDisable";
 				donpcevent "Cow#rus34::OnEnable";
 			} else {
@@ -10555,7 +10575,7 @@ OnTouch:
 	close;
 }
 
-mosk_dun02,257,193,0	script	Cow#rus35	889,3,3,{
+mosk_dun02,257,193,0	script	Cow#rus35	4_BULL,3,3,{
 	end;
 OnInit:
 	enablenpc "Cow#rus35";
@@ -10582,7 +10602,7 @@ OnTouch:
 		next;
 		mes "["+ strcharinfo(0) +"]";
 		mes "You! Go home now!";
-		emotion 23;
+		emotion e_omg;
 		next;
 		mes "- The cow seems surprised, jumps and tries to attack you !! -";
 		next;
@@ -10605,7 +10625,7 @@ OnTouch:
 				next;
 				mes "[Cow]";
 				mes "...Moo...";
-				emotion 9;
+				emotion e_dots;
 				next;
 				mes "- The cow, seems to gibe at you, looks at you quickly and runs to bushes !! -";
 				donpcevent "Cow#rus35::OnDisable";
@@ -10643,7 +10663,7 @@ OnTouch:
 	close;
 }
 
-mosk_dun02,65,232,0	script	Noisy Coffin#rus36	801,{
+mosk_dun02,65,232,0	script	Noisy Coffin#rus36	4_NFCOFFIN,{
 	if (rhea_rus_main < 16) {
 		mes "[Noisy Coffin]";
 		mes "Isn't it good to be alive? Isn't it good to live?";
@@ -10815,7 +10835,7 @@ mosk_dun02,65,232,0	script	Noisy Coffin#rus36	801,{
 		next;
 		mes "[Noisy Coffin]";
 		mes "................................";
-		emotion 9;
+		emotion e_dots;
 		next;
 		mes "["+ strcharinfo(0) +"]";
 		mes "Hu, the job has been done.";
@@ -10828,7 +10848,7 @@ mosk_dun02,65,232,0	script	Noisy Coffin#rus36	801,{
 		next;
 		mes "[Noisy Coffin]";
 		mes "................................";
-		emotion 9;
+		emotion e_dots;
 		next;
 		mes "["+ strcharinfo(0) +"]";
 		mes "Hu, the job has been done.";
@@ -10841,7 +10861,7 @@ mosk_dun02,65,232,0	script	Noisy Coffin#rus36	801,{
 		next;
 		mes "[Noisy Coffin]";
 		mes "................................";
-		emotion 9;
+		emotion e_dots;
 		next;
 		mes "["+ strcharinfo(0) +"]";
 		mes "Hu, the job has been done.";
@@ -10853,7 +10873,7 @@ mosk_dun02,65,232,0	script	Noisy Coffin#rus36	801,{
 	close;
 }
 
-treasure01,165,58,0	script	Old Treasure Box#rus37	111,{
+treasure01,165,58,0	script	Old Treasure Box#rus37	HIDDEN_NPC,{
 	if ((MaxWeight-Weight) < 3500) {
 		mes "You are carrying too much!";
 		mes "Lose some weight and try again.";
@@ -10938,7 +10958,7 @@ OnTimer180000:
 	end;
 }
 
-treasure01,24,39,0	script	Old Bed#rus38	111,{
+treasure01,24,39,0	script	Old Bed#rus38	HIDDEN_NPC,{
 	if (rhea_rus_main == 21) {
 		mes "- An old bed covered with dust and must -";
 		next;
@@ -10970,21 +10990,21 @@ treasure01,24,39,0	script	Old Bed#rus38	111,{
 		mes "...?! What is this?";
 		next;
 		mes "- There is a scar on the sheet that seems to have the location !! -";
-		viewpoint 1,165,58,1,0xFFFF0000;
-		viewpoint 1,61,183,2,0xFFFF0000;
-		viewpoint 1,98,118,3,0xFFFF0000;
-		viewpoint 1,27,115,4,0xFFFF0000;
+		viewpoint 1,165,58,1,0xFF0000;
+		viewpoint 1,61,183,2,0xFF0000;
+		viewpoint 1,98,118,3,0xFF0000;
+		viewpoint 1,27,115,4,0xFF0000;
 		next;
 		mes "["+ strcharinfo(0) +"]";
 		mes "...This may be?!";
 		next;
 		mes "[Voice unidentified]";
 		mes "Who is there!?";
-		viewpoint 2,165,58,1,0xFF00FF00;
-		viewpoint 2,61,183,2,0xFF00FF00;
-		viewpoint 2,98,118,3,0xFF00FF00;
-		viewpoint 2,27,115,4,0xFF00FF00;
-		emotion 23,1;
+		viewpoint 2,165,58,1,0x00FF00;
+		viewpoint 2,61,183,2,0x00FF00;
+		viewpoint 2,98,118,3,0x00FF00;
+		viewpoint 2,27,115,4,0x00FF00;
+		emotion e_omg,1;
 		next;
 		mes "["+ strcharinfo(0) +"]";
 		mes "Eek, it would be best to run away now!";
@@ -11023,7 +11043,7 @@ treasure01,24,39,0	script	Old Bed#rus38	111,{
 	end;
 }
 
-treasure01,98,119,0	script	Dirty Wall#rus39	111,{
+treasure01,98,119,0	script	Dirty Wall#rus39	HIDDEN_NPC,{
 	if (rhea_rus_main == 22 || (rhea_rus_main > 22 && rhea_rus_main < 26)) {
 		mes "- Something is engraved on the wall -";
 		next;
@@ -11037,7 +11057,7 @@ treasure01,98,119,0	script	Dirty Wall#rus39	111,{
 	end;
 }
 
-treasure01,61,183,0	script	Old_Wooden_Box#rus40	111,{
+treasure01,61,183,0	script	Old_Wooden_Box#rus40	HIDDEN_NPC,{
 	if (rhea_rus_main == 23) {
 		mes "- Something is glimmering inside of the box -";
 		next;
@@ -11060,7 +11080,7 @@ treasure01,61,183,0	script	Old_Wooden_Box#rus40	111,{
 	end;
 }
 
-treasure01,27,115,0	script	Opened Treasure Chest#41	111,{
+treasure01,27,115,0	script	Opened Treasure Chest#41	HIDDEN_NPC,{
 	if (rhea_rus_main == 24) {
 		mes "- You open the box, junk is in it -";
 		next;
@@ -11078,17 +11098,17 @@ treasure01,27,115,0	script	Opened Treasure Chest#41	111,{
 			next;
 		} else {
 			switch (.@russ_key02) {
-				Case 1: mes "- You find the cuticle of Kukre !! -"; break;
-				Case 2: mes "- You find the egg of a Theif Bug !! -"; break;
-				Case 4: mes "- You find something that seems to be a banana before !! -"; break;
-				Case 5: mes "- You find the tentacles of a Jelly Fish !! -"; break;
-				Case 6: mes "- You find pieces of cloth with must on it !! -"; break;
-				Case 7: mes "- You find a bone !! -"; break;
+				case 1: mes "- You find the cuticle of Kukre !! -"; break;
+				case 2: mes "- You find the egg of a Theif Bug !! -"; break;
+				case 4: mes "- You find something that seems to be a banana before !! -"; break;
+				case 5: mes "- You find the tentacles of a Jelly Fish !! -"; break;
+				case 6: mes "- You find pieces of cloth with must on it !! -"; break;
+				case 7: mes "- You find a bone !! -"; break;
 			}
 			next;
 			mes "["+ strcharinfo(0) +"]";
 			mes "W, what is this!?";
-			emotion 23,1;
+			emotion e_omg,1;
 			close;
 		}
 		mes "["+ strcharinfo(0) +"]";
@@ -11104,7 +11124,7 @@ treasure01,27,115,0	script	Opened Treasure Chest#41	111,{
 	end;
 }
 
-amatsu,233,234,3	script	Momotoro Publisher#rus42	757,{
+amatsu,233,234,3	script	Momotoro Publisher#rus42	4_F_JPN2,{
 	if ((MaxWeight-Weight) < 3500) {
 		mes "[Momotoro Publisher]";
 		mes "What on earth do you have in your bag?";
@@ -11166,7 +11186,7 @@ amatsu,233,234,3	script	Momotoro Publisher#rus42	757,{
 		}
 		mes "[Momotoro Publisher]";
 		mes "Thank you for buying our books. If you need more books, contact us please.";
-		set Zeny,Zeny-5000;
+		Zeny -= 5000;
 		set rhea_rus_main,27;
 		getitem 7881,1;
 		close;
@@ -11183,7 +11203,7 @@ amatsu,233,234,3	script	Momotoro Publisher#rus42	757,{
 	close;
 }
 
-mosk_dun02,57,220,0	script	House Ghost Jar#rus43	111,{
+mosk_dun02,57,220,0	script	House Ghost Jar#rus43	HIDDEN_NPC,{
 	if (rhea_rus_main == 31) {
 		mes "["+ strcharinfo(0) +"]";
 		mes "... Is it in here..? Hey, hey...";
@@ -11191,7 +11211,7 @@ mosk_dun02,57,220,0	script	House Ghost Jar#rus43	111,{
 		mes "- You tap the jar -";
 		mes "- with your hand -";
 		specialeffect EF_SIGHTRASHER;
-		emotion 23,1;
+		emotion e_omg,1;
 		next;
 		mes "- A voice laughs in the jar as -";
 		mes "- it shakes from right to left -";
@@ -11260,7 +11280,7 @@ mosk_dun02,57,220,0	script	House Ghost Jar#rus43	111,{
 			mes "[House Ghost]";
 			mes "Ok, first let me shuffle these cards around.";
 			mes "Ready!";
-			emotion 56;
+			emotion e_loud;
 			next;
 			mes "[House Ghost]";
 			mes "One!";
@@ -11294,9 +11314,9 @@ mosk_dun02,57,220,0	script	House Ghost Jar#rus43	111,{
 				mes "One! Two! Three!!";
 				next;
 				if (.@rucard_game01 == 1) {
-					cutin "Poring_Card.bmp",4;
-					emotion 0;
-					emotion 5,1;
+					cutin "포링카드",4; // Poring Card
+					emotion e_gasp;
+					emotion e_ic,1;
 					next;
 					mes "[House Ghost]";
 					mes "You got it right. You are good.";
@@ -11306,10 +11326,12 @@ mosk_dun02,57,220,0	script	House Ghost Jar#rus43	111,{
 					cutin "",255;
 					next;
 				} else {
-					if (.@rucard_game01 == 2) cutin "?↔Ð??┢??┢?.bmp",4;
-					else cutin "▲Ø?o???┢??┢?.bmp",4;
-					emotion 0;
-					emotion 23,1;
+					if (.@rucard_game01 == 2)
+						cutin "엔젤링카드",4; // Angeling Card
+					else
+						cutin "고스트링카드",4; // Ghostring Card
+					emotion e_gasp;
+					emotion e_omg,1;
 					next;
 					mes "[House Ghost]";
 					mes "Huuu...";
@@ -11328,9 +11350,9 @@ mosk_dun02,57,220,0	script	House Ghost Jar#rus43	111,{
 				mes "One! Two! Three!!";
 				next;
 				if (.@rucard_game01 == 2) {
-					cutin "?↔Ð??┢??┢?.bmp",4;
-					emotion 0;
-					emotion 5,1;
+					cutin "고스트링카드",4; // Angeling Card
+					emotion e_gasp;
+					emotion e_ic,1;
 					next;
 					mes "[House Ghost]";
 					mes "You got it right. You are good.";
@@ -11340,10 +11362,12 @@ mosk_dun02,57,220,0	script	House Ghost Jar#rus43	111,{
 					cutin "",255;
 					next;
 				} else {
-					if (.@rucard_game01 == 1) cutin "Poring_Card.bmp",4;
-					else cutin "▲Ø?o???┢??┢?.bmp",4;
-					emotion 0;
-					emotion 23,1;
+					if (.@rucard_game01 == 1)
+						cutin "포링카드",4; // Poring Card
+					else
+						cutin "고스트링카드",4; // Ghostring Card
+					emotion e_gasp;
+					emotion e_omg,1;
 					next;
 					mes "[House Ghost]";
 					mes "Huuu...";
@@ -11362,9 +11386,9 @@ mosk_dun02,57,220,0	script	House Ghost Jar#rus43	111,{
 				mes "One! Two! Three!!";
 				next;
 				if (.@rucard_game01 == 3) {
-					cutin "▲Ø?o???┢??┢?.bmp",4;
-					emotion 0;
-					emotion 5,1;
+					cutin "고스트링카드",4; // Ghostring Card
+					emotion e_gasp;
+					emotion e_ic,1;
 					next;
 					mes "[House Ghost]";
 					mes "You got it right. You are good.";
@@ -11374,10 +11398,12 @@ mosk_dun02,57,220,0	script	House Ghost Jar#rus43	111,{
 					cutin "",255;
 					next;
 				} else {
-					if (.@rucard_game01 == 1) cutin "Poring_Card.bmp",4;
-					else cutin "?↔Ð??┢??┢?.bmp",4;
-					emotion 0;
-					emotion 23,1;
+					if (.@rucard_game01 == 1)
+						cutin "포링카드",4; // Poring Card
+					else
+						cutin "고스트링카드",4; // Angeling Card
+					emotion e_gasp;
+					emotion e_omg,1;
 					next;
 					mes "[House Ghost]";
 					mes "Huuu...";
@@ -11468,7 +11494,7 @@ OnMyMobDead:
 	end;
 }
 
-payon,65,119,0	script	Broom Grandma#rus44	78,{
+payon,65,119,0	script	Broom Grandma#rus44	1_F_ORIENT_04,{
 	if (rhea_rus_main < 36) {
 		mes "[Broom Grandma]";
 		mes "A broom from Payon is the best!";
@@ -11525,7 +11551,7 @@ payon,65,119,0	script	Broom Grandma#rus44	78,{
 	close;
 }
 
-pay_dun04,163,186,0	script	Ghost Tree#rus45	111,{
+pay_dun04,163,186,0	script	Ghost Tree#rus45	HIDDEN_NPC,{
 	if (rhea_rus_main == 37) {
 		mes "[Ghost Tree]";
 		mes "Errr, a human? What are you doing here? Do you want to play with me?";
@@ -11779,7 +11805,7 @@ pay_dun04,163,186,0	script	Ghost Tree#rus45	111,{
 			mes "["+ strcharinfo(0) +"]";
 			if (.@rus_dice01 == .@tree_dice01) {
 				mes "Let's see... Wow, I got it! I've got ^0000ffNumber "+.@rus_dice01+"^000000!";
-				emotion 0;
+				emotion e_gasp;
 				next;
 				mes "[Ghost Tree]";
 				mes "You seem lucky...";
@@ -11790,7 +11816,7 @@ pay_dun04,163,186,0	script	Ghost Tree#rus45	111,{
 				mes "Let's see................... It is ^0000ff "+.@rus_dice01+" ^000000...";
 				mes "[Ghost Tree]";
 				mes "Huuu...";
-				emotion 18;
+				emotion e_heh;
 				set .@rustree_turn01,.@rustree_turn01+1;
 				next;
 			}
@@ -11824,4 +11850,57 @@ pay_dun04,163,186,0	script	Ghost Tree#rus45	111,{
 		close;
 	}
 	end;
+}
+
+mosk_dun01,3,3,3	script	Koshei GlobalVar#admin	4_F_RUSCHILD,{
+	callfunc "F_GM_NPC";
+	mes "[Koshei GlobalVar]";
+	mes "Please enter the password";
+	set .@i, callfunc("F_GM_NPC","orchid",1);
+	next;
+	if (.@i == 0) {
+		mes "[Koshei GlobalVar]";
+		mes "Please input the password exactly.";
+		close;
+	} else {
+		mes "[Koshei GlobalVar]";
+		mes "I can tell you what the";
+		mes "Koshei GlobalVar";
+		mes "$@rus_req02";
+		mes "on mosk_dun01";
+		mes "is currently set to.";
+		next;
+		if ($@rus_req02 == 0) {
+			mes "[Koshei GlobalVar]";
+			mes "Currently the GlobalVar $@rus_req02 is set to 0";
+			next;
+		} else if ($@rus_req02 == 1) {
+			mes "[Koshei GlobalVar]";
+			mes "Currently the GlobalVar $@rus_req02 is set to 1";
+			next;
+		} else {
+			mes "[Koshei GlobalVar]";
+			mes "error";
+			close;
+		}
+		mes "[Koshei GlobalVar]";
+		mes "What would you like to set the GlobalVar to?";
+		next;
+		switch(select("0:1:Cancel")) {
+		case 1:
+			mes "[Koshei GlobalVar]";
+			mes "GlobalVar $@rus_req02 will now be set to '0'";
+			set $@rus_req02,0;
+			donpcevent "Koshei#rus47::OnDisable";
+			close;
+		case 2:
+			mes "[Koshei GlobalVar]";
+			mes "GlobalVar $@rus_req02 will now be set to '1'";
+			set $@rus_req02,1;
+			donpcevent "Koshei#rus47::OnEnable";
+			close;
+		case 3:
+			close;
+		}
+	}
 }

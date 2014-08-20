@@ -1,24 +1,22 @@
-//===== rAthena Script ======================================= 
-//= Theif Mage Quest Story Mode
-//===== By: ================================================== 
+//===== Hercules Script ======================================
+//= Thief Mage Quest Story Mode
+//===== By: ==================================================
 //= Fix up by Jukka
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: ===================================== 
-//= rAthena SVN (Testet in Trunk 88xx)
-//===== Description: ========================================= 
-//=
-//===== Additional Comments: ================================= 
+//===== Description: =========================================
+//= [Official Conversion]
+//= Battle Traces from Thief and Magician training quests.
+//===== Additional Comments: =================================
 //= 1.0 Fully working
 //= 1.1 optimized [Lupus]
-//=	TODO: Test, Add correct misceffects numbers
 //= 1.2 Changed "battle_trace" to "Trace of Battle". [L0ne_W0lf]
 //= 1.3 Misc. updates. [L0ne_W0lf]
-//============================================================ 
+//============================================================
 
 // Battle Traces 1
 //============================================================
-moc_fild12,166,369,0	script	Trace of Battle#1	844,{
+moc_fild12,166,369,0	script	Trace of Battle#1	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 5){
 			mes "^3355FFYou find traces of poison";
@@ -32,7 +30,7 @@ moc_fild12,166,369,0	script	Trace of Battle#1	844,{
 			mes "of acute dizziness overcomes";
 			mes "you after examining the scene.^000000";
 			set tu_thief01, 6;
-			sc_start SC_Poison,60000,0;
+			sc_start SC_POISON,60000,0;
 			specialeffect EF_VENOMDUST2;
 			close;
 		} else if(tu_thief01 == 6){
@@ -40,7 +38,7 @@ moc_fild12,166,369,0	script	Trace of Battle#1	844,{
 			mes "used in a battle. A feeling";
 			mes "of acute dizziness overcomes";
 			mes "you after examining the scene.^000000";
-			sc_start SC_Poison,60000,0;
+			sc_start SC_POISON,60000,0;
 			specialeffect EF_VENOMDUST2;
 			close;
 		} else if(tu_thief01 == 7){
@@ -109,7 +107,7 @@ moc_fild12,166,369,0	script	Trace of Battle#1	844,{
 
 // Battle Traces 2
 //============================================================
-moc_fild12,173,215,0	script	Trace of Battle#2	844,{
+moc_fild12,173,215,0	script	Trace of Battle#2	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 9){
 			mes "^3355FFThere are signs";
@@ -159,7 +157,7 @@ moc_fild12,173,215,0	script	Trace of Battle#2	844,{
 
 // Battle Traces 3
 //============================================================
-moc_fild12,276,165,0	script	Trace of Battle#3	844,{
+moc_fild12,276,165,0	script	Trace of Battle#3	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 10){
 			mes "^3355FFThere are signs";
@@ -212,7 +210,7 @@ moc_fild12,276,165,0	script	Trace of Battle#3	844,{
 
 // Battle Traces 4
 //============================================================
-moc_fild11,39,163,0	script	Trace of Battle#4	844,{
+moc_fild11,39,163,0	script	Trace of Battle#4	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 11){
 			mes "^3355FFThere are signs";
@@ -272,7 +270,7 @@ moc_fild11,39,163,0	script	Trace of Battle#4	844,{
 
 // Battle Traces 5
 //============================================================
-moc_fild11,205,52,0	script	Trace of Battle#5	844,{
+moc_fild11,205,52,0	script	Trace of Battle#5	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 12){
 			mes "^3355FFThere are signs";
@@ -421,7 +419,7 @@ moc_fild11,205,52,0	script	Trace of Battle#5	844,{
 
 // Battle Traces 6
 //============================================================
-moc_fild11,226,235,0	script	Trace of Battle#6	844,{
+moc_fild11,226,235,0	script	Trace of Battle#6	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 13){
 			mes "^3355FFThere are signs";
@@ -464,7 +462,7 @@ moc_fild11,226,235,0	script	Trace of Battle#6	844,{
 
 // Battle Traces 7
 //============================================================
-moc_fild11,184,342,0	script	Trace of Battle#7	844,{
+moc_fild11,184,342,0	script	Trace of Battle#7	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 13){
 			mes "^3355FFThere are signs";
@@ -505,7 +503,7 @@ moc_fild11,184,342,0	script	Trace of Battle#7	844,{
 
 // Battle Traces 8
 //============================================================
-moc_fild17,213,358,0	script	Trace of Battle#8	844,{
+moc_fild17,213,358,0	script	Trace of Battle#8	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 13){
 			mes "^3355FFThere are two";
@@ -566,7 +564,7 @@ moc_fild17,213,358,0	script	Trace of Battle#8	844,{
 
 // Battle Traces 9
 //============================================================
-moc_fild17,228,274,0	script	Trace of Battle#9	844,{
+moc_fild17,228,274,0	script	Trace of Battle#9	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 14){
 			mes "^3355FFTraces of some";
@@ -661,7 +659,7 @@ moc_fild17,228,274,0	script	Trace of Battle#9	844,{
 
 // Battle Traces 10
 //============================================================
-moc_fild17,34,292,0	script	Trace of Battle#10	844,{
+moc_fild17,34,292,0	script	Trace of Battle#10	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 16){
 			mes "^3355FFThere are signs";
@@ -714,7 +712,7 @@ moc_fild17,34,292,0	script	Trace of Battle#10	844,{
 
 // Battle Traces 11
 //============================================================
-moc_fild18,346,296,0	script	Trace of Battle#11	844,{
+moc_fild18,346,296,0	script	Trace of Battle#11	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 17){
 			mes "^3355FFThere are signs";
@@ -771,7 +769,7 @@ moc_fild18,346,296,0	script	Trace of Battle#11	844,{
 
 // Battle Traces 12
 //============================================================
-moc_fild18,309,257,0	script	Trace of Battle#12	844,{
+moc_fild18,309,257,0	script	Trace of Battle#12	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 18){
 			mes "^3355FFThere are signs";
@@ -824,7 +822,7 @@ moc_fild18,309,257,0	script	Trace of Battle#12	844,{
 
 // Battle Traces 13
 //============================================================
-moc_fild18,177,333,0	script	Trace of Battle#13	844,{
+moc_fild18,177,333,0	script	Trace of Battle#13	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 19){
 			mes "^3355FFThere are signs";
@@ -878,7 +876,7 @@ moc_fild18,177,333,0	script	Trace of Battle#13	844,{
 
 // Battle Traces 14
 //============================================================
-moc_fild18,111,303,0	script	Trace of Battle#14	844,{
+moc_fild18,111,303,0	script	Trace of Battle#14	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 20){
 			mes "^3355FFThere are signs";
@@ -931,7 +929,7 @@ moc_fild18,111,303,0	script	Trace of Battle#14	844,{
 
 // Battle Traces 15
 //============================================================
-moc_fild18,109,197,0	script	Trace of Battle#15	844,{
+moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 21){
 			mes "^3355FFThere are signs";
@@ -1003,7 +1001,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	844,{
 				mes "^3355FFBy sheer accident,";
 				mes "you set off one of";
 				mes "the traps in the area.^000000";
-				sc_start SC_Poison,60000,0;
+				sc_start SC_POISON,60000,0;
 				specialeffect EF_VENOMDUST2;
 				percentheal -30,0;
 				close;
@@ -1157,7 +1155,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	844,{
 				mes "^3355FFBy sheer accident,";
 				mes "you set off one of";
 				mes "the traps in the area.^000000";
-				sc_start SC_Poison,60000,0;
+				sc_start SC_POISON,60000,0;
 				specialeffect EF_VENOMDUST2;
 				percentheal -30,0;
 				close;
@@ -1254,7 +1252,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	844,{
 
 // Battle Traces 16
 //============================================================
-moc_fild18,156,96,0	script	Trace of Battle#16	844,{
+moc_fild18,156,96,0	script	Trace of Battle#16	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 25){
 			mes "^3355FFThere are signs";

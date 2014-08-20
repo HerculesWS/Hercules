@@ -2,18 +2,22 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
+#define HERCULES_CORE
 
 #include "mail.h"
-#include "atcommand.h"
-#include "itemdb.h"
-#include "clif.h"
-#include "pc.h"
-#include "log.h"
 
 #include <time.h>
 #include <string.h>
+
+#include "atcommand.h"
+#include "clif.h"
+#include "itemdb.h"
+#include "log.h"
+#include "pc.h"
+#include "../common/nullpo.h"
+#include "../common/showmsg.h"
+
+struct mail_interface mail_s;
 
 void mail_clear(struct map_session_data *sd)
 {
@@ -62,7 +66,7 @@ unsigned char mail_setitem(struct map_session_data *sd, int idx, int amount) {
 		return 1;
 
 	if( idx == 0 ) { // Zeny Transfer
-		if( amount < 0 || !pc->can_give_items(sd) )
+		if( amount < 0 || !pc_can_give_items(sd) )
 			return 1;
 
 		if( amount > sd->status.zeny )
@@ -79,8 +83,9 @@ unsigned char mail_setitem(struct map_session_data *sd, int idx, int amount) {
 			return 1;
 		if( amount < 0 || amount > sd->status.inventory[idx].amount )
 			return 1;
-		if( !pc->can_give_items(sd) || sd->status.inventory[idx].expire_time ||
-				!itemdb_canmail(&sd->status.inventory[idx],pc->get_group_level(sd)) )
+		if( !pc_can_give_items(sd) || sd->status.inventory[idx].expire_time ||
+			!itemdb_canmail(&sd->status.inventory[idx],pc_get_group_level(sd)) ||
+			(sd->status.inventory[idx].bound && !pc_can_give_bound_items(sd)) )
 			return 1;
 
 		sd->mail.index = idx;
@@ -174,10 +179,8 @@ void mail_deliveryfail(struct map_session_data *sd, struct mail_message *msg)
 }
 
 // This function only check if the mail operations are valid
-bool mail_invalid_operation(struct map_session_data *sd)
-{
-	if( !map[sd->bl.m].flag.town && !pc->can_use_command(sd, "@mail") )
-	{
+bool mail_invalid_operation(struct map_session_data *sd) {
+	if( !map->list[sd->bl.m].flag.town && !pc->can_use_command(sd, "@mail") ) {
 		ShowWarning("clif->parse_Mail: char '%s' trying to do invalid mail operations.\n", sd->status.name);
 		return true;
 	}

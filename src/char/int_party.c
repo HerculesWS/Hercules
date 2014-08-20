@@ -2,22 +2,25 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/strlib.h"
-#include "../common/socket.h"
-#include "../common/showmsg.h"
-#include "../common/mapindex.h"
-#include "../common/sql.h"
-#include "char.h"
-#include "inter.h"
+#define HERCULES_CORE
+
 #include "int_party.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "char.h"
+#include "inter.h"
+#include "../common/cbasetypes.h"
+#include "../common/db.h"
+#include "../common/malloc.h"
+#include "../common/mapindex.h"
+#include "../common/mmo.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
+#include "../common/sql.h"
+#include "../common/strlib.h"
 
 struct party_data {
 	struct party party;
@@ -241,7 +244,7 @@ struct party_data *inter_party_fromsql(int party_id)
 		SQL->GetData(sql_handle, 1, &data, NULL); m->char_id = atoi(data);
 		SQL->GetData(sql_handle, 2, &data, &len); memcpy(m->name, data, min(len, NAME_LENGTH));
 		SQL->GetData(sql_handle, 3, &data, NULL); m->lv = atoi(data);
-		SQL->GetData(sql_handle, 4, &data, NULL); m->map = mapindex_name2id(data);
+		SQL->GetData(sql_handle, 4, &data, NULL); m->map = mapindex->name2id(data);
 		SQL->GetData(sql_handle, 5, &data, NULL); m->online = (atoi(data) ? 1 : 0);
 		SQL->GetData(sql_handle, 6, &data, NULL); m->class_ = atoi(data);
 		m->leader = (m->account_id == leader_id && m->char_id == leader_char ? 1 : 0);
@@ -472,8 +475,8 @@ int mapif_parse_CreateParty(int fd, char *name, int item, int item2, struct part
 		mapif_party_created(fd,leader->account_id,leader->char_id,NULL);
 		return 0;
 	}
-	// Check Authorised letters/symbols in the name of the character
-	if (char_name_option == 1) { // only letters/symbols in char_name_letters are authorised
+	// Check Authorized letters/symbols in the name of the character
+	if (char_name_option == 1) { // only letters/symbols in char_name_letters are authorized
 		for (i = 0; i < NAME_LENGTH && name[i]; i++)
 			if (strchr(char_name_letters, name[i]) == NULL) {
 				if( name[i] == '"' ) { /* client-special-char */
@@ -649,7 +652,7 @@ int mapif_parse_PartyChangeMap(int fd, int party_id, int account_id, int char_id
 	if (p == NULL)
 		return 0;
 
-	for(i = 0; i < MAX_PARTY && 
+	for(i = 0; i < MAX_PARTY &&
 		(p->party.member[i].account_id != account_id ||
 		p->party.member[i].char_id != char_id); i++);
 
@@ -663,7 +666,7 @@ int mapif_parse_PartyChangeMap(int fd, int party_id, int account_id, int char_id
 		else
 			p->party.count--;
 		// Even share check situations: Family state (always breaks)
-		// character logging on/off is max/min level (update level range) 
+		// character logging on/off is max/min level (update level range)
 		// or character logging on/off has a different level (update level range using new level)
 		if (p->family ||
 			(p->party.member[i].lv <= p->min_lv || p->party.member[i].lv >= p->max_lv) ||
@@ -728,7 +731,7 @@ int mapif_parse_PartyLeaderChange(int fd,int party_id,int account_id,int char_id
 
 	for (i = 0; i < MAX_PARTY; i++)
 	{
-		if(p->party.member[i].leader) 
+		if(p->party.member[i].leader)
 			p->party.member[i].leader = 0;
 		if(p->party.member[i].account_id == account_id &&
 			p->party.member[i].char_id == char_id)

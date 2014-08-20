@@ -5,7 +5,7 @@
 //===== Current Version: =====================================
 //= 1.4
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Allows you to change your hairstyle.
 //===== Additional Comments: =================================
 //= 1.2 Rescripted to the Aegis 10.3 Standards. [Samuray22]
@@ -15,7 +15,7 @@
 
 // Hair Dresser Veronica
 // ============================================================
-alberta_in,55,142,7	script	Hair Dresser	91,{
+alberta_in,55,142,7	script	Hair Dresser	4_F_02,{
 	mes "[Veronica]";
 	mes "Welcome to Veronica's hair salon.";
 	mes "How can I help you?";
@@ -470,7 +470,7 @@ alberta_in,55,142,7	script	Hair Dresser	91,{
 				mes "- *snip snip snip snip* -";
 				mes "- *bzzzzzzz bzzzzzzz bzzzzzzz bzzzzzzz* -";
 				next;
-				set Zeny,Zeny-99800;
+				Zeny -= 99800;
 				delitem 973,3;	// Counteragent
 				delitem 974,3;	// Mixture
 				delitem 901,100;	// Danggie
@@ -522,7 +522,7 @@ L_cutin:
 
 // Roving Hair Dresser
 // ============================================================
-alberta,33,141,7	script	Roving Hair Dresser	87,{
+alberta,33,141,7	script	Roving Hair Dresser	4_M_BARBER,{
 	mes "[Rui Vishop]";
 	mes "That Veronica...";
 	mes "Hah! Best hair dresser my ass.";
@@ -656,7 +656,7 @@ alberta,33,141,7	script	Roving Hair Dresser	87,{
 			mes "Once more I've outdone myself.";
 			mes "It's such a unique and talented";
 			mes "style! Yes, I am the best! Wooohahahahahaha!";
-			set Zeny,Zeny-199800;
+			Zeny -= 199800;
 			setlook 1,rand(1,19);
 			setlook 6,rand(1,8);
 			close;
@@ -683,7 +683,7 @@ alberta,33,141,7	script	Roving Hair Dresser	87,{
 
 
 // Lighthalzen
-lhz_in02,100,143,3	script	Hair Dresser#li	122,{
+lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 	mes "[Prince Shammi]";
 	mes "Welcome to Prince Shammi's";
 	mes "Beauty Shop, the place to go";
@@ -1042,7 +1042,7 @@ lhz_in02,100,143,3	script	Hair Dresser#li	122,{
 				mes "*Clip clip clip clip*";
 				mes "*Bzzzzzzzzzzzzzzzzzzzz*^000000";
 				next;
-				set zeny,zeny-99800;
+				Zeny -= 99800;
 				delitem 973,3; //Counteragent
 				delitem 974,3; //Mixture
 				delitem 901,100; //Danggie
@@ -1096,7 +1096,7 @@ lhz_in02,100,143,3	script	Hair Dresser#li	122,{
 	}
 }
 
-lhz_in02,91,155,5	script	Assistant Beautician#li	862,{
+lhz_in02,91,155,5	script	Assistant Beautician#li	4_F_LGTGIRL,{
 	mes "[Assistant Beautician]";
 	mes "Wah?! Sweet Jiminy,";
 	mes "you freaked me out!";
@@ -1249,7 +1249,7 @@ lhz_in02,91,155,5	script	Assistant Beautician#li	862,{
 				mes "[Assistant Beautician]";
 				mes "^333333*Pant Pant Pant*^000000";
 				next;
-				set zeny,zeny-250000;
+				Zeny -= 250000;
 				setlook VAR_HEAD,.@style_r;
 				setlook VAR_HEADPALETTE,.@color_r;
 				mes "[Assistant Beautician]";

@@ -8,13 +8,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// 
-// Simple test for the spinlock implementation to see if it works properly..  
+//
+// Simple test for the spinlock implementation to see if it works properly..
 //
 
 
 
-#define THRC 32 //thread Count 
+#define THRC 32 //thread Count
 #define PERINC 100000
 #define LOOPS 47
 
@@ -43,7 +43,7 @@ static  void *worker(void *p){
 
 
 int do_init(int argc, char **argv){
-	rAthread t[THRC];
+	rAthread *t[THRC];
 	int j, i;
 	int ok;
 	
@@ -66,7 +66,7 @@ int do_init(int argc, char **argv){
 		
 		
 		while(1){
-			if(InterlockedCompareExchange(&done_threads, THRC, THRC) == THRC) 
+			if(InterlockedCompareExchange(&done_threads, THRC, THRC) == THRC)
 				break;
 			
 			rathread_yield();
@@ -86,7 +86,7 @@ int do_init(int argc, char **argv){
 	
 
 	if(ok != LOOPS){
-		ShowFatalError("Test failed.\n");		
+		ShowFatalError("Test failed.\n");
 		exit(1);
 	}else{
 		ShowStatus("Test passed.\n");
@@ -98,16 +98,17 @@ return 0;
 }//end: do_init()
 
 
-void do_abort(){
+void do_abort(void) {
 }//end: do_abort()
 
 
-void set_server_type(){
-	SERVER_TYPE = ATHENA_SERVER_NONE;
+void set_server_type(void) {
+	SERVER_TYPE = SERVER_TYPE_UNKNOWN;
 }//end: set_server_type()
 
 
-void do_final(){
+int do_final(void) {
+	return EXIT_SUCCESS;
 }//end: do_final()
 
 

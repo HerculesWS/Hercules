@@ -2,16 +2,17 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _HOMUNCULUS_H_
-#define _HOMUNCULUS_H_
+#ifndef MAP_HOMUNCULUS_H
+#define MAP_HOMUNCULUS_H
 
+#include "pc.h"
 #include "status.h" // struct status_data, struct status_change
 #include "unit.h" // struct unit_data
-#include "pc.h"
+#include "../common/mmo.h"
 
 #define MAX_HOM_SKILL_REQUIRE 5
-#define homdb_checkid(id) (id >=  HM_CLASS_BASE && id <= HM_CLASS_MAX)
-#define homun_alive(x) ((x) && (x)->homunculus.vaporize != 1 && (x)->battle_status.hp > 0)
+#define homdb_checkid(id) ((id) >=  HM_CLASS_BASE && (id) <= HM_CLASS_MAX)
+#define homun_alive(x) ((x) && (x)->homunculus.vaporize == HOM_ST_ACTIVE && (x)->battle_status.hp > 0)
 
 struct h_stats {
 	unsigned int HP, SP;
@@ -27,8 +28,6 @@ struct s_homunculus_db {
 	long hungryDelay ;
 	unsigned char element, race, base_size, evo_size;
 };
-
-extern struct s_homunculus_db homunculus_db[MAX_HOMUNCULUS_CLASS];
 
 enum {
 	HOMUNCULUS_CLASS,
@@ -46,6 +45,12 @@ enum {
 	SP_HUNGRY   = 0x2,
 };
 
+enum homun_state {
+	HOM_ST_ACTIVE = 0,/* either alive or dead */
+	HOM_ST_REST   = 1,/* is resting (vaporized) */
+	HOM_ST_MORPH  = 2,/* in morph state */
+};
+
 struct homun_data {
 	struct block_list bl;
 	struct unit_data  ud;
@@ -53,13 +58,15 @@ struct homun_data {
 	struct status_data base_status, battle_status;
 	struct status_change sc;
 	struct regen_data regen;
-	struct s_homunculus_db *homunculusDB;	//[orn]
-	struct s_homunculus homunculus;	//[orn]
+	struct s_homunculus_db *homunculusDB; //[orn]
+	struct s_homunculus homunculus;       //[orn]
 
-	struct map_session_data *master; //pointer back to its master
-	int hungry_timer;	//[orn]
+	struct map_session_data *master;      //pointer back to its master
+	int hungry_timer;                     //[orn]
 	unsigned int exp_next;
-	char blockskill[MAX_SKILL];	// [orn]
+	char blockskill[MAX_SKILL];           // [orn]
+	
+	int64 masterteleport_timer;
 };
 
 struct homun_skill_tree_entry {
@@ -74,9 +81,10 @@ struct homun_skill_tree_entry {
 }; // Celest
 
 enum homun_type {
-	HT_REG	= 0x1,
-	HT_EVO	= 0x2,
-	HT_S	= 0x4,
+	HT_REG,          // Regular Homunculus
+	HT_EVO,          // Evolved Homunculus
+	HT_S,            // Homunculus S
+	HT_INVALID = -1, // Invalid Homunculus
 };
 
 /* homunculus.c interface */
@@ -86,7 +94,7 @@ struct homunculus_interface {
 	struct s_homunculus_db db[MAX_HOMUNCULUS_CLASS];
 	struct homun_skill_tree_entry skill_tree[MAX_HOMUNCULUS_CLASS][MAX_SKILL_TREE];
 	/* */
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
 	void (*reload) (void);
 	void (*reload_skill) (void);
@@ -95,7 +103,7 @@ struct homunculus_interface {
 	enum homun_type (*class2type) (int class_);
 	void (*damaged) (struct homun_data *hd);
 	int (*dead) (struct homun_data *hd);
-	int (*vaporize) (struct map_session_data *sd, int flag);
+	int (*vaporize) (struct map_session_data *sd, enum homun_state flag);
 	int (*delete) (struct homun_data *hd, int emote);
 	int (*checkskill) (struct homun_data *hd, uint16 skill_id);
 	int (*calc_skilltree) (struct homun_data *hd, int flag_evolve);
@@ -112,7 +120,7 @@ struct homunculus_interface {
 	void (*save) (struct homun_data *hd);
 	unsigned char (*menu) (struct map_session_data *sd,unsigned char menu_num);
 	bool (*feed) (struct map_session_data *sd, struct homun_data *hd);
-	int (*hunger_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*hunger_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*hunger_timer_delete) (struct homun_data *hd);
 	int (*change_name) (struct map_session_data *sd,char *name);
 	bool (*change_name_ack) (struct map_session_data *sd, char* name, int flag);
@@ -133,10 +141,11 @@ struct homunculus_interface {
 	void (*exp_db_read) (void);
 	void (*addspiritball) (struct homun_data *hd, int max);
 	void (*delspiritball) (struct homun_data *hd, int count, int type);
-} homunculus_s;
+	int8 (*get_intimacy_grade) (struct homun_data *hd);
+};
 
 struct homunculus_interface *homun;
 
 void homunculus_defaults(void);
 
-#endif /* _HOMUNCULUS_H_ */
+#endif /* MAP_HOMUNCULUS_H */

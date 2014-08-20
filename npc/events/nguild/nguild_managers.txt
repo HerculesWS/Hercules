@@ -23,7 +23,7 @@
 //==============================================
 function	script	F_GldManager	{
 
-	set @GID, GetCastleData(getarg(1),1);
+	set @GID, getcastledata(getarg(1),1);
 	mes "[ "+getarg(0)+" ]";
 	if (@GID == 0){
 		mes "I am waiting for my master.  Brave adventurer, follow your destiny!";
@@ -48,7 +48,7 @@ function	script	F_GldManager	{
 	M_Kaf:
 	//======
 		mes "[ "+getarg(0)+" ]";
-		if (GetCastleData(getarg(1),9) == 1) goto L_Dismiss;
+		if (getcastledata(getarg(1),9) == 1) goto L_Dismiss;
 		if (getgdskilllv(@GID,10001) == 0){
 			mes "Master, you don't have a contract with the Kafra Staff Company.";
 			mes "In order to hire a Kafra, you must first learn the Guild skill ^5533FFContract With Kafra^000000.";
@@ -65,9 +65,9 @@ function	script	F_GldManager	{
 					mes "Master, you do not have enough money to employ a Kafra. Employment has been cancelled.";
 					return;
 				}
-				set Zeny,Zeny-10000;
+				Zeny -= 10000;
 				enablenpc "Kafra Staff#"+getarg(4);
-				SetCastleData getarg(1),9,1;
+				setcastledata getarg(1),9,1;
 				mes "You have created a contract with the Kafra Staff Company.";
 				next;
 				cutin "kafra_01",2;
@@ -100,7 +100,7 @@ function	script	F_GldManager	{
 					mes "It's unfortunate that I won't be able to serve your guild anymore....";
 					next;
 					disablenpc "Kafra Staff#"+getarg(4);
-					SetCastleData getarg(1),9,0;
+					setcastledata getarg(1),9,0;
 					cutin "kafra_01",255;
 					mes "[ "+getarg(0)+" ]";
 					mes "The Kafra has been dismissed.  But... we should really get a Kafra as soon as possible!";
@@ -145,28 +145,28 @@ function	script	F_GldManager	{
 }
 
 // Castle 1 ==================================================================================
-nguild_alde,218,175,0	script	Frolo	55,{
+nguild_alde,218,175,0	script	Frolo	1_M_JOBTESTER,{
 	callfunc "F_GldManager","Frolo","nguild_alde",119,223,"N01";
 	close;
 }
 
 
 // Castle 2 ==================================================================================
-nguild_gef,40,48,5	script	Leiber	55,{
+nguild_gef,40,48,5	script	Leiber	1_M_JOBTESTER,{
 	callfunc "F_GldManager","Leiber","nguild_gef",155,112,"N02";
 	close;
 }
 
 
 // Castle 3 ==================================================================================
-nguild_pay,120,58,4	script	Dundar	55,{
+nguild_pay,120,58,4	script	Dundar	1_M_JOBTESTER,{
 	callfunc "F_GldManager","Dundar","nguild_pay",290,7,"N03";
 	close;
 }
 
 
 // Castle 4 ==================================================================================
-nguild_prt,112,181,0	script	Thefton	55,{
+nguild_prt,112,181,0	script	Thefton	1_M_JOBTESTER,{
 	callfunc "F_GldManager","Thefton","nguild_prt",15,209,"N04";
 	close;
 }

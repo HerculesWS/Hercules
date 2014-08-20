@@ -20,7 +20,7 @@
 
 // Headgear Quest - Pumpkin Hat
 //============================================================
-prontera,152,192,5	script	Pumpkin Hat Researcher	712,{
+prontera,152,192,5	script	Pumpkin Hat Researcher	4_M_05,{
 	if(BaseLevel < 45) {
 		mes "[Pumpkin Hat Researcher]";
 		mes "Shoo, I don't need a child. Shoo! I don't talk to novices.";
@@ -94,7 +94,7 @@ prontera,152,192,5	script	Pumpkin Hat Researcher	712,{
 
 // Buffs - Trick or Treaters
 //============================================================
--	script	Trick or Treater::09Treats	706,2,2,{
+-	script	Trick or Treater::09Treats	4_M_KID1,2,2,{
 OnTouch:
 	hideoffnpc strnpcinfo(3);
 	initnpctimer;
@@ -106,7 +106,7 @@ OnTouch:
 		mes "[Trick or Treater]";
 		mes "!!!!";
 		mes "Fine. I have no choice but to trick you back!";
-		sc_start SC_Stun,5000,0;
+		sc_start SC_STUN,5000,0;
 		close;
 	}
 	mes "[Trick or Treater]";
@@ -131,7 +131,7 @@ OnTouch:
 				mes "[Trick or Treater]";
 				mes "At least a Candy, a Candy Cane or a Well-baked Cookie is all I ask for a treat.";
 				mes "Fine. I have no choice but to trick you!";
-				sc_start SC_Stun,5000,0;
+				sc_start SC_STUN,5000,0;
 				close;
 			}
 		case 2:
@@ -152,7 +152,7 @@ OnTouch:
 				mes "[Trick or Treater]";
 				mes "At least a Candy, a Candy Cane or a Well-baked Cookie is all I ask for a treat.";
 				mes "Fine. I have no choice but to trick you!";
-				sc_start SC_Stun,5000,0;
+				sc_start SC_STUN,5000,0;
 				close;
 			}
 		case 3:
@@ -173,14 +173,14 @@ OnTouch:
 				mes "[Trick or Treater]";
 				mes "At least a Candy, a Candy Cane or a Well-baked Cookie is all I ask for a treat.";
 				mes "Fine. I have no choice but to trick you!";
-				sc_start SC_Stun,5000,0;
+				sc_start SC_STUN,5000,0;
 				close;
 			}
 		case 4:
 			mes "[Trick or Treater]";
 			mes "At least a Candy, a Candy Cane or a Well-baked Cookie is all I ask for a treat.";
 			mes "Fine. I have no choice but to trick you!";
-			sc_start SC_Stun,5000,0;
+			sc_start SC_STUN,5000,0;
 			close;
 	}
 OnInit:
@@ -209,18 +209,18 @@ OnTimer300000:
 	stopnpctimer;
 	end;
 }
-prontera,151,173,5	duplicate(09Treats)	Trick or Treater#iRO1	706,2,2
-prontera,270,350,5	duplicate(09Treats)	Trick or Treater#iRO2	706,2,2
-prontera,234,310,5	duplicate(09Treats)	Trick or Treater#iRO3	706,2,2
-prontera,156,321,5	duplicate(09Treats)	Trick or Treater#iRO4	706,2,2
-prontera,156,283,5	duplicate(09Treats)	Trick or Treater#iRO5	706,2,2
-prontera,142,214,5	duplicate(09Treats)	Trick or Treater#iRO6	706,2,2
-prontera,134,125,5	duplicate(09Treats)	Trick or Treater#iRO7	706,2,2
-prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	706,2,2
+prontera,151,173,5	duplicate(09Treats)	Trick or Treater#iRO1	4_M_KID1,2,2
+prontera,270,350,5	duplicate(09Treats)	Trick or Treater#iRO2	4_M_KID1,2,2
+prontera,234,310,5	duplicate(09Treats)	Trick or Treater#iRO3	4_M_KID1,2,2
+prontera,156,321,5	duplicate(09Treats)	Trick or Treater#iRO4	4_M_KID1,2,2
+prontera,156,283,5	duplicate(09Treats)	Trick or Treater#iRO5	4_M_KID1,2,2
+prontera,142,214,5	duplicate(09Treats)	Trick or Treater#iRO6	4_M_KID1,2,2
+prontera,134,125,5	duplicate(09Treats)	Trick or Treater#iRO7	4_M_KID1,2,2
+prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	4_M_KID1,2,2
 
 // Monster Summoning - Halloween Wizard
 //============================================================
--	script	Halloween Wizard#iRO09::09HallowWiz	737,{
+-	script	Halloween Wizard#iRO09::09HallowWiz	4_DARKLORD,{
 	mes "[Halloween Wizard]";
 	mes "...";
 	mes "Do you want to play a trick on someone?";
@@ -433,8 +433,8 @@ prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	706,2,2
 		}
 	}
 }
-prontera,156,195,5	duplicate(09HallowWiz)	Halloween Wizard#1	737
-geffen,133,122,5	duplicate(09HallowWiz)	Halloween Wizard#2	737
-payon,156,196,5	duplicate(09HallowWiz)	Halloween Wizard#3	737
-alberta,96,57,5	duplicate(09HallowWiz)	Halloween Wizard#4	737
-aldebaran,146,122,5	duplicate(09HallowWiz)	Halloween Wizard#5	737
+prontera,156,195,5	duplicate(09HallowWiz)	Halloween Wizard#1	4_DARKLORD
+geffen,133,122,5	duplicate(09HallowWiz)	Halloween Wizard#2	4_DARKLORD
+payon,156,196,5	duplicate(09HallowWiz)	Halloween Wizard#3	4_DARKLORD
+alberta,96,57,5	duplicate(09HallowWiz)	Halloween Wizard#4	4_DARKLORD
+aldebaran,146,122,5	duplicate(09HallowWiz)	Halloween Wizard#5	4_DARKLORD

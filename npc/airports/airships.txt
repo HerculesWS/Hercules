@@ -14,18 +14,18 @@
 //= -> Juno -> Hugel -> ...
 //============================================================
 
-airplane,243,73,0	script	#AirshipWarp-1	45,1,1,{
+airplane,243,73,0	script	#AirshipWarp-1	WARPNPC,1,1,{
 	end;
 
 OnInit:
 OnHide:
-	misceffect 16;
+	specialeffect EF_BASH;
 	disablenpc strnpcinfo(0);
 	end;
 
 OnUnhide:
 	enablenpc strnpcinfo(0);
-	misceffect 215;
+	specialeffect EF_SUMMONSLAVE;
 	end;
 
 OnTouch:
@@ -37,7 +37,7 @@ OnTouch:
 	}
 }
 
-airplane,243,29,0	duplicate(#AirshipWarp-1)	#AirshipWarp-2	45,1,1
+airplane,243,29,0	duplicate(#AirshipWarp-1)	#AirshipWarp-2	WARPNPC,1,1
 
 airplane,1,1,0	script	Domestic_Airship	-1,{
 	end;
@@ -167,14 +167,14 @@ OnTimer480000:
 	initnpctimer;
 }
 
-airplane,240,64,5	script	Exit#airplane1a::ExitAirplane	857,{
+airplane,240,64,5	script	Exit#airplane1a::ExitAirplane	4_BOARD3,{
 	end;
 }
-airplane,247,64,5	duplicate(ExitAirplane)	Exit#airplane1b	857
-airplane,240,40,1	duplicate(ExitAirplane)	Exit#airplane2a	857
-airplane,247,40,1	duplicate(ExitAirplane)	Exit#airplane2b	857
+airplane,247,64,5	duplicate(ExitAirplane)	Exit#airplane1b	4_BOARD3
+airplane,240,40,1	duplicate(ExitAirplane)	Exit#airplane2a	4_BOARD3
+airplane,247,40,1	duplicate(ExitAirplane)	Exit#airplane2b	4_BOARD3
 
-airplane,100,69,3	script	Airship Crew#ein-1	852,{
+airplane,100,69,3	script	Airship Crew#ein-1	4_M_EIN_SOLDIER,{
 	mes "[Airship Crew]";
 	mes "If we've landed at";
 	mes "your destination and";
@@ -185,7 +185,7 @@ airplane,100,69,3	script	Airship Crew#ein-1	852,{
 	close;
 }
 
-airplane,64,94,1	script	Umbala Kid#ein_p	787,{
+airplane,64,94,1	script	Umbala Kid#ein_p	4_M_UMKID,{
 	emotion e_swt2;
 	mes "[Kid]";
 	if (event_umbala >= 3) {
@@ -203,7 +203,7 @@ airplane,64,94,1	script	Umbala Kid#ein_p	787,{
 	close;
 }
 
-airplane,66,93,3	script	Umbala Lady#ein_p	783,{
+airplane,66,93,3	script	Umbala Lady#ein_p	4_F_UMWOMAN,{
 	emotion e_dots;
 	mes "[Lady]";
 	if (event_umbala >= 3) {
@@ -222,7 +222,7 @@ airplane,66,93,3	script	Umbala Lady#ein_p	783,{
 	close;
 }
 
-airplane,71,91,7	script	Umbala Man#ein_p	789,{
+airplane,71,91,7	script	Umbala Man#ein_p	4_M_UMSOLDIER,{
 	if (event_umbala >= 3) {
 		mes "[Chrmlim]";
 		mes "Hey there~";
@@ -265,7 +265,7 @@ airplane,71,91,7	script	Umbala Man#ein_p	789,{
 	close;
 }
 
-airplane,250,58,2	script	Airship Staff#airplane	67,{
+airplane,250,58,2	script	Airship Staff#airplane	1_F_02,{
 	// Hugel quest addition
 	if (hg_ma1 == 3) {
 		mes "[Airship Staff]";
@@ -329,7 +329,7 @@ airplane,250,58,2	script	Airship Staff#airplane	67,{
 	}
 }
 
-airplane,80,71,2	script	Zerta#01airplane	834,{
+airplane,80,71,2	script	Zerta#01airplane	4_M_BUDDHIST,{
 	mes "[Zerta]";
 	mes "Oh, hello adventurer.";
 	mes "I am currently on a";
@@ -339,7 +339,7 @@ airplane,80,71,2	script	Zerta#01airplane	834,{
 	close;
 }
 
-airplane,65,63,4	script	Maelin#01airplane	714,{
+airplane,65,63,4	script	Maelin#01airplane	4_F_06,{
 	mes "[Maelin]";
 	mes "Um, this Airship is";
 	mes "to Lutie, isn't it? I've";
@@ -349,7 +349,7 @@ airplane,65,63,4	script	Maelin#01airplane	714,{
 	close;
 }
 
-airplane,72,34,6	script	Aanos#01airplane	702,{
+airplane,72,34,6	script	Aanos#01airplane	4_F_GON,{
 	mes "[Aanos]";
 	mes "Oh wooow~";
 	mes "The sky looks";
@@ -358,7 +358,7 @@ airplane,72,34,6	script	Aanos#01airplane	702,{
 	close;
 }
 
-airplane,221,158,2	script	Pilot#airplane	852,{
+airplane,221,158,2	script	Pilot#airplane	4_M_EIN_SOLDIER,{
 	// Hugel quest addition
 	if (hg_ma1 == 3) {
 		mes "[Pilot]";
@@ -457,7 +457,7 @@ airplane,221,158,2	script	Pilot#airplane	852,{
 	}
 }
 
-airplane,50,66,5	script	Apple Merchant#airplane	86,{
+airplane,50,66,5	script	Apple Merchant#airplane	4_M_04,{
 	mes "[Fruitz]";
 	mes "Welcome to Fruitz's";
 	mes "Shop where you can";
@@ -531,7 +531,7 @@ airplane,50,66,5	script	Apple Merchant#airplane	86,{
 			close;
 		}
 		else {
-			set Zeny, Zeny - .@pay;
+			Zeny -= .@pay;
 			getitem 512,.@input; //Apple
 			mes "[Fruitz]";
 			mes "Thanks for stopping by";
@@ -643,18 +643,18 @@ airplane,50,66,5	script	Apple Merchant#airplane	86,{
 	}
 }
 
-//============================================================ 
+//============================================================
 //= International Airship Route
 //= ... -> Izlude -> Juno -> Rachel -> ...
-//============================================================ 
+//============================================================
 
-airplane_01,243,73,0	script	#AirshipWarp-3	45,1,1,{
+airplane_01,243,73,0	script	#AirshipWarp-3	WARPNPC,1,1,{
 	end;
 	
 OnTouch:
 	switch ($@airplanelocation2) {
 	case 0: warp "ra_fild12",292,204; end;
-	case 1: 
+	case 1:
 		if(checkre(0))
 			warp "izlude",200,73;
 		else
@@ -665,17 +665,17 @@ OnTouch:
 
 OnInit:
 OnHide:
-	misceffect 16;
+	specialeffect EF_BASH;
 	disablenpc strnpcinfo(0);
 	end;
 	
 OnUnhide:
 	enablenpc strnpcinfo(0);
-	misceffect 215;
+	specialeffect EF_SUMMONSLAVE;
 	end;
 }
 
-airplane_01,243,29,0	duplicate(#AirshipWarp-3)	#AirshipWarp-4	45,1,1
+airplane_01,243,29,0	duplicate(#AirshipWarp-3)	#AirshipWarp-4	WARPNPC,1,1
 
 airplane_01,1,1,0	script	International_Airship	-1,{
 	end;
@@ -755,14 +755,14 @@ OnTimer240000:
 	end;
 }
 
-airplane_01,240,64,5	script	Exit#airplane_011a::ExitAirplane01	857,{
+airplane_01,240,64,5	script	Exit#airplane_011a::ExitAirplane01	4_BOARD3,{
 	end;
 }
-airplane_01,247,64,5	duplicate(ExitAirplane01)	Exit#airplane_011b	857
-airplane_01,240,40,1	duplicate(ExitAirplane01)	Exit#airplane_012a	857
-airplane_01,247,40,1	duplicate(ExitAirplane01)	Exit#airplane_012b	857
+airplane_01,247,64,5	duplicate(ExitAirplane01)	Exit#airplane_011b	4_BOARD3
+airplane_01,240,40,1	duplicate(ExitAirplane01)	Exit#airplane_012a	4_BOARD3
+airplane_01,247,40,1	duplicate(ExitAirplane01)	Exit#airplane_012b	4_BOARD3
 
-airplane_01,250,58,2	script	Airship Staff#airplane01	67,{
+airplane_01,250,58,2	script	Airship Staff#airplane01	1_F_02,{
 	mes "[Airship Staff]";
 	mes "Welcome";
 	mes "to the Airship.";
@@ -813,7 +813,7 @@ airplane_01,250,58,2	script	Airship Staff#airplane01	67,{
 	}
 }
 
-airplane_01,50,66,5	script	Apple Merchant#air01	86,{
+airplane_01,50,66,5	script	Apple Merchant#air01	4_M_04,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -895,7 +895,7 @@ airplane_01,50,66,5	script	Apple Merchant#air01	86,{
 			close;
 		}
 		else {
-			set Zeny, Zeny - .@pay;
+			Zeny -= .@pay;
 			getitem 512,.@input; //Apple
 			mes "[Meltz]";
 			mes "Thanks for stopping by";
@@ -957,7 +957,7 @@ airplane_01,50,66,5	script	Apple Merchant#air01	86,{
 	}
 }
 
-airplane_01,221,158,2	script	Pilot#airplane_01	852,{
+airplane_01,221,158,2	script	Pilot#airplane_01	4_M_EIN_SOLDIER,{
 	switch (rand(1,4)) {
 	case 1:
 		mes "[Pilot]";
@@ -1013,7 +1013,7 @@ airplane_01,221,158,2	script	Pilot#airplane_01	852,{
 	}
 }
 
-airplane_01,83,61,2	script	Dianne#01airplane_01	72,2,2,{
+airplane_01,83,61,2	script	Dianne#01airplane_01	1_F_MARIA,2,2,{
 	mes "[Dianne]";
 	mes "It's so weird!";
 	mes "I went to visit the";
@@ -1028,7 +1028,7 @@ OnTouch:
 	end;
 }
 
-airplane_01,69,63,2	script	Mendel#01airplane_01	55,{
+airplane_01,69,63,2	script	Mendel#01airplane_01	1_M_JOBTESTER,{
 	mes "[Mendel]";
 	mes "As I expected, the";
 	mes "in-flight meals are";
@@ -1039,7 +1039,7 @@ airplane_01,69,63,2	script	Mendel#01airplane_01	55,{
 	close;
 }
 
-airplane_01,71,31,2	script	Swordsman Shimizu#air_01	106,{
+airplane_01,71,31,2	script	Swordsman Shimizu#air_01	1_M_MOC_LORD,{
 	mes "[Swordsman Shimizu]";
 	mes "Finally, after five";
 	mes "years of waiting...";
@@ -1054,10 +1054,10 @@ airplane_01,71,31,2	script	Swordsman Shimizu#air_01	106,{
 	close;
 }
 
-//============================================================ 
+//============================================================
 //= Typing Challenge
-//============================================================ 
-airplane_01,32,61,4	script	Nils#ein	49,1,1,{
+//============================================================
+airplane_01,32,61,4	script	Nils#ein	1_M_03,1,1,{
 	mes "[Nils]";
 	mes "Welcome to the";
 	mes "^ff0000RO Typing Challenge^000000.";
@@ -1229,10 +1229,10 @@ airplane_01,32,61,4	script	Nils#ein	49,1,1,{
 	}
 }
 
-//============================================================ 
+//============================================================
 //= Apple Gambling
-//============================================================ 
-airplane_01,33,68,4	script	Clarice	74,{
+//============================================================
+airplane_01,33,68,4	script	Clarice	1_F_MERCHANT_02,{
 	mes "[Clarice]";
 	mes "Hi, I'm Clarice~";
 	mes "How would you like";

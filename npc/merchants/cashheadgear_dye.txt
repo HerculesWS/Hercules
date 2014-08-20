@@ -6,13 +6,13 @@
 //===== Current Version: =====================================
 //= 1.0
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Change headgear's color. Cost is a Mysterious Dyestuff
 //===== Additional Comments: =================================
-//= v1.0 First / Optimized Version
+//= 1.0 First / Optimized Version
 //============================================================
 
-prt_in,253,168,4	script	Alora	862,{
+prt_in,253,168,4	script	Alora	4_F_LGTGIRL,{
 
 // Mysterious Dyestuff
 	set .@dyeID, 6220;

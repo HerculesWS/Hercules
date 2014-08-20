@@ -1,34 +1,35 @@
 //===== Hercules Script ======================================
 //= Quest NPCs related to Niflheim
-//===== By: ================================================== 
+//===== By: ==================================================
 //= The rAthena Dev Team
-//===== Current Version: ===================================== 
-//= 1.5
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Current Version: =====================================
+//= 1.6
+//===== Description: =========================================
+//= [Official Conversion]
 //= Piano Key Ouest
 //= - Escape from Niflheim
 //= - Variables in use: nif_esc, MISC_QUEST (Bit 32)
 //= Message Delivery Quest
 //= - Deliver a message to Erious' departed wife.
 //= - Variables in use: nif_revive, MISC_QUEST (Bit 16384)
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 Initial release, moved Book of Devil and Piano quest
-//=	from npc/cities/niflheim.txt [Evera]
+//=     from npc/cities/niflheim.txt [Evera]
 //= 1.1 Optimized Book of Devil quest. used bit-wise var,
-//=	Optimized Piano Quest - now uses 1 variable [Lupus]
+//=     Optimized Piano Quest - now uses 1 variable [Lupus]
 //= 1.2 Fixed bad NPC header data to comply with rev. 11603. [L0ne_W0lf]
 //= 1.3 Moved the Book of Devil quest to custom folder. [L0ne_W0lf]
-//=	Updated to Aegis 10.3 Standed, added Message Delivery Quest.
-//=	Rescripted Piano Quest. Prior quest progress will be lost.
+//=     Updated to Aegis 10.3 Standed, added Message Delivery Quest.
+//=     Rescripted Piano Quest. Prior quest progress will be lost.
 //= 1.4 Fixed NPCs using ID 111 when it shoudl have been 139. [L0ne_W0lf]
 //= 1.5 Swapped NPC IDs back from last change (139 back to 111). [L0ne_W0lf]
-//=     Clicking will do nothing, you have to still "touch" the npc. 
-//============================================================ 
-
-// Piano Quest
+//=     Clicking will do nothing, you have to still "touch" the npc.
+//= 1.6 Added questlog support. [Euphy]
 //============================================================
-niflheim,224,243,3	script	Alreg#nif	795,{
+
+// Piano Quest :: nif_ryu
+//============================================================
+niflheim,224,243,3	script	Alreg#nif	4_M_NFDEADMAN,{
 	if (nif_piano) set nif_piano,0;
 	mes "[Alreg]";
 	mes "Me like meat, muheh.";
@@ -66,7 +67,7 @@ niflheim,224,243,3	script	Alreg#nif	795,{
 	close;
 }
 
-nif_in,105,81,3	script	Crayu#nif	794,{
+nif_in,105,81,3	script	Crayu#nif	4_M_NFDEADMAN2,{
 	mes "[Crayu]";
 	mes "Living one...";
 	mes "Listen to this song...";
@@ -139,7 +140,7 @@ nif_in,105,81,3	script	Crayu#nif	794,{
 	close;
 }
 
-nif_in,31,20,3	script	Kuzkahina#nif	794,{
+nif_in,31,20,3	script	Kuzkahina#nif	4_M_NFDEADMAN2,{
 	if (nif_esc == 2 || nif_esc == 3) {
 		mes "[Kuzkahina]";
 		mes "I don't understand";
@@ -172,7 +173,7 @@ nif_in,31,20,3	script	Kuzkahina#nif	794,{
 	close;
 }
 
-niflheim,208,103,1	script	#Graveyard1	111,1,1,{
+niflheim,208,103,1	script	#Graveyard1	HIDDEN_NPC,1,1,{
 	end;
 
 OnTouch:
@@ -194,7 +195,7 @@ OnTouch:
 	end;
 }
 
-niflheim,169,71,1	script	#Graveyard2	111,1,1,{
+niflheim,169,71,1	script	#Graveyard2	HIDDEN_NPC,1,1,{
 	end;
 
 OnTouch:
@@ -213,7 +214,7 @@ OnTouch:
 	end;
 }
 
-nif_in,115,181,0	script	#Piano	111,1,1,{
+nif_in,115,181,0	script	#Piano	HIDDEN_NPC,1,1,{
 	end;
 
 OnTouch:
@@ -246,7 +247,7 @@ OnTouch:
 	end;
 }
 
-nif_in,114,181,0	script	#Piano3	111,1,1,{
+nif_in,114,181,0	script	#Piano3	HIDDEN_NPC,1,1,{
 	end;
 
 OnTouch:
@@ -272,7 +273,7 @@ OnTouch:
 	end;
 }
 
-nif_in,188,168,3	script	Witch#nif	792,{
+nif_in,188,168,3	script	Witch#nif	4_F_NFDEADMGCIAN,{
 	mes "[Kirkena]";
 	mes "Huh? ...You're alive, aren't you?";
 	mes "I'm not sure how more of you are";
@@ -292,9 +293,9 @@ nif_in,188,168,3	script	Witch#nif	792,{
 	end;
 }
 
-// Message Delivery Quest
+// Message Delivery Quest :: nif_npc_lackee
 //============================================================
-prt_in,161,20,3	script	Erious#nif	92,{
+prt_in,161,20,3	script	Erious#nif	4_F_03,{
 	if (MISC_QUEST & 16384) {
 		mes "[Erious]";
 		mes "I wish you safety from harm";
@@ -353,6 +354,7 @@ prt_in,161,20,3	script	Erious#nif	92,{
 				mes "Thank you for your help,";
 				mes "and please take care.";
 				set nif_revive,1;
+				setquest 11038;
 				close;
 			}
 			mes "[Erious]";
@@ -432,6 +434,7 @@ prt_in,161,20,3	script	Erious#nif	92,{
 				if (checkweight(610,26)) {
 					set MISC_QUEST,MISC_QUEST | 16384;
 					set nif_revive,0;
+					completequest 11043;
 					getitem 607,2; //Yggdrasilberry
 					getitem 608,2; //Seed_Of_Yggdrasil
 					getitem 610,10; //Leaf_Of_Yggdrasil
@@ -476,6 +479,7 @@ prt_in,161,20,3	script	Erious#nif	92,{
 			if (checkweight(610,10)) {
 				set MISC_QUEST,MISC_QUEST | 16384;
 				set nif_revive,0;
+				completequest 11042;
 				getitem 610,10; //Leaf_Of_Yggdrasil
 				mes "[Erious]";
 				mes "Thank you for everything.";
@@ -501,7 +505,7 @@ prt_in,161,20,3	script	Erious#nif	92,{
 	end;
 }
 
-umbala,215,181,3	script	Billik	733,{
+umbala,215,181,3	script	Billik	4_M_JOB_KNIGHT1,{
 	if (nif_revive > 1 || MISC_QUEST & 16384) {
 		mes "[Billik]";
 		mes "Well, long time no see.";
@@ -539,6 +543,7 @@ umbala,215,181,3	script	Billik	733,{
 			mes "for him. That way, he'll know for";
 			mes "sure that I've sent you.";
 			set nif_revive,2;
+			changequest 11038,11039;
 			next;
 			mes "[Billik]";
 			mes "The town of the dead is located";
@@ -565,7 +570,7 @@ umbala,215,181,3	script	Billik	733,{
 	}
 }
 
-niflheim,153,215,3	script	Feylin	794,{
+niflheim,153,215,3	script	Feylin	4_M_NFDEADMAN2,{
 	if (nif_revive == 2) {
 		mes "[Feylin]";
 		mes "Poor "+((Sex)?"guy":"girl")+"...";
@@ -598,6 +603,7 @@ niflheim,153,215,3	script	Feylin	794,{
 		mes "you go back to where you came";
 		mes "from before it's too late.";
 		set nif_revive,3;
+		changequest 11039,11040;
 		close;
 	}
 	else if (nif_revive == 3) {
@@ -621,6 +627,7 @@ niflheim,153,215,3	script	Feylin	794,{
 			mes "you. Besides, speaking about";
 			mes "such things is taboo.";
 			set nif_revive,4;
+			changequest 11040,11041;
 			close;
 		}
 		mes "[Feylin]";
@@ -675,6 +682,7 @@ niflheim,153,215,3	script	Feylin	794,{
 								delitem 748,1; //Witherless_Rose
 								delitem 610,10; //Leaf_Of_Yggdrasil
 								set nif_revive,5;
+								changequest 11041,11042;
 								percentheal -99,0;
 								next;
 								mes "[Feylin]";
@@ -718,6 +726,7 @@ niflheim,153,215,3	script	Feylin	794,{
 								mes "with someone else. Oh, also let";
 								mes "him know that I forgive him.";
 								set nif_revive,6;
+								changequest 11040,11043;
 								getitem 934,1; //Mementos
 								next;
 								mes "[Elly]";

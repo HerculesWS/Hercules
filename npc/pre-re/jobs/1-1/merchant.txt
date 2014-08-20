@@ -1,15 +1,13 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Merchant Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= kobra_k88; L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.3
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job quest for Merchant classes
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 Fully working.
 //= 1.1 Added instant job change for High Novice [Lupus]
 //= 1.3 Added Baby Class support [Lupus]
@@ -20,7 +18,7 @@
 //= 1.6 Merged back JFunc, CHANGED NUMBERS TO CONSTANTS [Lupus]
 //= 1.7 Updated to use Free Ticket for Kafra [Lupus]
 //= 1.8 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//=	No longer uses function "F_ToHigh"
+//=     No longer uses function "F_ToHigh"
 //= 1.9 Bugfixes, thanks to Barron-Monster. [L0ne_W0lf]
 //= 1.9a Added a missing next; (Barron-Monster) [L0ne_W0lf]
 //= 1.9b Typo. "nextl" -> "next;" (Barron-Monster) [L0ne_W0lf]
@@ -28,9 +26,9 @@
 //= 2.1 Fixed mistake in condition check. [L0ne_W0lf]
 //= 2.2 Added Quest Log commands. [L0ne_W0lf]
 //= 2.3 Fixed an issue with completequest by adding checkquest. [Kisuka]
-//============================================================ 
+//============================================================
 
-alberta_in,53,43,6	script	Merchant#mer	86,{
+alberta_in,53,43,6	script	Merchant#mer	4_M_04,{
 	if (Upper == 1) {
 		if (Class == Job_Novice_High && (ADVJOB == Job_Whitesmith || ADVJOB == Job_Creator)) {
 			mes "[Chief Mahnsoo]";
@@ -135,7 +133,7 @@ alberta_in,53,43,6	script	Merchant#mer	86,{
 					mes "Please return when you have earned the 500 zeny that you need to become a Merchant.";
 					close;
 				}
-				set zeny,zeny-500;
+				Zeny -= 500;
 				mes "Ah yes...!";
 				mes "Now your";
 				mes "membership";
@@ -171,7 +169,7 @@ alberta_in,53,43,6	script	Merchant#mer	86,{
 			mes "[Chief Mahnsoo]";
 			mes "*Ahem* Aaaaand let me give you a little bit of money for delivering that message to Blossom for me.";
 			mes "I hope you'll help me again next time~";
-			set zeny,zeny+200;
+			Zeny += 200;
 			set quest_alb_01,2;
 		}
 		else {
@@ -343,7 +341,7 @@ alberta_in,53,43,6	script	Merchant#mer	86,{
 					mes "[Chief Mahnsoo]";
 					if (Zeny >= 1000) {
 						set job_merchant_q,2;
-						set zeny,zeny-1000;
+						Zeny -= 1000;
 						mes "Alright~";
 						mes "That's 1,000 zeny.";
 						mes "Excellent, excellent.";
@@ -357,7 +355,7 @@ alberta_in,53,43,6	script	Merchant#mer	86,{
 					mes "[Chief Mahnsoo]";
 					if (Zeny >= 500) {
 						set job_merchant_q,1;
-						set zeny,zeny-500;
+						Zeny -= 500;
 						mes "Let's see...";
 						mes "That's 500 Zeny. Although I don't think splitting payment is a good idea for any Merchant, it's alright since you're still learning.";
 					}
@@ -511,7 +509,7 @@ S_GiveSerial:
 	return;
 }
 
-alberta_in,28,29,2	script	Merchant Guildsman#mer	83,{
+alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 	if (BaseJob == Job_Merchant) {
 		mes "[Union Staff Kay]";
 		mes "Heya pal.";
@@ -712,9 +710,9 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	83,{
 						mes "[Union Staff Kay]";
 						mes "Hey hey. That number's not valid! Enter a value from 1000000 to 5000000. got it?";
 						next;
-					}
-					else 
+					} else {
 						break;
+					}
 				}
 				mes "[Union Staff Kay]";
 				if (.@where_village == 1)
@@ -788,7 +786,7 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	83,{
 	}
 }
 
-morocc_in,140,102,4	script	Student#mer	86,{
+morocc_in,140,102,4	script	Student#mer	4_M_04,{
 	if ((job_merchant_q == 4) || (job_merchant_q == 3)) {
 		mes "[Dyer's Student]";
 		mes "You're from";
@@ -873,7 +871,7 @@ morocc_in,140,102,4	script	Student#mer	86,{
 	}
 }
 
-geffen_in,155,122,4	script	Guild Staff#mer	47,{
+geffen_in,155,122,4	script	Guild Staff#mer	1_M_01,{
 	if (job_merchant_q == 4 || job_merchant_q == 3) {
 		mes "[Guild Staff]";
 		mes "Ah, you must be with the Merchant Guild. Finally, my package has arrived! Alright...!";
@@ -954,7 +952,7 @@ geffen_in,155,122,4	script	Guild Staff#mer	47,{
 	}
 }
 
-prontera,248,42,0	script	Kafra Employee#mer	116,{
+prontera,248,42,0	script	Kafra Employee#mer	4_F_KAFRA2,{
 	cutin "kafra_02",2;
 	if (job_merchant_q == 6 || job_merchant_q == 5) && (job_merchant_q2 == 2 || job_merchant_q2 == 1) {
 		mes "[Kafra Employee]";
@@ -1060,7 +1058,7 @@ prontera,248,42,0	script	Kafra Employee#mer	116,{
 				cutin "",255;
 				end;
 			}
-			set zeny,zeny-600;
+			Zeny -= 600;
 			set RESRVPTS, RESRVPTS + 37;
 			cutin "",255;
 			warp "izlude",94,103;
@@ -1072,7 +1070,7 @@ prontera,248,42,0	script	Kafra Employee#mer	116,{
 	}
 }
 
-//izlu2dun,106,58,4	script	Kafra Employee#mer	116,{
+//izlu2dun,106,58,4	script	Kafra Employee#mer	4_F_KAFRA2,{
 function	script	F_MercKafra	{
 	if ((job_merchant_q == 6 || job_merchant_q == 5) && (job_merchant_q2 == 8 || job_merchant_q2 == 7)) {
 		mes "[Kafra Employee]";

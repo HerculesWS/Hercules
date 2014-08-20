@@ -1,24 +1,23 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Arrow Quivers
 //===== By: ==================================================
 //= Muad_Dib (Prometheus Project); L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
+//= [Official Conversion]
 //= Turns arrows into Arrow Quivers.
-// Breakdown of Subroutine "S_BuyQuiver"
-// arg(0): Type of Arrow to be packaged (item ID).
-// arg(1): How many of each 'getarg(0)' arrow per quiver.
-// arg(2): The cost of making a 'getarg(0)' quiver.
-// arg(3): The quiver given by the NPC (item ID).
+//= Breakdown of Subroutine "S_BuyQuiver"
+//= arg(0): Type of Arrow to be packaged (item ID).
+//= arg(1): How many of each 'getarg(0)' arrow per quiver.
+//= arg(2): The cost of making a 'getarg(0)' quiver.
+//= arg(3): The quiver given by the NPC (item ID).
 //===== Additional Comments: =================================
 //= 1.0 Added Mora NPC. [Euphy]
 //= 1.1 Updated to match the official scripts. [Euphy]
 //============================================================
 
-mora,106,117,3	script	Quiver Maker#mora	516,{
+mora,106,117,3	script	Quiver Maker#mora	4_M_RAFLE_GR,{
 	if (checkweight(1201,1) == 0) {
 		mes "[Quiver Maker]";
 		mes "You have too many things with you.";
@@ -114,7 +113,7 @@ S_BuyQuiver:
 	mes "There is ^3131FFsomething you need to know^000000 - try to remember it.";
 	mes "^FF0000You can't use quivers when your encumbrance is over 70%.^000000";
 	mes "You'd better keep that in mind, or you might be in trouble later.";
-	set Zeny, Zeny-.@arrow_zeny01;
+	Zeny -= .@arrow_zeny01;
 	delitem getarg(0),.@arrows_used;
 	getitem getarg(3),.@quiver;
 	close;

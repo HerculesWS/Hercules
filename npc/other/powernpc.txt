@@ -5,12 +5,12 @@
 //===== Current Version: =====================================
 //= 1.2
 //===== Additional Comments: =================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= 1.1 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
 //= 1.2 Cleaning. [Euphy]
 //============================================================
 
-gonryun,180,118,4	script	Iron man#gnp	85,{
+gonryun,180,118,4	script	Iron man#gnp	4_M_03,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -110,7 +110,7 @@ L_Lifting:
 	return;
 }
 
-gon_test,50,14,4	script	Administrator#gnp	780,{
+gon_test,50,14,4	script	Administrator#gnp	8_M_TWSOLDIER,{
 	mes "[Administrator]";
 	if (BaseJob == Job_Novice) {
 		mes "Children are not allowed in here.";
@@ -137,7 +137,7 @@ gon_test,50,14,4	script	Administrator#gnp	780,{
 		mes "I'm sorry but you don't have enough zeny.";
 		close;
 	}
-	set Zeny,Zeny - 500;
+	Zeny -= 500;
 	set in_battle,1;
 	warp "gon_test",42,86;
 	set $@in_battle,1;
@@ -146,7 +146,7 @@ gon_test,50,14,4	script	Administrator#gnp	780,{
 	end;
 }
 
-gon_test,42,89,4	script	Summoner#gnp	774,{
+gon_test,42,89,4	script	Summoner#gnp	4_M_TWBOY,{
 	mes "[SongYeunWoo]";
 	if (in_battle == 3) {
 		mes "Please come back after registration.";
@@ -161,16 +161,16 @@ gon_test,42,89,4	script	Summoner#gnp	774,{
 	mes "Welcome.";
 	mes "Which monster will you recall?";
 	next;
-	set @gnpGroup,select("Group 1:Group 2:Group 3:Group 4:Group 5:Group 6:Group 7:Group 8:Group 9:Group 10:Group 11");
-	set @gnpGroupMob$,.gnpMobsName$[(@gnpGroup-1)*6];
-	for (set @i,1; @i < 6; set @i, @i+1)
-		set @gnpGroupMob$, @gnpGroupMob$ + ":" + .gnpMobsName$[(@gnpGroup-1)*6 + @i];
-	set @gnpMob,select(@gnpGroupMob$);
+	set .@gnpGroup, select("Group 1:Group 2:Group 3:Group 4:Group 5:Group 6:Group 7:Group 8:Group 9:Group 10:Group 11");
+	set .@gnpGroupMob$,.gnpMobsName$[(.@gnpGroup-1)*6];
+	for (set .@i,1; .@i < 6; set .@i, .@i+1)
+		set .@gnpGroupMob$, .@gnpGroupMob$ + ":" + .gnpMobsName$[(.@gnpGroup-1)*6 + .@i];
+	set .@gnpMob, select(.@gnpGroupMob$);
 	mes "[SongYeunWoo]";
 	mes "Let the fight begin!";
 	close2;
 	set in_battle,2;
-	if (getnpctimer(0) < 180000) monster "gon_test",56,86,.gnpMobsName$[(@gnpGroup-1)*6 + @gnpMob - 1],.gnpMobsId[(@gnpGroup-1)*6 + @gnpMob - 1],1,"Summoner#gnp::OnGnpMobDead";
+	if (getnpctimer(0) < 180000) monster "gon_test",56,86,.gnpMobsName$[(.@gnpGroup-1)*6 + .@gnpMob - 1],.gnpMobsId[(.@gnpGroup-1)*6 + .@gnpMob - 1],1,"Summoner#gnp::OnGnpMobDead";
 	end;
 OnInit:
 	initnpctimer;
@@ -223,7 +223,7 @@ OnTimer184000:
 	end;
 }
 
-gon_test,46,14,3	script	Guide of field of fight	770,{
+gon_test,46,14,3	script	Guide of field of fight	4_F_TWGIRL,{
 	mes "[SongHeeYeon]";
 	mes ".....";
 	mes "Hi, there~";
@@ -272,7 +272,7 @@ gon_test,46,14,3	script	Guide of field of fight	770,{
 	close;
 }
 
-gon_test,70,103,3	script	ChowAnAn#gnp	773,{
+gon_test,70,103,3	script	ChowAnAn#gnp	4_F_TWMIDWOMAN,{
 	mes "[ChowAnAn]";
 	mes "Want to go back?";
 	next;

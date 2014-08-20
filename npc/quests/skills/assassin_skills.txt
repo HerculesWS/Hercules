@@ -1,18 +1,20 @@
 //===== Hercules Script ======================================
 //= Assassin Skills Quests
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Lupus, Reddozen
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.5
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== File Encoding ========================================
+//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
+//===== Description: =========================================
+//= [Official Conversion]
 //= Quests for skills: Venom Knife, Sonic Acceleration
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.4 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
 //= 1.5 Replaced effect numerics with constants. [L0ne_W0lf]
 //============================================================
 
-in_moc_16,14,27,5	script	Assassin#realman	884,{
+in_moc_16,14,27,5	script	Assassin#realman	4_M_ACROSS,{
 	if (BaseJob == Job_Assassin && ASSN_SK2 == 1) {
 		if (getskilllv("AS_VENOMKNIFE") == 0) {
 			mes "[Killtin]";
@@ -284,7 +286,7 @@ in_moc_16,14,27,5	script	Assassin#realman	884,{
 	}
 }
 
-in_moc_16,23,27,5	script	Assassin#realgirl	885,{
+in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 	if (BaseJob == Job_Assassin && ASSN_SK == 7) {
 		if (getskilllv("AS_SONICACCEL") == 0) {
 			mes "[Esmille]";
@@ -631,7 +633,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	885,{
 				mes "the one who invented this";
 				mes "skill, is also... He's a man";
 				mes "amongst men, I must say.";
-				Emotion e_lv;
+				emotion e_lv;
 				next;
 				break;
 			case 2:
@@ -713,7 +715,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	885,{
 			mes "Have you heard about";
 			mes "the latest news from";
 			mes "the Assassin Guild?";
-			Emotion e_heh;
+			emotion e_heh;
 			next;
 			select("News from the Assassin Guild?");
 			mes "[Assassin]";
@@ -757,9 +759,9 @@ OnTouch:
 				mes "^3355FFSomething inside";
 				mes "the coffin bit your";
 				mes "hand really hard!^000000";
-				sc_start SC_Poison,30000,0;
+				sc_start SC_POISON,30000,0;
 				sc_start SC_BLOODING,10000,0;
-				Emotion e_omg,1;
+				emotion e_omg,1;
 				close;
 			case 2:
 				mes "^3355FFYou try to peek";
@@ -774,7 +776,7 @@ OnTouch:
 				mes "is squirming inside the";
 				mes "coffin, but it's far too dark";
 				mes "to see anything else.^000000";
-				sc_start SC_Blind,30000,0;
+				sc_start SC_BLIND,30000,0;
 				next;
 				break;
 			case 3:
@@ -782,7 +784,7 @@ OnTouch:
 				mes "strength to move";
 				mes "something as heavy";
 				mes "as this coffin's lid...^000000";
-				sc_start SC_Curse,30000,0;
+				sc_start SC_CURSE,30000,0;
 				next;
 				break;
 			case 4:
@@ -829,9 +831,9 @@ OnTouch:
 					mes "^3355FFSomething inside";
 					mes "the coffin bit your";
 					mes "hand really hard!^000000";
-					sc_start SC_Poison,30000,0;
+					sc_start SC_POISON,30000,0;
 					sc_start SC_BLOODING,10000,0;
-					Emotion e_omg,1;
+					emotion e_omg,1;
 					close;
 				}
 				else {
@@ -857,7 +859,7 @@ OnTouch:
 				mes "is squirming inside the";
 				mes "coffin, but it's far too dark";
 				mes "to see anything else.^000000";
-				sc_start SC_Blind,30000,0;
+				sc_start SC_BLIND,30000,0;
 				next;
 				break;
 			case 3:
@@ -865,7 +867,7 @@ OnTouch:
 				mes "strength to move";
 				mes "something as heavy";
 				mes "as this coffin's lid...^000000";
-				sc_start SC_Curse,30000,0;
+				sc_start SC_CURSE,30000,0;
 				next;
 				break;
 			case 4:
@@ -901,7 +903,7 @@ OnTouch:
 				mes "^3355FFa yellow gas that clouds";
 				mes "your senses and briefly";
 				mes "knocks you unconscious.^000000";
-				sc_start SC_Sleep,30000,0;
+				sc_start SC_SLEEP,30000,0;
 				close;
 			}
 			mes "^3355FFa yellow gas. However, you";
@@ -936,7 +938,7 @@ OnTouch:
 				mes "^3355FFa yellow gas that clouds";
 				mes "your senses and briefly";
 				mes "knocks you unconscious.^000000";
-				sc_start SC_Sleep,30000,0;
+				sc_start SC_SLEEP,30000,0;
 				close;
 			}
 			mes "^3355FFa yellow gas. However, you";
@@ -944,13 +946,15 @@ OnTouch:
 			mes "all gas in your lungs in time";
 			mes "to escape its effects. Sadly,";
 			mes "all you found was broken glass.^000000";
-			Emotion e_omg,1;
+			emotion e_omg,1;
 		}
 		close;
 	}
 }
 
-moc_pryd04,85,96,0	script	��#crypt	-1,3,3,{
+// FIXME[Haru]: Why do we have a Korean name here? Can anyone translate it?
+//      Google translate says ¡¡ (jingjing) = Whining, but it doesn't make much sense to me.
+moc_pryd04,85,96,0	script	¡¡#crypt	-1,3,3,{
 OnTouch:
 	if (ASSN_SK == 4) {
 		specialeffect EF_CONE;
@@ -969,7 +973,7 @@ OnTouch:
 				mes "^3355FFIt's too late!";
 				mes "Your body has just";
 				mes "been frozen solid.^000000";
-				sc_start SC_Freeze,10000,0;
+				sc_start SC_FREEZE,10000,0;
 				close;
 			}
 			mes "^3355FFYou quickly pick up";
@@ -984,15 +988,15 @@ OnTouch:
 	}
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= 1.0 for fully working skills only [Lupus]
 //= 1.1 Added more new skill quests for more classes [Lupus]
 //= Somehow eA engine doesn't let you keep learn't skill V_V'
 //= 1.2 Added to correct locations, correct NPC's, fixed
 //= some of the items required and made them into real
-//= quests. [Reddozen] 
+//= quests. [Reddozen]
 //= 1.3 Fixed bugs and minor typos. Optimized [Lupus]
 //= 1.3a fixed an item ID typo, thx 2Spiritual Kid
 //= 1.3b Splitted into different files [DracoRPG]

@@ -5,7 +5,7 @@
 //===== Current Version: =====================================
 //= 1.5
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Trades bottles for milk
 //===== Additional Comments: =================================
 //= Fully working
@@ -17,7 +17,7 @@
 //= 1.5 Fixed missed variable. (bugreport:1523) [L0ne_W0lf]
 //============================================================
 
-prontera,73,140,0	script	Milk Vendor	86,{
+prontera,73,140,0	script	Milk Vendor	4_M_04,{
 	if (checkweight(1201,1) == 0) {
 		mes "^3355FFJust a minute!";
 		mes "I can't offer any of my";
@@ -49,7 +49,7 @@ prontera,73,140,0	script	Milk Vendor	86,{
 		set .@bottles,countitem(713);
 		set .@total_weight,.@bottles * 50;
 		set .@total_cost,.@bottles * 15;
-		if (zeny < .@Total_cost) {
+		if (Zeny < .@total_cost) {
 			mes "[Milk Vendor]";
 			mes "Oh, whoa~!";
 			mes "You don't have enough";
@@ -59,7 +59,7 @@ prontera,73,140,0	script	Milk Vendor	86,{
 			mes "at least " + .@total_cost + " zeny.";
 			close;
 		}
-		if ((maxweight-weight) < .@total_weight) {
+		if (MaxWeight - Weight < .@total_weight) {
 			mes "[Milk Vendor]";
 			mes "Hmm...";
 			mes "Would you make";
@@ -69,7 +69,7 @@ prontera,73,140,0	script	Milk Vendor	86,{
 			mes "all of this milk?";
 			close;
 		}
-		set zeny,zeny-.@total_cost;
+		Zeny -= .@total_cost;
 		delitem 713,.@bottles; //Empty Bottles
 		getitem 519,.@bottles; //Milk
 		close;

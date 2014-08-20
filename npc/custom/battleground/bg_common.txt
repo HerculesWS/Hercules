@@ -5,7 +5,7 @@
 // BattleGround Warper - Entrance
 // *********************************************************************
 
--	script	Maroll Battle Recruiter::BatRecruit	728,{
+-	script	Maroll Battle Recruiter::BatRecruit	4_F_JOB_KNIGHT,{
 	mes "[Maroll Battle Recruiter]";
 	mes "Good day, adventurer.";
 	mes "I'm a knight from a far country called Maroll Kingdom.";
@@ -26,17 +26,17 @@
 	end;
 }
 
-payon,189,104,3	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit1	728
-prontera,123,83,5	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit2	728
-rachel,149,138,5	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit3	728
-moc_ruins,75,162,5	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit4	728
-aldebaran,146,109,5	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit5	728
-lighthalzen,153,86,5	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit6	728
+payon,189,104,3	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit1	4_F_JOB_KNIGHT
+prontera,123,83,5	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit2	4_F_JOB_KNIGHT
+rachel,149,138,5	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit3	4_F_JOB_KNIGHT
+moc_ruins,75,162,5	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit4	4_F_JOB_KNIGHT
+aldebaran,146,109,5	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit5	4_F_JOB_KNIGHT
+lighthalzen,153,86,5	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit6	4_F_JOB_KNIGHT
 
 // BattleGround Warper - Exit
 // *********************************************************************
 
-bat_room,148,150,4	script	Teleporter#bat	124,{
+bat_room,148,150,4	script	Teleporter#bat	4_F_TELEPORTER,{
 	mes "[Teleporter]";
 	mes "Do you wish to leave the battlefield? Use my service to return to town.";
 	next;
@@ -59,14 +59,14 @@ bat_room,148,150,4	script	Teleporter#bat	124,{
 
 // Kafra
 // *********************************************************************
-bat_room,148,147,4	script	Kafra Staff::kaf_bat	861,{
+bat_room,148,147,4	script	Kafra Staff::kaf_bat	4_F_KAFRA9,{
 	cutin "kafra_09",2;
 	callfunc "F_Kafra",0,2,1,150,0;
 }
 
 // General Guillaume
 // *********************************************************************
-bat_room,160,159,3	script	General Guillaume	420,{
+bat_room,160,159,3	script	General Guillaume	4_M_KY_KIYOM,{
 	cutin "bat_kiyom2",2;
 	mes "[General Guillaume]";
 	mes "Hot-blooded adventurer, we need your ability to win this battle.";
@@ -105,7 +105,7 @@ bat_room,160,159,3	script	General Guillaume	420,{
 
 // General Croix
 // *********************************************************************
-bat_room,160,140,3	script	Prince Croix	416,{
+bat_room,160,140,3	script	Prince Croix	4_M_CRU_CRUA,{
 	cutin "bat_crua1",2;
 	mes "[Prince Croix]";
 	mes "Wise adventurer, why don't you lend us your power for victory?";
@@ -136,14 +136,14 @@ bat_room,160,140,3	script	Prince Croix	416,{
 // Time calculation Function
 // *********************************************************************
 function	script	Time2Str	{
-	set .@Time_Left, getarg(0) - gettimetick(2);
+	set .@time_left, getarg(0) - gettimetick(2);
 	
-	set .@Days, .@Time_Left / 86400;
-	set .@Time_Left, .@Time_Left - (.@Days * 86400);
-	set .@Hours, .@Time_Left / 3600;
-	set .@Time_Left, .@Time_Left - (.@Hours * 3600);
-	set .@Minutes, .@Time_Left / 60;
-	set .@Time_Left, .@Time_Left - (.@Minutes * 60);
+	set .@Days, .@time_left / 86400;
+	set .@time_left, .@time_left - (.@Days * 86400);
+	set .@Hours, .@time_left / 3600;
+	set .@time_left, .@time_left - (.@Hours * 3600);
+	set .@Minutes, .@time_left / 60;
+	set .@time_left, .@time_left - (.@Minutes * 60);
 	
 	set .@Time$, "";
 	if( .@Days > 1 )
@@ -161,17 +161,17 @@ function	script	Time2Str	{
 	else if( .@Minutes > 0 )
 		set .@Time$, .@Time$ + .@Minutes + " minute, ";
 
-	if( .@Time_Left > 1 || .@Time_Left == 0 )
-		set .@Time$, .@Time$ + .@Time_Left + " seconds.";
-	else if( .@Time_Left == 1 )
-		set .@Time$, .@Time$ + .@Time_Left + " second.";
+	if( .@time_left > 1 || .@time_left == 0 )
+		set .@Time$, .@Time$ + .@time_left + " seconds.";
+	else if( .@time_left == 1 )
+		set .@Time$, .@Time$ + .@time_left + " second.";
 	
 	return .@Time$;
 }
 
 // Guillaume Knight - Tierra Valley
 // *********************************************************************
-bat_room,159,178,5	script	Guillaume Knight#1	417,{
+bat_room,159,178,5	script	Guillaume Knight#1	4_M_KY_SOLD,{
 	mes "[Guillaume Knight]";
 	mes "Tierra Gorge is a very steep canyon with two forts residing in the north and south ends of the map.";
 	next;
@@ -190,7 +190,7 @@ bat_room,159,178,5	script	Guillaume Knight#1	417,{
 
 // Tierra Officer - Guillaume
 // *********************************************************************
-bat_room,156,178,5	script	Tierra Valley Officer#1	418,{
+bat_room,156,178,5	script	Tierra Valley Officer#1	4_M_KY_KNT,{
 	mes "[Tierra Officer]";
 	if( Bat_Team == 2 )
 	{
@@ -241,7 +241,7 @@ bat_room,156,178,5	script	Tierra Valley Officer#1	418,{
 
 // Croix Knight - Tierra Valley
 // *********************************************************************
-bat_room,159,121,1	script	Croix Knight#1	413,{
+bat_room,159,121,1	script	Croix Knight#1	4_M_CRU_SOLD,{
 	mes "[Croix Knight]";
 	mes "Tierra Gorge is a very steep canyon with two forts residing in the north and south ends of the map.";
 	next;
@@ -260,7 +260,7 @@ bat_room,159,121,1	script	Croix Knight#1	413,{
 
 // Tierra Officer - Croix
 // *********************************************************************
-bat_room,156,121,1	script	Tierra Valley Officer#2	414,{
+bat_room,156,121,1	script	Tierra Valley Officer#2	4_M_CRU_KNT,{
 	mes "[Tierra Officer]";
 	if( Bat_Team == 1 )
 	{
@@ -311,7 +311,7 @@ bat_room,156,121,1	script	Tierra Valley Officer#2	414,{
 
 // Guillaume Knight - Tierra
 // *********************************************************************
-bat_room,167,178,5	script	Guillaume Knight#2	417,{
+bat_room,167,178,5	script	Guillaume Knight#2	4_M_KY_SOLD,{
 	mes "[Guillaume Knight]";
 	mes "Tierra Gorge is a very steep canyon with two forts residing in the north and south ends of the map.";
 	next;
@@ -330,7 +330,7 @@ bat_room,167,178,5	script	Guillaume Knight#2	417,{
 
 // Tierra Officer - Guillaume
 // *********************************************************************
-bat_room,164,178,5	script	Tierra Valley Officer#3	418,{
+bat_room,164,178,5	script	Tierra Valley Officer#3	4_M_KY_KNT,{
 	mes "[Tierra Officer]";
 	if( Bat_Team == 2 )
 	{
@@ -381,7 +381,7 @@ bat_room,164,178,5	script	Tierra Valley Officer#3	418,{
 
 // Croix Knight - Tierra
 // *********************************************************************
-bat_room,167,121,1	script	Croix Knight#2	413,{
+bat_room,167,121,1	script	Croix Knight#2	4_M_CRU_SOLD,{
 	mes "[Croix Knight]";
 	mes "Tierra Gorge is a very steep canyon with two forts residing in the north and south ends of the map.";
 	next;
@@ -400,7 +400,7 @@ bat_room,167,121,1	script	Croix Knight#2	413,{
 
 // Tierra Officer - Croix
 // *********************************************************************
-bat_room,164,121,1	script	Tierra Valley Officer#4	414,{
+bat_room,164,121,1	script	Tierra Valley Officer#4	4_M_CRU_KNT,{
 	mes "[Tierra Officer]";
 	if( Bat_Team == 1 )
 	{
@@ -451,7 +451,7 @@ bat_room,164,121,1	script	Tierra Valley Officer#4	414,{
 
 // Guillaune Knight - Flavius
 // *********************************************************************
-bat_room,175,178,5	script	Guillaume Knight#3	417,{
+bat_room,175,178,5	script	Guillaume Knight#3	4_M_KY_SOLD,{
 	mes "[Guillaume Knight]";
 	mes "The objective of the Flavius Battle is to score 2 points before your enemy by destroying their crystal.";
 	next;
@@ -471,7 +471,7 @@ bat_room,175,178,5	script	Guillaume Knight#3	417,{
 
 // Flavius Officer - Guillaume
 // *********************************************************************
-bat_room,172,178,5	script	Flavius Officer#1	418,{
+bat_room,172,178,5	script	Flavius Officer#1	4_M_KY_KNT,{
 	mes "[Flavius Officer]";
 	if( Bat_Team == 2 )
 	{
@@ -522,7 +522,7 @@ bat_room,172,178,5	script	Flavius Officer#1	418,{
 
 // Croix Knight - Flavius
 // *********************************************************************
-bat_room,175,121,1	script	Croix Knight#3	413,{
+bat_room,175,121,1	script	Croix Knight#3	4_M_CRU_SOLD,{
 	mes "[Croix Knight]";
 	mes "The objective of the Flavius Battle is to score 2 points before your enemy by destroying their crystal.";
 	next;
@@ -542,7 +542,7 @@ bat_room,175,121,1	script	Croix Knight#3	413,{
 
 // Flavius Officerer - Croix
 // *********************************************************************
-bat_room,172,121,1	script	Flavius Officer#2	414,{
+bat_room,172,121,1	script	Flavius Officer#2	4_M_CRU_KNT,{
 	mes "[Flavius Officer]";
 	if( Bat_Team == 1 )
 	{
@@ -593,7 +593,7 @@ bat_room,172,121,1	script	Flavius Officer#2	414,{
 
 // Guillaune Knight - Flavius
 // *********************************************************************
-bat_room,151,178,5	script	Guillaume Knight#4	417,{
+bat_room,151,178,5	script	Guillaume Knight#4	4_M_KY_SOLD,{
 	mes "[Guillaume Knight]";
 	mes "The objective of the Flavius Battle is to score 2 points before your enemy by destroying their crystal.";
 	next;
@@ -613,7 +613,7 @@ bat_room,151,178,5	script	Guillaume Knight#4	417,{
 
 // Flavius Officerer - Guillaume
 // *********************************************************************
-bat_room,148,178,5	script	Flavius Officer#3	418,{
+bat_room,148,178,5	script	Flavius Officer#3	4_M_KY_KNT,{
 	mes "[Flavius Officer]";
 	if( Bat_Team == 2 )
 	{
@@ -664,7 +664,7 @@ bat_room,148,178,5	script	Flavius Officer#3	418,{
 
 // Croix Knight - Flavius
 // *********************************************************************
-bat_room,151,121,1	script	Croix Knight#4	413,{
+bat_room,151,121,1	script	Croix Knight#4	4_M_CRU_SOLD,{
 	mes "[Croix Knight]";
 	mes "The objective of the Flavius Battle is to score 2 points before your enemy by destroying their crystal.";
 	next;
@@ -684,7 +684,7 @@ bat_room,151,121,1	script	Croix Knight#4	413,{
 
 // Flavius Officerer - Croix
 // *********************************************************************
-bat_room,148,121,1	script	Flavius Officer#4	414,{
+bat_room,148,121,1	script	Flavius Officer#4	4_M_CRU_KNT,{
 	mes "[Flavius Officer]";
 	if( Bat_Team == 1 )
 	{
@@ -735,7 +735,7 @@ bat_room,148,121,1	script	Flavius Officer#4	414,{
 
 // Guillaume Knight - KvM
 // *********************************************************************
-bat_room,143,178,5	script	Guillaume Knight#5	417,{
+bat_room,143,178,5	script	Guillaume Knight#5	4_M_KY_SOLD,{
 	mes "[Guillaume Knight]";
 	mes "To win the Battle of Kriger Von Midgard you and your team must kill all the other opponents before all of you die.";
 	next;
@@ -752,7 +752,7 @@ bat_room,143,178,5	script	Guillaume Knight#5	417,{
 
 // KvM Officerer - Guillaume
 // *********************************************************************
-bat_room,140,178,5	script	KVM [80-99] Officer#1	418,{
+bat_room,140,178,5	script	KVM [80-99] Officer#1	4_M_KY_KNT,{
 	mes "[KVM Officer]";
 	if( Bat_Team == 2 )
 	{
@@ -803,7 +803,7 @@ bat_room,140,178,5	script	KVM [80-99] Officer#1	418,{
 
 // Croix Knight - KvM
 // *********************************************************************
-bat_room,143,121,1	script	Croix Knight#5	413,{
+bat_room,143,121,1	script	Croix Knight#5	4_M_CRU_SOLD,{
 	mes "[Croix Knight]";
 	mes "To win the Battle of Kriger Von Midgard you and your team must kill all the other opponents before all of you die.";
 	next;
@@ -820,7 +820,7 @@ bat_room,143,121,1	script	Croix Knight#5	413,{
 
 // KvM Officer - Croix
 // *********************************************************************
-bat_room,140,121,1	script	KVM [80-99] Officer#2	414,{
+bat_room,140,121,1	script	KVM [80-99] Officer#2	4_M_CRU_KNT,{
 	mes "[KVM Officer]";
 	if( Bat_Team == 1 )
 	{
@@ -871,7 +871,7 @@ bat_room,140,121,1	script	KVM [80-99] Officer#2	414,{
 
 // Guillaume Knight - KvM
 // *********************************************************************
-bat_room,135,178,5	script	Guillaume Knight#6	417,{
+bat_room,135,178,5	script	Guillaume Knight#6	4_M_KY_SOLD,{
 	mes "[Guillaume Knight]";
 	mes "To win the Battle of Kriger Von Midgard you and your team must kill all the other opponents before all of you die.";
 	next;
@@ -888,7 +888,7 @@ bat_room,135,178,5	script	Guillaume Knight#6	417,{
 
 // KvM Officerer - Guillaume
 // *********************************************************************
-bat_room,132,178,5	script	KVM [60-79] Officer#1	418,{
+bat_room,132,178,5	script	KVM [60-79] Officer#1	4_M_KY_KNT,{
 	mes "[KVM Officer]";
 	if( Bat_Team == 2 )
 	{
@@ -939,7 +939,7 @@ bat_room,132,178,5	script	KVM [60-79] Officer#1	418,{
 
 // Croix Knight - KvM
 // *********************************************************************
-bat_room,135,121,1	script	Croix Knight#6	413,{
+bat_room,135,121,1	script	Croix Knight#6	4_M_CRU_SOLD,{
 	mes "[Croix Knight]";
 	mes "To win the Battle of Kriger Von Midgard you and your team must kill all the other opponents before all of you die.";
 	next;
@@ -956,7 +956,7 @@ bat_room,135,121,1	script	Croix Knight#6	413,{
 
 // KvM Officer - Croix
 // *********************************************************************
-bat_room,132,121,1	script	KVM [60-79] Officer#2	414,{
+bat_room,132,121,1	script	KVM [60-79] Officer#2	4_M_CRU_KNT,{
 	mes "[KVM Officer]";
 	if( Bat_Team == 1 )
 	{
@@ -1007,7 +1007,7 @@ bat_room,132,121,1	script	KVM [60-79] Officer#2	414,{
 
 // Guillaume Knight - KvM
 // *********************************************************************
-bat_room,127,178,5	script	Guillaume Knight#7	417,{
+bat_room,127,178,5	script	Guillaume Knight#7	4_M_KY_SOLD,{
 	mes "[Guillaume Knight]";
 	mes "To win the Battle of Kriger Von Midgard you and your team must kill all the other opponents before all of you die.";
 	next;
@@ -1024,7 +1024,7 @@ bat_room,127,178,5	script	Guillaume Knight#7	417,{
 
 // KvM Officerer - Guillaume
 // *********************************************************************
-bat_room,124,178,5	script	KVM [1-59] Officer#1	418,{
+bat_room,124,178,5	script	KVM [1-59] Officer#1	4_M_KY_KNT,{
 	mes "[KVM Officer]";
 	if( Bat_Team == 2 )
 	{
@@ -1075,7 +1075,7 @@ bat_room,124,178,5	script	KVM [1-59] Officer#1	418,{
 
 // Croix Knight - KvM
 // *********************************************************************
-bat_room,127,121,1	script	Croix Knight#7	413,{
+bat_room,127,121,1	script	Croix Knight#7	4_M_CRU_SOLD,{
 	mes "[Croix Knight]";
 	mes "To win the Battle of Kriger Von Midgard you and your team must kill all the other opponents before all of you die.";
 	next;
@@ -1092,7 +1092,7 @@ bat_room,127,121,1	script	Croix Knight#7	413,{
 
 // KvM Officer - Croix
 // *********************************************************************
-bat_room,124,121,1	script	KVM [1-59] Officer#2	414,{
+bat_room,124,121,1	script	KVM [1-59] Officer#2	4_M_CRU_KNT,{
 	mes "[KVM Officer]";
 	if( Bat_Team == 1 )
 	{
@@ -1144,16 +1144,16 @@ bat_room,124,121,1	script	KVM [1-59] Officer#2	414,{
 // Guard Dummy
 // *********************************************************************
 
-bat_room,161,141,3	script	Prince Croix's Aid::bat_aid	415,{ end; }
-bat_room,161,139,3	duplicate(bat_aid)	Prince Croix's Aid::bat_aid2	415
-bat_room,161,160,3	duplicate(bat_aid)	General Guillaume's Aid::bat_aid3	419
-bat_room,161,158,3	duplicate(bat_aid)	General Guillaume's Aid::bat_aid4	419
+bat_room,161,141,3	script	Prince Croix's Aid::bat_aid	4_M_CRU_HEAD,{ end; }
+bat_room,161,139,3	duplicate(bat_aid)	Prince Croix's Aid::bat_aid2	4_M_CRU_HEAD
+bat_room,161,160,3	duplicate(bat_aid)	General Guillaume's Aid::bat_aid3	4_M_KY_HEAD
+bat_room,161,158,3	duplicate(bat_aid)	General Guillaume's Aid::bat_aid4	4_M_KY_HEAD
 
 // Flags
 // *********************************************************************
 
--	script	Guillaume camp#bat	973,{ end; }
--	script	Croix camp#bat	974,{ end; }
+-	script	Guillaume camp#bat	1_FLAG_LION,{ end; }
+-	script	Croix camp#bat	1_FLAG_EAGLE,{ end; }
 
 // Exit from Registration
 // *********************************************************************
@@ -1167,58 +1167,58 @@ OnTouch:
 }
 
 // Flavius bat_b02
-bat_room,57,81,0	duplicate(warp2bat_room)	bat1	45,1,1
-bat_room,57,90,0	duplicate(warp2bat_room)	bat2	45,1,1
+bat_room,57,81,0	duplicate(warp2bat_room)	bat1	WARPNPC,1,1
+bat_room,57,90,0	duplicate(warp2bat_room)	bat2	WARPNPC,1,1
 // Free BG
-bat_room,57,220,0	duplicate(warp2bat_room)	bat3	45,1,1
-bat_room,57,211,0	duplicate(warp2bat_room)	bat4	45,1,1
+bat_room,57,220,0	duplicate(warp2bat_room)	bat3	WARPNPC,1,1
+bat_room,57,211,0	duplicate(warp2bat_room)	bat4	WARPNPC,1,1
 // Tierra Valley bat_a02
-bat_room,85,81,0	duplicate(warp2bat_room)	bat5	45,1,1
-bat_room,85,90,0	duplicate(warp2bat_room)	bat6	45,1,1
+bat_room,85,81,0	duplicate(warp2bat_room)	bat5	WARPNPC,1,1
+bat_room,85,90,0	duplicate(warp2bat_room)	bat6	WARPNPC,1,1
 // Tierra Valley bat_a01
-bat_room,85,220,0	duplicate(warp2bat_room)	bat7	45,1,1
-bat_room,85,211,0	duplicate(warp2bat_room)	bat8	45,1,1
+bat_room,85,220,0	duplicate(warp2bat_room)	bat7	WARPNPC,1,1
+bat_room,85,211,0	duplicate(warp2bat_room)	bat8	WARPNPC,1,1
 // Free BG
-bat_room,113,81,0	duplicate(warp2bat_room)	bat9	45,1,1
-bat_room,113,90,0	duplicate(warp2bat_room)	bat10	45,1,1
+bat_room,113,81,0	duplicate(warp2bat_room)	bat9	WARPNPC,1,1
+bat_room,113,90,0	duplicate(warp2bat_room)	bat10	WARPNPC,1,1
 // Free BG
-bat_room,113,220,0	duplicate(warp2bat_room)	bat11	45,1,1
-bat_room,113,211,0	duplicate(warp2bat_room)	bat12	45,1,1
+bat_room,113,220,0	duplicate(warp2bat_room)	bat11	WARPNPC,1,1
+bat_room,113,211,0	duplicate(warp2bat_room)	bat12	WARPNPC,1,1
 // Free BG
-bat_room,141,81,0	duplicate(warp2bat_room)	bat13	45,1,1
-bat_room,141,90,0	duplicate(warp2bat_room)	bat14	45,1,1
+bat_room,141,81,0	duplicate(warp2bat_room)	bat13	WARPNPC,1,1
+bat_room,141,90,0	duplicate(warp2bat_room)	bat14	WARPNPC,1,1
 // Free BG
-bat_room,141,220,0	duplicate(warp2bat_room)	bat15	45,1,1
-bat_room,141,211,0	duplicate(warp2bat_room)	bat16	45,1,1
+bat_room,141,220,0	duplicate(warp2bat_room)	bat15	WARPNPC,1,1
+bat_room,141,211,0	duplicate(warp2bat_room)	bat16	WARPNPC,1,1
 // Free BG
-bat_room,169,81,0	duplicate(warp2bat_room)	bat17	45,1,1
-bat_room,169,90,0	duplicate(warp2bat_room)	bat18	45,1,1
+bat_room,169,81,0	duplicate(warp2bat_room)	bat17	WARPNPC,1,1
+bat_room,169,90,0	duplicate(warp2bat_room)	bat18	WARPNPC,1,1
 // Free BG
-bat_room,169,220,0	duplicate(warp2bat_room)	bat19	45,1,1
-bat_room,169,211,0	duplicate(warp2bat_room)	bat20	45,1,1
+bat_room,169,220,0	duplicate(warp2bat_room)	bat19	WARPNPC,1,1
+bat_room,169,211,0	duplicate(warp2bat_room)	bat20	WARPNPC,1,1
 // Free BG
-bat_room,197,81,0	duplicate(warp2bat_room)	bat21	45,1,1
-bat_room,197,90,0	duplicate(warp2bat_room)	bat22	45,1,1
+bat_room,197,81,0	duplicate(warp2bat_room)	bat21	WARPNPC,1,1
+bat_room,197,90,0	duplicate(warp2bat_room)	bat22	WARPNPC,1,1
 // KvM bat_c03
-bat_room,197,220,0	duplicate(warp2bat_room)	bat23	45,1,1
-bat_room,197,211,0	duplicate(warp2bat_room)	bat24	45,1,1
+bat_room,197,220,0	duplicate(warp2bat_room)	bat23	WARPNPC,1,1
+bat_room,197,211,0	duplicate(warp2bat_room)	bat24	WARPNPC,1,1
 // Free BG
-bat_room,225,81,0	duplicate(warp2bat_room)	bat25	45,1,1
-bat_room,225,90,0	duplicate(warp2bat_room)	bat26	45,1,1
+bat_room,225,81,0	duplicate(warp2bat_room)	bat25	WARPNPC,1,1
+bat_room,225,90,0	duplicate(warp2bat_room)	bat26	WARPNPC,1,1
 // KvM bat_c02
-bat_room,225,220,0	duplicate(warp2bat_room)	bat27	45,1,1
-bat_room,225,211,0	duplicate(warp2bat_room)	bat28	45,1,1
+bat_room,225,220,0	duplicate(warp2bat_room)	bat27	WARPNPC,1,1
+bat_room,225,211,0	duplicate(warp2bat_room)	bat28	WARPNPC,1,1
 // Flavius bat_b01
-bat_room,253,81,0	duplicate(warp2bat_room)	bat29	45,1,1
-bat_room,253,90,0	duplicate(warp2bat_room)	bat30	45,1,1
+bat_room,253,81,0	duplicate(warp2bat_room)	bat29	WARPNPC,1,1
+bat_room,253,90,0	duplicate(warp2bat_room)	bat30	WARPNPC,1,1
 // KvM bat_c01
-bat_room,253,220,0	duplicate(warp2bat_room)	bat31	45,1,1
-bat_room,253,211,0	duplicate(warp2bat_room)	bat32	45,1,1
+bat_room,253,220,0	duplicate(warp2bat_room)	bat31	WARPNPC,1,1
+bat_room,253,211,0	duplicate(warp2bat_room)	bat32	WARPNPC,1,1
 
 // Badges Repairman
 // *********************************************************************
 
-bat_room,138,144,5	script	Repairman#bg	99,{
+bat_room,138,144,5	script	Repairman#bg	4W_M_03,{
 	callfunc "repairmain","Repairman";
 	end;
 }
@@ -1226,7 +1226,7 @@ bat_room,138,144,5	script	Repairman#bg	99,{
 // Badges Exchange
 // *********************************************************************
 
-bat_room,160,150,3	script	Erundek	109,{
+bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 	mes "[Erundek]";
 	mes "Welcome, mighty warrior.";
 	mes "What can I do for you today ?";
@@ -1237,7 +1237,7 @@ bat_room,160,150,3	script	Erundek	109,{
 			mes "[Erundek]";
 			mes "We have many items, so please take a look and purchase deliberately.";
 			close2;
-			Readbook 11010,1;
+			readbook 11010,1;
 			end;
 		case 5:
 			mes "[Erundek]";
@@ -1292,12 +1292,12 @@ bat_room,160,150,3	script	Erundek	109,{
 	mes "If you are not sure, check the catalog.";
 	next;
 
-	set .@Menu$, "";
-	set .@Count, getarraysize(.@Item_DB);
-	for( set .@i, 0; .@i < .@Count; set .@i, .@i + 1 )
-		set .@Menu$, .@Menu$ + getitemname(.@Item_DB[.@i]) + ":";
+	set .@menu$, "";
+	set .@count, getarraysize(.@Item_DB);
+	for( set .@i, 0; .@i < .@count; set .@i, .@i + 1 )
+		set .@menu$, .@menu$ + getitemname(.@Item_DB[.@i]) + ":";
 
-	set .@Item_ID, .@Item_DB[select(.@Menu$) - 1];
+	set .@Item_ID, .@Item_DB[select(.@menu$) - 1];
 
 	mes "[Erundek]";
 	mes "Would you like to exchange ^FF0000" + .@Value + " " + getitemname(.@Badge) + "^000000 for a ^0000FF" + getitemname(.@Item_ID) + "^000000?";

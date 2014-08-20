@@ -1,14 +1,14 @@
 //===== Hercules Script ======================================
 //= Alchemist Skills Quests
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Lupus, Reddozen, Samuray22
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.2
-//===== Description: ========================================= 
-//= [Aegis COnversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Quests for item: Elemental_Create_Book
 //= Quest for skill: Bioethics
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.9 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
 //= 2.0 Rescripted (and re-added) Bio Ethics quest. [L0ne_W0lf]
 //= 2.1 Fixed a Resurrection -> Homunculus Resurrection. [L0ne_W0lf]
@@ -16,7 +16,7 @@
 //= 2.2 Replaced effect numerics with constants. [L0ne_W0lf]
 //============================================================
 
-yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
+yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 	if (BaseJob == Job_Alchemist) {
 		if (JobLevel < 40) {
 			mes "[Pisruik]";
@@ -1101,7 +1101,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 	}
 }
 
-yuno_in04,22,107,5	script	Irache#qsk_al	740,{
+yuno_in04,22,107,5	script	Irache#qsk_al	2_M_ALCHE,{
 	mes "[Irache]";
 	mes "Heh heh heh...!";
 	mes "It's done! With this";
@@ -1119,7 +1119,7 @@ yuno_in04,22,107,5	script	Irache#qsk_al	740,{
 	close;
 }
 
-yuno_in04,27,107,4	script	Degas#qsk_al	748,{
+yuno_in04,27,107,4	script	Degas#qsk_al	4_M_ALCHE_A,{
 	mes "[Degas]";
 	mes "It's such a pain working";
 	mes "so close to these other";
@@ -1137,7 +1137,7 @@ yuno_in04,27,107,4	script	Degas#qsk_al	748,{
 	close;
 }
 
-yuno_in04,33,106,4	script	Pile of Books#qsk_al	111,{
+yuno_in04,33,106,4	script	Pile of Books#qsk_al	HIDDEN_NPC,{
 	mes "^3355FFIt's simply a pile";
 	mes "of scattered documents.";
 	mes "Although it seems unorganized,";
@@ -1147,7 +1147,7 @@ yuno_in04,33,106,4	script	Pile of Books#qsk_al	111,{
 }
 
 // Start Bioethics quest
-lhz_in01,224,140,3	script	Kellasus#qsk_al	57,{
+lhz_in01,224,140,3	script	Kellasus#qsk_al	1_M_LIBRARYMASTER,{
 	if (BaseJob == Job_Alchemist && bioeth == 13) {
 		mes "[Kellasus]";
 		mes "Keep up the";
@@ -1203,7 +1203,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	57,{
 		mes "" + strcharinfo(0) + ".";
 		next;
 		set bioeth,13;
-		skill 238,1,0;
+		skill "AM_BIOETHICS",1,0;
 		mes "[Kellasus]";
 		mes "Ah...";
 		mes "" + strcharinfo(0) + ".";
@@ -1740,7 +1740,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	57,{
 	close;
 }
 
-lhz_in01,225,122,5	script	Skrajjad#qsk_al	754,{
+lhz_in01,225,122,5	script	Skrajjad#qsk_al	4_M_SAGE_A,{
 	if (BaseJob == Job_Alchemist && bioeth > 4) {
 		mes "[Skrajjad]";
 		mes "I've taught you everything";
@@ -1854,7 +1854,7 @@ lhz_in01,225,122,5	script	Skrajjad#qsk_al	754,{
 	close;
 }
 
-lhz_in01,204,138,5	script	Keshibien#qsk_al	750,{
+lhz_in01,204,138,5	script	Keshibien#qsk_al	4_M_ALCHE_C,{
 	if (BaseJob == Job_Alchemist && bioeth > 5) {
 		mes "[Keshibien]";
 		mes "I hope that you";
@@ -1966,7 +1966,7 @@ lhz_in01,204,138,5	script	Keshibien#qsk_al	750,{
 	close;
 }
 
-lhz_in02,278,273,3	script	Broncher#qsk_al	709,{
+lhz_in02,278,273,3	script	Broncher#qsk_al	4_M_SEAMAN,{
 	if (BaseJob == Job_Alchemist && bioeth > 6) {
 		mes "[Broncher]";
 		mes "You again? Didn't I already";
@@ -2058,7 +2058,7 @@ lhz_in02,278,273,3	script	Broncher#qsk_al	709,{
 	close;
 }
 
-lhz_in03,106,34,3	script	Koring#qsk_al	706,{
+lhz_in03,106,34,3	script	Koring#qsk_al	4_M_KID1,{
 	if (BaseJob == Job_Alchemist && bioeth == 8 || bioeth == 9) {
 		mes "[Koring]";
 		mes "My daddy is the bestest";
@@ -2104,7 +2104,7 @@ lhz_in03,106,34,3	script	Koring#qsk_al	706,{
 	close;
 }
 
-lhz_in03,109,31,5	script	Beninne#qsk_al	90,{
+lhz_in03,109,31,5	script	Beninne#qsk_al	4_F_01,{
 	if (BaseJob == Job_Alchemist && bioeth == 8 || bioeth == 9) {
 		mes "[Beninne]";
 		mes "You've met my husband,";
@@ -2148,7 +2148,7 @@ lhz_in03,109,31,5	script	Beninne#qsk_al	90,{
 	close;
 }
 
-lighthalzen,226,210,3	script	Nannan#qsk_al	86,{
+lighthalzen,226,210,3	script	Nannan#qsk_al	4_M_04,{
 	mes "[Nannan]";
 	mes "You know, I always thought^FFFFFF ^000000 that all Alchemists were bookish,";
 	mes "scholarly types, their faces always buried in books and studying. But";
@@ -2170,7 +2170,7 @@ lighthalzen,226,210,3	script	Nannan#qsk_al	86,{
 	close;
 }
 
-lhz_in01,218,141,7	script	Alchemist#qsk_al	98,{
+lhz_in01,218,141,7	script	Alchemist#qsk_al	4W_M_02,{
 	mes "[Alchemist]";
 	mes "Out of all humans,";
 	mes "I believe Kellasus is";
@@ -2197,15 +2197,15 @@ lhz_in01,218,141,7	script	Alchemist#qsk_al	98,{
 	close;
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= 1.0 for fully working skills only [Lupus]
 //= 1.1 Added more new skill quests for more classes [Lupus]
 //= Somehow eA engine doesn't let you keep learn't skill V_V'
 //= 1.2 Added to correct locations, correct NPC's, fixed
 //= some of the items required and made them into real
-//= quests. [Reddozen] 
+//= quests. [Reddozen]
 //= 1.3 Fixed bugs and minor typos. Optimized [Lupus]
 //= 1.3a fixed an item ID typo, thx 2Spiritual Kid
 //= 1.3b Splitted into different files [DracoRPG]

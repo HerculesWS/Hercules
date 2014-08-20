@@ -1,16 +1,20 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#include "pincode.h"
+
+#include <stdlib.h>
+
+#include "char.h"
 #include "../common/cbasetypes.h"
 #include "../common/mmo.h"
 #include "../common/random.h"
 #include "../common/showmsg.h"
 #include "../common/socket.h"
 #include "../common/strlib.h"
-#include "char.h"
-#include "pincode.h"
-
-#include <stdlib.h>
 
 int enabled = PINCODE_OK;
 int changetime = 0;
@@ -29,7 +33,7 @@ void pincode_handle ( int fd, struct char_session_data* sd ) {
 	}
 	
 	if( strlen(sd->pincode) == 4 ){
-		if( *pincode->changetime && time(NULL) > (sd->pincode_change+*pincode->changetime) ){ // User hasnt changed his PIN code for a long time
+		if( *pincode->changetime && time(NULL) > (sd->pincode_change+*pincode->changetime) ){ // User hasn't changed his PIN code for a long time
 			pincode->sendstate( fd, sd, PINCODE_EXPIRED );
 		} else { // Ask user for his PIN code
 			pincode->sendstate( fd, sd, PINCODE_ASK );

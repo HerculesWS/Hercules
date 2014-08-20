@@ -1,16 +1,14 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Crusader Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Made by: Black Dragon
 //= Converted by: Shin
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 3.3
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job quest for Crusader classes
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 2.2 Updated All NPCs to the officials one [Samuray22]
 //=     -Based on the ASB 4.0 Package.
 //=-Maybe need be checked the monsters in the test 2 and 4.
@@ -34,9 +32,9 @@
 //= 3.3 Removed the need for use of 'goto.' [L0ne_W0lf]
 //============================================================
 
-
-//=============== Senior Crusader: 1st Collect Items Test============================
-prt_castle,45,169,5	script	Senior Crusader	752,{
+// Senior Crusader: 1st Collect Items Test
+//============================================================
+prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 	mes "[Michael Halig]";
 	if (Upper == 1) { //the baby classes were totally blocked... due to missing == 1
 		mes "Go and train yourself in preparation for the holy war that is coming. Victory will be in the hands of those who are most ready to receive it.";
@@ -45,7 +43,7 @@ prt_castle,45,169,5	script	Senior Crusader	752,{
 		mes "You don't belong here, my friend.";
 		mes "Be advised to continue practicing yourself.";
 		close;
-	} 
+	}
 	else if(BaseJob != Job_Swordman) {
 		if(BaseJob == Job_Crusader) {
 			mes "Go and train yourself in preparation for the holy war that is coming. Victory will be in the hands of those who are most ready to receive it.";
@@ -70,7 +68,7 @@ prt_castle,45,169,5	script	Senior Crusader	752,{
 		mes "[Michael Halig]";
 		mes "As it happened one thousand years ago, evil forces will one day attack in droves in an attempt to take over the world once again.";
 		close;
-	} 
+	}
 	else if(CRUS_Q <= 3 && countitem(1004) && countitem(1009)) {
 		mes "Ah...";
 		mes "I see that you have been called to become a Crusader. We are assured of your will, but now we must test your capabilities.";
@@ -126,8 +124,8 @@ prt_castle,45,169,5	script	Senior Crusader	752,{
 					mes "[Michael Halig]";
 					mes "Train yourself more as a Swordsman and wait for your calling. I understand your intent, but as of now, you cannot join us.";
 					close;
-				} 
-				if (Skillpoint) {
+				}
+				if (SkillPoint) {
 					mes "[Michael Halig]";
 					mes "You haven't finished learning everything as a Swordsman. Use all of your remaining skill points, and then return to me.";
 					close;
@@ -207,7 +205,7 @@ prt_castle,45,169,5	script	Senior Crusader	752,{
 			close;
 		}
 		mes "[Michael Halig]";
-		if (sex) mes "If you, too, are a man of the sword, constantly train and prepare yourself. No one knows when the Holy War may begin.";
+		if (Sex) mes "If you, too, are a man of the sword, constantly train and prepare yourself. No one knows when the Holy War may begin.";
 		else mes "As a woman of the sword, you must train diligently and constantly. Prepare yourself, for no one knows when the Holy War may be coming.";
 		close;
 	}
@@ -216,25 +214,25 @@ prt_castle,45,169,5	script	Senior Crusader	752,{
 		next;
 		switch(CRUS_Q) {
 		case 1:
-			set @item1, 957;
-			set @item2, 959;
-			set @item3, 1099;
-			set @item4, 901;
+			set .@item1, 957;
+			set .@item2, 959;
+			set .@item3, 1099;
+			set .@item4, 901;
 			break;
-		Case 2:
-			set @item1, 932;
-			set @item2, 1043;
-			set @item3, 1098;
-			set @item4, 1094;
+		case 2:
+			set .@item1, 932;
+			set .@item2, 1043;
+			set .@item3, 1098;
+			set .@item4, 1094;
 			break;
-		Case 3:
-			set @item1, 958;
-			set @item2, 930;
-			set @item3, 1041;
-			set @item4, 1062;
+		case 3:
+			set .@item1, 958;
+			set .@item2, 930;
+			set .@item3, 1041;
+			set .@item4, 1062;
 			break;
 		}
-		if (countitem(@item1) > 9 && countitem(@item2) > 9 && countitem(@item3) > 9 && countitem(@item4) > 9) {
+		if (countitem(.@item1) > 9 && countitem(.@item2) > 9 && countitem(.@item3) > 9 && countitem(.@item4) > 9) {
 			mes "[Michael Halig]";
 			mes "Ah, well done.";
 			mes "I must acknowledge your efforts and determination. You may now proceed to take the next test.";
@@ -242,10 +240,10 @@ prt_castle,45,169,5	script	Senior Crusader	752,{
 			mes "[Michael Halig]";
 			mes "Meet with Moorenak Miyol who is training in the underground dungeon of the Prontera Castle. Go, and speak with him first.";
 			next;
-			delitem @item1, 10;
-			delitem @item2, 10;
-			delitem @item3, 10;
-			delitem @item4, 10;
+			delitem .@item1, 10;
+			delitem .@item2, 10;
+			delitem .@item3, 10;
+			delitem .@item4, 10;
 			set CRUS_Q, 4;
 			if(checkquest(3006) != -1) {
 				changequest 3006,3009;
@@ -264,10 +262,10 @@ prt_castle,45,169,5	script	Senior Crusader	752,{
 		mes "Ah, you still have not completed the task I have given to you. Bring me the following items, and prove your will to become a Crusader to me...";
 		next;
 		mes "[Michael Halig]";
-		mes "10 ^3355FF"+getitemname(@item1)+"^000000";
-		mes "10 ^3355FF"+getitemname(@item2)+"^000000";
-		mes "10 ^3355FF"+getitemname(@item3)+"^000000";
-		mes "10 ^3355FF"+getitemname(@item4)+"^000000";
+		mes "10 ^3355FF"+getitemname(.@item1)+"^000000";
+		mes "10 ^3355FF"+getitemname(.@item2)+"^000000";
+		mes "10 ^3355FF"+getitemname(.@item3)+"^000000";
+		mes "10 ^3355FF"+getitemname(.@item4)+"^000000";
 		next;
 		mes "[Michael Halig]";
 		mes "If you put forth the effort, you'll be able to accomplish this task. May Odin protect you on your journeys.";
@@ -295,10 +293,10 @@ prt_castle,45,169,5	script	Senior Crusader	752,{
 		mes "[Michael Halig]";
 		mes "Now you are";
 		mes "one of us!";
-		if (sex) mes "...Brother.";
+		if (Sex) mes "...Brother.";
 		else mes "...Comrade.";
 		next;
-		if(.@JobLevel != 50) getitem 504, 6;
+		if(.@Joblevel != 50) getitem 504, 6;
 		else getitem 504, 12;
 		mes "[Michael Halig]";
 		mes "And use this in times of dire peril. It will give you strength when your wounds are most grievous.";
@@ -314,8 +312,9 @@ prt_castle,45,169,5	script	Senior Crusader	752,{
 	close;
 }
 
-//===================== Suffering Man: 2nd Endurance Test ===============================================
-prt_castle,164,32,1	script	Man in Anguish	733,{
+// Suffering Man: 2nd Endurance Test
+//============================================================
+prt_castle,164,32,1	script	Man in Anguish	4_M_JOB_KNIGHT1,{
 	mes "[Murnak Mijoul]";
 	if(BaseJob != Job_Swordman) {
 		if (BaseJob == Job_Crusader) {
@@ -346,7 +345,7 @@ prt_castle,164,32,1	script	Man in Anguish	733,{
 	else if(CRUS_Q == 4) {
 		mes "What is it...?";
 		mes "Do you have business";
-		if (sex) mes "with me, man of the sword?";
+		if (Sex) mes "with me, man of the sword?";
 		else mes "with me, woman of the sword?";
 		next;
 		if (select("I'd like to take the Crusader test.:Nothing.") == 1) {
@@ -447,8 +446,9 @@ prt_castle,164,32,1	script	Man in Anguish	733,{
 	close;
 }
 
-//===================== Gabriel Valentine: 3rd Knowledge Test =================================
-prt_church,95,127,3	script	Crusader	745,{
+// Gabriel Valentine: 3rd Knowledge Test
+//============================================================
+prt_church,95,127,3	script	Crusader	4_F_CRU,{
 	mes "[Gabriel Valentine]";
 	if(BaseJob != Job_Swordman) {
 		if (BaseJob == Job_Crusader) {
@@ -550,7 +550,7 @@ prt_church,95,127,3	script	Crusader	745,{
 			mes "4. Which Undead monster";
 			mes "has the highest HP?";
 			next;
-			if (select("Ghoul:Skeleton Prisoner:Wraith:Zombie Prisoner") == 4) 
+			if (select("Ghoul:Skeleton Prisoner:Wraith:Zombie Prisoner") == 4)
 				set .@cru_t,.@cru_t+10;
 
 			mes "[Gabriel Valentine]";
@@ -769,7 +769,7 @@ prt_church,95,127,3	script	Crusader	745,{
 		mes "[Gabriel Valentine]";
 		mes "Don't stress, you need to know a lot in order to pass this test. In any case, I'll be waiting right here. When you think you're ready, come back, alright?";
 		close;
-	} 
+	}
 	else if(CRUS_Q == 8 || CRUS_Q == 9) {
 		mes "Like I mentioned before, you should go to Prontera Castle and meet with Bliant Piyord to take your next test. Good luck, and become a Crusder soon, alright?";
 		close;
@@ -795,8 +795,9 @@ prt_church,95,127,3	script	Crusader	745,{
 	close;
 }
 
-//===================== Crusader: 4th Purification Test =====================================================
-prt_castle,35,151,5	script	Patron Knight	751,{
+// Crusader: 4th Purification Test
+//============================================================
+prt_castle,35,151,5	script	Patron Knight	4_M_CRU,{
 	mes "[Bliant Piyord]";
 	mes "Welcome.";
 	if(BaseJob != Job_Swordman) {
@@ -937,7 +938,7 @@ prt_castle,35,151,5	script	Patron Knight	751,{
 		mes "I shall be";
 		mes "waiting.";
 		close;
-	} 
+	}
 	else if(CRUS_Q == 10) {
 		mes "Congratulations.";
 		mes "You have completed";
@@ -970,8 +971,12 @@ prt_castle,35,151,5	script	Patron Knight	751,{
 
 
 
-//=== Actual tests ========================================
-//=== Endurance Test ======================================
+// Actual tests
+//============================================================
+
+//----------------------------------------------------------------------------
+// Endurance Test
+//----------------------------------------------------------------------------
 job_cru,1,1,1	script	Summoner#cr1	-1,{
 OnTimer300000:
 	donpcevent "Summoner#cr1::OnReset";
@@ -1108,7 +1113,7 @@ OnInit:
 	monster "job_cru",98,80,"Greatest General",1277,1,"Summoner#cr3::OnDead";
 	monster "job_cru",92,90,"Greatest General",1277,1,"Summoner#cr3::OnDead";
 	monster "job_cru",104,90,"Greatest General",1277,1,"Summoner#cr3::OnDead";
-	Initnpctimer;
+	initnpctimer;
 	end;
 
 OnStart:
@@ -1121,7 +1126,7 @@ OnStart:
 	monster "job_cru",98,80,"Greatest General",1277,1,"Summoner#cr3::OnDead";
 	monster "job_cru",92,90,"Greatest General",1277,1,"Summoner#cr3::OnDead";
 	monster "job_cru",104,90,"Greatest General",1277,1,"Summoner#cr3::OnDead";
-	Initnpctimer;
+	initnpctimer;
 	end;
 
 OnReset:
@@ -1197,7 +1202,7 @@ OnDead:
 }
 
 
-job_cru,98,105,4	script	 Summoner#cr5	45,3,3,{
+job_cru,98,105,4	script	 Summoner#cr5	WARPNPC,3,3,{
 OnTouch:
 	set CRUS_Q,6;
 	changequest 3010,3011;
@@ -1205,8 +1210,10 @@ OnTouch:
 	end;
 }
 
-//=== Purification Test ===================================
-job_cru,24,187,4	script	Patron Knight#2	751,{
+//----------------------------------------------------------------------------
+// Purification Test
+//----------------------------------------------------------------------------
+job_cru,24,187,4	script	Patron Knight#2	4_M_CRU,{
 	mes "[Bliant Piyord]";
 	mes "Welcome.";
 	mes "You will take";
@@ -1223,7 +1230,7 @@ job_cru,24,187,4	script	Patron Knight#2	751,{
 	close;
 }
 
-job_cru,24,187,2	script	Waiting Room#cr1	700,{
+job_cru,24,187,2	script	Waiting Room#cr1	8_F_GIRL,{
 	end;
 
 OnInit:
@@ -1401,7 +1408,7 @@ OnDead:
 	end;
 }
 
-job_cru,168,180,4	script	Monster Summon#cr5	45,3,3,{
+job_cru,168,180,4	script	Monster Summon#cr5	WARPNPC,3,3,{
 OnInit:
 	disablenpc "Monster Summon#cr5";
 	end;
@@ -1458,9 +1465,9 @@ OnStop:
 	end;
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= Need optimalization and fixing
 //= thanks to Komurka, KiLLaLeN, Lupus (fixing error)
 //= just a temp Job Quest
@@ -1478,4 +1485,5 @@ OnStop:
 //=     Hand of God allow to skip item gathering [DracoRPG]
 //= 2.0 Changed numbers to constants. [Vicious]
 //= 2.1 Fixed endless loop, wrong condition check [Lupus]
-//=	also changed all job numbers to constants, fixed logic
+//=     also changed all job numbers to constants, fixed logic
+//============================================================

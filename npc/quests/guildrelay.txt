@@ -1,48 +1,48 @@
 //===== Hercules Script ======================================
 //= Guild Relay Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.1
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Guild Relay Quest.
 //= Quest designed for multiple users at once.
 //= Variable in use: guildrelay_q (Max: ??)
 //= Variable in use: guildtime (Max: ??)
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First version.
 //= 1.1 Fixed errors reported by NoHealing (Bugreport:3934) [L0ne_W0lf]
 //= NPCs now duplicate from FLOATING npcs instead of Luina 1 npcs.
-//============================================================ 
+//============================================================
 
 // Floating NPCs to duplicate from.
 //============================================================
--	script	RelayDummy1::GuildRelay1	754,{
+-	script	RelayDummy1::GuildRelay1	4_M_SAGE_A,{
 	set .@name$,strnpcinfo(1);
 	if (.@name$ == "Buzz") {
 		set .@name2$,"Lenya";
 		set .@name3$,"Gealuve";
 		set .@name4$,"Pariz";
-		set .@GID, GetCastleData("aldeg_cas"+strnpcinfo(2),1);
+		set .@GID, getcastledata("aldeg_cas"+strnpcinfo(2),1);
 	}
 	else if (.@name$ == "Jody") {
 		set .@name2$,"Ron Haware";
 		set .@name3$,"Vers";
 		set .@name4$,"Gen Garish";
-		set .@GID, GetCastleData("gefg_cas"+strnpcinfo(2),1);
+		set .@GID, getcastledata("gefg_cas"+strnpcinfo(2),1);
 	}
 	else if (.@name$ == "Chungye") {
 		set .@name2$,"Dosuhlji";
 		set .@name3$,"Yayula";
 		set .@name4$,"Ashin";
-		set .@GID, GetCastleData("payg_cas"+strnpcinfo(2),1);
+		set .@GID, getcastledata("payg_cas"+strnpcinfo(2),1);
 	}
 	else if (.@name$ == "Hermod") {
 		set .@name2$,"Atila";
 		set .@name3$,"Cecil";
 		set .@name4$,"Diligo";
-		set .@GID, GetCastleData("prtg_cas"+strnpcinfo(2),1);
+		set .@GID, getcastledata("prtg_cas"+strnpcinfo(2),1);
 	}
 	if (checkweight(908,630) == 0) {
 		mes "^3355FFWait a minute! You're";
@@ -1218,10 +1218,10 @@
 	}
 }
 
--	script	RelayDummy2::GuildRelay2	754,{
+-	script	RelayDummy2::GuildRelay2	4_M_SAGE_A,{
 	set .@name$,strnpcinfo(1);
 	getmapxy(.@m$,.@x,.@x,1);
-	set .@GID, GetCastleData(.@m$,1);
+	set .@GID, getcastledata(.@m$,1);
 	if (checkweight(1201,1) == 0) {
 		mes "^3355FFWait a minute! You're";
 		mes "carrying too many items";
@@ -1727,10 +1727,10 @@
 	}
 }
 
--	script	RelayDummy3::GuildRelay3	754,{
+-	script	RelayDummy3::GuildRelay3	4_M_SAGE_A,{
 	set .@name$,strnpcinfo(1);
 	getmapxy(.@m$,.@x,.@x,1);
-	set .@GID, GetCastleData(.@m$,1);
+	set .@GID, getcastledata(.@m$,1);
 	if (checkweight(1201,1) == 0) {
 		mes "^3355FFWait a minute! You're";
 		mes "carrying too many items";
@@ -2412,10 +2412,10 @@
 	close;
 }
 
--	script	GuildDummy4::GuildRelay4	754,{
+-	script	GuildDummy4::GuildRelay4	4_M_SAGE_A,{
 	set .@name$,strnpcinfo(1);
 	getmapxy(.@m$,.@x,.@x,1);
-	set .@GID, GetCastleData(.@m$,1);
+	set .@GID, getcastledata(.@m$,1);
 	if (checkweight(1201,1) == 0) {
 		mes "^3355FFWait a minute! You're";
 		mes "carrying too many items";
@@ -3090,140 +3090,140 @@
 
 // Luina 1
 //============================================================
-aldeg_cas01,51,102,5	duplicate(GuildRelay1)	Buzz#01	754,{
-aldeg_cas01,75,39,3	duplicate(GuildRelay2)	Lenya#01	754,{
-aldeg_cas01,200,175,3	duplicate(GuildRelay3)	Gealuve#01	754,{
-aldeg_cas01,59,224,3	duplicate(GuildRelay4)	Pariz#01	754,{
+aldeg_cas01,51,102,5	duplicate(GuildRelay1)	Buzz#01	4_M_SAGE_A,{
+aldeg_cas01,75,39,3	duplicate(GuildRelay2)	Lenya#01	4_M_SAGE_A,{
+aldeg_cas01,200,175,3	duplicate(GuildRelay3)	Gealuve#01	4_M_SAGE_A,{
+aldeg_cas01,59,224,3	duplicate(GuildRelay4)	Pariz#01	4_M_SAGE_A,{
 
 // Luina 2
 //============================================================
-aldeg_cas02,120,51,5	duplicate(GuildRelay1)	Buzz#02	754
-aldeg_cas02,180,184,3	duplicate(GuildRelay2)	Lenya#02	754
-aldeg_cas02,62,65,3	duplicate(GuildRelay3)	Gealuve#02	754
-aldeg_cas02,62,201,3	duplicate(GuildRelay4)	Pariz#02	754
+aldeg_cas02,120,51,5	duplicate(GuildRelay1)	Buzz#02	4_M_SAGE_A
+aldeg_cas02,180,184,3	duplicate(GuildRelay2)	Lenya#02	4_M_SAGE_A
+aldeg_cas02,62,65,3	duplicate(GuildRelay3)	Gealuve#02	4_M_SAGE_A
+aldeg_cas02,62,201,3	duplicate(GuildRelay4)	Pariz#02	4_M_SAGE_A
 
 // Luina 3
 //============================================================
-aldeg_cas03,70,252,5	duplicate(GuildRelay1)	Buzz#03	754
-aldeg_cas03,72,115,3	duplicate(GuildRelay2)	Lenya#03	754
-aldeg_cas03,114,119,3	duplicate(GuildRelay3)	Gealuve#03	754
-aldeg_cas03,188,181,3	duplicate(GuildRelay4)	Pariz#03	754
+aldeg_cas03,70,252,5	duplicate(GuildRelay1)	Buzz#03	4_M_SAGE_A
+aldeg_cas03,72,115,3	duplicate(GuildRelay2)	Lenya#03	4_M_SAGE_A
+aldeg_cas03,114,119,3	duplicate(GuildRelay3)	Gealuve#03	4_M_SAGE_A
+aldeg_cas03,188,181,3	duplicate(GuildRelay4)	Pariz#03	4_M_SAGE_A
 
 // Luina 4
 //============================================================
-aldeg_cas04,31,116,5	duplicate(GuildRelay1)	Buzz#04	754
-aldeg_cas04,66,117,3	duplicate(GuildRelay2)	Lenya#04	754
-aldeg_cas04,24,80,3	duplicate(GuildRelay3)	Gealuve#04	754
-aldeg_cas04,181,97,3	duplicate(GuildRelay4)	Pariz#04	754
+aldeg_cas04,31,116,5	duplicate(GuildRelay1)	Buzz#04	4_M_SAGE_A
+aldeg_cas04,66,117,3	duplicate(GuildRelay2)	Lenya#04	4_M_SAGE_A
+aldeg_cas04,24,80,3	duplicate(GuildRelay3)	Gealuve#04	4_M_SAGE_A
+aldeg_cas04,181,97,3	duplicate(GuildRelay4)	Pariz#04	4_M_SAGE_A
 
 // Luina 5
 //============================================================
-aldeg_cas05,31,191,5	duplicate(GuildRelay1)	Buzz#05	754
-aldeg_cas05,140,196,3	duplicate(GuildRelay2)	Lenya#05	754
-aldeg_cas05,148,224,3	duplicate(GuildRelay3)	Gealuve#05	754
-aldeg_cas05,165,51,3	duplicate(GuildRelay4)	Pariz#05	754
+aldeg_cas05,31,191,5	duplicate(GuildRelay1)	Buzz#05	4_M_SAGE_A
+aldeg_cas05,140,196,3	duplicate(GuildRelay2)	Lenya#05	4_M_SAGE_A
+aldeg_cas05,148,224,3	duplicate(GuildRelay3)	Gealuve#05	4_M_SAGE_A
+aldeg_cas05,165,51,3	duplicate(GuildRelay4)	Pariz#05	4_M_SAGE_A
 
 // Britoniah 1
 //============================================================
-gefg_cas01,85,47,4	duplicate(GuildRelay1)	Jody#01	754
-gefg_cas01,67,83,3	duplicate(GuildRelay2)	Ron Haware#01	754
-gefg_cas01,184,40,3	duplicate(GuildRelay3)	Vers#01	754
-gefg_cas01,35,34,6	duplicate(GuildRelay4)	Gen Garish#01	754
+gefg_cas01,85,47,4	duplicate(GuildRelay1)	Jody#01	4_M_SAGE_A
+gefg_cas01,67,83,3	duplicate(GuildRelay2)	Ron Haware#01	4_M_SAGE_A
+gefg_cas01,184,40,3	duplicate(GuildRelay3)	Vers#01	4_M_SAGE_A
+gefg_cas01,35,34,6	duplicate(GuildRelay4)	Gen Garish#01	4_M_SAGE_A
 
 // Britoniah 2
 //============================================================
-gefg_cas02,15,69,4	duplicate(GuildRelay1)	Jody#02	754
-gefg_cas02,23,22,3	duplicate(GuildRelay2)	Ron Haware#02	754
-gefg_cas02,178,38,3	duplicate(GuildRelay3)	Vers#02	754
-gefg_cas02,18,159,5	duplicate(GuildRelay4)	Gen Garish#02	754
+gefg_cas02,15,69,4	duplicate(GuildRelay1)	Jody#02	4_M_SAGE_A
+gefg_cas02,23,22,3	duplicate(GuildRelay2)	Ron Haware#02	4_M_SAGE_A
+gefg_cas02,178,38,3	duplicate(GuildRelay3)	Vers#02	4_M_SAGE_A
+gefg_cas02,18,159,5	duplicate(GuildRelay4)	Gen Garish#02	4_M_SAGE_A
 
 // Britoniah 3
 //============================================================
-gefg_cas03,257,41,4	duplicate(GuildRelay1)	Jody#03	754
-gefg_cas03,110,91,3	duplicate(GuildRelay2)	Ron Haware#03	754
-gefg_cas03,158,57,3	duplicate(GuildRelay3)	Vers#03	754
-gefg_cas03,124,24,3	duplicate(GuildRelay4)	Gen Garish#03	754
+gefg_cas03,257,41,4	duplicate(GuildRelay1)	Jody#03	4_M_SAGE_A
+gefg_cas03,110,91,3	duplicate(GuildRelay2)	Ron Haware#03	4_M_SAGE_A
+gefg_cas03,158,57,3	duplicate(GuildRelay3)	Vers#03	4_M_SAGE_A
+gefg_cas03,124,24,3	duplicate(GuildRelay4)	Gen Garish#03	4_M_SAGE_A
 
 // Britoniah 4
 //============================================================
-gefg_cas04,26,73,4	duplicate(GuildRelay1)	Jody#04	754
-gefg_cas04,34,16,1	duplicate(GuildRelay2)	Ron Haware#04	754
-gefg_cas04,55,70,5	duplicate(GuildRelay3)	Vers#04	754
-gefg_cas04,73,38,6	duplicate(GuildRelay4)	Gen Garish#04	754
+gefg_cas04,26,73,4	duplicate(GuildRelay1)	Jody#04	4_M_SAGE_A
+gefg_cas04,34,16,1	duplicate(GuildRelay2)	Ron Haware#04	4_M_SAGE_A
+gefg_cas04,55,70,5	duplicate(GuildRelay3)	Vers#04	4_M_SAGE_A
+gefg_cas04,73,38,6	duplicate(GuildRelay4)	Gen Garish#04	4_M_SAGE_A
 
 // Britoniah 5
 //============================================================
-gefg_cas05,47,47,4	duplicate(GuildRelay1)	Jody#05	754
-gefg_cas05,65,28,3	duplicate(GuildRelay2)	Ron Haware#05	754
-gefg_cas05,87,31,3	duplicate(GuildRelay3)	Vers#05	754
-gefg_cas05,46,28,3	duplicate(GuildRelay4)	Gen Garish#05	754
+gefg_cas05,47,47,4	duplicate(GuildRelay1)	Jody#05	4_M_SAGE_A
+gefg_cas05,65,28,3	duplicate(GuildRelay2)	Ron Haware#05	4_M_SAGE_A
+gefg_cas05,87,31,3	duplicate(GuildRelay3)	Vers#05	4_M_SAGE_A
+gefg_cas05,46,28,3	duplicate(GuildRelay4)	Gen Garish#05	4_M_SAGE_A
 
 // Greenwood Lake 1
 //============================================================
-payg_cas01,87,35,3	duplicate(GuildRelay1)	Chungye#01	106
-payg_cas01,129,29,3	duplicate(GuildRelay2)	Dosuhlji#01	754
-payg_cas01,13,146,5	duplicate(GuildRelay3)	Yayula#01	741
-payg_cas01,91,49,3	duplicate(GuildRelay4)	Ashin#01	59
+payg_cas01,87,35,3	duplicate(GuildRelay1)	Chungye#01	1_M_MOC_LORD
+payg_cas01,129,29,3	duplicate(GuildRelay2)	Dosuhlji#01	4_M_SAGE_A
+payg_cas01,13,146,5	duplicate(GuildRelay3)	Yayula#01	2_M_BARD_ORIENT
+payg_cas01,91,49,3	duplicate(GuildRelay4)	Ashin#01	1_M_ORIENT01
 
 // Greenwood Lake 2
 //============================================================
-payg_cas02,34,253,3	duplicate(GuildRelay1)	Chungye#02	106
-payg_cas02,77,229,3	duplicate(GuildRelay2)	Dosuhlji#02	754
-payg_cas02,252,287,3	duplicate(GuildRelay3)	Yayula#02	741
-payg_cas02,289,264,3	duplicate(GuildRelay4)	Ashin#02	59
+payg_cas02,34,253,3	duplicate(GuildRelay1)	Chungye#02	1_M_MOC_LORD
+payg_cas02,77,229,3	duplicate(GuildRelay2)	Dosuhlji#02	4_M_SAGE_A
+payg_cas02,252,287,3	duplicate(GuildRelay3)	Yayula#02	2_M_BARD_ORIENT
+payg_cas02,289,264,3	duplicate(GuildRelay4)	Ashin#02	1_M_ORIENT01
 
 // Greenwood Lake 3
 //============================================================
-payg_cas03,48,265,3	duplicate(GuildRelay1)	Chungye#03	106
-payg_cas03,7,265,5	duplicate(GuildRelay2)	Dosuhlji#03	754
-payg_cas03,16,16,5	duplicate(GuildRelay3)	Yayula#03	741
-payg_cas03,10,266,3	duplicate(GuildRelay4)	Ashin#03	59
+payg_cas03,48,265,3	duplicate(GuildRelay1)	Chungye#03	1_M_MOC_LORD
+payg_cas03,7,265,5	duplicate(GuildRelay2)	Dosuhlji#03	4_M_SAGE_A
+payg_cas03,16,16,5	duplicate(GuildRelay3)	Yayula#03	2_M_BARD_ORIENT
+payg_cas03,10,266,3	duplicate(GuildRelay4)	Ashin#03	1_M_ORIENT01
 
 // Greenwood Lake 4
 //============================================================
-payg_cas04,24,285,3	duplicate(GuildRelay1)	Chungye#04	106
-payg_cas04,21,16,3	duplicate(GuildRelay2)	Dosuhlji#04	754
-payg_cas04,69,270,3	duplicate(GuildRelay3)	Yayula#04	741
-payg_cas04,18,239,3	duplicate(GuildRelay4)	Ashin#04	59
+payg_cas04,24,285,3	duplicate(GuildRelay1)	Chungye#04	1_M_MOC_LORD
+payg_cas04,21,16,3	duplicate(GuildRelay2)	Dosuhlji#04	4_M_SAGE_A
+payg_cas04,69,270,3	duplicate(GuildRelay3)	Yayula#04	2_M_BARD_ORIENT
+payg_cas04,18,239,3	duplicate(GuildRelay4)	Ashin#04	1_M_ORIENT01
 
 // Greenwood Lake 5
 //============================================================
-payg_cas05,277,271,3	duplicate(GuildRelay1)	Chungye#05	106
-payg_cas05,273,15,3	duplicate(GuildRelay2)	Dosuhlji#05	754
-payg_cas05,283,24,3	duplicate(GuildRelay3)	Yayula#05	741
-payg_cas05,276,287,3	duplicate(GuildRelay4)	Ashin#05	59
+payg_cas05,277,271,3	duplicate(GuildRelay1)	Chungye#05	1_M_MOC_LORD
+payg_cas05,273,15,3	duplicate(GuildRelay2)	Dosuhlji#05	4_M_SAGE_A
+payg_cas05,283,24,3	duplicate(GuildRelay3)	Yayula#05	2_M_BARD_ORIENT
+payg_cas05,276,287,3	duplicate(GuildRelay4)	Ashin#05	1_M_ORIENT01
 
 // Valkyrie Realms 1
 //============================================================
-prtg_cas01,96,205,5	duplicate(GuildRelay1)	Hermod#01	754
-prtg_cas01,157,117,3	duplicate(GuildRelay2)	Atila#01	728
-prtg_cas01,149,78,3	duplicate(GuildRelay3)	Cecil#01	92
-prtg_cas01,125,191,3	duplicate(GuildRelay4)	Diligo#01	754
+prtg_cas01,96,205,5	duplicate(GuildRelay1)	Hermod#01	4_M_SAGE_A
+prtg_cas01,157,117,3	duplicate(GuildRelay2)	Atila#01	4_F_JOB_KNIGHT
+prtg_cas01,149,78,3	duplicate(GuildRelay3)	Cecil#01	4_F_03
+prtg_cas01,125,191,3	duplicate(GuildRelay4)	Diligo#01	4_M_SAGE_A
 
 // Valkyrie Realms 2
 //============================================================
-prtg_cas02,73,35,5	duplicate(GuildRelay1)	Hermod#02	754
-prtg_cas02,43,41,5	duplicate(GuildRelay2)	Atila#02	728
-prtg_cas02,52,63,3	duplicate(GuildRelay3)	Cecil#02	92
-prtg_cas02,100,62,3	duplicate(GuildRelay4)	Diligo#02	754
+prtg_cas02,73,35,5	duplicate(GuildRelay1)	Hermod#02	4_M_SAGE_A
+prtg_cas02,43,41,5	duplicate(GuildRelay2)	Atila#02	4_F_JOB_KNIGHT
+prtg_cas02,52,63,3	duplicate(GuildRelay3)	Cecil#02	4_F_03
+prtg_cas02,100,62,3	duplicate(GuildRelay4)	Diligo#02	4_M_SAGE_A
 
 // Valkyrie Realms 3
 //============================================================
-prtg_cas03,5,68,5	duplicate(GuildRelay1)	Hermod#03	754
-prtg_cas03,18,109,3	duplicate(GuildRelay2)	Atila#03	728
-prtg_cas03,71,81,5	duplicate(GuildRelay3)	Cecil#03	92
-prtg_cas03,183,215,3	duplicate(GuildRelay4)	Diligo#03	754
+prtg_cas03,5,68,5	duplicate(GuildRelay1)	Hermod#03	4_M_SAGE_A
+prtg_cas03,18,109,3	duplicate(GuildRelay2)	Atila#03	4_F_JOB_KNIGHT
+prtg_cas03,71,81,5	duplicate(GuildRelay3)	Cecil#03	4_F_03
+prtg_cas03,183,215,3	duplicate(GuildRelay4)	Diligo#03	4_M_SAGE_A
 
 // Valkyrie Realms 4
 //============================================================
-prtg_cas04,39,263,3	duplicate(GuildRelay1)	Hermod#04	754
-prtg_cas04,259,251,3	duplicate(GuildRelay2)	Atila#04	728
-prtg_cas04,6,281,5	duplicate(GuildRelay3)	Cecil#04	92
-prtg_cas04,59,282,5	duplicate(GuildRelay4)	Diligo#04	754
+prtg_cas04,39,263,3	duplicate(GuildRelay1)	Hermod#04	4_M_SAGE_A
+prtg_cas04,259,251,3	duplicate(GuildRelay2)	Atila#04	4_F_JOB_KNIGHT
+prtg_cas04,6,281,5	duplicate(GuildRelay3)	Cecil#04	4_F_03
+prtg_cas04,59,282,5	duplicate(GuildRelay4)	Diligo#04	4_M_SAGE_A
 
 // Valkyrie Realms 5
 //============================================================
-prtg_cas05,52,70,5	duplicate(GuildRelay1)	Hermod#05	754
-prtg_cas05,253,91,3	duplicate(GuildRelay2)	Atila#05	728
-prtg_cas05,276,93,3	duplicate(GuildRelay3)	Cecil#05	92
-prtg_cas05,211,36,3	duplicate(GuildRelay4)	Diligo#05	754
+prtg_cas05,52,70,5	duplicate(GuildRelay1)	Hermod#05	4_M_SAGE_A
+prtg_cas05,253,91,3	duplicate(GuildRelay2)	Atila#05	4_F_JOB_KNIGHT
+prtg_cas05,276,93,3	duplicate(GuildRelay3)	Cecil#05	4_F_03
+prtg_cas05,211,36,3	duplicate(GuildRelay4)	Diligo#05	4_M_SAGE_A

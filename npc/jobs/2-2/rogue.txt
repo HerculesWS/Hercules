@@ -1,29 +1,27 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Rogue Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= kobra_k88
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.9
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job quest for Rogue classes
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 2.4 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//=	No longer uses function "F_BlockHigh"
+//=     No longer uses function "F_BlockHigh"
 //= 2.4a Deleted unused variables. [Samuray22]
-//= 2.4b Changed a Problem with JobLevel what made 
-//=	impossible get a Gladius [3]. (bugreport:481) [Samuray22]
+//= 2.4b Changed a Problem with JobLevel what made
+//=     impossible get a Gladius [3]. (bugreport:481) [Samuray22]
 //= 2.4c Corrected a Typo error ";;" and a typo error with "rouge". (bugreport:909) [Samuray22]
 //= 2.5 Added dummy "OnMyMobDead" labels. (bugreport:1100) [L0ne_W0lf]
 //= 2.6 Fixed a few bugs in the Rogue Guildsman. [L0ne_W0lf]
 //= 2.7 Fixed a bug on Markie question 5, bugreport:1600 [Brainstorm]
 //= 2.8 Moved "Thug" to Morroc Ruins. [L0ne_W0lf]
 //= 2.9 Added Quest Log commands. [Kisuka]
-//============================================================ 
+//============================================================
 
-moc_ruins,86,103,1	script	Thug#rg	118,{
+moc_ruins,86,103,1	script	Thug#rg	2_M_THIEFMASTER,{
 	mes "[Thug]";
 	mes "*Sigh...*";
 	mes "What is life?";
@@ -54,7 +52,7 @@ moc_ruins,86,103,1	script	Thug#rg	118,{
 	close;
 }
 
-in_rogue,363,122,4	script	Rogue Guildsman#rg	747,{
+in_rogue,363,122,4	script	Rogue Guildsman#rg	4_F_ROGUE,{
 	if (Upper == 1) {
 		mes "[Markie]";
 		mes "Eh? You...you...?!";
@@ -84,7 +82,7 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	747,{
 				mes "[Rogue Guildsman]";
 				mes "So what's a kid";
 				mes "like you doin' here?";
-				if (sex == 1) {
+				if (Sex) {
 					mes "Oh, I get it now...";
 					mes "The widdle boy wants";
 				}
@@ -489,7 +487,7 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	747,{
 	}
 }
 
-in_rogue,376,23,1	script	Mr. Smith#rg	57,{
+in_rogue,376,23,1	script	Mr. Smith#rg	1_M_LIBRARYMASTER,{
 	if (ROGUE_Q == 2) {
 		mes "[Mr. Smith]";
 		mes "Welcome to";
@@ -656,14 +654,14 @@ in_rogue,376,23,1	script	Mr. Smith#rg	57,{
 		else if (ROGUE_Q == 4) callsub S_CheckItems,511,10,910,10,926,10,964,10;
 		else if (ROGUE_Q == 5) callsub S_CheckItems,508,10,948,10,935,10,940,10;
 		else if (ROGUE_Q == 6) {
-			if (zeny > 9999 && countitem(915) > 4 && countitem(713) > 4 && countitem(1002) > 4 &&
+			if (Zeny > 9999 && countitem(915) > 4 && countitem(713) > 4 && countitem(1002) > 4 &&
 			countitem(953) > 4 && countitem(507) > 4 && countitem(919) > 4 && countitem(715) > 4 &&
 			countitem(913) > 4 && countitem(904) > 4 && countitem(942) > 4 && countitem(528) > 4 &&
 			countitem(914) > 4 && countitem(705) > 4 && countitem(916) > 4 && countitem(917) > 4 &&
 			countitem(908) > 4 && countitem(945) > 4) {
 				mes "[Mr. Smith]";
 				mes "Ummm...let's see...";
-				set zeny,zeny-10000;
+				Zeny -= 10000;
 				delitem 915,5; //Chrysalis
 				delitem 713,5; //Empty_Bottle
 				delitem 1002,5; //Iron_Ore
@@ -976,7 +974,7 @@ S_CheckItems:
 	if (Zeny > 9999 && countitem(getarg(0)) >= getarg(1) && countitem(getarg(2)) >= getarg(3) && countitem(getarg(4)) >= getarg(5) && countitem(getarg(6)) >= getarg(7)) {
 		mes "[Mr. Smith]";
 		mes "Okay, we've got the application fee, ^FF000010,000 zeny^000000, "+getarg(1)+" "+getitemname(getarg(0))+", "+getarg(3)+" "+getitemname(getarg(2))+", "+getarg(5)+" "+getitemname(getarg(4))+" and "+getarg(7)+" "+getitemname(getarg(6))+"...";
-		set zeny,zeny-10000;
+		Zeny -= 10000;
 		delitem getarg(0),getarg(1);
 		delitem getarg(2),getarg(3);
 		delitem getarg(4),getarg(5);
@@ -1011,7 +1009,7 @@ S_CheckItems:
 	close;
 }
 
-cmd_fild09,106,195,0	script	Warp#1	45,1,1,{
+cmd_fild09,106,195,0	script	Warp#1	WARPNPC,1,1,{
 OnTouch:
 	mes "[???]";
 	mes "Who's there?!";
@@ -1081,7 +1079,7 @@ OnTouch:
 	}
 }
 
-cmd_fild09,335,143,0	script	Warp#2	45,1,1,{
+cmd_fild09,335,143,0	script	Warp#2	WARPNPC,1,1,{
 OnTouch:
 	mes "[???]";
 	mes "Who's there?!";
@@ -1151,7 +1149,7 @@ OnTouch:
 	}
 }
 
-cmd_fild04,304,180,0	script	Warp#3	45,1,1,{
+cmd_fild04,304,180,0	script	Warp#3	WARPNPC,1,1,{
 OnTouch:
 	mes "[???]";
 	mes "Who's there?!";
@@ -1174,7 +1172,7 @@ OnTouch:
 		break;
 	case 4:
 		mes "[" + strcharinfo(0) + "]";
-		mes "Hollgrehenn"; 
+		mes "Hollgrehenn";
 		break;
 	}
 	switch(select("enjoys:doesn't enjoy:likes:doesn't like")) {
@@ -1221,7 +1219,7 @@ OnTouch:
 	}
 }
 
-in_rogue,272,135,1	script	Hermanthorn Jr#rg	85,{
+in_rogue,272,135,1	script	Hermanthorn Jr#rg	4_M_03,{
 	if (ROGUE_Q == 8) {
 		mes "[HermanthornJr.]";
 		mes "I see...";
@@ -1271,7 +1269,7 @@ in_rogue,272,135,1	script	Hermanthorn Jr#rg	85,{
 	}
 }
 
-in_rogue,270,130,0	script	he_to_rogue#rg	45,1,1,{
+in_rogue,270,130,0	script	he_to_rogue#rg	WARPNPC,1,1,{
 OnTouch:
 	mes "^3355FFThe door is locked. You'll need to enter the four number combination to open it.^000000";
 	next;
@@ -1279,7 +1277,7 @@ OnTouch:
 	if (.@input < 1 || .@input > 10000) {
 		if (ROGUE_Q == 12)
 			mes "^3355FFIt didn't work. Please re-enter the four number combination.^000000";
-		else 
+		else
 			mes "^3355FFPlease enter a combination of four numbers.^000000";
 		close;
 	}
@@ -1384,7 +1382,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,9,389,0	script	oneway_to_gu	45,1,1,{
+in_rogue,9,389,0	script	oneway_to_gu	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "gen_ro#4::OnDisable";
 	set ROGUE_Q,17;
@@ -1392,7 +1390,7 @@ OnTouch:
 	end;
 }
 
-in_rogue,244,39,1	script	Aragham Junior#rg	99,{
+in_rogue,244,39,1	script	Aragham Junior#rg	4W_M_03,{
 	if (ROGUE_Q == 9) {
 		mes "[Aragham Jr.]";
 		mes "Oh, you must be";
@@ -1478,7 +1476,7 @@ in_rogue,244,39,1	script	Aragham Junior#rg	99,{
 	}
 }
 
-in_rogue,160,34,1	script	Hollgrehenn junior#rg	85,{
+in_rogue,160,34,1	script	Hollgrehenn junior#rg	4_M_03,{
 	if (ROGUE_Q == 11) {
 		mes "[Hollgrehenn Jr.]";
 		mes "Huh...";
@@ -1564,7 +1562,7 @@ in_rogue,160,34,1	script	Hollgrehenn junior#rg	85,{
 	}
 }
 
-in_rogue,177,109,1	script	Antonio junior#rg	88,{
+in_rogue,177,109,1	script	Antonio junior#rg	4_M_ORIENT01,{
 	if (ROGUE_Q == 10) {
 		mes "[Antonio Jr.]";
 		mes "You're from";
@@ -1649,7 +1647,7 @@ in_rogue,177,109,1	script	Antonio junior#rg	88,{
 	}
 }
 
-in_rogue,370,320,0	script	quest_out	45,1,1,{
+in_rogue,370,320,0	script	quest_out	WARPNPC,1,1,{
 OnTouch:
 	set ROGUE_Q,16;
 	warp "in_rogue",378,113;
@@ -1713,7 +1711,7 @@ OnTouch:
 	end;
 
 OnDisable:
-	killmonster "in_rogue","mob_rogue#3::OnMyMObDead";
+	killmonster "in_rogue","mob_rogue#3::OnMyMobDead";
 	end;
 
 OnMyMobDead:
@@ -1990,7 +1988,7 @@ OnInit:
 	end;
 }
 
-in_rogue,399,286,1	script	switch#rogreset	88,{
+in_rogue,399,286,1	script	switch#rogreset	4_M_ORIENT01,{
 	mes "^F08080Tah dah~";
 	mes "Monsters for the";
 	mes "Rogue Job Change";
@@ -2012,19 +2010,20 @@ in_rogue,399,286,1	script	switch#rogreset	88,{
 	close;
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= 1.1 fixed 3 wrong questions, added missing lines [Lupus]
 //= 1.3 Baby Class Support + 40/50 JobLevel Item fix [Lupus]
 //= 1.5 Fixed possible EXP abuse [Lupus]
 //= 1.6 Added a func which prevent advanced classes passing
-//= 2nd Job Quests again. It also guides adv classes where
-//= to go. [Lupus]
+//=     2nd Job Quests again. It also guides adv classes where
+//=     to go. [Lupus]
 //= 2.0 Changed numbers to constants. [Vicious]
 //= 2.1 Removed Duplicates [Silent]
 //= 2.2 Merged JFunc [Lupus]
 //= 2.3 Added a possibility for players doing Meginjyard quest
-//= to enter Rogue guild as there's a NPC inside [SinSloth]
+//=     to enter Rogue guild as there's a NPC inside [SinSloth]
 //= 2.3a fixed test4 person interaction, let BABY thieves pass
-//=	the test, too [Lupus]
+//=     the test, too [Lupus]
+//============================================================

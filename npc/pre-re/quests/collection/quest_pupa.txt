@@ -1,20 +1,18 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= iRO Repeatable EXP Quests.
 //===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Added Monster Killing quests.
 //= Repeatable EXP Quest (Chrysalis)
 //===== Additional Comments: =================================
 //= 1.0 First version.
 //============================================================
 
-gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	123,{
+gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 	if (checkquest(60110) != -1) {
 		if (checkquest(60110,HUNTING) != 2 ) {
 			mes "[Halgus]";

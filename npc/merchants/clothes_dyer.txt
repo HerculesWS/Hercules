@@ -1,12 +1,12 @@
-﻿//===== Hercules Script ======================================
+//===== Hercules Script ======================================
 //= Clothes Dyer
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Usnul
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.5
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Clothes dyer with standard palletes
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= Fully working
 //= 2.1 Shortened some labels to make this script loading,
 //= Added Black+White Colors desc [Lupus]
@@ -19,7 +19,7 @@
 //= 2.5 Optimized. [Euphy]
 //============================================================
 
-prt_in,284,168,2	script	Dyer Ginedin Rephere	55,{
+prt_in,284,168,2	script	Dyer Ginedin Rephere	1_M_JOBTESTER,{
 function Dyes;
 
 	set .@EnableDyes,1;	// Disable (set to 0) if palettes cause errors [see note v2.4]
@@ -105,7 +105,7 @@ function Dyes;
 				if (Sex) Dyes(6,1); else Dyes(4,1,8,2,7,3);
 			case Job_SuperNovice:
 				if (Sex) Dyes(2,1,6,2,5,3,4,4); else Dyes(6,1,3,2,5,3,4,4);
-			default: 
+			default:
 				mes "Wow, I've never seen clothes like that before! I'm sorry, but I don't think I can paint it.";
 				close;
 			}
@@ -166,7 +166,7 @@ function Dyes {
 		close;
 	}
 	delitem .@DyeItems[getarg((.@s-1)*2)],1;
-	set Zeny, Zeny-10000;
+	Zeny -= 10000;
 	setlook 7, ((.@s)?(getarg((.@s-1)*2+1)):0);
 	mes "Your clothes have been dyed "+((.@s)?.@DyeName$[getarg((.@s-1)*2)]:.@DyeName$[0])+".";
 	close;

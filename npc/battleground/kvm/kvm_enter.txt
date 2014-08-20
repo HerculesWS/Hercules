@@ -1,14 +1,14 @@
 //===== Hercules Script ======================================
 // BattleGround System - KvM Entrance NPCs
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.1
-//===== Description: ========================================= 
-//= [AEGIS Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Kreiger Von Midgard Battleground Entrance NPCs
 //= Original NPCs scrapped from bg_common.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version.
 //= 1.1 Corrected some typos, and shifted messages around.
 //=     Corrected iRO style quest log entries, however it's
@@ -17,7 +17,7 @@
 
 // KvM Officer - Guillaume
 //============================================================
-bat_room,164,178,5	script	KVM Mercenary Officer#1	418,{
+bat_room,164,178,5	script	KVM Mercenary Officer#1	4_M_KY_KNT,{
 	/*
 	set .@kvm,checkquest(6026,PLAYTIME);
 	if ((.@kvm == 0) || (.@kvm == 1)) {
@@ -57,7 +57,7 @@ bat_room,164,178,5	script	KVM Mercenary Officer#1	418,{
 
 // Guillaume Knight - KvM
 //============================================================
-bat_room,167,178,5	script	Guillaume Knight#kvm	417,{
+bat_room,167,178,5	script	Guillaume Knight#kvm	4_M_KY_SOLD,{
 	mes "[Guillaume Knight]";
 	mes "Hello.";
 	mes "What do you want to know?";
@@ -117,7 +117,7 @@ bat_room,167,178,5	script	Guillaume Knight#kvm	417,{
 
 // KvM Officer - Croix
 //============================================================
-bat_room,164,121,1	script	KVM Mercenary Officer#2	414,{
+bat_room,164,121,1	script	KVM Mercenary Officer#2	4_M_CRU_KNT,{
 	/*
 	set .@kvm,checkquest(6025,PLAYTIME);
 	if ((.@kvm == 0) || (.@kvm == 1)) {
@@ -157,7 +157,7 @@ bat_room,164,121,1	script	KVM Mercenary Officer#2	414,{
 
 // Croix Knight - KvM
 //============================================================
-bat_room,167,121,1	script	Croix Knight#kvm	413,{
+bat_room,167,121,1	script	Croix Knight#kvm	4_M_CRU_SOLD,{
 	mes "[Croix Knight]";
 	mes "Hello.";
 	mes "What do you want to know?";

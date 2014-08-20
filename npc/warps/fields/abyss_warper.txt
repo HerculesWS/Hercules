@@ -15,7 +15,7 @@
 //= 1.4 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
 //============================================================
 
-hu_fild05,168,304,0	script	Column#abyss1	111,{
+hu_fild05,168,304,0	script	Column#abyss1	HIDDEN_NPC,{
 
 	mes "^3355FFThere are 3 oddly";
 	mes "shaped grooves on";
@@ -84,7 +84,7 @@ hu_fild05,168,304,0	script	Column#abyss1	111,{
 	close;
 }
 
-hu_fild05,171,211,0	script	Column#abyss2	111,1,1,{
+hu_fild05,171,211,0	script	Column#abyss2	HIDDEN_NPC,1,1,{
 
 	mes "^3355FFThis column looks";
 	mes "very similar to the";
@@ -144,7 +144,7 @@ hu_fild05,171,211,0	script	Column#abyss2	111,1,1,{
 	}
 }
 
-hu_fild05,196,210,1	script	AbyssWarp	45,2,2,{
+hu_fild05,196,210,1	script	AbyssWarp	WARPNPC,2,2,{
 
 OnInit:
 	disablenpc "AbyssWarp";

@@ -2,22 +2,23 @@
 //= Alchemist Job Quest
 //===== By: ==================================================
 //= nestor_zulueta (Fusion), converted by Darkchild
-//===== Current Version: ===================================== 
-//= 3.0
-//===== Description: ========================================= 
+//===== Current Version: =====================================
+//= 3.1
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job quest for Alchemist classes
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 2.5 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//=	No longer uses function "F_BlockHigh"
+//=     No longer uses function "F_BlockHigh"
 //= 2.6 Corrected a bug in advanced class checking. [L0ne_W0lf]
 //= 2.7 Added missing checkweights. [L0ne_W0lf]
 //= 2.8 Fixed minor typo in test section. [L0ne_W0lf]
 //= 2.9 Added Quest Log commands. [Kisuka]
 //= 3.0 Removed the need for use of 'goto.' [L0ne_W0lf]
-//============================================================ 
+//= 3.1 Added missing changequest commands. [Kisuka]
+//============================================================
 
-alde_alche,27,185,5	script	Alchemist Guildsman#am	744,{
+alde_alche,27,185,5	script	Alchemist Guildsman#am	4_F_ALCHE,{
 	mes "[Parmy Gianino]";
 	if (Upper == 1) {
 		mes "Welcome to the";
@@ -175,7 +176,7 @@ alde_alche,27,185,5	script	Alchemist Guildsman#am	744,{
 					mes "Come back to me when you have 50,000 Zeny, otherwise we can't process your application.";
 					close;
 				}
-				set zeny,zeny-50000;
+				Zeny -= 50000;
 				mes "[Parmy Gianino]";
 				mes "Let's see.";
 				mes "" + strcharinfo(0);
@@ -320,7 +321,7 @@ alde_alche,27,185,5	script	Alchemist Guildsman#am	744,{
 	}
 }
 
-alde_alche,175,107,3	script	Fastidious Alchemist#am	749,{
+alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 	mes "[Raspuchin Gregory]";
 	if (BaseJob != Job_Merchant) {
 		if (BaseJob == Job_Alchemist) {
@@ -440,7 +441,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	749,{
 				mes "Wait...";
 				mes "Maybe I've";
 				mes "misjudged you.";
-				if (sex == 1) {
+				if (Sex) {
 					mes "You might be a pretty boy,";
 					mes "but I can tell you're smart";
 					mes "from your eyes.";
@@ -465,6 +466,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	749,{
 				mes "He'll teach you how to do the experiments. Just tell him that";
 				mes "I sent you.";
 				set ALCH_Q,6;
+				changequest 2031,2032;
 				close;
 			}
 			else {
@@ -789,7 +791,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	749,{
 	close;
 }
 
-alde_alche,13,15,7	script	Studying Man#am	750,{
+alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you are carrying -";
@@ -1090,6 +1092,7 @@ alde_alche,13,15,7	script	Studying Man#am	750,{
 			mes "and cast away the last";
 			mes "vestiges of Merchant life!!";
 			set ALCH_Q,40;
+			changequest 2033,2034;
 			close;
 		}
 		else if (countitem(7134) > 2 && countitem(713) > 2 && countitem(507) > 0 && countitem(508) > 0 && countitem(509) > 0) {
@@ -1333,7 +1336,7 @@ alde_alche,13,15,7	script	Studying Man#am	750,{
 	}
 }
 
-alde_alche,79,19,5	script	Experiment Expert#am	748,{
+alde_alche,79,19,5	script	Experiment Expert#am	4_M_ALCHE_A,{
 	mes "[Van Helmont]";
 	if (BaseJob != Job_Merchant) {
 		if (BaseJob == Job_Alchemist) {
@@ -1585,7 +1588,7 @@ alde_alche,79,19,5	script	Experiment Expert#am	748,{
 	}
 }
 
-alde_alche,101,184,4	script	Master Alchemist#am	122,{
+alde_alche,101,184,4	script	Master Alchemist#am	2_M_DYEINGER,{
 	cutin "job_alche_vincent",2;
 	mes "[Vincent Carsciallo]";
 	if (Upper == 1) {
@@ -1687,6 +1690,9 @@ alde_alche,101,184,4	script	Master Alchemist#am	122,{
 		if(checkquest(2039) != -1) {
 			changequest 2039,2040;
 		}
+		if(checkquest(2034) != -1) {
+			changequest 2034,2040;
+		}
 		mes "Ah, well done.";
 		mes "I can see that you";
 		mes "have learned all of";
@@ -1703,7 +1709,6 @@ alde_alche,101,184,4	script	Master Alchemist#am	122,{
 		mes "illustrious Union.";
 		mes "I hope you learn a lot...";
 		next;
-
 		if (.@jlevel == 50) {
 			getitem 7133,1; //Slim_Potion_Create_Book
 			mes "[Vincent Carsciallo]";
@@ -1767,7 +1772,7 @@ alde_alche,101,184,4	script	Master Alchemist#am	122,{
 	}
 }
 
-alde_alche,145,19,1	script	Chief Researcher#am	57,{
+alde_alche,145,19,1	script	Chief Researcher#am	1_M_LIBRARYMASTER,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you are carrying -";
@@ -1888,8 +1893,7 @@ alde_alche,145,19,1	script	Chief Researcher#am	57,{
 		}
 	}
 	else if (ALCH_Q == 22) {
-		set .@now_weight,MaxWeight-Weight;
-		if (.@now_weight < 1370) {
+		if (MaxWeight - Weight < 1370) {
 			mes "[Nicholas Flamel]";
 			mes "Whoa...";
 			mes "You're carrying too much stuff! First, put some of your things in Kafra Storage.";
@@ -1978,23 +1982,24 @@ alde_alche,145,19,1	script	Chief Researcher#am	57,{
 	}
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
-//= v1.0 Working.
-//= npc/quests/counteragent_mixture.txt Also Needed
-//= npc/quests/quests_yuno.txt Also Needed [Darkchild]
-//= v1.1 Fixed some minor bugs.  Optimized some lines. Re-organized the script a bit. 
-//= Giving Parmry NPC, Hammer and Old Book now waves the 50000 fee. (based of mRO website)
-//= Having a joblvl of 50 allows you to skip Rasputin's test. (based of mRO website) [kobra_k88]
+//============================================================
+//= 1.0 Working.
+//=     npc/quests/counteragent_mixture.txt Also Needed
+//=     npc/quests/quests_yuno.txt Also Needed [Darkchild]
+//= 1.1 Fixed some minor bugs.  Optimized some lines. Re-organized the script a bit.
+//=     Giving Parmry NPC, Hammer and Old Book now waves the 50000 fee. (based of mRO website)
+//=     Having a joblvl of 50 allows you to skip Rasputin's test. (based of mRO website) [kobra_k88]
 //= 1.2 fixed a few typos (have to hunt more) [Lupus]
 //= 1.3 Added Baby Class Support [Lupus]
 //= 1.6 Added a func which prevent advanced classes passing
-//= 2nd Job Quests again. It also guides adv classes where
-//= to go. [Lupus]
+//=     2nd Job Quests again. It also guides adv classes where
+//=     to go. [Lupus]
 //= 1.6a fixed some wrong answers, thanks to zlider for info [Lupus]
 //= 2.0 Changed numbers to constants. [Vicious]
 //= 2.2 Got rid of 'al_morgen' var. Now uses (MISC_QUEST & 4) [Lupus]
 //= 2.3 Optimized, changed job numbers to constants. Fixed some spelling [Lupus]
 //= 2.4 Added alternative prizes according to JobLevel [Lupus]
 //= 2.4a Fixed 2 wrong answers in Rasputin's test [Lupus]
+//============================================================

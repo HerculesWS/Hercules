@@ -1,20 +1,19 @@
 //===== Hercules Script ======================================
 //= Royal Guard Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Muad_Dib
-//===== Current Version: ===================================== 
-//= 1.1
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Current Version: =====================================
+//= 1.2
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job change Quest from Crusader / Paladin -> Royal Guard.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [brAthena]
 //= 1.1 Updated script. [Euphy]
+//= 1.2 Added GM management function. [Euphy]
 //============================================================
 
-prt_castle,48,161,3	script	Middle-aged Gentleman#rg	57,{
+prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- Your pack is too heavy. -";
 		mes "- Lighten your body first -";
@@ -334,7 +333,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	57,{
 	}
 }
 
-glast_01,240,366,5	script	Memory of King Schmidtz	844,{
+glast_01,240,366,5	script	Memory of King Schmidtz	CLEAR_NPC,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- Your pack is too heavy. -";
 		mes "- Lighten your body first -";
@@ -435,7 +434,7 @@ glast_01,240,366,5	script	Memory of King Schmidtz	844,{
 	end;
 }
 
-gl_church,173,88,0	script	Delicate trace#01	844,{
+gl_church,173,88,0	script	Delicate trace#01	CLEAR_NPC,{
 	if (job_royal == 4 && countitem(6274) == 0) {
 		progressbar "ffff00",5;
 		set .@roy_ran, rand(1,70);
@@ -465,18 +464,18 @@ OnTimer40000:
 	specialeffect EF_MAPPILLAR;
 	end;
 }
-gl_church,158,103,0	duplicate(Delicate trace#01)	Delicate trace#02	844
-gl_church,139,90,0	duplicate(Delicate trace#01)	Delicate trace#03	844
-gl_church,126,62,0	duplicate(Delicate trace#01)	Delicate trace#04	844
-gl_church,148,5,0	duplicate(Delicate trace#01)	Delicate trace#05	844
-gl_church,185,72,0	duplicate(Delicate trace#01)	Delicate trace#06	844
-gl_church,185,72,0	duplicate(Delicate trace#01)	Delicate trace#07	844
-gl_church,211,94,0	duplicate(Delicate trace#01)	Delicate trace#08	844
-gl_church,185,125,0	duplicate(Delicate trace#01)	Delicate trace#09	844
-gl_church,143,125,0	duplicate(Delicate trace#01)	Delicate trace#10	844
-gl_church,105,115,0	duplicate(Delicate trace#01)	Delicate trace#11	844
+gl_church,158,103,0	duplicate(Delicate trace#01)	Delicate trace#02	CLEAR_NPC
+gl_church,139,90,0	duplicate(Delicate trace#01)	Delicate trace#03	CLEAR_NPC
+gl_church,126,62,0	duplicate(Delicate trace#01)	Delicate trace#04	CLEAR_NPC
+gl_church,148,5,0	duplicate(Delicate trace#01)	Delicate trace#05	CLEAR_NPC
+gl_church,185,72,0	duplicate(Delicate trace#01)	Delicate trace#06	CLEAR_NPC
+gl_church,185,72,0	duplicate(Delicate trace#01)	Delicate trace#07	CLEAR_NPC
+gl_church,211,94,0	duplicate(Delicate trace#01)	Delicate trace#08	CLEAR_NPC
+gl_church,185,125,0	duplicate(Delicate trace#01)	Delicate trace#09	CLEAR_NPC
+gl_church,143,125,0	duplicate(Delicate trace#01)	Delicate trace#10	CLEAR_NPC
+gl_church,105,115,0	duplicate(Delicate trace#01)	Delicate trace#11	CLEAR_NPC
 
-gl_church,158,100,0	script	#Clue of traces	111,4,4,{
+gl_church,158,100,0	script	#Clue of traces	HIDDEN_NPC,4,4,{
 	end;
 OnTouch:
 	if (job_royal == 4 && countitem(6274) == 0) {
@@ -497,8 +496,8 @@ OnTouch:
 	end;
 }
 
-/*
-sec_in02,12,43,3	script	sorcereryal	57,1,1,{
+sec_in02,12,43,3	script	sorcereryal	1_M_LIBRARYMASTER,1,1,{
+	callfunc "F_GM_NPC";
 	switch(select("Royal Guard:Rune Knight:Sorcerer")) {
 	case 1:
 		mes "1~5";
@@ -538,4 +537,3 @@ sec_in02,12,43,3	script	sorcereryal	57,1,1,{
 		close;
 	}
 }
-*/

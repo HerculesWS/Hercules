@@ -1,14 +1,14 @@
 //===== Hercules Script ======================================
 //= Lighthalzen Airport Staff
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf, Muad_Dib
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Lighthalzen Airport Staff
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= Official NPCs.
-//============================================================ 
+//============================================================
 
-lhz_airport,143,43,5	script	Airport Staff#lhz_air1a::lhz_airport1	90,{
+lhz_airport,143,43,5	script	Airport Staff#lhz_air1a::lhz_airport1	4_F_01,{
 	mes "[Airport Staff]";
 	mes "Welcome to the";
 	mes "Lighthalzen Airport,";
@@ -29,7 +29,7 @@ lhz_airport,143,43,5	script	Airport Staff#lhz_air1a::lhz_airport1	90,{
 				end;
 			}
 			if (Zeny >= 1200) {
-				set Zeny, Zeny - 1200;
+				Zeny -= 1200;
 				warp "lhz_airport",148,51;
 				end;
 			}
@@ -47,10 +47,10 @@ lhz_airport,143,43,5	script	Airport Staff#lhz_air1a::lhz_airport1	90,{
 	close;
 }
 
-lhz_airport,158,43,5	duplicate(lhz_airport1)	Airship Staff#lhz_air1b	90
-lhz_airport,126,43,5	duplicate(lhz_airport1)	Airship Staff#lhz_air1c	90
+lhz_airport,158,43,5	duplicate(lhz_airport1)	Airship Staff#lhz_air1b	4_F_01
+lhz_airport,126,43,5	duplicate(lhz_airport1)	Airship Staff#lhz_air1c	4_F_01
 
-lhz_airport,143,49,3	script	Arrival Staff#lhz_air2a::lhz_airport2	90,{
+lhz_airport,143,49,3	script	Arrival Staff#lhz_air2a::lhz_airport2	4_F_01,{
 	mes "[Arrival Staff]";
 	mes "Welcome to Lighthalzen Airport.";
 	mes "Please let me guide you to the";
@@ -77,5 +77,5 @@ lhz_airport,143,49,3	script	Arrival Staff#lhz_air2a::lhz_airport2	90,{
 	close;
 }
 
-lhz_airport,126,51,3	duplicate(lhz_airport2)	Arrival Staff#lhz_air2b	90
-lhz_airport,158,50,3	duplicate(lhz_airport2)	Arrival Staff#lhz_air2c	90
+lhz_airport,126,51,3	duplicate(lhz_airport2)	Arrival Staff#lhz_air2b	4_F_01
+lhz_airport,158,50,3	duplicate(lhz_airport2)	Arrival Staff#lhz_air2c	4_F_01

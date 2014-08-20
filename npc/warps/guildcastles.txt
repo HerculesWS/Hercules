@@ -4,8 +4,6 @@
 //= Athena (1.0)
 //===== Current Version: =====================================
 //= 2.7
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Warp Points for Al de Baran, Payon, Prontera, Geffen,
 //= and Juno Guild Castles
@@ -18,14 +16,13 @@
 //= 2.3 Removed 2nd entrance to Novice Castle Geffen [Lupus]
 //= 2.4 Added Warps between Juno and it's new Castle Satelite map. [L0ne_W0lf]
 //= 2.4a Added more warps between Juno Satellite and Castle Interiors. [L0ne_W0lf]
-//=	castle 1, 4 and 5 entrances are questionable, and will be updated
-//=	as I get more information.
+//=     castle 1, 4 and 5 entrances are questionable, and will be updated
+//=     as I get more information.
 //= 2.4b Corrected Warp points for Juno castles 1, 4 and 5. [L0ne_W0lf]
 //= 2.5 Updated Schwaltzvalt warps and added Arunafeltz. [L0ne_W0lf]
 //= 2.6 Fixed warp position between Juno and Schwaltzvalt Realm. [Gepard]
 //= 2.7 Updated WoE:FE warps. [Masao]
 //============================================================
-
 
 //Prontera Castle Map
 prt_gld,159,298,0	warp	prtg01_NorthField	1,1,prt_fild01,199,30
@@ -369,7 +366,7 @@ aldeg_cas04,21,123,0	warp	aldeg-4-11_aldeg-4-12	1,1,aldeg_cas04,125,168
 aldeg_cas04,121,168,0	warp	aldeg-4-12_aldeg-4-11	1,1,aldeg_cas04,25,123
 aldeg_cas04,156,210,0	warp	aldeg-4-13_aldeg-4-5	1,1,aldeg_cas04,169,97
 aldeg_cas04,108,210,0	warp	aldeg-4-14_aldeg-4-4	1,1,aldeg_cas04,186,92
-aldeg_cas04,132,231,0	script	aldeg-4-15_aldeg-4-	45,1,1,{
+aldeg_cas04,132,231,0	script	aldeg-4-15_aldeg-4-	WARPNPC,1,1,{
 
 OnTouch:
 	switch (rand(1,5)) {
@@ -442,7 +439,7 @@ arug_cas05,141,40,0	warp	arug501	1,1,aru_gld,292,107
 aru_gld,287,107,0	warp	arug502	1,1,arug_cas05,141,45
 arug_cas05,321,52,0	warp	arug503	1,1,arug_cas05,141,45
 
-//==================  4 Novices Guild Castles =============================
+//==================4 Novices Guild Castles =============================
 //Novices Guild: Al de Baran Guild Castles Map
 n_castle,184,16,0	warp	naldg01	1,1,nguild_alde,34,248
 nguild_alde,34,252,0	warp	naldg01-1	1,1,n_castle,187,16

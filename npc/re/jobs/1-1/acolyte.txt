@@ -1,18 +1,18 @@
 //===== Hercules Script ======================================
 //= Renewal Acolyte Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Kisuka
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.3
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Job Change to Acolyte Class
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [Kisuka]
 //= 1.1 Added back the npcs used for the priest quest.
 //= 1.2 Added Baby Job compatibility [Streusel]
 //= 1.3 Rewrote bits [Euphy]
-//============================================================ 
-prt_church,184,41,4	script	Cleric#aco	60,{
+//============================================================
+prt_church,184,41,4	script	Cleric#aco	1_M_PASTOR,{
 	if (Upper == 1) {
 		if (ADVJOB == Job_High_Priest || ADVJOB == Job_Champion) {
 			if (Class == Job_Novice_High) {
@@ -110,7 +110,7 @@ prt_church,184,41,4	script	Cleric#aco	60,{
 	}
 }
 
-prt_fild03,365,255,2	script	Ascetic#aco	89,{
+prt_fild03,365,255,2	script	Ascetic#aco	4_M_ORIENT02,{
 	mes "[Father Rubalkabara]";
 	if (BaseJob == Job_Novice) {
 		if (job_acolyte_q == 6) {
@@ -187,7 +187,7 @@ prt_fild03,365,255,2	script	Ascetic#aco	89,{
 	}
 }
 
-moc_fild07,41,355,4	script	Ascetic#2aco	95,{
+moc_fild07,41,355,4	script	Ascetic#2aco	4_F_SISTER,{
 	mes "[Mother Mathilda]";
 	if (BaseJob == Job_Novice) {
 		if (job_acolyte_q == 7) {
@@ -256,7 +256,7 @@ moc_fild07,41,355,4	script	Ascetic#2aco	95,{
 	}
 }
 
-prt_fild00,208,218,6	script	Ascetic#3aco	98,{
+prt_fild00,208,218,6	script	Ascetic#3aco	4W_M_02,{
 	mes "[Father Yosuke]";
 	if (BaseJob == Job_Novice) {
 		if (job_acolyte_q == 8) {

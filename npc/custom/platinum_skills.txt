@@ -4,8 +4,6 @@
 //= Keichii, DarkChild
 //===== Current Version: =====================================
 //= 2.8
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Single NPC that assigns quests skills for all classes
 //===== Additional Comments: =================================
@@ -20,7 +18,7 @@
 //= 2.8 Clustered conditionals replaced with switch to include all Upper types. [Euphy]
 //============================================================
 
-prontera,128,200,6	script	Platinum Skill NPC	94,{
+prontera,128,200,6	script	Platinum Skill NPC	4_F_MAID,{
 	mes "[Platinum Skill NPC]";
 	mes "I can give you the special skills available to your job.";
 	mes "Would you like these skills now?";

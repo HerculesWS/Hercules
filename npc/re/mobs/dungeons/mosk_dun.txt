@@ -4,8 +4,6 @@
 //= Athena (1.0)
 //===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: =====================================
-//= Hercules
 //===== Additional Comments: =================================
 //= 1.0 Added spawns [Playtester]
 //= 1.1 Swapped named according to mob db. [L0ne_W0lf]

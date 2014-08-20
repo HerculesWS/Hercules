@@ -4,8 +4,6 @@
 //= Lupus
 //===== Current Version: =====================================
 //= 1.1a
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Write you name on your rare equipment or weapon ^_-
 //===== Additional Comments: =================================
@@ -13,10 +11,10 @@
 //= 1.1a Added 'disable_items' command. [Euphy]
 //============================================================
 
-prt_in,24,61,7	script	Perchik	47,{
+prt_in,24,61,7	script	Perchik	1_M_01,{
 	
-	setarray .@Item[0],644,3;	// Item requirements: <ID>,<Count>{,...} (0 to disable)
-	setarray .@Cost[0],0,5000;	// Zeny requirements: <base price>,<price per refine>
+	setarray .@item[0],644,3;	// Item requirements: <ID>,<Count>{,...} (0 to disable)
+	setarray .@cost[0],0,5000;	// Zeny requirements: <base price>,<price per refine>
 
 	disable_items;
 	mes "[Perchik]";
@@ -28,12 +26,12 @@ prt_in,24,61,7	script	Perchik	47,{
 		emotion e_ic;
 		next;
 		mes "[Perchik]";
-		if (getarraysize(.@Item) || getarraysize(.@Cost)) {
+		if (getarraysize(.@item) || getarraysize(.@cost)) {
 			mes "For my work I accept:";
-			if (getarraysize(.@Item)) for(set .@i,0; .@i<getarraysize(.@Item); set .@i,.@i+2)
-				mes " ~ "+.@Item[.@i+1]+"x "+getitemname(.@Item[.@i]);
-			if (.@Cost[0]) mes " ~ "+.@Cost[0]+" Zeny";
-			if (.@Cost[1]) mes " ~ "+.@Cost[1]+" Zeny per refine";
+			if (getarraysize(.@item)) for(set .@i,0; .@i<getarraysize(.@item); set .@i,.@i+2)
+				mes " ~ "+.@item[.@i+1]+"x "+getitemname(.@item[.@i]);
+			if (.@cost[0]) mes " ~ "+.@cost[0]+" Zeny";
+			if (.@cost[1]) mes " ~ "+.@cost[1]+" Zeny per refine";
 		}
 		else mes "I work for free, but...";
 		next;
@@ -93,12 +91,12 @@ prt_in,24,61,7	script	Perchik	47,{
 			emotion e_hmm;
 			close;
 		}
-	set .@price, .@Cost[0]+(.@Cost[1]*.@ref);
-	if (getarraysize(.@Item) || .@price) {
+	set .@price, .@cost[0]+(.@cost[1]*.@ref);
+	if (getarraysize(.@item) || .@price) {
 		mes "I will need:";
-		if (getarraysize(.@Item)) for(set .@i,0; .@i<getarraysize(.@Item); set .@i,.@i+2) {
-			mes " ~ "+.@Item[.@i+1]+"x "+getitemname(.@Item[.@i]);
-			if (countitem(.@Item[.@i]) < .@Item[.@i+1]) set .@nr,1;
+		if (getarraysize(.@item)) for(set .@i,0; .@i<getarraysize(.@item); set .@i,.@i+2) {
+			mes " ~ "+.@item[.@i+1]+"x "+getitemname(.@item[.@i]);
+			if (countitem(.@item[.@i]) < .@item[.@i+1]) set .@nr,1;
 		}
 		if (.@price) mes " ~ "+.@price+" Zeny";
 	}
@@ -123,9 +121,9 @@ prt_in,24,61,7	script	Perchik	47,{
 		emotion e_wah;
 		close;
 	}
-	if (.@price) set Zeny, Zeny-.@price;
-	if (getarraysize(.@Item))  for(set .@i,0; .@i<getarraysize(.@Item); set .@i,.@i+2)
-		delitem .@Item[.@i], .@Item[.@i+1];
+	if (.@price) Zeny -= .@price;
+	if (getarraysize(.@item))  for(set .@i,0; .@i<getarraysize(.@item); set .@i,.@i+2)
+		delitem .@item[.@i], .@item[.@i+1];
 	delitem2 .@id,1,1,.@ref,0,.@slot[0],.@slot[1],.@slot[2],.@slot[3];
 	mes "Done!";
 	emotion e_proud;

@@ -8,7 +8,7 @@
 //= Official NPCs.
 //============================================================
 
-hugel,178,142,0	script	toairplane#hugel	45,1,1,{
+hugel,178,142,0	script	toairplane#hugel	WARPNPC,1,1,{
 	end;
 OnTouch:
 	mes "To use the airship, you are required to pay 1,200 zeny or a Free Airship Ticket.";
@@ -21,7 +21,7 @@ OnTouch:
 			end;
 		}
 		if (Zeny >= 1200) {
-			set Zeny, Zeny - 1200;
+			Zeny -= 1200;
 			warp "airplane",244,58;
 			end;
 		}

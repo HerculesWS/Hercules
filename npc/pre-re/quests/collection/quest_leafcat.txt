@@ -1,20 +1,18 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= iRO Repeatable EXP Quests.
 //===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Added Monster Killing quests.
 //= Repeatable EXP Quest (Huge Leaves)
 //===== Additional Comments: =================================
 //= 1.0 First version.
 //============================================================
 
-ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	877,{
+ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 	if (checkquest(60143) != -1) {
 		if (checkquest(60143,HUNTING) != 2 ) {
 			mes "[Lella]";

@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Izlude Guides
 //===== By: ==================================================
 //= kobra_k88; L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.5a
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Official Conversion]
 //= Guides for the City of Izlude
@@ -19,7 +17,7 @@
 //	-Thanks to $ephiroth.
 //============================================================
 
-izlude,121,87,6	script	Guide#iz	105,{
+izlude,121,87,6	script	Guide#iz	8W_SOLDIER,{
 	cutin "prt_soldier",2;
 	mes "[Izlude Guide]";
 	mes "Welcome to Izlude,";

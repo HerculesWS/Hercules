@@ -1,19 +1,17 @@
 //===== Hercules Script ======================================
 //= Sphinx Mask Quest (custom)
-//===== By: ================================================== 
+//===== By: ==================================================
 //= sabernet09
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= This quest is related to Umbalian Chief.
 //= 1.1 Removed it from official Umbala quests [Lupus]
 //= 1.2 Added a missing variable (sphmask_q) [erKURITA]
 //= 1.3 Optimized, and coordinates moved. [Euphy]
-//============================================================ 
+//============================================================
 
-morocc,208,90,6	script	Turban Thief	58,{
+morocc,208,90,6	script	Turban Thief	1_M_MERCHANT,{
 	mes "[Turban Thief]";
 	if(event_umbala < 2) {
 		mes "What do you wan te withz me? Be gone!";
@@ -44,7 +42,7 @@ L_Menu:
 	if (Zeny < getarg(2)) {
 		mes "Are youz playin wit me? You don't have ze money!";
 		close; }
-	set Zeny, Zeny-getarg(2);
+	Zeny -= getarg(2);
 	mes "O ho ho, it's a deal, then!";
 	getitem 7114,1;
 	set sphmask_q,1;

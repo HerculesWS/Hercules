@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -20,12 +20,12 @@
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -128,27 +128,31 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\common\core.c" />
-	<ClCompile Include="..\src\common\console.c" />
+    <ClCompile Include="..\src\common\console.c" />
     <ClCompile Include="..\src\common\des.c" />
     <ClCompile Include="..\src\common\grfio.c" />
     <ClCompile Include="..\src\common\malloc.c" />
     <ClCompile Include="..\src\common\showmsg.c" />
     <ClCompile Include="..\src\common\strlib.c" />
+    <ClCompile Include="..\src\common\sysinfo.c" />
     <ClCompile Include="..\src\common\utils.c" />
+    <ClCompile Include="..\src\common\nullpo.c" />
     <ClCompile Include="..\src\tool\mapcache.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\common\cbasetypes.h" />
     <ClInclude Include="..\src\common\core.h" />
-	<ClInclude Include="..\src\common\console.h" />
+    <ClInclude Include="..\src\common\console.h" />
     <ClInclude Include="..\src\common\des.h" />
     <ClInclude Include="..\src\common\grfio.h" />
     <ClInclude Include="..\src\common\malloc.h" />
     <ClInclude Include="..\src\common\mmo.h" />
     <ClInclude Include="..\src\common\showmsg.h" />
     <ClInclude Include="..\src\common\strlib.h" />
+    <ClInclude Include="..\src\common\sysinfo.h" />
     <ClInclude Include="..\src\common\utils.h" />
     <ClInclude Include="..\src\common\winapi.h" />
+    <ClInclude Include="..\src\common\nullpo.h" />
     <ClInclude Include="..\src\config\renewal.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

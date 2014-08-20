@@ -5,23 +5,21 @@
 //= Lupus
 //===== Current Version: =====================================
 //= 1.01
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
-//= Custom quest for some RO mobile game bonus items 
+//= Custom quest for some RO mobile game bonus items
 //===== Additional Comments: =================================
 //= 1 May, 2006
 //= 1.01 translated the rest of dialogues
 //============================================================
 
-gonryun,187,140,4	script	Yakima	850,{
+gonryun,187,140,4	script	Yakima	4_F_EINWOMAN,{
 	mes "[Yakima]";
 	mes callfunc("F_Hi");
 	mes "I can make some items for you.";
 	mes "They are quite rare novadays...";
 	specialeffect 417;
 	next;
-	menu "Bird Nest",-,"Lion Mask",M_2,"Skeleton Manteau",M_3,"Fashion Hip Sack",M_4,"Sales Banner",M_5,"Leave",M_EXIT;
+	menu "Bird Nest",-,"Lion Mask",M_2,"Skeleton Manteau",M_3,"Fashion Hip Sack",M_4,"Sales Banner",M_5,"Leave",M_Exit;
 
 	mes "[Yakima]";
 	mes "Oh.. it's an excellent item for any beast hunter.";
@@ -36,9 +34,9 @@ gonryun,187,140,4	script	Yakima	850,{
 	mes "[Yakima]";
 	mes "Do you have all the items?";
 	next;
-	menu "Yeah.",-,"Nay.",M_EXIT;
+	menu "Yeah.",-,"Nay.",M_Exit;
 
-	if(countitem(5067) < 1 || countitem(916) < 920 || countitem(925) < 310) GOTO L_NOITEM;//Items: Sombrero, Feather_of_Birds, Bill_of_Birds,
+	if(countitem(5067) < 1 || countitem(916) < 920 || countitem(925) < 310) goto L_NOITEM;//Items: Sombrero, Feather_of_Birds, Bill_of_Birds,
 	delitem 5067,1;//Items: Sombrero,
 	delitem 916,920;//Items: Feather_of_Birds,
 	delitem 925,310;//Items: Bill_of_Birds,
@@ -63,9 +61,9 @@ M_2:
 	mes "[Yakima]";
 	mes "Do you have all the items?";
 	next;
-	menu "Yeah.",-,"Nay.",M_EXIT;
+	menu "Yeah.",-,"Nay.",M_Exit;
 
-	if(countitem(5098) < 1 || countitem(1030) < 10 || countitem(1029) < 30 || countitem(7267) < 300) GOTO L_NOITEM;//Items: Tiger_Mask, Tiger_Skin, Tiger's_Footskin, Tiger_Panty,
+	if(countitem(5098) < 1 || countitem(1030) < 10 || countitem(1029) < 30 || countitem(7267) < 300) goto L_NOITEM;//Items: Tiger_Mask, Tiger_Skin, Tiger's_Footskin, Tiger_Panty,
 	delitem 5098,1;//Items: Tiger_Mask,
 	delitem 1030,10;//Items: Tiger's_Footskin,
 	delitem 1029,30;//Items: Tiger_Skin,
@@ -92,9 +90,9 @@ M_3:
 	mes "[Yakima]";
 	mes "Do you have all the items?";
 	next;
-	menu "Yeah.",-,"Nay.",M_EXIT;
+	menu "Yeah.",-,"Nay.",M_Exit;
 
-	if(countitem(2508) < 1 || countitem(2506) < 2 || countitem(2609) < 3 || countitem(7207) < 10) GOTO L_NOITEM;//Items: Ragamuffin_Manteau, Manteau_, Skull_Ring, Old_Manteau,
+	if(countitem(2508) < 1 || countitem(2506) < 2 || countitem(2609) < 3 || countitem(7207) < 10) goto L_NOITEM;//Items: Ragamuffin_Manteau, Manteau_, Skull_Ring, Old_Manteau,
 	delitem 2508,1;//Items: Ragamuffin_Manteau,
 	delitem 2506,2;//Items: Manteau_,
 	delitem 2609,3;//Items: Skull_Ring,
@@ -121,9 +119,9 @@ M_4:
 	mes "[Yakima]";
 	mes "Do you have all the items?";
 	next;
-	menu "Yeah.",-,"Nay.",M_EXIT;
+	menu "Yeah.",-,"Nay.",M_Exit;
 
-	if(countitem(2269) < 3 || countitem(2207) < 3 || countitem(2612) < 2 || countitem(2287)<3 ) GOTO L_NOITEM;//Items: Romantic_Flower, Fancy_Flower, Flower_Ring,
+	if(countitem(2269) < 3 || countitem(2207) < 3 || countitem(2612) < 2 || countitem(2287)<3 ) goto L_NOITEM;//Items: Romantic_Flower, Fancy_Flower, Flower_Ring,
 	delitem 2269,3;//Items: Romantic_Flower,
 	delitem 2207,3;//Items: Fancy_Flower,
 	delitem 2612,2;//Items: Flower_Ring,
@@ -152,9 +150,9 @@ M_5:
 	mes "[Yakima]";
 	mes "Do you have all the items?";
 	next;
-	menu "Yeah.",-,"Nay.",M_EXIT;
+	menu "Yeah.",-,"Nay.",M_Exit;
 
-	if(countitem(975) < 1 || countitem(980) < 1 || countitem(2272) < 2 || countitem(2262) < 3 || countitem(7298) < 180 || countitem(7164) < 20) GOTO L_NOITEM;//Items: Scarlet_Dyestuff, Orange_Dyestuff, Stop_Post, Clown_Nose, Fig_Leaf, Solid_Peach,
+	if(countitem(975) < 1 || countitem(980) < 1 || countitem(2272) < 2 || countitem(2262) < 3 || countitem(7298) < 180 || countitem(7164) < 20) goto L_NOITEM;//Items: Scarlet_Dyestuff, Orange_Dyestuff, Stop_Post, Clown_Nose, Fig_Leaf, Solid_Peach,
 	delitem 975,1;//Items: Scarlet_Dyestuff,
 	delitem 980,1;//Items: Orange_Dyestuff,
 	delitem 2272,2;//Items: Stop_Post,
@@ -173,7 +171,7 @@ L_NOITEM:
 	emotion e_sry;
 	close;
 
-M_EXIT:
+M_Exit:
 	mes "[Yakima]";
 	mes callfunc("F_Bye");
 	close;

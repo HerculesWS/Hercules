@@ -11,9 +11,9 @@
 //= 1.2 Optimized. [Euphy]
 //============================================================
 
-prontera,165,178,8	script	Old Woman	103,{
+prontera,165,178,8	script	Old Woman	8_F_GRANDMOTHER,{
 
-	setarray .@Items[0],714,25,1061,100,1095,200,618,10,1551,2,1614,1,727,20;
+	setarray .@items[0],714,25,1061,100,1095,200,618,10,1551,2,1614,1,727,20;
 	set .@n$,"[Old Woman]";
 
 	mes .@n$;
@@ -37,9 +37,9 @@ prontera,165,178,8	script	Old Woman	103,{
 	next;
 	mes .@n$;
 	mes "I need all of the following items:";
-	for(set .@i,0; .@i<getarraysize(.@Items); set .@i,.@i+2) {
-		mes " ~ "+.@Items[.@i+1]+"x "+getitemname(.@Items[.@i]);
-		if (countitem(.@Items[.@i]) < .@Items[.@i+1]) set .@nr,1; }
+	for(set .@i,0; .@i<getarraysize(.@items); set .@i,.@i+2) {
+		mes " ~ "+.@items[.@i+1]+"x "+getitemname(.@items[.@i]);
+		if (countitem(.@items[.@i]) < .@items[.@i+1]) set .@nr,1; }
 	next;
 	if(select("I have all of that!:I'll get those ASAP")==2) goto M_Leave;
 
@@ -47,8 +47,8 @@ prontera,165,178,8	script	Old Woman	103,{
 	if (.@nr) {
 		mes "You lie! Get out of here and get those items, you sorry excuse for a rock star.";
 		close; }
-	for(set .@i,0; .@i<getarraysize(.@Items); set .@i,.@i+2)
-		delitem .@Items[.@i], .@Items[.@i+1];
+	for(set .@i,0; .@i<getarraysize(.@items); set .@i,.@i+2)
+		delitem .@items[.@i], .@items[.@i+1];
 	getitem 4145,1;
 	set BerzQuest, 1;
 	mes "Congratulations! You have all the items. Here is your ^FF0000Berzebub Card^000000, as promised.";

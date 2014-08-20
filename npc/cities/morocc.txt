@@ -1,13 +1,13 @@
 //===== Hercules Script ======================================
 //= Morroc Town
-//===== By: ================================================== 
+//===== By: ==================================================
 //= kobra_k88; L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.2
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Morroc Town NPCs
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= Fully working
 //= Fixed Lapidary sprite, Implemented ANTHELL trigger
 //= (in both NPC/Warps) [Lupus]. Removed it from NPC and put in Warp
@@ -27,7 +27,7 @@
 
 // Morroc
 //============================================================
-morocc,150,120,5	script	Soldier - Morroc#01::MocSoldier	707,3,3,{
+morocc,150,120,5	script	Soldier - Morroc#01::MocSoldier	4_M_MOC_SOLDIER,3,3,{
 	mes "[Morroc Soldier]";
 	mes "Hey, you! Stop there.";
 	next;
@@ -44,7 +44,7 @@ OnTouch:
 	close;
 }
 
-morocc,202,244,0	script	Volunteer - Morroc#01	745,{
+morocc,202,244,0	script	Volunteer - Morroc#01	4_F_CRU,{
 	mes "[Morroc Volunteer]";
 	mes "After that terrible incident wiped out the entire Morroc, Rune-Midgard Kingdom has gathered us valunteers to help restorations.";
 	next;
@@ -53,7 +53,7 @@ morocc,202,244,0	script	Volunteer - Morroc#01	745,{
 	close;
 }
 
-morocc,88,133,3	script	Volunteer - Morroc#02	748,{
+morocc,88,133,3	script	Volunteer - Morroc#02	4_M_ALCHE_A,{
 	mes "[Morroc Volunteer]";
 	mes "We're... We're flooded with work...";
 	next;
@@ -66,7 +66,7 @@ morocc,88,133,3	script	Volunteer - Morroc#02	748,{
 	close;
 }
 
-morocc,202,110,0	script	Volunteer - Morroc#03	730,{
+morocc,202,110,0	script	Volunteer - Morroc#03	4_M_JOB_ASSASSIN,{
 	mes "[Morroc Volunteer]";
 	mes "We're still unable to estimate the overall damage.";
 	next;
@@ -78,7 +78,7 @@ morocc,202,110,0	script	Volunteer - Morroc#03	730,{
 	close;
 }
 
-morocc,268,287,3	script	Volunteer - Morroc#04	727,{
+morocc,268,287,3	script	Volunteer - Morroc#04	4_F_JOB_HUNTER,{
 	mes "[Morroc Volunteer]";
 	mes "As bad as it seems, we can't even ask for more support.";
 	mes "This sure must be the worst thing ever happened in Rune-Midgard's history.";
@@ -88,7 +88,7 @@ morocc,268,287,3	script	Volunteer - Morroc#04	727,{
 	close;
 }
 
-morocc,37,287,0	script	Volunteer - Morroc#05	79,{
+morocc,37,287,0	script	Volunteer - Morroc#05	1_F_PRIEST,{
 	mes "[Morroc Volunteer]";
 	mes "The town's all shattered, but the real problem is the towners.";
 	next;
@@ -100,7 +100,7 @@ morocc,37,287,0	script	Volunteer - Morroc#05	79,{
 	close;
 }
 
-morocc,223,102,0	script	Volunteer - Morroc#06::MocVolunteer	741,{
+morocc,223,102,0	script	Volunteer - Morroc#06::MocVolunteer	2_M_BARD_ORIENT,{
 	mes "[Morroc Volunteer]";
 	mes "Ugh.. It's kinda spooky, here.. Even this dry wind of the desert seems to have a dark nature.";
 	next;
@@ -139,9 +139,9 @@ morocc,223,102,0	script	Volunteer - Morroc#06::MocVolunteer	741,{
 	close;
 }
 
-morocc,226,102,4	duplicate(MocVolunteer)	Volunteer - Morroc#07	726
+morocc,226,102,4	duplicate(MocVolunteer)	Volunteer - Morroc#07	4_F_JOB_BLACKSMITH
 
-moc_ruins,123,154,0	script	Young Man#moc01	99,{
+moc_ruins,123,154,0	script	Young Man#moc01	4W_M_03,{
 	mes "[Young Man]";
 	mes "The town's completely destroyed, but that giant triangular structure hasn't been harmed at all. Maybe it's protected by some kinda special power.";
 	next;
@@ -159,7 +159,7 @@ moc_ruins,123,154,0	script	Young Man#moc01	99,{
 	close;
 }
 
-moc_ruins,128,153,0	script	Grampa#moc	61,{
+moc_ruins,128,153,0	script	Grampa#moc	1_M_PUBMASTER,{
 	mes "[Old Scholar]";
 	mes "I've devoted my life to researching the mysterious pyramids near Morroc. I haven't been able to concretely confirm anything yet, but...";
 	next;
@@ -168,7 +168,7 @@ moc_ruins,128,153,0	script	Grampa#moc	61,{
 	close;
 }
 
-moc_ruins,132,144,0	script	Wolf Young Man#moc	85,{
+moc_ruins,132,144,0	script	Wolf Young Man#moc	4_M_03,{
 	mes "[Young Man]";
 	mes "I remember I said the bandits of desert are the desert wolves.. Those bastards always roam around in a bunch and they would get so cruel and outrageous if one of them got attacked.";
 	next;
@@ -181,7 +181,7 @@ moc_ruins,132,144,0	script	Wolf Young Man#moc	85,{
 	close;
 }
 
-moc_ruins,115,144,3	script	Muka Young Man#moc	83,{
+moc_ruins,115,144,3	script	Muka Young Man#moc	4_M_01,{
 	mes "[Young Man]";
 	mes "I work in the trading business, so I always have to cross the hot, dry Morroc Desert on business.";
 	next;
@@ -200,7 +200,7 @@ moc_ruins,115,144,3	script	Muka Young Man#moc	83,{
 	close;
 }
 
-moc_ruins,109,138,0	script	Diamond Young Man#moc	99,{
+moc_ruins,109,138,0	script	Diamond Young Man#moc	4W_M_03,{
 	mes "[Young Man]";
 	mes "The undisputed queen of jewels has to be the Diamond. After looking at it just once, no one can deny its beauty.";
 	next;
@@ -218,7 +218,7 @@ moc_ruins,109,138,0	script	Diamond Young Man#moc	99,{
 	close;
 }
 
-morocc,54,251,0	script	Young Man#moc02	89,{
+morocc,54,251,0	script	Young Man#moc02	4_M_ORIENT02,{
 	mes "[Drunken Young Man]";
 	mes "Wait a second..! Are you perhaps an adventurer? Welcome! How's your trip?";
 	mes "Heh heh~ Let me tell you a story. You know I just got out of that Tavern, there, huh?";
@@ -238,7 +238,7 @@ morocc,54,251,0	script	Young Man#moc02	89,{
 	close;
 }
 
-moc_ruins,94,117,0	script	Pale Looking Young Man	48,{
+moc_ruins,94,117,0	script	Pale Looking Young Man	1_M_02,{
 	mes "[Pale-looking Young Man]";
 	mes "... That day... I saw the bloody moon in the sky. It was too silent that it felt so spooky.";
 	next;
@@ -259,7 +259,7 @@ moc_ruins,94,117,0	script	Pale Looking Young Man	48,{
 	close;
 }
 
-moc_ruins,115,82,0	script	Little Girl#moc	703,{
+moc_ruins,115,82,0	script	Little Girl#moc	4_F_KID2,{
 	mes "[Little Girl]";
 	mes "-Crying-";
 	next;
@@ -274,7 +274,7 @@ moc_ruins,115,82,0	script	Little Girl#moc	703,{
 	close;
 }
 
-moc_ruins,118,82,1	script	Little Boy#moc	706,{
+moc_ruins,118,82,1	script	Little Boy#moc	4_M_KID1,{
 	mes "[Little Boy]";
 	mes "............... Let's stop crying, Eliese...";
 	next;
@@ -292,7 +292,7 @@ moc_ruins,118,82,1	script	Little Boy#moc	706,{
 	close;
 }
 
-moc_ruins,121,116,4	script	Picky Lady#moc	66,{
+moc_ruins,121,116,4	script	Picky Lady#moc	1_F_01,{
 	mes "[Syvia]";
 	mes "The fields of Rune-Midgard are infested with wild and dangerous monsters..But, you've got to admit a bunch of them are soooo cute!";
 	mes "You know, like how Spore sticks out its tongue after you kill it..";
@@ -342,7 +342,7 @@ moc_ruins,121,116,4	script	Picky Lady#moc	66,{
 	}
 }
 
-moc_ruins,155,107,4	script	Ant Man#moc	47,{
+moc_ruins,155,107,4	script	Ant Man#moc	1_M_01,{
 	mes "[Akira]";
 	mes "Hey, you. Did you cross the desert?";
 	next;
@@ -394,7 +394,7 @@ moc_ruins,155,107,4	script	Ant Man#moc	47,{
 	}
 }
 
-moc_ruins,143,43,4	script	Assassin Boy#moc	118,{
+moc_ruins,143,43,4	script	Assassin Boy#moc	2_M_THIEFMASTER,{
 	mes "[Slayer Kid]";
 	mes "Unbeatable in man-to-man fights, Assassins always overcome their enemies! Erm, always overcome their enemies without a trace.";
 	next;
@@ -447,7 +447,7 @@ moc_ruins,143,43,4	script	Assassin Boy#moc	118,{
 	}
 }
 
-moc_ruins,173,141,4	script	Dimitri#moc	49,{
+moc_ruins,173,141,4	script	Dimitri#moc	1_M_03,{
 	mes "[Dimitri]";
 	mes "The desert of Morroc has the highest average temperature in Midgard. You might as well think twice before you sit on the sand in the middle of the desert, cause your ass will be toasted.";
 	next;
@@ -489,7 +489,7 @@ moc_ruins,173,141,4	script	Dimitri#moc	49,{
 	}
 }
 
-moc_ruins,174,120,4	script	Fly Man#moc	54,{
+moc_ruins,174,120,4	script	Fly Man#moc	1_M_JOBGUIDER,{
 	mes "[Armani]";
 	mes "Ooh, Woooowwww.";
 	next;
@@ -521,7 +521,7 @@ moc_ruins,174,120,4	script	Fly Man#moc	54,{
 	}
 }
 
-moc_ruins,173,70,4	script	Uncle Morroc#moc	48,{
+moc_ruins,173,70,4	script	Uncle Morroc#moc	1_M_02,{
 	mes "[Phlanette]";
 	mes "Morroc is located in an extremely dry region, surrounded by desert.";
 	mes "No place in the world is as hot as Morroc.";
@@ -561,7 +561,7 @@ moc_ruins,173,70,4	script	Uncle Morroc#moc	48,{
 	}
 }
 
-moc_fild16,199,212,4	script	 Uncle Assassin#moc	55,{
+moc_fild16,199,212,4	script	 Uncle Assassin#moc	1_M_JOBTESTER,{
 	mes "[Hashisid]";
 	mes "...Assassins are trained";
 	mes "to approach their enemies steathily,";
@@ -621,7 +621,7 @@ moc_fild16,199,212,4	script	 Uncle Assassin#moc	55,{
 	}
 }
 
-moc_fild16,211,254,4	script	Assassin#07rhea_30	118,{
+moc_fild16,211,254,4	script	Assassin#07rhea_30	2_M_THIEFMASTER,{
 	mes "[La Conte]";
 	mes "Once Thiefs are promoted";
 	mes "to Assassins, which is very professional";
@@ -715,14 +715,14 @@ moc_fild16,211,254,4	script	Assassin#07rhea_30	118,{
 //============================================================
 //Bartender
 /*
-morocc_in,166,76,3	script	Bartender#02	46,{
+morocc_in,166,76,3	script	Bartender#02	1_ETC_01,{
 	mes "[Bartender]";
 	mes "What are you going to order?";
 	next;
 	switch(select("Tropical Sograt:Vemillion the Beach:Nothing.")) {
 	case 1:
-		if (zeny >= 1000 ) {
-			set zeny,zeny-1000;
+		if (Zeny >= 1000 ) {
+			Zeny -= 1000;
 			getitem 12112,1;
 			mes "[Bartender]";
 			mes "Here you go.";
@@ -732,8 +732,8 @@ morocc_in,166,76,3	script	Bartender#02	46,{
 		}
 		break;
 	case 2:
-		if (zeny >= 1000 ) {
-			set zeny,zeny-1000;
+		if (Zeny >= 1000 ) {
+			Zeny -= 1000;
 			getitem 12113,1;
 			mes "[Bartender]";
 			mes "Here you go.";
@@ -756,7 +756,7 @@ morocc_in,166,76,3	script	Bartender#02	46,{
 
 // Assassin Guild Guards
 //===================================================
-moc_fild16,195,281,4	script	Assassin Guardian#1::SinGuard	707,{
+moc_fild16,195,281,4	script	Assassin Guardian#1::SinGuard	4_M_MOC_SOLDIER,{
 	mes "[Assassin Guardian]";
 	if(BaseJob == Job_Assassin) {
 		mes "Welcome.";
@@ -770,11 +770,11 @@ moc_fild16,195,281,4	script	Assassin Guardian#1::SinGuard	707,{
 	close;
 }
 
-moc_fild16,204,281,4	duplicate(SinGuard)	Assassin Guardian#2	707
-moc_fild16,207,281,4	duplicate(SinGuard)	Assassin Guardian#3	707
-moc_fild16,216,281,4	duplicate(SinGuard)	Assassin Guardian#4	707
-moc_fild16,200,231,4	duplicate(SinGuard)	Assassin Guardian#5	707
-moc_fild16,211,231,4	duplicate(SinGuard)	Assassin Guardian#6	707
-moc_fild16,200,257,4	duplicate(SinGuard)	Assassin Guardian#7	707
-moc_fild16,211,257,4	duplicate(SinGuard)	Assassin Guardian#8	707
+moc_fild16,204,281,4	duplicate(SinGuard)	Assassin Guardian#2	4_M_MOC_SOLDIER
+moc_fild16,207,281,4	duplicate(SinGuard)	Assassin Guardian#3	4_M_MOC_SOLDIER
+moc_fild16,216,281,4	duplicate(SinGuard)	Assassin Guardian#4	4_M_MOC_SOLDIER
+moc_fild16,200,231,4	duplicate(SinGuard)	Assassin Guardian#5	4_M_MOC_SOLDIER
+moc_fild16,211,231,4	duplicate(SinGuard)	Assassin Guardian#6	4_M_MOC_SOLDIER
+moc_fild16,200,257,4	duplicate(SinGuard)	Assassin Guardian#7	4_M_MOC_SOLDIER
+moc_fild16,211,257,4	duplicate(SinGuard)	Assassin Guardian#8	4_M_MOC_SOLDIER
 

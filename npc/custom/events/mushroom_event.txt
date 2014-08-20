@@ -1,11 +1,9 @@
 //===== Hercules Script ======================================
 //= Find the Mushroom
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Mysterious
 //===== Current Version: =====================================
 //= 3.6a
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Find the Mushroom - random amount of Mushrooms spawns in random maps.
 //= Players need to find these mushrooms and kill them to gain prizes!
@@ -14,7 +12,7 @@
 //= 3.6a Slightly edited. [Euphy]
 //============================================================
 
-prontera,142,228,6	script	Find the Mushroom	1084,{
+prontera,142,228,6	script	Find the Mushroom	BLACK_MUSHROOM,{
 	mes "[ Find The Mushroom ]";
 	if (!.Status)
 		mes "There is no event at the moment!";

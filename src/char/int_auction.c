@@ -2,27 +2,30 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/mmo.h"
-#include "../common/malloc.h"
-#include "../common/db.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/sql.h"
-#include "../common/timer.h"
-#include "char.h"
-#include "inter.h"
-#include "int_mail.h"
+#define HERCULES_CORE
+
 #include "int_auction.h"
 
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
+
+#include "char.h"
+#include "int_mail.h"
+#include "inter.h"
+#include "../common/db.h"
+#include "../common/malloc.h"
+#include "../common/mmo.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
+#include "../common/sql.h"
+#include "../common/strlib.h"
+#include "../common/timer.h"
 
 static DBMap* auction_db_ = NULL; // int auction_id -> struct auction_data*
 
 void auction_delete(struct auction_data *auction);
-static int auction_end_timer(int tid, unsigned int tick, int id, intptr_t data);
+static int auction_end_timer(int tid, int64 tick, int id, intptr_t data);
 
 static int auction_count(int char_id, bool buy)
 {
@@ -90,10 +93,6 @@ unsigned int auction_create(struct auction_data *auction)
 	for( j = 0; j < MAX_SLOTS; j++ )
 		StrBuf->Printf(&buf, ",'%d'", auction->item.card[j]);
 	StrBuf->AppendStr(&buf, ")");
-	
-	//Unique Non Stackable Item ID
-	updateLastUid(auction->item.unique_id);
-	dbUpdateUid(sql_handle);
 
 	stmt = SQL->StmtMalloc(sql_handle);
 	if( SQL_SUCCESS != SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
@@ -108,15 +107,15 @@ unsigned int auction_create(struct auction_data *auction)
 	else
 	{
 		struct auction_data *auction_;
-		unsigned int tick = auction->hours * 3600000;
+		int64 tick = auction->hours * 3600000;
 
 		auction->item.amount = 1;
 		auction->item.identify = 1;
 		auction->item.expire_time = 0;
 
 		auction->auction_id = (unsigned int)SQL->StmtLastInsertId(stmt);
-		auction->auction_end_timer = iTimer->add_timer( iTimer->gettick() + tick , auction_end_timer, auction->auction_id, 0);
-		ShowInfo("New Auction %u | time left %u ms | By %s.\n", auction->auction_id, tick, auction->seller_name);
+		auction->auction_end_timer = timer->add( timer->gettick() + tick , auction_end_timer, auction->auction_id, 0);
+		ShowInfo("New Auction %u | time left %"PRId64" ms | By %s.\n", auction->auction_id, tick, auction->seller_name);
 
 		CREATE(auction_, struct auction_data, 1);
 		memcpy(auction_, auction, sizeof(struct auction_data));
@@ -139,8 +138,7 @@ static void mapif_Auction_message(int char_id, unsigned char result)
 	mapif_sendall(buf,7);
 }
 
-static int auction_end_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+static int auction_end_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct auction_data *auction;
 	if( (auction = (struct auction_data *)idb_get(auction_db_, id)) != NULL )
 	{
@@ -170,7 +168,7 @@ void auction_delete(struct auction_data *auction)
 		Sql_ShowDebug(sql_handle);
 
 	if( auction->auction_end_timer != INVALID_TIMER )
-		iTimer->delete_timer(auction->auction_end_timer, auction_end_timer);
+		timer->delete(auction->auction_end_timer, auction_end_timer);
 
 	idb_remove(auction_db_, auction_id);
 }
@@ -182,7 +180,7 @@ void inter_auctions_fromsql(void)
 	struct item *item;
 	char *data;
 	StringBuf buf;
-	unsigned int tick = iTimer->gettick(), endtick;
+	int64 tick = timer->gettick(), endtick;
 	time_t now = time(NULL);
 
 	StrBuf->Init(&buf);
@@ -230,11 +228,11 @@ void inter_auctions_fromsql(void)
 		}
 
 		if( auction->timestamp > now )
-			endtick = ((unsigned int)(auction->timestamp - now) * 1000) + tick;
+			endtick = ((int64)(auction->timestamp - now) * 1000) + tick;
 		else
-			endtick = tick + 10000; // 10 Second's to process ended auctions
+			endtick = tick + 10000; // 10 seconds to process ended auctions
 
-		auction->auction_end_timer = iTimer->add_timer(endtick, auction_end_timer, auction->auction_id, 0);
+		auction->auction_end_timer = timer->add(endtick, auction_end_timer, auction->auction_id, 0);
 		idb_put(auction_db_, auction->auction_id, auction);
 	}
 
@@ -270,7 +268,7 @@ static void mapif_parse_Auction_requestlist(int fd)
 
 	for( auction = dbi_first(iter); dbi_exists(iter); auction = dbi_next(iter) )
 	{
-		if( (type == 0 && auction->type != IT_ARMOR && auction->type != IT_PETARMOR) || 
+		if( (type == 0 && auction->type != IT_ARMOR && auction->type != IT_PETARMOR) ||
 			(type == 1 && auction->type != IT_WEAPON) ||
 			(type == 2 && auction->type != IT_CARD) ||
 			(type == 3 && auction->type != IT_ETC) ||

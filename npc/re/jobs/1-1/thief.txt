@@ -1,19 +1,17 @@
 //===== Hercules Script ======================================
 //= Renewal Thief Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Kisuka
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Job Change to Thief Class
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [Kisuka]
 //= 1.1 Added Baby Job compatibility [Streusel]
 //= 1.2 Rewrote bits [Euphy]
-//============================================================ 
-moc_prydb1,39,129,2	script	Thief Guide#thief	69,{
+//============================================================
+moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 	if (Upper == 1) {
 		if (ADVJOB == Job_Assassin_Cross || ADVJOB == Job_Stalker) {
 			if (Class == Job_Novice_High) {
@@ -42,7 +40,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	69,{
 				close;
 			}else{
 				mes "[Thief Guide]";
-				if (sex)
+				if (Sex)
 					mes "Hey, dude.";
 				else
 					mes "Hey, baby~";
@@ -50,7 +48,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	69,{
 			}
 		}else{
 			mes "[Thief Guide]";
-			if (sex)
+			if (Sex)
 				mes "Hey, dude.";
 			else
 				mes "Hey, baby.";
@@ -157,7 +155,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	69,{
 	close;
 }
 
-moc_prydb1,42,133,2	script	Thief Guildsman#thief	118,{
+moc_prydb1,42,133,2	script	Thief Guildsman#thief	2_M_THIEFMASTER,{
 	if(q_job_thief == 1) {
 		mes "[Thief Guildsman]";
 		mes "Alright. You must have passed the job interview, huh?";

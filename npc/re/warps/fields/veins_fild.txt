@@ -4,8 +4,6 @@
 //= $ephiroth
 //===== Current Version: =====================================
 //= 1.5
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Warp Points for Veins Field
 //===== Additional Comments: =================================
@@ -32,7 +30,7 @@ ve_fild04,115,50,0	warp	ve_fild4-3	1,1,ve_fild06,80,183
 //ve_fild05,359,192,0	warp	ve_fild5-2	1,1,ve_fild06,80,183
 ve_fild06,153,220,0	warp	ve_fild6-1	1,1,veins,218,355
 /*
-ve_fild06,81,177,0	script	ve_fild6-2	45,1,1,{
+ve_fild06,81,177,0	script	ve_fild6-2	WARPNPC,1,1,{
 	if (rand(2))
 		warp "ve_fild04",115,55;
 	else
@@ -45,9 +43,9 @@ ve_fild07,147,371,0	warp	ve_fild7-1	1,1,veins,146,28
 // Renewal Addon
 ve_fild06,81,177,0	warp	VeF06S_VeF04S	1,1,ve_fild04,115,55
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= 1.0 Initial version [$ephiroth]
 //= 1.1 Updated more warps [$ephiroth]
 //= 1.2 Removed some unofficial warps [Playtester]

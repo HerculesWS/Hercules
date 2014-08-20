@@ -1,11 +1,9 @@
 //===== Hercules Script ======================================
-//= Penal Servitude 
+//= Penal Servitude
 //===== By: ==================================================
 //= Lupus
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= A simple Penal Servitude Script.
 //= It could cheer up your prisoners a bit.
@@ -16,10 +14,10 @@
 // 1.2 Stricted the conditions a bit
 //============================================================
 
-sec_pri,36,58,1	script	Chief Warder	105,{ 
+sec_pri,36,58,1	script	Chief Warder	8W_SOLDIER,{
 	mes "[Saddeus]";
 	emotion 1;
-	if(sex) {
+	if(Sex) {
 		mes "Mr. Prisoner #"+BaseLevel+JobLevel+",";
 	} else {
 		mes "Ms. Prisoner #"+BaseLevel+JobLevel+",";
@@ -45,7 +43,7 @@ M_PAY:
 
 M_PAYCASH:
 	if (@MUSTPAY>Zeny) goto L_NOCASH;
-	set Zeny,Zeny-@MUSTPAY;
+	Zeny -= @MUSTPAY;
 	mes "[Saddeus]";
 	mes "OK, sing here and there.";
 	goto L_RELEASE;
@@ -122,14 +120,14 @@ L_W4:
 	close;
 
 M_NO_THANKS:
-	mes "[Saddeus]";  
+	mes "[Saddeus]";
 	if (rand(2)) mes "Is today X-Mas time, huh?";
 	mes "Now shut up and back off!";
 	if (rand(2)) emotion 23;
-	close;  
+	close;
 }
 
-sec_in02,137,57,1	script	Overseer	708,{ 
+sec_in02,137,57,1	script	Overseer	4_M_PAY_SOLDIER,{
 	mes "[Oliver]";
 
 	delitem 4002,countitem(4002);//Items: Fabre_Card,

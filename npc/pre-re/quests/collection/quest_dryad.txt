@@ -1,20 +1,18 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= iRO Repeatable EXP Quests.
 //===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Added Monster Killing quests.
 //= Repeatable EXP Quest (Sharp Leaves)
 //===== Additional Comments: =================================
 //= 1.0 First version.
 //============================================================
 
-um_fild01,34,281,5	script	Lilla#Dryad_Hunt	724,{
+um_fild01,34,281,5	script	Lilla#Dryad_Hunt	4_F_07,{
 	if (checkquest(60131) != -1) {
 		if (checkquest(60131,HUNTING) != 2 ) {
 			mes "[Lilla]";

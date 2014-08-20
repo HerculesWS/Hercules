@@ -1,8 +1,9 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
-#ifndef _PINCODE_H_
-#define _PINCODE_H_
+#ifndef CHAR_PINCODE_H
+#define CHAR_PINCODE_H
 
 #include "char.h"
 
@@ -39,4 +40,4 @@ struct pincode_interface *pincode;
 
 void pincode_defaults(void);
 
-#endif /* _PINCODE_H_ */
+#endif /* CHAR_PINCODE_H */

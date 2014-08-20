@@ -4,8 +4,6 @@
 //= c, L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Inn Npcs, Save and Heal
 //===== Additional Comments: =================================
@@ -15,7 +13,7 @@
 
 // Brasilis
 //============================================================
-bra_in01,27,24,3	script	Hotel Keeper#bra1	478,{
+bra_in01,27,24,3	script	Hotel Keeper#bra1	4_F_BRZ_WOMAN,{
 	mes "[Hotel Keeper]";
 	mes "Welcome to the beautiful Brasilis Hotel.";
 	next;
@@ -40,7 +38,7 @@ bra_in01,27,24,3	script	Hotel Keeper#bra1	478,{
 			mes "[Hotel Keeper]";
 			mes "I will show you a great room.";
 			close2;
-			set zeny,zeny-5000;
+			Zeny -= 5000;
 			percentheal 100,100;
 			warp "bra_in01",144,69;
 			end;

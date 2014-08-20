@@ -14,7 +14,7 @@
 //==================================================
 // ama_fild01 - Amatsu Field
 //==================================================
-ama_fild01,0,0,0,0	monster	Bigfoot	1060,15,5000,0,0
+ama_fild01,0,0,0,0	monster	Bigfoot	1060,10,5000,0,0
 ama_fild01,0,0,0,0	monster	Karakasa	1400,50,5000,0,0
 ama_fild01,0,0,0,0	monster	Kapha	1406,40,5000,0,0
 ama_fild01,0,0,0,0	monster	Miyabi Doll	1404,2,5000,0,0

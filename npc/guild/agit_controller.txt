@@ -48,7 +48,7 @@ OnAgitInit:
 	   (gettime(4)==4) && (gettime(3)>=21 && gettime(3)<23) ||
 	   (gettime(4)==6) && (gettime(3)>=16 && gettime(3)<18)) {
 		if (!agitcheck()) {
-			AgitStart;
+			agitstart;
 			callsub S_DisplayOwners;
 		}
 		end;
@@ -57,9 +57,9 @@ OnAgitInit:
 	// end time checks
 	if ((gettime(4)==2) && (gettime(3)==23) ||
 	    (gettime(4)==4) && (gettime(3)==23) ||
-	    (gettime(4)==6) && (gettime(3)==18)) { 
+	    (gettime(4)==6) && (gettime(3)==18)) {
 		if (agitcheck()) {
-			AgitEnd;
+			agitend;
 			callsub S_DisplayOwners;
 		}
 		end;
@@ -72,10 +72,10 @@ S_DisplayOwners:
 	setarray .@maps$[10],"payg_cas01","payg_cas02","payg_cas03","payg_cas04","payg_cas05";
 	setarray .@maps$[15],"prtg_cas01","prtg_cas02","prtg_cas03","prtg_cas04","prtg_cas05";
 	for( set .@i, 0; .@i <= 19; set .@i, .@i+1 ) {
-		if (GetCastleData(.@maps$[.@i],1))
-			Announce "The [" + GetCastleName(.@maps$[.@i]) + "] castle has been conquered by the [" + GetGuildName(GetCastleData(.@maps$[.@i],1)) + "] guild.",bc_all|bc_woe;
+		if (getcastledata(.@maps$[.@i],1))
+			announce "The [" + getcastlename(.@maps$[.@i]) + "] castle has been conquered by the [" + getguildname(getcastledata(.@maps$[.@i],1)) + "] guild.",bc_all|bc_woe;
 		else
-			Announce "The [" + GetCastleName(.@maps$[.@i]) + "] castle is currently unoccupied.",bc_all|bc_woe;
+			announce "The [" + getcastlename(.@maps$[.@i]) + "] castle is currently unoccupied.",bc_all|bc_woe;
 	}
 	end;
 }

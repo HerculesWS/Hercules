@@ -5,7 +5,7 @@
 // Registration NPC's
 // *********************************************************************
 
-bat_room,142,227,4	script	Registration::Fl2R_Guillaume	418,{
+bat_room,142,227,4	script	Registration::Fl2R_Guillaume	4_M_KY_KNT,{
 	end;
 OnInit:
 	waitingroom "Battle Station 10 Players",10,"Flavius_BG2::OnGuillaumeJoin",1;
@@ -15,7 +15,7 @@ OnEnterBG:
 	end;
 }
 
-bat_room,142,204,0	script	Registration::Fl2R_Croix	414,{
+bat_room,142,204,0	script	Registration::Fl2R_Croix	4_M_CRU_KNT,{
 	end;
 OnInit:
 	waitingroom "Battle Station 10 Players",10,"Flavius_BG2::OnCroixJoin",1;
@@ -268,7 +268,7 @@ OnReset:
 // Battleground rewards
 // *********************************************************************
 
-bat_b02,390,13,5	script	Guillaume Vintenar#fl2	419,{
+bat_b02,390,13,5	script	Guillaume Vintenar#fl2	4_M_KY_HEAD,{
 	if( $@FlaviusBG2_Victory )
 	{
 		if( $@FlaviusBG2_Victory == Bat_Team )
@@ -278,20 +278,18 @@ bat_b02,390,13,5	script	Guillaume Vintenar#fl2	419,{
 			mes "Let's enjoy our glorious victory!";
 			mes "" + strcharinfo(0) + ", its a sign reflecting victory";
 			close2;
-			set .@Reward, 9;
-		}
-		else
-		{ // 
+			set .@reward, 9;
+		} else {
 			mes "[Swandery]";
 			mes "You lost, but you're dedicated to this battle.";
 			mes "This is a reward for your great dedication by Guillaume Marollo!";
 			mes "Just take this defeat a lesson, and later you would definitely learn.";
 			close2;
-			set .@Reward, 3;
+			set .@reward, 3;
 		}
 
 		setquest 2070;
-		getitem 7829, .@Reward;
+		getitem 7829, .@reward;
 		bg_leave;
 		warp "bat_room",155,150;
 		end;
@@ -299,7 +297,7 @@ bat_b02,390,13,5	script	Guillaume Vintenar#fl2	419,{
 	end;
 }
 
-bat_b02,10,293,5	script	Croix Vintenar#fl2	415,{
+bat_b02,10,293,5	script	Croix Vintenar#fl2	4_M_CRU_HEAD,{
 	if( $@FlaviusBG2_Victory )
 	{
 		if( $@FlaviusBG2_Victory == Bat_Team )
@@ -309,20 +307,18 @@ bat_b02,10,293,5	script	Croix Vintenar#fl2	415,{
 			mes "Let's enjoy our glorious victory!";
 			mes "" + strcharinfo(0) + ", its a sign reflecting victory";
 			close2;
-			set .@Reward, 9;
-		}
-		else
-		{ // 
+			set .@reward, 9;
+		} else {
 			mes "[Swandery]";
 			mes "Oh, " + strcharinfo(0) + ". Don't be sad.";
 			mes "Even though we didn't win, we did our best.";
 			mes "This is a Royal gift from Croix, and please don't forget this battle. We can win the next.";
 			close2;
-			set .@Reward, 3;
+			set .@reward, 3;
 		}
 
 		setquest 2070;
-		getitem 7829, .@Reward;
+		getitem 7829, .@reward;
 		bg_leave;
 		warp "bat_room",155,150;
 		end;
@@ -333,7 +329,7 @@ bat_b02,10,293,5	script	Croix Vintenar#fl2	415,{
 // Battleground Therapist
 // *********************************************************************
 
-bat_b02,390,13,5	script	Therapist in battle#fl22	95,{
+bat_b02,390,13,5	script	Therapist in battle#fl22	4_F_SISTER,{
 	mes "[Therapist in battle]";
 	mes "Just close your eyes, and take a deep breathe.";
 	mes "You can be free from pain.";
@@ -341,7 +337,7 @@ bat_b02,390,13,5	script	Therapist in battle#fl22	95,{
 	close;
 }
 
-bat_b02,10,293,5	script	Therapist in battle#fl21	95,{
+bat_b02,10,293,5	script	Therapist in battle#fl21	4_F_SISTER,{
 	mes "[Therapist in battle]";
 	mes "Just close your eyes, and take a deep breathe.";
 	mes "You can be free from pain.";
@@ -352,7 +348,7 @@ bat_b02,10,293,5	script	Therapist in battle#fl21	95,{
 // Battleground Respawn
 // *********************************************************************
 
-bat_b02,390,10,0	script	#gfl2_respawn	139,{
+bat_b02,390,10,0	script	#gfl2_respawn	HIDDEN_WARP_NPC,{
 	end;
 
 OnBGStart:
@@ -374,7 +370,7 @@ OnTimer25000:
 	end;
 }
 
-bat_b02,10,290,0	script	#cfl2_respawn	139,{
+bat_b02,10,290,0	script	#cfl2_respawn	HIDDEN_WARP_NPC,{
 	end;
 
 OnBGStart:
@@ -399,30 +395,30 @@ OnTimer25000:
 // Flags
 // *********************************************************************
 
-bat_b02,304,231,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat32	973
-bat_b02,319,231,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat33	973
-bat_b02,304,218,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat34	973
-bat_b02,319,218,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat35	973
-bat_b02,304,231,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat36	973
-bat_b02,304,231,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat37	973
-bat_b02,335,142,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat38	973
-bat_b02,335,157,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat39	973
-bat_b02,390,16,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat40	973
-bat_b02,292,163,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat41	973
-bat_b02,292,136,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat42	973
-bat_b02,241,185,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat43	973
-bat_b02,247,179,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat44	973
+bat_b02,304,231,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat32	1_FLAG_LION
+bat_b02,319,231,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat33	1_FLAG_LION
+bat_b02,304,218,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat34	1_FLAG_LION
+bat_b02,319,218,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat35	1_FLAG_LION
+bat_b02,304,231,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat36	1_FLAG_LION
+bat_b02,304,231,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat37	1_FLAG_LION
+bat_b02,335,142,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat38	1_FLAG_LION
+bat_b02,335,157,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat39	1_FLAG_LION
+bat_b02,390,16,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat40	1_FLAG_LION
+bat_b02,292,163,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat41	1_FLAG_LION
+bat_b02,292,136,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat42	1_FLAG_LION
+bat_b02,241,185,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat43	1_FLAG_LION
+bat_b02,247,179,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat44	1_FLAG_LION
 
-bat_b02,96,81,1	duplicate(Croix camp#bat)	Croix camp#bat30	974
-bat_b02,96,68,1	duplicate(Croix camp#bat)	Croix camp#bat31	974
-bat_b02,79,81,1	duplicate(Croix camp#bat)	Croix camp#bat32	974
-bat_b02,79,68,1	duplicate(Croix camp#bat)	Croix camp#bat33	974
-bat_b02,96,81,1	duplicate(Croix camp#bat)	Croix camp#bat34	974
-bat_b02,96,81,1	duplicate(Croix camp#bat)	Croix camp#bat35	974
-bat_b02,59,164,1	duplicate(Croix camp#bat)	Croix camp#bat36	974
-bat_b02,59,137,1	duplicate(Croix camp#bat)	Croix camp#bat37	974
-bat_b02,10,296,1	duplicate(Croix camp#bat)	Croix camp#bat38	974
-bat_b02,110,162,1	duplicate(Croix camp#bat)	Croix camp#bat39	974
-bat_b02,110,137,1	duplicate(Croix camp#bat)	Croix camp#bat40	974
-bat_b02,152,120,1	duplicate(Croix camp#bat)	Croix camp#bat41	974
-bat_b02,158,114,1	duplicate(Croix camp#bat)	Croix camp#bat42	974
+bat_b02,96,81,1	duplicate(Croix camp#bat)	Croix camp#bat30	1_FLAG_EAGLE
+bat_b02,96,68,1	duplicate(Croix camp#bat)	Croix camp#bat31	1_FLAG_EAGLE
+bat_b02,79,81,1	duplicate(Croix camp#bat)	Croix camp#bat32	1_FLAG_EAGLE
+bat_b02,79,68,1	duplicate(Croix camp#bat)	Croix camp#bat33	1_FLAG_EAGLE
+bat_b02,96,81,1	duplicate(Croix camp#bat)	Croix camp#bat34	1_FLAG_EAGLE
+bat_b02,96,81,1	duplicate(Croix camp#bat)	Croix camp#bat35	1_FLAG_EAGLE
+bat_b02,59,164,1	duplicate(Croix camp#bat)	Croix camp#bat36	1_FLAG_EAGLE
+bat_b02,59,137,1	duplicate(Croix camp#bat)	Croix camp#bat37	1_FLAG_EAGLE
+bat_b02,10,296,1	duplicate(Croix camp#bat)	Croix camp#bat38	1_FLAG_EAGLE
+bat_b02,110,162,1	duplicate(Croix camp#bat)	Croix camp#bat39	1_FLAG_EAGLE
+bat_b02,110,137,1	duplicate(Croix camp#bat)	Croix camp#bat40	1_FLAG_EAGLE
+bat_b02,152,120,1	duplicate(Croix camp#bat)	Croix camp#bat41	1_FLAG_EAGLE
+bat_b02,158,114,1	duplicate(Croix camp#bat)	Croix camp#bat42	1_FLAG_EAGLE

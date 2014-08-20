@@ -1,22 +1,20 @@
 //===== Hercules Script ======================================
 //= Shadow Chaser Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Muad_Dib
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job change Quest from Rogue / Stalker -> Shadow Chaser.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [ultragunner, Oshinoke]
 //= 1.1 Standardized. [Euphy]
 //= 1.2 Updated dialogue. [Joseph]
 //= 1.3 Updated to official script. [Euphy]
 //============================================================
 
-morocc,156,70,3	script	Girl#sc00	93,3,3,{
+morocc,156,70,3	script	Girl#sc00	4_F_04,3,3,{
 	mes "[Girl]";
 	if (BaseJob == Job_Rogue) {
 		if (job_sha == 0) {
@@ -75,7 +73,7 @@ OnTouch:
 	end;
 }
 
-in_rogue,376,100,5	script	Guild Member#sc01	828,{
+in_rogue,376,100,5	script	Guild Member#sc01	4_M_ROGUE,{
 	if (BaseJob == Job_Rogue) {
 		if (job_sha < 2) {
 			set @job_sha,0;
@@ -145,7 +143,7 @@ in_rogue,376,100,5	script	Guild Member#sc01	828,{
 	close;
 }
 
-in_rogue,379,99,1	script	Guild Member#sc02	747,{
+in_rogue,379,99,1	script	Guild Member#sc02	4_F_ROGUE,{
 	if (BaseJob == Job_Rogue) {
 		if (job_sha < 2) {
 			set @job_sha,1;
@@ -175,7 +173,7 @@ in_rogue,379,99,1	script	Guild Member#sc02	747,{
 	close;
 }
 
-in_rogue,379,101,3	script	Scary Man#sc03	810,{
+in_rogue,379,101,3	script	Scary Man#sc03	1_M_SIGNROGUE,{
 	if (job_sha == 0) {
 		if (BaseJob == Job_Rogue && BaseLevel > 98 && JobLevel > 49) {
 			mes "[Scary man]";
@@ -294,7 +292,7 @@ L_Code:
 	return;
 }
 
-s_atelier,65,123,5	script	Manager#sc04_prt	903,{
+s_atelier,65,123,5	script	Manager#sc04_prt	4_M_KHKYEL,{
 	if (job_sha == 2) {
 		mes "[Manager]";
 		mes "Where's Max!?";
@@ -613,7 +611,7 @@ L_Code:
 	close;
 }
 
-s_atelier,168,65,5	script	Manager#sc08_ra	923,{
+s_atelier,168,65,5	script	Manager#sc08_ra	4_M_DOCTOR,{
 	if (job_sha < 10) {
 		mes "[Manager]";
 		mes "Who are you?";
@@ -885,7 +883,7 @@ L_Code:
 	close;
 }
 
-s_atelier,167,129,3	script	Manager#sc06_yuno	806,{
+s_atelier,167,129,3	script	Manager#sc06_yuno	1_M_SIGNART,{
 	if (job_sha < 19) {
 		mes "[Manager]";
 		mes "What?";
@@ -1120,7 +1118,7 @@ L_Code:
 	return;
 }
 
-s_atelier,25,75,3	script	Manager#sc10_lgt	899,{
+s_atelier,25,75,3	script	Manager#sc10_lgt	4_M_HUMAN_02,{
 	if (job_sha < 26) {
 		mes "[Manager]";
 		mes "You are?";
@@ -1314,7 +1312,7 @@ s_atelier,25,75,3	script	Manager#sc10_lgt	899,{
 	close;
 }
 
-s_atelier,73,65,3	script	Vicente#sc12_lgt	899,{
+s_atelier,73,65,3	script	Vicente#sc12_lgt	4_M_HUMAN_02,{
 	mes "[Vicente]";
 	if (job_sha < 29) {
 		mes "If you don't have anything special to do here, you'd better leave.";
@@ -1340,7 +1338,7 @@ s_atelier,73,65,3	script	Vicente#sc12_lgt	899,{
 	close;
 }
 
-s_atelier,70,66,4	script	Dumk#sc13_lgh	481,{
+s_atelier,70,66,4	script	Dumk#sc13_lgh	4_M_SHADOWCHASER,{
 	if (Class == Job_Shadow_Chaser || Class == Job_Shadow_Chaser_T || Class == Job_Baby_Chaser) {
 		mes "[Dumk]";
 		mes "What is it?";
@@ -1670,7 +1668,7 @@ s_atelier,70,66,4	script	Dumk#sc13_lgh	481,{
 
 // Flames
 //============================================================
-tur_dun03,38,209,1	script	Blue Flame#sc_f01	802,{
+tur_dun03,38,209,1	script	Blue Flame#sc_f01	4_NFWISP,{
 	if (job_sha == 5) {
 		mes "A blue flame is roaring.";
 		mes "The deciphered code means...";
@@ -1755,7 +1753,7 @@ tur_dun03,38,209,1	script	Blue Flame#sc_f01	802,{
 	close;
 }
 
-ice_dun02,206,223,1	script	Red Flame#sc_f02	802,{
+ice_dun02,206,223,1	script	Red Flame#sc_f02	4_NFWISP,{
 	if (job_sha < 11) {
 		mes "An unknown red flame is roaring.";
 		close;
@@ -1819,7 +1817,7 @@ ice_dun02,206,223,1	script	Red Flame#sc_f02	802,{
 	close;
 }
 
-niflheim,230,276,1	script	Red Flame#sc_f03	802,{
+niflheim,230,276,1	script	Red Flame#sc_f03	4_NFWISP,{
 	if (job_sha < 21) {
 		mes "That's a mysterious flame.";
 		mes "It looks like cursing.";
@@ -1922,7 +1920,7 @@ niflheim,230,276,1	script	Red Flame#sc_f03	802,{
 
 // Boxes
 //============================================================
-job3_sha01,22,78,0	script	????#keybox01	844,{
+job3_sha01,22,78,0	script	????#keybox01	CLEAR_NPC,{
 	if (checkweight(1201,1) == 0) {
 		mes "- You can't continue on in this quest because you are overweight. -";
 		close;
@@ -1992,13 +1990,13 @@ job3_sha01,22,78,0	script	????#keybox01	844,{
 	close;
 }
 
-job3_sha01,25,28,0	script	????#keybox02	844,{
+job3_sha01,25,28,0	script	????#keybox02	CLEAR_NPC,{
 	if (checkweight(1201,1) == 0) {
 		mes "- You can't continue on in this quest because you are overweight. -";
 		close;
 	}
 	setarray .@Words$[0],"SEED","FOOT","COLD";
-	setarray .@Numbers[0],24,25,20;
+	setarray .@numbers[0],24,25,20;
 	set .@i,job_sha-14;
 	if (job_sha > 13 && job_sha < 17) {
 		mes "There are lots of boxes.";
@@ -2025,8 +2023,8 @@ job3_sha01,25,28,0	script	????#keybox02	844,{
 		switch(select("Input the answer.:I can't get it.")) {
 		case 1:
 			input .@input;
-			if (.@input == .@Numbers[.@i]) {
-				mes "You put 2 and "+(.@Numbers[.@i]-20)+".";
+			if (.@input == .@numbers[.@i]) {
+				mes "You put 2 and "+(.@numbers[.@i]-20)+".";
 				mes "The box opens and you get one key.";
 				next;
 				mes "You got the Key of Illusion.";
@@ -2071,7 +2069,7 @@ job3_sha01,25,28,0	script	????#keybox02	844,{
 	end;
 }
 
-job3_sha01,73,80,0	script	????#keybox03	844,{
+job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 	if (checkweight(1201,1) == 0) {
 		mes "- You can't continue on in this quest because you are overweight. -";
 		close;
@@ -2208,7 +2206,7 @@ job3_sha01,73,80,0	script	????#keybox03	844,{
 	end;
 }
 
-job3_sha01,71,27,0	script	????#keybox04	844,{
+job3_sha01,71,27,0	script	????#keybox04	CLEAR_NPC,{
 	if (checkweight(1201,1) == 0) {
 		mes "- You can't continue on in this quest because you are overweight. -";
 		close;
@@ -2269,7 +2267,7 @@ job3_sha01,71,27,0	script	????#keybox04	844,{
 
 // Brush Shops
 //============================================================
-s_atelier,29,119,3	script	Max#sc05_prt	97,{
+s_atelier,29,119,3	script	Max#sc05_prt	4W_M_01,{
 	mes "[Max]";
 	mes "Welcome~";
 	if (Class == Job_Shadow_Chaser || Class == Job_Shadow_Chaser_T || Class == Job_Baby_Chaser) {
@@ -2306,7 +2304,7 @@ s_atelier,29,119,3	script	Max#sc05_prt	97,{
 			mes "Good luck!";
 			delitem 7150,.@i[2]; //Bamboo_Cut
 			delitem 949,.@i[3]; //Feather
-			set Zeny, Zeny - .@i[4];
+			Zeny -= .@i[4];
 			getitem .@i[1],1; //Makeover_Brush,Paint_Brush
 			close;
 		}
@@ -2334,7 +2332,7 @@ s_atelier,29,119,3	script	Max#sc05_prt	97,{
 	}
 }
 
-s_atelier,136,70,3	script	Titika#sc09_ra	914,{
+s_atelier,136,70,3	script	Titika#sc09_ra	4_F_CHILD,{
 	mes "[Titika]";
 	mes "Welcome.";
 	if (Class == Job_Shadow_Chaser || Class == Job_Shadow_Chaser_T || Class == Job_Baby_Chaser) {
@@ -2359,7 +2357,7 @@ s_atelier,136,70,3	script	Titika#sc09_ra	914,{
 			mes "I'll exchange it with the goods that I made.";
 			delitem 7150,.@i[2]; //Bamboo_Cut
 			delitem 949,.@i[3]; //Feather
-			set Zeny, Zeny - .@i[4];
+			Zeny -= .@i[4];
 			getitem .@i[1],1; //Makeover_Brush,Paint_Brush
 			close;
 		}
@@ -2385,7 +2383,7 @@ s_atelier,136,70,3	script	Titika#sc09_ra	914,{
 	}
 }
 
-s_atelier,124,128,3	script	RimiGX#sc07_yuno	862,{
+s_atelier,124,128,3	script	RimiGX#sc07_yuno	4_F_LGTGIRL,{
 	mes "[RimiGX]";
 	mes "Welcome.";
 	if (Class == Job_Shadow_Chaser || Class == Job_Shadow_Chaser_T || Class == Job_Baby_Chaser) {
@@ -2409,7 +2407,7 @@ s_atelier,124,128,3	script	RimiGX#sc07_yuno	862,{
 			mes "It will be fast when I exchange the stuff made?";
 			delitem 7150,.@i[2]; //Bamboo_Cut
 			delitem 949,.@i[3]; //Feather
-			set Zeny, Zeny - .@i[4];
+			Zeny -= .@i[4];
 			getitem .@i[1],1; //Makeover_Brush,Paint_Brush
 			close;
 		}
@@ -2434,7 +2432,7 @@ s_atelier,124,128,3	script	RimiGX#sc07_yuno	862,{
 	}
 }
 
-s_atelier,26,68,3	script	Vito#sc11_lgt	904,{
+s_atelier,26,68,3	script	Vito#sc11_lgt	4_M_KHMAN,{
 	mes "[Vito]";
 	mes "Welcome.";
 	if (Class == Job_Shadow_Chaser || Class == Job_Shadow_Chaser_T || Class == Job_Baby_Chaser) {
@@ -2459,7 +2457,7 @@ s_atelier,26,68,3	script	Vito#sc11_lgt	904,{
 			mes "I'm going to exchange the blush I made before.";
 			delitem 7150,.@i[2]; //Bamboo_Cut
 			delitem 949,.@i[3]; //Feather
-			set Zeny, Zeny - .@i[4];
+			Zeny -= .@i[4];
 			getitem .@i[1],1; //Makeover_Brush,Paint_Brush
 			close;
 		}
@@ -2485,7 +2483,7 @@ s_atelier,26,68,3	script	Vito#sc11_lgt	904,{
 
 // Warp Portal
 //============================================================
-tha_t01,149,228,0	script	#shadowc02	45,2,2,{
+tha_t01,149,228,0	script	#shadowc02	WARPNPC,2,2,{
 	end;
 OnTouch:
 	mes "You can feel weird power.";

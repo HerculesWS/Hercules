@@ -1,19 +1,19 @@
 //===== Hercules Script ======================================
 //= Moscovia Town
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Kisuka
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.2
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Moscovia Town Script
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [Kisuka]
 //= 1.1 Removed villagers (they are part of a quest). [Kisuka]
 //= 1.2 Moved Alberta NPC to pre-re/re paths. [Euphy]
 //============================================================
 
-// Moscovia Transportation
-//============================================================ 
+// Moscovia Transportation :: mosk_trans
+//============================================================
 -	script	::PR_Officer_moscovia	-1,{
 	mes "[Moscovia P.R. Officer]";
 	mes "Moscovia! Do you know Moscovia?";
@@ -73,11 +73,11 @@
 				mes "to go to Moscovia";
 				mes "Thank you.";
 				close;
-			}else{
+			} else {
 				mes "[Moscovia P.R. Officer]";
 				mes "Ok then, we're leaving now.";
 				close2;
-				set Zeny,Zeny - 10000;
+				Zeny -= 10000;
 				warp "moscovia",163,55;
 				end;
 			}
@@ -90,7 +90,7 @@
 	}
 }
 
-moscovia,166,53,4	script	Moscovia P.R. Officer#2	960,{
+moscovia,166,53,4	script	Moscovia P.R. Officer#2	4_F_RUSWOMAN2,{
 	mes "[Moscovia P.R. Officer]";
 	mes "How was your trip?";
 	mes "Do you have good memories from Moscovia?";
@@ -114,9 +114,10 @@ moscovia,166,53,4	script	Moscovia P.R. Officer#2	960,{
 	end;
 }
 
-// Generic Moscovia NPCs
-//============================================================ 
-moscovia,253,166,4	script	Soldier#mosk1	966,{
+
+// Moscovia Palace :: mos_swan
+//============================================================
+moscovia,253,166,4	script	Soldier#mosk1	4_M_RUSKNIGHT,{
 	mes "[Soldier]";
 	mes "Our dear Csar Alexsay III is in the palace.";
 	mes "He rules over Moscovia.";
@@ -124,15 +125,12 @@ moscovia,253,166,4	script	Soldier#mosk1	966,{
 	close;
 }
 
-// Moscovia Palace
-//============================================================ 
--	script	Soldier#mosk::MoscSoldier	966,{
+-	script	Soldier#mosk::MoscSoldier	4_M_RUSKNIGHT,{
 	mes "[Soldier]";
 	mes "Please be silent or the Csar will be angry.";
 	close;
 }
-
-mosk_in,118,66,5	duplicate(MoscSoldier)	Soldier#mosk02	966
-mosk_in,133,110,3	duplicate(MoscSoldier)	Soldier#mosk03	966
-mosk_in,133,73,3	duplicate(MoscSoldier)	Soldier#mosk04	966
-mosk_in,113,124,5	duplicate(MoscSoldier)	Soldier#mosk05	966
+mosk_in,118,66,5	duplicate(MoscSoldier)	Soldier#mosk02	4_M_RUSKNIGHT
+mosk_in,133,110,3	duplicate(MoscSoldier)	Soldier#mosk03	4_M_RUSKNIGHT
+mosk_in,133,73,3	duplicate(MoscSoldier)	Soldier#mosk04	4_M_RUSKNIGHT
+mosk_in,113,124,5	duplicate(MoscSoldier)	Soldier#mosk05	4_M_RUSKNIGHT

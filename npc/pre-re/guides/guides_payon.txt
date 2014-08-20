@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Payon Guides
 //===== By: ==================================================
 //= kobra_k88; L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.6
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Official COnversion]
 //= Guides for the City of Payon
@@ -16,12 +14,12 @@
 //=     to Muad_Dib
 //= 1.3a Fixed some problems with duplicated text, thanks to muad_dib [MasterOfMuppets]
 //= 1.4 Fitted the many lines into 1 or 2, and corrected some typos [erKURITA]
-//= 1.4a Tixed Archer Village Guide [Lupus] 
+//= 1.4a Tixed Archer Village Guide [Lupus]
 //= 1.5 Removed Duplicates [Silent]
 //= 1.6 Rescripted to official 10.3 standards. [L0ne_W0lf]
 //============================================================
 
-payon,162,67,4	script	Guide#pay	708,{
+payon,162,67,4	script	Guide#pay	4_M_PAY_SOLDIER,{
 	cutin "pay_soldier",2;
 	mes "[Payon Guide]";
 	mes "Welcome to the";
@@ -190,7 +188,7 @@ payon,162,67,4	script	Guide#pay	708,{
 	end;
 }
 
-pay_arche,85,30,2	script	Guide#2pay	708,{
+pay_arche,85,30,2	script	Guide#2pay	4_M_PAY_SOLDIER,{
 	cutin "pay_soldier",2;
 	mes "[Payon Guide]";
 	mes "Welcome to the";
@@ -246,7 +244,7 @@ pay_arche,85,30,2	script	Guide#2pay	708,{
 				case 4:
 					mes "[Payon Guide]";
 					mes "If you'd like to erase the marks on the mini-map, select menu, 'Wipe all indicators on the mini-map'.";
-					set @loop2,0;
+					set .@loop2,0;
 					break;
 				}
 			}

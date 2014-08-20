@@ -1,0 +1,58 @@
+//===== Hercules Script =======================================
+//= Sample: NPC Trader
+//===== By: ==================================================
+//= Hercules Dev Team
+//===== Current Version: =====================================
+//= 20131225
+//===== Description: ========================================= 
+//= Demonstrates NPC Trader.
+//============================================================
+
+/* ordinary zeny trader */
+prontera,152,151,1	trader	TestTrader	4_F_EDEN_OFFICER,{
+	OnInit:
+	sellitem Valkyrja's_Shield;
+	end;
+}
+/* ordinary cash trader */
+prontera,152,152,1	trader	TestTraderCash	4_F_EDEN_OFFICER,{
+	OnInit:
+	tradertype(NST_CASH);
+	sellitem Valkyrja's_Shield;
+	end;
+}
+/* custom npc trader */
+prontera,153,152,1	trader	TestCustom2	4_F_EDEN_OFFICER,{
+	OnInit:
+	tradertype(NST_CUSTOM);
+	sellitem Red_Potion,2;
+	end;
+
+/* allows currency to be item 501 and 502 */
+OnCountFunds:
+	setcurrency(countitem(Red_Potion),countitem(Orange_Potion));
+	end;
+
+/* receives @price (total cost) and @points (the secondary input field for cash windows) */
+OnPayFunds:
+	dispbottom "Hi: price="+@price+" and points="+@points;
+	if( countitem(Orange_Potion) < @points || countitem(Red_Potion) < @price-@points )
+		end;
+	delitem Orange_Potion,@points;
+	delitem Red_Potion,@price-@points;
+	purchaseok();
+	end;
+}
+/* demonstrates Market Trader */
+prontera,150,160,6	trader	HaiMarket	4_F_EDEN_OFFICER,{
+OnInit:
+	tradertype(NST_MARKET);
+	sellitem Red_Potion,-1,49;
+	end;
+
+OnClock0000://resupplies red potions on midnight
+OnMyResupply:
+	if( shopcount(Red_Potion) < 20 )
+		sellitem Red_Potion,-1,49;
+	end;
+}

@@ -3,13 +3,12 @@
 //===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
-//= 1.8
+//= 2.0
 //===== Description: =========================================
 //= [Official Conversion]
 //= - Hugel Monster Races (Single and Double)
 //= - Prize Medal Exchanging, and Monster Track NPCs.
 //= - Contains both euRO and iRO dialog.
-//= - There are no permenent variables.
 //===== Additional Comments: =================================
 //= 1.0 First version. Please report bugs. [L0ne_W0lf]
 //= 1.1 Corrected a minor typo. [L0ne_W0lf]
@@ -20,10 +19,12 @@
 //= 1.6 Updated experience rewards. [L0ne_W0lf]
 //= 1.7 Optimization, -4000 lines (more can still be done). [Euphy]
 //= 1.8 Optimized.
-//= 	Fixed Medal Distributor (Dual Race) disappears accordingly. [Joseph] 
+//=     Fixed Medal Distributor (Dual Race) disappears accordingly. [Joseph]
+//= 1.9 Updated RE/Pre-RE EXP. [Euphy]
+//= 2.0 Added GM management NPC. [Euphy]
 //============================================================
 
-// Monstrer Race - Single Monster Race
+// Monster Race - Single Monster Race
 //============================================================
 hugel,51,61,0	script	#race_timer1-1	-1,{
 OnInit:
@@ -182,7 +183,7 @@ OnInit:
 	end;
 }
 
-p_track01,73,22,1	script	Ticket Helper#single	899,{
+p_track01,73,22,1	script	Ticket Helper#single	4_M_HUMAN_02,{
 	mes "[Ticket Helper]";
 	mes "Welcome to the";
 	mes "Monster Race Arena.";
@@ -292,7 +293,7 @@ OnTimer9000:
 	function	WN	{
 		set .@n, charat(strnpcinfo(0),getstrlen(strnpcinfo(0))-1);
 		if (!getarg(0)) return .@n;
-		return ((.@n <= 3)?((.@n == 1)?"1st":((.@n == 2)?"2nd":"3rd")):.@n+"th"); 
+		return ((.@n <= 3)?((.@n == 1)?"1st":((.@n == 2)?"2nd":"3rd")):.@n+"th");
 	}
 	
 OnInit:
@@ -307,7 +308,7 @@ p_track01,30,32,0	duplicate(Runner#main)	Runner No. 4	-1,1,0
 p_track01,30,30,0	duplicate(Runner#main)	Runner No. 5	-1,1,0
 p_track01,30,28,0	duplicate(Runner#main)	Runner No. 6	-1,1,0
 
-p_track01,67,45,5	script	Medal Distributor#single	845,{
+p_track01,67,45,5	script	Medal Distributor#single	4_F_RACING,{
 	if (!checkweight(908,200)) {
 		mes "[Medal Distributor]";
 		mes "I'm sorry, but I can't";
@@ -333,7 +334,7 @@ p_track01,67,45,5	script	Medal Distributor#single	845,{
 		mes "after the race finishes. Prize";
 		mes "Medals may be given to Wayne";
 		mes "in Hugel in exchange for items.";
-		next; 
+		next;
 		if ($@monster_race) {
 			if (monster_race_1 == $@monster_race) {
 				mes "[Medal Distributor]";
@@ -513,7 +514,7 @@ OnInit:
 	end;
 }
 
-p_track01,76,36,1	script	Exit Guide#single	798,{
+p_track01,76,36,1	script	Exit Guide#single	4_M_NFMAN,{
 	mes "[Exit Guide]";
 	mes "If you have a winning Racing";
 	mes "Ticket, please make sure that";
@@ -557,7 +558,7 @@ p_track01,76,36,1	script	Exit Guide#single	798,{
 	end;
 }
 
-hugel,58,72,6	script	Eckar Ellebird#single	798,{
+hugel,58,72,6	script	Eckar Ellebird#single	4_M_NFMAN,{
 	mes "[Eckar Ellebird]";
 	mes "Welcome to the biggest";
 	mes "attraction in Hugel, the";
@@ -656,7 +657,7 @@ hugel,58,72,6	script	Eckar Ellebird#single	798,{
 			mes "that you enjoy the race~";
 			mes "Let me guide you inside";
 			mes "the Monster Race Arena now.";
-			set zeny,zeny-2000;
+			Zeny -= 2000;
 			set monster_race_1,0;
 			close2;
 			warp "p_track01",75,41;
@@ -669,7 +670,7 @@ hugel,58,72,6	script	Eckar Ellebird#single	798,{
 			mes "we ask that you please";
 			mes "wait a little while longer.";
 			close;
-		} 
+		}
 	} else {
 		if ($@mon_time_1_1 == 1) {
 			mes "[Eckar Ellebird]";
@@ -677,7 +678,7 @@ hugel,58,72,6	script	Eckar Ellebird#single	798,{
 			mes "you enjoy this race.";
 			mes "Let me guide you now";
 			mes "to the Monster Race Arena.";
-			set zeny,zeny-2000;
+			Zeny -= 2000;
 			set monster_race_1,0;
 			close2;
 			warp "p_track01",75,41;
@@ -714,7 +715,7 @@ hugel,58,72,6	script	Eckar Ellebird#single	798,{
 			mes "Thank you~";
 			mes "I hope you enjoy";
 			mes "watching this race!";
-			set zeny,zeny-500;
+			Zeny -= 500;
 			set monster_race_1,0;
 			close2;
 			warp "p_track01",75,41;
@@ -733,10 +734,16 @@ hugel,58,72,6	script	Eckar Ellebird#single	798,{
 	mes "which the winners can claim";
 	mes "their Prize Medals. The gate";
 	mes "will open soon, so please wait.";
-	close;				
+	close;
+OnEnable:
+	enablenpc "Eckar Ellebird#single";
+	end;
+OnDisable:
+	disablenpc "Eckar Ellebird#single";
+	end;
 }
 
-p_track01,39,49,3	script	Game Guide#single	845,{
+p_track01,39,49,3	script	Game Guide#single	4_F_RACING,{
 	mes "[Game Guide]";
 	mes "Welcome to the";
 	mes "Monster Race Arena.";
@@ -993,7 +1000,7 @@ p_track01,55,28,0	duplicate(Tire_1)	Tire6#4	-1,0,0
 p_track01,51,28,0	duplicate(Tire_1)	Tire6#5	-1,0,0
 p_track01,47,28,0	duplicate(Tire_1)	Tire6#6	-1,0,0
 
-// Monstrer Race - Dual Monster Race
+// Monster Race - Dual Monster Race
 //============================================================
 hugel,47,56,0	script	#race_timer2-1	-1,{
 OnEnable:
@@ -1172,7 +1179,7 @@ OnTimer300000:
 	end;
 }
 
-hugel,62,69,1	script	Eckar Erenes#double	798,{
+hugel,62,69,1	script	Eckar Erenes#double	4_M_NFMAN,{
 	mes "[Eckar Erenes]";
 	mes "Welcome to the";
 	mes "Monster Race Arena,";
@@ -1274,7 +1281,7 @@ hugel,62,69,1	script	Eckar Erenes#double	798,{
 			mes "that you enjoy the race~";
 			mes "Let me guide you inside";
 			mes "the Monster Race Arena now.";
-			set zeny,zeny-2000;
+			Zeny -= 2000;
 			set monster_race_2_1,0;
 			set monster_race_2_2,0;
 			close2;
@@ -1297,7 +1304,7 @@ hugel,62,69,1	script	Eckar Erenes#double	798,{
 			mes "you enjoy this race.";
 			mes "Let me guide you now";
 			mes "to the Monster Race Arena.";
-			set zeny,zeny-2000;
+			Zeny -= 2000;
 			set monster_race_2_1,0;
 			set monster_race_2_2,0;
 			close2;
@@ -1335,7 +1342,7 @@ hugel,62,69,1	script	Eckar Erenes#double	798,{
 			mes "Thank you~";
 			mes "I hope you enjoy";
 			mes "watching this race!";
-			set zeny,zeny-500;
+			Zeny -= 500;
 			set monster_race_2_1,0;
 			set monster_race_2_2,0;
 			close2;
@@ -1346,7 +1353,7 @@ hugel,62,69,1	script	Eckar Erenes#double	798,{
 		mes "I'm sorry, but you don't";
 		mes "have enough money to pay";
 		mes "the 500 zeny spectator fee.";
-		close;		
+		close;
 	}
 	mes "[Eckar Erenes]";
 	mes "I'm sorry, but a monster";
@@ -1356,9 +1363,15 @@ hugel,62,69,1	script	Eckar Erenes#double	798,{
 	mes "their Prize Medals. The gate";
 	mes "will open soon, so please wait.";
 	close;
+OnEnable:
+	enablenpc "Eckar Erenes#double";
+	end;
+OnDisable:
+	disablenpc "Eckar Erenes#double";
+	end;
 }
 
-p_track02,73,22,1	script	Ticket Helper#2	899,{
+p_track02,73,22,1	script	Ticket Helper#2	4_M_HUMAN_02,{
 	if (!checkweight(908,200)) {
 		mes "[Ticket Helper]";
 		mes "Welcome to the";
@@ -1412,19 +1425,19 @@ p_track02,73,22,1	script	Ticket Helper#2	899,{
 				set .@m, 0;
 				set .@m, select (.@m$);
 				switch (.@m) {
-					Case 1: setarray .@w$, "a friendly","Poring type monster"; break;
-					Case 2: setarray .@w$, "an adorable","Lunatic type monster"; break;
-					Case 3: setarray .@w$, "a darling","Savage Babe monster"; break;
-					Case 4: setarray .@w$, "a gentle baby","Desert Wolf monster"; break;
-					Case 5: setarray .@w$, "a small, yet","demonic, Deviruchi"; break;
-					Case 6: setarray .@w$, "a naughty","Baphomet Jr. monster"; break;
+					case 1: setarray .@w$, "a friendly","Poring type monster"; break;
+					case 2: setarray .@w$, "an adorable","Lunatic type monster"; break;
+					case 3: setarray .@w$, "a darling","Savage Babe monster"; break;
+					case 4: setarray .@w$, "a gentle baby","Desert Wolf monster"; break;
+					case 5: setarray .@w$, "a small, yet","demonic, Deviruchi"; break;
+					case 6: setarray .@w$, "a naughty","Baphomet Jr. monster"; break;
 				}
 				mes "[Ticket Helper]";
 				mes "You've chosen";
 				mes "^0000FFMonster "+.@m+"^000000, "+.@w$[0];
 				mes .@w$[1]+".";
 				mes "Are you sure you want";
-				mes "to choose this monster?";			
+				mes "to choose this monster?";
 				if (select("Yes:No") == 2) {
 					mes "[Ticket Helper]";
 					mes "You have canceled";
@@ -1432,7 +1445,7 @@ p_track02,73,22,1	script	Ticket Helper#2	899,{
 					mes "I understand. Perhaps";
 					mes "you'd feel more comfortable";
 					mes "checking the monsters first?";
-					close;			
+					close;
 				}
 				next;
 				if (!.@m1) {
@@ -1529,7 +1542,7 @@ p_track02,73,22,1	script	Ticket Helper#2	899,{
 			mes "^0000FFMonster " + monster_race_2_1 + "^000000 and ^0000FFMonster " + monster_race_2_2 + "^000000";
 			mes "for this Dual Monster Race.";
 			next;
-		} 
+		}
 		mes "[Ticket Helper]";
 		mes "The start of the race will be";
 		mes "announced through a broadcast.";
@@ -1538,7 +1551,7 @@ p_track02,73,22,1	script	Ticket Helper#2	899,{
 		mes "positions. Thank you, and";
 		mes "have a good time!";
 		viewpoint 1,43,35,0,0xFF0000;
-		close;	
+		close;
 	}
 
 OnInit:
@@ -1546,7 +1559,7 @@ OnInit:
 	end;
 }
 
-p_track02,39,49,3	script	Game Guide#double	845,{
+p_track02,39,49,3	script	Game Guide#double	4_F_RACING,{
 	mes "[Game Guide]";
 	mes "Welcome to the";
 	mes "Monster Race Arena.";
@@ -1644,7 +1657,7 @@ p_track02,39,49,3	script	Game Guide#double	845,{
 	close;
 }
 
-p_track02,67,45,5	script	Medal Distributor#medal	845,{
+p_track02,67,45,5	script	Medal Distributor#medal	4_F_RACING,{
 	if (!checkweight(909,20)) {
 		mes "[Medal Distributor]";
 		mes "I'm sorry, but I can't";
@@ -1717,12 +1730,12 @@ p_track02,67,45,5	script	Medal Distributor#medal	845,{
 		mes "wager on the monster races!";
 		close;
 	} else if (monster_race_2_1 == 7 && monster_race_2_2 == 7) {
-			mes "[Medal Distributor]";
-			mes "Thanks for visiting the";
-			mes "Monster Race Arena, and";
-			mes "I hope you enjoy your time";
-			mes "here. I'll see you next time~";
-			close;
+		mes "[Medal Distributor]";
+		mes "Thanks for visiting the";
+		mes "Monster Race Arena, and";
+		mes "I hope you enjoy your time";
+		mes "here. I'll see you next time~";
+		close;
 	} else if (monster_race_2_1 != $@mon_race_2_1 || monster_race_2_2 != $@mon_race_2_2) {
 		mes "[Medal Distributor]";
 		mes "You may not have wagered";
@@ -1737,7 +1750,7 @@ OnInit:
 	end;
 }
 
-p_track02,76,38,1	script	Exit Guide#double	798,{
+p_track02,76,38,1	script	Exit Guide#double	4_M_NFMAN,{
 	mes "[Exit Guide]";
 	mes "If you have a winning Racing";
 	mes "Ticket, please make sure that";
@@ -1828,10 +1841,10 @@ OnMyMobDead:
 	function	MN	{
 		setarray .@n$[1], "poring","lunatic","savagebebe","desertwolf","deviruchi","baphomet";
 		for (set .@i, 1; .@i <= getarraysize(.@n$); set .@i, .@i + 1) {
-			if (compare(strnpcinfo(0),.@n$[.@i])) 
+			if (compare(strnpcinfo(0),.@n$[.@i]))
 				break;
 		}
-		return .@i;	
+		return .@i;
 	}
 
 OnInit:
@@ -1839,12 +1852,12 @@ OnInit:
 	disablenpc strnpcinfo(0);
 	end;
 }
-p_track02,30,38,0	duplicate(mob1#main)	#poring1	139,0,0
-p_track02,30,36,0	duplicate(mob1#main)	#lunatic1	139,0,0
-p_track02,30,34,0	duplicate(mob1#main)	#savagebebe1	139,0,0
-p_track02,30,32,0	duplicate(mob1#main)	#desertwolf1	139,0,0
-p_track02,30,30,0	duplicate(mob1#main)	#deviruchi1	139,0,0
-p_track02,30,28,0	duplicate(mob1#main)	#baphomet1	139,0,0
+p_track02,30,38,0	duplicate(mob1#main)	#poring1	HIDDEN_WARP_NPC,0,0
+p_track02,30,36,0	duplicate(mob1#main)	#lunatic1	HIDDEN_WARP_NPC,0,0
+p_track02,30,34,0	duplicate(mob1#main)	#savagebebe1	HIDDEN_WARP_NPC,0,0
+p_track02,30,32,0	duplicate(mob1#main)	#desertwolf1	HIDDEN_WARP_NPC,0,0
+p_track02,30,30,0	duplicate(mob1#main)	#deviruchi1	HIDDEN_WARP_NPC,0,0
+p_track02,30,28,0	duplicate(mob1#main)	#baphomet1	HIDDEN_WARP_NPC,0,0
 
 p_track02,19,48,0	script	TrapGlobal#race02	-1,{
 OnEnable:
@@ -2035,7 +2048,7 @@ p_track02,47,28,0	duplicate(Tire_1)	Tire#race02_6_6	-1,0,0
 
 // NPCs for Redeeming Prize Medals (Einbroch and Hugel)
 //============================================================
-ein_in01,85,208,5	script	Ei'felle#repay01	854,{
+ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 	if (!ein_medal01) {
 		mes "[Ei'felle]";
 		mes "Curses! We need to deliver";
@@ -2265,11 +2278,11 @@ ein_in01,85,208,5	script	Ei'felle#repay01	854,{
 			next;
 			switch (select("Glittering Jacket:Fire Property Armor:Earth Property Armor:Wind Property Armor:Water Property Armor:Cancel")) {
 				case 1: callsub S_BonusReward,500,2319; end;
-				case 2:	callsub S_BonusReward,1000,2345; end;
+				case 2: callsub S_BonusReward,1000,2345; end;
 				case 3: callsub S_BonusReward,1000,2351; end;
-				case 4:	callsub S_BonusReward,1000,2349; end;
-				case 5:	callsub S_BonusReward,1000,2347; end;
-				case 6:	close;
+				case 4: callsub S_BonusReward,1000,2349; end;
+				case 5: callsub S_BonusReward,1000,2347; end;
+				case 6: close;
 			}
 		}
 		setarray .@m$, "Dagger","One Handed Sword","Two Handed Sword","Axe","Mace","Bow","Staff","Book","Spear","Katar","Knuckle","Whip","Musical Instrument";
@@ -2281,57 +2294,57 @@ ein_in01,85,208,5	script	Ei'felle#repay01	854,{
 		mes "that you want me to create.";
 		next;
 		switch (.@m) {
-			Case 0:
+			case 0:
 				setarray .@mw$, "Ginnungagap:Grimtooth:Dragon Killer:Mail Breaker:Bazerald:Sword Breaker:Ice Pick:Sucsamad:Kitchen Knife:Azoth:Exorciser:Assassin Dagger:Moonlight Dagger:Weeder Knife:Cursed Dagger:Dagger of Counter:Combat Knife:Fortune Sword";
 				setarray .@mw, 13002,1237,13001,1225,1231,1224,1230,1236,1229,1235,1233,1232,1234,1227,1241,1242,1228,1223;
 				break;
-			Case 1:
+			case 1:
 				setarray .@mw$, "Nagan:Immaterial Sword:Mysteltainn:Byeollungum:Star Dust Blade:Caesar's Sword:Ice Falchion:Excalibur:Edge:Cutlus:Solar Sword:Tirfing:Fireblend";
 				setarray .@mw, 1130,1141,1138,1140,1148,1134,1131,1137,1132,1135,1136,1139,1133;
 				break;
-			Case 2:	
+			case 2:
 				setarray .@mw$, "Dragon Slayer:Masamune:Muramasa:Schweizersabel:Executioner:Zweihander:Katzbalger";
 				setarray .@mw, 1166,1165,1164,1167,1169,1168,1170;
 				break;
-			Case 3:
+			case 3:
 				setarray .@mw$, "Great Axe:Guillotine:Light Epsilon:Bloody Axe:Sabbath:Slaughter:Cleaver:Tomahawk";
 				setarray .@mw, 1364,1369,1366,1363,1365,1367,1305,1368;
 				break;
-			Case 4:
+			case 4:
 				setarray .@mw$, "Golden Mace:Grand Cross:Long Mace:Spike:Slash:Quadrille";
 				setarray .@mw, 1524,1528,1525,1523,1526,1527;
 				break;
-			Case 5:
+			case 5:
 				setarray .@mw$, "Roguemaster's Bow:Dragon Wing:Rudra's Bow:Ballista";
 				setarray .@mw, 1719,1724,1720,1722;
 				break;
-			Case 6:
+			case 6:
 				setarray .@mw$, "Wing Staff:Wizardry Staff";
 				setarray .@mw, 1616,1473;
-			Case 7:
+			case 7:
 				setarray .@mw$, "Legacy of Dragon:Book of the Apocalypse:Girl's Diary:Hardcover Book";
 				setarray .@mw, 1559,1557,1558,1561;
 				break;
-			Case 8:
+			case 8:
 				setarray .@mw$, "Gae Bolg:Gelerdria:Gungnir:Skewer:Longinus's Spear:Brionac:Bill Guisarme:Zephyrus:Crescent Scythe:Tjungkuletti:Hellfire";
 				setarray .@mw, 1474,1414,1413,1415,1469,1470,1467,1468,1466,1416,1471;
 				break;
-			Case 9:
+			case 9:
 				setarray .@mw$, "Infiltrator:Bloody Roar:Unholy Touch";
 				setarray .@mw, 1261,1265,1263;
 				break;
-			Case 10:
+			case 10:
 				setarray .@mw$, "Hatii Claw:Berserk:Kaiser Knuckle";
 				setarray .@mw, 1815,1814,1813;
 				break;
-			Case 11:
+			case 11:
 				setarray .@mw$, "Lariat:Rapture Rose:Blade Whip:Chemeti:Queen's Whip";
 				setarray .@mw, 1962,1963,1969,1964,1970;
 				break;
-			Case 12:
+			case 12:
 				setarray .@mw$, "Oriental Lute:Electric Guitar";
 				setarray .@mw, 1918,1913;
-				break;		
+				break;
 		}
 		set .@j, select (.@mw$+":Cancel") - 1;
 		explode(.@mw$,.@mw$,":");
@@ -2383,18 +2396,41 @@ S_Reward:
 			mes "Now do you see the";
 			mes "power of hope?";
 			delitem 7515,1; //Marvelous_Medal
-			if (BaseLevel < 21) getexp 200,0;
-			else if ((BaseLevel > 20) && (BaseLevel < 31)) getexp 300,0;
-			else if ((BaseLevel > 30) && (BaseLevel < 41)) getexp 1000,0;
-			else if ((BaseLevel > 40) && (BaseLevel < 51)) getexp 1800,0;
-			else if ((BaseLevel > 50) && (BaseLevel < 61)) getexp 2500,0;
-			else if ((BaseLevel > 60) && (BaseLevel < 71)) getexp 4700,0;
-			else if ((BaseLevel > 70) && (BaseLevel < 81)) getexp 5500,0;
-			else if ((BaseLevel > 80) && (BaseLevel < 96)) getexp 7000,0;
-			else if ((BaseLevel > 95) && (BaseLevel < 111)) getexp 8800,0;
-			else if ((BaseLevel > 110) && (BaseLevel < 126)) getexp 10900,0;
-			else if ((BaseLevel > 125) && (BaseLevel < 141)) getexp 13300,0;
-			else getexp 16000,0;
+			if (checkre(3)) {
+				if (BaseLevel < 21) getexp 110,0;
+				else if ((BaseLevel > 20) && (BaseLevel < 31)) getexp 280,0;
+				else if ((BaseLevel > 30) && (BaseLevel < 41)) getexp 1000,0;
+				else if ((BaseLevel > 40) && (BaseLevel < 51)) getexp 1200,0;
+				else if ((BaseLevel > 50) && (BaseLevel < 61)) getexp 1500,0;
+				else if ((BaseLevel > 60) && (BaseLevel < 71)) getexp 2800,0;
+				else if ((BaseLevel > 70) && (BaseLevel < 81)) getexp 4500,0;
+				else getexp 8500,0;
+
+			/* iRO EXP Table:
+				if (BaseLevel < 21) getexp 200,0;
+				else if ((BaseLevel > 20) && (BaseLevel < 31)) getexp 300,0;
+				else if ((BaseLevel > 30) && (BaseLevel < 41)) getexp 1000,0;
+				else if ((BaseLevel > 40) && (BaseLevel < 51)) getexp 1800,0;
+				else if ((BaseLevel > 50) && (BaseLevel < 61)) getexp 2500,0;
+				else if ((BaseLevel > 60) && (BaseLevel < 71)) getexp 4700,0;
+				else if ((BaseLevel > 70) && (BaseLevel < 81)) getexp 5500,0;
+				else if ((BaseLevel > 80) && (BaseLevel < 96)) getexp 7000,0;
+				else if ((BaseLevel > 95) && (BaseLevel < 111)) getexp 8800,0;
+				else if ((BaseLevel > 110) && (BaseLevel < 126)) getexp 10900,0;
+				else if ((BaseLevel > 125) && (BaseLevel < 141)) getexp 13300,0;
+				else getexp 16000,0;
+			*/
+
+			} else {
+				if (BaseLevel < 21) getexp 150,0;
+				else if ((BaseLevel > 20) && (BaseLevel < 31)) getexp 300,0;
+				else if ((BaseLevel > 30) && (BaseLevel < 41)) getexp 2000,0;
+				else if ((BaseLevel > 40) && (BaseLevel < 51)) getexp 8000,0;
+				else if ((BaseLevel > 50) && (BaseLevel < 61)) getexp 25000,0;
+				else if ((BaseLevel > 60) && (BaseLevel < 71)) getexp 47000,0;
+				else if ((BaseLevel > 70) && (BaseLevel < 81)) getexp 55000,0;
+				else getexp 65000,0;
+			}
 			close;
 		case 2:
 			mes "[Ei'felle]";
@@ -2422,18 +2458,87 @@ S_Reward:
 			mes "whatever you feed it.";
 			mes "Placebos and psychosomatic symptoms-- it all ties together.";
 			delitem 7515,1; //Marvelous_Medal
-			if (BaseLevel < 21) getexp 0,150;
-			else if ((BaseLevel > 20) && (BaseLevel < 31)) getexp 0,200;
-			else if ((BaseLevel > 30) && (BaseLevel < 41)) getexp 0,750;
-			else if ((BaseLevel > 40) && (BaseLevel < 51)) getexp 0,1800;
-			else if ((BaseLevel > 50) && (BaseLevel < 61)) getexp 0,2500;
-			else if ((BaseLevel > 60) && (BaseLevel < 71)) getexp 0,3525;
-			else if ((BaseLevel > 70) && (BaseLevel < 81)) getexp 0,4125;
-			else if ((BaseLevel > 80) && (BaseLevel < 96)) getexp 0,5250;
-			else if ((BaseLevel > 95) && (BaseLevel < 111)) getexp 0,6600;
-			else if ((BaseLevel > 110) && (BaseLevel < 126)) getexp 0,8175;
-			else if ((BaseLevel > 125) && (BaseLevel < 141)) getexp 0,9975;
-			else getexp 0,12000;
+			if (checkre(3)) {
+				if (Class == Job_Novice) {
+					getexp 0,15;
+				} else if (Class == Job_Novice_High) {
+					getexp 0,25;
+				} else if ((Class >= Job_Swordman && Class <= Job_Thief) || Class == Job_Taekwon) {
+					if (JobLevel < 11) getexp 0,25;
+					else if ((JobLevel > 10) && (JobLevel < 21)) getexp 0,200;
+					else if ((JobLevel > 20) && (JobLevel < 31)) getexp 0,300;
+					else if ((JobLevel > 30) && (JobLevel < 41)) getexp 0,950;
+					else getexp 0,1800;
+				} else if ((Class >= Job_Knight && Class <= Job_Crusader2) || (Class >= Job_Swordman_High && Class <= Job_Thief_High)) {
+					if (JobLevel < 11) getexp 0,40;
+					else if ((JobLevel > 10) && (JobLevel < 21)) getexp 0,300;
+					else if ((JobLevel > 20) && (JobLevel < 31)) getexp 0,550;
+					else if ((JobLevel > 30) && (JobLevel < 41)) getexp 0,1080;
+					else getexp 0,2150;
+				} else {
+					if (JobLevel < 11) getexp 0,55;
+					else if ((JobLevel > 10) && (JobLevel < 21)) getexp 0,330;
+					else if ((JobLevel > 20) && (JobLevel < 31)) getexp 0,600;
+					else if ((JobLevel > 30) && (JobLevel < 41)) getexp 0,1200;
+					else if ((JobLevel > 40) && (JobLevel < 51)) getexp 0,1750;
+					else getexp 0,2950;
+				}
+
+			/* iRO JEXP Table:
+				if (BaseLevel < 21) getexp 0,150;
+				else if ((BaseLevel > 20) && (BaseLevel < 31)) getexp 0,200;
+				else if ((BaseLevel > 30) && (BaseLevel < 41)) getexp 0,750;
+				else if ((BaseLevel > 40) && (BaseLevel < 51)) getexp 0,1800;
+				else if ((BaseLevel > 50) && (BaseLevel < 61)) getexp 0,2500;
+				else if ((BaseLevel > 60) && (BaseLevel < 71)) getexp 0,3525;
+				else if ((BaseLevel > 70) && (BaseLevel < 81)) getexp 0,4125;
+				else if ((BaseLevel > 80) && (BaseLevel < 96)) getexp 0,5250;
+				else if ((BaseLevel > 95) && (BaseLevel < 111)) getexp 0,6600;
+				else if ((BaseLevel > 110) && (BaseLevel < 126)) getexp 0,8175;
+				else if ((BaseLevel > 125) && (BaseLevel < 141)) getexp 0,9975;
+				else getexp 0,12000;
+			*/
+
+			} else {
+				if (Class == Job_Novice) {
+					getexp 0,30;
+				} else if ((Class >= Job_Swordman && Class <= Job_Thief) || Class == Job_Taekwon) {
+					if (JobLevel < 11) getexp 0,50;
+					else if ((JobLevel > 10) && (JobLevel < 21)) getexp 0,250;
+					else if ((JobLevel > 20) && (JobLevel < 31)) getexp 0,1500;
+					else if ((JobLevel > 30) && (JobLevel < 41)) getexp 0,7000;
+					else getexp 0,20000;
+				} else if (Class >= Job_Knight && Class <= Job_Crusader2) {
+					if (JobLevel < 11) getexp 0,80;
+					else if ((JobLevel > 10) && (JobLevel < 21)) getexp 0,2000;
+					else if ((JobLevel > 20) && (JobLevel < 31)) getexp 0,10000;
+					else if ((JobLevel > 30) && (JobLevel < 41)) getexp 0,25000;
+					else getexp 0,38000;
+				} else if (Class == Job_Novice_High) {
+					getexp 0,40;
+				} else if (Class >= Job_Swordman_High && Class <= Job_Thief_High) {
+					if (JobLevel < 11) getexp 0,65;
+					else if ((JobLevel > 10) && (JobLevel < 21)) getexp 0,300;
+					else if ((JobLevel > 20) && (JobLevel < 31)) getexp 0,2500;
+					else if ((JobLevel > 30) && (JobLevel < 41)) getexp 0,10000;
+					else getexp 0,25000;
+				} else if (Class >= Job_Lord_Knight && Class <= Job_Paladin_2) {
+					if (JobLevel < 11) getexp 0,150;
+					else if ((JobLevel > 10) && (JobLevel < 21)) getexp 0,2200;
+					else if ((JobLevel > 20) && (JobLevel < 31)) getexp 0,13000;
+					else if ((JobLevel > 30) && (JobLevel < 41)) getexp 0,27000;
+					else if ((JobLevel > 40) && (JobLevel < 51)) getexp 0,38000;
+					else getexp 0,40000;
+				} else {
+					if (JobLevel < 11) getexp 0,50;
+					else if ((JobLevel > 10) && (JobLevel < 21)) getexp 0,250;
+					else if ((JobLevel > 20) && (JobLevel < 31)) getexp 0,1500;
+					else if ((JobLevel > 30) && (JobLevel < 41)) getexp 0,7000;
+					else if ((JobLevel > 40) && (JobLevel < 51)) getexp 0,20000;
+					else if ((JobLevel > 50) && (JobLevel < 61)) getexp 0,30000;
+					else getexp 0,38000;
+				}
+			}
 			close;
 		case 3:
 			mes "[Ei'felle]";
@@ -2504,7 +2609,7 @@ S_Reward:
 						mes "enter a number from 1 to 100.";
 						mes "If you want to give me more";
 						mes "medals, then perhaps you";
-						mes "should just give them all to me~ ^FFFFFF ^000000";
+						mes "should just give them all to me~";
 						next;
 					} else break;
 				}
@@ -2538,9 +2643,6 @@ S_Reward:
 				mes "come back as soon as you can.";
 				close;
 			}
-			delitem 7515,1; //Marvelous_Medal
-			set ein_medal01,1;
-			close;
 		case 4:
 			mes "[Ei'felle]";
 			mes "Well, I've been able to";
@@ -2638,7 +2740,7 @@ S_BonusReward:
 	close;
 }
 	
-hugel,71,83,4	script	Wayne	900,{
+hugel,71,83,4	script	Wayne	4_M_HUMERCHANT,{
 	if (!checkweight(1201,1)) {
 		mes "[Wayne]";
 		mes "Hold on a second...";
@@ -2702,35 +2804,35 @@ hugel,71,83,4	script	Wayne	900,{
 			set .@m$, .@m$ + .@pm[.@i] + " Prize medal:";
 		set .@m, select (.@m$) - 1;
 		switch (.@m) {
-			Case 0: 
+			case 0:
 				setarray .@mr$, "2 Hinale Leaflets:2 Aloe Leaflets:1 Mastela Fruit:5 Witch Starsands:4 Condensed Red Potions";
 				setarray .@mr, 520,2,521,2,522,1,1061,5,545,4;
 				break;
-			Case 1:
+			case 1:
 				setarray .@mr$, "1 Royal Jelly:6 Holy Waters";
 				setarray .@mr, 526,1,523,6;
 				break;
-			Case 2:
+			case 2:
 				setarray .@mr$, "1 Cookie Bag:1 First Aid Kit";
 				setarray .@mr, 12130,1,12110,1;
 				break;
-			Case 3:
+			case 3:
 				set .@mr$, "1 Gift Box";
 				setarray .@mr, 644,1;
 				break;
-			Case 4:
+			case 4:
 				set .@mr$, "1 Old Blue Box";
 				setarray .@mr, 603,1;
 				break;
-			Case 5:
+			case 5:
 				set .@mr$, "1 Taming Gift Set";
 				setarray .@mr, 12105,1;
 				break;
-			Case 6:
+			case 6:
 				set .@mr$, "1 Old Purple Box";
 				setarray .@mr, 617,1;
 				break;
-			Case 7:
+			case 7:
 				set .@mr$, "1 Poring Box";
 				setarray .@mr, 12109,1;
 				break;
@@ -2760,13 +2862,13 @@ hugel,71,83,4	script	Wayne	900,{
 		mes "races, fair adventurer~";
 		delitem 7515,.@pm[.@m];
 		getitem .@mr[.@m2*2],.@mr[((.@m2*2)+1)];
-		close;		
+		close;
 	}
 }
 
-// Monstrer Race Affiliated NPCs
+// Monster Race Affiliated NPCs
 //============================================================
-airplane,246,47,1	script	Eocatt#decoy01	878,{
+airplane,246,47,1	script	Eocatt#decoy01	4_M_OILMAN,{
 	mes "[Eocatt]";
 	mes "There's an old, humble";
 	mes "village on the outskirts of";
@@ -2791,7 +2893,7 @@ airplane,246,47,1	script	Eocatt#decoy01	878,{
 	close;
 }
 
-hugel,85,93,5	script	Mudie#dummy01	866,{
+hugel,85,93,5	script	Mudie#dummy01	4_M_LGTGRAND,{
 	mes "[Mudie]";
 	mes "The Monster Races";
 	mes "are probably the biggest";
@@ -2816,7 +2918,7 @@ hugel,85,93,5	script	Mudie#dummy01	866,{
 	close;
 }
 
-p_track02,32,45,5	script	Eccentric Scholar#double	755,{
+p_track02,32,45,5	script	Eccentric Scholar#double	4_M_SAGE_C,{
 	mes "[Eccentric Scholar]";
 	mes "Let's see now...";
 	mes "Monster 1's average speed";
@@ -2847,7 +2949,7 @@ p_track02,32,45,5	script	Eccentric Scholar#double	755,{
 	close;
 }
 
-p_track02,69,31,1	script	Blacksmith Guildsman#dou	726,{
+p_track02,69,31,1	script	Blacksmith Guildsman#dou	4_F_JOB_BLACKSMITH,{
 	if (!$@mon_time_2_2) {
 		mes "[Blacksmith Guildsman]";
 		mes "How many times must";
@@ -2866,7 +2968,7 @@ p_track02,69,31,1	script	Blacksmith Guildsman#dou	726,{
 		mes "It's too hard for me to win~!";
 		emotion e_swt2;
 		close;
-	} 
+	}
 	mes "[Blacksmith Guildsman]";
 	mes "Run! Go go go!";
 	mes "I need to win some";
@@ -2877,7 +2979,7 @@ p_track02,69,31,1	script	Blacksmith Guildsman#dou	726,{
 	close;
 }
 
-p_track02,53,45,3	script	Valiant Knight#double	733,{
+p_track02,53,45,3	script	Valiant Knight#double	4_M_JOB_KNIGHT1,{
 	mes "[Valiant Knight]";
 	mes "Hey, have you been";
 	mes "wagering on the races?";
@@ -2901,7 +3003,7 @@ p_track02,53,45,3	script	Valiant Knight#double	733,{
 	close;
 }
 
-p_track01,27,47,5	script	Drunkard#single	853,{
+p_track01,27,47,5	script	Drunkard#single	4_M_YURI,{
 	mes "[Familiar Drunkard]";
 	mes "Grrr...! ^333333*Hiccup*^000000";
 	mes "I just gotta win this";
@@ -2920,7 +3022,7 @@ p_track01,27,47,5	script	Drunkard#single	853,{
 	close;
 }
 
-p_track01,69,31,1	script	Blacksmith Guildsman#sin	107,{
+p_track01,69,31,1	script	Blacksmith Guildsman#sin	1_M_PAY_ELDER,{
 	mes "[Blacksmith Guildsman]";
 	mes "How can this be so hard?";
 	mes "Why can't I win at least";
@@ -2945,7 +3047,7 @@ p_track01,69,31,1	script	Blacksmith Guildsman#sin	107,{
 	close;
 }
 
-p_track01,45,42,3	script	Absent Minded Man#single	881,{
+p_track01,45,42,3	script	Absent Minded Man#single	4_M_SITDOWN,{
 	mes "[Absent Minded Man]";
 	mes "Say, are you here to bet";
 	mes "on the monster races? I've";
@@ -2962,4 +3064,55 @@ p_track01,45,42,3	script	Absent Minded Man#single	881,{
 	mes "I should win at least once,";
 	mes "right? What's going on?!";
 	close;
+}
+
+hugel,5,5,3	script	Monster Race Manager	4_M_LGTGUARD,{
+	callfunc "F_GM_NPC";
+	mes "[Monster Race Manager]";
+	mes "I can activate and";
+	mes "deactivate the Arena";
+	mes "Entry NPCs for the Single";
+	mes "and Dual Monster Races.";
+	next;
+	set .@select, select("Single Race Entry - ON:Dual Race Entry - ON:Single Race Entry - OFF:Dual Race Entry - OFF");
+	mes "[Monster Race Manager]";
+	mes "Please enter";
+	mes "the password.";
+	next;
+	set .@i, callfunc("F_GM_NPC",1854,0,0,2000);
+	if (.@i == -2) {
+		mes "[Monster Race Manager]";
+		mes "Error.";
+		close;
+	} else if (.@i == -1) {
+		mes "[Monster Race Manager]";
+		mes "Incorrect password.";
+		close;
+	} else if (.@i == 0) {
+		close;
+	} else {
+		mes "[Monster Race Manager]";
+		switch(.@select) {
+		case 1:
+			mes "The Single Monster";
+			mes "Race Entry NPC is ON.";
+			donpcevent "Eckar Ellebird#single::OnEnable";
+			close;
+		case 2:
+			mes "The Dual Monster";
+			mes "Race Entry NPC is ON.";
+			donpcevent "Eckar Erenes#double::OnEnable";
+			close;
+		case 3:
+			mes "The Single Monster";
+			mes "Race Entry NPC is OFF.";
+			donpcevent "Eckar Ellebird#single::OnDisable";
+			close;
+		case 4:
+			mes "The Dual Monster";
+			mes "Race Entry NPC is OFF.";
+			donpcevent "Eckar Erenes#double::OnDisable";
+			close;
+		}
+	}
 }

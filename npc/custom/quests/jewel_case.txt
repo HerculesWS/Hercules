@@ -4,14 +4,12 @@
 //= Lupus
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= A quest for players at base level 99,
 //= with Jewel Case as a reward.
 //============================================================
 
-lighthalzen,108,229,2	script	La Fenn	766,{
+lighthalzen,108,229,2	script	La Fenn	4_M_JPNOJI,{
 	mes "[La Fenn]";
 	if(BaseLevel<99) {
 		if(Q_99LVL) {

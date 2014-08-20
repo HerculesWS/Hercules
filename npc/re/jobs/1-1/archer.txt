@@ -1,17 +1,17 @@
 //===== Hercules Script ======================================
 //= Renewal Archer Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Kisuka
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.2
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Job Change to Archer Class
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [Kisuka]
 //= 1.1 Added Baby Job compatibility [Streusel]
 //= 1.2 Rewrote bits [Euphy]
-//============================================================ 
-payon_in02,64,71,4	script	Archer Guildsman#archer	85,{
+//============================================================
+payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 	if (Upper == 1) {
 		if (Class == Job_Novice_High && (ADVJOB == Job_Sniper || ADVJOB == Job_Clown || ADVJOB == Job_Gypsy)) {
 			mes "[Archer Guildsman]";
@@ -39,7 +39,7 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	85,{
 			mes "I know you'll make a great Archer...";
 			next;
 			skill 143,0,0;
-			jobchange Job_Archer_high;
+			jobchange Job_Archer_High;
 			skill 147,1,0;
 			skill 148,1,0;
 			mes "[Archer Guildsman]";

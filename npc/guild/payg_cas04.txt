@@ -17,9 +17,9 @@
 
 // Guild Flags (Outside Castle)
 //============================================================
--	script	Sacred Altar#1::OutsideFlagsPA4	722,{
+-	script	Sacred Altar#1::OutsideFlagsPA4	GUILD_FLAG,{
 
-	set .@GID, GetCastleData("payg_cas04",1);
+	set .@GID, getcastledata("payg_cas04",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";
@@ -42,7 +42,7 @@
 		next;
 		if(select("Return to the guild castle.:Quit.") == 1) {
 			close2;
-			if (getcharid(2) == GetCastleData("payg_cas04",1)) {
+			if (getcharid(2) == getcastledata("payg_cas04",1)) {
 					warp "payg_cas04",40,235;
 				end;
 			}
@@ -54,57 +54,57 @@
 	mes " ";
 	mes "1. Follow the ordinance of The Divine Rune-Midgarts Kingdom, ";
 	mes "we approve that this place is in";
-	mes "the private prossession of ^ff0000"+GetGuildName(.@GID)+"^000000 Guild.";
+	mes "the private prossession of ^ff0000"+getguildname(.@GID)+"^000000 Guild.";
 	mes " ";
-	mes "2. The guild Master of ^ff0000"+GetGuildName(.@GID)+"^000000 Guild is";
-	mes "^ff0000"+GetGuildMaster(.@GID)+"^000000";
+	mes "2. The guild Master of ^ff0000"+getguildname(.@GID)+"^000000 Guild is";
+	mes "^ff0000"+getguildmaster(.@GID)+"^000000";
 	mes "If there is anyone who objects to this,";
 	mes "prove your strength and honor with a steel blade in your hand.";
 	close;
 
 OnRecvCastlePy04:
-	FlagEmblem GetCastleData("payg_cas04",1);
+	flagemblem getcastledata("payg_cas04",1);
 	end;
 }
 
-pay_gld,137,160,0	duplicate(OutsideFlagsPA4)	Sacred Altar#1-2	722
-pay_gld,143,160,0	duplicate(OutsideFlagsPA4)	Sacred Altar#2	722
-pay_gld,133,151,2	duplicate(OutsideFlagsPA4)	Sacred Altar#3	722
-pay_gld,153,166,1	duplicate(OutsideFlagsPA4)	Sacred Altar#4	722
+pay_gld,137,160,0	duplicate(OutsideFlagsPA4)	Sacred Altar#1-2	GUILD_FLAG
+pay_gld,143,160,0	duplicate(OutsideFlagsPA4)	Sacred Altar#2	GUILD_FLAG
+pay_gld,133,151,2	duplicate(OutsideFlagsPA4)	Sacred Altar#3	GUILD_FLAG
+pay_gld,153,166,1	duplicate(OutsideFlagsPA4)	Sacred Altar#4	GUILD_FLAG
 
 // Guild Flags (Inside Castle)
 //============================================================
--	script	Sacred Altar#5::InsideFlagsPA4	722,{
+-	script	Sacred Altar#5::InsideFlagsPA4	GUILD_FLAG,{
 	end;
 
 OnRecvCastlePy04:
-	FlagEmblem GetCastleData("payg_cas04",1);
+	flagemblem getcastledata("payg_cas04",1);
 	end;
 }
 
-payg_cas04,255,259,0	duplicate(InsideFlagsPA4)	Sacred Altar#5-2	722
-payg_cas04,248,259,0	duplicate(InsideFlagsPA4)	Sacred Altar#6	722
-payg_cas04,248,168,6	duplicate(InsideFlagsPA4)	Sacred Altar#7	722
-payg_cas04,248,160,6	duplicate(InsideFlagsPA4)	Sacred Altar#8	722
-payg_cas04,232,181,4	duplicate(InsideFlagsPA4)	Sacred Altar#9	722
-payg_cas04,239,181,4	duplicate(InsideFlagsPA4)	Sacred Altar#10	722
+payg_cas04,255,259,0	duplicate(InsideFlagsPA4)	Sacred Altar#5-2	GUILD_FLAG
+payg_cas04,248,259,0	duplicate(InsideFlagsPA4)	Sacred Altar#6	GUILD_FLAG
+payg_cas04,248,168,6	duplicate(InsideFlagsPA4)	Sacred Altar#7	GUILD_FLAG
+payg_cas04,248,160,6	duplicate(InsideFlagsPA4)	Sacred Altar#8	GUILD_FLAG
+payg_cas04,232,181,4	duplicate(InsideFlagsPA4)	Sacred Altar#9	GUILD_FLAG
+payg_cas04,239,181,4	duplicate(InsideFlagsPA4)	Sacred Altar#10	GUILD_FLAG
 
 // Guild Flag (Town)
 //============================================================
-payon,118,322,4	duplicate(InsideFlagsPA4)	Sacred Altar#11	722
-payon,166,165,3	duplicate(InsideFlagsPA4)	Sacred Altar#12	722
+payon,118,322,4	duplicate(InsideFlagsPA4)	Sacred Altar#11	GUILD_FLAG
+payon,166,165,3	duplicate(InsideFlagsPA4)	Sacred Altar#12	GUILD_FLAG
 
 // Kafra Employee
 //============================================================
-payg_cas04,40,235,1	duplicate(guildkafra)	Kafra Staff#payg_cas04	117
+payg_cas04,40,235,1	duplicate(guildkafra)	Kafra Staff#payg_cas04	4_F_KAFRA1
 
 // Steward
 //============================================================
-payg_cas04,38,284,3	duplicate(cm)	DJ#payg_cas04	55
+payg_cas04,38,284,3	duplicate(cm)	DJ#payg_cas04	1_M_JOBTESTER
 
 // Treasure Room Exit
 //============================================================
-payg_cas04,151,47,0	script	#lever_PA04	111,{
+payg_cas04,151,47,0	script	#lever_PA04	HIDDEN_NPC,{
 
 	mes " ";
 	mes "There's a small lever. Will you pull it?";
@@ -119,7 +119,7 @@ payg_cas04,151,47,0	script	#lever_PA04	111,{
 
 // Guild Dungeon Switch
 //============================================================
-payg_cas04,52,48,0	duplicate(gdlever)	#payg_cas04	111
+payg_cas04,52,48,0	duplicate(gdlever)	#payg_cas04	HIDDEN_NPC
 
 // Guild Treasure Spawns
 //============================================================

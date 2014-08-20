@@ -5,8 +5,8 @@
 //===== Current Version: =====================================
 //= 1.2a
 //===== Description: =========================================
-//= Click the chicken and try retrieve the item at a low 
-//= chance. If you fail he will nuke, freeze, stone, 
+//= Click the chicken and try retrieve the item at a low
+//= chance. If you fail he will nuke, freeze, stone,
 //= stun, or make you fall asleep.
 //= The prize is configurable and triggered by the NPC.
 //===== Additional Comments: =================================
@@ -16,7 +16,7 @@
 //= 1.2a Switched 'atcommand' to 'unitskilluseid'.
 //============================================================
 
-prontera,156,219,4	script	Cluckers	800,{
+prontera,156,219,4	script	Cluckers	4_NFCOCK,{
 
 	set .@GMAccess,80;	// GM level required to access NPC
 
@@ -26,16 +26,16 @@ prontera,156,219,4	script	Cluckers	800,{
 			case 0: npctalk "CLUUUUUUCK!!!"; unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; emotion 23; break;
 			case 1: npctalk "Cluuuuuck!~"; break;
 			case 2: unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; break;
-			case 3: sc_start SC_Freeze,10000,0; break;
+			case 3: sc_start SC_FREEZE,10000,0; break;
 			case 4: npctalk "CLUUUUUUUUUCK!!!"; unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; emotion 23; break;
-			case 5: sc_start SC_Sleep,10000,0; break;
-			case 6: sc_start SC_Stone,10000,0; emotion 29; break;
+			case 5: sc_start SC_SLEEP,10000,0; break;
+			case 6: sc_start SC_STONE,10000,0; emotion 29; break;
 			case 7: npctalk "CLUUUUUUCK!!!"; unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; emotion 23; break;
 			case 8: npctalk "Cluck! CLUUUCK!!"; unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; emotion 23; break;
-			case 9: sc_start SC_Stun,10000,0; break;
-			case 10: sc_start SC_Sleep,10000,0; emotion 29; break;
+			case 9: sc_start SC_STUN,10000,0; break;
+			case 10: sc_start SC_SLEEP,10000,0; emotion 29; break;
 			case 11: npctalk "Cluck! Cluck!"; break;
-			case 12: sc_start SC_Stun,10000,0; break;
+			case 12: sc_start SC_STUN,10000,0; break;
 			case 13: unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; break;
 			default:
 				if (rand(50) < 4) {

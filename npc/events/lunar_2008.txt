@@ -22,7 +22,7 @@
 //= 1.1 Added missing checkweights. [L0ne_W0lf]
 //============================================================
 
-payon_in01,193,30,4	script	Rice Mill Grandma#rat	78,{
+payon_in01,193,30,4	script	Rice Mill Grandma#rat	1_F_ORIENT_04,{
 	mes "[Rice Mill Grandma]";
 	if (!lunar_rat) {
 		mes "Those filthy little";
@@ -170,7 +170,7 @@ payon_in01,193,30,4	script	Rice Mill Grandma#rat	78,{
 	}
 }
 
-payon,215,127,4	script	Rice Mill Man#rat	54,{
+payon,215,127,4	script	Rice Mill Man#rat	1_M_JOBGUIDER,{
 	mes "[Rice Mill Man]";
 	if (!lunar_rat) {
 		mes "Breaks my heart...";
@@ -223,8 +223,8 @@ payon,215,127,4	script	Rice Mill Man#rat	54,{
 	}
 }
 
-//payon,126,113,4	script	Miss Lunar#rat	862,{
-payon,126,113,4	script	Miss Lunar#rat	719,{
+//payon,126,113,4	script	Miss Lunar#rat	4_F_LGTGIRL,{
+payon,126,113,4	script	Miss Lunar#rat	4_F_NACORURI,{
 	mes "[Lunar]";
 	if ((MaxWeight-Weight) < 3000 || checkweight(1201,1) == 0) {
 		mes "Oh, I'm sorry, but we";
@@ -257,7 +257,7 @@ payon,126,113,4	script	Miss Lunar#rat	719,{
 		next;
 		if (select("Yes:No") == 1) {
 			if (Zeny >= 3000) {
-				set Zeny,Zeny-3000;
+				Zeny -= 3000;
 				getitem 554,10; // Mojji
 				mes "[Lunar]";
 				mes "Thank you, and I hope you";

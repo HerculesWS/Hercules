@@ -1,27 +1,25 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Quest NPCs related to Gonryun
 //===== By: ==================================================
 //= KarLaeda
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Broken Sword Quest (Kept old mechanics)
 //= Lost Knife Quest
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.1 Fixed bad NPC header data to comply with rev. 11603. [L0ne_W0lf]
 //= 1.2 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//=	Added Lost Knife, updated dialog for Broken Sword
-//=	dungeon quest mechanics aportion is still the same.
+//=     Added Lost Knife, updated dialog for Broken Sword
+//=     dungeon quest mechanics aportion is still the same.
 //= 1.2a Bugfixes (bugreport:2404) [Paradox924X]
 //= 1.2b More Bugfixes (bugreport:2407) [Paradox924X]
-//============================================================ 
+//============================================================
 
-// Broken Sword
-//============================================================ 
-gon_in,17,93,5	script	Chief#gon	775,{
+// Broken Sword :: broken_sword
+//============================================================
+gon_in,17,93,5	script	Chief#gon	4_M_TWMASKMAN,{
 	if (BaseLevel > 50) {
 		if (b_sword == 0) {
 			set b_sword,1;
@@ -417,7 +415,7 @@ gon_in,17,93,5	script	Chief#gon	775,{
 	close;
 }
 
-gon_in,152,35,4	script	Hostess#gon	702,{
+gon_in,152,35,4	script	Hostess#gon	4_F_GON,{
 	if (b_sword < 1) {
 		mes "[Mei Yen Fang]";
 		mes "Oh...you're new here, right?";
@@ -515,7 +513,7 @@ gon_in,152,35,4	script	Hostess#gon	702,{
 	close;
 }
 
-gon_in,165,16,4	script	Man in hangover#gon	748,{
+gon_in,165,16,4	script	Man in hangover#gon	4_M_ALCHE_A,{
 	if (b_sword < 4) {
 		mes "[Xue Bong]";
 		mes "Ahhh.. my stomach.. my head..";
@@ -788,824 +786,824 @@ gon_in,165,16,4	script	Man in hangover#gon	748,{
 }
 
 gon_dun01,148,156,0	script	start01#gnbs	-1,{
-	OnInit:
-		sleep 10000;
-	OnCommandOn:
-		donpcevent "trace1-"+rand(1,5)+"#gnbs::OnCommandOn";
-		end;
+OnInit:
+	sleep 10000;
+OnCommandOn:
+	donpcevent "trace1-"+rand(1,5)+"#gnbs::OnCommandOn";
+	end;
 }
 
-gon_dun01,201,25,0	script	trace1-1#gnbs	139,1,1,{
+gon_dun01,201,25,0	script	trace1-1#gnbs	HIDDEN_WARP_NPC,1,1,{
 	if (b_sword == 7) donpcevent "timer1-1::OnCommandOn";
 	end;
 
-	OnTimer10000:
-		stopnpctimer;
-		disablenpc "trace1-1#gnbs";
-		donpcevent "start01#gnbs::OnCommandOn";
-		end;
+OnTimer10000:
+	stopnpctimer;
+	disablenpc "trace1-1#gnbs";
+	donpcevent "start01#gnbs::OnCommandOn";
+	end;
 
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "trace1-1#gnbs";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "trace1-1#gnbs";
+	end;
 
-	OnCommandOn:
-		enablenpc "trace1-1#gnbs";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "trace1-1#gnbs";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 }
 
 gon_dun01,2,1,0	script	timer1-1	-1,{
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "timer1-1";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "timer1-1";
+	end;
 
-	OnCommandOn:
-		enablenpc "timer1-1";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "timer1-1";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 
-	OnCommandOff:
-		stopnpctimer;
-		disablenpc "timer1-1";
-		end;
+OnCommandOff:
+	stopnpctimer;
+	disablenpc "timer1-1";
+	end;
 
-	OnTimer3000:
-		donpcevent "#getitem1-1::OnCommandOn";
-		end;
+OnTimer3000:
+	donpcevent "#getitem1-1::OnCommandOn";
+	end;
 }
 
-gon_dun01,202,25,0	script	#getitem1-1	111,2,1,{
+gon_dun01,202,25,0	script	#getitem1-1	HIDDEN_NPC,2,1,{
 	if (b_sword != 7) end;
 	set b_sword,8;
 	mes "You found a ^FF0000piece of blade^000000.";
 	mes "Seems like it's a part of the sword you've been looking for.";
 	close;
 
-	OnInit:
-		disablenpc "#getitem1-1";
-		end;
+OnInit:
+	disablenpc "#getitem1-1";
+	end;
 
-	OnCommandOn:
-		enablenpc "#getitem1-1";
-		donpcevent "timer1-1::OnCommandOff";
-		donpcevent "start01#gnbs::OnCommandOn";
-		end;
+OnCommandOn:
+	enablenpc "#getitem1-1";
+	donpcevent "timer1-1::OnCommandOff";
+	donpcevent "start01#gnbs::OnCommandOn";
+	end;
 
-	OnCommandOff:
-		disablenpc "#getitem1-1";
-		end;
+OnCommandOff:
+	disablenpc "#getitem1-1";
+	end;
 }
 
-gon_dun01,190,160,0	script	trace1-2#gnbs	139,1,1,{
+gon_dun01,190,160,0	script	trace1-2#gnbs	HIDDEN_WARP_NPC,1,1,{
 	if (b_sword == 7) donpcevent "timer1-2::OnCommandOn";
 	end;
 
-	OnTimer100000:
-		stopnpctimer;
-		disablenpc "trace1-2#gnbs";
-		donpcevent "start01#gnbs::OnCommandOn";
-		end;
+OnTimer100000:
+	stopnpctimer;
+	disablenpc "trace1-2#gnbs";
+	donpcevent "start01#gnbs::OnCommandOn";
+	end;
 
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "trace1-2#gnbs";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "trace1-2#gnbs";
+	end;
 
-	OnCommandOn:
-		enablenpc "trace1-2#gnbs";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "trace1-2#gnbs";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 }
 
 gon_dun01,3,1,0	script	timer1-2	-1,{
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "timer1-2";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "timer1-2";
+	end;
 
-	OnCommandOn:
-		enablenpc "timer1-2";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "timer1-2";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 
-	OnCommandOff:
-		stopnpctimer;
-		disablenpc "timer1-2";
-		end;
+OnCommandOff:
+	stopnpctimer;
+	disablenpc "timer1-2";
+	end;
 
-	OnTimer3000:
-		donpcevent "#getitem1-2::OnCommandOn";
-		end;
+OnTimer3000:
+	donpcevent "#getitem1-2::OnCommandOn";
+	end;
 }
 
-gon_dun01,190,159,0	script	#getitem1-2	111,2,1,{
+gon_dun01,190,159,0	script	#getitem1-2	HIDDEN_NPC,2,1,{
 	if (b_sword != 7) end;
 	set b_sword,8;
 	mes "You found a ^FF0000piece of blade^000000.";
 	mes "Seems like it's a part of the sword you've been looking for.";
 	close;
 
-	OnInit:
-		disablenpc "#getitem1-2";
-		end;
+OnInit:
+	disablenpc "#getitem1-2";
+	end;
 
-	OnCommandOn:
-		enablenpc "#getitem1-2";
-		donpcevent "timer1-2::OnCommandOff";
-		donpcevent "start01#gnbs::OnCommandOn";
-		end;
+OnCommandOn:
+	enablenpc "#getitem1-2";
+	donpcevent "timer1-2::OnCommandOff";
+	donpcevent "start01#gnbs::OnCommandOn";
+	end;
 
-	OnCommandOff:
-		disablenpc "#getitem1-2";
-		end;
+OnCommandOff:
+	disablenpc "#getitem1-2";
+	end;
 }
 
-gon_dun01,163,53,0	script	trace1-3#gnbs	139,1,1,{
+gon_dun01,163,53,0	script	trace1-3#gnbs	HIDDEN_WARP_NPC,1,1,{
 	if (b_sword == 7) donpcevent "timer1-3::OnCommandOn";
 	end;
 
-	OnTimer90000:
-		stopnpctimer;
-		disablenpc "trace1-3#gnbs";
-		donpcevent "start01#gnbs::OnCommandOn";
-		end;
+OnTimer90000:
+	stopnpctimer;
+	disablenpc "trace1-3#gnbs";
+	donpcevent "start01#gnbs::OnCommandOn";
+	end;
 
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "trace1-3#gnbs";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "trace1-3#gnbs";
+	end;
 
-	OnCommandOn:
-		enablenpc "trace1-3#gnbs";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "trace1-3#gnbs";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 }
 
 gon_dun01,4,1,0	script	timer1-3	-1,{
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "timer1-3";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "timer1-3";
+	end;
 
-	OnCommandOn:
-		enablenpc "timer1-3";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "timer1-3";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 
-	OnCommandOff:
-		stopnpctimer;
-		disablenpc "timer1-3";
-		end;
+OnCommandOff:
+	stopnpctimer;
+	disablenpc "timer1-3";
+	end;
 
-	OnTimer3000:
-		donpcevent "#getitem1-3::OnCommandOn";
-		end;
+OnTimer3000:
+	donpcevent "#getitem1-3::OnCommandOn";
+	end;
 }
 
-gon_dun01,164,53,0	script	#getitem1-3	111,2,1,{
+gon_dun01,164,53,0	script	#getitem1-3	HIDDEN_NPC,2,1,{
 	if (b_sword != 7) end;
 	set b_sword,8;
 	mes "You found a ^FF0000piece of blade^000000.";
 	mes "Seems like it's a part of the sword you've been looking for.";
 	close;
 
-	OnInit:
-		disablenpc "#getitem1-3";
-		end;
+OnInit:
+	disablenpc "#getitem1-3";
+	end;
 
-	OnCommandOn:
-		enablenpc "#getitem1-3";
-		donpcevent "timer1-3::OnCommandOff";
-		donpcevent "start01#gnbs::OnCommandOn";
-		end;
+OnCommandOn:
+	enablenpc "#getitem1-3";
+	donpcevent "timer1-3::OnCommandOff";
+	donpcevent "start01#gnbs::OnCommandOn";
+	end;
 
-	OnCommandOff:
-		disablenpc "#getitem1-3";
-		end;
+OnCommandOff:
+	disablenpc "#getitem1-3";
+	end;
 }
 
-gon_dun01,133,183,0	script	trace1-4#gnbs	139,1,1,{
+gon_dun01,133,183,0	script	trace1-4#gnbs	HIDDEN_WARP_NPC,1,1,{
 	if (b_sword == 7) donpcevent "timer1-4::OnCommandOn";
 	end;
 
-	OnTimer150000:
-		stopnpctimer;
-		disablenpc "trace1-4#gnbs";
-		donpcevent "start01#gnbs::OnCommandOn";
-		end;
+OnTimer150000:
+	stopnpctimer;
+	disablenpc "trace1-4#gnbs";
+	donpcevent "start01#gnbs::OnCommandOn";
+	end;
 
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "trace1-4#gnbs";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "trace1-4#gnbs";
+	end;
 
-	OnCommandOn:
-		enablenpc "trace1-4#gnbs";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "trace1-4#gnbs";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 }
 
 gon_dun01,5,1,0	script	timer1-4	-1,{
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "timer1-4";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "timer1-4";
+	end;
 
-	OnCommandOn:
-		enablenpc "timer1-4";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "timer1-4";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 
-	OnCommandOff:
-		stopnpctimer;
-		disablenpc "timer1-4";
-		end;
+OnCommandOff:
+	stopnpctimer;
+	disablenpc "timer1-4";
+	end;
 
-	OnTimer3000:
-		donpcevent "#getitem1-4::OnCommandOn";
-		end;
+OnTimer3000:
+	donpcevent "#getitem1-4::OnCommandOn";
+	end;
 }
 
-gon_dun01,134,183,0	script	#getitem1-4	111,2,1,{
+gon_dun01,134,183,0	script	#getitem1-4	HIDDEN_NPC,2,1,{
 	if (b_sword != 7) end;
 	set b_sword,8;
 	mes "You found a ^FF0000piece of blade^000000.";
 	mes "Seems like it's a part of the sword you've been looking for.";
 	close;
 
-	OnInit:
-		disablenpc "#getitem1-4";
-		end;
+OnInit:
+	disablenpc "#getitem1-4";
+	end;
 
-	OnCommandOn:
-		enablenpc "#getitem1-4";
-		donpcevent "timer1-4::OnCommandOff";
-		donpcevent "start01#gnbs::OnCommandOn";
-		end;
+OnCommandOn:
+	enablenpc "#getitem1-4";
+	donpcevent "timer1-4::OnCommandOff";
+	donpcevent "start01#gnbs::OnCommandOn";
+	end;
 
-	OnCommandOff:
-		disablenpc "#getitem1-4";
-		end;
+OnCommandOff:
+	disablenpc "#getitem1-4";
+	end;
 }
 
-gon_dun01,139,257,0	script	trace1-5#gnbs	139,1,1,{
+gon_dun01,139,257,0	script	trace1-5#gnbs	HIDDEN_WARP_NPC,1,1,{
 	if (b_sword == 7) donpcevent "timer1-5::OnCommandOn";
 	end;
 
-	OnTimer170000:
-		stopnpctimer;
-		disablenpc "trace1-5#gnbs";
-		donpcevent "start01#gnbs::OnCommandOn";
-		end;
+OnTimer170000:
+	stopnpctimer;
+	disablenpc "trace1-5#gnbs";
+	donpcevent "start01#gnbs::OnCommandOn";
+	end;
 
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "trace1-5#gnbs";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "trace1-5#gnbs";
+	end;
 
-	OnCommandOn:
-		enablenpc "trace1-5#gnbs";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "trace1-5#gnbs";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 }
 
 gon_dun01,6,1,0	script	timer1-5	-1,{
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "timer1-5";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "timer1-5";
+	end;
 
-	OnCommandOn:
-		enablenpc "timer1-5";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "timer1-5";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 
-	OnCommandOff:
-		stopnpctimer;
-		disablenpc "timer1-5";
-		end;
+OnCommandOff:
+	stopnpctimer;
+	disablenpc "timer1-5";
+	end;
 
-	OnTimer3000:
-		donpcevent "#getitem1-5::OnCommandOn";
-		end;
+OnTimer3000:
+	donpcevent "#getitem1-5::OnCommandOn";
+	end;
 }
 
-gon_dun01,140,257,0	script	#getitem1-5	111,2,1,{
+gon_dun01,140,257,0	script	#getitem1-5	HIDDEN_NPC,2,1,{
 	if (b_sword != 7) end;
 	set b_sword,8;
 	mes "You found a ^FF0000piece of blade^000000.";
 	mes "Seems like it's a part of the sword you've been looking for.";
 	close;
 
-	OnInit:
-		disablenpc "#getitem1-5";
-		end;
+OnInit:
+	disablenpc "#getitem1-5";
+	end;
 
-	OnCommandOn:
-		enablenpc "#getitem1-5";
-		donpcevent "timer1-5::OnCommandOff";
-		donpcevent "start01#gnbs::OnCommandOn";
-		end;
+OnCommandOn:
+	enablenpc "#getitem1-5";
+	donpcevent "timer1-5::OnCommandOff";
+	donpcevent "start01#gnbs::OnCommandOn";
+	end;
 
-	OnCommandOff:
-		disablenpc "#getitem1-5";
-		end;
+OnCommandOff:
+	disablenpc "#getitem1-5";
+	end;
 }
 
 gon_dun02,1,1,0	script	start02#gnbs	-1,{
-	OnInit:
-		sleep 10000;
-	OnCommandOn:
-		donpcevent "trace2-"+rand(1,6)+"#gnbs::OnCommandOn";
-		end;
+OnInit:
+	sleep 10000;
+OnCommandOn:
+	donpcevent "trace2-"+rand(1,6)+"#gnbs::OnCommandOn";
+	end;
 }
 
-gon_dun02,65,168,0	script	trace2-1#gnbs	139,1,1,{
+gon_dun02,65,168,0	script	trace2-1#gnbs	HIDDEN_WARP_NPC,1,1,{
 	if (b_sword == 8) donpcevent "timer2-1::OnCommandOn";
 	end;
 
-	OnTimer80000:
-		stopnpctimer;
-		disablenpc "trace2-1#gnbs";
-		donpcevent "start02#gnbs::OnCommandOn";
-		end;
+OnTimer80000:
+	stopnpctimer;
+	disablenpc "trace2-1#gnbs";
+	donpcevent "start02#gnbs::OnCommandOn";
+	end;
 
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "trace2-1#gnbs";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "trace2-1#gnbs";
+	end;
 
-	OnCommandOn:
-		enablenpc "trace2-1#gnbs";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "trace2-1#gnbs";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 }
 
 gon_dun02,2,1,0	script	timer2-1	-1,{
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "timer2-1";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "timer2-1";
+	end;
 
-	OnCommandOn:
-		enablenpc "timer2-1";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "timer2-1";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 
-	OnCommandOff:
-		stopnpctimer;
-		disablenpc "timer2-1";
-		end;
+OnCommandOff:
+	stopnpctimer;
+	disablenpc "timer2-1";
+	end;
 
-	OnTimer3000:
-		donpcevent "#getitem2-1::OnCommandOn";
-		end;
+OnTimer3000:
+	donpcevent "#getitem2-1::OnCommandOn";
+	end;
 }
 
-gon_dun02,202,25,0	script	#getitem2-1	111,2,1,{
+gon_dun02,202,25,0	script	#getitem2-1	HIDDEN_NPC,2,1,{
 	if (b_sword != 8) end;
 	set b_sword,9;
 	mes "You found a ^FF0000piece of blade^000000.";
 	mes "Seems like it's a part of the sword you've been looking for.";
 	close;
 
-	OnInit:
-		disablenpc "#getitem2-1";
-		end;
+OnInit:
+	disablenpc "#getitem2-1";
+	end;
 
-	OnCommandOn:
-		enablenpc "#getitem2-1";
-		donpcevent "timer2-1::OnCommandOff";
-		donpcevent "start02#gnbs::OnCommandOn";
-		end;
+OnCommandOn:
+	enablenpc "#getitem2-1";
+	donpcevent "timer2-1::OnCommandOff";
+	donpcevent "start02#gnbs::OnCommandOn";
+	end;
 
-	OnCommandOff:
-		disablenpc "#getitem2-1";
-		end;
+OnCommandOff:
+	disablenpc "#getitem2-1";
+	end;
 }
 
-gon_dun02,265,200,0	script	trace2-2#gnbs	139,1,1,{
+gon_dun02,265,200,0	script	trace2-2#gnbs	HIDDEN_WARP_NPC,1,1,{
 	if (b_sword == 8) donpcevent "timer2-2::OnCommandOn";
 	end;
 
-	OnTimer130000:
-		stopnpctimer;
-		disablenpc "trace2-2#gnbs";
-		donpcevent "start02#gnbs::OnCommandOn";
-		end;
+OnTimer130000:
+	stopnpctimer;
+	disablenpc "trace2-2#gnbs";
+	donpcevent "start02#gnbs::OnCommandOn";
+	end;
 
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "trace2-2#gnbs";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "trace2-2#gnbs";
+	end;
 
-	OnCommandOn:
-		enablenpc "trace2-2#gnbs";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "trace2-2#gnbs";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 }
 
 gon_dun02,3,1,0	script	timer2-2	-1,{
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "timer2-2";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "timer2-2";
+	end;
 
-	OnCommandOn:
-		enablenpc "timer2-2";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "timer2-2";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 
-	OnCommandOff:
-		stopnpctimer;
-		disablenpc "timer2-2";
-		end;
+OnCommandOff:
+	stopnpctimer;
+	disablenpc "timer2-2";
+	end;
 
-	OnTimer3000:
-		donpcevent "#getitem2-2::OnCommandOn";
-		end;
+OnTimer3000:
+	donpcevent "#getitem2-2::OnCommandOn";
+	end;
 }
 
-gon_dun02,265,201,0	script	#getitem2-2	111,2,1,{
+gon_dun02,265,201,0	script	#getitem2-2	HIDDEN_NPC,2,1,{
 	if (b_sword != 8) end;
 	set b_sword,9;
 	mes "You found a ^FF0000piece of blade^000000.";
 	mes "Seems like it's a part of the sword you've been looking for.";
 	close;
 
-	OnInit:
-		disablenpc "#getitem2-2";
-		end;
+OnInit:
+	disablenpc "#getitem2-2";
+	end;
 
-	OnCommandOn:
-		enablenpc "#getitem2-2";
-		donpcevent "timer2-2::OnCommandOff";
-		donpcevent "start02#gnbs::OnCommandOn";
-		end;
+OnCommandOn:
+	enablenpc "#getitem2-2";
+	donpcevent "timer2-2::OnCommandOff";
+	donpcevent "start02#gnbs::OnCommandOn";
+	end;
 
-	OnCommandOff:
-		disablenpc "#getitem2-2";
-		end;
+OnCommandOff:
+	disablenpc "#getitem2-2";
+	end;
 }
 
-gon_dun02,247,129,0	script	trace2-3#gnbs	139,1,1,{
+gon_dun02,247,129,0	script	trace2-3#gnbs	HIDDEN_WARP_NPC,1,1,{
 	if (b_sword == 8) donpcevent "timer2-3::OnCommandOn";
 	end;
 
-	OnTimer110000:
-		stopnpctimer;
-		disablenpc "trace2-3#gnbs";
-		donpcevent "start02#gnbs::OnCommandOn";
-		end;
+OnTimer110000:
+	stopnpctimer;
+	disablenpc "trace2-3#gnbs";
+	donpcevent "start02#gnbs::OnCommandOn";
+	end;
 
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "trace2-3#gnbs";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "trace2-3#gnbs";
+	end;
 
-	OnCommandOn:
-		enablenpc "trace2-3#gnbs";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "trace2-3#gnbs";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 }
 
 gon_dun02,4,1,0	script	timer2-3	-1,{
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "timer2-3";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "timer2-3";
+	end;
 
-	OnCommandOn:
-		enablenpc "timer2-3";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "timer2-3";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 
-	OnCommandOff:
-		stopnpctimer;
-		disablenpc "timer2-3";
-		end;
+OnCommandOff:
+	stopnpctimer;
+	disablenpc "timer2-3";
+	end;
 
-	OnTimer3000:
-		donpcevent "#getitem2-3::OnCommandOn";
-		end;
+OnTimer3000:
+	donpcevent "#getitem2-3::OnCommandOn";
+	end;
 }
 
-gon_dun02,247,128,0	script	#getitem2-3	111,2,1,{
+gon_dun02,247,128,0	script	#getitem2-3	HIDDEN_NPC,2,1,{
 	if (b_sword != 8) end;
 	set b_sword,9;
 	mes "You found a ^FF0000piece of blade^000000.";
 	mes "Seems like it's a part of the sword you've been looking for.";
 	close;
 
-	OnInit:
-		disablenpc "#getitem2-3";
-		end;
+OnInit:
+	disablenpc "#getitem2-3";
+	end;
 
-	OnCommandOn:
-		enablenpc "#getitem2-3";
-		donpcevent "timer2-3::OnCommandOff";
-		donpcevent "start02#gnbs::OnCommandOn";
-		end;
+OnCommandOn:
+	enablenpc "#getitem2-3";
+	donpcevent "timer2-3::OnCommandOff";
+	donpcevent "start02#gnbs::OnCommandOn";
+	end;
 
-	OnCommandOff:
-		disablenpc "#getitem2-3";
-		end;
+OnCommandOff:
+	disablenpc "#getitem2-3";
+	end;
 }
 
-gon_dun02,149,74,0	script	trace2-4#gnbs	139,1,1,{
+gon_dun02,149,74,0	script	trace2-4#gnbs	HIDDEN_WARP_NPC,1,1,{
 	if (b_sword == 8) donpcevent "timer2-4::OnCommandOn";
 	end;
 
-	OnTimer230000:
-		stopnpctimer;
-		disablenpc "trace2-4#gnbs";
-		donpcevent "start02#gnbs::OnCommandOn";
-		end;
+OnTimer230000:
+	stopnpctimer;
+	disablenpc "trace2-4#gnbs";
+	donpcevent "start02#gnbs::OnCommandOn";
+	end;
 
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "trace2-4#gnbs";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "trace2-4#gnbs";
+	end;
 
-	OnCommandOn:
-		enablenpc "trace2-4#gnbs";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "trace2-4#gnbs";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 }
 
 gon_dun02,5,1,0	script	timer2-4	-1,{
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "timer2-4";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "timer2-4";
+	end;
 
-	OnCommandOn:
-		enablenpc "timer2-4";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "timer2-4";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 
-	OnCommandOff:
-		stopnpctimer;
-		disablenpc "timer2-4";
-		end;
+OnCommandOff:
+	stopnpctimer;
+	disablenpc "timer2-4";
+	end;
 
-	OnTimer3000:
-		donpcevent "#getitem2-4::OnCommandOn";
-		end;
+OnTimer3000:
+	donpcevent "#getitem2-4::OnCommandOn";
+	end;
 }
 
-gon_dun02,149,75,0	script	#getitem2-4	111,2,1,{
+gon_dun02,149,75,0	script	#getitem2-4	HIDDEN_NPC,2,1,{
 	if (b_sword != 8) end;
 	set b_sword,9;
 	mes "You found a ^FF0000piece of blade^000000.";
 	mes "Seems like it's a part of the sword you've been looking for.";
 	close;
 
-	OnInit:
-		disablenpc "#getitem2-4";
-		end;
+OnInit:
+	disablenpc "#getitem2-4";
+	end;
 
-	OnCommandOn:
-		enablenpc "#getitem2-4";
-		donpcevent "timer2-4::OnCommandOff";
-		donpcevent "start02#gnbs::OnCommandOn";
-		end;
+OnCommandOn:
+	enablenpc "#getitem2-4";
+	donpcevent "timer2-4::OnCommandOff";
+	donpcevent "start02#gnbs::OnCommandOn";
+	end;
 
-	OnCommandOff:
-		disablenpc "#getitem2-4";
-		end;
+OnCommandOff:
+	disablenpc "#getitem2-4";
+	end;
 }
 
-gon_dun02,23,105,0	script	trace2-5#gnbs	139,1,1,{
+gon_dun02,23,105,0	script	trace2-5#gnbs	HIDDEN_WARP_NPC,1,1,{
 	if (b_sword == 8) donpcevent "timer2-5::OnCommandOn";
 	end;
 
-	OnTimer190000:
-		stopnpctimer;
-		disablenpc "trace2-5#gnbs";
-		donpcevent "start02#gnbs::OnCommandOn";
-		end;
+OnTimer190000:
+	stopnpctimer;
+	disablenpc "trace2-5#gnbs";
+	donpcevent "start02#gnbs::OnCommandOn";
+	end;
 
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "trace2-5#gnbs";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "trace2-5#gnbs";
+	end;
 
-	OnCommandOn:
-		enablenpc "trace2-5#gnbs";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "trace2-5#gnbs";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 }
 
 gon_dun02,6,1,0	script	timer2-5	-1,{
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "timer2-5";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "timer2-5";
+	end;
 
-	OnCommandOn:
-		enablenpc "timer2-5";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "timer2-5";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 
-	OnCommandOff:
-		stopnpctimer;
-		disablenpc "timer2-5";
-		end;
+OnCommandOff:
+	stopnpctimer;
+	disablenpc "timer2-5";
+	end;
 
-	OnTimer3000:
-		donpcevent "#getitem2-5::OnCommandOn";
-		end;
+OnTimer3000:
+	donpcevent "#getitem2-5::OnCommandOn";
+	end;
 }
 
-gon_dun02,23,106,0	script	#getitem2-5	111,2,1,{
+gon_dun02,23,106,0	script	#getitem2-5	HIDDEN_NPC,2,1,{
 	if (b_sword != 8) end;
 	set b_sword,9;
 	mes "You found a ^FF0000piece of blade^000000.";
 	mes "Seems like it's a part of the sword you've been looking for.";
 	close;
 
-	OnInit:
-		disablenpc "#getitem2-5";
-		end;
+OnInit:
+	disablenpc "#getitem2-5";
+	end;
 
-	OnCommandOn:
-		enablenpc "#getitem2-5";
-		donpcevent "timer2-5::OnCommandOff";
-		donpcevent "start02#gnbs::OnCommandOn";
-		end;
+OnCommandOn:
+	enablenpc "#getitem2-5";
+	donpcevent "timer2-5::OnCommandOff";
+	donpcevent "start02#gnbs::OnCommandOn";
+	end;
 
-	OnCommandOff:
-		disablenpc "#getitem2-5";
-		end;
+OnCommandOff:
+	disablenpc "#getitem2-5";
+	end;
 }
 
-gon_dun02,249,39,0	script	trace2-6#gnbs	139,1,1,{
+gon_dun02,249,39,0	script	trace2-6#gnbs	HIDDEN_WARP_NPC,1,1,{
 	if (b_sword == 8) donpcevent "timer2-6::OnCommandOn";
 	end;
 
-	OnTimer110000:
-		stopnpctimer;
-		disablenpc "trace2-6#gnbs";
-		donpcevent "start02#gnbs::OnCommandOn";
-		end;
+OnTimer110000:
+	stopnpctimer;
+	disablenpc "trace2-6#gnbs";
+	donpcevent "start02#gnbs::OnCommandOn";
+	end;
 
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "trace2-6#gnbs";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "trace2-6#gnbs";
+	end;
 
-	OnCommandOn:
-		enablenpc "trace2-6#gnbs";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "trace2-6#gnbs";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 }
 
 gon_dun02,7,1,0	script	timer2-6	-1,{
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "timer2-6";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "timer2-6";
+	end;
 
-	OnCommandOn:
-		enablenpc "timer2-6";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "timer2-6";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 
-	OnCommandOff:
-		stopnpctimer;
-		disablenpc "timer2-6";
-		end;
+OnCommandOff:
+	stopnpctimer;
+	disablenpc "timer2-6";
+	end;
 
-	OnTimer3000:
-		donpcevent "#getitem2-6::OnCommandOn";
-		end;
+OnTimer3000:
+	donpcevent "#getitem2-6::OnCommandOn";
+	end;
 }
 
-gon_dun02,249,40,0	script	#getitem2-6	111,2,1,{
+gon_dun02,249,40,0	script	#getitem2-6	HIDDEN_NPC,2,1,{
 	if (b_sword != 8) end;
 	set b_sword,9;
 	mes "You found a ^FF0000piece of blade^000000.";
 	mes "Seems like it's a part of the sword you've been looking for.";
 	close;
 
-	OnInit:
-		disablenpc "#getitem2-6";
-		end;
+OnInit:
+	disablenpc "#getitem2-6";
+	end;
 
-	OnCommandOn:
-		enablenpc "#getitem2-6";
-		donpcevent "timer2-6::OnCommandOff";
-		donpcevent "start02#gnbs::OnCommandOn";
-		end;
+OnCommandOn:
+	enablenpc "#getitem2-6";
+	donpcevent "timer2-6::OnCommandOff";
+	donpcevent "start02#gnbs::OnCommandOn";
+	end;
 
-	OnCommandOff:
-		disablenpc "#getitem2-6";
-		end;
+OnCommandOff:
+	disablenpc "#getitem2-6";
+	end;
 }
 
 gon_dun03,1,1,0	script	start03#gnbs	-1,{
-	OnInit:
-		sleep 10000;
-	OnCommandOn:
-		donpcevent "trace3-"+rand(1,7)+"#gnbs::OnCommandOn";
-		end;
+OnInit:
+	sleep 10000;
+OnCommandOn:
+	donpcevent "trace3-"+rand(1,7)+"#gnbs::OnCommandOn";
+	end;
 }
 
-gon_dun03,11,75,0	script	trace3-1#gnbs	139,1,1,{
+gon_dun03,11,75,0	script	trace3-1#gnbs	HIDDEN_WARP_NPC,1,1,{
 	if (b_sword == 9) donpcevent "timer3-1::OnCommandOn";
 	end;
 
-	OnTimer200000:
-		stopnpctimer;
-		disablenpc "trace3-1#gnbs";
-		donpcevent "start03#gnbs::OnCommandOn";
-		end;
+OnTimer200000:
+	stopnpctimer;
+	disablenpc "trace3-1#gnbs";
+	donpcevent "start03#gnbs::OnCommandOn";
+	end;
 
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "trace3-1#gnbs";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "trace3-1#gnbs";
+	end;
 
-	OnCommandOn:
-		enablenpc "trace3-1#gnbs";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "trace3-1#gnbs";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 }
 
 gon_dun03,2,1,0	script	timer3-1	-1,{
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "timer3-1";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "timer3-1";
+	end;
 
-	OnCommandOn:
-		enablenpc "timer3-1";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "timer3-1";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 
-	OnCommandOff:
-		stopnpctimer;
-		disablenpc "timer3-1";
-		end;
+OnCommandOff:
+	stopnpctimer;
+	disablenpc "timer3-1";
+	end;
 
-	OnTimer3000:
-		donpcevent "#getitem3-1::OnCommandOn";
-		end;
+OnTimer3000:
+	donpcevent "#getitem3-1::OnCommandOn";
+	end;
 }
 
-gon_dun03,10,74,0	script	#getitem3-1	111,2,1,{
+gon_dun03,10,74,0	script	#getitem3-1	HIDDEN_NPC,2,1,{
 	if (b_sword != 9) end;
 	set b_sword,10;
 	mes "You found a ^FF0000piece of blade^000000.";
@@ -1616,68 +1614,68 @@ gon_dun03,10,74,0	script	#getitem3-1	111,2,1,{
 	mes "It looks like you've found all of the pieces of the blade.";
 	close;
 
-	OnInit:
-		disablenpc "#getitem3-1";
-		end;
+OnInit:
+	disablenpc "#getitem3-1";
+	end;
 
-	OnCommandOn:
-		enablenpc "#getitem3-1";
-		donpcevent "timer3-1::OnCommandOff";
-		donpcevent "start03#gnbs::OnCommandOn";
-		end;
+OnCommandOn:
+	enablenpc "#getitem3-1";
+	donpcevent "timer3-1::OnCommandOff";
+	donpcevent "start03#gnbs::OnCommandOn";
+	end;
 
-	OnCommandOff:
-		disablenpc "#getitem3-1";
-		end;
+OnCommandOff:
+	disablenpc "#getitem3-1";
+	end;
 }
 
-gon_dun03,199,103,0	script	trace3-2#gnbs	139,1,1,{
+gon_dun03,199,103,0	script	trace3-2#gnbs	HIDDEN_WARP_NPC,1,1,{
 	if (b_sword == 9) donpcevent "timer3-2::OnCommandOn";
 	end;
 
-	OnTimer130000:
-		stopnpctimer;
-		disablenpc "trace3-2#gnbs";
-		donpcevent "start03#gnbs::OnCommandOn";
-		end;
+OnTimer130000:
+	stopnpctimer;
+	disablenpc "trace3-2#gnbs";
+	donpcevent "start03#gnbs::OnCommandOn";
+	end;
 
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "trace3-2#gnbs";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "trace3-2#gnbs";
+	end;
 
-	OnCommandOn:
-		enablenpc "trace3-2#gnbs";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "trace3-2#gnbs";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 }
 
 gon_dun03,3,1,0	script	timer3-2	-1,{
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "timer3-2";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "timer3-2";
+	end;
 
-	OnCommandOn:
-		enablenpc "timer3-2";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "timer3-2";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 
-	OnCommandOff:
-		stopnpctimer;
-		disablenpc "timer3-2";
-		end;
+OnCommandOff:
+	stopnpctimer;
+	disablenpc "timer3-2";
+	end;
 
-	OnTimer3000:
-		donpcevent "#getitem3-2::OnCommandOn";
-		end;
+OnTimer3000:
+	donpcevent "#getitem3-2::OnCommandOn";
+	end;
 }
 
-gon_dun03,199,102,0	script	#getitem3-2	111,2,1,{
+gon_dun03,199,102,0	script	#getitem3-2	HIDDEN_NPC,2,1,{
 	if (b_sword != 9) end;
 	set b_sword,10;
 	mes "You found a ^FF0000piece of blade^000000.";
@@ -1688,68 +1686,68 @@ gon_dun03,199,102,0	script	#getitem3-2	111,2,1,{
 	mes "It looks like you've found all of the pieces of the blade.";
 	close;
 
-	OnInit:
-		disablenpc "#getitem3-2";
-		end;
+OnInit:
+	disablenpc "#getitem3-2";
+	end;
 
-	OnCommandOn:
-		enablenpc "#getitem3-2";
-		donpcevent "timer3-2::OnCommandOff";
-		donpcevent "start03#gnbs::OnCommandOn";
-		end;
+OnCommandOn:
+	enablenpc "#getitem3-2";
+	donpcevent "timer3-2::OnCommandOff";
+	donpcevent "start03#gnbs::OnCommandOn";
+	end;
 
-	OnCommandOff:
-		disablenpc "#getitem3-2";
-		end;
+OnCommandOff:
+	disablenpc "#getitem3-2";
+	end;
 }
 
-gon_dun03,14,162,0	script	trace3-3#gnbs	139,1,1,{
+gon_dun03,14,162,0	script	trace3-3#gnbs	HIDDEN_WARP_NPC,1,1,{
 	if (b_sword == 9) donpcevent "timer3-3::OnCommandOn";
 	end;
 
-	OnTimer110000:
-		stopnpctimer;
-		disablenpc "trace3-3#gnbs";
-		donpcevent "start03#gnbs::OnCommandOn";
-		end;
+OnTimer110000:
+	stopnpctimer;
+	disablenpc "trace3-3#gnbs";
+	donpcevent "start03#gnbs::OnCommandOn";
+	end;
 
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "trace3-3#gnbs";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "trace3-3#gnbs";
+	end;
 
-	OnCommandOn:
-		enablenpc "trace3-3#gnbs";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "trace3-3#gnbs";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 }
 
 gon_dun03,4,1,0	script	timer3-3	-1,{
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "timer3-3";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "timer3-3";
+	end;
 
-	OnCommandOn:
-		enablenpc "timer3-3";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "timer3-3";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 
-	OnCommandOff:
-		stopnpctimer;
-		disablenpc "timer3-3";
-		end;
+OnCommandOff:
+	stopnpctimer;
+	disablenpc "timer3-3";
+	end;
 
-	OnTimer3000:
-		donpcevent "#getitem3-3::OnCommandOn";
-		end;
+OnTimer3000:
+	donpcevent "#getitem3-3::OnCommandOn";
+	end;
 }
 
-gon_dun03,14,163,0	script	#getitem3-3	111,2,1,{
+gon_dun03,14,163,0	script	#getitem3-3	HIDDEN_NPC,2,1,{
 	if (b_sword != 9) end;
 	set b_sword,10;
 	mes "You found a ^FF0000piece of blade^000000.";
@@ -1760,68 +1758,68 @@ gon_dun03,14,163,0	script	#getitem3-3	111,2,1,{
 	mes "It looks like you've found all of the pieces of the blade.";
 	close;
 
-	OnInit:
-		disablenpc "#getitem3-3";
-		end;
+OnInit:
+	disablenpc "#getitem3-3";
+	end;
 
-	OnCommandOn:
-		enablenpc "#getitem3-3";
-		donpcevent "timer3-3::OnCommandOff";
-		donpcevent "start03#gnbs::OnCommandOn";
-		end;
+OnCommandOn:
+	enablenpc "#getitem3-3";
+	donpcevent "timer3-3::OnCommandOff";
+	donpcevent "start03#gnbs::OnCommandOn";
+	end;
 
-	OnCommandOff:
-		disablenpc "#getitem3-3";
-		end;
+OnCommandOff:
+	disablenpc "#getitem3-3";
+	end;
 }
 
-gon_dun03,155,263,0	script	trace3-4#gnbs	139,1,1,{
+gon_dun03,155,263,0	script	trace3-4#gnbs	HIDDEN_WARP_NPC,1,1,{
 	if (b_sword == 9) donpcevent "timer3-4::OnCommandOn";
 	end;
 
-	OnTimer230000:
-		stopnpctimer;
-		disablenpc "trace3-4#gnbs";
-		donpcevent "start03#gnbs::OnCommandOn";
-		end;
+OnTimer230000:
+	stopnpctimer;
+	disablenpc "trace3-4#gnbs";
+	donpcevent "start03#gnbs::OnCommandOn";
+	end;
 
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "trace3-4#gnbs";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "trace3-4#gnbs";
+	end;
 
-	OnCommandOn:
-		enablenpc "trace3-4#gnbs";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "trace3-4#gnbs";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 }
 
 gon_dun03,5,1,0	script	timer3-4	-1,{
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "timer3-4";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "timer3-4";
+	end;
 
-	OnCommandOn:
-		enablenpc "timer3-4";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "timer3-4";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 
-	OnCommandOff:
-		stopnpctimer;
-		disablenpc "timer3-4";
-		end;
+OnCommandOff:
+	stopnpctimer;
+	disablenpc "timer3-4";
+	end;
 
-	OnTimer3000:
-		donpcevent "#getitem3-4::OnCommandOn";
-		end;
+OnTimer3000:
+	donpcevent "#getitem3-4::OnCommandOn";
+	end;
 }
 
-gon_dun03,156,263,0	script	#getitem3-4	111,2,1,{
+gon_dun03,156,263,0	script	#getitem3-4	HIDDEN_NPC,2,1,{
 	if (b_sword != 9) end;
 	set b_sword,10;
 	mes "You found a ^FF0000piece of blade^000000.";
@@ -1832,68 +1830,68 @@ gon_dun03,156,263,0	script	#getitem3-4	111,2,1,{
 	mes "It looks like you've found all of the pieces of the blade.";
 	close;
 
-	OnInit:
-		disablenpc "#getitem3-4";
-		end;
+OnInit:
+	disablenpc "#getitem3-4";
+	end;
 
-	OnCommandOn:
-		enablenpc "#getitem3-4";
-		donpcevent "timer3-4::OnCommandOff";
-		donpcevent "start03#gnbs::OnCommandOn";
-		end;
+OnCommandOn:
+	enablenpc "#getitem3-4";
+	donpcevent "timer3-4::OnCommandOff";
+	donpcevent "start03#gnbs::OnCommandOn";
+	end;
 
-	OnCommandOff:
-		disablenpc "#getitem3-4";
-		end;
+OnCommandOff:
+	disablenpc "#getitem3-4";
+	end;
 }
 
-gon_dun03,169,90,0	script	trace3-5#gnbs	139,1,1,{
+gon_dun03,169,90,0	script	trace3-5#gnbs	HIDDEN_WARP_NPC,1,1,{
 	if (b_sword == 9) donpcevent "timer3-5::OnCommandOn";
 	end;
 
-	OnTimer190000:
-		stopnpctimer;
-		disablenpc "trace3-5#gnbs";
-		donpcevent "start03#gnbs::OnCommandOn";
-		end;
+OnTimer190000:
+	stopnpctimer;
+	disablenpc "trace3-5#gnbs";
+	donpcevent "start03#gnbs::OnCommandOn";
+	end;
 
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "trace3-5#gnbs";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "trace3-5#gnbs";
+	end;
 
-	OnCommandOn:
-		enablenpc "trace3-5#gnbs";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "trace3-5#gnbs";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 }
 
 gon_dun03,6,1,0	script	timer3-5	-1,{
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "timer3-5";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "timer3-5";
+	end;
 
-	OnCommandOn:
-		enablenpc "timer3-5";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "timer3-5";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 
-	OnCommandOff:
-		stopnpctimer;
-		disablenpc "timer3-5";
-		end;
+OnCommandOff:
+	stopnpctimer;
+	disablenpc "timer3-5";
+	end;
 
-	OnTimer3000:
-		donpcevent "#getitem3-5::OnCommandOn";
-		end;
+OnTimer3000:
+	donpcevent "#getitem3-5::OnCommandOn";
+	end;
 }
 
-gon_dun03,170,90,0	script	#getitem3-5	111,2,1,{
+gon_dun03,170,90,0	script	#getitem3-5	HIDDEN_NPC,2,1,{
 	if (b_sword != 9) end;
 	set b_sword,10;
 	mes "You found a ^FF0000piece of blade^000000.";
@@ -1904,68 +1902,68 @@ gon_dun03,170,90,0	script	#getitem3-5	111,2,1,{
 	mes "It looks like you've found all of the pieces of the blade.";
 	close;
 
-	OnInit:
-		disablenpc "#getitem3-5";
-		end;
+OnInit:
+	disablenpc "#getitem3-5";
+	end;
 
-	OnCommandOn:
-		enablenpc "#getitem3-5";
-		donpcevent "timer3-5::OnCommandOff";
-		donpcevent "start03#gnbs::OnCommandOn";
-		end;
+OnCommandOn:
+	enablenpc "#getitem3-5";
+	donpcevent "timer3-5::OnCommandOff";
+	donpcevent "start03#gnbs::OnCommandOn";
+	end;
 
-	OnCommandOff:
-		disablenpc "#getitem3-5";
-		end;
+OnCommandOff:
+	disablenpc "#getitem3-5";
+	end;
 }
 
-gon_dun03,162,40,0	script	trace3-6#gnbs	139,1,1,{
+gon_dun03,162,40,0	script	trace3-6#gnbs	HIDDEN_WARP_NPC,1,1,{
 	if (b_sword == 9) donpcevent "timer3-6::OnCommandOn";
 	end;
 
-	OnTimer110000:
-		stopnpctimer;
-		disablenpc "trace3-6#gnbs";
-		donpcevent "start03#gnbs::OnCommandOn";
-		end;
+OnTimer110000:
+	stopnpctimer;
+	disablenpc "trace3-6#gnbs";
+	donpcevent "start03#gnbs::OnCommandOn";
+	end;
 
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "trace3-6#gnbs";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "trace3-6#gnbs";
+	end;
 
-	OnCommandOn:
-		enablenpc "trace3-6#gnbs";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "trace3-6#gnbs";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 }
 
 gon_dun03,7,1,0	script	timer3-6	-1,{
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "timer3-6";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "timer3-6";
+	end;
 
-	OnCommandOn:
-		enablenpc "timer3-6";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "timer3-6";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 
-	OnCommandOff:
-		stopnpctimer;
-		disablenpc "timer3-6";
-		end;
+OnCommandOff:
+	stopnpctimer;
+	disablenpc "timer3-6";
+	end;
 
-	OnTimer3000:
-		donpcevent "#getitem3-6::OnCommandOn";
-		end;
+OnTimer3000:
+	donpcevent "#getitem3-6::OnCommandOn";
+	end;
 }
 
-gon_dun03,68,39,0	script	#getitem3-6	111,1,2,{
+gon_dun03,68,39,0	script	#getitem3-6	HIDDEN_NPC,1,2,{
 	if (b_sword != 9) end;
 	set b_sword,10;
 	mes "You found a ^FF0000piece of blade^000000.";
@@ -1976,68 +1974,68 @@ gon_dun03,68,39,0	script	#getitem3-6	111,1,2,{
 	mes "It looks like you've found all of the pieces of the blade.";
 	close;
 
-	OnInit:
-		disablenpc "#getitem3-6";
-		end;
+OnInit:
+	disablenpc "#getitem3-6";
+	end;
 
-	OnCommandOn:
-		enablenpc "#getitem3-6";
-		donpcevent "timer3-6::OnCommandOff";
-		donpcevent "start03#gnbs::OnCommandOn";
-		end;
+OnCommandOn:
+	enablenpc "#getitem3-6";
+	donpcevent "timer3-6::OnCommandOff";
+	donpcevent "start03#gnbs::OnCommandOn";
+	end;
 
-	OnCommandOff:
-		disablenpc "#getitem3-6";
-		end;
+OnCommandOff:
+	disablenpc "#getitem3-6";
+	end;
 }
 
-gon_dun03,68,212,0	script	trace3-7#gnbs	139,1,1,{
+gon_dun03,68,212,0	script	trace3-7#gnbs	HIDDEN_WARP_NPC,1,1,{
 	if (b_sword == 9) donpcevent "timer3-7::OnCommandOn";
 	end;
 
-	OnTimer110000:
-		stopnpctimer;
-		disablenpc "trace3-7#gnbs";
-		donpcevent "start03#gnbs::OnCommandOn";
-		end;
+OnTimer110000:
+	stopnpctimer;
+	disablenpc "trace3-7#gnbs";
+	donpcevent "start03#gnbs::OnCommandOn";
+	end;
 
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "trace3-7#gnbs";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "trace3-7#gnbs";
+	end;
 
-	OnCommandOn:
-		enablenpc "trace3-7#gnbs";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "trace3-7#gnbs";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 }
 
 gon_dun03,6,1,0	script	timer3-7	-1,{
-	OnInit:
-		initnpctimer;
-		stopnpctimer;
-		disablenpc "timer3-7";
-		end;
+OnInit:
+	initnpctimer;
+	stopnpctimer;
+	disablenpc "timer3-7";
+	end;
 
-	OnCommandOn:
-		enablenpc "timer3-7";
-		setnpctimer 0;
-		startnpctimer;
-		end;
+OnCommandOn:
+	enablenpc "timer3-7";
+	setnpctimer 0;
+	startnpctimer;
+	end;
 
-	OnCommandOff:
-		stopnpctimer;
-		disablenpc "timer3-7";
-		end;
+OnCommandOff:
+	stopnpctimer;
+	disablenpc "timer3-7";
+	end;
 
-	OnTimer3000:
-		donpcevent "#getitem3-7::OnCommandOn";
-		end;
+OnTimer3000:
+	donpcevent "#getitem3-7::OnCommandOn";
+	end;
 }
 
-gon_dun03,68,213,0	script	#getitem3-7	111,1,2,{
+gon_dun03,68,213,0	script	#getitem3-7	HIDDEN_NPC,1,2,{
 	if (b_sword != 9) end;
 	set b_sword,10;
 	mes "You found a ^FF0000piece of blade^000000.";
@@ -2048,22 +2046,22 @@ gon_dun03,68,213,0	script	#getitem3-7	111,1,2,{
 	mes "It looks like you've found all of the pieces of the blade.";
 	close;
 
-	OnInit:
-		disablenpc "#getitem3-7";
-		end;
+OnInit:
+	disablenpc "#getitem3-7";
+	end;
 
-	OnCommandOn:
-		enablenpc "#getitem3-7";
-		donpcevent "timer3-7::OnCommandOff";
-		donpcevent "start03#gnbs::OnCommandOn";
-		end;
+OnCommandOn:
+	enablenpc "#getitem3-7";
+	donpcevent "timer3-7::OnCommandOff";
+	donpcevent "start03#gnbs::OnCommandOn";
+	end;
 
-	OnCommandOff:
-		disablenpc "#getitem3-7";
-		end;
+OnCommandOff:
+	disablenpc "#getitem3-7";
+	end;
 }
 
-gon_in,18,27,5	script	Madam#gnbs	771,{
+gon_in,18,27,5	script	Madam#gnbs	4_F_TWGRANDMOM,{
 	mes "[Shang Hua Yen]";
 	mes "Ho, ho, ho~";
 	mes "Who might this be?";
@@ -2092,7 +2090,7 @@ gon_in,18,27,5	script	Madam#gnbs	771,{
 	close;
 }
 
-gon_dun03,62,222,0	script	Strange dead body#gnbs	111,{
+gon_dun03,62,222,0	script	Strange dead body#gnbs	HIDDEN_NPC,{
 	if (b_sword < 7) {
 		mes "Here's a decomposing corpse.";
 		mes "It seems like monsters devoured it.";
@@ -2142,7 +2140,7 @@ gon_dun03,62,222,0	script	Strange dead body#gnbs	111,{
 	close;
 }
 
-gonryun,139,142,7	script	Girl##gnbs1	772,{
+gonryun,139,142,7	script	Girl##gnbs1	4_F_TWMASKGIRL,{
 	if (b_sword < 12) {
 		mes "[Shi Ying Xiao]";
 		mes "..........";
@@ -2178,7 +2176,7 @@ gonryun,139,142,7	script	Girl##gnbs1	772,{
 	close;
 }
 
-gonryun,100,241,0	script	Stranger#gnbs	733,{
+gonryun,100,241,0	script	Stranger#gnbs	4_M_JOB_KNIGHT1,{
 	if (b_sword < 14) {
 		mes "[Zuo Hei]";
 		mes "Hmm...";
@@ -2414,7 +2412,7 @@ gonryun,100,241,0	script	Stranger#gnbs	733,{
 	close;
 }
 
-geffen_in,71,112,2	script	Blacksmith#SaYumMoon	731,{
+geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 	if (b_sword < 17) {
 		mes "[Aumgarl]";
 		mes "*Sob*..*sob*....";
@@ -3002,7 +3000,7 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	731,{
 	close;
 }
 
-geffen_in,106,106,7	script	Girl#gnbs2	716,{
+geffen_in,106,106,7	script	Girl#gnbs2	4_M_KID2,{
 	if (b_sword < 20) {
 		mes "[Lyroo]";
 		mes "Ah...Ah....";
@@ -3109,14 +3107,14 @@ geffen_in,106,106,7	script	Girl#gnbs2	716,{
 	mes "Heehehe...";
 	if (Sex == 0)
 		mes "Thank you my pretty sister.";
-	else 
+	else
 		mes "Thank you handsome brother~";
 	mes "I'll get my health back";
 	mes "and be a strong girl!";
 	close;
 }
 
-prontera,275,86,2	script	Young man#SaYumMoon	97,{
+prontera,275,86,2	script	Young man#SaYumMoon	4W_M_01,{
 	if (b_sword < 20) {
 		mes "[Neil]";
 		mes "Oh man, it feels so good";
@@ -3158,7 +3156,7 @@ prontera,275,86,2	script	Young man#SaYumMoon	97,{
 	close;
 }
 
-yuno,208,164,4	script	Active little girl#gnbs	101,{
+yuno,208,164,4	script	Active little girl#gnbs	4W_F_01,{
 	if (b_sword < 21) {
 		mes "[Hisa]";
 		mes ".....";
@@ -3200,7 +3198,7 @@ yuno,208,164,4	script	Active little girl#gnbs	101,{
 	close;
 }
 
-yuno_in01,99,101,4	script	Doctor#gnbs	744,{
+yuno_in01,99,101,4	script	Doctor#gnbs	4_F_ALCHE,{
 	if (b_sword < 23) {
 		mes "[??????]";
 		mes "I don't believe we've met";
@@ -3675,7 +3673,7 @@ yuno_in01,99,101,4	script	Doctor#gnbs	744,{
 	close;
 }
 
-yuno_in01,104,94,0	script	go away#gnbs	139,2,1,{
+yuno_in01,104,94,0	script	go away#gnbs	HIDDEN_WARP_NPC,2,1,{
 OnTouch:
 	if (b_sword < 22) {
 		mes "[??????]";
@@ -3702,9 +3700,9 @@ OnTouch:
 	end;
 }
 
-// Lost Knife
-//============================================================ 
-gonryun,237,226,3	script	Han Ran Jiao#gon	776,{
+// Lost Knife :: gon_npc
+//============================================================
+gonryun,237,226,3	script	Han Ran Jiao#gon	4_M_TWMIDMAN,{
 	if (nakha == 0) {
 		mes "[Han Ran Jiao]";
 		mes "Oh no! What will I do?!";
@@ -3799,7 +3797,7 @@ gonryun,237,226,3	script	Han Ran Jiao#gon	776,{
 	}
 }
 
-gon_fild01,245,257,0	script	#gonknife	111,3,3,{
+gon_fild01,245,257,0	script	#gonknife	HIDDEN_NPC,3,3,{
 OnTouch:
 	if (nakha == 1) {
 		set nakha,2;

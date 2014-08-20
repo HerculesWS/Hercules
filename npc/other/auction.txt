@@ -4,8 +4,8 @@
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.3
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Auction house releated NPCs, and warps
 //===== Additional Comments: =================================
 //= 1.0 First version, place holders only. [L0ne_W0lf]
@@ -16,19 +16,19 @@
 
 // Auction House warpers
 //============================================================
-moc_ruins,78,173,6	script	Auction Hall Guide#moc	98,{
+moc_ruins,78,173,6	script	Auction Hall Guide#moc	4W_M_02,{
 	callfunc "F_AuctionWarper",1;
 }
 
-prontera,218,120,4	script	Auction Hall Guide#prt	117,{
+prontera,218,120,4	script	Auction Hall Guide#prt	4_F_KAFRA1,{
 	callfunc "F_AuctionWarper",2;
 }
 
-yuno,129,116,0	script	Auction Hall Guide#yuno	90,{
+yuno,129,116,0	script	Auction Hall Guide#yuno	4_F_01,{
 	callfunc "F_AuctionWarper",3;
 }
 
-lighthalzen,205,169,6	script	Auction Hall Guide#lhz	833,{
+lighthalzen,205,169,6	script	Auction Hall Guide#lhz	4_M_ZONDAOYAJI,{
 	callfunc "F_AuctionWarper",4;
 }
 
@@ -44,7 +44,7 @@ function	script	F_AuctionWarper	{
 			mes "Great! Well then,";
 			mes "I hope you have fun";
 			mes "and enjoy the auction~";
-		}else{
+		} else {
 			mes "[Auction Hall Guide]";
 			mes "Enjoy your auction.";
 		}
@@ -77,10 +77,10 @@ function	script	F_AuctionWarper	{
 	close;
 }
 
-moc_ruins,76,176,6	duplicate(AuctionSign)	Information Post#moc	837
-prontera,216,120,4	duplicate(AuctionSign)	Information Post#prt	837
-yuno,131,116,0	duplicate(AuctionSign)	Information Post#yuno	837
-lighthalzen,207,169,6	duplicate(AuctionSign)	Information Post#lhz	837
+moc_ruins,76,176,6	duplicate(AuctionSign)	Information Post#moc	2_BULLETIN_BOARD
+prontera,216,120,4	duplicate(AuctionSign)	Information Post#prt	2_BULLETIN_BOARD
+yuno,131,116,0	duplicate(AuctionSign)	Information Post#yuno	2_BULLETIN_BOARD
+lighthalzen,207,169,6	duplicate(AuctionSign)	Information Post#lhz	2_BULLETIN_BOARD
 
 // Warps
 //============================================================
@@ -102,7 +102,7 @@ auction_02,43,17,0	warp	auction_enterance_lhz	1,1,lighthalzen,209,169
 		mes "Please take";
 		mes "a look, and see";
 		mes "What's being offered~";
-		OpenAuction;
+		openauction;
 		close;
 	}
 	mes "[Auction Broker]";
@@ -114,17 +114,17 @@ auction_02,43,17,0	warp	auction_enterance_lhz	1,1,lighthalzen,209,169
 	close;
 }
 
-auction_01,182,68,6	duplicate(AuctionBroker)	Auction Broker#moc1	98
-auction_01,182,75,0	duplicate(AuctionBroker)	Auction Broker#moc2	99
-auction_01,177,75,2	duplicate(AuctionBroker)	Auction Broker#moc3	98
-auction_01,177,68,4	duplicate(AuctionBroker)	Auction Broker#moc4	99
-auction_01,21,74,4	duplicate(AuctionBroker)	Auction Broker#prt1	117
-auction_01,27,78,4	duplicate(AuctionBroker)	Auction Broker#prt2	116
-auction_01,16,78,4	duplicate(AuctionBroker)	Auction Broker#prt3	115
-auction_02,158,47,6	duplicate(AuctionBroker)	Auction Broker#yuno1	90
-auction_02,145,47,2	duplicate(AuctionBroker)	Auction Broker#yuno2	90
-auction_02,151,54,0	duplicate(AuctionBroker)	Auction Broker#yuno3	90
-auction_02,152,41,4	duplicate(AuctionBroker)	Auction Broker#yuno4	90
-auction_02,57,46,2	duplicate(AuctionBroker)	Auction Broker#lhz1	874
-auction_02,31,46,6	duplicate(AuctionBroker)	Auction Broker#lhz2	874
-auction_02,43,65,4	duplicate(AuctionBroker)	Auction Broker#lhz3	833
+auction_01,182,68,6	duplicate(AuctionBroker)	Auction Broker#moc1	4W_M_02
+auction_01,182,75,0	duplicate(AuctionBroker)	Auction Broker#moc2	4W_M_03
+auction_01,177,75,2	duplicate(AuctionBroker)	Auction Broker#moc3	4W_M_02
+auction_01,177,68,4	duplicate(AuctionBroker)	Auction Broker#moc4	4W_M_03
+auction_01,21,74,4	duplicate(AuctionBroker)	Auction Broker#prt1	4_F_KAFRA1
+auction_01,27,78,4	duplicate(AuctionBroker)	Auction Broker#prt2	4_F_KAFRA2
+auction_01,16,78,4	duplicate(AuctionBroker)	Auction Broker#prt3	4_F_KAFRA3
+auction_02,158,47,6	duplicate(AuctionBroker)	Auction Broker#yuno1	4_F_01
+auction_02,145,47,2	duplicate(AuctionBroker)	Auction Broker#yuno2	4_F_01
+auction_02,151,54,0	duplicate(AuctionBroker)	Auction Broker#yuno3	4_F_01
+auction_02,152,41,4	duplicate(AuctionBroker)	Auction Broker#yuno4	4_F_01
+auction_02,57,46,2	duplicate(AuctionBroker)	Auction Broker#lhz1	4_M_ZONDAMAN
+auction_02,31,46,6	duplicate(AuctionBroker)	Auction Broker#lhz2	4_M_ZONDAMAN
+auction_02,43,65,4	duplicate(AuctionBroker)	Auction Broker#lhz3	4_M_ZONDAOYAJI

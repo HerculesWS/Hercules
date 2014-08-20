@@ -6,16 +6,16 @@
 //===== Current Version: =====================================
 //= 1.0
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Cats Footprint, Cute Ribbon Dyer and Brides Corolla.
 //===== Additional Comments: =================================
 //= 1.0 First Version. [Masao]
 //============================================================
 
-gef_fild05,80,149,3	script	Myu#08_hat	877,{
+gef_fild05,80,149,3	script	Myu#08_hat	4_F_YUNYANG,{
 	mes "[Myu]";
 	mes "Meow...";
-	emotion 23;
+	emotion e_omg;
 	next;
 	if(hatcat2008 == 0) {
 		mes "[Myu]";
@@ -23,7 +23,7 @@ gef_fild05,80,149,3	script	Myu#08_hat	877,{
 		mes "What brings you here? Ho, you are not here to harm Wild Roses, are you?";
 		mes "(Meow!)";
 		next;
-		menu "Meow..?",-;
+		select("Meow..?");
 		mes "[Myu]";
 		mes "Ah, Never mind that.";
 		mes "This place is the village of Deserted people.";
@@ -65,7 +65,7 @@ gef_fild05,80,149,3	script	Myu#08_hat	877,{
 			mes " ";
 			mes "(Meow!)";
 			next;
-			menu "Meow again?!",-;
+			select("Meow again?!");
 			mes "[Myu]";
 			mes "Hmm Hmm I told you to never mind that.";
 			mes "So as I was saying...";
@@ -75,7 +75,7 @@ gef_fild05,80,149,3	script	Myu#08_hat	877,{
 			mes "Exactly 1,000 times no more, no less.";
 			mes "Give them 1,000 warnings and they will back off.";
 			next;
-			menu "What do you mean by 1,000 warnings...?",-;
+			select("What do you mean by 1,000 warnings...?");
 			mes "[Myu]";
 			mes "Hu~Do I have to spell it out for you?";
 			next;
@@ -131,7 +131,7 @@ gef_fild05,80,149,3	script	Myu#08_hat	877,{
 			mes "This is the Seal of our 'Brave Kitty Cats'.";
 			mes "This is soooo valuable, so don't lose it.";
 			next;
-			menu "This is it?",-;
+			select("This is it?");
 			mes "[Myu]";
 			mes "What more did you expect?";
 			mes "That Pow is really a valuable thing!";
@@ -197,7 +197,7 @@ gef_fild05,80,149,3	script	Myu#08_hat	877,{
 	close;
 }
 
-morocc_in,137,102,5	script	Trainee#2008hat01	82,{
+morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 	mes "[Trainee Elgo]";
 	mes "Welcome.";
 	mes "Please talk to our teacher if you are here to make a dyes.";
@@ -748,7 +748,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	82,{
 	}
 }
 
-in_orcs01,119,106,3	script	Orc Lady#2008hat03	1273,2,2,{
+in_orcs01,119,106,3	script	Orc Lady#2008hat03	ORC_LADY,2,2,{
 
 OnTouch:
 	mes "["+strcharinfo(0)+"]";
@@ -780,7 +780,7 @@ OnTouch:
 			mes "Weaving the flower...with a ribbon..";
 			mes "Brides...wear...Corollas..";
 			next;
-			menu "Would you make one for me?",-;
+			select("Would you make one for me?");
 			if((countitem(10007) > 0) && (countitem(1032) > 999)) {
 				mes "[Aite]";
 				mes ".. Materials..you..have..";

@@ -1,19 +1,17 @@
 //===== Hercules Script ======================================
 //= Renewal Swordman Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Kisuka
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Job Change to Swordman Class
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [Kisuka]
 //= 1.1 Added Baby Job compatibility [Streusel]
 //= 1.2 Rewrote bits [Euphy]
-//============================================================ 
-izlude_in,74,172,4	script	Swordman#swd	119,{
+//============================================================
+izlude_in,74,172,4	script	Swordman#swd	2_M_SWORDMASTER,{
 	if (Upper == 1) {
 		if (Class == Job_Novice_High && (ADVJOB == Job_Lord_Knight || ADVJOB == Job_Paladin)) {
 			mes "[Swordman]";

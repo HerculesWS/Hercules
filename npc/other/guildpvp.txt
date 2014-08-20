@@ -1,22 +1,22 @@
 //===== Hercules Script ======================================
 //= Guild Battle NPC
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.1
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Guild Battle with PVP mechanics.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First version. [L0ne_W0lf]
 //= 1.1 Optimized. [Euphy]
-//============================================================ 
+//============================================================
 
-pvp_y_room,77,85,4	script	Guild Battle Guide	105,{
+pvp_y_room,77,85,4	script	Guild Battle Guide	8W_SOLDIER,{
 
-	setarray .@map1X[1],7,9,16,8,20;
-	setarray .@map2X[1],91,90,83,91,79;
-	setarray .@mapY[1],49,49,50,49,50;
+	setarray .@map1x[1],7,9,16,8,20;
+	setarray .@map2x[1],91,90,83,91,79;
+	setarray .@mapy[1],49,49,50,49,50;
 
 	mes "[Guild Battle Guide]";
 	mes "How are you doing?";
@@ -49,6 +49,6 @@ pvp_y_room,77,85,4	script	Guild Battle Guide	105,{
 	mes "[Guild Battle Guide]";
 	mes "Great! Have a good time~";
 	close2;
-	warp "guild_vs"+.@i,getd(".@map"+.@j+"X["+.@i+"]"),.@mapY[.@i];
+	warp "guild_vs"+.@i,getd(".@map"+.@j+"x["+.@i+"]"),.@mapy[.@i];
 	end;
 }

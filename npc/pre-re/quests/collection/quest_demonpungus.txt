@@ -1,20 +1,18 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= iRO Repeatable EXP Quests.
 //===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Added Monster Killing quests.
 //= Repeatable EXP Quest (Bacillus)
 //===== Additional Comments: =================================
 //= 1.0 First version.
 //============================================================
 
-ein_fild01,43,249,0	script	Local Villager#hunt	898,{
+ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 	if (checkquest(60125) != -1) {
 		if (checkquest(60125,HUNTING) != 2 ) {
 			mes "[Local Villager]";

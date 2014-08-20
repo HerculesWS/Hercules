@@ -1,19 +1,17 @@
 //===== Hercules Script ======================================
 //= Renewal Mage Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Kisuka
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Job Change to Mage Class
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [Kisuka]
 //= 1.1 Added Baby Job compatibility [Streusel]
 //= 1.2 Rewrote bits [Euphy]
-//============================================================ 
-geffen_in,164,124,4	script	Mage Guildsman#mage	123,{
+//============================================================
+geffen_in,164,124,4	script	Mage Guildsman#mage	2_F_MAGICMASTER,{
 	if (Upper == 1) {
 		if (ADVJOB == Job_High_Wizard || ADVJOB == Job_Professor) {
 			if (Class == Job_Novice_High) {

@@ -1,20 +1,20 @@
 //===== Hercules Script ======================================
 //= Splendide Town
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.2
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Town-specific NPCs for Splendide.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version.
 //= 1.1 Added more town NPCs
 //= 1.2 Added more town NPCs
 //============================================================
 
 // cat_enhance
-splendide,218,193,3	script	Fairy#ep13_1	441,{
+splendide,218,193,3	script	Fairy#ep13_1	4_F_FAIRYKID6,{
 	if (isequipped(2782) == 1) {
 		mes "[Exhausted Fairy]";
 		mes "Wait, don't come any closer. I can't stand your smell, it makes me feel dizzy.";
@@ -27,7 +27,7 @@ splendide,218,193,3	script	Fairy#ep13_1	441,{
 	}
 }
 
-splendide,180,223,3	script	Fairy#ep13_2	440,{
+splendide,180,223,3	script	Fairy#ep13_2	4_F_FAIRYKID5,{
 	if (isequipped(2782) == 1) {
 		mes "[Kalua]";
 		mes "You don't look sophisticated, but I think you are better than those uncivilized guys who are around the snowfield.";
@@ -40,7 +40,7 @@ splendide,180,223,3	script	Fairy#ep13_2	440,{
 	}
 }
 
-splendide,125,227,3	script	Fairy#ep13_3	444,{
+splendide,125,227,3	script	Fairy#ep13_3	4_M_FAIRYKID3,{
 	if (isequipped(2782) == 1) {
 		mes "[Flowa]";
 		mes "No offense, I was not looking at you with sympathy.";
@@ -56,7 +56,7 @@ splendide,125,227,3	script	Fairy#ep13_3	444,{
 }
 
 // ep13_2_hiki
-splendide,159,164,3	script	Fairy#13_2_1	461,{
+splendide,159,164,3	script	Fairy#13_2_1	4_M_FAIRYSOLDIER2,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Fairy]";
 		mes "It is shame that I have to";
@@ -73,7 +73,7 @@ splendide,159,164,3	script	Fairy#13_2_1	461,{
 	}
 }
 
-splendide,229,54,3	script	Fairy#13_2_2	439,{
+splendide,229,54,3	script	Fairy#13_2_2	4_F_FAIRYKID4,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Fairy]";
 		mes "Huh? You are a human.";
@@ -98,7 +98,7 @@ splendide,229,54,3	script	Fairy#13_2_2	439,{
 	}
 }
 
-splendide,89,235,5	script	Fairy#13_2_3	446,{
+splendide,89,235,5	script	Fairy#13_2_3	4_M_FAIRYKID5,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Fairy]";
 		mes "Lalalalal~Lala~Lalala~";
@@ -121,7 +121,7 @@ splendide,89,235,5	script	Fairy#13_2_3	446,{
 	}
 }
 
-splendide,245,243,3	script	Fairy#13_2_4	462,{
+splendide,245,243,3	script	Fairy#13_2_4	4_F_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Fairy]";
 		mes "This land was such a waste land.";
@@ -151,7 +151,7 @@ splendide,245,243,3	script	Fairy#13_2_4	462,{
 	}
 }
 
-splendide,230,142,3	script	Fairy#13_2_5	439,{
+splendide,230,142,3	script	Fairy#13_2_5	4_F_FAIRYKID4,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Fairy]";
 		mes "Ah-Ha, I am so stunning.";
@@ -164,7 +164,7 @@ splendide,230,142,3	script	Fairy#13_2_5	439,{
 	}
 }
 
-splendide,274,203,3	script	Fairy#13_2_6	444,{
+splendide,274,203,3	script	Fairy#13_2_6	4_M_FAIRYKID3,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Fairy]";
 		mes "Hey, you~! Human! How did you find us?";
@@ -181,7 +181,7 @@ splendide,274,203,3	script	Fairy#13_2_6	444,{
 	}
 }
 
-splendide,275,141,3	script	Fairy#13_2_7	447,{
+splendide,275,141,3	script	Fairy#13_2_7	4_M_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Fairy]";
 		mes "Don't talk to me. What do you want?";
@@ -204,7 +204,7 @@ splendide,275,141,3	script	Fairy#13_2_7	447,{
 	}
 }
 
-splendide,224,230,3	script	Fairy#13_2_8	440,{
+splendide,224,230,3	script	Fairy#13_2_8	4_F_FAIRYKID5,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Fairy]";
 		mes "Listen carefully and learn more!";
@@ -227,7 +227,7 @@ splendide,224,230,3	script	Fairy#13_2_8	440,{
 	}
 }
 
-splendide,223,36,3	script	Fairy#13_2_9	462,{
+splendide,223,36,3	script	Fairy#13_2_9	4_F_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Fairy]";
 		mes "I don't want to touch them at all.";
@@ -256,7 +256,7 @@ splendide,223,36,3	script	Fairy#13_2_9	462,{
 	}
 }
 
-splendide,305,129,3	script	Fairy#13_2_10	436,{
+splendide,305,129,3	script	Fairy#13_2_10	4_F_FAIRYKID,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Fairy]";
 		mes "Hu...feel sleepy.";
@@ -284,7 +284,7 @@ splendide,305,129,3	script	Fairy#13_2_10	436,{
 	}
 }
 
-splendide,142,315,3	script	Fairy#13_2_11	462,{
+splendide,142,315,3	script	Fairy#13_2_11	4_F_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Fairy]";
 		mes "Flying in the sky is not easy.";
@@ -312,7 +312,7 @@ splendide,142,315,3	script	Fairy#13_2_11	462,{
 	}
 }
 
-splendide,181,107,5	script	Fairy#13_2_12	462,{
+splendide,181,107,5	script	Fairy#13_2_12	4_F_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Fairy]";
 		mes "Neatness, tidiness and cleanness!";
@@ -332,7 +332,7 @@ splendide,181,107,5	script	Fairy#13_2_12	462,{
 }
 
 // ep13_2_tre
-splendide,188,76,5	script	Splendide Soldier#tre1	461,{
+splendide,188,76,5	script	Splendide Soldier#tre1	4_M_FAIRYSOLDIER2,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Splendide Soldier]";
 		mes "This is Splendide, the garrison base of the Laphine.";
@@ -345,7 +345,7 @@ splendide,188,76,5	script	Splendide Soldier#tre1	461,{
 	}
 }
 
-splendide,201,76,3	script	Splendide Soldier#tre2	461,{
+splendide,201,76,3	script	Splendide Soldier#tre2	4_M_FAIRYSOLDIER2,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Splendide Soldier]";
 		mes "This is Splendide, the garrison base of the Laphine.";
@@ -358,7 +358,7 @@ splendide,201,76,3	script	Splendide Soldier#tre2	461,{
 	}
 }
 
-splendide,207,97,5	script	Middle-Ranked Laphine#1	443,{
+splendide,207,97,5	script	Middle-Ranked Laphine#1	4_M_FAIRYKID2,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Middle-Ranked Laphine]";
 		mes "Haap-!";
@@ -375,7 +375,7 @@ splendide,207,97,5	script	Middle-Ranked Laphine#1	443,{
 	}
 }
 
-splendide,210,95,3	script	Middle-Ranked Laphine#2	442,{
+splendide,210,95,3	script	Middle-Ranked Laphine#2	4_M_FAIRYKID,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Middle-Ranked Laphine]";
 		mes "Wow~ Great!!";
@@ -390,7 +390,7 @@ splendide,210,95,3	script	Middle-Ranked Laphine#2	442,{
 	}
 }
 
-spl_in01,190,314,5	script	Security Officer#tre	461,{
+spl_in01,190,314,5	script	Security Officer#tre	4_M_FAIRYSOLDIER2,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Security Officer]";
 		mes "This is the underground prison of Splendide.";
@@ -409,7 +409,7 @@ spl_in01,190,314,5	script	Security Officer#tre	461,{
 	}
 }
 
-spl_in01,281,329,3	script	Splendide Guard#tre	447,{
+spl_in01,281,329,3	script	Splendide Guard#tre	4_M_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Splendide Guard]";
 		mes "If you make too much noise, the prisoners will cause trouble. So try to keep quiet at all times.";
@@ -422,7 +422,7 @@ spl_in01,281,329,3	script	Splendide Guard#tre	447,{
 	}
 }
 
-spl_in01,287,306,3	script	#spl_prs	111,{
+spl_in01,287,306,3	script	#spl_prs	HIDDEN_NPC,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Manuk Prisoner]";
 		mes "My, my body...!!";
@@ -456,9 +456,9 @@ OnTouch:
 }
 
 // ep13_spl_extra
-spl_in01,172,225,3	script	Wandering Poet#ep13	51,{
+spl_in01,172,225,3	script	Wandering Poet#ep13	1_M_BARD,{
 	cutin "god_nelluad02",2;
-	mes "[Poet Nell]"	;
+	mes "[Poet Nell]";
 	mes "Hi~~ do you hear the beautiful music comeing from afar~?";
 	next;
 	select("Who are you?");
@@ -538,7 +538,7 @@ spl_in01,172,225,3	script	Wandering Poet#ep13	51,{
 			next;
 			mes "^4d4dff Alberich swears with the last of his breath, that his treasured ring will curse it's wearer till death.";
 			next;
-			mes "^4d4dff Forever will the bearer be, cursed with Rocky's jealousy."				;
+			mes "^4d4dff Forever will the bearer be, cursed with Rocky's jealousy.";
 			break;
 		}
 		break;
@@ -557,7 +557,7 @@ spl_in01,172,225,3	script	Wandering Poet#ep13	51,{
 		next;
 		mes "[Poet Nell]";
 		mes "Yes, I look quite common...";
-		mes "But I doubt we've ever met before."		;
+		mes "But I doubt we've ever met before.";
 		next;
 		cutin "god_nelluad01",255;
 		mes "- Nell seems embarrassed, then starts playing very complicated music -";
@@ -568,7 +568,7 @@ spl_in01,172,225,3	script	Wandering Poet#ep13	51,{
 	end;
 }
 
-spl_in01,182,213,1	script	Resting Laphine#ep13_1	438,{
+spl_in01,182,213,1	script	Resting Laphine#ep13_1	4_F_FAIRYKID3,{
 	if ((isequipped(2782) > 0) && (ep13_2_rhea > 99)) {
 		mes "[Resting Laphine]";
 		mes "The poet on the stagie is mysterious.";
@@ -589,7 +589,7 @@ spl_in01,182,213,1	script	Resting Laphine#ep13_1	438,{
 	}
 }
 
-spl_in01,181,218,5	script	Resting Laphine#ep13_2	446,{
+spl_in01,181,218,5	script	Resting Laphine#ep13_2	4_M_FAIRYKID5,{
 	if ((isequipped(2782) > 0) && (ep13_2_rhea > 99)) {
 		mes "- He is nodding his head to the sound of the music -";
 		next;
@@ -609,7 +609,7 @@ spl_in01,181,218,5	script	Resting Laphine#ep13_2	446,{
 	}
 }
 
-spl_in01,161,213,7	script	Dining Laphine#ep13	447,{
+spl_in01,161,213,7	script	Dining Laphine#ep13	4_M_FAIRYSOLDIER,{
 	if ((isequipped(2782) > 0) && (ep13_2_rhea > 99)) {
 		mes "[Dining Laphine]";
 		mes "I got bored eating home cooked food.";
@@ -630,7 +630,7 @@ spl_in01,161,213,7	script	Dining Laphine#ep13	447,{
 	}
 }
 
-spl_in01,162,202,5	script	Laphine taking notes#1	436,{
+spl_in01,162,202,5	script	Laphine taking notes#1	4_F_FAIRYKID,{
 	if ((isequipped(2782) > 0) && (ep13_2_rhea > 99)) {
 		mes "[Laphine taking notes]";
 		mes "We are quite impressed by the poet.";
@@ -655,12 +655,12 @@ spl_in01,162,202,5	script	Laphine taking notes#1	436,{
 	}
 }
 
-spl_in01,167,207,7	script	Silent Laphine#ep13	445,{
+spl_in01,167,207,7	script	Silent Laphine#ep13	4_M_FAIRYKID4,{
 	mes "- He is almost sleeping but he is still managing to hold a cup with a drink in it. He must be really tired-";
 	close;
 }
 
-spl_in01,180,201,3	script	Laphine Soldier#ep13_1	461,{
+spl_in01,180,201,3	script	Laphine Soldier#ep13_1	4_M_FAIRYSOLDIER2,{
 	if ((isequipped(2782) > 0) && (ep13_2_rhea > 99)) {
 		mes "[Laphine Soldier]";
 		mes "You are a stranger here, aren't you?";
@@ -688,7 +688,7 @@ spl_in01,180,201,3	script	Laphine Soldier#ep13_1	461,{
 	}
 }
 
-spl_in01,189,207,3	script	Laphine Staff#ep13_1	439,{
+spl_in01,189,207,3	script	Laphine Staff#ep13_1	4_F_FAIRYKID4,{
 	if ((isequipped(2782) > 0) && (ep13_2_rhea > 99)) {
 		mes "[Laphine Staff]";
 		mes "Hm, what's up?";
@@ -713,7 +713,7 @@ spl_in01,189,207,3	script	Laphine Staff#ep13_1	439,{
 	}
 }
 
-spl_in01,154,207,5	script	Laphine Staff#ep13_2	440,{
+spl_in01,154,207,5	script	Laphine Staff#ep13_2	4_F_FAIRYKID5,{
 	if ((isequipped(2782) > 0) && (ep13_2_rhea > 99)) {
 		mes "[Laphine Staff]";
 		mes "his camp serves a military purpose. But we also have a need for bars.";
@@ -734,7 +734,7 @@ spl_in01,154,207,5	script	Laphine Staff#ep13_2	440,{
 	}
 }
 
-spl_in01,122,314,5	script	High-Ranked Soldier#ep13	461,{
+spl_in01,122,314,5	script	High-Ranked Soldier#ep13	4_M_FAIRYSOLDIER2,{
 	if ((isequipped(2782) > 0) && (ep13_2_rhea > 99)) {
 		mes "[High-Ranked Soldier]";
 		mes "Are ther any new supplies?";
@@ -763,7 +763,7 @@ spl_in01,122,314,5	script	High-Ranked Soldier#ep13	461,{
 	}
 }
 
-spl_in01,122,311,1	script	Laphine Soldier#ep13_2	447,{
+spl_in01,122,311,1	script	Laphine Soldier#ep13_2	4_M_FAIRYSOLDIER,{
 	if ((isequipped(2782) > 0) && (ep13_2_rhea > 99)) {
 		mes "[Laphine Soldier]";
 		mes "Are you a stranger?";
@@ -792,7 +792,7 @@ spl_in01,122,311,1	script	Laphine Soldier#ep13_2	447,{
 }
 
 // ep33_2_dailybs
-splendide,121,259,3	script	Fairy#ep13bs1	436,{
+splendide,121,259,3	script	Fairy#ep13bs1	4_F_FAIRYKID,{
 	if (isequipped(2782) == 1) {
 		mes "[Fairy]";
 		mes "Have you ever gone to the East side?";
@@ -809,7 +809,7 @@ splendide,121,259,3	script	Fairy#ep13bs1	436,{
 	}
 }
 
-splendide,163,264,3	script	Fairy#ep13bs2	438,{
+splendide,163,264,3	script	Fairy#ep13bs2	4_F_FAIRYKID3,{
 	if (isequipped(2782) == 1) {
 		mes "[Fairy]";
 		mes "What are you looking at!";

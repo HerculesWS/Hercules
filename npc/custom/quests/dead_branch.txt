@@ -4,17 +4,15 @@
 //= GM-Yevon
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: ===================================== 
-//= Hercules
 //===== Description: =========================================
 // Simple item trade-in quest, a person can get a Dead Branch
-// by simply providing the items: Log x3 (7201), Wooden Heart x1 (7189), 
+// by simply providing the items: Log x3 (7201), Wooden Heart x1 (7189),
 // Trunk x5 (1019), and Wooden Gnarl x1 (7222).
 //===== Additional Comments: =================================
 //= 1.1 Optimized, added Bloody Branch with 0.01% chance [Lupus]
 //============================================================
 
-niflheim,204,179,3	script	Mister Mobry	121,{
+niflheim,204,179,3	script	Mister Mobry	2_M_MOLGENSTEIN,{
 
 	mes "[Mister Mobry]";
 	mes "Trees possess spirits you know...";
@@ -27,10 +25,10 @@ niflheim,204,179,3	script	Mister Mobry	121,{
 	mes "[Mister Mobry]";
 	mes "I can create a spirited branch... That is, if you can provide me with the correct materials...";
 	next;
-	goto L_MENU;
+	goto L_Menu;
 
-L_MENU:
-	menu "What Do I Need?",-,"Where Can I find this Crap?",M_FIND,"Make me a Dead Branch!",M_CREATE,"Forget it...",M_END;
+L_Menu:
+	menu "What Do I Need?",-,"Where Can I find this Crap?",M_FIND,"Make me a Dead Branch!",M_CREATE,"Forget it...",M_End;
 
 	mes "[Mister Mobry]";
 	mes "Mwehehe... I see you want to control tree spirits am I right? Ok... I need:";
@@ -39,7 +37,7 @@ L_MENU:
 	mes "^1354455 Trunk^000000";
 	mes "^1354451 Wooden Gnarl^000000";
 	next;
-	goto L_MENU;
+	goto L_Menu;
 
 M_FIND:
 	mes "[Mister Mobry]";
@@ -49,7 +47,7 @@ M_FIND:
 	mes "^135445Trunks? Seriously, think wood...^000000";
 	mes "^135445Wooden Gnarl... Gibbet...^000000";
 	next;
-	goto L_MENU;
+	goto L_Menu;
 
 L_NOLOG:
 	mes "[Mister Mobry]";
@@ -97,7 +95,7 @@ L_GIVE2:
 	getitem 12103,1; //Bloody Branch
 	close;
 
-M_END:
+M_End:
 	mes "[Mister Mobry]";
 	mes "No spirit for you... then go!";
 	close;

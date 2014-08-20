@@ -1,25 +1,23 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Star Gladiator Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Celestria, Samuray22
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job Change quest for Star Gladiator class.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.1 Updated to the Aegis Standards. [Samuray22]
 //= 1.1a Corrected a minor error respect to the header. [Samuray22]
 //= 1.1b Corrected NPC name length warning. [L0ne_W0lf]
 //= 1.1c Changed item names to item IDs. [Samuray22]
 //= 1.2 Another round of updates to the script. [L0ne_W0lf]
-//=	Removes the use of labels, and correcets other errors.
+//=     Removes the use of labels, and correcets other errors.
 //= 1.3 Added Quest Log commands. [Kisuka]
 //============================================================
 
-payon,215,102,3	script	Moohyun#job_star	828,3,3,{
+payon,215,102,3	script	Moohyun#job_star	4_M_ROGUE,3,3,{
 	if (Class == Job_Taekwon) {
 		if (STGL_Q == 0) {
 			mes "[Moohyun]";
@@ -355,7 +353,7 @@ OnTouch:
 	close;
 }
 	
-comodo,172,230,3	script	Wandering Master#job_sta	730,{
+comodo,172,230,3	script	Wandering Master#job_sta	4_M_JOB_ASSASSIN,{
 	if (Class == Job_Taekwon) {
 		if (STGL_Q == 1) {
 			mes "[Moogang]";
@@ -818,7 +816,7 @@ comodo,172,230,3	script	Wandering Master#job_sta	730,{
 	close;
 }
 
-job_star,29,33,0	script	Daru#job_star	59,{
+job_star,29,33,0	script	Daru#job_star	1_M_ORIENT01,{
 	if (Class == Job_Taekwon) {
 		if (STGL_Q == 3) {
 			mes "[Daru]";
@@ -1103,7 +1101,7 @@ job_star,29,33,0	script	Daru#job_star	59,{
 	close;
 }
 
-job_star,95,33,0	script	Beeryu#job_star	106,{
+job_star,95,33,0	script	Beeryu#job_star	1_M_MOC_LORD,{
 	if (Class == Job_Taekwon) {
 		if (STGL_Q == 4) {
 			mes "[Beeryu]";
@@ -1415,7 +1413,7 @@ job_star,95,33,0	script	Beeryu#job_star	106,{
 	close;
 }
 
-job_star,161,33,0	script	Cheehee#job_star	77,{
+job_star,161,33,0	script	Cheehee#job_star	1_F_ORIENT_03,{
 	if (Class == Job_Taekwon) {
 		if (STGL_Q == 6) {
 			mes "[Cheehee]";
@@ -1636,11 +1634,11 @@ job_star,161,33,0	script	Cheehee#job_star	77,{
 	close;
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= A temp Star Gladiator Job Changer based on the kRO quest.
 //= Quest info from RagnaInfo.
 //= Sprites from kRO screenshots, bar two which I just had to guess at.
 //= 1.0 Optimized, updated [Lupus]
-//============================================================ 
+//============================================================

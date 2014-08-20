@@ -2,31 +2,68 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _GUILD_H_
-#define _GUILD_H_
+#ifndef MAP_GUILD_H
+#define MAP_GUILD_H
 
-//#include "../common/mmo.h"
-struct guild;
-struct guild_member;
-struct guild_position;
-struct guild_castle;
-#include "map.h" // NAME_LENGTH
-struct map_session_data;
-struct mob_data;
+#include "map.h" // EVENT_NAME_LENGTH, TBL_PC
+#include "../common/cbasetypes.h"
+#include "../common/db.h"
+#include "../common/mmo.h"
 
-//For quick linking to a guardian's info. [Skotlex]
-struct guardian_data {
-	int number; //0-MAX_GUARDIANS-1 = Guardians. MAX_GUARDIANS = Emperium.
-	int guild_id;
-	int emblem_id;
-	int guardup_lv; //Level of GD_GUARDUP skill.
-	char guild_name[NAME_LENGTH];
-	struct guild_castle* castle;
+/**
+ * Defines
+ **/
+#define GUILD_SEND_XY_INVERVAL	5000 // Interval of sending coordinates and HP
+#define GUILD_PAYEXP_INVERVAL 10000 //Interval (maximum survival time of the cache, in milliseconds)
+#define MAX_GUILD_SKILL_REQUIRE 5
+
+/**
+ * Structures
+ **/
+struct eventlist {
+	char name[EVENT_NAME_LENGTH];
+	struct eventlist *next;
 };
 
+/**
+ * Guardian data
+ * For quick linking to a guardian's info. [Skotlex]
+ **/
+struct guardian_data {
+	int number; //0-MAX_GUARDIANS-1 = Guardians. MAX_GUARDIANS = Emperium.
+
+	struct guild *g;
+	struct guild_castle* castle;
+};
+struct guild_expcache {
+	int guild_id, account_id, char_id;
+	uint64 exp;
+};
+struct s_guild_skill_tree {
+	int id;
+	int max;
+	struct {
+		short id;
+		short lv;
+	} need[MAX_GUILD_SKILL_REQUIRE];
+};
+
+
 struct guild_interface {
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
+	/* */
+	DBMap* db; // int guild_id -> struct guild*
+	DBMap* castle_db; // int castle_id -> struct guild_castle*
+	DBMap* expcache_db; // int char_id -> struct guild_expcache*
+	DBMap* infoevent_db; // int guild_id -> struct eventlist*
+	/* */
+	struct eri *expcache_ers; //For handling of guild exp payment.
+	/* */
+	struct s_guild_skill_tree skill_tree[MAX_GUILDSKILL];
+	/* guild flags cache */
+	struct npc_data **flags;
+	unsigned short flags_count;
 	/* */
 	int (*skill_get_max) (int id);
 	/* */
@@ -40,7 +77,7 @@ struct guild_interface {
 	struct guild_castle *(*castle_search) (int gcid);
 	/* */
 	struct guild_castle *(*mapname2gc) (const char* mapname);
-	struct guild_castle *(*mapindex2gc) (short mapindex);
+	struct guild_castle *(*mapindex2gc) (short map_index);
 	/* */
 	struct map_session_data *(*getavailablesd) (struct guild *g);
 	int (*getindex) (struct guild *g,int account_id,int char_id);
@@ -104,10 +141,30 @@ struct guild_interface {
 	void (*flags_clear) (void);
 	/* guild aura */
 	void (*aura_refresh) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
-} guild_s;
+	/* item bound [Mhalicot]*/
+	void (*retrieveitembound) (int char_id,int aid,int guild_id);
+	/* */
+	int (*payexp_timer) (int tid, int64 tick, int id, intptr_t data);
+	TBL_PC* (*sd_check) (int guild_id, int account_id, int char_id);
+	bool (*read_guildskill_tree_db) (char* split[], int columns, int current);
+	bool (*read_castledb) (char* str[], int columns, int current);
+	int (*payexp_timer_sub) (DBKey key, DBData *data, va_list ap);
+	int (*send_xy_timer_sub) (DBKey key, DBData *data, va_list ap);
+	int (*send_xy_timer) (int tid, int64 tick, int id, intptr_t data);
+	DBData (*create_expcache) (DBKey key, va_list args);
+	int (*eventlist_db_final) (DBKey key, DBData *data, va_list ap);
+	int (*expcache_db_final) (DBKey key, DBData *data, va_list ap);
+	int (*castle_db_final) (DBKey key, DBData *data, va_list ap);
+	int (*broken_sub) (DBKey key, DBData *data, va_list ap);
+	int (*castle_broken_sub) (DBKey key, DBData *data, va_list ap);
+	void (*makemember) (struct guild_member *m,struct map_session_data *sd);
+	int (*check_member) (struct guild *g);
+	int (*get_alliance_count) (struct guild *g,int flag);
+	void (*castle_reconnect_sub) (void *key, void *data, va_list ap);
+};
 
 struct guild_interface *guild;
 
 void guild_defaults(void);
 
-#endif /* _GUILD_H_ */
+#endif /* MAP_GUILD_H */

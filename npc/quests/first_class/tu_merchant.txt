@@ -1,24 +1,23 @@
 //===== Hercules Script ======================================
 //= Merchant Class Tutorial and Job Specific Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Fix up by Jukka
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
-//= Tutorial for Merchant Class 
-//===== Additional Comments: ================================= 
+//===== Description: =========================================
+//= [Official Conversion]
+//= Merchant training quest.
+//===== Additional Comments: =================================
 //= 1.0 Fully working
-//= 1.1 Fixed bugs, optimized [Lupus] 1.2 fixed Weight check
-//=	TODO: Test, add missing misceffects
+//= 1.1 Fixed bugs, optimized [Lupus]
+//= 1.2 fixed Weight check
 //= 1.2 Fixed experience gains to match upcoming rate adjustments. [SinSloth]
 //= 1.3 Misc. updates. [L0ne_W0lf]
-//============================================================ 
+//============================================================
 
 // Guarnien
 //============================================================
-alberta_in,70,51,5	script	Guarnien	98,{
+alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 	mes "[Guarnien]";
 	if(Class != Job_Merchant && Class != Job_Baby_Merchant){
 		mes "Hello stranger.";
@@ -580,7 +579,7 @@ alberta_in,70,51,5	script	Guarnien	98,{
 				mes "I'll talk about the Mammonite skill. For now, let me take a little bit of a break from all of this arduous lecture. ^666666*Whew!*^000000";
 				close;
 			}
-		} else { 
+		} else {
 			mes "No? That's fine.";
 			mes "But I can't teach you";
 			mes "much more if you can't grasp these simple basics, so hurry and learn those skills, okay?";
@@ -677,7 +676,7 @@ alberta_in,70,51,5	script	Guarnien	98,{
 
 // Sagle
 //============================================================
-prontera,66,111,3	script	Sagle	82,{
+prontera,66,111,3	script	Sagle	4_KID01,{
 	mes "[Sagle]";
 	if(tu_merchant == 8){
 		mes "Hello, hello~";
@@ -711,7 +710,7 @@ prontera,66,111,3	script	Sagle	82,{
 				mes "There's no way you carry all of this! Why don't you put some of your stuff in Kafra Storage before coming back?";
 				close;
 			} else {
-				set Zeny, Zeny - 420;
+				Zeny -= 420;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;
@@ -759,7 +758,7 @@ prontera,66,111,3	script	Sagle	82,{
 				close2;
 				end;
 			} else {
-				set Zeny, Zeny - 410;
+				Zeny -= 410;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;
@@ -806,7 +805,7 @@ prontera,66,111,3	script	Sagle	82,{
 				mes "There's no way you carry all of this! Why don't you put some of your stuff in Kafra Storage before coming back?";
 				close;
 			} else {
-				set Zeny, Zeny - 390;
+				Zeny -= 390;
 				set tu_merchant, 9;
 				getitem 501,10; //Red_Potion
 				close;
@@ -836,7 +835,7 @@ prontera,66,111,3	script	Sagle	82,{
 
 // Kellion
 //============================================================
-prontera,93,330,3	script	Kellion	97,{
+prontera,93,330,3	script	Kellion	4W_M_01,{
 	mes "[Kellion]";
 	if(tu_merchant == 8){
 		mes "I'm selling sets of";
@@ -862,8 +861,8 @@ prontera,93,330,3	script	Kellion	97,{
 				mes "...Huh?";
 				mes "You better put some of your stuff in Kafra Storage, you can't carry much else!";
 				close;
-			} else { 
-				set Zeny, Zeny - 340;
+			} else {
+				Zeny -= 340;
 				set tu_merchant, 10;
 				getitem 569,10; //Novice_Potion
 				close;
@@ -901,8 +900,8 @@ prontera,93,330,3	script	Kellion	97,{
 				mes "...Huh?";
 				mes "You better put some of your stuff in Kafra Storage, you can't carry much else!";
 				close;
-			} else { 
-				set Zeny, Zeny - 390;
+			} else {
+				Zeny -= 390;
 				set tu_merchant, 9;
 				getitem 501,10; //Red_Potion
 				close;
@@ -940,8 +939,8 @@ prontera,93,330,3	script	Kellion	97,{
 				mes "...Huh?";
 				mes "You better put some of your stuff in Kafra Storage, you can't carry much else!";
 				close;
-			} else { 
-				set Zeny, Zeny - 400;
+			} else {
+				Zeny -= 400;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;
@@ -970,7 +969,7 @@ prontera,93,330,3	script	Kellion	97,{
 	
 // Aigie
 //============================================================
-prt_in,169,11,3	script	Aigie	92,{
+prt_in,169,11,3	script	Aigie	4_F_03,{
 	if(tu_merchant == 8){
 		mes "[Aigie]";
 		mes "Welcome to my shop.";
@@ -1001,7 +1000,7 @@ prt_in,169,11,3	script	Aigie	92,{
 				mes "You can't possibly carry any more items. Why don't you put your things in Kafra Storage first?";
 				close;
 			} else {
-				set Zeny, Zeny - 390;
+				Zeny -= 390;
 				set tu_merchant, 9;
 				getitem 501,10; //Red_Potion
 				close;
@@ -1046,7 +1045,7 @@ prt_in,169,11,3	script	Aigie	92,{
 				mes "You can't possibly carry any more items. Why don't you put your things in Kafra Storage first?";
 				close;
 			} else {
-				set Zeny, Zeny - 420;
+				Zeny -= 420;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;
@@ -1091,7 +1090,7 @@ prt_in,169,11,3	script	Aigie	92,{
 				mes "You can't possibly carry any more items. Why don't you put your things in Kafra Storage first?";
 				close;
 			} else {
-				set Zeny, Zeny - 340;
+				Zeny -= 340;
 				set tu_merchant, 10;
 				getitem 569,10; //Novice_Potion
 				close;
@@ -1116,7 +1115,7 @@ prt_in,169,11,3	script	Aigie	92,{
 	
 // Jayon
 //============================================================
-prontera,247,129,3	script	Jayon	85,{
+prontera,247,129,3	script	Jayon	4_M_03,{
 	if(tu_merchant == 8){
 		mes "[Jayon]";
 		mes "If you've checked out the market for Red Potions, you know that my price is the best. I'm offering 10 Red Potions for only 410 Zeny!";
@@ -1146,7 +1145,7 @@ prontera,247,129,3	script	Jayon	85,{
 				mes "You ought to free up some of your inventory space when you get the chance.";
 				close;
 			} else {
-				set Zeny, Zeny - 410;
+				Zeny -= 410;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;
@@ -1192,7 +1191,7 @@ prontera,247,129,3	script	Jayon	85,{
 				mes "You ought to free up some of your inventory space when you get the chance.";
 				close;
 			} else {
-				set Zeny, Zeny - 400;
+				Zeny -= 400;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;
@@ -1239,7 +1238,7 @@ prontera,247,129,3	script	Jayon	85,{
 				mes "You ought to free up some of your inventory space when you get the chance.";
 				close;
 			} else {
-				set Zeny, Zeny - 410;
+				Zeny -= 410;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;
@@ -1268,7 +1267,7 @@ prontera,247,129,3	script	Jayon	85,{
 
 // Maos
 //============================================================
-prt_in,251,129,3	script	Maos	709,{
+prt_in,251,129,3	script	Maos	4_M_SEAMAN,{
 	if(tu_merchant == 8){
 		mes "[Maos]";
 		mes "Don't say anything.";
@@ -1294,7 +1293,7 @@ prt_in,251,129,3	script	Maos	709,{
 				mes "Ooh, but it doesn't look like you've got enough inventory space to carry any more items.";
 				close;
 			} else {
-				set Zeny, Zeny - 420;
+				Zeny -= 420;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;
@@ -1329,7 +1328,7 @@ prt_in,251,129,3	script	Maos	709,{
 				mes "Ooh, but it doesn't look like you've got enough inventory space to carry any more items.";
 				close;
 			} else {
-				set Zeny, Zeny - 340;
+				Zeny -= 340;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;
@@ -1364,7 +1363,7 @@ prt_in,251,129,3	script	Maos	709,{
 				mes "Ooh, but it doesn't look like you've got enough inventory space to carry any more items.";
 				close;
 			} else {
-				set Zeny, Zeny - 400;
+				Zeny -= 400;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;

@@ -4,8 +4,6 @@
 //= Lupus (based on Muad_Dib's work)
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 // Close to other official stValentine event (added white chocolate)
 // Custom: Handmade choco gives some EXP bonuses to married people
@@ -16,11 +14,11 @@
 //============================================================
 
 // Tine - Valentine Event Chocolate Even Guide ------------------
-prontera,156,172,4	script	Tine	58,{
+prontera,156,172,4	script	Tine	1_M_MERCHANT,{
 //  Debug info for item effects and tricky conditions 8)
 //	mes "@dsv: "+@dsv;
 //	mes "ispartneron()=="+ispartneron();
-//	mes "sex == "+sex;
+//	mes "sex == "+Sex;
 //	if(@dsv == gettime(3)+1) mes "@dsv == gettime(3)+1";
 
 	mes "[Tine]";
@@ -62,9 +60,9 @@ M_INFO:
 
 OnInit:
 	//559,Hand-made_Chocolate
-	setitemscript 559,"{ itemheal 50,50; if(sex==0 || @dsv == gettime(3)+1 || ispartneron()==0)end; set @dsv,gettime(3)+1; misceffect 113; }";
+	setitemscript 559,"{ itemheal 50,50; if(Sex==0 || @dsv == gettime(3)+1 || ispartneron()==0)end; set @dsv,gettime(3)+1; misceffect 113; }";
 	//560,Hand-made_White_Chocolate
-	setitemscript 560,"{ itemheal 50,50; if(sex || @dsv == gettime(3)+1 || ispartneron()==0)end; set @dsv,gettime(3)+1; misceffect 113; }";
+	setitemscript 560,"{ itemheal 50,50; if(Sex || @dsv == gettime(3)+1 || ispartneron()==0)end; set @dsv,gettime(3)+1; misceffect 113; }";
 
 	//2634,Wedding_Ring_M,Wedding Ring,5,,10,0,,0,,0,127918079,7,1,136,,0,0,0,{ skill 334,1; skill 335,1; skill 336,1; }
 	setitemscript 2634,"{ skill 334,1; skill 335,1; skill 336,1; if(@dsv == gettime(3)+1 && ispartneron()){ bonus2 bExpAddRace,5,50; bonus2 bExpAddRace,6,50; bonus2 bExpAddRace,7,50; bonus2 bExpAddRace,8,50; bonus2 bExpAddRace,1,50; } }";
@@ -74,7 +72,7 @@ OnInit:
 }
 
 // Stephen - Valentine Event Chocolate seller ------------------
-alberta,26,243,4	script	Stephen#val1	58,{
+alberta,26,243,4	script	Stephen#val1	1_M_MERCHANT,{
 	mes "[Stephen]";
 	mes "Guess what I've got?";
 	mes "A tasty treat not easily found in Rune-Midgard....";
@@ -107,7 +105,7 @@ M_CHOCO:
 	if (@flag_num > 5) goto L_ERR;
 	set @needmon,@flag_num*5000;
 	if (Zeny < @needmon) goto L_NOTENO;
-	set Zeny,Zeny - @needmon;
+	Zeny -= @needmon;
 	getitem 558,@flag_num;
 	mes "[Stephen]";
 	mes "There you go!";
@@ -129,7 +127,7 @@ L_NOTENO:
 }
 
 // Jainie -- Gives information about Valentine Event ------------------------
-alberta,29,243,4	script	Jainie#val1	53,{
+alberta,29,243,4	script	Jainie#val1	1_M_INNKEEPER,{
 	mes "[Jainie]";
 	mes "You know what? The chocolate that my boyfriend sells are from me!";
 	mes "I made them by myself. Now I need some Milk for my special White Chocolate.";
@@ -169,7 +167,7 @@ M_CHOCO:
 	set @needmon,@flag_num*4500;
 	if (Zeny < @needmon) goto L_NOTENO;
 	if (countitem(519) < @flag_num) goto L_NOMILK;
-	set Zeny,Zeny - @needmon;
+	Zeny -= @needmon;
 	delitem 519,@flag_num;
 	getitem 561,@flag_num;
 	mes "[Jainie]";
@@ -197,11 +195,11 @@ L_NOMILK:
 }
 
 // Carl Orleans -- Valentine Event Chocolate maker ------------------
-prt_castle,54,34,4	script	Carl Orleans#val1	47,{
+prt_castle,54,34,4	script	Carl Orleans#val1	1_M_01,{
 	mes "[Carl Orleans]";
 	mes "Yes? What can I cook for you?";
 	next;
-	menu "Black handmade Chocolate, please",-,"I want a White handmade Chocolate...",M_WHITE,"I'm lost, sorry to bother you.",M_END;
+	menu "Black handmade Chocolate, please",-,"I want a White handmade Chocolate...",M_WHITE,"I'm lost, sorry to bother you.",M_End;
      
 	mes "[Carl Orleans]";
 	mes "Well, I just might be able to fulfill your needs...";
@@ -268,7 +266,7 @@ M_WHITE:
 	mes "Enjoy.";
 	close;
 
-M_END:
+M_End:
 	mes "[Carl Orleans]";
 	mes "Oh.. well, if you want me to make some of my special handmade Chocolate....";
 	mes "You will need to give me at least ^0000FF 3 Chocolates^000000 or ^0000FF 3 White Chocolates^000000.";

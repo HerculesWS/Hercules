@@ -2,27 +2,21 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _STRLIB_H_
-#define _STRLIB_H_
+#ifndef COMMON_STRLIB_H
+#define COMMON_STRLIB_H
+
+#include <stdarg.h>
+#include <string.h>
 
 #include "../common/cbasetypes.h"
-#include <stdarg.h>
-
-#ifndef __USE_GNU
-	#define __USE_GNU  // required to enable strnlen on some platforms
-	#include <string.h>
-	#undef __USE_GNU
-#else
-	#include <string.h>
-#endif
 
 #ifdef WIN32
 	#define HAVE_STRTOK_R
-	#define strtok_r(s,delim,save_ptr) _strtok_r((s),(delim),(save_ptr))
-	char *_strtok_r(char* s1, const char* s2, char** lasts);
+	#define strtok_r(s,delim,save_ptr) strtok_r_((s),(delim),(save_ptr))
+	char *strtok_r_(char* s1, const char* s2, char** lasts);
 #endif
 
-/// Bitfield determining the behaviour of sv_parse and sv_split.
+/// Bitfield determining the behavior of sv_parse and sv_split.
 typedef enum e_svopt {
 	// default: no escapes and no line terminator
 	SV_NOESCAPE_NOTERMINATE = 0,
@@ -70,27 +64,25 @@ struct strlib_interface {
 	char *(*normalize_name) (char* str,const char* delims);
 	const char *(*stristr) (const char *haystack, const char *needle);
 		
-#if !(defined(WIN32) && defined(_MSC_VER) && _MSC_VER >= 1400) && !defined(HAVE_STRNLEN)
+	/* only used when '!(defined(WIN32) && defined(_MSC_VER) && _MSC_VER >= 1400) && !defined(HAVE_STRNLEN)', needs to be defined at all times however  */
 	size_t (*strnlen) (const char* string, size_t maxlen);
-#endif
-	
-#if defined(WIN32) && defined(_MSC_VER) && _MSC_VER <= 1200
+
+	/* only used when 'defined(WIN32) && defined(_MSC_VER) && _MSC_VER <= 1200', needs to be defined at all times however  */
 	uint64 (*strtoull) (const char* str, char** endptr, int base);
-#endif
 	
 	int (*e_mail_check) (char* email);
 	int (*config_switch) (const char* str);
 	
-	/// strncpy that always nul-terminates the string
+	/// strncpy that always null-terminates the string
 	char *(*safestrncpy) (char* dst, const char* src, size_t n);
 	
 	/// doesn't crash on null pointer
 	size_t (*safestrnlen) (const char* string, size_t maxlen);
 	
-	/// Works like snprintf, but always nul-terminates the buffer.
-	/// Returns the size of the string (without nul-terminator)
+	/// Works like snprintf, but always null-terminates the buffer.
+	/// Returns the size of the string (without null-terminator)
 	/// or -1 if the buffer is too small.
-	int (*safesnprintf) (char* buf, size_t sz, const char* fmt, ...);
+	int (*safesnprintf) (char *buf, size_t sz, const char *fmt, ...) __attribute__((format(printf, 3, 4)));
 	
 	/// Returns the line of the target position in the string.
 	/// Lines start at 1.
@@ -107,7 +99,7 @@ struct strlib_interface *strlib;
 struct stringbuf_interface {
 	StringBuf* (*Malloc) (void);
 	void (*Init) (StringBuf* self);
-	int (*Printf) (StringBuf* self, const char* fmt, ...);
+	int (*Printf) (StringBuf *self, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
 	int (*Vprintf) (StringBuf* self, const char* fmt, va_list args);
 	int (*Append) (StringBuf* self, const StringBuf *sbuf);
 	int (*AppendStr) (StringBuf* self, const char* str);
@@ -124,9 +116,9 @@ struct sv_interface {
 	/// Parses a single field in a delim-separated string.
 	/// The delimiter after the field is skipped.
 	///
-	/// @param sv Parse state
+	/// @param svstate Parse state
 	/// @return 1 if a field was parsed, 0 if done, -1 on error.
-	int (*parse_next) (struct s_svstate* sv);
+	int (*parse_next) (struct s_svstate* svstate);
 	
 	/// Parses a delim-separated string.
 	/// Starts parsing at startoff and fills the pos array with position pairs.
@@ -139,7 +131,7 @@ struct sv_interface {
 	/// WARNING: this function modifies the input string
 	/// Starts splitting at startoff and fills the out_fields array.
 	/// out_fields[0] is the start of the next line.
-	/// Other entries are the start of fields (nul-teminated).
+	/// Other entries are the start of fields (null-terminated).
 	/// Returns the number of fields found or -1 if an error occurs.
 	int (*split) (char* str, int len, int startoff, char delim, char** out_fields, int nfields, enum e_svopt opt);
 	
@@ -167,29 +159,30 @@ struct sv_interface *sv;
 void strlib_defaults(void);
 
 /* the purpose of these macros is simply to not make calling them be an annoyance */
-#ifndef STRLIB_C
-	#define jstrescape(pt) strlib->jstrescape(pt)
-	#define jstrescapecpy(pt,spt) strlib->jstrescapecpy(pt,spt)
-	#define jmemescapecpy(pt,spt,size) strlib->jmemescapecpy(pt,spt,size)
-	#define remove_control_chars(str) strlib->remove_control_chars(str)
-	#define trim(str) strlib->trim(str)
-	#define normalize_name(str,delims) strlib->normalize_name(str,delims)
-	#define stristr(haystack,needle) strlib->stristr(haystack,needle)
+#ifndef H_STRLIB_C
+	#define jstrescape(pt)             (strlib->jstrescape(pt))
+	#define jstrescapecpy(pt,spt)      (strlib->jstrescapecpy((pt),(spt)))
+	#define jmemescapecpy(pt,spt,size) (strlib->jmemescapecpy((pt),(spt),(size)))
+	#define remove_control_chars(str)  (strlib->remove_control_chars(str))
+	#define trim(str)                  (strlib->trim(str))
+	#define normalize_name(str,delims) (strlib->normalize_name((str),(delims)))
+	#define stristr(haystack,needle)   (strlib->stristr((haystack),(needle)))
 
 	#if !(defined(WIN32) && defined(_MSC_VER) && _MSC_VER >= 1400) && !defined(HAVE_STRNLEN)
-		#define strnln(string,maxlen) strlib->strnlen(string,maxlen)
+		#define strnlen(string,maxlen) (strlib->strnlen((string),(maxlen)))
 	#endif
 
 	#if defined(WIN32) && defined(_MSC_VER) && _MSC_VER <= 1200
-		#define strtoull(str,endptr,base) strlib->strtoull(str,endptr,base)
+		#define strtoull(str,endptr,base) (strlib->strtoull((str),(endptr),(base)))
 	#endif
 
-	#define e_mail_check(email) strlib->e_mail_check(email)
-	#define config_switch(str) strlib->config_switch(str)
-	#define safestrncpy(dst,src,n) strlib->safestrncpy(dst,src,n)
-	#define safestrnlen(string,maxlen) strlib->safestrnlen(string,maxlen)
-	#define safesnprintf(buf,sz,fmt,...) strlib->safesnprintf(buf,sz,fmt,##__VA_ARGS__)
-	#define strline(str,pos) strlib->strline(str,pos)
-	#define bin2hex(output,input,count) strlib->bin2hex(output,input,count)
-#endif /* STRLIB_C */
-#endif /* _STRLIB_H_ */
+	#define e_mail_check(email)          (strlib->e_mail_check(email))
+	#define config_switch(str)           (strlib->config_switch(str))
+	#define safestrncpy(dst,src,n)       (strlib->safestrncpy((dst),(src),(n)))
+	#define safestrnlen(string,maxlen)   (strlib->safestrnlen((string),(maxlen)))
+	#define safesnprintf(buf,sz,fmt,...) (strlib->safesnprintf((buf),(sz),(fmt),##__VA_ARGS__))
+	#define strline(str,pos)             (strlib->strline((str),(pos)))
+	#define bin2hex(output,input,count)  (strlib->bin2hex((output),(input),(count)))
+#endif /* H_STRLIB_C */
+
+#endif /* COMMON_STRLIB_H */

@@ -1,22 +1,20 @@
 //===== Hercules Script ======================================
 //= Minstrel Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Muad_Dib
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job change Quest from Bard / Clown -> Minstrel.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [Masao]
 //= 1.1 Fix the checking of requirements before job change to Minstel [JayPee]
 //= 1.2 Optimized. [Euphy]
 //= 1.3 Updated script. [Euphy]
 //============================================================
 
-alberta,196,133,4	script	Bard#job_min	486,{
+alberta,196,133,4	script	Bard#job_min	4_M_BARD,{
 	if (job_min == 0) {
 		if (BaseJob == Job_Bard && BaseLevel > 98 && JobLevel > 49) {
 			mes "[Bard]";
@@ -239,7 +237,7 @@ alberta,196,133,4	script	Bard#job_min	486,{
 	close;
 }
 
-prontera,141,97,4	script	Warmhearted woman	701,{
+prontera,141,97,4	script	Warmhearted woman	4_F_GODEMOM,{
 	mes "[Warmhearted woman]";
 	if (job_min == 1) {
 		mes "Maestro Song?";
@@ -270,7 +268,7 @@ prontera,141,97,4	script	Warmhearted woman	701,{
 	close;
 }
 
-prontera,140,331,6	script	Glasses-wearing Man	883,{
+prontera,140,331,6	script	Glasses-wearing Man	4_M_ALCHE_D,{
 	mes "[Glasses-wearing Man]";
 	if (job_min == 2) {
 		mes "You mean Maestro Song?";
@@ -303,7 +301,7 @@ prontera,140,331,6	script	Glasses-wearing Man	883,{
 	close;
 }
 
-prontera,146,218,4	script	Woman#job_min	90,{
+prontera,146,218,4	script	Woman#job_min	4_F_01,{
 	if (job_min == 3) {
 		mes "[Woman]";
 		mes "Do you know who Maestro Song is?";
@@ -342,7 +340,7 @@ prontera,146,218,4	script	Woman#job_min	90,{
 	close;
 }
 
-airplane,222,67,6	script	Karian#job_min1	486,{
+airplane,222,67,6	script	Karian#job_min1	4_M_BARD,{
 	mes "[Karian]";
 	mes "Yup!!!!!!!!!!!!!!!!!!";
 	next;
@@ -362,7 +360,7 @@ airplane,222,67,6	script	Karian#job_min1	486,{
 	close;
 }
 
-hu_in01,267,5,3	script	Karian#job_min2	486,{
+hu_in01,267,5,3	script	Karian#job_min2	4_M_BARD,{
 	mes "[Karian]";
 	if (job_min == 6) {
 		mes "Eeeeh it's so painful.";
@@ -487,7 +485,7 @@ hu_in01,267,5,3	script	Karian#job_min2	486,{
 	close;
 }
 
-hu_in01,361,103,3	script	Tone-deaf person	995,{
+hu_in01,361,103,3	script	Tone-deaf person	4_M_CASMAN1,{
 	if (job_min == 7) {
 		mes "[Tone-deaf person]";
 		mes "Lala~ lala~";
@@ -707,7 +705,7 @@ hu_in01,361,103,3	script	Tone-deaf person	995,{
 	close;
 }
 
-tha_scene01,140,200,0	script	#min_receipt	139,3,3,{
+tha_scene01,140,200,0	script	#min_receipt	HIDDEN_WARP_NPC,3,3,{
 OnTouch:
 	if (job_min == 10 || (job_min == 11 && countitem(6271) == 0)) {
 		mes "-There is a piece of paper on the ground.-";
@@ -749,7 +747,7 @@ OnTouch:
 	end;
 }
 
-tha_scene01,139,204,6	script	Karian#cmd1	486,{
+tha_scene01,139,204,6	script	Karian#cmd1	4_M_BARD,{
 	end;
 OnInit:
 	disablenpc "Karian#cmd1";
@@ -768,7 +766,7 @@ OnTimer15000:
 	end;
 }
 
-ve_fild07,129,132,5	script	Karian#cmd5	486,{
+ve_fild07,129,132,5	script	Karian#cmd5	4_M_BARD,{
 	end;
 OnInit:
 	disablenpc "Karian#cmd5";
@@ -787,7 +785,7 @@ OnTimer30000:
 	end;
 }
 
-prontera,155,49,4	script	Karian#cmd9	486,{
+prontera,155,49,4	script	Karian#cmd9	4_M_BARD,{
 	end;
 OnInit:
 	disablenpc "Karian#cmd9";
@@ -806,7 +804,7 @@ OnTimer300000:
 	end;
 }
 
-yuno,146,168,0	script	Karian#cmd2	486,{
+yuno,146,168,0	script	Karian#cmd2	4_M_BARD,{
 	end;
 OnInit:
 	disablenpc strnpcinfo(0);
@@ -824,13 +822,13 @@ OnTimer100000:
 	stopnpctimer;
 	end;
 }
-lighthalzen,160,124,6	duplicate(Karian#cmd2)	Karian#cmd3	486
-ra_in01,357,128,0	duplicate(Karian#cmd2)	Karian#cmd4	486
-comodo,184,109,0	duplicate(Karian#cmd2)	Karian#cmd6	486
-moc_fild16,204,231,0	duplicate(Karian#cmd2)	Karian#cmd7	486
-aldebaran,142,128,2	duplicate(Karian#cmd2)	Karian#cmd8	486
+lighthalzen,160,124,6	duplicate(Karian#cmd2)	Karian#cmd3	4_M_BARD
+ra_in01,357,128,0	duplicate(Karian#cmd2)	Karian#cmd4	4_M_BARD
+comodo,184,109,0	duplicate(Karian#cmd2)	Karian#cmd6	4_M_BARD
+moc_fild16,204,231,0	duplicate(Karian#cmd2)	Karian#cmd7	4_M_BARD
+aldebaran,142,128,2	duplicate(Karian#cmd2)	Karian#cmd8	4_M_BARD
 
-yuno,143,170,6	script	Mr. Click#job_min	748,{
+yuno,143,170,6	script	Mr. Click#job_min	4_M_ALCHE_A,{
 	mes "[Mr. Click]";
 	if (job_min == 11) {
 		mes "Hi~ welcome~";
@@ -954,7 +952,7 @@ yuno,143,170,6	script	Mr. Click#job_min	748,{
 	close;
 }
 
-lighthalzen,155,119,3	script	Little girl#job_min	891,3,3,{
+lighthalzen,155,119,3	script	Little girl#job_min	4_F_HUGIRL,3,3,{
 OnTouch:
 	if (checkquest(11145,HUNTING) == 2) {
 		if (job_min == 12) {
@@ -1084,7 +1082,7 @@ OnTouch:
 	close;
 }
 
-ice_dun01,157,15,0	script	#Minsicecave1	139,2,2,{
+ice_dun01,157,15,0	script	#Minsicecave1	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (job_min == 13) {
 		mes "-A long time ago-";
@@ -1095,7 +1093,7 @@ OnTouch:
 	end;
 }
 
-ice_dun01,157,23,0	script	#Minsicecave2	139,2,2,{
+ice_dun01,157,23,0	script	#Minsicecave2	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (job_min == 13) {
 		mes "-The giant born to ice-";
@@ -1106,7 +1104,7 @@ OnTouch:
 	end;
 }
 
-ice_dun01,141,41,0	script	#Minsicecave3	139,2,2,{
+ice_dun01,141,41,0	script	#Minsicecave3	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (job_min == 13) {
 		mes "-died-";
@@ -1117,7 +1115,7 @@ OnTouch:
 	end;
 }
 
-ice_dun01,120,35,0	script	#Minsicecave4	139,2,2,{
+ice_dun01,120,35,0	script	#Minsicecave4	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (job_min == 13) {
 		mes "-His body became the ground-";
@@ -1128,7 +1126,7 @@ OnTouch:
 	end;
 }
 
-ice_dun01,104,30,0	script	#Minsicecave5	139,2,2,{
+ice_dun01,104,30,0	script	#Minsicecave5	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (job_min == 13) {
 		mes "-His bones became a mountain-";
@@ -1139,7 +1137,7 @@ OnTouch:
 	end;
 }
 
-ice_dun01,86,23,0	script	#Minsicecave6	139,2,2,{
+ice_dun01,86,23,0	script	#Minsicecave6	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (job_min == 13) {
 		mes "-His skin became soil-";
@@ -1150,7 +1148,7 @@ OnTouch:
 	end;
 }
 
-ice_dun01,75,19,0	script	#Minsicecave7	139,2,2,{
+ice_dun01,75,19,0	script	#Minsicecave7	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (job_min == 13) {
 		mes "-His blood became a river-";
@@ -1161,7 +1159,7 @@ OnTouch:
 	end;
 }
 
-ice_dun01,56,12,0	script	#Minsicecave8	139,2,2,{
+ice_dun01,56,12,0	script	#Minsicecave8	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (job_min == 13) {
 		mes "-His hair became a plant-";
@@ -1172,7 +1170,7 @@ OnTouch:
 	end;
 }
 
-ice_dun01,29,26,0	script	#Minsicecave9	139,2,2,{
+ice_dun01,29,26,0	script	#Minsicecave9	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (job_min == 13) {
 		mes "-His head became the sky-";
@@ -1183,7 +1181,7 @@ OnTouch:
 	end;
 }
 
-ice_dun01,25,46,0	script	#Minsicecave10	139,2,2,{
+ice_dun01,25,46,0	script	#Minsicecave10	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (job_min == 13) {
 		mes "-His tears from his-";
@@ -1194,7 +1192,7 @@ OnTouch:
 	end;
 }
 
-ice_dun01,20,66,0	script	#Minsicecave11	139,2,2,{
+ice_dun01,20,66,0	script	#Minsicecave11	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (job_min == 13) {
 		mes "-eyes became dew-";
@@ -1205,7 +1203,7 @@ OnTouch:
 	end;
 }
 
-ice_dun01,22,85,0	script	#Minsicecave12	139,2,2,{
+ice_dun01,22,85,0	script	#Minsicecave12	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (job_min == 13) {
 		mes "-on the leaves-";
@@ -1219,7 +1217,7 @@ OnTouch:
 	end;
 }
 
-ra_in01,361,129,0	script	#jmRachelHotel	139,2,2,{
+ra_in01,361,129,0	script	#jmRachelHotel	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (job_min == 14) {
 		mes "[Old Woman]";
@@ -1234,7 +1232,7 @@ OnTouch:
 	end;
 }
 
-ra_in01,358,130,4	script	Old Woman#job_min	979,{
+ra_in01,358,130,4	script	Old Woman#job_min	4_F_CAVE1,{
 	mes "[Old Woman]";
 	if (job_min == 14) {
 		mes "Huu!!";
@@ -1331,7 +1329,7 @@ ra_in01,358,130,4	script	Old Woman#job_min	979,{
 	close;
 }
 
-ve_fild07,131,132,5	script	=Notice=#job_min	837,{
+ve_fild07,131,132,5	script	=Notice=#job_min	2_BULLETIN_BOARD,{
 function Choice;
 	if (job_min == 16) {
 		mes "===Notice===";
@@ -1470,7 +1468,7 @@ function Choice;
 	}
 }
 
-comodo,184,108,0	script	#jmComodo Almost Dead	139,2,2,{
+comodo,184,108,0	script	#jmComodo Almost Dead	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (job_min == 17) {
 		mes "["+strcharinfo(0)+"]";
@@ -1510,7 +1508,7 @@ OnTouch:
 	end;
 }
 
-comodo,192,119,0	script	Kayak Master#job_min	98,{
+comodo,192,119,0	script	Kayak Master#job_min	4W_M_02,{
 	mes "[Kayak Master]";
 	if (job_min == 18) {
 		mes "What?";
@@ -1535,7 +1533,7 @@ comodo,192,119,0	script	Kayak Master#job_min	98,{
 	close;
 }
 
-comodo,159,316,4	script	Woman Roasting Meat	701,{
+comodo,159,316,4	script	Woman Roasting Meat	4_F_GODEMOM,{
 	mes "[Woman Roasting Meat]";
 	if (job_min == 19) {
 		mes "Maestro Song?";
@@ -1579,7 +1577,7 @@ comodo,159,316,4	script	Woman Roasting Meat	701,{
 	close;
 }
 
-moc_fild16,206,232,0	script	#jmTransfer news	139,3,3,{
+moc_fild16,206,232,0	script	#jmTransfer news	HIDDEN_WARP_NPC,3,3,{
 OnTouch:
 	if (job_min == 20) {
 		mes "["+strcharinfo(0)+"]";
@@ -1655,7 +1653,7 @@ OnTouch:
 	end;
 }
 
-aldebaran,140,130,0	script	#jmAldebaran Clock Tower	139,3,3,{
+aldebaran,140,130,0	script	#jmAldebaran Clock Tower	HIDDEN_WARP_NPC,3,3,{
 OnTouch:
 	if (job_min == 21) {
 		mes "["+strcharinfo(0)+"]";
@@ -1720,7 +1718,7 @@ OnTouch:
 	end;
 }
 
-prontera,155,40,0	script	#jmprt1	139,2,2,{
+prontera,155,40,0	script	#jmprt1	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (job_min == 22) {
 		mes "[Karian]";
@@ -1738,7 +1736,7 @@ OnTouch:
 	end;
 }
 
-prontera,155,42,0	script	#prtjm1	139,1,1,{
+prontera,155,42,0	script	#prtjm1	HIDDEN_WARP_NPC,1,1,{
 OnTouch:
 	if (job_min == 23) {
 		mes "-Let me go back to my hometown.-";
@@ -1750,7 +1748,7 @@ OnTouch:
 	end;
 }
 
-prontera,155,44,0	script	#prtjm2	139,1,1,{
+prontera,155,44,0	script	#prtjm2	HIDDEN_WARP_NPC,1,1,{
 OnTouch:
 	if (job_min == 24) {
 		mes "-There are many beautiful flowers.-";
@@ -1762,7 +1760,7 @@ OnTouch:
 	end;
 }
 
-prontera,155,46,0	script	#prtjm3	139,1,1,{
+prontera,155,46,0	script	#prtjm3	HIDDEN_WARP_NPC,1,1,{
 OnTouch:
 	if (job_min == 25) {
 		mes "-The birds sing for me.-";
@@ -1774,7 +1772,7 @@ OnTouch:
 	end;
 }
 
-prontera,155,48,0	script	#prtjm4	139,1,1,{
+prontera,155,48,0	script	#prtjm4	HIDDEN_WARP_NPC,1,1,{
 OnTouch:
 	if (job_min == 26 || job_min == 27) {
 		mes "-It's this old town.-";
@@ -1824,7 +1822,7 @@ OnTouch:
 	end;
 }
 
-prt_in,94,172,4	script	Karian#job_min3	480,{
+prt_in,94,172,4	script	Karian#job_min3	4_M_MINSTREL1,{
 	if (job_min == 27) {
 		if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
 			mes "While you are on a trip, you gain lots of stuff. Make yourself lighter.";

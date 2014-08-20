@@ -1,28 +1,26 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Old Blue Box Quest
 //===== By ===================================================
 //= Celesta, Lupus
 //===== Version ==============================================
 //= 2.0
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
-// [Aegis Conversion]
+//===== Description: =========================================
+// [Official Conversion]
 //= Old Blue Box quest (?)
 //= Officially this quest gave an OBB in exhange for a the
 //= required items unlimitedly, however this was changed by
-//= Gravity, who claimed this behavior as a bug. 
+//= Gravity, who claimed this behavior as a bug.
 //= The exact purpose of this quest is undetermined, but
 //= Gravity claimed that another quest would eventually
 //= branch from this one.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.7 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
 //= 1.8 Added missing checkweights. [L0ne_W0lf]
 //= 1.9 Moved Morroc NPCs to Morroc Ruins. [L0ne_W0lf]
 //= 2.0 Removed unused "name" variable. [L0ne_W0lf]
-//============================================================ 
+//============================================================
 
-alberta,43,244,0	script	Tourist#thai	99,{
+alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you're carrying -";
@@ -457,8 +455,7 @@ alberta,43,244,0	script	Tourist#thai	99,{
 			next;
 			mes "[Tourist]";
 			mes "Hopefully, it'll be useful.";
-			set .@now_weight,MaxWeight-Weight;
-			if (.@now_weight < 500) {
+			if (MaxWeight - Weight < 500) {
 				mes "Umm...it seems you're carrying too much stuff with you.";
 				mes "Doncha want me to help you?";
 				close;
@@ -616,7 +613,7 @@ alberta,43,244,0	script	Tourist#thai	99,{
 	}
 }
 
-moc_ruins,105,62,4	script	Jacob#thai	50,{
+moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 	if (thai_head >= 6 && thai_head <= 11) {
 		switch (thai_head) {
 		case 6:
@@ -1063,7 +1060,7 @@ moc_ruins,105,62,4	script	Jacob#thai	50,{
 	}
 }
 
-comodo,68,195,0	script	Old Man#thai	120,{
+comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you're carrying -";
@@ -1844,7 +1841,7 @@ comodo,68,195,0	script	Old Man#thai	120,{
 	}
 }
 
-moc_ruins,107,62,0	script	Tommy#thai	716,{
+moc_ruins,107,62,0	script	Tommy#thai	4_M_KID2,{
 	if (thai_head >= 6 && thai_head <= 11) {
 		switch(thai_head) {
 		case 6:
@@ -1939,10 +1936,10 @@ moc_ruins,107,62,0	script	Tommy#thai	716,{
 	}
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= Official OBB Quest. You can pass it any times you want.
 //= 1.6 Updated, fixed, optimized and translated into English [Lupus]
 //= 1.6a Halved the required items to make an obb, thanks to marquis007 [MasterOfMuppets]
-//============================================================ 
+//============================================================

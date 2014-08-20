@@ -15,7 +15,7 @@
 //= prontera	mapflag	adjust_unit_duration	WZ_QUAGMIRE	250
 //= Increases duration of Quagmire by 2.5 times in Prontera.
 //===== Disclaimer: ==========================================
-//= Be aware that some skill units have their visual effect 
+//= Be aware that some skill units have their visual effect
 //= durations not controlled by the server (e.g. Storm Gust).
 //===== Additional Comments: =================================
 //= 1.0 - Initial script.

@@ -1,19 +1,17 @@
 //===== Hercules Script ======================================
 //= Expanded Super Novice Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Euphy
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.1a
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Job Change quest for Expanded Super Novice class.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 All dialogue is custom, contains some incorrect behaviors.
 //= 1.1 Switched to a translated copy of the official script
 //=     by Gennosuke Kouga, but vastly edited its content. [Euphy]
 //= 1.1a Replaced effect numerics with constants. [Euphy]
-//============================================================ 
+//============================================================
 
 function	script	Esseray_Ex	{
 	if (BaseLevel > 98 && JobLevel > 98) {
@@ -59,7 +57,7 @@ function	script	Esseray_Ex	{
 	else return;
 }
 
-beach_dun2,119,92,4	script	Fishing Novice#sp2	567,{
+beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 	if (checkquest(5092) >= 0) {
 		mes "[Fishing Novice]";
 		mes "Sh --------- !!";
@@ -479,7 +477,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	567,{
 		nude;
 		callfunc "F_ClearJobVar"; // -- Clears all job variables for the current player
 		jobchange roclass(eaclass()|EAJL_THIRD);
-		set EXSUPNOV_Q,5;	
+		set EXSUPNOV_Q,5;
 		emotion e_heh;
 		mes "[Nodor]";
 		mes "Puhahahahahahahahahahah!!";
@@ -589,7 +587,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	567,{
 	close;
 }
 
-airplane,33,47,5	script	Nudor#sp2	729,{
+airplane,33,47,5	script	Nudor#sp2	4_F_NOVICE,{
 	if (checkquest(5099) >= 0) {
 		mes "[Nudor]";
 		mes "Ahhh~ I have no money to buy any food.";
@@ -655,7 +653,7 @@ airplane,33,47,5	script	Nudor#sp2	729,{
 		mes "Woa~!! "+.@n+" Zeny! This helped me so much~ Tehee~";
 		mes "I can't believe it...";
 		changequest 5099,5100;
-		set Zeny, Zeny - .@n;
+		Zeny -= .@n;
 		if (.@i < 5) set EXSUPNOV_Q_, .@i;
 		else {
 			if (.@n > 1000000) set EXSUPNOV_Q_,4;

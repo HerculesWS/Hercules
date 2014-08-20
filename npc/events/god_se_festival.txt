@@ -1,25 +1,26 @@
 //===== Hercules Script ======================================
 //= Valkyrie's Gift NPCs
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
-//= 1.0
-//===== Description: ========================================= 
-//= [Aegis Conversion]
-//= Post-God Item SE Creation Summoning Event 
-//= Second Sister is a cusotm translation.
-//===== Additional Comments: ================================= 
+//===== Current Version: =====================================
+//= 1.1
+//===== Description: =========================================
+//= [Official Conversion]
+//= Post-God Item SE Creation Summoning Event
+//= Second Sister is a custom translation.
+//===== Additional Comments: =================================
 //= 1.0 First version. [L0ne_W0lf]
-//============================================================ 
+//= 1.1 Added GM management function. [Euphy]
+//============================================================
 
-/*
-yuno,1,1,0	script	Festival Manager#gq_fes00	891,{
+// Original name: "Festival Manager#god_se_fes00"
+yuno,1,1,0	script	Festival Manager#gq_fes0	4_F_HUGIRL,{
+	callfunc "F_GM_NPC";
 	mes "[Festival Manager]";
 	mes "I am the festival NPC manager for the God SE quest.";
 	mes "Please enter your password.";
 	next;
-	input .@input$;
-	if (.@input$ != "07godsefes") {
+	if (callfunc("F_GM_NPC","07godsefes",1) == 0) {
 		mes "[Festival Manager]";
 		mes "Password is incorrect.";
 		close;
@@ -31,20 +32,19 @@ yuno,1,1,0	script	Festival Manager#gq_fes00	891,{
 	case 1:
 		mes "[Festival Manager]";
 		mes "Ending festivals and disabling NPCs.";
-		donpcevent "Rmimi Ravies#gq_fes01::Onover";
-		donpcevent "Rmimi Ravies#gq_fes01::Onover";
+		donpcevent "Rmimi Ravies#gq_fes01::OnOver";
+		donpcevent "Rmimi Ravies#gq_fes01::OnOver";
 		close;
 	case 2:
 		mes "[Festival Manager]";
 		mes "Resetting festivals and enabling NPCs.";
-		donpcevent "Rmimi Ravies#gq_fes01::Onover";
+		donpcevent "Rmimi Ravies#gq_fes01::OnOver";
 		donpcevent "Rmimi Ravies#gq_fes01::OnEnable";
 		close;
 	}
 }
-*/
 
-yuno,118,192,5	script	Rmimi Ravies#gq_fes01	891,{
+yuno,118,192,5	script	Rmimi Ravies#gq_fes01	4_F_HUGIRL,{
 	set .@GID, getcharid(2);
 	if (countitem(7840) > 0) {
 		mes "[Rmimi Ravies]";
@@ -119,9 +119,9 @@ yuno,118,192,5	script	Rmimi Ravies#gq_fes01	891,{
 				next;
 				mes "[Rmimi Ravies]";
 				mes "Have a good time.";
-				donpcevent "Rmimi Ravies#gq_fes01::Onstart";
+				donpcevent "Rmimi Ravies#gq_fes01::OnStart";
 				
-				announce "["+ strcharinfo(0) +"] member of ["+ GetGuildName(.@GID) +"] is summoning a 'Valkyrie's Present' in 'Juno'.",bc_all,"0x70dbdb";
+				announce "["+ strcharinfo(0) +"] member of ["+ getguildname(.@GID) +"] is summoning a 'Valkyrie's Present' in 'Juno'.",bc_all,"0x70dbdb";
 				close;
 			}
 			else {
@@ -164,12 +164,12 @@ OnDisable:
 	disablenpc "Rmimi Ravies#gq_fes01";
 	end;
 
-Onstart:
+OnStart:
 	initnpctimer;
 	set $@gqse_festival,1;
 	end;
 
-Oncall:
+OnCall:
 	if (mobcount("yuno","Rmimi Ravies#gq_fes01::OnMyMobDead") < 31) {
 		monster "yuno",0,0,"Valkyrie's Blessing",1083,100,"Rmimi Ravies#gq_fes01::OnMyMobDead";
 		monster "yuno",0,0,"Valkyrie's Gift",1951,25,"Rmimi Ravies#gq_fes01::OnMyMobDead";
@@ -195,7 +195,7 @@ Oncall:
 	}
 	end;
 
-Onover:
+OnOver:
 	killmonster "yuno","Rmimi Ravies#gq_fes01::OnMyMobDead";
 	set $@gqse_festival,0;
 	stopnpctimer;
@@ -230,7 +230,7 @@ OnTimer243000:
 
 OnTimer300000:
 	announce "The first 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rmimi Ravies#gq_fes01::Oncall";
+	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer303000:
@@ -243,7 +243,7 @@ OnTimer308000:
 
 OnTimer600000:
 	announce "The second 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rmimi Ravies#gq_fes01::oncall";
+	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer603000:
@@ -256,7 +256,7 @@ OnTimer608000:
 
 OnTimer900000:
 	announce "The third 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rmimi Ravies#gq_fes01::Oncall";
+	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer903000:
@@ -269,7 +269,7 @@ OnTimer908000:
 
 OnTimer1200000:
 	announce "The fourth 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rmimi Ravies#gq_fes01::Oncall";
+	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer1203000:
@@ -282,7 +282,7 @@ OnTimer1208000:
 
 OnTimer1500000:
 	announce "The fifth 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rmimi Ravies#gq_fes01::Oncall";
+	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer1503000:
@@ -295,7 +295,7 @@ OnTimer1508000:
 
 OnTimer1800000:
 	announce "The sixth 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rmimi Ravies#gq_fes01::Oncall";
+	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer1803000:
@@ -308,7 +308,7 @@ OnTimer1808000:
 
 OnTimer2100000:
 	announce "The seventh 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rmimi Ravies#gq_fes01::Oncall";
+	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer2103000:
@@ -321,7 +321,7 @@ OnTimer2108000:
 
 OnTimer2400000:
 	announce "The eighth 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rmimi Ravies#gq_fes01::Oncall";
+	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer2403000:
@@ -334,7 +334,7 @@ OnTimer2408000:
 
 OnTimer2700000:
 	announce "The ninth 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rmimi Ravies#gq_fes01::Oncall";
+	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer2703000:
@@ -347,7 +347,7 @@ OnTimer2708000:
 
 OnTimer3000000:
 	announce "The first0 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rmimi Ravies#gq_fes01::Oncall";
+	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer3003000:
@@ -360,7 +360,7 @@ OnTimer3008000:
 
 OnTimer3300000:
 	announce "The eleventh 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rmimi Ravies#gq_fes01::Oncall";
+	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer3303000:
@@ -373,7 +373,7 @@ OnTimer3308000:
 
 OnTimer3600000:
 	announce "The twelfth 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rmimi Ravies#gq_fes01::Oncall";
+	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer3603000:
@@ -386,23 +386,19 @@ OnTimer3608000:
 
 OnTimer3900000:
 	announce "The entire ceremony is over now, I am sure all of you had fun.",bc_all,"0x70dbdb";
-	donpcevent "Rmimi Ravies#gq_fes01::Onover";
+	donpcevent "Rmimi Ravies#gq_fes01::OnOver";
 	end;
 }
 
-//===============================================================================================
-//                                             Rachel                                              
-//===============================================================================================
 
-//-------------------------------------Rachel Festival Manager-----------------------------------
-/*
-rachel,1,1,0	script	Festival Manager#god_se_fes02	891,{
+// Original name: "Festival Manager#god_se_fes02"
+rachel,1,1,0	script	Festival Manager#gq_fes2	4_F_HUGIRL,{
+	callfunc "F_GM_NPC";
 	mes "[Festival Manager]";
 	mes "I am the festival NPC manager for the God SE quest.";
 	mes "Please enter your password.";
 	next;
-	input .@input$;
-	if (.@input$ != "07godsefes") {
+	if (callfunc("F_GM_NPC","07godsefes",1) == 0) {
 		mes "[Festival Manager]";
 		mes "Password is incorrect.";
 		close;
@@ -414,21 +410,19 @@ rachel,1,1,0	script	Festival Manager#god_se_fes02	891,{
 	case 1:
 		mes "[Festival Manager]";
 		mes "Ending festivals and disabling NPCs.";
-		donpcevent "Rhehe Ravies#gq_fes03::Onover";
-		donpcevent "Rhehe Ravies#gq_fes03::Ondisable";
+		donpcevent "Rhehe Ravies#gq_fes03::OnOver";
+		donpcevent "Rhehe Ravies#gq_fes03::OnDisable";
 		close;
 	case 2:
 		mes "[Festival Manager]";
 		mes "Resetting festivals and enabling NPCs.";
-		donpcevent "Rhehe Ravies#gq_fes03::Onover";
+		donpcevent "Rhehe Ravies#gq_fes03::OnOver";
 		donpcevent "Rhehe Ravies#gq_fes03::OnEnable";
 		close;
 	}
 }
-*/
-//----------------------------------------Rhehe Ravies----------------------------------------
 
-rachel,132,117,3	script	Rhehe Ravies#gq_fes03	891,{
+rachel,132,117,3	script	Rhehe Ravies#gq_fes03	4_F_HUGIRL,{
 	set .@GID, getcharid(2);
 	if (countitem(7840) > 0) {
 		mes "[Rhehe Ravies]";
@@ -507,8 +501,8 @@ rachel,132,117,3	script	Rhehe Ravies#gq_fes03	891,{
 				next;
 				mes "[Rhehe Ravies]";
 				mes "I hope you enjoy yourself!";
-				donpcevent "Rhehe Ravies#gq_fes03::Onstart";
-				announce "["+ strcharinfo(0) +"] member of ["+ GetGuildName(.@GID) +"] is summoning a 'Valkyrie's Present' in 'Rachel'.",bc_all,"0x70dbdb";
+				donpcevent "Rhehe Ravies#gq_fes03::OnStart";
+				announce "["+ strcharinfo(0) +"] member of ["+ getguildname(.@GID) +"] is summoning a 'Valkyrie's Present' in 'Rachel'.",bc_all,"0x70dbdb";
 				close;
 			}
 			else {
@@ -552,12 +546,12 @@ OnDisable:
 	disablenpc "Rhehe Ravies#gq_fes03";
 	end;
 
-Onstart:
+OnStart:
 	initnpctimer;
 	set $@gqse_festival,1;
 	end;
 
-Oncall:
+OnCall:
 	if (mobcount("rachel","Rhehe Ravies#gq_fes03::OnMyMobDead") < 31) {
 		monster "rachel",0,0,"Valkyrie's Blessing",1083,100,"Rhehe Ravies#gq_fes03::OnMyMobDead";
 		monster "rachel",0,0,"Valkyrie's Gift",1951,25,"Rhehe Ravies#gq_fes03::OnMyMobDead";
@@ -583,7 +577,7 @@ Oncall:
 	}
 	end;
 
-Onover:
+OnOver:
 	killmonster "rachel","Rhehe Ravies#gq_fes03::OnMyMobDead";
 	set $@gqse_festival,0;
 	stopnpctimer;
@@ -618,7 +612,7 @@ OnTimer243000:
 
 OnTimer300000:
 	announce "The first 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rhehe Ravies#gq_fes03::Oncall";
+	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer303000:
@@ -631,7 +625,7 @@ OnTimer308000:
 
 OnTimer600000:
 	announce "The second 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rhehe Ravies#gq_fes03::Oncall";
+	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer603000:
@@ -644,7 +638,7 @@ OnTimer608000:
 
 OnTimer900000:
 	announce "The third 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rhehe Ravies#gq_fes03::Oncall";
+	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer903000:
@@ -657,7 +651,7 @@ OnTimer908000:
 
 OnTimer1200000:
 	announce "The fourth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rhehe Ravies#gq_fes03::Oncall";
+	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer1203000:
@@ -670,7 +664,7 @@ OnTimer1208000:
 
 OnTimer1500000:
 	announce "The fifth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rhehe Ravies#gq_fes03::Oncall";
+	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer1503000:
@@ -683,7 +677,7 @@ OnTimer1508000:
 
 OnTimer1800000:
 	announce "The sixth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rhehe Ravies#gq_fes03::Oncall";
+	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer1803000:
@@ -696,7 +690,7 @@ OnTimer1808000:
 
 OnTimer2100000:
 	announce "The seventh 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rhehe Ravies#gq_fes03::Oncall";
+	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer2103000:
@@ -709,7 +703,7 @@ OnTimer2108000:
 
 OnTimer2400000:
 	announce "The eighth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rhehe Ravies#gq_fes03::Oncall";
+	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer2403000:
@@ -722,7 +716,7 @@ OnTimer2408000:
 
 OnTimer2700000:
 	announce "The ninth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rhehe Ravies#gq_fes03::Oncall";
+	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer2703000:
@@ -735,7 +729,7 @@ OnTimer2708000:
 
 OnTimer3000000:
 	announce "The tenth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rhehe Ravies#gq_fes03::Oncall";
+	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer3003000:
@@ -748,7 +742,7 @@ OnTimer3008000:
 
 OnTimer3300000:
 	announce "The eleventh 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rhehe Ravies#gq_fes03::Oncall";
+	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer3303000:
@@ -761,7 +755,7 @@ OnTimer3308000:
 
 OnTimer3600000:
 	announce "The twelfth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rhehe Ravies#gq_fes03::Oncall";
+	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer3603000:
@@ -774,6 +768,6 @@ OnTimer3608000:
 
 OnTimer3900000:
 	announce "The entire ceremony is over now, I am sure all of you had fun.",bc_all,"0x70dbdb";
-	donpcevent "Rhehe Ravies#gq_fes03::Onover";
+	donpcevent "Rhehe Ravies#gq_fes03::OnOver";
 	end;
 }

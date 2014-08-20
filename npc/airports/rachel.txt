@@ -8,7 +8,7 @@
 //= Official NPCs.
 //============================================================
 
-ra_fild12,295,208,0	script	toairplane#rachel	45,1,1,{
+ra_fild12,295,208,0	script	toairplane#rachel	WARPNPC,1,1,{
 	end;
 OnTouch:
 	mes "To use the airship, you are required to pay 1,200 zeny or a Free Airship Ticket.";
@@ -21,7 +21,7 @@ OnTouch:
 			end;
 		}
 		if (Zeny >= 1200) {
-			set Zeny, Zeny - 1200;
+			Zeny -= 1200;
 			warp "airplane_01",245,60;
 			end;
 		}

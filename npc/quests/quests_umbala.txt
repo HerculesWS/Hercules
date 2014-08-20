@@ -1,13 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Quest NPCs related to Umbala
-//===== By: ================================================== 
+//===== By: ==================================================
 //= sabernet09 & rAthena Team
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.2a
-//===== Compatible With: ===================================== 
-//= rAthena 7.15 +
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Umbalian Language Quest, Umbala Skeletal Gate Quest,
 //= Umbala Event, Create Essence/Dismantle Stone
 //	Phase 1. Learning the Language
@@ -23,7 +21,7 @@
 //= Umbala Domestic Dispute?
 //= - This quest is only avaliable if you have not done language quest.
 //= - Variables in use: um_wind, MISC_QUEST (Bit 32768)
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= fixed by x[tsk], Lupus, PoW
 //= Quest completion is now registered
 //= 1.1 fixed Poporing Egg ID -> Poring Egg, fixed condition
@@ -32,16 +30,16 @@
 //= 1.7a Removed all custom quests to custom folder [Lupus]
 //= 1.8 Added official chance of failure to Create Essence/Dismantle Stone [Lupus]
 //= 1.9 Added functionality to allow players to dismantle more
-//= than a stone at once, up to 10. [SinSloth]
+//=     than a stone at once, up to 10. [SinSloth]
 //= 2.0 Updated hack check and added a weight check to dismantling. [SinSloth]
 //= 2.1 Rescripted to Aegis 10.3 standards. Added strange quest. [L0ne_W0lf]
 //= 2.2 Readded the ability to dismantle multiple stones at once. [L0ne_W0lf]
 //= 2.2a Fixed weight check from previous update. [L0ne_w0lf]
-//============================================================ 
-
-// Umbalian Language Quest
 //============================================================
-um_in,39,122,5	script	Utan Chief	784,{
+
+// Umbalian Language Quest :: um_trans
+//============================================================
+um_in,39,122,5	script	Utan Chief	4_M_UMCHIEF,{
 	if (event_umbala == 0) {
 		mes "[Karkatan]";
 		mes "Huh huh, a Rune-Midgardian.";
@@ -362,9 +360,9 @@ um_in,39,122,5	script	Utan Chief	784,{
 	}
 }
 
-// Create Essence/Dismantle Stone Quest
+// Create Essence/Dismantle Stone Quest :: um_npc
 //============================================================
-um_in,44,71,2	script	Utan Shaman	782,{
+um_in,44,71,2	script	Utan Shaman	4_F_UMOLDWOMAN,{
 	if (checkweight(908,600) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -515,22 +513,22 @@ um_in,44,71,2	script	Utan Shaman	782,{
 		switch (select("Earth:Water:Fire:Wind")) {
 		case 1:
 			set .@consume,947; //Horn
-			set .@amount,15; 
+			set .@amount,15;
 			set .@success,993; //Yellow_Live
 			break;
 		case 2:
 			set .@consume,946; //Snail's_Shell
-			set .@amount,20; 
+			set .@amount,20;
 			set .@success,991; //Crystal_Blue
 			break;
 		case 3:
 			set .@consume,904; //Scorpion's_Tail
-			set .@amount,20; 
+			set .@amount,20;
 			set .@success,990; //Boody_Red
 			break;
 		case 4:
 			set .@consume,1013; //Colorful_Shell
-			set .@amount,25; 
+			set .@amount,25;
 			set .@success,992; //Wind_Of_Verdure
 			break;
 		}
@@ -772,7 +770,7 @@ um_in,44,71,2	script	Utan Shaman	782,{
 				case 996:
 					getitem 992,.@shaman_max; //Wind_Of_Verdure
 					break;
-				case 997: 
+				case 997:
 					getitem 993,.@shaman_max; //Yellow_Live
 				}
 				delitem .@divide,.@input;
@@ -794,7 +792,7 @@ um_in,44,71,2	script	Utan Shaman	782,{
 					mes "wind stones? Then I will need";
 					mes "you to bring "+input_want+" pure wind stone.";
 					break;
-				case 997: 
+				case 997:
 					mes "earth stones? Then I'll need";
 					mes "you to bring "+.@input+" pure earth stone.";
 					break;
@@ -823,7 +821,7 @@ um_in,44,71,2	script	Utan Shaman	782,{
 	}
 }
 
-umbala,221,193,1	script	#Skulldoor	111,{
+umbala,221,193,1	script	#Skulldoor	HIDDEN_NPC,{
 	if (event_umbala >= 7) {
 		warp "um_in",32,71;
 		end;
@@ -979,9 +977,9 @@ umbala,221,193,1	script	#Skulldoor	111,{
 	}
 }
 
-// Umbala Domestic Dispute Quest
-//============================================================ 
-um_in,139,48,5	script	Phrenetan	783,{
+// Umbala Domestic Dispute Quest :: um_npc_ryu
+//============================================================
+um_in,139,48,5	script	Phrenetan	4_F_UMWOMAN,{
 	if (event_umbala >= 3) {
 		mes "[Phrenetan]";
 		mes "I am so sick and tired of";
@@ -1032,7 +1030,7 @@ um_in,139,48,5	script	Phrenetan	783,{
 	end;
 }
 
-um_in,144,45,5	script	Umpokoriohtan	789,{
+um_in,144,45,5	script	Umpokoriohtan	4_M_UMSOLDIER,{
 	if (event_umbala >= 3) {
 		if(rand(1,3) == 2) {
 			mes "[Umpokoriohtan]";
@@ -1113,7 +1111,7 @@ OnInit:
 	end;
 }
 
-um_in,101,73,3	script	Wainatan	783,{
+um_in,101,73,3	script	Wainatan	4_F_UMWOMAN,{
 	if (event_umbala >= 3) {
 		mes "[Wainatan]";
 		mes "I am sick and tired of this guy";
@@ -1160,7 +1158,7 @@ um_in,101,73,3	script	Wainatan	783,{
 	}
 }
 
-um_in,94,123,5	script	Bertztan	783,{
+um_in,94,123,5	script	Bertztan	4_F_UMWOMAN,{
 	if (event_umbala >= 3) {
 		mes "[Bertztan]";
 		mes "...*Sigh* That sicko";
@@ -1204,7 +1202,7 @@ um_in,94,123,5	script	Bertztan	783,{
 	}
 }
 
-umbala,145,217,3	script	Chabimatan	783,{
+umbala,145,217,3	script	Chabimatan	4_F_UMWOMAN,{
 	if (event_umbala >= 3) {
 		mes "[Chabimatan]";
 		mes "...*Sigh* Umpokoriohtan seems";

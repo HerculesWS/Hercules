@@ -2,19 +2,23 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/mmo.h"
-#include "../common/malloc.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/sql.h"
-#include "../common/timer.h"
-#include "char.h"
-#include "inter.h"
+#define HERCULES_CORE
+
+#include "int_mail.h"
 
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
+
+#include "char.h"
+#include "inter.h"
+#include "../common/malloc.h"
+#include "../common/mmo.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
+#include "../common/sql.h"
+#include "../common/strlib.h"
+#include "../common/timer.h"
 
 static int mail_fromsql(int char_id, struct mail_data* md)
 {
@@ -64,6 +68,7 @@ static int mail_fromsql(int char_id, struct mail_data* md)
 		SQL->GetData(sql_handle,14, &data, NULL); item->identify = atoi(data);
 		SQL->GetData(sql_handle,15, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
 		item->expire_time = 0;
+		item->bound = 0;
 
 		for (j = 0; j < MAX_SLOTS; j++)
 		{
@@ -116,10 +121,6 @@ int mail_savemessage(struct mail_message* msg)
 	for (j = 0; j < MAX_SLOTS; j++)
 		StrBuf->Printf(&buf, ", '%d'", msg->item.card[j]);
 	StrBuf->AppendStr(&buf, ")");
-	
-	//Unique Non Stackable Item ID
-	updateLastUid(msg->item.unique_id);
-	dbUpdateUid(sql_handle);
 
 	// prepare and execute query
 	stmt = SQL->StmtMalloc(sql_handle);
@@ -184,6 +185,7 @@ static bool mail_loadmessage(int mail_id, struct mail_message* msg)
 		SQL->GetData(sql_handle,14, &data, NULL); msg->item.identify = atoi(data);
 		SQL->GetData(sql_handle,15, &data, NULL); msg->item.unique_id = strtoull(data, NULL, 10);
 		msg->item.expire_time = 0;
+		msg->item.bound = 0;
 
 		for( j = 0; j < MAX_SLOTS; j++ )
 		{

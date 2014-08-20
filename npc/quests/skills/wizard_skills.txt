@@ -4,17 +4,15 @@
 //= Lupus, Reddozen
 //===== Current Version: =====================================
 //= 1.5
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Quests for skills: Sight Blaster
 //===== Additional Comments: =================================
 //= 1.4 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
 //= 1.5 Replaced effect numerics with constants. [L0ne_W0lf]
 //============================================================
 
-gef_tower,115,36,4	script	Meow#q_wiz	876,{
+gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 	if (BaseJob == Job_Wizard) {
 		if (WIZ_SK == 100) {
 			if (getskilllv("WZ_SIGHTBLASTER") == 0) {
@@ -353,7 +351,7 @@ gef_tower,115,36,4	script	Meow#q_wiz	876,{
 	}
 }
 
-prt_in,82,98,3	script	Simon Mayace#q_wiz	46,{
+prt_in,82,98,3	script	Simon Mayace#q_wiz	1_ETC_01,{
 	if (WIZ_SK == 1) {
 		mes "[Simon]";
 		mes "Ah, you must be a skilled";
@@ -434,15 +432,15 @@ prt_in,82,98,3	script	Simon Mayace#q_wiz	46,{
 	}
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= 1.0 for fully working skills only [Lupus]
 //= 1.1 Added more new skill quests for more classes [Lupus]
 //= Somehow eA engine doesn't let you keep learn't skill V_V'
 //= 1.2 Added to correct locations, correct NPC's, fixed
 //= some of the items required and made them into real
-//= quests. [Reddozen] 
+//= quests. [Reddozen]
 //= 1.3 Fixed bugs and minor typos. Optimized [Lupus]
 //= 1.3a fixed an item ID typo, thx 2Spiritual Kid
 //= 1.3b Splitted into different files [DracoRPG]

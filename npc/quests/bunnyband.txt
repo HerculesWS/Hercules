@@ -1,20 +1,20 @@
 //===== Hercules Script ======================================
 //= Bunny Band Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= rAthena Dev Team
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.6
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Quest to obtain a Bunny Band headgear.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.5 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
 //	Changed @BUNYBAN back to BUNYBND, it should be this way.
 //	Removed duplicates. NPC is ALberta-only.
 //= 1.6 Cleaning. [Euphy]
-//============================================================ 
+//============================================================
 
-alberta,26,229,0	script	Kafra Employee#bunny	83,{
+alberta,26,229,0	script	Kafra Employee#bunny	4_M_01,{
 	if (BUNYBND == 1) {
 		mes "[Kafra Employee]";
 		mes "Hello there~!";
@@ -31,14 +31,14 @@ alberta,26,229,0	script	Kafra Employee#bunny	83,{
 			mes "see if you brought";
 			mes "all the items...";
 			next;
-			setarray .@Items[0],949,100,706,1,722,1,2213,1;
+			setarray .@items[0],949,100,706,1,722,1,2213,1;
 			for(set .@i,0; .@i<8; set .@i,.@i+2)
-				if (countitem(.@Items[.@i]) < .@Items[.@i+1]) {
+				if (countitem(.@items[.@i]) < .@items[.@i+1]) {
 					mes "[Kafra Employee]";
 					mes "Ooh, I'm sorry";
 					mes "but you need to";
 					mes "bring at least";
-					mes .@Items[.@i+1]+" "+getitemname(.@Items[.@i])+((!.@i)?"s.":".");
+					mes .@items[.@i+1]+" "+getitemname(.@items[.@i])+((!.@i)?"s.":".");
 					close;
 				}
 			mes "[Kafra Employee]";
@@ -50,12 +50,12 @@ alberta,26,229,0	script	Kafra Employee#bunny	83,{
 			mes "while I put it together...";
 			next;
 			for(set .@i,0; .@i<8; set .@i,.@i+2)
-				if (countitem(.@Items[.@i]) < .@Items[.@i+1]) {
+				if (countitem(.@items[.@i]) < .@items[.@i+1]) {
 					mes "[Kafra Employee]";
 					mes "Hm? I'm sorry,";
 					mes "but I actually can't";
 					mes "make this right now. You";
-					mes "need "+.@Items[.@i+1]+" "+getitemname(.@Items[.@i])+((!.@i)?"s":"");
+					mes "need "+.@items[.@i+1]+" "+getitemname(.@items[.@i])+((!.@i)?"s":"");
 					mes "in order for me to put this";
 					mes "Bunny Band together...";
 					close;
@@ -141,11 +141,11 @@ L_Info:
 	close;
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= 1.1 using duplicate command
 //= 1.2 Fixed NPC location, removed NPC dupes [Lupus]
 //= 1.3 RE-Fixed exploit V_V, also cleared used VAR [Lupus]
 //= 1.4 replaced BUNYBND with @BUNYBND [Lupus]
-//============================================================ 
+//============================================================

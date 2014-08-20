@@ -1,13 +1,11 @@
 //===== Hercules Script ======================================
-//= Brasilis Qiests
+//= Brasilis Quests
 //===== By ===================================================
 //= L0ne_W0lf
 //===== Version ==============================================
-//= 1.2
-//===== Compatible With ======================================
-//= Hercules
+//= 1.2c
 //===== Description ==========================================
-//= [Translated from the Official]
+//= [Official Conversion]
 //= Lost Puppies (Repeatable, 24 hours.)
 //= Suspicious Beach (Repeatable, 24 hours. iRO/cRO version.)
 //= Guarana Candy Quest
@@ -18,11 +16,15 @@
 //= 1.0 First version.
 //= 1.1 Hydra Ball (12408)
 //= 1.2 Optimization. [Euphy]
+//= 1.2a Added 'consumeitem' command. [Euphy]
+//= 1.2b Updated RE EXP. [Michieru]
+//= 1.2c Put end; before OnTouch events in npcs that
+//= have view id of a mob [Panikon]
 //============================================================
 
-// Lost Puppies, Original file: dogdog.sc
+// Lost Puppies :: dogdog.sc
 //============================================================
-brasilis,297,307,5	script	Angelo#br	50,{
+brasilis,297,307,5	script	Angelo#br	1_M_04,{
 	if (BaseLevel < 40) {
 		mes "[Angelo]";
 		mes "Pets went out the village~!!";
@@ -49,11 +51,12 @@ brasilis,297,307,5	script	Angelo#br	50,{
 		mes "Oh, thank you. You found all of 3 puppies.";
 		mes "Thanks a lot.";
 		mes "I hope this is useful to you. hoho.";
-		getexp 50000,0;
+		set .@randexp,rand(50000,112500);
+		getexp .@randexp,0;
 		erasequest 9031;
 		setquest 9032;
 		specialeffect2 EF_ASSUMPTIO;
-		percentheal 100,100;
+		consumeitem 607; //Yggdrasilberry
 		set .@rand,rand(1,10);
 		if (.@rand > 4 && .@rand < 9) getitem 504,2; //White_Potion
 		else if (.@rand > 8) getitem 608,1; //Seed_Of_Yggdrasil
@@ -129,22 +132,22 @@ OnDisable:
 	end;
 }
 
-bra_fild01,98,96,3	duplicate(Puppy#bra)	Puppy#a1	81
-bra_fild01,59,116,5	duplicate(Puppy#bra)	Puppy#a2	81
-bra_fild01,62,142,3	duplicate(Puppy#bra)	Puppy#a3	81
-bra_fild01,80,163,3	duplicate(Puppy#bra)	Puppy#b1	81
-bra_fild01,73,210,3	duplicate(Puppy#bra)	Puppy#b2	81
-bra_fild01,80,210,3	duplicate(Puppy#bra)	Puppy#b3	81
-bra_fild01,38,235,3	duplicate(Puppy#bra)	Puppy#c1	81
-bra_fild01,307,64,3	duplicate(Puppy#bra)	Puppy#c2	81
-bra_fild01,260,60,3	duplicate(Puppy#bra)	Puppy#c3	81
-bra_fild01,234,101,3	duplicate(Puppy#bra)	Puppy#d1	81
-bra_fild01,200,84,3	duplicate(Puppy#bra)	Puppy#d2	81
-bra_fild01,176,63,5	duplicate(Puppy#bra)	Puppy#d3	81
+bra_fild01,98,96,3	duplicate(Puppy#bra)	Puppy#a1	4_DOG01
+bra_fild01,59,116,5	duplicate(Puppy#bra)	Puppy#a2	4_DOG01
+bra_fild01,62,142,3	duplicate(Puppy#bra)	Puppy#a3	4_DOG01
+bra_fild01,80,163,3	duplicate(Puppy#bra)	Puppy#b1	4_DOG01
+bra_fild01,73,210,3	duplicate(Puppy#bra)	Puppy#b2	4_DOG01
+bra_fild01,80,210,3	duplicate(Puppy#bra)	Puppy#b3	4_DOG01
+bra_fild01,38,235,3	duplicate(Puppy#bra)	Puppy#c1	4_DOG01
+bra_fild01,307,64,3	duplicate(Puppy#bra)	Puppy#c2	4_DOG01
+bra_fild01,260,60,3	duplicate(Puppy#bra)	Puppy#c3	4_DOG01
+bra_fild01,234,101,3	duplicate(Puppy#bra)	Puppy#d1	4_DOG01
+bra_fild01,200,84,3	duplicate(Puppy#bra)	Puppy#d2	4_DOG01
+bra_fild01,176,63,5	duplicate(Puppy#bra)	Puppy#d3	4_DOG01
 
-// Suspicious Beach, original file: Suspicious_Beach.sc
+// Suspicious Beach :: Suspicious_Beach.sc
 //============================================================
-brasilis,192,133,6	script	Lucia#brasilis	478,{
+brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 	/* -------------- Hydra Ball -------------------------
 	if (countitem(12408) > 0) {
 		delitem 12408,1; //Leaf_Cat_Ball
@@ -168,7 +171,7 @@ brasilis,192,133,6	script	Lucia#brasilis	478,{
 	else {
 		set .@nQState1,checkquest(9028);
 		set .@nQState2,checkquest(9029);
-		if (.@nQState1 == 0) {
+		if (.@nQState1 == -1) {
 			mes "[Lucia]";
 			mes "Hello.";
 			mes "Have you come here to hunt ^FF0000Strange Hydra^000000s?";
@@ -226,10 +229,10 @@ brasilis,192,133,6	script	Lucia#brasilis	478,{
 					//recall_completequest 9029;
 					if (.@nQState2 > -1) erasequest 9029;
 					setquest 9029;
-					percentheal 100,100;
-					sc_start SC_FOOD_LUK, 1200000, 5; percentheal 5,2;
-					sc_start SC_FOOD_VIT, 1200000, 5; percentheal 10,0;
-					sc_start SC_FOOD_DEX, 1200000, 5; percentheal 5,5;
+					consumeitem 607; //Yggdrasilberry
+					consumeitem 12070; //Luk_Dish05
+					consumeitem 12055; //Vit_Dish05
+					consumeitem 12065; //Dex_Dish05
 					getitem 11502,3; //Light_Blue_Pot
 					close;
 				}
@@ -354,9 +357,9 @@ OnTimer7000:
 	end;
 }
 
-// Guarana Quest, Original file: brazil_tre.sc
+// Guarana Quest :: brazil_tre.sc
 //============================================================
-brasilis,187,162,5	script	Candy Maker	476,{
+brasilis,187,162,5	script	Candy Maker	4_M_BRZ_MAN1,{
 	if (!checkweight(1201,1)) {
 		mes "- You can't start the quest. Please reduce the weight in your inventory. -";
 		close;
@@ -450,7 +453,7 @@ brasilis,187,162,5	script	Candy Maker	476,{
 		set brazil_gua,11;
 		completequest 2200;
 		getitem 12414,1; //Guarana_Candy
-		getexp 700000,100000;
+		getexp 70000,10000;
 		close;
 	}
 	else if (brazil_gua == 11) {
@@ -470,7 +473,7 @@ brasilis,187,162,5	script	Candy Maker	476,{
 			if (Zeny > 3999) {
 				mes "[Candy Maker]";
 				mes "Here is a delicious guarana candy.";
-				set zeny,zeny-4000;
+				Zeny -= 4000;
 				getitem 12414,1; //Guarana_Candy
 				close;
 			}
@@ -494,7 +497,7 @@ brasilis,187,162,5	script	Candy Maker	476,{
 	}
 }
 
-bra_in01,95,179,3	script	Cherto	477,{
+bra_in01,95,179,3	script	Cherto	4_M_BRZ_MAN2,{
 	if (brazil_gua == 0) {
 		mes "[Cherto]";
 		mes "Hmm... hey man, you are from outside, aren't you?";
@@ -654,7 +657,7 @@ bra_in01,95,179,3	script	Cherto	477,{
 	}
 }
 
-brasilis,203,64,3	script	Strange Kid#bra	706,{
+brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 	if (brazil_gua < 3) {
 		mes "[Strange Kid]";
 		mes "................";
@@ -809,11 +812,11 @@ brasilis,203,64,3	script	Strange Kid#bra	706,{
 	end;
 }
 
-brasilis,56,224,7	script	Mage Paje#bra	704,{
+brasilis,56,224,7	script	Mage Paje#bra	4_M_BIBI,{
 	mes "[Mage Paje]";
 	mes "Abracadabra~";
 	specialeffect EF_POISONHIT,AREA,"Poring#bra";
-	setarray .@display[0],800,876,909;
+	setarray .@display[0], 4_NFCOCK, 4_CAT, 4_PORING;
 	setnpcdisplay "Poring#bra",.@display[rand(3)];
 	if (brazil_gua != 5) close;
 	next;
@@ -856,11 +859,13 @@ brasilis,56,224,7	script	Mage Paje#bra	704,{
 	close;
 }
 
-brasilis,59,226,3	script	Poring#bra	909,{
+brasilis,59,226,3	script	Poring#bra	4_PORING,{
 	end;
 }
 
-bra_fild01,75,83,5	script	Toucan#bra	2073,2,2,{
+bra_fild01,75,83,5	script	Toucan#bra	TOUCAN,2,2,{
+end;
+
 OnTouch:
 	if (brazil_gua == 6) {
 		mes "[Toucan]";
@@ -920,7 +925,9 @@ OnTouch:
 	end;
 }
 
-bra_fild01,34,184,5	script	Jaguar#bra	2072,2,2,{
+bra_fild01,34,184,5	script	Jaguar#bra	JAGUAR,2,2,{
+end;
+
 OnTouch_:
 	if (brazil_gua == 7) {
 		mes "[Jaguar]";
@@ -971,7 +978,7 @@ OnTouch_:
 		set brazil_gua,8;
 		changequest 2197,2198;
 		close2;
-		sc_start SC_MOVHASTE_INFINITY,5000,0;
+		consumeitem 12016; //Speed_Up_Potion
 		end;
 	}
 	else {
@@ -982,11 +989,11 @@ OnTouch_:
 	end;
 }
 
-bra_fild01,245,53,3	script	#Monkeybra	1057,{
+bra_fild01,245,53,3	script	#Monkeybra	YOYO,{
 	end;
 }
 
-bra_fild01,245,52,3	script	Monkey#bra	111,{
+bra_fild01,245,52,3	script	Monkey#bra	HIDDEN_NPC,{
 	if (brazil_gua == 8) {
 		mes "[Monkey]";
 		mes "What is it??!!";
@@ -1032,9 +1039,9 @@ bra_fild01,245,52,3	script	Monkey#bra	111,{
 	}
 }
 
-// Water Lily Quest, Original file: brazil_tre.sc
+// Water Lily Quest :: brazil_tre.sc
 //============================================================
-brasilis,203,286,3	script	Botanist Karmen#bra	893,{
+brasilis,203,286,3	script	Botanist Karmen#bra	4_F_HUWOMAN,{
 	if (brazil_regia == 0) {
 		mes "[Karmen]";
 		mes "Brasilis' climate is special.";
@@ -1088,7 +1095,7 @@ brasilis,203,286,3	script	Botanist Karmen#bra	893,{
 		mes "The water lily must truly be a lucky flower. hahaha";
 		set brazil_regia,10;
 		completequest 2207;
-		getexp 500000,100000;
+		getexp 50000,10000;
 		close;
 	}
 	else {
@@ -1105,7 +1112,7 @@ brasilis,203,286,3	script	Botanist Karmen#bra	893,{
 	}
 }
 
-bra_in01,142,27,5	script	Marta#bra	474,{
+bra_in01,142,27,5	script	Marta#bra	4_F_BRZ_INDOLD,{
 	if (brazil_regia == 1) {
 		mes "[Brasilis Boy]";
 		mes "Grandma! That person has a weird smell.";
@@ -1256,7 +1263,7 @@ bra_in01,142,27,5	script	Marta#bra	474,{
 	}
 }
 
-bra_in01,145,27,3	script	Brasilis Boy#bra	472,{
+bra_in01,145,27,3	script	Brasilis Boy#bra	4_M_BRZ_INDIAN,{
 	if (brazil_regia == 1) {
 		mes "[Brasilis Boy]";
 		mes "Grandma! That person has a weird smell.";
@@ -1407,7 +1414,7 @@ bra_in01,145,27,3	script	Brasilis Boy#bra	472,{
 	}
 }
 
-brasilis,270,145,5	script	Brasilis Girl#bra	473,5,5,{
+brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 	if (!checkweight(1201,1)) {
 		mes "- wait a second!! -";
 		mes "- you have too many items -";
@@ -1696,7 +1703,7 @@ OnTouch:
 	end;
 }
 
-bra_dun02,67,205,5	script	Recluse#bra	475,3,3,{
+bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 	if (brazil_regia == 3) {
 		mes "[Recluse]";
 		mes "Oh, I haven't seen another person in such a long time.";
@@ -1820,7 +1827,7 @@ OnTouchNPC:
 	end;
 }
 
-bra_dun02,71,200,3	script	Water lily#bra	111,{
+bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 	if (brazil_regia == 4) {
 		mes "An unusual Water lily is blooming here. You can't stop staring at it, knowing that few people have seen this flower bloom.";
 		next;
@@ -1929,9 +1936,9 @@ bra_dun02,71,200,3	script	Water lily#bra	111,{
 	}
 }
 
-// Dungeon Access Quest, Original file: brazil_tre.sc
+// Dungeon Access Quest :: brazil_tre.sc
 //============================================================
-brasilis,185,246,5	script	Pedro#bra	62,{
+brasilis,185,246,5	script	Pedro#bra	1_M_SIZ,{
 	if (brazil_ghost == 0) {
 		OnTalk:
 		mes "[Pedro]";
@@ -2157,7 +2164,7 @@ brasilis,185,246,5	script	Pedro#bra	62,{
 	}
 }
 
-brasilis,187,244,1	script	Mariana#bra	72,{
+brasilis,187,244,1	script	Mariana#bra	1_F_MARIA,{
 	if (brazil_ghost == 0) {
 		doevent "Pedro#bra::OnTalk";
 		end;
@@ -2175,7 +2182,7 @@ brasilis,187,244,1	script	Mariana#bra	72,{
 	}
 }
 
-brasilis,181,250,5	script	Fabio#bra	706,{
+brasilis,181,250,5	script	Fabio#bra	4_M_KID1,{
 	if (brazil_ghost == 0) {
 		doevent "Pedro#bra::OnTalk";
 		end;
@@ -2195,7 +2202,7 @@ brasilis,181,250,5	script	Fabio#bra	706,{
 	}
 }
 
-brasilis,180,249,5	script	Daniel#bra	706,{
+brasilis,180,249,5	script	Daniel#bra	4_M_KID1,{
 	if (brazil_ghost == 0) {
 		doevent "Pedro#bra::OnTalk";
 		end;
@@ -2212,7 +2219,7 @@ brasilis,180,249,5	script	Daniel#bra	706,{
 	}
 }
 
-bra_in01,149,184,3	script	Door#bra	844,{
+bra_in01,149,184,3	script	Door#bra	CLEAR_NPC,{
 	if (brazil_ghost > 0) {
 		mes "- A key is inserted in the locked door.-";
 		next;
@@ -2301,7 +2308,7 @@ bra_in01,149,184,3	script	Door#bra	844,{
 	}
 }
 
-bra_in01,144,187,3	script	Toilet#bra	844,{
+bra_in01,144,187,3	script	Toilet#bra	CLEAR_NPC,{
 	if (brazil_ghost > 0) {
 		mes "- Looks like an ordinary toilet -";
 		next;
@@ -2387,7 +2394,7 @@ bra_in01,144,187,3	script	Toilet#bra	844,{
 	}
 }
 
-bra_in01,134,189,3	script	Faucet#bra	844,{
+bra_in01,134,189,3	script	Faucet#bra	CLEAR_NPC,{
 	if (brazil_ghost > 0) {
 		mes "- It seems like an ordinary faucet -";
 		next;
@@ -2462,7 +2469,7 @@ bra_in01,134,189,3	script	Faucet#bra	844,{
 	}
 }
 
-bra_in01,138,184,3	script	Carpet#bra	844,{
+bra_in01,138,184,3	script	Carpet#bra	CLEAR_NPC,{
 	if (brazil_ghost > 0) {
 		mes "- A carpet with an intricate pattern on it -";
 		next;
@@ -2544,7 +2551,7 @@ bra_in01,138,184,3	script	Carpet#bra	844,{
 	}
 }
 
-bra_in01,151,180,3	script	Mirror#bra	844,{
+bra_in01,151,180,3	script	Mirror#bra	CLEAR_NPC,{
 	if (brazil_ghost > 0) {
 		mes "- You can see a clean mirror without any marks or dust -";
 		next;
@@ -2660,7 +2667,7 @@ bra_in01,151,180,3	script	Mirror#bra	844,{
 	}
 }
 
-bra_in01,136,180,5	script	Ghost#bra	1867,{
+bra_in01,136,180,5	script	Ghost#bra	BANSHEE,{
 	end;
 
 OnInit:
@@ -2668,7 +2675,7 @@ OnInit:
 	end;
 }
 
-bra_in01,7,181,5	script	Curator#bra	477,{
+bra_in01,7,181,5	script	Curator#bra	4_M_BRZ_MAN2,{
 	if (BaseLevel < 40) {
 		mes "[Curator]";
 		mes "I'm sorry but this area is under construction right now.";
@@ -2754,7 +2761,7 @@ bra_in01,7,181,5	script	Curator#bra	477,{
 	}
 }
 
-bra_in01,12,185,0	script	inbathroom#bra	45,1,1,{
+bra_in01,12,185,0	script	inbathroom#bra	WARPNPC,1,1,{
 OnTouch_:
 	if (brazil_ghost > 6)
 		warp "bra_in01",138,176;
@@ -2768,7 +2775,7 @@ OnTouch_:
 bra_in01,138,174,0	warp	outbathroom#bra	1,1,bra_in01,12,183
 bra_in01,206,98,0	warp	tobath#bra	1,1,bra_in01,138,176
 
-bra_in01,206,188,1	script	Open Manhole#todunbra	844,{
+bra_in01,206,188,1	script	Open Manhole#todunbra	CLEAR_NPC,{
 	if (brazil_ghost == 7) {
 		enablenpc "Ghost#bra_end";
 		mes "[Ghost]";
@@ -2796,7 +2803,7 @@ bra_in01,206,188,1	script	Open Manhole#todunbra	844,{
 		set brazil_ghost,8;
 		//completequest 2208;
 		completequest 60355;
-		getexp 900000,0;
+		getexp 90000,0;
 		disablenpc "Ghost#bra_end";
 		close;
 	}
@@ -2805,12 +2812,12 @@ bra_in01,206,188,1	script	Open Manhole#todunbra	844,{
 }
 
 
-bra_dun01,87,43,1	script	Pipe#bra	844,{
+bra_dun01,87,43,1	script	Pipe#bra	CLEAR_NPC,{
 	warp "bra_in01",206,185;
 	end;
 }
 
-bra_fild01,323,136,1	script	Pipe#brafild	844,{
+bra_fild01,323,136,1	script	Pipe#brafild	CLEAR_NPC,{
 	if (brazil_ghost > 6) {
 		mes "You see a rusty pipe. It seems to be linked to somewhere beneath the jungle.";
 		next;
@@ -2831,7 +2838,7 @@ bra_fild01,323,136,1	script	Pipe#brafild	844,{
 	}
 }
 
-bra_in01,206,190,3	script	Ghost#bra_end	1867,{
+bra_in01,206,190,3	script	Ghost#bra_end	BANSHEE,{
 	end;
 
 OnInit:
@@ -2839,9 +2846,9 @@ OnInit:
 	end;
 }
 
-// Iara, Original file: iara.sc
+// Iara :: iara.sc
 //============================================================
-brasilis,315,334,5	script	Shaman#nk	474,{
+brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
 	set .@iara_re,checkquest(4135,PLAYTIME);
 	if ((.@iara_re == 0) || (.@iara_re == 1)) {
 		mes "[Anori]";
@@ -2962,21 +2969,18 @@ brasilis,315,334,5	script	Shaman#nk	474,{
 				mes "Could you listen to my stories for a moment.";
 				mes "There's an emergency in our tribe.";
 				next;
-				switch(select("No.:Okay.")) {
-				case 1:
+				if(select("No.:Okay.") == 1) {
 					mes "[Anori]";
 					mes "You are a heartless person...";
 					mes "You don't seem the helpful type.";
 					mes "Just keep on going your way.";
 					close;
-				case 2:
-					mes "[Anori]";
-					mes "Thank you, I met a kind person.";
-					mes "It's a secret of our tribe that";
-					mes "you cannot tell anyone.";
-					next;
-					break;
 				}
+				mes "[Anori]";
+				mes "Thank you, I met a kind person.";
+				mes "It's a secret of our tribe that";
+				mes "you cannot tell anyone.";
+				next;
 				mes "[Anori]";
 				mes "Lately young men from";
 				mes "the tribe are disappearing.";
@@ -3044,7 +3048,7 @@ brasilis,315,334,5	script	Shaman#nk	474,{
 	}
 }
 
-bra_dun02,157,74,5	script	Iara#nk	478,2,2,{
+bra_dun02,157,74,5	script	Iara#nk	4_F_BRZ_WOMAN,2,2,{
 	if (countitem(11517) > 0) {
 		mes "[" + strcharinfo(0) + "]";
 		mes "Should I use a Purification Potion?";
@@ -3072,12 +3076,12 @@ bra_dun02,157,74,5	script	Iara#nk	478,2,2,{
 			percentheal 100,100;
 			sc_start SC_INCFLEE,3600000,20;
 			sc_start SC_CRITICALPERCENT,3600000,10;
-			sc_start SC_FOOD_STR,1200000,3;
-			sc_start SC_FOOD_DEX,1200000,3;
-			sc_start SC_FOOD_AGI,1200000,3;
-			sc_start SC_FOOD_VIT,1200000,3;
-			sc_start SC_FOOD_INT,1200000,3;
-			sc_start SC_FOOD_LUK,1200000,3; 
+			consumeitem 12043; //Str_Dish03
+			consumeitem 12063; //Dex_Dish03
+			consumeitem 12058; //Agi_Dish03
+			consumeitem 12053; //Vit_Dish03
+			consumeitem 12048; //Int_Dish03
+			consumeitem 12068; //Luk_Dish03
 			next;
 			mes "[Iara]";
 			mes "Ahhh~...";
@@ -3098,11 +3102,10 @@ bra_dun02,157,74,5	script	Iara#nk	478,2,2,{
 		mes "Aaaaaaaaaaaaaaaaaaaaaah.";
 		mes "Eeeeeeeeeeeeeeeeeeeh.";
 		mes "Oooooooooooooooooh.";
-		set .@get_de,rand(1,2);
-		if (.@get_de == 1)
-			sc_start Sc_Curse,60000,0;
+		if (rand(1,2) == 1)
+			sc_start SC_CURSE,60000,0;
 		else
-			sc_start Sc_Confusion,60000,0;
+			sc_start SC_CONFUSION,60000,0;
 		next;
 		mes "[" + strcharinfo(0) + "]";
 		mes "Ugh! What's this strange voice?";
@@ -3116,11 +3119,10 @@ OnTouch:
 		mes "Aaaaaaaaaaaaaaaaaaaaaah.";
 		mes "Eeeeeeeeeeeeeeeeeeeh.";
 		mes "Oooooooooooooooooh.";
-		set .@get_de,rand(1,2);
-		if (.@get_de == 1)
-			sc_start Sc_Curse,60000,0;
+		if (rand(1,2) == 1)
+			sc_start SC_CURSE,60000,0;
 		else
-			sc_start Sc_Confusion,60000,0;
+			sc_start SC_CONFUSION,60000,0;
 		next;
 		mes "[" + strcharinfo(0) + "]";
 		mes "Ugh! What's this strange voice?";
@@ -3129,9 +3131,9 @@ OnTouch:
 	end;
 }
 
-bra_fild01,188,301,5	script	Native Warrior#nk	472,{
+bra_fild01,188,301,5	script	Native Warrior#nk	4_M_BRZ_INDIAN,{
 	mes "[Native Warrior]";
-	mes "Ah...the face I would never forget even in my dreams.";
+	mes "Ah... the face I would never forget even in my dreams.";
 	next;
 	mes "[Native Warrior]";
 	mes "When will she come out of the waterfall again...?";
@@ -3143,7 +3145,7 @@ bra_fild01,188,301,5	script	Native Warrior#nk	472,{
 	else {
 		mes "[" + strcharinfo(0) + "]";
 		mes "(This guy will never";
-		mes "get ocer Iara's curse...)";
+		mes "get over Iara's curse...)";
 	}
 	close;
 }

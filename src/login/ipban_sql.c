@@ -2,6 +2,15 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#include "ipban.h"
+
+#include <stdlib.h>
+#include <string.h>
+
+#include "login.h"
+#include "loginlog.h"
 #include "../common/cbasetypes.h"
 #include "../common/db.h"
 #include "../common/malloc.h"
@@ -9,11 +18,6 @@
 #include "../common/socket.h"
 #include "../common/strlib.h"
 #include "../common/timer.h"
-#include "login.h"
-#include "ipban.h"
-#include "loginlog.h"
-#include <stdlib.h>
-#include <string.h>
 
 // global sql settings
 static char   global_db_hostname[32] = "127.0.0.1";
@@ -36,7 +40,7 @@ static Sql* sql_handle = NULL;
 static int cleanup_timer_id = INVALID_TIMER;
 static bool ipban_inited = false;
 
-int ipban_cleanup(int tid, unsigned int tick, int id, intptr_t data);
+int ipban_cleanup(int tid, int64 tick, int id, intptr_t data);
 
 
 // initialize
@@ -86,8 +90,8 @@ void ipban_init(void)
 
 	if( login_config.ipban_cleanup_interval > 0 )
 	{ // set up periodic cleanup of connection history and active bans
-		iTimer->add_timer_func_list(ipban_cleanup, "ipban_cleanup");
-		cleanup_timer_id = iTimer->add_timer_interval(iTimer->gettick()+10, ipban_cleanup, 0, 0, login_config.ipban_cleanup_interval*1000);
+		timer->add_func_list(ipban_cleanup, "ipban_cleanup");
+		cleanup_timer_id = timer->add_interval(timer->gettick()+10, ipban_cleanup, 0, 0, login_config.ipban_cleanup_interval*1000);
 	} else // make sure it gets cleaned up on login-server start regardless of interval-based cleanups
 		ipban_cleanup(0,0,0,0);
 }
@@ -100,7 +104,7 @@ void ipban_final(void)
 
 	if( login_config.ipban_cleanup_interval > 0 )
 		// release data
-		iTimer->delete_timer(cleanup_timer_id, ipban_cleanup);
+		timer->delete(cleanup_timer_id, ipban_cleanup);
 	
 	ipban_cleanup(0,0,0,0); // always clean up on login-server stop
 
@@ -247,12 +251,11 @@ void ipban_log(uint32 ip)
 }
 
 // remove expired bans
-int ipban_cleanup(int tid, unsigned int tick, int id, intptr_t data)
-{
+int ipban_cleanup(int tid, int64 tick, int id, intptr_t data) {
 	if( !login_config.ipban )
 		return 0;// ipban disabled
 
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `ipbanlist` WHERE `rtime` <= NOW()") )
+	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `rtime` <= NOW()", ipban_table) )
 		Sql_ShowDebug(sql_handle);
 
 	return 0;

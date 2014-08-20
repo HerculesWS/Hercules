@@ -4,14 +4,14 @@
 //= jAthena (0.9) - I guess
 //= Unknown Translator (1.0)
 //= Darkchild (1.2)
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.8
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job quest for Sage classes
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 2.1 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//=	No longer uses function "F_BlockHigh"
+//=     No longer uses function "F_BlockHigh"
 //= 2.2 Small bug fix (== -> !=) thanks to Saithis. [L0ne_W0lf]
 //= 2.2b ANotehr smaLL bugfix, pointed out by Cara. [L0ne_W0lf]
 //= 2.3 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
@@ -19,15 +19,15 @@
 //= 2.4a Deleted unused variables. [Samuray22]
 //= 2.5 Updated waiting room. (Removes global var) [L0ne_W0lf]
 //= 2.5a Corrected some "mes"s without the getitemname. (bugreport:1564) [Samuray22]
-//	-Changed an incorrect "!=" to "==". (bugreport:1572) 
-//	-And Small Typo Error
+//=     -Changed an incorrect "!=" to "==". (bugreport:1572)
+//=     -And Small Typo Error
 //= 2.6 Fixed Kayron Grik cutin not being removed as reported by jc1991, bugreport:1825 [Brainstorm]
 //= 2.6a Fixed a Little Bug with Whispers Summoned in the Last Test. (bugreport:2253) [Samuray22]
 //= 2.7 Added Quest Log commands. [Kisuka]
 //= 2.8 Removed the need for use of 'goto.' [L0ne_W0lf]
-//============================================================ 
+//============================================================
 
-yuno_in02,38,61,5	script	Dean of the Academy#sa	743,{
+yuno_in02,38,61,5	script	Dean of the Academy#sa	2_M_SAGE_OLD,{
 	cutin "job_sage_kayron",2;
 	mes "[Kayron Grik]";
 	if (Upper == 1) {
@@ -193,7 +193,7 @@ yuno_in02,38,61,5	script	Dean of the Academy#sa	743,{
 	end;
 }
 
-yuno_in03,154,35,4	script	Staff of the Academy#a	742,{
+yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 	mes "[Metheus Sylphe]";
 	if (Upper == 1) {
 		mes "Welcome to the";
@@ -343,7 +343,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	742,{
 				next;
 				if (select("Pay 70,000 zeny.:Give him Old Magicbook and Necklace of Wisdom.") == 1) {
 					if (Zeny > 69999) {
-						set zeny,zeny-70000;
+						Zeny -= 70000;
 						mes "[Metheus Sylphe]";
 						mes "Thank you, your application has been accepted.";
 						mes "Next, you will take an entrance test.";
@@ -515,7 +515,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	742,{
 			next;
 		}
 		else if (Zeny > 69999) {
-			set zeny,zeny-70000;
+			Zeny -= 70000;
 			mes "[Metheus Sylphe]";
 			mes "Well done. Let me proceed with your application request.";
 			set SAGE_Q,4;
@@ -525,8 +525,8 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	742,{
 			switch (SAGE_Q) {
 			case 1:
 				//Feather_Of_Bird, Fluff, Iron_Ore
-				setarray .@item[0], 916,914,1002; 
-				setarray .@count[0], 50,50,25; 
+				setarray .@item[0], 916,914,1002;
+				setarray .@count[0], 50,50,25;
 				break;
 			case 2:
 				//Clover, Feather, Chinese_Ink
@@ -539,13 +539,13 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	742,{
 				setarray .@count[0], 50,50,50,50;
 				break;
 			}
-			set .@size, (getarraysize(.@item)-1); 
+			set .@size, (getarraysize(.@item)-1);
 			for( set .@i,0 ; .@i < .@size && countitem(.@item[.@i]) >= .@count[.@i] ; set .@i,.@i+1 );
-			if(.@i == .@size) {  
+			if(.@i == .@size) {
 				if (Zeny > 29999) {
 					for (set .@i, 0; .@i < .@size ; set .@i, .@i+1)
-						delitem .@item[.@i], .@count[.@i];  
-					set zeny,zeny-30000;
+						delitem .@item[.@i], .@count[.@i];
+					Zeny -= 30000;
 					mes "[Metheus Sylphe]";
 					mes "Well done. Let me proceed with your application request.";
 					set .@SAGE_Q_T,SAGE_Q;
@@ -634,7 +634,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	742,{
 	}
 }
 
-yuno_in03,105,177,5	script	Written Test Professor#s	754,{
+yuno_in03,105,177,5	script	Written Test Professor#s	4_M_SAGE_A,{
 	mes "[Claytos Verdo]";
 	if (BaseJob != Job_Mage) {
 		if (BaseJob == Job_Sage) {
@@ -1054,7 +1054,7 @@ L_AskQuestions:
 }
 
 //Practical Examination Professer
-yuno_in03,169,180,3	script	Practical Examination P	755,{
+yuno_in03,169,180,3	script	Practical Examination P	4_M_SAGE_C,{
 	mes "[Hermes Tris]";
 	if (BaseJob != Job_Mage) {
 		if (BaseJob == Job_Sage) {
@@ -1255,7 +1255,7 @@ yuno_in03,169,180,3	script	Practical Examination P	755,{
 	}
 }
 
-yuno_in03,62,176,2	script	History Professor#sa	109,{
+yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 	mes "[Saphien Layless]";
 	if (BaseJob != Job_Mage) {
 		if (BaseJob == Job_Sage) {
@@ -1696,7 +1696,7 @@ yuno_in03,62,176,2	script	History Professor#sa	109,{
 	}
 }
 
-yuno_in03,32,102,1	script	Biology Professor#sa	755,{
+yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 	mes "[Lucius Celsus]";
 	if (BaseJob != Job_Mage) {
 		if (BaseJob == Job_Sage) {
@@ -2123,7 +2123,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	755,{
 	}
 }
 
-yuno_in03,244,31,3	script	Physics Professor#sa	120,{
+yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 	mes "[Aebecee George]";
 	if (BaseJob != Job_Mage) {
 		if (BaseJob == Job_Sage) {
@@ -2542,7 +2542,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	120,{
 	}
 }
 
-job_sage,50,165,4	script	Test Helper#talk	700,{
+job_sage,50,165,4	script	Test Helper#talk	8_F_GIRL,{
 	mes "[Test Helper]";
 	mes "Welcome to the Sage practical examination hall.";
 	mes "If you wish to take the test right now, please enter the waiting room.";
@@ -2557,7 +2557,7 @@ job_sage,50,165,4	script	Test Helper#talk	700,{
 	close;
 }
 
-job_sage,50,165,4	script	Waiting Room#sg	700,{
+job_sage,50,165,4	script	Waiting Room#sg	8_F_GIRL,{
 	end;
 
 OnInit:
@@ -2577,7 +2577,7 @@ OnEnable:
 	end;
 }
 
--	script	Arena#1	66,{
+-	script	Arena#1	1_F_01,{
 OnInit:
 	disablenpc "Arena#1";
 	end;
@@ -2891,9 +2891,9 @@ OnTimer9000:
 	end;
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= Script mostly based on translated jA script
 //= Written test questions/answers weren't translated 100% corectly
 //= So a lot of those are based upon mRO site and my own info

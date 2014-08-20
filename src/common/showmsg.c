@@ -2,47 +2,34 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/strlib.h" // StringBuf
+#define HERCULES_CORE
+
 #include "showmsg.h"
-#include "core.h" //[Ind] - For SERVER_TYPE
 
-#include <stdio.h>
-#include <string.h>
 #include <stdarg.h>
-#include <time.h>
+#include <stdio.h>
 #include <stdlib.h> // atexit
+#include <string.h>
+#include <time.h>
 
-#include "libconfig.h"
+#include "../../3rdparty/libconfig/libconfig.h"
+
+#include "../common/cbasetypes.h"
+#include "../common/core.h" //[Ind] - For SERVER_TYPE
+#include "../common/strlib.h" // StringBuf
 
 #ifdef WIN32
-	#include "../common/winapi.h"
+#	include "../common/winapi.h"
+#else // not WIN32
+#	include <unistd.h>
+#endif // WIN32
 
-	#ifdef DEBUGLOGMAP
-		#define DEBUGLOGPATH "log\\map-server.log"
-	#else
-		#ifdef DEBUGLOGCHAR
-			#define DEBUGLOGPATH "log\\char-server.log"
-		#else
-			#ifdef DEBUGLOGLOGIN
-				#define DEBUGLOGPATH "log\\login-server.log"
-			#endif
-		#endif
-	#endif
-#else
-	#include <unistd.h>
-
-	#ifdef DEBUGLOGMAP
-		#define DEBUGLOGPATH "log/map-server.log"
-	#else
-		#ifdef DEBUGLOGCHAR
-			#define DEBUGLOGPATH "log/char-server.log"
-		#else
-			#ifdef DEBUGLOGLOGIN
-				#define DEBUGLOGPATH "log/login-server.log"
-			#endif
-		#endif
-	#endif
+#if defined(DEBUGLOGMAP)
+#define DEBUGLOGPATH "log"PATHSEP_STR"map-server.log"
+#elif defined(DEBUGLOGCHAR)
+#define DEBUGLOGPATH "log"PATHSEP_STR"char-server.log"
+#elif defined(DEBUGLOGLOGIN)
+#define DEBUGLOGPATH "log"PATHSEP_STR"login-server.log"
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -61,51 +48,50 @@ int console_msg_log = 0;//[Ind] msg error logging
 
 #define SBUF_SIZE 2054 // never put less that what's required for the debug message
 
-#define NEWBUF(buf)				\
-	struct {					\
-		char s_[SBUF_SIZE];		\
-		StringBuf *d_;			\
-		char *v_;				\
-		int l_;					\
-	} buf ={"",NULL,NULL,0};	\
+#define NEWBUF(buf) \
+	struct { \
+		char s_[SBUF_SIZE]; \
+		StringBuf *d_; \
+		char *v_; \
+		int l_; \
+	} buf ={"",NULL,NULL,0}; \
 //define NEWBUF
 
-#define BUFVPRINTF(buf,fmt,args)						\
-	buf.l_ = vsnprintf(buf.s_, SBUF_SIZE, fmt, args);	\
-	if( buf.l_ >= 0 && buf.l_ < SBUF_SIZE )				\
-	{/* static buffer */								\
-		buf.v_ = buf.s_;								\
-	}													\
-	else												\
-	{/* dynamic buffer */								\
-		buf.d_ = StrBuf->Malloc();					\
-		buf.l_ = StrBuf->Vprintf(buf.d_, fmt, args);	\
-		buf.v_ = StrBuf->Value(buf.d_);				\
-		ShowDebug("showmsg: dynamic buffer used, increase the static buffer size to %d or more.\n", buf.l_+1);\
-	}													\
-//define BUFVPRINTF
+#define BUFVPRINTF(buf,fmt,args) do { \
+	(buf).l_ = vsnprintf((buf).s_, SBUF_SIZE, (fmt), args); \
+	if( (buf).l_ >= 0 && (buf).l_ < SBUF_SIZE ) \
+	{/* static buffer */ \
+		(buf).v_ = (buf).s_; \
+	} \
+	else \
+	{/* dynamic buffer */ \
+		(buf).d_ = StrBuf->Malloc(); \
+		(buf).l_ = StrBuf->Vprintf((buf).d_, (fmt), args); \
+		(buf).v_ = StrBuf->Value((buf).d_); \
+		ShowDebug("showmsg: dynamic buffer used, increase the static buffer size to %d or more.\n", (buf).l_+1); \
+	} \
+} while(0) //define BUFVPRINTF
 
-#define BUFVAL(buf) buf.v_
-#define BUFLEN(buf) buf.l_
+#define BUFVAL(buf) ((buf).v_)
+#define BUFLEN(buf) ((buf).l_)
 
-#define FREEBUF(buf)			\
-	if( buf.d_ )				\
-	{							\
-		StrBuf->Free(buf.d_);	\
-		buf.d_ = NULL;			\
-	}							\
-	buf.v_ = NULL;				\
-//define FREEBUF
+#define FREEBUF(buf) do {\
+	if( (buf).d_ ) { \
+		StrBuf->Free((buf).d_); \
+		(buf).d_ = NULL; \
+	} \
+	(buf).v_ = NULL; \
+} while(0) //define FREEBUF
 
 ///////////////////////////////////////////////////////////////////////////////
 #ifdef _WIN32
 // XXX adapted from eApp (comments are left untouched) [flaviojs]
 
 ///////////////////////////////////////////////////////////////////////////////
-//  ansi compatible printf with control sequence parser for windows
+//  ANSI compatible printf with control sequence parser for windows
 //  fast hack, handle with care, not everything implemented
 //
-// \033[#;...;#m - Set Graphics Rendition (SGR) 
+// \033[#;...;#m - Set Graphics Rendition (SGR)
 //
 //  printf("\x1b[1;31;40m");	// Bright red on black
 //  printf("\x1b[3;33;45m");	// Blinking yellow on magenta (blink not implemented)
@@ -124,19 +110,19 @@ int console_msg_log = 0;//[Ind] msg error logging
 //  8 - Concealed (invisible)
 //
 // \033[#A - Cursor Up (CUU)
-//    Moves the cursor up by the specified number of lines without changing columns. 
+//    Moves the cursor up by the specified number of lines without changing columns.
 //    If the cursor is already on the top line, this sequence is ignored. \e[A is equivalent to \e[1A.
 //
 // \033[#B - Cursor Down (CUD)
-//    Moves the cursor down by the specified number of lines without changing columns. 
+//    Moves the cursor down by the specified number of lines without changing columns.
 //    If the cursor is already on the bottom line, this sequence is ignored. \e[B is equivalent to \e[1B.
 //
 // \033[#C - Cursor Forward (CUF)
-//    Moves the cursor forward by the specified number of columns without changing lines. 
+//    Moves the cursor forward by the specified number of columns without changing lines.
 //    If the cursor is already in the rightmost column, this sequence is ignored. \e[C is equivalent to \e[1C.
 //
 // \033[#D - Cursor Backward (CUB)
-//    Moves the cursor back by the specified number of columns without changing lines. 
+//    Moves the cursor back by the specified number of columns without changing lines.
 //    If the cursor is already in the leftmost column, this sequence is ignored. \e[D is equivalent to \e[1D.
 //
 // \033[#E - Cursor Next Line (CNL)
@@ -149,19 +135,19 @@ int console_msg_log = 0;//[Ind] msg error logging
 //    Moves the cursor to indicated column in current row. \e[G is equivalent to \e[1G.
 //
 // \033[#;#H - Cursor Position (CUP)
-//    Moves the cursor to the specified position. The first # specifies the line number, 
-//    the second # specifies the column. If you do not specify a position, the cursor moves to the home position: 
+//    Moves the cursor to the specified position. The first # specifies the line number,
+//    the second # specifies the column. If you do not specify a position, the cursor moves to the home position:
 //    the upper-left corner of the screen (line 1, column 1).
 //
 // \033[#;#f - Horizontal & Vertical Position
 //    (same as \033[#;#H)
 //
 // \033[s - Save Cursor Position (SCP)
-//    The current cursor position is saved. 
+//    The current cursor position is saved.
 //
 // \033[u - Restore cursor position (RCP)
 //    Restores the cursor position saved with the (SCP) sequence \033[s.
-//    (addition, restore to 0,0 if nothinh was saved before)
+//    (addition, restore to 0,0 if nothing was saved before)
 //
 
 // \033[#J - Erase Display (ED)
@@ -227,7 +213,7 @@ int	VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 			WriteFile(handle, p, (DWORD)(q-p), &written, 0);
 
 		if( q[1]!='[' )
-		{	// write the escape char (whatever purpose it has) 
+		{	// write the escape char (whatever purpose it has)
 			if(0==WriteConsole(handle, q, 1, &written, 0) )
 				WriteFile(handle,q, 1, &written, 0);
 			p=q+1;	//and start searching again
@@ -247,7 +233,7 @@ int	VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 			q=q+2;
 			for(;;)
 			{
-				if( ISDIGIT(*q) ) 
+				if( ISDIGIT(*q) )
 				{	// add number to number array, only accept 2digits, shift out the rest
 					// so // \033[123456789m will become \033[89m
 					numbers[numpoint] = (numbers[numpoint]<<4) | (*q-'0');
@@ -296,7 +282,7 @@ int	VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 							}
 							//case '2': // not existing
 							//case '3':	// blinking (not implemented)
-							//case '4':	// unterline (not implemented)
+							//case '4':	// underline (not implemented)
 							//case '6': // not existing
 							//case '8': // concealed (not implemented)
 							//case '9': // not existing
@@ -364,12 +350,12 @@ int	VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 					else if(num==2)
 					{	// Number of chars on screen.
 						cnt = info.dwSize.X * info.dwSize.Y;
-						SetConsoleCursorPosition(handle, origin); 
+						SetConsoleCursorPosition(handle, origin);
 					}
 					else// 0 and default
 					{	// number of chars from cursor to end
 						origin = info.dwCursorPosition;
-						cnt = info.dwSize.X * (info.dwSize.Y - info.dwCursorPosition.Y) - info.dwCursorPosition.X; 
+						cnt = info.dwSize.X * (info.dwSize.Y - info.dwCursorPosition.Y) - info.dwCursorPosition.X;
 					}
 					FillConsoleOutputAttribute(handle, info.wAttributes, cnt, origin, &tmp);
 					FillConsoleOutputCharacter(handle, ' ',              cnt, origin, &tmp);
@@ -403,7 +389,7 @@ int	VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 				else if( *q == 'H' || *q == 'f' )
 				{	// \033[#;#H - Cursor Position (CUP)
 					// \033[#;#f - Horizontal & Vertical Position
-					// The first # specifies the line number, the second # specifies the column. 
+					// The first # specifies the line number, the second # specifies the column.
 					// The default for both is 1
 					info.dwCursorPosition.X = (numbers[numpoint])?(numbers[numpoint]>>4)*10+((numbers[numpoint]&0x0F)-1):0;
 					info.dwCursorPosition.Y = (numpoint && numbers[numpoint-1])?(numbers[numpoint-1]>>4)*10+((numbers[numpoint-1]&0x0F)-1):0;
@@ -500,7 +486,7 @@ int	VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 					--q;
 				}
 				// skip the sequencer and search again
-				p = q+1; 
+				p = q+1;
 				break;
 			}// end while
 		}
@@ -512,8 +498,8 @@ int	VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 	return 0;
 }
 
-int	FPRINTF(HANDLE handle, const char *fmt, ...)
-{
+int FPRINTF(HANDLE handle, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
+int FPRINTF(HANDLE handle, const char *fmt, ...) {
 	int ret;
 	va_list argptr;
 	va_start(argptr, fmt);
@@ -556,7 +542,7 @@ int	VFPRINTF(FILE *file, const char *fmt, va_list argptr)
 	{	// find the escape character
 		fprintf(file, "%.*s", (int)(q-p), p); // write up to the escape
 		if( q[1]!='[' )
-		{	// write the escape char (whatever purpose it has) 
+		{	// write the escape char (whatever purpose it has)
 			fprintf(file, "%.*s", 1, q);
 			p=q+1;	//and start searching again
 		}
@@ -569,7 +555,7 @@ int	VFPRINTF(FILE *file, const char *fmt, va_list argptr)
 			q=q+2;
 			while(1)
 			{
-				if( ISDIGIT(*q) ) 
+				if( ISDIGIT(*q) )
 				{
 					++q;
 					// and next character
@@ -638,7 +624,7 @@ int	VFPRINTF(FILE *file, const char *fmt, va_list argptr)
 					--q;
 				}
 				// skip the sequencer and search again
-				p = q+1; 
+				p = q+1;
 				break;
 			}// end while
 		}
@@ -648,8 +634,8 @@ int	VFPRINTF(FILE *file, const char *fmt, va_list argptr)
 	FREEBUF(tempbuf);
 	return 0;
 }
-int	FPRINTF(FILE *file, const char *fmt, ...)
-{
+int FPRINTF(FILE *file, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
+int FPRINTF(FILE *file, const char *fmt, ...) {
 	int ret;
 	va_list argptr;
 	va_start(argptr, fmt);
@@ -666,17 +652,9 @@ int	FPRINTF(FILE *file, const char *fmt, ...)
 #endif// not _WIN32
 
 
-
-
-
-
-
-
-
-
 char timestamp_format[20] = ""; //For displaying Timestamps
 
-int _vShowMessage(enum msg_type flag, const char *string, va_list ap)
+int vShowMessage_(enum msg_type flag, const char *string, va_list ap)
 {
 	va_list apcopy;
 	char prefix[100];
@@ -685,7 +663,7 @@ int _vShowMessage(enum msg_type flag, const char *string, va_list ap)
 #endif
 	
 	if (!string || *string == '\0') {
-		ShowError("Empty string passed to _vShowMessage().\n");
+		ShowError("Empty string passed to vShowMessage_().\n");
 		return 1;
 	}
 	if(
@@ -756,7 +734,7 @@ int _vShowMessage(enum msg_type flag, const char *string, va_list ap)
 			strcat(prefix,CL_RED"[Fatal Error]"CL_RESET":");
 			break;
 		default:
-			ShowError("In function _vShowMessage() -> Invalid flag passed.\n");
+			ShowError("In function vShowMessage_() -> Invalid flag passed.\n");
 			return 1;
 	}
 
@@ -804,80 +782,89 @@ void ClearScreen(void)
 	ShowMessage(CL_CLS);	// to prevent empty string passed messages
 #endif
 }
-int _ShowMessage(enum msg_type flag, const char *string, ...)
-{
+int ShowMessage_(enum msg_type flag, const char *string, ...) __attribute__((format(printf, 2, 3)));
+int ShowMessage_(enum msg_type flag, const char *string, ...) {
 	int ret;
 	va_list ap;
 	va_start(ap, string);
-	ret = _vShowMessage(flag, string, ap);
+	ret = vShowMessage_(flag, string, ap);
 	va_end(ap);
 	return ret;
 }
 
 // direct printf replacement
+void ShowMessage(const char *string, ...) __attribute__((format(printf, 1, 2)));
 void ShowMessage(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);
-	_vShowMessage(MSG_NONE, string, ap);
+	vShowMessage_(MSG_NONE, string, ap);
 	va_end(ap);
 }
+void ShowStatus(const char *string, ...) __attribute__((format(printf, 1, 2)));
 void ShowStatus(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);
-	_vShowMessage(MSG_STATUS, string, ap);
+	vShowMessage_(MSG_STATUS, string, ap);
 	va_end(ap);
 }
+void ShowSQL(const char *string, ...) __attribute__((format(printf, 1, 2)));
 void ShowSQL(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);
-	_vShowMessage(MSG_SQL, string, ap);
+	vShowMessage_(MSG_SQL, string, ap);
 	va_end(ap);
 }
+void ShowInfo(const char *string, ...) __attribute__((format(printf, 1, 2)));
 void ShowInfo(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);
-	_vShowMessage(MSG_INFORMATION, string, ap);
+	vShowMessage_(MSG_INFORMATION, string, ap);
 	va_end(ap);
 }
+void ShowNotice(const char *string, ...) __attribute__((format(printf, 1, 2)));
 void ShowNotice(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);
-	_vShowMessage(MSG_NOTICE, string, ap);
+	vShowMessage_(MSG_NOTICE, string, ap);
 	va_end(ap);
 }
+void ShowWarning(const char *string, ...) __attribute__((format(printf, 1, 2)));
 void ShowWarning(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);
-	_vShowMessage(MSG_WARNING, string, ap);
+	vShowMessage_(MSG_WARNING, string, ap);
 	va_end(ap);
 }
-void ShowConfigWarning(config_setting_t *config, const char *string, ...)
-{
+void ShowConfigWarning(config_setting_t *config, const char *string, ...) __attribute__((format(printf, 2, 3)));
+void ShowConfigWarning(config_setting_t *config, const char *string, ...) {
 	StringBuf buf;
 	va_list ap;
 	StrBuf->Init(&buf);
 	StrBuf->AppendStr(&buf, string);
 	StrBuf->Printf(&buf, " (%s:%d)\n", config_setting_source_file(config), config_setting_source_line(config));
 	va_start(ap, string);
-	_vShowMessage(MSG_WARNING, StrBuf->Value(&buf), ap);
+	vShowMessage_(MSG_WARNING, StrBuf->Value(&buf), ap);
 	va_end(ap);
 	StrBuf->Destroy(&buf);
 }
+void ShowDebug(const char *string, ...) __attribute__((format(printf, 1, 2)));
 void ShowDebug(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);
-	_vShowMessage(MSG_DEBUG, string, ap);
+	vShowMessage_(MSG_DEBUG, string, ap);
 	va_end(ap);
 }
+void ShowError(const char *string, ...) __attribute__((format(printf, 1, 2)));
 void ShowError(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);
-	_vShowMessage(MSG_ERROR, string, ap);
+	vShowMessage_(MSG_ERROR, string, ap);
 	va_end(ap);
 }
+void ShowFatalError(const char *string, ...) __attribute__((format(printf, 1, 2)));
 void ShowFatalError(const char *string, ...) {
 	va_list ap;
 	va_start(ap, string);
-	_vShowMessage(MSG_FATALERROR, string, ap);
+	vShowMessage_(MSG_FATALERROR, string, ap);
 	va_end(ap);
 }

@@ -1,15 +1,13 @@
-//===== Hercules Script =======================================
+//===== Hercules Script ======================================
 //= Monster Tamers
 //===== By: ==================================================
-//= Streusel
+//= Euphy
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Cute pet quest items
 //===== Additional Comments: =================================
-//= 1.0 Duplicates for Monster Tamer [Streusel]
+//= 1.0 Moved Izlude NPC to pre-re/re paths.
 //============================================================
 
-izlude_in,129,64,4	duplicate(Monster_Tamer#izu)	Monster Tamer#izlude	125
+izlude_in,129,64,4	duplicate(MonsterTamer_izlude)	Monster Tamer#izu	4_M_TELEPORTER

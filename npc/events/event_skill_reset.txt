@@ -1,10 +1,10 @@
 //===== Hercules Script ======================================
 //= Official Skill Resetter Event in Yuno (kRO & idRO)
-//===== By: ================================================== 
+//===== By: ==================================================
 //= $ephiroth
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.02
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= 2006 - Edition Skill Reset NPC
 //= 2006/11/16: 1.0 Release and fully working. [$ephiroth]
 //= 1.01 Checked, fixed typos, now uses MISC_QUEST var [Lupus]
@@ -13,7 +13,7 @@
 //= Skill Reset with payment, minimum BaseLv.60 to reset skill.
 //= Each 1 BaseLv need 20.000 Zeny, so be careful to use skill.
 //============================================================
-yuno,138,187,4	script	Hypnotist Teacher	124,{
+yuno,138,187,4	script	Hypnotist Teacher	4_F_TELEPORTER,{
 	set @npcname$,"[^D5A500Hypnotist^000000]";
 	mes @npcname$;
 
@@ -58,7 +58,7 @@ yuno,138,187,4	script	Hypnotist Teacher	124,{
 
 	mes @npcname$;
 	mes "You know where to find me,";
-	mes "if you ever want a reset!!"; 
+	mes "if you ever want a reset!!";
 	close;
 
 L_Info:
@@ -80,10 +80,10 @@ L_Info:
 L_Reset:
 	mes @npcname$;
 	mes "Before skill reset in starting.";
-	mes "You shall have to first tell me your Base Level."; 
+	mes "You shall have to first tell me your Base Level.";
 	next;
 	mes "^D5A500[" + strcharinfo(0) + "]^000000";
-	mes "My Base level is ^AA00AALevel " + BaseLevel + "BaseLv.^000000"; 
+	mes "My Base level is ^AA00AALevel " + BaseLevel + "BaseLv.^000000";
 	next;
 	set @zeny,BaseLevel*20000;
 	mes @npcname$;
@@ -96,7 +96,7 @@ L_Reset:
 		emotion e_hmm;
 		close;
 	}
-	set Zeny, Zeny-@zeny;
+	Zeny -= @zeny;
 	set MISC_QUEST,MISC_QUEST | 1024;
 	resetskill;
 	mes @npcname$;

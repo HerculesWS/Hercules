@@ -1,25 +1,27 @@
 //===== Hercules Script ======================================
 // BattleGround System - Flavius Second
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
-//= 1.4
-//===== Description: ========================================= 
-//= [AEGIS Conversion]
+//===== Current Version: =====================================
+//= 1.6
+//===== Description: =========================================
+//= [Official Conversion]
 //= Flavius Battleground.
 //= - Winning Team: 9 badges
 //= - Losing Team: 3 badge
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version.
 //= 1.1 Fixed NPCs being called for waiting rooms. (bugreport:4395)
 //= 1.2 Fixed pink crystal spawning as blue. [L0ne_W0lf]
 //= 1.3 Updated 'waitingroom' to support required zeny/lvl. [Kisuka]
 //= 1.4 Removed MaxLvl check in waitingrooms. Replaced setwall with setcell.
+//= 1.5 Label standardization. [Euphy]
+//= 1.6 Added GM management function. [Euphy]
 //============================================================
 
 // Waiting Room NPCs
 //============================================================
-bat_room,142,227,4	script	Lieutenant Huvas	418,{
+bat_room,142,227,4	script	Lieutenant Huvas	4_M_KY_KNT,{
 	end;
 OnInit:
 	waitingroom "Battle Station",11,"start#bat_b02::OnReadyCheck",1,0,80;
@@ -29,7 +31,7 @@ OnEnterBG:
 	end;
 }
 
-bat_room,142,204,0	script	Lieutenant Yukon	414,{
+bat_room,142,204,0	script	Lieutenant Yukon	4_M_CRU_KNT,{
 	end;
 OnInit:
 	waitingroom "Battle Station",11,"start#bat_b02::OnReadyCheck",1,0,80;
@@ -42,7 +44,7 @@ OnEnterBG:
 bat_room,141,220,0	warp	back_bgroomb02a	1,1,bat_room,154,150
 bat_room,141,211,0	warp	back_bgroomb02b	1,1,bat_room,154,150
 
-bat_room,2,151,3	script	#bat_b02_timer	844,{
+bat_room,2,151,3	script	#bat_b02_timer	CLEAR_NPC,{
 	end;
 
 OnInit:
@@ -70,7 +72,7 @@ OnTimer1000:
 
 // Flavius Battleground Engine
 //============================================================
-bat_b02,15,15,3	script	start#bat_b02	844,{
+bat_b02,15,15,3	script	start#bat_b02	CLEAR_NPC,{
 OnInit:
 	mapwarp "bat_b02","bat_room",154,150;
 	end;
@@ -94,16 +96,16 @@ OnReadyCheck:
 	bg_updatescore "bat_b02",$@Guill_ScoreBG2,$@Croix_ScoreBG2;
 	donpcevent "Lieutenant Huvas::OnEnterBG";
 	donpcevent "Lieutenant Yukon::OnEnterBG";
-	donpcevent "OBJ#bat_b02_a::Onkill";
+	donpcevent "OBJ#bat_b02_a::OnKill";
 	donpcevent "OBJ#bat_b02_a::OnEnable";
-	donpcevent "OBJ#bat_b02_b::Onkill";
+	donpcevent "OBJ#bat_b02_b::OnKill";
 	donpcevent "OBJ#bat_b02_b::OnEnable";
-	donpcevent "guardian#bat_b02_a::Onkill";
-	donpcevent "guardian#bat_b02_b::Onkill";
+	donpcevent "guardian#bat_b02_a::OnKill";
+	donpcevent "guardian#bat_b02_b::OnKill";
 	donpcevent "guardian#bat_b02_a::OnEnable";
 	donpcevent "guardian#bat_b02_b::OnEnable";
-	donpcevent "cell#bat_b02_a::Onred";
-	donpcevent "cell#bat_b02_b::Onred";
+	donpcevent "cell#bat_b02_a::OnRed";
+	donpcevent "cell#bat_b02_b::OnRed";
 	donpcevent "time#bat_b02::OnEnable";
 	disablenpc "Guillaume Vintenar#b02_a";
 	disablenpc "Croix Vintenar#b02_b";
@@ -116,16 +118,16 @@ OnReadyCheck:
 	end;
 
 OnReset:
-	donpcevent "OBJ#bat_b02_a::Onkill";
+	donpcevent "OBJ#bat_b02_a::OnKill";
 	donpcevent "OBJ#bat_b02_a::OnEnable";
-	donpcevent "OBJ#bat_b02_b::Onkill";
+	donpcevent "OBJ#bat_b02_b::OnKill";
 	donpcevent "OBJ#bat_b02_b::OnEnable";
-	donpcevent "guardian#bat_b02_a::Onkill";
-	donpcevent "guardian#bat_b02_b::Onkill";
+	donpcevent "guardian#bat_b02_a::OnKill";
+	donpcevent "guardian#bat_b02_b::OnKill";
 	donpcevent "guardian#bat_b02_a::OnEnable";
 	donpcevent "guardian#bat_b02_b::OnEnable";
-	donpcevent "cell#bat_b02_a::Onred";
-	donpcevent "cell#bat_b02_b::Onred";
+	donpcevent "cell#bat_b02_a::OnRed";
+	donpcevent "cell#bat_b02_b::OnRed";
 	donpcevent "time#bat_b02::OnEnable";
 	disablenpc "Guillaume Vintenar#b02_a";
 	disablenpc "Croix Vintenar#b02_b";
@@ -146,12 +148,12 @@ OnTimer10000:
 	end;
 }
 
-bat_b02,1,1,3	script	OBJ#bat_b02_a	844,{
+bat_b02,1,1,3	script	OBJ#bat_b02_a	CLEAR_NPC,{
 OnEnable:
 	bg_monster $@FlaviusBG2_id1,"bat_b02",61,150,"Pink Crystal",1915,"OBJ#bat_b02_a::OnMyMobDead";
 	end;
 
-Onkill:
+OnKill:
 	killmonster "bat_b02","OBJ#bat_b02_a::OnMyMobDead";
 	end;
 
@@ -163,12 +165,12 @@ OnMyMobDead:
 			set $@Croix_ScoreBG2,$@Croix_ScoreBG2+1;
 			enablenpc "Guillaume Vintenar#b02_a";
 			enablenpc "Croix Vintenar#b02_b";
-			donpcevent "time#bat_b02::Onstop";
+			donpcevent "time#bat_b02::OnStop";
 		}
 		else {
 			set $@Croix_ScoreBG2,1;
 			donpcevent "time#bat_b02::OnEnable";
-			donpcevent "start#bat_b02::onReset";
+			donpcevent "start#bat_b02::OnReset";
 		}
 		donpcevent "#bat_b02_timer::OnStop";
 		bg_updatescore "bat_b02",$@Guill_ScoreBG2,$@Croix_ScoreBG2;
@@ -179,12 +181,12 @@ OnMyMobDead:
 	end;
 }
 
-bat_b02,1,2,3	script	OBJ#bat_b02_b	844,{
+bat_b02,1,2,3	script	OBJ#bat_b02_b	CLEAR_NPC,{
 OnEnable:
 	bg_monster $@FlaviusBG2_id2,"bat_b02",328,150,"Blue Crystal",1914,"OBJ#bat_b02_b::OnMyMobDead";
 	end;
 
-Onkill:
+OnKill:
 	killmonster "bat_b02","OBJ#bat_b02_b::OnMyMobDead";
 	end;
 
@@ -196,12 +198,12 @@ OnMyMobDead:
 			set $@Guill_ScoreBG2,$@Guill_ScoreBG2+1;
 			enablenpc "Guillaume Vintenar#b02_a";
 			enablenpc "Croix Vintenar#b02_b";
-			donpcevent "time#bat_b02::Onstop";
+			donpcevent "time#bat_b02::OnStop";
 		}
 		else {
 			set $@Guill_ScoreBG2,1;
 			donpcevent "time#bat_b02::OnEnable";
-			donpcevent "start#bat_b02::onReset";
+			donpcevent "start#bat_b02::OnReset";
 		}
 		donpcevent "#bat_b02_timer::OnStop";
 		bg_updatescore "bat_b02",$@Guill_ScoreBG2,$@Croix_ScoreBG2;
@@ -212,79 +214,79 @@ OnMyMobDead:
 	end;
 }
 
-bat_b02,1,3,3	script	guardian#bat_b02_a	844,{
+bat_b02,1,3,3	script	guardian#bat_b02_a	CLEAR_NPC,{
 OnEnable:
 	bg_monster $@FlaviusBG2_id1,"bat_b02",108,159,"Guillaume Camp Guardian",1949,"guardian#bat_b02_a::OnMyMobDead";
 	bg_monster $@FlaviusBG2_id1,"bat_b02",108,141,"Guillaume Camp Guardian",1949,"guardian#bat_b02_a::OnMyMobDead";
 	end;
 
-Onkill:
+OnKill:
 	killmonster "bat_b02","guardian#bat_b02_a::OnMyMobDead";
 	end;
 
 OnMyMobDead:
 	if (mobcount("bat_b02","guardian#bat_b02_a::OnMyMobDead") < 1) {
-		donpcevent "cell#bat_b02_a::Ongreen";
+		donpcevent "cell#bat_b02_a::OnGreen";
 		mapannounce "bat_b02", "The Guardian protecting Guillaume's Crystal has been slain.",bc_map,"0xFFCE00";
 	}
 	end;
 }
 
-bat_b02,1,3,3	script	guardian#bat_b02_b	844,{
+bat_b02,1,3,3	script	guardian#bat_b02_b	CLEAR_NPC,{
 OnEnable:
 	bg_monster $@FlaviusBG2_id2,"bat_b02",307,160,"Croix Camp Guardian",1949,"guardian#bat_b02_b::OnMyMobDead";
 	bg_monster $@FlaviusBG2_id2,"bat_b02",307,138,"Croix Camp Guardian",1949,"guardian#bat_b02_b::OnMyMobDead";
 	end;
 
-Onkill:
+OnKill:
 	killmonster "bat_b02","guardian#bat_b02_b::OnMyMobDead";
 	end;
 
 OnMyMobDead:
 	if (mobcount("bat_b02","guardian#bat_b02_b::OnMyMobDead") < 1) {
-		donpcevent "cell#bat_b02_b::Ongreen";
+		donpcevent "cell#bat_b02_b::OnGreen";
 		mapannounce "bat_b02", "The Guardian protecting Croix's Crystal has been slain.",bc_map,"0xFFCE00";
 	}
 	end;
 }
 
-bat_b02,1,4,3	script	cell#bat_b02_a	844,{
-Onred:
+bat_b02,1,4,3	script	cell#bat_b02_a	CLEAR_NPC,{
+OnRed:
 	setcell "bat_b02",62,149,60,151,cell_basilica,1;
 	setcell "bat_b02",62,149,60,151,cell_walkable,0;
 	end;
 
-Ongreen:
+OnGreen:
 	setcell "bat_b02",62,149,60,151,cell_basilica,0;
 	setcell "bat_b02",62,149,60,151,cell_walkable,1;
 	end;
 }
 
-bat_b02,1,5,3	script	cell#bat_b02_b	844,{
-Onred:
+bat_b02,1,5,3	script	cell#bat_b02_b	CLEAR_NPC,{
+OnRed:
 	setcell "bat_b02",327,151,329,149,cell_basilica,1;
 	setcell "bat_b02",327,151,329,149,cell_walkable,0;
 	end;
 
-Ongreen:
+OnGreen:
 	setcell "bat_b02",327,151,329,149,cell_basilica,0;
 	setcell "bat_b02",327,151,329,149,cell_walkable,1;
 	end;
 }
 
-bat_b02,1,6,1	script	time#bat_b02	844,{
+bat_b02,1,6,1	script	time#bat_b02	CLEAR_NPC,{
 OnEnable:
 	donpcevent "Battle Therapist#b02_a::OnEnable";
 	donpcevent "Battle Therapist#b02_b::OnEnable";
 	end;
 
-Onstop:
+OnStop:
 	donpcevent "Battle Therapist#b02_a::OnStop";
 	donpcevent "Battle Therapist#b02_b::OnStop";
 	end;
 }
 
-bat_b02,10,294,3	script	Battle Therapist#b02_a	95,{
+bat_b02,10,294,3	script	Battle Therapist#b02_a	4_F_SISTER,{
 	specialeffect2 EF_HEAL;
 	mes "[Battle Therapist]";
 	mes "Just close your eyes,";
@@ -303,7 +305,7 @@ OnTimer26000:
 
 OnTimer26500:
 	stopnpctimer;
-	donpcevent "Battle Therapist#b02_a::onEnable";
+	donpcevent "Battle Therapist#b02_a::OnEnable";
 	end;
 
 OnEnable:
@@ -311,14 +313,14 @@ OnEnable:
 	enablenpc "Battle Therapist#b02_a";
 	end;
 
-Onstop:
+OnStop:
 	disablenpc "bat_b02_rp1_a_warp";
 	disablenpc "Battle Therapist#b02_a";
 	stopnpctimer;
 	end;
 }
 
-bat_b02,10,290,0	script	bat_b02_rp1_a_warp	45,10,10,{
+bat_b02,10,290,0	script	bat_b02_rp1_a_warp	WARPNPC,10,10,{
 OnInit:
 	disablenpc "bat_b02_rp1_a_warp";
 	end;
@@ -329,7 +331,7 @@ OnTouch:
 	end;
 }
 
-bat_b02,389,14,3	script	Battle Therapist#b02_b	95,{
+bat_b02,389,14,3	script	Battle Therapist#b02_b	4_F_SISTER,{
 	specialeffect2 EF_HEAL;
 	mes "[Battle Therapist]";
 	mes "Just close your eyes,";
@@ -356,14 +358,14 @@ OnEnable:
 	enablenpc "Battle Therapist#b02_b";
 	end;
 
-Onstop:
+OnStop:
 	disablenpc "bat_b02_rp1_b_warp";
 	disablenpc "Battle Therapist#b02_b";
 	stopnpctimer;
 	end;
 }
 
-bat_b02,389,10,0	script	bat_b02_rp1_b_warp	45,9,9,{
+bat_b02,389,10,0	script	bat_b02_rp1_b_warp	WARPNPC,9,9,{
 OnInit:
 	disablenpc "bat_b02_rp1_a_warp";
 	end;
@@ -388,7 +390,7 @@ OnTouch:
 	end;
 }
 
-bat_b02,10,294,3	script	Guillaume Vintenar#b02_a	934,{
+bat_b02,10,294,3	script	Guillaume Vintenar#b02_a	4_M_RASWORD,{
 	if ($@FlaviusBG2_id1 == getcharid(4)) {
 		if ($@FlaviusBG2_Victory == 1) {
 			set .@your_medal,countitem(7829);
@@ -440,7 +442,7 @@ OnInit:
 	end;
 }
 
-bat_b02,389,14,3	script	Croix Vintenar#b02_b	934,{
+bat_b02,389,14,3	script	Croix Vintenar#b02_b	4_M_RASWORD,{
 	if ($@FlaviusBG2_id2 == getcharid(4)) {
 		if ($@FlaviusBG2_Victory == 2) {
 			set .@your_medal,countitem(7829);
@@ -492,7 +494,7 @@ OnInit:
 	end;
 }
 
-bat_b02,1,5,3	script	countdown#bat_b02	844,{
+bat_b02,1,5,3	script	countdown#bat_b02	CLEAR_NPC,{
 OnInit:
 	stopnpctimer;
 	end;
@@ -502,7 +504,7 @@ OnEnable:
 	initnpctimer;
 	end;
 
-Onstop:
+OnStop:
 	stopnpctimer;
 	end;
 
@@ -535,7 +537,7 @@ OnTimer1825000:
 	end;
 
 OnTimer1830000:
-	donpcevent "time#bat_b02::Onstop";
+	donpcevent "time#bat_b02::OnStop";
 	bg_warp $@FlaviusBG2_id1,"bat_b02",10,290;
 	bg_warp $@FlaviusBG2_id2,"bat_b02",390,10;
 	enablenpc "Vintenar#bat_b02_aover";
@@ -544,35 +546,35 @@ OnTimer1830000:
 
 OnTimer1900000:
 	mapwarp "bat_b02","bat_room",154,150;
-	donpcevent "countdown#bat_b02::Onstop";
+	donpcevent "countdown#bat_b02::OnStop";
 	end;
 }
 
-bat_b02,81,83,3	script	Guillaume Camp#flag32	973,{ end; }
-bat_b02,94,83,3	script	Guillaume Camp#flag33	973,{ end; }
-bat_b02,81,66,3	script	Guillaume Camp#flag34	973,{ end; }
-bat_b02,94,66,3	script	Guillaume Camp#flag35	973,{ end; }
-bat_b02,139,142,3	script	Guillaume Camp#flag36	973,{ end; }
-bat_b02,139,158,3	script	Guillaume Camp#flag37	973,{ end; }
-bat_b02,110,161,3	script	Guillaume Camp#flag38	973,{ end; }
-bat_b02,110,137,3	script	Guillaume Camp#flag39	973,{ end; }
-bat_b02,63,135,3	script	Guillaume Camp#flag40	973,{ end; }
-bat_b02,63,165,3	script	Guillaume Camp#flag41	973,{ end; }
-bat_b02,10,296,3	script	Guillaume Camp#flag42	973,{ end; }
+bat_b02,81,83,3	script	Guillaume Camp#flag32	1_FLAG_LION,{ end; }
+bat_b02,94,83,3	script	Guillaume Camp#flag33	1_FLAG_LION,{ end; }
+bat_b02,81,66,3	script	Guillaume Camp#flag34	1_FLAG_LION,{ end; }
+bat_b02,94,66,3	script	Guillaume Camp#flag35	1_FLAG_LION,{ end; }
+bat_b02,139,142,3	script	Guillaume Camp#flag36	1_FLAG_LION,{ end; }
+bat_b02,139,158,3	script	Guillaume Camp#flag37	1_FLAG_LION,{ end; }
+bat_b02,110,161,3	script	Guillaume Camp#flag38	1_FLAG_LION,{ end; }
+bat_b02,110,137,3	script	Guillaume Camp#flag39	1_FLAG_LION,{ end; }
+bat_b02,63,135,3	script	Guillaume Camp#flag40	1_FLAG_LION,{ end; }
+bat_b02,63,165,3	script	Guillaume Camp#flag41	1_FLAG_LION,{ end; }
+bat_b02,10,296,3	script	Guillaume Camp#flag42	1_FLAG_LION,{ end; }
 
-bat_b02,306,233,3	script	Croix Camp#flag32	974,{ end; }
-bat_b02,317,233,3	script	Croix Camp#flag33	974,{ end; }
-bat_b02,306,216,3	script	Croix Camp#flag34	974,{ end; }
-bat_b02,317,216,3	script	Croix Camp#flag35	974,{ end; }
-bat_b02,257,158,3	script	Croix Camp#flag36	974,{ end; }
-bat_b02,257,141,3	script	Croix Camp#flag37	974,{ end; }
-bat_b02,297,164,3	script	Croix Camp#flag38	974,{ end; }
-bat_b02,297,136,3	script	Croix Camp#flag39	974,{ end; }
-bat_b02,336,161,3	script	Croix Camp#flag40	974,{ end; }
-bat_b02,336,139,3	script	Croix Camp#flag41	974,{ end; }
-bat_b02,389,16,3	script	Croix Camp#flag42	974,{ end; }
+bat_b02,306,233,3	script	Croix Camp#flag32	1_FLAG_EAGLE,{ end; }
+bat_b02,317,233,3	script	Croix Camp#flag33	1_FLAG_EAGLE,{ end; }
+bat_b02,306,216,3	script	Croix Camp#flag34	1_FLAG_EAGLE,{ end; }
+bat_b02,317,216,3	script	Croix Camp#flag35	1_FLAG_EAGLE,{ end; }
+bat_b02,257,158,3	script	Croix Camp#flag36	1_FLAG_EAGLE,{ end; }
+bat_b02,257,141,3	script	Croix Camp#flag37	1_FLAG_EAGLE,{ end; }
+bat_b02,297,164,3	script	Croix Camp#flag38	1_FLAG_EAGLE,{ end; }
+bat_b02,297,136,3	script	Croix Camp#flag39	1_FLAG_EAGLE,{ end; }
+bat_b02,336,161,3	script	Croix Camp#flag40	1_FLAG_EAGLE,{ end; }
+bat_b02,336,139,3	script	Croix Camp#flag41	1_FLAG_EAGLE,{ end; }
+bat_b02,389,16,3	script	Croix Camp#flag42	1_FLAG_EAGLE,{ end; }
 
-bat_b02,10,294,3	script	Vintenar#bat_b02_aover	419,{
+bat_b02,10,294,3	script	Vintenar#bat_b02_aover	4_M_KY_HEAD,{
 	set .@A_B_gap,$@Guill_ScoreBG2 - $@Croix_ScoreBG2;
 	if ($@FlaviusBG2_id1 == getcharid(4)) {
 		if (.@A_B_gap > 0) {
@@ -650,7 +652,7 @@ OnInit:
 	end;
 }
 
-bat_b02,389,14,3	script	Vintenar#bat_b02_bover	415,{
+bat_b02,389,14,3	script	Vintenar#bat_b02_bover	4_M_CRU_HEAD,{
 	set .@A_B_gap,$@Guill_ScoreBG2 - $@Croix_ScoreBG2;
 	if ($@FlaviusBG2_id2 == getcharid(4)) {
 		if (.@A_B_gap > 0) {
@@ -728,14 +730,14 @@ OnInit:
 	end;
 }
 
-/*
-bat_b02,1,10,3	script	Release all#b02	81,{
-	input .@input,0,2000;
-	if (.@input == 0) {
+bat_b02,1,10,3	script	Release all#b02	4_DOG01,{
+	set .@i, callfunc("F_GM_NPC",1854,0);
+	if (.@i == -1) {
 		mes "Cancelled.";
 		close;
-	}
-	else if (.@input == 1854) {
+	} else if (.@i == 0) {
+		end;
+	} else {
 		mes "May I help you?";
 		next;
 		switch(select("Release all.:Cancel.")) {
@@ -750,4 +752,3 @@ bat_b02,1,10,3	script	Release all#b02	81,{
 		}
 	}
 }
-*/

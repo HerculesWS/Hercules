@@ -3,20 +3,22 @@
 //===== By: ==================================================
 //= Euphy
 //===== Current Version: =====================================
-//= 1.0
-//===== Compatible With: =====================================
-//= Hercules
+//= 1.1
 //===== Description: =========================================
 //= [Official Conversion]
 //= Cross through the Hazy Forest to reach the Bifrost.
-//= Contains the Wandering Guardian quest.
+//= Contains the "Wandering Guardian" quest.
 //===== Additional Comments: =================================
 //= 1.0 First version. [Euphy]
+//= 1.1 Instance system rewrite. [Euphy]
+//============================================================
+
+1@mist	mapflag	src4instance
 //============================================================
 
 // Instance Creation
 //============================================================
-bif_fild01,158,340,5	script	Laphine Soldier#mist	447,{
+bif_fild01,158,340,5	script	Laphine Soldier#mist	4_M_FAIRYSOLDIER,{
 
 	set .@party_id,getcharid(1);
 	set .@md_name$,"Mistwood Maze";
@@ -79,71 +81,39 @@ bif_fild01,158,340,5	script	Laphine Soldier#mist	447,{
 		next;
 		switch(select("Venture into the Hazy Forest.:Give up.")) {
 		case 1:
-			set .@instance, instance_create(.@md_name$,.@party_id);
-			if (.@instance >= 0) {
-				if (instance_attachmap("1@mist",.@instance) != "") {
-
-					instance_attach(.@instance);
-					instance_set_timeout 7200,300,.@instance;
-					instance_init(.@instance);
-
-					donpcevent instance_npcname("#Whisper_mist", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("Tom's Garden Tree", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("Tomba's Garden Tree", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("Remi's Garden Tree", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("Tired Rem's Garden Tree", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("Ron's Garden Tree", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("Rover's Garden Tree", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("Mona's Garden Tree", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("Namon's Garden Tree", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("Sad Neoron's Garden Tree", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("Spyder's Garden Tree", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("Tito's Garden Tree", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("Pumba's Garden Tree", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("Tete's Garden Tree", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("The Gardeners' Tree", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("#Dragon Herder", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("Mysterious Young Man#mis", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("Loki#mist", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("Collapsed Girl#mist", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("#Mist Mobs Respawn1", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("#Mist Mobs Respawn2", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("#Mist Mobs Respawn3", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("#Mist Mobs Respawn4", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("#Mist Mobs Respawn5", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("#Fragments of Memory", instance_id())+"::OnInstanceInit";
-					donpcevent instance_npcname("#mist_warp_init", instance_id())+"::OnInstanceInit";
-
-					mes "[Laphine Soldier]";
-					mes "Party Name "+getpartyname(.@party_id)+"...";
-					mes "Party Leader "+strcharinfo(0)+"...";
-					mes "I've got it. I've written them down on the report here.";
-					next;
-					mes "[Laphine Soldier]";
-					mes "You'll get permission soon.";
-					mes "Now go to the log tunnel, the only way to get into the Hazy Forest.";
-					mes "You understand?";
-					next;
-					mes "[Laphine Soldier]";
-					mes "We can't go against the forest,";
-					mes "but maybe you humans can.";
-					mes "Good luck!";
-					close;
-				} else
-					instance_destroy(.@instance);
-			}
 			mes "[Laphine Soldier]";
 			mes "Party Name "+getpartyname(.@party_id)+"...";
 			mes "Party Leader "+strcharinfo(0)+"...";
-			mes "Hmm...";
-			next;
-			mes "[Laphine Soldier]";
-			if (.@playtime == -1)
-				mes "It's dangerous in the forest.";
-			else
-				mes "The atmosphere is somewhat tense in the forest.";
-			mes "...Why don't you just go back today?";
-			close;
+			set .@instance, instance_create(.@md_name$, .@party_id);
+			if (.@instance < 0) {
+				mes "Hmm...";
+				next;
+				mes "[Laphine Soldier]";
+				if (.@playtime == -1)
+					mes "It's dangerous in the forest.";
+				else
+					mes "The atmosphere is somewhat tense in the forest.";
+				mes "...Why don't you just go back today?";
+				close;
+			}
+			if (instance_attachmap("1@mist",.@instance) != "") {
+				instance_set_timeout 7200,300,.@instance;
+				instance_init(.@instance);
+				mes "I've got it. I've written them down on the report here.";
+				next;
+				mes "[Laphine Soldier]";
+				mes "You'll get permission soon.";
+				mes "Now go to the log tunnel, the only way to get into the Hazy Forest.";
+				mes "You understand?";
+				next;
+				mes "[Laphine Soldier]";
+				mes "We can't go against the forest,";
+				mes "but maybe you humans can.";
+				mes "Good luck!";
+				close;
+			} else {
+				instance_destroy(.@instance);
+			}
 		case 2:
 			mes "[Laphine Soldier]";
 			mes "Well, you've made the right decision.";
@@ -171,21 +141,12 @@ bif_fild01,158,340,5	script	Laphine Soldier#mist	447,{
 	}
 }
 
-bif_fild01,161,355,0	script	Log Tunnel	844,{
+bif_fild01,161,355,0	script	Log Tunnel	CLEAR_NPC,{
 	mes "I see the forest through the log tunnel.";
 	mes "It looks like I can enter the forest through the log tunnel.";
 	next;
 	if(select("Enter the tunnel.:Give up.") == 2)
 		close;
-	// TODO: Add official MD_Enter cases.
-	if (!getcharid(1)) {
-		mes "[Laphine Soldier]";
-		mes "Hey, look!";
-		mes "Are you going alone?";
-		mes "That's impossible. Too rash.";
-		mes "Team up with some friends and go together!";
-		close;
-	}
 	set .@playtime, checkquest(7211,PLAYTIME);
 	if (has_instance("1@mist") == "") {
 		if (.@playtime == 0 || .@playtime == 1) {
@@ -196,347 +157,350 @@ bif_fild01,161,355,0	script	Log Tunnel	844,{
 		mes "The world beyond the log tunnel looks dark and suffocating.";
 		mes "Your instinct is screaming that this forest is dangerous.";
 		close;
+	} else {
+		if (checkquest(7211,PLAYTIME) == 2) erasequest 7211;
+		if (checkquest(7211,PLAYTIME) == -1) setquest 7211;
+		mapannounce "bif_fild01",getpartyname(getcharid(1))+" party's "+strcharinfo(0)+" member is entering the Mistwood Maze.",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
+		warp "1@mist",89,29;
+		close;
 	}
-	if (.@playtime == 2) erasequest 7211;
-	if (checkquest(7211,PLAYTIME) == -1) setquest 7211;
-	mapannounce "bif_fild01",getpartyname(getcharid(1))+" party's "+strcharinfo(0)+" member is entering the Mistwood Maze.",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
-	warp "1@mist",89,29;
-	close;
 }
 
 // Instance Scripts
 //============================================================
-1@mist,89,29,0	script	#Whisper_mist	844,1,1,{
+1@mist,89,29,0	script	#Whisper_mist	CLEAR_NPC,1,1,{
 	end;
 OnInstanceInit:
-	enablenpc instance_npcname("#Whisper_mist", instance_id());
+	enablenpc instance_npcname("#Whisper_mist");
 	end;
 OnTouch:
-	disablenpc instance_npcname("#Whisper_mist", instance_id());
+	disablenpc instance_npcname("#Whisper_mist");
 	initnpctimer;
 	end;
 OnTimer10000:
 OnTimer20000:
-	instance_announce 0,"Whisper: Who's this? Who's this!? The forest is open! Tom, Tomba, Tired Rem, Remi! Wake up!",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@mist"),"Whisper: Who's this? Who's this!? The forest is open! Tom, Tomba, Tired Rem, Remi! Wake up!",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
 	end;
 OnTimer60000:
-	instance_announce 0,"Loud Whisper: What are the forest keepers doing? What are the gardeners doing??",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@mist"),"Loud Whisper: What are the forest keepers doing? What are the gardeners doing??",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
 	end;
 OnTimer120000:
-	instance_announce 0,"Loud Whisper: Don't go out, wander around forever, and play with us!",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@mist"),"Loud Whisper: Don't go out, wander around forever, and play with us!",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
 	end;
 OnTimer180000:
-	instance_announce 0,"Loud Whisper: Useless, useless. Wandering around and around, you'll meet your end!",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@mist"),"Loud Whisper: Useless, useless. Wandering around and around, you'll meet your end!",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
 	stopnpctimer;
 	end;
 }
 
 // callfunc "F_Mora_Mist",<warp to enable>,<success message>,<fail message>{,<end flag>}
 function	script	F_Mora_Mist	{
-	if (mobcount("1@mist",instance_npcname(strnpcinfo(0), instance_id())+"::OnMyMobDead") == 0) {
+	set .@map$, instance_mapname("1@mist");
+	if (mobcount(.@map$,instance_npcname(strnpcinfo(0))+"::OnMyMobDead") == 0) {
 		mes "Obviously no one is taking care of it.";
 		mes "It seems like you can chop down the garden tree.";
 		next;
 		if(select("Chop down the garden tree.:Give up.") == 2)
 			close;
 		mes "You chop down the tree, which was blocking the path of the maze, "+((getarg(3,0))?"clearing the way out of the forest.":"so now you can continue.");
-		instance_announce 0,getarg(1),bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
-		enablenpc instance_npcname(getarg(0), instance_id());
-		disablenpc instance_npcname(strnpcinfo(0), instance_id());
+		mapannounce .@map$,getarg(1),bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
+		enablenpc instance_npcname(getarg(0));
+		disablenpc instance_npcname(strnpcinfo(0));
 		close;
 	} else
-		instance_announce 0,((getarg(3,0))?getarg(2):getarg(2)+"'s Cry: Huh? Who's doing bad things to my tree?!"),bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
+		mapannounce .@map$,((getarg(3,0))?getarg(2):getarg(2)+"'s Cry: Huh? Who's doing bad things to my tree?!"),bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
 	end;
 }
 
-1@mist,251,121,3	script	Tom's Garden	858,{ end; }
-1@mist,247,123,0	script	Tom's Garden Tree	527,{
+1@mist,251,121,3	script	Tom's Garden	4_BULLETIN_BOARD2,{ end; }
+1@mist,247,123,0	script	Tom's Garden Tree	4_CREEPER,{
 	callfunc "F_Mora_Mist",
 		"a25_a18-1",
 		"Roaring Cry: Tom's bolt is broken! Watch out, Tomba! Watch out, Tomba!",
 		"Tom";
 	end;
 OnInstanceInit:
-	monster "1@mist",249,120,"Tom",2136,1,instance_npcname("Tom's Garden Tree", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),249,120,"Tom",2136,1,instance_npcname("Tom's Garden Tree")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
 	end;
 }
 
-1@mist,226,95,3	script	Tomba's Garden	858,{ end; }
-1@mist,225,98,0	script	Tomba's Garden Tree	527,{
+1@mist,226,95,3	script	Tomba's Garden	4_BULLETIN_BOARD2,{ end; }
+1@mist,225,98,0	script	Tomba's Garden Tree	4_CREEPER,{
 	callfunc "F_Mora_Mist",
 		"a27-2_af1-2",
 		"Roaring Cry: Tomba's Garden Tree is gone with Tomba. Remi, what are you going to do now?",
 		"Tomba";
 	end;
 OnInstanceInit:
-	monster "1@mist",200,64,"Tomba",2136,1,instance_npcname("Tomba's Garden Tree", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),200,64,"Tomba",2136,1,instance_npcname("Tomba's Garden Tree")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
 	end;
 }
 
-1@mist,157,183,3	script	Remi's Garden	858,{ end; }
-1@mist,159,184,0	script	Remi's Garden Tree	527,{
+1@mist,157,183,3	script	Remi's Garden	4_BULLETIN_BOARD2,{ end; }
+1@mist,159,184,0	script	Remi's Garden Tree	4_CREEPER,{
 	callfunc "F_Mora_Mist",
 		"a15-2_a4-1",
 		"Roaring Cry: Remi, Remi's Garden Tree was chopped down- Rem, it's your turn next. Poor Rem!",
 		"Remi";
 	end;
 OnInstanceInit:
-	monster "1@mist",154,184,"Remi the Tired",2137,1,instance_npcname("Remi's Garden Tree", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),154,184,"Remi the Tired",2137,1,instance_npcname("Remi's Garden Tree")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
 	end;
 }
 
-1@mist,58,39,3	script	Tired Rem's Garden	858,{ end; }
-1@mist,61,39,0	script	Tired Rem's Garden Tree	527,{
+1@mist,58,39,3	script	Tired Rem's Garden	4_BULLETIN_BOARD2,{ end; }
+1@mist,61,39,0	script	Tired Rem's Garden Tree	4_CREEPER,{
 	callfunc "F_Mora_Mist",
 		"a4-2_a11",
 		"Rem's Desperate Cry: Argh... Rem will sleep. Rem will sleep now, and won't wake up forever!",
 		"Rem";
 	end;
 OnInstanceInit:
-	monster "1@mist",101,107,"Rem the Gardener",2136,1,instance_npcname("Tired Rem's Garden Tree", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),101,107,"Rem the Gardener",2136,1,instance_npcname("Tired Rem's Garden Tree")+"::OnMyMobDead";
 	end;
 OnTimer10000:
-	instance_announce 0,"Whisper of the Forest: So Tom's, Tomba's, Remi's, and Rem's garden trees were all chopped down?",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@mist"),"Whisper of the Forest: So Tom's, Tomba's, Remi's, and Rem's garden trees were all chopped down?",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
 	end;
 OnTimer15000:
-	instance_announce 0,"Whisper of the Forest: Trouble, trouble, we're in big trouble.",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@mist"),"Whisper of the Forest: Trouble, trouble, we're in big trouble.",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
 	end;
 OnTimer20000:
-	instance_announce 0,"Loud Whisper: They've come to the second deepest forest. Gardeners of the deep forest, watch out!",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@mist"),"Loud Whisper: They've come to the second deepest forest. Gardeners of the deep forest, watch out!",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
 	stopnpctimer;
 	end;
 OnMyMobDead:
 	end;
 }
 
-1@mist,227,179,3	script	Ron's Garden	858,{ end; }
-1@mist,230,179,0	script	Ron's Garden Tree	527,{
+1@mist,227,179,3	script	Ron's Garden	4_BULLETIN_BOARD2,{ end; }
+1@mist,230,179,0	script	Ron's Garden Tree	4_CREEPER,{
 	callfunc "F_Mora_Mist",
 		"b4-2_b2",
 		"Ron the Gardener's Cry: I'm getting off work! Don't look for Ron, the second gardener, any more!!",
 		"Ron";
 	end;
 OnInstanceInit:
-	monster "1@mist",227,178,"Ron the Gardener",2134,1,instance_npcname("Ron's Garden Tree", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),227,178,"Ron the Gardener",2134,1,instance_npcname("Ron's Garden Tree")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
 	end;
 }
 
-1@mist,288,226,3	script	Rover's Garden	858,{ end; }
-1@mist,285,225,0	script	Rover's Garden Tree	527,{
+1@mist,288,226,3	script	Rover's Garden	4_BULLETIN_BOARD2,{ end; }
+1@mist,285,225,0	script	Rover's Garden Tree	4_CREEPER,{
 	callfunc "F_Mora_Mist",
 		"b7_bf1-2",
 		"Roaring Whisper: Ron's, and Rover's trees were chopped down as well. Who is forcing his way into the forest? Who is it?",
 		"Rover";
 	end;
 OnInstanceInit:
-	monster "1@mist",304,237,"Rover the Strutter",2134,1,instance_npcname("Rover's Garden Tree", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),304,237,"Rover the Strutter",2134,1,instance_npcname("Rover's Garden Tree")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
 	end;
 }
 
-1@mist,159,318,3	script	Mona's Garden	858,{ end; }
-1@mist,161,316,0	script	Mona's Garden Tree	527,{
+1@mist,159,318,3	script	Mona's Garden	4_BULLETIN_BOARD2,{ end; }
+1@mist,161,316,0	script	Mona's Garden Tree	4_CREEPER,{
 	callfunc "F_Mora_Mist",
 		"b31_b16",
 		"Clamoring Whisper: Mona the Seedseeker's garden tree is gone! Mona is gone too! Namon will be okay, because he is brave, right? Namon, are you okay?",
 		"Mona";
 	end;
 OnInstanceInit:
-	monster "1@mist",239,253,"Mona the Seedseeker",2133,1,instance_npcname("Mona's Garden Tree", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),239,253,"Mona the Seedseeker",2133,1,instance_npcname("Mona's Garden Tree")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
 	end;
 }
 
-1@mist,205,300,3	script	Namon's Garden	858,{ end; }
-1@mist,204,299,0	script	Namon's Garden Tree	527,{
+1@mist,205,300,3	script	Namon's Garden	4_BULLETIN_BOARD2,{ end; }
+1@mist,204,299,0	script	Namon's Garden Tree	4_CREEPER,{
 	callfunc "F_Mora_Mist",
 		"b27-3_bN-1",
 		"Clamoring Whisper: Brave Namon met his fate not so bravely... *giggle*",
 		"Namon";
 	end;
 OnInstanceInit:
-	monster "1@mist",89,173,"Brave Namon",2134,1,instance_npcname("Namon's Garden Tree", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),89,173,"Brave Namon",2134,1,instance_npcname("Namon's Garden Tree")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
 	end;
 }
 
-1@mist,219,232,3	script	Sad Neoron's Garden	858,{ end; }
-1@mist,221,236,0	script	Sad Neoron's Garden Tree	527,{
+1@mist,219,232,3	script	Sad Neoron's Garden	4_BULLETIN_BOARD2,{ end; }
+1@mist,221,236,0	script	Sad Neoron's Garden Tree	4_CREEPER,{
 	callfunc "F_Mora_Mist",
 		"b6-1_b33",
 		"Lamenting Whisper: Sad Neoron has become cheerful! Spyder the Superior Spider, what are you going to do? What are you going to do now?",
 		"Neoron";
 	end;
 OnInstanceInit:
-	monster "1@mist",143,265,"Sad Neoron",2137,1,instance_npcname("Sad Neoron's Garden Tree", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),143,265,"Sad Neoron",2137,1,instance_npcname("Sad Neoron's Garden Tree")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
 	end;
 }
 
-1@mist,206,202,3	script	Spyder's Garden	858,{ end; }
-1@mist,206,200,0	script	Spyder's Garden Tree	527,{
+1@mist,206,202,3	script	Spyder's Garden	4_BULLETIN_BOARD2,{ end; }
+1@mist,206,200,0	script	Spyder's Garden Tree	4_CREEPER,{
 	callfunc "F_Mora_Mist",
 		"b5_b14",
 		"Depressed Whisper: Now it's all over with the second deepest forest. Gardeners are dying out-",
 		"Spyder";
 	end;
 OnInstanceInit:
-	monster "1@mist",209,200,"Spyder the Eight-Legged",2132,1,instance_npcname("Spyder's Garden Tree", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),209,200,"Spyder the Eight-Legged",2132,1,instance_npcname("Spyder's Garden Tree")+"::OnMyMobDead";
 	end;
 OnTimer5000:
-	instance_announce 0,"Roaring Whisper: The path is about to open. The tight bolts have been removed!",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@mist"),"Roaring Whisper: The path is about to open. The tight bolts have been removed!",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
 	end;
 OnTimer9000:
-	instance_announce 0,"Roaring Whisper: A forest opened, another opened, and the other is going to open as well. Tito and Pumba, they are heading your way!",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@mist"),"Roaring Whisper: A forest opened, another opened, and the other is going to open as well. Tito and Pumba, they are heading your way!",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
 	end;
 OnTimer13000:
-	instance_announce 0,"Roaring Whisper: Where you get after wandering around, around and around, everybody you've met while wandering around, around and around,",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@mist"),"Roaring Whisper: Where you get after wandering around, around and around, everybody you've met while wandering around, around and around,",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
 	end;
 OnTimer17000:
-	instance_announce 0,"Roaring Whisper: all the gardeners will be waiting for you, with their clippers in their hands-!",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@mist"),"Roaring Whisper: all the gardeners will be waiting for you, with their clippers in their hands-!",bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
 	stopnpctimer;
 	end;
 OnMyMobDead:
 	end;
 }
 
-1@mist,96,288,3	script	Tito's Garden	858,{ end; }
-1@mist,95,287,0	script	Tito's Garden Tree	527,{
+1@mist,96,288,3	script	Tito's Garden	4_BULLETIN_BOARD2,{ end; }
+1@mist,95,287,0	script	Tito's Garden Tree	4_CREEPER,{
 	callfunc "F_Mora_Mist",
 		"c1_c13-1",
 		"Tito's Cry: *sob* *sob* Tito's gone now! Tito's done for! Boo hoo!!",
 		"Tito";
 	end;
 OnInstanceInit:
-	monster "1@mist",264,291,"Tito the Flipper",2133,1,instance_npcname("Tito's Garden Tree", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),264,291,"Tito the Flipper",2133,1,instance_npcname("Tito's Garden Tree")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
 	end;
 }
 
-1@mist,326,325,3	script	Pumba's Garden	858,{ end; }
-1@mist,324,325,0	script	Pumba's Garden Tree	527,{
+1@mist,326,325,3	script	Pumba's Garden	4_BULLETIN_BOARD2,{ end; }
+1@mist,324,325,0	script	Pumba's Garden Tree	4_CREEPER,{
 	callfunc "F_Mora_Mist",
 		"c13-3_c4",
 		"Roaring Whisper: Tito the Hard Worker was defeated! Stop playing and go to work, Tete! Start working!",
 		"Pumba";
 	end;
 OnInstanceInit:
-	monster "1@mist",309,165,"Diligent Pumba",2134,1,instance_npcname("Pumba's Garden Tree", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),309,165,"Diligent Pumba",2134,1,instance_npcname("Pumba's Garden Tree")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
 	end;
 }
 
-1@mist,278,345,3	script	Tete's Garden	858,{ end; }
-1@mist,280,344,0	script	Tete's Garden Tree	527,{
+1@mist,278,345,3	script	Tete's Garden	4_BULLETIN_BOARD2,{ end; }
+1@mist,280,344,0	script	Tete's Garden Tree	4_CREEPER,{
 	callfunc "F_Mora_Mist",
 		"c19_c4",
 		"Whisper: They are strong, strong indeed. What are we going to do now? Are there any gardeners left? Are there any?",
 		"Tete";
 	end;
 OnInstanceInit:
-	monster "1@mist",277,343,"Carefree Tete",2136,1,instance_npcname("Tete's Garden Tree", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),277,343,"Carefree Tete",2136,1,instance_npcname("Tete's Garden Tree")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
 	end;
 }
 
-1@mist,345,186,0	script	The Gardeners' Tree	527,{
+1@mist,345,186,0	script	The Gardeners' Tree	4_CREEPER,{
 	callfunc "F_Mora_Mist",
 		"#to_bif02",
 		"Roaring Whisper: The forest will remember you! It will remember you, the one who broke the clippers of all the gardeners!",
 		"Gardeners: We're not dead, yet!!!!",1;
 	end;
 OnInstanceInit:
-	monster "1@mist",318,137,"Baby Tom",2136,1,instance_npcname("The Gardeners' Tree", instance_id())+"::OnMyMobDead";
-	monster "1@mist",321,137,"Tomba the Baby",2136,1,instance_npcname("The Gardeners' Tree", instance_id())+"::OnMyMobDead";
-	monster "1@mist",324,137,"Exhausted Remi",2137,1,instance_npcname("The Gardeners' Tree", instance_id())+"::OnMyMobDead";
-	monster "1@mist",319,135,"Rem the Exhausted",2136,1,instance_npcname("The Gardeners' Tree", instance_id())+"::OnMyMobDead";
-	monster "1@mist",323,135,"Ron the Ex-Gardener",2134,1,instance_npcname("The Gardeners' Tree", instance_id())+"::OnMyMobDead";
-	monster "1@mist",320,133,"Rover the Strutter",2134,1,instance_npcname("The Gardeners' Tree", instance_id())+"::OnMyMobDead";
-	monster "1@mist",323,133,"Mona the Seedpicker",2133,1,instance_npcname("The Gardeners' Tree", instance_id())+"::OnMyMobDead";
-	monster "1@mist",317,132,"Timid Namon",2134,1,instance_npcname("The Gardeners' Tree", instance_id())+"::OnMyMobDead";
-	monster "1@mist",326,132,"Indifferent Neoron",2137,1,instance_npcname("The Gardeners' Tree", instance_id())+"::OnMyMobDead";
-	monster "1@mist",317,129,"Spyder the Seven-Legged",2132,1,instance_npcname("The Gardeners' Tree", instance_id())+"::OnMyMobDead";
-	monster "1@mist",320,129,"Tito the Flapper",2133,1,instance_npcname("The Gardeners' Tree", instance_id())+"::OnMyMobDead";
-	monster "1@mist",324,129,"Lazy Pumba",2134,1,instance_npcname("The Gardeners' Tree", instance_id())+"::OnMyMobDead";
-	monster "1@mist",327,129,"Careless Tete",2136,1,instance_npcname("The Gardeners' Tree", instance_id())+"::OnMyMobDead";
+	set .@map$, instance_mapname("1@mist");
+	monster .@map$,318,137,"Baby Tom",2136,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
+	monster .@map$,321,137,"Tomba the Baby",2136,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
+	monster .@map$,324,137,"Exhausted Remi",2137,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
+	monster .@map$,319,135,"Rem the Exhausted",2136,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
+	monster .@map$,323,135,"Ron the Ex-Gardener",2134,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
+	monster .@map$,320,133,"Rover the Strutter",2134,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
+	monster .@map$,323,133,"Mona the Seedpicker",2133,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
+	monster .@map$,317,132,"Timid Namon",2134,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
+	monster .@map$,326,132,"Indifferent Neoron",2137,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
+	monster .@map$,317,129,"Spyder the Seven-Legged",2132,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
+	monster .@map$,320,129,"Tito the Flapper",2133,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
+	monster .@map$,324,129,"Lazy Pumba",2134,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
+	monster .@map$,327,129,"Careless Tete",2136,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
 	end;
 }
 
-1@mist,73,290,0	script	Mysterious Flower#1	844,{
+1@mist,73,290,0	script	Mysterious Flower#1	CLEAR_NPC,{
 	specialeffect EF_LEVEL99_4;
-	disablenpc instance_npcname(strnpcinfo(0), instance_id());
+	disablenpc instance_npcname(strnpcinfo(0));
 	getitem 12561,1; //Mysterious_Seed
 	end;
 }
-1@mist,69,295,0	duplicate(Mysterious Flower#1)	Mysterious Flower#2	844
-1@mist,62,291,0	duplicate(Mysterious Flower#1)	Mysterious Flower#3	844
-1@mist,54,293,0	duplicate(Mysterious Flower#1)	Mysterious Flower#4	844
-1@mist,48,286,0	duplicate(Mysterious Flower#1)	Mysterious Flower#5	844
-1@mist,54,277,0	duplicate(Mysterious Flower#1)	Mysterious Flower#6	844
-1@mist,52,270,0	duplicate(Mysterious Flower#1)	Mysterious Flower#7	844
-1@mist,62,268,0	duplicate(Mysterious Flower#1)	Mysterious Flower#8	844
-1@mist,72,271,0	duplicate(Mysterious Flower#1)	Mysterious Flower#9	844
-1@mist,72,276,0	duplicate(Mysterious Flower#1)	Mysterious Flower#10	844
-1@mist,118,194,0	duplicate(Mysterious Flower#1)	Mysterious Flower#11	844
-1@mist,122,204,0	duplicate(Mysterious Flower#1)	Mysterious Flower#12	844
-1@mist,137,209,0	duplicate(Mysterious Flower#1)	Mysterious Flower#13	844
-1@mist,144,203,0	duplicate(Mysterious Flower#1)	Mysterious Flower#14	844
-1@mist,146,186,0	duplicate(Mysterious Flower#1)	Mysterious Flower#15	844
-1@mist,142,182,0	duplicate(Mysterious Flower#1)	Mysterious Flower#16	844
-1@mist,132,179,0	duplicate(Mysterious Flower#1)	Mysterious Flower#17	844
-1@mist,123,184,0	duplicate(Mysterious Flower#1)	Mysterious Flower#18	844
-1@mist,194,118,0	duplicate(Mysterious Flower#1)	Mysterious Flower#19	844
-1@mist,188,109,0	duplicate(Mysterious Flower#1)	Mysterious Flower#20	844
-1@mist,193,94,0	duplicate(Mysterious Flower#1)	Mysterious Flower#21	844
-1@mist,205,92,0	duplicate(Mysterious Flower#1)	Mysterious Flower#22	844
-1@mist,213,96,0	duplicate(Mysterious Flower#1)	Mysterious Flower#23	844
-1@mist,216,103,0	duplicate(Mysterious Flower#1)	Mysterious Flower#24	844
-1@mist,212,116,0	duplicate(Mysterious Flower#1)	Mysterious Flower#25	844
-1@mist,207,120,0	duplicate(Mysterious Flower#1)	Mysterious Flower#26	844
-1@mist,169,310,0	duplicate(Mysterious Flower#1)	Mysterious Flower#27	844
-1@mist,172,296,0	duplicate(Mysterious Flower#1)	Mysterious Flower#28	844
-1@mist,191,301,0	duplicate(Mysterious Flower#1)	Mysterious Flower#30	844
-1@mist,195,301,0	duplicate(Mysterious Flower#1)	Mysterious Flower#31	844
-1@mist,192,316,0	duplicate(Mysterious Flower#1)	Mysterious Flower#32	844
-1@mist,187,320,0	duplicate(Mysterious Flower#1)	Mysterious Flower#33	844
-1@mist,174,318,0	duplicate(Mysterious Flower#1)	Mysterious Flower#34	844
-1@mist,308,136,0	duplicate(Mysterious Flower#1)	Mysterious Flower#35	844
-1@mist,314,122,0	duplicate(Mysterious Flower#1)	Mysterious Flower#36	844
-1@mist,321,118,0	duplicate(Mysterious Flower#1)	Mysterious Flower#37	844
-1@mist,331,123,0	duplicate(Mysterious Flower#1)	Mysterious Flower#38	844
-1@mist,335,126,0	duplicate(Mysterious Flower#1)	Mysterious Flower#39	844
-1@mist,332,141,0	duplicate(Mysterious Flower#1)	Mysterious Flower#40	844
-1@mist,328,144,0	duplicate(Mysterious Flower#1)	Mysterious Flower#41	844
-1@mist,314,144,0	duplicate(Mysterious Flower#1)	Mysterious Flower#42	844
-1@mist,238,224,0	duplicate(Mysterious Flower#1)	Mysterious Flower#43	844
-1@mist,244,231,0	duplicate(Mysterious Flower#1)	Mysterious Flower#44	844
-1@mist,257,232,0	duplicate(Mysterious Flower#1)	Mysterious Flower#45	844
-1@mist,262,229,0	duplicate(Mysterious Flower#1)	Mysterious Flower#46	844
-1@mist,265,216,0	duplicate(Mysterious Flower#1)	Mysterious Flower#47	844
-1@mist,260,214,0	duplicate(Mysterious Flower#1)	Mysterious Flower#48	844
-1@mist,252,206,0	duplicate(Mysterious Flower#1)	Mysterious Flower#49	844
-1@mist,244,211,0	duplicate(Mysterious Flower#1)	Mysterious Flower#50	844
+1@mist,69,295,0	duplicate(Mysterious Flower#1)	Mysterious Flower#2	CLEAR_NPC
+1@mist,62,291,0	duplicate(Mysterious Flower#1)	Mysterious Flower#3	CLEAR_NPC
+1@mist,54,293,0	duplicate(Mysterious Flower#1)	Mysterious Flower#4	CLEAR_NPC
+1@mist,48,286,0	duplicate(Mysterious Flower#1)	Mysterious Flower#5	CLEAR_NPC
+1@mist,54,277,0	duplicate(Mysterious Flower#1)	Mysterious Flower#6	CLEAR_NPC
+1@mist,52,270,0	duplicate(Mysterious Flower#1)	Mysterious Flower#7	CLEAR_NPC
+1@mist,62,268,0	duplicate(Mysterious Flower#1)	Mysterious Flower#8	CLEAR_NPC
+1@mist,72,271,0	duplicate(Mysterious Flower#1)	Mysterious Flower#9	CLEAR_NPC
+1@mist,72,276,0	duplicate(Mysterious Flower#1)	Mysterious Flower#10	CLEAR_NPC
+1@mist,118,194,0	duplicate(Mysterious Flower#1)	Mysterious Flower#11	CLEAR_NPC
+1@mist,122,204,0	duplicate(Mysterious Flower#1)	Mysterious Flower#12	CLEAR_NPC
+1@mist,137,209,0	duplicate(Mysterious Flower#1)	Mysterious Flower#13	CLEAR_NPC
+1@mist,144,203,0	duplicate(Mysterious Flower#1)	Mysterious Flower#14	CLEAR_NPC
+1@mist,146,186,0	duplicate(Mysterious Flower#1)	Mysterious Flower#15	CLEAR_NPC
+1@mist,142,182,0	duplicate(Mysterious Flower#1)	Mysterious Flower#16	CLEAR_NPC
+1@mist,132,179,0	duplicate(Mysterious Flower#1)	Mysterious Flower#17	CLEAR_NPC
+1@mist,123,184,0	duplicate(Mysterious Flower#1)	Mysterious Flower#18	CLEAR_NPC
+1@mist,194,118,0	duplicate(Mysterious Flower#1)	Mysterious Flower#19	CLEAR_NPC
+1@mist,188,109,0	duplicate(Mysterious Flower#1)	Mysterious Flower#20	CLEAR_NPC
+1@mist,193,94,0	duplicate(Mysterious Flower#1)	Mysterious Flower#21	CLEAR_NPC
+1@mist,205,92,0	duplicate(Mysterious Flower#1)	Mysterious Flower#22	CLEAR_NPC
+1@mist,213,96,0	duplicate(Mysterious Flower#1)	Mysterious Flower#23	CLEAR_NPC
+1@mist,216,103,0	duplicate(Mysterious Flower#1)	Mysterious Flower#24	CLEAR_NPC
+1@mist,212,116,0	duplicate(Mysterious Flower#1)	Mysterious Flower#25	CLEAR_NPC
+1@mist,207,120,0	duplicate(Mysterious Flower#1)	Mysterious Flower#26	CLEAR_NPC
+1@mist,169,310,0	duplicate(Mysterious Flower#1)	Mysterious Flower#27	CLEAR_NPC
+1@mist,172,296,0	duplicate(Mysterious Flower#1)	Mysterious Flower#28	CLEAR_NPC
+1@mist,191,301,0	duplicate(Mysterious Flower#1)	Mysterious Flower#30	CLEAR_NPC
+1@mist,195,301,0	duplicate(Mysterious Flower#1)	Mysterious Flower#31	CLEAR_NPC
+1@mist,192,316,0	duplicate(Mysterious Flower#1)	Mysterious Flower#32	CLEAR_NPC
+1@mist,187,320,0	duplicate(Mysterious Flower#1)	Mysterious Flower#33	CLEAR_NPC
+1@mist,174,318,0	duplicate(Mysterious Flower#1)	Mysterious Flower#34	CLEAR_NPC
+1@mist,308,136,0	duplicate(Mysterious Flower#1)	Mysterious Flower#35	CLEAR_NPC
+1@mist,314,122,0	duplicate(Mysterious Flower#1)	Mysterious Flower#36	CLEAR_NPC
+1@mist,321,118,0	duplicate(Mysterious Flower#1)	Mysterious Flower#37	CLEAR_NPC
+1@mist,331,123,0	duplicate(Mysterious Flower#1)	Mysterious Flower#38	CLEAR_NPC
+1@mist,335,126,0	duplicate(Mysterious Flower#1)	Mysterious Flower#39	CLEAR_NPC
+1@mist,332,141,0	duplicate(Mysterious Flower#1)	Mysterious Flower#40	CLEAR_NPC
+1@mist,328,144,0	duplicate(Mysterious Flower#1)	Mysterious Flower#41	CLEAR_NPC
+1@mist,314,144,0	duplicate(Mysterious Flower#1)	Mysterious Flower#42	CLEAR_NPC
+1@mist,238,224,0	duplicate(Mysterious Flower#1)	Mysterious Flower#43	CLEAR_NPC
+1@mist,244,231,0	duplicate(Mysterious Flower#1)	Mysterious Flower#44	CLEAR_NPC
+1@mist,257,232,0	duplicate(Mysterious Flower#1)	Mysterious Flower#45	CLEAR_NPC
+1@mist,262,229,0	duplicate(Mysterious Flower#1)	Mysterious Flower#46	CLEAR_NPC
+1@mist,265,216,0	duplicate(Mysterious Flower#1)	Mysterious Flower#47	CLEAR_NPC
+1@mist,260,214,0	duplicate(Mysterious Flower#1)	Mysterious Flower#48	CLEAR_NPC
+1@mist,252,206,0	duplicate(Mysterious Flower#1)	Mysterious Flower#49	CLEAR_NPC
+1@mist,244,211,0	duplicate(Mysterious Flower#1)	Mysterious Flower#50	CLEAR_NPC
 
 // Wandering Guardian Quest
 //============================================================
-1@mist,2,2,0	script	#Dragon Herder	844,{
+1@mist,2,2,0	script	#Dragon Herder	CLEAR_NPC,{
 	end;
 OnInstanceInit:
 	switch(rand(1,6)) {
@@ -547,25 +511,26 @@ OnInstanceInit:
 		case 5: setarray .@c[0],268,183; break;
 		case 6: setarray .@c[0],65,278; break;
 	}
-	monster "1@mist",.@c[0],.@c[1],"Wandering Purple Dragon",2131,1,instance_npcname("#Dragon Herder", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),.@c[0],.@c[1],"Wandering Purple Dragon",2131,1,instance_npcname("#Dragon Herder")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	if (mobcount("1@mist",instance_npcname("#Dragon Herder", instance_id())+"::OnMyMobDead") == 0) {
-		donpcevent instance_npcname("Collapsed Girl#mist", instance_id())+"::OnEnable";
-		donpcevent instance_npcname("Mysterious Young Man#mis", instance_id())+"::OnEnable";
-		donpcevent instance_npcname("Loki#mist", instance_id())+"::OnEnable";
-		instance_announce 0,"The Dragon's Cry: Am I being punished... for abandoning the way... of the guardian...?",bc_map,"0xffff00"; //FW_NORMAL 12 0 0
-		disablenpc instance_npcname("#Dragon Herder", instance_id());
+	set .@map$, instance_mapname("1@mist");
+	if (mobcount(.@map$,instance_npcname("#Dragon Herder")+"::OnMyMobDead") == 0) {
+		donpcevent instance_npcname("Collapsed Girl#mist")+"::OnEnable";
+		donpcevent instance_npcname("Mysterious Young Man#mis")+"::OnEnable";
+		donpcevent instance_npcname("Loki#mist")+"::OnEnable";
+		mapannounce .@map$,"The Dragon's Cry: Am I being punished... for abandoning the way... of the guardian...?",bc_map,"0xffff00"; //FW_NORMAL 12 0 0
+		disablenpc instance_npcname("#Dragon Herder");
 		initnpctimer;
 	}
 	end;
 OnTimer3000:
 	stopnpctimer;
-	instance_announce 0,"Voice in your head: ...Will you... save... me... please......?",bc_map,"0xffff00"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@mist"),"Voice in your head: ...Will you... save... me... please......?",bc_map,"0xffff00"; //FW_NORMAL 12 0 0
 	end;
 }
 
-1@mist,97,30,3	script	Mysterious Young Man#mis	512,{
+1@mist,97,30,3	script	Mysterious Young Man#mis	4_M_ROKI2,{
 	if (BaseLevel < 98) {
 		mes "[Mysterious Young Man]";
 		mes "Huh? Do you plan to pass through here?";
@@ -705,16 +670,15 @@ OnTimer3000:
 		close;
 	}
 	end;
-OnInstanceInit:
 OnEnable:
-	enablenpc instance_npcname("Mysterious Young Man#mis", instance_id());
+	enablenpc instance_npcname("Mysterious Young Man#mis");
 	end;
 OnDisable:
-	disablenpc instance_npcname("Mysterious Young Man#mis", instance_id());
+	disablenpc instance_npcname("Mysterious Young Man#mis");
 	end;
 }
 
-1@mist,183,304,3	script	Loki#mist	512,{
+1@mist,183,304,3	script	Loki#mist	4_M_ROKI2,{
 	if (ep14_1_mistwoods < 2) {
 		mes "[Loki]";
 		mes "An adventurer in the forest.";
@@ -761,27 +725,27 @@ OnDisable:
 	end;
 OnInstanceInit:
 OnDisable:
-	disablenpc instance_npcname("Loki#mist", instance_id());
+	disablenpc instance_npcname("Loki#mist");
 	end;
 OnEnable:
-	enablenpc instance_npcname("Loki#mist", instance_id());
+	enablenpc instance_npcname("Loki#mist");
 	end;
 }
 
-1@mist,181,303,3	script	Collapsed Girl#mist	511,{
+1@mist,181,303,3	script	Collapsed Girl#mist	4_F_NYDHOG2,{
 	mes "You see a girl with mysterious hair collapsed on the ground.";
 	mes "As you approach her, you smell the scent of flowers so strong that it makes you dizzy.";
 	close;
 OnInstanceInit:
 OnDisable:
-	disablenpc instance_npcname("Collapsed Girl#mist", instance_id());
+	disablenpc instance_npcname("Collapsed Girl#mist");
 	end;
 OnEnable:
-	enablenpc instance_npcname("Collapsed Girl#mist", instance_id());
+	enablenpc instance_npcname("Collapsed Girl#mist");
 	end;
 }
 
-mora,46,152,5	script	Flower Smelling Lady	510,{
+mora,46,152,5	script	Flower Smelling Lady	4_F_NYDHOG,{
 	if (ep14_1_mistwoods < 3) {
 		mes "[Flower Smell Lady]";
 		mes "I need rest.";
@@ -836,7 +800,7 @@ mora,46,152,5	script	Flower Smelling Lady	510,{
 	}
 }
 
-mora,48,152,3	script	Sharp Eyed Man	512,{
+mora,48,152,3	script	Sharp Eyed Man	4_M_ROKI2,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- You have too many items to do this quest. -";
 		close;
@@ -905,7 +869,7 @@ mora,48,152,3	script	Sharp Eyed Man	512,{
 		mes "You still have things to do.";
 		next;
 		mes "[Nydhogg the Guardian]";
-		mes "... Oh, yes. It's late, but I have to fulfill my duties as a guardian.";
+		mes "...Oh, yes. It's late, but I have to fulfill my duties as a guardian.";
 		mes "Now I know. I'll destroy Morroc with my own hands.";
 		mes "I will fulfill my duties as a guardian.";
 		next;
@@ -958,77 +922,82 @@ mora,48,152,3	script	Sharp Eyed Man	512,{
 
 // Monster Spawns
 //============================================================
-1@mist,1,1,0	script	#Mist Mobs Respawn1	844,{
+1@mist,1,1,0	script	#Mist Mobs Respawn1	CLEAR_NPC,{
 	end;
 OnInstanceInit:
-	monster "1@mist",0,0,"Miming",2137,15,instance_npcname("#Mist Mobs Respawn1", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),0,0,"Miming",2137,15,instance_npcname("#Mist Mobs Respawn1")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@num_mobs, 15 - mobcount("1@mist",instance_npcname("#Mist Mobs Respawn1", instance_id())+"::OnMyMobDead");
+	set .@map$, instance_mapname("1@mist");
+	set .@num_mobs, 15 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn1")+"::OnMyMobDead");
 	if (.@num_mobs > 0)
-		monster "1@mist",0,0,"Miming",2137,.@num_mobs,instance_npcname("#Mist Mobs Respawn1", instance_id())+"::OnMyMobDead";
+		monster .@map$,0,0,"Miming",2137,.@num_mobs,instance_npcname("#Mist Mobs Respawn1")+"::OnMyMobDead";
 	end;
 }
 
-1@mist,1,2,0	script	#Mist Mobs Respawn2	844,{
+1@mist,1,2,0	script	#Mist Mobs Respawn2	CLEAR_NPC,{
 	end;
 OnInstanceInit:
-	monster "1@mist",0,0,"Pom Spider",2132,35,instance_npcname("#Mist Mobs Respawn2", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),0,0,"Pom Spider",2132,35,instance_npcname("#Mist Mobs Respawn2")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@num_mobs, 35 - mobcount("1@mist",instance_npcname("#Mist Mobs Respawn2", instance_id())+"::OnMyMobDead");
+	set .@map$, instance_mapname("1@mist");
+	set .@num_mobs, 35 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn2")+"::OnMyMobDead");
 	if (.@num_mobs > 0)
-		monster "1@mist",0,0,"Pom Spider",2132,.@num_mobs,instance_npcname("#Mist Mobs Respawn2", instance_id())+"::OnMyMobDead";
+		monster .@map$,0,0,"Pom Spider",2132,.@num_mobs,instance_npcname("#Mist Mobs Respawn2")+"::OnMyMobDead";
 	end;
 }
 
-1@mist,1,3,0	script	#Mist Mobs Respawn3	844,{
+1@mist,1,3,0	script	#Mist Mobs Respawn3	CLEAR_NPC,{
 	end;
 OnInstanceInit:
-	monster "1@mist",0,0,"Angra Mantis",2133,35,instance_npcname("#Mist Mobs Respawn3", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),0,0,"Angra Mantis",2133,35,instance_npcname("#Mist Mobs Respawn3")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@num_mobs, 35 - mobcount("1@mist",instance_npcname("#Mist Mobs Respawn3", instance_id())+"::OnMyMobDead");
+	set .@map$, instance_mapname("1@mist");
+	set .@num_mobs, 35 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn3")+"::OnMyMobDead");
 	if (.@num_mobs > 0)
-		monster "1@mist",0,0,"Angra Mantis",2133,.@num_mobs,instance_npcname("#Mist Mobs Respawn3", instance_id())+"::OnMyMobDead";
+		monster .@map$,0,0,"Angra Mantis",2133,.@num_mobs,instance_npcname("#Mist Mobs Respawn3")+"::OnMyMobDead";
 	end;
 }
 
-1@mist,1,4,0	script	#Mist Mobs Respawn4	844,{
+1@mist,1,4,0	script	#Mist Mobs Respawn4	CLEAR_NPC,{
 	end;
 OnInstanceInit:
-	monster "1@mist",0,0,"Parus",2134,35,instance_npcname("#Mist Mobs Respawn4", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),0,0,"Parus",2134,35,instance_npcname("#Mist Mobs Respawn4")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@num_mobs, 35 - mobcount("1@mist",instance_npcname("#Mist Mobs Respawn4", instance_id())+"::OnMyMobDead");
+	set .@map$, instance_mapname("1@mist");
+	set .@num_mobs, 35 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn4")+"::OnMyMobDead");
 	if (.@num_mobs > 0)
-		monster "1@mist",0,0,"Parus",2134,.@num_mobs,instance_npcname("#Mist Mobs Respawn4", instance_id())+"::OnMyMobDead";
+		monster .@map$,0,0,"Parus",2134,.@num_mobs,instance_npcname("#Mist Mobs Respawn4")+"::OnMyMobDead";
 	end;
 }
 
-1@mist,1,5,0	script	#Mist Mobs Respawn5	844,{
+1@mist,1,5,0	script	#Mist Mobs Respawn5	CLEAR_NPC,{
 	end;
 OnInstanceInit:
-	monster "1@mist",0,0,"Little Fatum",2136,15,instance_npcname("#Mist Mobs Respawn5", instance_id())+"::OnMyMobDead";
+	monster instance_mapname("1@mist"),0,0,"Little Fatum",2136,15,instance_npcname("#Mist Mobs Respawn5")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@num_mobs, 15 - mobcount("1@mist",instance_npcname("#Mist Mobs Respawn5", instance_id())+"::OnMyMobDead");
+	set .@map$, instance_mapname("1@mist");
+	set .@num_mobs, 15 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn5")+"::OnMyMobDead");
 	if (.@num_mobs > 0)
-		monster "1@mist",0,0,"Little Fatum",2136,.@num_mobs,instance_npcname("#Mist Mobs Respawn5", instance_id())+"::OnMyMobDead";
+		monster .@map$,0,0,"Little Fatum",2136,.@num_mobs,instance_npcname("#Mist Mobs Respawn5")+"::OnMyMobDead";
 	end;
 }
 
-1@mist,1,6,0	script	#Fragments of Memory	844,{
+1@mist,1,6,0	script	#Fragments of Memory	CLEAR_NPC,{
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname("#Fragments of Memory", instance_id());
-	monster "1@mist",0,0,"Guardian's Fragments of Memory",2138,15;
+	disablenpc instance_npcname("#Fragments of Memory");
+	monster instance_mapname("1@mist"),0,0,"Guardian's Fragments of Memory",2138,15;
 	end;
 }
 
 // Warp Portals
 //============================================================
-bif_fild01,38,374,0	script	Mysterious Flower#ep14_1	844,{
+bif_fild01,38,374,0	script	Mysterious Flower#ep14_1	CLEAR_NPC,{
 	mes "It's a giant flower with mysterious energy.";
 	if (countitem(12561)) {
 		mes "It's reacting to the Mysterious Flower Seeds you have with you.";
@@ -1053,12 +1022,12 @@ bif_fild01,38,374,0	script	Mysterious Flower#ep14_1	844,{
 
 1@mist,104,23,0	warp	#to_bif01	1,1,bif_fild01,160,352
 
-1@mist,109,70,0	script	a1_a2	45,1,1,{
+1@mist,109,70,0	script	a1_a2	WARPNPC,1,1,{
 	end;
 OnTouch:
 	if (checkquest(7211,PLAYTIME) == -1)
 		setquest 7211;
-	warp "1@mist",116,40;
+	warp instance_mapname("1@mist"),116,40;
 	end;
 }
 
@@ -1157,24 +1126,24 @@ OnTouch:
 
 // Disable Garden Tree warps.
 // Custom, but saves processing and lines.
-1@mist,1,1,0	script	#mist_warp_init	844,{
+1@mist,1,1,0	script	#mist_warp_init	CLEAR_NPC,{
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname("a25_a18-1", instance_id());
-	disablenpc instance_npcname("a27-2_af1-2", instance_id());
-	disablenpc instance_npcname("a15-2_a4-1", instance_id());
-	disablenpc instance_npcname("a4-2_a11", instance_id());
-	disablenpc instance_npcname("b4-2_b2", instance_id());
-	disablenpc instance_npcname("b7_bf1-2", instance_id());
-	disablenpc instance_npcname("b31_b16", instance_id());
-	disablenpc instance_npcname("b27-3_bN-1", instance_id());
-	disablenpc instance_npcname("b6-1_b33", instance_id());
-	disablenpc instance_npcname("b5_b14", instance_id());
-	disablenpc instance_npcname("c1_c13-1", instance_id());
-	disablenpc instance_npcname("c13-3_c4", instance_id());
-	disablenpc instance_npcname("c19_c4", instance_id());
-	disablenpc instance_npcname("#to_bif02", instance_id());
-	disablenpc instance_npcname("#mist_warp_init", instance_id());
+	disablenpc instance_npcname("a25_a18-1");
+	disablenpc instance_npcname("a27-2_af1-2");
+	disablenpc instance_npcname("a15-2_a4-1");
+	disablenpc instance_npcname("a4-2_a11");
+	disablenpc instance_npcname("b4-2_b2");
+	disablenpc instance_npcname("b7_bf1-2");
+	disablenpc instance_npcname("b31_b16");
+	disablenpc instance_npcname("b27-3_bN-1");
+	disablenpc instance_npcname("b6-1_b33");
+	disablenpc instance_npcname("b5_b14");
+	disablenpc instance_npcname("c1_c13-1");
+	disablenpc instance_npcname("c13-3_c4");
+	disablenpc instance_npcname("c19_c4");
+	disablenpc instance_npcname("#to_bif02");
+	disablenpc instance_npcname("#mist_warp_init");
 	end;
 }
 1@mist,247,123,0	warp	a25_a18-1	1,1,1@mist,164,66	//Tom

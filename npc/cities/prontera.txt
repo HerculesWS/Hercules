@@ -1,13 +1,13 @@
 //===== Hercules Script ======================================
 //= Prontera Town
-//===== By: ================================================== 
+//===== By: ==================================================
 //= kobra_k88
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.1
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= NPCs in Prontera
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= Fully working
 //= +AntiNovice exploit fix [Lupus] 1.2 added baby novice check
 //= Spellchecked [massdriller]
@@ -23,16 +23,16 @@
 
 // Prontera
 //============================================================
-prontera,160,330,0	script	Guard#pront::prtguard	105,{
+prontera,160,330,0	script	Guard#pront::prtguard	8W_SOLDIER,{
 	mes "[Prontera Guard]";
 	mes "Welcome to Prontera.";
 	close;
 }
-prontera,223,99,1	duplicate(prtguard)	Guard#2pront	105
-prontera,229,104,5	duplicate(prtguard)	Guard#3pront	105
-prontera,47,339,5	duplicate(prtguard)	Guard#4pront	105
+prontera,223,99,1	duplicate(prtguard)	Guard#2pront	8W_SOLDIER
+prontera,229,104,5	duplicate(prtguard)	Guard#3pront	8W_SOLDIER
+prontera,47,339,5	duplicate(prtguard)	Guard#4pront	8W_SOLDIER
 
-prontera,101,288,3	script	Shuger#pront	98,{
+prontera,101,288,3	script	Shuger#pront	4W_M_02,{
 	mes "[Shuger]";
 	mes "Outside the safety of the city, there is a pink beast known as ^000077Poring^000000.";
 	next;
@@ -47,7 +47,7 @@ prontera,101,288,3	script	Shuger#pront	98,{
 	close;
 }
 
-prontera,54,240,6	script	Tono#pront	97,{
+prontera,54,240,6	script	Tono#pront	4W_M_01,{
 	mes "[Tono]";
 	mes "Did you know?";
 	next;
@@ -65,7 +65,7 @@ prontera,54,240,6	script	Tono#pront	97,{
 	close;
 }
 
-prontera,106,116,6	script	Merideth#pront	91,{
+prontera,106,116,6	script	Merideth#pront	4_F_02,{
 	mes "[Merideth]";
 	mes "The weather was nice on my day off so my family and I went for a picnic. We chose to go to a slightly secluded area where I saw something really interesting...";
 	next;
@@ -77,7 +77,7 @@ prontera,106,116,6	script	Merideth#pront	91,{
 	close;
 }
 
-prontera,160,133,2	script	YuPi#pront	102,{
+prontera,160,133,2	script	YuPi#pront	8_F,{
 	mes "[YuPi]";
 	mes "Although many monsters may look the same, be careful! There are variations among monsters that have the same basic form.";
 	next;
@@ -89,7 +89,7 @@ prontera,160,133,2	script	YuPi#pront	102,{
 	close;
 }
 
-prontera,149,202,2	script	YuNa#pront	700,{
+prontera,149,202,2	script	YuNa#pront	8_F_GIRL,{
 	mes "[YuNa]";
 	mes "Behold...";
 	mes "Mighty Odin!";
@@ -113,7 +113,7 @@ prontera,149,202,2	script	YuNa#pront	700,{
 	close;
 }
 
-prontera,216,70,2	script	Strife#pront	48,{
+prontera,216,70,2	script	Strife#pront	1_M_02,{
 	if (Class == Job_Novice) {
 		if (event_prt_nov_dreamtalk == 0) {
 			mes "[Strife]";
@@ -210,7 +210,7 @@ prontera,216,70,2	script	Strife#pront	48,{
 	}
 }
 
-prontera,78,150,3	script	Dairenne#pront	90,{
+prontera,78,150,3	script	Dairenne#pront	4_F_01,{
 	mes "[Towngirl Dairenne]";
 	mes "Ahh...";
 	mes "The streets are too crowded these days. *Cough Cough* Look at all this dust, not everything about living in the capital city is good. Anyway, may I help you?";
@@ -234,8 +234,8 @@ prontera,78,150,3	script	Dairenne#pront	90,{
 // inside Prontera
 //============================================================
 /*
-//This NPC has been disabled officiall.
-prt_in,178,92,0	script	Curator of Library#pront	57,{
+//This NPC has been disabled officially.
+prt_in,178,92,0	script	Curator of Library#pront	1_M_LIBRARYMASTER,{
 	mes "[Curator Guiss]";
 	mes "Here, in the Western branch of the Prontera Library, ";
 	mes "we keep records of monsters found in various dungeons scattered around the Rune-Midgarts Kingdom.";
@@ -251,14 +251,14 @@ prt_in,178,92,0	script	Curator of Library#pront	57,{
 }
 */
 
-prt_in,175,50,0	script	Library Girl#pront	71,{
+prt_in,175,50,0	script	Library Girl#pront	1_F_LIBRARYGIRL,{
 	mes "[Library Girl Ellen]";
 	mes "Here in the Eastern branch of the Prontera Library, we provide Monster Encyclopedias in which creatures are organized by their properties. We also have books on Merchant and Blacksmith skills.";
 	mes "Ooh~! The other branch of our library also has many interesting things to read! So if you get a chance, you just might want to visit.";
 	close;
 }
 
-prt_in,47,141,0	script	An Old Man#pront	56,{
+prt_in,47,141,0	script	An Old Man#pront	1_M_KNIGHTMASTER,{
 	mes "[Old Man]";
 	mes "The Prontera Culvert sewers have been left unattended for a long time. Now that place is infested with ^000077Thief Bugs^000000!";
 	next;
@@ -267,7 +267,7 @@ prt_in,47,141,0	script	An Old Man#pront	56,{
 	close;
 }
 
-prt_in,26,31,0	script	An Old Man#2pront	54,{
+prt_in,26,31,0	script	An Old Man#2pront	1_M_JOBGUIDER,{
 	mes "[Old Man]";
 	mes "I dunno if you'll believe me, but I saw the weirdest thing down in the ^000077Culvert Sewers^000000...";
 	next;
@@ -288,7 +288,7 @@ prt_in,26,31,0	script	An Old Man#2pront	54,{
 	close;
 }
 
-prt_in,180,20,2	script	Bartender#pront	61,{
+prt_in,180,20,2	script	Bartender#pront	1_M_PUBMASTER,{
 	mes "[Bartender]";
 	mes "Sigh...as more and more people coming into Prontera,";
 	mes "better and better my business has become nowadays. But...";
@@ -339,7 +339,7 @@ prt_in,180,20,2	script	Bartender#pront	61,{
 
 }
 
-prt_in,173,24,2	script	Shevild#pront	85,{
+prt_in,173,24,2	script	Shevild#pront	4_M_03,{
 	mes "[Shevild]";
 	mes "Hey, come on over and let's drink! I have lots of interesting stories to tell!";
 	mes "I know lots of things about Prontera. I have seen many fine views and I also have explored some monster lairs around this city.";
@@ -411,7 +411,7 @@ prt_in,173,24,2	script	Shevild#pront	85,{
 	close;
 }
 
-prt_in,177,20,2	script	TenSue#pront	97,{
+prt_in,177,20,2	script	TenSue#pront	4W_M_01,{
 	switch(rand(3)) {
 	case 1:
 		mes "[TenSue]";
@@ -444,7 +444,7 @@ prt_in,177,20,2	script	TenSue#pront	97,{
 		mes "[TenSue]";
 		mes "The headquarters of Kafra Corporation is also located in Al de Baran. You should really stop by and check it out for yourself.";
 		close;
-	Default:
+	default:
 		mes "[TenSue]";
 		mes "The kingdom of";
 		mes "Rune-Midgarts is ruled";
@@ -468,12 +468,12 @@ prt_in,177,20,2	script	TenSue#pront	97,{
 	}
 }
 
-prt_in,177,18,2	script	Marvin#pront	80,{
+prt_in,177,18,2	script	Marvin#pront	1_F_PUBGIRL,{
 	mes "[Marvin]";
 	mes "Whether it's schmoozing with a member of the opposite sex, or battling monsters, I gotta say, it's all about ^333399skills^000000.";
 	next;
 	mes "[Marvin]";
-	if (sex)
+	if (Sex)
 		mes "I can't help you much when it comes to the subject of talking to attractive women such as myself, but I can tell you a little more about skills that help in battle.";
 	else
 		mes "I don't really have any advice for skills when it comes to talking to a cute guy, but I can let you in on what I know about skills that help in battle.";
@@ -492,7 +492,7 @@ prt_in,177,18,2	script	Marvin#pront	80,{
 	close;
 }
 
-prt_in,284,168,3	script	Ginedin Rephere#pront	55,{
+prt_in,284,168,3	script	Ginedin Rephere#pront	1_M_JOBTESTER,{
 	mes "[Tailor Ginedin Rephere]";
 	mes "11...";
 	mes "12...";
@@ -540,7 +540,7 @@ prt_in,284,168,3	script	Ginedin Rephere#pront	55,{
 
 // Prontera Church
 //============================================================
-prt_church,103,76,0	script	Garnet#pront	67,{
+prt_church,103,76,0	script	Garnet#pront	1_F_02,{
 	mes "[Garnet]";
 	mes "Hello there~";
 	mes "Are you interested in learning more about helping and supporting other people?";
@@ -631,14 +631,14 @@ prt_church,103,76,0	script	Garnet#pront	67,{
 			mes "Alright, I've";
 			mes "heard enough.";
 			close2;
-			set .@SkilLChat,0;
+			set .@SkillChat,0;
 			break;
 		}
 	}
 	end;
 }
 
-prt_church,103,71,0	script	Henson#pront	120,{
+prt_church,103,71,0	script	Henson#pront	2_M_PHARMACIST,{
 	mes "[Henson]";
 	mes "We Priests and Acolytes are not only limited to easing the suffering of our fellow man...";
 	next;
@@ -649,7 +649,7 @@ prt_church,103,71,0	script	Henson#pront	120,{
 	mes "Did you have any questions about Acolyte and Priest skills?";
 	next;
 	set .@SkillChat,1;
-	while(.@Skillchat) {
+	while(.@SkillChat) {
 		switch(select("About Divine Protection:About Demon Bane:About Decrease AGI:About Signum Crusis :About Pneuma:About Ruwach:About Teleport:End conversation.")) {
 		case 1:
 			mes "[Henson]";
@@ -729,7 +729,7 @@ prt_church,103,71,0	script	Henson#pront	120,{
 			mes "[Henson]";
 			mes "If you wish to understand more about an Acolyte or Priest skill, you are welcome to visit me at any time.";
 			close2;
-			set .@SkilLChat,0;
+			set .@SkillChat,0;
 			break;
 		}
 	}
@@ -738,7 +738,7 @@ prt_church,103,71,0	script	Henson#pront	120,{
 
 // Hidden Temple
 //============================================================
-prt_maze02,100,69,0	script	Soldier#pront	105,{
+prt_maze02,100,69,0	script	Soldier#pront	8W_SOLDIER,{
 	mes "[Soldier]";
 	mes "H-hey!";
 	mes "What are";
@@ -750,7 +750,7 @@ prt_maze02,100,69,0	script	Soldier#pront	105,{
 	close;
 }
 
-prt_maze02,110,69,0	script	Soldier#2pront	105,{
+prt_maze02,110,69,0	script	Soldier#2pront	8W_SOLDIER,{
 	mes "[Soldier]";
 	mes "*Sigh...* The last guy that entered this place haven't come back at all. He didn't listen to me and went in to gather Herbs or something dumb like that...";
 	next;

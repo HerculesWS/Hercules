@@ -1,11 +1,11 @@
 //===== Hercules Script ======================================
 //= Quest NPCs related to Einbroch and Einbech
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Evera and The rAthena Dev Team
-//===== Current Version: ===================================== 
-//= 2.6
-//===== Description: ========================================= 
-//= [Aegis conversion]
+//===== Current Version: =====================================
+//= 2.7
+//===== Description: =========================================
+//= [Official Conversion]
 //= Oridecon/Mineral Quest
 //= - Variable in use: ein_gear1 (max 2)
 //= - Variable in use: $ein_amano (max 60)
@@ -18,11 +18,11 @@
 //= - Variable in use: Shinokas_Quest (max 11)
 //= Lovers Quest
 //= - Variable in use: EIN_LOVERQ (max 17)
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 Initial Release [Evera]
 //= 1.1 Added more quests [Evera]
 //= 1.2 Added quest bits from Einbech and renamed file to
-//=	quests_ein.txt [Evera]
+//=     quests_ein.txt [Evera]
 //= 1.3 Implemented the polution quest. [MasterOfMuppets]
 //= 1.4.1 Massive bugfix. Fixed Pollution exploit [Lupus]
 //= 1.4.2 Fixed Khowropher bug [Lupus]
@@ -47,13 +47,14 @@
 //= 2.5 Added quest log entries for:
 //=     - Factory Quest
 //=     - Murder Quest
-//= 2.6 Added renewal checks for exp distribution [Streusel]
-//============================================================ 
+//= 2.6 Updated RE/Pre-RE EXP. [Euphy]
+//= 2.7 Added GM management function. [Euphy]
+//============================================================
 
-// Oridecon Stone OR Mineral Stone Quest
-//============================================================ 
-einbech,97,167,5	script	Cavitar	847,{
-	if (ein_gear1 == 2){
+// Oridecon Stone OR Mineral Stone Quest :: ein_amano
+//============================================================
+einbech,97,167,5	script	Cavitar	4_M_EINOLD,{
+	if (ein_gear1 == 2) {
 		mes "[Cavitar]";
 		mes "It's been a long";
 		mes "time, my friend. With";
@@ -68,7 +69,7 @@ einbech,97,167,5	script	Cavitar	847,{
 		mes "come visit my town.";
 		close;
 	}
-	else if(ein_gear1 == 1){
+	else if (ein_gear1 == 1) {
 		mes "[Cavitar]";
 		mes "Oh, welcome.";
 		mes "So did you bring";
@@ -273,7 +274,7 @@ einbech,97,167,5	script	Cavitar	847,{
 									mes "you a small present";
 									mes "as a token of my gratitute.";
 									mes "If you would, please take this.";
-									set Zeny,Zeny-1000;
+									Zeny -= 1000;
 									set ein_gear1,2;
 									switch(rand(1,7)) {
 									case 1:
@@ -330,7 +331,7 @@ einbech,97,167,5	script	Cavitar	847,{
 									next;
 									switch(select("Sure~!:No, thanks.")) {
 									case 1:
-										set Zeny,Zeny-1000;
+										Zeny -= 1000;
 										set ein_gear1,1;
 										mes "[Cavitar]";
 										mes "Great...!";
@@ -354,7 +355,7 @@ einbech,97,167,5	script	Cavitar	847,{
 										mes "this small gift";
 										mes "as a token of";
 										mes "my gratitude.";
-										set Zeny,Zeny-1000;
+										Zeny -= 1000;
 										getitem 1010,1; // Phracon
 										close;
 									}
@@ -383,7 +384,7 @@ einbech,97,167,5	script	Cavitar	847,{
 								next;
 								switch(select("Sure~!:No, thanks.")) {
 						 		case 1:
-									set Zeny,Zeny-1000;
+									Zeny -= 1000;
 									set $einamanoama,$einamanoama + 1;
 									set ein_gear1,1;
 									mes "[Cavitar]";
@@ -408,7 +409,7 @@ einbech,97,167,5	script	Cavitar	847,{
 									mes "this small gift";
 									mes "as a token of";
 									mes "my gratitude.";
-									set Zeny,Zeny-1000;
+									Zeny -= 1000;
 									getitem 1010,1; // Phracon
 									close;
 								}
@@ -469,9 +470,9 @@ einbech,97,167,5	script	Cavitar	847,{
 	}
 }
 
-// Uwe Kleine
+// Uwe Kleine :: ein_anoz
 //============================================================
-einbroch,215,180,6	script	Uwe Kleine#ein	85,{
+einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 	set EinUwe,0;
 	if (BaseClass == Job_Blacksmith) {
 		if (ein_cook > 999) {
@@ -2308,7 +2309,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	85,{
 					mes "In fact, I still use the old knife I used back when I was just";
 					mes "a little novice chef~";
 					next;
-					mes "[Uwe]"							;
+					mes "[Uwe]";
 					mes "Well, that was";
 					mes "a fun talk. Come";
 					mes "back and visit, 'kay?";
@@ -2541,7 +2542,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	85,{
 						mes "In fact, I still use the old knife I used back when I was just";
 						mes "a little novice chef~";
 						next;
-						mes "[Uwe]"							;
+						mes "[Uwe]";
 						mes "Well, that was";
 						mes "a fun talk. Come";
 						mes "back and visit, 'kay?";
@@ -2817,7 +2818,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	85,{
 						mes "In fact, I still use the old knife I used back when I was just";
 						mes "a little novice chef~";
 						next;
-						mes "[Uwe]"							;
+						mes "[Uwe]";
 						mes "Well, that was";
 						mes "a fun talk. Come";
 						mes "back and visit, 'kay?";
@@ -3208,7 +3209,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	85,{
 	}
 }
 
-// Factory Quest
+// Factory Quest :: ein_factory
 //============================================================
 einbroch,1,1,0	script	Einbroch Smog Alert	-1,{
 	end;
@@ -3368,7 +3369,7 @@ OnTimer600000:
 	end;
 }
 
-einbroch,132,84,3	script	Liotzburg#ein	853,2,2,{
+einbroch,132,84,3	script	Liotzburg#ein	4_M_YURI,2,2,{
 	if ((EinFactory == 13) || (EinFactory == 14)) {
 		changequest 8029,8030;
 		set EinFactory,14;
@@ -3448,7 +3449,7 @@ OnTouch:
 	}
 }
 
-ein_in01,67,242,3	script	Zelmeto	851,{
+ein_in01,67,242,3	script	Zelmeto	4_M_REPAIR,{
 	if ($EinPolution > 9) {
 		mes "[Zelmeto]";
 		mes "We've got a big problem";
@@ -3554,50 +3555,22 @@ ein_in01,67,242,3	script	Zelmeto	851,{
 			set $EinPolution,$EinPolution+1;
 			completequest 8031;
 			set EinFactory,16;
-			if(checkre(0)) {
-				if (BaseLevel < 41) {
-					getexp 61,0;
-				}
-				else if (BaseLevel < 51) {
-					getexp 307,0;
-				}
-				else if (BaseLevel < 61) {
-					getexp 660,0;
-				}
-				else if (BaseLevel < 71) {
-					getexp 1850,0;
-				}
-				else if( BaseLevel < 81) {
-					getexp 3206,0;
-				}
-				else if (BaseLevel < 91) {
-					getexp 7602,0;
-				}
-				else if (BaseLevel < 99) {
-					getexp 29067,0;
-				}
-			}else {
-				if (BaseLevel < 41) {
-					getexp 615,0;
-				}
-				else if (BaseLevel < 51) {
-					getexp 3075,0;
-				}
-				else if (BaseLevel < 61) {
-					getexp 6604,0;
-				}
-				else if (BaseLevel < 71) {
-					getexp 18508,0;
-				}
-				else if( BaseLevel < 81) {
-					getexp 32062,0;
-				}
-				else if (BaseLevel < 91) {
-					getexp 76026,0;
-				}
-				else if (BaseLevel < 99) {
-					getexp 290675,0;
-				}			
+			if (checkre(3)) {
+				if (BaseLevel < 41) getexp 61,0;
+				else if (BaseLevel < 51) getexp 307,0;
+				else if (BaseLevel < 61) getexp 660,0;
+				else if (BaseLevel < 71) getexp 1850,0;
+				else if (BaseLevel < 81) getexp 3206,0;
+				else if (BaseLevel < 91) getexp 7602,0;
+				else getexp 29067,0;
+			} else {
+				if (BaseLevel < 41) getexp 615,0;
+				else if (BaseLevel < 51) getexp 3075,0;
+				else if (BaseLevel < 61) getexp 6604,0;
+				else if (BaseLevel < 71) getexp 18508,0;
+				else if (BaseLevel < 81) getexp 32066,0;
+				else if (BaseLevel < 91) getexp 76026,0;
+				else getexp 290675,0;
 			}
 			next;
 			mes "[Zelmeto]";
@@ -4100,7 +4073,7 @@ ein_in01,67,242,3	script	Zelmeto	851,{
 	}
 }
 
-ein_in01,49,232,3	script	2nd Control Panel#ins	111,{
+ein_in01,49,232,3	script	2nd Control Panel#ins	HIDDEN_NPC,{
 	if ((EinFactory == 1) || (EinFactory == 2)) {
 		changequest 8017,8018;
 		set EinFactory,2;
@@ -4115,7 +4088,7 @@ ein_in01,49,232,3	script	2nd Control Panel#ins	111,{
 	end;
 }
 
-ein_in01,108,217,3	script	3rd Pressure Governor#1	111,{
+ein_in01,108,217,3	script	3rd Pressure Governor#1	HIDDEN_NPC,{
 	if ((EinFactory == 3) || (EinFactory == 4)) {
 		changequest 8019,8020;
 		set EinFactory,4;
@@ -4131,7 +4104,7 @@ ein_in01,108,217,3	script	3rd Pressure Governor#1	111,{
 	end;
 }
 
-ein_in01,62,258,3	script	Main Control Panel#ins	111,{
+ein_in01,62,258,3	script	Main Control Panel#ins	HIDDEN_NPC,{
 	if ((EinFactory == 5) || (EinFactory == 6)) {
 		changequest 8021,8022;
 		set EinFactory,6;
@@ -4147,7 +4120,7 @@ ein_in01,62,258,3	script	Main Control Panel#ins	111,{
 	end;
 }
 
-ein_in01,46,197,3	script	Conveyor#ins	111,{
+ein_in01,46,197,3	script	Conveyor#ins	HIDDEN_NPC,{
 	if ((EinFactory == 7) || (EinFactory == 8)) {
 		changequest 8023,8024;
 		set EinFactory,8;
@@ -4162,7 +4135,7 @@ ein_in01,46,197,3	script	Conveyor#ins	111,{
 	end;
 }
 
-ein_in01,100,266,3	script	Pipe#ins	111,{
+ein_in01,100,266,3	script	Pipe#ins	HIDDEN_NPC,{
 	if ((EinFactory == 9) || (EinFactory == 10)) {
 		changequest 8025,8026;
 		set EinFactory,10;
@@ -4178,7 +4151,7 @@ ein_in01,100,266,3	script	Pipe#ins	111,{
 	end;
 }
 
-ein_in01,95,239,3	script	Conveyor#ins2	111,{
+ein_in01,95,239,3	script	Conveyor#ins2	HIDDEN_NPC,{
 	if ((EinFactory == 11) || (EinFactory == 12)) {
 		changequest 8027,8028;
 		set EinFactory,12;
@@ -4194,21 +4167,24 @@ ein_in01,95,239,3	script	Conveyor#ins2	111,{
 }
 
 // Administrator NPC used to rig the invasion in Einbroch.
-/**/
-sec_in02,127,86,3	script	Factory Quest Test	851,{
-	input .@input; //,0,9000;
-	if ((.@input < 0) || (.@input > 9000)) {
+sec_in02,127,86,3	script	Factory Quest Test	4_M_REPAIR,{
+	set .@i, callfunc("F_GM_NPC",8028,0,0,9000);
+	if (.@i == -2) {
 		mes "[Test1]";
 		mes "Boo~ya.";
 		close;
-	}
-	else if (.@input == 0) {
+	} else if (.@i == -1) {
 		mes "[Test1]";
 		mes "Do you want";
 		mes "to cancel~?";
 		close;
-	}
-	else if (.@input == 8028) {
+	} else if (.@i == 0) {
+		mes "[Test1]";
+		mes "Whoa...";
+		mes "That is";
+		mes "sooo wrong!";
+		close;
+	} else {
 		mes "[Test1]";
 		mes "The current value";
 		mes "of the global variable";
@@ -4236,19 +4212,11 @@ sec_in02,127,86,3	script	Factory Quest Test	851,{
 			close;
 		}
 	}
-	else {
-		mes "[Test1]";
-		mes "Whoa...";
-		mes "That is";
-		mes "sooo wrong!";
-		close;
-	}
 }
-/**/
 
-// Murder Quest
-//============================================================ 
-einbech,165,105,7	script	Buender Hikeman#ein	847,{
+// Murder Quest :: ein_main_tre
+//============================================================
+einbech,165,105,7	script	Buender Hikeman#ein	4_M_EINOLD,{
 	cutin "ein_hicman",2;
 	if (Shinokas_Quest == 0) {
 		mes "[Buender Hikeman]";
@@ -4697,32 +4665,16 @@ einbech,165,105,7	script	Buender Hikeman#ein	847,{
 			cutin "ein_hicman",255;
 			completequest 2078;
 			set Shinokas_Quest,11;
-			if(checkre(0)) {
-				if (BaseLevel < 70) {
-					getexp 10000,8000;
-				}
-				else if ((BaseLevel > 69) && (BaseLevel < 80)) {
-					getexp 30000,10000;
-				}
-				else if ((BaseLevel > 79) && (BaseLevel < 90)) {
-					getexp 50000,30000;
-				}
-				else if ((BaseLevel > 89) && (BaseLevel < 100)) {
-					getexp 70000,50000;
-				}
+			if (checkre(3)) {
+				if (BaseLevel < 70) getexp 30000,30000;
+				else if ((BaseLevel > 69) && (BaseLevel < 80)) getexp 40000,40000;
+				else if ((BaseLevel > 79) && (BaseLevel < 90)) getexp 70000,70000;
+				else getexp 90000,90000;
 			} else {
-				if (BaseLevel < 70) {
-					getexp 100000,80000;
-				}
-				else if ((BaseLevel > 69) && (BaseLevel < 80)) {
-					getexp 300000,100000;
-				}
-				else if ((BaseLevel > 79) && (BaseLevel < 90)) {
-					getexp 500000,300000;
-				}
-				else if ((BaseLevel > 89) && (BaseLevel < 100)) {
-					getexp 700000,500000;
-				}
+				if (BaseLevel < 70) getexp 100000,80000;
+				else if ((BaseLevel > 69) && (BaseLevel < 80)) getexp 300000,100000;
+				else if ((BaseLevel > 79) && (BaseLevel < 90)) getexp 500000,300000;
+				else getexp 700000,500000;
 			}
 			end;
 		case 2:
@@ -4770,7 +4722,7 @@ einbech,165,105,7	script	Buender Hikeman#ein	847,{
 	}
 }
 
-ein_in01,231,163,7	script	Sick Old Man#ein	849,{
+ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 	if (Shinokas_Quest < 2) {
 		mes "[Sick Old Man]";
 		mes "...!";
@@ -5045,7 +4997,7 @@ ein_in01,231,163,7	script	Sick Old Man#ein	849,{
 		mes "anything from the";
 		mes "Kapellthaines?";
 		next;
-		mes "["+strcharinfo(0)+"]"	;
+		mes "["+strcharinfo(0)+"]";
 		mes "Well, Mr. Kapellthaine";
 		mes "is kind of violent, but";
 		mes "I didn't find anything";
@@ -5300,7 +5252,7 @@ ein_in01,231,163,7	script	Sick Old Man#ein	849,{
 	}
 }
 
-ein_in01,32,133,7	script	Maid#ein	850,{
+ein_in01,32,133,7	script	Maid#ein	4_F_EINWOMAN,{
 	if (Shinokas_Quest == 4) {
 		mes "[Maid]";
 		mes "Did you ask me";
@@ -5333,7 +5285,7 @@ ein_in01,32,133,7	script	Maid#ein	850,{
 	}
 }
 
-ein_in01,254,35,1	script	Scientist#ein	749,{
+ein_in01,254,35,1	script	Scientist#ein	4_M_ALCHE_B,{
 	mes "[Scientist]";
 	mes "^333333*Grumble grumble*^000000";
 	next;
@@ -5398,7 +5350,7 @@ ein_in01,254,35,1	script	Scientist#ein	749,{
 	close;
 }
 
-ein_in01,266,27,3	script	Unknown Stuff#ein	111,{
+ein_in01,266,27,3	script	Unknown Stuff#ein	HIDDEN_NPC,{
 	mes "^3355FFThere's something";
 	mes "attached to a huge";
 	mes "machine with many cords";
@@ -5406,7 +5358,7 @@ ein_in01,266,27,3	script	Unknown Stuff#ein	111,{
 	close;
 }
 		
-einbroch,51,46,5	script	Laboratory Soldier#ein-1	852,{
+einbroch,51,46,5	script	Laboratory Soldier#ein-1	4_M_EIN_SOLDIER,{
 	mes "[Laboratory Soldier]";
 	mes "This area";
 	mes "is off limits.";
@@ -5415,7 +5367,7 @@ einbroch,51,46,5	script	Laboratory Soldier#ein-1	852,{
 	close;
 }
 	
-einbroch,51,56,5	script	Laboratory Soldier#ein-2	852,{
+einbroch,51,56,5	script	Laboratory Soldier#ein-2	4_M_EIN_SOLDIER,{
 	mes "[Laboratory Soldier]";
 	mes "Yuck...!";
 	mes "There's this";
@@ -5431,7 +5383,7 @@ einbroch,51,56,5	script	Laboratory Soldier#ein-2	852,{
 	close;
 }
 
-airplane,31,77,5	script	Drunken Man#ein	853,{
+airplane,31,77,5	script	Drunken Man#ein	4_M_YURI,{
 	if (Shinokas_Quest == 8) {
 		mes "[Drunken Man]";
 		mes "Okay okay...";
@@ -5696,7 +5648,7 @@ OnTouch:
 	end;
 }
 
-einbech,57,210,3	script	Young Man#Shinokas_Quest	855,{
+einbech,57,210,3	script	Young Man#Shinokas_Quest	4_M_EINMAN,{
 	mes "[Young Man]";
 	mes "Behind the pub,";
 	mes "you'll see this old man";
@@ -5719,8 +5671,9 @@ einbech,57,210,3	script	Young Man#Shinokas_Quest	855,{
 	close;
 }
 
-
-einbroch,51,52,0	script	Security#ein	45,1,1,{
+// Typing Test :: ein_main_ma1
+//============================================================
+einbroch,51,52,0	script	Security#ein	WARPNPC,1,1,{
 	end;
 
 OnTouch:
@@ -5872,9 +5825,9 @@ OnTouch:
 	}
 }
 
-// Lovers Quest
-//============================================================ 
-ein_in01,31,138,3	script	Calla#ein	90,{
+// Lovers Quest :: ein_ryu
+//============================================================
+ein_in01,31,138,3	script	Calla#ein	4_F_01,{
 	if (checkweight(908,70) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -5984,38 +5937,17 @@ ein_in01,31,138,3	script	Calla#ein	90,{
 		mes "feel goooood~";
 		percentheal 100,0;
 		set EIN_LOVERQ,17;
-		if(checkre(0)) {
-			if (BaseLevel < 41) {
-				getexp 61,0;
-			}
-			else if (BaseLevel < 61) {
-				getexp 600,0;
-			}
-			else if (BaseLevel < 81) {
-				getexp 3000,0;
-			}
-			else if (BaseLevel < 99) {
-				getexp 20000,0;
-			}
+		if (checkre(3)) {
+			if (BaseLevel < 41) getexp 61,0;
+			else if (BaseLevel < 61) getexp 600,0;
+			else if (BaseLevel < 81) getexp 3000,0;
+			else if (BaseLevel < 99) getexp 20000,0;
+			else getexp 30000,0;
 		} else {
-			if (BaseLevel < 41) {
-				getexp 3712,0;
-			}
-			else if (BaseLevel < 61) {
-				getexp 7425,0;
-			}
-			else if (BaseLevel < 71) {
-				getexp 14850,0;
-			}
-			else if (BaseLevel < 81) {
-				getexp 29700,0;
-			}
-			else if (BaseLevel < 91) {
-				getexp 59400,0;
-			}
-			else if (BaseLevel < 99) {
-				getexp 118800,0;
-		}
+			if (BaseLevel < 41) getexp 610,0;
+			else if (BaseLevel < 61) getexp 6000,0;
+			else if (BaseLevel < 81) getexp 30000,0;
+			else getexp 200000,0;
 		}
 		next;
 		mes "[Calla]";
@@ -6032,6 +5964,7 @@ ein_in01,31,138,3	script	Calla#ein	90,{
 		mes "I'll always pray for";
 		mes "your safety on your";
 		mes "your adventures~";
+		completequest 8088;
 		close;
 	}
 	if ((EIN_LOVERQ == 5) && (countitem(712) > 0)) {
@@ -6071,6 +6004,7 @@ ein_in01,31,138,3	script	Calla#ein	90,{
 			mes "^333333*Sob Sob...*^000000";
 			delitem 712,1; //Flower
 			set EIN_LOVERQ,6;
+			changequest 8079,808;
 			close;
 		}
 		else {
@@ -6104,6 +6038,7 @@ ein_in01,31,138,3	script	Calla#ein	90,{
 		mes "this time? Thank you";
 		mes "for your help~";
 		set EIN_LOVERQ,3;
+		changequest 8078,8077;
 		getitem 1901,1; //Violin
 		close;
 	}
@@ -6146,6 +6081,7 @@ ein_in01,31,138,3	script	Calla#ein	90,{
 		mes "all the time...";
 		next;
 		set EIN_LOVERQ,3;
+		changequest 8076,8077;
 		getitem 1901,1; //Violin
 		mes "[Calla]";
 		mes "I'm sorry to trouble you,";
@@ -6186,7 +6122,7 @@ ein_in01,31,138,3	script	Calla#ein	90,{
 	}
 }
 
-ein_in01,200,101,5	script	Klitzer#ein	854,{
+ein_in01,200,101,5	script	Klitzer#ein	4_M_EINMAN2,{
 	if (EIN_LOVERQ == 16) {
 		mes "[Klitzer]";
 		mes "Look out, world!";
@@ -6236,6 +6172,7 @@ ein_in01,200,101,5	script	Klitzer#ein	854,{
 			mes "even be useful to you later~";
 			delitem 7170,1; //Tuxedo
 			set EIN_LOVERQ,16;
+			changequest 8087,8088;
 			switch(rand(1,7)) {
 			case 1:
 				getitem 7289,1; //Olivine
@@ -6333,6 +6270,7 @@ ein_in01,200,101,5	script	Klitzer#ein	854,{
 		mes "W-what should I do?";
 		next;
 		set EIN_LOVERQ,14;
+		changequest 8085,8086;
 		mes "[Klitzer]";
 		mes "This monkey suit";
 		mes "that I've got on just";
@@ -6381,6 +6319,7 @@ ein_in01,200,101,5	script	Klitzer#ein	854,{
 			mes "my regards if you help me.";
 			next;
 			set EIN_LOVERQ,7;
+			changequest 8080,8081;
 			mes "[Klitzer]";
 			mes "I feel so much";
 			mes "better now. Oh!";
@@ -6473,38 +6412,18 @@ ein_in01,200,101,5	script	Klitzer#ein	854,{
 		percentheal 100,0;
 		delitem 1901,1; //Violin
 		set EIN_LOVERQ,5;
-		if(checkre(0)) {
-			if (BaseLevel < 41) {
-				getexp 61,0;
-			}
-			else if (BaseLevel < 61) {
-				getexp 600,0;
-			}
-			else if (BaseLevel < 81) {
-				getexp 3000,0;
-			}
-			else if (BaseLevel < 99) {
-				getexp 20000,0;
-			}
+		changequest 8077,8079;
+		if (checkre(3)) {
+			if (BaseLevel < 41) getexp 61,0;
+			else if (BaseLevel < 61) getexp 600,0;
+			else if (BaseLevel < 81) getexp 3000,0;
+			else if (BaseLevel < 99) getexp 20000,0;
+			else getexp 30000,0;
 		} else {
-			if (BaseLevel < 41) {
-				getexp 3712,0;
-			}
-			else if (BaseLevel < 61) {
-				getexp 7425,0;
-			}
-			else if (BaseLevel < 71) {
-				getexp 14850,0;
-			}
-			else if (BaseLevel < 81) {
-				getexp 29700,0;
-			}
-			else if (BaseLevel < 91) {
-				getexp 59400,0;
-			}
-			else if (BaseLevel < 99) {
-				getexp 118800,0;
-		}
+			if (BaseLevel < 41) getexp 610,0;
+			else if (BaseLevel < 61) getexp 6000,0;
+			else if (BaseLevel < 81) getexp 30000,0;
+			else getexp 200000,0;
 		}
 		next;
 		mes "[Klitzer]";
@@ -6556,6 +6475,7 @@ ein_in01,200,101,5	script	Klitzer#ein	854,{
 		mes "give anything to see her...";
 		next;
 		set EIN_LOVERQ,2;
+		setquest 8076;
 		mes "[Klitzer]";
 		mes "Just...";
 		mes "Just don't listen";
@@ -6588,7 +6508,7 @@ ein_in01,200,101,5	script	Klitzer#ein	854,{
 	close;
 }
 
-ein_in01,21,147,3	script	Megass#EIN	853,3,3,{
+ein_in01,21,147,3	script	Megass#EIN	4_M_YURI,3,3,{
 	end;
 
 OnTouch:
@@ -6634,6 +6554,7 @@ OnTouch:
 		mes "wakes up, it won't be today!";
 		delitem 1901,1; //Violin
 		set EIN_LOVERQ,4;
+		changequest 8077,8078;
 		percentheal -90,0;
 		close2;
 		warp "einbroch",112,245;
@@ -6656,7 +6577,7 @@ OnTouch:
 	close;
 }
 
-ein_in01,31,151,3	script	Satra#ein	850,{
+ein_in01,31,151,3	script	Satra#ein	4_F_EINWOMAN,{
 	if (EIN_LOVERQ > 12) {
 		mes "[Satra]";
 		mes "I understand that my";
@@ -6748,6 +6669,7 @@ ein_in01,31,151,3	script	Satra#ein	850,{
 			next;
 			delitem 1003,10; //Coal
 			set EIN_LOVERQ,13;
+			changequest 8084,8085;
 			mes "[Satra]";
 			mes "Anyway, when you next";
 			mes "meet Klitzer, please tell";
@@ -6859,7 +6781,7 @@ ein_in01,31,151,3	script	Satra#ein	850,{
 		mes "here for sight seeing,";
 		mes "or perhaps you're running";
 		mes "some sort of adventurer's";
-		mes "errand. Am I right?"	;
+		mes "errand. Am I right?";
 		next;
 		mes "[Satra]";
 		mes "I know you well enough";
@@ -6973,6 +6895,7 @@ ein_in01,31,151,3	script	Satra#ein	850,{
 		next;
 		delitem 1003,10; //Coal
 		set EIN_LOVERQ,10;
+		changequest 8083,8084;
 		mes "[Satra]";
 		mes "Well, I shall try to";
 		mes "find some use for these.";
@@ -7123,6 +7046,7 @@ ein_in01,31,151,3	script	Satra#ein	850,{
 		mes "this kind of task will require";
 		mes "some effort on your part.";
 		set EIN_LOVERQ,9;
+		changequest 8082,8083;
 		next;
 		mes "[Satra]";
 		mes "Tah tah,";
@@ -7152,7 +7076,7 @@ ein_in01,31,151,3	script	Satra#ein	850,{
 	close;
 }
 
-ein_in01,191,102,5	script	Kaijeta#ein	846,{
+ein_in01,191,102,5	script	Kaijeta#ein	4_F_EINOLD,{
 	if (EIN_LOVERQ > 15) {
 		mes "[Kaijeta]";
 		mes "My son learned";
@@ -7197,6 +7121,7 @@ ein_in01,191,102,5	script	Kaijeta#ein	846,{
 		mes "He gets so nervous about it!";
 		next;
 		set EIN_LOVERQ,15;
+		changequest 8086,8087;
 		mes "[Kaijeta]";
 		mes "A man should wear nice";
 		mes "clothes, like a Formal Suit";
@@ -7211,6 +7136,7 @@ ein_in01,191,102,5	script	Kaijeta#ein	846,{
 		mes "petty hatred between our";
 		mes "two towns stop my son from";
 		mes "seeing the woman he loves...";
+		changequest 8081,8082;
 		close;
 	}
 	if (EIN_LOVERQ == 7) {
@@ -7273,7 +7199,7 @@ ein_in01,191,102,5	script	Kaijeta#ein	846,{
 	close;
 }
 
-einbroch,188,72,3	script	Keneshiotz#ein	855,{
+einbroch,188,72,3	script	Keneshiotz#ein	4_M_EINMAN,{
 	mes "[Keneshiotz]";
 	mes "This city is full of sky";
 	mes "high smokestacks and";
@@ -7296,7 +7222,7 @@ einbroch,188,72,3	script	Keneshiotz#ein	855,{
 	close;
 }
 
-einbech,216,118,3	script	Catzllanpu#ein	854,{
+einbech,216,118,3	script	Catzllanpu#ein	4_M_EINMAN2,{
 	mes "[Catzllanpu]";
 	mes "^333333*Sigh...*^000000";
 	mes "Simple pleasures.";
@@ -7322,7 +7248,7 @@ einbech,216,118,3	script	Catzllanpu#ein	854,{
 	close;
 }
 
-einbroch,208,208,3	script	Kesunboss#ein	850,{
+einbroch,208,208,3	script	Kesunboss#ein	4_F_EINWOMAN,{
 	mes "[Kesunboss]";
 	mes "Lady Calla is the";
 	mes "epitome of elegance,";
@@ -7353,7 +7279,7 @@ einbroch,208,208,3	script	Kesunboss#ein	850,{
 	close;
 }
 
-einbech,176,125,3	script	Ellhenje#ein	850,{
+einbech,176,125,3	script	Ellhenje#ein	4_F_EINWOMAN,{
 	mes "[Ellhenje]";
 	mes "Things might be";
 	mes "bad in this town";
@@ -7389,7 +7315,7 @@ einbech,176,125,3	script	Ellhenje#ein	850,{
 	close;
 }
 
-ein_in01,208,86,3	script	Decii#ein	855,{
+ein_in01,208,86,3	script	Decii#ein	4_M_EINMAN,{
 	mes "[Decii]";
 	mes "This is so";
 	mes "frustrating!";
@@ -7405,7 +7331,7 @@ ein_in01,208,86,3	script	Decii#ein	855,{
 	close;
 }
 
-ein_in01,192,90,3	script	Supineque#ein	849,{
+ein_in01,192,90,3	script	Supineque#ein	4_M_DIEMAN,{
 	mes "[Supineque]";
 	mes "Ugh...";
 	mes "I'm starving!";

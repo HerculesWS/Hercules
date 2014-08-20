@@ -3,12 +3,12 @@
 //===== By: ==================================================
 //= Lupus
 //===== Current Version: =====================================
-//= 20121003
-//===== Description: ========================================= 
+//= 20131225
+//===== Description: =========================================
 //= Demonstrates the 'getiteminfo' command.
 //============================================================
 
-prontera,156,179,6	script	test_getiteminfo	117,{
+prontera,156,179,6	script	test_getiteminfo	4_F_KAFRA1,{
 	mes "Please enter an item ID.";
 	input .@value;
 
@@ -17,7 +17,7 @@ prontera,156,179,6	script	test_getiteminfo	117,{
 	mes "Item ID: "+.@value+" ^nItemID^"+.@value;
 
 	mes "Current item info:";
-	for(set .@id,0; .@id<14; set .@id,.@id+1)
+	for (.@id = 0; .@id < 14; ++.@id)
 		mes " getiteminfo("+.@value+","+.@id+") = "+getiteminfo(.@value,.@id);
 	close;
 }

@@ -1,21 +1,20 @@
 //===== Hercules Script ======================================
 //= Sura Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Muad_Dib, Gepard
-//===== Current Version: ===================================== 
-//= 1.2
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Current Version: =====================================
+//= 1.3
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job change Quest from Monk / Champion -> Sura.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [Masao]
 //= 1.1 Removed disablenpc which causes players stucked in waitingroom. [Joseph]
 //= 1.2 Updated script, optimized. [Euphy]
+//= 1.3 Added GM management function. [Euphy]
 //============================================================
 
-ve_in,237,125,0	script	King Crab#job_shu	107,{
+ve_in,237,125,0	script	King Crab#job_shu	1_M_PAY_ELDER,{
 	if (job_shu == 0) {
 		mes "[King Crab]";
 		mes "Khh ha ha ha ha ha ha.";
@@ -156,9 +155,9 @@ ve_in,237,125,0	script	King Crab#job_shu	107,{
 		close;
 	}
 }
-ve_in,241,128,4	duplicate(King Crab#job_shu)	Sludge Worm#job_shu	110
+ve_in,241,128,4	duplicate(King Crab#job_shu)	Sludge Worm#job_shu	4_M_MINISTER
 
-ve_in,244,126,3	script	Waitress#job_shu	69,{
+ve_in,244,126,3	script	Waitress#job_shu	1_F_04,{
 	mes "[Waitress]";
 	if (job_shu == 0) {
 		mes "Oh no~";
@@ -193,7 +192,7 @@ ve_in,244,126,3	script	Waitress#job_shu	69,{
 	close;
 }
 
-ve_in,240,131,0	script	???#bcmd	484,{
+ve_in,240,131,0	script	???#bcmd	4_F_SURA,{
 	end;
 OnInit:
 	disablenpc "???#bcmd";
@@ -212,7 +211,7 @@ OnTimer600000:
 	end;
 }
 
-ve_in,97,149,0	script	#Suraryokan	139,3,3,{
+ve_in,97,149,0	script	#Suraryokan	HIDDEN_WARP_NPC,3,3,{
 OnTouch:
 	if (job_shu == 1) {
 		set .@n$, "["+strcharinfo(0)+"]";
@@ -270,7 +269,7 @@ OnTouch:
 	end;
 }
 
-ve_in,98,159,0	script	Fighter#job_shu	484,{
+ve_in,98,159,0	script	Fighter#job_shu	4_F_SURA,{
 	if (job_shu < 2) {
 		mes "[Fighter]";
 		mes "Ahhhh~ I'm so tired.";
@@ -432,7 +431,7 @@ ve_in,98,159,0	script	Fighter#job_shu	484,{
 	close;
 }
 
-yuno_fild07,254,176,7	script	Buddy#job_shu	753,{
+yuno_fild07,254,176,7	script	Buddy#job_shu	4_M_MONK,{
 	if (job_shu < 4) {
 		mes "[Buddy]";
 		mes "Haaap!!! Haaaap!!! Whoo!! Haahhp!!!";
@@ -506,7 +505,7 @@ yuno_fild07,254,176,7	script	Buddy#job_shu	753,{
 	end;
 }
 
-sword_1-1,223,243,4	script	Drawing Room	753,{
+sword_1-1,223,243,4	script	Drawing Room	4_M_MONK,{
 	end;
 OnInit:
 	waitingroom "Drawing Room",20,"Drawing Room::OnStartArena",1;
@@ -525,7 +524,7 @@ OnDisable:
 	end;
 }
 
-sword_1-1,223,243,4	script	Buddy#job_shu_Salong	753,{
+sword_1-1,223,243,4	script	Buddy#job_shu_Salong	4_M_MONK,{
 	mes "[Buddy]";
 	mes "My master doesn't like noise, so please ^f57d7dwait in the living room silently.^000000";
 	next;
@@ -543,7 +542,7 @@ sword_1-1,223,243,4	script	Buddy#job_shu_Salong	753,{
 	}
 }
 
-sword_2-1,1,1,0	script	Buddy#Sura_Salon	66,{
+sword_2-1,1,1,0	script	Buddy#Sura_Salon	1_F_01,{
 	end;
 OnInit:
 	disablenpc "Buddy#Sura_Salon";
@@ -644,7 +643,7 @@ OnTimer320000:
 	end;
 }
 
-sword_2-1,223,205,7	script	Buddy#job_shuaneh	753,{
+sword_2-1,223,205,7	script	Buddy#job_shuaneh	4_M_MONK,{
 	if (job_shu > 4) {
 		mes "I'll show you the way. This way.";
 		close2;
@@ -665,7 +664,7 @@ OnEnable:
 	end;
 }
 
-sword_2-1,223,205,0	script	#Sura_garajjom	139,10,10,{
+sword_2-1,223,205,0	script	#Sura_garajjom	HIDDEN_WARP_NPC,10,10,{
 OnTouch:
 	warp "sword_1-1",216,168;
 	end;
@@ -678,7 +677,7 @@ OnEnable:
 	end;
 }
 
-sword_1-1,222,169,5	script	Bruno#job_shu	484,{
+sword_1-1,222,169,5	script	Bruno#job_shu	4_F_SURA,{
 	if (job_shu > 4) {
 		mes "[Bruno]";
 		mes "Hey~ "+strcharinfo(0)+", what's up?";
@@ -743,7 +742,7 @@ sword_1-1,222,169,5	script	Bruno#job_shu	484,{
 	end;
 }
 
-sword_1-1,223,167,2	script	Master#job_shu	483,{
+sword_1-1,223,167,2	script	Master#job_shu	4_M_SURA,{
 	mes "[Master]";
 	if (job_shu == 5) {
 		mes "You must have bright eyes to see that you finally came to this room.";
@@ -829,8 +828,8 @@ sword_1-1,223,167,2	script	Master#job_shu	483,{
 	end;
 }
 
-/*
-sword_2-1,1,2,0	script	Button Girl#sura	66,{
+sword_2-1,1,2,0	script	Button Girl#sura	1_F_01,{
+	callfunc "F_GM_NPC";
 	switch(select("Turn on arena.:Turn off arena.:Turn on the living room.:Turn on Buddy.:Turn on Gara.:Turn off all.:Close")) {
 	case 1:
 		mes "Turn on arena.";
@@ -864,4 +863,3 @@ sword_2-1,1,2,0	script	Button Girl#sura	66,{
 		close;
 	}
 }
-*/

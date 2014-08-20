@@ -4,8 +4,6 @@
 //= Athena (1.0)
 //===== Current Version: =====================================
 //= 1.5
-//===== Compatible With: =====================================
-//= Hercules
 //===== Additional Comments: =================================
 //= 1.0 spawn N and spawn delays aren't yet correct, so I set
 //=     respawn delays quite big for now [Lupus]

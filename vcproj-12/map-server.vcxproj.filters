@@ -37,6 +37,9 @@
     <ClCompile Include="..\src\map\homunculus.c">
       <Filter>map_sql</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\map\HPMmap.c">
+      <Filter>map_sql</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\map\instance.c">
       <Filter>map_sql</Filter>
     </ClCompile>
@@ -157,6 +160,9 @@
     <ClCompile Include="..\src\common\strlib.c">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\common\sysinfo.c">
+      <Filter>common</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\common\timer.c">
       <Filter>common</Filter>
     </ClCompile>
@@ -196,12 +202,6 @@
     <ClCompile Include="..\src\common\mutex.c">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\common\mempool.c">
-      <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\common\raconf.c">
-      <Filter>common</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\map\atcommand.h">
@@ -238,6 +238,9 @@
       <Filter>map_sql</Filter>
     </ClInclude>
     <ClInclude Include="..\src\map\homunculus.h">
+      <Filter>map_sql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\HPMmap.h">
       <Filter>map_sql</Filter>
     </ClInclude>
     <ClInclude Include="..\src\map\instance.h">
@@ -372,6 +375,9 @@
     <ClInclude Include="..\src\common\strlib.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\common\sysinfo.h">
+      <Filter>common</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\common\timer.h">
       <Filter>common</Filter>
     </ClInclude>
@@ -423,12 +429,6 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\mutex.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\common\mempool.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\common\raconf.h">
       <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>

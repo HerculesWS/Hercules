@@ -1,18 +1,18 @@
 //===== Hercules Script ======================================
 //= Elemental Stone Trader
-//===== By: ================================================== 
-//=  MasterOfMuppets, rAthena Dev Team
-//===== Current Version: ===================================== 
+//===== By: ==================================================
+//= rAthena Team & MasterOfMuppets
+//===== Current Version: =====================================
 //= 1.1
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Trade impure types of elemental stones for pure ones.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
 //= 1.1 Optimized. [Euphy]
-//============================================================ 
+//============================================================
 
-ama_in02,61,27,7	script	Alchemist#ama	749,{
+ama_in02,61,27,7	script	Alchemist#ama	4_M_ALCHE_B,{
 	mes "[Laspuchin Gregory]";
 	mes "KeekeekeeKeheheh.";
 	mes "This is amazing!";
@@ -79,8 +79,8 @@ ama_in02,61,27,7	script	Alchemist#ama	749,{
 	mes "[Laspuchin Gregory]";
 	mes "Uh-huh, what did you bring?";
 	next;
-	setarray .@Items[1],995,997,994,996;
-	set .@i, .@Items[select("Mystic Frozen:Great Nature:Flame Heart:Rough Wind")];
+	setarray .@items[1],995,997,994,996;
+	set .@i, .@items[select("Mystic Frozen:Great Nature:Flame Heart:Rough Wind")];
 	mes "[Laspuchin Gregory]";
 	if (countitem(.@i) > 7) {
 		mes "I will take 8 of them and";
@@ -93,7 +93,7 @@ ama_in02,61,27,7	script	Alchemist#ama	749,{
 		next;
 		set .@menu$, "";
 		for(set .@j,1; .@j<5; set .@j,.@j+1) {
-			if (.@Items[.@j] != .@i) set .@menu$, .@menu$+getitemname(.@Items[.@j]);
+			if (.@items[.@j] != .@i) set .@menu$, .@menu$+getitemname(.@items[.@j]);
 			set .@menu$, .@menu$+":";
 		}
 		set .@menu$, .@menu$+"Cancel the trade";
@@ -130,7 +130,7 @@ ama_in02,61,27,7	script	Alchemist#ama	749,{
 		}
 		else {
 			delitem .@i,8;
-			getitem .@Items[.@j],1;
+			getitem .@items[.@j],1;
 			mes "Keheheh! You've chosen a good one!";
 			mes "Use it well...";
 			mes "Bring me other stones if you have them!";

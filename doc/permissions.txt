@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= Hercules Dev Team
 //===== Current Version: =====================================
-//= 20130528
+//= 20131031
 //===== Description: =========================================
 //= Player group permissions, configured in /conf/groups.conf.
 //============================================================
@@ -31,4 +31,5 @@ show_bossmobs : Ability to see boss mobs with @showmobs.
 disable_pvm : Ability to disable Player vs. Monster.
 disable_pvp : Ability to disable Player vs. Player.
 disable_commands_when_dead : Ability to disable @command usage when dead.
+can_trade_bound: Ability to trade or otherwise distribute bound items (drop, storage, vending etc...).
 hchsys_admin : Hercules Chat System Admin (Ability to modify channel settings regardless of ownership and join password-protected channels without requiring a password.)

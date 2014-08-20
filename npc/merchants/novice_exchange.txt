@@ -1,23 +1,22 @@
 //===== Hercules Script ======================================
 //= Novice Goods Exchanger
 //===== By: ==================================================
-//= ???, rAthena Dev Team
+//= ???, rAthena Team
 //===== Current Version: =====================================
 //= 1.4
 //===== Description: =========================================
-//= [Aegis COnversion]
+//= [Official Conversion]
 //= Exchanges your Basic Monster drops for Red Potions.
 //===== Additional Comments: =================================
 //= 1.2 Rescripted to Aegis 10.standards. [L0ne_W0lf[
-//=	Made it easier to add new items to exhange list
-//=	meaning only the exchange is done in a function now.
+//=     Made it easier to add new items to exhange list
+//=     meaning only the exchange is done in a function now.
 //= 1.3 Fixed dialog mix-up in function. [L0ne_W0lf]
 //= 1.4 Added checkweight, and input min/max values. [L0ne_W0lf]
 //============================================================
 
-prontera,123,102,5	script	Merchant#pron	85,{
-	set .@now_weight,MaxWeight-Weight;
-	if (.@now_weight < 6301 || checkweight(1201,1) == 0) {
+prontera,123,102,5	script	Merchant#pron	4_M_03,{
+	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
 		mes "What are you, superhuman?";
@@ -72,9 +71,8 @@ prontera,123,102,5	script	Merchant#pron	85,{
 	}
 }
 
-morocc,180,259,3	script	Merchant#morroc	85,{
-	set .@now_weight,MaxWeight-Weight;
-	if (.@now_weight < 6301 || checkweight(1201,1) == 0) {
+morocc,180,259,3	script	Merchant#morroc	4_M_03,{
+	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
 		mes "What are you, superhuman?";
@@ -130,9 +128,8 @@ morocc,180,259,3	script	Merchant#morroc	85,{
 	}
 }
 
-payon,200,134,5	script	Merchant#pay	85,{
-	set .@now_weight,MaxWeight-Weight;
-	if (.@now_weight < 6301 || checkweight(1201,1) == 0) {
+payon,200,134,5	script	Merchant#pay	4_M_03,{
+	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
 		mes "What are you, superhuman?";
@@ -185,9 +182,8 @@ payon,200,134,5	script	Merchant#pay	85,{
 	}
 }
 
-aldebaran,152,63,5	script	Merchant#alde	85,{
-	set .@now_weight,MaxWeight-Weight;
-	if (.@now_weight < 6301 || checkweight(1201,1) == 0) {
+aldebaran,152,63,5	script	Merchant#alde	4_M_03,{
+	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
 		mes "What are you, superhuman?";
@@ -243,9 +239,8 @@ aldebaran,152,63,5	script	Merchant#alde	85,{
 	}
 }
 
-geffen,173,88,5	script	Merchant#geff	85,{
-	set .@now_weight,MaxWeight-Weight;
-	if (.@now_weight < 6301 || checkweight(1201,1) == 0) {
+geffen,173,88,5	script	Merchant#geff	4_M_03,{
+	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
 		mes "What are you, superhuman?";
@@ -384,9 +379,9 @@ function	script	F_PotExchange	{
 	}
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= 1.1 Made it as a function. U can add your own Merchs [Lupus]
 //= 1.1a Fixed item select [KarLaeda]
-//============================================================ 
+//============================================================

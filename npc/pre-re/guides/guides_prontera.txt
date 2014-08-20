@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Prontera Guides
 //===== By: ==================================================
 //= kobra_k88; L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.6a
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Official Conversion]
 //= Guides for the City of Prontera
@@ -23,7 +21,7 @@
 //	-Thanks to Brainstorm.
 //============================================================
 
-prontera,154,187,4	script	Guide#prt::PrtGuide	105,{
+prontera,154,187,4	script	Guide#prt::PrtGuide	8W_SOLDIER,{
 	cutin "prt_soldier",2;
 	mes "[Prontera Guide]";
 	mes "Welcome to Prontera,";
@@ -233,10 +231,10 @@ prontera,154,187,4	script	Guide#prt::PrtGuide	105,{
 	end;
 }
 
-prontera,282,208,2	duplicate(PrtGuide)	East Gate-Guide	105
+prontera,282,208,2	duplicate(PrtGuide)	East Gate-Guide	8W_SOLDIER
 
-prontera,29,200,6	duplicate(PrtGuide)	West Gate-Guide	105
+prontera,29,200,6	duplicate(PrtGuide)	West Gate-Guide	8W_SOLDIER
 
-prontera,160,29,0	duplicate(PrtGuide)	South Gate-Guide	105
+prontera,160,29,0	duplicate(PrtGuide)	South Gate-Guide	8W_SOLDIER
 
-prontera,151,330,4	duplicate(PrtGuide)	North Gate-Guide	105
+prontera,151,330,4	duplicate(PrtGuide)	North Gate-Guide	8W_SOLDIER

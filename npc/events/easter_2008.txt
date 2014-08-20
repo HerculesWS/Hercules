@@ -14,7 +14,7 @@
 //============================================================
 
 // Prontera
-prontera,111,99,5	script	Egg Salesman#prt::EggVendor	98,{
+prontera,111,99,5	script	Egg Salesman#prt::EggVendor	4W_M_02,{
 	mes "[Egg Salesman]";
 	mes "^FF0000Chicken Eggs^000000! Come and";
 	mes "buy as many Chicken Eggs";
@@ -91,7 +91,7 @@ prontera,111,99,5	script	Egg Salesman#prt::EggVendor	98,{
 				}
 				else {
 					set .@egg_zeny,.@input*500;
-					if (zeny < .@egg_zeny) {
+					if (Zeny < .@egg_zeny) {
 						mes "[Egg Salesman]";
 						mes "You don't have enough Zeny.";
 						next;
@@ -118,7 +118,7 @@ prontera,111,99,5	script	Egg Salesman#prt::EggVendor	98,{
 							mes "them, but I don't know anything";
 							mes "about that. Well, have a good";
 							mes "time, and I'll see you again!";
-							set zeny,zeny-.@egg_zeny;
+							Zeny -= .@egg_zeny;
 							getitem 7605,.@input; //Chicken_Egg
 							close;
 						}
@@ -138,7 +138,7 @@ prontera,111,99,5	script	Egg Salesman#prt::EggVendor	98,{
 	}
 }
 
-prontera,113,98,0	script	Dowdy Matron#prt::EggMatron	701,{
+prontera,113,98,0	script	Dowdy Matron#prt::EggMatron	4_F_GODEMOM,{
 	mes "[Dowdy Matron]";
 	mes "This festival is going";
 	mes "to be so much fun! Ooh!";
@@ -155,7 +155,7 @@ prontera,113,98,0	script	Dowdy Matron#prt::EggMatron	701,{
 	close;
 }
 
-prontera,108,96,5	script	Cantankerous Geezer#prt::EggGeezer	709,{
+prontera,108,96,5	script	Cantankerous Geezer#prt::EggGeezer	4_M_SEAMAN,{
 	mes "[Cantankerous Geezer]";
 	mes ".Hey, do you know how";
 	mes "Chicken Eggs got to be so";
@@ -179,27 +179,27 @@ prontera,108,96,5	script	Cantankerous Geezer#prt::EggGeezer	709,{
 }
 
 // Payon
-payon,172,173,5	duplicate(EggVendor)	Egg Salesman#pay	98
-payon,175,171,1	duplicate(EggMatron)	Dowdy Matron#pay	701
-payon,170,171,5	duplicate(EggGeezer)	Cantankerous Geezer#pay	709
+payon,172,173,5	duplicate(EggVendor)	Egg Salesman#pay	4W_M_02
+payon,175,171,1	duplicate(EggMatron)	Dowdy Matron#pay	4_F_GODEMOM
+payon,170,171,5	duplicate(EggGeezer)	Cantankerous Geezer#pay	4_M_SEAMAN
 
 // Geffen
-geffen,136,64,5	duplicate(EggVendor)	Egg Salesman#gef	98
-geffen,138,63,1	duplicate(EggMatron)	Dowdy Matron#gef	701
-geffen,133,63,5	duplicate(EggGeezer)	Cantankerous Geezer#gef	709
+geffen,136,64,5	duplicate(EggVendor)	Egg Salesman#gef	4W_M_02
+geffen,138,63,1	duplicate(EggMatron)	Dowdy Matron#gef	4_F_GODEMOM
+geffen,133,63,5	duplicate(EggGeezer)	Cantankerous Geezer#gef	4_M_SEAMAN
 
 // Al De Baran
-aldebaran,133,119,5	duplicate(EggVendor)	Egg Salesman#alde	98
-aldebaran,135,117,1	duplicate(EggMatron)	Dowdy Matron#ald	701
-aldebaran,132,116,5	duplicate(EggGeezer)	Cantankerous Geezer#ald	709
+aldebaran,133,119,5	duplicate(EggVendor)	Egg Salesman#alde	4W_M_02
+aldebaran,135,117,1	duplicate(EggMatron)	Dowdy Matron#ald	4_F_GODEMOM
+aldebaran,132,116,5	duplicate(EggGeezer)	Cantankerous Geezer#ald	4_M_SEAMAN
 
 // Alberta
-alberta,90,55,5	duplicate(EggVendor)	Egg Salesman#alb	98
-alberta,92,53,1	duplicate(EggMatron)	Dowdy Matron#alb	701
-alberta,88,52,5	duplicate(EggGeezer)	Cantankerous Geezer#alb	709
+alberta,90,55,5	duplicate(EggVendor)	Egg Salesman#alb	4W_M_02
+alberta,92,53,1	duplicate(EggMatron)	Dowdy Matron#alb	4_F_GODEMOM
+alberta,88,52,5	duplicate(EggGeezer)	Cantankerous Geezer#alb	4_M_SEAMAN
 
 // Create Holy Eggs
-prontera,230,312,3	script	Nerlen#es07	79,{
+prontera,230,312,3	script	Nerlen#es07	1_F_PRIEST,{
 	mes "[Nerlen]";
 	mes "Hello! If you'd like,";
 	mes "I can take your Chicken";
@@ -312,7 +312,7 @@ prontera,230,312,3	script	Nerlen#es07	79,{
 }
 
 // Easter Quest
-morocc,131,26,5	script	Secret Corps#egg	880,{
+morocc,131,26,5	script	Secret Corps#egg	4_M_MASKMAN,{
 	if (easter2008 == 1) {
 		mes "[Corps Member]";
 		mes "How are you doing?";
@@ -626,7 +626,7 @@ morocc,131,26,5	script	Secret Corps#egg	880,{
 	}
 }
 
-pay_dun00,22,127,0	script	Trace#egg1	844,{
+pay_dun00,22,127,0	script	Trace#egg1	CLEAR_NPC,{
 	if (easter2008 == 5) {
 		mes "[" + strcharinfo(0) + "]";
 		mes "Well...";
@@ -678,7 +678,7 @@ pay_dun00,22,127,0	script	Trace#egg1	844,{
 	}
 }
 
-iz_dun02,340,346,0	script	Trace#egg	844,{
+iz_dun02,340,346,0	script	Trace#egg	CLEAR_NPC,{
 	if (easter2008 == 6) {
 		mes "[" + strcharinfo(0) + "]";
 		mes "Well...";
@@ -730,7 +730,7 @@ iz_dun02,340,346,0	script	Trace#egg	844,{
 	}
 }
 
-mjo_dun03,308,256,0	script	Trace#egg2	844,{
+mjo_dun03,308,256,0	script	Trace#egg2	CLEAR_NPC,{
 	if (easter2008 == 7) {
 		mes "[" + strcharinfo(0) + "]";
 		mes "Well...";
@@ -782,7 +782,7 @@ mjo_dun03,308,256,0	script	Trace#egg2	844,{
 	}
 }
 
-gl_prison,157,176,0	script	Trace#egg3	844,{
+gl_prison,157,176,0	script	Trace#egg3	CLEAR_NPC,{
 	if (easter2008 == 8) {
 		mes "[" + strcharinfo(0) + "]";
 		mes "Well...";

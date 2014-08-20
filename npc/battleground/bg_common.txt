@@ -1,30 +1,31 @@
 //===== Hercules Script ======================================
 // BattleGround System - Common NPCs
-//===== By: ================================================== 
+//===== By: ==================================================
 //= ????, L0ne_W0lf
-//===== Current Version: ===================================== 
-//= 1.3
-//===== Description: ========================================= 
-//= [AEGIS Conversion]
+//===== Current Version: =====================================
+//= 1.4
+//===== Description: =========================================
+//= [Official Conversion]
 //= Battleground NPCs:
 //= - Generals and Aides
 //= - Battleground Warper
 //= - Kafra and Repairman.
 //= - GM Management NPC (disabled by default)
 //= - Badge Exchanger (Tierra and Flavius)
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version.
 //= 1.1 Updated several NPCs to Official.
 //= 1.2 Updated Repairman NPC
 //= 1.3 Optimized "Erundek" NPC. [Euphy]
+//= 1.4 Added GM management function. [Euphy]
 //============================================================
 
 // Generals
 //============================================================
-bat_room,161,158,3	script	Gen. Guillaume's Aide#01	419,{ end; }
-bat_room,161,160,3	script	Gen. Guillaume's Aide#03	419,{ end; }
+bat_room,161,158,3	script	Gen. Guillaume's Aide#01	4_M_KY_HEAD,{ end; }
+bat_room,161,160,3	script	Gen. Guillaume's Aide#03	4_M_KY_HEAD,{ end; }
 
-bat_room,160,141,3	script	Prince Croix	416,{
+bat_room,160,141,3	script	Prince Croix	4_M_CRU_CRUA,{
 	cutin "bat_crua1",2;
 	mes "[Prince Croix]";
 	mes "Wise adventurer, why don't you lend us your power for victory?";
@@ -88,10 +89,10 @@ bat_room,160,141,3	script	Prince Croix	416,{
 	end;
 }
 
-bat_room,161,140,3	script	Prince Croix's Aide#01	415,{ end; }
-bat_room,161,142,3	script	Prince Croix's Aide#02	415,{ end; }
+bat_room,161,140,3	script	Prince Croix's Aide#01	4_M_CRU_HEAD,{ end; }
+bat_room,161,142,3	script	Prince Croix's Aide#02	4_M_CRU_HEAD,{ end; }
 
-bat_room,160,159,3	script	General Guillaume	420,{
+bat_room,160,159,3	script	General Guillaume	4_M_KY_KIYOM,{
 	cutin "bat_kiyom2",2;
 	mes "[General Guillaume]";
 	mes "Hot-blooded adventurer, we need your ability to win this battle.";
@@ -171,14 +172,14 @@ bat_room,160,159,3	script	General Guillaume	420,{
 
 // Flags
 //============================================================
-//bat_room,140,160,3	script	Guillaume Base#roomflag1	973,{ end; }
-//bat_room,167,160,3	script	Guillaume Base#roomflag2	973,{ end; }
-//bat_room,140,139,3	script	Croix Base#roomflag1	974,{ end; }
-//bat_room,167,139,3	script	Croix Base#roomflag2	974,{ end; }
+//bat_room,140,160,3	script	Guillaume Base#roomflag1	1_FLAG_LION,{ end; }
+//bat_room,167,160,3	script	Guillaume Base#roomflag2	1_FLAG_LION,{ end; }
+//bat_room,140,139,3	script	Croix Base#roomflag1	1_FLAG_EAGLE,{ end; }
+//bat_room,167,139,3	script	Croix Base#roomflag2	1_FLAG_EAGLE,{ end; }
 
 // BattleGround Warper
 //============================================================
-bat_room,148,150,5	script	Teleporter#Battlefield	124,{
+bat_room,148,150,5	script	Teleporter#Battlefield	4_F_TELEPORTER,{
 	mes "[Teleporter]";
 	mes "Do you wish to leave the battlefield? Use my services to return to town.";
 	next;
@@ -228,7 +229,7 @@ bat_room,148,150,5	script	Teleporter#Battlefield	124,{
 	end;
 }
 
--	script	Maroll Battle Recruiter::BatRecruit	728,{
+-	script	Maroll Battle Recruiter::BatRecruit	4_F_JOB_KNIGHT,{
 	mes "[Maroll Battle Recruiter]";
 	mes "Good day, adventurer.";
 	mes "I'm a knight from a far country called Maroll Kingdom.";
@@ -269,13 +270,13 @@ bat_room,148,150,5	script	Teleporter#Battlefield	124,{
 	end;
 }
 
-prontera,123,83,3	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit1	728
-moc_ruins,75,162,3	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit2	728
-aldebaran,146,109,3	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit3	728
-geffen,109,66,3	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit4	728
-payon,189,105,3	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit5	728
-lighthalzen,153,86,5	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit6	728
-rachel,149,138,3	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit7	728
+prontera,123,83,3	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit1	4_F_JOB_KNIGHT
+moc_ruins,75,162,3	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit2	4_F_JOB_KNIGHT
+aldebaran,146,109,3	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit3	4_F_JOB_KNIGHT
+geffen,109,66,3	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit4	4_F_JOB_KNIGHT
+payon,189,105,3	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit5	4_F_JOB_KNIGHT
+lighthalzen,153,86,5	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit6	4_F_JOB_KNIGHT
+rachel,149,138,3	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit7	4_F_JOB_KNIGHT
 
 // Additional warps
 // Empty
@@ -308,29 +309,29 @@ bat_room,253,211,0	warp	bat32	1,1,bat_room,154,149
 
 // Kafra
 //============================================================
-bat_room,148,147,4	script	Kafra Staff::kaf_bat	861,{
+bat_room,148,147,4	script	Kafra Staff::kaf_bat	4_F_KAFRA9,{
 	cutin "kafra_09",2;
 	callfunc "F_Kafra",0,2,1,150,0;
 }
 
 // Repairman
 //============================================================
-bat_room,138,144,4	script	Repairman#bg	86,{
+bat_room,138,144,4	script	Repairman#bg	4_M_04,{
 	callfunc "repairmain","Repairman";
 	end;
 }
 
-/*
 // GM Management NPC
 //============================================================
-bat_room,1,151,3	script	Switch#batgnd	81,{
-	input .@input,0,2000;
-	if (.@input == 0) {
+bat_room,1,151,3	script	Switch#batgnd	4_DOG01,{
+	set .@i, callfunc("F_GM_NPC",1854,0);
+	if (.@i == -1) {
 		mes "The command has been cancelled.";
 		close;
-	}
-	else if (.@input == 1854) {
-		mes "May I help ypu?";
+	} else if (.@i == 0) {
+		end;
+	} else {
+		mes "May I help you?";
 		next;
 		switch(select("Close Battlefield:Open Battlefield:Reset a01:Reset b01:Reset a02:Reset b02")) {
 		case 1:
@@ -370,11 +371,10 @@ bat_room,1,151,3	script	Switch#batgnd	81,{
 		close;
 	}
 }
-*/
 
 // Badges Exchange
 //============================================================
-bat_room,160,150,3	script	Erundek	109,{
+bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -477,10 +477,10 @@ bat_room,160,150,3	script	Erundek	109,{
 			next;
 			switch(select("Garments / Shoes:Armor")) {
 			case 1:
-				setarray .@Items[0],2538,50,2539,50,2540,50,2435,50,2436,50,2437,50;
+				setarray .@items[0],2538,50,2539,50,2540,50,2435,50,2436,50,2437,50;
 				break;
 			case 2:
-				setarray .@Items[0],2376,80,2377,80,2378,80,2379,80,2380,80,2381,80,2382,80;
+				setarray .@items[0],2376,80,2377,80,2378,80,2379,80,2380,80,2381,80,2382,80;
 				break;
 			}
 			break;
@@ -489,7 +489,7 @@ bat_room,160,150,3	script	Erundek	109,{
 			mes "You chose ^3131FFAccessory^000000.";
 			mes "You can exchange the Medal of Honors with your Badges according to the job classes, as follows:";
 			next;
-			setarray .@Items[0],2733,500,2720,500,2721,500,2722,500,2723,500,2724,500,2725,500;
+			setarray .@items[0],2733,500,2720,500,2721,500,2722,500,2723,500,2724,500,2725,500;
 			set .@menu1$,"Gunslinger:Swordman/Taekwon Master:Thief:Acolyte:Magician:Archer:Merchant";
 			break;
 		case 4:
@@ -497,7 +497,7 @@ bat_room,160,150,3	script	Erundek	109,{
 			mes "You chose ^3131FFConsumable^000000.";
 			mes "The following consumable items are available for exchange with the battlefield badges:";
 			next;
-			setarray .@Items[0],12269,10,12270,10,12271,5,12272,10,12273,10;
+			setarray .@items[0],12269,10,12270,10,12271,5,12272,10,12273,10;
 			break;
 		}
 		break;
@@ -505,17 +505,17 @@ bat_room,160,150,3	script	Erundek	109,{
 		mes "[Erundek]";
 		mes "We have many items, so please take a look and purchase deliberately.";
 		close2;
-		ReadBook 11010,1;
+		readbook 11010,1;
 		end;
 	}
 	set .@menu$,"";
 	if (.@menu1$ != "") set .@menu$, .@menu1$;
-	else for(set .@i,0; .@i<getarraysize(.@Items); set .@i,.@i+2)
-		set .@menu$, .@menu$+getitemname(.@Items[.@i])+":";
+	else for(set .@i,0; .@i<getarraysize(.@items); set .@i,.@i+2)
+		set .@menu$, .@menu$+getitemname(.@items[.@i])+":";
 	set .@i, (select(.@menu$)-1)*2;
 	mes "[Erundek]";
-	mes "You chose ^3131FF"+getitemname(.@Items[.@i])+"^000000.";
-	switch(.@Items[.@i]) {
+	mes "You chose ^3131FF"+getitemname(.@items[.@i])+"^000000.";
+	switch(.@items[.@i]) {
 		case 2720: mes "This item is for Swordman and Taekwon Master Class only."; break;
 		case 2721: mes "This item is for Thief Class only."; break;
 		case 2722: mes "This item is for Acolyte Class only."; break;
@@ -525,7 +525,7 @@ bat_room,160,150,3	script	Erundek	109,{
 		case 2733: mes "This item is for Gunslinger only."; break;
 		default: break;
 	}
-	mes "You can exchange for this item with ^FF0000"+.@Items[.@i+1]+" "+getitemname(7828)+" or "+.@Items[.@i+1]+" "+getitemname(7829)+"^000000.";
+	mes "You can exchange for this item with ^FF0000"+.@items[.@i+1]+" "+getitemname(7828)+" or "+.@items[.@i+1]+" "+getitemname(7829)+"^000000.";
 	mes "Would you like to exchange?";
 	next;
 	switch(select("Do not exchange:Exchange")) {
@@ -536,7 +536,7 @@ bat_room,160,150,3	script	Erundek	109,{
 	case 2:
 		mes "[Erundek]";
 		mes "Which Badge do you want to exchange?";
-		mes "You need ^3131FF"+.@Items[.@i+1]+" Badges^000000 to exchange.";
+		mes "You need ^3131FF"+.@items[.@i+1]+" Badges^000000 to exchange.";
 		next;
 		if (.@item[0] < 12269 || .@item[0] > 12273 ) {
 			mes "[Erundek]";
@@ -550,10 +550,10 @@ bat_room,160,150,3	script	Erundek	109,{
 			break;
 		}
 		set .@cost, ((.@j==1)?7828:7829);
-		if (countitem(.@cost) >= .@Items[.@i+1]) {
+		if (countitem(.@cost) >= .@items[.@i+1]) {
 			mes "Thank you for exchanging.";
-			delitem .@cost, .@Items[.@i+1];
-			getitem .@Items[.@i],1;
+			delitem .@cost, .@items[.@i+1];
+			getitem .@items[.@i],1;
 		}
 		else mes "You do not have enough "+getitemname(.@cost)+"s.";
 		break;

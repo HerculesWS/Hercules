@@ -1,5 +1,8 @@
 Hercules
 ========
+
+Build Status: [![Build Status](https://travis-ci.org/HerculesWS/Hercules.png?branch=master)](https://travis-ci.org/HerculesWS/Hercules) 
+
 Table of Contents
 ---------
 * 1 What is Hercules?

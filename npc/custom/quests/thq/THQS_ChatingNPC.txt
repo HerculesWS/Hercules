@@ -4,8 +4,6 @@
 //= Fredzilla
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Start for Treasure hunter quests
 //===== Additional Comments: =================================
@@ -14,7 +12,7 @@
 //============================================================
 
 //Entrance Flags
-yuno,48,101,6	script	Notice	722,{
+yuno,48,101,6	script	Notice	GUILD_FLAG,{
 	mes "^FF0000[ Treasure Hunter Guild House ]^000000";
 	mes " ";
 	mes "Welcome to the Treasure Hunter's Guild House.";
@@ -26,7 +24,7 @@ yuno,48,101,6	script	Notice	722,{
 	close;
 }
 //Saver Girl;
-yuno_in01,32,178,3	script	Ahlma	94,{
+yuno_in01,32,178,3	script	Ahlma	4_F_MAID,{
 	mes "[Ahlma]";
 	if (Event_THQS == 0) goto N_Member;
 	mes "Welcome to The Treasure Hunter Guild.";
@@ -46,7 +44,7 @@ N_Member:
 	close;
 }
 //Retired Smile mask girl;
-yuno_in01,33,162,3	script	Smile Helper	92,{
+yuno_in01,33,162,3	script	Smile Helper	4_F_03,{
 	mes "[Smile Gal]";
 	mes "Oh man...I am so sick of";
 	mes "trading Mr. Smile masks for crap.";
@@ -55,15 +53,15 @@ yuno_in01,33,162,3	script	Smile Helper	92,{
 	close;
 }
 //Usless Female Assasin;
-yuno_in01,22,162,6	script	Female Assasin	725,{
+yuno_in01,22,162,6	script	Female Assasin	4_F_JOB_ASSASSIN,{
 	mes "[Sharlet]";
 	if (Event_THQS > 0) goto N_Member;
 	mes "Umm sorry I'm not gona waste my time talking to you if you arn't even a member!";
 	close;
 N_Member:
-	set @TEMP,rand(1,2);
-	if (@TEMP == 1) goto N_Chat1;
-	if (@TEMP == 2) goto N_Chat2;
+	set @temp,rand(1,2);
+	if (@temp == 1) goto N_Chat1;
+	if (@temp == 2) goto N_Chat2;
 	mes "How are you reading this???";
 	mes "Well unless you are reading the code :)";
 	close;
@@ -76,14 +74,14 @@ N_Chat2:
 	close;
 }
 //another usless member
-yuno_in01,25,162,6	script	Female Wizard	123,{
+yuno_in01,25,162,6	script	Female Wizard	2_F_MAGICMASTER,{
 	mes "[Sasha]";
 	if (Event_THQS > 0) goto N_Member;
 	mes "Umm sorry I'm not gona waste my time talking to you if you arn't even a member!";
 	close;
 N_Member:
-	set @TEMP,rand(2);
-	if (@TEMP == 1) goto N_Chat;
+	set @temp,rand(2);
+	if (@temp == 1) goto N_Chat;
 	mes "Ahh welcome fellow Treasure Hunter "+strcharinfo(0)+".";
 	mes "Did you hear about that goat man running around in the trees?";
 	mes " ";

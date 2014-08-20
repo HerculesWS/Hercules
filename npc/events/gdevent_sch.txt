@@ -1,18 +1,19 @@
 //===== Hercules Script ======================================
 //= Guild dungeon event, Schwaltzvalt.
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
-//= 1.1
-//===== Description: ========================================= 
+//===== Current Version: =====================================
+//= 1.2
+//===== Description: =========================================
 //= Guild dungeon event, Schwaltzvalt. Retrieve Morestone's
 //= pickaxe from Kublin.
 //===== Additional Comments: =================================
 //= 1.0 First version
 //= 1.1 Changed spawn timer to 1 hour. [L0ne_w0lf]
+//= 1.2 Added GM management function. [Euphy]
 //============================================================
 
-schg_dun01,1,1,1	script	Monster Controler#sch_gd	81,{
+schg_dun01,1,1,1	script	Monster Controler#sch_gd	4_DOG01,{
 OnInit:
 	donpcevent "Monster Controler1#sch::OnKill";
 	initnpctimer;
@@ -26,7 +27,7 @@ OnTimer3600000:
 	end;
 }
 
-schg_dun01,1,2,1	script	Monster Controler1#sch	81,{
+schg_dun01,1,2,1	script	Monster Controler1#sch	4_DOG01,{
 OnEnable:
 	set .@callwhere,rand(1,4);
 	if (.@callwhere == 1) {
@@ -43,12 +44,12 @@ OnEnable:
 	}
 	end;
 
-Onkill:
-	killmonster "schg_dun01","Monster Controler1#sch::OnMyMObDead";
+OnKill:
+	killmonster "schg_dun01","Monster Controler1#sch::OnMyMobDead";
 	end;
 
 OnMyMobDead:
-	if (mobcount("schg_dun01","Monster Controler1#sch::OnMyMObDead") == 0) {
+	if (mobcount("schg_dun01","Monster Controler1#sch::OnMyMobDead") == 0) {
 		mapannounce "schg_dun01", "Kublin: Aargh!",bc_map,"0x99CC00";
 		mapannounce "schg_dun01", "Morestone: I thought I heard Kublin screaming!! Who is there? What happened to Kublin? Hey you!",bc_map,"0x99CC00";
 		donpcevent "Dwarf#sch_gd::OnEnable";
@@ -56,7 +57,7 @@ OnMyMobDead:
 	end;
 }
 
-schg_dun01,194,148,5	script	Dwarf#sch_gd	826,{
+schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 	if (getcharid(2) == 0) {
 		mes "[Dwarf]";
 		mes "Hey did you see an ugly Goblin come by? He stole something from me!";
@@ -474,23 +475,23 @@ OnEnable:
 	end;
 }
 
-schg_que01,100,81,3	script	Pierrot Pier#sch_gd	715,{
+schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 	specialeffect EF_POISONHIT;
 	set .@sprchg_gd,rand(1,5);
 	if (.@sprchg_gd == 1) {
-		setnpcdisplay "Pierrot Pier#sch_gd",950;
+		setnpcdisplay "Pierrot Pier#sch_gd", 4_GHOSTRING;
 	}
 	else if (.@sprchg_gd == 2) {
-		setnpcdisplay "Pierrot Pier#sch_gd",715;
+		setnpcdisplay "Pierrot Pier#sch_gd", 4_M_PIERROT;
 	}
 	else if (.@sprchg_gd == 3) {
-		setnpcdisplay "Pierrot Pier#sch_gd",714;
+		setnpcdisplay "Pierrot Pier#sch_gd", 4_F_06;
 	}
 	else if (.@sprchg_gd == 4) {
-		setnpcdisplay "Pierrot Pier#sch_gd",785;
+		setnpcdisplay "Pierrot Pier#sch_gd", 4_M_UMDANCEKID2;
 	}
 	else {
-		setnpcdisplay "Pierrot Pier#sch_gd",876;
+		setnpcdisplay "Pierrot Pier#sch_gd", 4_CAT;
 	}
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait!! -";
@@ -504,7 +505,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	715,{
 		if ($@gdeventv_s2 == 0) {
 			set .@que_2143,checkquest(2143,PLAYTIME);
 			if (.@que_2143 == -1) {
-				setnpcdisplay "Pierrot Pier#sch_gd",715;
+				setnpcdisplay "Pierrot Pier#sch_gd", 4_M_PIERROT;
 				mes "A lonely clown is juggling.";
 				next;
 				mes "When looked at closely, the clown is just a puppet that looks like a human.";
@@ -658,7 +659,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	715,{
 					mes "Let the game.. Begin!";
 					mapannounce "schg_que01", "Pierrot Pier: Let the game.. Begin!",bc_map,"0x99CC00";
 					set $@gdeventv_s2,1;
-					donpcevent "Controller#gdevent_s::Ongame_start";
+					donpcevent "Controller#gdevent_s::OnGame_start";
 					erasequest 2143;
 					close;
 				}
@@ -673,9 +674,9 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	715,{
 			mes "Let me see...";
 			next;
 			if (countitem(6031) > 0) {
-				donpcevent "Controller#gdevent_s::Onstop";
+				donpcevent "Controller#gdevent_s::OnStop";
 				set $@gdeventv_s2,3;
-				donpcevent "eff_mvp#sch_gd::Onmvp";
+				donpcevent "eff_mvp#sch_gd::OnMVP";
 				mes "[Pierrot Pier]";
 				mes "Wow~~!!";
 				mes "Success~!!";
@@ -760,7 +761,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	715,{
 				mes "Let the game.. Begin!";
 				mapannounce "schg_que01", "Pierrot Pier: Let the game.. Begin!",bc_map,"0x99CC00";
 				set $@gdeventv_s2,10;
-				donpcevent "Controller#gdevent_s::Ongame_start";
+				donpcevent "Controller#gdevent_s::OnGame_start";
 				close;
 			}
 		}
@@ -782,7 +783,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	715,{
 			mes "You've completeled an unbelievable task, I will give you the wonderful gift master has prepared!! Ha!";
 			mapannounce "schg_que01", "Pierrot Pier: You've completeled an unbelievable task, I will give you the wonderful gift my master has prepared!! Ha!",bc_map,"0x99CC00";
 			mapannounce "schg_que01", "Pierrot Pier: Here, take Pierre's Treasure Boxes.",bc_map,"0x99CC00";
-			donpcevent "eff_mvp#sch_gd::Onmvp";
+			donpcevent "eff_mvp#sch_gd::OnMVP";
 			set $@gdeventv_s2,5;
 			getitem 14596,10; //Pierre_Treasurebox
 			close;
@@ -815,9 +816,9 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	715,{
 			mes "Let me see.";
 			next;
 			if (countitem(6031) > 0) {
-				donpcevent "Controller#gdevent_s::Onstop";
+				donpcevent "Controller#gdevent_s::OnStop";
 				set $@gdeventv_s2,3;
-				donpcevent "eff_mvp#sch_gd::Onmvp";
+				donpcevent "eff_mvp#sch_gd::OnMVP";
 				mes "[Pierrot Pier]";
 				mes "Wow~~!!";
 				mes "Success~!!";
@@ -843,7 +844,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	715,{
 	}
 	else {
 		if ($@gdeventv_s2 == 0) {
-			setnpcdisplay "Pierrot Pier#sch_gd",715;
+			setnpcdisplay "Pierrot Pier#sch_gd", 4_M_PIERROT;
 			mes "A lonely clown is juggling.";
 			next;
 			mes "When looked at closely, the clown is just a puppet that looks like a human.";
@@ -901,7 +902,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	715,{
 				mes "When is that person coming? I am very bored~!";
 				close;
 			}
-			emotion 18;
+			emotion e_heh;
 			mes "[Pierrot Pier]";
 			mes "^3131FF<Although you're a weirdo, you seem to be very dedicated>^000000. Beep beep.";
 			next;
@@ -925,9 +926,9 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	715,{
 			mes "Let me see...";
 			next;
 			if (countitem(6031) > 0) {
-				donpcevent "Controller#gdevent_s::Onstop";
+				donpcevent "Controller#gdevent_s::OnStop";
 				set $@gdeventv_s2,3;
-				donpcevent "eff_mvp#sch_gd::Onmvp";
+				donpcevent "eff_mvp#sch_gd::OnMVP";
 				mes "[Pierrot Pier]";
 				mes "Wow~~!!";
 				mes "Success~!!";
@@ -982,16 +983,16 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	715,{
 		}
 		else {
 			mes "[Pierrot Pier]";
-			mes "Voc� encontrou o tesouro?";
-			mes "Mostre-me o que voc� tem nas m�os agora.";
+			mes "Did you find the treasure?";
+			mes "Show me that thing you are holding, now!";
 			next;
 			mes "[Pierrot Pier]";
-			mes "Deixe-me ver...";
+			mes "Let me see...";
 			next;
 			if (countitem(6031) > 0) {
-				donpcevent "Controller#gdevent_s::Onstop";
+				donpcevent "Controller#gdevent_s::OnStop";
 				set $@gdeventv_s2,3;
-				donpcevent "eff_mvp#sch_gd::Onmvp";
+				donpcevent "eff_mvp#sch_gd::OnMVP";
 				mes "[Pierrot Pier]";
 				mes "Wow~~!!";
 				mes "Success~!!";
@@ -1017,16 +1018,16 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	715,{
 	}
 }
 
-schg_que01,10,10,3	script	Controller#gdevent_s	81,{
+schg_que01,10,10,3	script	Controller#gdevent_s	4_DOG01,{
 OnInit:
 	set $@gdeventv_s2,0;
 	end;
 
-Onwin:
+OnWin:
 	donpcevent "treg#sch_gd::OnEnable";
 	end;
 
-Ongame_start:
+OnGame_start:
 	initnpctimer;
 	donpcevent "paper_sp_1_s::OnEnable";
 	donpcevent "paper_sp_2_s::OnEnable";
@@ -1039,35 +1040,35 @@ Ongame_start:
 	donpcevent "paper_sp_9_s::OnEnable";
 	set .@roulette_where,rand(1,9);
 	if (.@roulette_where == 1) {
-		donpcevent "paper_sp_1_s::Onbingo";
+		donpcevent "paper_sp_1_s::OnBingo";
 	}
 	else if (.@roulette_where == 2) {
-		donpcevent "paper_sp_2_s::Onbingo";
+		donpcevent "paper_sp_2_s::OnBingo";
 	}
 	else if (.@roulette_where == 3) {
-		donpcevent "paper_sp_3_s::Onbingo";
+		donpcevent "paper_sp_3_s::OnBingo";
 	}
 	else if (.@roulette_where == 4) {
-		donpcevent "paper_sp_4_s::Onbingo";
+		donpcevent "paper_sp_4_s::OnBingo";
 	}
 	else if (.@roulette_where == 5) {
-		donpcevent "paper_sp_5_s::Onbingo";
+		donpcevent "paper_sp_5_s::OnBingo";
 	}
 	else if (.@roulette_where == 6) {
-		donpcevent "paper_sp_6_s::Onbingo";
+		donpcevent "paper_sp_6_s::OnBingo";
 	}
 	else if (.@roulette_where == 7) {
-		donpcevent "paper_sp_7_s::Onbingo";
+		donpcevent "paper_sp_7_s::OnBingo";
 	}
 	else if (.@roulette_where == 8) {
-		donpcevent "paper_sp_8_s::Onbingo";
+		donpcevent "paper_sp_8_s::OnBingo";
 	}
 	else {
-		donpcevent "paper_sp_9_s::Onbingo";
+		donpcevent "paper_sp_9_s::OnBingo";
 	}
 	end;
 
-Onstop:
+OnStop:
 	stopnpctimer;
 	end;
 
@@ -1087,7 +1088,7 @@ OnTimer63000:
 	end;
 }
 
-schg_que01,87,93,0	script	paper_sp_1_s	139,{
+schg_que01,87,93,0	script	paper_sp_1_s	HIDDEN_WARP_NPC,{
 	end;
 
 OnEnable:
@@ -1105,14 +1106,14 @@ OnEnable:
 	}
 	end;
 
-Onbingo:
+OnBingo:
 	set .@paper_x1,rand(81,95);
 	set .@paper_y1,rand(87,100);
 	makeitem 6031,1,"schg_que01",.@paper_x1,.@paper_y1; //Glitering_PaperB
 	end;
 }
 
-schg_que01,102,93,0	script	paper_sp_2_s	139,{
+schg_que01,102,93,0	script	paper_sp_2_s	HIDDEN_WARP_NPC,{
 	end;
 
 OnEnable:
@@ -1130,14 +1131,14 @@ OnEnable:
 	}
 	end;
 
-Onbingo:
+OnBingo:
 	set .@paper_x2,rand(96,110);
 	set .@paper_y2,rand(87,100);
 	makeitem 6031,1,"schg_que01",.@paper_x2,.@paper_y2; //Glitering_PaperB
 	end;
 }
 
-schg_que01,117,93,0	script	paper_sp_3_s	139,{
+schg_que01,117,93,0	script	paper_sp_3_s	HIDDEN_WARP_NPC,{
 	end;
 
 OnEnable:
@@ -1155,14 +1156,14 @@ OnEnable:
 	}
 	end;
 
-Onbingo:
+OnBingo:
 	set .@paper_x3,rand(111,124);
 	set .@paper_y3,rand(87,100);
 	makeitem 6031,1,"schg_que01",.@paper_x3,.@paper_y3; //Glitering_PaperB
 	end;
 }
 
-schg_que01,87,80,0	script	paper_sp_4_s	139,{
+schg_que01,87,80,0	script	paper_sp_4_s	HIDDEN_WARP_NPC,{
 	end;
 
 OnEnable:
@@ -1180,14 +1181,14 @@ OnEnable:
 	}
 	end;
 
-Onbingo:
+OnBingo:
 	set .@paper_x4,rand(81,95);
 	set .@paper_y4,rand(73,86);
 	makeitem 6031,1,"schg_que01",.@paper_x4,.@paper_y4; //Glitering_PaperB
 	end;
 }
 
-schg_que01,102,80,0	script	paper_sp_5_s	139,{
+schg_que01,102,80,0	script	paper_sp_5_s	HIDDEN_WARP_NPC,{
 	end;
 
 OnEnable:
@@ -1205,14 +1206,14 @@ OnEnable:
 	}
 	end;
 
-Onbingo:
+OnBingo:
 	set .@paper_x5,rand(96,110);
 	set .@paper_y5,rand(73,86);
 	makeitem 6031,1,"schg_que01",.@paper_x5,.@paper_y5; //Glitering_PaperB
 	end;
 }
 
-schg_que01,117,80,0	script	paper_sp_6_s	139,{
+schg_que01,117,80,0	script	paper_sp_6_s	HIDDEN_WARP_NPC,{
 	end;
 
 OnEnable:
@@ -1230,14 +1231,14 @@ OnEnable:
 	}
 	end;
 
-Onbingo:
+OnBingo:
 	set .@paper_x6,rand(111,124);
 	set .@paper_y6,rand(73,86);
 	makeitem 6031,1,"schg_que01",.@paper_x6,.@paper_y6; //Glitering_PaperB
 	end;
 }
 
-schg_que01,87,65,0	script	paper_sp_7_s	139,{
+schg_que01,87,65,0	script	paper_sp_7_s	HIDDEN_WARP_NPC,{
 	end;
 
 OnEnable:
@@ -1255,14 +1256,14 @@ OnEnable:
 	}
 	end;
 
-Onbingo:
+OnBingo:
 	set .@paper_x7,rand(81,95);
 	set .@paper_y7,rand(59,72);
 	makeitem 6031,1,"schg_que01",.@paper_x7,.@paper_y7; //Glitering_PaperB
 	end;
 }
 
-schg_que01,102,65,0	script	paper_sp_8_s	139,{
+schg_que01,102,65,0	script	paper_sp_8_s	HIDDEN_WARP_NPC,{
 	end;
 
 OnEnable:
@@ -1280,14 +1281,14 @@ OnEnable:
 	}
 	end;
 
-Onbingo:
+OnBingo:
 	set .@paper_x8,rand(96,110);
 	set .@paper_y8,rand(59,72);
 	makeitem 6031,1,"schg_que01",.@paper_x8,.@paper_y8; //Glitering_PaperB
 	end;
 }
 
-schg_que01,117,65,0	script	paper_sp_9_s	139,{
+schg_que01,117,65,0	script	paper_sp_9_s	HIDDEN_WARP_NPC,{
 	end;
 
 OnEnable:
@@ -1305,7 +1306,7 @@ OnEnable:
 	}
 	end;
 
-Onbingo:
+OnBingo:
 	set .@paper_x9,rand(111,124);
 	set .@paper_y9,rand(59,72);
 	makeitem 6031,1,"schg_que01",.@paper_x9,.@paper_y9; //Glitering_PaperB
@@ -1329,10 +1330,10 @@ OnTouch2:
 	end;
 }
 
-schg_que01,6,6,1	script	eff_mvp#sch_gd	844,{
+schg_que01,6,6,1	script	eff_mvp#sch_gd	CLEAR_NPC,{
 	end;
 
-Onmvp:
+OnMVP:
 	initnpctimer;
 	end;
 
@@ -1368,7 +1369,7 @@ OnTimer4000:
 	end;
 }
 
-schg_que01,100,75,5	script	Gergath#sch_gd	412,{
+schg_que01,100,75,5	script	Gergath#sch_gd	4_M_OLDFRIAR,{
 	end;
 
 OnInit:
@@ -1427,7 +1428,7 @@ OnTimer50000:
 schg_que01,104,140,0	warp	back#sch_gd	1,1,schg_dun01,199,192
 
 /*
-schg_que01,104,140,1	script	treg#sch_gd	844,{
+schg_que01,104,140,1	script	treg#sch_gd	CLEAR_NPC,{
 	end;
 
 OnEnable:
@@ -1451,69 +1452,70 @@ OnMyMobDead:
 }
 */
 
-schg_que01,98,105,3	script	#sch_flower_01::GD_Ev_Flower2	978,{
+schg_que01,98,105,3	script	#sch_flower_01::GD_Ev_Flower2	4_YELL_FLOWER,{
 	end;
 }
 
-schg_que01,94,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_02	977
-schg_que01,90,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_03	978
-schg_que01,86,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_04	977
-schg_que01,82,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_05	978
-schg_que01,79,103,3	duplicate(GD_Ev_Flower2)	#sch_flower_06	977
-schg_que01,79,100,3	duplicate(GD_Ev_Flower2)	#sch_flower_07	978
-schg_que01,79,97,3	duplicate(GD_Ev_Flower2)	#sch_flower_08	977
-schg_que01,79,97,3	duplicate(GD_Ev_Flower2)	#sch_flower_09	978
-schg_que01,79,94,3	duplicate(GD_Ev_Flower2)	#sch_flower_10	977
-schg_que01,79,91,3	duplicate(GD_Ev_Flower2)	#sch_flower_11	978
-schg_que01,79,88,3	duplicate(GD_Ev_Flower2)	#sch_flower_12	977
-schg_que01,79,85,3	duplicate(GD_Ev_Flower2)	#sch_flower_13	978
-schg_que01,79,82,3	duplicate(GD_Ev_Flower2)	#sch_flower_14	977
-schg_que01,79,79,3	duplicate(GD_Ev_Flower2)	#sch_flower_15	978
-schg_que01,79,76,3	duplicate(GD_Ev_Flower2)	#sch_flower_16	977
-schg_que01,79,73,3	duplicate(GD_Ev_Flower2)	#sch_flower_17	978
-schg_que01,79,70,3	duplicate(GD_Ev_Flower2)	#sch_flower_18	977
-schg_que01,79,67,3	duplicate(GD_Ev_Flower2)	#sch_flower_19	978
-schg_que01,79,64,3	duplicate(GD_Ev_Flower2)	#sch_flower_20	977
-schg_que01,79,61,3	duplicate(GD_Ev_Flower2)	#sch_flower_21	978
-schg_que01,79,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_22	977
-schg_que01,84,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_23	978
-schg_que01,89,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_24	977
-schg_que01,94,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_25	978
-schg_que01,99,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_26	977
-schg_que01,104,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_27	978
-schg_que01,109,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_28	977
-schg_que01,114,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_29	978
-schg_que01,119,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_30	977
-schg_que01,124,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_31	978
-schg_que01,129,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_32	977
-schg_que01,129,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_33	978
-schg_que01,129,103,3	duplicate(GD_Ev_Flower2)	#sch_flower_34	977
-schg_que01,129,100,3	duplicate(GD_Ev_Flower2)	#sch_flower_35	978
-schg_que01,129,97,3	duplicate(GD_Ev_Flower2)	#sch_flower_36	977
-schg_que01,129,97,3	duplicate(GD_Ev_Flower2)	#sch_flower_37	978
-schg_que01,129,94,3	duplicate(GD_Ev_Flower2)	#sch_flower_38	977
-schg_que01,129,91,3	duplicate(GD_Ev_Flower2)	#sch_flower_39	978
-schg_que01,129,88,3	duplicate(GD_Ev_Flower2)	#sch_flower_40	977
-schg_que01,129,85,3	duplicate(GD_Ev_Flower2)	#sch_flower_41	978
-schg_que01,129,82,3	duplicate(GD_Ev_Flower2)	#sch_flower_42	977
-schg_que01,129,79,3	duplicate(GD_Ev_Flower2)	#sch_flower_43	978
-schg_que01,129,76,3	duplicate(GD_Ev_Flower2)	#sch_flower_44	977
-schg_que01,129,73,3	duplicate(GD_Ev_Flower2)	#sch_flower_45	978
-schg_que01,129,70,3	duplicate(GD_Ev_Flower2)	#sch_flower_46	977
-schg_que01,129,67,3	duplicate(GD_Ev_Flower2)	#sch_flower_47	978
-schg_que01,129,64,3	duplicate(GD_Ev_Flower2)	#sch_flower_48	977
-schg_que01,129,61,3	duplicate(GD_Ev_Flower2)	#sch_flower_49	978
-schg_que01,129,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_50	977
-schg_que01,124,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_51	978
-schg_que01,119,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_52	977
-schg_que01,114,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_53	978
-schg_que01,109,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_54	977
-schg_que01,104,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_55	976
+schg_que01,94,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_02	4_RED_FLOWER
+schg_que01,90,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_03	4_YELL_FLOWER
+schg_que01,86,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_04	4_RED_FLOWER
+schg_que01,82,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_05	4_YELL_FLOWER
+schg_que01,79,103,3	duplicate(GD_Ev_Flower2)	#sch_flower_06	4_RED_FLOWER
+schg_que01,79,100,3	duplicate(GD_Ev_Flower2)	#sch_flower_07	4_YELL_FLOWER
+schg_que01,79,97,3	duplicate(GD_Ev_Flower2)	#sch_flower_08	4_RED_FLOWER
+schg_que01,79,97,3	duplicate(GD_Ev_Flower2)	#sch_flower_09	4_YELL_FLOWER
+schg_que01,79,94,3	duplicate(GD_Ev_Flower2)	#sch_flower_10	4_RED_FLOWER
+schg_que01,79,91,3	duplicate(GD_Ev_Flower2)	#sch_flower_11	4_YELL_FLOWER
+schg_que01,79,88,3	duplicate(GD_Ev_Flower2)	#sch_flower_12	4_RED_FLOWER
+schg_que01,79,85,3	duplicate(GD_Ev_Flower2)	#sch_flower_13	4_YELL_FLOWER
+schg_que01,79,82,3	duplicate(GD_Ev_Flower2)	#sch_flower_14	4_RED_FLOWER
+schg_que01,79,79,3	duplicate(GD_Ev_Flower2)	#sch_flower_15	4_YELL_FLOWER
+schg_que01,79,76,3	duplicate(GD_Ev_Flower2)	#sch_flower_16	4_RED_FLOWER
+schg_que01,79,73,3	duplicate(GD_Ev_Flower2)	#sch_flower_17	4_YELL_FLOWER
+schg_que01,79,70,3	duplicate(GD_Ev_Flower2)	#sch_flower_18	4_RED_FLOWER
+schg_que01,79,67,3	duplicate(GD_Ev_Flower2)	#sch_flower_19	4_YELL_FLOWER
+schg_que01,79,64,3	duplicate(GD_Ev_Flower2)	#sch_flower_20	4_RED_FLOWER
+schg_que01,79,61,3	duplicate(GD_Ev_Flower2)	#sch_flower_21	4_YELL_FLOWER
+schg_que01,79,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_22	4_RED_FLOWER
+schg_que01,84,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_23	4_YELL_FLOWER
+schg_que01,89,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_24	4_RED_FLOWER
+schg_que01,94,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_25	4_YELL_FLOWER
+schg_que01,99,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_26	4_RED_FLOWER
+schg_que01,104,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_27	4_YELL_FLOWER
+schg_que01,109,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_28	4_RED_FLOWER
+schg_que01,114,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_29	4_YELL_FLOWER
+schg_que01,119,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_30	4_RED_FLOWER
+schg_que01,124,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_31	4_YELL_FLOWER
+schg_que01,129,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_32	4_RED_FLOWER
+schg_que01,129,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_33	4_YELL_FLOWER
+schg_que01,129,103,3	duplicate(GD_Ev_Flower2)	#sch_flower_34	4_RED_FLOWER
+schg_que01,129,100,3	duplicate(GD_Ev_Flower2)	#sch_flower_35	4_YELL_FLOWER
+schg_que01,129,97,3	duplicate(GD_Ev_Flower2)	#sch_flower_36	4_RED_FLOWER
+schg_que01,129,97,3	duplicate(GD_Ev_Flower2)	#sch_flower_37	4_YELL_FLOWER
+schg_que01,129,94,3	duplicate(GD_Ev_Flower2)	#sch_flower_38	4_RED_FLOWER
+schg_que01,129,91,3	duplicate(GD_Ev_Flower2)	#sch_flower_39	4_YELL_FLOWER
+schg_que01,129,88,3	duplicate(GD_Ev_Flower2)	#sch_flower_40	4_RED_FLOWER
+schg_que01,129,85,3	duplicate(GD_Ev_Flower2)	#sch_flower_41	4_YELL_FLOWER
+schg_que01,129,82,3	duplicate(GD_Ev_Flower2)	#sch_flower_42	4_RED_FLOWER
+schg_que01,129,79,3	duplicate(GD_Ev_Flower2)	#sch_flower_43	4_YELL_FLOWER
+schg_que01,129,76,3	duplicate(GD_Ev_Flower2)	#sch_flower_44	4_RED_FLOWER
+schg_que01,129,73,3	duplicate(GD_Ev_Flower2)	#sch_flower_45	4_YELL_FLOWER
+schg_que01,129,70,3	duplicate(GD_Ev_Flower2)	#sch_flower_46	4_RED_FLOWER
+schg_que01,129,67,3	duplicate(GD_Ev_Flower2)	#sch_flower_47	4_YELL_FLOWER
+schg_que01,129,64,3	duplicate(GD_Ev_Flower2)	#sch_flower_48	4_RED_FLOWER
+schg_que01,129,61,3	duplicate(GD_Ev_Flower2)	#sch_flower_49	4_YELL_FLOWER
+schg_que01,129,58,3	duplicate(GD_Ev_Flower2)	#sch_flower_50	4_RED_FLOWER
+schg_que01,124,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_51	4_YELL_FLOWER
+schg_que01,119,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_52	4_RED_FLOWER
+schg_que01,114,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_53	4_YELL_FLOWER
+schg_que01,109,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_54	4_RED_FLOWER
+schg_que01,104,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_55	4_BLUE_FLOWER
 
-/*
-schg_dun01,5,5,1	script	Event controller#sch_gd	81,{
-	input .@input; //,0,9999;
-	if (input == 1854) {
+schg_dun01,5,5,1	script	Event controller#sch_gd	4_DOG01,{
+	if (callfunc("F_GM_NPC",1854,0) < 1) {
+		mes "Incorrect password.";
+		close;
+	} else {
 		mes "How can I help you?";
 		next;
 		switch(select("Reset.:No, thanks.")) {
@@ -1531,9 +1533,4 @@ schg_dun01,5,5,1	script	Event controller#sch_gd	81,{
 			close;
 		}
 	}
-	else {
-		mes "Incorrect password.";
-		close;
-	}
 }
-*/

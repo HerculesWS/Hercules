@@ -4,23 +4,21 @@
 //= rAthena Dev Team
 //===== Current Version: =====================================
 //= 2.0a
-//===== Compatible With: =====================================
-//= Hercules Git
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Adds slots to selected weapons and armor.
 //===== Additional Comments: =================================
 //= 0.1a added missing L_No: to 2 funcs [Lupus]
 //= 0.1b Removed duplicates [Toms]
-//= 0.2	Added missing next;'s [Evera]
+//= 0.2 Added missing next;'s [Evera]
 //= 0.3 Fixed Zweihander[+] id [Lupus]
 //= 1.0 Fixed ingredients check [Lupus]
-//= 1.1	Updated to official. [SinSloth]
+//= 1.1 Updated to official. [SinSloth]
 //= 1.1b Optimized/cleaned [ultramage]
 //= 1.2 Fixed some typos and a nasty bug. [SinSloth]
 //= 1.3 Fixed a wrong item ID with Sphinx Hat. [SinSloth]
 //= 1.4 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 1.5 Removed Ontouch trigger area from NPCs. [L0ne_W0lf]
+//= 1.5 Removed OnTouch trigger area from NPCs. [L0ne_W0lf]
 //= 1.6 Replaced effect numerics with constants. [Samuray22]
 //= 1.7 Adjusted prices on some armor and weapons. [L0ne_W0lf]
 //= 1.8 Added missing Gae Bolg and Dragon Slayer. [Kisuka]
@@ -294,7 +292,7 @@ function	script	Func_Socket	{
 					delitem getarg(5),getarg(6);
 					if (getarg(7,0) != 0 && getarg(8,0) != 0)
 						delitem getarg(7),getarg(8);
-					set Zeny, Zeny - getarg(4)*1000;
+					Zeny -= getarg(4)*1000;
 					getitem getarg(1),1;
 					next;
 					mes "[Seiyablem]";
@@ -313,7 +311,7 @@ function	script	Func_Socket	{
 					delitem getarg(5),getarg(6);
 					if (getarg(7,0) != 0 && getarg(8,0) != 0)
 						delitem getarg(7),getarg(8);
-					set Zeny, Zeny - getarg(4)*1000;
+					Zeny -= getarg(4)*1000;
 					next;
 					mes "[Seiyablem]";
 					mes "I wish you good luck next time!";
@@ -336,10 +334,10 @@ function	script	Func_Socket	{
 	}
 }
 
-payon,140,151,5	duplicate(SocketEnchant)	Seiyablem#pay	84
-lhz_in02,281,35,5	duplicate(SocketEnchant)	Seiyablem#lhz	84
-prt_in,33,70,5	duplicate(SocketEnchant)	Seiyablem#prt	84
-morocc,51,41,4	duplicate(SocketEnchant)	Seiyablem#moc	84
+payon,140,151,5	duplicate(SocketEnchant)	Seiyablem#pay	4_M_02
+lhz_in02,281,35,5	duplicate(SocketEnchant)	Seiyablem#lhz	4_M_02
+prt_in,33,70,5	duplicate(SocketEnchant)	Seiyablem#prt	4_M_02
+morocc,51,41,4	duplicate(SocketEnchant)	Seiyablem#moc	4_M_02
 
 -	script	Young Man#dummy::SocketMan	-1,{
 	mes "[Young Man]";
@@ -358,7 +356,7 @@ morocc,51,41,4	duplicate(SocketEnchant)	Seiyablem#moc	84
 	close;
 }
 
-prt_in,31,57,1	duplicate(SocketMan)	Young Man#prt	97
-payon,143,143,7	duplicate(SocketMan)	Young Man#pay	97
-morocc,60,42,3	duplicate(SocketMan)	Young Man#moc	97
-lhz_in02,269,33,5	duplicate(SocketMan)	Young Man#lhz	97
+prt_in,31,57,1	duplicate(SocketMan)	Young Man#prt	4W_M_01
+payon,143,143,7	duplicate(SocketMan)	Young Man#pay	4W_M_01
+morocc,60,42,3	duplicate(SocketMan)	Young Man#moc	4W_M_01
+lhz_in02,269,33,5	duplicate(SocketMan)	Young Man#lhz	4W_M_01

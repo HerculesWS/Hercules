@@ -12,10 +12,10 @@
 //= Currently does not allow for "insurance", or "splitting"
 //= of pairs.
 //===== Additional Comments: =================================
-//= 
+//=
 //============================================================
 
-cmd_in02,188,89,1	script	Black Jack Dealer	57,{
+cmd_in02,188,89,1	script	Black Jack Dealer	1_M_LIBRARYMASTER,{
 	mes "[Dealer]";
 	mes "Hello there! Would you like to play a game of Black Jack?";
 M_Menu:
@@ -233,12 +233,12 @@ sL_Win:
 	mes "[Dealer]";
 	mes "Congratulations, you've won!";
 	next;
-	set Zeny, Zeny + @bet;
+	Zeny += @bet;
 	goto L_Play;
 sL_Lose:
 	mes "[Dealer]";
 	mes "I'm sorry but you've lost.";
-	set Zeny, Zeny - @bet;
+	Zeny -= @bet;
 	next;
 	goto L_Play;
 sL_Push:

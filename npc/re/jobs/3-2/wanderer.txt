@@ -1,15 +1,13 @@
 //===== Hercules Script ======================================
 //= Wanderer Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Muad_Dib, Meyraw
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.4
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job change Quest from Dancer / Gypsy -> Wanderer.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version.
 //= 1.1 Updated dialogue to be more official / accurate. Huge thanks to Muad_Dib! [Masao]
 //= 1.2 Fixed an endless loop in dialogue.
@@ -17,7 +15,7 @@
 //= 1.4 Updated script, optimized. [Euphy]
 //============================================================
 
-xmas,162,209,5	script	Aspiring Wanderer, Soy	714,{
+xmas,162,209,5	script	Aspiring Wanderer, Soy	4_F_06,{
 	if (job_wan == 0) {
 		mes "[Soy]";
 		mes "Mimi, what should I do?";
@@ -111,9 +109,9 @@ xmas,162,209,5	script	Aspiring Wanderer, Soy	714,{
 		close;
 	}
 }
-xmas,163,209,3	duplicate(Aspiring Wanderer, Soy)	Aspiring Wanderer, Mimi	714
+xmas,163,209,3	duplicate(Aspiring Wanderer, Soy)	Aspiring Wanderer, Mimi	4_F_06
 
-xmas,132,143,5	script	Performance Manager#wnd	713,{
+xmas,132,143,5	script	Performance Manager#wnd	4_M_06,{
 	mes "[Performance Manager]";
 	if (job_wan == 0) {
 		mes "Oh, what should I do?";
@@ -291,7 +289,7 @@ xmas,132,143,5	script	Performance Manager#wnd	713,{
 	close;
 }
 
-comodo,140,86,5	script	Cheerless Maestro	479,{
+comodo,140,86,5	script	Cheerless Maestro	4_M_MINSTREL,{
 	if (job_wan < 2) {
 		mes "[Cheerless Maestro]";
 		mes "You can dance ~";
@@ -453,7 +451,7 @@ comodo,140,86,5	script	Cheerless Maestro	479,{
 			mes "[" + strcharinfo(0) + "]";
 			mes "It felt like hearing mommy's lullaby~ It was so beautiful and moving... You are the best artist of our time.";
 			next;
-			specialeffect 18;
+			specialeffect EF_STEAL;
 			mes "[Guitar Song]";
 			mes "Ha ha ha. I know that well, but it feels good to hear a compliment from you!";
 			next;
@@ -560,7 +558,7 @@ comodo,140,86,5	script	Cheerless Maestro	479,{
 	close;
 }
 
-hu_in01,305,251,5	script	Vacant Looking Lady#wnd	879,{
+hu_in01,305,251,5	script	Vacant Looking Lady#wnd	4_F_CAPEGIRL,{
 	if (job_wan < 4) {
 		mes "[Vacant Looking Lady]";
 		mes "(blank...)";
@@ -748,7 +746,7 @@ hu_in01,305,251,5	script	Vacant Looking Lady#wnd	879,{
 	close;
 }
 
-hu_fild05,342,130,5	script	Dancer Kim#fild	879,{
+hu_fild05,342,130,5	script	Dancer Kim#fild	4_F_CAPEGIRL,{
 	if (job_wan == 6) {
 		mes "[Dancer Kim]";
 		mes "Exercising together is good but if we compete for it, I think we'll get a better effect!";
@@ -860,18 +858,18 @@ OnTouch:
 	}
 	end;
 }
-hu_fild05,81,111,0	duplicate(wandererjcq)	#fildshout01	139,20,20
-hu_fild05,193,98,0	duplicate(wandererjcq)	#fildshout02	139,20,20
-hu_fild05,252,74,0	duplicate(wandererjcq)	#fildshout03	139,20,20
-hu_fild05,323,175,0	duplicate(wandererjcq)	#fildshout04	139,20,20
-hu_fild05,334,225,0	duplicate(wandererjcq)	#fildshout05	139,20,20
-hu_fild05,301,287,0	duplicate(wandererjcq)	#fildshout06	139,20,20
-hu_fild05,229,315,0	duplicate(wandererjcq)	#fildshout07	139,20,20
-hu_fild05,146,309,0	duplicate(wandererjcq)	#fildshout08	139,20,20
-hu_fild05,80,239,0	duplicate(wandererjcq)	#fildshout09	139,20,20
-hu_fild05,69,147,0	duplicate(wandererjcq)	#fildshout10	139,20,20
+hu_fild05,81,111,0	duplicate(wandererjcq)	#fildshout01	HIDDEN_WARP_NPC,20,20
+hu_fild05,193,98,0	duplicate(wandererjcq)	#fildshout02	HIDDEN_WARP_NPC,20,20
+hu_fild05,252,74,0	duplicate(wandererjcq)	#fildshout03	HIDDEN_WARP_NPC,20,20
+hu_fild05,323,175,0	duplicate(wandererjcq)	#fildshout04	HIDDEN_WARP_NPC,20,20
+hu_fild05,334,225,0	duplicate(wandererjcq)	#fildshout05	HIDDEN_WARP_NPC,20,20
+hu_fild05,301,287,0	duplicate(wandererjcq)	#fildshout06	HIDDEN_WARP_NPC,20,20
+hu_fild05,229,315,0	duplicate(wandererjcq)	#fildshout07	HIDDEN_WARP_NPC,20,20
+hu_fild05,146,309,0	duplicate(wandererjcq)	#fildshout08	HIDDEN_WARP_NPC,20,20
+hu_fild05,80,239,0	duplicate(wandererjcq)	#fildshout09	HIDDEN_WARP_NPC,20,20
+hu_fild05,69,147,0	duplicate(wandererjcq)	#fildshout10	HIDDEN_WARP_NPC,20,20
 
-xmas,148,131,0	script	#wandergogo	139,3,3,{
+xmas,148,131,0	script	#wandergogo	HIDDEN_WARP_NPC,3,3,{
 OnTouch:
 	if (job_wan == 9) {
 		enablenpc "Dancer Kim#xmas";
@@ -886,7 +884,7 @@ OnTouch:
 	end;
 }
 
-xmas,147,135,5	script	Dancer Kim#xmas	485,{
+xmas,147,135,5	script	Dancer Kim#xmas	4_F_WANDERER,{
 	if (job_wan == 9) {
 		if (BaseJob != Job_Dancer && BaseLevel < 99 && JobLevel < 50) {
 			mes "- You can't continue the quest because the condition for the quest is not appropriate. -";
@@ -1028,10 +1026,10 @@ OnInit:
 	disablenpc strnpcinfo(0);
 	end;
 }
-xmas,149,135,3	duplicate(#wander_xmas)	Guitar Song#xmas	479
-xmas,142,130,7	duplicate(#wander_xmas)	Spectator#xmas1	711
-xmas,145,127,7	duplicate(#wander_xmas)	Spectator#xmas2	712
-xmas,148,127,7	duplicate(#wander_xmas)	Soy#xmas	714
-xmas,149,127,1	duplicate(#wander_xmas)	Mimi#xmas	714
-xmas,151,127,1	duplicate(#wander_xmas)	Spectator#xmas3	716
-xmas,154,129,1	duplicate(#wander_xmas)	Spectator#xmas4	797
+xmas,149,135,3	duplicate(#wander_xmas)	Guitar Song#xmas	4_M_MINSTREL
+xmas,142,130,7	duplicate(#wander_xmas)	Spectator#xmas1	4_F_05
+xmas,145,127,7	duplicate(#wander_xmas)	Spectator#xmas2	4_M_05
+xmas,148,127,7	duplicate(#wander_xmas)	Soy#xmas	4_F_06
+xmas,149,127,1	duplicate(#wander_xmas)	Mimi#xmas	4_F_06
+xmas,151,127,1	duplicate(#wander_xmas)	Spectator#xmas3	4_M_KID2
+xmas,154,129,1	duplicate(#wander_xmas)	Spectator#xmas4	4_M_NFLOSTMAN

@@ -1,16 +1,16 @@
 //===== Hercules Script ======================================
 //= Cash Hair Stylist
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Kisuka
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.0
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Exchange cash item, New_Style_Coupon, for new hair styles.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [Kisuka]
 //============================================================
 
-itemmall,19,74,5	script	Stylist#cash	91,{
+itemmall,19,74,5	script	Stylist#cash	4_F_02,{
 	mes "[Stylist]";
 	mes "Hey, I'm Kaniki.";
 	mes "I'm here to start a new";

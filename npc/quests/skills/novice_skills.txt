@@ -1,20 +1,19 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Novice Skills Quests
-//===== By: ================================================== 
+//===== By: ==================================================
 //= kobra_k88
-//===== Current Version: ===================================== 
-//= 1.7
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== Current Version: =====================================
+//= 1.8
+//===== Description: =========================================
 //= Quest for skills: First Aid, Trick Dead
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.5 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
 //= 1.6 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
 //= 1.7 Updated to latest available official file. [Masao]
-//============================================================ 
+//= 1.8 Added Baby support. [Zopokx]
+//============================================================
 
-prt_in,234,133,4	script	Nami	66,{
+prt_in,234,133,4	script	Nami	1_F_01,{
 	if ((Class == Job_Novice || Class == Job_Baby) && (JobLevel > 3 || BaseLevel > 11) && (skill_nov < 3)) {
 		mes "[Nami]";
 		mes "Hello!";
@@ -188,7 +187,7 @@ prt_in,234,133,4	script	Nami	66,{
 	close;
 }
 
-prt_in,73,87,4	script	Chivalry Member	65,{
+prt_in,73,87,4	script	Chivalry Member	1_M_YOUNGKNIGHT,{
 	if ((Class == Job_Novice || Class == Job_Baby) && (JobLevel > 6) && ((skill_nov >= 3) && (skill_nov <= 5))) {
 		mes "[Bulma]";
 		mes "Yeah. . . I look great. . .";
@@ -356,7 +355,7 @@ prt_in,73,87,4	script	Chivalry Member	65,{
 	close;
 }
 
-prt_castle,175,146,4	script	Nursing Instructor	50,{
+prt_castle,175,146,4	script	Nursing Instructor	1_M_04,{
 	mes "[Dread Lord]";
 	mes ". . . . . . . . . .";
 	mes ". . . . . . . . . .";
@@ -468,13 +467,13 @@ prt_castle,175,146,4	script	Nursing Instructor	50,{
 	close;
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= Fully working
 //= 1.2 Added Baby Class Support [Lupus]
 //= 1.3 Fixed a Zeny exploit, made more variables clear
 //= on finishing quests. [Lupus]
 //= 1.4 Fixed exploits [Lupus]
 //= 1.4a Fixed some typos [IVBela]
-//============================================================ 
+//============================================================

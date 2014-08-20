@@ -1,17 +1,17 @@
 //===== Hercules Script ======================================
 //= Al De Baran Town
-//===== By: ================================================== 
-//= L0ne_W0lf, rAthena Dev Team
-//===== Current Version: ===================================== 
+//===== By: ==================================================
+//= rAthena Dev Team; L0ne_W0lf
+//===== Current Version: =====================================
 //= 2.3
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Al De Baran Town NPCs
-//===== Additional Comments: ================================= 
-//= v1.1 Added RS125 NPC.  Added another Kafra Reserve points agent.
-//= The 2nd reserve points agent is not complete yet.
+//===== Additional Comments: =================================
+//= 1.1 Added RS125 NPC.  Added another Kafra Reserve points agent.
+//=     The 2nd reserve points agent is not complete yet.
 //= 1.2 Lottery input number fix [Lupus], 1.2a - label typo fixed
-//= 1.3 Gatekeeper's bug fixed (wrong check and wrong item ID 
+//= 1.3 Gatekeeper's bug fixed (wrong check and wrong item ID
 //=     for underground), fixed some typos [Lupus]
 //= 1.4 Fixed Typos & Spellcheck [massdriller]
 //= 1.5 Finally added the Special Reserve 2 Lotto 8))
@@ -21,8 +21,8 @@
 //= 1.7 Fixed exploits [Lupus] 1.8 Removed Duplicates [Silent]
 //= 1.9 Fixed a bunch of typos with information from Crono/Hollengrhen [Evera]
 //= 1.9a Now Pavianne doesn't sell Kafra Passes. She refunds them [Lupus]
-//= 2.0	Re-made all the dialog-only NPCs with official dialogs.
-//=		Kafra and Clock Tower NPCs pending remake. [DZeroX]
+//= 2.0 Re-made all the dialog-only NPCs with official dialogs.
+//=     Kafra and Clock Tower NPCs pending remake. [DZeroX]
 //= 2.01 removed all .GATs [Lupus]
 //= 2.1 Rescripted most NPCs to Aegis 10.3 standards. [L0ne_W0lf]
 //= 2.2 Corrected NPC names to fall within proper resctrictions. [L0ne_W0lf]
@@ -31,7 +31,7 @@
 
 // Al De Baran
 //============================================================
-aldebaran,113,70,4	script	Forger Munster#alde	48,{
+aldebaran,113,70,4	script	Forger Munster#alde	1_M_02,{
 	mes "[Munster]";
 	mes "My family used to live in Geffen. So I guess it was natural that we studied forging and eventually became Blacksmiths. Then, we finally moved to this town,";
 	mes "Al De Baran.";
@@ -56,7 +56,7 @@ aldebaran,113,70,4	script	Forger Munster#alde	48,{
 	close;
 }
 
-aldebaran,64,104,4	script	Smithing Guy#alde	55,{
+aldebaran,64,104,4	script	Smithing Guy#alde	1_M_JOBTESTER,{
 	mes "[Quatro]";
 	mes "Have you heard that a famous Blacksmith moved here from Geffen?";
 	next;
@@ -79,7 +79,7 @@ aldebaran,64,104,4	script	Smithing Guy#alde	55,{
 	close;
 }
 
-aldebaran,49,93,4	script	Young Man#alde	83,{
+aldebaran,49,93,4	script	Young Man#alde	4_M_01,{
 	mes "[Miller]";
 	mes "Aren't level 4 weapons cool!";
 	mes "I can't believe such powerful";
@@ -90,7 +90,7 @@ aldebaran,49,93,4	script	Young Man#alde	83,{
 	close;
 }
 
-aldebaran,81,61,4	script	Shell Gathering Lady#ald	101,{
+aldebaran,81,61,4	script	Shell Gathering Lady#ald	4W_F_01,{
 	mes "[Joanne]";
 	mes "I enjoy gathering shells from the sea. It's really fun and relaxing~";
 	next;
@@ -120,7 +120,7 @@ aldebaran,81,61,4	script	Shell Gathering Lady#ald	101,{
 	close;
 }
 
-aldebaran,46,129,4	script	Canal Guy#alde	97,{
+aldebaran,46,129,4	script	Canal Guy#alde	4W_M_01,{
 	mes "[Panama]";
 	mes "Al De Baran is known world wide as the City of Canals. The waterways really add a sophisticated, romantic touch to our fair city.";
 	next;
@@ -142,7 +142,7 @@ aldebaran,46,129,4	script	Canal Guy#alde	97,{
 	}
 }
 
-aldebaran,67,154,4	script	Forest Guy#alde	98,{
+aldebaran,67,154,4	script	Forest Guy#alde	4W_M_02,{
 	mes "[Isenberg]";
 	mes "Mt. Mjolnir and Payon Forest.";
 	mes "Both of those places are tough";
@@ -181,7 +181,7 @@ aldebaran,67,154,4	script	Forest Guy#alde	98,{
 	}
 }
 
-aldebaran,90,170,4	script	Slot Guy#alde	47,{
+aldebaran,90,170,4	script	Slot Guy#alde	1_M_01,{
 	mes "[Epthiel]";
 	mes "Some weapons or armor have Slots where you can insert Cards obtained from monsters.";
 	next;
@@ -213,7 +213,7 @@ aldebaran,90,170,4	script	Slot Guy#alde	47,{
 	}
 }
 
-aldebaran,117,181,4	script	Phracon Guy#alde	48,{
+aldebaran,117,181,4	script	Phracon Guy#alde	1_M_02,{
 	mes "[Joy]";
 	mes "Level 1 weapons, which are the lowest grade, need a metal named ^3355FFPhracon^000000 in order to be upgraded.";
 	next;
@@ -242,7 +242,7 @@ aldebaran,117,181,4	script	Phracon Guy#alde	48,{
 	}
 }
 
-aldebaran,121,231,4	script	Alchemy Guy#alde	49,{
+aldebaran,121,231,4	script	Alchemy Guy#alde	1_M_03,{
 	mes "[Chemirre]";
 	mes "Alchemists, one of the 2nd Jobs, are able to create items out of several materials using knowledge from the ancient age of Al De Baran.";
 	next;
@@ -313,7 +313,7 @@ aldebaran,121,231,4	script	Alchemy Guy#alde	49,{
 	}
 }
 
-aldebaran,86,228,4	script	Little Kid#alde	62,{
+aldebaran,86,228,4	script	Little Kid#alde	1_M_SIZ,{
 	mes "[Bebe]";
 	mes "A while ago I went out for a walk toward Mt. Mjolnir with my pet Savage Bebe. His name is NukNuk!";
 	mes "We got attacked, but luckily we weren't hurt.";
@@ -347,7 +347,7 @@ aldebaran,86,228,4	script	Little Kid#alde	62,{
 	}
 }
 
-aldebaran,159,242,4	script	Insect Guy#alde	119,{
+aldebaran,159,242,4	script	Insect Guy#alde	2_M_SWORDMASTER,{
 	mes "[Stromme]";
 	mes "Even to a strong Swordman, the Insects or Mt. Mjolnir pose a considerable threat. You've got to know your enemy before engaging it in battle!";
 	next;
@@ -376,7 +376,7 @@ aldebaran,159,242,4	script	Insect Guy#alde	119,{
 	close;
 }
 
-aldebaran,60,70,4	script	Sylvia#alde	69,{
+aldebaran,60,70,4	script	Sylvia#alde	1_F_04,{
 	mes "[Sylvia]";
 	mes "I came all the way here from Prontera because I heard the Kafra Main Office was somewhere here in Al De Baran.";
 	next;
@@ -406,7 +406,7 @@ aldebaran,60,70,4	script	Sylvia#alde	69,{
 	close;
 }
 
-aldebaran,93,80,4	script	Issei#alde	48,{
+aldebaran,93,80,4	script	Issei#alde	1_M_02,{
 	mes "[Issei]";
 	mes "Al De Baran is such a wonderful place with its romantic canals and classic architecture. I love nothing more than to stroll through this city with my beautiful girlfriend.";
 	next;
@@ -432,7 +432,7 @@ aldebaran,93,80,4	script	Issei#alde	48,{
 	close;
 }
 
-aldebaran,180,46,4	script	Joo Jahk#alde	88,{
+aldebaran,180,46,4	script	Joo Jahk#alde	4_M_ORIENT01,{
 	mes "[Joo Jahk]";
 	mes "I'm a tourist";
 	mes "from Payon,";
@@ -457,7 +457,7 @@ aldebaran,180,46,4	script	Joo Jahk#alde	88,{
 	close;
 }
 
-aldebaran,212,122,4	script	Citizen#alde	97,{
+aldebaran,212,122,4	script	Citizen#alde	4W_M_01,{
 	mes "[Gavin]";
 	mes "Welcome!";
 	mes "The town of";
@@ -489,7 +489,7 @@ aldebaran,212,122,4	script	Citizen#alde	97,{
 	close;
 }
 
-aldebaran,146,124,4	script	Town Girl#alde	101,{
+aldebaran,146,124,4	script	Town Girl#alde	4W_F_01,{
 	mes "[Nastasia]";
 	mes "Somewhere in the world there is an ^3355FFAssassin Guild^000000, where they teach people the subtle art of assassination.";
 	next;
@@ -512,7 +512,7 @@ aldebaran,146,124,4	script	Town Girl#alde	101,{
 	close;
 }
 
-aldebaran,143,136,4	script	Bell Keeper#A	89,{
+aldebaran,143,136,4	script	Bell Keeper#A	4_M_ORIENT02,{
 	mes "[Bell Keeper]";
 	mes "I have been charged by the Committee of 'Heaven on Earth' to guard this entrance of the Clock Tower.";
 	next;
@@ -537,7 +537,7 @@ aldebaran,143,136,4	script	Bell Keeper#A	89,{
 
 // Inside Al De Baran
 //============================================================
-aldeba_in,232,241,4	script	RS125#alde	48,{
+aldeba_in,232,241,4	script	RS125#alde	1_M_02,{
 	mes "[RS125]";
 	mes "I may sound unhuman rather robotic";
 	mes "however, I hope you will not be afraid of me. I am as humane as you are.";
@@ -580,7 +580,7 @@ aldeba_in,232,241,4	script	RS125#alde	48,{
 	close;
 }
 
-aldeba_in,223,121,4	script	Threatening-Looking Man	63,{
+aldeba_in,223,121,4	script	Threatening-Looking Man	1_M_SMITH,{
 	mes "[Threatening-Looking Man]";
 	mes "Hey, you don't come inside someone else's house without permission.";
 	mes "This is ridiculous!";
@@ -626,7 +626,7 @@ aldeba_in,223,121,4	script	Threatening-Looking Man	63,{
 	close;
 }
 
-aldeba_in,219,61,4	script	Friendly-Looking Man#ald	109,{
+aldeba_in,219,61,4	script	Friendly-Looking Man#ald	4_M_MANAGER,{
 	mes "[Friendly-Looking Man]";
 	mes "You don't have to listen to a guy right next to my room.";
 	mes "Two years ago, he was in a mercenary training center and fell off from a tree";
@@ -638,7 +638,7 @@ aldeba_in,219,61,4	script	Friendly-Looking Man#ald	109,{
 	close;
 }
 
-aldeba_in,152,47,4	script	Fussy Man#alde	97,{
+aldeba_in,152,47,4	script	Fussy Man#alde	4W_M_01,{
 	mes "[Fussy Man]";
 	mes "Aaaaarrrggghhh...I AM IN TROUBLE!";
 	mes "My little chicken has left me!";
@@ -670,7 +670,7 @@ aldeba_in,152,47,4	script	Fussy Man#alde	97,{
 	close;
 }
 
-aldeba_in,156,179,4	script	Master#alde	61,{
+aldeba_in,156,179,4	script	Master#alde	1_M_PUBMASTER,{
 	mes "[Master]";
 	mes "The Kafra Corporation Headquarters is located here in Al De Baran.";
 	mes "Do you know";
@@ -685,7 +685,7 @@ aldeba_in,156,179,4	script	Master#alde	61,{
 	mes "Who's your";
 	mes "favorite Kafra girl?";
 	next;
-	if (sex == 0) {
+	if (Sex == 0) {
 		mes "[Master]";
 		mes "Oh, and don't worry. I know that girls have some kind of opinion about how pretty other girls are.";
 		next;
@@ -759,7 +759,7 @@ aldeba_in,156,179,4	script	Master#alde	61,{
 	close;
 }
 
-aldeba_in,84,166,4	script	Kafra Service#alde	117,{
+aldeba_in,84,166,4	script	Kafra Service#alde	4_F_KAFRA1,{
 	cutin "kafra_01",2;
 	mes "[Kafra Pavianne]";
 	mes "Welcome! I'm Pavianne,";
@@ -800,7 +800,7 @@ aldeba_in,84,166,4	script	Kafra Service#alde	117,{
 					end;
 				}
 				delitem 1084,countitem(1084); //Kapra's_Pass
-				set Zeny,Zeny+.@kafrapassmoney;
+				Zeny += .@kafrapassmoney;
 				mes "[Kafra Pavianne]";
 				mes "Thank you.";
 			}
@@ -817,7 +817,7 @@ aldeba_in,84,166,4	script	Kafra Service#alde	117,{
 	end;
 }
 
-aldeba_in,83,245,4	script	Kafra Service#2alde	116,{
+aldeba_in,83,245,4	script	Kafra Service#2alde	4_F_KAFRA2,{
 	cutin "kafra_02",2;
 	mes "[Kafra Blossom]";
 	mes "Welcome to the";
@@ -883,7 +883,7 @@ aldeba_in,83,245,4	script	Kafra Service#2alde	116,{
 	end;
 }
 
-aldeba_in,24,245,4	script	Kafra Jasmine#alde	115,{
+aldeba_in,24,245,4	script	Kafra Jasmine#alde	4_F_KAFRA3,{
 	cutin "kafra_03",2;
 	mes "[Kafra Jasmine]";
 	mes "Welcome!";
@@ -943,7 +943,7 @@ aldeba_in,24,245,4	script	Kafra Jasmine#alde	115,{
 	end;
 }
 
-aldeba_in,142,238,4	script	Kafra Service#3alde	114,{
+aldeba_in,142,238,4	script	Kafra Service#3alde	4_F_KAFRA4,{
 	cutin "kafra_04",2;
 	mes "[Kafra Roxie]";
 	mes "Welcome~!";
@@ -1019,7 +1019,7 @@ aldeba_in,142,238,4	script	Kafra Service#3alde	114,{
 	end;
 }
 
-aldeba_in,91,244,4	script	Kafra Service#4alde	112,{
+aldeba_in,91,244,4	script	Kafra Service#4alde	4_F_KAFRA6,{
 	cutin "kafra_06",2;
 	mes "[Kafra Curly Sue]";
 	mes "Hello, hello!!";
@@ -1048,7 +1048,7 @@ aldeba_in,91,244,4	script	Kafra Service#4alde	112,{
 // Kafra Special Reserve Point NPCs
 //============================================================
 // Special Reserve ----------------------------------------------
-aldeba_in,79,161,6	script	Kafra#04	115,{
+aldeba_in,79,161,6	script	Kafra#04	4_F_KAFRA3,{
 	cutin "kafra_03",2;
 	mes "[Kafra]";
 	mes "Welcome, ^6666FF" + strcharinfo(0) + "^000000.  This is where you can trade in your special reserve points for useful items and cool prizes.";
@@ -1235,7 +1235,7 @@ M_Menu:
 }
 
 // Special Reserve 2 ----------------------------------------------
-aldeba_in,88,161,3	script	Kafra#05	115,{
+aldeba_in,88,161,3	script	Kafra#05	4_F_KAFRA3,{
 	cutin "kafra_03",2;
 	mes "[Kafra]";
 	mes "Welcome ^5577FF"+strcharinfo(0)+"^000000.  We are currently having a special event for our customers.";
@@ -1250,7 +1250,7 @@ aldeba_in,88,161,3	script	Kafra#05	115,{
 		mes "You have the following amount of special reserve points: ^5544FF"+RESRVPTS+"^000000.";
 		mes "Make a choice and test your luck!";
 		next;
-		menu "5000pts = 1st Lottery Chance!",sM_1st, "7000pts = 2nd Lottery Chance!",sM_2nd, "10000pts = 3rd Lottery Chance!",sM_3rd, "Cancel",M_End; 
+		menu "5000pts = 1st Lottery Chance!",sM_1st, "7000pts = 2nd Lottery Chance!",sM_2nd, "10000pts = 3rd Lottery Chance!",sM_3rd, "Cancel",M_End;
 
 		sM_1st:
 			if(RESRVPTS < 5000) goto sL_NotEnuf;
@@ -1377,14 +1377,14 @@ sF_Spin:
 
 // Inside Clock Tower
 //============================================================
-c_tower3,10,249,4	script	Gatekeeper#ct	84,{
+c_tower3,10,249,4	script	Gatekeeper#ct	4_M_02,{
 	//Key_Of_Clock_Tower
-	callfunc "F_ClockTowerGate","4th",7026,"c_tower4",185,44; 
+	callfunc "F_ClockTowerGate","4th",7026,"c_tower4",185,44;
 }
 
-alde_dun03,264,16,4	script	Gatekeeper#ct1	101,{
+alde_dun03,264,16,4	script	Gatekeeper#ct1	4W_F_01,{
 	//Underground_Key
-	callfunc "F_ClockTowerGate","B4th",7027,"alde_dun04",79,267; 
+	callfunc "F_ClockTowerGate","B4th",7027,"alde_dun04",79,267;
 }
 
 function	script	F_ClockTowerGate	{
@@ -1463,7 +1463,7 @@ function	script	F_ClockTowerGate	{
 			mes "Please,You may enter.";
 			mes "May God bless you ..";
 			close2;
-			delitem getarg(1),1; 
+			delitem getarg(1),1;
 			warp getarg(2),getarg(3),getarg(4);
 			end;
 		}

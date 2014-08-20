@@ -4,8 +4,6 @@
 //= acky
 //===== Current Version: =====================================
 //= 1.2.1a
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Daily lottery draw
 //===== Additional Comments: =================================
@@ -65,9 +63,9 @@ Pick6:
 
 	// BROADCASTS DRAW
 L_Broadcast:
-	Announce "Lottery: Welcome to tonight's lotto draw!",8;
-	Announce "The numbers are as follows: [" + $LW1 + "] [" + $LW2 + "] [" + $LW3 + "] [" + $LW4 + "] [" + $LW5 + "] [" + $LW6 + "]",8;
-	Announce "Congratulations to the winners of tonight!",8;
+	announce "Lottery: Welcome to tonight's lotto draw!",8;
+	announce "The numbers are as follows: [" + $LW1 + "] [" + $LW2 + "] [" + $LW3 + "] [" + $LW4 + "] [" + $LW5 + "] [" + $LW6 + "]",8;
+	announce "Congratulations to the winners of tonight!",8;
 
 	// GENERATES DRAW ID CODE
 L_GenID:
@@ -88,7 +86,7 @@ L_Rigged_Draw:
 	goto L_Broadcast;
 }
 
-prontera,141,182,5	script	Lottery	76,{
+prontera,141,182,5	script	Lottery	1_F_ORIENT_02,{
 L_Begin:
 	mes "[Lottery]";
 	mes "Winning Lotto Numbers ("+$LID2+"):";
@@ -108,8 +106,8 @@ L_Buy:
 	mes "The Jackpot is ^FF0000" + $L_Prize_Money + "z^000000.";
 	next;
 	menu "Buy Ticket",-,"Cancel",L_Cancel;
-	if (zeny < $L_TicketPrice) goto L_NoZeny;
-	set zeny,zeny-$L_TicketPrice;
+	if (Zeny < $L_TicketPrice) goto L_NoZeny;
+	Zeny -= $L_TicketPrice;
 	mes "[Lottery]";
 	mes "Would you like your numbers hand picked or computer generated?";
 	next;
@@ -294,8 +292,8 @@ LWinBig:
 	mes "You have matched all six numbers!";
 	mes "Jackpot!";
 	mes "You've won ^0000FF" + $L_Prize_Money + "z^000000.";
-	set zeny,zeny+$L_Prize_Money;
-	Announce "Lottery: " + strcharinfo(0) + " has won the JACKPOT of " + $L_Prize_Money + "z!",8;
+	Zeny += $L_Prize_Money;
+	announce "Lottery: " + strcharinfo(0) + " has won the JACKPOT of " + $L_Prize_Money + "z!",8;
 	set #LID,0;
 	close;
 
@@ -304,8 +302,8 @@ LWinSmall:
 	mes "[Lottery]";
 	mes "You have matched at least 4 numbers!";
 	mes "You've won ^0000FF" + $L_Prize_Money_Small + "z^000000.";
-	set zeny,zeny+$L_Prize_Money_Small;
-	Announce "Lottery: " + strcharinfo(0) + " has won a prize of " + $L_Prize_Money_Small + "z!",8;
+	Zeny += $L_Prize_Money_Small;
+	announce "Lottery: " + strcharinfo(0) + " has won a prize of " + $L_Prize_Money_Small + "z!",8;
 	set #LID,0;
 	close;
 
@@ -375,9 +373,9 @@ GMPick6:
 
 // BROADCASTS DRAW
 L_Broadcast:
-	Announce "Lottery: Welcome to the special GM's lotto draw!",8;
-	Announce "The numbers are as follows: [" + $LW1 + "] [" + $LW2 + "] [" + $LW3 + "] [" + $LW4 + "] [" + $LW5 + "] [" + $LW6 + "]",8;
-	Announce "Congratulations to the winners!",8;
+	announce "Lottery: Welcome to the special GM's lotto draw!",8;
+	announce "The numbers are as follows: [" + $LW1 + "] [" + $LW2 + "] [" + $LW3 + "] [" + $LW4 + "] [" + $LW5 + "] [" + $LW6 + "]",8;
+	announce "Congratulations to the winners!",8;
 
 // GENERATES DRAW ID CODE
 L_GenID:
@@ -408,29 +406,29 @@ L_GM_Rig:
 	set $LR5,0;
 	set $LR6,0;
 GMInput1:
-	Input $LR1;
+	input $LR1;
 	if ($LR1 < 1 || $LR1 > 40) goto GMInput1;
 	mes $LR1;
 GMInput2:
-	Input $LR2;
+	input $LR2;
 	if ($LR2 < 1 || $LR2 > 40) goto GMInput2;
 	if ($LR2 == $LR1) goto GMInput2;
 	mes $LR2;
 GMInput3:
-	Input $LR3;
+	input $LR3;
 	if ($LR3 < 1 || $LR3 > 40) goto GMInput3;
 	if ($LR3 == $LR1) goto GMInput3;
 	if ($LR3 == $LR2) goto GMInput3;
 	mes $LR3;
 GMInput4:
-	Input $LR4;
+	input $LR4;
 	if ($LR4 < 1 || $LR4 > 40) goto GMInput4;
 	if ($LR4 == $LR1) goto GMInput4;
 	if ($LR4 == $LR2) goto GMInput4;
 	if ($LR4 == $LR3) goto GMInput4;
 	mes $LR4;
 GMInput5:
-	Input $LR5;
+	input $LR5;
 	if ($LR5 < 1 || $LR5 > 40) goto GMInput5;
 	if ($LR5 == $LR1) goto GMInput5;
 	if ($LR5 == $LR2) goto GMInput5;
@@ -438,7 +436,7 @@ GMInput5:
 	if ($LR5 == $LR4) goto GMInput5;
 	mes $LR5;
 GMInput6:
-	Input $LR6;
+	input $LR6;
 	if ($LR6 < 1 || $LR6 > 40) goto GMInput6;
 	if ($LR6 == $LR1) goto GMInput6;
 	if ($LR6 == $LR2) goto GMInput6;

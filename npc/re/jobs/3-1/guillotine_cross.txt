@@ -1,24 +1,24 @@
 //===== Hercules Script ======================================
 //= Guillotine Cross Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Muad_Dib
-//===== Current Version: ===================================== 
-//= 1.3
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Current Version: =====================================
+//= 1.5
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job change Quest from Assassin / Assassin Cross -> Guillotine Cross.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 Adapted from original script. [Euphy]
 //= 1.0a Added 'npcskill' command. [Euphy]
 //= 1.0b Moved warps to separate file. [Euphy]
 //= 1.1 Fixed some minor bugs. [Euphy]
 //= 1.2 Moved "Girl" NPC off ve_fild05. [Euphy]
 //= 1.3 Added missing OnMyMobDead labels. [Euphy]
+//= 1.4 Added missing labels. [Joseph]
+//= 1.5 Added GM management function. [Euphy]
 //============================================================
 
-que_job01,75,96,3	script	Guild Member#3rdgc01	997,{
+que_job01,75,96,3	script	Guild Member#3rdgc01	4_M_MOCASS1,{
 	if (job_3rd_gc == 0) {
 		if (Class == Job_Assassin || Class == Job_Assassin_Cross || Class == Job_Baby_Assassin) {
 			if (BaseLevel == 99) {
@@ -222,7 +222,7 @@ function	script	func_3rdgc	{
 	close;
 }
 
-job3_guil01,82,95,3	script	Daora#3rdgc02	940,{
+job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 	mes "[Daora]";
 	if (Class == Job_Assassin || Class == Job_Assassin_Cross || Class == Job_Baby_Assassin) {
 		if (job_3rd_gc < 4) {
@@ -243,7 +243,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	940,{
 				mes "[Daora]";
 				if (Zeny > 799) {
 					mes "Here you are, take it.";
-					set Zeny, Zeny - 800;
+					Zeny -= 800;
 					getitem 12112,1; //Tropical_Sograt
 					close;
 				}
@@ -253,7 +253,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	940,{
 				mes "[Daora]";
 				if (Zeny > 799) {
 					mes "Here you are, take it.";
-					set Zeny, Zeny - 800;
+					Zeny -= 800;
 					getitem 12113,1; //Vermilion_The_Beach
 					close;
 				}
@@ -697,7 +697,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	940,{
 					if (Zeny > 499) {
 						mes "Here you are. Milk.";
 						mes "Then take a rest.";
-						set Zeny, Zeny - 500;
+						Zeny -= 500;
 						getitem 519,1; //Milk
 						close;
 					}
@@ -737,7 +737,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	940,{
 			mes "[Daora]";
 			if (Zeny > 799) {
 				mes "Here you are, take it.";
-				set Zeny, Zeny - 800;
+				Zeny -= 800;
 				getitem 12112,1; //Tropical_Sograt
 				close;
 			}
@@ -747,7 +747,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	940,{
 			mes "[Daora]";
 			if (Zeny > 799) {
 				mes "Here you are, take it.";
-				set Zeny, Zeny - 800;
+				Zeny -= 800;
 				getitem 12113,1; //Vermilion_The_Beach
 				close;
 			}
@@ -764,7 +764,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	940,{
 				if (Zeny > 499) {
 					mes "I feel sorry to take 500 zeny per bottle, but I have to.";
 					mes "It's very hard to get milk in Veins.";
-					set Zeny, Zeny - 500;
+					Zeny -= 500;
 					getitem 519,1; //Milk
 					close;
 				}
@@ -799,7 +799,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	940,{
 			mes "[Daora]";
 			if (Zeny > 999) {
 				mes "Here you are, take it.";
-				set Zeny, Zeny - 1000;
+				Zeny -= 1000;
 				getitem 12112,1; //Tropical_Sograt
 				close;
 			}
@@ -809,7 +809,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	940,{
 			mes "[Daora]";
 			if (Zeny > 999) {
 				mes "Here you are, take it.";
-				set Zeny, Zeny - 1000;
+				Zeny -= 1000;
 				getitem 12113,1; //Vermilion_The_Beach
 				close;
 			}
@@ -825,7 +825,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	940,{
 	}
 }
 
-job3_guil01,16,20,4	script	Mayshell#3rdgc03	894,{
+job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 	if (!checkweight(1201,2)) {
 		mes "- You can't continue this quest because you have too many items. -";
 		close;
@@ -1097,7 +1097,7 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	894,{
 	}
 }
 
-ve_in,228,108,3	script	Waitress#3rdgc04	80,{
+ve_in,228,108,3	script	Waitress#3rdgc04	1_F_PUBGIRL,{
 	mes "[Waitress]";
 	if (job_3rd_gc < 6) {
 		mes "Welcome~";
@@ -1289,7 +1289,7 @@ ve_in,228,108,3	script	Waitress#3rdgc04	80,{
 							mes "[Waitress]";
 							mes "Oh by the way, my name is Madelle.";
 							mes "I hope you remember my name.";
-							set Zeny, Zeny - 5000;
+							Zeny -= 5000;
 							setquest 7112;
 							next;
 							mes "- Madelle's information is attached to a quest board. What information have I collected? -";
@@ -1330,7 +1330,7 @@ ve_in,228,108,3	script	Waitress#3rdgc04	80,{
 	}
 }
 
-ve_in,246,303,3	script	Young Merchant#3rdgc05	930,{
+ve_in,246,303,3	script	Young Merchant#3rdgc05	4_M_RACHMAN2,{
 	if (job_3rd_gc < 6) {
 		mes "[Young Merchant]";
 		mes "If you want to buy stuff, go to this person.";
@@ -1526,7 +1526,7 @@ ve_in,246,303,3	script	Young Merchant#3rdgc05	930,{
 	}
 }
 
-veins,291,215,3	script	Vigilante#3rdgc06	939,{
+veins,291,215,3	script	Vigilante#3rdgc06	4_DST_SOLDIER,{
 	if (job_3rd_gc < 6) {
 		mes "[Vigilante]";
 		mes "Do you have any inconveniences while you are traveling?";
@@ -1690,7 +1690,7 @@ veins,291,215,3	script	Vigilante#3rdgc06	939,{
 	}
 }
 
-veins,187,143,5	script	Peddler#3rdgc07	892,{
+veins,187,143,5	script	Peddler#3rdgc07	4_F_HUGRANMA,{
 	mes "[Peddler]";
 	if (job_3rd_gc < 6) {
 		mes "What a huge sandstorm.";
@@ -1793,7 +1793,7 @@ veins,187,143,5	script	Peddler#3rdgc07	892,{
 	}
 }
 
-veins,235,126,3	script	Old Man#3rdgc07	945,{
+veins,235,126,3	script	Old Man#3rdgc07	4_M_DST_GRAND,{
 	mes "[Old Man]";
 	if (job_3rd_gc < 6) {
 		mes "Haha... I can remember my past when I see a young adventurer like you...";
@@ -1900,7 +1900,7 @@ veins,235,126,3	script	Old Man#3rdgc07	945,{
 	}
 }
 
-veins,223,180,3	script	Girl#3rdgc09	941,{
+veins,223,180,3	script	Girl#3rdgc09	4_F_DST_CHILD,{
 	mes "[Melissa]";
 	if (job_3rd_gc == 8) {
 		mes "Hi?";
@@ -2071,7 +2071,7 @@ veins,223,180,3	script	Girl#3rdgc09	941,{
 	}
 }
 
-veins,337,284,0	script	#ghostestilla_3rdgc	139,3,3,{
+veins,337,284,0	script	#ghostestilla_3rdgc	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	if (job_3rd_gc == 9) {
@@ -2184,7 +2184,7 @@ OnTouch:
 	end;
 }
 
-veins,341,287,3	script	Estillda#3rdgc10	919,{
+veins,341,287,3	script	Estillda#3rdgc10	4_F_SHABBY,{
 OnInit:
 OnDisable:
 	disablenpc "Estillda#3rdgc10";
@@ -2194,7 +2194,7 @@ OnEnable:
 	end;
 }
 
-job3_guil01,79,15,1	script	Estillda#3rdgc11	919,{
+job3_guil01,79,15,1	script	Estillda#3rdgc11	4_F_SHABBY,{
 	if (job_3rd_gc == 11) {
 		mes "Estillda is looking around with an anxious expression on her face.";
 		next;
@@ -2313,7 +2313,7 @@ job3_guil01,79,15,1	script	Estillda#3rdgc11	919,{
 	end;
 }
 
-veins,206,56,0	script	#3rdgc_battleroom01	139,1,1,{
+veins,206,56,0	script	#3rdgc_battleroom01	HIDDEN_WARP_NPC,1,1,{
 	end;
 OnInit:
 	set $@3rdgc_room01, 0;
@@ -2352,7 +2352,7 @@ OnTouch:
 	end;
 }
 
-job3_guil02,34,44,0	script	#3rdgc_room01_mag01	139,2,2,{
+job3_guil02,34,44,0	script	#3rdgc_room01_mag01	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnEnable:
 	enablenpc "#3rdgc_room01_mag01";
@@ -2397,7 +2397,7 @@ OnTimer300000:
 	end;
 }
 
-job3_guil02,51,43,7	script	A man with black clothes	456,4,4,{
+job3_guil02,51,43,7	script	A man with black clothes	4_M_DSTMAN,4,4,{
 	end;
 OnInit:
 OnDisable:
@@ -2452,7 +2452,7 @@ OnMyMobDead:
 	end;
 }
 
-job3_guil02,1,1,0	script	#3rdgc_2nd_timer	844,{
+job3_guil02,1,1,0	script	#3rdgc_2nd_timer	CLEAR_NPC,{
 	end;
 OnEnable:
 	initnpctimer;
@@ -2472,7 +2472,7 @@ OnTimer61000:
 	end;
 }
 
-job3_guil02,49,43,5	script	Dandelion#3rdgc12	457,{
+job3_guil02,49,43,5	script	Dandelion#3rdgc12	4_M_DSTMANDEAD,{
 	if (!checkweight(1201,2)) {
 		mes "- You can't continue this quest because you have too many items. -";
 		close;
@@ -2517,7 +2517,7 @@ OnEnable:
 	end;
 }
 
-rachel,115,77,3	script	Girke#3rdgc13	85,{
+rachel,115,77,3	script	Girke#3rdgc13	4_M_03,{
 	mes "[Girke]";
 	mes "Oh~ young man.";
 	mes "I'm Girke Sara.";
@@ -2564,7 +2564,7 @@ rachel,115,77,3	script	Girke#3rdgc13	85,{
 	close;
 }
 
-ra_in01,175,196,3	script	Oresa Rava#3rdgc13	866,{
+ra_in01,175,196,3	script	Oresa Rava#3rdgc13	4_M_LGTGRAND,{
 	mes "[Oresa Rava]";
 	if (job_3rd_gc == 13) {
 		mes "I don't know why you are visiting me, but I'm not crafting anymore.";
@@ -2649,7 +2649,7 @@ ra_in01,175,196,3	script	Oresa Rava#3rdgc13	866,{
 }
 
 //Pre-RE: ve_fild05 (327,308)
-ve_fild02,330,384,3	script	Girl#3rdgc14	466,{
+ve_fild02,330,384,3	script	Girl#3rdgc14	4_F_GUILLOTINE,{
 	if (job_3rd_gc > 14 && job_3rd_gc < 18) {
 		mes "[Renzak]";
 		if (job_3rd_gc == 15) {
@@ -2728,7 +2728,7 @@ OnInit:
 	end;
 }
 
-job3_guil03,22,70,0	script	#3rdgc_event01	139,3,3,{
+job3_guil03,22,70,0	script	#3rdgc_event01	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnEnable:
 	enablenpc "#3rdgc_event01";
@@ -2763,7 +2763,7 @@ OnTimer902000:
 	end;
 }
 
-job3_guil03,1,4,0	script	#3rdgc_event_master	844,{
+job3_guil03,1,4,0	script	#3rdgc_event_master	CLEAR_NPC,{
 	end;
 OnEnable:
 	donpcevent "Barbed-Wire Entanglement::OnEnable";
@@ -2814,7 +2814,7 @@ OnReset:
 }
 
 //Original name: Barbed-Wire Entanglements#3rdgc_door01
-job3_guil03,55,79,0	script	Barbed-Wire Entanglement	844,1,1,{
+job3_guil03,55,79,0	script	Barbed-Wire Entanglement	CLEAR_NPC,1,1,{
 	end;
 OnEnable:
 	enablenpc "Barbed-Wire Entanglement";
@@ -2836,7 +2836,7 @@ OnTouch:
 	close;
 }
 
-job3_guil03,98,46,0	script	#3rdgc_hide01	139,1,4,{
+job3_guil03,98,46,0	script	#3rdgc_hide01	HIDDEN_WARP_NPC,1,4,{
 	end;
 OnStop:
 	killmonster "job3_guil03","#3rdgc_hide01::OnMyMobDead";
@@ -2863,7 +2863,7 @@ OnMyMobDead:
 	end;
 }
 
-job3_guil03,98,55,0	script	#3rdgc_hide02	139,1,4,{
+job3_guil03,98,55,0	script	#3rdgc_hide02	HIDDEN_WARP_NPC,1,4,{
 	end;
 OnStop:
 	killmonster "job3_guil03","#3rdgc_hide02::OnMyMobDead";
@@ -2890,7 +2890,7 @@ OnMyMobDead:
 	end;
 }
 
-job3_guil03,98,64,0	script	#3rdgc_hide03	139,1,4,{
+job3_guil03,98,64,0	script	#3rdgc_hide03	HIDDEN_WARP_NPC,1,4,{
 	end;
 OnStop:
 	killmonster "job3_guil03","#3rdgc_hide03::OnMyMobDead";
@@ -2917,7 +2917,7 @@ OnMyMobDead:
 	end;
 }
 
-job3_guil03,1,2,0	script	#3rdgc_guard	844,{
+job3_guil03,1,2,0	script	#3rdgc_guard	CLEAR_NPC,{
 	end;
 OnEnable:
 	initnpctimer;
@@ -2958,7 +2958,7 @@ OnTimer16000:
 	end;
 }
 
-job3_guil03,1,3,0	script	#3rdgc_guardoff	844,{
+job3_guil03,1,3,0	script	#3rdgc_guardoff	CLEAR_NPC,{
 	end;
 OnDisable:
 	initnpctimer;
@@ -3033,7 +3033,7 @@ OnEnable:
 	end;
 }
 
-job3_guil03,93,35,3	script	Front Gate Guard#g01	456,5,5,{
+job3_guil03,93,35,3	script	Front Gate Guard#g01	4_M_DSTMAN,5,5,{
 	end;
 OnInit:
 OnDisable:
@@ -3057,12 +3057,14 @@ OnTouch:
 	monster "job3_guil03",93,33,"Front Gate Guard",1985,1,"Front Gate Guard#g01::OnMyMobDead";
 	monster "job3_guil03",93,32,"Guard Dog",1866,1,"Front Gate Guard#g01::OnMyMobDead";
 	end;
+OnMyMobDead:
+	end;
 }
-job3_guil03,93,36,3	duplicate(#3rdgc_guard00)	Front Gate Guard#g03	456
-job3_guil03,93,34,3	duplicate(#3rdgc_guard00)	Front Gate Guard#g04	456
-job3_guil03,93,33,3	duplicate(#3rdgc_guard00)	Front Gate Guard#g05	456
+job3_guil03,93,36,3	duplicate(#3rdgc_guard00)	Front Gate Guard#g03	4_M_DSTMAN
+job3_guil03,93,34,3	duplicate(#3rdgc_guard00)	Front Gate Guard#g04	4_M_DSTMAN
+job3_guil03,93,33,3	duplicate(#3rdgc_guard00)	Front Gate Guard#g05	4_M_DSTMAN
 
-job3_guil03,133,52,5	script	Back Gate Guard#g01	456,5,5,{
+job3_guil03,133,52,5	script	Back Gate Guard#g01	4_M_DSTMAN,5,5,{
 	end;
 OnInit:
 OnDisable:
@@ -3086,12 +3088,14 @@ OnTouch:
 	monster "job3_guil03",133,50,"Back Gate Guard",1985,1,"Back Gate Guard#g01::OnMyMobDead";
 	monster "job3_guil03",133,49,"Guard Dog",1866,1,"Back Gate Guard#g01::OnMyMobDead";
 	end;
+OnMyMobDead:
+	end;
 }
-job3_guil03,133,53,5	duplicate(#3rdgc_guard00)	Back Gate Guard#g03	456
-job3_guil03,133,51,5	duplicate(#3rdgc_guard00)	Back Gate Guard#g04	456
-job3_guil03,133,50,5	duplicate(#3rdgc_guard00)	Back Gate Guard#g05	456
+job3_guil03,133,53,5	duplicate(#3rdgc_guard00)	Back Gate Guard#g03	4_M_DSTMAN
+job3_guil03,133,51,5	duplicate(#3rdgc_guard00)	Back Gate Guard#g04	4_M_DSTMAN
+job3_guil03,133,50,5	duplicate(#3rdgc_guard00)	Back Gate Guard#g05	4_M_DSTMAN
 
-job3_guil03,117,51,4	script	Interior Guard#g01	456,5,5,{
+job3_guil03,117,51,4	script	Interior Guard#g01	4_M_DSTMAN,5,5,{
 	end;
 OnInit:
 OnDisable:
@@ -3115,12 +3119,14 @@ OnTouch:
 	monster "job3_guil03",117,49,"Interior Guard",1985,1,"Interior Guard#g01::OnMyMobDead";
 	monster "job3_guil03",117,48,"Guard Dog",1866,1,"Interior Guard#g01::OnMyMobDead";
 	end;
+OnMyMobDead:
+	end;
 }
-job3_guil03,117,52,4	duplicate(#3rdgc_guard00)	Interior Guard#g03	456
-job3_guil03,117,50,4	duplicate(#3rdgc_guard00)	Interior Guard#g04	456
-job3_guil03,117,49,4	duplicate(#3rdgc_guard00)	Interior Guard#g05	456
+job3_guil03,117,52,4	duplicate(#3rdgc_guard00)	Interior Guard#g03	4_M_DSTMAN
+job3_guil03,117,50,4	duplicate(#3rdgc_guard00)	Interior Guard#g04	4_M_DSTMAN
+job3_guil03,117,49,4	duplicate(#3rdgc_guard00)	Interior Guard#g05	4_M_DSTMAN
 
-job3_guil03,88,44,4	script	Exterior Guard#g01	456,5,5,{
+job3_guil03,88,44,4	script	Exterior Guard#g01	4_M_DSTMAN,5,5,{
 	end;
 OnInit:
 OnDisable:
@@ -3139,9 +3145,11 @@ OnTouch:
 	monster "job3_guil03",88,43,"Exterior Guard",1985,1,"Exterior Guard#g01::OnMyMobDead";
 	monster "job3_guil03",88,45,"Guard Dog",1866,1,"Exterior Guard#g01::OnMyMobDead";
 	end;
+OnMyMobDead:
+	end;
 }
 
-job3_guil03,88,55,4	script	Exterior Guard#g02	456,5,5,{
+job3_guil03,88,55,4	script	Exterior Guard#g02	4_M_DSTMAN,5,5,{
 	end;
 OnInit:
 OnDisable:
@@ -3160,9 +3168,11 @@ OnTouch:
 	monster "job3_guil03",88,54,"Exterior Guard",1985,1,"Exterior Guard#g02::OnMyMobDead";
 	monster "job3_guil03",88,56,"Guard Dog",1866,1,"Exterior Guard#g02::OnMyMobDead";
 	end;
+OnMyMobDead:
+	end;
 }
 
-job3_guil03,88,64,4	script	Exterior Guard#g03	456,5,5,{
+job3_guil03,88,64,4	script	Exterior Guard#g03	4_M_DSTMAN,5,5,{
 	end;
 OnInit:
 OnDisable:
@@ -3181,9 +3191,11 @@ OnTouch:
 	monster "job3_guil03",88,63,"Exterior Guard",1985,1,"Exterior Guard#g03::OnMyMobDead";
 	monster "job3_guil03",88,65,"Guard Dog",1866,1,"Exterior Guard#g03::OnMyMobDead";
 	end;
+OnMyMobDead:
+	end;
 }
 
-job3_guil03,73,62,4	script	Exterior Guard#g04	456,5,5,{
+job3_guil03,73,62,4	script	Exterior Guard#g04	4_M_DSTMAN,5,5,{
 	end;
 OnInit:
 OnDisable:
@@ -3202,9 +3214,11 @@ OnTouch:
 	monster "job3_guil03",73,61,"Exterior Guard",1985,1,"Exterior Guard#g04::OnMyMobDead";
 	monster "job3_guil03",73,63,"Guard Dog",1866,1,"Exterior Guard#g04::OnMyMobDead";
 	end;
+OnMyMobDead:
+	end;
 }
 
-job3_guil03,77,51,4	script	Exterior Guard#g05	456,5,5,{
+job3_guil03,77,51,4	script	Exterior Guard#g05	4_M_DSTMAN,5,5,{
 	end;
 OnInit:
 OnDisable:
@@ -3223,9 +3237,11 @@ OnTouch:
 	monster "job3_guil03",77,50,"Exterior Guards",1985,1,"Exterior Guard#g05::OnMyMobDead";
 	monster "job3_guil03",77,49,"Guard Dog",1866,1,"Exterior Guard#g05::OnMyMobDead";
 	end;
+OnMyMobDead:
+	end;
 }
 
-job3_guil03,73,34,4	script	Exterior Guard#g06	456,5,5,{
+job3_guil03,73,34,4	script	Exterior Guard#g06	4_M_DSTMAN,5,5,{
 	end;
 OnInit:
 OnDisable:
@@ -3244,9 +3260,11 @@ OnTouch:
 	monster "job3_guil03",73,33,"Exterior guards",1985,1,"Exterior Guard#g06::OnMyMobDead";
 	monster "job3_guil03",73,32,"Guard Dog",1866,1,"Exterior Guard#g06::OnMyMobDead";
 	end;
+OnMyMobDead:
+	end;
 }
 
-job3_guil03,110,27,3	script	Guard Dog#dog01	1866,3,1,{
+job3_guil03,110,27,3	script	Guard Dog#dog01	HELL_POODLE,3,1,{
 	end;
 OnEnable:
 	enablenpc "Guard Dog#dog01";
@@ -3265,9 +3283,11 @@ OnTouch:
 	monster "job3_guil03",104,27,"Dog Trainer's Assistant",1985,1,"Guard Dog#dog01::OnMyMobDead";
 	monster "job3_guil03",98,27,"Guard",1985,1,"Guard Dog#dog01::OnMyMobDead";
 	end;
+OnMyMobDead:
+	end;
 }
 
-job3_guil03,119,27,3	script	Guard Dog#dog02	1866,3,1,{
+job3_guil03,119,27,3	script	Guard Dog#dog02	HELL_POODLE,3,1,{
 	end;
 OnEnable:
 	enablenpc "Guard Dog#dog02";
@@ -3286,9 +3306,11 @@ OnTouch:
 	monster "job3_guil03",104,27,"Trainer's Assistant",1985,1,"Guard Dog#dog02::OnMyMobDead";
 	monster "job3_guil03",131,27,"Guard",1985,1,"Guard Dog#dog02::OnMyMobDead";
 	end;
+OnMyMobDead:
+	end;
 }
 
-job3_guil03,2,1,0	script	#3rdgc_sunchal_nomal	844,{
+job3_guil03,2,1,0	script	#3rdgc_sunchal_nomal	CLEAR_NPC,{
 	end;
 OnEnable:
 	monster "job3_guil03",62,35,"Guard",1985,1,"#3rdgc_sunchal_nomal::OnMyMobDead";
@@ -3321,9 +3343,11 @@ OnEnable:
 OnReset:
 	killmonster "job3_guil03","#3rdgc_sunchal_nomal::OnMyMobDead";
 	end;
+OnMyMobDead:
+	end;
 }
 
-job3_guil03,2,2,0	script	#3rdgc_sunchal_kill01	844,{
+job3_guil03,2,2,0	script	#3rdgc_sunchal_kill01	CLEAR_NPC,{
 	end;
 OnEnable:
 	set .@i, atoi(charat(strnpcinfo(0),20));
@@ -3353,10 +3377,10 @@ OnTimer10000:
 	stopnpctimer;
 	end;
 }
-job3_guil03,2,3,0	duplicate(#3rdgc_sunchal_kill01)	#3rdgc_sunchal_kill02	844
-job3_guil03,2,4,0	duplicate(#3rdgc_sunchal_kill01)	#3rdgc_sunchal_kill03	844
+job3_guil03,2,3,0	duplicate(#3rdgc_sunchal_kill01)	#3rdgc_sunchal_kill02	CLEAR_NPC
+job3_guil03,2,4,0	duplicate(#3rdgc_sunchal_kill01)	#3rdgc_sunchal_kill03	CLEAR_NPC
 
-job3_guil03,64,68,3	script	#3rdgc_gojung_kill01	456,7,7,{
+job3_guil03,64,68,3	script	#3rdgc_gojung_kill01	4_M_DSTMAN,7,7,{
 	end;
 OnEnable:
 	enablenpc strnpcinfo(0);
@@ -3391,10 +3415,10 @@ OnTimer10000:
 	stopnpctimer;
 	end;
 }
-job3_guil03,86,63,1	duplicate(#3rdgc_gojung_kill01)	#3rdgc_gojung_kill02	456,8,8
-job3_guil03,83,36,5	duplicate(#3rdgc_gojung_kill01)	#3rdgc_gojung_kill03	456,6,6
+job3_guil03,86,63,1	duplicate(#3rdgc_gojung_kill01)	#3rdgc_gojung_kill02	4_M_DSTMAN,8,8
+job3_guil03,83,36,5	duplicate(#3rdgc_gojung_kill01)	#3rdgc_gojung_kill03	4_M_DSTMAN,6,6
 
-job3_guil03,88,71,0	script	#3rdgc_safezone01	139,1,1,{
+job3_guil03,88,71,0	script	#3rdgc_safezone01	HIDDEN_WARP_NPC,1,1,{
 	end;
 OnTouch:
 	mes "It's a good bush to hide yourself.";
@@ -3416,10 +3440,10 @@ OnTimer:
 		donpcevent "#3rdgc_guardoff::OnDisable";
 	end;
 }
-job3_guil03,82,45,0	duplicate(#3rdgc_safezone01)	#3rdgc_safezone02	139,1,1
-job3_guil03,72,53,0	duplicate(#3rdgc_safezone01)	#3rdgc_safezone03	139,1,1
+job3_guil03,82,45,0	duplicate(#3rdgc_safezone01)	#3rdgc_safezone02	HIDDEN_WARP_NPC,1,1
+job3_guil03,72,53,0	duplicate(#3rdgc_safezone01)	#3rdgc_safezone03	HIDDEN_WARP_NPC,1,1
 
-job3_guil03,111,51,7	script	Priest from Rachel	928,{
+job3_guil03,111,51,7	script	Priest from Rachel	4_M_MIDDLE1,{
 	if (!.on) end;
 	mes "[Priest from Rachel]";
 	if (job_3rd_gc == 17) {
@@ -3431,7 +3455,7 @@ job3_guil03,111,51,7	script	Priest from Rachel	928,{
 		next;
 		mes "[Priest from Rachel]";
 		mes "Because of you, you ruined everything!";
-		setnpcdisplay(strnpcinfo(0),2030);
+		setnpcdisplay(strnpcinfo(0), HIDEN_PRIEST);
 		next;
 		mes "[Priest from Rachel]";
 		mes "You want to destroy us forever!";
@@ -3514,7 +3538,7 @@ OnTimer61500:
 	end;
 }
 
-job3_guil03,146,70,3	script	Renzak#3rdgc16	466,{
+job3_guil03,146,70,3	script	Renzak#3rdgc16	4_F_GUILLOTINE,{
 	mes "[Renzak]";
 	if (checkquest(7110,HUNTING) == 2) {
 		mes "My peers will come here to settle this affair.";
@@ -3551,7 +3575,7 @@ OnDisable:
 	end;
 }
 
-job3_guil01,148,53,3	script	Bercasell#3rdgc16	467,{
+job3_guil01,148,53,3	script	Bercasell#3rdgc16	4_M_GUILLOTINE,{
 	if (!checkweight(1201,2)) {
 		mes "- You can't continue this quest because you have too many items. -";
 		close;
@@ -3764,7 +3788,7 @@ L_Info:
 
 // Warp Portals
 //============================================================
-job3_guil01,80,77,0	script	#gate_to_guil05	45,1,1,{
+job3_guil01,80,77,0	script	#gate_to_guil05	WARPNPC,1,1,{
 	end;
 OnTouch:
 	if (job_3rd_gc > 3)
@@ -3777,7 +3801,7 @@ OnTouch:
 	}
 	end;
 }
-job3_guil01,51,55,0	script	#gate_to_guil07	45,1,1,{
+job3_guil01,51,55,0	script	#gate_to_guil07	WARPNPC,1,1,{
 	end;
 OnTouch:
 	if (job_3rd_gc == 4 || job_3rd_gc == 14 || job_3rd_gc > 17)
@@ -3794,7 +3818,7 @@ OnTouch:
 	}
 	end;
 }
-job3_guil01,51,44,0	script	#gate_to_guil09	45,1,1,{
+job3_guil01,51,44,0	script	#gate_to_guil09	WARPNPC,1,1,{
 	end;
 OnTouch:
 	if (job_3rd_gc == 11 || job_3rd_gc == 12)
@@ -3808,12 +3832,11 @@ OnTouch:
 	end;
 }
 
-/*
-job3_guil02,1,3,0	script	#GMhelper01_gc	844,{
+job3_guil02,1,3,0	script	#GMhelper01_gc	CLEAR_NPC,{
+	callfunc "F_GM_NPC";
 	mes "What can I do for you?";
 	next;
-	input .@input;
-	if (.@input == 1854) {
+	if (callfunc("F_GM_NPC",1854,0) == 1) {
 		set .@room01, $@3rdgc_room01;
 		mes "I check the recent situation.";
 		mes "The battle situation of storage: "+.@room01+"";
@@ -3842,16 +3865,17 @@ job3_guil02,1,3,0	script	#GMhelper01_gc	844,{
 			mes "A management for mansion is in mansion.";
 			close;
 		}
+	} else {
+		mes "-_-.";
+		close;
 	}
-	mes "-_-.";
-	close;
 }
 
-job3_guil03,1,8,0	script	#GMhelper02_gc	844,{
+job3_guil03,1,8,0	script	#GMhelper02_gc	CLEAR_NPC,{
+	callfunc "F_GM_NPC";
 	mes "What can I do for you?";
 	next;
-	input .@input;
-	if (.@input == 1854) {
+	if (callfunc("F_GM_NPC",1854,0) == 1) {
 		set .@room02, $@3rdgc_room02;
 		mes "Check the recent situation.";
 		mes "The battle situation of the mansion is: "+.@room02+"";
@@ -3912,8 +3936,8 @@ job3_guil03,1,8,0	script	#GMhelper02_gc	844,{
 			mes "The management of storage is in a storage.";
 			close;
 		}
+	} else {
+		mes "-_-.";
+		close;
 	}
-	mes "-_-.";
-	close;
 }
-*/

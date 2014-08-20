@@ -5,18 +5,16 @@
 //= Nana (1.1)
 //===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Warp Points for Bibilyn Island & Undersea Cave
 //===== Additional Comments: =================================
 //= 1.2 Moved common warps to base path. [Euphy]
-//= 1.3 Added Undersea Tunnel 6th floor warper. [L0ne_W0lf]
+//= 1.3 Added Undersea Tunnel 6th floor warper.
 //============================================================
 
 // Undersea Tunnel Warper
 //============================================================
-iz_dun04,130,234,5	script	Gatekeeper#iz_dun	413,{
+iz_dun04,130,234,5	script	Gatekeeper#iz_dun	4_M_CRU_SOLD,{
 	mes "[Gatekeeper]";
 	mes "Halt!";
 	mes "What brings you here, Adventurer?";
@@ -43,7 +41,7 @@ iz_dun04,130,234,5	script	Gatekeeper#iz_dun	413,{
 	}
 }
 
-iz_dun05,142,190,5	script	Guard#iz_dun	413,{
+iz_dun05,142,190,5	script	Guard#iz_dun	4_M_CRU_SOLD,{
 	mes "[Gatekeeper]";
 	mes "So I guess you want to go back to the fifth floor?";
 	next;

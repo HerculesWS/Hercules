@@ -1,33 +1,33 @@
 //===== Hercules Script ======================================
 //= Bard Skill Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Lupus, Reddozen; L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.6
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Official quest for the Bard skill "Pang Voice"
 //= Prerequisite: Geffen Bard Quest
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 for fully working skills only [Lupus]
 //= 1.1 Added more new skill quests for more classes [Lupus]
-//= 	Somehow eA engine doesn't let you keep learn't skill
+//=     Somehow eA engine doesn't let you keep learn't skill
 //= 1.2 Added to correct locations, correct NPC's, fixed [Reddozen]
-//= 	some of the items required and made them into real
-//= 	quests.
+//=     some of the items required and made them into real
+//=     quests.
 //= 1.3 Fixed bugs and minor typos. Optimized [Lupus]
 //= 1.3a Tixed an item ID typo. Thanks, 2Spiritual Kid
 //= 1.3b Split into different files [DracoRPG]
-//= 1.4	Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 1.4a Checks the proper variable now. (bard_q -> gef_bard_q) [L0ne_W0lf]
+//= 1.4 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
+//= 1.4a Checks the proper variable now. (BARD_Q -> gef_bard_q) [L0ne_W0lf]
 //= 1.5 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
 //= 1.6 Added missing checkweights. [L0ne_W0lf]
 //= 1.6 Replaced effect numerics with constants. [L0ne_W0lf]
 //============================================================
 
-prontera,174,328,3	script	Young Man#bard_q1	89,3,3,{
+prontera,174,328,3	script	Young Man#bard_q1	4_M_ORIENT02,3,3,{
 	if (BaseJob == Job_Bard) {
-		Emotion e_omg;
+		emotion e_omg;
 		mes "[Timid Young Man]";
 		mes "Eh? Wwwaaaah--!";
 		mes "Y-you're--it's-it's--";
@@ -372,12 +372,12 @@ prontera,174,328,3	script	Young Man#bard_q1	89,3,3,{
 
 OnTouch:
 	if (BaseJob == Job_Bard) {
-		Emotion e_omg;
+		emotion e_omg;
 	}
 	end;
 }
 
-morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	741,3,3,{
+morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 	if (BaseJob == Job_Bard) {
 		if (Class == Job_Clown && qskill_bard == 9) {
 			if (getskilllv("BA_PANGVOICE") != 0) {
@@ -652,7 +652,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	741,3,3,{
 			mes "[Riott]";
 			mes "Hmmrmpf!";
 			mes "Eh heh heh heh!";
-			Emotion e_gg;
+			emotion e_gg;
 			next;
 			mes "[" + strcharinfo(0) + "]";
 			mes "Um...";
@@ -837,7 +837,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	741,3,3,{
 		mes "[Riott]";
 		mes "Hmmrmpf!";
 		mes "Eh heh heh heh!";
-		Emotion e_gg;
+		emotion e_gg;
 		next;
 		mes "[" + strcharinfo(0) + "]";
 		mes "Um...";
@@ -896,15 +896,15 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	741,3,3,{
 	}
 
 OnTouch:
-	Emotion e_gg;
+	emotion e_gg;
 	end;
 }
 
 // Yhelle the Chicken
-//============================================================ 
-niflheim,239,70,1	script	Yhelle#bard_chick1	800,3,3,{
-	Emotion e_omg,1;
-	Emotion e_omg;
+//============================================================
+niflheim,239,70,1	script	Yhelle#bard_chick1	4_NFCOCK,3,3,{
+	emotion e_omg,1;
+	emotion e_omg;
 	mes "[Hen Yhelle]";
 	mes "Cluck-Cluuuck?";
 	mes "Cluck cluck cluck!";
@@ -935,9 +935,9 @@ OnTouch:
 	callfunc "F_BardSkillYhelle",1,2; close;
 }
 
-niflheim,185,205,3	script	Yhelle#bard_chick2	800,3,3,{
-	Emotion e_omg,1;
-	Emotion e_omg;
+niflheim,185,205,3	script	Yhelle#bard_chick2	4_NFCOCK,3,3,{
+	emotion e_omg,1;
+	emotion e_omg;
 	mes "[Hen Yhelle]";
 	mes "Cluck-Cluuuck?";
 	mes "Cluck cluck cluck!";
@@ -961,9 +961,9 @@ OnTouch:
 	callfunc "F_BardSkillYhelle",2,3; close;
 }
 
-niflheim,85,203,5	script	Yhelle#bard_chick3	800,3,3,{
-	Emotion e_omg,1;
-	Emotion e_omg;
+niflheim,85,203,5	script	Yhelle#bard_chick3	4_NFCOCK,3,3,{
+	emotion e_omg,1;
+	emotion e_omg;
 	mes "[Hen Yhelle]";
 	mes "Cluck-Cluuuck?";
 	mes "Cluck cluck cluck!";
@@ -987,9 +987,9 @@ OnTouch:
 	callfunc "F_BardSkillYhelle",3,4; close;
 }
 
-niflheim,149,81,7	script	Yhelle#bard_chick4	800,3,3,{
-	Emotion e_omg,1;
-	Emotion e_omg;
+niflheim,149,81,7	script	Yhelle#bard_chick4	4_NFCOCK,3,3,{
+	emotion e_omg,1;
+	emotion e_omg;
 	mes "[Hen Yhelle]";
 	mes "Cluck-Cluuuck?";
 	mes "Cluck cluck cluck!";
@@ -1013,9 +1013,9 @@ OnTouch:
 	callfunc "F_BardSkillYhelle",4,5; close;
 }
 
-niflheim,209,144,3	script	Yhelle#bard_chick5	800,3,3,{
-	Emotion e_omg,1;
-	Emotion e_omg;
+niflheim,209,144,3	script	Yhelle#bard_chick5	4_NFCOCK,3,3,{
+	emotion e_omg,1;
+	emotion e_omg;
 	mes "[Hen Yhelle]";
 	mes "Cluck-Cluuuck?";
 	mes "Cluck cluck cluck!";
@@ -1040,8 +1040,8 @@ OnTouch:
 }
 
 // Drunken Men
-//============================================================ 
-morocc_in,178,73,3	script	Customer#bard_skill01	54,{
+//============================================================
+morocc_in,178,73,3	script	Customer#bard_skill01	1_M_JOBGUIDER,{
 	mes "[Little Bit Drunken Guy]";
 	mes "What do you think";
 	mes "is the best drink in";
@@ -1101,7 +1101,7 @@ morocc_in,178,73,3	script	Customer#bard_skill01	54,{
 	close;
 }
 
-morocc_in,175,70,7	script	Customer#bard_skill02	50,{
+morocc_in,175,70,7	script	Customer#bard_skill02	1_M_04,{
 	mes "[Little Bit Drunken Guy]";
 	mes "What do you think";
 	mes "is the best drink in";
@@ -1162,8 +1162,8 @@ morocc_in,175,70,7	script	Customer#bard_skill02	50,{
 }
 
 // Bartender
-//============================================================ 
-morocc_in,166,76,7	script	Bartender#bard_qskill	46,{
+//============================================================
+morocc_in,166,76,7	script	Bartender#bard_qskill	1_ETC_01,{
 	if (checkweight(1201,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
@@ -1175,8 +1175,7 @@ morocc_in,166,76,7	script	Bartender#bard_qskill	46,{
 	next;
 	switch(select("Tropical Sograt:Vermilion on the Beach:Nothing, thanks.")) {
 	case 1:
-		set .@now_weight,maxWeight-Weight;
-		if (.@now_weight < 2000) {
+		if (MaxWeight - Weight < 2000) {
 			mes "[Bartender]";
 			mes "You sure you can carry";
 			mes "any more stuff with you?";
@@ -1203,13 +1202,12 @@ morocc_in,166,76,7	script	Bartender#bard_qskill	46,{
 		mes "mild, but if you're not";
 		mes "careful, you'll pass out";
 		mes "in no time flat. Take it easy.";
-		set zeny,zeny-1000;
+		Zeny -= 1000;
 		getitem 12112,1; //Tropical_Sograt
 		close;
 
 	case 2:
-		set .@now_weight,maxWeight-Weight;
-		if (.@now_weight < 2000) {
+		if (MaxWeight - Weight < 2000) {
 			mes "[Bartender]";
 			mes "You sure you can carry";
 			mes "any more stuff with you?";
@@ -1234,7 +1232,7 @@ morocc_in,166,76,7	script	Bartender#bard_qskill	46,{
 		mes "Be sure that you";
 		mes "enjoy your drinking";
 		mes "without going crazy.";
-		set zeny,zeny-1000;
+		Zeny -= 1000;
 		getitem 12113,1; //Vermilion_The_Beach
 		close;
 
@@ -1247,22 +1245,15 @@ morocc_in,166,76,7	script	Bartender#bard_qskill	46,{
 }
 
 // Function
-//============================================================ 
+//============================================================
 function	script	F_BardSkillYhelle	{
-	//set max_max_c,1201;
-	//if (max_max_c == 1) {
-	//	mes "^3355FFHold it right there!";
-	//	mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
-	//	close;
-	//}
-	set .@now_weight,MaxWeight-Weight;
-	if (.@now_weight < 2000) {
+	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
 		close;
 	}
-	Emotion e_omg,1;
-	Emotion e_omg;
+	emotion e_omg,1;
+	emotion e_omg;
 	mes "[Hen Yhelle]";
 	mes "Cluck-Cluuuck?";
 	mes "Cluck cluck cluck!";

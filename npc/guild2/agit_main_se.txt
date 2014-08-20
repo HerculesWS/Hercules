@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= Euphy
 //===== Current Version: =====================================
-//= 1.4
+//= 1.4a
 //===== Description: =========================================
 //= Like agit_main, this file is required
 //= for SE castles to function.
@@ -14,6 +14,7 @@
 //= 1.2 Hopefully fixed a processing error. [Euphy]
 //= 1.3 Fixed barricade issue in schg_cas02. [Cookie]
 //= 1.4 Added OnGuildBreak event and a spawn check. [Euphy]
+//= 1.4a Fixed Guardian Stone respawns. [Euphy]
 //============================================================
 
 // Core, triggers all other events
@@ -48,7 +49,6 @@ OnAgitStart2:
 	if (agitcheck2()) {
 		maprespawnguildid strnpcinfo(2),getcastledata(strnpcinfo(2),1),2;
 		gvgon strnpcinfo(2);
-		setmapflag strnpcinfo(2),mf_zone,"GvG2";
 		donpcevent strnpcinfo(0)+"::OnStart";
 	}
 	else for(set .@i,0; .@i<4; set .@i,.@i+1)
@@ -58,7 +58,6 @@ OnAgitStart2:
 OnAgitEnd2:
 	if (strnpcinfo(2) == "template") end;
 	gvgoff strnpcinfo(2);
-	removemapflag strnpcinfo(2),mf_zone;
 	if (getcastledata(strnpcinfo(2),1)) {
 		set .@str$,substr(strnpcinfo(2),0,1)+substr(strnpcinfo(2),8,9);
 		killmonster strnpcinfo(2),"Steward#"+.@str$+"::OnStartArena";
@@ -109,8 +108,8 @@ OnEmpSpawn:
 
 OnReset:
 	set .@str$, substr(strnpcinfo(2),0,1)+substr(strnpcinfo(2),8,9);
-	donpcevent "df1#"+strnpcinfo(2)+"::OnEnable";
-	donpcevent "df2#"+strnpcinfo(2)+"::OnEnable";
+	donpcevent "df1#"+strnpcinfo(2)+"::OnDisable";
+	donpcevent "df2#"+strnpcinfo(2)+"::OnDisable";
 	donpcevent "gard1#"+strnpcinfo(2)+"::OnReset";
 	donpcevent "gard2#"+strnpcinfo(2)+"::OnReset";
 	donpcevent "1st Guardian Stone#"+.@str$+"::OnDisable";
@@ -144,8 +143,8 @@ OnClock0001:
 		setcastledata strnpcinfo(2),4,0;
 	}
 	if (getcastledata(strnpcinfo(2),5)) {
-		set .@Defence,getcastledata(strnpcinfo(2),3);
-		setcastledata strnpcinfo(2),3,.@Defence+getcastledata(strnpcinfo(2),5);
+		set .@defence,getcastledata(strnpcinfo(2),3);
+		setcastledata strnpcinfo(2),3,.@defence+getcastledata(strnpcinfo(2),5);
 		if (getcastledata(strnpcinfo(2),3) > 100) setcastledata strnpcinfo(2),3,100;
 		setcastledata strnpcinfo(2),5,0;
 	}
@@ -153,12 +152,12 @@ OnClock0001:
 	if (!.@Treasure) end;
 	freeloop(1);
 	if (compare(strnpcinfo(2),"arug")) {
-		if (strnpcinfo(2) == "arug_cas01") { 
+		if (strnpcinfo(2) == "arug_cas01") {
 			set .@treasurebox,1943;
 			setarray .@treasurex[0],251,252,253,254,255,256,257,258,251,252,253,254,255,256,257,258,251,252,253,254,255,256,257,258;
 			setarray .@treasurey[0],369,369,369,369,368,368,368,368,367,367,367,367,366,366,366,366,365,365,365,365,364,364,364,364;
 		}
-		else if (strnpcinfo(2) == "arug_cas02") { 
+		else if (strnpcinfo(2) == "arug_cas02") {
 			set .@treasurebox,1944;
 			setarray .@treasurex[0],382,383,384,385,386,387,384,385,386,387,388,389,382,383,384,385,386,387,384,385,386,387,388,389;
 			setarray .@treasurey[0],231,231,231,231,231,231,230,230,230,230,230,230,225,225,225,225,225,225,224,224,224,224,224,224;
@@ -170,12 +169,12 @@ OnClock0001:
 		}
 	}
 	else {
-		if (strnpcinfo(2) == "schg_cas02") { 
+		if (strnpcinfo(2) == "schg_cas02") {
 			set .@treasurebox,1939;
 			setarray .@treasurex[0],249,250,251,252,253,246,247,248,249,250,250,251,252,253,246,247,248,249,250,249,250,251,252,253;
 			setarray .@treasurey[0],378,378,378,378,378,376,376,376,376,376,374,374,374,374,372,372,372,372,372,370,370,370,370,370;
 		}
-		else if (strnpcinfo(2) == "schg_cas03") { 
+		else if (strnpcinfo(2) == "schg_cas03") {
 			set .@treasurebox,1940;
 			setarray .@treasurex[0],189,190,191,192,193,194,189,190,191,192,193,194,189,190,191,192,193,194,189,190,191,192,193,194;
 			setarray .@treasurey[0], 21, 21, 21, 21, 21, 21, 19, 19, 19, 19, 19, 19, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15;
@@ -331,7 +330,7 @@ OnTreasureDied:
 				mes "for the guild today.";
 				close;
 			}
-			set Zeny, Zeny-.@eco_invest;
+			Zeny -= .@eco_invest;
 			setcastledata strnpcinfo(4),4,getcastledata(strnpcinfo(4),4)+1;
 			mes "[ Steward ]";
 			mes "A wise use of the guild's";
@@ -345,11 +344,11 @@ OnTreasureDied:
 			close;
 		}
 	case 3:
-		set .@Defence,getcastledata(strnpcinfo(4),3);
+		set .@defence,getcastledata(strnpcinfo(4),3);
 		setarray .@cost[0],10000,20000,40000,70000,110000,160000,220000,290000,370000,460000,560000,670000,790000,920000,1060000,1210000,1370000,1540000,1720000,1910000;
 		set .@j,0;
 		for(set .@i,6; .@i<101; set .@i,.@i+5) {
-			if (.@Defence < .@i) {
+			if (.@defence < .@i) {
 				set .@def_invest,.@cost[.@j];
 				break;
 			}
@@ -419,7 +418,7 @@ OnTreasureDied:
 				mes "for the guild today.";
 				close;
 			}
-			set Zeny, Zeny-.@def_invest;
+			Zeny -= .@def_invest;
 			setcastledata strnpcinfo(4),5,getcastledata(strnpcinfo(4),5)+1;
 			mes "[ Steward ]";
 			mes "A wise use of the guild's";
@@ -511,7 +510,7 @@ OnTreasureDied:
 					mes "funds to pay the contract fee.";
 					close;
 				}
-				set Zeny, Zeny-10000;
+				Zeny -= 10000;
 				enablenpc "Kafra Employee#"+strnpcinfo(2);
 				setcastledata strnpcinfo(4),9,1;
 				mes "[ Steward ]";
@@ -608,9 +607,9 @@ OnStartArena:
 	if (.@Economy < 0) set .@Economy, 0;
 	setcastledata strnpcinfo(4),2,.@Economy;
 	// Lower Castle Defence
-	set .@Defence,getcastledata(strnpcinfo(4),3)-5;
-	if (.@Defence < 0) set .@Defence, 0;
-	setcastledata strnpcinfo(4),3,.@Defence;
+	set .@defence,getcastledata(strnpcinfo(4),3)-5;
+	if (.@defence < 0) set .@defence, 0;
+	setcastledata strnpcinfo(4),3,.@defence;
 	// Set new owner
 	setcastledata strnpcinfo(4),1,.@GID;
 	// Clear castle's data.
@@ -624,7 +623,7 @@ OnStartArena:
 	donpcevent "Manager#"+strnpcinfo(4)+"::OnReset";
 	maprespawnguildid strnpcinfo(4),getcastledata(strnpcinfo(4),1),2;
 	donpcevent "Manager#"+strnpcinfo(4)+"::OnRecvCastle2";
-	donpcevent "::OnRecvCastle"+strnpcinfo(2);
+	donpcevent "::OnRecvCastle"+ strtoupper( substr( strnpcinfo(2), 0, 0 ) ) + substr( strnpcinfo(2), 1, getstrlen( strnpcinfo(2) ) -1 );
 	sleep 10000;
 	if (agitcheck2()) {
 		donpcevent "Manager#"+strnpcinfo(4)+"::OnChange";
@@ -841,7 +840,7 @@ OnInit:
 	if (getcharid(2) == .@GID && getgdskilllv(.@GID,10001)) {
 		mes "[Kafra Employee]";
 		mes "Welcome, proud member";
-		mes "of the ^FF0000"+GetGuildName(.@GID)+"^000000 Guild!";
+		mes "of the ^FF0000"+getguildname(.@GID)+"^000000 Guild!";
 		mes "The Kafra Corporation is ready";
 		mes "to assist you wherever you go!";
 		next;
@@ -872,7 +871,7 @@ OnInit:
 					cutin "kafra_01",255;
 					end;
 				}
-				set Zeny, Zeny-200;
+				Zeny -= 200;
 				warp "rachel",115,125;
 				end;
 			case 2:
@@ -910,7 +909,7 @@ OnInit:
 						cutin "kafra_01",255;
 						end;
 					}
-					set Zeny, Zeny-800;
+					Zeny -= 800;
 					setcart;
 					break;
 				case 2:
@@ -966,6 +965,7 @@ OnInit:
 		mes "5 Red Gemstones";
 		next;
 		mes "^3355FFDo you want to continue?^000000";
+		next;
 		if(select("No:Continue") == 1) {
 			mes "^3355FFWork canceled.^000000";
 			close;
@@ -1503,8 +1503,9 @@ OnGuardianStoneDied:
 	end;
 
 OnTimer300000:
+	set .@num, atoi(charat(strnpcinfo(1),2));
 	set .@str$,substr(strnpcinfo(2),0,1)+substr(strnpcinfo(2),8,9);
-	donpcevent "1st Guardian Stone#"+.@str$+"::OnEnable";
+	donpcevent ((.@num == 1)?"1st":"2nd")+" Guardian Stone#"+.@str$+"::OnEnable";
 	setd "$agit_"+.@str$+"["+(atoi(charat(strnpcinfo(1),2))-1)+"]",2;
 	stopnpctimer;
 	end;

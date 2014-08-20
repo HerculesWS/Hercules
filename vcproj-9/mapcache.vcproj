@@ -271,6 +271,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\common\sysinfo.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\common\sysinfo.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\common\utils.c"
 				>
 			</File>
@@ -280,6 +288,14 @@
 			</File>
 			<File
 				RelativePath="..\src\common\winapi.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\common\nullpo.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\common\nullpo.c"
 				>
 			</File>
 		</Filter>

@@ -1,29 +1,29 @@
 //===== Hercules Script ======================================
 //= Mercenary related NPCs
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.4
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Sells Lancer, Sword, and Archer mercenaries,
 //= along with related mercenary items.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First version. [L0ne_W0lf]
 //= 1.1 Optimization. [Zephyrus]
 //= 1.2 Removed redundent input. [L0ne_W0lf]
 //= 1.3 Duplicates now spawned from floating NPCs. [L0ne_W0lf]
 //= 1.4 Optimized and fixed wrong item id. [Joseph]
-//============================================================ 
+//============================================================
 
 -	script	Mercenary Manager#main	-1,{
 	setarray .@name$, 	"Spear", 			"Sword", 			"Bow";
 	setarray .@faith$, 	"SPEAR_MERC_GUILD",	"SWORD_MERC_GUILD",	"ARCH_MERC_GUILD";
 	setarray .@item, 	12182,				12172,				12162;
-	set .@faith_lancer, mercenary_get_faith(getd(.@faith$[.@type]));
 	set .@npc$, strnpcinfo(2);
 	for (set .@size, getarraysize(.@name$); .@i < .@size; set .@i, .@i + 1)
 		if (.@npc$ == .@name$[.@i]) set .@type, .@i;
+	set .@faith_merc, mercenary_get_faith(getd(.@faith$[.@type]));
 	mes "[Mercenary Manager]";
 	mes "Welcome to the";
 	mes .@npc$ + " Mercenary Guild.";
@@ -62,7 +62,7 @@
 				mes "free to come back if your";
 				mes "needs change. Thank you~";
 			}
-			else if(.@FaithCost && .@faith_lancer < .@FaithCost) {
+			else if(.@FaithCost && .@faith_merc < .@FaithCost) {
 				mes "[Mercenary Manager]";
 				mes "Oh... Your Loyalty rating";
 				mes "with the " + .@npc$ + " Mercenary";
@@ -94,7 +94,7 @@
 				mes "Summoned Mercenaries will";
 				mes "offer their support to you for";
 				mes "30 minutes. Take care now.";
-				set Zeny, Zeny - (.@ZenyCost * 1000);
+				Zeny -= (.@ZenyCost * 1000);
 				getitem .@item[.@type] - 10 + .@Grade, 1;
 			}
 			close;
@@ -176,7 +176,7 @@
 				mes "Mercenary. Have you considered";
 				mes "hiring a lower grade Mercenary?";
 			}
-			else if (.@faith_lancer < 500) {
+			else if (.@faith_merc < 500) {
 				mes "[Mercenary Manager]";
 				mes "I'm sorry, but your";
 				mes "Loyalty rating is too";
@@ -206,8 +206,8 @@
 			close;
 	}
 }
-prontera,41,337,5	duplicate(Mercenary Manager#main)	Mercenary Manager#Spear	105
-pay_arche,99,167,4	duplicate(Mercenary Manager#main)	Mercenary Manager#Bow	732
+prontera,41,337,5	duplicate(Mercenary Manager#main)	Mercenary Manager#Spear	8W_SOLDIER
+pay_arche,99,167,4	duplicate(Mercenary Manager#main)	Mercenary Manager#Bow	4_M_JOB_HUNTER
 
 // Mercenary Merchant NPCs
 //============================================================
@@ -271,7 +271,7 @@ pay_arche,99,167,4	duplicate(Mercenary Manager#main)	Mercenary Manager#Bow	732
 		close;
 	}
 	mes "[Mercenary Goods Merchant]";
-	if (.@input == 1) 
+	if (.@input == 1)
 		mes "Here's your " + getitemname(.@item[.@m]) + ".";
 	else {
 		mes "Here you are, this is exactly";
@@ -280,9 +280,9 @@ pay_arche,99,167,4	duplicate(Mercenary Manager#main)	Mercenary Manager#Bow	732
 	mes "Thank you, and please come";
 	mes "again when you need more";
 	mes "potions for your Mercenaries.";
-	set Zeny, Zeny - .@total_po;
+	Zeny -= .@total_po;
 	getitem .@item[.@m], .@input;
 	close;
 }
-prontera,30,337,4	duplicate(MercMerchant)	Mercenary Merchant#Spear	700
-pay_arche,102,167,5	duplicate(MercMerchant)	Mercenary Merchant#Bow	879
+prontera,30,337,4	duplicate(MercMerchant)	Mercenary Merchant#Spear	8_F_GIRL
+pay_arche,102,167,5	duplicate(MercMerchant)	Mercenary Merchant#Bow	4_F_CAPEGIRL

@@ -2,16 +2,15 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _COMMON_SQL_H_
-#define _COMMON_SQL_H_
+#ifndef COMMON_SQL_H
+#define COMMON_SQL_H
 
-#include "../common/cbasetypes.h"
 #include <stdarg.h>// va_list
 
-
+#include "../common/cbasetypes.h"
 
 // Return codes
-#define SQL_ERROR -1
+#define SQL_ERROR (-1)
 #define SQL_SUCCESS 0
 #define SQL_NO_DATA 100
 
@@ -99,7 +98,7 @@ struct sql_interface {
 	/// The query is constructed as if it was sprintf.
 	///
 	/// @return SQL_SUCCESS or SQL_ERROR
-	int (*Query) (Sql* self, const char* query, ...);
+	int (*Query) (Sql *self, const char *query, ...) __attribute__((format(printf, 2, 3)));
 	/// Executes a query.
 	/// Any previous result is freed.
 	/// The query is constructed as if it was svprintf.
@@ -148,10 +147,10 @@ struct sql_interface {
 	///////////////////////////////////////////////////////////////////////////////
 	// Prepared Statements
 	///////////////////////////////////////////////////////////////////////////////
-	// Parameters are placed in the statement by embedding question mark ('?') 
+	// Parameters are placed in the statement by embedding question mark ('?')
 	// characters into the query at the appropriate positions.
 	// The markers are legal only in places where they represent data.
-	// The markers cannot be inside quotes. Quotes will be added automatically 
+	// The markers cannot be inside quotes. Quotes will be added automatically
 	// when they are required.
 	//
 	// example queries with parameters:
@@ -167,7 +166,7 @@ struct sql_interface {
 	/// It uses the connection of the parent Sql handle.
 	/// Queries in Sql and SqlStmt are independent and don't affect each other.
 	///
-	/// @return SqlStmt handle or NULL if an error occured
+	/// @return SqlStmt handle or NULL if an error occurred
 	struct SqlStmt* (*StmtMalloc)(Sql* sql);
 
 
@@ -177,7 +176,7 @@ struct sql_interface {
 	/// The query is constructed as if it was sprintf.
 	///
 	/// @return SQL_SUCCESS or SQL_ERROR
-	int (*StmtPrepare)(SqlStmt* self, const char* query, ...);
+	int (*StmtPrepare) (SqlStmt *self, const char *query, ...) __attribute__((format(printf, 2, 3)));
 
 	/// Prepares the statement.
 	/// Any previous result is freed and all parameter bindings are removed.
@@ -199,7 +198,7 @@ struct sql_interface {
 
 	/// Returns the number of parameters in the prepared statement.
 	///
-	/// @return Number or paramenters
+	/// @return Number or parameters
 	size_t (*StmtNumParams)(SqlStmt* self);
 
 
@@ -237,8 +236,8 @@ struct sql_interface {
 
 	/// Binds the result of a column to a buffer.
 	/// The buffer will be filled with data when the next row is fetched.
-	/// For string/enum buffer types there has to be enough space for the data 
-	/// and the nul-terminator (an extra byte).
+	/// For string/enum buffer types there has to be enough space for the data
+	/// and the null-terminator (an extra byte).
 	///
 	/// @return SQL_SUCCESS or SQL_ERROR
 	int (*StmtBindColumn)(SqlStmt* self, size_t idx, SqlDataType buffer_type, void* buffer, size_t buffer_len, uint32* out_length, int8* out_is_null);
@@ -277,24 +276,19 @@ void sql_defaults(void);
 #if defined(SQL_REMOVE_SHOWDEBUG)
 #define Sql_ShowDebug(self) (void)0
 #else
-#define Sql_ShowDebug(self) SQL->ShowDebug_(self, __FILE__, __LINE__)
+#define Sql_ShowDebug(self) (SQL->ShowDebug_((self), __FILE__, __LINE__))
 #endif
 
 void Sql_HerculesUpdateCheck(Sql* self);
+void Sql_HerculesUpdateSkip(Sql* self,const char *filename);
 
 #if defined(SQL_REMOVE_SHOWDEBUG)
 #define SqlStmt_ShowDebug(self) (void)0
 #else
-#define SqlStmt_ShowDebug(self) SQL->StmtShowDebug_(self, __FILE__, __LINE__)
-#endif
 /// Shows debug information (with statement).
-
-
-
-
-
+#define SqlStmt_ShowDebug(self) (SQL->StmtShowDebug_((self), __FILE__, __LINE__))
+#endif
 
 void Sql_Init(void);
 
-
-#endif /* _COMMON_SQL_H_ */
+#endif /* COMMON_SQL_H */

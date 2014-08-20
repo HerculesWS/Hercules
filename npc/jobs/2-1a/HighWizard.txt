@@ -1,21 +1,19 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Advance Class jobchanger after kRO Normals.
 //===== By: ==================================================
 //= Nana
 //= finished, optimized and tested by Lupus
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: ===================================== 
-//= rAthena 1.0 +
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Advance Class jobchanger after kRO Normals.
-//===== Additional Comments: ================================= 
-//= v1.1 Made all into functions, additional checks, etc. [Lupus]
-//= v1.2 Made numbers into constants. [Vicious]
+//===== Additional Comments: =================================
+//= 1.1 Made all into functions, additional checks, etc. [Lupus]
+//= 1.2 Made numbers into constants. [Vicious]
 //= 1.3 Now saves/restores all the quest skills [Lupus]
-//============================================================ 
+//============================================================
 
-valkyrie,44,47,5	script	High Wizard#Valkyrie	735,{
+valkyrie,44,47,5	script	High Wizard#Valkyrie	4_M_JOB_WIZARD,{
 	if (ADVJOB == 0 ||  Upper != 1) {
 		set .@karma_d,rand(1,10);
 		if (.@karma_d > 4) {
@@ -62,7 +60,7 @@ valkyrie,44,47,5	script	High Wizard#Valkyrie	735,{
 			mes "all of your remaining Skill Points before returning to me.";
 			close;
 		}
-		jobchange Job_high_Wizard;
+		jobchange Job_High_Wizard;
 		set ADVJOB,0;
 		mes "[High Wizard]";
 		mes "Congratulations.";

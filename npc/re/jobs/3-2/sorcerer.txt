@@ -1,21 +1,19 @@
 //===== Hercules Script ======================================
 //= Sorcerer Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Muad_Dib
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job change Quest from Sage / Professor -> Sorcerer.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [Masao]
 //= 1.1 Cleaning. [Euphy]
 //= 1.2 Updated script, optimized. [Euphy]
 //============================================================
 
-gef_tower,102,34,5	script	Merito	742,{
+gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 	mes "[Merito]";
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "You packed so much in your bag. Try again after emptying your bag.";
@@ -127,7 +125,7 @@ gef_tower,102,34,5	script	Merito	742,{
 	}
 }
 
-gef_tower,113,161,5	script	Karacas	754,{
+gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 	mes "[Karacas]";
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "Oh, it seems that you're too heavy. Empty your bag and then come again.";
@@ -414,7 +412,7 @@ gef_tower,113,161,5	script	Karacas	754,{
 	}
 	close;
 }
-thor_v01,64,252,0	duplicate(Spirit Detecting Staff#0)	Spirit Detecting Staff#1	836
-ice_dun01,274,274,0	duplicate(Spirit Detecting Staff#0)	Spirit Detecting Staff#2	836
-mjo_dun03,200,141,0	duplicate(Spirit Detecting Staff#0)	Spirit Detecting Staff#3	836
-gon_dun02,195,190,0	duplicate(Spirit Detecting Staff#0)	Spirit Detecting Staff#4	836
+thor_v01,64,252,0	duplicate(Spirit Detecting Staff#0)	Spirit Detecting Staff#1	2_BOARD2
+ice_dun01,274,274,0	duplicate(Spirit Detecting Staff#0)	Spirit Detecting Staff#2	2_BOARD2
+mjo_dun03,200,141,0	duplicate(Spirit Detecting Staff#0)	Spirit Detecting Staff#3	2_BOARD2
+gon_dun02,195,190,0	duplicate(Spirit Detecting Staff#0)	Spirit Detecting Staff#4	2_BOARD2

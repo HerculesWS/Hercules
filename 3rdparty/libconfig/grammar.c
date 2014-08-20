@@ -1,10 +1,9 @@
-
-/* A Bison parser, made by GNU Bison 2.4.1.  */
+/* A Bison parser, made by GNU Bison 2.4.3.  */
 
 /* Skeleton implementation for Bison's Yacc-like parsers in C
    
-      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006,
+   2009, 2010 Free Software Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -46,7 +45,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "2.4.1"
+#define YYBISON_VERSION "2.4.3"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -130,7 +129,7 @@ void libconfig_yyerror(void *scanner, struct parse_context *ctx,
 
 
 /* Line 189 of yacc.c  */
-#line 134 "grammar.c"
+#line 133 "grammar.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -219,7 +218,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 223 "grammar.c"
+#line 222 "grammar.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -231,7 +230,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 235 "grammar.c"
+#line 234 "grammar.c"
 
 #ifdef short
 # undef short
@@ -281,7 +280,7 @@ typedef short int yytype_int16;
 #define YYSIZE_MAXIMUM ((YYSIZE_T) -1)
 
 #ifndef YY_
-# if YYENABLE_NLS
+# if defined YYENABLE_NLS && YYENABLE_NLS
 #  if ENABLE_NLS
 #   include <libintl.h> /* INFRINGES ON USER NAME SPACE */
 #   define YY_(msgid) dgettext ("bison-runtime", msgid)
@@ -446,16 +445,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  6
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   35
+#define YYLAST   37
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  23
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  20
+#define YYNNTS  23
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  39
+#define YYNRULES  43
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  47
+#define YYNSTATES  51
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
@@ -503,32 +502,35 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint8 yyprhs[] =
 {
        0,     0,     3,     4,     6,     8,    11,    12,    14,    15,
-      17,    19,    20,    26,    27,    32,    33,    38,    40,    42,
-      44,    46,    48,    51,    53,    55,    57,    59,    61,    63,
-      65,    67,    71,    72,    74,    76,    80,    81,    83,    84
+      17,    19,    20,    22,    23,    29,    30,    35,    36,    41,
+      43,    45,    47,    49,    51,    54,    56,    58,    60,    62,
+      64,    66,    68,    70,    74,    77,    78,    80,    82,    86,
+      89,    90,    92,    93
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      24,     0,    -1,    -1,    25,    -1,    28,    -1,    25,    28,
+      24,     0,    -1,    -1,    25,    -1,    29,    -1,    25,    29,
       -1,    -1,    25,    -1,    -1,    20,    -1,    17,    -1,    -1,
-      10,    29,    11,    34,    27,    -1,    -1,    13,    31,    40,
-      14,    -1,    -1,    15,    33,    38,    16,    -1,    36,    -1,
-      30,    -1,    32,    -1,    41,    -1,     9,    -1,    35,     9,
-      -1,     3,    -1,     4,    -1,     6,    -1,     5,    -1,     7,
-      -1,     8,    -1,    35,    -1,    34,    -1,    37,    17,    34,
-      -1,    -1,    37,    -1,    36,    -1,    39,    17,    36,    -1,
-      -1,    39,    -1,    -1,    18,    42,    26,    19,    -1
+      17,    -1,    -1,    10,    30,    11,    35,    27,    -1,    -1,
+      13,    32,    43,    14,    -1,    -1,    15,    34,    40,    16,
+      -1,    37,    -1,    31,    -1,    33,    -1,    44,    -1,     9,
+      -1,    36,     9,    -1,     3,    -1,     4,    -1,     6,    -1,
+       5,    -1,     7,    -1,     8,    -1,    36,    -1,    35,    -1,
+      38,    17,    35,    -1,    38,    28,    -1,    -1,    39,    -1,
+      37,    -1,    41,    17,    37,    -1,    41,    28,    -1,    -1,
+      42,    -1,    -1,    18,    45,    26,    19,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
        0,   100,   100,   102,   106,   107,   110,   112,   115,   117,
-     118,   123,   122,   142,   141,   165,   164,   187,   188,   189,
-     190,   194,   195,   199,   219,   241,   263,   285,   307,   325,
-     353,   354,   357,   359,   363,   364,   367,   369,   374,   373
+     118,   121,   123,   128,   127,   147,   146,   170,   169,   192,
+     193,   194,   195,   199,   200,   204,   224,   246,   268,   290,
+     312,   330,   358,   359,   363,   366,   368,   372,   373,   377,
+     380,   382,   387,   386
 };
 #endif
 
@@ -543,8 +545,9 @@ static const char *const yytname[] =
   "TOK_LIST_START", "TOK_LIST_END", "TOK_COMMA", "TOK_GROUP_START",
   "TOK_GROUP_END", "TOK_SEMICOLON", "TOK_GARBAGE", "TOK_ERROR", "$accept",
   "configuration", "setting_list", "setting_list_optional",
-  "setting_terminator", "setting", "$@1", "array", "$@2", "list", "$@3",
-  "value", "string", "simple_value", "value_list", "value_list_optional",
+  "setting_terminator", "comma_optional", "setting", "$@1", "array", "$@2",
+  "list", "$@3", "value", "string", "simple_value", "value_list_sub",
+  "value_list", "value_list_optional", "simple_value_list_sub",
   "simple_value_list", "simple_value_list_optional", "group", "$@4", 0
 };
 #endif
@@ -564,18 +567,20 @@ static const yytype_uint16 yytoknum[] =
 static const yytype_uint8 yyr1[] =
 {
        0,    23,    24,    24,    25,    25,    26,    26,    27,    27,
-      27,    29,    28,    31,    30,    33,    32,    34,    34,    34,
-      34,    35,    35,    36,    36,    36,    36,    36,    36,    36,
-      37,    37,    38,    38,    39,    39,    40,    40,    42,    41
+      27,    28,    28,    30,    29,    32,    31,    34,    33,    35,
+      35,    35,    35,    36,    36,    37,    37,    37,    37,    37,
+      37,    37,    38,    38,    39,    40,    40,    41,    41,    42,
+      43,    43,    45,    44
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
        0,     2,     0,     1,     1,     2,     0,     1,     0,     1,
-       1,     0,     5,     0,     4,     0,     4,     1,     1,     1,
-       1,     1,     2,     1,     1,     1,     1,     1,     1,     1,
-       1,     3,     0,     1,     1,     3,     0,     1,     0,     4
+       1,     0,     1,     0,     5,     0,     4,     0,     4,     1,
+       1,     1,     1,     1,     2,     1,     1,     1,     1,     1,
+       1,     1,     1,     3,     2,     0,     1,     1,     3,     2,
+       0,     1,     0,     4
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -583,18 +588,20 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       2,    11,     0,     3,     4,     0,     1,     5,     0,    23,
-      24,    26,    25,    27,    28,    21,    13,    15,    38,    18,
-      19,     8,    29,    17,    20,    36,    32,     6,    10,     9,
-      12,    22,    34,    37,     0,    30,    33,     0,     7,     0,
-       0,    14,     0,    16,    39,    35,    31
+       2,    13,     0,     3,     4,     0,     1,     5,     0,    25,
+      26,    28,    27,    29,    30,    23,    15,    17,    42,    20,
+      21,     8,    31,    19,    22,    40,    35,     6,    10,     9,
+      14,    24,    37,    11,    41,     0,    32,    11,    36,     0,
+       7,     0,    12,    39,    16,    12,    34,    18,    43,    38,
+      33
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     2,     3,    39,    30,     4,     5,    19,    25,    20,
-      26,    21,    22,    23,    36,    37,    33,    34,    24,    27
+      -1,     2,     3,    41,    30,    43,     4,     5,    19,    25,
+      20,    26,    21,    22,    23,    37,    38,    39,    33,    34,
+      35,    24,    27
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
@@ -602,18 +609,20 @@ static const yytype_int8 yydefgoto[] =
 #define YYPACT_NINF -26
 static const yytype_int8 yypact[] =
 {
-      -8,   -26,    12,    -8,   -26,     5,   -26,   -26,     0,   -26,
+       2,   -26,    10,     2,   -26,     5,   -26,   -26,     0,   -26,
      -26,   -26,   -26,   -26,   -26,   -26,   -26,   -26,   -26,   -26,
-     -26,    -6,    10,   -26,   -26,    23,     0,    -8,   -26,   -26,
-     -26,   -26,   -26,     3,     7,   -26,     6,     8,    -8,    14,
-      23,   -26,     0,   -26,   -26,   -26,   -26
+     -26,    -6,     8,   -26,   -26,    18,     0,     2,   -26,   -26,
+     -26,   -26,   -26,    11,   -26,    15,   -26,    13,   -26,    16,
+       2,    12,    18,   -26,   -26,     0,   -26,   -26,   -26,   -26,
+     -26
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -26,   -26,    -5,   -26,   -26,    -3,   -26,   -26,   -26,   -26,
-     -26,   -25,   -26,   -15,   -26,   -26,   -26,   -26,   -26,   -26
+     -26,   -26,     6,   -26,   -26,    -2,    -3,   -26,   -26,   -26,
+     -26,   -26,   -25,   -26,   -23,   -26,   -26,   -26,   -26,   -26,
+     -26,   -26,   -26
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -623,29 +632,30 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-       7,    35,     1,     9,    10,    11,    12,    13,    14,    15,
-      32,    28,     6,    16,    29,    17,     8,    46,    18,    31,
-      40,    41,    38,    42,    43,    45,     9,    10,    11,    12,
-      13,    14,    15,    44,     0,     7
+       7,    36,    32,     9,    10,    11,    12,    13,    14,    15,
+       6,    28,     1,    16,    29,    17,     8,    31,    18,    49,
+      50,     9,    10,    11,    12,    13,    14,    15,    42,    44,
+      45,    48,    47,    40,     0,    46,     0,     7
 };
 
 static const yytype_int8 yycheck[] =
 {
-       3,    26,    10,     3,     4,     5,     6,     7,     8,     9,
-      25,    17,     0,    13,    20,    15,    11,    42,    18,     9,
-      17,    14,    27,    17,    16,    40,     3,     4,     5,     6,
-       7,     8,     9,    19,    -1,    38
+       3,    26,    25,     3,     4,     5,     6,     7,     8,     9,
+       0,    17,    10,    13,    20,    15,    11,     9,    18,    42,
+      45,     3,     4,     5,     6,     7,     8,     9,    17,    14,
+      17,    19,    16,    27,    -1,    37,    -1,    40
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    10,    24,    25,    28,    29,     0,    28,    11,     3,
-       4,     5,     6,     7,     8,     9,    13,    15,    18,    30,
-      32,    34,    35,    36,    41,    31,    33,    42,    17,    20,
-      27,     9,    36,    39,    40,    34,    37,    38,    25,    26,
-      17,    14,    17,    16,    19,    36,    34
+       0,    10,    24,    25,    29,    30,     0,    29,    11,     3,
+       4,     5,     6,     7,     8,     9,    13,    15,    18,    31,
+      33,    35,    36,    37,    44,    32,    34,    45,    17,    20,
+      27,     9,    37,    41,    42,    43,    35,    38,    39,    40,
+      25,    26,    17,    28,    14,    17,    28,    16,    19,    37,
+      35
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -660,9 +670,18 @@ static const yytype_uint8 yystos[] =
 
 /* Like YYERROR except do call yyerror.  This remains here temporarily
    to ease the transition to the new meaning of YYERROR, for GCC.
-   Once GCC version 2 has supplanted version 1, this can go.  */
+   Once GCC version 2 has supplanted version 1, this can go.  However,
+   YYFAIL appears to be in use.  Nevertheless, it is formally deprecated
+   in Bison 2.4.2's NEWS entry, where a plan to phase it out is
+   discussed.  */
 
 #define YYFAIL		goto yyerrlab
+#if defined YYFAIL
+  /* This is here to suppress warnings from the GCC cpp's
+     -Wunused-macros.  Normally we don't worry about that warning, but
+     some users do, and we want to make it easy for users to remove
+     YYFAIL uses, which will produce warnings from Bison 2.5.  */
+#endif
 
 #define YYRECOVERING()  (!!yyerrstatus)
 
@@ -719,7 +738,7 @@ while (YYID (0))
    we won't break user code: when these are the locations we know.  */
 
 #ifndef YY_LOCATION_PRINT
-# if YYLTYPE_IS_TRIVIAL
+# if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
 #  define YY_LOCATION_PRINT(File, Loc)			\
      fprintf (File, "%d.%d-%d.%d",			\
 	      (Loc).first_line, (Loc).first_column,	\
@@ -1168,9 +1187,7 @@ yydestruct (yymsg, yytype, yyvaluep, scanner, ctx, scan_ctx)
   YYUSE (ctx);
   YYUSE (scan_ctx);
 
-  if (!yymsg)
-    yymsg = "Deleting";
-  YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
+  YY_SYMBOL_PRINT (yymsg ? yymsg : "Deleting", yytype, yyvaluep, yylocationp);
 
   switch (yytype)
     {
@@ -1475,10 +1492,10 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 11:
+        case 13:
 
-/* Line 1455 of yacc.c  */
-#line 123 "grammar.y"
+/* Line 1464 of yacc.c  */
+#line 128 "grammar.y"
     {
     ctx->setting = config_setting_add(ctx->parent, (yyvsp[(1) - (1)].sval), CONFIG_TYPE_NONE);
 
@@ -1494,10 +1511,10 @@ yyreduce:
   }
     break;
 
-  case 13:
+  case 15:
 
-/* Line 1455 of yacc.c  */
-#line 142 "grammar.y"
+/* Line 1464 of yacc.c  */
+#line 147 "grammar.y"
     {
     if(IN_LIST())
     {
@@ -1513,20 +1530,20 @@ yyreduce:
   }
     break;
 
-  case 14:
+  case 16:
 
-/* Line 1455 of yacc.c  */
-#line 157 "grammar.y"
+/* Line 1464 of yacc.c  */
+#line 162 "grammar.y"
     {
     if(ctx->parent)
       ctx->parent = ctx->parent->parent;
   }
     break;
 
-  case 15:
+  case 17:
 
-/* Line 1455 of yacc.c  */
-#line 165 "grammar.y"
+/* Line 1464 of yacc.c  */
+#line 170 "grammar.y"
     {
     if(IN_LIST())
     {
@@ -1542,34 +1559,34 @@ yyreduce:
   }
     break;
 
-  case 16:
+  case 18:
 
-/* Line 1455 of yacc.c  */
-#line 180 "grammar.y"
+/* Line 1464 of yacc.c  */
+#line 185 "grammar.y"
     {
     if(ctx->parent)
       ctx->parent = ctx->parent->parent;
   }
     break;
 
-  case 21:
+  case 23:
 
-/* Line 1455 of yacc.c  */
-#line 194 "grammar.y"
+/* Line 1464 of yacc.c  */
+#line 199 "grammar.y"
     { parsectx_append_string(ctx, (yyvsp[(1) - (1)].sval)); free((yyvsp[(1) - (1)].sval)); }
     break;
 
-  case 22:
+  case 24:
 
-/* Line 1455 of yacc.c  */
-#line 195 "grammar.y"
+/* Line 1464 of yacc.c  */
+#line 200 "grammar.y"
     { parsectx_append_string(ctx, (yyvsp[(2) - (2)].sval)); free((yyvsp[(2) - (2)].sval)); }
     break;
 
-  case 23:
+  case 25:
 
-/* Line 1455 of yacc.c  */
-#line 200 "grammar.y"
+/* Line 1464 of yacc.c  */
+#line 205 "grammar.y"
     {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1591,64 +1608,10 @@ yyreduce:
   }
     break;
 
-  case 24:
-
-/* Line 1455 of yacc.c  */
-#line 220 "grammar.y"
-    {
-    if(IN_ARRAY() || IN_LIST())
-    {
-      config_setting_t *e = config_setting_set_int_elem(ctx->parent, -1, (yyvsp[(1) - (1)].ival));
-      if(! e)
-      {
-        libconfig_yyerror(scanner, ctx, scan_ctx, err_array_elem_type);
-        YYABORT;
-      }
-      else
-      {
-        config_setting_set_format(e, CONFIG_FORMAT_DEFAULT);
-        CAPTURE_PARSE_POS(e);
-      }
-    }
-    else
-    {
-      config_setting_set_int(ctx->setting, (yyvsp[(1) - (1)].ival));
-      config_setting_set_format(ctx->setting, CONFIG_FORMAT_DEFAULT);
-    }
-  }
-    break;
-
-  case 25:
-
-/* Line 1455 of yacc.c  */
-#line 242 "grammar.y"
-    {
-    if(IN_ARRAY() || IN_LIST())
-    {
-      config_setting_t *e = config_setting_set_int64_elem(ctx->parent, -1, (yyvsp[(1) - (1)].llval));
-      if(! e)
-      {
-        libconfig_yyerror(scanner, ctx, scan_ctx, err_array_elem_type);
-        YYABORT;
-      }
-      else
-      {
-        config_setting_set_format(e, CONFIG_FORMAT_DEFAULT);
-        CAPTURE_PARSE_POS(e);
-      }
-    }
-    else
-    {
-      config_setting_set_int64(ctx->setting, (yyvsp[(1) - (1)].llval));
-      config_setting_set_format(ctx->setting, CONFIG_FORMAT_DEFAULT);
-    }
-  }
-    break;
-
   case 26:
 
-/* Line 1455 of yacc.c  */
-#line 264 "grammar.y"
+/* Line 1464 of yacc.c  */
+#line 225 "grammar.y"
     {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1660,22 +1623,76 @@ yyreduce:
       }
       else
       {
-        config_setting_set_format(e, CONFIG_FORMAT_HEX);
+        config_setting_set_format(e, CONFIG_FORMAT_DEFAULT);
         CAPTURE_PARSE_POS(e);
       }
     }
     else
     {
       config_setting_set_int(ctx->setting, (yyvsp[(1) - (1)].ival));
-      config_setting_set_format(ctx->setting, CONFIG_FORMAT_HEX);
+      config_setting_set_format(ctx->setting, CONFIG_FORMAT_DEFAULT);
     }
   }
     break;
 
   case 27:
 
-/* Line 1455 of yacc.c  */
-#line 286 "grammar.y"
+/* Line 1464 of yacc.c  */
+#line 247 "grammar.y"
+    {
+    if(IN_ARRAY() || IN_LIST())
+    {
+      config_setting_t *e = config_setting_set_int64_elem(ctx->parent, -1, (yyvsp[(1) - (1)].llval));
+      if(! e)
+      {
+        libconfig_yyerror(scanner, ctx, scan_ctx, err_array_elem_type);
+        YYABORT;
+      }
+      else
+      {
+        config_setting_set_format(e, CONFIG_FORMAT_DEFAULT);
+        CAPTURE_PARSE_POS(e);
+      }
+    }
+    else
+    {
+      config_setting_set_int64(ctx->setting, (yyvsp[(1) - (1)].llval));
+      config_setting_set_format(ctx->setting, CONFIG_FORMAT_DEFAULT);
+    }
+  }
+    break;
+
+  case 28:
+
+/* Line 1464 of yacc.c  */
+#line 269 "grammar.y"
+    {
+    if(IN_ARRAY() || IN_LIST())
+    {
+      config_setting_t *e = config_setting_set_int_elem(ctx->parent, -1, (yyvsp[(1) - (1)].ival));
+      if(! e)
+      {
+        libconfig_yyerror(scanner, ctx, scan_ctx, err_array_elem_type);
+        YYABORT;
+      }
+      else
+      {
+        config_setting_set_format(e, CONFIG_FORMAT_HEX);
+        CAPTURE_PARSE_POS(e);
+      }
+    }
+    else
+    {
+      config_setting_set_int(ctx->setting, (yyvsp[(1) - (1)].ival));
+      config_setting_set_format(ctx->setting, CONFIG_FORMAT_HEX);
+    }
+  }
+    break;
+
+  case 29:
+
+/* Line 1464 of yacc.c  */
+#line 291 "grammar.y"
     {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1699,10 +1716,10 @@ yyreduce:
   }
     break;
 
-  case 28:
+  case 30:
 
-/* Line 1455 of yacc.c  */
-#line 308 "grammar.y"
+/* Line 1464 of yacc.c  */
+#line 313 "grammar.y"
     {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1722,10 +1739,10 @@ yyreduce:
   }
     break;
 
-  case 29:
+  case 31:
 
-/* Line 1455 of yacc.c  */
-#line 326 "grammar.y"
+/* Line 1464 of yacc.c  */
+#line 331 "grammar.y"
     {
     if(IN_ARRAY() || IN_LIST())
     {
@@ -1752,10 +1769,10 @@ yyreduce:
   }
     break;
 
-  case 38:
+  case 42:
 
-/* Line 1455 of yacc.c  */
-#line 374 "grammar.y"
+/* Line 1464 of yacc.c  */
+#line 387 "grammar.y"
     {
     if(IN_LIST())
     {
@@ -1771,10 +1788,10 @@ yyreduce:
   }
     break;
 
-  case 39:
+  case 43:
 
-/* Line 1455 of yacc.c  */
-#line 389 "grammar.y"
+/* Line 1464 of yacc.c  */
+#line 402 "grammar.y"
     {
     if(ctx->parent)
       ctx->parent = ctx->parent->parent;
@@ -1783,8 +1800,8 @@ yyreduce:
 
 
 
-/* Line 1455 of yacc.c  */
-#line 1788 "grammar.c"
+/* Line 1464 of yacc.c  */
+#line 1807 "grammar.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1995,7 +2012,7 @@ yyreturn:
 
 
 
-/* Line 1675 of yacc.c  */
-#line 395 "grammar.y"
+/* Line 1684 of yacc.c  */
+#line 408 "grammar.y"
 
 

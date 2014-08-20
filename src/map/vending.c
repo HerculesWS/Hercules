@@ -2,24 +2,29 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/nullpo.h"
-#include "../common/strlib.h"
-#include "../common/utils.h"
-#include "clif.h"
-#include "itemdb.h"
-#include "atcommand.h"
-#include "map.h"
-#include "path.h"
-#include "chrif.h"
+#define HERCULES_CORE
+
 #include "vending.h"
-#include "pc.h"
-#include "npc.h"
-#include "skill.h"
-#include "battle.h"
-#include "log.h"
 
 #include <stdio.h>
 #include <string.h>
+
+#include "atcommand.h"
+#include "battle.h"
+#include "chrif.h"
+#include "clif.h"
+#include "itemdb.h"
+#include "log.h"
+#include "map.h"
+#include "npc.h"
+#include "path.h"
+#include "pc.h"
+#include "skill.h"
+#include "../common/nullpo.h"
+#include "../common/strlib.h"
+#include "../common/utils.h"
+
+struct vending_interface vending_s;
 
 /// Returns an unique vending shop id.
 static inline unsigned int getid(void) {
@@ -46,16 +51,16 @@ void vending_vendinglistreq(struct map_session_data* sd, unsigned int id) {
 	struct map_session_data* vsd;
 	nullpo_retv(sd);
 
-	if( (vsd = iMap->id2sd(id)) == NULL )
+	if( (vsd = map->id2sd(id)) == NULL )
 		return;
 	if( !vsd->state.vending )
 		return; // not vending
 
-	if (!pc->can_give_items(sd) || !pc->can_give_items(vsd)) { //check if both GMs are allowed to trade
+	if (!pc_can_give_items(sd) || !pc_can_give_items(vsd)) { //check if both GMs are allowed to trade
 		// GM is not allowed to trade
 		clif->message(sd->fd, msg_txt(246));
 		return;
-	} 
+	}
 
 	sd->vended_id = vsd->vender_id;  // register vending uid
 
@@ -69,7 +74,7 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 	int i, j, cursor, w, new_ = 0, blank, vend_list[MAX_VENDING];
 	double z;
 	struct s_vending vend[MAX_VENDING]; // against duplicate packets
-	struct map_session_data* vsd = iMap->id2sd(aid);
+	struct map_session_data* vsd = map->id2sd(aid);
 
 	nullpo_retv(sd);
 	if( vsd == NULL || !vsd->state.vending || vsd->bl.id == sd->bl.id )
@@ -177,7 +182,7 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 		if( battle_config.buyer_name ) {
 			char temp[256];
 			sprintf(temp, msg_txt(265), sd->status.name);
-			clif->disp_onlyself(vsd,temp,strlen(temp));
+			clif_disp_onlyself(vsd,temp,strlen(temp));
 		}
 	}
 
@@ -197,9 +202,9 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 	vsd->vend_num = cursor;
 
 	//Always save BOTH: buyer and customer
-	if( iMap->save_settings&2 ) {
-		chrif_save(sd,0);
-		chrif_save(vsd,0);
+	if( map->save_settings&2 ) {
+		chrif->save(sd,0);
+		chrif->save(vsd,0);
 	}
 
 	//check for @AUTOTRADE users [durf]
@@ -209,8 +214,9 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 		if( i == vsd->vend_num ) {
 			//Close Vending (this was automatically done by the client, we have to do it manually for autovenders) [Skotlex]
 			vending->close(vsd);
-			iMap->quit(vsd);	//They have no reason to stay around anymore, do they?
-		}
+			map->quit(vsd); //They have no reason to stay around anymore, do they?
+		} else
+			pc->autotrade_update(vsd,PAUC_REFRESH);
 	}
 }
 
@@ -255,7 +261,8 @@ void vending_openvending(struct map_session_data* sd, const char* message, const
 		||  !sd->status.cart[index].identify // unidentified item
 		||  sd->status.cart[index].attribute == 1 // broken item
 		||  sd->status.cart[index].expire_time // It should not be in the cart but just in case
-		||  !itemdb_cantrade(&sd->status.cart[index], pc->get_group_level(sd), pc->get_group_level(sd)) ) // untradeable item
+		||  (sd->status.cart[index].bound && !pc_can_give_bound_items(sd)) // can't trade bound items w/o permission
+ 		||  !itemdb_cantrade(&sd->status.cart[index], pc_get_group_level(sd), pc_get_group_level(sd)) ) // untradeable item
 			continue;
 
 		sd->vending[i].index = index;
@@ -281,7 +288,7 @@ void vending_openvending(struct map_session_data* sd, const char* message, const
 	clif->openvending(sd,sd->bl.id,sd->vending);
 	clif->showvendingboard(&sd->bl,message,0);
 	
-	idb_put(vending->db, sd->vender_id, sd);
+	idb_put(vending->db, sd->status.char_id, sd);
 }
 
 
@@ -358,7 +365,7 @@ void final(void) {
 	db_destroy(vending->db);
 }
 
-void init(void) {
+void init(bool minimal) {
 	vending->db = idb_alloc(DB_OPT_BASE);
 	vending->next_id = 0;
 }

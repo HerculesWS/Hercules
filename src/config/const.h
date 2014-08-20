@@ -1,8 +1,9 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
-#ifndef _H_CONSTANTS_
-#define _H_CONSTANTS_
+
+#ifndef CONFIG_CONSTANTS_H
+#define CONFIG_CONSTANTS_H
 
 /**
  * Hercules configuration file (http://hercules.ws)
@@ -14,7 +15,7 @@
  */
 
 /**
- * "Sane Checks" to save you from compiling with cool bugs 
+ * "Sane Checks" to save you from compiling with cool bugs
  **/
 #if SECURE_NPCTIMEOUT_INTERVAL <= 0
 	#error SECURE_NPCTIMEOUT_INTERVAL should be at least 1 (1s)
@@ -51,54 +52,47 @@
 	#define DEFTYPE_MAX CHAR_MAX
 #endif
 
-/* pointer size fix which fixes several gcc warnings */
-#ifdef __64BIT__
-	#define __64BPTRSIZE(y) (intptr)y
-#else
-	#define __64BPTRSIZE(y) y
-#endif
-
 /* ATCMD_FUNC(mobinfo) HIT and FLEE calculations */
 #ifdef RENEWAL
-	#define MOB_FLEE(mob) ( mob->lv + mob->status.agi + 100 )
-	#define MOB_HIT(mob)  ( mob->lv + mob->status.dex + 150 )
+	#define MOB_FLEE(mobdata) ( (mobdata)->lv + (mobdata)->status.agi + 100 )
+	#define MOB_HIT(mobdata)  ( (mobdata)->lv + (mobdata)->status.dex + 150 )
+	#define RE_SKILL_REDUCTION() do { \
+		wd.damage = battle->calc_elefix(src, target, skill_id, skill_lv, battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage, 0, wd.flag), nk, n_ele, s_ele, s_ele_, false, flag.arrow); \
+		if( flag.lh ) \
+			wd.damage2 = battle->calc_elefix(src, target, skill_id, skill_lv, battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage2, 1, wd.flag), nk, n_ele, s_ele, s_ele_, true, flag.arrow); \
+	} while(0)
 #else
-	#define MOB_FLEE(mob) ( mob->lv + mob->status.agi )
-	#define MOB_HIT(mob)  ( mob->lv + mob->status.dex )
+	#define MOB_FLEE(mobdata) ( (mobdata)->lv + (mobdata)->status.agi )
+	#define MOB_HIT(mobdata)  ( (mobdata)->lv + (mobdata)->status.dex )
 #endif
 
 /* Renewal's dmg level modifier, used as a macro for a easy way to turn off. */
 #ifdef RENEWAL_LVDMG
-	#define RE_LVL_DMOD(val) \
-		if( status_get_lv(src) > 100 && val > 0 ) \
-			skillratio = skillratio * status_get_lv(src) / val;
-	#define RE_LVL_MDMOD(val) \
-		if( status_get_lv(src) > 100 && val > 0) \
-			md.damage = md.damage * status_get_lv(src) / val;
+	#define RE_LVL_DMOD(val) do { \
+		if( status->get_lv(src) > 100 && (val) > 0 ) \
+			skillratio = skillratio * status->get_lv(src) / (val); \
+	} while(0)
+	#define RE_LVL_MDMOD(val) do { \
+		if( status->get_lv(src) > 100 && (val) > 0) \
+			md.damage = md.damage * status->get_lv(src) / (val); \
+	} while(0)
 	/* ranger traps special */
-	#define RE_LVL_TMDMOD() \
-		if( status_get_lv(src) > 100 ) \
-			md.damage = md.damage * 150 / 100 + md.damage * status_get_lv(src) / 100;
+	#define RE_LVL_TMDMOD() do { \
+		if( status->get_lv(src) > 100 ) \
+			md.damage = md.damage * 150 / 100 + md.damage * status->get_lv(src) / 100; \
+	} while(0)
 #else
-	#define RE_LVL_DMOD(val) 
+	#define RE_LVL_DMOD(val)
 	#define RE_LVL_MDMOD(val)
 	#define RE_LVL_TMDMOD()
 #endif
 
-/* Feb 1st 2012 */
-#if PACKETVER >= 20120201
-	#define NEW_CARTS
-	#define MAX_CARTS 9
-#else
-	#define MAX_CARTS 5
-#endif
-
 // Renewal variable cast time reduction
 #ifdef RENEWAL_CAST
-	#define VARCAST_REDUCTION(val){ \
-		if( (varcast_r += val) != 0 && varcast_r >= 0 ) \
-			time = time * (1 - (float)min(val, 100) / 100); \
-	}
+	#define VARCAST_REDUCTION(val) do { \
+		if( (varcast_r += (val)) != 0 && varcast_r >= 0 ) \
+			time = time * (1 - (float)min((val), 100) / 100); \
+	} while(0)
 #endif
 
 /* console_input doesn't go well with minicore */
@@ -106,14 +100,7 @@
 	#undef CONSOLE_INPUT
 #endif
 
-#ifdef RENEWAL
-	#define ITEMDB_SQL_COLUMNS 24
-#else
-	#define ITEMDB_SQL_COLUMNS 22
-#endif
-
-
 /**
  * End of File
  **/
-#endif /* _H_CONSTANTS_ */
+#endif /* CONFIG_CONSTANTS_H */

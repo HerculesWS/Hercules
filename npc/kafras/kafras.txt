@@ -1,28 +1,30 @@
 //===== Hercules Script ======================================
 //= Kafras (Cities/Dungeons/Fields)
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Joseph
-//===== Current Version: ===================================== 
-//= 1.1
+//===== Current Version: =====================================
+//= 1.1b
 //===== Description: =========================================
 //= Argument settings for callfunc "F_Kafra":
 //=  arg(0): 0 - Default Kafra message
 //=          1 - Niflhiem Kafra message
 //=          2 - Guild Kafra message
-//=  arg(1): 1 - Disable teleport menu 
+//=  arg(1): 1 - Disable teleport menu
 //=  arg(2): 1 - Disable info menu
 //=  arg(3): Cost of Storage service
 //=  arg(4): Cost of Rent a Pushcart service
-//===== Additional Comments: ================================= 
-//= 0.x Previous Authors: 
+//===== Additional Comments: =================================
+//= 0.x Previous Authors:
 //=     - L0ne_W0lf, kobra_k88, Samuray22, Evera, Lupus
 //= 1.0 Merged and cleaned up Kafras. [Joseph]
 //= 1.1 Added Izlude RE coordinates. [Euphy]
-//============================================================ 
+//= 1.1a Fixed Pre-RE Call and some leftovers. [Lemongrass]
+//= 1.1b Enabled saving in Izlude duplicates (RE). [Euphy]
+//============================================================
 
 // Aldebaran
 //============================================================
-aldeba_in,96,181,4	script	Kafra Service	113,{
+aldeba_in,96,181,4	script	Kafra Service	4_F_KAFRA5,{
 	cutin "kafra_05",2;
 	mes "[Kafra Leilah]";
 	mes "Hm...?";
@@ -49,7 +51,7 @@ aldeba_in,96,181,4	script	Kafra Service	113,{
 		close2;
 		break;
 	case 2:
-		if (zeny < 20) {
+		if (Zeny < 20) {
 			mes "[Kafra Leilah]";
 			mes "Excuse me, but it";
 			mes "seems that you don't";
@@ -64,7 +66,7 @@ aldeba_in,96,181,4	script	Kafra Service	113,{
 		mes "and administrative functions,";
 		mes "I'll access your Storage for you.";
 		next;
-		set zeny,zeny-20;
+		Zeny -= 20;
 		set RESRVPTS, RESRVPTS + (20/5);
 		mes "[Kafra Leilah]";
 		mes "In the future, please";
@@ -108,7 +110,7 @@ aldeba_in,96,181,4	script	Kafra Service	113,{
 	end;
 }
 
-aldebaran,143,119,4	script	Kafra Employee::kaf_aldebaran	113,{
+aldebaran,143,119,4	script	Kafra Employee::kaf_aldebaran	4_F_KAFRA5,{
 	cutin "kafra_05",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -123,7 +125,7 @@ aldebaran,143,119,4	script	Kafra Employee::kaf_aldebaran	113,{
 
 // Geffen
 //============================================================
-geffen,120,62,0	script	Kafra Employee::kaf_geffen	115,{
+geffen,120,62,0	script	Kafra Employee::kaf_geffen	4_F_KAFRA3,{
 	cutin "kafra_03",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -136,7 +138,7 @@ geffen,120,62,0	script	Kafra Employee::kaf_geffen	115,{
 	callfunc "F_KafEnd",0,1,"in the city of Geffen";
 }
 
-geffen,203,123,2	script	Kafra Employee::geffen2	114,{
+geffen,203,123,2	script	Kafra Employee::geffen2	4_F_KAFRA4,{
 	cutin "kafra_04",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -153,7 +155,7 @@ geffen,203,123,2	script	Kafra Employee::geffen2	114,{
 
 // Morocc
 //============================================================
-morocc,156,97,4	script	Kafra Employee::kaf_morocc	113,{
+morocc,156,97,4	script	Kafra Employee::kaf_morocc	4_F_KAFRA5,{
 	cutin "kafra_05",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -166,7 +168,7 @@ morocc,156,97,4	script	Kafra Employee::kaf_morocc	113,{
 	callfunc "F_KafEnd",0,1,"in the city of Morroc";
 }
 
-morocc,160,258,4	script	Kafra::kaf_morocc2	114,{
+morocc,160,258,4	script	Kafra::kaf_morocc2	4_F_KAFRA4,{
 	cutin "kafra_04",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -183,7 +185,7 @@ morocc,160,258,4	script	Kafra::kaf_morocc2	114,{
 
 // Payon
 //============================================================
-payon,181,104,4	script	Kafra Employee::kaf_payon	113,{
+payon,181,104,4	script	Kafra Employee::kaf_payon	4_F_KAFRA5,{
 	cutin "kafra_05",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -196,7 +198,7 @@ payon,181,104,4	script	Kafra Employee::kaf_payon	113,{
 	callfunc "F_KafEnd",0,1,"in the city of Payon";
 }
 
-payon,175,226,4	script	Kafra Employee::kaf_payon2	116,{
+payon,175,226,4	script	Kafra Employee::kaf_payon2	4_F_KAFRA2,{
 	cutin "kafra_02",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -210,7 +212,7 @@ payon,175,226,4	script	Kafra Employee::kaf_payon2	116,{
 	callfunc "F_KafEnd",0,1,"in the city of Payon";
 }
 
-pay_arche,55,123,0	script	Kafra Employee::kaf_payon3	115,{
+pay_arche,55,123,0	script	Kafra Employee::kaf_payon3	4_F_KAFRA3,{
 	cutin "kafra_03",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -226,7 +228,7 @@ pay_arche,55,123,0	script	Kafra Employee::kaf_payon3	115,{
 
 // Prontera
 //============================================================
-prontera,152,326,3	script	Kafra Employee::kaf_prontera	112,{
+prontera,152,326,3	script	Kafra Employee::kaf_prontera	4_F_KAFRA6,{
 	cutin "kafra_06",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -241,7 +243,7 @@ prontera,152,326,3	script	Kafra Employee::kaf_prontera	112,{
 	callfunc "F_KafEnd",0,1,"in the city of Prontera";
 }
 
-prontera,151,29,0	script	Kafra Employee::kaf_prontera2	115,{
+prontera,151,29,0	script	Kafra Employee::kaf_prontera2	4_F_KAFRA3,{
 	cutin "kafra_03",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -254,7 +256,7 @@ prontera,151,29,0	script	Kafra Employee::kaf_prontera2	115,{
 	callfunc "F_KafEnd",0,1,"in the city of Prontera";
 }
 
-prontera,29,207,6	script	Kafra Employee::kaf_prontera3	113,{
+prontera,29,207,6	script	Kafra Employee::kaf_prontera3	4_F_KAFRA5,{
 	cutin "kafra_05",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -267,7 +269,7 @@ prontera,29,207,6	script	Kafra Employee::kaf_prontera3	113,{
 	callfunc "F_KafEnd",0,1,"in the city of Prontera";
 }
 
-prontera,282,200,2	script	Kafra Employee::kaf_prontera4	114,{
+prontera,282,200,2	script	Kafra Employee::kaf_prontera4	4_F_KAFRA4,{
 	cutin "kafra_04",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -282,7 +284,7 @@ prontera,282,200,2	script	Kafra Employee::kaf_prontera4	114,{
 	callfunc "F_KafEnd",0,1,"in the city of Prontera";
 }
 
-prontera,146,89,6	script	Kafra Employee::kaf_prontera5	117,{
+prontera,146,89,6	script	Kafra Employee::kaf_prontera5	4_F_KAFRA1,{
 	cutin "kafra_01",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -298,7 +300,7 @@ prontera,146,89,6	script	Kafra Employee::kaf_prontera5	117,{
 
 // Yuno
 //============================================================
-yuno,152,187,4	script	Kafra Employee::kaf_yuno	860,{
+yuno,152,187,4	script	Kafra Employee::kaf_yuno	4_F_KAFRA8,{
 	cutin "kafra_08",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -311,7 +313,7 @@ yuno,152,187,4	script	Kafra Employee::kaf_yuno	860,{
 	callfunc "F_KafEnd",0,1,"in the city of Juno";
 }
 
-yuno,327,108,4	script	Kafra Employee::kaf_yuno2	860,{
+yuno,327,108,4	script	Kafra Employee::kaf_yuno2	4_F_KAFRA8,{
 	cutin "kafra_08",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -324,9 +326,9 @@ yuno,327,108,4	script	Kafra Employee::kaf_yuno2	860,{
 	callfunc "F_KafEnd",0,1,"in the city of Juno";
 }
 
-yuno,277,221,4	script	Kafra Employee::kaf_yuno3	861,{
+yuno,277,221,4	script	Kafra Employee::kaf_yuno3	4_F_KAFRA9,{
 	cutin "kafra_09",2;
-	callfunc "F_KafSetYun";
+	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
 	mes "The Kafra Corporation";
 	mes "is always working to provide";
@@ -339,7 +341,7 @@ yuno,277,221,4	script	Kafra Employee::kaf_yuno3	861,{
 
 // Alberta
 //============================================================
-alberta,28,229,0	script	Kafra Employee::kaf_alberta	116,{
+alberta,28,229,0	script	Kafra Employee::kaf_alberta	4_F_KAFRA2,{
 	cutin "kafra_02",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -353,7 +355,7 @@ alberta,28,229,0	script	Kafra Employee::kaf_alberta	116,{
 	callfunc "F_KafEnd",0,1,"in the city of Alberta";
 }
 
-alberta,113,60,6	script	Kafra Employee::kaf_alberta2	112,{
+alberta,113,60,6	script	Kafra Employee::kaf_alberta2	4_F_KAFRA6,{
 	cutin "kafra_06",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -370,7 +372,7 @@ alberta,113,60,6	script	Kafra Employee::kaf_alberta2	112,{
 
 // Comodo
 //============================================================
-comodo,195,150,4	script	Kafra Employee::kaf_comodo	721,{
+comodo,195,150,4	script	Kafra Employee::kaf_comodo	4_F_KAFRA7,{
 	cutin "kafra_07",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -384,7 +386,7 @@ comodo,195,150,4	script	Kafra Employee::kaf_comodo	721,{
 	callfunc "F_KafEnd",0,1,"in the town of Comodo";
 }
 
-cmd_fild07,136,134,4	script	Kafra Employee::kaf_cmd_fild07	721,{
+cmd_fild07,136,134,4	script	Kafra Employee::kaf_cmd_fild07	4_F_KAFRA7,{
 	cutin "kafra_07",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -400,7 +402,7 @@ cmd_fild07,136,134,4	script	Kafra Employee::kaf_cmd_fild07	721,{
 
 // Izlude
 //============================================================
--	script	kaf_izlude	-1,{
+-	script	::kaf_izlude	-1,{
 	cutin "kafra_01",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -411,7 +413,7 @@ cmd_fild07,136,134,4	script	Kafra Employee::kaf_cmd_fild07	721,{
 	mes "How may I assist you?";
 	callfunc "F_Kafra",5,0,1,40,820;
 	if (checkre(0))
-		savepoint "izlude",129,97;
+		savepoint strnpcinfo(4),129,97;
 	else
 		savepoint "izlude",94,103;
 	callfunc "F_KafEnd",0,1,"in the city of Izlude";
@@ -419,7 +421,7 @@ cmd_fild07,136,134,4	script	Kafra Employee::kaf_cmd_fild07	721,{
 
 // Moscovia
 //============================================================
-moscovia,223,191,3	script	Kafra Employee::kaf_mosk	114,{
+moscovia,223,191,3	script	Kafra Employee::kaf_mosk	4_F_KAFRA4,{
 	cutin "kafra_04",2;
 	callfunc "F_Kafra",0,3,0,80,700;
 	savepoint "moscovia",221,194;;
@@ -428,7 +430,7 @@ moscovia,223,191,3	script	Kafra Employee::kaf_mosk	114,{
 
 // Amatsu
 //============================================================
-amatsu,102,149,4	script	Kafra Employee::kaf_amatsu	116,{
+amatsu,102,149,4	script	Kafra Employee::kaf_amatsu	4_F_KAFRA2,{
 	cutin "kafra_02",2;
 	mes "[Kafra Employee]";
 	mes "Welcome to the";
@@ -443,7 +445,7 @@ amatsu,102,149,4	script	Kafra Employee::kaf_amatsu	116,{
 
 // Ayothaya
 //============================================================
-ayothaya,212,169,5	script	Kafra Employee::kaf_ayothaya	116,{
+ayothaya,212,169,5	script	Kafra Employee::kaf_ayothaya	4_F_KAFRA2,{
 	cutin "kafra_02",2;
 	mes "[Kafra Employee]";
 	mes "Welcome to the";
@@ -458,7 +460,7 @@ ayothaya,212,169,5	script	Kafra Employee::kaf_ayothaya	116,{
 
 // Einbech
 //============================================================
-einbech,181,132,5	script	Kafra Employee#ein3::kaf_einbech	860,{
+einbech,181,132,5	script	Kafra Employee#ein3::kaf_einbech	4_F_KAFRA8,{
 	cutin "kafra_08",2;
 	mes "[Kafra Employee]";
 	mes "Welcome~!";
@@ -472,7 +474,7 @@ einbech,181,132,5	script	Kafra Employee#ein3::kaf_einbech	860,{
 
 // Einbroch
 //============================================================
-einbroch,242,205,5	script	Kafra Employee#ein2::kaf_einbroch	860,{
+einbroch,242,205,5	script	Kafra Employee#ein2::kaf_einbroch	4_F_KAFRA8,{
 	cutin "kafra_08",2;
 	mes "[Kafra Employee]";
 	mes "Welcome to the";
@@ -485,7 +487,7 @@ einbroch,242,205,5	script	Kafra Employee#ein2::kaf_einbroch	860,{
 	callfunc "F_KafEnd",0,1,"in the city of Einbroch";
 }
 
-einbroch,59,203,6	script	Kafra Employee#ein1::kaf_einbroch2	861,{
+einbroch,59,203,6	script	Kafra Employee#ein1::kaf_einbroch2	4_F_KAFRA9,{
 	cutin "kafra_09",2;
 	mes "[Kafra Employee]";
 	mes "Welcome to the";
@@ -500,7 +502,7 @@ einbroch,59,203,6	script	Kafra Employee#ein1::kaf_einbroch2	861,{
 
 // Gonryun
 //============================================================
-gonryun,159,122,4	script	Kafra Employee::kaf_gonryun	116,{
+gonryun,159,122,4	script	Kafra Employee::kaf_gonryun	4_F_KAFRA2,{
 	cutin "kafra_02",2;
 	mes "[Kafra Employee]";
 	mes "Welcome to the";
@@ -515,7 +517,7 @@ gonryun,159,122,4	script	Kafra Employee::kaf_gonryun	116,{
 
 // Lighthalzen
 //============================================================
-lighthalzen,164,100,4	script	Kafra Employee::kaf_lighthalzen	860,{
+lighthalzen,164,100,4	script	Kafra Employee::kaf_lighthalzen	4_F_KAFRA8,{
 	cutin "kafra_08",2;
 	mes "[Kafra Employee]";
 	mes "Welcome to the";
@@ -528,7 +530,7 @@ lighthalzen,164,100,4	script	Kafra Employee::kaf_lighthalzen	860,{
 	callfunc "F_KafEnd",0,1,"in the city of Lighthalzen";
 }
 
-lighthalzen,191,320,4	script	Kafra Employee::kaf_lighthalzen2	861,{
+lighthalzen,191,320,4	script	Kafra Employee::kaf_lighthalzen2	4_F_KAFRA9,{
 	cutin "kafra_09",2;
 	mes "[Kafra Employee]";
 	mes "Welcome~!";
@@ -540,7 +542,7 @@ lighthalzen,191,320,4	script	Kafra Employee::kaf_lighthalzen2	861,{
 	callfunc "F_KafEnd",0,1,"in the city of Lighthalzen";
 }
 
-lhz_in02,237,284,4	script	Kafra Employee::kaf_lhz_in02	861,{
+lhz_in02,237,284,4	script	Kafra Employee::kaf_lhz_in02	4_F_KAFRA9,{
 	cutin "kafra_09",2;
 	mes "[Kafra Employee]";
 	mes "Welcome~!";
@@ -554,7 +556,7 @@ lhz_in02,237,284,4	script	Kafra Employee::kaf_lhz_in02	861,{
 
 // Louyang
 //============================================================
-louyang,210,104,5	script	Kafra Employee::kaf_louyang	117,{
+louyang,210,104,5	script	Kafra Employee::kaf_louyang	4_F_KAFRA1,{
 	cutin "kafra_01",2;
 	mes "[Kafra Employee]";
 	mes "Welcome to the";
@@ -569,7 +571,7 @@ louyang,210,104,5	script	Kafra Employee::kaf_louyang	117,{
 
 // Umbala
 //============================================================
-umbala,87,160,4	script	Kafra Employee::kaf_umbala	721,{
+umbala,87,160,4	script	Kafra Employee::kaf_umbala	4_F_KAFRA7,{
 	cutin "kafra_07",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -585,7 +587,7 @@ umbala,87,160,4	script	Kafra Employee::kaf_umbala	721,{
 
 // Niflheim
 //============================================================
-niflheim,202,180,3	script	Kafra Employee::kaf_niflheim	791,{
+niflheim,202,180,3	script	Kafra Employee::kaf_niflheim	4_F_NFDEADKAFRA,{
 	callfunc "F_Kafra",1,2,1,150,0;
 	savepoint "niflheim",192,182;
 	callfunc "F_KafEnd",1,1,"in the city of Niflheim";
@@ -594,9 +596,13 @@ niflheim,202,180,3	script	Kafra Employee::kaf_niflheim	791,{
 // Dungeons and Fields
 //============================================================
 // - Byalan Island
-izlu2dun,106,58,8	script	Kafra Employee::kaf_izlu2dun	115,{
+izlu2dun,106,58,8	script	Kafra Employee::kaf_izlu2dun	4_F_KAFRA3,{
 	cutin "kafra_03",2;
-	if(BaseJob==Job_Novice && job_merchant_q2>0) callfunc "F_MercKafra";  //F_MercKafra found in merchant.txt
+	if (!checkre(0) && BaseJob == Job_Novice && job_merchant_q2 > 0) {
+		// Merchant Job Change Quest
+		// function F_MercKafra is found in /pre-re/jobs/1-1/merchant.txt
+		callfunc "F_MercKafra";
+	}
 	mes "[Kafra Employee]";
 	mes "Welcome to the";
 	mes "Kafra Corporation.";
@@ -609,7 +615,7 @@ izlu2dun,106,58,8	script	Kafra Employee::kaf_izlu2dun	115,{
 }
 
 // - Culvert Sewers
-prt_fild05,290,224,3	script	Kafra Employee::prt_fild05	114,{
+prt_fild05,290,224,3	script	Kafra Employee::prt_fild05	4_F_KAFRA4,{
 	cutin "kafra_04",2;
 	mes "[Kafra Employee]";
 	mes "Welcome!";
@@ -619,14 +625,12 @@ prt_fild05,290,224,3	script	Kafra Employee::prt_fild05	114,{
 	mes "with its excellent service. So";
 	mes "what can I do for you today?";
 	callfunc "F_Kafra",5,1,1,40,0;
-
-	M_Save:
-		savepoint "prt_fild05",274,243;
-		callfunc "F_KafEnd",0,1, "at the Prontera Culverts";
+	savepoint "prt_fild05",274,243;
+	callfunc "F_KafEnd",0,1, "at the Prontera Culverts";
 }
 
 // - Coal Mine (Dead Pitt)
-mjolnir_02,83,362,4	script	Kafra Employee::kaf_mjolnir_02	116,{
+mjolnir_02,83,362,4	script	Kafra Employee::kaf_mjolnir_02	4_F_KAFRA2,{
 	cutin "kafra_02",2;
 	mes "[Kafra Employee]";
 	mes "Welcome to the";
@@ -640,7 +644,7 @@ mjolnir_02,83,362,4	script	Kafra Employee::kaf_mjolnir_02	116,{
 }
 
 // - Morroc Ruins
-moc_ruins,59,157,5	script	Kafra Employee::moc_ruins	114,{
+moc_ruins,59,157,5	script	Kafra Employee::moc_ruins	4_F_KAFRA4,{
 	cutin "kafra_04",2;
 	mes "[Kafra Employee]";
 	mes "Welcome!";
@@ -655,7 +659,7 @@ moc_ruins,59,157,5	script	Kafra Employee::moc_ruins	114,{
 }
 
 // - Orc Dungeon
-gef_fild10,73,340,5	script	Kafra Employee::kaf_gef_fild10	116,{
+gef_fild10,73,340,5	script	Kafra Employee::kaf_gef_fild10	4_F_KAFRA2,{
 	cutin "kafra_02",2;
 	mes "[Kafra Employee]";
 	mes "Welcome to the";
@@ -669,7 +673,7 @@ gef_fild10,73,340,5	script	Kafra Employee::kaf_gef_fild10	116,{
 }
 
 // - Treasure Island
-alb2trea,59,69,5	script	Kafra Employee::kaf_alb2trea	117,{
+alb2trea,59,69,5	script	Kafra Employee::kaf_alb2trea	4_F_KAFRA1,{
 	cutin "kafra_01",2;
 	mes "[Kafra Employee]";
 	mes "Welcome to the";

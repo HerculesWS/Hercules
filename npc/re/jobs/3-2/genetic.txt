@@ -4,8 +4,6 @@
 //= Muad_Dib, Aeomin
 //===== Current Version: =====================================
 //= 1.3a
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= [Official Conversion]
 //= Job change Quest from Alchemist / Creator -> Genetic.
@@ -17,7 +15,7 @@
 //= 1.3a Moved warps to separate file. [Euphy]
 //============================================================
 
-alde_alche,35,186,5	script	Alchemist Union Member	805,{
+alde_alche,35,186,5	script	Alchemist Union Member	1_M_SIGNALCHE,{
 	mes "[Alchemist Union Member]";
 	if (BaseLevel > 98 && JobLevel > 49){
 		if (BaseJob == Job_Alchemist) {
@@ -85,7 +83,7 @@ alde_alche,35,186,5	script	Alchemist Union Member	805,{
 	close;
 }
 
-job3_gen01,25,58,3	script	Devries#gen	865,{
+job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 	if (SkillPoint != 0) {
 		mes "- You still have some unused skill points. -";
 		close;
@@ -575,7 +573,7 @@ job3_gen01,25,58,3	script	Devries#gen	865,{
 	close;
 }
 
-job3_gen01,83,72,3	script	Delivery Box#generic	111,{
+job3_gen01,83,72,3	script	Delivery Box#generic	HIDDEN_NPC,{
 	mes "- There's a big box. -";
 	if (job_gen == 2) {
 		next;
@@ -604,7 +602,7 @@ job3_gen01,83,72,3	script	Delivery Box#generic	111,{
 	close;
 }
 
-job3_gen01,12,56,3	script	Plant Guide#generic	111,{
+job3_gen01,12,56,3	script	Plant Guide#generic	HIDDEN_NPC,{
 	mes "<The Easiest Alchemy in the World>";
 	mes "Written by Bob Ross.";
 	next;
@@ -668,32 +666,32 @@ function	script	Genetic_Job_Plant	{
 	close;
 }
 
-job3_gen01,36,55,3	script	Bigibigi Grass#gen	844,{
+job3_gen01,36,55,3	script	Bigibigi Grass#gen	CLEAR_NPC,{
 	callfunc "Genetic_Job_Plant",2209,"Bigibigi Grass","The size is quite big to be normal grass so it's called Bigibigi Grass.";
 	end;
 }
-job3_gen01,36,45,3	script	Muka Tree#gen	844,{
+job3_gen01,36,45,3	script	Muka Tree#gen	CLEAR_NPC,{
 	callfunc "Genetic_Job_Plant",2210,"Muka Tree","This is the Muka Tree which protects its delicate inside with sharp thorns.",1;
 	end;
 }
-job3_gen01,42,55,3	script	Bogi Vine#gen	844,{
+job3_gen01,42,55,3	script	Bogi Vine#gen	CLEAR_NPC,{
 	callfunc "Genetic_Job_Plant",2211,"Bogi Vine","This is a Bogi Vine which has a very fast growth speed.",1;
 	end;
 }
-job3_gen01,30,58,3	script	Aolatura#gen	844,{
+job3_gen01,30,58,3	script	Aolatura#gen	CLEAR_NPC,{
 	callfunc "Genetic_Job_Plant",2212,"Aolatura","This is known to blossom then thousand flowers as it only blooms once per lifetime.";
 	end;
 }
-job3_gen01,30,63,3	script	Congra#gen	844,{
+job3_gen01,30,63,3	script	Congra#gen	CLEAR_NPC,{
 	callfunc "Genetic_Job_Plant",2213,"Congra","It's a plant that has a big and solid stem with enormous leaves.";
 	end;
 }
-job3_gen01,32,38,3	script	Sticky Grass#gen	844,{
+job3_gen01,32,38,3	script	Sticky Grass#gen	CLEAR_NPC,{
 	callfunc "Genetic_Job_Plant",2214,"Sticky Grass","I may not know the name but it's sticky and can stick to just about anything.";
 	end;
 }
 
-job3_gen01,7,50,3	script	Testing Table#gen	844,{
+job3_gen01,7,50,3	script	Testing Table#gen	CLEAR_NPC,{
 	if (job_gen == 7) {
 		mes "- This is a testing table with a lot of equipment. I think I can study the combinations here with plants. -";
 		next;
@@ -773,11 +771,11 @@ job3_gen01,7,50,3	script	Testing Table#gen	844,{
 	close;
 }
 
-job3_gen01,21,67,3	script	Super Cultivator#gen	844,{
+job3_gen01,21,67,3	script	Super Cultivator#gen	CLEAR_NPC,{
 	end;
 }
 
-job3_gen01,91,48,3	script	Demi Calberine#gen	982,{
+job3_gen01,91,48,3	script	Demi Calberine#gen	4_F_SCIENCE,{
 	mes "[Demi Calberine]";
 	if (job_gen < 62) {
 		mes "Hmm~ Where'd that bolt go?";
@@ -969,15 +967,15 @@ OnTimer7000:
 	stopnpctimer;
 	end;
 }
-job3_gen01,84,45,3	duplicate(Scattered Stuff#gen)	Scattered Stuff#gen1	111
-job3_gen01,77,41,3	duplicate(Scattered Stuff#gen)	Scattered Stuff#gen2	111
-job3_gen01,78,57,3	duplicate(Scattered Stuff#gen)	Scattered Stuff#gen3	111
-job3_gen01,89,59,3	duplicate(Scattered Stuff#gen)	Scattered Stuff#gen4	111
-job3_gen01,90,51,3	duplicate(Scattered Stuff#gen)	Scattered Stuff#gen5	111
-job3_gen01,83,27,3	duplicate(Scattered Stuff#gen)	Scattered Stuff#gen6	111
-job3_gen01,74,45,3	duplicate(Scattered Stuff#gen)	Scattered Stuff#gen7	111
+job3_gen01,84,45,3	duplicate(Scattered Stuff#gen)	Scattered Stuff#gen1	HIDDEN_NPC
+job3_gen01,77,41,3	duplicate(Scattered Stuff#gen)	Scattered Stuff#gen2	HIDDEN_NPC
+job3_gen01,78,57,3	duplicate(Scattered Stuff#gen)	Scattered Stuff#gen3	HIDDEN_NPC
+job3_gen01,89,59,3	duplicate(Scattered Stuff#gen)	Scattered Stuff#gen4	HIDDEN_NPC
+job3_gen01,90,51,3	duplicate(Scattered Stuff#gen)	Scattered Stuff#gen5	HIDDEN_NPC
+job3_gen01,83,27,3	duplicate(Scattered Stuff#gen)	Scattered Stuff#gen6	HIDDEN_NPC
+job3_gen01,74,45,3	duplicate(Scattered Stuff#gen)	Scattered Stuff#gen7	HIDDEN_NPC
 
-job3_gen01,18,39,3	script	Warning#gen	837,{
+job3_gen01,18,39,3	script	Warning#gen	2_BULLETIN_BOARD,{
 	mes "= Warning =";
 	mes "If you bully my spores, I'll scream!!!";
 	if (job_gen < 75) close;
@@ -994,30 +992,30 @@ job3_gen01,18,39,3	script	Warning#gen	837,{
 	}
 }
 
-job3_gen01,80,12,1	script	Stacked Magazines#gen	111,{
+job3_gen01,80,12,1	script	Stacked Magazines#gen	HIDDEN_NPC,{
 	mes "- 'Monthly Bang!' magazines are piled up in disorder. -";
 	close;
 }
 
-job3_gen01,83,20,1	script	Bed#gen	111,{
+job3_gen01,83,20,1	script	Bed#gen	HIDDEN_NPC,{
 	mes "- A checker patterned blanket set which looks like it was picked carefully is too good for this dirty bed. -";
 	close;
 }
 
-job3_gen01,85,25,1	script	Opened Book#gen	111,{
+job3_gen01,85,25,1	script	Opened Book#gen	HIDDEN_NPC,{
 	mes "< Do you want to have my pretty room? Do you have enough zeny? Is there enough room? Run to the Lighthalzen Department Store right away and get the most high-end wall papers and interior accessories! >";
 	next;
 	mes "< Luxurious candles that'll lighten up your room, a huge golden mirror that every lady owns, you cannot miss any of them! >";
 	close;
 }
 
-job3_gen01,81,81,0	script	#dbroom	139,2,2,{
+job3_gen01,81,81,0	script	#dbroom	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	mes "- It's a room that looks like a storehouse, thanks to so many parcels piled up in the room. -";
 	close;
 }
 
-job3_gen01,24,32,0	script	The gaze of Devries	139,2,2,{
+job3_gen01,24,32,0	script	The gaze of Devries	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (checkquest(2223,HUNTING) == 2) {
 		mapannounce "job3_gen01","Devries: Whoa? Was there a lost kitty in the spore pen?",bc_map,"0x99CC00"; //FW_NORMAL 12 0 0

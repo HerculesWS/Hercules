@@ -1,10 +1,10 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
-#ifndef _CHAR_SQL_H_
-#define _CHAR_SQL_H_
+#ifndef COMMON_CHAR_H
+#define COMMON_CHAR_H
 
-#include "../config/core.h"
 #include "../common/core.h" // CORE_ST_LAST
 #include "../common/db.h"
 
@@ -20,6 +20,7 @@ struct char_session_data {
 	bool auth; // whether the session is authed or not
 	int account_id, login_id1, login_id2, sex;
 	int found_char[MAX_CHARS]; // ids of chars on this account
+	time_t unban_time[MAX_CHARS]; // char unban time array
 	char email[40]; // e-mail (default: a@a.com) by [Yor]
 	time_t expiration_time; // # of seconds 1/1/1970 (timestamp): Validity limit of the account (0 = unlimited)
 	int group_id; // permission
@@ -47,7 +48,7 @@ DBMap* online_char_db; // int account_id -> struct online_char_data*
 
 #define MAX_MAP_SERVERS 2
 
-#define DEFAULT_AUTOSAVE_INTERVAL 300*1000
+#define DEFAULT_AUTOSAVE_INTERVAL (300*1000)
 
 enum {
 	TABLE_INVENTORY,
@@ -61,13 +62,15 @@ int memitemdata_to_sql(const struct item items[], int max, int id, int tableswit
 int mapif_sendall(unsigned char *buf,unsigned int len);
 int mapif_sendallwos(int fd,unsigned char *buf,unsigned int len);
 int mapif_send(int fd,unsigned char *buf,unsigned int len);
+void mapif_on_parse_accinfo(int account_id,int u_fd, int aid, int castergroup, int map_fd);
+
+void disconnect_player(int account_id);
 
 int char_married(int pl1,int pl2);
 int char_child(int parent_id, int child_id);
 int char_family(int pl1,int pl2,int pl3);
 
 int request_accreg2(int account_id, int char_id);
-int save_accreg2(unsigned char* buf, int len);
 int login_fd;
 extern int char_name_option;
 extern char char_name_letters[];
@@ -82,7 +85,6 @@ extern char inventory_db[256];
 extern char charlog_db[256];
 extern char storage_db[256];
 extern char interlog_db[256];
-extern char reg_db[256];
 extern char skill_db[256];
 extern char memo_db[256];
 extern char guild_db[256];
@@ -103,11 +105,22 @@ extern char skill_homunculus_db[256];
 extern char mercenary_db[256];
 extern char mercenary_owner_db[256];
 extern char ragsrvinfo_db[256];
+extern char elemental_db[256];
 extern char interreg_db[32];
+extern char acc_reg_num_db[32];
+extern char acc_reg_str_db[32];
+extern char char_reg_str_db[32];
+extern char char_reg_num_db[32];
 
-extern int db_use_sqldbs; // added for sql item_db read for char server [Valaris]
+extern int db_use_sql_item_db;
+extern int db_use_sql_mob_db;
+extern int db_use_sql_mob_skill_db;
 
 extern int guild_exp_rate;
 extern int log_inter;
 
-#endif /* _CHAR_SQL_H_ */
+void global_accreg_to_login_start (int account_id, int char_id);
+void global_accreg_to_login_send (void);
+void global_accreg_to_login_add (const char *key, unsigned int index, intptr_t val, bool is_string);
+
+#endif /* COMMON_CHAR_H */

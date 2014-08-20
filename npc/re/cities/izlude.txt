@@ -1,98 +1,105 @@
 //===== Hercules Script ======================================
 //= Izlude Town Renewal
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Masao
-//===== Current Version: ===================================== 
-//= 1.1
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Current Version: =====================================
+//= 1.2
+//===== Description: =========================================
+//= [Official Conversion]
 //= Izlude town NPCs.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. Still missing many new NPCs and their dialogues. [Masao]
-//= 1.1 Added bullet NPC duplicates. [Euphy]
-//= 1.2 Added new NPCs, Captain Carew & coordinates  [Streusel]
-//= 1.3 Added some NPC locations [Streusel]
+//= 1.1 Updated to match the official script. [Euphy]
+//= 1.2 Added Channel Warper and Izlude duplicates. [Euphy]
 //============================================================
 
-izlude,197,205,1	duplicate(Sailor_izlude)	Sailor#izlude	100
-izlude,71,92,2	duplicate(Bonne_izlude)	Bonne#izlude	90
-izlude,172,215,4	duplicate(Charfri_izlude)	Charfri#izlude	91
-izlude,174,164,3	duplicate(Cuskoal_izlude)	Cuskoal#izlude	124
-izlude,85,103,4	duplicate(Dega_izlude)	Dega#izlude	84
-izlude,140,186,4	duplicate(Kylick_izlude)	Kylick#izlude	97
-izlude,56,156,2	duplicate(Red_izlude)	Red#izlude	85
-izlude,58,156,2	duplicate(Cebalis_izlude)	Cebalis#izlude	98
-izlude,165,156,2	duplicate(Soldier_izlude)	Soldier#izlude	105
-izlude,158,130,3	duplicate(bdt)	Bullet Dealer Tony#iz	86
-izlude,155,132,3	duplicate(mdk)	Magazine Dealer Kenny	83
-//izlude,198,213,4	duplicate(Captain_Carew)	Captain Carew#izlude	873
-izlude_in,57,92,3	duplicate(Dorian)	Dorian#izlude	878	
-izlude,147,131,6	script	Blacksmith#izlude	726,{
-	end;
-}
+// Izlude
+//============================================================
+izlude,197,205,1	duplicate(Sailor_izlude)	Sailor#izlude	4W_SAILOR
+izlude_a,197,205,1	duplicate(Sailor_izlude)	Sailor#izlude_a	4W_SAILOR
+izlude_b,197,205,1	duplicate(Sailor_izlude)	Sailor#izlude_b	4W_SAILOR
+izlude_c,197,205,1	duplicate(Sailor_izlude)	Sailor#izlude_c	4W_SAILOR
+izlude_d,197,205,1	duplicate(Sailor_izlude)	Sailor#izlude_d	4W_SAILOR
 
-prt_fild08,350,219,4	script	Guard#izlude	105,{
+izlude,71,92,2	duplicate(Bonne_izlude)	Bonne#izlude	4_F_01
+izlude_a,71,92,2	duplicate(Bonne_izlude)	Bonne#izlude_a	4_F_01
+izlude_b,71,92,2	duplicate(Bonne_izlude)	Bonne#izlude_b	4_F_01
+izlude_c,71,92,2	duplicate(Bonne_izlude)	Bonne#izlude_c	4_F_01
+izlude_d,71,92,2	duplicate(Bonne_izlude)	Bonne#izlude_d	4_F_01
+
+izlude,172,215,4	duplicate(Charfri_izlude)	Charfri#izlude	4_F_02
+izlude_a,172,215,4	duplicate(Charfri_izlude)	Charfri#izlude_a	4_F_02
+izlude_b,172,215,4	duplicate(Charfri_izlude)	Charfri#izlude_b	4_F_02
+izlude_c,172,215,4	duplicate(Charfri_izlude)	Charfri#izlude_c	4_F_02
+izlude_d,172,215,4	duplicate(Charfri_izlude)	Charfri#izlude_d	4_F_02
+
+izlude,174,164,4	duplicate(Cuskoal_izlude)	Cuskoal#izlude	4_F_TELEPORTER
+izlude_a,174,164,4	duplicate(Cuskoal_izlude)	Cuskoal#izlude_a	4_F_TELEPORTER
+izlude_b,174,164,4	duplicate(Cuskoal_izlude)	Cuskoal#izlude_b	4_F_TELEPORTER
+izlude_c,174,164,4	duplicate(Cuskoal_izlude)	Cuskoal#izlude_c	4_F_TELEPORTER
+izlude_d,174,164,4	duplicate(Cuskoal_izlude)	Cuskoal#izlude_d	4_F_TELEPORTER
+
+izlude,85,103,4	duplicate(Dega_izlude)	Dega#izlude	4_M_02
+izlude_a,85,103,4	duplicate(Dega_izlude)	Dega#izlude_a	4_M_02
+izlude_b,85,103,4	duplicate(Dega_izlude)	Dega#izlude_b	4_M_02
+izlude_c,85,103,4	duplicate(Dega_izlude)	Dega#izlude_c	4_M_02
+izlude_d,85,103,4	duplicate(Dega_izlude)	Dega#izlude_d	4_M_02
+
+izlude,140,186,4	duplicate(Kylick_izlude)	Kylick#izlude	4W_M_01
+izlude_a,140,186,4	duplicate(Kylick_izlude)	Kylick#izlude_a	4W_M_01
+izlude_b,140,186,4	duplicate(Kylick_izlude)	Kylick#izlude_b	4W_M_01
+izlude_c,140,186,4	duplicate(Kylick_izlude)	Kylick#izlude_c	4W_M_01
+izlude_d,140,186,4	duplicate(Kylick_izlude)	Kylick#izlude_d	4W_M_01
+
+izlude,57,159,2	duplicate(Red_izlude)	Red#izlude	4_M_03
+izlude_a,57,159,2	duplicate(Red_izlude)	Red#izlude_a	4_M_03
+izlude_b,57,159,2	duplicate(Red_izlude)	Red#izlude_b	4_M_03
+izlude_c,57,159,2	duplicate(Red_izlude)	Red#izlude_c	4_M_03
+izlude_d,57,159,2	duplicate(Red_izlude)	Red#izlude_d	4_M_03
+
+izlude,55,159,2	duplicate(Cebalis_izlude)	Cebalis#izlude	4W_M_02
+izlude_a,55,159,2	duplicate(Cebalis_izlude)	Cebalis#izlude_a	4W_M_02
+izlude_b,55,159,2	duplicate(Cebalis_izlude)	Cebalis#izlude_b	4W_M_02
+izlude_c,55,159,2	duplicate(Cebalis_izlude)	Cebalis#izlude_c	4W_M_02
+izlude_d,55,159,2	duplicate(Cebalis_izlude)	Cebalis#izlude_d	4W_M_02
+
+izlude,165,156,2	duplicate(Soldier_izlude)	Soldier#izlude	8W_SOLDIER
+izlude_a,165,156,2	duplicate(Soldier_izlude)	Soldier#izlude_a	8W_SOLDIER
+izlude_b,165,156,2	duplicate(Soldier_izlude)	Soldier#izlude_b	8W_SOLDIER
+izlude_c,165,156,2	duplicate(Soldier_izlude)	Soldier#izlude_c	8W_SOLDIER
+izlude_d,165,156,2	duplicate(Soldier_izlude)	Soldier#izlude_d	8W_SOLDIER
+
+-	script	::Guard_izlude	-1,{
 	mes "[Izlude Guard]";
 	mes "Welcome to Izlude.";
 	close;
 }
+prt_fild08,350,219,4	duplicate(Guard_izlude)	Guard#izlude	8W_SOLDIER
+prt_fild08a,350,219,4	duplicate(Guard_izlude)	Guard#izlude_a	8W_SOLDIER
+prt_fild08b,350,219,4	duplicate(Guard_izlude)	Guard#izlude_b	8W_SOLDIER
+prt_fild08c,350,219,4	duplicate(Guard_izlude)	Guard#izlude_c	8W_SOLDIER
+prt_fild08d,350,219,4	duplicate(Guard_izlude)	Guard#izlude_d	8W_SOLDIER
 
-izlude,136,160,0	script	Traces of Fish#izlude	111,{
-	mes "There are signs of someone digging.";
+// Channel Warper
+//============================================================
+function	script	F_IzludeChannel	{
+	mes "[Izlude Copy Warper]";
+	mes "Izlude is a verly lively place is it not?";
+	mes "I am here to help make Izlude feel more smooth!";
+	mes "I can send you to another copy of Izlude.";
+	mes "Do you want to go to another copy?";
+	next;
+	set .@i, select(getarg(0)+":Never mind");
+	if (.@i < 6) {
+		setarray .@maps$[1],"izlude","izlude_a","izlude_b","izlude_c","izlude_d";
+		savepoint .@maps$[.@i],128,98;
+		warp .@maps$[.@i],128,98;
+		end;
+	}
 	close;
 }
-
-izlude,207,167,3	script	Arena#izlude	858,{
-	mes "";
-	close;
-}
-
-izlude,45,94,3	script	Milestone#izlude	858,{
-	mes "==== Information  ====";
-	mes "";
-	mes "Access to Prontera Field.";
-	mes "Prontera in the North.";
-	mes "If you wish got to Prontera.";
-	close;
-}
-
-izlude,179,75,3	script	Non-Process#izlude	858,{
-	mes "====End of Path====";
-	mes "";
-	mes "Airshop to Rachel";
-	mes "";
-	mes "Feel free to explore, however be reminded that you are a guest.";
-	mes "";
-	close;
-}
-
-izlude,141,251,1	script	Full-Grown Red Plant#iz	1078,{
-	end;
-}
-
-izlude,102,150,1	script	Sinchon Helper#izlude	71,{
-	end;
-}
-
-izlude,205,155,2	script	Nain#izlude	102,{
-	mes "[Nine]";
-	mes "Swords, no matter how strong";
-	mes "they are once they strike you're";
-	mes "a dead man. And though that's creepy,";
-	mes "I just can't throw them away.";
-	close;
-}
-
-izlude,143,205,7	script	Magpies Adventurer#iz-01	703,{
-	end;
-}
-
-
-izlude,146,205,7	script	Magpies Adventurer#iz-02	706,{
-	end;
-}
-
-izlude,120,254,0	script	Siege Monument#izlude	111,{
-	end;
-}
+izlude,122,105,5	script	Izlude Copy Warper	1_M_WIZARD,{ callfunc "F_IzludeChannel",":Go to copy 2:Go to copy 3:Go to copy 4:Go to copy 5"; }
+izlude_a,122,105,5	script	Izlude Copy Warper#_a	1_M_WIZARD,{ callfunc "F_IzludeChannel","Go to copy 1::Go to copy 3:Go to copy 4:Go to copy 5"; }
+izlude_b,122,105,5	script	Izlude Copy Warper#_b	1_M_WIZARD,{ callfunc "F_IzludeChannel","Go to copy 1:Go to copy 2::Go to copy 4:Go to copy 5"; }
+izlude_c,122,105,5	script	Izlude Copy Warper#_c	1_M_WIZARD,{ callfunc "F_IzludeChannel","Go to copy 1:Go to copy 2:Go to copy 3::Go to copy 5"; }
+izlude_d,122,105,5	script	Izlude Copy Warper#_d	1_M_WIZARD,{ callfunc "F_IzludeChannel","Go to copy 1:Go to copy 2:Go to copy 3:Go to copy 4:"; }

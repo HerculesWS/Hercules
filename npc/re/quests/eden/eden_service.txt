@@ -4,8 +4,6 @@
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Paradise Group storage access.
 //===== Additional Comments: =================================
@@ -43,7 +41,7 @@
 						mes "Maybe I am not yet qualified to use Cabinet.";
 						close;
 					}
-					set Zeny, Zeny - 500;
+					Zeny -= 500;
 					close2;
 					openstorage;
 					end;
@@ -60,5 +58,5 @@
 	close;
 }
 
-moc_para01,173,120,0	duplicate(pggc)	Goods Cabinet#01	111
-moc_para01,170,120,0	duplicate(pggc)	Goods Cabinet#02	111
+moc_para01,173,120,0	duplicate(pggc)	Goods Cabinet#01	HIDDEN_NPC
+moc_para01,170,120,0	duplicate(pggc)	Goods Cabinet#02	HIDDEN_NPC

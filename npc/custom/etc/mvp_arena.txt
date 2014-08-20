@@ -4,8 +4,6 @@
 //= Darkchild
 //===== Current Version: =====================================
 //= 1.4
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Rooms containing 16 different MVPs
 //===== Additional Comments: =================================
@@ -17,7 +15,7 @@
 //============================================================
 
 // Entrance
-prontera,154,197,3	script	MVP Warper	768,{
+prontera,154,197,3	script	MVP Warper	8_M_JPNMASTER,{
 	mes "[ ^0065DFMVP Warper^000000 ]";
 	mes "Would you like to enter";
 	mes "the MVP Arena?";
@@ -27,7 +25,7 @@ prontera,154,197,3	script	MVP Warper	768,{
 }
 
 // Information
-quiz_00,49,31,4	script	MVP Arena Guide	778,{
+quiz_00,49,31,4	script	MVP Arena Guide	4_M_TWTEAMAN,{
 	mes "[ ^0065DFMVP Arena Guide^000000 ]";
 	mes "Welcome and behold this sacred place. Here you will find out if you truly have what it takes to call yourself a warrior.";
 	next;
@@ -66,10 +64,10 @@ function	script	Keeper	{
 	warp "pvp_n_"+.@i+"-"+getarg(0),102,102;
 	close;
 }
-quiz_00,56,31,4	script	Alpha MVP	770,{ callfunc "Keeper",2; }
-quiz_00,58,31,4	script	Beta MVP	773,{ callfunc "Keeper",3; }
-quiz_00,60,31,4	script	Theta MVP	774,{ callfunc "Keeper",4; }
-quiz_00,62,31,4	script	Epsilon MVP	776,{ callfunc "Keeper",5; }
+quiz_00,56,31,4	script	Alpha MVP	4_F_TWGIRL,{ callfunc "Keeper",2; }
+quiz_00,58,31,4	script	Beta MVP	4_F_TWMIDWOMAN,{ callfunc "Keeper",3; }
+quiz_00,60,31,4	script	Theta MVP	4_M_TWBOY,{ callfunc "Keeper",4; }
+quiz_00,62,31,4	script	Epsilon MVP	4_M_TWMIDMAN,{ callfunc "Keeper",5; }
 
 // Protectors
 function	script	Protector	{
@@ -87,38 +85,38 @@ function	script	Protector	{
 		end;
 	}
 }
-pvp_n_1-2,100,100,4	script	MVP-Protector#01	727,{ callfunc "Protector","pvp_n_2-2"; }
-pvp_n_2-2,100,100,4	script	MVP-Protector#02	727,{ callfunc "Protector","pvp_n_3-2"; }
-pvp_n_3-2,100,100,4	script	MVP-Protector#03	727,{ callfunc "Protector","pvp_n_4-2"; }
-pvp_n_4-2,100,100,4	script	MVP-Protector#04	727,{ callfunc "Protector","pvp_n_5-2"; }
-pvp_n_5-2,100,100,4	script	MVP-Protector#05	727,{ callfunc "Protector","pvp_n_6-2"; }
-pvp_n_6-2,100,100,4	script	MVP-Protector#06	727,{ callfunc "Protector","pvp_n_7-2"; }
-pvp_n_7-2,100,100,4	script	MVP-Protector#07	727,{ callfunc "Protector","pvp_n_8-2"; }
-pvp_n_8-2,100,100,4	script	MVP-Protector#08	727,{ callfunc "Protector",""; }
-pvp_n_1-3,100,100,4	script	MVP-Protector#09	727,{ callfunc "Protector","pvp_n_2-3"; }
-pvp_n_2-3,100,100,4	script	MVP-Protector#10	727,{ callfunc "Protector","pvp_n_3-3"; }
-pvp_n_3-3,100,100,4	script	MVP-Protector#11	727,{ callfunc "Protector","pvp_n_4-3"; }
-pvp_n_4-3,100,100,4	script	MVP-Protector#12	727,{ callfunc "Protector","pvp_n_5-3"; }
-pvp_n_5-3,100,100,4	script	MVP-Protector#13	727,{ callfunc "Protector","pvp_n_6-3"; }
-pvp_n_6-3,100,100,4	script	MVP-Protector#14	727,{ callfunc "Protector","pvp_n_7-3"; }
-pvp_n_7-3,100,100,4	script	MVP-Protector#15	727,{ callfunc "Protector","pvp_n_8-3"; }
-pvp_n_8-3,100,100,4	script	MVP-Protector#16	727,{ callfunc "Protector",""; }
-pvp_n_1-4,100,100,4	script	MVP-Protector#17	727,{ callfunc "Protector","pvp_n_2-4"; }
-pvp_n_2-4,100,100,4	script	MVP-Protector#18	727,{ callfunc "Protector","pvp_n_3-4"; }
-pvp_n_3-4,100,100,4	script	MVP-Protector#19	727,{ callfunc "Protector","pvp_n_4-4"; }
-pvp_n_4-4,100,100,4	script	MVP-Protector#20	727,{ callfunc "Protector","pvp_n_5-4"; }
-pvp_n_5-4,100,100,4	script	MVP-Protector#21	727,{ callfunc "Protector","pvp_n_6-4"; }
-pvp_n_6-4,100,100,4	script	MVP-Protector#22	727,{ callfunc "Protector","pvp_n_7-4"; }
-pvp_n_7-4,100,100,4	script	MVP-Protector#23	727,{ callfunc "Protector","pvp_n_8-4"; }
-pvp_n_8-4,100,100,4	script	MVP-Protector#24	727,{ callfunc "Protector",""; }
-pvp_n_1-5,100,100,4	script	MVP-Protector#25	727,{ callfunc "Protector","pvp_n_2-5"; }
-pvp_n_2-5,100,100,4	script	MVP-Protector#26	727,{ callfunc "Protector","pvp_n_3-5"; }
-pvp_n_3-5,100,100,4	script	MVP-Protector#27	727,{ callfunc "Protector","pvp_n_4-5"; }
-pvp_n_4-5,100,100,4	script	MVP-Protector#28	727,{ callfunc "Protector","pvp_n_5-5"; }
-pvp_n_5-5,100,100,4	script	MVP-Protector#29	727,{ callfunc "Protector","pvp_n_6-5"; }
-pvp_n_6-5,100,100,4	script	MVP-Protector#30	727,{ callfunc "Protector","pvp_n_7-5"; }
-pvp_n_7-5,100,100,4	script	MVP-Protector#31	727,{ callfunc "Protector","pvp_n_8-5"; }
-pvp_n_8-5,100,100,4	script	MVP-Protector#32	727,{ callfunc "Protector",""; }
+pvp_n_1-2,100,100,4	script	MVP-Protector#01	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_2-2"; }
+pvp_n_2-2,100,100,4	script	MVP-Protector#02	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_3-2"; }
+pvp_n_3-2,100,100,4	script	MVP-Protector#03	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_4-2"; }
+pvp_n_4-2,100,100,4	script	MVP-Protector#04	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_5-2"; }
+pvp_n_5-2,100,100,4	script	MVP-Protector#05	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_6-2"; }
+pvp_n_6-2,100,100,4	script	MVP-Protector#06	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_7-2"; }
+pvp_n_7-2,100,100,4	script	MVP-Protector#07	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_8-2"; }
+pvp_n_8-2,100,100,4	script	MVP-Protector#08	4_F_JOB_HUNTER,{ callfunc "Protector",""; }
+pvp_n_1-3,100,100,4	script	MVP-Protector#09	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_2-3"; }
+pvp_n_2-3,100,100,4	script	MVP-Protector#10	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_3-3"; }
+pvp_n_3-3,100,100,4	script	MVP-Protector#11	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_4-3"; }
+pvp_n_4-3,100,100,4	script	MVP-Protector#12	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_5-3"; }
+pvp_n_5-3,100,100,4	script	MVP-Protector#13	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_6-3"; }
+pvp_n_6-3,100,100,4	script	MVP-Protector#14	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_7-3"; }
+pvp_n_7-3,100,100,4	script	MVP-Protector#15	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_8-3"; }
+pvp_n_8-3,100,100,4	script	MVP-Protector#16	4_F_JOB_HUNTER,{ callfunc "Protector",""; }
+pvp_n_1-4,100,100,4	script	MVP-Protector#17	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_2-4"; }
+pvp_n_2-4,100,100,4	script	MVP-Protector#18	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_3-4"; }
+pvp_n_3-4,100,100,4	script	MVP-Protector#19	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_4-4"; }
+pvp_n_4-4,100,100,4	script	MVP-Protector#20	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_5-4"; }
+pvp_n_5-4,100,100,4	script	MVP-Protector#21	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_6-4"; }
+pvp_n_6-4,100,100,4	script	MVP-Protector#22	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_7-4"; }
+pvp_n_7-4,100,100,4	script	MVP-Protector#23	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_8-4"; }
+pvp_n_8-4,100,100,4	script	MVP-Protector#24	4_F_JOB_HUNTER,{ callfunc "Protector",""; }
+pvp_n_1-5,100,100,4	script	MVP-Protector#25	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_2-5"; }
+pvp_n_2-5,100,100,4	script	MVP-Protector#26	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_3-5"; }
+pvp_n_3-5,100,100,4	script	MVP-Protector#27	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_4-5"; }
+pvp_n_4-5,100,100,4	script	MVP-Protector#28	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_5-5"; }
+pvp_n_5-5,100,100,4	script	MVP-Protector#29	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_6-5"; }
+pvp_n_6-5,100,100,4	script	MVP-Protector#30	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_7-5"; }
+pvp_n_7-5,100,100,4	script	MVP-Protector#31	4_F_JOB_HUNTER,{ callfunc "Protector","pvp_n_8-5"; }
+pvp_n_8-5,100,100,4	script	MVP-Protector#32	4_F_JOB_HUNTER,{ callfunc "Protector",""; }
 
 // Alpha
 pvp_n_1-2,0,0,0,0	monster	Eddga	1115,3,60000,66000

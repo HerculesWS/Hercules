@@ -2,6 +2,18 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#define HERCULES_CORE
+
+#include "login.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "account.h"
+#include "ipban.h"
+#include "loginlog.h"
+#include "../common/HPM.h"
 #include "../common/core.h"
 #include "../common/db.h"
 #include "../common/malloc.h"
@@ -11,44 +23,20 @@
 #include "../common/socket.h"
 #include "../common/strlib.h"
 #include "../common/timer.h"
-#include "account.h"
-#include "ipban.h"
-#include "login.h"
-#include "loginlog.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "../common/utils.h"
 
 struct Login_Config login_config;
 
 int login_fd; // login server socket
 struct mmo_char_server server[MAX_SERVERS]; // char server data
 
-// Account engines available
-static struct{
+static struct account_engine {
 	AccountDB* (*constructor)(void);
 	AccountDB* db;
-} account_engines[] = {
-	{account_db_sql, NULL},
-#ifdef ACCOUNTDB_ENGINE_0
-	{ACCOUNTDB_CONSTRUCTOR(ACCOUNTDB_ENGINE_0), NULL},
-#endif
-#ifdef ACCOUNTDB_ENGINE_1
-	{ACCOUNTDB_CONSTRUCTOR(ACCOUNTDB_ENGINE_1), NULL},
-#endif
-#ifdef ACCOUNTDB_ENGINE_2
-	{ACCOUNTDB_CONSTRUCTOR(ACCOUNTDB_ENGINE_2), NULL},
-#endif
-#ifdef ACCOUNTDB_ENGINE_3
-	{ACCOUNTDB_CONSTRUCTOR(ACCOUNTDB_ENGINE_3), NULL},
-#endif
-#ifdef ACCOUNTDB_ENGINE_4
-	{ACCOUNTDB_CONSTRUCTOR(ACCOUNTDB_ENGINE_4), NULL},
-#endif
-	// end of structure
-	{NULL, NULL}
+} account_engine[] = {
+	{account_db_sql, NULL}
 };
+
 // account database
 AccountDB* accounts = NULL;
 
@@ -81,6 +69,8 @@ struct auth_node {
 	char sex;
 	uint32 version;
 	uint8 clienttype;
+	int group_id;
+	time_t expiration_time;
 };
 
 static DBMap* auth_db; // int account_id -> struct auth_node*
@@ -97,7 +87,7 @@ struct online_login_data {
 };
 
 static DBMap* online_db; // int account_id -> struct online_login_data*
-static int waiting_disconnect_timer(int tid, unsigned int tick, int id, intptr_t data);
+static int waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data);
 
 /**
  * @see DBCreateData
@@ -119,7 +109,7 @@ struct online_login_data* add_online_user(int char_server, int account_id)
 	p->char_server = char_server;
 	if( p->waiting_disconnect != INVALID_TIMER )
 	{
-		iTimer->delete_timer(p->waiting_disconnect, waiting_disconnect_timer);
+		timer->delete(p->waiting_disconnect, waiting_disconnect_timer);
 		p->waiting_disconnect = INVALID_TIMER;
 	}
 	return p;
@@ -132,13 +122,12 @@ void remove_online_user(int account_id)
 	if( p == NULL )
 		return;
 	if( p->waiting_disconnect != INVALID_TIMER )
-		iTimer->delete_timer(p->waiting_disconnect, waiting_disconnect_timer);
+		timer->delete(p->waiting_disconnect, waiting_disconnect_timer);
 
 	idb_remove(online_db, account_id);
 }
 
-static int waiting_disconnect_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+static int waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct online_login_data* p = (struct online_login_data*)idb_get(online_db, id);
 	if( p != NULL && p->waiting_disconnect == tid && p->account_id == id )
 	{
@@ -155,17 +144,17 @@ static int waiting_disconnect_timer(int tid, unsigned int tick, int id, intptr_t
 static int online_db_setoffline(DBKey key, DBData *data, va_list ap)
 {
 	struct online_login_data* p = DB->data2ptr(data);
-	int server = va_arg(ap, int);
-	if( server == -1 )
+	int server_id = va_arg(ap, int);
+	if( server_id == -1 )
 	{
 		p->char_server = -1;
 		if( p->waiting_disconnect != INVALID_TIMER )
 		{
-			iTimer->delete_timer(p->waiting_disconnect, waiting_disconnect_timer);
+			timer->delete(p->waiting_disconnect, waiting_disconnect_timer);
 			p->waiting_disconnect = INVALID_TIMER;
 		}
 	}
-	else if( p->char_server == server )
+	else if( p->char_server == server_id )
 		p->char_server = -2; //Char server disconnected.
 	return 0;
 }
@@ -181,11 +170,10 @@ static int online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
 	return 0;
 }
 
-static int online_data_cleanup(int tid, unsigned int tick, int id, intptr_t data)
-{
+static int online_data_cleanup(int tid, int64 tick, int id, intptr_t data) {
 	online_db->foreach(online_db, online_data_cleanup_sub);
 	return 0;
-} 
+}
 
 
 //--------------------------------------------------------------------
@@ -250,8 +238,7 @@ void chrif_on_disconnect(int id)
 //-----------------------------------------------------
 // periodic ip address synchronization
 //-----------------------------------------------------
-static int sync_ip_addresses(int tid, unsigned int tick, int id, intptr_t data)
-{
+static int sync_ip_addresses(int tid, int64 tick, int id, intptr_t data) {
 	uint8 buf[2];
 	ShowInfo("IP Sync in progress...\n");
 	WBUFW(buf,0) = 0x2735;
@@ -289,18 +276,6 @@ bool check_password(const char* md5key, int passwdenc, const char* passwd, const
 	}
 }
 
-
-//-----------------------------------------------------
-// custom timestamp formatting (from eApp)
-//-----------------------------------------------------
-const char* timestamp2string(char* str, size_t size, time_t timestamp, const char* format)
-{
-	size_t len = strftime(str, size, format, localtime(&timestamp));
-	memset(str + len, '\0', size - len);
-	return str;
-}
-
-
 //--------------------------------------------
 // Test to know if an IP come from LAN or WAN.
 //--------------------------------------------
@@ -312,7 +287,7 @@ int lan_subnetcheck(uint32 ip)
 }
 
 //----------------------------------
-// Reading Lan Support configuration
+// Reading LAN Support configuration
 //----------------------------------
 int login_lan_config_read(const char *lancfgName)
 {
@@ -331,8 +306,7 @@ int login_lan_config_read(const char *lancfgName)
 		if ((line[0] == '/' && line[1] == '/') || line[0] == '\n' || line[1] == '\n')
 			continue;
 
-		if(sscanf(line,"%[^:]: %[^:]:%[^:]:%[^\r\n]", w1, w2, w3, w4) != 4)
-		{
+		if (sscanf(line, "%63[^:]: %63[^:]:%63[^:]:%63[^\r\n]", w1, w2, w3, w4) != 4) {
 			ShowWarning("Error syntax of configuration file %s in line %d.\n", lancfgName, line_num);
 			continue;
 		}
@@ -389,12 +363,17 @@ int parse_fromchar(int fd)
 	ipl = server[id].ip;
 	ip2str(ipl, ip);
 
-	while( RFIFOREST(fd) >= 2 )
-	{
+	while( RFIFOREST(fd) >= 2 ) {
 		uint16 command = RFIFOW(fd,0);
 
-		switch( command )
-		{
+		if( HPM->packetsc[hpParse_FromChar] ) {
+			if( (j = HPM->parse_packets(fd,hpParse_FromChar)) ) {
+				if( j == 1 ) continue;
+				if( j == 2 ) return 0;
+			}
+		}
+		
+		switch( command ) {
 
 		case 0x2712: // request from char-server to authenticate an account
 			if( RFIFOREST(fd) < 23 )
@@ -422,7 +401,7 @@ int parse_fromchar(int fd)
 				//ShowStatus("Char-server '%s': authentication of the account %d accepted (ip: %s).\n", server[id].name, account_id, ip);
 
 				// send ack
-				WFIFOHEAD(fd,25);
+				WFIFOHEAD(fd,33);
 				WFIFOW(fd,0) = 0x2713;
 				WFIFOL(fd,2) = account_id;
 				WFIFOL(fd,6) = login_id1;
@@ -432,7 +411,9 @@ int parse_fromchar(int fd)
 				WFIFOL(fd,16) = request_id;
 				WFIFOL(fd,20) = node->version;
 				WFIFOB(fd,24) = node->clienttype;
-				WFIFOSET(fd,25);
+				WFIFOL(fd,25) = node->group_id;
+				WFIFOL(fd,29) = (unsigned int)node->expiration_time;
+				WFIFOSET(fd,33);
 
 				// each auth entry can only be used once
 				idb_remove(auth_db, account_id);
@@ -440,7 +421,7 @@ int parse_fromchar(int fd)
 			else
 			{// authentication not found
 				ShowStatus("Char-server '%s': authentication of the account %d REFUSED (ip: %s).\n", server[id].name, account_id, ip);
-				WFIFOHEAD(fd,25);
+				WFIFOHEAD(fd,33);
 				WFIFOW(fd,0) = 0x2713;
 				WFIFOL(fd,2) = account_id;
 				WFIFOL(fd,6) = login_id1;
@@ -450,7 +431,9 @@ int parse_fromchar(int fd)
 				WFIFOL(fd,16) = request_id;
 				WFIFOL(fd,20) = 0;
 				WFIFOB(fd,24) = 0;
-				WFIFOSET(fd,25);
+				WFIFOL(fd,25) = 0;
+				WFIFOL(fd,29) = 0;
+				WFIFOSET(fd,33);
 			}
 		}
 		break;
@@ -634,10 +617,9 @@ int parse_fromchar(int fd)
 			int sec = (short)RFIFOW(fd,16);
 			RFIFOSKIP(fd,18);
 
-			if( !accounts->load_num(accounts, &acc, account_id) )
+			if (!accounts->load_num(accounts, &acc, account_id)) {
 				ShowNotice("Char-server '%s': Error of ban request (account: %d not found, ip: %s).\n", server[id].name, account_id, ip);
-			else
-			{
+			} else {
 				time_t timestamp;
 				struct tm *tmtime;
 				if (acc.unban_time == 0 || acc.unban_time < time(NULL))
@@ -645,24 +627,23 @@ int parse_fromchar(int fd)
 				else
 					timestamp = acc.unban_time; // add to existing ban
 				tmtime = localtime(&timestamp);
-				tmtime->tm_year = tmtime->tm_year + year;
-				tmtime->tm_mon  = tmtime->tm_mon + month;
-				tmtime->tm_mday = tmtime->tm_mday + mday;
-				tmtime->tm_hour = tmtime->tm_hour + hour;
-				tmtime->tm_min  = tmtime->tm_min + min;
-				tmtime->tm_sec  = tmtime->tm_sec + sec;
+				tmtime->tm_year += year;
+				tmtime->tm_mon  += month;
+				tmtime->tm_mday += mday;
+				tmtime->tm_hour += hour;
+				tmtime->tm_min  += min;
+				tmtime->tm_sec  += sec;
 				timestamp = mktime(tmtime);
-				if (timestamp == -1)
+				if (timestamp == -1) {
 					ShowNotice("Char-server '%s': Error of ban request (account: %d, invalid date, ip: %s).\n", server[id].name, account_id, ip);
-				else
-				if( timestamp <= time(NULL) || timestamp == 0 )
+				} else if( timestamp <= time(NULL) || timestamp == 0 ) {
 					ShowNotice("Char-server '%s': Error of ban request (account: %d, new date unbans the account, ip: %s).\n", server[id].name, account_id, ip);
-				else
-				{
+				} else {
 					uint8 buf[11];
 					char tmpstr[24];
 					timestamp2string(tmpstr, sizeof(tmpstr), timestamp, login_config.date_format);
-					ShowNotice("Char-server '%s': Ban request (account: %d, new final date of banishment: %d (%s), ip: %s).\n", server[id].name, account_id, timestamp, tmpstr, ip);
+					ShowNotice("Char-server '%s': Ban request (account: %d, new final date of banishment: %ld (%s), ip: %s).\n",
+					           server[id].name, account_id, (long)timestamp, tmpstr, ip);
 
 					acc.unban_time = timestamp;
 
@@ -723,30 +704,8 @@ int parse_fromchar(int fd)
 
 			if( !accounts->load_num(accounts, &acc, account_id) )
 				ShowStatus("Char-server '%s': receiving (from the char-server) of account_reg2 (account: %d not found, ip: %s).\n", server[id].name, account_id, ip);
-			else
-			{
-				int len;
-				int p;
-				ShowNotice("char-server '%s': receiving (from the char-server) of account_reg2 (account: %d, ip: %s).\n", server[id].name, account_id, ip);
-				for( j = 0, p = 13; j < ACCOUNT_REG2_NUM && p < RFIFOW(fd,2); ++j )
-				{
-					sscanf((char*)RFIFOP(fd,p), "%31c%n", acc.account_reg2[j].str, &len);
-					acc.account_reg2[j].str[len]='\0';
-					p +=len+1; //+1 to skip the '\0' between strings.
-					sscanf((char*)RFIFOP(fd,p), "%255c%n", acc.account_reg2[j].value, &len);
-					acc.account_reg2[j].value[len]='\0';
-					p +=len+1;
-					remove_control_chars(acc.account_reg2[j].str);
-					remove_control_chars(acc.account_reg2[j].value);
-				}
-				acc.account_reg2_num = j;
-
-				// Save
-				accounts->save(accounts, &acc);
-
-				// Sending information towards the other char-servers.
-				RFIFOW(fd,0) = 0x2729;// reusing read buffer
-				charif_sendallwos(fd, RFIFOP(fd,0), RFIFOW(fd,2));
+			else {
+				mmo_save_accreg2(accounts,fd,account_id,RFIFOL(fd, 8));
 			}
 			RFIFOSKIP(fd,RFIFOW(fd,2));
 		}
@@ -762,13 +721,13 @@ int parse_fromchar(int fd)
 			RFIFOSKIP(fd,6);
 
 			if( !accounts->load_num(accounts, &acc, account_id) )
-				ShowNotice("Char-server '%s': Error of UnBan request (account: %d not found, ip: %s).\n", server[id].name, account_id, ip);
+				ShowNotice("Char-server '%s': Error of Unban request (account: %d not found, ip: %s).\n", server[id].name, account_id, ip);
 			else
 			if( acc.unban_time == 0 )
-				ShowNotice("Char-server '%s': Error of UnBan request (account: %d, no change for unban date, ip: %s).\n", server[id].name, account_id, ip);
+				ShowNotice("Char-server '%s': Error of Unban request (account: %d, no change for unban date, ip: %s).\n", server[id].name, account_id, ip);
 			else
 			{
-				ShowNotice("Char-server '%s': UnBan request (account: %d, ip: %s).\n", server[id].name, account_id, ip);
+				ShowNotice("Char-server '%s': Unban request (account: %d, ip: %s).\n", server[id].name, account_id, ip);
 				acc.unban_time = 0;
 				accounts->save(accounts, &acc);
 			}
@@ -804,7 +763,7 @@ int parse_fromchar(int fd)
 					p->char_server = id;
 					if (p->waiting_disconnect != INVALID_TIMER)
 					{
-						iTimer->delete_timer(p->waiting_disconnect, waiting_disconnect_timer);
+						timer->delete(p->waiting_disconnect, waiting_disconnect_timer);
 						p->waiting_disconnect = INVALID_TIMER;
 					}
 				}
@@ -816,34 +775,11 @@ int parse_fromchar(int fd)
 			if (RFIFOREST(fd) < 10)
 				return 0;
 		{
-			struct mmo_account acc;
-			size_t off;
-
 			int account_id = RFIFOL(fd,2);
 			int char_id = RFIFOL(fd,6);
 			RFIFOSKIP(fd,10);
 
-			WFIFOHEAD(fd,ACCOUNT_REG2_NUM*sizeof(struct global_reg));
-			WFIFOW(fd,0) = 0x2729;
-			WFIFOL(fd,4) = account_id;
-			WFIFOL(fd,8) = char_id;
-			WFIFOB(fd,12) = 1; //Type 1 for Account2 registry
-
-			off = 13;
-			if( accounts->load_num(accounts, &acc, account_id) )
-			{
-				for( j = 0; j < acc.account_reg2_num; j++ )
-				{
-					if( acc.account_reg2[j].str[0] != '\0' )
-					{
-						off += sprintf((char*)WFIFOP(fd,off), "%s", acc.account_reg2[j].str)+1; //We add 1 to consider the '\0' in place.
-						off += sprintf((char*)WFIFOP(fd,off), "%s", acc.account_reg2[j].value)+1;
-					}
-				}
-			}
-
-			WFIFOW(fd,2) = (uint16)off;
-			WFIFOSET(fd,WFIFOW(fd,2));
+			mmo_send_accreg2(accounts,fd,account_id,char_id);
 		}
 		break;
 
@@ -896,6 +832,48 @@ int parse_fromchar(int fd)
 			}
 		break;
 				
+		case 0x2740: // Accinfo request forwarded by charserver on mapserver's account
+			if( RFIFOREST(fd) < 22 )
+				return 0;
+			else {
+				struct mmo_account acc;
+				int account_id = RFIFOL(fd, 2), u_fd = RFIFOL(fd, 6), u_aid = RFIFOL(fd, 10), u_group = RFIFOL(fd, 14), map_fd = RFIFOL(fd, 18);
+				if (accounts->load_num(accounts, &acc, account_id)) {
+					WFIFOHEAD(fd,183);
+					WFIFOW(fd,0) = 0x2737;
+					safestrncpy((char*)WFIFOP(fd,2), acc.userid, NAME_LENGTH);
+					if (u_group >= acc.group_id)
+						safestrncpy((char*)WFIFOP(fd,26), acc.pass, 33);
+					else
+						memset(WFIFOP(fd,26), '\0', 33);
+					safestrncpy((char*)WFIFOP(fd,59), acc.email, 40);
+					safestrncpy((char*)WFIFOP(fd,99), acc.last_ip, 16);
+					WFIFOL(fd,115) = acc.group_id;
+					safestrncpy((char*)WFIFOP(fd,119), acc.lastlogin, 24);
+					WFIFOL(fd,143) = acc.logincount;
+					WFIFOL(fd,147) = acc.state;
+					if (u_group >= acc.group_id) 
+						safestrncpy((char*)WFIFOP(fd,151), acc.pincode, 5);
+					else
+						memset(WFIFOP(fd,151), '\0', 5);
+					safestrncpy((char*)WFIFOP(fd,156), acc.birthdate, 11);
+					WFIFOL(fd,167) = map_fd;
+					WFIFOL(fd,171) = u_fd;
+					WFIFOL(fd,175) = u_aid;
+					WFIFOL(fd,179) = account_id;
+					WFIFOSET(fd,183);
+				} else {
+					WFIFOHEAD(fd,18);
+					WFIFOW(fd,0) = 0x2736;
+					WFIFOL(fd,2) = map_fd;
+					WFIFOL(fd,6) = u_fd;
+					WFIFOL(fd,10) = u_aid;
+					WFIFOL(fd,14) = account_id;
+					WFIFOSET(fd,18);
+				}
+				RFIFOSKIP(fd,22);
+			}
+		break;
 		default:
 			ShowError("parse_fromchar: Unknown packet 0x%x from a char-server! Disconnecting!\n", command);
 			set_eof(fd);
@@ -912,13 +890,13 @@ int parse_fromchar(int fd)
 //-------------------------------------
 int mmo_auth_new(const char* userid, const char* pass, const char sex, const char* last_ip) {
 	static int num_regs = 0; // registration counter
-	static unsigned int new_reg_tick = 0;
-	unsigned int tick = iTimer->gettick();
+	static int64 new_reg_tick = 0;
+	int64 tick = timer->gettick();
 	struct mmo_account acc;
 
 	//Account Registration Flood Protection by [Kevin]
 	if( new_reg_tick == 0 )
-		new_reg_tick = iTimer->gettick();
+		new_reg_tick = timer->gettick();
 	if( DIFF_TICK(tick, new_reg_tick) < 0 && num_regs >= allowed_regs ) {
 		ShowNotice("Account registration denied (registration limit exceeded)\n");
 		return 3;
@@ -933,7 +911,7 @@ int mmo_auth_new(const char* userid, const char* pass, const char sex, const cha
 
 	// check if the account doesn't exist already
 	if( accounts->load_str(accounts, &acc, userid) ) {
-		ShowNotice("Attempt of creation of an already existant account (account: %s_%c, pass: %s, received pass: %s)\n", userid, sex, acc.pass, pass);
+		ShowNotice("Attempt of creation of an already existing account (account: %s_%c, pass: %s, received pass: %s)\n", userid, sex, acc.pass, pass);
 		return 1; // 1 = Incorrect Password
 	}
 
@@ -970,7 +948,7 @@ int mmo_auth_new(const char* userid, const char* pass, const char sex, const cha
 //-----------------------------------------------------
 int mmo_auth(struct login_session_data* sd, bool isServer) {
 	struct mmo_account acc;
-	int len;
+	size_t len;
 
 	char ip[16];
 	ip2str(session[sd->fd]->client_addr, ip);
@@ -1028,11 +1006,6 @@ int mmo_auth(struct login_session_data* sd, bool isServer) {
 		return 1; // 1 = Incorrect Password
 	}
 
-	if( acc.expiration_time != 0 && acc.expiration_time < time(NULL) ) {
-		ShowNotice("Connection refused (account: %s, pass: %s, expired ID, ip: %s)\n", sd->userid, sd->passwd, ip);
-		return 2; // 2 = This ID is expired
-	}
-
 	if( acc.unban_time != 0 && acc.unban_time > time(NULL) ) {
 		char tmpstr[24];
 		timestamp2string(tmpstr, sizeof(tmpstr), acc.unban_time, login_config.date_format);
@@ -1046,31 +1019,34 @@ int mmo_auth(struct login_session_data* sd, bool isServer) {
 	}
 	
 	if( login_config.client_hash_check && !isServer ) {
-		struct client_hash_node *node = login_config.client_hash_nodes;
+		struct client_hash_node *node = NULL;
 		bool match = false;
 
-		if( !sd->has_client_hash ) {
-			ShowNotice("Client doesn't sent client hash (account: %s, pass: %s, ip: %s)\n", sd->userid, sd->passwd, acc.state, ip);
-			return 5;
-		}
-
-		while( node ) {
-			if( node->group_id <= acc.group_id && memcmp(node->hash, sd->client_hash, 16) == 0 ) {
+		for( node = login_config.client_hash_nodes; node; node = node->next ) {
+			if( acc.group_id < node->group_id )
+				continue;
+			if( *node->hash == '\0' // Allowed to login without hash
+			 || (sd->has_client_hash && memcmp(node->hash, sd->client_hash, 16) == 0 ) // Correct hash
+			) {
 				match = true;
 				break;
 			}
-
-			node = node->next;
 		}
 
 		if( !match ) {
 			char smd5[33];
 			int i;
 
+			if( !sd->has_client_hash ) {
+				ShowNotice("Client didn't send client hash (account: %s, pass: %s, ip: %s)\n", sd->userid, sd->passwd, ip);
+				return 5;
+			}
+
 			for( i = 0; i < 16; i++ )
 				sprintf(&smd5[i * 2], "%02x", sd->client_hash[i]);
+			smd5[32] = '\0';
 
-			ShowNotice("Invalid client hash (account: %s, pass: %s, sent md5: %d, ip: %s)\n", sd->userid, sd->passwd, smd5, ip);
+			ShowNotice("Invalid client hash (account: %s, pass: %s, sent md5: %s, ip: %s)\n", sd->userid, sd->passwd, smd5, ip);
 			return 5;
 		}
 	}
@@ -1084,6 +1060,7 @@ int mmo_auth(struct login_session_data* sd, bool isServer) {
 	safestrncpy(sd->lastlogin, acc.lastlogin, sizeof(sd->lastlogin));
 	sd->sex = acc.sex;
 	sd->group_id = (uint8)acc.group_id;
+	sd->expiration_time = acc.expiration_time;
 
 	// update account data
 	timestamp2string(acc.lastlogin, sizeof(acc.lastlogin), time(NULL), "%Y-%m-%d %H:%M:%S");
@@ -1127,12 +1104,12 @@ void login_auth_ok(struct login_session_data* sd)
 		WFIFOSET(fd,3);
 		return;
 	} else if( login_config.min_group_id_to_connect >= 0 && login_config.group_id_to_connect == -1 && sd->group_id < login_config.min_group_id_to_connect ) {
-		ShowStatus("Connection refused: the minium group id required for connection is %d (account: %s, group: %d).\n", login_config.min_group_id_to_connect, sd->userid, sd->group_id);
+		ShowStatus("Connection refused: the minimum group id required for connection is %d (account: %s, group: %d).\n", login_config.min_group_id_to_connect, sd->userid, sd->group_id);
 		WFIFOHEAD(fd,3);
 		WFIFOW(fd,0) = 0x81;
 		WFIFOB(fd,2) = 1; // 01 = Server closed
 		WFIFOSET(fd,3);
-		return;		
+		return;
 	}
 
 	server_num = 0;
@@ -1162,7 +1139,7 @@ void login_auth_ok(struct login_session_data* sd)
 				WBUFL(buf,2) = sd->account_id;
 				charif_sendallwos(-1, buf, 6);
 				if( data->waiting_disconnect == INVALID_TIMER )
-					data->waiting_disconnect = iTimer->add_timer(iTimer->gettick()+AUTH_TIMEOUT, waiting_disconnect_timer, sd->account_id, 0);
+					data->waiting_disconnect = timer->add(timer->gettick()+AUTH_TIMEOUT, waiting_disconnect_timer, sd->account_id, 0);
 
 				WFIFOHEAD(fd,3);
 				WFIFOW(fd,0) = 0x81;
@@ -1205,7 +1182,12 @@ void login_auth_ok(struct login_session_data* sd)
 		WFIFOW(fd,47+n*32+4) = ntows(htons(server[i].port)); // [!] LE byte order here [!]
 		memcpy(WFIFOP(fd,47+n*32+6), server[i].name, 20);
 		WFIFOW(fd,47+n*32+26) = server[i].users;
-		WFIFOW(fd,47+n*32+28) = server[i].type;
+		
+		if( server[i].type == CST_PAYING && sd->expiration_time > time(NULL) )
+			WFIFOW(fd,47+n*32+28) = CST_NORMAL;
+		else
+			WFIFOW(fd,47+n*32+28) = server[i].type;
+		
 		WFIFOW(fd,47+n*32+30) = server[i].new_;
 		n++;
 	}
@@ -1220,6 +1202,8 @@ void login_auth_ok(struct login_session_data* sd)
 	node->ip = ip;
 	node->version = sd->version;
 	node->clienttype = sd->clienttype;
+	node->group_id = sd->group_id;
+	node->expiration_time = sd->expiration_time;
 	idb_put(auth_db, sd->account_id, node);
 
 	{
@@ -1229,7 +1213,7 @@ void login_auth_ok(struct login_session_data* sd)
 		data = add_online_user(-1, sd->account_id);
 
 		// schedule deletion of this node
-		data->waiting_disconnect = iTimer->add_timer(iTimer->gettick()+AUTH_TIMEOUT, waiting_disconnect_timer, sd->account_id, 0);
+		data->waiting_disconnect = timer->add(timer->gettick()+AUTH_TIMEOUT, waiting_disconnect_timer, sd->account_id, 0);
 	}
 }
 
@@ -1325,7 +1309,7 @@ int parse_login(int fd)
 		// Perform ip-ban check
 		if( login_config.ipban && ipban_check(ipl) )
 		{
-			ShowStatus("Connection refused: IP isn't authorised (deny/allow, ip: %s).\n", ip);
+			ShowStatus("Connection refused: IP isn't authorized (deny/allow, ip: %s).\n", ip);
 			login_log(ipl, "unknown", -3, "ip banned");
 			WFIFOHEAD(fd,23);
 			WFIFOW(fd,0) = 0x6a;
@@ -1341,12 +1325,17 @@ int parse_login(int fd)
 		sd->fd = fd;
 	}
 
-	while( RFIFOREST(fd) >= 2 )
-	{
+	while( RFIFOREST(fd) >= 2 ) {
 		uint16 command = RFIFOW(fd,0);
 
-		switch( command )
-		{
+		if( HPM->packetsc[hpParse_Login] ) {
+			if( (result = HPM->parse_packets(fd,hpParse_Login)) ) {
+				if( result == 1 ) continue;
+				if( result == 2 ) return 0;
+			}
+		}
+		
+		switch( command ) {
 
 		case 0x0200:		// New alive packet: structure: 0x200 <account.userid>.24B. used to verify if client is always alive.
 			if (RFIFOREST(fd) < 26)
@@ -1389,11 +1378,11 @@ int parse_login(int fd)
 		{
 			uint32 version;
 			char username[NAME_LENGTH];
-			char password[NAME_LENGTH];
+			char password[PASSWD_LEN];
 			unsigned char passhash[16];
 			uint8 clienttype;
 			bool israwpass = (command==0x0064 || command==0x0277 || command==0x02b0 || command == 0x0825);
-
+			
 			// Shinryo: For the time being, just use token as password.
 			if(command == 0x0825)
 			{
@@ -1403,15 +1392,14 @@ int parse_login(int fd)
 				size_t uTokenLen = RFIFOREST(fd) - 0x5C;
 
 				version = RFIFOL(fd,4);
-
-				if(uAccLen > NAME_LENGTH - 1 || uAccLen <= 0 || uTokenLen > NAME_LENGTH - 1  || uTokenLen <= 0)
-				{
+				
+				if(uAccLen <= 0 || uTokenLen <= 0) {
 					login_auth_failed(sd, 3);
 					return 0;
 				}
 
-				safestrncpy(username, accname, uAccLen + 1);
-				safestrncpy(password, token, uTokenLen + 1);
+				safestrncpy(username, accname, NAME_LENGTH);
+				safestrncpy(password, token, min(uTokenLen+1, PASSWD_LEN)); // Variable-length field, don't copy more than necessary
 				clienttype = RFIFOB(fd, 8);
 			}
 			else
@@ -1437,7 +1425,7 @@ int parse_login(int fd)
 			if( israwpass )
 			{
 				ShowStatus("Request for connection of %s (ip: %s).\n", sd->userid, ip);
-				safestrncpy(sd->passwd, password, NAME_LENGTH);
+				safestrncpy(sd->passwd, password, PASSWD_LEN);
 				if( login_config.use_md5_passwds )
 					MD5_String(sd->passwd, sd->passwd);
 				sd->passwdenc = 0;
@@ -1578,7 +1566,6 @@ void login_set_defaults()
 	login_config.dynamic_pass_failure_ban_duration = 5;
 	login_config.use_dnsbl = false;
 	safestrncpy(login_config.dnsbl_servs, "", sizeof(login_config.dnsbl_servs));
-	safestrncpy(login_config.account_engine, "auto", sizeof(login_config.account_engine));
 
 	login_config.client_hash_check = 0;
 	login_config.client_hash_nodes = NULL;
@@ -1599,7 +1586,7 @@ int login_config_read(const char* cfgName)
 		if (line[0] == '/' && line[1] == '/')
 			continue;
 
-		if (sscanf(line, "%[^:]: %[^\r\n]", w1, w2) < 2)
+		if (sscanf(line, "%1023[^:]: %1023[^\r\n]", w1, w2) < 2)
 			continue;
 
 		if(!strcmpi(w1,"timestamp_format"))
@@ -1633,7 +1620,7 @@ int login_config_read(const char* cfgName)
 		else if(!strcmpi(w1, "check_client_version"))
 			login_config.check_client_version = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "client_version_to_connect"))
-			login_config.client_version_to_connect = strtoul(w2, NULL, 10);
+			login_config.client_version_to_connect = (unsigned int)strtoul(w2, NULL, 10);
 		else if(!strcmpi(w1, "use_MD5_passwords"))
 			login_config.use_md5_passwds = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "group_id_to_connect"))
@@ -1665,15 +1652,19 @@ int login_config_read(const char* cfgName)
 				int i;
 				CREATE(nnode, struct client_hash_node, 1);
 
-				for (i = 0; i < 32; i += 2) {
-					char buf[3];
-					unsigned int byte;
+				if (strcmpi(md5, "disabled") == 0) {
+					nnode->hash[0] = '\0';
+				} else {
+					for (i = 0; i < 32; i += 2) {
+						char buf[3];
+						unsigned int byte;
 
-					memcpy(buf, &md5[i], 2);
-					buf[2] = 0;
+						memcpy(buf, &md5[i], 2);
+						buf[2] = 0;
 
-					sscanf(buf, "%x", &byte);
-					nnode->hash[i / 2] = (uint8)(byte & 0xFF);
+						sscanf(buf, "%x", &byte);
+						nnode->hash[i / 2] = (uint8)(byte & 0xFF);
+					}
 				}
 
 				nnode->group_id = group;
@@ -1685,18 +1676,10 @@ int login_config_read(const char* cfgName)
 		else if(!strcmpi(w1, "import"))
 			login_config_read(w2);
 		else
-		if(!strcmpi(w1, "account.engine"))
-			safestrncpy(login_config.account_engine, w2, sizeof(login_config.account_engine));
-		else
-		{// try the account engines
-			int i;
-			for( i = 0; account_engines[i].constructor; ++i )
-			{
-				AccountDB* db = account_engines[i].db;
-				if( db && db->set_property(db, w1, w2) )
-					break;
-			}
-			// try others
+		{
+			AccountDB* db = account_engine[0].db;
+			if( db )
+				db->set_property(db, w1, w2);
 			ipban_config_read(w1, w2);
 			loginlog_config_read(w1, w2);
 		}
@@ -1706,61 +1689,36 @@ int login_config_read(const char* cfgName)
 	return 0;
 }
 
-/// Get the engine selected in the config settings.
-/// Updates the config setting with the selected engine if 'auto'.
-static AccountDB* get_account_engine(void)
-{
-	int i;
-	bool get_first = (strcmp(login_config.account_engine,"auto") == 0);
-
-	for( i = 0; account_engines[i].constructor; ++i )
-	{
-		char name[sizeof(login_config.account_engine)];
-		AccountDB* db = account_engines[i].db;
-		if( db && db->get_property(db, "engine.name", name, sizeof(name)) &&
-			(get_first || strcmp(name, login_config.account_engine) == 0) )
-		{
-			if( get_first )
-				safestrncpy(login_config.account_engine, name, sizeof(login_config.account_engine));
-			return db;
-		}
-	}
-	return NULL;
-}
-
 //--------------------------------------
 // Function called at exit of the server
 //--------------------------------------
-void do_final(void)
-{
+int do_final(void) {
 	int i;
 	struct client_hash_node *hn = login_config.client_hash_nodes;
 
-	while (hn)
-	{
+	ShowStatus("Terminating...\n");
+	
+	HPM->event(HPET_FINAL);
+	
+	while (hn) {
 		struct client_hash_node *tmp = hn;
 		hn = hn->next;
 		aFree(tmp);
 	}
 
 	login_log(0, "login server", 100, "login server shutdown");
-	ShowStatus("Terminating...\n");
 
 	if( login_config.log_login )
 		loginlog_final();
 
 	ipban_final();
 
-	for( i = 0; account_engines[i].constructor; ++i )
-	{// destroy all account engines
-		AccountDB* db = account_engines[i].db;
-		if( db )
-		{
-			db->destroy(db);
-			account_engines[i].db = NULL;
-		}
+	if( account_engine[0].db )
+	{// destroy account engine
+		account_engine[0].db->destroy(account_engine[0].db);
+		account_engine[0].db = NULL;
 	}
-	accounts = NULL; // destroyed in account_engines
+	accounts = NULL; // destroyed in account_engine
 	online_db->destroy(online_db, NULL);
 	auth_db->destroy(auth_db, NULL);
 	
@@ -1774,6 +1732,7 @@ void do_final(void)
 	}
 
 	ShowStatus("Finished.\n");
+	return EXIT_SUCCESS;
 }
 
 //------------------------------
@@ -1813,17 +1772,14 @@ int do_init(int argc, char** argv)
 {
 	int i;
 
-	// intialize engines (to accept config settings)
-	for( i = 0; account_engines[i].constructor; ++i )
-		account_engines[i].db = account_engines[i].constructor();
+	// initialize engine (to accept config settings)
+	account_engine[0].db = account_engine[0].constructor();
 
 	// read login-server configuration
 	login_set_defaults();
 	login_config_read((argc > 1) ? argv[1] : LOGIN_CONF_NAME);
 	login_lan_config_read((argc > 2) ? argv[2] : LAN_CONF_NAME);
-
-	rnd_init();
-	
+		
 	for( i = 0; i < ARRAYLENGTH(server); ++i )
 		chrif_server_init(i);
 
@@ -1833,10 +1789,10 @@ int do_init(int argc, char** argv)
 
 	// initialize static and dynamic ipban system
 	ipban_init();
-
+	
 	// Online user database init
 	online_db = idb_alloc(DB_OPT_RELEASE_DATA);
-	iTimer->add_timer_func_list(waiting_disconnect_timer, "waiting_disconnect_timer");
+	timer->add_func_list(waiting_disconnect_timer, "waiting_disconnect_timer");
 
 	// Interserver auth init
 	auth_db = idb_alloc(DB_OPT_RELEASE_DATA);
@@ -1845,29 +1801,33 @@ int do_init(int argc, char** argv)
 	set_defaultparse(parse_login);
 
 	// every 10 minutes cleanup online account db.
-	iTimer->add_timer_func_list(online_data_cleanup, "online_data_cleanup");
-	iTimer->add_timer_interval(iTimer->gettick() + 600*1000, online_data_cleanup, 0, 0, 600*1000);
+	timer->add_func_list(online_data_cleanup, "online_data_cleanup");
+	timer->add_interval(timer->gettick() + 600*1000, online_data_cleanup, 0, 0, 600*1000);
 
 	// add timer to detect ip address change and perform update
 	if (login_config.ip_sync_interval) {
-		iTimer->add_timer_func_list(sync_ip_addresses, "sync_ip_addresses");
-		iTimer->add_timer_interval(iTimer->gettick() + login_config.ip_sync_interval, sync_ip_addresses, 0, 0, login_config.ip_sync_interval);
+		timer->add_func_list(sync_ip_addresses, "sync_ip_addresses");
+		timer->add_interval(timer->gettick() + login_config.ip_sync_interval, sync_ip_addresses, 0, 0, login_config.ip_sync_interval);
 	}
 
 	// Account database init
-	accounts = get_account_engine();
+	accounts = account_engine[0].db;
 	if( accounts == NULL ) {
-		ShowFatalError("do_init: account engine '%s' not found.\n", login_config.account_engine);
+		ShowFatalError("do_init: account engine 'sql' not found.\n");
 		exit(EXIT_FAILURE);
 	} else {
 
 		if(!accounts->init(accounts)) {
-			ShowFatalError("do_init: Failed to initialize account engine '%s'.\n", login_config.account_engine);
+			ShowFatalError("do_init: Failed to initialize account engine 'sql'.\n");
 			exit(EXIT_FAILURE);
 		}
 	}
 
-	// server port open & binding	
+	HPM->share(account_db_sql_up(accounts),"sql_handle");
+	HPM->config_read(NULL, 0);
+	HPM->event(HPET_INIT);
+	
+	// server port open & binding
 	if( (login_fd = make_listen_bind(login_config.login_ip,login_config.login_port)) == -1 ) {
 		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",login_config.login_port);
 		exit(EXIT_FAILURE);
@@ -1877,11 +1837,11 @@ int do_init(int argc, char** argv)
 		shutdown_callback = do_shutdown;
 		runflag = LOGINSERVER_ST_RUNNING;
 	}
-
-	account_db_sql_up(accounts);
 	
 	ShowStatus("The login-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %u).\n\n", login_config.login_port);
 	login_log(0, "login server", 100, "login server started");
-		
+	
+	HPM->event(HPET_READY);
+	
 	return 0;
 }

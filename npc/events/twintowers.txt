@@ -13,7 +13,7 @@
 //= 1.6 Fixed wrong sprite id on main npc [ultramage]
 //============================================================
 
-prontera,146,92,4	script	Twin Towers#tt1::Twin-Towers	812,{
+prontera,146,92,4	script	Twin Towers#tt1::Twin-Towers	TW_TOWER,{
 	mes "[Twin Towers]";
 	mes "How are you? We are the Twin Towers.";
 	mes "It is such a pleasure to be able to meet you here.";
@@ -32,7 +32,7 @@ prontera,146,92,4	script	Twin Towers#tt1::Twin-Towers	812,{
 	menu "I shall accept your offer.",YES,"I'll ask for your service next time.",NO;
 
 	NO:
-	mes "[Twin Towers]"; 
+	mes "[Twin Towers]";
 	mes "Er, what a pity. Traveling by yourself is still the best evidence of adventure.";
 	mes "Isn't this proving that you are still young?";
 	mes "We respect brave hearts like this";
@@ -84,10 +84,10 @@ prontera,146,92,4	script	Twin Towers#tt1::Twin-Towers	812,{
 			close;
 }
 
-morocc,160,97,4	duplicate(Twin-Towers)	Twin Towers#tt2	812
-payon,176,226,4	duplicate(Twin-Towers)	Twin Towers#tt3	812
-izlude,134,92,4	duplicate(Twin-Towers)	Twin Towers#tt4	812
-alberta,25,238,4	duplicate(Twin-Towers)	Twin Towers#tt5	812
-geffen,120,60,4	duplicate(Twin-Towers)	Twin Towers#tt6	812
-aldebaran,143,116,4	duplicate(Twin-Towers)	Twin Towers#tt7	812
-comodo,194,158,4	duplicate(Twin-Towers)	Twin Towers#tt8	812
+morocc,160,97,4	duplicate(Twin-Towers)	Twin Towers#tt2	TW_TOWER
+payon,176,226,4	duplicate(Twin-Towers)	Twin Towers#tt3	TW_TOWER
+izlude,134,92,4	duplicate(Twin-Towers)	Twin Towers#tt4	TW_TOWER
+alberta,25,238,4	duplicate(Twin-Towers)	Twin Towers#tt5	TW_TOWER
+geffen,120,60,4	duplicate(Twin-Towers)	Twin Towers#tt6	TW_TOWER
+aldebaran,143,116,4	duplicate(Twin-Towers)	Twin Towers#tt7	TW_TOWER
+comodo,194,158,4	duplicate(Twin-Towers)	Twin Towers#tt8	TW_TOWER

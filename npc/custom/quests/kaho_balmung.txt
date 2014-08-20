@@ -4,8 +4,6 @@
 //= MagicalTux
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Custom quests for Balmung and Lord Kaho's Horns.
 //= WARNING: The quests are very easy, so be careful!
@@ -13,7 +11,7 @@
 //= 1.1 Cleaned and optimized. [Euphy]
 //============================================================
 
-prontera,158,356,4	script	Royal Messenger	105,{
+prontera,158,356,4	script	Royal Messenger	8W_SOLDIER,{
 	
 	setarray .@Req1[0],1161,999,120,984,10,996,10,994,10,995,10,997,10;
 	setarray .@Req2[0],5013,2298,1,1001,10,996,10,994,10,995,10,997,10;
@@ -44,7 +42,7 @@ prontera,158,356,4	script	Royal Messenger	105,{
 		close; }
 	for(set .@j,1; .@j<13; set .@j,.@j+2)
 		delitem getd(".@Req"+.@i+"["+.@j+"]"), getd(".@Req"+.@i+"["+(.@j+1)+"]");
-	set Zeny, Zeny-1000000;
+	Zeny -= 1000000;
 	mes "I see you already have all the items you need. Here's your "+getitemname(getd(".@Req"+.@i+"[0]"))+", as promised.";
 	getitem getd(".@Req"+.@i+"[0]"),1;
 	close;

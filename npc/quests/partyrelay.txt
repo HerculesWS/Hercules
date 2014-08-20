@@ -1,20 +1,19 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Party Relay Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
-//= 1.0
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Current Version: =====================================
+//= 1.2
+//===== Description: =========================================
+//= [Official Conversion]
 //= Party Relay Quest.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First version. [L0ne_W0lf]
 //= 1.1 Fixed a couple typos, npcs check area for PCs. [L0ne_W0lf]
+//= 1.2 Updated RE/Pre-RE EXP. [Euphy]
 //============================================================
 
-payon,103,113,3	script	Ledrion#payon::RelayLedrion	109,{
+payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 	getpartymember(getcharid(1));
 	set .@partymembercount,$@partymembercount;
 	set .@partyleader,getpartyleader(getcharid(1),2);
@@ -75,27 +74,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	109,{
 		else {
 			getitem 617,3; //Old_Violet_Box
 		}
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 19560,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Ledrion]";
 		mes "Well, I hope you like it!";
 		mes "If you can't use it, then";
@@ -151,27 +130,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	109,{
 		getitem 603,3; //Old_Blue_Box
 		getitem 617,1; //Old_Violet_Box
 		getitem 7738,1; //Mission_Certificate9
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 19560,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		next;
 		mes "[Ledrion]";
 		mes "Please give that ticket";
@@ -220,27 +179,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	109,{
 		getitem 644,3; //Gift_Box
 		getitem 603,1; //Old_Blue_Box
 		getitem 7734,1; //Mission_Certificate5
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 19560,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		close;
 	}
 	if (countitem(7733) > 0) {
@@ -442,7 +381,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	109,{
 	}
 }
 
-payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
+payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 	getpartymember(getcharid(1));
 	set .@partymembercount,$@partymembercount;
 	set .@partyleader,getpartyleader(getcharid(1),2);
@@ -485,27 +424,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		getitem 7739,1; //Mission_Certificate10
 		getitem 610,2; //Leaf_Of_Yggdrasil
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 19560,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		next;
 		mes "[Gatan]";
 		mes "Alright, get that done.";
@@ -970,27 +889,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		set party_relay,17;
 		getitem 7735,1; //Mission_Certificate6
 		getitem 610,2; //Leaf_Of_Yggdrasil
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 19560,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		next;
 		mes "[Gatan]";
 		mes "Alright, get that done.";
@@ -1461,27 +1360,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		set party_relay,6;
 		getitem 7731,1; //Mission_Certificate2
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		next;
 		mes "[Gatan]";
 		mes "Don't forget to make";
@@ -1937,7 +1816,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 	close;
 }
 
-payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
+payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 	getpartymember(getcharid(1));
 	set .@partymembercount,$@partymembercount;
 	set .@partyleader,getpartyleader(getcharid(1),2);
@@ -1983,27 +1862,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		getitem 7740,1; //Mission_Certificate11
 		getitem 610,2; //Leaf_Of_Yggdrasil
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Make sure that you give";
 		mes "that ticket to an Archer";
@@ -2028,27 +1887,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		getitem 7740,1; //Mission_Certificate11
 		getitem 610,2; //Leaf_Of_Yggdrasil
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Make sure that you give";
 		mes "that ticket to an Archer";
@@ -2075,7 +1914,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "Don't forget now, alright?";
 		close;
 	}
-	if ((countitem(7739) > 0) && (.@relaytime >= 11) && (.@relaytime < 14) && ((Baseclass == Job_Thief) || (BaseClass == Job_Acolyte))) {
+	if ((countitem(7739) > 0) && (.@relaytime >= 11) && (.@relaytime < 14) && ((BaseClass == Job_Thief) || (BaseClass == Job_Acolyte))) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -2102,7 +1941,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "I'll see you later~";
 		close;
 	}
-	else if ((countitem(7739) > 0) && (.@relaytime >= 0) && (.@relaytime < 3) && ((Baseclass == Job_Thief) || (BaseClass == Job_Acolyte))) {
+	else if ((countitem(7739) > 0) && (.@relaytime >= 0) && (.@relaytime < 3) && ((BaseClass == Job_Thief) || (BaseClass == Job_Acolyte))) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -2130,7 +1969,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "I'll see you later~";
 		close;
 	}
-	if ((countitem(7739) > 0) && ((Baseclass == Job_Thief) || (BaseClass == Job_Acolyte))) {
+	if ((countitem(7739) > 0) && ((BaseClass == Job_Thief) || (BaseClass == Job_Acolyte))) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -2170,27 +2009,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		set party_relay,20;
 		getitem 7736,1; //Mission_Certificate7
 		getitem 610,2; //Leaf_Of_Yggdrasil
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Do me a favor and make";
 		mes "sure that the Merchant";
@@ -2214,27 +2033,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		set party_relay,20;
 		getitem 7736,1; //Mission_Certificate7
 		getitem 610,2; //Leaf_Of_Yggdrasil
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Do me a favor and make";
 		mes "sure that the Merchant";
@@ -2276,27 +2075,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		set party_relay,20;
 		getitem 7736,1; //Mission_Certificate7
 		getitem 610,2; //Leaf_Of_Yggdrasil
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Do me a favor and make";
 		mes "sure that the Merchant";
@@ -2320,27 +2099,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		set party_relay,20;
 		getitem 7736,1; //Mission_Certificate7
 		getitem 610,2; //Leaf_Of_Yggdrasil
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Do me a favor and make";
 		mes "sure that the Merchant";
@@ -2480,27 +2239,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		set party_relay,9;
 		getitem 7732,1; //Mission_Certificate3
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Please give that";
 		mes "ticket to the Archer";
@@ -2523,27 +2262,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		set party_relay,9;
 		getitem 7732,1; //Mission_Certificate3
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		next;
 		mes "[Bafhail]";
 		mes "Please give that";
@@ -2632,7 +2351,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "Standard Time. Don't forget!";
 		close;
 	}
-	if ((countitem(7731) > 0) && (BaseLevel > 39) && ((.@relaytime >= 8) && (.@relaytime < 11)) && (Baseclass == Job_Thief)) {
+	if ((countitem(7731) > 0) && (BaseLevel > 39) && ((.@relaytime >= 8) && (.@relaytime < 11)) && (BaseClass == Job_Thief)) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -2664,7 +2383,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "items for missions, okay?";
 		close;
 	}
-	else if ((countitem(7731) > 0) && (BaseLevel > 39) && ((.@relaytime >= 21) && (Baseclass == Job_Thief))) {
+	else if ((countitem(7731) > 0) && (BaseLevel > 39) && ((.@relaytime >= 21) && (BaseClass == Job_Thief))) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -2696,7 +2415,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "items for missions, okay?";
 		close;
 	}
-	if ((countitem(7731) > 0) && (BaseLevel > 39) && (Baseclass == Job_Thief)) {
+	if ((countitem(7731) > 0) && (BaseLevel > 39) && (BaseClass == Job_Thief)) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -2730,7 +2449,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 	close;
 }
 
-payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
+payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 	getpartymember(getcharid(1));
 	set .@partymembercount,$@partymembercount;
 	set .@partyleader,getpartyleader(getcharid(1),2);
@@ -2783,27 +2502,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		getitem 7741,1; //Mission_Certificate12
 		getitem 610,2; //Leaf_Of_Yggdrasil
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Lospii]";
 		mes "Okay, now take this";
 		mes "ticket, and give it to";
@@ -2840,27 +2539,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		getitem 7741,1; //Mission_Certificate12
 		getitem 610,2; //Leaf_Of_Yggdrasil
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Lospii]";
 		mes "Okay, now take this";
 		mes "ticket, and give it to";
@@ -2970,7 +2649,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "important to know!";
 		close;
 	}
-	if ((countitem(7740) > 0) && ((Baseclass == Job_Archer) || (BaseClass == Job_Merchant))) {
+	if ((countitem(7740) > 0) && ((BaseClass == Job_Archer) || (BaseClass == Job_Merchant))) {
 		mes "[Lospii]";
 		mes "Hi, I'm Lospii! Maybe";
 		mes "I'm younger than you, but";
@@ -3021,27 +2700,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		set party_relay,22;
 		getitem 7737,1; //Mission_Certificate8
 		getitem 610,2; //Leaf_Of_Yggdrasil
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Lospii]";
 		mes "Okay, now take this";
 		mes "ticket, and give it to";
@@ -3077,27 +2736,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		set party_relay,22;
 		getitem 7737,1; //Mission_Certificate8
 		getitem 610,2; //Leaf_Of_Yggdrasil
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Lospii]";
 		mes "Okay, now take this";
 		mes "ticket, and give it to";
@@ -3258,27 +2897,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		set party_relay,11;
 		getitem 7733,1; //Mission_Certificate4
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Lospii]";
 		mes "Okay, now take this";
 		mes "ticket, and give it to";
@@ -3314,27 +2933,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		set party_relay,11;
 		getitem 7733,1; //Mission_Certificate4
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Lospii]";
 		mes "Okay, now take this";
 		mes "ticket, and give it to";
@@ -3362,7 +2961,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "I... I can't read watches...";
 		close;
 	}
-	if ((countitem(7732) > 0) && (BaseLevel > 39) && ((.@relaytime >= 14) && (.@relaytime < 17)) && (Baseclass == Job_Archer)) {
+	if ((countitem(7732) > 0) && (BaseLevel > 39) && ((.@relaytime >= 14) && (.@relaytime < 17)) && (BaseClass == Job_Archer)) {
 		mes "[Lospii]";
 		mes "Hi, I'm Lospii! Maybe";
 		mes "I'm younger than you, but";
@@ -3403,7 +3002,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "important to know!";
 		close;
 	}
-	else if ((countitem(7732) > 0) && (BaseLevel > 39) && ((.@relaytime >= 18) && (.@relaytime < 21)) && (Baseclass == Job_Archer)) {
+	else if ((countitem(7732) > 0) && (BaseLevel > 39) && ((.@relaytime >= 18) && (.@relaytime < 21)) && (BaseClass == Job_Archer)) {
 		mes "[Lospii]";
 		mes "Hi, I'm Lospii! Maybe";
 		mes "I'm younger than you, but";
@@ -3444,7 +3043,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "important to know!";
 		close;
 	}
-	if ((countitem(7732) > 0) && (BaseLevel > 39) && (Baseclass == Job_Archer)) {
+	if ((countitem(7732) > 0) && (BaseLevel > 39) && (BaseClass == Job_Archer)) {
 		mes "[Lospii]";
 		mes "Hi, I'm Lospii! Maybe";
 		mes "I'm younger than you, but";
@@ -3476,32 +3075,54 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 	close;
 }
 
+// EXP Rewards
+function	script	F_PartyRelay_Exp	{
+	if (checkre(3)) { //unconfirmed
+		if (BaseLevel > 94) getexp 104760,0;
+		else if (BaseLevel > 89) getexp 85920,0;
+		else if (BaseLevel > 79) getexp 38520,0;
+		else if (BaseLevel > 69) getexp 19560,0;
+		else if (BaseLevel > 59) getexp 6720,0;
+		else if (BaseLevel > 49) getexp 2880,0;
+		else getexp 1080,0;
+	} else {
+		if (BaseLevel > 94) getexp 1047600,0;
+		else if (BaseLevel > 89) getexp 859200,0;
+		else if (BaseLevel > 79) getexp 385200,0;
+		else if (BaseLevel > 69) getexp 195600,0;
+		else if (BaseLevel > 59) getexp 67200,0;
+		else if (BaseLevel > 49) getexp 28800,0;
+		else getexp 10800,0;
+	}
+	return;
+}
+
 // Comodo Relay
-comodo,71,137,3	duplicate(RelayLedrion)	Ledrion#comodo	109
-comodo,236,197,3	duplicate(RelayGatan)	Gatan#comodo	86
-comodo,152,184,3	duplicate(RelayBafhail)	Bafhail#comodo	731
-comodo,64,219,3	duplicate(RelayLospii)	Lospii#comodo	706
+comodo,71,137,3	duplicate(RelayLedrion)	Ledrion#comodo	4_M_MANAGER
+comodo,236,197,3	duplicate(RelayGatan)	Gatan#comodo	4_M_04
+comodo,152,184,3	duplicate(RelayBafhail)	Bafhail#comodo	4_M_JOB_BLACKSMITH
+comodo,64,219,3	duplicate(RelayLospii)	Lospii#comodo	4_M_KID1
 
 // Einbroch Relay
-einbroch,107,93,3	duplicate(RelayLedrion)	Ledrion#einbroch	109
-einbroch,260,128,3	duplicate(RelayGatan)	Gatan#einbroch	86
-einbroch,251,178,3	duplicate(RelayBafhail)	Bafhail#einbroch	731
-einbroch,173,72,3	duplicate(RelayLospii)	Lospii#einbroch	706
+einbroch,107,93,3	duplicate(RelayLedrion)	Ledrion#einbroch	4_M_MANAGER
+einbroch,260,128,3	duplicate(RelayGatan)	Gatan#einbroch	4_M_04
+einbroch,251,178,3	duplicate(RelayBafhail)	Bafhail#einbroch	4_M_JOB_BLACKSMITH
+einbroch,173,72,3	duplicate(RelayLospii)	Lospii#einbroch	4_M_KID1
 
 // Relay Hugel
-hugel,102,130,3	duplicate(RelayLedrion)	Ledrion#hugel	109
-hugel,169,139,3	duplicate(RelayGatan)	Gatan#hugel	86
-hugel,55,200,3	duplicate(RelayBafhail)	Bafhail#hugel	731
-hugel,144,201,3	duplicate(RelayLospii)	Lospii#hugel	706
+hugel,102,130,3	duplicate(RelayLedrion)	Ledrion#hugel	4_M_MANAGER
+hugel,169,139,3	duplicate(RelayGatan)	Gatan#hugel	4_M_04
+hugel,55,200,3	duplicate(RelayBafhail)	Bafhail#hugel	4_M_JOB_BLACKSMITH
+hugel,144,201,3	duplicate(RelayLospii)	Lospii#hugel	4_M_KID1
 
 // Relay Rachel
-rachel,215,71,3	duplicate(RelayLedrion)	Ledrion#rachel	109
-rachel,45,163,3	duplicate(RelayGatan)	Gatan#rachel	86
-rachel,245,132,3	duplicate(RelayBafhail)	Bafhail#rachel	731
-rachel,158,215,3	duplicate(RelayLospii)	Lospii#rachel	706
+rachel,215,71,3	duplicate(RelayLedrion)	Ledrion#rachel	4_M_MANAGER
+rachel,45,163,3	duplicate(RelayGatan)	Gatan#rachel	4_M_04
+rachel,245,132,3	duplicate(RelayBafhail)	Bafhail#rachel	4_M_JOB_BLACKSMITH
+rachel,158,215,3	duplicate(RelayLospii)	Lospii#rachel	4_M_KID1
 
 // Relay Veins
-veins,274,188,5	duplicate(RelayLedrion)	Ledrion#veins	109
-veins,138,207,3	duplicate(RelayGatan)	Gatan#veins	86
-veins,202,235,3	duplicate(RelayBafhail)	Bafhail#veins	731
-veins,97,245,5	duplicate(RelayLospii)	Lospii#veins	706
+veins,274,188,5	duplicate(RelayLedrion)	Ledrion#veins	4_M_MANAGER
+veins,138,207,3	duplicate(RelayGatan)	Gatan#veins	4_M_04
+veins,202,235,3	duplicate(RelayBafhail)	Bafhail#veins	4_M_JOB_BLACKSMITH
+veins,97,245,5	duplicate(RelayLospii)	Lospii#veins	4_M_KID1

@@ -4,8 +4,6 @@
 //= acky
 //===== Current Version: =====================================
 //= 1.1.2
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Players buy ninjas to assassinate other players
 //===== Additional Comments: =================================
@@ -13,7 +11,7 @@
 //= 1.1.2 Updated WoE Check. [Paradox924X]
 //============================================================
 
-morocc,148,86,5	script	Shifty Assassin	725,{
+morocc,148,86,5	script	Shifty Assassin	4_F_JOB_ASSASSIN,{
 	set $ninja_price,250000;
 
 	// STARTS THE MENU //
@@ -50,14 +48,14 @@ M_Buy:
 	if ($ninja_avail < 1) goto NoNinjas;
 	if ($ninja_avail < @buy) goto NotEnoughNinjas;
 	set @price,@buy*$ninja_price;
-	if (zeny < @price ) goto NoZeny;
+	if (Zeny < @price ) goto NoZeny;
 
 	mes "[Shifty Assassin]";
 	mes "That will cost you ^0000FF" + @price + " zeny^000000.";
 	next;
 	menu "Continue",-,"Cancel",M_Exit;
 
-	set zeny,zeny-@price;
+	Zeny -= @price;
 	set #ninjas,#ninjas+@buy;
 	set $ninja_avail,$ninja_avail-@buy;
 

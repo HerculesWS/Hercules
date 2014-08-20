@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Ayothaya Guides
 //===== By: ==================================================
 //= MasterOfMuppets
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Official Conversion]
 //= Guides for the City of Ayotaya
@@ -13,7 +11,7 @@
 //= 1.0 First version [L0ne_W0lf]
 //============================================================
 
-ayothaya,203,169,3	script	Noi#ayo	839,{
+ayothaya,203,169,3	script	Noi#ayo	4_F_THAIGIRL,{
 	mes "[Noi]";
 	mes "Welcome to Ayotaya.";
 	mes "Our beautiful village is built";

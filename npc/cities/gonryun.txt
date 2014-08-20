@@ -1,20 +1,20 @@
 //===== Hercules Script ======================================
 //= Kunlun Town
-//===== By: ================================================== 
+//===== By: ==================================================
 //= x[tsk], KarLaeda
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.6
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Kunlun Town Script
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.5 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//=	Moved Lost Knife mini-quest to quest file.
+//=     Moved Lost Knife mini-quest to quest file.
 //= 1.6 Moved Alberta NPC to pre-re/re paths. [Euphy]
 //============================================================
 
 // Kunlun Transportation
-//============================================================ 
+//============================================================
 -	script	::Kunlun_Envoy_gonryun	-1,{
 	mes "[Wa Bai Hu]";
 	mes "Good day~";
@@ -100,7 +100,7 @@
 				mes "[Wa Bai Hu]";
 				mes "Thank you, let me guide you there immediately.";
 				close2;
-				set zeny,zeny-10000;
+				Zeny -= 10000;
 				warp "gon_fild01",258,82;
 				end;
 			}
@@ -128,7 +128,7 @@
 	}
 }
 
-gon_fild01,255,79,7	script	Kunlun Envoy#gon2	776,{
+gon_fild01,255,79,7	script	Kunlun Envoy#gon2	4_M_TWMIDMAN,{
 	mes "[Wa Bai Hu]";
 	mes "So, did you enjoy your trip?";
 	mes "I guess it's the time for you to";
@@ -155,7 +155,7 @@ gon_fild01,255,79,7	script	Kunlun Envoy#gon2	776,{
 	close;
 }
 
-gon_fild01,187,239,7	script	Kunlun Envoy#gon3	776,{
+gon_fild01,187,239,7	script	Kunlun Envoy#gon3	4_M_TWMIDMAN,{
 	mes "[Zhang Quing Long]";
 	mes "Please head north to enter Kunlun.";
 	mes "I hope you will have a great time";
@@ -163,7 +163,7 @@ gon_fild01,187,239,7	script	Kunlun Envoy#gon3	776,{
 	close;
 }
 
-gonryun,153,64,7	script	Kunlun Envoy#gon4	776,{
+gonryun,153,64,7	script	Kunlun Envoy#gon4	4_M_TWMIDMAN,{
 	mes "[Zhang Quing Long]";
 	mes "Please make yourself comfortable.";
 	mes "If you want to go back, I will";
@@ -187,8 +187,8 @@ gonryun,153,64,7	script	Kunlun Envoy#gon4	776,{
 }
 
 // Generic Kunlun NPCs
-//============================================================ 
-gonryun,200,82,3	script	Jian Chung Xun#gon	774,{
+//============================================================
+gonryun,200,82,3	script	Jian Chung Xun#gon	4_M_TWBOY,{
 	mes "[Jian Chung Xun]";
 	mes "I simply adore festivals.";
 	mes "That's why I love this town.";
@@ -197,7 +197,7 @@ gonryun,200,82,3	script	Jian Chung Xun#gon	774,{
 	close;
 }
 
-gonryun,268,88,3	script	Liang Zhun Bu#gon	776,{
+gonryun,268,88,3	script	Liang Zhun Bu#gon	4_M_TWMIDMAN,{
 	mes "[Liang Zhun Bu]";
 	mes "We are proud to be an independent";
 	mes "nation, and have been fighting";
@@ -213,7 +213,7 @@ gonryun,268,88,3	script	Liang Zhun Bu#gon	776,{
 	close;
 }
 
-gonryun,118,111,5	script	Qian Yuen Shuang#gon	89,{
+gonryun,118,111,5	script	Qian Yuen Shuang#gon	4_M_ORIENT02,{
 	mes "[Qian Yuen Shuang]";
 	mes "The chief of this town is a man";
 	mes "who opens his heart to others.";
@@ -228,7 +228,7 @@ gonryun,118,111,5	script	Qian Yuen Shuang#gon	89,{
 	close;
 }
 
-gonryun,181,161,3	script	Jing Wen Zhen#gon	773,{
+gonryun,181,161,3	script	Jing Wen Zhen#gon	4_F_TWMIDWOMAN,{
 	mes "[Jing Wen Zhen]";
 	mes "The men in our town, Kunlun, are";
 	mes "all brave and courageous.";
@@ -244,7 +244,7 @@ gonryun,181,161,3	script	Jing Wen Zhen#gon	773,{
 	close;
 }
 
-gonryun,113,135,6	script	Gatekeeper#gon	780,{
+gonryun,113,135,6	script	Gatekeeper#gon	8_M_TWSOLDIER,{
 	mes "[Kunlun Guard]";
 	mes "Welcome.";
 	mes "This is the residence of Shi Yan Wen, the chief of Kunlun.";
@@ -261,7 +261,7 @@ gonryun,113,135,6	script	Gatekeeper#gon	780,{
 	close;
 }
 
-gonryun,113,127,6	script	Gatekeeper#gon2	780,{
+gonryun,113,127,6	script	Gatekeeper#gon2	8_M_TWSOLDIER,{
 	mes "[Kunlun Guard]";
 	mes "Welcome.";
 	mes "This is the residence of Shi Yan Wen, the chief of Kunlun.";
@@ -278,7 +278,7 @@ gonryun,113,127,6	script	Gatekeeper#gon2	780,{
 	close;
 }
 
-gon_in,73,82,5	script	Ji Chung Zhe#gon	778,{
+gon_in,73,82,5	script	Ji Chung Zhe#gon	4_M_TWTEAMAN,{
 	if (nakha >= 0 && nakha <= 2) {
 		mes "[Ji Chung Zhe]";
 		mes "............";
@@ -311,7 +311,7 @@ gon_in,73,82,5	script	Ji Chung Zhe#gon	778,{
 	}
 }
 
-gon_in,173,27,3	script	Yu Jiu Xia#gon	774,{
+gon_in,173,27,3	script	Yu Jiu Xia#gon	4_M_TWBOY,{
 	mes "[Yu Jiu Xia]";
 	mes "Geez, just as I thought.";
 	mes "They won't sell alcohol to me.";
@@ -327,7 +327,7 @@ gon_in,173,27,3	script	Yu Jiu Xia#gon	774,{
 	close;
 }
 
-gonryun,166,196,3	script	Soldier#gon	780,{
+gonryun,166,196,3	script	Soldier#gon	8_M_TWSOLDIER,{
 	if (b_sword < 7) {
 		mes "[Wa Qiu Wu]";
 		mes "Let me tell you something";
@@ -388,7 +388,7 @@ gonryun,166,196,3	script	Soldier#gon	780,{
 	close;
 }
 
-gonryun,169,71,3	script	Guidev#gon	770,{
+gonryun,169,71,3	script	Guidev#gon	4_F_TWGIRL,{
 	mes "[Li Xi Jiao]";
 	mes "Welcome to Kunlun!";
 	mes "Did you enjoy all the incredible";
@@ -410,9 +410,9 @@ gonryun,169,71,3	script	Guidev#gon	770,{
 	close;
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 // May be missing npc's and dialogue.
 //= 1.1 Fixed Typos [Nexon]
 //= 1.2 Removed Duplicates [Silent]

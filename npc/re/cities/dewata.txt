@@ -1,21 +1,75 @@
 //===== Hercules Script ======================================
 //= Dewata Town
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Gennosuke Kouga, Muad_Dib
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Description: =========================================
+//= [Official Conversion]
 //= Dewata Town Script
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First version.
 //= 1.1 Standardized. [Euphy]
 //= 1.2 Fixed Zeny check. [Joseph]
 //= 1.3 Updated to match the official script. [Lemongrass/Euphy]
 //============================================================
 
-dewata,221,237,5	script	Young Man#dew-1	536,{
+// Dewata Transportation
+//============================================================
+alberta,212,202,4	script	Dewata Sailor#alberta	4_M_DEWMAN,{
+	mes "[Dewata Sailor]";
+	mes "Do you want to visit ^8B4513Dewata Island^000000?";
+	mes "With it's dazzling waves and charming views it's a great place to relax.";
+	mes "The transit fee is 10,000 Zeny.";
+	next;
+	switch(select("Yes!:No.")) {
+	case 1:
+		if (Zeny >= 10000) {
+			mes "[Dewata Sailor]";
+			mes "^8B4513Dewata^000000 is a beautiful and peaceful island country.";
+			mes "Have a nice trip~";
+			close2;
+			Zeny -= 10000;
+			warp "dewata",232,53;
+			end;
+		} else {
+			mes "[Dewata Sailor]";
+			mes "You don't have the dough, kid.";
+			mes "Come back when you have a bigger wallet.";
+			close;
+		}
+	case 2:
+		mes "[Dewata Sailor]";
+		mes "Let me know";
+		mes "when you're ready to travel~";
+		close;
+	}
+}
+
+dewata,229,49,6	script	Alberta Sailor#dewata	4_M_DEWMAN,{
+	mes "[Alberta Sailor]";
+	mes "Do you want to go back to Alberta?";
+	next;
+	switch(select("Yes.:No.")) {
+	case 1:
+		mes "[Alberta Sailor]";
+		mes "I hope you had a lot of fun on";
+		mes "your trip to ^8B4513Dewata^000000 Island.";
+		mes "Please come again!";
+		close2;
+		warp "alberta",210,198;
+		end;
+	case 2:
+		mes "[Alberta Sailor]";
+		mes "Have some more fun before you go.";
+		mes "^8B4513Dewata^000000 Island still has more to offer.";
+		close;
+	}
+}
+
+// Generic Dewata NPCs
+//============================================================
+dewata,221,237,5	script	Young Man#dew-1	4_M_DEWMAN,{
 	mes "[Fruit Fancier]";
 	mes "What's wrong with your faaaaaace? You must really be clueless!";
 	next;
@@ -111,7 +165,7 @@ dewata,221,237,5	script	Young Man#dew-1	536,{
 	}
 }
 
-dewata,114,243,6	script	Lazy Young Man#dew	536,1,1,{
+dewata,114,243,6	script	Lazy Young Man#dew	4_M_DEWMAN,1,1,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 500) {
 		mes "[Lazy Young Man]";
 		mes "Why are you carrying so much? Isn't it heavy?";
@@ -157,7 +211,7 @@ OnTouch:
 	end;
 }
 
-dewata,159,81,4	script	Tourist#dew-1	881,{
+dewata,159,81,4	script	Tourist#dew-1	4_M_SITDOWN,{
 	mes "[Nasolo]";
 	mes "Wow~ Pure ocean, a warm beach...";
 	mes "Perfect for a date with a girlfriend...";
@@ -172,7 +226,7 @@ dewata,159,81,4	script	Tourist#dew-1	881,{
 	close;
 }
 
-dewata,146,109,5	script	Restauranteur#dew	886,{
+dewata,146,109,5	script	Restauranteur#dew	4_COOK,{
 	if (checkweight(11532,1) == 0 || checkweight(11533,1) == 0 || MaxWeight - Weight < 500) {
 		mes "[Restauranteur]";
 		mes "You came to taste my dish? It is always good to eat with an empty stomach.";
@@ -242,7 +296,7 @@ dewata,146,109,5	script	Restauranteur#dew	886,{
 			}
 			mes "[Restauranteur]";
 			mes "Here's your "+getitemname(.@food)+", you won't regret it!";
-			set Zeny, Zeny - 5000;
+			Zeny -= 5000;
 			getitem .@food,1;
 			close;
 		case 2:
@@ -257,7 +311,7 @@ dewata,146,109,5	script	Restauranteur#dew	886,{
 	}
 }
 
-dewata,147,107,6	script	Gourmet#dew	85,{
+dewata,147,107,6	script	Gourmet#dew	4_M_03,{
 	mes "[Gourmet]";
 	mes "Oh... it's like a party in my";
 	mes "mouth... and everyone's invited!";
@@ -273,7 +327,7 @@ dewata,147,107,6	script	Gourmet#dew	85,{
 	close;
 }
 
-dewata,154,107,4	script	Sightseer#dew	86,{
+dewata,154,107,4	script	Sightseer#dew	4_M_04,{
 	mes "[Tourist]";
 	mes "Wow...";
 	mes "How many has he already eaten?";
@@ -287,7 +341,7 @@ dewata,154,107,4	script	Sightseer#dew	86,{
 	close;
 }
 
-dewata,95,203,6	script	Travel Guide#dew	536,{
+dewata,95,203,6	script	Travel Guide#dew	4_M_DEWMAN,{
 	mes "[Guide]";
 	mes "This temple behind me is called Borobudur.";
 	mes "Borobudur temple was built in the 9th century";
@@ -312,7 +366,7 @@ dewata,95,203,6	script	Travel Guide#dew	536,{
 	close;
 }
 
-dewata,97,207,4	script	Tourist#dew1	803,{
+dewata,97,207,4	script	Tourist#dew1	1_F_SIGNZISK,{
 	mes "[Tourist]";
 	mes "Oh, dag-nabbit... I've gone and";
 	mes "picked the wrong tour guide...";
@@ -328,7 +382,7 @@ dewata,97,207,4	script	Tourist#dew1	803,{
 	close;
 }
 
-dewata,100,206,4	script	Tourist#dew2	59,{
+dewata,100,206,4	script	Tourist#dew2	1_M_ORIENT01,{
 	mes "[Tourist]";
 	mes "Hey, let's go there! Hurry up,";
 	mes "while the tour guide is explaining~";
@@ -339,7 +393,7 @@ dewata,100,206,4	script	Tourist#dew2	59,{
 	close;
 }
 
-dewata,101,206,4	script	Tourist#dew3	90,{
+dewata,101,206,4	script	Tourist#dew3	4_F_01,{
 	mes "[Tourist]";
 	mes "Aren't we going to get lost without the guide?";
 	next;
@@ -348,7 +402,7 @@ dewata,101,206,4	script	Tourist#dew3	90,{
 	close;
 }
 
-dewata,99,203,4	script	Tourist#dew4	755,{
+dewata,99,203,4	script	Tourist#dew4	4_M_SAGE_C,{
 	mes "[Tourist]";
 	mes "Oh~ This is very interesting. A";
 	mes "temple that worships the Buddha...";
@@ -364,7 +418,7 @@ dewata,99,203,4	script	Tourist#dew4	755,{
 	close;
 }
 
-dewata,67,186,8	script	Monk#dew1	834,{
+dewata,67,186,8	script	Monk#dew1	4_M_BUDDHIST,{
 	mes "[Monk]";
 	mes "I am a monk, content to spend my days in religious study.";
 	next;
@@ -376,7 +430,7 @@ dewata,67,186,8	script	Monk#dew1	834,{
 	close;
 }
 
-dewata,65,188,8	script	Monk#dew2	834,{
+dewata,65,188,8	script	Monk#dew2	4_M_BUDDHIST,{
 	mes "[Monk]";
 	mes "Borobudur temple is one of few temples left for worshiping the Great Buddha.";
 	next;
@@ -385,7 +439,7 @@ dewata,65,188,8	script	Monk#dew2	834,{
 	close;
 }
 
-dewata,63,190,8	script	Monk#dew3	834,{
+dewata,63,190,8	script	Monk#dew3	4_M_BUDDHIST,{
 	mes "[Monk]";
 	mes "Are you a Tourist? You can make an offering and a wish to one of the shrines.";
 	next;
@@ -394,7 +448,7 @@ dewata,63,190,8	script	Monk#dew3	834,{
 	close;
 }
 
-dewata,62,192,8	script	Monk#dew4	834,{
+dewata,62,192,8	script	Monk#dew4	4_M_BUDDHIST,{
 	mes "[Monk]";
 	mes "Our great Buddha is the king of souls and the leader of all good Gods.";
 	next;
@@ -406,7 +460,7 @@ dewata,62,192,8	script	Monk#dew4	834,{
 	close;
 }
 
-dewata,89,191,6	script	Small Shrine#dew1	844,{
+dewata,89,191,6	script	Small Shrine#dew1	CLEAR_NPC,{
 	mes "There is a small shrine here. There are many people making wishes.";
 	next;
 	switch(select("Make a donation.:Make a wish.:Walk away.")) {
@@ -455,37 +509,19 @@ dewata,89,191,6	script	Small Shrine#dew1	844,{
 		mes "You make a wish for ^0000FF" + .@wish$ + "^000000 to the small shrine.";
 		next;
 		callsub L_Wish;
-		set Zeny, Zeny - .@input;
-		if (.@stat & 1 && .@bonus){
-			sc_start SC_FOOD_STR,1200000,3;
-			percentheal 5,0;
-			//consumeitem 12043; //Str_Dish03
-		}
-		else if (.@stat & 2 && .@bonus){
-			sc_start SC_FOOD_AGI,1200000,3;
-			percentheal 5,0;
-			//consumeitem 12058; //Agi_Dish03
-		}
-		else if (.@stat & 4 && .@bonus){
-			sc_start SC_FOOD_DEX,1200000,3;
-			percentheal 5,0;
-			//consumeitem 12063; //Dex_Dish03
-		}
-		else if (.@stat & 8 && .@bonus){
-			sc_start SC_FOOD_VIT,1200000,3;
-			percentheal 5,0;
-			//consumeitem 12053; //Vit_Dish03
-		}
-		else if (.@stat & 16 && .@bonus){
-			sc_start SC_FOOD_INT,1200000,3;
-			percentheal 5,0;
-			//consumeitem 12048; //Int_Dish03
-		}
-		else if (.@stat & 32 && .@bonus){
-			sc_start SC_FOOD_LUK,1200000,3;
-			percentheal 5,0;
-			//consumeitem 12068; //Luk_Dish03
-		}
+		Zeny -= .@input;
+		if (.@stat & 1 && .@bonus)
+			consumeitem 12043; //Str_Dish03
+		else if (.@stat & 2 && .@bonus)
+			consumeitem 12058; //Agi_Dish03
+		else if (.@stat & 4 && .@bonus)
+			consumeitem 12063; //Dex_Dish03
+		else if (.@stat & 8 && .@bonus)
+			consumeitem 12053; //Vit_Dish03
+		else if (.@stat & 16 && .@bonus)
+			consumeitem 12048; //Int_Dish03
+		else if (.@stat & 32 && .@bonus)
+			consumeitem 12068; //Luk_Dish03
 		else if (.@stat & 64) {
 			specialeffect2 EF_ANGEL;
 			mes "- A celestial entity gives you a blessing. -";
@@ -523,11 +559,11 @@ L_Wish:
 	next;
 	return;
 }
-dewata,89,212,6	duplicate(Small Shrine#dew1)	Small Shrine#dew2	844
-dewata,68,212,6	duplicate(Small Shrine#dew1)	Small Shrine#dew3	844
-dewata,68,191,6	duplicate(Small Shrine#dew1)	Small Shrine#dew4	844
+dewata,89,212,6	duplicate(Small Shrine#dew1)	Small Shrine#dew2	CLEAR_NPC
+dewata,68,212,6	duplicate(Small Shrine#dew1)	Small Shrine#dew3	CLEAR_NPC
+dewata,68,191,6	duplicate(Small Shrine#dew1)	Small Shrine#dew4	CLEAR_NPC
 
-dewata,75,122,6	script	Monk#dewt1	834,{
+dewata,75,122,6	script	Monk#dewt1	4_M_BUDDHIST,{
 	mes "[Monk]";
 	mes "You are a stranger here. What brings here to this quiet place?";
 	next;
@@ -543,7 +579,7 @@ dewata,75,122,6	script	Monk#dewt1	834,{
 	}
 }
 
-dewata,69,101,6	script	Monk#dewt2	834,{
+dewata,69,101,6	script	Monk#dewt2	4_M_BUDDHIST,{
 	mes "[Monk]";
 	mes "We have a pagoda for the worship of Buddhas. Each temple has one of these towers, though not many people come here besides other monks.";
 	next;
@@ -578,7 +614,7 @@ dewata,69,101,6	script	Monk#dewt2	834,{
 	}
 }
 
-dewata,71,79,6	script	Monk#dewt3	834,{
+dewata,71,79,6	script	Monk#dewt3	4_M_BUDDHIST,{
 	mes "[Monk]";
 	mes "This tower is built on the edge of coastal cliff. You can pray with a cool ocean breeze in your hair.";
 	next;
@@ -587,7 +623,7 @@ dewata,71,79,6	script	Monk#dewt3	834,{
 	close;
 }
 
-dewata,211,272,4	script	Lodge Owner#dew	534,2,3,{
+dewata,211,272,4	script	Lodge Owner#dew	4_M_DEWOLDMAN,2,3,{
 OnTouch:
 	mes "[Lodge Owner]";
 	mes "These days, we have many honeymooners visiting here.";
@@ -604,7 +640,7 @@ OnTouch:
 	close;
 }
 
-dewata,245,244,4	script	Lodge Employee#dew	536,2,3,{
+dewata,245,244,4	script	Lodge Employee#dew	4_M_DEWMAN,2,3,{
 OnTouch:
 	mes "[Lodge employee]";
 	mes "Argg~ This is really ticking me off!";
@@ -621,7 +657,7 @@ OnTouch:
 	close;
 }
 
-dewata,233,263,8	script	Sweet Married Couple::smc_dew_01	828,2,3,{
+dewata,233,263,8	script	Sweet Married Couple#1	4_M_ROGUE,2,3,{
 OnTouch:
 	mes "[Sweet Husband]";
 	mes "You are the most beautiful thing in the world baby~";
@@ -641,7 +677,7 @@ OnTouch:
 	close;
 }
 
-dewata,234,263,8	script	Sweet Married Couple::smc_dew_02	727,2,3,{
+dewata,234,263,8	script	Sweet Married Couple#2	4_F_JOB_HUNTER,2,3,{
 OnTouch:
 	mes "[Sweet Wife]";
 	mes "Baby~ You know what flower that is~?";
@@ -672,7 +708,7 @@ OnTouch:
 	close;
 }
 
-dewata,279,213,4	script	Tourist#dew-2	887,2,3,{
+dewata,279,213,4	script	Tourist#dew-2	4_M_LIEMAN,2,3,{
 OnTouch:
 	mes "[Reclining Tourist]";
 	mes "Wow~ This is really comfy~";
@@ -690,7 +726,7 @@ OnTouch:
 	close;
 }
 
-dewata,269,208,4	script	Little Kid in Town#dew	538,2,3,{
+dewata,269,208,4	script	Little Kid in Town#dew	4_M_DEWBOY,2,3,{
 OnTouch:
 	mes "[Kid]";
 	mes "Hey "+((Sex)?"bro":"sis")+", look at that man!";
@@ -707,7 +743,7 @@ OnTouch:
 	close;
 }
 
-dewata,227,129,4	script	Sarr#dew	538,2,3,{
+dewata,227,129,4	script	Sarr#dew	4_M_DEWBOY,2,3,{
 OnTouch:
 	mes "[Sarr]";
 	mes "They're hiding so I should seek.";
@@ -730,7 +766,7 @@ OnTouch:
 	close;
 }
 
-dewata,239,140,4	script	Siyak#dew	539,2,3,{
+dewata,239,140,4	script	Siyak#dew	4_M_DEWGIRL,2,3,{
 OnTouch:
 	mes "[Siyak]";
 	mes "Hey come on, move over~ He's gonna find me~~";
@@ -748,7 +784,7 @@ OnTouch:
 	close;
 }
 
-dewata,193,145,4	script	Sipo#dew	538,2,3,{
+dewata,193,145,4	script	Sipo#dew	4_M_DEWBOY,2,3,{
 OnTouch:
 	mes "[Sipo]";
 	mes "Sarr won't find me here, right?";
@@ -765,7 +801,7 @@ OnTouch:
 	close;
 }
 
-dewata,228,177,4	script	Majya#dew	538,2,3,{
+dewata,228,177,4	script	Majya#dew	4_M_DEWBOY,2,3,{
 OnTouch:
 	mes "[Majya]";
 	mes "I was playing hide-and-seek with my friends...";
@@ -779,7 +815,7 @@ OnTouch:
 	close;
 }
 
-dewata,278,100,4	script	Missing Child#dew	703,2,3,{
+dewata,278,100,4	script	Missing Child#dew	4_F_KID2,2,3,{
 OnTouch:
 	mes "[Ukki]";
 	mes "WaaWaaWaaWaaWaaWaaWaaWaaWaaWaaWaaWaaWaaWaaWaaWaaWaaWaa~";
@@ -804,7 +840,7 @@ OnTouch:
 	close;
 }
 
-dewata,249,87,4	script	Mum#dew	101,2,3,{
+dewata,249,87,4	script	Mum#dew	4W_F_01,2,3,{
 OnTouch:
 	mes "[Mum]";
 	mes "Ukki~ Ukki~ Where did she go?";
@@ -819,7 +855,7 @@ OnTouch:
 	close;
 }
 
-dewata,251,85,6	script	Poppa#dew	97,2,3,{
+dewata,251,85,6	script	Poppa#dew	4W_M_01,2,3,{
 OnTouch:
 	mes "[Poppa]";
 	mes "Honey, is Ukki lost again?";
@@ -840,7 +876,7 @@ OnTouch:
 	close;
 }
 
-dewata,278,281,4	script	Happily Married Grandpa::hmg_dew_01	534,{
+dewata,278,281,4	script	Happily Married Grandpa	4_M_DEWOLDMAN,{
 	mes "[Happily Married Grandpa]";
 	mes "Today, I should ask my lady to";
 	mes "cook me some ^006400fried rice^000000.";
@@ -856,7 +892,7 @@ dewata,278,281,4	script	Happily Married Grandpa::hmg_dew_01	534,{
 	close;
 }
 
-dewata,280,277,4	script	Happily Married Grandma::hmg_dew_02	535,{
+dewata,280,277,4	script	Happily Married Grandma	4_M_DEWOLDWOMAN,{
 	mes "[Happily Married Grandma]";
 	mes "In my younger days,";
 	mes "there were many gentleman callers";
@@ -884,7 +920,7 @@ dewata,280,277,4	script	Happily Married Grandma::hmg_dew_02	535,{
 	close;
 }
 
-dewata,165,103,6	script	Adventurer Semangat#dew	534,{
+dewata,165,103,6	script	Adventurer Semangat#dew	4_M_DEWOLDMAN,{
 	mes "[Adventurer Semangat]";
 	mes "I also traveled around the World";
 	mes "When I was young like you.";
@@ -906,7 +942,7 @@ dewata,165,103,6	script	Adventurer Semangat#dew	534,{
 	close;
 }
 
-dewata,139,114,6	script	Semangat's Wife#dew	535,{
+dewata,139,114,6	script	Semangat's Wife#dew	4_M_DEWOLDWOMAN,{
 	mes "[Semangat's Wife]";
 	mes "Where's that old man";
 	mes "gone off to again?";
@@ -941,7 +977,7 @@ dewata,139,114,6	script	Semangat's Wife#dew	535,{
 	}
 }
 
-dewata,181,88,6	script	Young Man#dew-2	536,{
+dewata,181,88,6	script	Young Man#dew-2	4_M_DEWMAN,{
 	mes "[Young Man]";
 	mes "Isn't ^8B4513Dewata^000000 beach";
 	mes "really beautiful?";
@@ -958,7 +994,7 @@ dewata,181,88,6	script	Young Man#dew-2	536,{
 	close;
 }
 
-dewata,179,204,4	script	Young Lady#dew	537,{
+dewata,179,204,4	script	Young Lady#dew	4_M_DEWWOMAN,{
 	mes "[Young Lady]";
 	mes "When you are outside of the town,";
 	mes "and meet ^FF0000Tiger, Monkey, or pig^000000,";
@@ -980,7 +1016,7 @@ dewata,179,204,4	script	Young Lady#dew	537,{
 	close;
 }
 
-dewata,280,236,4	script	Settler#dew	726,{
+dewata,280,236,4	script	Settler#dew	4_F_JOB_BLACKSMITH,{
 	mes "[Settler]";
 	mes "I'm not really from ^8B4513Dewata^000000.";
 	mes "But while traveling,";
@@ -1000,7 +1036,7 @@ dewata,280,236,4	script	Settler#dew	726,{
 	close;
 }
 
-dewata,204,230,6	script	Dieting Lady#dew	537,{
+dewata,204,230,6	script	Dieting Lady#dew	4_M_DEWWOMAN,{
 	if (countitem(11533) == 0) {
 		mes "[Dieting Lady]";
 		mes "Ah~ I'm starving!!";
@@ -1045,7 +1081,7 @@ dewata,204,230,6	script	Dieting Lady#dew	537,{
 	}
 }
 
-dewata,117,156,6	script	Dreaming Kid#dew	538,{
+dewata,117,156,6	script	Dreaming Kid#dew	4_M_DEWBOY,{
 	mes "[Dreaming Kid]";
 	mes "My granny says";
 	mes "There was once a bird named ^FF0000Garuda^000000";
@@ -1063,7 +1099,7 @@ dewata,117,156,6	script	Dreaming Kid#dew	538,{
 	close;
 }
 
-dewata,144,216,4	script	Energetic Kid#dew	538,{
+dewata,144,216,4	script	Energetic Kid#dew	4_M_DEWBOY,{
 	mes "[Energetic Kid]";
 	mes "My parents used to tell me...";
 	next;
@@ -1084,7 +1120,7 @@ dewata,144,216,4	script	Energetic Kid#dew	538,{
 	close;
 }
 
-dewata,127,248,6	script	Wishing Kid#dew	539,{
+dewata,127,248,6	script	Wishing Kid#dew	4_M_DEWGIRL,{
 	mes "[Kid wishing to be an adult]";
 	mes "My family has been brewing";
 	mes "traditional Dewata wine for ages.";
@@ -1104,7 +1140,7 @@ dewata,127,248,6	script	Wishing Kid#dew	539,{
 	close;
 }
 
-dew_fild01,101,259,6	script	Jaty Tribe Gatekeeper::jtg_dew	541,{
+dew_fild01,101,259,6	script	Jaty Tribe Gatekeeper	4_M_DEWZATIMAN,{
 	mes "[Jaty Tribe Gatekeeper]";
 	mes "Welcome to ^FF0000Jaty^000000 town.";
 	mes "Our tribe reveres strength and bravery.";
@@ -1112,7 +1148,7 @@ dew_fild01,101,259,6	script	Jaty Tribe Gatekeeper::jtg_dew	541,{
 	close;
 }
 
-dew_fild01,106,306,4	script	R. Jaty Tribe Warrior	541,{
+dew_fild01,106,306,4	script	R. Jaty Tribe Warrior	4_M_DEWZATIMAN,{
 	mes "[Reserved Jaty Warrior]";
 	mes "I want to be the very best";
 	mes "like no one ever was.";

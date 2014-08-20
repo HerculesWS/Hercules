@@ -4,9 +4,8 @@
 //= Gennosuke Kouga, Muad_Dib
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
+//= [Official Conversion]
 //= Quest NPCs related to Dewata:
 //== "Dewata Legend"
 //== "Help Out the Old Man"
@@ -17,62 +16,9 @@
 //= 1.2 Updated to match the official script. [Lemongrass/Euphy]
 //============================================================
 
-// Entrance
+// Dewata Legend Quest :: dewata_legend
 //============================================================
-alberta,212,202,4	script	Dewata Sailor#alberta	536,{
-	mes "[Dewata Sailor]";
-	mes "Do you want to visit ^8B4513Dewata Island^000000?";
-	mes "With it's dazzling waves and charming views it's a great place to relax.";
-	mes "The transit fee is 10,000 Zeny.";
-	next;
-	switch(select("Yes!:No.")) {
-	case 1:
-		if (Zeny >= 10000) {
-			mes "[Dewata Sailor]";
-			mes "^8B4513Dewata^000000 is a beautiful and peaceful island country.";
-			mes "Have a nice trip~";
-			close2;
-			set Zeny, Zeny - 10000;
-			warp "dewata",232,53;
-			end;
-		} else {
-			mes "[Dewata Sailor]";
-			mes "You don't have the dough, kid.";
-			mes "Come back when you have a bigger wallet.";
-			close;
-		}
-	case 2:
-		mes "[Dewata Sailor]";
-		mes "Let me know";
-		mes "when you're ready to travel~";
-		close;
-	}
-}
-
-dewata,229,49,6	script	Alberta Sailor#dewata	536,{
-	mes "[Alberta Sailor]";
-	mes "Do you want to go back to Alberta?";
-	next;
-	switch(select("Yes.:No.")) {
-	case 1:
-		mes "[Alberta Sailor]";
-		mes "I hope you had a lot of fun on";
-		mes "your trip to ^8B4513Dewata^000000 Island.";
-		mes "Please come again!";
-		close2;
-		warp "alberta",210,198;
-		end;
-	case 2:
-		mes "[Alberta Sailor]";
-		mes "Have some more fun before you go.";
-		mes "^8B4513Dewata^000000 Island still has more to offer.";
-		close;
-	}
-}
-
-// Dewata Legend Quest
-//============================================================
-dew_fild01,57,274,0	script	#hideout_legend	111,6,6,{
+dew_fild01,57,274,0	script	#hideout_legend	HIDDEN_NPC,6,6,{
 OnTouch:
 	if (BaseLevel > 59 && dew_legend < 1) {
 		mes "- You hear a faint conversation going on inside. -";
@@ -106,7 +52,7 @@ OnTouch:
 	end;
 }
 
-dew_in01,15,33,0	script	#hidein_legend	111,5,5,{
+dew_in01,15,33,0	script	#hidein_legend	HIDDEN_NPC,5,5,{
 OnTouch:
 	if (dew_legend == 3) {
 		mes "Kasyapa and Chief Paiko begin talking as you are about to leave...";
@@ -137,7 +83,7 @@ OnTouch:
 	end;
 }
 
-dew_in01,22,48,3	script	Sage Kasyapa#dew	541,{
+dew_in01,22,48,3	script	Sage Kasyapa#dew	4_M_DEWZATIMAN,{
 	if (dew_legend == 0) {
 		mes "[Sage Kasyapa]";
 		mes "Ah, a stranger to our land.";
@@ -270,7 +216,7 @@ dew_in01,22,48,3	script	Sage Kasyapa#dew	541,{
 	}
 }
 
-dew_in01,15,49,4	script	Tribal Chief Paiko#dew	540,{
+dew_in01,15,49,4	script	Tribal Chief Paiko#dew	4_M_DEWZATICHIEF,{
 	if (dew_legend < 2) {
 		mes "[Tribal Chief Paiko]";
 		mes "I am the leader of this tribe";
@@ -569,7 +515,7 @@ L_Delivery:
 	}
 }
 
-dew_fild01,78,288,6	script	Jaty Tribe Warrior#dew	541,{
+dew_fild01,78,288,6	script	Jaty Tribe Warrior#dew	4_M_DEWZATIMAN,{
 	mes "[Jaty Tribe Warrior]";
 	mes "We revere strength and bravery.";
 	mes "We are ^FF0000Jaty^000000 Tribe.";
@@ -607,7 +553,7 @@ dew_fild01,78,288,6	script	Jaty Tribe Warrior#dew	541,{
 	close;
 }
 
-dew_fild01,185,300,6	script	Tribe Manager#dew	541,{
+dew_fild01,185,300,6	script	Tribe Manager#dew	4_M_DEWZATIMAN,{
 	mes "[Tribe Manager]";
 	mes "Keeping our culture and tradition is very important.";
 	if (dew_legend != 11 || !countitem(11533)) {
@@ -660,7 +606,7 @@ dew_fild01,185,300,6	script	Tribe Manager#dew	541,{
 }
 
 //Original name: Gatekeeper of Krakatau Volcano
-dewata,235,56,4	script	Gatekeeper of Krakatau#1	534,{
+dewata,235,56,4	script	Gatekeeper of Krakatau#1	4_M_DEWOLDMAN,{
 	mes "[Gatekeeper of Krakatau Volcano]";
 	mes "^8B4513Krakatau Volcano^000000 is";
 	mes "a very dangerous area";
@@ -728,7 +674,7 @@ dewata,235,56,4	script	Gatekeeper of Krakatau#1	534,{
 }
 
 //Original name: Gatekeeper of Krakatau Volcano
-dew_dun01,292,164,4	script	Gatekeeper of Krakatau#2	541,{
+dew_dun01,292,164,4	script	Gatekeeper of Krakatau#2	4_M_DEWZATIMAN,{
 	mes "[Gatekeeper of Krakatau Volcano]";
 	mes "Want to go back";
 	mes "to Dewata?";
@@ -747,7 +693,7 @@ dew_dun01,292,164,4	script	Gatekeeper of Krakatau#2	541,{
 	}
 }
 
-dewata,78,192,6	script	Borobudur Temple Manager	536,{
+dewata,78,192,6	script	Borobudur Temple Manager	4_M_DEWMAN,{
 	mes "[Borobudur Temple Manager]";
 	mes "The weather today is so beautiful.";
 	if (dew_legend != 15 || !countitem(11533))
@@ -794,9 +740,9 @@ dewata,78,192,6	script	Borobudur Temple Manager	536,{
 	close;
 }
 
-// Help Out the Old Man
+// Help Out the Old Man :: dewata_drink
 //============================================================
-dewata,109,262,4	script	Memo#dew_drink	534,{
+dewata,109,262,4	script	Memo#dew_drink	4_M_DEWOLDMAN,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 5000) {
 		if (dew_drink) {
 			mes "[Memo]";
@@ -1122,7 +1068,7 @@ dewata,109,262,4	script	Memo#dew_drink	534,{
 	}
 }
 
-dew_fild01,114,275,4	script	Lero#dew_drink	536,{
+dew_fild01,114,275,4	script	Lero#dew_drink	4_M_DEWMAN,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 5000) {
 		mes "[Lero]";
 		mes "You're carrying too many things...";
@@ -1383,7 +1329,7 @@ dew_fild01,114,275,4	script	Lero#dew_drink	536,{
 	close;
 }
 
-dew_fild01,259,48,4	script	Poby#dew_drink	538,{
+dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 500) {
 		if (dew_drink > 0) {
 			mes "[Poby]";
@@ -1675,50 +1621,50 @@ OnTimer300000:
 	donpcevent strnpcinfo(0)+"::OnEnable";
 	end;
 }
-dew_fild01,247,62,0	duplicate(DewataPalm)	Palm Tree#drink01	844
-dew_fild01,276,73,0	duplicate(DewataPalm)	Palm Tree#drink02	844
-dew_fild01,278,63,0	duplicate(DewataPalm)	Palm Tree#drink03	844
-dew_fild01,301,88,0	duplicate(DewataPalm)	Palm Tree#drink04	844
-dew_fild01,314,72,0	duplicate(DewataPalm)	Palm Tree#drink05	844
-dew_fild01,320,68,0	duplicate(DewataPalm)	Palm Tree#drink06	844
-dew_fild01,334,107,0	duplicate(DewataPalm)	Palm Tree#drink07	844
-dew_fild01,345,88,0	duplicate(DewataPalm)	Palm Tree#drink08	844
-dew_fild01,344,71,0	duplicate(DewataPalm)	Palm Tree#drink09	844
-dew_fild01,358,93,0	duplicate(DewataPalm)	Palm Tree#drink10	844
-dew_fild01,338,121,0	duplicate(DewataPalm)	Palm Tree#drink11	844
-dew_fild01,358,136,0	duplicate(DewataPalm)	Palm Tree#drink12	844
-dew_fild01,326,147,0	duplicate(DewataPalm)	Palm Tree#drink13	844
-dew_fild01,307,146,0	duplicate(DewataPalm)	Palm Tree#drink14	844
-dew_fild01,325,159,0	duplicate(DewataPalm)	Palm Tree#drink15	844
-dew_fild01,339,163,0	duplicate(DewataPalm)	Palm Tree#drink16	844
-dew_fild01,346,193,0	duplicate(DewataPalm)	Palm Tree#drink17	844
-dew_fild01,355,193,0	duplicate(DewataPalm)	Palm Tree#drink18	844
-dew_fild01,363,219,0	duplicate(DewataPalm)	Palm Tree#drink19	844
-dew_fild01,341,261,0	duplicate(DewataPalm)	Palm Tree#drink20	844
-dew_fild01,289,302,0	duplicate(DewataPalm)	Palm Tree#drink21	844
-dew_fild01,70,196,0	duplicate(DewataPalm)	Palm Tree#drink22	844
-dew_fild01,97,145,0	duplicate(DewataPalm)	Palm Tree#drink23	844
-dew_fild01,119,42,0	duplicate(DewataPalm)	Palm Tree#drink24	844
-dew_fild01,188,72,0	duplicate(DewataPalm)	Palm Tree#drink25	844
-dew_fild01,238,80,0	duplicate(DewataPalm)	Palm Tree#drink26	844
-dew_fild01,252,97,0	duplicate(DewataPalm)	Palm Tree#drink27	844
-dew_fild01,256,98,0	duplicate(DewataPalm)	Palm Tree#drink28	844
-dew_fild01,279,93,0	duplicate(DewataPalm)	Palm Tree#drink29	844
-dew_fild01,299,107,0	duplicate(DewataPalm)	Palm Tree#drink30	844
-dew_fild01,355,113,0	duplicate(DewataPalm)	Palm Tree#drink31	844
-dew_fild01,278,136,0	duplicate(DewataPalm)	Palm Tree#drink32	844
-dew_fild01,258,128,0	duplicate(DewataPalm)	Palm Tree#drink33	844
-dew_fild01,240,125,0	duplicate(DewataPalm)	Palm Tree#drink34	844
-dew_fild01,225,117,0	duplicate(DewataPalm)	Palm Tree#drink35	844
-dew_fild01,219,121,0	duplicate(DewataPalm)	Palm Tree#drink36	844
-dew_fild01,226,99,0	duplicate(DewataPalm)	Palm Tree#drink37	844
-dew_fild01,209,137,0	duplicate(DewataPalm)	Palm Tree#drink38	844
-dew_fild01,206,156,0	duplicate(DewataPalm)	Palm Tree#drink39	844
-dew_fild01,209,201,0	duplicate(DewataPalm)	Palm Tree#drink40	844
+dew_fild01,247,62,0	duplicate(DewataPalm)	Palm Tree#drink01	CLEAR_NPC
+dew_fild01,276,73,0	duplicate(DewataPalm)	Palm Tree#drink02	CLEAR_NPC
+dew_fild01,278,63,0	duplicate(DewataPalm)	Palm Tree#drink03	CLEAR_NPC
+dew_fild01,301,88,0	duplicate(DewataPalm)	Palm Tree#drink04	CLEAR_NPC
+dew_fild01,314,72,0	duplicate(DewataPalm)	Palm Tree#drink05	CLEAR_NPC
+dew_fild01,320,68,0	duplicate(DewataPalm)	Palm Tree#drink06	CLEAR_NPC
+dew_fild01,334,107,0	duplicate(DewataPalm)	Palm Tree#drink07	CLEAR_NPC
+dew_fild01,345,88,0	duplicate(DewataPalm)	Palm Tree#drink08	CLEAR_NPC
+dew_fild01,344,71,0	duplicate(DewataPalm)	Palm Tree#drink09	CLEAR_NPC
+dew_fild01,358,93,0	duplicate(DewataPalm)	Palm Tree#drink10	CLEAR_NPC
+dew_fild01,338,121,0	duplicate(DewataPalm)	Palm Tree#drink11	CLEAR_NPC
+dew_fild01,358,136,0	duplicate(DewataPalm)	Palm Tree#drink12	CLEAR_NPC
+dew_fild01,326,147,0	duplicate(DewataPalm)	Palm Tree#drink13	CLEAR_NPC
+dew_fild01,307,146,0	duplicate(DewataPalm)	Palm Tree#drink14	CLEAR_NPC
+dew_fild01,325,159,0	duplicate(DewataPalm)	Palm Tree#drink15	CLEAR_NPC
+dew_fild01,339,163,0	duplicate(DewataPalm)	Palm Tree#drink16	CLEAR_NPC
+dew_fild01,346,193,0	duplicate(DewataPalm)	Palm Tree#drink17	CLEAR_NPC
+dew_fild01,355,193,0	duplicate(DewataPalm)	Palm Tree#drink18	CLEAR_NPC
+dew_fild01,363,219,0	duplicate(DewataPalm)	Palm Tree#drink19	CLEAR_NPC
+dew_fild01,341,261,0	duplicate(DewataPalm)	Palm Tree#drink20	CLEAR_NPC
+dew_fild01,289,302,0	duplicate(DewataPalm)	Palm Tree#drink21	CLEAR_NPC
+dew_fild01,70,196,0	duplicate(DewataPalm)	Palm Tree#drink22	CLEAR_NPC
+dew_fild01,97,145,0	duplicate(DewataPalm)	Palm Tree#drink23	CLEAR_NPC
+dew_fild01,119,42,0	duplicate(DewataPalm)	Palm Tree#drink24	CLEAR_NPC
+dew_fild01,188,72,0	duplicate(DewataPalm)	Palm Tree#drink25	CLEAR_NPC
+dew_fild01,238,80,0	duplicate(DewataPalm)	Palm Tree#drink26	CLEAR_NPC
+dew_fild01,252,97,0	duplicate(DewataPalm)	Palm Tree#drink27	CLEAR_NPC
+dew_fild01,256,98,0	duplicate(DewataPalm)	Palm Tree#drink28	CLEAR_NPC
+dew_fild01,279,93,0	duplicate(DewataPalm)	Palm Tree#drink29	CLEAR_NPC
+dew_fild01,299,107,0	duplicate(DewataPalm)	Palm Tree#drink30	CLEAR_NPC
+dew_fild01,355,113,0	duplicate(DewataPalm)	Palm Tree#drink31	CLEAR_NPC
+dew_fild01,278,136,0	duplicate(DewataPalm)	Palm Tree#drink32	CLEAR_NPC
+dew_fild01,258,128,0	duplicate(DewataPalm)	Palm Tree#drink33	CLEAR_NPC
+dew_fild01,240,125,0	duplicate(DewataPalm)	Palm Tree#drink34	CLEAR_NPC
+dew_fild01,225,117,0	duplicate(DewataPalm)	Palm Tree#drink35	CLEAR_NPC
+dew_fild01,219,121,0	duplicate(DewataPalm)	Palm Tree#drink36	CLEAR_NPC
+dew_fild01,226,99,0	duplicate(DewataPalm)	Palm Tree#drink37	CLEAR_NPC
+dew_fild01,209,137,0	duplicate(DewataPalm)	Palm Tree#drink38	CLEAR_NPC
+dew_fild01,206,156,0	duplicate(DewataPalm)	Palm Tree#drink39	CLEAR_NPC
+dew_fild01,209,201,0	duplicate(DewataPalm)	Palm Tree#drink40	CLEAR_NPC
 
-// Traditional Weapon Quest
+// Traditional Weapon Quest :: dewata_weapon
 //============================================================
-dew_fild01,127,240,4	script	Gatti#weapon	813,{
+dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 10000) {
 		mes "- Hold it right there!! -";
 		mes "- You're carrying too many items and don't have enough inventory space to receive any rewards. -";
@@ -2151,7 +2097,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	813,{
 		}
 		specialeffect2 EF_REPAIRWEAPON;
 		progressbar "0xFFFF00",3;
-		set Zeny, Zeny - 100000;
+		Zeny -= 100000;
 
 		// Socket 3
 		set .@i, rand(4300);

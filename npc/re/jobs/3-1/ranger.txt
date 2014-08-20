@@ -1,15 +1,13 @@
 //===== Hercules Script ======================================
 //= Ranger Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Muad_Dib
-//===== Current Version: ===================================== 
-//= 1.5
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Current Version: =====================================
+//= 1.6
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job change Quest from Hunter / Sniper -> Ranger.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [Masao]
 //= 1.1 Updated SC_STONE duration from 2 Seconds to 2 Minutes
 //=     and fixed Mercenary check.
@@ -20,9 +18,10 @@
 //= 1.3a Little beauty fix, changed break; to next; . [Masao]
 //= 1.4 Some optimization. [Euphy]
 //= 1.5 Updated script, optimized. [Euphy]
+//= 1.6 Added GM management function. [Euphy]
 //============================================================
 
-tur_dun01,156,36,5	script	Survival Instructor#jr01	59,{
+tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 	mes "[Survival Instructor, Rescue]";
 	if (BaseJob == Job_Hunter) {
 		if (job_ranger01 < 1) {
@@ -305,7 +304,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	59,{
 	close;
 }
 
-tur_dun01,91,169,3	script	Test Instructor#jr02	732,{
+tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 	mes "[Test Instructor, Teardrop]";
 	if (BaseJob == Job_Hunter) {
 		if (job_ranger01 < 3) {
@@ -673,7 +672,7 @@ L_Start:
 	end;
 }
 
-job3_rang01,30,44,3	script	Test Waiting Room#jr_03	88,{
+job3_rang01,30,44,3	script	Test Waiting Room#jr_03	4_M_ORIENT01,{
 	mes "[Staff DTS]";
 	mes "Please wait at the practical test waiting room to start the test process.";
 	next;
@@ -799,7 +798,7 @@ OnDisable:
 	end;
 }
 
-job3_rang02,100,95,0	script	Test Supervisor#jr_04	139,{
+job3_rang02,100,95,0	script	Test Supervisor#jr_04	HIDDEN_WARP_NPC,{
 OnInit:
 	set $@job_rang_point01,0;
 	disablenpc "Test Supervisor#jr_04";
@@ -842,7 +841,7 @@ OnTimer18000:
 	end;
 }
 
-job3_rang02,102,95,0	script	First Test Timer#jr_05	139,{
+job3_rang02,102,95,0	script	First Test Timer#jr_05	HIDDEN_WARP_NPC,{
 OnInit:
 	disablenpc "First Test Timer#jr_05";
 	end;
@@ -943,7 +942,7 @@ OnTimer157000:
 	end;
 }
 
-job3_rang02,104,95,0	script	CallCorrectAnswer#jr	139,{
+job3_rang02,104,95,0	script	CallCorrectAnswer#jr	HIDDEN_WARP_NPC,{
 OnInit:
 OnDisable:
 	disablenpc "CallCorrectAnswer#jr";
@@ -970,7 +969,7 @@ OnMyMobDead:
 	end;
 }
 
-job3_rang02,106,95,0	script	CallWrongAnswer#jr	139,{
+job3_rang02,106,95,0	script	CallWrongAnswer#jr	HIDDEN_WARP_NPC,{
 OnInit:
 OnDisable:
 	disablenpc "CallWrongAnswer#jr";
@@ -1060,7 +1059,7 @@ OnMyMobDead:
 	end;
 }
 
-job3_rang02,100,93,0	script	Second Test Timer#jr_08	139,{
+job3_rang02,100,93,0	script	Second Test Timer#jr_08	HIDDEN_WARP_NPC,{
 OnInit:
 	disablenpc "Second Test Timer#jr_08";
 	end;
@@ -1167,7 +1166,7 @@ OnTimer223000:
 	end;
 }
 
-job3_rang02,111,56,3	script	Staff Rust#jr_09	89,{
+job3_rang02,111,56,3	script	Staff Rust#jr_09	4_M_ORIENT02,{
 	if (job_ranger01 == 6) {
 		if (countitem(12258) < 1) {
 			percentheal 100,0;
@@ -1212,7 +1211,7 @@ OnDisable:
 	end;
 }
 
-job3_rang02,136,21,0	script	Summon Monster#jr_10	139,5,5,{
+job3_rang02,136,21,0	script	Summon Monster#jr_10	HIDDEN_WARP_NPC,5,5,{
 OnInit:
 	disablenpc "Summon Monster#jr_10";
 	end;
@@ -1261,7 +1260,7 @@ OnMyMobDead:
 	end;
 }
 
-job3_rang02,180,78,3	script	Test Supervisor#jr_11	882,1,1,{
+job3_rang02,180,78,3	script	Test Supervisor#jr_11	4_F_SITDOWN,1,1,{
 	mes "[Test Supervisor, Caution]";
 	mes "Come, come near, nearer, nearer!!";
 	close;
@@ -1361,7 +1360,7 @@ OnTimer105000:
 	end;
 }
 
-job3_rang02,104,93,0	script	Third Test Timer#jr_12	139,{
+job3_rang02,104,93,0	script	Third Test Timer#jr_12	HIDDEN_WARP_NPC,{
 OnInit:
 	disablenpc "Third Test Timer#jr_12";
 	end;
@@ -1448,7 +1447,7 @@ OnTimer130000:
 	end;
 }
 
-job3_rang02,251,49,3	script	Test Supervisor#jr_13	732,{
+job3_rang02,251,49,3	script	Test Supervisor#jr_13	4_M_JOB_HUNTER,{
 	mes "[Test Supervisor, Freeze]";
 	if (job_ranger01 == 6) {
 		if (checkquest(8261) == -1) {
@@ -1603,23 +1602,23 @@ OnTimer10000:
 	donpcevent strnpcinfo(0)+"::OnDisable";
 	end;
 }
-job3_rang02,246,42,0	duplicate(Egg Bomb#0)	Egg Bomb#14	139
-job3_rang02,249,46,0	duplicate(Egg Bomb#0)	Egg Bomb#15	139
-job3_rang02,256,43,0	duplicate(Egg Bomb#0)	Egg Bomb#16	139
-job3_rang02,243,54,0	duplicate(Egg Bomb#0)	Egg Bomb#17	139
-job3_rang02,246,58,0	duplicate(Egg Bomb#0)	Egg Bomb#18	139
-job3_rang02,255,56,0	duplicate(Egg Bomb#0)	Egg Bomb#19	139
-job3_rang02,260,48,0	duplicate(Egg Bomb#0)	Egg Bomb#20	139
-job3_rang02,244,53,0	duplicate(Egg Bomb#0)	Egg Bomb#21	139
-job3_rang02,254,50,0	duplicate(Egg Bomb#0)	Egg Bomb#22	139
-job3_rang02,241,41,0	duplicate(Egg Bomb#0)	Egg Bomb#23	139
-job3_rang02,259,41,0	duplicate(Egg Bomb#0)	Egg Bomb#24	139
-job3_rang02,256,52,0	duplicate(Egg Bomb#0)	Egg Bomb#25	139
-job3_rang02,259,58,0	duplicate(Egg Bomb#0)	Egg Bomb#26	139
-job3_rang02,254,52,0	duplicate(Egg Bomb#0)	Egg Bomb#27	139
-job3_rang02,247,42,0	duplicate(Egg Bomb#0)	Egg Bomb#28	139
+job3_rang02,246,42,0	duplicate(Egg Bomb#0)	Egg Bomb#14	HIDDEN_WARP_NPC
+job3_rang02,249,46,0	duplicate(Egg Bomb#0)	Egg Bomb#15	HIDDEN_WARP_NPC
+job3_rang02,256,43,0	duplicate(Egg Bomb#0)	Egg Bomb#16	HIDDEN_WARP_NPC
+job3_rang02,243,54,0	duplicate(Egg Bomb#0)	Egg Bomb#17	HIDDEN_WARP_NPC
+job3_rang02,246,58,0	duplicate(Egg Bomb#0)	Egg Bomb#18	HIDDEN_WARP_NPC
+job3_rang02,255,56,0	duplicate(Egg Bomb#0)	Egg Bomb#19	HIDDEN_WARP_NPC
+job3_rang02,260,48,0	duplicate(Egg Bomb#0)	Egg Bomb#20	HIDDEN_WARP_NPC
+job3_rang02,244,53,0	duplicate(Egg Bomb#0)	Egg Bomb#21	HIDDEN_WARP_NPC
+job3_rang02,254,50,0	duplicate(Egg Bomb#0)	Egg Bomb#22	HIDDEN_WARP_NPC
+job3_rang02,241,41,0	duplicate(Egg Bomb#0)	Egg Bomb#23	HIDDEN_WARP_NPC
+job3_rang02,259,41,0	duplicate(Egg Bomb#0)	Egg Bomb#24	HIDDEN_WARP_NPC
+job3_rang02,256,52,0	duplicate(Egg Bomb#0)	Egg Bomb#25	HIDDEN_WARP_NPC
+job3_rang02,259,58,0	duplicate(Egg Bomb#0)	Egg Bomb#26	HIDDEN_WARP_NPC
+job3_rang02,254,52,0	duplicate(Egg Bomb#0)	Egg Bomb#27	HIDDEN_WARP_NPC
+job3_rang02,247,42,0	duplicate(Egg Bomb#0)	Egg Bomb#28	HIDDEN_WARP_NPC
 
-job3_rang01,90,43,3	script	Ranger Master#jr_29	832,{
+job3_rang01,90,43,3	script	Ranger Master#jr_29	4_M_REIDIN_KURS,{
 	mes "[Ranger Master, Neveragain]";
 	if (job_ranger01 < 6) {
 		mes "... ...Huh?";
@@ -1757,8 +1756,8 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	832,{
 	}
 }
 
-/*
-job3_rang01,58,1,0	script	Worker#job_ranger	88,{
+job3_rang01,58,1,0	script	Worker#job_ranger	4_M_ORIENT01,{
+	callfunc "F_GM_NPC";
 	switch(select("Enable Waiting Room:Disable Waiting Room:Enable 1st Test:Disable 1st Test:Enable 2nd Test:Disable 2nd Test:Enable 3rd Test:Disable 3rd Test:Cancel")) {
 	case 1:
 		mes "Enabled Waiting Room";
@@ -1803,4 +1802,3 @@ job3_rang01,58,1,0	script	Worker#job_ranger	88,{
 		close;
 	}
 }
-*/

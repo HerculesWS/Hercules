@@ -23,7 +23,7 @@
 
 // Marco Bassinio (Chocolate/Chocolate Box maker)
 //============================================================
-prontera,164,174,4	script	Trader#Val09	58,{
+prontera,164,174,4	script	Trader#Val09	1_M_MERCHANT,{
 	mes "[Marco Bassinio]";
 	mes "Hey, folks! Here's something you don't see everyday!";
 	mes "Something you can never find in Rune-Midgarts!";
@@ -82,7 +82,7 @@ prontera,164,174,4	script	Trader#Val09	58,{
 				mes "Maybe you should borrow some zeny from a friend.";
 				mes "Cuz, I'm not gonna be here everyday.";
 				close;
-			}else{
+			} else {
 				mes "[Marco Bassinio]";
 				mes "Good for you!";
 				mes "It's also perfect as a gift!";
@@ -91,7 +91,7 @@ prontera,164,174,4	script	Trader#Val09	58,{
 				mes "[Marco Bassinio]";
 				mes "If you want more, you should come back.";
 				mes "Might be a good idea to buy some more while you have a chance...!";
-				set Zeny,Zeny - .@price;
+				Zeny -= .@price;
 				getitem 558,.@input;
 				close;
 			}
@@ -103,7 +103,7 @@ prontera,164,174,4	script	Trader#Val09	58,{
 			mes "You also need to pay 500 zeny to carve your name on the box.";
 			mes "Are you all prepared...?";
 			next;
-			if(countitem(7175) < 1 || countitem(7174) < 1 || countitem(7948) < 1 || Zeny < 500) {
+			if (countitem(7175) < 1 || countitem(7174) < 1 || countitem(7948) < 1 || Zeny < 500) {
 				mes "[Marco Bassinio]";
 				mes "Hmm.. Looks like you don't have enough materials to decorate the gift box..";
 				mes "You can't just put your gift into some plain looking box..";
@@ -114,7 +114,7 @@ prontera,164,174,4	script	Trader#Val09	58,{
 				mes "Oh, also bring 500 zeny, and don't forget to bring your true loving heart with you!!";
 				close;
 			}
-			if(countitem(558) < 1) {
+			if (countitem(558) < 1) {
 				mes "[Marco Bassinio]";
 				mes "Hey, look, adventurer!";
 				mes "I can't create something right away!";
@@ -140,7 +140,7 @@ prontera,164,174,4	script	Trader#Val09	58,{
 			delitem 7175,1;
 			delitem 7174,1;
 			delitem 7948,1;
-			set Zeny,Zeny-500;
+			Zeny -= 500;
 			getnameditem 12744,strcharinfo(0);
 			mes "[Marco Bassinio]";
 			mes "Happy Valentine's Day!";
@@ -160,7 +160,7 @@ prontera,164,174,4	script	Trader#Val09	58,{
 
 // Packs Trader (Sells Wrapping Paper, Lace, and Box)
 //============================================================
-prontera,147,171,5	script	Packs Trader#Val09	58,{
+prontera,147,171,5	script	Packs Trader#Val09	1_M_MERCHANT,{
 	mes "[Packs Trader]";
 	mes "Hello.";
 	mes "I am a Packs Trader, I sell paper boxes and supplies for packing presents.";
@@ -202,11 +202,11 @@ prontera,147,171,5	script	Packs Trader#Val09	58,{
 					mes "Please check your wallet.";
 					next;
 					break;
-				}else{
+				} else {
 					mes "[Packs Trader]";
 					mes "Here they are.";
 					mes "Hope it makes your Valentine's Day more pleasing!";
-					set Zeny,Zeny-.@price;
+					Zeny -= .@price;
 					getitem 7175,.@input;
 					next;
 					break;
@@ -243,11 +243,11 @@ prontera,147,171,5	script	Packs Trader#Val09	58,{
 					mes "Please check your wallet.";
 					next;
 					break;
-				}else{
+				} else {
 					mes "[Packs Trader]";
 					mes "Here they are.";
 					mes "Hope it makes your Valentine's Day more pleasing!";
-					set Zeny,Zeny-.@price;
+					Zeny -= .@price;
 					getitem 7174,.@input;
 					next;
 					break;
@@ -284,11 +284,11 @@ prontera,147,171,5	script	Packs Trader#Val09	58,{
 					mes "Please check your wallet.";
 					next;
 					break;
-				}else{
+				} else {
 					mes "[Packs Trader]";
 					mes "Here they are.";
 					mes "Hope it makes your Valentine's Day more pleasing!";
-					set Zeny,Zeny-.@price;
+					Zeny -= .@price;
 					getitem 7948,.@input;
 					next;
 					break;
@@ -304,7 +304,7 @@ prontera,147,171,5	script	Packs Trader#Val09	58,{
 
 // Event Ring Maker (Makes ring for players)
 //============================================================
-prontera,154,185,5	script	Event Ring Maker#Val09	721,{
+prontera,154,185,5	script	Event Ring Maker#Val09	4_F_KAFRA7,{
 	if (BaseLevel < 75) {
 		mes "[Event Ring Maker]";
 		mes "Hello, I only make the Valentine rings to those experienced adventurer Level 75 or above.";
@@ -363,7 +363,7 @@ prontera,154,185,5	script	Event Ring Maker#Val09	721,{
 		mes "Just follow your heart!";
 		close;
 	}
-	if(countitem(7175) < 1 || countitem(7174) < 1 || countitem(7948) < 1 || Zeny < 1000) {
+	if (countitem(7175) < 1 || countitem(7174) < 1 || countitem(7948) < 1 || Zeny < 1000) {
 		mes "[Event Ring Maker]";
 		mes "Well, you don't have enough materials to make a gift box.";
 		mes "Check what you have, and come back later with all the materials.";
@@ -376,11 +376,11 @@ prontera,154,185,5	script	Event Ring Maker#Val09	721,{
 	delitem 7175,1;
 	delitem 7174,1;
 	delitem 7948,1;
-	set Zeny,Zeny-1000;
+	Zeny -= 1000;
 	set iROval09ring,1;
 	if (Sex) {
 		getnameditem 12742,strcharinfo(0);
-	}else{
+	} else {
 		getnameditem 12743,strcharinfo(0);
 	}
 	mes "[Event Ring Maker]";
@@ -398,7 +398,7 @@ prontera,154,185,5	script	Event Ring Maker#Val09	721,{
 
 // Valentine Vote Manager (Registers votes)
 //============================================================
-prontera,157,185,4	script	Valentine Vote Manager#v	113,{
+prontera,157,185,4	script	Valentine Vote Manager#v	4_F_KAFRA5,{
 	mes "[Valentine Vote Manager]";
 	mes "Hello, I'm the Valentine's Vote Manager.";
 	mes "I'm in charge of collecting rings for this event!";
@@ -464,7 +464,7 @@ prontera,157,185,4	script	Valentine Vote Manager#v	113,{
 					}
 					next;
 					break;
-				}else{
+				} else {
 					if (countitem(7946) > .@input) {
 						mes "[Valentine Vote Manager]";
 						mes "Seems like the value you entered is too small.";
@@ -519,7 +519,7 @@ prontera,157,185,4	script	Valentine Vote Manager#v	113,{
 
 // Charles Orleans (Makes Home-Made Chocolates)
 //============================================================
-prt_castle,42,35,3	script	Dessert Manager#Val09	47,{
+prt_castle,42,35,3	script	Dessert Manager#Val09	1_M_01,{
 	if (Sex) {
 		mes "[Charles Orleans]";
 		mes "Monsieur~! What brings you to my beautiful atelier?";
@@ -552,7 +552,7 @@ prt_castle,42,35,3	script	Dessert Manager#Val09	47,{
 		mes "Please.. I feel like my soul is lost..";
 		close;
 	}
-	if(countitem(558) < 3) {
+	if (countitem(558) < 3) {
 		mes "[Charles Orleans]";
 		mes "Ahhh, Mademoiselle.";
 		mes "I'm not an alchemist, or a magician.";
@@ -590,7 +590,7 @@ prt_castle,42,35,3	script	Dessert Manager#Val09	47,{
 		mes "Adios, Mademoiselle.....";
 		mes "I'll be waiting for you.";
 		close;
-	}else{
+	} else {
 		if (!checkweight(559,1)) {
 			mes "[Charles Orleans]";
 			mes "You're carrying too many items.";

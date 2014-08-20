@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Louyang Guides
 //===== By: ==================================================
 //= jAthena/Tsuyuki; L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= Guides for the City of Louyang
 //===== Additional Comments: =================================
@@ -15,7 +13,7 @@
 //= 1.2 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
 //============================================================
 
-louyang,213,213,3	script	Soldier#BA::LouGuide	825,{
+louyang,213,213,3	script	Soldier#BA::LouGuide	4_M_CHNSOLDIER,{
 	mes "[Soldier]";
 	mes "Welcome to Louyang,";
 	mes "a city with a long";
@@ -125,9 +123,9 @@ louyang,213,213,3	script	Soldier#BA::LouGuide	825,{
 	close;
 }
 
-louyang,160,175,3	duplicate(LouGuide)	Soldier#BB	825
+louyang,160,175,3	duplicate(LouGuide)	Soldier#BB	4_M_CHNSOLDIER
 
-louyang,224,104,3	script	Representative#lou	818,{
+louyang,224,104,3	script	Representative#lou	4_F_CHNWOMAN,{
 	mes "[Representative]";
 	mes "Welcome to Louyang,";
 	mes "an ancient land with";

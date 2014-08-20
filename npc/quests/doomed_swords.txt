@@ -3,11 +3,9 @@
 //===== By: ==================================================
 //= kobra_k88; L0ne_W0lf
 //===== Current Version: =====================================
-//= 1.6
-//===== Compatible With: =====================================
-//= Hercules
+//= 1.5
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Doomed Swords Quest:
 //= - Quest for Doomed Swords: Grimtooth, Mysteltain, Executioner.
 //=   Although this quest is enabled on iRO, the Mysteltainn
@@ -19,12 +17,11 @@
 //= 1.1 Fixed items count check. For all 3 swords... [Lupus]
 //= 1.3 Fixed exploit [Lupus]
 //= 1.4 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//=	Moved all non-related NPCs to their repsective files.
+//=     Moved all non-related NPCs to their repsective files.
 //= 1.5 Added missing checkweight. [L0ne_W0lf]
-//= 1.6 Removed Nain [Streusel]
 //============================================================
 
-prt_in,162,11,2	script	Ghatu#magum	86,{
+prt_in,162,11,2	script	Ghatu#magum	4_M_04,{
 	if (event_magum == 0) {
 		if (dmdswrd_Q2 & 1 || dmdswrd_Q2 & 2 || dmdswrd_Q2 & 4 || dmdswrd_Q2 & 8 || dmdswrd_Q2 & 16 || dmdswrd_Q2 & 32) {
 			mes "[Ghatu]";
@@ -119,7 +116,7 @@ prt_in,162,11,2	script	Ghatu#magum	86,{
 	close;
 }
 
-prontera,197,188,2	script	Veeyop#magum	50,{
+prontera,197,188,2	script	Veeyop#magum	1_M_04,{
 	if (dmdswrd_Q2 & 1) {
 		mes "[Veeyop]";
 		mes "You know, talking";
@@ -159,7 +156,7 @@ prontera,197,188,2	script	Veeyop#magum	50,{
 	close;
 }
 
-morocc,281,178,2	script	Cetsu#magum	97,{
+morocc,281,178,2	script	Cetsu#magum	4W_M_01,{
 	if (dmdswrd_Q2 & 2) {
 		mes "[Cetsu]";
 		mes "I keep thinking about";
@@ -211,7 +208,51 @@ morocc,281,178,2	script	Cetsu#magum	97,{
 	close;
 }
 
-pay_fild08,218,283,2	script	Mysterious Man#magum	89,{
+izlude_in,173,88,2	script	Nain#magum	8_F,{
+	if (dmdswrd_Q2 == 4) {
+		mes "[Nain]";
+		mes "It doesn't matter how";
+		mes "powerful the Executioner";
+		mes "is: if it were to end up in";
+		mes "my hands, I would get rid";
+		mes "of it right away. I'd never risk losing my mind to that curse...";
+		close;
+	}
+	mes "[Nain]";
+	mes "Long ago, one sword";
+	mes "was used to behead all";
+	mes "the criminals that had been";
+	mes "sentenced to death. That";
+	mes "accursed blade is known";
+	mes "as the Executioner.";
+	next;
+	mes "[Nain]";
+	mes "As the Executioner slayed";
+	mes "more criminals, the rage and";
+	mes "bloodlust of its victims began";
+	mes "to accumulate upon the blade.";
+	mes "Although the sword gained great^FFFFFF ^000000 strength, it was tainted by evil.";
+	next;
+	mes "[Nain]";
+	mes "The last person to wield";
+	mes "the Executioner almost lost";
+	mes "his mind to the sword. He saved^FFFFFF ^000000 himself by giving it to a talented";
+	mes "blacksmith who would destroy^FFFFFF ^000000 it for him, thus saving his soul.";
+	next;
+	mes "[Nain]";
+	mes "This mysterious blacksmith";
+	mes "was never seen again in the";
+	mes "city of Prontera, but rumor has";
+	mes "it that if you can find him, he";
+	mes "can forge that accursed";
+	mes "Executioner anew...";
+	if (event_magum == 1)
+		set event_magum,5;
+	set dmdswrd_Q2,dmdswrd_Q2 | 4;
+	close;
+}
+
+pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 	if (checkweight(1201,1) == 0) {
 		mes "[Mysterious Man]";
 		mes "Hold it.";

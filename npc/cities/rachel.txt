@@ -4,21 +4,22 @@
 //= First Version: Tsuyuki and Harp
 //= iRO Version: L0ne_W0lf
 //===== Current Version: =====================================
-//= 0.9
+//= 0.9a
 //===== Description: =========================================
-//= [Partial Aegis Conversion]
+//= [Partial Official Conversion]
 //= Arunafeltz NPCs
 //===== Additional Comments: =================================
-//= 0.5 Text translated from Korean > English, incomplete, 
+//= 0.5 Text translated from Korean > English, incomplete,
 //= possibly missing some NPCs and missing all quests.
 //= 0.6 Removed Inn Keeper (it's in inn.txt), name duplicates [Lupus]
 //= 0.7 Total update of most if not all NPCs. [L0ne_W0lf]
 //= 0.8 Updated "Frozen Boy" dialog. (euRO) [L0ne_W0lf]
 //= 0.9 Replaced effect numerics with constants. [L0ne_W0lf]
+//= 0.9a Added 'consumeitem' command. [Euphy]
 //============================================================
 
 //===== Set 1 ================================================
-ice_dun04,33,166,3	script	Frozen Boy	925,{
+ice_dun04,33,166,3	script	Frozen Boy	4_M_FROZEN,{
 	cutin "ra_sboy.bmp",2;
 	mes "["+strcharinfo(0)+"]";
 	mes "This boy must be the one who Ktullanux tried to protect.";
@@ -40,7 +41,7 @@ ice_dun04,33,166,3	script	Frozen Boy	925,{
 	end;
 }
 
-ra_san04,137,48,3	script	Loomin-1st Class Secret	111,{
+ra_san04,137,48,3	script	Loomin-1st Class Secret	HIDDEN_NPC,{
 	mes "^3131FFLoomin, the boy";
 	mes "trapped in the Ice Cave.^000000";
 	mes "Class: 1st";
@@ -89,7 +90,7 @@ ra_san04,137,48,3	script	Loomin-1st Class Secret	111,{
 	close;
 }
 
-rachel,124,132,1	script	Citizen#1 	921,{
+rachel,124,132,1	script	Citizen#1 	4_M_CHILD1,{
 	mes "[Citizen]";
 	mes "May Freya bless";
 	mes "you, and give you an";
@@ -105,7 +106,7 @@ rachel,124,132,1	script	Citizen#1 	921,{
 	close;
 }
 
-rachel,74,150,7	script	Girl#1	914,{
+rachel,74,150,7	script	Girl#1	4_F_CHILD,{
 	mes "[Girl]";
 	mes "I've never seen our pope";
 	mes "before, I hear that she has";
@@ -132,7 +133,7 @@ rachel,74,150,7	script	Girl#1	914,{
 	close;
 }
 
-rachel,144,243,5	script	Cheshrumnir Guard::ChesGuard	934,{
+rachel,144,243,5	script	Cheshrumnir Guard::ChesGuard	4_M_RASWORD,{
 	mes "[Cheshrumnir Guard]";
 	mes "You are at Cheshrumnir,";
 	mes "the hallowed grounds occupied";
@@ -143,10 +144,10 @@ rachel,144,243,5	script	Cheshrumnir Guard::ChesGuard	934,{
 	close;
 }
 
-rachel,155,243,3	duplicate(ChesGuard)	Cheshrumnir Guard	934
+rachel,155,243,3	duplicate(ChesGuard)	Cheshrumnir Guard	4_M_RASWORD
 
 
-rachel,209,198,3	script	Kinos#aru	921,{
+rachel,209,198,3	script	Kinos#aru	4_M_CHILD1,{
 	mes "[Kid]";
 	mes "If you open this door, you";
 	mes "can go inside this house,";
@@ -163,7 +164,7 @@ rachel,209,198,3	script	Kinos#aru	921,{
 	close;
 }
 
-rachel,260,175,3	script	Anku#aru	914,{
+rachel,260,175,3	script	Anku#aru	4_F_CHILD,{
 	mes "[Anku]";
 	mes "It's been so long";
 	mes "already! I can't find";
@@ -179,7 +180,7 @@ rachel,260,175,3	script	Anku#aru	914,{
 	close;
 }
 
-rachel,272,141,3	script	Himuhimu#aru	921,{
+rachel,272,141,3	script	Himuhimu#aru	4_M_CHILD1,{
 	mes "[Himuhimu]";
 	mes "Zzzz...Z...";
 	mes "Anku, you'll never";
@@ -189,7 +190,7 @@ rachel,272,141,3	script	Himuhimu#aru	921,{
 	close;
 }
 
-rachel,268,120,1	script	Rachel Guard#1aru::RaGuard	934,{
+rachel,268,120,1	script	Rachel Guard#1aru::RaGuard	4_M_RASWORD,{
 	mes "[Rachel Guard]";
 	mes "Welcome to Rachel";
 	mes "the capital of Arunafeltz.";
@@ -200,11 +201,11 @@ rachel,268,120,1	script	Rachel Guard#1aru::RaGuard	934,{
 	close;
 }
 
-rachel,125,33,5	duplicate(RaGuard)	Rachel Guard#2aru	934
+rachel,125,33,5	duplicate(RaGuard)	Rachel Guard#2aru	4_M_RASWORD
 
-rachel,31,130,3	duplicate(RaGuard)	Rachel Guard#3aru	934
+rachel,31,130,3	duplicate(RaGuard)	Rachel Guard#3aru	4_M_RASWORD
 
-rachel,76,77,3	script	Rachel Priest	927,{
+rachel,76,77,3	script	Rachel Priest	4_M_MASK,{
 	mes "[Rachel Priest]";
 	mes "Bwahahaha! Somehow,";
 	mes "drinks taste much better";
@@ -212,7 +213,7 @@ rachel,76,77,3	script	Rachel Priest	927,{
 	close;
 }
 
-ra_fild12,45,230,3	script	Airship Guide#Fild	934,{
+ra_fild12,45,230,3	script	Airship Guide#Fild	4_M_RASWORD,{
 	mes "[Airship Guide]";
 	mes "The Schwaltzvalt Republic's";
 	mes "international Airship service";
@@ -224,8 +225,8 @@ ra_fild12,45,230,3	script	Airship Guide#Fild	934,{
 	close;
 }
 
-//rachel,201,174,3	script	Freya's Follower	927,{
-rachel,201,174,3	script	Freya's Follower	926,{
+//rachel,201,174,3	script	Freya's Follower	4_M_MASK,{
+rachel,201,174,3	script	Freya's Follower	4_M_MASK1,{
 	mes "[Freya's Follower]";
 	mes "All of Arunafeltz believes";
 	mes "in the goddess Freya, but";
@@ -265,7 +266,7 @@ rachel,201,174,3	script	Freya's Follower	926,{
 	close;
 }
 
-rachel,206,30,3	script	Freya's Priest#play	920,{
+rachel,206,30,3	script	Freya's Priest#play	4_F_TRAINEE,{
 	mes "[Freya's Priest]";
 	mes "This...";
 	mes "bores me...";
@@ -273,7 +274,7 @@ rachel,206,30,3	script	Freya's Priest#play	920,{
 	mes "[Freya's Priest]";
 	mes "You!";
 	mes "Entertain me!";
-	Emotion e_ag;
+	emotion e_ag;
 	next;
 	if (select("What? You can't tell me what to do!:You got it.") == 1) {
 		mes "[Freya's Priest]";
@@ -306,15 +307,16 @@ rachel,206,30,3	script	Freya's Priest#play	920,{
 	mes "Oh? Oh! That's wonderful!";
 	close2;
 	set .@play,rand(1,10);
-	if (.@play == 1) warp "Random",0,0;
-	else if (.@play == 2) warp "Random",0,0;
-	else if (.@play == 3) sc_start SC_MOVHASTE_INFINITY,5000,0;
-	else if (.@play == 4) sc_start SC_MOVHASTE_INFINITY,5000,0;
-	else sc_start SC_SlowDown,5000,0;
+	if (.@play < 3)
+		consumeitem 601; //Wing_Of_Fly
+	else if (.@play < 5)
+		consumeitem 12016; //Speed_Up_Potion
+	else
+		consumeitem 12017; //Slow_Down_Potion
 	end;
 }
 
-rachel,197,137,3	script	Bard#aru	51,{
+rachel,197,137,3	script	Bard#aru	1_M_BARD,{
 	mes "[Bard]";
 	mes "I've wandered this";
 	mes "land, singing my songs~";
@@ -338,11 +340,11 @@ rachel,197,137,3	script	Bard#aru	51,{
 	mes ".........";
 	mes ".........";
 	mes ".........";
-	Emotion e_sob;
+	emotion e_sob;
 	close;
 }
 
-ra_temple,148,91,3	script	Follower Akarna	916,{
+ra_temple,148,91,3	script	Follower Akarna	4_F_MASK1,{
 	mes "[Follower Akarna]";
 	mes "Cheshrumnir...";
 	mes "It is said that one";
@@ -353,7 +355,7 @@ ra_temple,148,91,3	script	Follower Akarna	916,{
 	close;
 }
 
-ra_temple,115,148,7	script	Follower Yakum	916,{
+ra_temple,115,148,7	script	Follower Yakum	4_F_MASK1,{
 	mes "[Follower Yakum]";
 	mes "......";
 	mes ".........";
@@ -367,7 +369,7 @@ ra_temple,115,148,7	script	Follower Yakum	916,{
 	close;
 }
 
-ra_temin,287,88,7	script	Follower Lekua	926,{
+ra_temin,287,88,7	script	Follower Lekua	4_M_MASK1,{
 	mes "[Follower Lekua]";
 	mes "Look at these flowers.";
 	mes "Aren't they so beautiful?";
@@ -383,8 +385,8 @@ ra_temin,287,88,7	script	Follower Lekua	926,{
 	close;
 }
 
-//ra_temin,228,303,5	script	Freya's Follower#in1	927,{
-ra_temin,228,303,5	script	Freya's Follower#in1	926,{
+//ra_temin,228,303,5	script	Freya's Follower#in1	4_M_MASK,{
+ra_temin,228,303,5	script	Freya's Follower#in1	4_M_MASK1,{
 	mes "[Freya's Follower]";
 	mes "Once again, I didn't get";
 	mes "any sleep yesterday... I'm";
@@ -395,8 +397,8 @@ ra_temin,228,303,5	script	Freya's Follower#in1	926,{
 	close;
 }
 
-//ra_temin,230,303,3	script	Freya's Follower#in2	927,{
-ra_temin,230,303,3	script	Freya's Follower#in2	926,{
+//ra_temin,230,303,3	script	Freya's Follower#in2	4_M_MASK,{
+ra_temin,230,303,3	script	Freya's Follower#in2	4_M_MASK1,{
 	mes "[Freya's Follower]";
 	mes "You have done well,";
 	mes "my brother. I am certain";
@@ -405,7 +407,7 @@ ra_temin,230,303,3	script	Freya's Follower#in2	926,{
 	close;
 }
 
-ra_temin,138,64,5	script	Child Follower#in1	921,{
+ra_temin,138,64,5	script	Child Follower#in1	4_M_CHILD1,{
 	mes "[Child Follower]";
 	mes "No! My Mingming is dead!";
 	next;
@@ -430,7 +432,7 @@ ra_temin,138,64,5	script	Child Follower#in1	921,{
 
 
 //===== Set 2 ================================================
-ra_fild12,283,208,3	script	Apprentice Priestess	914,{
+ra_fild12,283,208,3	script	Apprentice Priestess	4_F_CHILD,{
 	if ($rachel_donate < 10000) {
 		mes "[Papaii]";
 		mes "Welcome to Arunafeltz,";
@@ -536,7 +538,7 @@ ra_fild12,283,208,3	script	Apprentice Priestess	914,{
 	close;
 }
 
-rachel,127,117,4	script	Child Follower#2	914,{
+rachel,127,117,4	script	Child Follower#2	4_F_CHILD,{
 	mes "[Deno]";
 	mes "Although we pray to";
 	mes "the goddess Freya and";
@@ -562,7 +564,7 @@ rachel,127,117,4	script	Child Follower#2	914,{
 	close;
 }
 
-ra_temple,167,155,4	script	Child Follower#3	914,{
+ra_temple,167,155,4	script	Child Follower#3	4_F_CHILD,{
 	mes "[Lewei]";
 	mes "Shushh!";
 	mes "Be quiet.";
@@ -591,7 +593,7 @@ ra_temple,167,155,4	script	Child Follower#3	914,{
 	close;
 }
 
-ra_temple,179,161,7	script	Child Follower#4	921,{
+ra_temple,179,161,7	script	Child Follower#4	4_M_CHILD1,{
 	mes "[Zhikka]";
 	mes "Shh! I'm playing";
 	mes "Hide-and-Seek. Would";
@@ -602,7 +604,7 @@ ra_temple,179,161,7	script	Child Follower#4	921,{
 	close;
 }
 
-ra_temple,77,114,7	script	Child Follower#5	921,{
+ra_temple,77,114,7	script	Child Follower#5	4_M_CHILD1,{
 	mes "[Emmet]";
 	mes "Oh my Freya! You scared me!";
 	mes "I thought you were one of the";
@@ -612,7 +614,7 @@ ra_temple,77,114,7	script	Child Follower#5	921,{
 	close;
 }
 
-ra_temple,172,113,5	script	Child Follower#6	921,{
+ra_temple,172,113,5	script	Child Follower#6	4_M_CHILD1,{
 	mes "[Harse]";
 	mes "Where are yoooou~";
 	mes "Come out, come out";
@@ -627,7 +629,7 @@ ra_temple,172,113,5	script	Child Follower#6	921,{
 	close;
 }
 
-airplane,238,54,7	script	Adventurer	59,{
+airplane,238,54,7	script	Adventurer	1_M_ORIENT01,{
 	if ($rachel_donate < 10000) {
 		mes "[Adventurer]";
 		mes "You know that the temple";

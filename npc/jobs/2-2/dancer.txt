@@ -1,18 +1,16 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Dancer Job Quest
 //===== By: ==================================================
 //= Kalen - Original jAthena
 //= Fredzilla - Converted, Lupus
-//===== Current Version: ===================================== 
-//= 3.7
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== Current Version: =====================================
+//= 3.7a
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job quest for Dancer classes
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 3.2 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//=	No longer uses function "F_BlockHigh"
+//=     No longer uses function "F_BlockHigh"
 //= 3.2a Deleted unused variables. [Samuray22]
 //= 3.3 Updated waiting room. (Removes global var) [L0ne_W0lf]
 //= 3.4 Fixed bad variables, bugreport:1685 [Brainstorm]
@@ -20,9 +18,10 @@
 //= 3.6 Applied Correction bug with for loop. [L0ne_W0lf]
 //= 3.6a Fixed a little Exploit to bug the quest with a timeout. (bugreport:2252) [Samuray22]
 //= 3.7 Added Quest Log commands. [Kisuka]
+//= 3.7a Fixed a label execution. [Euphy]
 //============================================================
 
-comodo,180,153,4	script	Sonotora#1	90,{
+comodo,180,153,4	script	Sonotora#1	4_F_01,{
 	mes "[Athena Sonotora]";
 	mes "They say the";
 	mes "famous dance school";
@@ -42,7 +41,7 @@ comodo,180,153,4	script	Sonotora#1	90,{
 	close;
 }
 
-comodo,193,151,4	script	Bor Robin#1	86,{
+comodo,193,151,4	script	Bor Robin#1	4_M_04,{
 	mes "[Bor Robin]";
 	mes "Aah....";
 	mes "A prima donna";
@@ -75,7 +74,7 @@ comodo,193,151,4	script	Bor Robin#1	86,{
 	close;
 }
 
-job_duncer,43,93,4	script	Aile#da	724,{
+job_duncer,43,93,4	script	Aile#da	4_F_07,{
 	if (Upper == 1) {
 		mes "[Aile]";
 		mes "One two three four,";
@@ -132,7 +131,7 @@ job_duncer,43,93,4	script	Aile#da	724,{
 		cutin "",255;
 		end;
 	}
-	if (DANC_Q == 0 && sex == 0 && BaseJob == Job_Archer) {
+	if (DANC_Q == 0 && Sex == 0 && BaseJob == Job_Archer) {
 		cutin "job_dancer_eir01",2;
 		mes "[Aile]";
 		mes "Welcome~!";
@@ -208,7 +207,7 @@ job_duncer,43,93,4	script	Aile#da	724,{
 		cutin "",255;
 		end;
 	}
-	else if (sex == 1) {
+	else if (Sex == 1) {
 		cutin "job_dancer_eir03",2;
 		mes "[Aile]";
 		mes "Welco--Mmm?";
@@ -287,15 +286,15 @@ job_duncer,43,93,4	script	Aile#da	724,{
 	}
 	else if (DANC_Q >= 2 && DANC_Q <= 4) {
 		switch(DANC_Q) {
-		case 2: 
+		case 2:
 			setarray .@item[0], 938,909,501,2403;
 			setarray .@count[0], 20,3,5,1;
 			break;
-		case 3: 
+		case 3:
 			setarray .@item[0], 1055,2405;
 			setarray .@count[0], 5,1;
 			break;
-		case 4: 
+		case 4:
 			setarray .@item[0], 965,503,909,1020,2401;
 			setarray .@count[0], 2,5,20,10,1;
 			break;
@@ -317,7 +316,7 @@ job_duncer,43,93,4	script	Aile#da	724,{
 			mes "tuition fee.";
 			next;
 			cutin "job_dancer_eir01",2;
-			set zeny,zeny-10000;
+			Zeny -= 10000;
 			mes "[Aile]";
 			mes "Next, go to ^CD6889Bijou^000000, who is in charge of the interviewing process. She will have a couple of things she'll need to ask you.";
 			set DANC_Q,5;
@@ -409,7 +408,7 @@ job_duncer,43,93,4	script	Aile#da	724,{
 	}
 }
 
-job_duncer,95,93,4	script	Bijou#da	101,{
+job_duncer,95,93,4	script	Bijou#da	4W_F_01,{
 	if (SkillPoint) {
 		mes "[Bijou]";
 		mes "You can't change jobs";
@@ -890,11 +889,11 @@ job_duncer,95,93,4	script	Bijou#da	101,{
 			getitem 1950,1; //Rope
 		close;
 	}
-} 
+}
 
 // Waiting Room
-//============================================================ 
-job_duncer,32,154,1	script	Waiting Room#dance	66,{
+//============================================================
+job_duncer,32,154,1	script	Waiting Room#dance	1_F_01,{
 	end;
 
 OnInit:
@@ -919,7 +918,7 @@ OnEnable:
 	end;
 }
 
-job_duncer,32,154,1	script	Waiting Room#click	66,{
+job_duncer,32,154,1	script	Waiting Room#click	1_F_01,{
 	mes "[Pyorgin]";
 	mes "Please wait in";
 	mes "the waiting room.";
@@ -935,7 +934,7 @@ job_duncer,32,154,1	script	Waiting Room#click	66,{
 }
 
 // Dance Timer
-//============================================================ 
+//============================================================
 job_duncer,69,105,0	script	Bijou#dance_timer	-1,{
 OnEnable:
 	initnpctimer;
@@ -1288,7 +1287,7 @@ OnEnable:
 }
 
 // Dance Move Triggers
-//============================================================ 
+//============================================================
 -	script	dancestep::StepTrigger	-1,1,1,{
 OnTouch:
 	donpcevent "Backdancer#1::OnOmg";
@@ -1322,65 +1321,65 @@ OnDisable:
 }
 
 // Backup Dancers
-//============================================================ 
-job_duncer,63,110,4	script	Backdancer#1::BackDancer	724,{
+//============================================================
+job_duncer,63,110,4	script	Backdancer#1	4_F_07,{
 	end;
 
 OnSmile:
-	Emotion e_no1;
+	emotion e_no1;
 	donpcevent "Backdancer#2::OnSmile";
 	donpcevent "Backdancer#3::OnSmile";
 	donpcevent "Backdancer#4::OnSmile";
 	end;
 
 OnOmg:
-	Emotion e_omg;
+	emotion e_omg;
 	donpcevent "Backdancer#2::OnOmg";
 	donpcevent "Backdancer#3::OnOmg";
 	donpcevent "Backdancer#4::OnOmg";
 	end;
 }
 
-job_duncer,66,113,4	script	Backdancer#2	724,{
+job_duncer,66,113,4	script	Backdancer#2	4_F_07,{
 	end;
 
 OnSmile:
-	Emotion e_no1;
+	emotion e_no1;
 	end;
 
 OnOmg:
-	Emotion e_omg;
+	emotion e_omg;
 	end;
 }
 
-job_duncer,72,113,4	script	Backdancer#3	724,{
+job_duncer,72,113,4	script	Backdancer#3	4_F_07,{
 	end;
 
 OnSmile:
-	Emotion e_no1;
+	emotion e_no1;
 	end;
 
 OnOmg:
-	Emotion e_omg;
+	emotion e_omg;
 	end;
 }
 
-job_duncer,75,110,4	script	Backdancer#4	724,{
+job_duncer,75,110,4	script	Backdancer#4	4_F_07,{
 	end;
 
 OnSmile:
-	Emotion e_no1;
+	emotion e_no1;
 	end;
 
 OnOmg:
-	Emotion e_omg;
+	emotion e_omg;
 	end;
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
-//= 1.1 Removed the warp I left here my accident, added a check for using 
+//============================================================
+//= 1.1 Removed the warp I left here my accident, added a check for using
 //=     Improved Concentration and arrow shower, people could get away with it
 //=     [Fredzilla]
 //= 1.0 I tried to keep as much the same from the Jap version as possible
@@ -1389,14 +1388,15 @@ OnOmg:
 //=     along with some optimization. [Fredzilla]
 //= 1.5 Added Baby Class Support [Fredzilla]
 //= 1.6 Added a func which prevent advanced classes passing
-//= 2nd Job Quests again. It also guides adv classes where
-//= to go. [Lupus]
+//=     2nd Job Quests again. It also guides adv classes where
+//=     to go. [Lupus]
 //= 2.0 Changed numbers to constants. [Vicious]
 //= 2.1 Script check #1. [Lance]
 //= 2.2 Fixed unpassable part, thx2 Alis [Lupus]
 //= 2.3 Updated initnpctimer to attach player to jobDq script [Skotlex]
 //= 2.4 Attached chrid to be able obtain player's SP on mobs death, optimized a bit [Lupus]
 //= 2.5 Final fix of chrid issues, changed 'Improved
-//=	Concentration' to 'Attention Concentrate' [Lupus]
+//=     Concentration' to 'Attention Concentrate' [Lupus]
 //= 3.0 Some optimization, typos, added missing dialogues (4Kb lighter) [Lupus]
 //= 3.1 Implemented JOBLVL as in other quests [Lupus]
+//============================================================

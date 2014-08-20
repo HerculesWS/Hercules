@@ -1,19 +1,17 @@
 //===== Hercules Script ======================================
 //= Episode 12 Socket Enchant NPC
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Gepard
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.1a
-//===== Compatible With: ===================================== 
-//= Hercules Git
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Adds slots to selected weapons and armor.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First version.
 //= 1.1 Duplicates now spawn from floating NPCs. [L0ne_W0lf]
 //= 1.1a Added 'disable_items' command. [Euphy]
-//============================================================ 
+//============================================================
 
 -	script	Leablem#dummy::SocketEnchant2	-1,{
 	if (checkweight(1201,1) == 0)
@@ -289,7 +287,7 @@
 							mes "Congratulations.";
 							delitem 5022,1; //Helm_Of_Sun
 							delitem 969,2; //Gold
-							set Zeny, Zeny - 200000000;
+							Zeny -= 200000000;
 							getitem 5353,1; //Helm_Of_Sun_
 							next;
 							mes "[Leablem]";
@@ -308,7 +306,7 @@
 							mes "I didn't want to do in the first place!";
 							delitem 5022,1; //Helm_Of_Sun
 							delitem 969,2; //Gold
-							set Zeny, Zeny - 200000000;
+							Zeny -= 200000000;
 							next;
 							mes "[Leablem]";
 							mes "No, don't ever ask me to do such a risky thing again!";
@@ -379,10 +377,10 @@
 	}
 }
 
-payon,236,199,3	duplicate(SocketEnchant2)	Leablem#pay	86
-lighthalzen,96,137,3	duplicate(SocketEnchant2)	Leablem#lhz	86
-prt_in,22,60,6	duplicate(SocketEnchant2)	Leablem#prt	86
-moc_ruins,154,86,3	duplicate(SocketEnchant2)	Leablem#moc	86
+payon,236,199,3	duplicate(SocketEnchant2)	Leablem#pay	4_M_04
+lighthalzen,96,137,3	duplicate(SocketEnchant2)	Leablem#lhz	4_M_04
+prt_in,22,60,6	duplicate(SocketEnchant2)	Leablem#prt	4_M_04
+moc_ruins,154,86,3	duplicate(SocketEnchant2)	Leablem#moc	4_M_04
 
 function	script	Func_Socket2	{
 
@@ -430,7 +428,7 @@ function	script	Func_Socket2	{
 					delitem getarg(5),getarg(6);
 					if (getarg(7,0) != 0 && getarg(8,0) != 0)
 						delitem getarg(7),getarg(8);
-					set Zeny, Zeny - getarg(4)*1000;
+					Zeny -= getarg(4)*1000;
 					getitem getarg(1),1;
 					next;
 					mes "[Leablem]";
@@ -450,7 +448,7 @@ function	script	Func_Socket2	{
 					delitem getarg(5),getarg(6);
 					if (getarg(7,0) != 0 && getarg(8,0) != 0)
 						delitem getarg(7),getarg(8);
-					set Zeny, Zeny - getarg(4)*1000;
+					Zeny -= getarg(4)*1000;
 					next;
 					mes "[Leablem]";
 					mes "See you again, buddy!";

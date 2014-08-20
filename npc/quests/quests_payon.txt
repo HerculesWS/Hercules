@@ -1,14 +1,12 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Quest NPCs related to Payon
-//===== By: ================================================== 
+//===== By: ==================================================
 //= kobra_k88
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.7
-//===== Compatible With: ===================================== 
-//= rAthena 7.15 +
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Pretend Murder, Ear Muffs, Oxygen, Derivuchi Cap, Helm of Angel Quests.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.1 Helm of Angel bug fixed [Lupus]
 //= 1.2 Fixed skirt of virgin [Lupus]
 //= 1.3 Fixed exploits [Lupus]
@@ -17,11 +15,11 @@
 //= 1.5a replaced item "names" with item id. [Lupus]
 //= 1.6 Updated Dialogs from "Oxygen Mask Quest" [Samuray22]
 //= 1.7 Updated headgear quests. [L0ne_W0lf]
-//============================================================ 
+//============================================================
 
 // 'Pretend Murdered' Quest
 //============================================================
-payon_in01,99,72,4	script	Granny	103,{
+payon_in01,99,72,4	script	Granny	8_F_GRANDMOTHER,{
 	if (checkweight(908,1) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
@@ -35,7 +33,7 @@ payon_in01,99,72,4	script	Granny	103,{
 		next;
 		switch(select("Alright.:No way!")) {
 		case 1:
-			delitem 1049,4;  //Skirt_Of_Virgin
+			delitem 1049,4; //Skirt_Of_Virgin
 			mes "[Granny]";
 			mes "Oh! Thank you so much~ Now I can make some clothes for Kitty Cutty~";
 			next;
@@ -46,7 +44,7 @@ payon_in01,99,72,4	script	Granny	103,{
 			mes "If it's okay...";
 			mes "I'd like to give you this.";
 			next;
-			getitem 2293,1; // Pretend_Murdered
+			getitem 2293,1; //Pretend_Murdered
 			mes "[Granny]";
 			mes "Goodbye, adventurer~!";
 			mes "Thank you for making an old woman so happy...";
@@ -73,39 +71,39 @@ payon_in01,99,72,4	script	Granny	103,{
 
 // 'Ear Muffs' Quest
 //============================================================
-payon_in01,18,10,4	script	Mystic Lady	76,{
+payon_in01,18,10,4	script	Mystic Lady	1_F_ORIENT_02,{
 	mes "[Mystic Lady]";
 	mes "My family has produced and sold the special Winter product ^3355FFEar Muffs^000000 for many years. We just moved here, but the weather is always warm so we can hardly make a living.";
 	next;
 	mes "[Mystic Lady]";
 	mes "If you plan to travel to colder regions, I suggest that you bring some ^3355FFEar Muffs^000000...";
-	Emotion e_dots;
+	emotion e_dots;
 	next;
 	mes "[Mystic Lady]";
 	mes "Ear Muffs are my family's specialty, and we provide it to customers who have ^FF33551 Cursed Ruby^000000, ^3311AA1 Headset,^000000 ^3355FF 200 Feathers^000000 and ^DDDD005000 Zeny^000000.";
-	Emotion e_dots;
+	emotion e_dots;
 	next;
 	switch(select("Oh Yeah? That sounds good.:No thank you, Ma'am.")) {
 	case 1:
 		if ((countitem(724) > 0) && (countitem(949) > 199) && (countitem(5001) > 0) && (Zeny > 4999)) {
 			mes "[Mystic Lady]";
-			delitem 724,1;  //Cardinal_Jewel_
-			delitem 949,200;  //Feather
-			delitem 5001,1;  //Headset
-			set Zeny,Zeny-5000;
+			delitem 724,1; //Cardinal_Jewel_
+			delitem 949,200; //Feather
+			delitem 5001,1; //Headset
+			Zeny -= 5000;
 			mes "Here, I will give you this pre-made one.";
-			getitem 2283,1; // Ear_Mufs
+			getitem 2283,1; //Ear_Mufs
 			next;
 			mes "[Mystic Lady]";
 			mes "Thank you for buying our product. You won't regret purchasing our Ear Muffs: Satisfaction guaranteed~";
-			Emotion e_dots;
+			emotion e_dots;
 			close;
 		}
 		else {
 			mes "[Mystic Lady]";
 			mes "Oh dear...";
 			mes "You don't have enough money or items. Unfortunately, we can't give any discounts. Please understand that we have to make a living...";
-			Emotion e_dots;
+			emotion e_dots;
 			close;
 		}
 	case 2:
@@ -114,14 +112,14 @@ payon_in01,18,10,4	script	Mystic Lady	76,{
 		mes "I believe we";
 		mes "will meet again.";
 		mes "...One of these days.";
-		Emotion e_dots;
+		emotion e_dots;
 		close;
 	}
 }
 
 // 'Oxygen Mask' Quest
 //============================================================
-payon_in02,25,71,4	script	Boy	86,{
+payon_in02,25,71,4	script	Boy	4_M_04,{
 	if (countitem(701) > 4) {
 		mes "[Young Man]";
 		mes "ArrrGggghh!";
@@ -145,7 +143,7 @@ payon_in02,25,71,4	script	Boy	86,{
 			close;
 		case 2:
 			if (countitem(701) > 4) {
-				delitem 701,5;  //Ora_Ora
+				delitem 701,5; //Ora_Ora
 			}
 			mes "[Young Man]";
 			mes "Muhahahahah!!!";
@@ -159,7 +157,7 @@ payon_in02,25,71,4	script	Boy	86,{
 			mes "Huk...Huk...";
 			mes "Sorry, I was out of control with pleasure for a while. Now, I will give my treasure as promised.";
 			next;
-			getitem 5004,1; // Oxygen_Mask
+			getitem 5004,1; //Oxygen_Mask
 			mes "[Young Man]";
 			mes "When you wear this over your mouth and start to breathe, it filters junk out before getting to your lungs.";
 			next;
@@ -216,7 +214,7 @@ payon_in02,25,71,4	script	Boy	86,{
 
 // 'Helm of Angel' and 'Deviruchi Cap' Quest
 //============================================================
-payon_in01,56,12,7	script	Young man#12	89,{
+payon_in01,56,12,7	script	Young man#12	4_M_ORIENT02,{
 	mes "[Young man]";
 	mes "...What is it?";
 	next;
@@ -248,11 +246,11 @@ payon_in01,56,12,7	script	Young man#12	89,{
 					mes "[Young man]";
 					mes ".....Hm.";
 					mes "Fine, here's your Helm of Angel. Take it.";
-					delitem 2229,1;  //Helm_
-					delitem 2254,1;  //Angelic_Chain
-					delitem 7036,5;  //Fang_Of_Garm
+					delitem 2229,1; //Helm_
+					delitem 2254,1; //Angelic_Chain
+					delitem 7036,5; //Fang_Of_Garm
 					close2;
-					getitem 5025,1; // Helm_Of_Angel
+					getitem 5025,1; //Helm_Of_Angel
 					end;
 				}
 				else {
@@ -285,10 +283,10 @@ payon_in01,56,12,7	script	Young man#12	89,{
 				if ((countitem(1038) > 599) && (countitem(7048) > 39)) {
 					mes "[Young man]";
 					mes ".....Hm. Here's your Deviruchi Hat. Please take it.";
-					delitem 1038,600;  //Petite_DiablOfs_Horn
-					delitem 7048,40;  //Talon_Of_Griffin
+					delitem 1038,600; //Petite_DiablOfs_Horn
+					delitem 7048,40; //Talon_Of_Griffin
 					close2;
-					getitem 5038,1; // Deviruchi_Cap
+					getitem 5038,1; //Deviruchi_Cap
 					end;
 				}
 				else {

@@ -1,8 +1,13 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
+#define HERCULES_CORE
+
 #include "date.h"
+
 #include <time.h>
+
+#include "../common/cbasetypes.h"
 
 int date_get_year(void)
 {
@@ -55,17 +60,21 @@ int date_get_sec(void)
 	return lt->tm_sec;
 }
 
-int is_day_of_sun(void)
+/*==========================================
+ * Star gladiator related checks
+ *------------------------------------------*/
+
+bool is_day_of_sun(void)
 {
 	return date_get_day()%2 == 0;
 }
 
-int is_day_of_moon(void)
+bool is_day_of_moon(void)
 {
 	return date_get_day()%2 == 1;
 }
 
-int is_day_of_star(void)
+bool is_day_of_star(void)
 {
 	return date_get_day()%5 == 0;
 }

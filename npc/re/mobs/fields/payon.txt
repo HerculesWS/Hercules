@@ -36,13 +36,13 @@ pay_fild01,70,246,0,0	monster	Black Mushroom	1084,1,180000,90000,1
 pay_fild01,0,0,0,0	monster	Green Plant	1080,5,180000,90000,1
 
 //==================================================
-// pay_fild02 - Payon Forest 
+// pay_fild02 - Payon Forest
 //==================================================
 pay_fild02,0,0,0,0	monster	Boa	1025,140,5000,0,0
 pay_fild02,0,0,0,0	monster	Wormtail	1024,30,5000,0,0
 pay_fild02,0,0,0,0	monster	Spore	1014,30,5000,0,0
-pay_fild02,105,256,10,10	monster	Red Mushroom	1085,4,360000,180000,1
 pay_fild02,105,256,10,10	monster	Green Plant	1080,4,360000,180000,1
+pay_fild02,105,256,10,10	monster	Red Mushroom	1085,4,360000,180000,1
 
 //==================================================
 // pay_fild03 - Payon Forest
@@ -71,8 +71,6 @@ pay_fild04,254,193,10,10	monster	Green Plant	1080,5,360000,180000,1
 //==================================================
 // pay_fild05 - Disabled on Renewal
 //==================================================
-//pay_fild05,95,147,5,5	monster	Green Plant	1080,4,900000,450000,1
-//pay_fild05,86,90,5,5	monster	Green Plant	1080,4,900000,450000,1
 
 //==================================================
 // pay_fild06 - Payon Forest

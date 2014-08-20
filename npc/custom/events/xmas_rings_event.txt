@@ -4,8 +4,6 @@
 //= Lupus (1.0)
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Custom event: Karachun (from 8 Dec till 8 Jan), X-Mas, HNY
 //===== Additional Comments: =================================
@@ -14,7 +12,7 @@
 //= 1.2 Fixed double quotes not being escaped [brianluau]
 //============================================================
 
-prontera,156,174,4	script	Snower	713,{
+prontera,156,174,4	script	Snower	4_M_06,{
 	mes "[Snower]";
 	if(Q_XMSRINGS==2){
 		mes "Oh.. is it true? You've helped my sis Sneewy? Thank you.";
@@ -99,7 +97,7 @@ OnInit:
 	end;
 }
 
-louyang,224,249,4	script	Sneewy	717,{
+louyang,224,249,4	script	Sneewy	4_F_KID3,{
 	mes "[Sneewy]";
 	if(Q_XMSRINGS==0){
 		mes "Hi! I'm waithing for my sister's birdy with mail...";
@@ -113,7 +111,7 @@ louyang,224,249,4	script	Sneewy	717,{
 		mes "[Sneewy]";
 		mes "Oh, hello. Has my brother Snower told you everything?";
 		next;
-		menu "Here are your 4 Gift Boxes",-, "I don't know any Snowhatevers...",M_END;
+		menu "Here are your 4 Gift Boxes",-, "I don't know any Snowhatevers...",M_End;
 
 		mes "[Sneewy]";
 		if(countitem(644)<4){
@@ -135,14 +133,14 @@ louyang,224,249,4	script	Sneewy	717,{
 	mes "Thanks again! No children will meet the holidays without the gifts!";
 	close;
 
-M_END:
+M_End:
 	mes "[Sneewy]";
 	mes "Pity... I've got a magic Santa's ring... I'd exchange it for 4 Gift Boxes...";
 	emotion e_swt;
 	close;
 }
 
-izlu2dun,133,160,2	script	Snoowy	714,{
+izlu2dun,133,160,2	script	Snoowy	4_F_06,{
 	mes "[Snoowy]";
 	if(Q_XMSRINGS==0){
 		mes "Helloooou! Do you know my bro and sis? How so? My brother Snower's well known in Prontera!! Just ask any child there.";
@@ -165,7 +163,7 @@ izlu2dun,133,160,2	script	Snoowy	714,{
 		mes "[Snoowy]";
 		mes "But I too need 3 more gifts for my marine folk friends...";
 		next;
-		menu "Have these gifts!",-, "I need a li'l something in return",M_END;
+		menu "Have these gifts!",-, "I need a li'l something in return",M_End;
 
 		mes "[Snoowy]";
 		if(countitem(644)<3){
@@ -185,7 +183,7 @@ izlu2dun,133,160,2	script	Snoowy	714,{
 	if(rand(2))mes "Didn't you know that Santa's Hat reveals the real power of the rings?";
 	close;
 
-M_END:
+M_End:
 	mes "[Snoowy]";
 	mes "I'd exchange a GOLD magic ring for 3 gift boxes...";
 	emotion e_swt;

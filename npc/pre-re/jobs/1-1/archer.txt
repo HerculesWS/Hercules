@@ -1,13 +1,13 @@
 //===== Hercules Script ======================================
 //= Archer Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= kobra_k88; L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.9
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job quest for Archer classes
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 Fully working.
 //= 1.1 Added instant job change for High Novice [Lupus]
 //= 1.3 Added Baby Class support [Lupus]
@@ -15,14 +15,14 @@
 //= 1.5 Now saves/restores all quest skills [Lupus]
 //= 1.6 Merged back JFunc [Lupus]
 //= 1.7 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//=	Arrow reward is now equal to the type sof trunks brought.
-//=	No longer uses function "F_ToHigh"
+//=     Arrow reward is now equal to the type sof trunks brought.
+//=     No longer uses function "F_ToHigh"
 //= 1.7a Fixed minor dialogue bug at Grade==25 [Lupus]
 //= 1.8 Fixed mistake in condition check. [L0ne_W0lf]
 //= 1.9 Added Quest Log commands. [L0ne_W0lf]
-//============================================================ 
+//============================================================
 
-payon_in02,64,71,4	script	Archer Guildsman#archer	85,{
+payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 	if (Upper == 1) {
 		if (Class == Job_Novice_High && (ADVJOB == Job_Sniper || ADVJOB == Job_Clown || ADVJOB == Job_Gypsy)) {
 			mes "[Archer Guildsman]";
@@ -50,7 +50,7 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	85,{
 			mes "I know you'll make a great Archer...";
 			next;
 			skill 143,0,0;
-			jobchange Job_Archer_high;
+			jobchange Job_Archer_High;
 			skill 147,1,0;
 			skill 148,1,0;
 			mes "[Archer Guildsman]";

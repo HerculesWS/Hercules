@@ -1,17 +1,15 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Hunter Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= EREMES THE CANIVALIZER (Aegis)Translated by yoshiki (Aegis)
 //= Converted by kobra_k88
 //= Further bugfixed and tested by Lupus
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 3.7
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job Change quest for Hunter class.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 0.5 Fully working.
 //= 0.6 Changed global variable names to unique ones.
 //= 0.7 - 0.8 Updates for rAthena +Knight2,Crusader2 fix
@@ -22,8 +20,8 @@
 //= 1.3 Added Baby Class support [Lupus]
 //= 1.5 Fixed possible EXP abuse [Lupus]
 //= 1.6 Added a func which prevent advanced classes passing
-//= 2nd Job Quests again. It also guides adv classes where
-//= to go. [Lupus]
+//=     2nd Job Quests again. It also guides adv classes where
+//=     to go. [Lupus]
 //= 1.6a Infinite Arrows exploit fix (thanx to Lorky, that
 //= reported the bug) [Lupus]
 //= 1.7 Moved the Job QUest to Hugel [Poki#3]
@@ -46,19 +44,19 @@
 //= 3.0a Corrected a Typo error ";;". [Samuray22]
 //= 3.1 Now uses enable and disable waitingroomevent. [L0ne_W0lf]
 //= 3.2 Fixes a bug where the timer was stopped causing the [L0ne_W0lf]
-//=	test to freeze. (bugreport:1099)
+//=     test to freeze. (bugreport:1099)
 //= 3.3 Added missing next. [L0ne_W0lf]
 //= 3.4 Corrected some Issues with the Waiting Room. (bugreport:1890) [Samuray22]
-//=	-Deleted a Unnecesary Next; on Hunter Guildsman#hnt. (bugreports:1665,2239,2179)
+//=     Deleted a Unnecesary Next; on Hunter Guildsman#hnt. (bugreports:1665,2239,2179)
 //= 3.5 Added Quest Log commands. [Kisuka]
 //= 3.6 Removed the need for use of 'goto.' [L0ne_W0lf]
 //= 3.7 Modified the quest to renewal. [Vali] (Thanks to Muad_Dib for the necessary info).
-//============================================================ 
+//============================================================
 
 // Notices in the old Hunter Guild.
-//============================================================ 
-in_hunter,99,99,4	script	Hunter Info#hnt::HntNotice	727,{
-	mes "============ Notice ============";
+//============================================================
+in_hunter,99,99,4	script	Hunter Info#hnt::HntNotice	4_F_JOB_HUNTER,{
+	mes "============Notice ============";
 	mes "We would like to inform that the Hunter Job Change Location";
 	mes "has been moved to ^ff0000Hugel^000000 in the Schwaltzvalt Republic.";
 	next;
@@ -74,11 +72,11 @@ in_hunter,99,99,4	script	Hunter Info#hnt::HntNotice	727,{
 	close;
 }
 
-pay_fild10,148,252,3	duplicate(HntNotice)	Job Change Location#hu	857
+pay_fild10,148,252,3	duplicate(HntNotice)	Job Change Location#hu	4_BOARD3
 
 // Actual Job quest start
-//============================================================ 
-hu_in01,386,373,4	script	Hunter Guildsman#hnt	727,{
+//============================================================
+hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 	if (Upper == 1) {
 		mes "[Hunter Sherin]";
 		mes "Oh, how have you been? It's been a long time, hasn't it?";
@@ -125,7 +123,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	727,{
 		mes "Oh, a person who serves God! Nice to meet you. There aren't many people like you that visit this place~ Hehe.";
 		close;
 	}
-	else if (Baseclass == Job_Merchant) {
+	else if (BaseClass == Job_Merchant) {
 		mes "[Hunter Guildsman]";
 		mes "Oh...";
 		mes "How's your business coming along?";
@@ -182,7 +180,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	727,{
 			mes "[Hunter Sherin]";
 			mes "Tada~ Congratulations!";
 			mes "You look great as a Hunter!!";
-			set .@joblvl,joblevel;
+			set .@joblvl, JobLevel;
 			completequest 4013;
 			callfunc "Job_Change",Job_Hunter;
 			callfunc "F_ClearJobVar";		// clears all job variables for the current player
@@ -438,7 +436,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	727,{
 			mes "Just give the item to the Demon Hunter, the guy who's all the way to the left in this area~";
 			next;
 			mes "[Hunter Sherin]";
-			if (sex)
+			if (Sex)
 				mes "If you decide to become a Hunter, promise to come visit me. I want to see you as a Hunter. You would look great!!";
 			else
 				mes "If you decide to become a Hunter, come and visit me, okay? You're pretty, but... You'd be even prettier as a Hunter. Hehe~";
@@ -470,7 +468,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	727,{
 	close;
 }
 
-hu_in01,382,382,4	script	Guild Receptionist#hnt	732,{
+hu_in01,382,382,4	script	Guild Receptionist#hnt	4_M_JOB_HUNTER,{
 	if (HNTR_Q == 2) {
 		mes "[Guild Receptionist]";
 		mes "Greetings. They call me... ^660000The Demon Hunter^000000. I am the one in charge of processing applications. Your name is ... " + strcharinfo(0) + ", correct?";
@@ -517,7 +515,7 @@ hu_in01,382,382,4	script	Guild Receptionist#hnt	732,{
 		case 5: setarray .@items[0], 935,9, 955,9, 508,9, 7; changequest 4001,4006; break;
 		//Tooth_Of_Bat, Sticky_Mucus, Bear's_Foot
 		case 6: setarray .@items[0], 913,3, 938,1, 948,1, 8; changequest 4001,4007; break;
-		//Porcupine_Spike, Yoyo_Tailm Acorn
+		//Porcupine_Spike, Yoyo_Tail, Acorn
 		case 7: setarray .@items[0], 1027,2, 942,1, 1026,1, 9; changequest 4001,4008; break;
 		}
 		if (.@selection == 1) {
@@ -538,7 +536,7 @@ hu_in01,382,382,4	script	Guild Receptionist#hnt	732,{
 		switch(HNTR_Q) {
 		//Insect_Feeler/Claw_Of_Desert_Wolf, Wooden_Block, White_Herb
 		case 3: setarray .@items[0], (.@i?928:7030),5, 1019,5, 509,3, 10; break;
-		//Bill_Of_Birds, Skel_Bonem Green_Herb
+		//Bill_Of_Birds, Skel_Bone, Green_Herb
 		case 4: setarray .@items[0], 925,3, 932,5, 511,3, 10; break;
 		//Colorful_Shell/Posionous_Canine, Animal's_Skin, Red_Herb
 		case 5: setarray .@items[0], (.@i?1013:937),3, 919,3, 507,5, 10; break;
@@ -548,7 +546,7 @@ hu_in01,382,382,4	script	Guild Receptionist#hnt	732,{
 		case 7: setarray .@items[0], 935,9, 955,9, 508,9, 11; break;
 		//Tooth_Of_Bat, Sticky_Mucus, Bear's_Foot
 		case 8: setarray .@items[0], 913,3, 938,1, 948,1, 11; break;
-		//Porcupine_Spike, Yoyo_Tailm Acorn
+		//Porcupine_Spike, Yoyo_Tail, Acorn
 		case 9: setarray .@items[0], 1027,2, 942,1, 1026,1, 11; break;
 		}
 		mes "[Demon Hunter]";
@@ -614,7 +612,7 @@ hu_in01,382,382,4	script	Guild Receptionist#hnt	732,{
 	}
 }
 
-payon_in03,131,7,3	script	Hunter#htnGM	59,{
+payon_in03,131,7,3	script	Hunter#htnGM	1_M_ORIENT01,{
 	if (HNTR_Q == 10) {
 		mes "[Hunter Guildmaster]";
 		mes "Hmpf. You must be here for the Hunter job test. Let me tell you about the testing process. What would you like to know?";
@@ -767,7 +765,7 @@ payon_in03,131,7,3	script	Hunter#htnGM	59,{
 	}
 }
 
-payon_in02,21,31,1	script	Hunter#htnGM2	59,{
+payon_in02,21,31,1	script	Hunter#htnGM2	1_M_ORIENT01,{
 	cutin "job_huntermaster",2;
 	if (HNTR_Q == 11) {
 		mes "[Hunter Guildmaster]";
@@ -968,7 +966,7 @@ payon_in02,21,31,1	script	Hunter#htnGM2	59,{
 	}
 }
 
-job_hunte,178,32,1	script	Guide#hnt	107,5,2,{
+job_hunte,178,32,1	script	Guide#hnt	1_M_PAY_ELDER,5,2,{
 OnTouch:
 	if (HNTR_Q == 12) {
 		mes "[Guide]";
@@ -1025,7 +1023,7 @@ OnTouch:
 	end;
 }
 
-job_hunte,178,38,1	script	Waiting Room#hnt	66,{
+job_hunte,178,38,1	script	Waiting Room#hnt	1_F_01,{
 	end;
 
 OnInit:
@@ -1044,7 +1042,7 @@ OnStart:
 	end;
 }
 
-job_hunte,1,1,1	script	Manager#hnt	66,{
+job_hunte,1,1,1	script	Manager#hnt	1_F_01,{
 OnInit:
 	disablenpc "Manager#hnt";
 	end;
@@ -1099,7 +1097,7 @@ OnMyMobDead:
 	if (.MyMobs < 3) {
 		mapannounce "job_hunte","Okay, good job... Now, find the switch in the center of the map!! Be careful of the traps!!",bc_map;
 		set HNTR_Q,14;
-		donpcevent "switch#hnt::OnEnable";
+		donpcevent "Switch#hnt::OnEnable";
 		donpcevent "Manager#hnt::OnDisable";
 	}
 	else {
@@ -1205,7 +1203,7 @@ OnTimer197000:
 	end;
 }
 
-job_hunte,93,101,1	script	Switch#hnt	723,1,1,{
+job_hunte,93,101,1	script	Switch#hnt	1_SHADOW_NPC,1,1,{
 OnTouch:
 	mes "^3355FFThere are 3 buttons";
 	mes "on the escape switch.^000000";
@@ -1248,7 +1246,7 @@ OnEnable:
 	end;
 }
 
-job_hunte,89,139,0	script	exit#hnttest	45,2,2,{
+job_hunte,89,139,0	script	exit#hnttest	WARPNPC,2,2,{
 OnInit:
 	disablenpc "exit#hnttest";
 	end;
@@ -1265,7 +1263,7 @@ OnTouch:
 }
 
 // Hunter Job test traps.
-//============================================================ 
+//============================================================
 job_hunte,52,140,0	script	1-1::HntTrap	-1,0,1,{
 OnTouch:
 	switch(rand(200)) {

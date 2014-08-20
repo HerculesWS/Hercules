@@ -1,18 +1,18 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Hall of Abyss - Core Scripts
 //===== By: ==================================================
 //= Euphy
 //===== Current Version: =====================================
-//= 1.0
-//===== Compatible With: =====================================
-//= rAthena SVN
+//= 1.1
 //===== Description: =========================================
+//= [Official Conversion]
 //= Expansion for War of Emperium FE.
 //= Invest in each realm to unlock new maps:
 //= - Guild Dungeon F2, total 20,000,000z.
 //= - Hall of Abyss, total 70,000,000z.
 //===== Additional Comments: =================================
 //= 1.0 First version. Missing official times. [Euphy]
+//= 1.1 Added GM management function. [Euphy]
 //============================================================
 
 // Global Variables
@@ -58,7 +58,7 @@ $@vfund_*_extra
 
 // Investment Functions & Controller
 //============================================================
-// Note: The time in this section are almost entirely custom.
+// Note: The times in this section are almost entirely custom.
 
 -	script	#invest_timer	-1,{
 OnClock0000:	// Open investments on Wed (1 hour after WoE)
@@ -163,7 +163,7 @@ function	script	F_Invest_Abyss	{
 		mes getarg(1);
 		mes "You've invested "+.@units+" unit"+((.@units == 1)?"":"s")+" "+((.@units < 100)?.@units:insertchar(""+.@units,",",1))+"0,000 Zeny"+getarg(2,"")+".";
 		mes "Not much but this is a small gift. You can exchange it with items in Malangdo.";
-		set Zeny, Zeny-.@zeny;
+		Zeny -= .@zeny;
 		setd getarg(0), getd(getarg(0)) + .@units;
 		getitem 6488,.@units; //Thanks_Invest_Ticket
 		close;
@@ -224,7 +224,7 @@ function	script	F_Invest_Abyss	{
 
 // Script Core
 //============================================================
-prt_gld,1,1,0	script	#fund_master	844,{
+prt_gld,1,1,0	script	#fund_master	CLEAR_NPC,{
 	end;
 OnInit:
 	set .@invest_status, callfunc("F_Invest_Status");
@@ -386,12 +386,11 @@ OnReset:
 	end;
 }
 
-prt_gld,2,2,0	script	Investment_total#fund00	844,{
-/*
+prt_gld,2,2,0	script	Investment_total#fund00	CLEAR_NPC,{
+	callfunc "F_GM_NPC";
 	mes "Is this not working properly?";
 	next;
-	input .@input;
-	if (.@input == 1854) {
+	if (callfunc("F_GM_NPC",1854,0) == 1) {
 		mes "If you think the investment timer is dead, please adjust the timer.";
 		next;
 		switch(select("Turn on the timer:Cancel")) {
@@ -407,8 +406,7 @@ prt_gld,2,2,0	script	Investment_total#fund00	844,{
 		mes "I don't need to adjust anything now.";
 		close;
 	}
-*/
-	end;
+
 OnInit:
 	if (callfunc("F_Invest_Status") == 1) {
 		initnpctimer;
@@ -464,7 +462,7 @@ OnTimer3600000:
 	}
 }
 
-prt_gld,164,98,3	script	Revoting Manager#Invest1	421,{
+prt_gld,164,98,3	script	Revoting Manager#Invest1	4_M_BOSSCAT,{
 	mes "[Revoting Manager]";
 	mes "We are not accepting additional votes.";
 	mes "Please wait for our results announcement.";
@@ -554,7 +552,7 @@ OnTimer60000:
 	end;
 }
 
-prt_gld,164,98,3	script	Revoting Manager#Invest2	421,{
+prt_gld,164,98,3	script	Revoting Manager#Invest2	4_M_BOSSCAT,{
 	set .@invest, $2011_agit_invest;
 	if (.@invest < 11) {
 		mes "[Revoting Manager]";
@@ -668,7 +666,7 @@ OnTimer20000:
 }
 
 /*
-prtg_cas01,2,2,0	script	Abrai	55,{
+prtg_cas01,2,2,0	script	Abrai	1_M_JOBTESTER,{
 	mes "I should quit my steward job.";
 	close;
 OnAgitInvest:
@@ -992,7 +990,7 @@ OnAgitInvest:
 		}
 		mes .@n$;
 		mes "I'm sending you to the "+.@realm$+" Agit Dungeon "+.@i+"F.";
-		set Zeny, Zeny-10000;
+		Zeny -= 10000;
 		setd "$fund_"+.@npc$+"_extra", getd("$fund_"+.@npc$+"_extra") + 1;
 		close2;
 		if (compare(strnpcinfo(2),"alde"))
@@ -1147,7 +1145,7 @@ OnAgitInvest:
 		callfunc "F_Invest_Abyss","$fund_"+.@npc$+"0"+.@id,"[Gate Manager]";
 		end;
 	case 2:
-		callsub L_Enter,1,.@realm$;
+		callsub L_Enter,1,.@realm$,.@npc$;
 		mes "[Gate Manager]";
 		mes "You are interested in exploring the "+.@realm$+" Guild Dungeon Deepest Layer (2F).";
 		mes "Let me guide you. Good luck.";
@@ -1187,7 +1185,7 @@ OnAgitInvest:
 		}
 		end;
 	case 3:
-		callsub L_Enter,2,.@realm$;
+		callsub L_Enter,2,.@realm$,.@npc$;
 		mes "[Gate Manager]";
 		mes "Let me guide you to the Abyss Gap connected with "+.@realm$+", the Abyss Gate 'Way of the Warrior'.";
 		close2;
@@ -1235,7 +1233,7 @@ OnAgitInvest:
 L_Enter:
 	set .@invest_status, callfunc("F_Invest_Status");
 	if (.@invest_status == 3) {
-		set .@status, getd("$"+.@npc$+"_invest_result");
+		set .@status, getd("$"+getarg(2)+"_invest_result");
 		if ((getarg(0) == 1 && .@status == 2) || .@status == 3)
 			return;
 		else {
@@ -1261,7 +1259,7 @@ L_Enter:
 
 // Item Investments
 //============================================================
-malangdo,218,126,4	script	Cat Paw Merchants Notice	857,{
+malangdo,218,126,4	script	Cat Paw Merchants Notice	4_BOARD3,{
 	mes "<< Cat Paw Merchants Notice >>";
 	mes "'^C379CEInvest Unused Items for Prizes!^000000'";
 	next;
@@ -1327,7 +1325,7 @@ malangdo,218,126,4	script	Cat Paw Merchants Notice	857,{
 	}
 }
 
-malangdo,218,123,1	script	Namis#invest	545,4,4,{
+malangdo,218,123,1	script	Namis#invest	4_CAT_SAILOR2,4,4,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -1467,7 +1465,7 @@ OnTouch:
 
 // Investment Rewards
 //============================================================
-malangdo,215,119,4	script	Thanks Ticket Machine	564,{
+malangdo,215,119,4	script	Thanks Ticket Machine	2_VENDING_MACHINE1,{
 	if (MaxWeight - Weight < 4500 || checkweight(1201,1) == 0) {
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
