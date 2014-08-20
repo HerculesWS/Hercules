@@ -9148,28 +9148,50 @@ int pc_checkitem(struct map_session_data *sd)
 		for( i = 0; i < MAX_INVENTORY; i++ ) {
 			id = sd->status.inventory[i].nameid;
 
-			if( id && !itemdb_available(id) ) {
+			if (!id)
+				continue;
+
+			if( !itemdb_available(id) ) {
 				ShowWarning("Removed invalid/disabled item id %d from inventory (amount=%d, char_id=%d).\n", id, sd->status.inventory[i].amount, sd->status.char_id);
 				pc->delitem(sd, i, sd->status.inventory[i].amount, 0, 0, LOG_TYPE_OTHER);
+				continue;
 			}
+
+			if ( !sd->status.inventory[i].unique_id && !itemdb->isstackable(id) )
+				sd->status.inventory[i].unique_id = itemdb->unique_id(sd);
 		}
 
 		for( i = 0; i < MAX_CART; i++ ) {
 			id = sd->status.cart[i].nameid;
 
-			if( id && !itemdb_available(id) ) {
+			if (!id)
+				continue;
+
+			if( !itemdb_available(id) ) {
 				ShowWarning("Removed invalid/disabled item id %d from cart (amount=%d, char_id=%d).\n", id, sd->status.cart[i].amount, sd->status.char_id);
 				pc->cart_delitem(sd, i, sd->status.cart[i].amount, 0, LOG_TYPE_OTHER);
+				continue;
 			}
+
+			if ( !sd->status.cart[i].unique_id && !itemdb->isstackable(id) )
+				sd->status.cart[i].unique_id = itemdb->unique_id(sd);
 		}
 		
 		for( i = 0; i < MAX_STORAGE; i++ ) {
 			id = sd->status.storage.items[i].nameid;
+
+			if (!id)
+				continue;
+
 			if( id && !itemdb_available(id) ) {
 				ShowWarning("Removed invalid/disabled item id %d from storage (amount=%d, char_id=%d).\n", id, sd->status.storage.items[i].amount, sd->status.char_id);
 				storage->delitem(sd, i, sd->status.storage.items[i].amount);
-				storage->close(sd); // force closing
+				storage->close(sd);
+				continue;
 			}
+
+			if ( !sd->status.storage.items[i].unique_id && !itemdb->isstackable(id) )
+				sd->status.storage.items[i].unique_id = itemdb->unique_id(sd);
 		}
 		
 		if (sd->guild) {
@@ -9177,11 +9199,19 @@ int pc_checkitem(struct map_session_data *sd)
 			if (guild_storage) {
 				for( i = 0; i < MAX_GUILD_STORAGE; i++ ) {
 					id = guild_storage->items[i].nameid;
-					if( id && !itemdb_available(id) ) {
+
+					if (!id)
+						continue;
+
+					if( !itemdb_available(id) ) {
 						ShowWarning("Removed invalid/disabled item id %d from guild storage (amount=%d, char_id=%d, guild_id=%d).\n", id, guild_storage->items[i].amount, sd->status.char_id, sd->guild->guild_id);
 						gstorage->delitem(sd, guild_storage, i, guild_storage->items[i].amount);
 						gstorage->close(sd); // force closing
+						continue;
 					}
+
+					if (!guild_storage->items[i].unique_id && !itemdb->isstackable(id))
+						guild_storage->items[i].unique_id = itemdb->unique_id(sd);
 				}
 			}
 		}
