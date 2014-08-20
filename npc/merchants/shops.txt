@@ -269,6 +269,8 @@ OnInit:
 	sellitem Flash_Shuriken;
 	sellitem Sharp_Leaf_Shuriken;
 	sellitem Thorn_Needle_Shuriken;
+	sellitem Explosive_Kunai;
+	sellitem Makibishi;
 }
 
 que_ng,73,26,5	trader	Boonray#nin	4_M_01,{
