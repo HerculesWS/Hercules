@@ -578,7 +578,7 @@ bool homunculus_feed(struct map_session_data *sd, struct homun_data *hd) {
 
 	foodID = hd->homunculusDB->foodID;
 	i = pc->search_inventory(sd,foodID);
-	if(i < 0) {
+	if (i == INDEX_NOT_FOUND) {
 		clif->hom_food(sd,foodID,0);
 		return false;
 	}

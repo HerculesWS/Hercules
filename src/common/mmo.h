@@ -208,6 +208,7 @@ enum item_types {
 	IT_MAX
 };
 
+#define INDEX_NOT_FOUND (-1) ///< Used as invalid/failure value in various functions that return an index
 
 // Questlog states
 enum quest_state {

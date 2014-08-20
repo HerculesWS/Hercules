@@ -2196,10 +2196,10 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 			/* bugreport:7859 magical reflected zeroes blow count */
 			dmg.blewcount = 0;
 			//Spirit of Wizard blocks Kaite's reflection
-			if( type == 2 && sc && sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_WIZARD )
-			{	//Consume one Fragment per hit of the casted skill? [Skotlex]
-				type = tsd?pc->search_inventory(tsd, ITEMID_FRAGMENT_OF_CRYSTAL):0;
-				if (type >= 0) {
+			if (type == 2 && sc && sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_WIZARD) {
+				//Consume one Fragment per hit of the casted skill? [Skotlex]
+				type = tsd ? pc->search_inventory(tsd, ITEMID_FRAGMENT_OF_CRYSTAL) : 0;
+				if (type != INDEX_NOT_FOUND) {
 					if ( tsd ) pc->delitem(tsd, type, 1, 0, 1, LOG_TYPE_CONSUME);
 					dmg.damage = dmg.damage2 = 0;
 					dmg.dmg_lv = ATK_MISS;
@@ -3038,22 +3038,20 @@ int skill_check_condition_mercenary(struct block_list *bl, int skill_id, int lv,
 		return 1;
 
 	// Check item existences
-	for( i = 0; i < ARRAYLENGTH(itemid); i++ )
-	{
-		index[i] = -1;
-		if( itemid[i] < 1 ) continue; // No item
+	for (i = 0; i < ARRAYLENGTH(itemid); i++) {
+		index[i] = INDEX_NOT_FOUND;
+		if (itemid[i] < 1) continue; // No item
 		index[i] = pc->search_inventory(sd, itemid[i]);
-		if( index[i] < 0 || sd->status.inventory[index[i]].amount < amount[i] )
-		{
+		if (index[i] == INDEX_NOT_FOUND || sd->status.inventory[index[i]].amount < amount[i]) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_NEED_ITEM, amount[i]|(itemid[i] << 16));
 			return 0;
 		}
 	}
 
 	// Consume items
-	for( i = 0; i < ARRAYLENGTH(itemid); i++ )
-	{
-		if( index[i] >= 0 ) pc->delitem(sd, index[i], amount[i], 0, 1, LOG_TYPE_CONSUME);
+	for (i = 0; i < ARRAYLENGTH(itemid); i++) {
+		if (index[i] != INDEX_NOT_FOUND)
+			pc->delitem(sd, index[i], amount[i], 0, 1, LOG_TYPE_CONSUME);
 	}
 
 	if( type&2 )
@@ -6675,7 +6673,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					int x,bonus=100, potion = min(500+skill_lv,505);
 					x = skill_lv%11 - 1;
 					i = pc->search_inventory(sd,skill->db[skill_id].itemid[x]);
-					if( i < 0 || skill->db[skill_id].itemid[x] <= 0 ) {
+					if (i == INDEX_NOT_FOUND || skill->db[skill_id].itemid[x] <= 0) {
 						clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 						map->freeblock_unlock();
 						return 1;
@@ -6827,7 +6825,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case AM_TWILIGHT3:
 			if (sd) {
 				int ebottle = pc->search_inventory(sd,ITEMID_EMPTY_BOTTLE);
-				if( ebottle >= 0 )
+				if (ebottle != INDEX_NOT_FOUND)
 					ebottle = sd->status.inventory[ebottle].amount;
 				//check if you can produce all three, if not, then fail:
 				if (!skill->can_produce_mix(sd,ITEMID_ALCHOL,-1, 100) //100 Alcohol
@@ -10287,8 +10285,9 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			if (sd) {
 				int i = skill_lv%11 - 1;
 				int j = pc->search_inventory(sd,skill->db[skill_id].itemid[i]);
-				if( j < 0 || skill->db[skill_id].itemid[i] <= 0 || sd->inventory_data[j] == NULL || sd->status.inventory[j].amount < skill->db[skill_id].amount[i] )
-				{
+				if (j == INDEX_NOT_FOUND || skill->db[skill_id].itemid[i] <= 0
+				 || sd->inventory_data[j] == NULL || sd->status.inventory[j].amount < skill->db[skill_id].amount[i]
+				) {
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					return 1;
 				}
@@ -13165,8 +13164,10 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 
 			if( !require.itemid[0] ) // issue: 7935
 				break;
-			if( skill->check_pc_partner(sd,skill_id,&skill_lv,1,0) <= 0 && ((idx = pc->search_inventory(sd,require.itemid[0])) < 0 || sd->status.inventory[idx].amount < require.amount[0]) )
-			{
+			if (skill->check_pc_partner(sd,skill_id,&skill_lv,1,0) <= 0
+			 && ((idx = pc->search_inventory(sd,require.itemid[0])) == INDEX_NOT_FOUND
+			    || sd->status.inventory[idx].amount < require.amount[0])
+			) {
 				//clif->skill_fail(sd,skill_id,USESKILL_FAIL_NEED_ITEM,require.amount[0],require.itemid[0]);
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return 0;
@@ -13716,7 +13717,7 @@ int skill_check_condition_castend(struct map_session_data* sd, uint16 skill_id, 
 		if( !require.itemid[i] )
 			continue;
 		index[i] = pc->search_inventory(sd,require.itemid[i]);
-		if( index[i] < 0 || sd->status.inventory[index[i]].amount < require.amount[i] ) {
+		if (index[i] == INDEX_NOT_FOUND || sd->status.inventory[index[i]].amount < require.amount[i]) {
 			useskill_fail_cause cause = USESKILL_FAIL_NEED_ITEM;
 			switch( skill_id ){
 				case NC_SILVERSNIPER:
@@ -13833,7 +13834,7 @@ int skill_consume_requirement( struct map_session_data *sd, uint16 skill_id, uin
 					break;
 			}
 
-			if( (n = pc->search_inventory(sd,req.itemid[i])) >= 0 )
+			if ((n = pc->search_inventory(sd,req.itemid[i])) != INDEX_NOT_FOUND)
 				pc->delitem(sd,n,req.amount[i],0,1,LOG_TYPE_CONSUME);
 		}
 	}
@@ -14019,8 +14020,10 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 			}
 		}
 		if( skill_id >= HT_SKIDTRAP && skill_id <= HT_TALKIEBOX && pc->checkskill(sd, RA_RESEARCHTRAP) > 0){
-			int16 itIndex;
-			if( (itIndex = pc->search_inventory(sd,req.itemid[i])) < 0  || ( itIndex >= 0 && sd->status.inventory[itIndex].amount < req.amount[i] ) ){
+			int16 item_index;
+			if ((item_index = pc->search_inventory(sd,req.itemid[i])) == INDEX_NOT_FOUND
+			  || sd->status.inventory[item_index].amount < req.amount[i]
+			) {
 				req.itemid[i] = ITEMID_TRAP_ALLOY;
 				req.amount[i] = 1;
 			}
@@ -14658,7 +14661,7 @@ void skill_repairweapon (struct map_session_data *sd, int idx) {
 		material = materials[ target_sd->inventory_data[idx]->wlv - 1 ]; // Lv1/2/3/4 weapons consume 1 Iron Ore/Iron/Steel/Rough Oridecon
 	else
 		material = materials[2]; // Armors consume 1 Steel
-	if ( pc->search_inventory(sd,material) < 0 ) {
+	if (pc->search_inventory(sd,material) == INDEX_NOT_FOUND) {
 		clif->skill_fail(sd,sd->menuskill_id,USESKILL_FAIL_LEVEL,0);
 		return;
 	}
@@ -14726,7 +14729,7 @@ void skill_weaponrefine (struct map_session_data *sd, int idx)
 				clif->upgrademessage(sd->fd, 2, item->nameid);
 				return;
 			}
-			if( (i = pc->search_inventory(sd, material[ditem->wlv])) < 0 ){
+			if ((i = pc->search_inventory(sd, material[ditem->wlv])) == INDEX_NOT_FOUND) {
 				clif->upgrademessage(sd->fd, 3, material[ditem->wlv]);
 				return;
 			}
@@ -16413,11 +16416,10 @@ int skill_can_produce_mix (struct map_session_data *sd, int nameid, int trigger,
 		int id,x,y;
 		if( (id=skill->produce_db[i].mat_id[j]) <= 0 )
 			continue;
-		if(skill->produce_db[i].mat_amount[j] <= 0) {
-			if(pc->search_inventory(sd,id) < 0)
+		if (skill->produce_db[i].mat_amount[j] <= 0) {
+			if (pc->search_inventory(sd,id) == INDEX_NOT_FOUND)
 				return 0;
-		}
-		else {
+		} else {
 			for(y=0,x=0;y<MAX_INVENTORY;y++)
 				if( sd->status.inventory[y].nameid == id )
 					x+=sd->status.inventory[y].amount;
@@ -16466,7 +16468,7 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 		if( slot[i]<=0 )
 			continue;
 		j = pc->search_inventory(sd,slot[i]);
-		if(j < 0)
+		if (j == INDEX_NOT_FOUND)
 			continue;
 		if( slot[i]==ITEMID_STAR_CRUMB ) {
 			pc->delitem(sd,j,1,1,0,LOG_TYPE_PRODUCE);
@@ -16517,7 +16519,7 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 			int y=0;
 			j = pc->search_inventory(sd,id);
 
-			if(j >= 0){
+			if (j != INDEX_NOT_FOUND) {
 				y = sd->status.inventory[j].amount;
 				if(y>x)y=x;
 				pc->delitem(sd,j,y,0,0,LOG_TYPE_PRODUCE);
@@ -16781,10 +16783,14 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 		make_per += pc->checkskill(sd,skill_id)*500; // Smithing skills bonus: +5/+10/+15
 		make_per += pc->checkskill(sd,BS_WEAPONRESEARCH)*100 +((wlv >= 3)? pc->checkskill(sd,BS_ORIDEOCON)*100:0); // Weaponry Research bonus: +1/+2/+3/+4/+5/+6/+7/+8/+9/+10, Oridecon Research bonus (custom): +1/+2/+3/+4/+5
 		make_per -= (ele?2000:0) + sc*1500 + (wlv>1?wlv*1000:0); // Element Stone: -20%, Star Crumb: -15% each, Weapon level malus: -0/-20/-30
-		if(pc->search_inventory(sd,989) > 0) make_per+= 1000; // Emperium Anvil: +10
-		else if(pc->search_inventory(sd,988) > 0) make_per+= 500; // Golden Anvil: +5
-		else if(pc->search_inventory(sd,987) > 0) make_per+= 300; // Oridecon Anvil: +3
-		else if(pc->search_inventory(sd,986) > 0) make_per+= 0; // Anvil: +0?
+		if (pc->search_inventory(sd,ITEMID_EMPERIUM_ANVIL) != INDEX_NOT_FOUND)
+			make_per+= 1000; // +10
+		else if(pc->search_inventory(sd,ITEMID_GOLDEN_ANVIL) != INDEX_NOT_FOUND)
+			make_per+= 500; // +5
+		else if(pc->search_inventory(sd,ITEMID_ORIDECON_ANVIL) != INDEX_NOT_FOUND)
+			make_per+= 300; // +3
+		else if(pc->search_inventory(sd,ITEMID_ANVIL) != INDEX_NOT_FOUND)
+			make_per+= 0; // +0?
 		if(battle_config.wp_rate != 100)
 			make_per = make_per * battle_config.wp_rate / 100;
 	}
@@ -17045,7 +17051,7 @@ int skill_arrow_create (struct map_session_data *sd, int nameid)
 			break;
 		}
 
-	if(index < 0 || (j = pc->search_inventory(sd,nameid)) < 0)
+	if(index < 0 || (j = pc->search_inventory(sd,nameid)) == INDEX_NOT_FOUND)
 		return 1;
 
 	pc->delitem(sd,j,1,0,0,LOG_TYPE_PRODUCE);
@@ -17074,7 +17080,7 @@ int skill_poisoningweapon( struct map_session_data *sd, int nameid) {
 	sc_type type;
 	int chance, i;
 	nullpo_ret(sd);
-	if( nameid <= 0 || (i = pc->search_inventory(sd,nameid)) < 0 || pc->delitem(sd,i,1,0,0,LOG_TYPE_CONSUME) ) {
+	if( nameid <= 0 || (i = pc->search_inventory(sd,nameid)) == INDEX_NOT_FOUND || pc->delitem(sd,i,1,0,0,LOG_TYPE_CONSUME) ) {
 		clif->skill_fail(sd,GC_POISONINGWEAPON,USESKILL_FAIL_LEVEL,0);
 		return 0;
 	}
@@ -17131,8 +17137,9 @@ int skill_magicdecoy(struct map_session_data *sd, int nameid) {
 	nullpo_ret(sd);
 	skill_id = sd->menuskill_val;
 
-	if( nameid <= 0 || !itemdb_is_element(nameid) || (i = pc->search_inventory(sd,nameid)) < 0 || !skill_id || pc->delitem(sd,i,1,0,0,LOG_TYPE_CONSUME) )
-	{
+	if (nameid <= 0 || !itemdb_is_element(nameid) || (i = pc->search_inventory(sd,nameid)) == INDEX_NOT_FOUND
+	 || !skill_id || pc->delitem(sd,i,1,0,0,LOG_TYPE_CONSUME)
+	) {
 		clif->skill_fail(sd,NC_MAGICDECOY,USESKILL_FAIL_LEVEL,0);
 		return 0;
 	}

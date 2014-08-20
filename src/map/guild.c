@@ -347,8 +347,8 @@ int guild_create(struct map_session_data *sd, const char *name)
 		clif->guild_created(sd,1);
 		return 0;
 	}
-	if( battle_config.guild_emperium_check && pc->search_inventory(sd,714) == -1 )
-	{// item required
+	if (battle_config.guild_emperium_check && pc->search_inventory(sd, ITEMID_EMPERIUM) == INDEX_NOT_FOUND) {
+		// item required
 		clif->guild_created(sd,3);
 		return 0;
 	}

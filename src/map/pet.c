@@ -743,42 +743,39 @@ int pet_unequipitem(struct map_session_data *sd, struct pet_data *pd) {
 	return 0;
 }
 
-int pet_food(struct map_session_data *sd, struct pet_data *pd)
-{
-	int i,k;
+int pet_food(struct map_session_data *sd, struct pet_data *pd) {
+	int i, food_id;
 
-	k=pd->petDB->FoodID;
-	i=pc->search_inventory(sd,k);
-	if(i < 0) {
-		clif->pet_food(sd,k,0);
+	food_id = pd->petDB->FoodID;
+	i = pc->search_inventory(sd, food_id);
+	if(i == INDEX_NOT_FOUND) {
+		clif->pet_food(sd, food_id, 0);
 		return 1;
 	}
 	pc->delitem(sd,i,1,0,0,LOG_TYPE_CONSUME);
 
-	if( pd->pet.hungry > 90 )
+	if (pd->pet.hungry > 90) {
 		pet->set_intimate(pd, pd->pet.intimate - pd->petDB->r_full);
-	else
-	{
-		if( battle_config.pet_friendly_rate != 100 )
-			k = (pd->petDB->r_hungry * battle_config.pet_friendly_rate)/100;
+	} else {
+		int add_intimate = 0;
+		if (battle_config.pet_friendly_rate != 100)
+			add_intimate = (pd->petDB->r_hungry * battle_config.pet_friendly_rate)/100;
 		else
-			k = pd->petDB->r_hungry;
-		if( pd->pet.hungry > 75 )
-		{
-			k = k >> 1;
-			if( k <= 0 )
-				k = 1;
+			add_intimate = pd->petDB->r_hungry;
+		if (pd->pet.hungry > 75) {
+			add_intimate = add_intimate >> 1;
+			if (add_intimate <= 0)
+				add_intimate = 1;
 		}
-		pet->set_intimate(pd, pd->pet.intimate + k);
+		pet->set_intimate(pd, pd->pet.intimate + add_intimate);
 	}
-	if( pd->pet.intimate <= 0 )
-	{
+	if (pd->pet.intimate <= 0) {
 		pd->pet.intimate = 0;
 		pet_stop_attack(pd);
 		pd->status.speed = pd->db->status.speed;
-	}
-	else if( pd->pet.intimate > 1000 )
+	} else if (pd->pet.intimate > 1000) {
 		pd->pet.intimate = 1000;
+	}
 	status_calc_pet(pd, SCO_NONE);
 	pd->pet.hungry += pd->petDB->fullness;
 	if( pd->pet.hungry > 100 )

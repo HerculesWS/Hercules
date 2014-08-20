@@ -10343,7 +10343,7 @@ BUILDIN(homunculus_mutate) {
 		m_id    = homun->class2type(homun_id);
 
 		if( m_class == HT_EVO && m_id == HT_S &&
-			sd->hd->homunculus.level >= 99 && i >= 0 &&
+			sd->hd->homunculus.level >= 99 && i != INDEX_NOT_FOUND &&
 			!pc->delitem(sd, i, 1, 0, 0, LOG_TYPE_SCRIPT) ) {
 			sd->hd->homunculus.vaporize = HOM_ST_REST; // Remove morph state.
 			homun->call(sd); // Respawn homunculus.

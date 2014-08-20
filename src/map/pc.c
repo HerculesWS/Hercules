@@ -3922,16 +3922,23 @@ int pc_getzeny(struct map_session_data *sd,int zeny, enum e_log_pick_type type, 
 	return 0;
 }
 
-/*==========================================
- * Searching a specified itemid in inventory and return his stored index
- *------------------------------------------*/
-int pc_search_inventory(struct map_session_data *sd,int item_id)
-{
+/**
+ * Searches for the specified item ID in inventory and return its inventory index.
+ * 
+ * If the item is found, the returned value is guaranteed to be a valid index
+ * (non-negative, smaller than MAX_INVENTORY).
+ * 
+ * @param sd      Character to search on.
+ * @param item_id The item ID to search.
+ * @return the inventory index of the first instance of the requested item.
+ * @retval INDEX_NOT_FOUND if the item wasn't found.
+ */
+int pc_search_inventory(struct map_session_data *sd, int item_id) {
 	int i;
-	nullpo_retr(-1, sd);
+	nullpo_retr(INDEX_NOT_FOUND, sd);
 
 	ARR_FIND( 0, MAX_INVENTORY, i, sd->status.inventory[i].nameid == item_id && (sd->status.inventory[i].amount > 0 || item_id == 0) );
-	return ( i < MAX_INVENTORY ) ? i : -1;
+	return ( i < MAX_INVENTORY ) ? i : INDEX_NOT_FOUND;
 }
 
 /*==========================================
@@ -3940,11 +3947,11 @@ int pc_search_inventory(struct map_session_data *sd,int item_id)
         0 = success
         1 = invalid itemid not found or negative amount
         2 = overweight
-		3 = ?
+        3 = ?
         4 = no free place found
         5 = max amount reached
-		6 = ?
-		7 = stack limitation
+        6 = ?
+        7 = stack limitation
  *------------------------------------------*/
 int pc_additem(struct map_session_data *sd,struct item *item_data,int amount,e_log_pick_type log_type)
 {
@@ -4011,10 +4018,9 @@ int pc_additem(struct map_session_data *sd,struct item *item_data,int amount,e_l
 		}
 	}
 	
-	if( i >= MAX_INVENTORY )
-	{
+	if ( i >= MAX_INVENTORY ) {
 		i = pc->search_inventory(sd,0);
-		if( i < 0 )
+		if (i == INDEX_NOT_FOUND)
 			return 4;
 
 		memcpy(&sd->status.inventory[i], item_data, sizeof(sd->status.inventory[0]));

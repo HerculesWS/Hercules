@@ -3486,10 +3486,10 @@ void clif_arrow_create_list(struct map_session_data *sd)
 	WFIFOW(fd,0) = 0x1ad;
 
 	for (i = 0, c = 0; i < MAX_SKILL_ARROW_DB; i++) {
-		if (skill->arrow_db[i].nameid > 0 &&
-			(j = pc->search_inventory(sd, skill->arrow_db[i].nameid)) >= 0 &&
-			!sd->status.inventory[j].equip && sd->status.inventory[j].identify)
-		{
+		if (skill->arrow_db[i].nameid > 0
+		 && (j = pc->search_inventory(sd, skill->arrow_db[i].nameid)) != INDEX_NOT_FOUND
+		 && !sd->status.inventory[j].equip && sd->status.inventory[j].identify
+		) {
 			if ((j = itemdb_viewid(skill->arrow_db[i].nameid)) > 0)
 				WFIFOW(fd,c*2+4) = j;
 			else
@@ -14615,7 +14615,7 @@ void clif_parse_AutoRevive(int fd, struct map_session_data *sd) {
 	int item_position = pc->search_inventory(sd, ITEMID_TOKEN_OF_SIEGFRIED);
 	int hpsp = 100;
 
-	if (item_position < 0) {
+	if (item_position == INDEX_NOT_FOUND) {
 		if (sd->sc.data[SC_LIGHT_OF_REGENE])
 			hpsp = 20 * sd->sc.data[SC_LIGHT_OF_REGENE]->val1;
 		else
@@ -14628,7 +14628,7 @@ void clif_parse_AutoRevive(int fd, struct map_session_data *sd) {
 	if (!status->revive(&sd->bl, hpsp, hpsp))
 		return;
 
-	if ( item_position < 0)
+	if (item_position == INDEX_NOT_FOUND)
 		status_change_end(&sd->bl,SC_LIGHT_OF_REGENE,INVALID_TIMER);
 	else
 		pc->delitem(sd, item_position, 1, 0, 1, LOG_TYPE_CONSUME);

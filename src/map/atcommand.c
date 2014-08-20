@@ -8214,8 +8214,7 @@ ACMD(delitem) {
 	total = amount;
 	
 	// delete items
-	while( amount && ( idx = pc->search_inventory(sd, nameid) ) != -1 )
-	{
+	while (amount && (idx = pc->search_inventory(sd, nameid)) != INDEX_NOT_FOUND) {
 		int delamount = ( amount < sd->status.inventory[idx].amount ) ? amount : sd->status.inventory[idx].amount;
 		
 		if( sd->inventory_data[idx]->type == IT_PETEGG && sd->status.inventory[idx].card[0] == CARD0_PET )
