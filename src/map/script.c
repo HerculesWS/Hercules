@@ -17880,12 +17880,14 @@ int script_hqueue_create(void) {
 	script->hq[ idx ].onMapChange[0] = '\0';
 	return idx;
 }
+
 /* set .@id,queue(); */
 /* creates queue, returns created queue id */
 BUILDIN(queue) {
 	script_pushint(st,script->queue_create());
 	return true;
 }
+
 /* set .@length,queuesize(.@queue_id); */
 /* returns queue length */
 BUILDIN(queuesize) {
@@ -17900,6 +17902,7 @@ BUILDIN(queuesize) {
 
 	return true;
 }
+
 bool script_hqueue_add(int idx, int var) {
 	if( idx < 0 || idx >= script->hqs || script->hq[idx].size == -1 ) {
 		ShowWarning("script_hqueue_add: unknown queue id %d\n",idx);
@@ -17914,32 +17917,28 @@ bool script_hqueue_add(int idx, int var) {
 			}
 		}
 
-		if( i == script->hq[idx].size ) {
+		for(i = 0; i < script->hq[idx].size; i++) {
+			if( script->hq[idx].item[i] == 0 ) {
+				break;
+			}
+		}
 
-			for(i = 0; i < script->hq[idx].size; i++) {
-				if( script->hq[idx].item[i] == 0 ) {
+		if( i == script->hq[idx].size )
+			RECREATE(script->hq[idx].item, int, ++script->hq[idx].size);
+
+		script->hq[idx].item[i] = var;
+		script->hq[idx].items++;
+		if( var >= START_ACCOUNT_NUM && (sd = map->id2sd(var)) ) {
+			for(i = 0; i < sd->queues_count; i++) {
+				if( sd->queues[i] == -1 ) {
 					break;
 				}
 			}
 
-			if( i == script->hq[idx].size )
-				RECREATE(script->hq[idx].item, int, ++script->hq[idx].size);
+			if( i == sd->queues_count )
+				RECREATE(sd->queues, int, ++sd->queues_count);
 
-			script->hq[idx].item[i] = var;
-			script->hq[idx].items++;
-			if( var >= START_ACCOUNT_NUM && (sd = map->id2sd(var)) ) {
-				for(i = 0; i < sd->queues_count; i++) {
-					if( sd->queues[i] == -1 ) {
-						break;
-					}
-				}
-
-				if( i == sd->queues_count )
-					RECREATE(sd->queues, int, ++sd->queues_count);
-
-				sd->queues[i] = idx;
-			}
-
+			sd->queues[i] = idx;
 		}
 	}
 	return false;
@@ -17954,6 +17953,7 @@ BUILDIN(queueadd) {
 
 	return true;
 }
+
 bool script_hqueue_remove(int idx, int var) {
 	if( idx < 0 || idx >= script->hqs || script->hq[idx].size == -1 ) {
 		ShowWarning("script_hqueue_remove: unknown queue id %d (used with var %d)\n",idx,var);
@@ -18042,6 +18042,7 @@ BUILDIN(queueopt) {
 
 	return true;
 }
+
 bool script_hqueue_del(int idx) {
 	if( idx < 0 || idx >= script->hqs || script->hq[idx].size == -1 ) {
 		ShowWarning("script_queue_del: unknown queue id %d\n",idx);
@@ -18070,6 +18071,7 @@ bool script_hqueue_del(int idx) {
 	}
 	return false;
 }
+
 /* queuedel(.@queue_id); */
 /* deletes queue of id .@queue_id, returns 1 if id not found, 0 otherwise */
 BUILDIN(queuedel) {
@@ -18079,6 +18081,7 @@ BUILDIN(queuedel) {
 
 	return true;
 }
+
 void script_hqueue_clear(int idx) {
 	if( idx < 0 || idx >= script->hqs || script->hq[idx].size == -1 ) {
 		ShowWarning("script_hqueue_clear: unknown queue id %d\n",idx);
@@ -18107,6 +18110,7 @@ void script_hqueue_clear(int idx) {
 	}
 	return;
 }
+
 /* set .@id, queueiterator(.@queue_id); */
 /* creates a new queue iterator, returns its id */
 BUILDIN(queueiterator) {
@@ -18140,14 +18144,28 @@ BUILDIN(queueiterator) {
 
 	RECREATE(script->hqi[ idx ].item, int, queue->size);
 
+	int j = 0;
+	for (i = 0; i < queue->size; i++)
+	{
+		if (queue->item[i] > 0 ) {
+			queue->item[j] = queue->item[i];
+			j++;
+		}
+	}
+
+	for (i = queue->items; i < queue->size; i++) {
+		queue->item[i] = 0;
+	}
+
 	memcpy(script->hqi[idx].item, queue->item, sizeof(int)*queue->size);
 
-	script->hqi[ idx ].items = queue->size;
-	script->hqi[ idx ].pos = 0;
+	script->hqi[idx].items = queue->items;
+	script->hqi[idx].pos = 0;
 
 	script_pushint(st,idx);
 	return true;
 }
+
 /* Queue Iterator Get Next */
 /* returns next/first member in the iterator, 0 if none */
 BUILDIN(qiget) {
@@ -18165,6 +18183,7 @@ BUILDIN(qiget) {
 
 	return true;
 }
+
 /* Queue Iterator Check */
 /* returns 1:0 if there is a next member in the iterator */
 BUILDIN(qicheck) {
@@ -18181,6 +18200,7 @@ BUILDIN(qicheck) {
 
 	return true;
 }
+
 /* Queue Iterator Check */
 BUILDIN(qiclear) {
 	int idx = script_getnum(st, 2);
@@ -18195,6 +18215,7 @@ BUILDIN(qiclear) {
 
 	return true;
 }
+
 /**
  * packageitem({<optional container_item_id>})
  * when no item id is provided it tries to assume it comes from the current item id being processed (if any)
