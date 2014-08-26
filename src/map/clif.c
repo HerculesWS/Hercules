@@ -10886,7 +10886,7 @@ void clif_parse_NpcBuyListSend(int fd, struct map_session_data* sd)
 	unsigned short* item_list = (unsigned short*)RFIFOP(fd,4);
 	int result;
 
-	if( sd->state.trading || !sd->npc_shopid )
+	if( sd->state.trading || !sd->npc_shopid || pc_has_permission(sd,PC_PERM_DISABLE_STORE) )
 		result = 1;
 	else
 		result = npc->buylist(sd,n,item_list);
@@ -13503,7 +13503,10 @@ void clif_parse_GMKick(int fd, struct map_session_data *sd) {
 			}
 			sprintf(command, "/kick %s (%d)", status->get_name(target), status->get_class(target));
 			logs->atcommand(sd, command);
-			status_percent_damage(&sd->bl, target, 100, 0, true); // can invalidate 'target'
+			if(pc_has_permission(sd,PC_PERM_DISABLE_DROPS))
+				status_kill(target);
+			else
+				status_percent_damage(&sd->bl, target, 100, 0, true); // can invalidate 'target'
 		}
 		break;
 
@@ -15602,7 +15605,7 @@ void clif_parse_cashshop_buy(int fd, struct map_session_data *sd)
     int fail = 0;
     nullpo_retv(sd);
 
-    if( sd->state.trading || !sd->npc_shopid )
+    if( sd->state.trading || !sd->npc_shopid || pc_has_permission(sd,PC_PERM_DISABLE_STORE))
         fail = 1;
     else {
 #if PACKETVER < 20101116

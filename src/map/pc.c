@@ -4157,6 +4157,9 @@ int pc_takeitem(struct map_session_data *sd,struct flooritem_data *fitem)
 	if(!check_distance_bl(&fitem->bl, &sd->bl, 2) && sd->ud.skill_id!=BS_GREED)
 		return 0;	// Distance is too far
 
+	if( pc_has_permission(sd,PC_PERM_DISABLE_PICK_UP) )
+		return 0;
+
 	if (sd->status.party_id)
 		p = party->search(sd->status.party_id);
 
@@ -6032,6 +6035,9 @@ bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned in
 
 	if(!battle_config.pvp_exp && map->list[sd->bl.m].flag.pvp)  // [MouseJstr]
 		return false; // no exp on pvp maps
+
+	if( pc_has_permission(sd,PC_PERM_DISABLE_EXP) )
+		return false;
 
 	if(sd->status.guild_id>0)
 		base_exp-=guild->payexp(sd,base_exp);

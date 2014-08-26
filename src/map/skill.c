@@ -12674,6 +12674,9 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 
 	if (sd->chatID) return 0;
 
+	if( pc_has_permission(sd, PC_PERM_DISABLE_SKILL_USAGE) )
+		return 0;
+
 	if( pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->skillitem != skill_id )
 	{	//GMs don't override the skillItem check, otherwise they can use items without them being consumed! [Skotlex]
 		sd->state.arrow_atk = skill->get_ammotype(skill_id)?1:0; //Need to do arrow state check.
