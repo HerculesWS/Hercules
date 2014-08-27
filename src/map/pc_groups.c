@@ -423,7 +423,6 @@ void do_init_pc_groups(void) {
 		{ "disable_pickup", PC_PERM_DISABLE_PICK_UP },
 		{ "disable_store", PC_PERM_DISABLE_STORE },
 		{ "disable_exp", PC_PERM_DISABLE_EXP },
-		{ "disable_drops", PC_PERM_DISABLE_DROPS },
 		{ "disable_skill_usage", PC_PERM_DISABLE_SKILL_USAGE },
 	};
 	unsigned char i, len = ARRAYLENGTH(pc_g_defaults);

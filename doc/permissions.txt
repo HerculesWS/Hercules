@@ -37,4 +37,3 @@ disable_pickup: Ability to disable the player from picking up any item from grou
 disable_exp: Ability to disable the player from gaining any experience point.
 disable_store: Ability to disable the player from using/openning npc and player stores.
 disable_skill_usage: Ability to disable the player from using any skill.
-disable_drops: Ability to disable item dropping from any monster killed by the player by using the GM kick feature.

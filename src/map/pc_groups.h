@@ -38,8 +38,7 @@ enum e_pc_permission {
 	PC_PERM_DISABLE_PICK_UP     = 0x800000,
 	PC_PERM_DISABLE_STORE       = 0x1000000,
 	PC_PERM_DISABLE_EXP         = 0x2000000,
-	PC_PERM_DISABLE_DROPS       = 0x4000000,
-	PC_PERM_DISABLE_SKILL_USAGE = 0x8000000,
+	PC_PERM_DISABLE_SKILL_USAGE = 0x4000000,
 };
 
 // Cached config settings for quick lookup

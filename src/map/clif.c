@@ -13503,10 +13503,7 @@ void clif_parse_GMKick(int fd, struct map_session_data *sd) {
 			}
 			sprintf(command, "/kick %s (%d)", status->get_name(target), status->get_class(target));
 			logs->atcommand(sd, command);
-			if(pc_has_permission(sd,PC_PERM_DISABLE_DROPS))
-				status_kill(target);
-			else
-				status_percent_damage(&sd->bl, target, 100, 0, true); // can invalidate 'target'
+			status_percent_damage(&sd->bl, target, 100, 0, true); // can invalidate 'target'
 		}
 		break;
 
