@@ -6294,9 +6294,9 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 	int sc_def = 0, tick_def = -1; //-1 = use sc_def
 	//Linear resistance substracted from rate and tick after percentual resistance was applied
 	//Example: 25% -> sc_def2=2000 -> 5%; 2500ms -> tick_def2=2000 -> 500ms
-	int sc_def2 = 0, tick_def2 = -1; //-1 = use sc_def2 (pre-re only)
+	int sc_def2 = 0, tick_def2 = 0;
 
-	struct status_data *st;
+	struct status_data *st, *bst;
 	struct status_change *sc;
 	struct map_session_data *sd;
 
@@ -6307,14 +6307,8 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 
 /// Returns the 'bl's level, capped to 'cap'
 #define SCDEF_LVL_CAP(bl, cap) ( (bl) ? (status->get_lv(bl) > (cap) ? (cap) : status->get_lv(bl)) : 0 )
-/// Renewal level modifier.
-/// In renewal, returns the difference between the levels of 'bl' and 'src', both capped to 'maxlv', multiplied by 'factor'
-/// In pre-renewal, returns zero.
-#ifdef RENEWAL
+/// returns the difference between the levels of 'bl' and 'src', both capped to 'maxlv', multiplied by 'factor'
 #define SCDEF_LVL_DIFF(bl, src, maxlv, factor) ( ( SCDEF_LVL_CAP((bl), (maxlv)) - SCDEF_LVL_CAP((src), (maxlv)) ) * (factor) )
-#else
-#define SCDEF_LVL_DIFF(bl, src, maxlv, factor) 0
-#endif
 
 	//Status that are blocked by Golden Thief Bug card or Wand of Hermod
 	if (status->isimmune(bl))
@@ -6353,6 +6347,7 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 
 	sd = BL_CAST(BL_PC,bl);
 	st = status->get_status_data(bl);
+	bst = status_get_base_status(bl);
 	sc = status->get_sc(bl);
 	if( sc && !sc->count )
 		sc = NULL;
@@ -6394,7 +6389,6 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 	case SC_DPOISON:
 		sc_def = st->vit*100;
 		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-#ifdef RENEWAL
 		if (sd) {
 			//For players: 60000 - 450*vit - 100*luk
 			tick_def = st->vit*75;
@@ -6404,7 +6398,6 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 			tick>>=1;
 			tick_def = (st->vit*200)/3;
 		}
-#endif
 		break;
 	case SC_SILENCE:
 #ifdef RENEWAL
@@ -6428,14 +6421,12 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 	case SC_SLEEP:
 		sc_def = st->int_*100;
 		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-#ifdef RENEWAL
 		tick_def2 = st->luk*10;
-#endif
 		break;
 	case SC_DEEP_SLEEP:
-		sc_def = st->int_*50;
+		sc_def = bst->int_*50;
 		tick_def = 0; // Linear reduction instead
-		tick_def2 = st->int_ * 50 + SCDEF_LVL_CAP(bl, 150) * 50; // kRO balance update lists this formula
+		tick_def2 = bst->int_ * 50 + SCDEF_LVL_CAP(bl, 150) * 50; // kRO balance update lists this formula
 		break;
 	case SC_DEC_AGI:
 	case SC_ADORAMUS:
@@ -6451,19 +6442,11 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 		sc_def = st->mdef*100;
 		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
 		tick_def = 0; //No duration reduction
-#ifndef RENEWAL
-		tick_def2 = 0; //No duration reduction
-#endif
 		break;
 	case SC_FREEZE:
 		sc_def = st->mdef*100;
 		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-		tick_def = 0; //No duration reduction
-#ifdef RENEWAL
 		tick_def2 = status_get_luk(src) * -10; //Caster can increase final duration with luk
-#else
-		tick_def2 = 0; //No duration reduction
-#endif
 		break;
 	case SC_CURSE:
 		// Special property: immunity when luk is zero
@@ -6477,24 +6460,17 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 		sc_def = st->luk*100;
 		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(NULL, src, 99, 10); // Curse only has a level penalty and no resistance
 		tick_def = st->vit*100;
-#ifdef RENEWAL
 		tick_def2 = st->luk*10;
-#endif
 		break;
 	case SC_BLIND:
 		sc_def = (st->vit + st->int_)*50;
 		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-#ifdef RENEWAL
 		tick_def2 = st->luk*10;
-#endif
 		break;
 	case SC_CONFUSION:
 		sc_def = (st->str + st->int_)*50;
 		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-#ifdef RENEWAL
-		sc_def2 = -sc_def2; // Reversed sc_def2
 		tick_def2 = st->luk*10;
-#endif
 		break;
 	case SC_ANKLESNARE:
 		if(st->mode&MD_BOSS) // Lasts 5 times less on bosses
@@ -6506,7 +6482,6 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 		if (sd) //Duration greatly reduced for players.
 			tick /= 15;
 		sc_def2 = st->vit*25 + st->agi*10 + SCDEF_LVL_CAP(bl, 99) * 20; // Linear Reduction of Rate
-		tick_def2 = 0; //No duration reduction
 		break;
 	case SC_MARSHOFABYSS:
 		//5 second (Fixed) + 25 second - {( INT + LUK ) / 20 second }
@@ -6548,10 +6523,10 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 		tick_def2 = (st->vit + st->agi) * 70;
 		break;
 	case SC_COLD:
-		tick_def2 = st->vit*100 + status->get_lv(bl)*20;
+		tick_def2 = bst->vit*100 + status->get_lv(bl)*20;
 		break;
 	case SC_VACUUM_EXTREME:
-		tick_def2 = st->str*50;
+		tick_def2 = bst->str*50;
 		break;
 	case SC_MANDRAGORA:
 		sc_def = (st->vit + st->luk)*20;
@@ -6612,13 +6587,6 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 	//When tick def not set, reduction is the same for both.
 	if(tick_def == -1)
 		tick_def = sc_def;
-	if(tick_def2 == -1) {
-#ifdef RENEWAL
-		tick_def2 = 0;
-#else
-		tick_def2 = sc_def2;
-#endif
-	}
 
 	//Natural resistance
 	if (!(flag&8)) {

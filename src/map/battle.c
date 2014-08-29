@@ -1396,7 +1396,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 	int i;
 	struct status_change *sc, *tsc;
 	struct map_session_data *sd, *tsd;
-	struct status_data *st, *tst;
+	struct status_data *st, *tst, *bst;
 
 	nullpo_ret(src);
 	nullpo_ret(target);
@@ -1406,6 +1406,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 	sc = status->get_sc(src);
 	tsc = status->get_sc(target);
 	st = status->get_status_data(src);
+	bst = status->get_base_status(src);
 	tst = status->get_status_data(target);
 
 	switch(attack_type){
@@ -2411,9 +2412,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					break;
 				case GN_CART_TORNADO:
 				{
-					int strbonus = st->str; // FIXME Supposed to take only base STR, but current code wont allow that. So well just take STR for now. [Rytech]
-					if ( strbonus > 130 ) // Max base stat limit on official is 130. So well allow no higher then 125 STR here. This limit prevents
-						strbonus = 130; // the division from going any lower then 30 so the server wont divide by 0 if someone has 150 STR.
+					int strbonus = bst->str;
 					skillratio = 50 * skill_lv + (sd ? sd->cart_weight : battle_config.max_cart_weight) / 10 / (150 - strbonus) + 50 * (sd ? pc->checkskill(sd, GN_REMODELING_CART) : 5);
 				}
 					break;

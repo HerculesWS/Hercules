@@ -218,6 +218,9 @@ int elemental_delete(struct elemental_data *ed, int reply) {
 	sd->ed = NULL;
 	sd->status.ele_id = 0;
 
+	if( !ed->bl.prev )
+		return unit->free(&ed->bl, 0);
+
 	return unit->remove_map(&ed->bl, 0, ALC_MARK);
 }
 
