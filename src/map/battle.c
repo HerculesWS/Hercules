@@ -2874,9 +2874,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			if(flag&BF_SKILL) { //25% reduction
 				if ( !(skill->get_inf(skill_id)&INF_GROUND_SKILL) && !(skill->get_nk(skill_id)&NK_SPLASH) )
 					damage -= 25*damage/100;
-				}
-			else if ((flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON))
+			} else if ((flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON)) {
 				damage >>= 2; //75% reduction
+			}
 		}
 
 		if ( sc->data[SC_WATER_BARRIER] )
