@@ -756,24 +756,6 @@ int pc_setequipindex(struct map_session_data *sd)
 
 	return 0;
 }
-//static int pc_isAllowedCardOn(struct map_session_data *sd,int s,int eqindex,int flag)
-//{
-//	int i;
-//	struct item *item = &sd->status.inventory[eqindex];
-//	struct item_data *data;
-//
-//	//Crafted/made/hatched items.
-//	if (itemdb_isspecial(item->card[0]))
-//		return 1;
-//
-//	/* scan for enchant armor gems */
-//	if( item->card[MAX_SLOTS - 1] && s < MAX_SLOTS - 1 )
-//		s = MAX_SLOTS - 1;
-//
-//	ARR_FIND( 0, s, i, item->card[i] && (data = itemdb->exists(item->card[i])) != NULL && data->flag.no_equip&flag );
-//	return( i < s ) ? 0 : 1;
-//}
-
 
 bool pc_isequipped(struct map_session_data *sd, int nameid)
 {
@@ -960,6 +942,23 @@ int pc_isequip(struct map_session_data *sd,int n)
 		if( item->class_upper&ITEMUPPER_BABY   &&   sd->class_&JOBL_BABY                          ) break;
 		if( item->class_upper&ITEMUPPER_THIRD  &&   sd->class_&JOBL_THIRD                         ) break;
 		return 0;
+	}
+
+	if ( battle_config.unequip_restricted_equipment & 1 ) {
+		int i;
+		for ( i = 0; i < map->list[sd->bl.m].zone->disabled_items_count; i++ )
+			if ( map->list[sd->bl.m].zone->disabled_items[i] == sd->status.inventory[n].nameid )
+				return 0;
+	}
+
+	if ( battle_config.unequip_restricted_equipment & 2 ) {
+		if ( !itemdb_isspecial( sd->status.inventory[n].card[0] ) ) {
+			int i, slot;
+			for ( slot = 0; slot < MAX_SLOTS; slot++ )
+				for ( i = 0; i < map->list[sd->bl.m].zone->disabled_items_count; i++ )
+					if ( map->list[sd->bl.m].zone->disabled_items[i] == sd->status.inventory[n].card[slot] )
+						return 0;
+		}
 	}
 
 	return 1;
@@ -9238,8 +9237,32 @@ int pc_checkitem(struct map_session_data *sd)
 			continue;
 		}
 
+		if ( battle_config.unequip_restricted_equipment & 1 ) {
+			int j;
+			for ( j = 0; j < map->list[sd->bl.m].zone->disabled_items_count; j++ ) {
+				if ( map->list[sd->bl.m].zone->disabled_items[j] == sd->status.inventory[i].nameid ) {
+					pc_unequipitem( sd, i, 2 );
+					calc_flag = 1;
+				}
+			}
+		}
+
+		if ( battle_config.unequip_restricted_equipment & 2 ) {
+			if ( !itemdb_isspecial( sd->status.inventory[i].card[0] ) ) {
+				int j, slot;
+				for ( slot = 0; slot < MAX_SLOTS; slot++ ) {
+					for ( j = 0; j < map->list[sd->bl.m].zone->disabled_items_count; j++ ) {
+						if ( map->list[sd->bl.m].zone->disabled_items[j] == sd->status.inventory[i].card[slot] ) {
+							pc_unequipitem( sd, i, 2 );
+							calc_flag = 1;
+						}
+					}
+				}
+			}
+		}
+
 	}
-		
+
 	if( calc_flag && sd->state.active ) {
 		pc->checkallowskill(sd);
 		status_calc_pc(sd,SCO_NONE);
