@@ -10095,7 +10095,7 @@ BUILDIN(sc_start)
 	}
 
 	if(!bl)
-		return 0;
+		return true;
 
 	switch(start_type) {
 		case 1:
@@ -10112,7 +10112,7 @@ BUILDIN(sc_start)
 			status->change_start(bl, bl, type, rate, val1, val2, val3, val4, tick, flag);
 			break;
 	}
-	return 0;
+	return true;
 }
 
 /// Ends one or all status effects on the target unit or on the attached player.
