@@ -4514,6 +4514,7 @@ int parse_char(int fd)
 						WFIFOW(fd,0) = 0x6c;
 						WFIFOB(fd,2) = 0;
 						WFIFOSET(fd,3);
+						RFIFOSKIP(fd,( cmd == 0x68) ? 46 : 56);
 						break;
 					}
 				}
