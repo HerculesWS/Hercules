@@ -19282,6 +19282,7 @@ void script_hardcoded_constants(void) {
 	script->set_constant("MAX_ZENY",MAX_ZENY,false);
 	script->set_constant("MAX_BG_MEMBERS",MAX_BG_MEMBERS,false);
 	script->set_constant("MAX_CHAT_USERS",MAX_CHAT_USERS,false);
+	script->set_constant("MAX_REFINE",MAX_REFINE,false);
 
 	/* status options */
 	script->set_constant("Option_Nothing",OPTION_NOTHING,false);

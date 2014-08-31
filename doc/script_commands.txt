@@ -702,6 +702,7 @@ MAX_INVENTORY		- Maximum inventory items
 MAX_ZENY			- Maximum Zeny
 MAX_BG_MEMBERS		- Maximum BattleGround members 
 MAX_CHAT_USERS		- Maximum Chat users
+MAX_REFINE			- Maximum Refine level
 
 Send targets and status options are also hard-coded and can be found
 in src/map/script.c::script_hardcoded_constants or in functions that
