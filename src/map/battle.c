@@ -2692,22 +2692,11 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			d->dmg_lv = ATK_BLOCK;
 			return 0;
 		}
-		if( (sce=sc->data[SC_AUTOGUARD]) && flag&BF_WEAPON && !(skill->get_nk(skill_id)&NK_NO_CARDFIX_ATK) && rnd()%100 < sce->val2 )
-		{
+		if ((sce=sc->data[SC_AUTOGUARD]) && flag&BF_WEAPON && !(skill->get_nk(skill_id)&NK_NO_CARDFIX_ATK) && rnd()%100 < sce->val2) {
 			int delay;
-			struct block_list *d_bl;
-			struct status_change_entry *sce_d;
-			bool devoted = false;
+			struct block_list *d_bl = NULL;
+			struct status_change_entry *sce_d = sc->data[SC_DEVOTION];
 
-			if ((sce_d = sc->data[SC_DEVOTION]) && (d_bl = map->id2bl(sce_d->val1)) &&
-				((d_bl->type == BL_MER && ((TBL_MER*)d_bl)->master && ((TBL_MER*)d_bl)->master->bl.id == bl->id) || // 
-				(d_bl->type == BL_PC && ((TBL_PC*)d_bl)->devotion[sce_d->val2] == bl->id))) {
-			// if player is target of devotion, show guard effect on the devotion caster rather than the target
-				devoted = true;
-				clif->skill_nodamage(d_bl, d_bl, CR_AUTOGUARD, sce->val1, 1);	
-			} else
-				clif->skill_nodamage(bl, bl, CR_AUTOGUARD,sce->val1, 1);
-			
 			// different delay depending on skill level [celest]
 			if (sce->val1 <= 5)
 				delay = 300;
@@ -2716,7 +2705,17 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			else
 				delay = 100;
 
-			unit->set_walkdelay((devoted ? d_bl : bl), timer->gettick(), delay, 1);
+			if (sce_d && (d_bl = map->id2bl(sce_d->val1))
+			 && ((d_bl->type == BL_MER && ((TBL_MER*)d_bl)->master && ((TBL_MER*)d_bl)->master->bl.id == bl->id)
+			    || (d_bl->type == BL_PC && ((TBL_PC*)d_bl)->devotion[sce_d->val2] == bl->id))
+			) {
+				// if player is target of devotion, show guard effect on the devotion caster rather than the target
+				clif->skill_nodamage(d_bl, d_bl, CR_AUTOGUARD, sce->val1, 1);
+				unit->set_walkdelay(d_bl, timer->gettick(), delay, 1);
+			} else {
+				clif->skill_nodamage(bl, bl, CR_AUTOGUARD, sce->val1, 1);
+				unit->set_walkdelay(bl, timer->gettick(), delay, 1);
+			}
 
 			if(sc->data[SC_CR_SHRINK] && rnd()%100<5*sce->val1)
 				skill->blown(bl,src,skill->get_blewcount(CR_SHRINK,1),-1,0);
