@@ -3,7 +3,7 @@
 //===== By: ====================================================================
 //= Kisuka (1.0)
 //===== Current Version: =======================================================
-//= 1.0.1
+//= 1.0.2
 //===== File Encoding ==========================================================
 //= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //===== Description: ===========================================================
@@ -11,6 +11,7 @@
 //===== Additional Comments: ===================================================
 //= 1.0.0 Initial Release. [Kisuka]
 //= 1.0.1 Some Clean-Up and Fixes. [Euphy]
+//= 1.0.2 Fixed a small typo. [Euphy]
 //==============================================================================
 
 1@lhz	mapflag	src4instance
@@ -949,7 +950,7 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 	.@equip_item = getequipid(.@position);
 	.@lhz_max_num = 4000;
 	if(.@equip_item == Agent_Katar || .@equip_item == Guillotine_Katar || .@equip_item == Ygnus_Stale ||
-	.@equip_item == End_Sektura || .@equip_item = Cannon_Spear || .@equip_item == Giant_Lance ||
+	.@equip_item == End_Sektura || .@equip_item == Cannon_Spear || .@equip_item == Giant_Lance ||
 	.@equip_item == Aztoe_Nail || .@equip_item == Scarletto_Nail || .@equip_item == Bloody_Cross) {
 	  .@type = 1;
 	  if(.@equip_item == Giant_Lance)
