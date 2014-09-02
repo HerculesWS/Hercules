@@ -11018,15 +11018,9 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 			}
 			break;
 		case BA_ASSASSINCROSS:
-#ifdef RENEWAL
 			val1 = 10 + skill_lv + (st->agi/10); // ASPD increase
 			if(sd)
-				val1 += 4*pc->checkskill(sd,BA_MUSICALLESSON);
-#else
-			val1 = 100+(10*skill_lv)+(st->agi/10); // ASPD increase
-			if(sd)
-				val1 += 5*pc->checkskill(sd,BA_MUSICALLESSON);
-#endif
+				val1 += (pc->checkskill(sd,BA_MUSICALLESSON) + 1) / 2;
 			break;
 		case DC_FORTUNEKISS:
 			val1 = 10+skill_lv+(st->luk/10); // Critical increase
