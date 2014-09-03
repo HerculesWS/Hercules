@@ -5569,7 +5569,7 @@ short status_calc_aspd_rate(struct block_list *bl, struct status_change *sc, int
 					max = sc->data[SC_ASSNCROS]->val2;
 			}
 		}
-		aspd_rate -= max;
+		aspd_rate -= 10 * max; // let's multiply here for consistency
 
 		if(sc->data[SC_BERSERK])
 			aspd_rate -= 300;
