@@ -4749,8 +4749,7 @@ int parse_char(int fd)
 				
 			// checks the entered pin
 			case 0x8b8:
-				if( RFIFOREST(fd) < 10 )
-					return 0;
+				FIFOSD_CHECK(10);
 				
 				if( RFIFOL(fd,2) == sd->account_id )
 					pincode->check( fd, sd );
@@ -4760,8 +4759,8 @@ int parse_char(int fd)
 				
 			// request for PIN window
 			case 0x8c5:
-				if( RFIFOREST(fd) < 6 )
-					return 0;
+				FIFOSD_CHECK(6);
+
 				if( RFIFOL(fd,2) == sd->account_id )
 					pincode->sendstate( fd, sd, PINCODE_NOTSET );
 							
@@ -4770,8 +4769,8 @@ int parse_char(int fd)
 				
 			// pincode change request
 			case 0x8be:
-				if( RFIFOREST(fd) < 14 )
-					return 0;
+				FIFOSD_CHECK(14);
+
 				if( RFIFOL(fd,2) == sd->account_id )
 					pincode->change( fd, sd );
 				
@@ -4780,8 +4779,8 @@ int parse_char(int fd)
 				
 			// activate PIN system and set first PIN
 			case 0x8ba:
-				if( RFIFOREST(fd) < 10 )
-					return 0;
+				FIFOSD_CHECK(10);
+
 				if( RFIFOL(fd,2) == sd->account_id )
 					pincode->setnew( fd, sd );
 				RFIFOSKIP(fd,10);
@@ -4789,9 +4788,8 @@ int parse_char(int fd)
 			
 			/* 0x8d4 <from>.W <to>.W <unused>.W (2+2+2+2) */
 			case 0x8d4:
-				if( RFIFOREST(fd) < 8 )
-					return 0;
-				else {
+				FIFOSD_CHECK(8);
+				{
 					bool ret;
 					ret = char_slotchange(sd, fd, RFIFOW(fd, 2), RFIFOW(fd, 4));
 					WFIFOHEAD(fd, 8);
