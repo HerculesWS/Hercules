@@ -1185,7 +1185,7 @@ enum si_type {
 	SI_ECHOSONG                              = 443,
 	SI_HARMONIZE                             = 444,
 	SI_STRIKING                              = 445,
-	SI_WARMER                                = 446,
+	//SI_WARMER                              = 446,
 	SI_MOONLITSERENADE                       = 447,
 	SI_SATURDAYNIGHTFEVER                    = 448,
 	SI_SITDOWN_FORCE                         = 449,
