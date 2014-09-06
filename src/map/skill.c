@@ -11021,6 +11021,7 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 			val1 = 10 + skill_lv + (st->agi/10); // ASPD increase
 			if(sd)
 				val1 += (pc->checkskill(sd,BA_MUSICALLESSON) + 1) / 2;
+			val1 *= 10; // ASPD works with 1000 as 100%
 			break;
 		case DC_FORTUNEKISS:
 			val1 = 10+skill_lv+(st->luk/10); // Critical increase
