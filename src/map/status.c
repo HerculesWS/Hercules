@@ -1790,16 +1790,8 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 	hide_flag = flag?OPTION_HIDE:(OPTION_HIDE|OPTION_CLOAK|OPTION_CHASEWALK);
 
 	//You cannot hide from ground skills.
-	if( skill->get_ele(skill_id,1) == ELE_EARTH ) //TODO: Need Skill Lv here :/
+	if( skill->get_ele(skill_id,1) == ELE_EARTH && skill_id != MG_STONECURSE)
 		hide_flag &= ~OPTION_HIDE;
-	else {
-		switch ( skill_id ) {
-			case MO_ABSORBSPIRITS: // it works when already casted and target suddenly hides.
-			case SA_DISPELL:
-				hide_flag &= ~OPTION_HIDE;
-				break;
-		}
-	}
 
 	switch( target->type ) {
 		case BL_PC: {
@@ -1810,6 +1802,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 					return 0;
 				if( tsc ) {
 					if (tsc->option&hide_flag && !is_boss &&
+						!(flag&1 && skill->get_nk(skill_id)&NK_NO_DAMAGE) && // Buff/debuff skills that started casting before hiding still applies
 						((sd->special_state.perfect_hiding || !is_detect) ||
 						(tsc->data[SC_CLOAKINGEXCEED] && is_detect)))
 						return 0;
