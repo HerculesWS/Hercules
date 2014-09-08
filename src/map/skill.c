@@ -6360,7 +6360,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 				if (tsc->data[SC_STONE]) {
 					status_change_end(bl, SC_STONE, INVALID_TIMER);
-					if (sd) clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+					clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 					break;
 				}
 				if (sc_start4(src,bl,SC_STONE,(skill_lv*4+20)+brate,
