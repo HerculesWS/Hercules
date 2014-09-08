@@ -272,6 +272,29 @@ AC_ARG_ENABLE(
 
 
 #
+# adress sanitize
+#
+AC_ARG_ENABLE(
+	[sanitize],
+	AC_HELP_STRING(
+		[--enable-sanitize],
+		[
+			Enables or Disables Sanitize Address Checking (SANITIZE is disabled by default)
+		]
+	),
+	[
+		enable_sanitize="$enableval"
+		case $enableval in
+			"no");;
+			"yes");;
+			*) AC_MSG_ERROR([[invalid argument --enable-sanitize=$disableval... stopping]]);;
+		esac
+	],
+	[enable_sanitize="no"]
+)
+
+
+#
 # Renewal
 #
 AC_ARG_ENABLE(
@@ -554,6 +577,39 @@ if test "$enable_lto" != "no" ; then
 	LDFLAGS="$LDFLAGS -flto"
 
 	AC_MSG_CHECKING([whether $CC supports -flto])
+	AC_RUN_IFELSE(
+		[AC_LANG_SOURCE([
+			int main(int argc, char **argv){
+				return 0;
+			}
+		])],
+		[
+			AC_MSG_RESULT([yes])
+		],
+		[
+			AC_MSG_RESULT([no])
+			CFLAGS="$OLD_CFLAGS"
+			LDFLAGS="$OLD_LDFLAGS"
+		],
+		[
+			AC_MSG_RESULT([guessing no])
+		]
+	)
+fi
+
+
+#
+# sanitize Support test
+#
+if test "$enable_sanitize" != "no" ; then
+
+	OLD_CFLAGS="$CFLAGS"
+	CFLAGS="$CFLAGS -fsanitize=address"
+
+	OLD_LDFLAGS="$LDFLAGS"
+	LDFLAGS="$LDFLAGS -fsanitize=address"
+
+	AC_MSG_CHECKING([whether $CC supports -fsanitize=address])
 	AC_RUN_IFELSE(
 		[AC_LANG_SOURCE([
 			int main(int argc, char **argv){
