@@ -138,7 +138,7 @@ int mapindex_init(void) {
 	char line[1024];
 	int last_index = -1;
 	int index, total = 0;
-	char map_name[12];
+	char map_name[13];
 	
 	if( ( fp = fopen(mapindex->config_file,"r") ) == NULL ){
 		ShowFatalError("Unable to read mapindex config file %s!\n", mapindex->config_file);
