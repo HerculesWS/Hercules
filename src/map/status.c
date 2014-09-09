@@ -5395,7 +5395,25 @@ short status_calc_aspd(struct block_list *bl, struct status_change *sc, short fl
 			skills1 = 5;
 	}
 
-	if((sc->data[SC_BERSERK]) &&	skills1 < 15)
+	if( sc->data[SC_ASSNCROS] && skills1 < sc->data[SC_ASSNCROS]->val2){
+		if (bl->type!=BL_PC)
+			skills1 = sc->data[SC_ASSNCROS]->val2;
+		else
+			switch(((TBL_PC*)bl)->status.weapon)
+		{
+			case W_BOW:
+			case W_REVOLVER:
+			case W_RIFLE:
+			case W_GATLING:
+			case W_SHOTGUN:
+			case W_GRENADE:
+				break;
+			default:
+				skills1 = sc->data[SC_ASSNCROS]->val2;
+		}
+	}
+
+	if((sc->data[SC_BERSERK]) &&	 skills1 < 15)
 		skills1 = 15;
 	else if(sc->data[SC_GS_MADNESSCANCEL] && skills1 < 20)
 		skills1 = 20;
@@ -5441,7 +5459,7 @@ short status_calc_aspd(struct block_list *bl, struct status_change *sc, short fl
 	if( sc->data[SC_PAIN_KILLER] )
 		skills2 -= sc->data[SC_PAIN_KILLER]->val2;
 
-	if( sc->data[SC_SWING] )
+	if( sc->data[SC_SWING] ) // TODO: SC_SWING shouldn't stack with skill1 modifiers
 		skills2 += sc->data[SC_SWING]->val3;
 	if( sc->data[SC_DANCE_WITH_WUG] )
 		skills2 += sc->data[SC_DANCE_WITH_WUG]->val3;
@@ -5457,23 +5475,7 @@ short status_calc_aspd(struct block_list *bl, struct status_change *sc, short fl
 		skills2 += sc->data[SC_GS_GATLINGFEVER]->val1;
 	if( sc->data[SC_STAR_COMFORT] )
 		skills2 += 3 * sc->data[SC_STAR_COMFORT]->val1;
-	if( sc->data[SC_ASSNCROS] && !skills1){
-		if (bl->type!=BL_PC)
-			skills2 += sc->data[SC_ASSNCROS]->val2;
-		else
-			switch(((TBL_PC*)bl)->status.weapon)
-		{
-			case W_BOW:
-			case W_REVOLVER:
-			case W_RIFLE:
-			case W_GATLING:
-			case W_SHOTGUN:
-			case W_GRENADE:
-				break;
-			default:
-				skills2 += sc->data[SC_ASSNCROS]->val2;
-		}
-	}
+	
 	return ( flag&1? (skills1 + pots) : skills2 );
 #else
 	return 0;
