@@ -5413,7 +5413,7 @@ short status_calc_aspd(struct block_list *bl, struct status_change *sc, short fl
 		}
 	}
 
-	if((sc->data[SC_BERSERK]) &&	 skills1 < 15)
+	if((sc->data[SC_BERSERK]) && skills1 < 15)
 		skills1 = 15;
 	else if(sc->data[SC_GS_MADNESSCANCEL] && skills1 < 20)
 		skills1 = 20;
