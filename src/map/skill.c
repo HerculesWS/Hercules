@@ -11018,13 +11018,15 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 			}
 			break;
 		case BA_ASSASSINCROSS:
-			val1 = 10 + skill_lv + (st->agi/10); // ASPD increase
 			if(sd)
+				val1 = (pc->checkskill(sd,BA_MUSICALLESSON) + 1) / 2;
 #ifdef RENEWAL
-				val1 += 4 * pc->checkskill(sd,BA_MUSICALLESSON);
+			// This formula was taken from a RE calculator
+			// and the changes published on irowiki
+			// Luckily, official tests show it's the right one
+			val1 += skill_lv + (st->agi/20);
 #else
-				val1 += (pc->checkskill(sd,BA_MUSICALLESSON) + 1) / 2;
-
+			val1 += 10 + skill_lv + (st->agi/10); // ASPD increase
 			val1 *= 10; // ASPD works with 1000 as 100%
 #endif
 			break;
@@ -12273,6 +12275,16 @@ int skill_unit_onout(struct skill_unit *src, struct block_list *bl, int64 tick) 
 			}
 		}
 			break;
+		case UNT_WHISTLE:
+		case UNT_ASSASSINCROSS:
+		case UNT_POEMBRAGI:
+		case UNT_APPLEIDUN:
+		case UNT_HUMMING:
+		case UNT_DONTFORGETME:
+		case UNT_FORTUNEKISS:
+		case UNT_SERVICEFORYOU:
+			if (sg->src_id==bl->id && !(sc && sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_BARDDANCER))
+				return -1;
 	}
 	return sg->skill_id;
 }
@@ -12413,8 +12425,8 @@ int skill_unit_effect(struct block_list* bl, va_list ap) {
 	} else {
 		if( flag&1 )
 			skill->unit_onplace(su,bl,tick);
-		else
-			skill->unit_onout(su,bl,tick);
+		else if (skill->unit_onout(su,bl,tick) == -1)
+			return 0; // Don't let a Bard/Dancer update their own song timer
 
 		if( flag&4 )
 	  		skill->unit_onleft(skill_id, bl, tick);
