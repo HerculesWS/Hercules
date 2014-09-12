@@ -11446,10 +11446,12 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 			if (!sce)
 				sc_start4(ss,bl,type,100,sg->skill_lv,sg->val1,sg->val2,0,sg->limit);
 			break;
+		case UNT_APPLEIDUN:  // Apple of idun gets it from skill_unit_onplace_timer
+			if (!battle_config.song_timer_reset)
+				break;
 		case UNT_WHISTLE:
 		case UNT_ASSASSINCROSS:
 		case UNT_POEMBRAGI:
-		case UNT_APPLEIDUN:
 		case UNT_HUMMING:
 		case UNT_DONTFORGETME:
 		case UNT_FORTUNEKISS:
@@ -11458,16 +11460,15 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 				return 0;
 
 			if (!sc) return 0;
-			if (battle_config.song_timer_reset) { // Aegis like behaviour goes on skill_unit_onplace_timer
-				if (!sce)
-					sc_start4(ss,bl,type,100,sg->skill_lv,sg->val1,sg->val2,0,sg->limit);
-				else if (sce->val4 == 1) {
-					//Readjust timers since the effect will not last long.
-					sce->val4 = 0;
-					timer->delete(sce->timer, status->change_timer);
-					sce->timer = timer->add(tick+sg->limit, status->change_timer, bl->id, type);
-				}
+			if (!sce)
+				sc_start4(ss,bl,type,100,sg->skill_lv,sg->val1,sg->val2,0,sg->limit);
+			else if (battle_config.song_timer_reset && sce->val4 == 1) {
+				//Readjust timers since the effect will not last long.
+				sce->val4 = 0;
+				timer->delete(sce->timer, status->change_timer);
+				sce->timer = timer->add(tick+sg->limit, status->change_timer, bl->id, type);
 			}
+			
 			break;
 
 		case UNT_FOGWALL:
@@ -11850,10 +11851,10 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 				heal = ~heal + 1;
 			clif->skill_nodamage(&src->bl, bl, AL_HEAL, heal, 1);
 			status->heal(bl, heal, 0, 0);
-			
+
 			if (!(battle_config.song_timer_reset) // songs don't reset prior timers
-			 && !(sg->src_id == bl->id && !(tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_BARDDANCER)) // Don't affect itself
-			 && (!(tsc->data[type]) || (tsc->data[type] && tsc->data[type]->val4 != 1))) // Check for 20 seconds song effect
+			  && !(sg->src_id == bl->id && !(tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_BARDDANCER)) // Don't affect itself
+			  && (!(tsc->data[type]) || (tsc->data[type] && tsc->data[type]->val4 != 1))) // Check for 20 seconds song effect
 				sc_start4(ss,bl,type,100,sg->skill_lv,sg->val1,sg->val2,0,sg->interval + 100);
 
 			break;
