@@ -11446,10 +11446,12 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 			if (!sce)
 				sc_start4(ss,bl,type,100,sg->skill_lv,sg->val1,sg->val2,0,sg->limit);
 			break;
+		case UNT_APPLEIDUN:  // Apple of idun gets it from skill_unit_onplace_timer
+			if (!battle_config.song_timer_reset)
+				break;
 		case UNT_WHISTLE:
 		case UNT_ASSASSINCROSS:
 		case UNT_POEMBRAGI:
-		case UNT_APPLEIDUN:
 		case UNT_HUMMING:
 		case UNT_DONTFORGETME:
 		case UNT_FORTUNEKISS:
@@ -11458,7 +11460,7 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 				return 0;
 
 			if (!sc) return 0;
-			if (!sce && !(!battle_config.song_timer_reset && sg->unit_id == UNT_APPLEIDUN)) // Apple of idun gets it from skill_unit_onplace_timer
+			if (!sce)
 				sc_start4(ss,bl,type,100,sg->skill_lv,sg->val1,sg->val2,0,sg->limit);
 			else if (battle_config.song_timer_reset && sce->val4 == 1) {
 				//Readjust timers since the effect will not last long.
