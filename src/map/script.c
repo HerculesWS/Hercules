@@ -7407,6 +7407,49 @@ BUILDIN(getguildmasterid)
 }
 
 /*==========================================
+ * Get the information of the members of a guild by type.
+ * getguildmember <guild_id>{,<type>};
+ * @param guild_id: ID of guild
+ * @param type:
+ * 0 : name (default)
+ * 1 : character ID
+ * 2 : account ID
+ *------------------------------------------*/
+BUILDIN(getguildmember)
+{
+	struct guild *g = NULL;
+	int j = 0;
+
+	g = guild->search(script_getnum(st,2));
+
+	if (g) {
+		int i, type = 0;
+
+		if (script_hasdata(st,3))
+			type = script_getnum(st,3);
+
+		for ( i = 0; i < MAX_GUILD; i++ ) {
+			if ( g->member[i].account_id ) {
+				switch (type) {
+				case 2:
+					mapreg->setreg(reference_uid(script->add_str("$@guildmemberaid"), j),g->member[i].account_id);
+					break;
+				case 1:
+					mapreg->setreg(reference_uid(script->add_str("$@guildmembercid"), j), g->member[i].char_id);
+					break;
+				default:
+					mapreg->setregstr(reference_uid(script->add_str("$@guildmembername$"), j), g->member[i].name);
+					break;
+				}
+				j++;
+			}
+		}
+	}
+	mapreg->setreg(script->add_str("$@guildmembercount"), j);
+	return true;
+}
+
+/*==========================================
  * Get char string information by type :
  * Return by @type :
  * 0 : char_name
@@ -18800,6 +18843,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getguildname,"i"),
 		BUILDIN_DEF(getguildmaster,"i"),
 		BUILDIN_DEF(getguildmasterid,"i"),
+		BUILDIN_DEF(getguildmember,"i?"),
 		BUILDIN_DEF(strcharinfo,"i"),
 		BUILDIN_DEF(strnpcinfo,"i"),
 		BUILDIN_DEF(getequipid,"i"),
