@@ -169,6 +169,7 @@ struct Battle_Config {
 	int emergency_call;
 	int guild_aura;
 	int pc_invincible_time;
+	int song_timer_reset;
 	
 	int pet_catch_rate;
 	int pet_rename;
