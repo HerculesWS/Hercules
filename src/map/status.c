@@ -1004,6 +1004,7 @@ void initChangeTables(void) {
 	status->ChangeFlagTable[SC_REBOUND] |= SCB_SPEED|SCB_REGEN;
 	status->ChangeFlagTable[SC_DEFSET] |= SCB_DEF|SCB_DEF2;
 	status->ChangeFlagTable[SC_MDEFSET] |= SCB_MDEF|SCB_MDEF2;
+	status->ChangeFlagTable[SC_MYSTERIOUS_POWDER] |= SCB_MAXHP;
 
 	status->ChangeFlagTable[SC_ALL_RIDING] = SCB_SPEED;
 	status->ChangeFlagTable[SC_WEDDING] = SCB_SPEED;

@@ -2809,7 +2809,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		//Now damage increasing effects
 		if( sc->data[SC_LEXAETERNA] && skill_id != PF_SOULBURN
 #ifdef RENEWAL
-		&& skill_id != CR_ACIDDEMONSTRATION
+		&& skill_id != CR_ACIDDEMONSTRATION && skill_id != ASC_BREAKER
 #endif
 		)
 		{
@@ -3834,6 +3834,10 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 			ratio >>= 1;
 		md.damage = (matk + atk) * ratio / 100;
 		md.damage -= totaldef;
+		if( tsc && tsc->data[SC_LEXAETERNA] ) {
+				md.damage <<= 1;
+				status_change_end(target, SC_LEXAETERNA, INVALID_TIMER);
+			}
 #endif
 		}
 		break;
