@@ -433,14 +433,10 @@ int can_copy (struct map_session_data *sd, uint16 skill_id, struct block_list* b
 		return 0;
 
 	// Couldn't preserve 3rd Class skills except only when using Reproduce skill. [Jobbie]
-	if( !(sd->sc.data[SC__REPRODUCE]) && ((skill_id >= RK_ENCHANTBLADE && skill_id <= SR_RIDEINLIGHTNING) || (skill_id >= KO_YAMIKUMO && skill_id <= OB_AKAITSUKI)))
+	if( !(sd->sc.data[SC__REPRODUCE]) && ((skill_id >= RK_ENCHANTBLADE && skill_id <= LG_OVERBRAND_PLUSATK) || (skill_id >= RL_GLITTERING_GREED && skill_id <= OB_AKAITSUKI) || (skill_id >= GC_DARKCROW && skill_id <= NC_MAGMA_ERUPTION_DOTDAMAGE)))
 		return 0;
 	// Reproduce will only copy skills according on the list. [Jobbie]
 	else if( sd->sc.data[SC__REPRODUCE] && !skill->reproduce_db[skill->get_index(skill_id)] )
-		return 0;
-
-	//Never copy new 3rd class skills By OmegaRed
-	if(skill_id >= GC_DARKCROW && skill_id <= ALL_FULL_THROTTLE)
 		return 0;
 
 	return 1;
@@ -1210,6 +1206,14 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			rate = 30 + 8 * skill_lv + sstatus->dex / 10 + (sd? sd->status.job_level:0) / 4;
 			sc_start(src, bl, SC_STUN, rate, skill_lv, skill->get_time(skill_id,skill_lv));
 			break;
+		case LG_HESPERUSLIT:
+			if ( sc && sc->data[SC_BANDING] ) {
+				if ( sc->data[SC_BANDING]->val2 == 4 )	// 4 banding RGs: Targets will be stunned at 100% chance for 4 ~ 8 seconds, irreducible by STAT.
+					status->change_start(src, bl, SC_STUN, 10000, skill_lv, 0, 0, 0, 1000*(4+rand()%4), 2);
+				else if ( sc->data[SC_BANDING]->val2 == 6 ) // 6 banding RGs: activate Pinpoint Attack Lv1-5
+					skill->castend_damage_id(src,bl,LG_PINPOINTATTACK,1+rand()%5,tick,0);
+			}
+			break;
 		case LG_PINPOINTATTACK:
 			rate = 30 + 5 * (sd ? pc->checkskill(sd,LG_PINPOINTATTACK) : 1) + (sstatus->agi + status->get_lv(src)) / 10;
 			switch( skill_lv ) {
@@ -1667,6 +1671,7 @@ int skill_counter_additional_effect(struct block_list* src, struct block_list *b
 	int rate;
 	struct map_session_data *sd=NULL;
 	struct map_session_data *dstsd=NULL;
+	struct status_change *sc;
 
 	nullpo_ret(src);
 	nullpo_ret(bl);
@@ -1675,6 +1680,7 @@ int skill_counter_additional_effect(struct block_list* src, struct block_list *b
 
 	sd = BL_CAST(BL_PC, src);
 	dstsd = BL_CAST(BL_PC, bl);
+	sc = status->get_sc(src);
 
 	if(dstsd && attack_type&BF_WEAPON) {
 		//Counter effects.
@@ -1723,6 +1729,13 @@ int skill_counter_additional_effect(struct block_list* src, struct block_list *b
 		case NPC_GRANDDARKNESS:
 			attack_type |= BF_WEAPON;
 			break;
+		case LG_HESPERUSLIT:
+			if ( sc && sc->data[SC_FORCEOFVANGUARD] && sc->data[SC_BANDING] && sc->data[SC_BANDING]->val2 > 6 ) {
+					char i;
+					for( i = 0; i < sc->data[SC_FORCEOFVANGUARD]->val3; i++ && sc->fv_counter <= sc->data[SC_FORCEOFVANGUARD]->val3 )
+					clif->millenniumshield(bl, sc->fv_counter++);
+				}
+				break;
 	}
 
 	if( sd && (sd->class_&MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR

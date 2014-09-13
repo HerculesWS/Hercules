@@ -2197,12 +2197,12 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					break;
 				case NC_VULCANARM:
 					skillratio = 70 * skill_lv + status_get_dex(src);
-					RE_LVL_DMOD(100);
+					RE_LVL_DMOD(120);
 					break;
 				case NC_FLAMELAUNCHER:
 				case NC_COLDSLOWER:
-					skillratio += 200 + 100 * skill_lv + status_get_str(src);
-					RE_LVL_DMOD(100);
+					skillratio += 200 + 300 * skill_lv;
+					RE_LVL_DMOD(150);
 					break;
 				case NC_ARMSCANNON:
 					switch( tst->size ) {
@@ -2233,13 +2233,16 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 						skillratio = skillratio * 75 / 100;
 					break;
 				case SC_FATALMENACE:
-					skillratio = 100 * (skill_lv+1) * status->get_lv(src) / 100;
+					skillratio = 100 * (skill_lv+1);
+					RE_LVL_DMOD(100);
 					break;
 				case SC_TRIANGLESHOT:
-					skillratio = ( 300 + (skill_lv-1) * status_get_agi(src)/2 ) * status->get_lv(src) / 120;
+					skillratio = ( 300 + (skill_lv-1) * status_get_agi(src)/2 );
+					RE_LVL_DMOD(120);
 					break;
 				case SC_FEINTBOMB:
-					skillratio = (skill_lv+1) * (st->dex/2) * (sd?sd->status.job_level:50)/10 * status->get_lv(src) / 120;
+					skillratio = (skill_lv+1) * (st->dex/2) * (sd?sd->status.job_level:50)/10;
+					RE_LVL_DMOD(120);
 					break;
 				case LG_CANNONSPEAR:
 					skillratio = (50 + st->str) * skill_lv;
@@ -2307,7 +2310,14 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					RE_LVL_DMOD(100);
 					break;
 				case LG_HESPERUSLIT:
-					skillratio += 120 * skill_lv - 100;
+					skillratio = 120 * skill_lv;
+					if( sc && sc->data[SC_BANDING] )
+						skillratio += 200 * sc->data[SC_BANDING]->val2;
+					if( sc && sc->data[SC_BANDING] && sc->data[SC_BANDING]->val2 > 5 )
+						skillratio = skillratio * 150 / 100;
+					if( sc && sc->data[SC_INSPIRATION] )
+						skillratio += 600;
+					RE_LVL_DMOD(100);
 					break;
 				case SR_DRAGONCOMBO:
 					skillratio += 40 * skill_lv;
@@ -2797,7 +2807,11 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		}
 
 		//Now damage increasing effects
-		if( sc->data[SC_LEXAETERNA] && skill_id != PF_SOULBURN )
+		if( sc->data[SC_LEXAETERNA] && skill_id != PF_SOULBURN
+#ifdef RENEWAL
+		&& skill_id != CR_ACIDDEMONSTRATION
+#endif
+		)
 		{
 			if( src->type != BL_MER || skill_id == 0 )
 				damage <<= 1; // Lex Aeterna only doubles damage of regular attacks from mercenaries
@@ -3762,6 +3776,10 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 					md.damage >>= 1;
 			}
 			md.damage -= totaldef;
+			if( tsc && tsc->data[SC_LEXAETERNA] ) {
+				md.damage <<= 1;
+				status_change_end(target, SC_LEXAETERNA, INVALID_TIMER);
+			}
 		}
 #else
 		// updated the formula based on a Japanese formula found to be exact [Reddozen]
@@ -4176,6 +4194,12 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			case LK_SPIRALPIERCE:
 				if (!sd) wd.flag=(wd.flag&~(BF_RANGEMASK|BF_WEAPONMASK))|BF_LONG|BF_MISC;
 				break;
+
+			//When in banding, the number of hits is equal to the number of Royal Guards in banding.
+			case LG_HESPERUSLIT:
+				if( sc && sc->data[SC_BANDING] && sc->data[SC_BANDING]->val2 > 3 )
+					wd.div_ = sc->data[SC_BANDING]->val2;
+				break;
 				
 			case MO_INVESTIGATE:
 				flag.pdef = flag.pdef2 = 2;
@@ -4227,6 +4251,10 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		case LK_SPIRALPIERCE:
 			if (!sd) n_ele = false; //forced neutral for monsters
 			break;
+		case LG_HESPERUSLIT:
+			if ( sc && sc->data[SC_BANDING] && sc->data[SC_BANDING]->val2 == 5 )
+				s_ele = ELE_HOLY;	// Banding with 5 RGs: change atk element to Holy.
+		break;
 	}
 
 	if (!(nk & NK_NO_ELEFIX) && !n_ele)

@@ -4584,7 +4584,7 @@ unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc,
 		watk += sc->data[SC_SHIELDSPELL_DEF]->val2;
 	if(sc->data[SC_INSPIRATION])
 		watk += sc->data[SC_INSPIRATION]->val2;
-	if( sc->data[SC_BANDING] && sc->data[SC_BANDING]->val2 > 0 )
+	if( sc->data[SC_BANDING] && sc->data[SC_BANDING]->val2 > 1 )
 		watk += (10 + 10 * sc->data[SC_BANDING]->val1) * (sc->data[SC_BANDING]->val2);
 	if( sc->data[SC_TROPIC_OPTION] )
 		watk += sc->data[SC_TROPIC_OPTION]->val2;
@@ -4677,8 +4677,6 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
-		if (sc->data[SC_MINDBREAKER])
-			matk += matk * sc->data[SC_MINDBREAKER]->val2/100;
 		return (unsigned short)cap_value(matk,0,USHRT_MAX);
 	}
 
@@ -4703,6 +4701,8 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 	if (sc->data[SC_IZAYOI])
 		matk += 25 * sc->data[SC_IZAYOI]->val1;
 #endif
+	if (sc->data[SC_MINDBREAKER])
+		matk += matk * sc->data[SC_MINDBREAKER]->val2/100;
 	if( sc->data[SC_ZANGETSU] )
 		matk += sc->data[SC_ZANGETSU]->val3;
 	if (sc->data[SC_MAGICPOWER] && sc->data[SC_MAGICPOWER]->val4)
@@ -5040,7 +5040,7 @@ signed short status_calc_def2(struct block_list *bl, struct status_change *sc, i
 		return 0;
 	if(sc->data[SC_SUN_COMFORT])
 		def2 += sc->data[SC_SUN_COMFORT]->val2;
-	if( sc->data[SC_BANDING] && sc->data[SC_BANDING]->val2 > 0 )
+	if( sc->data[SC_BANDING] && sc->data[SC_BANDING]->val2 > 1 )
 		def2 += (5 + sc->data[SC_BANDING]->val1) * (sc->data[SC_BANDING]->val2);
 	if(sc->data[SC_ANGELUS])
 #ifdef RENEWAL //in renewal only the VIT stat bonus is boosted by angelus
@@ -8749,7 +8749,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				struct block_list * src2;
 				val3 = st->agi * val1 / 60; // ASPD increase: [(Target AGI x Skill Level) / 60] %
 				if( (src2 = map->id2bl(val2)) ){
-					val4 = ( 200/status_get_int(src2) ) * val1;// MDEF decrease: MDEF [(200 / Caster INT) x Skill Level]
+					val4 = ( 200/status_get_int(src2)?status_get_int(src2):1 ) * val1;// MDEF decrease: MDEF [(200 / Caster INT) x Skill Level]
 					val2 = ( status_get_dex(src2)/4 + status_get_str(src2)/2 ) * val1 / 5; // ATK increase: ATK [{(Caster DEX / 4) + (Caster STR / 2)} x Skill Level / 5]
 				}
 			}
