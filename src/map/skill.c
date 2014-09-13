@@ -11156,6 +11156,10 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 		case SO_WARMER:
 			skill->clear_group(src, 8);
 			break;
+		case SO_VACUUM_EXTREME:
+			val1 = x;
+			val2 = y;
+			break;
 		case GN_WALLOFTHORN:
 			if( flag&1 )
 				limit = 3000;
@@ -12192,6 +12196,11 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			} else {
 				sg->limit -= 100 * tstatus->str/20;
 				sc_start(ss, bl, SC_VACUUM_EXTREME, 100, sg->skill_lv, sg->limit);
+
+				if (unit->movepos(bl, sg->val1, sg->val2, 0, 0)) {
+					clif->slide(bl, sg->val1, sg->val2);
+					clif->fixpos(bl);
+				}		
 			}
 			break;
 
