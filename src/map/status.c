@@ -6378,9 +6378,7 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 	case SC_STUN:
 		sc_def = st->vit*100;
 		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-#ifdef RENEWAL
 		tick_def2 = st->luk*10;
-#endif
 		break;
 	case SC_POISON:
 	case SC_DPOISON:
@@ -6400,24 +6398,29 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 #ifdef RENEWAL
 		sc_def = st->int_*100;
 		sc_def2 = (st->vit + st->luk) * 5 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-		tick_def2 = st->luk * 10;
 #else
 		sc_def = st->vit*100;
 		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
 #endif
+		tick_def2 = st->luk * 10;
 		break;
 	case SC_BLOODING:
 #ifdef RENEWAL
 		sc_def = st->agi*100;
-		tick_def2 = st->luk*10;
 #else
 		sc_def = st->vit*100;
 #endif
 		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
+		tick_def2 = st->luk*10;
 		break;
 	case SC_SLEEP:
+#ifdef RENEWAL
+		sc_def = st->agi*100;
+		sc_def2 = (st->int_ + st->luk) * 5 + SCDEF_LVL_DIFF(bl, src, 99, 10);
+#else
 		sc_def = st->int_*100;
 		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
+#endif
 		tick_def2 = st->luk*10;
 		break;
 	case SC_DEEP_SLEEP:
@@ -6431,7 +6434,6 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 		sc_def = st->mdef*100;
 #ifndef RENEWAL
 		sc_def2 = st->luk*10;
-		tick_def2 = 0; //No duration reduction
 #endif
 		tick_def = 0; //No duration reduction
 		break;
@@ -6449,11 +6451,6 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 		// Special property: immunity when luk is zero
 		if (st->luk == 0)
 			return 0;
-#ifndef RENEWAL
-		// Special property: immunity when luk is greater than level
-		if (st->luk > status->get_lv(bl))
-			return 0;
-#endif
 		sc_def = st->luk*100;
 		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(NULL, src, 99, 10); // Curse only has a level penalty and no resistance
 		tick_def = st->vit*100;
