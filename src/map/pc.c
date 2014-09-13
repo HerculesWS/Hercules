@@ -4969,7 +4969,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 		
 		for( i = 0; i < sd->queues_count; i++ ) {
 			struct hQueue *queue;
-			if ((sd->queues[i] != -1) && queue->onMapChange[0] != '\0') {
+			if ((queue = script->queue(sd->queues[i])) && queue->onMapChange[0] != '\0') {
 				pc->setregstr(sd, script->add_str("@QMapChangeTo$"), map->list[m].name);
 				npc->event(sd, queue->onMapChange, 0);
 			}
@@ -6947,7 +6947,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	
 	for( i = 0; i < sd->queues_count; i++ ) {
 		struct hQueue *queue;
-		if ((sd->queues[i] != -1) && queue->onDeath[0] != '\0')
+		if ((queue = script->queue(sd->queues[i])) && queue->onDeath[0] != '\0')
 			npc->event(sd, queue->onDeath, 0);
 	}
 	

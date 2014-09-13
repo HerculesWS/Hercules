@@ -1700,7 +1700,7 @@ int map_quit(struct map_session_data *sd) {
 
 	for( i = 0; i < sd->queues_count; i++ ) {
 		struct hQueue *queue;
-		if ((sd->queues[i] != -1) && queue->onLogOut[0] != '\0') {
+		if( (queue = script->queue(sd->queues[i])) && queue->onLogOut[0] != '\0' ) {
 			npc->event(sd, queue->onLogOut, 0);
 		}
 	}
