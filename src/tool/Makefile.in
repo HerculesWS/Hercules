@@ -36,7 +36,7 @@ mapcache: ../../mapcache@EXEEXT@
 
 ../../mapcache@EXEEXT@: $(MAPCACHE_DEPENDS) Makefile
 	@echo "	LD	$(notdir $@)"
-	@$(CC) @LDFLAGS@ -o ../../mapcache@EXEEXT@ $(MAPCACHE_DEPENDS) @LIBS@
+	@$(CC) @STATIC@ @LDFLAGS@ -o ../../mapcache@EXEEXT@ $(MAPCACHE_DEPENDS) @LIBS@
 
 buildclean:
 	@echo "	CLEAN	tool (build temp files)"
