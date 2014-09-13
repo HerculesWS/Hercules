@@ -17981,12 +17981,10 @@ bool script_hqueue_remove(int idx, int var) {
 			if( var >= START_ACCOUNT_NUM && (sd = map->id2sd(var)) ) {
 				for(i = 0; i < sd->queues_count; i++) {
 					if( sd->queues[i] == idx ) {
+						sd->queues[i] = -1;
 						break;
 					}
 				}
-
-				if( i != sd->queues_count )
-					sd->queues[i] = -1;
 			}
 
 		}
@@ -18061,12 +18059,10 @@ bool script_hqueue_del(int idx) {
 				int j;
 				for(j = 0; j < sd->queues_count; j++) {
 					if( sd->queues[j] == script->hq[idx].item[i] ) {
+						sd->queues[j] = -1;
 						break;
 					}
-				}
-
-				if( j != sd->queues_count )
-					sd->queues[j] = -1;
+				}		
 			}
 			script->hq[idx].item[i] = 0;
 		}
