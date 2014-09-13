@@ -433,14 +433,10 @@ int can_copy (struct map_session_data *sd, uint16 skill_id, struct block_list* b
 		return 0;
 
 	// Couldn't preserve 3rd Class skills except only when using Reproduce skill. [Jobbie]
-	if( !(sd->sc.data[SC__REPRODUCE]) && ((skill_id >= RK_ENCHANTBLADE && skill_id <= SR_RIDEINLIGHTNING) || (skill_id >= KO_YAMIKUMO && skill_id <= OB_AKAITSUKI)))
+	if( !(sd->sc.data[SC__REPRODUCE]) && ((skill_id >= RK_ENCHANTBLADE && skill_id <= LG_OVERBRAND_PLUSATK) || (skill_id >= RL_GLITTERING_GREED && skill_id <= OB_AKAITSUKI) || (skill_id >= GC_DARKCROW && skill_id <= NC_MAGMA_ERUPTION_DOTDAMAGE)))
 		return 0;
 	// Reproduce will only copy skills according on the list. [Jobbie]
 	else if( sd->sc.data[SC__REPRODUCE] && !skill->reproduce_db[skill->get_index(skill_id)] )
-		return 0;
-
-	//Never copy new 3rd class skills By OmegaRed
-	if(skill_id >= GC_DARKCROW && skill_id <= ALL_FULL_THROTTLE)
 		return 0;
 
 	return 1;
@@ -1210,6 +1206,14 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			rate = 30 + 8 * skill_lv + sstatus->dex / 10 + (sd? sd->status.job_level:0) / 4;
 			sc_start(src, bl, SC_STUN, rate, skill_lv, skill->get_time(skill_id,skill_lv));
 			break;
+		case LG_HESPERUSLIT:
+			if ( sc && sc->data[SC_BANDING] ) {
+				if ( sc->data[SC_BANDING]->val2 == 4 )	// 4 banding RGs: Targets will be stunned at 100% chance for 4 ~ 8 seconds, irreducible by STAT.
+					status->change_start(src, bl, SC_STUN, 10000, skill_lv, 0, 0, 0, 1000*(4+rand()%4), 2);
+				else if ( sc->data[SC_BANDING]->val2 == 6 ) // 6 banding RGs: activate Pinpoint Attack Lv1-5
+					skill->castend_damage_id(src,bl,LG_PINPOINTATTACK,1+rand()%5,tick,0);
+			}
+			break;
 		case LG_PINPOINTATTACK:
 			rate = 30 + 5 * (sd ? pc->checkskill(sd,LG_PINPOINTATTACK) : 1) + (sstatus->agi + status->get_lv(src)) / 10;
 			switch( skill_lv ) {
@@ -1667,6 +1671,7 @@ int skill_counter_additional_effect(struct block_list* src, struct block_list *b
 	int rate;
 	struct map_session_data *sd=NULL;
 	struct map_session_data *dstsd=NULL;
+	struct status_change *sc;
 
 	nullpo_ret(src);
 	nullpo_ret(bl);
@@ -1675,6 +1680,7 @@ int skill_counter_additional_effect(struct block_list* src, struct block_list *b
 
 	sd = BL_CAST(BL_PC, src);
 	dstsd = BL_CAST(BL_PC, bl);
+	sc = status->get_sc(src);
 
 	if(dstsd && attack_type&BF_WEAPON) {
 		//Counter effects.
@@ -1723,6 +1729,13 @@ int skill_counter_additional_effect(struct block_list* src, struct block_list *b
 		case NPC_GRANDDARKNESS:
 			attack_type |= BF_WEAPON;
 			break;
+		case LG_HESPERUSLIT:
+			if ( sc && sc->data[SC_FORCEOFVANGUARD] && sc->data[SC_BANDING] && sc->data[SC_BANDING]->val2 > 6 ) {
+					char i;
+					for( i = 0; i < sc->data[SC_FORCEOFVANGUARD]->val3; i++ && sc->fv_counter <= sc->data[SC_FORCEOFVANGUARD]->val3 )
+					clif->millenniumshield(bl, sc->fv_counter++);
+				}
+				break;
 	}
 
 	if( sd && (sd->class_&MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
@@ -4068,7 +4081,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 		case SL_STIN:
 		case SL_STUN:
 			if (sd && !battle_config.allow_es_magic_pc && bl->type != BL_MOB) {
-				status->change_start(src,src,SC_STUN,10000,skill_lv,0,0,0,500,10);
+				status->change_start(src,src,SC_STUN,10000,skill_lv,0,0,0,500,2);
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				break;
 			}
@@ -4507,7 +4520,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 						tsc->data[SC_MELODYOFSINK] || tsc->data[SC_BEYOND_OF_WARCRY] || tsc->data[SC_UNLIMITED_HUMMING_VOICE] ) &&
 						rnd()%100 < 4 * skill_lv + 2 * (sd ? pc->checkskill(sd,WM_LESSON) : 10) + 10 * battle->calc_chorusbonus(sd)) {
 					skill->attack(BF_MISC,src,src,bl,skill_id,skill_lv,tick,flag);
-					status->change_start(src,bl,SC_STUN,10000,skill_lv,0,0,0,skill->get_time(skill_id,skill_lv),8);
+					status->change_start(src,bl,SC_STUN,10000,skill_lv,0,0,0,skill->get_time(skill_id,skill_lv),0);
 					status_change_end(bl, SC_SWING, INVALID_TIMER);
 					status_change_end(bl, SC_SYMPHONY_LOVE, INVALID_TIMER);
 					status_change_end(bl, SC_MOONLIT_SERENADE, INVALID_TIMER);
@@ -5184,7 +5197,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case RK_FIGHTINGSPIRIT:
 		case RK_ABUNDANCE:
 			if( sd && !pc->checkskill(sd, RK_RUNEMASTERY) ){
-				if( status->change_start(src,&sd->bl, (sc_type)(rnd()%SC_CONFUSION), 1000, 1, 0, 0, 0, skill->get_time2(skill_id,skill_lv),8) ){
+				if( status->change_start(src,&sd->bl, (sc_type)(rnd()%SC_CONFUSION), 1000, 1, 0, 0, 0, skill->get_time2(skill_id,skill_lv),0) ){
 					skill->consume_requirement(sd,skill_id,skill_lv,2);
 					map->freeblock_unlock();
 					return 0;
@@ -6213,7 +6226,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				             || dstsd->status.char_id == sd->status.child
 				               )
 				) {
-					status->change_start(src,src,SC_STUN,10000,skill_lv,0,0,0,500,8);
+					status->change_start(src,src,SC_STUN,10000,skill_lv,0,0,0,500,0);
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					break;
 				}
@@ -6360,7 +6373,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 				if (tsc->data[SC_STONE]) {
 					status_change_end(bl, SC_STONE, INVALID_TIMER);
-					if (sd) clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+					clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 					break;
 				}
 				if (sc_start4(src,bl,SC_STONE,(skill_lv*4+20)+brate,
@@ -7265,7 +7278,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					return 0;
 				}
 				else
-					status->change_start(src,bl,SC_STUN,10000,skill_lv,0,0,0,skill->get_time2(skill_id,skill_lv),8);
+					status->change_start(src,bl,SC_STUN,10000,skill_lv,0,0,0,skill->get_time2(skill_id,skill_lv),0);
 			}
 			break;
 
@@ -7671,7 +7684,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			if (tsce) {
 				if(sd)
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-				status->change_start(src,src,SC_STUN,10000,skill_lv,0,0,0,10000,8);
+				status->change_start(src,src,SC_STUN,10000,skill_lv,0,0,0,10000,0);
 				status_change_end(bl, SC_SWOO, INVALID_TIMER);
 				break;
 			}
@@ -7679,7 +7692,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case SL_SKE:
 			if (sd && !battle_config.allow_es_magic_pc && bl->type != BL_MOB) {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-				status->change_start(src,src,SC_STUN,10000,skill_lv,0,0,0,500,10);
+				status->change_start(src,src,SC_STUN,10000,skill_lv,0,0,0,500,2);
 				break;
 			}
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv)));
@@ -8646,13 +8659,13 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					//If the target was successfully inflected with the Unlucky status, give 1 of 3 random status's.
 					switch(rnd()%3) {//Targets in the Unlucky status will be affected by one of the 3 random status's regardless of resistance.
 						case 0:
-							status->change_start(src,bl,SC_POISON,10000,skill_lv,0,0,0,skill->get_time(skill_id,skill_lv),10);
+							status->change_start(src,bl,SC_POISON,10000,skill_lv,0,0,0,skill->get_time(skill_id,skill_lv),2);
 							break;
 						case 1:
-							status->change_start(src,bl,SC_SILENCE,10000,skill_lv,0,0,0,skill->get_time(skill_id,skill_lv),10);
+							status->change_start(src,bl,SC_SILENCE,10000,skill_lv,0,0,0,skill->get_time(skill_id,skill_lv),2);
 							break;
 						case 2:
-							status->change_start(src,bl,SC_BLIND,10000,skill_lv,0,0,0,skill->get_time(skill_id,skill_lv),10);
+							status->change_start(src,bl,SC_BLIND,10000,skill_lv,0,0,0,skill->get_time(skill_id,skill_lv),2);
 						}
 				}
 			} else if( sd )
@@ -9547,8 +9560,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			heal = 5 * status->get_lv(&hd->bl) + status->base_matk(&hd->battle_status, status->get_lv(&hd->bl));
 			status->heal(bl, heal, 0, 0);
 			clif->skill_nodamage(src, src, skill_id, skill_lv, clif->skill_nodamage(src, bl, AL_HEAL, heal, 1));
-			status->change_start(src, src, type, 1000, skill_lv, 0, 0, 0, skill->get_time(skill_id,skill_lv), 1|2|8);
-			status->change_start(src, bl,  type, 1000, skill_lv, 0, 0, 0, skill->get_time(skill_id,skill_lv), 1|2|8);
+			status->change_start(src, src, type, 1000, skill_lv, 0, 0, 0, skill->get_time(skill_id,skill_lv), 1|2);
+			status->change_start(src, bl,  type, 1000, skill_lv, 0, 0, 0, skill->get_time(skill_id,skill_lv), 1|2);
 		}
 			break;
 
@@ -11013,19 +11026,21 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 			val1 = 15+skill_lv+(st->int_/10); // MaxSP percent increase TO-DO: this INT bonus value is guessed
 			val2 = 20+3*skill_lv+(st->int_/10); // SP cost reduction
 			if(sd){
-				val1 += pc->checkskill(sd,DC_DANCINGLESSON); //TO-DO This bonus value is guessed
-				val2 += pc->checkskill(sd,DC_DANCINGLESSON); //TO-DO Should be half this value
+				val1 += (pc->checkskill(sd,DC_DANCINGLESSON) + 1) / 2;
+				val2 += (pc->checkskill(sd,DC_DANCINGLESSON) + 1) / 2;
 			}
 			break;
 		case BA_ASSASSINCROSS:
+			if(sd)
+				val1 = (pc->checkskill(sd,BA_MUSICALLESSON) + 1) / 2;
 #ifdef RENEWAL
-			val1 = 10 + skill_lv + (st->agi/10); // ASPD increase
-			if(sd)
-				val1 += 4*pc->checkskill(sd,BA_MUSICALLESSON);
+			// This formula was taken from a RE calculator
+			// and the changes published on irowiki
+			// Luckily, official tests show it's the right one
+			val1 += skill_lv + (st->agi/20);
 #else
-			val1 = 100+(10*skill_lv)+(st->agi/10); // ASPD increase
-			if(sd)
-				val1 += 5*pc->checkskill(sd,BA_MUSICALLESSON);
+			val1 += 10 + skill_lv + (st->agi/10); // ASPD increase
+			val1 *= 10; // ASPD works with 1000 as 100%
 #endif
 			break;
 		case DC_FORTUNEKISS:
@@ -11346,7 +11361,7 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 				break;
 			} else if( sc && battle->check_target(&sg->unit->bl,bl,sg->target_flag) > 0 ) {
 				int sec = skill->get_time2(sg->skill_id,sg->skill_lv);
-				if( status->change_start(ss, bl,type,10000,sg->skill_lv,1,sg->group_id,0,sec,8) ) {
+				if( status->change_start(ss, bl,type,10000,sg->skill_lv,1,sg->group_id,0,sec,0) ) {
 					const struct TimerData* td = sc->data[type]?timer->get(sc->data[type]->timer):NULL;
 					if( td )
 						sec = DIFF_TICK32(td->tick, tick);
@@ -11444,10 +11459,12 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 			if (!sce)
 				sc_start4(ss,bl,type,100,sg->skill_lv,sg->val1,sg->val2,0,sg->limit);
 			break;
+		case UNT_APPLEIDUN:  // Apple of idun gets it from skill_unit_onplace_timer
+			if (!battle_config.song_timer_reset)
+				break;
 		case UNT_WHISTLE:
 		case UNT_ASSASSINCROSS:
 		case UNT_POEMBRAGI:
-		case UNT_APPLEIDUN:
 		case UNT_HUMMING:
 		case UNT_DONTFORGETME:
 		case UNT_FORTUNEKISS:
@@ -11458,12 +11475,13 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 			if (!sc) return 0;
 			if (!sce)
 				sc_start4(ss,bl,type,100,sg->skill_lv,sg->val1,sg->val2,0,sg->limit);
-			else if (sce->val4 == 1) {
+			else if (battle_config.song_timer_reset && sce->val4 == 1) {
 				//Readjust timers since the effect will not last long.
 				sce->val4 = 0;
 				timer->delete(sce->timer, status->change_timer);
 				sce->timer = timer->add(tick+sg->limit, status->change_timer, bl->id, type);
 			}
+			
 			break;
 
 		case UNT_FOGWALL:
@@ -11727,7 +11745,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 		case UNT_MANHOLE:
 			if( sg->val2 == 0 && tsc && (sg->unit_id == UNT_ANKLESNARE || bl->id != sg->src_id) ) {
 				int sec = skill->get_time2(sg->skill_id,sg->skill_lv);
-				if( status->change_start(ss,bl,type,10000,sg->skill_lv,sg->group_id,0,0,sec, 8) ) {
+				if( status->change_start(ss,bl,type,10000,sg->skill_lv,sg->group_id,0,0,sec, 0) ) {
 					const struct TimerData* td = tsc->data[type]?timer->get(tsc->data[type]->timer):NULL;
 					if( td )
 						sec = DIFF_TICK32(td->tick, tick);
@@ -11757,7 +11775,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			if( bl->id != ss->id ) {
 				if( status_get_mode(bl)&MD_BOSS )
 					break;
-				if( status->change_start(ss,bl,type,10000,sg->skill_lv,sg->group_id,0,0,skill->get_time2(sg->skill_id, sg->skill_lv), 8) ) {
+				if( status->change_start(ss,bl,type,10000,sg->skill_lv,sg->group_id,0,0,skill->get_time2(sg->skill_id, sg->skill_lv), 0) ) {
 					map->moveblock(bl, src->bl.x, src->bl.y, tick);
 					clif->fixpos(bl);
 
@@ -11846,6 +11864,12 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 				heal = ~heal + 1;
 			clif->skill_nodamage(&src->bl, bl, AL_HEAL, heal, 1);
 			status->heal(bl, heal, 0, 0);
+
+			if (!(battle_config.song_timer_reset) // songs don't reset prior timers
+			  && !(sg->src_id == bl->id && !(tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_BARDDANCER)) // Don't affect itself
+			  && (!(tsc->data[type]) || (tsc->data[type] && tsc->data[type]->val4 != 1))) // Check for 20 seconds song effect
+				sc_start4(ss,bl,type,100,sg->skill_lv,sg->val1,sg->val2,0,sg->interval + 100);
+
 			break;
 		}
 
@@ -12117,7 +12141,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 
 		case UNT_CLOUD_KILL:
 			if(tsc && !tsc->data[type])
-				status->change_start(ss,bl,type,10000,sg->skill_lv,sg->group_id,0,0,skill->get_time2(sg->skill_id,sg->skill_lv),8);
+				status->change_start(ss,bl,type,10000,sg->skill_lv,sg->group_id,0,0,skill->get_time2(sg->skill_id,sg->skill_lv),0);
 			skill->attack(skill->get_type(sg->skill_id),ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick,0);
 			break;
 
@@ -12212,7 +12236,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 
 		case UNT_POISON_MIST:
 			skill->attack(BF_MAGIC, ss, &src->bl, bl, sg->skill_id, sg->skill_lv, tick, 0);
-			status->change_start(ss, bl, SC_BLIND, rnd() % 100 > sg->skill_lv * 10, sg->skill_lv, sg->skill_id, 0, 0, skill->get_time2(sg->skill_id, sg->skill_lv), 2|8);
+			status->change_start(ss, bl, SC_BLIND, rnd() % 100 > sg->skill_lv * 10, sg->skill_lv, sg->skill_id, 0, 0, skill->get_time2(sg->skill_id, sg->skill_lv), 2);
 			break;
 	}
 
@@ -12273,6 +12297,16 @@ int skill_unit_onout(struct skill_unit *src, struct block_list *bl, int64 tick) 
 			}
 		}
 			break;
+		case UNT_WHISTLE:
+		case UNT_ASSASSINCROSS:
+		case UNT_POEMBRAGI:
+		case UNT_APPLEIDUN:
+		case UNT_HUMMING:
+		case UNT_DONTFORGETME:
+		case UNT_FORTUNEKISS:
+		case UNT_SERVICEFORYOU:
+			if (sg->src_id==bl->id && !(sc && sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_BARDDANCER))
+				return -1;
 	}
 	return sg->skill_id;
 }
@@ -12350,7 +12384,7 @@ int skill_unit_onleft(uint16 skill_id, struct block_list *bl, int64 tick) {
 		case DC_DONTFORGETME:
 		case DC_FORTUNEKISS:
 		case DC_SERVICEFORYOU:
-			if (sce) {
+			if ((battle_config.song_timer_reset && sce) || (!battle_config.song_timer_reset && sce && sce->val4 != 1)) {
 				timer->delete(sce->timer, status->change_timer);
 				//NOTE: It'd be nice if we could get the skill_lv for a more accurate extra time, but alas...
 				//not possible on our current implementation.
@@ -12413,8 +12447,8 @@ int skill_unit_effect(struct block_list* bl, va_list ap) {
 	} else {
 		if( flag&1 )
 			skill->unit_onplace(su,bl,tick);
-		else
-			skill->unit_onout(su,bl,tick);
+		else if (skill->unit_onout(su,bl,tick) == -1)
+			return 0; // Don't let a Bard/Dancer update their own song timer
 
 		if( flag&4 )
 	  		skill->unit_onleft(skill_id, bl, tick);

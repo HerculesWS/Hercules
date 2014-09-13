@@ -702,6 +702,7 @@ MAX_INVENTORY		- Maximum inventory items
 MAX_ZENY			- Maximum Zeny
 MAX_BG_MEMBERS		- Maximum BattleGround members 
 MAX_CHAT_USERS		- Maximum Chat users
+MAX_REFINE			- Maximum Refine level
 
 Send targets and status options are also hard-coded and can be found
 in src/map/script.c::script_hardcoded_constants or in functions that
@@ -3353,6 +3354,38 @@ Example:
 mes "You have "+getmapguildusers("prontera",getcharid(2))+" guild members in Prontera.";
 
 ---------------------------------------
+
+*getguildmember <guild id>{,<type>};
+
+This command will find all members of a specified guild and returns their names 
+(or character id or account id depending on the value of "type") into an array
+of temporary global variables.
+
+Upon executing this,
+
+$@guildmembername$[] is a global temporary string array which contains all the 
+                     names of these guild members.
+                     (only set when type is 0 or not specified)
+
+$@guildmembercid[]   is a global temporary number array which contains the 
+                     character id of these guild members.
+                     (only set when type is 1)
+
+$@guildmemberaid[]   is a global temporary number array which contains the 
+                     account id of these guild members.
+                     (only set when type is 2)
+
+$@guildmembercount   is the number of guild members that were found.
+
+The guild members will be found regardless of whether they are online or offline.
+Note that the names come in no particular order.
+
+Be sure to use $@guildmembercount to go through this array, and not 
+'getarraysize', because it is not cleared between runs of 'getguildmember'.
+
+For usage examples, see 'getpartymember'.
+
+---------------------------------------
 //=====================================
 2.2 - End of Guild-Related Commands
 //=====================================
@@ -5301,53 +5334,60 @@ Used in reset NPC's (duh!).
 
 ---------------------------------------
 
-*sc_start 	<effect type>,<ticks>,<extra argument>{,<GID>};
-*sc_start2 	<effect type>,<ticks>,<extra argument>,<percent chance>{,<GID>};
-*sc_start4	<effect type>,<ticks>,<value 1>,<value 2>,<value 3>,<value 4>{,<GID>};
+*sc_start 	<effect type>,<ticks>,<value 1>{,<rate>,<flag>{,<GID>}};
+*sc_start2 	<effect type>,<ticks>,<value 1>,<value 2>{,<rate>,<flag>{,<GID>}};
+*sc_start4 	<effect type>,<ticks>,<value 1>,<value 2>,<value 3>,<value 4>{,<rate>,<flag>{,<GID>}};
 *sc_end 	<effect type>{,<GID>};
 
-These command bestow a status effect on the invoking character. This 
-command is used a lot in the item scripts.
+These commands will bestow a status effect on a character.
 
-	// This would poison them for 10 min
-	sc_start SC_Poison,600000,0;
+The <effect type> determines which status is invoked. This can be either a number
+or constant, with the common statuses (mostly negative) found in 'db/const.txt'
+with the 'SC_' prefix. A full list is located in 'src/map/status.h', though
+they are not currently documented.
 
-Effect type is a number of effect, 'db/const.txt' lists the common (mostly 
-negative) status effect types as constants, starting with 'SC_'. You can 
-also use this to give someone an effect of a player-cast spell:
+The duration of the status is given in <ticks>, or milleseconds.
 
-	// This will bless someone as if with Bless 10:
+Certain status changes take an additional parameter <value 1>, which typically
+modifies player stats by the given number or percentage. This differs for each
+status, and is sometimes zero.
+
+Optional value <rate> is the chance that the status will be invoked (10000 = 1%).
+This is used primarily in item scripts. When used in an NPC script, a flag MUST
+be defined for the rate to work.
+
+Optional value <flag> is how the status change start will be handled (a bitmask).
+ 1: Status change cannot be avoided.
+ 2: Tick cannot be reduced by stats (default).
+ 4: sc_data loaded, so no value will be altered.
+ 8: Rate cannot be reduced.
+
+If a <GID> is given, the status change will be invoked on the specified character
+instead of the one attached to the script. This can only be defined after setting
+a rate and flag.
+
+'sc_start2' and 'sc_start4' allow extra parameters to be passed, and are used only
+for effects that require them. The meaning of the extra values vary depending on the
+effect type.
+
+'sc_end' will remove a specified status effect. If SC_ALL (-1) is given, it will
+perform a complete removal of all statuses (although permanent ones will re-apply).
+
+Examples:
+	// This will poison the invoking character for 10 minutes at 50% chance.
+	sc_start SC_POISON,600000,0,5000;
+
+	// This will bestow the effect of Level 10 Blessing.
 	sc_start 10,240000,10;
 
-Extra argument's meaning differs depending on the effect type, for most 
-effects caused by a player skill the extra argument means the level of the 
-skill that would have been used to create that effect, for others it might 
-have no meaning whatsoever. You can actually bless someone with a 0 bless 
-spell level this way, which is fun, but weird.
+	// Elemental armor defense takes the following four values:
+	// val1 is the first element, val2 is the resistance to the element val1.
+	// val3 is the second element, val4 is the resistance to the element val3.
+	sc_start4 SC_DefEle,60000,Ele_Fire,20,Ele_Water,-15;
 
-The GID, if given, will cause the status effect to appear on a specified 
-character, instead of the one attached to the running script. This has not 
-been properly tested.
+	// This will end the Freezing status for the invoking character.
+	sc_end SC_FREEZE;
 
-'sc_start2' is perfectly equivalent, but unlike 'sc_start', a status 
-change effect will only occur with a specified percentage chance. 10000 
-given as the chance is equivalent to a 100% chance, 0 is a zero.
-
-'sc_start4' is just like sc_start, however it takes four parameters for 
-the status change instead of one. What these values are depends on the 
-status change in question. For example, elemental armor defense takes the 
-following four values:
-- val1 is the first element, val2 is the resistance to the element val1.
-- val3 is the second element, val4 is the resistance to said element.
-eg: sc_start4 SC_ARMOR_RESIST,300000,20,20,20,20;
-
-'sc_end' will remove a specified status effect. If SC_All is used (-1), it 
-will do a complete removal of all statuses (although permanent ones will 
-re-apply).
-
-You can see the full list of status effects caused by skills in 
-'src/map/status.h' - they are currently not fully documented, but most of 
-that should be rather obvious.
 Note: to use SC_NOCHAT you should alter Manner
 	Manner = -5;	// Will mute a user for 5 minutes
 	Manner = 0;	// Will unmute a user

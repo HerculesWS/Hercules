@@ -7407,6 +7407,49 @@ BUILDIN(getguildmasterid)
 }
 
 /*==========================================
+ * Get the information of the members of a guild by type.
+ * getguildmember <guild_id>{,<type>};
+ * @param guild_id: ID of guild
+ * @param type:
+ * 0 : name (default)
+ * 1 : character ID
+ * 2 : account ID
+ *------------------------------------------*/
+BUILDIN(getguildmember)
+{
+	struct guild *g = NULL;
+	int j = 0;
+
+	g = guild->search(script_getnum(st,2));
+
+	if (g) {
+		int i, type = 0;
+
+		if (script_hasdata(st,3))
+			type = script_getnum(st,3);
+
+		for ( i = 0; i < MAX_GUILD; i++ ) {
+			if ( g->member[i].account_id ) {
+				switch (type) {
+				case 2:
+					mapreg->setreg(reference_uid(script->add_str("$@guildmemberaid"), j),g->member[i].account_id);
+					break;
+				case 1:
+					mapreg->setreg(reference_uid(script->add_str("$@guildmembercid"), j), g->member[i].char_id);
+					break;
+				default:
+					mapreg->setregstr(reference_uid(script->add_str("$@guildmembername$"), j), g->member[i].name);
+					break;
+				}
+				j++;
+			}
+		}
+	}
+	mapreg->setreg(script->add_str("$@guildmembercount"), j);
+	return true;
+}
+
+/*==========================================
  * Get char string information by type :
  * Return by @type :
  * 0 : char_name
@@ -10039,117 +10082,79 @@ BUILDIN(hideonnpc)
 	return true;
 }
 
-/// Starts a status effect on the target unit or on the attached player.
-///
-/// sc_start <effect_id>,<duration>,<val1>{,<unit_id>};
-BUILDIN(sc_start) {
+/* Starts a status effect on the target unit or on the attached player.
+ *
+ * sc_start  <effect_id>,<duration>,<val1>{,<rate>,<flag>,{<unit_id>}};
+ * sc_start2 <effect_id>,<duration>,<val1>,<val2>{,<rate,<flag>,{<unit_id>}};
+ * sc_start4 <effect_id>,<duration>,<val1>,<val2>,<val3>,<val4>{,<rate,<flag>,{<unit_id>}};
+ * <flag>
+ * 	&1: Cannot be avoided (it has to start)
+ * 	&2: Tick should not be reduced (by vit, luk, lv, etc)
+ * 	&4: sc_data loaded, no value has to be altered.
+ * 	&8: rate should not be reduced
+ */
+BUILDIN(sc_start)
+{
+	TBL_NPC * nd = map->id2nd(st->oid);
 	struct block_list* bl;
 	enum sc_type type;
-	int tick;
-	int val1;
-	int val4 = 0;
+	int tick, val1, val2, val3, val4=0, rate, flag;
+	char start_type;
+	const char* command = script_getfuncname(st);
+
+	if(strstr(command, "4"))
+		start_type = 4;
+	else if(strstr(command, "2"))
+		start_type = 2;
+	else
+		start_type = 1;
 
 	type = (sc_type)script_getnum(st,2);
 	tick = script_getnum(st,3);
 	val1 = script_getnum(st,4);
-	if( script_hasdata(st,5) )
-		bl = map->id2bl(script_getnum(st,5));
+
+	//If from NPC we make default flag 1 to be unavoidable
+	if(nd && nd->bl.id == npc->fake_nd->bl.id)
+		flag = script_hasdata(st,5+start_type)?script_getnum(st,5+start_type):2;
+	else
+		flag = script_hasdata(st,5+start_type)?script_getnum(st,5+start_type):1;
+
+	rate = script_hasdata(st,4+start_type)?min(script_getnum(st,4+start_type),10000):10000;
+
+	if(script_hasdata(st,(6+start_type)))
+		bl = map->id2bl(script_getnum(st,(6+start_type)));
 	else
 		bl = map->id2bl(st->rid);
 
-	if( tick == 0 && val1 > 0 && type > SC_NONE && type < SC_MAX && status->sc2skill(type) != 0 ) {
-		// When there isn't a duration specified, try to get it from the skill_db
+	if(tick == 0 && val1 > 0 && type > SC_NONE && type < SC_MAX && status->sc2skill(type) != 0)
+	{// When there isn't a duration specified, try to get it from the skill_db
 		tick = skill->get_time(status->sc2skill(type), val1);
 	}
 
-	if( script->potion_flag == 1 && script->potion_target ) {
-		//skill.c set the flags before running the script, this must be a potion-pitched effect.
+	if(script->potion_flag == 1 && script->potion_target) { //skill.c set the flags before running the script, this is a potion-pitched effect.
 		bl = map->id2bl(script->potion_target);
 		tick /= 2;// Thrown potions only last half.
 		val4 = 1;// Mark that this was a thrown sc_effect
 	}
 
-	if( bl )
-		status->change_start(NULL, bl, type, 10000, val1, 0, 0, val4, tick, 2);
+	if(!bl)
+		return true;
 
-	return true;
-}
-
-/// Starts a status effect on the target unit or on the attached player.
-///
-/// sc_start2 <effect_id>,<duration>,<val1>,<percent chance>{,<unit_id>};
-BUILDIN(sc_start2) {
-	struct block_list* bl;
-	enum sc_type type;
-	int tick;
-	int val1;
-	int val4 = 0;
-	int rate;
-
-	type = (sc_type)script_getnum(st,2);
-	tick = script_getnum(st,3);
-	val1 = script_getnum(st,4);
-	rate = script_getnum(st,5);
-	if( script_hasdata(st,6) )
-		bl = map->id2bl(script_getnum(st,6));
-	else
-		bl = map->id2bl(st->rid);
-
-	if( tick == 0 && val1 > 0 && type > SC_NONE && type < SC_MAX && status->sc2skill(type) != 0 ) {
-		// When there isn't a duration specified, try to get it from the skill_db
-		tick = skill->get_time(status->sc2skill(type), val1);
+	switch(start_type) {
+		case 1:
+			status->change_start(bl, bl, type, rate, val1, 0, 0, val4, tick, flag);
+			break;
+		case 2:
+			val2 = script_getnum(st,5);
+			status->change_start(bl, bl, type, rate, val1, val2, 0, val4, tick, flag);
+			break;
+		case 4:
+			val2 = script_getnum(st,5);
+			val3 = script_getnum(st,6);
+			val4 = script_getnum(st,7);
+			status->change_start(bl, bl, type, rate, val1, val2, val3, val4, tick, flag);
+			break;
 	}
-
-	if( script->potion_flag == 1 && script->potion_target ) {
-		//skill.c set the flags before running the script, this must be a potion-pitched effect.
-		bl = map->id2bl(script->potion_target);
-		tick /= 2;// Thrown potions only last half.
-		val4 = 1;// Mark that this was a thrown sc_effect
-	}
-
-	if( bl )
-		status->change_start(NULL, bl, type, rate, val1, 0, 0, val4, tick, 2);
-
-	return true;
-}
-
-/// Starts a status effect on the target unit or on the attached player.
-///
-/// sc_start4 <effect_id>,<duration>,<val1>,<val2>,<val3>,<val4>{,<unit_id>};
-BUILDIN(sc_start4) {
-	struct block_list* bl;
-	enum sc_type type;
-	int tick;
-	int val1;
-	int val2;
-	int val3;
-	int val4;
-
-	type = (sc_type)script_getnum(st,2);
-	tick = script_getnum(st,3);
-	val1 = script_getnum(st,4);
-	val2 = script_getnum(st,5);
-	val3 = script_getnum(st,6);
-	val4 = script_getnum(st,7);
-	if( script_hasdata(st,8) )
-		bl = map->id2bl(script_getnum(st,8));
-	else
-		bl = map->id2bl(st->rid);
-
-	if( tick == 0 && val1 > 0 && type > SC_NONE && type < SC_MAX && status->sc2skill(type) != 0 ) {
-		// When there isn't a duration specified, try to get it from the skill_db
-		tick = skill->get_time(status->sc2skill(type), val1);
-	}
-
-	if( script->potion_flag == 1 && script->potion_target ) {
-		//skill.c set the flags before running the script, this must be a potion-pitched effect.
-		bl = map->id2bl(script->potion_target);
-		tick /= 2;// Thrown potions only last half.
-	}
-
-	if( bl )
-		status->change_start(NULL, bl, type, 10000, val1, val2, val3, val4, tick, 2);
-
 	return true;
 }
 
@@ -18859,6 +18864,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getguildname,"i"),
 		BUILDIN_DEF(getguildmaster,"i"),
 		BUILDIN_DEF(getguildmasterid,"i"),
+		BUILDIN_DEF(getguildmember,"i?"),
 		BUILDIN_DEF(strcharinfo,"i"),
 		BUILDIN_DEF(strnpcinfo,"i"),
 		BUILDIN_DEF(getequipid,"i"),
@@ -18947,9 +18953,9 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(disablenpc,"s"),
 		BUILDIN_DEF(hideoffnpc,"s"),
 		BUILDIN_DEF(hideonnpc,"s"),
-		BUILDIN_DEF(sc_start,"iii?"),
-		BUILDIN_DEF(sc_start2,"iiii?"),
-		BUILDIN_DEF(sc_start4,"iiiiii?"),
+		BUILDIN_DEF(sc_start,"iii???"),
+		BUILDIN_DEF2(sc_start,"sc_start2","iiii???"),
+		BUILDIN_DEF2(sc_start,"sc_start4","iiiiii???"),
 		BUILDIN_DEF(sc_end,"i?"),
 		BUILDIN_DEF(getstatus, "i?"),
 		BUILDIN_DEF(getscrate,"ii?"),
@@ -19341,6 +19347,7 @@ void script_hardcoded_constants(void) {
 	script->set_constant("MAX_ZENY",MAX_ZENY,false);
 	script->set_constant("MAX_BG_MEMBERS",MAX_BG_MEMBERS,false);
 	script->set_constant("MAX_CHAT_USERS",MAX_CHAT_USERS,false);
+	script->set_constant("MAX_REFINE",MAX_REFINE,false);
 
 	/* status options */
 	script->set_constant("Option_Nothing",OPTION_NOTHING,false);

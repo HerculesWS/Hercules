@@ -494,7 +494,7 @@ S_GiveSerial:
 	next;
 	mes "[Chief Mahnsoo]";
 	mes "Remember...";
-	if (rand(1)) {
+	if (rand(2)) {
 		mes "The package's";
 		mes "Serial Number is";
 		mes "^3355FF"+getarg(0)+"^000000.";

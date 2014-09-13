@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= Euphy
 //===== Current Version: =====================================
-//= 1.4a
+//= 1.4b
 //===== Description: =========================================
 //= Random hunting missions.
 //= Rewards are based on quest difficulty.
@@ -17,6 +17,8 @@
 //= 1.4 Fix ranking table using new SQL database [ossi0110]
 //= 1.4a Fix a bug when a character has deleted, that account
 //=     can't do mission. [AnnieRuru]
+//= 1.4b Update to follow author's method on fixing
+//=     character deletion bug [AnnieRuru]
 //============================================================
 
 prontera,152,187,6	script	Hunting Missions	4_F_EDEN_MASTER,{
@@ -44,9 +46,21 @@ function Chk; function Cm;
 	switch(select(((!Mission0)?" ~ New Mission::":": ~ Mission Status: ~ Abandon Mission")+": ~ Information: ~ Mission Shop: ~ View Top Hunters: ~ ^777777Cancel^000000")) {
 	case 1:
 		mes "[Hunting Missions]";
-		if ( query_sql( "SELECT 1 FROM `char_reg_num_db` WHERE `key` = 'Mission0' AND `char_id` IN ( SELECT `char_id` FROM `char` WHERE `account_id` = "+ getcharid(3) +" )", .@dummy ) && #Mission_Count ) {
+		if ( #Mission_Count ) {
 			mes "You've started a mission";
 			mes "on another character.";
+			if ( !@hm_char_del_check ) {
+				if ( !query_sql( "SELECT 1 FROM `char_reg_num_db` WHERE `key` = 'Mission0' AND `char_id` IN ( SELECT `char_id` FROM `char` WHERE `account_id` = "+ getcharid(3) +" )", .@dummy ) ) {
+					next;
+					mes "[Hunting Missions]";
+					mes "I can't seem to find any records";
+					mes "for that character, though...";
+					mes "One moment, please.";
+					emotion e_hmm;
+					set #Mission_Count, 0;
+				}
+				set @hm_char_del_check, 1;
+			}
 			close;
 		}
 		if (#Mission_Delay > gettimetick(2) && .Delay) {

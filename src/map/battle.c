@@ -1396,7 +1396,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 	int i;
 	struct status_change *sc, *tsc;
 	struct map_session_data *sd, *tsd;
-	struct status_data *st, *tst;
+	struct status_data *st, *tst, *bst;
 
 	nullpo_ret(src);
 	nullpo_ret(target);
@@ -1406,6 +1406,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 	sc = status->get_sc(src);
 	tsc = status->get_sc(target);
 	st = status->get_status_data(src);
+	bst = status->get_base_status(src);
 	tst = status->get_status_data(target);
 
 	switch(attack_type){
@@ -2196,12 +2197,12 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					break;
 				case NC_VULCANARM:
 					skillratio = 70 * skill_lv + status_get_dex(src);
-					RE_LVL_DMOD(100);
+					RE_LVL_DMOD(120);
 					break;
 				case NC_FLAMELAUNCHER:
 				case NC_COLDSLOWER:
-					skillratio += 200 + 100 * skill_lv + status_get_str(src);
-					RE_LVL_DMOD(100);
+					skillratio += 200 + 300 * skill_lv;
+					RE_LVL_DMOD(150);
 					break;
 				case NC_ARMSCANNON:
 					switch( tst->size ) {
@@ -2232,13 +2233,16 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 						skillratio = skillratio * 75 / 100;
 					break;
 				case SC_FATALMENACE:
-					skillratio = 100 * (skill_lv+1) * status->get_lv(src) / 100;
+					skillratio = 100 * (skill_lv+1);
+					RE_LVL_DMOD(100);
 					break;
 				case SC_TRIANGLESHOT:
-					skillratio = ( 300 + (skill_lv-1) * status_get_agi(src)/2 ) * status->get_lv(src) / 120;
+					skillratio = ( 300 + (skill_lv-1) * status_get_agi(src)/2 );
+					RE_LVL_DMOD(120);
 					break;
 				case SC_FEINTBOMB:
-					skillratio = (skill_lv+1) * (st->dex/2) * (sd?sd->status.job_level:50)/10 * status->get_lv(src) / 120;
+					skillratio = (skill_lv+1) * (st->dex/2) * (sd?sd->status.job_level:50)/10;
+					RE_LVL_DMOD(120);
 					break;
 				case LG_CANNONSPEAR:
 					skillratio = (50 + st->str) * skill_lv;
@@ -2306,7 +2310,14 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					RE_LVL_DMOD(100);
 					break;
 				case LG_HESPERUSLIT:
-					skillratio += 120 * skill_lv - 100;
+					skillratio = 120 * skill_lv;
+					if( sc && sc->data[SC_BANDING] )
+						skillratio += 200 * sc->data[SC_BANDING]->val2;
+					if( sc && sc->data[SC_BANDING] && sc->data[SC_BANDING]->val2 > 5 )
+						skillratio = skillratio * 150 / 100;
+					if( sc && sc->data[SC_INSPIRATION] )
+						skillratio += 600;
+					RE_LVL_DMOD(100);
 					break;
 				case SR_DRAGONCOMBO:
 					skillratio += 40 * skill_lv;
@@ -2411,9 +2422,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					break;
 				case GN_CART_TORNADO:
 				{
-					int strbonus = st->str; // FIXME Supposed to take only base STR, but current code wont allow that. So well just take STR for now. [Rytech]
-					if ( strbonus > 130 ) // Max base stat limit on official is 130. So well allow no higher then 125 STR here. This limit prevents
-						strbonus = 130; // the division from going any lower then 30 so the server wont divide by 0 if someone has 150 STR.
+					int strbonus = bst->str;
 					skillratio = 50 * skill_lv + (sd ? sd->cart_weight : battle_config.max_cart_weight) / 10 / (150 - strbonus) + 50 * (sd ? pc->checkskill(sd, GN_REMODELING_CART) : 5);
 				}
 					break;
@@ -2693,10 +2702,11 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			d->dmg_lv = ATK_BLOCK;
 			return 0;
 		}
-		if( (sce=sc->data[SC_AUTOGUARD]) && flag&BF_WEAPON && !(skill->get_nk(skill_id)&NK_NO_CARDFIX_ATK) && rnd()%100 < sce->val2 )
-		{
+		if ((sce=sc->data[SC_AUTOGUARD]) && flag&BF_WEAPON && !(skill->get_nk(skill_id)&NK_NO_CARDFIX_ATK) && rnd()%100 < sce->val2) {
 			int delay;
-			clif->skill_nodamage(bl,bl,CR_AUTOGUARD,sce->val1,1);
+			struct block_list *d_bl = NULL;
+			struct status_change_entry *sce_d = sc->data[SC_DEVOTION];
+
 			// different delay depending on skill level [celest]
 			if (sce->val1 <= 5)
 				delay = 300;
@@ -2704,7 +2714,18 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 				delay = 200;
 			else
 				delay = 100;
-			unit->set_walkdelay(bl, timer->gettick(), delay, 1);
+
+			if (sce_d && (d_bl = map->id2bl(sce_d->val1))
+			 && ((d_bl->type == BL_MER && ((TBL_MER*)d_bl)->master && ((TBL_MER*)d_bl)->master->bl.id == bl->id)
+			    || (d_bl->type == BL_PC && ((TBL_PC*)d_bl)->devotion[sce_d->val2] == bl->id))
+			) {
+				// if player is target of devotion, show guard effect on the devotion caster rather than the target
+				clif->skill_nodamage(d_bl, d_bl, CR_AUTOGUARD, sce->val1, 1);
+				unit->set_walkdelay(d_bl, timer->gettick(), delay, 1);
+			} else {
+				clif->skill_nodamage(bl, bl, CR_AUTOGUARD, sce->val1, 1);
+				unit->set_walkdelay(bl, timer->gettick(), delay, 1);
+			}
 
 			if(sc->data[SC_CR_SHRINK] && rnd()%100<5*sce->val1)
 				skill->blown(bl,src,skill->get_blewcount(CR_SHRINK,1),-1,0);
@@ -2786,7 +2807,11 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		}
 
 		//Now damage increasing effects
-		if( sc->data[SC_LEXAETERNA] && skill_id != PF_SOULBURN )
+		if( sc->data[SC_LEXAETERNA] && skill_id != PF_SOULBURN
+#ifdef RENEWAL
+		&& skill_id != CR_ACIDDEMONSTRATION && skill_id != ASC_BREAKER
+#endif
+		)
 		{
 			if( src->type != BL_MER || skill_id == 0 )
 				damage <<= 1; // Lex Aeterna only doubles damage of regular attacks from mercenaries
@@ -2862,9 +2887,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			if(flag&BF_SKILL) { //25% reduction
 				if ( !(skill->get_inf(skill_id)&INF_GROUND_SKILL) && !(skill->get_nk(skill_id)&NK_SPLASH) )
 					damage -= 25*damage/100;
-				}
-			else if ((flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON))
+			} else if ((flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON)) {
 				damage >>= 2; //75% reduction
+			}
 		}
 
 		if ( sc->data[SC_WATER_BARRIER] )
@@ -3751,6 +3776,10 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 					md.damage >>= 1;
 			}
 			md.damage -= totaldef;
+			if( tsc && tsc->data[SC_LEXAETERNA] ) {
+				md.damage <<= 1;
+				status_change_end(target, SC_LEXAETERNA, INVALID_TIMER);
+			}
 		}
 #else
 		// updated the formula based on a Japanese formula found to be exact [Reddozen]
@@ -3805,6 +3834,10 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 			ratio >>= 1;
 		md.damage = (matk + atk) * ratio / 100;
 		md.damage -= totaldef;
+		if( tsc && tsc->data[SC_LEXAETERNA] ) {
+				md.damage <<= 1;
+				status_change_end(target, SC_LEXAETERNA, INVALID_TIMER);
+			}
 #endif
 		}
 		break;
@@ -4165,6 +4198,12 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			case LK_SPIRALPIERCE:
 				if (!sd) wd.flag=(wd.flag&~(BF_RANGEMASK|BF_WEAPONMASK))|BF_LONG|BF_MISC;
 				break;
+
+			//When in banding, the number of hits is equal to the number of Royal Guards in banding.
+			case LG_HESPERUSLIT:
+				if( sc && sc->data[SC_BANDING] && sc->data[SC_BANDING]->val2 > 3 )
+					wd.div_ = sc->data[SC_BANDING]->val2;
+				break;
 				
 			case MO_INVESTIGATE:
 				flag.pdef = flag.pdef2 = 2;
@@ -4216,6 +4255,10 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		case LK_SPIRALPIERCE:
 			if (!sd) n_ele = false; //forced neutral for monsters
 			break;
+		case LG_HESPERUSLIT:
+			if ( sc && sc->data[SC_BANDING] && sc->data[SC_BANDING]->val2 == 5 )
+				s_ele = ELE_HOLY;	// Banding with 5 RGs: change atk element to Holy.
+		break;
 	}
 
 	if (!(nk & NK_NO_ELEFIX) && !n_ele)
@@ -5217,9 +5260,9 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			wd.damage-=wd.damage2;
 #endif
 		}
-		
-		if( src != target ) { // Don't reflect your own damage (Grand Cross)
 
+
+		if( src != target ) { // Don't reflect your own damage (Grand Cross)
 			if( wd.dmg_lv == ATK_MISS || wd.dmg_lv == ATK_BLOCK ) {
 				int64 prev1 = wd.damage, prev2 = wd.damage2;
 
@@ -5345,6 +5388,9 @@ void battle_reflect_damage(struct block_list *target, struct block_list *src, st
 		sc = NULL;
 
 	if( sc ) {
+		if (sc->data[SC_DEVOTION] && !(wd->flag & BF_SKILL))
+			return; // No reflect for basic attacks on devoted characters
+
 		if (wd->flag & BF_SHORT && !(skill->get_inf(skill_id) & (INF_GROUND_SKILL | INF_SELF_SKILL))) {
 			if( sc->data[SC_CRESCENTELBOW] && !is_boss(src) && rnd()%100 < sc->data[SC_CRESCENTELBOW]->val2 ){
 				//ATK [{(Target HP / 100) x Skill Level} x Caster Base Level / 125] % + [Received damage x {1 + (Skill Level x 0.2)}]
@@ -6353,13 +6399,6 @@ bool battle_check_range(struct block_list *src, struct block_list *bl, int range
 	if( src->m != bl->m )
 		return false;
 
-#ifndef CIRCULAR_AREA
-	if( src->type == BL_PC ) { // Range for players' attacks and skills should always have a circular check. [Angezerus]
-		int dx = src->x - bl->x, dy = src->y - bl->y;
-		if( !path->check_distance(dx, dy, range) )
-			return false;
-	} else
-#endif
 	if( !check_distance_bl(src, bl, range) )
 		return false;
 
@@ -6726,6 +6765,7 @@ static const struct battle_data {
 	{ "mail_show_status",                   &battle_config.mail_show_status,                0,      0,      2,              },
 	{ "client_limit_unit_lv",               &battle_config.client_limit_unit_lv,            0,      0,      BL_ALL,         },
 	{ "client_emblem_max_blank_percent",    &battle_config.client_emblem_max_blank_percent, 100,    0,      100,            },
+	{ "song_timer_reset",                   &battle_config.song_timer_reset,                0,      0,      1,              },
 	// BattleGround Settings
 	{ "bg_update_interval",                 &battle_config.bg_update_interval,              1000,   100,    INT_MAX,        },
 	{ "bg_flee_penalty",                    &battle_config.bg_flee_penalty,                 20,     0,      INT_MAX,        },
@@ -6750,6 +6790,7 @@ static const struct battle_data {
 	 **/
 	{ "skill_trap_type",                    &battle_config.skill_trap_type,                 0,      0,      1,              },
 	{ "item_restricted_consumption_type",   &battle_config.item_restricted_consumption_type,1,      0,      1,              },
+	{ "unequip_restricted_equipment",       &battle_config.unequip_restricted_equipment,    0,      0,      3,              },
 	{ "max_walk_path",                      &battle_config.max_walk_path,                   17,     1,      MAX_WALKPATH,   },
 	{ "item_enabled_npc",                   &battle_config.item_enabled_npc,                1,      0,      1,              },
 	{ "gm_ignore_warpable_area",            &battle_config.gm_ignore_warpable_area,         0,      2,      100,            },

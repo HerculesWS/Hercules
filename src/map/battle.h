@@ -169,6 +169,7 @@ struct Battle_Config {
 	int emergency_call;
 	int guild_aura;
 	int pc_invincible_time;
+	int song_timer_reset;
 	
 	int pet_catch_rate;
 	int pet_rename;
@@ -455,6 +456,7 @@ struct Battle_Config {
 	/** Hercules **/
 	int skill_trap_type;
 	int item_restricted_consumption_type;
+	int unequip_restricted_equipment;
 	int max_walk_path;
 	int item_enabled_npc;
 	int packet_obfuscation;
