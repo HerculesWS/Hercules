@@ -12959,20 +12959,20 @@ BUILDIN(dispbottom)
  *------------------------------------------*/
  
 int buildin_recovery_sub(struct map_session_data *sd, int revive) {
-    if (revive&1 && pc_isdead(sd)) {
-        status->revive(&sd->bl,100,100);
-        return 1;
-    } else if (revive&2 && !pc_isdead(sd)) {
-        status_percent_heal(&sd->bl,100,100);
-        return 1;
-    }
-    return 0;
+	if (revive&1 && pc_isdead(sd)) {
+		status->revive(&sd->bl,100,100);
+		return 1;
+	} else if (revive&2 && !pc_isdead(sd)) {
+		status_percent_heal(&sd->bl,100,100);
+		return 1;
+	}
+	return 0;
 }
 
 int buildin_recovery_TYPE_bl(struct block_list *bl, va_list ap) {
-    TBL_PC *sd = BL_CAST(BL_PC, bl);
-    int revive = va_arg(ap, int);
-    return buildin_recovery_sub(sd,revive);
+	TBL_PC *sd = BL_CAST(BL_PC, bl);
+	int revive = va_arg(ap, int);
+	return buildin_recovery_sub(sd,revive);
 }
 
 BUILDIN(recovery)
