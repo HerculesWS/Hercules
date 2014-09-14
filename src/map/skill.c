@@ -6275,25 +6275,24 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case GC_CLOAKINGEXCEED:
 		case LG_FORCEOFVANGUARD:
 		case SC_REPRODUCE:
+		case RA_CAMOUFLAGE:
 			if (tsce) {
 				int failure = status_change_end(bl, type, INVALID_TIMER);
 				if( failure )
 					clif->skill_nodamage(src,bl,skill_id,( skill_id == LG_FORCEOFVANGUARD ) ? skill_lv : -1,failure);
 				else if( sd )
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-				if ( skill_id == LG_FORCEOFVANGUARD )
+				if ( skill_id == LG_FORCEOFVANGUARD || skill_id == RA_CAMOUFLAGE )
 					break;
 				map->freeblock_unlock();
 				return 0;
+			} else {
+				int failure = sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
+				if( failure )
+					clif->skill_nodamage(src,bl,skill_id,( skill_id == LG_FORCEOFVANGUARD ) ? skill_lv : -1,failure);
+				else if( sd )
+					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 			}
-		case RA_CAMOUFLAGE:
-		{
-			int failure = sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
-			if( failure )
-				clif->skill_nodamage(src,bl,skill_id,( skill_id == LG_FORCEOFVANGUARD ) ? skill_lv : -1,failure);
-			else if( sd )
-				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-		}
 			break;
 
 		case BD_ADAPTATION:
@@ -12199,7 +12198,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			break;
 
 		case UNT_VACUUM_EXTREME:
-			if ( tsc && tsc->data[SC_HALLUCINATIONWALK] ) {
+			if (tsc && (tsc->data[SC_HALLUCINATIONWALK] || tsc->data[SC_VACUUM_EXTREME])) {
 				return 0;
 			} else {
 				sg->limit -= 100 * tstatus->str/20;
@@ -12208,7 +12207,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 				if (unit->movepos(bl, sg->val1, sg->val2, 0, 0)) {
 					clif->slide(bl, sg->val1, sg->val2);
 					clif->fixpos(bl);
-				}		
+				}
 			}
 			break;
 

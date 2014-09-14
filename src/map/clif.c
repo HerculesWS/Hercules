@@ -10173,6 +10173,7 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 
 			if (sd->sc.count && (
 				sd->sc.data[SC_DANCING] ||
+				sd->sc.data[SC_ANKLESNARE] ||
 				(sd->sc.data[SC_GRAVITATION] && sd->sc.data[SC_GRAVITATION]->val3 == BCT_SELF)
 			)) //No sitting during these states either.
 				break;
