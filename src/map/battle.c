@@ -500,8 +500,13 @@ int64 battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, u
 int64 battle_calc_base_damage(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, int flag, int flag2) {
 	int64 damage, batk;
 	struct status_data *st = status->get_status_data(src);
-	
-	batk = battle->calc_elefix(src, bl, skill_id, skill_lv, status->calc_batk(bl, status->get_sc(src), st->batk, false), nk, n_ele, ELE_NEUTRAL, ELE_NEUTRAL, false, flag);
+	struct status_change *sc = status->get_sc(src);
+
+	// Property from mild wind bypasses it
+	if (sc && sc->data[SC_TK_SEVENWIND])
+		batk = battle->calc_elefix(src, bl, skill_id, skill_lv, status->calc_batk(bl, sc, st->batk, false), nk, n_ele, s_ele, s_ele_, false, flag);
+	else
+		batk = battle->calc_elefix(src, bl, skill_id, skill_lv, status->calc_batk(bl, sc, st->batk, false), nk, n_ele, ELE_NEUTRAL, ELE_NEUTRAL, false, flag);
 
 	if( type == EQI_HAND_L )
 		damage = batk + 3 * battle->calc_weapon_damage(src, bl, skill_id, skill_lv, &st->lhw, nk, n_ele, s_ele, s_ele_, status_get_size(bl), type, flag, flag2) / 4;
