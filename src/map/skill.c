@@ -12157,7 +12157,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			break;
 
 		case UNT_WARMER:
-			if( bl->type == BL_PC && !battle->check_undead(tstatus->race, tstatus->def_ele) && tstatus->race != RC_DEMON ) {
+			{	// It has effect on everything, including monsters, undead property and demon
 				int hp = 0;
 				if( ssc && ssc->data[SC_HEATER_OPTION] )
 					hp = tstatus->max_hp * 3 * sg->skill_lv / 100;
@@ -12169,10 +12169,9 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 				if( tsc && tsc->data[SC_AKAITSUKI] && hp )
 					hp = ~hp + 1;
 				status->heal(bl, hp, 0, 0);
-				sc_start(ss, bl, SC_WARMER, 100, sg->skill_lv, skill->get_time2(sg->skill_id,sg->skill_lv));
+				sc_start(ss, bl, type, 100, sg->skill_lv, sg->interval + 100);
 			}
 			break;
-
 		case UNT_FIRE_INSIGNIA:
 		case UNT_WATER_INSIGNIA:
 		case UNT_WIND_INSIGNIA:
@@ -12285,10 +12284,8 @@ int skill_unit_onout(struct skill_unit *src, struct block_list *bl, int64 tick) 
 	switch(sg->unit_id){
 		case UNT_SAFETYWALL:
 		case UNT_PNEUMA:
-		case UNT_EPICLESIS://Arch Bishop
 		case UNT_NEUTRALBARRIER:
 		case UNT_STEALTHFIELD:
-		case UNT_WARMER:
 			if (sce)
 				status_change_end(bl, type, INVALID_TIMER);
 			break;
