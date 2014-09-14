@@ -12957,35 +12957,22 @@ BUILDIN(dispbottom)
  *  recovery SELF {,<flag>};
  *  recovery BG {, <flag> {, <battleground ID>}};
  *------------------------------------------*/
-
-bool buildin_recovery_sub(struct map_session_data *sd, int revive) {
-	if ( revive&1 && pc_isdead(sd) ) {
-		status->revive(&sd->bl,100,100);
-		return true;
-	}
-	else if ( revive&2 && !pc_isdead(sd) ) {
-		status_percent_heal(&sd->bl,100,100);
-		return true;
-	}
-	else
-		return false;
-}
-
-int buildin_recovery_ALL_pc(struct map_session_data* sd, va_list ap) {
-	int revive = va_arg(ap, int);
-	int *count = va_arg(ap, int*);
-	if (buildin_recovery_sub(sd,revive))
-		(*count)++;
-	return false;
+ 
+int buildin_recovery_sub(struct map_session_data *sd, int revive) {
+    if (revive&1 && pc_isdead(sd)) {
+        status->revive(&sd->bl,100,100);
+        return 1;
+    } else if (revive&2 && !pc_isdead(sd)) {
+        status_percent_heal(&sd->bl,100,100);
+        return 1;
+    }
+    return 0;
 }
 
 int buildin_recovery_TYPE_bl(struct block_list *bl, va_list ap) {
-	TBL_PC *sd = BL_CAST(BL_PC, bl);
-	int revive = va_arg(ap, int);
-	int *count = va_arg(ap, int*);
-	if (buildin_recovery_sub(sd,revive))
-		(*count)++;
-	return false;
+    TBL_PC *sd = BL_CAST(BL_PC, bl);
+    int revive = va_arg(ap, int);
+    return buildin_recovery_sub(sd,revive);
 }
 
 BUILDIN(recovery)
@@ -13000,9 +12987,14 @@ BUILDIN(recovery)
 	switch ( type ) {
 
 	case ALL_CLIENT:
-		map->foreachpc(buildin_recovery_ALL_pc, revive, &count);
-		break;
-
+		{
+			struct s_mapiterator* iter = mapit_getallusers();
+			TBL_PC *sd;
+			for (sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter))
+				count += buildin_recovery_sub(sd, revive);
+			mapit->free(iter);
+			break;
+		}
 	case ALL_SAMEMAP:
 		{
 			int16 map_id;
@@ -13022,7 +13014,7 @@ BUILDIN(recovery)
 				}
 				map_id = sd->bl.m;
 			}
-			map->foreachinmap(buildin_recovery_TYPE_bl, map_id, BL_PC, revive, &count);
+			count = map->foreachinmap(buildin_recovery_TYPE_bl, map_id, BL_PC, revive);
 			break;
 		}
 	case AREA:
@@ -13042,7 +13034,7 @@ BUILDIN(recovery)
 			y1 = script_getnum(st,6);
 			x2 = script_getnum(st,7);
 			y2 = script_getnum(st,8);
-			map->foreachinarea(buildin_recovery_TYPE_bl, map_id, x1, y1, x2, y2, BL_PC, revive, &count);
+			count = map->foreachinarea(buildin_recovery_TYPE_bl, map_id, x1, y1, x2, y2, BL_PC, revive);
 			break;
 		}
 		else {
@@ -13053,7 +13045,7 @@ BUILDIN(recovery)
 				return false;
 			}
 			else {
-				map->foreachinrange(buildin_recovery_TYPE_bl, &sd->bl, battle_config.area_size, BL_PC, revive, &count);
+				count = map->foreachinrange(buildin_recovery_TYPE_bl, &sd->bl, battle_config.area_size, BL_PC, revive);
 				break;
 			}
 		}
@@ -13092,15 +13084,13 @@ BUILDIN(recovery)
 				}
 				for (i = 0; i < MAX_PARTY; i++)
 					if (p->party.member[i].account_id && p->party.member[i].online && p->data[i].sd->bl.m == map_id)
-						if (buildin_recovery_sub(p->data[i].sd, revive))
-							count++;
+						count += buildin_recovery_sub(p->data[i].sd, revive);
 			}
 			else {
 				int i;
 				for ( i = 0; i < MAX_PARTY; i++ )
 					if (p->party.member[i].account_id && p->party.member[i].online)
-						if (buildin_recovery_sub(p->data[i].sd, revive))
-							count++;
+						count += buildin_recovery_sub(p->data[i].sd, revive);
 			}
 			break;
 		}
@@ -13139,15 +13129,13 @@ BUILDIN(recovery)
 				}
 				for (i = 0; i < MAX_GUILD; i++)
 					if (g->member[i].account_id && g->member[i].online && g->member[i].sd->bl.m == map_id)
-						if (buildin_recovery_sub(g->member[i].sd, revive))
-							count++;
+						count += buildin_recovery_sub(g->member[i].sd, revive);
 			}
 			else {
 				int i;
 				for (i = 0; i < MAX_GUILD; i++)
 					if (g->member[i].account_id && g->member[i].online)
-						if (buildin_recovery_sub(g->member[i].sd, revive))
-							count++;
+						count += buildin_recovery_sub(g->member[i].sd, revive);
 			}
 			break;
 		}
@@ -13155,8 +13143,7 @@ BUILDIN(recovery)
 		{
 			TBL_PC *sd = script->rid2sd(st);
 			if (sd)
-				if (buildin_recovery_sub(sd, revive))
-					count = 1;
+				count += buildin_recovery_sub(sd, revive);
 			break;
 		}
 	case BG:
@@ -13186,9 +13173,8 @@ BUILDIN(recovery)
 				bgd = bg->team_search(sd->bg_id);
 			}
 			for (i = 0; i < MAX_BG_MEMBERS; i++)
-				if ( bgd->members[i].sd )
-					if (buildin_recovery_sub( bgd->members[i].sd, revive ))
-						count++;
+				if (bgd->members[i].sd)
+					count += buildin_recovery_sub(bgd->members[i].sd, revive);
 			break;
 		}
 	default:
