@@ -4253,10 +4253,41 @@ effects.
 
 ---------------------------------------
 
-*recovery;
+*recovery {<type>{,<flag>{,<option>{,"<map name>"{<x1>,<y1>,<x2>,<y2>}}}}};
 
-This command will revive and restore full HP and SP to all characters 
-currently connected to the server.
+This command will revive and fully restore the HP/SP of the selected characters.
+It returns 1 upon successful use.
+
+<type> is the target, and determines the <option> parameter:
+ ALL_CLIENT  -> None
+ ALL_SAMEMAP -> Map name (a string)
+ AREA        -> Map name, <x1>, <y1>, <x2>, <y2>
+ PARTY       -> Party ID number
+ GUILD       -> GUILD ID number
+ SELF        -> None
+ BG          -> Battleground ID number
+
+If no option is specified, the invoking player's ID, party ID, guild ID,
+battleground ID or map will be used.
+
+<flag> determines the action:
+ 1 : Revive dead players only
+ 2 : Heal living players only
+ 3 : Revive and heal all players (default)
+
+<map name> can optionally be used to define a single map to execute the command
+for types PARTY and GUILD.
+
+A quick list of available types are :-
+ *  recovery ALL_CLIENT, <flag>;
+ *  recovery ALL_SAMEMAP, <flag>, "<map name>";
+ *  recovery AREA, <flag>, "<map name>", <x1>, <y1>, <x2>, <y2>;
+ *  recovery PARTY, <flag>, <party ID> {,"<map name>"};
+ *  recovery GUILD, <flag>, <guild ID> {,"<map name>"};
+ *  recovery SELF, <flag>;
+ *  recovery BG, <flag>, <battleground ID>;
+
+For more example of this, see doc/sample/npc_test_recovery.txt
 
 ---------------------------------------
 

@@ -1,0 +1,120 @@
+//===== Hercules Script =======================================
+//= Sample: Recovery Test
+//===== By: ==================================================
+//= Hercules Dev Team
+//===== Current Version: =====================================
+//= 20140914
+//===== Description: ========================================= 
+//= Demonstrates recovery command.
+//===== Additional Comments: =================================
+//* recovery ALL_CLIENT, <flag>;
+//* recovery ALL_SAMEMAP, <flag>;
+//* recovery ALL_SAMEMAP, <flag>, "<map name>";
+//* recovery AREA, <flag>;
+//* recovery AREA, <flag>, "<map name>", <x1>, <y1>, <x2>, <y2>;
+//* recovery PARTY, <flag>;
+//* recovery PARTY, <flag>, <party ID>;
+//* recovery PARTY, <flag>, <party ID>, "<map name>";
+//* recovery GUILD, <flag>;
+//* recovery GUILD, <flag>, <guild ID>;
+//* recovery GUILD, <flag>, <guild ID>, "<map name>";
+//* recovery SELF, <flag>;
+//* recovery BG, <flag>;
+//* recovery BG, <flag>, <battleground ID>;
+//============================================================
+
+//	revive all players on the server
+prontera,150,190,5	script	ALL_CLIENT	4_F_KAFRA2,{
+	recovery ALL_CLIENT, 3;
+	end;
+}
+
+//	revive all players on the same map as the attached player
+prontera,150,188,5	script	ALL_SAMEMAP	4_F_KAFRA2,{
+	recovery ALL_SAMEMAP, 3;
+	end;
+}
+
+//	revive all players on the map "geffen"
+prontera,152,188,5	script	ALL_SAMEMAP_geffen	4_F_KAFRA2,{
+	recovery ALL_SAMEMAP, 3, "geffen";
+	end;
+}
+
+//	revive all players within the sight range of attached player
+prontera,150,186,5	script	AREA	4_F_KAFRA2,{
+	recovery AREA, 3;
+	end;
+}
+
+//	revive all players within the specified coordinates
+prontera,152,186,5	script	AREA_coordinate	4_F_KAFRA2,{
+	getmapxy .@map$, .@x, .@y, 0;
+	detachrid;
+	recovery AREA, 3, .@map$, .@x-1, .@y-1, .@x+1, .@y+1;
+	end;
+}
+
+//	revive all players from the attached player's party
+prontera,150,184,5	script	PARTY	4_F_KAFRA2,{
+	recovery PARTY, 3;
+	end;
+}
+
+//	revive all players for that party ID
+prontera,152,184,5	script	PARTY_id	4_F_KAFRA2,{
+	.@pid = getcharid(1);
+	detachrid;
+	recovery PARTY, 3, .@pid;
+	end;
+}
+
+//	revive all players for that party ID only on the map "geffen"
+prontera,154,184,5	script	PARTY_geffen	4_F_KAFRA2,{
+	.@pid = getcharid(1);
+	detachrid;
+	recovery PARTY, 3, .@pid, "geffen";
+	end;
+}
+
+//	revive all players from the attached player's guild
+prontera,150,182,5	script	GUILD	4_F_KAFRA2,{
+	recovery GUILD, 3;
+	end;
+}
+
+//	revive all players for that guild ID
+prontera,152,182,5	script	GUILD_id	4_F_KAFRA2,{
+	.@gid = getcharid(2);
+	detachrid;
+	recovery GUILD, 3, .@gid;
+	end;
+}
+
+//	revive all players for that guild ID only on the map "geffen"
+prontera,154,182,5	script	GUILD_geffen	4_F_KAFRA2,{
+	.@gid = getcharid(2);
+	detachrid;
+	recovery GUILD, 3, .@gid, "geffen";
+	end;
+}
+
+//	revive the player
+prontera,150,180,5	script	SELF	4_F_KAFRA2,{
+	recovery SELF;
+	end;
+}
+
+//	revive all players for the attached player's battleground ID
+prontera,150,178,5	script	BG	4_F_KAFRA2,{
+	recovery BG, 3;
+	end;
+}
+
+//	revive all players for that battleground ID
+prontera,152,178,5	script	BG_id	4_F_KAFRA2,{
+	.@bgid = getcharid(4);
+	detachrid;
+	recovery BG, 3, .@bgid;
+	end;
+}
