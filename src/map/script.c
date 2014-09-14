@@ -12949,182 +12949,205 @@ BUILDIN(dispbottom)
  * <map name>:
  *	for type PARTY and GUILD : map_name (null = all maps)
  * Examples:
- *  recovery ALL_CLIENT, <flag>;
- *  recovery ALL_SAMEMAP, <flag>, "<map name>";
- *  recovery AREA, <flag>, "<map name>", <x1>, <y1>, <x2>, <y2>;
- *  recovery PARTY, <flag>, <party ID> {,"<map name>"};
- *  recovery GUILD, <flag>, <guild ID> {,"<map name>"};
- *  recovery SELF, <flag>;
- *  recovery BG, <flag>, <battleground ID>;
+ *  recovery ALL_CLIENT {,<flag>};
+ *  recovery ALL_SAMEMAP {,<flag> {,"<map name>"}};
+ *  recovery AREA {,<flag> {,"<map name>", <x1>, <y1>, <x2>, <y2>}};
+ *  recovery PARTY {,<flag> {,<party ID> {,"<map name>"}}};
+ *  recovery GUILD {,<flag> {, <guild ID> {,"<map name>"}}};
+ *  recovery SELF {,<flag>};
+ *  recovery BG {, <flag> {, <battleground ID>}};
  *------------------------------------------*/
 
-void buildin_recovery_sub( struct map_session_data *sd, char revive ) {
-	if ( revive & 1 && pc_isdead(sd) )
-		status->revive( &sd->bl, 100, 100 );
-	else if ( revive & 2 && !pc_isdead(sd) )
-		status_percent_heal( &sd->bl, 100, 100 );
-	return;
+bool buildin_recovery_sub(struct map_session_data *sd, int revive) {
+	if ( revive&1 && pc_isdead(sd) ) {
+		status->revive(&sd->bl,100,100);
+		return true;
+	}
+	else if ( revive&2 && !pc_isdead(sd) ) {
+		status_percent_heal(&sd->bl,100,100);
+		return true;
+	}
+	else
+		return false;
 }
 
 int buildin_recovery_ALL_pc(struct map_session_data* sd, va_list ap) {
-	char revive = va_arg( ap, char );
-	buildin_recovery_sub( sd, revive );
-	return true;
+	int revive = va_arg(ap, int);
+	int *count = va_arg(ap, int*);
+	if (buildin_recovery_sub(sd,revive))
+		(*count)++;
+	return false;
 }
 
 int buildin_recovery_TYPE_bl(struct block_list *bl, va_list ap) {
-	TBL_PC *sd = BL_CAST( BL_PC, bl );
-	char revive = va_arg( ap, char );
-	buildin_recovery_sub( sd, revive );
-	return true;
+	TBL_PC *sd = BL_CAST(BL_PC, bl);
+	int revive = va_arg(ap, int);
+	int *count = va_arg(ap, int*);
+	if (buildin_recovery_sub(sd,revive))
+		(*count)++;
+	return false;
 }
 
 BUILDIN(recovery)
 {
-	char type = ALL_CLIENT, revive = 3;
+	int type = ALL_CLIENT, revive = 3, count = 0;
 
-	if ( script_hasdata(st,2) )
+	if (script_hasdata(st,2))
 		type = script_getnum(st,2);
-	if ( script_hasdata(st,3) )
+	if (script_hasdata(st,3))
 		revive = script_getnum(st,3);
 
 	switch ( type ) {
 
 	case ALL_CLIENT:
-		map->foreachpc( buildin_recovery_ALL_pc, revive );
+		map->foreachpc(buildin_recovery_ALL_pc, revive, &count);
 		break;
 
 	case ALL_SAMEMAP:
 		{
-			int16 m;
-			if ( script_hasdata(st,4) ) {
-				if ( ( m = map->mapname2mapid( script_getstr(st,4) ) ) < 0 ) {
-					ShowError( "buildin_recovery: using type ALL_SAMEMAP but map not found !\n" );
+			int16 map_id;
+			if (script_hasdata(st,4)) {
+				if ((map_id = map->mapname2mapid(script_getstr(st,4))) < 0) {
+					ShowError("buildin_recovery: type ALL_SAMEMAP but map not found !\n");
+					script_pushint(st,-1);
 					return false;
 				}
 			}
 			else {
 				TBL_PC *sd = script->rid2sd(st);
-				if ( !sd ) {
-					ShowError( "buildin_recovery: using type ALL_SAMEMAP but no map given and no rid attached !\n" );
-					mapreg->setreg( script->add_str("$@onlinecount"), 0 );
+				if (!sd) {
+					ShowError("buildin_recovery: type ALL_SAMEMAP but no map given and no RID attached !\n");
+					script_pushint(st,-1);
 					return false;
 				}
-				m = sd->bl.m;
+				map_id = sd->bl.m;
 			}
-			map->foreachinmap( buildin_recovery_TYPE_bl, m, BL_PC, revive );
+			map->foreachinmap(buildin_recovery_TYPE_bl, map_id, BL_PC, revive, &count);
 			break;
 		}
 	case AREA:
-		if ( script_hasdata(st,4) ) {
-			if ( script_hasdata(st,5) && script_hasdata(st,6) && script_hasdata(st,7) && script_hasdata(st,8) ) {
-				int16 m, x1, y1, x2, y2;
-				if ( ( m = map->mapname2mapid( script_getstr(st,4) ) ) < 0 ) {
-					ShowError( "buildin_recovery: using type AREA but map not found !\n" );
-					return false;
-				}
-				x1 = script_getnum(st,5);
-				y1 = script_getnum(st,6);
-				x2 = script_getnum(st,7);
-				y2 = script_getnum(st,8);
-				map->foreachinarea( buildin_recovery_TYPE_bl, m, x1, y1, x2, y2, BL_PC, revive );
-				break;
-			}
-			else {
-				ShowError( "buildin_recovery: using type AREA but not enough arguments given !\n" );
+		if (script_hasdata(st,4)) {
+			int16 map_id, x1, y1, x2, y2;
+			if (!script_hasdata(st,5) || !script_hasdata(st,6) || !script_hasdata(st,7) || !script_hasdata(st,8)) {
+				ShowError("buildin_recovery: type AREA but not enough arguments given !\n");
+				script_pushint(st,-1);
 				return false;
 			}
+			if ((map_id = map->mapname2mapid(script_getstr(st,4))) < 0) {
+				ShowError("buildin_recovery: type AREA but map not found !\n");
+				script_pushint(st,-1);
+				return false;
+			}
+			x1 = script_getnum(st,5);
+			y1 = script_getnum(st,6);
+			x2 = script_getnum(st,7);
+			y2 = script_getnum(st,8);
+			map->foreachinarea(buildin_recovery_TYPE_bl, map_id, x1, y1, x2, y2, BL_PC, revive, &count);
+			break;
 		}
 		else {
 			TBL_PC *sd = script->rid2sd(st);
-			if ( !sd ) {
-				ShowError( "buildin_recovery: using type AREA but no coordinate given and no rid attached !\n" );
+			if (!sd) {
+				ShowError("buildin_recovery: type AREA but no coordinate given and no RID attached !\n");
+				script_pushint(st,-1);
 				return false;
 			}
 			else {
-				map->foreachinrange( buildin_recovery_TYPE_bl, &sd->bl, battle_config.area_size, BL_PC, revive );
+				map->foreachinrange(buildin_recovery_TYPE_bl, &sd->bl, battle_config.area_size, BL_PC, revive, &count);
 				break;
 			}
 		}
 	case PARTY:
 		{
 			struct party_data *p;
-			if ( script_hasdata(st,4) ) {
-				p = party->search( script_getnum(st,4) );
-				if ( !p ) {
-					ShowError( "buildin_recovery: using type PARTY but party ID not found !\n" );
+			if (script_hasdata(st,4)) {
+				p = party->search(script_getnum(st,4));
+				if (!p) {
+					ShowError("buildin_recovery: type PARTY but party ID not found !\n");
+					script_pushint(st,-1);
 					return false;
 				}
 			}
 			else {
 				TBL_PC *sd = script->rid2sd(st);
-				if ( !sd ) {
-					ShowError( "buildin_recovery: using type PARTY but no party ID given and no rid attached !\n" );
+				if (!sd) {
+					ShowError("buildin_recovery: type PARTY but no party ID given and no RID attached !\n");
+					script_pushint(st,-1);
 					return false;
 				}
-				else if ( sd->status.party_id == 0 ) {
-					ShowError( "buildin_recovery: using type PARTY but RID attached has no party ID !\n" );
+				if (sd->status.party_id == 0) {
+					ShowError("buildin_recovery: type PARTY but RID attached has no party ID !\n");
+					script_pushint(st,-1);
 					return false;
 				}
-				p = party->search( sd->status.party_id );
+				p = party->search(sd->status.party_id);
 			}
-			if ( script_hasdata(st,5) ) {
-				int16 m;
-				unsigned char i;
-				if ( ( m = map->mapname2mapid( script_getstr(st,5) ) ) < 0 ) {
-					ShowError( "buildin_recovery: using type PARTY but map not found !\n" );
+			if (script_hasdata(st,5)) {
+				int16 map_id;
+				int i;
+				if ((map_id = map->mapname2mapid(script_getstr(st,5))) < 0) {
+					ShowError( "buildin_recovery: type PARTY but map not found !\n" );
+					script_pushint(st,-1);
 					return false;
 				}
-				for ( i = 0; i < MAX_PARTY; i++ )
-					if ( p->party.member[i].account_id && p->party.member[i].online && p->data[i].sd->bl.m == m )
-						buildin_recovery_sub( p->data[i].sd, revive );
+				for (i = 0; i < MAX_PARTY; i++)
+					if (p->party.member[i].account_id && p->party.member[i].online && p->data[i].sd->bl.m == map_id)
+						if (buildin_recovery_sub(p->data[i].sd, revive))
+							count++;
 			}
 			else {
-				unsigned char i;
+				int i;
 				for ( i = 0; i < MAX_PARTY; i++ )
-					if ( p->party.member[i].account_id && p->party.member[i].online )
-						buildin_recovery_sub( p->data[i].sd, revive );
+					if (p->party.member[i].account_id && p->party.member[i].online)
+						if (buildin_recovery_sub(p->data[i].sd, revive))
+							count++;
 			}
 			break;
 		}
 	case GUILD:
 		{
 			struct guild *g;
-			if ( script_hasdata(st,4) ) {
-				g = guild->search( script_getnum(st,4) );
-				if ( !g ) {
-					ShowError( "buildin_recovery: using type GUILD but guild ID not found !\n" );
+			if (script_hasdata(st,4)) {
+				g = guild->search(script_getnum(st,4));
+				if (!g) {
+					ShowError("buildin_recovery: type GUILD but guild ID not found !\n");
+					script_pushint(st,-1);
 					return false;
 				}
 			}
 			else {
 				TBL_PC *sd = script->rid2sd(st);
-				if ( !sd ) {
-					ShowError( "buildin_recovery: using type GUILD but no guild ID given and no rid attached !\n" );
+				if (!sd) {
+					ShowError("buildin_recovery: type GUILD but no guild ID given and no RID attached !\n");
+					script_pushint(st,-1);
 					return false;
 				}
-				else if ( sd->status.guild_id == 0 ) {
-					ShowError( "buildin_recovery: using type GUILD but RID attached has no guild ID !\n" );
+				if (sd->status.guild_id == 0) {
+					ShowError("buildin_recovery: type GUILD but RID attached has no guild ID !\n");
+					script_pushint(st,-1);
 					return false;
 				}
-				g = guild->search( sd->status.guild_id );
+				g = guild->search(sd->status.guild_id);
 			}
-			if ( script_hasdata(st,5) ) {
-				int16 m;
-				unsigned char i;
-				if ( ( m = map->mapname2mapid( script_getstr(st,5) ) ) < 0 ) {
-					ShowError( "buildin_recovery: using type GUILD but map not found !\n" );
+			if (script_hasdata(st,5)) {
+				int16 map_id;
+				int i;
+				if ((map_id = map->mapname2mapid(script_getstr(st,5))) < 0) {
+					ShowError("buildin_recovery: type GUILD but map not found !\n");
+					script_pushint(st,-1);
 					return false;
 				}
-				for ( i = 0; i < MAX_GUILD; i++ )
-					if ( g->member[i].account_id && g->member[i].online && g->member[i].sd->bl.m == m )
-						buildin_recovery_sub( g->member[i].sd, revive );
+				for (i = 0; i < MAX_GUILD; i++)
+					if (g->member[i].account_id && g->member[i].online && g->member[i].sd->bl.m == map_id)
+						if (buildin_recovery_sub(g->member[i].sd, revive))
+							count++;
 			}
 			else {
-				unsigned char i;
-				for ( i = 0; i < MAX_GUILD; i++ )
-					if ( g->member[i].account_id && g->member[i].online )
-						buildin_recovery_sub( g->member[i].sd, revive );
+				int i;
+				for (i = 0; i < MAX_GUILD; i++)
+					if (g->member[i].account_id && g->member[i].online)
+						if (buildin_recovery_sub(g->member[i].sd, revive))
+							count++;
 			}
 			break;
 		}
@@ -13132,43 +13155,49 @@ BUILDIN(recovery)
 		{
 			TBL_PC *sd = script->rid2sd(st);
 			if (sd)
-				buildin_recovery_sub( sd, revive );
+				if (buildin_recovery_sub(sd, revive))
+					count = 1;
 			break;
 		}
 	case BG:
 		{
 			struct battleground_data *bgd;
-			unsigned char i;
-			if ( script_hasdata(st,4) ) {
-				bgd = bg->team_search( script_getnum(st,4) );
-				if ( !bgd ) {
-					ShowError( "buildin_recovery: using type BG but battleground ID not found !\n" );
+			int i;
+			if (script_hasdata(st,4)) {
+				bgd = bg->team_search(script_getnum(st,4));
+				if (!bgd) {
+					ShowError("buildin_recovery: type BG but battleground ID not found !\n");
+					script_pushint(st,-1);
 					return false;
 				}
 			}
 			else {
 				TBL_PC *sd = script->rid2sd(st);
-				if ( !sd ) {
-					ShowError( "buildin_recovery: using type BG but no battleground ID given and no rid attached !\n" );
+				if (!sd) {
+					ShowError("buildin_recovery: type BG but no battleground ID given and no RID attached !\n");
+					script_pushint(st,-1);
 					return false;
 				}
-				else if ( sd->bg_id == 0 ) {
-					ShowError( "buildin_recovery: using type BG but RID attached has no battleground ID !\n" );
+				if (sd->bg_id == 0) {
+					ShowError("buildin_recovery: type BG but RID attached has no battleground ID !\n");
+					script_pushint(st,-1);
 					return false;
 				}
-				bgd = bg->team_search( sd->bg_id );
+				bgd = bg->team_search(sd->bg_id);
 			}
-			for ( i = 0; i < MAX_BG_MEMBERS; i++ )
+			for (i = 0; i < MAX_BG_MEMBERS; i++)
 				if ( bgd->members[i].sd )
-					buildin_recovery_sub( bgd->members[i].sd, revive );
+					if (buildin_recovery_sub( bgd->members[i].sd, revive ))
+						count++;
 			break;
 		}
 	default:
-		ShowError( "buildin_recovery: invalid type !\n" );
+		ShowError("buildin_recovery: invalid type !\n");
+		script_pushint(st,-1);
 		return false;
 	}
 
-	script_pushint(st,1);
+	script_pushint(st,count);
 	return true;
 }
 
