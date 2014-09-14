@@ -5461,7 +5461,7 @@ void battle_reflect_damage(struct block_list *target, struct block_list *src, st
 
 		if( wd->dmg_lv >= ATK_BLOCK ) {/* yes block still applies, somehow gravity thinks it makes sense. */
 			if( sc ) {
-				if( sc->data[SC_REFLECTSHIELD] && skill_id != WS_CARTTERMINATION ) {
+				if( sc->data[SC_REFLECTSHIELD] && skill_id != WS_CARTTERMINATION && skill_id != GS_DESPERADO ) {
 					NORMALIZE_RDAMAGE(damage * sc->data[SC_REFLECTSHIELD]->val2 / 100);
 
 #ifndef RENEWAL

@@ -6333,12 +6333,6 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 		case SC_QUAGMIRE:
 		case SC_NJ_SUITON:
 		case SC_SWING:
-		case SC__ENERVATION:
-		case SC__GROOMY:
-		case SC__IGNORANCE:
-		case SC__LAZINESS:
-		case SC__UNLUCKY:
-		case SC__WEAKNESS:
 			return 0;
 		}
 

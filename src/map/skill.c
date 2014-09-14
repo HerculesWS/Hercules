@@ -838,9 +838,9 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 		#ifdef RENEWAL
 			sc_start(src,bl,SC_FREEZE,65-(5*skill_lv),skill_lv,skill->get_time2(skill_id,skill_lv));
 		#else
-			 // [Tharis] pointed out that this is normal freeze chance with a base of 300%
+			//On third hit, there is a 150% to freeze the target 
 			if(tsc->sg_counter >= 3 &&
-				sc_start(src,bl,SC_FREEZE,300,skill_lv,skill->get_time2(skill_id,skill_lv)))
+				sc_start(src,bl,SC_FREEZE,150,skill_lv,skill->get_time2(skill_id,skill_lv)))
 				tsc->sg_counter = 0;
 			/**
 			 * being it only resets on success it'd keep stacking and eventually overflowing on mvps, so we reset at a high value
@@ -1006,7 +1006,8 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 
 		case LK_SPIRALPIERCE:
 		case ML_SPIRALPIERCE:
-			sc_start(src,bl,SC_ANKLESNARE,100,0,skill->get_time2(skill_id,skill_lv));
+			if( dstsd || ( dstmd && !is_boss(bl) ) ) //Does not work on bosses
+				sc_start(src,bl,SC_STOP,100,0,skill_get_time2(skill_id,skill_lv));
 			break;
 
 		case ST_REJECTSWORD:
@@ -6745,7 +6746,14 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 						sp += sp * i / 100;
 					}
 				} else {
-					hp = (1 + rnd()%400) * (100 + skill_lv*10) / 100;
+					//Maybe replace with potion_hp, but I'm unsure how that works [Playtester] 
+					switch (skill_lv) { 
+						case 1: hp = 45; break; 
+						case 2: hp = 105; break; 
+						case 3: hp = 175; break; 
+						default: hp = 325; break; 
+					} 
+					hp = (hp + rnd()%(skill_lv*20+1)) * (150 + skill_lv*10) / 100; 
 					hp = hp * (100 + (tstatus->vit<<1)) / 100;
 					if( dstsd )
 						hp = hp * (100 + pc->checkskill(dstsd,SM_RECOVERY)*10) / 100;
