@@ -1790,7 +1790,8 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 	//If targeting, cloak+hide protect you, otherwise only hiding does.
 	hide_flag = flag?OPTION_HIDE:(OPTION_HIDE|OPTION_CLOAK|OPTION_CHASEWALK);
 
-	//You cannot hide from ground skills.
+	// There is no NF for ground skills, but every earth type skill out there
+	// affects hidding except Stone Curse
 	if( skill->get_ele(skill_id,1) == ELE_EARTH && skill_id != MG_STONECURSE)
 		hide_flag &= ~OPTION_HIDE;
 
@@ -6704,11 +6705,11 @@ void status_display_remove(struct map_session_data *sd, enum sc_type type) {
 * 'rate' = base success rate. 10000 = 100%
 * 'tick' is base duration
 * 'flag':
-* &1: Cannot be avoided (it has to start)
-* &2: Tick should not be reduced (by vit, luk, lv, etc)
-* &4: sc_data loaded, no value has to be altered.
-* &8: rate should not be reduced (not evaluated here, but in some calls to other functions)
-* &16: SI will not be sent to the client
+* &1 : Cannot be avoided (it has to start)
+* &2 : Tick should not be reduced (by vit, luk, lv, etc)
+* &4 : sc_data loaded, no value has to be altered.
+* &8 : rate should not be reduced (not evaluated here, but in some calls to other functions)
+* &16: Status icon (SI) should not be send
 *------------------------------------------*/
 int status_change_start(struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int flag) {
 	struct map_session_data *sd = NULL;

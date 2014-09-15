@@ -11470,9 +11470,7 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 			if (!sce)
 				sc_start4(ss,bl,type,100,sg->skill_lv,sg->val1,sg->val2,0,sg->limit);
 			break;
-		case UNT_APPLEIDUN:  // Apple of idun gets it from skill_unit_onplace_timer
-			if (!battle_config.song_timer_reset)
-				break;
+		case UNT_APPLEIDUN:
 		case UNT_WHISTLE:
 		case UNT_ASSASSINCROSS:
 		case UNT_POEMBRAGI:
@@ -11492,7 +11490,7 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 				timer->delete(sce->timer, status->change_timer);
 				sce->timer = timer->add(tick+sg->limit, status->change_timer, bl->id, type);
 			}
-			
+
 			break;
 
 		case UNT_FOGWALL:
@@ -11868,22 +11866,16 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			if( md && md->class_ == MOBID_EMPERIUM )
 				break;
 #endif
-			if( sg->src_id == bl->id && !(tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_BARDDANCER) )
-				break; // affects self only when soullinked
+			if( sg->src_id == bl->id && !(tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_BARDDANCER)
+			  || (!(battle_config.song_timer_reset) && tsc && tsc->data[type] && tsc->data[type]->val4 == 1))
+				break;
 			heal = skill->calc_heal(ss,bl,sg->skill_id, sg->skill_lv, true);
 			if( tsc->data[SC_AKAITSUKI] && heal )
 				heal = ~heal + 1;
 			clif->skill_nodamage(&src->bl, bl, AL_HEAL, heal, 1);
 			status->heal(bl, heal, 0, 0);
-
-			if (!(battle_config.song_timer_reset) // songs don't reset prior timers
-			  && !(sg->src_id == bl->id && !(tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_BARDDANCER)) // Don't affect itself
-			  && (!(tsc->data[type]) || (tsc->data[type] && tsc->data[type]->val4 != 1))) // Check for 20 seconds song effect
-				sc_start4(ss,bl,type,100,sg->skill_lv,sg->val1,sg->val2,0,sg->interval + 100);
-
-			break;
 		}
-
+			break;
  		case UNT_TATAMIGAESHI:
 		case UNT_DEMONSTRATION:
 			skill->attack(BF_WEAPON,ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick,0);
