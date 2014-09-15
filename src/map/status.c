@@ -4001,8 +4001,12 @@ void status_calc_bl_(struct block_list *bl, enum scb_flag flag, enum e_status_ca
 	if( bl->type == BL_PET )
 		return; // pets are not affected by statuses
 
-	if( opt&SCO_FIRST && bl->type == BL_MOB )
+	if( opt&SCO_FIRST && bl->type == BL_MOB ) {
+#ifdef RENEWAL
+		status->update_matk(bl); // Otherwise, the mob will spawn with lower MATK values
+#endif
 		return; // assume there will be no statuses active
+	}
 
 	status->calc_bl_main(bl, flag);
 
