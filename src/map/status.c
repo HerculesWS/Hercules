@@ -1790,7 +1790,8 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 	//If targeting, cloak+hide protect you, otherwise only hiding does.
 	hide_flag = flag?OPTION_HIDE:(OPTION_HIDE|OPTION_CLOAK|OPTION_CHASEWALK);
 
-	//You cannot hide from ground skills.
+	// There is no NF for ground skills, but every earth type skill out there
+	// affects hidding except Stone Curse
 	if( skill->get_ele(skill_id,1) == ELE_EARTH && skill_id != MG_STONECURSE)
 		hide_flag &= ~OPTION_HIDE;
 

@@ -11489,9 +11489,8 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 				sce->val4 = 0;
 				timer->delete(sce->timer, status->change_timer);
 				sce->timer = timer->add(tick+sg->limit, status->change_timer, bl->id, type);
-			} else if (!battle_config.song_timer_reset)
+			}
 
-			
 			break;
 
 		case UNT_FOGWALL:

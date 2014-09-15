@@ -5393,8 +5393,7 @@ void battle_reflect_damage(struct block_list *target, struct block_list *src, st
 		sc = NULL;
 
 	if( sc ) {
-		if (sc->data[SC_DEVOTION] && !(wd->flag & BF_SKILL))
-			return; // No reflect for basic attacks on devoted characters
+		
 
 		if (wd->flag & BF_SHORT && !(skill->get_inf(skill_id) & (INF_GROUND_SKILL | INF_SELF_SKILL))) {
 			if( sc->data[SC_CRESCENTELBOW] && !is_boss(src) && rnd()%100 < sc->data[SC_CRESCENTELBOW]->val2 ){
@@ -5461,7 +5460,9 @@ void battle_reflect_damage(struct block_list *target, struct block_list *src, st
 
 		if( wd->dmg_lv >= ATK_BLOCK ) {/* yes block still applies, somehow gravity thinks it makes sense. */
 			if( sc ) {
-				if( sc->data[SC_REFLECTSHIELD] && skill_id != WS_CARTTERMINATION && skill_id != GS_DESPERADO ) {
+				if( sc->data[SC_REFLECTSHIELD] && skill_id != WS_CARTTERMINATION && skill_id != GS_DESPERADO
+				  && !(!(wd->flag&BF_SKILL) && sc->data[SC_DEVOTION])
+				  ) {
 					NORMALIZE_RDAMAGE(damage * sc->data[SC_REFLECTSHIELD]->val2 / 100);
 
 #ifndef RENEWAL
