@@ -679,8 +679,8 @@ RC2_Golem	4
 RC2_Guardian	5
 RC2_Ninja	6
 
-Size_Small	0
-Size_Medium	1
+Size_Medium	0
+Size_Small	1
 Size_Large	2
 
 BF_WEAPON	0x0001
