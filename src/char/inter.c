@@ -694,7 +694,11 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
 void inter_savereg(int account_id, int char_id, const char *key, unsigned int index, intptr_t val, bool is_string) {
 	/* to login server we go! */
 	if( key[0] == '#' && key[1] == '#' ) {/* global account reg */
-		global_accreg_to_login_add(key,index,val,is_string);
+		if( session_isValid(login_fd) )
+			global_accreg_to_login_add(key,index,val,is_string);
+		else {
+			ShowError("Login server unavailable, cant perform update on '%s' variable for AID:%d CID:%d\n",key,account_id,char_id);
+		}
 	} else if ( key[0] == '#' ) {/* local account reg */
 		if( is_string ) {
 			if( val ) {
@@ -1301,8 +1305,10 @@ int mapif_parse_Registry(int fd)
 		int cursor = 14, i;
 		char key[32], sval[254];
 		unsigned int index;
-		
-		global_accreg_to_login_start(account_id,char_id);
+		bool isLoginActive = session_isActive(login_fd);
+
+		if( isLoginActive )
+			global_accreg_to_login_start(account_id,char_id);
 		
 		for(i = 0; i < count; i++) {
 			safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
@@ -1336,8 +1342,9 @@ int mapif_parse_Registry(int fd)
 			}
 
 		}
-		
-		global_accreg_to_login_send();
+
+		if( isLoginActive )		
+			global_accreg_to_login_send();
 	}
 	return 0;
 }
