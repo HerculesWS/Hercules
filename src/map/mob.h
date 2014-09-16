@@ -62,8 +62,8 @@ enum MobDamageLogFlag
 };
 
 enum size {
-	SZ_MEDIUM = 0,
-	SZ_SMALL,
+	SZ_SMALL = 0,
+	SZ_MEDIUM,
 	SZ_BIG,
 };
 

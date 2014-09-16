@@ -9072,7 +9072,7 @@ BUILDIN(monster)
 	int class_        = script_getnum(st,6);
 	int amount        = script_getnum(st,7);
 	const char *event = "";
-	unsigned int size = SZ_MEDIUM;
+	unsigned int size = SZ_SMALL;
 	unsigned int ai   = AI_NONE;
 	int mob_id;
 
@@ -9181,7 +9181,7 @@ BUILDIN(areamonster) {
 	int class_        = script_getnum(st,8);
 	int amount        = script_getnum(st,9);
 	const char *event = "";
-	unsigned int size = SZ_MEDIUM;
+	unsigned int size = SZ_SMALL;
 	unsigned int ai   = AI_NONE;
 	int mob_id;
 
@@ -13501,7 +13501,7 @@ BUILDIN(summon)
 
 	clif->skill_poseffect(&sd->bl,AM_CALLHOMUN,1,sd->bl.x,sd->bl.y,tick);
 
-	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, sd->bl.x, sd->bl.y, str, class_, event, SZ_MEDIUM, AI_NONE);
+	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, sd->bl.x, sd->bl.y, str, class_, event, SZ_SMALL, AI_NONE);
 	if (md) {
 		md->master_id=sd->bl.id;
 		md->special_state.ai = AI_ATTACK;

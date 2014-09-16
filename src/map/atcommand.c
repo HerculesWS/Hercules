@@ -6252,7 +6252,7 @@ ACMD(summon)
 		return false;
 	}
 	
-	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, -1, -1, "--ja--", mob_id, "", SZ_MEDIUM, AI_NONE);
+	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, -1, -1, "--ja--", mob_id, "", SZ_SMALL, AI_NONE);
 	
 	if(!md)
 		return false;
@@ -7312,15 +7312,15 @@ ACMD(size)
 {
 	int size = 0;
 	
-	size = cap_value(atoi(message),SZ_MEDIUM,SZ_BIG);
+	size = cap_value(atoi(message),SZ_SMALL,SZ_BIG);
 	
 	if(sd->state.size) {
-		sd->state.size = SZ_MEDIUM;
+		sd->state.size = SZ_SMALL;
 		pc->setpos(sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_TELEPORT);
 	}
 	
 	sd->state.size = size;
-	if( size == SZ_SMALL )
+	if( size == SZ_MEDIUM )
 		clif->specialeffect(&sd->bl,420,AREA);
 	else if( size == SZ_BIG )
 		clif->specialeffect(&sd->bl,422,AREA);
@@ -7342,12 +7342,12 @@ ACMD(sizeall)
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) ) {
 		if( pl_sd->state.size != size ) {
 			if( pl_sd->state.size ) {
-				pl_sd->state.size = SZ_MEDIUM;
+				pl_sd->state.size = SZ_SMALL;
 				pc->setpos(pl_sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
 			}
 			
 			pl_sd->state.size = size;
-			if( size == SZ_SMALL )
+			if( size == SZ_MEDIUM )
 				clif->specialeffect(&pl_sd->bl,420,AREA);
 			else if( size == SZ_BIG )
 				clif->specialeffect(&pl_sd->bl,422,AREA);
@@ -7378,17 +7378,17 @@ ACMD(sizeguild)
 		return false;
 	}
 	
-	size = cap_value(size,SZ_MEDIUM,SZ_BIG);
+	size = cap_value(size,SZ_SMALL,SZ_BIG);
 	
 	for( i = 0; i < g->max_member; i++ ) {
 		if( (pl_sd = g->member[i].sd) && pl_sd->state.size != size ) {
 			if( pl_sd->state.size ) {
-				pl_sd->state.size = SZ_MEDIUM;
+				pl_sd->state.size = SZ_SMALL;
 				pc->setpos(pl_sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
 			}
 			
 			pl_sd->state.size = size;
-			if( size == SZ_SMALL )
+			if( size == SZ_MEDIUM )
 				clif->specialeffect(&pl_sd->bl,420,AREA);
 			else if( size == SZ_BIG )
 				clif->specialeffect(&pl_sd->bl,422,AREA);

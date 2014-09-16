@@ -1348,7 +1348,7 @@ bool clif_spawn(struct block_list *bl)
 					clif->spiritball(&sd->bl);
 				if(sd->state.size==SZ_BIG) // tiny/big players [Valaris]
 					clif->specialeffect(bl,423,AREA);
-				else if(sd->state.size==SZ_SMALL)
+				else if(sd->state.size==SZ_MEDIUM)
 					clif->specialeffect(bl,421,AREA);
 				if( sd->bg_id && map->list[sd->bl.m].flag.battleground )
 					clif->sendbgemblem_area(sd);
@@ -1377,7 +1377,7 @@ bool clif_spawn(struct block_list *bl)
 				TBL_NPC *nd = ((TBL_NPC*)bl);
 				if( nd->size == SZ_BIG )
 					clif->specialeffect(&nd->bl,423,AREA);
-				else if( nd->size == SZ_SMALL )
+				else if( nd->size == SZ_MEDIUM )
 					clif->specialeffect(&nd->bl,421,AREA);
 			}
 			break;
@@ -1585,7 +1585,7 @@ void clif_move2(struct block_list *bl, struct view_data *vd, struct unit_data *u
 	//			clif_movepc(sd);
 				if(sd->state.size==SZ_BIG) // tiny/big players [Valaris]
 					clif->specialeffect(&sd->bl,423,AREA);
-				else if(sd->state.size==SZ_SMALL)
+				else if(sd->state.size==SZ_MEDIUM)
 					clif->specialeffect(&sd->bl,421,AREA);
 			}
 			break;
@@ -1594,7 +1594,7 @@ void clif_move2(struct block_list *bl, struct view_data *vd, struct unit_data *u
 				TBL_MOB *md = ((TBL_MOB*)bl);
 				if(md->special_state.size==SZ_BIG) // tiny/big mobs [Valaris]
 					clif->specialeffect(&md->bl,423,AREA);
-				else if(md->special_state.size==SZ_SMALL)
+				else if(md->special_state.size==SZ_MEDIUM)
 					clif->specialeffect(&md->bl,421,AREA);
 			}
 			break;
@@ -4326,7 +4326,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 				clif->getareachar_pc(sd, tsd);
 				if(tsd->state.size==SZ_BIG) // tiny/big players [Valaris]
 					clif->specialeffect_single(bl,423,sd->fd);
-				else if(tsd->state.size==SZ_SMALL)
+				else if(tsd->state.size==SZ_MEDIUM)
 					clif->specialeffect_single(bl,421,sd->fd);
 				if( tsd->bg_id && map->list[tsd->bl.m].flag.battleground )
 					clif->sendbgemblem_single(sd->fd,tsd);
@@ -4345,7 +4345,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 					clif->dispchat((struct chat_data*)map->id2bl(nd->chat_id),sd->fd);
 				if( nd->size == SZ_BIG )
 					clif->specialeffect_single(bl,423,sd->fd);
-				else if( nd->size == SZ_SMALL )
+				else if( nd->size == SZ_MEDIUM )
 					clif->specialeffect_single(bl,421,sd->fd);
 			}
 			break;
@@ -4354,7 +4354,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 				TBL_MOB* md = (TBL_MOB*)bl;
 				if(md->special_state.size==SZ_BIG) // tiny/big mobs [Valaris]
 					clif->specialeffect_single(bl,423,sd->fd);
-				else if(md->special_state.size==SZ_SMALL)
+				else if(md->special_state.size==SZ_MEDIUM)
 					clif->specialeffect_single(bl,421,sd->fd);
 #if PACKETVER >= 20120404
 				if( !(md->status.mode&MD_BOSS) ){

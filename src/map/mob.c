@@ -2203,7 +2203,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		// change experience for different sized monsters [Valaris]
 		if (battle_config.mob_size_influence) {
 			switch( md->special_state.size ) {
-				case SZ_SMALL:
+				case SZ_MEDIUM:
 					per /= 2.;
 					break;
 				case SZ_BIG:
@@ -2324,7 +2324,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 			// change drops depending on monsters size [Valaris]
 			if (battle_config.mob_size_influence)
 			{
-				if (md->special_state.size == SZ_SMALL && drop_rate >= 2)
+				if (md->special_state.size == SZ_MEDIUM && drop_rate >= 2)
 					drop_rate /= 2;
 				else if( md->special_state.size == SZ_BIG)
 					drop_rate *= 2;
@@ -3508,7 +3508,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 	sd->fd = fd;
 
 	//Finally, spawn it.
-	md = mob->once_spawn_sub(&sd->bl, m, x, y, "--en--", class_, event, SZ_MEDIUM, AI_NONE);
+	md = mob->once_spawn_sub(&sd->bl, m, x, y, "--en--", class_, event, SZ_SMALL, AI_NONE);
 	if (!md) return 0; //Failed?
 
 	md->special_state.clone = 1;

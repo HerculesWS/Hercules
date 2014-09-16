@@ -2164,7 +2164,7 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 
 	if (flag&2 && battle_config.mob_size_influence) {
 		// change for sized monsters [Valaris]
-		if (md->special_state.size==SZ_SMALL) {
+		if (md->special_state.size==SZ_MEDIUM) {
 			mstatus->max_hp>>=1;
 			mstatus->max_sp>>=1;
 			if (!mstatus->max_hp) mstatus->max_hp = 1;
