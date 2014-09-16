@@ -5,9 +5,9 @@
 CREATE TABLE IF NOT EXISTS `account_data` (
   `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `bank_vault` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `base_exp` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '100',
-  `base_drop` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '100',
-  `base_death` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '100',
+  `base_exp` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '100',
+  `base_drop` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '100',
+  `base_death` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '100',
   PRIMARY KEY (`account_id`)
 ) ENGINE=MyISAM; 
 
@@ -805,6 +805,7 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1395789302); -- 2014-03-25--23-5
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1396893866); -- 2014-04-07--22-04.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1398477600); -- 2014-04-26--10-00.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1400256139); -- 2014-05-17--00-06.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1409590380); -- 2014-09-01--16-53.sql
 
 --
 -- Table structure for table `sstatus`
