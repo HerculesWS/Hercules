@@ -316,7 +316,7 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 				unit->attack(bl, tbl->id, ud->state.attack_continue);
 			}
 		} else { //Update chase-path
-			unit->walktobl(bl, tbl, ud->chaserange, ud->state.walk_easy|(ud->state.attack_continue?2:0));
+			unit->walktobl(bl, tbl, ud->chaserange, ud->state.walk_easy|(ud->state.attack_continue? 1 : 0));
 			return 0;
 		}
 	} else {
