@@ -1733,7 +1733,7 @@ int skill_counter_additional_effect(struct block_list* src, struct block_list *b
 		case LG_HESPERUSLIT:
 			if ( sc && sc->data[SC_FORCEOFVANGUARD] && sc->data[SC_BANDING] && sc->data[SC_BANDING]->val2 > 6 ) {
 					char i;
-					for( i = 0; i < sc->data[SC_FORCEOFVANGUARD]->val3; i++ && sc->fv_counter <= sc->data[SC_FORCEOFVANGUARD]->val3 )
+					for( i = 0; i < sc->data[SC_FORCEOFVANGUARD]->val3 && sc->fv_counter <= sc->data[SC_FORCEOFVANGUARD]->val3 ; i++)
 					clif->millenniumshield(bl, sc->fv_counter++);
 				}
 				break;
@@ -1768,15 +1768,12 @@ int skill_counter_additional_effect(struct block_list* src, struct block_list *b
 		if( attack_type&BF_MAGIC ) {
 			sp += sd->bonus.magic_sp_gain_value;
 			hp += sd->bonus.magic_hp_gain_value;
-			if( skill_id == WZ_WATERBALL ) {// (bugreport:5303)
-				struct status_change *sc = NULL;
-				if( ( sc = status->get_sc(src) ) ) {
-					if( sc->data[SC_SOULLINK]
-					 && sc->data[SC_SOULLINK]->val2 == SL_WIZARD
-					 && sc->data[SC_SOULLINK]->val3 == WZ_WATERBALL
-					)
-						sc->data[SC_SOULLINK]->val3 = 0; //Clear bounced spell check.
-				}
+			if( skill_id == WZ_WATERBALL ) {// (bugreport:5303) 
+				if( sc->data[SC_SOULLINK]
+				  && sc->data[SC_SOULLINK]->val2 == SL_WIZARD
+				  && sc->data[SC_SOULLINK]->val3 == WZ_WATERBALL
+				)
+					sc->data[SC_SOULLINK]->val3 = 0; //Clear bounced spell check.
 			}
 		}
 		if( hp || sp ) {
@@ -11866,7 +11863,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			if( md && md->class_ == MOBID_EMPERIUM )
 				break;
 #endif
-			if( sg->src_id == bl->id && !(tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_BARDDANCER)
+			if( (sg->src_id == bl->id && !(tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_BARDDANCER))
 			  || (!(battle_config.song_timer_reset) && tsc && tsc->data[type] && tsc->data[type]->val4 == 1))
 				break;
 			heal = skill->calc_heal(ss,bl,sg->skill_id, sg->skill_lv, true);

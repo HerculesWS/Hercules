@@ -2712,6 +2712,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			struct block_list *d_bl = NULL;
 			struct status_change_entry *sce_d = sc->data[SC_DEVOTION];
 
+
 			// different delay depending on skill level [celest]
 			if (sce->val1 <= 5)
 				delay = 300;
@@ -2720,22 +2721,30 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			else
 				delay = 100;
 
-			if (sce_d && (d_bl = map->id2bl(sce_d->val1))
-			 && ((d_bl->type == BL_MER && ((TBL_MER*)d_bl)->master && ((TBL_MER*)d_bl)->master->bl.id == bl->id)
-			    || (d_bl->type == BL_PC && ((TBL_PC*)d_bl)->devotion[sce_d->val2] == bl->id))
-			) {
-				// if player is target of devotion, show guard effect on the devotion caster rather than the target
-				clif->skill_nodamage(d_bl, d_bl, CR_AUTOGUARD, sce->val1, 1);
-				unit->set_walkdelay(d_bl, timer->gettick(), delay, 1);
+			if (sce_d) {
+				// If the target is too far away from the devotion caster, autoguard has no effect
+				// Autoguard will be disabled later on
+				if ((d_bl = map->id2bl(sce_d->val1)) && check_distance_bl(bl, d_bl, sce_d->val3) 
+				  && ((d_bl->type == BL_MER && ((TBL_MER*)d_bl)->master && ((TBL_MER*)d_bl)->master->bl.id == bl->id)
+				    || (d_bl->type == BL_PC && ((TBL_PC*)d_bl)->devotion[sce_d->val2] == bl->id))
+				) {
+					// if player is target of devotion, show guard effect on the devotion caster rather than the target
+					clif->skill_nodamage(d_bl, d_bl, CR_AUTOGUARD, sce->val1, 1);
+					unit->set_walkdelay(d_bl, timer->gettick(), delay, 1);
+
+					d->dmg_lv = ATK_MISS;
+					return 0;
+				}
 			} else {
 				clif->skill_nodamage(bl, bl, CR_AUTOGUARD, sce->val1, 1);
 				unit->set_walkdelay(bl, timer->gettick(), delay, 1);
-			}
 
-			if(sc->data[SC_CR_SHRINK] && rnd()%100<5*sce->val1)
-				skill->blown(bl,src,skill->get_blewcount(CR_SHRINK,1),-1,0);
-			d->dmg_lv = ATK_MISS;
-			return 0;
+				if(sc->data[SC_CR_SHRINK] && rnd()%100<5*sce->val1)
+					skill->blown(bl,src,skill->get_blewcount(CR_SHRINK,1),-1,0);
+
+				d->dmg_lv = ATK_MISS;
+				return 0;
+			}
 		}
 
 		if( (sce = sc->data[SC_MILLENNIUMSHIELD]) && sce->val2 > 0 && damage > 0 ) {
@@ -5460,11 +5469,18 @@ void battle_reflect_damage(struct block_list *target, struct block_list *src, st
 
 		if( wd->dmg_lv >= ATK_BLOCK ) {/* yes block still applies, somehow gravity thinks it makes sense. */
 			if( sc ) {
-				if( sc->data[SC_REFLECTSHIELD] && skill_id != WS_CARTTERMINATION && skill_id != GS_DESPERADO
-				  && !(!(wd->flag&BF_SKILL) && sc->data[SC_DEVOTION])
-				  ) {
-					NORMALIZE_RDAMAGE(damage * sc->data[SC_REFLECTSHIELD]->val2 / 100);
+				struct status_change_entry *sce_d = sc->data[SC_DEVOTION];
+				struct block_list *d_bl = NULL;
 
+				if (sce_d && sce_d->val1)
+					d_bl = map->id2bl(sce_d->val1);
+				
+				if( sc->data[SC_REFLECTSHIELD] && skill_id != WS_CARTTERMINATION && skill_id != GS_DESPERADO
+				  && !(d_bl && !(wd->flag&BF_SKILL)) /* It should not be a basic attack if the target is under devotion */
+				  && !(d_bl && sce_d && !check_distance_bl(target, d_bl, sce_d->val3)) /* It should not be out of range if the target is under devotion */
+				) {
+
+					NORMALIZE_RDAMAGE(damage * sc->data[SC_REFLECTSHIELD]->val2 / 100);
 #ifndef RENEWAL
 					rdelay = clif->delay_damage(tick+delay,src, src, status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4);
 #else
