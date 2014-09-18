@@ -19,7 +19,7 @@ MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
 MT19937AR_INCLUDE = -I$(MT19937AR_D)
 
 COMMON_SHARED_C = conf.c db.c des.c ers.c grfio.c HPM.c mapindex.c md5calc.c \
-                  mutex.c nullpo.c random.c showmsg.c strlib.c sysinfo.c \
+                  mutex.c random.c showmsg.c strlib.c sysinfo.c \
                   thread.c timer.c utils.c
 COMMON_C = $(COMMON_SHARED_C)
 COMMON_SHARED_OBJ = $(patsubst %.c,%.o,$(COMMON_SHARED_C))

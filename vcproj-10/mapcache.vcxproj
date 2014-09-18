@@ -132,7 +132,6 @@
     <ClCompile Include="..\src\common\strlib.c" />
     <ClCompile Include="..\src\common\sysinfo.c" />
     <ClCompile Include="..\src\common\utils.c" />
-    <ClCompile Include="..\src\common\nullpo.c" />
     <ClCompile Include="..\src\tool\mapcache.c" />
   </ItemGroup>
   <ItemGroup>
