@@ -28,9 +28,6 @@
     <ClCompile Include="..\src\common\utils.c">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\common\nullpo.c">
-      <Filter>common</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\tool\mapcache.c">
       <Filter>mapcache</Filter>
     </ClCompile>

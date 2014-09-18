@@ -193,7 +193,6 @@
     <ClCompile Include="..\src\common\malloc.c" />
     <ClCompile Include="..\src\common\mapindex.c" />
     <ClCompile Include="..\src\common\mutex.c" />
-    <ClCompile Include="..\src\common\nullpo.c" />
     <ClCompile Include="..\src\common\random.c" />
     <ClCompile Include="..\src\common\showmsg.c" />
     <ClCompile Include="..\src\common\socket.c" />

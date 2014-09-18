@@ -5,7 +5,24 @@
 #ifndef COMMON_NULLPO_H
 #define COMMON_NULLPO_H
 
+#include <stdio.h>
+#include <stdarg.h>
+#include <string.h>
+
 #include "../common/cbasetypes.h"
+#include "../common/showmsg.h"
+
+#define assert_report(file,line,func,targetname,title) ( \
+	if (file == NULL) \
+		file = "??"; \
+	if (func == NULL || *func == '\0') \
+		func = "unknown"; \
+	 \
+	ShowError("--- %s --------------------------------------------\n", title); \
+	ShowError("%s:%d: '%s' in function `%s'\n", file, line, targetname, func); \
+	ShowError("--- end %s ----------------------------------------\n", title); \
+)
+
 
 // enabled by default on debug builds
 #if defined(DEBUG) && !defined(NULLPO_CHECK)
@@ -23,6 +40,7 @@
 // extern "C" {
 #include <assert.h>
 // }
+
 #if !defined(DEFCPP) && defined(WIN32) && !defined(MINGW)
 #include <crtdbg.h>
 #endif // !DEFCPP && WIN && !MINGW
@@ -121,8 +139,5 @@
  */
 #define Assert_retb(t) \
 	if (Assert_chk(t)) break; else (void)0
-
-
-void assert_report(const char *file, int line, const char *func, const char *targetname, const char *title);
 
 #endif /* COMMON_NULLPO_H */

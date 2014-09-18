@@ -357,10 +357,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\common\nullpo.c"
-				>
-			</File>
-			<File
 				RelativePath="..\src\common\nullpo.h"
 				>
 			</File>

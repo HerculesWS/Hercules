@@ -22,9 +22,6 @@
     <ClCompile Include="..\src\common\mapindex.c">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\common\nullpo.c">
-      <Filter>common</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\common\random.c">
       <Filter>common</Filter>
     </ClCompile>
