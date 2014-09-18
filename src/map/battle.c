@@ -5108,7 +5108,6 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 	}
 #endif
 
-#ifndef RENEWAL
 	if (sd) {
 		if (skill_id != CR_SHIELDBOOMERANG) //Only Shield boomerang doesn't takes the Star Crumbs bonus.
 			ATK_ADD2(wd.div_*sd->right_weapon.star, wd.div_*sd->left_weapon.star);
@@ -5130,7 +5129,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				ATK_ADD(10*sd->status.inventory[index].refine);
 		}
 	}
-#endif
+
     //Card Fix, tsd side
     if(tsd){ //if player on player then it was already measured above
 		wd.damage = battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage, (flag.lh?1:0), wd.flag);
