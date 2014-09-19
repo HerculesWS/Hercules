@@ -4581,13 +4581,11 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					ATK_ADD(-totaldef);
 					if( is_boss(target) )
 						ATK_RATE(50);
-					RE_SKILL_REDUCTION();
 				}
 				break;
 			case NJ_SYURIKEN: // [malufett]
 				GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0) );
 				wd.damage += battle->calc_masteryfix(src, target, skill_id, skill_lv, 4 * skill_lv + (sd ? sd->bonus.arrow_atk : 0), wd.div_, 0, flag.weapon) - status->get_total_def(target);
-				RE_SKILL_REDUCTION();
 				break;
 			case MO_EXTREMITYFIST:	// [malufett]
 				{
@@ -4597,7 +4595,6 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 						wd.damage = (250 + 150 * skill_lv) + (10 * (status_get_sp(src)+1) * wd.damage / 100) + (8 * wd.damage);
 						ATK_ADD(-totaldef);
 					}
-					RE_SKILL_REDUCTION();
 				}
 #endif
 				break;
@@ -4736,9 +4733,6 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 	#endif
 		switch(skill_id){
 			case SR_GATEOFHELL:
-	#ifdef RENEWAL
-				RE_SKILL_REDUCTION();
-	#endif // RENEWAL
 				if (wd.dmg_lv != ATK_FLEE)
 					ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
 				else
