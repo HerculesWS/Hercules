@@ -3316,7 +3316,7 @@ int status_calc_homunculus_(struct homun_data *hd, enum e_status_calc_opt opt) {
 
 	skill_lv = hom->level/10 + hstatus->int_/5;
 	hstatus->mdef = cap_value(skill_lv, 0, 99);
-	amotion = (1000 -4*status->agi -status->dex) * hd->homunculusDB->baseASPD/1000;
+	amotion = (1000 -4*hstatus->agi - hstatus->dex) * hd->homunculusDB->baseASPD/1000;
 #endif
 
 	hstatus->amotion = cap_value(amotion,battle_config.max_aspd,2000);
