@@ -1969,8 +1969,17 @@ unsigned short status_base_atk(const struct block_list *bl, const struct status_
 	//Normally only players have base-atk, but homunc have a different batk
 	// equation, hinting that perhaps non-players should use this for batk.
 	// [Skotlex]
+	if (bl->type == BL_HOM) {
+#ifdef RENEWAL
+		str = (int)(floor((rstr + dex + st->luk) / 3) + floor(((TBL_HOM*)bl)->homunculus.level / 10));
+#else
 	dstr = str/10;
 	str += dstr*dstr;
+#endif
+	} else if (bl->type != BL_PC) {
+		dstr = str/10;
+		str += dstr*dstr;
+	} else
 	if (bl->type == BL_PC)
 #ifdef RENEWAL
 		str = (int)(rstr + (float)dex/5 + (float)st->luk/3 + (float)((TBL_PC*)bl)->status.base_level/4);
@@ -2005,11 +2014,16 @@ void status_calc_misc(struct block_list *bl, struct status_data *st, int level) 
 		st->cri = st->flee2 = 0;
 
 #ifdef RENEWAL // renewal formulas
-	st->matk_min = st->matk_max = bl->type == BL_PC ? status->base_matk(st, level) : level + st->int_;
-	st->hit += level + st->dex + (bl->type == BL_PC ? st->luk/3 + 175 : 150); //base level + ( every 1 dex = +1 hit ) + (every 3 luk = +1 hit) + 175
-	st->flee += level + st->agi + (bl->type == BL_PC ? st->luk/5 : 0) + 100; //base level + ( every 1 agi = +1 flee ) + (every 5 luk = +1 flee) + 100
-	st->def2 += (int)(((float)level + st->vit)/2 + ( bl->type == BL_PC ? ((float)st->agi/5) : 0 )); //base level + (every 2 vit = +1 def) + (every 5 agi = +1 def)
-	st->mdef2 += (int)( bl->type == BL_PC ?(st->int_ + ((float)level/4) + ((float)(st->dex+st->vit)/5)):((float)(st->int_ + level)/4)); //(every 4 base level = +1 mdef) + (every 1 int = +1 mdef) + (every 5 dex = +1 mdef) + (every 5 vit = +1 mdef)
+	if (bl->type == BL_HOM) {
+		st->hit = level + st->dex + 150; //base level + dex + 150
+		st->flee = level + st->agi + level/10; //base level + agi + base level/10
+	} else {
+		st->matk_min = st->matk_max = bl->type == BL_PC ? status->base_matk(st, level) : level + st->int_;
+		st->hit += level + st->dex + (bl->type == BL_PC ? st->luk/3 + 175 : 150); //base level + ( every 1 dex = +1 hit ) + (every 3 luk = +1 hit) + 175
+		st->flee += level + st->agi + (bl->type == BL_PC ? st->luk/5 : 0) + 100; //base level + ( every 1 agi = +1 flee ) + (every 5 luk = +1 flee) + 100
+		st->def2 += (int)(((float)level + st->vit)/2 + ( bl->type == BL_PC ? ((float)st->agi/5) : 0 )); //base level + (every 2 vit = +1 def) + (every 5 agi = +1 def)
+		st->mdef2 += (int)( bl->type == BL_PC ?(st->int_ + ((float)level/4) + ((float)(st->dex+st->vit)/5)):((float)(st->int_ + level)/4)); //(every 4 base level = +1 mdef) + (every 1 int = +1 mdef) + (every 5 dex = +1 mdef) + (every 5 vit = +1 mdef)
+	}
 #else // not RENEWAL
 	st->matk_min = status_base_matk_min(st);
 	st->matk_max = status_base_matk_max(st);
@@ -2476,7 +2490,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 			if (battle_config.character_size&SZ_BIG)
 				bstatus->size++;
 		} else
-			if(battle_config.character_size&SZ_SMALL)
+			if(battle_config.character_size&SZ_MEDIUM)
 				bstatus->size++;
 	}
 	bstatus->aspd_rate = 1000;
@@ -3288,11 +3302,26 @@ int status_calc_homunculus_(struct homun_data *hd, enum e_status_calc_opt opt) {
 		hstatus->hp = 1;
 		hstatus->sp = 1;
 	}
+
+	hstatus->aspd_rate = 1000;
+
+#ifdef RENEWAL
+	hstatus->def = (hstatus->vit + (hom->level / 10)) + ((hstatus->agi + (hom->level / 10)) / 2);
+	hstatus->mdef = hstatus->int_ + ((hstatus->int_ + hstatus->dex + hstatus->luk) / 3) + (hom->level / 10) * 2;
+
+	amotion = (1000 -2*hstatus->agi -hstatus->dex) * hd->homunculusDB->baseASPD/1000;
+#else
 	skill_lv = hom->level/10 + hstatus->vit/5;
 	hstatus->def = cap_value(skill_lv, 0, 99);
 
 	skill_lv = hom->level/10 + hstatus->int_/5;
 	hstatus->mdef = cap_value(skill_lv, 0, 99);
+	amotion = (1000 -4*status->agi -status->dex) * hd->homunculusDB->baseASPD/1000;
+#endif
+
+	hstatus->amotion = cap_value(amotion,battle_config.max_aspd,2000);
+	hstatus->adelay = hstatus->amotion; //It seems adelay = amotion for Homunculus.
+
 
 	hstatus->max_hp = hom->max_hp;
 	hstatus->max_sp = hom->max_sp;
@@ -3318,14 +3347,10 @@ int status_calc_homunculus_(struct homun_data *hd, enum e_status_calc_opt opt) {
 		hd->battle_status.sp = hom->sp;
 	}
 
+#ifndef RENEWAL
 	hstatus->rhw.atk = hstatus->dex;
 	hstatus->rhw.atk2 = hstatus->str + hom->level;
-
-	hstatus->aspd_rate = 1000;
-
-	amotion = (1000 -4*hstatus->agi -hstatus->dex) * hd->homunculusDB->baseASPD/1000;
-	hstatus->amotion = cap_value(amotion,battle_config.max_aspd,2000);
-	hstatus->adelay = hstatus->amotion; //It seems adelay = amotion for Homunculus.
+#endif
 
 	status->calc_misc(&hd->bl, hstatus, hom->level);
 
@@ -3694,12 +3719,12 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
 			}
 		}
 
-		if( bl->type&BL_HOM ) {
+		/*if( bl->type&BL_HOM ) {
 			st->rhw.atk += (st->dex - bst->dex);
 			st->rhw.atk2 += (st->str - bst->str);
 			if( st->rhw.atk2 < st->rhw.atk )
 				st->rhw.atk2 = st->rhw.atk;
-		}
+		}*/
 	}
 
 	if(flag&SCB_HIT) {
@@ -3912,7 +3937,11 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
 
 			st->adelay = 2*st->amotion;
 		} else if( bl->type&BL_HOM ) {
+#ifdef RENEWAL
+			amotion = (1000 - 2*st->agi - st->dex) * ((TBL_HOM*)bl)->homunculusDB->baseASPD/1000;
+#else
 			amotion = (1000 - 4*st->agi - st->dex) * ((TBL_HOM*)bl)->homunculusDB->baseASPD/1000;
+#endif	
 			st->aspd_rate = status->calc_aspd_rate(bl, sc, bst->aspd_rate);
 
 			if(st->aspd_rate != 1000)

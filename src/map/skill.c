@@ -12830,6 +12830,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			case RA_WUGSTRIKE:
 			// Other
 			case BS_GREED:
+			case ALL_FULL_THROTTLE:
 				break;
 			default: // in official there is no message.
 				return 0;
@@ -12839,12 +12840,26 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 
 	// Check the skills that can be used whiled using mado
 	if( pc_ismadogear(sd) ) {
-		if( !(skill_id > NC_MADOLICENCE && skill_id <= NC_DISJOINT)
-			&& skill_id != NC_MAGMA_ERUPTION
-			&& skill_id != BS_GREED ) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_MADOGEAR,0);
-			return 0;
-		}
+		switch ( skill_id ) {
+				case BS_GREED:			case NC_BOOSTKNUCKLE:
+				case NC_PILEBUNKER:		case NC_VULCANARM:
+				case NC_FLAMELAUNCHER:	case NC_COLDSLOWER:
+				case NC_ARMSCANNON:		case NC_ACCELERATION:
+				case NC_HOVERING:		case NC_F_SIDESLIDE:
+				case NC_B_SIDESLIDE:	case NC_SELFDESTRUCTION:
+				case NC_SHAPESHIFT:		case NC_EMERGENCYCOOL:
+				case NC_INFRAREDSCAN:	case NC_ANALYZE:
+				case NC_MAGNETICFIELD:	case NC_NEUTRALBARRIER:
+				case NC_STEALTHFIELD:	case NC_REPAIR:
+				case NC_AXEBOOMERANG:	case NC_POWERSWING:
+				case NC_AXETORNADO:		case NC_SILVERSNIPER:
+				case NC_MAGICDECOY:		case NC_DISJOINT:
+				case NC_MAGMA_ERUPTION:	case ALL_FULL_THROTTLE:
+				case NC_MAGMA_ERUPTION_DOTDAMAGE:
+					break;
+				default:
+					return 0;
+			}
 	}
 
 	if( skill_lv < 1 || skill_lv > MAX_SKILL_LEVEL )

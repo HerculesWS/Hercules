@@ -1915,11 +1915,11 @@ ACMD(monster)
 		number = battle_config.atc_spawn_quantity_limit;
 	
 	if (strcmpi(info->command, "monstersmall") == 0)
-		size = SZ_SMALL;
+		size = SZ_MEDIUM;
 	else if (strcmpi(info->command, "monsterbig") == 0)
 		size = SZ_BIG;
 	else
-		size = SZ_MEDIUM;
+		size = SZ_SMALL;
 	
 	if (battle_config.etc_log)
 		ShowInfo("%s monster='%s' name='%s' id=%d count=%d (%d,%d)\n", command, monster, name, mob_id, number, sd->bl.x, sd->bl.y);

@@ -1368,7 +1368,7 @@ bool clif_spawn(struct block_list *bl)
 				TBL_MOB *md = ((TBL_MOB*)bl);
 				if(md->special_state.size==SZ_BIG) // tiny/big mobs [Valaris]
 					clif->specialeffect(&md->bl,423,AREA);
-				else if(md->special_state.size==SZ_SMALL)
+				else if(md->special_state.size==SZ_MEDIUM)
 					clif->specialeffect(&md->bl,421,AREA);
 			}
 			break;
