@@ -169,7 +169,6 @@ struct Battle_Config {
 	int emergency_call;
 	int guild_aura;
 	int pc_invincible_time;
-	int song_timer_reset;
 	
 	int pet_catch_rate;
 	int pet_rename;
@@ -475,6 +474,9 @@ struct Battle_Config {
 	int case_sensitive_aegisnames;
 	int guild_castle_invite;
 	int guild_castle_expulsion;
+
+	int song_timer_reset; // [csnv]
+	int snap_dodge; // Enable or disable dodging damage snapping away [csnv]
 };
 
 extern struct Battle_Config battle_config;
