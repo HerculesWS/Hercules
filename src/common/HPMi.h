@@ -80,6 +80,9 @@ enum HPluginDataTypes {
 	HPDT_INSTANCE,
 	HPDT_GUILD,
 	HPDT_PARTY,
+	HPDT_MOBDB,
+	HPDT_MOBDATA,
+	HPDT_ITEMDATA,
 };
 
 /* used in macros and conf storage */
@@ -131,6 +134,18 @@ enum HPluginConfType {
 #define addToINSTD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_INSTANCE,HPMi->pid,(ptr),(data),(index),(autofree)))
 #define getFromINSTD(ptr,index) (HPMi->getFromHPData(HPDT_INSTANCE,HPMi->pid,(ptr),(index)))
 #define removeFromINSTD(ptr,index) (HPMi->removeFromHPData(HPDT_INSTANCE,HPMi->pid,(ptr),(index)))
+/* mob_db */
+#define addToMOBDB(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_MOBDB,HPMi->pid,(ptr),(data),(index),(autofree)))
+#define getFromMOBDB(ptr,index) (HPMi->getFromHPData(HPDT_MOBDB,HPMi->pid,(ptr),(index)))
+#define removeFromMOBDB(ptr,index) (HPMi->removeFromHPData(HPDT_MOBDB,HPMi->pid,(ptr),(index)))
+/* mob_data */
+#define addToMOBDATA(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_MOBDATA,HPMi->pid,(ptr),(data),(index),(autofree)))
+#define getFromMOBDATA(ptr,index) (HPMi->getFromHPData(HPDT_MOBDATA,HPMi->pid,(ptr),(index)))
+#define removeFromMOBDATA(ptr,index) (HPMi->removeFromHPData(HPDT_MOBDATA,HPMi->pid,(ptr),(index)))
+/* item_data */
+#define addToITEMDATA(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_ITEMDATA,HPMi->pid,(ptr),(data),(index),(autofree)))
+#define getFromITEMDATA(ptr,index) (HPMi->getFromHPData(HPDT_ITEMDATA,HPMi->pid,(ptr),(index)))
+#define removeFromITEMDATA(ptr,index) (HPMi->removeFromHPData(HPDT_ITEMDATA,HPMi->pid,(ptr),(index)))
 
 /* HPMi->addCommand */
 #define addAtcommand(cname,funcname) \

@@ -126,6 +126,10 @@ struct mob_db {
 	int maxskill;
 	struct mob_skill skill[MAX_MOBSKILL];
 	struct spawn_info spawn[10];
+
+	/* HPM Custom Struct */
+	struct HPluginData **hdata;
+	unsigned int hdatac;
 };
 
 struct mob_data {
@@ -197,6 +201,10 @@ struct mob_data {
 	 * MvP Tombstone NPC ID
 	 **/
 	int tomb_nid;
+
+	/* HPM Custom Struct */
+	struct HPluginData **hdata;
+	unsigned int hdatac;
 };
 
 
