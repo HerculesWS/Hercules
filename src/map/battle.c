@@ -252,12 +252,16 @@ int battle_delay_damage_sub(int tid, int64 tick, int id, intptr_t data) {
 int battle_delay_damage(int64 tick, int amotion, struct block_list *src, struct block_list *target, int attack_type, uint16 skill_id, uint16 skill_lv, int64 damage, enum damage_lv dmg_lv, int ddelay, bool additional_effects) {
 	struct delay_damage *dat;
 	struct status_change *sc;
+	struct block_list *d_tbl = NULL;
 	nullpo_ret(src);
 	nullpo_ret(target);
 
 	sc = status->get_sc(target);
 
-	if( sc && sc->data[SC_DEVOTION] && damage > 0 && skill_id != PA_PRESSURE && skill_id != CR_REFLECTSHIELD )
+	if (sc && sc->data[SC_DEVOTION] && sc->data[SC_DEVOTION]->val1)
+		d_tbl = map->id2bl(sc->data[SC_DEVOTION]->val1);
+
+	if( d_tbl && check_distance_bl(target, d_tbl, sc->data[SC_DEVOTION]->val3) && damage > 0 && skill_id != PA_PRESSURE && skill_id != CR_REFLECTSHIELD )
 		damage = 0;
 
 	if ( !battle_config.delay_battle_damage || amotion <= 1 ) {
@@ -279,7 +283,7 @@ int battle_delay_damage(int64 tick, int amotion, struct block_list *src, struct 
 	dat->damage = damage;
 	dat->dmg_lv = dmg_lv;
 	dat->delay = ddelay;
-	dat->distance = distance_bl(src, target)+10; //Attack should connect regardless unless you teleported.
+	dat->distance = distance_bl(src, target) + (battle_config.snap_dodge ? 10 : battle_config.area_size);
 	dat->additional_effects = additional_effects;
 	dat->src_type = src->type;
 	if (src->type != BL_PC && amotion > 1000)
@@ -2711,7 +2715,6 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			int delay;
 			struct block_list *d_bl = NULL;
 			struct status_change_entry *sce_d = sc->data[SC_DEVOTION];
-
 
 			// different delay depending on skill level [celest]
 			if (sce->val1 <= 5)
@@ -5475,8 +5478,8 @@ void battle_reflect_damage(struct block_list *target, struct block_list *src, st
 					d_bl = map->id2bl(sce_d->val1);
 				
 				if( sc->data[SC_REFLECTSHIELD] && skill_id != WS_CARTTERMINATION && skill_id != GS_DESPERADO
-				  && !(d_bl && !(wd->flag&BF_SKILL)) /* It should not be a basic attack if the target is under devotion */
-				  && !(d_bl && sce_d && !check_distance_bl(target, d_bl, sce_d->val3)) /* It should not be out of range if the target is under devotion */
+				  && !(d_bl && !(wd->flag&BF_SKILL)) // It should not be a basic attack if the target is under devotion
+				  && !(d_bl && sce_d && !check_distance_bl(target, d_bl, sce_d->val3)) // It should not be out of range if the target is under devotion
 				) {
 
 					NORMALIZE_RDAMAGE(damage * sc->data[SC_REFLECTSHIELD]->val2 / 100);
@@ -6786,7 +6789,7 @@ static const struct battle_data {
 	{ "mail_show_status",                   &battle_config.mail_show_status,                0,      0,      2,              },
 	{ "client_limit_unit_lv",               &battle_config.client_limit_unit_lv,            0,      0,      BL_ALL,         },
 	{ "client_emblem_max_blank_percent",    &battle_config.client_emblem_max_blank_percent, 100,    0,      100,            },
-	{ "song_timer_reset",                   &battle_config.song_timer_reset,                0,      0,      1,              },
+
 	// BattleGround Settings
 	{ "bg_update_interval",                 &battle_config.bg_update_interval,              1000,   100,    INT_MAX,        },
 	{ "bg_flee_penalty",                    &battle_config.bg_flee_penalty,                 20,     0,      INT_MAX,        },
@@ -6827,6 +6830,8 @@ static const struct battle_data {
 	{ "case_sensitive_aegisnames",          &battle_config.case_sensitive_aegisnames,       1,      0,      1,              },
 	{ "guild_castle_invite",				&battle_config.guild_castle_invite,				0,		0,		1,				},
 	{ "guild_castle_expulsion",				&battle_config.guild_castle_expulsion,			0,		0,		1,				},
+	{ "song_timer_reset",                   &battle_config.song_timer_reset,                0,      0,      1,              },
+	{ "snap_dodge",                         &battle_config.snap_dodge,                      0,      0,      1,              },
 };
 #ifndef STATS_OPT_OUT
 /**
