@@ -5357,10 +5357,12 @@ This is used primarily in item scripts. When used in an NPC script, a flag MUST
 be defined for the rate to work.
 
 Optional value <flag> is how the status change start will be handled (a bitmask).
- 1: Status change cannot be avoided.
- 2: Tick cannot be reduced by stats (default).
- 4: sc_data loaded, so no value will be altered.
- 8: Rate cannot be reduced.
+ SCFLAG_NONE      = 0x00: No special behavior.
+ SCFLAG_NOAVOID   = 0x01: Status change cannot be avoided.
+ SCFLAG_FIXEDTICK = 0x02: Tick cannot be reduced by stats (default).
+ SCFLAG_LOADED    = 0x04: sc_data was loaded, no value will be altered.
+ SCFLAG_FIXEDRATE = 0x08: Rate cannot be reduced.
+ SCFLAG_NOICON    = 0x10: Status icon (SI) won't be shown.
 
 If a <GID> is given, the status change will be invoked on the specified character
 instead of the one attached to the script. This can only be defined after setting

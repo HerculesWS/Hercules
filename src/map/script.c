@@ -10087,14 +10087,9 @@ BUILDIN(hideonnpc)
  * sc_start  <effect_id>,<duration>,<val1>{,<rate>,<flag>,{<unit_id>}};
  * sc_start2 <effect_id>,<duration>,<val1>,<val2>{,<rate,<flag>,{<unit_id>}};
  * sc_start4 <effect_id>,<duration>,<val1>,<val2>,<val3>,<val4>{,<rate,<flag>,{<unit_id>}};
- * <flag>
- * 	&1: Cannot be avoided (it has to start)
- * 	&2: Tick should not be reduced (by vit, luk, lv, etc)
- * 	&4: sc_data loaded, no value has to be altered.
- * 	&8: rate should not be reduced
+ * <flag>: @see enum scstart_flag
  */
-BUILDIN(sc_start)
-{
+BUILDIN(sc_start) {
 	TBL_NPC * nd = map->id2nd(st->oid);
 	struct block_list* bl;
 	enum sc_type type;
@@ -10113,11 +10108,11 @@ BUILDIN(sc_start)
 	tick = script_getnum(st,3);
 	val1 = script_getnum(st,4);
 
-	//If from NPC we make default flag 1 to be unavoidable
+	//If from NPC we make default flag SCFLAG_NOAVOID to be unavoidable
 	if(nd && nd->bl.id == npc->fake_nd->bl.id)
-		flag = script_hasdata(st,5+start_type)?script_getnum(st,5+start_type):2;
+		flag = script_hasdata(st,5+start_type) ? script_getnum(st,5+start_type) : SCFLAG_FIXEDTICK;
 	else
-		flag = script_hasdata(st,5+start_type)?script_getnum(st,5+start_type):1;
+		flag = script_hasdata(st,5+start_type) ? script_getnum(st,5+start_type) : SCFLAG_NOAVOID;
 
 	rate = script_hasdata(st,4+start_type)?min(script_getnum(st,4+start_type),10000):10000;
 
@@ -10220,7 +10215,7 @@ BUILDIN(getscrate) {
 		bl = map->id2bl(st->rid);
 
 	if (bl)
-		rate = status->get_sc_def(bl, bl, (sc_type)type, 10000, 10000, 0);
+		rate = status->get_sc_def(bl, bl, (sc_type)type, 10000, 10000, SCFLAG_NONE);
 
 	script_pushint(st,rate);
 	return true;
@@ -16063,7 +16058,7 @@ BUILDIN(mercenary_sc_start) {
 	tick = script_getnum(st,3);
 	val1 = script_getnum(st,4);
 
-	status->change_start(NULL, &sd->md->bl, type, 10000, val1, 0, 0, 0, tick, 2);
+	status->change_start(NULL, &sd->md->bl, type, 10000, val1, 0, 0, 0, tick, SCFLAG_FIXEDTICK);
 	return true;
 }
 

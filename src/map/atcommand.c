@@ -5469,7 +5469,8 @@ ACMD(autotrade) {
 	sd->state.autotrade = 1;
 	if( battle_config.at_timeout ) {
 		int timeout = atoi(message);
-		status->change_start(NULL,&sd->bl, SC_AUTOTRADE, 10000, 0, 0, 0, 0, ((timeout > 0) ? min(timeout,battle_config.at_timeout) : battle_config.at_timeout) * 60000, 0);
+		status->change_start(NULL,&sd->bl, SC_AUTOTRADE, 10000, 0, 0, 0, 0,
+		                     ((timeout > 0) ? min(timeout,battle_config.at_timeout) : battle_config.at_timeout) * 60000, SCFLAG_NONE);
 	}
 
 	/* currently standalone is not supporting buyingstores, so we rely on the previous method */
