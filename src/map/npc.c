@@ -3693,7 +3693,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) && map->list[m].zone != zone ) {
 			map->zone_change(m,zone,start,buffer,filepath);
 		} else if ( !state ) {
-			map->list[m].zone = &map->zone_pk;
+			map->list[m].zone = &map->zone_all;
 		}
 	}
 	else if (!strcmpi(w3,"pvp_noparty"))
