@@ -2179,6 +2179,10 @@ int npc_unload(struct npc_data* nd, bool single) {
 	
 	nullpo_ret(nd);
 
+	if( nd->ud && nd->ud != &npc->base_ud ) {
+		skill->clear_unitgroup(&nd->bl);
+	}
+	
 	npc->remove_map(nd);
 	map->deliddb(&nd->bl);
 	if( single )
@@ -2216,7 +2220,7 @@ int npc_unload(struct npc_data* nd, bool single) {
 			npc->ev_db->foreach(npc->ev_db,npc->unload_ev,nd->exname); //Clean up all events related
 			npc->ev_label_db->foreach(npc->ev_label_db,npc->unload_ev_label,nd);
 		}
-
+		
 		iter = mapit_geteachpc();
 		for( bl = (struct block_list*)mapit->first(iter); mapit->exists(iter); bl = (struct block_list*)mapit->next(iter) ) {
 			struct map_session_data *sd = ((TBL_PC*)bl);
@@ -2263,7 +2267,7 @@ int npc_unload(struct npc_data* nd, bool single) {
 			guild->flag_remove(nd);
 	}
 
-	if( nd->ud != &npc->base_ud ) {
+	if( nd->ud && nd->ud != &npc->base_ud ) {
 		aFree(nd->ud);
 		nd->ud = NULL;
 	}

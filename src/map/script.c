@@ -15909,8 +15909,7 @@ BUILDIN(warpportal) {
 	struct block_list* bl;
 
 	bl = map->id2bl(st->oid);
-	if( bl == NULL )
-	{
+	if( bl == NULL ) {
 		ShowError("script:warpportal: npc is needed\n");
 		return false;
 	}
@@ -15924,6 +15923,9 @@ BUILDIN(warpportal) {
 	if( map_index == 0 )
 		return true;// map not found
 
+	if( bl->type == BL_NPC )
+		unit->bl2ud2(bl); // ensure nd->ud is safe to edit
+	
 	group = skill->unitsetting(bl, AL_WARP, 4, spx, spy, 0);
 	if( group == NULL )
 		return true;// failed
