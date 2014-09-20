@@ -5128,8 +5128,12 @@ int clif_skill_damage(struct block_list *src, struct block_list *dst, int64 tick
 
 	damage = (int)cap_value(in_damage,INT_MIN,INT_MAX);
 	type = clif_calc_delay(type,div,damage,ddelay);
-	sc = status->get_sc(dst);
-	if(sc && sc->count) {
+	
+#if PACKETVER >= 20131223
+	if( type == 6 ) type = 8; //bugreport:8263
+#endif
+	
+	if( ( sc = status->get_sc(dst) ) && sc->count ) {
 		if(sc->data[SC_ILLUSION] && damage)
 			damage = damage*(sc->data[SC_ILLUSION]->val2) + rnd()%100;
 	}
