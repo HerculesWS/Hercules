@@ -17706,8 +17706,8 @@ void clif_maptypeproperty2(struct block_list *bl,enum send_target t) {
 	p.PacketType = maptypeproperty2Type;
 	p.type = 0x28;
 	p.flag.party = map->list[bl->m].flag.pvp ? 1 : 0;
-	p.flag.guild = map_flag_gvg(bl->m) ? 1 : 0;
-	p.flag.siege = map_flag_gvg2(bl->m) ? 1: 0;
+	p.flag.guild = (map->list[bl->m].flag.battleground || map_flag_gvg(bl->m)) ? 1 : 0;
+	p.flag.siege = (map->list[bl->m].flag.battleground || map_flag_gvg2(bl->m)) ? 1: 0;
 	p.flag.mineffect = map_flag_gvg(bl->m); // FIXME/CHECKME Forcing /mineffect in castles during WoE (probably redundant? I'm not sure)
 	p.flag.nolockon = 0; // TODO
 	p.flag.countpk = map->list[bl->m].flag.pvp ? 1 : 0;
