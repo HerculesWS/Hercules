@@ -5482,6 +5482,7 @@ ACMD(autotrade) {
 		return true;
 	
 #ifdef AUTOTRADE_PERSISTENCY
+	sd->state.autotrade = 2;/** state will enter pre-save, we use it to rule out some criterias **/
 	pc->autotrade_prepare(sd);
 	
 	return false;/* we fail to not cause it to proceed on is_atcommand */

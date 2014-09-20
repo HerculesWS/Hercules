@@ -585,7 +585,7 @@ int pc_makesavestatus(struct map_session_data *sd)
 		sd->status.last_point.y = sd->bl.y;
 	}
 
-	if(map->list[sd->bl.m].flag.nosave || map->list[sd->bl.m].instance_id >= 0) {
+	if( ( map->list[sd->bl.m].flag.nosave && sd->state.autotrade != 2 ) || map->list[sd->bl.m].instance_id >= 0) {
 		struct map_data *m=&map->list[sd->bl.m];
 		if(m->save.map)
 			memcpy(&sd->status.last_point,&m->save,sizeof(sd->status.last_point));
