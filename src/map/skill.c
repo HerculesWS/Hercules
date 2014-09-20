@@ -8696,8 +8696,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				sc_start(src,bl,SC_SILENCE,100,skill_lv,sd->bonus.shieldmdef * 30000);
 			} else {
 				int opt = 0, val = 0, splashrange = 0;
-				struct item_data *shield_data = sd->inventory_data[sd->equip_index[EQI_HAND_L]];
-				if( !shield_data || shield_data->type != IT_ARMOR ) {
+				struct item_data *shield_data = NULL;
+				if( sd->equip_index[EQI_HAND_L] < 0 || !( shield_data = sd->inventory_data[sd->equip_index[EQI_HAND_L]] ) || shield_data->type != IT_ARMOR ) {
 					//Skill will first check if a shield is equipped. If none is found on the caster the skill will fail.
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					break;
