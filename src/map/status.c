@@ -1601,8 +1601,13 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 					if( src->type == BL_PC )
 						clif->msg((TBL_PC*)src, SKILL_CANT_USE_AREA); // This skill cannot be used within this area
 					else if( src->type == BL_MOB && map->list[src->m].zone->disabled_skills[i]->subtype != MZS_NONE ) {
-						if( (st->mode&MD_BOSS) && !(map->list[src->m].zone->disabled_skills[i]->subtype&MZS_BOSS) )
-							break;
+						if( st->mode&MD_BOSS ) { /** is boss **/
+							if( !( map->list[src->m].zone->disabled_skills[i]->subtype&MZS_BOSS ) )
+								break;
+						} else { /** is not boss **/
+							if( map->list[src->m].zone->disabled_skills[i]->subtype&MZS_BOSS )
+								break;
+						}
 					}
 					return 0;
 				}

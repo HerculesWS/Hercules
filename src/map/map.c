@@ -5020,6 +5020,7 @@ void read_map_zone_db(void) {
 							CREATE( entry, struct map_zone_disabled_skill_entry, 1 );
 							entry->nameid = izone->disabled_skills[j]->nameid;
 							entry->type = izone->disabled_skills[j]->type;
+							entry->subtype = izone->disabled_skills[j]->subtype;
 							zone->disabled_skills[zone->disabled_skills_count-1] = entry;
 						}
 					}
@@ -5114,6 +5115,7 @@ void read_map_zone_db(void) {
 							entry->nameid = izone->capped_skills[j]->nameid;
 							entry->cap = izone->capped_skills[j]->cap;
 							entry->type = izone->capped_skills[j]->type;
+							entry->subtype = izone->capped_skills[j]->subtype;
 							zone->capped_skills[zone->capped_skills_count-1] = entry;
 						}
 					}
