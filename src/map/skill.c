@@ -9734,9 +9734,11 @@ int skill_castend_pos(int tid, int64 tick, int id, intptr_t data) {
 
 		if( sd )
 		{
-			if( ud->skill_id != AL_WARP && !skill->check_condition_castend(sd, ud->skill_id, ud->skill_lv) )
+			if( ud->skill_id != AL_WARP && !skill->check_condition_castend(sd, ud->skill_id, ud->skill_lv) ) {
+				if( ud->skill_id == SA_LANDPROTECTOR )
+					clif->skill_poseffect(&sd->bl,ud->skill_id,ud->skill_lv,sd->bl.x,sd->bl.y,tick);
 				break;
-			else
+			}else
 				skill->consume_requirement(sd,ud->skill_id,ud->skill_lv,1);
 		}
 
