@@ -5473,17 +5473,13 @@ ACMD(autotrade) {
 		                     ((timeout > 0) ? min(timeout,battle_config.at_timeout) : battle_config.at_timeout) * 60000, SCFLAG_NONE);
 	}
 
-	/* currently standalone is not supporting buyingstores, so we rely on the previous method */
-	if( sd->state.buyingstore ) {
-		clif->authfail_fd(fd, 15);
-		return true;
-	}
-
-	
 	clif->chsys_quit(sd);
 	
 	clif->authfail_fd(sd->fd, 15);
-	
+
+	/* currently standalone is not supporting buyingstores, so we rely on the previous method */
+	if( sd->state.buyingstore )
+		return true;
 	
 #ifdef AUTOTRADE_PERSISTENCY
 	pc->autotrade_prepare(sd);
