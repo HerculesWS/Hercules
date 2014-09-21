@@ -686,12 +686,10 @@ bool party_changeleader(struct map_session_data *sd, struct map_session_data *ts
 
 	//Change leadership.
 	p->party.member[mi].leader = 0;
-	if (p->data[mi].sd->fd)
-		clif->message(p->data[mi].sd->fd, msg_txt(284));
-
 	p->party.member[tmi].leader = 1;
-	if (p->data[tmi].sd->fd)
-		clif->message(p->data[tmi].sd->fd, msg_txt(285));
+	
+	/** update members **/
+	clif->PartyLeaderChanged(p->data[mi].sd, p->data[mi].sd->status.account_id, p->data[tmi].sd->status.account_id);
 
 	//Update info.
 	intif->party_leaderchange(p->party.party_id,p->party.member[tmi].account_id,p->party.member[tmi].char_id);

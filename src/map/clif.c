@@ -12234,7 +12234,7 @@ void clif_parse_PartyMessage(int fd, struct map_session_data* sd)
 void clif_parse_PartyChangeLeader(int fd, struct map_session_data* sd) {
 	party->changeleader(sd, map->id2sd(RFIFOL(fd,2)));
 }
-
+	
 /// Party Booking in KRO [Spiria]
 ///
 
@@ -18254,6 +18254,18 @@ void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd) {
 	clif->npc_market_purchase_ack(sd,p,npc->market_buylist(sd,(p->PacketLength - 4) / sizeof(p->list[0]),p));
 #endif
 }
+	
+void clif_PartyLeaderChanged(struct map_session_data *sd, int prev_leader_aid, int new_leader_aid) {
+	struct packet_party_leader_changed p;
+	
+	p.PacketType = partyleaderchangedType;
+	
+	p.prev_leader_aid = prev_leader_aid;
+	p.new_leader_aid = new_leader_aid;
+	
+	clif->send(&p,sizeof(p),&sd->bl,PARTY);
+}
+	
 /* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
 	if( sd ) {
@@ -18884,6 +18896,7 @@ void clif_defaults(void) {
 	clif->party_xy_remove = clif_party_xy_remove;
 	clif->party_show_picker = clif_party_show_picker;
 	clif->partyinvitationstate = clif_partyinvitationstate;
+	clif->PartyLeaderChanged = clif_PartyLeaderChanged;
 	/* guild-specific */
 	clif->guild_created = clif_guild_created;
 	clif->guild_belonginfo = clif_guild_belonginfo;

@@ -866,6 +866,7 @@ struct clif_interface {
 	void (*party_xy_remove) (struct map_session_data *sd);
 	void (*party_show_picker) (struct map_session_data * sd, struct item * item_data);
 	void (*partyinvitationstate) (struct map_session_data* sd);
+	void (*PartyLeaderChanged) (struct map_session_data *sd, int prev_leader_aid, int new_leader_aid);
 	/* guild-specific */
 	void (*guild_created) (struct map_session_data *sd,int flag);
 	void (*guild_belonginfo) (struct map_session_data *sd, struct guild *g);

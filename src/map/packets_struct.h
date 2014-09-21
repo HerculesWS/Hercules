@@ -209,6 +209,7 @@ enum packet_headers {
 #else
 	wisendType = 0x98,
 #endif
+	partyleaderchangedType = 0x7fc,
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -956,6 +957,13 @@ struct packet_wis_end {
 #if PACKETVER >= 20131223
 	unsigned int unknown;/* maybe AID, not sure what for (works sending as 0) */
 #endif
+} __attribute__((packed));
+
+
+struct packet_party_leader_changed {
+	short PacketType;
+	unsigned int prev_leader_aid;
+	unsigned int new_leader_aid;
 } __attribute__((packed));
 
 
