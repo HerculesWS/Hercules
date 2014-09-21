@@ -3210,12 +3210,6 @@ void clif_changelook(struct block_list *bl,int type,int val)
 			break;
 			case LOOK_BASE:
 				if( !sd ) break;
-				// We shouldn't update LOOK_BASE if the player is disguised
-				// if we do so the client will think that the player class
-				// is really a mob and issues like 7725 will happen in every
-				// SC_ that alters class_ in any way [Panikon]
-				if( sd->disguise != -1 )
-					return;
 
 				if( sd->sc.option&OPTION_COSTUME )
 					vd->weapon = vd->shield = 0;
@@ -3295,7 +3289,7 @@ void clif_changelook(struct block_list *bl,int type,int val)
 	}
 
 	// prevent leaking the presence of GM-hidden objects
-	if( sc && sc->option&OPTION_INVISIBLE )
+	if( sc && sc->option&OPTION_INVISIBLE && !disguised(bl) )
 		target = SELF;
 
 #if PACKETVER < 4
@@ -3316,11 +3310,12 @@ void clif_changelook(struct block_list *bl,int type,int val)
 		WBUFB(buf,6)=type;
 		WBUFL(buf,7)=val;
 	}
-	clif->send(buf,packet_len(0x1d7),bl,target);
-	if( disguised(bl) && sd && sd->fontcolor ) {
+	if( disguised(bl) ) {
+		clif->send(buf,packet_len(0x1d7),bl,AREA_WOS);
 		WBUFL(buf,2)=-bl->id;
 		clif->send(buf,packet_len(0x1d7),bl,SELF);
-	}
+	} else
+		clif->send(buf,packet_len(0x1d7),bl,target);
 #endif
 }
 
