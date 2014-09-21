@@ -220,9 +220,9 @@ int battle_delay_damage_sub(int tid, int64 tick, int id, intptr_t data) {
 		src = map->id2bl(dat->src_id);
 		
 		//Check to see if you haven't teleported. [Skotlex]
-		if( src && target->m == src->m
+		if( src
 		 && (target->type != BL_PC || ((TBL_PC*)target)->invincible_timer == INVALID_TIMER)
-		 && check_distance_bl(src, target, dat->distance)
+		 && (dat->skill_id == MO_EXTREMITYFIST || (target->m == src->m && check_distance_bl(src, target, dat->distance)) )
 		) {
 			map->freeblock_lock();
 			status_fix_damage(src, target, dat->damage, dat->delay);
