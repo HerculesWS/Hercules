@@ -1137,6 +1137,21 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 
 	if(!status->check_skilluse(src, target, skill_id, 0))
 		return 0;
+	
+	if( src != target && status->isdead(target) ) {
+		/**
+		 * Skills that may be cast on dead targets
+		 **/
+		switch( skill_id ) {
+			case NPC_WIDESOULDRAIN:
+			case PR_REDEMPTIO:
+			case ALL_RESURRECTION:
+			case WM_DEADHILLHERE:
+				break;
+			default:
+				return 1;
+		}
+	}
 
 	tstatus = status->get_status_data(target);
 	// Record the status of the previous skill)
