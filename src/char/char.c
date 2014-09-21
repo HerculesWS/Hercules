@@ -2239,7 +2239,7 @@ void loginif_on_ready(void)
 	send_accounts_tologin(INVALID_TIMER, timer->gettick(), 0, 0);
 
 	// if no map-server already connected, display a message...
-	ARR_FIND( 0, ARRAYLENGTH(server), i, server[i].fd > 0 && server[i].map[0] );
+	ARR_FIND( 0, ARRAYLENGTH(server), i, server[i].fd > 0 && server[i].map );
 	if( i == ARRAYLENGTH(server) )
 		ShowStatus("Awaiting maps from map-server.\n");
 }
@@ -4279,7 +4279,7 @@ int parse_char(int fd)
 				}
 #endif
 				
-				ARR_FIND( 0, ARRAYLENGTH(server), server_id, server[server_id].fd > 0 && server[server_id].map[0] );
+				ARR_FIND( 0, ARRAYLENGTH(server), server_id, server[server_id].fd > 0 && server[server_id].map );
 				/* not available, tell it to wait (client wont close; char select will respawn).
 				 * magic response found by Ind thanks to Yommy <3 */
 				if( server_id == ARRAYLENGTH(server) ) {
@@ -4350,7 +4350,7 @@ int parse_char(int fd)
 				if (i < 0 || !cd->last_point.map) {
 					unsigned short j;
 					//First check that there's actually a map server online.
-					ARR_FIND( 0, ARRAYLENGTH(server), j, server[j].fd >= 0 && server[j].map[0] );
+					ARR_FIND( 0, ARRAYLENGTH(server), j, server[j].fd >= 0 && server[j].map );
 					if (j == ARRAYLENGTH(server)) {
 						ShowInfo("Connection Closed. No map servers available.\n");
 						WFIFOHEAD(fd,3);
