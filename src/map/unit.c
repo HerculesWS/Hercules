@@ -930,7 +930,7 @@ int unit_can_move(struct block_list *bl) {
 		    ||  sc->data[SC_ELECTRICSHOCKER]
 		    ||  sc->data[SC_WUGBITE]
 		    ||  sc->data[SC_THORNS_TRAP]
-		    ||  sc->data[SC_MAGNETICFIELD]
+		    ||  ( sc->data[SC_MAGNETICFIELD] && !sc->data[SC_HOVERING] )
 		    ||  sc->data[SC__MANHOLE]
 		    ||  sc->data[SC_CURSEDCIRCLE_ATKER]
 		    ||  sc->data[SC_CURSEDCIRCLE_TARGET]
