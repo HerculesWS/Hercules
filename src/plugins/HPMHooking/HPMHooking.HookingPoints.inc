@@ -498,6 +498,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->party_xy_remove, HP_clif_party_xy_remove) },
 	{ HP_POP(clif->party_show_picker, HP_clif_party_show_picker) },
 	{ HP_POP(clif->partyinvitationstate, HP_clif_partyinvitationstate) },
+	{ HP_POP(clif->PartyLeaderChanged, HP_clif_PartyLeaderChanged) },
 	{ HP_POP(clif->guild_created, HP_clif_guild_created) },
 	{ HP_POP(clif->guild_belonginfo, HP_clif_guild_belonginfo) },
 	{ HP_POP(clif->guild_masterormember, HP_clif_guild_masterormember) },

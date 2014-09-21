@@ -12937,6 +12937,32 @@ void HP_clif_partyinvitationstate(struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_clif_PartyLeaderChanged(struct map_session_data *sd, int prev_leader_aid, int new_leader_aid) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_PartyLeaderChanged_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, int *prev_leader_aid, int *new_leader_aid);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyLeaderChanged_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_PartyLeaderChanged_pre[hIndex].func;
+			preHookFunc(sd, &prev_leader_aid, &new_leader_aid);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.PartyLeaderChanged(sd, prev_leader_aid, new_leader_aid);
+	}
+	if( HPMHooks.count.HP_clif_PartyLeaderChanged_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, int *prev_leader_aid, int *new_leader_aid);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyLeaderChanged_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_PartyLeaderChanged_post[hIndex].func;
+			postHookFunc(sd, &prev_leader_aid, &new_leader_aid);
+		}
+	}
+	return;
+}
 void HP_clif_guild_created(struct map_session_data *sd, int flag) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_guild_created_pre ) {

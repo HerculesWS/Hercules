@@ -977,6 +977,8 @@ struct {
 	struct HPMHookPoint *HP_clif_party_show_picker_post;
 	struct HPMHookPoint *HP_clif_partyinvitationstate_pre;
 	struct HPMHookPoint *HP_clif_partyinvitationstate_post;
+	struct HPMHookPoint *HP_clif_PartyLeaderChanged_pre;
+	struct HPMHookPoint *HP_clif_PartyLeaderChanged_post;
 	struct HPMHookPoint *HP_clif_guild_created_pre;
 	struct HPMHookPoint *HP_clif_guild_created_post;
 	struct HPMHookPoint *HP_clif_guild_belonginfo_pre;
@@ -6014,6 +6016,8 @@ struct {
 	int HP_clif_party_show_picker_post;
 	int HP_clif_partyinvitationstate_pre;
 	int HP_clif_partyinvitationstate_post;
+	int HP_clif_PartyLeaderChanged_pre;
+	int HP_clif_PartyLeaderChanged_post;
 	int HP_clif_guild_created_pre;
 	int HP_clif_guild_created_post;
 	int HP_clif_guild_belonginfo_pre;
