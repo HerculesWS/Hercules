@@ -995,6 +995,11 @@ int mmo_auth(struct login_session_data* sd, bool isServer) {
 				return result;// Failed to make account. [Skotlex].
 		}
 	}
+
+	if( len <= 0 ) { /** a empty password is fine, a userid is not. **/
+		ShowNotice("Empty userid (received pass: '%s', ip: %s)\n", sd->passwd, ip);
+		return 0; // 0 = Unregistered ID
+	}
 	
 	if( !accounts->load_str(accounts, &acc, sd->userid) ) {
 		ShowNotice("Unknown account (account: %s, received pass: %s, ip: %s)\n", sd->userid, sd->passwd, ip);
