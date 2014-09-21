@@ -619,7 +619,7 @@ ACMD(who) {
 					break;
 				}
 			}
-			clif->message(fd, StrBuf->Value(&buf));
+			clif->colormes(fd, COLOR_DEFAULT, StrBuf->Value(&buf));/** for whatever reason clif->message crashes with some patterns, see bugreport:8186 **/
 			StrBuf->Clear(&buf);
 			count++;
 		}
