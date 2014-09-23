@@ -2551,7 +2551,7 @@ Example 1: list party member names
 	
 	// list the party member names
 	for (.@i = 0; .@i < .@count; ++.@i) {
-		mes (.@i +1) + ". ^"+ C_Blue + .@name$[.@i] + "^"+ C_Black;
+		mes (.@i +1) + ". ^"+ C_BLUE + .@name$[.@i] + "^"+ C_BLACK;
 	}
 	close;
 
