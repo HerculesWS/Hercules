@@ -15658,8 +15658,6 @@ BUILDIN(unittalk) {
 		StrBuf->Init(&sbuf);
 		StrBuf->Printf(&sbuf, "%s : %s", status->get_name(bl), message);
 		clif->disp_overhead(bl, StrBuf->Value(&sbuf));
-		if( bl->type == BL_PC )
-			clif->message(((TBL_PC*)bl)->fd, StrBuf->Value(&sbuf));
 		StrBuf->Destroy(&sbuf);
 	}
 
