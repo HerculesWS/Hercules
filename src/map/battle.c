@@ -3190,8 +3190,9 @@ int64 battle_calc_gvg_damage(struct block_list *src,struct block_list *bl,int64 
 			switch (skill_id) {
 #ifndef RENEWAL
 			case MO_TRIPLEATTACK:
-#endif
 			case HW_GRAVITATION:
+#endif
+			case TF_DOUBLE:
 				break;
 			default:
 				return 0;

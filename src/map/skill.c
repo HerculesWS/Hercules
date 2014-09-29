@@ -12194,9 +12194,11 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 				sg->limit -= 100 * tstatus->str/20;
 				sc_start(ss, bl, SC_VACUUM_EXTREME, 100, sg->skill_lv, sg->limit);
 
-				if (unit->movepos(bl, sg->val1, sg->val2, 0, 0)) {
-					clif->slide(bl, sg->val1, sg->val2);
-					clif->fixpos(bl);
+				if ( !map_flag_gvg(bl->m) && !map->list[bl->m].flag.battleground && !is_boss(bl) ) {
+					if (unit->movepos(bl, sg->val1, sg->val2, 0, 0)) {
+						clif->slide(bl, sg->val1, sg->val2);
+						clif->fixpos(bl);
+					}
 				}
 			}
 			break;
