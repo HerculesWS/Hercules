@@ -13325,19 +13325,16 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			}
 			break;
 		case LG_RAYOFGENESIS:
+		case LG_HESPERUSLIT:
 			if( sc && sc->data[SC_INSPIRATION]  )
 				return 1;	// Don't check for partner.
 			if( !(sc && sc->data[SC_BANDING]) ) {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL,0);
 				return 0;
-			} else if( skill->check_pc_partner(sd,skill_id,&skill_lv,skill->get_range(skill_id,skill_lv),0) < 1 )
+			} 
+			if( sc->data[SC_BANDING] &&
+				sc->data[SC_BANDING]->val2 < (skill_id == LG_RAYOFGENESIS ? 2 : 3) )
 				return 0; // Just fails, no msg here.
-			break;
-		case LG_HESPERUSLIT:
-			if( !sc || !sc->data[SC_BANDING] ) {
-				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-				return 0;
-			}
 			break;
 		case SR_FALLENEMPIRE:
 			if( sc && sc->data[SC_COMBOATTACK] ) {
