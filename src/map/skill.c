@@ -2456,6 +2456,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		case EL_HURRICANE_ATK:
 		case EL_TYPOON_MIS:
 		case EL_TYPOON_MIS_ATK:
+		case GN_CRAZYWEED_ATK:
 		case KO_BAKURETSU:
 		case NC_MAGMA_ERUPTION:
 			dmg.dmotion = clif->skill_damage(src,bl,tick,dmg.amotion,dmg.dmotion,damage,dmg.div_,skill_id,-1,5);
@@ -2465,9 +2466,6 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 			break;
 		case SC_FEINTBOMB:
 			dmg.dmotion = clif->skill_damage(src,bl,tick,dmg.amotion,dmg.dmotion,damage,1,skill_id,skill_lv,5);
-			break;
-		case GN_CRAZYWEED_ATK:
-			dmg.dmotion = clif->skill_damage(src,bl,tick,dmg.amotion,dmg.dmotion,damage,dmg.div_,skill_id, -2, 6);
 			break;
 		case EL_STONE_RAIN:
 			dmg.dmotion = clif->skill_damage(dsrc,bl,tick,dmg.amotion,dmg.dmotion,damage,dmg.div_,skill_id,-1,(flag&1)?8:5);
@@ -2541,7 +2539,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 				break;
 			case WM_SEVERE_RAINSTORM_MELEE:
 				copy_skill = WM_SEVERE_RAINSTORM;
-			break;
+				break;
 			case GN_CRAZYWEED_ATK:
 				copy_skill = GN_CRAZYWEED;
 				break;
@@ -3298,6 +3296,11 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 					else if( path->search_long(NULL, src->m, src->x, src->y, skl->x, skl->y, CELL_CHKWALL) )
 						skill->unitsetting(src,skl->skill_id,skl->skill_lv,skl->x,skl->y,skl->flag);
 					break;
+				case GN_CRAZYWEED_ATK: {
+						int dummy = 1, i = skill->get_unit_range(skl->skill_id,skl->skill_lv);
+
+						map->foreachinarea(skill->cell_overlap,src->m,skl->x-i,skl->y-i,skl->x+i,skl->y+i,BL_SKILL,skl->skill_id,&dummy,src);
+					}
 				// fall through ...
 				case WL_EARTHSTRAIN:
 					skill->unitsetting(src,skl->skill_id,skl->skill_lv,skl->x,skl->y,(skl->type<<16)|skl->flag);
@@ -3306,14 +3309,6 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 					skill->area_temp[1] = 0;
 					map->foreachinpath(skill->attack_area,src->m,src->x,src->y,skl->x,skl->y,4,2,BL_CHAR,
 						skill->get_type(skl->skill_id),src,src,skl->skill_id,skl->skill_lv,tick,skl->flag,BCT_ENEMY);
-					break;
-				case GN_CRAZYWEED:
-					if( skl->type >= 0 ) {
-						int x = skl->type>>16, y = skl->type&0xFFFF;
-						if( path->search_long(NULL, src->m, src->x, src->y, skl->x, skl->y, CELL_CHKWALL) )
-							skill->castend_pos2(src, x, y, GN_CRAZYWEED_ATK, skl->skill_lv, tick, skl->flag);
-					} else if( path->search_long(NULL, src->m, src->x, src->y, skl->x, skl->y, CELL_CHKWALL) )
-						skill->castend_pos2(src, skl->x, skl->y, GN_CRAZYWEED_ATK, skl->skill_lv, tick, skl->flag);
 					break;
 			}
 		}
@@ -3561,7 +3556,6 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 		case SR_GENTLETOUCH_QUIET:
 		case WM_SEVERE_RAINSTORM_MELEE:
 		case WM_GREAT_ECHO:
-		case GN_CRAZYWEED_ATK:
 		case GN_SLINGITEM_RANGEMELEEATK:
 		case KO_JYUMONJIKIRI:
 		case KO_SETSUDAN:
@@ -10596,33 +10590,17 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case GN_CRAZYWEED:
 			{
 				int area = skill->get_splash(skill_id, skill_lv);
-				short tmpx = 0, tmpy = 0, x1 = 0, y1 = 0;
 
 				for( r = 0; r < 3 + (skill_lv>>1); r++ ) {
 					// Creates a random Cell in the Splash Area
-					tmpx = x - area + rnd()%(area * 2 + 1);
-					tmpy = y - area + rnd()%(area * 2 + 1);
+					int tmpx = x - area + rnd()%(area * 2 + 1);
+					int tmpy = y - area + rnd()%(area * 2 + 1);
 
-					if( r > 0 )
-						skill->addtimerskill(src,tick+r*250,0,tmpx,tmpy,GN_CRAZYWEED,skill_lv,(x1<<16)|y1,flag);
-
-					x1 = tmpx;
-					y1 = tmpy;
+					skill_addtimerskill(src,tick+r*250,0,tmpx,tmpy,GN_CRAZYWEED_ATK,skill_lv,-1,0);
 				}
-
-				skill->addtimerskill(src,tick+r*250,0,tmpx,tmpy,GN_CRAZYWEED,skill_lv,-1,flag);
 			}
 			break;
 
-		case GN_CRAZYWEED_ATK: {
-				int dummy = 1;
-				//Enable if any unique animation gets added to this skill ID in the future. [Rytech]
-				//clif_skill_poseffect(src,skillid,skilllv,x,y,tick);
-				r = skill->get_splash(skill_id, skill_lv);
-				map->foreachinarea(skill->cell_overlap, src->m, x-r, y-r, x+r, y+r, BL_SKILL, skill_id, &dummy, src);
-				map->foreachinarea(skill->area_sub, src->m, x-r, y-r, x+r, y+r, BL_CHAR, src, skill_id, skill_lv, tick, flag|BCT_ENEMY|1, skill->castend_damage_id);
-			}
-			break;
 		case GN_FIRE_EXPANSION: {
 			int i;
 			struct unit_data *ud = unit->bl2ud(src);
