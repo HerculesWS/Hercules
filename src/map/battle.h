@@ -353,6 +353,7 @@ struct Battle_Config {
 	int copyskill_restrict; // [Aru]
 	int berserk_cancels_buffs; // [Aru]
 	int mob_ai; //Configures various mob_ai settings to make them smarter or dumber(official). [Skotlex]
+	int mob_chase_refresh; //How often a monster should refresh its chase [Playtester]
 	int hom_setting; //Configures various homunc settings which make them behave unlike normal characters.. [Skotlex]
 	int dynamic_mobs; // Dynamic Mobs [Wizputer] - battle.conf flag implemented by [random]
 	int mob_remove_damaged; // Dynamic Mobs - Remove mobs even if damaged [Wizputer]
