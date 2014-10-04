@@ -853,7 +853,7 @@ struct map_interface {
 	int server_port;
 	char server_ip[32];
 	char server_id[32];
-	char server_pw[32];
+	char server_pw[100];
 	char server_db[32];
 	Sql* mysql_handle;
 	

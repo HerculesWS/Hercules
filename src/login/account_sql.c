@@ -33,14 +33,14 @@ typedef struct AccountDB_SQL
 	char   global_db_hostname[32];
 	uint16 global_db_port;
 	char   global_db_username[32];
-	char   global_db_password[32];
+	char   global_db_password[100];
 	char   global_db_database[32];
 	char   global_codepage[32];
 	// local sql settings
 	char   db_hostname[32];
 	uint16 db_port;
 	char   db_username[32];
-	char   db_password[32];
+	char   db_password[100];
 	char   db_database[32];
 	char   codepage[32];
 	// other settings
