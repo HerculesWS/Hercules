@@ -6617,9 +6617,9 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			if( skill_id == GC_WEAPONCRUSH){
 				d = skill->get_time(skill_id,skill_lv);
 				if(bl->type == BL_PC)
-					d += skill_lv * 15 + (sstatus->dex - tstatus->dex);
+					d += 1000 * ( skill_lv * 15 + ( sstatus->dex - tstatus->dex ) );
 				else
-					d += skill_lv * 30 + (sstatus->dex - tstatus->dex) / 2;
+					d += 1000 * ( skill_lv * 30 + ( sstatus->dex - tstatus->dex ) / 2 );
 			}else
 				d = skill->get_time(skill_id,skill_lv) + (sstatus->dex - tstatus->dex)*500;
 
