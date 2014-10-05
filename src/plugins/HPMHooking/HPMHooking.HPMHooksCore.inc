@@ -2001,10 +2001,8 @@ struct {
 	struct HPMHookPoint *HP_guild_get_alliance_count_post;
 	struct HPMHookPoint *HP_guild_castle_reconnect_sub_pre;
 	struct HPMHookPoint *HP_guild_castle_reconnect_sub_post;
-	struct HPMHookPoint *HP_gstorage_id2storage_pre;
-	struct HPMHookPoint *HP_gstorage_id2storage_post;
-	struct HPMHookPoint *HP_gstorage_id2storage2_pre;
-	struct HPMHookPoint *HP_gstorage_id2storage2_post;
+	struct HPMHookPoint *HP_gstorage_ensure_pre;
+	struct HPMHookPoint *HP_gstorage_ensure_post;
 	struct HPMHookPoint *HP_gstorage_init_pre;
 	struct HPMHookPoint *HP_gstorage_init_post;
 	struct HPMHookPoint *HP_gstorage_final_pre;
@@ -7040,10 +7038,8 @@ struct {
 	int HP_guild_get_alliance_count_post;
 	int HP_guild_castle_reconnect_sub_pre;
 	int HP_guild_castle_reconnect_sub_post;
-	int HP_gstorage_id2storage_pre;
-	int HP_gstorage_id2storage_post;
-	int HP_gstorage_id2storage2_pre;
-	int HP_gstorage_id2storage2_post;
+	int HP_gstorage_ensure_pre;
+	int HP_gstorage_ensure_post;
 	int HP_gstorage_init_pre;
 	int HP_gstorage_init_post;
 	int HP_gstorage_final_pre;

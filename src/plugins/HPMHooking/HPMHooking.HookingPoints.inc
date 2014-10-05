@@ -1014,8 +1014,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(guild->get_alliance_count, HP_guild_get_alliance_count) },
 	{ HP_POP(guild->castle_reconnect_sub, HP_guild_castle_reconnect_sub) },
 /* gstorage */
-	{ HP_POP(gstorage->id2storage, HP_gstorage_id2storage) },
-	{ HP_POP(gstorage->id2storage2, HP_gstorage_id2storage2) },
+	{ HP_POP(gstorage->ensure, HP_gstorage_ensure) },
 	{ HP_POP(gstorage->init, HP_gstorage_init) },
 	{ HP_POP(gstorage->final, HP_gstorage_final) },
 	{ HP_POP(gstorage->delete, HP_gstorage_delete) },
