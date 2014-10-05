@@ -1098,7 +1098,7 @@ void intif_parse_LoadGuildStorage(int fd)
 			return;
 		}
 	}
-	gstor=gstorage->id2storage(guild_id);
+	gstor=gstorage->ensure(guild_id);
 	if(!gstor) {
 		ShowWarning("intif_parse_LoadGuildStorage: error guild_id %d not exist\n",guild_id);
 		return;
@@ -2165,7 +2165,7 @@ void intif_parse_MessageToFD(int fd) {
  *------------------------------------------*/
 void intif_itembound_req(int char_id,int aid,int guild_id) {
 #ifdef GP_BOUND_ITEMS
-	struct guild_storage *gstor = gstorage->id2storage2(guild_id);
+	struct guild_storage *gstor = gstorage->id2storage(guild_id);
 	WFIFOHEAD(inter_fd,12);
 	WFIFOW(inter_fd,0) = 0x3056;
 	WFIFOL(inter_fd,2) = char_id;
@@ -2183,7 +2183,7 @@ void intif_parse_Itembound_ack(int fd) {
 	struct guild_storage *gstor;
 	int guild_id = RFIFOW(fd,6);
 
-	gstor = gstorage->id2storage2(guild_id);
+	gstor = gstorage->id2storage(guild_id);
 	if(gstor)
 		gstor->lock = 0; //Unlock now that operation is completed
 #endif

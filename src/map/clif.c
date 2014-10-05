@@ -8443,7 +8443,7 @@ void clif_refresh_storagewindow( struct map_session_data *sd ) {
 	// remain locked forever and nobody will be able to access it
 	if( sd->state.storage_flag == 2 ) {
 		struct guild_storage *gstor;
-		if( (gstor = gstorage->id2storage2(sd->status.guild_id)) == NULL) {
+		if( (gstor = gstorage->id2storage(sd->status.guild_id)) == NULL) {
 			// Shouldn't happen... The information should already be at the map-server
 			intif->request_guild_storage(sd->status.account_id,sd->status.guild_id);
 		} else {

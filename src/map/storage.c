@@ -351,7 +351,7 @@ DBData create_guildstorage(DBKey key, va_list args)
 	return DB->ptr2data(gs);
 }
 
-struct guild_storage *guild2storage(int guild_id)
+struct guild_storage *guild2storage_ensure(int guild_id)
 {
 	struct guild_storage *gs = NULL;
 	if(guild->search(guild_id) != NULL)
@@ -360,7 +360,7 @@ struct guild_storage *guild2storage(int guild_id)
 }
 
 //For just locating a storage without creating one. [Skotlex]
-struct guild_storage *guild2storage2(int guild_id) {
+struct guild_storage *guild2storage(int guild_id) {
 	return (struct guild_storage*)idb_get(gstorage->db,guild_id);
 }
 
@@ -393,7 +393,7 @@ int storage_guild_storageopen(struct map_session_data* sd)
 		return 1;
 	}
 
-	if((gstor = gstorage->id2storage2(sd->status.guild_id)) == NULL) {
+	if((gstor = gstorage->id2storage(sd->status.guild_id)) == NULL) {
 		intif->request_guild_storage(sd->status.account_id,sd->status.guild_id);
 		return 0;
 	}
@@ -511,7 +511,7 @@ int storage_guild_storageadd(struct map_session_data* sd, int index, int amount)
 	struct guild_storage *stor;
 
 	nullpo_ret(sd);
-	nullpo_ret(stor=gstorage->id2storage2(sd->status.guild_id));
+	nullpo_ret(stor=gstorage->id2storage(sd->status.guild_id));
 		
 	if( !stor->storage_status || stor->storage_amount > MAX_GUILD_STORAGE )
 		return 0;
@@ -674,7 +674,7 @@ int storage_guild_storagesaved(int guild_id)
 {
 	struct guild_storage *stor;
 
-	if((stor=gstorage->id2storage2(guild_id)) != NULL) {
+	if((stor=gstorage->id2storage(guild_id)) != NULL) {
 		if (stor->dirty && stor->storage_status == 0)
 		{	//Storage has been correctly saved.
 			stor->dirty = 0;
@@ -689,7 +689,7 @@ int storage_guild_storageclose(struct map_session_data* sd) {
 	struct guild_storage *stor;
 
 	nullpo_ret(sd);
-	nullpo_ret(stor=gstorage->id2storage2(sd->status.guild_id));
+	nullpo_ret(stor=gstorage->id2storage(sd->status.guild_id));
 
 	clif->storageclose(sd);
 	if (stor->storage_status) {
@@ -708,7 +708,7 @@ int storage_guild_storage_quit(struct map_session_data* sd, int flag) {
 	struct guild_storage *stor;
 
 	nullpo_ret(sd);
-	nullpo_ret(stor=gstorage->id2storage2(sd->status.guild_id));
+	nullpo_ret(stor=gstorage->id2storage(sd->status.guild_id));
 	
 	if(flag) {
 		//Only during a guild break flag is 1 (don't save storage)
@@ -765,8 +765,8 @@ void gstorage_defaults(void) {
 	gstorage->init = do_init_gstorage;
 	gstorage->final = do_final_gstorage;
 	/* */
+	gstorage->ensure = guild2storage_ensure;
 	gstorage->id2storage = guild2storage;
-	gstorage->id2storage2 = guild2storage2;
 	gstorage->delete = guild_storage_delete;
 	gstorage->open = storage_guild_storageopen;
 	gstorage->additem = guild_storage_additem;

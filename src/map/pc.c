@@ -9212,7 +9212,7 @@ int pc_checkitem(struct map_session_data *sd)
 		}
 		
 		if (sd->guild) {
-			struct guild_storage *guild_storage = gstorage->id2storage2(sd->guild->guild_id);
+			struct guild_storage *guild_storage = gstorage->id2storage(sd->guild->guild_id);
 			if (guild_storage) {
 				for( i = 0; i < MAX_GUILD_STORAGE; i++ ) {
 					id = guild_storage->items[i].nameid;
