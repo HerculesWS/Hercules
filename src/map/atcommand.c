@@ -5143,7 +5143,7 @@ ACMD(cleargstorage)
 		return false;
 	}
 	
-	guild_storage = gstorage->id2storage(sd->status.guild_id);
+	guild_storage = idb_get(gstorage->db,sd->status.guild_id);
 	if (guild_storage == NULL) {// Doesn't have opened @gstorage yet, so we skip the deletion since *shouldn't* have any item there.
 		return false;
 	}

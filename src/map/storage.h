@@ -35,7 +35,6 @@ struct guild_storage_interface {
 	struct DBMap* db; // int guild_id -> struct guild_storage*
 	/* */
 	struct guild_storage *(*ensure) (int guild_id);
-	struct guild_storage *(*id2storage) (int guild_id);
 	/* */
 	void (*init) (bool minimal);
 	void (*final) (void);

@@ -928,7 +928,7 @@ void guild_retrieveitembound(int char_id,int aid,int guild_id) {
 	if(sd){ //Character is online
 		pc->bound_clear(sd,IBT_GUILD);
 	} else { //Character is offline, ask char server to do the job
-		struct guild_storage *gstor = gstorage->id2storage(guild_id);
+		struct guild_storage *gstor = idb_get(gstorage->db,guild_id);
 		if(gstor && gstor->storage_status == 1) { //Someone is in guild storage, close them
 			struct s_mapiterator* iter = mapit_getallusers();
 			for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
