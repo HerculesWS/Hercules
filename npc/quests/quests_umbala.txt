@@ -459,12 +459,12 @@ um_in,44,71,2	script	Utan Shaman	4_F_UMOLDWOMAN,{
 		set event_umbala,7;
 		close;
 	case 7:
-		mes "[Putsuchiritan]";
+		mes "[Puchuchartan]";
 		mes "I don't know whether my talents";
 		mes "will be useful to you, but I'll";
 		mes "help you anyway.";
 		next;
-		mes "[Putsuchiritan]";
+		mes "[Puchuchartan]";
 		mes "I can create elemental essence from natural objects,";
 		mes "or, dismantle elemental stones into their component essences.";
 		mes "Which would you like to do?";
