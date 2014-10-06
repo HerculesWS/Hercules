@@ -726,6 +726,9 @@ struct autotrade_vending {
 	struct item list[MAX_VENDING];
 	struct s_vending vending[MAX_VENDING];
 	unsigned char vend_num;
+	/* HPM Custom Struct */
+	struct HPluginData **hdata;
+	unsigned int hdatac;
 };
 
 /*=====================================
@@ -1024,6 +1027,7 @@ struct pc_interface {
 	void (*autotrade_start) (struct map_session_data *sd);
 	void (*autotrade_prepare) (struct map_session_data *sd);
 	void (*autotrade_populate) (struct map_session_data *sd);
+	int (*autotrade_free) (DBKey key, DBData *data, va_list ap);
 };
 
 struct pc_interface *pc;

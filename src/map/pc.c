@@ -44,6 +44,7 @@
 #include "../common/cbasetypes.h"
 #include "../common/conf.h"
 #include "../common/core.h" // get_svn_revision()
+#include "../common/HPM.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h" // NAME_LENGTH, MAX_CARTS, NEW_CARTS
 #include "../common/nullpo.h"
@@ -10701,7 +10702,7 @@ void pc_autotrade_prepare(struct map_session_data *sd) {
  **/
 void pc_autotrade_populate(struct map_session_data *sd) {
 	struct autotrade_vending *data;
-	int i, j, k, cursor = 0;
+	int i, j, k, l, cursor = 0;
 
 	if( !(data = idb_get(pc->at_db,sd->status.char_id)) )
 		return;
@@ -10734,12 +10735,41 @@ void pc_autotrade_populate(struct map_session_data *sd) {
 
 	pc->autotrade_update(sd,PAUC_START);
 	
+	for(l = 0; l < data->hdatac; l++ ) {
+		if( data->hdata[l]->flag.free ) {
+			aFree(data->hdata[l]->data);
+		}
+		aFree(data->hdata[l]);
+	}
+	if( data->hdata )
+		aFree(data->hdata);
+	
 	idb_remove(pc->at_db, sd->status.char_id);
 }
+
+/**
+ * @see DBApply
+ */
+int pc_autotrade_free(DBKey key, DBData *data, va_list ap) {
+	struct autotrade_vending* at_v = DB->data2ptr(data);
+	int i;
+	for(i = 0; i < at_v->hdatac; i++ ) {
+		if( at_v->hdata[i]->flag.free ) {
+			aFree(at_v->hdata[i]->data);
+		}
+		aFree(at_v->hdata[i]);
+	}
+	if( at_v->hdata )
+		aFree(at_v->hdata);
+		
+	aFree(at_v);
+	return 0;
+}
+
 void do_final_pc(void) {
 	
 	db_destroy(pc->itemcd_db);
-	db_destroy(pc->at_db);
+	pc->at_db->destroy(pc->at_db,pc->autotrade_free);
 	
 	pcg->final();
 	
@@ -11096,4 +11126,5 @@ void pc_defaults(void) {
 	pc->autotrade_start = pc_autotrade_start;
 	pc->autotrade_prepare = pc_autotrade_prepare;
 	pc->autotrade_populate = pc_autotrade_populate;
+	pc->autotrade_free = pc_autotrade_free;
 }
