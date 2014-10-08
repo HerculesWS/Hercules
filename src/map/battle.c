@@ -2707,10 +2707,6 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			sc_start2(src,bl,SC_COMBOATTACK,100,GC_WEAPONBLOCKING,src->id,2000);
 			return 0;
 		}
-		if( sc->data[SC_HOVERING] && skill_id && (skill->get_inf(skill_id)&INF_GROUND_SKILL || skill_id == SR_WINDMILL) ) {
-			d->dmg_lv = ATK_BLOCK;
-			return 0;
-		}
 		if ((sce=sc->data[SC_AUTOGUARD]) && flag&BF_WEAPON && !(skill->get_nk(skill_id)&NK_NO_CARDFIX_ATK) && rnd()%100 < sce->val2) {
 			int delay;
 			struct block_list *d_bl = NULL;
@@ -2783,7 +2779,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			return 0;
 		}
 
-		if((sc->data[SC_HERMODE] || sc->data[SC_HOVERING]) && flag&BF_MAGIC)
+		if((sc->data[SC_HERMODE]) && flag&BF_MAGIC)
 			return 0;
 
 		if(sc->data[SC_NJ_TATAMIGAESHI] && (flag&(BF_MAGIC|BF_LONG)) == BF_LONG)

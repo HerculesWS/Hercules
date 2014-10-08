@@ -3412,7 +3412,7 @@ int skill_reveal_trap (struct block_list *bl, va_list ap) {
 int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag) {
 	struct map_session_data *sd = NULL;
 	struct status_data *tstatus;
-	struct status_change *sc;
+	struct status_change *sc, *tsc;
 
 	if (skill_id > 0 && !skill_lv) return 0;
 
@@ -3440,6 +3440,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 	}
 
 	sc = status->get_sc(src);
+	tsc = status->get_sc(bl);
 	if (sc && !sc->count)
 		sc = NULL; //Unneeded
 
@@ -3803,6 +3804,9 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 					sflag |= SD_LEVEL; // -1 will be used in packets instead of the skill level
 				if( (skill->area_temp[1] != bl->id && !(skill->get_inf2(skill_id)&INF2_NPC_SKILL)) || flag&SD_ANIMATION )
 					sflag |= SD_ANIMATION; // original target gets no animation (as well as all NPC skills)
+
+				if ( tsc && tsc->data[SC_HOVERING] && ( skill_id == SR_WINDMILL || skill_id == LG_MOONSLASHER ) )
+					break;
 
 				heal = skill->attack(skill->get_type(skill_id), src, src, bl, skill_id, skill_lv, tick, sflag);
 				if( skill_id == NPC_VAMPIRE_GIFT && heal > 0 ) {
@@ -11338,6 +11342,9 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 	if (sc && sc->data[SC_VACUUM_EXTREME] && map->getcell(bl->m, bl->x, bl->y, CELL_CHKLANDPROTECTOR))
 		status_change_end(bl, SC_VACUUM_EXTREME, INVALID_TIMER);
 
+	if ( sc && sc->data[SC_HOVERING] && ( sg->skill_id == SO_VACUUM_EXTREME || sg->skill_id == SO_ELECTRICWALK || sg->skill_id == SO_FIREWALK || sg->skill_id == WZ_QUAGMIRE ) )
+		return 0;
+
 	type = status->skill2sc(sg->skill_id);
 	sce = (sc && type != -1)?sc->data[type]:NULL;
 	skill_id = sg->skill_id; //In case the group is deleted, we need to return the correct skill id, still.
@@ -11558,9 +11565,6 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 	tsc = status->get_sc(bl);
 	ssc = status->get_sc(ss); // Status Effects for Unit caster.
 
-	if ( tsc && tsc->data[SC_HOVERING] )
-		return 0; //Under hovering characters are immune to trap and ground target skills.
-
 	// Maestro or Wanderer is unaffected by traps of trappers he or she charmed [SuperHulk]
 	if ( ssc && ssc->data[SC_SIREN] && ssc->data[SC_SIREN]->val2 == bl->id && (skill->get_inf2(sg->skill_id)&INF2_TRAP) )
 		return 0;
@@ -11568,6 +11572,15 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 	tstatus = status->get_status_data(bl);
 	type = status->skill2sc(sg->skill_id);
 	skill_id = sg->skill_id;
+
+	if ( tsc && tsc->data[SC_HOVERING] ) {
+		switch ( skill_id ) {
+		case HT_SKIDTRAP:	case HT_LANDMINE:		case HT_ANKLESNARE:		case HT_FLASHER:		case HT_SHOCKWAVE:
+		case HT_SANDMAN:	case HT_FREEZINGTRAP:	case HT_BLASTMINE:		case HT_CLAYMORETRAP:	case HW_GRAVITATION:
+		case SA_DELUGE:		case SA_VOLCANO:		case SA_VIOLENTGALE:	case NJ_SUITON:
+			return 0;
+		}
+	}
 
 	if (sg->interval == -1) {
 		switch (sg->unit_id) {

@@ -6876,7 +6876,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				)
 				return 0;
 		case SC_VACUUM_EXTREME:
-			if(sc->data[SC_HALLUCINATIONWALK] || sc->data[SC_HOVERING])
+			if(sc->data[SC_HALLUCINATIONWALK])
 				return 0;
 			break;
 		case SC_STONE:
