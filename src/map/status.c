@@ -4232,7 +4232,7 @@ unsigned short status_calc_str(struct block_list *bl, struct status_change *sc, 
 	if(sc->data[SC_STOMACHACHE])
 		str -= sc->data[SC_STOMACHACHE]->val1;
 	if(sc->data[SC_KYOUGAKU])
-		str -= sc->data[SC_KYOUGAKU]->val2;
+		str -= sc->data[SC_KYOUGAKU]->val3;
 	if(sc->data[SC_FULL_THROTTLE])
 		str += str * 20 / 100;
 
@@ -4287,7 +4287,7 @@ unsigned short status_calc_agi(struct block_list *bl, struct status_change *sc, 
 	if(sc->data[SC_STOMACHACHE])
 		agi -= sc->data[SC_STOMACHACHE]->val1;
 	if(sc->data[SC_KYOUGAKU])
-		agi -= sc->data[SC_KYOUGAKU]->val2;
+		agi -= sc->data[SC_KYOUGAKU]->val3;
 
 	if(sc->data[SC_MARSHOFABYSS])
 		agi -= agi * sc->data[SC_MARSHOFABYSS]->val2 / 100;
@@ -4335,7 +4335,7 @@ unsigned short status_calc_vit(struct block_list *bl, struct status_change *sc, 
 	if(sc->data[SC_STOMACHACHE])
 		vit -= sc->data[SC_STOMACHACHE]->val1;
 	if(sc->data[SC_KYOUGAKU])
-		vit -= sc->data[SC_KYOUGAKU]->val2;
+		vit -= sc->data[SC_KYOUGAKU]->val3;
 
 	if(sc->data[SC_NOEQUIPARMOR])
 		vit -= vit * sc->data[SC_NOEQUIPARMOR]->val2/100;
@@ -4393,7 +4393,7 @@ unsigned short status_calc_int(struct block_list *bl, struct status_change *sc, 
 	if(sc->data[SC_STOMACHACHE])
 		int_ -= sc->data[SC_STOMACHACHE]->val1;
 	if(sc->data[SC_KYOUGAKU])
-		int_ -= sc->data[SC_KYOUGAKU]->val2;
+		int_ -= sc->data[SC_KYOUGAKU]->val3;
 
 	if(bl->type != BL_PC){
 		if(sc->data[SC_NOEQUIPHELM])
@@ -4455,7 +4455,7 @@ unsigned short status_calc_dex(struct block_list *bl, struct status_change *sc, 
 	if(sc->data[SC_STOMACHACHE])
 		dex -= sc->data[SC_STOMACHACHE]->val1;
 	if(sc->data[SC_KYOUGAKU])
-		dex -= sc->data[SC_KYOUGAKU]->val2;
+		dex -= sc->data[SC_KYOUGAKU]->val3;
 
 	if(sc->data[SC_MARSHOFABYSS])
 		dex -= dex * sc->data[SC_MARSHOFABYSS]->val2 / 100;
@@ -4503,7 +4503,7 @@ unsigned short status_calc_luk(struct block_list *bl, struct status_change *sc, 
 	if(sc->data[SC_STOMACHACHE])
 		luk -= sc->data[SC_STOMACHACHE]->val1;
 	if(sc->data[SC_KYOUGAKU])
-		luk -= sc->data[SC_KYOUGAKU]->val2;
+		luk -= sc->data[SC_KYOUGAKU]->val3;
 	if(sc->data[SC_LAUDARAMUS])
 		luk += 4 + sc->data[SC_LAUDARAMUS]->val1;
 
@@ -6558,9 +6558,6 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 		break;
 	case SC_SIREN:
 		tick_def2 = (status->get_lv(bl) * 100) + ((bl->type == BL_PC)?((TBL_PC*)bl)->status.job_level : 0);
-		break;
-	case SC_KYOUGAKU:
-		tick_def2 = st->int_ * 50;
 		break;
 	case SC_NEEDLE_OF_PARALYZE:
 		tick_def2 = (st->vit + st->luk) * 50;
@@ -8910,9 +8907,13 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				val4 = tick / 10000;
 				tick_time = 10000; // [GodLesZ] tick time
 				break;
-			case SC_KYOUGAKU:
-				val2 = 2*val1 + rand()%(3 * val1);
-				clif->status_change(bl, SI_ACTIVE_MONSTER_TRANSFORM, 1, 0, 1002, 0, 0); // Poring in disguise
+			case SC_KYOUGAKU: {
+				int min = val1*2;
+				int max = val1*3;
+				val3 = rnd()%(max-min)+min;
+					val2 = val1;
+					val1 = 1002; // Monster ID
+				}
 				break;
 			case SC_KAGEMUSYA:
 				val3 = val1 * 2;
@@ -9059,9 +9060,6 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_KAAHI:
 				val4 = INVALID_TIMER;
 				break;
-			case SC_KYOUGAKU:
-				clif->status_change(bl, SI_ACTIVE_MONSTER_TRANSFORM, 1, 0, 1002, 0, 0); // Poring in disguise
-				break;
 		}
 	}
 
@@ -9182,6 +9180,9 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_WATER_BARRIER:
 			val_flag |= 1|2|4;
 			break;
+		case SC_KYOUGAKU:
+			val_flag |= 1;
+			break;
 		case SC_CASH_PLUSEXP:
 		case SC_CASH_PLUSONLYJOBEXP:
 		case SC_MONSTER_TRANSFORM:
@@ -9240,7 +9241,6 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_CURSEDCIRCLE_TARGET:
 		case SC_FEAR:
 		case SC_MEIKYOUSISUI:
-		case SC_KYOUGAKU:
 		case SC_NEEDLE_OF_PARALYZE:
 		case SC_DEATHBOUND:
 			unit->stop_walking(bl,1);
@@ -10132,9 +10132,6 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 					ssc->bs_counter--;
 				}
 			}
-			break;
-		case SC_KYOUGAKU:
-			clif->sc_end(&sd->bl,sd->bl.id,AREA,SI_ACTIVE_MONSTER_TRANSFORM);
 			break;
 		case SC_CLAIRVOYANCE:
 			calc_flag = SCB_ALL;/* required for overlapping */

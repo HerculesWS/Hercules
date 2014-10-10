@@ -9441,17 +9441,16 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 
 		case KO_KYOUGAKU:
-			{
-				int rate = max(5, (45 + 5 * skill_lv - status_get_int(bl) / 10));
-				if( sd && !map_flag_gvg2(src->m) ){
-					clif->skill_fail(sd, skill_id, USESKILL_FAIL_SIZE, 0);
-					break;
-				}
-				if( dstsd && tsc && !tsc->data[type] && rand()%100 < rate ){
-					clif->skill_nodamage(src, bl, skill_id, skill_lv,
-						sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv)));
-				}else if( sd )
-					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
+			if (!map_flag_vs(src->m) || !dstsd) {
+				if (sd) clif->skill_fail(sd, skill_id, USESKILL_FAIL_SIZE, 0);
+				break;
+			} else {
+				int time;
+				int rate = 45+ 5*skill_lv - status_get_int(bl)/10;
+				if (rate < 5) rate = 5;
+
+				time =  skill->get_time(skill_id, skill_lv) - 1000*status_get_int(bl)/20;
+				sc_start(src,bl, type, rate, skill_lv, time);
 			}
 			break;
 
