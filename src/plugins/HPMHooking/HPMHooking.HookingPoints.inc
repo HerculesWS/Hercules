@@ -1764,6 +1764,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(path->search_long, HP_path_search_long) },
 	{ HP_POP(path->check_distance, HP_path_check_distance) },
 	{ HP_POP(path->distance, HP_path_distance) },
+	{ HP_POP(path->check_distance_client, HP_path_check_distance_client) },
+	{ HP_POP(path->distance_client, HP_path_distance_client) },
 /* pcg */
 	{ HP_POP(pcg->init, HP_pcg_init) },
 	{ HP_POP(pcg->final, HP_pcg_final) },
@@ -2526,6 +2528,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(unit->warp, HP_unit_warp) },
 	{ HP_POP(unit->stop_walking, HP_unit_stop_walking) },
 	{ HP_POP(unit->skilluse_id, HP_unit_skilluse_id) },
+	{ HP_POP(unit->step_timer, HP_unit_step_timer) },
+	{ HP_POP(unit->stop_stepaction, HP_unit_stop_stepaction) },
 	{ HP_POP(unit->is_walking, HP_unit_is_walking) },
 	{ HP_POP(unit->can_move, HP_unit_can_move) },
 	{ HP_POP(unit->resume_running, HP_unit_resume_running) },

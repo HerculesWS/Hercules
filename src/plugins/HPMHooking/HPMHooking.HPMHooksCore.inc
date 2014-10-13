@@ -3471,6 +3471,10 @@ struct {
 	struct HPMHookPoint *HP_path_check_distance_post;
 	struct HPMHookPoint *HP_path_distance_pre;
 	struct HPMHookPoint *HP_path_distance_post;
+	struct HPMHookPoint *HP_path_check_distance_client_pre;
+	struct HPMHookPoint *HP_path_check_distance_client_post;
+	struct HPMHookPoint *HP_path_distance_client_pre;
+	struct HPMHookPoint *HP_path_distance_client_post;
 	struct HPMHookPoint *HP_pcg_init_pre;
 	struct HPMHookPoint *HP_pcg_init_post;
 	struct HPMHookPoint *HP_pcg_final_pre;
@@ -4973,6 +4977,10 @@ struct {
 	struct HPMHookPoint *HP_unit_stop_walking_post;
 	struct HPMHookPoint *HP_unit_skilluse_id_pre;
 	struct HPMHookPoint *HP_unit_skilluse_id_post;
+	struct HPMHookPoint *HP_unit_step_timer_pre;
+	struct HPMHookPoint *HP_unit_step_timer_post;
+	struct HPMHookPoint *HP_unit_stop_stepaction_pre;
+	struct HPMHookPoint *HP_unit_stop_stepaction_post;
 	struct HPMHookPoint *HP_unit_is_walking_pre;
 	struct HPMHookPoint *HP_unit_is_walking_post;
 	struct HPMHookPoint *HP_unit_can_move_pre;
@@ -8508,6 +8516,10 @@ struct {
 	int HP_path_check_distance_post;
 	int HP_path_distance_pre;
 	int HP_path_distance_post;
+	int HP_path_check_distance_client_pre;
+	int HP_path_check_distance_client_post;
+	int HP_path_distance_client_pre;
+	int HP_path_distance_client_post;
 	int HP_pcg_init_pre;
 	int HP_pcg_init_post;
 	int HP_pcg_final_pre;
@@ -10010,6 +10022,10 @@ struct {
 	int HP_unit_stop_walking_post;
 	int HP_unit_skilluse_id_pre;
 	int HP_unit_skilluse_id_post;
+	int HP_unit_step_timer_pre;
+	int HP_unit_step_timer_post;
+	int HP_unit_stop_stepaction_pre;
+	int HP_unit_stop_stepaction_post;
 	int HP_unit_is_walking_pre;
 	int HP_unit_is_walking_post;
 	int HP_unit_can_move_pre;
