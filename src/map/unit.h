@@ -30,6 +30,9 @@ struct unit_data {
 	int   attacktimer;
 	int   walktimer;
 	int   chaserange;
+	bool  stepaction; //Action should be executed on step [Playtester]
+	int   steptimer; //Timer that triggers the action [Playtester]
+	uint16 stepskill_id,stepskill_lv; //Remembers skill that should be casted on step [Playtester]
 	int64 attackabletime;
 	int64 canact_tick;
 	int64 canmove_tick;
@@ -93,6 +96,8 @@ struct unit_interface {
 	int (*warp) (struct block_list *bl, short m, short x, short y, clr_type type);
 	int (*stop_walking) (struct block_list *bl, int type);
 	int (*skilluse_id) (struct block_list *src, int target_id, uint16 skill_id, uint16 skill_lv);
+	int (*step_timer) (int tid, int64 tick, int id, intptr_t data);
+	void (*stop_stepaction) (struct block_list *bl);
 	int (*is_walking) (struct block_list *bl);
 	int (*can_move) (struct block_list *bl);
 	int (*resume_running) (int tid, int64 tick, int id, intptr_t data);
@@ -101,7 +106,7 @@ struct unit_interface {
 	int (*skilluse_pos) (struct block_list *src, short skill_x, short skill_y, uint16 skill_id, uint16 skill_lv);
 	int (*skilluse_pos2) (struct block_list *src, short skill_x, short skill_y, uint16 skill_id, uint16 skill_lv, int casttime, int castcancel);
 	int (*set_target) (struct unit_data *ud, int target_id);
-	int (*stop_attack) (struct block_list *bl);
+	void (*stop_attack) (struct block_list *bl);
 	int (*unattackable) (struct block_list *bl);
 	int (*attack) (struct block_list *src, int target_id, int continuous);
 	int (*cancel_combo) (struct block_list *bl);

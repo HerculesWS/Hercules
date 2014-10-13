@@ -6415,6 +6415,12 @@ bool battle_check_range(struct block_list *src, struct block_list *bl, int range
 	if( src->m != bl->m )
 		return false;
 
+#ifndef CIRCULAR_AREA
+	if( src->type == BL_PC ) { // Range for players' attacks and skills should always have a circular check. [Angezerus]
+		if ( !check_distance_client_bl(src, bl, range) )
+			return false;
+	} else
+#endif
 	if( !check_distance_bl(src, bl, range) )
 		return false;
 
@@ -6449,7 +6455,7 @@ static const struct battle_data {
 	{ "skill_add_range",                    &battle_config.skill_add_range,                 0,      0,      INT_MAX,        },
 	{ "skill_out_range_consume",            &battle_config.skill_out_range_consume,         1,      0,      1,              },
 	{ "skillrange_by_distance",             &battle_config.skillrange_by_distance,          ~BL_PC, BL_NUL, BL_ALL,         },
-	{ "skillrange_from_weapon",             &battle_config.use_weapon_skill_range,          ~BL_PC, BL_NUL, BL_ALL,         },
+	{ "skillrange_from_weapon",             &battle_config.use_weapon_skill_range,          BL_NUL, BL_NUL, BL_ALL,         },
 	{ "player_damage_delay_rate",           &battle_config.pc_damage_delay_rate,            100,    0,      INT_MAX,        },
 	{ "defunit_not_enemy",                  &battle_config.defnotenemy,                     0,      0,      1,              },
 	{ "gvg_traps_target_all",               &battle_config.vs_traps_bctall,                 BL_PC,  BL_NUL, BL_ALL,         },
@@ -6711,7 +6717,6 @@ static const struct battle_data {
 	{ "copyskill_restrict",                 &battle_config.copyskill_restrict,              2,      0,      2,              },
 	{ "berserk_cancels_buffs",              &battle_config.berserk_cancels_buffs,           0,      0,      1,              },
 	{ "monster_ai",                         &battle_config.mob_ai,                          0x000,  0x000,  0x77F,          },
-	{ "monster_chase_refresh",              &battle_config.mob_chase_refresh,               1,      0,      30,             },
 	{ "hom_setting",                        &battle_config.hom_setting,                     0xFFFF, 0x0000, 0xFFFF,         },
 	{ "dynamic_mobs",                       &battle_config.dynamic_mobs,                    1,      0,      1,              },
 	{ "mob_remove_damaged",                 &battle_config.mob_remove_damaged,              1,      0,      1,              },
@@ -6825,6 +6830,7 @@ static const struct battle_data {
 	{ "guild_castle_expulsion",				&battle_config.guild_castle_expulsion,			0,		0,		1,				},
 	{ "song_timer_reset",                   &battle_config.song_timer_reset,                0,      0,      1,              },
 	{ "snap_dodge",                         &battle_config.snap_dodge,                      0,      0,      1,              },
+	{ "monster_chase_refresh",              &battle_config.mob_chase_refresh,               1,      0,      30,             }
 };
 #ifndef STATS_OPT_OUT
 /**

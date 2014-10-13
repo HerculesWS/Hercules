@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "map.h"
 #include "../common/cbasetypes.h"
@@ -410,7 +411,7 @@ bool path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x
 
 
 //Distance functions, taken from http://www.flipcode.com/articles/article_fastdistance.shtml
-int check_distance(int dx, int dy, int distance)
+bool check_distance(int dx, int dy, int distance)
 {
 #ifdef CIRCULAR_AREA
 	//In this case, we just do a square comparison. Add 1 tile grace for diagonal range checks.
@@ -450,6 +451,42 @@ unsigned int distance(int dx, int dy)
 	return (dx<dy?dy:dx);
 #endif
 }
+
+/**
+ * The client uses a circular distance instead of the square one. The circular distance
+ * is only used by units sending their attack commands via the client (not monsters).
+ * @param dx: Horizontal distance
+ * @param dy: Vertical distance
+ * @param distance: Distance to check against
+ * @return Within distance(1); Not within distance(0);
+ */
+bool check_distance_client(int dx, int dy, int distance)
+{
+	if(distance < 0) distance = 0;
+
+	return (path->distance_client(dx,dy) <= distance);
+}
+
+/**
+ * The client uses a circular distance instead of the square one. The circular distance
+ * is only used by units sending their attack commands via the client (not monsters).
+ * @param dx: Horizontal distance
+ * @param dy: Vertical distance
+ * @return Circular distance
+ */
+int distance_client(int dx, int dy)
+{
+	double temp_dist = sqrt((double)(dx*dx + dy*dy));
+
+	//Bonus factor used by client
+	//This affects even horizontal/vertical lines so they are one cell longer than expected
+	temp_dist -= 0.0625;
+
+	if(temp_dist < 0) temp_dist = 0;
+
+	return ((int)temp_dist);
+}
+
 void path_defaults(void) {
 	path = &path_s;
 	
@@ -458,4 +495,6 @@ void path_defaults(void) {
 	path->search = path_search;
 	path->check_distance = check_distance;
 	path->distance = distance;
+	path->check_distance_client = check_distance_client;
+	path->distance_client = distance_client;
 }
