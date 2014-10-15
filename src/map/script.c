@@ -14499,7 +14499,7 @@ BUILDIN(replacestr)
 	}
 
 	if(script_hasdata(st, 6)) {
-		if (!script_isinttype(st, 5) || (count = script_getnum(st, 6) == 0)) {
+		if (!script_isinttype(st, 6) || (count = script_getnum(st, 6)) == 0) {
 			ShowError("script:replacestr: Invalid count value. Expected int.\n");
 			st->state = END;
 			return false;
