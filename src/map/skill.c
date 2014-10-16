@@ -3412,7 +3412,7 @@ int skill_reveal_trap (struct block_list *bl, va_list ap) {
 int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag) {
 	struct map_session_data *sd = NULL;
 	struct status_data *tstatus;
-	struct status_change *sc, *tsc;
+	struct status_change *sc;
 
 	if (skill_id > 0 && !skill_lv) return 0;
 
@@ -3440,7 +3440,6 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 	}
 
 	sc = status->get_sc(src);
-	tsc = status->get_sc(bl);
 	if (sc && !sc->count)
 		sc = NULL; //Unneeded
 
@@ -3800,6 +3799,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 				// skill->area_temp[1] holds the id of the original target
 				// skill->area_temp[2] counts how many targets have already been processed
 				int sflag = skill->area_temp[0] & 0xFFF, heal;
+				struct status_change *tsc = status->get_sc(bl);
 				if( flag&SD_LEVEL )
 					sflag |= SD_LEVEL; // -1 will be used in packets instead of the skill level
 				if( (skill->area_temp[1] != bl->id && !(skill->get_inf2(skill_id)&INF2_NPC_SKILL)) || flag&SD_ANIMATION )
