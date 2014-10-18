@@ -7658,29 +7658,6 @@ BUILDIN(getbrokenid)
 }
 
 /*==========================================
- * getbrokencount
- *------------------------------------------*/
-BUILDIN(getbrokencount)
-{
-	int i, counter = 0;
-	TBL_PC *sd;
-
-	sd = script->rid2sd(st);
-
-	if( sd == NULL )
-		return true;
-
-	for(i = 0; i < MAX_INVENTORY; i++) {
-		if(sd->status.inventory[i].attribute)
-			counter++;
-	}
-
-	script_pushint(st, counter);
-
-	return true;
-}
-
-/*==========================================
  * repair [Valaris]
  *------------------------------------------*/
 BUILDIN(repair)
@@ -8681,7 +8658,7 @@ BUILDIN(checkriding)
 	if( sd == NULL )
 		return true;// no player attached, report source
 
-	if( pc_isriding(sd) )
+	if( pc_isriding(sd) || pc_isridingwug(sd) || pc_isridingdragon(sd) )
 		script_pushint(st, 1);
 	else
 		script_pushint(st, 0);
@@ -8700,17 +8677,11 @@ BUILDIN(setriding)
 	TBL_PC* sd;
 
 	sd = script->rid2sd(st);
-
 	if( sd == NULL )
 		return true;// no player attached, report source
 
 	if( script_hasdata(st,2) )
 		flag = script_getnum(st,2);
-
-	// Color variants for Rune Knight dragon mounts.
-	if( (sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT )
-		flag = (flag == 1 ? OPTION_DRAGON1 : flag == 2 ? OPTION_DRAGON2 : flag == 3 ? OPTION_DRAGON3 : flag == 4 ? OPTION_DRAGON4 : flag == 5 ? OPTION_DRAGON5 : 0);
-
 	pc->setriding(sd, flag);
 
 	return true;
@@ -16310,57 +16281,21 @@ BUILDIN(setquest) {
 
 BUILDIN(erasequest) {
 	struct map_session_data *sd = script->rid2sd(st);
-	int quest_id;
 
 	if( sd == NULL )
 		return false;
 
-	if(script_hasdata(st, 3))
-	{
-		if(script_getnum(st, 3) < script_getnum(st, 2))
-		{
-			ShowError("buildin_erasequest: The second quest id must be greater than the id of the first.\n");
-			return false;
-		}
-
-		for(quest_id = script_getnum(st, 2); quest_id < script_getnum(st, 3); quest_id++)
-		{
-			quest->delete(sd, quest_id);
-		}
-	}
-	else
-	{
-		quest->delete(sd, script_getnum(st, 2));
-	}
-
+	quest->delete(sd, script_getnum(st, 2));
 	return true;
 }
 
 BUILDIN(completequest) {
 	struct map_session_data *sd = script->rid2sd(st);
-	int quest_id;
 
 	if( sd == NULL )
 		return false;
 
-	if(script_hasdata(st, 3))
-	{
-		if(script_getnum(st, 3) < script_getnum(st, 2))
-		{
-			ShowError("buildin_completequest: The second quest id must be greater than the id of the first.\n");
-			return false;
-		}
-
-		for(quest_id = script_getnum(st, 2); quest_id < script_getnum(st, 3); quest_id++)
-		{
-			quest->update_status(sd, quest_id, Q_COMPLETE);
-		}
-	}
-	else
-	{
-		quest->update_status(sd, script_getnum(st, 2), Q_COMPLETE);
-	}
-
+	quest->update_status(sd, script_getnum(st, 2), Q_COMPLETE);
 	return true;
 }
 
@@ -16374,8 +16309,6 @@ BUILDIN(changequest) {
 	return true;
 }
 
-// Deprecated
-// Please use questprogress instead.
 BUILDIN(checkquest) {
 	struct map_session_data *sd = script->rid2sd(st);
 	enum quest_check_type type = HAVEQUEST;
@@ -16387,33 +16320,6 @@ BUILDIN(checkquest) {
 		type = (enum quest_check_type)script_getnum(st, 3);
 
 	script_pushint(st, quest->check(sd, script_getnum(st, 2), type));
-
-	return true;
-}
-
-BUILDIN(questprogress) {
-	struct map_session_data *sd = script->rid2sd(st);
-	enum quest_check_type type = HAVEQUEST;
-	int quest_progress = 0;
-
-	if( sd == NULL )
-		return false;
-
-	if( script_hasdata(st, 3) )
-		type = (enum quest_check_type)script_getnum(st, 3);
-
-	quest_progress = quest->check(sd, script_getnum(st, 2), type);
-
-	// "Fix" returned quest state value to make more sense.
-	// 0 = Not Started, 1 = In Progress, 2 = Completed.
-	if(quest_progress == -1)
-		quest_progress = 0;
-	else if(quest_progress == 0 || quest_progress == 1)
-		quest_progress = 1;
-	else
-		quest_progress = 2;
-
-	script_pushint(st, quest_progress);
 
 	return true;
 }
@@ -17398,7 +17304,6 @@ BUILDIN(setmounting) {
 	}
 	return true;
 }
-
 /**
  * Retrieves quantity of arguments provided to callfunc/callsub.
  * getargcount() -> amount of arguments received in a function
@@ -18939,7 +18844,6 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getequipid,"i"),
 		BUILDIN_DEF(getequipname,"i"),
 		BUILDIN_DEF(getbrokenid,"i"), // [Valaris]
-		BUILDIN_DEF(getbrokencount,""),
 		BUILDIN_DEF(repair,"i"), // [Valaris]
 		BUILDIN_DEF(repairall,""),
 		BUILDIN_DEF(getequipisequiped,"i"),
@@ -19337,10 +19241,9 @@ void script_parse_builtin(void) {
 		//Quest Log System [Inkfish]
 		BUILDIN_DEF(questinfo, "ii??"),
 		BUILDIN_DEF(setquest, "i"),
-		BUILDIN_DEF(erasequest, "i?"),
-		BUILDIN_DEF(completequest, "i?"),
+		BUILDIN_DEF(erasequest, "i"),
+		BUILDIN_DEF(completequest, "i"),
 		BUILDIN_DEF(checkquest, "i?"),
-		BUILDIN_DEF(questprogress, "i?"),
 		BUILDIN_DEF(changequest, "ii"),
 		BUILDIN_DEF(showevent, "i?"),
 
