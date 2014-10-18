@@ -526,7 +526,7 @@ int script_add_str(const char* p)
 		}
 	}
 	if( existingentry ) {
-		DeprecationWarning2("script_add_str", p, existingentry, script->parser_current_file); // TODO
+		DeprecationCaseWarning2("script_add_str", p, existingentry, script->parser_current_file); // TODO
 	}
 #endif // ENABLE_CASE_CHECK
 

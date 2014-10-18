@@ -26,9 +26,9 @@ struct eri;
 // TODO: Remove temporary code
 #define ENABLE_CASE_CHECK
 #define get_script_source(source) ((source) ? (source) : "Unknown (Possibly source or variables stored in database")
-#define DeprecationWarning(func, bad, good, file, line) ShowError("%s: use of deprecated keyword '%s' (use '%s' instead) in file '%s', line '%d'.\n", (func), (bad), (good), get_script_source(file), (line));
-#define DeprecationWarning2(func, bad, good, where) ShowError("%s: detected possible use of wrong case in a script. Found '%s', probably meant to be '%s' (in '%s').\n", (func), (bad), (good), get_script_source(where));
-#define disp_deprecation_message(func, good, p) disp_warning_message(func": use of deprecated keyword (use '"good"' instead).", (p));
+#define DeprecationCaseWarning(func, bad, good, file, line) ShowError("%s: use of deprecated keyword '%s' (use '%s' instead) in file '%s', line '%d'.\n", (func), (bad), (good), get_script_source(file), (line))
+#define DeprecationCaseWarning2(func, bad, good, where) ShowError("%s: detected possible use of wrong case in a script. Found '%s', probably meant to be '%s' (in '%s').\n", (func), (bad), (good), get_script_source(where))
+#define disp_deprecation_message(func, good, p) disp_warning_message(func": use of deprecated keyword (use '"good"' instead).", (p))
 
 #define NUM_WHISPER_VAR 10
 
