@@ -643,7 +643,7 @@ void initChangeTables(void) {
 	set_sc( SR_RAISINGDRAGON         , SC_RAISINGDRAGON      , SI_RAISINGDRAGON         , SCB_REGEN|SCB_MAXHP|SCB_MAXSP );
 	set_sc( SR_GENTLETOUCH_ENERGYGAIN, SC_GENTLETOUCH_ENERGYGAIN      , SI_GENTLETOUCH_ENERGYGAIN, SCB_NONE );
 	set_sc( SR_GENTLETOUCH_CHANGE    , SC_GENTLETOUCH_CHANGE          , SI_GENTLETOUCH_CHANGE    , SCB_ASPD|SCB_MDEF|SCB_MAXHP );
-	set_sc( SR_GENTLETOUCH_REVITALIZE, SC_GENTLETOUCH_REVITALIZE      , SI_GENTLETOUCH_REVITALIZE, SCB_MAXHP|SCB_REGEN );
+	set_sc( SR_GENTLETOUCH_REVITALIZE, SC_GENTLETOUCH_REVITALIZE      , SI_GENTLETOUCH_REVITALIZE, SCB_MAXHP|SCB_DEF2|SCB_REGEN );
 	set_sc( SR_FLASHCOMBO            , SC_FLASHCOMBO                  , SI_FLASHCOMBO            , SCB_WATK );
 	/**
 	* Wanderer / Minstrel
@@ -3603,8 +3603,7 @@ void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, str
 			regen->flag&=~sce->val4; //Remove regen as specified by val4
 	}
 	if(sc->data[SC_GENTLETOUCH_REVITALIZE]) {
-		regen->hp = cap_value(regen->hp*sc->data[SC_GENTLETOUCH_REVITALIZE]->val3/100, 1, SHRT_MAX);
-		regen->state.walk= 1;
+		regen->hp += regen->hp * ( 30 * sc->data[SC_GENTLETOUCH_REVITALIZE]->val1 + 50 ) / 100;
 	}
 	if ((sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 1) //if insignia lvl 1
 		|| (sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 1)
@@ -4955,8 +4954,6 @@ defType status_calc_def(struct block_list *bl, struct status_change *sc, int def
 			def -= def * 50 / 100;
 		if( sc->data[SC_NEUTRALBARRIER] )
 			def += def * (10 + 5*sc->data[SC_NEUTRALBARRIER]->val1) / 100;
-		if( sc && sc->data[SC_GENTLETOUCH_REVITALIZE] && sc->data[SC_GENTLETOUCH_REVITALIZE]->val4 )
-			def += 2 * sc->data[SC_GENTLETOUCH_REVITALIZE]->val4;
 		if( sc->data[SC_FORCEOFVANGUARD] )
 			def += def * 2 * sc->data[SC_FORCEOFVANGUARD]->val1 / 100;
 		if(sc->data[SC_DEFSET])
@@ -5060,6 +5057,8 @@ signed short status_calc_def2(struct block_list *bl, struct status_change *sc, i
 #endif
 		if( sc && sc->data[SC_CAMOUFLAGE] )
 			def2 -= def2 * 5 * (10-sc->data[SC_CAMOUFLAGE]->val4) / 100;
+		if(sc->data[SC_GENTLETOUCH_REVITALIZE])
+			def2 += sc->data[SC_GENTLETOUCH_REVITALIZE]->val2;
 		if(sc->data[SC_DEFSET])
 			return sc->data[SC_DEFSET]->val1;
 #ifdef RENEWAL
@@ -8789,12 +8788,10 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			}
 				break;
 			case SC_GENTLETOUCH_REVITALIZE:
-			{// take note there is no vit,aspd,speed increase as skill desc says. [malufett]
-				struct block_list * src2;
-				val3 = val1 * 30 + 150; // Natural HP recovery increase: [(Skill Level x 30) + 50] %
-				if( (src2 = map->id2bl(val2)) ) // the stat def is not shown in the status window and it is process differently
-					val4 = ( status_get_vit(src2)/4 ) * val1; // STAT DEF increase: [(Caster VIT / 4) x Skill Level]
-			}
+				if(val2 < 0)
+					val2 = 0;
+				else
+					val2 = val2 / 4 * val1; // STAT DEF increase: [(Caster VIT / 4) x Skill Level]
 				break;
 			case SC_PYROTECHNIC_OPTION:
 				val2 = 60;
