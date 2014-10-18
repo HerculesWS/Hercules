@@ -29,24 +29,22 @@ prontera,146,92,4	script	Twin Towers#tt1::Twin-Towers	TW_TOWER,{
 	mes "For this reason, we are here at your service with our special magic.";
 	mes "Kindly let us know.";
 	next;
-	menu "I shall accept your offer.",YES,"I'll ask for your service next time.",NO;
-
-	NO:
-	mes "[Twin Towers]";
-	mes "Er, what a pity. Traveling by yourself is still the best evidence of adventure.";
-	mes "Isn't this proving that you are still young?";
-	mes "We respect brave hearts like this";
-	next;
-	mes "[Twin Towers]";
-	mes "There are good and bad times in life, moreover, adventure isn't an easy task in the first place.";
-	mes "Isn't this true?";
-	mes "Feel free to come to us when you have time, we will always be there to serve you.";
-	next;
-	mes "[Twin Towers]";
-	mes "Forget all your troubles, and create a splendid legend in this wonderful world.";
-	mes "This is such a wonderful world, and you'll always be a great adventurer!";
-	close;
-	YES:
+	if (select("I shall accept your offer.","I'll ask for your service next time.") != 1) {
+		mes "[Twin Towers]";
+		mes "Er, what a pity. Traveling by yourself is still the best evidence of adventure.";
+		mes "Isn't this proving that you are still young?";
+		mes "We respect brave hearts like this";
+		next;
+		mes "[Twin Towers]";
+		mes "There are good and bad times in life, moreover, adventure isn't an easy task in the first place.";
+		mes "Isn't this true?";
+		mes "Feel free to come to us when you have time, we will always be there to serve you.";
+		next;
+		mes "[Twin Towers]";
+		mes "Forget all your troubles, and create a splendid legend in this wonderful world.";
+		mes "This is such a wonderful world, and you'll always be a great adventurer!";
+		close;
+	}
 	mes "[Twin Towers]";
 	mes "The flaming passion of an adventurer,";
 	mes "The desire to explore the unknown realms,";
@@ -60,28 +58,29 @@ prontera,146,92,4	script	Twin Towers#tt1::Twin-Towers	TW_TOWER,{
 	mes "[Twin Towers]";
 	mes "Come on! Where do you wish to go?";
 	mes "Just let us know you desired destination and we will send your there!";
-	menu "Hidden Temple", HiddenTemple,"Orc Dungeon",OrcDungeon,"Ant Hell",AntHell,"Mjolnir Waste Pit",MjolnirWastePit,"Sphinx",Sphinx,"Glast Heim",GlastHeim,"Comodo",Comodo;
-		HiddenTemple:
-			warp "prt_fild01",136,368;
-			close;
-		OrcDungeon:
-			warp "gef_fild10",67,334;
-			close;
-		AntHell:
-			warp "moc_fild04",210,329;
-			close;
-		MjolnirWastePit:
-			warp "mjolnir_02",79,361;
-			close;
-		Sphinx:
-			warp "moc_fild19",105,99;
-			close;
-		GlastHeim:
-			warp "gef_fild06",45,304;
-			close;
-		Comodo:
-			warp "cmd_fild01",30,317;
-			close;
+	switch (select("Hidden Temple","Orc Dungeon","Ant Hell","Mjolnir Waste Pit","Sphinx","Glast Heim","Comodo")) {
+	case 1: // HiddenTemple
+		warp "prt_fild01",136,368;
+		close;
+	case 2: // OrcDungeon
+		warp "gef_fild10",67,334;
+		close;
+	case 3: // AntHell
+		warp "moc_fild04",210,329;
+		close;
+	case 4: // MjolnirWastePit
+		warp "mjolnir_02",79,361;
+		close;
+	case 5: // Sphinx
+		warp "moc_fild19",105,99;
+		close;
+	case 6: // GlastHeim
+		warp "gef_fild06",45,304;
+		close;
+	case 7: // Comodo
+		warp "cmd_fild01",30,317;
+		close;
+	}
 }
 
 morocc,160,97,4	duplicate(Twin-Towers)	Twin Towers#tt2	TW_TOWER

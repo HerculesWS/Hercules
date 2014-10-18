@@ -1026,7 +1026,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 			mes "I feel so sad for disappointed";
 			mes "kids who didn't hear the carols.";
 			next;
-			menu "...can I help you?",-;
+			select("...can I help you?");
 			mes "[Oholy]";
 			mes "Good gracious! Are you for real?";
 			mes "Oh? Shee... Can you hear it?";
