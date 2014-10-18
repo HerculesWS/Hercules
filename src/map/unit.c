@@ -250,6 +250,19 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 	if(map->getcell(bl->m,x+dx,y+dy,CELL_CHKNOPASS))
 		return unit->walktoxy_sub(bl);
 
+	//Monsters can only leave icewalls to the west and south
+	//But if movement fails more than icewall_walk_block times, they can ignore this rule
+	if(md && md->walktoxy_fail_count < battle_config.icewall_walk_block && map->getcell(bl->m,x,y,CELL_CHKICEWALL) && (dx > 0 || dy > 0)) {
+		//Needs to be done here so that rudeattack skills are invoked
+		md->walktoxy_fail_count++;
+		clif->fixpos(bl);
+		mob->unlocktarget(md, tick);
+		//Use idle skill at this point
+		if (!(++ud->walk_count%WALK_SKILL_INTERVAL))
+			mob->skill_use(md, tick, -1);
+		return 0;
+	}
+
 	//Refresh view for all those we lose sight
 	map->foreachinmovearea(clif->outsight, bl, AREA_SIZE, dx, dy, sd?BL_ALL:BL_PC, bl);
 
@@ -300,6 +313,8 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 				sd->hd->masterteleport_timer = 0;
 		}
 	} else if (md) {
+		//Movement was successful, reset walktoxy_fail_count
+		md->walktoxy_fail_count = 0;
 		if( map->getcell(bl->m,x,y,CELL_CHKNPC) ) {
 			if( npc->touch_areanpc2(md) ) return 0; // Warped
 		} else
@@ -2010,8 +2025,9 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick) {
 	sstatus = status->get_status_data(src);
 	range = sstatus->rhw.range;
 
-	if( unit->is_walking(target) )
-		range++; //Extra range when chasing
+	if( unit->is_walking(target) && (target->type == BL_PC || !map->getcell(target->m,target->x,target->y,CELL_CHKICEWALL)) )
+		range++; // Extra range when chasing (does not apply to mobs locked in an icewall)
+
 	if(sd && !check_distance_client_bl(src,target,range)) {
 		// Player tries to attack but target is too far, notify client
 		clif->movetoattack(sd,target);

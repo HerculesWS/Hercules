@@ -452,6 +452,7 @@ struct Battle_Config {
 	int mob_size_influence; // Enable modifications on earned experience, drop rates and monster status depending on monster size. [mkbu95]
 	int bowling_bash_area;
 	int mob_chase_refresh; //How often a monster should refresh its chase [Playtester]
+	int icewall_walk_block; //How long a monster should stay trapped in icewall [Playtester]
 
 	/** Hercules **/
 	int skill_trap_type;

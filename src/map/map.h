@@ -658,13 +658,7 @@ struct map_data {
 	int jexp;	// map experience multiplicator
 	int bexp;	// map experience multiplicator
 	int nocommand; //Blocks @/# commands for non-gms. [Skotlex]
-	/**
-	* Ice wall reference counter for bugreport:3574
-	* - since there are a thousand mobs out there in a lot of maps checking on,
-	* - every targeting for icewall on attack path would just be a waste, so,
-	* - this counter allows icewall checking be only run when there is a actual ice wall on the map
-	**/
-	int icewall_num;
+
 	// Instance Variables
 	int instance_id;
 	int instance_src_map;

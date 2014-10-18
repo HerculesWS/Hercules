@@ -1984,7 +1984,6 @@ struct skill_interface {
 	int (*frostjoke_scream) (struct block_list *bl, va_list ap);
 	int (*greed) (struct block_list *bl, va_list ap);
 	int (*destroy_trap) ( struct block_list *bl, va_list ap );
-	int (*icewall_block) (struct block_list *bl,va_list ap);
 	struct skill_unit_group_tickset *(*unitgrouptickset_search) (struct block_list *bl, struct skill_unit_group *group, int64 tick);
 	bool (*dance_switch) (struct skill_unit* su, int flag);
 	int (*check_condition_char_sub) (struct block_list *bl, va_list ap);

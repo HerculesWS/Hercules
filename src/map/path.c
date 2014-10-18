@@ -129,9 +129,6 @@ bool path_search_long(struct shootpath_data *spd,int16 m,int16 x0,int16 y0,int16
 	spd->x[0] = x0;
 	spd->y[0] = y0;
 
-	if (md->getcellp(md,x1,y1,cell))
-		return false;
-
 	if (dx > abs(dy)) {
 		weight = dx;
 		spd->ry = 1;
@@ -142,8 +139,6 @@ bool path_search_long(struct shootpath_data *spd,int16 m,int16 x0,int16 y0,int16
 
 	while (x0 != x1 || y0 != y1)
 	{
-		if (md->getcellp(md,x0,y0,cell))
-			return false;
 		wx += dx;
 		wy += dy;
 		if (wx >= weight) {
@@ -163,6 +158,8 @@ bool path_search_long(struct shootpath_data *spd,int16 m,int16 x0,int16 y0,int16
 			spd->y[spd->len] = y0;
 			spd->len++;
 		}
+		if (md->getcellp(md,x0,y0,cell))
+			return false;
 	}
 
 	return true;

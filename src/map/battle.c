@@ -6830,7 +6830,8 @@ static const struct battle_data {
 	{ "guild_castle_expulsion",				&battle_config.guild_castle_expulsion,			0,		0,		1,				},
 	{ "song_timer_reset",                   &battle_config.song_timer_reset,                0,      0,      1,              },
 	{ "snap_dodge",                         &battle_config.snap_dodge,                      0,      0,      1,              },
-	{ "monster_chase_refresh",              &battle_config.mob_chase_refresh,               1,      0,      30,             }
+	{ "monster_chase_refresh",              &battle_config.mob_chase_refresh,               1,      0,      30,             },
+	{ "icewall_walk_block",                 &battle_config.icewall_walk_block,              75,     0,      255,            }
 };
 #ifndef STATS_OPT_OUT
 /**

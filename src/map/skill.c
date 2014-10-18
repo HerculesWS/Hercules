@@ -10782,28 +10782,6 @@ bool skill_dance_switch(struct skill_unit* su, int flag) {
 
 	return true;
 }
-/**
- * Upon Ice Wall cast it checks all nearby mobs to find any who may be blocked by the IW
- **/
-int skill_icewall_block(struct block_list *bl,va_list ap) {
-	struct block_list *target = NULL;
-	struct mob_data *md = ((TBL_MOB*)bl);
-
-	nullpo_ret(bl);
-	nullpo_ret(md);
-	if( !md->target_id || ( target = map->id2bl(md->target_id) ) == NULL )
-		return 0;
-
-	if( path->search_long(NULL,bl->m,bl->x,bl->y,target->x,target->y,CELL_CHKICEWALL) )
-		return 0;
-
-	if( !check_distance_bl(bl, target, status_get_range(bl) ) ) {
-		mob->unlocktarget(md,timer->gettick());
-		mob_stop_walking(md,1);
-	}
-
-	return 0;
-}
 /*==========================================
  * Initializes and sets a ground skill.
  * flag&1 is used to determine when the skill 'morphs' (Warp portal becomes active, or Fire Pillar becomes active)
@@ -11303,9 +11281,6 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 
 	//success, unit created.
 	switch( skill_id ) {
-		case WZ_ICEWALL:
-			map->foreachinrange(skill->icewall_block, src, AREA_SIZE, BL_MOB);
-			break;
 		case NJ_TATAMIGAESHI: //Store number of tiles.
 			group->val1 = group->alive_count;
 			break;
@@ -15599,7 +15574,6 @@ struct skill_unit *skill_initunit (struct skill_unit_group *group, int idx, int 
 			map->setgatcell(su->bl.m,su->bl.x,su->bl.y,5);
 			clif->changemapcell(0,su->bl.m,su->bl.x,su->bl.y,5,AREA);
 			skill->unitsetmapcell(su,WZ_ICEWALL,group->skill_lv,CELL_ICEWALL,true);
-			map->list[su->bl.m].icewall_num++;
 			break;
 		case SA_LANDPROTECTOR:
 			skill->unitsetmapcell(su,SA_LANDPROTECTOR,group->skill_lv,CELL_LANDPROTECTOR,true);
@@ -15651,7 +15625,6 @@ int skill_delunit (struct skill_unit* su) {
 			map->setgatcell(su->bl.m,su->bl.x,su->bl.y,su->val2);
 			clif->changemapcell(0,su->bl.m,su->bl.x,su->bl.y,su->val2,ALL_SAMEMAP); // hack to avoid clientside cell bug
 			skill->unitsetmapcell(su,WZ_ICEWALL,group->skill_lv,CELL_ICEWALL,false);
-			map->list[su->bl.m].icewall_num--;
 			// AS_CLOAKING in low levels requires a wall to be cast, thus it needs to be
 			// checked again when a wall disapears! issue:8182 [Panikon]
 			map->foreachinarea(skill->check_cloaking_end, su->bl.m,
@@ -18803,7 +18776,6 @@ void skill_defaults(void) {
 	skill->frostjoke_scream = skill_frostjoke_scream;
 	skill->greed = skill_greed;
 	skill->destroy_trap = skill_destroy_trap;
-	skill->icewall_block = skill_icewall_block;
 	skill->unitgrouptickset_search = skill_unitgrouptickset_search;
 	skill->dance_switch = skill_dance_switch;
 	skill->check_condition_char_sub = skill_check_condition_char_sub;
