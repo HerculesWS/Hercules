@@ -4567,8 +4567,6 @@ struct {
 	struct HPMHookPoint *HP_skill_greed_post;
 	struct HPMHookPoint *HP_skill_destroy_trap_pre;
 	struct HPMHookPoint *HP_skill_destroy_trap_post;
-	struct HPMHookPoint *HP_skill_icewall_block_pre;
-	struct HPMHookPoint *HP_skill_icewall_block_post;
 	struct HPMHookPoint *HP_skill_unitgrouptickset_search_pre;
 	struct HPMHookPoint *HP_skill_unitgrouptickset_search_post;
 	struct HPMHookPoint *HP_skill_dance_switch_pre;
@@ -9612,8 +9610,6 @@ struct {
 	int HP_skill_greed_post;
 	int HP_skill_destroy_trap_pre;
 	int HP_skill_destroy_trap_post;
-	int HP_skill_icewall_block_pre;
-	int HP_skill_icewall_block_post;
 	int HP_skill_unitgrouptickset_search_pre;
 	int HP_skill_unitgrouptickset_search_post;
 	int HP_skill_dance_switch_pre;

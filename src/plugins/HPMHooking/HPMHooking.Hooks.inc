@@ -61384,39 +61384,6 @@ int HP_skill_destroy_trap(struct block_list *bl, va_list ap) {
 	}
 	return retVal___;
 }
-int HP_skill_icewall_block(struct block_list *bl, va_list ap) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if( HPMHooks.count.HP_skill_icewall_block_pre ) {
-		int (*preHookFunc) (struct block_list *bl, va_list ap);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_icewall_block_pre; hIndex++ ) {
-			va_list ap___copy; va_copy(ap___copy, ap);
-			preHookFunc = HPMHooks.list.HP_skill_icewall_block_pre[hIndex].func;
-			retVal___ = preHookFunc(bl, ap___copy);
-			va_end(ap___copy);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		va_list ap___copy; va_copy(ap___copy, ap);
-		retVal___ = HPMHooks.source.skill.icewall_block(bl, ap___copy);
-		va_end(ap___copy);
-	}
-	if( HPMHooks.count.HP_skill_icewall_block_post ) {
-		int (*postHookFunc) (int retVal___, struct block_list *bl, va_list ap);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_icewall_block_post; hIndex++ ) {
-			va_list ap___copy; va_copy(ap___copy, ap);
-			postHookFunc = HPMHooks.list.HP_skill_icewall_block_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, bl, ap___copy);
-			va_end(ap___copy);
-		}
-	}
-	return retVal___;
-}
 struct skill_unit_group_tickset* HP_skill_unitgrouptickset_search(struct block_list *bl, struct skill_unit_group *group, int64 tick) {
 	int hIndex = 0;
 	struct skill_unit_group_tickset* retVal___ = NULL;

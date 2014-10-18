@@ -2319,7 +2319,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->frostjoke_scream, HP_skill_frostjoke_scream) },
 	{ HP_POP(skill->greed, HP_skill_greed) },
 	{ HP_POP(skill->destroy_trap, HP_skill_destroy_trap) },
-	{ HP_POP(skill->icewall_block, HP_skill_icewall_block) },
 	{ HP_POP(skill->unitgrouptickset_search, HP_skill_unitgrouptickset_search) },
 	{ HP_POP(skill->dance_switch, HP_skill_dance_switch) },
 	{ HP_POP(skill->check_condition_char_sub, HP_skill_check_condition_char_sub) },
