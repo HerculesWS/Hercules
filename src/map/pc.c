@@ -8163,11 +8163,47 @@ int pc_setfalcon(TBL_PC* sd, int flag)
  *------------------------------------------*/
 int pc_setriding(TBL_PC* sd, int flag)
 {
-	if( flag ){
-		if( pc->checkskill(sd,KN_RIDING) > 0 ) // add peco
-			pc->setoption(sd, sd->sc.option|OPTION_RIDING);
-	} else if( pc_isriding(sd) ){
+	if( flag )
+	{
+		// Rune Knight (Dragon)
+		if( (sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT ) {
+			if( pc->checkskill(sd, RK_DRAGONTRAINING) )
+				pc->setoption(sd, sd->sc.option|flag);
+		}
+		// Ranger (Warg)
+		else if( (sd->class_&MAPID_THIRDMASK) == MAPID_RANGER ) {
+			if( pc->checkskill(sd, RA_WUGRIDER) )
+				pc->setoption(sd,sd->sc.option|OPTION_WUGRIDER);
+		}
+		// Mechanic (Mado Gear)
+		else if( (sd->class_&MAPID_THIRDMASK) == MAPID_MECHANIC ) {
+			if( pc->checkskill(sd, NC_MADOLICENCE) )
+				pc->setoption(sd, sd->sc.option|OPTION_MADOGEAR);
+		}
+		// Knight / Crusader (Peco Peco)
+		else {
+			if( pc->checkskill(sd, KN_RIDING) )
+				pc->setoption(sd, sd->sc.option|OPTION_RIDING);
+		}
+	}
+	else if( pc_isriding(sd) )
+	{
+		// Rune Knight (Dragon)
+		if( (sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT ) {
+			pc->setoption(sd, sd->sc.option&~OPTION_DRAGON);
+		}
+		// Ranger (Warg)
+		else if( (sd->class_&MAPID_THIRDMASK) == MAPID_RANGER ) {
+			pc->setoption(sd,sd->sc.option&~OPTION_WUGRIDER);
+		}
+		// Mechanic (Mado Gear)
+		else if( (sd->class_&MAPID_THIRDMASK) == MAPID_MECHANIC ) {
+			pc->setoption(sd, sd->sc.option&~OPTION_MADOGEAR);
+		}
+		// Knight / Crusaders (Peco Peco)
+		else {
 			pc->setoption(sd, sd->sc.option&~OPTION_RIDING);
+		}
 	}
 
 	return 0;

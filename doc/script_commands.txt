@@ -2788,6 +2788,13 @@ such item is found.
 
 ---------------------------------------
 
+*getbrokencount()
+
+This function will return the total amount of broken equipment on the
+invoking character.
+
+---------------------------------------
+
 *getequipisequiped(<equipment slot>)
 
 This functions will return 1 if there is an equipment placed on the 
@@ -3816,21 +3823,46 @@ falcon and 0 if they don't.
 *checkriding()
 
 If <flag> is 0 this command will remove the mount from the character.
-Otherwise it gives the invoking character a PecoPeco (if they are a Knight 
-series class), a GrandPeco (if they are a Crusader series class), or 
-a Gryphon (if they are a Royal Guard). Unlike 'setfalcon' and 'setcart' 
-this will not work at all if they aren't of a class which can ride.
-Note: the character needs to have the skill KN_RIDING to gain a mount.
+
+Otherwise it gives the invoking character a combat mount specific to their
+class.
+
+	- PecoPeco (Knight series class)
+
+	- GrandPeco (Crusader series class)
+
+	- Dragon (Rune Knight)
+		The color of the dragon can be passed through the flag value using
+		either values 1 ~ 5 or the following constants:
+			DRAGON_GREEN
+			DRAGON_BROWN
+			DRAGON_GRAY
+			DRAGON_BLUE
+			DRAGON_RED
+
+	- Gryphon (Royal Guard)
+
+	- Warg (Ranger)
+	
+	- Mado Gear (Mechanic)
+
+Unlike 'setfalcon' and 'setcart' this will not work at all if they aren't of a 
+class which can ride a mount.
+
+Note: The character needs to have the specific skill for their mount.
 
 The accompanying function will return 1 if the invoking character is 
-riding a bird and 0 if they aren't.
+on a mount and 0 if they aren't.
 
-	if (checkriding()) mes "PLEASE leave your bird outside! No riding birds on the floor here!";
+	if (checkriding())
+		mes "Leave your mount outside! No riding mounts on the floor here!";
 
 ---------------------------------------
 
 *setdragon {<color>};
 *checkdragon()
+
+[ DEPRECATED - Please use setriding]
 
 The 'setdragon' function toggles mounting a dragon for the invoking 
 character. It will return 1 if successful, 0 otherwise.
@@ -3852,6 +3884,8 @@ riding a dragon and 0 if they aren't.
 
 *setmadogear {<flag>};
 *checkmadogear()
+
+[ DEPRECATED - Please use setriding]
 
 If <flag> is 0 this command will remove the mount from the character.
 Otherwise it gives the invoking character a Mado (if they are a Mechanic).
@@ -8284,16 +8318,22 @@ If *questinfo is set, and the same ID is specified here, the icon will be cleare
 
 ---------------------------------------
 
-*completequest <ID>;
+*completequest <ID>{,<ID2>};
 
 Change the state for the given quest <ID> to "complete" and remove from 
 the users quest log.
 
+If a second quest id of greater value is specified, all quests between the two
+will be completed.
+
 ---------------------------------------
 
-*erasequest <ID>;
+*erasequest <ID>{,<ID2>};
 
 Remove the quest of the given <ID> from the user's quest log.
+
+If a second quest id of greater value is specified, all quests between the two
+will be erased.
 
 ---------------------------------------
 
@@ -8305,6 +8345,8 @@ Add quest of the <ID2> to the the quest log, and the state is "active".
 ---------------------------------------
 
 *checkquest(<ID>{,PLAYTIME|HUNTING})
+
+DEPRECATED - use questprogress instead.
 
 If no additional argument supplied, return the state of the quest: 
 	-1 = Quest not started (not in quest log)
@@ -8326,6 +8368,25 @@ If parameter "HUNTING" is supplied:
 	1 = you haven't killed all of the target monsters but the time limit 
 		has been reached.
 	2 = you've killed all of the target monsters
+
+---------------------------------------
+
+*questprogress(<ID>{,PLAYTIME|HUNTING})
+
+If no additional argument supplied, return the state of the quest: 
+	0 = Quest not started (not in quest log)
+	1 = Quest has been given
+	2 = Quest completed
+
+If parameter "PLAYTIME" is supplied:
+	0 = Quest not started (not in quest log)
+	1 = The time limit has not yet been reached
+	2 = The time limit has been reached
+
+If parameter "HUNTING" is supplied:
+	0 = Quest not started (not in quest log)
+	1 = Player hasn't killed all of the target monsters
+	2 = Player has killed all of the target monsters
 
 ---------------------------------------
 

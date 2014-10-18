@@ -589,7 +589,7 @@ struct map_session_data {
 #endif
 
 #define pc_isfalcon(sd)       ( (sd)->sc.option&OPTION_FALCON )
-#define pc_isriding(sd)       ( (sd)->sc.option&OPTION_RIDING )
+#define pc_isriding(sd)       ( (sd)->sc.option&(OPTION_RIDING|OPTION_DRAGON|OPTION_WUGRIDER|OPTION_MADOGEAR) )
 #define pc_isinvisible(sd)    ( (sd)->sc.option&OPTION_INVISIBLE )
 #define pc_is50overweight(sd) ( (sd)->weight*100 >= (sd)->max_weight*battle->bc->natural_heal_weight_rate )
 #define pc_is90overweight(sd) ( (sd)->weight*10 >= (sd)->max_weight*9 )
