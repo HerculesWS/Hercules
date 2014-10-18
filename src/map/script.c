@@ -772,6 +772,8 @@ const char* parse_callfunc(const char* p, int require_paren, int is_custom)
 		script->addl(func);
 		script->addc(C_ARG);
 		arg = script->buildin[script->str_data[func].val];
+		if (script->str_data[func].deprecated)
+			DeprecationWarning(p);
 		if( !arg ) arg = &null_arg; // Use a dummy, null string
 	} else if( script->str_data[func].type == C_USERFUNC || script->str_data[func].type == C_USERFUNC_POS ) {
 		// script defined function
@@ -18977,6 +18979,7 @@ bool script_add_builtin(const struct script_function *buildin, bool override) {
 	}
 
 	script->str_data[n].func = buildin->func;
+	script->str_data[n].deprecated = (buildin->deprecated ? 1 : 0);
 
 	/* we only store the arguments, its the only thing used out of this */
 	if( slen ) {
@@ -18994,11 +18997,14 @@ bool script_hp_add(char *name, char *args, bool (*func)(struct script_state *st)
 	buildin.name = name;
 	buildin.arg = args;
 	buildin.func = func;
+	buildin.deprecated = false;
 	return script->add_builtin(&buildin, true);
 }
 
-#define BUILDIN_DEF(x,args) { buildin_ ## x , #x , args }
-#define BUILDIN_DEF2(x,x2,args) { buildin_ ## x , x2 , args }
+#define BUILDIN_DEF(x,args) { buildin_ ## x , #x , args, false }
+#define BUILDIN_DEF2(x,x2,args) { buildin_ ## x , x2 , args, false }
+#define BUILDIN_DEF_DEPRECATED(x,args) { buildin_ ## x , #x , args, true }
+#define BUILDIN_DEF2_DEPRECATED(x,x2,args) { buildin_ ## x , x2 , args, true }
 void script_parse_builtin(void) {
 	struct script_function BUILDIN[] = {
 		// NPC interaction
