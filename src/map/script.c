@@ -16304,21 +16304,45 @@ BUILDIN(setquest) {
 
 BUILDIN(erasequest) {
 	struct map_session_data *sd = script->rid2sd(st);
+	int quest_id;
 
 	if( sd == NULL )
 		return false;
 
-	quest->delete(sd, script_getnum(st, 2));
+	if (script_hasdata(st, 3)) {
+		if (script_getnum(st, 3) < script_getnum(st, 2)) {
+			ShowError("buildin_erasequest: The second quest id must be greater than the id of the first.\n");
+			return false;
+		}
+		for (quest_id = script_getnum(st, 2); quest_id < script_getnum(st, 3); quest_id++) {
+			quest->delete(sd, quest_id);
+		}
+	} else {
+		quest->delete(sd, script_getnum(st, 2));
+	}
+
 	return true;
 }
 
 BUILDIN(completequest) {
 	struct map_session_data *sd = script->rid2sd(st);
+	int quest_id;
 
 	if( sd == NULL )
 		return false;
 
-	quest->update_status(sd, script_getnum(st, 2), Q_COMPLETE);
+	if (script_hasdata(st, 3)) {
+		if (script_getnum(st, 3) < script_getnum(st, 2)) {
+			ShowError("buildin_completequest: The second quest id must be greater than the id of the first.\n");
+			return false;
+		}
+		for (quest_id = script_getnum(st, 2); quest_id < script_getnum(st, 3); quest_id++) {
+			quest->update_status(sd, quest_id, Q_COMPLETE);
+		}
+	} else {
+		quest->update_status(sd, script_getnum(st, 2), Q_COMPLETE);
+	}
+
 	return true;
 }
 
@@ -16332,6 +16356,8 @@ BUILDIN(changequest) {
 	return true;
 }
 
+// Deprecated
+// Please use questprogress instead.
 BUILDIN(checkquest) {
 	struct map_session_data *sd = script->rid2sd(st);
 	enum quest_check_type type = HAVEQUEST;
@@ -16343,6 +16369,33 @@ BUILDIN(checkquest) {
 		type = (enum quest_check_type)script_getnum(st, 3);
 
 	script_pushint(st, quest->check(sd, script_getnum(st, 2), type));
+
+	return true;
+}
+
+BUILDIN(questprogress) {
+	struct map_session_data *sd = script->rid2sd(st);
+	enum quest_check_type type = HAVEQUEST;
+	int quest_progress = 0;
+
+	if (sd == NULL)
+		return false;
+
+	if (script_hasdata(st, 3))
+		type = (enum quest_check_type)script_getnum(st, 3);
+
+	quest_progress = quest->check(sd, script_getnum(st, 2), type);
+
+	// "Fix" returned quest state value to make more sense.
+	// 0 = Not Started, 1 = In Progress, 2 = Completed.
+	if (quest_progress == -1) // Not found
+		quest_progress = 0;
+	else if (quest_progress == 0 || quest_progress == 1)
+		quest_progress = 1;
+	else
+		quest_progress = 2;
+
+	script_pushint(st, quest_progress);
 
 	return true;
 }
@@ -17327,6 +17380,7 @@ BUILDIN(setmounting) {
 	}
 	return true;
 }
+
 /**
  * Retrieves quantity of arguments provided to callfunc/callsub.
  * getargcount() -> amount of arguments received in a function
@@ -19265,9 +19319,10 @@ void script_parse_builtin(void) {
 		//Quest Log System [Inkfish]
 		BUILDIN_DEF(questinfo, "ii??"),
 		BUILDIN_DEF(setquest, "i"),
-		BUILDIN_DEF(erasequest, "i"),
-		BUILDIN_DEF(completequest, "i"),
+		BUILDIN_DEF(erasequest, "i?"),
+		BUILDIN_DEF(completequest, "i?"),
 		BUILDIN_DEF(checkquest, "i?"),
+		BUILDIN_DEF(questprogress, "i?"),
 		BUILDIN_DEF(changequest, "ii"),
 		BUILDIN_DEF(showevent, "i?"),
 

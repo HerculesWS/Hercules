@@ -8339,16 +8339,22 @@ If *questinfo is set, and the same ID is specified here, the icon will be cleare
 
 ---------------------------------------
 
-*completequest <ID>;
+*completequest <ID>{,<ID2>};
 
 Change the state for the given quest <ID> to "complete" and remove from 
 the users quest log.
 
+If a second quest id of greater value is specified, all quests between the two
+will be completed.
+
 ---------------------------------------
 
-*erasequest <ID>;
+*erasequest <ID>{,<ID2>};
 
 Remove the quest of the given <ID> from the user's quest log.
+
+If a second quest id of greater value is specified, all quests between the two
+will be erased.
 
 ---------------------------------------
 
@@ -8360,6 +8366,8 @@ Add quest of the <ID2> to the the quest log, and the state is "active".
 ---------------------------------------
 
 *checkquest(<ID>{,PLAYTIME|HUNTING})
+
+DEPRECATED - use questprogress instead.
 
 If no additional argument supplied, return the state of the quest: 
 	-1 = Quest not started (not in quest log)
@@ -8381,6 +8389,25 @@ If parameter "HUNTING" is supplied:
 	1 = you haven't killed all of the target monsters but the time limit 
 		has been reached.
 	2 = you've killed all of the target monsters
+
+---------------------------------------
+
+*questprogress(<ID>{,PLAYTIME|HUNTING})
+
+If no additional argument supplied, return the state of the quest:
+	0 = Quest not started (not in quest log)
+	1 = Quest has been given
+	2 = Quest completed
+
+If parameter 'PLAYTIME' is supplied:
+	0 = Quest not started (not in quest log)
+	1 = The time limit has not yet been reached
+	2 = The time limit has been reached
+
+If parameter 'HUNTING' is supplied:
+	0 = Quest not started (not in quest log)
+	1 = Player hasn't killed all of the target monsters
+	2 = Player has killed all of the target monsters
 
 ---------------------------------------
 
