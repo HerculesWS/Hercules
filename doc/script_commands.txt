@@ -2788,6 +2788,13 @@ such item is found.
 
 ---------------------------------------
 
+*getbrokencount()
+
+This function will return the total amount of broken equipment on the
+invoking character.
+
+---------------------------------------
+
 *getequipisequiped(<equipment slot>)
 
 This functions will return 1 if there is an equipment placed on the 

@@ -7658,6 +7658,29 @@ BUILDIN(getbrokenid)
 }
 
 /*==========================================
+ * getbrokencount
+ *------------------------------------------*/
+BUILDIN(getbrokencount)
+{
+	int i, counter = 0;
+	TBL_PC *sd;
+
+	sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return true;
+
+	for (i = 0; i < MAX_INVENTORY; i++) {
+		if (sd->status.inventory[i].attribute)
+			counter++;
+	}
+
+	script_pushint(st, counter);
+
+	return true;
+}
+
+/*==========================================
  * repair [Valaris]
  *------------------------------------------*/
 BUILDIN(repair)
@@ -18844,6 +18867,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getequipid,"i"),
 		BUILDIN_DEF(getequipname,"i"),
 		BUILDIN_DEF(getbrokenid,"i"), // [Valaris]
+		BUILDIN_DEF(getbrokencount,""),
 		BUILDIN_DEF(repair,"i"), // [Valaris]
 		BUILDIN_DEF(repairall,""),
 		BUILDIN_DEF(getequipisequiped,"i"),
