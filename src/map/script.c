@@ -8635,10 +8635,10 @@ BUILDIN(checkfalcon)
 	TBL_PC* sd;
 
 	sd = script->rid2sd(st);
-	if( sd == NULL )
+	if (sd == NULL)
 		return true;// no player attached, report source
 
-	if( pc_isfalcon(sd) )
+	if (pc_isfalcon(sd))
 		script_pushint(st, 1);
 	else
 		script_pushint(st, 0);
@@ -8653,15 +8653,15 @@ BUILDIN(checkfalcon)
 /// setfalcon;
 BUILDIN(setfalcon)
 {
-	int flag = 1;
+	bool flag = true;
 	TBL_PC* sd;
 
 	sd = script->rid2sd(st);
-	if( sd == NULL )
+	if (sd == NULL)
 		return true;// no player attached, report source
 
-	if( script_hasdata(st,2) )
-		flag = script_getnum(st,2);
+	if (script_hasdata(st,2))
+		flag = script_getnum(st,2) ? true : false;
 
 	pc->setfalcon(sd, flag);
 
@@ -8678,10 +8678,10 @@ BUILDIN(checkriding)
 	TBL_PC* sd;
 
 	sd = script->rid2sd(st);
-	if( sd == NULL )
-		return true;// no player attached, report source
+	if (sd == NULL)
+		return true; // no player attached, report source
 
-	if( pc_isriding(sd) || pc_isridingwug(sd) || pc_isridingdragon(sd) )
+	if (pc_hasmount(sd))
 		script_pushint(st, 1);
 	else
 		script_pushint(st, 0);
@@ -8700,12 +8700,13 @@ BUILDIN(setriding)
 	TBL_PC* sd;
 
 	sd = script->rid2sd(st);
-	if( sd == NULL )
+
+	if (sd == NULL)
 		return true;// no player attached, report source
 
-	if( script_hasdata(st,2) )
+	if (script_hasdata(st,2))
 		flag = script_getnum(st,2);
-	pc->setriding(sd, flag);
+	pc->setridingpeco(sd, flag ? true : false);
 
 	return true;
 }
@@ -8757,15 +8758,15 @@ BUILDIN(checkmadogear)
 /// setmadogear;
 BUILDIN(setmadogear)
 {
-	int flag = 1;
+	bool flag = true;
 	TBL_PC* sd;
 
 	sd = script->rid2sd(st);
-	if( sd == NULL )
+	if (sd == NULL)
 		return true;// no player attached, report source
 
-	if( script_hasdata(st,2) )
-		flag = script_getnum(st,2);
+	if (script_hasdata(st,2))
+		flag = script_getnum(st,2) ? true : false;
 	pc->setmadogear(sd, flag);
 
 	return true;
@@ -17383,9 +17384,9 @@ BUILDIN(ismounting) {
  **/
 BUILDIN(setmounting) {
 	TBL_PC* sd;
-	if( (sd = script->rid2sd(st)) == NULL )
+	if ((sd = script->rid2sd(st)) == NULL)
 		return true;
-	if( sd->sc.option&(OPTION_WUGRIDER|OPTION_RIDING|OPTION_DRAGON|OPTION_MADOGEAR) ) {
+	if (pc_hasmount(sd)) {
 		clif->msgtable(sd->fd, 0X78b);
 		script_pushint(st,0);//can't mount with one of these
 	} else {

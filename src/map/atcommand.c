@@ -583,7 +583,7 @@ ACMD(who) {
 	
 	iter = mapit_getallusers();
 	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter))	{
-		if (!((pc_has_permission(pl_sd, PC_PERM_HIDE_SESSION) || (pl_sd->sc.option & OPTION_INVISIBLE)) && pc_get_group_level(pl_sd) > level)) { // you can look only lower or same level
+		if (!((pc_has_permission(pl_sd, PC_PERM_HIDE_SESSION) || pc_isinvisible(pl_sd)) && pc_get_group_level(pl_sd) > level)) { // you can look only lower or same level
 			if (stristr(pl_sd->status.name, player_name) == NULL // search with no case sensitive
 				|| (map_id >= 0 && pl_sd->bl.m != map_id))
 				continue;
@@ -689,7 +689,7 @@ ACMD(whogm)
 				continue;
 		}
 		if (pl_level > level) {
-			if (pl_sd->sc.option & OPTION_INVISIBLE)
+			if (pc_isinvisible(pl_sd))
 				continue;
 			sprintf(atcmd_output, msg_txt(913), pl_sd->status.name); // Name: %s (GM)
 			clif->message(fd, atcmd_output);
@@ -889,7 +889,7 @@ ACMD(option)
  *
  *------------------------------------------*/
 ACMD(hide) {
-	if (sd->sc.option & OPTION_INVISIBLE) {
+	if (pc_isinvisible(sd)) {
 		sd->sc.option &= ~OPTION_INVISIBLE;
 		if (sd->disguise != -1 )
 			status->set_viewdata(&sd->bl, sd->disguise);
@@ -3923,12 +3923,12 @@ ACMD(mount_peco)
 			clif->message(fd, atcmd_output);
 			return false;
 		}
-		if( !(sd->sc.option&OPTION_DRAGON1) ) {
+		if (!pc_isridingdragon(sd)) {
 			clif->message(sd->fd,msg_txt(1119)); // You have mounted your Dragon.
-			pc->setoption(sd, sd->sc.option|OPTION_DRAGON1);
+			pc->setridingdragon(sd, OPTION_DRAGON1);
 		} else {
 			clif->message(sd->fd,msg_txt(1120)); // You have released your Dragon.
-			pc->setoption(sd, sd->sc.option&~OPTION_DRAGON1);
+			pc->setridingdragon(sd, 0);
 		}
 		return true;
 	}
@@ -3940,34 +3940,34 @@ ACMD(mount_peco)
 		}
 		if( !pc_isridingwug(sd) ) {
 			clif->message(sd->fd,msg_txt(1121)); // You have mounted your Warg.
-			pc->setoption(sd, sd->sc.option|OPTION_WUGRIDER);
+			pc->setridingwug(sd, true);
 		} else {
 			clif->message(sd->fd,msg_txt(1122)); // You have released your Warg.
-			pc->setoption(sd, sd->sc.option&~OPTION_WUGRIDER);
+			pc->setridingwug(sd, false);
 		}
 		return true;
 	}
 	if( (sd->class_&MAPID_THIRDMASK) == MAPID_MECHANIC ) {
 		if( !pc_ismadogear(sd) ) {
 			clif->message(sd->fd,msg_txt(1123)); // You have mounted your Mado Gear.
-			pc->setoption(sd, sd->sc.option|OPTION_MADOGEAR);
+			pc->setmadogear(sd, true);
 		} else {
 			clif->message(sd->fd,msg_txt(1124)); // You have released your Mado Gear.
-			pc->setoption(sd, sd->sc.option&~OPTION_MADOGEAR);
+			pc->setmadogear(sd, false);
 		}
 		return true;
 	}
 	if( sd->class_&MAPID_SWORDMAN && sd->class_&JOBL_2 ) {
-		if( !pc_isriding(sd) ) { // if actually no peco
+		if (!pc_isridingpeco(sd)) { // if actually no peco
 			if (!pc->checkskill(sd, KN_RIDING)) {
 				sprintf(atcmd_output, msg_txt(213), skill->get_desc(KN_RIDING)); // You need %s to mount!
 				clif->message(fd, atcmd_output);
 				return false;
 			}
-			pc->setoption(sd, sd->sc.option | OPTION_RIDING);
+			pc->setridingpeco(sd, true);
 			clif->message(fd, msg_txt(102)); // You have mounted a Peco Peco.
 		} else {//Dismount
-			pc->setoption(sd, sd->sc.option & ~OPTION_RIDING);
+			pc->setridingpeco(sd, false);
 			clif->message(fd, msg_txt(214)); // You have released your Peco Peco.
 		}
 		return true;
@@ -4621,8 +4621,7 @@ ACMD(disguise)
 		return false;
 	}
 	
-	if(pc_isriding(sd))
-	{
+	if (pc_hasmount(sd)) {
 		clif->message(fd, msg_txt(1144)); // Character cannot be disguised while mounted.
 		return false;
 	}
@@ -4709,8 +4708,8 @@ ACMD(disguiseguild)
 		return false;
 	}
 	
-	for( i = 0; i < g->max_member; i++ )
-		if( (pl_sd = g->member[i].sd) && !pc_isriding(pl_sd) )
+	for (i = 0; i < g->max_member; i++)
+		if ((pl_sd = g->member[i].sd) && !pc_hasmount(pl_sd))
 			pc->disguise(pl_sd, id);
 	
 	clif->message(fd, msg_txt(122)); // Disguise applied.
@@ -8360,7 +8359,7 @@ ACMD(charcommands)
 /* for new mounts */
 ACMD(mount2) {
 	
-	if( sd->sc.option&(OPTION_WUGRIDER|OPTION_RIDING|OPTION_DRAGON|OPTION_MADOGEAR) ) {
+	if (pc_hasmount(sd)) {
 		clif->message(fd, msg_txt(1476)); // You are already mounting something else
 		return false;
 	}

@@ -2385,7 +2385,7 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 					sd->debug_file, sd->debug_line, sd->debug_func, file, line, func);
 			} else if (--map->list[bl->m].users == 0 && battle_config.dynamic_mobs) //[Skotlex]
 				map->removemobs(bl->m);
-			if( !(sd->sc.option&OPTION_INVISIBLE) ) {
+			if (!(pc_isinvisible(sd))) {
 				// decrement the number of active pvp players on the map
 				--map->list[bl->m].users_pvp;
 			}

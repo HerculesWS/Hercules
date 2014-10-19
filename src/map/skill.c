@@ -8533,9 +8533,9 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 
 		case NC_SELFDESTRUCTION:
-			if( sd ) {
-				if( pc_ismadogear(sd) )
-					 pc->setmadogear(sd, 0);
+			if (sd) {
+				if (pc_ismadogear(sd))
+					 pc->setmadogear(sd, false);
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
 				skill->castend_damage_id(src, src, skill_id, skill_lv, tick, flag);
 				status->set_sp(src, 0, 0);
@@ -13440,7 +13440,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			}
 			break;
 		case ST_RIDING:
-			if(!pc_isriding(sd) && !pc_isridingdragon(sd)) {
+			if (!pc_isridingpeco(sd) && !pc_isridingdragon(sd)) {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return 0;
 			}
@@ -13555,7 +13555,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 				return 0;
 			}
 		case ST_PECO:
-			if(!pc_isriding(sd)) {
+			if (!pc_isridingpeco(sd)) {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return 0;
 			}
@@ -14972,7 +14972,7 @@ int skill_frostjoke_scream(struct block_list *bl, va_list ap) {
 		return 0;
 	if (bl->type == BL_PC) {
 		struct map_session_data *sd = (struct map_session_data *)bl;
-		if ( sd && sd->sc.option&(OPTION_INVISIBLE|OPTION_MADOGEAR) )
+		if (sd && (pc_isinvisible(sd) || pc_ismadogear(sd)))
 			return 0;//Frost Joke / Scream cannot target invisible or MADO Gear characters [Ind]
 	}
 	//It has been reported that Scream/Joke works the same regardless of woe-setting. [Skotlex]

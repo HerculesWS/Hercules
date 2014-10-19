@@ -2485,13 +2485,14 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	bstatus->mode = MD_MASK&~(MD_BOSS|MD_PLANT|MD_DETECTOR|MD_ANGRY|MD_TARGETWEAK);
 
 	bstatus->size = (sd->class_&JOBL_BABY)?SZ_SMALL:SZ_MEDIUM;
-	if (battle_config.character_size && (pc_isriding(sd) || pc_isridingdragon(sd)) ) { //[Lupus]
+	if (battle_config.character_size && (pc_isridingpeco(sd) || pc_isridingdragon(sd))) { //[Lupus]
 		if (sd->class_&JOBL_BABY) {
 			if (battle_config.character_size&SZ_BIG)
 				bstatus->size++;
-		} else
+		} else {
 			if(battle_config.character_size&SZ_MEDIUM)
 				bstatus->size++;
+		}
 	}
 	bstatus->aspd_rate = 1000;
 	bstatus->ele_lv = 1;
@@ -2780,9 +2781,10 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	sd->left_weapon.atkmods[1] = status->atkmods[1][sd->weapontype2];
 	sd->left_weapon.atkmods[2] = status->atkmods[2][sd->weapontype2];
 
-	if( (pc_isriding(sd) || pc_isridingdragon(sd)) &&
-		(sd->status.weapon==W_1HSPEAR || sd->status.weapon==W_2HSPEAR))
-	{	//When Riding with spear, damage modifier to mid-class becomes
+	if ((pc_isridingpeco(sd) || pc_isridingdragon(sd))
+	    && (sd->status.weapon==W_1HSPEAR || sd->status.weapon==W_2HSPEAR)
+	    ) {
+		//When Riding with spear, damage modifier to mid-class becomes
 		//same as versus large size.
 		sd->right_weapon.atkmods[1] = sd->right_weapon.atkmods[2];
 		sd->left_weapon.atkmods[1] = sd->left_weapon.atkmods[2];
@@ -3062,9 +3064,9 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	if((skill_lv=pc->checkskill(sd,GS_SINGLEACTION))>0 &&
 		(sd->status.weapon >= W_REVOLVER && sd->status.weapon <= W_GRENADE))
 		bstatus->aspd_rate -= ((skill_lv+1)/2) * 10;
-	if(pc_isriding(sd))
+	if (pc_isridingpeco(sd))
 		bstatus->aspd_rate += 500-100*pc->checkskill(sd,KN_CAVALIERMASTERY);
-	else if(pc_isridingdragon(sd))
+	else if (pc_isridingdragon(sd))
 		bstatus->aspd_rate += 250-50*pc->checkskill(sd,RK_DRAGONTRAINING);
 #else // needs more info
 	if((skill_lv=pc->checkskill(sd,SA_ADVANCEDBOOK))>0 && sd->status.weapon == W_BOOK)
@@ -3074,9 +3076,9 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	if((skill_lv=pc->checkskill(sd,GS_SINGLEACTION))>0 &&
 		(sd->status.weapon >= W_REVOLVER && sd->status.weapon <= W_GRENADE))
 		bstatus->aspd_rate += ((skill_lv+1)/2) * 10;
-	if(pc_isriding(sd))
+	if (pc_isridingpeco(sd))
 		bstatus->aspd_rate -= 500-100*pc->checkskill(sd,KN_CAVALIERMASTERY);
-	else if(pc_isridingdragon(sd))
+	else if (pc_isridingdragon(sd))
 		bstatus->aspd_rate -= 250-50*pc->checkskill(sd,RK_DRAGONTRAINING);
 #endif
 	bstatus->adelay = 2*bstatus->amotion;
@@ -3094,7 +3096,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	// Weight
 	if((skill_lv=pc->checkskill(sd,MC_INCCARRY))>0)
 		sd->max_weight += 2000*skill_lv;
-	if(pc_isriding(sd) && pc->checkskill(sd,KN_RIDING)>0)
+	if (pc_isridingpeco(sd) && pc->checkskill(sd,KN_RIDING) > 0)
 		sd->max_weight += 10000;
 	else if(pc_isridingdragon(sd))
 		sd->max_weight += 5000+2000*pc->checkskill(sd,RK_DRAGONTRAINING);
@@ -5231,16 +5233,16 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 		{
 			int val = 0;
 
-			if( sc->data[SC_FUSION] )
+			if(sc->data[SC_FUSION]) {
 				val = 25;
-			else if( sd ) {
-				if( pc_isriding(sd) || sd->sc.option&(OPTION_DRAGON) || sd->sc.data[SC_ALL_RIDING] )
+			} else if (sd) {
+				if (pc_isridingpeco(sd) || pc_isridingdragon(sd) || sd->sc.data[SC_ALL_RIDING])
 					val = 25;//Same bonus
-				else if( pc_isridingwug(sd) )
+				else if (pc_isridingwug(sd))
 					val = 15 + 5 * pc->checkskill(sd, RA_WUGRIDER);
-				else if( pc_ismadogear(sd) ) {
+				else if (pc_ismadogear(sd)) {
 					val = (- 10 * (5 - pc->checkskill(sd,NC_MADOLICENCE)));
-					if( sc->data[SC_ACCELERATION] )
+					if (sc->data[SC_ACCELERATION])
 						val += 25;
 				}
 			}
@@ -6178,7 +6180,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 		{
 			TBL_PC* sd = (TBL_PC*)bl;
 			if (pcdb_checkid(class_)) {
-				if (sd->sc.option&OPTION_RIDING) {
+				if (pc_isridingpeco(sd)) {
 					switch (class_) {	//Adapt class to a Mounted one.
 						case JOB_KNIGHT:
 							class_ = JOB_KNIGHT2;
@@ -8581,14 +8583,22 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				val2 = 20 + 10 * val1; //ASPD. Need to confirm if Movement Speed reduction is the same. [Jobbie]
 				val3 = 20 * val1; //HIT
 				if( sd ) { // Removes Animals
-					if( pc_isriding(sd) ) pc->setriding(sd, 0);
-					if( pc_isridingdragon(sd) ) pc->setoption(sd, sd->sc.option&~OPTION_DRAGON);
-					if( pc_iswug(sd) ) pc->setoption(sd, sd->sc.option&~OPTION_WUG);
-					if( pc_isridingwug(sd) ) pc->setoption(sd, sd->sc.option&~OPTION_WUGRIDER);
-					if( pc_isfalcon(sd) ) pc->setoption(sd, sd->sc.option&~OPTION_FALCON);
-					if( sd->status.pet_id > 0 ) pet->menu(sd, 3);
-					if( homun_alive(sd->hd) ) homun->vaporize(sd,HOM_ST_REST);
-					if( sd->md ) mercenary->delete(sd->md,3);
+					if (pc_isridingpeco(sd))
+						pc->setridingpeco(sd, false);
+					if (pc_isridingdragon(sd))
+						pc->setridingdragon(sd, 0);
+					if (pc_iswug(sd))
+						pc->setoption(sd, sd->sc.option&~OPTION_WUG);
+					if (pc_isridingwug(sd))
+						pc->setridingwug(sd, false);
+					if (pc_isfalcon(sd))
+						pc->setfalcon(sd, false);
+					if (sd->status.pet_id > 0)
+						pet->menu(sd, 3);
+					if (homun_alive(sd->hd))
+						homun->vaporize(sd,HOM_ST_REST);
+					if (sd->md)
+						mercenary->delete(sd->md,3);
 				}
 				break;
 			case SC__LAZINESS:
@@ -8685,8 +8695,10 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 					if ( !val3 )
 						val3 = 50;
 					if( sd ) {
-						if( pc_isriding(sd) ) pc->setriding(sd, 0);
-						if( pc_isridingdragon(sd) ) pc->setoption(sd, sd->sc.option&~OPTION_DRAGON);
+						if (pc_isridingpeco(sd))
+							pc->setridingpeco(sd, false);
+						if (pc_isridingdragon(sd))
+							pc->setridingdragon(sd, false);
 					}
 				}
 				break;

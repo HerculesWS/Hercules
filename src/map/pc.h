@@ -589,19 +589,20 @@ struct map_session_data {
 #endif
 
 #define pc_isfalcon(sd)       ( (sd)->sc.option&OPTION_FALCON )
-#define pc_isriding(sd)       ( (sd)->sc.option&OPTION_RIDING )
 #define pc_isinvisible(sd)    ( (sd)->sc.option&OPTION_INVISIBLE )
 #define pc_is50overweight(sd) ( (sd)->weight*100 >= (sd)->max_weight*battle->bc->natural_heal_weight_rate )
 #define pc_is90overweight(sd) ( (sd)->weight*10 >= (sd)->max_weight*9 )
 #define pc_maxparameter(sd)   ( (((sd)->class_&MAPID_UPPERMASK) == MAPID_KAGEROUOBORO || ((sd)->class_&MAPID_UPPERMASK) == MAPID_REBELLION || ((sd)->class_&MAPID_THIRDMASK) == MAPID_SUPER_NOVICE_E) ? battle->bc->max_extended_parameter : (sd)->class_&JOBL_THIRD ? ((sd)->class_&JOBL_BABY ? battle->bc->max_baby_third_parameter : battle->bc->max_third_parameter) : ((sd)->class_&JOBL_BABY ? battle->bc->max_baby_parameter : battle->bc->max_parameter) )
-/**
- * Ranger
- **/
+/// Generic check for mounts
+#define pc_hasmount(sd)       ( (sd)->sc.option&(OPTION_RIDING|OPTION_WUGRIDER|OPTION_DRAGON|OPTION_MADOGEAR) )
+/// Knight classes Peco / Gryphon
+#define pc_isridingpeco(sd)   ( (sd)->sc.option&(OPTION_RIDING) )
+/// Ranger Warg
 #define pc_iswug(sd)       ( (sd)->sc.option&OPTION_WUG )
 #define pc_isridingwug(sd) ( (sd)->sc.option&OPTION_WUGRIDER )
-// Mechanic Magic Gear
+/// Mechanic Magic Gear
 #define pc_ismadogear(sd) ( (sd)->sc.option&OPTION_MADOGEAR )
-// Rune Knight Dragon
+/// Rune Knight Dragon
 #define pc_isridingdragon(sd) ( (sd)->sc.option&OPTION_DRAGON )
 
 #define pc_stop_walking(sd, type) (unit->stop_walking(&(sd)->bl, (type)))
@@ -897,9 +898,11 @@ struct pc_interface {
 	int (*jobchange) (struct map_session_data *sd,int job, int upper);
 	int (*setoption) (struct map_session_data *sd,int type);
 	int (*setcart) (struct map_session_data* sd, int type);
-	int (*setfalcon) (struct map_session_data* sd, int flag);
-	int (*setriding) (struct map_session_data* sd, int flag);
-	void (*setmadogear) (struct map_session_data* sd, int flag);
+	void (*setfalcon) (struct map_session_data *sd, bool flag);
+	void (*setridingpeco) (struct map_session_data *sd, bool flag);
+	void (*setmadogear) (struct map_session_data *sd, bool flag);
+	void (*setridingdragon) (struct map_session_data *sd, unsigned int type);
+	void (*setridingwug) (struct map_session_data *sd, bool flag);
 	int (*changelook) (struct map_session_data *sd,int type,int val);
 	int (*equiplookall) (struct map_session_data *sd);
 	

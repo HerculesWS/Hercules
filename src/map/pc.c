@@ -1320,7 +1320,7 @@ int pc_reg_received(struct map_session_data *sd)
 		clif->pLoadEndAck(sd->fd, sd);
 	}
 
-	if( sd->sc.option & OPTION_INVISIBLE ) {
+	if (pc_isinvisible(sd)) {
 		sd->vd.class_ = INVISIBLE_CLASS;
 		clif->message(sd->fd, msg_txt(11)); // Invisible: On
 		// decrement the number of pvp players on the map
@@ -1729,7 +1729,7 @@ int pc_disguise(struct map_session_data *sd, int class_) {
 	if (class_ >= 0 && sd->disguise == class_)
 		return 0;
 
-	if(sd->sc.option&OPTION_INVISIBLE) { //Character is invisible. Stealth class-change. [Skotlex]
+	if (pc_isinvisible(sd)) { //Character is invisible. Stealth class-change. [Skotlex]
 		sd->disguise = class_; //viewdata is set on uncloaking.
 		return 2;
 	}
@@ -4471,7 +4471,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 			} else {// not yet used item (all slots are initially empty)
 				sd->item_delay[i].nameid = nameid;
 			}
-			if( !(nameid == ITEMID_REINS_OF_MOUNT && sd->sc.option&(OPTION_WUGRIDER|OPTION_RIDING|OPTION_DRAGON|OPTION_MADOGEAR)) )
+			if (!(nameid == ITEMID_REINS_OF_MOUNT && pc_hasmount(sd)))
 				sd->item_delay[i].tick = tick + sd->inventory_data[n]->delay;
 		} else {// should not happen
 			ShowError("pc_useitem: Exceeded item delay array capacity! (nameid=%d, char_id=%d)\n", nameid, sd->status.char_id);
@@ -8143,48 +8143,111 @@ int pc_setcart(struct map_session_data *sd,int type) {
 	return 0;
 }
 
-/*==========================================
- * Give player a falcon
- *------------------------------------------*/
-int pc_setfalcon(TBL_PC* sd, int flag)
+/* FIXME: These setter methods are inconsistent in their class/skill checks.
+          They should be changed so that they all either do or skip the checks.*/
+
+/**
+ * Gives/removes a falcon.
+ *
+ * The target player needs the required skills in order to obtain a falcon.
+ *
+ * @param sd Target player.
+ * @param flag New state.
+ **/
+void pc_setfalcon(TBL_PC* sd, bool flag)
 {
-	if( flag ){
-		if( pc->checkskill(sd,HT_FALCON)>0 )	// add falcon if he have the skill
+	if (flag) {
+		if (pc->checkskill(sd,HT_FALCON) > 0) // add falcon if he have the skill
 			pc->setoption(sd,sd->sc.option|OPTION_FALCON);
-	} else if( pc_isfalcon(sd) ){
+	} else if (pc_isfalcon(sd)) {
 		pc->setoption(sd,sd->sc.option&~OPTION_FALCON); // remove falcon
 	}
-
-	return 0;
-}
-
-/*==========================================
- *  Set player riding
- *------------------------------------------*/
-int pc_setriding(TBL_PC* sd, int flag)
-{
-	if( flag ){
-		if( pc->checkskill(sd,KN_RIDING) > 0 ) // add peco
-			pc->setoption(sd, sd->sc.option|OPTION_RIDING);
-	} else if( pc_isriding(sd) ){
-			pc->setoption(sd, sd->sc.option&~OPTION_RIDING);
-	}
-
-	return 0;
 }
 
 /**
- * Gives player a mado
- * @param flag 1 Set mado
+ * Mounts/dismounts a Peco or Gryphon.
+ *
+ * The target player needs the required skills in order to mount a peco.
+ *
+ * @param sd Target player.
+ * @param flag New state.
  **/
-void pc_setmadogear( struct map_session_data *sd, int flag ) {
-	if( flag ) {
-		if( (sd->class_&MAPID_THIRDMASK) == MAPID_MECHANIC )
-			pc->setoption(sd, sd->sc.option|OPTION_MADOGEAR);
-	} else if( pc_ismadogear(sd) )
-		pc->setoption(sd, sd->sc.option&~OPTION_MADOGEAR);
+void pc_setridingpeco(TBL_PC* sd, bool flag)
+{
+	if (flag) {
+		if (pc->checkskill(sd, KN_RIDING))
+			pc->setoption(sd, sd->sc.option|OPTION_RIDING);
+	} else if (pc_isridingpeco(sd)) {
+		pc->setoption(sd, sd->sc.option&~OPTION_RIDING);
+	}
+}
 
-	return;
+/**
+ * Gives/removes a Mado Gear.
+ *
+ * The target player needs to be the correct class in order to obtain a mado gear.
+ *
+ * @param sd Target player.
+ * @param flag New state.
+ **/
+void pc_setmadogear(struct map_session_data *sd, bool flag)
+{
+	if (flag) {
+		if ((sd->class_&MAPID_THIRDMASK) == MAPID_MECHANIC)
+			pc->setoption(sd, sd->sc.option|OPTION_MADOGEAR);
+	} else if (pc_ismadogear(sd)) {
+		pc->setoption(sd, sd->sc.option&~OPTION_MADOGEAR);
+	}
+}
+
+/**
+ * Mounts/dismounts a dragon.
+ *
+ * The target player needs the required skills in order to mount a dragon.
+ *
+ * @param sd Target player.
+ * @param type New state. This must be a valid OPTION_DRAGON* or 0.
+ **/
+void pc_setridingdragon(TBL_PC* sd, unsigned int type)
+{
+	if (type&OPTION_DRAGON) {
+		// Ensure only one dragon is set at a time.
+		if (type&OPTION_DRAGON1)
+			type = OPTION_DRAGON1;
+		else if (type&OPTION_DRAGON2)
+			type = OPTION_DRAGON2;
+		else if (type&OPTION_DRAGON3)
+			type = OPTION_DRAGON3;
+		else if (type&OPTION_DRAGON4)
+			type = OPTION_DRAGON4;
+		else if (type&OPTION_DRAGON5)
+			type = OPTION_DRAGON5;
+		else
+			type = OPTION_DRAGON1;
+
+		if (pc->checkskill(sd, RK_DRAGONTRAINING))
+			pc->setoption(sd, (sd->sc.option&~OPTION_DRAGON)|type);
+	} else if (pc_isridingdragon(sd)) {
+		pc->setoption(sd,sd->sc.option&~OPTION_DRAGON); // remove dragon
+	}
+}
+
+/**
+ * Mounts/dismounts a wug.
+ *
+ * The target player needs the required skills in order to mount a wug.
+ *
+ * @param sd Target player.
+ * @param flag New state.
+ **/
+void pc_setridingwug(TBL_PC* sd, bool flag)
+{
+	if (flag) {
+		if (pc->checkskill(sd, RA_WUGRIDER) > 0)
+			pc->setoption(sd,sd->sc.option|OPTION_WUGRIDER);
+	} else if (pc_isridingwug(sd)) {
+		pc->setoption(sd,sd->sc.option&~OPTION_WUGRIDER); // remove wug
+	}
 }
 
 /**
@@ -9293,8 +9356,8 @@ int pc_calc_pvprank_sub(struct block_list *bl,va_list ap)
 	sd1=(struct map_session_data *)bl;
 	sd2=va_arg(ap,struct map_session_data *);
 
-	if( sd1->sc.option&OPTION_INVISIBLE || sd2->sc.option&OPTION_INVISIBLE )
-	{// cannot register pvp rank for hidden GMs
+	if (pc_isinvisible(sd1) ||pc_isinvisible(sd2)) {
+		// cannot register pvp rank for hidden GMs
 		return 0;
 	}
 
@@ -9328,8 +9391,8 @@ int pc_calc_pvprank_timer(int tid, int64 tick, int id, intptr_t data) {
 		return 0;
 	sd->pvp_timer = INVALID_TIMER;
 
-	if( sd->sc.option&OPTION_INVISIBLE )
-	{// do not calculate the pvp rank for a hidden GM
+	if (pc_isinvisible(sd)) {
+		// do not calculate the pvp rank for a hidden GM
 		return 0;
 	}
 
@@ -10967,8 +11030,10 @@ void pc_defaults(void) {
 	pc->setoption = pc_setoption;
 	pc->setcart = pc_setcart;
 	pc->setfalcon = pc_setfalcon;
-	pc->setriding = pc_setriding;
+	pc->setridingpeco = pc_setridingpeco;
 	pc->setmadogear = pc_setmadogear;
+	pc->setridingdragon = pc_setridingdragon;
+	pc->setridingwug = pc_setridingwug;
 	pc->changelook = pc_changelook;
 	pc->equiplookall = pc_equiplookall;
 	

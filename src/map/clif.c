@@ -5831,12 +5831,12 @@ void clif_pvpset(struct map_session_data *sd,int pvprank,int pvpnum,int type)
 		unsigned char buf[32];
 		WBUFW(buf,0) = 0x19a;
 		WBUFL(buf,2) = sd->bl.id;
-		if(sd->sc.option&(OPTION_HIDE|OPTION_CLOAK))
+		if (sd->sc.option&(OPTION_HIDE|OPTION_CLOAK)) // TODO[Haru] Should this be pc_ishiding(sd)? (i.e. include Chase Walk and any new options)
 			WBUFL(buf,6) = UINT32_MAX; //On client displays as --
 		else
 			WBUFL(buf,6) = pvprank;
 		WBUFL(buf,10) = pvpnum;
-		if(sd->sc.option&OPTION_INVISIBLE || sd->disguise != -1) //Causes crashes when a 'mob' with pvp info dies.
+		if (pc_isinvisible(sd) || sd->disguise != -1) //Causes crashes when a 'mob' with pvp info dies.
 			clif->send(buf,packet_len(0x19a),&sd->bl,SELF);
 		else if(!type)
 			clif->send(buf,packet_len(0x19a),&sd->bl,AREA);
@@ -9338,7 +9338,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 		sd->state.hpmeter_visible = 1;
 	}
 
-	if( !(sd->sc.option&OPTION_INVISIBLE) ) { // increment the number of pvp players on the map
+	if (!pc_isinvisible(sd)) { // increment the number of pvp players on the map
 		map->list[sd->bl.m].users_pvp++;
 	}
 
@@ -9359,7 +9359,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 
 	if( sd->bg_id ) clif->bg_hp(sd); // BattleGround System
 
-	if(map->list[sd->bl.m].flag.pvp && !(sd->sc.option&OPTION_INVISIBLE)) {
+	if (map->list[sd->bl.m].flag.pvp && !pc_isinvisible(sd)) {
 		if(!battle_config.pk_mode) { // remove pvp stuff for pk_mode [Valaris]
 			if (!map->list[sd->bl.m].flag.pvp_nocalcrank)
 				sd->pvp_timer = timer->add(timer->gettick()+200, pc->calc_pvprank_timer, sd->bl.id, 0);
@@ -9444,11 +9444,11 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 		clif->updatestatus(sd,SP_SKILLPOINT);
 		clif->initialstatus(sd);
 
-		if (sd->sc.option&OPTION_FALCON)
+		if (pc_isfalcon(sd))
 			clif->status_change(&sd->bl, SI_FALCON, 1, 0, 0, 0, 0);
-		if (sd->sc.option&(OPTION_RIDING|OPTION_DRAGON))
+		if (pc_isridingpeco(sd) || pc_isridingdragon(sd))
 			clif->status_change(&sd->bl, SI_RIDING, 1, 0, 0, 0, 0);
-		else if (sd->sc.option&OPTION_WUGRIDER)
+		else if (pc_isridingwug(sd))
 			clif->status_change(&sd->bl, SI_WUGRIDER, 1, 0, 0, 0, 0);
 
 		if(sd->status.manner < 0)
@@ -10488,7 +10488,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 
 	// if player ignores everyone
 	if (dstsd->state.ignoreAll && pc_get_group_level(sd) <= pc_get_group_level(dstsd)) {
-		if (dstsd->sc.option & OPTION_INVISIBLE && pc_get_group_level(sd) < pc_get_group_level(dstsd))
+		if (pc_isinvisible(dstsd) && pc_get_group_level(sd) < pc_get_group_level(dstsd))
 			clif->wis_end(fd, 1); // 1: target character is not logged in
 		else
 			clif->wis_end(fd, 3); // 3: everyone ignored by target
@@ -11162,16 +11162,17 @@ void clif_parse_GetItemFromCart(int fd,struct map_session_data *sd)
 /// 012a
 void clif_parse_RemoveOption(int fd,struct map_session_data *sd)
 {
-	if( !(sd->sc.option&(OPTION_RIDING|OPTION_FALCON|OPTION_DRAGON|OPTION_MADOGEAR))
-#ifdef NEW_CARTS
-		&& sd->sc.data[SC_PUSH_CART] ){
-		pc->setcart(sd,0);
-#else
-		){
-		pc->setoption(sd,sd->sc.option&~OPTION_CART);
-#endif
-	}else // priority to remove this option before we can clear cart
+	if (pc_isridingpeco(sd) || pc_isfalcon(sd) || pc_isridingdragon(sd) || pc_ismadogear(sd)) {
+		// priority to remove this option before we can clear cart
 		pc->setoption(sd,sd->sc.option&~(OPTION_RIDING|OPTION_FALCON|OPTION_DRAGON|OPTION_MADOGEAR));
+	} else {
+#ifdef NEW_CARTS
+		if (sd->sc.data[SC_PUSH_CART])
+			pc->setcart(sd,0);
+#else // not NEW_CARTS
+		pc->setoption(sd,sd->sc.option&~OPTION_CART);
+#endif // NEW_CARTS
+	}
 }
 
 

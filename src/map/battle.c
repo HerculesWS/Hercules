@@ -663,10 +663,10 @@ int64 battle_addmastery(struct map_session_data *sd,struct block_list *target,in
 			break;
 		case W_1HSPEAR:
 		case W_2HSPEAR:
-			if((skill_lv = pc->checkskill(sd,KN_SPEARMASTERY)) > 0) {
-				if(pc_isridingdragon(sd))
+			if ((skill_lv = pc->checkskill(sd,KN_SPEARMASTERY)) > 0) {
+				if (pc_isridingdragon(sd))
 					damage += (skill_lv * 10);
-				else if(pc_isriding(sd))
+				else if (pc_isridingpeco(sd))
 					damage += (skill_lv * 5);
 				else
 					damage += (skill_lv * 4);
