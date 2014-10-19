@@ -459,6 +459,8 @@ int guild_recv_info(struct guild *sg) {
 	struct map_session_data *sd;
 	bool guild_new = false;
 	struct hChSysCh *aChSysSave = NULL;
+	short *instance_save = NULL;
+	unsigned short instances_save = 0;
 
 	nullpo_ret(sg);
 
@@ -538,10 +540,16 @@ int guild_recv_info(struct guild *sg) {
 		before=*g;
 		if( g->channel )
 			aChSysSave = g->channel;
+		if( g->instance )
+			instance_save = g->instance;
+		if( g->instances )
+			instances_save = g->instances;
 	}
 	memcpy(g,sg,sizeof(struct guild));
 	
 	g->channel = aChSysSave;
+	g->instance = instance_save;
+	g->instances = instances_save;
 	
 	if(g->max_member > MAX_GUILD) {
 		ShowError("guild_recv_info: Received guild with %d members, but MAX_GUILD is only %d. Extra guild-members have been lost!\n", g->max_member, MAX_GUILD);
