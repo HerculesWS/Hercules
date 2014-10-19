@@ -8411,6 +8411,15 @@ If parameter 'HUNTING' is supplied:
 
 ---------------------------------------
 
+*questactive(<ID>)
+
+Check whether the given quest is in its active state.
+
+Returns true if the quest is active, false otherwise (quest not started,
+inactive or completed)
+
+---------------------------------------
+
 *showevent <icon>{,<mark color>}
 
 Show an emotion on top of a NPC, and optionally,

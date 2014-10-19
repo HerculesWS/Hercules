@@ -16373,6 +16373,23 @@ BUILDIN(checkquest) {
 	return true;
 }
 
+BUILDIN(questactive) {
+	struct map_session_data *sd = script->rid2sd(st);
+	int quest_progress = 0;
+
+	if (sd == NULL)
+		return false;
+
+	if (quest->check(sd, script_getnum(st, 2), HAVEQUEST) == Q_ACTIVE)
+		script_pushint(st, 1);
+	else
+		script_pushint(st, 0);
+
+	script_pushint(st, quest_progress);
+
+	return true;
+}
+
 BUILDIN(questprogress) {
 	struct map_session_data *sd = script->rid2sd(st);
 	enum quest_check_type type = HAVEQUEST;
@@ -19323,6 +19340,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(completequest, "i?"),
 		BUILDIN_DEF(checkquest, "i?"),
 		BUILDIN_DEF(questprogress, "i?"),
+		BUILDIN_DEF(questactive, "i"),
 		BUILDIN_DEF(changequest, "ii"),
 		BUILDIN_DEF(showevent, "i?"),
 
