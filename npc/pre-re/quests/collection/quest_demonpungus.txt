@@ -13,8 +13,8 @@
 //============================================================
 
 ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
-	if (checkquest(60125) != -1) {
-		if (checkquest(60125,HUNTING) != 2 ) {
+	if (questprogress(60125)) {
+		if (questprogress(60125,HUNTING) != 2) {
 			mes "[Local Villager]";
 			mes "Have you finished hunting the 50 Demon Pungus?";
 			next;
@@ -53,8 +53,8 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 			close;
 		}
 	}
-	if (checkquest(60126) != -1) {
-		if (checkquest(60126,HUNTING) != 2 ) {
+	if (questprogress(60126)) {
+		if (questprogress(60126,HUNTING) != 2) {
 			mes "[Local Villager]";
 			mes "Have you finished hunting the 50 Demon Pungus?";
 			next;
@@ -94,8 +94,8 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 			close;
 		}
 	}
-	if (checkquest(60127) != -1) {
-		if (checkquest(60127,HUNTING) != 2 ) {
+	if (questprogress(60127)) {
+		if (questprogress(60127,HUNTING) != 2) {
 			mes "[Local Villager]";
 			mes "Have you finished hunting the 150 Demon Pungus?";
 			next;

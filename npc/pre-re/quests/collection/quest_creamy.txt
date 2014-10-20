@@ -13,8 +13,8 @@
 //============================================================
 
 prt_fild04,356,148,3	script	Laertes#Creamy_Hunt	4_M_NFMAN,{
-	if (checkquest(60122) != -1) {
-		if (checkquest(60122,HUNTING) != 2 ) {
+	if (questprogress(60122)) {
+		if (questprogress(60122,HUNTING) != 2) {
 			mes "[Laertes]";
 			mes "Have you finished hunting the 50 Creamys?";
 			next;
@@ -53,8 +53,8 @@ prt_fild04,356,148,3	script	Laertes#Creamy_Hunt	4_M_NFMAN,{
 			close;
 		}
 	}
-	if (checkquest(60123) != -1) {
-		if (checkquest(60123,HUNTING) != 2 ) {
+	if (questprogress(60123)) {
+		if (questprogress(60123,HUNTING) != 2) {
 			mes "[Laertes]";
 			mes "Have you finished hunting the 50 Creamys?";
 			next;
@@ -94,8 +94,8 @@ prt_fild04,356,148,3	script	Laertes#Creamy_Hunt	4_M_NFMAN,{
 			close;
 		}
 	}
-	if (checkquest(60124) != -1) {
-		if (checkquest(60124,HUNTING) != 2 ) {
+	if (questprogress(60124)) {
+		if (questprogress(60124,HUNTING) != 2) {
 			mes "[Laertes]";
 			mes "Have you finished hunting the 150 Creamys?";
 			next;

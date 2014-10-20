@@ -13,8 +13,8 @@
 //============================================================
 
 um_fild01,34,281,5	script	Lilla#Dryad_Hunt	4_F_07,{
-	if (checkquest(60131) != -1) {
-		if (checkquest(60131,HUNTING) != 2 ) {
+	if (questprogress(60131)) {
+		if (questprogress(60131,HUNTING) != 2) {
 			mes "[Lilla]";
 			mes "Have you finished hunting the 50 Dryads?";
 			next;
@@ -53,8 +53,8 @@ um_fild01,34,281,5	script	Lilla#Dryad_Hunt	4_F_07,{
 			close;
 		}
 	}
-	if (checkquest(60132) != -1) {
-		if (checkquest(60132,HUNTING) != 2 ) {
+	if (questprogress(60132)) {
+		if (questprogress(60132,HUNTING) != 2) {
 			mes "[Lilla]";
 			mes "Have you finished hunting the 50 Dryads?";
 			next;
@@ -94,8 +94,8 @@ um_fild01,34,281,5	script	Lilla#Dryad_Hunt	4_F_07,{
 			close;
 		}
 	}
-	if (checkquest(60133) != -1) {
-		if (checkquest(60133,HUNTING) != 2 ) {
+	if (questprogress(60133)) {
+		if (questprogress(60133,HUNTING) != 2) {
 			mes "[Lilla]";
 			mes "Have you finished hunting the 150 Dryads?";
 			next;

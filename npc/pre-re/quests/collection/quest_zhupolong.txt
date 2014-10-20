@@ -13,8 +13,8 @@
 
 lou_dun02,161,264,4	script	Dragon Hunter	4_M_JOB_HUNTER,{
 
-	if (checkquest(60182) != -1) {
-		if (checkquest(60182,HUNTING) != 2 ) {
+	if (questprogress(60182)) {
+		if (questprogress(60182,HUNTING) != 2) {
 			mes "[Dragon Hunter]";
 			mes "Have you finished hunting the 50 Zhu Po Long?";
 			next;

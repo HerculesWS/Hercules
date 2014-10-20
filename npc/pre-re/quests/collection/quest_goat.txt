@@ -13,8 +13,8 @@
 //============================================================
 
 ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
-	if (checkquest(60137) != -1) {
-		if (checkquest(60137,HUNTING) != 2 ) {
+	if (questprogress(60137)) {
+		if (questprogress(60137,HUNTING) != 2) {
 			mes "[Vegetable Farmer]";
 			mes "Have you finished hunting the 50 Goats?";
 			next;
@@ -53,8 +53,8 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 			close;
 		}
 	}
-	if (checkquest(60138) != -1) {
-		if (checkquest(60138,HUNTING) != 2) {
+	if (questprogress(60138)) {
+		if (questprogress(60138,HUNTING) != 2) {
 			mes "[Vegetable Farmer]";
 			mes "Have you finished hunting the 100 Goats?";
 			next;
@@ -94,8 +94,8 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 			close;
 		}
 	}
-	if (checkquest(60139) != -1) {
-		if (checkquest(60139,HUNTING) != 2) {
+	if (questprogress(60139)) {
+		if (questprogress(60139,HUNTING) != 2) {
 			mes "[Vegetable Farmer]";
 			mes "Have you finished hunting the 150 Goats?";
 			next;

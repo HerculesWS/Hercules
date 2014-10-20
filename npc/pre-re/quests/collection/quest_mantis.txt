@@ -13,8 +13,8 @@
 
 lou_fild01,240,354,4	script	Mantis Researcher	4_M_OILMAN,{
 
-	if (checkquest(60179) != -1) {
-		if (checkquest(60179,HUNTING) != 2 ) {
+	if (questprogress(60179)) {
+		if (questprogress(60179,HUNTING) != 2) {
 			mes "[Mantis Researcher]";
 			mes "Have you finished hunting the 50 Mantis?";
 			next;
