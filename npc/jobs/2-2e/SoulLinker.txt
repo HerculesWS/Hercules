@@ -520,7 +520,7 @@ job_soul,30,35,6	script	Monk Spirit#link4	4_M_GRANDMONK,{
 		mes "possibly have to do this.";
 		next;
 		set SOUL_Q,4;
-		if(checkquest(6008) == -1) {
+		if (!questprogress(6008)) {
 			changequest 6007,6008;
 		}
 		mes "[Monk Spirit]";
@@ -569,7 +569,7 @@ job_soul,30,25,7	script	Sage Spirit#link5	4_M_SAGE_A,{
 		mes "require your help. I beg you,";
 		mes "let me become your spirit ally.";
 		set SOUL_Q,4;
-		if(checkquest(6008) == -1) {
+		if (!questprogress(6008)) {
 			changequest 6007,6008;
 		}
 		next;
@@ -613,7 +613,7 @@ job_soul,25,30,5	script	Alchemist Spirit#link7	4_F_ALCHE,{
 		mes "on to the next world until I've";
 		mes "passed on my techniques...";
 		set SOUL_Q,4;
-		if(checkquest(6008) == -1) {
+		if (!questprogress(6008)) {
 			changequest 6007,6008;
 		}
 		next;

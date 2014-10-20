@@ -245,10 +245,10 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 			delitem .@item3, 10;
 			delitem .@item4, 10;
 			set CRUS_Q, 4;
-			if(checkquest(3006) != -1) {
+			if (questprogress(3006)) {
 				changequest 3006,3009;
 			}
-			else if(checkquest(3007) != -1) {
+			else if (questprogress(3007)) {
 				changequest 3007,3009;
 			}
 			else {
@@ -759,7 +759,7 @@ prt_church,95,127,3	script	Crusader	4_F_CRU,{
 			close;
 		}
 		set CRUS_Q,7;
-		if(checkquest(3011) != -1) {
+		if (questprogress(3011)) {
 			changequest 3011,3012;
 		}
 		mes "Hmmm... What a pity.";
@@ -866,7 +866,7 @@ prt_castle,35,151,5	script	Patron Knight	4_M_CRU,{
 			mes "[Bliant Piyord]";
 			mes "To take the battle test, bring";
 			mes "1 ^3355FFHoly Water^000000. This will be used to purify you prior to taking the test.";
-			if(checkquest(3013) != -1) {
+			if (questprogress(3013)) {
 				changequest 3013,3014;
 			}
 			next;

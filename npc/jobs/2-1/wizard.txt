@@ -547,7 +547,7 @@ gef_tower,102,24,2	script	Gloomy Wizard	4_M_JOB_WIZARD,{
 			mes "[Raulel]";
 			mes "I'll give you 10 questions so give me the right answers.";
 			mes "If you get something wrong, I won't tell you what it is!";
-			if(checkquest(9016) == -1) {
+			if (!questprogress(9016)) {
 				changequest 9015,9016;
 			}
 			next;

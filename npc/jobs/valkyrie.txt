@@ -325,7 +325,7 @@ yuno_in02,93,207,1	script	Book of Ymir	HIDDEN_NPC,{
 			mes "can confirm that Valkyrie and Valhalla actually exist...";
 			next;
 			set valkyrie_Q,2;
-			if(checkquest(1000) == -1) {
+			if(!questprogress(1000)) {
 				setquest 1000;
 			}
 			mes "[The Book of Ymir]";

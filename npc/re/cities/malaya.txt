@@ -222,7 +222,7 @@ OnTouch:
 		if (getcharid(0) == getpartyleader(getcharid(1),2))
 			set .@pass,1;
 	} else if (.@i%4 == 3) {
-		if (checkquest(4229,PLAYTIME) > -1 && checkquest(9223,PLAYTIME) > -1 && checkquest(12278,PLAYTIME) > -1)
+		if (questprogress(4229,PLAYTIME) && questprogress(9223,PLAYTIME) && questprogress(12278,PLAYTIME))
 			set .@pass,1;
 	} else if (.@i%4 == 0) {
 		if (rand(1,100)%10 == 7)

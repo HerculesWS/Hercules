@@ -92,12 +92,12 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 		set .@party_id,getcharid(1);
 		set .@md_name$,"Nidhoggur's Nest";
 
-		set .@ins_nyd_check,checkquest(3135,PLAYTIME); // 3 Day cooldown
-		set .@ins_nyd_check2,checkquest(3136,PLAYTIME); // 4 Hour play limit
+		.@ins_nyd_check = questprogress(3135,PLAYTIME); // 3 Day cooldown
+		.@ins_nyd_check2 = questprogress(3136,PLAYTIME); // 4 Hour play limit
 
 		mes "As I put my hands on the stone gate, a voice sounded from the depth of my heart.";
 		next;
-		if (.@ins_nyd_check == -1 && .@ins_nyd_check2 == -1) {
+		if (!.@ins_nyd_check && !.@ins_nyd_check2) {
 			if (!instance_check_party(.@party_id,2,70)) {
 				mes "[Yggdrasil Gatekeeper]";
 				mes "Where are the other servants, so you can work together? Each servant cannot be admitted here individually...";
@@ -150,7 +150,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 				close;
 			goto L_Enter;
 		} else {
-			if (.@ins_nyd_check == 0 || .@ins_nyd_check == 1) {
+			if (.@ins_nyd_check == 1) {
 				if ('ins_nyd2 == 3 || 'ins_nyd2 == 4) {
 					mes "[Yggdrasil Gatekeeper]";
 					mes "With the defeat of Nidhoggur's Shadow, the roots of the World Tree Yggdrasil are also affected.";
@@ -166,7 +166,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 					close;
 				goto L_Enter;
 			} else if (.@ins_nyd_check == 2) {
-				if (.@ins_nyd_check2 == 0 || .@ins_nyd_check2 == 1) {
+				if (.@ins_nyd_check2 == 1) {
 					mes "[Yggdrasil Gatekeeper]";
 					mes "The time limit to enter the dungeon has expired. You must wait for the World Tree to stabilize its power before trying to re-enter.";
 					close;
@@ -210,8 +210,8 @@ L_Enter:
 		close;
 	} else {
 		mapannounce "nyd_dun02", getpartyname(getcharid(1))+"'s party member "+strcharinfo(0)+" has entered Nidhoggur's Nest.",bc_map,"0x00ff99";
-		if (checkquest(3135) == -1) setquest 3135;
-		if (checkquest(3136) == -1) setquest 3136;
+		if (!questprogress(3135)) setquest 3135;
+		if (!questprogress(3136)) setquest 3136;
 		warp "1@nyd",32,37;
 		close;
 	}

@@ -690,7 +690,7 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 	}
 	else if (PRIEST_Q == 7 || PRIEST_Q == 8) {
 		if (PRIEST_Q == 7) {
-			if(checkquest(8014) == -1) {
+			if (!questprogress(8014)) {
 				changequest 8013,8014;
 			}
 			mes "Welcome! I'm so glad to see you've come back! Now, there is one last trial left for you to complete.";
@@ -990,7 +990,7 @@ job_prist,24,187,4	script	Peter S. Alberto	4_M_MINISTER,{
 			mes "Kill those";
 			mes "misbegotten creatures!";
 			close2;
-			if(checkquest(8012) == -1) {
+			if (!questprogress(8012)) {
 				changequest 8011,8012;
 			}
 			warp "job_prist",24,44;
@@ -1712,7 +1712,7 @@ OnTouch:
 	}
 	else if (BaseClass == Job_Acolyte) {
 		set PRIEST_Q,7;
-		if(checkquest(8012) != -1) {
+		if (questprogress(8012)) {
 			changequest 8012,8013;
 		}
 		warp "prt_church",16,37;

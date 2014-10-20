@@ -4453,7 +4453,7 @@ prontera,153,353,4	script	Messenger#prince1	8W_SOLDIER,{
 }
 
 prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
-	if (checkquest(10004) == 0 || checkquest(10004) == 1) {
+	if (questprogress(10004) == 1) {
 		mes "[Inspector]";
 		mes "Judge!";
 		mes "How goes it? I don't think it is easy to meet seven candidates and appraise them.";
@@ -5243,7 +5243,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "How is it going?";
 		mes "Grading someone is not a piece of cake. It's real hard work indeed. You do the hard work for our country.";
 		next;
-		if ((nkprince_eisen == 15) && (checkquest(10025) == 0 || checkquest(10025) == 1)) {
+		if (nkprince_eisen == 15 && questprogress(10025) == 1) {
 			mes "-I tell him about the Ahrum and Ernst accident.-";
 			next;
 			mes "[Inspector]";
@@ -5308,14 +5308,8 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		next;
 		switch(select("Yes.:No.")) {
 		case 1:
-			set .@prin1,checkquest(10005);
-			set .@prin2,checkquest(10006);
-			set .@prin3,checkquest(10007);
-			set .@prin4,checkquest(10008);
-			set .@prin5,checkquest(10009);
-			set .@prin6,checkquest(10010);
-			set .@prin7,checkquest(10011);
-			if (.@prin1 + .@prin2 + .@prin3 + .@prin4 + .@prin5 + .@prin6 + .@prin7 == 14) {
+			if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
+			 && questprogress(10009) == 2 && questprogress(10010) == 2 && questprogress(10011) == 2) {
 				mes "[Inspector]";
 				mes "Very well.";
 				mes "I like hearing about the princes.";
@@ -5328,14 +5322,8 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 			}
 			close;
 		case 2:
-			set .@prin1,checkquest(10005);
-			set .@prin2,checkquest(10006);
-			set .@prin3,checkquest(10007);
-			set .@prin4,checkquest(10008);
-			set .@prin5,checkquest(10009);
-			set .@prin6,checkquest(10010);
-			set .@prin7,checkquest(10011);
-			if (.@prin1 + .@prin2 + .@prin3 + .@prin4 + .@prin5 + .@prin6 + .@prin7 == 14) {
+			if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
+			 && questprogress(10009) == 2 && questprogress(10010) == 2 && questprogress(10011) == 2) {
 				mes "[Inspector]";
 				mes "Don't be coy. I'm sure you have done it already.";
 				completequest 10004;
@@ -5355,13 +5343,13 @@ prt_castle,272,375,4	script	Prince	4_M_SITDOWN,{
 		mes "lock and key.-";
 		close;
 	}
-	if (checkquest(10020) == 2) {
+	if (questprogress(10020) == 2) {
 		mes "[Erich]";
 		mes "...What bad luck I have!";
 		mes "But he insists me to be corrupted, knowing how it would be...";
 		close;
 	}
-	else if (checkquest(10020) == 0 || checkquest(10020) == 1) {
+	else if (questprogress(10020) == 1) {
 		mes "[Erich]";
 		mes "These days, I have bad luck... Only harrassments happen to me...";
 		close;
@@ -5394,14 +5382,8 @@ prt_castle,272,375,4	script	Prince	4_M_SITDOWN,{
 		mes "You can ask information about me to my servant. I will take a rest.";
 		set nk_prince,6;
 		completequest 10011;
-		set .@prin1,checkquest(10005);
-		set .@prin2,checkquest(10006);
-		set .@prin3,checkquest(10007);
-		set .@prin4,checkquest(10008);
-		set .@prin5,checkquest(10009);
-		set .@prin6,checkquest(10010);
-		set .@prin7,checkquest(10011);
-		if ((.@prin1 + .@prin2 + .@prin3 + .@prin4 + .@prin5 + .@prin6 + .@prin7) == 14) {
+		if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
+		 && questprogress(10009) == 2 && questprogress(10010) == 2 && questprogress(10011) == 2) {
 			setquest 10012;
 		}
 		close;
@@ -5417,7 +5399,7 @@ prt_castle,272,375,4	script	Prince	4_M_SITDOWN,{
 }
 
 prt_castle,274,372,4	script	Servant#hans	1_M_02,{
-	if (checkquest(10020) == 2) {
+	if (questprogress(10020) == 2) {
 		mes "[Hans]";
 		mes "Ahh... mmm... I...";
 		mes "I... am so, sorry!";
@@ -5427,7 +5409,7 @@ prt_castle,274,372,4	script	Servant#hans	1_M_02,{
 		mes "My prince didn't do anything wrong but, anyways, I apologize for anything to you!";
 		close;
 	}
-	else if (checkquest(10020) == 0 || checkquest(10020) == 1) {
+	else if (questprogress(10020) == 1) {
 		mes "Incessantly...-";
 		mes "-He has jitters whenever I react to him. His actions give me a feeling of pity.-";
 		close;
@@ -5507,7 +5489,7 @@ prt_castle,339,202,3	script	Prince#urgen	4_M_4THPRIN1,{
 		mes "It discomforts me...";
 		close;
 	}
-	if (checkquest(10021) == 2) {
+	if (questprogress(10021) == 2) {
 		mes "[Urugen]";
 		mes " feel very much displeased. Hey, what are you looking at? Get out!";
 		next;
@@ -5515,7 +5497,7 @@ prt_castle,339,202,3	script	Prince#urgen	4_M_4THPRIN1,{
 		mes "My beautiful body isn't in perfect condition right now. I don't want to show it to anyone today.";
 		close;
 	}
-	else if (checkquest(10021) == 0 || checkquest(10021) == 1) {
+	else if (questprogress(10021) == 1) {
 		mes "[Urugen]";
 		mes "...What? What did you...";
 		mes "just say to me?... Huh?";
@@ -5587,14 +5569,8 @@ prt_castle,339,202,3	script	Prince#urgen	4_M_4THPRIN1,{
 					completequest 10009;
 				}
 				completequest 10011;
-				set .@prin1,checkquest(10005);
-				set .@prin2,checkquest(10006);
-				set .@prin3,checkquest(10007);
-				set .@prin4,checkquest(10008);
-				set .@prin5,checkquest(10009);
-				set .@prin6,checkquest(10010);
-				set .@prin7,checkquest(10011);
-				if ((.@prin1 + .@prin2 + .@prin3 + .@prin4 + .@prin5 + .@prin6 + .@prin7) == 14) {
+				if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
+				 && questprogress(10009) == 2 && questprogress(10010) == 2 && questprogress(10011) == 2) {
 					setquest 10012;
 				}
 				close;
@@ -5609,14 +5585,14 @@ prt_castle,289,201,3	script	Prince#helmut	4_M_5THPRIN1,{
 		mes "Such an idiot. I should have killed him earlier. Now I feel relieved.";
 		close;
 	}
-	if (checkquest(10022) == 2) {
+	if (questprogress(10022) == 2) {
 		mes "[Helmut]";
 		mes "Damn... Damn it!";
 		mes "Novice of Walter!!";
 		mes "How can I deal with this stress? Damn! Hell!";
 		close;
 	}
-	else if (checkquest(10022) == 0 || checkquest(10022) == 1) {
+	else if (questprogress(10022) == 1) {
 		mes "-He is so blushed,";
 		mes "evidently shown on his face.-";
 		close;
@@ -5668,14 +5644,8 @@ prt_castle,289,201,3	script	Prince#helmut	4_M_5THPRIN1,{
 			mes "[" + strcharinfo(0) + "]";
 			mes "......";
 			completequest 10010;
-			set .@prin1,checkquest(10005);
-			set .@prin2,checkquest(10006);
-			set .@prin3,checkquest(10007);
-			set .@prin4,checkquest(10008);
-			set .@prin5,checkquest(10009);
-			set .@prin6,checkquest(10010);
-			set .@prin7,checkquest(10011);
-			if ((.@prin1 + .@prin2 + .@prin3 + .@prin4 + .@prin5 + .@prin6 + .@prin7) == 14) {
+			if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
+			 && questprogress(10009) == 2 && questprogress(10010) == 2 && questprogress(10011) == 2) {
 				setquest 10012;
 			}
 			close;
@@ -5713,14 +5683,8 @@ prt_castle,289,201,3	script	Prince#helmut	4_M_5THPRIN1,{
 			mes "[" + strcharinfo(0) + "]";
 			mes "......";
 			completequest 10010;
-			set .@prin1,checkquest(10005);
-			set .@prin2,checkquest(10006);
-			set .@prin3,checkquest(10007);
-			set .@prin4,checkquest(10008);
-			set .@prin5,checkquest(10009);
-			set .@prin6,checkquest(10010);
-			set .@prin7,checkquest(10011);
-			if ((.@prin1 + .@prin2 + .@prin3 + .@prin4 + .@prin5 + .@prin6 + .@prin7) == 14) {
+			if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
+			 && questprogress(10009) == 2 && questprogress(10010) == 2 && questprogress(10011) == 2) {
 				setquest 10012;
 			}
 			close;
@@ -5758,14 +5722,8 @@ prt_castle,289,201,3	script	Prince#helmut	4_M_5THPRIN1,{
 			mes "[" + strcharinfo(0) + "]";
 			mes "......";
 			completequest 10010;
-			set .@prin1,checkquest(10005);
-			set .@prin2,checkquest(10006);
-			set .@prin3,checkquest(10007);
-			set .@prin4,checkquest(10008);
-			set .@prin5,checkquest(10009);
-			set .@prin6,checkquest(10010);
-			set .@prin7,checkquest(10011);
-			if ((.@prin1 + .@prin2 + .@prin3 + .@prin4 + .@prin5 + .@prin6 + .@prin7) == 14) {
+			if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
+			 && questprogress(10009) == 2 && questprogress(10010) == 2 && questprogress(10011) == 2) {
 				setquest 10012;
 			}
 			close;
@@ -5806,12 +5764,12 @@ prt_castle,391,205,3	script	Prince#poe	4_M_6THPRIN1,{
 		mes "Whatever the condition is, he is just a loser in the match of life.";
 		close;
 	}
-	if (checkquest(10018) == 2) {
+	if (questprogress(10018) == 2) {
 		mes "[Poe]";
 		mes "He gave up without any challenge. That's not what the man has to do. He is not as good as me. But okay. I am disappointed in him. Eigen Ahrum.";
 		close;
 	}
-	else if (checkquest(10018) == 0 || checkquest(10018) == 1) {
+	else if (questprogress(10018) == 1) {
 		mes "[Poe]";
 		mes "......";
 		close;
@@ -6008,14 +5966,8 @@ prt_castle,391,205,3	script	Prince#poe	4_M_6THPRIN1,{
 				if (.@p_a + .@p_b + .@p_c == 3) {
 					completequest 10007;
 				}
-				set .@prin1,checkquest(10005);
-				set .@prin2,checkquest(10006);
-				set .@prin3,checkquest(10007);
-				set .@prin4,checkquest(10008);
-				set .@prin5,checkquest(10009);
-				set .@prin6,checkquest(10010);
-				set .@prin7,checkquest(10011);
-				if ((.@prin1 + .@prin2 + .@prin3 + .@prin4 + .@prin5 + .@prin6 + .@prin7) == 14) {
+				if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
+				 && questprogress(10009) == 2 && questprogress(10010) == 2 && questprogress(10011) == 2) {
 					setquest 10012;
 				}
 				close;
@@ -6032,7 +5984,7 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 		next;
 		switch(select("Yes, I saw her for you.:No, I don't want to.")) {
 		case 1:
-			if (checkquest(10014) == 0 || checkquest(10014) == 1) {
+			if (questprogress(10014) == 1) {
 				mes "[Peter]";
 				mes "I am glad that the girl liked it. Once I got cured, I wanted to go meet with her.";
 				next;
@@ -6046,7 +5998,7 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 			mes "Thinking about the little girl calms me. I still can't believe my eyes. My prince Ahrum who just passed away...~";
 			close;
 		case 2:
-			if (checkquest(10014) == 0 || checkquest(10014) == 1) {
+			if (questprogress(10014) == 1) {
 				mes "[Peter]";
 				mes "As you said.";
 				mes "I've heard that her life is like a flower when I lost it.";
@@ -6064,25 +6016,25 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 			close;
 		}
 	}
-	if (checkquest(10019) == 2) {
+	if (questprogress(10019) == 2) {
 		mes "[Peter]";
 		mes "Child... What the heck happened to you?...";
 		close;
 	}
-	else if (checkquest(10019) == 0 || checkquest(10019) == 1) {
+	else if (questprogress(10019) == 1) {
 		mes "[Peter]";
 		mes "......";
 		close;
 	}
-	if (checkquest(10008) == 2) {
-		set .@quest, checkquest(10014);
+	if (questprogress(10008) == 2) {
+		.@quest = questprogress(10014);
 		if (.@quest == 2) {
 			mes "[Peter]";
 			mes "I really appreciate it.";
 			mes "You are so kind.";
 			close;
 		}
-		else if (.@quest == 0 || .@quest == 1) {
+		else if (.@quest == 1) {
 			mes "[Peter]";
 			mes "I am glad that the girl liked it. Once I got cured, I wanted to go meet with her.";
 			next;
@@ -6172,14 +6124,8 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 						mes "Please take care.";
 						getitem 744,1; //Bunch_Of_Flowers
 						setquest 10013;
-						set .@prin1,checkquest(10005);
-						set .@prin2,checkquest(10006);
-						set .@prin3,checkquest(10007);
-						set .@prin4,checkquest(10008);
-						set .@prin5,checkquest(10009);
-						set .@prin6,checkquest(10010);
-						set .@prin7,checkquest(10011);
-						if ((.@prin1 + .@prin2 + .@prin3 + .@prin4 + .@prin5 + .@prin6 + .@prin7) == 14) {
+						if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
+						 && questprogress(10009) == 2 && questprogress(10010) == 2 && questprogress(10011) == 2) {
 							setquest 10012;
 						}
 						close;
@@ -6189,14 +6135,8 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 						mes "I know you have your";
 						mes "own business.";
 						setquest 10013;
-						set .@prin1,checkquest(10005);
-						set .@prin2,checkquest(10006);
-						set .@prin3,checkquest(10007);
-						set .@prin4,checkquest(10008);
-						set .@prin5,checkquest(10009);
-						set .@prin6,checkquest(10010);
-						set .@prin7,checkquest(10011);
-						if ((.@prin1 + .@prin2 + .@prin3 + .@prin4 + .@prin5 + .@prin6 + .@prin7) == 14) {
+						if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
+						 && questprogress(10009) == 2 && questprogress(10010) == 2 && questprogress(10011) == 2) {
 							setquest 10012;
 						}
 						close;
@@ -6208,7 +6148,7 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 }
 
 aldebaran,132,184,3	script	Girl#prince	4W_KID,{
-	if (checkquest(10013) == 0 || checkquest(10013) == 1) {
+	if (questprogress(10013) == 1) {
 		if (countitem(744) > 0) {
 			mes "[Girl]";
 			mes "Wooah, Uncle Peter sent these flowers";
@@ -6681,14 +6621,8 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 					set nkprince_eisen,1;
 				}
 				completequest 10005;
-				set .@prin1,checkquest(10005);
-				set .@prin2,checkquest(10006);
-				set .@prin3,checkquest(10007);
-				set .@prin4,checkquest(10008);
-				set .@prin5,checkquest(10009);
-				set .@prin6,checkquest(10010);
-				set .@prin7,checkquest(10011);
-				if ((.@prin1 + .@prin2 + .@prin3 + .@prin4 + .@prin5 + .@prin6 + .@prin7) == 14) {
+				if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
+				 && questprogress(10009) == 2 && questprogress(10010) == 2 && questprogress(10011) == 2) {
 					setquest 10012;
 				}
 				close;
@@ -6698,14 +6632,14 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 }
 
 prt_castle,368,312,4	script	Prince#ern	4_M_2NDPRIN1,{
-	if (checkquest(10024) == 2) {
+	if (questprogress(10024) == 2) {
 		mes "[Ernst]";
 		mes "...brother, if you want...";
 		mes "...Ah, please leave here.";
 		mes "I don't want to see anyone.";
 		close;
 	}
-	else if (checkquest(10024) == 0 || checkquest(10024) == 1) {
+	else if (questprogress(10024) == 1) {
 		mes "[Ernst]";
 		mes "...Brother Ahrum...";
 		close;
@@ -6874,14 +6808,8 @@ prt_castle,368,312,4	script	Prince#ern	4_M_2NDPRIN1,{
 					set nkprince_eisen,2;
 				}
 				completequest 10006;
-				set .@prin1,checkquest(10005);
-				set .@prin2,checkquest(10006);
-				set .@prin3,checkquest(10007);
-				set .@prin4,checkquest(10008);
-				set .@prin5,checkquest(10009);
-				set .@prin6,checkquest(10010);
-				set .@prin7,checkquest(10011);
-				if ((.@prin1 + .@prin2 + .@prin3 + .@prin4 + .@prin5 + .@prin6 + .@prin7) == 14) {
+				if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
+				 && questprogress(10009) == 2 && questprogress(10010) == 2 && questprogress(10011) == 2) {
 					setquest 10012;
 				}
 				close;
@@ -7290,12 +7218,8 @@ prt_castle,272,372,1	script	Prince#eisen1	4_M_1STPRIN1,{
 	mes "[Erich]";
 	mes "...Nuts.";
 	completequest 10020;
-	set .@er1,checkquest(10018);
-	set .@er2,checkquest(10019);
-	set .@er3,checkquest(10020);
-	set .@er4,checkquest(10021);
-	set .@er5,checkquest(10022);
-	if ((.@er1 + .@er2 + .@er3 + .@er4 + .@er5) == 10) {
+	if (questprogress(10018) == 2 && questprogress(10019) == 2 && questprogress(10020) == 2
+	 && questprogress(10021) == 2 && questprogress(10022) == 2) {
 		setquest 10023;
 		set nkprince_eisen,11;
 	}
@@ -7348,12 +7272,8 @@ prt_castle,336,202,7	script	Prince#eisen2	4_M_1STPRIN1,{
 	mes "[Urugen]";
 	mes "...You are so low. I misjudged you. You are not of the few that have an artistic view. I totally saw you the wrong way.";
 	completequest 10021;
-	set .@er1,checkquest(10018);
-	set .@er2,checkquest(10019);
-	set .@er3,checkquest(10020);
-	set .@er4,checkquest(10021);
-	set .@er5,checkquest(10022);
-	if ((.@er1 + .@er2 + .@er3 + .@er4 + .@er5) == 10) {
+	if (questprogress(10018) == 2 && questprogress(10019) == 2 && questprogress(10020) == 2
+	 && questprogress(10021) == 2 && questprogress(10022) == 2) {
 		setquest 10023;
 		set nkprince_eisen,11;
 	}
@@ -7403,12 +7323,8 @@ prt_castle,286,201,7	script	Prince#eisen3	4_M_1STPRIN1,{
 	mes "[Helmut]";
 	mes "That is... such a villain!!!";
 	completequest 10022;
-	set .@er1,checkquest(10018);
-	set .@er2,checkquest(10019);
-	set .@er3,checkquest(10020);
-	set .@er4,checkquest(10021);
-	set .@er5,checkquest(10022);
-	if ((.@er1 + .@er2 + .@er3 + .@er4 + .@er5) == 10) {
+	if (questprogress(10018) == 2 && questprogress(10019) == 2 && questprogress(10020) == 2
+	 && questprogress(10021) == 2 && questprogress(10022) == 2) {
 		setquest 10023;
 		set nkprince_eisen,11;
 	}
@@ -7467,12 +7383,8 @@ prt_castle,388,205,6	script	Prince#eisen4	4_M_1STPRIN1,{
 	mes "What... What. It's not fun.";
 	mes "I totally couldn't get him.";
 	completequest 10018;
-	set .@er1,checkquest(10018);
-	set .@er2,checkquest(10019);
-	set .@er3,checkquest(10020);
-	set .@er4,checkquest(10021);
-	set .@er5,checkquest(10022);
-	if ((.@er1 + .@er2 + .@er3 + .@er4 + .@er5) == 10) {
+	if (questprogress(10018) == 2 && questprogress(10019) == 2 && questprogress(10020) == 2
+	 && questprogress(10021) == 2 && questprogress(10022) == 2) {
 		setquest 10023;
 		set nkprince_eisen,11;
 	}
@@ -7531,12 +7443,8 @@ prt_castle,364,372,1	script	Prince#eisen5	4_M_1STPRIN1,{
 	mes "[Peter]";
 	mes "......";
 	completequest 10019;
-	set .@er1,checkquest(10018);
-	set .@er2,checkquest(10019);
-	set .@er3,checkquest(10020);
-	set .@er4,checkquest(10021);
-	set .@er5,checkquest(10022);
-	if ((.@er1 + .@er2 + .@er3 + .@er4 + .@er5) == 10) {
+	if (questprogress(10018) == 2 && questprogress(10019) == 2 && questprogress(10020) == 2
+	 && questprogress(10021) == 2 && questprogress(10022) == 2) {
 		setquest 10023;
 		set nkprince_eisen,11;
 	}
@@ -7737,7 +7645,7 @@ OnTouch:
 
 prt_castle,336,276,0	script	#ern	WARPNPC,1,1,{
 OnTouch:
-	if (checkquest(10023) == 0 || checkquest(10023) == 1) {
+	if (questprogress(10023) == 1) {
 		donpcevent "Prince#eisen6::OnEnable";
 	}
 	warp "prt_castle",368,308;
@@ -7746,7 +7654,7 @@ OnTouch:
 
 prt_castle,300,276,0	script	#erich	WARPNPC,1,1,{
 OnTouch:
-	if (checkquest(10020) == 0 || checkquest(10020) == 1) {
+	if (questprogress(10020) == 1) {
 		donpcevent "Prince#eisen1::OnEnable";
 	}
 	warp "prt_castle",274,368;
@@ -7755,7 +7663,7 @@ OnTouch:
 
 prt_castle,330,271,0	script	#helmut	WARPNPC,1,1,{
 OnTouch:
-	if (checkquest(10022) == 0 || checkquest(10022) == 1) {
+	if (questprogress(10022) == 1) {
 		donpcevent "Prince#eisen3::OnEnable";
 	}
 	warp "prt_castle",290,208;
@@ -7764,7 +7672,7 @@ OnTouch:
 
 prt_castle,348,271,0	script	#poe	WARPNPC,1,1,{
 OnTouch:
-	if (checkquest(10018) == 0 || checkquest(10018) == 1) {
+	if (questprogress(10018) == 1) {
 		donpcevent "Prince#eisen4::OnEnable";
 	}
 	warp "prt_castle",390,208;
@@ -7773,7 +7681,7 @@ OnTouch:
 
 prt_castle,354,276,0	script	#peter	WARPNPC,1,1,{
 OnTouch:
-	if (checkquest(10019) == 0 || checkquest(10019) == 1) {
+	if (questprogress(10019) == 1) {
 		donpcevent "Prince#eisen5::OnEnable";
 	}
 	warp "prt_castle",366,368;
@@ -7782,7 +7690,7 @@ OnTouch:
 
 prt_castle,310,271,0	script	#urgen	WARPNPC,1,1,{
 OnTouch:
-	if (checkquest(10021) == 0 || checkquest(10021) == 1) {
+	if (questprogress(10021) == 1) {
 		donpcevent "Prince#eisen2::OnEnable";
 	}
 	warp "prt_castle",340,208;

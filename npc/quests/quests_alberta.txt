@@ -2493,8 +2493,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 		close;
 	}
 	if (ep13_2_hiki == 10) {
-		set .@cooltime,checkquest(10087,PLAYTIME);
-		if (.@cooltime == 2) {
+		if (questprogress(10087,PLAYTIME) == 2) {
 			mes "[Iromo]";
 			mes "...You really are annoying...";
 			mes "What exactly do you want from me...?";
@@ -2581,8 +2580,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 		close;
 	}
 	if ((ep13_2_hiki == 8) || (ep13_2_hiki == 9)) {
-		set .@cooltime,checkquest(10085,PLAYTIME);
-		if (.@cooltime == 2) {
+		if (questprogress(10085,PLAYTIME) == 2) {
 			mes "[Iromo]";
 			mes "You never give up, don't you?";
 			mes "What are you trying to say?";
@@ -2620,8 +2618,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 		close;
 	}
 	if (ep13_2_hiki == 7) {
-		set .@goyang,checkquest(10084,HUNTING);
-		if (.@goyang == 2) {
+		if (questprogress(10084,HUNTING) == 2) {
 			mes "[Iromo]";
 			mes "Oh, you made the furious cat";
 			mes "go away from the village?";
@@ -2831,7 +2828,7 @@ alberta_in,120,93,3	script	Iromo's Mother#ep3_2	1_M_INNKEEPER,{
 	mes "But, somehow...";
 	mes "he doesn't go out anymore.";
 	next;
-	if (BaseLevel > 40 && checkquest(10079) == -1) {
+	if (BaseLevel > 40 && !questprogress(10079)) {
 		set ep13_2_hiki,1;
 		setquest 10079;
 	}

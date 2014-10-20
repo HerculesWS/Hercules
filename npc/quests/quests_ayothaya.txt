@@ -160,7 +160,7 @@ ayothaya,233,105,3	script	Powerful-Looking Woman	4_F_THAIAYO,2,2,{
 			mes "my ring. I'll be waiting";
 			mes "here for the good news.";
 			mes "Oho ho ho ho ho~!";
-			if (checkquest(12029) == -1)
+			if (!questprogress(12029))
 				setquest 12029;
 			close;
 		}
@@ -386,7 +386,7 @@ ayothaya,233,105,3	script	Powerful-Looking Woman	4_F_THAIAYO,2,2,{
 					next;
 					mes "[Shuda]";
 					mes "So go and look under the water! There's no water current, so I'm sure it's still there! What are you waiting for, it's should be an easy swim for you! Oho ho ho ho ho!";
-					if (checkquest(12029) == -1)
+					if (!questprogress(12029))
 						setquest 12029;
 					set thai_find,1;
 					close;

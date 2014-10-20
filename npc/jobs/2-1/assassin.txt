@@ -254,7 +254,7 @@ in_moc_16,19,33,1	script	Guildsman#asn	1_M_JOBTESTER,{
 					mes "you to the office.";
 					close2;
 					set ASSIN_Q,0;
-					if (checkquest(8000) != -1) {
+					if (questprogress(8000)) {
 						changequest 8000,8001;
 					} else {
 						setquest 8001;

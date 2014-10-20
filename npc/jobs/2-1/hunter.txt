@@ -223,7 +223,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 					mes "shall we begin?";
 					next;
 					if (select("Yes~ Let's start now.:No, I'll be back later.") == 1) {
-						if(checkquest(4000) == -1) {
+						if (!questprogress(4000)) {
 							setquest 4000;
 						}
 						mes "[Hunter Sherin]";
@@ -556,22 +556,22 @@ hu_in01,382,382,4	script	Guild Receptionist#hnt	4_M_JOB_HUNTER,{
 			mes "[Demon Hunter]";
 			mes "You brought all of the necessary materials... You can get directions to the testing area from our Guildmaster who is currently in the Payon Central Palace.";
 			set HNTR_Q,.@items[6];
-			if(checkquest(4002) != -1) {
+			if (questprogress(4002)) {
 				changequest 4002,4009;
 			}
-			else if(checkquest(4003) != -1) {
+			else if (questprogress(4003)) {
 				changequest 4003,4009;
 			}
-			else if(checkquest(4004) != -1) {
+			else if (questprogress(4004)) {
 				changequest 4004,4009;
 			}
-			else if(checkquest(4005) != -1) {
+			else if (questprogress(4005)) {
 				changequest 4005,4009;
 			}
-			else if(checkquest(4006) != -1) {
+			else if (questprogress(4006)) {
 				changequest 4006,4010;
 			}
-			else if(checkquest(4007) != -1) {
+			else if (questprogress(4007)) {
 				changequest 4007,4010;
 			}
 			else {

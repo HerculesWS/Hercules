@@ -5781,8 +5781,8 @@ hu_in01,15,372,3	script	Cellette Lavit	1_F_MERCHANT_02,{
 		mes "is your Fish Cake Soup. Thank";
 		mes "you so much for your help~";
 		set hg_odeng,0;
-		for(set .@i,8072; .@i<= 8075; set .@i,.@i+1) {
-			if (checkquest(.@i) > -1)
+		for (.@i = 8072; .@i <= 8075; ++.@i) {
+			if (questprogress(.@i))
 				erasequest .@i;
 		}
 		getitem 584,3; //Fish_Ball_Soup
@@ -5833,8 +5833,8 @@ hugel,76,134,3	script	Neha	4W_F_01,{
 				mes "^FF00001 Whip^000000 so that I can spank you";
 				mes "for your impertinence, girl!";
 			}
-			for(set .@i,8064; .@i<= 8067; set .@i,.@i+1) {
-				if (checkquest(.@i) > -1 && checkquest(.@i) < 2)
+			for (.@i = 8064; .@i <= 8067; ++.@i) {
+				if (questprogress(.@i) && questprogress(.@i) != 2)
 					completequest .@i;
 			}
 			setquest 8068;
@@ -7499,7 +7499,8 @@ hugel,72,101,0	script	Burupu's Instructions	HIDDEN_NPC,{
 		break;
 	}
 	close2;
-	if (checkquest(12042) > -1) erasequest 12042;
+	if (questprogress(12042))
+		erasequest 12042;
 	end;
 }
 
@@ -8710,8 +8711,8 @@ hu_in01,14,11,4	script	Laura	1_F_GYPSY,{
 		next;
 		select("Yeah, yeah, whatever.:Sure thing.:I s-s-s-suppose...!:Yes, Ma'am!");
 		set hg_odin,17;
-		for(set .@i,11002; .@i<=11005; set .@i,.@i+1) {
-			if (checkquest(.@i) > -1 && checkquest(.@i) < 2)
+		for(.@i = 11002; .@i <= 11005; ++.@i) {
+			if (questprogress(.@i) && questprogress(.@i) != 2)
 				completequest .@i;
 		}
 		setquest 11006;

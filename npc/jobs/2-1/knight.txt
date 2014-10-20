@@ -1109,7 +1109,7 @@ prt_in,79,94,4	script	Sir Windsor#knt	4_M_JOB_KNIGHT1,{
 			mes "...";
 			next;
 			set KNIGHT_Q,7;
-			if (checkquest(9004) != -1) {
+			if (questprogress(9004)) {
 				changequest 9004,9005;
 			}
 			mes "[Sir Windsor]";
@@ -1126,7 +1126,8 @@ prt_in,79,94,4	script	Sir Windsor#knt	4_M_JOB_KNIGHT1,{
 				mes "...This way.";
 			}
 			close2;
-			if(checkquest(9006) == -1) changequest 9005,9006;
+			if (!questprogress(9006))
+				changequest 9005,9006;
 			warp "job_knt",89,101;
 			end;
 		}
@@ -1416,7 +1417,7 @@ OnMyMobDead:
 		mes "Amy Beatrice now.";
 		close2;
 		set KNIGHT_Q,8;
-		if(checkquest(9007) == -1) {
+		if (!questprogress(9007)) {
 			changequest 9006,9007;
 		}
 		warp "prt_in",80,100;
@@ -1544,7 +1545,8 @@ prt_in,69,107,6	script	Lady Amy#knt	4_F_JOB_KNIGHT,{
 			mes "come to Amy?";
 			next;
 			if (select("Sir Windsor told me to--:Oh, nothing.") == 1) {
-				if(checkquest(9008) == -1) changequest 9007,9008;
+				if (!questprogress(9008))
+					changequest 9007,9008;
 				mes "[Lady Amy]";
 				mes "Oh!";
 				mes "No need to say";

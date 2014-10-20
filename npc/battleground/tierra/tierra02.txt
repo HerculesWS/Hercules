@@ -72,7 +72,7 @@ bat_a02,352,342,0	script	#bat_a02_quest_a	-1,5,5,{
 	end;
 
 OnTouch:
-	if (checkquest(2069) < 0)
+	if (!questprogress(2069))
 		setquest 2069;
 	end;
 }
@@ -81,7 +81,7 @@ bat_a02,353,52,0	script	#bat_a02_quest_b	-1,5,5,{
 	end;
 
 OnTouch:
-	if (checkquest(2069) < 0)
+	if (!questprogress(2069))
 		setquest 2069;
 	end;
 }
@@ -633,16 +633,14 @@ OnTouch:
 
 bat_a02,352,342,0	script	A_CODE#bat_a02	-1,5,5,{
 OnTouch:
-	set .@chk_bfquest,checkquest(2069);
-	if ((.@chk_bfquest == 0) || (.@chk_bfquest == 1))
+	if (questprogress(2069) == 1)
 		setquest 2069;
 	end;
 }
 
 bat_a02,353,52,0	script	B_CODE#bat_a02	-1,5,5,{
 OnTouch:
-	set .@chk_bfquest,checkquest(2069);
-	if ((.@chk_bfquest == 0) || (.@chk_bfquest == 1))
+	if (questprogress(2069) == 1)
 		setquest 2069;
 	end;
 }

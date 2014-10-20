@@ -595,13 +595,13 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 		mes "Ah yes, everything is in readiness.";
 		mes "Next, you will take an entrance test.";
 		set SAGE_Q,4;
-		if(checkquest(2043) != -1) {
+		if (questprogress(2043)) {
 			changequest 2043,2041;
 		}
-		else if(checkquest(2044) != -1) {
+		else if (questprogress(2044)) {
 			changequest 2044,2041;
 		}
-		else if(checkquest(2045) != -1) {
+		else if (questprogress(2045)) {
 			changequest 2045,2041;
 		}
 		else {
@@ -1881,10 +1881,10 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 				switch(rand(1,4)) {
 				case 1:
 					set SAGE_Q2,4;
-					if(checkquest(2053) != -1) {
+					if (questprogress(2053)) {
 						changequest 2053,2056;
 					}
-					else if(checkquest(2054) != -1) {
+					else if (questprogress(2054)) {
 						changequest 2054,2056;
 					}
 					else {
@@ -1896,10 +1896,10 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 					break;
 				case 2:
 					set SAGE_Q2,5;
-					if(checkquest(2053) != -1) {
+					if (questprogress(2053)) {
 						changequest 2053,2057;
 					}
-					else if(checkquest(2054) != -1) {
+					else if (questprogress(2054)) {
 						changequest 2054,2057;
 					}
 					else {
@@ -1911,10 +1911,10 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 					break;
 				case 3:
 					set SAGE_Q2,6;
-					if(checkquest(2053) != -1) {
+					if (questprogress(2053)) {
 						changequest 2053,2058;
 					}
-					else if(checkquest(2054) != -1) {
+					else if (questprogress(2054)) {
 						changequest 2054,2058;
 					}
 					else {
@@ -1926,10 +1926,10 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 					break;
 				case 4:
 					set SAGE_Q2,7;
-					if(checkquest(2053) != -1) {
+					if (questprogress(2053)) {
 						changequest 2053,2059;
 					}
-					else if(checkquest(2054) != -1) {
+					else if (questprogress(2054)) {
 						changequest 2054,2059;
 					}
 					else {
@@ -2002,13 +2002,13 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 				next;
 				set SAGE_Q2,0;
 				set SAGE_Q,12;
-				if(checkquest(2056) != -1) {
+				if (questprogress(2056)) {
 					changequest 2056,2051;
 				}
-				else if(checkquest(2057) != -1) {
+				else if (questprogress(2057)) {
 					changequest 2057,2051;
 				}
-				else if(checkquest(2058) != -1) {
+				else if (questprogress(2058)) {
 					changequest 2058,2051;
 				}
 				else {

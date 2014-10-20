@@ -103,7 +103,7 @@ gef_fild05,80,149,3	script	Myu#08_hat	4_F_YUNYANG,{
 			}
 		}
 	} else if(hatcat2008 == 1) {
-		if(checkquest(7055,HUNTING) == 2) {
+		if (questprogress(7055,HUNTING) == 2) {
 			mes "[Myu]";
 			mes "Did you think I didn't know what you have done?";
 			mes "Huh?";
@@ -120,7 +120,7 @@ gef_fild05,80,149,3	script	Myu#08_hat	4_F_YUNYANG,{
 			erasequest 7054;
 			erasequest 7055;
 			close;
-		} else if(checkquest(7054,HUNTING) == 2) {
+		} else if (questprogress(7054,HUNTING) == 2) {
 			mes "[Myu]";
 			mes "Oh..wow unbelievable!";
 			mes "Now, those Kobolds should have learned a lesson, haven't they?";

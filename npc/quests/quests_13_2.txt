@@ -416,7 +416,7 @@ function Catwarp {
 man_fild02,132,47,4	duplicate(Cat Hand Agent#spl)	Cat Hand Agent#man	4_M_BOSSCAT
 
 -	script	Mysterious Rock#30::manukrock2	-1,{
-	if ((countitem(6048) < 3) && (checkquest(12062,PLAYTIME) == -1)) {
+	if (countitem(6048) < 3 && !questprogress(12062,PLAYTIME)) {
 		specialeffect2 EF_REPAIRWEAPON;
 		progressbar "ffff00",10;
 		set .@rhea_ran,rand(1,20);
@@ -456,7 +456,7 @@ man_fild02,358,174,0	duplicate(manukrock2)	Mysterious Rock#39	CLEAR_NPC
 man_fild02,241,227,0	duplicate(manukrock2)	Mysterious Rock#40	CLEAR_NPC
 
 spl_fild03,226,151,0	script	School of Fish#5::FishingHole_spl3	CLEAR_NPC,{
-	if ((checkquest(12060,PLAYTIME) == -1) && (countitem(6039) < 20)) {
+	if (!questprogress(12060,PLAYTIME) && countitem(6039) < 20) {
 		specialeffect2 EF_BUBBLE;
 		specialeffect2 EF_INVENOM;
 		set .@fcast,15;
@@ -2767,9 +2767,7 @@ manuk,252,116,3	script	Manuk Galtun#ep13_2day	4_MAN_GALTUN,{
 			}
 		}
 		else if (ep13_2_days01 == 1) {
-			set .@qst_cpl01,checkquest(7074,HUNTING);
-			set .@qst_cpl02,checkquest(7075,HUNTING);
-			if ((.@qst_cpl01 == 2) & (.@qst_cpl02 == 2)) {
+			if (questprogress(7074,HUNTING) == 2 && questprogress(7075,HUNTING) == 2) {
 				mes "[Strom]";
 				mes "Sure enough... I, the Sapha Galtun, Strom, apologize to you. I should not have been so quick to despise you.";
 				mes "I admit that you are a brave soldier, please feel free to visit Manuk.";
@@ -2829,10 +2827,8 @@ man_in01,378,276,3	script	Manuk Engineer#ep13_2	4_MAN_NITT,{
 		close;
 	}
 	if ((isequipped(2782) == 1) && (ep13_2_rhea > 99)) {
-		set .@alba,checkquest(7080);
-		if ((.@alba == 0) || (.@alba == 1)) {
-			set .@time_chek,checkquest(7080,PLAYTIME);
-			if (.@time_chek != 2) {
+		if (questprogress(7080) == 1) {
+			if (questprogress(7080,PLAYTIME) != 2) {
 				mes "[Manuk Engineer]";
 				mes "Thank you for collecting the Enriched Bradium for me, it was very helpful.";
 				mes "We've got more than enough for now though.";
@@ -2847,8 +2843,7 @@ man_in01,378,276,3	script	Manuk Engineer#ep13_2	4_MAN_NITT,{
 			}
 		}
 		else {
-			set .@alba2,checkquest(7079);
-			if ((.@alba2 == 0) || (.@alba2 == 1)) {
+			if (questprogress(7079) == 1) {
 				if (countitem(6090) > 19) {
 					mes "[Manuk Engineer]";
 					mes "Oh, that will do very well.";
@@ -2937,10 +2932,8 @@ spl_in01,97,313,3	script	Laphine Craftsman#ep13	4_M_FAIRYKID5,{
 	}
 	if ((isequipped(2782) == 1) && (ep13_2_rhea > 99)) {
 		if (ep13_mdrama > 5) {
-			set .@alba,checkquest(7082);
-			if (.@alba == 1) {
-				set .@time_chek,checkquest(7082,PLAYTIME);
-				if ((.@time_chek == 0) || (.@time_chek == 1)) {
+			if (questprogress(7082) == 1) {
+				if (questprogress(7082,PLAYTIME) == 1) {
 					mes "[Laphine craftsman]";
 					mes "Thank you for collecting those items for me.";
 					mes "That should be sufficient for the time being.";
@@ -2952,8 +2945,7 @@ spl_in01,97,313,3	script	Laphine Craftsman#ep13	4_M_FAIRYKID5,{
 				erasequest 7082;
 				close;
 			}
-			set .@alba2,checkquest(7081);
-			if ((.@alba2 == 0) || (.@alba2 == 1)) {
+			if (questprogress(7081) == 1) {
 				if ((countitem(7326) > 14) && (countitem(6075) > 14)) {
 					mes "[Laphine craftsman]";
 					mes "Oh, fantastic.";
@@ -3102,7 +3094,7 @@ mid_camp,146,306,3	script	Pet Breeder#ep13_eden01	4_F_SCIENCE,{
 	next;
 	if (select("Notice for criminal report:Cute pet investigation.") == 1) {
 		if (ep13_2_wanted == 1) {
-			if (checkquest(7076,HUNTING) == 2) {
+			if (questprogress(7076,HUNTING) == 2) {
 				mes "[Pinedel]";
 				mes "Have you hunted the Runaway Dandelion?";
 				mes "Ok, I accept you.";
@@ -3165,14 +3157,14 @@ mid_camp,146,306,3	script	Pet Breeder#ep13_eden01	4_F_SCIENCE,{
 		mes "[Pinedel]";
 		mes "Those eggs are about to hatch now.";
 		mes "I will investigate those back home.";
-		set .@alba_check,checkquest(7078,PLAYTIME);
-		if (.@alba_check == -1) {
+		.@alba_check = questprogress(7078,PLAYTIME);
+		if (!.@alba_check) {
 			close2;
 			erasequest 7078;
 			set ep13_2_dayegg,3;
 			end;
 		}
-		else if ((.@alba_check == 0) || (.@alba_check == 1)) {
+		else if (.@alba_check == 1) {
 			mes "For now I still need more time.";
 			next;
 			mes "[Pinedel]";
@@ -3638,8 +3630,7 @@ mid_camp,197,237,3	script	Schwartzvalt Mechanic#1	4_M_LGTMAN,{
 			close;
 		}
 		else if (ep13_2_rhea == 12) {
-			set .@trs_time01,checkquest(8253,PLAYTIME);
-			if (.@trs_time01 == 2) {
+			if (questprogress(8253,PLAYTIME) == 2) {
 				mes "[Mechanic Engineer Dorance]";
 				mes "Sigh, What should I do now?!";
 				next;
@@ -3814,9 +3805,7 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 		mes "[Linguist Dictionary]";
 		mes "Have you met the other world's people by any chance?";
 		next;
-		set .@check_splque00,checkquest(2158);
-		set .@check_manque00,checkquest(2159);
-		if ((.@check_splque00 == 0) && (.@check_manque00 == 0)) {
+		if (!questprogress(2158) && !questprogress(2159)) {
 			// custom translation
 			mes "[Linguist Dictionary]";
 			mes "Looks like you haven't encountered them yet.";
@@ -3871,9 +3860,7 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 		}
 	}
 	else if (ep13_2_rhea == 2) {
-		set .@check_splque00,checkquest(2158);
-		set .@check_manque00,checkquest(2159);
-		if ((.@check_splque00 > 0) && (.@check_manque00 > 0)) {
+		if (questprogress(2158) && questprogress(2159)) {
 			mes "[Linguist Dictionary]";
 			mes "You are back!";
 			next;
@@ -4256,9 +4243,7 @@ mid_camp,147,256,3	script	Rune Midgarts Magician#1	4_M_JOB_WIZARD,{
 		close;
 	}
 	else if (ep13_2_rhea == 5) {
-		set .@check_spljew00,checkquest(8241);
-		set .@check_manjew00,checkquest(8242);
-		if ((.@check_spljew00 > 0) && (.@check_manjew00 > 0)) {
+		if (questprogress(8241) && questprogress(8242)) {
 			if (countitem(7575) > 0) && (countitem(7576) > 0) {
 				mes "[Magician Whisper]";
 				mes "Wow, You are back already!";
@@ -4475,7 +4460,7 @@ function	script	jewel_13_2	{
 		close;
 	}
 	else if (ep13_2_rhea == 5) {
-		if (checkquest(8240+getarg(1)) == -1) {
+		if (!questprogress(8240+getarg(1))) {
 			mes "- Under a round pile of earth, -";
 			mes "- there's a "+getarg(0)+" Gem -";
 			mes "- half-buried. -";
@@ -4716,8 +4701,7 @@ man_in01,372,221,5	script	Scientist#lifeguard	4_MAN_BENKUNI,{
 				mes "Why not put some of your items in storage and come back?";
 				close;
 			}
-			set .@dayq_chk,checkquest(2182,PLAYTIME);
-			if ((.@dayq_chk == 0) || (.@dayq_chk == 1)) {
+			if (questprogress(2182,PLAYTIME) == 1) {
 				mes "The future of the Sapha is up to you.";
 				mes "I do not have any need of your help right now.";
 				close;
@@ -5465,8 +5449,8 @@ spl_in01,30,324,3	script	High Laphine#grenouille	4_M_FAIRYKID5,{
 			mes "Why not put some of your items in storage and come back?";
 			close;
 		}
-		set .@dayq_chk,checkquest(2186,PLAYTIME);
-		if ((.@dayq_chk == -1) || (.@dayq_chk == 2)) {
+		.@dayq_chk = questprogress(2186,PLAYTIME);
+		if (!.@dayq_chk || .@dayq_chk == 2) {
 			if ((ep13_2_tre1 < 1) || (ep13_2_tre1 == 6)) {
 				erasequest 2186;
 				set ep13_2_tre1,0;

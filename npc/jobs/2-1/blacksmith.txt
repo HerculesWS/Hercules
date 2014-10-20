@@ -1,4 +1,4 @@
-//===== HerculesScript =======================================
+//===== Hercules Script =======================================
 //= Blacksmith Job Quest
 //===== By: ==================================================
 //= EREMES THE CANIVALIZER(Aegis)
@@ -248,7 +248,7 @@ ein_in01,18,28,4	script	Guildsman#BLS	4_M_JOB_BLACKSMITH,{
 		else if (BSMITH_Q == 17 && countitem(1005) > 0 && JobLevel > 39) {
 			mes "[Altiregen]";
 			mes "Excellent, I can tell by the twinkle in your eye that you were successful. I can now bestow upon you the gift of the smithing, the art of the Blacksmith.";
-			if (checkquest(2015) != -1) {
+			if (questprogress(2015)) {
 				changequest 2015,2016;
 			}
 			next;
@@ -483,7 +483,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 				mes "Let's see...your score is..." + .@black_q + " points.";
 				if (.@black_q == 100) {
 					set BSMITH_Q,3;
-					if (checkquest(2001) != -1) {
+					if (questprogress(2001)) {
 						changequest 2001,2002;
 					} else {
 						changequest 2000,2002;
@@ -500,7 +500,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 					close;
 				}
 				set BSMITH_Q,2;
-				if (checkquest(2001) == -1) {
+				if (!questprogress(2001)) {
 					changequest 2000,2001;
 				}
 				mes ".............";
@@ -653,7 +653,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 				case 9:
 					mes "Okay, now take this to ^8E6B23Baisulist^000000 in Geffen of Rune-Midgarts Kingdom. Simply deliver it and bring me the receipt.";
 					getitem 1610,1; //Arc_Wand
-					if (checkquest(2003) != -1) {
+					if (questprogress(2003)) {
 						changequest 2003,2008;
 					}
 					next;
@@ -678,7 +678,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 				case 10:
 					mes "Okay, now take this to ^8E6B23Wickebine^000000 in Morroc of Rune-Midgarts Kingdom. Simply deliver it and bring me the receipt.";
 					getitem 1219,1; //Gladius
-					if (checkquest(2004) != -1) {
+					if (questprogress(2004)) {
 						changequest 2004,2009;
 					}
 					next;
@@ -703,7 +703,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 				case 11:
 					mes "Okay, now take this to ^8E6B23Krongast^000000 in Lighthalzen. Simply deliver it and bring me the receipt.";
 					getitem 1119,1; //Tsurugi
-					if (checkquest(2005) != -1) {
+					if (questprogress(2005)) {
 						changequest 2005,2010;
 					}
 					next;
@@ -729,7 +729,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 				case 12:
 					mes "Okay, now take this to ^8E6B23Talpiz^000000 in Payon of Rune-Midgarts Kingdom. Simply deliver this and bring me the receipt.";
 					getitem 1713,1; //Arbalest
-					if (checkquest(2006) != -1) {
+					if (questprogress(2006)) {
 						changequest 2006,2011;
 					}
 					next;
@@ -753,7 +753,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 				case 13:
 					mes "Okay, now take this to ^8E6B23Bismarc^000000 in Hugel. Simply deliver this and bring back the receipt.";
 					getitem 1122,1; //Ring_Pommel_Saber
-					if (checkquest(2007) != -1) {
+					if (questprogress(2007)) {
 						changequest 2007,2012;
 					}
 					next;
@@ -850,16 +850,16 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 				if (countitem(1073) > 0) {
 					set BSMITH_Q,15;
 					delitem 1073,1; //Merchant_Voucher_1
-					if (checkquest(2008) != -1) {
+					if (questprogress(2008)) {
 						changequest 2008,2013;
 					}
-					else if (checkquest(2009) != -1) {
+					else if (questprogress(2009)) {
 						changequest 2009,2013;
 					}
-					else if (checkquest(2010) != -1) {
+					else if (questprogress(2010)) {
 						changequest 2010,2013;
 					}
-					else if (checkquest(2011) != -1) {
+					else if (questprogress(2011)) {
 						changequest 2011,2013;
 					}
 					else {

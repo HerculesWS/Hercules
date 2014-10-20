@@ -63,8 +63,8 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 		mes "Hey did you see an ugly Goblin come by? He stole something from me!";
 		close;
 	}
-	set .@chk_urquest,checkquest(2143,PLAYTIME);
-	set .@chk_yourgdname$,getguildname(getcharid(2));
+	.@chk_urquest = questprogress(2143,PLAYTIME);
+	.@chk_yourgdname$ = getguildname(getcharid(2));
 	if ($@gdeventv_a1 == 0) {
 		if ($@gdevents_a$ == "") {
 			set $@gdeventv_a1,1;
@@ -178,8 +178,7 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 			}
 		}
 		else if ($@gdevents_a$ == .@chk_yourgdname$) {
-			set .@chk_urquest1,checkquest(2144);
-			if ((.@chk_urquest1 == 0) || (.@chk_urquest1 == 1)) {
+			if (questprogress(2144) == 1) {
 				mes "[Morestone]";
 				mes "I, Morestone, have made an alliance with the "+$@gdevents_a$+" guild.";
 				mes "Oh, you are a member.";
@@ -321,8 +320,7 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 	}
 	else {
 		if ($@gdevents_a$ == .@chk_yourgdname$) {
-			set .@chk_urquest1,checkquest(2144);
-			if ((.@chk_urquest1 == 0) || (.@chk_urquest1 == 1)) {
+			if (questprogress(2144) == 1) {
 				mes "[Morestone]";
 				mes "[Morestone]";
 				mes "I, Morestone, have made an alliance with the "+$@gdevents_a$+" guild.";
@@ -504,8 +502,8 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 	}
 	if (strcharinfo(0) == getguildmaster(getcharid(2))) {
 		if ($@gdeventv_a2 == 0) {
-			set .@que_2143,checkquest(2143,PLAYTIME);
-			if (.@que_2143 == -1) {
+			set .@que_2143,questprogress(2143,PLAYTIME);
+			if (!.@que_2143) {
 				setnpcdisplay "Pierrot Pier#aru_gd", 4_M_PIERROT;
 				mes "A lonely clown is juggling.";
 				next;
@@ -589,7 +587,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 				donpcevent "Gergath#aru_gd::OnEnable";
 				close;
 			}
-			else if ((.@que_2143 == 0) || (.@que_2143 == 1)) {
+			else if (.@que_2143 == 1) {
 				mes "[Pierrot Pier]";
 				mes "Let's talk after I finished reading my master's message. Beep beep.";
 				close;
@@ -767,8 +765,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			}
 		}
 		else if ($@gdeventv_a2 == 3) {
-			set .@que_2143,checkquest(2143);
-			if (.@que_2143 == 3) {
+			if (questprogress(2143) == 2) {
 				erasequest 2143;
 			}
 			mes "[Pierrot Pier]";

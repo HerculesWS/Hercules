@@ -433,7 +433,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "Then, do you want to try singing...?";
 				mes "I'll sing a short melody...";
 				mes "and you try after.";
-				if(checkquest(3003) == -1) {
+				if (!questprogress(3003)) {
 					changequest 3002,3003;
 				}
 				next;

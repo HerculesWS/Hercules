@@ -8491,8 +8491,8 @@ L_Mission:
 		mes "[Karl]";
 		mes ".........";
 		mes "............";
-		for(set .@i,12015; .@i<=12028; set .@i,.@i+1) {
-			if (checkquest(.@i) > 0 && checkquest(.@i) < 2)
+		for (.@i = 12015; .@i <= 12028; ++.@i) {
+			if (questprogress(.@i) && questprogress(.@i) != 2)
 				completequest .@i;
 		}
 		close;

@@ -106,11 +106,11 @@ monk_test,309,146,3	script	Friar Patrick#edq	4_M_OLDFRIAR,{
 			next;
 
 			// 12 hour cooldown
-			set .@ins_bapho_check,checkquest(3040,PLAYTIME);
+			.@ins_bapho_check = questprogress(3040,PLAYTIME);
 			// Two hour play limit
-			//set .@ins_bapho_check2,checkquest(3045,PLAYTIME);
+			//.@ins_bapho_check2 = questprogress(3045,PLAYTIME);
 
-			if (.@ins_bapho_check == -1) {
+			if (!.@ins_bapho_check) {
 				if (getpartyleader(.@party_id,2) == getcharid(0) && instance_check_party(.@party_id,2,75)) {
 					mes "[Friar Patrick]";
 					mes "Party name is "+getpartyname(.@party_id)+"...";
@@ -158,7 +158,7 @@ monk_test,309,146,3	script	Friar Patrick#edq	4_M_OLDFRIAR,{
 					mes "Once the party leader is permitted, the rest of the party can enter. This is a rule of this monastery, so please understand.";
 				}
 			}
-			else if (.@ins_bapho_check == 0 || .@ins_bapho_check == 1) {
+			else if (.@ins_bapho_check == 1) {
 				mes "[Friar Patrick]";
 				mes "It seems you have entered this shrine recently... You cannot reenter because Baphomet's Curse still remains. Baphomet's Curse disappears only after a certain amount of time has passed.";
 			}
@@ -170,8 +170,8 @@ monk_test,309,146,3	script	Friar Patrick#edq	4_M_OLDFRIAR,{
 				mes "Haaaaaaap... Hocus Pocus Wingardium Abracadabra!!!!!";
 				next;
 				erasequest 3040;
-				if (checkquest(3041)>=0) erasequest 3041;
-				if (checkquest(3045)>=0) erasequest 3045;
+				if (questprogress(3041)) erasequest 3041;
+				if (questprogress(3045)) erasequest 3045;
 				mes "[Friar Patrick]";
 				mes "Huu... It's over. Now that I've released Baphomet's Curse, you can enter again.";
 			}
@@ -224,11 +224,11 @@ monk_test,306,151,3	script	Grave of Baphomet#edq	HIDDEN_NPC,{
 		close;
 
 	// 12 hour cooldown
-	set .@ins_bapho_check,checkquest(3040,PLAYTIME);
+	.@ins_bapho_check = questprogress(3040,PLAYTIME);
 	// Two hour play limit
-	//set .@ins_bapho_check2,checkquest(3045,PLAYTIME);
+	//.@ins_bapho_check2 = questprogress(3045,PLAYTIME);
 
-	if (.@ins_bapho_check == -1) {
+	if (!.@ins_bapho_check) {
 		if (has_instance("1@cata") == "") {
 			mes "It's cold to the touch. It doesn't respond.";
 			close;
@@ -238,7 +238,7 @@ monk_test,306,151,3	script	Grave of Baphomet#edq	HIDDEN_NPC,{
 			warp "1@cata",100,224;
 			end;
 		}
-	} else if (.@ins_bapho_check == 0 || .@ins_bapho_check == 1) {
+	} else if (.@ins_bapho_check == 1) {
 		mes "[Friar Patrick]";
 		mes "It seems you have entered this shrine recently... You cannot reenter because the curse of Baphomet still remains.";
 		mes "The curse of Baphomet disappears after a certain amount of time after you entered.";
@@ -251,8 +251,8 @@ monk_test,306,151,3	script	Grave of Baphomet#edq	HIDDEN_NPC,{
 		mes "Haaaaaaap... Wingardium Leviosa Expecto Patronum !!!!!";
 		specialeffect2 EF_HOLYHIT;
 		erasequest 3040;
-		if (checkquest(3041)>=0) erasequest 3041;
-		if (checkquest(3045)>=0) erasequest 3045;
+		if (questprogress(3041)) erasequest 3041;
+		if (questprogress(3045)) erasequest 3045;
 		next;
 		mes "[Friar Patrick]";
 		mes "Huu... It's over. Now I released all of the curses on you. You can enter again.";
@@ -261,14 +261,14 @@ monk_test,306,151,3	script	Grave of Baphomet#edq	HIDDEN_NPC,{
 }
 
 prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
-	set .@new_maje,checkquest(3043);
+	.@new_maje = questprogress(3043);
 	mes "[Rust Blackhand]";
 	mes "Who are you? What do you want me for?";
 	next;
 	mes "[Rust Blackhand]";
 	mes "You're not a monk, then what do you want?";
 	next;
-	if (.@new_maje == 0 || .@new_maje == 1) {
+	if (.@new_maje == 1) {
 		mes "[Rust Blackhand]";
 		mes "Did you bring all of the ingredients?";
 		next;
@@ -311,7 +311,7 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 			close;
 		}
 	}
-	else if ((.@new_maje == -1) && (countitem(6004) > 0)) {
+	else if (!.@new_maje && countitem(6004) > 0) {
 		switch(select("About the Cursed Baphomet Doll:Stop talking.")) {
 		case 1:
 			mes "[Rust Blackhand]";
@@ -364,12 +364,12 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 			close;
 		}
 	}
-	else if ((.@new_maje == -1) && (countitem(6004) == 0)) {
+	else if (!.@new_maje && countitem(6004) == 0) {
 		mes "[Rust Blackhand]";
 		mes "If you don't have business with me, go away! As you see, I make equipment for the Brothers at the monastery, not for adventurers like you. Do you understand?";
 		close;
 	}
-	else if ((.@new_maje == 2) && (countitem(6004) > 0)) {
+	else if (.@new_maje == 2 && countitem(6004) > 0) {
 		switch(select("About the Cursed Baphomet Doll:Stop talking.")) {
 		case 1:
 			mes "[Rust Blackhand]";
@@ -420,7 +420,7 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 			close;
 		}
 	}
-	else if ((.@new_maje == 2) && (countitem(6004) == 0)) {
+	else if (.@new_maje == 2 && countitem(6004) == 0) {
 		mes "[Rust Blackhand]";
 		mes "Why are you hanging around here? If you don't want a ^4d4dffGigantic Magestic Goat^000000, go away.";
 		close;
@@ -1084,8 +1084,8 @@ OnTouch:
 // Magical Seals
 //============================================================
 -	script	Magical Seal#SS	-1,{
-	set .@seal_check,checkquest(3041,PLAYTIME);
-	if (.@seal_check == 0 || .@seal_check == 1) {
+	.@seal_check = questprogress(3041,PLAYTIME);
+	if (.@seal_check == 1) {
 		specialeffect2 EF_SILENCEATTACK;
 		percentheal -50,0;
 		sc_start Eff_Stone,30000,0;
@@ -1149,7 +1149,7 @@ OnInstanceInit:
 
 2@cata,80,63,4	script	Ancient Hero's Soul#2F	4_M_CHAMPSOUL,{
 	cutin "ins_cata_champ_s",2;
-	if (checkquest(3041)>=0) erasequest 3041;
+	if (questprogress(3041)) erasequest 3041;
 	mes "[Ancient Hero's Soul]";
 	mes "Good job, my descendants... You've finished the long-cherished task that me and my bretheren could not complete.";
 	next;

@@ -207,8 +207,8 @@ prontera,114,81,5	script	RWC2011 Agent#2	4_M_ATEIL,{
 			close;
 		}
 	} else if (oversea_event == 2) {
-		set .@playtime, checkquest(13001,PLAYTIME);
-		if (.@playtime == 0 || .@playtime == 1) {
+		.@playtime = questprogress(13001,PLAYTIME);
+		if (.@playtime == 1) {
 			mes "[RWC2011 Agent]";
 			mes "First, I will start attaching cards you found... I'll take the rest of cards tomorrow.";
 			mes "Please come back tomorrow.";

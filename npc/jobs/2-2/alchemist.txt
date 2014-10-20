@@ -234,10 +234,10 @@ alde_alche,27,185,5	script	Alchemist Guildsman#am	4_F_ALCHE,{
 			mes "Okay, now you need to learn";
 			mes "the basics to being an Alchemist and learn the procedures for mixing chemicals and medicines.";
 			set ALCH_Q,4;
-			if(checkquest(2028) != -1) {
+			if (questprogress(2028)) {
 				changequest 2028,2031;
 			}
-			else if(checkquest(2029) != -1) {
+			else if (questprogress(2029)) {
 				changequest 2029,2031;
 			}
 			else {
@@ -267,10 +267,10 @@ alde_alche,27,185,5	script	Alchemist Guildsman#am	4_F_ALCHE,{
 			mes "Okay, now you need to learn";
 			mes "the basics to being an Alchemist and learn the procedures for mixing chemicals and medicines.";
 			set ALCH_Q,4;
-			if(checkquest(2028) != -1) {
+			if (questprogress(2028)) {
 				changequest 2028,2031;
 			}
-			else if(checkquest(2029) != -1) {
+			else if (questprogress(2029)) {
 				changequest 2029,2031;
 			}
 			else {
@@ -1687,10 +1687,10 @@ alde_alche,101,184,4	script	Master Alchemist#am	2_M_DYEINGER,{
 			cutin "",255;
 			end;
 		}
-		if(checkquest(2039) != -1) {
+		if (questprogress(2039)) {
 			changequest 2039,2040;
 		}
-		if(checkquest(2034) != -1) {
+		if (questprogress(2034)) {
 			changequest 2034,2040;
 		}
 		mes "Ah, well done.";

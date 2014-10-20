@@ -320,10 +320,10 @@ job_duncer,43,93,4	script	Aile#da	4_F_07,{
 			mes "[Aile]";
 			mes "Next, go to ^CD6889Bijou^000000, who is in charge of the interviewing process. She will have a couple of things she'll need to ask you.";
 			set DANC_Q,5;
-			if(checkquest(7001) != -1) {
+			if (questprogress(7001)) {
 				changequest 7001,7004;
 			}
-			else if(checkquest(7002) != -1) {
+			else if (questprogress(7002)) {
 				changequest 7002,7004;
 			}
 			else {

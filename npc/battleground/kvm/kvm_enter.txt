@@ -19,16 +19,16 @@
 //============================================================
 bat_room,164,178,5	script	KVM Mercenary Officer#1	4_M_KY_KNT,{
 	/*
-	set .@kvm,checkquest(6026,PLAYTIME);
-	if ((.@kvm == 0) || (.@kvm == 1)) {
+	.@kvm = questprogress(6026,PLAYTIME);
+	if (.@kvm == 1) {
 		mes "[Croix Mercenary Officer]";
 		mes "I know that you've already signed with the Croix. Go back and join their team. We will not accept traitors to fight for us.";
 		close;
 	}
 	else if (.@kvm == 2) erasequest 6026;
 	*/
-	set .@permit,checkquest(6025,PLAYTIME);
-	if ((.@permit == 0) || (.@permit == 1)) {
+	.@permit = questprogress(6025,PLAYTIME);
+	if (.@permit == 1) {
 		mes "[Guillaume Mercenary Officer]";
 		mes "It seems you have recently participated in a KVM battle. You must wait 5 minutes before signing up again.";
 		close;
@@ -119,16 +119,16 @@ bat_room,167,178,5	script	Guillaume Knight#kvm	4_M_KY_SOLD,{
 //============================================================
 bat_room,164,121,1	script	KVM Mercenary Officer#2	4_M_CRU_KNT,{
 	/*
-	set .@kvm,checkquest(6025,PLAYTIME);
-	if ((.@kvm == 0) || (.@kvm == 1)) {
+	.@kvm = questprogress(6025,PLAYTIME);
+	if (.@kvm == 1) {
 		mes "[Croix Mercenary Officer]";
 		mes "I know that you've already signed with the Guillaume. Go back and join their team. We will not accept traitors to fight for us.";
 		close;
 	}
 	else if (.@kvm == 2) erasequest 6025;
 	*/
-	set .@permit,checkquest(6025,PLAYTIME);
-	if ((.@permit == 0) || (.@permit == 1)) {
+	.@permit = questprogress(6025,PLAYTIME);
+	if (.@permit == 1) {
 		mes "[Croix Mercenary Officer]";
 		mes "It seems you have recently participated in a KVM battle. You must wait 5 minutes before signing up again.";
 		close;

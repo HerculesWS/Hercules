@@ -19,7 +19,7 @@
 // Malangdo Transportation :: malangdo_go
 //============================================================
 -	script	Dolangmal	-1,{
-	if (checkquest(5091) == -1) {
+	if (!questprogress(5091)) {
 		mes "[Dolangmal]";
 		mes "Hey~! Hi human~ This is Mr. Dolangmal. kakaka~";
 		next;

@@ -213,14 +213,14 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 	set .@p_name$,getpartyname(.@party_id);
 	set .@md_name$,"Endless Tower";
 
-	set .@etower_timer,checkquest(60200,PLAYTIME); // 1 week
-	set .@etower_timer2,checkquest(60201,PLAYTIME); // 4 hours
+	.@etower_timer = questprogress(60200,PLAYTIME); // 1 week
+	.@etower_timer2 = questprogress(60201,PLAYTIME); // 4 hours
 
 	if (!instance_check_party(.@party_id,2)) {
 		mes "Make or join a party with more than 1 member and try again.";
 		close;
 	}
-	if (.@etower_timer == -1) {
+	if (!.@etower_timer) {
 		if (getcharid(0) == getpartyleader(.@party_id,2)) {
 			mes "Confirmed the party has been made. Would you like to reserve entrance to the Endless Tower?";
 			next;
@@ -267,7 +267,7 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 		case 3:
 			end;
 		}
-	} else if ((.@etower_timer >= 0) && (.@etower_timer2 < 2)) {
+	} else if (.@etower_timer == 1) {
 		mes "If you have the dungeon generated already, you can enter it. ";
 		next;
 		switch(select("Enter the "+.@md_name$+":Return to Alberta:Cancel")) {
@@ -282,7 +282,7 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 			break;
 		}
 		close;
-	} else if ((.@etower_timer >= 0) && (.@etower_timer < 2) && (.@etower_timer2 == 2)) {
+	} else if (.@etower_timer == 1 && .@etower_timer2 == 2) {
 
 		set .@dun_lim_time,etower_timer+604800; // 1 week
 		set .@dun_lim_time2,etower_timer+14400; // 4 hours
