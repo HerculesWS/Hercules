@@ -31,8 +31,7 @@ job3_rune01,88,62,5	script	Dragon Breeder	8W_SOLDIER,{
 				mes "[Dragon Breeder]";
 				mes "You already have a Dragon.";
 				close;
-			}
-			else if(ismounting()) {
+			} else if(hascashmount()) {
 				mes "[Dragon Breeder]";
 				mes "Please remove your cash mount.";
 				close;
@@ -69,8 +68,7 @@ prontera,130,213,5	script	Riding Creature Master	8W_SOLDIER,{
 				mes "[Riding Creature Master]";
 				mes "You already have a Dragon.";
 				close;
-			}
-			else if(ismounting()) {
+			} else if(hascashmount()) {
 				mes "[Riding Creature Master]";
 				mes "Please remove your cash mount.";
 				close;
@@ -97,8 +95,7 @@ prontera,130,213,5	script	Riding Creature Master	8W_SOLDIER,{
 				mes "[Riding Creature Master]";
 				mes "You already have a Gryphon.";
 				close;
-			}
-			else if(ismounting()) {
+			} else if(hascashmount()) {
 				mes "[Riding Creature Master]";
 				mes "Please remove your cash mount.";
 				close;
@@ -178,8 +175,7 @@ prontera,125,208,5	script	Peco Peco Remover	8W_SOLDIER,{
 				mes "[Magic Gear Master]";
 				mes "Please learn the skill to get the Magic Gear License first.";
 				close;
-			}
-			else if(ismounting()) {
+			} else if(hascashmount()) {
 				mes "[Magic Gear Master]";
 				mes "Please remove your cash mount.";
 				close;

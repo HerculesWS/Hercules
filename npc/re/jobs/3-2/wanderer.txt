@@ -898,7 +898,7 @@ xmas,147,135,5	script	Dancer Kim#xmas	4_F_WANDERER,{
 			mes "- You need to empty your inventory if you want to continue the quest. -";
 			close;
 		}
-		if (ismounting()) {
+		if (hascashmount()) {
 			mes "[Dancer Kim]";
 			mes "Please get off of that creature you're riding on.";
 			mes "Then talk to me again.";

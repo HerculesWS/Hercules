@@ -3868,10 +3868,10 @@ Mado and 0 if they don't.
 
 ---------------------------------------
 
-*setmounting;
-*ismounting()
+*setcashmount;
+*hascashmount()
 
-The 'setmounting' function toggles cash mount for the invoking character.
+The 'setcashmount' function toggles cash mount for the invoking character.
 It will return 1 if successful, 0 otherwise.
 
 Note: Character must not be mounting a non-cash mount (eg. dragon, peco, 

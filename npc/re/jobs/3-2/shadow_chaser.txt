@@ -1358,7 +1358,7 @@ s_atelier,70,66,4	script	Dumk#sc13_lgh	4_M_SHADOWCHASER,{
 		mes "- You can't continue on in this quest because you are overweight. -";
 		close;
 	}
-	if (ismounting()) {
+	if (hascashmount()) {
 		mes "[Dumk]";
 		mes "Who is this guy? Why should he sit in front of me so high?";
 		mes "Although I do not know why you riding on it, but here is in door,";

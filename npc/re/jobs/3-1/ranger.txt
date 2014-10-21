@@ -1692,7 +1692,7 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	4_M_REIDIN_KURS,{
 			close;
 		}
 		mes "[Ranger Master, Neveragain]";
-		if (ismounting()) {
+		if (hascashmount()) {
 			mes "You are on a riding pet,";
 			mes "so you cannot change your job.";
 			mes "Please unequip your riding pet and try again!";

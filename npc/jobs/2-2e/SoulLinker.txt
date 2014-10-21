@@ -398,7 +398,7 @@ OnTouch:
 				mes "if you talk to me later...";
 				close;
 			}
-			if (ismounting()) {
+			if (hascashmount()) {
 				mes "[Maia]";
 				mes "You are on a riding pet,";
 				mes "so you cannot change your job.";

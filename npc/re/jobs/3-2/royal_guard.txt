@@ -340,7 +340,7 @@ glast_01,240,366,5	script	Memory of King Schmidtz	CLEAR_NPC,{
 		mes "- and please try again. -";
 		close;
 	}
-	if (ismounting() || checkriding()) {
+	if (hascashmount() || checkriding()) {
 		mes " Please unequip your riding pet and try again!";
 		close;
 	}

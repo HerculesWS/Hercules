@@ -30,7 +30,7 @@ yuno,129,156,3	script	Chainheart	4_M_DOCTOR,{
 		close;
 	} else if (job__mechanic == 11) {
 		if (BaseJob == Job_Blacksmith && BaseLevel > 98 && JobLevel > 49 && SkillPoint == 0) {
-			if (ismounting()) {
+			if (hascashmount()) {
 				mes "You are on a riding pet,";
 				mes "so you cannot change your job.";
 				mes "Please unequip your riding pet and try again!";

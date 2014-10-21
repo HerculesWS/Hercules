@@ -4691,7 +4691,7 @@ alde_gld,186,199,3	script	Turbo Track Guide#Entran	4_F_RACING,{
 -	script	::MountManager_turbo	-1,{
 	set .@n$, "["+strnpcinfo(1)+"]";
 	mes .@n$;
-	if (ismounting()) {
+	if (hascashmount()) {
 		mes "Please get off of that creature you're riding on.";
 		mes "Then talk to me again.";
 		close;

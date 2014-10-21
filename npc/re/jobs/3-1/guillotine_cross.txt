@@ -3624,7 +3624,7 @@ job3_guil01,148,53,3	script	Bercasell#3rdgc16	4_M_GUILLOTINE,{
 							switch(select("Yes, change my job.:I need to rethink it.")) {
 							case 1:
 								mes "[Bercasell]";
-								if (ismounting()) {
+								if (hascashmount()) {
 									mes "I cannot perform the job change.";
 									mes "Please remove your mount and try again.";
 									close;

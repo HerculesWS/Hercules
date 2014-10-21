@@ -1839,7 +1839,7 @@ prt_in,94,172,4	script	Karian#job_min3	4_M_MINSTREL1,{
 			mes "How did you degrade?";
 			close;
 		}
-		if (ismounting()) {
+		if (hascashmount()) {
 			mes "Please unequip your riding pet and try again!";
 			close;
 		}

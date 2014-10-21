@@ -794,7 +794,7 @@ sword_1-1,223,167,2	script	Master#job_shu	4_M_SURA,{
 		mes "[Master]";
 		mes "I hope those days will not come but... I'll willingly be the ghost and kill all enemies.";
 		next;
-		if (ismounting()) {
+		if (hascashmount()) {
 			mes "[Master]";
 			mes "So... please get down from your riding pet!";
 			mes "It is a loss of etiquette on this situation.";

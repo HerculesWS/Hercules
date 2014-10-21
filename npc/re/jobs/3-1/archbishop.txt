@@ -1188,7 +1188,7 @@ OnTouch:
 		mes "- and come for the challenge again. -";
 		close;
 	}
-	if (ismounting()) {
+	if (hascashmount()) {
 		mes "You are on a riding pet,";
 		mes "so you cannot change your job.";
 		mes "Please unequip your riding pet and try again!";

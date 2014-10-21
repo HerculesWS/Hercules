@@ -546,7 +546,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 		mes "<We hope that you yield good fruits in the future as well.>";
 		next;
 		mes "[Devries]";
-		if (ismounting()) {
+		if (hascashmount()) {
 			mes "You are on a riding pet,";
 			mes "so you cannot change your job.";
 			mes "Please unequip your riding pet and try again!";

@@ -8357,7 +8357,8 @@ ACMD(charcommands)
 	return true;
 }
 /* for new mounts */
-ACMD(mount2) {
+ACMD(cashmount)
+{
 	
 	if (pc_hasmount(sd)) {
 		clif->message(fd, msg_txt(1476)); // You are already mounting something else
@@ -8365,7 +8366,7 @@ ACMD(mount2) {
 	}
 	
 	clif->message(sd->fd,msg_txt(1362)); // NOTICE: If you crash with mount your LUA is outdated.
-	if( !(sd->sc.data[SC_ALL_RIDING]) ) {
+	if (!sd->sc.data[SC_ALL_RIDING]) {
 		clif->message(sd->fd,msg_txt(1363)); // You have mounted.
 		sc_start(NULL,&sd->bl,SC_ALL_RIDING,100,0,-1);
 	} else {
@@ -9633,7 +9634,7 @@ void atcommand_basecommands(void) {
 		ACMD_DEF2("rmvperm", addperm),
 		ACMD_DEF(unloadnpcfile),
 		ACMD_DEF(cart),
-		ACMD_DEF(mount2),
+		ACMD_DEF(cashmount),
 		ACMD_DEF(join),
 		ACMD_DEF(channel),
 		ACMD_DEF(fontcolor),

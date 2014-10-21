@@ -17363,9 +17363,10 @@ BUILDIN(setdragon) {
 }
 
 /**
- * ismounting() returns 1 if mounting a new mount or 0 otherwise
+ * hascashmount() returns 1 if mounting a cash mount or 0 otherwise
  **/
-BUILDIN(ismounting) {
+BUILDIN(hascashmount)
+{
 	TBL_PC* sd;
 	if( (sd = script->rid2sd(st)) == NULL )
 		return true;
@@ -17377,12 +17378,14 @@ BUILDIN(ismounting) {
 }
 
 /**
- * setmounting() returns 1 on success or 0 otherwise
- * - Toggles new mounts on a player when he can mount
- * - Will fail if the player is mounting a non-new mount, e.g. dragon, peco, wug, etc.
- * - Will unmount the player is he is already mounting
+ * setcashmount() returns 1 on success or 0 otherwise
+ *
+ * - Toggles cash mounts on a player when he can mount
+ * - Will fail if the player is already riding a standard mount e.g. dragon, peco, wug, mado, etc.
+ * - Will unmount the player is he is already mounting a cash mount
  **/
-BUILDIN(setmounting) {
+BUILDIN(setcashmount)
+{
 	TBL_PC* sd;
 	if ((sd = script->rid2sd(st)) == NULL)
 		return true;
@@ -17390,7 +17393,7 @@ BUILDIN(setmounting) {
 		clif->msgtable(sd->fd, 0X78b);
 		script_pushint(st,0);//can't mount with one of these
 	} else {
-		if( sd->sc.data[SC_ALL_RIDING] )
+		if (sd->sc.data[SC_ALL_RIDING])
 			status_change_end(&sd->bl, SC_ALL_RIDING, INVALID_TIMER);
 		else
 			sc_start(NULL,&sd->bl, SC_ALL_RIDING, 100, 0, -1);
@@ -19303,8 +19306,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(makerune,"i"),
 		BUILDIN_DEF(checkdragon,""),//[Ind]
 		BUILDIN_DEF(setdragon,"?"),//[Ind]
-		BUILDIN_DEF(ismounting,""),//[Ind]
-		BUILDIN_DEF(setmounting,""),//[Ind]
+		BUILDIN_DEF(hascashmount,""),//[Ind]
+		BUILDIN_DEF(setcashmount,""),//[Ind]
 		BUILDIN_DEF(checkre,"i"),
 		/**
 		 * rAthena and beyond!

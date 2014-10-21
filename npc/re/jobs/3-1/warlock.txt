@@ -672,7 +672,7 @@ spl_in02,80,108,5	script	Guild Master#Warlock	4_F_FAIRY1,{
 			mes "Unless you like your current job, you should use all your skill points.";
 			close;
 		}
-		if (ismounting()) {
+		if (hascashmount()) {
 			mes "You are on a riding pet,";
 			mes "so you cannot change your job.";
 			mes "Please unequip your riding pet and try again!";
