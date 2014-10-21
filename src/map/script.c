@@ -19479,7 +19479,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(setquest, "i"),
 		BUILDIN_DEF(erasequest, "i?"),
 		BUILDIN_DEF(completequest, "i?"),
-		BUILDIN_DEF(checkquest, "i?"),
+		BUILDIN_DEF_DEPRECATED(checkquest, "i?"), // Deprecated 2014-10-28 [Haru]
 		BUILDIN_DEF(questprogress, "i?"),
 		BUILDIN_DEF(questactive, "i"),
 		BUILDIN_DEF(changequest, "ii"),

@@ -8437,7 +8437,13 @@ Add quest of the <ID2> to the the quest log, and the state is "active".
 
 *checkquest(<ID>{,PLAYTIME|HUNTING})
 
-DEPRECATED - use questprogress instead.
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it
+is scheduled to be removed on or after November 28th, 2014. Please consider
+using questprogress() instead. Or, in special cases, questactive().
 
 If no additional argument supplied, return the state of the quest: 
 	-1 = Quest not started (not in quest log)
