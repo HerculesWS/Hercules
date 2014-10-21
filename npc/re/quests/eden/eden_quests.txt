@@ -1139,7 +1139,7 @@ moc_fild11,180,253,5	script	Talking Dog#para03	4_RUS_DWOLF,{
 		}
 	}
 	if (para_suv01 == 2) {
-		if (checkquest(7129,HUNTING) == 2) {
+		if (questprogress(7129,HUNTING) == 2) {
 			mes "[Talking Dog]";
 			mes "Woooohh...";
 			mes "Great!";
@@ -1186,7 +1186,7 @@ moc_fild11,180,253,5	script	Talking Dog#para03	4_RUS_DWOLF,{
 		close;
 	}
 	if (para_suv01 == 3) {
-		if (checkquest(7130,HUNTING) == 2) {
+		if (questprogress(7130,HUNTING) == 2) {
 			mes "[Talking Dog]";
 			mes "You are so perfect.";
 			next;
@@ -1224,7 +1224,7 @@ moc_fild11,180,253,5	script	Talking Dog#para03	4_RUS_DWOLF,{
 		close;
 	}
 	if (para_suv01 == 4) {
-		if (checkquest(7131,HUNTING) == 2) {
+		if (questprogress(7131,HUNTING) == 2) {
 			mes "[Talking Dog]";
 			mes "Um. Excellent.";
 			mes "You are awesome!";
@@ -1388,7 +1388,7 @@ prt_sewb1,131,262,3	script	Timid Cat#para04	4_M_BABYCAT,{
 		}
 	}
 	if (para_suv01 == 7) {
-		if (checkquest(7134,HUNTING) == 2) {
+		if (questprogress(7134,HUNTING) == 2) {
 			mes "[Timid Cat]";
 			mes "Now do you understand the dirty and humid underground sewers?";
 			mes "Eeeh look what's next meow.";
@@ -1426,7 +1426,7 @@ prt_sewb1,131,262,3	script	Timid Cat#para04	4_M_BABYCAT,{
 		close;
 	}
 	if (para_suv01 == 8) {
-		if (checkquest(7135,HUNTING) == 2) {
+		if (questprogress(7135,HUNTING) == 2) {
 			mes "[Timid Cat]";
 			mes "Great job~!";
 			mes "How'd you get rid of those dirty bugs and Tarou. You are brave.";
@@ -1464,7 +1464,7 @@ prt_sewb1,131,262,3	script	Timid Cat#para04	4_M_BABYCAT,{
 		close;
 	}
 	if (para_suv01 == 9) {
-		if (checkquest(7136,HUNTING) == 2) {
+		if (questprogress(7136,HUNTING) == 2) {
 			mes "[Timid Cat]";
 			mes "You are great meow~";
 			mes "You killed them so quickly!";
@@ -1572,7 +1572,7 @@ pay_arche,41,136,3	script	Eden Member Karl#para05	4_M_KHMAN,{
 		close;
 	}
 	if (para_suv01 == 14) {
-		if (checkquest(7139,HUNTING) == 2) {
+		if (questprogress(7139,HUNTING) == 2) {
 			mes "[Karl]";
 			mes "Did you get how the undead work?";
 			mes "As you know undead never die so, blessing of live person it's same as curse to them.";
@@ -1611,7 +1611,7 @@ pay_arche,41,136,3	script	Eden Member Karl#para05	4_M_KHMAN,{
 		close;
 	}
 	if (para_suv01 == 15) {
-		if (checkquest(7140,HUNTING) == 2) {
+		if (questprogress(7140,HUNTING) == 2) {
 			mes "[Karl]";
 			mes "Did you get back what the Poporing stole?";
 			mes "This cave is really deep and there are lots of precious things that they could have picked up.";
@@ -1734,7 +1734,7 @@ anthell01,29,264,5	script	Eden Member Cloud#para06	4_M_HUMAN_02,{
 		}
 	}
 	if (para_suv01 == 18) {
-		if (checkquest(7143,HUNTING) == 2) {
+		if (questprogress(7143,HUNTING) == 2) {
 			mes "[Cloud]";
 			mes "Hey, what was it?";
 			mes "Maybe you saw an Andre when you were hunting Pierre.";
@@ -1764,7 +1764,7 @@ anthell01,29,264,5	script	Eden Member Cloud#para06	4_M_HUMAN_02,{
 		close;
 	}
 	if (para_suv01 == 19) {
-		if (checkquest(7144,HUNTING) == 2) {
+		if (questprogress(7144,HUNTING) == 2) {
 			mes "[Cloud]";
 			mes "Great. You seem to have killed all of the Andre.";
 			mes "How do you think about fighting ants?";
@@ -1803,7 +1803,7 @@ anthell01,29,264,5	script	Eden Member Cloud#para06	4_M_HUMAN_02,{
 		close;
 	}
 	if (para_suv01 == 20) {
-		if (checkquest(7145,HUNTING) == 2) {
+		if (questprogress(7145,HUNTING) == 2) {
 			mes "[Cloud]";
 			mes "Oh... it might have been an anoying fight.";
 			mes "You finished so fast.";
@@ -1913,7 +1913,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 		close;
 	}
 	if (para_suv01 == 25) {
-		if (checkquest(7148,HUNTING) == 2) {
+		if (questprogress(7148,HUNTING) == 2) {
 			mes "[Hooksha]";
 			mes "Great. Awesome.";
 			mes "It's not very pleasant so let's move on.";
@@ -1946,7 +1946,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 		close;
 	}
 	if (para_suv01 == 26) {
-		if (checkquest(7149,HUNTING) == 2) {
+		if (questprogress(7149,HUNTING) == 2) {
 			mes "[Hooksha]";
 			mes "Now you can move on to the next step.";
 			next;
@@ -1977,7 +1977,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 		close;
 	}
 	if (para_suv01 == 27) {
-		if (checkquest(7150,HUNTING) == 2) {
+		if (questprogress(7150,HUNTING) == 2) {
 			mes "[Hooksha]";
 			mes "Great job.";
 			mes "Now you should understand how the orc tribe works here in Orc Village.";
@@ -2044,7 +2044,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 		close;
 	}
 	if (para_suv01 == 30) {
-		if (checkquest(7153,HUNTING) == 2) {
+		if (questprogress(7153,HUNTING) == 2) {
 			mes "[Hooksha]";
 			mes "It's different from what you saw in Payon, right?";
 			mes "Although you managed to kill the Orc Zombies, you can't be sure you are much stronger..";
@@ -2076,7 +2076,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 		close;
 	}
 	if (para_suv01 == 31) {
-		if (checkquest(7154,HUNTING) == 2) {
+		if (questprogress(7154,HUNTING) == 2) {
 			mes "[Hooksha]";
 			mes "Your training mission has been completed.";
 			mes "Go back to the Eden Group headquarters and report.";
@@ -2172,7 +2172,7 @@ iz_dun04,43,46,3	script	Eden Member Callandiva	4_F_CRU,{
 		close;
 	}
 	if (para_suv01 == 34) {
-		if (checkquest(7157,HUNTING) == 2) {
+		if (questprogress(7157,HUNTING) == 2) {
 			mes "[Callandiva]";
 			mes "Oh, you came back~!";
 			mes "What did you think of those threatening Mermans?";
@@ -2203,7 +2203,7 @@ iz_dun04,43,46,3	script	Eden Member Callandiva	4_F_CRU,{
 		close;
 	}
 	if (para_suv01 == 35) {
-		if (checkquest(7158,HUNTING) == 2) {
+		if (questprogress(7158,HUNTING) == 2) {
 			mes "[Callandiva]";
 			mes "Did you kill all the Strouf already?";
 			mes "I wasn't counting that you'd make it.";
@@ -4000,7 +4000,7 @@ comodo,173,354,6	script	Romeo#01	1_M_JOBTESTER,{
 		close;
 	}
 	if (romeo == 1) {
-		if (checkquest(7215,HUNTING) == 2) {
+		if (questprogress(7215,HUNTING) == 2) {
 			mes "[Romeo]";
 			mes "You did it? Thats all the proof I needed.";
 			next;
@@ -4033,7 +4033,7 @@ comodo,173,354,6	script	Romeo#01	1_M_JOBTESTER,{
 
 um_fild01,34,280,6	script	Romeo#02	1_M_JOBTESTER,{
 	if (romeo == 2) {
-		if (checkquest(7216,HUNTING) == 2) {
+		if (questprogress(7216,HUNTING) == 2) {
 			mes "[Romeo]";
 			mes "Wow, you have arrived sooner than I expected.";
 			next;
@@ -4098,7 +4098,7 @@ glast_01,195,131,6	script	Johan	4_F_SISTER,{
 		close;
 	}
 	if (johan == 1) {
-		if (checkquest(7220,HUNTING) == 2) {
+		if (questprogress(7220,HUNTING) == 2) {
 			mes "[Johan]";
 			mes "Good.";
 			next;
@@ -4117,7 +4117,7 @@ glast_01,195,131,6	script	Johan	4_F_SISTER,{
 		close;
 	}
 	if (johan == 2) {
-		if (checkquest(7221,HUNTING) == 2) {
+		if (questprogress(7221,HUNTING) == 2) {
 			mes "[Johan]";
 			mes "Hmmmm, better.";
 			next;
@@ -4163,7 +4163,7 @@ ein_fild08,172,359,4	script	Kiren	4_M_4THPRIN1,{
 		close;
 	}
 	if (kiren == 1) {
-		if (checkquest(7224,HUNTING) == 2) {
+		if (questprogress(7224,HUNTING) == 2) {
 			mes "[Kiren]";
 			mes "Wow, most people spend twice as long as you did to kill those Porcellios!";
 			next;
@@ -4183,7 +4183,7 @@ ein_fild08,172,359,4	script	Kiren	4_M_4THPRIN1,{
 		close;
 	}
 	if (kiren == 2) {
-		if ((checkquest(7226,HUNTING) == 2) && (checkquest(7227,HUNTING) == 2)) {
+		if ((questprogress(7226,HUNTING) == 2) && (questprogress(7227,HUNTING) == 2)) {
 			mes "[Kiren]";
 			mes "Incredible, you set a new record!";
 			next;
@@ -4230,7 +4230,7 @@ ice_dun01,154,13,6	script	Naomi	4_F_JOB_BLACKSMITH,{
 		close;
 	}
 	if (naomi == 1) {
-		if (checkquest(7230,HUNTING) == 2) {
+		if (questprogress(7230,HUNTING) == 2) {
 			mes "[Naomi]";
 			mes "Thank you, but there are still so many Siromas here!";
 			next;
@@ -4249,7 +4249,7 @@ ice_dun01,154,13,6	script	Naomi	4_F_JOB_BLACKSMITH,{
 		close;
 	}
 	if (naomi == 2) {
-		if ((checkquest(7231,HUNTING) == 2) && (countitem(7066) >= 30) && (countitem(519) >= 1) && (countitem(7453) >= 1)) {
+		if ((questprogress(7231,HUNTING) == 2) && (countitem(7066) >= 30) && (countitem(519) >= 1) && (countitem(7453) >= 1)) {
 			mes "[Naomi]";
 			mes "Yay, you did it!";
 			next;
@@ -4349,7 +4349,7 @@ man_fild01,43,234,2	script	Paradise Dispatch#01	4_DST_SOLDIER,{
 		close;
 	}
 	if (margaret == 2) {
-		if (checkquest(7235,HUNTING) == 2) {
+		if (questprogress(7235,HUNTING) == 2) {
 			mes "[Paradise Dispatch]";
 			mes "Thanks!";
 			next;
@@ -4395,7 +4395,7 @@ spl_fild02,377,149,4	script	Paradise Dispatch#02	4_M_DST_MASTER,{
 		close;
 	}
 	if (margaret == 5) {
-		if (checkquest(7236,HUNTING) == 2) {
+		if (questprogress(7236,HUNTING) == 2) {
 			mes "[Paradise Dispatch]";
 			mes "You make it look so easy, but I couldn't even kill 1...";
 			next;
@@ -4701,12 +4701,12 @@ moc_para01,111,83,3	script	Toren	2_M_OLDBLSMITH,{
 			mes "It is finished! Come back tomorrow if you want to enchant more.";
 			close;
 		}
-		if ((paragearenchant == 4) && (checkquest(7241,PLAYTIME) != 2)) {
+		if ((paragearenchant == 4) && (questprogress(7241,PLAYTIME) != 2)) {
 			mes "[Toren]";
 			mes "Please come back tomorrow if you want to enchant more.";
 			close;
 		}
-		if ((paragearenchant == 4) && (checkquest(7241,PLAYTIME) == 2)) {
+		if ((paragearenchant == 4) && (questprogress(7241,PLAYTIME) == 2)) {
 			set paragearenchant,0;
 			erasequest 7241;
 			mes "[Toren]";

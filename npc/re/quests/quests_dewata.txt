@@ -754,7 +754,7 @@ dewata,109,262,4	script	Memo#dew_drink	4_M_DEWOLDMAN,{
 			close;
 		}
 	}
-	set .@playtime, checkquest(5044,PLAYTIME);
+	.@playtime = questprogress(5044,PLAYTIME);
 	if (.@playtime == 0) {
 		mes "[Memo]";
 		mes "Will you help me again tomorrow?";
@@ -913,14 +913,14 @@ dewata,109,262,4	script	Memo#dew_drink	4_M_DEWOLDMAN,{
 		set dew_drink,8;
 		close;
 	} else if (dew_drink == 8) {
-		if (checkquest(5043,PLAYTIME) == 0) {
+		if (questprogress(5043,PLAYTIME) == 1) {
 			mes "[Memo]";
 			mes "... ... ...";
 			emotion e_swt2;
 			next;
 			mes "- Memo is making an ark. -";
 			close;
-		} else if (checkquest(5043,PLAYTIME) == -1) {
+		} else if (!questprogress(5043,PLAYTIME)) {
 			mes "- There is error in the quest. -";
 			close;
 		}
@@ -968,7 +968,7 @@ dewata,109,262,4	script	Memo#dew_drink	4_M_DEWOLDMAN,{
 		close;
 	} else if (dew_drink == 10) {
 		for(set .@i,0; .@i<7; set .@i,.@i+1)
-			if (checkquest(5045+.@i) > -1)
+			if (questprogress(5045+.@i))
 				set .@j, .@j | (1<<.@i);
 		if (.@j == 0) {
 			mes "[Memo]";
@@ -1166,14 +1166,14 @@ dew_fild01,114,275,4	script	Lero#dew_drink	4_M_DEWMAN,{
 		mes "Although he is lazy and rather careless, he is the best worker.";
 		close;
 	} else if (dew_drink == 4) {
-		if (checkquest(5038) > -1) {
+		if (questprogress(5038)) {
 			mes "[Lero]";
 			mes "You can ask Poby about the best method of gathering nuts where you met him in the forest. He should be able to teach you the technique.";
 			next;
 			mes "[Lero]";
 			mes "Although he is lazy and rather careless, he is the best worker.";
 			close;
-		} else if (checkquest(5039) > -1) {
+		} else if (questprogress(5039)) {
 			if (countitem(6402) < 60) {
 				mes "[Lero]";
 				mes "Did you gather the nuts already?";
@@ -1226,7 +1226,7 @@ dew_fild01,114,275,4	script	Lero#dew_drink	4_M_DEWMAN,{
 		getitem 6401,30; //Palm_O
 		close;
 	} else if (dew_drink == 7) {
-		if (checkquest(5042) > -1 && countitem(6401) > 29) {
+		if (questprogress(5042) && countitem(6401) > 29) {
 			mes "[Lero]";
 			mes "It is heavier than you might think, so be careful when carrying it.";
 			next;
@@ -1266,7 +1266,7 @@ dew_fild01,114,275,4	script	Lero#dew_drink	4_M_DEWMAN,{
 		close;
 	} else if (dew_drink == 10) {
 		for(set .@i,0; .@i<7; set .@i,.@i+1)
-			if (checkquest(5045+.@i) > -1)
+			if (questprogress(5045+.@i))
 				set .@j, .@j | (1<<.@i);
 		if (.@j == 0) {
 			mes "[Lero]";
@@ -1391,7 +1391,7 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 		emotion e_swt2;
 		close;
 	} else if (dew_drink == 4) {
-		if (checkquest(5039) > -1) {
+		if (questprogress(5039)) {
 			if (countitem(6402) > 59) { // Oil_Palm_F
 				mes "[Poby]";
 				mes "You got all the fruits. Bring them to Mr. Lero.";
@@ -1440,11 +1440,11 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 		mes "[Poby]";
 		mes "Oh! "+strcharinfo(0)+", we meet again. What's going on?";
 
-		if (checkquest(5047) > -1)
+		if (questprogress(5047))
 			set .@count,10;
-		else if (checkquest(5049) > -1)
+		else if (questprogress(5049))
 			set .@count,15;
-		else if (checkquest(5051) > -1)
+		else if (questprogress(5051))
 			set .@count,20;
 		if (.@count) {
 			if (countitem(6401) >= .@count) {
@@ -1501,10 +1501,10 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 		close;
 	}
 
-	if (checkquest(5039) > -1) set .@count,60;
-	else if (checkquest(5046) > -1) set .@count,20;
-	else if (checkquest(5048) > -1) set .@count,30;
-	else if (checkquest(5050) > -1) set .@count,40;
+	if (questprogress(5039)) set .@count,60;
+	else if (questprogress(5046)) set .@count,20;
+	else if (questprogress(5048)) set .@count,30;
+	else if (questprogress(5050)) set .@count,40;
 	if (.@count == 0) {
 		mes "There's a palm tree";
 		mes "facing the cool wind.";

@@ -347,7 +347,7 @@ eclage,102,32,4	script	Fairy Carpenter#ep14_2	4_M_FAIRYKID2,{
 		emotion e_sob;
 		close;
 	}
-	if (checkquest(11312) == -1) {
+	if (!questprogress(11312)) {
 		mes "[Fairy Carpenter]";
 		mes "This area is kind of broken, so be careful.";
 		mes "Otherwise, you'll fall aaaaaall the way down.";
@@ -743,7 +743,7 @@ ecl_in04,109,215,2	script	Hiel#pa0829	4_M_FAIRYSCHOLAR,{
 // For Eclage
 //============================================================
 function	script	F_Eclage_Traveler	{
-	if (checkquest(7411) > -1 && checkquest(7412) > -1 && checkquest(7413) > -1) {
+	if (questprogress(7411) && questprogress(7412) && questprogress(7413)) {
 		cutin "minuel01.bmp",4;
 		donpcevent "Eclage Guard#tl01::OnEnable";
 		mes "[Eclage Guard]";
@@ -792,7 +792,7 @@ function	script	F_Eclage_Traveler	{
 
 ecl_in01,32,52,4	script	Traveler Fome#tl01	4_F_DOGTRAVELER,3,3,{
 	if (ep14_2_tl == 0) {
-		if (checkquest(7411) == -1) {
+		if (!questprogress(7411)) {
 			mes "[Fome]";
 			mes "Come here and have a talk with us.";
 			mes "My name is Fome and I'm from the central region of Alpheim.";
@@ -903,7 +903,7 @@ ecl_in01,32,52,4	script	Traveler Fome#tl01	4_F_DOGTRAVELER,3,3,{
 		close;
 	}
 OnTouch:
-	if (ep14_2_tl == 0 && checkquest(7411) == -1 && checkquest(7412) == -1 && checkquest(7413) == -1) {
+	if (ep14_2_tl == 0 && !questprogress(7411) && !questprogress(7412) && !questprogress(7413)) {
 		mes "A group of travelers of Alpheim are having a conversation.";
 		emotion e_loud;
 		next;
@@ -920,7 +920,7 @@ OnTouch:
 
 ecl_in01,32,51,6	script	Traveler Litrip#tl02	4_M_DOGTRAVELER,{
 	if (ep14_2_tl == 0) {
-		if (checkquest(7412) == -1) {
+		if (questprogress(7412)) {
 			mes "[Litrip]";
 			mes "Oh, look at this strange traveler.";
 			mes "Come here. My name is Litrip.";
@@ -1008,7 +1008,7 @@ ecl_in01,32,51,6	script	Traveler Litrip#tl02	4_M_DOGTRAVELER,{
 
 ecl_in01,35,51,2	script	Traveler Chiba#tl03	4_M_DOGTRAVELER2,{
 	if (ep14_2_tl == 0) {
-		if (checkquest(7413) == -1) {
+		if (questprogress(7413)) {
 			mes "[Chiba]";
 			mes "You're human from Midgard.";
 			mes "I'm Chiba.";
@@ -1157,7 +1157,7 @@ ecl_in01,82,70,2	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 		mes "I see you pretty often.";
 		mes "I was notified in advance that the Chief of Staff requested for an audience.";
 		next;
-		if (checkquest(7416,PLAYTIME) < 2) {
+		if (questprogress(7416,PLAYTIME) != 2) {
 			mes "[Eclage Guard]";
 			mes "But I'm afraid it's too early.";
 			mes "I think you have to wait for a while.";
@@ -1210,7 +1210,7 @@ ecl_in01,82,70,2	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 			end;
 		}
 	} else if (ep14_2_tl == 5) {
-		if (checkquest(7418) == -1) {
+		if (!questprogress(7418)) {
 			cutin "minuel01.bmp",2;
 			mes "[Eclage Guard]";
 			mes "Eh, good to see you again.";
@@ -1428,7 +1428,7 @@ ecl_in03,245,93,2	script	Chief of Staff#tl01	4_F_FAIRY,{
 		warp "ecl_in01",47,28;
 		end;
 	} else if (ep14_2_tl == 3) {
-		if (checkquest(7416,PLAYTIME) < 2) {
+		if (questprogress(7416,PLAYTIME) != 2) {
 			mes "[Shenime]";
 			mes "You need to wait a little longer to see Mayor Jun.";
 			mes "He is pretty busy, so please bear with us.";
@@ -1618,7 +1618,7 @@ ecl_fild01,205,86,4	script	Eclage Messenger Roy#tl	4_M_FAIRYSOLDIER2,{
 		mes "...Ah... I'm just feeling sorry for myself, so just continue on your way.";
 		close;
 	} else {
-		if (checkquest(7419) == -1) {
+		if (!questprogress(7419)) {
 			mes "[Roy]";
 			mes "It's hard.";
 			mes "It really is hard.";
@@ -1705,7 +1705,7 @@ eclage,112,40,4	script	Eclage Guard Leo#tl	4_M_FAIRYSOLDIER2,{
 		mes "I hope you enjoy your trip.";
 		close;
 	} else {
-		if (checkquest(7420) == -1) {
+		if (!questprogress(7420)) {
 			mes "[Leo]";
 			mes "Hi, how are you?";
 			emotion e_gasp;

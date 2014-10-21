@@ -119,15 +119,15 @@ moc_prydn1,94,98,3	script	Suspicious Cat#night2	4_CAT_SAILOR4,{
 		warp "moc_prydb1",100,57;
 		end;
 	case 2:
-		set .@playtime, checkquest(2290,PLAYTIME);
-		if (.@playtime == 0 || .@playtime == 1) {
+		.@playtime = questprogress(2290,PLAYTIME);
+		if (.@playtime == 1) {
 			mes "[Suspicious Cat]";
 			mes "Look at that Verit, he's afraid of us! Kyaahaha! We're safe, at least for a while!";
 			close;
 		} else if (.@playtime == 2)
 			erasequest 2290;
-		set .@hunting, checkquest(2289,HUNTING);
-		if (.@hunting == -1) {
+		.@hunting = questprogress(2289,HUNTING);
+		if (!.@hunting) {
 			mes "[Suspicious Cat]";
 			mes "Did you know that cats and dogs don't get along?";
 			next;
@@ -157,7 +157,7 @@ moc_prydn1,94,98,3	script	Suspicious Cat#night2	4_CAT_SAILOR4,{
 				mes "Pah! You don't care about me? Fine, you traitor!";
 				close;
 			}
-		} else if (.@hunting == 0 || .@hunting == 1) {
+		} else if (.@hunting == 1) {
 			mes "[Suspicious Cat]";
 			mes "Is Verit's training going well?";
 			next;
@@ -181,15 +181,15 @@ moc_prydn1,94,98,3	script	Suspicious Cat#night2	4_CAT_SAILOR4,{
 			close;
 		}
 	case 3:
-		set .@playtime, checkquest(2291,PLAYTIME);
-		if (.@playtime == 0 || .@playtime == 1) {
+		.@playtime = questprogress(2291,PLAYTIME);
+		if (.@playtime == 1) {
 			mes "[Suspicious Cat]";
 			mes "Good, I'll make a good use of the time you gained! But I gotta do something about this stomachache first.....";
 			close;
 		} else if (.@playtime == 2)
 			erasequest 2291;
-		set .@hunting, checkquest(2292,HUNTING);
-		if (.@hunting == -1) {
+		.@hunting = questprogress(2292,HUNTING);
+		if (!.@hunting) {
 			mes "[Suspicious Cat]";
 			mes "Precious treasures are supposed to be hidden in the deep secret places here!";
 			mes "I'm sure the mummy's precious treasures are hidden in the second basement level.";
@@ -217,7 +217,7 @@ moc_prydn1,94,98,3	script	Suspicious Cat#night2	4_CAT_SAILOR4,{
 				mes "Bah, you're so cold-hearted.";
 				close;
 			}
-		} else if (.@hunting == 0 || .@hunting == 1) {
+		} else if (.@hunting == 1) {
 			mes "[Suspicious Cat]";
 			mes "Is fighting Ancient Mummies going well?";
 			next;

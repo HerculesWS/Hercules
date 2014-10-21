@@ -23,9 +23,9 @@ moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 
 	// Clear the original quest data (no longer used).
 	if (slv_quest) set slv_quest,0;
-	if (checkquest(10102) > -1 || checkquest(10103) > -1 || checkquest(10104) > -1 || checkquest(10105) > -1 || checkquest(10106) > -1) {
+	if (questprogress(10102) || questprogress(10103) || questprogress(10104) || questprogress(10105) || questprogress(10106)) {
 		for(set .@quest,10102; .@quest<=10106; set .@quest,.@quest+1) {
-			if (checkquest(.@quest) > -1)
+			if (questprogress(.@quest))
 				erasequest .@quest;
 		}
 		mes "- Since the client has moved -";
@@ -50,10 +50,10 @@ moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 			10118,10119,10120,
 			10121,10122,10123,5055,5056;
 		for(set .@i,0; .@i<getarraysize(.@quests); set .@i,.@i+1) {
-			if (checkquest(.@quests[.@i],HUNTING) == 2)
+			if (questprogress(.@quests[.@i],HUNTING) == 2)
 				set .@complete[getarraysize(.@complete)], .@quests[.@i];
 		}
-		if (checkquest(5057) > -1 && countitem(7187) >= 30)
+		if (questprogress(5057) && countitem(7187) >= 30)
 			set .@complete[getarraysize(.@complete)],5057;
 		if (getarraysize(.@complete)) {
 			mes "You have quests in progress.";
@@ -184,13 +184,14 @@ L_Quest:
 	} else {
 		if (.@quest == 5057) {
 			// Quest 5057 is the only collection quest, so separate conditions are unnecessary.
-			if (checkquest(5057) == -1)
-				set .@hunting,-1;
+			if (!questprogress(5057))
+				.@hunting = 0;
 			else if (countitem(7187) >= 30)
-				set .@hunting,2;
-		} else
-			set .@hunting, checkquest(.@quest,HUNTING);
-		if (.@hunting == 0 || .@hunting == 1) {
+				.@hunting = 2;
+		} else {
+			.@hunting = questprogress(.@quest,HUNTING);
+		}
+		if (.@hunting == 1) {
 			mes getarg(1);
 			mes getarg(2);
 			next;

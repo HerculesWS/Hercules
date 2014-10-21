@@ -138,7 +138,7 @@ mid_camp,148,222,4	script	Theore#ep14_1_bs	4_F_SCIENCE,3,3,{
 			}
 		}
 	} else if (ep14_1_bs == 2) {
-		if (checkquest(11182,PLAYTIME) < 2) {
+		if (questprogress(11182,PLAYTIME) != 2) {
 			mes "[Theore]";
 			mes "......";
 			switch(rand(1,4)) {
@@ -530,7 +530,7 @@ splendide,183,117,4	script	Tired-looking Fairy	4_F_FAIRYKID3,{
 		mes "I'm tired, don't talk to me.";
 		close;
 	} else if (ep14_1_bs < 10) {
-		if (checkquest(11187) == -1) {
+		if (!questprogress(11187)) {
 			mes "[Tired-looking Fairy]";
 			mes "I'm tired, don't talk to me.";
 			next;
@@ -552,7 +552,7 @@ splendide,183,117,4	script	Tired-looking Fairy	4_F_FAIRYKID3,{
 				mes "Then tell me if you remember anything.";
 				close;
 			}
-		} else if (checkquest(11187) == 2) {
+		} else if (questprogress(11187) == 2) {
 			mes "[Tired-looking Fairy]";
 			mes "I hope you can find the owner.";
 			close;
@@ -771,7 +771,7 @@ splendide,119,138,4	script	Kusmi#ep14_1_bs	4_F_FAIRYKID5,{
 			next;
 			mes "[Kusmi]";
 			mes "If you go to the warehouse in Mora Village, the manager will tell you moree.";
-			if (checkquest(11193) > -1 && checkquest(11193) < 2)
+			if (questprogress(11193) == 1)
 				close;
 			mes "Also, on the way back, will you check to see that my friend Rondo is in Mora Villagee?";
 			next;
@@ -779,7 +779,7 @@ splendide,119,138,4	script	Kusmi#ep14_1_bs	4_F_FAIRYKID5,{
 			mes "He always used to visit Splendide around this time, but the situation is no good now. I'll have to tell him to come another time.";
 			close;
 		} else if (ep14_1_bs > 14) {
-			if (checkquest(11193) == -1) {
+			if (!questprogress(11193)) {
 				mes "[Kusmi]";
 				mes "Will you check to see that my friend Rondo is in Mora Villagee?";
 				next;
@@ -802,7 +802,7 @@ splendide,119,138,4	script	Kusmi#ep14_1_bs	4_F_FAIRYKID5,{
 				mes "[Kusmi]";
 				mes "Oh, And Daphrer is in northwest Splendide.";
 			}
-			if (checkquest(11193) < 2) {
+			if (questprogress(11193) != 2) {
 				completequest 11192;
 				completequest 11193;
 			}
@@ -958,14 +958,14 @@ splendide,304,295,4	script	Theodore#ep14_1_bs	4_M_FAIRYKID4,{
 			mes "[Theodore]";
 			mes "If you speak to the Warehouse Manager of Mora Village, you'd be able to get more information.";
 			mes "If you're willing, will you go to Bifrost's 'Mora' Village and meet the Warehouse Manager?";
-			if (checkquest(11199) > -1 && checkquest(11199) < 2)
+			if (questprogress(11199) == 1)
 				close;
 			next;
 			mes "[Theodore]";
 			mes "And if it's not too much trouble, you could drop by my friend Lilitia's also...";
 			close;
 		} else if (ep14_1_bs > 14) {
-			if (checkquest(11199) == -1) {
+			if (!questprogress(11199)) {
 				mes "[Theodore]";
 				mes "And if it's not too much trouble, you could drop by my friend Lilitia's also...";
 				close;
@@ -984,7 +984,7 @@ splendide,304,295,4	script	Theodore#ep14_1_bs	4_M_FAIRYKID4,{
 				mes "[Theodore]";
 				mes "Oh, And Daphrer is in northwest Splendide.";
 			}
-			if (checkquest(11199) < 2) {
+			if (questprogress(11199) != 2) {
 				completequest 11198;
 				completequest 11199;
 			}
@@ -1140,7 +1140,7 @@ splendide,168,301,4	script	Pauchon#ep14_1_bs	4_F_FAIRYKID4,{
 			next;
 			mes "[Pauchon]";
 			mes "The supplies from the mainland come through the Village. If you go speak to the Warehouse Manager, he'll be able to tell you something.";
-			if (checkquest(11205) > -1 && checkquest(11205) < 2)
+			if (questprogress(11205) == 1)
 				close;
 			mes "Also, please pay a visit to my friend Humming.";
 			next;
@@ -1148,7 +1148,7 @@ splendide,168,301,4	script	Pauchon#ep14_1_bs	4_F_FAIRYKID4,{
 			mes "He's such a flighty guy, might have already left, but we were supposed to meet up in Mora Village.";
 			close;
 		} else if (ep14_1_bs > 14) {
-			if (checkquest(11205) == -1) {
+			if (!questprogress(11205)) {
 				mes "[Pauchon]";
 				mes "Please pay a visit to my friend Humming.";
 				mes "He's such a flighty guy, might have already left, but we were supposed to meet up in Mora Village.";
@@ -1167,7 +1167,7 @@ splendide,168,301,4	script	Pauchon#ep14_1_bs	4_F_FAIRYKID4,{
 				mes "[Pauchon]";
 				mes "Oh, And Daphrer is in northwest Splendide.";
 			}
-			if (checkquest(11205) < 2) {
+			if (questprogress(11205) != 2) {
 				completequest 11204;
 				completequest 11205;
 			}
@@ -1201,13 +1201,13 @@ splendide,262,376,4	script	Laphine Soldier#ep14_1	4_M_FAIRYSOLDIER,{
 	next;
 	mes "[Laphine Soldier]";
 	mes "You can get to Alfheim by making it through the Maze of the Hazy Forest. However, nobody has ever come back from the Maze of the Hazy Forest.";
-	if (checkquest(11190) > -1 && checkquest(11190) < 2) {
+	if (questprogress(11190) == 1) {
 		set ep14_1_bs,13;
 		changequest 11190,11191;
-	} else if (checkquest(11196) > -1 && checkquest(11196) < 2) {
+	} else if (questprogress(11196) == 1) {
 		set ep14_1_bs,13;
 		changequest 11196,11197;
-	} else if (checkquest(11202) > -1 && checkquest(11202) < 2) {
+	} else if (questprogress(11202) == 1) {
 		set ep14_1_bs,13;
 		changequest 11202,11203;
 	}
@@ -1270,7 +1270,7 @@ mora,35,119,4	script	Rondo#ep14_1_bs	4_M_DOGTRAVELER,{
 		mes "[Rondo]";
 		mes "Please tell Kusmi";
 		mes "that if he wants to meet, we can meet any time. There is nothing to worry about.";
-		if (checkquest(11193) == -1)
+		if (!questprogress(11193))
 			setquest 11193;
 	}
 	close;
@@ -1290,7 +1290,7 @@ mora,98,66,4	script	Lilitia#ep14_1_bs	4_F_RAFLE_PK,{
 		mes "[Lilitia]";
 		mes "What? Theodore sent you?";
 		mes "Please tell him that I'm so mad!!";
-		if (checkquest(11199) == -1)
+		if (!questprogress(11199))
 			setquest 11199;
 		close;
 	}
@@ -1316,7 +1316,7 @@ mora,139,102,2	script	Humming#ep14_1_bs	4_F_DOGTRAVELER,{
 		mes "[Humming]";
 		mes "If you reach Splendide before me, please tell Pauchon";
 		mes "that I'm going through the Maze of the Hazy Forest.";
-		if (checkquest(11205) == -1)
+		if (!questprogress(11205))
 			setquest 11205;
 		close;
 	}
@@ -1465,7 +1465,7 @@ sec_in02,35,175,0	script	Theore Set Guid	4_F_FAIRYKID,{
 dic_in01,262,191,0	script	#ep14_1_xq02	HIDDEN_WARP_NPC,0,3,{
 	end;
 OnTouch:
-	if (ep13_3_secret > 22 && checkquest(7206) == -1) {
+	if (ep13_3_secret > 22 && !questprogress(7206)) {
 		enablenpc "Cheshire#ep14_1_xq01";
 		cutin "ep13_cheshire_h",1;
 		mes "[Cheshire]";
@@ -1507,8 +1507,8 @@ dic_dun01,274,114,0	script	Stacked Boxes of Goods	CLEAR_NPC,{
 		mes "- You have too many items to do this quest. -";
 		close;
 	}
-	set .@playtime, checkquest(7208,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(7208,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "Boxes with all kinds of goods in them are stacked to the ceiling.";
 		mes "The marked box Cheshire was talking about doesn't seem to be here yet.";
 		close;
@@ -1531,8 +1531,8 @@ dic_dun01,274,114,0	script	Stacked Boxes of Goods	CLEAR_NPC,{
 			close;
 		}
 	} else {
-		if (checkquest(7207) == -1) {
-			if (checkquest(7206) > -1) {
+		if (!questprogress(7207)) {
+			if (questprogress(7206)) {
 				mes "Boxes with all kinds of goods in them are stacked to the ceiling.";
 				mes "Looking closely, you find a box with a small piece of paper stuck to it.";
 				next;
@@ -1545,7 +1545,7 @@ dic_dun01,274,114,0	script	Stacked Boxes of Goods	CLEAR_NPC,{
 				getitem 6392,1; //Bradium_Box
 				close;
 			}
-		} else if (checkquest(7207) < 2) {
+		} else if (questprogress(7207) != 2) {
 			mes "You've already obtained the box Cheshire was talking about.";
 			mes "Now you only have to take it to the Crevice of Bifrost.";
 			close;
@@ -1562,7 +1562,7 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 		close;
 	}
 	cutin "ep13_cheshire",1;
-	if (checkquest(7209) > -1) {
+	if (questprogress(7209)) {
 		if (countitem(6090) < 20) {
 			mes "[Cheshire]";
 			mes "Bring me 20 pieces of refined Bradium.";
@@ -1592,7 +1592,7 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 		end;
 	}
 	callsub L_CheckPlaytime;
-	if (checkquest(7210) > -1) {
+	if (questprogress(7210)) {
 		if (countitem(6392) == 0)
 			callsub L_LostQuest,7210;
 		else {
@@ -1616,8 +1616,8 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 		}
 	}
 	if (ep13_3_secret > 22) {
-		if (checkquest(7207) == -1) {
-			if (checkquest(7206) == -1) {
+		if (!questprogress(7207)) {
+			if (!questprogress(7206)) {
 				mes "[Cheshire]";
 				mes "...Hmm? Huh?";
 				mes "It's "+strcharinfo(0)+"!";
@@ -1685,7 +1685,7 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 				cutin "",255;
 				end;
 			}
-		} else if (checkquest(7207) < 2) {
+		} else if (questprogress(7207) != 2) {
 			if (countitem(6392) == 0)
 				callsub L_LostQuest,7207;
 			else {
@@ -1828,8 +1828,8 @@ L_LostQuest:
 	cutin "",255;
 	end;
 L_CheckPlaytime:
-	set .@playtime, checkquest(7208,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(7208,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "[Cheshire]";
 		mes "Each day, one of these boxes is sent to Kamidal Tunnel.";
 		mes "It's smuggled in among other items.";
@@ -2662,7 +2662,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		emotion e_paper;
 		close;
 	} else if (ep14_1_muk == 1) {
-		if (checkquest(5016) > -1 && countitem(6385) == 0) {
+		if (questprogress(5016) && countitem(6385) == 0) {
 			mes "[Raffle Researcher]";
 			mes "You're back? Where are my research tools?";
 			emotion e_what;
@@ -2716,7 +2716,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		close;
 	} else if (ep14_1_muk == 2) {
 		// Unofficial check, but it's needed here.
-		if (checkquest(5029,PLAYTIME) == 0 || checkquest(5029,PLAYTIME) == 1) {
+		if (questprogress(5029,PLAYTIME) == 1) {
 			mes "[Raffle Researcher]";
 			mes "It must've been hard work to retrieve the tools.";
 			mes "Why don't you take this and go to the inn";
@@ -2847,7 +2847,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		setquest 5019;
 		close;
 	} else if (ep14_1_muk == 7) {
-		if (checkquest(5019) > -1 && countitem(6386) < 10) {
+		if (questprogress(5019) && countitem(6386) < 10) {
 			mes "[Raffle Researcher]";
 			mes "Have you collected the samples yet?";
 			mes "Please hurry up.";
@@ -2882,7 +2882,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		setquest 5020;
 		close;
 	} else if (ep14_1_muk == 8) {
-		if (checkquest(5020,PLAYTIME) == 0 || checkquest(5020,PLAYTIME) == 1) {
+		if (questprogress(5020,PLAYTIME) == 1) {
 			mes "[Raffle Researcher]";
 			mes "The basic tests have not been completed yet.";
 			mes "There's nothing for you to do now.";
@@ -2924,8 +2924,8 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		setquest .@quest;
 		close;
 	} else if (ep14_1_muk == 9) {
-		if (checkquest(5021) > -1 || checkquest(5022) > -1) {
-			if (checkquest(5021) > -1) {
+		if (questprogress(5021) || questprogress(5022)) {
+			if (questprogress(5021)) {
 				set .@quest,5021;
 				set .@item,6387; //Teeth_Sample
 				setarray .@str$[0],"tooth","teeth";
@@ -2966,7 +2966,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 			erasequest .@quest;
 			setquest 5023;
 			close;
-		} else if (checkquest(5023,PLAYTIME) == 0 || checkquest(5023,PLAYTIME) == 1) {
+		} else if (questprogress(5023,PLAYTIME) == 1) {
 			mes "[Raffle Researcher]";
 			mes "I'm still analyzing the DNA.";
 			mes "The DNA analysis takes about 6 hours.";
@@ -3189,7 +3189,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "will take about 12 hours.";
 		close;
 	} else if (ep14_1_muk == 14) {
-		if (checkquest(5028,PLAYTIME) == 0 || checkquest(5028,PLAYTIME) == 1) {
+		if (questprogress(5028,PLAYTIME) == 1) {
 			mes "[Raffle Researcher]";
 			mes "What? You're here? Well...";
 			next;
@@ -3462,8 +3462,8 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 		donpcevent "Black Shadow#ep14_muk::OnDisable";
 		end;
 	}
-	set .@playtime, checkquest(5029,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(5029,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "You see a dark hole. As you show interest, something disappears quickly into the dark hole.";
 		close2;
 		donpcevent "Black Shadow#ep14_muk::OnDisable";
@@ -3471,7 +3471,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 	} else if (.@playtime == 2)
 		erasequest 5029;
 	if (ep14_1_goki == 30) {
-		if (checkquest(5030) == -1 && checkquest(5031) == -1 && checkquest(5032) == -1 && checkquest(5033) == -1 && checkquest(5034) == -1) {
+		if (!questprogress(5030) && !questprogress(5031) && !questprogress(5032) && !questprogress(5033) && !questprogress(5034)) {
 			mes "[Unidentified creature]";
 			mes "Arrgghh!!!";
 			mes "Why you bother me.";
@@ -3548,7 +3548,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			mes "You tell me my family do okay.";
 			setquest 5030+rand(4); //5030,5031,5032,5033
 			close;
-		} else if (checkquest(5030) > -1 || checkquest(5031) > -1 || checkquest(5032) > -1 || checkquest(5033) > -1) {
+		} else if (questprogress(5030) || questprogress(5031) || questprogress(5032) || questprogress(5033)) {
 			mes "[Fishee]";
 			mes "Please. In puddle.";
 			mes "You tell me my family do okay.";
@@ -3567,7 +3567,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			mes "Please. In puddle.";
 			mes "You tell me my family do okay.";
 			close;
-		} else if (checkquest(5034) > -1 && checkquest(5034) < 2) {
+		} else if (questprogress(5034) == 1) {
 			if (MaxWeight - Weight < 100 || checkweight(5792,1) == 0) {
 				mes "[Fishee]";
 				mes "You have lots.";
@@ -3593,7 +3593,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			completequest 5034;
 			getitem 5792,1; //Fish_Pin
 			close;
-		} else if (checkquest(5034) == 2) {
+		} else if (questprogress(5034) == 2) {
 			mes "[Fishee]";
 			mes "You...  I saw. Feeling. I saw. Feeling.";
 			mes "You... Name?";
@@ -3711,7 +3711,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 		if (.@npc_hp <= 0) {
 			mes "You won. The unidentified creature is unconscious.";
 			next;
-			if (checkquest(5016) > -1 && countitem(6385) == 0) {
+			if (questprogress(5016) && countitem(6385) == 0) {
 				mes "What will you do?";
 				next;
 				select("Look for the research tools.");
@@ -3733,7 +3733,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 				close2;
 				donpcevent "Black Shadow#ep14_muk::OnDisable";
 				end;
-			} else if (checkquest(5017) > -1) {
+			} else if (questprogress(5017)) {
 				mes "How will you bully the creature?";
 				next;
 				input .@inputstr$;
@@ -4076,7 +4076,7 @@ OnFullon:
 }
 
 -	script	???#mora	-1,{
-	if (checkquest(5019) > -1) {
+	if (questprogress(5019)) {
 		mes "You find an area emitting a distinct aura.";
 		mes "You may be able to collect bath water samples.";
 		mes "What will you do?";
@@ -4119,8 +4119,8 @@ OnFullon:
 		close2;
 		donpcevent strnpcinfo(0)+"::OnDisable";
 		end;
-	} else if (checkquest(5021) > -1 || checkquest(5022) > -1) {
-		if (checkquest(5021) > -1) {
+	} else if (questprogress(5021) || questprogress(5022)) {
+		if (questprogress(5021)) {
 			set .@str$,"tooth";
 			set .@item,6387; //Teeth_Sample
 		} else {
@@ -4191,12 +4191,12 @@ OnTimer60000:
 	donpcevent strnpcinfo(0)+"::OnEnable";
 	end;
 OnTouch:
-	if (checkquest(5034) == 2 || ep14_1_muk == 0 || rand(5)) {
+	if (questprogress(5034) == 2 || ep14_1_muk == 0 || rand(5)) {
 		percentheal 5,5;
 		end;
 	}
-	set .@playtime, checkquest(5029,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(5029,PLAYTIME);
+	if (.@playtime == 1) {
 		percentheal 5,5;
 		end;
 	} else if (.@playtime == 2) {
@@ -4225,7 +4225,7 @@ mora,118,86,0	duplicate(???#mora)	???#ep14_muk05	CLEAR_NPC,2,2
 	setarray .@quest1[1],5024,5025,5026,5027;
 	setarray .@dir$[1],"east","west","south","north";
 
-	if (checkquest(.@quest1[.@i]) > -1) {
+	if (questprogress(.@quest1[.@i])) {
 		if (countitem(6389) == 0) {
 			mes "This appears to be the puddle to the "+.@dir$[.@i];
 			mes "that the researcher talked about.";
@@ -4259,9 +4259,9 @@ mora,118,86,0	duplicate(???#mora)	???#ep14_muk05	CLEAR_NPC,2,2
 	deletearray .@quest1[.@i],1;
 	deletearray .@dir$[.@i],1;
 
-	if (checkquest(.@quest1[1]) > -1 || checkquest(.@quest1[2]) > -1 || checkquest(.@quest1[3]) > -1) {
+	if (questprogress(.@quest1[1]) || questprogress(.@quest1[2]) || questprogress(.@quest1[3])) {
 		for(set .@j,1; .@j<=3; set .@j,.@j+1) {
-			if (checkquest(.@quest1[.@j]) > -1)
+			if (questprogress(.@quest1[.@j]))
 				break;
 		}
 		mes "This is not the puddle to the "+.@dir$[.@j]+".";
@@ -4272,7 +4272,7 @@ mora,118,86,0	duplicate(???#mora)	???#ep14_muk05	CLEAR_NPC,2,2
 	set .@quest2[0], .@quest2[.@i];
 	deletearray .@quest2[.@i],1;
 
-	if (ep14_1_goki == 30 && checkquest(.@quest2[0]) > -1) {
+	if (ep14_1_goki == 30 && questprogress(.@quest2[0])) {
 		mes "You arrived at the puddle to the "+.@dir$[0]+".";
 		mes "You should look for the unidentified creature's family.";
 		next;
@@ -4329,13 +4329,13 @@ mora,118,86,0	duplicate(???#mora)	???#ep14_muk05	CLEAR_NPC,2,2
 		mes "We okay. Happy. Here. You tell son.";
 		changequest .@quest2[0],5034;
 		close;
-	} else if (checkquest(5034) > -1 && checkquest(5034) < 2) {
+	} else if (questprogress(5034) == 1) {
 		mes "[Fishee's Dad]";
 		mes "Yes... Human give son news.";
 		mes "Thanks. Son,";
 		mes "We okay. Happy. Here. You tell son.";
 		close;
-	} else if (checkquest(.@quest2[1]) > -1 || checkquest(.@quest2[2]) > -1 || checkquest(.@quest2[3]) > -1) {
+	} else if (questprogress(.@quest2[1]) || questprogress(.@quest2[2]) || questprogress(.@quest2[3])) {
 		mes "You arrived at the puddle to the "+.@dir$[0]+".";
 		mes "You should look for the unidentified creature's family.";
 		next;
@@ -4377,8 +4377,8 @@ mora,133,80,6	script	Elephantine#pa0829	4_ELEPHANT,{
 		mes "Why don't you come back when you've grown stronger? I can't give you tasks when you're in your current state.";
 		close;
 	}
-	set .@playtime, checkquest(12230,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(12230,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "[Elephantine]";
 		mes "I have no additional tasks available now. If I get some, I'll let you know when you come back.";
 		close;
@@ -4485,8 +4485,8 @@ mora,115,98,8	script	Hotcha#pa0829	4_ELEPHANT,{
 		mes "This place is like a paradise for adventurers. Not for weak ones like you, though.";
 		close;
 	}
-	set .@playtime, checkquest(12230,PLAYTIME);
-	if (.@playtime == -1) {
+	.@playtime = questprogress(12230,PLAYTIME);
+	if (!.@playtime) {
 		mes "[Hotcha]";
 		mes "I see you haven't received";
 		mes "any tasks yet.";
@@ -4504,7 +4504,7 @@ mora,115,98,8	script	Hotcha#pa0829	4_ELEPHANT,{
 		mes "[Hotcha]";
 		mes "Once they are removed, go talk to Elephantine and you can receive new tasks.";
 		for(set .@i,12225; .@i<=12229; set .@i,.@i+1) {
-			if (checkquest(.@i) > -1)
+			if (questprogress(.@i))
 				erasequest .@i;
 		}
 		erasequest 12230;
@@ -4521,7 +4521,7 @@ mora,115,98,8	script	Hotcha#pa0829	4_ELEPHANT,{
 	next;
 
 	for(set .@i,12225; .@i<=12229; set .@i,.@i+1) {
-		if (checkquest(.@i,HUNTING) == 2) {
+		if (questprogress(.@i,HUNTING) == 2) {
 			mes "[Hotcha]";
 			mes "Yes, I see you've completed the task. It has been confirmed as completed.";
 			erasequest .@i;
@@ -4560,8 +4560,8 @@ mora,119,103,4	script	Bow-wow#pa0829	4_M_DOGTRAVELER,{
 		mes "You really have no clue. What could you do with such a weak body?";
 		close;
 	}
-	set .@playtime, checkquest(12241,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(12241,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "[Bow-wow]";
 		mes "I have no additional tasks available now. If I get some, I'll let you know when you come back.";
 		close;
@@ -4668,8 +4668,8 @@ mora,119,118,4	script	General Good Dealer#pa0	4_M_RAFLE_GR,{
 		mes "What could you do with that fragile body? Go get some exercise.";
 		close;
 	}
-	set .@playtime, checkquest(12241,PLAYTIME);
-	if (.@playtime == -1) {
+	.@playtime = questprogress(12241,PLAYTIME);
+	if (!.@playtime) {
 		mes "[General Good Dealer]";
 		mes "I see you haven't received";
 		mes "any tasks yet.";
@@ -4687,7 +4687,7 @@ mora,119,118,4	script	General Good Dealer#pa0	4_M_RAFLE_GR,{
 		mes "[General Good Dealer]";
 		mes "Once they are removed, go talk to Bow-wow and you can receive new tasks.";
 		for(set .@i,12231; .@i<=12235; set .@i,.@i+1) {
-			if (checkquest(.@i) > -1)
+			if (questprogress(.@i))
 				erasequest .@i;
 		}
 		erasequest 12241;
@@ -4716,7 +4716,7 @@ mora,119,118,4	script	General Good Dealer#pa0	4_M_RAFLE_GR,{
 	close;
 
 L_CheckQuest:
-	if (checkquest(getarg(0)) > -1) {
+	if (questprogress(getarg(0))) {
 		if (countitem(getarg(1)) < getarg(2)) {
 			mes "[General Good Dealer]";
 			mes "The amount is not enough...";
@@ -4756,8 +4756,8 @@ mora,124,108,7	script	Woof-grrr#pa0829	4_M_DOGTRAVELER2,{
 		mes "This place is not a nursery. Grow up and come back, and I'll gladly give you tasks.";
 		close;
 	}
-	set .@playtime, checkquest(12242,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(12242,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "[Woof-grrr]";
 		mes "I have no additional tasks available now. If I get some, I'll let you know when you come back.";
 		close;
@@ -4864,8 +4864,8 @@ mora,127,112,4	script	Commodities Dealer#pa08	4_F_RAFLE_PK,{
 		mes "Go away! I can't concentrate on cataloging with you hanging around like that...";
 		close;
 	}
-	set .@playtime, checkquest(12242,PLAYTIME);
-	if (.@playtime == -1) {
+	.@playtime = questprogress(12242,PLAYTIME);
+	if (!.@playtime) {
 		mes "[Commodities Dealer]";
 		mes "I see you haven't received";
 		mes "any tasks yet.";
@@ -4883,7 +4883,7 @@ mora,127,112,4	script	Commodities Dealer#pa08	4_F_RAFLE_PK,{
 		mes "[Commodities Dealer]";
 		mes "Once they are removed, go talk to Woof-grrr and you can receive new tasks.";
 		for(set .@i,12236; .@i<=12240; set .@i,.@i+1) {
-			if (checkquest(.@i) > -1)
+			if (questprogress(.@i))
 				erasequest .@i;
 		}
 		erasequest 12242;
@@ -4912,7 +4912,7 @@ mora,127,112,4	script	Commodities Dealer#pa08	4_F_RAFLE_PK,{
 	close;
 
 L_CheckQuest:
-	if (checkquest(getarg(0)) > -1) {
+	if (questprogress(getarg(0))) {
 		if (countitem(getarg(1)) < getarg(2)) {
 			mes "[Commodities Dealer]";
 			mes "The amount is not enough...";
@@ -4952,8 +4952,8 @@ mora,170,101,4	script	Soul Guide#pa0829	4_F_DOGTRAVELER,{
 		mes "You need to have a strong spirit to do this task. I think you need a lot more discipline.";
 		close;
 	}
-	set .@playtime, checkquest(12253,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(12253,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "You still have marks of the haunting souls on your body.";
 		next;
 		mes "You'll have to come back when the marks have disappeared.";
@@ -4961,7 +4961,7 @@ mora,170,101,4	script	Soul Guide#pa0829	4_F_DOGTRAVELER,{
 	} else if (.@playtime == 2) {
 		mes "You feel your mind has calmed down once again. You now have enough energy to go look for other souls, so talk to the Guide again.";
 		for(set .@i,12243; .@i<=12252; set .@i,.@i+1) {
-			if (checkquest(.@i) > -1)
+			if (questprogress(.@i))
 				erasequest .@i;
 		}
 		erasequest 12253;
@@ -5089,7 +5089,7 @@ sec_in02,29,34,5	script	Initializing Mora Sanjo	4_MAN_NITT,{
 		mes "14.1 Initializing all quest window include related daily quest and map and so on";
 		freeloop(1);
 		for(set .@i,12225; .@i<=12353; set .@i,.@i+1) {
-			if (checkquest(.@i) > -1)
+			if (questprogress(.@i))
 				erasequest .@i;
 		}
 		freeloop(0);
@@ -5106,7 +5106,7 @@ function	script	mora_remains	{
 		mes "You have to make space in your inventory.";
 		close;
 	}
-	if (checkquest(getarg(0)) > -1) {
+	if (questprogress(getarg(0))) {
 		specialeffect2 EF_BLIND;
 		specialeffect2 EF_BEGINSPELL;
 		progressbar "ffff00",4;
@@ -5155,8 +5155,8 @@ mora,118,166,6	script	Knights Chief#mo	4_F_RAFLE_VI,{
 }
 
 mora,116,165,5	script	Knights Boss#mo	4_M_RAFLE_VI,{
-	set .@playtime, checkquest(1119,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(1119,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "[Order of the Knights Boss]";
 		mes "We've run out of Mora Coins.";
 		mes "Come back tomorrow!";

@@ -1719,12 +1719,12 @@ tur_dun03,38,209,1	script	Blue Flame#sc_f01	4_NFWISP,{
 		mes "They seem to be related.";
 		set job_sha,6;
 		setquest 7164;
-		if (checkquest(7161) >= 0) erasequest 7161;
-		if (checkquest(7162) >= 0) erasequest 7162;
-		if (checkquest(7163) >= 0) erasequest 7163;
+		if (questprogress(7161)) erasequest 7161;
+		if (questprogress(7162)) erasequest 7162;
+		if (questprogress(7163)) erasequest 7163;
 		close;
 	} else if (job_sha == 6) {
-		if (checkquest(7164,HUNTING) == 2) {
+		if (questprogress(7164,HUNTING) == 2) {
 			mes "It looks like the blue flame is under the limitation.";
 			mes "You can't feel that rolling effect of a spell like before.";
 			next;
@@ -1787,7 +1787,7 @@ ice_dun02,206,223,1	script	Red Flame#sc_f02	4_NFWISP,{
 		setquest 7171;
 		close;
 	} else if (job_sha == 14 || job_sha == 15 || job_sha == 16) {
-		if (checkquest(7171,HUNTING) == 2) {
+		if (questprogress(7171,HUNTING) == 2) {
 			mes "You can't feel the soul from the flame.";
 			mes "When you go closer, you can't see well because of darkness.";
 			close2;
@@ -1894,7 +1894,7 @@ niflheim,230,276,1	script	Red Flame#sc_f03	4_NFWISP,{
 		setquest 7175;
 		close;
 	} else if (job_sha == 22) {
-		if (checkquest(7175,HUNTING) == 2) {
+		if (questprogress(7175,HUNTING) == 2) {
 			mes "You can't feel the soul from the flame.";
 			mes "When you go closer, you can't see well because of darkness.";
 			set job_sha,23;

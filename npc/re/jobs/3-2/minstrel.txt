@@ -954,7 +954,7 @@ yuno,143,170,6	script	Mr. Click#job_min	4_M_ALCHE_A,{
 
 lighthalzen,155,119,3	script	Little girl#job_min	4_F_HUGIRL,3,3,{
 OnTouch:
-	if (checkquest(11145,HUNTING) == 2) {
+	if (questprogress(11145,HUNTING) == 2) {
 		if (job_min == 12) {
 			mes "[Little Girl]";
 			mes "Ah!!!!";

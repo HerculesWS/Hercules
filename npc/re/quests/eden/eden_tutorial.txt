@@ -14,7 +14,7 @@
 moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 	if (Class == Job_Novice) {
 		// Fall through
-	} else if (checkquest(9167) == -1) {
+	} else if (!questprogress(9167)) {
 	OnStartQuest:
 		if (@tutorial_restart) {
 			set .@tutorial_restart,1;
@@ -85,7 +85,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 			mes "When you're not so busy, come find me again.";
 			close;
 		}
-	} else if (checkquest(9167) == 0 || checkquest(9167) == 1) {
+	} else if (questprogress(9167) == 1) {
 		if (!getmercinfo(1)) {
 			mes "[Tutorial Instructor]";
 			mes "You haven't gotten a mercenary yet.";
@@ -146,7 +146,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 		completequest 9167;
 		setquest 9168;
 		close;
-	} else if (checkquest(9168) == 0 || checkquest(9168) == 1) {
+	} else if (questprogress(9168) == 1) {
 		if (checkweight(607,1) == 0) {
 			if (MaxWeight - Weight < getiteminfo(607,6)) {
 				mes "[Tutorial Instructor]";
@@ -237,7 +237,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 		mes "the ^006400Quest Window^000000,";
 		mes "come find and talk to me again.";
 		close;
-	} else if (checkquest(9169) == 0 || checkquest(9169) == 1) {
+	} else if (questprogress(9169) == 1) {
 		if (countitem(12580) == 0) {
 			mes "[Tutorial Instructor]";
 			mes "Hmm? So I noticed that";
@@ -280,7 +280,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 		completequest 9169;
 		setquest 9170;
 		close;
-	} else if (checkquest(9170) == 0 || checkquest(9170) == 1) {
+	} else if (questprogress(9170) == 1) {
 		if (countitem(12580)) {
 			mes "[Tutorial Instructor]";
 			mes "Hmm... It seems that you still have";
@@ -319,7 +319,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 		completequest 9170;
 		setquest 9171;
 		close;
-	} else if (checkquest(9171) == 0 || checkquest(9171) == 1) {
+	} else if (questprogress(9171) == 1) {
 		if (countitem(909) < 10) {
 			mes "[Tutorial Instructor]";
 			mes "It seems you didn't bring";
@@ -401,7 +401,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 		mes "When you're done looking at them,";
 		mes "give them back to me.";
 		close;
-	} else if (checkquest(9172) == 0 || checkquest(9172) == 1) {
+	} else if (questprogress(9172) == 1) {
 		if (countitem(15033) == 0 || countitem(15034) == 0) {
 			mes "[Tutorial Instructor]";
 			mes "What did you do with the Enchanted";
@@ -438,13 +438,13 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 			mes "then bring them back to me.";
 			close;
 		}
-	} else if (checkquest(9173) == 0 || checkquest(9173) == 1) {
+	} else if (questprogress(9173) == 1) {
 		mes "[Tutorial Instructor]";
 		mes "Do you have any questions?";
 		next;
 		switch(select("Can I do the same quest again?:About the Quest Window...:About ENCHANT...:About Searching Vends...:About Mercenary and Pets...:End Conversation.")) {
 		case 1:
-			if (checkquest(9173,PLAYTIME) == 0 || checkquest(9173,PLAYTIME) == 1) {
+			if (questprogress(9173,PLAYTIME) == 1) {
 				mes "[Tutorial Instructor]";
 				mes "The one method to do the same quests repeatdedly is to do the ^006400Daily Quests^000000.";
 				next;
@@ -579,32 +579,32 @@ moc_para01,32,179,4	script	Tutorial Goal	4_F_KHELLY,{
 			close;
 		}
 	}
-	if (checkquest(4161) == 0 || checkquest(4161) == 1) {
+	if (questprogress(4161) == 1) {
 		mes "[Tutorial Goal]";
 		mes "Well~ We gotta go challenge the experts right?";
 		mes "Let's start off by finding the ^006400Siege Expert^000000!";
 		close;
-	} else if (checkquest(4162) == 0 || checkquest(4162) == 1) {
+	} else if (questprogress(4162) == 1) {
 		mes "[Tutorial Goal]";
 		mes "You've passed the ^006400Siege Expert^000000's test! Congrats!";
 		mes "Now, go find the ^006400Party Recruiting Expert^000000!";
 		close;
-	} else if (checkquest(4163) == 0 || checkquest(4163) == 1) {
+	} else if (questprogress(4163) == 1) {
 		mes "[Tutorial Goal]";
 		mes "Oh! You've passed the ^006400Party Recruiting Expert^000000's test! Congrats!";
 		mes "Now, go find the ^006400Battleground Expert^000000!";
 		close;
-	} else if (checkquest(4164) == 0 || checkquest(4164) == 1) {
+	} else if (questprogress(4164) == 1) {
 		mes "[Tutorial Goal]";
 		mes "Yay! You passed the test from the ^006400Battleground Expert^000000! Congrats!";
 		mes "Next, go and find the ^006400Memorial Dungeon Expert^000000!";
 		close;
-	} else if (checkquest(4165) == 0 || checkquest(4165) == 1) {
+	} else if (questprogress(4165) == 1) {
 		mes "[Tutorial Goal]";
 		mes "You passed the test from ^006400Memorial Dungeon Expert^000000! That's great!";
 		mes "Try finding the ^006400Map Expert^000000!";
 		close;
-	} else if (checkquest(4166) == 0 || checkquest(4166) == 1) {
+	} else if (questprogress(4166) == 1) {
 		mes "[Tutorial Goal]";
 		mes "You passed ^006400Map Expert^000000's test! Congrats!";
 		mes "I'm so glad that you were to pass all the Experts' tests! You're better than I expected!!";
@@ -621,7 +621,7 @@ moc_para01,32,179,4	script	Tutorial Goal	4_F_KHELLY,{
 		getitem 504,5; //White_Potion
 		getitem 608,1; //Seed_Of_Yggdrasil
 		close;
-	} else if (checkquest(4166) == 2) {
+	} else if (questprogress(4166) == 2) {
 		mes "[Tutorial Goal]";
 		mes "Now, even you are an ^006400Expert^000000!! Such a fitting nick name for you!";
 		mes "Thank you so much for your hard work.";
@@ -662,7 +662,7 @@ moc_para01,32,179,4	script	Tutorial Goal	4_F_KHELLY,{
 }
 
 moc_para01,24,175,4	script	Siege Master	4_M_JOB_KNIGHT2,{
-	set .@checkquest, checkquest(4161);
+	.@checkquest = questprogress(4161);
 	if (.@checkquest == 2) {
 		mes "[Siege Expert]";
 		mes "Since you've come again, I assume you're curious about ^006400Siege^000000?";
@@ -678,7 +678,7 @@ moc_para01,24,175,4	script	Siege Master	4_M_JOB_KNIGHT2,{
 			mes "If you want to go over anything, just come talk to me.";
 			close;
 		}
-	} else if (.@checkquest == 0 || .@checkquest == 1) {
+	} else if (.@checkquest == 1) {
 		mes "[Siege Expert]";
 		mes "I am someone who has studied War of Emperium for 16 years! So that makes me an expert! Since you came to find me, I assume you want to learn more about ^006400Siege^000000.";
 		next;
@@ -835,7 +835,7 @@ L_Info:
 }
 
 moc_para01,21,172,4	script	Party Recruiting Expert	4_M_OILMAN,{
-	set .@checkquest, checkquest(4162);
+	.@checkquest = questprogress(4162);
 	if (.@checkquest == 2) {
 		mes "[Party Recruiting Expert]";
 		mes "Since you've come and found me, it seems you're curious about ^006400Party Recruiting^000000?";
@@ -851,7 +851,7 @@ moc_para01,21,172,4	script	Party Recruiting Expert	4_M_OILMAN,{
 			mes "Well, if you have any questions, come find me.";
 			close;
 		}
-	} else if (.@checkquest == 0 || .@checkquest == 1) {
+	} else if (.@checkquest == 1) {
 		mes "[Party Recruiting Expert]";
 		mes "I am the ^006400Party Recruiting^000000 expert because I did research about Party Recruting for 16 years! It seems that the ^006400Siege Expert^000000 sent you my way since you passed his tests, hmm?";
 		next;
@@ -1017,7 +1017,7 @@ L_Info:
 }
 
 moc_para01,12,179,6	script	Battleground Master	4_M_KY_HEAD,{
-	set .@checkquest, checkquest(4163);
+	.@checkquest = questprogress(4163);
 	if (.@checkquest == 2) {
 		mes "[Battleground Expert]";
 		mes "Seeing that you sought me out, I guess you want to learn about ^006400Battleground^000000s, eh?";
@@ -1033,7 +1033,7 @@ moc_para01,12,179,6	script	Battleground Master	4_M_KY_HEAD,{
 			mes "If you want to go over anything, let me know.";
 			close;
 		}
-	} else if (.@checkquest == 0 || .@checkquest == 1) {
+	} else if (.@checkquest == 1) {
 		mes "[Battleground Expert]";
 		mes "For 16 years, I experienced the intense heat of battle on the ^006400Battleground^000000s... I am the ^006400Battleground^000000 Expert!";
 		mes "It seems that the ^006400Party Recruiting Expert^000000 sent you to me since you passed his quiz.";
@@ -1197,7 +1197,7 @@ L_Info:
 }
 
 moc_para01,28,167,3	script	Memorial Dungeon Expert	4_M_LGTGUARD,{
-	set .@checkquest, checkquest(4164);
+	.@checkquest = questprogress(4164);
 	if (.@checkquest == 2) {
 		mes "[Memorial Dungeon Expert]";
 		mes "Since you've come here, it seems you want to learn about the ^006400Memorial Dungeon^000000.";
@@ -1213,7 +1213,7 @@ moc_para01,28,167,3	script	Memorial Dungeon Expert	4_M_LGTGUARD,{
 			mes " If you want to hear about it again, come find me.";
 			close;
 		}
-	} else if (.@checkquest == 0 || .@checkquest == 1) {
+	} else if (.@checkquest == 1) {
 		mes "[Memorial Dungeon Expert]";
 		mes "I am the ^006400Memorial Dungeon^000000 Expert! I studied the ^006400Memorial Dungeon^000000 for 16 years!";
 		mes "Since you've sought me out, I assume that you've passed the ^006400Battleground Expert^000000's quiz.";
@@ -1375,7 +1375,7 @@ L_Info:
 }
 
 moc_para01,14,168,6	script	Map Expert	2_M_SAGE_OLD,{
-	set .@checkquest, checkquest(4165);
+	.@checkquest = questprogress(4165);
 	if (.@checkquest == 2) {
 		mes "[Map Expert]";
 		mes "Seeing that you came to me, I assume you have some questions about ^006400MAP^000000s?";
@@ -1392,7 +1392,7 @@ moc_para01,14,168,6	script	Map Expert	2_M_SAGE_OLD,{
 			mes "If you have any more questions, come find me.";
 			close;
 		}
-	} else if (.@checkquest == 0 || .@checkquest == 1) {
+	} else if (.@checkquest == 1) {
 		mes "[Map Expert]";
 		mes "I have been researching and studying ^006400MAP^000000s for 16 years and so now I am the ^006400MAP^000000 Expert!";
 		mes "Since you've sought me out, it seems you've passed ^006400Memorial Dungeon Expert^000000's quiz.";

@@ -169,7 +169,7 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 L_Second:
 	if (getd(getarg(0)) != 0) {
 		setd getarg(0),0;
-		if (checkquest(getarg(1)) == 2)
+		if (questprogress(getarg(1)) == 2)
 			erasequest getarg(1);
 		mes "[Valerie]";
 		mes "I will help clear your problems for you that came from your former attempts.";
@@ -184,15 +184,15 @@ L_Third:
 	if (getd(getarg(0)) != 0) {
 		setd getarg(0),0;
 		if (getarg(1)) {
-			if (checkquest(getarg(1)) == 2)
+			if (questprogress(getarg(1)) == 2)
 				erasequest getarg(1);
 		}
 		for(set .@i,getarg(2); .@i<=getarg(3); set .@i,.@i+1) {
-			if (checkquest(.@i) > -1)
+			if (questprogress(.@i))
 				erasequest .@i;
 		}
 		if (getarg(4,0)) {
-			if (checkquest(getarg(4)) > -1)
+			if (questprogress(getarg(4)))
 				erasequest getarg(4);
 		}
 		mes "[Valerie]";

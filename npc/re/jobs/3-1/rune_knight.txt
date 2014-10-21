@@ -622,7 +622,7 @@ job3_rune01,90,50,3	script	Rune Knight Lunarea	4_M_KNIGHT_GOLD,2,2,{
 			next;
 			switch(select("Move to the test field now.:Please give me time to prepare.")) {
 			case 1:
-				if (checkquest(3220,PLAYTIME) == 1) {
+				if (questprogress(3220,PLAYTIME) == 1) {
 					mes "[Rune Knight, Lunarea]";
 					mes "Once someone enters into the test field you cannot enter directly. The test is taken one by one.";
 					next;
@@ -664,7 +664,7 @@ L_Test:
 			set job_rune_edq,4;
 			changequest 3202,3203;
 			setquest 3220; // ?
-		} else if (checkquest(3220) > -1) {
+		} else if (questprogress(3220)) {
 			erasequest 3220;
 			setquest 3220;
 		}
@@ -1346,7 +1346,7 @@ mid_camp,235,250,3	script	Sage Serpeone	4_F_FAIRY,2,2,{
 				mes "[Sage Serpeone]";
 				mes "Is it so? Then let's check this out.";
 				next;
-				if (checkquest(3209,HUNTING) == 2 && checkquest(3210,HUNTING) == 2 && checkquest(3211,HUNTING) == 2 && checkquest(3212,HUNTING) == 2) {
+				if (questprogress(3209,HUNTING) == 2 && questprogress(3210,HUNTING) == 2 && questprogress(3211,HUNTING) == 2 && questprogress(3212,HUNTING) == 2) {
 					mes "[Sage Serpeone]";
 					mes "Umm, this is great. Enough amount of living body magical energy has accumulated in your body.";
 					next;
@@ -1481,7 +1481,7 @@ job3_rune01,114,50,3	script	Rune Knight Velpino	4_M_KNIGHT_BLACK,{
 					mes "For this test, only a one-hand weapon, a shield or a two-handed weapon can be equipped. Keep your other equipments with the Kafra Employee in the center.";
 					close;
 				}
-				if (checkquest(3220,PLAYTIME) == 1) {
+				if (questprogress(3220,PLAYTIME) == 1) {
 					mes "[Rune Knight Velpino]";
 					mes "Haven't you failed at the test... If you fail once, you cannot enter again for 10 minutes.";
 					next;
@@ -1495,7 +1495,7 @@ job3_rune01,114,50,3	script	Rune Knight Velpino	4_M_KNIGHT_BLACK,{
 						sc_start SC_INCINT,300000,40;
 						getitem 12389,30; //Runstone_Storm
 						getitem 12390,30; //Runstone_Millennium
-						if (checkquest(3220) > -1) erasequest 3220;
+						if (questprogress(3220)) erasequest 3220;
 						setquest 3220;
 						warp "job3_rune02",38,40;
 						end;

@@ -76,8 +76,8 @@ mal_dun01,151,235,5	script	Starfish	4_ASTER,{
 			next;
 			break;
 		case 2:
-			set .@playtime, checkquest(4197,PLAYTIME);
-			if (.@playtime == 0 || .@playtime == 1) {
+			.@playtime = questprogress(4197,PLAYTIME);
+			if (.@playtime == 1) {
 				mes "[Starfish]";
 				mes "Octopus is not around now, hehe.";
 				mes "Please come back later.";
@@ -130,7 +130,7 @@ mal_dun01,153,237,5	script	Weird Entrance	CLEAR_NPC,{
 	case 1:
 		if (countitem(6442)) {
 			if (has_instance("1@cash") == "") {
-				if (checkquest(4197,PLAYTIME) == 0 || checkquest(4197,PLAYTIME) == 1) {
+				if (questprogress(4197,PLAYTIME) == 1) {
 					mes "[Starfish]";
 					mes "Ah, now is not the time...";
 					mes "Would you come back later? Hehe.";
@@ -143,7 +143,7 @@ mal_dun01,153,237,5	script	Weird Entrance	CLEAR_NPC,{
 				close;
 			}
 			mapannounce "mal_dun01", getpartyname(getcharid(1))+" party's "+strcharinfo(0)+" member started to hunt the Octopus!",bc_map,"0x00ff99";
-			if (checkquest(4197) == -1) setquest 4197;
+			if (!questprogress(4197)) setquest 4197;
 			warp "1@cash",199,99;
 			end;
 		}

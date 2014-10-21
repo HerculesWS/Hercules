@@ -770,8 +770,8 @@ hu_fild05,342,130,5	script	Dancer Kim#fild	4_F_CAPEGIRL,{
 		changequest 2220,2221;
 		close;
 	} else if (job_wan == 7) {
-		if (checkquest(2221,PLAYTIME) == 0 || checkquest(2221,PLAYTIME) == 1) {
-			if (checkquest(2221,HUNTING) == 2) {
+		if (questprogress(2221,PLAYTIME) == 1) {
+			if (questprogress(2221,HUNTING) == 2) {
 				mes "[Dancer Kim]";
 				mes "Whew!";
 				mes "Looks like I've lost!";
@@ -816,7 +816,7 @@ hu_fild05,342,130,5	script	Dancer Kim#fild	4_F_CAPEGIRL,{
 				mes "But I'm sure I have a better chance to win.";
 				close;
 			}
-		} else if (checkquest(2221,PLAYTIME) == 2) {
+		} else if (questprogress(2221,PLAYTIME) == 2) {
 			mes "[Dancer Kim]";
 			mes "Oh, you came back to me.";
 			mes "I'm so tired. I don't give up halfway. It's a good exercise for me. I will have to give up Nollio to another Wanderer, it's all over....";

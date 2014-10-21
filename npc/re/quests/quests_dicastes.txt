@@ -443,8 +443,8 @@ sec_in02,10,42,1	script	13.3 Related Reset	4_MAN_BENKUNI,{
 	mes "[Reset]";
 	mes "Resets all quest windows including daily and map quests for 13.3.";
 	freeloop(1);
-	for(set .@i,12099; .@i<=12216; set .@i,.@i+1) {
-		if (checkquest(.@i) > -1)
+	for(.@i = 12099; .@i <= 12216; ++.@i) {
+		if (questprogress(.@i))
 			erasequest .@i;
 	}
 	freeloop(0);
@@ -455,11 +455,11 @@ sec_in02,10,42,1	script	13.3 Related Reset	4_MAN_BENKUNI,{
 //============================================================
 function	script	que_dic	{
 	if (!getarg(0)) {
-		if (checkquest(getarg(1),HUNTING) != 2) return;
+		if (questprogress(getarg(1),HUNTING) != 2) return;
 		mes getarg(3);
 	}
 	else if (getarg(0) == 1) {
-		if (checkquest(getarg(1)) == -1) return;
+		if (!questprogress(getarg(1))) return;
 		if (countitem(getarg(3)) < getarg(4)) {
 			mes "It looks like you are short on the amount.";
 			close;
@@ -469,8 +469,8 @@ function	script	que_dic	{
 		delitem getarg(3), getarg(4);
 	}
 	else if (getarg(0) == 2) {
-		for(set .@i,1; .@i<getargcount(); set .@i,.@i+1) {
-			if (checkquest(getarg(.@i)) >= 0)
+		for(.@i = 1; .@i < getargcount(); ++.@i) {
+			if (questprogress(getarg(.@i)))
 				erasequest getarg(.@i);
 		}
 		return;
@@ -507,7 +507,7 @@ dic_in01,48,263,5	script	Hunting Dept. 1 Manager	4_MAN_BENKUNI,{
 		mes "Umm...What are you up to? Anything to do with me?";
 		close;
 	}
-	if (checkquest(12159,PLAYTIME) == -1) {
+	if (!questprogress(12159,PLAYTIME)) {
 		mes "[Hunting Dept. 1 Manager]";
 		mes "So you didn't get";
 		mes "any requests yet.";
@@ -516,7 +516,7 @@ dic_in01,48,263,5	script	Hunting Dept. 1 Manager	4_MAN_BENKUNI,{
 		mes "you one. Try meeting him.";
 		close;
 	}
-	else if (checkquest(12159,PLAYTIME) == 2) {
+	else if (questprogress(12159,PLAYTIME) == 2) {
 		mes "[Hunting Dept. 1 Manager]";
 		mes "Time limit has expired for the existing request.";
 		next;
@@ -577,7 +577,7 @@ dic_in01,51,266,6	script	Hunting Dept. 2 Manager	4_MAN_BENKUNI,{
 		mes "Ha ha, you will need to train a little more to work with me.";
 		close;
 	}
-	if (checkquest(12160,PLAYTIME) == -1) {
+	if (!questprogress(12160,PLAYTIME)) {
 		mes "[Hunting Dept. 2 Manager]";
 		mes "So you didn't get";
 		mes "any requests yet.";
@@ -586,7 +586,7 @@ dic_in01,51,266,6	script	Hunting Dept. 2 Manager	4_MAN_BENKUNI,{
 		mes "you one. Try to find him.";
 		close;
 	}
-	else if (checkquest(12160,PLAYTIME) == 2) {
+	else if (questprogress(12160,PLAYTIME) == 2) {
 		mes "[Hunting Dept. 2 Manager]";
 		mes "Kalipo seems to have another request for you.";
 		next;
@@ -646,7 +646,7 @@ dic_in01,51,270,7	script	Supply Dept. 1 Manager	4_MAN_BENKUNI,{
 		mes "You gotta be strong enough to deal with Supply Dept. 1.";
 		close;
 	}
-	if (checkquest(12161,PLAYTIME) == -1) {
+	if (!questprogress(12161,PLAYTIME)) {
 		mes "[Supply Dept. 1 Manager]";
 		mes "So you didn't get";
 		mes "any requests yet.";
@@ -655,7 +655,7 @@ dic_in01,51,270,7	script	Supply Dept. 1 Manager	4_MAN_BENKUNI,{
 		mes "you one. Try meeting him.";
 		close;
 	}
-	else if (checkquest(12161,PLAYTIME) == 2) {
+	else if (questprogress(12161,PLAYTIME) == 2) {
 		mes "[Supply Dept. 1 Manager]";
 		mes "Pura is looking for you.";
 		next;
@@ -717,7 +717,7 @@ dic_in01,48,273,8	script	Supply Dept. 2 Manager	4_MAN_BENKUNI,{
 		mes "No way, You can't stand the job of Supply Dept. 2 with that weak body.";
 		close;
 	}
-	if (checkquest(12162,PLAYTIME) == -1) {
+	if (!questprogress(12162,PLAYTIME)) {
 		mes "[Supply Dept. 2 Manager]";
 		mes "So you didn't get";
 		mes "any requests yet.";
@@ -726,7 +726,7 @@ dic_in01,48,273,8	script	Supply Dept. 2 Manager	4_MAN_BENKUNI,{
 		mes "you one. Try meeting him.";
 		close;
 	}
-	else if (checkquest(12162,PLAYTIME) == 2) {
+	else if (questprogress(12162,PLAYTIME) == 2) {
 		mes "[Supply Dept. 2 Manager]";
 		mes "I erased all records related with the previous request. Tragis is looking for you so hurry up to meet him.";
 		next;
@@ -784,7 +784,7 @@ dic_in01,43,273,1	script	Transport Dept. 1 Mgr	4_MAN_BENKUNI,{
 		mes "You're not qualified. You won't last a day with your strength working here at Transport Dept. 1.";
 		close;
 	}
-	if (checkquest(12163,PLAYTIME) == -1) {
+	if (!questprogress(12163,PLAYTIME)) {
 		mes "[Transport Dept. 1 Manager]";
 		mes "So you didn't get";
 		mes "any requests yet.";
@@ -793,7 +793,7 @@ dic_in01,43,273,1	script	Transport Dept. 1 Mgr	4_MAN_BENKUNI,{
 		mes "you one. Try meeting him.";
 		close;
 	}
-	else if (checkquest(12163,PLAYTIME) == 2) {
+	else if (questprogress(12163,PLAYTIME) == 2) {
 		mes "[Transport Dept. 1 Manager]";
 		mes "I erased all records related with the previous request. Calyon is looking for you so hurry up to meet him.";
 		next;
@@ -858,7 +858,7 @@ dic_in01,40,270,2	script	Transport Dept. 2 Mgr	4_MAN_BENKUNI,{
 		mes "You're not qualified. You won't last a day with your strength working here at Transport Dept. 2.";
 		close;
 	}
-	if (checkquest(12164) == -1) {
+	if (!questprogress(12164)) {
 		mes "[Transport Dept. 2 Manager]";
 		mes "So you didn't get";
 		mes "any requests yet.";
@@ -867,7 +867,7 @@ dic_in01,40,270,2	script	Transport Dept. 2 Mgr	4_MAN_BENKUNI,{
 		mes "you one. Try meeting him.";
 		close;
 	}
-	else if (checkquest(12164,PLAYTIME) == 2) {
+	else if (questprogress(12164,PLAYTIME) == 2) {
 		mes "[Transport Dept. 2 Manager]";
 		mes "I erased all records related with the previous request. Moltuka is looking for you so hurry up to meet him.";
 		next;
@@ -1026,12 +1026,12 @@ dic_in01,40,193,1	script	Papyrus#0001	4_MAN_NITT,{
 		mes "When you try to open and read a document, a Sapha manager motions to call Guard Galten. Let's get out of here quickly.";
 		close;
 	}
-	if (checkquest(12165,PLAYTIME) == 2) {
+	if (questprogress(12165,PLAYTIME) == 2) {
 		mes "Feeling a bit better";
 		erasequest 12165;
 		close;
 	}
-	else if (checkquest(12165,PLAYTIME) != -1) {
+	else if (questprogress(12165,PLAYTIME)) {
 		mes "Ugh... feel dizzy from simply staring at the document. Will come back after cooling down";
 		close;
 	}
@@ -1099,7 +1099,7 @@ dic_in01,40,193,1	script	Papyrus#0001	4_MAN_NITT,{
 	close;
 
 	function	eldicastes_dp	{
-		if (checkquest(getarg(0)) >= 0) {
+		if (questprogress(getarg(0))) {
 			mes "You've found a document you already have.";
 			close;
 		}
@@ -1120,7 +1120,7 @@ dic_in01,25,187,0	duplicate(Document Package#main)	Document Package#0004	CLEAR_N
 // Unknown Relics
 //============================================================
 function	script	unknown_d	{
-	if (checkquest(getarg(0)) == -1) {
+	if (!questprogress(getarg(0))) {
 		mes "You see some traces of digging.";
 		close;
 	}
@@ -1465,14 +1465,14 @@ dic_in01,294,276,5	script	Secret Adjutant#ep133_2	4_M_CATMAN2,{
 			}
 		}
 		else if (ep13_3_ahtdayq == 2) {
-			if (checkquest(7200,PLAYTIME) == 0 || checkquest(7200,PLAYTIME) == 1) {
+			if (questprogress(7200,PLAYTIME) == 1) {
 				mes "[Cheshire]";
 				mes "Not just yet.";
 				mes "We must plan the cleanup near the crack carefully.";
 				mes "Come back later.";
 				close2;
 			}
-			else if (checkquest(7200,PLAYTIME) == 2) {
+			else if (questprogress(7200,PLAYTIME) == 2) {
 				mes "[Cheshire]";
 				mes "Back to work today.";
 				mes "Clotted Bloodstain, Piece of Frozen Skin, Strange Magic Stone..";
@@ -1482,7 +1482,7 @@ dic_in01,294,276,5	script	Secret Adjutant#ep133_2	4_M_CATMAN2,{
 				mes "Collect 10 of each as always.";
 				mes "Got it?";
 				set ep13_3_ahtdayq, 1;
-				if (checkquest(7200,PLAYTIME) >= 0) erasequest 7200;
+				if (questprogress(7200,PLAYTIME)) erasequest 7200;
 				setquest 7201;
 				next;
 				mes "You've received a request from Cheshire to clean up the crack area.";
@@ -2339,10 +2339,10 @@ dicastes01,223,190,1	script	Calyon#pa8029	4_MAN_NITT,{
 		mes "Ha ha, come back again after you are trained more. I have no request that fits you.";
 		close;
 	}
-	if (checkquest(12163,PLAYTIME) == 2) {
+	if (questprogress(12163,PLAYTIME) == 2) {
 		mes "Calculate your request activities with the ^800080Transport Dept. 1 Manager^000000 at Operations and then come back.";
 		close;
-	} else if (checkquest(12163,PLAYTIME) != -1) {
+	} else if (questprogress(12163,PLAYTIME)) {
 		mes "We're done for the day. You can report back to the ^800080Transport Dept. 1 Manager^000000 at Operations. Good luck.";
 		close;
 	}
@@ -2512,12 +2512,12 @@ dicastes01,211,178,2	script	Moltuka#pa0829	4_MAN_NITT,{
 		mes "Ha ha, come back again after you are trained more. I have no request that fits you.";
 		close;
 	}
-	if (checkquest(12164,PLAYTIME) == 2) {
+	if (questprogress(12164,PLAYTIME) == 2) {
 		mes "[Moltuka]";
 		mes "Have you met the ^990099Transport Dept. 2 Manager^000000 at Operations? I will give you a new request after you clear your request history.";
 		close;
 	}
-	else if (checkquest(12164,PLAYTIME) != -1) {
+	else if (questprogress(12164,PLAYTIME)) {
 		mes "[Moltuka]";
 		mes "I don't have any requests for you now. Report back to the ^990099Transport Dept. 2 Manager^000000 at Operations after you complete all requests.";
 		close;
@@ -2736,13 +2736,13 @@ dicastes01,175,217,5	script	Kalipo#pa0829	4_MAN_NITT,{
 		mes "Ha ha ha, many other adventurers are giving a helping hand. I'll see you next time.";
 		close;
 	}
-	if (checkquest(12160,PLAYTIME) == 2) {
+	if (questprogress(12160,PLAYTIME) == 2) {
 		mes "[Kalipo]";
 		mes "Please come back after checking";
 		mes "previous requests with the ^990099Hunting Dept. 2 Manager^000000.";
 		close;
 	}
-	else if (checkquest(12160,PLAYTIME) > -1) {
+	else if (questprogress(12160,PLAYTIME)) {
 		mes "[Kalipo]";
 		mes "I do not have any additional requests. Please report to the ^990099Hunting Dept. 2 Manager^000000 at Operations to report request completion.";
 		close;
@@ -2878,12 +2878,12 @@ dicastes01,187,230,5	script	Laponte#pa0829	4_MAN_NITT,{
 		mes "Ha ha ha, many other adventurers are giving a helping hand. I'll see you next time.";
 		close;
 	}
-	if (checkquest(12159,PLAYTIME) > -1 && checkquest(12159,PLAYTIME) < 2) {
+	if (questprogress(12159,PLAYTIME) && questprogress(12159,PLAYTIME) != 2) {
 		mes "[Laponte]";
 		mes "I do not have any additional requests. Please report to the ^990099Hunting Dept. 1 Manager^000000 at Operations to report request completion.";
 		close;
 	}
-	else if (checkquest(12159,PLAYTIME) == 2) {
+	else if (questprogress(12159,PLAYTIME) == 2) {
 		mes "[Laponte]";
 		mes "Please come back after checking";
 		mes "previous requests with the ^990099Hunting Dept. 1 Manager^000000.";
@@ -3050,12 +3050,12 @@ dicastes01,208,230,3	script	Pura#pa0829	4_MAN_NITT,{
 		mes "We are not that unfortunate to receive help from you.";
 		close;
 	}
-	if (checkquest(12161,PLAYTIME) == 2) {
+	if (questprogress(12161,PLAYTIME) == 2) {
 		mes "[Pura]";
 		mes "Have you already met the ^990099Supply Dept. 1 Manager^000000 at Operations? I will give you a new request after you clear your request history.";
 		close;
 	}
-	else if (checkquest(12161,PLAYTIME) > -1) {
+	else if (questprogress(12161,PLAYTIME)) {
 		mes "[Pura]";
 		mes "I don't have any requests for you now. Report back to the ^990099Supply Dept. 1 Manager^000000 at Operations after you complete all requests.";
 		close;
@@ -3240,12 +3240,12 @@ dicastes01,225,211,3	script	Tragis#pa0829	4_MAN_NITT,{
 		mes "It is pretty embarassing that you are looking for a request with your level, you know that?";
 		close;
 	}
-	if (checkquest(12162,PLAYTIME) == 2) {
+	if (questprogress(12162,PLAYTIME) == 2) {
 		mes "[Tragis]";
 		mes "Calculate your request activities with the ^990099Supply Dept. 2 Manager^000000 at Operations and then come back.";
 		close;
 	}
-	else if (checkquest(12162,PLAYTIME) > -1) {
+	else if (questprogress(12162,PLAYTIME)) {
 		mes "[Tragis]";
 		mes "I don't have any requests for you now. Report back to the ^990099Supply Dept. 2 Manager^000000 at Operations after you complete all requests.";
 		close;
@@ -3845,9 +3845,10 @@ dic_in01,245,119,4	script	Shay#ep133_13	4_M_ACROSS,{
 					"7190","Galtens are interested in the Cat Merchant for their cat ears.";
 				mes "[" + strcharinfo(0) + "]";
 				mes "I'm trying to organize the information I've collected.";
-				for (set .@size, getarraysize(.@ward$); .@i < .@size; set .@i, .@i + 2)
-					if (checkquest(atoi(.@ward$[.@i])) >= 0) {
-						set .@sealall, .@sealall + 1;
+				.@size = getarraysize(.@ward$);
+				for (.@i = 0; .@i < .@size; .@i += 2)
+					if (questprogress(atoi(.@ward$[.@i]))) {
+						++.@sealall;
 						mes .@ward$[.@i+1];
 					}
 				if (!.@sealall) mes "But what should I do with the collected information?";
@@ -4050,8 +4051,8 @@ dic_in01,245,119,4	script	Shay#ep133_13	4_M_ACROSS,{
 				mes "Meet Ahat by collecting exploit certifications.";
 				mes "And then find doubt what is the relationship between him and the crack.";
 				set ep13_3_secret, 12;
-				for (set .@i, 0; .@i < getarraysize(.@quest); set .@i, .@i + 1)
-					if (checkquest(.@quest[.@i]) >= 0) erasequest .@quest[.@i];
+				for (.@i = 0; .@i < getarraysize(.@quest); ++.@i)
+					if (questprogress(.@quest[.@i])) erasequest .@quest[.@i];
 				setquest 7197;
 				break;
 			}
@@ -4315,7 +4316,7 @@ dicastes01,207,210,5	script	Walking Knit#ep133_15	4_MAN_BENKUNI,{
 			mes "Ah, did you see the group of cats in front of the castle?";
 			mes "They are really soft and cuddly unlike us.";
 			next;
-			if (checkquest(7188) >= -1) {
+			if (questprogress(7188)) {
 				mes "[Knit]";
 				mes "And especially their ear and tail!!";
 				next;
@@ -4404,7 +4405,7 @@ dicastes01,112,248,5	script	Resting Piom#ep133_16	4_MAN_PIOM5,{
 		mes "Huh? You're... human!";
 		mes "Why are you here?";
 		next;
-		if (checkquest(7189) >= -1) {
+		if (questprogress(7189)) {
 			select("About a human with cat ears..");
 			mes "[Piom]";
 			mes "HAHAHAHA!!!";
@@ -4476,7 +4477,7 @@ dicastes01,249,140,3	script	Training Galten#ep133_17	4_MAN_GALTUN,{
 		mes "Hmm? Aren't you the outsider that came here awhile ago?";
 		mes "Have you come to see the training grounds?";
 		next;
-		if (checkquest(7190) >= -1) {
+		if (questprogress(7190)) {
 			select("About a human with cat ears..");
 			mes "[Galten]";
 			mes "Cat ears?";
@@ -4883,14 +4884,14 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 			if (countitem(.@item[.@type]) == 10) {
 				mes "Collected enough for Cheshire but";
 				mes "you may need some more to report separately.";
-				if (checkquest(7202) == -1) setquest 7202;
+				if (!questprogress(7202)) setquest 7202;
 				close;
 			}
 			mes "Not enough was collected to fill Cheshire's request.";
 			close;
 		}
 		else if (countitem(.@item[.@type]) == 10) {
-			if (checkquest(7202) >= 0) {
+			if (questprogress(7202)) {
 				setarray .@str$, "stone fragments","bloodstains","pieces of skin";
 				mes "Need more " + .@str$[.@type] + " to report back to Doha at the expedition camp.";
 			}
@@ -5219,9 +5220,10 @@ dic_in01,165,104,0	script	Frede#13_3_in	4_MAN_PIOM,{
 		}
 		else if (ep13_3_bra == 4) {
 			setarray .@quest_id, 11159,11160,11161,11162,11163,11164;
-			for (set .@size, getarraysize(.@quest_id); .@i < .@size; set .@i, .@i + 1)
-				if (checkquest(.@quest_id[.@i]) == -1) {
-					set .@fail, 1;
+			.@size = getarraysize(.@quest_id);
+			for (.@i = 0; .@i < .@size; ++.@i)
+				if (!questprogress(.@quest_id[.@i])) {
+					.@fail = true;
 					break;
 				}
 			if (!.@fail) {
@@ -5307,9 +5309,10 @@ dic_in01,165,104,0	script	Frede#13_3_in	4_MAN_PIOM,{
 				close;
 			}
 			setarray .@quest_id, 11165,11166,11167,11168,11169,11170;
-			for (set .@size, getarraysize(.@quest_id); .@i < .@size; set .@i, .@i + 1)
-				if (checkquest(.@quest_id[.@i]) == -1) {
-					set .@fail, 1;
+			.@size = getarraysize(.@quest_id);
+			for (.@i = 0; .@i < .@size; ++.@i)
+				if (!questprogress(.@quest_id[.@i])) {
+					.@fail = true;
 					break;
 				}
 			if (!.@fail) {
@@ -5360,7 +5363,7 @@ dic_dun01,205,43,5	script	Brian#ep13_3_	4_MAN_PIOM4,{
 			close;
 		}
 		else if (ep13_3_bra < 8) {
-			if (checkquest(11159) >= 0 || ep13_3_bra != 4) {
+			if (questprogress(11159) || ep13_3_bra != 4) {
 				mes "[Brian]";
 				mes "Oh... that reminds me, how many days passed since I came here...";
 				mes "Do you happen to know what day it is today?";
@@ -5399,7 +5402,7 @@ dic_dun01,205,43,5	script	Brian#ep13_3_	4_MAN_PIOM4,{
 			close;
 		}
 		else if (ep13_3_bra == 8) {
-			if (checkquest(11165) >= 0) {
+			if (questprogress(11165)) {
 				mes "[Brian]";
 				mes "I'm out of Bradium already.";
 				mes "Frede has been nagging me about this all the time but now I see why.";
@@ -5461,7 +5464,7 @@ dic_dun01,153,107,4	script	Tyler#13_3	4_MAN_PIOM6,{
 			close;
 		}
 		else if (ep13_3_bra == 4) {
-			if (checkquest(11161) >= 0) {
+			if (questprogress(11161)) {
 				mes "[Tyler]";
 				mes "If you happen to bump into him in the village, please tell him I'm fine and not to worry.";
 				close;
@@ -5523,7 +5526,7 @@ dic_dun01,153,107,4	script	Tyler#13_3	4_MAN_PIOM6,{
 			close;
 		}
 		else if (ep13_3_bra == 8) {
-			if (checkquest(11167) >= 0) {
+			if (questprogress(11167)) {
 				mes "[Tyler]";
 				mes "Oh!! I was out of Bradium. How did you know!";
 				mes "Thanks!";
@@ -5591,7 +5594,7 @@ dic_dun01,235,243,0	script	John#13_3	4_MAN_PIOM,{
 			close;
 		}
 		else if (ep13_3_bra == 4) {
-			if (checkquest(11160) >= 0) {
+			if (questprogress(11160)) {
 				mes "[John]";
 				mes "Oh well...";
 				mes "There... is nothing to worry about.";
@@ -5645,7 +5648,7 @@ dic_dun01,235,243,0	script	John#13_3	4_MAN_PIOM,{
 			close;
 		}
 		else if (ep13_3_bra == 8) {
-			if (checkquest(11166) >= 0) {
+			if (questprogress(11166)) {
 				mes "[John]";
 				mes "......";
 				mes "Thanks....";
@@ -5691,7 +5694,7 @@ dic_dun02,110,127,5	script	Rose#13_3	4_MAN_PIOM6,{
 			close;
 		}
 		else if (ep13_3_bra == 4) {
-			if (checkquest(11162) >= 0) {
+			if (questprogress(11162)) {
 				mes "[Rose]";
 				mes "Tell him there is no problem at all except that I am too good at my job.";
 				mes "Because I'm perfect.";
@@ -5729,7 +5732,7 @@ dic_dun02,110,127,5	script	Rose#13_3	4_MAN_PIOM6,{
 			close;
 		}
 		else if (ep13_3_bra == 8) {
-			if (checkquest(11168) >= 0) {
+			if (questprogress(11168)) {
 				mes "[Rose]";
 				mes "I'll return to the village soon.";
 				mes "We can meet up then~";
@@ -5788,7 +5791,7 @@ dic_dun01,64,107,7	script	Bain#13_3	4_MAN_PIOM4,{
 			close;
 		}
 		else if (ep13_3_bra == 4) {
-			if (checkquest(11163) >= 0) {
+			if (questprogress(11163)) {
 				mes "[Bain]";
 				mes "Just tell him I'm doing well.";
 				mes "Simple, isn't it?";
@@ -5819,7 +5822,7 @@ dic_dun01,64,107,7	script	Bain#13_3	4_MAN_PIOM4,{
 			close;
 		}
 		else if (ep13_3_bra == 8) {
-			if (checkquest(11169) >= 0) {
+			if (questprogress(11169)) {
 				mes "[Bain]";
 				mes "But I will be in trouble if I don't go back to the village for Bradium.";
 				next;
@@ -5883,7 +5886,7 @@ dic_dun01,58,225,4	script	Lash#13_3	4_MAN_PIOM5,{
 			close;
 		}
 		else if (ep13_3_bra == 4) {
-			if (checkquest(11164) >= 0) {
+			if (questprogress(11164)) {
 				mes "[Lash]";
 				mes "If you'd like to tell him how I'm doing, look at my forearm. Doesn't it spell out 'Strong' on it?";
 				next;
@@ -5929,7 +5932,7 @@ dic_dun01,58,225,4	script	Lash#13_3	4_MAN_PIOM5,{
 			close;
 		}
 		else if (ep13_3_bra == 8) {
-			if (checkquest(11170) >= 0) {
+			if (questprogress(11170)) {
 				mes "[Lash]";
 				mes "Wow!!!!";
 				mes "You've saved me!";
@@ -6050,7 +6053,7 @@ dic_in01,349,129,5	script	Bouy#13_3	4_MAN_BENKUNI,{
 			close;
 		}
 		else if (ep13_3_bra == 7) {
-			if (checkquest(11175,PLAYTIME) > 1) {
+			if (questprogress(11175,PLAYTIME) == 2) {
 				mes "[Bouy]";
 				mes "I did it!";
 				mes "I was a bit nervous because it has been a long time since I did manual work but I think I did a good job.";

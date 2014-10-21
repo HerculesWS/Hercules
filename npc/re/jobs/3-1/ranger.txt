@@ -384,7 +384,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 			changequest 8256,8257;
 			close;
 		} else if (job_ranger01 == 4) {
-			if (checkquest(8257,HUNTING) == 2) {
+			if (questprogress(8257,HUNTING) == 2) {
 				if (countitem(7064) > 0) {
 					mes "Oh! Oh! Woooooow!";
 					mes "You've brought it! Let me see...";
@@ -549,9 +549,10 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 						mes "Okay. I'll respect your opinion.";
 						mes "I'll cancel the job change request from "+strcharinfo(0)+".";
 						delitem 1703,1; //Bow__
-						set job_ranger01,0;
-						for(set .@i,8254; .@i<=8262; set .@i,.@i+1)
-							if (checkquest(.@i) > -1) erasequest .@i;
+						job_ranger01 = 0;
+						for(.@i = 8254; .@i <= 8262; ++.@i)
+							if (questprogress(.@i))
+								erasequest .@i;
 						close;
 					}
 					mes "[Test Instructor, Teardrop]";
@@ -710,9 +711,10 @@ job3_rang01,30,44,3	script	Test Waiting Room#jr_03	4_M_ORIENT01,{
 				mes "Okay. I'll respect your opinion.";
 				mes "I'll cancel the job change request from "+strcharinfo(0)+".";
 				delitem 1703,1; //Bow__
-				set job_ranger01,0;
-				for(set .@i,8254; .@i<=8262; set .@i,.@i+1)
-					if (checkquest(.@i) > -1) erasequest .@i;
+				job_ranger01 = 0;
+				for(.@i = 8254; .@i <= 8262; ++.@i)
+					if (questprogress(.@i))
+						erasequest .@i;
 				close;
 				close2;
 				warp "alberta",117,57;
@@ -1450,7 +1452,7 @@ OnTimer130000:
 job3_rang02,251,49,3	script	Test Supervisor#jr_13	4_M_JOB_HUNTER,{
 	mes "[Test Supervisor, Freeze]";
 	if (job_ranger01 == 6) {
-		if (checkquest(8261) == -1) {
+		if (!questprogress(8261)) {
 			mes "Congrats for passing the 2nd practical test! I am the 3rd practical test supervisor Freeze!";
 			next;
 			mes "[Test Supervisor, Freeze]";
@@ -1705,9 +1707,10 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	4_M_REIDIN_KURS,{
 			mes "[Ranger Master, Neveragain]";
 			mes "What are you doing here?";
 			mes "You are not supposed to be here. Get out!";
-			set job_ranger01,0;
-			for(set .@i,8254; .@i<=8262; set .@i,.@i+1)
-				if (checkquest(.@i) > -1) erasequest .@i;
+			job_ranger01 = 0;
+			for(.@i = 8254; .@i <= 8262; ++.@i)
+				if (questprogress(.@i))
+					erasequest .@i;
 			close2;
 			warp "alberta",117,57;
 			end;

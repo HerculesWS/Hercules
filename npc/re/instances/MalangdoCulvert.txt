@@ -44,7 +44,7 @@ mal_in01,172,28,2	script	Albo#mal	4_CAT_SAILOR5,{
 		"General Culvert Weekly Service","^990000Hard Culvert Weekly Service^000000";
 	set .@menu$,"Why are doing this job?:";
 	for(set .@i,0; .@i<4; set .@i,.@i+1) {
-		if (checkquest(.@quests[.@i],PLAYTIME) > -1) {
+		if (questprogress(.@quests[.@i],PLAYTIME)) {
 			set .@status[.@i],2;
 			set .@menu$, .@menu$+"^aaaaaa- There is no new task -^000000:";
 		} else if (.@i%2 && BaseLevel < 140) {
@@ -192,7 +192,7 @@ mal_in01,172,26,2	script	Madeca#mal	4_CAT_SAILOR1,{
 	specialeffect2 EF_STEAL;
 	switch(.@i) {
 	case 1: // General Culvert Daily Service
-		if (checkquest(12271,PLAYTIME) == 2)
+		if (questprogress(12271,PLAYTIME) == 2)
 			callsub L_EraseQuest,12255,12256,12257,12258,12259,12260,12271;
 		else {
 			// Reward: 2x B Grade Coin
@@ -205,7 +205,7 @@ mal_in01,172,26,2	script	Madeca#mal	4_CAT_SAILOR1,{
 		}
 		break;
 	case 2: // Hard Culvert Daily Service
-		if (checkquest(12272,PLAYTIME) == 2)
+		if (questprogress(12272,PLAYTIME) == 2)
 			callsub L_EraseQuest,12261,12262,12263,12264,12265,12266,12272;
 		else {
 			// Reward: 1x A Grade Coin
@@ -218,7 +218,7 @@ mal_in01,172,26,2	script	Madeca#mal	4_CAT_SAILOR1,{
 		}
 		break;
 	case 3: // General Culvert Weekly Service
-		if (checkquest(12273,PLAYTIME) == 2)
+		if (questprogress(12273,PLAYTIME) == 2)
 			callsub L_EraseQuest,12267,12268,12273;
 		else {
 			// Reward: 1x Sea God's Wrath
@@ -227,7 +227,7 @@ mal_in01,172,26,2	script	Madeca#mal	4_CAT_SAILOR1,{
 		}
 		break;
 	case 4: // Hard Culvert Weekly Service
-		if (checkquest(12274,PLAYTIME) == 2)
+		if (questprogress(12274,PLAYTIME) == 2)
 			callsub L_EraseQuest,12269,12270,12274;
 		else {
 			// Reward: 5x Sea God's Wrath
@@ -246,7 +246,7 @@ mal_in01,172,26,2	script	Madeca#mal	4_CAT_SAILOR1,{
 
 L_EraseQuest:
 	for(set .@j,0; .@j<getargcount(); set .@j,.@j+1) {
-		if (checkquest(getarg(.@j)) > -1)
+		if (questprogress(getarg(.@j)))
 			erasequest getarg(.@j);
 	}
 	mes "[Madeca]";
@@ -255,7 +255,7 @@ L_EraseQuest:
 
 // callsub L_CheckQuest,<quest ID>,<monster>,<reward item ID>,<reward item amount>;
 L_CheckQuest:
-	if (checkquest(getarg(0),HUNTING) == 2) {
+	if (questprogress(getarg(0),HUNTING) == 2) {
 		mes "[Madeca]";
 		mes "You've punished ^0000ff"+getarg(1)+"^000000!";
 		mes "Here's your pay!";
@@ -392,8 +392,8 @@ mal_in01,160,34,4	script	Missing, the Cleaner	4_CAT_SAILOR2,{
 		mes "of the party and come back.^000000";
 		close;
 	}
-	set .@playtime, checkquest(12254,PLAYTIME);
-	if (.@playtime == -1) {
+	.@playtime = questprogress(12254,PLAYTIME);
+	if (!.@playtime) {
 		if (getcharid(0) == getpartyleader(.@party_id,2)) {
 			mes "[Missing, the Cleaner]";
 			mes "Ummm? What's up? Tell me the password if you're the leader!";
@@ -430,7 +430,7 @@ mal_in01,160,34,4	script	Missing, the Cleaner	4_CAT_SAILOR2,{
 		if(select("Enter Culvert:Cancel") == 2)
 			end;
 		callsub L_Enter,1;
-	} else if (.@playtime == 0 || .@playtime == 1) {
+	} else if (.@playtime == 1) {
 		mes "You can enter the Culvert if the gate is open.";
 		next;
 		if(select("Enter Culvert:Cancel") == 2)
@@ -444,7 +444,7 @@ mal_in01,160,34,4	script	Missing, the Cleaner	4_CAT_SAILOR2,{
 	end;
 L_Enter:
 	if (has_instance("1@pump") == "") {
-		if (checkquest(12254,PLAYTIME) == 0 || checkquest(12254,PLAYTIME) == 1) {
+		if (questprogress(12254,PLAYTIME) == 1) {
 			mes "The gate to the Culvert is still closed.";
 			mes "You must wait until you are able to enter or find a party leader who can create the instance.";
 			close;
@@ -454,7 +454,7 @@ L_Enter:
 		close;
 	}
 	mapannounce "mal_in01", strcharinfo(0)+" of the party "+getpartyname(.@party_id)+" is entering the Culvert.",bc_map,"0x00ff99";
-	if (checkquest(12254) == -1) setquest 12254;
+	if (!questprogress(12254)) setquest 12254;
 	warp "1@pump",63,98;
 	end;
 }

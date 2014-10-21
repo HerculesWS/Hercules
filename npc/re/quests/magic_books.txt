@@ -626,7 +626,7 @@ mid_camp,255,244,4	script	Galfos	4_M_JOB_WIZARD,{
 			mes "Are you kidding me? You already have the book!";
 			close;
 		}
-		if ((.@i == 1 && checkquest(12218) == 2) || (.@i == 2 && checkquest(12219) == 2 && checkquest(12220) == 2 && checkquest(12221) == 2 && checkquest(12222) == 2)) {
+		if ((.@i == 1 && questprogress(12218) == 2) || (.@i == 2 && questprogress(12219) == 2 && questprogress(12220) == 2 && questprogress(12221) == 2 && questprogress(12222) == 2)) {
 			mes "Oh my, I sense incredible energy coming from you. This is great! Now we're ready to make the Ultimate Magic Book.";
 			next;
 			mes "[Galfos]";
@@ -676,11 +676,11 @@ dic_in01,25,190,0	script	Mysterious Documents	CLEAR_NPC,{
 		mes "When you approach the documents, an Evil Giant that looks like the archive manager tries to call Guard Galton. You should get out of here quickly.";
 		close;
 	}
-	if (checkquest(12165,"PLAYTIME") == 1) {
+	if (questprogress(12165,PLAYTIME) == 1) {
 		mes "The documents are making you feel nauseous. You should come back later after your stomach settles.";
 		close;
 	}
-	if (checkquest(12165,"PLAYTIME") == 2) {
+	if (questprogress(12165,PLAYTIME) == 2) {
 		mes "You don't feel as nauseous anymore. It should be safe to proceed now.";
 		erasequest 12165;
 		close;
@@ -703,7 +703,7 @@ dic_in01,25,190,0	script	Mysterious Documents	CLEAR_NPC,{
 	if (mac_book == 4) {
 		if (rand(1,10) == 1) {
 			if (getskilllv(2213) > 0) {
-				if (checkquest(12218) == 1) {
+				if (questprogress(12218) == 1) {
 					mes "You already own this document.";
 					close;
 				}
@@ -721,7 +721,7 @@ dic_in01,25,190,0	script	Mysterious Documents	CLEAR_NPC,{
 		}
 		if (rand(1,10) == 2) {
 			if (getskilllv(2217) > 0) {
-				if (checkquest(12219) == 1) {
+				if (questprogress(12219) == 1) {
 					mes "You already own this document.";
 					close;
 				}
@@ -739,7 +739,7 @@ dic_in01,25,190,0	script	Mysterious Documents	CLEAR_NPC,{
 		}
 		if (rand(1,10) == 3) {
 			if (getskilllv(2217) > 0) {
-				if (checkquest(12220) == 1) {
+				if (questprogress(12220) == 1) {
 					mes "You already own this document.";
 					close;
 				}
@@ -756,7 +756,7 @@ dic_in01,25,190,0	script	Mysterious Documents	CLEAR_NPC,{
 		}
 		if (rand(1,10) == 4) {
 			if (getskilllv(2217) > 0) {
-				if (checkquest(12221) == 1) {
+				if (questprogress(12221) == 1) {
 					mes "You already own this document.";
 					close;
 				}
@@ -774,7 +774,7 @@ dic_in01,25,190,0	script	Mysterious Documents	CLEAR_NPC,{
 		}
 		if (rand(1,10) == 5) {
 			if (getskilllv(2217) > 0) {
-				if (checkquest(12222) == 1) {
+				if (questprogress(12222) == 1) {
 					mes "You already own this document.";
 					close;
 				}
@@ -807,7 +807,7 @@ function	script	Magic_Book_Essence	{
 		mes "Please lighten your bag.";
 		close;
 	}
-	if (checkquest(getarg(0)) == 1 && countitem(getarg(1)) >= getarg(2)) {
+	if (questprogress(getarg(0)) == 1 && countitem(getarg(1)) >= getarg(2)) {
 		specialeffect2 EF_BLIND;
 		specialeffect2 EF_BEGINSPELL;
 		progressbar "ffff00",4;
@@ -823,7 +823,7 @@ function	script	Magic_Book_Essence	{
 		mes "^008888You have failed to refine the essence using "+getarg(2)+" "+getitemname(getarg(1))+"s.^000000";
 		close;
 	}
-	if (checkquest(getarg(0)) == 2) {
+	if (questprogress(getarg(0)) == 2) {
 		mes "You've already created "+getarg(3)+" Essence in this area.";
 		close;
 	}

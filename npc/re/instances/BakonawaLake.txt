@@ -39,16 +39,16 @@ ma_scene01,174,179,4	script	Taho	4_M_DEWZATIMAN,{
 	set .@party_id,getcharid(1);
 	set .@md_name$, "Bakonawa Lake";
 
-	set .@baku_time, checkquest(12278,PLAYTIME);
-	if (.@baku_time == -1) {
-		if (checkquest(12279) == -1) setquest 12279;
+	.@baku_time = questprogress(12278,PLAYTIME);
+	if (!.@baku_time) {
+		if (!questprogress(12279)) setquest 12279;
 	}
 	if (!.@party_id) {
 		mes "[Taho]";
 		mes "Isn't there any company who can go with you? Or even if you wanna go alone, come after organizing a party.";
 		close;
 	}
-	if (.@baku_time == -1) {
+	if (!.@baku_time) {
 		if (getcharid(0) == getpartyleader(.@party_id,2)) {
 			mes "[Taho]";
 			mes "Are you the leader of the Bakonawa slayers? The road is not well so we have to go down the cliff with a rope, is that OK?";
@@ -92,7 +92,7 @@ ma_scene01,174,179,4	script	Taho	4_M_DEWZATIMAN,{
 		case 3:
 			close;
 		}
-	} else if (.@baku_time == 0 || .@baku_time == 1) {
+	} else if (.@baku_time == 1) {
 		mes "[Taho]";
 		mes "The rope used for getting to the Lake is already broken. We are now cleaning up the surroundings so come back after some time.";
 		close;
@@ -469,7 +469,7 @@ OnMobSpawn:
 		mes "It seems you are already carrying items of too much weight. Please try again after reducing the weight.";
 		close;
               }
-	if (checkquest(12279,HUNTING) == 2) {
+	if (questprogress(12279,HUNTING) == 2) {
 		erasequest 12279;
 		mes "[Taho]";
 		mes "This was found from Bakonawa's corpse. It would be better if you take this.";

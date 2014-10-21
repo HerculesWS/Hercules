@@ -390,12 +390,12 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 			mes "You can start from the beginning then?";
 			mes "Why are you asking me such things?";
 			set job_gen,7;
-			if (checkquest(2209) == 1) erasequest 2209;
-			if (checkquest(2210) == 1) erasequest 2210;
-			if (checkquest(2211) == 1) erasequest 2211;
-			if (checkquest(2212) == 1) erasequest 2212;
-			if (checkquest(2213) == 1) erasequest 2213;
-			if (checkquest(2214) == 1) erasequest 2214;
+			if (questprogress(2209) == 1) erasequest 2209;
+			if (questprogress(2210) == 1) erasequest 2210;
+			if (questprogress(2211) == 1) erasequest 2211;
+			if (questprogress(2212) == 1) erasequest 2212;
+			if (questprogress(2213) == 1) erasequest 2213;
+			if (questprogress(2214) == 1) erasequest 2214;
 			close;
 		}
 	} else if (job_gen == 60 || job_gen == 61) {
@@ -473,15 +473,15 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 				set job_gen,7;
 			}
 		}
-		if (checkquest(2209) == 1) erasequest 2209;
-		if (checkquest(2210) == 1) erasequest 2210;
-		if (checkquest(2211) == 1) erasequest 2211;
-		if (checkquest(2212) == 1) erasequest 2212;
-		if (checkquest(2213) == 1) erasequest 2213;
-		if (checkquest(2214) == 1) erasequest 2214;
+		if (questprogress(2209) == 1) erasequest 2209;
+		if (questprogress(2210) == 1) erasequest 2210;
+		if (questprogress(2211) == 1) erasequest 2211;
+		if (questprogress(2212) == 1) erasequest 2212;
+		if (questprogress(2213) == 1) erasequest 2213;
+		if (questprogress(2214) == 1) erasequest 2214;
 		close;
 	} else if (job_gen > 61 && job_gen < 76) {
-		if (checkquest(2223,HUNTING) == 2) {
+		if (questprogress(2223,HUNTING) == 2) {
 			mes "[Devries]";
 			mes "Oh, wait a second.";
 			mes "It seems that the mail's has arrived.";
@@ -642,7 +642,7 @@ job3_gen01,12,56,3	script	Plant Guide#generic	HIDDEN_NPC,{
 // QuestID,PlantName,Description{,Part?}
 function	script	Genetic_Job_Plant	{
 	if (job_gen == 7) {
-		if (checkquest(getarg(0)) == -1 || checkquest(getarg(0)) == 0) {
+		if (!questprogress(getarg(0))) {
 			mes "- "+getarg(2)+" -";
 			next;
 			switch(select("Use it as a material.:Do not use.")) {
@@ -699,12 +699,8 @@ job3_gen01,7,50,3	script	Testing Table#gen	CLEAR_NPC,{
 			mes "- It's not the time to start an experiment. -";
 			close;
 		}
-		if ((checkquest(2209) == -1 || checkquest(2209) == 0) &&
-		    (checkquest(2210) == -1 || checkquest(2210) == 0) &&
-		    (checkquest(2211) == -1 || checkquest(2211) == 0) &&
-		    (checkquest(2212) == -1 || checkquest(2212) == 0) &&
-		    (checkquest(2213) == -1 || checkquest(2213) == 0) &&
-		    (checkquest(2214) == -1 || checkquest(2214) == 0)) {
+		if (!questprogress(2209) && !questprogress(2210) && !questprogress(2211) && !questprogress(2212)
+		 && !questprogress(2213) && !questprogress(2213) && !questprogress(2214)) {
 			mes "["+strcharinfo(0)+"]";
 			mes "Hmm, I need to gather plant materials first.";
 			close;
@@ -731,16 +727,14 @@ job3_gen01,7,50,3	script	Testing Table#gen	CLEAR_NPC,{
 		next;
 		mes "["+strcharinfo(0)+"]";
 		mes "Good. Now I can let Miss Devries take a look at this seed!";
-		if ((checkquest(2209) == -1 || checkquest(2209) == 0) &&
-		    (checkquest(2210) == -1 || checkquest(2210) == 0) &&
-		    (checkquest(2211) == -1 || checkquest(2211) == 0)){
+		if (!questprogress(2209) && !questprogress(2210) && !questprogress(2211)) {
 			set job_gen,61;
 			getitem 6272,1; //Experiment_Seed
 			close;
 		}
-		if (checkquest(2209) == 1) set job_gen,job_gen+10;
-		if (checkquest(2210) == 1) set job_gen,job_gen+10;
-		if (checkquest(2211) == 1) set job_gen,job_gen+10;
+		if (questprogress(2209) == 1) set job_gen,job_gen+10;
+		if (questprogress(2210) == 1) set job_gen,job_gen+10;
+		if (questprogress(2211) == 1) set job_gen,job_gen+10;
 		set .@score, job_gen + JobLevel - 20;
 		if (rand(1,100) < .@score) {
 			set job_gen,60;
@@ -756,12 +750,12 @@ job3_gen01,7,50,3	script	Testing Table#gen	CLEAR_NPC,{
 		set job_gen,7;
 		if (countitem(6273)) delitem 6273,1; //Altered_Seed
 		if (countitem(6272)) delitem 6272,1; //Experiment_Seed
-		if (checkquest(2209) == 1) erasequest 2209;
-		if (checkquest(2210) == 1) erasequest 2210;
-		if (checkquest(2211) == 1) erasequest 2211;
-		if (checkquest(2212) == 1) erasequest 2212;
-		if (checkquest(2213) == 1) erasequest 2213;
-		if (checkquest(2214) == 1) erasequest 2214;
+		if (questprogress(2209) == 1) erasequest 2209;
+		if (questprogress(2210) == 1) erasequest 2210;
+		if (questprogress(2211) == 1) erasequest 2211;
+		if (questprogress(2212) == 1) erasequest 2212;
+		if (questprogress(2213) == 1) erasequest 2213;
+		if (questprogress(2214) == 1) erasequest 2214;
 		close;
 	} else if (job_gen == 60 || job_gen == 61) {
 		mes " - It looks like I need to let Miss Devries take a look at this seed! -";
@@ -920,7 +914,7 @@ job3_gen01,91,48,3	script	Demi Calberine#gen	4_F_SCIENCE,{
 		warp "job3_gen01",23,32;
 		end;
 	} else if (job_gen == 75) {
-		if (checkquest(2223,HUNTING) == 2) {
+		if (questprogress(2223,HUNTING) == 2) {
 			mes "It seem Miss Devries found out that I put you in her spore pen.";
 			mes "It's funny when you look at her face. After you've killed all those spores.";
 			close;
@@ -1017,7 +1011,7 @@ OnTouch:
 
 job3_gen01,24,32,0	script	The gaze of Devries	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
-	if (checkquest(2223,HUNTING) == 2) {
+	if (questprogress(2223,HUNTING) == 2) {
 		mapannounce "job3_gen01","Devries: Whoa? Was there a lost kitty in the spore pen?",bc_map,"0x99CC00"; //FW_NORMAL 12 0 0
 		emotion e_omg,1;
 		warp "job3_gen01",21,38;

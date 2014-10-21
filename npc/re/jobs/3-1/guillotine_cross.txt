@@ -156,13 +156,13 @@ function	script	func_3rdgc	{
 	mes .@n$;
 	mes "Let me collect all the information...";
 	set .@i,0;
-	if (checkquest(7112) == 1) { mes "Madelle saw a person who looked like a priest from Rachel late at night."; set .@i,.@i+1; }
-	if (checkquest(7113) == 1) { mes "Crave said that there was a girl who bought lots of things day and night."; set .@i,.@i+1; }
-	if (checkquest(7114) == 1) { mes "Trovan said that there was a guy who could be seen often but is not a hotel guest, so he is suspicious."; set .@i,.@i+1; }
+	if (questprogress(7112) == 1) { mes "Madelle saw a person who looked like a priest from Rachel late at night."; set .@i,.@i+1; }
+	if (questprogress(7113) == 1) { mes "Crave said that there was a girl who bought lots of things day and night."; set .@i,.@i+1; }
+	if (questprogress(7114) == 1) { mes "Trovan said that there was a guy who could be seen often but is not a hotel guest, so he is suspicious."; set .@i,.@i+1; }
 	if (!getarg(0)) {
 		set .@i,.@i-2;
-		if (checkquest(7115) == 1) { mes "A peddler wears shabby clothes, but she buys fresh and expensive things every single day."; set .@i,.@i+1; }
-		if (checkquest(7116) == 1) { mes "The old man in village said that there was a girl who showed up in same place at the same time, so maybe moved here."; set .@i,.@i+1; }
+		if (questprogress(7115) == 1) { mes "A peddler wears shabby clothes, but she buys fresh and expensive things every single day."; set .@i,.@i+1; }
+		if (questprogress(7116) == 1) { mes "The old man in village said that there was a girl who showed up in same place at the same time, so maybe moved here."; set .@i,.@i+1; }
 	}
 	next;
 	if (.@i == 3) {
@@ -398,7 +398,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 					set job_3rd_gc, 6;
 					close;
 				} else if (job_3rd_gc == 6) {
-					if (checkquest(7091) == 1) {
+					if (questprogress(7091) == 1) {
 						mes "You hope that there will be something in the glass?";
 						mes "Information can't come out of empty glasses.";
 						close;
@@ -453,7 +453,8 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 					next;
 					switch(select("Figure out based on information.:Stop the stage.")) {
 					case 1:
-						if (checkquest(7091) == 1) set .@j,1;
+						if (questprogress(7091) == 1)
+							.@j = 1;
 						callfunc "func_3rdgc",.@j;
 						close;
 					case 2:
@@ -461,7 +462,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 						close;
 					}
 				} else if (job_3rd_gc == 8) {
-					if (checkquest(7092) == 1) {
+					if (questprogress(7092) == 1) {
 						mes "Wait in an alley where she usually shows up to find her, and you will be able to pursue the question.";
 						next;
 						mes "[Daora]";
@@ -531,7 +532,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 						close;
 					}
 				} else if (job_3rd_gc == 9) {
-					if (checkquest(7093) == 1) {
+					if (questprogress(7093) == 1) {
 						mes "So, go to the east of village, you can see a narrow alley directed to the north.";
 						next;
 						mes "[Daora]";
@@ -575,7 +576,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 					mes "I sent a girl named Estillda to her home.";
 					mes "Why do we handle worthless things like it?";
 					next;
-					if (checkquest(7094) == 1) {
+					if (questprogress(7094) == 1) {
 						mes "[Daora]";
 						mes "I'm not sure if he still lives...";
 						mes "Anyway, he is a key artisan in Rachel,";
@@ -639,7 +640,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 						close;
 					}
 				} else if (job_3rd_gc == 15) {
-					if (checkquest(7095) == 1) {
+					if (questprogress(7095) == 1) {
 						mes "The field northwest of Veins.";
 						mes "You can find that easily with a map.";
 						mes "There are lots of wolves, so be careful.";
@@ -957,9 +958,11 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 			mes "At least you came back alive.";
 		}
 		next;
-		set .@all_wine,0;
-		for(set .@i,0; .@i<5; set .@i,.@i+1)
-			if (checkquest(7091+.@i) == 1) set .@all_wine, .@all_wine+1;
+		.@all_wine = 0;
+		for(.@i = 0; .@i < 5; ++.@i)
+			if (questprogress(7091+.@i) == 1) {
+				++.@all_wine;
+			}
 		mes "[Mayshell]";
 		if (.@all_wine < 2) {
 			mes "You did the job by yourself";
@@ -1037,13 +1040,13 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 		erasequest 7091;
 		erasequest 7092;
 		erasequest 7093;
-		if (checkquest(7094) > -1) erasequest 7094;
-		if (checkquest(7095) > -1) erasequest 7095;
+		if (questprogress(7094)) erasequest 7094;
+		if (questprogress(7095)) erasequest 7095;
 		erasequest 7112;
 		erasequest 7113;
 		erasequest 7114;
-		if (checkquest(7115) > -1) erasequest 7115;
-		if (checkquest(7116) > -1) erasequest 7116;
+		if (questprogress(7115)) erasequest 7115;
+		if (questprogress(7116)) erasequest 7116;
 		changequest 7111,.@quest;
 		next;
 		mes "[Mayshell]";
@@ -1104,8 +1107,8 @@ ve_in,228,108,3	script	Waitress#3rdgc04	1_F_PUBGIRL,{
 		mes "Visit and take a rest~";
 		close;
 	} else if (job_3rd_gc == 6) {
-		if (checkquest(7091) == 1) {
-			if (checkquest(7112) == 1) {
+		if (questprogress(7091) == 1) {
+			if (questprogress(7112) == 1) {
 				mes "That's all the information that I know.";
 				mes "After that, I can't remember anything else.";
 				next;
@@ -1194,7 +1197,7 @@ ve_in,228,108,3	script	Waitress#3rdgc04	1_F_PUBGIRL,{
 				}
 			}
 		} else {
-			if (checkquest(7112) == 1) {
+			if (questprogress(7112) == 1) {
 				mes "That's all the information that I know.";
 				mes "I haven't seen them since.";
 				next;
@@ -1338,8 +1341,8 @@ ve_in,246,303,3	script	Young Merchant#3rdgc05	4_M_RACHMAN2,{
 		close;
 	}
 	else if (job_3rd_gc == 6) {
-		if (checkquest(7091) == 1) {
-			if (checkquest(7113) == 1) {
+		if (questprogress(7091) == 1) {
+			if (questprogress(7113) == 1) {
 				mes "[Crave]";
 				mes "I already gave you all the information I have.";
 				mes "I'm quick in visual learning.";
@@ -1413,7 +1416,7 @@ ve_in,246,303,3	script	Young Merchant#3rdgc05	4_M_RACHMAN2,{
 				}
 			}
 		} else {
-			if (checkquest(7113) == 1) {
+			if (questprogress(7113) == 1) {
 				mes "[Crave]";
 				mes "I already gave you all the information I have.";
 				mes "I'm quick in visual learning.";
@@ -1534,8 +1537,8 @@ veins,291,215,3	script	Vigilante#3rdgc06	4_DST_SOLDIER,{
 		close;
 	}
 	else if (job_3rd_gc == 6) {
-		if (checkquest(7091) == 1) {
-			if (checkquest(7114) == 1) {
+		if (questprogress(7091) == 1) {
+			if (questprogress(7114) == 1) {
 				mes "[Trovan]";
 				mes "I already gave you all the information I have.";
 				mes "He's the only suspicious person that's been seen.";
@@ -1616,7 +1619,7 @@ veins,291,215,3	script	Vigilante#3rdgc06	4_DST_SOLDIER,{
 				}
 			}
 		} else {
-			if (checkquest(7114) == 1) {
+			if (questprogress(7114) == 1) {
 				mes "[Trovan]";
 				mes "I already gave you all the information I have.";
 				mes "He's the only suspicious person that's been seen.";
@@ -1698,12 +1701,12 @@ veins,187,143,5	script	Peddler#3rdgc07	4_F_HUGRANMA,{
 		close;
 	}
 	else if (job_3rd_gc == 6) {
-		if (checkquest(7091) == 1) {
+		if (questprogress(7091) == 1) {
 			mes "What a huge sandstorm.";
 			mes "Are you ok?";
 			close;
 		} else {
-			if (checkquest(7115) == 1) {
+			if (questprogress(7115) == 1) {
 				mes "So, did you find that girl?";
 				mes "If you do, let her know that she has to come and visit me.";
 				next;
@@ -1799,11 +1802,11 @@ veins,235,126,3	script	Old Man#3rdgc07	4_M_DST_GRAND,{
 		mes "Haha... I can remember my past when I see a young adventurer like you...";
 		close2;
 	} else if (job_3rd_gc == 6) {
-		if (checkquest(7091) == 1) {
+		if (questprogress(7091) == 1) {
 			mes "Haha... I can remember my past when I see a young adventurer like you...";
 			close;
 		} else {
-			if (checkquest(7116) == 1) {
+			if (questprogress(7116) == 1) {
 				mes "Thanks for talking to me.";
 				next;
 				mes "- I can't get anymore information from the Old Man. What information have I collected? -";
@@ -2075,12 +2078,12 @@ veins,337,284,0	script	#ghostestilla_3rdgc	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	if (job_3rd_gc == 9) {
-		if ((checkquest(7104,PLAYTIME) == 1) || (checkquest(7105,PLAYTIME) == 1)) {
+		if ((questprogress(7104,PLAYTIME) == 1) || (questprogress(7105,PLAYTIME) == 1)) {
 			mes ".....?";
 			mes "There's a sign of somebody present.";
 			mes "You still have time.";
 			close;
-		} else if ((checkquest(7104,PLAYTIME) == 2) || (checkquest(7105,PLAYTIME) == 2)) {
+		} else if ((questprogress(7104,PLAYTIME) == 2) || (questprogress(7105,PLAYTIME) == 2)) {
 			mes "The blind alley that Melissa told me about must be this street.";
 			next;
 			mes "There's a sign of somebody present.";
@@ -2158,8 +2161,8 @@ OnTouch:
 				next;
 				mes "- I demand that she walks as usual and tell her how to get to Daora's pub. -";
 				donpcevent "Estillda#3rdgc10::OnDisable";
-				if (checkquest(7104) > -1) erasequest 7104;
-				if (checkquest(7105) > -1) erasequest 7105;
+				if (questprogress(7104)) erasequest 7104;
+				if (questprogress(7105)) erasequest 7105;
 				set job_3rd_gc, 10;
 				setquest 7106;
 				next;
@@ -2168,8 +2171,8 @@ OnTouch:
 			} else {
 				mes "- I tried to take her by the wrist, but she already knew and ran away screaming. -";
 				donpcevent "Estillda#3rdgc10::OnDisable";
-				if (checkquest(7104) > -1) erasequest 7104;
-				if (checkquest(7105) > -1) erasequest 7105;
+				if (questprogress(7104)) erasequest 7104;
+				if (questprogress(7105)) erasequest 7105;
 				setquest 7105;
 				next;
 				mes "You couldn't catch Estillda.";
@@ -2320,7 +2323,7 @@ OnInit:
 	end;
 OnTouch:
 	if (job_3rd_gc == 12) {
-		if (checkquest(7107,PLAYTIME) == 2) {
+		if (questprogress(7107,PLAYTIME) == 2) {
 			mes "This must be the place Estillda told me about.";
 			next;
 			switch(select("Go inside.:Observe the situation.")) {
@@ -2339,7 +2342,7 @@ OnTouch:
 				mes "I back up to watch the situation unfold.";
 				close;
 			}
-		} else if (checkquest(7107,PLAYTIME) == 1) {
+		} else if (questprogress(7107,PLAYTIME) == 1) {
 			mes "This must be the place Estillda told me about.";
 			mes "I have enough time for meeting.";
 			close;
@@ -3540,12 +3543,12 @@ OnTimer61500:
 
 job3_guil03,146,70,3	script	Renzak#3rdgc16	4_F_GUILLOTINE,{
 	mes "[Renzak]";
-	if (checkquest(7110,HUNTING) == 2) {
+	if (questprogress(7110,HUNTING) == 2) {
 		mes "My peers will come here to settle this affair.";
 		mes "Go to Mayshell for the report.";
 		next;
 		mes "[Renzak]";
-		if (checkquest(7110,PLAYTIME) == 1) {
+		if (questprogress(7110,PLAYTIME) == 1) {
 			mes "You finished quickly.";
 			mes "Good job.";
 			set job_3rd_gc, 18;
@@ -3653,16 +3656,16 @@ job3_guil01,148,53,3	script	Bercasell#3rdgc16	4_M_GUILLOTINE,{
 								mes "A sword of the shadow...";
 								setlook 7,0;
 								jobchange roclass(eaclass()|EAJL_THIRD);
-								if (checkquest(7096) == 1) {
+								if (questprogress(7096) == 1) {
 									set job_3rd_gc, 25;
 									erasequest 7096;
-								} else if (checkquest(7097) == 1) {
+								} else if (questprogress(7097) == 1) {
 									set job_3rd_gc, 26;
 									erasequest 7097;
-								} else if (checkquest(7098) == 1) {
+								} else if (questprogress(7098) == 1) {
 									set job_3rd_gc, 27;
 									erasequest 7098;
-								} else if (checkquest(7099) == 1) {
+								} else if (questprogress(7099) == 1) {
 									set job_3rd_gc, 28;
 									erasequest 7099;
 								}

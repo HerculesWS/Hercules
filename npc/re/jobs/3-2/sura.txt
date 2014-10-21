@@ -377,7 +377,7 @@ ve_in,98,159,0	script	Fighter#job_shu	4_F_SURA,{
 			close;
 		}
 	} else if (job_shu == 3) {
-		if (checkquest(11156,HUNTING) == 2) {
+		if (questprogress(11156,HUNTING) == 2) {
 			mes "[???]";
 			mes "Wow~";
 			mes "Did you really kill all those wolves?";

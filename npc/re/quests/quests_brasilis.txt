@@ -31,22 +31,22 @@ brasilis,297,307,5	script	Angelo#br	1_M_04,{
 		mes "Gosh... what can I do... ?";
 		close;
 	}
-	if (checkquest(9032,PLAYTIME) == 2) {
+	if (questprogress(9032,PLAYTIME) == 2) {
 		erasequest 9032;
 	}
-	if (checkquest(9032,PLAYTIME) == 0) {
+	if (questprogress(9032,PLAYTIME) == 1) {
 		mes "[Angelo]";
 		mes "The day is not finished yet.";
 		mes "You can only help once a day. Hehe.";
 		close;
 	}
-	if (checkquest(9030) == 1) {
+	if (questprogress(9030) == 1) {
 		mes "[Angelo]";
 		mes "My pets are in the field outside of the village.";
 		mes "Why did they leave? Please find them.";
 		close;
 	}
-	if (checkquest(9031) == 1) {
+	if (questprogress(9031) == 1) {
 		mes "[Angelo]";
 		mes "Oh, thank you. You found all of 3 puppies.";
 		mes "Thanks a lot.";
@@ -89,7 +89,7 @@ OnGo:
 }
 
 -	script	Puppy#bra	-1,{
-	if (checkquest(9030) == 1) {
+	if (questprogress(9030) == 1) {
 		if (brazil_kid < 3) {
 			mes "[Puppy]";
 			mes "bow wow bow wow!!";
@@ -169,9 +169,8 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 		close;
 	}
 	else {
-		set .@nQState1,checkquest(9028);
-		set .@nQState2,checkquest(9029);
-		if (.@nQState1 == -1) {
+		.@nQState = questprogress(9028);
+		if (!.@nQState) {
 			mes "[Lucia]";
 			mes "Hello.";
 			mes "Have you come here to hunt ^FF0000Strange Hydra^000000s?";
@@ -215,7 +214,7 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 				close;
 			}
 		}
-		else if ((.@nQState1 == 0) || (.@nQState1 == 1)) {
+		else if (.@nQState == 1) {
 			if (countitem(6221) > 0) {
 				mes "[Lucia]";
 				mes "Hello, you really did it!";
@@ -227,7 +226,7 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 					delitem 6221,1; //Mystic_Leaf_Cat_Ball
 					completequest 9028;
 					//recall_completequest 9029;
-					if (.@nQState2 > -1) erasequest 9029;
+					if (questprogress(9029)) erasequest 9029;
 					setquest 9029;
 					consumeitem 607; //Yggdrasilberry
 					consumeitem 12070; //Luk_Dish05
@@ -290,8 +289,7 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 		else {
 			mes "[Lucia]";
 			mes "Oh, ^0000FF"+strcharinfo(0)+"^000000 you're back.";
-			set .@nCheckTime,checkquest(9029,PLAYTIME);
-			if ((.@nCheckTime == 0) || (.@nCheckTime == 1)) {
+			if (questprogress(9029,PLAYTIME) == 1) {
 				mes "I'm so grateful for your help.";
 				mes "Each ^006400Hydra Ball^000000 is provided ^006400every 24 hours^000000";
 				mes "Please come at the appropriate time.";
@@ -299,7 +297,7 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 			}
 			else {
 				//recall_completequest 9028;
-				if (.@nQState1 > -1) erasequest 9028;
+				if (.@nQState) erasequest 9028;
 				completequest 9029;
 				mes "Did you come here to hunt ^FF0000Strange Hydra^000000s?";
 				next;
@@ -2849,8 +2847,7 @@ OnInit:
 // Iara :: iara.sc
 //============================================================
 brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
-	set .@iara_re,checkquest(4135,PLAYTIME);
-	if ((.@iara_re == 0) || (.@iara_re == 1)) {
+	if (questprogress(4135,PLAYTIME) == 1) {
 		mes "[Anori]";
 		mes "I'm still preparing.";
 		mes "I don't require your help at this time.";
@@ -2858,9 +2855,8 @@ brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
 		close;
 	}
 	else {
-		if (checkquest(4135) > 1) erasequest 4135;
-		set .@iara_q,checkquest(4133);
-		if ((.@iara_q == 0) || (.@iara_q == 1)) {
+		if (questprogress(4135) == 2) erasequest 4135;
+		if (questprogress(4133) == 1) {
 			mes "[Anori]";
 			mes "To block Iara ";
 			mes "seducing the tribes";
@@ -2914,8 +2910,7 @@ brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
 				mes "The tribe is facing a major threat.";
 				close;
 			}
-			set .@re_q,checkquest(4134);
-			if (.@re_q == 2) {
+			if (questprogress(4134) == 2) {
 				mes "[Anori]";
 				mes "you are...";
 				mes "the adventurer who came for the";
@@ -3138,7 +3133,7 @@ bra_fild01,188,301,5	script	Native Warrior#nk	4_M_BRZ_INDIAN,{
 	mes "[Native Warrior]";
 	mes "When will she come out of the waterfall again...?";
 	next;
-	if ((checkquest(4133) >= 0) || (checkquest(4134) >= 0)) {
+	if (questprogress(4133) || questprogress(4134)) {
 		mes "[" + strcharinfo(0) + "]";
 		mes "(Wh...what's this guy?)";
 	}

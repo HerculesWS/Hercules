@@ -60,10 +60,10 @@ ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 				next;
 				break;
 			case 2:
-				set .@playtime, checkquest(4229,PLAYTIME);
-				if (.@playtime == -1) {
+				.@playtime = questprogress(4229,PLAYTIME);
+				if (!.@playtime) {
 					// fall through
-				} else if (.@playtime == 0 || .@playtime == 1) {
+				} else if (.@playtime == 1) {
 					mes "[Guard]";
 					mes "Buwaya is still hiding.";
 					mes "Even if you enter now, Buwaya will not come out. ";
@@ -118,10 +118,10 @@ OnTouch:
 		mes "This place is dangerous. Please go back.";
 		close;
 	}
-	set .@playtime, checkquest(4229,PLAYTIME);
-	if (.@playtime == -1) {
+	.@playtime = questprogress(4229,PLAYTIME);
+	if (!.@playtime) {
 		// fall through
-	} else if (.@playtime == 0 || .@playtime == 1) {
+	} else if (.@playtime == 1) {
 		mes "[Guard]";
 		mes "Buwaya is still hiding.";
 		mes "Even if you enter now, Buwaya will not come out.";

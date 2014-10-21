@@ -561,8 +561,8 @@ prt_gld,164,98,3	script	Revoting Manager#Invest2	4_M_BOSSCAT,{
 		disablenpc "Revoting Manager#Invest2";
 		end;
 	}
-	set .@playtime, checkquest(7349,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(7349,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "[Revoting Manager]";
 		mes "You've already participated in the vote.";
 		mes "Please relax and wait for the results.";

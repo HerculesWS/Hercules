@@ -1100,12 +1100,12 @@ mal_in02,179,57,1	script	Geologist Mali#mal	4_CAT_ADV1,{
 		getitem 6422,20; //Egrade_Coin
 		close;
 	} else if (ma_tomas > 99) {
-		if (checkquest(11240) > -1 || checkquest(11241) > -1) {
+		if (questprogress(11240) || questprogress(11241)) {
 			mes "[Geologist Mali]";
 			mes "Please listen to ^6666ccmy assistant, Bob^000000 in detail, mew~.";
 			mes "Get out of here and visit the ^6666cca room on your right^000000, mew~";
 			close;
-		} else if (checkquest(11242) > -1) {
+		} else if (questprogress(11242)) {
 			mes "[Geologist Mali]";
 			mes "Ah! Bob complimented you so much on your great job, mew~";
 			mes "Please help us next time again when you can, mew~";
@@ -1113,13 +1113,13 @@ mal_in02,179,57,1	script	Geologist Mali#mal	4_CAT_ADV1,{
 			getitem 6422,4; //Egrade_Coin
 			close;
 		} else {
-			if (checkquest(11243,PLAYTIME) == 0 || checkquest(11243,PLAYTIME) == 1) {
+			if (questprogress(11243,PLAYTIME) == 1) {
 				mes "[Geologist Mali]";
 				mes "Don't overdo yourself, mew~";
 				mes "It'd be bad if your health gets worse, mew~";
 				close;
 			}
-			if (checkquest(11243,PLAYTIME) == 2)
+			if (questprogress(11243,PLAYTIME) == 2)
 				erasequest 11243;
 			mes "[Geologist Mali]";
 			mes "There is a lot more repairing left to do for today!";
@@ -1292,10 +1292,10 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 		changequest 11223,11224;
 		close;
 	} else if (ma_tomas > 99) {
-		if (checkquest(11240) > -1) {
+		if (questprogress(11240)) {
 			set @mal_bob_q,2;
 			goto L_Quest1;
-		} else if (checkquest(11241) > -1)
+		} else if (questprogress(11241))
 			goto L_Quest2;
 	}
 	mes "[Bob]";
@@ -1307,7 +1307,7 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 
 -	script	Crack#mal0	-1,{
 	if (.off) end;	// Official script uses a 1-second timer to disable cracks. Added to prevent abuse.
-	if (ma_tomas == 15 || checkquest(11241) > -1) {
+	if (ma_tomas == 15 || questprogress(11241)) {
 		if (countitem(6434) < 1) {
 			mes "- To repair the crack -";
 			mes "- you need a Fix Kit. -";
@@ -1363,7 +1363,7 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 							set ma_tomas,16;
 							changequest 11222,11223;
 						}
-						if (checkquest(11241) > -1) {
+						if (questprogress(11241)) {
 							changequest 11241,11242;
 						}
 					} else {
@@ -1805,7 +1805,7 @@ mal_in01,114,169,5	script	Rican#mal	4_CAT_SAILOR4,{
 		mes "If you see my son, please tell him to get back soon~";
 		close;
 	} else if (ma_tomas > 99) {
-		if (checkquest(11238) != -1) {
+		if (questprogress(11238)) {
 			if (countitem(6435) < 30) {
 				mes "[Rican]";
 				mes "You need exactly 30 to get a set!";
@@ -1819,13 +1819,13 @@ mal_in01,114,169,5	script	Rican#mal	4_CAT_SAILOR4,{
 			setquest 11239;
 			getitem 6422,5; //Egrade_Coin
 			close;
-		} else if (checkquest(11239,PLAYTIME) == 0 || checkquest(11239,PLAYTIME) == 1) {
+		} else if (questprogress(11239,PLAYTIME) == 1) {
 			mes "[Rican]";
 			mes "Would you like to take a rest for a while?";
 			mes "It hasn't been a day yet since you last worked~";
 			close;
 		} else {
-			if (checkquest(11239,PLAYTIME) == 2)
+			if (questprogress(11239,PLAYTIME) == 2)
 				erasequest 11239;
 			mes "[Rican]";
 			mes "Hehe~";
@@ -1900,7 +1900,7 @@ mal_in01,116,168,0	script	Dry Machine#mal	2_SLOT_MACHINE,{
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
-	if (ma_tomas == 9 || checkquest(11238) > -1) {
+	if (ma_tomas == 9 || questprogress(11238)) {
 		if (rand(1,5) == 4) {
 			mes "- As I put my hand in the sand -";
 			mes "- a fresh smell comes out. -";
@@ -2385,15 +2385,15 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 		getitem 12636,20; //Malang_Sp_Can
 		close;
 	} else if (ma_tomas > 99) {
-		if (checkquest(11244) > -1) {
+		if (questprogress(11244)) {
 			set @mal_bob_q,2;
 			goto L_Quest;
-		} else if (checkquest(11245,PLAYTIME) == 0 || checkquest(11245,PLAYTIME) == 1) {
+		} else if (questprogress(11245,PLAYTIME) == 1) {
 			mes "[Biscuit]";
 			mes "I'll call you when I need you, so don't worry!";
 			close;
 		} else {
-			if (checkquest(11245,PLAYTIME) == 2)
+			if (questprogress(11245,PLAYTIME) == 2)
 				erasequest 11245;
 			mes "[Biscuit]";
 			mes "It's the time for Star Candy to have a meal.";
@@ -2890,7 +2890,7 @@ malangdo,175,206,3	script	Gobonge#ml	4_CAT_SAILOR5,{
 		mes "- Can't go next step due to having too many items. -";
 		close;
 	}
-	if (checkquest(1152,PLAYTIME) == 0) {
+	if (!questprogress(1152,PLAYTIME)) {
 		mes "[Gobonge]";
 		mes "Hmm, investigation is not enough.";
 		mes "We need go back to basic point.";
@@ -2898,10 +2898,10 @@ malangdo,175,206,3	script	Gobonge#ml	4_CAT_SAILOR5,{
 		mes "I might be in pain of stomach";
 		mes "like usual.";
 		close;
-	} else if (checkquest(1152,PLAYTIME) == 1) {
+	} else if (questprogress(1152,PLAYTIME) == 1) {
 		erasequest 1152;
 		set malang_bad_guys,0;
-	} else if (checkquest(1152,PLAYTIME) == 2) {
+	} else if (questprogress(1152,PLAYTIME) == 2) {
 		completequest 1152;
 		erasequest 1152;
 		set malang_bad_guys,0;
@@ -3451,7 +3451,7 @@ malangdo,125,147,3	script	Patrol Leader#ml	4_CAT_SAILOR2,{
 			close;
 		}
 	} else if (malang_bad_guys == 11) {
-		if (checkquest(1154,HUNTING) == 2) {
+		if (questprogress(1154,HUNTING) == 2) {
 			mes "[Patrol Leader]";
 			mes "Wow, you did to ^0000FFRed Eruma^000000 so badly!";
 			mes "I am impressed at your work.";
@@ -3654,7 +3654,7 @@ mal_in02,76,63,7	script	Cleanyang	4_CAT_SAILOR1,{
 			close;
 		}
 	} else if (mal_qook == 1) {
-		if (checkquest(7261) != -1 && checkquest(7262) != -1 && checkquest(7263) != -1) {
+		if (questprogress(7261) && questprogress(7262) && questprogress(7263)) {
 			emotion e_omg;
 			mes "[Cleanyang]";
 			mes "Uh. What is that? Meow.";
@@ -3839,14 +3839,14 @@ mal_in02,76,63,7	script	Cleanyang	4_CAT_SAILOR1,{
 	next;
 	switch(select("It's time to promise~:I'm here to see the result~:Shake your butt~")) {
 	case 1:
-		if (checkquest(7267,PLAYTIME) == 0) {
+		if (!questprogress(7267,PLAYTIME)) {
 			mes "[Cleanyang]";
 			mes "Uh? Not yet.";
 			mes "Today's cat's ship biscuit is not provided yet, so I will know that after wait little bit more.";
 			mes "It might be after chef's distribution of cat's ship biscuit.";
 			close;
 		}
-		if (checkquest(7268) != -1) {
+		if (questprogress(7268)) {
 			mes "[Cleanyang]";
 			mes "My service to you today.";
 			mes "Recently, there are 9 spot that hided cat's ship biscuit as well.";
@@ -3860,7 +3860,7 @@ mal_in02,76,63,7	script	Cleanyang	4_CAT_SAILOR1,{
 			mes "Please search the 9 spot where hiding frequently.";
 			close;
 		}
-		if (checkquest(7267,PLAYTIME) == 2)
+		if (questprogress(7267,PLAYTIME) == 2)
 			completequest 7267;
 		erasequest 7267;
 		mes "[Cleanyang]";
@@ -3884,15 +3884,15 @@ mal_in02,76,63,7	script	Cleanyang	4_CAT_SAILOR1,{
 			close;
 		}
 	case 2:
-		if (checkquest(7268) == -1) {
+		if (!questprogress(7268)) {
 			mes "[Cleanyang]";
 			mes "Um? Nobody request for collecting cat's ship biscuit today.";
 			mes "By the way, what is the result report?";
 			mes "Are you sick?";
 			close;
 		}
-		if (checkquest(7261) != -1 && checkquest(7262) != -1 && checkquest(7263) != -1 && checkquest(7269) != -1 && checkquest(7270) != -1 &&
-		    checkquest(7271) != -1 && checkquest(7272) != -1 && checkquest(7273) != -1 && checkquest(7274) != -1 && checkquest(7275) != -1) {
+		if (questprogress(7261) && questprogress(7262) && questprogress(7263) && questprogress(7269) && questprogress(7270) &&
+		    questprogress(7271) && questprogress(7272) && questprogress(7273) && questprogress(7274) && questprogress(7275)) {
 			mes "[Cleanyang]";
 			mes "Um, the rising cat's ship biscuit spot!";
 			mes "Did you collect all fully?";
@@ -3953,7 +3953,7 @@ mal_in02,29,67,0	script	#CaptainRoom3	CLEAR_NPC,{
 		close;
 	}
 	if (mal_qook == 1) {
-		if (checkquest(7261) == -1) {
+		if (!questprogress(7261)) {
 			mes "Lots of junk are piled up in a corner of captain's room.";
 			mes "Cleanyang might not clean in a corner because it is not within his hand.";
 			next;
@@ -3987,7 +3987,7 @@ mal_in02,29,67,0	script	#CaptainRoom3	CLEAR_NPC,{
 				setquest 7261;
 				getitem 11536,1; //Cat_Hard_Biscuit
 				next;
-				if (checkquest(7261) != -1 && checkquest(7262) != -1 && checkquest(7263) != -1) {
+				if (questprogress(7261) && questprogress(7262) && questprogress(7263)) {
 					mes "I guess I searched pretty enough.";
 					mes "Let's tell Cleanyang that is infested of insects due to cat's ship biscuit is left long time.";
 					close;
@@ -4000,8 +4000,8 @@ mal_in02,29,67,0	script	#CaptainRoom3	CLEAR_NPC,{
 		mes "I think it's ok now due to we removed all of them.";
 		close;
 	}
-	if (checkquest(7268) != -1) {
-		if (checkquest(7261) == -1) {
+	if (questprogress(7268)) {
+		if (!questprogress(7261)) {
 			mes "Lots of junk are piled up in a corner of captain's room.";
 			mes "Cleanyng might not clean in a corner because it is not within his hand.";
 			mes "He reached out and search under the junk.";
@@ -4031,8 +4031,8 @@ mal_in02,183,49,0	script	#MeetingFloor4	CLEAR_NPC,{
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
-	if (mal_qook == 1 || checkquest(7268) != -1) {
-		if (checkquest(7263) == -1) {
+	if (mal_qook == 1 || questprogress(7268)) {
+		if (!questprogress(7263)) {
 			mes "This is ventilation window on the floor. It is really close to Cooking table";
 			mes "I'm trying to ignore that but it is on my mind. What should I do?";
 			next;
@@ -4056,7 +4056,7 @@ mal_in02,183,49,0	script	#MeetingFloor4	CLEAR_NPC,{
 				getitem 11536,1; //Cat_Hard_Biscuit
 				if (mal_qook == 1) {
 					next;
-					if (checkquest(7261) != -1 && checkquest(7262) != -1 && checkquest(7263) != -1) {
+					if (questprogress(7261) && questprogress(7262) && questprogress(7263)) {
 						mes "I guess I searched pretty enough.";
 						mes "Let's tell Cleanyang that is infested of insects due to cat's ship biscuit is left long time.";
 					} else
@@ -4078,8 +4078,8 @@ mal_in02,103,22,0	script	#MalBed5	CLEAR_NPC,{
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
-	if (mal_qook == 1 || checkquest(7268) != -1) {
-		if (checkquest(7262) == -1) {
+	if (mal_qook == 1 || questprogress(7268)) {
+		if (!questprogress(7262)) {
 			mes "This is bed for sailors. There is too much hair and so messy.";
 			mes "At the corner of under the bed is does not reached hand so I'm thinking too much about that.";
 			next;
@@ -4096,7 +4096,7 @@ mal_in02,103,22,0	script	#MalBed5	CLEAR_NPC,{
 				getitem 11536,1; //Cat_Hard_Biscuit
 				if (mal_qook == 1) {
 					next;
-					if (checkquest(7261) != -1 && checkquest(7262) != -1 && checkquest(7263) != -1) {
+					if (questprogress(7261) && questprogress(7262) && questprogress(7263)) {
 						mes "I guess I searched pretty enough.";
 						mes "Let's tell Cleanyang that is infested of insects due to cat's ship biscuit is left long time.";
 					} else
@@ -4123,8 +4123,8 @@ malangdo,141,178,0	script	#Darkweed6	CLEAR_NPC,{
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
-	if (checkquest(7268) != -1) {
-		if (checkquest(7269) == -1) {
+	if (questprogress(7268)) {
+		if (!questprogress(7269)) {
 			mes "Many weeds are growing in rest area near cat tower.";
 			mes "It's easily ignored, so it's on my mind.";
 			next;
@@ -4160,9 +4160,9 @@ malangdo,133,134,0	script	Strange Pile of Sand#7	4_SOIL,{
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
-	if (checkquest(7268) != -1) {
+	if (questprogress(7268)) {
 		set .@quest, (strnpcinfo(0) == "Strange Pile of Sand#7")?7270:7275;
-		if (checkquest(.@quest) == -1) {
+		if (!questprogress(.@quest)) {
 			mes "The pile of sand is billowed like a grave. Should be something in there.";
 			mes "According to rumors, cats have a habit to bury with sand after stool...";
 			next;
@@ -4204,8 +4204,8 @@ malangdo,232,131,0	script	#UnderStairs8	CLEAR_NPC,{
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
-	if (checkquest(7268) != -1) {
-		if (checkquest(7271) == -1) {
+	if (questprogress(7268)) {
+		if (!questprogress(7271)) {
 			mes "Some weeds are growing under the low stairs.";
 			mes "It's really hard to find something fell under the stairs..";
 			next;
@@ -4238,8 +4238,8 @@ mal_in01,74,20,0	script	#CornerTower9	CLEAR_NPC,{
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
-	if (checkquest(7268) != -1) {
-		if (checkquest(7272) == -1) {
+	if (questprogress(7268)) {
+		if (!questprogress(7272)) {
 			mes "This cat tower is for playing and resting.";
 			mes "Dust is piled up because there is gap between the foothold and ground.";
 			next;
@@ -4269,8 +4269,8 @@ mal_in01,159,225,0	script	#CornerLocker10	CLEAR_NPC,{
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
-	if (checkquest(7268) != -1) {
-		if (checkquest(7273) == -1) {
+	if (questprogress(7268)) {
+		if (!questprogress(7273)) {
 			mes "In the corner of the gap between the wall and locker that is used by cat's gamers,";
 			mes "I can see something there. It's really hard to find object if drop there.";
 			next;
@@ -4300,8 +4300,8 @@ mal_in01,24,72,0	script	#FootholdTower11	CLEAR_NPC,{
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
-	if (checkquest(7268) != -1) {
-		if (checkquest(7274) == -1) {
+	if (questprogress(7268)) {
+		if (!questprogress(7274)) {
 			mes "This cat tower is for playing and resting in Malangdo.";
 			mes "Dust is piled up because there is gap between the foothold and ground.";
 			next;
@@ -4485,7 +4485,7 @@ mal_in02,187,58,3	script	Chef Nyas	4_CAT_CHEF,{
 	next;
 	switch(select("What's today's work?:Food Delivery:Just bored...")) {
 	case 1:
-		if (checkquest(7276,PLAYTIME) == 0) {
+		if (questprogress(7276,PLAYTIME)) {
 			mes "[Chef Nyas]";
 			mes "Now, cat's ship biscuit is being baked in this oven.";
 			mes "It's all for your delivery food.";
@@ -4506,12 +4506,12 @@ mal_in02,187,58,3	script	Chef Nyas	4_CAT_CHEF,{
 			mes "Just take care of them.";
 			close;
 		}
-		if (checkquest(7276,PLAYTIME) == 2)
+		if (questprogress(7276,PLAYTIME) == 2)
 			completequest 7276;
 		mes "[Chef Nyas]";
 		mes "Here you are.";
 		mes "I need ingredients for cat's ship biscuit now. Fortunately, you are here at the right moment.";
-		if (checkquest(7276) != -1)
+		if (questprogress(7276))
 			erasequest 7276;
 		next;
 		mes "[Chef Nyas]";
@@ -4951,7 +4951,7 @@ malangdo,211,203,4	script	[Meow Team] Charo#nya_11	4_CAT_ADV2,{
 			mes "I'm really disappointed.";
 			mes "Try again~ you can make it!";
 			set nyadven02,0;
-			if (checkquest(7257) > -1)
+			if (questprogress(7257))
 				erasequest 7257;
 			close;
 		}
@@ -5291,7 +5291,7 @@ malangdo,215,201,3	script	[Meow Team] Roku#nya_10	4_CAT_DOWN,{
 					delitem 12636,1; //Malang_Sp_Can
 					getitem 6428,1; //Bravery_Card_A
 					set nyadven02,0;
-					if (checkquest(7257) > -1)
+					if (questprogress(7257))
 						erasequest 7257;
 					close;
 				case 2:
@@ -5336,7 +5336,7 @@ malangdo,215,201,3	script	[Meow Team] Roku#nya_10	4_CAT_DOWN,{
 			mes "Do you want to try again?";
 			mes "I will delete the report of the failed result.";
 		} else {
-			if (checkquest(7257,PLAYTIME) == 0 || checkquest(7257,PLAYTIME) == 1) {
+			if (questprogress(7257,PLAYTIME) == 1) {
 				mes "[Roku]";
 				mes "No, not yet.";
 				mes "Duruduru race is only once for a day.";
@@ -5347,7 +5347,7 @@ malangdo,215,201,3	script	[Meow Team] Roku#nya_10	4_CAT_DOWN,{
 			mes "I know that you will try the Duruduru race.";
 			mes "I deleted your last report.";
 		}
-		if (checkquest(7257) > -1)
+		if (questprogress(7257))
 			erasequest 7257;
 		next;
 		mes "[Roku]";
@@ -5616,7 +5616,7 @@ malangdo,175,163,0	script	Meowbell#nya_12	CLEAR_NPC,{
 	viewpoint 2,1,1,3,0xFFFFFF;
 	viewpoint 2,1,1,4,0xFFFFFF;
 	viewpoint 2,1,1,5,0xFFFFFF;
-	if (checkquest(.@quest,PLAYTIME) == 0 || checkquest(.@quest,PLAYTIME) == 1) {
+	if (questprogress(.@quest,PLAYTIME) == 1) {
 		mes "Knock Meowbell!!";
 		set nyadven02,27;
 		changequest .@quest,7257;
@@ -6000,7 +6000,7 @@ malangdo,172,178,7	script	Cat Detective#nya_14	4_CAT_ADV2,{
 		next;
 		switch(select("How's the condition of Bang?:Ignore it.")) {
 		case 1:
-			if (checkquest(7249,PLAYTIME) == 0 || checkquest(7249,PLAYTIME) == 1) {
+			if (questprogress(7249,PLAYTIME) == 1) {
 				mes "[Homnya]";
 				mes "it's so motivated but it's not the time yet.";
 				mes "Not yet even though naughty machine is noisy.";
@@ -6010,7 +6010,7 @@ malangdo,172,178,7	script	Cat Detective#nya_14	4_CAT_ADV2,{
 				mes "We also have break time.....";
 				close2;
 			} else {
-				if (checkquest(7249,PLAYTIME) == 2)
+				if (questprogress(7249,PLAYTIME) == 2)
 					erasequest 7249;
 				mes "[Homnya]";
 				mes "Can you hear how noisy this one is?";
@@ -6102,7 +6102,7 @@ malangdo,174,175,0	script	Noisy Machine#nya_13	CLEAR_NPC,{
 		mes "It looks more unstable as it spins faster.";
 		close;
 	}
-	if (checkquest(7249,PLAYTIME) == 0 || checkquest(7249,PLAYTIME) == 1) {
+	if (questprogress(7249,PLAYTIME) == 1) {
 		mes "[Homnya]";
 		mes "It's so motivated, but it's not time yet.";
 		mes "Not yet, even though the machine is so noisy.";
@@ -6308,7 +6308,7 @@ function	script	F_Mal_Picture	{
 		return 1;
 	else if (nyadven != 10)
 		return 2;
-	else if (checkquest(getarg(0)) > -1)
+	else if (questprogress(getarg(0)))
 		return 3;
 	else {
 		mes getarg(2);
@@ -6319,7 +6319,7 @@ function	script	F_Mal_Picture	{
 		setquest getarg(0);
 		getitem 6430,1; //Picture_Piece
 		next;
-		if (checkquest(7251) > -1 && checkquest(7252) > -1 && checkquest(7253) > -1 && checkquest(7254) > -1 && checkquest(7255) > -1 && checkquest(7256) > -1) {
+		if (questprogress(7251) && questprogress(7252) && questprogress(7253) && questprogress(7254) && questprogress(7255) && questprogress(7256)) {
 			mes "It looks like you can put these pieces of paintings together.";
 			mes "If I found all the pieces, I should go back to Homnya.";
 			set nyadven,11;
@@ -6686,7 +6686,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		setquest 5060;
 		close;
 	} else if (malang_gamer == 5) {
-		if (checkquest(5060,PLAYTIME) == 0 || checkquest(5060,PLAYTIME) == 1) {
+		if (questprogress(5060,PLAYTIME) == 1) {
 			mes "Cat Gamers Director seems to be in shock. Let's give him some time to calm down.";
 			close;
 		}
@@ -6731,7 +6731,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		setquest 5061;
 		close;
 	} else if (malang_gamer == 6) {
-		if (checkquest(5062) == 2 && checkquest(5063) == 2 && checkquest(5064) == 2 && checkquest(5065) == 2) {
+		if (questprogress(5062) == 2 && questprogress(5063) == 2 && questprogress(5064) == 2 && questprogress(5065) == 2) {
 			mes "[Cat Gamers Director]";
 			mes "Heh~ It seems some humans are scamming cats around this town.";
 			next;
@@ -6780,7 +6780,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		mes "I appreciate your help, "+strcharinfo(0)+". heh~";
 		close;
 	} else if (malang_gamer == 7) {
-		if (checkquest(5060,PLAYTIME) == 0 || checkquest(5060,PLAYTIME) == 1) {
+		if (questprogress(5060,PLAYTIME) == 1) {
 			mes "Cat Gamers Director seems to be in shock once again. Better give more time to calm down.";
 			close;
 		}
@@ -6847,7 +6847,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		setquest 5068;
 		close;
 	} else if (malang_gamer == 10) {
-		if (checkquest(5068,PLAYTIME) == 0 || checkquest(5068,PLAYTIME) == 1) {
+		if (questprogress(5068,PLAYTIME) == 1) {
 			mes "[Cat Gamers Director]";
 			mes "Still receiving petition letters. Heh~";
 			next;
@@ -7019,7 +7019,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			close;
 		}
 	} else if (malang_gamer == 12) {
-		if (checkquest(5069,PLAYTIME) == 0 || checkquest(5069,PLAYTIME) == 1) {
+		if (questprogress(5069,PLAYTIME) == 1) {
 			mes "[Cat Gamers Director]";
 			mes "Heh~ You want to get the '^0000FFCat Gamers Certificate^000000' faster. Heh~ It's not really easy to get such a certificate easily.";
 			next;
@@ -7133,10 +7133,10 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 
 	// Detect quest (ID range 5074~5090)
 	mes "[Cat Gamers Director]";
-	if (checkquest(5074,HUNTING) > -1) {
+	if (questprogress(5074,HUNTING)) {
 		mes "Heh~ It's not like I didn't feed them right... Heh~ I hope it was not too much for you, "+strcharinfo(0)+".";
 		next;
-		if (checkquest(5074,HUNTING) == 2 && countitem(1023) >= 10) {
+		if (questprogress(5074,HUNTING) == 2 && countitem(1023) >= 10) {
 			delitem 1023,10; //Fish_Tail
 			callsub L_CompleteQuest,5074,
 				"Heh~ So, you brought 30 Phens and 10 Fish Tails, just as ordered.";
@@ -7145,10 +7145,10 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			mes "Heh~ It says in the note to bring 30 Phens and 10 Fish Tails. Heh~ Maybe you didn't catch enough Phens, or forgot some Fish Tails? Heh~";
 			close;
 		}
-	} else if (checkquest(5075,HUNTING) > -1) {
+	} else if (questprogress(5075,HUNTING)) {
 		mes "Heh~ Hmm, 50 Marses, and 30 Milk Bottles... Heh~";
 		next;
-		if (checkquest(5075,HUNTING) == 2 && countitem(519) >= 30) {
+		if (questprogress(5075,HUNTING) == 2 && countitem(519) >= 30) {
 			delitem 519,30; //Milk
 			callsub L_CompleteQuest,5075,
 				"Heh~ Guess they wanted some healthy food. Heh~ They should have just told me... Let me show you my skills. Heh~";
@@ -7157,10 +7157,10 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			mes "Heh~ But, where are 50 Marses and 30 Milk Bottles? Heh~ Please see if you haven't missed them...";
 			close;
 		}
-	} else if (checkquest(5076,HUNTING) > -1) {
+	} else if (questprogress(5076,HUNTING)) {
 		mes "Heh~ Our team must have some grudge over Team 'Dog n Waltz', enough to ask you for this kind of favor...";
 		next;
-		if (checkquest(5076,HUNTING) == 2) {
+		if (questprogress(5076,HUNTING) == 2) {
 			callsub L_CompleteQuest,5076,
 				"Heh~ So you have finished harassing 30 Kobold Archers as noted. Heh~ Outstanding.";
 		} else {
@@ -7168,11 +7168,11 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			mes "Heh~ It says on the note, harass 30 Kobold Archers. Heh~ Please check if you have harassed 30 of them already.";
 			close;
 		}
-	} else if (checkquest(5077,HUNTING) > -1) {
+	} else if (questprogress(5077,HUNTING)) {
 		mes "Heh~ Ah, quickness training. It's good to see our players trying their best on training.";
 		mes "Heh~ Yes, nothing is better than mouse catching for improving quickness.";
 		next;
-		if (checkquest(5077,HUNTING) == 2) {
+		if (questprogress(5077,HUNTING) == 2) {
 			callsub L_CompleteQuest,5077,
 				"Heh~ Oh, you got some fresh and chubby Cramps. Heh~ Great.";
 		} else {
@@ -7180,10 +7180,10 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			mes "Heh? Where are those 10 Cramps you promised? Heh~ You didn't eat them... did you?";
 			close;
 		}
-	} else if (checkquest(5078,HUNTING) > -1) {
+	} else if (questprogress(5078,HUNTING)) {
 		mes "Heh~ '50 Peco Peco please!! Let's party.' Hmm... Heh~ 50 Pecos can feed all of our neighbors.";
 		next;
-		if (checkquest(5078,HUNTING) == 2) {
+		if (questprogress(5078,HUNTING) == 2) {
 			callsub L_CompleteQuest,5078,
 				"Heh~ Wow, you did bring 50 Peco Pecos. Heh~ I guess we'll really have a party this evening.";
 		} else {
@@ -7191,7 +7191,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			mes "Heh~ Where are those Peco Pecos? Still not ready? Heh~";
 			close;
 		}
-	} else if (checkquest(5079) > -1) {
+	} else if (questprogress(5079)) {
 		mes "Heh~ Hmm... let me see... Heh~ That's right, I was worrying about our team getting so nervous before the actual game... But, they won't even talk to me about it.";
 		next;
 		if (countitem(7038) >= 20) {
@@ -7203,7 +7203,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			mes "Heh~ Where are those 20 yarns? It says 20 on the note, right...? Please check if you have lost them somewhere.";
 			close;
 		}
-	} else if (checkquest(5080) > -1) {
+	} else if (questprogress(5080)) {
 		mes "Heh~ The note says, get me 30 Rat Tails for a snack.";
 		next;
 		if (countitem(1016) >= 30) {
@@ -7215,7 +7215,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			mes "Heh~ Where are those 30 Rat Tails? Please check and come back later.";
 			close;
 		}
-	} else if (checkquest(5081) > -1) {
+	} else if (questprogress(5081)) {
 		mes "Heh~ It says 5 on the note... 5 of what? What?! Lemons?";
 		next;
 		if (countitem(568) >= 5) {
@@ -7227,7 +7227,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			mes "Heh~ Let's just get 5 Lemons for them, will you? Heh~ I am still not sure where they want to use them...";
 			close;
 		}
-	} else if (checkquest(5082) > -1) {
+	} else if (questprogress(5082)) {
 		mes "Heh~ Give us 10 Ice Pieces or 10 Ice Creams!! Heh~ I personally prefer Ice Cream, just so you know.";
 		next;
 		if (countitem(7066) >= 10) {
@@ -7243,10 +7243,10 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			mes "Heh~ Where are the Ice Pieces or Ice Creams? You should get them before they melt...";
 			close;
 		}
-	} else if (checkquest(5083) > -1 || checkquest(5084) > -1) {
+	} else if (questprogress(5083) || questprogress(5084)) {
 		mes "Heh~ Here, I found the note from our team. Heh~";
 		next;
-		if (checkquest(5083) > -1) {
+		if (questprogress(5083)) {
 			mes "[Cat Gamers Director]";
 			mes "Heh~ It says 'We will meet Eryu together.'. Heh~ Have you met Eryu already? I don't think so... Heh~";
 			close;
@@ -7254,10 +7254,10 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			callsub L_CompleteQuest,5084,
 				"Heh~ Oh, you did meet Eryu. Heh~ I will lecture them later for making you work too much... Heh~";
 		}
-	} else if (checkquest(5085) > -1 || checkquest(5086) > -1) {
+	} else if (questprogress(5085) || questprogress(5086)) {
 		mes "Heh~ Here, I found the note from our team. Heh~";
 		next;
-		if (checkquest(5085) > -1) {
+		if (questprogress(5085)) {
 			mes "[Cat Gamers Director]";
 			mes "Heh~ It says 'We will meet Stew together.'. Heh~ Have you met Stew already? I don't think so... Heh~";
 			close;
@@ -7265,10 +7265,10 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			callsub L_CompleteQuest,5086,
 				"Heh~ Oh, you did meet Stew. Heh~ I will lecture them later for making you work too much... Heh~";
 		}
-	} else if (checkquest(5087) > -1 || checkquest(5088) > -1) {
+	} else if (questprogress(5087) || questprogress(5088)) {
 		mes "Heh~ Here, I found the note from our team. Heh~";
 		next;
-		if (checkquest(5087) > -1) {
+		if (questprogress(5087)) {
 			mes "[Cat Gamers Director]";
 			mes "Heh~ It says 'We will meet Ketchup together.'. Heh~ Have you met Ketchup already? I don't think so... Heh~";
 			close;
@@ -7276,10 +7276,10 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			callsub L_CompleteQuest,5088,
 				"Heh~ Oh, you did meet Ketchup. Heh~ I will lecture them later for making you work too much... Heh~";
 		}
-	} else if (checkquest(5089) > -1 || checkquest(5090) > -1) {
+	} else if (questprogress(5089) || questprogress(5090)) {
 		mes "Heh~ Here, I found the note from our team. Heh~";
 		next;
-		if (checkquest(5089) > -1) {
+		if (questprogress(5089)) {
 			mes "[Cat Gamers Director]";
 			mes "Heh~ It says 'We will meet Eff together.'. Heh~ Have you met Eff already? I don't think so... Heh~";
 			close;
@@ -7606,8 +7606,8 @@ malangdo,161,197,4	script	Eryu#gamer	4_CAT,{
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
-	if (checkquest(5061) == 0 || checkquest(5061) == 1) {
-		if (checkquest(5062) == -1) {
+	if (questprogress(5061) == 1) {
+		if (!questprogress(5062)) {
 			mes "You found Eryu the cat, and start talking.";
 			next;
 			mes "[Eryu]";
@@ -7719,7 +7719,7 @@ malangdo,161,197,4	script	Eryu#gamer	4_CAT,{
 				break;
 			}
 			close2;
-		} else if (checkquest(5062) == 2) {
+		} else if (questprogress(5062) == 2) {
 			mes "[Eryu]";
 			mes "Aren't you the magazine writer?";
 			mes "What brings you here again...?";
@@ -7739,7 +7739,7 @@ malangdo,161,197,4	script	Eryu#gamer	4_CAT,{
 			mes "This is not possible. Please contact an administrator.";
 			close2;
 		}
-	} else if (checkquest(5083) == 0 || checkquest(5083) == 1) {
+	} else if (questprogress(5083) == 1) {
 		mes "[Eryu]";
 		mes "Who are you?";
 		next;
@@ -7763,7 +7763,7 @@ malangdo,161,197,4	script	Eryu#gamer	4_CAT,{
 		mes "Eryu seems to recognize you.";
 		mes .@str$;
 		close2;
-	} else if (checkquest(5084) == 0 || checkquest(5084) == 1) {
+	} else if (questprogress(5084) == 1) {
 		mes "[Eryu]";
 		mes "I think you are the writer...";
 		mes "Hey~ Stop there~";
@@ -7822,8 +7822,8 @@ malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
-	if (checkquest(5061) == 0 || checkquest(5061) == 1) {
-		if (checkquest(5063) == -1) {
+	if (questprogress(5061) == 1) {
+		if (!questprogress(5063)) {
 			mes "You found Stew the cat, and start talking.";
 			next;
 			mes "[Stew]";
@@ -7948,7 +7948,7 @@ malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 				break;
 			}
 			close2;
-		} else if (checkquest(5063) == 2) {
+		} else if (questprogress(5063) == 2) {
 			mes "[Stew]";
 			mes "Aren't you from the 'Boom Can' Company?";
 			mes "Another survey meow?";
@@ -7967,7 +7967,7 @@ malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 			mes "This is not possible. Please contact an administrator.";
 			close2;
 		}
-	} else if (checkquest(5085) == 0 || checkquest(5085) == 1) {
+	} else if (questprogress(5085) == 1) {
 		mes "[Stew]";
 		mes "Who are you meow?";
 		emotion e_what;
@@ -7992,7 +7992,7 @@ malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 		mes "Stew seems to recognize you.";
 		mes .@str$;
 		close2;
-	} else if (checkquest(5086) == 0 || checkquest(5086) == 1) {
+	} else if (questprogress(5086) == 1) {
 		mes "[Stew]";
 		mes "I think you are from the 'Boom Can' Company, meow... Who are you, meow~";
 		next;
@@ -8051,8 +8051,8 @@ malangdo,244,144,4	script	Ketchup#gamer	4_CAT_SAILOR3,{
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
-	if (checkquest(5061) == 0 || checkquest(5061) == 1) {
-		if (checkquest(5064) == -1) {
+	if (questprogress(5061) == 1) {
+		if (!questprogress(5064)) {
 			mes "You found Ketchup the cat, and start talking.";
 			next;
 			mes "[Ketchup]";
@@ -8136,7 +8136,7 @@ malangdo,244,144,4	script	Ketchup#gamer	4_CAT_SAILOR3,{
 				break;
 			}
 			close2;
-		} else if (checkquest(5064) == 2) {
+		} else if (questprogress(5064) == 2) {
 			mes "[Ketchup]";
 			mes "You are...";
 			emotion e_omg;
@@ -8149,7 +8149,7 @@ malangdo,244,144,4	script	Ketchup#gamer	4_CAT_SAILOR3,{
 			mes "This is not possible. Please contact an administrator.";
 			close2;
 		}
-	} else if (checkquest(5087) == 0 || checkquest(5087) == 1) {
+	} else if (questprogress(5087) == 1) {
 		mes "[Ketchup]";
 		mes "Who are you?";
 		emotion e_what;
@@ -8182,7 +8182,7 @@ malangdo,244,144,4	script	Ketchup#gamer	4_CAT_SAILOR3,{
 			mes "It seems you need to find Ketchup one more time.";
 			close2;
 		}
-	} else if (checkquest(5088) == 0 || checkquest(5088) == 1) {
+	} else if (questprogress(5088) == 1) {
 		mes "[Ketchup]";
 		mes "Can... 'Cans for Kittens'?";
 		emotion e_omg;
@@ -8240,8 +8240,8 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
-	if (checkquest(5061) == 0 || checkquest(5061) == 1) {
-		if (checkquest(5065) == -1) {
+	if (questprogress(5061) == 1) {
+		if (!questprogress(5065)) {
 			mes "You found Eff the cat, and start talking.";
 			next;
 			mes "[Eff]";
@@ -8395,7 +8395,7 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 				break;
 			}
 			close2;
-		} else if (checkquest(5065) == 2) {
+		} else if (questprogress(5065) == 2) {
 			mes "[Eff]";
 			mes "You are--!!";
 			mes "Meow~ I want to invest. Meow~";
@@ -8417,7 +8417,7 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 			mes "This is not possible. Please contact an administrator.";
 			close2;
 		}
-	} else if (checkquest(5089) == 0 || checkquest(5089) == 1) {
+	} else if (questprogress(5089) == 1) {
 		mes "[Eff]";
 		mes "Who are you, meow?";
 		next;
@@ -8440,7 +8440,7 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 		mes "Eff seems to recognize you.";
 		mes .@str$;
 		close2;
-	} else if (checkquest(5090) == 0 || checkquest(5090) == 1) {
+	} else if (questprogress(5090) == 1) {
 		mes "[Eff]";
 		mes "You are--!!";
 		mes "Meow~ I want to invest. Meow~";
@@ -8502,7 +8502,7 @@ mal_in01,91,216,4	script	Ser#gamer	4_CAT_SAILOR1,{
 		close;
 	}
 	for(set .@i,5074; .@i<=5090; set .@i,.@i+1) {
-		if (checkquest(.@i) > -1) {
+		if (questprogress(.@i)) {
 			mes "[Ser]";
 			mes "Hey, ^0000FF"+strcharinfo(0)+"^000000. You haven't done what we asked you for. A promise is a promise, you know.";
 			next;
@@ -8535,11 +8535,11 @@ mal_in01,91,216,4	script	Ser#gamer	4_CAT_SAILOR1,{
 		mes "Please go get the certificate.";
 		close;
 	}
-	if (checkquest(5070,PLAYTIME) == 0 || checkquest(5070,PLAYTIME) == 1) {
+	if (questprogress(5070,PLAYTIME) == 1) {
 		mes "[Ser]";
 		mes "Is it tomorrow already? I don't think so! Can't you read the time?";
 		close;
-	} else if (checkquest(5070,PLAYTIME) == 2)
+	} else if (questprogress(5070,PLAYTIME) == 2)
 		erasequest 5070;
 	mes "[Ser]";
 	mes "Oh, ^0000FF"+strcharinfo(0)+"^000000? Want to play the Rock Paper Scissors game?";
@@ -8846,7 +8846,7 @@ mal_in01,86,222,4	script	Paa#gamer	4_CAT_SAILOR1,{
 		close;
 	}
 	for(set .@i,5074; .@i<=5090; set .@i,.@i+1) {
-		if (checkquest(.@i) > -1) {
+		if (questprogress(.@i)) {
 			mes "[Paa]";
 			mes "You haven't done what we asked you for meow. A promise is a promise, you know meow.";
 			next;
@@ -8879,11 +8879,11 @@ mal_in01,86,222,4	script	Paa#gamer	4_CAT_SAILOR1,{
 		mes "Go get the certificate meow.";
 		close;
 	}
-	if (checkquest(5070,PLAYTIME) == 0 || checkquest(5070,PLAYTIME) == 1) {
+	if (questprogress(5070,PLAYTIME) == 1) {
 		mes "[Paa]";
 		mes "We can only play the game once a day meow. Come tomorrow meow.";
 		close;
-	} else if (checkquest(5070,PLAYTIME) == 2)
+	} else if (questprogress(5070,PLAYTIME) == 2)
 		erasequest 5070;
 	mes "[Paa]";
 	mes "Oh, ^0000FF"+strcharinfo(0)+"^000000 meow? Want to play the Rock Paper Scissors game meow?";
@@ -9176,7 +9176,7 @@ mal_in01,91,222,4	script	Kuka#gamer	4_M_BABYCAT,{
 		close;
 	}
 	for(set .@i,5074; .@i<=5090; set .@i,.@i+1) {
-		if (checkquest(.@i) > -1) {
+		if (questprogress(.@i)) {
 			mes "[Kuka]";
 			mes "You haven't done what we asked you for yo~. A promise is a promise, you know yo~.";
 			next;
@@ -9209,11 +9209,11 @@ mal_in01,91,222,4	script	Kuka#gamer	4_M_BABYCAT,{
 		mes "Please go get the certificate yo~";
 		close;
 	}
-	if (checkquest(5071,PLAYTIME) == 0 || checkquest(5071,PLAYTIME) == 1) {
+	if (questprogress(5071,PLAYTIME) == 1) {
 		mes "[Kuka]";
 		mes "Is it not tomorrow yet yo~ You can play one game a day yo~ Come back tomorrow yo~";
 		close;
-	} else if (checkquest(5071,PLAYTIME) == 2)
+	} else if (questprogress(5071,PLAYTIME) == 2)
 		erasequest 5071;
 	mes "[Kuka]";
 	mes "Oh great member you, ^0000FF"+strcharinfo(0)+"^000000~ Let's play ChamChamCham yo~";
@@ -9498,7 +9498,7 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 		close;
 	}
 	for(set .@i,5074; .@i<=5090; set .@i,.@i+1) {
-		if (checkquest(.@i) > -1) {
+		if (questprogress(.@i)) {
 			mes "[KungKung]";
 			mes "You didn't keep your promise. I have no business with you.";
 			close;
@@ -9525,11 +9525,11 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 		mes "Where is your certificate? You cannot practice with us unless you have that certificate. Go get it.";
 		close;
 	}
-	if (checkquest(5072,PLAYTIME) == 0 || checkquest(5072,PLAYTIME) == 1) {
+	if (questprogress(5072,PLAYTIME) == 1) {
 		mes "[KungKung]";
 		mes "You don't have a watch? Or can't read the time? It's not the time yet.";
 		close;
-	} else if (checkquest(5072,PLAYTIME) == 2)
+	} else if (questprogress(5072,PLAYTIME) == 2)
 		erasequest 5072;
 	mes "[KungKung]";
 	mes "Are you the practice partner? You are late. Let's start right away.";
@@ -9916,7 +9916,7 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 		close;
 	}
 	for(set .@i,5074; .@i<=5090; set .@i,.@i+1) {
-		if (checkquest(.@i) > -1) {
+		if (questprogress(.@i)) {
 			mes "[Leader]";
 			mes "You cannot challenge this Flag Game unless you are done with your assigned work.";
 			close;
@@ -9943,11 +9943,11 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 		mes "You cannot challenge this Flag Game unless you are wearing our certificate item. Please come back later.";
 		close;
 	}
-	if (checkquest(5073) == 0 || checkquest(5073) == 1) {
+	if (questprogress(5073) == 1) {
 		mes "[Leader]";
 		mes "The Flag Game is only available once a day.";
 		close;
-	} else if (checkquest(5073) == 2)
+	} else if (questprogress(5073) == 2)
 		erasequest 5073;
 	mes "[Leader]";
 	mes "Do you want to challege?";
@@ -10446,8 +10446,8 @@ mal_in01,142,220,6	script	Sign#Cat G B2	4_BULLETIN_BOARD2,{
 }
 
 mal_in01,155,222,2	script	Uneet#gamer	4_LAM,{
-	set .@playtime, checkquest(5069,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@playtime = questprogress(5069,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "[Uneet]";
 		mes "Wow Wot~ What a busy day~";
 		mes "Oh, you are the one who won the honorable certificate?";
