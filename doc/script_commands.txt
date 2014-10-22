@@ -3819,8 +3819,59 @@ falcon and 0 if they don't.
 
 ---------------------------------------
 
+*setmount {<flag>};
+*checkmount()
+
+If <flag> is MOUNT_NONE (or 0) this command will remove the mount from the
+character.
+
+Otherwise it gives the invoking character the desired combat mount, where
+allowed by their class and skills.
+
+If no flag is specified, the mount is automatically chosen according to the
+character's class and skills.
+
+The following flag values are accepted:
+
+    MOUNT_NONE:
+        - Dismount
+    MOUNT_PECO:
+        - PecoPeco (Knight series class)
+        - GrandPeco (Crusader series class)
+        - Gryphon (Royal Guard)
+    MOUNT_WUG:
+        - Warg (Ranger)
+    MOUNT_MADO:
+        - Mado Gear (Mechanic)
+    MOUNT_DRAGON:
+    MOUNT_DRAGON_GREEN:
+    MOUNT_DRAGON_BROWN:
+    MOUNT_DRAGON_GRAY:
+    MOUNT_DRAGON_BLUE:
+    MOUNT_DRAGON_RED:
+        - Dragon (Rune Knight)
+          if MOUNT_DRAGON is specified, a the default (green) dragon will be used.
+
+Unlike 'setfalcon' and 'setcart' this will not work at all if they aren't of a 
+class which can ride a mount.
+
+The accompanying function will return 0 if the invoking character is not on a
+mount, and a non-zero value (according to the above constants) if they are.
+Note: in case of dragons, the returned value will always be MOUNT_DRAGON,
+regardless of color.
+
+	if (checkmount())
+		mes "Leave your mount outside! No riding mounts on the floor here!";
+
+	if (checkmount() == MOUNT_DRAGON)
+		mes "Wow, your dragon is cool! Can I pet it?";
+
+---------------------------------------
+
 *setriding {<flag>};
 *checkriding()
+
+[ DEPRECATED - Please use setmount / checkmount]
 
 If <flag> is 0 this command will remove the mount from the character.
 Otherwise it gives the invoking character a PecoPeco (if they are a Knight 
@@ -3838,6 +3889,8 @@ riding a bird and 0 if they aren't.
 
 *setdragon {<color>};
 *checkdragon()
+
+[ DEPRECATED - Please use setmount / checkmount]
 
 The 'setdragon' function toggles mounting a dragon for the invoking 
 character. It will return 1 if successful, 0 otherwise.
@@ -3859,6 +3912,8 @@ riding a dragon and 0 if they aren't.
 
 *setmadogear {<flag>};
 *checkmadogear()
+
+[ DEPRECATED - Please use setmount / checkmount]
 
 If <flag> is 0 this command will remove the mount from the character.
 Otherwise it gives the invoking character a Mado (if they are a Mechanic).

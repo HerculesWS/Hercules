@@ -8711,6 +8711,137 @@ BUILDIN(setriding)
 	return true;
 }
 
+enum setmount_type {
+	SETMOUNT_TYPE_AUTODETECT   = -1,
+	SETMOUNT_TYPE_NONE         = 0,
+	SETMOUNT_TYPE_PECO         = 1,
+	SETMOUNT_TYPE_WUG          = 2,
+	SETMOUNT_TYPE_MADO         = 3,
+	SETMOUNT_TYPE_DRAGON_GREEN = 4,
+	SETMOUNT_TYPE_DRAGON_BROWN = 5,
+	SETMOUNT_TYPE_DRAGON_GRAY  = 6,
+	SETMOUNT_TYPE_DRAGON_BLUE  = 7,
+	SETMOUNT_TYPE_DRAGON_RED   = 8,
+	SETMOUNT_TYPE_MAX,
+	SETMOUNT_TYPE_DRAGON       = SETMOUNT_TYPE_DRAGON_GREEN,
+};
+
+/**
+ * Checks if the player is riding a combat mount.
+ *
+ * Returns 0 if the player isn't riding, and non-zero if it is.
+ * The exact returned values are the same used as flag in setmount, except for
+ * dragons, where SETMOUNT_TYPE_DRAGON is returned, regardless of color.
+ */
+BUILDIN(checkmount)
+{
+	TBL_PC* sd;
+
+	sd = script->rid2sd(st);
+	if (sd == NULL)
+		return true; // no player attached, report source
+
+	if (!pc_hasmount(sd)) {
+		script_pushint(st, SETMOUNT_TYPE_NONE);
+	} else if (pc_isridingpeco(sd)) {
+		script_pushint(st, SETMOUNT_TYPE_PECO);
+	} else if (pc_isridingwug(sd)) {
+		script_pushint(st, SETMOUNT_TYPE_WUG);
+	} else if (pc_ismadogear(sd)) {
+		script_pushint(st, SETMOUNT_TYPE_MADO);
+	} else { // if (pc_isridingdragon(sd))
+		script_pushint(st, SETMOUNT_TYPE_DRAGON);
+	}
+
+	return true;
+}
+
+/**
+ * Mounts or dismounts a combat mount.
+ *
+ * setmount <flag>;
+ * setmount;
+ *
+ * Accepted values for flag:
+ * MOUNT_NONE         - dismount
+ * MOUNT_PECO         - Peco Peco / Grand Peco / Gryphon (depending on the class)
+ * MOUNT_WUG          - Wug (Rider)
+ * MOUNT_MADO         - Mado Gear
+ * MOUNT_DRAGON       - Dragon (default color)
+ * MOUNT_DRAGON_GREEN - Green Dragon
+ * MOUNT_DRAGON_BROWN - Brown Dragon
+ * MOUNT_DRAGON_GRAY  - Gray Dragon
+ * MOUNT_DRAGON_BLUE  - Blue Dragon
+ * MOUNT_DRAGON_RED   - Red Dragon
+ *
+ * If an invalid value or no flag is specified, the appropriate mount is
+ * auto-detected. As a result of this, there is no need to specify a flag at
+ * all, unless it is a dragon color other than green.
+ */
+BUILDIN(setmount)
+{
+	int flag = SETMOUNT_TYPE_AUTODETECT;
+	TBL_PC* sd;
+
+	sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return true;// no player attached, report source
+
+	if (script_hasdata(st,2))
+		flag = script_getnum(st,2);
+
+	// Color variants for Rune Knight dragon mounts.
+	if (flag != SETMOUNT_TYPE_NONE) {
+		if (flag < SETMOUNT_TYPE_AUTODETECT || flag >= SETMOUNT_TYPE_MAX) {
+			ShowWarning("script_setmount: Unknown flag %d specified. Using auto-detected value.\n", flag);
+			flag = SETMOUNT_TYPE_AUTODETECT;
+		}
+		// Sanity checks and auto-detection
+		if ((sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT) {
+			if (pc->checkskill(sd, RK_DRAGONTRAINING)) {
+				// Rune Knight (Dragon)
+				unsigned int option;
+				option = ( flag == SETMOUNT_TYPE_DRAGON_GREEN ? OPTION_DRAGON1 :
+				           flag == SETMOUNT_TYPE_DRAGON_BROWN ? OPTION_DRAGON2 :
+				           flag == SETMOUNT_TYPE_DRAGON_GRAY ? OPTION_DRAGON3 :
+				           flag == SETMOUNT_TYPE_DRAGON_RED ? OPTION_DRAGON4 :
+				           flag == SETMOUNT_TYPE_DRAGON_RED ? OPTION_DRAGON5 :
+				           OPTION_DRAGON1); // default value
+				pc->setridingdragon(sd, option);
+		} else if ((sd->class_&MAPID_THIRDMASK) == MAPID_RANGER) {
+			// Ranger (Warg)
+			if (pc->checkskill(sd, RA_WUGRIDER))
+				pc->setridingwug(sd, true);
+		} else if ((sd->class_&MAPID_THIRDMASK) == MAPID_MECHANIC) {
+			// Mechanic (Mado Gear)
+			if (pc->checkskill(sd, NC_MADOLICENCE))
+				pc->setmadogear(sd, true);
+		} else if (flag != SETMOUNT_TYPE_PECO)
+			flag = SETMOUNT_TYPE_PECO;
+		} else {
+			// Knight / Crusader (Peco Peco)
+			if (pc->checkskill(sd, KN_RIDING))
+				pc->setridingpeco(sd, true);
+		}
+	} else if (pc_hasmount(sd)) {
+		if (pc_isridingdragon(sd)) {
+			pc->setridingdragon(sd, 0);
+		}
+		if (pc_isridingwug(sd)) {
+			pc->setridingwug(sd, false);
+		}
+		if (pc_ismadogear(sd)) {
+			pc->setmadogear(sd, false);
+		}
+		if (pc_isridingpeco(sd)) {
+			pc->setridingpeco(sd, false);
+		}
+	}
+
+	return true;
+}
+
 /// Returns if the player has a warg.
 ///
 /// checkwug() -> <bool>
@@ -18981,6 +19112,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(checkfalcon,""),
 		BUILDIN_DEF(setriding,"?"),
 		BUILDIN_DEF(checkriding,""),
+		BUILDIN_DEF(setmount,"?"),
+		BUILDIN_DEF(checkmount,""),
 		BUILDIN_DEF(checkwug,""),
 		BUILDIN_DEF(checkmadogear,""),
 		BUILDIN_DEF(setmadogear,"?"),
