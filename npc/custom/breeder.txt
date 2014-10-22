@@ -41,7 +41,8 @@ prontera,124,201,1	script	Universal Rental NPC	4_F_JOB_BLACKSMITH,{
 	else if (!checkcart() && getskilllv("MC_PUSHCART")) setcart;
 	else if (!checkfalcon() && getskilllv("HT_FALCON") && !checkoption(Option_Wug) && !checkoption(Option_Wugrider)) setfalcon;
 	else if (!checkriding() && getskilllv("KN_RIDING")) {
-		if ((eaclass()&EAJ_THIRDMASK) == EAJ_RUNE_KNIGHT) setdragon;
+		if ((eaclass()&EAJ_THIRDMASK) == EAJ_RUNE_KNIGHT)
+			setmount(MOUNT_DRAGON);
 		else setriding;
 	} else if (checkmount() != MOUNT_MADO && getskilllv(NC_MADOLICENCE)) {
 		setmount(MOUNT_MADO);

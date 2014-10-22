@@ -21,8 +21,8 @@ job3_rune01,88,62,5	script	Dragon Breeder	8W_SOLDIER,{
 		next;
 		switch(select("Yes:No")) {
 		case 1:
-			//if (!getskilllv("RK_DRAGONTRAINING")) {
-			if (!getskilllv("KN_RIDING")) {
+			//if (!getskilllv(RK_DRAGONTRAINING)) {
+			if (!getskilllv(KN_RIDING)) {
 				mes "[Dragon Breeder]";
 				mes "Please learn how to ride a Dragon first.";
 				close;
@@ -36,7 +36,7 @@ job3_rune01,88,62,5	script	Dragon Breeder	8W_SOLDIER,{
 				mes "Please remove your cash mount.";
 				close;
 			}
-			setdragon;
+			setmount(MOUNT_DRAGON);
 			close;
 		case 2:
 			mes "[Dragon Breeder]";
@@ -58,8 +58,8 @@ prontera,130,213,5	script	Riding Creature Master	8W_SOLDIER,{
 		next;
 		switch(select("Yes:No")) {
 		case 1:
-			//if (!getskilllv("RK_DRAGONTRAINING")) {
-			if (!getskilllv("KN_RIDING")) {
+			//if (!getskilllv(RK_DRAGONTRAINING)) {
+			if (!getskilllv(KN_RIDING)) {
 				mes "[Riding Creature Master]";
 				mes "Please learn how to ride a Dragon first.";
 				close;
@@ -73,7 +73,7 @@ prontera,130,213,5	script	Riding Creature Master	8W_SOLDIER,{
 				mes "Please remove your cash mount.";
 				close;
 			}
-			setdragon;
+			setmount(MOUNT_DRAGON);
 			close;
 		case 2:
 			mes "[Riding Creature Master]";

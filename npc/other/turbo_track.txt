@@ -4629,7 +4629,7 @@ OnTouch:
 				getitem 7310,1; //Free_Peco_Ticket
 			} else {
 				if (BaseJob == Job_Knight)
-					setdragon 0;
+					setmount(MOUNT_NONE);
 				else
 					setriding 0;
 			}
@@ -4716,7 +4716,7 @@ alde_gld,186,199,3	script	Turbo Track Guide#Entran	4_F_RACING,{
 				set .@mount$,"Dragon";
 				set .@skill,63;
 				set .@skill$,"Dragon Training";
-				set .@riding, checkdragon();
+				set .@riding, checkmount() == MOUNT_DRAGON ? true : false; // FIXME
 				set .@i,2;
 			} else {
 				set .@mount$,"Gryphon";
@@ -4782,7 +4782,7 @@ alde_gld,186,199,3	script	Turbo Track Guide#Entran	4_F_RACING,{
 				}
 				switch(.@i) {
 					case 1: setriding; break;
-					case 2: setdragon; break;
+					case 2: setmount(MOUNT_DRAGON); break;
 					case 3: setmount(MOUNT_MADO); break;
 				}
 				mes .@n$;

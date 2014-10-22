@@ -19396,8 +19396,8 @@ void script_parse_builtin(void) {
 		 * 3rd-related
 		 **/
 		BUILDIN_DEF(makerune,"i"),
-		BUILDIN_DEF(checkdragon,""),//[Ind]
-		BUILDIN_DEF(setdragon,"?"),//[Ind]
+		BUILDIN_DEF_DEPRECATED(checkdragon,""), // Deprecated 2014-10-30 [Haru]
+		BUILDIN_DEF_DEPRECATED(setdragon,"?"), // Deprecated 2014-10-30 [Haru]
 		BUILDIN_DEF(hascashmount,""),//[Ind]
 		BUILDIN_DEF(setcashmount,""),//[Ind]
 		BUILDIN_DEF(checkre,"i"),
