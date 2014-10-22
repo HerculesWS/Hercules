@@ -3324,8 +3324,8 @@ int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const c
 	struct event_data* ev = (struct event_data*)strdb_get(npc->ev_db, eventname);
 	struct npc_data *nd;
 	struct script_state *st;
-	int i = 0, j = 0, k = 0;
-	char *temp;
+	int i = 0, nargs = 0;
+	size_t len;
 
 	nullpo_ret(sd);
 
@@ -3353,27 +3353,29 @@ int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const c
 	st = script->alloc_state(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
 	script->setd_sub(st, NULL, ".@atcmd_command$", 0, (void *)command, NULL);
 
-	// split atcmd parameters based on spaces
-	temp = (char*)aMalloc(strlen(message) + 1);
-
-	for( i = 0; i < ( strlen( message ) + 1 ) && k < 127; i ++ ) {
-		if( message[i] == ' ' || message[i] == '\0' ) {
-			if( message[ ( i - 1 ) ] == ' ' ) {
-				continue; // To prevent "@atcmd [space][space]" and .@atcmd_numparameters return 1 without any parameter.
-			}
-			temp[k] = '\0';
-			k = 0;
-			if( temp[0] != '\0' ) {
-				script->setd_sub( st, NULL, ".@atcmd_parameters$", j++, (void *)temp, NULL );
-			}
-		} else {
-			temp[k] = message[i];
-			k++;
+	len = strlen(message);
+	if (len) {
+		char *temp, *p;
+		p = temp = aStrdup(message);
+		// Sanity check - Skip leading spaces (shouldn't happen)
+		while (i <= len && temp[i] == ' ') {
+			p++;
+			i++;
 		}
+		// split atcmd parameters based on spaces
+		while (i <= len) {
+			if (temp[i] != ' ' && temp[i] != '\0') {
+				i++;
+				continue;
+			}
+			temp[i] = '\0';
+			script->setd_sub(st, NULL, ".@atcmd_parameters$", nargs++, (void *)p, NULL);
+			i++;
+			p = temp + i;
+		}
+		aFree(temp);
 	}
-
-	script->setd_sub(st, NULL, ".@atcmd_numparameters", 0, (void *)h64BPTRSIZE(j), NULL);
-	aFree(temp);
+	script->setd_sub(st, NULL, ".@atcmd_numparameters", 0, (void *)h64BPTRSIZE(nargs), NULL);
 
 	script->run_main(st);
 	return 0;

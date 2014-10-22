@@ -7250,12 +7250,16 @@ when not provided, "group level char" defaults to 99.
 (1 = log, 0 = no log), default is to not log.
 
 The following variables are set upon execution:
-	.@atcmd_command$       =  The name of the @command used.
-	.@atcmd_parameters$[]  =  Array containing the given parameters, 
-                              starting from an index of 0.
-	.@atcmd_numparameters  =  The number of parameters defined.
+	.@atcmd_command$      =  The name of the @command used.
+	.@atcmd_parameters$[] =  Array containing the given parameters,
+	                         starting from an index of 0.
+	.@atcmd_numparameters =  The number of parameters defined.
 
-Example:
+Parameters are split on spaces. Multiple spaces aren't grouped together, and
+will create multiple (empty) arguments.
+Any leading spaces before the first parameter will be omitted.
+
+Usage example:
 
 When a user types the command "@test", an angel effect will be shown.
 
@@ -7265,6 +7269,50 @@ OnInit:
 	end;
 OnAtcommand:
 	specialeffect2 338;
+	end;
+}
+
+Parameter splitting example:
+	@mycommand
+		.@atcmd_numparameters -> 0
+		.@atcmd_parameters$   -> { }
+	@mycommand<space><space>
+		.@atcmd_numparameters -> 0
+		.@atcmd_parameters$   -> { }
+	@mycommand<space>foo
+		.@atcmd_numparameters -> 1
+		.@atcmd_parameters$   -> { "foo" }
+	@mycommand<space><space>foo
+		.@atcmd_numparameters -> 1
+		.@atcmd_parameters$   -> { "foo" }
+	@mycommand<space>foo<space>bar
+		.@atcmd_numparameters -> 2
+		.@atcmd_parameters$   -> { "foo", "bar" }
+	@mycommand<space>foo<space><space>bar
+		.@atcmd_numparameters -> 3
+		.@atcmd_parameters$   -> { "foo", "", "bar" }
+	@mycommand<space>foo<space>
+		.@atcmd_numparameters -> 2
+		.@atcmd_parameters$   -> { "foo", "" }
+	@mycommand<space>foo<space><space>
+		.@atcmd_numparameters -> 3
+		.@atcmd_parameters$   -> { "foo", "", "" }
+
+The called event label needs to take care of joining arguments together, in
+case it expects spaces. For example:
+
+-	script	atcmd_example	-1,{
+OnInit:
+	bindatcmd "test",strnpcinfo(3)+"::OnAtcommand";
+	end;
+OnAtcommand:
+	// This command expects a character name (that may contain spaces) as
+	// the only parameter.
+	.@name$ = "";
+	for (.@i = 0; .@i < .@atcmd_numparameters; ++.@i) {
+		.@name$ += (.@i > 0 ? " " : "") + .@atcmd_parameters$[.@i];
+	}
+	dispbottom("The specified name is: '" + .@name$ + "'");
 	end;
 }
 
