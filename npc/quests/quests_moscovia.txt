@@ -6716,7 +6716,7 @@ mosk_dun01,169,162,0	script	Mysterious Stone#rus02	HIDDEN_NPC,{
 				warp "mosk_dun01",190,47;
 				end;
 			case 2:
-				if (!checkriding()) {
+				if (checkmount() != MOUNT_PECO) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "...What about the left...?";
 					next;
@@ -6744,7 +6744,7 @@ mosk_dun01,169,162,0	script	Mysterious Stone#rus02	HIDDEN_NPC,{
 				mes "- an unknown force and tries -";
 				mes "- to run away!! -";
 				sc_start SC_CURSE,60000,0;
-				setriding 0;
+				setmount(MOUNT_NONE);
 				close2;
 				warp "mosk_dun01",190,47;
 				end;

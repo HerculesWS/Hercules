@@ -32,7 +32,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		mes "Oh you are so young. Keep working hard.";
 		close;
 	}
-	if (checkriding() || checkcart() || checkfalcon()) {
+	if (checkmount() || checkcart() || checkfalcon()) {
 		mes "[Middle-aged Gentleman]";
 		mes "You are dragging something. If you're riding something you better dismount it before proceeding.";
 		close;
@@ -340,7 +340,7 @@ glast_01,240,366,5	script	Memory of King Schmidtz	CLEAR_NPC,{
 		mes "- and please try again. -";
 		close;
 	}
-	if (hascashmount() || checkriding()) {
+	if (hascashmount() || checkmount()) {
 		mes " Please unequip your riding pet and try again!";
 		close;
 	}

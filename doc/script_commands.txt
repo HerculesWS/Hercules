@@ -3879,7 +3879,13 @@ regardless of color.
 *setriding {<flag>};
 *checkriding()
 
-[ DEPRECATED - Please use setmount / checkmount]
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it
+is scheduled to be removed on or after November 30th, 2014. Please consider
+using setmount and checkmount() instead.
 
 If <flag> is 0 this command will remove the mount from the character.
 Otherwise it gives the invoking character a PecoPeco (if they are a Knight 

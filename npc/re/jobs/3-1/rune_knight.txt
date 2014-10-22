@@ -504,7 +504,7 @@ job3_rune01,80,60,3	script	Rune Knight Captain	4_M_KNIGHT_SILVER,2,2,{
 			next;
 			switch(select("Every preparation is done.:I need more time to think.")) {
 			case 1:
-				if (SkillPoint != 0 || checkriding()) {
+				if (SkillPoint != 0 || checkmount() == MOUNT_PECO) {
 					mes "[Captain Tigris]";
 					mes "Weren't you listening?";
 					next;

@@ -4600,10 +4600,10 @@ OnTouch:
 		mes "things using the Kafra Service.^000000";
 		close;
 	}
-	if ((BaseJob == Job_Knight || BaseJob == Job_Crusader) && checkriding()) {
+	if ((BaseJob == Job_Knight || BaseJob == Job_Crusader) && checkmount()) {
 		if (MaxWeight-Weight < 20000) {
 			if (!(eaclass()&EAJL_THIRD)) {
-				set .@mount$,(BaseJob == Job_Knight)?"Peco Peco":"Grand Peco";
+				.@mount$ = (BaseJob == Job_Knight) ? "Peco Peco" : "Grand Peco";
 				mes "[Helper]";
 				mes .@mount$+"s are prohibited";
 				mes "in the Turbo Track Arena.";
@@ -4612,7 +4612,7 @@ OnTouch:
 				mes "a Free Ticket for Peco Ride";
 				mes "for retrieving your "+.@mount$+".";
 			} else {
-				set .@mount$,(BaseJob == Job_Knight)?"Dragon":"Gryphon";
+				.@mount$ = (BaseJob == Job_Knight) ? "Dragon" : "Gryphon";
 				mes "[Helper]";
 				mes .@mount$+"s are prohibited";
 				mes "in the Turbo Track Arena.";
@@ -4625,14 +4625,9 @@ OnTouch:
 			end;
 		} else {
 			if (!(eaclass()&EAJL_THIRD)) {
-				setriding 0;
-				getitem 7310,1; //Free_Peco_Ticket
-			} else {
-				if (BaseJob == Job_Knight)
-					setmount(MOUNT_NONE);
-				else
-					setriding 0;
+				getitem Free_Peco_Ticket, 1;
 			}
+			setmount(MOUNT_NONE);
 			warp "turbo_room",100,65;
 		}
 	} else if ((Class == Job_Ranger || Class == Job_Ranger_T || Class == Job_Baby_Ranger) && checkoption(Option_Wugrider)) {
@@ -4648,7 +4643,7 @@ OnTouch:
 			setoption Option_Wugrider,0;
 			warp "turbo_room",100,65;
 		}
-	} else if ((Class == Job_Mechanic || Class == Job_Mechanic_T || Class == Job_Baby_Mechanic) && checkmount() == MOUNT_MADO) {
+	} else if ((Class == Job_Mechanic || Class == Job_Mechanic_T || Class == Job_Baby_Mechanic) && checkmount()) {
 		if (MaxWeight-Weight < 20000) {
 			mes "[Helper]";
 			mes "Magic Gears are prohibited";
@@ -4689,7 +4684,7 @@ alde_gld,186,199,3	script	Turbo Track Guide#Entran	4_F_RACING,{
 }
 
 -	script	::MountManager_turbo	-1,{
-	set .@n$, "["+strnpcinfo(1)+"]";
+	.@n$ = "["+strnpcinfo(1)+"]";
 	mes .@n$;
 	if (hascashmount()) {
 		mes "Please get off of that creature you're riding on.";
@@ -4699,39 +4694,27 @@ alde_gld,186,199,3	script	Turbo Track Guide#Entran	4_F_RACING,{
 	if (BaseJob == Job_Knight || BaseJob == Job_Crusader) {
 		if (!(eaclass()&EAJL_THIRD)) {
 			if (BaseJob == Job_Knight) {
-				set .@zeny,2500;
-				set .@zeny$,"2,500";
-				set .@mount$,"Peco Peco";
+				.@zeny = 2500;
+				.@zeny$ = "2,500";
+				.@mount$ = "Peco Peco";
 			} else {
-				set .@zeny,3500;
-				set .@zeny$,"3,500";
-				set .@mount$,"Grand Peco";
+				.@zeny = 3500;
+				.@zeny$ = "3,500";
+				.@mount$ = "Grand Peco";
 			}
-			set .@skill,63;
-			set .@skill$,"Peco Peco Ride";
-			set .@riding, checkriding();
-			set .@i,1;
 		} else {
 			if (BaseJob == Job_Knight) {
-				set .@mount$,"Dragon";
-				set .@skill,63;
-				set .@skill$,"Dragon Training";
-				set .@riding, checkmount() == MOUNT_DRAGON ? true : false; // FIXME
-				set .@i,2;
+				.@mount$ = "Dragon";
 			} else {
-				set .@mount$,"Gryphon";
-				set .@skill,63;
-				set .@skill$,"Peco Peco Ride";
-				set .@riding, checkriding();
-				set .@i,1;
+				.@mount$ = "Gryphon";
 			}
 		}
+		.@skill = KN_RIDING;
+		.@skill$ = "Peco Peco Ride";
 	} else if (Class == Job_Mechanic || Class == Job_Mechanic_T || Class == Job_Baby_Mechanic) {
-		set .@mount$,"Magic Gear";
-		set .@skill,2255;
-		set .@skill$,"Magic Gear License";
-		set .@riding, checkmount() == MOUNT_MADO ? true : false; // FIXME
-		set .@i,3;
+		.@mount$ = "Magic Gear";
+		.@skill = NC_MADOLICENCE;
+		.@skill$ = "Magic Gear License";
 	} else {
 		mes "Thank you for";
 		mes "visiting Al De Baran's";
@@ -4757,7 +4740,7 @@ alde_gld,186,199,3	script	Turbo Track Guide#Entran	4_F_RACING,{
 			mes "the "+.@skill$+" skill first.";
 			close;
 		} else {
-			if (.@riding) {
+			if (checkmount()) {
 				mes .@n$;
 				mes "You're already";
 				mes "mounted on a";
@@ -4766,7 +4749,7 @@ alde_gld,186,199,3	script	Turbo Track Guide#Entran	4_F_RACING,{
 				close;
 			} else {
 				if (.@zeny) {
-					if (countitem(7310) < 1 && Zeny < .@zeny) {
+					if (countitem(Free_Peco_Ticket) < 1 && Zeny < .@zeny) {
 						mes .@n$;
 						mes "I'm sorry, but you";
 						mes "don't have a Free Ticket";
@@ -4774,17 +4757,13 @@ alde_gld,186,199,3	script	Turbo Track Guide#Entran	4_F_RACING,{
 						mes "to use the Peco rental service.";
 						close;
 					} else {
-						if (countitem(7310) > 0)
-							delitem 7310,1; //Free_Peco_Ticket
+						if (countitem(Free_Peco_Ticket) > 0)
+							delitem Free_Peco_Ticket, 1;
 						else
 							Zeny -= .@zeny;
 					}
 				}
-				switch(.@i) {
-					case 1: setriding; break;
-					case 2: setmount(MOUNT_DRAGON); break;
-					case 3: setmount(MOUNT_MADO); break;
-				}
+				setmount;
 				mes .@n$;
 				mes "Thank you for";
 				mes "your patronage~";

@@ -16,17 +16,18 @@ prontera,124,201,1	script	Universal Rental NPC	4_F_JOB_BLACKSMITH,{
 	if (hascashmount()) {
 		message strcharinfo(0),"You must first remove your mount.";
 		end;
-	}
-	else if ((eaclass()&EAJ_THIRDMASK) == EAJ_RANGER && !countitem(6124)) {
-		if (!checkfalcon() && getskilllv("HT_FALCON") && !checkoption(Option_Wug) && !checkoption(Option_Wugrider)) {
-			if(select(" ~ Falcon: ~ Warg")==1) setfalcon;
-			else getitem 6124,1;
+	} else if ((eaclass()&EAJ_THIRDMASK) == EAJ_RANGER && !countitem(Wolf's_Flute)) {
+		if (!checkfalcon() && getskilllv(HT_FALCON) && !checkwug()) {
+			if (select(" ~ Falcon: ~ Warg") == 1)
+				setfalcon;
+			else
+				getitem Wolf's_Flute, 1;
 			specialeffect2 EF_TEIHIT3;
 			close;
+		} else {
+			getitem Wolf's_Flute,1;
 		}
-		else getitem 6124,1;
-	}
-	else if ((eaclass()&EAJ_THIRDMASK) == EAJ_MECHANIC && !checkcart() && getskilllv(MC_PUSHCART)) {
+	} else if ((eaclass()&EAJ_THIRDMASK) == EAJ_MECHANIC && !checkcart() && getskilllv(MC_PUSHCART)) {
 		if (!checkmount() != MOUNT_MADO && getskilllv(NC_MADOLICENCE)) {
 			if (select(" ~ Cart: ~ Mado") == 1) {
 				setcart;
@@ -35,15 +36,15 @@ prontera,124,201,1	script	Universal Rental NPC	4_F_JOB_BLACKSMITH,{
 			}
 			specialeffect2 EF_TEIHIT3;
 			close;
+		} else {
+			setcart;
 		}
-		else setcart;
-	}
-	else if (!checkcart() && getskilllv("MC_PUSHCART")) setcart;
-	else if (!checkfalcon() && getskilllv("HT_FALCON") && !checkoption(Option_Wug) && !checkoption(Option_Wugrider)) setfalcon;
-	else if (!checkriding() && getskilllv("KN_RIDING")) {
-		if ((eaclass()&EAJ_THIRDMASK) == EAJ_RUNE_KNIGHT)
-			setmount(MOUNT_DRAGON);
-		else setriding;
+	} else if (!checkcart() && getskilllv(MC_PUSHCART)) {
+		setcart;
+	} else if (!checkfalcon() && getskilllv(HT_FALCON) && !checkwug()) {
+		setfalcon;
+	} else if (checkmount() == MOUNT_PECO && getskilllv(KN_RIDING)) {
+		setmount; // Peco or Dragon
 	} else if (checkmount() != MOUNT_MADO && getskilllv(NC_MADOLICENCE)) {
 		setmount(MOUNT_MADO);
 	} else {

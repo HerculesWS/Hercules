@@ -19069,8 +19069,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(checkcart,""),
 		BUILDIN_DEF(setfalcon,"?"),
 		BUILDIN_DEF(checkfalcon,""),
-		BUILDIN_DEF(setriding,"?"),
-		BUILDIN_DEF(checkriding,""),
+		BUILDIN_DEF_DEPRECATED(setriding,"?"), // Deprecated 2014-10-30 [Haru]
+		BUILDIN_DEF_DEPRECATED(checkriding,""), // Deprecated 2014-10-30 [Haru]
 		BUILDIN_DEF(setmount,"?"),
 		BUILDIN_DEF(checkmount,""),
 		BUILDIN_DEF(checkwug,""),

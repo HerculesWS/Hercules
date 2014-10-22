@@ -48,7 +48,7 @@ prontera,55,350,5	script	Peco Peco Breeder#knt	8W_SOLDIER,{
 				mes "bankrupt?";
 				close;
 			}
-			else if(getskilllv("KN_RIDING") == 0) {
+			else if(getskilllv(KN_RIDING) == 0) {
 				mes "[Peco Peco Breeder]";
 				mes "I'm sorry, but you're";
 				mes "not eligible for this";
@@ -56,7 +56,7 @@ prontera,55,350,5	script	Peco Peco Breeder#knt	8W_SOLDIER,{
 				mes "the Peco Peco Ride skill first.";
 				close;
 			}
-			else if(checkriding()) {
+			else if(checkmount()) {
 				mes "[Peco Peco Breeder]";
 				mes "You're already";
 				mes "mounted on a";
@@ -68,7 +68,7 @@ prontera,55,350,5	script	Peco Peco Breeder#knt	8W_SOLDIER,{
 				close;
 			}
 			Zeny -= .@price;
-			setriding;
+			setmount(MOUNT_PECO);
 			close;
 		case 2:
 			mes "[Peco Peco Breeder]";
@@ -112,14 +112,14 @@ prontera,232,318,3	script	Peco Peco Breeder#cru	8W_SOLDIER,{
 				mes "bring "+.@price+" zeny...";
 				close;
 			}
-			else if(getskilllv("KN_RIDING") == 0) {
+			else if(getskilllv(KN_RIDING) == 0) {
 				mes "[Peco Peco Breeder]";
 				mes "You must first learn";
 				mes "to ride a PecoPeco before";
 				mes "I can rent one to you.";
 				close;
 			}
-			else if(checkriding()) {
+			else if(checkmount()) {
 				mes "[Peco Peco Breeder]";
 				mes "You are already";
 				mes "mounted on a Peco Peco.";
@@ -130,7 +130,7 @@ prontera,232,318,3	script	Peco Peco Breeder#cru	8W_SOLDIER,{
 				close;
 			}
 			Zeny -= .@price;
-			setriding;
+			setmount(MOUNT_NONE);
 			close;
 		case 2:
 			mes "[PecoPeco Breeder]";
