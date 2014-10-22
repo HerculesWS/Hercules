@@ -4648,7 +4648,7 @@ OnTouch:
 			setoption Option_Wugrider,0;
 			warp "turbo_room",100,65;
 		}
-	} else if ((Class == Job_Mechanic || Class == Job_Mechanic_T || Class == Job_Baby_Mechanic) && checkmadogear()) {
+	} else if ((Class == Job_Mechanic || Class == Job_Mechanic_T || Class == Job_Baby_Mechanic) && checkmount() == MOUNT_MADO) {
 		if (MaxWeight-Weight < 20000) {
 			mes "[Helper]";
 			mes "Magic Gears are prohibited";
@@ -4660,7 +4660,7 @@ OnTouch:
 			warp "alde_gld",183,199;
 			end;
 		} else {
-			setmadogear 0;
+			setmount(MOUNT_NONE);
 			warp "turbo_room",100,65;
 		}
 	} else
@@ -4730,7 +4730,7 @@ alde_gld,186,199,3	script	Turbo Track Guide#Entran	4_F_RACING,{
 		set .@mount$,"Magic Gear";
 		set .@skill,2255;
 		set .@skill$,"Magic Gear License";
-		set .@riding, checkmadogear();
+		set .@riding, checkmount() == MOUNT_MADO ? true : false; // FIXME
 		set .@i,3;
 	} else {
 		mes "Thank you for";
@@ -4783,7 +4783,7 @@ alde_gld,186,199,3	script	Turbo Track Guide#Entran	4_F_RACING,{
 				switch(.@i) {
 					case 1: setriding; break;
 					case 2: setdragon; break;
-					case 3: setmadogear; break;
+					case 3: setmount(MOUNT_MADO); break;
 				}
 				mes .@n$;
 				mes "Thank you for";

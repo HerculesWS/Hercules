@@ -165,13 +165,13 @@ prontera,125,208,5	script	Peco Peco Remover	8W_SOLDIER,{
 			mes "There you go!";
 			close;
 		case 2:
-			if (checkmadogear()) {
+			if (checkmount() == MOUNT_MADO) {
 				mes "[Magic Gear Master]";
 				mes "I'm sorry, but you're already";
 				mes "riding a Magic Gear.";
 				close;
 			}
-			else if (!getskilllv("NC_MADOLICENCE")) {
+			else if (!getskilllv(NC_MADOLICENCE)) {
 				mes "[Magic Gear Master]";
 				mes "Please learn the skill to get the Magic Gear License first.";
 				close;
@@ -180,7 +180,7 @@ prontera,125,208,5	script	Peco Peco Remover	8W_SOLDIER,{
 				mes "Please remove your cash mount.";
 				close;
 			}
-			setmadogear;
+			setmount(MOUNT_MADO);
 			mes "[Magic Gear Master]";
 			mes "Have fun, and please come again!";
 			close;
