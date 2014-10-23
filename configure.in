@@ -1118,6 +1118,52 @@ case $enable_renewal in
 esac
 
 #
+# Host specific stuff
+#
+AC_MSG_CHECKING([host OS])
+host_os="`uname`"
+AC_MSG_RESULT([$host_os])
+fd_setsize=""
+DLLEXT=".so"
+case $host_os in
+Solaris* )
+	LIBS="$LIBS -lsocket -lnsl -ldl"
+	;;
+Linux* )
+	LIBS="$LIBS -ldl"
+	;;
+FreeBSD*)
+	CPPFLAGS="$CPPFLAGS -D__FREEBSD__"
+	;;
+NetBSD*)
+	CPPFLAGS="$CPPFLAGS -D__NETBSD__"
+	;;
+CYGWIN*)
+	CPPFLAGS="$CPPFLAGS -DFD_SETSIZE=4096 -DCYGWIN"
+	fd_setsize="done"
+	DLLEXT=".dll"
+	;;
+Darwin*)
+	DLLEXT=".dylib"
+	;;
+esac
+AC_SUBST([DLLEXT])
+
+AC_MSG_CHECKING([for MinGW])
+if test -n "`$CC --version 2>/dev/null | grep -i mingw`" ; then
+	AC_MSG_RESULT([yes])
+	CPPFLAGS="$CPPFLAGS -DMINGW"
+	if test -z "$fd_setsize" ; then
+		CPPFLAGS="$CPPFLAGS -DFD_SETSIZE=4096"
+	fi
+	LIBS="$LIBS -lws2_32"
+else
+	AC_MSG_RESULT([no])
+fi
+
+
+
+#
 # zlib library (required)
 #
 if test -n "${ZLIB_HOME}" ; then
@@ -1350,52 +1396,6 @@ AC_SUBST(PLUGINSTATIC, ${PLUGINSTATIC})
 AC_CHECK_PROG([HAVE_DOXYGEN],[doxygen],[yes],[no])
 
 AC_CHECK_PROG([HAVE_PERL],[perl],[yes],[no])
-
-#
-# Host specific stuff
-#
-AC_MSG_CHECKING([host OS])
-host_os="`uname`"
-AC_MSG_RESULT([$host_os])
-fd_setsize=""
-DLLEXT=".so"
-case $host_os in
-Solaris* )
-	LIBS="$LIBS -lsocket -lnsl -ldl"
-	;;
-Linux* )
-	LIBS="$LIBS -ldl"
-	;;
-FreeBSD*)
-	CPPFLAGS="$CPPFLAGS -D__FREEBSD__"
-	;;
-NetBSD*)
-	CPPFLAGS="$CPPFLAGS -D__NETBSD__"
-	;;
-CYGWIN*)
-	CPPFLAGS="$CPPFLAGS -DFD_SETSIZE=4096 -DCYGWIN"
-	fd_setsize="done"
-	DLLEXT=".dll"
-	;;
-Darwin*)
-	DLLEXT=".dylib"
-	;;
-esac
-AC_SUBST([DLLEXT])
-
-AC_MSG_CHECKING([for MinGW])
-if test -n "`$CC --version 2>/dev/null | grep -i mingw`" ; then
-	AC_MSG_RESULT([yes])
-	CPPFLAGS="$CPPFLAGS -DMINGW"
-	if test -z "$fd_setsize" ; then
-		CPPFLAGS="$CPPFLAGS -DFD_SETSIZE=4096"
-	fi
-	LIBS="$LIBS -lws2_32"
-else
-	AC_MSG_RESULT([no])
-fi
-
-
 
 ###############################################################################
 AC_OUTPUT
