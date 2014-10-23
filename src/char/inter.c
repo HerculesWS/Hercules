@@ -483,19 +483,19 @@ void geoip_init(void) {
 	geoip.active = true;
 
 	db = fopen("./db/GeoIP.dat","rb");
-	if( db == NULL ) {
+	if (db == NULL) {
 		ShowError("geoip_readdb: Error reading GeoIP.dat!\n");
 		geoip_final(false);
 		return;
 	}
 	fno = fileno(db);
-	if( fstat(fno, &bufa) < 0 ) {
+	if (fstat(fno, &bufa) < 0) {
 		ShowError("geoip_readdb: Error stating GeoIP.dat! Error %d\n", errno);
 		geoip_final(false);
 		return;
 	}
 	geoip.cache = aMalloc( (sizeof(geoip.cache) * bufa.st_size) );
-	if( fread(geoip.cache, sizeof(unsigned char), bufa.st_size, db) != bufa.st_size ) {
+	if (fread(geoip.cache, sizeof(unsigned char), bufa.st_size, db) != bufa.st_size) {
 		ShowError("geoip_cache: Couldn't read all elements!\n");
 		fclose(db);
 		geoip_final(false);
@@ -504,10 +504,15 @@ void geoip_init(void) {
 
 	// Search database type
 	fseek(db, -3l, SEEK_END);
-	for( i = 0; i < GEOIP_STRUCTURE_INFO_MAX_SIZE; i++ ) {
-		fread(delim, sizeof(delim[0]), 3, db);
-		if( delim[0] == 255 && delim[1] == 255 && delim[2] == 255 ) {
-			fread(&db_type, sizeof(db_type), 1, db);
+	for (i = 0; i < GEOIP_STRUCTURE_INFO_MAX_SIZE; i++) {
+		if (fread(delim, sizeof(delim[0]), 3, db) != 3) {
+			db_type = 0;
+			break;
+		}
+		if (delim[0] == 255 && delim[1] == 255 && delim[2] == 255) {
+			if (fread(&db_type, sizeof(db_type), 1, db) != 1) {
+				db_type = 0;
+			}
 			break;
 		} else {
 			fseek(db, -4l, SEEK_CUR);
@@ -516,8 +521,8 @@ void geoip_init(void) {
 	
 	fclose(db);
 
-	if( db_type != 1 ) {
-		if( db_type )
+	if (db_type != 1) {
+		if (db_type)
 			ShowError("geoip_init(): Database type is not supported %d!\n", db_type);
 		else
 			ShowError("geoip_init(): GeoIP is corrupted!\n");
