@@ -80,4 +80,4 @@ Makefile: Makefile.in
 
 ../../plugins/%@DLLEXT@: %.c $(ALL_H) $$(shell ls %/* 2>/dev/null)
 	@echo "	CC	$<"
-	@$(CC) @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o $@ $<
+	@$(CC) @PLUGINSTATIC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o $@ $<

@@ -91,7 +91,7 @@ char-server: ../../char-server@EXEEXT@
 
 ../../char-server@EXEEXT@: $(CHAR_SERVER_SQL_DEPENDS) Makefile
 	@echo "	LD	$(notdir $@)"
-	@$(CC) @LDFLAGS@ -o ../../char-server@EXEEXT@ $(CHAR_OBJ) $(COMMON_D)/obj_sql/common_sql.a \
+	@$(CC) @STATIC@ @LDFLAGS@ -o ../../char-server@EXEEXT@ $(CHAR_OBJ) $(COMMON_D)/obj_sql/common_sql.a \
 		$(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
 
 # char object files

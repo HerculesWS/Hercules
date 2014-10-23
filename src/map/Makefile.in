@@ -104,7 +104,7 @@ map-server: ../../map-server@EXEEXT@
 
 ../../map-server@EXEEXT@: $(MAP_SERVER_SQL_DEPENDS) Makefile
 	@echo "	LD	$(notdir $@)"
-	@$(CC) @LDFLAGS@ -o ../../map-server@EXEEXT@ $(MAP_OBJ) $(COMMON_D)/obj_sql/common_sql.a \
+	@$(CC) @STATIC@ @LDFLAGS@ -o ../../map-server@EXEEXT@ $(MAP_OBJ) $(COMMON_D)/obj_sql/common_sql.a \
 		$(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @PCRE_LIBS@ @MYSQL_LIBS@
 
 # map object files
