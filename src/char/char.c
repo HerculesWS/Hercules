@@ -750,6 +750,7 @@ int memitemdata_to_sql(const struct item items[], int max, int id, int tableswit
 		return 1;
 	}
 
+	memset(&item, 0, sizeof(item));
 	SQL->StmtBindColumn(stmt, 0, SQLDT_INT,       &item.id,          0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 1, SQLDT_SHORT,     &item.nameid,      0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 2, SQLDT_SHORT,     &item.amount,      0, NULL, NULL);
@@ -893,6 +894,7 @@ int inventory_to_sql(const struct item items[], int max, int id) {
 		return 1;
 	}
 
+	memset(&item, 0, sizeof(item));
 	SQL->StmtBindColumn(stmt, 0, SQLDT_INT,       &item.id,          0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 1, SQLDT_SHORT,     &item.nameid,      0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 2, SQLDT_SHORT,     &item.amount,      0, NULL, NULL);
@@ -1229,6 +1231,7 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 
 	//read memo data
 	//`memo` (`memo_id`,`char_id`,`map`,`x`,`y`)
+	memset(&tmp_point, 0, sizeof(tmp_point));
 	if( SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `map`,`x`,`y` FROM `%s` WHERE `char_id`=? ORDER by `memo_id` LIMIT %d", memo_db, MAX_MEMOPOINTS)
 	||	SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, 0)
 	||	SQL_ERROR == SQL->StmtExecute(stmt)
@@ -1251,6 +1254,7 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 		StrBuf->Printf(&buf, ", `card%d`", i);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `char_id`=? LIMIT %d", inventory_db, MAX_INVENTORY);
 
+	memset(&tmp_item, 0, sizeof(tmp_item));
 	if( SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
 	||	SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, 0)
 	||	SQL_ERROR == SQL->StmtExecute(stmt)
@@ -1312,6 +1316,7 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 
 	//read skill
 	//`skill` (`char_id`, `id`, `lv`)
+	memset(&tmp_skill, 0, sizeof(tmp_skill));
 	if( SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `id`, `lv`,`flag` FROM `%s` WHERE `char_id`=? LIMIT %d", skill_db, MAX_SKILL)
 	||	SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, 0)
 	||	SQL_ERROR == SQL->StmtExecute(stmt)
@@ -1333,6 +1338,7 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 
 	//read friends
 	//`friends` (`char_id`, `friend_account`, `friend_id`)
+	memset(&tmp_friend, 0, sizeof(tmp_friend));
 	if( SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT c.`account_id`, c.`char_id`, c.`name` FROM `%s` c LEFT JOIN `%s` f ON f.`friend_account` = c.`account_id` AND f.`friend_id` = c.`char_id` WHERE f.`char_id`=? LIMIT %d", char_db, friend_db, MAX_FRIENDS)
 	||	SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, 0)
 	||	SQL_ERROR == SQL->StmtExecute(stmt)
@@ -1348,6 +1354,7 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 #ifdef HOTKEY_SAVING
 	//read hotkeys
 	//`hotkey` (`char_id`, `hotkey`, `type`, `itemskill_id`, `skill_lvl`
+	memset(&tmp_hotkey, 0, sizeof(tmp_hotkey));
 	if( SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `hotkey`, `type`, `itemskill_id`, `skill_lvl` FROM `%s` WHERE `char_id`=?", hotkey_db)
 	||	SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, 0)
 	||	SQL_ERROR == SQL->StmtExecute(stmt)
@@ -3061,6 +3068,7 @@ int parse_frommap(int fd)
 					int count;
 					char* data;
 
+					memset(&scdata, 0, sizeof(scdata));
 					WFIFOHEAD(fd,14+50*sizeof(struct status_change_data));
 					WFIFOW(fd,0) = 0x2b1d;
 					WFIFOL(fd,4) = aid;
@@ -3232,7 +3240,6 @@ int parse_frommap(int fd)
 			{
 				int map_id, map_fd = -1;
 				struct mmo_charstatus* char_data;
-				struct mmo_charstatus char_dat;
 
 				map_id = search_mapserver(RFIFOW(fd,18), ntohl(RFIFOL(fd,24)), ntohs(RFIFOW(fd,28))); //Locate mapserver by ip and port.
 				if (map_id >= 0)
@@ -3240,6 +3247,7 @@ int parse_frommap(int fd)
 				//Char should just had been saved before this packet, so this should be safe. [Skotlex]
 				char_data = (struct mmo_charstatus*)uidb_get(char_db_,RFIFOL(fd,14));
 				if (char_data == NULL) {	//Really shouldn't happen.
+					struct mmo_charstatus char_dat;
 					mmo_char_fromsql(RFIFOL(fd,14), &char_dat, true);
 					char_data = (struct mmo_charstatus*)uidb_get(char_db_,RFIFOL(fd,14));
 				}

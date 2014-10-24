@@ -282,6 +282,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 		return 1;
 	}
 
+	memset(&item, 0, sizeof(item));
 	SQL->StmtBindColumn(stmt, 0, SQLDT_INT,       &item.id,          0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 1, SQLDT_SHORT,     &item.nameid,      0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 2, SQLDT_SHORT,     &item.amount,      0, NULL, NULL);

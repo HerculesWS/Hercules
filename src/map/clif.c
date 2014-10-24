@@ -15117,7 +15117,8 @@ void clif_parse_Mail_send(int fd, struct map_session_data *sd)
 	if (body_len > MAIL_BODY_LENGTH)
 		body_len = MAIL_BODY_LENGTH;
 
-	if( !mail->setattachment(sd, &msg) ) { // Invalid Append condition
+	memset(&msg, 0, sizeof(msg));
+	if (!mail->setattachment(sd, &msg)) { // Invalid Append condition
 		clif->mail_send(sd->fd, true); // fail
 		mail->removeitem(sd,0);
 		mail->removezeny(sd,0);
@@ -15335,9 +15336,10 @@ void clif_parse_Auction_register(int fd, struct map_session_data *sd)
 	struct auction_data auction;
 	struct item_data *item;
 
-	if( !battle_config.feature_auction )
+	if (!battle_config.feature_auction)
 		return;
 
+	memset(&auction, 0, sizeof(auction));
 	auction.price = RFIFOL(fd,2);
 	auction.buynow = RFIFOL(fd,6);
 	auction.hours = RFIFOW(fd,10);

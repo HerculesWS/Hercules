@@ -95,6 +95,8 @@ int unit_walktoxy_sub(struct block_list *bl)
 	ud = unit->bl2ud(bl);
 	if(ud == NULL) return 0;
 
+	memset(&wpd, 0, sizeof(wpd));
+
 	if( !path->search(&wpd,bl->m,bl->x,bl->y,ud->to_x,ud->to_y,ud->state.walk_easy,CELL_CHKNOPASS) )
 		return 0;
 

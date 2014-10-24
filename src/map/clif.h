@@ -18,8 +18,6 @@
  **/
 struct item;
 struct item_data;
-struct storage_data;
-struct guild_storage;
 struct unit_data;
 struct map_session_data;
 struct homun_data;

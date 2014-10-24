@@ -148,6 +148,7 @@ static bool mail_loadmessage(int mail_id, struct mail_message* msg)
 {
 	int j;
 	StringBuf buf;
+	memset(msg, 0, sizeof(struct mail_message)); // Initialize data
 
 	StrBuf->Init(&buf);
 	StrBuf->AppendStr(&buf, "SELECT `id`,`send_name`,`send_id`,`dest_name`,`dest_id`,`title`,`message`,`time`,`status`,"
@@ -206,6 +207,7 @@ static bool mail_loadmessage(int mail_id, struct mail_message* msg)
 static void mapif_Mail_sendinbox(int fd, int char_id, unsigned char flag)
 {
 	struct mail_data md;
+	memset(&md, 0, sizeof(md));
 	mail_fromsql(char_id, &md);
 
 	//FIXME: dumping the whole structure like this is unsafe [ultramage]
@@ -262,6 +264,7 @@ static bool mail_DeleteAttach(int mail_id)
 static void mapif_Mail_getattach(int fd, int char_id, int mail_id)
 {
 	struct mail_message msg;
+	memset(&msg, 0, sizeof(msg));
 
 	if( !mail_loadmessage(mail_id, &msg) )
 		return;

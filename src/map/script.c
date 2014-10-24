@@ -7013,28 +7013,25 @@ BUILDIN(delitem) {
 	TBL_PC *sd;
 	struct item it;
 
-	if( script_hasdata(st,4) )
-	{
+	if (script_hasdata(st,4)) {
 		int account_id = script_getnum(st,4);
 		sd = map->id2sd(account_id); // <account id>
-		if( sd == NULL )
-		{
+		if (sd == NULL) {
 			ShowError("script:delitem: player not found (AID=%d).\n", account_id);
 			st->state = END;
 			return false;
 		}
-	}
-	else
-	{
+	} else {
 		sd = script->rid2sd(st);// attached player
-		if( sd == NULL )
+		if (sd == NULL)
 			return true;
 	}
 
-	if( script_isstringtype(st, 2) ) {
+	memset(&it, 0, sizeof(it));
+	if (script_isstringtype(st, 2)) {
 		const char* item_name = script_getstr(st, 2);
 		struct item_data* id = itemdb->search_name(item_name);
-		if( id == NULL ) {
+		if (id == NULL) {
 			ShowError("script:delitem: unknown item \"%s\".\n", item_name);
 			st->state = END;
 			return false;
@@ -7042,8 +7039,7 @@ BUILDIN(delitem) {
 		it.nameid = id->nameid;// "<item name>"
 	} else {
 		it.nameid = script_getnum(st, 2);// <item id>
-		if( !itemdb->exists( it.nameid ) )
-		{
+		if (!itemdb->exists(it.nameid)) {
 			ShowError("script:delitem: unknown item \"%d\".\n", it.nameid);
 			st->state = END;
 			return false;
@@ -7074,26 +7070,25 @@ BUILDIN(delitem2) {
 	TBL_PC *sd;
 	struct item it;
 
-	if( script_hasdata(st,11) ) {
+	if (script_hasdata(st,11)) {
 		int account_id = script_getnum(st,11);
 		sd = map->id2sd(account_id); // <account id>
-		if( sd == NULL ) {
+		if (sd == NULL) {
 			ShowError("script:delitem2: player not found (AID=%d).\n", account_id);
 			st->state = END;
 			return false;
 		}
-	}
-	else
-	{
+	} else {
 		sd = script->rid2sd(st);// attached player
 		if( sd == NULL )
 			return true;
 	}
 
-	if( script_isstringtype(st, 2) ) {
+	memset(&it, 0, sizeof(it));
+	if (script_isstringtype(st, 2)) {
 		const char* item_name = script_getstr(st, 2);
 		struct item_data* id = itemdb->search_name(item_name);
-		if( id == NULL ) {
+		if (id == NULL) {
 			ShowError("script:delitem2: unknown item \"%s\".\n", item_name);
 			st->state = END;
 			return false;

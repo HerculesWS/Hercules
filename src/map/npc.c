@@ -1818,11 +1818,11 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 	for( i = 0; i < n; ++i ) {
 		int nameid = item_list[i*2+1];
 		int amount = item_list[i*2+0];
-		struct item item_tmp;
 		
-		if (itemdb_type(nameid) == IT_PETEGG)
+		if (itemdb_type(nameid) == IT_PETEGG) {
 			pet->create_egg(sd, nameid);
-		else {
+		} else {
+			struct item item_tmp;
 			memset(&item_tmp,0,sizeof(item_tmp));
 			item_tmp.nameid = nameid;
 			item_tmp.identify = 1;
@@ -1933,7 +1933,6 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 	for( i = 0; i < list_size; ++i ) {
 		int nameid = p->list[i].ITID;
 		int amount = p->list[i].qty;
-		struct item item_tmp;
 		
 		j = npc_market_qty[i];
 		
@@ -1944,9 +1943,10 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 		
 		npc->market_tosql(nd,j);
 		
-		if (itemdb_type(nameid) == IT_PETEGG)
+		if (itemdb_type(nameid) == IT_PETEGG) {
 			pet->create_egg(sd, nameid);
-		else {
+		} else {
+			struct item item_tmp;
 			memset(&item_tmp,0,sizeof(item_tmp));
 			item_tmp.nameid = nameid;
 			item_tmp.identify = 1;

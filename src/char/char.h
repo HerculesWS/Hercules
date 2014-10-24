@@ -14,8 +14,6 @@ enum E_CHARSERVER_ST {
 	CHARSERVER_ST_LAST
 };
 
-struct mmo_charstatus;
-
 struct char_session_data {
 	bool auth; // whether the session is authed or not
 	int account_id, login_id1, login_id2, sex;

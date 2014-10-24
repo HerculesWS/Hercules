@@ -1651,6 +1651,7 @@ int login_config_read(const char* cfgName)
 		else if(!strcmpi(w1, "client_hash")) {
 			int group = 0;
 			char md5[33];
+			memset(md5, '\0', 33);
 
 			if (sscanf(w2, "%d, %32s", &group, md5) == 2) {
 				struct client_hash_node *nnode;
