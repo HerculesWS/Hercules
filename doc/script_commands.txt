@@ -7971,16 +7971,23 @@ reached or when pet performance is activated.
 
 *petskillsupport <skill id>,<skill level>,<delay>,<percent hp>,<percent sp>;
 *petskillsupport "<skill name>",<skill level>,<delay>,<percent hp>,<percent sp>;
-*petheal <level>,<delay>,<percent hp>,<percent sp>;
 
 This will make the pet use a specified support skill on the owner whenever 
 the HP and SP are below the given percent values, with a specified delay 
 time between activations. The skill numbers are as per 
 'db/(pre-)re/skill_db.txt'.
-'petheal' works the same as 'petskillsupport' but has the skill ID 
-hard-coded to 28 (Heal). This command is deprecated.
 It's not quite certain who's stats will be used for the skills cast, the 
 character's or the pets. Probably, Skotlex can answer that question.
+
+*petheal <level>,<delay>,<percent hp>,<percent sp>;
+
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+The petheal command is deprecated and it should not be used in new scripts, as
+it is scheduled to be removed after November 27th, 2014. Please consider using
+petskillsupport by specifying the AL_HEAL skill id instead.
 
 *petskillattack <skill id>,<skill level>,<rate>,<bonusrate>;
 *petskillattack "<skill name>",<skill level>,<rate>,<bonusrate>;

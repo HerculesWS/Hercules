@@ -19239,7 +19239,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(petskillbonus,"iiii"), // [Valaris]
 		BUILDIN_DEF(petrecovery,"ii"), // [Valaris]
 		BUILDIN_DEF(petloot,"i"), // [Valaris]
-		BUILDIN_DEF(petheal,"iiii"), // [Valaris]
+		BUILDIN_DEF_DEPRECATED(petheal,"iiii"), // Deprecated 2014-10-27 [Haru]
 		BUILDIN_DEF(petskillattack,"viii"), // [Skotlex]
 		BUILDIN_DEF(petskillattack2,"viiii"), // [Valaris]
 		BUILDIN_DEF(petskillsupport,"viiii"), // [Skotlex]
