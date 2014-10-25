@@ -1649,7 +1649,7 @@ const char* parse_syntax(const char* p)
 			} else {
 				// Skip to the end point if the condition is false
 				sprintf(label,"__FR%x_FIN",script->syntax.curly[pos].index);
-				script->addl(script->add_str("jump_zero"));
+				script->addl(script->add_str("__jump_zero"));
 				script->addc(C_ARG);
 				p=script->parse_expr(p);
 				p=script->skip_space(p);
@@ -1774,7 +1774,7 @@ const char* parse_syntax(const char* p)
 			script->syntax.curly[script->syntax.curly_count].flag  = 0;
 			sprintf(label,"__IF%x_%x",script->syntax.curly[script->syntax.curly_count].index,script->syntax.curly[script->syntax.curly_count].count);
 			script->syntax.curly_count++;
-			script->addl(script->add_str("jump_zero"));
+			script->addl(script->add_str("__jump_zero"));
 			script->addc(C_ARG);
 			p=script->parse_expr(p);
 			p=script->skip_space(p);
@@ -1839,7 +1839,7 @@ const char* parse_syntax(const char* p)
 			// Skip to the end point if the condition is false
 			sprintf(label,"__WL%x_FIN",script->syntax.curly[script->syntax.curly_count].index);
 			script->syntax.curly_count++;
-			script->addl(script->add_str("jump_zero"));
+			script->addl(script->add_str("__jump_zero"));
 			script->addc(C_ARG);
 			p=script->parse_expr(p);
 			p=script->skip_space(p);
@@ -1911,7 +1911,7 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 					disp_error_message("need '('",p);
 				}
 				sprintf(label,"__IF%x_%x",script->syntax.curly[pos].index,script->syntax.curly[pos].count);
-				script->addl(script->add_str("jump_zero"));
+				script->addl(script->add_str("__jump_zero"));
 				script->addc(C_ARG);
 				p=script->parse_expr(p);
 				p=script->skip_space(p);
@@ -1976,7 +1976,7 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		script->parse_nextline(false, p);
 
 		sprintf(label,"__DO%x_FIN",script->syntax.curly[pos].index);
-		script->addl(script->add_str("jump_zero"));
+		script->addl(script->add_str("__jump_zero"));
 		script->addc(C_ARG);
 		p=script->parse_expr(p);
 		p=script->skip_space(p);
@@ -13246,14 +13246,14 @@ BUILDIN(checkequipedcard)
 	return true;
 }
 
-BUILDIN(jump_zero)
+BUILDIN(__jump_zero)
 {
 	int sel;
 	sel=script_getnum(st,2);
-	if(!sel) {
+	if (!sel) {
 		int pos;
-		if( !data_islabel(script_getdata(st,3)) ) {
-			ShowError("script: jump_zero: not label !\n");
+		if (!data_islabel(script_getdata(st,3))) {
+			ShowError("script: jump_zero: not a label !\n");
 			st->state=END;
 			return false;
 		}
@@ -19007,6 +19007,9 @@ bool script_hp_add(char *name, char *args, bool (*func)(struct script_state *st)
 #define BUILDIN_DEF2_DEPRECATED(x,x2,args) { buildin_ ## x , x2 , args, true }
 void script_parse_builtin(void) {
 	struct script_function BUILDIN[] = {
+		/* Commands for internal use by the script engine */
+		BUILDIN_DEF(__jump_zero,"il"),
+
 		// NPC interaction
 		BUILDIN_DEF(mes,"s*"),
 		BUILDIN_DEF(next,""),
@@ -19286,7 +19289,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(gethominfo,"i"),
 		BUILDIN_DEF(getmercinfo,"i?"),
 		BUILDIN_DEF(checkequipedcard,"i"),
-		BUILDIN_DEF(jump_zero,"il"), //for future jA script compatibility
+		BUILDIN_DEF2_DEPRECATED(__jump_zero,"jump_zero","il"), // Deprecated 2014-10-27 [Haru]
 		BUILDIN_DEF(globalmes,"s?"), //end jA addition
 		BUILDIN_DEF(unequip,"i"), // unequip command [Spectre]
 		BUILDIN_DEF(getstrlen,"s"), //strlen [Valaris]

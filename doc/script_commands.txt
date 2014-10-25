@@ -974,14 +974,14 @@ Within executable script code, some lines can be labels:
 <label name>:
 
 Labels are points of reference in your script, which can be used to route 
-execution with 'goto', 'menu' and 'jump_zero' commands, invoked with 
-'doevent' and 'donpcevent' commands and are otherwise essential. A label's 
-name may not be longer than 22 characters. (23rd is the ':'.) There is 
-some confusion in the source about whether it's 22, 23 or 24 all over the 
-place, so keeping labels under 22 characters could be wise. It may only 
-contain alphanumeric characters and underscore. In addition to labels you 
-name yourself, there are also some special labels which the script engine 
-will start execution from if a special event happens:
+execution with 'goto' and 'menu' commands, invoked with 'doevent', 'donpcevent'
+and 'callsub' commands and are otherwise essential. A label's name may not be
+longer than 22 characters. (23rd is the ':'.) There is some confusion in the
+source about whether it's 22, 23 or 24 all over the place, so keeping labels
+under 22 characters could be wise. It may only contain alphanumeric characters
+and underscore. In addition to labels you name yourself, there are also some
+special labels which the script engine will start execution from if a special
+event happens:
 
 OnClock<hour><minute>:
 OnMinute<minute>:
@@ -2057,6 +2057,14 @@ else if (<condition 2>) {
 ---------------------------------------
 
 *jump_zero (<condition>),<label>;
+
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it is
+scheduled to be removed at any time on or after November 27th, 2014. Please
+consider using 'if', 'switch', 'for', 'while', as appropriate.
 
 This command works like an 'if'+'goto' combination in one go. (See 'if'). 
 If the condition is false (equal to zero) this command will immediately 
