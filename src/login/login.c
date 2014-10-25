@@ -335,6 +335,519 @@ int login_lan_config_read(const char *lancfgName)
 	return 0;
 }
 
+void login_fromchar_auth_ack(int fd, int account_id, uint32 login_id1, uint32 login_id2, uint8 sex, int request_id, struct auth_node* node)
+{
+	WFIFOHEAD(fd,33);
+	WFIFOW(fd,0) = 0x2713;
+	WFIFOL(fd,2) = account_id;
+	WFIFOL(fd,6) = login_id1;
+	WFIFOL(fd,10) = login_id2;
+	WFIFOB(fd,14) = sex;
+	if (node)
+	{
+		WFIFOB(fd,15) = 0;// ok
+		WFIFOL(fd,16) = request_id;
+		WFIFOL(fd,20) = node->version;
+		WFIFOB(fd,24) = node->clienttype;
+		WFIFOL(fd,25) = node->group_id;
+		WFIFOL(fd,29) = (unsigned int)node->expiration_time;
+	}
+	else
+	{
+		WFIFOB(fd,15) = 1;// auth failed
+		WFIFOL(fd,16) = request_id;
+		WFIFOL(fd,20) = 0;
+		WFIFOB(fd,24) = 0;
+		WFIFOL(fd,25) = 0;
+		WFIFOL(fd,29) = 0;
+	}
+	WFIFOSET(fd,33);
+}
+
+void login_fromchar_parse_auth(int fd, int id, const char *const ip)
+{
+	struct auth_node* node;
+
+	int account_id = RFIFOL(fd,2);
+	uint32 login_id1 = RFIFOL(fd,6);
+	uint32 login_id2 = RFIFOL(fd,10);
+	uint8 sex = RFIFOB(fd,14);
+	//uint32 ip_ = ntohl(RFIFOL(fd,15));
+	int request_id = RFIFOL(fd,19);
+	RFIFOSKIP(fd,23);
+
+	node = (struct auth_node*)idb_get(auth_db, account_id);
+	if( runflag == LOGINSERVER_ST_RUNNING &&
+		node != NULL &&
+		node->account_id == account_id &&
+		node->login_id1  == login_id1 &&
+		node->login_id2  == login_id2 &&
+		node->sex        == sex_num2str(sex) /*&&
+		node->ip         == ip_*/ )
+	{// found
+		//ShowStatus("Char-server '%s': authentication of the account %d accepted (ip: %s).\n", server[id].name, account_id, ip);
+
+		// send ack
+		login_fromchar_auth_ack(fd, account_id, login_id1, login_id2, sex, request_id, node);
+		// each auth entry can only be used once
+		idb_remove(auth_db, account_id);
+	}
+	else
+	{// authentication not found
+		ShowStatus("Char-server '%s': authentication of the account %d REFUSED (ip: %s).\n", server[id].name, account_id, ip);
+		login_fromchar_auth_ack(fd, account_id, login_id1, login_id2, sex, request_id, NULL);
+	}
+}
+
+void login_fromchar_parse_update_users(int fd, int id)
+{
+	int users = RFIFOL(fd,2);
+	RFIFOSKIP(fd,6);
+
+	// how many users on world? (update)
+	if( server[id].users != users )
+	{
+		ShowStatus("set users %s : %d\n", server[id].name, users);
+
+		server[id].users = (uint16)users;
+	}
+}
+
+void login_fromchar_parse_request_change_email(int fd, int id, const char *const ip)
+{
+	struct mmo_account acc;
+	char email[40];
+
+	int account_id = RFIFOL(fd,2);
+	safestrncpy(email, (char*)RFIFOP(fd,6), 40); remove_control_chars(email);
+	RFIFOSKIP(fd,46);
+
+	if( e_mail_check(email) == 0 )
+		ShowNotice("Char-server '%s': Attempt to create an e-mail on an account with a default e-mail REFUSED - e-mail is invalid (account: %d, ip: %s)\n", server[id].name, account_id, ip);
+	else
+	if( !accounts->load_num(accounts, &acc, account_id) || strcmp(acc.email, "a@a.com") == 0 || acc.email[0] == '\0' )
+		ShowNotice("Char-server '%s': Attempt to create an e-mail on an account with a default e-mail REFUSED - account doesn't exist or e-mail of account isn't default e-mail (account: %d, ip: %s).\n", server[id].name, account_id, ip);
+	else {
+		memcpy(acc.email, email, 40);
+		ShowNotice("Char-server '%s': Create an e-mail on an account with a default e-mail (account: %d, new e-mail: %s, ip: %s).\n", server[id].name, account_id, email, ip);
+		// Save
+		accounts->save(accounts, &acc);
+	}
+}
+
+void login_fromchar_account(int fd, int account_id, struct mmo_account *acc)
+{
+	WFIFOHEAD(fd,72);
+	WFIFOW(fd,0) = 0x2717;
+	WFIFOL(fd,2) = account_id;
+	if (acc)
+	{
+		time_t expiration_time = 0;
+		char email[40] = "";
+		int group_id = 0;
+		uint8 char_slots = 0;
+		char birthdate[10+1] = "";
+		char pincode[4+1] = "\0\0\0\0";
+
+		safestrncpy(email, acc->email, sizeof(email));
+		expiration_time = acc->expiration_time;
+		group_id = acc->group_id;
+		char_slots = acc->char_slots;
+		safestrncpy(pincode, acc->pincode, sizeof(pincode));
+		safestrncpy(birthdate, acc->birthdate, sizeof(birthdate));
+		if( strlen(pincode) == 0 )
+			memset(pincode,'\0',sizeof(pincode));
+
+		safestrncpy((char*)WFIFOP(fd,6), email, 40);
+		WFIFOL(fd,46) = (uint32)expiration_time;
+		WFIFOB(fd,50) = (unsigned char)group_id;
+		WFIFOB(fd,51) = char_slots;
+		safestrncpy((char*)WFIFOP(fd,52), birthdate, 10+1);
+		safestrncpy((char*)WFIFOP(fd,63), pincode, 4+1 );
+		WFIFOL(fd,68) = acc->pincode_change;
+	}
+	else
+	{
+		safestrncpy((char*)WFIFOP(fd,6), "", 40);
+		WFIFOL(fd,46) = 0;
+		WFIFOB(fd,50) = 0;
+		WFIFOB(fd,51) = 0;
+		safestrncpy((char*)WFIFOP(fd,52), "", 10+1);
+		safestrncpy((char*)WFIFOP(fd,63), "\0\0\0\0", 4+1 );
+		WFIFOL(fd,68) = 0;
+	}
+	WFIFOSET(fd,72);
+}
+
+void login_fromchar_parse_account_data(int fd, int id, const char *const ip)
+{
+	struct mmo_account acc;
+
+	int account_id = RFIFOL(fd,2);
+	RFIFOSKIP(fd,6);
+
+	if( !accounts->load_num(accounts, &acc, account_id) )
+	{
+		ShowNotice("Char-server '%s': account %d NOT found (ip: %s).\n", server[id].name, account_id, ip);
+		login_fromchar_account(fd, account_id, NULL);
+	}
+	else {
+		login_fromchar_account(fd, account_id, &acc);
+	}
+}
+
+void login_fromchar_pong(int fd)
+{
+	WFIFOHEAD(fd,2);
+	WFIFOW(fd,0) = 0x2718;
+	WFIFOSET(fd,2);
+}
+
+void login_fromchar_parse_ping(int fd)
+{
+	RFIFOSKIP(fd,2);
+	login_fromchar_pong(fd);
+}
+
+void login_fromchar_parse_change_email(int fd, int id, const char *const ip)
+{
+	struct mmo_account acc;
+	char actual_email[40];
+	char new_email[40];
+
+	int account_id = RFIFOL(fd,2);
+	safestrncpy(actual_email, (char*)RFIFOP(fd,6), 40);
+	safestrncpy(new_email, (char*)RFIFOP(fd,46), 40);
+	RFIFOSKIP(fd, 86);
+
+	if( e_mail_check(actual_email) == 0 )
+		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command), but actual email is invalid (account: %d, ip: %s)\n", server[id].name, account_id, ip);
+	else
+	if( e_mail_check(new_email) == 0 )
+		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command) with a invalid new e-mail (account: %d, ip: %s)\n", server[id].name, account_id, ip);
+	else
+	if( strcmpi(new_email, "a@a.com") == 0 )
+		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command) with a default e-mail (account: %d, ip: %s)\n", server[id].name, account_id, ip);
+	else
+	if( !accounts->load_num(accounts, &acc, account_id) )
+		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command), but account doesn't exist (account: %d, ip: %s).\n", server[id].name, account_id, ip);
+	else
+	if( strcmpi(acc.email, actual_email) != 0 )
+		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command), but actual e-mail is incorrect (account: %d (%s), actual e-mail: %s, proposed e-mail: %s, ip: %s).\n", server[id].name, account_id, acc.userid, acc.email, actual_email, ip);
+	else {
+		safestrncpy(acc.email, new_email, 40);
+		ShowNotice("Char-server '%s': Modify an e-mail on an account (@email GM command) (account: %d (%s), new e-mail: %s, ip: %s).\n", server[id].name, account_id, acc.userid, new_email, ip);
+		// Save
+		accounts->save(accounts, &acc);
+	}
+}
+
+void login_fromchar_account_update_other(int account_id, unsigned int state)
+{
+	uint8 buf[11];
+	WBUFW(buf,0) = 0x2731;
+	WBUFL(buf,2) = account_id;
+	WBUFB(buf,6) = 0; // 0: change of state, 1: ban
+	WBUFL(buf,7) = state; // status or final date of a banishment
+	charif_sendallwos(-1, buf, 11);
+}
+
+void login_fromchar_parse_account_update(int fd, int id, const char *const ip)
+{
+	struct mmo_account acc;
+
+	int account_id = RFIFOL(fd,2);
+	unsigned int state = RFIFOL(fd,6);
+	RFIFOSKIP(fd,10);
+
+	if( !accounts->load_num(accounts, &acc, account_id) )
+		ShowNotice("Char-server '%s': Error of Status change (account: %d not found, suggested status %d, ip: %s).\n", server[id].name, account_id, state, ip);
+	else
+	if( acc.state == state )
+		ShowNotice("Char-server '%s':  Error of Status change - actual status is already the good status (account: %d, status %d, ip: %s).\n", server[id].name, account_id, state, ip);
+	else {
+		ShowNotice("Char-server '%s': Status change (account: %d, new status %d, ip: %s).\n", server[id].name, account_id, state, ip);
+
+		acc.state = state;
+		// Save
+		accounts->save(accounts, &acc);
+
+		// notify other servers
+		if (state != 0) {
+			login_fromchar_account_update_other(account_id, state);
+		}
+	}
+}
+
+void login_fromchar_ban(int account_id, time_t timestamp)
+{
+	uint8 buf[11];
+	WBUFW(buf,0) = 0x2731;
+	WBUFL(buf,2) = account_id;
+	WBUFB(buf,6) = 1; // 0: change of status, 1: ban
+	WBUFL(buf,7) = (uint32)timestamp; // status or final date of a banishment
+	charif_sendallwos(-1, buf, 11);
+}
+
+void login_fromchar_parse_ban(int fd, int id, const char *const ip)
+{
+	struct mmo_account acc;
+
+	int account_id = RFIFOL(fd,2);
+	int year = (short)RFIFOW(fd,6);
+	int month = (short)RFIFOW(fd,8);
+	int mday = (short)RFIFOW(fd,10);
+	int hour = (short)RFIFOW(fd,12);
+	int min = (short)RFIFOW(fd,14);
+	int sec = (short)RFIFOW(fd,16);
+	RFIFOSKIP(fd,18);
+
+	if (!accounts->load_num(accounts, &acc, account_id)) {
+		ShowNotice("Char-server '%s': Error of ban request (account: %d not found, ip: %s).\n", server[id].name, account_id, ip);
+	} else {
+		time_t timestamp;
+		struct tm *tmtime;
+		if (acc.unban_time == 0 || acc.unban_time < time(NULL))
+			timestamp = time(NULL); // new ban
+		else
+			timestamp = acc.unban_time; // add to existing ban
+		tmtime = localtime(&timestamp);
+		tmtime->tm_year += year;
+		tmtime->tm_mon  += month;
+		tmtime->tm_mday += mday;
+		tmtime->tm_hour += hour;
+		tmtime->tm_min  += min;
+		tmtime->tm_sec  += sec;
+		timestamp = mktime(tmtime);
+		if (timestamp == -1) {
+			ShowNotice("Char-server '%s': Error of ban request (account: %d, invalid date, ip: %s).\n", server[id].name, account_id, ip);
+		} else if( timestamp <= time(NULL) || timestamp == 0 ) {
+			ShowNotice("Char-server '%s': Error of ban request (account: %d, new date unbans the account, ip: %s).\n", server[id].name, account_id, ip);
+		} else {
+			char tmpstr[24];
+			timestamp2string(tmpstr, sizeof(tmpstr), timestamp, login_config.date_format);
+			ShowNotice("Char-server '%s': Ban request (account: %d, new final date of banishment: %ld (%s), ip: %s).\n",
+			           server[id].name, account_id, (long)timestamp, tmpstr, ip);
+
+			acc.unban_time = timestamp;
+
+			// Save
+			accounts->save(accounts, &acc);
+
+			login_fromchar_ban(account_id, timestamp);
+		}
+	}
+}
+
+void login_fromchar_change_sex_other(int account_id, char sex)
+{
+	unsigned char buf[7];
+	WBUFW(buf,0) = 0x2723;
+	WBUFL(buf,2) = account_id;
+	WBUFB(buf,6) = sex_str2num(sex);
+	charif_sendallwos(-1, buf, 7);
+}
+
+void login_fromchar_parse_change_sex(int fd, int id, const char *const ip)
+{
+	struct mmo_account acc;
+
+	int account_id = RFIFOL(fd,2);
+	RFIFOSKIP(fd,6);
+
+	if( !accounts->load_num(accounts, &acc, account_id) )
+		ShowNotice("Char-server '%s': Error of sex change (account: %d not found, ip: %s).\n", server[id].name, account_id, ip);
+	else
+	if( acc.sex == 'S' )
+		ShowNotice("Char-server '%s': Error of sex change - account to change is a Server account (account: %d, ip: %s).\n", server[id].name, account_id, ip);
+	else
+	{
+		char sex = ( acc.sex == 'M' ) ? 'F' : 'M'; //Change gender
+
+		ShowNotice("Char-server '%s': Sex change (account: %d, new sex %c, ip: %s).\n", server[id].name, account_id, sex, ip);
+
+		acc.sex = sex;
+		// Save
+		accounts->save(accounts, &acc);
+
+		// announce to other servers
+		login_fromchar_change_sex_other(account_id, sex);
+	}
+}
+
+void login_fromchar_parse_account_reg2(int fd, int id, const char *const ip)
+{
+	struct mmo_account acc;
+
+	int account_id = RFIFOL(fd,4);
+
+	if( !accounts->load_num(accounts, &acc, account_id) )
+		ShowStatus("Char-server '%s': receiving (from the char-server) of account_reg2 (account: %d not found, ip: %s).\n", server[id].name, account_id, ip);
+	else {
+		mmo_save_accreg2(accounts,fd,account_id,RFIFOL(fd, 8));
+	}
+	RFIFOSKIP(fd,RFIFOW(fd,2));
+}
+
+void login_fromchar_parse_unban(int fd, int id, const char *const ip)
+{
+	struct mmo_account acc;
+
+	int account_id = RFIFOL(fd,2);
+	RFIFOSKIP(fd,6);
+
+	if( !accounts->load_num(accounts, &acc, account_id) )
+		ShowNotice("Char-server '%s': Error of Unban request (account: %d not found, ip: %s).\n", server[id].name, account_id, ip);
+	else
+	if( acc.unban_time == 0 )
+		ShowNotice("Char-server '%s': Error of Unban request (account: %d, no change for unban date, ip: %s).\n", server[id].name, account_id, ip);
+	else
+	{
+		ShowNotice("Char-server '%s': Unban request (account: %d, ip: %s).\n", server[id].name, account_id, ip);
+		acc.unban_time = 0;
+		accounts->save(accounts, &acc);
+	}
+}
+
+void login_fromchar_parse_account_online(int fd, int id)
+{
+	login_add_online_user(id, RFIFOL(fd,2));
+	RFIFOSKIP(fd,6);
+}
+
+void login_fromchar_parse_account_offline(int fd)
+{
+	login_remove_online_user(RFIFOL(fd,2));
+	RFIFOSKIP(fd,6);
+}
+
+void login_fromchar_parse_online_accounts(int fd, int id)
+{
+	struct online_login_data *p;
+	int aid;
+	uint32 i, users;
+	online_db->foreach(online_db, login_online_db_setoffline, id); //Set all chars from this char-server offline first
+	users = RFIFOW(fd,4);
+	for (i = 0; i < users; i++) {
+		aid = RFIFOL(fd,6+i*4);
+		p = idb_ensure(online_db, aid, login_create_online_user);
+		p->char_server = id;
+		if (p->waiting_disconnect != INVALID_TIMER)
+		{
+			timer->delete(p->waiting_disconnect, login_waiting_disconnect_timer);
+			p->waiting_disconnect = INVALID_TIMER;
+		}
+	}
+}
+
+void login_fromchar_parse_request_account_reg2(int fd)
+{
+	int account_id = RFIFOL(fd,2);
+	int char_id = RFIFOL(fd,6);
+	RFIFOSKIP(fd,10);
+
+	mmo_send_accreg2(accounts,fd,account_id,char_id);
+}
+
+void login_fromchar_parse_update_wan_ip(int fd, int id)
+{
+	server[id].ip = ntohl(RFIFOL(fd,2));
+	ShowInfo("Updated IP of Server #%d to %d.%d.%d.%d.\n",id, CONVIP(server[id].ip));
+	RFIFOSKIP(fd,6);
+}
+
+void login_fromchar_parse_all_offline(int fd, int id)
+{
+	ShowInfo("Setting accounts from char-server %d offline.\n", id);
+	online_db->foreach(online_db, login_online_db_setoffline, id);
+	RFIFOSKIP(fd,2);
+}
+
+void login_fromchar_parse_change_pincode(int fd)
+{
+	struct mmo_account acc;
+
+	if( accounts->load_num(accounts, &acc, RFIFOL(fd,2) ) ) {
+		strncpy( acc.pincode, (char*)RFIFOP(fd,6), 5 );
+		acc.pincode_change = ((unsigned int)time( NULL ));
+		accounts->save(accounts, &acc);
+	}
+	RFIFOSKIP(fd,11);
+}
+
+bool login_fromchar_parse_wrong_pincode(int fd)
+{
+	struct mmo_account acc;
+
+	if( accounts->load_num(accounts, &acc, RFIFOL(fd,2) ) ) {
+		struct online_login_data* ld;
+
+		if( ( ld = (struct online_login_data*)idb_get(online_db,acc.account_id) ) == NULL )
+		{
+			RFIFOSKIP(fd,6);
+			return true;
+		}
+
+		login_log( host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed" );
+	}
+
+	login_remove_online_user(acc.account_id);
+	RFIFOSKIP(fd,6);
+	return false;
+}
+
+void login_fromchar_accinfo(int fd, int account_id, int u_fd, int u_aid, int u_group, int map_fd, struct mmo_account *acc)
+{
+	if (acc)
+	{
+		WFIFOHEAD(fd,183);
+		WFIFOW(fd,0) = 0x2737;
+		safestrncpy((char*)WFIFOP(fd,2), acc->userid, NAME_LENGTH);
+		if (u_group >= acc->group_id)
+			safestrncpy((char*)WFIFOP(fd,26), acc->pass, 33);
+		else
+			memset(WFIFOP(fd,26), '\0', 33);
+		safestrncpy((char*)WFIFOP(fd,59), acc->email, 40);
+		safestrncpy((char*)WFIFOP(fd,99), acc->last_ip, 16);
+		WFIFOL(fd,115) = acc->group_id;
+		safestrncpy((char*)WFIFOP(fd,119), acc->lastlogin, 24);
+		WFIFOL(fd,143) = acc->logincount;
+		WFIFOL(fd,147) = acc->state;
+		if (u_group >= acc->group_id) 
+			safestrncpy((char*)WFIFOP(fd,151), acc->pincode, 5);
+		else
+			memset(WFIFOP(fd,151), '\0', 5);
+		safestrncpy((char*)WFIFOP(fd,156), acc->birthdate, 11);
+		WFIFOL(fd,167) = map_fd;
+		WFIFOL(fd,171) = u_fd;
+		WFIFOL(fd,175) = u_aid;
+		WFIFOL(fd,179) = account_id;
+		WFIFOSET(fd,183);
+	}
+	else
+	{
+		WFIFOHEAD(fd,18);
+		WFIFOW(fd,0) = 0x2736;
+		WFIFOL(fd,2) = map_fd;
+		WFIFOL(fd,6) = u_fd;
+		WFIFOL(fd,10) = u_aid;
+		WFIFOL(fd,14) = account_id;
+		WFIFOSET(fd,18);
+	}
+}
+
+void login_fromchar_parse_accinfo(int fd)
+{
+	struct mmo_account acc;
+	int account_id = RFIFOL(fd, 2), u_fd = RFIFOL(fd, 6), u_aid = RFIFOL(fd, 10), u_group = RFIFOL(fd, 14), map_fd = RFIFOL(fd, 18);
+	if (accounts->load_num(accounts, &acc, account_id)) {
+		login_fromchar_accinfo(fd, account_id, u_fd, u_aid, u_group, map_fd, &acc);
+	} else {
+		login_fromchar_accinfo(fd, account_id, u_fd, u_aid, u_group, map_fd, NULL);
+	}
+	RFIFOSKIP(fd,22);
+}
+
 //--------------------------------
 // Packet parsing for char-servers
 //--------------------------------
@@ -380,62 +893,7 @@ int login_parse_fromchar(int fd)
 			if( RFIFOREST(fd) < 23 )
 				return 0;
 		{
-			struct auth_node* node;
-
-			int account_id = RFIFOL(fd,2);
-			uint32 login_id1 = RFIFOL(fd,6);
-			uint32 login_id2 = RFIFOL(fd,10);
-			uint8 sex = RFIFOB(fd,14);
-			//uint32 ip_ = ntohl(RFIFOL(fd,15));
-			int request_id = RFIFOL(fd,19);
-			RFIFOSKIP(fd,23);
-
-			node = (struct auth_node*)idb_get(auth_db, account_id);
-			if( runflag == LOGINSERVER_ST_RUNNING &&
-				node != NULL &&
-				node->account_id == account_id &&
-				node->login_id1  == login_id1 &&
-				node->login_id2  == login_id2 &&
-				node->sex        == sex_num2str(sex) /*&&
-				node->ip         == ip_*/ )
-			{// found
-				//ShowStatus("Char-server '%s': authentication of the account %d accepted (ip: %s).\n", server[id].name, account_id, ip);
-
-				// send ack
-				WFIFOHEAD(fd,33);
-				WFIFOW(fd,0) = 0x2713;
-				WFIFOL(fd,2) = account_id;
-				WFIFOL(fd,6) = login_id1;
-				WFIFOL(fd,10) = login_id2;
-				WFIFOB(fd,14) = sex;
-				WFIFOB(fd,15) = 0;// ok
-				WFIFOL(fd,16) = request_id;
-				WFIFOL(fd,20) = node->version;
-				WFIFOB(fd,24) = node->clienttype;
-				WFIFOL(fd,25) = node->group_id;
-				WFIFOL(fd,29) = (unsigned int)node->expiration_time;
-				WFIFOSET(fd,33);
-
-				// each auth entry can only be used once
-				idb_remove(auth_db, account_id);
-			}
-			else
-			{// authentication not found
-				ShowStatus("Char-server '%s': authentication of the account %d REFUSED (ip: %s).\n", server[id].name, account_id, ip);
-				WFIFOHEAD(fd,33);
-				WFIFOW(fd,0) = 0x2713;
-				WFIFOL(fd,2) = account_id;
-				WFIFOL(fd,6) = login_id1;
-				WFIFOL(fd,10) = login_id2;
-				WFIFOB(fd,14) = sex;
-				WFIFOB(fd,15) = 1;// auth failed
-				WFIFOL(fd,16) = request_id;
-				WFIFOL(fd,20) = 0;
-				WFIFOB(fd,24) = 0;
-				WFIFOL(fd,25) = 0;
-				WFIFOL(fd,29) = 0;
-				WFIFOSET(fd,33);
-			}
+			login_fromchar_parse_auth(fd, id, ip);
 		}
 		break;
 
@@ -443,16 +901,7 @@ int login_parse_fromchar(int fd)
 			if( RFIFOREST(fd) < 6 )
 				return 0;
 		{
-			int users = RFIFOL(fd,2);
-			RFIFOSKIP(fd,6);
-
-			// how many users on world? (update)
-			if( server[id].users != users )
-			{
-				ShowStatus("set users %s : %d\n", server[id].name, users);
-
-				server[id].users = (uint16)users;
-			}
+			login_fromchar_parse_update_users(fd, id);
 		}
 		break;
 
@@ -460,24 +909,7 @@ int login_parse_fromchar(int fd)
 			if (RFIFOREST(fd) < 46)
 				return 0;
 		{
-			struct mmo_account acc;
-			char email[40];
-
-			int account_id = RFIFOL(fd,2);
-			safestrncpy(email, (char*)RFIFOP(fd,6), 40); remove_control_chars(email);
-			RFIFOSKIP(fd,46);
-
-			if( e_mail_check(email) == 0 )
-				ShowNotice("Char-server '%s': Attempt to create an e-mail on an account with a default e-mail REFUSED - e-mail is invalid (account: %d, ip: %s)\n", server[id].name, account_id, ip);
-			else
-			if( !accounts->load_num(accounts, &acc, account_id) || strcmp(acc.email, "a@a.com") == 0 || acc.email[0] == '\0' )
-				ShowNotice("Char-server '%s': Attempt to create an e-mail on an account with a default e-mail REFUSED - account doesn't exist or e-mail of account isn't default e-mail (account: %d, ip: %s).\n", server[id].name, account_id, ip);
-			else {
-				memcpy(acc.email, email, 40);
-				ShowNotice("Char-server '%s': Create an e-mail on an account with a default e-mail (account: %d, new e-mail: %s, ip: %s).\n", server[id].name, account_id, email, ip);
-				// Save
-				accounts->save(accounts, &acc);
-			}
+			login_fromchar_parse_request_change_email(fd, id, ip);
 		}
 		break;
 
@@ -485,50 +917,12 @@ int login_parse_fromchar(int fd)
 			if( RFIFOREST(fd) < 6 )
 				return 0;
 		{
-			struct mmo_account acc;
-			time_t expiration_time = 0;
-			char email[40] = "";
-			int group_id = 0;
-			uint8 char_slots = 0;
-			char birthdate[10+1] = "";
-			char pincode[4+1] = "\0\0\0\0";
-
-			int account_id = RFIFOL(fd,2);
-			RFIFOSKIP(fd,6);
-
-			if( !accounts->load_num(accounts, &acc, account_id) )
-				ShowNotice("Char-server '%s': account %d NOT found (ip: %s).\n", server[id].name, account_id, ip);
-			else {
-				safestrncpy(email, acc.email, sizeof(email));
-				expiration_time = acc.expiration_time;
-				group_id = acc.group_id;
-				char_slots = acc.char_slots;
-				safestrncpy(pincode, acc.pincode, sizeof(pincode));
-				safestrncpy(birthdate, acc.birthdate, sizeof(birthdate));
-				if( strlen(pincode) == 0 )
-					memset(pincode,'\0',sizeof(pincode));
-			}
-
-			WFIFOHEAD(fd,72);
-			WFIFOW(fd,0) = 0x2717;
-			WFIFOL(fd,2) = account_id;
-			safestrncpy((char*)WFIFOP(fd,6), email, 40);
-			WFIFOL(fd,46) = (uint32)expiration_time;
-			WFIFOB(fd,50) = (unsigned char)group_id;
-			WFIFOB(fd,51) = char_slots;
-			safestrncpy((char*)WFIFOP(fd,52), birthdate, 10+1);
-			safestrncpy((char*)WFIFOP(fd,63), pincode, 4+1 );
-			WFIFOL(fd,68) = acc.pincode_change;
-			WFIFOSET(fd,72);
+			login_fromchar_parse_account_data(fd, id, ip);
 		}
 		break;
 
 		case 0x2719: // ping request from charserver
-			RFIFOSKIP(fd,2);
-
-			WFIFOHEAD(fd,2);
-			WFIFOW(fd,0) = 0x2718;
-			WFIFOSET(fd,2);
+			login_fromchar_parse_ping(fd);
 		break;
 
 		// Map server send information to change an email of an account via char-server
@@ -536,35 +930,7 @@ int login_parse_fromchar(int fd)
 			if (RFIFOREST(fd) < 86)
 				return 0;
 		{
-			struct mmo_account acc;
-			char actual_email[40];
-			char new_email[40];
-
-			int account_id = RFIFOL(fd,2);
-			safestrncpy(actual_email, (char*)RFIFOP(fd,6), 40);
-			safestrncpy(new_email, (char*)RFIFOP(fd,46), 40);
-			RFIFOSKIP(fd, 86);
-
-			if( e_mail_check(actual_email) == 0 )
-				ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command), but actual email is invalid (account: %d, ip: %s)\n", server[id].name, account_id, ip);
-			else
-			if( e_mail_check(new_email) == 0 )
-				ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command) with a invalid new e-mail (account: %d, ip: %s)\n", server[id].name, account_id, ip);
-			else
-			if( strcmpi(new_email, "a@a.com") == 0 )
-				ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command) with a default e-mail (account: %d, ip: %s)\n", server[id].name, account_id, ip);
-			else
-			if( !accounts->load_num(accounts, &acc, account_id) )
-				ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command), but account doesn't exist (account: %d, ip: %s).\n", server[id].name, account_id, ip);
-			else
-			if( strcmpi(acc.email, actual_email) != 0 )
-				ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command), but actual e-mail is incorrect (account: %d (%s), actual e-mail: %s, proposed e-mail: %s, ip: %s).\n", server[id].name, account_id, acc.userid, acc.email, actual_email, ip);
-			else {
-				safestrncpy(acc.email, new_email, 40);
-				ShowNotice("Char-server '%s': Modify an e-mail on an account (@email GM command) (account: %d (%s), new e-mail: %s, ip: %s).\n", server[id].name, account_id, acc.userid, new_email, ip);
-				// Save
-				accounts->save(accounts, &acc);
-			}
+			login_fromchar_parse_change_email(fd, id, ip);
 		}
 		break;
 
@@ -572,34 +938,7 @@ int login_parse_fromchar(int fd)
 			if (RFIFOREST(fd) < 10)
 				return 0;
 		{
-			struct mmo_account acc;
-
-			int account_id = RFIFOL(fd,2);
-			unsigned int state = RFIFOL(fd,6);
-			RFIFOSKIP(fd,10);
-
-			if( !accounts->load_num(accounts, &acc, account_id) )
-				ShowNotice("Char-server '%s': Error of Status change (account: %d not found, suggested status %d, ip: %s).\n", server[id].name, account_id, state, ip);
-			else
-			if( acc.state == state )
-				ShowNotice("Char-server '%s':  Error of Status change - actual status is already the good status (account: %d, status %d, ip: %s).\n", server[id].name, account_id, state, ip);
-			else {
-				ShowNotice("Char-server '%s': Status change (account: %d, new status %d, ip: %s).\n", server[id].name, account_id, state, ip);
-
-				acc.state = state;
-				// Save
-				accounts->save(accounts, &acc);
-
-				// notify other servers
-				if (state != 0) {
-					uint8 buf[11];
-					WBUFW(buf,0) = 0x2731;
-					WBUFL(buf,2) = account_id;
-					WBUFB(buf,6) = 0; // 0: change of state, 1: ban
-					WBUFL(buf,7) = state; // status or final date of a banishment
-					charif_sendallwos(-1, buf, 11);
-				}
-			}
+			login_fromchar_parse_account_update(fd, id, ip);
 		}
 		break;
 
@@ -607,57 +946,7 @@ int login_parse_fromchar(int fd)
 			if (RFIFOREST(fd) < 18)
 				return 0;
 		{
-			struct mmo_account acc;
-
-			int account_id = RFIFOL(fd,2);
-			int year = (short)RFIFOW(fd,6);
-			int month = (short)RFIFOW(fd,8);
-			int mday = (short)RFIFOW(fd,10);
-			int hour = (short)RFIFOW(fd,12);
-			int min = (short)RFIFOW(fd,14);
-			int sec = (short)RFIFOW(fd,16);
-			RFIFOSKIP(fd,18);
-
-			if (!accounts->load_num(accounts, &acc, account_id)) {
-				ShowNotice("Char-server '%s': Error of ban request (account: %d not found, ip: %s).\n", server[id].name, account_id, ip);
-			} else {
-				time_t timestamp;
-				struct tm *tmtime;
-				if (acc.unban_time == 0 || acc.unban_time < time(NULL))
-					timestamp = time(NULL); // new ban
-				else
-					timestamp = acc.unban_time; // add to existing ban
-				tmtime = localtime(&timestamp);
-				tmtime->tm_year += year;
-				tmtime->tm_mon  += month;
-				tmtime->tm_mday += mday;
-				tmtime->tm_hour += hour;
-				tmtime->tm_min  += min;
-				tmtime->tm_sec  += sec;
-				timestamp = mktime(tmtime);
-				if (timestamp == -1) {
-					ShowNotice("Char-server '%s': Error of ban request (account: %d, invalid date, ip: %s).\n", server[id].name, account_id, ip);
-				} else if( timestamp <= time(NULL) || timestamp == 0 ) {
-					ShowNotice("Char-server '%s': Error of ban request (account: %d, new date unbans the account, ip: %s).\n", server[id].name, account_id, ip);
-				} else {
-					uint8 buf[11];
-					char tmpstr[24];
-					timestamp2string(tmpstr, sizeof(tmpstr), timestamp, login_config.date_format);
-					ShowNotice("Char-server '%s': Ban request (account: %d, new final date of banishment: %ld (%s), ip: %s).\n",
-					           server[id].name, account_id, (long)timestamp, tmpstr, ip);
-
-					acc.unban_time = timestamp;
-
-					// Save
-					accounts->save(accounts, &acc);
-
-					WBUFW(buf,0) = 0x2731;
-					WBUFL(buf,2) = account_id;
-					WBUFB(buf,6) = 1; // 0: change of status, 1: ban
-					WBUFL(buf,7) = (uint32)timestamp; // status or final date of a banishment
-					charif_sendallwos(-1, buf, 11);
-				}
-			}
+			login_fromchar_parse_ban(fd, id, ip);
 		}
 		break;
 
@@ -665,33 +954,7 @@ int login_parse_fromchar(int fd)
 			if( RFIFOREST(fd) < 6 )
 				return 0;
 		{
-			struct mmo_account acc;
-
-			int account_id = RFIFOL(fd,2);
-			RFIFOSKIP(fd,6);
-
-			if( !accounts->load_num(accounts, &acc, account_id) )
-				ShowNotice("Char-server '%s': Error of sex change (account: %d not found, ip: %s).\n", server[id].name, account_id, ip);
-			else
-			if( acc.sex == 'S' )
-				ShowNotice("Char-server '%s': Error of sex change - account to change is a Server account (account: %d, ip: %s).\n", server[id].name, account_id, ip);
-			else
-			{
-				unsigned char buf[7];
-				char sex = ( acc.sex == 'M' ) ? 'F' : 'M'; //Change gender
-
-				ShowNotice("Char-server '%s': Sex change (account: %d, new sex %c, ip: %s).\n", server[id].name, account_id, sex, ip);
-
-				acc.sex = sex;
-				// Save
-				accounts->save(accounts, &acc);
-
-				// announce to other servers
-				WBUFW(buf,0) = 0x2723;
-				WBUFL(buf,2) = account_id;
-				WBUFB(buf,6) = sex_str2num(sex);
-				charif_sendallwos(-1, buf, 7);
-			}
+			login_fromchar_parse_change_sex(fd, id, ip);
 		}
 		break;
 
@@ -699,16 +962,7 @@ int login_parse_fromchar(int fd)
 			if( RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd,2) )
 				return 0;
 		{
-			struct mmo_account acc;
-
-			int account_id = RFIFOL(fd,4);
-
-			if( !accounts->load_num(accounts, &acc, account_id) )
-				ShowStatus("Char-server '%s': receiving (from the char-server) of account_reg2 (account: %d not found, ip: %s).\n", server[id].name, account_id, ip);
-			else {
-				mmo_save_accreg2(accounts,fd,account_id,RFIFOL(fd, 8));
-			}
-			RFIFOSKIP(fd,RFIFOW(fd,2));
+			login_fromchar_parse_account_reg2(fd, id, ip);
 		}
 		break;
 
@@ -716,58 +970,27 @@ int login_parse_fromchar(int fd)
 			if( RFIFOREST(fd) < 6 )
 				return 0;
 		{
-			struct mmo_account acc;
-
-			int account_id = RFIFOL(fd,2);
-			RFIFOSKIP(fd,6);
-
-			if( !accounts->load_num(accounts, &acc, account_id) )
-				ShowNotice("Char-server '%s': Error of Unban request (account: %d not found, ip: %s).\n", server[id].name, account_id, ip);
-			else
-			if( acc.unban_time == 0 )
-				ShowNotice("Char-server '%s': Error of Unban request (account: %d, no change for unban date, ip: %s).\n", server[id].name, account_id, ip);
-			else
-			{
-				ShowNotice("Char-server '%s': Unban request (account: %d, ip: %s).\n", server[id].name, account_id, ip);
-				acc.unban_time = 0;
-				accounts->save(accounts, &acc);
-			}
+			login_fromchar_parse_unban(fd, id, ip);
 		}
 		break;
 
 		case 0x272b:    // Set account_id to online [Wizputer]
 			if( RFIFOREST(fd) < 6 )
 				return 0;
-			login_add_online_user(id, RFIFOL(fd,2));
-			RFIFOSKIP(fd,6);
+			login_fromchar_parse_account_online(fd, id);
 		break;
 
 		case 0x272c:   // Set account_id to offline [Wizputer]
 			if( RFIFOREST(fd) < 6 )
 				return 0;
-			login_remove_online_user(RFIFOL(fd,2));
-			RFIFOSKIP(fd,6);
+			login_fromchar_parse_account_offline(fd);
 		break;
 
 		case 0x272d:	// Receive list of all online accounts. [Skotlex]
 			if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd,2))
 				return 0;
 			{
-				struct online_login_data *p;
-				int aid;
-				uint32 i, users;
-				online_db->foreach(online_db, login_online_db_setoffline, id); //Set all chars from this char-server offline first
-				users = RFIFOW(fd,4);
-				for (i = 0; i < users; i++) {
-					aid = RFIFOL(fd,6+i*4);
-					p = idb_ensure(online_db, aid, login_create_online_user);
-					p->char_server = id;
-					if (p->waiting_disconnect != INVALID_TIMER)
-					{
-						timer->delete(p->waiting_disconnect, login_waiting_disconnect_timer);
-						p->waiting_disconnect = INVALID_TIMER;
-					}
-				}
+				login_fromchar_parse_online_accounts(fd, id);
 			}
 			RFIFOSKIP(fd,RFIFOW(fd,2));
 		break;
@@ -776,40 +999,25 @@ int login_parse_fromchar(int fd)
 			if (RFIFOREST(fd) < 10)
 				return 0;
 		{
-			int account_id = RFIFOL(fd,2);
-			int char_id = RFIFOL(fd,6);
-			RFIFOSKIP(fd,10);
-
-			mmo_send_accreg2(accounts,fd,account_id,char_id);
+			login_fromchar_parse_request_account_reg2(fd);
 		}
 		break;
 
 		case 0x2736: // WAN IP update from char-server
 			if( RFIFOREST(fd) < 6 )
 				return 0;
-			server[id].ip = ntohl(RFIFOL(fd,2));
-			ShowInfo("Updated IP of Server #%d to %d.%d.%d.%d.\n",id, CONVIP(server[id].ip));
-			RFIFOSKIP(fd,6);
+			login_fromchar_parse_update_wan_ip(fd, id);
 		break;
 
 		case 0x2737: //Request to set all offline.
-			ShowInfo("Setting accounts from char-server %d offline.\n", id);
-			online_db->foreach(online_db, login_online_db_setoffline, id);
-			RFIFOSKIP(fd,2);
+			login_fromchar_parse_all_offline(fd, id);
 		break;
 
 		case 0x2738: //Change PIN Code for a account
 			if( RFIFOREST(fd) < 11 )
 				return 0;
 			else {
-				struct mmo_account acc;
-				
-				if( accounts->load_num(accounts, &acc, RFIFOL(fd,2) ) ) {
-					strncpy( acc.pincode, (char*)RFIFOP(fd,6), 5 );
-					acc.pincode_change = ((unsigned int)time( NULL ));
-					accounts->save(accounts, &acc);
-				}
-				RFIFOSKIP(fd,11);
+				login_fromchar_parse_change_pincode(fd);
 			}
 			break;
 			
@@ -817,19 +1025,8 @@ int login_parse_fromchar(int fd)
 			if( RFIFOREST(fd) < 6 )
 				return 0;
 			else {
-				struct mmo_account acc;
-				
-				if( accounts->load_num(accounts, &acc, RFIFOL(fd,2) ) ) {
-					struct online_login_data* ld;
-
-					if( ( ld = (struct online_login_data*)idb_get(online_db,acc.account_id) ) == NULL )
-						return 0;
-					
-					login_log( host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed" );
-				}
-				
-				login_remove_online_user(acc.account_id);
-				RFIFOSKIP(fd,6);
+				if (login_fromchar_parse_wrong_pincode(fd))
+					return 0;
 			}
 		break;
 				
@@ -837,42 +1034,7 @@ int login_parse_fromchar(int fd)
 			if( RFIFOREST(fd) < 22 )
 				return 0;
 			else {
-				struct mmo_account acc;
-				int account_id = RFIFOL(fd, 2), u_fd = RFIFOL(fd, 6), u_aid = RFIFOL(fd, 10), u_group = RFIFOL(fd, 14), map_fd = RFIFOL(fd, 18);
-				if (accounts->load_num(accounts, &acc, account_id)) {
-					WFIFOHEAD(fd,183);
-					WFIFOW(fd,0) = 0x2737;
-					safestrncpy((char*)WFIFOP(fd,2), acc.userid, NAME_LENGTH);
-					if (u_group >= acc.group_id)
-						safestrncpy((char*)WFIFOP(fd,26), acc.pass, 33);
-					else
-						memset(WFIFOP(fd,26), '\0', 33);
-					safestrncpy((char*)WFIFOP(fd,59), acc.email, 40);
-					safestrncpy((char*)WFIFOP(fd,99), acc.last_ip, 16);
-					WFIFOL(fd,115) = acc.group_id;
-					safestrncpy((char*)WFIFOP(fd,119), acc.lastlogin, 24);
-					WFIFOL(fd,143) = acc.logincount;
-					WFIFOL(fd,147) = acc.state;
-					if (u_group >= acc.group_id) 
-						safestrncpy((char*)WFIFOP(fd,151), acc.pincode, 5);
-					else
-						memset(WFIFOP(fd,151), '\0', 5);
-					safestrncpy((char*)WFIFOP(fd,156), acc.birthdate, 11);
-					WFIFOL(fd,167) = map_fd;
-					WFIFOL(fd,171) = u_fd;
-					WFIFOL(fd,175) = u_aid;
-					WFIFOL(fd,179) = account_id;
-					WFIFOSET(fd,183);
-				} else {
-					WFIFOHEAD(fd,18);
-					WFIFOW(fd,0) = 0x2736;
-					WFIFOL(fd,2) = map_fd;
-					WFIFOL(fd,6) = u_fd;
-					WFIFOL(fd,10) = u_aid;
-					WFIFOL(fd,14) = account_id;
-					WFIFOSET(fd,18);
-				}
-				RFIFOSKIP(fd,22);
+				login_fromchar_parse_accinfo(fd);
 			}
 		break;
 		default:
