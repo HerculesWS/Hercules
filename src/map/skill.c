@@ -2120,6 +2120,7 @@ int skill_magic_reflect(struct block_list* src, struct block_list* bl, int type)
  *      packet shouldn't display a skill animation)
  * flag&0x2000 is used to signal that the skill_lv should be passed as -1 to the
  *      client (causes player characters to not scream skill name)
+ * flag&0x4000 - Return 0 if damage was reflected
  *-------------------------------------------------------------------------*/
 int skill_attack(int attack_type, struct block_list* src, struct block_list *dsrc, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag) {
 	struct Damage dmg;
@@ -2790,6 +2791,9 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 	}
 
 	map->freeblock_unlock();
+
+	if ((flag&0x4000) && rmdamage == 1)
+		return 0; //Should return 0 when damage was reflected
 
 	return (int)cap_value(damage,INT_MIN,INT_MAX);
 }

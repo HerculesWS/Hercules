@@ -4785,7 +4785,9 @@ int clif_outsight(struct block_list *bl,va_list ap)
 	}
 	if (sd && sd->fd) { //sd is watching tbl go out of view.
 		nullpo_ret(tbl);
-		if (((vd=status->get_viewdata(tbl)) && vd->class_ != INVISIBLE_CLASS) &&
+		if(tbl->type == BL_SKILL) //Trap knocked out of sight
+			clif->clearchar_skillunit((struct skill_unit *)tbl,sd->fd);
+		else if (((vd=status->get_viewdata(tbl)) && vd->class_ != INVISIBLE_CLASS) &&
 			!(tbl->type == BL_NPC && (((TBL_NPC*)tbl)->option&OPTION_INVISIBLE)))
 			clif->clearunit_single(tbl->id,CLR_OUTSIGHT,sd->fd);
 	}

@@ -6015,7 +6015,9 @@ int status_get_party_id(struct block_list *bl) {
 			return ((TBL_MER*)bl)->master->status.party_id;
 		break;
 	case BL_SKILL:
-		return ((TBL_SKILL*)bl)->group->party_id;
+		if (((TBL_SKILL*)bl)->group)
+			return ((TBL_SKILL*)bl)->group->party_id;
+		break;
 	case BL_ELEM:
 		if (((TBL_ELEM*)bl)->master)
 			return ((TBL_ELEM*)bl)->master->status.party_id;
@@ -6058,7 +6060,9 @@ int status_get_guild_id(struct block_list *bl) {
 			return ((TBL_NPC*)bl)->u.scr.guild_id;
 		break;
 	case BL_SKILL:
-		return ((TBL_SKILL*)bl)->group->guild_id;
+		if (((TBL_SKILL*)bl)->group)
+				return ((TBL_SKILL*)bl)->group->guild_id;
+			break;
 	case BL_ELEM:
 		if (((TBL_ELEM*)bl)->master)
 			return ((TBL_ELEM*)bl)->master->status.guild_id;
@@ -7883,8 +7887,8 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_RUWACH:
 			case SC_WZ_SIGHTBLASTER:
 				val3 = skill->get_splash(val2, val1); //Val2 should bring the skill-id.
-				val2 = tick/250;
-				tick_time = 10; // [GodLesZ] tick time
+				val2 = tick/20;
+				tick_time = 20; // [GodLesZ] tick time
 				break;
 
 				//Permanent effects.
@@ -10522,14 +10526,17 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 		case SC_SIGHT:
 		case SC_RUWACH:
 		case SC_WZ_SIGHTBLASTER:
-			if(type == SC_WZ_SIGHTBLASTER)
+			if(type == SC_WZ_SIGHTBLASTER) {
+			//Restore trap immunity
+			if(sce->val4%2)
+				sce->val4--;
 				map->foreachinrange(status->change_timer_sub, bl, sce->val3, BL_CHAR|BL_SKILL, bl, sce, type, tick);
-			else
+			} else
 				map->foreachinrange(status->change_timer_sub, bl, sce->val3, BL_CHAR, bl, sce, type, tick);
 
 			if( --(sce->val2)>0 ){
-				sce->val4 += 250; // use for Shadow Form 2 seconds checking.
-				sc_timer_next(250+tick, status->change_timer, bl->id, data);
+				sce->val4 += 20; // use for Shadow Form 2 seconds checking.
+				sc_timer_next(20+tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
@@ -11324,10 +11331,13 @@ int status_change_timer_sub(struct block_list* bl, va_list ap) {
 			if (battle->check_target( src, bl, BCT_ENEMY ) > 0
 			 && status->check_skilluse(src, bl, WZ_SIGHTBLASTER, 2)
 			) {
-				if (sce && !(bl->type&BL_SKILL) //The hit is not counted if it's against a trap
-						&& skill->attack(BF_MAGIC,src,src,bl,WZ_SIGHTBLASTER,1,tick,0)
-				){
-						sce->val2 = 0; //This signals it to end.
+				struct skill_unit *su = (struct skill_unit *)bl;
+				if (sce && skill->attack(BF_MAGIC,src,src,bl,WZ_SIGHTBLASTER,sce->val1,tick,0x4000)
+					&& (!su || !su->group || !(skill->get_inf2(su->group->skill_id)&INF2_TRAP))) { // The hit is not counted if it's against a trap
+					sce->val2 = 0; // This signals it to end.
+				} else if((bl->type&BL_SKILL) && sce->val4%2 == 0) {
+					//Remove trap immunity temporarily so it triggers if you still stand on it
+					sce->val4++;
 				}
 			}
 			break;

@@ -795,6 +795,7 @@ int unit_blown(struct block_list* bl, int dx, int dy, int count, int flag)
 		}
 
 		if( sd ) {
+			unit->stop_stepaction(bl); //Stop stepaction when knocked back
 			sd->ud.to_x = nx;
 			sd->ud.to_y = ny;
 		}
