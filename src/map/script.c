@@ -1351,7 +1351,7 @@ const char* parse_curly_close(const char* p)
 		char label[256];
 		int l;
 		// Remove temporary variables
-		sprintf(label,"set $@__SW%x_VAL,0;",script->syntax.curly[pos].index);
+		sprintf(label,"__setr $@__SW%x_VAL,0;",script->syntax.curly[pos].index);
 		script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
 		script->parse_line(label);
 		script->syntax.curly_count--;
@@ -1508,7 +1508,7 @@ const char* parse_syntax(const char* p)
 					disp_error_message("parse_syntax: dup 'case'",p);
 				linkdb_insert(&script->syntax.curly[pos].case_label, (void*)h64BPTRSIZE(v), (void*)1);
 
-				sprintf(label,"set $@__SW%x_VAL,0;",script->syntax.curly[pos].index);
+				sprintf(label,"__setr $@__SW%x_VAL,0;",script->syntax.curly[pos].index);
 				script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
 
 				script->parse_line(label);
@@ -1802,7 +1802,7 @@ const char* parse_syntax(const char* p)
 			script->syntax.curly[script->syntax.curly_count].flag  = 0;
 			sprintf(label,"$@__SW%x_VAL",script->syntax.curly[script->syntax.curly_count].index);
 			script->syntax.curly_count++;
-			script->addl(script->add_str("set"));
+			script->addl(script->add_str("__setr"));
 			script->addc(C_ARG);
 			script->addl(script->add_str(label));
 			p=script->parse_expr(p);
@@ -5683,7 +5683,7 @@ BUILDIN(copyarray);
 /// The value is converted to the type of the variable.
 ///
 /// set(<variable>,<value>) -> <variable>
-BUILDIN(setr) {
+BUILDIN(__setr) {
 	TBL_PC* sd = NULL;
 	struct script_data* data;
 	//struct script_data* datavalue;
@@ -5693,7 +5693,7 @@ BUILDIN(setr) {
 
 	data = script_getdata(st,2);
 	//datavalue = script_getdata(st,3);
-	if( !data_isreference(data) || reference_toconstant(data) ) {
+	if (!data_isreference(data) || reference_toconstant(data)) {
 		ShowError("script:set: not a variable\n");
 		script->reportdata(script_getdata(st,2));
 		st->state = END;
@@ -5704,9 +5704,9 @@ BUILDIN(setr) {
 	name = reference_getname(data);
 	prefix = *name;
 
-	if( not_server_variable(prefix) ) {
+	if (not_server_variable(prefix)) {
 		sd = script->rid2sd(st);
-		if( sd == NULL ) {
+		if (sd == NULL) {
 			ShowError("script:set: no player attached for player variable '%s'\n", name);
 			return true;
 		}
@@ -5714,19 +5714,19 @@ BUILDIN(setr) {
 
 #if 0
 	// TODO: see de43fa0f73be01080bd11c08adbfb7c158324c81
-	if( data_isreference(datavalue) ) {
+	if (data_isreference(datavalue)) {
 		// the value being referenced is a variable
 		const char* namevalue = reference_getname(datavalue);
 
-		if( !not_array_variable(*namevalue) ) {
+		if (!not_array_variable(*namevalue)) {
 			// array variable being copied into another array variable
-			if( sd == NULL && not_server_variable(*namevalue) && !(sd = script->rid2sd(st)) ) {
+			if (sd == NULL && not_server_variable(*namevalue) && !(sd = script->rid2sd(st))) {
 				// player must be attached in order to copy a player variable
 				ShowError("script:set: no player attached for player variable '%s'\n", namevalue);
 				return true;
 			}
 
-			if( is_string_variable(namevalue) != is_string_variable(name) ) {
+			if (is_string_variable(namevalue) != is_string_variable(name)) {
 				// non-matching array value types
 				ShowWarning("script:set: two array variables do not match in type.\n");
 				return true;
@@ -5741,9 +5741,9 @@ BUILDIN(setr) {
 	}
 #endif
 
-	if( script_hasdata(st, 4) ) {
+	if (script_hasdata(st, 4)) {
 		// Optional argument used by post-increment/post-decrement constructs to return the previous value
-		if( is_string_variable(name) ) {
+		if (is_string_variable(name)) {
 			script_pushstrcopy(st, script_getstr(st, 4));
 		} else {
 			script_pushint(st, script_getnum(st, 4));
@@ -5753,7 +5753,7 @@ BUILDIN(setr) {
 		script_pushcopy(st,2);
 	}
 
-	if( is_string_variable(name) )
+	if (is_string_variable(name))
 		script->set_reg(st,sd,num,name,(void*)script_getstr(st,3),script_getref(st,2));
 	else
 		script->set_reg(st,sd,num,name,(void*)h64BPTRSIZE(script_getnum(st,3)),script_getref(st,2));
@@ -18963,7 +18963,7 @@ bool script_add_builtin(const struct script_function *buildin, bool override) {
 		script->buildin[offset] = NULL;
 	} else {
 		// Adding new function
-		if( strcmp(buildin->name, "setr") == 0 ) script->buildin_set_ref = n;
+		if( strcmp(buildin->name, "__setr") == 0 ) script->buildin_set_ref = n;
 		else if( strcmp(buildin->name, "callsub") == 0 ) script->buildin_callsub_ref = n;
 		else if( strcmp(buildin->name, "callfunc") == 0 ) script->buildin_callfunc_ref = n;
 		else if( strcmp(buildin->name, "getelementofarray") == 0 ) script->buildin_getelementofarray_ref = n;
@@ -19009,6 +19009,7 @@ void script_parse_builtin(void) {
 	struct script_function BUILDIN[] = {
 		/* Commands for internal use by the script engine */
 		BUILDIN_DEF(__jump_zero,"il"),
+		BUILDIN_DEF(__setr,"rv?"),
 
 		// NPC interaction
 		BUILDIN_DEF(mes,"s*"),
@@ -19034,8 +19035,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(warpguild,"siii"), // [Fredzilla]
 		BUILDIN_DEF(setlook,"ii"),
 		BUILDIN_DEF(changelook,"ii"), // Simulates but don't Store it
-		BUILDIN_DEF2(setr,"set","rv"),
-		BUILDIN_DEF(setr,"rv?"), // Not meant to be used directly, required for var++/var--
+		BUILDIN_DEF2(__setr,"set","rv"),
 		BUILDIN_DEF(setarray,"rv*"),
 		BUILDIN_DEF(cleararray,"rvi"),
 		BUILDIN_DEF(copyarray,"rri"),
