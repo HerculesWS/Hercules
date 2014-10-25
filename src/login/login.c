@@ -1244,6 +1244,22 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 	return -1; // account OK
 }
 
+void login_connection_problem(int fd, uint8 status)
+{
+	WFIFOHEAD(fd,3);
+	WFIFOW(fd,0) = 0x81;
+	WFIFOB(fd,2) = status;
+	WFIFOSET(fd,3);
+}
+
+void login_kick(struct login_session_data* sd)
+{
+	uint8 buf[6];
+	WBUFW(buf,0) = 0x2734;
+	WBUFL(buf,2) = sd->account_id;
+	charif_sendallwos(-1, buf, 6);
+}
+
 void login_auth_ok(struct login_session_data* sd)
 {
 	int fd = sd->fd;
@@ -1257,26 +1273,17 @@ void login_auth_ok(struct login_session_data* sd)
 	if( runflag != LOGINSERVER_ST_RUNNING )
 	{
 		// players can only login while running
-		WFIFOHEAD(fd,3);
-		WFIFOW(fd,0) = 0x81;
-		WFIFOB(fd,2) = 1;// server closed
-		WFIFOSET(fd,3);
+		login_connection_problem(fd, 1); // 01 = server closed
 		return;
 	}
 
 	if( login_config.group_id_to_connect >= 0 && sd->group_id != login_config.group_id_to_connect ) {
 		ShowStatus("Connection refused: the required group id for connection is %d (account: %s, group: %d).\n", login_config.group_id_to_connect, sd->userid, sd->group_id);
-		WFIFOHEAD(fd,3);
-		WFIFOW(fd,0) = 0x81;
-		WFIFOB(fd,2) = 1; // 01 = Server closed
-		WFIFOSET(fd,3);
+		login_connection_problem(fd, 1); // 01 = server closed
 		return;
 	} else if( login_config.min_group_id_to_connect >= 0 && login_config.group_id_to_connect == -1 && sd->group_id < login_config.min_group_id_to_connect ) {
 		ShowStatus("Connection refused: the minimum group id required for connection is %d (account: %s, group: %d).\n", login_config.min_group_id_to_connect, sd->userid, sd->group_id);
-		WFIFOHEAD(fd,3);
-		WFIFOW(fd,0) = 0x81;
-		WFIFOB(fd,2) = 1; // 01 = Server closed
-		WFIFOSET(fd,3);
+		login_connection_problem(fd, 1); // 01 = server closed
 		return;
 	}
 
@@ -1288,10 +1295,7 @@ void login_auth_ok(struct login_session_data* sd)
 	if( server_num == 0 )
 	{// if no char-server, don't send void list of servers, just disconnect the player with proper message
 		ShowStatus("Connection refused: there is no char-server online (account: %s).\n", sd->userid);
-		WFIFOHEAD(fd,3);
-		WFIFOW(fd,0) = 0x81;
-		WFIFOB(fd,2) = 1; // 01 = Server closed
-		WFIFOSET(fd,3);
+		login_connection_problem(fd, 1); // 01 = server closed
 		return;
 	}
 
@@ -1301,18 +1305,12 @@ void login_auth_ok(struct login_session_data* sd)
 		{// account is already marked as online!
 			if( data->char_server > -1 )
 			{// Request char servers to kick this account out. [Skotlex]
-				uint8 buf[6];
 				ShowNotice("User '%s' is already online - Rejected.\n", sd->userid);
-				WBUFW(buf,0) = 0x2734;
-				WBUFL(buf,2) = sd->account_id;
-				charif_sendallwos(-1, buf, 6);
+				login_kick(sd);
 				if( data->waiting_disconnect == INVALID_TIMER )
 					data->waiting_disconnect = timer->add(timer->gettick()+AUTH_TIMEOUT, login_waiting_disconnect_timer, sd->account_id, 0);
 
-				WFIFOHEAD(fd,3);
-				WFIFOW(fd,0) = 0x81;
-				WFIFOB(fd,2) = 8; // 08 = Server still recognizes your last login
-				WFIFOSET(fd,3);
+				login_connection_problem(fd, 8); // 08 = Server still recognizes your last login
 				return;
 			}
 			else
