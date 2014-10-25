@@ -54,7 +54,7 @@ struct s_subnet {
 
 int subnet_count = 0;
 
-int mmo_auth_new(const char* userid, const char* pass, const char sex, const char* last_ip);
+int login_mmo_auth_new(const char* userid, const char* pass, const char sex, const char* last_ip);
 
 //-----------------------------------------------------
 // Auth database
@@ -88,12 +88,12 @@ struct online_login_data {
 };
 
 static DBMap* online_db; // int account_id -> struct online_login_data*
-static int waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data);
+static int login_waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data);
 
 /**
  * @see DBCreateData
  */
-static DBData create_online_user(DBKey key, va_list args)
+static DBData login_create_online_user(DBKey key, va_list args)
 {
 	struct online_login_data* p;
 	CREATE(p, struct online_login_data, 1);
@@ -103,37 +103,37 @@ static DBData create_online_user(DBKey key, va_list args)
 	return DB->ptr2data(p);
 }
 
-struct online_login_data* add_online_user(int char_server, int account_id)
+struct online_login_data* login_add_online_user(int char_server, int account_id)
 {
 	struct online_login_data* p;
-	p = idb_ensure(online_db, account_id, create_online_user);
+	p = idb_ensure(online_db, account_id, login_create_online_user);
 	p->char_server = char_server;
 	if( p->waiting_disconnect != INVALID_TIMER )
 	{
-		timer->delete(p->waiting_disconnect, waiting_disconnect_timer);
+		timer->delete(p->waiting_disconnect, login_waiting_disconnect_timer);
 		p->waiting_disconnect = INVALID_TIMER;
 	}
 	return p;
 }
 
-void remove_online_user(int account_id)
+void login_remove_online_user(int account_id)
 {
 	struct online_login_data* p;
 	p = (struct online_login_data*)idb_get(online_db, account_id);
 	if( p == NULL )
 		return;
 	if( p->waiting_disconnect != INVALID_TIMER )
-		timer->delete(p->waiting_disconnect, waiting_disconnect_timer);
+		timer->delete(p->waiting_disconnect, login_waiting_disconnect_timer);
 
 	idb_remove(online_db, account_id);
 }
 
-static int waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data) {
+static int login_waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct online_login_data* p = (struct online_login_data*)idb_get(online_db, id);
 	if( p != NULL && p->waiting_disconnect == tid && p->account_id == id )
 	{
 		p->waiting_disconnect = INVALID_TIMER;
-		remove_online_user(id);
+		login_remove_online_user(id);
 		idb_remove(auth_db, id);
 	}
 	return 0;
@@ -142,7 +142,7 @@ static int waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data) 
 /**
  * @see DBApply
  */
-static int online_db_setoffline(DBKey key, DBData *data, va_list ap)
+static int login_online_db_setoffline(DBKey key, DBData *data, va_list ap)
 {
 	struct online_login_data* p = DB->data2ptr(data);
 	int server_id = va_arg(ap, int);
@@ -151,7 +151,7 @@ static int online_db_setoffline(DBKey key, DBData *data, va_list ap)
 		p->char_server = -1;
 		if( p->waiting_disconnect != INVALID_TIMER )
 		{
-			timer->delete(p->waiting_disconnect, waiting_disconnect_timer);
+			timer->delete(p->waiting_disconnect, login_waiting_disconnect_timer);
 			p->waiting_disconnect = INVALID_TIMER;
 		}
 	}
@@ -163,16 +163,16 @@ static int online_db_setoffline(DBKey key, DBData *data, va_list ap)
 /**
  * @see DBApply
  */
-static int online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
+static int login_online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
 {
 	struct online_login_data *character= DB->data2ptr(data);
 	if (character->char_server == -2) //Unknown server.. set them offline
-		remove_online_user(character->account_id);
+		login_remove_online_user(character->account_id);
 	return 0;
 }
 
-static int online_data_cleanup(int tid, int64 tick, int id, intptr_t data) {
-	online_db->foreach(online_db, online_data_cleanup_sub);
+static int login_online_data_cleanup(int tid, int64 tick, int id, intptr_t data) {
+	online_db->foreach(online_db, login_online_data_cleanup_sub);
 	return 0;
 }
 
@@ -222,7 +222,7 @@ void chrif_server_destroy(int id)
 /// Resets all the data related to a server.
 void chrif_server_reset(int id)
 {
-	online_db->foreach(online_db, online_db_setoffline, id); //Set all chars from this char server to offline.
+	online_db->foreach(online_db, login_online_db_setoffline, id); //Set all chars from this char server to offline.
 	chrif_server_destroy(id);
 	chrif_server_init(id);
 }
@@ -239,7 +239,7 @@ void chrif_on_disconnect(int id)
 //-----------------------------------------------------
 // periodic ip address synchronization
 //-----------------------------------------------------
-static int sync_ip_addresses(int tid, int64 tick, int id, intptr_t data) {
+static int login_sync_ip_addresses(int tid, int64 tick, int id, intptr_t data) {
 	uint8 buf[2];
 	ShowInfo("IP Sync in progress...\n");
 	WBUFW(buf,0) = 0x2735;
@@ -251,7 +251,7 @@ static int sync_ip_addresses(int tid, int64 tick, int id, intptr_t data) {
 //-----------------------------------------------------
 // encrypted/unencrypted password check (from eApp)
 //-----------------------------------------------------
-bool check_encrypted(const char* str1, const char* str2, const char* passwd)
+bool login_check_encrypted(const char* str1, const char* str2, const char* passwd)
 {
 	char tmpstr[64+1], md5str[32+1];
 
@@ -261,7 +261,7 @@ bool check_encrypted(const char* str1, const char* str2, const char* passwd)
 	return (0==strcmp(passwd, md5str));
 }
 
-bool check_password(const char* md5key, int passwdenc, const char* passwd, const char* refpass)
+bool login_check_password(const char* md5key, int passwdenc, const char* passwd, const char* refpass)
 {
 	if(passwdenc == 0)
 	{
@@ -272,15 +272,15 @@ bool check_password(const char* md5key, int passwdenc, const char* passwd, const
 		// password mode set to 1 -> md5(md5key, refpass) enable with <passwordencrypt></passwordencrypt>
 		// password mode set to 2 -> md5(refpass, md5key) enable with <passwordencrypt2></passwordencrypt2>
 		
-		return ((passwdenc&0x01) && check_encrypted(md5key, refpass, passwd)) ||
-		       ((passwdenc&0x02) && check_encrypted(refpass, md5key, passwd));
+		return ((passwdenc&0x01) && login_check_encrypted(md5key, refpass, passwd)) ||
+		       ((passwdenc&0x02) && login_check_encrypted(refpass, md5key, passwd));
 	}
 }
 
 //--------------------------------------------
 // Test to know if an IP come from LAN or WAN.
 //--------------------------------------------
-int lan_subnetcheck(uint32 ip)
+int login_lan_subnetcheck(uint32 ip)
 {
 	int i;
 	ARR_FIND( 0, subnet_count, i, (subnet[i].char_ip & subnet[i].mask) == (ip & subnet[i].mask) );
@@ -338,7 +338,7 @@ int login_lan_config_read(const char *lancfgName)
 //--------------------------------
 // Packet parsing for char-servers
 //--------------------------------
-int parse_fromchar(int fd)
+int login_parse_fromchar(int fd)
 {
 	int j, id;
 	uint32 ipl;
@@ -347,7 +347,7 @@ int parse_fromchar(int fd)
 	ARR_FIND( 0, ARRAYLENGTH(server), id, server[id].fd == fd );
 	if( id == ARRAYLENGTH(server) )
 	{// not a char server
-		ShowDebug("parse_fromchar: Disconnecting invalid session #%d (is not a char-server)\n", fd);
+		ShowDebug("login_parse_fromchar: Disconnecting invalid session #%d (is not a char-server)\n", fd);
 		set_eof(fd);
 		do_close(fd);
 		return 0;
@@ -738,14 +738,14 @@ int parse_fromchar(int fd)
 		case 0x272b:    // Set account_id to online [Wizputer]
 			if( RFIFOREST(fd) < 6 )
 				return 0;
-			add_online_user(id, RFIFOL(fd,2));
+			login_add_online_user(id, RFIFOL(fd,2));
 			RFIFOSKIP(fd,6);
 		break;
 
 		case 0x272c:   // Set account_id to offline [Wizputer]
 			if( RFIFOREST(fd) < 6 )
 				return 0;
-			remove_online_user(RFIFOL(fd,2));
+			login_remove_online_user(RFIFOL(fd,2));
 			RFIFOSKIP(fd,6);
 		break;
 
@@ -756,15 +756,15 @@ int parse_fromchar(int fd)
 				struct online_login_data *p;
 				int aid;
 				uint32 i, users;
-				online_db->foreach(online_db, online_db_setoffline, id); //Set all chars from this char-server offline first
+				online_db->foreach(online_db, login_online_db_setoffline, id); //Set all chars from this char-server offline first
 				users = RFIFOW(fd,4);
 				for (i = 0; i < users; i++) {
 					aid = RFIFOL(fd,6+i*4);
-					p = idb_ensure(online_db, aid, create_online_user);
+					p = idb_ensure(online_db, aid, login_create_online_user);
 					p->char_server = id;
 					if (p->waiting_disconnect != INVALID_TIMER)
 					{
-						timer->delete(p->waiting_disconnect, waiting_disconnect_timer);
+						timer->delete(p->waiting_disconnect, login_waiting_disconnect_timer);
 						p->waiting_disconnect = INVALID_TIMER;
 					}
 				}
@@ -794,7 +794,7 @@ int parse_fromchar(int fd)
 
 		case 0x2737: //Request to set all offline.
 			ShowInfo("Setting accounts from char-server %d offline.\n", id);
-			online_db->foreach(online_db, online_db_setoffline, id);
+			online_db->foreach(online_db, login_online_db_setoffline, id);
 			RFIFOSKIP(fd,2);
 		break;
 
@@ -828,7 +828,7 @@ int parse_fromchar(int fd)
 					login_log( host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed" );
 				}
 				
-				remove_online_user(acc.account_id);
+				login_remove_online_user(acc.account_id);
 				RFIFOSKIP(fd,6);
 			}
 		break;
@@ -876,7 +876,7 @@ int parse_fromchar(int fd)
 			}
 		break;
 		default:
-			ShowError("parse_fromchar: Unknown packet 0x%x from a char-server! Disconnecting!\n", command);
+			ShowError("login_parse_fromchar: Unknown packet 0x%x from a char-server! Disconnecting!\n", command);
 			set_eof(fd);
 			return 0;
 		} // switch
@@ -889,7 +889,7 @@ int parse_fromchar(int fd)
 //-------------------------------------
 // Make new account
 //-------------------------------------
-int mmo_auth_new(const char* userid, const char* pass, const char sex, const char* last_ip) {
+int login_mmo_auth_new(const char* userid, const char* pass, const char sex, const char* last_ip) {
 	static int num_regs = 0; // registration counter
 	static int64 new_reg_tick = 0;
 	int64 tick = timer->gettick();
@@ -947,7 +947,7 @@ int mmo_auth_new(const char* userid, const char* pass, const char sex, const cha
 //-----------------------------------------------------
 // Check/authentication of a connection
 //-----------------------------------------------------
-int mmo_auth(struct login_session_data* sd, bool isServer) {
+int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 	struct mmo_account acc;
 	size_t len;
 
@@ -991,7 +991,7 @@ int mmo_auth(struct login_session_data* sd, bool isServer) {
 			len -= 2;
 			sd->userid[len] = '\0';
 
-			result = mmo_auth_new(sd->userid, sd->passwd, TOUPPER(sd->userid[len+1]), ip);
+			result = login_mmo_auth_new(sd->userid, sd->passwd, TOUPPER(sd->userid[len+1]), ip);
 			if( result != -1 )
 				return result;// Failed to make account. [Skotlex].
 		}
@@ -1007,7 +1007,7 @@ int mmo_auth(struct login_session_data* sd, bool isServer) {
 		return 0; // 0 = Unregistered ID
 	}
 
-	if( !check_password(sd->md5key, sd->passwdenc, sd->passwd, acc.pass) ) {
+	if( !login_check_password(sd->md5key, sd->passwdenc, sd->passwd, acc.pass) ) {
 		ShowNotice("Invalid password (account: '%s', pass: '%s', received pass: '%s', ip: %s)\n", sd->userid, acc.pass, sd->passwd, ip);
 		return 1; // 1 = Incorrect Password
 	}
@@ -1145,7 +1145,7 @@ void login_auth_ok(struct login_session_data* sd)
 				WBUFL(buf,2) = sd->account_id;
 				charif_sendallwos(-1, buf, 6);
 				if( data->waiting_disconnect == INVALID_TIMER )
-					data->waiting_disconnect = timer->add(timer->gettick()+AUTH_TIMEOUT, waiting_disconnect_timer, sd->account_id, 0);
+					data->waiting_disconnect = timer->add(timer->gettick()+AUTH_TIMEOUT, login_waiting_disconnect_timer, sd->account_id, 0);
 
 				WFIFOHEAD(fd,3);
 				WFIFOW(fd,0) = 0x81;
@@ -1158,7 +1158,7 @@ void login_auth_ok(struct login_session_data* sd)
 			{// client has authed but did not access char-server yet
 				// wipe previous session
 				idb_remove(auth_db, sd->account_id);
-				remove_online_user(sd->account_id);
+				login_remove_online_user(sd->account_id);
 				data = NULL;
 			}
 		}
@@ -1183,7 +1183,7 @@ void login_auth_ok(struct login_session_data* sd)
 		if( !session_isValid(server[i].fd) )
 			continue;
 
-		subnet_char_ip = lan_subnetcheck(ip); // Advanced subnet check [LuzZza]
+		subnet_char_ip = login_lan_subnetcheck(ip); // Advanced subnet check [LuzZza]
 		WFIFOL(fd,47+n*32) = htonl((subnet_char_ip) ? subnet_char_ip : server[i].ip);
 		WFIFOW(fd,47+n*32+4) = ntows(htons(server[i].port)); // [!] LE byte order here [!]
 		memcpy(WFIFOP(fd,47+n*32+6), server[i].name, 20);
@@ -1216,10 +1216,10 @@ void login_auth_ok(struct login_session_data* sd)
 		struct online_login_data* data;
 
 		// mark client as 'online'
-		data = add_online_user(-1, sd->account_id);
+		data = login_add_online_user(-1, sd->account_id);
 
 		// schedule deletion of this node
-		data->waiting_disconnect = timer->add(timer->gettick()+AUTH_TIMEOUT, waiting_disconnect_timer, sd->account_id, 0);
+		data->waiting_disconnect = timer->add(timer->gettick()+AUTH_TIMEOUT, login_waiting_disconnect_timer, sd->account_id, 0);
 	}
 }
 
@@ -1294,7 +1294,7 @@ void login_auth_failed(struct login_session_data* sd, int result)
 //----------------------------------------------------------------------------------------
 // Default packet parsing (normal players or char-server connection requests)
 //----------------------------------------------------------------------------------------
-int parse_login(int fd)
+int login_parse_login(int fd)
 {
 	struct login_session_data* sd = (struct login_session_data*)session[fd]->session_data;
 	int result;
@@ -1449,7 +1449,7 @@ int parse_login(int fd)
 				return 0;
 			}
 			
-			result = mmo_auth(sd, false);
+			result = login_mmo_auth(sd, false);
 
 			if( result == -1 )
 				login_auth_ok(sd);
@@ -1501,7 +1501,7 @@ int parse_login(int fd)
 			sprintf(message, "charserver - %s@%u.%u.%u.%u:%u", server_name, CONVIP(server_ip), server_port);
 			login_log(session[fd]->client_addr, sd->userid, 100, message);
 
-			result = mmo_auth(sd, true);
+			result = login_mmo_auth(sd, true);
 			if( runflag == LOGINSERVER_ST_RUNNING &&
 				result == -1 &&
 				sd->sex == 'S' &&
@@ -1517,7 +1517,7 @@ int parse_login(int fd)
 				server[sd->account_id].type = type;
 				server[sd->account_id].new_ = new_;
 
-				session[fd]->func_parse = parse_fromchar;
+				session[fd]->func_parse = login_parse_fromchar;
 				session[fd]->flag.server = 1;
 				realloc_fifo(fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
@@ -1760,7 +1760,7 @@ void set_server_type(void) {
 
 
 /// Called when a terminate signal is received.
-void do_shutdown(void)
+void do_shutdown_login(void)
 {
 	if( runflag != LOGINSERVER_ST_SHUTDOWN )
 	{
@@ -1835,22 +1835,22 @@ int do_init(int argc, char** argv)
 	
 	// Online user database init
 	online_db = idb_alloc(DB_OPT_RELEASE_DATA);
-	timer->add_func_list(waiting_disconnect_timer, "waiting_disconnect_timer");
+	timer->add_func_list(login_waiting_disconnect_timer, "login_waiting_disconnect_timer");
 
 	// Interserver auth init
 	auth_db = idb_alloc(DB_OPT_RELEASE_DATA);
 
-	// set default parser as parse_login function
-	set_defaultparse(parse_login);
+	// set default parser as login_parse_login function
+	set_defaultparse(login_parse_login);
 
 	// every 10 minutes cleanup online account db.
-	timer->add_func_list(online_data_cleanup, "online_data_cleanup");
-	timer->add_interval(timer->gettick() + 600*1000, online_data_cleanup, 0, 0, 600*1000);
+	timer->add_func_list(login_online_data_cleanup, "login_online_data_cleanup");
+	timer->add_interval(timer->gettick() + 600*1000, login_online_data_cleanup, 0, 0, 600*1000);
 
 	// add timer to detect ip address change and perform update
 	if (login_config.ip_sync_interval) {
-		timer->add_func_list(sync_ip_addresses, "sync_ip_addresses");
-		timer->add_interval(timer->gettick() + login_config.ip_sync_interval, sync_ip_addresses, 0, 0, login_config.ip_sync_interval);
+		timer->add_func_list(login_sync_ip_addresses, "login_sync_ip_addresses");
+		timer->add_interval(timer->gettick() + login_config.ip_sync_interval, login_sync_ip_addresses, 0, 0, login_config.ip_sync_interval);
 	}
 
 	// Account database init
@@ -1868,7 +1868,7 @@ int do_init(int argc, char** argv)
 	}
 	
 	if( runflag != CORE_ST_STOP ) {
-		shutdown_callback = do_shutdown;
+		shutdown_callback = do_shutdown_login;
 		runflag = LOGINSERVER_ST_RUNNING;
 	}
 	
