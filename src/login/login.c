@@ -289,7 +289,7 @@ int login_lan_config_read(const char *lancfgName)
 	return 0;
 }
 
-void login_fromchar_auth_ack(int fd, int account_id, uint32 login_id1, uint32 login_id2, uint8 sex, int request_id, struct auth_node* node)
+void login_fromchar_auth_ack(int fd, int account_id, uint32 login_id1, uint32 login_id2, uint8 sex, int request_id, struct login_auth_node* node)
 {
 	WFIFOHEAD(fd,33);
 	WFIFOW(fd,0) = 0x2713;
@@ -320,7 +320,7 @@ void login_fromchar_auth_ack(int fd, int account_id, uint32 login_id1, uint32 lo
 
 void login_fromchar_parse_auth(int fd, int id, const char *const ip)
 {
-	struct auth_node* node;
+	struct login_auth_node* node;
 
 	int account_id = RFIFOL(fd,2);
 	uint32 login_id1 = RFIFOL(fd,6);
@@ -330,7 +330,7 @@ void login_fromchar_parse_auth(int fd, int id, const char *const ip)
 	int request_id = RFIFOL(fd,19);
 	RFIFOSKIP(fd,23);
 
-	node = (struct auth_node*)idb_get(login->auth_db, account_id);
+	node = (struct login_auth_node*)idb_get(login->auth_db, account_id);
 	if( runflag == LOGINSERVER_ST_RUNNING &&
 		node != NULL &&
 		node->account_id == account_id &&
@@ -1221,7 +1221,7 @@ void login_auth_ok(struct login_session_data* sd)
 
 	uint8 server_num, n;
 	uint32 subnet_char_ip;
-	struct auth_node* node;
+	struct login_auth_node* node;
 	int i;
 
 	if( runflag != LOGINSERVER_ST_RUNNING )
@@ -1314,7 +1314,7 @@ void login_auth_ok(struct login_session_data* sd)
 	WFIFOSET(fd,47+32*server_num);
 
 	// create temporary auth entry
-	CREATE(node, struct auth_node, 1);
+	CREATE(node, struct login_auth_node, 1);
 	node->account_id = sd->account_id;
 	node->login_id1 = sd->login_id1;
 	node->login_id2 = sd->login_id2;

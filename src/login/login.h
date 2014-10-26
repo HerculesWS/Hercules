@@ -104,7 +104,7 @@ struct Login_Config {
 	int subnet_count;
 };
 
-struct auth_node {
+struct login_auth_node {
 	int account_id;
 	uint32 login_id1;
 	uint32 login_id2;
@@ -157,7 +157,7 @@ struct login_interface {
 	void (*fromchar_accinfo) (int fd, int account_id, int u_fd, int u_aid, int u_group, int map_fd, struct mmo_account *acc);
 	void (*fromchar_account) (int fd, int account_id, struct mmo_account *acc);
 	void (*fromchar_account_update_other) (int account_id, unsigned int state);
-	void (*fromchar_auth_ack) (int fd, int account_id, uint32 login_id1, uint32 login_id2, uint8 sex, int request_id, struct auth_node* node);
+	void (*fromchar_auth_ack) (int fd, int account_id, uint32 login_id1, uint32 login_id2, uint8 sex, int request_id, struct login_auth_node* node);
 	void (*fromchar_ban) (int account_id, time_t timestamp);
 	void (*fromchar_change_sex_other) (int account_id, char sex);
 	void (*fromchar_pong) (int fd);
