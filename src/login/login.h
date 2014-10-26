@@ -132,6 +132,9 @@ struct online_login_data {
 extern struct mmo_char_server server[MAX_SERVERS];
 extern struct Login_Config login_config;
 
+/**
+ * Login.c Interface
+ **/
 struct login_interface {
 	DBMap* auth_db;
 	DBMap* online_db;
@@ -158,17 +161,17 @@ struct login_interface {
 	void (*fromchar_ban) (int account_id, time_t timestamp);
 	void (*fromchar_change_sex_other) (int account_id, char sex);
 	void (*fromchar_pong) (int fd);
-	void (*fromchar_parse_auth) (int fd, int id, const char *const ip);
+	void (*fromchar_parse_auth) (int fd, int id, const char *ip);
 	void (*fromchar_parse_update_users) (int fd, int id);
-	void (*fromchar_parse_request_change_email) (int fd, int id, const char *const ip);
-	void (*fromchar_parse_account_data) (int fd, int id, const char *const ip);
+	void (*fromchar_parse_request_change_email) (int fd, int id, const char *ip);
+	void (*fromchar_parse_account_data) (int fd, int id, const char *ip);
 	void (*fromchar_parse_ping) (int fd);
-	void (*fromchar_parse_change_email) (int fd, int id, const char *const ip);
-	void (*fromchar_parse_account_update) (int fd, int id, const char *const ip);
-	void (*fromchar_parse_ban) (int fd, int id, const char *const ip);
-	void (*fromchar_parse_change_sex) (int fd, int id, const char *const ip);
-	void (*fromchar_parse_account_reg2) (int fd, int id, const char *const ip);
-	void (*fromchar_parse_unban) (int fd, int id, const char *const ip);
+	void (*fromchar_parse_change_email) (int fd, int id, const char *ip);
+	void (*fromchar_parse_account_update) (int fd, int id, const char *ip);
+	void (*fromchar_parse_ban) (int fd, int id, const char *ip);
+	void (*fromchar_parse_change_sex) (int fd, int id, const char *ip);
+	void (*fromchar_parse_account_reg2) (int fd, int id, const char *ip);
+	void (*fromchar_parse_unban) (int fd, int id, const char *ip);
 	void (*fromchar_parse_account_online) (int fd, int id);
 	void (*fromchar_parse_account_offline) (int fd);
 	void (*fromchar_parse_online_accounts) (int fd, int id);
@@ -186,11 +189,11 @@ struct login_interface {
 	void (*login_error) (int fd, uint8 status);
 	void (*parse_ping) (int fd, struct login_session_data* sd);
 	void (*parse_client_md5) (int fd, struct login_session_data* sd);
-	bool (*parse_client_login) (int fd, struct login_session_data* sd, const char *const ip);
+	bool (*parse_client_login) (int fd, struct login_session_data* sd, const char *ip);
 	void (*send_coding_key) (int fd, struct login_session_data* sd);
 	void (*parse_request_coding_key) (int fd, struct login_session_data* sd);
 	void (*char_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
-	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *const ip);
+	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip);
 	int (*parse_login) (int fd);
 };
 
