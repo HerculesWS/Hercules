@@ -339,7 +339,7 @@ amatsu,287,266,3	script	Jyaburo#ama	4_M_JPNOJI,{
 // Legendary Tree
 //============================================================
 amatsu,269,221,1	script	Propose Girl#ama	4_F_JPN,{
-	set jap_tree,1;
+	jap_tree = 1;
 	mes "[Hutari Shioko]";
 	mes "It is a pleasure to meet you.";
 	mes "My name is Hutari Shioko.";
@@ -374,7 +374,7 @@ amatsu,269,221,1	script	Propose Girl#ama	4_F_JPN,{
 }
 	
 amatsu,243,202,3	script	Drama Teacher#ama	4_F_JPNOBA2,{
-	set jap_tree,2;
+	jap_tree = 2;
 	mes "[Garakame sensei]";
 	mes "This is a beautiful place";
 	mes "with everlasting cherry blossoms.";
@@ -423,7 +423,7 @@ amatsu,283,203,1	script	Bonubonu#ama1	SEE_OTTER,{
 }
 
 amatsu,283,203,1	script	Bonubonu#ama2	HIDDEN_NPC,{
-	set jap_tree,3;
+	jap_tree = 3;
 	emotion e_swt2;
 	mes "[Bonubonu]";
 	mes "That tree on the hill is";
@@ -453,7 +453,7 @@ amatsu,283,203,1	script	Bonubonu#ama2	HIDDEN_NPC,{
 }
 	
 amatsu,274,178,7	script	Veterinarian#ama	4_M_JOB_WIZARD,{
-	set jap_tree,4;
+	jap_tree = 4;
 	mes "[Sakura Seiichi]";
 	mes "Ah... I'm not a weirdo so";
 	mes "don't panic. I'm just an ordinary";

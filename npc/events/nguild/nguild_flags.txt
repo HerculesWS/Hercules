@@ -16,7 +16,7 @@
 /// Flag Function
 //============================================================
 function	script	F_Flags	{
-	set .@GID, getcastledata(getarg(1),1);
+	.@GID = getcastledata(getarg(1),1);
 	if (getarg(5) == 0) return;
 	if (.@GID == 0) {
 		mes " [ Edict of the Divine Rune Midgard Kingdom ]";

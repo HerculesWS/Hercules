@@ -564,7 +564,7 @@ lighthalzen,182,102,3	script	Lucius#zen5	4_M_LGTGRAND,{
 				close;
 			}
 			Zeny -= .@input;
-			set $donatedzeny,$donatedzeny + .@input;
+			$donatedzeny += .@input;
 			mes "[Lucius]";
 			mes "So far, I've received";
 			mes "a total of " + $donatedzeny + " zeny in";
@@ -580,7 +580,7 @@ lighthalzen,182,102,3	script	Lucius#zen5	4_M_LGTGRAND,{
 				mes "this small gift as a token of";
 				mes "my gratitude, adventurer. Bless";
 				mes "you, youngster and take care.";
-				set $donatedzeny,0;
+				$donatedzeny = 0;
 				getitem 603,1; //Old_Blue_Box
 				getitem 12016,1; //Speed_Up_Potion
 			}

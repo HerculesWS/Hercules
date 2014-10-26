@@ -14,7 +14,7 @@
 //= Each 1 BaseLv need 20.000 Zeny, so be careful to use skill.
 //============================================================
 yuno,138,187,4	script	Hypnotist Teacher	4_F_TELEPORTER,{
-	set @npcname$,"[^D5A500Hypnotist^000000]";
+	@npcname$ = "[^D5A500Hypnotist^000000]";
 	mes @npcname$;
 
 	if(MISC_QUEST & 1024){

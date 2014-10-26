@@ -62,7 +62,7 @@ force_1-2,33,178,0	warp	force_10_09	1,1,force_1-2,59,178
 // GM Control Panel
 //============================================================
 sec_in02,79,180,3	script	#arenacontrol	4_DOG01,{
-	set .@i, callfunc("F_GM_NPC",1357,0);
+	.@i = callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
 		mes "Error!";
 		close;

@@ -183,17 +183,17 @@ alde_alche,27,185,5	script	Alchemist Guildsman#am	4_F_ALCHE,{
 				mes "needs to bring...";
 				switch(rand(1,3)) {
 				case 1:
-					set ALCH_Q,1;
+					ALCH_Q = 1;
 					setquest 2028;
 					mes "^551A8B7 Berserk Potions^000000.";
 					break;
 				case 2:
-					set ALCH_Q,2;
+					ALCH_Q = 2;
 					setquest 2029;
 					mes "^551A8B100 Mini Furnaces^000000.";
 					break;
 				case 3:
-					set ALCH_Q,3;
+					ALCH_Q = 3;
 					setquest 2030;
 					mes "^551A8B7,500 Fire Arrows^000000.";
 				}
@@ -233,7 +233,7 @@ alde_alche,27,185,5	script	Alchemist Guildsman#am	4_F_ALCHE,{
 			mes "[Parmy Gianino]";
 			mes "Okay, now you need to learn";
 			mes "the basics to being an Alchemist and learn the procedures for mixing chemicals and medicines.";
-			set ALCH_Q,4;
+			ALCH_Q = 4;
 			if (questprogress(2028)) {
 				changequest 2028,2031;
 			}
@@ -266,7 +266,7 @@ alde_alche,27,185,5	script	Alchemist Guildsman#am	4_F_ALCHE,{
 			mes "[Parmy Gianino]";
 			mes "Okay, now you need to learn";
 			mes "the basics to being an Alchemist and learn the procedures for mixing chemicals and medicines.";
-			set ALCH_Q,4;
+			ALCH_Q = 4;
 			if (questprogress(2028)) {
 				changequest 2028,2031;
 			}
@@ -465,7 +465,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 				mes "Now go to Darwin!";
 				mes "He'll teach you how to do the experiments. Just tell him that";
 				mes "I sent you.";
-				set ALCH_Q,6;
+				ALCH_Q = 6;
 				changequest 2031,2032;
 				close;
 			}
@@ -515,32 +515,32 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			mes "12 + 23 + 34 + 45 = ?";
 			next;
 			input .@input;
-			if (.@input != 114) set .@w_point,.@w_point+1;
+			if (.@input != 114) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "1000 - 36 - 227 - 348 = ?";
 			next;
 			input .@input;
-			if (.@input != 389) set .@w_point,.@w_point+1;
+			if (.@input != 389) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "14 * 17 * 3 = ?";
 			next;
 			input .@input;
-			if (.@input != 714) set .@w_point,.@w_point+1;
+			if (.@input != 714) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "9765 / 3 / 5 / 7 = ?";
 			next;
 			input .@input;
-			if (.@input != 93) set .@w_point,.@w_point+1;
+			if (.@input != 93) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "(47 * 28) - (1376 / 4) = ?";
 			next;
 			input .@input;
-			if (.@input != 972) set .@w_point,.@w_point+1;
+			if (.@input != 972) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "(2646 / 7) + (13 * 28) = ?";
 			next;
 			input .@input;
-			if (.@input != 742) set .@w_point,.@w_point+1;
+			if (.@input != 742) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "How much do";
 			mes "12 Red Potions,";
@@ -549,7 +549,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			mes "after a 24 % discount?";
 			next;
 			input .@input;
-			if (.@input != 909) set .@w_point,.@w_point+1;
+			if (.@input != 909) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "What is the";
 			mes "total weight of";
@@ -557,7 +557,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			mes "and 1 Long Coat?";
 			next;
 			input .@input;
-			if (.@input != 450) set .@w_point,.@w_point+1;
+			if (.@input != 450) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "What is the";
 			mes "total defense of";
@@ -567,7 +567,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			mes "Ear Muffs?";
 			next;
 			input .@input;
-			if (.@input != 20) set .@w_point,.@w_point+1;
+			if (.@input != 20) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "If you buy 5 Helms";
 			mes "with a 24 % discount";
@@ -576,44 +576,44 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			mes "do you earn?";
 			next;
 			input .@input;
-			if (.@input != 8800) set .@w_point,.@w_point+1;
+			if (.@input != 8800) .@w_point += 1;
 			break;
 		case 2:
 			mes "[Raspuchin Gregory]";
 			mes "13 + 25 + 37 + 48 = ?";
 			next;
 			input .@input;
-			if (.@input != 123) set .@w_point,.@w_point+1;
+			if (.@input != 123) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "1000 - 58 - 214 - 416 = ?";
 			next;
 			input .@input;
-			if (.@input != 312) set .@w_point,.@w_point+1;
+			if (.@input != 312) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "12 * 24 * 3 = ?";
 			next;
 			input .@input;
-			if (.@input != 864) set .@w_point,.@w_point+1;
+			if (.@input != 864) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "10530 / 3 / 5 / 2 = ?";
 			next;
 			input .@input;
-			if (.@input != 351) set .@w_point,.@w_point+1;
+			if (.@input != 351) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "(35 * 19) - (1792 / 7) = ?";
 			next;
 			input .@input;
-			if (.@input != 409) set .@w_point,.@w_point+1;
+			if (.@input != 409) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "(2368 / 8) + (24 * 17) = ?";
 			next;
 			input .@input;
-			if (.@input != 704) set .@w_point,.@w_point+1;
+			if (.@input != 704) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "(2646 / 7) + (13 * 28) = ?";
 			next;
 			input .@input;
-			if (.@input != 742) set .@w_point,.@w_point+1;
+			if (.@input != 742) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "What is the";
 			mes "total price of";
@@ -623,7 +623,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			mes "a 24 % discount?";
 			next;
 			input .@input;
-			if (.@input != 934) set .@w_point,.@w_point+1;
+			if (.@input != 934) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "What is the";
 			mes "total weight of";
@@ -631,7 +631,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			mes "4 Caps, and 2 Boots?";
 			next;
 			input .@input;
-			if (.@input != 550) set .@w_point,.@w_point+1;
+			if (.@input != 550) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "What is the";
 			mes "total defense of";
@@ -641,7 +641,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			mes "and Glasses?";
 			next;
 			input .@input;
-			if (.@input != 16) set .@w_point,.@w_point+1;
+			if (.@input != 16) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "How much profit do you";
 			mes "make if you buy Tights";
@@ -650,39 +650,39 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			mes "the normal price?";
 			next;
 			input .@input;
-			if (.@input != 8520) set .@w_point,.@w_point+1;
+			if (.@input != 8520) .@w_point += 1;
 			break;
 		case 3:
 			mes "[Raspuchin Gregory]";
 			mes "12 + 23 + 34 + 45 = ?";
 			next;
 			input .@input;
-			if (.@input != 114) set .@w_point,.@w_point+1;
+			if (.@input != 114) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "1000 - 58 - 214 - 416 = ?";
 			next;
 			input .@input;
-			if (.@input != 312) set .@w_point,.@w_point+1;
+			if (.@input != 312) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "14 * 17 * 3 = ?";
 			next;
 			input .@input;
-			if (.@input != 714) set .@w_point,.@w_point+1;
+			if (.@input != 714) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "10530 / 3 / 5 / 2 = ?";
 			next;
 			input .@input;
-			if (.@input != 351) set .@w_point,.@w_point+1;
+			if (.@input != 351) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "(47 * 28) - (1376 / 4) = ?";
 			next;
 			input .@input;
-			if (.@input != 972) set .@w_point,.@w_point+1;
+			if (.@input != 972) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "(2646 / 7) + (13 * 28) = ?";
 			next;
 			input .@input;
-			if (.@input != 742) set .@w_point,.@w_point+1;
+			if (.@input != 742) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "What is the";
 			mes "total cost of";
@@ -692,7 +692,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			mes "after a 24 % discount?";
 			next;
 			input .@input;
-			if (.@input != 798) set .@w_point,.@w_point+1;
+			if (.@input != 798) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "What is the";
 			mes "total weight of";
@@ -700,14 +700,14 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			mes "3 Caps, and 3 boots?";
 			next;
 			input .@input;
-			if (.@input != 480) set .@w_point,.@w_point+1;
+			if (.@input != 480) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "What is the";
 			mes "total defense of";
 			mes "a Mirror Shield, Mr. Smile, Leather Jacket, Silk Robe, Wedding Veil, Muffler, and Eye Patch?";
 			next;
 			input .@input;
-			if (.@input != 12) set .@w_point,.@w_point+1;
+			if (.@input != 12) .@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "If you buy 4 Padded Armors";
 			mes "at a 24% discount and sell";
@@ -716,7 +716,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			mes "you make from this sale?";
 			next;
 			input .@input;
-			if (.@input != 7680) set w_point,w_point+1;
+			if (.@input != 7680) .@w_point += 1;
 		}
 		if (.@w_point == 0) {
 			mes "[Raspuchin Gregory]";
@@ -741,7 +741,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			next;
 		}
 		else {
-			set ALCH_Q,5;
+			ALCH_Q = 5;
 			mes "[Raspuchin Gregory]";
 			mes "Keheheh! Idiot!";
 			mes "Just listening to your";
@@ -773,7 +773,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 		mes "Now go to Darwin!";
 		mes "He'll teach you how to do the experiments. Just tell him that";
 		mes "I sent you.";
-		set ALCH_Q,6;
+		ALCH_Q = 6;
 		changequest 2031,2032;
 		close;
 	}
@@ -914,7 +914,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			mes "^551A8B1 Red Herb^000000,";
 			mes "^551A8B1 Yellow Herb^000000 and";
 			mes "^551A8B1 White Herb^000000.";
-			set ALCH_Q,7;
+			ALCH_Q = 7;
 			changequest 2032,2033;
 			next;
 			mes "[Darwin]";
@@ -1091,7 +1091,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			mes "Go to the Union";
 			mes "and cast away the last";
 			mes "vestiges of Merchant life!!";
-			set ALCH_Q,40;
+			ALCH_Q = 40;
 			changequest 2033,2034;
 			close;
 		}
@@ -1122,19 +1122,19 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			mes "Now, make some medicine";
 			mes "using the simple procedure";
 			mes "I just explained to you.";
-			set w_point,0;
+			.@w_point = 0;
 			next;
 			switch(select("Prepare the Medicine Bowl.:Put the Medicine Bowl on your head.:Kick the Medicine Bowl.")) {
 			case 1:
 				break;
 			case 2:
-				set .@w_point,.@w_point+1;
+				++.@w_point;
 				mes "[Darwin]";
 				mes "What...?";
 				next;
 				break;
 			case 3:
-				set .@w_point,.@w_point+1;
+				++.@w_point;
 				mes "[Darwin]";
 				mes "No!";
 				next;
@@ -1142,7 +1142,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			}
 			switch(select("Put some dirt in the Medicine Bowl.:Put some Herbs in the Medicine Bowl.:Put a Harp in the Medicine Bowl.")) {
 			case 1:
-				set .@w_point,.@w_point+1;
+				++.@w_point;
 				mes "[Darwin]";
 				mes "...Eh!?";
 				mes "That's not";
@@ -1152,7 +1152,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			case 2:
 				break;
 			case 3:
-				set .@w_point,.@w_point+1;
+				++.@w_point;
 				mes "[Darwin]";
 				mes "A Harp?";
 				mes "And how would";
@@ -1164,14 +1164,14 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			case 1:
 				break;
 			case 2:
-				set .@w_point,.@w_point+1;
+				++.@w_point;
 				mes "[Darwin]";
 				mes "Wh-What are";
 				mes "you doing!?";
 				next;
 				break;
 			case 3:
-				set .@w_point,.@w_point+1;
+				++.@w_point;
 				mes "[Darwin]";
 				mes "Agh...!";
 				mes "What do you";
@@ -1182,14 +1182,14 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			}
 			switch(select("Spray clean water.:Drink clean water.:Pour clean water.")) {
 			case 1:
-				set .@w_point,.@w_point+1;
+				++.@w_point;
 				mes "[Darwin]";
 				mes "Huh?";
 				mes "What are you doing?";
 				next;
 				break;
 			case 2:
-				set .@w_point,.@w_point+1;
+				++.@w_point;
 				mes "[Darwin]";
 				mes "W-wait...";
 				mes "Are you";
@@ -1203,7 +1203,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			case 1:
 				break;
 			case 2:
-				set .@w_point,.@w_point+1;
+				++.@w_point;
 				mes "[Darwin]";
 				mes "Eat the Herbs?";
 				mes "I think you need";
@@ -1212,7 +1212,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 				next;
 				break;
 			case 3:
-				set .@w_point,.@w_point+1;
+				++.@w_point;
 				mes "[Darwin]";
 				mes "Singing and";
 				mes "dancing? Alchemists";
@@ -1223,7 +1223,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			}
 			switch(select("Put noodles in and fry it.:Pour it in an empty bottle.:Hold the Medicine Bowl and drink it.")) {
 			case 1:
-				set .@w_point,.@w_point+1;
+				++.@w_point;
 				mes "[Darwin]";
 				mes "We're Alchemists,";
 				mes "not restaurant chefs.";
@@ -1232,7 +1232,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			case 2:
 				break;
 			case 3:
-				set .@w_point,.@w_point+1;
+				++.@w_point;
 				mes "[Darwin]";
 				mes "Huh...";
 				mes "Pretty sloppy...";
@@ -1256,7 +1256,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			mes "[Darwin]";
 			mes "Good job.";
 			mes "It came out pretty well considering it's your first time. Go ahead and keep the medicines that you've just made.";
-			set ALCH_Q,8;
+			ALCH_Q = 8;
 			changequest 2033,2035;
 			next;
 			mes "[Darwin]";
@@ -1433,7 +1433,7 @@ alde_alche,79,19,5	script	Experiment Expert#am	4_M_ALCHE_A,{
 			mes "You don't need to bring anything. Just go watch him at work and have him tell you how he makes those solutions. Got it?";
 			next;
 			mes "[Van Helmont]";
-			set ALCH_Q,9;
+			ALCH_Q = 9;
 			changequest 2035,2036;
 			mes "Well then, see you later.";
 			mes "You'd better get going as";
@@ -1503,13 +1503,13 @@ alde_alche,79,19,5	script	Experiment Expert#am	4_M_ALCHE_A,{
 			mes "necessary to make";
 			mes "a Counteragent?";
 			next;
-			if (select("Karvodailnirol:Detrimindexta:Alcohol") != 1) set .@w_point,.@w_point+1;
+			if (select("Karvodailnirol:Detrimindexta:Alcohol") != 1) .@w_point += 1;
 			mes "[Van Helmont]";
 			mes "What item is not";
 			mes "necessary to make";
 			mes "a Mixture?";
 			next;
-			if (select("Karvodailnirol:Detrimindexta:Alcohol") != 2) set .@w_point,.@w_point+1;
+			if (select("Karvodailnirol:Detrimindexta:Alcohol") != 2) .@w_point += 1;
 			if (.@w_point > 0) {
 				mes "[Van Helmont]";
 				mes "Weren't you listening to Molgenstein at all? Maybe you";
@@ -1528,7 +1528,7 @@ alde_alche,79,19,5	script	Experiment Expert#am	4_M_ALCHE_A,{
 			mes "Go out and find the room next";
 			mes "to this one and talk to Nicholas. He'll continue your training.";
 			next;
-			set ALCH_Q,20;
+			ALCH_Q = 20;
 			changequest 2036,2037;
 			mes "[Van Helmont]";
 			mes "What are you";
@@ -1664,7 +1664,7 @@ alde_alche,101,184,4	script	Master Alchemist#am	2_M_DYEINGER,{
 	}
 	else if (ALCH_Q == 40) {
 		if (JobLevel < 40) {
-			set ALCH_Q,0;
+			ALCH_Q = 0;
 			mes "Hmm...you don't seem to be qualified yet.";
 			mes "Remember, you must reach at least job level 40 to become an Alchemist.";
 			close2;
@@ -1698,9 +1698,9 @@ alde_alche,101,184,4	script	Master Alchemist#am	2_M_DYEINGER,{
 		mes "have learned all of";
 		mes "the basics of Alchemy.";
 		next;
-		set ALCH_Q,0;
+		ALCH_Q = 0;
 		completequest 2040;
-		set .@jlevel,JobLevel;
+		.@jlevel = JobLevel;
 		callfunc "Job_Change",Job_Alchemist;
 		callfunc "F_ClearJobVar";
 		mes "[Vincent Carsciallo]";
@@ -1813,51 +1813,51 @@ alde_alche,145,19,1	script	Chief Researcher#am	1_M_LIBRARYMASTER,{
 		case 1:
 			mes "t m y a n y e o b n e g p r i";
 			next;
-			if (select("Brake:Brass:Bug:Broken:Brigan?") == 5) set .@alch_t,.@alch_t+10;
+			if (select("Brake:Brass:Bug:Broken:Brigan?") == 5) .@alch_t += 10;
 			mes "o n c u t a p j l e r s v m u";
 			next;
-			if (select("vendor:storage:weapon:simple:streetshop") == 1) set .@alch_t,.@alch_t+10;
+			if (select("vendor:storage:weapon:simple:streetshop") == 1) .@alch_t += 10;
 			mes "t v a r m e g p h e u b o y l";
 			next;
-			if (select("molasses:party:leader:sweets:treacle") == 2) set .@alch_t,.@alch_t+10;
+			if (select("molasses:party:leader:sweets:treacle") == 2) .@alch_t += 10;
 			mes "q z a h n a i n b r d p t n c";
 			next;
-			if (select("partisan:partizan:pato:paros:pack") == 2) set .@alch_t,.@alch_t+10;
+			if (select("partisan:partizan:pato:paros:pack") == 2) .@alch_t += 10;
 			break;
 		case 2:
 			mes "m p d i c f a r o g n k w a s";
 			next;
-			if (select("packman:sunshine:ragnarok:wonderland:frost") == 1) set .@alch_t,.@alch_t+10;
+			if (select("packman:sunshine:ragnarok:wonderland:frost") == 1) .@alch_t += 10;
 			mes "g b n o p r e f a r e t a s k";
 			next;
-			if (select("purple:smoker:ragnarok:bolt:burnt wood") == 3) set .@alch_t,.@alch_t+10;
+			if (select("purple:smoker:ragnarok:bolt:burnt wood") == 3) .@alch_t += 10;
 			mes "u g n i s j e k c e o g n d p";
 			next;
-			if (select("scab:kinship:donate:source:opening") == 5) set .@alch_t,.@alch_t+10;
+			if (select("scab:kinship:donate:source:opening") == 5) .@alch_t += 10;
 			mes "r o e h n r o m c a i n p t t";
 			next;
-			if (select("forgemerchant:potionmerchant:dcmerchant:vendingmerchant:battlemerchant") == 2) set .@alch_t,.@alch_t+10;
+			if (select("forgemerchant:potionmerchant:dcmerchant:vendingmerchant:battlemerchant") == 2) .@alch_t += 10;
 			break;
 		case 3:
 			mes "s m i e x b w u n e t a g l r";
 			next;
-			if (select("tiger:wolf:pumpkin:tripped:tore") == 1) set .@alch_t,.@alch_t+10;
+			if (select("tiger:wolf:pumpkin:tripped:tore") == 1) .@alch_t += 10;
 			mes "n i e g b o p d s o a u w r v";
 			next;
-			if (select("bash:provoke:endure:stun:abracadabra") == 3) set .@alch_t,.@alch_t+10;
+			if (select("bash:provoke:endure:stun:abracadabra") == 3) .@alch_t += 10;
 			mes "l r m g r e x t a v i n e d e";
 			next;
-			if (select("alberta:latifoliate:crimson:maple:evergreen") == 5) set .@alch_t,.@alch_t+10;
+			if (select("alberta:latifoliate:crimson:maple:evergreen") == 5) .@alch_t += 10;
 			mes "r o e h n r o m c a i n p t t";
 			next;
-			if (select("forgemerchant:potionmerchant:dcmerchant:vendingmerchant:battlemerchant") == 2) set .@alch_t,.@alch_t+10;
+			if (select("forgemerchant:potionmerchant:dcmerchant:vendingmerchant:battlemerchant") == 2) .@alch_t += 10;
 			break;
 		}
 		mes "[Nicholas Flamel]";
 		mes "Ah, you finished.";
 		mes "Now, let's see...";
 		if (.@alch_t > 30) {
-			set ALCH_Q,22;
+			ALCH_Q = 22;
 			mes "Excellent job!";
 			next;
 			mes "[Nicholas Flamel]";
@@ -1875,7 +1875,7 @@ alde_alche,145,19,1	script	Chief Researcher#am	1_M_LIBRARYMASTER,{
 			close;
 		}
 		else {
-			set ALCH_Q,21;
+			ALCH_Q = 21;
 			mes "^666666*Gasp!*^000000 H-horrible!";
 			next;
 			mes "[Nicholas Flamel]";
@@ -1913,7 +1913,7 @@ alde_alche,145,19,1	script	Chief Researcher#am	1_M_LIBRARYMASTER,{
 		mes "Come back here to me after you";
 		mes "help them out. They'll need all of these items to continue their experiments.";
 		next;
-		set ALCH_Q,23;
+		ALCH_Q = 23;
 		changequest 2037,2038;
 		mes "[Nicholas Flamel]";
 		mes "1 Mixture,";
@@ -1943,7 +1943,7 @@ alde_alche,145,19,1	script	Chief Researcher#am	1_M_LIBRARYMASTER,{
 		close;
 	}
 	else if (ALCH_Q == 24) {
-		set ALCH_Q,40;
+		ALCH_Q = 40;
 		changequest 2038,2039;
 		mes "[Nicholas Flamel]";
 		mes "Ah, you're back!";

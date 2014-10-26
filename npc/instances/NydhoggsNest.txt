@@ -32,7 +32,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 			specialeffect2 EF_HOLYHIT;
 			pushpc 3,3;
 			if (ep13_1_edq == 14)
-				set ep13_1_edq,15;
+				ep13_1_edq = 15;
 			mes "A mysterious power prevents you from getting too close. It looks like there is something strong beyond the door...";
 			next;
 			mes "Perhaps there's a great hidden secret beyond the gate, beyond expectation.";
@@ -42,7 +42,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 				next;
 				mes "You'll have to obtain the others trust in the expendition camp by working hard.";
 			}
-			set ins_nyd,1;
+			ins_nyd = 1;
 			close;
 		case 2:
 			close;
@@ -54,7 +54,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 		next;
 		mes "It would be better to go back to camp and inform the others and ask for help.";
 		if (ep13_1_edq == 14 || ep13_1_edq == 15) {
-			set ep13_1_edq,15;
+			ep13_1_edq = 15;
 			close;
 		}
 		next;
@@ -78,7 +78,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 			mes "In the name of Yggdrasiliad, I will accept you as a servant of the Guardian.";
 			next;
 			specialeffect2 EF_CHANGECOLD;
-			set ins_nyd,200;
+			ins_nyd = 200;
 			mes "[Yggdrasil Gatekeeper]";
 			mes "I accept your entrance through the Guardian's gate. You are now considered a faithful servant of the Guardian Nidhoggur.";
 			next;
@@ -89,8 +89,8 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 		}
 	} else if (ins_nyd == 131 || ins_nyd == 132 || ins_nyd > 199) {
 
-		set .@party_id,getcharid(1);
-		set .@md_name$,"Nidhoggur's Nest";
+		.@party_id = getcharid(1);
+		.@md_name$ = "Nidhoggur's Nest";
 
 		.@ins_nyd_check = questprogress(3135,PLAYTIME); // 3 Day cooldown
 		.@ins_nyd_check2 = questprogress(3136,PLAYTIME); // 4 Hour play limit
@@ -115,13 +115,13 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 				next;
 				switch(select("Please allow me to enter.:I want to go in.:I want to leave.")) {
 				case 1:
-					set .@instance, instance_create(.@md_name$, .@party_id);
+					.@instance = instance_create(.@md_name$, .@party_id);
 					if (.@instance < 0) {
 						mes "[Yggdrasil Gatekeeper]";
 						mes "The Guardian seems to wish to be alone. I will go in and check, please wait out here.";
 						close;
 					}
-					for( set .@i, 1; .@i <= 2; set .@i, .@i + 1 ) {
+					for (.@i = 1; .@i <= 2; ++.@i) {
 						if( instance_attachmap(.@i + "@nyd", .@instance) == "" )
 							break;
 					}
@@ -178,7 +178,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 					mes "If you would like to enter again, please register with me.";
 					erasequest 3135;
 					erasequest 3136;
-					set 'ins_nyd2,0;
+					'ins_nyd2 = 0;
 					close;
 				}
 			}
@@ -278,7 +278,7 @@ mid_camp,271,299,3	script	Historian Magnifier#edq	4_M_SAGE_C,3,3,{
 		next;
 		mes "[Historian Magnifier]";
 		mes "I will definitely help you find a way to enter the World Tree directly so, just believe in me! Okay~!!";
-		set ins_nyd,3;
+		ins_nyd = 3;
 		close;
 	} else if (ins_nyd == 3) {
 		mes "Why are you standing there? Go to my assistant in the Prontera Library!";
@@ -336,7 +336,7 @@ mid_camp,271,299,3	script	Historian Magnifier#edq	4_M_SAGE_C,3,3,{
 			next;
 			mes "[Historian Magnifier]";
 			mes "I'll also keep searching here. If you find anything, come back and let me know.";
-			set ins_nyd,5;
+			ins_nyd = 5;
 			close;
 		}
 	} else if ((ins_nyd == 5) || (ins_nyd == 51) || (ins_nyd == 52)) {
@@ -375,7 +375,7 @@ mid_camp,271,299,3	script	Historian Magnifier#edq	4_M_SAGE_C,3,3,{
 		next;
 		mes "[Historian Magnifier]";
 		mes "Let's report to Commander Agip about the situation so far. Then, we wait on his decision.";
-		set ins_nyd,7;
+		ins_nyd = 7;
 		close;
 	} else if ((ins_nyd == 7) || (ins_nyd == 8)) {
 		mes "Report to Commander Hibba Agip about what we have discovered, since time is dependent on his decision.";
@@ -412,7 +412,7 @@ mid_camp,271,299,3	script	Historian Magnifier#edq	4_M_SAGE_C,3,3,{
 
 prt_in,171,94,3	script	Assistant Naomi#edq	4_F_HUWOMAN,3,3,{
 	mes "[Assistant Naomi]";
-	set .@name$,strcharinfo(0);
+	.@name$ = strcharinfo(0);
 	if (ins_nyd == 3) {
 		mes "The doctor never ever tries to come back, and there're too many things to do... How can I do it all...";
 		next;
@@ -519,7 +519,7 @@ prt_in,171,94,3	script	Assistant Naomi#edq	4_F_HUWOMAN,3,3,{
 			next;
 			mes "[Assistant Naomi]";
 			mes "Before you go back to the Doctor, you had better read these books. So, I will go back to work.";
-			set ins_nyd,4;
+			ins_nyd = 4;
 			close;
 		}
 	} else if (ins_nyd == 4) {
@@ -615,7 +615,7 @@ splendide,198,178,3	script	Grumbling Soldier#edq	4_M_FAIRYSOLDIER,3,3,{
 				next;
 				mes "[Grumbling Soldier]";
 				mes "Might be... those Sapha tribesmen have dug in the cave before... They do have a special talent for digging.";
-				set ins_nyd,51;
+				ins_nyd = 51;
 				close;
 			case 2:
 				mes "[Grumbling Soldier]";
@@ -675,7 +675,7 @@ splendide,240,164,3	script	Sighing Soldier#edq	4_M_FAIRYSOLDIER2,3,3,{
 				next;
 				mes "[Sighing Soldier]";
 				mes "We don't know if the monsters there are strong, so we never checked it out. But on a personal level, nobody wants to go there...";
-				set ins_nyd,51;
+				ins_nyd = 51;
 				close;
 			case 2:
 				mes "[Sighing Soldier]";
@@ -761,7 +761,7 @@ spl_in01,109,60,3	script	Commander Lebiordirr#edq	4_F_FAIRY,3,3,{
 			next;
 			mes "[Commander Lebiordirr]";
 			mes "Now, if you understand this, inform your friends.";
-			set ins_nyd,61;
+			ins_nyd = 61;
 			close;
 		} else if (ins_nyd == 61) {
 			mes "If you can't follow this rule, I will stop associating with you and ban all of your people from here.";
@@ -843,7 +843,7 @@ spl_in01,109,60,3	script	Commander Lebiordirr#edq	4_F_FAIRY,3,3,{
 			next;
 			mes "[Commander Lebiordirr]";
 			mes "Here, outsider. Arioss will explain the situation with the giants. Talk with him...";
-			set ins_nyd,91;
+			ins_nyd = 91;
 			close;
 		} else if ((ins_nyd == 91) || (ins_nyd == 101) || (ins_nyd == 111) || (ins_nyd == 200) || (ins_nyd == 201) || (ins_nyd == 202)) {
 			mes "Outsider. Arioss here will explain the situation with the giants, talk with him...";
@@ -906,7 +906,7 @@ spl_in01,109,60,3	script	Commander Lebiordirr#edq	4_F_FAIRY,3,3,{
 			next;
 			mes "[Aide Arioss]";
 			mes "Commander...";
-			set ins_nyd,121;
+			ins_nyd = 121;
 			close;
 		} else if ((ins_nyd == 121) || (ins_nyd == 131)) {
 			mes "Strange one, thank you for your cooperation in such situations... Please forget what has happened today...";
@@ -978,7 +978,7 @@ spl_in01,104,56,3	script	Aide Arioss#edq	4_F_FAIRYKID2,3,3,{
 			next;
 			mes "[Aide Arioss]";
 			mes "I have already told you what you wanted to know... If you need anything else, just let me know.";
-			set ins_nyd,101;
+			ins_nyd = 101;
 			close;
 		} else if (ins_nyd == 101) {
 			mes "Ah, you said that there is a strange power blocking the entrance to the Guardian's nest, right?";
@@ -1019,7 +1019,7 @@ spl_in01,104,56,3	script	Aide Arioss#edq	4_F_FAIRYKID2,3,3,{
 			next;
 			mes "[Aide Arioss]";
 			mes "Please meet the Guardian, and come back with an answer to everything. I believe in you.";
-			set ins_nyd,111;
+			ins_nyd = 111;
 			close;
 		} else if ((ins_nyd == 101) || (ins_nyd == 111) || (ins_nyd == 200) || (ins_nyd == 201) || (ins_nyd == 202)) {
 			mes "Please meet with the Guardian and take a wise answer from him. I will trust you.";
@@ -1039,7 +1039,7 @@ spl_in01,104,56,3	script	Aide Arioss#edq	4_F_FAIRYKID2,3,3,{
 			mes "It can't compare with the effort you have put in for us... but please accept our token of friendship.";
 			getexp 1500000,350000;
 			getitem 6081,10; //Splendide_Coin
-			set ins_nyd,131;
+			ins_nyd = 131;
 			mes "[Aide Arioss]";
 			mes "If we can help you with anything in the future, we will do all we can to assist you. Once again, thank you.";
 			close;
@@ -1140,7 +1140,7 @@ man_in01,311,57,3	script	Neat Etorr#edq	4_MAN_NITT,3,3,{
 			next;
 			mes "[Neat Etorr]";
 			mes "You have heard it all, now please report back to your race.";
-			set ins_nyd,62;
+			ins_nyd = 62;
 			close;
 		} else if (ins_nyd == 62) {
 			mes "That captive is the only reference for our tribe, so we have taken good care of her. She is related to your current investigation.";
@@ -1225,7 +1225,7 @@ man_in01,311,57,3	script	Neat Etorr#edq	4_MAN_NITT,3,3,{
 			next;
 			mes "[Neat Etorr]";
 			mes "Strange one, we hope our cooperation will be a good one. Now please go interrogate the Laphine prisoner.";
-			set ins_nyd,92;
+			ins_nyd = 92;
 			close;
 		} else if ((ins_nyd == 92) || (ins_nyd == 102) || (ins_nyd == 112) || (ins_nyd == 200) || (ins_nyd == 201) || (ins_nyd == 202)) {
 			mes "Strange one, we hope our cooperation will be a good one. Now please go interrogate the Laphine prisoner.";
@@ -1275,7 +1275,7 @@ man_in01,311,57,3	script	Neat Etorr#edq	4_MAN_NITT,3,3,{
 			mes "It's not a lot, but please this as a token of our appreciation.";
 			getexp 1500000,350000;
 			getitem 6080,10; //Manuk_Coin
-			set ins_nyd,132;
+			ins_nyd = 132;
 			close;
 		} else if (ins_nyd == 132) {
 			mes "Strange one, thank you for helping us in the time of need. I will never forget your kindness.";
@@ -1345,7 +1345,7 @@ man_in01,291,62,3	script	Laphine Prisoner#edq	4_F_FAIRYKID2,3,3,{
 				next;
 				mes "[Laphine Prisoner]";
 				mes "I just want to say this...if the Sapha tribe intrude that place, we will never forgive them!";
-				set ins_nyd,52;
+				ins_nyd = 52;
 				close;
 			case 3:
 				mes "[Laphine Prisoner]";
@@ -1420,7 +1420,7 @@ man_in01,291,62,3	script	Laphine Prisoner#edq	4_F_FAIRYKID2,3,3,{
 			next;
 			mes "[Laphine Prisoner]";
 			mes "I have already told you everything you wanted to hear. If you have any other requests, please let me know.";
-			set ins_nyd,102;
+			ins_nyd = 102;
 			close;
 		} else if (ins_nyd == 102) {
 			mes "Ah, you said that there is a strange power blocking the entrance to the Guardian's nest, right?";
@@ -1461,7 +1461,7 @@ man_in01,291,62,3	script	Laphine Prisoner#edq	4_F_FAIRYKID2,3,3,{
 			next;
 			mes "[Laphine Prisoner]";
 			mes "Please meet the Guardian, and come back with an answer to everything. And tell the answer to...";
-			set ins_nyd,112;
+			ins_nyd = 112;
 			close;
 		} else if ((ins_nyd == 71) || (ins_nyd == 81) || (ins_nyd == 91) || (ins_nyd == 101) || (ins_nyd == 111) || (ins_nyd == 121) || (ins_nyd == 131)) {
 			mes "... ...";
@@ -1555,7 +1555,7 @@ OnTouch_:
 				mes "[World Tree Yggdrasil]";
 				mes "My soul... it has been trapped here. You're the only ones I can trust now.";
 				next;
-				set .@exit,1;
+				.@exit = 1;
 			}
 			if (.@exit) break;
 		}
@@ -1608,7 +1608,7 @@ OnTouch_:
 			next;
 			mes "[World Tree Yggdrasil]";
 			mes "And... Be careful... Be careful of the shadow's power.";
-			set 'ins_nyd2,1;
+			'ins_nyd2 = 1;
 			donpcevent instance_npcname("ins_nyd_1f_timer")+"::OnEnable";
 			donpcevent instance_npcname("nyd_call_mon_1")+"::OnEnable";
 			close;
@@ -1665,7 +1665,7 @@ OnTouch:
 	end;
 
 OnInstanceInit: // Temporary fix for @reloadscript.
-	set 'ins_nyd2,0;
+	'ins_nyd2 = 0;
 	end;
 }
 
@@ -1675,7 +1675,7 @@ OnInstanceInit:
 	end;
 
 OnEnable:
-	set .@map$, instance_mapname("1@nyd");
+	.@map$ = instance_mapname("1@nyd");
 	monster .@map$,220,250,"Nidhoggur's Guardian#1",2020,1,instance_npcname("nyd_call_mon_1")+"::OnMyMobDead";
 	monster .@map$,220,252,"Nidhoggur's Guardian#2",2020,1,instance_npcname("nyd_call_mon_1")+"::OnMyMobDead";
 	monster .@map$,240,270,"Nidhoggur's Guardian#3",2020,1,instance_npcname("nyd_call_mon_1")+"::OnMyMobDead";
@@ -1697,13 +1697,13 @@ OnDisable:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("1@nyd");
-	set .@mob_dead_num,mobcount(.@map$, instance_npcname("nyd_call_mon_1")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@nyd");
+	.@mob_dead_num = mobcount(.@map$, instance_npcname("nyd_call_mon_1")+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
 		mapannounce .@map$, "All of Nidhoggur's Guardians have been defeated!",bc_map,"0x00ff99";
 		donpcevent instance_npcname("ins_nyd_1f_timer")+"::OnDisable";
 		donpcevent instance_npcname("nyd_to2f_warp")+"::OnEnable";
-		set 'ins_nyd2,2;
+		'ins_nyd2 = 2;
 	}
 	end;
 }
@@ -1763,14 +1763,14 @@ OnEnable:
 	end;
 
 OnTouch:
-	set 'ins_nyd2,3;
+	'ins_nyd2 = 3;
 	warp instance_mapname("2@nyd"),200,10;
 	end;
 }
 
 1@nyd,1,1,0	script	ins_nyd1_spawn_mobs	-1,{
 OnInstanceInit:
-	set .@map$, instance_mapname("1@nyd");
+	.@map$ = instance_mapname("1@nyd");
 	monster .@map$,0,0,"Ancient Tree",2019,40,instance_npcname("ins_nyd1_spawn_mobs")+"::OnMyTreeDead";
 	monster .@map$,0,0,"Rhyncho",2020,30,instance_npcname("ins_nyd1_spawn_mobs")+"::OnMyRhynDead";
 	monster .@map$,0,0,"Phylla",2021,30,instance_npcname("ins_nyd1_spawn_mobs")+"::OnMyPhyDead";
@@ -1862,7 +1862,7 @@ OnInstanceInit:
 
 OnEnable:
 	enablenpc instance_npcname("nyd_2f_boss_enter_call");
-	set .@map$, instance_mapname("2@nyd");
+	.@map$ = instance_mapname("2@nyd");
 	monster .@map$,199,327,"Nidhoggur's Shadow",2022,1,instance_npcname("nyd_2f_boss_enter_call")+"::OnMyMobDead";
 	mapannounce .@map$, "Nidhoggur's Shadow : I will devour all of you... you and the World Tree Yggdrasil.",bc_map,"0x00ff99";
 	//donpcevent instance_npcname("nyd_2f_boss_enter_call")+"::OnGo";
@@ -1877,7 +1877,7 @@ OnDisable:
 OnTimer180000:
 	stopnpctimer;
 OnWarpColor:
-	set .@map$, instance_mapname("2@nyd");
+	.@map$ = instance_mapname("2@nyd");
 	switch(rand(1,4)) {
 	case 1:
 		mapannounce .@map$, "Nidhoggur's Shadow : In this chaos... your blood is just what I need.",bc_map,"0xFFFF00";
@@ -1915,7 +1915,7 @@ OnWarpColor:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("2@nyd");
+	.@map$ = instance_mapname("2@nyd");
 	if (mobcount(.@map$,instance_npcname("nyd_2f_boss_enter_call")+"::OnMyMobDead") < 1) {
 		mapannounce .@map$, "Nidhoggur's Shadow : World Tree Yggdrasil's guardian... his powers are disappearing...",bc_map,"0x00ff99";
 		donpcevent instance_npcname("World Tree Yggdrasil#2F")+"::OnEnable";
@@ -1925,7 +1925,7 @@ OnMyMobDead:
 		donpcevent instance_npcname("nyd_2f_white_c")+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow_c")+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green_c")+"::OnDisable";
-		set 'ins_nyd2,4;
+		'ins_nyd2 = 4;
 		end;
 	}
 	end;
@@ -1976,8 +1976,8 @@ OnTimer180000:
 	next;
 	switch(select("Please let me out.:I want to look around for a while.")) {
 	case 1:
-		set 'ins_nyd2,0;
-		set ins_nyd,203;
+		'ins_nyd2 = 0;
+		ins_nyd = 203;
 		//setquest 3135;
 		warp "nyd_dun02",98,196;
 		end;
@@ -2051,8 +2051,8 @@ OnInstanceInit:
 OnEnable:
 	enablenpc instance_npcname(strnpcinfo(0));
 	initnpctimer;
-	set .@map$, instance_mapname("2@nyd");
-	set .@label$, instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	.@map$ = instance_mapname("2@nyd");
+	.@label$ = instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
 	if (compare(strnpcinfo(0),"red")) {
 		monster .@map$,120,285,"Nidhoggur's Guardian#1",2020,1,.@label$;
 		monster .@map$,119,286,"Nidhoggur's Guardian#2",2020,1,.@label$;
@@ -2081,7 +2081,7 @@ OnEnable:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("2@nyd");
+	.@map$ = instance_mapname("2@nyd");
 	if (mobcount(.@map$,instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1) {
 		mapannounce .@map$, "Nidhoggur's Shadow : You're not bad... but I will be your opponent this time.",bc_map,"0x00ff99";
 		donpcevent instance_npcname("nyd_2f_boss_enter_logic")+"::OnEnable";
@@ -2155,7 +2155,7 @@ OnTouch:
 
 2@nyd,1,1,0	script	ins_nyd2_spawn_mobs	-1,{
 OnInstanceInit:
-	set .@map$, instance_mapname("2@nyd");
+	.@map$ = instance_mapname("2@nyd");
 	areamonster .@map$,200,92,180,80,"Rhyncho",2020,40,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyRhynDead";
 	areamonster .@map$,200,92,180,80,"Phylla",2021,40,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyPhyDead";
 	areamonster .@map$,200,92,180,80,"Dark Shadow",2023,40,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyDarkshaDead";
@@ -2193,8 +2193,8 @@ sec_in02,36,167,3	script	Nidhoggur Manager	4_M_FAIRYSOLDIER,1,1,{
 	next;
 	switch(select("Reset variables to allow entrance to Nidhoggur:change variable 'ins_nyd':Remove 3 day timer 3135:Confirm variable number")) {
 	case 1:
-		set ins_nyd,200;
-		set ins_nyd2,0;
+		ins_nyd = 200;
+		ins_nyd2 = 0;
 		erasequest 3135;
 		mes "ins_nyd set to 200 ins_nyd2 set to 0";
 		mes "quest 3135 erased.";
@@ -2203,8 +2203,8 @@ sec_in02,36,167,3	script	Nidhoggur Manager	4_M_FAIRYSOLDIER,1,1,{
 		mes "Which variable do you want to change?";
 		next;
 		switch(select("ins_nyd:ins_nyd2")) {
-			case 1: set .@var$,"ins_nyd"; break;
-			case 2: set .@var$,"ins_nyd2"; break;
+			case 1: .@var$ = "ins_nyd"; break;
+			case 2: .@var$ = "ins_nyd2"; break;
 		}
 		mes "Input the variable number";
 		next;
@@ -2228,7 +2228,7 @@ sec_in02,36,167,3	script	Nidhoggur Manager	4_M_FAIRYSOLDIER,1,1,{
 nyd_dun02,7,7,2	script	Purification Admin#nyd2	CLEAR_NPC,2,0,{
 	callfunc "F_GM_NPC";
 	mes "Please enter the password";
-	set .@i, callfunc("F_GM_NPC","dragonslayer",1);
+	.@i = callfunc("F_GM_NPC","dragonslayer",1);
 	next;
 	if (.@i == 0) {
 		mes "Enter the password exactly.";
@@ -2259,8 +2259,8 @@ nyd_dun02,7,7,2	script	Purification Admin#nyd2	CLEAR_NPC,2,0,{
 nyd_dun02,88,195,4	script	Purification Stone#nyd2	2_MONEMUS,{
 	erasequest 3135;
 	erasequest 3136;
-	set ins_nyd,200;
-	set ins_nyd2,0;
+	ins_nyd = 200;
+	ins_nyd2 = 0;
 	mes "^0000FFThe records and after-effect related to the Nidhoggur's Nest have been removed. You can generate and enter the dungeon again.^000000";
 	close;
 OnInit:

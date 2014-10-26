@@ -17,7 +17,7 @@
 
 valkyrie,53,54,3	script	Minstrel#Valkyrie	2_M_BARD_ORIENT,{
 	if (ADVJOB == 0 || Upper != 1) {
-		set .@karma_d,rand(1,10);
+		.@karma_d = rand(1,10);
 		if (.@karma_d > 4) {
 			mes "[Minstrel]";
 			mes "Congratulations.";
@@ -58,7 +58,7 @@ valkyrie,53,54,3	script	Minstrel#Valkyrie	2_M_BARD_ORIENT,{
 			close;
 		}
 		jobchange Job_Clown;
-		set ADVJOB,0;
+		ADVJOB = 0;
 		mes "[Minstrel]";
 		mes "Congratulations!";
 		mes "As a Minstrel, your";

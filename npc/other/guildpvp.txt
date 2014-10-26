@@ -25,14 +25,14 @@ pvp_y_room,77,85,4	script	Guild Battle Guide	8W_SOLDIER,{
 	mes "Let me know to which map";
 	mes "you want me to move you.";
 	next;
-	set .@i, select("Map 1:Map 2:Map 3:Map 4:Map 5");
+	.@i = select("Map 1:Map 2:Map 3:Map 4:Map 5");
 	mes "[Guild Battle Guide]";
 	mes "You've chosen Map "+.@i+".";
 	mes "Now, which team are";
 	mes "you on? You can choose";
 	mes "either Team 1 or Team 2.";
 	next;
-	set .@j, select("Team 1:Team 2");
+	.@j = select("Team 1:Team 2");
 	mes "[Guild Battle Guide]";
 	mes "Alright, I'll move you";
 	mes "to Map "+.@i+" as a member";

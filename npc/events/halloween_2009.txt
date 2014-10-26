@@ -246,80 +246,80 @@ prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	4_M_KID1,2,2
 				if (.@mapname$ == "prontera") {
 					switch(select("Geffen:Payon:Alberta:Aldebaran")) {
 						case 1:
-							set .@HallowTown,3;
+							.@HallowTown = 3;
 							break;
 						case 2:
-							set .@HallowTown,2;
+							.@HallowTown = 2;
 							break;
 						case 3:
-							set .@HallowTown,4;
+							.@HallowTown = 4;
 							break;
 						case 4:
-							set .@HallowTown,5;
+							.@HallowTown = 5;
 							break;
 					}
 				}
 				else if (.@mapname$ == "payon") {
 					switch(select("Prontera:Geffen:Alberta:Aldebaran")) {
 						case 1:
-							set .@HallowTown,1;
+							.@HallowTown = 1;
 							break;
 						case 2:
-							set .@HallowTown,3;
+							.@HallowTown = 3;
 							break;
 						case 3:
-							set .@HallowTown,4;
+							.@HallowTown = 4;
 							break;
 						case 4:
-							set .@HallowTown,5;
+							.@HallowTown = 5;
 							break;
 					}
 				}
 				else if (.@mapname$ == "geffen") {
 					switch(select("Prontera:Payon:Alberta:Aldebaran")) {
 						case 1:
-							set .@HallowTown,1;
+							.@HallowTown = 1;
 							break;
 						case 2:
-							set .@HallowTown,2;
+							.@HallowTown = 2;
 							break;
 						case 3:
-							set .@HallowTown,4;
+							.@HallowTown = 4;
 							break;
 						case 4:
-							set .@HallowTown,5;
+							.@HallowTown = 5;
 							break;
 					}
 				}
 				else if (.@mapname$ == "alberta") {
 					switch(select("Prontera:Geffen:Payon:Aldebaran")) {
 						case 1:
-							set .@HallowTown,1;
+							.@HallowTown = 1;
 							break;
 						case 2:
-							set .@HallowTown,3;
+							.@HallowTown = 3;
 							break;
 						case 3:
-							set .@HallowTown,2;
+							.@HallowTown = 2;
 							break;
 						case 4:
-							set .@HallowTown,5;
+							.@HallowTown = 5;
 							break;
 					}
 				}
 				else if (.@mapname$ == "aldebaran") {
 					switch(select("Prontera:Geffen:Payon:Alberta")) {
 						case 1:
-							set .@HallowTown,1;
+							.@HallowTown = 1;
 							break;
 						case 2:
-							set .@HallowTown,3;
+							.@HallowTown = 3;
 							break;
 						case 3:
-							set .@HallowTown,2;
+							.@HallowTown = 2;
 							break;
 						case 4:
-							set .@HallowTown,4;
+							.@HallowTown = 4;
 							break;
 					}
 				}
@@ -347,14 +347,14 @@ prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	4_M_KID1,2,2
 					break;
 				}
 				else {
-					set .@fabric,countitem(1059);
-					set .@jack,countitem(1062);
-					set .@worn,countitem(6299);
-					set .@crushed,countitem(6298);
-					set .@whispers,0;
-					set .@darklords,0;
+					.@fabric = countitem(1059);
+					.@jack = countitem(1062);
+					.@worn = countitem(6299);
+					.@crushed = countitem(6298);
+					.@whispers = 0;
+					.@darklords = 0;
 
-					set .@total,.@fabric + .@jack + .@worn + .@crushed;
+					.@total = .@fabric + .@jack + .@worn + .@crushed;
 
 					if(.@total < .@input) {
 						mes "[Halloween Wizard]";
@@ -367,49 +367,49 @@ prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	4_M_KID1,2,2
 					if(.@fabric > 0) {
 						if(.@fabric >= .@input) {
 							delitem 1059,.@input;
-							set .@whispers,.@whispers+.@input;
-							set .@input,0;
+							.@whispers += .@input;
+							.@input = 0;
 						}
 						else{
 							delitem 1059,.@fabric;
-							set .@input,.@input - .@fabric;
-							set .@whispers,.@whispers+.@fabric;
+							.@input -= .@fabric;
+							.@whispers += .@fabric;
 						}
 					}
 					if(.@worn > 0 && .@input != 0) {
 						if(.@worn >= .@input) {
 							delitem 6299,.@input;
-							set .@whispers,.@whispers+.@input;
-							set .@input,0;
+							.@whispers += .@input;
+							.@input = 0;
 						}
 						else{
 							delitem 6299,.@worn;
-							set .@input,.@input - .@worn;
-							set .@whispers,.@whispers+.@worn;
+							.@input -= .@worn;
+							.@whispers += .@worn;
 						}
 					}
 					if(.@jack > 0 && .@input != 0) {
 						if(.@jack >= .@input) {
 							delitem 1062,.@input;
-							set .@darklords,.@darklords+.@input;
-							set .@input,0;
+							.@darklords += .@input;
+							.@input = 0;
 						}
 						else{
 							delitem 1062,.@jack;
-							set .@input,.@input - .@jack;
-							set .@darklords,.@darklords+.@jack;
+							.@input -= .@jack;
+							.@darklords += .@jack;
 						}
 					}
 					if(.@crushed > 0 && .@input != 0) {
 						if(.@crushed >= .@input) {
 							delitem 6298,.@input;
-							set .@darklords,.@darklords+.@input;
-							set .@input,0;
+							.@darklords += .@input;
+							.@input = 0;
 						}
 						else{
 							delitem 6298,.@crushed;
-							set .@input,.@input - .@crushed;
-							set .@darklords,.@darklords+.@crushed;
+							.@input -= .@crushed;
+							.@darklords += .@crushed;
 						}
 					}
 					if (.@input > 0) {

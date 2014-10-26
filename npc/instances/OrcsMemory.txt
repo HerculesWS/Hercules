@@ -42,9 +42,9 @@
 //============================================================
 gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 
-	set .@party_id,getcharid(1);
-	set .@p_name$,getpartyname(.@party_id);
-	set .@md_name$,"Orc's Memory";
+	.@party_id = getcharid(1);
+	.@p_name$ = getpartyname(.@party_id);
+	.@md_name$ = "Orc's Memory";
 
 	if (!instance_check_party(.@party_id,2,30,80)) {
 		mes "Only users between Levels ^ff000030 ~ 80^000000 can enter this Dungeon.";
@@ -58,7 +58,7 @@ gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 			next;
 			switch(select("Reserve the "+.@md_name$+":Enter the Dungeon:Cancel")) {
 			case 1:
-				set .@instance,instance_create(.@md_name$,.@party_id);
+				.@instance = instance_create(.@md_name$,.@party_id);
 				if (.@instance < 0) {
 					mes "Party Name: "+.@p_name$;
 					mes "Party Leader: "+strcharinfo(0);
@@ -66,7 +66,7 @@ gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 					close;
 				}
 				mes "^0000ff"+.@md_name$+"^000000- Attempting to book an entrance";
-				for( set .@i, 1; .@i <= 2; set .@i, .@i + 1 ) {
+				for (.@i = 1; .@i <= 2; ++.@i) {
 					if( instance_attachmap(.@i + "@orcs", .@instance) == "" )
 						break;
 				}
@@ -158,7 +158,7 @@ gef_fild10,238,202,6	script	Mad Scientist#orc	4_LGTSCIENCE,{
 		case 1:
 			mes "[Mad Scientist]";
 			mes "Very good! Just sit in the hands of this statue! And try to act natural when you're in there!";
-			set mad,1;
+			mad = 1;
 			close;
 		case 2:
 			mes "[Mad Scientist]";
@@ -170,7 +170,7 @@ gef_fild10,238,202,6	script	Mad Scientist#orc	4_LGTSCIENCE,{
 		mes "Hmm? Put your hand on that Monemus Statue if you want to experience traveling through dimensions!";
 		close;
 	} else {
-		set mad,1;
+		mad = 1;
 		end;
 	}
 }
@@ -195,10 +195,10 @@ OnEnable:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("1@orcs");
-	set .@mob_dead_num, 30 - mobcount(.@map$,instance_npcname("#Resurrect Monsters1")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@orcs");
+	.@mob_dead_num = 30 - mobcount(.@map$,instance_npcname("#Resurrect Monsters1")+"::OnMyMobDead");
 	if (.@mob_dead_num > 0) {
-		set .@mob_ran,rand(1,30);
+		.@mob_ran = rand(1,30);
 		if (.@mob_ran > 29) {
 			monster .@map$,0,0,"Orc Warrior",1023,.@mob_dead_num,instance_npcname("#Resurrect Monsters1")+"::OnMyMobDead";
 		}
@@ -231,7 +231,7 @@ OnTimer10:
 	end;
 
 OnTimer4010:
-	set .@map$, instance_mapname("1@orcs");
+	.@map$ = instance_mapname("1@orcs");
 	mapannounce .@map$, "Stalactic Golems are digging out of the deep underground.",bc_map,"0x77ff77";
 	areamonster .@map$,17,187,27,177,"Stalactic Golem",1278,20,instance_npcname("#Resurrect Monsters1")+"::OnMyMobDead";
 	stopnpctimer;
@@ -255,8 +255,8 @@ OnEnable:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("1@orcs");
-	set .@mob_dead_num, 15 - mobcount(.@map$,instance_npcname("#Resurrect Monsters2")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@orcs");
+	.@mob_dead_num = 15 - mobcount(.@map$,instance_npcname("#Resurrect Monsters2")+"::OnMyMobDead");
 	if (rand(1,30) > 15) {
 		if (.@mob_dead_num > 0) {
 			monster .@map$,0,0,"Trained Wolf",1106,.@mob_dead_num,instance_npcname("#Resurrect Monsters2")+"::OnMyMobDead";
@@ -287,9 +287,9 @@ OnEnable:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("1@orcs");
-	set .@mob_dead_num, 15 - mobcount(.@map$,instance_npcname("#Resurrect Monsters3")+"::OnMyMobDead");
-	set .@mob_ran,rand(1,30);
+	.@map$ = instance_mapname("1@orcs");
+	.@mob_dead_num = 15 - mobcount(.@map$,instance_npcname("#Resurrect Monsters3")+"::OnMyMobDead");
+	.@mob_ran = rand(1,30);
 	if (.@mob_ran > 29) {
 		if (.@mob_dead_num > 0) {
 			monster .@map$,0,0,"Orc Archer",1189,.@mob_dead_num,instance_npcname("#Resurrect Monsters3")+"::OnMyMobDead";
@@ -320,8 +320,8 @@ OnInstanceInit:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("1@orcs");
-	set .@mob_dead_num, 10 - mobcount(.@map$,instance_npcname("#Resurrect Monsters4")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@orcs");
+	.@mob_dead_num = 10 - mobcount(.@map$,instance_npcname("#Resurrect Monsters4")+"::OnMyMobDead");
 	if (.@mob_dead_num > 0) {
 		monster .@map$,0,0,"Anopheles",1627,.@mob_dead_num,instance_npcname("#Resurrect Monsters4")+"::OnMyMobDead";
 	}
@@ -542,10 +542,10 @@ OnDisable:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("2@orcs");
-	set .@mob_dead_num, 30 - mobcount(.@map$,instance_npcname("#2Resurrect Monsters1")+"::OnMyMobDead");
+	.@map$ = instance_mapname("2@orcs");
+	.@mob_dead_num = 30 - mobcount(.@map$,instance_npcname("#2Resurrect Monsters1")+"::OnMyMobDead");
 	if (.@mob_dead_num > 0) {
-		set .@mob_ran,rand(1,30);
+		.@mob_ran = rand(1,30);
 		if (.@mob_ran > 29) {
 			monster .@map$,0,0,"Vengeful Orc",1152,.@mob_dead_num,instance_npcname("#2Resurrect Monsters1")+"::OnMyMobDead";
 		}
@@ -575,7 +575,7 @@ OnTimer10:
 	end;
 
 OnTimer4010:
-	set .@map$, instance_mapname("2@orcs");
+	.@map$ = instance_mapname("2@orcs");
 	mapannounce .@map$, "[ Wraiths were summoned by an unknown power ]",bc_map,"0x77ff77";
 	areamonster .@map$,167,25,177,35,"Wraith",1475,30,instance_npcname("#2Resurrect Monsters1")+"::OnMyMobDead";
 	stopnpctimer;
@@ -595,9 +595,9 @@ OnEnable:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("2@orcs");
-	set .@mob_dead_num, 15 - mobcount(.@map$,instance_npcname("#2Resurrect Monsters3")+"::OnMyMobDead");
-	set .@mob_ran,rand(1,30);
+	.@map$ = instance_mapname("2@orcs");
+	.@mob_dead_num = 15 - mobcount(.@map$,instance_npcname("#2Resurrect Monsters3")+"::OnMyMobDead");
+	.@mob_ran = rand(1,30);
 	if (.@mob_ran > 29) {
 		if (.@mob_dead_num > 0) {
 			monster .@map$,0,0,"Orc Archer",1189,.@mob_dead_num,instance_npcname("#2Resurrect Monsters3")+"::OnMyMobDead";
@@ -632,8 +632,8 @@ OnInstanceInit:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("2@orcs");
-	set .@mob_dead_num, 10 - mobcount(.@map$,instance_npcname("#2Resurrect Monsters4")+"::OnMyMobDead");
+	.@map$ = instance_mapname("2@orcs");
+	.@mob_dead_num = 10 - mobcount(.@map$,instance_npcname("#2Resurrect Monsters4")+"::OnMyMobDead");
 	if (.@mob_dead_num > 0) {
 		monster .@map$,0,0,"Anopheles",1627,1,instance_npcname("#2Resurrect Monsters4")+"::OnMyMobDead";
 	}
@@ -727,7 +727,7 @@ OnInstanceInit:
 	end;
 
 OnEnable:
-	set .@map$, instance_mapname("2@orcs");
+	.@map$ = instance_mapname("2@orcs");
 	monster .@map$,109,156,"Safeguard Chief",1981,1,instance_npcname("#Mobs Control")+"::OnMyMobDead1";
 	mapannounce .@map$, "The Chief Orc of Safeguards: Oh!! Looks like I have company. Defeat me if you can!!",bc_map,"0xff8888";
 	end;
@@ -758,7 +758,7 @@ OnInstanceInit:
 	end;
 
 OnEnable:
-	set .@map$, instance_mapname("2@orcs");
+	.@map$ = instance_mapname("2@orcs");
 	monster .@map$,67,64,"Orc Sniper",1982,1,instance_npcname("#Mobs Control")+"::OnMyMobDead2";
 	mapannounce .@map$, "Orc Sniper: Hah! Pretty impressive that you made it this far, but your foolish little trip ends here...",bc_map,"0xff8888";
 	end;
@@ -789,7 +789,7 @@ OnInstanceInit:
 	end;
 
 OnEnable:
-	set .@map$, instance_mapname("2@orcs");
+	.@map$ = instance_mapname("2@orcs");
 	monster .@map$,152,147,"Depraved Orc Spirit",1983,1,instance_npcname("#Mobs Control")+"::OnMyMobDead3";
 	mapannounce .@map$, "Depraved Orc Spirit: I smell flesh! Hungry! Wanna try some human meat!!",bc_map,"0xff8888";
 	end;
@@ -831,7 +831,7 @@ OnInstanceInit:
 	end;
 
 OnEnable:
-	set .@map$, instance_mapname("2@orcs");
+	.@map$ = instance_mapname("2@orcs");
 	monster .@map$,185,8,"Shaman Cargalache",1984,1,instance_npcname("#Boss Control")+"::OnMyMobDead";
 	monster .@map$,179,15,"Depraved Orc Hero",1087,1;
 	enablenpc instance_npcname("#Boss Control");
@@ -839,8 +839,8 @@ OnEnable:
 
 OnMyMobDead:
 	donpcevent instance_npcname("Kruger#")+"::OnEnable";
-	set .@map$, instance_mapname("2@orcs");
-	set .@mob_ran,rand(1,5);
+	.@map$ = instance_mapname("2@orcs");
+	.@mob_ran = rand(1,5);
 	if (.@mob_ran == 1) {
 		mapannounce .@map$, "Shaman Cargalache: How... How could this be... How could someone like you...!!",bc_map,"0xffff00";
 	}
@@ -900,7 +900,7 @@ OnTouch:
 		mes "Thank you, I'm sure she's finally free from the nightmare that used to choke her soul.";
 		next;
 		mes "Kruger was about to say something more, but he breathed his last breath before he could...";
-		set yong_odun,2;
+		yong_odun = 2;
 		close;
 	}
 	else {

@@ -20,10 +20,11 @@
 	setarray .@name$, 	"Spear", 			"Sword", 			"Bow";
 	setarray .@faith$, 	"SPEAR_MERC_GUILD",	"SWORD_MERC_GUILD",	"ARCH_MERC_GUILD";
 	setarray .@item, 	12182,				12172,				12162;
-	set .@npc$, strnpcinfo(2);
-	for (set .@size, getarraysize(.@name$); .@i < .@size; set .@i, .@i + 1)
-		if (.@npc$ == .@name$[.@i]) set .@type, .@i;
-	set .@faith_merc, mercenary_get_faith(getd(.@faith$[.@type]));
+	.@npc$ = strnpcinfo(2);
+	.@size = getarraysize(.@name$);
+	for (.@i = 0; .@i < .@size; ++.@i)
+		if (.@npc$ == .@name$[.@i]) .@type = .@i;
+	.@faith_merc = mercenary_get_faith(getd(.@faith$[.@type]));
 	mes "[Mercenary Manager]";
 	mes "Welcome to the";
 	mes .@npc$ + " Mercenary Guild.";
@@ -38,14 +39,14 @@
 			mes "interested in hiring?";
 			next;
 			setarray .@suffix$, "th","st","nd","rd";
-			for (set .@i, 1; .@i <= 9; set .@i, .@i + 1)
-				set .@menu$, .@menu$ + .@i + .@suffix$[((.@i <= 3)? .@i : 0)] + " Grade " + .@npc$ + " Mercenary:";
-			set .@Grade, select(.@menu$);
-			set .@BaseLevel, 5 + (.@Grade * 10);
-			set .@BaseLevel, (.@val > 90)? 90 : .@BaseLevel;
-			set .@ZenyCost, 7 * .@Grade;
+			for (.@i = 1; .@i <= 9; ++.@i)
+				.@menu$ += .@i + .@suffix$[((.@i <= 3)? .@i : 0)] + " Grade " + .@npc$ + " Mercenary:";
+			.@Grade = select(.@menu$);
+			.@BaseLevel = 5 + (.@Grade * 10);
+			.@BaseLevel = (.@val > 90)? 90 : .@BaseLevel;
+			.@ZenyCost = 7 * .@Grade;
 			setarray .@FaithCost[7], 50,100,300;
-			set .@FaithCost, .@FaithCost[.@Grade];
+			.@FaithCost = .@FaithCost[.@Grade];
 			mes "[Mercenary Manager]";
 			mes "So you want to hire a " + .@Grade + .@suffix$[((.@Grade <= 3)? .@i : 0)];
 			mes "Grade " + .@npc$ + " Mercenary?";
@@ -221,12 +222,13 @@ pay_arche,99,167,4	duplicate(Mercenary Manager#main)	Mercenary Manager#Bow	4_M_J
 	next;
 	setarray .@item, 12184,	12185,	12241,	12242,	12243;
 	setarray .@cost, 1750,	3000,	560,	1050,	2100;
-	for (set .@size, getarraysize(.@item); .@i < .@size; set .@i, .@i + 1)
-		set .@menu$, .@menu$ + getitemname(.@item[.@i]) + ":";
-	set .@m, select(.@menu$)-1;
-	set .@str$, .@cost[.@m] + "";
-	set .@len, getstrlen(.@str$);
-	set .@str_cost$, (.@len <= 3)? .@str$ : insertchar(.@str$,",",.@len-3);
+	.@size = getarraysize(.@item);
+	for (.@i = 0; .@i < .@size; ++.@i)
+		.@menu$ += getitemname(.@item[.@i]) + ":";
+	.@m = select(.@menu$)-1;
+	.@str$ = .@cost[.@m] + "";
+	.@len = getstrlen(.@str$);
+	.@str_cost$ = (.@len <= 3)? .@str$ : insertchar(.@str$,",",.@len-3);
 	mes "[Mercenary Goods Merchant]";
 	mes getitemname(.@item[.@m]);
 	mes "each cost " + .@str_cost$ + " zeny.";
@@ -241,7 +243,7 @@ pay_arche,99,167,4	duplicate(Mercenary Manager#main)	Mercenary Manager#Bow	4_M_J
 		mes "to buy any Mercenary Potions.";
 		close;
 	}
-	else if (.@input < 0 || .@input > 10000) {
+	if (.@input < 0 || .@input > 10000) {
 		mes "[Mercenary Goods Merchant]";
 		mes "I'm sorry, but you";
 		mes "can only buy up to";
@@ -250,7 +252,8 @@ pay_arche,99,167,4	duplicate(Mercenary Manager#main)	Mercenary Manager#Bow	4_M_J
 		mes "a number from 1 to 10,000.";
 		close;
 	}
-	else if (set(.@total_po, .@input * .@cost[.@m]) > Zeny) {
+	.@total_po = .@input * .@cost[.@m];
+	if (.@total_po > Zeny) {
 		mes "[Mercenary Goods Merchant]";
 		mes "I'm sorry, but you don't";
 		mes "have enough zeny for this";
@@ -260,7 +263,7 @@ pay_arche,99,167,4	duplicate(Mercenary Manager#main)	Mercenary Manager#Bow	4_M_J
 		mes "for your Mercenaries.";
 		close;
 	}
-	else if (!checkweight(.@item[.@m], .@input)) {
+	if (!checkweight(.@item[.@m], .@input)) {
 		mes "[Mercenary Goods Merchant]";
 		mes "If I gave you that many";
 		mes "potions, you wouldn't be";

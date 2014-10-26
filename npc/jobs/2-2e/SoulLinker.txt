@@ -156,7 +156,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 					mes "and talk to me at any time.";
 					close;
 				}
-				set SOUL_Q,1;
+				SOUL_Q = 1;
 				setquest 6005;
 				mes "[Kid]";
 				mes "So you want to become";
@@ -197,7 +197,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 						delitem 732,1; //Crystal_Jewel__
 						delitem 929,1; //Immortal_Heart
 						delitem 748,1; //Witherless_Rose
-						set SOUL_Q,2;
+						SOUL_Q = 2;
 						changequest 6005,6006;
 						mes "[Kid]";
 						mes "Great, I see that you've";
@@ -246,7 +246,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 				mes "to wait for very long.";
 				close;
 			}
-			set SOUL_Q,0;
+			SOUL_Q = 0;
 			mes "[Kid]";
 			mes "You've become a warrior";
 			mes "of the Sun, the Moon and";
@@ -276,7 +276,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 				close;
 			}
 			donpcevent "Timer#link3::OnEnable";
-			set .SoulLinkerTest,1;
+			.SoulLinkerTest = 1;
 			mes "[Maia]";
 			mes "Great, I've finished";
 			mes "the preparations. Now";
@@ -314,7 +314,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 				close;
 			}
 			donpcevent "Timer#link3::OnEnable";
-			set .SoulLinkerTest,1;
+			.SoulLinkerTest = 1;
 			mes "[Maia]";
 			mes "Alright then, close";
 			mes "your eyes and relax.";
@@ -327,7 +327,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 	}
 
 OnInit:
-	set .SoulLinkerTest,0;
+	.SoulLinkerTest = 0;
 	end;
 }
 
@@ -360,7 +360,7 @@ OnTouch:
 			mes "will be able to call upon";
 			mes "more spirits as a Soul Linker.";
 			next;
-			set SOUL_Q,3;
+			SOUL_Q = 3;
 			changequest 6006,6007;
 			mes "[Maia]";
 			mes "We can only remain in";
@@ -445,7 +445,7 @@ OnTouch:
 			completequest 6008;
 			callfunc "Job_Change",Job_Soul_Linker;
 			callfunc "F_ClearJobVar";	// clears all job variables for the current player
-			set SOUL_Q,0;
+			SOUL_Q = 0;
 			mes "[Maia]";
 			mes "I wish the best of luck";
 			mes "in your new life. Surround";
@@ -519,7 +519,7 @@ job_soul,30,35,6	script	Monk Spirit#link4	4_M_GRANDMONK,{
 		mes "is the only chance that I can";
 		mes "possibly have to do this.";
 		next;
-		set SOUL_Q,4;
+		SOUL_Q = 4;
 		if (!questprogress(6008)) {
 			changequest 6007,6008;
 		}
@@ -568,7 +568,7 @@ job_soul,30,25,7	script	Sage Spirit#link5	4_M_SAGE_A,{
 		mes "it. But to do that, I shall";
 		mes "require your help. I beg you,";
 		mes "let me become your spirit ally.";
-		set SOUL_Q,4;
+		SOUL_Q = 4;
 		if (!questprogress(6008)) {
 			changequest 6007,6008;
 		}
@@ -612,7 +612,7 @@ job_soul,25,30,5	script	Alchemist Spirit#link7	4_F_ALCHE,{
 		mes "passed away. I cannot go";
 		mes "on to the next world until I've";
 		mes "passed on my techniques...";
-		set SOUL_Q,4;
+		SOUL_Q = 4;
 		if (!questprogress(6008)) {
 			changequest 6007,6008;
 		}

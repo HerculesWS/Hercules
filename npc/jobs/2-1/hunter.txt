@@ -180,7 +180,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 			mes "[Hunter Sherin]";
 			mes "Tada~ Congratulations!";
 			mes "You look great as a Hunter!!";
-			set .@joblvl, JobLevel;
+			.@joblvl = JobLevel;
 			completequest 4013;
 			callfunc "Job_Change",Job_Hunter;
 			callfunc "F_ClearJobVar";		// clears all job variables for the current player
@@ -242,10 +242,10 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 					}
 					break;
 				case 2:
-					set .@selection,2;
+					.@selection = 2;
 					break;
 				case 3:
-					set .@selection,3;
+					.@selection = 3;
 					break;
 				}
 			}
@@ -267,7 +267,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				switch(select("Scream out loud asking where you should go.:Quietly ask a person passing by.:Wander around alone and search for a place.")) {
 				case 2:
 				case 3:
-					set .@hunter_t,.@hunter_t+10;
+					.@hunter_t += 10;
 				default:
 					break;
 				}
@@ -281,7 +281,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				switch(select("Ask a Priest to open a free warp portal.:Use the Kafra service.:Walk with a friend.")) {
 				case 2:
 				case 3:
-					set .@hunter_t,.@hunter_t+10;
+					.@hunter_t += 10;
 				default:
 					break;
 				}
@@ -296,7 +296,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				switch(select("Beg here and there.:Sell items I do not need.:Hunt at a nearby field.")) {
 				case 2:
 				case 3:
-					set .@hunter_t,.@hunter_t+10;
+					.@hunter_t += 10;
 				default:
 					break;
 				}
@@ -309,12 +309,12 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				mes "situation?";
 				next;
 				if (select("Attack a Hode from the top of a hill.:Go back to town.:Attack someone else's Hode.") == 2)
-					set .@hunter_t,.@hunter_t+10;
+					.@hunter_t += 10;
 				mes "[Hunter Sherin]";
 				mes "Let's say you were having too much trouble hunting Hodes and returned to town. Now you are out of HP and a Priest happens to be around. How would you ask for a Heal?";
 				next;
 				if (select("Would it be possible to get a Heal, please?:Heal, please.:Heal me.") == 1)
-					set .@hunter_t,.@hunter_t+10;
+					.@hunter_t += 10;
 				mes "[Hunter Sherin]";
 				mes "This time, you found a rare item while you were going through your inventory. You go out to sell the item, and there are many people with stores and chatrooms open.";
 				next;
@@ -326,7 +326,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				switch(select("Scream out loud to everyone in sight.:Open a chatroom and wait.:Look to see if anyone already wants it.")) {
 				case 2:
 				case 3:
-					set .@hunter_t,.@hunter_t+10;
+					.@hunter_t += 10;
 				default:
 					break;
 				}
@@ -334,7 +334,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				mes "While you are waiting, someone is begging for items and Zeny. What should you do?";
 				next;
 				if (select("Give some of my items and Zeny.:Ignore and walk away.:Tell the person about a good place to hunt.") == 1)
-					set .@hunter_t,.@hunter_t+10;
+					.@hunter_t += 10;
 				mes "[Hunter Sherin]";
 				mes "By now, you decide to go to the Maze by yourself.";
 				next;
@@ -346,7 +346,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				switch(select("Tell them which way to go.:Guide them to their destination.:Ignore.")) {
 				case 1:
 				case 2:
-					set .@hunter_t,.@hunter_t+10;
+					.@hunter_t += 10;
 				default:
 					break;
 				}
@@ -357,7 +357,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				mes "What should you do?";
 				next;
 				if (select("Watch, then attack when asked for help.:Attack and see what happens.:Just go back to town.") == 1)
-					set .@hunter_t,.@hunter_t+10;
+					.@hunter_t += 10;
 				mes "[Hunter Sherin]";
 				mes "You are now very exhausted after your day of hunting. It's time to go back to town.";
 				next;
@@ -367,7 +367,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				switch(select("Pick it up and keep it.:Try to find the owner.:Just walk by.")) {
 				case 2:
 				case 3:
-					set .@hunter_t,.@hunter_t+10;
+					.@hunter_t += 10;
 				default:
 					break;
 				}
@@ -375,7 +375,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				mes "Okay, this is the end of the test!";
 				next;
 				if (.@hunter_t == 100) {
-					set HNTR_Q,2;
+					HNTR_Q = 2;
 					changequest 4000,4001;
 					mes "[Hunter Sherin]";
 					mes "Well done! Your answers show you've got the right outlook on life. You definitely have the right qualities to become a Hunter~";
@@ -385,7 +385,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 					close;
 				}
 				else if (.@hunter_t == 90) {
-					set HNTR_Q,2;
+					HNTR_Q = 2;
 					changequest 4000,4001;
 					mes "[Hunter Sherin]";
 					mes "Well, I'm looking at your answers and your score isn't perfect. But I'll let you pass anyway. I don't know what our Guildmaster will think, though.";
@@ -394,7 +394,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 					mes "Just remember to always keep basic etiquette in mind. Try harder in the following tests and make me happy, okay?";
 					close;
 				}
-				set HNTR_Q,1;
+				HNTR_Q = 1;
 				mes "[Hunter Sherin]";
 				mes "Hmm... I don't think this'll work out. You can't become a Hunter without knowing basic etiquette.";
 				next;
@@ -473,7 +473,7 @@ hu_in01,382,382,4	script	Guild Receptionist#hnt	4_M_JOB_HUNTER,{
 		mes "[Guild Receptionist]";
 		mes "Greetings. They call me... ^660000The Demon Hunter^000000. I am the one in charge of processing applications. Your name is ... " + strcharinfo(0) + ", correct?";
 		next;
-		set .@selection,select("Yes, that is correct.:Nope~~(heeheehee)");
+		.@selection = select("Yes, that is correct.:Nope~~(heeheehee)");
 		if (.@selection == 2) {
 			mes "[Demon Hunter]";
 			mes "Hey, stop messing around.";
@@ -501,7 +501,7 @@ hu_in01,382,382,4	script	Guild Receptionist#hnt	4_M_JOB_HUNTER,{
 		mes "[Demon Hunter]";
 		mes "You see, we're having some financial problems. Let's see, we're short on these items...";
 		next;
-		if(checkre(0)) set .@i,1;
+		if(checkre(0)) .@i = 1;
 		switch(rand(1,7)) {
 		//Insect_Feeler/Claw_Of_Desert_Wolf, Wooden_Block, White_Herb
 		case 1: setarray .@items[0], (.@i?928:7030),5, 1019,5, 509,3, 3; changequest 4001,4002; break;
@@ -521,7 +521,7 @@ hu_in01,382,382,4	script	Guild Receptionist#hnt	4_M_JOB_HUNTER,{
 		if (.@selection == 1) {
 			mes "[Demon Hunter]";
 			mes "Hmm. ^660000"+.@items[1]+" "+getitemname(.@items[0])+"^000000 to use for arrow tips. ^660000"+.@items[3]+" "+getitemname(.@items[2])+"^000000 to use here and there. And ^660000"+.@items[5]+" "+getitemname(.@items[4])+"^000000 please.";
-			set HNTR_Q,.@items[6];
+			HNTR_Q = .@items[6];
 			next;
 			mes "[Demon Hunter]";
 			mes "Oh right. Our Guildmaster has gone on an official trip to the Payon Central Palace. You have to go visit him because the one that administers the test.";
@@ -532,7 +532,7 @@ hu_in01,382,382,4	script	Guild Receptionist#hnt	4_M_JOB_HUNTER,{
 		close;
 	}
 	else if (HNTR_Q >= 3 && HNTR_Q <= 9) {
-		if(checkre(0)) set .@i,1;
+		if(checkre(0)) .@i = 1;
 		switch(HNTR_Q) {
 		//Insect_Feeler/Claw_Of_Desert_Wolf, Wooden_Block, White_Herb
 		case 3: setarray .@items[0], (.@i?928:7030),5, 1019,5, 509,3, 10; break;
@@ -555,7 +555,7 @@ hu_in01,382,382,4	script	Guild Receptionist#hnt	4_M_JOB_HUNTER,{
 		if (countitem(.@items[0]) >= .@items[1] && countitem(.@items[2]) >= .@items[3] && countitem(.@items[4]) >= .@items[5]) {
 			mes "[Demon Hunter]";
 			mes "You brought all of the necessary materials... You can get directions to the testing area from our Guildmaster who is currently in the Payon Central Palace.";
-			set HNTR_Q,.@items[6];
+			HNTR_Q = .@items[6];
 			if (questprogress(4002)) {
 				changequest 4002,4009;
 			}
@@ -655,7 +655,7 @@ payon_in03,131,7,3	script	Hunter#htnGM	1_M_ORIENT01,{
 		}
 		mes "[Hunter Guildmaster]";
 		mes "Well, then. Your arrows are probably still being made, so you can use mine to take the test.";
-		set HNTR_Q,12;
+		HNTR_Q = 12;
 		changequest 4009,4011;
 		getitem 1751,200; //Silver_Arrow
 		close2;
@@ -727,7 +727,7 @@ payon_in03,131,7,3	script	Hunter#htnGM	1_M_ORIENT01,{
 			mes "Okay!! I hope";
 			mes "you will pass this time!";
 			close2;
-			set HNTR_Q,12;
+			HNTR_Q = 12;
 			warp "job_hunte",176,22;
 			end;
 		}
@@ -740,7 +740,7 @@ payon_in03,131,7,3	script	Hunter#htnGM	1_M_ORIENT01,{
 		mes "[Hunter Guildmaster]";
 		mes "Wow, you came back in one piece!";
 		mes "I mean, good job. I'll give you the item which proves that you have passed the test.";
-		set HNTR_Q,17;
+		HNTR_Q = 17;
 		savepoint "payon",104,99;
 		getitem 1007,1; //Penetration
 		changequest 4012,4013;
@@ -819,7 +819,7 @@ payon_in02,21,31,1	script	Hunter#htnGM2	1_M_ORIENT01,{
 		next;
 		mes "[Hunter Guildmaster]";
 		mes "Good luck.";
-		set HNTR_Q,12;
+		HNTR_Q = 12;
 		changequest 4010,4011;
 		warp "job_hunte",176,22;
 		cutin "job_huntermaster",255;
@@ -915,7 +915,7 @@ payon_in02,21,31,1	script	Hunter#htnGM2	1_M_ORIENT01,{
 			mes "Pass this time!";
 			close2;
 			cutin "job_huntermaster",255;
-			set HNTR_Q,12;
+			HNTR_Q = 12;
 			warp "job_hunte",176,22;
 			end;
 		}
@@ -932,7 +932,7 @@ payon_in02,21,31,1	script	Hunter#htnGM2	1_M_ORIENT01,{
 		mes "[Hunter Guildmaster]";
 		mes "Wow. You're back in one piece!";
 		mes "I mean, good job. Well then, I'll give you the item which serves as proof that you passed the test.";
-		set HNTR_Q,17;
+		HNTR_Q = 17;
 		savepoint "payon",104,99;
 		getitem 1007,1; //Penetration
 		next;
@@ -1008,7 +1008,7 @@ OnTouch:
 			mes "Very well. I'll send you to Payon. Hope to see you next time. Don't forget to save when you leave.";
 			// donpcevent "Waiting Room#hnt::OnStart";
 			close2;
-			set HNTR_Q,13;
+			HNTR_Q = 13;
 			savepoint "payon",104,99;
 			warp "payon_in02",21,27;
 		}
@@ -1050,7 +1050,7 @@ OnInit:
 OnEnable:
 	donpcevent "Switch#hnt::OnDisable";
 	enablenpc "Manager#hnt";
-	set .MyMobs,6;
+	.MyMobs = 6;
 	initnpctimer;
 	// Target Mosnters
 	monster "job_hunte",67,80,"Job Change Monster",1015,1,"Manager#hnt::OnMyMobDead";
@@ -1093,10 +1093,10 @@ OnEnable:
 	end;
 
 OnMyMobDead:
-	set .MyMobs,.MyMobs-1;
+	--.MyMobs;
 	if (.MyMobs < 3) {
 		mapannounce "job_hunte","Okay, good job... Now, find the switch in the center of the map!! Be careful of the traps!!",bc_map;
-		set HNTR_Q,14;
+		HNTR_Q = 14;
 		donpcevent "Switch#hnt::OnEnable";
 		donpcevent "Manager#hnt::OnDisable";
 	}
@@ -1107,7 +1107,7 @@ OnMyMobDead:
 
 OnMyMobDead2:
 	mapannounce "job_hunte",strcharinfo(0)+ "!! You made a mistake...Please try again.",bc_map;
-	set HNTR_Q,13;
+	HNTR_Q = 13;
 	warp "job_hunte",176,22;
 	donpcevent "Manager#hnt::OnReset";
 	donpcevent "Waiting Room#hnt::OnStart";
@@ -1207,7 +1207,7 @@ job_hunte,93,101,1	script	Switch#hnt	1_SHADOW_NPC,1,1,{
 OnTouch:
 	mes "^3355FFThere are 3 buttons";
 	mes "on the escape switch.^000000";
-	set HNTR_Q,15;
+	HNTR_Q = 15;
 	next;
 	switch(select("Escape:Cancel:Re-test")) {
 	case 1:
@@ -1229,7 +1229,7 @@ OnTouch:
 		mes "returned to the";
 		mes "waiting room.^000000";
 		close2;
-		set HNTR_Q,13;
+		HNTR_Q = 13;
 		warp "job_hunte",176,22;
 		donpcevent "Manager#hnt::OnReset";
 		donpcevent "Waiting Room#hnt::OnStart";
@@ -1254,7 +1254,7 @@ OnInit:
 OnTouch:
 	donpcevent "Manager#hnt::OnReset";
 	donpcevent "Waiting Room#hnt::OnStart";
-	set HNTR_Q,16;
+	HNTR_Q = 16;
 	changequest 4011,4012;
 	savepoint "payon",104,99;
 	if (rand(2))
@@ -1400,7 +1400,7 @@ OnTouch:
 	case 130: mapannounce "job_hunte",strcharinfo(0) + ", it's okay to cry. Just not too loudly.",bc_map; break;
 	case 131: mapannounce "job_hunte",strcharinfo(0) + "...oh man. It's tiring setting up all these traps. You guys have got to stop falling into them!",bc_map; break;
 	}
-	set HNTR_Q,13;
+	HNTR_Q = 13;
 	warp "job_hunte",176,22;
 	donpcevent "Manager#hnt::OnReset";
 	donpcevent "Waiting Room#hnt::OnStart";
@@ -1636,7 +1636,7 @@ job_hunte,65,92,0	duplicate(HntTrap)	57-3	-1,0,0
 job_hunte,65,93,0	script	57-4::HntTrap2	-1,{
 OnTouch:
 	mapannounce "job_hunte",strcharinfo(0) + ", has failed me! Go back to where you started!",bc_map;
-	set HNTR_Q,13;
+	HNTR_Q = 13;
 	warp "job_hunte",176,22;
 	donpcevent "Manager#hnt::OnReset";
 	donpcevent "Waiting Room#hnt::OnStart";

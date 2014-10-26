@@ -15,7 +15,7 @@
 
 valkyrie,44,58,5	script	Assassin Cross#Valkyrie	4_F_JOB_ASSASSIN,{
 	if (ADVJOB == 0 || Upper != 1) {
-		set .@karma_d,rand(1,10);
+		.@karma_d = rand(1,10);
 		if (.@karma_d > 4) {
 			mes "[Assassin Cross]";
 			mes "Congratulations...";
@@ -77,7 +77,7 @@ valkyrie,44,58,5	script	Assassin Cross#Valkyrie	4_F_JOB_ASSASSIN,{
 			close;
 		}
 		jobchange Job_Assassin_Cross;
-		set ADVJOB,0;
+		ADVJOB = 0;
 		mes "[Assassin Cross]";
 		mes "Congratulations.";
 		mes "As an Assassin Cross,";

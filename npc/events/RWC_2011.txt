@@ -26,7 +26,7 @@ prontera,114,81,5	script	RWC2011 Agent#2	4_M_ATEIL,{
 		mes "[New Agent]";
 		mes "It's RWC time!";
 		next;
-		set .@loop,1;
+		.@loop = 1;
 		while(.@loop) {
 			switch(select("What is RWC?:Are you a New Agent?:I don't care.")) {
 			case 1:
@@ -73,7 +73,7 @@ prontera,114,81,5	script	RWC2011 Agent#2	4_M_ATEIL,{
 					mes "- His brimming small eyes seem to tell you something. ^FF0000Please talk to me again...^000000 -";
 					close;
 				}
-				set .@loop,0;
+				.@loop = 0;
 				break;
 			case 3:
 				mes "[New Agent]";
@@ -148,7 +148,7 @@ prontera,114,81,5	script	RWC2011 Agent#2	4_M_ATEIL,{
 		next;
 		mes "[New Agent]";
 		mes "Please help me out!! My life is in your hands!";
-		set oversea_event,1;
+		oversea_event = 1;
 		setquest 13000;
 		close;
 	} else if (oversea_event == 1) {
@@ -169,35 +169,35 @@ prontera,114,81,5	script	RWC2011 Agent#2	4_M_ATEIL,{
 			delitem 7470,1; //BlueCard_W
 			delitem 6012,1; //Blue_Card_C
 			//SavePPL BlueCard_2
-			set oversea_event,2;
+			oversea_event = 2;
 			erasequest 13000;
 			setquest 13001;
-			set .@i, rand(1,100);
-	 		     if (.@i == 1) getitem 12690,1; //Old_C_Album_Helm
-	 		else if (.@i == 2) getitem 12691,1; //Old_C_Album_Armor
-	 		else if (.@i == 3) getitem 12693,1; //Old_C_Album_Garment
-	 		else if (.@i == 4) getitem 12694,1; //Old_C_Album_Shoes
-	 		else if (.@i == 5) getitem 12698,1; //Old_C_Album_Weapon
-	 		else if (.@i == 6) getitem 12695,1; //Old_C_Album_Acc
-	 		else if (.@i == 7) getitem 12692,1; //Old_C_Album_Shield
-	 		else if (.@i < 28) getitem 547,10; //White_Slim_Potion
-	 		else if (.@i < 38) getitem 607,1; //Yggdrasilberry
-	 		else if (.@i < 51) getitem 608,1; //Seed_Of_Yggdrasil
-	 		else {
+			.@i = rand(1,100);
+			     if (.@i == 1) getitem 12690,1; //Old_C_Album_Helm
+			else if (.@i == 2) getitem 12691,1; //Old_C_Album_Armor
+			else if (.@i == 3) getitem 12693,1; //Old_C_Album_Garment
+			else if (.@i == 4) getitem 12694,1; //Old_C_Album_Shoes
+			else if (.@i == 5) getitem 12698,1; //Old_C_Album_Weapon
+			else if (.@i == 6) getitem 12695,1; //Old_C_Album_Acc
+			else if (.@i == 7) getitem 12692,1; //Old_C_Album_Shield
+			else if (.@i < 28) getitem 547,10; //White_Slim_Potion
+			else if (.@i < 38) getitem 607,1; //Yggdrasilberry
+			else if (.@i < 51) getitem 608,1; //Seed_Of_Yggdrasil
+			else {
 				getitem 12696,5; //RWC_Cele_Fire
 				getitem 12697,5; //RWC_Cele_Fire2
-	 		}
-	 		mes "[RWC2011 Agent]";
-	 		mes "It's not much but please keep it! Haha, we still have lots of cards to be found. I hope you can help me tomorrow as well.";
-	 		next;
-	 		mes "[RWC2011 Agent]";
-	 		mes "Thank you!! I can continue working now. Nothing is impossible when we have great adventurers like you in this world!";
-	 		next;
-	 		mes "[RWC2011 Agent]";
-	 		mes "ADIOS!";
-	 		next;
-	 		mes "- Agent muttered something to himself. -";
-	 		close;
+			}
+			mes "[RWC2011 Agent]";
+			mes "It's not much but please keep it! Haha, we still have lots of cards to be found. I hope you can help me tomorrow as well.";
+			next;
+			mes "[RWC2011 Agent]";
+			mes "Thank you!! I can continue working now. Nothing is impossible when we have great adventurers like you in this world!";
+			next;
+			mes "[RWC2011 Agent]";
+			mes "ADIOS!";
+			next;
+			mes "- Agent muttered something to himself. -";
+			close;
 		} else {
 			mes "[RWC2011 Agent]";
 			mes "Mmmm~ not yet? We're short-handed... Please help me.";
@@ -218,7 +218,7 @@ prontera,114,81,5	script	RWC2011 Agent#2	4_M_ATEIL,{
 		mes "[RWC2011 Agent]";
 		mes "Thanks for the last time.";
 		mes "I must keep on promoting the event so I want to ask you again~!";
-		set oversea_event,3;
+		oversea_event = 3;
 		close;
 	} else if (oversea_event == 3) {
 		mes "[RWC2011 Agent]";
@@ -231,7 +231,7 @@ prontera,114,81,5	script	RWC2011 Agent#2	4_M_ATEIL,{
 			mes "It's the same mission as before.";
 			mes "Try to gather blue cards and make the word, ^FF0000R W C 2 0 1 1 ^000000.";
 			mes "Good Luck!";
-			set oversea_event,1;
+			oversea_event = 1;
 			setquest 13000;
 			close;
 		case 2:

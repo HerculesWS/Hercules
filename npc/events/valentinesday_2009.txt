@@ -75,7 +75,7 @@ prontera,164,174,4	script	Trader#Val09	1_M_MERCHANT,{
 				mes "Please use the Kafra Services.";
 				close;
 			}
-			set .@price, .@input * 5000;
+			.@price = .@input * 5000;
 			if (Zeny < .@price) {
 				mes "[Marco Bassinio]";
 				mes "Looks like you don't have enough zeny with ya.";
@@ -195,7 +195,7 @@ prontera,147,171,5	script	Packs Trader#Val09	1_M_MERCHANT,{
 					mes "Please use the Kafra Services.";
 					close;
 				}
-				set .@price, .@input * 200;
+				.@price = .@input * 200;
 				if (Zeny < .@price) {
 					mes "[Packs Trader]";
 					mes "You don't have enough money.";
@@ -236,7 +236,7 @@ prontera,147,171,5	script	Packs Trader#Val09	1_M_MERCHANT,{
 					mes "Please use the Kafra Services.";
 					close;
 				}
-				set .@price, .@input * 200;
+				.@price = .@input * 200;
 				if (Zeny < .@price) {
 					mes "[Packs Trader]";
 					mes "You don't have enough money.";
@@ -277,7 +277,7 @@ prontera,147,171,5	script	Packs Trader#Val09	1_M_MERCHANT,{
 					mes "Please use the Kafra Services.";
 					close;
 				}
-				set .@price, .@input * 600;
+				.@price = .@input * 600;
 				if (Zeny < .@price) {
 					mes "[Packs Trader]";
 					mes "You don't have enough money.";
@@ -377,7 +377,7 @@ prontera,154,185,5	script	Event Ring Maker#Val09	4_F_KAFRA7,{
 	delitem 7174,1;
 	delitem 7948,1;
 	Zeny -= 1000;
-	set iROval09ring,1;
+	iROval09ring = 1;
 	if (Sex) {
 		getnameditem 12742,strcharinfo(0);
 	} else {
@@ -457,10 +457,10 @@ prontera,157,185,4	script	Valentine Vote Manager#v	4_F_KAFRA5,{
 					mes "I'll take those silver rings, and count the votes for you.";
 					mes "Thank you for participating.";
 					delitem 7947,.@input;
-					set Val09Rings,Val09Rings+.@input;
+					Val09Rings += .@input;
 					if (Val09Rings > $Val09votes_M) {
-						set $Val09votes_M,Val09Rings;
-						set $Val09name_M$,strcharinfo(0);
+						$Val09votes_M = Val09Rings;
+						$Val09name_M$ = strcharinfo(0);
 					}
 					next;
 					break;
@@ -485,10 +485,10 @@ prontera,157,185,4	script	Valentine Vote Manager#v	4_F_KAFRA5,{
 					mes "I'll take those gold rings, and count the votes for you.";
 					mes "Thank you for participating.";
 					delitem 7946,.@input;
-					set Val09Rings,Val09Rings+.@input;
+					Val09Rings += .@input;
 					if (Val09Rings > $Val09votes_F) {
-						set $Val09votes_F,Val09Rings;
-						set $Val09name_F$,strcharinfo(0);
+						$Val09votes_F = Val09Rings;
+						$Val09name_F$ = strcharinfo(0);
 					}
 					next;
 					break;

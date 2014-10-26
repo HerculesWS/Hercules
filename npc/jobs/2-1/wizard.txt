@@ -140,7 +140,7 @@ gef_tower,111,37,4	script	Wizard Guildsman	1_F_GYPSY,{
 					mes "[Catherine]";
 					mes "Go talk to the man in the corner and he will give you the remaining exams.";
 					mes "Be careful. We have lost many Mages due to the difficulty of the exams.";
-					set WIZ_Q,3;
+					WIZ_Q = 3;
 					setquest 9015;
 					close;
 				}
@@ -152,18 +152,18 @@ gef_tower,111,37,4	script	Wizard Guildsman	1_F_GYPSY,{
 				mes "The first test is collecting magic items.";
 				mes "The important part is that you must gather these items on your own.";
 				next;
-				set wizard_m1,rand(1,2);
+				wizard_m1 = rand(1,2);
 				mes "[Catherine]";
 				mes "The items you must collect are...";
 				if (rand(2)) {
-					set WIZ_Q,1;
+					WIZ_Q = 1;
 					setquest 9013;
 					mes "^3355FFRed Gemstone^000000 10 each,";
 					mes "^3355FFBlue Gemstone^000000 10 each,";
 					mes "^3355FFYellow Gemstone^000000 10 each,";
 				}
 				else {
-					set WIZ_Q,2;
+					WIZ_Q = 2;
 					setquest 9014;
 					mes "^3355FFCrystal Blue^000000 5 each,";
 					mes "^3355FFGreen Live^000000 5 each,";
@@ -200,7 +200,7 @@ gef_tower,111,37,4	script	Wizard Guildsman	1_F_GYPSY,{
 			delitem 716,10; //Red_Gemstone
 			delitem 717,10; //Blue_Gemstone
 			delitem 715,10; //Yellow_Gemstone
-			set WIZ_Q,3;
+			WIZ_Q = 3;
 			changequest 9013,9015;
 			mes "[Catherine]";
 			mes "Good for you! You passed the first test.";
@@ -239,7 +239,7 @@ gef_tower,111,37,4	script	Wizard Guildsman	1_F_GYPSY,{
 			delitem 993,5; //Yellow_Live
 			delitem 990,5; //Boody_Red
 			delitem 992,5; //Wind_Of_Verdure
-			set WIZ_Q,3;
+			WIZ_Q = 3;
 			changequest 9014,9015;
 			mes "[Catherine]";
 			mes "Good. You've passed the first test now.";
@@ -393,7 +393,7 @@ gef_tower,111,37,4	script	Wizard Guildsman	1_F_GYPSY,{
 	}
 	else if (WIZ_Q == 7) {
 		if (JobLevel < 40) {
-			set WIZ_Q,0;
+			WIZ_Q = 0;
 			mes "[Catherine]";
 			mes "Hey, what don't you get it?";
 			mes "I said you must be at least job level 40 to change your job, got it?";
@@ -588,156 +588,156 @@ gef_tower,102,24,2	script	Gloomy Wizard	4_M_JOB_WIZARD,{
 			mes "1. Which of the following is not necessary to learn Fire Wall?";
 			next;
 			if (select("Fire Bolt Lv 4:Fire Ball Lv 5:Sight Lv 1:Napalm Beat Lv 4") == 4)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "2. Regaurdless of it's previous attribute, What does the monster's attribute change to when you cast Frost Diver on it?";
 			next;
 			if (select("Water:Earth:Fire:Wind") == 1)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "3. When you completely master Napalm Beat, what is the ratio of the increased MATK using that spell?";
 			next;
 			if (select("1.6 times:1.7 times:2 times:20 times") == 2)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "4. What item do you need when casting Stone Curse?";
 			next;
 			if (select("Red Blood:Blue Gemstone:Yellow Gemstone:Red Gemstone") == 4)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "5. Which of the following is not required to master Safety Wall?";
 			next;
 			if (select("Napalm Beat Lv 4:Soul Strike Lv 5:Increase SP Recovery Lv 6:Safety Wall Lv 7") == 3)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "6. Without the INT bonus, what amount of SP is recovered every 10 seconds when you have learned Increase SP Recovery Lv 7?";
 			next;
 			if (select("14:21:28:35") == 2)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "7. Using Energy Coat, when you have 50% of your SP remaining, how much SP is used when hit, and what percentage is damage reduced by?";
 			next;
 			if (select("Damage 18% SP1.5%:Damage 18% SP2%:Damage 24% SP1.5%:Damage 24% SP2%") == 2)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "8. How much SP is consumed and how many times can you avoid attacks when using Safety Wall Lv 6?";
 			next;
 			if (select("SP 40, 6 times:SP 35, 6 times:SP 40, 7 times:SP 35, 7 times") == 3)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "9. How much SP is needed when using Lv 10 Thunderstorm?";
 			next;
 			if (select("84:74:64:54") == 2)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "10. Which skill is most useful training in the Byalan Dungeon?";
 			next;
 			if (select("Lightning Bolt:Fire Bolt:Cold Bolt:Sight") == 1)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			break;
 		case 2:
 			mes "[Raulel]";
 			mes "1. Which monster can you obtain a slotted Guard from?";
 			next;
 			if (select("Thief Bug:PecoPeco:Pupa:Kobold (Hammer)") == 3)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "2. Which of the following is the easiest monster for a low level Mage to hunt?";
 			next;
 			if (select("Flora:Giearth:Golem:Myst") == 1)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "3. Which monster will not be affected by Stone Curse?";
 			next;
 			if (select("Elder Willow:Evil Druid:Magnolia:Marc") == 2)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "4. When attacking a Lv 3 water attribute monster with a wind attribute weapon, what is the damage percentage?";
 			next;
 			if (select("125%:150%:175%:200%") == 4)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "5. If a Baby Desert Wolf and a Familiar fought, which one would win?";
 			next;
 			if (select("Baby Desert Wolf:Familiar:Neither:I don't know") == 1)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "6. Which of the following cannot be a Cute Pet?";
 			next;
 			if (select("Poporing:Roda Frog:Smokie:Poison Spore") == 2)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "7. Choose the monster that is weak against a fire attribute attack.";
 			next;
 			if (select("Dagger Goblin:Mace Goblin:Morningstar Goblin:Hammer Goblin") == 4)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "8. Which of the following has the highest defense?";
 			next;
 			if (select("Horn:Chonchon:Andre:Caramel") == 4)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "9. Choose the monster that's of a different species.";
 			next;
 			if (select("Poring:Mastering:Ghostring:Spore") == 3)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "10. Which of the following is not an Undead monster?";
 			next;
 			if (select("Drake:Megalodon:Deviace:Khalitzburg") == 3)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			break;
 		case 3:
 			mes "[Raulel]";
 			mes "1. Which stat is the most important for a Mage?";
 			next;
 			if (select("INT:AGI:DEX:VIT") == 1)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "2. Which attribute does not have a 'Bolt' type attack?";
 			next;
 			if (select("Water:Earth:Fire:Wind") == 2)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "3. Choose the one that does not relate to a Mage.";
 			next;
 			if (select("Weak physical strength.:Attacks at a distance.:Good at selling stuff.:Magic Defense is high.") == 3)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "4. Which town is the home of Mages?";
 			next;
 			if (select("Prontera:Morroc:Alberta:Geffen") == 4)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "5. Which of the following cards has nothing to do with INT?";
 			next;
 			if (select("Andre Egg Card:Soldier Andre Card:Baby Desert Wolf Card:Elder Willow Card") == 2)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "6. What is the Mage good at compared to other job classes?";
 			next;
 			if (select("Exceptional Vocal Ability:Exceptional Acting Ability:Exceptional Dance Skills:Exceptional Magic Skills") == 4)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "7. What is the INT bonus at Job Lv 40 for a Mage?";
 			next;
 			if (select("8:7:6:5") == 4)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "8. Which item can a Mage not equip?";
 			next;
 			if (select("Knife:Boys Cap:Sandle:Eye of Dullahan") == 2)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "9. Which of the following is the catalyst when making the Mage test solution 3?";
 			next;
 			if (select("Blue Gemstone:Red Gemstone:Yellow Gemstone:Red Blood") == 1)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 			mes "[Raulel]";
 			mes "10. Which card is irrelevant to magic?";
 			next;
 			if (select("Marduk Card:Magnolia Card:Willow Card:Maya Card") == 2)
-				set .@wizard_t,.@wizard_t+10;
+				.@wizard_t += 10;
 		}
 		mes "[Raulel]";
 		if (WIZ_Q == 4) {
@@ -746,7 +746,7 @@ gef_tower,102,24,2	script	Gloomy Wizard	4_M_JOB_WIZARD,{
 			mes "[Raulel]";
 			mes "Your score is... " + .@wizard_t + "points.....";
 			if (.@wizard_t == 100) {
-				set WIZ_Q,5;
+				WIZ_Q = 5;
 				changequest 9016,9017;
 				mes "Hahahahahahah~ Well done, you passed the second test.";
 				mes "It wasn't done in one try like mine was, but I'll let you slide...";
@@ -757,7 +757,7 @@ gef_tower,102,24,2	script	Gloomy Wizard	4_M_JOB_WIZARD,{
 				close;
 			}
 			else if (.@wizard_t == 90) {
-				set WIZ_Q,5;
+				WIZ_Q = 5;
 				changequest 9016,9017;
 				mes "Hahaha~ Since you only missed one problem, you passed the second test.";
 				mes "It wasn't done in one try like mine was, but I'll let you slide...";
@@ -768,7 +768,7 @@ gef_tower,102,24,2	script	Gloomy Wizard	4_M_JOB_WIZARD,{
 				close;
 			}
 			else if (.@wizard_t == 80) {
-				set WIZ_Q,5;
+				WIZ_Q = 5;
 				changequest 9016,9017;
 				mes "Sheez... You didn't do very well, but you passed the second test.";
 				mes "It wasn't done in one try like mine was, but I'll let you slide...";
@@ -792,7 +792,7 @@ gef_tower,102,24,2	script	Gloomy Wizard	4_M_JOB_WIZARD,{
 		mes "[Raulel]";
 		mes "Your score is... " + .@wizard_t + " points!";
 		if (.@wizard_t == 100) {
-			set WIZ_Q,5;
+			WIZ_Q = 5;
 			changequest 9016,9017;
 			mes "*cough* *Cough* Well done, you passed the second test.";
 			next;
@@ -802,7 +802,7 @@ gef_tower,102,24,2	script	Gloomy Wizard	4_M_JOB_WIZARD,{
 			close;
 		}
 		else if (.@wizard_t == 90) {
-			set WIZ_Q,5;
+			WIZ_Q = 5;
 			changequest 9016,9017;
 			mes "Hahahaha~ I'll let you slide by since you only missed one problem. You passed the second test.";
 			next;
@@ -812,7 +812,7 @@ gef_tower,102,24,2	script	Gloomy Wizard	4_M_JOB_WIZARD,{
 			close;
 		}
 		else {
-			set WIZ_Q,4;
+			WIZ_Q = 4;
 			mes "You failed. I will let you come back again...after you've learned more relating to the type of questions I've asked you.";
 			next;
 			mes "[Raulel]";
@@ -834,7 +834,7 @@ gef_tower,102,24,2	script	Gloomy Wizard	4_M_JOB_WIZARD,{
 			mes "What a rash person. Your the type that rushes into battle without thinking, what in the world are you doing here instead of with the Prontera Chivalry? Heck, go for it! *cough* Not my fault if you end up dying.";
 			mes "Just consider yourself a glass cannon...because the monsters are going to break you into pieces. Hahahahahahahahaha~";
 			next;
-			set WIZ_Q,6;
+			WIZ_Q = 6;
 			savepoint "geffen",120,107;
 			mes "[Raulel]";
 			mes "Then, as you wish. I'll send you there right now.";
@@ -868,7 +868,7 @@ gef_tower,102,24,2	script	Gloomy Wizard	4_M_JOB_WIZARD,{
 		mes "If you want, I can send you back to town right now... What do you want to do?";
 		next;
 		if (select("Continue testing.:I want to go back because I have butterflies in my stomach.") == 1) {
-			set WIZ_Q,6;
+			WIZ_Q = 6;
 			savepoint "geffen",120,107;
 			mes "[Raulel]";
 			mes "You are indeed, very determined. Ok! Hahahahahaha~";
@@ -877,7 +877,7 @@ gef_tower,102,24,2	script	Gloomy Wizard	4_M_JOB_WIZARD,{
 			warp "job_wiz",57,154;
 			end;
 		}
-		set WIZ_Q,6;
+		WIZ_Q = 6;
 		mes "[Raulel]";
 		mes "Good thinking. This is a better choice for you. Hahahahah~";
 		mes "Go back and live a easy life, Greater Magic is a force that should not be wield by types like yourself.";
@@ -895,7 +895,7 @@ gef_tower,102,24,2	script	Gloomy Wizard	4_M_JOB_WIZARD,{
 			mes "Ok then, here's a proposition. Since you're probably worn out as it is, and I can clearly see the lust for Greater Magic burning in your eyes...";
 			mes "Hahahahaha~ yeah! Go bring me a ^3355FFWorn Out Scroll^000000.";
 			next;
-			set WIZ_Q2,WIZ_Q2+1;
+			WIZ_Q2 = 7;
 			mes "[Raulel]";
 			mes "If not, you can take the test again...";
 			mes "Well, I'll send you to take the test for now. Hahahaha~";
@@ -923,8 +923,8 @@ gef_tower,102,24,2	script	Gloomy Wizard	4_M_JOB_WIZARD,{
 				mes "Hahahahahahahaha~ *Cough* *cough* So you ended up bringing one of these eh? Good job...";
 				mes "I think I can continue my research with this...";
 				next;
-				set WIZ_Q2,0;
-				set WIZ_Q,7;
+				WIZ_Q2 = 0;
+				WIZ_Q = 7;
 				mes "[Raulel]";
 				mes "Even though your not Grade A Wizard material, I can tell your serious about wanting the Greater Magic. I'll tell Catherine that you passed. Hahahahahahahahah~";
 				mes "You went through a lot of trouble here, and that is the true purpose for us selecting Wizards. Only those who will devote themselves to the art will ever become Wizards. Good luck to you. Become much Stronger. Hahahahahaha~";
@@ -946,27 +946,27 @@ gef_tower,102,24,2	script	Gloomy Wizard	4_M_JOB_WIZARD,{
 		mes "1. Choose the monster with a different attribute than the others.";
 		next;
 		if (select("Mantis:Cornutus:Giearth:Caramel") == 2)
-			set .@wizard_t,.@wizard_t+20;
+			.@wizard_t += 20;
 		mes "[Raulel]";
 		mes "2. Choose the monster that is not a looting one.";
 		next;
 		if (select("Yoyo:Magnolia:Metaller:Zerom") == 4)
-			set .@wizard_t,.@wizard_t+20;
+			.@wizard_t += 20;
 		mes "[Raulel]";
 		mes "3. Which of these monsters does not recognize casting?";
 		next;
 		if (select("Marina:Vitata:Scorpion:Giearth") == 1)
-			set .@wizard_t,.@wizard_t+20;
+			.@wizard_t += 20;
 		mes "[Raulel]";
 		mes "4. Choose the spell that would be efficient against a Marine Sphere.";
 		next;
 		if (select("Cold Bolt:Fire Bolt:Lightning Bolt:Stone Curse") == 3)
-			set .@wizard_t,.@wizard_t+20;
+			.@wizard_t += 20;
 		mes "[Raulel]";
 		mes "5. Choose the monster that can move.";
 		next;
 		if (select("Hydra:Madragora:Greatest General:Frilldora") == 4)
-			set .@wizard_t,.@wizard_t+20;
+			.@wizard_t += 20;
 		mes "[Raulel]";
 		mes "*pfft* Do it right, so I don't have to ask again.";
 		next;
@@ -1094,11 +1094,11 @@ OnInit:
 OnEnable:
 	enablenpc "Room of Water";
 	if (!checkre(0)) {
-		set .MyMobs,8;
+		.MyMobs = 8;
 		monster "job_wiz",129,170,"Obeaune",1044,1,"Room of Water::OnMyMobDead";
 	}
 	else
-		set .MyMobs,7;
+		.MyMobs = 7;
 	monster "job_wiz",109,174,"Phen",1158,1,"Room of Water::OnMyMobDead";
 	monster "job_wiz",118,174,"Shellfish",1074,1,"Room of Water::OnMyMobDead";
 	monster "job_wiz",109,165,"Vadon",1066,1,"Room of Water::OnMyMobDead";
@@ -1115,9 +1115,9 @@ OnDisable:
 	end;
 
 OnMyMobDead:
-	set .MyMobs,.MyMobs-1;
+	--.MyMobs;
 	if (.MyMobs < 1) {
-		set WIZ_Q2,WIZ_Q2+1;
+		++WIZ_Q2;
 		mapannounce "job_wiz",strcharinfo(0)+" has succeeded in eliminating the monsters.",bc_map;
 		donpcevent "Room of Water#Door::OnEnable";
 		stopnpctimer;
@@ -1188,7 +1188,7 @@ OnInit:
 OnEnable:
 	enablenpc "Room of Water#Door";
 	donpcevent "Room of Water::OnDisable";
-	set .MyMobs,5;
+	.MyMobs = 5;
 	monster "job_wiz",114,169,"Marine Sphere",1142,1,"Room of Water#Door::OnMyMobDead";
 	monster "job_wiz",112,169,"Hydra",1068,1,"Room of Water#Door::OnMyMobDead";
 	monster "job_wiz",116,169,"Hydra",1068,1,"Room of Water#Door::OnMyMobDead";
@@ -1203,7 +1203,7 @@ OnDisable:
 	end;
 
 OnMyMobDead:
-	set .MyMobs,.MyMobs-1;
+	--.MyMobs;
 	if (.MyMobs < 1) {
 		mapannounce "job_wiz",strcharinfo(0)+" has succeeded in eliminating the monsters.",bc_map;
 		percentheal 100,100;
@@ -1267,13 +1267,13 @@ OnInit:
 OnEnable:
 	enablenpc "Room of Earth";
 	if (!checkre(0)) {
-		set .MyMobs,10;
+		.MyMobs = 10;
 		monster "job_wiz",120,102,"Hode",1127,1,"Room of Earth::OnMyMobDead";
 		monster "job_wiz",111,93,"Savage",1166,1,"Room of Earth::OnMyMobDead";
 		monster "job_wiz",127,86,"Mantis",1139,1,"Room of Earth::OnMyMobDead";
 	}
 	else
-		set .MyMobs,7;
+		.MyMobs = 7;
 	monster "job_wiz",111,102,"Yoyo",1057,1,"Room of Earth::OnMyMobDead";
 	monster "job_wiz",120,102,"Deniro",1105,1,"Room of Earth::OnMyMobDead";
 	monster "job_wiz",111,102,"Caramel",1103,1,"Room of Earth::OnMyMobDead";
@@ -1290,7 +1290,7 @@ OnDisable:
 	end;
 
 OnMyMobDead:
-	set .MyMobs,.MyMobs-1;
+	--.MyMobs;
 	if (.MyMobs < 1) {
 		mapannounce "job_wiz",strcharinfo(0) + " has succeeded in eliminating the monsters.",bc_map;
 		donpcevent "Room of Earth#Door::OnEnable";
@@ -1363,11 +1363,11 @@ OnEnable:
 	enablenpc "Room of Earth#Door";
 	donpcevent "Room of Earth::OnDisable";
 	if (!checkre(0)) {
-		set .MyMobs,7;
+		.MyMobs = 7;
 		monster "job_wiz",116,97,"Flora",1118,1,"Room of Earth#Door::OnMyMobDead";
 	}
 	else
-		set .MyMobs,6;
+		.MyMobs = 6;
 	monster "job_wiz",114,95,"Mandragora",1020,1,"Room of Earth#Door::OnMyMobDead";
 	monster "job_wiz",118,95,"Mandragora",1020,1,"Room of Earth#Door::OnMyMobDead";
 	monster "job_wiz",114,99,"Mandragora",1020,1,"Room of Earth#Door::OnMyMobDead";
@@ -1383,7 +1383,7 @@ OnDisable:
 	end;
 
 OnMyMobDead:
-	set .MyMobs,.MyMobs-1;
+	--.MyMobs;
 	if (.MyMobs < 1) {
 		mapannounce "job_wiz",strcharinfo(0) + " has succeeded in eliminating the monster.",bc_map;
 		percentheal 100,100;
@@ -1447,12 +1447,12 @@ OnInit:
 OnEnable:
 	enablenpc "Room of Fire";
 	if (!checkre(0)) {
-		set .MyMobs,8;
+		.MyMobs = 8;
 		monster "job_wiz",58,110,"Zerom",1178,1,"Room of Fire::OnMyMobDead";
 		monster "job_wiz",54,89,"Desert Wolf",1106,1,"Room of Fire::OnMyMobDead";
 	}
 	else
-		set .MyMobs,6;
+		.MyMobs = 6;
 	monster "job_wiz",33,110,"Goblin",1123,1,"Room of Fire::OnMyMobDead";
 	monster "job_wiz",40,103,"Scorpion",1001,1,"Room of Fire::OnMyMobDead";
 	monster "job_wiz",51,103,"Frilldora",1119,1,"Room of Fire::OnMyMobDead";
@@ -1468,7 +1468,7 @@ OnDisable:
 	end;
 
 OnMyMobDead:
-	set .MyMobs,.MyMobs-1;
+	--.MyMobs;
 	if (.MyMobs < 1) {
 		mapannounce "job_wiz",strcharinfo(0) + " has succeeded in eliminating the monsters.",bc_map;
 		donpcevent "Room of Fire#Door::OnEnable";
@@ -1540,7 +1540,7 @@ OnInit:
 OnEnable:
 	enablenpc "Room of Fire#Door";
 	donpcevent "Room of Fire::OnDisable";
-	set .MyMobs,3;
+	.MyMobs = 3;
 	monster "job_wiz",44,99,"Greatest General",1277,1,"Room of Fire#Door::OnMyMobDead";
 	if (checkre(0)) {
 		monster "job_wiz",43,99,"Greatest General",1277,1,"Room of Fire#Door::OnMyMobDead";
@@ -1559,10 +1559,10 @@ OnDisable:
 	end;
 
 OnMyMobDead:
-	set .MyMobs,.MyMobs-1;
+	--.MyMobs;
 	if (.MyMobs < 1) {
 		mapannounce "job_wiz","Congratulations, " + strcharinfo(0) + ". You have passed the job change test.",bc_map;
-		set WIZ_Q,7;
+		WIZ_Q = 7;
 		changequest 9017,9018;
 		donpcevent "Room of Fire#Door::OnDisable";
 		donpcevent "Test Helper#wiz::OnEnable";

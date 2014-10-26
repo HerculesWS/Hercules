@@ -24,7 +24,7 @@ gonryun,180,118,4	script	Iron man#gnp	4_M_03,{
 		mes "Children are not allowed in here.";
 		close;
 	}
-	if (in_battle == 3) set in_battle,1;
+	if (in_battle == 3) in_battle = 1;
 	if (in_battle < 1) {
 		mes "[Songmoodoo]";
 		mes "Hey hey~ This is not something";
@@ -84,14 +84,14 @@ gonryun,180,118,4	script	Iron man#gnp	4_M_03,{
 		mes "I'll give you another chance.";
 		mes "See you again.";
 		emotion e_pif;
-		set in_battle,1;
+		in_battle = 1;
 	}
 	close;
 
 L_Lifting:
 	if (checkweight(7049,getarg(0))) {
 		mes "You lifted the Stone lightly.^000000";
-		set in_battle,1;
+		in_battle = 1;
 		getitem 7049, getarg(0); // Stone
 		next;
 		emotion e_no1;
@@ -138,9 +138,9 @@ gon_test,50,14,4	script	Administrator#gnp	8_M_TWSOLDIER,{
 		close;
 	}
 	Zeny -= 500;
-	set in_battle,1;
+	in_battle = 1;
 	warp "gon_test",42,86;
-	set $@in_battle,1;
+	$@in_battle = 1;
 	setnpctimer 0,"Summoner#gnp";
 	startnpctimer "Summoner#gnp";
 	end;
@@ -161,15 +161,15 @@ gon_test,42,89,4	script	Summoner#gnp	4_M_TWBOY,{
 	mes "Welcome.";
 	mes "Which monster will you recall?";
 	next;
-	set .@gnpGroup, select("Group 1:Group 2:Group 3:Group 4:Group 5:Group 6:Group 7:Group 8:Group 9:Group 10:Group 11");
-	set .@gnpGroupMob$,.gnpMobsName$[(.@gnpGroup-1)*6];
-	for (set .@i,1; .@i < 6; set .@i, .@i+1)
-		set .@gnpGroupMob$, .@gnpGroupMob$ + ":" + .gnpMobsName$[(.@gnpGroup-1)*6 + .@i];
-	set .@gnpMob, select(.@gnpGroupMob$);
+	.@gnpGroup = select("Group 1:Group 2:Group 3:Group 4:Group 5:Group 6:Group 7:Group 8:Group 9:Group 10:Group 11");
+	.@gnpGroupMob$ = .gnpMobsName$[(.@gnpGroup-1)*6];
+	for (.@i = 1; .@i < 6; ++.@i)
+		.@gnpGroupMob$ += ":" + .gnpMobsName$[(.@gnpGroup-1)*6 + .@i];
+	.@gnpMob = select(.@gnpGroupMob$);
 	mes "[SongYeunWoo]";
 	mes "Let the fight begin!";
 	close2;
-	set in_battle,2;
+	in_battle = 2;
 	if (getnpctimer(0) < 180000) monster "gon_test",56,86,.gnpMobsName$[(.@gnpGroup-1)*6 + .@gnpMob - 1],.gnpMobsId[(.@gnpGroup-1)*6 + .@gnpMob - 1],1,"Summoner#gnp::OnGnpMobDead";
 	end;
 OnInit:
@@ -213,13 +213,13 @@ OnTimer182000:
 
 OnGnpMobDead:
 	setnpctimer 0;
-	set in_battle,1;
+	in_battle = 1;
 	areaannounce "gon_test",41,81,74,92,"Thank you. Please come again.",0;
 	sleep 4000;
 OnTimer184000:
 	stopnpctimer;
 	areawarp "gon_test",41,81,74,92,"gon_test",44,4;
-	set $@in_battle,0;
+	$@in_battle = 0;
 	end;
 }
 
@@ -253,7 +253,7 @@ gon_test,46,14,3	script	Guide of field of fight	4_F_TWGIRL,{
 		mes "Yes, thank you.";
 		mes "Have a good time.";
 		close2;
-		set in_battle,3;
+		in_battle = 3;
 		warp "gon_test",25,98;
 		end;
 	case 4:
@@ -281,7 +281,7 @@ gon_test,70,103,3	script	ChowAnAn#gnp	4_F_TWMIDWOMAN,{
 		mes "Thank you.";
 		mes "Please come again.";
 		close2;
-		set in_battle,1;
+		in_battle = 1;
 		warp "gon_test",44,4;
 		end;
 	}

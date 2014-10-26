@@ -16,7 +16,7 @@
 //============================================================
 -	script	Neuschwanstein#1::OutsideFlagsA1	GUILD_FLAG,{
 
-	set .@GID, getcastledata("aldeg_cas01",1);
+	.@GID = getcastledata("aldeg_cas01",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";

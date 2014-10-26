@@ -18,7 +18,7 @@
 //============================================================
 -	script	Swanhild#1::OutsideFlagsPR2	GUILD_FLAG,{
 
-	set .@GID, getcastledata("prtg_cas02",1);
+	.@GID = getcastledata("prtg_cas02",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";

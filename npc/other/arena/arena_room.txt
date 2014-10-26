@@ -392,7 +392,7 @@ arena_room,158,82,1	script	Helper Lonik	4_M_ROGUE,{
 }
 
 sec_in02,72,180,3	script	Arena Manager#arena	4_NFWISP,{
-	set .@i, callfunc("F_GM_NPC",1357,0);
+	.@i = callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
 		mes "[Arena Manager]";
 		mes "Command has been canceled.";
@@ -408,16 +408,16 @@ sec_in02,72,180,3	script	Arena Manager#arena	4_NFWISP,{
 		case 1:
 			switch(select("Lv 50:Lv 60:Lv 70:Lv 80:Party Mode")) {
 			case 1:
-				set .@arena,50;
+				.@arena = 50;
 				break;
 			case 2:
-				set .@arena,60;
+				.@arena = 60;
 				break;
 			case 3:
-				set .@arena,70;
+				.@arena = 70;
 				break;
 			case 4:
-				set .@arena,80;
+				.@arena = 80;
 				break;
 			case 5:
 				mes "[Arena Manager]";
@@ -470,29 +470,29 @@ sec_in02,72,180,3	script	Arena Manager#arena	4_NFWISP,{
 			case 2:
 				switch(select("Lv 50:Lv 60:Lv 70:Lv 80:Party Mode")) {
 				case 1:
-					set .@min$,"$top50min";
-					set .@sec$,"$top50sec";
-					set .@mode$,"Lv 50";
+					.@min$ = "$top50min";
+					.@sec$ = "$top50sec";
+					.@mode$ = "Lv 50";
 					break;
 				case 2:
-					set .@min$,"$top60min";
-					set .@sec$,"$top60sec";
-					set .@mode$,"Lv 60";
+					.@min$ = "$top60min";
+					.@sec$ = "$top60sec";
+					.@mode$ = "Lv 60";
 					break;
 				case 3:
-					set .@min$,"$top70min";
-					set .@sec$,"$top70sec";
-					set .@mode$,"Lv 70";
+					.@min$ = "$top70min";
+					.@sec$ = "$top70sec";
+					.@mode$ = "Lv 70";
 					break;
 				case 4:
-					set .@min$,"$top80min";
-					set .@sec$,"$top80sec";
-					set .@mode$,"Lv 80";
+					.@min$ = "$top80min";
+					.@sec$ = "$top80sec";
+					.@mode$ = "Lv 80";
 					break;
 				case 5:
-					set .@min$,"$top_ptmin";
-					set .@sec$,"$top_ptsec";
-					set .@mode$,"party";
+					.@min$ = "$top_ptmin";
+					.@sec$ = "$top_ptsec";
+					.@mode$ = "party";
 					break;
 				}
 				mes "[Arena Manager]";
@@ -514,7 +514,7 @@ sec_in02,72,180,3	script	Arena Manager#arena	4_NFWISP,{
 }
 
 sec_in02,79,171,3	script	Reward Manager#arena	4_NFWISP,{
-	set .@i, callfunc("F_GM_NPC",1357,0);
+	.@i = callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
 		mes "[Reward Manager]";
 		mes "Command has been canceled.";
@@ -616,7 +616,7 @@ prt_are_in,98,14,3	script	Givu#arena	4_F_JOB_KNIGHT,{
 				mes "Please check the total amount of arena points you have.";
 				close;
 			}
-			set arena_point, arena_point-40;
+			arena_point -= 40;
 			if (checkre(3)) {
 				if (BaseLevel < 70) getexp 300,0;
 				else if (BaseLevel < 80) getexp 900,0;
@@ -661,16 +661,16 @@ prt_are_in,98,14,3	script	Givu#arena	4_F_JOB_KNIGHT,{
 			mes "The NPC will appear for 1 minute and this service requires 10 arena points.";
 			next;
 			switch(select("Baphomet:Dark Lord:Doppelganger:Eddga:Dracula:Samurai:Stormy Knight:Phreeoni:Girl:Valkyrie")) {
-				case 1: set $@arena_picture_id,1039; break;
-				case 2: set $@arena_picture_id,1272; break;
-				case 3: set $@arena_picture_id,1046; break;
-				case 4: set $@arena_picture_id,1115; break;
-				case 5: set $@arena_picture_id,1389; break;
-				case 6: set $@arena_picture_id,1492; break;
-				case 7: set $@arena_picture_id,1251; break;
-				case 8: set $@arena_picture_id,1159; break;
-				case 9: set $@arena_picture_id,6969; break;
-				case 10: set $@arena_picture_id,7777; break;
+				case 1: $@arena_picture_id = 1039; break;
+				case 2: $@arena_picture_id = 1272; break;
+				case 3: $@arena_picture_id = 1046; break;
+				case 4: $@arena_picture_id = 1115; break;
+				case 5: $@arena_picture_id = 1389; break;
+				case 6: $@arena_picture_id = 1492; break;
+				case 7: $@arena_picture_id = 1251; break;
+				case 8: $@arena_picture_id = 1159; break;
+				case 9: $@arena_picture_id = 6969; break;
+				case 10: $@arena_picture_id = 7777; break;
 			}
 			if (arena_point < 10) {
 				mes "[Givu]";
@@ -688,8 +688,8 @@ prt_are_in,98,14,3	script	Givu#arena	4_F_JOB_KNIGHT,{
 			next;
 			switch(select("Yes:No")) {
 			case 1:
-				set arena_point, arena_point-10;
-				set $@arena_picture,1;
+				arena_point -= 10;
+				$@arena_picture = 1;
 				enablenpc "#arena_"+$@arena_picture_id+"";
 				movenpc "#arena_"+$@arena_picture_id+"",96,28;
 				if ($@arena_picture_id == 6969) {
@@ -941,13 +941,13 @@ OnTimer62000:
 	mapannounce "prt_are_in","Time is over. Thank you for using my services.",1,0xFFCE00;
 	movenpc "#arena_"+$@arena_picture_id+"",1,1;
 	donpcevent "#arena_1039::OnInit";
-	set $@arena_picture,0;
+	$@arena_picture = 0;
 	stopnpctimer;
 	end;
 }
 
 sec_in02,72,171,3	script	Picture Manager#arena	4_NFWISP,{
-	set .@i, callfunc("F_GM_NPC",1357,0);
+	.@i = callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
 		mes "[Picture Manager]";
 		mes "Command has been canceled.";
@@ -968,7 +968,7 @@ sec_in02,72,171,3	script	Picture Manager#arena	4_NFWISP,{
 		case 2:
 			mes "[Picture Manager]";
 			mes "Picture rewarding reseted.";
-			set $@arena_picture,0;
+			$@arena_picture = 0;
 			close;
 		}
 	}
@@ -1008,7 +1008,7 @@ function	script	Func_Are_Rew	{
 		mes "Please check the total amount of arena points you have.";
 		close;
 	}
-	set arena_point, arena_point - (.@reward * getarg(2));
+	arena_point -= (.@reward * getarg(2));
 	getitem getarg(0),.@reward * getarg(1);
 	mes "[Givu]";
 	mes "Thank you, please come again.";

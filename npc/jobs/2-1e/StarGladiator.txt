@@ -101,7 +101,7 @@ payon,215,102,3	script	Moohyun#job_star	4_M_ROGUE,3,3,{
 							mes "place that's closest to the sky.^FFFFFF ^000000 In the meantime, I'll write a";
 							mes "letter of recommendation that";
 							mes "I'll send to him for you.";
-							set STGL_Q,1;
+							STGL_Q = 1;
 							setquest 7007;
 							close;
 						}
@@ -224,7 +224,7 @@ payon,215,102,3	script	Moohyun#job_star	4_M_ROGUE,3,3,{
 				mes "back to the Moon Room. Soon,";
 				mes "maybe we'll be able to greet";
 				mes "each other as Taekwon Masters!";
-				set STGL_Q,8;
+				STGL_Q = 8;
 				close;
 			}
 			mes "[Moohyun]";
@@ -420,7 +420,7 @@ comodo,172,230,3	script	Wandering Master#job_sta	4_M_JOB_ASSASSIN,{
 				mes "^4D4DFFMystic Frozen^000000 and";
 				mes "^4D4DFFFlame Heart^000000.";
 				mes "Now go...";
-				set STGL_Q,2;
+				STGL_Q = 2;
 				changequest 7007,7008;
 				close;
 			}
@@ -485,7 +485,7 @@ comodo,172,230,3	script	Wandering Master#job_sta	4_M_JOB_ASSASSIN,{
 				delitem 997,1; //Great_Nature
 				delitem 995,1; //Mistic_Frozen
 				delitem 994,1; //Flame_Heart
-				set STGL_Q,3;
+				STGL_Q = 3;
 				changequest 7008,7009;
 				close;
 			}
@@ -839,7 +839,7 @@ job_star,29,33,0	script	Daru#job_star	1_M_ORIENT01,{
 				mes "I suppose you can think";
 				mes "of mankind as the sons of";
 				mes "the sun. Good, very good...";
-				set .@sun_point,.@sun_point+10;
+				.@sun_point += 10;
 				break;
 			case 2:
 				mes "[Daru]";
@@ -853,7 +853,7 @@ job_star,29,33,0	script	Daru#job_star	1_M_ORIENT01,{
 				mes "I suppose you can think of";
 				mes "the Sun as one of thousands";
 				mes "of stars in the universe...";
-				set .@sun_point,.@sun_point+5;
+				.@sun_point += 5;
 				break;
 			case 4:
 				mes "[Daru]";
@@ -879,7 +879,7 @@ job_star,29,33,0	script	Daru#job_star	1_M_ORIENT01,{
 				mes "of the sun, our world";
 				mes "not only be cold, but it";
 				mes "would be completely lifeless.";
-				set .@sun_point,.@sun_point+10;
+				.@sun_point += 10;
 				break;
 			case 2:
 				mes "[Daru]";
@@ -888,7 +888,7 @@ job_star,29,33,0	script	Daru#job_star	1_M_ORIENT01,{
 				mes "of the sun brings comfort.";
 				mes "And without comfort, is life";
 				mes "truly worth living? Good answer. ^FFFFFF ^000000";
-				set .@sun_point,.@sun_point+10;
+				.@sun_point += 10;
 				break;
 			case 3:
 				mes "[Daru]";
@@ -897,7 +897,7 @@ job_star,29,33,0	script	Daru#job_star	1_M_ORIENT01,{
 				mes "we would see nothing.";
 				mes "We would know nothing.";
 				mes "We would be nothing.";
-				set .@sun_point,.@sun_point+10;
+				.@sun_point += 10;
 				break;
 			case 4:
 				mes "[Daru]";
@@ -931,7 +931,7 @@ job_star,29,33,0	script	Daru#job_star	1_M_ORIENT01,{
 			mes "them all? Think carefully...";
 			next;
 			if (select("2nd, Marsh, Knights:4th, Desert, Sand:10th, Desert, Knights:5th, Deep Cave, Wolves") == 2)
-				set .@sun_point,.@sun_point+10;
+				.@sun_point += 10;
 			mes "[Daru]";
 			mes "Well, that will be all.";
 			mes "I cannot possibly know all";
@@ -948,7 +948,7 @@ job_star,29,33,0	script	Daru#job_star	1_M_ORIENT01,{
 				mes "all life, the origin of warmth";
 				mes "and comfort. Now, let me lead";
 				mes "you to the Moon Room.";
-				set STGL_Q,4;
+				STGL_Q = 4;
 				close2;
 				warp "job_star",100,13;
 				end;
@@ -967,7 +967,7 @@ job_star,29,33,0	script	Daru#job_star	1_M_ORIENT01,{
 				mes "more attuned with the power of";
 				mes "the cosmos. Now, please come";
 				mes "this way to the Moon Room...";
-				set STGL_Q,4;
+				STGL_Q = 4;
 				close2;
 				warp "job_star",100,13;
 				end;
@@ -987,7 +987,7 @@ job_star,29,33,0	script	Daru#job_star	1_M_ORIENT01,{
 			mes "to speak to me once again.";
 			mes "Contemplate the infinite";
 			mes "power of the sun...";
-			set STGL_Q,5;
+			STGL_Q = 5;
 			close;
 		}
 		else if (STGL_Q == 4) {
@@ -1009,7 +1009,7 @@ job_star,29,33,0	script	Daru#job_star	1_M_ORIENT01,{
 				mes "its importance to the humans";
 				mes "and the world. Well done. Now,";
 				mes "let's proceed to the Moon Room.";
-				set STGL_Q,4;
+				STGL_Q = 4;
 				close2;
 				warp "job_star",100,13;
 				end;
@@ -1134,7 +1134,7 @@ job_star,95,33,0	script	Beeryu#job_star	1_M_MOC_LORD,{
 				mes "gentle moon whose soft";
 				mes "light helps you think clearly.";
 				mes "It's a moon of peaceful rest...";
-				set .@moon_point,.@moon_point+10;
+				.@moon_point += 10;
 				break;
 			case 3:
 				mes "[Beeryu]";
@@ -1144,7 +1144,7 @@ job_star,95,33,0	script	Beeryu#job_star	1_M_MOC_LORD,{
 				mes "to aspire to attain prosperity";
 				mes "is natural, and to fulfill your";
 				mes "aspirations is life's pinnacle.";
-				set .@moon_point,.@moon_point+10;
+				.@moon_point += 10;
 				break;
 			case 4:
 				mes "[Beeryu]";
@@ -1173,7 +1173,7 @@ job_star,95,33,0	script	Beeryu#job_star	1_M_MOC_LORD,{
 				mes "both power and compassion";
 				mes "are required to enact the";
 				mes "truest form of justice.";
-				set .@moon_point,.@moon_point+10;
+				.@moon_point += 10;
 				break;
 			case 2:
 				mes "[Beeryu]";
@@ -1183,7 +1183,7 @@ job_star,95,33,0	script	Beeryu#job_star	1_M_MOC_LORD,{
 				mes "never forget your reasons";
 				mes "for attaining mastery of the";
 				mes "self, else you lose your way.";
-				set .@moon_point,.@moon_point+10;
+				.@moon_point += 10;
 				break;
 			case 3:
 				mes "[Beeryu]";
@@ -1240,7 +1240,7 @@ job_star,95,33,0	script	Beeryu#job_star	1_M_MOC_LORD,{
 			mes "light of the moon?";
 			next;
 			if (select("2nd, Marsh, Dark Knights:4th, the Desert, the Sand:10th, Deep Cave, Dark Knight:5th, Marsh, Wolves") == 4)
-				set .@moon_point,.@moon_point+10;
+				.@moon_point += 10;
 			mes "[Beeryu]";
 			mes "Well, I've asked the";
 			mes "questions I wanted to set";
@@ -1264,7 +1264,7 @@ job_star,95,33,0	script	Beeryu#job_star	1_M_MOC_LORD,{
 				mes "Now, the time has come for you";
 				mes "to enter the Star Room. Come,";
 				mes "follow me this way...";
-				set STGL_Q,6;
+				STGL_Q = 6;
 				close2;
 				warp "job_star",166,29;
 				end;
@@ -1295,7 +1295,7 @@ job_star,95,33,0	script	Beeryu#job_star	1_M_MOC_LORD,{
 			mes "of patience^000000. Then, when you're";
 			mes "ready, please talk to Moogang";
 			mes "so that he can send you to me.";
-			set STGL_Q,7;
+			STGL_Q = 7;
 			close2;
 			warp "payon",164,58;
 			end;
@@ -1366,7 +1366,7 @@ job_star,95,33,0	script	Beeryu#job_star	1_M_MOC_LORD,{
 			mes "pride without hubris. You're";
 			mes "ready for the Star Room, so";
 			mes "I'll send you to Cheehee now.";
-			set STGL_Q,6;
+			STGL_Q = 6;
 			close2;
 			warp "job_star",166,29;
 			end;
@@ -1422,7 +1422,7 @@ job_star,161,33,0	script	Cheehee#job_star	1_F_ORIENT_03,{
 			mes "like a pretty girl's teardrops";
 			mes "shed on a background of ";
 			mes "pitch black night sky...";
-			set STGL_Q,9;
+			STGL_Q = 9;
 			close;
 		}
 		else if (STGL_Q == 9) {
@@ -1433,7 +1433,7 @@ job_star,161,33,0	script	Cheehee#job_star	1_F_ORIENT_03,{
 				mes "bring me the items on";
 				mes "this earth that come from";
 				mes "the stars. Bring me a piece of a star and the sand of a star...";
-				set STGL_Q,10;
+				STGL_Q = 10;
 				changequest 7009,7010;
 				close;
 			}
@@ -1465,7 +1465,7 @@ job_star,161,33,0	script	Cheehee#job_star	1_F_ORIENT_03,{
 				mes "sweet kind of sadness...";
 				delitem 1000,1; //Star_Crumb
 				delitem 1001,1; //Sparkling_Dust
-				set STGL_Q,11;
+				STGL_Q = 11;
 				close;
 			}
 			mes "[Cheehee]";
@@ -1534,7 +1534,7 @@ job_star,161,33,0	script	Cheehee#job_star	1_F_ORIENT_03,{
 				mes "Moogang again. I will";
 				mes "let him know that you";
 				mes "completed our testing.";
-				set STGL_Q,12;
+				STGL_Q = 12;
 				changequest 7010,7011;
 				close;
 			}
@@ -1567,7 +1567,7 @@ job_star,161,33,0	script	Cheehee#job_star	1_F_ORIENT_03,{
 			mes "Moogang again. I will";
 			mes "let him know that you";
 			mes "completed our testing.";
-			set STGL_Q,12;
+			STGL_Q = 12;
 			changequest 7010,7011;
 			close;
 		}

@@ -42,11 +42,11 @@ monk_test,309,146,3	script	Friar Patrick#edq	4_M_OLDFRIAR,{
 	mes "What brought you to this place?";
 	next;
 	if (countitem(6004) > 0) {
-		set .@doll,1;
-		set .@selection,select("What is this place?:I want to enter.:About the Cursed Baphomet Doll.:Cancel.");
+		.@doll = 1;
+		.@selection = select("What is this place?:I want to enter.:About the Cursed Baphomet Doll.:Cancel.");
 	}
 	else {
-		set .@selection,select("What is this place?:I want to enter.:Cancel.");
+		.@selection = select("What is this place?:I want to enter.:Cancel.");
 	}
 	switch(.@selection) {
 	case 1:
@@ -99,7 +99,7 @@ monk_test,309,146,3	script	Friar Patrick#edq	4_M_OLDFRIAR,{
 	case 2:
 		if (BaseLevel >= 75) {
 
-			set .@party_id,getcharid(1);
+			.@party_id = getcharid(1);
 
 			mes "[Friar Patrick]";
 			mes "Do you mean you'll go to the shrine and reseal Baphomet?";
@@ -115,12 +115,12 @@ monk_test,309,146,3	script	Friar Patrick#edq	4_M_OLDFRIAR,{
 					mes "[Friar Patrick]";
 					mes "Party name is "+getpartyname(.@party_id)+"...";
 					mes "Name of the leader is "+strcharinfo(0)+"...";
-					set .@instance, instance_create("Sealed Catacomb",.@party_id);
+					.@instance = instance_create("Sealed Catacomb",.@party_id);
 					if (.@instance < 0) {
 						mes "Umm... But it seems that there is a problem here... I'll check quickly. Please wait.";
 					}
 					else {
-						for( set .@i, 1; .@i <= 2; set .@i, .@i + 1 ) {
+						for (.@i = 1; .@i <= 2; ++.@i) {
 							if( instance_attachmap("" + .@i + "@cata", .@instance) == "" )
 								break;
 						}
@@ -432,8 +432,8 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 1@cata,1,2,0	script	ins_baphomet_lotto	-1,{
 OnInstanceInit:
 	// Pick one "true" Gravestone and 12 "false" Gravestones.
-	set .@true, rand(1,13);
-	for(set .@i,1; .@i<13; set .@i,.@i+1) {
+	.@true = rand(1,13);
+	for (.@i = 1; .@i<13; ++.@i) {
 		disablenpc instance_npcname("Gravestone#1F_1"+((.@i == .@true)?"F":"T"));
 	}
 	disablenpc instance_npcname("ins_baphomet_lotto");
@@ -442,15 +442,15 @@ OnInstanceInit:
 
 1@cata,3,2,0	script	ins_baphomet_lotto2	-1,{
 OnEnable:
-	for(set .@i,1; .@i<12; set .@i,.@i+1)
+	for (.@i = 1; .@i < 12; ++.@i)
 		enablenpc instance_npcname("Bobbing Torch#"+.@i);
 	end;
 }
 
 1@cata,4,2,0	script	ins_baphomet_lotto3	-1,{
 OnEnable:
-	set .@label$, instance_npcname("ins_baphomet_lotto3")+"::OnMyMobDead";
-	set .@map$, instance_mapname("1@cata");
+	.@label$ = instance_npcname("ins_baphomet_lotto3")+"::OnMyMobDead";
+	.@map$ = instance_mapname("1@cata");
 	monster .@map$,0,0,"Apostle of Baphomet",1869,1,.@label$;
 	monster .@map$,0,0,"Apostle of Baphomet",1291,1,.@label$;
 	monster .@map$,0,0,"Apostle of Baphomet",1869,1,.@label$;
@@ -473,7 +473,7 @@ OnDisable:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("1@cata");
+	.@map$ = instance_mapname("1@cata");
 	if (mobcount(.@map$,instance_npcname("ins_baphomet_lotto3")+"::OnMyMobDead") < 1) {
 		mapannounce .@map$, "All apostles of Baphomet are dead!",bc_map,"0x00ff99";
 	}
@@ -484,7 +484,7 @@ OnMyMobDead:
 // Soul of hero near the north grave
 //============================================================
 1@cata,141,221,0	script	Gravestone#	CLEAR_NPC,3,3,{
-	set .@party_id,getcharid(1);
+	.@party_id = getcharid(1);
 	if ('ins_baphomet == 0) {
 		mes "The gravestone is trembling...";
 		next;
@@ -522,7 +522,7 @@ OnMyMobDead:
 				next;
 				mes "[Voice of the Gravestone]";
 				mes "If your ^0000FFparty leader^000000 brings me the pendant, my soul can be substantialized. So, hurry up.";
-				set 'ins_baphomet,1;
+				'ins_baphomet = 1;
 				close;
 			case 3:
 				mes "I can feel the voice becoming faint.";
@@ -586,12 +586,12 @@ OnTouch:
 	end;
 
 OnInstanceInit: // Temporary fix for @reloadscript.
-	set 'ins_baphomet,0;
+	'ins_baphomet = 0;
 	end;
 }
 
 1@cata,176,119,4	script	Ancient Hero's Soul#1F	4_M_CHAMPSOUL,{
-	set .@party_id,getcharid(1);
+	.@party_id = getcharid(1);
 	cutin "ins_cata_champ_n",2;
 	if ('ins_baphomet == 2) {
 		mes "[Ancient Hero's Soul]";
@@ -610,7 +610,7 @@ OnInstanceInit: // Temporary fix for @reloadscript.
 			cutin "ins_cata_champ_n",2;
 			switch(select("What is Essence of Fire?:What is a Token of Apostle?:What should I do?:I am ready.")) {
 			case 1:
-				set .@ins_baphomet_1f_1,.@ins_baphomet_1f_1+1;
+				++.@ins_baphomet_1f_1;
 				mes "[Ancient Hero's Soul]";
 				mes "You can see the torches here and there. These torches are the essence of Thor, the god of Thunder. They are inherited from our predecessors to stop the darkness of Baphomet...";
 				next;
@@ -625,7 +625,7 @@ OnInstanceInit: // Temporary fix for @reloadscript.
 				next;
 				break;
 			case 2:
-				set .@ins_baphomet_1f_2,.@ins_baphomet_1f_2+1;
+				++.@ins_baphomet_1f_2;
 				mes "[Ancient Hero's Soul]";
 				mes "At that time, it was impossible to get rid of Devil Baphomet by ourselves. After numerous heroes sacrificed their lives, we could barely seal him under this Abbey.";
 				next;
@@ -652,7 +652,7 @@ OnInstanceInit: // Temporary fix for @reloadscript.
 				next;
 				break;
 			case 3:
-				set .@ins_baphomet_1f_3,.@ins_baphomet_1f_3+1;
+				++.@ins_baphomet_1f_3;
 				if (getpartyleader(.@party_id,2) == getcharid(0)) {
 					mes "[Ancient Hero's Soul]";
 					mes "You look like the leader of this party. You need to go and get ^0000FF10 Essence of Fire^000000 from the torches.";
@@ -690,7 +690,7 @@ OnInstanceInit: // Temporary fix for @reloadscript.
 					mes "[Ancient Hero's Soul]";
 					mes "Are you ready to go? Then I'll open this sealed gate now.";
 					next;
-					set .@exitloop,1;
+					.@exitloop = 1;
 				}
 				else {
 					cutin "ins_cata_champ_a",2;
@@ -708,7 +708,7 @@ OnInstanceInit: // Temporary fix for @reloadscript.
 		if (getpartyleader(.@party_id,2) == getcharid(0)) {
 			mes "[Ancient Hero's Soul]";
 			mes "To remind you again, I must be substantialized within the next hour. So everyone, finish your work within that time!";
-			set 'ins_baphomet,3;
+			'ins_baphomet = 3;
 			donpcevent instance_npcname("ins_baphomet_1f_timer")+"::OnEnable";
 			donpcevent instance_npcname("ins_baphomet_lotto2")+"::OnEnable";
 			donpcevent instance_npcname("ins_baphomet_lotto3")+"::OnEnable";
@@ -716,7 +716,7 @@ OnInstanceInit: // Temporary fix for @reloadscript.
 		else {
 			mes "[Ancient Hero's Soul]";
 			mes "To remind you again, I can be substantialized for the next hour. So everyone, finish your work within that time.";
-			//set 'ins_baphomet,3;
+			//'ins_baphomet = 3;
 		}
 		close2;
 		cutin "",255;
@@ -729,7 +729,7 @@ OnInstanceInit: // Temporary fix for @reloadscript.
 		next;
 		if ((countitem(6001) > 9) && (countitem(6002) > 0)) {
 			delitem 6001,countitem(6001); //Essence_Of_Fire
-			set 'ins_baphomet,4;
+			'ins_baphomet = 4;
 			mes "[Ancient Hero's Soul]";
 			mes "Okay. You've done your work. Now check your companions and tell me when everyone has finished their work.";
 		}
@@ -747,7 +747,7 @@ OnInstanceInit: // Temporary fix for @reloadscript.
 		mes "Do you have a ^0000FFToken of Apostle^000000?";
 		next;
 		if (countitem(6002) > 0) {
-			set 'ins_baphomet,4;
+			'ins_baphomet = 4;
 			mes "[Ancient Hero's Soul]";
 			mes "Okay. You've done your work. Tell your representative to check your companions and come to me when everyone has finished their work.";
 		}
@@ -764,7 +764,7 @@ OnInstanceInit: // Temporary fix for @reloadscript.
 		mes "[Ancient Hero's Soul]";
 		mes "Are you ready? I opened the sealed gate. To pass the gate, you should carry a ^0000FFToken of Apostle^000000.";
 		next;
-		set 'ins_baphomet,5;
+		'ins_baphomet = 5;
 		specialeffect EF_TELEPORTATION;
 		enablenpc instance_npcname("ins_bapho_to_2f");
 		mes "[Ancient Hero's Soul]";
@@ -815,7 +815,7 @@ OnInstanceInit:
 OnTouch:
 	if (countitem(6002) > 0) {
 		delitem 6002,countitem(6002); //Token_Of_Apostle
-		set 'ins_baphomet,5;
+		'ins_baphomet = 5;
 		warp instance_mapname("2@cata"),80,144;
 		end;
 	}
@@ -835,7 +835,7 @@ OnInstanceInit:
 -	script	Gravestone#SS1	-1,{
 	if ('ins_baphomet == 1) {
 		getitem 6003,1; //Soul_Pendant
-		set 'ins_baphomet,2;
+		'ins_baphomet = 2;
 		mes "A small object is shining under a leaning grave.";
 		next;
 		mes "[" + strcharinfo(0) + "]";
@@ -882,7 +882,7 @@ OnInstanceInit:
 // Bobbing Torches
 //============================================================
 -	script	Bobbing Torch#SS	-1,{
-	set .@party_id,getcharid(1);
+	.@party_id = getcharid(1);
 	if (getpartyleader(.@party_id,2) == getcharid(0)) {
 		if (('ins_baphomet == 3) && (countitem(6001) < 11)) {
 			mes "A huge torch appearing as if it can burn everything is bobbing up and down in front of me.";
@@ -1011,7 +1011,7 @@ OnTimer18000:
 
 2@cata,50,67,0	script	slave_left	-1,5,5,{
 OnTouch:
-	set .@map$, instance_mapname("2@cata");
+	.@map$ = instance_mapname("2@cata");
 	mapannounce .@map$, "Apostle of Baphomet : Kill the humans! Don't let them interrupt the revival of our Master!",bc_map,"0xFFFF00";
 	monster .@map$,55,67,"Apostle of Baphomet",1869,1;
 	monster .@map$,51,67,"Apostle of Baphomet",1291,1;
@@ -1035,7 +1035,7 @@ OnTouch:
 
 2@cata,109,67,0	script	slave_right	-1,5,5,{
 OnTouch:
-	set .@map$, instance_mapname("2@cata");
+	.@map$ = instance_mapname("2@cata");
 	mapannounce .@map$, "Apostle of Baphomet : Kill the humans! Don't let them interrupt the revival of our Master!",bc_map,"0xFFFF00";
 	monster .@map$,105,67,"Apostle of Baphomet",1869,1;
 	monster .@map$,104,67,"Apostle of Baphomet",1291,1;
@@ -1059,7 +1059,7 @@ OnTouch:
 
 2@cata,79,39,0	script	slave_down	-1,5,5,{
 OnTouch:
-	set .@map$, instance_mapname("2@cata");
+	.@map$ = instance_mapname("2@cata");
 	mapannounce .@map$, "Apostle of Baphomet : Kill the humans! Don't let them interrupt the revival of our Master!",bc_map,"0xFFFF00";
 	monster .@map$,78,41,"Apostle of Baphomet",1869,1;
 	monster .@map$,79,42,"Apostle of Baphomet",1291,1;
@@ -1095,7 +1095,7 @@ OnTouch:
 	if (.@seal_check == 2) erasequest 3041;
 	specialeffect EF_LEXDIVINA;
 	disablenpc instance_npcname(strnpcinfo(0));
-	set .@map$, instance_mapname("2@cata");
+	.@map$ = instance_mapname("2@cata");
 	if (strnpcinfo(2) == "0") areamobuseskill .@map$,79,81,10,1929,"NPC_INVINCIBLEOFF",1,0,0,e_hlp,0;
 	else if (strnpcinfo(2) == "2") areamobuseskill .@map$,123,109,10,1929,"NPC_INVINCIBLEOFF",1,0,0,e_hlp,0;
 	else if (strnpcinfo(2) == "4") areamobuseskill .@map$,123,22,10,1929,"NPC_INVINCIBLEOFF",1,0,0,e_hlp,0;
@@ -1121,7 +1121,7 @@ OnInstanceInit:
 2@cata,35,109,0	duplicate(Magical Seal#SS)	Magical Seal#10	CLEAR_NPC
 
 2@cata,79,65,0	script	The Main Altar#ss	CLEAR_NPC,{
-	set .@party_id,getcharid(1);
+	.@party_id = getcharid(1);
 	if (('ins_baphomet == 5) && (getpartyleader(.@party_id,2) == getcharid(0))) {
 		mes "An evil power, too terrible to describe, lies under the great altar radiating a violet color.";
 		next;
@@ -1133,7 +1133,7 @@ OnInstanceInit:
 		specialeffect EF_METEORSTORM;
 		mes "[" + strcharinfo(0) + "]";
 		mes "Watch out! Something... Something is coming.";
-		set 'ins_baphomet,6;
+		'ins_baphomet = 6;
 		donpcevent instance_npcname("ins_2f_hero_broad")+"::OnEnable";
 		disablenpc instance_npcname("The Main Altar#ss");
 		close;
@@ -1168,7 +1168,7 @@ OnInstanceInit:
 		mes "[Ancient Hero's Soul]";
 		mes "If you leave, please say hello to Patrick for me.";
 		cutin "",255;
-		set 'ins_baphomet,0;
+		'ins_baphomet = 0;
 		warp "monk_test",310,150;
 		close;
 	case 2:
@@ -1235,9 +1235,9 @@ OnEnable:
 	end;
 
 OnMyMobDead:
-	set .@map$, instance_mapname("2@cata");
+	.@map$ = instance_mapname("2@cata");
 	if (mobcount(.@map$,instance_npcname("control_baphomet")+"::OnMyMobDead") < 1) {
-		set 'ins_baphomet,7;
+		'ins_baphomet = 7;
 		erasequest 3041;
 		mapannounce .@map$, "Baphomet : No! Nonono! How dare these weaklings defeat me!... No!!...",bc_map,"0xdb7093";
 		enablenpc instance_npcname("Ancient Hero's Soul#2F");
@@ -1455,7 +1455,7 @@ OnTimer70000:
 
 1@cata,1,1,0	script	ins_1f_spawn_mobs	-1,{
 OnInstanceInit:
-	set .@map$, instance_mapname("1@cata");
+	.@map$ = instance_mapname("1@cata");
 	monster .@map$,0,0,"Zombie Master",1298,10;
 	monster .@map$,0,0,"Wraith Dead",1291,10;
 	//monster .@map$,0,0,"Ancient Mimic",1699,10;

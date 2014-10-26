@@ -102,7 +102,7 @@ payon,157,141,5	script	Phoenix#TKJobChange	4_M_MONK,{
 				mes "training as a Novice. Very good. Then let us prepare for your";
 				mes "spiritual training. Take a deep";
 				mes "breath, speak to me when ready.";
-				set TK_Q, 2;
+				TK_Q = 2;
 				setquest 6001;
 				close;
 			}
@@ -112,8 +112,8 @@ payon,157,141,5	script	Phoenix#TKJobChange	4_M_MONK,{
 			mes "true potential without integrating mind and body. Go, gain ^FF00001 more";
 			mes "Base Level^000000, and then return.";
 			next;
-			set TAEK_Q, BaseLevel;
-			set TK_Q, 1;
+			TAEK_Q = BaseLevel;
+			TK_Q = 1;
 			setquest 6000;
 			mes "[Phoenix]";
 			mes "I understand this is not an";
@@ -136,7 +136,7 @@ payon,157,141,5	script	Phoenix#TKJobChange	4_M_MONK,{
 	switch(TK_Q) {
 	case 1:
 		if(BaseLevel > TAEK_Q) {
-			set TK_Q, 2;
+			TK_Q = 2;
 			changequest 6000,6001;
 			mes "[Phoenix]";
 			mes "Good. I sense that you";
@@ -331,7 +331,7 @@ payon,157,141,5	script	Phoenix#TKJobChange	4_M_MONK,{
 		mes "we have discussed for a little";
 		mes "while. When your mind is calm,";
 		mes "come and speak to me.";
-		set TK_Q, 3;
+		TK_Q = 3;
 		changequest 6001,6002;
 		close;
 	case 3:

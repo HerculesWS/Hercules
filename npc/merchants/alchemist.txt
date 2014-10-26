@@ -60,8 +60,8 @@ alde_alche,24,188,3	script	Guild Dealer	2_M_ALCHE,{
 					break;
 				}
 			}
-			set .@sell,.@input * 8;
-			set .@item_weight,.@input * 10;
+			.@sell = .@input * 8;
+			.@item_weight = .@input * 10;
 			if (Zeny < .@sell) {
 				mes "[Gever Al Sharp]";
 				mes "You don't";

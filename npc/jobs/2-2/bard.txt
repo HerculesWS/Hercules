@@ -151,7 +151,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 					mes "[Lalo]";
 					mes "It would be nice if more people went around and sang...";
 					mes "Well, it's quite ok as it is now... hmmhmm.";
-					set BARD_Q,1;
+					BARD_Q = 1;
 					setquest 3000;
 					close2;
 					cutin "job_bard_aiolo01",255;
@@ -208,7 +208,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "[Lalo]";
 				mes "It doesn't really matter which Flower, but try to bring one that I like.";
 				mes "And don't just buy any random Flower, ok?";
-				set BARD_Q,2;
+				BARD_Q = 2;
 				changequest 3000,3001;
 				close2;
 				cutin "job_bard_aiolo01",255;
@@ -411,9 +411,9 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 		mes "There's a talking snowman in a town called Lutie.";
 		mes "Go there and bring back a present.";
 		next;
-		set BARD_Q,3;
+		BARD_Q = 3;
 		changequest 3001,3002;
-		set xmas_npc,1;
+		xmas_npc = 1;
 		mes "[Lalo]";
 		mes "if you become friends with ^008800Jack Frost^000000, you will receive something.";
 		mes "And also talk to the townspeople while you're at it...";
@@ -423,7 +423,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 	}
 	else if ((BARD_Q >= 3) || (BARD_Q <= 5)) {
 		if (BARD_Q == 3) {
-			if(xmas_npc > 10) { //this var is set in LUTIE.TXT
+			if(xmas_npc > 10) { //this var is set in lutie.txt
 				cutin "job_bard_aiolo01",2;
 				mes "[Lalo]";
 				mes "How was the trip? Did you meet a lot of people?";
@@ -445,7 +445,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 			}
 			else {
 				cutin "job_bard_aiolo01",2;
-				set xmas_npc,1;
+				xmas_npc = 1;
 				mes "[Lalo]";
 				mes "Eh, you still haven't become his friend?";
 				mes "Talking will not be enough.";
@@ -475,7 +475,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 			next;
 		}
 		if (BARD_Q != 5) {
-			set .@bard_s, rand(1,5);
+			.@bard_s = rand(1,5);
 			if (.@bard_s == 1) {
 				mes "^3377FFThere was a man^000000";
 				mes "who was said to be immortal.";
@@ -486,7 +486,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "There was a man")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFThere was a man";
 				mes "who was said to be immortal.^000000";
@@ -497,7 +497,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "who was said to be immortal.")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFThere was a man";
 				mes "who was said to be immortal.";
@@ -508,7 +508,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "His name Jichfreid,")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFThere was a man";
 				mes "who was said to be immortal.";
@@ -519,7 +519,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "Son of the hero Jichmunt.")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFThere was a man";
 				mes "who was said to be immortal.";
@@ -530,7 +530,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "The evil giant Papner,")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFThere was a man";
 				mes "who was said to be immortal.";
@@ -541,7 +541,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "Turned into a dragon and ate him.")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 			}
 			else if (.@bard_s == 2) {
 				mes "^3377FFA Merchant without money or equipment,^000000";
@@ -553,7 +553,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "A Merchant without money or equipment,")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFA Merchant without money or equipment,";
 				mes "a Merchant that couldn't sell anything.^000000";
@@ -564,7 +564,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "a Merchant that couldn't sell anything.")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFA Merchant without money or equipment,";
 				mes "a Merchant that couldn't sell anything.";
@@ -575,7 +575,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "But he was too proud to beg.")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFA Merchant without money or equipment,";
 				mes "a Merchant that couldn't sell anything.";
@@ -586,7 +586,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "So he gathered some money selling items.")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFA Merchant without money or equipment,";
 				mes "a Merchant that couldn't sell anything.";
@@ -597,7 +597,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "At first he only sold Red Potions.")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFA Merchant without money or equipment,";
 				mes "a Merchant that couldn't sell anything.";
@@ -608,7 +608,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "Some say he sold Sweet Potatoes, too.")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 			}
 			else if (.@bard_s == 3) {
 				mes "^3377FFAll Gods never age.^000000";
@@ -620,7 +620,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "All Gods never age.")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFAll Gods never age.";
 				mes "The ever so Beautiful Goddess Eden,^000000";
@@ -631,7 +631,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "The ever so Beautiful Goddess Eden,")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFAll Gods never age.";
 				mes "The ever so Beautiful Goddess Eden,";
@@ -642,7 +642,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "Beautiful and graceful Goddess Eden,")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFAll Gods never age.";
 				mes "The ever so Beautiful Goddess Eden,";
@@ -653,7 +653,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "Odin's daughter-in-law and Bragi's wife.")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFAll Gods never age.";
 				mes "The ever so Beautiful Goddess Eden,";
@@ -664,7 +664,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "Her sweet apples in her basket,")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFAll Gods never age.";
 				mes "The ever so Beautiful Goddess Eden,";
@@ -675,7 +675,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "All thanks to her sweet apples.")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 			}
 			else if (.@bard_s == 4) {
 				mes "^3377FFBragi, Bragi,^000000";
@@ -687,7 +687,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "Bragi, Bragi,")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFBragi, Bragi,";
 				mes "Forever call the poets name.^000000";
@@ -698,7 +698,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "Forever call the poets name.")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFBragi, Bragi,";
 				mes "Forever call the poets name.";
@@ -709,7 +709,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "My songs are his breath,")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFBragi, Bragi,";
 				mes "Forever call the poets name.";
@@ -720,7 +720,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "My mind is his will,")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFBragi, Bragi,";
 				mes "Forever call the poets name.";
@@ -731,7 +731,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "All wandering poets are his people,")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFBragi, Bragi,";
 				mes "Forever call the poets name.";
@@ -742,7 +742,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "And all praise shall go to him.")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 			}
 			else {
 				mes "^3377FFLouder, louder, louder.^000000";
@@ -754,7 +754,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "Louder, louder, louder.")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFLouder, louder, louder.";
 				mes "Give strength to the warriors!^000000";
@@ -765,7 +765,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "Give strength to the warriors!")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFLouder, louder, louder.";
 				mes "Give strength to the warriors!";
@@ -776,7 +776,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "Shake the sky and roar through the land.")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFLouder, louder, louder.";
 				mes "Give strength to the warriors!";
@@ -787,7 +787,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "Make my heart pound again!")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFLouder, louder, louder.";
 				mes "Give strength to the warriors!";
@@ -798,7 +798,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "Let the castle walls ring.")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 
 				mes "^3377FFLouder, louder, louder.";
 				mes "Give strength to the warriors!";
@@ -809,7 +809,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				next;
 				input .@Song$;
 				if (.@Song$ != "This day will never come again!")
-					set .@w_point,.@w_point+1;
+					.@w_point += 1;
 			}
 
 			if (.@w_point) {
@@ -828,7 +828,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 			mes "[Lalo]";
 			mes "..........";
 			next;
-			set BARD_Q,5;
+			BARD_Q = 5;
 			mes "[Lalo]";
 			mes "Wonderful! Finished it in one try!";
 			mes "You can become a great Bard. ";
@@ -841,7 +841,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 			mes "Do you want to just change jobs now?";
 			mes "Or do you want a present.";
 			next;
-			set .@selection,select("Just change my job please.:I'd be thankful for a present.");
+			.@selection = select("Just change my job please.:I'd be thankful for a present.");
 		}
 		if ((.@selection == 1) || (BARD_Q == 5)) {
 			if(SkillPoint) {

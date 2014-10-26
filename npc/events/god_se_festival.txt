@@ -45,7 +45,7 @@ yuno,1,1,0	script	Festival Manager#gq_fes0	4_F_HUGIRL,{
 }
 
 yuno,118,192,5	script	Rmimi Ravies#gq_fes01	4_F_HUGIRL,{
-	set .@GID, getcharid(2);
+	.@GID = getcharid(2);
 	if (countitem(7840) > 0) {
 		mes "[Rmimi Ravies]";
 		mes "This is the flower.";
@@ -166,7 +166,7 @@ OnDisable:
 
 OnStart:
 	initnpctimer;
-	set $@gqse_festival,1;
+	$@gqse_festival = 1;
 	end;
 
 OnCall:
@@ -197,7 +197,7 @@ OnCall:
 
 OnOver:
 	killmonster "yuno","Rmimi Ravies#gq_fes01::OnMyMobDead";
-	set $@gqse_festival,0;
+	$@gqse_festival = 0;
 	stopnpctimer;
 	end;
 
@@ -423,7 +423,7 @@ rachel,1,1,0	script	Festival Manager#gq_fes2	4_F_HUGIRL,{
 }
 
 rachel,132,117,3	script	Rhehe Ravies#gq_fes03	4_F_HUGIRL,{
-	set .@GID, getcharid(2);
+	.@GID = getcharid(2);
 	if (countitem(7840) > 0) {
 		mes "[Rhehe Ravies]";
 		mes "A flower!!";
@@ -548,7 +548,7 @@ OnDisable:
 
 OnStart:
 	initnpctimer;
-	set $@gqse_festival,1;
+	$@gqse_festival = 1;
 	end;
 
 OnCall:
@@ -579,7 +579,7 @@ OnCall:
 
 OnOver:
 	killmonster "rachel","Rhehe Ravies#gq_fes03::OnMyMobDead";
-	set $@gqse_festival,0;
+	$@gqse_festival = 0;
 	stopnpctimer;
 	end;
 

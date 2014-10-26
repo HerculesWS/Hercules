@@ -27,7 +27,7 @@ OnInit:
 	waitingroom "Battle Station",11,"start#bat_b02::OnReadyCheck",1,0,80;
 	end;
 OnEnterBG:
-	set $@FlaviusBG2_id1, waitingroom2bg("bat_b02",10,290,"start#bat_b02::OnGuillaumeQuit","");
+	$@FlaviusBG2_id1 = waitingroom2bg("bat_b02",10,290,"start#bat_b02::OnGuillaumeQuit","");
 	end;
 }
 
@@ -37,7 +37,7 @@ OnInit:
 	waitingroom "Battle Station",11,"start#bat_b02::OnReadyCheck",1,0,80;
 	end;
 OnEnterBG:
-	set $@FlaviusBG2_id2, waitingroom2bg("bat_b02",390,10,"start#bat_b02::OnCroixQuit","");
+	$@FlaviusBG2_id2 = waitingroom2bg("bat_b02",390,10,"start#bat_b02::OnCroixQuit","");
 	end;
 }
 
@@ -59,11 +59,11 @@ OnStop:
 OnTimer1000:
 	stopnpctimer;
 	initnpctimer;
-	set .@chk_bat_a01,getmapusers("bat_b02");
+	.@chk_bat_a01 = getmapusers("bat_b02");
 	if (.@chk_bat_a01 < 1) {
-		set $@FlaviusBG2, 0;
-		if( $@FlaviusBG2_id1 ) { bg_destroy $@FlaviusBG2_id1; set $@FlaviusBG2_id1, 0; }
-		if( $@FlaviusBG2_id2 ) { bg_destroy $@FlaviusBG2_id2; set $@FlaviusBG2_id2, 0; }
+		$@FlaviusBG2 = 0;
+		if( $@FlaviusBG2_id1 ) { bg_destroy $@FlaviusBG2_id1; $@FlaviusBG2_id1 = 0; }
+		if( $@FlaviusBG2_id2 ) { bg_destroy $@FlaviusBG2_id2; $@FlaviusBG2_id2 = 0; }
 		donpcevent "start#bat_b02::OnReadyCheck";
 	}
 	end;
@@ -80,18 +80,18 @@ OnInit:
 OnReadyCheck:
 	if( $@FlaviusBG2 )
 		end;
-	set .@Guillaume, getwaitingroomstate(0,"Lieutenant Huvas");
-	set .@Croix, getwaitingroomstate(0,"Lieutenant Yukon");
+	.@Guillaume = getwaitingroomstate(0,"Lieutenant Huvas");
+	.@Croix = getwaitingroomstate(0,"Lieutenant Yukon");
 	if( !.@Guillaume && !.@Croix ) {
 		donpcevent "#bat_b02_timer::OnStop";
 		end;
 	}
 	if( .@Guillaume < 10 || .@Croix < 10 )
 		end;
-	set $@FlaviusBG2, 1;
-	set $@FlaviusBG2_Victory, 0;
-	set $@Croix_ScoreBG2, 0;
-	set $@Guill_ScoreBG2, 0;
+	$@FlaviusBG2 = 1;
+	$@FlaviusBG2_Victory = 0;
+	$@Croix_ScoreBG2 = 0;
+	$@Guill_ScoreBG2 = 0;
 
 	bg_updatescore "bat_b02",$@Guill_ScoreBG2,$@Croix_ScoreBG2;
 	donpcevent "Lieutenant Huvas::OnEnterBG";
@@ -161,14 +161,14 @@ OnMyMobDead:
 	if (mobcount("bat_b02","OBJ#bat_b02_a::OnMyMobDead") < 1) {
 		mapannounce "bat_b02", "Guillaume's Crystal has been destroyed.",bc_map,"0xFFCE00";
 		if ($@Croix_ScoreBG2 > 0) {
-			set $@FlaviusBG2_Victory,2;
-			set $@Croix_ScoreBG2,$@Croix_ScoreBG2+1;
+			$@FlaviusBG2_Victory = 2;
+			$@Croix_ScoreBG2 = $@Croix_ScoreBG2+1;
 			enablenpc "Guillaume Vintenar#b02_a";
 			enablenpc "Croix Vintenar#b02_b";
 			donpcevent "time#bat_b02::OnStop";
 		}
 		else {
-			set $@Croix_ScoreBG2,1;
+			$@Croix_ScoreBG2 = 1;
 			donpcevent "time#bat_b02::OnEnable";
 			donpcevent "start#bat_b02::OnReset";
 		}
@@ -194,14 +194,14 @@ OnMyMobDead:
 	if (mobcount("bat_b02","OBJ#bat_b02_b::OnMyMobDead") < 1) {
 		mapannounce "bat_b02", "Croix's Crystal has been destroyed.",bc_map,"0xFFCE00";
 		if ($@Guill_ScoreBG2 > 0) {
-			set $@FlaviusBG2_Victory,1;
-			set $@Guill_ScoreBG2,$@Guill_ScoreBG2+1;
+			$@FlaviusBG2_Victory = 1;
+			++$@Guill_ScoreBG2;
 			enablenpc "Guillaume Vintenar#b02_a";
 			enablenpc "Croix Vintenar#b02_b";
 			donpcevent "time#bat_b02::OnStop";
 		}
 		else {
-			set $@Guill_ScoreBG2,1;
+			$@Guill_ScoreBG2 = 1;
 			donpcevent "time#bat_b02::OnEnable";
 			donpcevent "start#bat_b02::OnReset";
 		}
@@ -393,8 +393,8 @@ OnTouch:
 bat_b02,10,294,3	script	Guillaume Vintenar#b02_a	4_M_RASWORD,{
 	if ($@FlaviusBG2_id1 == getcharid(4)) {
 		if ($@FlaviusBG2_Victory == 1) {
-			set .@your_medal,countitem(7829);
-			set .@medal_gap,500 - .@your_medal;
+			.@your_medal = countitem(7829);
+			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 8) {
 				mes "[Axl Rose]";
 				mes "Blessed Guillaume!";
@@ -413,8 +413,8 @@ bat_b02,10,294,3	script	Guillaume Vintenar#b02_a	4_M_RASWORD,{
 			}
 		}
 		else {
-			set .@your_medal,countitem(7829);
-			set .@medal_gap,500 - .@your_medal;
+			.@your_medal = countitem(7829);
+			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 2) {
 				mes "[Axl Rose]";
 				mes "You lost, but you're dedicated to this battle.";
@@ -445,8 +445,8 @@ OnInit:
 bat_b02,389,14,3	script	Croix Vintenar#b02_b	4_M_RASWORD,{
 	if ($@FlaviusBG2_id2 == getcharid(4)) {
 		if ($@FlaviusBG2_Victory == 2) {
-			set .@your_medal,countitem(7829);
-			set .@medal_gap,500 - .@your_medal;
+			.@your_medal = countitem(7829);
+			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 8) {
 				mes "[Swandery]";
 				mes "Blessed Croix!";
@@ -465,8 +465,8 @@ bat_b02,389,14,3	script	Croix Vintenar#b02_b	4_M_RASWORD,{
 			}
 		}
 		else {
-			set .@your_medal,countitem(7829);
-			set .@medal_gap,500 - .@your_medal;
+			.@your_medal = countitem(7829);
+			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 2) {
 				mes "[Swandery]";
 				mes "Oh, "+strcharinfo(0)+". Don't be sad.";
@@ -575,11 +575,11 @@ bat_b02,336,139,3	script	Croix Camp#flag41	1_FLAG_EAGLE,{ end; }
 bat_b02,389,16,3	script	Croix Camp#flag42	1_FLAG_EAGLE,{ end; }
 
 bat_b02,10,294,3	script	Vintenar#bat_b02_aover	4_M_KY_HEAD,{
-	set .@A_B_gap,$@Guill_ScoreBG2 - $@Croix_ScoreBG2;
+	.@A_B_gap = $@Guill_ScoreBG2 - $@Croix_ScoreBG2;
 	if ($@FlaviusBG2_id1 == getcharid(4)) {
 		if (.@A_B_gap > 0) {
-			set .@your_medal,countitem(7829);
-			set .@medal_gap,500 - .@your_medal;
+			.@your_medal = countitem(7829);
+			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 8) {
 				mes "[Axl Rose]";
 				mes "Blessed Guillaume!";
@@ -598,8 +598,8 @@ bat_b02,10,294,3	script	Vintenar#bat_b02_aover	4_M_KY_HEAD,{
 			}
 		}
 		else if (.@A_B_gap == 0) {
-			set .@your_medal,countitem(7829);
-			set .@medal_gap,500 - .@your_medal;
+			.@your_medal = countitem(7829);
+			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 2) {
 				mes "[Axl Rose]";
 				mes "You lost, but you're dedicated to this battle.";
@@ -618,8 +618,8 @@ bat_b02,10,294,3	script	Vintenar#bat_b02_aover	4_M_KY_HEAD,{
 			}
 		}
 		else {
-			set .@your_medal,countitem(7829);
-			set .@medal_gap,500 - .@your_medal;
+			.@your_medal = countitem(7829);
+			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 2) {
 				mes "[Axl Rose]";
 				mes "You lost, but you're dedicated to this battle.";
@@ -653,11 +653,11 @@ OnInit:
 }
 
 bat_b02,389,14,3	script	Vintenar#bat_b02_bover	4_M_CRU_HEAD,{
-	set .@A_B_gap,$@Guill_ScoreBG2 - $@Croix_ScoreBG2;
+	.@A_B_gap = $@Guill_ScoreBG2 - $@Croix_ScoreBG2;
 	if ($@FlaviusBG2_id2 == getcharid(4)) {
 		if (.@A_B_gap > 0) {
-			set .@your_medal,countitem(7829);
-			set .@medal_gap,500 - .@your_medal;
+			.@your_medal = countitem(7829);
+			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 2) {
 				mes "[Swandery]";
 				mes "Oh, "+strcharinfo(0)+". Don't be sad.";
@@ -676,8 +676,8 @@ bat_b02,389,14,3	script	Vintenar#bat_b02_bover	4_M_CRU_HEAD,{
 			}
 		}
 		else if (.@A_B_gap == 0) {
-			set .@your_medal,countitem(7829);
-			set .@medal_gap,500 - .@your_medal;
+			.@your_medal = countitem(7829);
+			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 2) {
 				mes "[Swandery]";
 				mes "Oh, "+strcharinfo(0)+". Don't be sad.";
@@ -696,8 +696,8 @@ bat_b02,389,14,3	script	Vintenar#bat_b02_bover	4_M_CRU_HEAD,{
 			}
 		}
 		else {
-			set .@your_medal,countitem(7829);
-			set .@medal_gap,500 - .@your_medal;
+			.@your_medal = countitem(7829);
+			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 8) {
 				mes "[Swandery]";
 				mes "Blessed Croix!";
@@ -731,7 +731,7 @@ OnInit:
 }
 
 bat_b02,1,10,3	script	Release all#b02	4_DOG01,{
-	set .@i, callfunc("F_GM_NPC",1854,0);
+	.@i = callfunc("F_GM_NPC",1854,0);
 	if (.@i == -1) {
 		mes "Cancelled.";
 		close;

@@ -18,7 +18,7 @@
 //============================================================
 -	script	Bright Arbor#1::OutsideFlagsPA1	GUILD_FLAG,{
 
-	set .@GID, getcastledata("payg_cas01",1);
+	.@GID = getcastledata("payg_cas01",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";

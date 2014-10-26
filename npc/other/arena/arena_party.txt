@@ -40,7 +40,7 @@ OnStart:
 
 prt_are_in,76,87,3	script	Helper#party	 67,4,4,{
 	if($arn_partywait == 0) {
-		set $arn_partywait,1;
+		$arn_partywait = 1;
 		emotion e_gasp,0;
 		mes "[Helper Iriff]";
 		mes "Good day, challengers!";
@@ -52,7 +52,7 @@ prt_are_in,76,87,3	script	Helper#party	 67,4,4,{
 		next;
 		switch( select( "No","Yes" ) ) {
 		case 1:
-			set $arn_partywait,0;
+			$arn_partywait = 0;
 			mes "[Helper Iriff]";
 			mes "I see.";
 			mes "However, please remember you have only a limited amount of time.";
@@ -80,7 +80,7 @@ OnStop:
 	end;
 
 OnInit:
-	set $arn_partywait,0;
+	$arn_partywait = 0;
 	end;
 }
 
@@ -94,7 +94,7 @@ OnTouch:
 		warp "arena_room",100,75;
 	else {
 		Zeny -= 1000;
-		set $arn_partywait,0;
+		$arn_partywait = 0;
 		donpcevent "toout#party::OnStop";
 		warp "force_1-2",99,26;
 	}
@@ -114,7 +114,7 @@ OnTimer:
 	end;
 
 OnTimer60000:
-	set $arn_partywait,0;
+	$arn_partywait = 0;
 	enablenpc "toout#party";
 	end;
 
@@ -124,7 +124,7 @@ OnTimer70000:
 	disablenpc "toout#party";
 
 OnTouch:
-	set $arn_partywait,0;
+	$arn_partywait = 0;
 	warp "arena_room",100,75;
 
 OnEnter:
@@ -139,7 +139,7 @@ OnStop:
 
 prt_are_in,73,74,0	script	arena_out	-1,1,1,{
 OnTouch:
-	set $arn_partywait,0;
+	$arn_partywait = 0;
 	warp "arena_room",100,75;
 	end;
 }
@@ -147,8 +147,8 @@ OnTouch:
 force_1-2,99,31,4	script	Slipslowrun#party	4_F_TELEPORTER,{
 OnStart:
 	initnpctimer;
-	set $arena_minptst,gettime(2);
-	set $arena_secptst,gettime(1);
+	$arena_minptst = gettime(2);
+	$arena_secptst = gettime(1);
 	end;
 
 OnTimer2000:
@@ -354,8 +354,8 @@ OnStart:
 	donpcevent "force_10mob-2#party::OnReset";
 	donpcevent "force_exitmob#party::OnReset";
 	donpcevent "Slipslowrun#party::OnStart";
-	set $arn_partyc,0;
-	set $arn_partywait,0;
+	$arn_partyc = 0;
+	$arn_partywait = 0;
 	end;
 
 On04_Start:
@@ -412,8 +412,8 @@ OnReset:
 
 force_1-2,95,187,0	script	force_09_exit	WARPNPC,1,1,{
 OnTouch:
-	set $arena_minptend,gettime(2);
-	set $arena_secptend,gettime(1);
+	$arena_minptend = gettime(2);
+	$arena_secptend = gettime(1);
 	warp "prt_are_in",73,139;
 	donpcevent "#arn_timer_pt::OnEnter";
 	donpcevent "arena_p::OnReset";
@@ -466,7 +466,7 @@ OnMyMobDead:
 	if (mobcount("force_1-2","force_01mob#party::OnMyMobDead") < 1) {
 		enablenpc "force_01_00";
 		donpcevent "Slipslowrun#party::On01_End";
-		set $arn_partyc,$arn_partyc +1;
+		++$arn_partyc;
 		if($arn_partyc == 3) {
 			donpcevent "Slipslowrun#party::On04_Start";
 			enablenpc "force_03_04";
@@ -525,7 +525,7 @@ OnMyMobDead:
 	if (mobcount("force_1-2","force_02mob#party::OnMyMobDead") < 1) {
 		enablenpc "force_02_00";
 		donpcevent "Slipslowrun#party::On02_End";
-		set $arn_partyc,$arn_partyc +1;
+		++$arn_partyc;
 		if($arn_partyc == 3) {
 			donpcevent "Slipslowrun#party::On04_Start";
 			enablenpc "force_03_04";
@@ -580,7 +580,7 @@ OnMyMobDead:
 	if (mobcount("force_1-2","force_03mob#party::OnMyMobDead") < 1) {
 		enablenpc "force_03_00";
 		donpcevent "Slipslowrun#party::On03_End";
-		set $arn_partyc,$arn_partyc +1;
+		++$arn_partyc;
 		if($arn_partyc == 3) {
 			donpcevent "Slipslowrun#party::On04_Start";
 			enablenpc "force_03_04";
@@ -725,7 +725,7 @@ OnMyMobDead:
 	if (mobcount("force_1-2","force_06mob#party::OnMyMobDead") < 1) {
 		donpcevent "arena_p::On07_Start";
 		donpcevent "Slipslowrun#party::On06_End";
-		set $arn_partyc,$arn_partyc +1;
+		++$arn_partyc;
 	}
 	end;
 }
@@ -761,7 +761,7 @@ OnMyMobDead:
 	if (mobcount("force_1-2","force_07mob#party::OnMyMobDead") < 1) {
 		donpcevent "arena_p::On08_Start";
 		donpcevent "Slipslowrun#party::On07_End";
-		set $arn_partyc,$arn_partyc +1;
+		++$arn_partyc;
 	}
 	end;
 }
@@ -778,20 +778,20 @@ OnEnable:
 	monster "force_1-2",172,154,"Khalitzburg",1438,1,"force_08mob#party::OnMyMobDead";
 	monster "force_1-2",174,145,"Ghostring",1576,1,"force_08mob#party::OnMyMobDead";
 	monster "force_1-2",174,145,"Chimera",1456,1,"force_08mob#party::OnMyMobDead";
-	for(set .@i,0; .@i<5; set .@i,.@i+1) {
+	for(.@i = 0; .@i<5; ++.@i) {
 		monster "force_1-2",rand(162,184),rand(122,185),"Injustice",1446,1,"force_08mob#party::OnMyMobDead";
 	}
 	monster "force_1-2",rand(162,184),rand(122,185),"Raydric Archer",1453,1,"force_08mob#party::OnMyMobDead";
-	for(set .@i,0; .@i<5; set .@i,.@i+1) {
+	for(.@i = 0; .@i<5; ++.@i) {
 		monster "force_1-2",rand(162,184),rand(122,185),"Nightmare Terror",1554,1,"force_08mob#party::OnMyMobDead";
 	}
-	for(set .@i,0; .@i<6; set .@i,.@i+1) {
+	for(.@i = 0; .@i<6; ++.@i) {
 		monster "force_1-2",rand(162,184),rand(122,185),"Ancient Mummy",1522,1,"force_08mob#party::OnMyMobDead";
 	}
-	for(set .@i,0; .@i<10; set .@i,.@i+1) {
+	for(.@i = 0; .@i<10; ++.@i) {
 		monster "force_1-2",rand(162,184),rand(122,185),"Skel Prisoner",1479,1,"force_08mob#party::OnMyMobDead";
 	}
-	for(set .@i,0; .@i<5; set .@i,.@i+1) {
+	for(.@i = 0; .@i<5; ++.@i) {
 		monster "force_1-2",rand(162,184),rand(122,185),"Hunter Fly",1422,1,"force_08mob#party::OnMyMobDead";
 	}
 	end;
@@ -804,7 +804,7 @@ OnMyMobDead:
 	if (mobcount("force_1-2","force_08mob#party::OnMyMobDead") < 1) {
 		donpcevent "arena_p::On09_Start";
 		donpcevent "Slipslowrun#party::On08_End";
-		set $arn_partyc,$arn_partyc +1;
+		++$arn_partyc;
 	}
 	end;
 }
@@ -833,7 +833,7 @@ OnEnable:
 	monster "force_1-2",122,178,"Anolian",1488,1,"force_09mob#party::OnMyMobDead";
 	monster "force_1-2",121,177,"Anolian",1488,1,"force_09mob#party::OnMyMobDead";
 	monster "force_1-2",122,177,"Anolian",1488,1,"force_09mob#party::OnMyMobDead";
-	set $force_09_pt,15;
+	$force_09_pt = 15;
 	end;
 
 OnReset:
@@ -844,7 +844,7 @@ OnMyMobDead:
 	if (mobcount("force_1-2","force_09mob#party::OnMyMobDead") < 1) {
 		donpcevent "arena_p::On10_Start";
 		donpcevent "Slipslowrun#party::On09_End";
-		set $arn_partyc,$arn_partyc +1;
+		++$arn_partyc;
 	}
 	end;
 }
@@ -896,7 +896,7 @@ OnMyMobDead:
 	if (mobcount("force_1-2","force_10mob-2#party::OnMyMobDead") < 1) {
 		donpcevent "arena_p::OnExit";
 		donpcevent "Slipslowrun#party::On10_End";
-		set $arn_partyc,0;
+		$arn_partyc = 0;
 	}
 	end;
 }
@@ -960,8 +960,9 @@ prt_are_in,181,135,3	script	Staff#party-1	1_F_02,{
 		mes "You already have enough arena points.";
 		mes "Please spend some arena points later. When I see you next time, I will make sure to give you some reward.";
 		next;
+	} else {
+		++arena_point;
 	}
-	else set arena_point, arena_point + 1;
 	mes "[Staff]";
 	mes "Let me guide you outside. I hope you had a good time.";
 	close2;
@@ -973,22 +974,22 @@ prt_are_in,181,135,3	script	Staff#party-1	1_F_02,{
 prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 	if($arena_minptend < $arena_minptst) {
 		if($arena_secptend < $arena_secptst) {
-			set @record_minpt,60 - $arena_minptst + $arena_minptend -1;
-			set @record_secpt,60 - $arena_secptst + $arena_secptend;
+			@record_minpt = 60 - $arena_minptst + $arena_minptend -1;
+			@record_secpt = 60 - $arena_secptst + $arena_secptend;
 		} else {
-			set @record_minpt,60 - $arena_minptst + $arena_minptend;
-			set @record_secpt,$arena_secptend - $arena_secptst;
+			@record_minpt = 60 - $arena_minptst + $arena_minptend;
+			@record_secpt = $arena_secptend - $arena_secptst;
 		}
 	} else {
 		if($arena_secptend < $arena_secptst) {
-			set @record_minpt,$arena_minptend - $arena_minptst -1;
-			set @record_secpt,60 - $arena_secptst + $arena_secptend;
+			@record_minpt = $arena_minptend - $arena_minptst -1;
+			@record_secpt = 60 - $arena_secptst + $arena_secptend;
 		} else {
-			set @record_minpt,$arena_minptend - $arena_minptst;
-			set @record_secpt,$arena_secptend - $arena_secptst;
+			@record_minpt = $arena_minptend - $arena_minptst;
+			@record_secpt = $arena_secptend - $arena_secptst;
 		}
 	}
-	set @gappt,(60 * $top_ptmin + $top_ptsec) - (60 * @record_minpt + @record_secpt);
+	@gappt = (60 * $top_ptmin + $top_ptsec) - (60 * @record_minpt + @record_secpt);
 	mes "[Staff]";
 	mes "Wow, you did a good job~ ";
 	mes "Your name is...^3131FF" + strcharinfo(0) +"^000000, isn't it?";
@@ -1004,7 +1005,7 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 	mes "[Staff]";
 	mes "^3131FF"+$arena_pttopn$+"^000000's running time was ^3131FF"+$top_ptmin+"^000000minutes ^3131FF"+$top_ptsec+"^000000seconds.";
 	next;
-	set .arn_party,getcharid(1);
+	.arn_party = getcharid(1);
 	if (@gappt < 0) {
 		mes "[Staff]";
 		mes "Although you failed to make a new record, I hope you will succeed next time.";
@@ -1022,7 +1023,7 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 			mes "Thank you.";
 			close2;
 		} else {
-			set arena_point, arena_point + 40;
+			arena_point += 40;
 			mes "[Staff]";
 			mes "Let me reward you some arena points.";
 			mes "If you wish to check the amount of arena points you have, please go talk to ^3131FFVendigos^000000 at the arena entrance.";
@@ -1063,9 +1064,9 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 				next;
 				switch( select( "Yes","No" ) ) {
 				case 1:
-					set $top_ptmin, @record_minpt;
-					set $top_ptsec, @record_secpt;
-					set $arena_pttopn$,.@arnparty$;
+					$top_ptmin = @record_minpt;
+					$top_ptsec = @record_secpt;
+					$arena_pttopn$ = .@arnparty$;
 					donpcevent "Vendigos::OnLineRec_pt";
 					mes "[Staff]";
 					mes "Your record has been entered.";
@@ -1100,7 +1101,7 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 			mes "Let me reward you with some arena points.";
 			mes "At the same time, since you have renewed the record you will receive an extra amount of the points this time.";
 			next;
-			set arena_point, arena_point + 100;
+			arena_point += 100;
 			mes "[Staff]";
 			mes "Let me reward you some arena points.";
 			mes "If you wish to check the amount of arena points you have, please go talk to ^3131FFVendigos^000000 at the arena entrance.";
@@ -1230,14 +1231,14 @@ OnEnable:
 	donpcevent "Slipslowrun#party::OnTimerOff";
 	disablenpc "Slipslowrun#party";
 	disablenpc "arn_warp_pt";
-	set $arn_partywait,0;
-	set $arn_partyc,0;
+	$arn_partywait = 0;
+	$arn_partyc = 0;
 	donpcevent "#arn_timer_pt::OnStop";
 	enablenpc "Slipslowrun#party";
 	enablenpc "arena_p";
 	end;
 
 OnInit:
-	if(!$top_ptmin && !$top_ptsec) set $top_ptmin,10;
+	if(!$top_ptmin && !$top_ptsec) $top_ptmin = 10;
 	end;
 }

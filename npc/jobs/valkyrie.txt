@@ -143,12 +143,12 @@ valkyrie,48,86,4	script	Valkyrie#	4_F_VALKYRIE,{
 			mes "One...";
 			mes "Two......";
 			mes "And Three.";
-			set ADVJOB, Class+Job_Novice_High; //memo the target 3rd Job ID
-			if(ADVJOB == Job_Lord_Knight2) set ADVJOB,Job_Lord_Knight;
-			if(ADVJOB == Job_Paladin2) set ADVJOB,Job_Paladin;
+			ADVJOB = Class+Job_Novice_High; //memo the target 3rd Job ID
+			if(ADVJOB == Job_Lord_Knight2) ADVJOB = Job_Lord_Knight;
+			if(ADVJOB == Job_Paladin2) ADVJOB = Job_Paladin;
 			jobchange Job_Novice_High;
 			resetlvl(1);
-			set MISC_QUEST,MISC_QUEST | 1024; //<-reset Skill Reset Event
+			MISC_QUEST |= 1024; //<-reset Skill Reset Event
 			skill 142,1,0;
 			skill 143,1,0;
 			completequest 1000;
@@ -232,7 +232,7 @@ yuno_in02,88,164,5	script	Metheus Sylphe#Library	2_M_SAGE_B,{
 			if (select("Donate.:Cancel.") == 1) {
 				if (Zeny >= 1285000) {
 					Zeny -= 1285000;
-					set valkyrie_Q,1;
+					valkyrie_Q = 1;
 					mes "[Metheus Sylphe]";
 					mes "Thank you, your donation will be used for a good cause. You may";
 					mes "now go in and read the book.";
@@ -324,7 +324,7 @@ yuno_in02,93,207,1	script	Book of Ymir	HIDDEN_NPC,{
 			mes "So, I am leaving this record in hope that someone in the future";
 			mes "can confirm that Valkyrie and Valhalla actually exist...";
 			next;
-			set valkyrie_Q,2;
+			valkyrie_Q = 2;
 			if(!questprogress(1000)) {
 				setquest 1000;
 			}
@@ -352,7 +352,7 @@ yuno_in05,49,43,1	script	Heart of Ymir	HIDDEN_NPC,{
 
 valkyrie,44,33,5	script	Teleporter	4_F_TELEPORTER,{
 	if (Upper != 1) {
-		set .@karma_d,rand(1,10);
+		.@karma_d = rand(1,10);
 		if (.@karma_d > 4) {
 			mes "[Teleporter]";
 			mes "Congratulations.";

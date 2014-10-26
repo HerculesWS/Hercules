@@ -37,8 +37,8 @@ force_1-1,99,20,4	script	Heel and Toe#arena	4_F_TELEPORTER,{
 
 OnStart:
 	initnpctimer;
-	set $arena_min50st,gettime(2);
-	set $arena_sec50st,gettime(1);
+	$arena_min50st = gettime(2);
+	$arena_sec50st = gettime(1);
 	end;
 
 OnTimer3000:
@@ -774,8 +774,8 @@ OnMyMobDead:
 		donpcevent "Heel and Toe#arena::On09_End";
 		donpcevent "arena#50::OnReset_09";
 		donpcevent "arena#50::OnReset_All";
-		set $arena_min50end,gettime(2);
-		set $arena_sec50end,gettime(1);
+		$arena_min50end = gettime(2);
+		$arena_sec50end = gettime(1);
 	}
 	end;
 }
@@ -791,8 +791,9 @@ prt_are_in,129,188,3	script	Staff#50-1	1_F_02,{
 		mes "You already have enough arena points.";
 		mes "Please spend some arena points later. When I see you next time, I will make sure to give you some reward.";
 		next;
+	} else {
+		++arena_point;
 	}
-	else set arena_point, arena_point + 1;
 	mes "[Staff]";
 	mes "Let me guide you outside. I hope you had a good time.";
 	close2;
@@ -804,22 +805,22 @@ prt_are_in,129,188,3	script	Staff#50-1	1_F_02,{
 prt_are_in,25,188,3	script	Staff#50-2	1_F_02,{
 	if($arena_min50end < $arena_min50st) {
 		if($arena_sec50end < $arena_sec50st) {
-			set @record_min50,60 - $arena_min50st + $arena_min50end -1;
-			set @record_sec50,60 - $arena_sec50st + $arena_sec50end;
+			@record_min50 = 60 - $arena_min50st + $arena_min50end -1;
+			@record_sec50 = 60 - $arena_sec50st + $arena_sec50end;
 		} else {
-			set @record_min50,60 - $arena_min50st + $arena_min50end;
-			set @record_sec50,$arena_sec50end - $arena_sec50st;
+			@record_min50 = 60 - $arena_min50st + $arena_min50end;
+			@record_sec50 = $arena_sec50end - $arena_sec50st;
 		}
 	} else {
 		if($arena_sec50end < $arena_sec50st) {
-			set @record_min50,$arena_min50end - $arena_min50st -1;
-			set @record_sec50,60 - $arena_sec50st + $arena_sec50end;
+			@record_min50 = $arena_min50end - $arena_min50st -1;
+			@record_sec50 = 60 - $arena_sec50st + $arena_sec50end;
 		} else {
-			set @record_min50,$arena_min50end - $arena_min50st;
-			set @record_sec50,$arena_sec50end - $arena_sec50st;
+			@record_min50 = $arena_min50end - $arena_min50st;
+			@record_sec50 = $arena_sec50end - $arena_sec50st;
 		}
 	}
-	set @gap50,(60 * $top_50min + $top_50sec) - (60 * @record_min50 + @record_sec50);
+	@gap50 = (60 * $top_50min + $top_50sec) - (60 * @record_min50 + @record_sec50);
 	mes "[Staff]";
 	mes "Wow, you did a good job~ ";
 	mes "Your name is...^3131FF" + strcharinfo(0) +"^000000, isn't it?";
@@ -852,7 +853,7 @@ prt_are_in,25,188,3	script	Staff#50-2	1_F_02,{
 			mes "Thank you.";
 			close2;
 		} else {
-			set arena_point, arena_point + 20;
+			arena_point += 20;
 			mes "[Staff]";
 			mes "Let me reward you some arena points.";
 			mes "If you wish to check the amount of arena points you have, please go talk to ^3131FFVendigos^000000 at the arena entrance.";
@@ -877,9 +878,9 @@ prt_are_in,25,188,3	script	Staff#50-2	1_F_02,{
 		next;
 		mes "[Staff]";
 		mes "You have been recorded as the fastest player among people who cleared ^FF0000Arena Time Force Battle lvl 50s^000000, ^3131FF"+strcharinfo(0)+"^000000.";
-		set $top_50min, @record_min50;
-		set $top_50sec, @record_sec50;
-		set $arena_50topn$,strcharinfo(0);
+		$top_50min = @record_min50;
+		$top_50sec = @record_sec50;
+		$arena_50topn$ = strcharinfo(0);
 		donpcevent "Vendigos::OnLineRec_50";
 		next;
 		if (arena_point > 29950) {
@@ -899,7 +900,7 @@ prt_are_in,25,188,3	script	Staff#50-2	1_F_02,{
 			mes "Let me reward you with some arena points.";
 			mes "At the same time, since you have renewed the record you will receive an extra amount of the points this time.";
 			next;
-			set arena_point, arena_point + 50;
+			arena_point += 50;
 			mes "[Staff]";
 			mes "Let me reward you some arena points.";
 			mes "If you wish to check the amount of arena points you have, please go talk to ^3131FFVendigos^000000 at the arena entrance.";
@@ -1007,6 +1008,6 @@ OnEnable:
 	end;
 
 OnInit:
-	if(!$top_50min && !$top_50sec) set $top_50min,5;
+	if(!$top_50min && !$top_50sec) $top_50min = 5;
 	end;
 }

@@ -184,10 +184,10 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 			else if (oversea_event9 == 197) playbgm "94.mp3"; // Theme of Rachel
 			else {
 				switch(rand(1,4)) {
-					case 1: playbgm "13.mp3"; set oversea_event2,520; break;
-					case 2: playbgm "59.mp3"; set oversea_event3,270; break;
-					case 3: playbgm "70.mp3"; set oversea_event6,245; break;
-					case 4: playbgm "94.mp3"; set oversea_event9,197; break;
+					case 1: playbgm "13.mp3"; oversea_event2 = 520; break;
+					case 2: playbgm "59.mp3"; oversea_event3 = 270; break;
+					case 3: playbgm "70.mp3"; oversea_event6 = 245; break;
+					case 4: playbgm "94.mp3"; oversea_event9 = 197; break;
 				}
 			}
 		}
@@ -234,28 +234,28 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 		getitem 5852,1; //Easter_Egg_Shell
 		.@BaseExp = (BaseLevel * (BaseLevel / 4)) * ((BaseLevel / 29) + (BaseLevel / 6)) + (5 * BaseLevel / 2);
 		if (ADVJOB == 0) {
-			if (BaseLevel < 40) set .@nBaseExp, .@BaseExp;
-			else if (BaseLevel < 50) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel);
-			else if (BaseLevel < 60) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 20));
-			else if (BaseLevel < 70) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 10));
-			else if (BaseLevel < 80) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 5));
-			else if (BaseLevel < 90) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 3));
-			else if (BaseLevel < 99) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 2));
-			else set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 2) * 2);
+			if (BaseLevel < 40) .@nBaseExp = .@BaseExp;
+			else if (BaseLevel < 50) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel);
+			else if (BaseLevel < 60) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 20));
+			else if (BaseLevel < 70) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 10));
+			else if (BaseLevel < 80) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 5));
+			else if (BaseLevel < 90) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 3));
+			else if (BaseLevel < 99) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 2));
+			else .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 2) * 2);
 
-			set .@nJobExp, (JobLevel * (JobLevel - 3) * (JobLevel / 25 + 1) + (16 - (JobLevel * 2))) * 2;
+			.@nJobExp = (JobLevel * (JobLevel - 3) * (JobLevel / 25 + 1) + (16 - (JobLevel * 2))) * 2;
 		} else {
-			if (BaseLevel < 30) set .@nBaseExp, .@BaseExp;
-			else if (BaseLevel < 40) set .@nBaseExp, .@BaseExp + (BaseLevel * 10);
-			else if (BaseLevel < 50) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * 2);
-			else if (BaseLevel < 60) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 10));
-			else if (BaseLevel < 70) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 5));
-			else if (BaseLevel < 80) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 3));
-			else if (BaseLevel < 90) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 2));
-			else if (BaseLevel < 98) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * BaseLevel);
-			else set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * BaseLevel * 2);
+			if (BaseLevel < 30) .@nBaseExp = .@BaseExp;
+			else if (BaseLevel < 40) .@nBaseExp = .@BaseExp + (BaseLevel * 10);
+			else if (BaseLevel < 50) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * 2);
+			else if (BaseLevel < 60) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 10));
+			else if (BaseLevel < 70) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 5));
+			else if (BaseLevel < 80) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 3));
+			else if (BaseLevel < 90) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 2));
+			else if (BaseLevel < 98) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * BaseLevel);
+			else .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * BaseLevel * 2);
 
-			set .@nJobExp, (JobLevel * JobLevel * (JobLevel / 5 + 2) + (20 - JobLevel)) * 3;
+			.@nJobExp = (JobLevel * JobLevel * (JobLevel / 5 + 2) + (20 - JobLevel)) * 3;
 		}
 		getexp .@nBaseExp,.@nJobExp;
 		mes "[Rina]";
@@ -348,13 +348,13 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 		case 1:
 			if (ADVJOB == 0) {
 				if (BaseLevel < 70)
-					set .@nCharge,400000;
+					.@nCharge = 400000;
 				else if (BaseLevel < 90)
-					set .@nCharge,450000;
+					.@nCharge = 450000;
 				else
-					set .@nCharge,480000;
+					.@nCharge = 480000;
 			} else
-				set .@nCharge,500000;
+				.@nCharge = 500000;
 			if (countitem(574) < 1 || countitem(1001) < 20 || Zeny < .@nCharge) {
 				mes "[Rina's Little Friend]";
 				mes "Hmm.";
@@ -381,7 +381,7 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 			delitem 574,1; //Egg
 			delitem 1001,20; //Sparkling_Dust
 			Zeny -= .@nCharge;
-			set .@nPercentage, rand(1,100);
+			.@nPercentage = rand(1,100);
 			if (.@nPercentage <= 41) {
 				mes "[Rina's Little Friend]";
 				mes "Life is given to the egg.";

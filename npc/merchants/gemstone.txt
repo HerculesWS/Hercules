@@ -47,7 +47,7 @@ S_TradeGems:
 		close;
 	}
 	else {
-		set .@gems,countitem(getarg(0))/2;
+		.@gems = countitem(getarg(0))/2;
 		mes "[Jade]";
 		mes "I believe I can create";
 		mes "a total of " + .@gems + " " + getitemname(getarg(1)) + "s";

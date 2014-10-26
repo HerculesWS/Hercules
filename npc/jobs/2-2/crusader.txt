@@ -78,7 +78,7 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 		next;
 		delitem 1004, 1;
 		delitem 1009, 1;
-		set CRUS_Q,4;
+		CRUS_Q = 4;
 		mes "[Michael Halig]";
 		mes "Moorenak and others like him will test the limits of your capabilities and help you find your path. Return to me after you have completed their tests...";
 		close;
@@ -149,7 +149,7 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 					next;
 					delitem 1004, 1;
 					delitem 1009, 1;
-					set CRUS_Q,4;
+					CRUS_Q = 4;
 					setquest 3009;
 					mes "[Michael Halig]";
 					mes "Moorenak and others like him will test the limits of your capabilities and help you find your path. Return to me after you have completed their tests...";
@@ -163,9 +163,9 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 				mes "This is my test for you. Bring me the following items and prove your determination to me.";
 				next;
 				mes "[Michael Halig]";
-				set .@cru_m1,rand(1,3);
+				.@cru_m1 = rand(1,3);
 				if(.@cru_m1 == 1) {
-					set CRUS_Q, 1;
+					CRUS_Q = 1;
 					setquest 3006;
 					mes "10 ^3355FF"+getitemname(957)+"^000000";
 					mes "10 ^3355FF"+getitemname(959)+"^000000";
@@ -174,7 +174,7 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 					next;
 				}
 				else if(.@cru_m1 == 2) {
-					set CRUS_Q, 2;
+					CRUS_Q = 2;
 					setquest 3007;
 					mes "10 ^3355FF"+getitemname(932)+"^000000";
 					mes "10 ^3355FF"+getitemname(1043)+"^000000";
@@ -183,7 +183,7 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 					next;
 				}
 				else {
-					set CRUS_Q, 3;
+					CRUS_Q = 3;
 					setquest 3008;
 					mes "10 ^3355FF"+getitemname(958)+"^000000";
 					mes "10 ^3355FF"+getitemname(930)+"^000000";
@@ -214,22 +214,22 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 		next;
 		switch(CRUS_Q) {
 		case 1:
-			set .@item1, 957;
-			set .@item2, 959;
-			set .@item3, 1099;
-			set .@item4, 901;
+			.@item1 = 957;
+			.@item2 = 959;
+			.@item3 = 1099;
+			.@item4 = 901;
 			break;
 		case 2:
-			set .@item1, 932;
-			set .@item2, 1043;
-			set .@item3, 1098;
-			set .@item4, 1094;
+			.@item1 = 932;
+			.@item2 = 1043;
+			.@item3 = 1098;
+			.@item4 = 1094;
 			break;
 		case 3:
-			set .@item1, 958;
-			set .@item2, 930;
-			set .@item3, 1041;
-			set .@item4, 1062;
+			.@item1 = 958;
+			.@item2 = 930;
+			.@item3 = 1041;
+			.@item4 = 1062;
 			break;
 		}
 		if (countitem(.@item1) > 9 && countitem(.@item2) > 9 && countitem(.@item3) > 9 && countitem(.@item4) > 9) {
@@ -244,7 +244,7 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 			delitem .@item2, 10;
 			delitem .@item3, 10;
 			delitem .@item4, 10;
-			set CRUS_Q, 4;
+			CRUS_Q = 4;
 			if (questprogress(3006)) {
 				changequest 3006,3009;
 			}
@@ -281,7 +281,7 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 		mes "[Michael Halig]";
 		mes "Together, let us ready ourselves and be victorious over evil and tyranny!";
 		next;
-		set .@Joblevel,JobLevel;
+		.@Joblevel = JobLevel;
 		completequest 3015;
 		callfunc "Job_Change",Job_Crusader;
 		callfunc "F_ClearJobVar";		//clears all job variables for the current player
@@ -377,7 +377,7 @@ prt_castle,164,32,1	script	Man in Anguish	4_M_JOB_KNIGHT1,{
 			mes "But...";
 			mes "You must keep one thing in mind. Under no condition are you allowed to kill the monsters.";
 			next;
-			set CRUS_Q,5;
+			CRUS_Q = 5;
 			changequest 3009,3010;
 			mes "[Murnak Mijoul]";
 			mes "Well then...";
@@ -419,7 +419,7 @@ prt_castle,164,32,1	script	Man in Anguish	4_M_JOB_KNIGHT1,{
 			mes "[Murnak Mijoul]";
 			mes "No matter what you do, do not kill any of the monsters. This time, think carefully before you draw your sword.";
 			next;
-			set CRUS_Q,5;
+			CRUS_Q = 5;
 			mes "[Murnak Mijoul]";
 			mes "Well then...";
 			mes "Good luck.";
@@ -526,191 +526,191 @@ prt_church,95,127,3	script	Crusader	4_F_CRU,{
 			mes "choose the correct answer.";
 			next;
 		}
-		set .@cru_m,rand(1,3);
+		.@cru_m = rand(1,3);
 		if (.@cru_m == 1) {
 			mes "[Gabriel Valentine]";
 			mes "1. Which attribute is the most effective in atttacking the Undead?";
 			next;
 			if (select("Neutral:Earth:Undead:Holy") == 4)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "2. If the monster is a Level 2 Undead, how much more damage does a Holy attack do compared to Fire?";
 			next;
 			if (select("25 %:50 %:75 %:100 %") == 1)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "3. What item can you not get from an Evil Druid?";
 			next;
 			if (select("Monk Hat:Yggdrasil leaf:White Herb:Amulet ") == 1)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "4. Which Undead monster";
 			mes "has the highest HP?";
 			next;
 			if (select("Ghoul:Skeleton Prisoner:Wraith:Zombie Prisoner") == 4)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "5. Which of the following monsters is a different size than the others?";
 			next;
 			if (select("Wraith:Khalitzburg:Drake:Evil Druid") == 3)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "6. Which card grants you tolerance to Undead property attacks?";
 			next;
 			if (select("Orc Skeleton Card:Orc Zombie Card:Ghoul Card:Skel Worker Card") == 2)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "7. What was the relationship between Munak and Bongun before they passed away?";
 			next;
 			if (select("Big Brother and Little Sister:Childhood friends in the same village:Stepbrother and sister:Complete strangers") == 2)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "8. Which of the following monsters is not aggressive?";
 			next;
 			if (select("Soldier Skeleton:Orc Skeleton:Skeleton:Skel Worker") == 3)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "9. What is the name of the shield in which a Munak Card has been inserted?";
 			next;
 			if (select("Atomic Shield:Amulet Shield:Hypnotic Shield:Homeroth Shield") == 2)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "10. Which of the following monsters does not drop Memento?";
 			next;
 			if (select("Munak:Ghoul:Mummy:Soldier Skeleton") == 1)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 		}
 		else if (.@cru_m == 2) {
 			mes "[Gabriel Valentine]";
 			mes "1. Which of the following monsters is a different attribute than the others?";
 			next;
 			if (select("Carat:Wind Ghost:Isis:Wanderer") == 3)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "2. Which sword is effective in attacking Demon monsters?";
 			next;
 			if (select("Decussate Tsurugi:Hollowed Tsurugi:Damned Tsurugi:Drowsy Tsurugi") == 1)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "3. Which item is NOT dropped by Dokebi?";
 			next;
 			if (select("Rough Elunium:Golden Hammer:Sword Mace:Mighty Staff") == 2)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "4. Which Demon monster has the most HP?";
 			next;
 			if (select("Giearth:Magnolia:Dokebi:Marionette") == 4)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "5. Which Demon monster is a different size than the others?";
 			next;
 			if (select("Ghostring:Whisper:Deviruchi:Baphomet Junior") == 1)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "6. Which shield reduces damage inflicted by Demon monsters?";
 			next;
 			if (select("Satanic Shield:Shield from Hell:Amulet Shield:Excellent Shield") == 2)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "7. Which attribute is the most effective on the Wind Ghost?";
 			next;
 			if (select("Water:Earth:Fire:Wind") == 2)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "8. Which monster is different from the other Demon monsters?";
 			next;
 			if (select("Sohee:Isis:Dokebi:Whisper") == 4)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "9. What effect does the Marionette Card have?";
 			next;
 			if (select("Increase defense against Shadow attacks by 30 %:Increase defense against poison attacks by 30 %:Increase defense against Ghost attacks by 30 %:Increase defense against Neutral attacks by 30 %") == 3)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "10. Which of the following is an effective way to react when encountering a demon monster?";
 			next;
 			if (select("Scream, 'Evil one, go away!':Offer your soul and get a deal.:Put Holy Water on a weapon and attack.:Put on a Deviruchi hat.") == 3)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 		}
 		else {
 			mes "[Gabriel Valentine]";
 			mes "1. What level of 'Divine Protection' do you need to learn 'Demon Bane?'";
 			next;
 			if (select("Level 1:Level 2:Level 3:Level 4") == 3)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "2. If your INT is 30, including INT bonuses from quipment, at level 55, how much HP does Level 5 Heal recover?";
 			next;
 			if (select("396:440:484:528") == 2)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "3. With Level 7 Divine Protection, by how much is your defense against the Undead increased?";
 			next;
 			if (select("21:22:23:24") == 1)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "4. Which of the following spears can attack Nightmare, which is endowed with the Ghost attribute?";
 			next;
 			if (select("Lance:Bill Guisarme:Cresent scythe:Zephyrus") == 4)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "5. What level of 'Heal' do you need to learn 'Cure?'";
 			next;
 			if (select("Level 1:Level 2:Level 3:Level 4") == 2)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "6. What is the attack speed when Level 3 Cavalier Mastery is learned?";
 			next;
 			if (select("70 % of normal speed:80 % of normal speed:90 % of normal speed:100 % of normal speed") == 2)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "7. Which of the following is not correct of the Demon Bane skill?";
 			next;
 			if (select("Increase attack on Undead:Only Acolytes can learn the skill:When mastered, + 30 increase:Passive Skill") == 2)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "8. How much SP does Level 7 Heal use?";
 			next;
 			if (select("30:31:33:35") == 2)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "9. What status cannot be";
 			mes "cured with the Cure skill?";
 			next;
 			if (select("Curse:Silence:Chaos:Blind") == 1)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "10. What best describes a Crusader?";
 			next;
 			if (select("One preparing for matrimony.:One preparing for the Holy War.:One preparing consummation.:One preparing potions.") == 2)
-				set .@cru_t,.@cru_t+10;
+				.@cru_t += 10;
 
 		}
 		mes "[Gabriel Valentine]";
@@ -722,7 +722,7 @@ prt_church,95,127,3	script	Crusader	4_F_CRU,{
 		mes " " + strcharinfo(0) + "'s score";
 		mes "is " + .@cru_t + " points...";
 		if(.@cru_t == 100) {
-			set CRUS_Q, 8;
+			CRUS_Q = 8;
 			changequest 3011,3013;
 			mes "Superb! Now, it's time for";
 			mes "you to take the next test.";
@@ -735,7 +735,7 @@ prt_church,95,127,3	script	Crusader	4_F_CRU,{
 			close;
 		}
 		else if(.@cru_t == 90) {
-			set CRUS_Q, 8;
+			CRUS_Q = 8;
 			changequest 3011,3013;
 			mes "Well done~ Now, it's time for";
 			mes "you to take the next test.";
@@ -748,7 +748,7 @@ prt_church,95,127,3	script	Crusader	4_F_CRU,{
 			close;
 		}
 		else if (.@cru_t == 80 && CRUS_Q == 7) {
-			set CRUS_Q,8;
+			CRUS_Q = 8;
 			changequest 3011,3013;
 			mes "Seems like you prepared a lot so I'll let you pass this time.";
 			mes "Hurry now and go take the next test.";
@@ -758,7 +758,7 @@ prt_church,95,127,3	script	Crusader	4_F_CRU,{
 			mes "I will inform him to prepare the next test.";
 			close;
 		}
-		set CRUS_Q,7;
+		CRUS_Q = 7;
 		if (questprogress(3011)) {
 			changequest 3011,3012;
 		}
@@ -1204,7 +1204,7 @@ OnDead:
 
 job_cru,98,105,4	script	 Summoner#cr5	WARPNPC,3,3,{
 OnTouch:
-	set CRUS_Q,6;
+	CRUS_Q = 6;
 	changequest 3010,3011;
 	warp "prt_castle",164,28;
 	end;
@@ -1271,7 +1271,7 @@ OnInit:
 	end;
 
 OnStart:
-	set .MyMonsterCount,0;
+	.MyMonsterCount = 0;
 	enablenpc "Monster Summon#cr0";
 	donpcevent "Monster Summon#cr1::OnStart";
 	donpcevent "Monster Summon#cr2::OnStart";
@@ -1301,9 +1301,9 @@ OnMonster3:
 	end;
 
 OnDead:
-	set .MyMonsterCount,.MyMonsterCount+1;
+	++.MyMonsterCount;
 	if (.MyMonsterCount >= 10) {
-		set CRUS_Q,10;
+		CRUS_Q = 10;
 		changequest 3014,3015;
 	}
 	end;

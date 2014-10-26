@@ -126,7 +126,7 @@ yuno_in02,38,61,5	script	Dean of the Academy#sa	2_M_SAGE_OLD,{
 	else if (SAGE_Q == 15) {
 		if (countitem(1550) > 0) {
 			if (JobLevel < 40) {
-				set SAGE_Q,0;
+				SAGE_Q = 0;
 				mes "You don't seem to be qualified yet.";
 				mes "Remember, you must reach at least job level 40 to become a Sage.";
 				close2;
@@ -329,7 +329,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 					mes "[Metheus Sylphe]";
 					mes "Yes, everything's ready.";
 					mes "Next, you will take an entrance test.";
-					set SAGE_Q,4;
+					SAGE_Q = 4;
 					setquest 2041;
 					next;
 					mes "[Metheus Sylphe]";
@@ -347,7 +347,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 						mes "[Metheus Sylphe]";
 						mes "Thank you, your application has been accepted.";
 						mes "Next, you will take an entrance test.";
-						set SAGE_Q,4;
+						SAGE_Q = 4;
 						setquest 2041;
 						next;
 						mes "[Metheus Sylphe]";
@@ -366,7 +366,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 					mes "[Metheus Sylphe]";
 					mes "Thank you, your application has been accepted.";
 					mes "Next, you will take the entrance test.";
-					set SAGE_Q,4;
+					SAGE_Q = 4;
 					setquest 2041;
 					next;
 					mes "[Metheus Sylphe]";
@@ -405,7 +405,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 					mes "[Metheus Sylphe]";
 					mes "Yes, everything's ready.";
 					mes "Next, you will take the entrance test.";
-					set SAGE_Q,4;
+					SAGE_Q = 4;
 					setquest 2041;
 					next;
 					mes "[Metheus Sylphe]";
@@ -438,7 +438,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 						next;
 						switch(rand(1,3)) {
 						case 1:
-							set SAGE_Q,1;
+							SAGE_Q = 1;
 							setquest 2043;
 							mes "[Metheus Sylphe]";
 							mes "Please gather the following items.";
@@ -450,7 +450,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 							mes "If you bring those items, your tuition will be 30,000 zeny, in lieu of the original 70,000 zeny fee.";
 							break;
 						case 2:
-							set SAGE_Q,2;
+							SAGE_Q = 2;
 							setquest 2044;
 							mes "[Metheus Sylphe]";
 							mes "Please gather the following items.";
@@ -462,7 +462,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 							mes "If you bring the aforementioned items, the tuition fee will be 30,000 zeny, rather than the original 70,000 zeny fee.";
 							break;
 						case 3:
-							set SAGE_Q,3;
+							SAGE_Q = 3;
 							setquest 2045;
 							mes "[Metheus Sylphe]";
 							mes "Please gather the following items.";
@@ -511,14 +511,14 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 			delitem 1007,1; //Penetration
 			mes "[Metheus Sylphe]";
 			mes "Well done. Let me proceed with your application request.";
-			set SAGE_Q,4;
+			SAGE_Q = 4;
 			next;
 		}
 		else if (Zeny > 69999) {
 			Zeny -= 70000;
 			mes "[Metheus Sylphe]";
 			mes "Well done. Let me proceed with your application request.";
-			set SAGE_Q,4;
+			SAGE_Q = 4;
 			next;
 		}
 		else {
@@ -539,17 +539,17 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 				setarray .@count[0], 50,50,50,50;
 				break;
 			}
-			set .@size, (getarraysize(.@item)-1);
-			for( set .@i,0 ; .@i < .@size && countitem(.@item[.@i]) >= .@count[.@i] ; set .@i,.@i+1 );
+			.@size = (getarraysize(.@item)-1);
+			for (.@i = 0 ; .@i < .@size && countitem(.@item[.@i]) >= .@count[.@i] ; ++.@i);
 			if(.@i == .@size) {
 				if (Zeny > 29999) {
-					for (set .@i, 0; .@i < .@size ; set .@i, .@i+1)
+					for (.@i = 0; .@i < .@size ; ++.@i)
 						delitem .@item[.@i], .@count[.@i];
 					Zeny -= 30000;
 					mes "[Metheus Sylphe]";
 					mes "Well done. Let me proceed with your application request.";
-					set .@SAGE_Q_T,SAGE_Q;
-					set SAGE_Q,4;
+					.@SAGE_Q_T = SAGE_Q;
+					SAGE_Q = 4;
 					next;
 				}
 				mes "[Metheus Sylphe]";
@@ -594,7 +594,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 		mes "[Metheus Sylphe]";
 		mes "Ah yes, everything is in readiness.";
 		mes "Next, you will take an entrance test.";
-		set SAGE_Q,4;
+		SAGE_Q = 4;
 		if (questprogress(2043)) {
 			changequest 2043,2041;
 		}
@@ -714,247 +714,247 @@ L_AskQuestions:
 			mes "1. Choose an item that the Gift merchant in Prontera does not sell.";
 			next;
 			if (select("China:Red Frame:Bouquet:Glass Bead") == 3)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "2. Choose a city where you cannot purchase a Stiletto.";
 			next;
 			if (select("Prontera:Morroc:Geffen:Lutie") == 1)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "3. Choose the closest city to Turtle Island.";
 			next;
 			if (select("Al De Baran:Alberta:Comodo:Izlude") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "4. Choose the monster that is a different type than the others.";
 			next;
 			if (select("Raggler:Pest:Frilldora:Aster") == 4)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "5. Choose the monster that has a different attribute than the others.";
 			next;
 			if (select("Mantis:Metaller:Rocker:Horn") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "6. Choose the monster that is different sized than the others.";
 			next;
 			if (select("Raydric:Raydric Archer:Wanderer:Dark Frame") == 1)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "7. Choose the monster which doesn't drop 'Alcohol'.";
 			next;
 			if (select("Horong:Plankton:Poison Spore:Toad") == 3)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "8. Choose the NPC that is irrelevant to the Knight job change quest.";
 			next;
 			if (select("Sir Siracuse:Thomas Servantes:Sir Windsor:Lady Amy") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "9. Choose the NPC that is not a citizen of Prontera.";
 			next;
 			if (select("Tono:Pina:YuPi:Hollgrehenn") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "10. Choose the right name for the Kafra lady who wears glasses.";
 			next;
 			if (select("Pavianne:Roxie:Leilah:Curly Sue") == 3)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "11. How much SP is spent to use lvl 7 Thunderstorm?";
 			next;
 			if (select("49:59:69:74") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "12. Choose the right amount of damage reduction and SP consumption of the Energy Coat skill when the caster's remaining SP is 50%.";
 			next;
 			if (select("Damage -24% SP1.5%:Damage -24% SP2%:Damage -18% SP1.5%:Damage -18% SP2%") == 4)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "13. Choose the property that is irrelevant to 'Bolt' type skills for the Mage class.";
 			next;
 			if (select("Water:Earth:Fire:Wind") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "14. Choose the right chance and attack strength for lvl 7 Double Attack, the Thief skill.";
 			next;
 			if (select("35% / 120%:35% / 140%:40% / 120%:40% / 140%") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "15. Choose the skill that is irrelevant to learning Magnus Exorcismus, the Priest skill.";
 			next;
 			if (select("Divine Protection:Heal:Ruwach:Aqua Benedicta") == 1)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "16. Choose the correct defense and ability of the Bunny Band.";
 			next;
 			if (select("1 / LUK +2:1 / LUK +5:2 / LUK +2:2 / LUK +5") == 3)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "17. Choose the class that cannot equip Padded Armor.";
 			next;
 			if (select("Swordman:Merchant:Thief:Archer") == 4)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "18. Choose the item that cures all abnormal status and restores full HP and SP at the same time.";
 			next;
 			if (select("Royal Jelly:Yggdrasil Seed:Yggdrasilberry:Mastella Fruit") == 3)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "19. Who rules the Rune-Midgarts kingdom right now?";
 			next;
 			if (select("Tristun the 3rd:Tristram the 3rd:Tristar the 3rd:Trast the 3rd") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "20. Choose the god of Crusaders.";
 			next;
 			if (select("Odin:Loki:Thor:Venadin") == 1)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			break;
 		case 2:
 			mes "1. Choose the jewel that the Morroc Jewel Merchant does not sell.";
 			next;
 			if (select("Topaz:Garnet:Diamond:Sapphire") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "2. Choose the city where users cannot purchase Monster's Feed from an NPC.";
 			next;
 			if (select("Prontera:Morroc:Al De Baran:Alberta") == 3)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "3. Choose the closest city to the Maze.";
 			next;
 			if (select("Prontera:Morroc:Geffen:Payon") == 1)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "4. Choose the monster that is a different type than the others.";
 			next;
 			if (select("Muka:Drops:Plankton:Penomena") == 4)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "5. Choose the monster with the different attribute.";
 			next;
 			if (select("Dokebi:Isis:Giearth:Deviruchi") == 3)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "6. Choose the monster that is different in size.";
 			next;
 			if (select("Thiefbug (Aggressive):Horn:Metaller:Argos") == 4)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "7. Choose the monster which does not drop 'Yggdrasil Leaf'.";
 			next;
 			if (select("Marduk:Baphomet Jr.:Angeling:Wanderer") == 1)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "8. Choose the NPC that is irrelevant to the Priest job change quest.";
 			next;
 			if (select("Paul:Sir Windsor:Peter S. Alberto:Cecilia") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "9. Choose the NPC that is not a citizen of Morroc.";
 			next;
 			if (select("Syvia:Akira:Antonio:Dmitrii") == 3)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "10. Choose the Kafra lady who has gorgeous blue hair.";
 			next;
 			if (select("Pavianne:Roxie:Leilah:Curly Sue") == 1)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "11. Choose the skill that is irrelevant to learning Fire Wall, the Mage skill.";
 			next;
 			if (select("lvl 4 Fire Bolt:lvl 4 Napalm Beat:lvl 5 Fire Ball:lvl 1 Sight") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "12. How much SP can be restored when learning SP recovery at lvl 6 (without being affected by INT)?";
 			next;
 			if (select("14:16:18:21") == 3)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "13. How many INT points does a Mage receive as a bonus at job lvl 33?";
 			next;
 			if (select("7:6:5:4") == 4)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "14. Choose the correct SP consumption and the skill duration for Improve Concentration lvl 5 (Archer skill).";
 			next;
 			if (select("45 / 80 sec:50 / 80 sec:45 / 90 sec:50 / 90 sec") == 1)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "15. Choose the skill that is irrelevant to learning Maximize Power, the Blacksmith skill.";
 			next;
 			if (select("Hilt Binding:Skin Tempering:Hammer Fall:Weapon Perfection") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "16. What is the correct defense rate and ability of Cute Ribbon?";
 			next;
 			if (select("0 / SP +20:0 / SP +30:1 / SP +20:1 / SP +30") == 3)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "17. Choose the class that cannot equip Saint Robe.";
 			next;
 			if (select("Swordman:Merchant:Thief:Acolyte") == 3)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "18. Choose the abnormal status that cannot be cured by Green Potion.";
 			next;
 			if (select("Silence:Chaos:Blind:Curse") == 4)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "19. Choose the correct name for the ancient kingdom that disappeared somewhere in Geffen.";
 			next;
 			if (select("Geffayon:Geffenia:Gefenn:Jaffen") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "20. Choose the correct name for the tree that has become the root of this world.";
 			next;
 			if (select("Yggdrasil:Iggdrassil:Mastella:Dead Branch") == 1)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			break;
 		case 3:
 			mes "1. Choose the item that the Magical Tool merchant in Geffen does not sell.";
 			next;
 			if (select("Mantle:Wand:Circlet:Silver Robe") == 1)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "2. Choose the city where users cannot purchase Blade from an NPC.";
 			next;
 			if (select("Prontera:Izlude:Al De Baran:Payon") == 3)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "3. Choose the closest city to Glast Heim.";
 			next;
 			if (select("Prontera:Geffen:Morroc:Payon") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "4. Choose the monster that is a different type than the others.";
 			next;
 			if (select("Aster:Marc:Marse:Marin") == 4)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "5. Choose the monster that has a different attribute.";
 			next;
 			if (select("Baby Desert Wolf:Smokie:Picky:Choco") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "6. Choose the monster that is different sized.";
 			next;
 			if (select("Drake:Wraith:Evil Druid:Khalitzburg") == 1)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "7. Choose the monster that does not drop 'Phracon'.";
 			next;
 			if (select("Pupa:Peco Peco Egg:Savage Bebe:Baby Desert Wolf") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "8. Choose the NPC that is irrelevant to the Blacksmith job change quest.";
 			next;
 			if (select("Altiregen:Geschupenschte:Barcadi:Baisulist") == 3)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "9. Choose the NPC that is not a citizen of Al De Baran.";
 			next;
 			if (select("RS125:GOD-POING:Stromme:Chemirre") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "10. Choose the Kafra lady who is the youngest among the staff.";
 			next;
 			if (select("Pavianne:Roxie:Leilah:Curly Sue") == 4)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "11. Choose the correct SP consumption and the number of evasions when using Safety Wall lvl 6.";
 			next;
 			if (select("SP 40, 6 times:SP 35, 6 times:SP 40, 7 times:SP 35, 7 times") == 3)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "12. Choose the correct amount of magic attack for Napalm Beat lvl 6.";
 			next;
 			if (select("MATK * 1.2:MATK * 1.3:MATK * 1.4:MATK * 1.5") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "13. Choose the catalyst stone for Mage Solution no. 4 that is used for the Mage job change quest.";
 			next;
 			if (select("Blue Gemstone:Red Gemstone:Yellow Gemstone:1 carat Diamond") == 4)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "14. Choose the correct attack strength and SP consumption for Bash lvl 6, the Swordman skill.";
 			next;
 			if (select("250% / 8:280% / 8:280% / 15:310% / 15") == 3)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "15. Choose the skill that is irrelevant to learning Claymore Trap, the Hunter skill.";
 			next;
 			if (select("Remove Trap:Land Mine:Ankle Snare:Flasher") == 1)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "16. Choose the correct defense and ability of Wedding Veil.";
 			next;
 			if (select("0 / MDEF +3:0 / MDEF +5:1 / MDEF +3:1 / MDEF +5") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "17. Choose the class that cannot equip Coat.";
 			next;
 			if (select("Swordman:Merchant:Thief:Novice") == 4)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "18. Choose the item that is not an ingredient for Blue Dyestuffs.";
 			next;
 			if (select("Alcohol:Detrimindexta:Karvodailnirol:Blue Herb") == 3)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "19. When the world was created by the god Odin, what did he use for the material?";
 			next;
 			if (select("The heart of Ymir:The nail of Ymir:The tooth of Ymir:The memento of Ymir") == 1)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 			mes "20. Choose the metal that has rumored to bring fortune and fame to a person with the destiny.";
 			next;
 			if (select("Empelium Gold:Emperium:Emperor:Phracon") == 2)
-				set .@sage_t,.@sage_t+5;
+				.@sage_t += 5;
 		}
 		mes "[Claytos Verdo]";
 		if (SAGE_Q == 4) {
@@ -977,7 +977,7 @@ L_AskQuestions:
 				mes "Excellent! You seem fully qualified to become a Sage!";
 			else
 				mes "Excellent! You must have studed really hard for this test!";
-			set SAGE_Q,6;
+			SAGE_Q = 6;
 			changequest 2041,2046;
 			next;
 			mes "[Claytos Verdo]";
@@ -985,7 +985,7 @@ L_AskQuestions:
 			mes "Go visit Professor Hermes for the practical examination.";
 		}
 		else if (.@sage_t >= 80) {
-			set SAGE_Q,6;
+			SAGE_Q = 6;
 			changequest 2041,2046;
 			mes "Yeah, not bad. I assume that you will at least understand what you're going to learn in class.";
 			next;
@@ -995,7 +995,7 @@ L_AskQuestions:
 		}
 		else {
 			if (SAGE_Q == 4) {
-				set SAGE_Q,5;
+				SAGE_Q = 5;
 				mes "Oh well...what a shame: You failed.";
 				next;
 				mes "[Claytos Verdo]";
@@ -1020,11 +1020,11 @@ L_AskQuestions:
 		mes "You will take the written test under the same conditions as the test you took before. I'll give you 20 questions.";
 		mes "Each correct answer will give you 5 points. When your score reaches 80 points, you pass the test.";
 		next;
-		set sage_m2,rand(1,3);
+		sage_m2 = rand(1,3);
 		mes "[Claytos Verdo]";
 		mes "Okay, there's no need to wait.";
 		mes "Answer immediately, or I'll fail you again.";
-		set SAGE_Q,5;
+		SAGE_Q = 5;
 		goto L_AskQuestions;
 		end;
 	}
@@ -1127,7 +1127,7 @@ yuno_in03,169,180,3	script	Practical Examination P	4_M_SAGE_C,{
 		mes "How about it? Are you ready to take this test?";
 		next;
 		if (select("Yes, I am.:Sorry, give me some time.") == 1) {
-			set SAGE_Q,7;
+			SAGE_Q = 7;
 			mes "[Hermes Tris]";
 			mes "Good, let's start immediately.";
 			mes "Do your best and come back safely!";
@@ -1135,7 +1135,7 @@ yuno_in03,169,180,3	script	Practical Examination P	4_M_SAGE_C,{
 			warp "job_sage",50,154;
 			end;
 		}
-		set SAGE_Q,7;
+		SAGE_Q = 7;
 		mes "[Hermes Tris]";
 		mes "Yes, you don't need to hurry... take your time and come back.";
 		close;
@@ -1173,7 +1173,7 @@ yuno_in03,169,180,3	script	Practical Examination P	4_M_SAGE_C,{
 		next;
 		switch(rand(1,3)) {
 		case 1:
-			set SAGE_Q,9;
+			SAGE_Q = 9;
 			changequest 2046,2047;
 			mes "[Hermes Tris]";
 			mes "Now, you will study Yggdrasil.";
@@ -1187,7 +1187,7 @@ yuno_in03,169,180,3	script	Practical Examination P	4_M_SAGE_C,{
 			mes "I wish you luck.";
 			close;
 		case 2:
-			set SAGE_Q,11;
+			SAGE_Q = 11;
 			changequest 2046,2048;
 			mes "[Hermes Tris]";
 			mes "Now, you will study monsters.";
@@ -1201,7 +1201,7 @@ yuno_in03,169,180,3	script	Practical Examination P	4_M_SAGE_C,{
 			mes "I wish you luck.";
 			close;
 		case 3:
-			set SAGE_Q,13;
+			SAGE_Q = 13;
 			changequest 2046,2049;
 			mes "[Hermes Tris]";
 			mes "Now, you will study magic skills that have certain properties.";
@@ -1346,7 +1346,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 			mes "Anything is fine as long as it's related to the Yggdrasil tree.";
 			mes "Seeds or fruits of the tree would be good. I know it's difficult to find, but please try.";
 			next;
-			set SAGE_Q2,1;
+			SAGE_Q2 = 1;
 			changequest 2047,2050;
 			mes "[Saphien Layless]";
 			mes "When we have the reserve items, we will start the class.";
@@ -1471,8 +1471,8 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 			mes "^3355FF1 Squid Ink^000000 which will be used as ink,";
 			mes "^3355FF1 Empty Bottle^000000 which will be used for holding the squid ink.";
 			next;
-			set SAGE_Q2,0;
-			set SAGE_Q,10;
+			SAGE_Q2 = 0;
+			SAGE_Q = 10;
 			changequest 2050,2051;
 			mes "[Saphien Layless]";
 			mes "I will help you to write your thesis when you're ready with all those items.";
@@ -1500,36 +1500,36 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 			mes "The ocean is coiled up by";
 			switch(select("A giant ash tree.:A giant snake Yormungandr.:A giant turtle and elephants.:A giant dragon.")) {
 			case 1:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "A giant ash tree.";
 				break;
 			case 2:
 				mes "A giant snake Yormungandr.";
 				break;
 			case 3:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "A giant turtle and elephants.";
 				break;
 			case 4:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "A giant dragon.";
 				break;
 			}
 			mes "The continent consists of three places such as,";
 			switch(select("Mt.Mjolnir, where spiders live,:Uranos, where titans live,:Utgard, where titans live,:Lutie, the winter land,")) {
 			case 1:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "Mt.Mjolnir where spiders live,";
 				break;
 			case 2:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "Uranos where titans live,";
 				break;
 			case 3:
 				mes "Utgard where titans live,";
 				break;
 			case 4:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "Lutie, the winter land,";
 				break;
 			}
@@ -1538,32 +1538,32 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 				mes "Midgard, where humans live in,";
 				break;
 			case 2:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "Rune-Midgarts, where humans live,";
 				break;
 			case 3:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "Tritonia, where mermaids live,";
 				break;
 			case 4:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "Morroc, the desert city,";
 				break;
 			}
 			switch(select("Abguard, where gods live.:Asgard, where gods live.:Schwarzwald, where citizens live.:Prontera, the capital of Rune-Midgarts.")) {
 			case 1:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "Abguard where gods live.";
 				break;
 			case 2:
 				mes "Asgard, where gods live.";
 				break;
 			case 3:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "Schwarzwald, where citizens live.";
 				break;
 			case 4:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "Prontera, the capital of Rune-Midgarts.";
 				break;
 			}
@@ -1586,30 +1586,30 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 				mes "A giant ash tree.";
 				break;
 			case 2:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "A fabulous Mastella tree.";
 				break;
 			case 3:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "A giant willow.";
 				break;
 			case 4:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "A giant dead branch.";
 				break;
 			}
 			mes "The root of Yggdrasil is divided into 3 parts. Those parts reach to 3 places...";
 			switch(select("Schwarzwald, Jotunnheim, Niflheim.:Midgard, Jotunnheim, Naffleheim.:Asgard, Jotunnheim, Naffleheim.:Asgard, Jotunnheim, Niflheim.")) {
 			case 1:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "Schwarzwald, Jotunnheim, Niflheim.";
 				break;
 			case 2:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "Midgard, Jotunnheim, Naffleheim.";
 				break;
 			case 3:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "Asgard, Jotunnheim, Naffleheim.";
 				break;
 			case 4:
@@ -1619,18 +1619,18 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 			mes "One who has a Seed of Yggdrasil,";
 			switch(select("can be cured from all the abnormal statuses.:can restore full HP and SP at once.:can restore half of total HP and SP.:can be cured from Silence, Curse and Chaos.")) {
 			case 1:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "can be cured from all the abnormal statuses.";
 				break;
 			case 2:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "can restore full HP and SP at once.";
 				break;
 			case 3:
 				mes "can restore half of total HP and SP.";
 				break;
 			case 4:
-				set .@w_point,.@w_point+1;
+				.@w_point += 1;
 				mes "can be cured from Silence, Curse and Chaos.";
 				break;
 			}
@@ -1651,7 +1651,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 			next;
 			mes ".................................";
 			next;
-			set SAGE_Q,15;
+			SAGE_Q = 15;
 			changequest 2051,2052;
 			mes "[Saphien Layless]";
 			mes "Oh, did you finish already? Well done.";
@@ -1758,13 +1758,13 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 			mes "Yes, that's what I guessed about you. You're just book smart.";
 			mes "However, I am sure you will encounter most of the monsters mentioned in my lecture.";
 			next;
-			set sage_m4,rand(1,3);
+			sage_m4 = rand(1,3);
 			mes "[Lucius Celsus]";
 			mes "Let's get started.";
 			mes "Make sure you're ready for the practical examination during my lecture.";
 			next;
 			if (sage_m4 == 1) {
-				set SAGE_Q2,1;
+				SAGE_Q2 = 1;
 				changequest 2048,2053;
 				mes "[Lucius Celsus]";
 				mes "Go bring the following items to me.";
@@ -1773,7 +1773,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 				mes "5 ^3355FFFish Tail^000000.";
 			}
 			else if (sage_m4 == 2) {
-				set SAGE_Q2,2;
+				SAGE_Q2 = 2;
 				changequest 2048,2054;
 				mes "[Lucius Celsus]";
 				mes "Go bring the following items to me.";
@@ -1782,7 +1782,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 				mes "5 ^3355FFHeart of Mermaid^000000.";
 			}
 			else {
-				set SAGE_Q2,3;
+				SAGE_Q2 = 3;
 				changequest 2048,2054;
 				mes "[Lucius Celsus]";
 				mes "Go bring following items to me.";
@@ -1824,7 +1824,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 					mes "Most fish class monsters live underwater, so they are attributed with the water property.";
 					break;
 				case 3:
-					set sage_m4,4;
+					sage_m4 = 4;
 					mes "[Lucius Celsus]";
 					mes "...I didn't know Phens were aggressive nowadays?";
 					mes "Or do Marina and Plankton team up to start a fight with you?";
@@ -1834,7 +1834,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 					mes "They are all fishes and possess water property.";
 					break;
 				case 4:
-					set sage_m4,4;
+					sage_m4 = 4;
 					mes "[Lucius Celsus]";
 					mes "What...! What are you here for!? You are here to study about specific monsters, microcephalic moron!";
 					mes "Sigh...they are all fishes and possess water property.";
@@ -1852,7 +1852,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 					mes "Although you might want to be careful of monsters that recognize magic casting.";
 					break;
 				case 2:
-					set sage_m4,4;
+					sage_m4 = 4;
 					mes "[Lucius Celsus]";
 					mes "What? Fire Bolt! Fire cannot beat water, you imbecile!";
 					mes "Most fishes are attributed with the water property. Therefore, they are weak to wind property magic spells. Don't you get it?";
@@ -1863,7 +1863,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 					mes "However, you will be in trouble if you use the spell in a poorly chosen spot.";
 					break;
 				case 4:
-					set sage_m4,4;
+					sage_m4 = 4;
 					mes "[Lucius Celsus]";
 					mes "I can't fathom such stupidity! This question asks you to choose a property that counters water! Don't you get it?";
 					mes "Logically, any magic spell possessing the water property cannot overcome the water atrribute monsters!";
@@ -1880,7 +1880,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 				next;
 				switch(rand(1,4)) {
 				case 1:
-					set SAGE_Q2,4;
+					SAGE_Q2 = 4;
 					if (questprogress(2053)) {
 						changequest 2053,2056;
 					}
@@ -1895,7 +1895,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 					mes "5 ^3355FFInsect Feeler^000000.";
 					break;
 				case 2:
-					set SAGE_Q2,5;
+					SAGE_Q2 = 5;
 					if (questprogress(2053)) {
 						changequest 2053,2057;
 					}
@@ -1910,7 +1910,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 					mes "5 ^3355FFMoth Dust^000000.";
 					break;
 				case 3:
-					set SAGE_Q2,6;
+					SAGE_Q2 = 6;
 					if (questprogress(2053)) {
 						changequest 2053,2058;
 					}
@@ -1925,7 +1925,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 					mes "5 ^3355FFRainbow Shell^000000.";
 					break;
 				case 4:
-					set SAGE_Q2,7;
+					SAGE_Q2 = 7;
 					if (questprogress(2053)) {
 						changequest 2053,2059;
 					}
@@ -2000,8 +2000,8 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 				mes "^3355FF1 Squid Ink^000000 which will be used as ink,";
 				mes "^3355FF1 Empty Bottle^000000 which will be used for holding squid ink.";
 				next;
-				set SAGE_Q2,0;
-				set SAGE_Q,12;
+				SAGE_Q2 = 0;
+				SAGE_Q = 12;
 				if (questprogress(2056)) {
 					changequest 2056,2051;
 				}
@@ -2074,7 +2074,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 			next;
 			mes ".................................";
 			next;
-			set SAGE_Q,15;
+			SAGE_Q = 15;
 			changequest 2051,2052;
 			mes "[Lucius Celsus]";
 			mes "Are you done? Okay, then it's over.";
@@ -2179,7 +2179,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 			mes "Please bring me ^3355FF30 Stone^000000, that's all.";
 			mes "It's not so hard, isn't it?";
 			next;
-			set SAGE_Q2,1;
+			SAGE_Q2 = 1;
 			changequest 2049,2060;
 			mes "[Aebecee George]";
 			mes "Why don't you ask a thief pal for help?";
@@ -2215,7 +2215,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				mes "[Aebecee George]";
 				mes "I will give you these elemental ores...but...they are not for free.";
 				mes "Whoa there cowboy! Don't pull out so soon~ Listen, tee hee~";
-				set SAGE_Q2,2;
+				SAGE_Q2 = 2;
 				changequest 2060,2061;
 				next;
 				mes "[Aebecee George]";
@@ -2274,7 +2274,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				mes "[Aebecee George]";
 				mes "When you come to the next class, bring ^3355FF1 Holy Water^000000~";
 				mes "I hope you have at least one Priest friend. Oh, you don't? Well, it couldn't hurt to get friendly with one.";
-				set SAGE_Q2,3;
+				SAGE_Q2 = 3;
 				changequest 2061,2062;
 				close;
 			}
@@ -2323,8 +2323,8 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				mes "[Aebecee George]";
 				mes "Well, that's it. You can write your thesis with what I've taught you!";
 				mes "Tee hee~ yes! Yes! I am the best teacher in the world! Oh, I am on fire! Tee hee~";
-				set SAGE_Q2,0;
-				set SAGE_Q,14;
+				SAGE_Q2 = 0;
+				SAGE_Q = 14;
 				changequest 2062,2051;
 				next;
 				mes "[Aebecee George]";
@@ -2491,7 +2491,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 			next;
 			mes ".................................";
 			next;
-			set SAGE_Q,15;
+			SAGE_Q = 15;
 			changequest 2051,2052;
 			mes "[Aebecee George]";
 			mes "Tee hee, so... are you done with your thesis? What do you think of your work? I think you did fine~";
@@ -2584,7 +2584,7 @@ OnInit:
 
 OnEnable:
 	enablenpc "Arena#1";
-	set .MyMobs,16;
+	.MyMobs = 16;
 	monster "job_sage",111,102,"Grade F",1183,1,"Arena#1::OnMyMobDead";
 	monster "job_sage",120,102,"Grade F",1183,1,"Arena#1::OnMyMobDead";
 	monster "job_sage",111,93,"Grade F",1183,1,"Arena#1::OnMyMobDead";
@@ -2609,7 +2609,7 @@ OnReset:
 	end;
 
 OnMyMobDead:
-	set .MyMobs,.MyMobs-1;
+	--.MyMobs;
 	if (.MyMobs < 1) {
 		mapannounce "job_sage"," " + strcharinfo(0) + ", successfully defeat all the monsters.",bc_map;
 		donpcevent "Arena#2::OnEnable";
@@ -2682,7 +2682,7 @@ OnEnable:
 	enablenpc "Arena#2";
 	donpcevent "Arena#1::OnReset";
 	disablenpc "Arena#1";
-	set .MyMobs,24;
+	.MyMobs = 24;
 	monster "job_sage",111,102,"Numerical Value",1063,1,"Arena#2::OnMyMobDead";
 	monster "job_sage",111,102,"Physics",1063,1,"Arena#2::OnMyMobDead";
 	monster "job_sage",111,102,"History",1063,1,"Arena#2::OnMyMobDead";
@@ -2715,7 +2715,7 @@ OnReset:
 	end;
 
 OnMyMobDead:
-	set .MyMobs,.MyMobs-1;
+	--.MyMobs;
 	if (.MyMobs < 1) {
 		mapannounce "job_sage"," " + strcharinfo(0) + ", successfully defeat all the monsters.",bc_map;
 		donpcevent "Arena#Doorkeeper::OnEnable";
@@ -2785,7 +2785,7 @@ OnEnable:
 	enablenpc "Arena#Doorkeeper";
 	donpcevent "Arena#2::OnReset";
 	disablenpc "Arena#2";
-	set .MyMobs,1;
+	.MyMobs = 1;
 	monster "job_sage",116,97,"Academic Probation",1179,1,"Arena#Doorkeeper::OnMyMobDead";
 	initnpctimer;
 	end;
@@ -2800,10 +2800,10 @@ OnDisable:
 	end;
 
 OnMyMobDead:
-	set .MyMobs,.MyMobs-1;
+	--.MyMobs;
 	if (.MyMobs < 1) {
 		mapannounce "job_sage","Congratulations, " + strcharinfo(0) + ". You passed the test.",bc_map;
-		set SAGE_Q,8;
+		SAGE_Q = 8;
 		donpcevent "Test Helper#sg::OnEnable";
 		disablenpc "Arena#Doorkeeper";
 		stopnpctimer;

@@ -75,10 +75,10 @@ prt_are_in,103,11,3	script	Arena Point Manager	4_M_JOB_HUNTER,{
 				close;
 			}
 			else {
-				set .@want_point1,10 * .@input;
-				set .@want_point,5 * .@input;
-				set .@my_arena_all,arena_point + .@want_point;
-				set .@my_turbo_all,tt_point - .@want_point1;
+				.@want_point1 = 10 * .@input;
+				.@want_point = 5 * .@input;
+				.@my_arena_all = arena_point + .@want_point;
+				.@my_turbo_all = tt_point - .@want_point1;
 				if (.@my_arena_all > 28999) {
 					mes "[Arena Point Manager]";
 					mes "You will exceed the";
@@ -111,8 +111,8 @@ prt_are_in,103,11,3	script	Arena Point Manager	4_M_JOB_HUNTER,{
 					mes "into 5 Arena Points " + .@input + " times.";
 					mes "A total of " + .@want_point1 + " Turbo Track Points were converted into";
 					mes "" + .@want_point +" Arena Points.";
-					set tt_point,tt_point - .@want_point1;
-					set arena_point,arena_point+.@want_point;
+					tt_point -= .@want_point1;
+					arena_point += .@want_point;
 					next;
 					mes "[Arena Point Manager]";
 					mes "" + strcharinfo(0) + ",";
@@ -158,8 +158,8 @@ S_ExchangePoints:
 		mes "" + strcharinfo(0) + ",";
 		mes "you've converted "+getarg(1)+" Track";
 		mes "Points into "+getarg(2)+" Arena Point.";
-		set tt_point,tt_point-getarg(1);
-		set arena_point,arena_point+getarg(2);
+		tt_point -= getarg(1);
+		arena_point += getarg(2);
 		next;
 		mes "[Arena Point Manager]";
 		mes "" + strcharinfo(0) + ",";

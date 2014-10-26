@@ -198,7 +198,7 @@ cmd_in02,174,126,4	script	Loyar#cmd	4_M_01,{
 }
 
 cmd_in02,57,62,4	script	Moo#cmd	4_M_MANAGER,{
-	set mooz,rand(1,10);
+	mooz = rand(1,10);
 	if (mooz == 1) {
 		mes "[Moo]";
 		mes "Those cheating punks!";
@@ -338,7 +338,7 @@ cmd_fild07,52,280,4	script	Hallosu#cmd	4W_SAILOR,{
 }
 
 cmd_fild07,299,83,4	script	Zain#cmd	4W_SAILOR,{
-	set .@n$,"["+strnpcinfo(1)+"]";
+	.@n$ = "["+strnpcinfo(1)+"]";
 	mes .@n$;
 	mes "Would you like to";
 	mes "board a ship on the";

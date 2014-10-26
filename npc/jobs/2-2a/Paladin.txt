@@ -15,7 +15,7 @@
 
 valkyrie,53,39,3	script	Paladin#Valkyrie	4_M_CRU_OLD,{
 	if (ADVJOB == 0 || Upper != 1) {
-		set .@karma_d,rand(1,10);
+		.@karma_d = rand(1,10);
 		if (.@karma_d > 4) {
 			mes "[Paladin]";
 			mes "Congratulations.";
@@ -59,7 +59,7 @@ valkyrie,53,39,3	script	Paladin#Valkyrie	4_M_CRU_OLD,{
 			close;
 		}
 		jobchange Job_Paladin;
-		set ADVJOB,0;
+		ADVJOB = 0;
 		mes "[Paladin]";
 		mes "Congratulations.";
 		mes "As a Paladin, I hope";

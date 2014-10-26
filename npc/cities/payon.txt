@@ -840,7 +840,7 @@ OnTouch:
 		close;
 	}
 	if (BaseLevel > 30) {
-		set .@oldman_random,rand(1,2);
+		.@oldman_random = rand(1,2);
 		if (.@oldman_random == 1) {
 			mes "[Guard]";
 			mes "Hey...";

@@ -29,7 +29,7 @@ OnTimer3600000:
 
 arug_dun01,1,2,1	script	Monster Controler1#aru	4_DOG01,{
 OnEnable:
-	set .@callwhere,rand(1,4);
+	.@callwhere = rand(1,4);
 	if (.@callwhere == 1) {
 		monster "arug_dun01",150,340,"Kublin",1980,1,"Monster Controler1#aru::OnMyMobDead";
 	}
@@ -67,8 +67,8 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 	.@chk_yourgdname$ = getguildname(getcharid(2));
 	if ($@gdeventv_a1 == 0) {
 		if ($@gdevents_a$ == "") {
-			set $@gdeventv_a1,1;
-			set $@gdevents_a$,.@chk_yourgdname$;
+			$@gdeventv_a1 = 1;
+			$@gdevents_a$ = .@chk_yourgdname$;
 			mes "[Dwarf]";
 			mes "Help me!";
 			mes "Please, help me!";
@@ -141,8 +141,8 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 					next;
 					switch(select("Wait! I'm not ready yet.:Let's go!")) {
 					case 1:
-						set $@gdeventv_a1,0;
-						set $@gdevents_a$,"";
+						$@gdeventv_a1 = 0;
+						$@gdevents_a$ = "";
 						mes "[Morestone]";
 						mes "Take your time, and find a place to gather your friends.";
 						close;
@@ -152,8 +152,8 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 						mes "If your friends visit me again later, I will guide them to that area again.";
 						mes "Don't forget, dwarves are grateful beings! Hahaha!";
 						delitem 6010,1; //Pickaxe
-						set $@gdeventv_a1,1;
-						set $@gdevents_a$,.@chk_yourgdname$;
+						$@gdeventv_a1 = 1;
+						$@gdevents_a$ = .@chk_yourgdname$;
 						close2;
 						setquest 2144;
 						warp "arug_que01",103,133;
@@ -161,16 +161,16 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 					}
 				}
 				else {
-					set $@gdeventv_a1,0;
-					set $@gdevents_a$,"";
+					$@gdeventv_a1 = 0;
+					$@gdevents_a$ = "";
 					mes "[Morestone]";
 					mes "I will tell you how to find him.";
 					mes "Kublin wears a ridiculous golden hat, It should be easy to recognise him by that.";
 					close;
 				}
 			case 2:
-				set $@gdeventv_a1,0;
-				set $@gdevents_a$,"";
+				$@gdeventv_a1 = 0;
+				$@gdevents_a$ = "";
 				emotion e_sob;
 				mes "[Dwarf]";
 				mes "Ahhh...";
@@ -199,8 +199,8 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 				}
 			}
 			else {
-				set $@gdeventv_a1,1;
-				set $@gdevents_a$,.@chk_yourgdname$;
+				$@gdeventv_a1 = 1;
+				$@gdevents_a$ = .@chk_yourgdname$;
 				mes "[Dwarf]";
 				mes "Help me!";
 				mes "Please, help me!";
@@ -273,8 +273,8 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 						next;
 						switch(select("Wait! I'm not ready yet.:Let's go!")) {
 						case 1:
-							set $@gdeventv_a1,0;
-							set $@gdevents_a$,"";
+							$@gdeventv_a1 = 0;
+							$@gdevents_a$ = "";
 							mes "[Morestone]";
 							mes "Take your time, and find a place to gather your friends.";
 							close;
@@ -284,8 +284,8 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 							mes "If your friends visit me again later, I will guide them to that area again.";
 							mes "Don't forget, dwarves are grateful beings! Hahaha!";
 							delitem 6010,1; //Pickaxe
-							set $@gdeventv_a1,1;
-							set $@gdevents_a$,.@chk_yourgdname$;
+							$@gdeventv_a1 = 1;
+							$@gdevents_a$ = .@chk_yourgdname$;
 							close2;
 							setquest 2144;
 							warp "arug_que01",103,133;
@@ -293,16 +293,16 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 						}
 					}
 					else {
-						set $@gdeventv_a1,0;
-						set $@gdevents_a$,"";
+						$@gdeventv_a1 = 0;
+						$@gdevents_a$ = "";
 						mes "[Morestone]";
 						mes "I will tell you how to find him.";
 						mes "Kublin wears a ridiculous golden hat, It should be easy to recognise him by that.";
 						close;
 					}
 				case 2:
-					set $@gdeventv_a1,0;
-					set $@gdevents_a$,"";
+					$@gdeventv_a1 = 0;
+					$@gdevents_a$ = "";
 					emotion e_sob;
 					mes "[Dwarf]";
 					mes "Ah....";
@@ -342,8 +342,8 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 				}
 			}
 			else {
-				set $@gdeventv_a1,1;
-				set $@gdevents_a$,.@chk_yourgdname$;
+				$@gdeventv_a1 = 1;
+				$@gdevents_a$ = .@chk_yourgdname$;
 				mes "[Dwarf]";
 				mes "Help me!";
 				mes "Please, help me!";
@@ -416,8 +416,8 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 						next;
 						switch(select("Wait! I'm not ready yet.:Let's go!")) {
 						case 1:
-							set $@gdeventv_a1,0;
-							set $@gdevents_a$,"";
+							$@gdeventv_a1 = 0;
+							$@gdevents_a$ = "";
 							mes "[Morestone]";
 							mes "Take your time, and find a place to gather you friends.";
 							close;
@@ -427,8 +427,8 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 							mes "If your friends visit me again later, I will guide them to that area again.";
 							mes "Don't forget, dwarves are grateful beings! Hahaha!";
 							delitem 6010,1; //Pickaxe
-							set $@gdeventv_a1,1;
-							set $@gdevents_a$,.@chk_yourgdname$;
+							$@gdeventv_a1 = 1;
+							$@gdevents_a$ = .@chk_yourgdname$;
 							close2;
 							setquest 2144;
 							warp "arug_que01",103,133;
@@ -436,16 +436,16 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 						}
 					}
 					else {
-						set $@gdeventv_a1,0;
-						set $@gdevents_a$,"";
+						$@gdeventv_a1 = 0;
+						$@gdevents_a$ = "";
 						mes "[Morestone]";
 						mes "I will tell you how to find him.";
 						mes "Kublin wears a ridiculous golden hat, It should be easy to recognise him by that.";
 						close;
 					}
 				case 2:
-					set $@gdeventv_a1,0;
-					set $@gdevents_a$,"";
+					$@gdeventv_a1 = 0;
+					$@gdevents_a$ = "";
 					emotion e_sob;
 					mes "[Dwarf]";
 					mes "Ah....";
@@ -465,8 +465,8 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 
 OnInit:
 	disablenpc "Dwarf#aru_gd";
-	set $@gdeventv_a1,0;
-	set $@gdevents_a$,"";
+	$@gdeventv_a1 = 0;
+	$@gdevents_a$ = "";
 	end;
 
 OnEnable:
@@ -476,7 +476,7 @@ OnEnable:
 
 arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 	specialeffect EF_POISONHIT;
-	set .@sprchg_gd,rand(1,5);
+	.@sprchg_gd = rand(1,5);
 	if (.@sprchg_gd == 1) {
 		setnpcdisplay "Pierrot Pier#aru_gd", 4_GHOSTRING;
 	}
@@ -502,7 +502,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 	}
 	if (strcharinfo(0) == getguildmaster(getcharid(2))) {
 		if ($@gdeventv_a2 == 0) {
-			set .@que_2143,questprogress(2143,PLAYTIME);
+			.@que_2143 = questprogress(2143,PLAYTIME);
 			if (!.@que_2143) {
 				setnpcdisplay "Pierrot Pier#aru_gd", 4_M_PIERROT;
 				mes "A lonely clown is juggling.";
@@ -657,7 +657,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 					mes "[Pierrot Pier]";
 					mes "Let the game.. Begin!";
 					mapannounce "arug_que01", "Pierrot Pier: Let the game.. Begin!",bc_map,"0x99CC00";
-					set $@gdeventv_a2,1;
+					$@gdeventv_a2 = 1;
 					donpcevent "Controller#gdevent_a::OnGame_start";
 					erasequest 2143;
 					close;
@@ -674,7 +674,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			next;
 			if (countitem(6031) > 0) {
 				donpcevent "Controller#gdevent_a::OnStop";
-				set $@gdeventv_a2,3;
+				$@gdeventv_a2 = 3;
 				donpcevent "eff_mvp#aru_gd::OnMVP";
 				mes "[Pierrot Pier]";
 				mes "Wow~~!!";
@@ -759,7 +759,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 				mes "[Pierrot Pier]";
 				mes "Let the game.. Begin!";
 				mapannounce "arug_que01", "Pierrot Pier: Let the game.. Begin!",bc_map,"0x99CC00";
-				set $@gdeventv_a2,10;
+				$@gdeventv_a2 = 10;
 				donpcevent "Controller#gdevent_a::OnGame_start";
 				close;
 			}
@@ -782,7 +782,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			mapannounce "arug_que01", "Pierrot Pier: You've completeled an unbelievable task, I will give you the wonderful gift my master has prepared!! Ha!",bc_map,"0x99CC00";
 			mapannounce "arug_que01", "Pierrot Pier: Here, take Pierre's Treasure Boxes.",bc_map,"0x99CC00";
 			donpcevent "eff_mvp#aru_gd::OnMVP";
-			set $@gdeventv_a2,5;
+			$@gdeventv_a2 = 5;
 			getitem 14596,10; //Pierre_Treasurebox
 			close;
 		}
@@ -815,7 +815,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			next;
 			if (countitem(6031) > 0) {
 				donpcevent "Controller#gdevent_a::OnStop";
-				set $@gdeventv_a2,3;
+				$@gdeventv_a2 = 3;
 				donpcevent "eff_mvp#aru_gd::OnMVP";
 				mes "[Pierrot Pier]";
 				mes "Wow~~!!";
@@ -925,7 +925,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			next;
 			if (countitem(6031) > 0) {
 				donpcevent "Controller#gdevent_a::OnStop";
-				set $@gdeventv_a2,3;
+				$@gdeventv_a2 = 3;
 				donpcevent "eff_mvp#aru_gd::OnMVP";
 				mes "[Pierrot Pier]";
 				mes "Wow~~!!";
@@ -989,7 +989,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			next;
 			if (countitem(6031) > 0) {
 				donpcevent "Controller#gdevent_a::OnStop";
-				set $@gdeventv_a2,3;
+				$@gdeventv_a2 = 3;
 				donpcevent "eff_mvp#aru_gd::OnMVP";
 				mes "[Pierrot Pier]";
 				mes "Wow~~!!";
@@ -1018,7 +1018,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 
 arug_que01,10,10,3	script	Controller#gdevent_a	4_DOG01,{
 OnInit:
-	set $@gdeventv_a2,0;
+	$@gdeventv_a2 = 0;
 	end;
 
 OnWin:
@@ -1036,7 +1036,7 @@ OnGame_start:
 	donpcevent "paper_sp_7_a::OnEnable";
 	donpcevent "paper_sp_8_a::OnEnable";
 	donpcevent "paper_sp_9_a::OnEnable";
-	set .@roulette_where,rand(1,9);
+	.@roulette_where = rand(1,9);
 	if (.@roulette_where == 1) {
 		donpcevent "paper_sp_1_a::OnBingo";
 	}
@@ -1078,7 +1078,7 @@ OnTimer60000:
 	mapannounce "arug_que01", "Pierrot Pier: Time is up!",bc_map,"0x99CC00";
 	mapwarp "arug_que01","arug_que01",100,79;
 	enablenpc "removepp_aru_gd";
-	set $@gdeventv_a2,2;
+	$@gdeventv_a2 = 2;
 	end;
 
 OnTimer63000:
@@ -1090,23 +1090,22 @@ arug_que01,87,93,0	script	paper_sp_1_a	HIDDEN_WARP_NPC,{
 	end;
 
 OnEnable:
-	set .@paper_while1,0;
+	.@paper_while1 = 0;
 	while(1) {
 		if (.@paper_while1 == 100) {
 			break;
-		}
-		else {
-			set .@paper_while1,.@paper_while1+1;
-			set .@paper_x1,rand(81,95);
-			set .@paper_y1,rand(87,100);
+		} else {
+			++.@paper_while1;
+			.@paper_x1 = rand(81,95);
+			.@paper_y1 = rand(87,100);
 			makeitem 6030,1,"arug_que01",.@paper_x1,.@paper_y1; //Glitering_PaperA
 		}
 	}
 	end;
 
 OnBingo:
-	set .@paper_x1,rand(81,95);
-	set .@paper_y1,rand(87,100);
+	.@paper_x1 = rand(81,95);
+	.@paper_y1 = rand(87,100);
 	makeitem 6031,1,"arug_que01",.@paper_x1,.@paper_y1; //Glitering_PaperB
 	end;
 }
@@ -1115,23 +1114,22 @@ arug_que01,102,93,0	script	paper_sp_2_a	HIDDEN_WARP_NPC,{
 	end;
 
 OnEnable:
-	set .@paper_while2,0;
+	.@paper_while2 = 0;
 	while(1) {
 		if (.@paper_while2 == 100) {
 			break;
-		}
-		else {
-			set .@paper_while2,.@paper_while2+1;
-			set .@paper_x2,rand(96,110);
-			set .@paper_y2,rand(87,100);
+		} else {
+			++.@paper_while2;
+			.@paper_x2 = rand(96,110);
+			.@paper_y2 = rand(87,100);
 			makeitem 6030,1,"arug_que01",.@paper_x2,.@paper_y2; //Glitering_PaperA
 		}
 	}
 	end;
 
 OnBingo:
-	set .@paper_x2,rand(96,110);
-	set .@paper_y2,rand(87,100);
+	.@paper_x2 = rand(96,110);
+	.@paper_y2 = rand(87,100);
 	makeitem 6031,1,"arug_que01",.@paper_x2,.@paper_y2; //Glitering_PaperB
 	end;
 }
@@ -1140,23 +1138,22 @@ arug_que01,117,93,0	script	paper_sp_3_a	HIDDEN_WARP_NPC,{
 	end;
 
 OnEnable:
-	set .@paper_while3,0;
+	.@paper_while3 = 0;
 	while(1) {
 		if (.@paper_while3 == 100) {
 			break;
-		}
-		else {
-			set .@paper_while3,.@paper_while3+1;
-			set .@paper_x3,rand(111,124);
-			set .@paper_y3,rand(87,100);
+		} else {
+			++.@paper_while3;
+			.@paper_x3 = rand(111,124);
+			.@paper_y3 = rand(87,100);
 			makeitem 6030,1,"arug_que01",.@paper_x3,.@paper_y3; //Glitering_PaperA
 		}
 	}
 	end;
 
 OnBingo:
-	set .@paper_x3,rand(111,124);
-	set .@paper_y3,rand(87,100);
+	.@paper_x3 = rand(111,124);
+	.@paper_y3 = rand(87,100);
 	makeitem 6031,1,"arug_que01",.@paper_x3,.@paper_y3; //Glitering_PaperB
 	end;
 }
@@ -1165,23 +1162,23 @@ arug_que01,87,80,0	script	paper_sp_4_a	HIDDEN_WARP_NPC,{
 	end;
 
 OnEnable:
-	set .@paper_while4,0;
+	.@paper_while4 = 0;
 	while(1) {
 		if (.@paper_while4 == 100) {
 			break;
 		}
 		else {
-			set .@paper_while4,.@paper_while4+1;
-			set .@paper_x4,rand(81,95);
-			set .@paper_y4,rand(73,86);
+			++.@paper_while4;
+			.@paper_x4 = rand(81,95);
+			.@paper_y4 = rand(73,86);
 			makeitem 6030,1,"arug_que01",.@paper_x4,.@paper_y4; //Glitering_PaperA
 		}
 	}
 	end;
 
 OnBingo:
-	set .@paper_x4,rand(81,95);
-	set .@paper_y4,rand(73,86);
+	.@paper_x4 = rand(81,95);
+	.@paper_y4 = rand(73,86);
 	makeitem 6031,1,"arug_que01",.@paper_x4,.@paper_y4; //Glitering_PaperB
 	end;
 }
@@ -1190,23 +1187,22 @@ arug_que01,102,80,0	script	paper_sp_5_a	HIDDEN_WARP_NPC,{
 	end;
 
 OnEnable:
-	set .@paper_while5,0;
+	.@paper_while5 = 0;
 	while(1) {
 		if (.@paper_while5 == 100) {
 			break;
-		}
-		else {
-			set .@paper_while5,.@paper_while5+1;
-			set .@paper_x5,rand(96,110);
-			set .@paper_y5,rand(73,86);
+		} else {
+			++.@paper_while5;
+			.@paper_x5 = rand(96,110);
+			.@paper_y5 = rand(73,86);
 			makeitem 6030,1,"arug_que01",.@paper_x5,.@paper_y5; //Glitering_PaperA
 		}
 	}
 	end;
 
 OnBingo:
-	set .@paper_x5,rand(96,110);
-	set .@paper_y5,rand(73,86);
+	.@paper_x5 = rand(96,110);
+	.@paper_y5 = rand(73,86);
 	makeitem 6031,1,"arug_que01",.@paper_x5,.@paper_y5; //Glitering_PaperB
 	end;
 }
@@ -1215,23 +1211,22 @@ arug_que01,117,80,0	script	paper_sp_6_a	HIDDEN_WARP_NPC,{
 	end;
 
 OnEnable:
-	set .@paper_while6,0;
+	.@paper_while6 = 0;
 	while(1) {
 		if (.@paper_while6 == 100) {
 			break;
-		}
-		else {
-			set .@paper_while6,.@paper_while6+1;
-			set .@paper_x6,rand(111,124);
-			set .@paper_y6,rand(73,86);
+		} else {
+			++.@paper_while6;
+			.@paper_x6 = rand(111,124);
+			.@paper_y6 = rand(73,86);
 			makeitem 6030,1,"arug_que01",.@paper_x6,.@paper_y6; //Glitering_PaperA
 		}
 	}
 	end;
 
 OnBingo:
-	set .@paper_x6,rand(111,124);
-	set .@paper_y6,rand(73,86);
+	.@paper_x6 = rand(111,124);
+	.@paper_y6 = rand(73,86);
 	makeitem 6031,1,"arug_que01",.@paper_x6,.@paper_y6; //Glitering_PaperB
 	end;
 }
@@ -1240,23 +1235,22 @@ arug_que01,87,65,0	script	paper_sp_7_a	HIDDEN_WARP_NPC,{
 	end;
 
 OnEnable:
-	set .@paper_while7,0;
+	.@paper_while7 = 0;
 	while(1) {
 		if (.@paper_while7 == 100) {
 			break;
-		}
-		else {
-			set .@paper_while7,.@paper_while7+1;
-			set .@paper_x7,rand(81,95);
-			set .@paper_y7,rand(59,72);
+		} else {
+			++.@paper_while7;
+			.@paper_x7 = rand(81,95);
+			.@paper_y7 = rand(59,72);
 			makeitem 6030,1,"arug_que01",.@paper_x7,.@paper_y7; //Glitering_PaperA
 		}
 	}
 	end;
 
 OnBingo:
-	set .@paper_x7,rand(81,95);
-	set .@paper_y7,rand(59,72);
+	.@paper_x7 = rand(81,95);
+	.@paper_y7 = rand(59,72);
 	makeitem 6031,1,"arug_que01",.@paper_x7,.@paper_y7; //Glitering_PaperB
 	end;
 }
@@ -1265,23 +1259,23 @@ arug_que01,102,65,0	script	paper_sp_8_a	HIDDEN_WARP_NPC,{
 	end;
 
 OnEnable:
-	set .@paper_while8,0;
+	.@paper_while8 = 0;
 	while(1) {
 		if (.@paper_while8 == 100) {
 			break;
 		}
 		else {
-			set .@paper_while8,.@paper_while8+1;
-			set .@paper_x8,rand(96,110);
-			set .@paper_y8,rand(59,72);
+			++.@paper_while8;
+			.@paper_x8 = rand(96,110);
+			.@paper_y8 = rand(59,72);
 			makeitem 6030,1,"arug_que01",.@paper_x8,.@paper_y8; //Glitering_PaperA
 		}
 	}
 	end;
 
 OnBingo:
-	set .@paper_x8,rand(96,110);
-	set .@paper_y8,rand(59,72);
+	.@paper_x8 = rand(96,110);
+	.@paper_y8 = rand(59,72);
 	makeitem 6031,1,"arug_que01",.@paper_x8,.@paper_y8; //Glitering_PaperB
 	end;
 }
@@ -1290,23 +1284,23 @@ arug_que01,117,65,0	script	paper_sp_9_a	HIDDEN_WARP_NPC,{
 	end;
 
 OnEnable:
-	set .@paper_while9,0;
+	.@paper_while9 = 0;
 	while(1) {
 		if (.@paper_while9 == 100) {
 			break;
 		}
 		else {
-			set .@paper_while9,.@paper_while9+1;
-			set .@paper_x9,rand(111,124);
-			set .@paper_y9,rand(59,72);
+			++.@paper_while9;
+			.@paper_x9 = rand(111,124);
+			.@paper_y9 = rand(59,72);
 			makeitem 6030,1,"arug_que01",.@paper_x9,.@paper_y9; //Glitering_PaperA
 		}
 	}
 	end;
 
 OnBingo:
-	set .@paper_x9,rand(111,124);
-	set .@paper_y9,rand(59,72);
+	.@paper_x9 = rand(111,124);
+	.@paper_y9 = rand(59,72);
 	makeitem 6031,1,"arug_que01",.@paper_x9,.@paper_y9; //Glitering_PaperB
 	end;
 }
@@ -1319,8 +1313,8 @@ OnInit:
 	end;
 
 OnTouch2:
-	set .@paper_aru_gd,countitem(6030);
-	set .@spaper_aru_gd,countitem(6031);
+	.@paper_aru_gd = countitem(6030);
+	.@spaper_aru_gd = countitem(6031);
 	if ((.@paper_aru_gd > 0) || (.@spaper_aru_gd > 0)) {
 		delitem 6030,.@paper_aru_gd; //Glitering_PaperA
 		delitem 6031,.@spaper_aru_gd; //Glitering_PaperB
@@ -1444,7 +1438,7 @@ OnEnable:
 OnMyMobDead:
 	if (mobcount("arug_que01","treg#aru_gd::OnMyMobDead") == 0) {
 		mapannounce "arug_que01", "Pierrot Pier: Beep! Oh, you already opened the gift? You sure are fast now, beep!",bc_map,"0x99CC00";
-		set $@gdeventv_a2,5;
+		$@gdeventv_a2 = 5;
 	}
 	end;
 }
@@ -1522,9 +1516,9 @@ arug_dun01,5,5,1	script	Event controller#aru_gd	4_DOG01,{
 			donpcevent "Monster Controler1#aru::OnControler1#aru_gd";
 			donpcevent "Monster Controler1#aru::OnControler1#aru_gd";
 			disablenpc "Dwarf#aru_gd";
-			set $@gdeventv_a1,0;
-			set $@gdeventv_a2,0;
-			set $@gdevents_a$,"";
+			$@gdeventv_a1 = 0;
+			$@gdeventv_a2 = 0;
+			$@gdevents_a$ = "";
 			close;
 		case 2:
 			mes "Good bye~";

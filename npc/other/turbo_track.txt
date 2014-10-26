@@ -19,7 +19,7 @@
 
 function	script	F_tt	{
 	if (compare(strnpcinfo(2),"main")) end;
-	set .@w$,(charat(strnpcinfo(4),6))+((getstrlen(strnpcinfo(4)) > 9)?(substr(strnpcinfo(4),8,9)):(charat(strnpcinfo(4),getstrlen(strnpcinfo(4))-1)));
+	.@w$ = (charat(strnpcinfo(4),6))+((getstrlen(strnpcinfo(4)) > 9)?(substr(strnpcinfo(4),8,9)):(charat(strnpcinfo(4),getstrlen(strnpcinfo(4))-1)));
 	return .@w$;
 }
 
@@ -33,13 +33,13 @@ OnEnable:
 
 OnStartArena:
 	if (compare(strnpcinfo(2),"n1")) {
-		set .@in$, "n";
-		set .@in, 1;
+		.@in$ = "n";
+		.@in = 1;
 	} else {
-		set .@in$,(compare(strnpcinfo(1),"Expert"))?"e":"n";
-		if (compare(strnpcinfo(1),"4")) set .@in, 4;
-		if (compare(strnpcinfo(1),"8")) set .@in, 8;
-		if (compare(strnpcinfo(1),"16")) set .@in, 16;
+		.@in$ = (compare(strnpcinfo(1),"Expert"))?"e":"n";
+		if (compare(strnpcinfo(1),"4")) .@in = 4;
+		if (compare(strnpcinfo(1),"8")) .@in = 8;
+		if (compare(strnpcinfo(1),"16")) .@in = 16;
 	}
 	warpwaitingpc "turbo_"+.@in$+"_"+.@in,298,161;
 	donpcevent "Broadcast#"+.@in$+.@in+"::OnEnable";
@@ -51,9 +51,9 @@ OnInit:
 	if (compare(strnpcinfo(2),"n1")) {
 		waitingroom "Solo Mode",60,"Solo Mode#n1::OnStartArena",1;
 	} else {
-		if (compare(strnpcinfo(1),"4")) set .@in, 4;
-		if (compare(strnpcinfo(1),"8")) set .@in, 8;
-		if (compare(strnpcinfo(1),"16")) set .@in, 16;
+		if (compare(strnpcinfo(1),"4")) .@in = 4;
+		if (compare(strnpcinfo(1),"8")) .@in = 8;
+		if (compare(strnpcinfo(1),"16")) .@in = 16;
 		waitingroom strnpcinfo(1),60,strnpcinfo(0)+"::OnStartArena",.@in,1000,10,99;
 	}
 	enablewaitingroomevent strnpcinfo(0);
@@ -90,7 +90,7 @@ turbo_e_4,298,167,0	script	Point#tt_main	-1,15,15,{
 
 OnTouch:
 	if (tt_point < 28999) {
-		set tt_point,tt_point+2;
+		tt_point += 2;
 		warp strnpcinfo(4),59,364;
 	}
 	else
@@ -98,7 +98,7 @@ OnTouch:
 	end;
 	
 OnInit:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	disablenpc "Point Give-Away Guy#"+.@w$;
 	end;
 }
@@ -112,7 +112,7 @@ turbo_n_1,298,167,0	duplicate(Point#tt_main)	Point Give-Away Guy#n1	-1,15,15
 
 -	script	Broadcast#tt_main	-1,{
 OnEnable:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	enablenpc "Broadcast#"+.@w$;
 	initnpctimer;
 	end;
@@ -170,25 +170,25 @@ OnTimer47000:
 	end;
 
 OnTimer49000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	enablenpc "Point Give-Away Guy#"+.@w$;
 	donpcevent "Master#"+.@w$+"::OnEnable";
 	end;
 
 OnTimer50000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	donpcevent "snake#"+.@w$+"::OnEnable";
 	donpcevent "hunting#"+.@w$+"::OnEnable";
 	if (strnpcinfo(4) != "turbo_n_1") enablenpc "bing#"+.@w$;
 	end;
 
 OnTimer57000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	disablenpc "Point Give-Away Guy#"+.@w$;
 	end;
 
 OnInit:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	disablenpc "Broadcast#"+.@w$;
 	end;
 }
@@ -203,13 +203,13 @@ turbo_n_1,167,3,0	duplicate(Broadcast#tt_main)	Broadcast#n1	-1
 -	script	Master#tt_main	-1,{
 	function	RName;
 OnEnable:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	enablenpc "Master#"+.@w$;
 	initnpctimer;
 	end;
 
 OnDisable:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	stopnpctimer;
 	disablenpc "Master#"+.@w$;
 	end;
@@ -259,11 +259,11 @@ OnTimer22000:
 	end;
 
 OnTimer23000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	mapannounce strnpcinfo(4),"Now! The race has begun! Go Go Go!!",bc_map,"0x33FF66";
 	disablenpc "No_Unfair_Start#"+.@w$+"-1";
 	disablenpc "No_Unfair_Start#"+.@w$+"-2";
-	if (strnpcinfo(4) == "turbo_n_1") set $@start_time,gettimetick(0);
+	if (strnpcinfo(4) == "turbo_n_1") $@start_time = gettimetick(0);
 	end;
 
 OnTimer30000:
@@ -367,7 +367,7 @@ OnTimer925000:
 	end;
 
 OnTimer927000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	mapannounce strnpcinfo(4),"[Everyone will be transported to a Waiting Room.]",bc_map,"0x33FF66";
 	mapwarp strnpcinfo(4),"turbo_room",71,89;
 	disablenpc "Broadcast#"+.@w$;
@@ -393,13 +393,13 @@ OnTimer927000:
 	end;
 	
 OnInit:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	disablenpc "Master#"+.@w$;
 	end;
 	
 	function	RName	{
-		set .@s,(getstrlen(getarg(0)) > 2)?(substr(getarg(0),1,2)):(charat(getarg(0),getstrlen(getarg(0))-1));
-		set .@rn$,((compare(strnpcinfo(4),"_e_"+.@s))?"Expert mode":"Normal mode")+" - "+.@s+" person";
+		.@s = (getstrlen(getarg(0)) > 2)?(substr(getarg(0),1,2)):(charat(getarg(0),getstrlen(getarg(0))-1));
+		.@rn$ = ((compare(strnpcinfo(4),"_e_"+.@s))?"Expert mode":"Normal mode")+" - "+.@s+" person";
 		return .@rn$;
 	}
 }
@@ -1177,7 +1177,7 @@ turbo_n_1,381,354,0	duplicate(SandTrap#tt_main)	#TBT_trap_n1-23	-1,1,1
 -	script	Trap#tt_main	-1,{
 OnTouch:
 	if (rand(1,3) == 1) {
-		set .@w$,callfunc("F_tt");
+		.@w$ = callfunc("F_tt");
 		cutin "kafra_03",2;
 		mes "^4d4dffAl De Baran";
 		mes "Turbo Track";
@@ -1609,7 +1609,7 @@ turbo_n_1,236,3,0	duplicate(WaterTrap#tt_main)	flasher#n1-48b	-1,3,0
 
 -	script	snake01#tt_main	-1,{
 OnTouch:
-	set .@turbo2,rand(1,7);
+	.@turbo2 = rand(1,7);
 	if (.@turbo2 < 3) warp strnpcinfo(4),370,292;
 	if (.@turbo2 < 5) warp strnpcinfo(4),295,293;
 	if (.@turbo2 < 7) warp strnpcinfo(4),355,292;
@@ -1626,7 +1626,7 @@ turbo_n_1,324,279,0	duplicate(snake01#tt_main)	snake01#n1	WARPNPC,1,1
 
 -	script	snake02#tt_main	-1,{
 OnTouch:
-	set .@turbo2,rand(1,8);
+	.@turbo2 = rand(1,8);
 	if (.@turbo2 < 3) warp strnpcinfo(4),287,256;
 	if (.@turbo2 < 5) warp strnpcinfo(4),303,256;
 	if (.@turbo2 < 7) warp strnpcinfo(4),347,256;
@@ -1644,7 +1644,7 @@ turbo_n_1,332,279,0	duplicate(snake02#tt_main)	snake02#n1	WARPNPC,1,1
 
 -	script	snake03#tt_main	WARPNPC,1,1,{
 OnTouch:
-	set .@turbo2,rand(1,8);
+	.@turbo2 = rand(1,8);
 	if (.@turbo2 < 3) warp strnpcinfo(4),279,292;
 	if (.@turbo2 < 5) warp strnpcinfo(4),311,292;
 	if (.@turbo2 < 7) warp strnpcinfo(4),347,256;
@@ -1662,7 +1662,7 @@ turbo_n_1,324,270,0	duplicate(snake03#tt_main)	snake03#n1	WARPNPC,1,1
 
 -	script	snake04#tt_main	WARPNPC,1,1,{
 OnTouch:
-	set .@turbo2,rand(1,7);
+	.@turbo2 = rand(1,7);
 	if (.@turbo2 < 3) warp strnpcinfo(4),363,256;
 	if (.@turbo2 < 5) warp strnpcinfo(4),295,293;
 	if (.@turbo2 < 7) warp strnpcinfo(4),355,292;
@@ -1687,7 +1687,7 @@ OnReset:
 OnEnable:
 	if (compare(strnpcinfo(2),"snake")) {
 		setarray .@n, 279,284,279,268,279,260,287,288,287,280,287,264,295,284,295,268,295,260,303,288,303,280,303,264,311,284,311,268,311,260,347,288,347,280,347,264,355,284,355,268,355,260,363,288,363,280,363,264,371,284,371,268,371,260,379,288,379,280,379,264;
-		for (set .@i, 0; .@i < getarraysize(.@n); set .@i, .@i + 2)
+		for (.@i = 0; .@i < getarraysize(.@n); .@i += 2)
 			monster strnpcinfo(4),.@n[.@i],.@n[.@i+1],"Archer Skeleton",1420,1;
 	} else {
 		setarray .@n_1$, "Munak","1610";
@@ -1697,9 +1697,9 @@ OnEnable:
 		setarray .@n_3$, "Yao Jun","1612";
 		setarray .@n_3, 68,56,26,46;
 		while (.@c < 3) {
-			for (set .@i, 0; .@i < getarraysize(getd(".@n_"+.@c)); set .@i, .@i + 2)
+			for (.@i = 0; .@i < getarraysize(getd(".@n_"+.@c)); .@i += 2)
 				monster strnpcinfo(4),getd(".@n_"+.@c+"["+.@i+"]"),getd(".@n_"+.@c+"["+(.@i+1)+"]"),getd(".@n_"+.@c+"$[0]"),atoi(getd(".@n_"+.@c+"$[1]")),1;
-			set .@c, .@c + 1;
+			++.@c;
 		}
 	}
 
@@ -1718,7 +1718,7 @@ turbo_n_1,90,46,0	duplicate(SnakeHunt#tt_main)	hunting#n1	HIDDEN_NPC
 
 -	script	cos#tt_main	-1,{
 OnTouch:
-	set .@n, charat(strnpcinfo(2),getstrlen(strnpcinfo(2))-1);
+	.@n = charat(strnpcinfo(2),getstrlen(strnpcinfo(2))-1);
 	switch (.@n) {
 		case 1:
 			mapannounce strnpcinfo(4),strcharinfo(0) +" has just passed the Log Bridge course!",bc_map,"0x70DBDB";
@@ -1921,8 +1921,8 @@ turbo_n_1,222,65,0	duplicate(TurboHint_4#tt_main)	#n1NoWayOut7	-1,1,1
 -	script	cos_end#tt_main	-1,{
 	function	GetNumber;
 OnTouch:
-	set .@w$,callfunc("F_tt");
-	if (.@w$ == "n1") set $@end_time,gettimetick(0);
+	.@w$ = callfunc("F_tt");
+	if (.@w$ == "n1") $@end_time = gettimetick(0);
 	mapannounce strnpcinfo(4),strcharinfo(0) +" has just arrived at the Finish Line! Congratulations!",bc_map,"0xFFFF00";
 	if (.@w$ != "n1") {
 		setd "$ttnames$["+GetNumber(.@w$)+"]",strcharinfo(0);
@@ -1940,7 +1940,7 @@ OnTouch:
 	} else {
 		if (.@w$ == "e8" || .@w$ == "n8") setarray .@pts, 28951,50;
 		if (.@w$ == "e16" || .@w$ == "n16") setarray .@pts, 28941,60;
-		if (tt_point < .@pts[0]) set tt_point,tt_point+.@pts[1];
+		if (tt_point < .@pts[0]) tt_point += .@pts[1];
 		warp strnpcinfo(4),384,161;
 		enablenpc "Winner Helper#TBT_"+.@w$;
 		enablenpc "#cos_"+.@w$+"_end2";
@@ -1950,14 +1950,14 @@ OnTouch:
 	
 	function	GetNumber	{
 		setarray .@w_n$[1], "n4","n8","n16","e4","e8","e16";
-		for (set .@i, 1; .@i <= getarraysize(.@w_n$); set .@i, .@i + 1) {
+		for (.@i = 1; .@i <= getarraysize(.@w_n$); ++.@i) {
 			if (getarg(0) == .@w_n$[.@i])
 				return .@i;
 		}
 	}
 	
 OnInit:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	enablenpc "#cos_"+.@w$+"_end";
 	end;
 }
@@ -1971,18 +1971,18 @@ turbo_n_1,371,47,0	duplicate(cos_end#tt_main)	#cos_n1_end	WARPNPC,1,1
 
 -	script	cos_end2#tt_main	WARPNPC,1,1,{
 OnTouch:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	mapannounce strnpcinfo(4),strcharinfo(0) +" is second to reach the Finish Line! Congratulations!",bc_map,"0xFFFF00";
 	if (.@w$ == "e8" || .@w$ == "n8") setarray .@pts, 28961,40;
 	if (.@w$ == "e16" || .@w$ == "n16") setarray .@pts, 28951,50;
-	if (tt_points < .@pts[0]) set tt_point,tt_point+.@pts[1];
+	if (tt_points < .@pts[0]) tt_point += .@pts[1];
 	warp "turbo_room",72,89;
 	disablenpc "#cos_"+.@w$+"_end2";
 	enablenpc "#cos_"+.@w$+"_end3";
 	end;
 	
 OnInit:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	disablenpc "#cos_"+.@w$+"_end2";
 	end;
 }
@@ -1993,11 +1993,11 @@ turbo_n_16,371,51,0	duplicate(cos_end2#tt_main)	#cos_n16_end2	WARPNPC,1,1
 
 -	script	cos_end3#tt_main	-1,{
 OnTouch:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	mapannounce strnpcinfo(4),"" + strcharinfo(0) +" is third to reach the Finish Line! Congratulations!",bc_map,"0xFFFF00";
 	if (.@w$ == "e8" || .@w$ == "n8") setarray .@pts, 28971,30;
 	if (.@w$ == "e16" || .@w$ == "n16") setarray .@pts, 28951,50;
-	if (tt_point < .@pts[0]) set tt_point,tt_point+.@pts[1];
+	if (tt_point < .@pts[0]) tt_point += .@pts[1];
 	warp "turbo_room",72,89;
 	donpcevent "Winner Helper#TBT_"+.@w$+"::OnEnable";
 	donpcevent "Master#"+.@w$+"::OnDisable";
@@ -2006,7 +2006,7 @@ OnTouch:
 	end;
 
 OnInit:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	disablenpc "#cos_"+.@w$+"_end3";
 	end;
 }
@@ -2017,7 +2017,7 @@ turbo_n_16,371,43,0	duplicate(cos_end3#tt_main)	#cos_n16_end3	WARPNPC,1,1
 
 turbo_e_4,316,365,0	script	DSwitch#tt_main	-1,1,1,{
 OnTouch:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (rand(1,2) == 1)
 		enablenpc "Flasher_Exit_1#"+.@w$;
 	else
@@ -2040,7 +2040,7 @@ OnTouch:
 	end;
 	
 OnInit:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	disablenpc strnpcinfo(0);
 	end;
 }
@@ -2064,13 +2064,13 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 	if (tt_rank < 29999) {
 		mes "[Guide]";
 		mes "Congratulations!";
-		set .@w$,callfunc("F_tt");
+		.@w$ = callfunc("F_tt");
 		if (compare(.@w$,"4")) {
 			if (tt_point < 28961) {
 				mes "As the winner, your reward";
 				mes "is 40 Turbo Track Points~";
-				set tt_point,tt_point+40;
-				set my_point,tt_point;
+				tt_point += 40;
+				my_point = tt_point;
 				mes "You now have a total of";
 				mes tt_point + " Turbo Track points,";
 				mes strcharinfo(0) +".";
@@ -2090,7 +2090,7 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 			mes "any points if you exceed the";
 			mes "point limit. You now have a total of " + my_point + " Turbo Track points.";
 		}
-		set tt_rank,tt_rank+1;
+		++tt_rank;
 		next;
 		if (tt_rank > $ttranks[1]) {
 			setarray $ttranks[0],$ttranks[0],tt_rank,$ttranks[1],$ttranks[2],$ttranks[3],$ttranks[4];
@@ -2103,13 +2103,13 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 			donpcevent "Turbo Track Guide::OnNew_Top1";
 			if (tt_rank == 29999) {
 				if ($ttnames$[7] == "Breezy Havana") {
-					set $ttnames$[7],strcharinfo(0);
+					$ttnames$[7] = strcharinfo(0);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
 					announce strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
 				}
 				else if ($ttnames$[8] == "RS125") {
-					set $ttnames$[8],strcharinfo(0);
+					$ttnames$[8] = strcharinfo(0);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
 					if (compare(.@w$,"4")) announce strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
@@ -2127,13 +2127,13 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 			donpcevent "Turbo Track Guide::OnNew_Top2";
 			if (tt_rank == 29999) {
 				if ($ttnames$[7] == "Breezy Havana") {
-					set $ttnames$[7],strcharinfo(0);
+					$ttnames$[7] = strcharinfo(0);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
 					announce strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
 				}
 				else if ($ttnames$[8] == "RS125") {
-					set $ttnames$[8],strcharinfo(0);
+					$ttnames$[8] = strcharinfo(0);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
 					announce strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
@@ -2151,13 +2151,13 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 			donpcevent "Turbo Track Guide::OnNew_Top3";
 			if (tt_rank == 29999) {
 				if ($ttnames$[7] == "Breezy Havana") {
-					set $ttnames$[7],strcharinfo(0);
+					$ttnames$[7] = strcharinfo(0);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
 					announce strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
 				}
 				else if ($ttnames$[8] == "RS125") {
-					set $ttnames$[8],strcharinfo(0);
+					$ttnames$[8] = strcharinfo(0);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
 					announce strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
@@ -2175,13 +2175,13 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 			donpcevent "Turbo Track Guide::OnNew_Top4";
 			if (tt_rank == 29999) {
 				if ($ttnames$[7] == "Breezy Havana") {
-					set $ttnames$[7],strcharinfo(0);
+					$ttnames$[7] = strcharinfo(0);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
 					announce strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
 				}
 				else if ($ttnames$[8] == "RS125") {
-					set $ttnames$[8],strcharinfo(0);
+					$ttnames$[8] = strcharinfo(0);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
 					announce strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
@@ -2199,13 +2199,13 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 			donpcevent "Turbo Track Guide::OnNew_Top5";
 			if (tt_rank == 29999) {
 				if ($ttnames$[7] == "Breezy Havana") {
-					set $ttnames$[7],strcharinfo(0);
+					$ttnames$[7] = strcharinfo(0);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
 					announce "" + strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
 				}
 				else if ($ttnames$[8] == "RS125") {
-					set $ttnames$[8],strcharinfo(0);
+					$ttnames$[8] = strcharinfo(0);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
 					announce strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
@@ -2250,7 +2250,7 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 				mes "Right, your reward...";
 				if (tt_point < 28961) {
 					mes "40 Turbo Track Points!";
-					set tt_point,tt_point+40;
+					tt_point += 40;
 					mes "You now have a total of";
 					mes tt_point +" Turbo Track Points.";
 				}
@@ -2265,7 +2265,7 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 				mes "Oh, I'm sorry! You're";
 				mes "here so that I can tell you";
 				mes "how many Turbo Track Points";
-				set my_point,tt_point;
+				my_point = tt_point;
 				mes "you have, right? You've got a total of " + my_point + " Turbo Track Points, "+ strcharinfo(0) +".";
 			}
 				next;
@@ -2291,7 +2291,7 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 				mes "Right, your reward...";
 				if (tt_point < 28961) {
 					mes "40 Turbo Track Points!";
-					set tt_point,tt_point+40;
+					tt_point += 40;
 					mes "You now have a total of";
 					mes tt_point +" Turbo Track Points.";
 				}
@@ -2303,7 +2303,7 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 				}
 			} else {
 				mes "Oh right, your current";
-				set my_point,tt_point;
+				my_point = tt_point;
 				mes "Turbo Track Point total!";
 				mes "You've got a total of";
 				mes my_point + " Turbo Track points,";
@@ -2332,8 +2332,8 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 				mes "Right, your reward...";
 				mes "40 Turbo Track Points!";
 				if (tt_point < 28961) {
-					set tt_point,tt_point+40;
-					set my_point,tt_point;
+					tt_point += 40;
+					my_point = tt_point;
 					mes "You now have a total of";
 					mes tt_point +" Turbo Track Points.";
 				}
@@ -2363,13 +2363,13 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 	}
 	
 OnEnable:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	enablenpc "Winner Helper#TBT_"+.@w$;
 	initnpctimer;
 	end;
 
 OnTimer4000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	mapannounce strnpcinfo(4),"This is the ending broadcast for Turbo Track "+RName(.@w$)+".",bc_map,"0x33FF66";
 	end;
 
@@ -2382,12 +2382,12 @@ OnTimer12000:
 	end;
 
 OnTimer16000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (compare(.@w$,"4")) mapannounce strnpcinfo(4),"Players in the arena must be ready to leave through the Warp Portal.",bc_map,"0x33FF66";
 	end;
 
 OnTimer20000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (compare(.@w$,"4"))
 		mapannounce strnpcinfo(4),"In the meantime, winners must proceed to receive their rewards as soon as possible.",bc_map,"0x33FF66";
 	else
@@ -2395,41 +2395,41 @@ OnTimer20000:
 	end;
 
 OnTimer24000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (compare(.@w$,"4")) mapannounce strnpcinfo(4),"Thank you for visiting Al De Baran Turbo Track.",bc_map,"0x33FF66";
 	end;
 
 OnTimer25000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (!compare(.@w$,"4")) mapannounce strnpcinfo(4),"In the meantime, winners must procceed to receive their rewards as soon as possible.",bc_map,"0x33FF66";
 	end;
 	
 OnTimer28000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (compare(.@w$,"4")) mapannounce strnpcinfo(4),"Al De Baran Turbo Track is brought to you by...",bc_map,"0x33FF66";
 	end;
 	
 OnTimer30000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (!compare(.@w$,"4")) mapannounce strnpcinfo(4),"Thank you for visiting Al De Baran Turbo Track.",bc_map,"0x33FF66";
 
 OnTimer32000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (compare(.@w$,"4")) mapannounce strnpcinfo(4),"[Al De Baran Kafra Corporation Headquarters]",bc_map,"0x33FF66";
 	end;
 
 OnTimer35000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (!compare(.@w$,"4")) mapannounce strnpcinfo(4),"Al De Baran Turbo Track is brought to you by...",bc_map,"0x33FF66";
 	end;
 	
 OnTimer36000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (compare(.@w$,"4")) mapannounce strnpcinfo(4),"[Al De Baran Guild Castle Management Luina]",bc_map,"0x33FF66";
 	end;
 
 OnTimer40000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (compare(.@w$,"4"))
 		mapannounce strnpcinfo(4),"[Blacksmith Union]",bc_map,"0x33FF66";
 	else
@@ -2437,42 +2437,42 @@ OnTimer40000:
 	end;
 
 OnTimer44000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (compare(.@w$,"4")) mapannounce strnpcinfo(4),"And [Comodo Casino].",bc_map,"0x33FF66";
 	end;
 
 OnTimer45000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (!compare(.@w$,"4")) mapannounce strnpcinfo(4),"[Al De Baran Guild Castle Management Luina]",bc_map,"0x33FF66";
 	end;
 
 OnTimer48000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (compare(.@w$,"4")) mapannounce strnpcinfo(4),"Once again, we'd like to thank our sponsors.",bc_map,"0x33FF66";
 	end;
 	
 OnTimer50000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (!compare(.@w$,"4")) mapannounce strnpcinfo(4),"[Blacksmith Union]",bc_map,"0x33FF66";
 	end;
 
 OnTimer52000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (compare(.@w$,"4")) mapannounce strnpcinfo(4),"Have a good day.",bc_map,"0x33FF66";
 	end;
 	
 OnTimer55000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (!compare(.@w$,"4")) mapannounce strnpcinfo(4),"And [Comodo Casino].",bc_map,"0x33FF66";
 	end;
 
 OnTimer58000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (compare(.@w$,"4")) mapwarp strnpcinfo(4),"turbo_room",72,89;
 	end;
 
 OnTimer60000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (compare(.@w$,"4")) {
 		enablenpc "Notice_Maker1#TBT_"+.@w$;
 		enablenpc "Notice_Maker3#TBT_"+.@w$;
@@ -2494,17 +2494,17 @@ OnTimer60000:
 	end;
 	
 OnTimer65000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (!compare(.@w$,"4")) mapannounce strnpcinfo(4),"Have a good day.",bc_map,"0x33FF66";
 	end;
 	
 OnTimer70000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (!compare(.@w$,"4")) mapwarp strnpcinfo(4),"turbo_room",72,89;
 	end;
 	
 OnTimer71000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	if (!compare(.@w$,"4")) {
 		disablenpc "Winner Helper#TBT_"+.@w$;
 		enablenpc "#cos_"+.@w$+"_end";
@@ -2527,13 +2527,13 @@ OnTimer71000:
 	end;
 	
 	function	RName	{
-		set .@s,(getstrlen(getarg(0)) > 2)?(substr(getarg(0),1,2)):(charat(getarg(0),getstrlen(getarg(0))-1));
-		set .@rn$,((compare(strnpcinfo(4),"_e_"+.@s))?"Expert mode":"Normal mode")+" - "+.@s+" person";
+		.@s = (getstrlen(getarg(0)) > 2)?(substr(getarg(0),1,2)):(charat(getarg(0),getstrlen(getarg(0))-1));
+		.@rn$ = ((compare(strnpcinfo(4),"_e_"+.@s))?"Expert mode":"Normal mode")+" - "+.@s+" person";
 		return .@rn$;
 	}
 	
 OnInit:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	disablenpc "Winner Helper#TBT_"+.@w$;
 	end;
 }
@@ -2545,19 +2545,19 @@ turbo_n_8,384,167,1	duplicate(WHelper#tt_main)	Winner Helper#TBT_n8	1_M_01
 turbo_n_16,384,167,1	duplicate(WHelper#tt_main)	Winner Helper#TBT_n16	1_M_01
 
 turbo_n_1,384,167,1	script	Guide#TBT_n1	1_M_01,{
-	set .@hour_start,$@start_time / 10000;
-	set .@min_start,(($@start_time % 10000) / 100);
-	set .@sec_start,$@start_time % 100;
-	set .@hour_end,$@end_time / 10000;
-	set .@min_end,(($@end_time % 10000) / 100);
-	set .@sec_end,$@end_time % 100;
-	if (hour_start == 23 && hour_end == 0) set .@hour_end,24;
-	set .@st_to_sec,((.@hour_start * 3600) + (.@min_start * 60) + (.@sec_start));
-	set .@et_to_sec,((.@hour_end * 3600) + (.@min_end * 60) + (.@sec_end));
-	set .@record_time,(.@et_to_sec - .@st_to_sec);
-	set .@record_hour,.@record_time / 3600;
-	set .@record_min,((.@record_time % 3600) / 60);
-	set .@record_sec,.@record_time % 60;
+	.@hour_start = $@start_time / 10000;
+	.@min_start = (($@start_time % 10000) / 100);
+	.@sec_start = $@start_time % 100;
+	.@hour_end = $@end_time / 10000;
+	.@min_end = (($@end_time % 10000) / 100);
+	.@sec_end = $@end_time % 100;
+	if (hour_start == 23 && hour_end == 0) .@hour_end = 24;
+	.@st_to_sec = ((.@hour_start * 3600) + (.@min_start * 60) + (.@sec_start));
+	.@et_to_sec = ((.@hour_end * 3600) + (.@min_end * 60) + (.@sec_end));
+	.@record_time = (.@et_to_sec - .@st_to_sec);
+	.@record_hour = .@record_time / 3600;
+	.@record_min = ((.@record_time % 3600) / 60);
+	.@record_sec = .@record_time % 60;
 	if (.@record_min < 0) {
 		mes "[Guide]";
 		mes "Good work! Maybe you didn't";
@@ -2570,8 +2570,8 @@ turbo_n_1,384,167,1	script	Guide#TBT_n1	1_M_01,{
 		if (tt_point < 28991) {
 			mes "You will be rewarded";
 			mes "with 10 Turbo Track points~!";
-			set tt_point,tt_point+10;
-			set my_point,tt_point;
+			tt_point += 10;
+			my_point = tt_point;
 			mes "You now have a total of";
 			mes tt_point + " Turbo Track points.";
 		}
@@ -2594,9 +2594,9 @@ turbo_n_1,384,167,1	script	Guide#TBT_n1	1_M_01,{
 		end;
 	}
 	else {
-		set .@topbun,(($ttranks[0] % 3600) / 60 );
-		set .@topcho,$ttranks[0] % 60;
-		set .@gap,$ttranks[0] - .@record_time;
+		.@topbun = (($ttranks[0] % 3600) / 60 );
+		.@topcho = $ttranks[0] % 60;
+		.@gap = $ttranks[0] - .@record_time;
 		if (.@gap < 0) {
 			mes "[Guide]";
 			mes "Good work! Maybe you didn't";
@@ -2609,8 +2609,8 @@ turbo_n_1,384,167,1	script	Guide#TBT_n1	1_M_01,{
 			if (tt_point < 28991) {
 				mes "You will be rewarded";
 				mes "with 10 Turbo Track points~!";
-				set tt_point,tt_point+10;
-				set my_point,tt_point;
+				tt_point += 10;
+				my_point = tt_point;
 				mes "You now have a total of";
 				mes tt_point + " Turbo Track points.";
 			}
@@ -2648,7 +2648,7 @@ turbo_n_1,384,167,1	script	Guide#TBT_n1	1_M_01,{
 				mes "a new record, you";
 				mes "will be rewarded with";
 				mes "40 Turbo Track Points!";
-				set tt_point,tt_point+40;
+				tt_point += 40;
 				mes "You now have a total of";
 				mes tt_point + " Turbo Track points.";
 			}
@@ -2674,7 +2674,7 @@ turbo_n_1,384,167,1	script	Guide#TBT_n1	1_M_01,{
 	}
 	
 OnEnable:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	enablenpc "Guide#TBT_"+.@w$;
 	initnpctimer;
 	end;
@@ -2736,7 +2736,7 @@ OnTimer56000:
 	end;
 
 OnTimer60000:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	disablenpc "Guide#TBT_"+.@w$;
 	enablenpc "#cos_"+.@w$+"_end";
 	enablenpc "Notice_Maker1#TBT_"+.@w$;
@@ -2754,21 +2754,21 @@ OnTimer60000:
 	end;
 	
 OnInit:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	disablenpc "Guide#TBT_"+.@w$;
 	end;
 }
 
 -	script	NMaker1#tt_main	-1,{
 OnTouch:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	mapannounce strnpcinfo(4),strcharinfo(0) +" is now entering the Small Cave! " + strcharinfo(0) +" is now in the lead!",bc_map,"0xFFFF00";
 	donpcevent "Turbo Track Guide::OnEnd_"+.@w$;
 	disablenpc "Notice_Maker1#TBT_"+.@w$;
 	end;
 	
 OnInit:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	enablenpc "Notice_Maker1#TBT_"+.@w$;
 	end;
 }
@@ -2782,13 +2782,13 @@ turbo_n_1,11,91,0	duplicate(NMaker1#tt_main)	Notice_Maker1#TBT_n1	-1,3,3
 
 -	script	NMaker3#tt_main	-1,{
 OnTouch:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	mapannounce strnpcinfo(4),strcharinfo(0) +" is now entering the Single Snail! " + strcharinfo(0) +" is now in the lead!",bc_map,"0xFFFF00";
 	disablenpc "Notice_Maker3#TBT_"+.@w$;
 	end;
 	
 OnInit:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	enablenpc "Notice_Maker3#TBT_"+.@w$;
 	end;
 }
@@ -2802,13 +2802,13 @@ turbo_n_1,234,223,0	duplicate(NMaker3#tt_main)	Notice_Maker3#TBT_n1	-1,3,3
 
 -	script	NMaker4#tt_main	-1,{
 OnTouch:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	mapannounce strnpcinfo(4),strcharinfo(0) +" is currently in First Place!",bc_map,"0xFFFF00";
 	disablenpc "Notice_Maker4#TBT_"+.@w$;
 	end;
 
 OnInit:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	enablenpc "Notice_Maker4#TBT_"+.@w$;
 	end;
 
@@ -2887,7 +2887,7 @@ turbo_n_1,253,364,0	duplicate(warp#tt_main)	Warp#n1_7	-1,2,2
 	end;
 OnTouch:
 	specialeffect EF_BLASTMINEBOMB;
-	set .@HitTrap,10;
+	.@HitTrap = 10;
 	if (.@HitTrap > 0 && .@HitTrap < 4)
 		percentheal -1,0;
 	else if (.@HitTrap > 4 && .@HitTrap < 8)
@@ -3524,7 +3524,7 @@ turbo_n_1,368,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F95	HIDDEN_WARP_NPC,1,1
 	end;
 OnTouch:
 	specialeffect EF_FREEZING;
-	set .@HitTrap,10;
+	.@HitTrap = 10;
 	if (.@HitTrap > 0 && .@HitTrap < 4)
 		percentheal -1,0;
 	else if (.@HitTrap > 4 && .@HitTrap < 8) {
@@ -3589,8 +3589,8 @@ turbo_n_1,340,55,0	duplicate(TurboTrap_2#tt_main)	trap_n1#F48	HIDDEN_WARP_NPC,1,
 -	script	bing_1#tt_main	-1,{
 	end;
 OnTouch:
-	set .@w$,callfunc("F_tt");
-	set .@bing1,rand(1,10);
+	.@w$ = callfunc("F_tt");
+	.@bing1 = rand(1,10);
 	if (.@bing1 > 0 && .@bing1 < 4)
 		warp strnpcinfo(4),217,232;
 	else if (.@bing1 == 6)
@@ -3627,7 +3627,7 @@ OnTouch:
 	end;
 	
 OnInit:
-	set .@w$,callfunc("F_tt");
+	.@w$ = callfunc("F_tt");
 	disablenpc "bing2#"+.@w$;
 	end;
 }
@@ -3735,7 +3735,7 @@ turbo_room,99,120,4	script	Turbo Track Guide	4_F_TELEPORTER,{
 			mes "game mode. Would you like to";
 			mes "learn more about a certain course?";
 			next;
-			set .@exitloop,1;
+			.@exitloop = 1;
 			while (.@exitloop) {
 				switch(select("Log Bridge and Cube Hills:Cursed Desert and Flasher Maze:Single Snail and Invisible Maze:Snake Dice and Small Cave:No, thanks.")) {
 				case 1:
@@ -3809,7 +3809,7 @@ turbo_room,99,120,4	script	Turbo Track Guide	4_F_TELEPORTER,{
 					mes "best of luck to";
 					mes "you in the races!";
 					next;
-					set .@exitloop,0;
+					.@exitloop = 0;
 				}
 			}
 			mes "[Turbo Track Guide]";
@@ -4123,7 +4123,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 					close;
 				}
 				else {
-					set .@total_point,10 * .@input;
+					.@total_point = 10 * .@input;
 					if (.@total_point > tt_point) {
 						mes "[Item Exchange Helper]";
 						mes "I'm sorry, but you do";
@@ -4134,7 +4134,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 						mes "redeeming your points again.";
 						close;
 					}
-					set tt_point,tt_point-.@total_point;
+					tt_point -= .@total_point;
 					getitem 7060,.@input; //Warp_Free_Ticket
 					mes "[Item Exchange Helper]";
 					mes "Thank you for";
@@ -4152,40 +4152,40 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 				next;
 				switch(select("Earth Spike:Cold Bolt:Fire Bolt:Lightning Bolt:Soul Strike:Fire Ball:Fire Wall:Frost Diver:Heal")) {
 				case 1:
-					set .@scroll,687; //Earth_Scroll_1_5
-					set .@name$,"Earth Spike";
+					.@scroll = 687; //Earth_Scroll_1_5
+					.@name$ = "Earth Spike";
 					break;
 				case 2:
-					set .@scroll,689; //Cold_Scroll_1_5
-					set .@name$,"Cold Boltl";
+					.@scroll = 689; //Cold_Scroll_1_5
+					.@name$ = "Cold Boltl";
 					break;
 				case 3:
-					set .@scroll,691; //Fire_Scroll_1_5
-					set .@name$,"Fire Bolt";
+					.@scroll = 691; //Fire_Scroll_1_5
+					.@name$ = "Fire Bolt";
 					break;
 				case 4:
-					set .@scroll,693; //Wind_Scroll_1_5
-					set .@name$,"Lightning Bolt";
+					.@scroll = 693; //Wind_Scroll_1_5
+					.@name$ = "Lightning Bolt";
 					break;
 				case 5:
-					set .@scroll,695; //Ghost_Scroll_1_5
-					set .@name$,"Soul Strike";
+					.@scroll = 695; //Ghost_Scroll_1_5
+					.@name$ = "Soul Strike";
 					break;
 				case 6:
-					set .@scroll,697; //Fire_Scroll_2_5
-					set .@name$,"Fire Ball";
+					.@scroll = 697; //Fire_Scroll_2_5
+					.@name$ = "Fire Ball";
 					break;
 				case 7:
-					set .@scroll,699; //Fire_Scroll_3_5
-					set .@name$,"Fire Wall";
+					.@scroll = 699; //Fire_Scroll_3_5
+					.@name$ = "Fire Wall";
 					break;
 				case 8:
-					set .@scroll,12000; //Cold_Scroll_2_5
-					set .@name$,"Frost Diver";
+					.@scroll = 12000; //Cold_Scroll_2_5
+					.@name$ = "Frost Diver";
 					break;
 				case 9:
-					set .@scroll,12002; //Holy_Scroll_1_5
-					set .@name$,"Heal";
+					.@scroll = 12002; //Holy_Scroll_1_5
+					.@name$ = "Heal";
 					break;
 				}
 				mes "[Item Exchange Helper]";
@@ -4211,7 +4211,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 					close;
 				}
 				else {
-					set .@total_point,12 * .@input;
+					.@total_point = 12 * .@input;
 					if (.@total_point > tt_point) {
 						mes "[Item Exchange Helper]";
 						mes "I'm sorry, but you do";
@@ -4222,7 +4222,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 						mes "redeeming your points again.";
 						close;
 					}
-					set tt_point,tt_point-.@total_point;
+					tt_point -= .@total_point;
 					getitem .@scroll,.@input;
 					mes "[Item Exchange Helper]";
 					mes "Thank you for";
@@ -4253,7 +4253,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 						close;
 	
 					}
-					set tt_point,tt_point-40;
+					tt_point -= 40;
 					if (BaseLevel < 70) getexp 3000,0;
 					else if (BaseLevel < 80) getexp 9000,0;
 					else if (BaseLevel < 90) getexp 10000,0;
@@ -4296,7 +4296,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 					close;
 				}
 				else {
-					set .@total_point,150 * .@input;
+					.@total_point = 150 * .@input;
 					if (.@total_point > tt_point) {
 						mes "[Item Exchange Helper]";
 						mes "I'm sorry, but you do";
@@ -4307,7 +4307,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 						mes "redeeming your points again.";
 						close;
 					}
-					set tt_point,tt_point-.@total_point;
+					tt_point -= .@total_point;
 					getitem 732,.@input; //Crystal_Jewel__
 					mes "[Item Exchange Helper]";
 					mes "Thank you for";
@@ -4343,7 +4343,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 					close;
 				}
 				else {
-					set .@total_point,300 * .@input;
+					.@total_point = 300 * .@input;
 					if (.@total_point > tt_point) {
 						mes "[Item Exchange Helper]";
 						mes "I'm sorry, but you do";
@@ -4354,7 +4354,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 						mes "redeeming your points again.";
 						close;
 					}
-					set tt_point,tt_point-.@total_point;
+					tt_point -= .@total_point;
 					getitem 644,.@input; //Gift_Box
 					mes "[Item Exchange Helper]";
 					mes "Thank you for";
@@ -4390,7 +4390,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 					close;
 				}
 				else {
-					set .@total_point,400 * .@input;
+					.@total_point = 400 * .@input;
 					if (.@total_point > tt_point) {
 						mes "[Item Exchange Helper]";
 						mes "I'm sorry, but you do";
@@ -4401,7 +4401,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 						mes "redeeming your points again.";
 						close;
 					}
-					set tt_point,tt_point-.@total_point;
+					tt_point -= .@total_point;
 					getitem 12016,.@input; //Speed_Up_Potion
 					mes "[Item Exchange Helper]";
 					mes "Thank you for";
@@ -4503,10 +4503,10 @@ turbo_room,106,117,3	script	Point Manager#tt	4_M_ZONDAOYAJI,{
 				close;
 			}
 			else {
-				set .@want_point1,10 * .@input;
-				set .@want_point,5 * .@input;
-				set .@my_turbo_all,tt_point+.@want_point;
-				set .@my_arena_all,arena_point-.@want_point1;
+				.@want_point1 = 10 * .@input;
+				.@want_point = 5 * .@input;
+				.@my_turbo_all = tt_point+.@want_point;
+				.@my_arena_all = arena_point-.@want_point1;
 				if (.@my_turbo_all > 28999) {
 					mes "[Turbo Track Point Manager]";
 					mes "Unfortunately, your Turbo Track Points will exceed the maximum limit if we proceed with point conversion. Please spend more";
@@ -4529,8 +4529,8 @@ turbo_room,106,117,3	script	Point Manager#tt	4_M_ZONDAOYAJI,{
 					mes "A total of " + .@want_point1 + " Arena Points";
 					mes "has been converted into";
 					mes "" + .@want_point +" Turbo Track Points.";
-					set arena_point,.@my_arena_all; //arena_point
-					set tt_point,.@my_turbo_all;
+					arena_point = .@my_arena_all; //arena_point
+					tt_point = .@my_turbo_all;
 					next;
 					mes "[Turbo Track Point Manager]";
 					mes "" + strcharinfo(0) + ",";
@@ -4569,8 +4569,8 @@ S_ExchangePoints:
 		mes "2 Arena Points";
 		mes "have been converted";
 		mes "into 1 Turbo Track Point.";
-		set arena_point,arena_point-getarg(1);
-		set tt_point,tt_point+getarg(2);
+		arena_point -= getarg(1);
+		tt_point += getarg(2);
 		next;
 		mes "[Turbo Track Point Manager]";
 		mes "" + strcharinfo(0) + ",";

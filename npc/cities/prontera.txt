@@ -135,7 +135,7 @@ prontera,216,70,2	script	Strife#pront	1_M_02,{
 			mes "MAGNUM BREAK!";
 			next;
 			if (select("I wanna be strong too!:Um... Do you best.") == 1) {
-				set event_prt_nov_dreamtalk,1;
+				event_prt_nov_dreamtalk = 1;
 				mes "[Strife]";
 				mes "Wow...!";
 				mes "That's so awesome!";
@@ -172,7 +172,7 @@ prontera,216,70,2	script	Strife#pront	1_M_02,{
 			mes "that now, I gotta";
 			mes "train even harder!";
 			next;
-			set event_prt_nov_dreamtalk,2;
+			event_prt_nov_dreamtalk = 2;
 			getitem 2501,1; //Hood
 			mes "[Strife]";
 			mes "This is, well, for you to help you get even stronger. I guess I want to thank you for being such a good example.";
@@ -305,7 +305,7 @@ prt_in,180,20,2	script	Bartender#pront	1_M_PUBMASTER,{
 	mes "[Bartender]";
 	mes "I can't keep my business busy without my special menu 'Crunch Crunch Sour' and 'Savory Yum Yum'...*Sigh*";
 	next;
-	set .@drink,1;
+	.@drink = 1;
 	while(.@drink) {
 		switch(select("'Cunch Crunch Sour'?:'Savory Yum Yum'?:Cancel.")) {
 		case 1:
@@ -330,7 +330,7 @@ prt_in,180,20,2	script	Bartender#pront	1_M_PUBMASTER,{
 			mes "[Bartender]";
 			mes "Take care of yourself~.";
 			close2;
-			set .@drink,0;
+			.@drink = 0;
 			break;
 		}
 
@@ -551,7 +551,7 @@ prt_church,103,76,0	script	Garnet#pront	1_F_02,{
 	mes "[Garnet]";
 	mes "Go and ahead and ask if you have any questions about skills for Acolytes and Priests.";
 	next;
-	set .@SkillChat,1;
+	.@SkillChat = 1;
 	while(.@SkillChat) {
 		switch(select("About Heal:About Cure:About Increase AGI:About Angelus:About Blessing:About Warp Portal:End Conversation")) {
 		case 1:
@@ -631,7 +631,7 @@ prt_church,103,76,0	script	Garnet#pront	1_F_02,{
 			mes "Alright, I've";
 			mes "heard enough.";
 			close2;
-			set .@SkillChat,0;
+			.@SkillChat = 0;
 			break;
 		}
 	}
@@ -648,7 +648,7 @@ prt_church,103,71,0	script	Henson#pront	2_M_PHARMACIST,{
 	mes "[Henson]";
 	mes "Did you have any questions about Acolyte and Priest skills?";
 	next;
-	set .@SkillChat,1;
+	.@SkillChat = 1;
 	while(.@SkillChat) {
 		switch(select("About Divine Protection:About Demon Bane:About Decrease AGI:About Signum Crusis :About Pneuma:About Ruwach:About Teleport:End conversation.")) {
 		case 1:
@@ -729,7 +729,7 @@ prt_church,103,71,0	script	Henson#pront	2_M_PHARMACIST,{
 			mes "[Henson]";
 			mes "If you wish to understand more about an Acolyte or Priest skill, you are welcome to visit me at any time.";
 			close2;
-			set .@SkillChat,0;
+			.@SkillChat = 0;
 			break;
 		}
 	}

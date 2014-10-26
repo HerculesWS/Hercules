@@ -16,7 +16,7 @@
 //============================================================
 -	script	Repherion#1::OutsideFlagsG1	GUILD_FLAG,{
 
-	set .@GID, getcastledata("gefg_cas01",1);
+	.@GID = getcastledata("gefg_cas01",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";
