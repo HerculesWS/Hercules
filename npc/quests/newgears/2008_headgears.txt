@@ -96,7 +96,7 @@ gef_fild05,80,149,3	script	Myu#08_hat	4_F_YUNYANG,{
 				mes "If you do, it's all over for you.";
 				mes "So you better be careful.. ";
 				mes "Meow Meow Meow..";
-				set hatcat2008,1;
+				hatcat2008 = 1;
 				setquest 7054;
 				setquest 7055;
 				close;
@@ -116,7 +116,7 @@ gef_fild05,80,149,3	script	Myu#08_hat	4_F_YUNYANG,{
 			mes "Our business is over!!!";
 			mes " ";
 			mes "(Meow..)";
-			set hatcat2008,0;
+			hatcat2008 = 0;
 			erasequest 7054;
 			erasequest 7055;
 			close;
@@ -136,7 +136,7 @@ gef_fild05,80,149,3	script	Myu#08_hat	4_F_YUNYANG,{
 			mes "What more did you expect?";
 			mes "That Pow is really a valuable thing!";
 			mes "Now, just take it and leave. Wild Roses feel uncomfortable with an adventurer around them.";
-			set hatcat2008,2;
+			hatcat2008 = 2;
 			getitem 5446,1;
 			erasequest 7054;
 			erasequest 7055;
@@ -185,7 +185,7 @@ gef_fild05,80,149,3	script	Myu#08_hat	4_F_YUNYANG,{
 			mes "You know the drill right?";
 			mes "Never ever touch the Wild Roses, Only hunt down the Kobold Archers.";
 			mes "Give them 1,000 times despair!";
-			set hatcat2008,1;
+			hatcat2008 = 1;
 			setquest 7054;
 			setquest 7055;
 			close;

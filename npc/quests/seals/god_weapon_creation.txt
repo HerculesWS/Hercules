@@ -68,7 +68,7 @@ gld_dun01,28,85,0	script	Grunburti#1::GodDwarf	4_M_DWARF,{
 		mes "At least I was fortunate enough to find this cave. We Dwarves are most cozy living underground, after all.";
 		close;
 	case 3:
-		set .@GID,getcharid(2);
+		.@GID = getcharid(2);
 		if (($God1 < $@god_check2) || ($God2 < $@god_check2) || ($God3 < $@god_check2) || ($God4 < $@god_check2)){
 			if (($God1 >= $@god_check1) && ($God2 >= $@god_check1) && ($God3 >= $@god_check1) && ($God4 >= $@god_check1) && (strcharinfo(0) == getguildmaster(.@GID))) {
 				mes "[Dwarf Grunburti]";
@@ -391,7 +391,7 @@ que_god01,154,112,4	script	Grunburti#god	4_M_DWARF,{
 		mes "pity for you~";
 		close;
 	}
-	set .@GID,getcharid(2);
+	.@GID = getcharid(2);
 	if (strcharinfo(0) != getguildmaster(.@GID)) {
 		mes "[Dwarf Grunburti]";
 		mes "How in the...";
@@ -490,10 +490,10 @@ que_god01,154,112,4	script	Grunburti#god	4_M_DWARF,{
 				delitem 969,20;  //Gold
 				delitem 2603,1;  //Necklace
 				getitem 2630,1; // Brysinggamen
-				set $God1,0;
-				set $God2,0;
-				set $God3,0;
-				set $God4,0;
+				$God1 = 0;
+				$God2 = 0;
+				$God3 = 0;
+				$God4 = 0;
 				announce "[Brisingamen] has come into the hands of [" + strcharinfo(0) + "], master of the [" + getguildname(.@GID) + "] guild.",bc_all;
 				mes "[Dwarf Grunburti]";
 				mes "Ah, just look at this dazzling beauty. No other piece of jewelry complemented Freya as well as Brisingamen.";
@@ -564,10 +564,10 @@ que_god01,154,112,4	script	Grunburti#god	4_M_DWARF,{
 				delitem 984,10;  //Oridecon
 				delitem 2627,1;  //Belt
 				getitem 2629,1; // Magingiorde
-				set $God1,0;
-				set $God2,0;
-				set $God3,0;
-				set $God4,0;
+				$God1 = 0;
+				$God2 = 0;
+				$God3 = 0;
+				$God4 = 0;
 				announce "[Megingjard] the godly item has been given to [" + strcharinfo(0) + "], the master of the guild [" + getguildname(.@GID) + "].",bc_all;
 				mes "[Dwarf Grunburti]";
 				mes "Here...";
@@ -654,10 +654,10 @@ que_god01,154,112,4	script	Grunburti#god	4_M_DWARF,{
 				delitem 985,10;  //Elunium
 				delitem 2406,1;  //Boots_
 				getitem 2410,1; // Sleipnir
-				set $God1,0;
-				set $God2,0;
-				set $God3,0;
-				set $God4,0;
+				$God1 = 0;
+				$God2 = 0;
+				$God3 = 0;
+				$God4 = 0;
 				announce "[Sleipnir] the godly item has been given to [" + strcharinfo(0) + "], the master of the guild [" + getguildname(.@GID) + "].",bc_all;
 				mes "[Dwarf Grunburti]";
 				mes "There...";
@@ -743,10 +743,10 @@ que_god01,154,112,4	script	Grunburti#god	4_M_DWARF,{
 				delitem 969,40;  //Gold
 				delitem 1522,1;  //Stunner
 				getitem 1530,1; // Mjolnir
-				set $God1,0;
-				set $God2,0;
-				set $God3,0;
-				set $God4,0;
+				$God1 = 0;
+				$God2 = 0;
+				$God3 = 0;
+				$God4 = 0;
 				announce "[Mjolnir] has been bestowed to [" + strcharinfo(0) + "], the master of the [" + getguildname(.@GID) + "] guild.",bc_all;
 				mes "[Dwarf Grunburti]";
 				mes "It's done.";
@@ -798,11 +798,11 @@ OnTimer615000:
 
 que_god01,169,82,0	script	god_wep_warpmaster	-1,{
 OnEnable:
-	for(set .@i,1; .@i<=6; set .@i,.@i+1)
+	for(.@i = 1; .@i<=6; ++.@i)
 		enablenpc "god_failwarp#"+.@i;
 	end;
 OnDisable:
-	for(set .@i,1; .@i<=6; set .@i,.@i+1)
+	for(.@i = 1; .@i<=6; ++.@i)
 		disablenpc "god_failwarp#"+.@i;
 	end;
 }
@@ -828,7 +828,7 @@ que_god01,293,3,0	script	Godly Item Quests#god	4_F_01,{
 	mes "Please enter password.";
 	mes "If you wish to cancel, please enter 0.";
 	next;
-	set .@i, callfunc("F_GM_NPC",1854,0,0,4000);
+	.@i = callfunc("F_GM_NPC",1854,0,0,4000);
 	if (.@i == -2) {
 		mes "[Use in case of emergency]";
 		mes "Password is incorrect.";

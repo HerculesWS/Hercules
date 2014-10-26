@@ -225,7 +225,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 						mes "My old comrades in arms.";
 						mes "You have no idea how much";
 						mes "I miss them...";
-						set god_eremes,1;
+						god_eremes = 1;
 						break;
 					case 2:
 						mes "[Rebarev Doug]";
@@ -324,7 +324,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 						next;
 						mes "[Rebarev Doug]";
 						mes "Let's not talk about that. What's important that our squad was disbanded because of we failed our final mission. Now, will you please go find ^0000FFThe 3rd Platoon Records^000000 in the Prontera Library for me?";
-						set god_eremes,3;
+						god_eremes = 3;
 						next;
 						mes "[Rebarev Doug]";
 						mes "Remember, it might be helpful to ask the librarian for the file with a record on ^660000the 1st squad's final mission^000000.";
@@ -359,7 +359,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 						mes "I wonder what they";
 						mes "have been doing since";
 						mes "our ^0000FFfinal mission^000000...";
-						set god_eremes,2;
+						god_eremes = 2;
 						break;
 					}
 				}
@@ -451,7 +451,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 					mes "[Rebarev Doug]";
 					mes "I appreciate that you've delivered news of my old comrades to me.";
 					mes "Now, I need to continue my research under the command of his Majesty.";
-					set god_eremes,21;
+					god_eremes = 21;
 					break;
 				case 2:
 					mes "^3355FFYou keep your suspicions to yourself and tell Rebarev Doug about the members of";
@@ -468,7 +468,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 					mes "[Rebarev Doug]";
 					mes "I appreciate that you've delivered news of my old comrades to me.";
 					mes "Now, I need to continue my research under the command of his Majesty. Once again, thank you for your help.";
-					set god_eremes,22;
+					god_eremes = 22;
 					break;
 				}
 			}
@@ -560,7 +560,7 @@ prt_castle,48,164,0	script	Crusader#God	4_M_JOB_KNIGHT2,{
 			next;
 			mes "[Max Von Shedough]";
 			mes "However, as of now, the petition you've just given me is considered classified information. Please keep this a military secret.";
-			set $God2,$God2+1;
+			++$God2;
 			if ($God2 == $@god_check1) {
 				announce "The 2nd seal of [Megingjard] has appeared.",bc_all;
 			}
@@ -571,10 +571,10 @@ prt_castle,48,164,0	script	Crusader#God	4_M_JOB_KNIGHT2,{
 					announce "The 2nd seal of [Megingjard] has been released.",bc_all;
 			}
 			if (god_eremes == 23) {
-				set god_eremes,25;
+				god_eremes = 25;
 			}
 			else if (god_eremes == 24) {
-				set god_eremes,26;
+				god_eremes = 26;
 			}
 			close;
 		}
@@ -624,7 +624,7 @@ prt_in,172,109,0	script	A File#megin1	HIDDEN_NPC,{
 	else if (god_eremes > 6 && god_eremes < 12) {
 		if (rand(1,10) > 6 && god_eremes > 6) {
 			mes "^3355FFYou see a shelf filled with many files. You begin searching through them, one by one.^000000";
-			set god_eremes,god_eremes+1;
+			++god_eremes;
 			close;
 		}
 		else {
@@ -655,7 +655,7 @@ prt_in,170,109,0	script	A File#megin2	HIDDEN_NPC,{
 	else if (god_eremes > 6 && god_eremes < 12) {
 		if (rand(1,10) > 6 && god_eremes > 6) {
 			mes "^3355FFYou see a shelf filled with many files. You begin searching through them, one by one.^000000";
-			set god_eremes,god_eremes+1;
+			++god_eremes;
 			close;
 		}
 		else {
@@ -688,7 +688,7 @@ prt_in,168,109,0	script	A File#megin3	HIDDEN_NPC,{
 	else if (god_eremes > 6 && god_eremes < 12) {
 		if (rand(1,10) > 6 && god_eremes > 6) {
 			mes "^3355FFYou see a shelf filled with many files. You begin searching through them, one by one.^000000";
-			set god_eremes,god_eremes+1;
+			++god_eremes;
 			close;
 		}
 		else {
@@ -720,7 +720,7 @@ prt_in,169,109,0	script	A File#megin4	HIDDEN_NPC,{
 	else if (god_eremes > 6 && god_eremes < 12) {
 		if (rand(1,10) > 6 && god_eremes > 6) {
 			mes "^3355FFYou see a shelf filled with many files. You begin searching through them, one by one.^000000";
-			set god_eremes,god_eremes+1;
+			++god_eremes;
 			close;
 		}
 		else {
@@ -753,7 +753,7 @@ prt_in,166,109,0	script	A File#megin5	HIDDEN_NPC,{
 	else if (god_eremes > 6 && god_eremes < 12) {
 		if (rand(1,10) > 6 && god_eremes > 6) {
 			mes "^3355FFYou see a shelf filled with many files. You begin searching through them, one by one.^000000";
-			set god_eremes,god_eremes+1;
+			++god_eremes;
 			close;
 		}
 		else {
@@ -837,7 +837,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 							else if (countitem(1041)) {
 								delitem 1041,countitem(1041);
 							}
-							set god_eremes,6;
+							god_eremes = 6;
 							next;
 							mes "[Librarian Jekan]";
 							mes "Thank you...";
@@ -882,7 +882,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 						mes "classified file as soon";
 						mes "as I can!";
 						close2;
-						set god_eremes,7;
+						god_eremes = 7;
 						end;
 					}
 					else {
@@ -910,7 +910,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 						mes "[Librarian Jekan]";
 						mes "Damn, my eyes are sore.";
 						mes "Working as a government official is easy except for the times when the beaucrats make you do stuff like this.";
-						set god_eremes,5;
+						god_eremes = 5;
 					}
 					else if (god_eremes > 4) {
 						mes "[Librarian Jekan]";
@@ -946,7 +946,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 						mes "Hmm...?";
 						mes "How did you";
 						mes "know about that?";
-						set god_eremes,4;
+						god_eremes = 4;
 					}
 					else {
 						mes "[Librarian Jekan]";
@@ -1055,7 +1055,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 			mes "Okay, now...";
 			mes "Come back here";
 			mes "as soon as you can.";
-			set god_eremes,13;
+			god_eremes = 13;
 			close;
 		}
 		else if (god_eremes == 13) {
@@ -1074,7 +1074,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 				delitem 1024,3;  //Chinese_Ink
 				delitem 916,3;  //Feather_Of_Birds
 				delitem 717,20;  //Blue_Gemstone
-				set god_eremes,14;
+				god_eremes = 14;
 				next;
 				mes "[Librarian Jekan]";
 				mes "Alright then...";
@@ -1110,7 +1110,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 			else {
 				mes "[Librarian Jekan]";
 				mes "Let me go over and review the document before I make a copy...";
-				set god_eremes,god_eremes+1;
+				++god_eremes;
 			}
 			close;
 		}
@@ -1120,7 +1120,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 			next;
 			mes "[Librarian Jekan]";
 			mes "Just remember, this copy needs to stay in the Prontera Library. That means you have to come back if you need to read the document again.";
-			set god_eremes,17;
+			god_eremes = 17;
 			close;
 		}
 		else if (god_eremes > 16) {
@@ -1174,7 +1174,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 									mes " : Royal Myst";
 									mes " : The Nineball^000000";
 									if (god_eremes == 17) {
-										set god_eremes,18;
+										god_eremes = 18;
 									}
 									close2;
 									if (compare(.@input$,"record") == 1) {
@@ -1197,7 +1197,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 										mes "Most of the members of the 1st Squad were transferred to other squads or retired. Their former leader, Rebarev Doug, is currently in charge of researching godly artifacts under royal edict.^000000";
 										close2;
 										if (god_eremes == 18) {
-											set god_eremes,19;
+											god_eremes = 19;
 										}
 									}
 								}
@@ -1267,7 +1267,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 								mes " : The Nineball^000000";
 								close2;
 								if (god_eremes == 17) {
-									set god_eremes,18;
+									god_eremes = 18;
 								}
 								if (compare(.@input$,"record") == 1) {
 									mes "^663300[Keyword: ^9966331st Squad Record^663300]";
@@ -1289,7 +1289,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 									mes "Most of the members of the 1st Squad were transferred to other squads or retired. Their former leader, Rebarev Doug, is currently in charge of researching godly artifacts under royal edict.^000000";
 									close2;
 									if (god_eremes == 18) {
-										set god_eremes,19;
+										god_eremes = 19;
 									}
 								}
 							}
@@ -1597,7 +1597,7 @@ geffen_in,109,161,3	script	Crusader#God1	4_M_CRU,{
 					mes "[Zan.Huadoku]";
 					mes "^3355FFZan looks very confused and his eyes begin to glaze with a dazed look. You try speaking to him again, but he doesn't respond at all.^000000";
 					if (!god_megin_1) {
-						set god_megin_1,1;
+						god_megin_1 = 1;
 					}
 					close;
 				}
@@ -1668,7 +1668,7 @@ geffen_in,109,161,3	script	Crusader#God1	4_M_CRU,{
 					next;
 					mes "^3355FFZan stood still in silence, with a pained look on his face.^000000";
 					if (god_megin_1 == 1) {
-						set god_megin_1,2;
+						god_megin_1 = 2;
 					}
 					close;
 				}
@@ -1707,7 +1707,7 @@ geffen_in,109,161,3	script	Crusader#God1	4_M_CRU,{
 			mes "I can't think about anything further than that. I can't even remember what we found. Three months after that all happened, I've had these head problems...";
 			next;
 			mes "^3355FFZan stood still in silence, with a pained look on his face.^000000";
-			set god_megin_1,3;
+			god_megin_1 = 3;
 			close;
 		}
 		else if (god_megin_1 > 2) {
@@ -1861,7 +1861,7 @@ morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 							mes "and I'm saying it just once...";
 							mes "^0000FFAragham never hoarded";
 							mes "upgrade items.^000000";
-							set god_megin_2,1;
+							god_megin_2 = 1;
 							close;
 						}
 					case 2:
@@ -1903,7 +1903,7 @@ morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 							mes "you this hint once...";
 							mes "^0000FFAragham never hoarded";
 							mes "upgrade items.^000000";
-							set god_megin_2,1;
+							god_megin_2 = 1;
 							close;
 						}
 					case 3:
@@ -1941,7 +1941,7 @@ morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 							mes "^0000FFAragham never";
 							mes "hoarded upgrade items.^000000";
 							mes "Now, don't forget!";
-							set god_megin_2,1;
+							god_megin_2 = 1;
 							close;
 						}
 					}
@@ -2018,37 +2018,37 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 				next;
 				if ((countitem(740) > 0) || (countitem(741) > 0) || (countitem(742) > 0) || (countitem(743) > 0) || (countitem(750) > 0) || (countitem(751) > 0) || (countitem(752) > 0) || (countitem(753) > 0) || (countitem(754) > 0) || (countitem(7206) > 0) || (countitem(7212) > 0)){
 					if (countitem(740) > 0) {
-						set .@toy$,"Puppet";
+						.@toy$ = "Puppet";
 					}
 					else if (countitem(741) > 0) {
-						set .@toy$,"Poring Doll";
+						.@toy$ = "Poring Doll";
 					}
 					else if (countitem(742) > 0) {
-						set .@toy$,"Chonchon Doll";
+						.@toy$ = "Chonchon Doll";
 					}
 					else if (countitem(743) > 0) {
-						set .@toy$,"Spore Doll";
+						.@toy$ = "Spore Doll";
 					}
 					else if (countitem(744) > 0) {
-						set .@toy$,"Baphomet Doll";
+						.@toy$ = "Baphomet Doll";
 					}
 					else if (countitem(751) > 0) {
-						set .@toy$,"Osiris Doll";
+						.@toy$ = "Osiris Doll";
 					}
 					else if (countitem(752) > 0) {
-						set .@toy$,"Rocker Doll";
+						.@toy$ = "Rocker Doll";
 					}
 					else if (countitem(753) > 0) {
-						set .@toy$,"Yoyo Doll";
+						.@toy$ = "Yoyo Doll";
 					}
 					else if (countitem(754) > 0) {
-						set .@toy$,"Racoon Doll";
+						.@toy$ = "Racoon Doll";
 					}
 					else if (countitem(7206) > 0) {
-						set .@toy$,"Black Cat Doll";
+						.@toy$ = "Black Cat Doll";
 					}
 					else {
-						set .@toy$,"Hung Doll";
+						.@toy$ = "Hung Doll";
 					}
 					mes "^3355FFYou pulled out a "+ .@toy$ +"";
 					mes "to cover your face, and wiggled its arms as if it were talking.^000000";
@@ -2127,7 +2127,7 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 						next;
 						mes "[Cuaque Donon]";
 						mes "^666666Still, this is the safest place for me for a while. But I'm always ready to run away if I have to.^000000";
-						set god_megin_2,3;
+						god_megin_2 = 3;
 					}
 					close;
 				case 2:
@@ -2150,7 +2150,7 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 					mes "[Cuaque Donon]";
 					mes "Like anyone who works as a Crusader under my old boss will end up like me. You know... broken.";
 					if (god_megin_2 == 1) {
-						set god_megin_2,2;
+						god_megin_2 = 2;
 					}
 					close;
 				case 3:
@@ -2174,7 +2174,7 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 								mes "You're the same";
 								mes "as all the others!";
 								mes "Go away from me!";
-								set god_megin_2,0;
+								god_megin_2 = 0;
 								close;
 							case 2:
 								mes "[Cuaque Donon]";
@@ -2184,7 +2184,7 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 								mes "Ergh...";
 								mes "I can't remember";
 								mes "more than that...";
-								set god_megin_2,4;
+								god_megin_2 = 4;
 								close;
 							}
 						}
@@ -2196,7 +2196,7 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 								mes "You're the same";
 								mes "as all the others!";
 								mes "Go away from me!";
-								set god_megin_2,0;
+								god_megin_2 = 0;
 								close;
 							case 2:
 								mes "[Cuaque Donon]";
@@ -2204,7 +2204,7 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 								mes "You're the same";
 								mes "as all the others!";
 								mes "Go away from me!";
-								set god_megin_2,0;
+								god_megin_2 = 0;
 								close;
 							case 3:
 								mes "[Cuaque Donon]";
@@ -2214,7 +2214,7 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 								mes "Ergh...";
 								mes "I can't remember";
 								mes "more than that...";
-								set god_megin_2,4;
+								god_megin_2 = 4;
 								close;
 							}
 						}
@@ -2347,7 +2347,7 @@ alberta,196,146,0	script	Crusader#megin2	4_M_CRU,{
 						mes "[Jack O]";
 						mes "That's all I can remember.";
 						mes "I better take some Green Herbs now. My head throbs like crazy whenever I think about that time.";
-						set god_megin_3,2;
+						god_megin_3 = 2;
 						close;
 					}
 					else {
@@ -2373,7 +2373,7 @@ alberta,196,146,0	script	Crusader#megin2	4_M_CRU,{
 					mes "I might not be able to remember";
 					mes "a whole lot from back then, but the part about ^0000FFinsubordination^000000 can't be right. I'm sure of that.";
 					if (god_megin_3 == 0) {
-						set god_megin_3,1;
+						god_megin_3 = 1;
 					}
 					close;
 				}
@@ -2548,7 +2548,7 @@ aldebaran,66,213,0	script	Lady#megin	1_F_04,{
 						mes "I think I can";
 						mes "try to remember";
 						mes "my comrades...";
-						set god_megin_4,1;
+						god_megin_4 = 1;
 						close;
 					}
 					else {
@@ -2601,7 +2601,7 @@ aldebaran,66,213,0	script	Lady#megin	1_F_04,{
 						mes "have, no, was there someone";
 						mes "named that with us?";
 						close2;
-						set god_megin_4,2;
+						god_megin_4 = 2;
 						end;
 					}
 					else {
@@ -2650,7 +2650,7 @@ aldebaran,66,213,0	script	Lady#megin	1_F_04,{
 			next;
 			mes "[Emma Searth]";
 			mes "I really appreciate you coming here to talk to me about the old days. I, I want you to have this.";
-			set god_eremes,28;
+			god_eremes = 28;
 			getitem 603,1; // Old_Blue_Box
 			if (checkre(3)) {
 				if (BaseLevel < 56) getexp 2700,0;
@@ -2780,7 +2780,7 @@ cmd_in02,190,94,3	script	Man#megin	4_M_ROGUE,{
 					if (god_megin_6 == 0) {
 						mes "[Royal Myst]";
 						mes "Huh? What's that old geezer want this time? Tell 'em I'm fine, dandy even! Why the hell does he keep sending people...";
-						set god_megin_6,1;
+						god_megin_6 = 1;
 						close;
 					}
 					else if (god_megin_6 > 0 && god_megin_6 < 15) {
@@ -2837,7 +2837,7 @@ cmd_in02,190,94,3	script	Man#megin	4_M_ROGUE,{
 						next;
 						mes "[Royal Myst]";
 						mes "Hey, what do you think happens to Crusaders when they're framed and killed, huh? Where exactly do they go? Niflheim, Vahalla...?";
-						set god_eremes,20;
+						god_eremes = 20;
 						close;
 					}
 				case 4:
@@ -2864,7 +2864,7 @@ cmd_in02,190,94,3	script	Man#megin	4_M_ROGUE,{
 							mes "^3355FFBefore you can even think,";
 							mes "Royal Myst dips his hand into your inventory and helps himself to an Alcohol.^000000";
 							delitem 970,1;
-							set god_megin_6,god_megin_6 +2;
+							god_megin_6 += 2;
 							close;
 						}
 						else {
@@ -2935,7 +2935,7 @@ jawaii_in,44,110,0	script	Security Officer#megin	4_M_JOB_KNIGHT2,{
 				mes "[The Nineball]";
 				mes "I've been told that there have";
 				mes "been many unruly drunkards here lately, but it is in our best interest to make your experience here as enjoyable as possible.";
-				set god_megin_5,god_megin_5 +1;
+				++god_megin_5;
 				close;
 			}
 			else if (god_megin_5 == 5) {
@@ -3146,10 +3146,10 @@ niflheim,109,254,0	script	Egnigem	4_M_NFDEADSWDMAN,{
 						mes "Thank you for";
 						mes "listening to me...";
 						if (god_eremes == 21) {
-							set god_eremes,23;
+							god_eremes = 23;
 						}
 						else if (god_eremes == 22) {
-							set god_eremes,24;
+							god_eremes = 24;
 						}
 						close;
 					}
@@ -3190,7 +3190,7 @@ niflheim,109,254,0	script	Egnigem	4_M_NFDEADSWDMAN,{
 			mes "invested in me, I humbly bestow upon you my remaining strength. Fight honorably, and do not lose sight of righteousness.";
 			specialeffect EF_LOCKON;
 			specialeffect2 EF_HOLYCROSS;
-			set god_eremes,27;
+			god_eremes = 27;
 			if (checkre(3)) {
 				if (BaseLevel < 56) getexp 2700,0;
 				else if ((BaseLevel > 55) && (BaseLevel < 61)) getexp 3000,0;
@@ -3248,7 +3248,7 @@ niflheim,109,254,0	script	Egnigem	4_M_NFDEADSWDMAN,{
 			mes "invested in me, I humbly bestow upon you my remaining strength. Fight honorably, and do not lose sight of righteousness.";
 			specialeffect EF_LOCKON;
 			specialeffect2 EF_HOLYCROSS;
-			set god_eremes,27;
+			god_eremes = 27;
 			if (checkre(3)) {
 				if (BaseLevel < 56) getexp 2700,0;
 				else if ((BaseLevel > 55) && (BaseLevel < 61)) getexp 3000,0;

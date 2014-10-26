@@ -202,7 +202,7 @@ prontera,174,328,3	script	Young Man#bard_q1	4_M_ORIENT02,3,3,{
 								mes "stop you. Thankfully, nobody";
 								mes "has any idea of where he is~";
 								delitem 12112,1; //Tropical_Sograt
-								set qskill_bard,1;
+								qskill_bard = 1;
 							}
 							else {
 								mes "[Timid Young Man]";
@@ -296,7 +296,7 @@ prontera,174,328,3	script	Young Man#bard_q1	4_M_ORIENT02,3,3,{
 								mes "stop you. Thankfully, nobody";
 								mes "has any idea of where he is~";
 								delitem 12112,1; //Tropical_Sograt
-								set qskill_bard,1;
+								qskill_bard = 1;
 							}
 							else {
 								mes "[Timid Young Man]";
@@ -488,7 +488,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 				specialeffect2 EF_TALK_FROSTJOKE;
 				delitem 7277,1; //Munak_Doll
 				skill "BA_PANGVOICE",1,0;
-				set qskill_bard,9;
+				qskill_bard = 9;
 				next;
 				mes "[Riott]";
 				mes "Remember, it doesn't matter";
@@ -570,7 +570,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 				specialeffect2 EF_TALK_FROSTJOKE;
 				delitem 574,5; //Egg
 				skill 1010,1,0;
-				set qskill_bard,9;
+				qskill_bard = 9;
 				next;
 				mes "[Riott]";
 				mes "Remember, it doesn't matter";
@@ -634,7 +634,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 					mes "Bweh heh heh heh heh!";
 					delitem 574,countitem(574); //Egg
 				}
-				set qskill_bard,8;
+				qskill_bard = 8;
 				close;
 			}
 		}
@@ -788,7 +788,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 						mes "to come back here";
 						mes "and bring me back";
 						mes "^4D4DFF5 Yhelle's Eggs^000000, alright?";
-						set qskill_bard,2;
+						qskill_bard = 2;
 						close;
 					}
 					mes "[Riott]";
@@ -1268,7 +1268,7 @@ function	script	F_BardSkillYhelle	{
 			mes "^3355FFYou found ^3333331 Egg^3355FF in the";
 			mes "place where Yhelle the";
 			mes "Hen was roosting.^000000";
-			set qskill_bard,qskill_bard+1;
+			++qskill_bard;
 			getitem 574,1; //Egg
 		}
 	}

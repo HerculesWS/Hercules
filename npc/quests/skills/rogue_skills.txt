@@ -56,7 +56,7 @@ OnTouch:
 		specialeffect2 EF_CHANGECOLD;
 		specialeffect EF_CHANGEWIND;
 		specialeffect2 EF_LIGHTSPHERE;
-		set ROG_SK,11;
+		ROG_SK = 11;
 		mes "[Killer]";
 		mes "Wh-what have";
 		mes "you done to me?!";
@@ -85,8 +85,8 @@ OnTouch:
 		mes "backward, it will be pale red.";
 		next;
 		setarray .@Effects[1],EF_CHANGECOLD,EF_CHANGEWIND,EF_CHANGEEARTH;
-		for(set .@lim_1,0; .@lim_1<10; set .@lim_1,.@lim_1+1) {
-			set .@move_1,rand(1,3);
+		for(.@lim_1 = 0; .@lim_1<10; ++.@lim_1) {
+			.@move_1 = rand(1,3);
 			specialeffect .@Effects[.@move_1];
 			if (select("Block him to the Left:Block him to the Right:Block his Retreat") == .@move_1) {
 				mes "^3355FFThe killer remains";
@@ -139,7 +139,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 			mes "Close Confine skill once again.";
 			specialeffect2 EF_LIGHTSPHERE;
 			skill 1005,1,0;
-			set ROG_SK,13;
+			ROG_SK = 13;
 			close;
 		}
 		else if (ROG_SK == 13 && Upper == 1) {
@@ -238,7 +238,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 								mes "this letter to my youngest";
 								mes "son, ^FF0000Louis Greg^000000? Hurry,";
 								mes "there's not much time left!";
-								set ROG_SK,2;
+								ROG_SK = 2;
 								close;
 							}
 							mes "[Haijara Greg]";
@@ -264,7 +264,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 							mes "this letter to my youngest";
 							mes "son, ^FF0000Louis Greg^000000? Hurry,";
 							mes "there's not much time left!";
-							set ROG_SK,2;
+							ROG_SK = 2;
 							close;
 						}
 						mes "[Haijara Greg]";
@@ -304,7 +304,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 				mes "face in front of me again.";
 				mes "And just be happy that";
 				mes "I haven't killed you!";
-				set ROG_SK,1;
+				ROG_SK = 1;
 				close;
 			}
 			else if (ROG_SK == 2) {
@@ -342,7 +342,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 				mes "a letter from Jay.";
 				mes "Good, good, let me";
 				mes "read what he has to say...";
-				set ROG_SK,6;
+				ROG_SK = 6;
 				next;
 				mes "[Haijara Greg]";
 				mes "Ah, great news! He's";
@@ -410,7 +410,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 				mes "him steal that book!";
 				specialeffect EF_COMBOATTACK5;
 				donpcevent "Killer#Rogueguild::OnEnable";
-				set ROG_SK,10;
+				ROG_SK = 10;
 				close;
 			}
 			else if (ROG_SK == 10) {
@@ -490,7 +490,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 					mes "I hope that you can learn";
 					mes "more about this skill through";
 					mes "practice, and that you become^FFFFFF ^000000 as great a legend as Chae Takbae.";
-					set ROG_SK,12;
+					ROG_SK = 12;
 					skill 1005,1,0;
 					specialeffect2 EF_LIGHTSPHERE;
 					close;
@@ -502,7 +502,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 				mes "Confine through diligent";
 				mes "practice. Good luck, and";
 				mes "thanks again for your help.";
-				set ROG_SK,12;
+				ROG_SK = 12;
 				skill 1005,1,0;
 				specialeffect2 EF_LIGHTSPHERE;
 				close;
@@ -556,7 +556,7 @@ in_rogue,152,29,0	script	Louis Greg#rogueguild	4_M_02,{
 			mes "room in the Rogue Guild, but";
 			mes "even I don't know where to find";
 			mes "it. I hope everything's okay...";
-			set ROG_SK,1;
+			ROG_SK = 1;
 			close;
 		}
 		else if (ROG_SK == 1) {
@@ -576,7 +576,7 @@ in_rogue,152,29,0	script	Louis Greg#rogueguild	4_M_02,{
 			mes "father? Oh, he must";
 			mes "be alright! Quick, let";
 			mes "me read it right away!";
-			set ROG_SK,3;
+			ROG_SK = 3;
 			next;
 			mes "[Louis Greg]";
 			mes "Oh no, he may be safe for";
@@ -703,7 +703,7 @@ in_rogue,268,125,2	script	Thor Greg#rogueguild	4_M_04,{
 			mes "didn't get to him. With";
 			mes "any luck, he's hidden in";
 			mes "the panic room, but still...";
-			set ROG_SK,1;
+			ROG_SK = 1;
 			close;
 		}
 		else if (ROG_SK == 1) {
@@ -731,7 +731,7 @@ in_rogue,268,125,2	script	Thor Greg#rogueguild	4_M_04,{
 			mes "What's this you're";
 			mes "giving me? A letter";
 			mes "from Louis? Let's see...";
-			set ROG_SK,4;
+			ROG_SK = 4;
 			next;
 			mes "[Thor Greg]";
 			mes "Oh God, father's in";
@@ -822,7 +822,7 @@ in_rogue,268,125,2	script	Thor Greg#rogueguild	4_M_04,{
 				mes "closely and make sure that you";
 				mes "predict and block her movements";
 				mes "to the left, right or backward.^FFFFFF ^000000 Get ready, I'm sending you now...";
-				set ROG_SK,6;
+				ROG_SK = 6;
 				close2;
 				warp "in_rogue",89,114;
 				end;
@@ -842,7 +842,7 @@ in_rogue,268,125,2	script	Thor Greg#rogueguild	4_M_04,{
 			mes "training. Congratulations!";
 			mes "Now, please speak to my";
 			mes "father so that he can explain^FFFFFF ^000000 the Close Confine skill in detail.";
-			set ROG_SK,9;
+			ROG_SK = 9;
 			close;
 		}
 		else if (ROG_SK == 9) {
@@ -895,7 +895,7 @@ in_rogue,181,114,3	script	Jay Greg#rogueguild	4_M_03,{
 			mes "room. Strangely, my brothers";
 			mes "and I can never find it and";
 			mes "figure out whether he's safe...";
-			set ROG_SK,1;
+			ROG_SK = 1;
 			next;
 			mes "[Jay Greg]";
 			mes "Recently, he's been pursued";
@@ -940,7 +940,7 @@ in_rogue,181,114,3	script	Jay Greg#rogueguild	4_M_03,{
 			mes "Ah, it's from Thor, so";
 			mes "I guess I better read";
 			mes "it right away. Hmmm...";
-			set ROG_SK,5;
+			ROG_SK = 5;
 			next;
 			mes "[Jay Greg]";
 			mes "I see... I must report";
@@ -1175,10 +1175,10 @@ function	script	F_Kienna	{
 		mes "going to move and block";
 		mes "me from moving, essentially";
 		mes "immobilizing me. Get ready~";
-		set ROG_SK,7;
+		ROG_SK = 7;
 		next;
-		for(set .@lim_1,0; .@lim_1<10; set .@lim_1,.@lim_1+1) {
-			set .@move_1,rand(1,3);
+		for(.@lim_1 = 0; .@lim_1<10; ++.@lim_1) {
+			.@move_1 = rand(1,3);
 			if (select("Block her to the Left:Block her to the Right:Block her retreat") == .@move_1) {
 				mes "[Kienna]";
 				mes "Huh...?";
@@ -1186,7 +1186,7 @@ function	script	F_Kienna	{
 				mes "Very nice work~";
 				specialeffect EF_POTION1;
 				specialeffect2 EF_POTION7;
-				set .@suc_1,.@suc_1 + 1;
+				++.@suc_1;
 			}
 			else {
 				mes "[Kienna]";
@@ -1251,7 +1251,7 @@ function	script	F_Kienna	{
 			mes "you back to Thor Greg";
 			mes "now so that you can finish";
 			mes "learning ^FF0000Close Confine^000000.";
-			set ROG_SK,8;
+			ROG_SK = 8;
 			disablenpc "Kienna#"+getarg(0);
 			donpcevent "#1st5min::OnDisable";
 			enablenpc "#1strecog";
@@ -1272,14 +1272,14 @@ function	script	F_Kienna	{
 			if (select("Yes!:No, thanks.") == 1) {
 				disablenpc "Kienna#"+getarg(0);
 				donpcevent "#1stmove::OnEnable";
-				set ROG_SK,6;
+				ROG_SK = 6;
 				warp "prt_are01",150,150;
 				end;
 			}
 			disablenpc "Kienna#"+getarg(0);
 			donpcevent "#1st5min::OnDisable";
 			enablenpc "#1strecog";
-			set ROG_SK,6;
+			ROG_SK = 6;
 			donpcevent "Waiting Room#rogue10::OnEnable";
 			warp "in_rogue",264,124;
 			end;
@@ -1293,7 +1293,7 @@ function	script	F_Kienna	{
 		mes "but you'll have to start";
 		mes "from the very beginning";
 		mes "of this training.";
-		set ROG_SK,6;
+		ROG_SK = 6;
 		close2;
 		disablenpc "Kienna#"+getarg(0);
 		donpcevent "#1stmove::OnEnable";

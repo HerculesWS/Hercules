@@ -59,7 +59,7 @@ prt_in,85,99,3	script	Knight#kabuto	4_M_JOB_KNIGHT2,{
 			mes "the cost of increased damage";
 			mes "is greater risk to yourself.";
 			mes "For now, it would be best to practice this skill on your own.";
-			set KNGT_SK,10;
+			KNGT_SK = 10;
 			skill "KN_CHARGEATK",1,0;
 			next;
 			mes "[Essofeit]";
@@ -109,7 +109,7 @@ prt_in,85,99,3	script	Knight#kabuto	4_M_JOB_KNIGHT2,{
 			mes "the cost of increased damage";
 			mes "is greater risk to yourself.";
 			mes "For now, it would be best to practice this skill on your own.";
-			set KNGT_SK,9;
+			KNGT_SK = 9;
 			skill "KN_CHARGEATK",1,0;
 			next;
 			mes "[Essofeit]";
@@ -178,7 +178,7 @@ prt_in,85,99,3	script	Knight#kabuto	4_M_JOB_KNIGHT2,{
 				mes "completed the preparations?";
 				delitem 530,5; //Candy_Striper
 				delitem 748,3; //Witherless_Rose
-				set KNGT_SK,8;
+				KNGT_SK = 8;
 				close;
 			}
 			mes "[Essofeit]";
@@ -228,7 +228,7 @@ prt_in,85,99,3	script	Knight#kabuto	4_M_JOB_KNIGHT2,{
 			mes "wonderful battles, that glorious camaraderie forged between";
 			mes "rivals... It's all in the past.";
 			next;
-			set KNGT_SK,7;
+			KNGT_SK = 7;
 			mes "[Essofeit]";
 			mes "Maybe it's better that";
 			mes "I forget all about my old";
@@ -284,7 +284,7 @@ prt_in,85,99,3	script	Knight#kabuto	4_M_JOB_KNIGHT2,{
 			mes "for yourself and speak to the";
 			mes "other Knights that are training. Hopefully, you will see what";
 			mes "I have seen for a long time...";
-			set KNGT_SK,1;
+			KNGT_SK = 1;
 			close;
 		}
 	}
@@ -328,7 +328,7 @@ OnTouch:
 		mes "training. But as you listen";
 		mes "a little more closely, their";
 		mes "screams seem a bit dramatized.^000000";
-		if (KNGT_SK == 1) set KNGT_SK,2;
+		if (KNGT_SK == 1) KNGT_SK = 2;
 		close;
 	}
 	mes "^3355FFThis group of Knights";
@@ -356,7 +356,7 @@ prontera,72,352,7	script	Grand Master	4_M_JOB_KNIGHT1,{
 		mes "and make sure that you";
 		mes "don't pull a muscle.";
 		mes "Um, that's an order!";
-		if (KNGT_SK == 2) set KNGT_SK,3;
+		if (KNGT_SK == 2) KNGT_SK = 3;
 		close;
 	}
 	mes "Put your backs into it,";
@@ -397,7 +397,7 @@ prontera,78,354,3	script	Knight#zabii	4_M_JOB_KNIGHT2,{
 		mes "talkin' to me and let me";
 		mes "grunt like I've got a hernia.";
 		mes "Hooooo-AH! BWAH! HAI-YAH!";
-		if (KNGT_SK == 3) set KNGT_SK,4;
+		if (KNGT_SK == 3) KNGT_SK = 4;
 		close;
 	}
 	mes "[A Knight]";
@@ -419,7 +419,7 @@ prontera,73,357,5	script	Knight#drake	4_M_JOB_KNIGHT2,{
 		mes "necklace for my wife.";
 		mes "I just know she'll love it!";
 		next;
-		if (KNGT_SK == 4) set KNGT_SK,5;
+		if (KNGT_SK == 4) KNGT_SK = 5;
 		mes "[Gon]";
 		mes "Let's see, how many";
 		mes "more days until payday?";
@@ -454,7 +454,7 @@ prontera,78,357,3	script	Knight#sasword	4_M_JOB_KNIGHT2,{
 		mes "second rate, except maybe";
 		mes "for that one guy, Essofeit.";
 		next;
-		set KNGT_SK,6;
+		KNGT_SK = 6;
 		mes "[Jiya]";
 		mes "As for me, I don't have too";
 		mes "much in the way of ambition.";

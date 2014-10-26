@@ -35,7 +35,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			mes "worse than working when";
 			mes "you're supposed to be resting.";
 			mes "H-hey! Um, what are you doing?";
-			set ALCHE_SK,1;
+			ALCHE_SK = 1;
 			next;
 			mes "[Pisruik]";
 			mes "Q-quit looking at";
@@ -104,7 +104,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 				mes "["+ strcharinfo(0) +"]";
 				mes "I am called "+ strcharinfo(0) +".";
 				next;
-				set ALCHE_SK,2;
+				ALCHE_SK = 2;
 				mes "[Pisruik]";
 				mes "Ah, "+ strcharinfo(0) +".";
 				mes "Would you please bring";
@@ -195,7 +195,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 						delitem 1093,4; //Empty_Potion
 						delitem 950,10; //Heart_Of_Mermaid
 						delitem 1057,10; //Moth_Dust
-						set ALCHE_SK,3;
+						ALCHE_SK = 3;
 						mes "[Pisruik]";
 						mes "Great, it looks like";
 						mes "everything is here.";
@@ -206,14 +206,14 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 						next;
 						switch(select("Medicine?:Bomb?")) {
 						case 1:
-							set ALCHE_SK,4;
+							ALCHE_SK = 4;
 							mes "[Pisruik]";
 							mes "Hahahah, that's right!";
 							mes "I'm working on making";
 							mes "a new form of medicine.";
 							break;
 						case 2:
-							set ALCHE_SK,4;
+							ALCHE_SK = 4;
 							mes "[Pisruik]";
 							mes "A bomb? Do I look like";
 							mes "a nutcase to you? No, no...";
@@ -257,7 +257,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 						next;
 						switch(select("Nope, I'm too busy!:Sure, I'll help you.:What's in it for me?")) {
 						case 1:
-							set ALCHE_SK,5;
+							ALCHE_SK = 5;
 							mes "[Pisruik]";
 							mes "I guess I'll have to gather";
 							mes "those on my own. Alright, well,";
@@ -266,7 +266,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 							mes "your business with me is done.";
 							close;
 						case 2:
-							set ALCHE_SK,6;
+							ALCHE_SK = 6;
 							mes "[Pisruik]";
 							mes "Thanks, I really";
 							mes "appreciate it. While";
@@ -318,7 +318,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 							mes "the results of my research.";
 							next;
 							if (select("Nah, I'm too busy.:Alright, I'll help you.") == 1) {
-								set ALCHE_SK,5;
+								ALCHE_SK = 5;
 								mes "[Pisruik]";
 								mes "I guess I'll have to gather";
 								mes "those on my own. Alright, well,";
@@ -327,7 +327,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 								mes "your business with me is done.";
 								close;
 							}
-							set ALCHE_SK,6;
+							ALCHE_SK = 6;
 							mes "[Pisruik]";
 							mes "Thanks, I really";
 							mes "appreciate it. While";
@@ -435,7 +435,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			mes "maybe it's not your fault.";
 			mes "Anyway, just so you know,";
 			mes "I'm developing a new medicine.";
-			set ALCHE_SK,4;
+			ALCHE_SK = 4;
 			close;
 		}
 		else if (ALCHE_SK == 4) {
@@ -497,7 +497,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			next;
 			switch(select("Nope, I'm too busy!:Sure, I'll help you.:What's in it for me?")) {
 			case 1:
-				set ALCHE_SK,5;
+				ALCHE_SK = 5;
 				mes "[Pisruik]";
 				mes "I guess I'll have to gather";
 				mes "those on my own. Alright, well,";
@@ -506,7 +506,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 				mes "your business with me is done.";
 				close;
 			case 2:
-				set ALCHE_SK,6;
+				ALCHE_SK = 6;
 				mes "[Pisruik]";
 				mes "Thanks, I really";
 				mes "appreciate it. While";
@@ -558,7 +558,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 				mes "the results of my research.";
 				next;
 				if (select("Nah, I'm too busy.:Alright, I'll help you.") == 1) {
-					set ALCHE_SK,5;
+					ALCHE_SK = 5;
 					mes "[Pisruik]";
 					mes "I guess I'll have to gather";
 					mes "those on my own. Alright, well,";
@@ -567,7 +567,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 					mes "your business with me is done.";
 					close;
 				}
-				set ALCHE_SK,6;
+				ALCHE_SK = 6;
 				mes "[Pisruik]";
 				mes "Thanks, I really";
 				mes "appreciate it. While";
@@ -641,7 +641,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			mes "If I weren't so sickly, I'd get";
 			mes "them myself, but--*Cough* as";
 			mes "you can see, I don't feel so well. ^FFFFFF ^000000";
-			set ALCHE_SK,6;
+			ALCHE_SK = 6;
 			next;
 			mes "[Pisruik]";
 			if (Sex == 0) {
@@ -661,7 +661,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 		else if (ALCHE_SK == 6) {
 			if (countitem(1032) > 19) {
 				delitem 1032,20; //Blossom_Of_Maneater
-				set ALCHE_SK,7;
+				ALCHE_SK = 7;
 				mes "[Pisruik]";
 				mes "Thanks so much for";
 				mes "bringing me these";
@@ -676,7 +676,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 					mes "Clover extract I prepared.";
 				}
 				next;
-				set ALCHE_SK,9;
+				ALCHE_SK = 9;
 				specialeffect EF_SUI_EXPLOSION;
 				mes "[Pisruik]";
 				mes "Ah!";
@@ -753,7 +753,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			}
 		}
 		else if (ALCHE_SK == 7) {
-			set ALCHE_SK,8;
+			ALCHE_SK = 8;
 			mes "[Pisruik]";
 			mes "Hmmm...";
 			mes "Actually, I miscalculated";
@@ -765,7 +765,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 		else if (ALCHE_SK == 8) {
 			if (countitem(1032) > 0) {
 				delitem 1032,1; //Blossom_Of_Maneater
-				set ALCHE_SK,7;
+				ALCHE_SK = 7;
 				mes "[Pisruik]";
 				mes "Thanks so much!";
 				mes "Now I finally have the";
@@ -780,7 +780,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 					mes "exciting part of this project!";
 				}
 				next;
-				set ALCHE_SK,9;
+				ALCHE_SK = 9;
 				specialeffect EF_SUI_EXPLOSION;
 				mes "[Pisruik]";
 				mes "Ah!";
@@ -866,7 +866,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			if (select("Let him try a pair of your glasses:Don't give him anything") == 1) {
 				if (countitem(2243) > 0) {
 					delitem 2243,1; //Spinning_Eyes
-					set ALCHE_SK,10;
+					ALCHE_SK = 10;
 					//changes the quest steps by deicision.
 					mes "["+ strcharinfo(0) +"]";
 					mes "Here, why don't you";
@@ -922,7 +922,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 						mes "well as a few warnings about";
 						mes "the medicine's side effects.^000000";
 						next;
-						set ALCHE_SK,11;
+						ALCHE_SK = 11;
 						getitem 7434,1; //Elemental_Create_Book
 						mes "[Pisruik]";
 						mes "Well, you should be";
@@ -1009,7 +1009,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 				mes "well as a few warnings about";
 				mes "the medicine's side effects.^000000";
 				next;
-				set ALCHE_SK,11;
+				ALCHE_SK = 11;
 				getitem 7434,1; //Elemental_Create_Book
 				mes "[Pisruik]";
 				mes "Well, you should be";
@@ -1202,7 +1202,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	1_M_LIBRARYMASTER,{
 		mes "My name is...";
 		mes "" + strcharinfo(0) + ".";
 		next;
-		set bioeth,13;
+		bioeth = 13;
 		skill "AM_BIOETHICS",1,0;
 		mes "[Kellasus]";
 		mes "Ah...";
@@ -1249,7 +1249,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	1_M_LIBRARYMASTER,{
 		mes "people. It's not like I can force you to forget once you know how";
 		mes "to make Homunculi, understand?";
 		next;
-		set bioeth,12;
+		bioeth = 12;
 		mes "[Kellasus]";
 		mes "Please give me a little";
 		mes "time to prepare my lesson";
@@ -1258,7 +1258,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	1_M_LIBRARYMASTER,{
 		close;
 	}
 	if (BaseJob == Job_Alchemist && bioeth == 10) {
-		set bioeth,11;
+		bioeth = 11;
 		mes "[Kellasus]";
 		mes "^333333*Sigh*^000000";
 		mes "I'm so confused...";
@@ -1361,7 +1361,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	1_M_LIBRARYMASTER,{
 		mes "hope to someone's";
 		mes "hopeless situation...";
 		next;
-		set bioeth,10;
+		bioeth = 10;
 		mes "[Kellasus]";
 		mes "I've never...";
 		mes "I never thought...";
@@ -1460,7 +1460,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	1_M_LIBRARYMASTER,{
 					mes "of what I believe to be an";
 					mes "abuse of the gift of life.";
 					next;
-					set bioeth,8;
+					bioeth = 8;
 					mes "[Kellasus]";
 					mes "There's just so much";
 					mes "risk! I don't think I can";
@@ -1559,7 +1559,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	1_M_LIBRARYMASTER,{
 			mes "learn those skills. Yes, it's";
 			mes "true that I could teach you...";
 			next;
-			set bioeth,4;
+			bioeth = 4;
 			mes "[Kellasus]";
 			mes "But I refuse to pass down";
 			mes "my knowledge of Homunculi";
@@ -1632,7 +1632,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	1_M_LIBRARYMASTER,{
 		mes "curiosity to reveal the unknown,^FFFFFF ^000000 may lead you on the path of the";
 		mes "Homunculus. For your own sake,^FFFFFF ^000000 don't bother considering the idea.";
 		next;
-		set bioeth,3;
+		bioeth = 3;
 		mes "[Kellasus]";
 		mes "Remember that all life is";
 		mes "precious. If your motives";
@@ -1680,7 +1680,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	1_M_LIBRARYMASTER,{
 		mes "Philosophy must all be learned";
 		mes "by the competent Alchemist.";
 		next;
-		set bioeth,2;
+		bioeth = 2;
 		mes "[Kellasus]";
 		mes "Once you've entered the";
 		mes "exciting vastness of Alchemy,";
@@ -1714,7 +1714,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	1_M_LIBRARYMASTER,{
 		mes "Do not be so proud as to";
 		mes "seek out forbidden truths.";
 		next;
-		set bioeth,1;
+		bioeth = 1;
 		mes "[Kellasus]";
 		mes "Good luck in your";
 		mes "studies, and I hope";
@@ -1828,7 +1828,7 @@ lhz_in01,225,122,5	script	Skrajjad#qsk_al	4_M_SAGE_A,{
 		mes "so that he can teach you";
 		mes "the Call Homunculus skill.";
 		next;
-		set bioeth,5;
+		bioeth = 5;
 		mes "[Skrajjad]";
 		mes "Good luck in";
 		mes "your studies";
@@ -1940,7 +1940,7 @@ lhz_in01,204,138,5	script	Keshibien#qsk_al	4_M_ALCHE_C,{
 		mes "find him somewhere in town,";
 		mes "though I'm unsure where...";
 		next;
-		set bioeth,6;
+		bioeth = 6;
 		mes "[Keshibien]";
 		mes "Anyway, it was really";
 		mes "nice to meet you. Hopefully,";
@@ -2031,7 +2031,7 @@ lhz_in02,278,273,3	script	Broncher#qsk_al	4_M_SEAMAN,{
 		mes "Homunculus Resurrection.";
 		mes "But you still need Kellasus";
 		mes "to teach you the fundamentals.";
-		set bioeth,7;
+		bioeth = 7;
 		next;
 		mes "[Broncher]";
 		mes "Without those basic";
@@ -2087,7 +2087,7 @@ lhz_in03,106,34,3	script	Koring#qsk_al	4_M_KID1,{
 		mes "a while, I was really scared,";
 		mes "but my Daddy never gave up.";
 		next;
-		if (bioeth == 8) set bioeth,9;
+		if (bioeth == 8) bioeth = 9;
 		mes "[Koring]";
 		mes "He might be a little";
 		mes "grumpy now, but my ";
