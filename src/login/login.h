@@ -8,6 +8,8 @@
 #include "../common/core.h" // CORE_ST_LAST
 #include "../common/mmo.h" // NAME_LENGTH,SEX_*
 
+struct mmo_account;
+
 enum E_LOGINSERVER_ST
 {
 	LOGINSERVER_ST_RUNNING = CORE_ST_LAST,
@@ -92,6 +94,27 @@ struct Login_Config {
 	struct client_hash_node *client_hash_nodes;		// linked list containg md5 hash for each gm group
 };
 
+struct auth_node {
+	int account_id;
+	uint32 login_id1;
+	uint32 login_id2;
+	uint32 ip;
+	char sex;
+	uint32 version;
+	uint8 clienttype;
+	int group_id;
+	time_t expiration_time;
+};
+
+//-----------------------------------------------------
+// Online User Database [Wizputer]
+//-----------------------------------------------------
+struct online_login_data {
+	int account_id;
+	int waiting_disconnect;
+	int char_server;
+};
+
 #define sex_num2str(num) ( ((num) ==  SEX_FEMALE) ? 'F' : ((num) ==  SEX_MALE) ? 'M' : 'S' )
 #define sex_str2num(str) ( ((str) == 'F') ? SEX_FEMALE : ((str) == 'M') ? SEX_MALE : SEX_SERVER )
 
@@ -99,5 +122,66 @@ struct Login_Config {
 extern struct mmo_char_server server[MAX_SERVERS];
 extern struct Login_Config login_config;
 
+struct login_interface {
+	int (*mmo_auth) (struct login_session_data* sd, bool isServer);
+	int (*mmo_auth_new) (const char* userid, const char* pass, const char sex, const char* last_ip);
+	int (*waiting_disconnect_timer) (int tid, int64 tick, int id, intptr_t data);
+	DBData (*create_online_user) (DBKey key, va_list args);
+	struct online_login_data* (*add_online_user) (int char_server, int account_id);
+	void (*remove_online_user) (int account_id);
+	int (*online_db_setoffline) (DBKey key, DBData *data, va_list ap);
+	int (*online_data_cleanup_sub) (DBKey key, DBData *data, va_list ap);
+	int (*online_data_cleanup) (int tid, int64 tick, int id, intptr_t data);
+	int (*sync_ip_addresses) (int tid, int64 tick, int id, intptr_t data);
+	bool (*check_encrypted) (const char* str1, const char* str2, const char* passwd);
+	bool (*check_password) (const char* md5key, int passwdenc, const char* passwd, const char* refpass);
+	int (*lan_subnetcheck) (uint32 ip);
+	int (*lan_config_read) (const char *lancfgName);
+	void (*fromchar_accinfo) (int fd, int account_id, int u_fd, int u_aid, int u_group, int map_fd, struct mmo_account *acc);
+	void (*fromchar_account) (int fd, int account_id, struct mmo_account *acc);
+	void (*fromchar_account_update_other) (int account_id, unsigned int state);
+	void (*fromchar_auth_ack) (int fd, int account_id, uint32 login_id1, uint32 login_id2, uint8 sex, int request_id, struct auth_node* node);
+	void (*fromchar_ban) (int account_id, time_t timestamp);
+	void (*fromchar_change_sex_other) (int account_id, char sex);
+	void (*fromchar_pong) (int fd);
+	void (*fromchar_parse_auth) (int fd, int id, const char *const ip);
+	void (*fromchar_parse_update_users) (int fd, int id);
+	void (*fromchar_parse_request_change_email) (int fd, int id, const char *const ip);
+	void (*fromchar_parse_account_data) (int fd, int id, const char *const ip);
+	void (*fromchar_parse_ping) (int fd);
+	void (*fromchar_parse_change_email) (int fd, int id, const char *const ip);
+	void (*fromchar_parse_account_update) (int fd, int id, const char *const ip);
+	void (*fromchar_parse_ban) (int fd, int id, const char *const ip);
+	void (*fromchar_parse_change_sex) (int fd, int id, const char *const ip);
+	void (*fromchar_parse_account_reg2) (int fd, int id, const char *const ip);
+	void (*fromchar_parse_unban) (int fd, int id, const char *const ip);
+	void (*fromchar_parse_account_online) (int fd, int id);
+	void (*fromchar_parse_account_offline) (int fd);
+	void (*fromchar_parse_online_accounts) (int fd, int id);
+	void (*fromchar_parse_request_account_reg2) (int fd);
+	void (*fromchar_parse_update_wan_ip) (int fd, int id);
+	void (*fromchar_parse_all_offline) (int fd, int id);
+	void (*fromchar_parse_change_pincode) (int fd);
+	bool (*fromchar_parse_wrong_pincode) (int fd);
+	void (*fromchar_parse_accinfo) (int fd);
+	int (*parse_fromchar) (int fd);
+	void (*connection_problem) (int fd, uint8 status);
+	void (*kick) (struct login_session_data* sd);
+	void (*auth_ok) (struct login_session_data* sd);
+	void (*auth_failed) (struct login_session_data* sd, int result);
+	void (*login_error) (int fd, uint8 status);
+	void (*parse_ping) (int fd, struct login_session_data* sd);
+	void (*parse_client_md5) (int fd, struct login_session_data* sd);
+	bool (*parse_client_login) (int fd, struct login_session_data* sd, const char *const ip);
+	void (*send_coding_key) (int fd, struct login_session_data* sd);
+	void (*parse_request_coding_key) (int fd, struct login_session_data* sd);
+	void (*char_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
+	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *const ip);
+	int (*parse_login) (int fd);
+};
+
+struct login_interface *login;
+
+void login_defaults(void);
 
 #endif /* LOGIN_LOGIN_H */

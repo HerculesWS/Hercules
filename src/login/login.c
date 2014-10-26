@@ -26,6 +26,7 @@
 #include "../common/timer.h"
 #include "../common/utils.h"
 
+struct login_interface login_s;
 struct Login_Config login_config;
 
 int login_fd; // login server socket
@@ -54,41 +55,13 @@ struct s_subnet {
 
 int subnet_count = 0;
 
-int login_mmo_auth_new(const char* userid, const char* pass, const char sex, const char* last_ip);
-
 //-----------------------------------------------------
 // Auth database
 //-----------------------------------------------------
 #define AUTH_TIMEOUT 30000
 
-struct auth_node {
-
-	int account_id;
-	uint32 login_id1;
-	uint32 login_id2;
-	uint32 ip;
-	char sex;
-	uint32 version;
-	uint8 clienttype;
-	int group_id;
-	time_t expiration_time;
-};
-
 static DBMap* auth_db; // int account_id -> struct auth_node*
-
-
-//-----------------------------------------------------
-// Online User Database [Wizputer]
-//-----------------------------------------------------
-struct online_login_data {
-
-	int account_id;
-	int waiting_disconnect;
-	int char_server;
-};
-
 static DBMap* online_db; // int account_id -> struct online_login_data*
-static int login_waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data);
 
 /**
  * @see DBCreateData
@@ -106,11 +79,11 @@ static DBData login_create_online_user(DBKey key, va_list args)
 struct online_login_data* login_add_online_user(int char_server, int account_id)
 {
 	struct online_login_data* p;
-	p = idb_ensure(online_db, account_id, login_create_online_user);
+	p = idb_ensure(online_db, account_id, login->create_online_user);
 	p->char_server = char_server;
 	if( p->waiting_disconnect != INVALID_TIMER )
 	{
-		timer->delete(p->waiting_disconnect, login_waiting_disconnect_timer);
+		timer->delete(p->waiting_disconnect, login->waiting_disconnect_timer);
 		p->waiting_disconnect = INVALID_TIMER;
 	}
 	return p;
@@ -123,7 +96,7 @@ void login_remove_online_user(int account_id)
 	if( p == NULL )
 		return;
 	if( p->waiting_disconnect != INVALID_TIMER )
-		timer->delete(p->waiting_disconnect, login_waiting_disconnect_timer);
+		timer->delete(p->waiting_disconnect, login->waiting_disconnect_timer);
 
 	idb_remove(online_db, account_id);
 }
@@ -133,7 +106,7 @@ static int login_waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t 
 	if( p != NULL && p->waiting_disconnect == tid && p->account_id == id )
 	{
 		p->waiting_disconnect = INVALID_TIMER;
-		login_remove_online_user(id);
+		login->remove_online_user(id);
 		idb_remove(auth_db, id);
 	}
 	return 0;
@@ -151,7 +124,7 @@ static int login_online_db_setoffline(DBKey key, DBData *data, va_list ap)
 		p->char_server = -1;
 		if( p->waiting_disconnect != INVALID_TIMER )
 		{
-			timer->delete(p->waiting_disconnect, login_waiting_disconnect_timer);
+			timer->delete(p->waiting_disconnect, login->waiting_disconnect_timer);
 			p->waiting_disconnect = INVALID_TIMER;
 		}
 	}
@@ -167,12 +140,12 @@ static int login_online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
 {
 	struct online_login_data *character= DB->data2ptr(data);
 	if (character->char_server == -2) //Unknown server.. set them offline
-		login_remove_online_user(character->account_id);
+		login->remove_online_user(character->account_id);
 	return 0;
 }
 
 static int login_online_data_cleanup(int tid, int64 tick, int id, intptr_t data) {
-	online_db->foreach(online_db, login_online_data_cleanup_sub);
+	online_db->foreach(online_db, login->online_data_cleanup_sub);
 	return 0;
 }
 
@@ -222,7 +195,7 @@ void chrif_server_destroy(int id)
 /// Resets all the data related to a server.
 void chrif_server_reset(int id)
 {
-	online_db->foreach(online_db, login_online_db_setoffline, id); //Set all chars from this char server to offline.
+	online_db->foreach(online_db, login->online_db_setoffline, id); //Set all chars from this char server to offline.
 	chrif_server_destroy(id);
 	chrif_server_init(id);
 }
@@ -272,8 +245,8 @@ bool login_check_password(const char* md5key, int passwdenc, const char* passwd,
 		// password mode set to 1 -> md5(md5key, refpass) enable with <passwordencrypt></passwordencrypt>
 		// password mode set to 2 -> md5(refpass, md5key) enable with <passwordencrypt2></passwordencrypt2>
 		
-		return ((passwdenc&0x01) && login_check_encrypted(md5key, refpass, passwd)) ||
-		       ((passwdenc&0x02) && login_check_encrypted(refpass, md5key, passwd));
+		return ((passwdenc&0x01) && login->check_encrypted(md5key, refpass, passwd)) ||
+		       ((passwdenc&0x02) && login->check_encrypted(refpass, md5key, passwd));
 	}
 }
 
@@ -388,14 +361,14 @@ void login_fromchar_parse_auth(int fd, int id, const char *const ip)
 		//ShowStatus("Char-server '%s': authentication of the account %d accepted (ip: %s).\n", server[id].name, account_id, ip);
 
 		// send ack
-		login_fromchar_auth_ack(fd, account_id, login_id1, login_id2, sex, request_id, node);
+		login->fromchar_auth_ack(fd, account_id, login_id1, login_id2, sex, request_id, node);
 		// each auth entry can only be used once
 		idb_remove(auth_db, account_id);
 	}
 	else
 	{// authentication not found
 		ShowStatus("Char-server '%s': authentication of the account %d REFUSED (ip: %s).\n", server[id].name, account_id, ip);
-		login_fromchar_auth_ack(fd, account_id, login_id1, login_id2, sex, request_id, NULL);
+		login->fromchar_auth_ack(fd, account_id, login_id1, login_id2, sex, request_id, NULL);
 	}
 }
 
@@ -489,10 +462,10 @@ void login_fromchar_parse_account_data(int fd, int id, const char *const ip)
 	if( !accounts->load_num(accounts, &acc, account_id) )
 	{
 		ShowNotice("Char-server '%s': account %d NOT found (ip: %s).\n", server[id].name, account_id, ip);
-		login_fromchar_account(fd, account_id, NULL);
+		login->fromchar_account(fd, account_id, NULL);
 	}
 	else {
-		login_fromchar_account(fd, account_id, &acc);
+		login->fromchar_account(fd, account_id, &acc);
 	}
 }
 
@@ -506,7 +479,7 @@ void login_fromchar_pong(int fd)
 void login_fromchar_parse_ping(int fd)
 {
 	RFIFOSKIP(fd,2);
-	login_fromchar_pong(fd);
+	login->fromchar_pong(fd);
 }
 
 void login_fromchar_parse_change_email(int fd, int id, const char *const ip)
@@ -574,7 +547,7 @@ void login_fromchar_parse_account_update(int fd, int id, const char *const ip)
 
 		// notify other servers
 		if (state != 0) {
-			login_fromchar_account_update_other(account_id, state);
+			login->fromchar_account_update_other(account_id, state);
 		}
 	}
 }
@@ -634,7 +607,7 @@ void login_fromchar_parse_ban(int fd, int id, const char *const ip)
 			// Save
 			accounts->save(accounts, &acc);
 
-			login_fromchar_ban(account_id, timestamp);
+			login->fromchar_ban(account_id, timestamp);
 		}
 	}
 }
@@ -671,7 +644,7 @@ void login_fromchar_parse_change_sex(int fd, int id, const char *const ip)
 		accounts->save(accounts, &acc);
 
 		// announce to other servers
-		login_fromchar_change_sex_other(account_id, sex);
+		login->fromchar_change_sex_other(account_id, sex);
 	}
 }
 
@@ -711,13 +684,13 @@ void login_fromchar_parse_unban(int fd, int id, const char *const ip)
 
 void login_fromchar_parse_account_online(int fd, int id)
 {
-	login_add_online_user(id, RFIFOL(fd,2));
+	login->add_online_user(id, RFIFOL(fd,2));
 	RFIFOSKIP(fd,6);
 }
 
 void login_fromchar_parse_account_offline(int fd)
 {
-	login_remove_online_user(RFIFOL(fd,2));
+	login->remove_online_user(RFIFOL(fd,2));
 	RFIFOSKIP(fd,6);
 }
 
@@ -726,15 +699,15 @@ void login_fromchar_parse_online_accounts(int fd, int id)
 	struct online_login_data *p;
 	int aid;
 	uint32 i, users;
-	online_db->foreach(online_db, login_online_db_setoffline, id); //Set all chars from this char-server offline first
+	online_db->foreach(online_db, login->online_db_setoffline, id); //Set all chars from this char-server offline first
 	users = RFIFOW(fd,4);
 	for (i = 0; i < users; i++) {
 		aid = RFIFOL(fd,6+i*4);
-		p = idb_ensure(online_db, aid, login_create_online_user);
+		p = idb_ensure(online_db, aid, login->create_online_user);
 		p->char_server = id;
 		if (p->waiting_disconnect != INVALID_TIMER)
 		{
-			timer->delete(p->waiting_disconnect, login_waiting_disconnect_timer);
+			timer->delete(p->waiting_disconnect, login->waiting_disconnect_timer);
 			p->waiting_disconnect = INVALID_TIMER;
 		}
 	}
@@ -759,7 +732,7 @@ void login_fromchar_parse_update_wan_ip(int fd, int id)
 void login_fromchar_parse_all_offline(int fd, int id)
 {
 	ShowInfo("Setting accounts from char-server %d offline.\n", id);
-	online_db->foreach(online_db, login_online_db_setoffline, id);
+	online_db->foreach(online_db, login->online_db_setoffline, id);
 	RFIFOSKIP(fd,2);
 }
 
@@ -791,7 +764,7 @@ bool login_fromchar_parse_wrong_pincode(int fd)
 		login_log( host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed" );
 	}
 
-	login_remove_online_user(acc.account_id);
+	login->remove_online_user(acc.account_id);
 	RFIFOSKIP(fd,6);
 	return false;
 }
@@ -841,9 +814,9 @@ void login_fromchar_parse_accinfo(int fd)
 	struct mmo_account acc;
 	int account_id = RFIFOL(fd, 2), u_fd = RFIFOL(fd, 6), u_aid = RFIFOL(fd, 10), u_group = RFIFOL(fd, 14), map_fd = RFIFOL(fd, 18);
 	if (accounts->load_num(accounts, &acc, account_id)) {
-		login_fromchar_accinfo(fd, account_id, u_fd, u_aid, u_group, map_fd, &acc);
+		login->fromchar_accinfo(fd, account_id, u_fd, u_aid, u_group, map_fd, &acc);
 	} else {
-		login_fromchar_accinfo(fd, account_id, u_fd, u_aid, u_group, map_fd, NULL);
+		login->fromchar_accinfo(fd, account_id, u_fd, u_aid, u_group, map_fd, NULL);
 	}
 	RFIFOSKIP(fd,22);
 }
@@ -893,7 +866,7 @@ int login_parse_fromchar(int fd)
 			if( RFIFOREST(fd) < 23 )
 				return 0;
 		{
-			login_fromchar_parse_auth(fd, id, ip);
+			login->fromchar_parse_auth(fd, id, ip);
 		}
 		break;
 
@@ -901,7 +874,7 @@ int login_parse_fromchar(int fd)
 			if( RFIFOREST(fd) < 6 )
 				return 0;
 		{
-			login_fromchar_parse_update_users(fd, id);
+			login->fromchar_parse_update_users(fd, id);
 		}
 		break;
 
@@ -909,7 +882,7 @@ int login_parse_fromchar(int fd)
 			if (RFIFOREST(fd) < 46)
 				return 0;
 		{
-			login_fromchar_parse_request_change_email(fd, id, ip);
+			login->fromchar_parse_request_change_email(fd, id, ip);
 		}
 		break;
 
@@ -917,12 +890,12 @@ int login_parse_fromchar(int fd)
 			if( RFIFOREST(fd) < 6 )
 				return 0;
 		{
-			login_fromchar_parse_account_data(fd, id, ip);
+			login->fromchar_parse_account_data(fd, id, ip);
 		}
 		break;
 
 		case 0x2719: // ping request from charserver
-			login_fromchar_parse_ping(fd);
+			login->fromchar_parse_ping(fd);
 		break;
 
 		// Map server send information to change an email of an account via char-server
@@ -930,7 +903,7 @@ int login_parse_fromchar(int fd)
 			if (RFIFOREST(fd) < 86)
 				return 0;
 		{
-			login_fromchar_parse_change_email(fd, id, ip);
+			login->fromchar_parse_change_email(fd, id, ip);
 		}
 		break;
 
@@ -938,7 +911,7 @@ int login_parse_fromchar(int fd)
 			if (RFIFOREST(fd) < 10)
 				return 0;
 		{
-			login_fromchar_parse_account_update(fd, id, ip);
+			login->fromchar_parse_account_update(fd, id, ip);
 		}
 		break;
 
@@ -946,7 +919,7 @@ int login_parse_fromchar(int fd)
 			if (RFIFOREST(fd) < 18)
 				return 0;
 		{
-			login_fromchar_parse_ban(fd, id, ip);
+			login->fromchar_parse_ban(fd, id, ip);
 		}
 		break;
 
@@ -954,7 +927,7 @@ int login_parse_fromchar(int fd)
 			if( RFIFOREST(fd) < 6 )
 				return 0;
 		{
-			login_fromchar_parse_change_sex(fd, id, ip);
+			login->fromchar_parse_change_sex(fd, id, ip);
 		}
 		break;
 
@@ -962,7 +935,7 @@ int login_parse_fromchar(int fd)
 			if( RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd,2) )
 				return 0;
 		{
-			login_fromchar_parse_account_reg2(fd, id, ip);
+			login->fromchar_parse_account_reg2(fd, id, ip);
 		}
 		break;
 
@@ -970,27 +943,27 @@ int login_parse_fromchar(int fd)
 			if( RFIFOREST(fd) < 6 )
 				return 0;
 		{
-			login_fromchar_parse_unban(fd, id, ip);
+			login->fromchar_parse_unban(fd, id, ip);
 		}
 		break;
 
 		case 0x272b:    // Set account_id to online [Wizputer]
 			if( RFIFOREST(fd) < 6 )
 				return 0;
-			login_fromchar_parse_account_online(fd, id);
+			login->fromchar_parse_account_online(fd, id);
 		break;
 
 		case 0x272c:   // Set account_id to offline [Wizputer]
 			if( RFIFOREST(fd) < 6 )
 				return 0;
-			login_fromchar_parse_account_offline(fd);
+			login->fromchar_parse_account_offline(fd);
 		break;
 
 		case 0x272d:	// Receive list of all online accounts. [Skotlex]
 			if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd,2))
 				return 0;
 			{
-				login_fromchar_parse_online_accounts(fd, id);
+				login->fromchar_parse_online_accounts(fd, id);
 			}
 			RFIFOSKIP(fd,RFIFOW(fd,2));
 		break;
@@ -999,25 +972,25 @@ int login_parse_fromchar(int fd)
 			if (RFIFOREST(fd) < 10)
 				return 0;
 		{
-			login_fromchar_parse_request_account_reg2(fd);
+			login->fromchar_parse_request_account_reg2(fd);
 		}
 		break;
 
 		case 0x2736: // WAN IP update from char-server
 			if( RFIFOREST(fd) < 6 )
 				return 0;
-			login_fromchar_parse_update_wan_ip(fd, id);
+			login->fromchar_parse_update_wan_ip(fd, id);
 		break;
 
 		case 0x2737: //Request to set all offline.
-			login_fromchar_parse_all_offline(fd, id);
+			login->fromchar_parse_all_offline(fd, id);
 		break;
 
 		case 0x2738: //Change PIN Code for a account
 			if( RFIFOREST(fd) < 11 )
 				return 0;
 			else {
-				login_fromchar_parse_change_pincode(fd);
+				login->fromchar_parse_change_pincode(fd);
 			}
 			break;
 			
@@ -1025,7 +998,7 @@ int login_parse_fromchar(int fd)
 			if( RFIFOREST(fd) < 6 )
 				return 0;
 			else {
-				if (login_fromchar_parse_wrong_pincode(fd))
+				if (login->fromchar_parse_wrong_pincode(fd))
 					return 0;
 			}
 		break;
@@ -1034,7 +1007,7 @@ int login_parse_fromchar(int fd)
 			if( RFIFOREST(fd) < 22 )
 				return 0;
 			else {
-				login_fromchar_parse_accinfo(fd);
+				login->fromchar_parse_accinfo(fd);
 			}
 		break;
 		default:
@@ -1153,7 +1126,7 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 			len -= 2;
 			sd->userid[len] = '\0';
 
-			result = login_mmo_auth_new(sd->userid, sd->passwd, TOUPPER(sd->userid[len+1]), ip);
+			result = login->mmo_auth_new(sd->userid, sd->passwd, TOUPPER(sd->userid[len+1]), ip);
 			if( result != -1 )
 				return result;// Failed to make account. [Skotlex].
 		}
@@ -1169,7 +1142,7 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 		return 0; // 0 = Unregistered ID
 	}
 
-	if( !login_check_password(sd->md5key, sd->passwdenc, sd->passwd, acc.pass) ) {
+	if( !login->check_password(sd->md5key, sd->passwdenc, sd->passwd, acc.pass) ) {
 		ShowNotice("Invalid password (account: '%s', pass: '%s', received pass: '%s', ip: %s)\n", sd->userid, acc.pass, sd->passwd, ip);
 		return 1; // 1 = Incorrect Password
 	}
@@ -1273,17 +1246,17 @@ void login_auth_ok(struct login_session_data* sd)
 	if( runflag != LOGINSERVER_ST_RUNNING )
 	{
 		// players can only login while running
-		login_connection_problem(fd, 1); // 01 = server closed
+		login->connection_problem(fd, 1); // 01 = server closed
 		return;
 	}
 
 	if( login_config.group_id_to_connect >= 0 && sd->group_id != login_config.group_id_to_connect ) {
 		ShowStatus("Connection refused: the required group id for connection is %d (account: %s, group: %d).\n", login_config.group_id_to_connect, sd->userid, sd->group_id);
-		login_connection_problem(fd, 1); // 01 = server closed
+		login->connection_problem(fd, 1); // 01 = server closed
 		return;
 	} else if( login_config.min_group_id_to_connect >= 0 && login_config.group_id_to_connect == -1 && sd->group_id < login_config.min_group_id_to_connect ) {
 		ShowStatus("Connection refused: the minimum group id required for connection is %d (account: %s, group: %d).\n", login_config.min_group_id_to_connect, sd->userid, sd->group_id);
-		login_connection_problem(fd, 1); // 01 = server closed
+		login->connection_problem(fd, 1); // 01 = server closed
 		return;
 	}
 
@@ -1295,7 +1268,7 @@ void login_auth_ok(struct login_session_data* sd)
 	if( server_num == 0 )
 	{// if no char-server, don't send void list of servers, just disconnect the player with proper message
 		ShowStatus("Connection refused: there is no char-server online (account: %s).\n", sd->userid);
-		login_connection_problem(fd, 1); // 01 = server closed
+		login->connection_problem(fd, 1); // 01 = server closed
 		return;
 	}
 
@@ -1306,11 +1279,11 @@ void login_auth_ok(struct login_session_data* sd)
 			if( data->char_server > -1 )
 			{// Request char servers to kick this account out. [Skotlex]
 				ShowNotice("User '%s' is already online - Rejected.\n", sd->userid);
-				login_kick(sd);
+				login->kick(sd);
 				if( data->waiting_disconnect == INVALID_TIMER )
-					data->waiting_disconnect = timer->add(timer->gettick()+AUTH_TIMEOUT, login_waiting_disconnect_timer, sd->account_id, 0);
+					data->waiting_disconnect = timer->add(timer->gettick()+AUTH_TIMEOUT, login->waiting_disconnect_timer, sd->account_id, 0);
 
-				login_connection_problem(fd, 8); // 08 = Server still recognizes your last login
+				login->connection_problem(fd, 8); // 08 = Server still recognizes your last login
 				return;
 			}
 			else
@@ -1318,7 +1291,7 @@ void login_auth_ok(struct login_session_data* sd)
 			{// client has authed but did not access char-server yet
 				// wipe previous session
 				idb_remove(auth_db, sd->account_id);
-				login_remove_online_user(sd->account_id);
+				login->remove_online_user(sd->account_id);
 				data = NULL;
 			}
 		}
@@ -1343,7 +1316,7 @@ void login_auth_ok(struct login_session_data* sd)
 		if( !session_isValid(server[i].fd) )
 			continue;
 
-		subnet_char_ip = login_lan_subnetcheck(ip); // Advanced subnet check [LuzZza]
+		subnet_char_ip = login->lan_subnetcheck(ip); // Advanced subnet check [LuzZza]
 		WFIFOL(fd,47+n*32) = htonl((subnet_char_ip) ? subnet_char_ip : server[i].ip);
 		WFIFOW(fd,47+n*32+4) = ntows(htons(server[i].port)); // [!] LE byte order here [!]
 		memcpy(WFIFOP(fd,47+n*32+6), server[i].name, 20);
@@ -1376,10 +1349,10 @@ void login_auth_ok(struct login_session_data* sd)
 		struct online_login_data* data;
 
 		// mark client as 'online'
-		data = login_add_online_user(-1, sd->account_id);
+		data = login->add_online_user(-1, sd->account_id);
 
 		// schedule deletion of this node
-		data->waiting_disconnect = timer->add(timer->gettick()+AUTH_TIMEOUT, login_waiting_disconnect_timer, sd->account_id, 0);
+		data->waiting_disconnect = timer->add(timer->gettick()+AUTH_TIMEOUT, login->waiting_disconnect_timer, sd->account_id, 0);
 	}
 }
 
@@ -1492,7 +1465,7 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 		version = RFIFOL(fd,4);
 
 		if(uAccLen <= 0 || uTokenLen <= 0) {
-			login_auth_failed(sd, 3);
+			login->auth_failed(sd, 3);
 			return true;
 		}
 
@@ -1537,16 +1510,16 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 
 	if( sd->passwdenc != 0 && login_config.use_md5_passwds )
 	{
-		login_auth_failed(sd, 3); // send "rejected from server"
+		login->auth_failed(sd, 3); // send "rejected from server"
 		return true;
 	}
 
-	int result = login_mmo_auth(sd, false);
+	int result = login->mmo_auth(sd, false);
 
 	if( result == -1 )
-		login_auth_ok(sd);
+		login->auth_ok(sd);
 	else
-		login_auth_failed(sd, result);
+		login->auth_failed(sd, result);
 	return false;
 }
 
@@ -1565,7 +1538,7 @@ void login_parse_request_coding_key(int fd, struct login_session_data* sd)
 	sd->md5keylen = (uint16)(12 + rnd() % 4);
 	MD5_Salt(sd->md5keylen, sd->md5key);
 
-	login_send_coding_key(fd, sd);
+	login->send_coding_key(fd, sd);
 }
 
 void login_char_server_connection_status(int fd, struct login_session_data* sd, uint8 status)
@@ -1602,7 +1575,7 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 	sprintf(message, "charserver - %s@%u.%u.%u.%u:%u", server_name, CONVIP(server_ip), server_port);
 	login_log(session[fd]->client_addr, sd->userid, 100, message);
 
-	int result = login_mmo_auth(sd, true);
+	int result = login->mmo_auth(sd, true);
 	if( runflag == LOGINSERVER_ST_RUNNING &&
 		result == -1 &&
 		sd->sex == 'S' &&
@@ -1618,17 +1591,17 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 		server[sd->account_id].type = type;
 		server[sd->account_id].new_ = new_;
 
-		session[fd]->func_parse = login_parse_fromchar;
+		session[fd]->func_parse = login->parse_fromchar;
 		session[fd]->flag.server = 1;
 		realloc_fifo(fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
 		// send connection success
-		login_char_server_connection_status(fd, sd, 0);
+		login->char_server_connection_status(fd, sd, 0);
 	}
 	else
 	{
 		ShowNotice("Connection of the char-server '%s' REFUSED.\n", server_name);
-		login_char_server_connection_status(fd, sd, 3);
+		login->char_server_connection_status(fd, sd, 3);
 	}
 }
 
@@ -1658,7 +1631,7 @@ int login_parse_login(int fd)
 		{
 			ShowStatus("Connection refused: IP isn't authorized (deny/allow, ip: %s).\n", ip);
 			login_log(ipl, "unknown", -3, "ip banned");
-			login_login_error(fd, 3); // 3 = Rejected from Server
+			login->login_error(fd, 3); // 3 = Rejected from Server
 			set_eof(fd);
 			return 0;
 		}
@@ -1684,7 +1657,7 @@ int login_parse_login(int fd)
 		case 0x0200:		// New alive packet: structure: 0x200 <account.userid>.24B. used to verify if client is always alive.
 			if (RFIFOREST(fd) < 26)
 				return 0;
-			login_parse_ping(fd, sd);
+			login->parse_ping(fd, sd);
 		break;
 
 		// client md5 hash (binary)
@@ -1692,7 +1665,7 @@ int login_parse_login(int fd)
 			if (RFIFOREST(fd) < 18)
 				return 0;
 
-			login_parse_client_md5(fd, sd);
+			login->parse_client_md5(fd, sd);
 		break;
 
 		// request client login (raw password)
@@ -1717,7 +1690,7 @@ int login_parse_login(int fd)
 				return 0;
 		}
 		{
-			if (login_parse_client_login(fd, sd, ip))
+			if (login->parse_client_login(fd, sd, ip))
 				return 0;
 		}
 		break;
@@ -1725,7 +1698,7 @@ int login_parse_login(int fd)
 		case 0x01db:	// Sending request of the coding key
 			RFIFOSKIP(fd,2);
 		{
-			login_parse_request_coding_key(fd, sd);
+			login->parse_request_coding_key(fd, sd);
 		}
 		break;
 
@@ -1733,7 +1706,7 @@ int login_parse_login(int fd)
 			if (RFIFOREST(fd) < 86)
 				return 0;
 		{
-			login_parse_request_connection(fd, sd, ip);
+			login->parse_request_connection(fd, sd, ip);
 		}
 		return 0; // processing will continue elsewhere
 
@@ -1985,6 +1958,8 @@ int do_init(int argc, char** argv)
 {
 	int i;
 
+	login_defaults();
+
 	// initialize engine (to accept config settings)
 	account_engine[0].db = account_engine[0].constructor();
 	accounts = account_engine[0].db;
@@ -2020,7 +1995,7 @@ int do_init(int argc, char** argv)
 	HPM->event(HPET_PRE_INIT);
 
 	login_config_read((argc > 1) ? argv[1] : LOGIN_CONF_NAME);
-	login_lan_config_read((argc > 2) ? argv[2] : LAN_CONF_NAME);
+	login->lan_config_read((argc > 2) ? argv[2] : LAN_CONF_NAME);
 		
 	for( i = 0; i < ARRAYLENGTH(server); ++i )
 		chrif_server_init(i);
@@ -2034,22 +2009,22 @@ int do_init(int argc, char** argv)
 	
 	// Online user database init
 	online_db = idb_alloc(DB_OPT_RELEASE_DATA);
-	timer->add_func_list(login_waiting_disconnect_timer, "login_waiting_disconnect_timer");
+	timer->add_func_list(login->waiting_disconnect_timer, "login->waiting_disconnect_timer");
 
 	// Interserver auth init
 	auth_db = idb_alloc(DB_OPT_RELEASE_DATA);
 
 	// set default parser as login_parse_login function
-	set_defaultparse(login_parse_login);
+	set_defaultparse(login->parse_login);
 
 	// every 10 minutes cleanup online account db.
-	timer->add_func_list(login_online_data_cleanup, "login_online_data_cleanup");
-	timer->add_interval(timer->gettick() + 600*1000, login_online_data_cleanup, 0, 0, 600*1000);
+	timer->add_func_list(login->online_data_cleanup, "login->online_data_cleanup");
+	timer->add_interval(timer->gettick() + 600*1000, login->online_data_cleanup, 0, 0, 600*1000);
 
 	// add timer to detect ip address change and perform update
 	if (login_config.ip_sync_interval) {
-		timer->add_func_list(login_sync_ip_addresses, "login_sync_ip_addresses");
-		timer->add_interval(timer->gettick() + login_config.ip_sync_interval, login_sync_ip_addresses, 0, 0, login_config.ip_sync_interval);
+		timer->add_func_list(login->sync_ip_addresses, "login->sync_ip_addresses");
+		timer->add_interval(timer->gettick() + login_config.ip_sync_interval, login->sync_ip_addresses, 0, 0, login_config.ip_sync_interval);
 	}
 
 	// Account database init
@@ -2077,4 +2052,64 @@ int do_init(int argc, char** argv)
 	HPM->event(HPET_READY);
 	
 	return 0;
+}
+
+void login_defaults(void) {
+	login = &login_s;
+	login->mmo_auth = login_mmo_auth;
+	login->mmo_auth_new = login_mmo_auth_new;
+	login->waiting_disconnect_timer = login_waiting_disconnect_timer;
+	login->create_online_user = login_create_online_user;
+	login->add_online_user = login_add_online_user;
+	login->remove_online_user = login_remove_online_user;
+	login->online_db_setoffline = login_online_db_setoffline;
+	login->online_data_cleanup_sub = login_online_data_cleanup_sub;
+	login->online_data_cleanup = login_online_data_cleanup;
+	login->sync_ip_addresses = login_sync_ip_addresses;
+	login->check_encrypted = login_check_encrypted;
+	login->check_password = login_check_password;
+	login->lan_subnetcheck = login_lan_subnetcheck;
+	login->lan_config_read = login_lan_config_read;
+
+	login->fromchar_auth_ack = login_fromchar_auth_ack;
+	login->fromchar_accinfo = login_fromchar_accinfo;
+	login->fromchar_account = login_fromchar_account;
+	login->fromchar_account_update_other = login_fromchar_account_update_other;
+	login->fromchar_ban = login_fromchar_ban;
+	login->fromchar_change_sex_other = login_fromchar_change_sex_other;
+	login->fromchar_pong = login_fromchar_pong;
+	login->fromchar_parse_auth = login_fromchar_parse_auth;
+	login->fromchar_parse_update_users = login_fromchar_parse_update_users;
+	login->fromchar_parse_request_change_email = login_fromchar_parse_request_change_email;
+	login->fromchar_parse_account_data = login_fromchar_parse_account_data;
+	login->fromchar_parse_ping = login_fromchar_parse_ping;
+	login->fromchar_parse_change_email = login_fromchar_parse_change_email;
+	login->fromchar_parse_account_update = login_fromchar_parse_account_update;
+	login->fromchar_parse_ban = login_fromchar_parse_ban;
+	login->fromchar_parse_change_sex = login_fromchar_parse_change_sex;
+	login->fromchar_parse_account_reg2 = login_fromchar_parse_account_reg2;
+	login->fromchar_parse_unban = login_fromchar_parse_unban;
+	login->fromchar_parse_account_online = login_fromchar_parse_account_online;
+	login->fromchar_parse_account_offline = login_fromchar_parse_account_offline;
+	login->fromchar_parse_online_accounts = login_fromchar_parse_online_accounts;
+	login->fromchar_parse_request_account_reg2 = login_fromchar_parse_request_account_reg2;
+	login->fromchar_parse_update_wan_ip = login_fromchar_parse_update_wan_ip;
+	login->fromchar_parse_all_offline = login_fromchar_parse_all_offline;
+	login->fromchar_parse_change_pincode = login_fromchar_parse_change_pincode;
+	login->fromchar_parse_wrong_pincode = login_fromchar_parse_wrong_pincode;
+	login->fromchar_parse_accinfo = login_fromchar_parse_accinfo;
+
+	login->parse_fromchar = login_parse_fromchar;
+	login->parse_login = login_parse_login;
+	login->parse_ping = login_parse_ping;
+	login->parse_client_md5 = login_parse_client_md5;
+	login->parse_client_login = login_parse_client_login;
+	login->parse_request_coding_key = login_parse_request_coding_key;
+	login->parse_request_connection = login_parse_request_connection;
+	login->auth_ok = login_auth_ok;
+	login->char_server_connection_status = login_char_server_connection_status;
+	login->connection_problem = login_connection_problem;
+	login->kick = login_kick;
+	login->login_error = login_login_error;
+	login->send_coding_key = login_send_coding_key;
 }
