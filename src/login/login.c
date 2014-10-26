@@ -1933,6 +1933,7 @@ void do_shutdown_login(void)
 
 void login_hp_symbols(void) {
 	HPM->share(account_db_sql_up(accounts),"sql_handle");
+	HPM->share(login,"login");
 }
 
 //------------------------------
