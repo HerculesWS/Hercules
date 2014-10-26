@@ -106,22 +106,22 @@ geffen_in,164,124,4	script	Mage Guildsman	2_F_MAGICMASTER,{
 				case 1:
 					mes "Make me a ^3355FFMixed Solution No. 1^000000";
 					mes "and bring it back to me.";
-					set job_magician_q,1;
+					job_magician_q = 1;
 					break;
 				case 2:
 					mes "Make me a ^3355FFMixed Solution No. 2^000000";
 					mes "and bring it back to me.";
-					set job_magician_q,2;
+					job_magician_q = 2;
 					break;
 				case 3:
 					mes "Make me a ^3355FFMixed Solution No. 3^000000";
 					mes "and bring it back to me.";
-					set job_magician_q,3;
+					job_magician_q = 3;
 					break;
 				default:
 					mes "Make me a ^3355FFMixed Solution No. 4^000000";
 					mes "and bring it back to me.";
-					set job_magician_q,4;
+					job_magician_q = 4;
 				}
 				next;
 				getitem 1092,1; //Empty_Cylinder
@@ -305,7 +305,7 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 				mes "Process Halting.";
 				close;
 			}
-			set .@mixitem2,1;
+			.@mixitem2 = 1;
 			break;
 		case 2:
 			if (countitem(1088) == 0) {
@@ -316,10 +316,10 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 				mes "Process Halting.";
 				close;
 			}
-			set .@mixitem2,2;
+			.@mixitem2 = 2;
 			break;
 		case 3:
-			set .@mixitem2,0;
+			.@mixitem2 = 0;
 			break;
 		}
 		while (1) {
@@ -384,20 +384,20 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 						if (.@mixitem2 == 2) delitem 1088,1; //Morocc_Potion
 						mes "Items are Ready.";
 						mes "Close the Lid.";
-						set .@progress,3;
+						.@progress = 3;
 						next;
 					}
 					break;
 				case 2:
-					set .@continue,0;
+					.@continue = 0;
 					next;
 					break;
 				case 3:
-					set .@mixitem1_1,0;
-					set .@mixitem1_2,0;
-					set .@mixitem1_3,0;
-					set .@progress,0;
-					set .@continue,0;
+					.@mixitem1_1 = 0;
+					.@mixitem1_2 = 0;
+					.@mixitem1_3 = 0;
+					.@progress = 0;
+					.@continue = 0;
 					mes "[Mixing Machine]";
 					mes "Reset Complete.";
 					mes "Initiate again?";
@@ -430,8 +430,8 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 							next;
 						}
 						else {
-							if (countitem(909) > 0) set .@mixitem1_1,.@mixitem1_1 + .@input;
-							set .@progress,2;
+							if (countitem(909) > 0) .@mixitem1_1 += .@input;
+							.@progress = 2;
 							break;
 						}
 					}
@@ -446,8 +446,8 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 							next;
 						}
 						else {
-							if (countitem(914) > 0) set .@mixitem1_2,.@mixitem1_2 + .@input;
-							set .@progress,2;
+							if (countitem(914) > 0) .@mixitem1_2 += .@input;
+							.@progress = 2;
 							break;
 						}
 					}
@@ -462,8 +462,8 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 							next;
 						}
 						else {
-						if (countitem(519) > 0) set .@mixitem1_3,.@mixitem1_3 + .@input;
-							set .@progress,2;
+						if (countitem(519) > 0) .@mixitem1_3 += .@input;
+							.@progress = 2;
 							break;
 						}
 					}
@@ -471,8 +471,8 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 
 				case 4:
 					if (.@progress != 2)
-						set .@progress,1;
-					set .@continue,1;
+						.@progress = 1;
+					.@continue = 1;
 					next;
 				}
 				if (.@continue) break;
@@ -506,15 +506,15 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 				next;
 				if (select("Confirm.:Cancel.") == 1) {
 					if (.@input == 8472)
-						set .@magic_powder,1;
+						.@magic_powder = 1;
 					else if (.@input == 3735)
-						set .@magic_powder,2;
+						.@magic_powder = 2;
 					else if (.@input == 2750)
-						set .@magic_powder,3;
+						.@magic_powder = 3;
 					else if (.@input == 5429)
-						set .@magic_powder,4;
+						.@magic_powder = 4;
 					else
-						set .@magic_powder,5;
+						.@magic_powder = 5;
 				}
 				break;
 			}
@@ -524,10 +524,10 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 		mes "Catalyst Stone.";
 		next;
 		switch(select("Yellow Gemstone.:Red Gemstone.:Blue Gemstone.:1carat Diamond.:Skip.")) {
-		case 1: set .@mixitem3,1; break;
-		case 2: set .@mixitem3,2; break;
-		case 3: set .@mixitem3,3; break;
-		case 4: set .@mixitem3,4; break;
+		case 1: .@mixitem3 = 1; break;
+		case 2: .@mixitem3 = 2; break;
+		case 3: .@mixitem3 = 3; break;
+		case 4: .@mixitem3 = 4; break;
 		case 5: break;
 		}
 		mes "[Mixing Machine]";

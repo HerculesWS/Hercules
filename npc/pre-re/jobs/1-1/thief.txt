@@ -251,7 +251,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 				mes "[Thief Guide]";
 				mes "" + strcharinfo(0) + "?";
 				mes "What kind of name is " + strcharinfo(0) + "? Anyway, give me a second.";
-				set job_thief_q,1;
+				job_thief_q = 1;
 				next;
 				mes "[Thief Guide]";
 				mes "Alright, your registration has been processed. Okay, you can begin your test if you're ready.";
@@ -296,7 +296,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 		next;
 		mes "[Thief Guide]";
 		mes "Because I feel like it, I now decree that you have passed this interview. Good work!";
-		set job_thief_q,2;
+		job_thief_q = 2;
 		setquest 1013;
 		next;
 		mes "[Thief Guide]";
@@ -385,10 +385,10 @@ moc_prydb1,42,133,2	script	Comrade	2_M_THIEFMASTER,{
 			close;
 		}
 		next;
-		set .@thief_item1,countitem(1069) * 3;
-		set .@thief_item2,countitem(1070);
-		set .@total_thief,.@thief_item1 + .@thief_item2;
-		set .@money_thief,((.@thief_item1 * 5) + (.@thief_item2 * 2)) + 200;
+		.@thief_item1 = countitem(1069) * 3;
+		.@thief_item2 = countitem(1070);
+		.@total_thief = .@thief_item1 + .@thief_item2;
+		.@money_thief = ((.@thief_item1 * 5) + (.@thief_item2 * 2)) + 200;
 		mes "[Comrade]";
 		if (countitem(1069) != 0) {
 			mes "First, let me check the Orange Net Mushrooms you got.";
@@ -503,7 +503,7 @@ moc_ruins,141,125,3	script	Mr. Irrelevant	4_M_01,{
 		mes "[Mr. Irrelevant]";
 		mes "Your name is " + strcharinfo(0) + "? Ah, it's on the list. Alright, I'll let you into the Mushroom Farm , but I can't guarantee your safety...";
 		close2;
-		set job_thief_q,3;
+		job_thief_q = 3;
 		switch(rand(5)) {
 		case 1: warp "job_thief1",228,106; end;
 		case 2: warp "job_thief1",38,50; end;

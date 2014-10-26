@@ -22,7 +22,7 @@ lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	4_M_EIN_SOLDIER,{
 	mes "around the city, feel free";
 	mes "to ask me and I'll do my";
 	mes "very best to help you.";
-	set .@loop1,1;
+	.@loop1 = 1;
 	while (.@loop1) {
 		next;
 		switch(select("City Guide:Remove Marks from Mini-Map:Notice.:Cancel")) {
@@ -42,11 +42,11 @@ lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	4_M_EIN_SOLDIER,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes.:No.") == 1) set .@compass_check,1;
+				if (select("Yes.:No.") == 1) .@compass_check = 1;
 			}
-			set .@loop2,1;
+			.@loop2 = 1;
 			while(.@loop2) {
-				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 				switch(select("^FF0000Rekenber Corporation^000000:Train Station:Police Station:Bank:Hotel:Airport:Merchant Guild:Jewelry Shop:Weapon Shop:Departement Store:Cancel")) {
 				case 1:
@@ -154,7 +154,7 @@ lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	4_M_EIN_SOLDIER,{
 					mes "no longer wish to have the";
 					mes "location marks displayed";
 					mes "on your Mini-Map.";
-					set .@loop2,0;
+					.@loop2 = 0;
 				}
 			}
 			break;
@@ -169,7 +169,7 @@ lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	4_M_EIN_SOLDIER,{
 			viewpoint 2,93,110,9,0xFF9900;
 			viewpoint 2,196,46,10,0x330033;
 			viewpoint 2,199,163,11,0xFFFF00;
-			set .@compass_check,0;
+			.@compass_check = 0;
 			break;
 		case 3:
 			mes "[Lighthalzen Guide]";
@@ -211,7 +211,7 @@ lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	4_M_EIN_SOLDIER,{
 			mes "We hope that you enjoy";
 			mes "our fair city, adventurer.";
 			close2;
-			set .@loop1,0;
+			.@loop1 = 0;
 		}
 	}
 	cutin "ein_soldier",255;

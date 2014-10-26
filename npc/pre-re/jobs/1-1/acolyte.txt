@@ -104,17 +104,17 @@ prt_church,184,41,4	script	Cleric#aco	1_M_PASTOR,{
 				mes "give you a mission...";
 				switch(rand(3)) {
 				default:
-					set job_acolyte_q,2;
+					job_acolyte_q = 2;
 					mes "Please visit ^000077Father Rubalkabara^000000, a member of the Prontera Parish, and return here. He has been practicing asceticism in the ^000077Relics NorthEast of Prontera City^000000.";
 					setquest 1001;
 					break;
 				case 1:
-					set job_acolyte_q,3;
+					job_acolyte_q = 3;
 					mes "Please visit ^000077Mother Mathilda^000000 and then return to me. She has been practicing asceticism near ^000077Morroc Town, SouthWest of Prontera City^000000.";
 					setquest 1002;
 					break;
 				case 2:
-					set job_acolyte_q,4;
+					job_acolyte_q = 4;
 					mes "Please visit ^000077Father Yosuke^000000 and return here. He has been practicing asceticism around ^000077a bridge somewhere NorthWest of Prontera^000000.";
 					setquest 1003;
 					break;
@@ -278,7 +278,7 @@ prt_fild03,365,255,2	script	Ascetic#aco	4_M_ORIENT02,{
 				mes "Farewell.";
 				close2;
 				savepoint "prt_fild03",361,255;
-				set job_acolyte_q,6;
+				job_acolyte_q = 6;
 				end;
 			}
 			else {
@@ -346,7 +346,7 @@ moc_fild07,41,355,4	script	Ascetic#2aco	4_F_SISTER,{
 				mes "Please return to the Prontera Sanctuary and speak to the Priest in charge.";
 				close2;
 				savepoint "moc_fild07",35,355;
-				set job_acolyte_q,7;
+				job_acolyte_q = 7;
 				end;
 			}
 			else {
@@ -423,7 +423,7 @@ prt_fild00,208,218,6	script	Ascetic#3aco	4W_M_02,{
 				mes "Now go back to the Santuary and finish becoming an Acolyte, kid.";
 				close2;
 				savepoint "prt_fild00",206,230;
-				set job_acolyte_q,8;
+				job_acolyte_q = 8;
 				end;
 			}
 			else {

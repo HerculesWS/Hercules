@@ -106,14 +106,14 @@ new_1-2,100,29,4	script	Receptionist#nv1	4_M_04,{
 			mes "best, and I wish you";
 			mes "the best of luck!";
 			close2;
-			set nov_1st_cos,0;
-			set nov_2nd_cos,0;
-			set nov_3_swordman,0;
-			set nov_3_archer,0;
-			set nov_3_thief,0;
-			set nov_3_magician,0;
-			set nov_3_acolyte,0;
-			set nov_3_merchant,0;
+			nov_1st_cos = 0;
+			nov_2nd_cos = 0;
+			nov_3_swordman = 0;
+			nov_3_archer = 0;
+			nov_3_thief = 0;
+			nov_3_magician = 0;
+			nov_3_acolyte = 0;
+			nov_3_merchant = 0;
 			switch(rand(6)) {
 			case 0:
 				savepoint "prontera",273,354;
@@ -237,7 +237,7 @@ new_1-1,53,114,4	script	Shion#nv1	4_F_JOB_HUNTER,{
 		mes "[Shion]";
 		mes "Oh, and before you leave,";
 		mes "learn how to treat a lady nice, okay? Then they might give you gifts like this!";
-		set nov_1st_cos,3;
+		nov_1st_cos = 3;
 		getexp 9,0;
 		close;
 	}
@@ -254,7 +254,7 @@ new_1-1,53,114,4	script	Shion#nv1	4_F_JOB_HUNTER,{
 		mes "[Shion]";
 		mes "You can even gain";
 		mes "experience like this!";
-		set nov_1st_cos,3;
+		nov_1st_cos = 3;
 		getexp 9,0;
 		next;
 		mes "[Shion]";
@@ -303,7 +303,7 @@ new_1-1,53,114,4	script	Shion#nv1	4_F_JOB_HUNTER,{
 			mes "at the entrance, so don't";
 			mes "worry about getting lost.";
 			mes "Take care now~!";
-			set nov_1st_cos,1;
+			nov_1st_cos = 1;
 			close;
 		case 2:
 			mes "[Shion]";
@@ -336,13 +336,13 @@ new_1-1,53,114,4	script	Shion#nv1	4_F_JOB_HUNTER,{
 			mes "at the entrance, so don't";
 			mes "worry about getting lost.";
 			mes "Take care now~!";
-			set nov_1st_cos,1;
+			nov_1st_cos = 1;
 			close;
 		case 3:
 			mes "[Shion]";
 			mes "Me? I'm Shion!";
 			mes "But that's a rude way of asking! I'm volunteering my time and effort here, so you've got to show me a little bit of respect at least!";
-			set nov_1st_cos,2;
+			nov_1st_cos = 2;
 			close;
 		}
 	}
@@ -388,15 +388,15 @@ new_1-2,99,105,3	script	Interfaces Tutor#nv1	4_M_CRU,{
 		if (NEW_MES_FLAG0) {
 			mes "[Kris]";
 			mes "Ah, " + strcharinfo(0) + ", you've applied for an old training course that we no longer provide for our trainees. Let me issue a new proof of registration for you.";
-			set NEW_MES_FLAG0,0;
-			set NEW_MES_FLAG1,0;
-			set NEW_MES_FLAG2,0;
-			set NEW_MES_FLAG3,0;
-			set NEW_MES_FLAG4,0;
-			set NEW_MES_FLAG5,0;
-			set NEW_LVUP0,0;
-			set NEW_LVUP1,0;
-			set NEW_JOBLVUP,0;
+			NEW_MES_FLAG0 = 0;
+			NEW_MES_FLAG1 = 0;
+			NEW_MES_FLAG2 = 0;
+			NEW_MES_FLAG3 = 0;
+			NEW_MES_FLAG4 = 0;
+			NEW_MES_FLAG5 = 0;
+			NEW_LVUP0 = 0;
+			NEW_LVUP1 = 0;
+			NEW_JOBLVUP = 0;
 			next;
 		}
 		mes "[Kris]";
@@ -434,7 +434,7 @@ new_1-2,99,105,3	script	Interfaces Tutor#nv1	4_M_CRU,{
 				mes "As you gain experience,";
 				mes "the experience gauge fills up.";
 				mes "Once it is 100 % full, you gain an experience level, and the gauge is reset to 0.";
-				set nov_get_item02,10;
+				nov_get_item02 = 10;
 				switch (BaseLevel) {
 				case 1: getexp 10,0; break;
 				case 2: getexp 17,0; break;
@@ -507,7 +507,7 @@ new_1-2,99,105,3	script	Interfaces Tutor#nv1	4_M_CRU,{
 				next;
 				mes "[Kris]";
 				mes "Let me give you a little bit of Job experience points. Open your Skill Window and distribute your Skill Points into ^3355FFBasic Skills^000000.";
-				set nov_get_item02,11;
+				nov_get_item02 = 11;
 				switch (JobLevel) {
 				case 1: getexp 0,10; break;
 				case 2: getexp 0,18; break;
@@ -524,7 +524,7 @@ new_1-2,99,105,3	script	Interfaces Tutor#nv1	4_M_CRU,{
 			next;
 			mes "[Kris]";
 			mes "Now, why don't you speak to Edwin? He will teach you more regarding the basic use of Skills. Ah, and let me give you a small present: a Tattered Novice Ninja Suit!";
-			set nov_get_item02,12;
+			nov_get_item02 = 12;
 			getitem 2352,1; //Novice_Plate
 			close;
 		case 2:
@@ -684,15 +684,15 @@ new_1-2,83,111,3	script	Skill Tutor#nv	4_M_MONK,{
 		if (NEW_MES_FLAG0) {
 			mes "By the way, your proof of registration has expired, so let me give you a new one.";
 			mes "Let me give you a new one.";
-			set NEW_MES_FLAG0,0;
-			set NEW_MES_FLAG1,0;
-			set NEW_MES_FLAG2,0;
-			set NEW_MES_FLAG3,0;
-			set NEW_MES_FLAG4,0;
-			set NEW_MES_FLAG5,0;
-			set NEW_LVUP0,0;
-			set NEW_LVUP1,0;
-			set NEW_JOBLVUP,0;
+			NEW_MES_FLAG0 = 0;
+			NEW_MES_FLAG1 = 0;
+			NEW_MES_FLAG2 = 0;
+			NEW_MES_FLAG3 = 0;
+			NEW_MES_FLAG4 = 0;
+			NEW_MES_FLAG5 = 0;
+			NEW_LVUP0 = 0;
+			NEW_LVUP1 = 0;
+			NEW_JOBLVUP = 0;
 		}
 		mes "Then, shall we begin the class?";
 		next;
@@ -723,7 +723,7 @@ new_1-2,83,111,3	script	Skill Tutor#nv	4_M_MONK,{
 				next;
 				mes "[Cecil]";
 				mes "Open your Skill Window ('Alt' + 'S') and click the '^3355FFLv Up^000000' button next to the Basic Skill icon to allocate a Skill Point to your Basic Skills.";
-				set nov_get_item03,10;
+				nov_get_item03 = 10;
 				switch (JobLevel) {
 				case 1: getexp 0,10; break;
 				case 2: getexp 0,18; break;
@@ -752,13 +752,13 @@ new_1-2,83,111,3	script	Skill Tutor#nv	4_M_MONK,{
 			mes "^3355FFYou have learned";
 			mes "the ^4A708BFirst Aid^3355FF skill.^000000";
 			skill 142,1,0; //NV_FIRSTAID
-			set NOV_SK,3;
-			set nov_get_item03,11;
+			NOV_SK = 3;
+			nov_get_item03 = 11;
 			next;
 			if (JobLevel < 7) {
 				mes "^3355FFYou have gained a small";
 				mes "amount of Job experience.^000000";
-				set nov_get_item03,12;
+				nov_get_item03 = 12;
 				switch (JobLevel) {
 				case 1: getexp 0,10; break;
 				case 2: getexp 0,18; break;
@@ -784,7 +784,7 @@ new_1-2,83,111,3	script	Skill Tutor#nv	4_M_MONK,{
 			mes "so let me reward you!";
 			if (BaseLevel < 8) {
 				mes "Behold: bonus experience!";
-				set nov_get_item03,13;
+				nov_get_item03 = 13;
 				switch (BaseLevel) {
 				case 1: getexp 10,0; break;
 				case 2: getexp 17,0; break;
@@ -928,15 +928,15 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 		mes "Oh! Hello, you're new here.";
 		if (NEW_MES_FLAG0) {
 			mes "Ooh, your proof of registration was expired. But that's okay, I'll just give you a new one! There you go.";
-			set NEW_MES_FLAG0,0;
-			set NEW_MES_FLAG1,0;
-			set NEW_MES_FLAG2,0;
-			set NEW_MES_FLAG3,0;
-			set NEW_MES_FLAG4,0;
-			set NEW_MES_FLAG5,0;
-			set NEW_LVUP0,0;
-			set NEW_LVUP1,0;
-			set NEW_JOBLVUP,0;
+			NEW_MES_FLAG0 = 0;
+			NEW_MES_FLAG1 = 0;
+			NEW_MES_FLAG2 = 0;
+			NEW_MES_FLAG3 = 0;
+			NEW_MES_FLAG4 = 0;
+			NEW_MES_FLAG5 = 0;
+			NEW_LVUP0 = 0;
+			NEW_LVUP1 = 0;
+			NEW_JOBLVUP = 0;
 		}
 		mes "So, have you come to attend";
 		mes "my Item Information class?";
@@ -953,7 +953,7 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 			next;
 			mes "[Alice]";
 			mes "Now, would you click the ^4A708Bitem^000000 tab in the Inventory Window? I just gave you a Novice Potion. You can drink it by double-clicking it. Go ahead, try it!";
-			set nov_get_item04,10;
+			nov_get_item04 = 10;
 			getitem 569,1; //Novice_Potion
 			percentheal -50,0;
 			next;
@@ -964,7 +964,7 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 					mes "And here's";
 					mes "a little reward";
 					mes "just for listening.";
-					set nov_get_item04,11;
+					nov_get_item04 = 11;
 					switch (BaseLevel) {
 					case 1: getexp 10,0; break;
 					case 2: getexp 17,0; break;
@@ -999,7 +999,7 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 			mes "on the Novice Slippers";
 			mes "I just gave you to";
 			mes "put them on.";
-			set nov_get_item04,12;
+			nov_get_item04 = 12;
 			getitem 2510,1; //Novice_Hood
 			getitem 2414,1; //Novice_Boots
 			getitem 5055,1; //Novice_Egg_Cap
@@ -1010,7 +1010,7 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 					mes "Hooray~!";
 					mes "You did it!";
 					mes "You deserve a reward!";
-					set nov_get_item04,13;
+					nov_get_item04 = 13;
 					switch (BaseLevel) {
 					case 1: getexp 10,0; break;
 					case 2: getexp 17,0; break;
@@ -1054,7 +1054,7 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 			next;
 			mes "[Alice]";
 			mes "Passive Skills, such as the aptly named 'Basic Skill,' cannot be dragged into the Hotkey bar because Passive Skills are always in effect and don't need to be activated.";
-			set nov_get_item04,14;
+			nov_get_item04 = 14;
 			if (JobLevel < 7) {
 				switch (JobLevel) {
 				case 1: getexp 0,10; break;
@@ -1073,7 +1073,7 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 			next;
 			mes "[Alice]";
 			mes "However, ^ff0000do not use the Fly Wing or Butterfly Wing^000000 in these Training Grounds or you could be stuck here forever. Those items are for when you graduate, okay?";
-			set nov_get_item04,15;
+			nov_get_item04 = 15;
 			getitem 601,10; //Wing_Of_Fly
 			getitem 602,2; //Wing_Of_Butterfly
 			getitem 569,50; //Novice_Potion
@@ -1083,7 +1083,7 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 			if (JobLevel < 7) {
 				mes "I will give";
 				mes "you some Job experience!";
-				set nov_get_item04,16;
+				nov_get_item04 = 16;
 				switch (JobLevel) {
 				case 1: getexp 0,10; break;
 				case 2: getexp 0,18; break;
@@ -1238,15 +1238,15 @@ new_1-2,118,108,3	script	Kafra Employee#nv1	4_F_KAFRA1,{
 	mes "The Kafra services are";
 	mes "always on your side.";
 	if (NEW_MES_FLAG0) {
-		set NEW_MES_FLAG0,0;
-		set NEW_MES_FLAG1,0;
-		set NEW_MES_FLAG2,0;
-		set NEW_MES_FLAG3,0;
-		set NEW_MES_FLAG4,0;
-		set NEW_MES_FLAG5,0;
-		set NEW_LVUP0,0;
-		set NEW_LVUP1,0;
-		set NEW_JOBLVUP,0;
+		NEW_MES_FLAG0 = 0;
+		NEW_MES_FLAG1 = 0;
+		NEW_MES_FLAG2 = 0;
+		NEW_MES_FLAG3 = 0;
+		NEW_MES_FLAG4 = 0;
+		NEW_MES_FLAG5 = 0;
+		NEW_LVUP0 = 0;
+		NEW_LVUP1 = 0;
+		NEW_JOBLVUP = 0;
 	}
 	next;
 	mes "[Kafra Employee]";
@@ -1283,34 +1283,34 @@ new_1-2,118,108,3	script	Kafra Employee#nv1	4_F_KAFRA1,{
 			next;
 			switch(select("Prontera:Morroc:Payon:Alberta:Geffen")) {
 			case 1:
-				set .@dest$,"Prontera";
-				set .@mapn$,"prontera";
-				set .@saveX,117; set .@saveY,72;
-				set .@warpX,150; set .@warpY,50;
+				.@dest$ = "Prontera";
+				.@mapn$ = "prontera";
+				.@saveX = 117; .@saveY = 72;
+				.@warpX = 150; .@warpY = 50;
 				break;
 			case 2:
-				set .@dest$,"Morroc";
-				set .@mapn$,"morocc";
-				set .@saveX,150; set .@saveY,99;
-				set .@warpX,155; set .@warpY,110;
+				.@dest$ = "Morroc";
+				.@mapn$ = "morocc";
+				.@saveX = 150; .@saveY = 99;
+				.@warpX = 155; .@warpY = 110;
 				break;
 			case 3:
-				set .@dest$,"Payon";
-				set .@mapn$,"payon";
-				set .@saveX,70; set .@saveY,100;
-				set .@warpX,166; set .@warpY,67;
+				.@dest$ = "Payon";
+				.@mapn$ = "payon";
+				.@saveX = 70; .@saveY = 100;
+				.@warpX = 166; .@warpY = 67;
 				break;
 			case 4:
-				set .@dest$,"Alberta";
-				set .@mapn$,"alberta";
-				set .@saveX,30; set .@saveY,232;
-				set .@warpX,114; set .@warpY,58;
+				.@dest$ = "Alberta";
+				.@mapn$ = "alberta";
+				.@saveX = 30; .@saveY = 232;
+				.@warpX = 114; .@warpY = 58;
 				break;
 			case 5:
-				set .@dest$,"Geffen";
-				set .@mapn$,"geffen";
-				set .@saveX,119; set .@saveY,37;
-				set .@warpX,122; set .@warpY,65;
+				.@dest$ = "Geffen";
+				.@mapn$ = "geffen";
+				.@saveX = 119; .@saveY = 37;
+				.@warpX = 122; .@warpY = 65;
 				break;
 			}
 			mes "[Kafra Employee]";
@@ -1319,7 +1319,7 @@ new_1-2,118,108,3	script	Kafra Employee#nv1	4_F_KAFRA1,{
 			mes "May God be with you.";
 			close2;
 			if (nov_get_item05 < 11) {
-				set nov_get_item05,11;
+				nov_get_item05 = 11;
 				getitem 569,100; //Novice_Potion
 				getitem 1243,1; //Novice_Knife
 				getitem 2414,1; //Novice_Boots
@@ -1331,14 +1331,14 @@ new_1-2,118,108,3	script	Kafra Employee#nv1	4_F_KAFRA1,{
 				getitem 7059,5; //Cargo_Free_Ticket
 				getitem 7060,5; //Warp_Free_Ticket
 			}
-			set nov_1st_cos,0;
-			set nov_2nd_cos,0;
-			set nov_3_swordman,0;
-			set nov_3_archer,0;
-			set nov_3_thief,0;
-			set nov_3_magician,0;
-			set nov_3_acolyte,0;
-			set nov_3_merchant,0;
+			nov_1st_cos = 0;
+			nov_2nd_cos = 0;
+			nov_3_swordman = 0;
+			nov_3_archer = 0;
+			nov_3_thief = 0;
+			nov_3_magician = 0;
+			nov_3_acolyte = 0;
+			nov_3_merchant = 0;
 			savepoint .@mapn$,.@saveX,.@saveY;
 			warp .@mapn$,.@warpX,.@warpY;
 			end;
@@ -1354,34 +1354,34 @@ new_1-2,118,108,3	script	Kafra Employee#nv1	4_F_KAFRA1,{
 				warp "new_1-2",28,178;
 				end;
 			case 2:
-				set .@dest$,"Prontera";
-				set .@mapn$,"prontera";
-				set .@saveX,117; set .@saveY,72;
-				set .@warpX,150; set .@warpY,50;
+				.@dest$ = "Prontera";
+				.@mapn$ = "prontera";
+				.@saveX = 117; .@saveY = 72;
+				.@warpX = 150; .@warpY = 50;
 				break;
 			case 3:
-				set .@dest$,"Morroc";
-				set .@mapn$,"morocc";
-				set .@saveX,150; set .@saveY,99;
-				set .@warpX,155; set .@warpY,110;
+				.@dest$ = "Morroc";
+				.@mapn$ = "morocc";
+				.@saveX = 150; .@saveY = 99;
+				.@warpX = 155; .@warpY = 110;
 				break;
 			case 4:
-				set .@dest$,"Payon";
-				set .@mapn$,"payon";
-				set .@saveX,70; set .@saveY,100;
-				set .@warpX,166; set .@warpY,67;
+				.@dest$ = "Payon";
+				.@mapn$ = "payon";
+				.@saveX = 70; .@saveY = 100;
+				.@warpX = 166; .@warpY = 67;
 				break;
 			case 5:
-				set .@dest$,"Alberta";
-				set .@mapn$,"alberta";
-				set .@saveX,30; set .@saveY,232;
-				set .@warpX,114; set .@warpY,58;
+				.@dest$ = "Alberta";
+				.@mapn$ = "alberta";
+				.@saveX = 30; .@saveY = 232;
+				.@warpX = 114; .@warpY = 58;
 				break;
 			case 6:
-				set .@dest$,"Geffen";
-				set .@mapn$,"geffen";
-				set .@saveX,119; set .@saveY,37;
-				set .@warpX,122; set .@warpY,65;
+				.@dest$ = "Geffen";
+				.@mapn$ = "geffen";
+				.@saveX = 119; .@saveY = 37;
+				.@warpX = 122; .@warpY = 65;
 				break;
 			}
 			mes "[Kafra Employee]";
@@ -1390,18 +1390,18 @@ new_1-2,118,108,3	script	Kafra Employee#nv1	4_F_KAFRA1,{
 			mes "May God be with you.";
 			close2;
 			if (nov_get_item05 < 11) {
-				set nov_get_item05,11;
+				nov_get_item05 = 11;
 				getitem 7059,5; //Cargo_Free_Ticket
 				getitem 7060,5; //Warp_Free_Ticket
 			}
-			set nov_1st_cos,0;
-			set nov_2nd_cos,0;
-			set nov_3_swordman,0;
-			set nov_3_archer,0;
-			set nov_3_thief,0;
-			set nov_3_magician,0;
-			set nov_3_acolyte,0;
-			set nov_3_merchant,0;
+			nov_1st_cos = 0;
+			nov_2nd_cos = 0;
+			nov_3_swordman = 0;
+			nov_3_archer = 0;
+			nov_3_thief = 0;
+			nov_3_magician = 0;
+			nov_3_acolyte = 0;
+			nov_3_merchant = 0;
 			savepoint .@mapn$,.@saveX,.@saveY;
 			warp .@mapn$,.@warpX,.@warpY;
 			end;
@@ -1431,7 +1431,7 @@ new_1-2,118,108,3	script	Kafra Employee#nv1	4_F_KAFRA1,{
 				mes "the Kafra Corporation";
 				mes "free of charge~!";
 				if (nov_1st_cos < 20) {
-					set nov_1st_cos,20;
+					nov_1st_cos = 20;
 					switch (BaseLevel) {
 					case 1: getexp 10,0; break;
 					case 2: getexp 17,0; break;
@@ -1474,7 +1474,7 @@ new_1-2,118,108,3	script	Kafra Employee#nv1	4_F_KAFRA1,{
 				mes "Remember though, that in the case of Equipment, each item takes up one Inventory Slot. The maximum number of items that can be placed in Kafra Storage is 30,000.";
 				if (nov_3_archer < 20) {
 					if (JobLevel < 7) {
-						set nov_3_archer,20;
+						nov_3_archer = 20;
 						switch (JobLevel) {
 						case 1: getexp 0,10; break;
 						case 2: getexp 0,18; break;
@@ -2089,7 +2089,7 @@ new_1-2,184,172,1	script	Understandings of Skills	1_M_01,{
 					mes "as you are cute~!";
 					mes "I, Leo, am very impressed.";
 					next;
-					set .@end,1;
+					.@end = 1;
 				}
 				if (.@end) break;
 			}
@@ -2214,31 +2214,31 @@ new_1-2,17,182,5	script	Helper#nv	4_M_02,{
 			mes "Haaaaaaa~!";
 			if (nov_2nd_cos < 1) {
 				if (BaseLevel == 1) {
-					set nov_2nd_cos,12;
+					nov_2nd_cos = 12;
 					getexp 9,0;
 				}
 				else if (BaseLevel == 2) {
-					set nov_2nd_cos,13;
+					nov_2nd_cos = 13;
 					getexp 16,0;
 				}
 				else if (BaseLevel == 3) {
-					set nov_2nd_cos,14;
+					nov_2nd_cos = 14;
 					getexp 25,0;
 				}
 				else if (BaseLevel == 4) {
-					set nov_2nd_cos,15;
+					nov_2nd_cos = 15;
 					getexp 36,0;
 				}
 				else if (BaseLevel == 5) {
-					set nov_2nd_cos,16;
+					nov_2nd_cos = 16;
 					getexp 77,0;
 				}
 				else if (BaseLevel == 6) {
-					set nov_2nd_cos,17;
+					nov_2nd_cos = 17;
 					getexp 112,0;
 				}
 				else if (BaseLevel >= 7) {
-					set nov_2nd_cos,18;
+					nov_2nd_cos = 18;
 					getexp 153,0;
 				}
 			}
@@ -2482,28 +2482,28 @@ new_1-2,38,182,3	script	Entrance Guard#nv	4_F_03,{
 			mes "[Muriel]";
 			mes "I'm going to give you some useful supplies, so please use them in case of an emergency.";
 			if (nov_2nd_cos == 12) {
-				set nov_2nd_cos,22;
+				nov_2nd_cos = 22;
 			}
 			else if (nov_2nd_cos == 13) {
-				set nov_2nd_cos,23;
+				nov_2nd_cos = 23;
 			}
 			else if (nov_2nd_cos == 14) {
-				set nov_2nd_cos,24;
+				nov_2nd_cos = 24;
 			}
 			else if (nov_2nd_cos == 15) {
-				set nov_2nd_cos,25;
+				nov_2nd_cos = 25;
 			}
 			else if (nov_2nd_cos == 16) {
-				set nov_2nd_cos,26;
+				nov_2nd_cos = 26;
 			}
 			else if (nov_2nd_cos == 17) {
-				set nov_2nd_cos,27;
+				nov_2nd_cos = 27;
 			}
 			else if (nov_2nd_cos == 18) {
-				set nov_2nd_cos,28;
+				nov_2nd_cos = 28;
 			}
 			else {
-				set nov_2nd_cos,29;
+				nov_2nd_cos = 29;
 			}
 			getitem 602,1; //Wing_Of_Butterfly
 			getitem 601,9; //Wing_Of_Fly
@@ -2543,35 +2543,35 @@ new_1-2,38,182,3	script	Entrance Guard#nv	4_F_03,{
 			mes "some supplies again.";
 			mes "Please be careful!";
 			if (nov_2nd_cos == 22) {
-				set nov_2nd_cos,33;
+				nov_2nd_cos = 33;
 				getexp 16,0;
 			}
 			else if (nov_2nd_cos == 23) {
-				set nov_2nd_cos,34;
+				nov_2nd_cos = 34;
 				getexp 25,0;
 			}
 			else if (nov_2nd_cos == 24) {
-				set nov_2nd_cos,35;
+				nov_2nd_cos = 35;
 				getexp 36,0;
 			}
 			else if (nov_2nd_cos == 25) {
-				set nov_2nd_cos,36;
+				nov_2nd_cos = 36;
 				getexp 77,0;
 			}
 			else if (nov_2nd_cos == 26) {
-				set nov_2nd_cos,37;
+				nov_2nd_cos = 37;
 				getexp 112,0;
 			}
 			else if (nov_2nd_cos == 27) {
-				set nov_2nd_cos,38;
+				nov_2nd_cos = 38;
 				getexp 153,0;
 			}
 			else if (nov_2nd_cos == 28) {
-				set nov_2nd_cos,39;
+				nov_2nd_cos = 39;
 				getexp 200,0;
 			}
 			else if (nov_2nd_cos == 29) {
-				set nov_2nd_cos,40;
+				nov_2nd_cos = 40;
 				getexp 200,0;
 			}
 			percentheal 100,0;
@@ -2781,66 +2781,66 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			next;
 			switch(select("Study:Exercise:Public service:Violence")) {
 			case 1:
-				set .@magician_p,.@magician_p+1;
+				++.@magician_p;
 				break;
 			case 2:
-				set .@thief_p,.@thief_p+1;
-				set .@swordman_p,.@swordman_p+1;
+				++.@thief_p;
+				++.@swordman_p;
 				break;
 			case 3:
-				set .@acolyte_p,.@acolyte_p+1;
+				++.@acolyte_p;
 				break;
 			case 4:
-				set .@thief_p,.@thief_p+1;
+				++.@thief_p;
 				break;
 			}
 			switch(select("Change:Conserve")) {
 			case 1:
-				set .@magician_p,.@magician_p+1;
+				++.@magician_p;
 				break;
 			case 2:
-				set .@acolyte_p,.@acolyte_p+1;
+				++.@acolyte_p;
 				break;
 			}
 			switch(select("Consumer:Seller:Producer")) {
 			case 1:
-				set .@swordman_p,.@swordman_p+1;
-				set .@thief_p,.@thief_p+1;
-				set .@acolyte_p,.@acolyte_p+1;
+				++.@swordman_p;
+				++.@thief_p;
+				++.@acolyte_p;
 				break;
 			case 2:
-				set .@merchant_p,.@merchant_p+1;
+				++.@merchant_p;
 				break;
 			case 3:
-				set .@magician_p,.@magician_p+1;
+				++.@magician_p;
 				break;
 			}
 			switch(select("Celebrity:Prudence")) {
 			case 1:
-				set .@thief_p,.@thief_p+1;
+				++.@thief_p;
 				break;
 			case 2:
-				set .@archer_p,.@archer_p+1;
+				++.@archer_p;
 				break;
 			}
 			switch(select("Theory:Experience")) {
 			case 1:
-				set .@magician_p,.@magician_p+1;
+				++.@magician_p;
 				break;
 			case 2:
-				set .@swordman_p,.@swordman_p+1;
+				++.@swordman_p;
 				break;
 			}
 			switch(select("The Past:Reality:The Future")) {
 			case 1:
-				set .@archer_p,.@archer_p+1;
+				++.@archer_p;
 				break;
 			case 2:
-				set .@merchant_p,.@merchant_p+1;
-				set .@thief_p,.@thief_p+1;
+				++.@merchant_p;
+				++.@thief_p;
 				break;
 			case 3:
-				set .@magician_p,.@magician_p+1;
+				++.@magician_p;
 				break;
 			}
 			mes "[Hanson]";
@@ -2854,11 +2854,11 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			next;
 			switch(select("Yes.:No.")) {
 			case 1:
-				set .@swordman_p,.@swordman_p+1;
+				++.@swordman_p;
 				break;
 			case 2:
-				set .@thief_p,.@thief_p+1;
-				set .@merchant_p,.@merchant_p+1;
+				++.@thief_p;
+				++.@merchant_p;
 				break;
 			}
 			mes "[Hanson]";
@@ -2868,10 +2868,10 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			next;
 			switch(select("Yes.:No.")) {
 			case 1:
-				set .@merchant_p,.@merchant_p+1;
+				++.@merchant_p;
 				break;
 			case 2:
-				set .@acolyte_p,.@acolyte_p+1;
+				++.@acolyte_p;
 				break;
 			}
 			mes "[Hanson]";
@@ -2881,10 +2881,10 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			next;
 			switch(select("Yes.:No.")) {
 			case 1:
-				set .@swordman_p,.@swordman_p+1;
+				++.@swordman_p;
 				break;
 			case 2:
-				set .@magician_p,.@magician_p+1;
+				++.@magician_p;
 				break;
 			}
 			mes "[Hanson]";
@@ -2894,10 +2894,10 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			next;
 			switch(select("Yes.:No.")) {
 			case 1:
-				set .@swordman_p,.@swordman_p+1;
+				++.@swordman_p;
 				break;
 			case 2:
-				set .@archer_p,.@archer_p+1;
+				++.@archer_p;
 				break;
 			}
 			mes "[Hanson]";
@@ -2915,10 +2915,10 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			next;
 			switch(select("Yes.:No.")) {
 			case 1:
-				set .@thief_p,.@thief_p+1;
+				++.@thief_p;
 				break;
 			case 2:
-				set .@swordman_p,.@swordman_p+1;
+				++.@swordman_p;
 				break;
 			}
 			mes "[Hanson]";
@@ -2927,10 +2927,10 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			next;
 			switch(select("Yes.:No.")) {
 			case 1:
-				set .@acolyte_p,.@acolyte_p+1;
+				++.@acolyte_p;
 				break;
 			case 2:
-				set .@magician_p,.@magician_p+1;
+				++.@magician_p;
 				break;
 			}
 			mes "[Hanson]";
@@ -2940,10 +2940,10 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			next;
 			switch(select("Yes.:No.")) {
 			case 1:
-				set .@acolyte_p,.@acolyte_p+1;
+				++.@acolyte_p;
 				break;
 			case 2:
-				set .@magician_p,.@magician_p+1;
+				++.@magician_p;
 				break;
 			}
 			mes "[Hanson]";
@@ -2951,10 +2951,10 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			next;
 			switch(select("Yes.:No.")) {
 			case 1:
-				set .@merchant_p,.@merchant_p+1;
+				++.@merchant_p;
 				break;
 			case 2:
-				set .@archer_p,.@archer_p+1;
+				++.@archer_p;
 				break;
 			}
 			mes "[Hanson]";
@@ -2966,16 +2966,16 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			next;
 			switch(select("You feel like a robot.:You are proud and satisfied.:Schedule? What schedule?")) {
 			case 1:
-				set .@swordman_p,.@swordman_p+1;
-				set .@thief_p,.@thief_p+1;
+				++.@swordman_p;
+				++.@thief_p;
 				break;
 			case 2:
-				set .@acolyte_p,.@acolyte_p+1;
-				set .@magician_p,.@magician_p+1;
+				++.@acolyte_p;
+				++.@magician_p;
 				break;
 			case 3:
-				set .@archer_p,.@archer_p+1;
-				set .@merchant_p,.@merchant_p+1;
+				++.@archer_p;
+				++.@merchant_p;
 				break;
 			}
 			mes "[Hanson]";
@@ -2986,13 +2986,13 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			next;
 			switch(select("Consider if you need it.:Check the price.:Don't think twice, just buy it!")) {
 			case 1:
-				set .@archer_p,.@archer_p+1;
+				++.@archer_p;
 				break;
 			case 2:
-				set .@merchant_p,.@merchant_p+1;
+				++.@merchant_p;
 				break;
 			case 3:
-				set .@thief_p,.@thief_p+1;
+				++.@thief_p;
 				break;
 			}
 			mes "[Hanson]";
@@ -3003,14 +3003,14 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			next;
 			switch(select("don't mind...:don't like...:don't care about...")) {
 			case 1:
-				set .@merchant_p,.@merchant_p+1;
+				++.@merchant_p;
 				break;
 			case 2:
-				set .@thief_p,.@thief_p+1;
+				++.@thief_p;
 				break;
 			case 3:
-				set .@acolyte_p,.@acolyte_p+1;
-				set .@swordman_p,.@swordman_p+1;
+				++.@acolyte_p;
+				++.@swordman_p;
 				break;
 			}
 			mes "[Hanson]";
@@ -3021,10 +3021,10 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			next;
 			switch(select("Handle it myself, even if it's hard.:Ask friends to help.")) {
 			case 1:
-				set .@magician_p,.@magician_p+1;
+				++.@magician_p;
 				break;
 			case 2:
-				set .@merchant_p,.@merchant_p+1;
+				++.@merchant_p;
 				break;
 			}
 			mes "[Hanson]";
@@ -3035,16 +3035,16 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			next;
 			switch(select("Carry her to a hospital.:Assess the situation before taking action.:Just ignore it.")) {
 			case 1:
-				set .@acolyte_p,.@acolyte_p+1;
+				++.@acolyte_p;
 				break;
 			case 2:
-				set .@swordman_p,.@swordman_p+1;
-				set .@archer_p,.@archer_p+1;
+				++.@swordman_p;
+				++.@archer_p;
 				break;
 			case 3:
-				set .@magician_p,.@magician_p+1;
-				set .@thief_p,.@thief_p+1;
-				set .@merchant_p,.@merchant_p+1;
+				++.@magician_p;
+				++.@thief_p;
+				++.@merchant_p;
 				break;
 			}
 			mes "[Hanson]";
@@ -3054,17 +3054,17 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			next;
 			switch(select("Check the brand.:Wonder who lost it.:Finder's keepers!:Leave it where it was.")) {
 			case 1:
-				set .@merchant_p,.@merchant_p+1;
+				++.@merchant_p;
 				break;
 			case 2:
-				set .@acolyte_p,.@acolyte_p+1;
+				++.@acolyte_p;
 				break;
 			case 3:
-				set .@merchant_p,.@merchant_p+1;
-				set .@thief_p,.@thief_p+1;
+				++.@merchant_p;
+				++.@thief_p;
 				break;
 			case 4:
-				set .@magician_p,.@magician_p+1;
+				++.@magician_p;
 				break;
 			}
 			mes "[Hanson]";
@@ -3072,16 +3072,16 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			next;
 			switch(select("Pretend it's a joke.:Change the subject.:Analyze it.:Apologize honestly.")) {
 			case 1:
-				set .@thief_p,.@thief_p+1;
+				++.@thief_p;
 				break;
 			case 2:
-				set .@swordman_p,.@swordman_p+1;
+				++.@swordman_p;
 				break;
 			case 3:
-				set .@magician_p,.@magician_p+1;
+				++.@magician_p;
 				break;
 			case 4:
-				set .@acolyte_p,.@acolyte_p+1;
+				++.@acolyte_p;
 				break;
 			}
 			mes "[Hanson]";
@@ -3089,13 +3089,13 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			next;
 			switch(select("Buy the item for her/him.:Say 'no.':Promise it for next time.")) {
 			case 1:
-				set .@swordman_p,.@swordman_p+1;
+				++.@swordman_p;
 				break;
 			case 2:
-				set .@merchant_p,.@merchant_p+1;
+				++.@merchant_p;
 				break;
 			case 3:
-				set .@thief_p,.@thief_p+1;
+				++.@thief_p;
 				break;
 			}
 			mes "[Hanson]";
@@ -3105,7 +3105,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "I've prepared some items for you since you passed the personality test. Please take them, you've earned it.";
 			next;
 			//---------------------------------------------------------------------------------------------------------------------------------------------------
-			set nov_3_swordman,40;
+			nov_3_swordman = 40;
 			getitem 501,4; //Red_Potion
 			getitem 503,2; //Yellow_Potion
 			getitem 506,2; //Green_Potion
@@ -3131,156 +3131,95 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					if (.@swordman_p > .@thief_p) {
 						if (.@swordman_p > .@archer_p) {
 							if (.@swordman_p > .@acolyte_p) {
-								set .@job_c,1;
+								.@job_c = 1;
+							} else {
+								.@job_c = 6;
 							}
-							else {
-								set .@job_c,6;
-							}
+						} else if (.@archer_p > .@acolyte_p) {
+							.@job_c = 5;
+						} else {
+							.@job_c = 6;
 						}
-						else {
-							if (.@archer_p > .@acolyte_p) {
-								set .@job_c,5;
-							}
-							else {
-								set .@job_c,6;
-							}
+					} else if (.@thief_p > .@archer_p) {
+						if (.@thief_p > .@acolyte_p) {
+							.@job_c = 4;
+						} else {
+							.@job_c = 6;
 						}
+					} else if (.@archer_p > .@acolyte_p) {
+						.@job_c = 5;
+					} else {
+						.@job_c = 6;
 					}
-					else {
-						if (.@thief_p > .@archer_p) {
-							if (.@thief_p > .@acolyte_p) {
-								set .@job_c,4;
-							}
-							else {
-								set .@job_c,6;
-							}
+				} else if (.@merchant_p > .@thief_p) {
+					if (.@merchant_p > .@archer_p) {
+						if (.@merchant_p > .@acolyte_p) {
+							.@job_c = 3;
+						} else {
+							.@job_c = 6;
 						}
-						else {
-							if (.@archer_p > .@acolyte_p) {
-								set .@job_c,5;
-							}
-							else {
-								set .@job_c,6;
-							}
-						}
+					} else if (.@archer_p > .@acolyte_p) {
+						.@job_c = 5;
+					} else {
+						.@job_c = 6;
 					}
+				} else if (.@thief_p > .@archer_p) {
+					if (.@thief_p > .@acolyte_p) {
+						.@job_c = 4;
+					} else {
+						.@job_c = 6;
+					}
+				} else if (.@archer_p > .@acolyte_p) {
+					.@job_c = 5;
+				} else {
+					.@job_c = 6;
 				}
-				else {
-					if (.@merchant_p > .@thief_p) {
-						if (.@merchant_p > .@archer_p) {
-							if (.@merchant_p > .@acolyte_p) {
-								set .@job_c,3;
-							}
-							else {
-								set .@job_c,6;
-							}
+			} else if (.@magician_p > .@merchant_p) {
+				if (.@magician_p > .@thief_p) {
+					if (.@magician_p > .@archer_p) {
+						if (.@magician_p > .@acolyte_p) {
+							.@job_c = 2;
+						} else {
+							.@job_c = 6;
 						}
-						else {
-							if (.@archer_p > .@acolyte_p) {
-								set .@job_c,5;
-							}
-							else {
-								set .@job_c,6;
-							}
-						}
+					} else if (.@archer_p > .@acolyte_p) {
+						.@job_c = 5;
+					} else {
+						.@job_c = 6;
 					}
-					else {
-						if (.@thief_p > .@archer_p) {
-							if (.@thief_p > .@acolyte_p) {
-								set .@job_c,4;
-							}
-							else {
-								set .@job_c,6;
-							}
-						}
-						else {
-							if (.@archer_p > .@acolyte_p) {
-								set .@job_c,5;
-							}
-							else {
-								set .@job_c,6;
-							}
-						}
+				} else if (.@thief_p > .@archer_p) {
+					if (.@thief_p > .@acolyte_p) {
+						.@job_c = 4;
+					} else {
+						.@job_c = 6;
 					}
+				} else if (.@archer_p > .@acolyte_p) {
+					.@job_c = 5;
+				} else {
+					.@job_c = 6;
 				}
-			}
-			else {
-				if (.@magician_p > .@merchant_p) {
-					if (.@magician_p > .@thief_p) {
-						if (.@magician_p > .@archer_p) {
-							if (.@magician_p > .@acolyte_p) {
-								set .@job_c,2;
-							}
-							else {
-								set .@job_c,6;
-							}
-						}
-						else {
-							if (.@archer_p > .@acolyte_p) {
-								set .@job_c,5;
-							}
-							else {
-								set .@job_c,6;
-							}
-						}
+			} else if (.@merchant_p > .@thief_p) {
+				if (.@merchant_p > .@archer_p) {
+					if (.@merchant_p > .@acolyte_p) {
+						.@job_c = 3;
+					} else {
+						.@job_c = 6;
 					}
-					else {
-						if (.@thief_p > .@archer_p) {
-							if (.@thief_p > .@acolyte_p) {
-								set .@job_c,4;
-							}
-							else {
-								set .@job_c,6;
-							}
-						}
-						else {
-							if (.@archer_p > .@acolyte_p) {
-								set .@job_c,5;
-							}
-							else {
-								set .@job_c,6;
-							}
-						}
-					}
+				} else if (.@archer_p > .@acolyte_p) {
+					.@job_c = 5;
+				} else {
+					.@job_c = 6;
 				}
-				else {
-					if (.@merchant_p > .@thief_p) {
-						if (.@merchant_p > .@archer_p) {
-							if (.@merchant_p > .@acolyte_p) {
-								set .@job_c,3;
-							}
-							else {
-								set .@job_c,6;
-							}
-						}
-						else {
-							if (.@archer_p > .@acolyte_p) {
-								set .@job_c,5;
-							}
-							else {
-								set .@job_c,6;
-							}
-						}
-					}
-					else {
-						if (.@thief_p > .@archer_p) {
-							if (.@thief_p > .@acolyte_p) {
-								set .@job_c,4;
-							}
-							else {
-								set .@job_c,6;
-							}
-						}
-						else {
-							if (.@archer_p > .@acolyte_p) {
-								set .@job_c,5;
-							}
-							else {
-								set .@job_c,6;
-							}
-						}
-					}
+			} else if (.@thief_p > .@archer_p) {
+				if (.@thief_p > .@acolyte_p) {
+					.@job_c = 4;
+				} else {
+					.@job_c = 6;
 				}
+			} else if (.@archer_p > .@acolyte_p) {
+				.@job_c = 5;
+			} else {
+				.@job_c = 6;
 			}
 			if (.@job_c == 1) {
 				mes "[Hanson]";
@@ -3310,7 +3249,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					mes "^0000331 Falchion^000000";
 					mes "^0000337 Phracon^000000";
 					next;
-					set nov_3_swordman,40;
+					nov_3_swordman = 40;
 					getitem 7059,5; //Cargo_Free_Ticket
 					getitem 7060,5; //Warp_Free_Ticket
 					getitem 1104,1; //Falchion
@@ -3338,14 +3277,14 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					mes "^A62A2A" + strcharinfo(0) + "^000000";
 					mes "and farewell.";
 					close2;
-					set nov_1st_cos,0;
-					set nov_2nd_cos,0;
-					set nov_3_swordman,0;
-					set nov_3_archer,0;
-					set nov_3_thief,0;
-					set nov_3_magician,0;
-					set nov_3_acolyte,0;
-					set nov_3_merchant,0;
+					nov_1st_cos = 0;
+					nov_2nd_cos = 0;
+					nov_3_swordman = 0;
+					nov_3_archer = 0;
+					nov_3_thief = 0;
+					nov_3_magician = 0;
+					nov_3_acolyte = 0;
+					nov_3_merchant = 0;
 					savepoint "izlude",93,104;
 					warp "izlude_in",74,167;
 					end;
@@ -3379,7 +3318,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					mes "^0000337 Phracon^000000";
 					next;
 					//---------------------------------------------------------------------------------------------------------------------------------------------------
-					set nov_3_swordman,40;
+					nov_3_swordman = 40;
 					getitem 7059,5; //Cargo_Free_Ticket
 					getitem 7060,5; //Warp_Free_Ticket
 					getitem 1601,1; //Rod
@@ -3411,14 +3350,14 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					mes "You'll now be teleported.";
 					mes "Good luck, ^A62A2A" + strcharinfo(0) + "^000000 and farewell.";
 					close2;
-					set nov_1st_cos,0;
-					set nov_2nd_cos,0;
-					set nov_3_swordman,0;
-					set nov_3_archer,0;
-					set nov_3_thief,0;
-					set nov_3_magician,0;
-					set nov_3_acolyte,0;
-					set nov_3_merchant,0;
+					nov_1st_cos = 0;
+					nov_2nd_cos = 0;
+					nov_3_swordman = 0;
+					nov_3_archer = 0;
+					nov_3_thief = 0;
+					nov_3_magician = 0;
+					nov_3_acolyte = 0;
+					nov_3_merchant = 0;
 					savepoint "geffen",119,37;
 					warp "geffen_in",163,98;
 					end;
@@ -3452,7 +3391,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					mes "^0000337 Phracon^000000";
 					next;
 					//---------------------------------------------------------------------------------------------------------------------------------------------------
-					set nov_3_swordman,40;
+					nov_3_swordman = 40;
 					getitem 7059,4; //Cargo_Free_Ticket
 					getitem 7060,4; //Warp_Free_Ticket
 					getitem 7061,4; //Cart_Free_Ticket
@@ -3482,14 +3421,14 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					mes "^A62A2A" + strcharinfo(0) + "^000000";
 					mes "and farewell.";
 					close2;
-					set nov_1st_cos,0;
-					set nov_2nd_cos,0;
-					set nov_3_swordman,0;
-					set nov_3_archer,0;
-					set nov_3_thief,0;
-					set nov_3_magician,0;
-					set nov_3_acolyte,0;
-					set nov_3_merchant,0;
+					nov_1st_cos = 0;
+					nov_2nd_cos = 0;
+					nov_3_swordman = 0;
+					nov_3_archer = 0;
+					nov_3_thief = 0;
+					nov_3_magician = 0;
+					nov_3_acolyte = 0;
+					nov_3_merchant = 0;
 					savepoint "alberta",30,232;
 					warp "alberta_in",62,44;
 					end;
@@ -3529,7 +3468,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					mes "^0000337 Phracon^000000";
 					next;
 					//---------------------------------------------------------------------------------------------------------------------------------------------------
-					set nov_3_swordman,40;
+					nov_3_swordman = 40;
 					getitem 7059,5; //Cargo_Free_Ticket
 					getitem 7060,5; //Warp_Free_Ticket
 					getitem 1207,1; //Main_Gauche
@@ -3590,7 +3529,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					mes "^0000337 Phracon^000000";
 					next;
 					//---------------------------------------------------------------------------------------------------------------------------------------------------
-					set nov_3_swordman,40;
+					nov_3_swordman = 40;
 					getitem 7059,5; //Cargo_Free_Ticket
 					getitem 7060,5; //Warp_Free_Ticket
 					getitem 1704,1; //Composite_Bow
@@ -3619,14 +3558,14 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					mes "^A62A2A" + strcharinfo(0) + "^000000";
 					mes "and farewell.";
 					close2;
-					set nov_1st_cos,0;
-					set nov_2nd_cos,0;
-					set nov_3_swordman,0;
-					set nov_3_archer,0;
-					set nov_3_thief,0;
-					set nov_3_magician,0;
-					set nov_3_acolyte,0;
-					set nov_3_merchant,0;
+					nov_1st_cos = 0;
+					nov_2nd_cos = 0;
+					nov_3_swordman = 0;
+					nov_3_archer = 0;
+					nov_3_thief = 0;
+					nov_3_magician = 0;
+					nov_3_acolyte = 0;
+					nov_3_merchant = 0;
 					savepoint "payon",70,100;
 					warp "payon_in02",64,65;
 					end;
@@ -3662,7 +3601,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					mes "^0000337 Phracon^000000";
 					next;
 					//---------------------------------------------------------------------------------------------------------------------------------------------------
-					set nov_3_swordman,40;
+					nov_3_swordman = 40;
 					getitem 7059,5; //Cargo_Free_Ticket
 					getitem 7060,5; //Warp_Free_Ticket
 					getitem 1504,1; //Mace
@@ -3691,14 +3630,14 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					mes "^A62A2A" + strcharinfo(0) + "^000000";
 					mes "and farewell.";
 					close2;
-					set nov_1st_cos,0;
-					set nov_2nd_cos,0;
-					set nov_3_swordman,0;
-					set nov_3_archer,0;
-					set nov_3_thief,0;
-					set nov_3_magician,0;
-					set nov_3_acolyte,0;
-					set nov_3_merchant,0;
+					nov_1st_cos = 0;
+					nov_2nd_cos = 0;
+					nov_3_swordman = 0;
+					nov_3_archer = 0;
+					nov_3_thief = 0;
+					nov_3_magician = 0;
+					nov_3_acolyte = 0;
+					nov_3_merchant = 0;
 					savepoint "prontera",117,72;
 					warp "prt_church",172,19;
 					end;
@@ -3725,16 +3664,16 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes ""+ strcharinfo(0) +".";
 			mes "Fare well.";
 			next;
-			set nov_3_swordman,40;
-			set nov_1st_cos,0;
-			set nov_2nd_cos,0;
-			set nov_3_swordman,0;
-			set nov_3_archer,0;
-			set nov_3_thief,0;
-			set nov_3_magician,0;
-			set nov_3_acolyte,0;
-			set nov_3_merchant,0;
-			set .@startmap,rand(1,6);
+			nov_3_swordman = 40;
+			nov_1st_cos = 0;
+			nov_2nd_cos = 0;
+			nov_3_swordman = 0;
+			nov_3_archer = 0;
+			nov_3_thief = 0;
+			nov_3_magician = 0;
+			nov_3_acolyte = 0;
+			nov_3_merchant = 0;
+			.@startmap = rand(1,6);
 			if ((.@startmap > 0) && (.@startmap < 2)) {
 				savepoint "prontera",117,72;
 				warp "prt_fild08",170,371;
@@ -3777,15 +3716,15 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 		mes "left to do is to lead";
 		mes "you to Rune-Midgard~";
 		next;
-		set nov_1st_cos,0;
-		set nov_2nd_cos,0;
-		set nov_3_swordman,0;
-		set nov_3_archer,0;
-		set nov_3_thief,0;
-		set nov_3_magician,0;
-		set nov_3_acolyte,0;
-		set nov_3_merchant,0;
-		set .@startmap,rand(1,6);
+		nov_1st_cos = 0;
+		nov_2nd_cos = 0;
+		nov_3_swordman = 0;
+		nov_3_archer = 0;
+		nov_3_thief = 0;
+		nov_3_magician = 0;
+		nov_3_acolyte = 0;
+		nov_3_merchant = 0;
+		.@startmap = rand(1,6);
 		if ((.@startmap > 0) && (.@startmap < 2)) {
 			savepoint "prontera",117,72;
 			warp "prt_fild08",170,371;
@@ -3902,7 +3841,7 @@ S_UserJobchoice:
 	////mes "^000099100 Zeny^000000";
 	next;
 	//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	set nov_3_swordman,40;
+	nov_3_swordman = 40;
 	getitem 7059,5; //Cargo_Free_Ticket
 	getitem 7060,5; //Warp_Free_Ticket
 	getitem 2305,1; //Adventure_Suit
@@ -3925,14 +3864,14 @@ S_UserJobchoice:
 	mes "^A62A2A" + strcharinfo(0) + "^000000";
 	mes "and farewell.";
 	next;
-	set nov_1st_cos,0;
-	set nov_2nd_cos,0;
-	set nov_3_swordman,0;
-	set nov_3_archer,0;
-	set nov_3_thief,0;
-	set nov_3_magician,0;
-	set nov_3_acolyte,0;
-	set nov_3_merchant,0;
+	nov_1st_cos = 0;
+	nov_2nd_cos = 0;
+	nov_3_swordman = 0;
+	nov_3_archer = 0;
+	nov_3_thief = 0;
+	nov_3_magician = 0;
+	nov_3_acolyte = 0;
+	nov_3_merchant = 0;
 	if(@menu == 1) {
 		savepoint "izlude",93,104;
 		warp "izlude_in",74,167;
@@ -3995,7 +3934,7 @@ new_1-4,91,22,4	script	Bruce#nv	1_M_LIBRARYMASTER,{
 					next;
 					mes "[Bruce]";
 					mes "A Swordman is the ideal character to take the position of party leader. When advancing to the Second Job Class, Swordmen can change their jobs to ^8E2323Knights^000000 or ^8E2323Crusaders^000000.";
-					set nov_3_swordman,20;
+					nov_3_swordman = 20;
 					next;
 					break;
 				case 2:
@@ -4013,7 +3952,7 @@ new_1-4,91,22,4	script	Bruce#nv	1_M_LIBRARYMASTER,{
 					next;
 					mes "[Bruce]";
 					mes "When advancing to the Second Job Class, Mages can change their jobs to ^8E2323Wizards^000000 or ^8E2323Sages^000000.";
-					set nov_3_swordman,20;
+					nov_3_swordman = 20;
 					next;
 					break;
 				case 3:
@@ -4028,7 +3967,7 @@ new_1-4,91,22,4	script	Bruce#nv	1_M_LIBRARYMASTER,{
 					next;
 					mes "[Bruce]";
 					mes "When advancing to the Second Job Class, every Archer may advance to the ^8E2323Hunter^000000 class. Alternatively, male Archers may advance to become ^8E2323Bards^000000, and female Archers may become ^8E2323Dancers^000000.";
-					set nov_3_swordman,20;
+					nov_3_swordman = 20;
 					next;
 					break;
 				case 4:
@@ -4044,7 +3983,7 @@ new_1-4,91,22,4	script	Bruce#nv	1_M_LIBRARYMASTER,{
 					next;
 					mes "[Bruce]";
 					mes "When advancing to the Second Job Class, Merchants can change their jobs to ^8E2323Blacksmiths^000000 or ^8E2323Alchemists^000000.";
-					set nov_3_swordman,20;
+					nov_3_swordman = 20;
 					next;
 					break;
 				case 5:
@@ -4057,7 +3996,7 @@ new_1-4,91,22,4	script	Bruce#nv	1_M_LIBRARYMASTER,{
 					next;
 					mes "[Bruce]";
 					mes "When advancing to the Second Job Class, Thieves can change their jobs to ^8E2323Assassins^000000 or ^8E2323Rogues^000000.";
-					set nov_3_swordman,20;
+					nov_3_swordman = 20;
 					next;
 					break;
 				case 6:
@@ -4070,7 +4009,7 @@ new_1-4,91,22,4	script	Bruce#nv	1_M_LIBRARYMASTER,{
 					mes "[Bruce]";
 					mes "When advancing to the Second Job Class, Acolytes can change their jobs to ^8E2323Priests^000000 or ^8E2323Monks^000000.";
 					mes "";
-					set nov_3_swordman,20;
+					nov_3_swordman = 20;
 					next;
 					break;
 				case 7:
@@ -4153,7 +4092,7 @@ new_1-4,91,22,4	script	Bruce#nv	1_M_LIBRARYMASTER,{
 					next;
 					mes "[Bruce]";
 					mes "A Swordman is the ideal character to take the position of party leader. When advancing to the Second Job Class, Swordmen can change their jobs to ^8E2323Knights^000000 or ^8E2323Crusaders^000000.";
-					set nov_3_swordman,20;
+					nov_3_swordman = 20;
 					next;
 					break;
 				case 2:
@@ -4171,7 +4110,7 @@ new_1-4,91,22,4	script	Bruce#nv	1_M_LIBRARYMASTER,{
 					next;
 					mes "[Bruce]";
 					mes "When advancing to the Second Job Class, Mages can change their jobs to ^8E2323Wizards^000000 or ^8E2323Sages^000000.";
-					set nov_3_swordman,20;
+					nov_3_swordman = 20;
 					next;
 					break;
 				case 3:
@@ -4186,7 +4125,7 @@ new_1-4,91,22,4	script	Bruce#nv	1_M_LIBRARYMASTER,{
 					next;
 					mes "[Bruce]";
 					mes "When advancing to the Second Job Class, every Archer may advance to the ^8E2323Hunter^000000 class. Alternatively, male Archers may advance to become ^8E2323Bards^000000, and female Archers may become ^8E2323Dancers^000000.";
-					set nov_3_swordman,20;
+					nov_3_swordman = 20;
 					next;
 					break;
 				case 4:
@@ -4202,7 +4141,7 @@ new_1-4,91,22,4	script	Bruce#nv	1_M_LIBRARYMASTER,{
 					next;
 					mes "[Bruce]";
 					mes "When advancing to the Second Job Class, Merchants can change their jobs to ^8E2323Blacksmiths^000000 or ^8E2323Alchemists^000000.";
-					set nov_3_swordman,20;
+					nov_3_swordman = 20;
 					next;
 					break;
 				case 5:
@@ -4215,7 +4154,7 @@ new_1-4,91,22,4	script	Bruce#nv	1_M_LIBRARYMASTER,{
 					next;
 					mes "[Bruce]";
 					mes "When advancing to the Second Job Class, Thieves can change their jobs to ^8E2323Assassins^000000 or ^8E2323Rogues^000000.";
-					set nov_3_swordman,20;
+					nov_3_swordman = 20;
 					next;
 					break;
 				case 6:
@@ -4228,7 +4167,7 @@ new_1-4,91,22,4	script	Bruce#nv	1_M_LIBRARYMASTER,{
 					mes "[Bruce]";
 					mes "When advancing to the Second Job Class, Acolytes can change their jobs to ^8E2323Priests^000000 or ^8E2323Monks^000000.";
 					mes "";
-					set nov_3_swordman,20;
+					nov_3_swordman = 20;
 					next;
 					break;
 				case 7:
