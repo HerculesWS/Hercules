@@ -233,22 +233,22 @@ geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 		mes "Number Match game. Please";
 		mes "try to guess my number, okay?";
 		mes "If you want to cancel, then please enter a number greater than 1,000.";
-		set .@practice,1;
+		.@practice = 1;
 		break;
 	case 3:
 		mes "[Nia]";
 		mes "Great, let's play Number Match!";
 		mes "You will have 5 chances to guess the number that I'm thinking of.";
 		mes "If you want to cancel, then please enter a number greater than 1,000.";
-		set .@practice,0;
+		.@practice = 0;
 		break;
 	case 4:
-		set .@name_record$, $050908_minus1_yagu$;
+		.@name_record$ = $050908_minus1_yagu$;
 		if (.@name_record$ == "") //custom
-			set .@name_record$,"(null)";
-		set .@score_record, $050908_minus1_yagu;
-		set .@score_min, .@score_record / 60;
-		set .@score_sec, .@score_record % 60;
+			.@name_record$ = "(null)";
+		.@score_record = $050908_minus1_yagu;
+		.@score_min = .@score_record / 60;
+		.@score_sec = .@score_record % 60;
 		mes "[Nia]";
 		mes "^ff0000" + .@name_record$ + "^000000 is the";
 		mes "record holder for the Number";
@@ -268,12 +268,12 @@ geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 
 	// Generate 3 digits of a number.
 	while(1) {
-		set .@yagu100, rand(1,9);
-		set .@yagu10, rand(1,9);
-		set .@yagu1, rand(1,9);
+		.@yagu100 = rand(1,9);
+		.@yagu10 = rand(1,9);
+		.@yagu1 = rand(1,9);
 		if ((.@yagu100 != .@yagu10) && (.@yagu100 != .@yagu1) && (.@yagu10 != .@yagu1)) {
 			// Store the actual number (unofficial).
-			set .@yagu, (100*.@yagu100) + (10*.@yagu10) + .@yagu1;
+			.@yagu = (100*.@yagu100) + (10*.@yagu10) + .@yagu1;
 			break;
 		}
 	}
@@ -281,7 +281,7 @@ geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 	// The official time calculation is based on ServerTime,
 	// an int HHMMSS equivalent to atoi(gettimestr("%H%M%S",7)).
 	// UNIX time is really a better way to do this.
-	set .@start_time, gettimetick(2);
+	.@start_time = gettimetick(2);
 
 	while(1) {
 
@@ -293,9 +293,9 @@ geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 				mes "Number Match game.";
 				close;
 			}
-			set .@input100, .@input / 100;
-			set .@input10, (.@input % 100) / 10;
-			set .@input1, .@input % 10;
+			.@input100 = .@input / 100;
+			.@input10 = (.@input % 100) / 10;
+			.@input1 = .@input % 10;
 			if ((.@input100 > 0) && (.@input10 > 0) && (.@input1 > 0)) {
 				if ((.@input100 != .@input10) && (.@input100 != .@input1) && (.@input10 != .@input1))
 					break;
@@ -309,7 +309,7 @@ geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 			next;
 		}
 
-		set .@retry, .@retry+1;
+		.@retry = .@retry+1;
 		mes "[Nia]";
 		mes "^ff0000"+strcharinfo(0)+"^000000,";
 		mes "your guess is ^0000ff"+.@input+"^000000.";
@@ -318,22 +318,22 @@ geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 		next;
 
 		// Correct digits in correct locations.
-		set .@strike,0;
+		.@strike = 0;
 		if (.@yagu100 == .@input100)
-			set .@strike, .@strike+1;
+			.@strike += 1;
 		if (.@yagu10 == .@input10)
-			set .@strike, .@strike+1;
+			.@strike += 1;
 		if (.@yagu1 == .@input1)
-			set .@strike, .@strike+1;
+			.@strike += 1;
 
 		// Correct digits in incorrect locations.
-		set .@ball,0;
+		.@ball = 0;
 		if ((.@yagu100 == .@input10) || (.@yagu100 == .@input1))
-			set .@ball, .@ball+1;
+			.@ball += 1;
 		if ((.@yagu10 == .@input100) || (.@yagu10 == .@input1))
-			set .@ball, .@ball+1;
+			.@ball += 1;
 		if ((.@yagu1 == .@input100) || (.@yagu1 == .@input10))
-			set .@ball, .@ball+1;
+			.@ball += 1;
 
 		if (.@strike == 3) {
 			if (.@practice) {
@@ -348,22 +348,22 @@ geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 			} else {
 
 				// Calculate final time and check against the previous record.
-				set .@end_time, gettimetick(2);
+				.@end_time = gettimetick(2);
 				if (.@end_time < .@start_time)
-					set .@end_time, .@end_time + 3600;
-				set .@total_time, .@end_time - .@start_time;
-				set .@total_min, .@total_time / 60;
-				set .@total_sec, .@total_time % 60;
-				set .@name_record$, $050908_minus1_yagu$;
+					.@end_time += 3600;
+				.@total_time = .@end_time - .@start_time;
+				.@total_min = .@total_time / 60;
+				.@total_sec = .@total_time % 60;
+				.@name_record$ = $050908_minus1_yagu$;
 				if (.@name_record$ == "") //custom
-					set .@name_record$,"(null)";
-				set .@score_record, $050908_minus1_yagu;
-				set .@score_min, .@score_record / 60;
-				set .@score_sec, .@score_record % 60;
+					.@name_record$ = "(null)";
+				.@score_record = $050908_minus1_yagu;
+				.@score_min = .@score_record / 60;
+				.@score_sec = .@score_record % 60;
 
 				if (.@score_record >= .@total_time || !.@score_record) { //custom (second condition)
-					set $050908_minus1_yagu$, strcharinfo(0);
-					set $050908_minus1_yagu, .@total_time;
+					$050908_minus1_yagu$ = strcharinfo(0);
+					$050908_minus1_yagu = .@total_time;
 					mes "[Nia]";
 					mes "Great! You guessed";
 					mes "my number, which was";

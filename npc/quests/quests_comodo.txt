@@ -519,7 +519,7 @@ comodo,206,310,4	script	Campground Boy#cmd	4_M_BIBI,{
 			mes "Would you visit him and see";
 			mes "what's taking him so long";
 			mes "to get over here?";
-			set dmdswrd_Q,1;
+			dmdswrd_Q = 1;
 			close;
 		}
 		mes "[Rochito]";
@@ -584,7 +584,7 @@ comodo,206,310,4	script	Campground Boy#cmd	4_M_BIBI,{
 		mes "^3355FFYou've received a bottle";
 		mes "of Mureuchieligu wine to";
 		mes "deliver to the Comodo Chief.^000000";
-		set dmdswrd_Q,3;
+		dmdswrd_Q = 3;
 		break;
 	case 3:
 		mes "[Rochito]";
@@ -706,7 +706,7 @@ comodo,204,310,4	script	Camping Youth#cmd	1_M_YOUNGKNIGHT,{
 		mes "one of the best friends that";
 		mes "a guy can have! Cheers!";
 		mes "Hahahaha hahahaha~!";
-		set dmdswrd_Q,5;
+		dmdswrd_Q = 5;
 		next;
 		mes "[Rockha]";
 		mes "Ahh, you know what would";
@@ -988,7 +988,7 @@ cmd_in02,32,140,4	script	Chief#cmd	1_M_03,{
 		mes "long since I've seen them, but";
 		mes "I hope that I get a chance to";
 		mes "visit them someday soon.";
-		set dmdswrd_Q,4;
+		dmdswrd_Q = 4;
 		break;
 	case 4:
 		mes "[Tausupa]";
@@ -1057,7 +1057,7 @@ cmd_in02,32,140,4	script	Chief#cmd	1_M_03,{
 				mes "friends cannot begin the";
 				mes "barbeque without Comodo's";
 				mes "world famous seasoning...";
-				set dmdswrd_Q,2;
+				dmdswrd_Q = 2;
 				break;
 			case 2:
 				mes "[Tausupa]";
@@ -1156,7 +1156,7 @@ comodo,88,97,4	script	Toruna#cmd	4_M_MANAGER,{
 			mes "here chalk him up to be some";
 			mes "sort of common loon, but who";
 			mes "knows? Maybe it does exist...";
-			set dmdswrd_Q,6;
+			dmdswrd_Q = 6;
 			next;
 			mes "[Toruna]";
 			mes "Well, you can decide for";
@@ -1245,7 +1245,7 @@ comodo,164,291,4	script	Rakusa#cmd	1_F_MERCHANT_01,{
 		mes "around here? Nope, I thought";
 		mes "so! Still, I think he really";
 		mes "believes that it exists...";
-		set dmdswrd_Q,7;
+		dmdswrd_Q = 7;
 		break;
 	case 7:
 		mes "[Rakusa]";
@@ -1293,7 +1293,7 @@ comodo,169,284,4	script	Kichiri#cmd	4W_M_02,{
 		mes "Magatu to shut up?";
 		mes "I just want to drink";
 		mes "my alcohol in peace!";
-		set dmdswrd_Q,8;
+		dmdswrd_Q = 8;
 		break;
 	case 8:
 		mes "[Kichiri]";
@@ -1361,7 +1361,7 @@ comodo,163,280,4	script	Magatu#cmd	1_M_JOBTESTER,{
 		mes "^3355FFYou have received";
 		mes "Magatu's lucky bottle";
 		mes "cap to present to Manzi.";
-		set dmdswrd_Q,9;
+		dmdswrd_Q = 9;
 		break;
 	case 9:
 		mes "[Magatu]";
@@ -1435,7 +1435,7 @@ cmd_in02,189,99,4	script	Manzi#cmd	4_M_03,{
 		mes "you his lucky bottle cap, so I'm^FFFFFF ^000000 gonna give you my lucky coin!";
 		mes "The old crone'll recognize it~";
 		next;
-		set dmdswrd_Q,10;
+		dmdswrd_Q = 10;
 		mes "^3355FFYou received Manzi's";
 		mes "''lucky coin.'' Strangely";
 		mes "enough, both sides";
@@ -1561,7 +1561,7 @@ comodo,187,153,4	script	Hullaris#cmd	4_F_GODEMOM,{
 			mes "^3355FFNigirboran^000000. He will judge";
 			mes "whether you are worthy";
 			mes "of the Comodo Cheese...";
-			set dmdswrd_Q,11;
+			dmdswrd_Q = 11;
 			next;
 			mes "[Hullaris]";
 			mes "Now, you should be";
@@ -1660,7 +1660,7 @@ comodo,187,153,4	script	Hullaris#cmd	4_F_GODEMOM,{
 		mes "body. You feel a powerful, yet";
 		mes "quiet confidence of being able";
 		mes "to accomplish anything.^000000";
-		set dmdswrd_Q,14;
+		dmdswrd_Q = 14;
 		next;
 		mes "[Hullaris]";
 		mes "Hahahah! So what";
@@ -1740,7 +1740,7 @@ beach_dun3,30,220,4	script	Nigirboran#cmd	4_M_BIBI,{
 		mes "have a fighting chance, right?";
 		mes "So come back when you're";
 		mes "ready for the testing~";
-		set dmdswrd_Q,12;
+		dmdswrd_Q = 12;
 		break;
 	case 12:
 		mes "[Nigirboran]";
@@ -1830,7 +1830,7 @@ beach_dun3,30,220,4	script	Nigirboran#cmd	4_M_BIBI,{
 				mes "a token button to";
 				mes "present to Hullaris";
 				mes "from Nigirboran.^000000";
-				set dmdswrd_Q,13;
+				dmdswrd_Q = 13;
 				next;
 				mes "[Nigirboran]";
 				mes "Ah, I almost forgot";
@@ -2010,7 +2010,7 @@ aldebaran,44,53,4	script	Meteurengut#cmd	1_M_WIZARD,{
 		mes "^3355FF1 Rough Elunium^000000,";
 		mes "^3355FF1 Emerald^000000, and";
 		mes "^3355FF1 Blue Gemstone^000000.";
-		set dmdswrd_Q,15;
+		dmdswrd_Q = 15;
 		break;
 	case 15:
 		if (countitem(717) > 0 && countitem(726) > 0 && countitem(721) > 0 && countitem(640) > 0 && countitem(757) > 0) {
@@ -2026,7 +2026,7 @@ aldebaran,44,53,4	script	Meteurengut#cmd	1_M_WIZARD,{
 			delitem 721,1; //Azure_Jewel
 			delitem 640,1; //Shining_Stone
 			delitem 757,1; //Elunium_Stone
-			set dmdswrd_Q,16;
+			dmdswrd_Q = 16;
 			next;
 			mes "[Meteurengut]";
 			mes "Would you please bring me";
@@ -2073,7 +2073,7 @@ aldebaran,44,53,4	script	Meteurengut#cmd	1_M_WIZARD,{
 			mes "*^3355FFClang Clang Clang!*";
 			mes "*Zaaaaaaaaaaaaaap*";
 			mes "*Ching tink t-t-t-tap*^000000";
-			set dmdswrd_Q,17;
+			dmdswrd_Q = 17;
 			next;
 			mes "[Meteurengut]";
 			mes "*Whew* It's finished.";
@@ -2201,12 +2201,12 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 		mes "Ah, yes. The first thing";
 		mes "I need is ^3355FF2 Snake Scales^000000,";
 		mes "so please bring those soon.";
-		set dmdswrd_Q,18;
+		dmdswrd_Q = 18;
 		break;
 	case 18:
 		if (countitem(926) > 1) {
 			delitem 926,2; //Scale_Of_Snakes
-			set dmdswrd_Q,19;
+			dmdswrd_Q = 19;
 			mes "[Zaka]";
 			mes "Ah, you've brought";
 			mes "the Snake Scales? Good,";
@@ -2249,7 +2249,7 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 			mes "I finish this part of the process, okay? Wait, actually, I think";
 			mes "you can take your time...";
 			delitem 936,1; //Scales_Shell
-			set dmdswrd_Q,20;
+			dmdswrd_Q = 20;
 			close;
 		}
 		mes "[Zaka]";
@@ -2270,7 +2270,7 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 			mes "I want to ask you to bring me:";
 			mes "^3355FF1 Stinky Scale^000000. Easy, right?";
 			delitem 954,1; //Shining_Scales
-			set dmdswrd_Q,21;
+			dmdswrd_Q = 21;
 			next;
 			mes "[Zaka]";
 			mes "The energy of a Stinky";
@@ -2303,7 +2303,7 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 			mes "the creation of the";
 			mes "Book of the Lamb.^000000";
 			delitem 959,1; //Rotten_Scale
-			set dmdswrd_Q,22;
+			dmdswrd_Q = 22;
 			next;
 			mes "[Zaka]";
 			mes "What...?!";
@@ -2431,7 +2431,7 @@ comodo,232,87,4	script	Won#cmd	1_M_MOC_LORD,{
 		next;
 		mes "^3355FFYou receive the";
 		mes "Stamp of Muriniel.^000000";
-		set dmdswrd_Q,23;
+		dmdswrd_Q = 23;
 		next;
 		mes "[Won]";
 		mes "Mysteltainn, Executioner,";

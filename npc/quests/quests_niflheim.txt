@@ -30,7 +30,7 @@
 // Piano Quest :: nif_ryu
 //============================================================
 niflheim,224,243,3	script	Alreg#nif	4_M_NFDEADMAN,{
-	if (nif_piano) set nif_piano,0;
+	if (nif_piano) nif_piano = 0;
 	mes "[Alreg]";
 	mes "Me like meat, muheh.";
 	mes "You! Look tempting.";
@@ -51,7 +51,7 @@ niflheim,224,243,3	script	Alreg#nif	4_M_NFDEADMAN,{
 		mes "good. Alreg give you this";
 		mes "for payback. Present!";
 		mes "*Burrrp*";
-		set nif_esc,rand(1,2);
+		nif_esc = rand(1,2);
 		getitem 7184,1; //Piano_Keyboard
 		close;
 	}
@@ -86,19 +86,19 @@ nif_in,105,81,3	script	Crayu#nif	4_M_NFDEADMAN2,{
 		mes "Okay, wait! Here's a test for you!";
 		switch(rand(1,4)) {
 		case 1:
-			set .@songline$,"Mountain sunset to the west";
+			.@songline$ = "Mountain sunset to the west";
 			mes "Write down the first line of the song.";
 			break;
 		case 2:
-			set .@songline$,"Where the purple dusk falls";
+			.@songline$ = "Where the purple dusk falls";
 			mes "Write down the second line of the song.";
 			break;
 		case 3:
-			set .@songline$,"Surrounded by beautiful melody";
+			.@songline$ = "Surrounded by beautiful melody";
 			mes "Write down the third line of the song.";
 			break;
 		case 4:
-			set .@songline$,"You become the key that ignores its master";
+			.@songline$ = "You become the key that ignores its master";
 			mes "Write down the fourth line of the song.";
 			break;
 		}
@@ -112,8 +112,8 @@ nif_in,105,81,3	script	Crayu#nif	4_M_NFDEADMAN2,{
 			mes "favorite guests. Here's a";
 			mes "little reward for you.";
 			next;
-			if (nif_esc == 1) set nif_esc,3;
-			else set nif_esc,6;
+			if (nif_esc == 1) nif_esc = 3;
+			else nif_esc = 6;
 			getitem 7184,1; //Piano_Keyboard
 			mes "[Crayu]";
 			mes "Lastly, I hope you will show your";
@@ -153,7 +153,7 @@ nif_in,31,20,3	script	Kuzkahina#nif	4_M_NFDEADMAN2,{
 		mes "[Kuzkahina]";
 		mes "Hey you! Make yourself useful";
 		mes "and throw this away when you leave.";
-		set nif_esc,nif_esc+2;
+		nif_esc += 2;
 		getitem 7184,1; //Piano_Keyboard
 		next;
 		mes "[Kuzkahina]";
@@ -185,9 +185,9 @@ OnTouch:
 		mes "^3355FFWould you like to pick it up?^000000";
 		if (select("Yes:No") == 1) {
 			if (nif_esc < 10)
-				set nif_esc,nif_esc+2;
+				nif_esc += 2;
 			else if (nif_esc == 10)
-				set nif_esc,11;
+				nif_esc = 11;
 			getitem 7184,1; //Piano_Keyboard
 		}
 		close;
@@ -206,7 +206,7 @@ OnTouch:
 		next;
 		mes "^3355FFWould you like to pick it up?^000000";
 		if (select("Yes:No") == 1) {
-			set nif_esc,nif_esc+2;
+			nif_esc += 2;
 			getitem 7184,1; //Piano_Keyboard
 		}
 		close;
@@ -232,7 +232,7 @@ OnTouch:
 		close;
 	}
 	if (nif_esc == 11 && countitem(7184) > 5) {
-		set nif_esc,12;
+		nif_esc = 12;
 		delitem 7184,6; //Piano_Keyboard
 		mes "^3355FFYou took the keys you've found";
 		mes "and inserted them into";
@@ -259,8 +259,8 @@ OnTouch:
 		soundeffect "complete.wav",0;
 		next;
 		if (nif_esc == 12) {
-			set MISC_QUEST,MISC_QUEST | 32;
-			set nif_piano, 0;
+			MISC_QUEST |= 32;
+			nif_piano = 0;
 		}
 		mes "^3355FFYou begin to feel dizzy and";
 		mes "your body feels as if it were";
@@ -353,7 +353,7 @@ prt_in,161,20,3	script	Erious#nif	4_F_03,{
 				mes "a month ago was all my fault.";
 				mes "Thank you for your help,";
 				mes "and please take care.";
-				set nif_revive,1;
+				nif_revive = 1;
 				setquest 11038;
 				close;
 			}
@@ -432,8 +432,8 @@ prt_in,161,20,3	script	Erious#nif	4_F_03,{
 				mes "as a token of my gratitute.";
 				next;
 				if (checkweight(610,26)) {
-					set MISC_QUEST,MISC_QUEST | 16384;
-					set nif_revive,0;
+					MISC_QUEST |= 16384;
+					nif_revive = 0;
 					completequest 11043;
 					getitem 607,2; //Yggdrasilberry
 					getitem 608,2; //Seed_Of_Yggdrasil
@@ -477,8 +477,8 @@ prt_in,161,20,3	script	Erious#nif	4_F_03,{
 			mes "gratitute.";
 			next;
 			if (checkweight(610,10)) {
-				set MISC_QUEST,MISC_QUEST | 16384;
-				set nif_revive,0;
+				MISC_QUEST |= 16384;
+				nif_revive = 0;
 				completequest 11042;
 				getitem 610,10; //Leaf_Of_Yggdrasil
 				mes "[Erious]";
@@ -542,7 +542,7 @@ umbala,215,181,3	script	Billik	4_M_JOB_KNIGHT1,{
 			mes "likes roses a lot, so bring a rose";
 			mes "for him. That way, he'll know for";
 			mes "sure that I've sent you.";
-			set nif_revive,2;
+			nif_revive = 2;
 			changequest 11038,11039;
 			next;
 			mes "[Billik]";
@@ -602,7 +602,7 @@ niflheim,153,215,3	script	Feylin	4_M_NFDEADMAN2,{
 		mes "you came here for nothing. I hope";
 		mes "you go back to where you came";
 		mes "from before it's too late.";
-		set nif_revive,3;
+		nif_revive = 3;
 		changequest 11039,11040;
 		close;
 	}
@@ -626,7 +626,7 @@ niflheim,153,215,3	script	Feylin	4_M_NFDEADMAN2,{
 			mes "But I surely wouldn't have told";
 			mes "you. Besides, speaking about";
 			mes "such things is taboo.";
-			set nif_revive,4;
+			nif_revive = 4;
 			changequest 11040,11041;
 			close;
 		}
@@ -671,7 +671,7 @@ niflheim,153,215,3	script	Feylin	4_M_NFDEADMAN2,{
 							mes "Woombah woombah hoombabah!";
 							mes "Yeeeeep!";
 							next;
-							set .@nif_revive1,rand(1,100);
+							.@nif_revive1 = rand(1,100);
 							if (.@nif_revive1 > 0) && (.@nif_revive1 < 88) {
 								mes "[Feylin]";
 								mes "...I am sorry.";
@@ -681,7 +681,7 @@ niflheim,153,215,3	script	Feylin	4_M_NFDEADMAN2,{
 								emotion e_omg;
 								delitem 748,1; //Witherless_Rose
 								delitem 610,10; //Leaf_Of_Yggdrasil
-								set nif_revive,5;
+								nif_revive = 5;
 								changequest 11041,11042;
 								percentheal -99,0;
 								next;
@@ -725,7 +725,7 @@ niflheim,153,215,3	script	Feylin	4_M_NFDEADMAN2,{
 								mes "live the rest of his life happily";
 								mes "with someone else. Oh, also let";
 								mes "him know that I forgive him.";
-								set nif_revive,6;
+								nif_revive = 6;
 								changequest 11040,11043;
 								getitem 934,1; //Mementos
 								next;

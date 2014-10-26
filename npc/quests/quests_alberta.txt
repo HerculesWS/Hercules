@@ -1064,7 +1064,7 @@ alberta_in,23,104,4	script	Grandpa Turtle#tur	2_M_PHARMACIST,{
 		close;
 	case 2:
 		if ((MISC_QUEST & 65536) || TURTLE) {
-			if(MISC_QUEST & 65536) set TURTLE,0; //now clear the var
+			if(MISC_QUEST & 65536) TURTLE = 0; //now clear the var
 			mes "[Grandpa Turtle]";
 			mes "Well...";
 			mes "If you go to eastern side of the Alberta port, you should find an old ferryboatman.";
@@ -1089,7 +1089,7 @@ alberta_in,23,104,4	script	Grandpa Turtle#tur	2_M_PHARMACIST,{
 		mes "[Grandpa Turtle]";
 		mes "Well, then...";
 		mes "Good luck~";
-		set TURTLE,1;
+		TURTLE = 1;
 		close;
 	case 3:
 		mes "[Grandpa Turtle]";
@@ -1429,7 +1429,7 @@ alberta,248,93,4	script	Voyage log#tur	HIDDEN_NPC,{
 				mes "^FF3355X : 160 , Y : 81^000000";
 				next;
 				mes "^3355FFIn the Voyage log is a thin key marked with a skull. You've taken this Skull key, as it may be of some use later.^000000";
-				set TURTLE,2;
+				TURTLE = 2;
 				close;
 			case 2:
 				mes "^3355FFYou notice a page with a stamp shaped like a bird's foot. The black ink smells sort of like fruit.^000000";
@@ -1479,7 +1479,7 @@ alberta,248,93,4	script	Voyage log#tur	HIDDEN_NPC,{
 				next;
 				mes "^3355FFYou've gained^000000";
 				mes "^3355FFthe Roots key.^000000";
-				set TURTLE,3;
+				TURTLE = 3;
 				close;
 			case 3:
 				mes "^3355FFThese pages of this log are soiled with mud, and some of them are missing.^000000";
@@ -1513,7 +1513,7 @@ alberta,248,93,4	script	Voyage log#tur	HIDDEN_NPC,{
 				next;
 				mes "^3355FFYou've gained ^000000";
 				mes "^3355FFthe Security key^000000";
-				set TURTLE,4;
+				TURTLE = 4;
 				close;
 			}
 		}
@@ -1537,8 +1537,8 @@ tur_dun01,160,81,4	script	Skull Stone#tur	HIDDEN_NPC,{
 		mes "^3355FFthe stone opened and^000000";
 		mes "^3355FFsome items popped out!!^000000";
 		next;
-		set MISC_QUEST,MISC_QUEST | 65536;
-		set TURTLE,0;
+		MISC_QUEST |= 65536;
+		TURTLE = 0;
 		switch(rand(1,3)) {
 		case 1:
 			getitem 532,5; //Banana_Juice
@@ -1612,7 +1612,7 @@ tur_dun02,132,251,4	script	Turtle Tree Roots#tur	HIDDEN_NPC,{
 		mes "^3355FFInside the pile of turtle^000000";
 		mes "^3355FFcrystals, a scroll is hidden.^000000";
 		mes "";
-		set TURTLE,7;
+		TURTLE = 7;
 		mes "^3355FFYou've gained a^000000";
 		mes "^3355FFTurtle Crystal key.^000000";
 		close;
@@ -1669,7 +1669,7 @@ tur_dun02,46,125,4	script	A pile of turtle crystal	HIDDEN_NPC,{
 		mes "^3355FFAt the edge of the crystal^000000";
 		mes "^3355FFplate, is a long key.^000000";
 		mes "";
-		set TURTLE,8;
+		TURTLE = 8;
 		mes "^3355FFYou've gained the^000000";
 		mes "^3355FFTurtle Pillar key.^000000";
 		close;
@@ -1717,8 +1717,8 @@ tur_dun02,49,158,4	script	Turtle Pillar#tur	HIDDEN_NPC,{
 		next;
 		mes "^3355FFThere are many items^000000";
 		mes "^3355FFunder the pillar...^000000";
-		set MISC_QUEST,MISC_QUEST | 65536;
-		set TURTLE,0;
+		MISC_QUEST |= 65536;
+		TURTLE = 0;
 		switch(rand(1,10)) {
 		case 1:
 			getitem 702,1; //Animal_Blood
@@ -1811,7 +1811,7 @@ tur_dun01,203,155,4	script	Turtle stone#tur	HIDDEN_NPC,{
 		mes "beneath the line of words,";
 		mes "rests a brilliant red bead.^000000";
 		next;
-		set TURTLE,10;
+		TURTLE = 10;
 		mes "^3355FFYou set the red bead to the";
 		mes "Security key, fitting it";
 		mes "within one of three tiny holes.^000000";
@@ -1858,7 +1858,7 @@ tur_dun02,75,249,4	script	Turtle stone#tur2	HIDDEN_NPC,{
 		mes "beneath the line of words,";
 		mes "rests a brilliant yellow bead.";
 		next;
-		set TURTLE,11;
+		TURTLE = 11;
 		mes "^3355FFYou set the yellow bead";
 		mes "into the Security key, fitting it";
 		mes "within one of three tiny holes.^000000";
@@ -1905,7 +1905,7 @@ tur_dun03,118,233,4	script	Turtle Stone#tur3	HIDDEN_NPC,{
 		mes "beneath the line of words,";
 		mes "rests a brilliant blue bead.^000000";
 		next;
-		set TURTLE,12;
+		TURTLE = 12;
 		mes "^3355FFYou set the blue bead to the";
 		mes "into the Security Key, fitting it";
 		mes "within one of three tiny holes.^000000";
@@ -1945,8 +1945,8 @@ tur_dun04,113,178,4	script	Turtle Statue#tur	HIDDEN_NPC,{
 		mes "metal plate. You pull";
 		mes "it open like a drawer.^000000";
 		next;
-		set MISC_QUEST,MISC_QUEST | 65536;
-		set TURTLE,0;
+		MISC_QUEST |= 65536;
+		TURTLE = 0;
 		if (rand(1,20) == 7) {
 			switch(rand(1,4)) {
 			case 1:
@@ -2376,7 +2376,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 		mes "One day, I will surely become...";
 		mes "..An adventurer... and do many, many things.";
 		next;
-		set ep13_2_hiki,13;
+		ep13_2_hiki = 13;
 		completequest 10089;
 		getexp (checkre(3))?8000:80000,0;
 		mes "[Iromo]";
@@ -2473,7 +2473,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 		mes "Really...? Other than Alberta, and Rune-Midgarts...?";
 		mes "There are other places...?";
 		next;
-		set ep13_2_hiki,12;
+		ep13_2_hiki = 12;
 		changequest 10088,10089;
 		mes "[Iromo]";
 		mes "But... there will also be many troubles...";
@@ -2504,7 +2504,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 			mes "But...";
 			mes "He must've forgotten all about me...";
 			next;
-			set ep13_2_hiki,11;
+			ep13_2_hiki = 11;
 			changequest 10087,10088;
 			getexp (checkre(3))?6700:67000,0;
 			mes "[Iromo]";
@@ -2572,7 +2572,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 		mes "...is always the same...";
 		mes "Get out... I'm not in the mood...";
 		next;
-		set ep13_2_hiki,10;
+		ep13_2_hiki = 10;
 		changequest 10086,10087;
 		getexp (checkre(3))?5700:57000,0;
 		mes "[Iromo]";
@@ -2604,7 +2604,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 			mes "[Iromo]";
 			mes "Do you have any stories about siblings?";
 			next;
-			set ep13_2_hiki,9;
+			ep13_2_hiki = 9;
 			changequest 10085,10086;
 			mes "[Iromo]";
 			mes "What? Anything to say?";
@@ -2629,7 +2629,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 			mes "being outside.";
 			mes "I would rather stay at home.";
 			next;
-			set ep13_2_hiki,8;
+			ep13_2_hiki = 8;
 			changequest 10084,10085;
 			getexp (checkre(3))?4700:47000,0;
 			mes "[Iromo]";
@@ -2685,7 +2685,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 		next;
 		delitem 528,1; //Monster's_Feed
 		delitem 501,1; //Red_Potion
-		set ep13_2_hiki,7;
+		ep13_2_hiki = 7;
 		changequest 10083,10084;
 		getexp (checkre(3))?3750:37500,0;
 		mes "[Iromo]";
@@ -2713,7 +2713,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 		mes "I can stand it.";
 		next;
 		if (ep13_2_hiki == 1) {
-			set ep13_2_hiki,2;
+			ep13_2_hiki = 2;
 			changequest 10079,10080;
 		}
 		mes "[Iromo]";
@@ -2793,7 +2793,7 @@ alberta_in,120,93,3	script	Iromo's Mother#ep3_2	1_M_INNKEEPER,{
 		mes "he spent all his pocket money,";
 		mes "but I don't know what he has been eating.";
 		next;
-		set ep13_2_hiki,3;
+		ep13_2_hiki = 3;
 		mes "[Mother]";
 		mes "Oh, why don't you ask Iromo's friend?";
 		mes "I think he would know about his favorite food.";
@@ -2811,7 +2811,7 @@ alberta_in,120,93,3	script	Iromo's Mother#ep3_2	1_M_INNKEEPER,{
 		mes "he spent all his pocket money,";
 		mes "but I don't know what he has been eating.";
 		next;
-		set ep13_2_hiki,3;
+		ep13_2_hiki = 3;
 		mes "[Mother]";
 		mes "Oh, why don't you ask Iromo's friend?";
 		mes "I think he would know about his favorite food.";
@@ -2829,7 +2829,7 @@ alberta_in,120,93,3	script	Iromo's Mother#ep3_2	1_M_INNKEEPER,{
 	mes "he doesn't go out anymore.";
 	next;
 	if (BaseLevel > 40 && !questprogress(10079)) {
-		set ep13_2_hiki,1;
+		ep13_2_hiki = 1;
 		setquest 10079;
 	}
 	mes "[Mother]";
@@ -2885,7 +2885,7 @@ alberta,45,106,5	script	Little Boy#ep3_2	4_M_KID1,{
 		mes "I can't understand why he liked";
 		mes "those foods. He was odd...";
 		next;
-		set ep13_2_hiki,6;
+		ep13_2_hiki = 6;
 		changequest 10082,10083;
 		mes "[Little Boy]";
 		mes "Anyway, I already told you";
@@ -2911,7 +2911,7 @@ alberta,45,106,5	script	Little Boy#ep3_2	4_M_KID1,{
 		mes "Yum Yum...";
 		next;
 		delitem 513,1; //Banana
-		set ep13_2_hiki,5;
+		ep13_2_hiki = 5;
 		changequest 10081,10082;
 		mes "[Little Boy]";
 		mes "Wait. Wait...";
@@ -2960,7 +2960,7 @@ alberta,45,106,5	script	Little Boy#ep3_2	4_M_KID1,{
 		mes "They don't sell bananas in this village...";
 		mes "I am eager to have bananas.";
 		next;
-		set ep13_2_hiki,4;
+		ep13_2_hiki = 4;
 		changequest 10080,10081;
 		mes "[Little Boy]";
 		mes "Oh, you will buy me a banana?";

@@ -86,7 +86,7 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 			mes "like any liquids we're used to.";
 			close;
 		case 2:
-			set molgenstain,1;
+			molgenstain = 1;
 			mes "[Merchant Louitz]";
 			mes "Hey, this is one of";
 			mes "those solutions that";
@@ -156,7 +156,7 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 			mes "like any liquids we're used to.";
 			close;
 		case 2:
-			set molgenstain,1;
+			molgenstain = 1;
 			mes "[Merchant Louitz]";
 			mes "Oh hey, this is that";
 			mes "Karvodailnirol that the";
@@ -226,7 +226,7 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 			mes "like any liquids we're used to.";
 			close;
 		case 2:
-			set molgenstain,1;
+			molgenstain = 1;
 			mes "[Merchant Louitz]";
 			mes "Oh hey, this is that";
 			mes "Detrimindexta that the";
@@ -348,7 +348,7 @@ geffen,181,114,3	script	Aure Dupon#cm	4_KID01,{
 			mes "carried by the tides of destiny.";
 			close;
 		case 2:
-			set molgenstain,2;
+			molgenstain = 2;
 			mes "[Aure Dupon]";
 			mes "Molgenstein...?";
 			mes "The man is obsessed";
@@ -536,8 +536,8 @@ geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 		}
 	}
 	if (molgenstain == 2) {
-		set MISC_QUEST,MISC_QUEST | 4;
-		set molgenstain,0;
+		MISC_QUEST |= 4;
+		molgenstain = 0;
 		mes "[Chemist Molgenstein]";
 		mes "Heeheeheehee.... welcome. Hehehehe.... heeheeheeheehee....";
 		next;

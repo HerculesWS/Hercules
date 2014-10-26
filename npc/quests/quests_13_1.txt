@@ -158,7 +158,7 @@ prt_castle,121,51,3	script	Alliance Manager#prt	4_M_CRU_OLD,{
 		mes "Always be careful not to get lost.";
 		next;
 		changequest 10068,10069;
-		set ep13_ryu,13;
+		ep13_ryu = 13;
 		mes "[Alliance Manager]";
 		mes "Thanks for reporting to us.";
 		mes "We are better prepared.";
@@ -267,7 +267,7 @@ prt_castle,83,67,5	script	Recruiter for the Brave	4_M_MANAGER,{
 		mes "Remember, go to ^FF0000Lighthalzen^000000, then follow the directions of the guide there.";
 		next;
 		changequest 10064,10065;
-		set ep13_ryu,9;
+		ep13_ryu = 9;
 		if (checkre(3))
 			getexp 66000,21000;
 		else
@@ -332,7 +332,7 @@ prt_castle,83,67,5	script	Recruiter for the Brave	4_M_MANAGER,{
 		mes "They will take care of everything, if you say that you've been sent by the Recruiter in Prontera.";
 		next;
 		setquest 10057;
-		set ep13_ryu,1;
+		ep13_ryu = 1;
 		mes "[Recruiter]";
 		mes "Time is zeny, just go.";
 		mes "As soon as you visit the Promotional Staff, you will be allowed to travel to the unknown land.";
@@ -402,7 +402,7 @@ aldebaran,127,138,3	script	Promotional Staff#alde	4W_SAILOR,{
 		next;
 		delitem 909,300; //Jellopy
 		changequest 10058,10059;
-		set ep13_ryu,3;
+		ep13_ryu = 3;
 		mes "[Promotional Staff]";
 		mes "Anyway you did the first step.";
 		mes "Bless you!";
@@ -440,7 +440,7 @@ aldebaran,127,138,3	script	Promotional Staff#alde	4W_SAILOR,{
 		mes "Are you ready?";
 		next;
 		changequest 10057,10058;
-		set ep13_ryu,2;
+		ep13_ryu = 2;
 		mes "[Promotional Staff]";
 		mes "Just go ahead and hunt monsters, or whatever and collect 300 jellopies.";
 		mes "Then we can go forward.";
@@ -497,7 +497,7 @@ geffen,90,67,3	script	Promotional Staff#gef	4W_SAILOR,{
 		next;
 		delitem 723,1; //Cardinal_Jewel
 		changequest 10061,10062;
-		set ep13_ryu,6;
+		ep13_ryu = 6;
 		mes "[Promotional Staff]";
 		mes "I hope you can do it!";
 		mes "Good luck!";
@@ -526,7 +526,7 @@ geffen,90,67,3	script	Promotional Staff#gef	4W_SAILOR,{
 		next;
 		delitem 721,1; //Azure_Jewel
 		changequest 10060,10061;
-		set ep13_ryu,5;
+		ep13_ryu = 5;
 		mes "[Promotional Staff]";
 		mes "Please bring me a Ruby.";
 		mes "As I mentioned, this is the second request.";
@@ -555,7 +555,7 @@ geffen,90,67,3	script	Promotional Staff#gef	4W_SAILOR,{
 		mes "Are you ready?";
 		next;
 		changequest 10059,10060;
-		set ep13_ryu,4;
+		ep13_ryu = 4;
 		mes "[Promotional Staff]";
 		mes "Just bring me ^ff00001 Emerald^000000.";
 		mes "That isn't hard for you right?";
@@ -625,7 +625,7 @@ geffen,90,67,3	script	Promotional Staff#gef	4W_SAILOR,{
 		mes "job, friend!";
 		next;
 		changequest 10063,10064;
-		set ep13_ryu,8;
+		ep13_ryu = 8;
 		mes "[Promotional Staff]";
 		mes "Bless all of your heart,";
 		mes "for your great future!";
@@ -670,7 +670,7 @@ geffen,90,67,3	script	Promotional Staff#gef	4W_SAILOR,{
 			mes "Good job, friend!";
 			next;
 			changequest 10062,10064;
-			set ep13_ryu,8;
+			ep13_ryu = 8;
 			mes "[Promotional Staff]";
 			mes "May Freya bless you,";
 			mes "for your great future!";
@@ -687,7 +687,7 @@ geffen,90,67,3	script	Promotional Staff#gef	4W_SAILOR,{
 			mes "I can't let you pass.";
 			next;
 			changequest 10062,10063;
-			set ep13_ryu,7;
+			ep13_ryu = 7;
 			mes "[Promotional Staff]";
 			mes "Please level up a little more. I";
 			mes "can't accept that you're strong";
@@ -833,7 +833,7 @@ lhz_in01,132,259,5	script	Sikaiz#1	4_M_LGTGUARD,{
 			mes "It would bear watching you.";
 			next;
 			changequest 10073,10074;
-			set ep13_ryu,18;
+			ep13_ryu = 18;
 			mes "[Sikaiz]";
 			mes "See you then.";
 			close;
@@ -869,7 +869,7 @@ lhz_in01,132,259,5	script	Sikaiz#1	4_M_LGTGUARD,{
 		mes "You need to investigate and report to us as much as possible. That's not that tough.";
 		next;
 		changequest 10072,10073;
-		set ep13_ryu,17;
+		ep13_ryu = 17;
 		mes "[Sikaiz]";
 		mes "Don't worry so much.";
 		mes "We will support you.";
@@ -905,7 +905,7 @@ lhz_in01,132,259,5	script	Sikaiz#1	4_M_LGTGUARD,{
 		mes "I feel like I am forcing you, but I hope to get your help. Go to the ^FF0000Cheshrumnir Guard^000000 in Rachel and deliver Munkenro's message for me.";
 		next;
 		changequest 10070,10071;
-		set ep13_ryu,15;
+		ep13_ryu = 15;
 		mes "[Sikaiz]";
 		mes "It's the same mission you did for Rune-Midgarts, so it shouldn't be that hard. I hope you can do it.";
 		close;
@@ -959,7 +959,7 @@ lhz_in01,132,259,5	script	Sikaiz#1	4_M_LGTGUARD,{
 		mes "He is a kind of manager for Schwaltzvald and he is the main contact point of the kingdom's people, since he's quite closely in communication with them.";
 		next;
 		changequest 10069,10070;
-		set ep13_ryu,14;
+		ep13_ryu = 14;
 		mes "[Sikaiz]";
 		mes "That's enough talk about the three kingdoms. Now, let's move on to the next stories.";
 		close;
@@ -984,7 +984,7 @@ lhz_in01,132,259,5	script	Sikaiz#1	4_M_LGTGUARD,{
 		mes "It's not that difficult. Just tell them to prepare for the trip to the Dimensional Rift. It's quite easy, isn't it?";
 		next;
 		changequest 10067,10068;
-		set ep13_ryu,12;
+		ep13_ryu = 12;
 		mes "[Sikaiz]";
 		mes "We're running out of time, so I will answer you when you come back. Ok?";
 		close;
@@ -1059,7 +1059,7 @@ lhz_in01,132,259,5	script	Sikaiz#1	4_M_LGTGUARD,{
 		mes "Anyway, I told you about Ash-Vacuum. What I know about it all. Though you still don't know much about it, that's all I can tell you.";
 		next;
 		changequest 10066,10067;
-		set ep13_ryu,11;
+		ep13_ryu = 11;
 		mes "[Sikaiz]";
 		mes "If you have any other questions, you can still ask me...";
 		close;
@@ -1086,7 +1086,7 @@ lhz_in01,132,259,5	script	Sikaiz#1	4_M_LGTGUARD,{
 		mes "You all should be relaxed about completing this mission. If there are more adventurers to register, let them come to me.";
 		next;
 		changequest 10065,10066;
-		set ep13_ryu,10;
+		ep13_ryu = 10;
 		mes "- The speech has ended. -";
 		mes "- Let's move on. -";
 		close;
@@ -1355,7 +1355,7 @@ ra_temple,119,113,3	script	Alliance Manager#ra	4_M_TRAINEE,{
 		mes "We're all together for this mission now... They would sacrifice for Freya.";
 		next;
 		changequest 10071,10072;
-		set ep13_ryu,16;
+		ep13_ryu = 16;
 		mes "[Manager]";
 		mes "Now you can go back.";
 		mes "Just say I received the report of the status well.";
@@ -1413,7 +1413,7 @@ lhz_in01,32,22,3	script	Officer A	4_M_MANAGER,{
 		mes "...or whatever you do...";
 		next;
 		changequest 10075,10076;
-		set ep13_ryu,20;
+		ep13_ryu = 20;
 		mes "[Officer A]";
 		mes "Just return there. Good job.";
 		close;
@@ -1469,7 +1469,7 @@ lhz_in01,32,22,3	script	Officer A	4_M_MANAGER,{
 		mes "Let's talk about it later.";
 		next;
 		changequest 10074,10075;
-		set ep13_ryu,19;
+		ep13_ryu = 19;
 		mes "[Officer B]";
 		mes "Um, what's your business?";
 		close;
@@ -1522,7 +1522,7 @@ lhz_in01,30,24,5	script	Officer B	4_M_MANAGER,{
 		mes "...or whatever you do...";
 		next;
 		changequest 10075,10076;
-		set ep13_ryu,20;
+		ep13_ryu = 20;
 		mes "[Officer A]";
 		mes "Just return there. Good job.";
 		close;
@@ -1578,7 +1578,7 @@ lhz_in01,30,24,5	script	Officer B	4_M_MANAGER,{
 		mes "Let's talk about it later.";
 		next;
 		changequest 10074,10075;
-		set ep13_ryu,19;
+		ep13_ryu = 19;
 		mes "[Officer B]";
 		mes "Um, what's your business?";
 		close;
@@ -1711,7 +1711,7 @@ moc_fild22b,230,197,5	script	Munkenro#2	4_M_RUSMAN1,{
 		mes "This can prove that you're strong enough. That's the minimum test I can perform.";
 		next;
 		changequest 10076,10077;
-		set ep13_ryu,21;
+		ep13_ryu = 21;
 		mes "[Munkenro]";
 		mes "Once you get ready,";
 		mes "just let me know.";
@@ -1727,7 +1727,7 @@ moc_fild22b,230,197,5	script	Munkenro#2	4_M_RUSMAN1,{
 			mes "[Munkenro]";
 			mes "Ok, just have a good adventure.";
 			next;
-			set ep13_ryu,22;
+			ep13_ryu = 22;
 			changequest 10077,10078;
 			donpcevent "Head of the Alliance#moo::OnEnable";
 			mes "[Munkenro]";
@@ -1752,8 +1752,8 @@ moc_fild22b,230,197,5	script	Munkenro#2	4_M_RUSMAN1,{
 		mes "I will give you one more chance.";
 		mes "Don't make any mistakes again.";
 		next;
-		set ep13_ryu,21;
-		set $@ep13_test,0;
+		ep13_ryu = 21;
+		$@ep13_test = 0;
 		mes "[Munkenro]";
 		mes "Once you get ready,";
 		mes "just let me know,";
@@ -1782,7 +1782,7 @@ moc_fild22b,230,197,5	script	Munkenro#2	4_M_RUSMAN1,{
 		mes "Just forget it.";
 		next;
 		completequest 10078;
-		set ep13_ryu,100;
+		ep13_ryu = 100;
 		if (checkre(3))
 			getexp 66000,21000;
 		else
@@ -1802,7 +1802,7 @@ OnInit:
 OnEnable:
 	mapannounce "moc_fild22b","Head of the Alliance: I command that all soldiers attack the adventurers around here for 15 minutes. This is an order!",bc_map;
 	enablenpc "Head of the Alliance#moo";
-	set $@ep13_test,1;
+	$@ep13_test = 1;
 	initnpctimer;
 	monster "moc_fild22b",0,0,"Allied Soldier",1851,80,"Head of the Alliance#moo::OnMyMobDead";
 	end;
@@ -1814,7 +1814,7 @@ OnReset:
 OnDisable:
 	killmonster "moc_fild22b","Head of the Alliance#moo::OnMyMobDead";
 	mapannounce "moc_fild22b","Head of the Alliance: All alliance members. All of you should stop your attacks and return to work. That's all.",bc_map;
-	set $@ep13_test,0;
+	$@ep13_test = 0;
 	disablenpc "Head of the Alliance#moo";
 	end;
 
@@ -1827,7 +1827,7 @@ OnMyMobDead:
 OnTimer900000:
 	killmonster "moc_fild22b","Head of the Alliance#moo::OnMyMobDead";
 	mapannounce "moc_fild22b","Head of the Alliance: All alliance members. All of you should stop your attacks and return to work. That's all.",bc_map;
-	set $@ep13_test,2;
+	$@ep13_test = 2;
 	disablenpc "Head of the Alliance#moo";
 	stopnpctimer;
 	end;
@@ -1925,7 +1925,7 @@ moc_fild22b,370,370,3	script	Allied Manager#gm	4W_SAILOR,{
 	mes "[Manager]";
 	mes "Please enter the password.";
 	next;
-	set .@i, callfunc("F_GM_NPC",8028,0,0,9000);
+	.@i = callfunc("F_GM_NPC",8028,0,0,9000);
 	if (.@i == -2) {
 		mes "[Manager]";
 		mes "Incorrect password.";
@@ -1946,7 +1946,7 @@ moc_fild22b,370,370,3	script	Allied Manager#gm	4W_SAILOR,{
 		case 1:
 			mes "[Manager]";
 			mes "Resetting the allied attacks.";
-			set $@ep13_test,2;
+			$@ep13_test = 2;
 			disablenpc "Head of the Alliance#moo";
 			close;
 		case 2:
@@ -1990,7 +1990,7 @@ mid_camp,222,283,4	script	Marian#ep13bs	4_F_JOB_HUNTER,{
 				mes "[Marian]";
 				mes "Go to the right to find";
 				mes "^0000FFInstructor Lugen^000000.";
-				set ep13_newbs,1;
+				ep13_newbs = 1;
 				getitem 12322,1; //Chocolate_Pie
 				setquest 11084;
 				close;
@@ -2009,7 +2009,7 @@ mid_camp,222,283,4	script	Marian#ep13bs	4_F_JOB_HUNTER,{
 				mes "Go to the right along this way";
 				mes "and you'll find ^0000FFInstructor Lugen^000000.";
 				mes "Talk to him, first.";
-				set ep13_newbs,1;
+				ep13_newbs = 1;
 				getitem 12322,1; //Chocolate_Pie
 				setquest 11084;
 				close;
@@ -2061,16 +2061,16 @@ mid_camp,222,283,4	script	Marian#ep13bs	4_F_JOB_HUNTER,{
 		mes "Here they are!";
 		mes "And this is for you.";
 		mes "Go, go~~";
-		set ep13_newbs,14;
+		ep13_newbs = 14;
 		getitem 6045,3; //Supply_Box
 		getitem 12322,1; //Chocolate_Pie
 		changequest 11091,11092;
 		close;
 	}
 	if (ep13_newbs > 13 && ep13_newbs < 20) {
-		if (ep13_newbs < 16) set .@i,3;
-		else if (ep13_newbs < 18) set .@i,2;
-		else set .@i,1;
+		if (ep13_newbs < 16) .@i = 3;
+		else if (ep13_newbs < 18) .@i = 2;
+		else .@i = 1;
 		if (countitem(6045) < .@i) {
 			mes "[Marian]";
 			mes "Ha! You misplaced the Supply Box?!";
@@ -2173,14 +2173,14 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 			mes "registration, come back";
 			mes "to me and I will assign";
 			mes "your accomodations.";
-			set ep13_newbs,3;
+			ep13_newbs = 3;
 			changequest 11084,11085;
 			close;
 		case 2:
 			mes "[Instructor Lugen]";
 			mes "You don't want to join?";
 			mes "If you change your mind, come back later.";
-			set ep13_newbs,2;
+			ep13_newbs = 2;
 			close;
 		}
 	}
@@ -2209,7 +2209,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 			mes "registration, come back";
 			mes "to me and I will assign";
 			mes "your accomodations.";
-			set ep13_newbs,3;
+			ep13_newbs = 3;
 			changequest 11084,11085;
 			close;
 		case 2:
@@ -2247,7 +2247,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		mes "You need to share the barracks";
 		mes "with others, so make sure to";
 		mes "talk with them while you're there.";
-		set ep13_newbs,5;
+		ep13_newbs = 5;
 		getitem 12322,1; //Chocolate_Pie
 		completequest 11086;
 		close;
@@ -2280,7 +2280,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		mes "whom you met when";
 		mes "you first came here and";
 		mes "get the supplies from her.";
-		set ep13_newbs,13;
+		ep13_newbs = 13;
 		getitem 12322,1; //Chocolate_Pie
 		setquest 11091;
 		close;
@@ -2310,7 +2310,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 			mes "The first box should be sent to";
 			mes "Jan, northwest of the camp.";
 			mes "She may be around the fence.";
-			set ep13_newbs,15;
+			ep13_newbs = 15;
 			changequest 11092,11093;
 			close;
 		}
@@ -2356,7 +2356,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 			next;
 			mes "[Instructor Lugen]";
 			mes "Freya be with you.";
-			set ep13_newbs,17;
+			ep13_newbs = 17;
 			changequest 11094,11095;
 			close;
 		}
@@ -2412,7 +2412,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 			next;
 			mes "[Instructor Lugen]";
 			mes "Please deliver it to him.";
-			set ep13_newbs,19;
+			ep13_newbs = 19;
 			changequest 11096,11097;
 			close;
 		}
@@ -2456,7 +2456,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		mes "I have more things";
 		mes "to do now, ha...";
 		emotion e_pif;
-		set ep13_newbs,21;
+		ep13_newbs = 21;
 		completequest 11098;
 		close;
 	}
@@ -2539,7 +2539,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 				mes "My friend, Otto, is working";
 				mes "on the barrier in the west.";
 				mes "Please give it to him.";
-				set ep13_newbs,23;
+				ep13_newbs = 23;
 				getitem 6043,1; //Letter_From_Lugen
 				setquest 11099;
 				close;
@@ -2550,7 +2550,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 				mes "[Instructor Lugen]";
 				mes "Yes.. I really appreciate your listening to me.";
 				mes "It makes me feel better.";
-				set ep13_newbs,22;
+				ep13_newbs = 22;
 				close;
 			}
 		}
@@ -2600,7 +2600,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 			mes "[Instructor Lugen]";
 			mes "My friend, Otto, is working on the barrier in the west.";
 			mes "Please give it to him.";
-			set ep13_newbs,23;
+			ep13_newbs = 23;
 			getitem 6043,1; //Letter_From_Lugen
 			setquest 11099;
 			close;
@@ -2672,7 +2672,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 			mes "[Instructor Lugen]";
 			mes "And this is for you.";
 			delitem 6044,1; //Letter_From_Otto
-			set ep13_newbs,100;
+			ep13_newbs = 100;
 			getitem 617,1; //Old_Violet_Box
 			getitem 12322,5; //Chocolate_Pie
 			if (checkre(3))
@@ -2768,7 +2768,7 @@ mid_camp,123,290,4	script	Otto#ep13bs	4_M_RUSMAN1,{
 			mes "in the near future and will";
 			mes "use that time to visit him.";
 			delitem 6043,1; //Letter_From_Lugen
-			set ep13_newbs,24;
+			ep13_newbs = 24;
 			getitem 6044,1; //Letter_From_Otto
 			getitem 12322,1; //Chocolate_Pie
 			changequest 11099,11100;
@@ -2890,7 +2890,7 @@ mid_campin,106,122,4	script	Receptionist Brink#ep13b	4_M_ORIENT02,{
 			next;
 			mes "- I guess I'm registered -";
 			mes "- I'd better go back to Lugen -";
-			set ep13_newbs,4;
+			ep13_newbs = 4;
 			getitem 12322,1; //Chocolate_Pie
 			changequest 11085,11086;
 			close;
@@ -2986,7 +2986,7 @@ mid_camp,264,263,4	script	Diego#ep13bs	4_M_RACHMAN1,{
 			mes "able to fix this with";
 			mes "^0000FF20 Ordinary Branches and 20 Strong Vine^000000.";
 			mes "Please bring them to me!!!";
-			set ep13_newbs,6;
+			ep13_newbs = 6;
 			setquest 11087;
 			close;
 		case 2:
@@ -3013,7 +3013,7 @@ mid_camp,264,263,4	script	Diego#ep13bs	4_M_RACHMAN1,{
 			mes "and tie it up with the vines.";
 			delitem 6041,20; //Strong_Bine
 			delitem 6042,20; //Ordinary_Branch
-			set ep13_newbs,7;
+			ep13_newbs = 7;
 			changequest 11087,11088;
 			close;
 		}
@@ -3072,7 +3072,7 @@ mid_camp,264,263,4	script	Diego#ep13bs	4_M_RACHMAN1,{
 			mes "Please come in and";
 			mes "take some rest for the";
 			mes "expedition tomorrow!!";
-			set ep13_newbs,10;
+			ep13_newbs = 10;
 			getitem 12322,5; //Chocolate_Pie
 			completequest 11090;
 			close2;
@@ -3111,7 +3111,7 @@ OnTouch:
 		mes "- and feel better. -";
 		mes "- I think I need to go -";
 		mes "- to Instructor Lugen -";
-		set ep13_newbs,11;
+		ep13_newbs = 11;
 		close;
 	}
 	else {
@@ -3157,7 +3157,7 @@ mid_campin,295,128,4	script	Lucas#ep13bs	4_M_ACROSS,{
 			mes "[Lucas]";
 			mes "No, just ignore what I said.";
 			mes "......";
-			set ep13_newbs,12;
+			ep13_newbs = 12;
 			//getitem 12322,1; //Chocolate_Pie
 			close;
 		case 2:
@@ -3211,7 +3211,7 @@ mid_camp,160,298,4	script	Jan#ep13bs	4_LGTSCIENCE,{
 			mes "I'm grateful~";
 			mes "Uhuhu.";
 			delitem 6045,1; //Supply_Box
-			set ep13_newbs,16;
+			ep13_newbs = 16;
 			getitem 12322,1; //Chocolate_Pie
 			changequest 11093,11094;
 			close;
@@ -3294,7 +3294,7 @@ mid_camp,30,168,4	script	Gerard#ep13bs	4_DST_SOLDIER,{
 			mes "I won't be back for some time.";
 			emotion e_no1;
 			delitem 6045,1; //Supply_Box
-			set ep13_newbs,18;
+			ep13_newbs = 18;
 			getitem 12322,1; //Chocolate_Pie
 			changequest 11095,11096;
 			close;
@@ -3376,7 +3376,7 @@ man_fild01,80,248,4	script	Alberto#ep13bs	4_M_RASWORD,{
 			mes "Sniff.";
 			emotion e_sob;
 			delitem 6045,1; //Supply_Box
-			set ep13_newbs,20;
+			ep13_newbs = 20;
 			getitem 12322,1; //Chocolate_Pie
 			changequest 11097,11098;
 			close;
@@ -3525,7 +3525,7 @@ mid_camp,267,263,0	script	Post#ep13bs1	HIDDEN_NPC,{
 						mes "[Diego]";
 						mes "And this post should be knotted.";
 						mes "Then please do it to that post.";
-						set ep13_newbs,8;
+						ep13_newbs = 8;
 						changequest 11088,11089;
 						close;
 					case 2:
@@ -3609,7 +3609,7 @@ mid_camp,267,258,0	script	Post#ep13bs2	HIDDEN_NPC,{
 						mes "[Diego]";
 						mes "Ohhh!!!!";
 						mes "The broken posts are perfectly fixed!";
-						set ep13_newbs,9;
+						ep13_newbs = 9;
 						changequest 11089,11090;
 						close;
 					case 2:
@@ -3818,7 +3818,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 			mes "venture through";
 			mes "such a threatening";
 			mes "environment!";
-			set ep13_animal,1;
+			ep13_animal = 1;
 			setquest 2147;
 			close;
 		}
@@ -3937,7 +3937,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 					mes "asking here, don't you?";
 					mes "Help me, help me, please.";
 					delitem 6041,1; //Strong_Bine
-					set ep13_animal,3;
+					ep13_animal = 3;
 					changequest 2147,2148;
 					close;
 				case 2:
@@ -4041,7 +4041,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 				delitem 713,1; //Empty_Bottle
 				delitem 523,5; //Holy_Water
 				delitem 938,30; //Sticky_Mucus
-				set ep13_animal,4;
+				ep13_animal = 4;
 				changequest 2148,2149;
 				close;
 			}
@@ -4095,7 +4095,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 				mes "[Rumis Block]";
 				mes "It won't take long. Can you please go wait for me over the eastern bridge?";
 				mes "Don't... Don't go too far from the bridge!";
-				set ep13_animal,11;
+				ep13_animal = 11;
 				changequest 2153,2154;
 				close;
 			case 2:
@@ -4140,7 +4140,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 			mes "[Rumis Block]";
 			mes "Even thinking of them send chills down on my spine! Can you please go check what kind of races reside at the end of the land over the rightward bridge?";
 			mes "I want to know if they're friendly or hostile to us.";
-			set ep13_animal,14;
+			ep13_animal = 14;
 			changequest 2156,2157;
 			close;
 		}
@@ -4206,7 +4206,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 				mes "[Rumis Block]";
 				mes "I'll repay your favor as soon as I go back home.";
 				mes "I hope you'll make yourself known in Ash Vacuum with your great accomplishments.";
-				set ep13_animal,15;
+				ep13_animal = 15;
 				completequest 2157;
 				getexp (checkre(3))?100000:1500000,0;
 				close;
@@ -4303,7 +4303,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 				mes "- With a shy smile on the face, Rumis Block asked you to shake hands, and then turned around hurriedly. -";
 				next;
 				mes "- You really hope that Rumis will be able to go back home. -";
-				set ep13_animal,100;
+				ep13_animal = 100;
 				delitem 6033,1; //Horn_Of_Tendrilion
 				getexp (checkre(3))?50000:1000000,0;
 				close;
@@ -4493,7 +4493,7 @@ mid_camp,240,270,3	script	Botanist#ep13	4_M_ALCHE_C,{
 			next;
 			mes "[Botanist]";
 			mes "Yes, I only need... ^3131FF30^000000 of them.";
-			set ep13_animal,5;
+			ep13_animal = 5;
 			changequest 2149,2150;
 			close;
 		}
@@ -4549,7 +4549,7 @@ mid_camp,240,270,3	script	Botanist#ep13	4_M_ALCHE_C,{
 				next;
 				mes "[Botanist]";
 				mes "How'd you like to hunt ^3131FF10 of them^000000 to set an example? Good luck!";
-				set ep13_animal,6;
+				ep13_animal = 6;
 				changequest 2150,2151;
 				close;
 			}
@@ -4582,7 +4582,7 @@ mid_camp,240,270,3	script	Botanist#ep13	4_M_ALCHE_C,{
 				mes "Let me show you.";
 				mes "Please take this rotting plant stem,";
 				mes "I'll meet you at the environmental purifier standing right next to the leftward bridge on the other side.";
-				set ep13_animal,7;
+				ep13_animal = 7;
 				getitem 6035,1; //Decaying_Stem
 				changequest 2151,2152;
 				close;
@@ -4625,7 +4625,7 @@ mid_camp,336,171,1	script	Camp Guard#man1	4_M_EIN_SOLDIER,{
 		switch(atoi(charat(strnpcinfo(2),3))) {
 		case 1:
 			if (ep13_animal == 1)
-				set ep13_animal,2;
+				ep13_animal = 2;
 			warp "man_fild01",36,235;
 			break;
 		case 2:
@@ -4658,7 +4658,7 @@ OnTouch:
 		next;
 		mes "[Botanist]";
 		mes "Please try to plant the rotting stem in the ground.";
-		set ep13_animal,8;
+		ep13_animal = 8;
 		close;
 	}
 	else if (ep13_animal == 8) {
@@ -4701,7 +4701,7 @@ mid_camp,45,148,7	script	Botanist#ep13_1	4_M_ALCHE_C,{
 		next;
 		mes "[Botanist]";
 		mes "And don't forget to tell him that I've produced great research results. That'll make him cry like a baby. Hahahaha!";
-		set ep13_animal,10;
+		ep13_animal = 10;
 		changequest 2152,2153;
 		disablenpc "Botanist#ep13_1";
 		close;
@@ -4729,7 +4729,7 @@ mid_camp,52,148,1	script	Dirt#ep13	CLEAR_NPC,{
 		mes "- Ssshuhhhh -";
 		next;
 		mes "- Something is growing out of the dirt. -";
-		set ep13_animal,9;
+		ep13_animal = 9;
 		delitem 6035,1; //Decaying_Stem
 		getitem 7193,1; //Germinating_Sprout
 		close;
@@ -4774,7 +4774,7 @@ man_fild01,92,230,3	script	Frozen Tree#evt_lumis	HIDDEN_NPC,1,1,{
 		mes "[Rumis Block]";
 		mes "Their horns might possess a special power. And I want to have them for further research.";
 		mes "...5 horns will be enough.";
-		set ep13_animal,12;
+		ep13_animal = 12;
 		changequest 2154,2155;
 		close;
 	}
@@ -4830,7 +4830,7 @@ man_fild01,92,230,3	script	Frozen Tree#evt_lumis	HIDDEN_NPC,1,1,{
 			next;
 			mes "[Rumis Block]";
 			mes "Let's go back to the camp. Shall we? I have something to discuss with you.";
-			set ep13_animal,13;
+			ep13_animal = 13;
 			delitem 6032,5; //Horn_Of_Hilsrion
 			changequest 2155,2156;
 			close;
@@ -5031,7 +5031,7 @@ OnTouch:
 			next;
 			mes "[United Research Official]";
 			mes "Sounds good, huh? Please, you should go now.";
-			set ep13_1_rhea,1;
+			ep13_1_rhea = 1;
 			setquest 8196;
 			close;
 		}
@@ -5091,7 +5091,7 @@ OnTouch:
 				mes "[United Research Official]";
 				mes "So, first! Can you go meet those 3 researchers and check on them to prepare for the meeting?";
 				delitem 6036,1; //Invite_To_Meeting
-				set ep13_1_rhea,11;
+				ep13_1_rhea = 11;
 				changequest 8198,8199;
 				close;
 			}
@@ -5214,7 +5214,7 @@ OnTouch:
 			mes "researchers of the union started to";
 			mes "scream as well, and rushed out of";
 			mes "the room. -";
-			set ep13_1_rhea,20;
+			ep13_1_rhea = 20;
 			donpcevent "Research Official#ep131::OnCall";
 			close2;
 			warp "mid_camp",165,236;
@@ -5310,7 +5310,7 @@ OnTouch:
 			mes "Come on!!!";
 			next;
 			mes "-The three researchers say nothing. They just stare at each other, standing still... Then they finally leave the room. -";
-			set ep13_1_rhea,21;
+			ep13_1_rhea = 21;
 			donpcevent "Ryosen#ep131_rhea05::OnDisable";
 			donpcevent "Hue#ep131_rhea06::OnDisable";
 			donpcevent "Hansenne#ep131_rhea07::OnDisable";
@@ -5341,7 +5341,7 @@ OnTouch:
 			next;
 			mes "[United Research Official]";
 			mes "What? Ah, adventurer?!";
-			set ep13_1_rhea,22;
+			ep13_1_rhea = 22;
 			changequest 8206,8207;
 			close;
 		}
@@ -5386,7 +5386,7 @@ OnTouch:
 			next;
 			mes "- You feel so refreshed and light, as you drink the tea that the Official offered. -";
 			specialeffect2 EF_ABSORBSPIRITS;
-			set ep13_1_rhea,100;
+			ep13_1_rhea = 100;
 			if (checkre(3))
 				getexp 80000,3000;
 			else
@@ -5533,7 +5533,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 			mes "[Ryosen]";
 			mes "How about having some tea here?";
 			mes "It's Rafflesia tea from Schwartzvalt. Don't even expect taste, it's awful... But what can I do? It's the only thing I've got...";
-			set ep13_1_rhea,2;
+			ep13_1_rhea = 2;
 			close;
 		}
 		else if (ep13_1_rhea == 2) {
@@ -5565,7 +5565,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 			mes "[Ryosen]";
 			mes "I mean... the situation here is... just like the taste of this tea.";
 			mes "Just awful!";
-			set ep13_1_rhea,3;
+			ep13_1_rhea = 3;
 			close;
 		}
 		else if (ep13_1_rhea == 3) {
@@ -5634,7 +5634,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 			mes "- which briefly explains -";
 			mes "- the agenda and schedule -";
 			mes "- of the whole meeting! -";
-			set ep13_1_rhea,4;
+			ep13_1_rhea = 4;
 			getitem 6036,1; //Invite_To_Meeting
 			changequest 8196,8197;
 			close;
@@ -5668,7 +5668,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 				mes "[Ryosen]";
 				mes "Thank you for dealing with those guys. I've got to go through the file now. Please give me the Invitation.";
 				delitem 6036,1; //Invite_To_Meeting
-				set ep13_1_rhea,9;
+				ep13_1_rhea = 9;
 				close;
 			}
 			else {
@@ -5707,7 +5707,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 			next;
 			mes "[Ryosen]";
 			mes "In the meantime, I should prepare myself for the meeting.";
-			set ep13_1_rhea,10;
+			ep13_1_rhea = 10;
 			getitem 6036,1; //Invite_To_Meeting
 			changequest 8197,8198;
 			close;
@@ -5743,7 +5743,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 			next;
 			mes "[Ryosen]";
 			mes "I need that for the meeting, but he never sends it to me. He must've forgotten about it, again! You'll help me with this, right!?";
-			set ep13_1_rhea,12;
+			ep13_1_rhea = 12;
 			changequest 8199,8200;
 			close;
 		}
@@ -5818,7 +5818,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 				mes "[Ryosen]";
 				mes "Please, the meeting's gonna begin soon.";
 				delitem 6038,1; //Neat_Report
-				set ep13_1_rhea,19;
+				ep13_1_rhea = 19;
 				changequest 8204,8205;
 				close;
 			}
@@ -5916,7 +5916,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 			mes "[Ryosen]";
 			mes "Again, thank you so much.";
 			delitem 6038,1; //Neat_Report
-			set ep13_1_rhea,26;
+			ep13_1_rhea = 26;
 			getitem 12319,1; //Strawberry_Cake
 			changequest 8209,8210;
 			close;
@@ -6083,7 +6083,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 				mes "[Hue]";
 				mes "You should have some Sand chips while I'm reading this. Don't expect any taste, it's from Arunafeltz.";
 				delitem 6036,1; //Invite_To_Meeting
-				set ep13_1_rhea,5;
+				ep13_1_rhea = 5;
 				close;
 			}
 			else {
@@ -6096,7 +6096,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 			}
 		}
 		else if (ep13_1_rhea == 5) {
-			set .@shu_agree00,rand(1,4);
+			.@shu_agree00 = rand(1,4);
 			if (.@shu_agree00 == 2) {
 				mes "[Hue]";
 				mes "...Meeting Schedule, on the Xth day, from hh:mm to hh:mm...";
@@ -6135,7 +6135,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 				mes "[Hue]";
 				mes "You'll experience some hard time talking to Hansenne... It'll be like testing your patience.";
 				mes "Good luck!";
-				set ep13_1_rhea,6;
+				ep13_1_rhea = 6;
 				getitem 6036,1; //Invite_To_Meeting
 				close;
 			}
@@ -6188,7 +6188,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 				next;
 				mes "[Hue]";
 				mes "Just don't gorget that the file will be restored as fast as you prepare those things for me.";
-				set ep13_1_rhea,16;
+				ep13_1_rhea = 16;
 				changequest 8202,8203;
 				close;
 			}
@@ -6217,7 +6217,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 				delitem 7031,1; //Old_Frying_Pan
 				delitem 7521,1; //Flame_Stone
 				delitem 1024,1; //Chinese_Ink
-				set ep13_1_rhea,17;
+				ep13_1_rhea = 17;
 				close;
 			}
 			else {
@@ -6242,7 +6242,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 				next;
 				mes "[Hue]";
 				mes "Please, deliver this file before it's too late. The meeting's gonna begin soon.";
-				set ep13_1_rhea,18;
+				ep13_1_rhea = 18;
 				getitem 6038,1; //Neat_Report
 				changequest 8203,8204;
 				close;
@@ -6311,7 +6311,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 			mes "[Hue]";
 			mes "Please give this report to Ryosen.";
 			mes "Thank you.";
-			set ep13_1_rhea,25;
+			ep13_1_rhea = 25;
 			getitem 6038,1; //Neat_Report
 			getitem 12320,1; //Pineapple_Juice
 			changequest 8208,8209;
@@ -6481,7 +6481,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 				mes "[Hansenne]";
 				mes "You should take a rest, while I'm reading this. Oh, have some Poring Candy from Rune-Midgarts. It's terribly sour and sometimes salty. Funny taste, huh?";
 				delitem 6036,1; //Invite_To_Meeting
-				set ep13_1_rhea,7;
+				ep13_1_rhea = 7;
 				close;
 			}
 			else {
@@ -6497,7 +6497,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 			}
 		}
 		else if (ep13_1_rhea == 7) {
-			set .@shu_agree00,rand(1,5);
+			.@shu_agree00 = rand(1,5);
 			if (.@shu_agree00 == 1) {
 				mes "[Hansenne]";
 				mes "Mmmmmm~";
@@ -6566,7 +6566,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 				mes "Ryosen's avery funny guy. Well, he wouldn't know how funny he is...";
 				mes "Haha, you should tell him that.";
 				mes "Haha, hahaha, hahahahahahahahaha.";
-				set ep13_1_rhea,8;
+				ep13_1_rhea = 8;
 				getitem 6036,1; //Invite_To_Meeting
 				close;
 			}
@@ -6647,7 +6647,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 			mes "[Hansenne]";
 			mes "Maybe we can catch that document with a fishing rod if we're lucky!";
 			mes "Wow!";
-			set ep13_1_rhea,13;
+			ep13_1_rhea = 13;
 			changequest 8200,8201;
 			close;
 		}
@@ -6680,7 +6680,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 				mes "[Hansenne]";
 				mes "He'd scream so hard and the windows might break. But he'll do it.";
 				mes "Haha, hahaha, hahahahahahahahaha.";
-				set ep13_1_rhea,15;
+				ep13_1_rhea = 15;
 				changequest 8201,8202;
 				close;
 			}
@@ -6763,7 +6763,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 			mes "[Hansenne]";
 			mes "He must've been so upset that we all couldn't share that cake. Isn't it kinda cute?";
 			mes "Haha, hahaha, hahahahahahahahaha.";
-			set ep13_1_rhea,23;
+			ep13_1_rhea = 23;
 			close;
 		}
 		else if (ep13_1_rhea == 23) {
@@ -6783,7 +6783,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 			mes "[Hansenne]";
 			mes "Thank you for doing me a favor.";
 			mes "Haha, hahaha, hahahahahahahahaha.";
-			set ep13_1_rhea,24;
+			ep13_1_rhea = 24;
 			getitem 12321,1; //Spicy_Sandwich
 			changequest 8207,8208;
 			close;
@@ -6970,8 +6970,8 @@ mid_camp,1,1,0	script	#timer_alba01	CLEAR_NPC,{
 			stopnpctimer;
 			next;
 			mes "Global values have been reset.";
-			set $@PartTimeOn,0;
-			set $@PartTimeSlots,0;
+			$@PartTimeOn = 0;
+			$@PartTimeSlots = 0;
 			next;
 			mes "Recruiting has been reset.";
 			mes "Timer has started!";
@@ -6984,8 +6984,8 @@ mid_camp,1,1,0	script	#timer_alba01	CLEAR_NPC,{
 	}
 
 OnInit:
-	set $@PartTimeOn,0;
-	set $@PartTimeSlots,0;
+	$@PartTimeOn = 0;
+	$@PartTimeSlots = 0;
 OnEnable:
 	initnpctimer;
 	end;
@@ -6995,8 +6995,8 @@ OnStop:
 	end;
 
 OnTimer1000:
-	set $@PartTimeSlots,0;
-	set $@PartTimeOn,1;
+	$@PartTimeSlots = 0;
+	$@PartTimeOn = 1;
 	mapannounce "mid_camp", "Breeder Taab: Attention adventurers in the camp! I'm recruiting 5 part-timers for my breeding farm. Only the first to arrive here will be hired!",bc_map,"0x00ff00";
 	end;
 
@@ -7008,7 +7008,7 @@ OnTimer360000:
 
 OnTimer600000:
 	mapannounce "mid_camp", "Breeder Taab: The recruitment for my breeding farm has ended. I'll see you next time. Thanks!",bc_map,"0x00ff00";
-	set $@PartTimeOn,0;
+	$@PartTimeOn = 0;
 	end;
 
 OnTimer7800000:
@@ -7055,7 +7055,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				}
 				else {
 					if ($@PartTimeSlots < 5) {
-						set $@PartTimeSlots,$@PartTimeSlots+1;
+						++$@PartTimeSlots;
 						mes "[Taab]";
 						mes "Welcome.";
 						mes "Your job is simple:";
@@ -7065,7 +7065,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 						mes "These are the available jobs.";
 						next;
 						if ($@PartTimeSlots == 1) {
-							set ep13_alba,1;
+							ep13_alba = 1;
 							setquest 7042;
 							mes "[Taab]";
 							mes "Please bring me 50 Fresh Fish.";
@@ -7083,7 +7083,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 							close;
 						}
 						else if ($@PartTimeSlots == 2) {
-							set ep13_alba,2;
+							ep13_alba = 2;
 							setquest 7043;
 							mes "[Taab]";
 							mes "I've just run out of";
@@ -7098,7 +7098,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 							close;
 						}
 						else if ($@PartTimeSlots == 3) {
-							set ep13_alba,3;
+							ep13_alba = 3;
 							setquest 7044;
 							mes "[Taab]";
 							mes "I've just run out of";
@@ -7125,7 +7125,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 							close;
 						}
 						else if ($@PartTimeSlots == 4) {
-							set ep13_alba,4;
+							ep13_alba = 4;
 							setquest 7045;
 							mes "[Taab]";
 							mes "This is perfect because";
@@ -7148,7 +7148,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 							close;
 						}
 						else {
-							set ep13_alba,5;
+							ep13_alba = 5;
 							setquest 7046;
 							mes "[Taab]";
 							mes "Oh, I always wanted to put something warm on the floor for my creatures.";
@@ -7209,7 +7209,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				mes "How about a spiritual reward?";
 				next;
 				delitem 579,50; //Delicious_Fish
-				set ep13_alba,6;
+				ep13_alba = 6;
 				if (checkre(3)) {
 					getexp 8000,3000;
 					mes "^4d4dff You have received 8,000 EXP";
@@ -7248,7 +7248,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				next;
 				delitem 7198,30; //Great_Leaf
 				delitem 7188,30; //Browny_Root
-				set ep13_alba,6;
+				ep13_alba = 6;
 				if (checkre(3)) {
 					getexp 9000,4000;
 					mes "^4d4dff You have received 9,000 EXP";
@@ -7292,7 +7292,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				next;
 				delitem 528,20; //Monster's_Feed
 				delitem 537,30; //Pet_Food
-				set ep13_alba,6;
+				ep13_alba = 6;
 				if (checkre(3)) {
 					getexp 8000,3000;
 					mes "^4d4dff You have received 8,000 EXP";
@@ -7333,7 +7333,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				next;
 				delitem 517,50; //Meat
 				delitem 537,30; //Pet_Food
-				set ep13_alba,6;
+				ep13_alba = 6;
 				if (checkre(3)) {
 					getexp 8000,3000;
 					mes "^4d4dff You have received 8,000 EXP";
@@ -7371,7 +7371,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				mes "How about a spiritual reward?";
 				next;
 				delitem 6020,30; //Fur
-				set ep13_alba,6;
+				ep13_alba = 6;
 				if (checkre(3)) {
 					getexp 8000,3000;
 					mes "^4d4dff You have received 8,000 EXP";
@@ -7403,7 +7403,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				mes "I hope you'll come by";
 				mes "to help me again.";
 				erasequest 7047;
-				set ep13_alba,0;
+				ep13_alba = 0;
 				close;
 			}
 			else if (.@alba_check == 1) {
@@ -7429,7 +7429,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				mes "I hope you'll come by";
 				mes "to help me again.";
 				erasequest 7047;
-				set ep13_alba,0;
+				ep13_alba = 0;
 				close;
 			}
 		}
@@ -7514,7 +7514,7 @@ OnStop:
 	end;
 
 OnTimer3600000:
-	set .@monster,rand(1,3);
+	.@monster = rand(1,3);
 	if (.@monster == 1) {
 		monster "mid_camp",149,291,"Escaped Tatacho",1986,1,"#monster_master::OnMyMobDead";
 		mapannounce "mid_camp", "Breeder Taab: Argh! My Tatacho ran away!",bc_map,"0x00ff00";
@@ -7581,7 +7581,7 @@ function Catwarp;
 			mes "[Cat Hand Agent]";
 			mes "For more information, please speak to Agent Gyaruk standing down there.";
 			mes "I'm sure you'll find our business proposition to be very reasonable.";
-			set ep13_yong1,1;
+			ep13_yong1 = 1;
 			close;
 		case 2:
 			mes "[Cat Hand Agent]";
@@ -7603,7 +7603,7 @@ function Catwarp;
 		mes "[Cat Hand Agent]";
 		mes "For our newcomers, we're offering a location-saving service with which you can save this camp as your returning location.";
 		mes "Would you like to save your location?";
-		set ep13_yong1,3;
+		ep13_yong1 = 3;
 		next;
 		switch(select("Save your location:Cancel")) {
 		case 1:
@@ -8021,7 +8021,7 @@ mid_camp,72,94,4	script	Fluffy Gyaruk	4_M_BOSSCAT,{
 			mes "[Fluffy Gyaruk]";
 			mes "Please go speak to the Cat Hand Agent over there to use a basic service.";
 			mes "Oh, and please come back afterwards.";
-			set ep13_yong1,2;
+			ep13_yong1 = 2;
 			close;
 		case 2:
 			mes "[Fluffy Gyaruk]";
@@ -8054,7 +8054,7 @@ mid_camp,72,94,4	script	Fluffy Gyaruk	4_M_BOSSCAT,{
 			mes "[Fluffy Gyaruk]";
 			mes "Excellent.";
 			mes "For more information about fishing and mining, please speak to the two Cat Agents standing at the river over there.";
-			set ep13_yong1,4;
+			ep13_yong1 = 4;
 			close;
 		case 2:
 			mes "[Fluffy Gyaruk]";
@@ -8120,7 +8120,7 @@ mid_camp,69,144,0	script	Ferocious Gorurug	4_M_BOSSCAT,{
 			mes "[Ferocious Gorurug]";
 			mes "You'll have a hard time to catch them at first, but you'll get better.";
 			mes "It gets easier with a bit of practice.";
-			set ep13_yong1,5;
+			ep13_yong1 = 5;
 			close;
 		}
 		else if (ep13_yong1 == 5) {
@@ -8130,7 +8130,7 @@ mid_camp,69,144,0	script	Ferocious Gorurug	4_M_BOSSCAT,{
 				mes "GOOD JOB!";
 				delitem 6039,10; //Piece_Of_Fish
 				getexp (checkre(3))?20000:30000,0;
-				set ep13_yong1,10;
+				ep13_yong1 = 10;
 				setquest 12060;
 				next;
 				mes "^0000ffYou gain EXP "+(checkre(3)?"20,000":"30,000")+"^000000";
@@ -8151,7 +8151,7 @@ mid_camp,69,144,0	script	Ferocious Gorurug	4_M_BOSSCAT,{
 				delitem 6039,10; //Piece_Of_Fish
 				getexp 15000,0;
 				setquest 12060;
-				set ep13_yong1,ep13_yong1+1;
+				++ep13_yong1;
 				next;
 				mes "^0000ffYou gain EXP 15,000^000000";
 				close;
@@ -8172,7 +8172,7 @@ mid_camp,69,144,0	script	Ferocious Gorurug	4_M_BOSSCAT,{
 				delitem 6039,10; //Piece_Of_Fish
 				getexp 15000,0;
 				setquest 12060;
-				set ep13_yong1,ep13_yong1+1;
+				++ep13_yong1;
 				next;
 				mes "^0000ffYou gain EXP 15,000^000000";
 				close;
@@ -8192,7 +8192,7 @@ mid_camp,69,144,0	script	Ferocious Gorurug	4_M_BOSSCAT,{
 				delitem 6039,10; //Piece_Of_Fish
 				getexp 15000,0;
 				setquest 12060;
-				set ep13_yong1,ep13_yong1+1;
+				++ep13_yong1;
 				next;
 				mes "^0000ffYou gain EXP 15,000^000000";
 				close;
@@ -8214,7 +8214,7 @@ mid_camp,69,144,0	script	Ferocious Gorurug	4_M_BOSSCAT,{
 				delitem 6039,10; //Piece_Of_Fish
 				getexp 15000,0;
 				setquest 12060;
-				set ep13_yong1,ep13_yong1+1;
+				++ep13_yong1;
 				next;
 				mes "^0000ffYou gain EXP 1,500^000000";
 				close;
@@ -8255,29 +8255,29 @@ spl_fild02,314,165,0	script	School of Fish#1::Fishinghole	CLEAR_NPC,{
 	if (!questprogress(12060,PLAYTIME) && countitem(6039) < 20) {
 		specialeffect2 EF_BUBBLE;
 		specialeffect2 EF_INVENOM;
-		set .@fcast,15;
+		.@fcast = 15;
 		if (isequipped(2550)) //Fisher's_Muffler
-			set .@fcast,.@fcast - 2;
+			.@fcast -= 2;
 		if (isequipped(2443)) //Fish_Shoes
-			set .@fcast,.@fcast - 2;
+			.@fcast -= 2;
 		if (isequipped(2764)) //Small_Fishing_Rod
-			set .@fcast,.@fcast - 3;
+			.@fcast -= 3;
 		if (isequipped(2775)) //Lure
-			set .@fcast,.@fcast - 1;
+			.@fcast -= 1;
 		if (isequipped(1599)) //Ahura_Mazda
-			set .@fcast,.@fcast - 3;
+			.@fcast -= 3;
 		if (isequipped(2199)) //Angra_Manyu
-			set .@fcast,.@fcast - 4;
+			.@fcast -= 4;
 		progressbar "ffff00",.@fcast;
 		if (ep13_1_rhea == 13) {
 			if (rand(1,20) == 2) {
 				getitem 6037,1; //Rough_File
-				set ep13_1_rhea,14;
+				ep13_1_rhea = 14;
 				specialeffect EF_BUBBLE;
 				mapannounce strcharinfo(3),strcharinfo(0) + " has caught a Messy File!!",bc_map,"0xff77ff";
 			}
 		}
-		set .@rhea_ran,rand(1,70);
+		.@rhea_ran = rand(1,70);
 		if (.@rhea_ran < 20) getitem 6039,1; //Piece_Of_Fish
 		else if (.@rhea_ran == 20) getitem 908,1; //Spawn
 		else if (.@rhea_ran == 21) getitem 909,1; //Jellopy
@@ -8331,7 +8331,7 @@ mid_camp,66,122,55	script	Henry Clifford	4_M_05,{
 		switch(select("Yes.:No, thanks.")) {
 		case 1:
 			delitem 6049,1; //Marlin
-			set ep13_yong1,ep13_yong1+2;
+			ep13_yong1 += 2;
 			mes "[Henry Clifford]";
 			mes "Thank you for the Marlin.";
 			mes "I've given you the points in return.";
@@ -8377,7 +8377,7 @@ mid_camp,88,100,55	script	Cat Hand Mining Agent	4_CAT,{
 			delitem 6048,3; //Unidentified_Mineral
 			getexp (checkre(3))?20000:30000,0;
 			setquest 12062;
-			set ep13_yong1,ep13_yong1+1;
+			++ep13_yong1;
 			select("I'm freezing! Take them quickly.");
 			mes "[Cat Hand Mining Agent]";
 			mes "Yes, yes~ I've received the mineral samples.";
@@ -8422,7 +8422,7 @@ mid_camp,88,100,55	script	Cat Hand Mining Agent	4_CAT,{
 	if (countitem(6048) < 3 && !questprogress(12062,PLAYTIME)) {
 		specialeffect2 EF_REPAIRWEAPON;
 		progressbar "ffff00",10;
-		set .@rhea_ran,rand(1,20);
+		.@rhea_ran = rand(1,20);
 		if (.@rhea_ran < 13) getitem 7049,1; //Stone
 		else if (.@rhea_ran == 13) getitem 990,1; //Boody_Red
 		else if (.@rhea_ran == 14) getitem 991,1; //Crystal_Blue
@@ -8474,7 +8474,7 @@ sec_in02,80,171,0	script	Piece of crack#sec	2_MONEMUS,{
 		mes "You can enter the number between 1~3000.";
 		close;
 	} else {
-		set ep13_yong1,.@input;
+		ep13_yong1 = .@input;
 		close;
 	}
 }
@@ -8483,7 +8483,7 @@ sec_in02,80,171,0	script	Piece of crack#sec	2_MONEMUS,{
 //============================================================
 mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 	cutin "ep13_captin_edq",2;
-	set .@start,(ep13_newbs + ep13_ryu + mao_morocc2 + ep13_1_rhea + ep13_animal + ep13_start);
+	.@start = (ep13_newbs + ep13_ryu + mao_morocc2 + ep13_1_rhea + ep13_animal + ep13_start);
 	if ((ep13_1_edq == 0) && (.@start > 115)) {
 		mes "[Hibba Agip]";
 		mes "*Sigh* Look at me, I used to command the desert of Morroc, but I've been deployed to a world that only God knows where...";
@@ -8539,7 +8539,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 		next;
 		mes "[Instructor Igrid]";
 		mes "What are you still doing here? Go, go speak to Abidal.";
-		set ep13_1_edq,1;
+		ep13_1_edq = 1;
 		setquest 3085;
 		cutin "ep13_captin_edq",255;
 		close;
@@ -8582,7 +8582,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 		mes "Hmm... Anyways, this is not a difficult mission. All you have to do is deliver this expedition report to officials of three countries of Rune Midgard. Simple right?";
 		next;
 		getitem 11012,1; //Expedition_Report
-		set ep13_1_edq,3;
+		ep13_1_edq = 3;
 		changequest 3086,3087;
 		mes "[Hibba Agip]";
 		mes "The officials are ^0000FFMinister Laur^000000 of the Rune-Midgart's Kingdom, ^0000FFPriest Nuria^000000 of Arunafeltz, and ^0000FFGerhart^000000 of the Schwatzvalt Republic.";
@@ -8682,7 +8682,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 		next;
 		mes "[Hibba Agip]";
 		mes "Let me tell you this: I can care less about justice or righteousness, but loyalty and faithfulness are very important. Keep that in mind for your own good, alright?";
-		set ep13_1_edq,61;
+		ep13_1_edq = 61;
 		changequest 3088,3089;
 		next;
 		mes "[Hibba Agip]";
@@ -8765,7 +8765,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 		next;
 		mes "[Hibba Agip]";
 		mes "Let me tell you this, loyalty and faithfulness are very, very important. They may cause you hardship sometimes, but those qualities will guarantee you the last laugh.";
-		set ep13_1_edq,62;
+		ep13_1_edq = 62;
 		changequest 3088,3089;
 		next;
 		mes "[Hibba Agip]";
@@ -8801,7 +8801,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 		mes "This was finished more quickly than I thought. Let me see...";
 		next;
 		delitem 11012,1; //Expedition_Report
-		set ep13_1_edq,9;
+		ep13_1_edq = 9;
 		changequest 3092,3093;
 		mes "[Hibba Agip]";
 		mes "It looks alright. I don't have to read this thoroughly because I trust Abidal.";
@@ -8907,7 +8907,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 		else
 			getexp 2500000,0;
 		getitem 12110,3; //First_Aid_Kit
-		set ep13_1_edq,14;
+		ep13_1_edq = 14;
 		completequest 3094;
 		mes "[Hibba Agip]";
 		mes "Then I'll see you next time. Keep yourself in one piece, alright?";
@@ -8961,7 +8961,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 			next;
 			mes "[Hibba Agip]";
 			mes "Find the historian and see if he has any useful information for you.";
-			set ins_nyd,2;
+			ins_nyd = 2;
 			cutin "ep13_captin_edq",255;
 			break;
 		}
@@ -9100,7 +9100,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 					next;
 					mes "[Hibba Agip]";
 					mes "You have your orders! Now I'm going to look for an adventurer who is willing to be sent to the Sapha.";
-					set ins_nyd,81;
+					ins_nyd = 81;
 					cutin "ep13_captin_edq",255;
 					break;
 				case 2:
@@ -9133,7 +9133,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 					next;
 					mes "[Hibba Agip]";
 					mes "You have your orders! Now I'm going to look for an adventurer who is willing to be sent to the Laphine.";
-					set ins_nyd,82;
+					ins_nyd = 82;
 					cutin "ep13_captin_edq",255;
 					break;
 				case 2:
@@ -9342,7 +9342,7 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 			mes "[Staff Officer Abidal]";
 			mes "I'll prepare for your departure.";
 			mes "Please go speak to the commander.";
-			set ep13_1_edq,2;
+			ep13_1_edq = 2;
 			changequest 3085,3086;
 			close;
 		case 2:
@@ -9388,7 +9388,7 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 		next;
 		mes "[Staff Officer Abidal]";
 		mes "Anyways, please bring the pages of the report in ^0000FFincrements of 10^000000 whenever you find them. I'll try to put them in order.";
-		set ep13_1_edq,71;
+		ep13_1_edq = 71;
 		changequest 3089,3090;
 		close;
 	}
@@ -9410,7 +9410,7 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 		next;
 		mes "[Staff Officer Abidal]";
 		mes "Anyways, please bring the pages of the report in ^0000FFincrements of 10^000000 whenever you find them. I'll try to put them in order.";
-		set ep13_1_edq,72;
+		ep13_1_edq = 72;
 		changequest 3089,3090;
 		close;
 	}
@@ -9441,7 +9441,7 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 						mes "[Staff Officer Abidal]";
 						mes "Umm... This page should go here and..";
 						next;
-						set .@ep13_edq_wrong,rand(1,7);
+						.@ep13_edq_wrong = rand(1,7);
 						if ((countitem(11013) == 0) && (.@ep13_edq_wrong == 1)) {
 							mes "[Staff Officer Abidal]";
 							mes "Thank you for your hard work. We were able to restore one volume of the report.";
@@ -9544,7 +9544,7 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 						mes "[Staff Officer Abidal]";
 						mes "Umm... This page should go here and..";
 						next;
-						set .@ep13_edq_wrong,rand(1,5);
+						.@ep13_edq_wrong = rand(1,5);
 						if ((countitem(11013) == 0) && (.@ep13_edq_wrong == 1)) {
 							mes "[Staff Officer Abidal]";
 							mes "Thank you for your hard work. We were able to restore one volume of the report.";
@@ -9663,7 +9663,7 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 				delitem 11015,1; //Expedition_Report_Vol3
 				delitem 11016,1; //Expedition_Report_Vol4
 				getitem 11012,1; //Expedition_Report
-				set ep13_1_edq,8;
+				ep13_1_edq = 8;
 				erasequest 3090;
 				erasequest 3091;
 				setquest 3092;
@@ -9894,7 +9894,7 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 			mes "Argh... " + strcharinfo(0) + ", are you alright? The report... The report...";
 			next;
 			delitem 11012,1; //Expedition_Report
-			set ep13_1_edq,4;
+			ep13_1_edq = 4;
 			changequest 3087,3088;
 			mes "[Expedition Agent]";
 			mes "We lost the report. The pages are blowing away!";
@@ -9950,7 +9950,7 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 			mes "We lost the report. The pages are blowing away!";
 			next;
 			delitem 11012,1; //Expedition_Report
-			set ep13_1_edq,5;
+			ep13_1_edq = 5;
 			changequest 3087,3088;
 			mes "[???]";
 			mes "Haha, I may have failed to take the report, but it's better destroyed than in your hands!";
@@ -9969,7 +9969,7 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 			mes "[Expedition Messenger]";
 			mes "We must report this to the commander before anything else.";
 			mes ""+ strcharinfo(0) + ", please report to the commander immidiatly. Let us take care of the rest.";
-			set ep13_1_edq,5;
+			ep13_1_edq = 5;
 			next;
 			mes "[Expedition Agent]";
 			mes "Yes, please report to the commander...";
@@ -10094,17 +10094,17 @@ man_fild01,315,95,3	script	Expedition Scout#1	4_M_MOC_SOLDIER,{
 				switch(rand(1,6)) {
 				case 1:
 				case 6:
-					set .@i,2;
+					.@i = 2;
 					break;
 				case 3:
-					set .@i,3;
+					.@i = 3;
 					break;
 				case 4:
-					set .@i,5;
+					.@i = 5;
 					break;
 				case 2:
 				case 5:
-					set .@i,0;
+					.@i = 0;
 					break;
 				}
 				mes "[Expedition Scout]";
@@ -10163,11 +10163,11 @@ prt_castle,88,165,3	script	Laur	1_M_LIBRARYMASTER,{
 		mes "I knew it was the wrong idea to out a mercenary in the commander position. See, nothing is done on time. Gosh!";
 		next;
 		delitem 11012,1; //Expedition_Report
-		if (ep13_1_edq == 9) set ep13_1_edq,101;
-		else if (ep13_1_edq == 111) set ep13_1_edq,112;
-		else if (ep13_1_edq == 121) set ep13_1_edq,122;
+		if (ep13_1_edq == 9) ep13_1_edq = 101;
+		else if (ep13_1_edq == 111) ep13_1_edq = 112;
+		else if (ep13_1_edq == 121) ep13_1_edq = 122;
 		else if (ep13_1_edq == 113 || ep13_1_edq == 123) {
-			set ep13_1_edq,13;
+			ep13_1_edq = 13;
 			changequest 3093,3094;
 		}
 		mes "...";
@@ -10217,11 +10217,11 @@ ra_temple,122,174,3	script	Nuria	4_F_RACHOLD,{
 		mes "I regret admitting that you've brought it much later than I expected, but... I'm glad it is here safely. Please give it to me.";
 		next;
 		delitem 11012,1; //Expedition_Report
-		if (ep13_1_edq == 9) set ep13_1_edq,111;
-		else if (ep13_1_edq == 101) set ep13_1_edq,102;
-		else if (ep13_1_edq == 121) set ep13_1_edq,123;
+		if (ep13_1_edq == 9) ep13_1_edq = 111;
+		else if (ep13_1_edq == 101) ep13_1_edq = 102;
+		else if (ep13_1_edq == 121) ep13_1_edq = 123;
 		else if (ep13_1_edq == 122 || ep13_1_edq == 103) {
-			set ep13_1_edq,13;
+			ep13_1_edq = 13;
 			changequest 3093,3094;
 		}
 		mes "...";
@@ -10263,11 +10263,11 @@ lhz_in01,110,174,5	script	Gerhart	4_M_KHKYEL,{
 		mes "Do you know how long I waited for this report? *Sigh* ...Fine, just give it to me.";
 		next;
 		delitem 11012,1; //Expedition_Report
-		if (ep13_1_edq == 9) set ep13_1_edq,121;
-		else if (ep13_1_edq == 101) set ep13_1_edq,103;
-		else if (ep13_1_edq == 111) set ep13_1_edq,113;
+		if (ep13_1_edq == 9) ep13_1_edq = 121;
+		else if (ep13_1_edq == 101) ep13_1_edq = 103;
+		else if (ep13_1_edq == 111) ep13_1_edq = 113;
 		else if (ep13_1_edq == 102 || ep13_1_edq == 112) {
-			set ep13_1_edq,13;
+			ep13_1_edq = 13;
 			changequest 3093,3094;
 		}
 		mes "...";
@@ -10360,7 +10360,7 @@ OnTimer600000:
 	end;
 
 OnMyMobDead:
-	set .@spl_fild03_mob_dead,mobcount("spl_fild03","ep13_spl_fild03_mon_edq::OnMyMobDead");
+	.@spl_fild03_mob_dead = mobcount("spl_fild03","ep13_spl_fild03_mon_edq::OnMyMobDead");
 	if (mobcount("spl_fild03","ep13_spl_fild03_mon_edq::OnMyMobDead") < 10 && (ep13_1_edq == 71 || ep13_1_edq == 72))
 		getitem 6040,1; //Some_Of_Report
 	end;
@@ -10483,7 +10483,7 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 				mes "What are you still doing here?";
 				mes "" + strcharinfo(0) + ", your job is to assist Mr. Kidd.";
 				mes "Please go help him, will you?";
-				set mao_morocc2,1;
+				mao_morocc2 = 1;
 				setquest 7012;
 				close;
 		}
@@ -10513,7 +10513,7 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 		next;
 		mes "- Her rant doesn't seem to be ending any time soon. You'd better go back and help Mr. Kidd, even if your heart's not in it. -";
 		next;
-		set mao_morocc2,3;
+		mao_morocc2 = 3;
 		changequest 7013,7014;
 		next;
 		mes "[Echinacea]";
@@ -10554,7 +10554,7 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 		next;
 		mes "[Echinacea]";
 		mes "Why don't you go show it to him? He might be able to help Mr. Kidd with what he is trying to do.";
-		set mao_morocc2,14;
+		mao_morocc2 = 14;
 		changequest 7022,7023;
 		close;
 	}
@@ -10593,8 +10593,8 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 		next;
 		input .@input$;
 		setarray .@pattern$[0],"SDHF92F-SDF","VWNM94GVWN90","CM3-TRDFGHE0";
-		set .@quest, mao_morocc2;
-		if (.@quest > 25) set .@quest,.@quest-3;
+		.@quest = mao_morocc2;
+		if (.@quest > 25) .@quest -= 3;
 		mes "[Echinacea]";
 		mes "[" + .@input$ + "]";
 		if (.@input$ == .@pattern$[.@quest-23]) {
@@ -10609,7 +10609,7 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 			mes "It'll take some time before we get the results.";
 			if (countitem(6029) > 0)
 				delitem 6029,countitem(6029); //Morocc_Tracing_Log
-			set mao_morocc2,29;
+			mao_morocc2 = 29;
 			changequest 7031+(.@quest-23),7034;
 			close;
 		}
@@ -10623,7 +10623,7 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 			next;
 			mes "[Echinacea]";
 			mes "Go check the number again.";
-			if (mao_morocc2 < 26) set mao_morocc2,.@quest+3;
+			if (mao_morocc2 < 26) mao_morocc2 = .@quest+3;
 			close;
 		}
 	}
@@ -10637,7 +10637,7 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 			mes "[Echinacea]";
 			mes "To the south of this camp, you'll see a building with a mana detector attached to it.";
 			mes "Go ask the building manager about the trace results.";
-			set mao_morocc2,30;
+			mao_morocc2 = 30;
 			changequest 7034,7035;
 			close;
 		}
@@ -10686,7 +10686,7 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 		next;
 		mes "[Echinacea]";
 		mes "Keep up the good work assisting the explorers in this camp.";
-		set mao_morocc2,100;
+		mao_morocc2 = 100;
 		if (checkre(3))
 			getexp 120000,20000;
 		else
@@ -10745,7 +10745,7 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 			mes "[Echinacea]";
 			mes "No country wants to start a war, especially when we have a greater common enemy.";
 			mes "Just focus on what you can do to help us.";
-			set mao_morocc2,101;
+			mao_morocc2 = 101;
 			setquest 7037;
 			close;
 		}
@@ -10798,7 +10798,7 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 			mes "You believe in peace, don't you?";
 			mes "Tell him that I'm grateful for these sweet potatoes, anyway..";
 			delitem 549,2; //Nice_Sweet_Potato
-			set mao_morocc2,107;
+			mao_morocc2 = 107;
 			changequest 7040,7041;
 			close;
 		}
@@ -10862,7 +10862,7 @@ mid_camp,191,206,3	script	Manager#moc2_finder	4_M_EIN_SOLDIER,{
 		next;
 		mes "[Manager]";
 		mes "That's all for today.";
-		set mao_morocc2,31;
+		mao_morocc2 = 31;
 		changequest 7035,7036;
 		close;
 	}
@@ -10921,7 +10921,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 				next;
 				mes "[Mr. Kidd]";
 				mes "If you don't want to help us out then go back to Echinacea and let her know yourself!";
-				set mao_morocc2,2;
+				mao_morocc2 = 2;
 				changequest 7012,7013;
 				close2;
 				break;
@@ -10941,7 +10941,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 				mes "At Southwest Morroc, you'll find an underground tavern.";
 				mes "Go find ^4d4dffRin^000000.";
 				mes "Tell her I've sent you, and she'll take care of you.";
-				set mao_morocc2,4;
+				mao_morocc2 = 4;
 				changequest 7012,7015;
 				close2;
 				break;
@@ -10988,7 +10988,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 		mes "At Southwest Morroc, you'll find an underground tavern.";
 		mes "Go find ^4d4dffRin^000000.";
 		mes "Tell her I've sent you, and she'll take care of you.";
-		set mao_morocc2,4;
+		mao_morocc2 = 4;
 		changequest 7014,7015;
 		close2;
 	}
@@ -11066,7 +11066,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 			mes "Now, would you leave me alone for a while? I need to write a report based on the findings in this journal.";
 			delitem 6029,1; //Morocc_Tracing_Log
 			delitem 6027,1; //Crystal_Of_Feardoom
-			set mao_morocc2,10;
+			mao_morocc2 = 10;
 			if (checkre(3))
 				getexp 20000,1000;
 			else
@@ -11093,7 +11093,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 		next;
 		if ($@moc_mao_gate1 == 0) {
 			warp "que_dan01",32,27;
-			set $@moc_mao_gate1,1;
+			$@moc_mao_gate1 = 1;
 			end;
 		}
 		else {
@@ -11178,7 +11178,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 		next;
 		mes "[Mr. Kidd]";
 		mes "Thanks in advance.";
-		set mao_morocc2,13;
+		mao_morocc2 = 13;
 		changequest 7021,7022;
 		close2;
 	}
@@ -11314,7 +11314,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 		mes "[Mr. Kidd]";
 		mes "Can you go back and spy on them a bit more?";
 		mes "I'll follow you as soon as I report these findings to the higher-ups.";
-		set mao_morocc2,19;
+		mao_morocc2 = 19;
 		changequest 7027,7028;
 		close2;
 	}
@@ -11360,7 +11360,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 		mes "[Mr. Kidd]";
 		mes "Oh, and please bring ^4d4dffthis journal to Rin^000000.";
 		mes "This will be your last assignment from me.";
-		set mao_morocc2,21;
+		mao_morocc2 = 21;
 		getitem 6027,1; //Crystal_Of_Feardoom
 		getitem 6029,1; //Morocc_Tracing_Log
 		changequest 7029,7030;
@@ -11464,7 +11464,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 			mes "..I guess he's finally made a fire, huh?";
 			mes "Tell him thanks for these sweet potatoes.";
 			delitem 549,2; //Nice_Sweet_Potato
-			set mao_morocc2,105;
+			mao_morocc2 = 105;
 			next;
 			switch(select("Ask about Dandelion.:Ask about Arunafeltz.")) {
 			case 1:
@@ -11527,7 +11527,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 	end;
 
 OnInit:
-	set $@moc_mao_gate1,0; //Global Variable
+	$@moc_mao_gate1 = 0; //Global Variable
 	end;
 }
 
@@ -11538,7 +11538,7 @@ OnTouch:
 		mes "[Mr. Kidd]";
 		mes "" + strcharinfo(0) + "? " + strcharinfo(0) + "?!";
 		mes "Wake up!";
-		set mao_morocc2,12;
+		mao_morocc2 = 12;
 		close;
 	}
 }
@@ -11620,7 +11620,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 			next;
 			mes "[Defaria]";
 			mes "I'll be waiting for your return.";
-			set mao_morocc2,15;
+			mao_morocc2 = 15;
 			changequest 7023,7024;
 			close;
 		case 2:
@@ -11641,7 +11641,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 			delitem 7511,30; //Rune_Of_Darkness
 			delitem 7563,30; //Bloody_Rune
 			delitem 6028,1; //Seal_Scroll
-			set mao_morocc2,16;
+			mao_morocc2 = 16;
 			changequest 7024,7025;
 			close;
 		}
@@ -11688,7 +11688,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 			mes "[Defaria]";
 			mes "Um, do you mind? Would you stop talking to yourself and just leave already?";
 			mes "I'm sorry, but this old man needs some rest, alright?";
-			set mao_morocc2,17;
+			mao_morocc2 = 17;
 			getitem 14595,1; //Unsealed_Magic_Spell
 			changequest 7025,7026;
 			close;
@@ -11766,7 +11766,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 					mes "[Defaria]";
 					mes "Please bring me ^4d4dff20 Sweet Potatoes and 30 Logs^000000.";
 					mes "I'll be waiting for your return.";
-					set mao_morocc2,102;
+					mao_morocc2 = 102;
 					changequest 7037,7038;
 					close;
 				}
@@ -11819,7 +11819,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 			mes "I guess my magic hasn't gotten that rusty after all..";
 			delitem 516,20; //Sweet_Potato
 			delitem 7201,30; //Log
-			set mao_morocc2,103;
+			mao_morocc2 = 103;
 			close;
 		}
 		else {
@@ -11853,7 +11853,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 		mes "...Do you mind delivering these to Mr. Kidd?";
 		next;
 		mes "- Defaria has given you 2 Nice Sweet Potatoes. -";
-		set mao_morocc2,104;
+		mao_morocc2 = 104;
 		getitem 549,2; //Nice_Sweet_Potato
 		changequest 7038,7039;
 		close;
@@ -11900,7 +11900,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 		mes "They're cooked very well.";
 		next;
 		mes "- You have received 2 steaming hot Nice Sweet Potatoes. -";
-		set mao_morocc2,106;
+		mao_morocc2 = 106;
 		getitem 549,2; //Nice_Sweet_Potato
 		changequest 7039,7040;
 		close;
@@ -11935,7 +11935,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 		mes "Ah, your sweet potatoes are now roasted very well.";
 		mes "Here, enjoy them.";
 		mes "Thank you for trying so hard to please this whimsical old man.";
-		set mao_morocc2,108;
+		mao_morocc2 = 108;
 		getitem 633,5; //Baked_Yam
 		completequest 7041;
 		close;
@@ -12153,7 +12153,7 @@ que_job01,82,95,3	script	Bar Master#moc2_01	1_ETC_01,{
 				mes "You can't expect your job to always go smoothly.";
 				mes "Of course there will be risks.";
 				mes "Why don't you go pay her a visit?";
-				set mao_morocc2,5;
+				mao_morocc2 = 5;
 				close;
 			}
 			else if (mao_morocc2 > 4) {
@@ -12200,7 +12200,7 @@ que_job01,82,95,3	script	Bar Master#moc2_01	1_ETC_01,{
 					mes "I see. So you're a member of the Ash Vacuum expedition.";
 					mes "Rin is in the inner room.";
 					mes "...She's been badly injured and is resting in bed. Don't do anything to shock her, alright?";
-					set mao_morocc2,5;
+					mao_morocc2 = 5;
 					close;
 				}
 				else {
@@ -12422,14 +12422,14 @@ que_job01,49,49,5	script	Tao#dan_09	4_F_YUNYANG,{
 que_job01,51,55,0	script	que_job01#room_1	WARPNPC,1,1,{
 OnInit:
 OnReset:
-	set $@moc_mao_room1,0; //Global Variable
+	$@moc_mao_room1 = 0; //Global Variable
 	end;
 
 OnTouch:
 	mes "[Tao]";
 	if (prt_curse == 24) {
 		if ($@moc_mao_room1 == 0) {
-			set $@moc_mao_room1,1; //Global Variable
+			$@moc_mao_room1 = 1; //Global Variable
 			donpcevent " #room1timer::OnEnable";
 			donpcevent "Marjana#poison::OnEnable";
 			mes "Ah, that place is protected";
@@ -12452,7 +12452,7 @@ OnTouch:
 	}
 	else if (mao_request > 0) {
 		if ($@moc_mao_room1 == 0) {
-			set $@moc_mao_room1,1; //Global Variable
+			$@moc_mao_room1 = 1; //Global Variable
 			donpcevent " #room1timer::OnEnable";
 			donpcevent "Valdes#moc_master_1::OnEnable";
 			mes "Ah, that place is protected";
@@ -12582,13 +12582,13 @@ que_job01,51,44,0	script	que_job01#room_2	WARPNPC,1,1,{
 
 OnInit:
 OnReset:
-	set $@moc_mao_room2,0; //Global Variable
+	$@moc_mao_room2 = 0; //Global Variable
 	end;
 
 OnTouch:
 	if ((mao_morocc2 > 4) && (mao_morocc2 < 10)) {
 		if ($@moc_mao_room2 == 0) {
-			set $@moc_mao_room2,1; //Global Variable
+			$@moc_mao_room2 = 1; //Global Variable
 			donpcevent " #room2timer::OnEnable";
 			mes "[Tao]";
 			mes "The room is also sealed with a security magic spell, meow.";
@@ -12609,7 +12609,7 @@ OnTouch:
 	}
 	else if (mao_morocc2 == 21) {
 		if ($@moc_mao_room2 == 0) {
-			set $@moc_mao_room2,1; //Global Variable
+			$@moc_mao_room2 = 1; //Global Variable
 			donpcevent " #room2timer::OnEnable";
 			donpcevent "Rin#moc_room2_2::OnEnable";
 			donpcevent "Rayan#moc_room2_2::OnEnable";
@@ -12632,7 +12632,7 @@ OnTouch:
 	}
 	else if ((mao_morocc2 > 21) && (mao_morocc2 < 29)) {
 		if ($@moc_mao_room2 == 0) {
-			set $@moc_mao_room2,1; //Global Variable
+			$@moc_mao_room2 = 1; //Global Variable
 			donpcevent " #room2timer::OnEnable";
 			donpcevent "Rin#moc_room2_2::OnEnable";
 			mes "[Tao]";
@@ -12867,7 +12867,7 @@ que_job01,84,17,3	script	Rin#moc_room2_1	4_F_ACROSS,{
 			mes "[Rin]";
 			mes "How'd you like to conduct an investigation around that area? We might find something..";
 			mes "Like important clues or where they've headed...";
-			set mao_morocc2,6;
+			mao_morocc2 = 6;
 			next;
 			mes "[Rin]";
 			mes "^4d4dffIf you're interested in helping me, I'll continue talking.^000000";
@@ -12906,7 +12906,7 @@ que_job01,84,17,3	script	Rin#moc_room2_1	4_F_ACROSS,{
 		mes "[Rin]";
 		mes "While you're gone, I'll be preparing a document to send to Mr. Kidd.";
 		mes "Be safe, and look out for yourself, okay?";
-		set mao_morocc2,7;
+		mao_morocc2 = 7;
 		changequest 7015,7016;
 		close2;
 	}
@@ -12974,7 +12974,7 @@ que_job01,84,17,3	script	Rin#moc_room2_1	4_F_ACROSS,{
 			next;
 			mes "- You received the journal from Rin.";
 			mes "Instead of a journal, it's more like a bunch of documents being exchanged. -";
-			set mao_morocc2,9;
+			mao_morocc2 = 9;
 			getitem 6029,1; //Morocc_Tracing_Log
 			changequest 7017,7018;
 			close2;
@@ -13181,7 +13181,7 @@ que_job01,144,54,3	script	Rin#moc_room2_2	4_F_ACROSS,{
 			mes "...I think he's gone...?";
 			delitem 6029,1; //Morocc_Tracing_Log
 			delitem 6027,1; //Crystal_Of_Feardoom
-			set mao_morocc2,22;
+			mao_morocc2 = 22;
 			close2;
 		}
 		else {
@@ -13244,15 +13244,15 @@ que_job01,144,54,3	script	Rin#moc_room2_2	4_F_ACROSS,{
 		mes "I'll give you the pattern number of his magic wavelength. Can you give the number to Echinacea?";
 		mes "She'll take care of the rest.";
 		next;
-		set .@rotto,rand(1,3);
-		if (.@rotto == 1) set .@pattern$,"SDHF92F-SDF";
-		else if (.@rotto == 2) set .@pattern$,"VWNM94GVWN90";
-		else set .@pattern$,"CM3-TRDFGHE0";
+		.@rotto = rand(1,3);
+		if (.@rotto == 1) .@pattern$ = "SDHF92F-SDF";
+		else if (.@rotto == 2) .@pattern$ = "VWNM94GVWN90";
+		else .@pattern$ = "CM3-TRDFGHE0";
 		mes "[Rin]";
 		mes "The pattern number is...";
 		mes "^4d4dff["+.@pattern$+"]^000000";
 		mes "Don't leave out even one character. Okay?";
-		set mao_morocc2,22+.@rotto;
+		mao_morocc2 = 22+.@rotto;
 		getitem 6029,1; //Morocc_Tracing_Log
 		changequest 7030,7030+.@rotto;
 		next;
@@ -13293,9 +13293,9 @@ que_job01,144,54,3	script	Rin#moc_room2_2	4_F_ACROSS,{
 		next;
 		mes "[Rin]";
 		mes "Make sure you don't forget it again. The pattern number is...";
-		if (mao_morocc2 == 26) set .@pattern$,"SDHF92F-SDF";
-		else if (mao_morocc2 == 27) set .@pattern$,"VWNM94GVWN90";
-		else set .@pattern$,"CM3-TRDFGHE0";
+		if (mao_morocc2 == 26) .@pattern$ = "SDHF92F-SDF";
+		else if (mao_morocc2 == 27) .@pattern$ = "VWNM94GVWN90";
+		else .@pattern$ = "CM3-TRDFGHE0";
 		mes "^4d4dff["+.@pattern$+"]^000000. Don't leave out even one character. Okay?";
 		mes "Got it?";
 		next;
@@ -13382,7 +13382,7 @@ hu_fild04,235,103,0	script	Heap of Earth#mao2_01	CLEAR_NPC,4,4,{
 			mes "I don't think I'll find anything else here...";
 			mes "I should go back now.";
 			mes "I hope Rin will understand.";
-			set mao_morocc2,8;
+			mao_morocc2 = 8;
 			getitem 6027,1; //Crystal_Of_Feardoom
 			changequest 7016,7017;
 			close;
@@ -13456,7 +13456,7 @@ OnTouch:
 		mes "A mysterious force is repelling you, and you're unable to push forward into this area.";
 		close2;
 		warp "morocc",100,100;
-		set $@moc_mao_gate1,0; //Global Variable
+		$@moc_mao_gate1 = 0; //Global Variable
 		end;
 	}
 	end;
@@ -13489,7 +13489,7 @@ OnTimer307000:
 
 OnTimer308000:
 	enablenpc "#moc2_event_on";
-	set $@moc_mao_gate1,0; //Global Variable
+	$@moc_mao_gate1 = 0; //Global Variable
 	stopnpctimer;
 }
 
@@ -13632,7 +13632,7 @@ que_dan01,49,36,5	script	Corpse#moc2_dead01	4_M_DSTMANDEAD,{
 			next;
 			mes "^4d4dffYou have obtained a Sealed Magic Scroll.";
 			mes "Let's bring this to Kidd.^000000";
-			set mao_morocc2,11;
+			mao_morocc2 = 11;
 			getitem 6028,1; //Seal_Scroll
 			donpcevent "#moc2_event_on::OnStop";
 			initnpctimer;
@@ -13705,7 +13705,7 @@ OnTimer10000:
 	end;
 
 OnTimer11000:
-	set $@moc_mao_gate1,0; //Global Variable
+	$@moc_mao_gate1 = 0; //Global Variable
 	end;
 }
 
@@ -13812,7 +13812,7 @@ OnTouch:
 		mes "I'd better run!";
 		next;
 		mes "- You used a Butterfly Wing.-";
-		set mao_morocc2,18;
+		mao_morocc2 = 18;
 		changequest 7026,7027;
 		close2;
 		consumeitem 602; //Wing_Of_Butterfly
@@ -13904,7 +13904,7 @@ que_dan02,115,53,3	script	Man#moc2_crazyR01	4_M_DSTMAN,{
 		cutin "mocseal_kid01",255;
 		next;
 		mes "- You watched Mr. Kidd arrest the unconscious Rayan and take out a teleportation item. You decide to return to town. -";
-		set mao_morocc2,20;
+		mao_morocc2 = 20;
 		changequest 7028,7029;
 		close2;
 		consumeitem 602; //Wing_Of_Butterfly
@@ -13984,7 +13984,7 @@ prontera,161,192,5	script	Ash-Vacuum Warper	4_M_MOC_SOLDIER,{
 		mes "Ok. I hope you";
 		mes "enjoy your trip.";
 		close2;
-		set ep13_ryu,100;
+		ep13_ryu = 100;
 		warp "mid_camp",210,291;
 		end;
 	case 2:

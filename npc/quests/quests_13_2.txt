@@ -419,7 +419,7 @@ man_fild02,132,47,4	duplicate(Cat Hand Agent#spl)	Cat Hand Agent#man	4_M_BOSSCAT
 	if (countitem(6048) < 3 && !questprogress(12062,PLAYTIME)) {
 		specialeffect2 EF_REPAIRWEAPON;
 		progressbar "ffff00",10;
-		set .@rhea_ran,rand(1,20);
+		.@rhea_ran = rand(1,20);
 		if (.@rhea_ran < 13) getitem 7049,1; //Stone
 		else if (.@rhea_ran == 13) getitem 990,1; //Boody_Red
 		else if (.@rhea_ran == 14) getitem 991,1; //Crystal_Blue
@@ -459,29 +459,29 @@ spl_fild03,226,151,0	script	School of Fish#5::FishingHole_spl3	CLEAR_NPC,{
 	if (!questprogress(12060,PLAYTIME) && countitem(6039) < 20) {
 		specialeffect2 EF_BUBBLE;
 		specialeffect2 EF_INVENOM;
-		set .@fcast,15;
+		.@fcast = 15;
 		if (isequipped(2550)) //Fisher's_Muffler
-			set .@fcast,.@fcast - 2;
+			.@fcast -= 2;
 		if (isequipped(2443)) //Fish_Shoes
-			set .@fcast,.@fcast - 2;
+			.@fcast -= 2;
 		if (isequipped(2764)) //Small_Fishing_Rod
-			set .@fcast,.@fcast - 3;
+			.@fcast -= 3;
 		if (isequipped(2775)) //Lure
-			set .@fcast,.@fcast - 1;
+			.@fcast -= 1;
 		if (isequipped(1599)) //Ahura_Mazda
-			set .@fcast,.@fcast - 3;
+			.@fcast -= 3;
 		if (isequipped(2199)) //Angra_Manyu
-			set .@fcast,.@fcast - 4;
+			.@fcast -= 4;
 		progressbar "ffff00",.@fcast;
 		if (ep13_1_rhea == 13) {
 			if (rand(1,20) == 2) {
 				getitem 6037,1; //Rough_File
-				set ep13_1_rhea,14;
+				ep13_1_rhea = 14;
 				specialeffect2 EF_BUBBLE;
 				mapannounce strcharinfo(3),strcharinfo(0) + " has caught a Loose File.",bc_map,"0xff77ff";
 			}
 		}
-		set .@rhea_ran,rand(1,70);
+		.@rhea_ran = rand(1,70);
 		if (.@rhea_ran < 20) getitem 6039,1; //Piece_Of_Fish
 		else if (.@rhea_ran == 20) getitem 908,1; //Spawn
 		else if (.@rhea_ran == 21) getitem 909,1; //Jellopy
@@ -497,17 +497,17 @@ spl_fild03,226,151,0	script	School of Fish#5::FishingHole_spl3	CLEAR_NPC,{
 			mes "Nothing was caught.";
 			close;
 		}
-		set .@rhea_ran5,rand(1,200);
+		.@rhea_ran5 = rand(1,200);
 		if (.@rhea_ran5 == 3) {
 			getitem 644,1; //Gift_Box
 			mapannounce strcharinfo(3),strcharinfo(0) + " has caught a Gift Box.",bc_map,"0x00ffff";
 		}
-		set .@rhea_ran3,rand(1,500);
+		.@rhea_ran3 = rand(1,500);
 		if (.@rhea_ran3 == 3) {
 			getitem 603,1; //Old_Blue_Box
 			mapannounce strcharinfo(3),strcharinfo(0) + " has caught an Old Blue Box.",bc_map,"0x00ffff";
 		}
-		set .@rhea_ran4,rand(1,3000);
+		.@rhea_ran4 = rand(1,3000);
 		if (.@rhea_ran4 == 3) {
 			getitem 617,1; //Old_Violet_Box
 			mapannounce strcharinfo(3),strcharinfo(0) + " has caught an Old Purple Box.",bc_map,"0x44ff44";
@@ -574,7 +574,7 @@ spl_in01,32,306,3	script	Splendide Guard#ep13md01	4_M_FAIRYSOLDIER,2,2,{
 				mes "[Arc]";
 				mes "Now I clearly understand that you are not sent by the giants of Manuk.";
 				mes "Thank you for telling me these interesting stories.";
-				set ep13_mdrama,1;
+				ep13_mdrama = 1;
 				close;
 			case 2:
 				mes "[Arc]";
@@ -661,7 +661,7 @@ spl_in01,32,306,3	script	Splendide Guard#ep13md01	4_M_FAIRYSOLDIER,2,2,{
 					mes "[Arc]";
 					mes "Remember " + strcharinfo(0) + "... you must keep this to yourself...";
 					mes "Please, find her.";
-					set ep13_mdrama,2;
+					ep13_mdrama = 2;
 					setquest 7056;
 					close;
 				case 2:
@@ -755,7 +755,7 @@ spl_in01,32,306,3	script	Splendide Guard#ep13md01	4_M_FAIRYSOLDIER,2,2,{
 			mes "Terra!!";
 			next;
 			mes "- Arc suddenly began gathering up his gear. -";
-			set ep13_mdrama,8;
+			ep13_mdrama = 8;
 			close;
 		}
 		else if (ep13_mdrama == 8) {
@@ -788,7 +788,7 @@ spl_in01,32,306,3	script	Splendide Guard#ep13md01	4_M_FAIRYSOLDIER,2,2,{
 			mes "The higher ups won't just remain still...";
 			mes "I'm sorry to ask you but...";
 			mes "Please go and bring her back here...";
-			set ep13_mdrama,9;
+			ep13_mdrama = 9;
 			changequest 7058,7059;
 			close;
 		}
@@ -841,7 +841,7 @@ spl_in01,32,306,3	script	Splendide Guard#ep13md01	4_M_FAIRYSOLDIER,2,2,{
 			mes "[Arc]";
 			mes "Sometimes you can find Yggdrasilberries around there.";
 			mes "Go find few more and bring them with you. Hurry!";
-			set ep13_mdrama,14;
+			ep13_mdrama = 14;
 			getitem 607,3; //Yggdrasilberry
 			changequest 7062,7063;
 			close;
@@ -880,7 +880,7 @@ spl_in01,32,306,3	script	Splendide Guard#ep13md01	4_M_FAIRYSOLDIER,2,2,{
 			mes "Terra's Yai.";
 			mes "Which is her Private Residence... It's located at the Southeast direction from here.";
 			mes "I would like to hear a detailed account of what happened.";
-			set ep13_mdrama,26;
+			ep13_mdrama = 26;
 			changequest 7070,7071;
 			close;
 		}
@@ -957,7 +957,7 @@ spl_fild02,45,214,0	script	????#ep13_mdplant01	CLEAR_NPC,{
 		mes "It looks like this is Terra's trace that Arc told me about.";
 		next;
 		mes "A knotted leaf is pointing toward the^4d4dff Southern^000000 direction.";
-		set ep13_mdrama,3;
+		ep13_mdrama = 3;
 		changequest 7056,7057;
 		close2;
 	}
@@ -1020,7 +1020,7 @@ spl_fild02,328,323,0	script	????#ep13_mdplant04	CLEAR_NPC,{
 		mes "But who?";
 		next;
 		mes "There are footprints heading ^4d4dffNorth^000000.";
-		set ep13_mdrama,4;
+		ep13_mdrama = 4;
 		close;
 	}
 	else if (ep13_mdrama > 3) {
@@ -1040,7 +1040,7 @@ spl_fild01,341,109,0	script	????#ep13_mdplant05	CLEAR_NPC,{
 		mes "These footsteps can't be a Laphine's...";
 		next;
 		mes "There are footprints that lead to^4d4dff the Root of a huge tree^000000.";
-		set ep13_mdrama,5;
+		ep13_mdrama = 5;
 		close;
 	}
 	else if (ep13_mdrama > 4) {
@@ -1064,7 +1064,7 @@ OnTouch:
 		switch(select("Follow the trace.:Looks dangerous... head back.")) {
 		case 1:
 			mes "You take a one step forward carefully through the muddy roots and slip.";
-			set ep13_mdrama,6;
+			ep13_mdrama = 6;
 			close2;
 			percentheal -30,0;
 			warp "nyd_dun01",72,125;
@@ -1133,7 +1133,7 @@ nyd_dun01,58,223,0	script	Petrified Sapha#ep13md03	CLEAR_NPC,{
 		next;
 		mes "[" + strcharinfo(0) + "]";
 		mes "Could it be... Terra was fighting this Giant?";
-		set ep13_mdrama,7;
+		ep13_mdrama = 7;
 		changequest 7057,7058;
 		next;
 		mes "[" + strcharinfo(0) + "]";
@@ -1163,7 +1163,7 @@ nyd_dun01,58,223,0	script	Petrified Sapha#ep13md03	CLEAR_NPC,{
 		mes "[" + strcharinfo(0) + "]";
 		mes "I can't just go back to Arc without anything... he'd be so disappointed...";
 		mes "Hmm, Should I go to the Sapha's village?";
-		set ep13_mdrama,10;
+		ep13_mdrama = 10;
 		changequest 7059,7060;
 		close;
 	}
@@ -1205,7 +1205,7 @@ nyd_dun01,58,223,0	script	Petrified Sapha#ep13md03	CLEAR_NPC,{
 			case 3:
 				mes "You pick up a fragment of Bradium scattered on the ground.";
 				mes "This should be enough.";
-				set ep13_mdrama,22;
+				ep13_mdrama = 22;
 				getitem 6085,1; //Shaggy_Muffler
 				getitem 6084,1; //Bradium_Fragments
 				changequest 7066,7067;
@@ -1227,7 +1227,7 @@ nyd_dun01,58,223,0	script	Petrified Sapha#ep13md03	CLEAR_NPC,{
 				mes "You carefully strip a worn muffler off of the Sapha's neck.";
 				mes "We will see if this muffler belongs to Ogen or not...";
 				mes "This should be enough.";
-				set ep13_mdrama,22;
+				ep13_mdrama = 22;
 				getitem 6085,1; //Shaggy_Muffler
 				getitem 6084,1; //Bradium_Fragments
 				changequest 7066,7067;
@@ -1295,7 +1295,7 @@ nyd_dun01,58,223,0	script	Petrified Sapha#ep13md03	CLEAR_NPC,{
 			donpcevent "Snorren#ep13md17::OnDisable";
 			mes "- Snorren stood up with a bitter smile...";
 			mes "...I should go back too... I'm worried about Terra. -";
-			set ep13_mdrama,24;
+			ep13_mdrama = 24;
 			changequest 7068,7069;
 			close;
 		}
@@ -1390,7 +1390,7 @@ manuk,278,177,5	script	Villager#ep13_11	4_MAN_PIOM,{
 				next;
 				mes "- The Sapha people are not willing to tell you anything. But the";
 				mes "captured Fairy may be Terra. -";
-				set ep13_mdrama,11;
+				ep13_mdrama = 11;
 				changequest 7060,7061;
 				close;
 			case 2:
@@ -1417,7 +1417,7 @@ manuk,278,177,5	script	Villager#ep13_11	4_MAN_PIOM,{
 				next;
 				mes "- Fortunately, Sapha had thought I could not understand them,";
 				mes "but they must be talking about Terra... -";
-				set ep13_mdrama,11;
+				ep13_mdrama = 11;
 				changequest 7060,7061;
 				close;
 			}
@@ -1488,7 +1488,7 @@ manuk,281,177,3	script	Villager#ep13_12	4_MAN_BENKUNI,{
 				next;
 				mes "- The Sapha people are not willing to tell you anything. But the";
 				mes "captured Fairy may be Terra. -";
-				set ep13_mdrama,11;
+				ep13_mdrama = 11;
 				changequest 7060,7061;
 				close;
 			case 2:
@@ -1515,7 +1515,7 @@ manuk,281,177,3	script	Villager#ep13_12	4_MAN_BENKUNI,{
 				next;
 				mes "- Fortunately, Sapha had thought I could not understand them,";
 				mes "but they must be talking about Terra... -";
-				set ep13_mdrama,11;
+				ep13_mdrama = 11;
 				changequest 7060,7061;
 				close;
 			}
@@ -1679,7 +1679,7 @@ man_in01,175,59,5	script	Snorren#ep13_13	4_MAN_PIOM,{
 				mes "Yeah?!";
 				mes "Then just wait here for a sec!";
 				mes "I will go and ask Luik about this!";
-				set ep13_mdrama,12;
+				ep13_mdrama = 12;
 				close;
 			case 2:
 				mes "[Snorren]";
@@ -1739,7 +1739,7 @@ man_in01,175,59,5	script	Snorren#ep13_13	4_MAN_PIOM,{
 			next;
 			mes "[" + strcharinfo(0) + "]";
 			mes "(I think I have no choice but to go back and ask Arc....)";
-			set ep13_mdrama,13;
+			ep13_mdrama = 13;
 			changequest 7061,7062;
 			close;
 		}
@@ -1758,9 +1758,9 @@ man_in01,175,59,5	script	Snorren#ep13_13	4_MAN_PIOM,{
 				next;
 				mes "[Snorren]";
 				mes "I will take everything you've brought with you!";
-				set .@temp_ig,countitem(607);
+				.@temp_ig = countitem(607);
 				delitem 607,.@temp_ig; //Yggdrasilberry
-				set ep13_mdrama,18;
+				ep13_mdrama = 18;
 				next;
 				mes "[Snorren]";
 				mes "Now, Let's go inside!";
@@ -1833,7 +1833,7 @@ man_in01,175,59,5	script	Snorren#ep13_13	4_MAN_PIOM,{
 			mes "[Snorren]";
 			mes "Come back anytime...";
 			mes "Ok?";
-			set ep13_mdrama,25;
+			ep13_mdrama = 25;
 			getitem 6080,15; //Manuk_Coin
 			changequest 7069,7070;
 			close;
@@ -1964,7 +1964,7 @@ man_in01,22,126,3	script	Captured Laphine#ep13md	4_F_FAIRYKID6,{
 				mes "[Luik]";
 				mes "Why did she break down like that? What did she say?";
 				mes "Tell me what she said!!!";
-				set ep13_mdrama,20;
+				ep13_mdrama = 20;
 				close;
 			case 2:
 				mes "[Terra]";
@@ -2011,7 +2011,7 @@ man_in01,22,126,3	script	Captured Laphine#ep13md	4_F_FAIRYKID6,{
 				mes "[Luik]";
 				mes "Why did she break down like that? What did she say?";
 				mes "Tell me what she said!!!";
-				set ep13_mdrama,20;
+				ep13_mdrama = 20;
 				close;
 			}
 		}
@@ -2079,7 +2079,7 @@ man_in01,17,128,5	script	Snorren#ep13md_15	4_MAN_PIOM,{
 			mes "Yeah, Right.";
 			mes "" + strcharinfo(0) + ", you should try talking to that Laphine...";
 			mes "Let's hear her story.";
-			set ep13_mdrama,19;
+			ep13_mdrama = 19;
 			changequest 7064,7065;
 			close;
 		}
@@ -2147,7 +2147,7 @@ man_in01,17,128,5	script	Snorren#ep13md_15	4_MAN_PIOM,{
 				mes "Please save Ogen.";
 				delitem 6085,1; //Shaggy_Muffler
 				delitem 6084,1; //Bradium_Fragments
-				set ep13_mdrama,23;
+				ep13_mdrama = 23;
 				changequest 7067,7068;
 				close;
 			}
@@ -2264,7 +2264,7 @@ man_in01,19,126,3	script	Luik#ep13md16	4_MAN_GALTUN,{
 			next;
 			mes "[" + strcharinfo(0) + "]";
 			mes "Don't you dare...try to do any harm to Terra.";
-			set ep13_mdrama,21;
+			ep13_mdrama = 21;
 			changequest 7065,7066;
 			close;
 		}
@@ -2317,7 +2317,7 @@ man_in01,19,126,3	script	Luik#ep13md16	4_MAN_GALTUN,{
 				mes "Please save Ogen.";
 				delitem 6085,1; //Shaggy_Muffler
 				delitem 6084,1; //Bradium_Fragments
-				set ep13_mdrama,23;
+				ep13_mdrama = 23;
 				changequest 7067,7068;
 				close;
 			}
@@ -2456,7 +2456,7 @@ spl_in02,236,92,5	script	Arc#ep13md_l02	4_M_FAIRYSOLDIER,{
 			next;
 			mes "[Arc]";
 			mes "I'm sorry this is all I can give you for now.";
-			set ep13_mdrama,27;
+			ep13_mdrama = 27;
 			getitem 6081,25; //Splendide_Coin
 			if (checkre(3))
 				getexp 120000,10000;
@@ -2485,7 +2485,7 @@ spl_in02,236,92,5	script	Arc#ep13md_l02	4_M_FAIRYSOLDIER,{
 			mes "["+strnpcinfo(1)+"]";
 			if (strnpcinfo(1) == "Arc") mes "That's what Terra wants too.";
 			mes "It might be cramped, but you are always welcome to visit us.";
-			set ep13_mdrama,28;
+			ep13_mdrama = 28;
 			close;
 		}
 		else if (ep13_mdrama > 27) {
@@ -2561,7 +2561,7 @@ spl_fild01,357,44,0	script	???#ep13mdf01	CLEAR_NPC,{
 		mes "There's some kind of fruit lying on the ground.";
 		mes "I see a small berry inside of a big outer shell...";
 		mes "It is a Yggdrasil!";
-		set ep13_mdrama,15;
+		ep13_mdrama = 15;
 		getitem 607,1; //Yggdrasilberry
 		getitem 522,1; //Fruit_Of_Mastela
 		close;
@@ -2569,7 +2569,7 @@ spl_fild01,357,44,0	script	???#ep13mdf01	CLEAR_NPC,{
 	else if (ep13_mdrama == 15) {
 		mes "I've already pulled out a Yggdradsil... but is there anyting else..?";
 		next;
-		set .@apple,rand(1,100);
+		.@apple = rand(1,100);
 		if (.@apple < 50) {
 			mes "I've been bitten by an unknown insect.";
 			mes "It hurts!";
@@ -2610,7 +2610,7 @@ spl_fild01,312,79,0	script	???#ep13mdf02	CLEAR_NPC,{
 		mes "There's some kind of fruit lying on the ground.";
 		mes "I see a small berry inside of a big outer shell...";
 		mes "It is a Yggdrasil!";
-		set ep13_mdrama,16;
+		ep13_mdrama = 16;
 		getitem 607,1; //Yggdrasilberry
 		getitem 522,1; //Fruit_Of_Mastela
 		close;
@@ -2618,7 +2618,7 @@ spl_fild01,312,79,0	script	???#ep13mdf02	CLEAR_NPC,{
 	else if (ep13_mdrama == 16) {
 		mes "I've already pulled out a Yggdradsil... but is there anyting else..?";
 		next;
-		set .@apple,rand(1,100);
+		.@apple = rand(1,100);
 		if (.@apple < 50) {
 			mes "I've been bitten by an unknown insect.";
 			mes "It hurts!";
@@ -2659,7 +2659,7 @@ spl_fild01,329,29,0	script	???#ep13mdf03	CLEAR_NPC,{
 		mes "There's some kind of fruit lying on the ground.";
 		mes "I see a small berry inside of a big outer shell...";
 		mes "It is a Yggdrasil!";
-		set ep13_mdrama,17;
+		ep13_mdrama = 17;
 		getitem 607,1; //Yggdrasilberry
 		getitem 522,1; //Fruit_Of_Mastela
 		changequest 7063,7064;
@@ -2673,7 +2673,7 @@ spl_fild01,329,29,0	script	???#ep13mdf03	CLEAR_NPC,{
 	else if (ep13_mdrama == 17) {
 		mes "I've already pulled out a Yggdradsil... but is there anyting else..?";
 		next;
-		set .@apple,rand(1,100);
+		.@apple = rand(1,100);
 		if (.@apple < 50) {
 			mes "I've been bitten by an unknown insect.";
 			mes "It hurts!";
@@ -2747,7 +2747,7 @@ manuk,252,116,3	script	Manuk Galtun#ep13_2day	4_MAN_GALTUN,{
 					mes "[Strom]";
 					mes "There're monsters called ^4d4dffRata^000000 and ^4d4dffDueyrr^000000.";
 					mes "If you terminate them, I would regard you as a decent and strong person.";
-					set ep13_2_days01,1;
+					ep13_2_days01 = 1;
 					setquest 7074;
 					setquest 7075;
 					close;
@@ -2777,7 +2777,7 @@ manuk,252,116,3	script	Manuk Galtun#ep13_2day	4_MAN_GALTUN,{
 				mes "If you need to buy something, you can use them.";
 				completequest 7074;
 				completequest 7075;
-				set ep13_2_days01,2;
+				ep13_2_days01 = 2;
 				if (checkre(3))
 					getexp 50000,30000;
 				else
@@ -3104,7 +3104,7 @@ mid_camp,146,306,3	script	Pet Breeder#ep13_eden01	4_F_SCIENCE,{
 				mes "This is Rin's cherished treasure box...";
 				mes "This is enough payment, right?";
 				completequest 7076;
-				set ep13_2_wanted,2;
+				ep13_2_wanted = 2;
 				getitem 7444,1; //Treasure_Box
 				close;
 			}
@@ -3142,7 +3142,7 @@ mid_camp,146,306,3	script	Pet Breeder#ep13_eden01	4_F_SCIENCE,{
 			delitem 6093,10; //Egg_Of_Draco
 			erasequest 7077;
 			setquest 7078;
-			set ep13_2_dayegg,2;
+			ep13_2_dayegg = 2;
 			getexp 40000,40000;
 			getitem 6081,1; //Splendide_Coin
 			getitem 6080,1; //Manuk_Coin
@@ -3161,7 +3161,7 @@ mid_camp,146,306,3	script	Pet Breeder#ep13_eden01	4_F_SCIENCE,{
 		if (!.@alba_check) {
 			close2;
 			erasequest 7078;
-			set ep13_2_dayegg,3;
+			ep13_2_dayegg = 3;
 			end;
 		}
 		else if (.@alba_check == 1) {
@@ -3173,7 +3173,7 @@ mid_camp,146,306,3	script	Pet Breeder#ep13_eden01	4_F_SCIENCE,{
 		}
 		close2;
 		erasequest 7078;
-		set ep13_2_dayegg,3;
+		ep13_2_dayegg = 3;
 		end;
 	}
 	else if (ep13_2_dayegg == 3) {
@@ -3184,7 +3184,7 @@ mid_camp,146,306,3	script	Pet Breeder#ep13_eden01	4_F_SCIENCE,{
 		if (select("Sure.:Sorry, I can't.") == 1) {
 			mes "[Pinedel]";
 			mes "Please collect 10 Draco Eggs.";
-			set ep13_2_dayegg,1;
+			ep13_2_dayegg = 1;
 			setquest 7077;
 			close;
 		}
@@ -3209,7 +3209,7 @@ mid_camp,146,306,3	script	Pet Breeder#ep13_eden01	4_F_SCIENCE,{
 		mes "[Pinedel]";
 		mes "Please collect 10 Draco Eggs.";
 		mes "Let's work together to make them as pets.";
-		set ep13_2_dayegg,1;
+		ep13_2_dayegg = 1;
 		setquest 7077;
 		close;
 	}
@@ -3253,7 +3253,7 @@ mid_camp,192,239,4	script	Wanted Sign#ep13_2ect01	4_BOARD3,{
 			mes "Do you accept Rin's request?";
 			if (select("I accept that request.:No, I can't.") == 1) {
 				mes "I accepted Rin's request.";
-				set ep13_2_wanted,1;
+				ep13_2_wanted = 1;
 				setquest 7076;
 				close;
 			}
@@ -3529,7 +3529,7 @@ mid_camp,197,237,3	script	Schwartzvalt Mechanic#1	4_M_LGTMAN,{
 			mes "[Mechanic Engineer Dorance]";
 			mes "The ^0000ff Arunafeltz Linguist^000000 should be on the second floor of the Alliance Headquarters.";
 			setquest 8243;
-			set ep13_2_rhea,1;
+			ep13_2_rhea = 1;
 			close;
 		}
 		else if ((ep13_2_rhea > 0) && (ep13_2_rhea < 7)) {
@@ -3582,7 +3582,7 @@ mid_camp,197,237,3	script	Schwartzvalt Mechanic#1	4_M_LGTMAN,{
 			mes "While you are gone, I be here organizing these documents.";
 			completequest 8248;
 			setquest 8249;
-			set ep13_2_rhea,8;
+			ep13_2_rhea = 8;
 			close;
 		}
 		else if ((ep13_2_rhea > 7) && (ep13_2_rhea < 11)) {
@@ -3626,7 +3626,7 @@ mid_camp,197,237,3	script	Schwartzvalt Mechanic#1	4_M_LGTMAN,{
 			mes "With all preperation done, allow me about one hour to finish this thing.";
 			completequest 8252;
 			setquest 8253;
-			set ep13_2_rhea,12;
+			ep13_2_rhea = 12;
 			close;
 		}
 		else if (ep13_2_rhea == 12) {
@@ -3694,7 +3694,7 @@ mid_camp,197,237,3	script	Schwartzvalt Mechanic#1	4_M_LGTMAN,{
 				mes "Thank you for helping us out.";
 				mes "I hope this ring would be a big help for your journey through the other world.";
 				completequest 8253;
-				set ep13_2_rhea,100;
+				ep13_2_rhea = 100;
 				if (checkre(3))
 					getexp 200000,5000;
 				else
@@ -3829,7 +3829,7 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 			mes "Do me a favor and go outside of the camp, find the fairies and wooden giants, and remember everything that they are saying, word for word so that I can hear what their language sounds like.";
 			completequest 8243;
 			setquest 8244;
-			set ep13_2_rhea,2;
+			ep13_2_rhea = 2;
 			close;
 		}
 		else {
@@ -3855,7 +3855,7 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 			mes "Do me a favor and go outside of the camp, find the fairies and wooden giants, and remember everything that they are saying, word for word so that I can hear what their language sounds like.";
 			completequest 8243;
 			setquest 8244;
-			set ep13_2_rhea,2;
+			ep13_2_rhea = 2;
 			close;
 		}
 	}
@@ -3871,45 +3871,45 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 			mes "[Linguist Dictionary]";
 			mes "Now, let's start with the Fairies! What is the fairy's language like? Please write them down here sentence by sentence!";
 			next;
-			set .@spl_score00,0;
+			.@spl_score00 = 0;
 			input .@input$;
 			if (.@input$ == "RLGHLRXLA TKANTLFDMS") {
 				mes "[Linguist Dictionary]";
 				mes ""+ .@input$ +"....";
 				mes "And?";
-				set .@spl_score01,.@spl_score00+1;
+				.@spl_score01 = .@spl_score00+1;
 				next;
 			}
 			else {
 				mes ""+ .@input$ +"....";
 				mes "Mmm... Hmm...?";
-				set .@spl_score01,.@spl_score00;
+				.@spl_score01 = .@spl_score00;
 				next;
 			}
 			input .@input$;
 			if (.@input$ == "WJACK TNAHRDNJSDMFH") {
 				mes ""+ .@input$ +"....";
 				mes "And?";
-				set .@spl_score02,.@spl_score01+1;
+				.@spl_score02 = .@spl_score01+1;
 				next;
 			}
 			else {
 				mes ""+ .@input$ +"....";
 				mes "I see...?";
-				set .@spl_score02,.@spl_score01;
+				.@spl_score02 = .@spl_score01;
 				next;
 			}
 			input .@input$;
 			if ((.@input$ == "WLSGHKWND !!") || (.@input$ == "WLSGHKWND")) {
 				mes ""+ .@input$ +"....";
 				mes "Is that all?";
-				set .@spl_score03,.@spl_score02+1;
+				.@spl_score03 = .@spl_score02+1;
 				next;
 			}
 			else {
 				mes ""+ .@input$ +"....";
 				mes "Is that all?";
-				set .@spl_score03,.@spl_score02;
+				.@spl_score03 = .@spl_score02;
 				next;
 			}
 			if (.@spl_score03 > 2) {
@@ -3936,45 +3936,45 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 			mes "[Linguist Dictionary]";
 			mes "Good. then next is the Wooden Giants! What's their language like? Write them down sentence by sentence just as you did with the Fairy's.";
 			next;
-			set .@man_score00,0;
+			.@man_score00 = 0;
 			input .@input$;
 			if (.@input$ == "TJDTMFJDNS CJFDI") {
 				mes "[Linguist Dictionary]";
 				mes ""+ .@input$ +"....";
 				mes "And?";
-				set .@man_score01,.@man_score00+1;
+				.@man_score01 = .@man_score00+1;
 				next;
 			}
 			else {
 				mes ""+ .@input$ +"....";
 				mes "And?";
-				set .@man_score01,.@man_score00;
+				.@man_score01 = .@man_score00;
 				next;
 			}
 			input .@input$;
 			if (.@input$ == "TKADLFDMF QKATOS") {
 				mes ""+ .@input$ +"....";
 				mes "And?";
-				set .@man_score02,.@man_score01+1;
+				.@man_score02 = .@man_score01+1;
 				next;
 			}
 			else {
 				mes ""+ .@input$ +"....";
 				mes "And?";
-				set .@man_score02,.@man_score01;
+				.@man_score02 = .@man_score01;
 				next;
 			}
 			input .@input$;
 			if ((.@input$ == "EKDTLSDML DLFMADMS..") || (.@input$ == "EKDTLSDML DLFMADMS")) {
 				mes ""+ .@input$ +"....";
 				mes "This is it?";
-				set .@man_score03,.@man_score02+1;
+				.@man_score03 = .@man_score02+1;
 				next;
 			}
 			else {
 				mes ""+ .@input$ +"....";
 				mes "Is that all?";
-				set .@man_score03,.@man_score02;
+				.@man_score03 = .@man_score02;
 				next;
 			}
 			if (.@man_score03 > 2) {
@@ -4005,7 +4005,7 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 			mes "....Ummmm...";
 			next;
 			mes "- Dictionary stared at the paper intently. -";
-			set ep13_2_rhea,3;
+			ep13_2_rhea = 3;
 			close;
 		}
 		else {
@@ -4084,7 +4084,7 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 		mes "It's difficult to continue on a research without some more samples of language. Please do my favor.";
 		completequest 8244;
 		setquest 8245;
-		set ep13_2_rhea,4;
+		ep13_2_rhea = 4;
 		close;
 	}
 	else if ((ep13_2_rhea > 3) && (ep13_2_rhea < 6)) {
@@ -4119,7 +4119,7 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 		mes "I wonder what the Mechanic Engineer from the Schwaltzvalt Republic would think... Would you be kind to go ask him?";
 		completequest 8247;
 		setquest 8248;
-		set ep13_2_rhea,7;
+		ep13_2_rhea = 7;
 		close;
 	}
 	else if ((ep13_2_rhea > 6) && (ep13_2_rhea < 13)) {
@@ -4239,7 +4239,7 @@ mid_camp,147,256,3	script	Rune Midgarts Magician#1	4_M_JOB_WIZARD,{
 		mes "Assassins installed a trap to protect Gems as they bury them.";
 		completequest 8245;
 		setquest 8246;
-		set ep13_2_rhea,5;
+		ep13_2_rhea = 5;
 		close;
 	}
 	else if (ep13_2_rhea == 5) {
@@ -4270,7 +4270,7 @@ mid_camp,147,256,3	script	Rune Midgarts Magician#1	4_M_JOB_WIZARD,{
 				setquest 8247;
 				delitem 7575,1; //Red_Jewel_
 				delitem 7576,1; //Blue_Jewel_
-				set ep13_2_rhea,6;
+				ep13_2_rhea = 6;
 				close;
 			}
 			else {
@@ -4333,7 +4333,7 @@ mid_camp,147,256,3	script	Rune Midgarts Magician#1	4_M_JOB_WIZARD,{
 		mes "While you are gone, I will organize the data to put into the Gem.";
 		completequest 8249;
 		setquest 8250;
-		set ep13_2_rhea,9;
+		ep13_2_rhea = 9;
 		close;
 	}
 	else if (ep13_2_rhea == 9) {
@@ -4370,7 +4370,7 @@ mid_camp,147,256,3	script	Rune Midgarts Magician#1	4_M_JOB_WIZARD,{
 			completequest 8250;
 			setquest 8251;
 			delitem 6048,1; //Unidentified_Mineral
-			set ep13_2_rhea,10;
+			ep13_2_rhea = 10;
 			close;
 		}
 		else {
@@ -4408,7 +4408,7 @@ mid_camp,147,256,3	script	Rune Midgarts Magician#1	4_M_JOB_WIZARD,{
 			mes "- ^0000ff from Whisper !!^000000 -";
 			completequest 8251;
 			setquest 8252;
-			set ep13_2_rhea,11;
+			ep13_2_rhea = 11;
 			close;
 		}
 		else {
@@ -4573,7 +4573,7 @@ mid_camp,7,3,0	script	Translator Preparation#1	4_M_PAY_SOLDIER,{
 	mes "[EP13 Translator Quest Preparation]";
 	mes "First, you must confirm that you are my master.";
 	next;
-	set .@i, callfunc("F_GM_NPC",1854,0);
+	.@i = callfunc("F_GM_NPC",1854,0);
 	if (.@i == -1) {
 		mes "[EP 13 Translator Quest Preparation]";
 		mes "Cancelled";
@@ -4604,7 +4604,7 @@ mid_camp,7,3,0	script	Translator Preparation#1	4_M_PAY_SOLDIER,{
 			}
 			mes "[EP 13 Translator Quest Preparation]";
 			mes "Episode 13.1 - The Report Quest Reward Item Received.";
-			set ep13_1_edq,14;
+			ep13_1_edq = 14;
 			close;
 		case 2:
 			mes "[EP 13 Translator Quest Preparation]";
@@ -4692,7 +4692,7 @@ man_in01,372,221,5	script	Scientist#lifeguard	4_MAN_BENKUNI,{
 			mes "[Dr. Lifeguard]";
 			mes "I'll draw a result that can";
 			mes "satisfy his lead!";
-			set ep13_2_tre,1;
+			ep13_2_tre = 1;
 			close;
 		}
 		else if ((ep13_2_tre == 1) || (ep13_2_tre == 100)) {
@@ -4749,7 +4749,7 @@ man_in01,372,221,5	script	Scientist#lifeguard	4_MAN_BENKUNI,{
 				mes "Take it, it shold be";
 				mes "helpful in collecting";
 				mes "the minerals I need.";
-				set ep13_2_tre,atoi(.@rand_dayq$[2]);
+				ep13_2_tre = atoi(.@rand_dayq$[2]);
 				setquest 2179+(atoi(.@rand_dayq$[2])-2);
 				getitem 6076,1; //Portable_Toolbox
 				close;
@@ -4770,15 +4770,15 @@ man_in01,372,221,5	script	Scientist#lifeguard	4_MAN_BENKUNI,{
 				mes "[Dr. Lifeguard]";
 				mes "If you want to help my study for the sake of the Sapha, come to me at any time.";
 				mes "I will be very happy for any help you can give.";
-				set .@stone_chk,countitem(6077);
-				set .@stoneelse_chk,countitem(6078);
+				.@stone_chk = countitem(6077);
+				.@stoneelse_chk = countitem(6078);
 				delitem 6077,.@stone_chk; //Rough_Mineral
 				delitem 6078,.@stoneelse_chk; //Stone_Fragments
 				delitem 6076,1; //Portable_Toolbox
 				getitem 6080,3; //Manuk_Coin
 				getexp 0,(checkre(3))?50000:700000; //unconfirmed (RE)
 				changequest 2179+(ep13_2_tre-2),2182;
-				set ep13_2_tre,100;
+				ep13_2_tre = 100;
 				close;
 			}
 			else {
@@ -4805,9 +4805,9 @@ man_in01,372,221,5	script	Scientist#lifeguard	4_MAN_BENKUNI,{
 
 function	script	find_13_2	{
 	switch (getarg(0)) {
-		case 0: setarray .@check[0],2,10; set .@str$,"Mt. Mjolnir"; break;
-		case 1: setarray .@check[0],3,5; set .@str$,"Abyss Lake"; break;
-		case 2: setarray .@check[0],4,5; set .@str$,"Thor Volcano"; break;
+		case 0: setarray .@check[0],2,10; .@str$ = "Mt. Mjolnir"; break;
+		case 1: setarray .@check[0],3,5;  .@str$ = "Abyss Lake"; break;
+		case 2: setarray .@check[0],4,5;  .@str$ = "Thor Volcano"; break;
 	}
 	if (ep13_2_tre != .@check[0] || countitem(6076) != 1 || countitem(6077) >= .@check[1]) end;
 	mes "- Just arrived at "+.@str$+". I think I can find the mineral by using the Mineral Detector in the Portable Toolbox. -";
@@ -4878,7 +4878,7 @@ mjolnir_12,220,37,0	duplicate(mjo_no_find)	#mj12_find_3	-1,5,5
 				else {
 					mes "- You succeeded to mine minerals. -";
 					emotion e_ic,1;
-					set .@stst,rand(1,5);
+					.@stst = rand(1,5);
 					if (.@stst == 5) getitem 6077,5; //Rough_Mineral
 					else if (.@stst == 1) getitem 6077,1; //Rough_Mineral
 					else getitem 6077,2; //Rough_Mineral
@@ -5229,7 +5229,7 @@ OnTouch:
 				else {
 					mes "- You succeeded to mine minerals. -";
 					emotion e_ic,1;
-					set .@stst,rand(1,5);
+					.@stst = rand(1,5);
 					if (.@stst == 5) getitem 6077,5; //Rough_Mineral
 					else if (.@stst == 1) getitem 6077,2; //Rough_Mineral
 					else getitem 6077,1; //Rough_Mineral
@@ -5362,7 +5362,7 @@ OnTouch:
 				else {
 					mes "- You succeeded to mine minerals. -";
 					emotion e_ic,1;
-					set .@stst,rand(1,5);
+					.@stst = rand(1,5);
 					if (.@stst == 5) getitem 6077,5; //Rough_Mineral
 					else if (.@stst == 1) getitem 6077,2; //Rough_Mineral
 					else getitem 6077,1; //Rough_Mineral
@@ -5453,7 +5453,7 @@ spl_in01,30,324,3	script	High Laphine#grenouille	4_M_FAIRYKID5,{
 		if (!.@dayq_chk || .@dayq_chk == 2) {
 			if ((ep13_2_tre1 < 1) || (ep13_2_tre1 == 6)) {
 				erasequest 2186;
-				set ep13_2_tre1,0;
+				ep13_2_tre1 = 0;
 				mes "[Grenouille]";
 				mes "I've heard that some strangers from Rune Midgard are around here, it must be you.";
 				mes "I'm Grenouille, a scientist.";
@@ -5531,7 +5531,7 @@ spl_in01,30,324,3	script	High Laphine#grenouille	4_M_FAIRYKID5,{
 				mes "depending on the Splendide device,";
 				mes "but ^FF0000the way^000000 can fill";
 				mes "Splendide by it's scent like it never falls!";
-				set ep13_2_tre1,1;
+				ep13_2_tre1 = 1;
 				setquest 2183;
 				close;
 			}
@@ -5563,7 +5563,7 @@ spl_in01,30,324,3	script	High Laphine#grenouille	4_M_FAIRYKID5,{
 					mes "[Grenouille]";
 					mes "Would you please wait a while?";
 					changequest 2183,2184;
-					set ep13_2_tre1,4;
+					ep13_2_tre1 = 4;
 					delitem 6079,1; //Flower_Of_Alfheim
 					close;
 				}
@@ -5574,7 +5574,7 @@ spl_in01,30,324,3	script	High Laphine#grenouille	4_M_FAIRYKID5,{
 				}
 			}
 			else if (ep13_2_tre1 == 4) {
-				set .@ttalk,rand(1,10);
+				.@ttalk = rand(1,10);
 				if (.@ttalk < 8) {
 					mes "- clitter-clatter -";
 					next;
@@ -5616,7 +5616,7 @@ spl_in01,30,324,3	script	High Laphine#grenouille	4_M_FAIRYKID5,{
 					mes "Here, I'll give you this perfume,";
 					mes "help the exhausted soldiers and";
 					mes "let me know the result, please!";
-					set ep13_2_tre1,5;
+					ep13_2_tre1 = 5;
 					getitem 6082,5; //Spirit_Of_Alfheim
 					changequest 2184,2185;
 					close;
@@ -5640,7 +5640,7 @@ spl_in01,30,324,3	script	High Laphine#grenouille	4_M_FAIRYKID5,{
 					mes "This is my reward for you.";
 					mes "I hope this will be helpful to you.";
 					mes "If you have something to talk to me about, come to me whenever. Nice to meet you, human from Rune Midgard.";
-					set ep13_2_tre1,6;
+					ep13_2_tre1 = 6;
 					changequest 2185,2186;
 					getitem 6081,3; //Splendide_Coin
 					if (checkre(3) == 0)
@@ -5727,7 +5727,7 @@ spl_in02,139,65,3	script	Middle-Ranked Laphine#la	4_F_FAIRYKID3,{
 			mes "Umm.. But I don't have";
 			mes "any other seed of flower..";
 			mes "So, just bring this, here you are~";
-			set ep13_2_tre1,2;
+			ep13_2_tre1 = 2;
 			getitem 7193,1; //Germinating_Sprout
 			close;
 		}
@@ -5743,7 +5743,6 @@ spl_in02,139,65,3	script	Middle-Ranked Laphine#la	4_F_FAIRYKID3,{
 			mes "Can you believe that right in front of us is a battle field? Though it's very silent and peaceful at the moment. So do I~";
 			close;
 		}
-		
 	}
 	else {
 		mes "[Middle-Ranked Laphine]";
@@ -5767,7 +5766,7 @@ spl_in02,139,65,3	script	Middle-Ranked Laphine#la	4_F_FAIRYKID3,{
 			mes "a big flower of Alfheim was lied";
 			mes "in your hand, instead of the seed. -";
 			delitem 7193,1; //Germinating_Sprout
-			set ep13_2_tre1,3;
+			ep13_2_tre1 = 3;
 			getitem 6079,1; //Flower_Of_Alfheim
 			close;
 		}
@@ -6326,7 +6325,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 					next;
 					mes "[Bazett]";
 					mes "Hopefully I can find what I am looking for with the information you can find.";
-					set ep13_2_busut,2;
+					ep13_2_busut = 2;
 					setquest 11101;
 					close;
 				case 2:
@@ -6340,7 +6339,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 					next;
 					mes "[Industrious Man]";
 					mes "Well if you decide to change your mind, come back to me.";
-					set ep13_2_busut,1;
+					ep13_2_busut = 1;
 					close;
 				}
 				break;
@@ -6367,7 +6366,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 				next;
 				mes "[Bazett]";
 				mes "Hopefully I can find what I am looking for with the information you can find.";
-				set ep13_2_busut,2;
+				ep13_2_busut = 2;
 				setquest 11101;
 				close;
 			case 3:
@@ -6399,7 +6398,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 				next;
 				mes "[Industrious Man]";
 				mes "Well if you decide to change your mind, come back to me.";
-				set ep13_2_busut,1;
+				ep13_2_busut = 1;
 				close;
 			}
 		}
@@ -6475,7 +6474,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 			next;
 			mes "[Bazett]";
 			mes "Hopefully I can find what I am looking for with the information you can find.";
-			set ep13_2_busut,2;
+			ep13_2_busut = 2;
 			setquest 11101;
 			close;
 		case 2:
@@ -6500,11 +6499,11 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 		next;
 		mes "[Bazett]";
 		mes "Got it? Ok take care and see you soon.";
-		set ep13_2_busut,3;
-		set ep13_2_bs1,1;
-		set ep13_2_bs2,1;
-		set ep13_2_bs3,1;
-		set ep13_2_bs4,1;
+		ep13_2_busut = 3;
+		ep13_2_bs1 = 1;
+		ep13_2_bs2 = 1;
+		ep13_2_bs3 = 1;
+		ep13_2_bs4 = 1;
 		getitem 6074,1; //Bazett's_Order
 		changequest 11101,11102;
 		close;
@@ -6548,7 +6547,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 				mes "You must be tired, go take a rest.";
 				mes "I'll go prepare new notes.";
 				mes "You can just go investigate again for me.";
-				set ep13_2_busut,7;
+				ep13_2_busut = 7;
 				erasequest 11102;
 				setquest 11104;
 				close;
@@ -6581,7 +6580,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 				mes "Ah... this isn't much, but it's a coin that the giants use.";
 				mes "Maybe you can buy something from them with this.";
 				delitem 6074,1; //Bazett's_Order
-				set ep13_2_busut,7;
+				ep13_2_busut = 7;
 				if (ep13_2_bs1 == 3) getitem 6080,1; //Manuk_Coin
 				if (ep13_2_bs2 == 3) getitem 6080,1; //Manuk_Coin
 				if (ep13_2_bs3 == 3) getitem 6080,1; //Manuk_Coin
@@ -6688,7 +6687,7 @@ manuk,193,135,0	script	Worker#ep13bs	4_MAN_PIOM,{
 				next;
 				mes "[Gill]";
 				mes "Sorry, again for making you do this but I will be waiting here for you.";
-				set ep13_2_bs1,2;
+				ep13_2_bs1 = 2;
 				setquest 11105;
 				close;
 			}
@@ -6702,8 +6701,8 @@ manuk,193,135,0	script	Worker#ep13bs	4_MAN_PIOM,{
 					mes "It's all because of you, we are able to prevent anything disastrous.";
 					mes "^0000FFEven though you're also an alien race, but compared to the vile fairies^000000, I'm glad to have met someone like "+strcharinfo(0)+".";
 					delitem 6032,30; //Horn_Of_Hilsrion
-					set ep13_2_bs1,3;
-					set ep13_2_busut,4;
+					ep13_2_bs1 = 3;
+					ep13_2_busut = 4;
 					completequest 11105;
 					close;
 				}
@@ -6810,7 +6809,7 @@ manuk,193,135,0	script	Worker#ep13bs	4_MAN_PIOM,{
 				next;
 				mes "[Gill]";
 				mes "I'm really sorry, so please hurry.";
-				set ep13_2_bs1,2;
+				ep13_2_bs1 = 2;
 				setquest 11105;
 				close;
 			}
@@ -6824,7 +6823,7 @@ manuk,193,135,0	script	Worker#ep13bs	4_MAN_PIOM,{
 					mes "It's all because of you, we are able to prevent anything disastrous.";
 					mes "^0000FFEven though you're also an alien race, but compared to the vile fairies^000000, I'm glad to have met someone like "+strcharinfo(0)+".";
 					delitem 6032,30; //Horn_Of_Hilsrion
-					set ep13_2_bs1,3;
+					ep13_2_bs1 = 3;
 					completequest 11105;
 					close;
 				}
@@ -6910,8 +6909,8 @@ nyd_dun02,139,274,0	script	Strange Device#ep13_in	CLEAR_NPC,3,3,{
 				close;
 			}
 			else {
-				set $@08_ep13nydun02_in,1;
-				set .@way_loot,rand(1,2);
+				$@08_ep13nydun02_in = 1;
+				.@way_loot = rand(1,2);
 				if (.@way_loot == 1) {
 					donpcevent "ep13_warp_s1::OnEnable";
 					donpcevent "ep13_warp_11::OnEnable";
@@ -6940,7 +6939,7 @@ nyd_dun02,139,274,0	script	Strange Device#ep13_in	CLEAR_NPC,3,3,{
 
 OnTimer70000:
 	donpcevent "ep13_nd2f_mng::OnReset";
-	set $@08_ep13nydun02_in,0;
+	$@08_ep13nydun02_in = 0;
 	stopnpctimer;
 	end;
 
@@ -7290,7 +7289,7 @@ nyd_dun02,1,1,0	script	ep13_nd2f_mng	CLEAR_NPC,{
 		switch(select("Yes:No")) {
 		case 1:
 			donpcevent "ep13_nd2f_mng::OnReset";
-			set $@08_ep13nydun02_in,0;
+			$@08_ep13nydun02_in = 0;
 			mes "Done.";
 			close;
 		case 2:

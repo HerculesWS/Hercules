@@ -46,7 +46,7 @@
 	next;
 	cutin "sign_03",255;
 	cutin "sign_04",4;
-	if (!sign_q) set sign_q,1;
+	if (!sign_q) sign_q = 1;
 	mes "^3355FFClose^000000";
 	close2;
 	cutin "sign_04",255;
@@ -54,12 +54,11 @@
 
 OnInit:
 	// Remove old depreciated settings.
-	set $signbmps,0;
-	set $signmazemonster,0;
-	
+	$signbmps = 0;
+	$signmazemonster = 0;
 	// Set the time zone of the server.
 	// - Not official but seemed like a nice way to handle it.
-	set $timezonestring$,"^FF0000GMT^000000";
+	$timezonestring$ = "^FF0000GMT^000000";
 	end;
 }
 
@@ -108,7 +107,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 					mes "me your name? "+ strcharinfo(0) +"?";
 					mes "Okay then, I'll remember that.";
 					mes "Talk to you later, alright?";
-					set sign_q,2;
+					sign_q = 2;
 					break;
 				}
 			case 2:
@@ -154,7 +153,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 			mes "unless he knows them or";
 			mes "receives a message from me.";
 			mes "So if he's snubbed you in the past, just understand that's his way.";
-			set sign_q,3;
+			sign_q = 3;
 			break;
 		case 3:
 			mes "Hm...?";
@@ -290,7 +289,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		mes "skill for this task. Once";
 		mes "know right away. For now,";
 		mes "please hold on to these pieces.";
-		set sign_q,54;
+		sign_q = 54;
 		getitem 7177,1; //Part_Of_Star's_Sob
 	}
 	else if (sign_q == 54) {
@@ -363,7 +362,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		mes "Tower. There's someone I know";
 		mes "there who might just be up for";
 		mes "this task...";
-		set sign_q,72;
+		sign_q = 72;
 	}
 	else if (sign_q == 72) {
 		mes "Now that the";
@@ -441,7 +440,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 				mes "where he devotes his time";
 				mes "to his research. He may not";
 				mes "always be home though...";
-				set sign_q,77;
+				sign_q = 77;
 				next;
 				break;
 			case 3:
@@ -553,81 +552,81 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		mes "Please let me handle";
 		mes "this and come back later~";
 		delitem 7314,1; //The_Sign
-		set sign_q,138;
-		set .@stime_s,gettime(3);
-		if (.@stime_s < 1) set sign_sq,1;
-		else if (.@stime_s < 3) set sign_sq,2;
-		else if (.@stime_s < 5) set sign_sq,3;
-		else if (.@stime_s < 7) set sign_sq,4;
-		else if (.@stime_s < 9) set sign_sq,5;
-		else if (.@stime_s < 11) set sign_sq,6;
-		else if (.@stime_s < 13) set sign_sq,7;
-		else if (.@stime_s < 15) set sign_sq,8;
-		else if (.@stime_s < 17) set sign_sq,9;
-		else if (.@stime_s < 19) set sign_sq,10;
-		else if (.@stime_s < 21) set sign_sq,11;
-		else set sign_sq,12;
+		sign_q = 138;
+		.@stime_s = gettime(3);
+		if (.@stime_s < 1) sign_sq = 1;
+		else if (.@stime_s < 3) sign_sq = 2;
+		else if (.@stime_s < 5) sign_sq = 3;
+		else if (.@stime_s < 7) sign_sq = 4;
+		else if (.@stime_s < 9) sign_sq = 5;
+		else if (.@stime_s < 11) sign_sq = 6;
+		else if (.@stime_s < 13) sign_sq = 7;
+		else if (.@stime_s < 15) sign_sq = 8;
+		else if (.@stime_s < 17) sign_sq = 9;
+		else if (.@stime_s < 19) sign_sq = 10;
+		else if (.@stime_s < 21) sign_sq = 11;
+		else sign_sq = 12;
 	}
 	else if (sign_q == 138) {
-		set .@stime_s1,gettime(3);
+		.@stime_s1 = gettime(3);
 		if (.@stime_s1 < 1) {
 			if (sign_sq == 11) {
-				set .@pass_s,1;
+				.@pass_s = 1;
 			}
 		}
 		else if (.@stime_s1 < 3) {
 			if (sign_sq == 12) {
-				set .@pass_s,1;
+				.@pass_s = 1;
 			}
 		}
 		else if (.@stime_s1 < 5) {
 			if (sign_sq == 1) {
-				set .@pass_s,1;
+				.@pass_s = 1;
 			}
 		}
 		else if (.@stime_s1 < 7) {
 			if (sign_sq == 2) {
-				set .@pass_s,1;
+				.@pass_s = 1;
 			}
 		}
 		else if (.@stime_s1 < 9) {
 			if (sign_sq == 3) {
-				set .@pass_s,1;
+				.@pass_s = 1;
 			}
 		}
 		else if (.@stime_s1 < 11) {
 			if (sign_sq == 4) {
-				set .@pass_s,1;
+				.@pass_s = 1;
 			}
 		}
 		else if (.@stime_s1 < 13) {
 			if (sign_sq == 5) {
-				set .@pass_s,1;
+				.@pass_s = 1;
 			}
 		}
 		else if (.@stime_s1 < 15) {
 			if (sign_sq == 6) {
-				set .@pass_s,1;
+				.@pass_s = 1;
 			}
 		}
 		else if (.@stime_s1 < 17) {
 			if (sign_sq == 7) {
-				set .@pass_s,1;
+				.@pass_s = 1;
 			}
 		}
 		else if (.@stime_s1 < 19) {
 			if (sign_sq == 8) {
-				set .@pass_s,1;
+				.@pass_s = 1;
 			}
 		}
 		else if (.@stime_s1 < 21) {
 			if (sign_sq == 9) {
-				set .@pass_s,1;
+				.@pass_s = 1;
 			}
 		}
 		else {
 			if (sign_sq == 10) {
-				set .@pass_s,1;
+				.@pass_s = 1;
 			}
 		}
 		if (.@pass_s == 1) {
@@ -657,8 +656,8 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 			mes "this: Engel Howard,";
 			mes "Rune-Midgard's best";
 			mes "Blacksmith.";
-			set sign_q,139;
-			set sign_sq,0;
+			sign_q = 139;
+			sign_sq = 0;
 			getitem 7314,1; //The_Sign
 		}
 		else {
@@ -694,7 +693,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 			mes "[Metz]";
 			mes "You may have had your doubts,";
 			mes "but I'm happy enough to confirm that the Sign really exists. Thanks again, and I hope you stop by and chat from time to time.";
-			set sign_q,142;
+			sign_q = 142;
 			getexp (checkre(3))?200000:2000000,0;
 		}
 		else {
@@ -727,7 +726,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 				close;
 		}
 		delitem 7178,1; //Star's_Sob
-		set sign_q,202;
+		sign_q = 202;
 		getexp (checkre(3))?10000:100000,0;
 		getitem 617,1; //Old_Violet_Box
 	}
@@ -1262,7 +1261,7 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 			mes "Bring that and I'll";
 			mes "tell you what to";
 			mes "bring next.";
-			set sign_q,4;
+			sign_q = 4;
 			close;
 		case 3:
 			mes "[Arian]";
@@ -1312,7 +1311,7 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 			mes "Alright, that looks like";
 			mes "enough Fluff. Now, go and";
 			mes "get me ^FF000050 Poison Spores^000000.";
-			set sign_q,5;
+			sign_q = 5;
 			close;
 		case 5:
 			mes "[Arian]";
@@ -1343,7 +1342,7 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 			mes "got here with those";
 			mes "Poison Spores. Now, go";
 			mes "and get ^FF000030 Scorpion Tails^000000.";
-			set sign_q,6;
+			sign_q = 6;
 			close;
 		case 6:
 			mes "[Arian]";
@@ -1371,7 +1370,7 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 			mes "sweet time bringing over this";
 			mes "over this crap. Okay, now bring";
 			mes "^FF000020 Rotten Bandages^000000.";
-			set sign_q,7;
+			sign_q = 7;
 			close;
 		case 7:
 			mes "[Arian]";
@@ -1397,7 +1396,7 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 			mes "me ^FF000015 Little Evil Horn^000000. What";
 			mes "are you waiting for, a memo?";
 			mes "Get outta here~!";
-			set sign_q,8;
+			sign_q = 8;
 			close;
 		case 8:
 			mes "[Arian]";
@@ -1427,7 +1426,7 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 			mes "it tookyou to come back.";
 			mes "Now hurry it up and get";
 			mes "me ^FF000010 Coral Reefs^000000!";
-			set sign_q,9;
+			sign_q = 9;
 			close;
 		case 9:
 			mes "[Arian]";
@@ -1449,7 +1448,7 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 			mes "sure you're not trying to";
 			mes "cheat. God help you if you";
 			mes "try to pull a fast one on me...!";
-			set sign_q,10;
+			sign_q = 10;
 			close;
 		case 10:
 			mes "[Arian]";
@@ -1458,7 +1457,7 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 			mes "to the guy to my left.";
 			mes "The dude at the counter.";
 			mes "What's-his-face, Ganaan.";
-			set sign_q,11;
+			sign_q = 11;
 			close;
 		case 11:
 			mes "[Arian]";
@@ -1488,7 +1487,7 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 			mes "You're givin' Ganaan";
 			mes "a hard time. You hear";
 			mes "me? That's my job!";
-			set sign_q,11;
+			sign_q = 11;
 			close;
 		case 13:
 			mes "[Arian]";
@@ -1509,7 +1508,7 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 				else if (BaseLevel < 90) getexp 13000,0;
 				else getexp 18000,0;
 			}
-			set sign_q,14;
+			sign_q = 14;
 			getitem 7177,1; //Part_Of_Star's_Sob
 			close;
 		case 14:
@@ -1571,16 +1570,16 @@ morocc_in,114,162,4	script	Young Man#sign	2_M_THIEFMASTER,{
 		next;
 		switch(select("Look for fresh water.:Just wait for rescue.:Forage for food.:Explore the island.")) {
 		case 1:
-			set .@point_s,.@point_s+7;
+			.@point_s += 7;
 			break;
 		case 2:
-			set .@point_s,.@point_s+1;
+			.@point_s += 1;
 			break;
 		case 3:
-			set .@point_s,.@point_s+4;
+			.@point_s += 4;
 			break;
 		case 4:
-			set .@point_s,.@point_s+10;
+			.@point_s += 10;
 			break;
 		}
 		mes "[Gaanan]";
@@ -1592,16 +1591,16 @@ morocc_in,114,162,4	script	Young Man#sign	2_M_THIEFMASTER,{
 		next;
 		switch(select("Scream for help.:Stay quiet.:Wait for death to come.:Find a way out.")) {
 		case 1:
-			set .@point_s,.@point_s+3;
+			.@point_s += 3;
 			break;
 		case 2:
-			set .@point_s,.@point_s+7;
+			.@point_s += 7;
 			break;
 		case 3:
-			set .@point_s,.@point_s+1;
+			.@point_s += 1;
 			break;
 		case 4:
-			set .@point_s,.@point_s+7;
+			.@point_s += 7;
 			break;
 		}
 		mes "[Gaanan]";
@@ -1615,13 +1614,13 @@ morocc_in,114,162,4	script	Young Man#sign	2_M_THIEFMASTER,{
 		case 1:
 			break;
 		case 2:
-			set .@point_s,.@point_s+5;
+			.@point_s += 5;
 			break;
 		case 3:
-			set .@point_s,.@point_s+10;
+			.@point_s += 10;
 			break;
 		case 4:
-			set .@point_s,.@point_s+1;
+			.@point_s += 1;
 			break;
 		}
 		mes "[Ganaan]";
@@ -1632,19 +1631,19 @@ morocc_in,114,162,4	script	Young Man#sign	2_M_THIEFMASTER,{
 		next;
 		switch(select("Wait for the case to get solved.:Try to find my friends first.:Find a way out.:Solve the murder case on my own.:Kill the others before they kill me.")) {
 		case 1:
-			set .@point_s,.@point_s+5;
+			.@point_s += 5;
 			break;
 		case 2:
-			set .@point_s,.@point_s+7;
+			.@point_s += 7;
 			break;
 		case 3:
-			set .@point_s,.@point_s+3;
+			.@point_s += 3;
 			break;
 		case 4:
-			set .@point_s,.@point_s+1;
+			.@point_s += 1;
 			break;
 		case 5:
-			set .@point_s,.@point_s+1;
+			.@point_s += 1;
 			break;
 		}
 		mes "[Gaanan]";
@@ -1656,19 +1655,19 @@ morocc_in,114,162,4	script	Young Man#sign	2_M_THIEFMASTER,{
 		next;
 		switch(select("Wait to see the end.:Plant an apple tree.:Look to move to a different world.:What else? Save the world.:What else? Go on a crime spree.")) {
 		case 1:
-			set .@point_s,.@point_s+5;
+			.@point_s += 5;
 			break;
 		case 2:
-			set .@point_s,.@point_s+3;
+			.@point_s += 3;
 			break;
 		case 3:
-			set .@point_s,.@point_s+7;
+			.@point_s += 7;
 			break;
 		case 4:
-			set .@point_s,.@point_s+10;
+			.@point_s += 10;
 			break;
 		case 5:
-			set .@point_s,.@point_s+1;
+			.@point_s += 1;
 			break;
 		}
 		mes "[Gaanan]";
@@ -1678,8 +1677,8 @@ morocc_in,114,162,4	script	Young Man#sign	2_M_THIEFMASTER,{
 		mes "Sooo... Talk to him and";
 		mes "he'll let you know how";
 		mes "you did.";
-		if (.@point_s > 33) set sign_q,13;
-		else set sign_q,12;
+		if (.@point_s > 33) sign_q = 13;
+		else sign_q = 12;
 		close;
 	}
 	else if (sign_q < 14) {
@@ -1895,7 +1894,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 		}
 		next;
 		if (countitem(7177) > 0) {
-			set .@pay_point,1;
+			.@pay_point = 1;
 			mes "["+ strcharinfo(0) +"]";
 			mes "Sure...";
 			mes "But first, would you";
@@ -1937,7 +1936,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 				next;
 				switch(select("It's handy.:I actually don't know...")) {
 				case 1:
-					set .@pay_point,.@pay_point+2;
+					.@pay_point += 2;
 					mes "[Daewoon]";
 					emotion e_dots;
 					mes "Mmm...?";
@@ -1948,7 +1947,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 					next;
 					break;
 				case 2:
-					set .@pay_point,.@pay_point+4;
+					.@pay_point += 4;
 					emotion e_pif;
 					mes "[Daewoon]";
 					mes "Really?";
@@ -1969,7 +1968,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 				next;
 				break;
 			case 3:
-				set .@pay_point,.@pay_point+5;
+				.@pay_point += 5;
 				mes "[Daewoon]";
 				mes "Didn't Arian tell you";
 				mes "anything? I appreciate";
@@ -2002,7 +2001,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 			next;
 			switch(select("I'M READY! YEEAH!:I'll do my best!:To hell with this!:Fine. Let's get it over with.")) {
 			case 1:
-				set .@pay_point,.@pay_point+5;
+				.@pay_point += 5;
 				mes "[Daewoon]";
 				mes "Ooh~";
 				mes "Such unbridled";
@@ -2011,7 +2010,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 				next;
 				break;
 			case 2:
-				set .@pay_point,.@pay_point+7;
+				.@pay_point += 7;
 				emotion e_ok;
 				mes "[Daewoon]";
 				mes "Mwah ah hah!";
@@ -2024,7 +2023,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 				break;
 			case 3:
 				emotion e_an;
-				set .@pay_point,.@pay_point+2;
+				.@pay_point += 2;
 				mes "[Daewoon]";
 				mes "E...";
 				mes "Excuse me?";
@@ -2041,7 +2040,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 				next;
 				break;
 			case 4:
-				set .@pay_point,.@pay_point+4;
+				.@pay_point += 4;
 				emotion e_dots;
 				mes "[Daewoon]";
 				mes "Hmm. That kind of half-hearted";
@@ -2065,7 +2064,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 			next;
 			switch(select("Yes, I do.:I prefer soloing.:I am lonely.")) {
 			case 1:
-				set .@pay_point,.@pay_point+5;
+				.@pay_point += 5;
 				emotion e_omg;
 				mes "[Daewoon]";
 				mes "Oh, that's great~!";
@@ -2084,7 +2083,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 				next;
 				break;
 			case 2:
-				set .@pay_point,.@pay_point+4;
+				.@pay_point += 4;
 				mes "[Daewoon]";
 				mes "Well, everybody";
 				mes "needs to be alone once";
@@ -2102,7 +2101,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 				next;
 				break;
 			case 3:
-				set .@pay_point,.@pay_point+3;
+				.@pay_point += 3;
 				mes "[Daewoon]";
 				mes "You don't have any";
 				mes "friends at all? Well,";
@@ -2140,7 +2139,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 				next;
 				break;
 			case 2:
-				set .@pay_point,.@pay_point+5;
+				.@pay_point += 5;
 				mes "[Daewoon]";
 				mes "Really?";
 				mes "I do too!";
@@ -2166,7 +2165,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 				next;
 				break;
 			case 3:
-				set .@pay_point,.@pay_point+3;
+				.@pay_point += 3;
 				mes "[Daewoon]";
 				mes "At least you're honest.";
 				mes "But let me say that I cannot";
@@ -2216,7 +2215,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 			next;
 			switch(select("Destroy it!:I can't destroy such beauty...:I'd close my eyes, then destroy it.")) {
 			case 1:
-				set .@pay_point,.@pay_point+3;
+				.@pay_point += 3;
 				mes "[Daewoon]";
 				mes "Hmm. You have a truly";
 				mes "strong will. Then again,";
@@ -2233,13 +2232,13 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 				}
 				break;
 			case 2:
-				set .@pay_point,.@pay_point+5;
+				.@pay_point += 5;
 				mes "[Daewoon]";
 				mes "Ah yes! I felt you would answer that way! We must cherish and protect what is beautiful in this world. I would never be able to harm a Priestess, even in";
 				mes "statue form...";
 				break;
 			case 3:
-				set .@pay_point,.@pay_point+6;
+				.@pay_point += 6;
 				mes "[Daewoon]";
 				mes "Interesting...!";
 				mes "Although you cherish";
@@ -2276,14 +2275,14 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 			next;
 			switch(select("Yes, of course!:I'd pretend not to hear anything.:I'd make fun of him, then run off.")) {
 			case 1:
-				set .@pay_point,.@pay_point+6;
+				.@pay_point += 6;
 				mes "[Daewoon]";
 				mes "Ah, you would help him!";
 				mes "Good, good. I'm glad to see";
 				mes "that you understand that such pettiness should not get in the way of doing what is good and right.";
 				break;
 			case 2:
-				set .@pay_point,.@pay_point+5;
+				.@pay_point += 5;
 				mes "[Daewoon]";
 				mes "True, you're not really";
 				mes "obligated to help your";
@@ -2293,7 +2292,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 				mes "depend on his rival for help.";
 				break;
 			case 3:
-				set .@pay_point,.@pay_point+4;
+				.@pay_point += 4;
 				mes "[Daewoon]";
 				mes "Even though he is";
 				mes "your enemy, I still";
@@ -2364,7 +2363,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 				break;
 			}
 			if (.@pay_point > 29) {
-				set sign_q,15;
+				sign_q = 15;
 				getitem 7177,1; //Part_Of_Star's_Sob
 				if (checkre(3)) {
 					if (BaseLevel < 60) getexp 300,0;
@@ -2408,7 +2407,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 				close;
 			}
 			else if ((.@pay_point > 26) && (.@pay_point < 30)) {
-				set sign_q,15;
+				sign_q = 15;
 				getitem 7177,1; //Part_Of_Star's_Sob
 				if (checkre(3)) {
 					if (BaseLevel < 60) getexp 300,0;
@@ -2659,7 +2658,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 				mes "five hours part that's";
 				mes "hard. Now, let's see...";
 				next;
-				set sign_q,16;
+				sign_q = 16;
 				mes "[Sir Jore]";
 				mes "Just bring me";
 				mes "10 Empty Test Tubes,";
@@ -2699,7 +2698,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 				delitem 1092,10; //Empty_Cylinder
 				delitem 610,2; //Leaf_Of_Yggdrasil
 				delitem 511,10; //Green_Herb
-				set sign_q,17;
+				sign_q = 17;
 				emotion e_thx;
 				mes "[Sir Jore]";
 				mes "Ah! Th-thank you for";
@@ -2722,7 +2721,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 				mes "feeling that I need it to bring";
 				mes "my Biology research to the next step. This is how you'll help me.";
 				next;
-				set sign_q,17;
+				sign_q = 17;
 				mes "[Sir Jore]";
 				mes "I need you to investigate";
 				mes "this Stone of Sage by finding";
@@ -2809,7 +2808,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 				mes "Still, I'm so ashamed of";
 				mes "relying on a rumor...";
 				next;
-				set sign_q,20;
+				sign_q = 20;
 				getitem 7177,1; //Part_Of_Star's_Sob
 				mes "[Sir Jore]";
 				mes "Thank you very much";
@@ -3064,7 +3063,7 @@ prt_maze02,57,151,1	script	Pleur#warp	4_F_02,{
 	mes "to follow her and see if you can";
 	mes "learn more.^000000";
 	close2;
-	set .@warp_s,rand(1,10);
+	.@warp_s = rand(1,10);
 	if (.@warp_s < 5) warp "prt_maze02",11,146;
 	if (.@warp_s > 7) warp "prt_maze03",55,8;
 	if ((.@warp_s > 4) && (.@warp_s < 8)) warp "prt_maze01",62,129;
@@ -3079,7 +3078,7 @@ OnTouch:
 	mes "to follow her and see if you can";
 	mes "learn more.^000000";
 	close2;
-	set .@warp_s,rand(1,10);
+	.@warp_s = rand(1,10);
 	if (.@warp_s < 5) warp "prt_maze02",11,146;
 	if (.@warp_s > 7) warp "prt_maze03",55,8;
 	if ((.@warp_s > 4) && (.@warp_s < 8)) warp "prt_maze01",62,129;
@@ -3180,7 +3179,7 @@ prt_maze02,14,183,4	script	Gordon#sign	1_M_BARD,{
 			next;
 			switch(select("Roar~!:Excuse me.")) {
 			case 1:
-				set sign_q,18;
+				sign_q = 18;
 				donpcevent "#skill::OnEnable";
 				emotion e_omg;
 				donpcevent "Pleur#sign::OnOMG";
@@ -3218,7 +3217,7 @@ prt_maze02,14,183,4	script	Gordon#sign	1_M_BARD,{
 				next;
 				switch(select("Ask about Stone of Sage:Ask about Alchemy:Quit")) {
 				case 1:
-					set sign_q,19;
+					sign_q = 19;
 					mes "[Gordon]";
 					mes "Stone of Sage?";
 					mes "Huh. To be honest,";
@@ -3324,7 +3323,7 @@ prt_maze02,14,183,4	script	Gordon#sign	1_M_BARD,{
 		next;
 		switch(select("Ask about Stone of Sage:Ask about Alchemy:Quit")) {
 		case 1:
-			set sign_q,19;
+			sign_q = 19;
 			mes "[Gordon]";
 			mes "Stone of Sage?";
 			mes "Huh. To be honest,";
@@ -3555,7 +3554,7 @@ geffen_in,59,74,4	script	Jesqurienne#sign	1_F_SIGNZISK,{
 				mes "I believe I can be";
 				mes "of assistance.";
 				next;
-				set sign_q,21;
+				sign_q = 21;
 				emotion e_gg;
 				mes "[Jesqurienne]";
 				mes "Professor Aaron?";
@@ -3620,7 +3619,7 @@ geffen_in,59,74,4	script	Jesqurienne#sign	1_F_SIGNZISK,{
 		next;
 		switch(select("I can't let you win!:Darn it...")) {
 		case 1:
-			set sign_q,22;
+			sign_q = 22;
 			mes "[Jesqurienne]";
 			mes "You're a slow learner,";
 			mes "aren't you? Well, I welcome";
@@ -3662,7 +3661,7 @@ geffen_in,59,74,4	script	Jesqurienne#sign	1_F_SIGNZISK,{
 		mes "I will remember that.";
 		next;
 		mes "[Jesqurienne]";
-		set sign_q,25;
+		sign_q = 25;
 		getitem 7177,1; //Part_Of_Star's_Sob
 		mes "Here...";
 		mes "My old friend, Metz, told";
@@ -3731,7 +3730,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 		mes "use questions that I use";
 		mes "in teaching my class.";
 		next;
-		set sign_q,22;
+		sign_q = 22;
 		mes "[Aaron]";
 		mes "Alright...";
 		mes "I'm almost finished";
@@ -3747,14 +3746,14 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "not relevant to the";
 			mes "Blacksmith Job Quest?";
 			next;
-			if (select("Baisulist:Wickebine:Barcardi:Krongast") == 3) set .@user_p,.@user_p+1;
+			if (select("Baisulist:Wickebine:Barcardi:Krongast") == 3) .@user_p += 1;
 			break;
 		case 2:
 			mes "1. Which item is not";
 			mes "relevant to the creation";
 			mes "of a Counteragent?";
 			next;
-			if (select("Karvodailnirol:Detrimindexta:Alcohol") != 1) set .@user_p,.@user_p+1;
+			if (select("Karvodailnirol:Detrimindexta:Alcohol") != 1) .@user_p += 1;
 			break;
 		case 3:
 			mes "1. Choose the";
@@ -3762,7 +3761,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "a different size";
 			mes "than the others.";
 			next;
-			if (select("Giant Whisper:Marine:Cornutus:Kobold Archer") == 2) set .@user_p,.@user_p+1;
+			if (select("Giant Whisper:Marine:Cornutus:Kobold Archer") == 2) .@user_p += 1;
 			break;
 		}
 		if (rand(1,10) < 9 ) {
@@ -3771,7 +3770,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "Heh heh...";
 			mes "The first question";
 			mes "is always too easy!";
-			set .@npc_p,.@npc_p+1;
+			++.@npc_p;
 		}
 		else {
 			donpcevent "Jesqurienne#sign::OnOmg";
@@ -3789,7 +3788,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "B.S. Sacramenti from the";
 			mes "ones displayed in the list.";
 			next;
-			if (select("Lex Divina:Gloria:Recovery:Sanctuary") == 2) set .@user_p,.@user_p+1;
+			if (select("Lex Divina:Gloria:Recovery:Sanctuary") == 2) .@user_p += 1;
 			break;
 		case 2:
 			mes "[Aaron]";
@@ -3797,7 +3796,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "is not related to the creation";
 			mes "of a Condensed White Potion.";
 			next;
-			if (select("Medicine Bowl:Witch Starsand:Empty Bottle:Empty Potion Bottle") == 3) set .@user_p,.@user_p+1;
+			if (select("Medicine Bowl:Witch Starsand:Empty Bottle:Empty Potion Bottle") == 3) .@user_p += 1;
 			break;
 		case 3:
 			mes "[Aaron]";
@@ -3805,7 +3804,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "necessary for a Blacksmith";
 			mes "to create a Gladius.";
 			next;
-			if (select("Sapphire:Zircon:Topaz:Cursed Ruby") == 1) set .@user_p,.@user_p+1;
+			if (select("Sapphire:Zircon:Topaz:Cursed Ruby") == 1) .@user_p += 1;
 			break;
 		}
 		if (rand(1,10) < 8 ) {
@@ -3815,7 +3814,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "I know the answer.";
 			mes "Any fool should know";
 			mes "this. But do you?";
-			set .@npc_p,.@npc_p+1;
+			++.@npc_p;
 		}
 		else {
 			donpcevent "Jesqurienne#sign::OnOmg";
@@ -3834,7 +3833,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "unrelated to the";
 			mes "Mage's Bolt type skills.";
 			next;
-			if (select("Water:Earth:Fire:Wind") == 2) set .@user_p,.@user_p+1;
+			if (select("Water:Earth:Fire:Wind") == 2) .@user_p += 1;
 			break;
 		case 2:
 			mes "[Aaron]";
@@ -3842,7 +3841,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "Bunny Band's DEF";
 			mes "and its added ability?";
 			next;
-			if (select("1 / LUK +2:1 / LUK +5:2 / LUK +2:2 / LUK +5") == 3) set .@user_p,.@user_p+1;
+			if (select("1 / LUK +2:1 / LUK +5:2 / LUK +2:2 / LUK +5") == 3) .@user_p += 1;
 			break;
 		case 3:
 			mes "[Aaron]";
@@ -3851,7 +3850,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "matched with its Monster";
 			mes "Card name.";
 			next;
-			if (select("Hornet Card - Martyr:Requiem - Chaos:Wormtail - Clever:Golem - Immortal") == 4) set .@user_p,.@user_p+1;
+			if (select("Hornet Card - Martyr:Requiem - Chaos:Wormtail - Clever:Golem - Immortal") == 4) .@user_p += 1;
 			break;
 		}
 		if (rand(1,10) < 8 ) {
@@ -3860,7 +3859,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "Ah...";
 			mes "That's another";
 			mes "point for me!";
-			set .@npc_p,.@npc_p+1;
+			++.@npc_p;
 		}
 		else {
 			donpcevent "Jesqurienne#sign::OnOmg";
@@ -3911,7 +3910,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "name of the ruler of the";
 			mes "Rune-Midgarts Kingdom.";
 			next;
-			if (select("Tristan lll:Tristram lll:Tristar lll:Trust lll") == 2) set .@user_p,.@user_p+1;
+			if (select("Tristan lll:Tristram lll:Tristar lll:Trust lll") == 2) .@user_p += 1;
 			break;
 		case 2:
 			mes "[Aaron]";
@@ -3919,7 +3918,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "that is a different type";
 			mes "than the others.";
 			next;
-			if (select("Penomena:Hatii:Pest:Explosion") == 1) set .@user_p,.@user_p+1;
+			if (select("Penomena:Hatii:Pest:Explosion") == 1) .@user_p += 1;
 			break;
 		}
 		if (rand(1,10) < 8 ) {
@@ -3928,7 +3927,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "That counts as";
 			mes "a question? You're";
 			mes "being too easy!";
-			set .@npc_p,.@npc_p+1;
+			++.@npc_p;
 		}
 		else {
 			donpcevent "Jesqurienne#sign::OnOmg";
@@ -3971,14 +3970,14 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "which does not drop the";
 			mes "'Yggdrasil Leaf' item.";
 			next;
-			if (select("Marduk:Baphomet Jr.:Angeling:Wanderer") == 1) set .@user_p,.@user_p+1;
+			if (select("Marduk:Baphomet Jr.:Angeling:Wanderer") == 1) .@user_p += 1;
 			break;
 		case 2:
 			mes "[Aaron]";
 			mes "5. Choose the job class";
 			mes "that cannot equip Silk Robe.";
 			next;
-			if (select("Swordman:Merchant:Hunter:Mage") == 3) set .@user_p,.@user_p+1;
+			if (select("Swordman:Merchant:Hunter:Mage") == 3) .@user_p += 1;
 			break;
 		case 3:
 			mes "[Aaron]";
@@ -3986,10 +3985,10 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "requirement for entering";
 			mes "the PvP Room.";
 			next;
-			if (select("30:31:32:33") == 2) set .@user_p,.@user_p+1;
+			if (select("30:31:32:33") == 2) .@user_p += 1;
 			break;
 		}
-		set zis_5,rand(1,10);
+		zis_5 = rand(1,10);
 		if (rand(1,10) < 9 ) {
 			donpcevent "Jesqurienne#sign::OnHo";
 			mes "[Jesqurienne]";
@@ -3998,7 +3997,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "to know the answer.";
 			mes "Are you still thinking?";
 			mes "I wouldn't think you'd know!";
-			set .@npc_p,.@npc_p+1;
+			++.@npc_p;
 		}
 		else {
 			donpcevent "Jesqurienne#sign::OnOmg";
@@ -4040,7 +4039,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "correct weight";
 			mes "for 1 Empty Bottle?";
 			next;
-			if (select("1:2:3") == 2) set .@user_p,.@user_p+1;
+			if (select("1:2:3") == 2) .@user_p += 1;
 			break;
 		case 2:
 			mes "[Aaron]";
@@ -4048,7 +4047,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "correct DEF for";
 			mes "the Indian Filet item.";
 			next;
-			if (select("0:1:2:3") == 4) set .@user_p,.@user_p+1;
+			if (select("0:1:2:3") == 4) .@user_p += 1;
 			break;
 		case 3:
 			mes "[Aaron]";
@@ -4056,7 +4055,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "city closest to";
 			mes "Turtle Island?";
 			next;
-			if (select("Al De Baran:Alberta:Comodo:Izlude") == 2) set .@user_p,.@user_p+1;
+			if (select("Al De Baran:Alberta:Comodo:Izlude") == 2) .@user_p += 1;
 			break;
 		}
 		if (rand(1,10) < 9 ) {
@@ -4066,7 +4065,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "Simple questions,";
 			mes "simple answers.";
 			mes "Did you get it?";
-			set .@npc_p,.@npc_p+1;
+			++.@npc_p;
 		}
 		else {
 			donpcevent "Jesqurienne#sign::OnOmg";
@@ -4108,20 +4107,20 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "by fifteen, divided by three,";
 			mes "plus five is equal to...?";
 			next;
-			if (select("250:255:260:265") == 3) set .@user_p,.@user_p+1;
+			if (select("250:255:260:265") == 3) .@user_p += 1;
 			break;
 		case 2:
 			mes "[Aaron]";
 			mes "7. Four thousand five hundred sixty divided by four, divided by two, plus three is equal to...?";
 			next;
-			if (select("573:574:575:576") == 1) set .@user_p,.@user_p+1;
+			if (select("573:574:575:576") == 1) .@user_p += 1;
 			break;
 		case 3:
 			mes "[Aaron]";
 			mes "7. Three thousand one hundred";
 			mes "two added to five hundred, plus four, divided by six equals...";
 			next;
-			if (select("600:601:602") == 2) set .@user_p,.@user_p+1;
+			if (select("600:601:602") == 2) .@user_p += 1;
 			break;
 		}
 		if (rand(1,10) < 9 ) {
@@ -4132,7 +4131,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "a veritable";
 			mes "calculator!";
 			mes "Ho ho ho~!";
-			set .@npc_p,.@npc_p+1;
+			++.@npc_p;
 		}
 		else {
 			donpcevent "Jesqurienne#sign::OnOmg";
@@ -4178,7 +4177,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "that is the closest to the";
 			mes "Item Upgrade Place in Juno.";
 			next;
-			if (select("Tavern:Monster Library:Tool Shop:Weapon Shop") == 4) set .@user_p,.@user_p+1;
+			if (select("Tavern:Monster Library:Tool Shop:Weapon Shop") == 4) .@user_p += 1;
 			break;
 		case 2:
 			mes "[Aaron]";
@@ -4186,7 +4185,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "Trap skill which does not";
 			mes "inflict Property Damage.";
 			next;
-			if (select("Claymore Trap:Freezing Trap:Shockwave Trap:Land Mine") == 3) set .@user_p,.@user_p+1;
+			if (select("Claymore Trap:Freezing Trap:Shockwave Trap:Land Mine") == 3) .@user_p += 1;
 			break;
 		}
 		if ( rand(1,10) < 9 ) {
@@ -4195,7 +4194,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "Hah hah~!";
 			mes "That was a";
 			mes "piece of cake!";
-			set .@npc_p,.@npc_p+1;
+			++.@npc_p;
 		}
 		else {
 			donpcevent "Jesqurienne#sign::OnOmg";
@@ -4239,7 +4238,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "receive the most damage";
 			mes "from a Fire Property Dagger?";
 			next;
-			if (select("Dagger Goblin:Mace Goblin:Morning Star Goblin:Hammer Goblin") == 4) set .@user_p,.@user_p+1;
+			if (select("Dagger Goblin:Mace Goblin:Morning Star Goblin:Hammer Goblin") == 4) .@user_p += 1;
 			break;
 		case 2:
 			mes "[Aaron]";
@@ -4247,7 +4246,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "on which the Mage skill,";
 			mes "''Stone Curse,'' is ineffective. ^FFFFFFaaaaaa aaaaaaa aaaaaa aaaaaaa aaaaaaaaa^000000";
 			next;
-			if (select("Elder Willow:Evil Druid:Magnolia:Marc") == 2) set .@user_p,.@user_p+1;
+			if (select("Elder Willow:Evil Druid:Magnolia:Marc") == 2) .@user_p += 1;
 			break;
 		}
 		if ( rand(1,10) < 9 ) {
@@ -4257,7 +4256,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "I'm just breezing";
 			mes "through this Quiz Challenge!";
 			mes "Aren't you having a hard time?";
-			set .@npc_p,.@npc_p+1;
+			++.@npc_p;
 		}
 		else {
 			donpcevent "Jesqurienne#sign::OnOmg";
@@ -4297,7 +4296,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "that looks different";
 			mes "than all the others.";
 			next;
-			if (select("Prontera Hollgrehenn:Prontera Doll Merchant:Izlude Meat Merchant:Morroc Meat Merchant") == 3) set .@user_p,.@user_p+1;
+			if (select("Prontera Hollgrehenn:Prontera Doll Merchant:Izlude Meat Merchant:Morroc Meat Merchant") == 3) .@user_p += 1;
 			break;
 		case 2:
 			mes "[Aaron]";
@@ -4305,7 +4304,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "that cannot be equipped";
 			mes "by Novice class characters.";
 			next;
-			if (select("Funeral Hat:Shackles:Wooden Mail:Pantie") == 3) set .@user_p,.@user_p+1;
+			if (select("Funeral Hat:Shackles:Wooden Mail:Pantie") == 3) .@user_p += 1;
 			break;
 		}
 		if ( rand(1,10) < 9 ) {
@@ -4314,7 +4313,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "As usual, I got";
 			mes "the last question";
 			mes "absolutely right~";
-			set .@npc_p,.@npc_p+1;
+			++.@npc_p;
 		}
 		else {
 			donpcevent "Jesqurienne#sign::OnOmg";
@@ -4341,7 +4340,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 		mes ""+.@npc_p+" points!";
 		next;
 		if (.@npc_p > .@user_p) {
-			set sign_q,23;
+			sign_q = 23;
 			emotion e_gg;
 			mes "[Jesqurienne]";
 			mes "Bwahahaha!";
@@ -4349,7 +4348,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "Ho ho ho ho ho ho~";
 		}
 		else if (.@npc_p == .@user_p) {
-			set sign_q,24;
+			sign_q = 24;
 			mes "[Jesqurienne]";
 			mes "Tied?! ";
 			mes "Alright, I'm impressed.";
@@ -4357,7 +4356,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "smarter than I thought...";
 		}
 		else {
-			set sign_q,24;
+			sign_q = 24;
 			mes "[Jesqurienne]";
 			mes "No...!";
 			mes "I can't...";
@@ -4484,7 +4483,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 				mes "of the fee as a preliminary";
 				mes "for my test. You know, to";
 				mes "weed out the riffraff.";
-				set sign_q,26;
+				sign_q = 26;
 				close;
 			}
 		case 2:
@@ -4519,7 +4518,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 				mes "alright! Okay, come back";
 				mes "to me tomorrow night and";
 				mes "we'll start your test...";
-				set sign_q,27;
+				sign_q = 27;
 				Zeny -= 30000;
 			}
 			close;
@@ -4547,7 +4546,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 			mes "business. I guess I gotta keep";
 			mes "this promise to him, so when";
 			mes "you're ready, say the word.";
-			set sign_q,28;
+			sign_q = 28;
 			close;
 		}
 		else {
@@ -4586,7 +4585,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 		mes "standin' around";
 		mes "waiting for? Bring";
 		mes "those collection items!";
-		set sign_q,29;
+		sign_q = 29;
 		close;
 	}
 	else if (sign_q < 35) {
@@ -4595,21 +4594,21 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 			mes "Ah, so is this";
 			mes "the stuff you brought?";
 			mes "Lemme take a look-see...";
-			if (countitem(734)) set .@diaris_t,.@diaris_t+1;
-			if (countitem(735)) set .@diaris_t,.@diaris_t+1;
-			if (countitem(736)) set .@diaris_t,.@diaris_t+1;
-			if (countitem(7149)) set .@diaris_t,.@diaris_t+1;
-			if (countitem(747)) set .@diaris_t,.@diaris_t+2;
-			if (countitem(749)) set .@diaris_t,.@diaris_t+4;
-			if (countitem(740)) set .@diaris_t,.@diaris_t+1;
-			if (countitem(741)) set .@diaris_t,.@diaris_t+1;
-			if (countitem(742)) set .@diaris_t,.@diaris_t+2;
-			if (countitem(743)) set .@diaris_t,.@diaris_t+3;
-			if (countitem(752)) set .@diaris_t,.@diaris_t+3;
-			if (countitem(753)) set .@diaris_t,.@diaris_t+4;
-			if (countitem(754)) set .@diaris_t,.@diaris_t+4;
-			if (countitem(750)) set .@diaris_t,.@diaris_t+7;
-			if (countitem(751)) set .@diaris_t,.@diaris_t+7;
+			if (countitem(734)) .@diaris_t += 1;
+			if (countitem(735)) .@diaris_t += 1;
+			if (countitem(736)) .@diaris_t += 1;
+			if (countitem(7149)) .@diaris_t += 1;
+			if (countitem(747)) .@diaris_t += 2;
+			if (countitem(749)) .@diaris_t += 4;
+			if (countitem(740)) .@diaris_t += 1;
+			if (countitem(741)) .@diaris_t += 1;
+			if (countitem(742)) .@diaris_t += 2;
+			if (countitem(743)) .@diaris_t += 3;
+			if (countitem(752)) .@diaris_t += 3;
+			if (countitem(753)) .@diaris_t += 4;
+			if (countitem(754)) .@diaris_t += 4;
+			if (countitem(750)) .@diaris_t += 7;
+			if (countitem(751)) .@diaris_t += 7;
 			next;
 			if (.@diaris_t > 10) {
 				mes "[Dearles]";
@@ -4639,7 +4638,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 				if (countitem(754)) delitem 754,1; //Raccoondog_Doll
 				if (countitem(750)) delitem 750,1; //Baphomet_Doll
 				if (countitem(751)) delitem 751,1; //Osiris_Doll
-				set sign_q,30;
+				sign_q = 30;
 				if (checkre(3)) {
 					if (BaseLevel < 60) getexp 300,0;
 					else if (BaseLevel < 70) getexp 500,0;
@@ -4729,7 +4728,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 			mes "of Sobbing Starlight and";
 			mes "go find someone named,";
 			mes "um, ''Bakerlan'' in Alberta.";
-			set sign_q,35;
+			sign_q = 35;
 			getitem 7177,1; //Part_Of_Star's_Sob
 			if (checkre(3)) {
 				if (BaseLevel < 60) getexp 300,0;
@@ -4766,7 +4765,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 			mes "of Sobbing Starlight and";
 			mes "go find someone named,";
 			mes "um, ''Bakerlan'' in Alberta.";
-			set sign_q,35;
+			sign_q = 35;
 			getitem 7177,1; //Part_Of_Star's_Sob
 			Zeny += 20000;
 			if (checkre(3)) {
@@ -4906,7 +4905,7 @@ cmd_in01,33,25,5	script	Examiner#sign	4_F_07,{
 		close;
 	}
 	else if (sign_q == 31) {
-		set sign_q,30;
+		sign_q = 30;
 		mes "Please click on the";
 		mes "Chat Room to enter the";
 		mes "Standby Room. When it's";
@@ -4946,7 +4945,7 @@ cmd_in01,33,25,5	script	Examiner#sign	4_F_07,{
 		mes "try again whenever";
 		mes "you want, alright?";
 		mes "Thank you~";
-		set sign_q,30;
+		sign_q = 30;
 		close;
 	}
 	else if (sign_q == 33) {
@@ -5159,11 +5158,11 @@ OnDisable:
 	end;
 
 OnUp:
-	set .s_up,.s_up + 1;
+	++.s_up;
 	end;
 
 OnReset:
-	set .s_up,0;
+	.s_up = 0;
 	end;
 
 OnTouch:
@@ -5215,11 +5214,11 @@ OnDisable:
 	end;
 
 OnUp:
-	set .s_down,.s_down + 1;
+	++.s_down;
 	end;
 
 OnReset:
-	set .s_down,0;
+	.s_down = 0;
 	end;
 
 OnTouch:
@@ -5292,11 +5291,11 @@ OnDisable:
 	end;
 
 OnUp:
-	set .s_left,.s_left + 1;
+	++.s_left;
 	end;
 
 OnReset:
-	set .s_left,0;
+	.s_left = 0;
 	end;
 
 OnTouch:
@@ -5360,11 +5359,11 @@ OnDisable:
 	end;
 
 OnUp:
-	set .s_right,.s_right + 1;
+	++.s_right;
 	end;
 
 OnReset:
-	set .s_right,0;
+	.s_right = 0;
 	end;
 
 OnTouch:
@@ -5432,13 +5431,13 @@ OnDisable:
 	//specialeffect EF_SUMMONSLAVE;
 	disablenpc "s_dance#cen";
 	end;
-	
+
 OnUp:
-	set .s_center,.s_center + 1;
+	++.s_center;
 	end;
 
 OnReset:
-	set .s_center,0;
+	.s_center = 0;
 	end;
 
 OnTouch:
@@ -5474,17 +5473,17 @@ OnInit:
 OnTouch:
 	if (.s_check < 30) {
 		if (sign_q == 30) {
-			set sign_q,32;
+			sign_q = 32;
 		}
 	}
 	else if (.s_check < 34) {
 		if (sign_q == 30) {
-			set sign_q,33;
+			sign_q = 33;
 		}
 	}
 	else if (.s_check == 34) {
 		if (sign_q == 30) {
-			set sign_q,34;
+			sign_q = 34;
 		}
 	}
 	warp "cmd_in01",29,33;
@@ -5492,11 +5491,11 @@ OnTouch:
 	end;
 
 OnUp:
-	set .s_check,.s_check + 1;
+	++.s_check;
 	end;
 
 OnDisable:
-	set .s_check,0;
+	.s_check = 0;
 	disablenpc "Examiner#sd";
 	end;
 }
@@ -5534,7 +5533,7 @@ alberta_in,125,101,5	script	Wealthy-looking Merchant	1_M_SIGNMCNT,{
 			mes "Unfortunately I am kind of busy...";
 			mes "will you please come back later?";
 			mes "Thank you.";
-			set sign_q,36;
+			sign_q = 36;
 			close;
 		}
 	}
@@ -5573,7 +5572,7 @@ alberta_in,125,101,5	script	Wealthy-looking Merchant	1_M_SIGNMCNT,{
 				mes "[Bakerlan]";
 				mes "First, I wish for you to make";
 				mes "a delivery. The object I want you to deliver is expensive and must be handled with care. Don't lose it or you will fail. Now, speak to my steward for more information.";
-				set sign_q,37;
+				sign_q = 37;
 				close;
 			}
 			else {
@@ -5602,7 +5601,7 @@ alberta_in,125,101,5	script	Wealthy-looking Merchant	1_M_SIGNMCNT,{
 		mes "has another assignment for";
 		mes "for you to complete. So";
 		mes "please talk to him again.";
-		set sign_q,41;
+		sign_q = 41;
 		close;
 	}
 	else if (sign_q < 52) {
@@ -5638,7 +5637,7 @@ alberta_in,125,101,5	script	Wealthy-looking Merchant	1_M_SIGNMCNT,{
 		mes "I am the last one who tested your qualification.";
 		mes "Now bring all of the stone pieces to Metz.";
 		mes "He will tell you what you need to do next.";
-		set sign_q,53;
+		sign_q = 53;
 		getitem 7177,1; //Part_Of_Star's_Sob
 		if (checkre(3)) {
 			if (BaseLevel < 60) getexp 500,0;
@@ -5734,7 +5733,7 @@ alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 		mes "I was just thinking";
 		mes "about something. I hope";
 		mes "I didn't bother you. ^333333*Sigh*^000000";
-		set sign_q,43;
+		sign_q = 43;
 		close;
 	}
 	else if (sign_q < 51) {
@@ -5795,7 +5794,7 @@ alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 						mes "understand. I'm";
 						mes "very sorry to bother";
 						mes "you with my problems.";
-						set sign_q,44;
+						sign_q = 44;
 						close;
 					case 2:
 						mes "[Seylin]";
@@ -5804,7 +5803,7 @@ alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 						mes "If you can help";
 						mes "me, I'd really";
 						mes "appreciate it~";
-						set sign_q,45;
+						sign_q = 45;
 						close;
 					case 3:
 						mes "[Seylin]";
@@ -5822,7 +5821,7 @@ alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 						mes "it makes men feel young again.";
 						mes "So that must be good, right?";
 						mes "Thanks again for your help~";
-						set sign_q,46;
+						sign_q = 46;
 						close;
 					}
 				}
@@ -5861,7 +5860,7 @@ alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 				mes "it makes men feel young again.";
 				mes "So that must be good, right?";
 				mes "Thanks again for your help~";
-				set sign_q,46;
+				sign_q = 46;
 				close;
 			}
 		case 45:
@@ -5895,7 +5894,7 @@ alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 				mes "it makes men feel young again.";
 				mes "So that must be good, right?";
 				mes "Thanks again for your help~";
-				set sign_q,46;
+				sign_q = 46;
 				close;
 			}
 		case 46:
@@ -5940,7 +5939,7 @@ alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 				mes "him this letter, so would";
 				mes "you also make sure he gets";
 				mes "this? Thank you so much!";
-				set sign_q,49;
+				sign_q = 49;
 				getitem 7183,1; //Sister_Letter
 				close;
 			}
@@ -5957,7 +5956,7 @@ alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 			mes "I want you to have this";
 			mes "as a token of my gratitude.";
 			mes "You really are a kind person~";
-			set sign_q,51;
+			sign_q = 51;
 			getitem 525,3; //Panacea
 			next;
 			emotion e_kis2;
@@ -6082,7 +6081,7 @@ prt_castle,107,58,5	script	Soldier#s11	8W_SOLDIER,{
 			mes "but no one will say anything.";
 			delitem 7044,1; //Vigorgra
 			delitem 7183,1; //Sister_Letter
-			set sign_q,50;
+			sign_q = 50;
 			percentheal 100,100;
 			next;
 			mes "[Maruin]";
@@ -6220,7 +6219,7 @@ alde_alche,169,162,7	script	Alchemist#sign	4_M_ALCHE_B,{
 				mes "bring all those";
 				mes "items to me. I'll";
 				mes "be seeing you later.";
-				set sign_q,47;
+				sign_q = 47;
 				close;
 			}
 		case 2:
@@ -6346,7 +6345,7 @@ alde_alche,169,162,7	script	Alchemist#sign	4_M_ALCHE_B,{
 						delitem 520,1; //Leaflet_Of_Hinal
 						delitem 708,1; //Ment
 						delitem 713,1; //Empty_Bottle
-						set sign_q,48;
+						sign_q = 48;
 						getitem 7044,1; //Vigorgra
 						mes "[Melkaba]";
 						mes "Um, just remember";
@@ -6481,7 +6480,7 @@ alberta_in,114,178,5	script	Refined Steward	4_M_MANAGER,{
 		mes "^3355FFMahatra gives you";
 		mes "a unique stone that has";
 		mes "your name attached to it.^000000";
-		set sign_q,38;
+		sign_q = 38;
 		getnameditem 7049,strcharinfo(0);
 		close;
 	}
@@ -6502,7 +6501,7 @@ alberta_in,114,178,5	script	Refined Steward	4_M_MANAGER,{
 		mes "message to the master, so";
 		mes "please visit him later.";
 		delitem 7181,1; //Receipt_01
-		set sign_q,40;
+		sign_q = 40;
 		close;
 	}
 	else if (sign_q == 40) {
@@ -6532,7 +6531,7 @@ alberta_in,114,178,5	script	Refined Steward	4_M_MANAGER,{
 			mes "leave me any instructions.";
 			mes "Hmmm. Oh, I know what you can";
 			mes "do! Why don't you help ^FF0000Seylin^000000? She seems bothered by something...";
-			set sign_q,42;
+			sign_q = 42;
 			close;
 		}
 	}
@@ -6556,7 +6555,7 @@ alberta_in,114,178,5	script	Refined Steward	4_M_MANAGER,{
 		mes "Mahatra]";
 		mes "If there is anything else, he will let you pass the test.";
 		mes "Good luck.";
-		set sign_q,52;
+		sign_q = 52;
 		close;
 	}
 	else if (sign_q == 98) {
@@ -6820,11 +6819,11 @@ yuno,330,100,4	script	Knight#ss	4_M_JOB_KNIGHT2,{
 			}
 		}
 		else {
-			set .@signid,getcharid(0,strcharinfo(0));
-			set .@sign3, .@signid & 65535;
-			set .@sign4, .@signid >> 16;
-			set .@sign1,254;
-			set .@sign2,0;
+			.@signid = getcharid(0,strcharinfo(0));
+			.@sign3 = .@signid & 65535;
+			.@sign4 = .@signid >> 16;
+			.@sign1 = 254;
+			.@sign2 = 0;
 			if (!countitem2(7049,1,0,0,.@sign1,.@sign2,.@sign3,.@sign4)) {
 				mes "Hm...?";
 				mes "There must be some";
@@ -6852,7 +6851,7 @@ yuno,330,100,4	script	Knight#ss	4_M_JOB_KNIGHT2,{
 				mes "a good job for me.";
 				mes "Thanks again!";
 				delitem2 7049,1,1,0,0,.@sign1,.@sign2,.@sign3,.@sign4;
-				set sign_q,39;
+				sign_q = 39;
 				getitem 7181,1; //Receipt_01
 				if (checkre(3)) {
 					if (BaseLevel < 60) getexp 100,0;
@@ -6962,7 +6961,7 @@ geffen_in,159,48,5	script	Lonely-looking Woman	4_F_05,{
 			mes "[Brenda Howard]";
 			mes "Oh, and if you're going to look";
 			mes "for my husband, please talk to my daughter before you go. I think she has something that she wants to give to her father...";
-			set sign_q,55;
+			sign_q = 55;
 			close;
 		}
 	}
@@ -7000,7 +6999,7 @@ geffen_in,159,48,5	script	Lonely-looking Woman	4_F_05,{
 			mes "him know that I want him to spend";
 			mes "a little more time at home. Oh, and why don't you talk to Liana? She's been waiting to tell you something.";
 			delitem 7278,1; //Wellbeing_Letter
-			set sign_q,sign_q+4;
+			sign_q += 4;
 			close;
 		}
 		else {
@@ -7103,7 +7102,7 @@ geffen_in,171,42,3	script	Cute Girl	4_F_KID2,{
 					mes "forget to give this to";
 					mes "my dad, okay? Promise?";
 					emotion e_ho;
-					set sign_q,56;
+					sign_q = 56;
 					getitem 7276,1; //Picture_Letter
 					close;
 				case 2:
@@ -7134,7 +7133,7 @@ geffen_in,171,42,3	script	Cute Girl	4_F_KID2,{
 		mes "Yay~!";
 		mes "Thank you for bringing my letter to my dad. Here, here!";
 		mes "You have to share my treasure with me, 'kay?";
-		set sign_q,sign_q+4;
+		sign_q += 4;
 		getitem 529,10; //Candy
 		close;
 	}
@@ -7265,7 +7264,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 					mes "Right. Let me guide you to a shortcut to the exit of these mines, just in case you don't know your way out of here. Good luck~";
 					delitem 7276,1; //Picture_Letter
 					delitem 7177,7; //Part_Of_Star's_Sob
-					set sign_q,57;
+					sign_q = 57;
 					close2;
 					warp "mjo_dun02",371,344;
 					end;
@@ -7302,7 +7301,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 				mes "Regular Anvil?";
 				mes "Alright, I guess I'll try it.";
 				mes "But I can't guarantee success.";
-				set .@anvil,0;
+				.@anvil = 0;
 			}
 			else if (countitem(987) > 0) {
 				mes "Ah...";
@@ -7310,18 +7309,18 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 				mes "This isn't too bad,";
 				mes "but there's a good risk";
 				mes "that this might not work.";
-				set .@anvil,1;
+				.@anvil = 1;
 			}
 			else if (countitem(988) > 0) {
 				mes "Ah...";
 				mes "A Golden Anvil.";
 				mes "This just might be able to do the job. This might take a while, so I have something to ask of you.";
-				set .@anvil,2;
+				.@anvil = 2;
 			}
 			else if (countitem(989) > 0) {
 				mes "Oh wow, an Emperium Anvil!";
 				mes "And this looks like one I might have actually made. Great, I should be able to do this so long as I don't make any critical mistakes~";
-				set .@anvil,3;
+				.@anvil = 3;
 			}
 			next;
 			mes "[Engel]";
@@ -7334,7 +7333,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 			delitem 612,5; //Portable_Furnace
 			delitem 615,2; //Oridecon_Hammer
 			delitem (986+.@anvil),1; //Anvil-Oridecon_Anvil-Golden_Anvil-Emperium_Anvil
-			set sign_q, (58+.@anvil);
+			sign_q = (58+.@anvil);
 			getitem 7278,1; //Wellbeing_Letter
 			close;
 		}
@@ -7370,7 +7369,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 			mes "Are you back already?";
 			mes "While you were gone, I managed to restore this Sobbing Starlight. Why don't you go ahead and take a look?";
 			next;
-			set sign_q,71;
+			sign_q = 71;
 			getitem 7178,1; //Star's_Sob
 			specialeffect2 EF_YUFITELHIT;
 			next;
@@ -7409,7 +7408,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 				next;
 				mes "[Engel]";
 				mes "Although it'd be perfect if I had an Emperium Anvil, I'm pretty sure it'll be alright if we used a Golden Anvil.";
-				set sign_q,70;
+				sign_q = 70;
 				close;
 			case 68:
 				mes "Oh good, you're back.";
@@ -7432,7 +7431,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 				mes "^FF00005 Mini Furnace^000000 and";
 				mes "^FF00002 Oridecon Hammer^000000.";
 				mes "Don't forget the ^FF0000Golden Anvil^000000! But if you can get your hands on one, an ^FF0000Emperium Anvil^000000 would be better.";
-				set sign_q,70;
+				sign_q = 70;
 				close;
 		}
 	}
@@ -7490,7 +7489,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 			mes "We've both gone through a lot of trouble to make this, so I hope you treasure your Sobbing Starlight. Good luck on your adventures...";
 			if (countitem(988) > 0) delitem 988,1; //Golden_Anvil
 			else if (countitem(989) > 0) delitem 989,1; //Emperium_Anvil
-			set sign_q,71;
+			sign_q = 71;
 			getitem 7178,1; //Star's_Sob
 			specialeffect2 EF_YUFITELHIT;
 			close;
@@ -7550,82 +7549,82 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 		mes "give you a time estimate...";
 		mes "But I'll do my best for you.";
 		delitem 7314,1; //The_Sign
-		set sign_q,140;
-		set .@stime_e,gettime(3);
-		if (.@stime_e < 2) set sign_sq,1;
-		else if (.@stime_e < 4) set sign_sq,2;
-		else if (.@stime_e < 6) set sign_sq,3;
-		else if (.@stime_e < 8) set sign_sq,4;
-		else if (.@stime_e < 10) set sign_sq,5;
-		else if (.@stime_e < 12) set sign_sq,6;
-		else if (.@stime_e < 14) set sign_sq,7;
-		else if (.@stime_e < 16) set sign_sq,8;
-		else if (.@stime_e < 18) set sign_sq,9;
-		else if (.@stime_e < 20) set sign_sq,10;
-		else if (.@stime_e < 22) set sign_sq,11;
-		else set sign_sq,12;
+		sign_q = 140;
+		.@stime_e = gettime(3);
+		if (.@stime_e < 2) sign_sq = 1;
+		else if (.@stime_e < 4) sign_sq = 2;
+		else if (.@stime_e < 6) sign_sq = 3;
+		else if (.@stime_e < 8) sign_sq = 4;
+		else if (.@stime_e < 10) sign_sq = 5;
+		else if (.@stime_e < 12) sign_sq = 6;
+		else if (.@stime_e < 14) sign_sq = 7;
+		else if (.@stime_e < 16) sign_sq = 8;
+		else if (.@stime_e < 18) sign_sq = 9;
+		else if (.@stime_e < 20) sign_sq = 10;
+		else if (.@stime_e < 22) sign_sq = 11;
+		else sign_sq = 12;
 		close;
 	}
 	else if (sign_q == 140) {
-		set .@stime_e1,gettime(3);
+		.@stime_e1 = gettime(3);
 		if (.@stime_e1 < 2) {
 			if (sign_sq == 11) {
-				set .@pass_s1,1;
+				.@pass_s1 = 1;
 			}
 		}
 		else if (.@stime_e1 < 4) {
 			if (sign_sq == 12) {
-				set .@pass_s1,1;
+				.@pass_s1 = 1;
 			}
 		}
 		else if (.@stime_e1 < 6) {
 			if (sign_sq == 1) {
-				set .@pass_s1,1;
+				.@pass_s1 = 1;
 			}
 		}
 		else if (.@stime_e1 < 8) {
 			if (sign_sq == 2) {
-				set .@pass_s1,1;
+				.@pass_s1 = 1;
 			}
 		}
 		else if (.@stime_e1 < 10) {
 			if (sign_sq == 3) {
-				set .@pass_s1,1;
+				.@pass_s1 = 1;
 			}
 		}
 		else if (.@stime_e1 < 12) {
 			if (sign_sq == 4) {
-				set .@pass_s1,1;
+				.@pass_s1 = 1;
 			}
 		}
 		else if (.@stime_e1 < 14) {
 			if (sign_sq == 5) {
-				set .@pass_s1,1;
+				.@pass_s1 = 1;
 			}
 		}
 		else if (.@stime_e1 < 16) {
 			if (sign_sq == 6) {
-				set .@pass_s1,1;
+				.@pass_s1 = 1;
 			}
 		}
 		else if (.@stime_e1 < 18) {
 			if (sign_sq == 7) {
-				set .@pass_s1,1;
+				.@pass_s1 = 1;
 			}
 		}
 		else if (.@stime_e1 < 20) {
 			if (sign_sq == 8) {
-				set .@pass_s1,1;
+				.@pass_s1 = 1;
 			}
 		}
 		else if (.@stime_e1 < 22) {
 			if (sign_sq == 9) {
-				set .@pass_s1,1;
+				.@pass_s1 = 1;
 			}
 		}
 		else {
 			if (sign_sq == 10) {
-				set .@pass_s1,1;
+				.@pass_s1 = 1;
 			}
 		}
 		if (.@pass_s1 == 1) {
@@ -7643,7 +7642,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 			mes "Thank you for giving me the";
 			mes "honor of working on a worthy";
 			mes "smithing challenge.";
-			set sign_q,141;
+			sign_q = 141;
 			getitem 2644,1; //The_Sign_
 			close;
 		}
@@ -7720,7 +7719,7 @@ gef_tower,118,36,4	script	Annoyed Man	1_M_WIZARD,{
 			mes "here right now. Went somewhere";
 			mes "near Comodo to investigate some";
 			mes "tribal people or whatever.";
-			set sign_q,73;
+			sign_q = 73;
 			emotion e_pif;
 			close;
 		}
@@ -7783,7 +7782,7 @@ umbala,163,256,3	script	Native#_s	4_F_UMGIRL,{
 					mes "Oh right~!";
 					mes "The weird man in the funny clothes was in our village for a while, but ever since he went into that big tree, nobody's seen him!";
 					delitem 2278,1; //Mr_Smile
-					set sign_q,74;
+					sign_q = 74;
 					close;
 				case 2:
 					mes "[Laotan]";
@@ -7912,7 +7911,7 @@ um_in,27,23,3	script	Fastidious-Looking Guy	2_M_MOLGENSTEIN,{
 			mes "what's written in the Sobbing";
 			mes "Starlight, we'd need at least";
 			mes "10 ancient pieces of paper...";
-			set sign_q,75;
+			sign_q = 75;
 			close;
 		case 4:
 			specialeffect EF_VENOMDUST;
@@ -7956,7 +7955,7 @@ um_in,27,23,3	script	Fastidious-Looking Guy	2_M_MOLGENSTEIN,{
 			mes "The Sobbing Starlight is responding to these Worn Out Pages! Excellent! I've finally fulfilled my promise to Metz! Now he can leave";
 			mes "me alone!";
 			delitem 1097,10; //Worn_Out_Page
-			set sign_q,76;
+			sign_q = 76;
 			getitem 7275,1; //Ancient_Document
 			close;
 		}
@@ -8033,7 +8032,7 @@ alberta,165,83,4	script	Fastidious Old Man	4_M_SAGE_C,{
 		mes "when I read. I guess this old";
 		mes "man's got no choice but to get";
 		mes "some sort of seeing aid...";
-		set sign_q,78;
+		sign_q = 78;
 		close;
 	}
 	else if (sign_q == 78) {
@@ -8086,7 +8085,7 @@ alberta,165,83,4	script	Fastidious Old Man	4_M_SAGE_C,{
 						mes "Hmm, as far as I can tell, this is a sophisticated language spoken by the ancient gods. It's complex and confusing, but I'll do my best for you. Come back to me later, and I'll what I've learned.";
 						delitem 2203,1; //Glasses
 						delitem 7275,1; //Ancient_Document
-						set sign_q,79;
+						sign_q = 79;
 						close;
 					}
 				}
@@ -8117,7 +8116,7 @@ alberta,165,83,4	script	Fastidious Old Man	4_M_SAGE_C,{
 			mes "[Frank]";
 			mes "Well, I've written down the best translation that I could for you. It's been a long time since I've had this kind of challenge. Thanks, youngster.";
 			mes "Ha ha ha~";
-			set sign_q,80;
+			sign_q = 80;
 			getitem 7274,1; //Ancient_Translator
 			close;
 		}
@@ -8172,7 +8171,7 @@ OnTouch:
 		delitem 907,4; //Resin
 		delitem 953,12; //Stone_Heart
 		delitem 7013,365; //Coral_Reef
-		set sign_q,81;
+		sign_q = 81;
 		warp "himinn",49,10;
 		end;
 	}
@@ -8243,7 +8242,7 @@ himinn,48,86,5	script	Valkyrie#sign	4_F_VALKYRIE,{
 		mes "travel there and ferret";
 		mes "out true darkness from";
 		mes "one of the hearts there...";
-		set sign_q,82;
+		sign_q = 82;
 		percentheal 100,100;
 		if (checkre(3)) {
 			if (BaseLevel < 56) getexp 900,0;
@@ -8295,7 +8294,7 @@ himinn,48,86,5	script	Valkyrie#sign	4_F_VALKYRIE,{
 		mes "Always step forward";
 		mes "with wisdom and courage.";
 		mes "That is all I can tell you.";
-		set sign_q,96;
+		sign_q = 96;
 		close;
 	}
 	else if ((sign_q == 129) || (sign_q == 130)) {
@@ -8313,7 +8312,7 @@ himinn,48,86,5	script	Valkyrie#sign	4_F_VALKYRIE,{
 		mes ""+ strcharinfo(0) +". Verily,";
 		mes "you are an honorable";
 		mes "hero worthy of praise!";
-		set sign_q,137;
+		sign_q = 137;
 		getitem 7314,1; //The_Sign
 		close;
 	}
@@ -8344,7 +8343,7 @@ himinn,48,86,5	script	Valkyrie#sign	4_F_VALKYRIE,{
 		mes "I hope that you find your";
 		mes "another way to win back";
 		mes "the favor of the gods...";
-		set sign_q,203;
+		sign_q = 203;
 		close;
 	}
 	else {
@@ -8449,7 +8448,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 		mes "pretty dangerous";
 		mes "so please step back...";
 		delitem 7305,1; //Authority_Of_Nine_World
-		set sign_q,133;
+		sign_q = 133;
 		donpcevent "Serin#dummy::OnEnable";
 		donpcevent "Serin#dummy::OnStart";
 		donpcevent "Serin#serin::OnDisable";
@@ -8522,7 +8521,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 				mes "stopping me? Hmpf.";
 				mes "Every fool must learn.";
 				mes "Prepare to die!^000000";
-				set sign_q,134;
+				sign_q = 134;
 				donpcevent "Serin#serin::OnDisable";
 				donpcevent "Dark Lord#serin::OnDisable";
 				donpcevent "CallMonster#serin::OnCall";
@@ -8534,9 +8533,9 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 				mes "to Rune-Midgard and";
 				mes "ask the Dark Lord to spare";
 				mes "you. Thank you so much...";
-				set sign_q,200;
+				sign_q = 200;
 				getexp (checkre(3))?20000:200000,0;
-				set $@sign_w2,0;
+				$@sign_w2 = 0;
 				donpcevent "Dark Lord#serin::OnDisable";
 				close2;
 				warp "umbala",132,203;
@@ -8556,7 +8555,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 			mes "stopping me? Hmpf.";
 			mes "Every fool must learn.";
 			mes "Prepare to die!^000000";
-			set sign_q,134;
+			sign_q = 134;
 			donpcevent "Serin#serin::OnDisable";
 			donpcevent "Dark Lord#serin::OnDisable";
 			donpcevent "CallMonster#serin::OnCall";
@@ -8603,7 +8602,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 		mes "Farewell, now.";
 		mes "And good luck on";
 		mes "your travels, my friend...";
-		set sign_q,135;
+		sign_q = 135;
 		close;
 	}
 	else if (sign_q == 135) {
@@ -8611,20 +8610,20 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 		mes "unconscious Serin";
 		mes "and returned to Niflheim.^000000";
 		close2;
-		set sign_q,136;
-		set $@sign_w2,0;
+		sign_q = 136;
+		$@sign_w2 = 0;
 		warp "que_sign01",117,137;
 		end;
 	}
 	else if (sign_q == 199) {
-		set .@fail_s1,rand(1,800);
-		set .@fail_s2,rand(1,700);
-		set .@fail_s3,rand(1,600);
-		set .@fail_s4,rand(1,500);
-		set .@fail_s5,rand(1,400);
+		.@fail_s1 = rand(1,800);
+		.@fail_s2 = rand(1,700);
+		.@fail_s3 = rand(1,600);
+		.@fail_s4 = rand(1,500);
+		.@fail_s5 = rand(1,400);
 		if (countitem(2643) == 1) {
 			if (((sign_sq == 0) && (.@fail_s3 == 356)) || ((sign_sq == 1) && (.@fail_s2 == 356)) || (.@fail_s1 == 356)) {
-				set sign_q,200;
+				sign_q = 200;
 				mes "[Serin]";
 				mes "Even though you tried";
 				mes "to stop me, I still don't wish";
@@ -8643,7 +8642,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 				mes "[Serin]";
 				mes "Farewell...";
 				close2;
-				set $@sign_w2,0;
+				$@sign_w2 = 0;
 				warp "niflheim",30,156;
 				end;
 			}
@@ -8654,7 +8653,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 				mes "Please don't";
 				mes "try to stop me!";
 				close2;
-				set sign_q,134;
+				sign_q = 134;
 				donpcevent "Serin#serin::OnDisable";
 				donpcevent "Dark Lord#serin::OnDisable";
 				donpcevent "CallMonster#serin::OnCall";
@@ -8663,7 +8662,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 		}
 		else {
 			if (((sign_sq == 0) && (.@fail_s5 == 356)) || ((sign_sq == 1) && (.@fail_s4 == 356)) || (.@fail_s3 == 356)) {
-				set sign_q,200;
+				sign_q = 200;
 				mes "[Serin]";
 				mes "Even though you tried";
 				mes "to stop me, I still don't wish";
@@ -8682,7 +8681,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 				mes "[Serin]";
 				mes "Farewell...";
 				close2;
-				set $@sign_w2,0;
+				$@sign_w2 = 0;
 				warp "niflheim",30,156;
 				end;
 			}
@@ -8693,7 +8692,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 				mes "Please don't";
 				mes "try to stop me!";
 				close2;
-				set sign_q,134;
+				sign_q = 134;
 				donpcevent "Serin#serin::OnDisable";
 				donpcevent "Dark Lord#serin::OnDisable";
 				donpcevent "CallMonster#serin::OnCall";
@@ -8785,7 +8784,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 		next;
 		switch(select("I can't let you do this!:Okay, have it your way.")) {
 		case 1:
-			set sign_q,125;
+			sign_q = 125;
 			close;
 		case 2:
 			mes "[Serin]";
@@ -8796,7 +8795,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 			next;
 			switch(select("I changed my mind for Rune-Midgard.:I do, and it's alright...")) {
 			case 1:
-				set sign_q,125;
+				sign_q = 125;
 				close;
 			case 2:
 				mes "[Serin]";
@@ -8805,9 +8804,9 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 				mes "to Rune-Midgard and";
 				mes "ask the Dark Lord to spare";
 				mes "you. Thank you so much...";
-				set sign_q,200;
+				sign_q = 200;
 				getexp (checkre(3))?20000:200000,0;
-				set $@sign_w1,0;
+				$@sign_w1 = 0;
 				close2;
 				warp "umbala,",132,203;
 				end;
@@ -8856,7 +8855,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 			mes "human again so I can't give up";
 			mes "now! We'll have to battle!";
 			close2;
-			set sign_q,126;
+			sign_q = 126;
 			donpcevent "CallMonster#witch::OnCall";
 			donpcevent "Serin#witch::OnDisable";
 			end;
@@ -8897,7 +8896,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 			mes "human again so I can't give up";
 			mes "now! We'll have to battle!";
 			close2;
-			set sign_q,126;
+			sign_q = 126;
 			donpcevent "CallMonster#witch::OnCall";
 			donpcevent "Serin#witch::OnDisable";
 			end;
@@ -8944,7 +8943,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 		mes "And good luck on";
 		mes "your travels, my friend...";
 		delitem 7308,1; //Witch's_Potion
-		set sign_q,127;
+		sign_q = 127;
 		close;
 	}
 	else if (sign_q == 127) {
@@ -8952,21 +8951,21 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 		mes "unconscious Serin";
 		mes "and returned to Niflheim.^000000";
 		close2;
-		set sign_q,128;
-		set $@sign_w1,0;
+		sign_q = 128;
+		$@sign_w1 = 0;
 		warp "que_sign01",117,137;
 		end;
 	}
 	else if (sign_q == 198) {
-		set .@fail_s1,rand(1,1000);
-		set .@fail_s2,rand(1,900);
-		set .@fail_s3,rand(1,800);
-		set .@fail_s4,rand(1,700);
-		set .@fail_s5,rand(1,600);
+		.@fail_s1 = rand(1,1000);
+		.@fail_s2 = rand(1,900);
+		.@fail_s3 = rand(1,800);
+		.@fail_s4 = rand(1,700);
+		.@fail_s5 = rand(1,600);
 		if (countitem(2643) == 1) {
 			if (((sign_sq == 0) && (.@fail_s3 == 356)) || ((sign_sq == 1) && (.@fail_s2 == 356)) || (.@fail_s1 == 356)) {
 				delitem 7308,1; //Witch's_Potion
-				set sign_q,200;
+				sign_q = 200;
 				mes "[Serin]";
 				mes "Even though you tried";
 				mes "to stop me, I still don't wish";
@@ -8993,7 +8992,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 				mes "to help me summon";
 				mes "Dark Lord. Farewell...";
 				close2;
-				set $@sign_w1,0;
+				$@sign_w1 = 0;
 				warp "niflheim",30,156;
 				end;
 			}
@@ -9004,7 +9003,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 				mes "Please don't";
 				mes "try to stop me!";
 				close2;
-				set sign_q,126;
+				sign_q = 126;
 				donpcevent "Serin#witch::OnDisable";
 				donpcevent "CallMonster#witch::OnCall";
 				end;
@@ -9013,7 +9012,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 		else {
 			if (((sign_sq == 0) && (.@fail_s5 == 356)) || ((sign_sq == 1) && (.@fail_s4 == 356)) || (.@fail_s3 == 356)) {
 				delitem 7308,1; //Witch's_Potion
-				set sign_q,200;
+				sign_q = 200;
 				mes "[Serin]";
 				mes "Even though you tried";
 				mes "to stop me, I still don't wish";
@@ -9040,7 +9039,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 				mes "to help me summon";
 				mes "Dark Lord. Farewell...";
 				close2;
-				set $@sign_w1,0;
+				$@sign_w1 = 0;
 				warp "niflheim",30,156;
 				end;
 			}
@@ -9051,7 +9050,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 				mes "Please don't";
 				mes "try to stop me!";
 				close2;
-				set sign_q,126;
+				sign_q = 126;
 				donpcevent "Serin#witch::OnDisable";
 				donpcevent "CallMonster#witch::OnCall";
 				end;
@@ -9065,7 +9064,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 		mes "you belong.";
 		mes ".......";
 		close2;
-		set $@sign_w1,0;
+		$@sign_w1 = 0;
 		warp "umbala",132,203;
 		end;
 	}
@@ -9160,14 +9159,14 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 					mes "You really are a kind person.";
 					mes "Now, in order to help the other";
 					mes "misfortunate in Niflheim, you've got to remember to gain their trust first and get close to them, okay?";
-					set sign_q,83;
+					sign_q = 83;
 					close;
 				case 2:
 					mes "[Serin]";
 					mes "I... I understand.";
 					mes "Although I asked too much in asking you to help the other people here, I was hoping you'd realize that";
 					mes "would be the best way to learn clues for a way to escape for now.";
-					set sign_q,84;
+					sign_q = 84;
 					close;
 				}
 			}
@@ -9205,8 +9204,8 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 			mes "your help. This is all I have,";
 			mes "and it means a lot to me, but";
 			mes "I want you to have this ring. It's the only way I can properly express my gratitude for your aid so far.";
-			set sign_q,85;
-			set sign_sq,0;
+			sign_q = 85;
+			sign_sq = 0;
 			getitem 2642,1; //Serin's_Gold_Ring
 			close;
 		}
@@ -9231,7 +9230,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		mes "Niflheim, you'll find that";
 		mes "some of the deceased here are";
 		mes "different than most of the others in this town. Please talk to them and see if you can be of any help.";
-		set sign_q,87;
+		sign_q = 87;
 		close;
 	}
 	else if (sign_q == 85) {
@@ -9247,7 +9246,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		mes "some useful information,";
 		mes "so it might be a good";
 		mes "idea to speak with him.";
-		set sign_q,86;
+		sign_q = 86;
 		close;
 	}
 	else if (sign_q < 92) {
@@ -9350,7 +9349,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 			mes "somehow I don't really belong";
 			mes "here in Niflheim.";
 			emotion e_dots;
-			set sign_q,93;
+			sign_q = 93;
 			close;
 		}
 	}
@@ -9373,7 +9372,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		mes "has been sealed away in the";
 		mes "world of Rune-Midgard...";
 		emotion e_dots;
-		set sign_q,94;
+		sign_q = 94;
 		close;
 	}
 	else if (sign_q == 94) {
@@ -9422,13 +9421,13 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 				mes "[Serin]";
 				mes "Then I will";
 				mes "wait for you here.";
-				set sign_q,95;
+				sign_q = 95;
 				close;
 			case 2:
 				mes "[Serin]";
 				mes "Alright...";
 				mes "It's your decision.";
-				set sign_q,95;
+				sign_q = 95;
 				close;
 			}
 		case 2:
@@ -9439,7 +9438,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 			mes "of obtaining the symbol,";
 			mes "you should also be able";
 			mes "to protect it from abuse.";
-			set sign_q,95;
+			sign_q = 95;
 			close;
 		}
 	}
@@ -9493,7 +9492,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 			mes "There is this rumor";
 			mes "going around, but I don't";
 			mes "know if you want to hear it...";
-			set sign_q,131;
+			sign_q = 131;
 			close;
 		case 2:
 			mes "[Serin]";
@@ -9647,7 +9646,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		mes "do it somewhere inside town";
 		mes "to avoid attention. Hmmm...";
 		mes "I'll send you there once I figure out where the circle might be.";
-		set sign_q,132;
+		sign_q = 132;
 		close;
 	}
 	else if (sign_q == 132) {
@@ -9670,7 +9669,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 			mes "Okay~";
 			mes "Let's go...";
 			close2;
-			set $@sign_w2,1;
+			$@sign_w2 = 1;
 			warp "que_sign01",199,36;
 			end;
 		case 2:
@@ -9694,8 +9693,8 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		switch(select("Follow the trace.:Ignore it.")) {
 		case 1:
 			close2;
-			set sign_q,199;
-			set $@sign_w2,1;
+			sign_q = 199;
+			$@sign_w2 = 1;
 			warp "que_sign01",199,36;
 			end;
 		case 2:
@@ -9809,7 +9808,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			mes "retrieve my other";
 			mes "spell book for me,";
 			mes "adventurer?";
-			set sign_sq,0;
+			sign_sq = 0;
 			close;
 		}
 		else {
@@ -9901,7 +9900,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			mes "is searching for her lost mother, Angrboda. Now, if you could find where Angrboda has been";
 			mes "sealed away...";
 			delitem 7304,1; //Witch's_Spell_Book
-			set sign_q,92;
+			sign_q = 92;
 			close;
 		}
 		else {
@@ -9996,7 +9995,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			mes "if you can find any remaining";
 			mes "trace of her.";
 			delitem 7305,1; //Authority_Of_Nine_World
-			set sign_q,119;
+			sign_q = 119;
 			close;
 		case 2:
 			mes "[Kirkena]";
@@ -10017,7 +10016,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			mes "strongly infused with her";
 			mes "vibes. It's really tough to find something like this that resonates so strongly with its owner.";
 			delitem 2642,1; //Serin's_Gold_Ring
-			set sign_q,120;
+			sign_q = 120;
 			close;
 		}
 		else {
@@ -10026,7 +10025,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			mes "This isn't good. She's hid";
 			mes "herself already and it might";
 			mes "be too late to find any trace of her. I'll have to do something...";
-			set sign_q,121;
+			sign_q = 121;
 			close;
 		}
 	}
@@ -10077,10 +10076,10 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 				mes "command the guards of Niflheim";
 				mes "to just let her pass and re-enter the world of the living. But your symbol can be used just once...";
 				next;
-				set .@kir_talk1,1;
+				.@kir_talk1 = 1;
 				if ((.@kir_talk1 == 1) && (.@kir_talk2 == 1) && (.@kir_talk3 == 1)) {
-					if (sign_q == 120) set sign_q,122;
-					else if (sign_q == 121) set sign_q,123;
+					if (sign_q == 120) sign_q = 122;
+					else if (sign_q == 121) sign_q = 123;
 				}
 				break;
 			case 2:
@@ -10130,10 +10129,10 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 				mes "sphere of influence. I don't think she'll help Dark Lord, but she";
 				mes "also won't get in his way.";
 				next;
-				set .@kir_talk2,1;
+				.@kir_talk2 = 1;
 				if ((.@kir_talk1 == 1) && (.@kir_talk2 == 1) && (.@kir_talk3 == 1)) {
-					if (sign_q == 120) set sign_q,122;
-					else if (sign_q == 121) set sign_q,123;
+					if (sign_q == 120) sign_q = 122;
+					else if (sign_q == 121) sign_q = 123;
 				}
 				break;
 			case 3:
@@ -10157,10 +10156,10 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 				mes "to avoid drinking this";
 				mes "for quite a while now...";
 				next;
-				set .@kir_talk3,1;
+				.@kir_talk3 = 1;
 				if ((.@kir_talk1 == 1) && (.@kir_talk2 == 1) && (.@kir_talk3 == 1)) {
-					if (sign_q == 120) set sign_q,122;
-					else if (sign_q == 121) set sign_q,123;
+					if (sign_q == 120) sign_q = 122;
+					else if (sign_q == 121) sign_q = 123;
 				}
 			}
 			if ((sign_q == 122) || (sign_q == 123)) close;
@@ -10192,7 +10191,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			mes "forget to bring back all";
 			mes "of the vouchers I've";
 			mes "given you, alright?";
-			set sign_q,124;
+			sign_q = 124;
 			getitem 7308,1; //Witch's_Potion
 			getitem 2643,1; //Serin's_Gold_Ring_
 			getitem 7313,5; //Seal_Of_Witch
@@ -10228,7 +10227,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			mes "forget to bring back all of";
 			mes "the Witch's Medals that";
 			mes "I've lent to you, alright?";
-			set sign_q,124;
+			sign_q = 124;
 			getitem 7308,1; //Witch's_Potion
 			getitem 7313,5; //Seal_Of_Witch
 			close;
@@ -10252,7 +10251,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			switch(select("Yes:No")) {
 			case 1:
 				close2;
-				set $@sign_w1,1;
+				$@sign_w1 = 1;
 				warp "que_sign01",195,189;
 				end;
 			case 2:
@@ -10313,7 +10312,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 				mes "help. Once you finish here,";
 				mes "please visit our queen, Lady Hell. I believe she wants to see you for some reason, "+strcharinfo(0)+"...";
 				delitem 7313,5; //Seal_Of_Witch
-				set sign_q,129;
+				sign_q = 129;
 				getexp (checkre(3))?50000:500000,0;
 				close;
 			}
@@ -10342,7 +10341,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 				mes "help. Once you finish here,";
 				mes "please visit our queen, Lady Hell. I believe she wants to see you for some reason...";
 				delitem 7313,5; //Seal_Of_Witch
-				set sign_q,130;
+				sign_q = 130;
 				getexp (checkre(3))?30000:300000,0;
 				close;
 			}
@@ -10367,8 +10366,8 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		mes "you so much for your";
 		mes "help. Once you finish here,";
 		mes "please visit our queen, Lady Hell. I believe she wants to see you for some reason...";
-		if (countitem(2643) == 1) set sign_q,129;
-		else set sign_q,130;
+		if (countitem(2643) == 1) sign_q = 129;
+		else sign_q = 130;
 		getexp (checkre(3))?30000:300000,0;
 		close;
 	}
@@ -10398,7 +10397,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		mes "ordeals for her sake...";
 		if (countitem(2642) > 0) delitem 2642,1; //Serin's_Gold_Ring
 		if (countitem(7308) > 0) delitem 7308,1; //Witch's_Potion
-		set sign_q,201;
+		sign_q = 201;
 		getexp (checkre(3))?20000:200000,0;
 		close;
 	}
@@ -10469,7 +10468,7 @@ OnTouch:
 						mes "a living human back to one";
 						mes "of the towns in your realm.";
 						delitem 7304,1; //Witch's_Spell_Book
-						set sign_sq,3;
+						sign_sq = 3;
 						getitem 7309,1; //Wing_Of_Crow
 						close;
 					}
@@ -10502,7 +10501,7 @@ OnTouch:
 				mes "Here, let me give you";
 				mes "my last one. Now, hurry";
 				mes "up and save that lost child!";
-				set sign_sq,4;
+				sign_sq = 4;
 				getitem 7309,1; //Wing_Of_Crow
 				close;
 			}
@@ -10538,7 +10537,7 @@ OnTouch:
 			mes "That's impossible!";
 			mes "Wait, give me a moment to";
 			mes "think. What could be wrong?";
-			set sign_sq,7;
+			sign_sq = 7;
 			close;
 		}
 		else if (sign_sq == 7) {
@@ -10554,7 +10553,7 @@ OnTouch:
 			mes "that she's dead. It's tragic,";
 			mes "but there's no way for her";
 			mes "to get out of here...";
-			set sign_sq,8;
+			sign_sq = 8;
 			close;
 		}
 		else {
@@ -10620,7 +10619,7 @@ OnTouch:
 			next;
 			switch(select("Alright, I understand.:How am I supposed to get the symbol?")) {
 			case 1:
-				set sign_q,89;
+				sign_q = 89;
 				close;
 			case 2:
 				mes "[Kirkena]";
@@ -10650,7 +10649,7 @@ OnTouch:
 				mes "through the right side of the";
 				mes "portrait on the second floor^000000";
 				mes "of this castle, "+strcharinfo(0)+".";
-				set sign_q,92;
+				sign_q = 92;
 				next;
 				mes "[Kirkena]";
 				mes "If you use that piano";
@@ -10695,7 +10694,7 @@ OnTouch:
 				mes "to see me, go ahead and use";
 				mes "the passage to the right of the portrait on the second floor";
 				mes "of the castle.";
-				set sign_q,90;
+				sign_q = 90;
 				close;
 			}
 		}
@@ -10735,7 +10734,7 @@ OnTouch:
 		mes "through the right side of the";
 		mes "portrait on the second";
 		mes "floor of this castle.";
-		set sign_q,92;
+		sign_q = 92;
 		close;
 	}
 	end;
@@ -10796,7 +10795,7 @@ que_sign01,45,227,4	script	Queen of the Dead	2_F_SIGN1,{
 		mes "^3355FFYou received the";
 		mes "Symbol of the Nine Realms.^000000";
 		delitem 7307,1; //Whisper_Of_Soul
-		set sign_q,118;
+		sign_q = 118;
 		getitem 7305,1; //Authority_Of_Nine_World
 		close;
 	}
@@ -10854,7 +10853,7 @@ que_sign01,45,227,4	script	Queen of the Dead	2_F_SIGN1,{
 				mes "you something truly";
 				mes "interesting...^000000";
 				delitem 7178,1; //Star's_Sob
-				set sign_q,143;
+				sign_q = 143;
 				close;
 			case 2:
 				mes "[Lady Hell]";
@@ -10900,7 +10899,7 @@ que_sign01,45,227,4	script	Queen of the Dead	2_F_SIGN1,{
 		mes "you humans call the";
 		mes "Sobbing Starlight.^000000";
 		next;
-		set sign_q,144;
+		sign_q = 144;
 		getitem 7025,1; //Lucifer's_Lament
 		mes "[Lady Hell]";
 		mes "^8C1717Although you may also know";
@@ -10965,8 +10964,8 @@ niflheim,146,241,0	script	Depressing Man	4_M_JOB_WIZARD,{
 			next;
 			switch(select("To prove my courage:For honor:To help people")) {
 			case 1:
-				if (sign_sq > 2) set sign_sq,0;
-				else set sign_sq,sign_sq+1;
+				if (sign_sq > 2) sign_sq = 0;
+				else sign_sq += 1;
 			case 2:
 				break;
 			}
@@ -10988,7 +10987,7 @@ niflheim,146,241,0	script	Depressing Man	4_M_JOB_WIZARD,{
 				mes "I think you should be";
 				mes "really careful if you find";
 				mes "yourself dealing with Serin...";
-				set sign_q,88;
+				sign_q = 88;
 				close;
 			case 2:
 				mes "[Gen]";
@@ -11022,7 +11021,7 @@ niflheim,146,241,0	script	Depressing Man	4_M_JOB_WIZARD,{
 				mes "and the fact that she used";
 				mes "to be a great wizard when she";
 				mes "was alive bothers me. She's a lot different than the rest of the guys stuck in Niflheim...";
-				set sign_q,88;
+				sign_q = 88;
 				close;
 			}
 		}
@@ -11049,7 +11048,7 @@ niflheim,146,241,0	script	Depressing Man	4_M_JOB_WIZARD,{
 			mes "too much. First, go and see";
 			mes "the witch and ask her to";
 			mes "help you out, okay?";
-			set sign_q,88;
+			sign_q = 88;
 			close;
 		}
 	}
@@ -11202,7 +11201,7 @@ nif_in,140,177,0	script	#Switch	HIDDEN_NPC,{
 		end;
 	}
 	if (sign_q > 89) {
-		if (sign_q == 126) set sign_q,198;
+		if (sign_q == 126) sign_q = 198;
 		warp "que_sign01",115,135;
 		end;
 	}
@@ -11309,7 +11308,7 @@ niflheim,102,54,4	script	Mad Man#s	8_DOPPEL,{
 				mes "lowest part of Glast Heim to";
 				mes "find Angrboda's soul pieces.";
 				next;
-				set .@select_s,rand(1,5);
+				.@select_s = rand(1,5);
 				if (.@select_s == 1) {
 					mes "[Laichin]";
 					mes "Check out the";
@@ -11361,10 +11360,10 @@ niflheim,102,54,4	script	Mad Man#s	8_DOPPEL,{
 					mes "[Laichin]";
 					mes "Alright, kid.";
 					mes "Have fun!";
-					if (.@select_s == 1) set sign_q,97;
-					else if (.@select_s == 2) set sign_q,98;
-					else if (.@select_s == 3) set sign_q,99;
-					else if (.@select_s == 4) set sign_q,100;
+					if (.@select_s == 1) sign_q = 97;
+					else if (.@select_s == 2) sign_q = 98;
+					else if (.@select_s == 3) sign_q = 99;
+					else if (.@select_s == 4) sign_q = 100;
 					else {
 						mes "[Laichin]";
 						mes "Heh heh!";
@@ -11390,10 +11389,10 @@ niflheim,102,54,4	script	Mad Man#s	8_DOPPEL,{
 						mes "you can't figure out";
 						mes "where the soul pieces are!";
 						Zeny -= 40000;
-						if (.@select_s == 1) set sign_q,97;
-						else if (.@select_s == 2) set sign_q,98;
-						else if (.@select_s == 3) set sign_q,99;
-						else if (.@select_s == 4) set sign_q,100;
+						if (.@select_s == 1) sign_q = 97;
+						else if (.@select_s == 2) sign_q = 98;
+						else if (.@select_s == 3) sign_q = 99;
+						else if (.@select_s == 4) sign_q = 100;
 						else {
 							mes "[Laichin]";
 							mes "Hehehehe~";
@@ -11426,10 +11425,10 @@ niflheim,102,54,4	script	Mad Man#s	8_DOPPEL,{
 							mes "For very small, you gotta";
 							mes "look near the center. Got it?";
 							Zeny -= 60000;
-							if (.@select_s == 1) set sign_q,101;
-							else if (.@select_s == 2) set sign_q,102;
-							else if (.@select_s == 3) set sign_q,103;
-							else if (.@select_s == 4) set sign_q,104;
+							if (.@select_s == 1) sign_q = 101;
+							else if (.@select_s == 2) sign_q = 102;
+							else if (.@select_s == 3) sign_q = 103;
+							else if (.@select_s == 4) sign_q = 104;
 							else {
 								mes "[Laichin]";
 								mes "Eh heh";
@@ -11487,10 +11486,10 @@ niflheim,102,54,4	script	Mad Man#s	8_DOPPEL,{
 				mes "For very small, you gotta";
 				mes "look near the center. Got it?";
 				Zeny -= 20000;
-				if (sign_q == 97) set sign_q,101;
-				else if (sign_q == 98) set sign_q,102;
-				else if (sign_q == 99) set sign_q,103;
-				else if (sign_q == 100) set sign_q,104;
+				if (sign_q == 97) sign_q = 101;
+				else if (sign_q == 98) sign_q = 102;
+				else if (sign_q == 99) sign_q = 103;
+				else if (sign_q == 100) sign_q = 104;
 				else {
 					mes "[Laichin]";
 					mes "Bwahahaha!";
@@ -11698,9 +11697,9 @@ OnTouch:
 				mes "a fighting chance and let";
 				mes "you cast a spell.";
 				next;
-				if (select("Clover:Klaatu:Kleitos") == 2) set .@spell,.@spell+1;
-				if (select("Verit:Veritas:Verata") == 3) set .@spell,.@spell+1;
-				if (select("Necktie:Necklace:Nero:^FFFFFFNictu^000000") == 4) set .@spell,.@spell+1;
+				if (select("Clover:Klaatu:Kleitos") == 2) .@spell += 1;
+				if (select("Verit:Veritas:Verata") == 3) .@spell += 1;
+				if (select("Necktie:Necklace:Nero:^FFFFFFNictu^000000") == 4) .@spell += 1;
 				if (.@spell == 3) {
 					if (rand(1,5) == 5) {
 						mes "[Ashe Bruce]";
@@ -11723,12 +11722,12 @@ OnTouch:
 						mes "weak, pathetic witch!";
 						if (sign_q == 83) {
 							if(sign_sq == 0) {
-								set sign_sq,1;
+								sign_sq = 1;
 								getitem 7304,1; //Witch's_Spell_Book
 							}
 						}
 						else if (sign_q == 90) {
-							set sign_q,91;
+							sign_q = 91;
 							getitem 7304,1; //Witch's_Spell_Book
 						}
 						close;
@@ -11797,8 +11796,8 @@ OnTouch:
 		next;
 		switch(select("Just my opinion.:It's the truth!")) {
 		case 1:
-			if (sign_sq > 1) set sign_sq,0;
-			else set sign_sq,sign_sq+1;
+			if (sign_sq > 1) sign_sq = 0;
+			else sign_sq += 1;
 		case 2:
 			break;
 		}
@@ -11841,7 +11840,7 @@ OnTouch:
 			mes "be a good idea if";
 			mes "you talk to someone";
 			mes "in Niflheim named ^FF0000Gen^000000.";
-			set sign_q,87;
+			sign_q = 87;
 			close;
 		}
 	}
@@ -11883,7 +11882,7 @@ OnTouch:
 				mes "singing man told me to";
 				mes "go meet a witch, but it's";
 				mes "too scary to go outside...";
-				set sign_sq,2;
+				sign_sq = 2;
 				close;
 			case 2:
 				mes "[Alakina Ann]";
@@ -11910,7 +11909,7 @@ OnTouch:
 				mes "this to go back home?";
 				mes "Thank you! Thank you so much!";
 				delitem 7309,countitem(7309); //Wing_Of_Crow
-				set sign_sq,5;
+				sign_sq = 5;
 				close;
 			}
 			else {
@@ -11931,7 +11930,7 @@ OnTouch:
 			mes "This wing doesn't do";
 			mes "anything! I-I'm still here";
 			mes "in this scary place! ^333333*Cries*^000000";
-			set sign_sq,6;
+			sign_sq = 6;
 			emotion e_sob;
 			close;
 		}
@@ -12024,7 +12023,7 @@ function	script	F_SignSeal	{
 		mes "with you. Please guide";
 		mes "me to the queen of the dead...^000000";
 		delitem 7306,3; //Fragment_Of_Soul
-		set sign_q,117;
+		sign_q = 117;
 		getitem 7307,1; //Whisper_Of_Soul
 	}
 	else {
@@ -12041,10 +12040,10 @@ function	script	F_SignSeal	{
 
 gl_dun02,262,265,0	script	Mysterious Energy#1	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
-	set .@crash_s,rand(1,1000);
+	.@crash_s = rand(1,1000);
 	if (sign_q == 101) {
 		callfunc "F_SignSeal",.@crash_s;
-		set sign_q,105;
+		sign_q = 105;
 		close;
 	}
 	else {
@@ -12057,11 +12056,11 @@ gl_dun02,262,265,0	script	Mysterious Energy#1	HIDDEN_NPC,{
 // Angrboda's Seal 2 big 4 O'clock 270 198
 gl_dun02,271,100,0	script	Mysterious Energy#2	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
-	set .@crash_s,rand(1,1000);
+	.@crash_s = rand(1,1000);
 	if ((sign_q == 102) || (sign_q == 104)) {
 		callfunc "F_SignSeal",.@crash_s;
-		if (sign_q == 102) set sign_q,106;
-		else if (sign_q == 104) set sign_q,108;
+		if (sign_q == 102) sign_q = 106;
+		else if (sign_q == 104) sign_q = 108;
 		close;
 	}
 	else {
@@ -12074,12 +12073,12 @@ gl_dun02,271,100,0	script	Mysterious Energy#2	HIDDEN_NPC,{
 // Angrboda's Seal 3 big 5 O'clock 268 32
 gl_dun02,268,32,0	script	Mysterious Energy#3	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
-	set .@crash_s,rand(1,1000);
+	.@crash_s = rand(1,1000);
 	if ((sign_q == 103) || (sign_q == 105) || (sign_q == 108)) {
 		callfunc "F_SignSeal",.@crash_s;
-		if (sign_q == 103) set sign_q,107;
-		else if (sign_q == 105) set sign_q,109;
-		else if (sign_q == 108) set sign_q,112;
+		if (sign_q == 103) sign_q = 107;
+		else if (sign_q == 105) sign_q = 109;
+		else if (sign_q == 108) sign_q = 112;
 		close;
 	}
 	else {
@@ -12092,10 +12091,10 @@ gl_dun02,268,32,0	script	Mysterious Energy#3	HIDDEN_NPC,{
 // Angrboda's Seal 4 big 7 O'clock 16 26
 gl_dun02,16,26,0	script	Mysterious Energy#4	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
-	set .@crash_s,rand(1,1000);
+	.@crash_s = rand(1,1000);
 	if (sign_q == 109) {
 		callfunc "F_SignSeal",.@crash_s;
-		if (sign_q == 109) set sign_q,113;
+		if (sign_q == 109) sign_q = 113;
 		close;
 	}
 	else {
@@ -12108,11 +12107,11 @@ gl_dun02,16,26,0	script	Mysterious Energy#4	HIDDEN_NPC,{
 // Angrboda's Seal 5 big 11 O'clock 42 251
 gl_dun02,42,251,0	script	Mysterious Energy#5	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
-	set .@crash_s,rand(1,1000);
+	.@crash_s = rand(1,1000);
 	if ((sign_q == 106) || (sign_q == 112)) {
 		callfunc "F_SignSeal",.@crash_s;
-		if (sign_q == 106) set sign_q,110;
-		else if (sign_q == 112) set sign_q,116;
+		if (sign_q == 106) sign_q = 110;
+		else if (sign_q == 112) sign_q = 116;
 		close;
 	}
 	else {
@@ -12125,10 +12124,10 @@ gl_dun02,42,251,0	script	Mysterious Energy#5	HIDDEN_NPC,{
 // Angrboda's Seal 6 small 11 O'clock 123 234
 gl_dun02,123,234,0	script	Mysterious Energy#6	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
-	set .@crash_s,rand(1,1000);
+	.@crash_s = rand(1,1000);
 	if (sign_q == 107) {
 		callfunc "F_SignSeal",.@crash_s;
-		if (sign_q == 107) set sign_q,111;
+		if (sign_q == 107) sign_q = 111;
 		close;
 	}
 	else if (sign_q == 116) {
@@ -12145,11 +12144,11 @@ gl_dun02,123,234,0	script	Mysterious Energy#6	HIDDEN_NPC,{
 // Angrboda's Seal 7 small 6 O'clock 140 72
 gl_dun02,140,72,0	script	Mysterious Energy#7	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
-	set .@crash_s,rand(1,1000);
+	.@crash_s = rand(1,1000);
 	if ((sign_q == 110) || (sign_q == 111)) {
 		callfunc "F_SignSeal",.@crash_s;
-		if (sign_q == 110) set sign_q,114;
-		else if (sign_q == 111) set sign_q,115;
+		if (sign_q == 110) sign_q = 114;
+		else if (sign_q == 111) sign_q = 115;
 		close;
 	}
 	else if (sign_q == 113) {
@@ -12166,7 +12165,7 @@ gl_dun02,140,72,0	script	Mysterious Energy#7	HIDDEN_NPC,{
 // Angrboda's Seal 8 very small 119 182
 gl_dun02,119,182,0	script	Mysterious Energy#8	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
-	set .@crash_s,rand(1,1000);
+	.@crash_s = rand(1,1000);
 	if ((sign_q == 114) || (sign_q == 115)) {
 		callfunc "F_SignSeal",.@crash_s,1;
 		close;
@@ -12237,7 +12236,7 @@ OnInit:
 	end;
 
 OnTouch:
-	set geffenia_warp,rand(1,4);
+	geffenia_warp = rand(1,4);
 	if (geffenia_warp == 1) warp "gefenia01",58,169;
 	else if (geffenia_warp == 2) warp "gefenia02",116,115;
 	else if (geffenia_warp == 3) warp "gefenia03",130,206;
@@ -12336,7 +12335,7 @@ OnTimer600000:
 	end;
 
 OnTimer620000:
-	set $@sign_w2,0;
+	$@sign_w2 = 0;
 	donpcevent "Starter#serin::OnEnable";
 	donpcevent "Warp#serin::OnDisable";
 	donpcevent "Serin#serin::OnEnable";
@@ -12386,7 +12385,7 @@ OnTimer620000:
 	donpcevent "Warp#witch::OnDisable";
 	donpcevent "CallMonster#witch::OnReset";
 	donpcevent "Serin#witch::OnEnable";
-	set $@sign_w1,0;
+	$@sign_w1 = 0;
 	stopnpctimer;
 	end;
 }
@@ -12456,7 +12455,7 @@ OnTouch:
 		close;
 	}
 	else {
-		set $@sign_w1,1;
+		$@sign_w1 = 1;
 		warp "que_sign01",197,190;
 		end;
 	}
@@ -12468,89 +12467,89 @@ function	script	F_UpdateSignVars	{
 		// P.S. I want to slit someone's throat.
 
 		// Attmept to save using the main (old) tracting variable
-		if (signquest <= 4) { set sign_q,signquest; }
+		if (signquest <= 4) { sign_q = signquest; }
 		// ariantest = 5-11
 		// gaanantest = 12 & 13
-		else if (signquest == 5) { set sign_q,14; }
-		else if (signquest == 6) { set sign_q,15; }
+		else if (signquest == 5) { sign_q = 14; }
+		else if (signquest == 6) { sign_q = 15; }
 		// SighJore = 16
-		else if (signquest == 7) { set sign_q,17; }
+		else if (signquest == 7) { sign_q = 17; }
 		// ScareAlchSign = 18
-		else if (signquest == 8) { set sign_q,19; }
-		else if (signquest == 9) { set sign_q,20; }
+		else if (signquest == 8) { sign_q = 19; }
+		else if (signquest == 9) { sign_q = 20; }
 		// There is noequivilent for sign_q 21-24
-		else if (signquest == 10) { set sign_q,25; }
+		else if (signquest == 10) { sign_q = 25; }
 		// There is noequivilent for sign_q 26
-		else if (signquest == 11) { set sign_q,27; }
+		else if (signquest == 11) { sign_q = 27; }
 		// deales_test = 28-30
 		// 31 is not used.
 		// SignDance = 32 & 33
 		// there is no equivilent to sign_q 34
-		else if (signquest == 12) { set sign_q,35; }
+		else if (signquest == 12) { sign_q = 35; }
 		// bakerlan_test - 36-42
 		// there is no equivilent to sign_q 43-45
 		// bakerlan_test - 46-52
-		else if (signquest == 13) { set sign_q,53; }
-		else if ((signquest >= 14) && (signquest <= 15)) { set sign_q,54; }
-		else if ((signquest >= 16) && (signquest <= 18)) { set sign_q,signquest+39; }
+		else if (signquest == 13) { sign_q = 53; }
+		else if ((signquest >= 14) && (signquest <= 15)) { sign_q = 54; }
+		else if ((signquest >= 16) && (signquest <= 18)) { sign_q = signquest+39; }
 		// signanvil = 58-61
-		else if ((signquest == 19) && (countitem(7278))) { set sign_q,61; }
+		else if ((signquest == 19) && (countitem(7278))) { sign_q = 61; }
 		// there is no equivilent to sign_q 62-64
-		else if (signquest == 20) { set sign_q,65; }
+		else if (signquest == 20) { sign_q = 65; }
 		// there is no equivilent to sign_q 66-68
-		else if (signquest == 21) { set sign_q,69; }
-		else if ((signquest >= 22) && (signquest <= 28)) { set sign_q,signquest+48; } // 70-76
+		else if (signquest == 21) { sign_q = 69; }
+		else if ((signquest >= 22) && (signquest <= 28)) { sign_q = signquest+48; } // 70-76
 		// there is no equivilent to sign_q 77
-		else if ((signquest >= 29) && (signquest <= 34)) { set sign_q,signquest+49; } // 78-83
-		else if (signquest == 35) { set sign_q,83; set sign_sq,1; }
-		else if (signquest == 36) { set sign_q,83; set sign_sq,1; }
-		else if (signquest == 37) { set sign_q,83; set sign_sq,2; }
-		else if (signquest == 38) { set sign_q,83; set sign_sq,3; }
+		else if ((signquest >= 29) && (signquest <= 34)) { sign_q = signquest+49; } // 78-83
+		else if (signquest == 35) { sign_q = 83; sign_sq = 1; }
+		else if (signquest == 36) { sign_q = 83; sign_sq = 1; }
+		else if (signquest == 37) { sign_q = 83; sign_sq = 2; }
+		else if (signquest == 38) { sign_q = 83; sign_sq = 3; }
 		// there is no equivilent to sign_sq 4
-		else if (signquest == 39) { set sign_q,83; set sign_sq,5; }
-		else if (signquest == 40) { set sign_q,83; set sign_sq,6; }
-		else if (signquest == 41) { set sign_q,83; set sign_sq,7; }
-		else if (signquest == 42) { set sign_q,83; set sign_sq,8; }
+		else if (signquest == 39) { sign_q = 83; sign_sq = 5; }
+		else if (signquest == 40) { sign_q = 83; sign_sq = 6; }
+		else if (signquest == 41) { sign_q = 83; sign_sq = 7; }
+		else if (signquest == 42) { sign_q = 83; sign_sq = 8; }
 		// there is no equivilent to sign_q 84
-		else if ((signquest >= 43) && (signquest <= 48)) { set sign_q,signquest+42; } // 85-90
+		else if ((signquest >= 43) && (signquest <= 48)) { sign_q = signquest+42; } // 85-90
 		// 91-92
-		else if ((signquest >= 49) && (signquest <= 52)) { set sign_q,signquest+44; } // 93-96
+		else if ((signquest >= 49) && (signquest <= 52)) { sign_q = signquest+44; } // 93-96
 		// signlaichin97-99
-		else if (signquest == 53) { set sign_q,100; }
+		else if (signquest == 53) { sign_q = 100; }
 		// 101-116
-		else if (signquest == 54) { set sign_q,117; }
-		else if (signquest == 55) { set sign_q,118; }
+		else if (signquest == 54) { sign_q = 117; }
+		else if (signquest == 55) { sign_q = 118; }
 		// 119-126
-		else if (signquest == 56) { set sign_q,127; }
+		else if (signquest == 56) { sign_q = 127; }
 		// 128
-		else if (signquest == 57) { set sign_q,129; }
-		else if (signquest == 58) { set sign_q,130; }
+		else if (signquest == 57) { sign_q = 129; }
+		else if (signquest == 58) { sign_q = 130; }
 		// 131-136
-		else if ((signquest >= 59) && (signquest <= 66)) { set sign_q,signquest+78; } // 137-144
+		else if ((signquest >= 59) && (signquest <= 66)) { sign_q = signquest+78; } // 137-144
 		// 144-199
 
 		// Attmept to save using the intermediate variables.
-		if (sign_fail == 1) { set sign_q,200; }
-		else if (sign_fail >= 2) { set sign_q,201; }
+		if (sign_fail == 1) { sign_q = 200; }
+		else if (sign_fail >= 2) { sign_q = 201; }
 
-		if (ariantest >= 2) { set sign_q,ariantest+3; }
-		if (gaanantest == 1) { set sign_q,12; }
+		if (ariantest >= 2) { sign_q = ariantest+3; }
+		if (gaanantest == 1) { sign_q = 12; }
 
-		if (SignJore == 1) { set sign_q,16; }
-		if (ScareAlchSign == 1) { set sign_q,18; }
+		if (SignJore == 1) { sign_q = 16; }
+		if (ScareAlchSign == 1) { sign_q = 18; }
 
-		if (dearles_test == 1) { set sign_q,28; }
-		else if (dearles_test == 2) { set sign_q,29; }
-		else if (dearles_test == 3) { set sign_q,30; }
+		if (dearles_test == 1) { sign_q = 28; }
+		else if (dearles_test == 2) { sign_q = 29; }
+		else if (dearles_test == 3) { sign_q = 30; }
 
-		if (SignDance == 1) { set sign_q,32; }
-		else if (SignDance == 2) { set sign_q,33; }
+		if (SignDance == 1) { sign_q = 32; }
+		else if (SignDance == 2) { sign_q = 33; }
 
-		if ((bakerlan_test >= 1) && (bakerlan_test <= 3)) { set sign_q,bakerlan_test+35; }
-		else if ((bakerlan_test >= 4) && (bakerlan_test <= 6)) { set sign_q,bakerlan_test+36; }
-		else if ((bakerlan_test >= 7) && (bakerlan_test <= 13)) { set sign_q,bakerlan_test+39; }
+		if ((bakerlan_test >= 1) && (bakerlan_test <= 3)) { sign_q = bakerlan_test+35; }
+		else if ((bakerlan_test >= 4) && (bakerlan_test <= 6)) { sign_q = bakerlan_test+36; }
+		else if ((bakerlan_test >= 7) && (bakerlan_test <= 13)) { sign_q = bakerlan_test+39; }
 
-		if ((signanvil >= 1) && (signanvil <= 4)) { set sign_sq,signanvil+57; }
+		if ((signanvil >= 1) && (signanvil <= 4)) { sign_sq = signanvil+57; }
 
 		// Because of the horrible way this was scripted, it's incompatable
 		// With the new script, So I am resetting the quest to the start
@@ -12569,69 +12568,69 @@ function	script	F_UpdateSignVars	{
 			mes "^FF0000pieces on the ground and they vanish! Perhaps you should talk to Lachin.^000000";
 			delitem 7306,countitem(7306); //Fragment_Of_Soul
 			delitem 7307,countitem(7307); //Whisper_Of_Soul
-			set sign_q,rand(97,100);
+			sign_q = rand(97,100);
 		}
 
 		// Same BS as above, unable to save pickup time for 'The Sign' from Engel.
 		if (signengelhour) {
 			mes "^FF0000You see that Engel has forgotten to look at 'The Sign', how you got it back is a mystery too you, but you should remind Engel that he needs to look at it.^000000";
 			getitem 7314,1; //The_Sign
-			set sign_q,139;
+			sign_q = 139;
 		}
 
-		if (Sign_Branch8A == 1) { set sign_q,119; }
-		else if (Sign_Branch8A == 2) { set sign_q,120; }
-		else if (Sign_Branch8A == 3) { set sign_q,122; }
-		else if (Sign_Branch8A == 4) { set sign_q,124; }
-		else if (Sign_Branch8A == 5) { set sign_q,134; }
-		else if ((Sign_Branch8A == 7) || (Sign_Branch8A == 8)) { set sign_q,126; }
+		if (Sign_Branch8A == 1) { sign_q = 119; }
+		else if (Sign_Branch8A == 2) { sign_q = 120; }
+		else if (Sign_Branch8A == 3) { sign_q = 122; }
+		else if (Sign_Branch8A == 4) { sign_q = 124; }
+		else if (Sign_Branch8A == 5) { sign_q = 134; }
+		else if ((Sign_Branch8A == 7) || (Sign_Branch8A == 8)) { sign_q = 126; }
 
 		// Incompatable with the new version.
 		if (Sign_Branch8B > 0) {
 			mes "^FF0000Something is wrong, perhaps you should go talk to Serin again.^000000";
-			set sign_q,132;
+			sign_q = 132;
 		}
 
 		// Incompatable with the new version. Again.
 		if (Sign_Branch2B) {
-			set sign_q,91;
+			sign_q = 91;
 		}
 
 		// Unable to save when the Sign should be picked up from Metz
 		if (signmetzhour) {
 			mes "^FF0000You see that Metz has forgotten to look at 'The Sign', how you got it back is a mystery too you, but you should remind Metz that he needs to look at it.^000000";
 			getitem 7314,1; //The_Sign
-			set sign_q,138;
+			sign_q = 138;
 		}
 
 		// Clear old variables.
-		set signquest,0;
-		set sign_fail,0;
-		set gaananpoint,0;
-		set gaanantest,0;
-		set arianstest,0;
-		set SignJore,0;
-		set ScareAlchSign,0;
-		set dearles_test,0;
-		set SignDance,0;
-		set bakerlan_test,0;
-		set signanvil,0;
-		set signengelhour,0;
-		set signlaichin,0;
-		set Sign_Seal1,0;
-		set Sign_Seal2,0;
-		set Sign_Seal3,0;
-		set Sign_Seal4,0;
-		set Sign_Seal1$,"";
-		set Sign_Seal2$,"";
-		set Sign_Seal3$,"";
-		set Sign_Seal4$,"";
-		set brokenseal,0;
-		set Sign_Branch8A,0;
-		set Sign_Branch8B,0;
-		set Sign_Branch2B,0;
-		set serinring,0;
-		set signmetzhour,0;
+		signquest = 0;
+		sign_fail = 0;
+		gaananpoint = 0;
+		gaanantest = 0;
+		arianstest = 0;
+		SignJore = 0;
+		ScareAlchSign = 0;
+		dearles_test = 0;
+		SignDance = 0;
+		bakerlan_test = 0;
+		signanvil = 0;
+		signengelhour = 0;
+		signlaichin = 0;
+		Sign_Seal1 = 0;
+		Sign_Seal2 = 0;
+		Sign_Seal3 = 0;
+		Sign_Seal4 = 0;
+		Sign_Seal1$ = "";
+		Sign_Seal2$ = "";
+		Sign_Seal3$ = "";
+		Sign_Seal4$ = "";
+		brokenseal = 0;
+		Sign_Branch8A = 0;
+		Sign_Branch8B = 0;
+		Sign_Branch2B = 0;
+		serinring = 0;
+		signmetzhour = 0;
 	}
 	return;
 }

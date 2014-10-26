@@ -666,13 +666,13 @@ que_job01,49,49,5	script	Tao#dan_09	4_F_YUNYANG,{
 que_job01,51,55,0	script	que_job01#room_1	WARPNPC,1,1,{
 
 OnReset:
-	set $@maobar_room,0;
+	$@maobar_room = 0;
 	end;
 
 OnTouch:
 	if (prt_curse == 24) {
 		if ($@maobar_room == 0) {
-			set $@maobar_room,1;
+			$@maobar_room = 1;
 			donpcevent " #room1timer::OnEnable";
 			donpcevent "Marjana#poison::OnEnable";
 			mes "[Tao]";
@@ -697,7 +697,7 @@ OnTouch:
 	}
 	else if (mao_request > 0) {
 		if ($@maobar_room == 0) {
-			set $@maobar_room,1;
+			$@maobar_room = 1;
 			donpcevent " #room1timer::OnEnable";
 			donpcevent "Valdes#moc_master_1::OnEnable";
 			mes "[Tao]";
@@ -946,14 +946,14 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 		case 2:
 			if ($@re_moc < 3) {
 				getpartymember(getcharid(1));
-				set .@partymembercount,$@partymembercount;
+				.@partymembercount = $@partymembercount;
 				copyarray .@partymembername$[0],$@partymembername$[0],.@partymembercount;
 				while (.@partymembercount >= 0) {
-					set .@name$,.@partymembername$[.@partymembercount];
+					.@name$ = .@partymembername$[.@partymembercount];
 					if (isloggedin(getcharid(3,.@name$))) {
-						set .@onlinemembers,.@onlinemembers + 1;
+						++.@onlinemembers;
 					}
-					set .@partymembercount,.@partymembercount - 1;
+					--.@partymembercount;
 				}
 				if ((.@onlinemembers > 1) && (countitem(7826) > 0)) {
 					mes "[Continental Guard]";
@@ -1009,14 +1009,14 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 		mes "Ah, you're an adventurer working for the Continental Guard. Nice to meet you. Feel free to ask me if you need my assistance.";
 		next;
 		getpartymember(getcharid(1));
-		set .@partymembercount,$@partymembercount;
+		.@partymembercount = $@partymembercount;
 		copyarray .@partymembername$[0],$@partymembername$[0],.@partymembercount;
 		while (.@partymembercount >= 0) {
-			set .@name$,.@partymembername$[.@partymembercount];
+			.@name$ = .@partymembername$[.@partymembercount];
 			if (isloggedin(getcharid(3,.@name$))) {
-				set .@onlinemembers,.@onlinemembers + 1;
+				++.@onlinemembers;
 			}
-			set .@partymembercount,.@partymembercount - 1;
+			--.@partymembercount;
 		}
 		switch(select("Enter the First Field to Investigate:Enter the Second Field to Investigate:Return to Morroc's Accident Site:Cancel Conversation")) {
 		case 1:
@@ -1117,12 +1117,12 @@ moc_fild20,203,336,5	duplicate(MocConGuard)	Continental Guard#07	4_M_MOC_SOLDIER
 moc_fild20,215,336,3	duplicate(MocConGuard)	Continental Guard#08	4_M_MOC_SOLDIER,3,3
 
 -	script	Continental Messenger#00::ConMessenger	4_M_MOCASS1,3,3,{
-	set .@area$,strnpcinfo(2);
-	if (.@area$ == "01") { set .@area$,"Prontera"; }
-	else if (.@area$ == "02") { set .@area$,"Geffen"; }
-	else if (.@area$ == "03") { set .@area$,"Payon"; }
-	else if (.@area$ == "04") { set .@area$,"Alberta"; }
-	else if (.@area$ == "05") { set .@area$,"Al De Baran"; }
+	.@area$ = strnpcinfo(2);
+	if (.@area$ == "01") { .@area$ = "Prontera"; }
+	else if (.@area$ == "02") { .@area$ = "Geffen"; }
+	else if (.@area$ == "03") { .@area$ = "Payon"; }
+	else if (.@area$ == "04") { .@area$ = "Alberta"; }
+	else if (.@area$ == "05") { .@area$ = "Al De Baran"; }
 	if (BaseLevel > 79) {
 		mes "[Continental Guard Messenger]";
 		mes "Good day, "+ strcharinfo(0) +". We don't have the luxury of time in this dire situation so I'll try to make this quick.";
@@ -1247,7 +1247,7 @@ morocc,176,103,3	script	Continental Official	4_M_SAGE_A,{
 				next;
 				mes "[Continental Guard Official]";
 				mes "Now please go speak to Chief Balrog of the Continental Guard. You can find him in the center.";
-				set rebirth_moc_edq,1;
+				rebirth_moc_edq = 1;
 				setquest 3050;
 				close;
 			}
@@ -1397,7 +1397,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 							case 2:
 								mes "[Chief Balrog]";
 								mes "Excellent! Bring back ^0000FF30 Live Coals^000000. I'll be waiting for your return.";
-								set rebirth_moc_edq,2;
+								rebirth_moc_edq = 2;
 								changequest 3050,3051;
 								close;
 							}
@@ -1479,7 +1479,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 				mes "[Chief Balrog]";
 				mes "Please bring me ^0000FF50 Glacial Hearts^000000. The faster you get them here, the better.";
 				delitem 7098,30; //Live_Coal
-				set rebirth_moc_edq,3;
+				rebirth_moc_edq = 3;
 				changequest 3051,3052;
 				close;
 			}
@@ -1505,7 +1505,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 			mes "Well... It looks like you earned this.";
 			delitem 7561,50; //Ice_Heart
 			getitem 7826,1; //Continental_Guard_Paper
-			set rebirth_moc_edq,4;
+			rebirth_moc_edq = 4;
 			changequest 3052,3053;
 			next;
 			mes "[" + strcharinfo(0) + "]";
@@ -1617,7 +1617,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 			next;
 			delitem 7820,1; //Morroc_Skin
 			getexp (checkre(3))?200000:2000000,0;
-			set rebirth_moc_edq,7;
+			rebirth_moc_edq = 7;
 			changequest 3055,3056;
 			mes "[Chief Balrog]";
 			mes "I've prepared a few things to give as a reward for you. Let's see... I have three items. Which one do you like to receive?";
@@ -1639,7 +1639,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 					mes "Great, then I'll reward you with the Seal of Continental Guard. Congratulations.";
 					next;
 					getitem 2730,1; //Morroc_Seal
-					set rebirth_moc_edq,8;
+					rebirth_moc_edq = 8;
 					completequest 3056;
 					mes "[Chief Balrog]";
 					mes "I hope you keep in mind that our battle is far from over. Our enemy is the king of demons... I fear that Satan Morroc will return someday soon.";
@@ -1671,7 +1671,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 					mes "Great, then I'll reward you with a Morroc Charm Stone. Congratulations.";
 					next;
 					getitem 2731,1; //Morroc_Charm_Stone
-					set rebirth_moc_edq,8;
+					rebirth_moc_edq = 8;
 					completequest 3056;
 					mes "[Chief Balrog]";
 					mes "I hope you keep in mind that our battle is far from over. Our enemy is the king of demons... I fear that Satan Morroc will return someday soon.";
@@ -1703,7 +1703,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 					mes "Great, then I'll reward you with a Morroc Ring. Congratulations.";
 					next;
 					getitem 2732,1; //Morroc_Ring
-					set rebirth_moc_edq,8;
+					rebirth_moc_edq = 8;
 					completequest 3056;
 					mes "[Chief Balrog]";
 					mes "I hope you keep in mind that our battle is far from over. Our enemy is the king of demons... I fear that Satan Morroc will return someday soon.";
@@ -1751,7 +1751,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 				mes "Great, then I'll reward you with the Seal of Continental Guard. Congratulations.";
 				next;
 				getitem 2730,1; //Morroc_Seal
-				set rebirth_moc_edq,8;
+				rebirth_moc_edq = 8;
 				completequest 3056;
 				mes "[Chief Balrog]";
 				mes "I hope you keep in mind that our battle is far from over. Our enemy is the king of demons... I fear that Satan Morroc will return someday soon.";
@@ -1783,7 +1783,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 				mes "Great, then I'll reward you with a Morroc Charm Stone. Congratulations.";
 				next;
 				getitem 2731,1; //Morroc_Charm_Stone
-				set rebirth_moc_edq,8;
+				rebirth_moc_edq = 8;
 				completequest 3056;
 				mes "[Chief Balrog]";
 				mes "I hope you keep in mind that our battle is far from over. Our enemy is the king of demons... I fear that Satan Morroc will return someday soon.";
@@ -1815,7 +1815,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 				mes "Great, then I'll reward you with a Morroc Ring. Congratulations.";
 				next;
 				getitem 2732,1; //Morroc_Ring
-				set rebirth_moc_edq,8;
+				rebirth_moc_edq = 8;
 				completequest 3056;
 				mes "[Chief Balrog]";
 				mes "I hope you keep in mind that our battle is far from over. Our enemy is the king of demons... I fear that Satan Morroc will return someday soon.";
@@ -1859,13 +1859,13 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 
 moc_fild21,38,193,0	script	Morocc Timer#edq	-1,6,6,{
 //OnInit:
-//	set $@re_moc,0;
-//	set $@re_moc_time$,"";
+//	$@re_moc = 0;
+//	$@re_moc_time$ = "";
 //	end;
 
 OnTouch:
 	if ($@re_moc == 0) {
-		set $@re_moc,1;
+		$@re_moc = 1;
 		donpcevent "Satan Broadcast#edq::OnEnable";
 	}
 	end;
@@ -1909,7 +1909,7 @@ moc_fild21,178,239,0	script	Group of Evil#edq	CLEAR_NPC,1,1,{
 		mes "Wah...!";
 		close2;
 		if($@re_moc == 1) {
-			set $@re_moc,2;
+			$@re_moc = 2;
 			donpcevent "Satan Summon#edq::OnEnable";
 		}
 		end;
@@ -1927,7 +1927,7 @@ OnInit:
 
 OnEnable:
 	enablenpc "Group of Evil#edq";
-	set $@re_moc_time$,"";
+	$@re_moc_time$ = "";
 	end;
 
 OnDisable:
@@ -1944,7 +1944,7 @@ moc_fild21,177,239,0	script	Time-Space Gap#edq	CLEAR_NPC,1,1,{
 		next;
 		mes "You stretch your hand and pick up a lusterless fragment.";
 		getitem 7820,1; //Morroc_Skin
-		set rebirth_moc_edq,6;
+		rebirth_moc_edq = 6;
 		changequest 3053,3055;
 		close;
 	}
@@ -1968,16 +1968,16 @@ OnDisable:
 	stopnpctimer;
 	disablenpc "Time-Space Gap#edq";
 	donpcevent "Group of Evil#edq::OnEnable";
-	set $@re_moc,0;
+	$@re_moc = 0;
 	end;
 
 OnTimer1800000:
-	set $@re_moc,4;
+	$@re_moc = 4;
 	end;
 
 OnTimer21600000:
 	stopnpctimer;
-	set $@re_moc,0;
+	$@re_moc = 0;
 	donpcevent "Time-Space Gap#edq::OnDisable";
 	end;
 }
@@ -1996,13 +1996,13 @@ OnEnable:
 OnDisable:
 	stopnpctimer;
 	killmonster "moc_fild21","Satan Summon#edq::OnMyMobDead";
-	set $@re_moc,0;
+	$@re_moc = 0;
 	disablenpc "Satan Summon#edq";
 	end;
 
 OnMyMobDead:
-	set $@re_moc,3;
-	set $@re_moc_time$, gettimestr("%H%M%S",7);
+	$@re_moc = 3;
+	$@re_moc_time$ = gettimestr("%H%M%S",7);
 	mapannounce "moc_fild21","I'll let live just a little longer. You'll never find me through this time-space gap!",bc_map,"0xFFFF00";
 	donpcevent "Time-Space Gap#edq::OnEnable";
 	donpcevent "Satan Broadcast#edq::OnDisable";
@@ -2018,7 +2018,7 @@ OnTimer5415000:
 	mapannounce "moc_fild21","I don't have time for this! Go away!",bc_map,"0xFFFF00";
 	stopnpctimer;
 	killmonster "moc_fild21","Satan Summon#edq::OnMyMobDead";
-	set $@re_moc,0;
+	$@re_moc = 0;
 	donpcevent "Satan Summon#edq::OnDisable";
 	end;
 }
@@ -2235,7 +2235,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 					mes "[Benjamin]";
 					mes "Thank you so much! Then remember this title: 'The Crow of the Fate' written by 'Oliver Hilpert.' I'm sure you can find it in Prontera Library.";
 					mes "Hehehe, Mammi! I'm almost there!";
-					set barmunt_crow,1;
+					barmunt_crow = 1;
 					setquest 2063;
 					close;
 				case 2:
@@ -2337,7 +2337,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 			}
 			mes "^660000Quickly blinking his eyes, he made you take Mammi's picture book in your arms";
 			mes "demanding that you must encase the book so it would not be damaged.^000000";
-			set barmunt_crow,11;
+			barmunt_crow = 11;
 			getitem 7795,1; //Mami_Photo_Album
 			next;
 			mes "[Benjamin]";
@@ -2395,7 +2395,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 					mes "I'm going to see her tomorrow as soon as the morning comes! Mammi, I'm coming!";
 					delitem 7797,1; //Author_Memo
 					delitem 7796,1; //Author_Autograph
-					set barmunt_crow,16;
+					barmunt_crow = 16;
 					if (checkre(3))
 						getexp 90000,90000;
 					else
@@ -2528,7 +2528,7 @@ prt_in,179,92,3	script	Library Curator#garas	1_M_LIBRARYMASTER,{
 			mes "Well, Juno is quite far from here, but if you're really enthusiastic about reading such a popular book, it should be worthwile.";
 			next;
 			mes "^660000The book isn't for you, but you believe in 100% customer satisfaction. Let's go to Juno Library now.^000000";
-			set barmunt_crow,2;
+			barmunt_crow = 2;
 			changequest 2063,2064;
 			close;
 		case 2:
@@ -2644,7 +2644,7 @@ yuno,333,210,5	script	Library Master#garas	1_M_LIBRARYMASTER,{
 		next;
 		mes "^660000He sounded sincere, but it doesn't sound like that kind of broth would even be effective...^000000";
 		emotion e_dots,1;
-		set barmunt_crow,3;
+		barmunt_crow = 3;
 		close;
 	}
 	else {
@@ -2744,7 +2744,7 @@ OnTouch:
 		next;
 		mes "^660000He sounded sincere, but it doesn't sound like that kind of broth would even be effective...^000000";
 		emotion e_dots,1;
-		set barmunt_crow,3;
+		barmunt_crow = 3;
 		close;
 	}
 	end;
@@ -2864,7 +2864,7 @@ yuno_in04,100,5,3	script	Hot Bestseller Corner	HIDDEN_NPC,{
 		mes "^FF0000-- BEEP --^000000";
 		next;
 		mes "^660000You were about to pull out the book, complaining and grumbling, when suddenly it felt as if your brain exploded. You black out...^000000";
-		set barmunt_crow,4;
+		barmunt_crow = 4;
 		close2;
 		specialeffect2 EF_BASH3D2;
 		warp "que_ba",247,33;
@@ -2969,7 +2969,7 @@ OnTouch2:
 		next;
 		mes "'^660000Now I wonder if the scene is describing an accident that really happened in the past. If there was such big fire, I'm sure I can verify it in a newspaper.";
 		mes "...I just want to know it out of curiosity...^000000'";
-		set barmunt_crow,7;
+		barmunt_crow = 7;
 		changequest 2064,2065;
 		close;
 	}
@@ -2992,7 +2992,7 @@ yuno_in04,117,102,3	script	Old News Scrapbook	CLEAR_NPC,{
 			next;
 			mes "...................................";
 			next;
-			set .@newspp,rand(1,10);
+			.@newspp = rand(1,10);
 			if ((.@newspp == 1) || (.@newspp == 2)) {
 				mes "- Page 1 -";
 				mes "Renowned Assassin Sieglinde: 'I serve you only.'";
@@ -3072,7 +3072,7 @@ yuno_in04,117,102,3	script	Old News Scrapbook	CLEAR_NPC,{
 				mes "["+ strcharinfo(0) +"]";
 				mes "I can't believe this is happening!";
 				mes "Think hard... It was ^FF0000an area connected to a northern cave^000000.";
-				set barmunt_crow,8;
+				barmunt_crow = 8;
 				changequest 2065,2066;
 				close;
 			}
@@ -3195,7 +3195,7 @@ yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
 		close2;
 		specialeffect2 EF_ENHANCE;
 		delitem 7795,1; //Mami_Photo_Album
-		set barmunt_crow,14;
+		barmunt_crow = 14;
 		getitem 7796,1; //Author_Autograph
 		getitem 7797,1; //Author_Memo
 		getitem 617,1; //Old_Violet_Box
@@ -3321,7 +3321,7 @@ yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
 		next;
 		mes "["+ strcharinfo(0) +"]";
 		mes "That was pretty fun, but also pretty tiring. Where should I head for my next adventure?";
-		set barmunt_crow,15;
+		barmunt_crow = 15;
 		completequest 2068;
 		close2;
 		cutin "",255;
@@ -3527,7 +3527,7 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 			mes "[Oliver Hilpert]";
 			mes "Okay... I see...";
 			emotion e_sob;
-			set barmunt_crow,13;
+			barmunt_crow = 13;
 			close2;
 			cutin "",255;
 			end;
@@ -3565,7 +3565,7 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		close2;
 		specialeffect2 EF_ENHANCE;
 		delitem 7795,1; //Mami_Photo_Album
-		set barmunt_crow,14;
+		barmunt_crow = 14;
 		getitem 7796,1; //Author_Autograph
 		getitem 7797,1; //Author_Memo
 		getitem 617,1; //Old_Violet_Box
@@ -3699,7 +3699,7 @@ OnTouch:
 		mes "[Male]";
 		mes "Eva!! We don't have time to save all of them! Come here!";
 		if (barmunt_crow == 4) {
-			set barmunt_crow,5;
+			barmunt_crow = 5;
 		}
 		sc_start SC_BLIND,600000,0,10000;
 		close2;
@@ -3743,7 +3743,7 @@ OnTouch:
 		mes "^660000They seemed completely oblivious of your presence, and headed north.^000000";
 		next;
 		mes "^660000You were looking at their backs as they left, and then noticed that you were holding the book you were reading in your hands. Then....^000000";
-		set barmunt_crow,6;
+		barmunt_crow = 6;
 		specialeffect2 EF_FLASHER;
 		close2;
 		warp "yuno_in04",100,3;
@@ -3790,7 +3790,7 @@ OnTouch:
 		next;
 		mes "^660000He could not finish his words before flames swallowed him up. At the same time, you were...^000000";
 		specialeffect EF_METEORSTORM;
-		set barmunt_crow,12;
+		barmunt_crow = 12;
 		close2;
 		warp "yuno_in04",108,57;
 	}
@@ -3959,7 +3959,7 @@ cave,82,97,3	script	Cave Settler#g1	4_M_CAVE1,3,3,{
 				next;
 				mes "^660000The stern-looking man examined you, and then stepped to the side, allowing you to pass.";
 				mes "You clenched your fists in nervousness, and then started up the dark stairwell.^000000";
-				set barmunt_crow,9;
+				barmunt_crow = 9;
 				close2;
 				warp "cave",82,105;
 				end;
@@ -4048,7 +4048,7 @@ OnTouch:
 				next;
 				mes "^660000The stern-looking man examined you, and then stepped to the side, allowing you to pass.";
 				mes "You clenched your fists in nervousness, and then started up the dark stairwell.^000000";
-				set barmunt_crow,9;
+				barmunt_crow = 9;
 				close2;
 				warp "cave",82,105;
 				end;
@@ -4200,7 +4200,7 @@ cave,22,186,3	script	Monsterous Man#zid	4_M_MUT1,{
 				next;
 				break;
 			case 4:
-				set .@exitloop,1;
+				.@exitloop = 1;
 				break;
 			}
 			if (.@exitloop) break;
@@ -4247,7 +4247,7 @@ cave,22,186,3	script	Monsterous Man#zid	4_M_MUT1,{
 		mes "^660000Zid turned his head away from you. You're still not sure if all of this is really happening. It's all so surreal...^000000";
 		next;
 		mes "^660000Frustrated by the conversation with Zid, you have decided to go back to Morroc and forget everything.^000000";
-		set barmunt_crow,10;
+		barmunt_crow = 10;
 		changequest 2066,2067;
 		close;
 	}
@@ -4354,7 +4354,7 @@ prontera,153,353,4	script	Messenger#prince1	8W_SOLDIER,{
 					mes "The King's position cannot";
 					mes "be empty for too long.";
 					mes "Now, the debate over selecting our next King is actively in progress. Please give us a hand with this, for the tomorrow of Rune Midgarts.";
-					set nk_prince,1;
+					nk_prince = 1;
 					setquest 10000;
 					close;
 				case 2:
@@ -4386,7 +4386,7 @@ prontera,153,353,4	script	Messenger#prince1	8W_SOLDIER,{
 					mes "Please...Please...";
 					mes "Lend a hand for the future";
 					mes "of the Rune Midgarts kingdom.";
-					set nk_prince,1;
+					nk_prince = 1;
 					setquest 10000;
 					close;
 				}
@@ -4421,7 +4421,7 @@ prontera,153,353,4	script	Messenger#prince1	8W_SOLDIER,{
 				mes "you have to do in court.";
 				mes "I hope you will help bring";
 				mes "peace to Rune Midgarts.";
-				set nk_prince,1;
+				nk_prince = 1;
 				setquest 10000;
 				close;
 			}
@@ -4549,13 +4549,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				next;
 				switch(select("Strength and characteristics of the monster.:Efficiency of the hunt.:What we can get from the hunt.")) {
 				case 1:
-					set .@int,.@int+10;
+					.@int += 10;
 					break;
 				case 2:
-					set .@solid,.@solid+10;
+					.@solid += 10;
 					break;
 				case 3:
-					set .@brave,.@brave+10;
+					.@brave += 10;
 					break;
 				}
 				mes "[Inspector]";
@@ -4564,13 +4564,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				next;
 				switch(select("Keep fighting until we can do it.:Find a new place and try differently.:Stop hunting and replenish.")) {
 				case 1:
-					set .@brave,.@brave+10;
+					.@brave += 10;
 					break;
 				case 2:
-					set .@int,.@int+10;
+					.@int += 10;
 					break;
 				case 3:
-					set .@solid,.@solid+10;
+					.@solid += 10;
 					break;
 				}
 				mes "[Inspector]";
@@ -4578,13 +4578,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				next;
 				switch(select("Share it as agreed prior.:I don't want to care for sharing.:Give it to the member that needs it.")) {
 				case 1:
-					set .@int,.@int+10;
+					.@int += 10;
 					break;
 				case 2:
-					set .@solid,.@solid+10;
+					.@solid += 10;
 					break;
 				case 3:
-					set .@brave,.@brave+10;
+					.@brave += 10;
 					break;
 				}
 				mes "[Inspector]";
@@ -4593,13 +4593,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				next;
 				switch(select("Priest, healer class.:Hunter, damage dealer.:Lord Knight, tanker.")) {
 				case 1:
-					set .@int,.@int+10;
+					.@int += 10;
 					break;
 				case 2:
-					set .@brave,.@brave+10;
+					.@brave += 10;
 					break;
 				case 3:
-					set .@solid,.@solid+10;
+					.@solid += 10;
 					break;
 				}
 				mes "[Inspector]";
@@ -4607,13 +4607,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				next;
 				switch(select("A strong person.:An experienced person.:A kind person.")) {
 				case 1:
-					set .@brave,.@brave+10;
+					.@brave += 10;
 					break;
 				case 2:
-					set .@int,.@int+10;
+					.@int += 10;
 					break;
 				case 3:
-					set .@solid,.@solid+10;
+					.@solid += 10;
 					break;
 				}
 				mes "[Inspector]";
@@ -4622,13 +4622,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				next;
 				switch(select("Relationships with people.:Plenty of information gathering.:Discernment and driving force.")) {
 				case 1:
-					set .@solid,.@solid+10;
+					.@solid += 10;
 					break;
 				case 2:
-					set .@int,.@int+10;
+					.@int += 10;
 					break;
 				case 3:
-					set .@brave,.@brave+10;
+					.@brave += 10;
 					break;
 				}
 				mes "[Inspector]";
@@ -4636,13 +4636,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				next;
 				switch(select("Refer to a past failure.:Hesitating is the worst thing.:You are not alone.")) {
 				case 1:
-					set .@int,.@int+10;
+					.@int += 10;
 					break;
 				case 2:
-					set .@brave,.@brave+10;
+					.@brave += 10;
 					break;
 				case 3:
-					set .@solid,.@solid+10;
+					.@solid += 10;
 					break;
 				}
 				mes "[Inspector]";
@@ -4651,13 +4651,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				next;
 				switch(select("Growth of oneself.:World peace.:The pursuit of truth.")) {
 				case 1:
-					set .@brave,.@brave+10;
+					.@brave += 10;
 					break;
 				case 2:
-					set .@solid,.@solid+10;
+					.@solid += 10;
 					break;
 				case 3:
-					set .@int,.@int+10;
+					.@int += 10;
 					break;
 				}
 				mes "[Inspector]";
@@ -4667,13 +4667,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				next;
 				switch(select("Map:Flint:Weapon")) {
 				case 1:
-					set .@int,.@int+10;
+					.@int += 10;
 					break;
 				case 2:
-					set .@solid,.@solid+10;
+					.@solid += 10;
 					break;
 				case 3:
-					set .@brave,.@brave+10;
+					.@brave += 10;
 					break;
 				}
 				mes "[Inspector]";
@@ -4681,13 +4681,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				next;
 				switch(select("Love story.:Heroic epic.:Religious tale.")) {
 				case 1:
-					set .@solid,.@solid+10;
+					.@solid += 10;
 					break;
 				case 2:
-					set .@brave,.@brave+10;
+					.@brave += 10;
 					break;
 				case 3:
-					set .@int,.@int+10;
+					.@int += 10;
 					break;
 				}
 				mes "[Inspector]";
@@ -4697,13 +4697,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				next;
 				switch(select("Attack first.:Observe from a distance.:Flee away.")) {
 				case 1:
-					set .@brave,.@brave+10;
+					.@brave += 10;
 					break;
 				case 2:
-					set .@int,.@int+10;
+					.@int += 10;
 					break;
 				case 3:
-					set .@solid,.@solid+10;
+					.@solid += 10;
 					break;
 				}
 				mes "[Inspector]";
@@ -4712,13 +4712,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				next;
 				switch(select("Dominate countries by reinforcing militia.:Advancement of economy and technology.:Keep public security firm.")) {
 				case 1:
-					set .@brave,.@brave+10;
+					.@brave += 10;
 					break;
 				case 2:
-					set .@int,.@int+10;
+					.@int += 10;
 					break;
 				case 3:
-					set .@solid,.@solid+10;
+					.@solid += 10;
 					break;
 				}
 				mes "[Inspector]";
@@ -4803,7 +4803,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "[Inspector]";
 				mes "Ah, you've spent a long time with me. You must be very tired. Before starting work, if you need some preparation, take off now and come back to me later. I will be waiting here for you.";
 				next;
-				set nk_prince,4;
+				nk_prince = 4;
 				changequest 10000,10003;
 				close;
 			}
@@ -4824,7 +4824,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "bring 2 ^ff0000Reins^000000.";
 				mes "If you can do this mission,";
 				mes "I will respect your strength.";
-				set nk_prince,2;
+				nk_prince = 2;
 				changequest 10000,10001;
 				next;
 				mes "[Inspector]";
@@ -4850,7 +4850,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 			mes "[Inspector]";
 			mes "Alright, good. You proved your strength for yourself. Now you passed one exam. All but one.";
 			delitem 1064,2; //Reins
-			set nk_prince,3;
+			nk_prince = 3;
 			changequest 10001,10002;
 			next;
 			mes "[Inspector]";
@@ -4887,13 +4887,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		next;
 		switch(select("Strength and characteristics of the monster.:Efficiency of the hunt.:What we can get from the hunt.")) {
 		case 1:
-			set .@int,.@int+10;
+			.@int += 10;
 			break;
 		case 2:
-			set .@solid,.@solid+10;
+			.@solid += 10;
 			break;
 		case 3:
-			set .@brave,.@brave+10;
+			.@brave += 10;
 			break;
 		}
 		mes "[Inspector]";
@@ -4902,13 +4902,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		next;
 		switch(select("Keep fighting until we can do it.:Find a new place and try differently.:Stop hunting and replenish.")) {
 		case 1:
-			set .@brave,.@brave+10;
+			.@brave += 10;
 			break;
 		case 2:
-			set .@int,.@int+10;
+			.@int += 10;
 			break;
 		case 3:
-			set .@solid,.@solid+10;
+			.@solid += 10;
 			break;
 		}
 		mes "[Inspector]";
@@ -4916,13 +4916,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		next;
 		switch(select("Share it as agreed prior.:I don't want to care for sharing.:Give it to the member that needs it.")) {
 		case 1:
-			set .@int,.@int+10;
+			.@int += 10;
 			break;
 		case 2:
-			set .@solid,.@solid+10;
+			.@solid += 10;
 			break;
 		case 3:
-			set .@brave,.@brave+10;
+			.@brave += 10;
 			break;
 		}
 		mes "[Inspector]";
@@ -4931,13 +4931,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		next;
 		switch(select("Priest, healer class.:Hunter, damage dealer.:Lord Knight, tanker.")) {
 		case 1:
-			set .@int,.@int+10;
+			.@int += 10;
 			break;
 		case 2:
-			set .@brave,.@brave+10;
+			.@brave += 10;
 			break;
 		case 3:
-			set .@solid,.@solid+10;
+			.@solid += 10;
 			break;
 		}
 		mes "[Inspector]";
@@ -4945,13 +4945,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		next;
 		switch(select("A strong person.:An experienced person.:A kind person.")) {
 		case 1:
-			set .@brave,.@brave+10;
+			.@brave += 10;
 			break;
 		case 2:
-			set .@int,.@int+10;
+			.@int += 10;
 			break;
 		case 3:
-			set .@solid,.@solid+10;
+			.@solid += 10;
 			break;
 		}
 		mes "[Inspector]";
@@ -4960,13 +4960,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		next;
 		switch(select("Relationships with people.:Plenty of information gathering.:Discernment and driving force.")) {
 		case 1:
-			set .@solid,.@solid+10;
+			.@solid += 10;
 			break;
 		case 2:
-			set .@int,.@int+10;
+			.@int += 10;
 			break;
 		case 3:
-			set .@brave,.@brave+10;
+			.@brave += 10;
 			break;
 		}
 		mes "[Inspector]";
@@ -4974,13 +4974,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		next;
 		switch(select("Refer to a past failure.:Hesitating is the worst thing.:You are not alone.")) {
 		case 1:
-			set .@int,.@int+10;
+			.@int += 10;
 			break;
 		case 2:
-			set .@brave,.@brave+10;
+			.@brave += 10;
 			break;
 		case 3:
-			set .@solid,.@solid+10;
+			.@solid += 10;
 			break;
 		}
 		mes "[Inspector]";
@@ -4989,13 +4989,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		next;
 		switch(select("Growth of oneself.:World peace.:The pursuit of truth.")) {
 		case 1:
-			set .@brave,.@brave+10;
+			.@brave += 10;
 			break;
 		case 2:
-			set .@solid,.@solid+10;
+			.@solid += 10;
 			break;
 		case 3:
-			set .@int,.@int+10;
+			.@int += 10;
 			break;
 		}
 		mes "[Inspector]";
@@ -5005,13 +5005,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		next;
 		switch(select("Map:Flint:Weapon")) {
 		case 1:
-			set .@int,.@int+10;
+			.@int += 10;
 			break;
 		case 2:
-			set .@solid,.@solid+10;
+			.@solid += 10;
 			break;
 		case 3:
-			set .@brave,.@brave+10;
+			.@brave += 10;
 			break;
 		}
 		mes "[Inspector]";
@@ -5019,13 +5019,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		next;
 		switch(select("Love story.:Heroic epic.:Religious tale.")) {
 		case 1:
-			set .@solid,.@solid+10;
+			.@solid += 10;
 			break;
 		case 2:
-			set .@brave,.@brave+10;
+			.@brave += 10;
 			break;
 		case 3:
-			set .@int,.@int+10;
+			.@int += 10;
 			break;
 		}
 		mes "[Inspector]";
@@ -5035,13 +5035,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		next;
 		switch(select("Attack first.:Observe from a distance.:Flee away.")) {
 		case 1:
-			set .@brave,.@brave+10;
+			.@brave += 10;
 			break;
 		case 2:
-			set .@int,.@int+10;
+			.@int += 10;
 			break;
 		case 3:
-			set .@solid,.@solid+10;
+			.@solid += 10;
 			break;
 		}
 		mes "[Inspector]";
@@ -5050,13 +5050,13 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		next;
 		switch(select("Dominate countries by reinforcing militia.:Advancement of economy and technology.:Keep public security firm.")) {
 		case 1:
-			set .@brave,.@brave+10;
+			.@brave += 10;
 			break;
 		case 2:
-			set .@int,.@int+10;
+			.@int += 10;
 			break;
 		case 3:
-			set .@solid,.@solid+10;
+			.@solid += 10;
 			break;
 		}
 		mes "[Inspector]";
@@ -5141,7 +5141,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "[Inspector]";
 		mes "Ah, you've spent a long time with me. You must be very tired. Before starting work, if you need some preparation, take off now and come back to me later. I will be waiting here for you.";
 		next;
-		set nk_prince,4;
+		nk_prince = 4;
 		changequest 10002,10003;
 		close;
 	}
@@ -5176,7 +5176,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "[Inspector]";
 				mes "So this time, the Court decided to change its ways, giving the opportunity to appraise the candidates to famous and devoted adventurers like yourself. That's why you are here.";
 				next;
-				set .@prince,1;
+				.@prince = 1;
 				break;
 			case 2:
 				mes "[Inspector]";
@@ -5215,7 +5215,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 					mes "[Inspector]";
 					mes "Please behave accordingly.";
 					mes "Thanks for your effort.";
-					set nk_prince,5;
+					nk_prince = 5;
 					completequest 10003;
 					setquest 10005;
 					setquest 10006;
@@ -5283,7 +5283,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				else if (BaseLevel >= 99) getexp 1100000,0;
 				else getexp 300000,0;
 			}
-			set nk_prince,8;
+			nk_prince = 8;
 			completequest 10025;
 			close;
 		}
@@ -5380,7 +5380,7 @@ prt_castle,272,375,4	script	Prince	4_M_SITDOWN,{
 		mes "[Erich]";
 		mes "That's enough.";
 		mes "You can ask information about me to my servant. I will take a rest.";
-		set nk_prince,6;
+		nk_prince = 6;
 		completequest 10011;
 		if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
 		 && questprogress(10009) == 2 && questprogress(10010) == 2 && questprogress(10011) == 2) {
@@ -5541,7 +5541,7 @@ prt_castle,339,202,3	script	Prince#urgen	4_M_4THPRIN1,{
 				next;
 				mes "[Urugen]";
 				mes "I became timid, gradually, in phases. I feel awe from men and women both, regardless of sexuality.";
-				set .@p_a,1;
+				.@p_a = 1;
 				next;
 				break;
 			case 2:
@@ -5550,7 +5550,7 @@ prt_castle,339,202,3	script	Prince#urgen	4_M_4THPRIN1,{
 				next;
 				mes "[Urugen]";
 				mes "The presence of such a gorgeous king like me will be the light for people and the hope and reason for their lives.";
-				set .@p_b,1;
+				.@p_b = 1;
 				next;
 				break;
 			case 3:
@@ -5559,7 +5559,7 @@ prt_castle,339,202,3	script	Prince#urgen	4_M_4THPRIN1,{
 				next;
 				mes "[Urugen]";
 				mes "In every case, there is an exception, like you in this court. Can you stand away from me a bit more? Because of your odor, I can hardly breathe.";
-				set .@p_c,1;
+				.@p_c = 1;
 				next;
 				break;
 			case 4:
@@ -5809,7 +5809,7 @@ prt_castle,391,205,3	script	Prince#poe	4_M_6THPRIN1,{
 		mes "Ah, of course, 7 is the middle number. 7 means no success or no failure. The goal of this game is to give the right answer 2 times in a row. Let's begin!";
 		next;
 		while(.@wincount < 2) {
-			set .@card,rand(1,13);
+			.@card = rand(1,13);
 			mes "[Poe]";
 			mes "Yes, now choose one";
 			mes "from higher and lower.";
@@ -5825,7 +5825,7 @@ prt_castle,391,205,3	script	Prince#poe	4_M_6THPRIN1,{
 				mes "It is..." + .@card + "!!";
 				next;
 				if (.@card > 7) {
-					set .@wincount,.@wincount+1;
+					++.@wincount;
 					mes "[Poe]";
 					mes "Whooah, you gave the right answer!";
 					if (.@wincount == 2) {
@@ -5860,7 +5860,7 @@ prt_castle,391,205,3	script	Prince#poe	4_M_6THPRIN1,{
 				mes "It is..." + .@card + "!!";
 				next;
 				if (.@card < 7) {
-					set .@wincount,.@wincount+1;
+					++.@wincount;
 					mes "[Poe]";
 					mes "Whooah, you gave the right answer!";
 					if (.@wincount == 2) {
@@ -5920,7 +5920,7 @@ prt_castle,391,205,3	script	Prince#poe	4_M_6THPRIN1,{
 				mes "[Poe]";
 				mes "Hey it's cool, huh?";
 				mes "We have same tastes, haven't we?";
-				set .@p_a,1;
+				.@p_a = 1;
 				next;
 				break;
 			case 2:
@@ -5943,7 +5943,7 @@ prt_castle,391,205,3	script	Prince#poe	4_M_6THPRIN1,{
 				mes "Ah, those last words";
 				mes "are off-the-record.";
 				mes "I don't want to be bothered by my family.";
-				set .@p_b,1;
+				.@p_b = 1;
 				next;
 				break;
 			case 3:
@@ -5956,7 +5956,7 @@ prt_castle,391,205,3	script	Prince#poe	4_M_6THPRIN1,{
 				next;
 				mes "[Poe]";
 				mes "But many say, about my character, that I am addicted to gambling. I am just full of a challenging spirit and I like raking in money! I am a free-spirited normal man.";
-				set .@p_c,1;
+				.@p_c = 1;
 				next;
 				break;
 			case 4:
@@ -6192,7 +6192,7 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 			next;
 			mes "[Ahrum]";
 			mes "We were close friends. Unlike me, he is kind and compassionate; a distinct official of public affairs. When he has to be strict, he turns strict with everyone.";
-			set nkprince_eisen,4;
+			nkprince_eisen = 4;
 			close;
 		}
 		else if (nkprince_eisen == 4) {
@@ -6256,7 +6256,7 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 			mes "[Ernst]";
 			mes "Now, let me return to my room. Keep up the good work, appraiser.";
 			donpcevent "Prince#another_ern::OnDisable";
-			set nkprince_eisen,6;
+			nkprince_eisen = 6;
 			close;
 		}
 		else if (nkprince_eisen == 6) {
@@ -6268,7 +6268,7 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 			mes "I worry about your words...";
 			mes "What do you want to say this time?...";
 			mes "Have you seen him, appraiser?";
-			set nkprince_eisen,7;
+			nkprince_eisen = 7;
 			changequest 10012,10016;
 			close;
 		}
@@ -6306,7 +6306,7 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 				next;
 				mes "[Ahrum]";
 				mes "I am very sorry, but I want to be left alone. Leave me alone, right now!";
-				set nkprince_eisen,9;
+				nkprince_eisen = 9;
 				close2;
 				warp "prt_castle",318,273;
 				end;
@@ -6387,7 +6387,7 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 			next;
 			mes "(dagger thrusting sound)";
 			specialeffect EF_HIT2;
-			set nkprince_eisen,14;
+			nkprince_eisen = 14;
 			donpcevent "Prince#another_ern::OnDisable";
 			donpcevent "Prince#another_ern1::OnEnable";
 			close;
@@ -6476,8 +6476,8 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 			mes "[Ernst]";
 			mes "Brotherrrrrrrr!!!";
 			next;
-			set nkprince_eisen,15;
-			set nk_prince,7;
+			nkprince_eisen = 15;
+			nk_prince = 7;
 			donpcevent "Prince#another_ern1::OnDisable";
 			changequest 10024,10025;
 			close2;
@@ -6615,10 +6615,10 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 				mes "Okay...";
 				mes "as you please.";
 				if (nkprince_eisen == 2) {
-					set nkprince_eisen,3;
+					nkprince_eisen = 3;
 				}
 				else {
-					set nkprince_eisen,1;
+					nkprince_eisen = 1;
 				}
 				completequest 10005;
 				if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
@@ -6674,7 +6674,7 @@ prt_castle,368,312,4	script	Prince#ern	4_M_2NDPRIN1,{
 			next;
 			mes "[Ernst]";
 			mes "It seems that even brother Ahrum hasn't met with him. Hmm...";
-			set nkprince_eisen,7;
+			nkprince_eisen = 7;
 			changequest 10012,10016;
 			close;
 		}
@@ -6686,7 +6686,7 @@ prt_castle,368,312,4	script	Prince#ern	4_M_2NDPRIN1,{
 			next;
 			mes "[Ernst]";
 			mes "Hmm...I don't have any more words to say. Moreover, Ahrum seems to be strange these days. I worry about that. I hope it's not a big deal.";
-			set nkprince_eisen,10;
+			nkprince_eisen = 10;
 			changequest 10017,10004;
 			close;
 		}
@@ -6802,10 +6802,10 @@ prt_castle,368,312,4	script	Prince#ern	4_M_2NDPRIN1,{
 				mes "[Ernst]";
 				mes "Yes, then, see you later.";
 				if (nkprince_eisen == 1) {
-					set nkprince_eisen,3;
+					nkprince_eisen = 3;
 				}
 				else {
-					set nkprince_eisen,2;
+					nkprince_eisen = 2;
 				}
 				completequest 10006;
 				if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
@@ -6888,7 +6888,7 @@ OnTouch:
 		mes "[" + strcharinfo(0) + "]";
 		mes "(Is this the conspiracy of two families? What the hell..)";
 		changequest 10016,10017;
-		set nkprince_eisen,8;
+		nkprince_eisen = 8;
 		close;
 	}
 }
@@ -6996,7 +6996,7 @@ prt_castle,314,371,0	script	Prince#another_ern	4_M_2NDPRIN1,{
 		next;
 		mes "(dagger thrusting sound)";
 		specialeffect EF_HIT2;
-		set nkprince_eisen,14;
+		nkprince_eisen = 14;
 		donpcevent "Prince#another_ern::OnDisable";
 		donpcevent "Prince#another_ern1::OnEnable";
 		close;
@@ -7063,7 +7063,7 @@ prt_castle,314,371,0	script	Prince#another_ern	4_M_2NDPRIN1,{
 		mes "[Ernst]";
 		mes "Now, let me return to my room. Keep up the good work, appraiser.";
 		donpcevent "Prince#another_ern::OnDisable";
-		set nkprince_eisen,6;
+		nkprince_eisen = 6;
 		close;
 	}
 
@@ -7163,8 +7163,8 @@ prt_castle,314,372,0	script	Prince#another_ern1	4_M_2NDPRIN1,{
 		mes "[Ernst]";
 		mes "Brotherrrrrrrr!!!";
 		next;
-		set nkprince_eisen,15;
-		set nk_prince,7;
+		nkprince_eisen = 15;
+		nk_prince = 7;
 		donpcevent "Prince#another_ern1::OnDisable";
 		changequest 10024,10025;
 		close2;
@@ -7221,7 +7221,7 @@ prt_castle,272,372,1	script	Prince#eisen1	4_M_1STPRIN1,{
 	if (questprogress(10018) == 2 && questprogress(10019) == 2 && questprogress(10020) == 2
 	 && questprogress(10021) == 2 && questprogress(10022) == 2) {
 		setquest 10023;
-		set nkprince_eisen,11;
+		nkprince_eisen = 11;
 	}
 	donpcevent "Prince#eisen1::OnDisable";
 	close;
@@ -7275,7 +7275,7 @@ prt_castle,336,202,7	script	Prince#eisen2	4_M_1STPRIN1,{
 	if (questprogress(10018) == 2 && questprogress(10019) == 2 && questprogress(10020) == 2
 	 && questprogress(10021) == 2 && questprogress(10022) == 2) {
 		setquest 10023;
-		set nkprince_eisen,11;
+		nkprince_eisen = 11;
 	}
 	donpcevent "Prince#eisen2::OnDisable";
 	close;
@@ -7326,7 +7326,7 @@ prt_castle,286,201,7	script	Prince#eisen3	4_M_1STPRIN1,{
 	if (questprogress(10018) == 2 && questprogress(10019) == 2 && questprogress(10020) == 2
 	 && questprogress(10021) == 2 && questprogress(10022) == 2) {
 		setquest 10023;
-		set nkprince_eisen,11;
+		nkprince_eisen = 11;
 	}
 	donpcevent "Prince#eisen3::OnDisable";
 	close;
@@ -7386,7 +7386,7 @@ prt_castle,388,205,6	script	Prince#eisen4	4_M_1STPRIN1,{
 	if (questprogress(10018) == 2 && questprogress(10019) == 2 && questprogress(10020) == 2
 	 && questprogress(10021) == 2 && questprogress(10022) == 2) {
 		setquest 10023;
-		set nkprince_eisen,11;
+		nkprince_eisen = 11;
 	}
 	donpcevent "Prince#eisen4::OnDisable";
 	close;
@@ -7446,7 +7446,7 @@ prt_castle,364,372,1	script	Prince#eisen5	4_M_1STPRIN1,{
 	if (questprogress(10018) == 2 && questprogress(10019) == 2 && questprogress(10020) == 2
 	 && questprogress(10021) == 2 && questprogress(10022) == 2) {
 		setquest 10023;
-		set nkprince_eisen,11;
+		nkprince_eisen = 11;
 	}
 	donpcevent "Prince#eisen5::OnDisable";
 	close;
@@ -7534,7 +7534,7 @@ prt_castle,368,310,1	script	Prince#eisen6	4_M_1STPRIN1,{
 	mes "[Ernst]";
 	mes "Ahrum... Ahrum...";
 	changequest 10023,10024;
-	set nkprince_eisen,13;
+	nkprince_eisen = 13;
 	donpcevent "Prince#eisen6::OnDisable";
 	close;
 
@@ -7555,11 +7555,11 @@ prt_castle,318,276,0	script	#eisen	WARPNPC,1,1,{
 OnTouch:
 	if ((nkprince_eisen == 4) || (nkprince_eisen == 5)) {
 		donpcevent "Prince#another_ern::OnEnable";
-		set nkprince_eisen,5;
+		nkprince_eisen = 5;
 		warp "prt_castle",318,368;
 	}
 	else if ((nkprince_eisen == 9) || (nkprince_eisen == 10) || (nkprince_eisen == 11) || (nkprince_eisen == 12)) {
-		set .@armkoe,rand(1,4);
+		.@armkoe = rand(1,4);
 		if (.@armkoe == 1) {
 			mes "-You can hear Ahrum's voice";
 			mes "before going into his room";
@@ -7745,7 +7745,7 @@ OnTouch:
 		mes "[" + strcharinfo(0) + "]";
 		mes "Who is going to have the throne instead of him?";
 		next;
-		set nk_prince,9;
+		nk_prince = 9;
 		mes "[" + strcharinfo(0) + "]";
 		mes "Oh no...";
 		close;

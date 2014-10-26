@@ -92,7 +92,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 			mes "Oh, Very well.";
 			mes "Get a move on.";
 			mes "Find the shield called ^ff0000Guard[1]^000000 and bring it to me.";
-			set ninbo,1;
+			ninbo = 1;
 			close;
 		}
 	}
@@ -119,7 +119,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 			mes "Hmm, Ok.";
 			mes "I'm so grateful that I was able to see such a rare thing from overseas.";
 			mes "Thanks for everything.";
-			set ninbo,0;
+			ninbo = 0;
 			close;
 		}else{
 			mes "[Boshuu]";
@@ -132,7 +132,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 			mes "[Boshuu]";
 			mes "Then I'll slot your slotless Arm Guard.";
 			mes "Come back when you have all the required materials.";
-			set ninbo,2;
+			ninbo = 2;
 			close;
 		}
 	}
@@ -182,14 +182,14 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 			delitem 2102,1;
 			delitem 2117,1;
 			Zeny -= 10000;
-			set ninbo,0;
-			set MISC_QUEST,MISC_QUEST | 2048;
+			ninbo = 0;
+			MISC_QUEST |= 2048;
 			getitem 2118,1;
 			close;
 		}
 	}
 	else if (MISC_QUEST & 2048){
-		set ninbo,0;
+		ninbo = 0;
 		mes "[Boshuu]";
 		mes "Oh~ I see you've come back.";
 		mes "Is it because you need another slotted Arm Guard?";
@@ -256,7 +256,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 		}
 	}
 	else{
-		set ninbo,0;
+		ninbo = 0;
 		mes "[Boshuu]";
 		mes "Oh~ You~!";
 		mes "Is what you have there the shield from overseas called a Guard? Let me take a look.";
@@ -352,7 +352,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 				delitem 2102,1;
 				delitem 2117,1;
 				Zeny -= 10000;
-				set MISC_QUEST,MISC_QUEST | 2048;
+				MISC_QUEST |= 2048;
 				getitem 2118,1;
 				close;
 			}
@@ -415,7 +415,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 			mes "[Basshu]";
 			mes "Oh, thank you.";
 			mes "If you could really find me a Mirror Shield, I might get some really good ideas.";
-			set ninbot,1;
+			ninbot = 1;
 			close;
 		}
 	}
@@ -447,7 +447,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 			next;
 			mes "[Basshu]";
 			mes "Thanks for everything.";
-			set ninbot,0;
+			ninbot = 0;
 			close;
 		}else{
 			mes "[Basshu]";
@@ -462,7 +462,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 			next;
 			mes "[Basshu]";
 			mes "Come and see me when you have everything ready.";
-			set ninbot,2;
+			ninbot = 2;
 			close;
 		}
 	}
@@ -522,14 +522,14 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 			delitem 2107,1;
 			delitem 2117,1;
 			Zeny -= 20000;
-			set ninbot,0;
-			set MISC_QUEST,MISC_QUEST | 4096;
+			ninbot = 0;
+			MISC_QUEST |= 4096;
 			getitem 2119,1;
 			close;
 		}
 	}
 	else if (MISC_QUEST & 4096){
-		set ninbot,0;
+		ninbot = 0;
 		mes "[Basshu]";
 		mes "Oh~ I see you've come back.";
 		mes "Are you here because you need an Improved Arm Guard?";
@@ -601,7 +601,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 		}
 	}
 	else{
-		set ninbot,0;
+		ninbot = 0;
 		mes "[Basshu]";
 		mes "Why~ That's~!";
 		mes "Is what you have there that shield which is called a 'Mirror Shield' overseas?";
@@ -703,7 +703,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 				delitem 2107,1;
 				delitem 2117,1;
 				Zeny -= 20000;
-				set MISC_QUEST,MISC_QUEST | 4096;
+				MISC_QUEST |= 4096;
 				getitem 2119,1;
 				close;
 			}
@@ -712,7 +712,6 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 }
 
 que_ng,27,18,3	script	Toshu	4_M_SEAMAN,{
-	
 	if(BaseClass != Job_Ninja){
 		mes "[Toshu]";
 		mes "How are you~";

@@ -60,7 +60,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				close;
 			}
 		}
@@ -73,7 +73,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				close;
 			}
 		}
@@ -86,7 +86,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				close;
 			}
 		}
@@ -104,7 +104,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				close;
 			}
 		}
@@ -148,7 +148,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				close;
 			}
 		}
@@ -162,7 +162,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				close;
 			}
 		}
@@ -176,7 +176,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				close;
 			}
 		}
@@ -194,7 +194,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				close;
 			}
 		}
@@ -244,7 +244,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				close;
 			}
 		}
@@ -258,7 +258,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				close;
 			}
 		}
@@ -272,7 +272,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				close;
 			}
 		}
@@ -291,7 +291,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				close;
 			}
 		}
@@ -377,7 +377,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				warp "louyang",280,161;
 				close;
 			}
@@ -392,7 +392,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				warp "louyang",280,161;
 				close;
 			}
@@ -407,7 +407,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				warp "louyang",280,161;
 				close;
 			}
@@ -426,7 +426,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				warp "louyang",280,161;
 				close;
 			}
@@ -437,12 +437,12 @@ OnTouch:
 
 lou_fild01,195,177,5	script	Jiu Lian Bu#1-1	4_M_CHN8GUEK,{
 	//Remove outdated variables and attempt to preserve prior quest progress.
-	if (QL_ACCEPTSOUP) set ch_tre,1;
-	if (QL_GOTDRAGONSOUP) set ch_tre,2;
-	if (QL_GOTFAKESOUP) set ch_tre,3;
-	if (QL_SOUPQUEST)  set ch_tre,4;
-	if (QL_SOUP2) set ch_tre,5;
-	set QL_ACCEPTSOUP,0; set QL_GOTDRAGONSOUP,0; set QL_GOTFAKESOUP,0; set QL_SOUPQUEST,0; set QL_SOUP2,0;
+	if (QL_ACCEPTSOUP) ch_tre = 1;
+	if (QL_GOTDRAGONSOUP) ch_tre = 2;
+	if (QL_GOTFAKESOUP) ch_tre = 3;
+	if (QL_SOUPQUEST)  ch_tre = 4;
+	if (QL_SOUP2) ch_tre = 5;
+	QL_ACCEPTSOUP = 0; QL_GOTDRAGONSOUP = 0; QL_GOTFAKESOUP = 0; QL_SOUPQUEST = 0; QL_SOUP2 = 0;
 
 	if (ch_tre == 0) {
 		mes "[Jiu Lian Bu]";
@@ -512,7 +512,7 @@ lou_fild01,195,177,5	script	Jiu Lian Bu#1-1	4_M_CHN8GUEK,{
 				next;
 				mes "[Jiu Lian Bu]";
 				mes "When you finally steal the broth, make sure you bring it without spilling any. Okay? Good luck~";
-				set ch_tre,1;
+				ch_tre = 1;
 				close;
 			}
 			mes "[Jiu Lian Bu]";
@@ -551,7 +551,7 @@ lou_fild01,195,177,5	script	Jiu Lian Bu#1-1	4_M_CHN8GUEK,{
 		mes "Ohhhh man....";
 		mes "This is soooo not Dragon Soup Broth. Sorry, but would you go";
 		mes "and try to get it again?";
-		set ch_tre,1;
+		ch_tre = 1;
 		close;
 	}
 	else if (ch_tre == 3) {
@@ -574,7 +574,7 @@ lou_fild01,195,177,5	script	Jiu Lian Bu#1-1	4_M_CHN8GUEK,{
 		next;
 		mes "[Jiu Lian Bu]";
 		mes "Good job, chum! Heh heh heh, because you risked your neck for me, I'm gonna show you an awesome place! Just follow me~";
-		set ch_tre,4;
+		ch_tre = 4;
 		close2;
 		warp "lou_fild01",180,170;
 		end;
@@ -668,7 +668,7 @@ lou_fild01,175,173,3	script	Jiu Lian Bu#1-2	4_M_CHN8GUEK,{
 		mes "[Jiu Lian Bu]";
 		mes "So from now on, whenever you";
 		mes "wanna relieve yourself of stress, come see me and we'll come back to this place. Call it my way of saying thanks.";
-		set ch_tre,5;
+		ch_tre = 5;
 		close;
 	}
 	else if (ch_tre == 5) {
@@ -754,10 +754,10 @@ lou_in02,50,185,5	script	Pot#1	HIDDEN_NPC,{
 			mes "away from this restaurant";
 			mes "without getting caught...^000000";
 			if (rand(1,4) < 4) {
-				set ch_tre,2;
+				ch_tre = 2;
 			}
 			else {
-				set ch_tre,3;
+				ch_tre = 3;
 			}
 			close;
 		}
@@ -826,10 +826,10 @@ lou_in02,49,185,5	script	Pot#2	HIDDEN_NPC,{
 			mes "away from this restaurant";
 			mes "without getting caught...^000000";
 			if (rand(1,4) < 4) {
-				set ch_tre,2;
+				ch_tre = 2;
 			}
 			else {
-				set ch_tre,3;
+				ch_tre = 3;
 			}
 			close;
 		}
@@ -904,7 +904,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				close;
 			}
 		}
@@ -918,7 +918,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				close;
 			}
 		}
@@ -932,7 +932,7 @@ OnTouch:
 				next;
 				mes "^3131FFYou have failed^000000";
 				mes "^3131FFto steal the pot.^000000";
-				set ch_tre,1;
+				ch_tre = 1;
 				close;
 			}
 		}
@@ -1111,7 +1111,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 		next;
 		mes "[Hua Tuo]";
 		mes "If pressed the wrong way, it can cause death. But between 5:15 am and 7:15 am, it's just a weak point.";
-		set ch_par,1;
+		ch_par = 1;
 		close;
 	}
 	else if (ch_par == 1) {
@@ -1193,7 +1193,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			mes "I am sorry for causing you";
 			mes "so much trouble, but if you'll excuse me, I have other patients waiting. Please hurry back with";
 			mes "the medicine!";
-			set ch_par,2;
+			ch_par = 2;
 			setquest 11044;
 			close;
 		}
@@ -1283,7 +1283,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			mes "This medicine is not that";
 			mes "great, but it's an old family secret. I hope it will be useful to you if you find yourself in great danger.";
 			delitem 7252,1; //Herb_Medicine
-			set ch_par,10;
+			ch_par = 10;
 			completequest 11056;
 			getitem 679,2; //Gold_Pill
 			getexp (checkre(3))?1000:10000,0;
@@ -1323,7 +1323,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 		mes "^3355FF20 Brown Root^000000,";
 		mes "^3355FF10 Sprout^000000 and";
 		mes "^3355FF5 Honey Pot^000000.";
-		set ch_par,17;
+		ch_par = 17;
 		changequest 11056,11057;
 		close;
 	}
@@ -1402,7 +1402,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			mes "It's not much, but this medicine";
 			mes "is an old family secret. I hope that it will be of use to you in dangerous situations.";
 			delitem 7252,1; //Herb_Medicine
-			set ch_par,10;
+			ch_par = 10;
 			completequest 11056;
 			getitem 679,2; //Gold_Pill
 			getexp (checkre(3))?1000:10000,0;
@@ -1433,7 +1433,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 		mes "^3355FF20 Brown Root^000000,";
 		mes "^3355FF10 Sprout^000000 and";
 		mes "^3355FF5 Honey Pot^000000.";
-		set ch_par,17;
+		ch_par = 17;
 		close;
 	}
 	else if (ch_par == 17) {
@@ -1457,7 +1457,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			delitem 7193,10; //Germinating_Sprout
 			delitem 7121,5; //Honey_Jar
 			delitem 7252,1; //Herb_Medicine
-			set ch_par,18;
+			ch_par = 18;
 			completequest 11057;
 			getitem 679,5; //Gold_Pill
 			getexp (checkre(3))?10000:30000,0;
@@ -1506,7 +1506,7 @@ lou_in02,272,55,0	script	Familiar-Looking Patient	4_M_NFMAN,{
 		mes "Ummm....";
 		mes "^666666*Cough...cough...*^000000";
 		emotion e_omg;
-		set ch_par,1;
+		ch_par = 1;
 		close;
 	}
 	else if (ch_par < 18) {
@@ -1555,7 +1555,7 @@ lou_in02,248,166,2	script	Tool Shop Master#lou	4_M_CHNOLD,{
 			mes "[Wang Chuiyi]";
 			mes "You can find the storage on";
 			mes "the opposite side of this building. There, you'll see a guy named Jiang Xiayou. Go ahead and ask him for the stuff you need.";
-			set ch_par,3;
+			ch_par = 3;
 			changequest 11044,11045;
 			close;
 		}
@@ -1661,25 +1661,25 @@ lou_in02,201,166,4	script	Storage Keeper#lou	4_M_CHN8GUEK,{
 				mes "[Jiang Xiayou]";
 				mes "This is important,";
 				mes "So don't forget this.";
-				set .@paper_j,rand(10,13);
+				.@paper_j = rand(10,13);
 				if (.@paper_j == 10) {
 					mes "When the guy asks what you need, you tell him: '^ff0000Residence Transfer Application^000000.' Just like that.";
-					set ch_par,5;
+					ch_par = 5;
 					changequest 11045,11046;
 				}
 				else if (.@paper_j == 11) {
 					mes "When the guy asks what you need, you tell him: '^ff0000Summer SAT Class Application^000000.' Got it?";
-					set ch_par,6;
+					ch_par = 6;
 					changequest 11045,11047;
 				}
 				else if (.@paper_j == 12) {
 					mes "When the guy asks what you need, you tell him: '^ff0000Sandy Dust Phenomenon Report^000000.' Easy, right?";
-					set ch_par,7;
+					ch_par = 7;
 					changequest 11045,11048;
 				}
 				else if (.@paper_j == 13) {
 					mes "When the guy asks what you need, you tell him: '^ff0000Communication Proposal^000000.' Just like that?";
-					set ch_par,8;
+					ch_par = 8;
 					changequest 11045,11049;
 				}
 				next;
@@ -1695,7 +1695,7 @@ lou_in02,201,166,4	script	Storage Keeper#lou	4_M_CHN8GUEK,{
 			mes "[Jiang Xiayou]";
 			mes "The medicines you're looking for might be around here, so look around. If it weren't for the doctor, I wouldn't even let you hang around, you know that?";
 			emotion e_pif;
-			set ch_par,4;
+			ch_par = 4;
 			changequest 11045,11050;
 			close;
 		}
@@ -1811,7 +1811,7 @@ lou_in02,201,166,4	script	Storage Keeper#lou	4_M_CHN8GUEK,{
 		mes "[Jiang Xiayou]";
 		mes "Ah! Here you go. Even if it was kind of annoying to do, I guess";
 		mes "we gotta help each other, right? Alright then, I'll see ya around.";
-		set ch_par,16;
+		ch_par = 16;
 		changequest 11055,11056;
 		getitem 7252,1; //Herb_Medicine
 		close;
@@ -1887,19 +1887,19 @@ lou_in02,210,47,0	script	City Hall Officer#lou	4_M_CHNSOLDIER,{
 					mes "^333333When you go up stairs, another officer will give you the document you want.^000000 ^666666*Ahem*^000000 Louyang thanks you!";
 					Zeny -= .@input;
 					if (ch_par == 5) {
-						set ch_par,11;
+						ch_par = 11;
 						changequest 11046,11051;
 					}
 					else if (ch_par == 6) {
-						set ch_par,12;
+						ch_par = 12;
 						changequest 11047,11052;
 					}
 					else if (ch_par == 7) {
-						set ch_par,13;
+						ch_par = 13;
 						changequest 11048,11053;
 					}
 					else if (ch_par == 8) {
-						set ch_par,14;
+						ch_par = 14;
 						changequest 11049,11054;
 					}
 					close;
@@ -2078,19 +2078,19 @@ lou_in02,156,38,0	script	Studying Officer#lou	4_M_CHNMAN,{
 		switch (ch_par) {
 		case 11:
 			if (.@input$ == "Residence Transfer Application")
-				set .@paper,1;
+				.@paper = 1;
 			break;
 		case 12:
 			if (.@input$ == "Summer SAT Class Application")
-				set .@paper,1;
+				.@paper = 1;
 			break;
 		case 13:
 			if (.@input$ == "Sandy Dust Phenomenon Report")
-				set .@paper,1;
+				.@paper = 1;
 			break;
 		case 14:
 			if (.@input$ == "Communication Proposal")
-				set .@paper,1;
+				.@paper = 1;
 			break;
 		}
 		mes "[Huang Zhishu]";
@@ -2125,7 +2125,7 @@ lou_in02,156,38,0	script	Studying Officer#lou	4_M_CHNMAN,{
 			mes "[Huang Zhishu]";
 			mes "Here it is. A few days ago, someone asked me for the same document,";
 			mes "so I was able to find it again pretty easily. I hope it's useful to you.";
-			set ch_par,15;
+			ch_par = 15;
 			for (.@i = 11051; .@i <= 11054; ++.@i) {
 				if (questprogress(.@i) && questprogress(.@i) != 2)
 					completequest .@i;
@@ -2169,7 +2169,7 @@ lou_in02,204,169,0	script	Supply Stack#1lou	HIDDEN_NPC,{
 				mes "*Rummage rummage*";
 				mes "*Rummage rummage*";
 				mes "You found a medicine.^000000";
-				set ch_par,9;
+				ch_par = 9;
 				changequest 11050,11056;
 				getitem 7252,1; //Herb_Medicine
 				next;
@@ -2219,7 +2219,7 @@ lou_in02,207,168,0	script	Supply Stack#5lou	HIDDEN_NPC,{
 				mes "*Rummage rummage*";
 				mes "*Rummage rummage*";
 				mes "You found a medicine.^000000";
-				set ch_par,9;
+				ch_par = 9;
 				changequest 11050,11056;
 				getitem 7252,1; //Herb_Medicine
 				next;
@@ -2271,7 +2271,7 @@ lou_in02,206,163,0	script	Supply Stack#4lou	HIDDEN_NPC,{
 				mes "*Rummage rummage*";
 				mes "*Rummage rummage*";
 				mes "You found a medicine.^000000";
-				set ch_par,9;
+				ch_par = 9;
 				changequest 11050,11056;
 				getitem 7252,1; //Herb_Medicine
 				next;
@@ -2323,7 +2323,7 @@ lou_in02,198,170,0	script	Supply Stack#3lou	HIDDEN_NPC,{
 				mes "*Rummage rummage*";
 				mes "*Rummage rummage*";
 				mes "You found a medicine.^000000";
-				set ch_par,9;
+				ch_par = 9;
 				changequest 11050,11056;
 				getitem 7252,1; //Herb_Medicine
 				next;
@@ -2375,7 +2375,7 @@ lou_in02,192,170,0	script	Supply Stack#2	HIDDEN_NPC,{
 				mes "*Rummage rummage*";
 				mes "*Rummage rummage*";
 				mes "You found a medicine.^000000";
-				set ch_par,9;
+				ch_par = 9;
 				changequest 11050,11056;
 				getitem 7252,1; //Herb_Medicine
 				next;
@@ -2417,11 +2417,11 @@ lou_in02,203,159,0	warp	Storage Warp#4	1,1,louyang,129,118
 lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 	// Attempt to preserve prior quest progress.
 	if (ch_poison == 0 && CL_POISONKING != 0) {
-		if (QL_POISONKING <= 12) set ch_poison,QL_POISONKING;
-		else if (QL_POISONKING == 16) set ch_poison,19;
-		else if (QL_POISONKING >= 17) set ch_poison,20;
+		if (QL_POISONKING <= 12) ch_poison = QL_POISONKING;
+		else if (QL_POISONKING == 16) ch_poison = 19;
+		else if (QL_POISONKING >= 17) ch_poison = 20;
 		// Remove outdated variable.
-		set QL_POISONKING,0;
+		QL_POISONKING = 0;
 	}
 	if (checkweight(1201,1) == 0) {
 		mes "^3355FF * Wait a minute! *";
@@ -2473,18 +2473,18 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 				mes "mind helping me";
 				mes "memorize this poem...";
 				next;
-				set .@question_poet,rand(1,4);
+				.@question_poet = rand(1,4);
 				if (.@question_poet == 1) {
 					mes "[Nagash Arses]";
 					mes "'^3355FFAs I lay^000000 ^3355FFlooking up at the moonlight^000000.' In this first line, what word should be in [ ]?";
 					next;
 					if (select("on the ground:with you:in bed:in the stars") == 3)
-						set .@answer_poet,.@answer_poet + 10;
+						.@answer_poet += 10;
 					mes "[Nagash Arses]";
 					mes "'^3355FFIt looks like the^000000 ^3355FFon the ground^000000.' In the second line, which word should be in [ ]?";
 					next;
 					if (select("frost:dew:pebbles:snow") == 1)
-						set .@answer_poet,.@answer_poet + 10;
+						.@answer_poet += 10;
 					mes "[Nagash Arses]";
 					mes "Now to see if you see really understand the poem. It's no use to just know the words. They must be a part of you as well.";
 					next;
@@ -2492,20 +2492,20 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "How would you describe the overall mood and tone of the speaker of this poem?";
 					next;
 					if (select("Romantic:Wistful:Regretful:Passionate") == 2)
-						set .@answer_poet,.@answer_poet + 10;
+						.@answer_poet += 10;
 					mes "[Nagash Arses]";
 					mes "What do you think is the";
 					mes "major theme of this poem?";
 					next;
 					if (select("Tragedy:Separation:Love:Revenge:Buddy Cop Film") == 2)
-						set .@answer_poet,.@answer_poet + 10;
+						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
 					mes "Ha ha ha! You understand this poem well! Now, would you repeat the first line for me again?";
 					next;
 					if (.@answer_poet > 30) {
 						if (select("When I lay in bed looking up at the moon light:When I lay in bed thinking of the moon light:As I lay in bed looking up at the moonlight:As I lay in bed thinking of the moonlight") == 3) {
-							set ch_poison,2;
+							ch_poison = 2;
 						}
 					}
 					else {
@@ -2524,12 +2524,12 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "'^3355FFIt looks like the^000000 ^3355FFon the ground^000000.' In the second line, which word should be in [ ]?";
 					next;
 					if (select("frost:dew:pebbles:snow") == 1)
-						set .@answer_poet,.@answer_poet + 10;
+						.@answer_poet += 10;
 					mes "[Nagash Arses]";
 					mes "'^3355FFI lower my head feeling^000000 [ ].' Which word should be in [ ]?";
 					next;
 					if (select("homesick.:drowsy:loneliness.:heartbroken.") == 1)
-						set .@answer_poet,.@answer_poet + 10;
+						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
 					mes "Now to see if you see really understand the poem. It's no use to just know the words. To know this poem by heart is to truly take it to heart.";
@@ -2541,19 +2541,19 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "gazing at the moon?";
 					next;
 					if (select("In his hometown.:In jail.:In the depths of the cosmos.:In bed.") == 4)
-						set .@answer_poet,.@answer_poet + 10;
+						.@answer_poet += 10;
 					mes "[Nagash Arses]";
 					mes "Although this poem is only four lines long, its structure can be easily classified. How would you describe this poem's structure?";
 					next;
 					if (select("Why, it's a sonnet.:It's prose with erratic caesuras.:It's a quatrain, of course.:Iambic pentameter?") == 3)
-						set .@answer_poet,.@answer_poet + 10;
+						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
 					mes "Ha ha ha! You understand this poem well! Now, would you repeat the first line for me again?";
 					next;
 					if (.@answer_poet > 30) {
 						if (select("It looks like the frost on the ground:It looks like an icicle on the ground:It looks as though shining:It looks like the frost in the sky") == 1) {
-							set ch_poison,2;
+							ch_poison = 2;
 						}
 					}
 					else {
@@ -2572,13 +2572,13 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "'^3355FFIt looks like the^000000 ^3355FFon the ground^000000.' In the second line, which word should be in [ ]?";
 					next;
 					if (select("frost:dew:pebbles:snow") == 1)
-						set .@answer_poet,.@answer_poet + 10;
+						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
 					mes "'^3355FFI lower my head feeling^000000 [ ].' Which word should be in [ ]?";
 					next;
 					if (select("homesick.:drowsy:loneliness.:heartbroken.") == 1)
-						set .@answer_poet,.@answer_poet + 10;
+						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
 					mes "Now to see if you see really understand the poem. It's not enough to just know the words. You must know what they truly mean.";
@@ -2587,19 +2587,19 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "In the first two lines, what two images are being linked by the poet?";
 					next;
 					if (select("Bed and ground:Frost and hometown:Gloomy:Smokey:Moonlight and frost") == 5)
-						set .@answer_poet,.@answer_poet + 10;
+						.@answer_poet += 10;
 					mes "[Nagash Arses]";
 					mes "In this land, the image of the moon often appears in poems expressing separation, longing and homesickness. Why would gazing at the moon offer comfort?";
 					next;
 					if (select("The rabbit on the moon grants wishes.:Its sheer beauty eases any anxiety.:Because it wanes and waxes.:All places and peoples share the same moon.") == 4)
-						set .@answer_poet,.@answer_poet + 10;
+						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
 					mes "Ha ha ha! You understand this poem well! Now, would you repeat the third line for me again?";
 					next;
 					if (.@answer_poet > 30) {
 						if (select("I look up at the bright moon:I lift my head to look at the bright moon:I turn my head to look at the bright moon:I face the bright moon") == 2) {
-							set ch_poison,2;
+							ch_poison = 2;
 						}
 					}
 					else {
@@ -2619,13 +2619,13 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "which word should be in [ ]?";
 					next;
 					if (select("frost:dew:pebbles:snow") == 1)
-						set .@answer_poet,.@answer_poet + 10;
+						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
 					mes "'^3355FFI lift my^000000 ^3355FFto look at the bright moon^000000.' In the third line, which word should be in [ ]?";
 					next;
 					if (select("eyes:head:gaze:sights") == 2)
-						set .@answer_poet,.@answer_poet + 10;
+						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
 					mes "Now to see if you see really understand the poem. It's no";
@@ -2635,20 +2635,20 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "What do you think is the major theme of this poem?";
 					next;
 					if (select("Tragedy:Separation:Love:Revenge:Buddy Cop Film") == 2)
-						set .@answer_poet,.@answer_poet + 10;
+						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
 					mes "Why might be one reason why the bright moonlight looks like frost on the ground to the poet?";
 					next;
 					if (select("He's looking through a frosty window.:A bright moon glimmers like icicles.:He's homesick, so the moonlight looks cold:It's called 'poetic license.'") == 3)
-						set .@answer_poet,.@answer_poet + 10;
+						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
 					mes "Ha ha ha! You understand this poem well! Now, would you repeat the last line for me again?";
 					next;
 					if (.@answer_poet > 30) {
 						if (select("I cry for my home town.:I lower my head feeling homesick.:I miss my home town.:I sob feeling homesick.") == 2) {
-							set ch_poison,2;
+							ch_poison = 2;
 						}
 					}
 					else {
@@ -2823,7 +2823,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "home town. I miss the heat";
 					mes "of the desert and the glare";
 					mes "of the blazing sun...";
-					set ch_poison,3;
+					ch_poison = 3;
 					close;
 				}
 				else {
@@ -2914,7 +2914,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "[Nagash Arses]";
 					mes "Go find my last disciple,";
 					mes "^0000FFSong Zhi Du^000000, as he may tell you something useful. He's working at the doctor's office. If it weren't for him, I'd be starving now.";
-					set ch_poison,5;
+					ch_poison = 5;
 					setquest 11070;
 					close;
 				}
@@ -3005,7 +3005,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "[Nagash Arses]";
 					mes "Even to this day, the police are hounding after me. I really want to tell the lord of Louyang that I'm innocent, but it may be";
 					mes "too late now...";
-					set ch_poison,4;
+					ch_poison = 4;
 					close;
 				}
 				else {
@@ -3072,7 +3072,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 				mes "Let's not talk about this any longer. It's reminding me of";
 				mes "my worst memories.";
 				next;
-				set ch_poison,1;
+				ch_poison = 1;
 				if (BaseClass == Job_Thief) {
 					mes "[Nagash Arses]";
 					mes "Ah, you look just like I did when";
@@ -3198,7 +3198,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "Will you...";
 					mes "Will you excuse";
 					mes "me for a second...?";
-					set ch_poison,15;
+					ch_poison = 15;
 					changequest 11077,11078;
 					close;
 				}
@@ -3284,7 +3284,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 		mes "For my sake, as well";
 		mes "as that of my disciple,";
 		mes "Louyang's leader must live...";
-		set ch_poison,16;
+		ch_poison = 16;
 		changequest 11078,11079;
 		close;
 	}
@@ -3315,7 +3315,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 		mes "^3355FFYou obtained";
 		mes "^0000FFPoison King,";
 		mes "Nagash Arses' Jounal^000000.";
-		set ch_poison,18;
+		ch_poison = 18;
 		changequest 11080,11081;
 		close;
 	}
@@ -3357,7 +3357,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 		next;
 		mes "^3355FFYou grow dizzy, but you also feel like you're becoming more powerful and gaining experience.^000000";
 		next;
-		set ch_poison,20;
+		ch_poison = 20;
 		changequest 11082,11083;
 		if (checkre(3)) {
 			if (BaseLevel < 56) getexp 1050,0;
@@ -3419,7 +3419,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 			}
 			else {
 				if (rand(1,4) > 2) {
-					set .@r_o_o_f,.@r_o_o_f + 1;
+					++.@r_o_o_f;
 					mes "[Song Zhi Du]";
 					mes "Let's see, there's that medicine, and then the medicine over here...";
 					next;
@@ -3593,7 +3593,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 			mes "Go do whatever";
 			mes "you were going to do.";
 			mes "I'm just disappointed...";
-			set ch_poison,6;
+			ch_poison = 6;
 			changequest 11070,11071;
 			close;
 		}
@@ -3610,7 +3610,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 		next;
 		mes "[Song Zhi Du]";
 		mes "Since my body is so frail, I can't bear the tension and rage of seeing my lifelong enemy face to face.";
-		set ch_poison,8;
+		ch_poison = 8;
 		changequest 11070,11073;
 		close;
 	}
@@ -3639,7 +3639,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 			mes "10 Venom Canine,";
 			mes "10 Empty Potion,";
 			mes "30 Green Potion^000000.";
-			set ch_poison,7;
+			ch_poison = 7;
 			changequest 11071,11072;
 			next;
 			mes "[Song Zhi Du]";
@@ -3652,7 +3652,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 		mes "make you understand how I feel.";
 		specialeffect EF_ENDURE;
 		close2;
-		set ch_poison,6;
+		ch_poison = 6;
 		changequest 11070,11071;
 		end;
 	}
@@ -3668,7 +3668,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 				delitem 937,10; //Posionous_Canine
 				delitem 1093,10; //Empty_Potion
 				delitem 506,30; //Green_Potion
-				set ch_poison,8;
+				ch_poison = 8;
 				changequest 11072,11073;
 				mes "[Song Zhi Du]";
 				mes "Ah...";
@@ -3755,7 +3755,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 			emotion e_omg;
 			mes "[Song Zhi Du]";
 			mes "No!! I failed again! ^666666*Sigh...*^000000 And I spent a long time preparing all of those materials...";
-			set ch_poison,10;
+			ch_poison = 10;
 			changequest 11074,11075;
 			close;
 		}
@@ -3845,7 +3845,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 				mes "I made it!";
 				mes "Now, revenge will be mine!";
 				next;
-				set ch_poison,11;
+				ch_poison = 11;
 				getitem 678,2; //Poison_Bottle
 				mes "[Song Zhi Du]";
 				mes "Hahaha! Now, please";
@@ -3941,7 +3941,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 		mes "Hahaha...!";
 		mes "Master, I did it!";
 		mes "Your disciple Song Zhi Du made the world's deadliest poison for you!";
-		set ch_poison,12;
+		ch_poison = 12;
 		changequest 11075,11076;
 		close;
 	}
@@ -3997,7 +3997,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 		mes "[Song Zhi Du]";
 		mes "But before you go, let me give you some poison and a medicinal pill.";
 		mes "I made these with the leftover materials and medicine in the storage.";
-		set ch_poison,14;
+		ch_poison = 14;
 		getitem 678,3; //Poison_Bottle
 		next;
 		mes "[Song Zhi Du]";
@@ -4074,7 +4074,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 		mes "Also, I hope you will";
 		mes "take these, since I don't";
 		mes "need them any longer.";
-		set ch_poison,21;
+		ch_poison = 21;
 		completequest 11083;
 		getitem 678,5; //Poison_Bottle
 		next;
@@ -4184,7 +4184,7 @@ lou_fild01,224,348,0	script	Lady#delivery	4_F_CHNDRESS3,{
 					mes "please bring this to";
 					mes "Song Zhi Du.";
 					mes "Take care!";
-					set ch_poison,9;
+					ch_poison = 9;
 					changequest 11073,11074;
 					close;
 				}
@@ -4347,7 +4347,7 @@ lou_in01,107,163,0	script	 #lou_drink1	HIDDEN_NPC,{
 		next;
 		mes "^3355FFYou put the deadly poison into the bottle.^000000";
 		delitem 678,1; //Poison_Bottle
-		set ch_poison,13;
+		ch_poison = 13;
 		changequest 11076,11077;
 		close;
 	}
@@ -4360,7 +4360,7 @@ lou_in01,107,163,0	script	 #lou_drink1	HIDDEN_NPC,{
 			mes "^3355FFYou take the drink bottle and replace it with a bottle filled with Sticky Mucus. Hopefully Bai Long won't notice!^000000";
 			delitem 938,1; //Sticky_Mucus
 			delitem 713,1; //Empty_Bottle
-			set ch_poison,17;
+			ch_poison = 17;
 			changequest 11079,11080;
 			close;
 		}
@@ -4463,7 +4463,7 @@ lou_in01,99,158,4	script	Lord#bailong	4_M_CHNGENERL,{
 			next;
 			mes "[Lord Bai Long]";
 			mes "Please, take this as a token of gratitute. And please deliver this letter to Nagash and Song Zhi Du for me.";
-			set ch_poison,19;
+			ch_poison = 19;
 			changequest 11081,11802;
 			getitem 603,1; //Old_Blue_Box
 			next;
@@ -4635,13 +4635,13 @@ lou_in02,77,37,7	script	Hermit	4_M_CHNOLD,{
 				mes "I understand if you need time to decide. If you do decide to join us, please return. Time is on our side, after all.";
 				close;
 			case 2:
-				set QL_REVOL,1;
+				QL_REVOL = 1;
 				mes "[Sun Mao]";
 				mes strcharinfo(0)+ "...!";
 				mes "Your name is now engraved on this bloody pledge board. We will fight together to the death for Louyang's future!";
 				next;
 				getpartymember(getcharid(1));
-				set @partymember,$@partymembercount;
+				@partymember = $@partymembercount;
 				if (getpartyleader(getcharid(1),1) == getcharid(0) || !@partymember) {
 					mes "[Sun Mao]";
 					mes "Now, the most important thing for our cause is to gather more recruits and increase our numbers. Please find others who will join us in our fight.";
@@ -4675,11 +4675,11 @@ lou_in02,77,37,7	script	Hermit	4_M_CHNOLD,{
 			close;
 		}
 		getpartymember(getcharid(1));
-		set @partymember,$@partymembercount;
+		@partymember = $@partymembercount;
 		if (QL_REVOL < 8) {
 			if (@partymember == QL_REVOL +1) {
 				if (@partymember != 8) {
-					set QL_REVOL,QL_REVOL +1;
+					QL_REVOL += 1;
 					mes "[Sun Mao]";
 					mes "Oh, you brought a new comrade! Welcome. Please help your friend understand our intentions before joining us.";
 					next;
@@ -4749,7 +4749,7 @@ lou_in02,77,37,7	script	Hermit	4_M_CHNOLD,{
 				mes "[Sun Mao]";
 				mes "Since flammable chemicals are not allowed inside government offices, you must keep them well hidden. If the chemicals are equally divided among the eight of you, we might succeed!";
 				next;
-				set QL_REVOL,8;
+				QL_REVOL = 8;
 				getitem 7068,8; //Burn_Tree
 				getitem 7096,8; //Cold_Magma
 				getitem 7004,8; //Mud_Lump
@@ -4821,8 +4821,8 @@ lou_in02,77,37,7	script	Hermit	4_M_CHNOLD,{
 					mes "Finally, we have a weapon to mete out severe retribution to our enemies, the corrupt government officials and the evil martial arts organizations! I appreciate your help, comrades.";
 					next;
 					delitem 7204,countitem(7204);
-					set ch_make,0;
-					set QL_REVOL,9;
+					ch_make = 0;
+					QL_REVOL = 9;
 					getitem 668,8;
 					mes "[Sun Mao]";
 					mes "Please take these funds and share them with your party members. I hope that all of you will lend your power to our cause once again.";
@@ -4847,7 +4847,7 @@ lou_in02,77,37,7	script	Hermit	4_M_CHNOLD,{
 		}
 	} else {
 		if (ch_make == 1) {
-			set ch_make,0;
+			ch_make = 0;
 			mes "[Sun Mao]";
 			mes "Ah...";
 			mes "You have";
@@ -4867,7 +4867,7 @@ lou_in02,77,37,7	script	Hermit	4_M_CHNOLD,{
 lou_in01,43,147,3	script	Gunpowder Expert	4_M_ALCHE_C,{
 	if (ch_make == 0) {
 		getpartymember(getcharid(1));
-		set @partymember,$@partymembercount;
+		@partymember = $@partymembercount;
 		if (!QL_REVOL) {
 			mes "[Hao Chenryu]";
 			mes "Who...";
@@ -4887,7 +4887,7 @@ lou_in01,43,147,3	script	Gunpowder Expert	4_M_ALCHE_C,{
 			mes "Mao's plans are flawless,";
 			mes "so I'm sticking to the scenario he's drawn up. You're either improvising needlessly, or you're not really my comrade...";
 			close;
-		 } else if (countitem(7068) && countitem(7096) && countitem(7004)) {
+		} else if (countitem(7068) && countitem(7096) && countitem(7004)) {
 			mes "[Hao Chenryu]";
 			mes "Ah, I see that Mao";
 			mes "has sent you. I'm sorry";
@@ -4908,7 +4908,7 @@ lou_in01,43,147,3	script	Gunpowder Expert	4_M_ALCHE_C,{
 				delitem 7004,1; //Mud_Lump
 				mes "[Hao Chenryu]";
 				mes "I don't want you to be caught if the soldiers inspect your goods. It will be better if one of you carry a Cart and hide the gunpowder in there.";
-				set ch_make,1;
+				ch_make = 1;
 				getitem 7204,1; //Gunpowder
 				close;
 			case 2:

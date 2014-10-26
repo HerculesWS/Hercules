@@ -54,7 +54,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 		mes "It's a strange favor to ask, but I'll pay you back as soon as you return.";
 		next;
 		setquest 2079;
-		set kain_ticket, 5;
+		kain_ticket = 5;
 		mes "^3355FFKain Himere has given you a small box.^000000";
 		close;
 	}
@@ -64,7 +64,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 	if (kain_ticket == 0) {
 		switch(select("About the Airship...:Leave a Comment")) {
 		case 1:
-			set kain_ticket, 1;
+			kain_ticket = 1;
 			mes "[Kain Himere]";
 			mes "Is this your first time flying? Hahaha, I understand how nervous you might be since I used to feel the same way.";
 			next;
@@ -122,7 +122,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 	} else if (kain_ticket == 1) {
 		switch(select("About the Airship...:Make a remark")) {
 		case 1:
-			set kain_ticket, 2;
+			kain_ticket = 2;
 			mes "[Kain Himere]";
 			mes "You want to hear more";
 			mes "about the Airship? Hmm, I don't know too many stories that I could tell you.";
@@ -269,7 +269,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 			next;
 			switch(select("Einbroch:Juno")) {
 			case 1:
-				set kain_ticket, 4;
+				kain_ticket = 4;
 				mes "["+strcharinfo(0)+"]";
 				mes "I'm heading";
 				mes "to Einbroch.";
@@ -280,7 +280,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 				mes "that thing. Hold on...";
 				close;
 			case 2:
-				set kain_ticket, 3;
+				kain_ticket = 3;
 				mes "["+strcharinfo(0)+"]";
 				mes "I'm heading";
 				mes "to Juno.";
@@ -299,7 +299,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 		next;
 		switch(select("Einbroch:Juno")) {
 		case 1:
-			set kain_ticket, 4;
+			kain_ticket = 4;
 			mes "["+strcharinfo(0)+"]";
 			mes "I'm heading";
 			mes "to Einbroch.";
@@ -389,7 +389,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 			mes "[Kain Himere]";
 			mes "Would be so kind as to help me by finding that journal and seeing if Tarsha is my daughter?";
 			changequest 2081,2082;
-			set kain_ticket, 11;
+			kain_ticket = 11;
 			close;
 		}
 	} else if (kain_ticket == 11 || kain_ticket == 12) {
@@ -425,7 +425,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 			mes "I know this isn't much, but please understand that it's all I can give you. God bless you for your all your help!";
 			delitem 7276, 1;
 			completequest 2085;
-			set kain_ticket, 15;
+			kain_ticket = 15;
 			getitem 7311, 4;
 			close;
 		} else {
@@ -451,7 +451,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 ein_in01,227,279,3	script	#door_ein	-1,5,5,{
 OnTouch:
 	if (kain_ticket == 5) {
-		set kain_ticket, 6;
+		kain_ticket = 6;
 		mes "["+strcharinfo(0)+"]";
 		mes "Excuse me...?";
 		next;
@@ -498,7 +498,7 @@ OnTouch:
 			close;
 		case 2:
 			changequest 2079,2080;
-			set kain_ticket, 7;
+			kain_ticket = 7;
 			mes "[Elle Cherno]";
 			mes "This...?";
 			mes "It's the Miner's Song!";
@@ -548,7 +548,7 @@ OnTouch:
 			mes "doodled message";
 			mes "in your hand.^000000";
 			changequest 2084,2085;
-			set kain_ticket, 14;
+			kain_ticket = 14;
 			getitem 7276, 1; //Picture_Letter
 			close;
 		}
@@ -562,7 +562,7 @@ OnTouch:
 ein_in01,123,94,1	script	Theo Cherno	4_M_REPAIR,{
 	if (kain_ticket == 7) {
 		callfunc "F_Cherno";
-		set kain_ticket, 8;
+		kain_ticket = 8;
 		close;
 	} else if (kain_ticket > 7 && kain_ticket < 10) {
 		mes "[Theo Cherno]";
@@ -600,7 +600,7 @@ ein_in01,123,94,1	script	Theo Cherno	4_M_REPAIR,{
 ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 	if (kain_ticket == 7) {
 		callfunc "F_Cherno";
-		set kain_ticket, 8;
+		kain_ticket = 8;
 		close;
 	} else if (kain_ticket == 8) {
 		mes "[Tarsha Cherno]";
@@ -669,7 +669,7 @@ ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 		mes "["+strcharinfo(0)+"]";
 		mes "I've got to go check something now, but hopefully I'll be back soon with good news!";
 		changequest 2080,2081;
-		set kain_ticket, 10;
+		kain_ticket = 10;
 		close;
 	} else if (kain_ticket == 10 || kain_ticket == 11) {
 		mes "["+strcharinfo(0)+"]";
@@ -737,7 +737,7 @@ ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 			mes "Ah, right.";
 			mes "Elle wants to see you again. Would you be so kind as to see her before you go?";
 			changequest 2083,2084;
-			set kain_ticket, 13;
+			kain_ticket = 13;
 			close;
 		case 3:
 			mes "^3355FFUh oh...";
@@ -1018,7 +1018,7 @@ ein_in01,121,99,3	script	Mirror#ein	HIDDEN_NPC,{
 		mes "^3355FFAfter enjoying that little epiphany, you see a reflection of Tarsha's neck as you set the mirror back down.^000000";
 		next;
 		mes "^3355FFAs you take a closer look, you find that there's a strange mark around her neck...^000000";
-		set kain_ticket, 9;
+		kain_ticket = 9;
 		close;
 	}
 }
@@ -1040,7 +1040,7 @@ einbech,45,113,5	script	Tree#t1-1::Tree	HIDDEN_NPC,{
 		mes "......";
 		mes ".........";
 		next;
-		set .@find_diary,rand(1,100);
+		.@find_diary = rand(1,100);
 		if (.@find_diary > 10) {
 			mes "^3355ffUnfortunately,";
 			mes "you weren't able";
@@ -1056,7 +1056,7 @@ einbech,45,113,5	script	Tree#t1-1::Tree	HIDDEN_NPC,{
 			next;
 			mes "^3355FFThat was the last page of the journal. You picked it up so that you can bring it over to ^3131FFTarsha.^000000";
 			changequest 2082,2083;
-			set kain_ticket, 12;
+			kain_ticket = 12;
 			close;
 		}
 	} else if (kain_ticket == 12) {
@@ -1160,7 +1160,7 @@ ein_in01,117,80,5	script	Unidentified Machine#as	HIDDEN_NPC,{
 			mes "your items again.";
 			close;
 		} else {
-			set .@choice, select(getitemname(getbrokenid(1)),getitemname(getbrokenid(2)),
+			.@choice = select(getitemname(getbrokenid(1)),getitemname(getbrokenid(2)),
 			getitemname(getbrokenid(3)),getitemname(getbrokenid(4)),getitemname(getbrokenid(5)),
 			getitemname(getbrokenid(6)),getitemname(getbrokenid(7)),getitemname(getbrokenid(8)),
 			getitemname(getbrokenid(9)),getitemname(getbrokenid(10)));
@@ -1511,7 +1511,7 @@ OnTimer410000:
 	mapannounce "airplane_01","We will arrive in Izlude shortly.",bc_map,"0x00ff00";
 	end;
 OnTimer420000:
-	set $@airplanelocation2,1;
+	$@airplanelocation2 = 1;
 	donpcevent "#AirshipWarp-3::OnUnhide";
 	donpcevent "#AirshipWarp-4::OnUnhide";
 	mapannounce "airplane_01","Welcome to Izlude. Have a safe trip.",bc_map,"0x00ff00";
@@ -1531,7 +1531,7 @@ OnTimer490000:
 	mapannounce "airplane_01","We will arrive in Juno shortly.",bc_map,"0x70dbdb";
 	end;
 OnTimer500000:
-	set $@airplanelocation2,2;
+	$@airplanelocation2 = 2;
 	donpcevent "#AirshipWarp-3::OnUnhide";
 	donpcevent "#AirshipWarp-4::OnUnhide";
 	mapannounce "airplane_01","Welcome to Juno. Have a safe trip.",bc_map,"0x70dbdb";
@@ -1551,7 +1551,7 @@ OnTimer570000:
 	mapannounce "airplane_01","We will arrive in Rachel shortly.",bc_map,"0xFF8200";
 	end;
 OnTimer580000:
-	set $@airplanelocation2,0;
+	$@airplanelocation2 = 0;
 	donpcevent "#AirshipWarp-3::OnUnhide";
 	donpcevent "#AirshipWarp-4::OnUnhide";
 	mapannounce "airplane_01","Welcome to Rachel. Have a safe trip.",bc_map,"0xFF8200";
@@ -1584,7 +1584,7 @@ airplane_01,246,54,3	script	Airship Captain#02	4_M_REINDEER,{
 	close2;
 	cutin "",255;
 	end;
-	
+
 OnInit:
 	hideonnpc "Airship Captain#02";
 	end;
@@ -1614,13 +1614,13 @@ airplane_01,238,154,3	script	Airship Captain#01	4_M_REINDEER,{
 	mes "have a question?";
 	next;
 	if (lght_air >= 0 && lght_air <= 3 || lght_air == 7) {
-		set .@question$, "How does this Airship fly?";
+		.@question$ = "How does this Airship fly?";
 	} else if (lght_air == 4) {
-		set .@question$, "I handed the letter to Captain Ferlock.";
+		.@question$ = "I handed the letter to Captain Ferlock.";
 	} else if (lght_air == 5) {
-		set .@question$, "You finished reading the letter?";
+		.@question$ = "You finished reading the letter?";
 	} else if (lght_air == 6) {
-		set .@question$, "Already finished reading?";
+		.@question$ = "Already finished reading?";
 	}
 	switch (select("Y-you're a reindeer?!", .@question$, "No, not really.")) {
 	case 1:
@@ -1702,7 +1702,7 @@ airplane_01,238,154,3	script	Airship Captain#01	4_M_REINDEER,{
 						end;
 					case 2:
 						setquest 8032;
-						set lght_air, 2;
+						lght_air = 2;
 						mes "[Tarlock]";
 						mes "Ha-hah! I like you";
 						mes "already! Alright, here's";
@@ -1736,7 +1736,7 @@ airplane_01,238,154,3	script	Airship Captain#01	4_M_REINDEER,{
 				}
 			}
 		} else if (lght_air == 4) {
-			set lght_air, 5;
+			lght_air = 5;
 			changequest 8034,8035;
 			mes "[Tarlock]";
 			mes "Oh!";
@@ -1749,7 +1749,7 @@ airplane_01,238,154,3	script	Airship Captain#01	4_M_REINDEER,{
 			cutin "",255;
 			end;
 		} else if (lght_air == 5) {
-			set lght_air, 6;
+			lght_air = 6;
 			mes "[Tarlock]";
 			mes "Um... Ha ha ha~!";
 			mes "This guy, he is a real lover!";
@@ -1835,7 +1835,7 @@ airplane_01,238,154,3	script	Airship Captain#01	4_M_REINDEER,{
 			mes "and writing those long";
 			mes "letters.";
 			completequest 8035;
-			set lght_air, 7;
+			lght_air = 7;
 			if (checkre(3))
 				getexp 20000,1000;
 			else
@@ -1869,7 +1869,7 @@ airplane_01,238,154,3	script	Airship Captain#01	4_M_REINDEER,{
 		mes "Although that's a secret,";
 		mes "let me assure you that it's";
 		mes "nothing weird or dangerous.";
-		set lght_air, 1;
+		lght_air = 1;
 		close2;
 		cutin "",255;
 		end;
@@ -1921,7 +1921,7 @@ airplane,236,163,5	script	Airship Captain#03	4_M_REINDEER,{
 		mes "Haha, does it frighten you? This is a magically enchanted book. Once you've written the name in it, you will be able to find the answer you want in an instant.";
 		next;
 		mes "[Ferlock]";
- 		mes "It must have surprised you to find that the people of Schwaltzvalt make use of magical items too.";
+		mes "It must have surprised you to find that the people of Schwaltzvalt make use of magical items too.";
 		next;
 		mes "[Ferlock]";
 		mes "This is something I acquired from an old friend.... Hmm, but that has nothing to do with this.";
@@ -1947,7 +1947,7 @@ airplane,236,163,5	script	Airship Captain#03	4_M_REINDEER,{
 		mes "[Ferlock]";
 		mes "And if you ever meet him, please send him my gratitude and regards.";
 		changequest 8045,8046;
-		set hg_ma1,5;
+		hg_ma1 = 5;
 		close2;
 		cutin "",255;
 		end;
@@ -2070,7 +2070,7 @@ airplane,236,163,5	script	Airship Captain#03	4_M_REINDEER,{
 			mes "my breath before";
 			mes "I continue? Yes,";
 			mes "there's a little more...";
-			set lhz_heart,12;
+			lhz_heart = 12;
 			close2;
 			cutin "",255;
 			end;
@@ -2154,7 +2154,7 @@ airplane,236,163,5	script	Airship Captain#03	4_M_REINDEER,{
 		close2;
 		specialeffect2 EF_ABSORBSPIRITS;
 		completequest 8043;
-		set lhz_heart,13;
+		lhz_heart = 13;
 		if (checkre(3))
 			getexp 70000,40000;
 		else
@@ -2180,13 +2180,13 @@ airplane,236,163,5	script	Airship Captain#03	4_M_REINDEER,{
 	mes "I be of service to you?";
 	next;
 	if (lght_air == 2) {
-		set .@question2$, "Give him Tarlock's Letter.";
-		set .@question3$, "Cancel.";
+		.@question2$ = "Give him Tarlock's Letter.";
+		.@question3$ = "Cancel.";
 	} else if (lght_air == 3) {
-		set .@question2$, "Here are the items I've found.";
-		set .@question3$, "Cancel.";
+		.@question2$ = "Here are the items I've found.";
+		.@question3$ = "Cancel.";
 	} else {
-		set .@question2$, "Cancel.";
+		.@question2$ = "Cancel.";
 	}
 	switch(select("How does this Airship fly?", .@question2$, .@question3$)) {
 	case 1:
@@ -2203,7 +2203,7 @@ airplane,236,163,5	script	Airship Captain#03	4_M_REINDEER,{
 	case 2:
 		if (lght_air == 2) {
 			changequest 8032,8033;
-			set lght_air, 3;
+			lght_air = 3;
 			mes "^3131FFYou give Captain Ferlock";
 			mes "the letter that his brother";
 			mes "Tarlock has written for him.^000000";
@@ -2269,7 +2269,7 @@ airplane,236,163,5	script	Airship Captain#03	4_M_REINDEER,{
 				delitem 7340, 2;
 				delitem 576, 2;
 				changequest 8033,8034;
-				set lght_air, 4;
+				lght_air = 4;
 				mes "[Ferlock]";
 				mes "You brought the items!";
 				mes "Thank you very much.";
@@ -2404,7 +2404,7 @@ airplane,236,63,4	script	Hallen	4_M_KID1,{
 		mes "believe that? Yeah... Kaci";
 		mes "doesn't like him so much...";
 		close2;
-		set lhz_heart,1;
+		lhz_heart = 1;
 		end;
 	} else if (lhz_heart == 1) {
 		mes "[Hallen]";
@@ -2454,7 +2454,7 @@ airplane,236,63,4	script	Hallen	4_M_KID1,{
 			mes "Mawong's letter to";
 			mes "be delivered to Kaci.^000000";
 			setquest 8036;
-			set lhz_heart,2;
+			lhz_heart = 2;
 			next;
 			mes "[Hallen]";
 			mes "Hey, thanks a lot, pal~";
@@ -2510,7 +2510,7 @@ airplane,236,63,4	script	Hallen	4_M_KID1,{
 			mes "I can't think";
 			mes "that you really";
 			mes "believe that...";
-			set lhz_heart,5;
+			lhz_heart = 5;
 			close;
 		case 2:
 			mes "[Hallen]";
@@ -2529,7 +2529,7 @@ airplane,236,63,4	script	Hallen	4_M_KID1,{
 				mes "too much stuff right now...";
 				close;
 			}
-			set lhz_heart,5;
+			lhz_heart = 5;
 			getitem 501,1;
 			mes "[Hallen]";
 			mes "I know this isn't";
@@ -2603,7 +2603,7 @@ airplane,236,63,4	script	Hallen	4_M_KID1,{
 		mes "you could find out for me, ";
 		mes "it'd be a really big help.";
 		changequest 8038,8039;
-		set lhz_heart,6;
+		lhz_heart = 6;
 		close;
 	} else if (lhz_heart == 6) {
 		mes "[Hallen]";
@@ -2655,7 +2655,7 @@ airplane,236,63,4	script	Hallen	4_M_KID1,{
 			mes "have I heard about that";
 			mes "before? Mm, let me think...";
 			changequest 8039,8040;
-			set lhz_heart,7;
+			lhz_heart = 7;
 			close;
 		} else {
 			select("Actually...");
@@ -2719,8 +2719,8 @@ airplane,236,63,4	script	Hallen	4_M_KID1,{
 			mes "in your inventory for me, okay?";
 			close;
 		}
-		if (Shinokas_Quest > 9) set lhz_heart,9;
-		else set lhz_heart,8;
+		if (Shinokas_Quest > 9) lhz_heart = 9;
+		else lhz_heart = 8;
 		changequest 8040,8041;
 		getitem 501,1;
 		mes "[Hallen]";
@@ -2807,7 +2807,7 @@ airplane,33,69,4	script	Kaci	1_F_MERCHANT_01,{
 		next;
 		mes "^3355FFSince she's begging, I guess I should send her message.";
 		changequest 8044,8045;
-		set hg_ma1,4;
+		hg_ma1 = 4;
 		close;
 	} else if (hg_ma1 == 4) {
 		mes "[Kaci]";
@@ -2830,7 +2830,7 @@ airplane,33,69,4	script	Kaci	1_F_MERCHANT_01,{
 		mes "But still, he's really busy...";
 		next;
 		changequest 8036,8037;
-		set lhz_heart,3;
+		lhz_heart = 3;
 		mes "[Kaci]";
 		mes "Thank you for bringing";
 		mes "this to me. If you ever";
@@ -2850,7 +2850,7 @@ airplane,33,69,4	script	Kaci	1_F_MERCHANT_01,{
 L_Ask:
 		switch(select("Ask about Hallen:Ask about Mawong:Ask about the Airship")) {
 		case 1:
-			set .@mesa,1;
+			.@mesa = 1;
 			mes "[Kaci]";
 			mes "Hallen? Well, he and I are";
 			mes "pretty close. Did you know";
@@ -2876,7 +2876,7 @@ L_Ask:
 			next;
 			break;
 		case 2:
-			set .@mesb,1;
+			.@mesb = 1;
 			mes "[Kaci]";
 			mes "Mr. Mawong? Oh, don't get";
 			mes "the wrong idea! He's my";
@@ -2903,7 +2903,7 @@ L_Ask:
 			next;
 			break;
 		case 3:
-			set .@mesc,1;
+			.@mesc = 1;
 			mes "[Kaci]";
 			mes "The Airship? It's so";
 			mes "huge and beautiful, and";
@@ -2942,7 +2942,7 @@ L_Ask:
 		mes "Have a nice day,";
 		mes "and I'll see you later~";
 		changequest 8037,8038;
-		set lhz_heart,4;
+		lhz_heart = 4;
 		close;
 	} else if (lhz_heart == 8) {
 		mes "[Kaci]";
@@ -2988,7 +2988,7 @@ L_Ask:
 		mes "as soon as I can, even if it's";
 		mes "a heavily restricted area.^000000)";
 		changequest 8041,8042;
-		set lhz_heart,9;
+		lhz_heart = 9;
 		close;
 	}
 	mes "[Kaci]";
@@ -3033,7 +3033,7 @@ OnTouch:
 		mes "the Password Checker";
 		mes "device with you into";
 		mes "the laboratory.^000000";
-		set lhz_heart,10;
+		lhz_heart = 10;
 		close;
 	}
 }
@@ -3081,12 +3081,12 @@ OnTouch:
 		mes "not enter any number";
 		mes "more than once. Make";
 		mes "sure the password is 3 digits.";
-		set @retry,0;
+		@retry = 0;
 		next;
 		while (1) {
-			set @yagu100,rand(1,9);
-			set @yagu10,rand(1,9);
-			set @yagu1,rand(1,9);
+			@yagu100 = rand(1,9);
+			@yagu10 = rand(1,9);
+			@yagu1 = rand(1,9);
 			if (((@yagu100 != @yagu10) && (@yagu100 != @yagu1)) && (@yagu10 != @yagu1)) {
 				break;
 			}
@@ -3105,9 +3105,9 @@ L_Retry:
 					mes "3 digit passwords.^000000";
 					close;
 				}
-				set @input100,@input / 100;
-				set @input10,(@input % 100) / 10;
-				set @input1,@input % 10;
+				@input100 = @input / 100;
+				@input10 = (@input % 100) / 10;
+				@input1 = @input % 10;
 				if ((@input100 > 0) && (@input10 > 0) && (@input1 > 0)) {
 					if ((@input100 != @input10) && (@input100 != @input1) && (@input10 != @input1)) {
 						break;
@@ -3121,21 +3121,21 @@ L_Retry:
 					next;
 				}
 			}
-			set @retry,@retry+1;
+			++@retry;
 			mes "[Security System]";
 			mes "^ff0000"+strcharinfo(0)+"^000000";
 			mes "has entered the following:";
 			mes "^0000ff"+@input100+"^000000 - ^0000ff"+@input10+"^000000 - ^0000ff"+@input1+"^000000.";
 			mes "Please wait for authorization to complete.";
 			next;
-			set @strike,0;
-			set @ball,0;
-			if (@yagu100 == @input100) set @strike,@strike+1;
-			if (@yagu10 == @input10) set @strike,@strike+1;
-			if (@yagu1 == @input1) set @strike,@strike+1;
-			if ((@yagu100 == @input10) || (@yagu100 == @input1)) set @ball,@ball+1;
-			if ((@yagu10 == @input100) || (@yagu10 == @input1)) set @ball,@ball+1;
-			if ((@yagu1 == @input100) || (@yagu1 == @input10)) set @ball,@ball+1;
+			@strike = 0;
+			@ball = 0;
+			if (@yagu100 == @input100) @strike += 1;
+			if (@yagu10 == @input10) @strike += 1;
+			if (@yagu1 == @input1) @strike += 1;
+			if ((@yagu100 == @input10) || (@yagu100 == @input1)) @ball += 1;
+			if ((@yagu10 == @input100) || (@yagu10 == @input1)) @ball += 1;
+			if ((@yagu1 == @input100) || (@yagu1 == @input10)) @ball += 1;
 			if (@strike == 3) {
 				mes "[Security System]";
 				mes "Authorization complete.";
@@ -3205,7 +3205,7 @@ L_Retry:
 				close2;
 				donpcevent "Ferlock#lab::OnInit";
 				changequest 8042,8043;
-				set lhz_heart,11;
+				lhz_heart = 11;
 				end;
 			}
 			mes "[Password Checker]";

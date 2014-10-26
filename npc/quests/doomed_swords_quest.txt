@@ -101,7 +101,7 @@ mjolnir_02,186,193,4	script	Middle-Aged Man#magum1	1_M_LIBRARYMASTER,{
 			mes "Give me a few minutes and";
 			mes "I'll let you know what you";
 			mes "need to bring to me.";
-			set dmdswrd_Q,32;
+			dmdswrd_Q = 32;
 			close;
 		}
 		else if (dmdswrd_Q == 32) {
@@ -135,7 +135,7 @@ mjolnir_02,186,193,4	script	Middle-Aged Man#magum1	1_M_LIBRARYMASTER,{
 			mes "^FF000025 Amulets^000000,";
 			mes "^FF00001 Coal^000000, and";
 			mes "^FF00001 Necklace of Oblivion^000000.";
-			set dmdswrd_Q,33;
+			dmdswrd_Q = 33;
 			close;
 		}
 		else if (dmdswrd_Q == 33) {
@@ -152,7 +152,7 @@ mjolnir_02,186,193,4	script	Middle-Aged Man#magum1	1_M_LIBRARYMASTER,{
 				delitem 1003,1; //Coal
 				delitem 609,25; //Amulet
 				delitem 1008,1; //Frozen_Heart
-				set dmdswrd_Q,34;
+				dmdswrd_Q = 34;
 				close;
 			}
 			mes "[Walker]";
@@ -262,7 +262,7 @@ mjolnir_02,186,193,4	script	Middle-Aged Man#magum1	1_M_LIBRARYMASTER,{
 			mes "and give my regards to Morf";
 			mes "once you see him. If you do";
 			mes "succeed in obtaining a doomed sword, use its power responsibly.";
-			set dmdswrd_Q,35;
+			dmdswrd_Q = 35;
 			close;
 		}
 		else if (dmdswrd_Q == 35) {
@@ -391,7 +391,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 		mes "Potions so I can nurse";
 		mes "the headache I'm gonna";
 		mes "have! I'll need them so bad...";
-		set dmdswrd_Q,36;
+		dmdswrd_Q = 36;
 		close;
 	}
 	else if (dmdswrd_Q == 36) {
@@ -431,7 +431,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 			mes "sword pentagram. I'll just be";
 			mes "waiting for you right here.";
 			delitem 503,20; //Yellow_Potion
-			set dmdswrd_Q,37;
+			dmdswrd_Q = 37;
 			close;
 		}
 		mes "[Old Man]";
@@ -557,7 +557,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 			delitem 1019,3; //Wooden_Block
 			delitem 7021,1; //Foolishness_Of_Blind
 			delitem 7002,50; //Ogre_Tooth
-			set dmdswrd_Q,38;
+			dmdswrd_Q = 38;
 			close;
 		}
 		mes "[Old Man]";
@@ -662,7 +662,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 			mes "find him, he can complete";
 			mes "this pentagram for you. Well,";
 			mes "care now, and good luck.";
-			set dmdswrd_Q,39;
+			dmdswrd_Q = 39;
 			close;
 		case 2:
 			mes "[Morf]";
@@ -870,7 +870,7 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 		mes "Oh, and bring me the ^FF0000exact";
 		mes "amounts^000000--^FF0000no more^000000, ^FF0000no less^000000.";
 		mes "Okay now, I'll see you later~";
-		set dmdswrd_Q,40;
+		dmdswrd_Q = 40;
 		close;
 	}
 	else if (dmdswrd_Q == 40) {
@@ -893,7 +893,7 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 			delitem 7023,6; //Blade_Lost_In_Darkness
 			delitem 723,9; //Cardinal_Jewel
 			delitem 7019,1; //Loki's_Whispers
-			set dmdswrd_Q,41;
+			dmdswrd_Q = 41;
 			close;
 		}
 		mes "[Huey]";
@@ -972,7 +972,7 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 		mes "There, I see it! Now";
 		mes "quickly, take it! It's yours!";
 		next;
-		set .@random,rand(1,10);
+		.@random = rand(1,10);
 		if (.@random >= 1 && .@random <= 5) {
 			callsub S_GetSword,1237,0,1,42;
 			getitem 1237,1; //Grimtooth_
@@ -1041,7 +1041,7 @@ S_GetSword:
 		mes "the light dissipates, you";
 		mes "can see that you have";
 		mes "obtained a "+getitemname(getarg(0))+".^000000";
-		set magum,getarg(3);
+		magum = getarg(3);
 		next;
 	}
 	if (checkweight(getarg(0),1) == 0) {
@@ -1091,6 +1091,6 @@ S_GetSword:
 	mes "Walker my regards if you";
 	mes "happen to see them. Well";
 	mes "then, take care of yourself, and be cautious in using that sword.";
-	set dmdswrd_Q,45;
+	dmdswrd_Q = 45;
 	return;
 }

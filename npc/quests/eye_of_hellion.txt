@@ -203,7 +203,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 				mes "has offered to help me find";
 				mes "the gem, but I do not know if";
 				mes "I can trust him. Please help me protect this world from the gem...";
-				set HELLIONQ,36;
+				HELLIONQ = 36;
 				close;
 			}
 			mes "[Sir Chilias'Tyus]";
@@ -213,7 +213,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "one to take lightly. However,";
 			mes "I believe that you are wholly";
 			mes "capable of accomplishing this.";
-			set HELLIONQ,37;
+			HELLIONQ = 37;
 			close;
 		}
 		mes "[Sir Chilias'Tyus]";
@@ -257,7 +257,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "has offered to help me find";
 			mes "the gem, but I do not know if";
 			mes "I can trust him. Please help me protect this world from the gem...";
-			set HELLIONQ,36;
+			HELLIONQ = 36;
 			close;
 		}
 		mes "[Sir Chilias'Tyus]";
@@ -301,7 +301,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 		mes "and see if you can find";
 		mes "it. Good luck to you,";
 		mes "kind adventurer.";
-		set HELLIONQ,47;
+		HELLIONQ = 47;
 		close;
 	}
 	else if (HELLIONQ == 47) {
@@ -358,7 +358,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "fulfill my dear grandfather's";
 			mes "greatest wish and forever";
 			mes "seal away the Hellion's gem.";
-			set HELLIONQ,58;
+			HELLIONQ = 58;
 			getitem 7335,1; //Piece_Of_Slate_3
 			next;
 			mes "[Sir Chilias'Tyus]";
@@ -406,7 +406,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "the only one who can combine";
 			mes "the tablet pieces into the its";
 			mes "complete form. Thank you...";
-			set HELLIONQ,67;
+			HELLIONQ = 67;
 			close;
 		}
 		mes "[Sir Chilias'Tyus]";
@@ -544,7 +544,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "from those motivated by greed.";
 			delitem 7332,1; //Slate
 			delitem 7337,countitem(7337); //Eye_Of_Hellion
-			set HELLIONQ,69;
+			HELLIONQ = 69;
 			getitem 2658,1; //Nile_Rose_
 			getitem 603,1; //Old_Blue_Box
 			getexp (checkre(3))?120000:1200000,0;
@@ -612,7 +612,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "keep its secret and protect it";
 			mes "from those motivated by greed.";
 			delitem 7332,1; //Slate
-			set HELLIONQ,70;
+			HELLIONQ = 70;
 			getitem 2658,1; //Nile_Rose_
 			getexp (checkre(3))?100000:1000000,0;
 			next;
@@ -739,7 +739,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 				mes "through so much trouble to";
 				mes "even hide these clues. Oh";
 				mes "man, I want it so bad...";
-				set HELLIONQ,39;
+				HELLIONQ = 39;
 				close;
 			}
 			mes "[Clanux Heffron]";
@@ -757,7 +757,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 			mes "Prontera. I doubt it, but there's";
 			mes "a chance I mighta missed";
 			mes "something there. Get to it!";
-			set HELLIONQ,39;
+			HELLIONQ = 39;
 			close;
 		}
 		mes "[Clanux Heffron]";
@@ -767,7 +767,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 		mes "that, pal! Why should I help";
 		mes "you if we're gonna compete";
 		mes "for the same prize?!";
-		set HELLIONQ,38;
+		HELLIONQ = 38;
 		close;
 	}
 	else if (HELLIONQ == 38) {
@@ -793,7 +793,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 			mes "the old Swordman Training";
 			mes "Grounds here in Prontera.";
 			mes "There might be some clues left over there for you to find...";
-			set HELLIONQ,39;
+			HELLIONQ = 39;
 			close;
 		}
 		mes "[" + strcharinfo(0) + "]";
@@ -852,7 +852,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 			mes "drop me a couple more hints.";
 			mes "And give this to the old guy";
 			mes "to prove I found it, will you?";
-			set HELLIONQ,41;
+			HELLIONQ = 41;
 			getitem 7093,1; //Wheel
 			next;
 			mes "[Clanux Heffron]";
@@ -884,7 +884,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 		mes "learn anything new,";
 		mes "to me and let me know!";
 		mes "That's an order, got it?";
-		set HELLIONQ,41;
+		HELLIONQ = 41;
 		getitem 7093,1; //Wheel
 		close;
 	}
@@ -924,7 +924,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 		mes "here. The sooner you get";
 		mes "that clue, the sooner I'll";
 		mes "get that Hellion's gem.";
-		set HELLIONQ,43;
+		HELLIONQ = 43;
 		getitem 7093,1; //Wheel
 		close;
 	}
@@ -1000,7 +1000,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 			mes "Oh yeah? Hah! Well, now";
 			mes "that the easy part is done, I'll just figure out that secret";
 			mes "password myself! Hahaha! That Hellion's gem is as good as mine!";
-			set HELLIONQ,46;
+			HELLIONQ = 46;
 			close;
 		}
 		mes "[Clanux Heffron]";
@@ -1010,7 +1010,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 		mes "Yeah, I was able to get that";
 		mes "far, but I haven't been able";
 		mes "to figure out the password...";
-		set HELLIONQ,46;
+		HELLIONQ = 46;
 		close;
 	}
 	else if (HELLIONQ > 45 && HELLIONQ < 71) {
@@ -1055,7 +1055,7 @@ prontera,223,82,0	script	#prt_key-1	HIDDEN_NPC,{
 		mes "a steel bearing with a roughly";
 		mes "etched message that reads:^000000";
 		mes "^4d4dff''Veggie Lady N9 W3 BINGO.''^000000";
-		set HELLIONQ,40;
+		HELLIONQ = 40;
 		next;
 		mes "[" + strcharinfo(0) + "]";
 		mes "What the heck does this";
@@ -1132,9 +1132,9 @@ OnTouch:
 			mes "In fact, I hate talking.";
 			mes "That's why I sell vegetables.";
 			if (HELLIONQ == 40)
-				set HELLIONQ,42;
+				HELLIONQ = 42;
 			else if (HELLIONQ == 41)
-				set HELLIONQ,43;
+				HELLIONQ = 43;
 			next;
 			mes "["+ strcharinfo(0) +"]";
 			mes "Holy cow...";
@@ -1184,7 +1184,7 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 				mes "to life and a panel opens,";
 				mes "revealing a numeric keypad.^000000";
 				delitem 7093,1; //Wheel
-				set HELLIONQ,44;
+				HELLIONQ = 44;
 				next;
 				mes "[" + strcharinfo(0) + "]";
 				mes "I guess that I've got";
@@ -1216,7 +1216,7 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 					mes "this back to Sir Chilia'Tyus";
 					mes "and confirm that this was";
 					mes "made by his grandfather...^000000";
-					set HELLIONQ,45;
+					HELLIONQ = 45;
 					getitem 7333,1; //Piece_Of_Slate_1
 					close;
 				}
@@ -1267,7 +1267,7 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 			mes "this back to Sir Chilia'Tyus";
 			mes "and confirm that this was";
 			mes "made by his grandfather...^000000";
-			set HELLIONQ,45;
+			HELLIONQ = 45;
 			getitem 7333,1; //Piece_Of_Slate_1
 			close;
 		}
@@ -1372,7 +1372,7 @@ payon,182,132,3	script	Grout'he Tuccok#hellion	1_M_02,{
 					mes "If you got any more questions,";
 					mes "I guess you can ask me later~";
 					Zeny -= 10000;
-					set HELLIONQ,48;
+					HELLIONQ = 48;
 					getitem 953,1; //Stone_Heart
 					getitem 511,1; //Green_Herb
 					getitem 533,1; //Grape_Juice
@@ -1513,7 +1513,7 @@ payon,182,132,3	script	Grout'he Tuccok#hellion	1_M_02,{
 			mes "it's all we got. Heck,";
 			mes "all these clues make";
 			mes "less sense than this!";
-			set HELLIONQ,53;
+			HELLIONQ = 53;
 			close;
 		}
 		mes "[Grout'he]";
@@ -1551,7 +1551,7 @@ payon,182,132,3	script	Grout'he Tuccok#hellion	1_M_02,{
 		mes "Archer Village that fits";
 		mes "that description perfectly!";
 		mes "You should check it out.";
-		set HELLIONQ,56;
+		HELLIONQ = 56;
 		close;
 	}
 	else if (HELLIONQ == 56) {
@@ -1617,7 +1617,7 @@ OnTouch:
 		mes "Hopefully this will";
 		mes "make more sense once";
 		mes "I find more clues. I hope.";
-		set HELLIONQ,49;
+		HELLIONQ = 49;
 		close;
 	}
 	end;
@@ -1638,7 +1638,7 @@ payon,82,109,3	script	Pile of Stone#paypuzz2	HIDDEN_NPC,{
 		mes "that looks easy once";
 		mes "I get the answer. Well,";
 		mes "if I ever get it, that is.";
-		set HELLIONQ,50;
+		HELLIONQ = 50;
 		close;
 	}
 }
@@ -1659,7 +1659,7 @@ payon,239,56,3	script	Dried Fish#paypuzz3	HIDDEN_NPC,{
 		mes "these clues must be";
 		mes "some sort of crazy man!";
 		mes "It's the only explanation!";
-		set HELLIONQ,51;
+		HELLIONQ = 51;
 		close;
 	}
 }
@@ -1685,7 +1685,7 @@ payon,240,160,3	script	Vat#paypuzz4	HIDDEN_NPC,{
 		mes "Am I missing something?";
 		mes "I think I really need help in";
 		mes "figuring this out. Hmm...";
-		set HELLIONQ,52;
+		HELLIONQ = 52;
 		close;
 	}
 }
@@ -1746,7 +1746,7 @@ payon,159,129,3	script	Wooden Floor#paypuzz5	HIDDEN_NPC,{
 			delitem 511,1; //Green_Herb
 			delitem 533,1; //Grape_Juice
 			delitem 1049,1; //Skirt_Of_Virgin
-			set HELLIONQ,54;
+			HELLIONQ = 54;
 			next;
 			mes "[Stone Engraving]";
 			mes "^4D4DFF''This has been entrusted to";
@@ -1755,7 +1755,7 @@ payon,159,129,3	script	Wooden Floor#paypuzz5	HIDDEN_NPC,{
 			mes "find peace. To he who finds";
 			mes "this, remember that avarice";
 			mes "knows no bounds. --Tyus.''^000000";
-			set HELLIONQ,55;
+			HELLIONQ = 55;
 			close;
 		}
 		mes "[" + strcharinfo(0) + "]";
@@ -1775,7 +1775,7 @@ payon,159,129,3	script	Wooden Floor#paypuzz5	HIDDEN_NPC,{
 		mes "find peace. To he who finds";
 		mes "this, remember that avarice";
 		mes "knows no bounds. --Tyus.''^000000";
-		set HELLIONQ,55;
+		HELLIONQ = 55;
 		close;
 	}
 	else if (HELLIONQ > 54) {
@@ -1861,7 +1861,7 @@ pay_arche,142,28,0	script	Buddha Statue#paypuzz6	HIDDEN_NPC,5,5,{
 			mes "revealing a piece of the";
 			mes "tablet that will lead you";
 			mes "to the Hellion's gem.";
-			set HELLIONQ,57;
+			HELLIONQ = 57;
 			getitem 7334,1; //Piece_Of_Slate_2
 			close;
 		case 4:
@@ -1933,7 +1933,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 			mes "when he entrusted you with";
 			mes "this important mission. Huh.";
 			mes "A reevaluation is in order...";
-			set HELLIONQ,60;
+			HELLIONQ = 60;
 			close;
 		}
 		mes "[Welshyun]";
@@ -1957,7 +1957,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 		mes "please remember that.";
 		mes "Ah, and my student's";
 		mes "name is Enoz.";
-		set HELLIONQ,59;
+		HELLIONQ = 59;
 		close;
 	}
 	else if (HELLIONQ == 59) {
@@ -1977,7 +1977,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 		mes "There's no way I can do any";
 		mes "serious thinking with such";
 		mes "a dry, parched throat...";
-		set HELLIONQ,61;
+		HELLIONQ = 61;
 		close;
 	}
 	else if (HELLIONQ == 61) {
@@ -2011,7 +2011,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 			mes "Ah, and my student's";
 			mes "name is Enoz.";
 			delitem 504,1; //White_Potion
-			set HELLIONQ,62;
+			HELLIONQ = 62;
 			close;
 		}
 		mes "[Welshyun]";
@@ -2061,7 +2061,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 		mes "incredibly heavy tome,";
 		mes "the Master Science";
 		mes "Reference Book.^000000";
-		set HELLIONQ,64;
+		HELLIONQ = 64;
 		close;
 	}
 	else if (HELLIONQ == 64) {
@@ -2098,7 +2098,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 				mes "you may have this piece of";
 				mes "the tablet, which I've already found. The clues were too simple...";
 				delitem 717,1; //Blue_Gemstone
-				set HELLIONQ,66;
+				HELLIONQ = 66;
 				getitem 7336,1; //Piece_Of_Slate_4
 				next;
 				mes "[Welshyun]";
@@ -2174,7 +2174,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 			delitem 7334,1; //Piece_Of_Slate_2
 			delitem 7335,1; //Piece_Of_Slate_3
 			delitem 7336,1; //Piece_Of_Slate_4
-			set HELLIONQ,68;
+			HELLIONQ = 68;
 			getitem 7332,1; //Slate
 			next;
 			mes "[Welshyun]";
@@ -2290,7 +2290,7 @@ gef_tower,116,37,0	script	Enoz#hellion	4_M_ALCHE_A,{
 				mes "Reference Book? ";
 				mes "It was right here";
 				mes "three days ago...";
-				set HELLIONQ,63;
+				HELLIONQ = 63;
 				close;
 			}
 			mes "[Enoz]";
@@ -2351,7 +2351,7 @@ gef_tower,116,37,0	script	Enoz#hellion	4_M_ALCHE_A,{
 		mes "playing these pranks?!";
 		mes "Apple Juice! I need";
 		mes "some Apple Juice!";
-		set HELLIONQ,65;
+		HELLIONQ = 65;
 		next;
 		mes "^3355FFIt looks like it's time";
 		mes "to get 1 Blue Gemstone,";
