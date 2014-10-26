@@ -24,7 +24,7 @@ geffen,203,116,4	script	Guide#01geffen::GuideGeffen	4_M_GEF_SOLDIER,{
 	while (1) {
 		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
 		case 1:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Magic Academy ]:[ Geffen Tower ]:[ Fountain ]:[ Tool Shop ]:[ Buy & Repair Equipment ]:[ Inn ]:[ Tavern ]:[ Christopher's Forge ]:Previous Menu")) {
 				case 1:
@@ -84,13 +84,13 @@ geffen,203,116,4	script	Guide#01geffen::GuideGeffen	4_M_GEF_SOLDIER,{
 					next;
 					break;
 				case 9:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
 			break;
 		case 2:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Eden Teleport Officer ]:[ Kafra Employee ]:[ Pet Groomer ]:[ Chef Assistant ]:[ Dimensional Arcanist Guide ]:Previous Menu")) {
 				case 1:
@@ -121,7 +121,7 @@ geffen,203,116,4	script	Guide#01geffen::GuideGeffen	4_M_GEF_SOLDIER,{
 					next;
 					break;
 				case 6:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}

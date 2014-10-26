@@ -48,7 +48,7 @@ function	script	Esseray_Ex	{
 		mes "You should find him.";
 		next;
 		setquest 5092;
-		set EXSUPNOV_Q,1;
+		EXSUPNOV_Q = 1;
 		mes "[Esseray]";
 		mes "He can guide you along";
 		mes "the correct path...";
@@ -251,7 +251,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		mes "Do you know what this is for?";
 		next;
 		setarray .@Monsters$[0],"Poring","Lunatic","Fabre","Picky";
-		set .@i, rand(4);
+		.@i = rand(4);
 		changequest 5093,5094+.@i;
 		mes "[Nodor]";
 		mes "You know what a ^FF0000"+.@Monsters$[.@i]+"^000000 monster is, right?";
@@ -291,7 +291,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		mes "You are better than I thought.";
 		mes "Anyway, what was the monster that I told you to hunt?";
 		next;
-		set .@i, select("Poring:Lunatic:Fabre:Picky:Baphomet")-1;
+		.@i = select("Poring:Lunatic:Fabre:Picky:Baphomet")-1;
 		if (.@i == 4) {
 			mes "[Nodor]";
 			mes "Heheh? Can you seriously hunt Baphomet alone?";
@@ -393,9 +393,9 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		close;
 	}
 	else if (questprogress(5100)) {
-		if (EXSUPNOV_Q_ == 3) set .@str$,"300,000";
-		else if (EXSUPNOV_Q_ == 4) set .@str$,"1,000,000";
-		else set .@str$,"100,000";
+		if (EXSUPNOV_Q_ == 3) .@str$ = "300,000";
+		else if (EXSUPNOV_Q_ == 4) .@str$ = "1,000,000";
+		else .@str$ = "100,000";
 		mes "[Nodor]";
 		mes "Hey, have you gone there?";
 		mes "I got another message from my bro.";
@@ -477,7 +477,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		nude;
 		callfunc "F_ClearJobVar"; // -- Clears all job variables for the current player
 		jobchange roclass(eaclass()|EAJL_THIRD);
-		set EXSUPNOV_Q,5;
+		EXSUPNOV_Q = 5;
 		emotion e_heh;
 		mes "[Nodor]";
 		mes "Puhahahahahahahahahahah!!";
@@ -570,7 +570,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		specialeffect2 EF_RECOVERY;
 		mes "[Nodor]";
 		mes "Let Super Novice "+strcharinfo(0)+" be blessed with the Super Novice Guardian!";
-		set EXSUPNOV_Q,6;
+		EXSUPNOV_Q = 6;
 		close;
 	}
 	else if (EXSUPNOV_Q > 5) {
@@ -610,7 +610,7 @@ airplane,33,47,5	script	Nudor#sp2	4_F_NOVICE,{
 		mes "- eyes, holding out his hands. -";
 		mes "- How much do you want to give? -";
 		next;
-		set .@i, select("I have no money:Give 100,000 Zeny:Give 300,000 Zeny:Give 1,000,000 Zeny:Give all the money you have");
+		.@i = select("I have no money:Give 100,000 Zeny:Give 300,000 Zeny:Give 1,000,000 Zeny:Give all the money you have");
 		mes "[Nudor]";
 		if (.@i == 1) {
 			mes "- crying -";
@@ -622,9 +622,9 @@ airplane,33,47,5	script	Nudor#sp2	4_F_NOVICE,{
 		}
 		else if (.@i < 5) {
 			switch(.@i) {
-				case 2: set .@str$,"100,000"; set .@n,100000; break;
-				case 3: set .@str$,"300,000"; set .@n,300000; break;
-				case 4: set .@str$,"1,000,000"; set .@n,1000000; break;
+				case 2: .@str$ = "100,000"; .@n = 100000; break;
+				case 3: .@str$ = "300,000"; .@n = 300000; break;
+				case 4: .@str$ = "1,000,000"; .@n = 1000000; break;
 			}
 			mes "Lovely~~ Did he give you "+.@str$+" Zeny? That's pretty much!";
 			next;
@@ -647,18 +647,18 @@ airplane,33,47,5	script	Nudor#sp2	4_F_NOVICE,{
 				mes "Eh? But you don't have any money. You're so poor, huh?";
 				close;
 			}
-			set .@n,Zeny;
+			.@n = Zeny;
 		}
 		mes "[Nudor]";
 		mes "Woa~!! "+.@n+" Zeny! This helped me so much~ Tehee~";
 		mes "I can't believe it...";
 		changequest 5099,5100;
 		Zeny -= .@n;
-		if (.@i < 5) set EXSUPNOV_Q_, .@i;
+		if (.@i < 5) EXSUPNOV_Q_ = .@i;
 		else {
-			if (.@n > 1000000) set EXSUPNOV_Q_,4;
-			else if (.@n > 300000) set EX_SUPNOV_Q_,3;
-			else set EXSUPNOV_Q_,2;
+			if (.@n > 1000000) EXSUPNOV_Q_ = 4;
+			else if (.@n > 300000) EX_SUPNOV_Q_ = 3;
+			else EXSUPNOV_Q_ = 2;
 		}
 		next;
 		mes "[Nudor]";

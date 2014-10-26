@@ -35,7 +35,7 @@ lighthalzen,207,310,5	script	Lighthalzen Guide#lhz01::GuideLighthazlen	4_M_EIN_S
 	while (1) {
 		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
 		case 1:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Hotel ]:[ Bank ]:[ Airport ]:[ Weapon Shop ]:[ Department Store ]:[ Police Station ]:[ Jewelry Store ]:[ Cool Event Corp. ]:[ Somatology Laboratory ]:[ Alchemist Association ]:Previous Menu")) {
 				case 1:
@@ -89,13 +89,13 @@ lighthalzen,207,310,5	script	Lighthalzen Guide#lhz01::GuideLighthazlen	4_M_EIN_S
 					next;
 					break;
 				case 11:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
 			break;
 		case 2:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Armsmith ]:[ Seiayablem ]:[ Pet Groomer ]:[ Kafra Employees ]:[ Cool Event Corp. Staff ]:Previous Menu")) {
 				case 1:
@@ -136,7 +136,7 @@ lighthalzen,207,310,5	script	Lighthalzen Guide#lhz01::GuideLighthazlen	4_M_EIN_S
 					next;
 					break;
 				case 6:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}

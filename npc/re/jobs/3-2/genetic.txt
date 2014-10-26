@@ -56,7 +56,7 @@ alde_alche,35,186,5	script	Alchemist Union Member	1_M_SIGNALCHE,{
 					next;
 					mes "[Alchemist Union Member]";
 					mes "You can find her in the Alchemy Lab at the western part of Lighthalzen. There is also another Geneticist studying weaponry there, you might want to pay her a visit as well.";
-					set job_gen,1;
+					job_gen = 1;
 					setquest 2215;
 					close;
 				case 2:
@@ -187,7 +187,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 		next;
 		mes "- For now it seems that I -";
 		mes "- need to calm down Devries. -";
-		set job_gen,2;
+		job_gen = 2;
 		close;
 	} else if (job_gen == 2) {
 		mes "[Devries]";
@@ -281,13 +281,13 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 			mes "Alright.";
 			mes "Even though your knowledge is not that great as that of Geneticists, a fundamental knowledge is also important.";
 			mes "Popo, come back to me once you've finished your studies.";
-			set job_gen,4;
+			job_gen = 4;
 			close;
 		case 2:
 			mes "[Devries]";
 			mes "Good!";
 			mes "Let's do it!";
-			set job_gen,5;
+			job_gen = 5;
 			close;
 		}
 	} else if (job_gen == 4) {
@@ -304,7 +304,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 			mes "[Devries]";
 			mes "Very good!";
 			mes "Let's do it!";
-			set job_gen,5;
+			job_gen = 5;
 			close;
 		}
 	} else if (job_gen == 5) {
@@ -365,7 +365,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 		next;
 		mes "[Devries]";
 		mes "Well, you better get started!";
-		set job_gen,6;
+		job_gen = 6;
 		close;
 	} else if (job_gen == 6) {
 		mes "[Devries]";
@@ -389,7 +389,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 			mes "[Devries]";
 			mes "You can start from the beginning then?";
 			mes "Why are you asking me such things?";
-			set job_gen,7;
+			job_gen = 7;
 			if (questprogress(2209) == 1) erasequest 2209;
 			if (questprogress(2210) == 1) erasequest 2210;
 			if (questprogress(2211) == 1) erasequest 2211;
@@ -416,7 +416,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 			mes "What happened?";
 			mes "How could you say the study is completed without any result?";
 			mes "Start again.";
-			set job_gen,7;
+			job_gen = 7;
 		} else {
 			mes "[Devries]";
 			mes "Well, I'll take a look at the seeds Popo made.";
@@ -460,7 +460,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 				mes "Go take a look at her experiment results.";
 				mes "Could you give this message to her? Tell her to conduct her experiments quietly.";
 				delitem 6273,1; //Altered_Seed
-				set job_gen,62;
+				job_gen = 62;
 				changequest 2215,2216;
 			} else {
 				specialeffect EF_SPELLBREAKER,AREA,"Super Cultivator#gen";
@@ -470,7 +470,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 				mes "It didn't grow at all, it's withered already.";
 				mes "Go and start over!";
 				delitem 6272,1; //Experiment_Seed
-				set job_gen,7;
+				job_gen = 7;
 			}
 		}
 		if (questprogress(2209) == 1) erasequest 2209;
@@ -485,7 +485,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 			mes "[Devries]";
 			mes "Oh, wait a second.";
 			mes "It seems that the mail's has arrived.";
-			set job_gen,76;
+			job_gen = 76;
 			completequest 2223;
 			close;
 		}
@@ -555,7 +555,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 		mes "Congratulations, Popo!";
 		mes "You are a Geneticist from now on!!";
 		jobchange roclass(eaclass()|EAJL_THIRD);
-		set job_gen,77;
+		job_gen = 77;
 		getitem 5752,1; //Midas_Whisper
 		getitem 2795,1; //Green_Apple_Ring
 		next;
@@ -584,7 +584,7 @@ job3_gen01,83,72,3	script	Delivery Box#generic	HIDDEN_NPC,{
 			switch(select("Take out a cookie bag.:Do nothing.")) {
 			case 1:
 				mes "- You've taken out a cookie bag out of the box. -";
-				set job_gen,3;
+				job_gen = 3;
 				close;
 			case 2:
 				mes "You do nothing.";
@@ -622,7 +622,7 @@ job3_gen01,12,56,3	script	Plant Guide#generic	HIDDEN_NPC,{
 		next;
 		mes "...The plants usually used for Alchemy are Bigibigi Grass and Muka Trees that have sharp thorns but are delicate inside and Bogi Creeper whose growth speed is really fast but parasitic on living things.";
 		if (job_gen == 6)
-			set job_gen,7;
+			job_gen = 7;
 		close;
 	case 3:
 		mes "...Using minerals in Alchemy is a way that beginners find pretty easy.";
@@ -647,7 +647,7 @@ function	script	Genetic_Job_Plant	{
 			next;
 			switch(select("Use it as a material.:Do not use.")) {
 			case 1:
-				if (getarg(3,0)) set .@str$,"some of the ";
+				if (getarg(3, 0)) .@str$ = "some of the ";
 				mes "- You've acquired "+.@str$+getarg(1)+". -";
 				setquest getarg(0);
 				close;
@@ -728,26 +728,26 @@ job3_gen01,7,50,3	script	Testing Table#gen	CLEAR_NPC,{
 		mes "["+strcharinfo(0)+"]";
 		mes "Good. Now I can let Miss Devries take a look at this seed!";
 		if (!questprogress(2209) && !questprogress(2210) && !questprogress(2211)) {
-			set job_gen,61;
+			job_gen = 61;
 			getitem 6272,1; //Experiment_Seed
 			close;
 		}
-		if (questprogress(2209) == 1) set job_gen,job_gen+10;
-		if (questprogress(2210) == 1) set job_gen,job_gen+10;
-		if (questprogress(2211) == 1) set job_gen,job_gen+10;
-		set .@score, job_gen + JobLevel - 20;
+		if (questprogress(2209) == 1) job_gen += 10;
+		if (questprogress(2210) == 1) job_gen += 10;
+		if (questprogress(2211) == 1) job_gen += 10;
+		.@score = job_gen + JobLevel - 20;
 		if (rand(1,100) < .@score) {
-			set job_gen,60;
+			job_gen = 60;
 			getitem 6273,1; //Altered_Seed
 			close;
 		} else {
-			set job_gen,61;
+			job_gen = 61;
 			getitem 6272,1; //Experiment_Seed
 			close;
 		}
 	} else if (job_gen > 7 && job_gen < 60) {
 		mes "- It looks like the experiment has failed. I better start over. -";
-		set job_gen,7;
+		job_gen = 7;
 		if (countitem(6273)) delitem 6273,1; //Altered_Seed
 		if (countitem(6272)) delitem 6272,1; //Experiment_Seed
 		if (questprogress(2209) == 1) erasequest 2209;
@@ -800,7 +800,7 @@ job3_gen01,91,48,3	script	Demi Calberine#gen	4_F_SCIENCE,{
 		mes "Ugh~ I think they dropped around here somewhere.";
 		mes "I only need 10! I need to put the other parts together first... Please could you help me?!";
 		changequest 2216,2217;
-		set job_gen,63;
+		job_gen = 63;
 		close;
 	} else if (job_gen > 62 && job_gen < 74) {
 		mes "Ah, oh no, oh no~~~";
@@ -908,7 +908,7 @@ job3_gen01,91,48,3	script	Demi Calberine#gen	4_F_SCIENCE,{
 		mes "- Rattle -";
 		next;
 		mes "- What's this? I feel like the floor is missing somewhere. -";
-		set job_gen,75;
+		job_gen = 75;
 		changequest 2217,2223;
 		close2;
 		warp "job3_gen01",23,32;
@@ -946,7 +946,7 @@ job3_gen01,91,48,3	script	Demi Calberine#gen	4_F_SCIENCE,{
 		mes "- There are so many scattered things on the floor that the lab is in chaos. -";
 		next;
 		mes "- You found a little metal fragment. -";
-		set job_gen, job_gen+1;
+		job_gen = job_gen+1;
 		specialeffect EF_BASH;
 		disablenpc strnpcinfo(0);
 		initnpctimer;

@@ -21,7 +21,7 @@ moscovia,161,76,3	script	Moscovia Guide#01mosc	4_F_RUSWOMAN1,{
 	mes "I'm supporting to offer information about here.";
 	mes "If you want to ask anything just feel free tell me.";
 	F_Navi("[Moscovia Guide]");
-	set .@str$,"Is there anything else I can do for you?";
+	.@str$ = "Is there anything else I can do for you?";
 	while (1) {
 		next;
 		switch(select("[ Kafra Employee ]:[ Palace ]:[ Chapel ]:[ Weapon Shop ]:[ Armor Shop ]:[ Tool Shop ]:[ Inn ]:[ Return to Alberta ]:Remove Marks from Mini-Map:Cancel")) {

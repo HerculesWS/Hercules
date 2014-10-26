@@ -23,8 +23,8 @@ ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 		close;
 	}
 
-	set .@party_id,getcharid(1);
-	set .@md_name$,"Buwaya Cave";
+	.@party_id = getcharid(1);
+	.@md_name$ = "Buwaya Cave";
 
 	if (!.@party_id) {
 		mes "[Guard]";
@@ -73,7 +73,7 @@ ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 					erasequest 4229;
 					// fall through
 				}
-				set .@instance,instance_create(.@md_name$,.@party_id);
+				.@instance = instance_create(.@md_name$,.@party_id);
 				if (.@instance < 0) {
 					mes "[Guard]";
 					mes "Party name is... "+getpartyname(.@party_id)+".";;
@@ -247,8 +247,8 @@ OnInstanceInit:
 	end;
 OnEnable:
 	enablenpc instance_npcname("#box_mob_call");
-	set .@label$, instance_npcname("#box_mob_call")+"::OnMyMobDead";
-	set .@map$, instance_mapname("1@ma_c");
+	.@label$ = instance_npcname("#box_mob_call")+"::OnMyMobDead";
+	.@map$ = instance_mapname("1@ma_c");
 	monster .@map$,30,118,"Buwaya's Weakness",2333,1,.@label$;
 	monster .@map$,35,118,"Buwaya's Weakness",2333,1,.@label$;
 	end;
@@ -271,8 +271,8 @@ OnEnable:
 	enablenpc instance_npcname("#box_out");
 	end;
 OnTouch:
-	set .@x, rand(1,20) + 97;
-	set .@y, rand(1,20) + 74;
+	.@x = rand(1,20) + 97;
+	.@y = rand(1,20) + 74;
 	warp instance_mapname("1@ma_c"),.@x,.@y;
 	end;
 }
@@ -286,7 +286,7 @@ OnInstanceInit:
 OnTimer30000:
 	mapannounce instance_mapname("1@ma_c"),"Buwaya : I will put you in my treasure box!",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
 	// Should execute OnTimer33000, but client doesn't render the effect fast enough.
-	for(set .@i,1; .@i<=9; set .@i,.@i+1)
+	for(.@i = 1; .@i<=9; ++.@i)
 		donpcevent instance_npcname("#yunobi"+.@i)+"::OnEnable";
 	end;
 OnTimer33000:
@@ -352,8 +352,8 @@ OnTimer64000:
 	mapannounce instance_mapname("1@ma_c"),"Buwaya : This is...MY...Deadly... ATTACK!",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
 	end;
 OnTimer65000:
-	set .@label$, instance_npcname("#bunshin")+"::OnMyMobDead";
-	set .@map$, instance_mapname("1@ma_c");
+	.@label$ = instance_npcname("#bunshin")+"::OnMyMobDead";
+	.@map$ = instance_mapname("1@ma_c");
 	areamonster .@map$,112,89,122,99,"Buwaya",2332,1,.@label$;
 	areamonster .@map$,112,49,122,59,"Buwaya",2332,1,.@label$;
 	areamonster .@map$,72,49,82,59,"Buwaya",2332,1,.@label$;
@@ -386,7 +386,7 @@ OnInstanceInit:
 	areamonster instance_mapname("1@ma_c"),90,67,104,81,"Buwaya",2319,1,instance_npcname("#buwaya_con")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@ma_c");
+	.@map$ = instance_mapname("1@ma_c");
 	if (mobcount(.@map$,instance_npcname("#buwaya_con")+"::OnMyMobDead") < 1) {
 		donpcevent instance_npcname("#box_call")+"::OnDisable";
 		donpcevent instance_npcname("#bunshin")+"::OnDisable";
@@ -403,12 +403,12 @@ OnInstanceInit:
 	initnpctimer;
 	end;
 OnTimer60000:
-	set .@label$, instance_npcname("#exit_mob")+"::OnMyMobDead";
-	set .@map$, instance_mapname("1@ma_c");
+	.@label$ = instance_npcname("#exit_mob")+"::OnMyMobDead";
+	.@map$ = instance_mapname("1@ma_c");
 	if (mobcount(.@map$,.@label$) < 30)
-		set .@amount,10;
+		.@amount = 10;
 	else
-		set .@amount,1;
+		.@amount = 1;
 	areamonster .@map$,43,58,47,60,"Water Plant",2331,.@amount,.@label$;
 	areamonster .@map$,43,58,47,60,"Egg",2329,.@amount,.@label$;
 	stopnpctimer;
@@ -440,7 +440,7 @@ OnTouch:
 
 1@ma_c,1,1,0	script	#buwaya_spawn_mobs	-1,{
 OnInstanceInit:
-	set .@map$, instance_mapname("1@ma_c");
+	.@map$ = instance_mapname("1@ma_c");
 	areamonster .@map$,73,81,93,101,"Seaweed",2331,18;
 	areamonster .@map$,110,97,116,103,"Seaweed",2331,8;
 	areamonster .@map$,59,63,63,67,"Seaweed",2331,8;

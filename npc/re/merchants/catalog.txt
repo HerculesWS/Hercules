@@ -18,7 +18,7 @@ moc_para01,22,16,5	script	Catalog Magician#catal01	4_M_BIBI,{
 		mes "- You have too many items. Please make space. -";
 		close;
 	}
-	set .@ticket_cost, 200;
+	.@ticket_cost = 200;
 	mes "[Catalog Magician]";
 	mes "Look... the Magic Academy";
 	mes "in Geffen is now directly";
@@ -64,7 +64,7 @@ moc_para01,22,16,5	script	Catalog Magician#catal01	4_M_BIBI,{
 			} else
 				break;
 		}
-		set .@sell, .@ticket_cost * .@input;
+		.@sell = .@ticket_cost * .@input;
 		mes "The total number of catalog(s) that you're trying to purchase is " + .@input + " pieces.";
 		mes "It costs " + .@sell + " z.";
 		if (Zeny < .@sell) {

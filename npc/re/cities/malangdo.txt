@@ -27,7 +27,7 @@
 		mes "We are sent to here to take you to the heaven of cats, ^A2314BMalangdo^000000.";
 		next;
 		mes "[Dolangmal]";
-		set .@s$,"Why don't you go to ^A2314BMalangdo^000000?";
+		.@s$ = "Why don't you go to ^A2314BMalangdo^000000?";
 		switch(atoi(strnpcinfo(2))) {
 			case 1: mes "How is that? The crowded city of Prontera is good, but why don't you go our heaven of the cats, ^A2314BMalangdo^000000?"; break;
 			case 2: mes "Why don't you go to ^A2314BMalangdo^000000? That place is better than Geffen, where there are only crowds of simple honest wizards."; break;
@@ -165,17 +165,17 @@ mora,57,150,4	duplicate(Dolangmal)	Dolangmal#9	4_CAT_DOWN
 	mes "Meow? Huh?";
 	next;
 	if (ep13_yong1 == 0) {
-		set .@price,1000;
-		set .@s1$,"Huh! You are so annoying. Let me send you to ^A2314BMalangdo^000000 for ^0000FF1000 Zeny^000000.";
-		set .@s2$,"Money? Where is the money? You can't go anywhere without the money. Shame on you.";
+		.@price = 1000;
+		.@s1$ = "Huh! You are so annoying. Let me send you to ^A2314BMalangdo^000000 for ^0000FF1000 Zeny^000000.";
+		.@s2$ = "Money? Where is the money? You can't go anywhere without the money. Shame on you.";
 	} else if (ep13_yong1 < 60) {
-		set .@price,999;
-		set .@s1$,"You have a little relationship with fleet of cat. I'll give you special discount price ^0000FF999 Zeny^000000 to ^A2314BMalangdo^000000, because you have relationship with fleet.";
-		set .@s2$,"Where is the money? You don't have a sense of honor.";
+		.@price = 999;
+		.@s1$ = "You have a little relationship with fleet of cat. I'll give you special discount price ^0000FF999 Zeny^000000 to ^A2314BMalangdo^000000, because you have relationship with fleet.";
+		.@s2$ = "Where is the money? You don't have a sense of honor.";
 	} else if (ep13_yong1 > 59 && ep13_yong1 < 80) {
-		set .@price,500;
-		set .@s1$,"You gave several help to our cat's fleet so let me give you special that with 50% discount price ^0000FF500 Zeny^000000. I'll send you to ^A2314BMalangdo^000000.";
-		set .@s2$,"You don't have any money for paying 50% discount price? I can't believe it.";
+		.@price = 500;
+		.@s1$ = "You gave several help to our cat's fleet so let me give you special that with 50% discount price ^0000FF500 Zeny^000000. I'll send you to ^A2314BMalangdo^000000.";
+		.@s2$ = "You don't have any money for paying 50% discount price? I can't believe it.";
 	} else {
 		mes "[Odgnalam]";
 		mes "You are a hero of cat's fleet. Your activity is the legend between us.";
@@ -218,36 +218,36 @@ malangdo,219,86,4	script	Kong#malang	4_CAT_SAILOR2,{
 	mes "The fleet has a service to Izlude and Alberta.";
 	next;
 	if (ep13_yong1 == 0) {
-		set .@price,1000;
-		set .@s1$, "1000 zeny";
-		set .@s2$, "Have a nice day in Malangdo.";
-		set .@no_money$, "It is difficult for free.";
-		set .@yes_money$, "Have a nice trip.";
+		.@price = 1000;
+		.@s1$ = "1000 zeny";
+		.@s2$ = "Have a nice day in Malangdo.";
+		.@no_money$ = "It is difficult for free.";
+		.@yes_money$ = "Have a nice trip.";
 		mes "[Kong]";
 		mes "The fee of ship is only 1000 zeny, where do you want to go?";
 		next;
 	} else if (ep13_yong1 < 60) {
-		set .@price,999;
-		set .@s1$,"999 zeny";
-		set .@s2$, "Have a full of fortune day in Malangdo...";
-		set .@no_money$, "It is difficult even though you have a relationship with the fleet.";
-		set .@yes_money$, "Thanks, have a wonderful trip.";
+		.@price = 999;
+		.@s1$ = "999 zeny";
+		.@s2$ = "Have a full of fortune day in Malangdo...";
+		.@no_money$ = "It is difficult even though you have a relationship with the fleet.";
+		.@yes_money$ = "Thanks, have a wonderful trip.";
 		mes "[Kong]";
 		mes "You have a connection with our fleet. Apply special price 999 zeny. Where do you want to go?";
 		next;
 	} else if (ep13_yong1 > 59 && ep13_yong1 < 80) {
-		set .@price,500;
-		set .@s1$,"500 zeny";
-		set .@s2$, "There are full of fortune and jackpot in Malangdo.";
-		set .@no_money$, "Oh my god. You don't have 500 zeny? It is difficult for free.";
-		set .@yes_money$, "Have a nice trip and come again.";
+		.@price = 500;
+		.@s1$ = "500 zeny";
+		.@s2$ = "There are full of fortune and jackpot in Malangdo.";
+		.@no_money$ = "Oh my god. You don't have 500 zeny? It is difficult for free.";
+		.@yes_money$ = "Have a nice trip and come again.";
 		mes "[Kong]";
 		mes "Wow~ You contributed to our fleet a lot. Alright!! Special discount price 500 zeny. Where do you want to go?";
 		next;
 	} else {
-		set .@price,0;
-		set .@s1$,"Free for the hero of our fleet!!";
-		set .@s2$, "No one objects to the hero of our fleet staying in Malangdo...";
+		.@price = 0;
+		.@s1$ = "Free for the hero of our fleet!!";
+		.@s2$ = "No one objects to the hero of our fleet staying in Malangdo...";
 		mes "[Kong]";
 		mes "Ah... You are the legendary hero of our cat's fleet.";
 		next;
@@ -255,7 +255,7 @@ malangdo,219,86,4	script	Kong#malang	4_CAT_SAILOR2,{
 		mes "We can't charge the hero of our fleet. What is your destination?";
 		next;
 	}
-	set .@i, select("- Izlude destination --- "+.@s1$+":- Alberta destination --- "+.@s1$+":- Stay on Malangdo");
+	.@i = select("- Izlude destination --- "+.@s1$+":- Alberta destination --- "+.@s1$+":- Stay on Malangdo");
 	mes "[Kong]";
 	if (.@i == 3) {
 		mes .@s2$;

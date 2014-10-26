@@ -26,7 +26,7 @@ louyang,224,104,4	script	Louyang Guide#01louyang	4_F_CHNWOMAN,{
 	mes "^8B4513Louyang^000000 is famous for";
 	mes "its elaborate history, as well as specialties that are unique to this nation. Please take your time and enjoy your stay.";
 	F_Navi("[Representative]");
-	set .@str$,"Is there anything else I can do for you?";
+	.@str$ = "Is there anything else I can do for you?";
 	while (1) {
 		next;
 		switch(select("[ Dragon Castle ]:[ Doctor's Office ]:[ City Hall ]:[ Weapon Shop ]:[ Tool Shop ]:[ Tavern ]:[ Observatory ]:[ Return to Alberta ]:Remove Marks from Mini-Map:Cancel")) {

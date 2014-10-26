@@ -151,7 +151,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 	mes "[Thief Guildsman]";
 	mes "Well, I'm not in charge of making you a Thief. I just accept applications, get it?";
 	mes "If you want to become a Thief, ask the guy next to me.";
-	set q_job_thief,1;
+	q_job_thief = 1;
 	close;
 }
 
@@ -166,7 +166,7 @@ moc_prydb1,42,133,2	script	Thief Guildsman#thief	2_M_THIEFMASTER,{
 		mes "'"+strcharinfo(0)+".'";
 		mes "'For those who are ready, the moonlight shall open the way. Now you are fully ready, I now officially allow you to become a member of the Thief Guild.'";
 		callfunc "Job_Change",Job_Thief;
-		set q_job_thief,0;
+		q_job_thief = 0;
 		getitem 13041,1; // N_Main_Gauche
 		next;
 		mes "[Commander of Thief Guild]";

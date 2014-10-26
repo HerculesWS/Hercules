@@ -22,11 +22,11 @@ prontera,154,187,4	script	Guide#01prontera::GuideProntera	8W_SOLDIER,{
 	mes "Do you need help navigating the city?";
 	F_Navi("[Prontera Guide]");
 	next;
-	set .@str$,"Would you like to check any other locations?";
+	.@str$ = "Would you like to check any other locations?";
 	while (1) {
 		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
 		case 1:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Tool Shop ]:[ Weapon & Armor Shop ]:[ Forge ]:[ Sanctuary ]:[ Chivalry Office ]:[ Inn ]:[ Tavern ]:[ Library ]:[ Prontera Castle ]:[ Job Agency ]:[ City Hall ]:Previous Menu")) {
 				case 1:
@@ -119,13 +119,13 @@ prontera,154,187,4	script	Guide#01prontera::GuideProntera	8W_SOLDIER,{
 					next;
 					break;
 				case 12:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
 			break;
 		case 2:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Eden Teleport Officer ]:[ Peco Peco Breeder ]:[ Riding Creature Master ]:[ Magic Gear Master ]:[ Peco Peco Remover ]:[ Trading Merchants ]:[ Mercenary Guildsman ]:[ Hypnotist ]:[ Kafra Employee ]:[ Leablem ]:[ Apprentice Craftsman ]:[ Pet Groomer ]:Previous Menu")) {
 				case 1:
@@ -234,7 +234,7 @@ prontera,154,187,4	script	Guide#01prontera::GuideProntera	8W_SOLDIER,{
 					next;
 					break;
 				case 13:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}

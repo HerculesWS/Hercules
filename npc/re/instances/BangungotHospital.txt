@@ -21,7 +21,7 @@
 ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 	if (BaseLevel < 100) end;
 
-	set .@party_id,getcharid(1);
+	.@party_id = getcharid(1);
 	cutin "malaya_nurseB",2;
 	if (!questprogress(9223)) {
 		.@quest = questprogress(9222);
@@ -215,7 +215,7 @@ L_Closed:
 	mes "I call her behind, but";
 	mes "she doesn't respond. -";
 	if (getarg(0)) {
-		set malaya_bang,31;
+		malaya_bang = 31;
 		changequest 11302,11303;
 	}
 	close2;
@@ -232,7 +232,7 @@ L_NoParty:
 	end;
 
 L_Enter:
-	set .@md_name$,"Bangungot Hospital 2F";
+	.@md_name$ = "Bangungot Hospital 2F";
 	if (getarg(2) == 0) {
 		mes "[Nurse Maenne]";
 		mes "I already heard that story so";
@@ -257,7 +257,7 @@ L_Enter:
 	next;
 	switch(select(((getarg(0))?"Prepare to enter the second floor.":"")+":Enter the second floor.:Do not enter.")) {
 	case 1:
-		set .@instance, instance_create(.@md_name$,getcharid(1));
+		.@instance = instance_create(.@md_name$,getcharid(1));
 		if (.@instance < 0) {
 			mes "[Nurse Maenne]";
 			mes "A critical situation has happened.";
@@ -351,8 +351,8 @@ sec_in02,27,30,0	script	Bangungot Gate	2_MONEMUS,{
 		case 4: erasequest 9223; close;
 		case 5: setquest 9224; close;
 		case 6: erasequest 9224; close;
-		case 7: set malaya_bang,30; close;
-		case 8: set malaya_bang,40; close;
+		case 7: malaya_bang = 30; close;
+		case 8: malaya_bang = 40; close;
 		case 9: setquest 11309; close;
 		case 10: completequest 11309; close;
 		case 11: close;
@@ -364,7 +364,7 @@ sec_in02,27,30,0	script	Bangungot Gate	2_MONEMUS,{
 1@ma_h,43,157,0	script	#Memorial Start	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
-	set .@map$, instance_mapname("1@ma_h");
+	.@map$ = instance_mapname("1@ma_h");
 	mapannounce .@map$,"Bangungot: You silly "+strcharinfo(0)+" ....",bc_map,"0xFF82FF";
 	mapannounce .@map$,"Bangungot: Get out before you die...",bc_map,"0xFF82FF";
 	areamonster .@map$,44,156,46,158,"Bangungot's Mangkukulam",2339,1,instance_npcname("#Memorial Start")+"::OnMyMobDead";
@@ -374,7 +374,7 @@ OnMyMobDead:
 	initnpctimer;
 	end;
 OnTimer1000:
-	set .@map$, instance_mapname("1@ma_h");
+	.@map$ = instance_mapname("1@ma_h");
 	if (mobcount(.@map$,instance_npcname("#Memorial Start")+"::OnMyMobDead") < 1) {
 		donpcevent instance_npcname("#Ward1 Entry")+"::OnEnable1";
 		donpcevent instance_npcname("#Memorial Start_time")+"::OnDisable";
@@ -412,8 +412,8 @@ OnInstanceInit:
 	disablenpc instance_npcname(strnpcinfo(0));
 	end;
 OnEnable1:
-	set .@map$, instance_mapname("1@ma_h");
-	set .@label$, instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	.@map$ = instance_mapname("1@ma_h");
+	.@label$ = instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
 	enablenpc instance_npcname(strnpcinfo(0));
 	specialeffect EF_BAT2;
 	switch(atoi(charat(strnpcinfo(2),4))) {
@@ -449,7 +449,7 @@ OnEnable2:
 	end;
 */
 OnEnable3:
-	set .@i, atoi(charat(strnpcinfo(2),4))+1;
+	.@i = atoi(charat(strnpcinfo(2),4))+1;
 	donpcevent instance_npcname("#Ward"+.@i+" Entry")+"::OnEnable1";
 	disablenpc instance_npcname(strnpcinfo(0));
 	end;
@@ -457,16 +457,16 @@ OnMyMobDead:
 	initnpctimer;
 	end;
 OnTimer1000:
-	set .@map$, instance_mapname("1@ma_h");
+	.@map$ = instance_mapname("1@ma_h");
 	if (mobcount(.@map$,instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1) {
 		specialeffect EF_BAT2;
 		donpcevent instance_npcname(strnpcinfo(0))+"::OnEnable3";
 		switch(atoi(charat(strnpcinfo(2),4))) {
-			case 1: set .@str$,"Bangungot: I will let you see the pain and the agony actually be real....."; break;
-			case 2: set .@str$,"Bangungot: Diseased spirits are the source of my energy, and my life..."; break;
-			case 3: set .@str$,"Bangungot: Scream more....and more...... your pain..."; break;
-			case 4: set .@str$,"Bangungot: Deeply and more deeply in pain..."; break;
-			case 5: set .@str$,"Bangungot: Be horrified...be petrified."; break;
+			case 1: .@str$ = "Bangungot: I will let you see the pain and the agony actually be real....."; break;
+			case 2: .@str$ = "Bangungot: Diseased spirits are the source of my energy, and my life..."; break;
+			case 3: .@str$ = "Bangungot: Scream more....and more...... your pain..."; break;
+			case 4: .@str$ = "Bangungot: Deeply and more deeply in pain..."; break;
+			case 5: .@str$ = "Bangungot: Be horrified...be petrified."; break;
 		}
 		mapannounce .@map$,.@str$,bc_map,"0xFF82FF";
 	}
@@ -484,8 +484,8 @@ OnInstanceInit:
 	disablenpc instance_npcname("#Ward6 Entry");
 	end;
 OnEnable1:
-	set .@map$, instance_mapname("1@ma_h");
-	set .@label$, instance_npcname("#Ward6 Entry")+"::OnMyMobDead";
+	.@map$ = instance_mapname("1@ma_h");
+	.@label$ = instance_npcname("#Ward6 Entry")+"::OnMyMobDead";
 	enablenpc instance_npcname("#Ward6 Entry");
 	specialeffect EF_BAT2;
 	areamonster .@map$,93,137,95,139,"Bangungot's Mangkukulam",2339,1,.@label$;
@@ -504,7 +504,7 @@ OnMyMobDead:
 	initnpctimer;
 	end;
 OnTimer3000:
-	set .@map$, instance_mapname("1@ma_h");
+	.@map$ = instance_mapname("1@ma_h");
 	if (mobcount(.@map$,instance_npcname("#Ward6 Entry")+"::OnMyMobDead") < 1) {
 		specialeffect EF_BAT2;
 		donpcevent instance_npcname("#Summon Boss")+"::OnEnable";
@@ -563,7 +563,7 @@ OnMyMobDead:
 	initnpctimer;
 	end;
 OnTimer1000:
-	set .@map$, instance_mapname("1@ma_h");
+	.@map$ = instance_mapname("1@ma_h");
 	if (mobcount(.@map$,instance_npcname("#Boss Room Entry")+"::OnMyMobDead") < 1)
 		mapannounce .@map$,"Bangungot: HAHAHAH... That's not enough, I will be even stronger....",bc_map,"0xFF82FF";
 	stopnpctimer;
@@ -605,12 +605,12 @@ OnEnable:
 	end;
 OnTimer25000:
 	mapannounce instance_mapname("1@ma_h"),"Bangungot: You will know what it is...",bc_map,"0xFF82FF";
-	for(set .@i,10; .@i<=22; set .@i,.@i+1)
+	for(.@i = 10; .@i<=22; ++.@i)
 		disablenpc instance_npcname("#Patternwarp"+.@i);
 	end;
 OnTimer35000:
 	mapannounce instance_mapname("1@ma_h"),"Bangungot: Real pain! You will know!!",bc_map,"0xFF82FF";
-	for(set .@i,25; .@i<=33; set .@i,.@i+1)
+	for(.@i = 25; .@i<=33; ++.@i)
 		disablenpc instance_npcname("#Patternwarp"+.@i);
 	end;
 OnTimer45000:
@@ -622,13 +622,13 @@ OnTimer55000:
 	donpcevent instance_npcname("#Summon Ward Mob")+"::OnEnable7";
 	end;
 OnTimer60000:
-	for(set .@i,1; .@i<=8; set .@i,.@i+1)
+	for(.@i = 1; .@i<=8; ++.@i)
 		enablenpc instance_npcname("#Patternwarp"+.@i);
-	for(set .@i,34; .@i<=38; set .@i,.@i+1)
+	for(.@i = 34; .@i<=38; ++.@i)
 		enablenpc instance_npcname("#Patternwarp"+.@i);
 	end;
 OnTimer60500:
-	for(set .@i,41; .@i<=49; set .@i,.@i+1)
+	for(.@i = 41; .@i<=49; ++.@i)
 		enablenpc instance_npcname("#Patternwarp"+.@i);
 	end;
 OnTimer90000:
@@ -643,13 +643,13 @@ OnTimer125000:
 	mapannounce instance_mapname("1@ma_h"),"Bangungot: You wanna hang out with me ......?",bc_map,"0xFF82FF";
 	end;
 OnTimer128000:
-	for(set .@i,1; .@i<=8; set .@i,.@i+1)
+	for(.@i = 1; .@i<=8; ++.@i)
 		disablenpc instance_npcname("#Patternwarp"+.@i);
-	for(set .@i,34; .@i<=38; set .@i,.@i+1)
+	for(.@i = 34; .@i<=38; ++.@i)
 		disablenpc instance_npcname("#Patternwarp"+.@i);
 	end;
 OnTimer128500:
-	for(set .@i,41; .@i<=49; set .@i,.@i+1)
+	for(.@i = 41; .@i<=49; ++.@i)
 		disablenpc instance_npcname("#Patternwarp"+.@i);
 	end;
 OnTimer129000:
@@ -657,11 +657,11 @@ OnTimer129000:
 	end;
 OnTimer129500:
 	donpcevent instance_npcname("#Boss Room Entry")+"::OnSpawn";
-	for(set .@i,10; .@i<=22; set .@i,.@i+1)
+	for(.@i = 10; .@i<=22; ++.@i)
 		enablenpc instance_npcname("#Patternwarp"+.@i);
 	end;
 OnTimer130000:
-	for(set .@i,25; .@i<=33; set .@i,.@i+1)
+	for(.@i = 25; .@i<=33; ++.@i)
 		enablenpc instance_npcname("#Patternwarp"+.@i);
 	stopnpctimer;
 	end;
@@ -686,22 +686,22 @@ OnTimer6000:
 	mapannounce instance_mapname("1@ma_h"),"Bangungot: ...defeat me again...?",bc_map,"0xFF82FF";
 	end;
 OnTimer9000:
-	for(set .@i,1; .@i<=8; set .@i,.@i+1)
+	for(.@i = 1; .@i<=8; ++.@i)
 		disablenpc instance_npcname("#Patternwarp"+.@i);
-	for(set .@i,34; .@i<=38; set .@i,.@i+1)
+	for(.@i = 34; .@i<=38; ++.@i)
 		disablenpc instance_npcname("#Patternwarp"+.@i);
 	end;
 OnTimer9500:
-	for(set .@i,41; .@i<=49; set .@i,.@i+1)
+	for(.@i = 41; .@i<=49; ++.@i)
 		disablenpc instance_npcname("#Patternwarp"+.@i);
 	end;
 OnTimer10000:
 	mapannounce instance_mapname("1@ma_h"),"Bangungot: You stupid persoon....",bc_map,"0xFF82FF";
-	for(set .@i,10; .@i<=22; set .@i,.@i+1)
+	for(.@i = 10; .@i<=22; ++.@i)
 		enablenpc instance_npcname("#Patternwarp"+.@i);
 	end;
 OnTimer10500:
-	for(set .@i,25; .@i<=33; set .@i,.@i+1)
+	for(.@i = 25; .@i<=33; ++.@i)
 		enablenpc instance_npcname("#Patternwarp"+.@i);
 	stopnpctimer;
 	end;
@@ -717,8 +717,8 @@ OnTouch:
 	specialeffect EF_CURSEATTACK;
 	end;
 OnEnable1:
-	set .@map$, instance_mapname("1@ma_h");
-	set .@label$, instance_npcname("#Summon Ward Mob")+"::OnMyMobDead";
+	.@map$ = instance_mapname("1@ma_h");
+	.@label$ = instance_npcname("#Summon Ward Mob")+"::OnMyMobDead";
 	areamonster .@map$,47,77,49,79,"Bangungot's Tiyanak",2340,1,.@label$;
 	areamonster .@map$,49,77,51,79,"Bangungot's Tiyanak",2340,1,.@label$;
 	areamonster .@map$,51,77,53,79,"Bangungot's Tiyanak",2340,1,.@label$;
@@ -728,8 +728,8 @@ OnEnable1:
 	areamonster .@map$,49,81,51,83,"Bangungot's Tiyanak",2339,1,.@label$;
 	end;
 OnEnable2:
-	set .@map$, instance_mapname("1@ma_h");
-	set .@label$, instance_npcname("#Summon Ward Mob")+"::OnMyMobDead";
+	.@map$ = instance_mapname("1@ma_h");
+	.@label$ = instance_npcname("#Summon Ward Mob")+"::OnMyMobDead";
 	areamonster .@map$,51,45,53,47,"Bangungot's Tiyanak",2339,1,.@label$;
 	areamonster .@map$,53,45,55,47,"Bangungot's Tiyanak",2339,1,.@label$;
 	areamonster .@map$,49,47,51,49,"Bangungot's Mangkukulam",2339,1,.@label$;
@@ -739,8 +739,8 @@ OnEnable2:
 	areamonster .@map$,53,49,55,51,"Bangungot's Tiyanak",2340,1,.@label$;
 	end;
 OnEnable3:
-	set .@map$, instance_mapname("1@ma_h");
-	set .@label$, instance_npcname("#Summon Ward Mob")+"::OnMyMobDead";
+	.@map$ = instance_mapname("1@ma_h");
+	.@label$ = instance_npcname("#Summon Ward Mob")+"::OnMyMobDead";
 	areamonster .@map$,69,75,71,77,"Bangungot's Tiyanak",2340,1,.@label$;
 	areamonster .@map$,71,75,73,77,"Bangungot's Tiyanak",2340,1,.@label$;
 	areamonster .@map$,73,75,75,77,"Bangungot's Tiyanak",2340,1,.@label$;
@@ -750,8 +750,8 @@ OnEnable3:
 	areamonster .@map$,71,79,73,81,"Bangungot's Tiyanak",2339,1,.@label$;
 	end;
 OnEnable4:
-	set .@map$, instance_mapname("1@ma_h");
-	set .@label$, instance_npcname("#Summon Ward Mob")+"::OnMyMobDead";
+	.@map$ = instance_mapname("1@ma_h");
+	.@label$ = instance_npcname("#Summon Ward Mob")+"::OnMyMobDead";
 	areamonster .@map$,73,45,75,47,"Bangungot's Tiyanak",2339,1,.@label$;
 	areamonster .@map$,75,45,77,47,"Bangungot's Tiyanak",2339,1,.@label$;
 	areamonster .@map$,71,47,73,49,"Bangungot's Mangkukulam",2339,1,.@label$;
@@ -761,8 +761,8 @@ OnEnable4:
 	areamonster .@map$,75,49,77,51,"Bangungot's Tiyanak",2340,1,.@label$;
 	end;
 OnEnable5:
-	set .@map$, instance_mapname("1@ma_h");
-	set .@label$, instance_npcname("#Summon Ward Mob")+"::OnMyMobDead";
+	.@map$ = instance_mapname("1@ma_h");
+	.@label$ = instance_npcname("#Summon Ward Mob")+"::OnMyMobDead";
 	areamonster .@map$,93,77,95,79,"Bangungot's Tiyanak",2340,1,.@label$;
 	areamonster .@map$,95,77,97,79,"Bangungot's Tiyanak",2340,1,.@label$;
 	areamonster .@map$,97,77,99,79,"Bangungot's Tiyanak",2340,1,.@label$;
@@ -772,8 +772,8 @@ OnEnable5:
 	areamonster .@map$,95,81,97,83,"Bangungot's Tiyanak",2339,1,.@label$;
 	end;
 OnEnable6:
-	set .@map$, instance_mapname("1@ma_h");
-	set .@label$, instance_npcname("#Summon Ward Mob")+"::OnMyMobDead";
+	.@map$ = instance_mapname("1@ma_h");
+	.@label$ = instance_npcname("#Summon Ward Mob")+"::OnMyMobDead";
 	areamonster .@map$,93,43,95,45,"Bangungot's Tiyanak",2339,1,.@label$;
 	areamonster .@map$,95,43,97,45,"Bangungot's Tiyanak",2339,1,.@label$;
 	areamonster .@map$,91,45,93,47,"Bangungot's Mangkukulam",2339,1,.@label$;
@@ -821,9 +821,9 @@ OnTimer10000:
 		"Moaning Patient","Screaming Patient","Patient in Pain","Passed Out Patient","Patient with Nightmare","Sick Looking Patient",
 		"Horrified Patient","Patient in Sorrow","Suffering Patient","Wriggling Patient","Patient in Cold Sweat","Howling Patient";
 	enablenpc instance_npcname("#Summon Ward Mob");
-	set .@rand, rand(1,6);
+	.@rand = rand(1,6);
 	donpcevent instance_npcname("#Summon Ward Mob")+"::OnEnable"+.@rand;
-	set .@id, (.@rand*2)-rand(2);
+	.@id = (.@rand*2)-rand(2);
 	donpcevent instance_npcname(.@npc$[.@id]+"#"+.@id)+"::OnEnable";
 	stopnpctimer;
 	end;
@@ -851,7 +851,7 @@ OnMyMobDead:
 	initnpctimer;
 	end;
 OnTimer1000:
-	set .@map$, instance_mapname("1@ma_h");
+	.@map$ = instance_mapname("1@ma_h");
 	if (mobcount(.@map$,instance_npcname("#Summon Pillar")+"::OnMyMobDead") < 1) {
 		donpcevent instance_npcname("#Summon Pillar_time")+"::OnStopTimer";
 		donpcevent instance_npcname("#Summon Pillar")+"::OnEnable3";
@@ -968,17 +968,17 @@ OnTimer30000:
 	end;
 OnEnable:
 	switch(atoi(strnpcinfo(2))) {
-		case 2: set .@str$,"Screaming Patient: Aaaaargh!!"; break;
-		case 3: set .@str$,"Patient in Pain: Oooooowwww!! It's killing me!!!"; break;
-		case 4: set .@str$,"Passed Out Patient: ........"; break;
-		case 5: set .@str$,"Patient with Nightmare: Help~!!! Save me!!!"; break;
-		case 6: set .@str$,"Sick Looking Patient: Hu..a...aaah.."; break;
-		case 7: set .@str$,"Horrified Patient: Get away!! Please...."; break;
-		case 8: set .@str$,"Patient in Sorrow: crying and crying......"; break;
-		case 9: set .@str$,"Suffering Patient: Stop... please..."; break;
-		case 10: set .@str$,"Wriggling Patient: awwww..."; break;
-		case 11: set .@str$,"Patient in Cold Sweat: Help.....help...."; break;
-		case 12: set .@str$,"Howling Patient: aaaaahhhhhhhhhh!!"; break;
+		case 2: .@str$ = "Screaming Patient: Aaaaargh!!"; break;
+		case 3: .@str$ = "Patient in Pain: Oooooowwww!! It's killing me!!!"; break;
+		case 4: .@str$ = "Passed Out Patient: ........"; break;
+		case 5: .@str$ = "Patient with Nightmare: Help~!!! Save me!!!"; break;
+		case 6: .@str$ = "Sick Looking Patient: Hu..a...aaah.."; break;
+		case 7: .@str$ = "Horrified Patient: Get away!! Please...."; break;
+		case 8: .@str$ = "Patient in Sorrow: crying and crying......"; break;
+		case 9: .@str$ = "Suffering Patient: Stop... please..."; break;
+		case 10: .@str$ = "Wriggling Patient: awwww..."; break;
+		case 11: .@str$ = "Patient in Cold Sweat: Help.....help...."; break;
+		case 12: .@str$ = "Howling Patient: aaaaahhhhhhhhhh!!"; break;
 	}
 	mapannounce instance_mapname("1@ma_h"),.@str$,bc_map,"0xFF0000";
 	initnpctimer;
@@ -1088,12 +1088,12 @@ OnInstanceInit:
 	disablenpc instance_npcname("#Boss Room Exit");
 	disablenpc instance_npcname("#Boss Room Door");
 	disablenpc instance_npcname("#Boss Room Door1");
-	for(set .@i,1; .@i<=8; set .@i,.@i+1)
+	for(.@i = 1; .@i<=8; ++.@i)
 		disablenpc instance_npcname("#Patternwarp"+.@i);
-	for(set .@i,34; .@i<=38; set .@i,.@i+1)
+	for(.@i = 34; .@i<=38; ++.@i)
 		disablenpc instance_npcname("#Patternwarp"+.@i);
 	// Skip 39-40 since they're disabled in the official script.
-	for(set .@i,41; .@i<=49; set .@i,.@i+1)
+	for(.@i = 41; .@i<=49; ++.@i)
 		disablenpc instance_npcname("#Patternwarp"+.@i);
 	disablenpc instance_npcname("#ma_hos_warp_init");
 	end;

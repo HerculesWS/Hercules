@@ -122,7 +122,7 @@ prt_church,103,88,3	script	Praying Minister#arch	1_M_PASTOR,{
 				mes "He's very old so he is hard of hearing.";
 				mes "You have to speak loud and clearly. You got it?";
 				mes "I hope that this paves the way for you to live in the light of Odin.";
-				set job_arch,1;
+				job_arch = 1;
 				setquest 2187;
 				close;
 			case 2:
@@ -308,7 +308,7 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		mes "After making your pilgrimage, let's have a drink together and talk about your experience.";
 		next;
 		mes "- Priest Dayan smiles again. -";
-		set job_arch,2;
+		job_arch = 2;
 		changequest 2187,2188;
 		close;
 	} else if (job_arch == 2) {
@@ -405,7 +405,7 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		mes "Thank you very much.";
 		mes "Feel free to visit here when you want to pray, "+(Sex?"brother.":"sister.");
 		mes "A visit from a friend always makes me happy.";
-		set job_arch,4;
+		job_arch = 4;
 		changequest 2188,2189;
 		close;
 	}
@@ -559,7 +559,7 @@ OnTouch:
 		mes "[" + strcharinfo(0) + "]";
 		mes "That was refreshing.";
 		mes "I guess I should go back to Priest Dayan.";
-		set job_arch,3;
+		job_arch = 3;
 		close2;
 		warp "umbala",138,219;
 		end;
@@ -707,7 +707,7 @@ hu_in01,205,204,7	script	Praying Nun#benew	1_F_PRIEST,{
 		mes "[Vinue]";
 		mes "I'll pray for your safe return.";
 		mes "I hope that Odin gives you his protection as well.";
-		set job_arch,5;
+		job_arch = 5;
 		changequest 2189,2190;
 		close;
 	} else if ((job_arch > 4) && (job_arch < 100)) {
@@ -901,11 +901,11 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 			mes "[Valkyrie Anguhilde]";
 			mes "When you finish preparing to go on, talk to me again.";
 			mes "It'll be a long journey...";
-			set job_arch,6;
+			job_arch = 6;
 			close;
 		} else if (job_arch == 6) {
 			if ($@archbs == 0) {
-				set $@archbs,1;
+				$@archbs = 1;
 				mes "[Valkyrie Anguhilde]";
 				mes "" + strcharinfo(0) + " Did you finish preparing for your way of asceticism?";
 				next;
@@ -913,19 +913,19 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 					mes "[Valkyrie Anguhilde]";
 					mes "Hmm, someone is battling the devil in the shrine right now.";
 					mes "You just wait a minute while I'm finding who it is.";
-					set $@archbs,0;
+					$@archbs = 0;
 					close;
 				}
 				mes "[Valkyrie Anguhilde]";
 				mes "Ok. Now I'm going to send you there.";
 				mes "^FF0000When you go there, you have to summon my impersonation with the scroll^000000. Don't forget.";
-				set $@archbs,0;
+				$@archbs = 0;
 				close2;
 				nude;
 				if (countitem(2798))
 					delitem 2798,countitem(2798); //Will_Of_Exhausted_Angel
 				donpcevent "start#arch::OnEnable";
-				set job_arch,7;
+				job_arch = 7;
 				changequest 2190,2191;
 				warp "job3_arch02",119,49;
 				hideonnpc "Valkyrie#arch";
@@ -938,20 +938,20 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 			if (countitem(12381)) delitem 12381,countitem(12381); //ValkyrieA_Scroll
 			if (countitem(12382)) delitem 12382,countitem(12382); //ValkyrieB_Scroll
 			if ($@archbs == 0) {
-				set $@archbs,1;
+				$@archbs = 1;
 				mes "[Valkyrie Anguhilde]";
 				mes "Are you ok human?";
 				mes "It was not as easy as I expected.";
 				mes "Will you challenge again?";
 				next;
 				if (getmapusers("job3_arch02") > 0) {
-					set $@archbs,0;
+					$@archbs = 0;
 					mes "[Valkyrie Anguhilde]";
 					mes "Hmm, someone is battling the devil in the shrine right now.";
 					mes "You just wait a minute while I'm finding who it is.";
 					close;
 				}
-				set $@archbs,0;
+				$@archbs = 0;
 				mes "[Valkyrie Anguhilde]";
 				mes "OK. now I'm going to send you there.";
 				mes "^FF0000When you go there, you have to summon my impersonation with the scroll^000000.";
@@ -962,7 +962,7 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 				if (countitem(2798))
 					delitem 2798,countitem(2798); //Will_Of_Exhausted_Angel
 				donpcevent "start#arch::OnEnable";
-				set job_arch,7;
+				job_arch = 7;
 				warp "job3_arch02",119,49;
 				hideonnpc "Valkyrie#arch";
 				end;
@@ -974,7 +974,7 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 	}
 	end;
 OnBc:
-	set $@archbs,0;
+	$@archbs = 0;
 	mapannounce "job3_arch01","Valkyrie: I think someone fell down in the shrine. I can hear the devil's unpleasant laugh.",bc_map,"0xFFCE00";
 	hideoffnpc "Valkyrie#arch";
 	end;
@@ -997,7 +997,7 @@ OnTouch:
 	} else if (getmercinfo(1) == 2037) {
 		if (strnpcinfo(0) == "#arch_1_10")
 			viewpoint 1,113,327,1,0xFF9900;
-		set .@randht, rand(1,10);
+		.@randht = rand(1,10);
 		if (.@randht < 8)
 			mapannounce "job3_arch02","Whispering of an impersonation: I can feel the devil's spirits! Be careful!",bc_map,"0xFFCE00";
 		else if ((.@randht == 8) || (.@randht == 9))
@@ -1293,7 +1293,7 @@ OnTouch:
 	if (countitem(2798))
 		delitem 2798,countitem(2798); //Will_Of_Exhausted_Angel
 	delitem 6154,countitem(6154); //Broken_Horn_Pipe
-	set job_arch,100;
+	job_arch = 100;
 	completequest 2191;
 	getitem 5747,1; //Mitra
 	getitem 2795,1; //Green_Apple_Ring
@@ -1344,7 +1344,7 @@ OnTouch:
 		delitem 12382,1; //ValkyrieB_Scroll
 		// fall through
 	} else if (getmercinfo(1) == 2038) {
-		set .@randht, rand(1,10);
+		.@randht = rand(1,10);
 		if (.@randht < 8)
 			mapannounce "job3_arch02","Whispering of an impersonation: I can feel the devil's spirits. Can you hear? The sound of gathering in crowds.",bc_map,"0xFFCE00";
 		else if ((.@randht == 8) || (.@randht == 9))
@@ -1656,11 +1656,11 @@ job3_arch01,1,1,1	script	control#arch	CLEAR_NPC,{
 		next;
 		switch(select("0:1")) {
 		case 1:
-			set $@archbs,0;
+			$@archbs = 0;
 			hideoffnpc "Valkyrie#arch";
 			close;
 		case 2:
-			set $@archbs,1;
+			$@archbs = 1;
 			hideoffnpc "Valkyrie#arch";
 			close;
 		}

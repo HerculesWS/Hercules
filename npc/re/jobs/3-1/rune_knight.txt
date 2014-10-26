@@ -80,7 +80,7 @@ prt_in,162,24,3	script	Splendid-Looking Knight	4_M_KNIGHT_SILVER,2,2,{
 					mes "You're sure now?";
 					mes "Let me send a dispatch to my comrades that you are willing to join our ranks.";
 					next;
-					set job_rune_edq,1;
+					job_rune_edq = 1;
 					setquest 3200;
 					mes "[Rune Knight Manuel]";
 					mes "You know the place called Glast Heim? There's a Rune Knight waiting for you there, he will guide you to the entrance of Glast Heim Tower.";
@@ -215,7 +215,7 @@ glast_01,44,363,3	script	Guide, Jungberg	4_M_KNIGHT_BLACK,2,2,{
 				next;
 				mes "[Guide, Jungberg]";
 				mes "Of course your life might be at risk by the ghosts of Glast Heim... but overcoming the risk shouldn't be hard for a Rune Knight candidate.";
-				set job_rune_edq,2;
+				job_rune_edq = 2;
 				changequest 3200,3201;
 				close;
 			case 2:
@@ -315,19 +315,19 @@ job3_rune01,80,60,3	script	Rune Knight Captain	4_M_KNIGHT_SILVER,2,2,{
 			mes "[Captain Tigris]";
 			if (job_rune_edq3 == 0) {
 				mes "Hm... This is perfect. You've come here with very rare good records.";
-				set .@item,2140; //Energy_Rune_Guard
+				.@item = 2140; //Energy_Rune_Guard
 			} else if (job_rune_edq3 > 2 && job_rune_edq3 < 6) {
 				mes "Hmm... This is great. You've come here with decent records.";
-				set .@item,2794; //Magic_Stone_Ring
+				.@item = 2794; //Magic_Stone_Ring
 			} else {
 				mes "Hmm, not bad. It's not a great record but you tried your best.";
-				set .@item,15002; //Rune_Plate
+				.@item = 15002; //Rune_Plate
 			}
 			next;
 			mes "[Captain Tigris]";
 			mes "Here, take this. It's a gift that I like to give to the younger generation like yourself.";
 			getitem .@item,1; //Energy_Rune_Guard
-			set job_rune_edq,24;
+			job_rune_edq = 24;
 			close;
 		}
 		mes "Hey, long time no see, "+strcharinfo(0)+". I don't think you've got any important matters to discuss but make yourself comfortable.";
@@ -371,7 +371,7 @@ job3_rune01,80,60,3	script	Rune Knight Captain	4_M_KNIGHT_SILVER,2,2,{
 			mes "[Captain Tigris]";
 			mes "When the test is done, talk to me. Anyway you'll need to care about the tests progressing with other people.";
 			next;
-			set job_rune_edq,3;
+			job_rune_edq = 3;
 			changequest 3201,3202;
 			mes "[Captain Tigris]";
 			mes "Well then, I'll be waiting here so take the test.";
@@ -428,7 +428,7 @@ job3_rune01,80,60,3	script	Rune Knight Captain	4_M_KNIGHT_SILVER,2,2,{
 			next;
 			mes "[Captain Tigris]";
 			mes "Go to that fiery lady in the library room to get the next test done and come back.";
-			set job_rune_edq,7;
+			job_rune_edq = 7;
 			changequest 3204,3205;
 			close;
 		} else if (job_rune_edq > 6 && job_rune_edq < 16) {
@@ -466,7 +466,7 @@ job3_rune01,80,60,3	script	Rune Knight Captain	4_M_KNIGHT_SILVER,2,2,{
 			mes "[Captain Tigris]";
 			mes "I'm not kidding, I am really looking forward to your new start as a Rune Knight.";
 			mes "So please do your best.";
-			set job_rune_edq,17;
+			job_rune_edq = 17;
 			changequest 3215,3216;
 			close;
 		} else if (job_rune_edq > 16 && job_rune_edq < 22) {
@@ -531,7 +531,7 @@ job3_rune01,80,60,3	script	Rune Knight Captain	4_M_KNIGHT_SILVER,2,2,{
 				next;
 				getitem 5746,1; //Rune_Circlet
 				getitem 2795,1; //Green_Apple_Ring
-				set job_rune_edq,23;
+				job_rune_edq = 23;
 				completequest 3219;
 				jobchange roclass(eaclass()|EAJL_THIRD);
 				mes "[Captain Tigris]";
@@ -643,7 +643,7 @@ job3_rune01,90,50,3	script	Rune Knight Lunarea	4_M_KNIGHT_GOLD,2,2,{
 			next;
 			mes "[Rune Knight, Lunarea]";
 			mes "This portion of the test is over. Go talk to Captain Tigris.";
-			set job_rune_edq,6;
+			job_rune_edq = 6;
 			changequest 3203,3204;
 			close;
 		} else if (job_rune_edq > 5) {
@@ -661,14 +661,14 @@ L_Test:
 	mes "She nods her head and reaches out her hand lightly. Then she draws her sword and makes a signal.";
 	if ($@job_rune_test1 == 0) {
 		if (getarg(0) == 0) {
-			set job_rune_edq,4;
+			job_rune_edq = 4;
 			changequest 3202,3203;
 			setquest 3220; // ?
 		} else if (questprogress(3220)) {
 			erasequest 3220;
 			setquest 3220;
 		}
-		set $@job_rune_test1,1;
+		$@job_rune_test1 = 1;
 		close2;
 		warp "job3_rune02",38,40;
 		end;
@@ -733,7 +733,7 @@ job3_rune01,55,50,3	script	Rune Knight, Renoa	4_M_KNIGHT_GOLD,2,2,{
 			next;
 			mes "[Rune Knight, Renoa]";
 			mes "Don't worry, you won't be required to have the same knowledge as the magicians of Geffen or Juno. But you can't be an idiot either.";
-			set job_rune_edq,8;
+			job_rune_edq = 8;
 			changequest 3205,3206;
 			close;
 		} else if (job_rune_edq > 7 && job_rune_edq < 11) {
@@ -780,8 +780,8 @@ job3_rune01,55,50,3	script	Rune Knight, Renoa	4_M_KNIGHT_GOLD,2,2,{
 			next;
 			mes "[Rune Knight, Renoa]";
 			mes "If you are ready I'll guide you to the warp that moves you directly to Serpeone. Meet her and get instructions from her.";
-			set job_rune_edq_book,0;
-			set job_rune_edq,12;
+			job_rune_edq_book = 0;
+			job_rune_edq = 12;
 			changequest 3206,3207;
 			close;
 		} else if (job_rune_edq > 11 && job_rune_edq < 14) {
@@ -838,7 +838,7 @@ job3_rune01,55,50,3	script	Rune Knight, Renoa	4_M_KNIGHT_GOLD,2,2,{
 			mes "[Rune Knight, Renoa]";
 			mes "The total number of rune stones you need to make is 20.";
 			mes "Remember that well.";
-			set job_rune_edq,15;
+			job_rune_edq = 15;
 			changequest 3213,3214;
 			close;
 		} else if (job_rune_edq == 15) {
@@ -882,7 +882,7 @@ job3_rune01,55,50,3	script	Rune Knight, Renoa	4_M_KNIGHT_GOLD,2,2,{
 				next;
 				mes "[Rune Knight, Renoa]";
 				mes "Ha! You did a good job considering how difficult my test is. If you were nervous, you can relax now.";
-				set job_rune_edq,16;
+				job_rune_edq = 16;
 				if (job_rune_edq2 == 20)
 					changequest 3214,3215;
 				close;
@@ -951,7 +951,7 @@ job3_rune01,58,51,1	script	Rune Furnace	CLEAR_NPC,{
 			next;
 			mes "[Rune Knight Renoa]";
 			mes "1 "+.@str$[0]+" rune was created normally.";
-			set job_rune_edq2, job_rune_edq2+1;
+			++job_rune_edq2;
 			close;
 		}
 		if (rand(1,(6 + job_rune_edq3)) == 3) {
@@ -960,7 +960,7 @@ job3_rune01,58,51,1	script	Rune Furnace	CLEAR_NPC,{
 			next;
 			mes "[Rune Knight Renoa]";
 			mes "1 "+.@str$[0]+" rune was created normally.";
-			set job_rune_edq2, job_rune_edq2+1;
+			++job_rune_edq2;
 			close;
 		}
 		mes "[Rune Knight Renoa]";
@@ -968,7 +968,7 @@ job3_rune01,58,51,1	script	Rune Furnace	CLEAR_NPC,{
 		next;
 		mes "[Rune Knight Renoa]";
 		mes "Refining the rune stone has failed... Please try again.";
-		set job_rune_edq3, job_rune_edq3+1;
+		++job_rune_edq3;
 		close;
 	}
 	mes "[Rune Knight Renoa]";
@@ -988,7 +988,7 @@ job3_rune01,40,54,1	script	Runes and Rune Knights	CLEAR_NPC,{
 	while(1) {
 		switch(select("The birth of Rune Knights:Runes and Magic Energy:Stop Reading")) {
 		case 1:
-			set .@book1,1;
+			.@book1 = 1;
 			mes "Rune Knights are the gathering of evolved swordmen who have achieved the harmony of sword and magic.";
 			next;
 			mes "It had been achieved by the legendary swordsman Beljeve who's been known as a Sword Master and a founder of dispensable expenditure.";
@@ -1013,7 +1013,7 @@ job3_rune01,40,54,1	script	Runes and Rune Knights	CLEAR_NPC,{
 			next;
 			break;
 		case 2:
-			set .@book2,1;
+			.@book2 = 1;
 			mes "A jewel called as a Rune is a medium that contains the formless existence, the magical power and the essence of it can be used directly.";
 			next;
 			mes "The Laphine Sage, Serpeone and the founder of Rune Knights Beljeve co-researched runes and the result of their research has only recently become to be known to the world.";
@@ -1027,8 +1027,8 @@ job3_rune01,40,54,1	script	Runes and Rune Knights	CLEAR_NPC,{
 			break;
 		case 3:
 			if (.@book1 && .@book2 && job_rune_edq < 11 && (job_rune_edq_book & 1) == 0) {
-				set job_rune_edq_book, job_rune_edq_book | 1;
-				set job_rune_edq, job_rune_edq+1;
+				job_rune_edq_book |= 1;
+				++job_rune_edq;
 			}
 			close;
 		}
@@ -1047,7 +1047,7 @@ job3_rune01,43,44,1	script	The Principles of Runes	CLEAR_NPC,{
 	while(1) {
 		switch(select("The principle use of Runes:The types of Runes:Stop Reading")) {
 		case 1:
-			set .@book1,1;
+			.@book1 = 1;
 			mes "A rune is a kind of symbol that's been used on the Rune-Midgard continent since ancient times. Up until now it has only been used by occult circles.";
 			next;
 			mes "Runes are used as a symbol system, however, by the story handed down orally, it's known to be used for fortune-telling or used to draw out the human sub consciousness.";
@@ -1058,7 +1058,7 @@ job3_rune01,43,44,1	script	The Principles of Runes	CLEAR_NPC,{
 			next;
 			break;
 		case 2:
-			set .@book2,1;
+			.@book2 = 1;
 			mes "The runes are created from a a total of 25 small stones and they are very fragile to physical shock. So they require special care when being handled.";
 			next;
 			mes "The 25 stones have different meanings and among these, 14 when counter-positioned can have entirely different power and meaning from the original so it's essential to study the exceptional aspects.";
@@ -1074,8 +1074,8 @@ job3_rune01,43,44,1	script	The Principles of Runes	CLEAR_NPC,{
 			break;
 		case 3:
 			if (.@book1 && .@book2 && job_rune_edq < 11 && (job_rune_edq_book & 2) == 0) {
-				set job_rune_edq_book, job_rune_edq_book | 2;
-				set job_rune_edq, job_rune_edq+1;
+				job_rune_edq_book |= 2;
+				++job_rune_edq;
 			}
 			close;
 		}
@@ -1094,7 +1094,7 @@ job3_rune01,50,36,1	script	Runes, Make & Use	CLEAR_NPC,{
 	while(1) {
 		switch(select("The Making of Rune Stones:Rune Stone Ability Details:Stop Reading")) {
 		case 1:
-			set .@book1,1;
+			.@book1 = 1;
 			mes "The making of Rune stones is achieved through a skill called rune mastery which is learned when one becomes a Rune Knight.";
 			next;
 			mes "Rune Mastery is like a code that's been put into the body as a mark of a Rune Knight.";
@@ -1109,7 +1109,7 @@ job3_rune01,50,36,1	script	Runes, Make & Use	CLEAR_NPC,{
 			next;
 			break;
 		case 2:
-			set .@book2,1;
+			.@book2 = 1;
 			switch(select("Chapter One:Chapter Two:Chapter Three:Chapter Four:Stop Reading")) {
 			case 1:
 				mes "Ehwaz - This rune means the enhancement of luck and positive power. It shapes the source in the form of a red spiral in a Rune Furnace.";
@@ -1173,8 +1173,8 @@ job3_rune01,50,36,1	script	Runes, Make & Use	CLEAR_NPC,{
 			break;
 		case 3:
 			if (.@book1 && .@book2 && job_rune_edq < 11 && (job_rune_edq_book & 4) == 0) {
-				set job_rune_edq_book, job_rune_edq_book | 4;
-				set job_rune_edq, job_rune_edq+1;
+				job_rune_edq_book |= 4;
+				++job_rune_edq;
 			}
 			close;
 		}
@@ -1331,7 +1331,7 @@ mid_camp,235,250,3	script	Sage Serpeone	4_F_FAIRY,2,2,{
 			next;
 			mes "[Sage Serpeone]";
 			mes "If you have any problems or any questions, please talk to me.";
-			set job_rune_edq,13;
+			job_rune_edq = 13;
 			changequest 3207,3208;
 			setquest 3209;
 			setquest 3210;
@@ -1358,7 +1358,7 @@ mid_camp,235,250,3	script	Sage Serpeone	4_F_FAIRY,2,2,{
 					next;
 					mes "[Sage Serpeone]";
 					mes "If you have any business here, I'll send you to the Rune Knight gathering place. If you are ready, please tell me.";
-					set job_rune_edq,14;
+					job_rune_edq = 14;
 					changequest 3208,3213;
 					completequest 3209;
 					completequest 3210;
@@ -1465,14 +1465,14 @@ job3_rune01,114,50,3	script	Rune Knight Velpino	4_M_KNIGHT_BLACK,{
 			next;
 			mes "[Rune Knight Velpino]";
 			mes "If you are ready just talk to me again.";
-			set job_rune_edq,18;
+			job_rune_edq = 18;
 			changequest 3216,3217;
 			close;
 		} else if (job_rune_edq > 17 && job_rune_edq < 21) {
 			if (countitem(12388)+countitem(12389)+countitem(12390) == 0) {
 				mes "[Rune Knight Velpino]";
 				mes "If all of your preparations are done, I'll send you to the final test field.";
-				set job_rune_edq,18;
+				job_rune_edq = 18;
 				next;
 				if(select("Enter the final test field.:I'm not ready yet.") == 2) close;
 				if (getequipisequiped(EQI_HEAD_TOP) || getequipisequiped(EQI_ARMOR) || getequipisequiped(EQI_GARMENT) || getequipisequiped(EQI_SHOES) ||
@@ -1491,7 +1491,7 @@ job3_rune01,114,50,3	script	Rune Knight Velpino	4_M_KNIGHT_BLACK,{
 				}
 				if ($@job_rune_test1 == 0) {
 					if (Weight < 4001) {
-						set $@job_rune_test1,1;
+						$@job_rune_test1 = 1;
 						sc_start SC_INCINT,300000,40;
 						getitem 12389,30; //Runstone_Storm
 						getitem 12390,30; //Runstone_Millennium
@@ -1535,7 +1535,7 @@ job3_rune01,114,50,3	script	Rune Knight Velpino	4_M_KNIGHT_BLACK,{
 				mes "[Rune Knight Velpino]";
 				mes "Congratulations!";
 				mes "Well I'd better go now for the remaining candidates.";
-				set job_rune_edq,22;
+				job_rune_edq = 22;
 				changequest 3218,3219;
 				close;
 			}
@@ -1580,8 +1580,8 @@ OnTouch:
 		donpcevent "job_rune_edq#1st_tcnc::OnDisable";
 		donpcevent "job_rune_edq#3rd_tb::OnDisable";
 		donpcevent "job_rune_edq#3rd_tc::OnDisable";
-		set $@job_rune_test1,0;
-		set $@job_rune_test2,0;
+		$@job_rune_test1 = 0;
+		$@job_rune_test2 = 0;
 		donpcevent "#RK Test Hidden Portal 1::OnEnable";
 		mapwarp "job3_rune02","job3_rune01",80,65;
 		end;
@@ -1647,8 +1647,8 @@ OnTimer305000:
 	donpcevent "job_rune_edq#3rd_tc::OnDisable";
 	donpcevent "#RK Test Hidden Portal 1::OnEnable";
 	mapwarp "job3_rune02","job3_rune01",80,65;
-	set $@job_rune_test1,0;
-	set $@job_rune_test2,0;
+	$@job_rune_test1 = 0;
+	$@job_rune_test2 = 0;
 	stopnpctimer;
 	end;
 }
@@ -1738,7 +1738,7 @@ OnDisable:
 	end;
 OnMyMobDead:
 	if (mobcount("job3_rune02","job_rune_edq#1st_tcmc2::OnMyMobDead") < 1) {
-		set job_rune_edq,5;
+		job_rune_edq = 5;
 		erasequest 3220;
 		killmonster "job3_rune02","job_rune_edq#1st_tcmc2::OnMyMobDead";
 		mapannounce "job3_rune02","Congratulations. You've passed the first test.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
@@ -1749,8 +1749,8 @@ OnMyMobDead:
 		donpcevent "job_rune_edq#1st_tcmc::OnDisable";
 		donpcevent "job_rune_edq#1st_tcmc2::OnDisable";
 		donpcevent "#RK Test Hidden Portal 1::OnEnable";
-		set $@job_rune_test1,0;
-		set $@job_rune_test2,0;
+		$@job_rune_test1 = 0;
+		$@job_rune_test2 = 0;
 		end;
 	}
 	end;
@@ -1767,7 +1767,7 @@ OnEnable:
 	end;
 OnDisable:
 	stopnpctimer;
-	set $@job_rune_test2,0;
+	$@job_rune_test2 = 0;
 	donpcevent "Captain Tigris#jrt1::OnDisable";
 	donpcevent "Rune Knight Lunarea#jrt1::OnDisable";
 	donpcevent "Rune Knight Renoa#jrt1::OnDisable";
@@ -1777,7 +1777,7 @@ OnDisable:
 OnUse:
 	mapannounce "job3_rune02","Captain Tigris : Gentlemen, let's watch the test for a while.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
 	stopnpctimer;
-	set $@job_rune_test2,0;
+	$@job_rune_test2 = 0;
 	donpcevent "Captain Tigris#jrt1::OnDisable";
 	donpcevent "Rune Knight Lunarea#jrt1::OnDisable";
 	donpcevent "Rune Knight Renoa#jrt1::OnDisable";
@@ -1831,7 +1831,7 @@ job3_rune02,34,46,5	script	Captain Tigris#jrt1	4_M_KNIGHT_SILVER,2,2,{
 		sc_start SC_BLOODING,10000,0;
 		break;
 	}
-	set $@job_rune_test2,1;
+	$@job_rune_test2 = 1;
 	initnpctimer;
 	end;
 OnInit:
@@ -1843,7 +1843,7 @@ OnEnable:
 	end;
 OnTimer5000:
 	donpcevent "job_rune_edq#1st_tcnc::OnUse";
-	set $@job_rune_test2,0;
+	$@job_rune_test2 = 0;
 	stopnpctimer;
 	end;
 }
@@ -1876,7 +1876,7 @@ job3_rune02,43,46,3	script	Rune Knight Lunarea#jrt1	4_M_KNIGHT_GOLD,2,2,{
 		sc_start SC_CURSE,30000,0;
 		break;
 	}
-	set $@job_rune_test2,1;
+	$@job_rune_test2 = 1;
 	initnpctimer;
 	end;
 OnInit:
@@ -1888,7 +1888,7 @@ OnEnable:
 	end;
 OnTimer5000:
 	donpcevent "job_rune_edq#1st_tcnc::OnUse";
-	set $@job_rune_test2,0;
+	$@job_rune_test2 = 0;
 	stopnpctimer;
 	end;
 }
@@ -1922,7 +1922,7 @@ job3_rune02,43,34,1	script	Rune Knight Renoa#jrt1	4_M_KNIGHT_GOLD,2,2,{
 		sc_start SC_CURSE,30000,0;
 		break;
 	}
-	set $@job_rune_test2,1;
+	$@job_rune_test2 = 1;
 	initnpctimer;
 	end;
 OnInit:
@@ -1933,7 +1933,7 @@ OnEnable:
 	enablenpc "Rune Knight Renoa#jrt1";
 	end;
 OnTimer5000:
-	set $@job_rune_test2,0;
+	$@job_rune_test2 = 0;
 	donpcevent "job_rune_edq#1st_tcnc::OnUse";
 	stopnpctimer;
 	end;
@@ -1967,7 +1967,7 @@ job3_rune02,34,34,7	script	Rune Knight Velpino#jrt1	4_M_KNIGHT_BLACK,2,2,{
 		sc_start SC_SLEEP,10000,0;
 		break;
 	}
-	set $@job_rune_test2,1;
+	$@job_rune_test2 = 1;
 	initnpctimer;
 	end;
 OnInit:
@@ -1978,7 +1978,7 @@ OnEnable:
 	enablenpc "Rune Knight Velpino#jrt1";
 	end;
 OnTimer5000:
-	set $@job_rune_test2,0;
+	$@job_rune_test2 = 0;
 	donpcevent "job_rune_edq#1st_tcnc::OnUse";
 	stopnpctimer;
 	end;
@@ -2044,8 +2044,8 @@ OnTimer482000:
 	donpcevent "job_rune_edq#3rd_tb::OnDisable";
 	donpcevent "job_rune_edq#3rd_tc::OnDisable";
 	donpcevent "#RK Test Hidden Portal 1::OnEnable";
-	set $@job_rune_test1,0;
-	set $@job_rune_test2,0;
+	$@job_rune_test1 = 0;
+	$@job_rune_test2 = 0;
 	stopnpctimer;
 	end;
 }
@@ -2065,7 +2065,7 @@ OnDisable:
 	end;
 OnMyMobDead:
 	if (mobcount("job3_rune02","job_rune_edq#3rd_tc1::OnMyMobDead") < 1) {
-		set job_rune_edq,19;
+		job_rune_edq = 19;
 		killmonster "job3_rune02","job_rune_edq#3rd_tc1::OnMyMobDead";
 		donpcevent "job_rune_edq#3rd_tc2::OnEnable";
 		donpcevent "job_rune_edq#3rd_tc1::OnDisable";
@@ -2089,7 +2089,7 @@ OnDisable:
 	end;
 OnMyMobDead:
 	if (mobcount("job3_rune02","job_rune_edq#3rd_tc2::OnMyMobDead") < 1) {
-		set job_rune_edq,20;
+		job_rune_edq = 20;
 		killmonster "job3_rune02","job_rune_edq#3rd_tc2::OnMyMobDead";
 		donpcevent "job_rune_edq#3rd_tc3::OnEnable";
 		donpcevent "job_rune_edq#3rd_tc2::OnDisable";
@@ -2113,7 +2113,7 @@ OnDisable:
 	end;
 OnMyMobDead:
 	if (mobcount("job3_rune02","job_rune_edq#3rd_tc3::OnMyMobDead") < 1) {
-		set job_rune_edq,21;
+		job_rune_edq = 21;
 		changequest 3217,3218;
 		erasequest 3220;
 		killmonster "job3_rune02","job_rune_edq#3rd_tc3::OnMyMobDead";
@@ -2127,8 +2127,8 @@ OnMyMobDead:
 		donpcevent "job_rune_edq#3rd_tb::OnDisable";
 		donpcevent "job_rune_edq#3rd_tc::OnDisable";
 		donpcevent "#RK Test Hidden Portal 1::OnEnable";
-		set $@job_rune_test1,0;
-		set $@job_rune_test2,0;
+		$@job_rune_test1 = 0;
+		$@job_rune_test2 = 0;
 		end;
 	}
 	end;
@@ -2147,7 +2147,7 @@ sec_in02,34,167,3	script	R.Knight Job Manager	4_M_KNIGHT_SILVER,1,1,{
 			mes "The number of Rune Knight Test field right now is... " + getmapusers("job3_rune02") + ".";
 			close;
 		case 2:
-			set $@job_rune_test1,0;
+			$@job_rune_test1 = 0;
 			mes "Rune Knight Job Change GlobalVar is modified to 0. The use of the test field is now available.";
 			close;
 		}

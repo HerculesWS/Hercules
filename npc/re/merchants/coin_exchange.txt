@@ -34,22 +34,22 @@ malangdo,220,167,5	script	Coin Exchanger CX-1	2_VENDING_MACHINE1,{
 		6420, //Cgrade_Coin
 		6421, //Dgrade_Coin
 		6422; //Egrade_Coin
-	set .@menu$,"Stop:";
-	for(set .@i,1; .@i<=6; set .@i,.@i+1) {
+	.@menu$ = "Stop:";
+	for(.@i = 1; .@i<=6; ++.@i) {
 		if (countitem(.@coins[.@i]))
-			set .@menu$, .@menu$+getitemname(.@coins[.@i])+":";
+			.@menu$ += getitemname(.@coins[.@i])+":";
 		else
-			set .@menu$, .@menu$+"^aaaaaa"+getitemname(.@coins[.@i])+" (None)^000000:";
+			.@menu$ += "^aaaaaa"+getitemname(.@coins[.@i])+" (None)^000000:";
 	}
-	set .@i, select(.@menu$);
+	.@i = select(.@menu$);
 	switch(.@i) {
 	case 1:
 		mes "[Coin Exchanger CX-1]";
 		mes "Thank you for coming.";
 		close;
 	default:
-		set .@coin, .@coins[.@i-1];
-		set .@coin_select, .@i-1;
+		.@coin = .@coins[.@i-1];
+		.@coin_select = .@i-1;
 		break;
 	}
 	if (countitem(.@coin) == 0) {
@@ -69,17 +69,17 @@ malangdo,220,167,5	script	Coin Exchanger CX-1	2_VENDING_MACHINE1,{
 	setarray .@exchange_rate[0],30,10;
 	setarray .@exchange_loss[0],rand(1,4),rand(1,2); // Amount deducted per exchange.
 	setarray .@exchange_id[0],.@coins[.@coin_select-1],.@coins[.@coin_select+1];
-	if (.@exchange_id[0] == .@coins[1]) set .@exchange_id[0],0; // Cannot exchange for Silvervine.
-	set .@menu$,"Stop:";
-	for(set .@i,0; .@i<2; set .@i,.@i+1) {
+	if (.@exchange_id[0] == .@coins[1]) .@exchange_id[0] = 0; // Cannot exchange for Silvervine.
+	.@menu$ = "Stop:";
+	for(.@i = 0; .@i<2; ++.@i) {
 		if (.@exchange_id[.@i] == 0)
-			set .@menu$, .@menu$+"^ff3333Unavailable exchange to "+.@exchange_name$[.@i]+" coin^000000:";
+			.@menu$ += "^ff3333Unavailable exchange to "+.@exchange_name$[.@i]+" coin^000000:";
 		else if (countitem(.@coin) < .@exchange_rate[.@i])
-			set .@menu$, .@menu$+"^aaaaaaExchange to "+.@exchange_name$[.@i]+" coin (null)^000000:";
+			.@menu$ += "^aaaaaaExchange to "+.@exchange_name$[.@i]+" coin (null)^000000:";
 		else
-			set .@menu$, .@menu$+"Exchange to "+.@exchange_name$[.@i]+" coin - "+getitemname(.@coin)+" ("+.@exchange_rate[.@i]+" needed):";
+			.@menu$ += "Exchange to "+.@exchange_name$[.@i]+" coin - "+getitemname(.@coin)+" ("+.@exchange_rate[.@i]+" needed):";
 	}
-	set .@i, select(.@menu$)-2;
+	.@i = select(.@menu$)-2;
 	if (.@i == -1) {
 		mes "[Coin Exchanger CX-1]";
 		mes "Thank you for coming.";
@@ -97,7 +97,7 @@ malangdo,220,167,5	script	Coin Exchanger CX-1	2_VENDING_MACHINE1,{
 		mes "Thank you for coming.";
 		close;
 	}
-	set .@exchange_total, .@exchange_rate[(!.@i)] - .@exchange_loss[(!.@i)];
+	.@exchange_total = .@exchange_rate[(!.@i)] - .@exchange_loss[(!.@i)];
 	delitem .@coin, .@exchange_rate[.@i];
 	getitem .@exchange_id[.@i], .@exchange_total;
 	mes "[Coin Exchanger CX-1]";
@@ -129,10 +129,10 @@ malangdo,218,165,5	script	Special Vending Machine	2_DROP_MACHINE,{
 		"Ordinary Lubricant",6440,36,
 		"Sillit Pong",6443,192;
 L_AddItem:
-	set .@menu$,"Explanation:";
-	for(set .@i,0; .@i<getargcount(); set .@i,.@i+3)
-		set .@menu$, .@menu$+getarg(.@i)+":";
-	set .@i, select(.@menu$)-2;
+	.@menu$ = "Explanation:";
+	for(.@i = 0; .@i<getargcount(); .@i += 3)
+		.@menu$ += getarg(.@i)+":";
+	.@i = select(.@menu$)-2;
 	if (.@i == -1) {
 		mes "[Special Vending Machine]";
 		mes "Seagod's Protection is an item used for entering the Culvert memorial dungeon during a certain period.";
@@ -147,14 +147,14 @@ L_AddItem:
 		mes "Sillit Pong is special item that separates sockets with MVP cards. Unable to separate MVP card by Premium and Ordinary Lubricant.";
 		close;
 	}
-	set .@cost, getarg(.@i*3+2);
+	.@cost = getarg(.@i*3+2);
 	mes "[Special Vending Machine]";
 	mes "You choose ^005500"+getarg(.@i*3)+"^000000. For purchasing, you need ^005500"+.@cost+"^000000 unit(s) of Silvervine Fruit.";
 	next;
 	if (countitem(6417) < .@cost)
-		set .@ven_menu$, "^999999Silvervine Fruit (missing "+(.@cost - countitem(6417))+")^000000";
+		.@ven_menu$ = "^999999Silvervine Fruit (missing "+(.@cost - countitem(6417))+")^000000";
 	else
-		set .@ven_menu$, "Purchase - Silvervine Fruit (have "+countitem(6417)+")";
+		.@ven_menu$ = "Purchase - Silvervine Fruit (have "+countitem(6417)+")";
 	switch(select("Stop:"+.@ven_menu$)) {
 	case 1:
 		mes "[Special Vending Machine]";
@@ -191,14 +191,14 @@ malangdo,236,179,5	script	Dark Merchant K	4_CAT_REST,{
 	next;
 	setarray .@coin_amount[0],10,100,500,1000;
 	while(1) {
-		set .@menu$,"";
-		for(set .@i,0; .@i<getarraysize(.@coin_amount); set .@i,.@i+1) {
+		.@menu$ = "";
+		for(.@i = 0; .@i<getarraysize(.@coin_amount); ++.@i) {
 			if (countitem(6420) >= .@coin_amount[.@i])
-				set .@menu$, .@menu$+"Exchange "+(.@coin_amount[.@i]/10)+" Mora Coin:";
+				.@menu$ += "Exchange "+(.@coin_amount[.@i]/10)+" Mora Coin:";
 			else
-				set .@menu$, .@menu$+"^aaaaaaExchange "+(.@coin_amount[.@i]/10)+" Mora Coin (Not Enough)^000000:";
+				.@menu$ += "^aaaaaaExchange "+(.@coin_amount[.@i]/10)+" Mora Coin (Not Enough)^000000:";
 		}
-		set .@i, select(.@menu$+"Quit")-1;
+		.@i = select(.@menu$+"Quit")-1;
 		if (.@i == getarraysize(.@coin_amount)) {
 			mes "[Merchant K]";
 			mes "Let's exchange some other time.";
@@ -243,23 +243,23 @@ malangdo,233,180,3	script	Dark MachineTX100	2_VENDING_MACHINE1,{
 		6420, //Cgrade_Coin
 		6421, //Dgrade_Coin
 		6422; //Egrade_Coin
-	set .@menu$,"Quit:";
-	for(set .@i,1; .@i<=6; set .@i,.@i+1) {
+	.@menu$ = "Quit:";
+	for(.@i = 1; .@i<=6; ++.@i) {
 		if (countitem(.@coins[.@i]))
-			set .@menu$, .@menu$+getitemname(.@coins[.@i])+" (have "+countitem(.@coins[.@i])+"):";
+			.@menu$ += getitemname(.@coins[.@i])+" (have "+countitem(.@coins[.@i])+"):";
 		else
-			set .@menu$, .@menu$+"^aaaaaa"+getitemname(.@coins[.@i])+" (None)^000000:";
+			.@menu$ += "^aaaaaa"+getitemname(.@coins[.@i])+" (None)^000000:";
 	}
-	set .@i, select(.@menu$)-1;
+	.@i = select(.@menu$)-1;
 	if (.@i == 0) {
 		mes "[Dark Machine TX100]";
 		mes "Thank you for coming.";
 		close;
 	}
-	set .@coin, .@coins[.@i];
+	.@coin = .@coins[.@i];
 	setarray .@exchange_name$[0],"higher","lower";
 	setarray .@exchange_id[0],.@coins[.@i-1],.@coins[.@i+1];
-	if (.@exchange_id[0] == .@coins[1]) set .@exchange_id[0],0; // Cannot exchange for Silvervine.
+	if (.@exchange_id[0] == .@coins[1]) .@exchange_id[0] = 0; // Cannot exchange for Silvervine.
 	if (.@i > getarraysize(.@coins)) {
 		mes "[Dark Machine TX100]";
 		mes "You've chosen abnormal menu.";
@@ -279,26 +279,26 @@ malangdo,233,180,3	script	Dark MachineTX100	2_VENDING_MACHINE1,{
 	mes "---------------------";
 	mes "^ff3333We take a small vendor fee from your exchanged coins.^000000";
 	next;
-	set .@menu$, "Quit:";
+	.@menu$ = "Quit:";
 	if (.@exchange_id[0] == 0)
-		set .@menu$, .@menu$+"^ff3333Cannot exchange to higher level coin^000000:";
+		.@menu$ += "^ff3333Cannot exchange to higher level coin^000000:";
 	else {
 		if (countitem(.@coin) >= 99)
-			set .@menu$, .@menu$+"Exchange 99 "+getitemname(.@coin)+" into higher level coin:";
+			.@menu$ += "Exchange 99 "+getitemname(.@coin)+" into higher level coin:";
 		else
-			set .@menu$, .@menu$+"^aaaaaaExchange to higher level coin (Not enough)^000000:";
+			.@menu$ += "^aaaaaaExchange to higher level coin (Not enough)^000000:";
 	}
 	if (.@exchange_id[1] == 0)
-		set .@menu$, .@menu$+"^ff3333Cannot exchange to lower level coin^000000:";
+		.@menu$ += "^ff3333Cannot exchange to lower level coin^000000:";
 	else {
 		if (countitem(.@coin) > 500)
-			set .@menu$, .@menu$+"Exchange 500 "+getitemname(.@coin)+" into lower level coin:";
+			.@menu$ += "Exchange 500 "+getitemname(.@coin)+" into lower level coin:";
 		else if (countitem(.@coin))
-			set .@menu$, .@menu$+"Exchange "+countitem(.@coin)+" "+getitemname(.@coin)+" into lower level coin:";
+			.@menu$ += "Exchange "+countitem(.@coin)+" "+getitemname(.@coin)+" into lower level coin:";
 		else
-			set .@menu$, .@menu$+"^aaaaaaExchange to lower level coin (Not enough)^000000:";
+			.@menu$ += "^aaaaaaExchange to lower level coin (Not enough)^000000:";
 	}
-	set .@i, select(.@menu$)-2;
+	.@i = select(.@menu$)-2;
 	if (.@i == -1) {
 		mes "[Dark Machine TX100]";
 		mes "Thank you for coming.";
@@ -323,17 +323,17 @@ malangdo,233,180,3	script	Dark MachineTX100	2_VENDING_MACHINE1,{
 	}
 	switch(.@i) {
 	case 0:
-		set .@payment_amount,99;
-		set .@reward_amount, .@payment_amount/3;
-		set .@coin_text$,"High";
+		.@payment_amount = 99;
+		.@reward_amount = .@payment_amount/3;
+		.@coin_text$ = "High";
 		break;
 	case 1:
-		set .@payment_amount,(((countitem(.@coin) > 500))?500:countitem(.@coin));
-		set .@reward_amount, .@payment_amount*3;
-		set .@coin_text$,"Low";
+		.@payment_amount = (((countitem(.@coin) > 500))?500:countitem(.@coin));
+		.@reward_amount = .@payment_amount*3;
+		.@coin_text$ = "Low";
 		break;
 	}
-	set .@fee, rand(1,3);
+	.@fee = rand(1,3);
 	delitem .@coin, .@payment_amount;
 	getitem .@exchange_id[.@i], .@reward_amount - .@fee;
 	mes "[Dark Machine TX100]";
@@ -389,20 +389,20 @@ malangdo,175,145,4	script	Can Agency Guard	4_CAT_MERMASTER,{
 		mes "Umm, I'm not here forever, so come to me if you'd like to exchange while I still am.";
 		close;
 	case 2:
-		set .@check,1;
-		set .@count,1;
+		.@check = 1;
+		.@count = 1;
 		break;
 	case 3:
-		set .@check,10;
-		set .@count,10;
+		.@check = 10;
+		.@count = 10;
 		break;
 	case 4:
-		set .@check,100;
-		set .@count,100;
+		.@check = 100;
+		.@count = 100;
 		break;
 	case 5:
-		set .@check,1;
-		set .@count,countitem(12633);
+		.@check = 1;
+		.@count = countitem(12633);
 		break;
 	}
 	if (countitem(12633) < .@check) {
@@ -501,16 +501,16 @@ function	script	F_mal_coin	{
 		mes "The price of ^0000FF["+getarg(2)+"]^000000 is";
 		if (getarg(4) && getarg(5)) { // Type 1: Egrade_Coin or Malang_Sp_Can
 			mes getarg(4)+" E Grade Coin or "+getarg(5)+" Malangdo Canned Specialties.";
-			set .@type,1;
-			set .@menu$,"Yes.:No, I'll purchase with cans.:I don't want to purchase any.";
+			.@type = 1;
+			.@menu$ = "Yes.:No, I'll purchase with cans.:I don't want to purchase any.";
 		} else if (getarg(5)) { // Type 2: Malang_Sp_Can only
 			mes getarg(5)+" Malangdo Canned Specialties.";
-			set .@type,2;
-			set .@menu$,"Yes.::No.";
+			.@type = 2;
+			.@menu$ = "Yes.::No.";
 		} else { // Type 3: Silvervine only
 			mes getarg(6)+" Silvervine Fruit.";
-			set .@type,3;
-			set .@menu$,"Yes.::I don't want to purchase any.";
+			.@type = 3;
+			.@menu$ = "Yes.::I don't want to purchase any.";
 		}
 		next;
 		mes getarg(1);
@@ -524,23 +524,23 @@ function	script	F_mal_coin	{
 		next;
 		switch(select(.@menu$)) {
 		case 2:
-			set .@type,2;
+			.@type = 2;
 		case 1:
 			switch(.@type) {
 			case 1:
-				set .@item,6422; //Egrade_Coin
-				set .@amount,getarg(4);
-				set .@str$,"coins";
+				.@item = 6422; //Egrade_Coin
+				.@amount = getarg(4);
+				.@str$ = "coins";
 				break;
 			case 2:
-				set .@item,12636; //Malang_Sp_Can
-				set .@amount,getarg(5);
-				set .@str$,"cans";
+				.@item = 12636; //Malang_Sp_Can
+				.@amount = getarg(5);
+				.@str$ = "cans";
 				break;
 			case 3:
-				set .@item,6417; //Silvervine
-				set .@amount,getarg(6);
-				set .@str$,"Silvervine Fruit";
+				.@item = 6417; //Silvervine
+				.@amount = getarg(6);
+				.@str$ = "Silvervine Fruit";
 				break;
 			}
 			if (countitem(.@item) < .@amount) {
@@ -576,7 +576,7 @@ malangdo,162,146,5	script	Wandering Merchant#mal	4_M_MERCAT1,{
 		"Spearfish","Tuna","Hairtail","Saurel","Malang Snow Crab","Brindle Eel",
 		"Hairtail (7Days)","Spearfish (7Days)","Saurel (7Days)","Tuna (7Days)","Brindle Eel (7Days)","Malang Snow Crab (7Days)";
 	while(1) {
-		set .@i, select(
+		.@i = select(
 			"[Spearfish(1hr)] 8 E-Coins/50 Cans",
 			"[Tuna(1hr)] 8 E-Coins/50 Cans",
 			"[Hairtail(1hr)] 8 E-Coins/50 Cans",
@@ -703,7 +703,7 @@ malangdo,173,145,4	script	Stinky Merchant	4_M_MERCAT2,{
 	setarray .@items[1],2873,16015;
 	setarray .@names$[1],"Cat Hand Glove","Cat Club";
 	while(1) {
-		set .@i, select(
+		.@i = select(
 			"[Cat Hand Glove] 32 E-Coins/200 Cans",
 			"[Cat Club] 32 E-Coins/200 Cans",
 			"End purchasing."
@@ -754,7 +754,7 @@ malangdo,150,135,5	script	Roving Merchant	4_M_MERCAT1,{
 	setarray .@items[1],12639,12637,12638,12640;
 	setarray .@names$[1],"Flying Fish","Sow Bug","Dried Squid","Starfish";
 	while(1) {
-		set .@i, select(
+		.@i = select(
 			"[Flying Fish] 200 Cans",
 			"[Sow Bug] 200 Cans",
 			"[Dried Squid] 200 Cans",
@@ -832,7 +832,7 @@ ecl_in01,66,95,2	script	Armor Merchant Naphara	4_F_FAIRYKID,{
 	mes "Hello, this is Naphara's store, a place of high class goods.";
 	mes "What would you need?";
 	next;
-	set .@i, select("Str Glove:Int Glove:Agi Glove:Vit Glove:Dex Glove:Luk Glove");
+	.@i = select("Str Glove:Int Glove:Agi Glove:Vit Glove:Dex Glove:Luk Glove");
 	mes "[Armor Merchant]";
 	switch(.@i) {
 	case 1: // Str Glove
@@ -840,42 +840,42 @@ ecl_in01,66,95,2	script	Armor Merchant Naphara	4_F_FAIRYKID,{
 		mes "^3131FFMHP + 100, MSP + 20^000000";
 		mes "^3131FFATK+1 increases for every STR+10^000000";
 		mes "^3131FFATK +1% added above STR 110^000000";
-		set .@item,2917; //Str_Glove
+		.@item = 2917; //Str_Glove
 		break;
 	case 2:
 		mes "^3131FFInt Glove^000000";
 		mes "^3131FFMHP + 100, MSP + 20^000000";
 		mes "^3131FFMATK+1 increases for every INT+10^000000";
 		mes "^3131FFMATK +1% added above INT 110^000000";
-		set .@item,2918; //Int_Glove
+		.@item = 2918; //Int_Glove
 		break;
 	case 3:
 		mes "^3131FFAgi Glove^000000";
 		mes "^3131FFMHP + 100, MSP + 20^000000";
 		mes "^3131FFFLEE+1 increases for every AGI+10^000000";
 		mes "^3131FFComplete Flee +1 added above AGI 110^000000";
-		set .@item,2919; //Agi_Glove
+		.@item = 2919; //Agi_Glove
 		break;
 	case 4:
 		mes "^3131FFVit Glove^000000";
 		mes "^3131FFMHP + 100, MSP + 20^000000";
 		mes "^3131FFMHP+50 for every VIT+10^000000";
 		mes "^3131FFMHP+1% added above VIT 110^000000";
-		set .@item,2920; //Vit_Glove
+		.@item = 2920; //Vit_Glove
 		break;
 	case 5:
 		mes "^3131FFDex Glove^000000";
 		mes "^3131FFMHP + 100, MSP + 20^000000";
 		mes "^3131FFHIT+1 increases for every DEX+10^000000";
 		mes "^3131FFRanged attack power +1% added above DEX 110^000000";
-		set .@item,2921; //Dex_Glove
+		.@item = 2921; //Dex_Glove
 		break;
 	case 6:
 		mes "^3131FFLuk Glove^000000";
 		mes "^3131FFMHP + 100, MSP + 20^000000";
 		mes "^3131FFCRI+1 increases for every LUK+10^000000";
 		mes "^3131FFCritical damage +1% added above LUK 110^000000";
-		set .@item,2922; //Luk_Glove
+		.@item = 2922; //Luk_Glove
 		break;
 	}
 	mes "^3131FFRequired Level: 100^000000";
@@ -921,9 +921,9 @@ ecl_in01,64,97,4	script	Slot Expert Nattuer#ecl	4_F_FAIRYKID,{
 	next;
 	setarray .@noslots[0],2917,2918,2919,2920,2921,2922;
 	setarray .@slotted[0],2923,2924,2925,2926,2927,2928;
-	set .@i, select("Str Glove:Int Glove:Ag Glove:Vit Glove:Dex Glove:Luk Glove")-1;
-	set .@item, .@noslots[.@i];
-	set .@new_item, .@slotted[.@i];
+	.@i = select("Str Glove:Int Glove:Ag Glove:Vit Glove:Dex Glove:Luk Glove")-1;
+	.@item = .@noslots[.@i];
+	.@new_item = .@slotted[.@i];
 	mes "[Slot Expert]";
 	mes "Let's confirm for the last time. Is the one you want "+getitemname(.@item)+"?";
 	next;
@@ -1063,16 +1063,16 @@ ecl_in01,67,39,4	script	Replication Expert Palt	4_M_FAIRYKID4,{
 		0,     //-- not implemented? --
 		19545; //C_Boys_Cap
 	if (countitem(6081) >= 50 && countitem(747) >= 4 && countitem(6395) >= 1 && countitem(721) >= 10 && countitem(723) >= 10 && countitem(726) >= 10 && countitem(728) >= 10 && countitem(729) >= 10)
-		set .@item_check,1;
-	for(set .@i,0; .@i<getarraysize(.@items); set .@i,.@i+1) {
+		.@item_check = 1;
+	for(.@i = 0; .@i<getarraysize(.@items); ++.@i) {
 		if (.@item_check && countitem(.@items[.@i]))
-			set .@menu$, .@menu$+getitemname(.@items[.@i])+":"; //custom
+			.@menu$ += getitemname(.@items[.@i])+":"; //custom
 		else
-			set .@menu$, .@menu$+getitemname(.@items[.@i])+" (^777777Insufficient ingredients^000000):";
+			.@menu$ += getitemname(.@items[.@i])+" (^777777Insufficient ingredients^000000):";
 	}
-	set .@i, select(.@menu$)-1;
-	set .@item, .@items[.@i];
-	set .@new_item, .@costumes[.@i];
+	.@i = select(.@menu$)-1;
+	.@item = .@items[.@i];
+	.@new_item = .@costumes[.@i];
 	mes "[Paltu]";
 	mes "Is ^0571B0"+getitemname(.@item)+"^000000 what you wanted?";
 	next;
@@ -1115,26 +1115,26 @@ ecl_in01,33,98,4	script	Herb Merchant Plafina#e	4_M_FAIRYKID2,{
 	case 1:
 		mes "[Herb Merchant]";
 		mes "Snow Flip has special effects on ^3131FFBurning, Bleeding, Deep Sleep, Sleep^000000.";
-		set .@item,12812; //Snow_Flip
-		set .@cost,5;
+		.@item = 12812; //Snow_Flip
+		.@cost = 5;
 		break;
 	case 2:
 		mes "[Herb Merchant]";
 		mes "Peony Mamy has special effects on ^3131FFFrost, Frozen, Freezing^000000.";
-		set .@item,12813; //Peony_Mommy
-		set .@cost,5;
+		.@item = 12813; //Peony_Mommy
+		.@cost = 5;
 		break;
 	case 3:
 		mes "[Herb Merchant]";
 		mes "Slapping Herb has special effects on ^3131FFStun, Fear, Chaos, Hallucination^000000.";
-		set .@item,12814; //Slapping_Herb
-		set .@cost,1;
+		.@item = 12814; //Slapping_Herb
+		.@cost = 1;
 		break;
 	case 4:
 		mes "[Herb Merchant]";
 		mes "Yggdrasil Dust has special effects on ^3131FFBlind, Curse, Decrease Agility, Reverse Orcish^000000.";
-		set .@item,12815; //Yggdrasil_Dust
-		set .@cost,1;
+		.@item = 12815; //Yggdrasil_Dust
+		.@cost = 1;
 		break;
 	case 5:
 		mes "[Herb Merchant]";
@@ -1146,15 +1146,15 @@ ecl_in01,33,98,4	script	Herb Merchant Plafina#e	4_M_FAIRYKID2,{
 	next;
 	switch(select("Buy 1.:Buy 10.:Don't buy.")) {
 	case 1:
-		set .@amount,1;
+		.@amount = 1;
 		break;
 	case 2:
-		set .@amount,10;
+		.@amount = 10;
 		break;
 	case 3:
 		close;
 	}
-	set .@price,.@amount*.@cost;
+	.@price = .@amount*.@cost;
 	mes "[Herb Merchant]";
 	mes "Would you like to buy "+.@amount+" "+getitemname(.@item)+"?";
 	next;

@@ -278,12 +278,12 @@ dewata,146,109,5	script	Restauranteur#dew	4_COOK,{
 		case 1:
 			mes "[Restauranteur]";
 			mes "This is Nasi Goreng fried with my special sauce plus egg fry on the top. It only costs ^0000FF5000^000000 Zeny.";
-			set .@food,11532;
+			.@food = 11532;
 			break;
 		case 2:
 			mes "[Restauranteur]";
 			mes "This is the Satay, a slice of meat skewered and grilled over Palm fruit charcoal. It costs only ^0000FF5000^000000 Zeny.";
-			set .@food,11533;
+			.@food = 11533;
 			break;
 		}
 		next;
@@ -474,9 +474,9 @@ dewata,89,191,6	script	Small Shrine#dew1	CLEAR_NPC,{
 			mes "- Cancelled. -";
 			close;
 		} else if (.@input <= 50000)
-			set .@good_luck, rand(1,10000);
+			.@good_luck = rand(1,10000);
 		else
-			set .@good_luck, rand(1,5000);
+			.@good_luck = rand(1,5000);
 		if (.@input > Zeny) {
 			mes "- Not enough Zeny. -";
 			close;
@@ -498,10 +498,10 @@ dewata,89,191,6	script	Small Shrine#dew1	CLEAR_NPC,{
 			1,1,2,2,2,2,4,4,8,8,8,16,16,16,16,16,32,32,32,32,32,32,64,64,64,128,128,128;
 			
 		if (.@good_luck == 7 || .@good_luck == 77 || .@good_luck == 777 || .@good_luck == 7777)
-			set .@bonus,1;
-		for(set .@i,0; .@i<getarraysize(.@wishes$); set .@i,.@i+1) {
+			.@bonus = 1;
+		for(.@i = 0; .@i<getarraysize(.@wishes$); ++.@i) {
 			if (compare(.@wish$,.@wishes$[.@i])) {
-				set .@stat, .@stat | .@index[.@i];
+				.@stat |= .@index[.@i];
 				break;
 			}
 		}

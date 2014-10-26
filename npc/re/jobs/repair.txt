@@ -82,7 +82,7 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 				close;
 			}
 			setarray .@items[0], 2796, 2797, 6152, 6151; //Magical_Stone,Magical_Stone_,Glittering_Crystal,Peice_Of_Great_Bradium
-			for(set .@i,0; .@i<4; set .@i,.@i+1) {
+			for(.@i = 0; .@i<4; ++.@i) {
 				if (countitem(.@items[.@i]))
 					delitem .@items[.@i], countitem(.@items[.@i]);
 			}
@@ -100,7 +100,7 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 
 		// Rebirth - variable
 		if ((Class >= Job_Swordman && Class <= Job_Crusader2) && ADVJOB != 0) {
-			set ADVJOB,0;
+			ADVJOB = 0;
 			mes "[Valerie]";
 			mes "You're carrying big karma- You should erase it.";
 			next;
@@ -187,7 +187,7 @@ L_Third:
 			if (questprogress(getarg(1)) == 2)
 				erasequest getarg(1);
 		}
-		for(set .@i,getarg(2); .@i<=getarg(3); set .@i,.@i+1) {
+		for(.@i = getarg(2); .@i<=getarg(3); ++.@i) {
 			if (questprogress(.@i))
 				erasequest .@i;
 		}
@@ -239,33 +239,33 @@ sec_in02,12,40,5	script	Job Repair	1_M_LIBRARYMASTER,1,1,{
 	mes "Please input your password.";
 	next;
 	if (callfunc("F_GM_NPC","1854",1) == 1) {
-		set job_arch,100;
-		set job_3rd_gc,100;
-		set job__mechanic,100;
-		set job_ranger01,100;
-		set job_rune_edq,100;
-		set job_wl,100;
-		set job_gen,100;
-		set job_min,100;
-		set job_royal,100;
-		set job_sha,100;
-		set job_soc,100;
-		set job_shu,100;
-		set job_wan,100;
-		set KNIGHT_Q,100;
-		set PRIEST_Q,100;
-		set WIZ_Q,100;
-		set BSMITH_Q,100;
-		set ASSIN_Q,100;
-		set HNTR_Q,100;
-		set CRUS_Q,100;
-		set MONK_Q,100;
-		set SAGE_Q,100;
-		set ALCH_Q,100;
-		set ROGUE_Q,100;
-		set BARD_Q,100;
-		set DANC_Q,100;
-		set ADVJOB,15;
+		job_arch = 100;
+		job_3rd_gc = 100;
+		job__mechanic = 100;
+		job_ranger01 = 100;
+		job_rune_edq = 100;
+		job_wl = 100;
+		job_gen = 100;
+		job_min = 100;
+		job_royal = 100;
+		job_sha = 100;
+		job_soc = 100;
+		job_shu = 100;
+		job_wan = 100;
+		KNIGHT_Q = 100;
+		PRIEST_Q = 100;
+		WIZ_Q = 100;
+		BSMITH_Q = 100;
+		ASSIN_Q = 100;
+		HNTR_Q = 100;
+		CRUS_Q = 100;
+		MONK_Q = 100;
+		SAGE_Q = 100;
+		ALCH_Q = 100;
+		ROGUE_Q = 100;
+		BARD_Q = 100;
+		DANC_Q = 100;
+		ADVJOB = 15;
 	}
 	close;
 }

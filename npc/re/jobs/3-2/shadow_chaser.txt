@@ -38,7 +38,7 @@ morocc,156,70,3	script	Girl#sc00	4_F_04,3,3,{
 			mes "[Girl]";
 			mes "Every time they visit us, they are on new missions.";
 			mes "What missions are they doing I wonder?";
-			set job_sha,1;
+			job_sha = 1;
 			close;
 		} else if (job_sha == 1) {
 			mes "If you have any interest... just go!";
@@ -76,7 +76,7 @@ OnTouch:
 in_rogue,376,100,5	script	Guild Member#sc01	4_M_ROGUE,{
 	if (BaseJob == Job_Rogue) {
 		if (job_sha < 2) {
-			set @job_sha,0;
+			@job_sha = 0;
 		OnDialogue:
 			mes "[Vin]";
 			mes "Ah? What's this?";
@@ -104,8 +104,8 @@ in_rogue,376,100,5	script	Guild Member#sc01	4_M_ROGUE,{
 					mes "My name is Urupa.";
 					mes "If you are interested, could you come over here?";
 					if (@job_sha == 1) {
-						set job_sha,1;
-						set @job_sha,0;
+						job_sha = 1;
+						@job_sha = 0;
 					}
 					close;
 				case 2:
@@ -146,7 +146,7 @@ in_rogue,376,100,5	script	Guild Member#sc01	4_M_ROGUE,{
 in_rogue,379,99,1	script	Guild Member#sc02	4_F_ROGUE,{
 	if (BaseJob == Job_Rogue) {
 		if (job_sha < 2) {
-			set @job_sha,1;
+			@job_sha = 1;
 			doevent "Guild Member#sc01::OnDialogue";
 			end;
 		}
@@ -183,7 +183,7 @@ in_rogue,379,101,3	script	Scary Man#sc03	1_M_SIGNROGUE,{
 			mes "[Urupa]";
 			mes "My name is Urupa.";
 			mes "If you have anything interesting just challenge it.";
-			set job_sha,1;
+			job_sha = 1;
 			close;
 		}
 		mes "[Scary man]";
@@ -217,7 +217,7 @@ in_rogue,379,101,3	script	Scary Man#sc03	1_M_SIGNROGUE,{
 		mes "[Urupa]";
 		mes "So write this down!";
 		mes "I expected that you would take this adventure!";
-		set job_sha,2;
+		job_sha = 2;
 		setquest 7160;
 		close;
 	} else if (job_sha == 2) {
@@ -316,7 +316,7 @@ s_atelier,65,123,5	script	Manager#sc04_prt	4_M_KHKYEL,{
 				mes "[Manager]";
 				mes "So you are the one.";
 				mes "Could you wait for a sec'?";
-				set job_sha,3;
+				job_sha = 3;
 				close;
 			}
 			mes "[Manager]";
@@ -373,7 +373,7 @@ s_atelier,65,123,5	script	Manager#sc04_prt	4_M_KHKYEL,{
 			mes "[Graham]";
 			mes "What the hell?";
 			mes "If you are not going to help then I'll just find someone else.";
-			set job_sha,4;
+			job_sha = 4;
 			close;
 		case 2:
 			mes "[Graham]";
@@ -467,7 +467,7 @@ s_atelier,65,123,5	script	Manager#sc04_prt	4_M_KHKYEL,{
 		mes "[Graham]";
 		mes "Ok?";
 		mes "Then go there!";
-		set job_sha,9;
+		job_sha = 9;
 		changequest 7165,7166;
 		close;
 	} else if (job_sha == 9) {
@@ -569,21 +569,21 @@ L_Code:
 	mes "Now let's move on to the mission.";
 	mes "Here's the cipher...";
 	next;
-	set .@key01, rand(3,5);
-	set .@a, 1 + .@key01;
-	set .@b, 2 + .@key01;
-	set .@d, 4 + .@key01;
-	set .@e, 5 + .@key01;
-	set .@f, 6 + .@key01;
-	set .@h, 8 + .@key01;
-	set .@i, 9 + .@key01;
-	set .@l, 12 + .@key01;
-	set .@n, 14 + .@key01;
-	set .@o, 15 + .@key01;
-	set .@r, 18 + .@key01;
-	set .@s, 19 + .@key01;
-	set .@t, 20 + .@key01;
-	set .@u, 21 + .@key01;
+	.@key01 = rand(3,5);
+	.@a = 1 + .@key01;
+	.@b = 2 + .@key01;
+	.@d = 4 + .@key01;
+	.@e = 5 + .@key01;
+	.@f = 6 + .@key01;
+	.@h = 8 + .@key01;
+	.@i = 9 + .@key01;
+	.@l = 12 + .@key01;
+	.@n = 14 + .@key01;
+	.@o = 15 + .@key01;
+	.@r = 18 + .@key01;
+	.@s = 19 + .@key01;
+	.@t = 20 + .@key01;
+	.@u = 21 + .@key01;
 	mes "^4d4dff" + .@b + " " + .@l + " " + .@u + " " + .@e + " ";
 	mes "" + .@f + " " + .@i + " " + .@r + " " + .@e + " ";
 	mes "" + .@i + " " + .@n + " ";
@@ -592,7 +592,7 @@ L_Code:
 	mes "" + .@t + " " + .@h + " " + .@i + " " + .@r + " " + .@d + " ";
 	mes "" + .@f + " " + .@l + " " + .@o + " " + .@o + " " + .@r + " ";
 	mes "key : " + .@key01 + ".";
-	set job_sha,5;
+	job_sha = 5;
 	erasequest 7160;
 	if (.@key01 == 3) setquest 7161;
 	else if (.@key01 == 4) setquest 7162;
@@ -706,7 +706,7 @@ s_atelier,168,65,5	script	Manager#sc08_ra	4_M_DOCTOR,{
 				mes "What? You don't know it?";
 				mes "Then you'd better think about it more.";
 				mes "It's so easy.";
-				set job_sha,10;
+				job_sha = 10;
 				changequest 7166,7167;
 				close;
 			}
@@ -806,7 +806,7 @@ s_atelier,168,65,5	script	Manager#sc08_ra	4_M_DOCTOR,{
 		mes "If Haled isn't supportive...";
 		mes "Tell him ^4d4dffI know what you did last summer!^000000";
 		mes "You shouldn't be wrong...!?";
-		set job_sha,18;
+		job_sha = 18;
 		changequest 7172,7173;
 		close;
 	} else if (job_sha == 18) {
@@ -863,19 +863,19 @@ L_Code:
 	case 0:
 		mes "[ S E E D ]";
 		mes "S E E D?";
-		set job_sha,11;
+		job_sha = 11;
 		changequest getarg(0),7168;
 		break;
 	case 1:
 		mes "[ F O O T ]";
 		mes "F O O T?";
-		set job_sha,12;
+		job_sha = 12;
 		changequest getarg(0),7169;
 		break;
 	case 2:
 		mes "[ C O L D ]";
 		mes "C O L D?";
-		set job_sha,13;
+		job_sha = 13;
 		changequest getarg(0),7170;
 		break;
 	}
@@ -928,7 +928,7 @@ s_atelier,167,129,3	script	Manager#sc06_yuno	1_M_SIGNART,{
 		mes "So what?";
 		mes "He's a wild-eyed person.";
 		mes "Did you just speak to me in a threatening tone?";
-		set job_sha,19;
+		job_sha = 19;
 		close;
 	} else if (job_sha == 19) {
 		mes "[Haled]";
@@ -941,7 +941,7 @@ s_atelier,167,129,3	script	Manager#sc06_yuno	1_M_SIGNART,{
 		mes "What's wrong with you?";
 		mes "Are you ok?";
 		mes "Paul? What do you want to say?";
-		set job_sha,19;
+		job_sha = 19;
 		close;
 	} else if (job_sha == 20) {
 		mes "[Haled]";
@@ -974,7 +974,7 @@ s_atelier,167,129,3	script	Manager#sc06_yuno	1_M_SIGNART,{
 		mes "Of course, if you find something, you have to come back.";
 		mes "Got it?";
 		mes "I'm going to write it down so that you won't forget.";
-		set job_sha,21;
+		job_sha = 21;
 		changequest 7173,7174;
 		close;
 	} else if (job_sha == 21) {
@@ -1046,7 +1046,7 @@ s_atelier,167,129,3	script	Manager#sc06_yuno	1_M_SIGNART,{
 			mes "[Haled]";
 			mes "Ok. Let me finish.";
 			mes "Go to Vicente in Lighthalzen.";
-			set job_sha,26;
+			job_sha = 26;
 			changequest 7176,7177;
 			close;
 		}
@@ -1112,7 +1112,7 @@ L_Code:
 		mes "[Haled]";
 		mes "I need some time to collect my thoughts.";
 		mes "Wait for me a bit.";
-		set job_sha,20;
+		job_sha = 20;
 		close;
 	}
 	return;
@@ -1220,7 +1220,7 @@ s_atelier,25,75,3	script	Manager#sc10_lgt	4_M_HUMAN_02,{
 		mes "[Vicente]";
 		mes "You can't imagine what kind of things you might find.";
 		mes "That's the final destination of all of the keys.";
-		set job_sha,27;
+		job_sha = 27;
 		changequest 7177,7178;
 		next;
 		mes "[Vicente]";
@@ -1297,7 +1297,7 @@ s_atelier,25,75,3	script	Manager#sc10_lgt	4_M_HUMAN_02,{
 		mes "There is someone who has been waiting for you.";
 		mes "He's been waiting for someone to bring this brush back.";
 		mes "Let's go inside.";
-		set job_sha,29;
+		job_sha = 29;
 		erasequest 7179;
 		close;
 	} else if (job_sha == 29 || job_sha == 30) {
@@ -1497,7 +1497,7 @@ s_atelier,70,66,4	script	Dumk#sc13_lgh	4_M_SHADOWCHASER,{
 				mes "I'm so thirsty.";
 				mes "Wait a minute.";
 				delitem 6269,1; //Master_Brush
-				set job_sha,30;
+				job_sha = 30;
 				close;
 			}
 			mes "[Dumk]";
@@ -1594,7 +1594,7 @@ s_atelier,70,66,4	script	Dumk#sc13_lgh	4_M_SHADOWCHASER,{
 				jobchange roclass(eaclass()|EAJL_THIRD);
 				getitem 6121,1; //Makeover_Brush
 				getitem 6122,1; //Paint_Brush
-				set job_sha,32;
+				job_sha = 32;
 				getitem 2795,1; //Green_Apple_Ring
 				getitem 5750,1; //Shadow_Handicraft
 				next;
@@ -1674,8 +1674,8 @@ tur_dun03,38,209,1	script	Blue Flame#sc_f01	4_NFWISP,{
 		mes "The deciphered code means...";
 		next;
 		input .@inputstr$;
-		set .@dap01$, "blue fire in turtle island third floor";
-		set .@dap02$, "BLUE FIRE IN TURTLE ISLAND THIRD FLOOR";
+		.@dap01$ = "blue fire in turtle island third floor";
+		.@dap02$ = "BLUE FIRE IN TURTLE ISLAND THIRD FLOOR";
 		if (.@inputstr$ != .@dap01$ && .@inputstr$ != .@dap02$) {
 			mes "["+strcharinfo(0)+"]";
 			mes "What was it?";
@@ -1717,7 +1717,7 @@ tur_dun03,38,209,1	script	Blue Flame#sc_f01	4_NFWISP,{
 		next;
 		mes "The Blue Flame is growning and rolling.";
 		mes "They seem to be related.";
-		set job_sha,6;
+		job_sha = 6;
 		setquest 7164;
 		if (questprogress(7161)) erasequest 7161;
 		if (questprogress(7162)) erasequest 7162;
@@ -1730,7 +1730,7 @@ tur_dun03,38,209,1	script	Blue Flame#sc_f01	4_NFWISP,{
 			next;
 			select("Pick up the marbles.");
 			mes "When you pick them up, you can feel that your weight is lightened.";
-			set job_sha,7;
+			job_sha = 7;
 			erasequest 7164;
 			close2;
 			warp "job3_sha01",22,82;
@@ -1783,7 +1783,7 @@ ice_dun02,206,223,1	script	Red Flame#sc_f02	4_NFWISP,{
 		mes "Then pick it up.";
 		mes "Tear my soul and";
 		mes "show the truth.";
-		set job_sha, job_sha+3;
+		job_sha += 3;
 		setquest 7171;
 		close;
 	} else if (job_sha == 14 || job_sha == 15 || job_sha == 16) {
@@ -1889,7 +1889,7 @@ niflheim,230,276,1	script	Red Flame#sc_f03	4_NFWISP,{
 		next;
 		mes "The flame is dying.";
 		mes "You should handle the shadow of pleasure.";
-		set job_sha,22;
+		job_sha = 22;
 		erasequest 7174;
 		setquest 7175;
 		close;
@@ -1897,7 +1897,7 @@ niflheim,230,276,1	script	Red Flame#sc_f03	4_NFWISP,{
 		if (questprogress(7175,HUNTING) == 2) {
 			mes "You can't feel the soul from the flame.";
 			mes "When you go closer, you can't see well because of darkness.";
-			set job_sha,23;
+			job_sha = 23;
 			erasequest 7175;
 			close2;
 			warp "job3_sha01",73,87;
@@ -1934,7 +1934,7 @@ job3_sha01,22,78,0	script	????#keybox01	CLEAR_NPC,{
 		next;
 		setarray .@Codes1$[1],"EFDFJWF","FGEGKXG","GHFHLYH","HIGIMZI","IJHJNAJ","JKIKOBK","KLJLPCL","LMKMQDM";
 		setarray .@Codes2$[1],"IPOFTUZ","JQPGUVA","KRQHVWB","LSRIWXC","MTSJXYD","NUTKYZE","OVULZAF","PWVMABG";
-		set .@i, rand(1,8);
+		.@i = rand(1,8);
 		mes " ";
 		mes " ";
 		mes " DECEIVE";
@@ -1973,7 +1973,7 @@ job3_sha01,22,78,0	script	????#keybox01	CLEAR_NPC,{
 			mes "There is a small and fabulous key.";
 			next;
 			mes "- You get the Key of Deception. -";
-			set job_sha,8;
+			job_sha = 8;
 			getitem 6266,1; //Cheat_Key
 			setquest 7165;
 			close;
@@ -1997,7 +1997,7 @@ job3_sha01,25,28,0	script	????#keybox02	CLEAR_NPC,{
 	}
 	setarray .@Words$[0],"SEED","FOOT","COLD";
 	setarray .@numbers[0],24,25,20;
-	set .@i,job_sha-14;
+	.@i = job_sha-14;
 	if (job_sha > 13 && job_sha < 17) {
 		mes "There are lots of boxes.";
 		mes "with sort of numbers.";
@@ -2038,7 +2038,7 @@ job3_sha01,25,28,0	script	????#keybox02	CLEAR_NPC,{
 				mes "Anyway, Paul will be disappointed.";
 				mes "Key again...";
 				mes "How can I escape from here...?";
-				set job_sha,17;
+				job_sha = 17;
 				getitem 6267,1; //Virtual_Key
 				erasequest 7171;
 				changequest 7168+.@i,7172;
@@ -2173,7 +2173,7 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 						mes "What? A key again!";
 						mes "Haled will be disappointed.";
 						mes "I better go back.";
-						set job_sha,25;
+						job_sha = 25;
 						setquest 7176;
 						getitem 6268,1; //Mirth_Key
 						close;
@@ -2194,7 +2194,7 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 		mes "..."+.@inputstr$+"...?";
 		if (job_sha == 23) {
 			mes "What does that mean?";
-			set job_sha,24;
+			job_sha = 24;
 		} else
 			mes "Again? I don't get it.";
 		close;
@@ -2236,7 +2236,7 @@ job3_sha01,71,27,0	script	????#keybox04	CLEAR_NPC,{
 			delitem 6266,1; //Cheat_Key
 			delitem 6267,1; //Virtual_Key
 			delitem 6268,1; //Mirth_Key
-			set job_sha,28;
+			job_sha = 28;
 			getitem 6269,1; //Master_Brush
 			changequest 7178,7179;
 			next;
@@ -2274,7 +2274,7 @@ s_atelier,29,119,3	script	Max#sc05_prt	4W_M_01,{
 		mes "You are a member of the Rogue guild!";
 		mes "What can I help you with?";
 		next;
-		set .@i, select("I need a make-up brush.:I need a paint brush.:Nothing.");
+		.@i = select("I need a make-up brush.:I need a paint brush.:Nothing.");
 		mes "[Max]";
 		if (.@i == 1) setarray .@i[1],6121,1,10,100000;
 		else if (.@i == 2) setarray .@i[1],6122,2,30,200000;
@@ -2339,7 +2339,7 @@ s_atelier,136,70,3	script	Titika#sc09_ra	4_F_CHILD,{
 		mes "You are in a guild.";
 		mes "What can I help you with?";
 		next;
-		set .@i, select("Make a new make-up brush.:Make a new paint brush.:Nothing.");
+		.@i = select("Make a new make-up brush.:Make a new paint brush.:Nothing.");
 		mes "[Titika]";
 		if (.@i == 1) setarray .@i[1],6121,1,10,100000;
 		else if (.@i == 2) setarray .@i[1],6122,2,30,200000;
@@ -2389,7 +2389,7 @@ s_atelier,124,128,3	script	RimiGX#sc07_yuno	4_F_LGTGIRL,{
 	if (Class == Job_Shadow_Chaser || Class == Job_Shadow_Chaser_T || Class == Job_Baby_Chaser) {
 		mes "What are you looking for?";
 		next;
-		set .@i, select("Make a new blush for make-up.:Make a new blush for painting.:Nothing.");
+		.@i = select("Make a new blush for make-up.:Make a new blush for painting.:Nothing.");
 		mes "[RimiGX]";
 		if (.@i == 1) setarray .@i[1],6121,1,10,100000;
 		else if (.@i == 2) setarray .@i[1],6122,2,30,200000;
@@ -2438,7 +2438,7 @@ s_atelier,26,68,3	script	Vito#sc11_lgt	4_M_KHMAN,{
 	if (Class == Job_Shadow_Chaser || Class == Job_Shadow_Chaser_T || Class == Job_Baby_Chaser) {
 		mes "What are you looking for?";
 		next;
-		set .@i, select("Make a new blush for make-up.:Make a new blush for painting.:Nothing.");
+		.@i = select("Make a new blush for make-up.:Make a new blush for painting.:Nothing.");
 		mes "[Vito]";
 		if (.@i == 1) setarray .@i[1],6121,1,10,100000;
 		else if (.@i == 2) setarray .@i[1],6122,2,30,200000;

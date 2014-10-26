@@ -20,8 +20,8 @@
 //============================================================
 bif_fild01,158,340,5	script	Laphine Soldier#mist	4_M_FAIRYSOLDIER,{
 
-	set .@party_id,getcharid(1);
-	set .@md_name$,"Mistwood Maze";
+	.@party_id = getcharid(1);
+	.@md_name$ = "Mistwood Maze";
 
 	mes "[Laphine Soldier]";
 	mes "Are you going into the forest?";
@@ -84,7 +84,7 @@ bif_fild01,158,340,5	script	Laphine Soldier#mist	4_M_FAIRYSOLDIER,{
 			mes "[Laphine Soldier]";
 			mes "Party Name "+getpartyname(.@party_id)+"...";
 			mes "Party Leader "+strcharinfo(0)+"...";
-			set .@instance, instance_create(.@md_name$, .@party_id);
+			.@instance = instance_create(.@md_name$, .@party_id);
 			if (.@instance < 0) {
 				mes "Hmm...";
 				next;
@@ -194,7 +194,7 @@ OnTimer180000:
 
 // callfunc "F_Mora_Mist",<warp to enable>,<success message>,<fail message>{,<end flag>}
 function	script	F_Mora_Mist	{
-	set .@map$, instance_mapname("1@mist");
+	.@map$ = instance_mapname("1@mist");
 	if (mobcount(.@map$,instance_npcname(strnpcinfo(0))+"::OnMyMobDead") == 0) {
 		mes "Obviously no one is taking care of it.";
 		mes "It seems like you can chop down the garden tree.";
@@ -423,7 +423,7 @@ OnMyMobDead:
 		"Gardeners: We're not dead, yet!!!!",1;
 	end;
 OnInstanceInit:
-	set .@map$, instance_mapname("1@mist");
+	.@map$ = instance_mapname("1@mist");
 	monster .@map$,318,137,"Baby Tom",2136,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
 	monster .@map$,321,137,"Tomba the Baby",2136,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
 	monster .@map$,324,137,"Exhausted Remi",2137,1,instance_npcname("The Gardeners' Tree")+"::OnMyMobDead";
@@ -513,7 +513,7 @@ OnInstanceInit:
 	monster instance_mapname("1@mist"),.@c[0],.@c[1],"Wandering Purple Dragon",2131,1,instance_npcname("#Dragon Herder")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@mist");
+	.@map$ = instance_mapname("1@mist");
 	if (mobcount(.@map$,instance_npcname("#Dragon Herder")+"::OnMyMobDead") == 0) {
 		donpcevent instance_npcname("Collapsed Girl#mist")+"::OnEnable";
 		donpcevent instance_npcname("Mysterious Young Man#mis")+"::OnEnable";
@@ -599,7 +599,7 @@ OnTimer3000:
 			mes "[Loki]";
 			mes "Now we have to say goodbye here.";
 			mes "If you survive this forest, of course.";
-			set ep14_1_mistwoods,2;
+			ep14_1_mistwoods = 2;
 			setquest 7212;
 			close;
 		case 2:
@@ -607,7 +607,7 @@ OnTimer3000:
 			mes "I understand.";
 			mes "Step back if you aren't ready.";
 			mes "This forest doesn't like strangers.";
-			set ep14_1_mistwoods,1;
+			ep14_1_mistwoods = 1;
 			close;
 		}
 	} else if (ep14_1_mistwoods == 1) {
@@ -645,7 +645,7 @@ OnTimer3000:
 			mes "[Loki]";
 			mes "Now we have to say goodbye here.";
 			mes "Hopefully, we will see each other again in Mora.";
-			set ep14_1_mistwoods,2;
+			ep14_1_mistwoods = 2;
 			setquest 7212;
 			close;
 		}
@@ -705,7 +705,7 @@ OnDisable:
 		mes "I'll wait for her to wake up and get out of this forest.";
 		mes "I can manage it on my own.";
 		mes "I'll see you in Mora.";
-		set ep14_1_mistwoods,3;
+		ep14_1_mistwoods = 3;
 		erasequest 7212;
 		setquest 7213;
 		close;
@@ -778,7 +778,7 @@ mora,46,152,5	script	Flower Smelling Lady	4_F_NYDHOG,{
 		mes "I thought I was forsaken...";
 		next;
 		mes "The Guardian slowly looked away as if deep in thought.";
-		set ep14_1_mistwoods,4;
+		ep14_1_mistwoods = 4;
 		close2;
 	} else if (ep14_1_mistwoods == 4) {
 		mes "- He seems to be deep in thought. -";
@@ -901,7 +901,7 @@ mora,48,152,3	script	Sharp Eyed Man	4_M_ROKI2,{
 		next;
 		mes "[Nydhogg the Guardian]";
 		mes "May the blessing of Mother Yggdrasil be with you...";
-		set ep14_1_mistwoods,10;
+		ep14_1_mistwoods = 10;
 		completequest 7213;
 		getitem 2568,1; //Muffler_Of_Roki
 		getitem 2858,1; //Pendant_Of_Guardian
@@ -927,8 +927,8 @@ OnInstanceInit:
 	monster instance_mapname("1@mist"),0,0,"Miming",2137,15,instance_npcname("#Mist Mobs Respawn1")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@mist");
-	set .@num_mobs, 15 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn1")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@mist");
+	.@num_mobs = 15 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn1")+"::OnMyMobDead");
 	if (.@num_mobs > 0)
 		monster .@map$,0,0,"Miming",2137,.@num_mobs,instance_npcname("#Mist Mobs Respawn1")+"::OnMyMobDead";
 	end;
@@ -940,8 +940,8 @@ OnInstanceInit:
 	monster instance_mapname("1@mist"),0,0,"Pom Spider",2132,35,instance_npcname("#Mist Mobs Respawn2")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@mist");
-	set .@num_mobs, 35 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn2")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@mist");
+	.@num_mobs = 35 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn2")+"::OnMyMobDead");
 	if (.@num_mobs > 0)
 		monster .@map$,0,0,"Pom Spider",2132,.@num_mobs,instance_npcname("#Mist Mobs Respawn2")+"::OnMyMobDead";
 	end;
@@ -953,8 +953,8 @@ OnInstanceInit:
 	monster instance_mapname("1@mist"),0,0,"Angra Mantis",2133,35,instance_npcname("#Mist Mobs Respawn3")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@mist");
-	set .@num_mobs, 35 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn3")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@mist");
+	.@num_mobs = 35 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn3")+"::OnMyMobDead");
 	if (.@num_mobs > 0)
 		monster .@map$,0,0,"Angra Mantis",2133,.@num_mobs,instance_npcname("#Mist Mobs Respawn3")+"::OnMyMobDead";
 	end;
@@ -966,8 +966,8 @@ OnInstanceInit:
 	monster instance_mapname("1@mist"),0,0,"Parus",2134,35,instance_npcname("#Mist Mobs Respawn4")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@mist");
-	set .@num_mobs, 35 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn4")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@mist");
+	.@num_mobs = 35 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn4")+"::OnMyMobDead");
 	if (.@num_mobs > 0)
 		monster .@map$,0,0,"Parus",2134,.@num_mobs,instance_npcname("#Mist Mobs Respawn4")+"::OnMyMobDead";
 	end;
@@ -979,8 +979,8 @@ OnInstanceInit:
 	monster instance_mapname("1@mist"),0,0,"Little Fatum",2136,15,instance_npcname("#Mist Mobs Respawn5")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@mist");
-	set .@num_mobs, 15 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn5")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@mist");
+	.@num_mobs = 15 - mobcount(.@map$,instance_npcname("#Mist Mobs Respawn5")+"::OnMyMobDead");
 	if (.@num_mobs > 0)
 		monster .@map$,0,0,"Little Fatum",2136,.@num_mobs,instance_npcname("#Mist Mobs Respawn5")+"::OnMyMobDead";
 	end;

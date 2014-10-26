@@ -19,8 +19,8 @@
 //============================================================
 mal_dun01,151,235,5	script	Starfish	4_ASTER,{
 
-	set .@party_id,getcharid(1);
-	set .@md_name$,"Octopus Cave";
+	.@party_id = getcharid(1);
+	.@md_name$ = "Octopus Cave";
 
 	if (!.@party_id) {
 		mes "[Starfish]";
@@ -85,7 +85,7 @@ mal_dun01,151,235,5	script	Starfish	4_ASTER,{
 			}
 			if (.@playtime == 2) erasequest 4197;
 			if (countitem(6442)) {
-				set .@instance,instance_create(.@md_name$,.@party_id);
+				.@instance = instance_create(.@md_name$,.@party_id);
 				if (.@instance < 0) {
 					mes "[Starfish]";
 					mes "Party name is... "+getpartyname(.@party_id)+".";
@@ -209,7 +209,7 @@ OnEnable:
 	donpcevent instance_npcname("oct_foot2")+"::OnEnable";
 	donpcevent instance_npcname("oct_foot3")+"::OnEnable";
 	donpcevent instance_npcname("oct_foot4")+"::OnEnable";
-	set .@map$, instance_mapname("1@cash");
+	.@map$ = instance_mapname("1@cash");
 	monster .@map$,20,114,"Octopus Leg#1",2193,1,instance_npcname("oct_foot_4")+"::OnMyMobDead";
 	monster .@map$,88,190,"Octopus Leg#2",2193,1,instance_npcname("oct_foot_4")+"::OnMyMobDead";
 	monster .@map$,307,215,"Octopus Leg#3",2193,1,instance_npcname("oct_foot_4")+"::OnMyMobDead";
@@ -219,7 +219,7 @@ OnDisable:
 	disablenpc instance_npcname("oct_foot_4");
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@cash");
+	.@map$ = instance_mapname("1@cash");
 	if (mobcount(.@map$,instance_npcname("oct_foot_4")+"::OnMyMobDead") < 1) {
 		donpcevent instance_npcname("oct_boss_con")+"::OnEnable";
 		mapannounce .@map$,"Hey you!! I'll personally take care of you all! Let's bring it on!",bc_map,"0x00ff99";
@@ -238,9 +238,9 @@ OnInstanceInit:
 	end;
 OnEnable:
 	enablenpc instance_npcname(strnpcinfo(0));
-	set .@label$, instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
-	set .@i, atoi(charat(strnpcinfo(0),8));
-	set .@map$, instance_mapname("1@cash");
+	.@label$ = instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	.@i = atoi(charat(strnpcinfo(0),8));
+	.@map$ = instance_mapname("1@cash");
 	switch(.@i) {
 	case 1:
 		areamonster .@map$,34,96,38,100,"Octopus's Henchman",2192,3,.@label$;
@@ -308,10 +308,10 @@ OnTouch:
 	initnpctimer;
 	end;
 OnTimer5000:
-	set .@map$, instance_mapname("1@cash");
+	.@map$ = instance_mapname("1@cash");
 	mapannounce .@map$,"Let's give them a lesson!",bc_map,"0xFFFF00";
-	set .@label$, instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
-	set .@i, atoi(charat(strnpcinfo(0),8));
+	.@label$ = instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	.@i = atoi(charat(strnpcinfo(0),8));
 	switch(.@i) {
 	case 1:
 		areamonster .@map$,18,112,22,116,"Octopus's Henchman",2192,3,.@label$;
@@ -334,17 +334,17 @@ OnTimer5000:
 OnTimer30000:
 	setd "."+strnpcinfo(0)+instance_id(),0;
 	stopnpctimer;
-	set .@i, atoi(charat(strnpcinfo(0),8));
+	.@i = atoi(charat(strnpcinfo(0),8));
 	donpcevent instance_npcname("oct_foot_exit"+.@i)+"::OnEnable";
 	donpcevent instance_npcname(strnpcinfo(0))+"::OnDisable";
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@cash");
+	.@map$ = instance_mapname("1@cash");
 	if (mobcount(.@map$,instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1) {
 		mapannounce .@map$,"You hurt my babies!!? You'll have to pay for this!!!",bc_map,"0x00ff99";
 		setd "."+strnpcinfo(0)+instance_id(),0;
 		stopnpctimer;
-		set .@i, atoi(charat(strnpcinfo(0),8));
+		.@i = atoi(charat(strnpcinfo(0),8));
 		donpcevent instance_npcname("oct_foot_exit"+.@i)+"::OnEnable";
 		donpcevent instance_npcname(strnpcinfo(0))+"::OnDisable";
 		end;
@@ -377,7 +377,7 @@ OnInstanceInit:
 	donpcevent instance_npcname("oct_mob_con")+"::OnDisable";
 	end;
 OnEnable:
-	set .@map$, instance_mapname("1@cash");
+	.@map$ = instance_mapname("1@cash");
 	enablenpc instance_npcname("oct_mob_con");
 	monster .@map$,32,94,"Hydra",1068,1;
 	monster .@map$,41,101,"Hydra",1068,1;
@@ -439,7 +439,7 @@ OnInstanceInit:
 	disablenpc instance_npcname("oct_backattack1");
 	end;
 OnTouch:
-	set .@map$, instance_mapname("1@cash");
+	.@map$ = instance_mapname("1@cash");
 	monster .@map$,39,59,"Hydra",1068,1;
 	monster .@map$,40,59,"Hydra",1068,1;
 	monster .@map$,41,59,"Hydra",1068,1;
@@ -465,28 +465,28 @@ OnTouch:
 	if (getd("."+instance_id())) end;
 	setd "."+instance_id(),1;
 	initnpctimer;
-	set .@map$, instance_mapname("1@cash");
+	.@map$ = instance_mapname("1@cash");
 	monster .@map$,71,105,"Octopus's Henchman ",2192,1;
 	mapannounce .@map$,"Headquarters are empty, GO!!!",bc_map,"0x00ff99";
 	hideonnpc instance_npcname("oct_backattack2");
 	end;
 OnTimer2000:
-	set .@map$, instance_mapname("1@cash");
+	.@map$ = instance_mapname("1@cash");
 	monster .@map$,71,105,"Octopus's Henchman ",2192,1;
 	mapannounce .@map$,"Run, RUN! Go, GO!!!",bc_map,"0x00ff99";
 	end;
 OnTimer4000:
-	set .@map$, instance_mapname("1@cash");
+	.@map$ = instance_mapname("1@cash");
 	monster .@map$,71,105,"Octopus's Henchman ",2192,1;
 	mapannounce .@map$,"No time, come out fast!",bc_map,"0x00ff99";
 	end;
 OnTimer6000:
-	set .@map$, instance_mapname("1@cash");
+	.@map$ = instance_mapname("1@cash");
 	monster .@map$,71,105,"Octopus's Henchman ",2192,3;
 	mapannounce .@map$,"Let's take over the headquarters!!!",bc_map,"0x00ff99";
 	end;
 OnTimer8000:
-	set .@map$, instance_mapname("1@cash");
+	.@map$ = instance_mapname("1@cash");
 	monster .@map$,71,105,"Octopus's Henchman ",2192,1;
 	mapannounce .@map$,"There is no time to lose, hurry up!!!",bc_map,"0x00ff99";
 	stopnpctimer;
@@ -504,7 +504,7 @@ OnInstanceInit:
 OnTouch:
 	if (getd("."+instance_id())) end;
 	setd "."+instance_id(),1;
-	set .@map$, instance_mapname("1@cash");
+	.@map$ = instance_mapname("1@cash");
 	monster .@map$,293,153,"Octopus's Henchman ",2192,1;
 	monster .@map$,294,152,"Octopus's Henchman ",2192,1;
 	monster .@map$,292,153,"Octopus's Henchman ",2192,1;
@@ -531,7 +531,7 @@ OnInstanceInit:
 OnTouch:
 	if (getd("."+instance_id())) end;
 	setd "."+instance_id(),1;
-	set .@map$, instance_mapname("1@cash");
+	.@map$ = instance_mapname("1@cash");
 	monster .@map$,332,37,"Octopus's Henchman ",2192,1;
 	monster .@map$,332,36,"Octopus's Henchman ",2192,1;
 	monster .@map$,332,35,"Octopus's Henchman ",2192,1;
@@ -623,7 +623,7 @@ OnAnnounce:
 	mapannounce instance_mapname("1@cash"),"Disgusting Octopus : "+getarg(rand(3)),bc_map,"0xFFFF00";
 	return;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@cash");
+	.@map$ = instance_mapname("1@cash");
 	if (mobcount(.@map$,instance_npcname("oct_boss_con")+"::OnMyMobDead") < 1) {
 		mapannounce .@map$,"Disgusting Octopus : That's it for the today! Next time, I will play with you badly!",bc_map,"0xFFFF00";
 		enablenpc instance_npcname("oct_exit_1");
@@ -646,7 +646,7 @@ OnEnable:
 	initnpctimer;
 	end;
 OnCall:
-	set .@map$, instance_mapname("1@cash");
+	.@map$ = instance_mapname("1@cash");
 	if (mobcount(.@map$,instance_npcname("oct_boss_foot")+"::OnMyMobDead") < 100) {
 		switch(rand(2)) {
 		case 0:

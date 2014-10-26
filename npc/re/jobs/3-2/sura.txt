@@ -140,7 +140,7 @@ ve_in,237,125,0	script	King Crab#job_shu	1_M_PAY_ELDER,{
 		mes "...";
 		mes ".....";
 		mes "........(cheeks glowing)";
-		set job_shu,1;
+		job_shu = 1;
 		setquest 11155;
 		close;
 	} else {
@@ -214,7 +214,7 @@ OnTimer600000:
 ve_in,97,149,0	script	#Suraryokan	HIDDEN_WARP_NPC,3,3,{
 OnTouch:
 	if (job_shu == 1) {
-		set .@n$, "["+strcharinfo(0)+"]";
+		.@n$ = "["+strcharinfo(0)+"]";
 		mes "[???]";
 		mes "Who is it?!";
 		next;
@@ -263,7 +263,7 @@ OnTouch:
 		next;
 		mes "[???]";
 		mes "What the hell do you want?";
-		set job_shu,2;
+		job_shu = 2;
 		close;
 	}
 	end;
@@ -367,7 +367,7 @@ ve_in,98,159,0	script	Fighter#job_shu	4_F_SURA,{
 			mes "[???]";
 			mes "Okay, then^f57d7d go and kill 100 Desert Wolves.^000000";
 			mes "After that, I'll think about it again.";
-			set job_shu,3;
+			job_shu = 3;
 			changequest 11155,11156;
 			close;
 		case 2:
@@ -393,7 +393,7 @@ ve_in,98,159,0	script	Fighter#job_shu	4_F_SURA,{
 			next;
 			mes "[Bruno]";
 			mes "Tell him that 'Bruno' sent you there and after that, just suit yourself.";
-			set job_shu,4;
+			job_shu = 4;
 			changequest 11156,11157;
 			close;
 		}
@@ -468,7 +468,7 @@ yuno_fild07,254,176,7	script	Buddy#job_shu	4_M_MONK,{
 		next;
 		mes "[Buddy]";
 		mes "This way...";
-		set job_shu,5;
+		job_shu = 5;
 		changequest 11157,11158;
 		close2;
 		warp "sword_1-1",215,244;
@@ -802,7 +802,7 @@ sword_1-1,223,167,2	script	Master#job_shu	4_M_SURA,{
 		}
 		mes "[Master]";
 		mes "You should train yourself steadily until that day.";
-		set job_shu,100;
+		job_shu = 100;
 		jobchange roclass(eaclass()|EAJL_THIRD);
 		completequest 11158;
 		getitem 5754,1; //Blazing_Soul

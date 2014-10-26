@@ -112,7 +112,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 			next;
 			mes "[Heinrich]";
 			mes "It's not a simple story to tell a person like you. Go back.";
-			set job_royal,1;
+			job_royal = 1;
 			setquest 12090;
 			close;
 		case 2:
@@ -187,7 +187,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		next;
 		mes "[Heinrich]";
 		mes "Don't forget to bring the 100 Burning Hearts.";
-		set job_royal,2;
+		job_royal = 2;
 		changequest 12090,12091;
 		close;
 	} else if (job_royal == 2) {
@@ -201,7 +201,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		mes "[Heinrich]";
 		mes "Wait while I arrange the stuff that you brought.";
 		delitem 7097,100; //Burning_Heart
-		set job_royal,3;
+		job_royal = 3;
 		changequest 12091,12092;
 		close;
 	} else if (job_royal == 3) {
@@ -275,7 +275,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		mes "I don't know if it will be helpful or not. I will write an explanation in detail.";
 		next;
 		mes "^000099Here's the last trace of the Royal Guard. Open the quest window and check the position.^000000";
-		set job_royal,4;
+		job_royal = 4;
 		changequest 12092,12093;
 		close;
 	} else if (job_royal == 4) {
@@ -319,7 +319,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		mes "I'll be deciphering the cloth for now so I will be very busy!";
 		delitem 6274,1; //Saint_Cloth_Piece
 		getitem 6275,1; //King_Shield
-		set job_royal,5;
+		job_royal = 5;
 		changequest 12093,12094;
 		close;
 	} else if (job_royal == 5) {
@@ -437,7 +437,7 @@ glast_01,240,366,5	script	Memory of King Schmidtz	CLEAR_NPC,{
 gl_church,173,88,0	script	Delicate trace#01	CLEAR_NPC,{
 	if (job_royal == 4 && countitem(6274) == 0) {
 		progressbar "ffff00",5;
-		set .@roy_ran, rand(1,70);
+		.@roy_ran = rand(1,70);
 		if (.@roy_ran < 6)
 			getitem 6274,1; //Saint_Cloth_Piece
 		else if (.@roy_ran > 5 && .@roy_ran < 66)
@@ -507,7 +507,7 @@ sec_in02,12,43,3	script	sorcereryal	1_M_LIBRARYMASTER,1,1,{
 			mes "Set item to adjust the Royal Guard";
 			mes "You can only set a number between 1 to 5.";
 		} else {
-			set job_royal, .@input;
+			job_royal = .@input;
 			mes "Completed";
 		}
 		close;
@@ -519,7 +519,7 @@ sec_in02,12,43,3	script	sorcereryal	1_M_LIBRARYMASTER,1,1,{
 			mes "Set item to adjust the Rune Knight";
 			mes "You can only set a nbumber between 1 to 24.";
 		} else {
-			set job_rune_edq, .@input;
+			job_rune_edq = .@input;
 			mes "Completed";
 		}
 		close;
@@ -531,7 +531,7 @@ sec_in02,12,43,3	script	sorcereryal	1_M_LIBRARYMASTER,1,1,{
 			mes "Set item to adjust the Sorcerer";
 			mes "You can only set a number between 1 to 5.";
 		} else {
-			set job_soc, .@input;
+			job_soc = .@input;
 			mes "Completed";
 		}
 		close;

@@ -36,8 +36,8 @@ ma_scene01,174,179,4	script	Taho	4_M_DEWZATIMAN,{
 		close;
 	}
 
-	set .@party_id,getcharid(1);
-	set .@md_name$, "Bakonawa Lake";
+	.@party_id = getcharid(1);
+	.@md_name$ = "Bakonawa Lake";
 
 	.@baku_time = questprogress(12278,PLAYTIME);
 	if (!.@baku_time) {
@@ -53,16 +53,16 @@ ma_scene01,174,179,4	script	Taho	4_M_DEWZATIMAN,{
 			mes "[Taho]";
 			mes "Are you the leader of the Bakonawa slayers? The road is not well so we have to go down the cliff with a rope, is that OK?";
 			next;
-			set .@i, select("Please weave a rope.:Now I will go down.:Cancel.");
+			.@i = select("Please weave a rope.:Now I will go down.:Cancel.");
 		} else {
 			mes "[Taho]";
 			mes "You came for slaying Bakonawa. The leader of your party has to help me weaving the rope for going down.";
 			next;
-			set .@i, select(":Now I will go down.:Cancel.");
+			.@i = select(":Now I will go down.:Cancel.");
 		}
 		switch(.@i) {
 		case 1:
-			set .@instance,instance_create(.@md_name$,.@party_id);
+			.@instance = instance_create(.@md_name$,.@party_id);
 			if (.@instance < 0) {
 				mes "[Taho]";
 				mes "Oh, the rope got dropped. I have to make a new one.";
@@ -111,8 +111,8 @@ sec_in02,26,26,4	script	Bakonawa's Rage	4_M_DEWZATIMAN,{
 	if (callfunc("F_GM_NPC",1854,0) == 1) {
 		erasequest 12278;
 		erasequest 12279;
-		set malaya_bakona1,7;
-		set malaya_bakona2,15;
+		malaya_bakona1 = 7;
+		malaya_bakona2 = 15;
 	}
 	close;
 }
@@ -157,7 +157,7 @@ OnInstanceInit:
 	end;
 OnStart:
 	enablenpc instance_npcname("#Bakonawan1");
-	set .@map$, instance_mapname("1@ma_b");
+	.@map$ = instance_mapname("1@ma_b");
 	mapannounce .@map$,"Taho: I can see him there on the surface! ATTACK!!!",bc_map,"0x00ffff"; //FW_NORMAL 15 0 0
 	monster .@map$,78,81,"Bakonawa",2320,1,instance_npcname("#Bakonawan1")+"::OnMyMobDead"; //original: (78,83)
 	initnpctimer;
@@ -166,7 +166,7 @@ OnFail:
 	killmonster instance_mapname("1@ma_b"),instance_npcname("#Bakonawan1")+"::OnMyMobDead";
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@ma_b");
+	.@map$ = instance_mapname("1@ma_b");
 	if (mobcount(.@map$,instance_npcname("#Bakonawan1")+"::OnMyMobDead") < 1) {
 		donpcevent instance_npcname("#BakonawaDeadn1")+"::OnStart";
 		killmonster .@map$,instance_npcname("#Bakonawan1")+"::OnMyMobDead";
@@ -189,7 +189,7 @@ OnTimer570000:
 	donpcevent instance_npcname("#SummonPuppetsn1")+"::OnStart";
 	end;
 OnTimer600000:
-	set .@map$, instance_mapname("1@ma_b");
+	.@map$ = instance_mapname("1@ma_b");
 	mapannounce .@map$,"Bakonawa has escaped deep into the lake.",bc_map,"0xffff00"; //FW_NORMAL 20 0 0
 	donpcevent instance_npcname("Taho#Fail")+"::OnStart";
 	donpcevent instance_npcname("#Bakonawan1")+"::OnFail";
@@ -220,9 +220,9 @@ OnTouch:
 OnTimer5000:
 	setarray .@x[0],79,71,60,61,57,89,95,96,99;
 	setarray .@y[0],71,72,80,90,99,73,82,90,99;
-	set .@map$, instance_mapname("1@ma_b");
-	for(set .@i,0; .@i<9; set .@i,.@i+1) {
-		set .@rand, rand(1,10);
+	.@map$ = instance_mapname("1@ma_b");
+	for(.@i = 0; .@i<9; ++.@i) {
+		.@rand = rand(1,10);
 		if (.@rand > 7)
 			monster .@map$,.@x[.@i],.@y[.@i],"Bakonawa's Will",2337,1,instance_npcname("#SummonPuppetsn1")+"::OnMyMobDead";
 		else if (.@rand < 4)
@@ -271,8 +271,8 @@ OnInstanceInit:
 	end;
 OnStart:
 	enablenpc instance_npcname("#Bakonawan2");
-	set .@label$, instance_npcname("#Bakonawan2")+"::OnMyMobDead";
-	set .@map$, instance_mapname("1@ma_b");
+	.@label$ = instance_npcname("#Bakonawan2")+"::OnMyMobDead";
+	.@map$ = instance_mapname("1@ma_b");
 	monster .@map$,95,98,"Caldron",2328,1,.@label$;
 	monster .@map$,60,98,"Caldron",2328,1,.@label$;
 	monster .@map$,97,104,"Gong",2328,1,.@label$;
@@ -281,8 +281,8 @@ OnStart:
 	initnpctimer;
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@ma_b");
-	set .@mob_dead_num, mobcount(.@map$,instance_npcname("#Bakonawan2")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@ma_b");
+	.@mob_dead_num = mobcount(.@map$,instance_npcname("#Bakonawan2")+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
 		donpcevent instance_npcname("#Bakonawan2-1")+"::OnEnd";
 		stopnpctimer;
@@ -304,7 +304,7 @@ OnTimer297000:	callsub OnAnnounce,"3 seconds",18,0;
 OnTimer298000:	callsub OnAnnounce,"2 seconds",19,0;
 OnTimer299000:	callsub OnAnnounce,"1 second",20,0;
 OnTimer300000:
-	set .@map$, instance_mapname("1@ma_b");
+	.@map$ = instance_mapname("1@ma_b");
 	mapannounce .@map$,"Bakonawa has escaped deep into the lake.",bc_map,"0xffff00"; //FW_NORMAL 20 0 0
 	donpcevent instance_npcname("Taho#Fail")+"::OnStart";
 	donpcevent instance_npcname("#Bakonawan2-1")+"::OnFail";
@@ -363,8 +363,8 @@ OnStart:
 	donpcevent instance_npcname("#Bakonawan3-1")+"::OnStart";
 	end;
 OnMyMobDead:
-	set .@map$, instance_mapname("1@ma_b");
-	set .@mob_dead_num, mobcount(.@map$,instance_npcname("#Bakonawan3")+"::OnMyMobDead");
+	.@map$ = instance_mapname("1@ma_b");
+	.@mob_dead_num = mobcount(.@map$,instance_npcname("#Bakonawan3")+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
 		mapannounce .@map$,"Taho: We got him! I can see he has threw up something that looks like a box.",bc_map,"0x00ffff"; //FW_NORMAL 15 0 0
 		donpcevent instance_npcname("Taho#Completed")+"::OnStart";
@@ -397,7 +397,7 @@ OnTimer597000:	callsub OnAnnounce,"3 seconds",18,0;
 OnTimer598000:	callsub OnAnnounce,"2 seconds",19,0;
 OnTimer599000:	callsub OnAnnounce,"1 second",20,0;
 OnTimer600000:
-	set .@map$, instance_mapname("1@ma_b");
+	.@map$ = instance_mapname("1@ma_b");
 	mapannounce .@map$,"Bakonawa has escaped deep into the lake.",bc_map,"0xffff00"; //FW_NORMAL 20 0 0
 	donpcevent instance_npcname("Taho#Fail")+"::OnStart";
 	killmonster .@map$,instance_npcname("#Bakonawan3")+"::OnMyMobDead";
@@ -440,17 +440,17 @@ OnTimer600000:
 	stopnpctimer;
 	end;
 OnMobSpawn:
-	set .@label$, instance_npcname("#Bakonawan3-1")+"::OnMyMobDead";
-	set .@map$, instance_mapname("1@ma_b");
+	.@label$ = instance_npcname("#Bakonawan3-1")+"::OnMyMobDead";
+	.@map$ = instance_mapname("1@ma_b");
 	killmonster .@map$,.@label$;
-	set .@mob_dead_num, mobcount(.@map$,.@label$);
+	.@mob_dead_num = mobcount(.@map$,.@label$);
 	if (.@mob_dead_num < 50) {
-		set .@mob_rg, 50 - .@mob_dead_num;
+		.@mob_rg = 50 - .@mob_dead_num;
 		if (.@mob_rg > getarg(0))
-			set .@mob_rg, getarg(0);
+			.@mob_rg = getarg(0);
 		while(1) {
 			areamonster .@map$,74,74,82,74,"Bakonawa's Puppet",2334,1,.@label$;
-			set .@mob_dead_num, mobcount(.@map$,.@label$);
+			.@mob_dead_num = mobcount(.@map$,.@label$);
 			if (.@mob_dead_num >= .@mob_rg) {
 				break;
 			}

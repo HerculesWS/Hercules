@@ -63,13 +63,13 @@ $@vfund_*_extra
 -	script	#invest_timer	-1,{
 OnClock0000:	// Open investments on Wed (1 hour after WoE)
 	if (gettime(4) == 3 && !agitcheck()) {
-		set $2011_agit_invest,1;
+		$2011_agit_invest = 1;
 		donpcevent "#fund_master::OnInvest_start";
 	}
 	end;
 OnClock1200:	// Close investments on Fri (60 hours after investments open)
 	if (gettime(4) == 5 && !agitcheck()) {
-		set $2011_agit_invest,2;
+		$2011_agit_invest = 2;
 		donpcevent "#fund_master::OnInvest_stop";
 	}
 	end;
@@ -84,9 +84,9 @@ OnClock2000:	// Close dungeons on Tues (1 hour before WoE)
 }
 
 function	script	F_Invest_Status	{
-	set .@day, gettime(4);
-	set .@hour, gettime(3);
-	set .@minute, gettime(2);
+	.@day = gettime(4);
+	.@hour = gettime(3);
+	.@minute = gettime(2);
 
 	// Inactive.
 	if (agitcheck())
@@ -123,13 +123,13 @@ function	script	F_Invest_Abyss	{
 		next;
 		switch(select("1 unit 10,000 Zeny:10 units 100,000 Zeny:50 units 500,000 Zeny:Another amount:Cancel")) {
 		case 1:
-			set .@units,1;
+			.@units = 1;
 			break;
 		case 2:
-			set .@units,10;
+			.@units = 10;
 			break;
 		case 3:
-			set .@units,50;
+			.@units = 50;
 			break;
 		case 4:
 			mes getarg(1);
@@ -154,7 +154,7 @@ function	script	F_Invest_Abyss	{
 			mes "Canceled.";
 			close;
 		}
-		set .@zeny, .@units * 10000;
+		.@zeny = .@units * 10000;
 		if (Zeny < .@zeny) {
 			mes getarg(1);
 			mes "You do not have enough money.";
@@ -174,10 +174,10 @@ function	script	F_Invest_Abyss	{
 		next;
 		switch(select("1 Investment Certificate:5 Investment Certificates:Another amount:Cancel")) {
 		case 1:
-			set .@tickets,1;
+			.@tickets = 1;
 			break;
 		case 2:
-			set .@tickets,5;
+			.@tickets = 5;
 			break;
 		case 3:
 			mes getarg(1);
@@ -207,7 +207,7 @@ function	script	F_Invest_Abyss	{
 			mes "Looks like you have fewer Investment Certificates than you want to submit.";
 			close;
 		}
-		set .@units, .@tickets * 10;
+		.@units = .@tickets * 10;
 		mes getarg(1);
 		mes .@tickets+" Investment Certificate"+((.@tickets == 1)?" is":"s are")+" the same as an investment of "+.@units+" units ("+((.@units < 100)?.@units:insertchar(""+.@units,",",1))+"0,000z)"+getarg(2,"")+".";
 		mes "Not much but this is a small gift. You can exchange it with items in Malangdo.";
@@ -227,9 +227,9 @@ function	script	F_Invest_Abyss	{
 prt_gld,1,1,0	script	#fund_master	CLEAR_NPC,{
 	end;
 OnInit:
-	set .@invest_status, callfunc("F_Invest_Status");
+	.@invest_status = callfunc("F_Invest_Status");
 	if (.@invest_status == 1) {
-		set $2011_agit_invest,1;
+		$2011_agit_invest = 1;
 		end;
 	}
 	if ((.@invest_status == 2 && $2011_agit_invest == 1) ||
@@ -239,22 +239,22 @@ OnInit:
 	}
 	end;
 OnCalculate_Election:
-	set .@force_vote,1;
+	.@force_vote = 1;
 OnCalculate:
 	setarray .@cas$[0],"prt","pay","gef","alde";
-	for(set .@i,0; .@i<4; set .@i,.@i+1) {
+	for(.@i = 0; .@i<4; ++.@i) {
 		// All funds per realm are summed.
-		set .@funds[.@i], getd("$fund_"+.@cas$[.@i]+"01")+getd("$fund_"+.@cas$[.@i]+"02")+getd("$fund_"+.@cas$[.@i]+"03")+getd("$fund_"+.@cas$[.@i]+"04")+getd("$fund_"+.@cas$[.@i]+"05")+getd("$fund_"+.@cas$[.@i]+"_extra");
+		.@funds[.@i] = getd("$fund_"+.@cas$[.@i]+"01")+getd("$fund_"+.@cas$[.@i]+"02")+getd("$fund_"+.@cas$[.@i]+"03")+getd("$fund_"+.@cas$[.@i]+"04")+getd("$fund_"+.@cas$[.@i]+"05")+getd("$fund_"+.@cas$[.@i]+"_extra");
 
 		// 70,000,000z opens Hall of Abyss and F2.
 		if (.@funds[.@i] >= 7000) {
 			setd "$"+.@cas$[.@i]+"_invest_result",3;
-			set .@total_7000,1;
+			.@total_7000 = 1;
 		}
 		// 20,000,000z opens F2 and a chance for Hall of Abyss.
 		else if (.@funds[.@i] >= 2000) {
 			setd "$"+.@cas$[.@i]+"_invest_result",2;
-			set .@total_2000,1;
+			.@total_2000 = 1;
 		}
 		// Anything below that opens nothing.
 		else
@@ -265,20 +265,20 @@ OnCalculate:
 		end;
 	// No further actions if any realm hits 70,000,000z.
 	if (.@total_7000) {
-		set $2011_agit_invest,4;
+		$2011_agit_invest = 4;
 		end;
 	}
 	// Otherwise, highest investment above 20,000,000z opens Hall of Abyss.
-	set .@max, .@funds[0];
-	for(set .@i,1; .@i<4; set .@i,.@i+1) {
+	.@max = .@funds[0];
+	for(.@i = 1; .@i<4; ++.@i) {
 		if (.@funds[.@i] > .@max) {
-			set .@max, .@funds[.@i];
-			set .@ele, .@i;
+			.@max = .@funds[.@i];
+			.@ele = .@i;
 			deletearray .@rand$[0], getarraysize(.@rand$);
 		} else if (.@funds[.@i] == .@max && .@funds[.@i] >= 2000) {
 			if (!getarraysize(.@rand$))
-				set .@rand$[0], .@cas$[.@ele];
-			set .@rand$[getarraysize(.@rand$)], .@cas$[.@i];
+				.@rand$[0] = .@cas$[.@ele];
+			.@rand$[getarraysize(.@rand$)] = .@cas$[.@i];
 		}
 	}
 	if (.@max < 2000)
@@ -287,62 +287,62 @@ OnCalculate:
 
 		// Tie: declare a random winner.
 		if (!.@force_vote) {
-			set .@i, rand(getarraysize(.@rand$));
+			.@i = rand(getarraysize(.@rand$));
 			setd "$"+.@rand$[.@i]+"_invest_result",3;
-			set $2011_agit_invest,4;
+			$2011_agit_invest = 4;
 			end;
 		}
 
 		// Tie: initiate a 30-minute election.
-		set .@str$, implode(.@rand$,"|");
-		for(set .@i,0; .@i<4; set .@i,.@i+1) {
+		.@str$ = implode(.@rand$,"|");
+		for(.@i = 0; .@i<4; ++.@i) {
 			if (compare(.@str$,.@cas$[.@i]))
-				set .@election, .@election | (1<<.@i);
+				.@election = .@election | (1<<.@i);
 		}
 		switch(.@election) {
-			case 3:  set $2011_agit_invest,11; break; //Prontera|Payon
-			case 9:  set $2011_agit_invest,12; break; //Prontera|Al De Baran
-			case 5:  set $2011_agit_invest,13; break; //Prontera|Geffen
-			case 10: set $2011_agit_invest,14; break; //Al De Baran|Payon
-			case 6:  set $2011_agit_invest,15; break; //Geffen|Payon
-			case 12: set $2011_agit_invest,16; break; //Al De Baran|Geffen
-			case 11: set $2011_agit_invest,17; break; //Prontera|Payon|Al De Baran
-			case 7:  set $2011_agit_invest,18; break; //Prontera|Payon|Geffen
-			case 13: set $2011_agit_invest,19; break; //Prontera|Al De Baran|Geffen
-			case 14: set $2011_agit_invest,20; break; //Al De Baran|Payon|Geffen
-			case 15: set $2011_agit_invest,21; break; //Prontera|Payon|Al De Baran|Geffen
+			case 3:  $2011_agit_invest = 11; break; //Prontera|Payon
+			case 9:  $2011_agit_invest = 12; break; //Prontera|Al De Baran
+			case 5:  $2011_agit_invest = 13; break; //Prontera|Geffen
+			case 10: $2011_agit_invest = 14; break; //Al De Baran|Payon
+			case 6:  $2011_agit_invest = 15; break; //Geffen|Payon
+			case 12: $2011_agit_invest = 16; break; //Al De Baran|Geffen
+			case 11: $2011_agit_invest = 17; break; //Prontera|Payon|Al De Baran
+			case 7:  $2011_agit_invest = 18; break; //Prontera|Payon|Geffen
+			case 13: $2011_agit_invest = 19; break; //Prontera|Al De Baran|Geffen
+			case 14: $2011_agit_invest = 20; break; //Al De Baran|Payon|Geffen
+			case 15: $2011_agit_invest = 21; break; //Prontera|Payon|Al De Baran|Geffen
 		}
 		if ($2011_agit_invest >= 11)
 			donpcevent "Revoting Manager#Invest1::OnStart";
 		end;
 	} else {
 		setd "$"+.@cas$[.@ele]+"_invest_result",3;
-		set $2011_agit_invest,4;
+		$2011_agit_invest = 4;
 		end;
 	}
 	end;
 OnInvest_start:
 	announce "From now on, we are going to start the investments to connect the 'Abyss Gate' in the WOE areas: Valkyrie Realm, Greenwood Lake, Luina, Britoniah.",bc_all,0xFF0000; //FW_NORMAL 10
-	set $fund_prt01,0;
-	set $fund_prt02,0;
-	set $fund_prt03,0;
-	set $fund_prt04,0;
-	set $fund_prt05,0;
-	set $fund_pay01,0;
-	set $fund_pay02,0;
-	set $fund_pay03,0;
-	set $fund_pay04,0;
-	set $fund_pay05,0;
-	set $fund_gef01,0;
-	set $fund_gef02,0;
-	set $fund_gef03,0;
-	set $fund_gef04,0;
-	set $fund_gef05,0;
-	set $fund_alde01,0;
-	set $fund_alde02,0;
-	set $fund_alde03,0;
-	set $fund_alde04,0;
-	set $fund_alde05,0;
+	$fund_prt01 = 0;
+	$fund_prt02 = 0;
+	$fund_prt03 = 0;
+	$fund_prt04 = 0;
+	$fund_prt05 = 0;
+	$fund_pay01 = 0;
+	$fund_pay02 = 0;
+	$fund_pay03 = 0;
+	$fund_pay04 = 0;
+	$fund_pay05 = 0;
+	$fund_gef01 = 0;
+	$fund_gef02 = 0;
+	$fund_gef03 = 0;
+	$fund_gef04 = 0;
+	$fund_gef05 = 0;
+	$fund_alde01 = 0;
+	$fund_alde02 = 0;
+	$fund_alde03 = 0;
+	$fund_alde04 = 0;
+	$fund_alde05 = 0;
 	donpcevent "Investment_total#fund00::OnEnable";
 	end;
 OnInvest_stop:
@@ -353,35 +353,35 @@ OnInvest_stop:
 OnResult:
 	announce "We've got the results of the investments for the 'Abyss Gate'. You can check through the Investment Status Board in each WOE area.",bc_all,0xFF0000; //FW_NORMAL 10
 	if ($2011_agit_invest == 4) {
-		set $fund_prt01,0;
-		set $fund_prt02,0;
-		set $fund_prt03,0;
-		set $fund_prt04,0;
-		set $fund_prt05,0;
-		set $fund_prt_extra,0;
-		set $fund_pay01,0;
-		set $fund_pay02,0;
-		set $fund_pay03,0;
-		set $fund_pay04,0;
-		set $fund_pay05,0;
-		set $fund_pay_extra,0;
-		set $fund_gef01,0;
-		set $fund_gef02,0;
-		set $fund_gef03,0;
-		set $fund_gef04,0;
-		set $fund_gef05,0;
-		set $fund_gef_extra,0;
-		set $fund_alde01,0;
-		set $fund_alde02,0;
-		set $fund_alde03,0;
-		set $fund_alde04,0;
-		set $fund_alde05,0;
-		set $fund_alde_extra,0;
+		$fund_prt01 = 0;
+		$fund_prt02 = 0;
+		$fund_prt03 = 0;
+		$fund_prt04 = 0;
+		$fund_prt05 = 0;
+		$fund_prt_extra = 0;
+		$fund_pay01 = 0;
+		$fund_pay02 = 0;
+		$fund_pay03 = 0;
+		$fund_pay04 = 0;
+		$fund_pay05 = 0;
+		$fund_pay_extra = 0;
+		$fund_gef01 = 0;
+		$fund_gef02 = 0;
+		$fund_gef03 = 0;
+		$fund_gef04 = 0;
+		$fund_gef05 = 0;
+		$fund_gef_extra = 0;
+		$fund_alde01 = 0;
+		$fund_alde02 = 0;
+		$fund_alde03 = 0;
+		$fund_alde04 = 0;
+		$fund_alde05 = 0;
+		$fund_alde_extra = 0;
 	} else if ($2011_agit_invest == 2)
 		donpcevent "#fund_master::OnCalculate";
 	end;
 OnReset:
-	set $2011_agit_invest,0;
+	$2011_agit_invest = 0;
 	donpcevent "Investment_total#fund00::OnReset";
 	end;
 }
@@ -412,13 +412,13 @@ OnInit:
 		initnpctimer;
 		donpcevent "Investment_total#fund00::OnVarInit";
 	} else {
-		set $agit_result_timer,0;
-		set $agit_result_notice,0;
+		$agit_result_timer = 0;
+		$agit_result_notice = 0;
 	}
 	end;
 OnVarInit:
 	setarray .@cas$[0],"prt","pay","gef","alde";
-	for(set .@i,0; .@i<4; set .@i,.@i+1) {
+	for(.@i = 0; .@i<4; ++.@i) {
 		setd "$@vfund_"+.@cas$[.@i]+"01", getd("$fund_"+.@cas$[.@i]+"01");
 		setd "$@vfund_"+.@cas$[.@i]+"02", getd("$fund_"+.@cas$[.@i]+"02");
 		setd "$@vfund_"+.@cas$[.@i]+"03", getd("$fund_"+.@cas$[.@i]+"03");
@@ -428,13 +428,13 @@ OnVarInit:
 	}
 	end;
 OnEnable:
-	set $agit_result_timer,0;
-	set $agit_result_notice,0;
+	$agit_result_timer = 0;
+	$agit_result_notice = 0;
 	initnpctimer;
 	end;
 OnReset:
-	set $agit_result_timer,0;
-	set $agit_result_notice,0;
+	$agit_result_timer = 0;
+	$agit_result_notice = 0;
 	stopnpctimer;
 	end;
 OnTimerReset:
@@ -443,11 +443,11 @@ OnTimerReset:
 OnTimer3600000:
 	if (callfunc("F_Invest_Status") == 1) {
 		if ($agit_result_timer < 59) {
-			set $agit_result_timer, $agit_result_timer+1;
+			$agit_result_timer = $agit_result_timer+1;
 
 			// Trigger on multiples of 5 up to 55, and 58.
 			if ($agit_result_timer % 10 == 5 || $agit_result_timer % 10 == 0 || $agit_result_timer == 58) {
-				set $agit_result_notice, $agit_result_notice+1;
+				$agit_result_notice = $agit_result_notice+1;
 				donpcevent "Investment_total#fund00::OnVarInit";
 				announce "No. "+$agit_result_notice+" Interim statement is now available. You can check through the Investment Status Board in each WOE area.",bc_all,0xFF0000; //FW_NORMAL 10
 			}
@@ -468,7 +468,7 @@ prt_gld,164,98,3	script	Revoting Manager#Invest1	4_M_BOSSCAT,{
 	mes "Please wait for our results announcement.";
 	close;
 OnInit:
-	set .@invest_status, callfunc("F_Invest_Status");
+	.@invest_status = callfunc("F_Invest_Status");
 	if (.@invest_status == 2 && $2011_agit_invest >= 11 && $agit_revoting_timer < 30) {
 		donpcevent "Revoting Manager#Invest2::OnEnable";
 		initnpctimer;
@@ -491,26 +491,26 @@ OnCalculate:
 		case 21: setarray.@cas$[0],"prt","pay","alde","gef"; break;
 		default: end;
 	}
-	set .@max, getd("$fund_"+.@cas$[0]+"_extra");
-	for(set .@i,1; .@i<getarraysize(.@cas$); set .@i,.@i+1) {
-		set .@funds, getd("$fund_"+.@cas$[.@i]+"_extra");
+	.@max = getd("$fund_"+.@cas$[0]+"_extra");
+	for(.@i = 1; .@i<getarraysize(.@cas$); ++.@i) {
+		.@funds = getd("$fund_"+.@cas$[.@i]+"_extra");
 		if (.@funds > .@max) {
-			set .@max, .@funds;
-			set .@ele, .@i;
+			.@max = .@funds;
+			.@ele = .@i;
 			deletearray .@rand$[0], getarraysize(.@rand$);
 		} else if (.@funds == .@max) {
 			if (!getarraysize(.@rand$))
-				set .@rand$[0], .@cas$[.@ele];
-			set .@rand$[getarraysize(.@rand$)], .@cas$[.@i];
+				.@rand$[0] = .@cas$[.@ele];
+			.@rand$[getarraysize(.@rand$)] = .@cas$[.@i];
 		}
 	}
 	if (getarraysize(.@rand$)) {
-		set .@i, rand(getarraysize(.@rand$));
+		.@i = rand(getarraysize(.@rand$));
 		setd "$"+.@rand$[.@i]+"_invest_result",3;
 	} else
 		setd "$"+.@cas$[.@ele]+"_invest_result",3;
-	set $2011_agit_invest,4;
-	set $agit_revoting_timer,0;
+	$2011_agit_invest = 4;
+	$agit_revoting_timer = 0;
 	end;
 OnEnable:
 	enablenpc "Revoting Manager#Invest1";
@@ -530,15 +530,15 @@ OnTimerReset:
 	initnpctimer;
 	end;
 OnTimer60000:
-	set .@revote, $agit_revoting_timer;
+	.@revote = $agit_revoting_timer;
 	if (.@revote < 30) {
-		set $agit_revoting_timer, $agit_revoting_timer+1;
+		$agit_revoting_timer = $agit_revoting_timer+1;
 		donpcevent "Revoting Manager#Invest1::OnTimerReset";
 	} else if (.@revote == 30) {
 		announce "Cat Paw Merchant Guild: Now we are going to close the additional vote. We will announce the results soon.",bc_all,0xFF0000; //FW_NORMAL 10
 		donpcevent "Revoting Manager#Invest2::OnDisable";
 		donpcevent "Revoting Manager#Invest1::OnEnable";
-		set $agit_revoting_timer, $agit_revoting_timer+1;
+		$agit_revoting_timer = $agit_revoting_timer+1;
 		donpcevent "Revoting Manager#Invest1::OnTimerReset";
 	} else if (.@revote == 31) {
 		donpcevent "Revoting Manager#Invest1::OnCalculate";
@@ -553,7 +553,7 @@ OnTimer60000:
 }
 
 prt_gld,164,98,3	script	Revoting Manager#Invest2	4_M_BOSSCAT,{
-	set .@invest, $2011_agit_invest;
+	.@invest = $2011_agit_invest;
 	if (.@invest < 11) {
 		mes "[Revoting Manager]";
 		mes "No! This is not the time to take a revote.";
@@ -584,17 +584,17 @@ prt_gld,164,98,3	script	Revoting Manager#Invest2	4_M_BOSSCAT,{
 
 	// Create menu.
 	explode(.@candidates$, callsub(OnGetCandidates, .@invest),"|");
-	for(set .@i,0; .@i<getarraysize(.@candidates$); set .@i,.@i+1) {
+	for(.@i = 0; .@i<getarraysize(.@candidates$); ++.@i) {
 		if (.@candidates$[.@i] == "alde")
-			set .@menu$[.@i],"Luina";
+			.@menu$[.@i] = "Luina";
 		else if (.@candidates$[.@i] == "gef")
-			set .@menu$[.@i],"Britoniah";
+			.@menu$[.@i] = "Britoniah";
 		else if (.@candidates$[.@i] == "pay")
-			set .@menu$[.@i],"Greenwood Lake";
+			.@menu$[.@i] = "Greenwood Lake";
 		else if (.@candidates$[.@i] == "prt")
-			set .@menu$[.@i],"Valkyrie Realm";
+			.@menu$[.@i] = "Valkyrie Realm";
 	}
-	set .@vote, select(implode(.@menu$,":"))-1;
+	.@vote = select(implode(.@menu$,":"))-1;
 
 	mes "[Revoting Manager]";
 	mes "You've voted for "+.@menu$[.@vote]+".";
@@ -644,22 +644,22 @@ OnTimer14000:
 	end;
 OnTimer20000:
 	explode(.@candidates$, callsub(OnGetCandidates, $2011_agit_invest),"|");
-	for(set .@i,0; .@i<getarraysize(.@candidates$); set .@i,.@i+1) {
+	for(.@i = 0; .@i<getarraysize(.@candidates$); ++.@i) {
 		if (.@candidates$[.@i] == "alde")
-			set .@choices$[.@i],"Luina";
+			.@choices$[.@i] = "Luina";
 		else if (.@candidates$[.@i] == "gef")
-			set .@choices$[.@i],"Britoniah";
+			.@choices$[.@i] = "Britoniah";
 		else if (.@candidates$[.@i] == "pay")
-			set .@choices$[.@i],"Greenwood Lake";
+			.@choices$[.@i] = "Greenwood Lake";
 		else if (.@candidates$[.@i] == "prt")
-			set .@choices$[.@i],"Valkyrie Realm";
+			.@choices$[.@i] = "Valkyrie Realm";
 	}
 	announce "Cat Paw Merchant Guild: The candidates for the additional vote are... "+implode(.@choices$," vs. ")+".",bc_all,0xFF0000; //FW_NORMAL 10
-	set $fund_prt_extra,0;
-	set $fund_pay_extra,0;
-	set $fund_gef_extra,0;
-	set $fund_alde_extra,0;
-	set $agit_revoting_timer,0;
+	$fund_prt_extra = 0;
+	$fund_pay_extra = 0;
+	$fund_gef_extra = 0;
+	$fund_alde_extra = 0;
+	$agit_revoting_timer = 0;
 	donpcevent "Revoting Manager#Invest2::OnEnable";
 	stopnpctimer;
 	end;
@@ -672,15 +672,15 @@ prtg_cas01,2,2,0	script	Abrai	1_M_JOBTESTER,{
 OnAgitInvest:
 	switch(callfunc("F_Invest_Status")) {
 	case 0:
-		set $2011_agit_invest,0;
+		$2011_agit_invest = 0;
 		donpcevent "#fund_master::OnReset";
 		break;
 	case 1:
-		set $2011_agit_invest,1;
+		$2011_agit_invest = 1;
 		donpcevent "#fund_master::OnInvest_start";
 		break;
 	case 2:
-		set $2011_agit_invest,2;
+		$2011_agit_invest = 2;
 		donpcevent "#fund_master::OnInvest_stop";
 		break;
 	case 3:
@@ -696,27 +696,27 @@ OnAgitInvest:
 -	script	Cat Paw Merchant Guild	-1,{
 
 	if (compare(strnpcinfo(4),"alde")) {
-		set .@npc$,"alde";
-		set .@name$,"Megrez";
-		set .@realm$,"Luina";
-		set .@intro$,"Luina Branch Manager in Al De Baran";
+		.@npc$ = "alde";
+		.@name$ = "Megrez";
+		.@realm$ = "Luina";
+		.@intro$ = "Luina Branch Manager in Al De Baran";
 	} else if (compare(strnpcinfo(4),"gef")) {
-		set .@npc$,"gef";
-		set .@name$,"Meraq";
-		set .@realm$,"Britoniah";
-		set .@intro$,"Britoniah Branch Manager";
+		.@npc$ = "gef";
+		.@name$ = "Meraq";
+		.@realm$ = "Britoniah";
+		.@intro$ = "Britoniah Branch Manager";
 	} else if (compare(strnpcinfo(4),"pay")) {
-		set .@npc$,"pay";
-		set .@name$,"Phecda";
-		set .@realm$,"Greenwood Lake";
-		set .@intro$,"Payon Greenwood Lake Branch Manager";
+		.@npc$ = "pay";
+		.@name$ = "Phecda";
+		.@realm$ = "Greenwood Lake";
+		.@intro$ = "Payon Greenwood Lake Branch Manager";
 	} else if (compare(strnpcinfo(4),"prt")) {
-		set .@npc$,"prt";
-		set .@name$,"Dubae";
-		set .@realm$,"Valkyrie Realm";
-		set .@intro$,"Prontera Valkyrie Realm Branch Manager";
+		.@npc$ = "prt";
+		.@name$ = "Dubae";
+		.@realm$ = "Valkyrie Realm";
+		.@intro$ = "Prontera Valkyrie Realm Branch Manager";
 	}
-	set .@n$,"["+.@name$+"]";
+	.@n$ = "["+.@name$+"]";
 
 	mes .@n$;
 	mes "I'm "+.@name$+", the "+.@intro$+" of the Cat Paw Merchant Guild.";
@@ -890,23 +890,23 @@ OnAgitInvest:
 			mes "Please come back during the investment duration.";
 			close;
 		}
-		set .@guild, getcharid(2);
-		for(set .@i,1; .@i<=5; set .@i,.@i+1) {
-			set .@castle_name$[.@i], getcastlename(.@npc$+"g_cas0"+.@i);
-			set .@owner_id[.@i], getcastledata(.@npc$+"g_cas0"+.@i,1);
-			set .@owner_name$[.@i], getguildname(.@owner_id[.@i]);
+		.@guild = getcharid(2);
+		for(.@i = 1; .@i<=5; ++.@i) {
+			.@castle_name$[.@i] = getcastlename(.@npc$+"g_cas0"+.@i);
+			.@owner_id[.@i] = getcastledata(.@npc$+"g_cas0"+.@i,1);
+			.@owner_name$[.@i] = getguildname(.@owner_id[.@i]);
 			if (.@guild == .@owner_id[.@i]) {
-				set .@menu$, .@menu$+.@castle_name$[.@i]+" ["+.@owner_name$[.@i]+"] Guild:";
-				set .@castles_owned, .@castles_owned | (1<<.@i);
+				.@menu$ = .@menu$+.@castle_name$[.@i]+" ["+.@owner_name$[.@i]+"] Guild:";
+				.@castles_owned = .@castles_owned | (1<<.@i);
 			} else
-				set .@menu$, .@menu$+"^aaaaaaNot the guild that claimed "+.@castle_name$[.@i]+"^000000:";
+				.@menu$ = .@menu$+"^aaaaaaNot the guild that claimed "+.@castle_name$[.@i]+"^000000:";
 		}
 		mes .@n$;
 		mes "Would you like to invest in the ^4d4dff"+.@realm$+"^000000 region?";
 		mes "If there is a castle occupied already, you will invest in the castle and the guild that is occupying it.";
 		next;
 		if (.@castles_owned) {
-			set .@i, select(.@menu$+"Cancel");
+			.@i = select(.@menu$+"Cancel");
 			if (.@i == 6) {
 				mes .@n$;
 				mes "Canceled.";
@@ -938,34 +938,34 @@ OnAgitInvest:
 -	script	Gate Manager#realm	-1,{
 
 	if (compare(strnpcinfo(4),"alde")) {
-		set .@npc$,"alde";
-		set .@name$,"Alkor";
-		set .@gate$,"Hero's Tears";
-		set .@realm$,"Luina";
+		.@npc$ = "alde";
+		.@name$ = "Alkor";
+		.@gate$ = "Hero's Tears";
+		.@realm$ = "Luina";
 	} else if (compare(strnpcinfo(4),"gef")) {
-		set .@npc$,"gef";
-		set .@name$,"Mizar";
-		set .@gate$,"Hill of the Dead";
-		set .@realm$,"Britoniah";
+		.@npc$ = "gef";
+		.@name$ = "Mizar";
+		.@gate$ = "Hill of the Dead";
+		.@realm$ = "Britoniah";
 	} else if (compare(strnpcinfo(4),"pay")) {
-		set .@npc$,"pay";
-		set .@name$,"Alkaid";
-		set .@gate$,"Winds of the Ancient";
-		set .@realm$,"Greenwood Lake";
+		.@npc$ = "pay";
+		.@name$ = "Alkaid";
+		.@gate$ = "Winds of the Ancient";
+		.@realm$ = "Greenwood Lake";
 	} else if (compare(strnpcinfo(4),"prt")) {
-		set .@npc$,"prt";
-		set .@name$,"Arios";
-		set .@gate$,"Way of the Warrior";
-		set .@realm$,"Valkyrie Realm";
+		.@npc$ = "prt";
+		.@name$ = "Arios";
+		.@gate$ = "Way of the Warrior";
+		.@realm$ = "Valkyrie Realm";
 	}
-	set .@n$,"["+.@name$+"]";
+	.@n$ = "["+.@name$+"]";
 
 	if (callfunc("F_Invest_Status") != 3) {
 		mes .@n$;
 		mes "There are currently no connected dungeon gates.";
 		close;
 	}
-	set .@status, getd("$"+.@npc$+"_invest_result");
+	.@status = getd("$"+.@npc$+"_invest_result");
 	if (.@status == 3) {
 		mes .@n$;
 		mes "We've successfully connected the Abyss Gate ["+.@gate$+"] with the help from your investment.";
@@ -975,7 +975,7 @@ OnAgitInvest:
 		mes "Please visit as often as possible since the entrance fee is saved as an investment for the region.";
 		mes "Do you want to enter the Agit dungeon?";
 		next;
-		set .@i, select(.@realm$+" Dungeon 1F - 10000z:"+.@realm$+" Dungeon 2F - 10000z:Cancel");
+		.@i = select(.@realm$+" Dungeon 1F - 10000z:"+.@realm$+" Dungeon 2F - 10000z:Cancel");
 		if (.@i == 3) {
 			mes .@n$;
 			mes "Canceled.";
@@ -1017,40 +1017,40 @@ OnAgitInvest:
 }
 
 -	script	Investment Status Board	-1,{
-	set .@invest_status, callfunc("F_Invest_Status");
+	.@invest_status = callfunc("F_Invest_Status");
 	if (.@invest_status == 1) {
 		if (compare(strnpcinfo(4),"alde")) {
-			set .@npc$,"alde";
-			set .@realm$,"Luina";
+			.@npc$ = "alde";
+			.@realm$ = "Luina";
 		} else if (compare(strnpcinfo(4),"gef")) {
-			set .@npc$,"gef";
-			set .@realm$,"Britoniah";
+			.@npc$ = "gef";
+			.@realm$ = "Britoniah";
 		} else if (compare(strnpcinfo(4),"pay")) {
-			set .@npc$,"pay";
-			set .@realm$,"Greenwood Lake";
+			.@npc$ = "pay";
+			.@realm$ = "Greenwood Lake";
 		} else if (compare(strnpcinfo(4),"prt")) {
-			set .@npc$,"prt";
-			set .@realm$,"Valkyrie Realm";
+			.@npc$ = "prt";
+			.@realm$ = "Valkyrie Realm";
 		}
-		set .@notice, $agit_result_notice;
+		.@notice = $agit_result_notice;
 		if (.@notice < 1 || .@notice > 12) {
 			mes "There are currently no investment sums available.";
 			close;
 		} else if (.@notice == 1)
-			set .@str$,"1st";
+			.@str$ = "1st";
 		else if (.@notice == 2)
-			set .@str$,"2nd";
+			.@str$ = "2nd";
 		else if (.@notice == 3)
-			set .@str$,"3rd";
+			.@str$ = "3rd";
 		else
-			set .@str$,.@notice+"th";
+			.@str$ = .@notice+"th";
 		mes .@str$+" total (unit in 10,000z)";
-		for(set .@i,1; .@i<=5; set .@i,.@i+1) {
-			set .@map$, .@npc$+"g_cas0"+.@i;
-			set .@fund[.@i], getd("$@vfund_"+.@npc$+"0"+.@i);
+		for(.@i = 1; .@i<=5; ++.@i) {
+			.@map$ = .@npc$+"g_cas0"+.@i;
+			.@fund[.@i] = getd("$@vfund_"+.@npc$+"0"+.@i);
 			mes getcastlename(.@map$)+" "+getguildname(getcastledata(.@map$,1))+" Guild: "+.@fund[.@i];
 		}
-		set .@fund[0], getd("$@vfund_"+.@npc$+"_extra");
+		.@fund[0] = getd("$@vfund_"+.@npc$+"_extra");
 		mes .@realm$+" normal: "+.@fund[0];
 		mes .@realm$+" Investment Grand Total: "+(.@fund[0]+.@fund[1]+.@fund[2]+.@fund[3]+.@fund[4]+.@fund[5]);
 		close;
@@ -1063,7 +1063,7 @@ OnAgitInvest:
 		setarray .@invest_result[0], $prt_invest_result,$pay_invest_result,$gef_invest_result,$alde_invest_result;
 		setarray .@invest_region$[0],  "Valkyrie Realm",  "Greenwood Lake",       "Britoniah",            "Luina";
 		mes "!- Investment Results of All Agit Regions -!";
-		for(set .@i,0; .@i<4; set .@i,.@i+1) {
+		for(.@i = 0; .@i<4; ++.@i) {
 			if (.@invest_result[.@i] == 1)
 				mes "^aaaaaa["+.@invest_region$[.@i]+"] below minimum^000000";
 			else if (.@invest_result[.@i] == 2) {
@@ -1087,22 +1087,22 @@ OnAgitInvest:
 //============================================================
 -	script	Gate Manager#castle	-1,{
 
-	set .@id, atoi(charat(strnpcinfo(2),getstrlen(strnpcinfo(2))-1));
+	.@id = atoi(charat(strnpcinfo(2),getstrlen(strnpcinfo(2))-1));
 	if (compare(strnpcinfo(2),"alde")) {
-		set .@npc$,"alde";
-		set .@realm$,"Luina";
+		.@npc$ = "alde";
+		.@realm$ = "Luina";
 	} else if (compare(strnpcinfo(2),"gef")) {
-		set .@npc$,"gef";
-		set .@realm$,"Britoniah";
+		.@npc$ = "gef";
+		.@realm$ = "Britoniah";
 	} else if (compare(strnpcinfo(2),"pay")) {
-		set .@npc$,"pay";
-		set .@realm$,"Greenwood Lake";
+		.@npc$ = "pay";
+		.@realm$ = "Greenwood Lake";
 	} else if (compare(strnpcinfo(2),"prt")) {
-		set .@npc$,"prt";
-		set .@realm$,"Valkyrie Realm";
+		.@npc$ = "prt";
+		.@realm$ = "Valkyrie Realm";
 	}
 
-	set .@GID, getcastledata(strnpcinfo(4),1);
+	.@GID = getcastledata(strnpcinfo(4),1);
 	if (getcharid(2) != .@GID) {
 		mes "[Gate Manager]";
 		mes "You don't seem to be the member of guild owning this castle.";
@@ -1231,9 +1231,9 @@ OnAgitInvest:
 	end;
 
 L_Enter:
-	set .@invest_status, callfunc("F_Invest_Status");
+	.@invest_status = callfunc("F_Invest_Status");
 	if (.@invest_status == 3) {
-		set .@status, getd("$"+getarg(2)+"_invest_result");
+		.@status = getd("$"+getarg(2)+"_invest_result");
 		if ((getarg(0) == 1 && .@status == 2) || .@status == 3)
 			return;
 		else {
@@ -1288,32 +1288,32 @@ malangdo,218,126,4	script	Cat Paw Merchants Notice	4_BOARD3,{
 			"Planting trees on Mellow Island","Ancient language research","Weapons made of sharp teeth","Toy boss doll 01",
 			"A tiger is just a cat after all","The shattered spear and shield?","Toy boss doll 02","Best in summer! Cold scales",
 			"Piece of Thanatos' armor","I hear Dragon Scales are tough 02","The identity of the creepy eye","If only I could see!";
-		set .@menu$, "Quit:"+implode(.@event1$[0],":");
+		.@menu$ = "Quit:"+implode(.@event1$[0],":");
 		while(1) {
-			set .@i, select(.@menu$)-1;
+			.@i = select(.@menu$)-1;
 			switch(.@i) {
 				case 0: close;
-				case 1: set .@str$,"2 Pieces of Queen's Wing"; break;
-				case 2: set .@str$,"2 Broken Crowns"; break;
-				case 3: set .@str$,"2 Fire Dragon Scales"; break;
-				case 4: set .@str$,"3 Mother's Nightmares"; break;
-				case 5: set .@str$,"5 Gemstones"; break;
-				case 6: set .@str$,"5 Heroic Emblems"; break;
-				case 7: set .@str$,"3 Taeguk Plates"; break;
-				case 8: set .@str$,"3 Broken Pharaoh Symbols and 3 Tutankhamen's Masks"; break;
-				case 9: set .@str$,"2 Pocket Watches"; break;
-				case 10: set .@str$,"3 Young Twigs"; break;
-				case 11: set .@str$,"5 Rossata Pieces"; break;
-				case 12: set .@str$,"5 Fangs of Garm"; break;
-				case 13: set .@str$,"3 Baphomet Dolls"; break;
-				case 14: set .@str$,"1 Tiger's Footskin and 5 Tiger Skins"; break;
-				case 15: set .@str$,"3 Broken Shield Pieces and 3 Shining Spear Blades"; break;
-				case 16: set .@str$,"3 Osiris Dolls"; break;
-				case 17: set .@str$,"1 Ice Scale"; break;
-				case 18: set .@str$,"1 Skeletal Armor Piece"; break;
-				case 19: set .@str$,"1 Darkred Scale Piece"; break;
-				case 20: set .@str$,"2 Wills of Red Darkness"; break;
-				case 21: set .@str$,"2 Foolishness of the Blind"; break;
+				case 1: .@str$ = "2 Pieces of Queen's Wing"; break;
+				case 2: .@str$ = "2 Broken Crowns"; break;
+				case 3: .@str$ = "2 Fire Dragon Scales"; break;
+				case 4: .@str$ = "3 Mother's Nightmares"; break;
+				case 5: .@str$ = "5 Gemstones"; break;
+				case 6: .@str$ = "5 Heroic Emblems"; break;
+				case 7: .@str$ = "3 Taeguk Plates"; break;
+				case 8: .@str$ = "3 Broken Pharaoh Symbols and 3 Tutankhamen's Masks"; break;
+				case 9: .@str$ = "2 Pocket Watches"; break;
+				case 10: .@str$ = "3 Young Twigs"; break;
+				case 11: .@str$ = "5 Rossata Pieces"; break;
+				case 12: .@str$ = "5 Fangs of Garm"; break;
+				case 13: .@str$ = "3 Baphomet Dolls"; break;
+				case 14: .@str$ = "1 Tiger's Footskin and 5 Tiger Skins"; break;
+				case 15: .@str$ = "3 Broken Shield Pieces and 3 Shining Spear Blades"; break;
+				case 16: .@str$ = "3 Osiris Dolls"; break;
+				case 17: .@str$ = "1 Ice Scale"; break;
+				case 18: .@str$ = "1 Skeletal Armor Piece"; break;
+				case 19: .@str$ = "1 Darkred Scale Piece"; break;
+				case 20: .@str$ = "2 Wills of Red Darkness"; break;
+				case 21: .@str$ = "2 Foolishness of the Blind"; break;
 			}
 			mes "["+.@event1$[.@i-1]+"]";
 			mes .@str$+" for one Cat Paw Merchants Investment Certificate.";
@@ -1389,7 +1389,7 @@ malangdo,218,123,1	script	Namis#invest	4_CAT_SAILOR2,4,4,{
 			"Planting trees on Mellow Island","Ancient language research","Weapons made of sharp teeth","Toy boss doll 01",
 			"A tiger is just a cat after all","The shattered spear and shield?","Toy boss doll 02","Best in summer! Cold scales",
 			"Piece of Thanatos' armor","I hear Dragon Scales are tough 02","The identity of the creepy eye","If only I could see!";
-		set .@i, select(implode(.@event1$[0],":"))-1;
+		.@i = select(implode(.@event1$[0],":"))-1;
 		switch(.@i+1) {
 			case 1: callsub L_Check,"2 Pieces of Queen's Wing",6326,2,"Wings of the Insect Queen? What a pitiful name. I would've given some cool names!",.@event1$[.@i];
 			case 2: callsub L_Check,"2 Broken Crowns",7754,2,"For crying out loud! Those cats working on these events must be playing around. Can't they think of a better name?",.@event1$[.@i];
@@ -1421,12 +1421,12 @@ malangdo,218,123,1	script	Namis#invest	4_CAT_SAILOR2,4,4,{
 	}
 	end;
 L_Check:
-	set .@args, getargcount();
+	.@args = getargcount();
 	if (.@args > 5) {
 		if (countitem(getarg(5)) < getarg(6))
-			set .@items,1; //incomplete
+			.@items = 1; //incomplete
 		else
-			set .@items,2; //complete
+			.@items = 2; //complete
 	}
 	if (countitem(getarg(1)) < getarg(2) || .@items == 1) {
 		mes "[Namis]";
@@ -1512,7 +1512,7 @@ malangdo,215,119,4	script	Thanks Ticket Machine	2_VENDING_MACHINE1,{
 			close;
 		}
 		delitem 6488,5; //Thanks_Invest_Ticket
-		set .@i, rand(1,10000);
+		.@i = rand(1,10000);
 		     if (.@i <= 100) callsub L_Bag,12531,1; //White_Potion_Box
 		else if (.@i <= 200) callsub L_Bag,12549,1; //White_Slim_Pot_Box2
 		else if (.@i <= 250) callsub L_Bag,11549,10; //Woe_Blue_Potion
@@ -1581,7 +1581,7 @@ malangdo,215,119,4	script	Thanks Ticket Machine	2_VENDING_MACHINE1,{
 			close;
 		}
 		delitem 6488,50; //Thanks_Invest_Ticket
-		set .@i, rand(1,10000);
+		.@i = rand(1,10000);
 		     if (.@i <= 100) callsub L_Bag,12531,1; //White_Potion_Box
 		else if (.@i <= 200) callsub L_Bag,12549,1; //White_Slim_Pot_Box2
 		else if (.@i <= 250) callsub L_Bag,11549,20; //Woe_Blue_Potion

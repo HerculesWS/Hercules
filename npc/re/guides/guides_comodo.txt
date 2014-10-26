@@ -23,7 +23,7 @@ comodo,322,178,4	script	Comodo Guide#01comodo::GuideComodo	8_F_GIRL,{
 	while (1) {
 		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel:About ^8B4513Comodo^000000")) {
 		case 1:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Tavern ]:[ Casino ]:[ Weapon & Armor Shop ]:[ Tool Shop ]:[ Campsite ]:[ Souvenir Vendor ]:[ East Cave Mao ]:[ West Cave Karu ]:[ North Cave Ruanda ]:[ Hula Dance Stage ]:[ Kafra Co. Western Branch ]:Previous Menu")) {
 				case 1:
@@ -86,13 +86,13 @@ comodo,322,178,4	script	Comodo Guide#01comodo::GuideComodo	8_F_GIRL,{
 					next;
 					break;
 				case 12:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
 			break;
 		case 2:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Chief's House ]:[ Bor Robin ]:[ Kafra Employee ]:[ Roaming Bard ]:Previous Menu")) {
 				case 1:
@@ -122,7 +122,7 @@ comodo,322,178,4	script	Comodo Guide#01comodo::GuideComodo	8_F_GIRL,{
 					next;
 					break;
 				case 5:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}

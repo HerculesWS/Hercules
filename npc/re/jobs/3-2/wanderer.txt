@@ -73,7 +73,7 @@ xmas,162,209,5	script	Aspiring Wanderer, Soy	4_F_06,{
 			mes "Right in front of the Christmas tree!";
 			mes "White snow, beautiful melody, and my captivating dance.";
 			mes "Don't you think it would be a great performance?";
-			set job_wan,1;
+			job_wan = 1;
 			close;
 		case 2:
 			mes "[Mimi]";
@@ -128,7 +128,7 @@ xmas,132,143,5	script	Performance Manager#wnd	4_M_06,{
 		mes "But I'm so overwhelmed that I might go crazy. Ahhhh~~!";
 		next;
 		while (1) {
-			set .@loop,0;
+			.@loop = 0;
 			switch(select("Sorry, I don't care.:What's the matter?:Why are you telling me this?")) {
 			case 1:
 				mes "[Performance Manager]";
@@ -142,7 +142,7 @@ xmas,132,143,5	script	Performance Manager#wnd	4_M_06,{
 				mes "Those people don't feel any responsibility..";
 				mes "We're all expecting them and I've promoted them a lot.";
 				next;
-				set .@loop,1;
+				.@loop = 1;
 				break;
 			case 3:
 				emotion e_ag;
@@ -155,7 +155,7 @@ xmas,132,143,5	script	Performance Manager#wnd	4_M_06,{
 			if (.@loop) break;
 		}
 		while (1) {
-			set .@loop,0;
+			.@loop = 0;
 			switch(select("Is there a problem?:Who do you mean?:It has nothing to do with me.")) {
 			case 1:
 				mes "[Performance Manager]";
@@ -169,7 +169,7 @@ xmas,132,143,5	script	Performance Manager#wnd	4_M_06,{
 				mes "Swing swing, dangling dangling!!";
 				mes "This is awful.";
 				next;
-				set .@loop,1;
+				.@loop = 1;
 				break;
 			case 2:
 				mes "[Performance Manager]";
@@ -187,7 +187,7 @@ xmas,132,143,5	script	Performance Manager#wnd	4_M_06,{
 			if (.@loop) break;
 		}
 		while (1) {
-			set .@loop,0;
+			.@loop = 0;
 			switch(select("Are you afraid of people?:The performers caused trouble?:Ignore him.")) {
 			case 1:
 				mes "[Performance Manager]";
@@ -207,7 +207,7 @@ xmas,132,143,5	script	Performance Manager#wnd	4_M_06,{
 				mes "Besides the money I spent for promoting and setting up the stage..";
 				mes "How can I handle all the angry people?";
 				next;
-				set .@loop,1;
+				.@loop = 1;
 				break;
 			case 3:
 				mes "[Performance Manager]";
@@ -270,7 +270,7 @@ xmas,132,143,5	script	Performance Manager#wnd	4_M_06,{
 		mes "[Performance Manager]";
 		mes "I don't know where Guitar Song is, but it is clear that he likes to visit the Comodo Casino!";
 		mes "Hu, Hurry up!! Oh, I really feel dizzy! Guitar Song!!!";
-		set job_wan,2;
+		job_wan = 2;
 		setquest 2218;
 		close;
 	} else if (job_wan == 2) {
@@ -358,7 +358,7 @@ comodo,140,86,5	script	Cheerless Maestro	4_M_MINSTREL,{
 		mes "I don't want to think about it. It just hurts my feelings.";
 		next;
 		mes "- Guitar Song is adamantly refusing to talk. What should I do to hear the story about <Nollio>? -";
-		set job_wan,3;
+		job_wan = 3;
 		close;
 	} else if (job_wan == 3) {
 		mes "[" + strcharinfo(0) + "]";
@@ -522,7 +522,7 @@ comodo,140,86,5	script	Cheerless Maestro	4_M_MINSTREL,{
 		mes "[Guitar Song]";
 		mes "Although she loses her temper easily, her dance is so wonderful....";
 		mes "I don't know what I am doing wrong.";
-		set job_wan,4;
+		job_wan = 4;
 		changequest 2218,2219;
 		next;
 		mes "[Guitar Song]";
@@ -546,7 +546,7 @@ comodo,140,86,5	script	Cheerless Maestro	4_M_MINSTREL,{
 		next;
 		mes "[Guitar Song]";
 		mes "I'll go there right away and scold her.";
-		set job_wan,9;
+		job_wan = 9;
 		close;
 	} else if (job_wan == 9) {
 		mes "[Guitar Song]";
@@ -669,7 +669,7 @@ hu_in01,305,251,5	script	Vacant Looking Lady#wnd	4_F_CAPEGIRL,{
 		next;
 		mes "[Vacant Looking Lady]";
 		mes "<Nollio> is over! Boo hoo hoo!";
-		set job_wan,5;
+		job_wan = 5;
 		close;
 	} else if (job_wan == 5) {
 		emotion e_sob;
@@ -728,7 +728,7 @@ hu_in01,305,251,5	script	Vacant Looking Lady#wnd	4_F_CAPEGIRL,{
 		mes "I'll see you there.";
 		mes "Just go one field South and one field West from here in Hugel.";
 		mes "I'll meet you there.";
-		set job_wan,6;
+		job_wan = 6;
 		changequest 2219,2220;
 		close;
 	} else if (job_wan == 6 || job_wan == 7) {
@@ -766,7 +766,7 @@ hu_fild05,342,130,5	script	Dancer Kim#fild	4_F_CAPEGIRL,{
 		mes "[Dancer Kim]";
 		mes "Good! Then ready, set~~";
 		mes "Go!";
-		set job_wan,7;
+		job_wan = 7;
 		changequest 2220,2221;
 		close;
 	} else if (job_wan == 7) {
@@ -807,7 +807,7 @@ hu_fild05,342,130,5	script	Dancer Kim#fild	4_F_CAPEGIRL,{
 				mes "[Dancer Kim]";
 				mes "You're a good person. I'm really happy that I met you.";
 				mes "Thank god for sending such a stubborn person to me!";
-				set job_wan,8;
+				job_wan = 8;
 				changequest 2221,2222;
 				close;
 			} else {
@@ -822,13 +822,13 @@ hu_fild05,342,130,5	script	Dancer Kim#fild	4_F_CAPEGIRL,{
 			mes "I'm so tired. I don't give up halfway. It's a good exercise for me. I will have to give up Nollio to another Wanderer, it's all over....";
 			next;
 			mes "- Dancer Kim dropped down by grief and fatigue -";
-			set job_wan,6;
+			job_wan = 6;
 			changequest 2221,2220;
 			close;
 		} else {
 			mes "[Dancer Kim]";
 			mes "Huh...?";
-			set job_wan,6;
+			job_wan = 6;
 			close;
 		}
 	} else if (job_wan == 8) {
@@ -981,7 +981,7 @@ xmas,147,135,5	script	Dancer Kim#xmas	4_F_WANDERER,{
 		mapannounce "xmas","Dancer Kim: Introducing the rising Wanderer! " + strcharinfo(0) + "!",bc_map,"0xffff00"; //FW_NORMAL 12 0 0
 		mes "This rising Wanderer star, " + strcharinfo(0) + "!";
 		jobchange roclass(eaclass()|EAJL_THIRD);
-		set job_wan,10;
+		job_wan = 10;
 		getitem 2795,1; //Green_Apple_Ring
 		getitem 5758,1; //Dying_Swan
 		completequest 2222;

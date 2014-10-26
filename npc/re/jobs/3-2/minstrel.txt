@@ -116,7 +116,7 @@ alberta,196,133,4	script	Bard#job_min	4_M_BARD,{
 			}
 			mes "["+strcharinfo(0)+"]";
 			mes "Ok, I will.";
-			set job_min,1;
+			job_min = 1;
 			setquest 11135;
 			next;
 			mes "[Karian]";
@@ -181,7 +181,7 @@ alberta,196,133,4	script	Bard#job_min	4_M_BARD,{
 		mes "[Karian]";
 		mes "Um..";
 		mes "Anyway let's meet at the airship in Izlude.";
-		set job_min,5;
+		job_min = 5;
 		changequest 11138,11139;
 		close;
 	} else if (job_min == 100) {
@@ -253,7 +253,7 @@ prontera,141,97,4	script	Warmhearted woman	4_F_GODEMOM,{
 		next;
 		mes "[Warmhearted woman]";
 		mes "He must know something about making that book.";
-		set job_min,2;
+		job_min = 2;
 		changequest 11135,11136;
 		close;
 	} else if (job_min == 2) {
@@ -285,7 +285,7 @@ prontera,140,331,6	script	Glasses-wearing Man	4_M_ALCHE_D,{
 		next;
 		mes "[Glasses-wearing Man]";
 		mes "It would be better to ask the ^f57d7dwoman standing in front of the tool shop^000000.";
-		set job_min,3;
+		job_min = 3;
 		changequest 11136,11137;
 		close;
 	} else if (job_min == 3) {
@@ -325,7 +325,7 @@ prontera,146,218,4	script	Woman#job_min	4_F_01,{
 		mes "- useful information. -";
 		mes "- I'll go back to Alberta -";
 		mes "- and talk to that Bard. -";
-		set job_min,4;
+		job_min = 4;
 		changequest 11137,11138;
 		close;
 	} else if (job_min == 4) {
@@ -351,7 +351,7 @@ airplane,222,67,6	script	Karian#job_min1	4_M_BARD,{
 	mes "[Karian]";
 	mes "Acchh...";
 	if (job_min == 5) {
-		set job_min,6;
+		job_min = 6;
 		changequest 11139,11140;
 		close2;
 		warp "hu_in01",267,8;
@@ -386,7 +386,7 @@ hu_in01,267,5,3	script	Karian#job_min2	4_M_BARD,{
 		next;
 		mes "[Karian]";
 		mes "...";
-		set job_min,7;
+		job_min = 7;
 		changequest 11140,11141;
 		close;
 	} else if (job_min == 7) {
@@ -471,7 +471,7 @@ hu_in01,267,5,3	script	Karian#job_min2	4_M_BARD,{
 		next;
 		mes "[Karian]";
 		mes "Did he? I must go there!";
-		set job_min,10;
+		job_min = 10;
 		changequest 11142,11143;
 		close;
 	} else if (job_min == 10) {
@@ -605,7 +605,7 @@ hu_in01,361,103,3	script	Tone-deaf person	4_M_CASMAN1,{
 		mes "[Tone-deaf person]";
 		mes "Rummaging rummaging.";
 		mes "Browsing browsing .";
-		set job_min,8;
+		job_min = 8;
 		close;
 	} else if (job_min == 8) {
 		mes "[Tone-deaf person]";
@@ -666,7 +666,7 @@ hu_in01,361,103,3	script	Tone-deaf person	4_M_CASMAN1,{
 		mes "Ok see you later.";
 		mes "If you want to hear my song, you can visit me.";
 		mes "Hahahh";
-		set job_min,9;
+		job_min = 9;
 		changequest 11141,11142;
 		close;
 	} else if (job_min == 9) {
@@ -738,7 +738,7 @@ OnTouch:
 		mes "Juno's store...";
 		mes "Let's go to Juno...";
 		if (job_min == 10) {
-			set job_min,11;
+			job_min = 11;
 			changequest 11143,11144;
 		}
 		donpcevent "Karian#cmd1::OnDisable";
@@ -926,7 +926,7 @@ yuno,143,170,6	script	Mr. Click#job_min	4_M_ALCHE_A,{
 		mes "Ok. Then let's meet at Lighthalzen's hotel.";
 		mes "I'll get the 33 Teddy Bears.";
 		donpcevent "Karian#cmd2::OnDisable";
-		set job_min,12;
+		job_min = 12;
 		getitem 6270,1; //Mins_Picture
 		changequest 11144,11145;
 		close;
@@ -1057,7 +1057,7 @@ OnTouch:
 			mes "Waaah!!!!!!!!!";
 			mes "I'm so happy!!!";
 			mes "Thank you, "+strcharinfo(0)+".";
-			set job_min,13;
+			job_min = 13;
 			changequest 11145,11146;
 			donpcevent "Karian#cmd3::OnDisable";
 			close;
@@ -1208,7 +1208,7 @@ OnTouch:
 	if (job_min == 13) {
 		mes "-on the leaves-";
 		percentheal -90,0;
-		set job_min,14;
+		job_min = 14;
 		changequest 11146,11147;
 		close2;
 		warp "ra_in01",361,129;
@@ -1226,7 +1226,7 @@ OnTouch:
 		next;
 		mes "["+strcharinfo(0)+"]";
 		mes "Where am I...?";
-		set job_min,15;
+		job_min = 15;
 		close;
 	}
 	end;
@@ -1240,7 +1240,7 @@ ra_in01,358,130,4	script	Old Woman#job_min	4_F_CAVE1,{
 		next;
 		mes "["+strcharinfo(0)+"]";
 		mes "Where am I...?";
-		set job_min,15;
+		job_min = 15;
 		close;
 	} else if (job_min == 15) {
 		mes "You're in Rachel.";
@@ -1308,7 +1308,7 @@ ra_in01,358,130,4	script	Old Woman#job_min	4_F_CAVE1,{
 		mes "We don't have a proper boat.";
 		mes "In southern of Veins, there is a port. If you are lucky you can take it...";
 		donpcevent "Karian#cmd4::OnDisable";
-		set job_min,16;
+		job_min = 16;
 		changequest 11147,11148;
 		close;
 	} else if (job_min == 16) {
@@ -1443,7 +1443,7 @@ function Choice;
 		mes "-I've escaped from the-";
 		mes "-throes of death a-";
 		mes "-countless amount of times.-";
-		set job_min,17;
+		job_min = 17;
 		changequest 11148,11149;
 		close2;
 		warp "comodo",184,108;
@@ -1455,7 +1455,7 @@ function Choice;
 	close;
 
 	function Choice {
-		set .@i$, getarg(select(getarg(0),getarg(1),getarg(2))-1);
+		.@i$ = getarg(select(getarg(0),getarg(1),getarg(2))-1);
 		mes "[Karian]";
 		if (.@i$ == "Throw the water out.") {
 			mes "I'll row and you just throw the water out!!";
@@ -1501,7 +1501,7 @@ OnTouch:
 		mes "Oh yeah...";
 		mes "Why don't we ask the villagers?";
 		donpcevent "Karian#cmd6::OnDisable";
-		set job_min,18;
+		job_min = 18;
 		changequest 11149,11150;
 		close;
 	}
@@ -1522,7 +1522,7 @@ comodo,192,119,0	script	Kayak Master#job_min	4W_M_02,{
 		mes "[Kayak Master]";
 		mes "The hostess is good at memorizing the faces of customers.";
 		mes "It's good for business you know?";
-		set job_min,19;
+		job_min = 19;
 		changequest 11150,11151;
 		close;
 	}
@@ -1558,7 +1558,7 @@ comodo,159,316,4	script	Woman Roasting Meat	4_F_GODEMOM,{
 		next;
 		mes "[Woman Roasting Meat]";
 		mes "He raised our income a lot while he was here...";
-		set job_min,20;
+		job_min = 20;
 		changequest 11151,11152;
 		close;
 	} else if (job_min == 20) {
@@ -1646,7 +1646,7 @@ OnTouch:
 		}
 		mes "Hey! Let's go~~";
 		donpcevent "Karian#cmd7::OnDisable";
-		set job_min,21;
+		job_min = 21;
 		changequest 11152,11153;
 		close;
 	}
@@ -1703,7 +1703,7 @@ OnTouch:
 		next;
 		mes "[Karian]";
 		mes "I can't get rid of the the memories that I was impressed with when I entered Prontera's gates.";
-		set job_min,22;
+		job_min = 22;
 		changequest 11153,11154;
 		donpcevent "Karian#cmd8::OnDisable";
 		close;
@@ -1730,7 +1730,7 @@ OnTouch:
 		mes "I'm so tired.";
 		mes "I want to take a rest~";
 		mes "Come here, "+strcharinfo(0)+".";
-		set job_min,23;
+		job_min = 23;
 		close;
 	}
 	end;
@@ -1740,7 +1740,7 @@ prontera,155,42,0	script	#prtjm1	HIDDEN_WARP_NPC,1,1,{
 OnTouch:
 	if (job_min == 23) {
 		mes "-Let me go back to my hometown.-";
-		set job_min,24;
+		job_min = 24;
 		close2;
 		warp "prontera",155,44;
 		end;
@@ -1752,7 +1752,7 @@ prontera,155,44,0	script	#prtjm2	HIDDEN_WARP_NPC,1,1,{
 OnTouch:
 	if (job_min == 24) {
 		mes "-There are many beautiful flowers.-";
-		set job_min,25;
+		job_min = 25;
 		close2;
 		warp "prontera",155,46;
 		end;
@@ -1764,7 +1764,7 @@ prontera,155,46,0	script	#prtjm3	HIDDEN_WARP_NPC,1,1,{
 OnTouch:
 	if (job_min == 25) {
 		mes "-The birds sing for me.-";
-		set job_min,26;
+		job_min = 26;
 		close2;
 		warp "prontera",155,48;
 		end;
@@ -1813,7 +1813,7 @@ OnTouch:
 		mes "[Karian]";
 		mes "Why are you looking at me?";
 		mes "How was it? Have fun??";
-		set job_min,27;
+		job_min = 27;
 		donpcevent "Karian#cmd9::OnDisable";
 		close2;
 		warp "prt_in",101,174;
@@ -1874,7 +1874,7 @@ prt_in,94,172,4	script	Karian#job_min3	4_M_MINSTREL1,{
 		next;
 		mes "[Maestro Song]";
 		mes "You are also my friend.";
-		set job_min,100;
+		job_min = 100;
 		jobchange roclass(eaclass()|EAJL_THIRD);
 		completequest 11154;
 		getitem 5751,1; //Minstrel_Song_Hat

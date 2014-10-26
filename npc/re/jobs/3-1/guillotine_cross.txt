@@ -83,14 +83,14 @@ que_job01,75,96,3	script	Guild Member#3rdgc01	4_M_MOCASS1,{
 					mes "[Ahcart]";
 					mes "You should be able to find it easily.";
 					mes "Go now.";
-					set job_3rd_gc, 3;
+					job_3rd_gc = 3;
 					setquest 7101;
 					close;
 				case 2:
 					mes "[Ahcart]";
 					mes "Got it.";
 					mes "But don't think about it for too long.";
-					set job_3rd_gc, 2;
+					job_3rd_gc = 2;
 					close;
 				}
 			}
@@ -102,7 +102,7 @@ que_job01,75,96,3	script	Guild Member#3rdgc01	4_M_MOCASS1,{
 			mes "[Ahcart]";
 			mes "Of course, a chapter of the assassin guild is not only in Morroc. If you have a chance to go there, visit there.";
 			mes "I think you might go there.";
-			set job_3rd_gc, 1;
+			job_3rd_gc = 1;
 			close;
 		}
 		mes "[A man of a sharp impression]";
@@ -130,7 +130,7 @@ que_job01,75,96,3	script	Guild Member#3rdgc01	4_M_MOCASS1,{
 			mes "[Ahcart]";
 			mes "You should be able to find it easily.";
 			mes "Go now.";
-			set job_3rd_gc, 3;
+			job_3rd_gc = 3;
 			setquest 7101;
 			close;
 		case 2:
@@ -152,17 +152,32 @@ que_job01,75,96,3	script	Guild Member#3rdgc01	4_M_MOCASS1,{
 }
 
 function	script	func_3rdgc	{
-	set .@n$, "["+strcharinfo(0)+"]";
+	.@n$ = "["+strcharinfo(0)+"]";
 	mes .@n$;
 	mes "Let me collect all the information...";
-	set .@i,0;
-	if (questprogress(7112) == 1) { mes "Madelle saw a person who looked like a priest from Rachel late at night."; set .@i,.@i+1; }
-	if (questprogress(7113) == 1) { mes "Crave said that there was a girl who bought lots of things day and night."; set .@i,.@i+1; }
-	if (questprogress(7114) == 1) { mes "Trovan said that there was a guy who could be seen often but is not a hotel guest, so he is suspicious."; set .@i,.@i+1; }
+	.@i = 0;
+	if (questprogress(7112) == 1) {
+		mes "Madelle saw a person who looked like a priest from Rachel late at night.";
+		++.@i;
+	}
+	if (questprogress(7113) == 1) {
+		mes "Crave said that there was a girl who bought lots of things day and night.";
+		++.@i;
+	}
+	if (questprogress(7114) == 1) {
+		mes "Trovan said that there was a guy who could be seen often but is not a hotel guest, so he is suspicious.";
+		++.@i;
+	}
 	if (!getarg(0)) {
-		set .@i,.@i-2;
-		if (questprogress(7115) == 1) { mes "A peddler wears shabby clothes, but she buys fresh and expensive things every single day."; set .@i,.@i+1; }
-		if (questprogress(7116) == 1) { mes "The old man in village said that there was a girl who showed up in same place at the same time, so maybe moved here."; set .@i,.@i+1; }
+		.@i -= 2;
+		if (questprogress(7115) == 1) {
+			mes "A peddler wears shabby clothes, but she buys fresh and expensive things every single day.";
+			++.@i;
+		}
+		if (questprogress(7116) == 1) {
+			mes "The old man in village said that there was a girl who showed up in same place at the same time, so maybe moved here.";
+			++.@i;
+		}
 	}
 	next;
 	if (.@i == 3) {
@@ -182,7 +197,7 @@ function	script	func_3rdgc	{
 			next;
 			mes .@n$;
 			mes "Let me rethink this.";
-			set job_3rd_gc, 7;
+			job_3rd_gc = 7;
 			close;
 		case 2:
 			mes .@n$;
@@ -212,7 +227,7 @@ function	script	func_3rdgc	{
 			mes .@n$;
 			mes "Crave said that she comes here day and night to buy stuff regularly.";
 			mes "Then I know what I have to do.";
-			set job_3rd_gc, 8;
+			job_3rd_gc = 8;
 			close;
 		}
 	}
@@ -284,7 +299,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 					mes "Yeah, can you find an entrance to an alley in the corner?";
 					mes "Go in there, then you can hear a more detailed story.";
 					mes "Take on this special task~!";
-					set job_3rd_gc, 4;
+					job_3rd_gc = 4;
 					changequest 7101,7102;
 					close;
 				}
@@ -352,7 +367,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			mes "So, don't worry.";
 			mes "Are you supposed to be here for her?";
 			mes "Go ahead.";
-			set job_3rd_gc, 11;
+			job_3rd_gc = 11;
 			close;
 		} else if (job_3rd_gc == 11) {
 			mes "She is in a room.";
@@ -395,7 +410,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 					next;
 					mes "[Daora]";
 					mes "If you need to, visit me anytime and I'll serve you a drink after your task is done.";
-					set job_3rd_gc, 6;
+					job_3rd_gc = 6;
 					close;
 				} else if (job_3rd_gc == 6) {
 					if (questprogress(7091) == 1) {
@@ -875,7 +890,7 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 		mes strcharinfo(0)+".";
 		mes "Time is not waiting for you.";
 		mes "Go ahead. Spill blood with the blade of a knife that stands for a stoic life.";
-		set job_3rd_gc, 5;
+		job_3rd_gc = 5;
 		changequest 7102,7103;
 		close;
 	} else if (job_3rd_gc == 5) {
@@ -937,7 +952,7 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 		mes "This is the last step.";
 		mes "Don't make any mistakes.";
 		delitem 6150,1; //Key_Of_The_Mansion
-		set job_3rd_gc, 15;
+		job_3rd_gc = 15;
 		changequest 7108,7109;
 		close;
 	} else if (job_3rd_gc == 15) {
@@ -978,11 +993,11 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 			if (job_3rd_gc == 18) {
 				mes "The evaluation of your task is... [S].";
 				mes "[S] is for 'special'.";
-				set .@quest,7099;
+				.@quest = 7099;
 			} else {
 				mes "The evaluation of your task is... [A].";
 				mes "If you were punctual, you would have received higher.";
-				set .@quest,7096;
+				.@quest = 7096;
 			}
 			next;
 		} else {
@@ -1001,11 +1016,11 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 			if (.@all_wine > 3) {
 				if (job_3rd_gc == 18) {
 					mes "The evaluation of your task is... [B].";
-					set .@quest,7097;
+					.@quest = 7097;
 				} else {
 					mes "The evaluation of your task is... [C].";
 					mes "You need to act by yourself.";
-					set .@quest,7098;
+					.@quest = 7098;
 				}
 				next;
 			} else {
@@ -1016,10 +1031,10 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 				mes "I like that.";
 				if (job_3rd_gc == 18) {
 					mes "The evaluation of your task is... [A].";
-					set .@quest,7096;
+					.@quest = 7096;
 				} else {
 					mes "The evaluation of your task is... [B].";
-					set .@quest,7097;
+					.@quest = 7097;
 				}
 				next;
 			}
@@ -1035,7 +1050,7 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 		mes "[Mayshell]";
 		mes "I reward you for your labor, and I'm going to give you a present.";
 		mes "I got this one from guild, I hope it's helpful to you.";
-		set job_3rd_gc, 20;
+		job_3rd_gc = 20;
 		getitem 12106,1; //Accessory_Box
 		erasequest 7091;
 		erasequest 7092;
@@ -1927,7 +1942,7 @@ veins,223,180,3	script	Girl#3rdgc09	4_F_DST_CHILD,{
 				mes "I know everything.";
 				close;
 			case 2:
-				set .@ans00, 0;
+				.@ans00 = 0;
 				mes "[Melissa]";
 				mes "Ok, answer my question.";
 				mes "Is it a boy or a girl?";
@@ -1940,7 +1955,7 @@ veins,223,180,3	script	Girl#3rdgc09	4_F_DST_CHILD,{
 				case 2:
 					mes "[Melissa]";
 					mes "A girl and...";
-					set .@ans00, .@ans00+1;
+					++.@ans00;
 					break;
 				}
 				next;
@@ -1960,7 +1975,7 @@ veins,223,180,3	script	Girl#3rdgc09	4_F_DST_CHILD,{
 				case 3:
 					mes "[Melissa]";
 					mes "Light orange to blonde hair.";
-					set .@ans00, .@ans00+1;
+					++.@ans00;
 					break;
 				case 4:
 					mes "[Melissa]";
@@ -1980,7 +1995,7 @@ veins,223,180,3	script	Girl#3rdgc09	4_F_DST_CHILD,{
 					mes "[Melissa]";
 					mes "A young person.";
 					mes "Like you?";
-					set .@ans00, .@ans00+1;
+					++.@ans00;
 					break;
 				case 3:
 					mes "[Melissa]";
@@ -2017,7 +2032,7 @@ veins,223,180,3	script	Girl#3rdgc09	4_F_DST_CHILD,{
 					mes "Hehehe!";
 					erasequest 7103;
 					setquest 7104;
-					set job_3rd_gc, 9;
+					job_3rd_gc = 9;
 					next;
 					mes "[Melissa]";
 					mes "She has to be who you're looking for. I'm never wrong.";
@@ -2091,7 +2106,7 @@ OnTouch:
 			donpcevent "Estillda#3rdgc10::OnEnable";
 			next;
 			select("Make a surprise attack.");
-			set .@c_spec, readparam(bDex)+readparam(bAspd)+readparam(bCritical);
+			.@c_spec = readparam(bDex)+readparam(bAspd)+readparam(bCritical);
 			if (.@c_spec > 209 || (!rand(2) && .@c_spec > 190 && .@c_spec < 210) || (!rand(3) && .@c_spec < 191)) {
 				mes "You take her by the wrist trying not to let her see you.";
 				mes "The food that she is holding falls on the floor.";
@@ -2163,7 +2178,7 @@ OnTouch:
 				donpcevent "Estillda#3rdgc10::OnDisable";
 				if (questprogress(7104)) erasequest 7104;
 				if (questprogress(7105)) erasequest 7105;
-				set job_3rd_gc, 10;
+				job_3rd_gc = 10;
 				setquest 7106;
 				next;
 				mes "- The pub in the underground of Veins is the best place to keep her safe. -";
@@ -2294,7 +2309,7 @@ job3_guil01,79,15,1	script	Estillda#3rdgc11	4_F_SHABBY,{
 			next;
 			mes "["+strcharinfo(0)+"]";
 			mes "To go back home without an accident.";
-			set job_3rd_gc, 12;
+			job_3rd_gc = 12;
 			changequest 7106,7107;
 			close;
 		case 2:
@@ -2319,7 +2334,7 @@ job3_guil01,79,15,1	script	Estillda#3rdgc11	4_F_SHABBY,{
 veins,206,56,0	script	#3rdgc_battleroom01	HIDDEN_WARP_NPC,1,1,{
 	end;
 OnInit:
-	set $@3rdgc_room01, 0;
+	$@3rdgc_room01 = 0;
 	end;
 OnTouch:
 	if (job_3rd_gc == 12) {
@@ -2330,7 +2345,7 @@ OnTouch:
 			case 1:
 				if ($@3rdgc_room01 == 0) {
 					warp "job3_guil02",34,44;
-					set $@3rdgc_room01, 1;
+					$@3rdgc_room01 = 1;
 				} else {
 					mes "You tried to open the door but it's locked.";
 					mes "It doesn't show any signs of life.";
@@ -2375,7 +2390,7 @@ OnTouch:
 		mes "You don't have to come here now.";
 		close;
 		warp "veins",178,62;
-		set $@3rdgc_room01, 0;
+		$@3rdgc_room01 = 0;
 		end;
 	}
 	end;
@@ -2395,7 +2410,7 @@ OnTimer299000:
 	donpcevent "#3rdgc_room01_mag01::OnEnable";
 	end;
 OnTimer300000:
-	set $@3rdgc_room01, 0;
+	$@3rdgc_room01 = 0;
 	stopnpctimer;
 	end;
 }
@@ -2405,11 +2420,11 @@ job3_guil02,51,43,7	script	A man with black clothes	4_M_DSTMAN,4,4,{
 OnInit:
 OnDisable:
 	hideonnpc "A man with black clothes";
-	set .on,0;
+	.on = 0;
 	end;
 OnEnable:
 	hideoffnpc "A man with black clothes";
-	set .on,1;
+	.on = 1;
 	end;
 OnReset:
 	killmonster "job3_guil02","A man with black clothes::OnMyMobDead";
@@ -2470,7 +2485,7 @@ OnTimer61000:
 	donpcevent "Dandelion#3rdgc12::OnDisable";
 	donpcevent "A man with black clothes::OnDisable";
 	donpcevent "#3rdgc_room01_mag01::OnEnable";
-	set $@3rdgc_room01, 0;
+	$@3rdgc_room01 = 0;
 	stopnpctimer;
 	end;
 }
@@ -2497,7 +2512,7 @@ job3_guil02,49,43,5	script	Dandelion#3rdgc12	4_M_DSTMANDEAD,{
 		mes "It's too late to save him.";
 		mes "He passed away.";
 		mes "You find a key with a fancy decoration around his neck.";
-		set job_3rd_gc, 13;
+		job_3rd_gc = 13;
 		getitem 6150,1; //Key_Of_The_Mansion
 		changequest 7107,7108;
 		close;
@@ -2635,7 +2650,7 @@ ra_in01,175,196,3	script	Oresa Rava#3rdgc13	4_M_LGTGRAND,{
 		mes "Send over that key.";
 		next;
 		mes "- Find the owner of that key soon and tell Mayshell. -";
-		set job_3rd_gc, 14;
+		job_3rd_gc = 14;
 		close;
 	} else if (job_3rd_gc == 14) {
 		mes "That key is of a mansion built in a gorge of Veins.";
@@ -2686,9 +2701,9 @@ ve_fild02,330,384,3	script	Girl#3rdgc14	4_F_GUILLOTINE,{
 		case 1:
 			if ($@3rdgc_room02 == 0) {
 				erasequest ((job_3rd_gc == 17)?7110:7109);
-				set job_3rd_gc, 17;
+				job_3rd_gc = 17;
 				setquest 7110;
-				set $@3rdgc_room02, 1;
+				$@3rdgc_room02 = 1;
 				warp "job3_guil03",22,70;
 			} else {
 				mes "[Renzak]";
@@ -2697,7 +2712,7 @@ ve_fild02,330,384,3	script	Girl#3rdgc14	4_F_GUILLOTINE,{
 				next;
 				mes "[Renzak]";
 				mes "It'll be easy to infiltrate because it's covered by the cliff's shadow.";
-				set job_3rd_gc, 16;
+				job_3rd_gc = 16;
 			}
 			close;
 		case 2:
@@ -2708,7 +2723,7 @@ ve_fild02,330,384,3	script	Girl#3rdgc14	4_F_GUILLOTINE,{
 				erasequest 7110;
 				setquest 7109;
 			}
-			set job_3rd_gc, 16;
+			job_3rd_gc = 16;
 			close;
 		}
 	} else if (job_3rd_gc > 18) {
@@ -2727,7 +2742,7 @@ ve_fild02,330,384,3	script	Girl#3rdgc14	4_F_GUILLOTINE,{
 		close;
 	}
 OnInit:
-	set $@3rdgc_room02, 0;
+	$@3rdgc_room02 = 0;
 	end;
 }
 
@@ -2751,7 +2766,7 @@ OnTouch:
 		mes "You don't have to come here.";
 		close2;
 		warp "ve_fild02",330,379;	//Pre-RE: ve_fild05 (341,303)
-		set $@3rdgc_room02, 0;
+		$@3rdgc_room02 = 0;
 	}
 	end;
 OnTimer900000:
@@ -2812,7 +2827,7 @@ OnReset:
 	donpcevent "Priest from Rachel::OnDisable";
 	donpcevent "Renzak#3rdgc16::OnDisable";
 	donpcevent "#3rdgc_event01::OnEnable";
-	set $@3rdgc_room02, 0;
+	$@3rdgc_room02 = 0;
 	end;
 }
 
@@ -3353,7 +3368,7 @@ OnMyMobDead:
 job3_guil03,2,2,0	script	#3rdgc_sunchal_kill01	CLEAR_NPC,{
 	end;
 OnEnable:
-	set .@i, atoi(charat(strnpcinfo(0),20));
+	.@i = atoi(charat(strnpcinfo(0),20));
 	setarray .@x[1],74,124,103;
 	setarray .@y[1],63, 78, 24;
 	monster "job3_guil03",.@x[.@i],.@y[.@i],"Guard",1985,1,strnpcinfo(0)+"::OnMyMobDead";
@@ -3399,7 +3414,7 @@ OnReset:
 	killmonster "job3_guil03",strnpcinfo(0)+"::OnMyMobDead";
 	end;
 OnTouch:
-	set .@i, atoi(charat(strnpcinfo(0),19));
+	.@i = atoi(charat(strnpcinfo(0),19));
 	setarray .@x[1],64,86,83;
 	setarray .@y[1],68,63,36;
 	mapannounce "job3_guil03","Guard : Who are you?!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
@@ -3434,7 +3449,7 @@ OnTimer:
 	setarray .@x[1],.@x-2,.@x+2;
 	setarray .@y[1],.@y-2,.@y+2;
 	sleep 1000;
-	for(set .@i,0; .@i<9; set .@i,.@i+1) {
+	for(.@i = 0; .@i<9; ++.@i) {
 		if (getareausers(.@map$,.@x[1],.@y[1],.@x[2],.@y[2]) < 1)
 			end;
 		sleep 1000;
@@ -3478,11 +3493,11 @@ job3_guil03,111,51,7	script	Priest from Rachel	4_M_MIDDLE1,{
 	end;
 OnInit:
 OnDisable:
-	set .on,0;
+	.on = 0;
 	hideonnpc "Priest from Rachel";
 	end;
 OnEnable:
-	set .on,1;
+	.on = 1;
 	hideoffnpc "Priest from Rachel";
 	end;
 OnReset:
@@ -3536,7 +3551,7 @@ OnTimer61000:
 	end;
 OnTimer61500:
 	donpcevent "#3rdgc_event01::OnEnable";
-	set $@3rdgc_room02, 0;
+	$@3rdgc_room02 = 0;
 	stopnpctimer;
 	end;
 }
@@ -3551,12 +3566,12 @@ job3_guil03,146,70,3	script	Renzak#3rdgc16	4_F_GUILLOTINE,{
 		if (questprogress(7110,PLAYTIME) == 1) {
 			mes "You finished quickly.";
 			mes "Good job.";
-			set job_3rd_gc, 18;
+			job_3rd_gc = 18;
 		} else {
 			mes "I told you that you have to finish within 10 minutes.";
 			mes "You might be exhausted.";
 			mes "Fortunately you are ok.";
-			set job_3rd_gc, 19;
+			job_3rd_gc = 19;
 		}
 		erasequest 7110;
 		setquest 7111;
@@ -3657,16 +3672,16 @@ job3_guil01,148,53,3	script	Bercasell#3rdgc16	4_M_GUILLOTINE,{
 								setlook 7,0;
 								jobchange roclass(eaclass()|EAJL_THIRD);
 								if (questprogress(7096) == 1) {
-									set job_3rd_gc, 25;
+									job_3rd_gc = 25;
 									erasequest 7096;
 								} else if (questprogress(7097) == 1) {
-									set job_3rd_gc, 26;
+									job_3rd_gc = 26;
 									erasequest 7097;
 								} else if (questprogress(7098) == 1) {
-									set job_3rd_gc, 27;
+									job_3rd_gc = 27;
 									erasequest 7098;
 								} else if (questprogress(7099) == 1) {
-									set job_3rd_gc, 28;
+									job_3rd_gc = 28;
 									erasequest 7099;
 								}
 								getitem 2795,1; //Green_Apple_Ring
@@ -3840,7 +3855,7 @@ job3_guil02,1,3,0	script	#GMhelper01_gc	CLEAR_NPC,{
 	mes "What can I do for you?";
 	next;
 	if (callfunc("F_GM_NPC",1854,0) == 1) {
-		set .@room01, $@3rdgc_room01;
+		.@room01 = $@3rdgc_room01;
 		mes "I check the recent situation.";
 		mes "The battle situation of storage: "+.@room01+"";
 		mes "1 : In progress. 0 : Standby status.";
@@ -3859,7 +3874,7 @@ job3_guil02,1,3,0	script	#GMhelper01_gc	CLEAR_NPC,{
 				donpcevent "Dandelion#3rdgc12::OnDisable";
 				donpcevent "A man with black clothes::OnDisable";
 				donpcevent "#3rdgc_room01_mag01::OnEnable";
-				set $@3rdgc_room01, 0;
+				$@3rdgc_room01 = 0;
 				next;
 				mes "Complete a reset.";
 				close;
@@ -3879,7 +3894,7 @@ job3_guil03,1,8,0	script	#GMhelper02_gc	CLEAR_NPC,{
 	mes "What can I do for you?";
 	next;
 	if (callfunc("F_GM_NPC",1854,0) == 1) {
-		set .@room02, $@3rdgc_room02;
+		.@room02 = $@3rdgc_room02;
 		mes "Check the recent situation.";
 		mes "The battle situation of the mansion is: "+.@room02+"";
 		mes "1 : In progress. 0 : Standby status.";
@@ -3930,7 +3945,7 @@ job3_guil03,1,8,0	script	#GMhelper02_gc	CLEAR_NPC,{
 				mes "We start to expel by force.";
 				mes "Just put the enter button now.";
 				donpcevent "#3rdgc_event01::OnEnable";
-				set $@3rdgc_room02, 0;
+				$@3rdgc_room02 = 0;
 				close2;
 				mapwarp "job3_guil03","ve_fild02",330,379;	//Pre-RE: ve_fild05 (341,303)
 				end;
