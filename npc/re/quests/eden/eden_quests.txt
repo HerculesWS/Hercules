@@ -94,7 +94,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						mes "[Boya]";
 						mes "Anyway, that place is not far from here so, it is a reasonable place for a beginner like you.";
 						mes "Ok, may Freya bless you~!";
-						set para_suv01,1;
+						para_suv01 = 1;
 						setquest 7128;
 						close;
 					}
@@ -125,7 +125,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						mes "Anyway...";
 						mes "That place is nor far from here so, it is a reasonable place for a beginner like you.";
 						mes "Ok, may Freya bless you~!";
-						set para_suv01,6;
+						para_suv01 = 6;
 						setquest 7133;
 						close;
 					}
@@ -161,7 +161,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						mes "Anyway...";
 						mes "That place is not far from here so, come back quickly.";
 						mes "Ok, may Freya bless you~!";
-						set para_suv01,13;
+						para_suv01 = 13;
 						setquest 7138;
 						close;
 					}
@@ -197,7 +197,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						mes "Anyway...";
 						mes "That place is not far from here so, come back quickly.";
 						mes "Ok, blessing you~!!";
-						set para_suv01,17;
+						para_suv01 = 17;
 						setquest 7142;
 						close;
 					}
@@ -224,7 +224,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						next;
 						mes "[Boya]";
 						mes "Ok, may Freya bless you!";
-						set para_suv01,24;
+						para_suv01 = 24;
 						setquest 7147;
 						close;
 					}
@@ -251,7 +251,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						next;
 						mes "[Boya]";
 						mes "Ok, may Freya bless you!";
-						set para_suv01,29;
+						para_suv01 = 29;
 						setquest 7152;
 						close;
 					}
@@ -272,7 +272,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						mes "[Boya]";
 						mes "Tell him that I sent you and follow his directions.";
 						mes "Ok, may Freya bless you!";
-						set para_suv01,33;
+						para_suv01 = 33;
 						setquest 7156;
 						close;
 					}
@@ -352,7 +352,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						mes "[Boya]";
 						mes "Anyway, that place is not far from here so, it is a reasonable place for a beginner like you.";
 						mes "Ok, may Freya bless you~!";
-						set para_suv01,1;
+						para_suv01 = 1;
 						setquest 7128;
 						close;
 					}
@@ -383,7 +383,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						mes "Anyway...";
 						mes "That place is nor far from here so, it is a reasonable place for a beginner like you.";
 						mes "Ok, may Freya bless you~!";
-						set para_suv01,6;
+						para_suv01 = 6;
 						setquest 7133;
 						close;
 					}
@@ -419,7 +419,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						mes "Anyway...";
 						mes "That place is not far from here so, come back quickly.";
 						mes "Ok, may Freya bless you~!";
-						set para_suv01,13;
+						para_suv01 = 13;
 						setquest 7138;
 						close;
 					}
@@ -455,7 +455,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						mes "Anyway...";
 						mes "That place is not far from here so, come back quickly.";
 						mes "Ok, blessing you~!!";
-						set para_suv01,17;
+						para_suv01 = 17;
 						setquest 7142;
 						close;
 					}
@@ -482,7 +482,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						next;
 						mes "[Boya]";
 						mes "Ok, may Freya bless you!";
-						set para_suv01,24;
+						para_suv01 = 24;
 						setquest 7147;
 						close;
 					}
@@ -509,7 +509,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						next;
 						mes "[Boya]";
 						mes "Ok, may Freya bless you!";
-						set para_suv01,29;
+						para_suv01 = 29;
 						setquest 7152;
 						close;
 					}
@@ -530,7 +530,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						mes "[Boya]";
 						mes "Tell him that I sent you and follow his directions.";
 						mes "Ok, may Freya bless you!";
-						set para_suv01,33;
+						para_suv01 = 33;
 						setquest 7156;
 						close;
 					}
@@ -579,7 +579,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 			mes "[Boya]";
 			mes "Inform the manager that I sent you. He will give you some stuff.";
 			mes "Go go go!";
-			set para_suv01,11;
+			para_suv01 = 11;
 			completequest 7132;
 			close;
 		}
@@ -610,7 +610,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 			mes "[Boya]";
 			mes "Inform the manager that I sent you. He will give you some stuff.";
 			mes "Go go go!";
-			set para_suv01,11;
+			para_suv01 = 11;
 			completequest 7137;
 			close;
 		}
@@ -676,7 +676,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						mes "Anyway...";
 						mes "That place is not far from here so, come back quickly.";
 						mes "Ok, may Freya bless you~!";
-						set para_suv01,13;
+						para_suv01 = 13;
 						setquest 7138;
 						close;
 					}
@@ -712,7 +712,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						mes "Anyway...";
 						mes "That place is not far from here so, come back quickly.";
 						mes "Ok, blessing you~!!";
-						set para_suv01,17;
+						para_suv01 = 17;
 						setquest 7142;
 						close;
 					}
@@ -739,7 +739,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						next;
 						mes "[Boya]";
 						mes "Ok, may Freya bless you!";
-						set para_suv01,24;
+						para_suv01 = 24;
 						setquest 7147;
 						close;
 					}
@@ -766,7 +766,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						next;
 						mes "[Boya]";
 						mes "Ok, may Freya bless you!";
-						set para_suv01,29;
+						para_suv01 = 29;
 						setquest 7152;
 						close;
 					}
@@ -787,7 +787,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 						mes "[Boya]";
 						mes "Tell him that I sent you and follow his directions.";
 						mes "Ok, may Freya bless you!";
-						set para_suv01,33;
+						para_suv01 = 33;
 						setquest 7156;
 						close;
 					}
@@ -820,7 +820,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 			next;
 			mes "[Boya]";
 			mes "Choose an equipment that fits your particular set of skills.";
-			set para_suv01,22;
+			para_suv01 = 22;
 			completequest 7141;
 			close;
 		}
@@ -844,7 +844,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 			next;
 			mes "[Boya]";
 			mes "The person in charge of equipment storage will supply you with what you need.";
-			set para_suv01,22;
+			para_suv01 = 22;
 			completequest 7146;
 			close;
 		}
@@ -891,7 +891,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 					next;
 					mes "[Boya]";
 					mes "Ok, may Freya bless you!";
-					set para_suv01,24;
+					para_suv01 = 24;
 					setquest 7147;
 					close;
 				}
@@ -918,7 +918,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 					next;
 					mes "[Boya]";
 					mes "Ok, may Freya bless you!";
-					set para_suv01,29;
+					para_suv01 = 29;
 					setquest 7152;
 					close;
 				}
@@ -939,7 +939,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 					mes "[Boya]";
 					mes "Tell him that I sent you and follow his directions.";
 					mes "Ok, may Freya bless you!";
-					set para_suv01,33;
+					para_suv01 = 33;
 					setquest 7156;
 					close;
 				}
@@ -979,7 +979,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 			next;
 			mes "[Boya]";
 			mes "To find the storage pass the blue gate next to the mission board then at the end of the hallway to the right side.";
-			set para_suv01,37;
+			para_suv01 = 37;
 			completequest 7151;
 			close;
 		}
@@ -1003,7 +1003,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 			next;
 			mes "[Boya]";
 			mes "To find the storage pass the blue gate next to the mission board then at the end of the hallway to the right side.";
-			set para_suv01,37;
+			para_suv01 = 37;
 			completequest 7155;
 			close;
 		}
@@ -1028,7 +1028,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 			next;
 			mes "[Boya]";
 			mes "To find the storage pass the blue gate next to the mission board then at the end of the hallway to the right side.";
-			set para_suv01,37;
+			para_suv01 = 37;
 			completequest 7159;
 			close;
 		}
@@ -1127,7 +1127,7 @@ moc_fild11,180,253,5	script	Talking Dog#para03	4_RUS_DWOLF,{
 			mes "We should hunt at least 10 Condors, ok?";
 			mes "I will sleep for a while.";
 			mes "Krrrr woo bow...";
-			set para_suv01,2;
+			para_suv01 = 2;
 			changequest 7128,7129;
 			close;
 		case 3:
@@ -1170,7 +1170,7 @@ moc_fild11,180,253,5	script	Talking Dog#para03	4_RUS_DWOLF,{
 			mes "You must hunt at least 10!";
 			mes "Exactly 10!";
 			mes "Go go go!";
-			set para_suv01,3;
+			para_suv01 = 3;
 			changequest 7129,7130;
 			close;
 		}
@@ -1206,7 +1206,7 @@ moc_fild11,180,253,5	script	Talking Dog#para03	4_RUS_DWOLF,{
 			mes "It's the last step so let's make it simple";
 			mes "Just hunt 5!";
 			mes "Bow wow!";
-			set para_suv01,4;
+			para_suv01 = 4;
 			changequest 7130,7131;
 			close;
 		}
@@ -1253,7 +1253,7 @@ moc_fild11,180,253,5	script	Talking Dog#para03	4_RUS_DWOLF,{
 			mes "Go back to the Eden Group headquarters and show it to the flashy Rune Knight.";
 			mes "Let me say again that you are great!";
 			mes "Hooooohooo~";
-			set para_suv01,5;
+			para_suv01 = 5;
 			changequest 7131,7132;
 			close;
 		}
@@ -1382,7 +1382,7 @@ prt_sewb1,131,262,3	script	Timid Cat#para04	4_M_BABYCAT,{
 			mes "a thief bug and froze in";
 			mes "place. Hunt those";
 			mes "Thief Bugs around here.^000000";
-			set para_suv01,7;
+			para_suv01 = 7;
 			changequest 7133,7134;
 			close;
 		}
@@ -1410,7 +1410,7 @@ prt_sewb1,131,262,3	script	Timid Cat#para04	4_M_BABYCAT,{
 			mes "[Timid Cat]";
 			mes "Training missions are hard and anoying.";
 			mes "So go hurry and hunt 10 Tarou.";
-			set para_suv01,8;
+			para_suv01 = 8;
 			changequest 7134,7135;
 			close;
 		}
@@ -1448,7 +1448,7 @@ prt_sewb1,131,262,3	script	Timid Cat#para04	4_M_BABYCAT,{
 			mes "I don't have anything...";
 			mes "......";
 			mes "What do you want meow? Familiars are waiting to fight with you, hurry up, move~!";
-			set para_suv01,9;
+			para_suv01 = 9;
 			changequest 7135,7136;
 			close;
 		}
@@ -1482,7 +1482,7 @@ prt_sewb1,131,262,3	script	Timid Cat#para04	4_M_BABYCAT,{
 			mes "Do you know how to get to the Eden Group Headquarters?";
 			mes "Prontera is the closest city from here.";
 			mes "Go to Prontera and find an Eden Group Teleporter.";
-			set para_suv01,10;
+			para_suv01 = 10;
 			changequest 7136,7137;
 			close;
 		}
@@ -1567,7 +1567,7 @@ pay_arche,41,136,3	script	Eden Member Karl#para05	4_M_KHMAN,{
 		mes "[Karl]";
 		mes "If you feel like you're in danger don't hesitate to just leave.";
 		mes "You're not worried about getting hurt are you?";
-		set para_suv01,14;
+		para_suv01 = 14;
 		changequest 7138,7139;
 		close;
 	}
@@ -1594,7 +1594,7 @@ pay_arche,41,136,3	script	Eden Member Karl#para05	4_M_KHMAN,{
 			mes "Ok if you're ready go and kill those Poporings.";
 			mes "You should hunt 10 of them.";
 			next;
-			set para_suv01,15;
+			para_suv01 = 15;
 			changequest 7139,7140;
 			close;
 		}
@@ -1626,7 +1626,7 @@ pay_arche,41,136,3	script	Eden Member Karl#para05	4_M_KHMAN,{
 			mes "[Karl]";
 			mes "You might get a new uniform.";
 			mes "Haha. I will keep tabs on your progression.";
-			set para_suv01,16;
+			para_suv01 = 16;
 			changequest 7140,7141;
 			close;
 		}
@@ -1712,7 +1712,7 @@ anthell01,29,264,5	script	Eden Member Cloud#para06	4_M_HUMAN_02,{
 			mes "[Cloud]";
 			mes "In the case of ants, they assist eachother when attacked.";
 			mes "Be careful and kill 15 Pierre ants.";
-			set para_suv01,18;
+			para_suv01 = 18;
 			changequest 7142,7143;
 			close;
 		case 2:
@@ -1751,7 +1751,7 @@ anthell01,29,264,5	script	Eden Member Cloud#para06	4_M_HUMAN_02,{
 			mes "[Cloud]";
 			mes "If you can't find Andre go deeper into the cave.";
 			mes "Ah, and be careful of Maya.";
-			set para_suv01,19;
+			para_suv01 = 19;
 			changequest 7143,7144;
 			close;
 		}
@@ -1791,7 +1791,7 @@ anthell01,29,264,5	script	Eden Member Cloud#para06	4_M_HUMAN_02,{
 			mes "[Cloud]";
 			mes "If you feel you're in too much danger. Just come back.";
 			mes "I will heal you.";
-			set para_suv01,20;
+			para_suv01 = 20;
 			changequest 7144,7145;
 			close;
 		}
@@ -1815,7 +1815,7 @@ anthell01,29,264,5	script	Eden Member Cloud#para06	4_M_HUMAN_02,{
 			mes "[Cloud]";
 			mes "You will get good news.";
 			mes "You did a really good job even under the hot weather.";
-			set para_suv01,21;
+			para_suv01 = 21;
 			changequest 7145,7146;
 			close;
 		}
@@ -1908,7 +1908,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 		mes "[Hooksha]";
 		mes "Good or bad this is how it is going to be.";
 		mes "Even if they are babies don't hesitate.";
-		set para_suv01,25;
+		para_suv01 = 25;
 		changequest 7147,7148;
 		close;
 	}
@@ -1930,7 +1930,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 			mes "Now it's time to hunt 10 Orc Warriors.";
 			mes "If you are in trouble just come back here to safety.";
 			mes "Do you understand?";
-			set para_suv01,26;
+			para_suv01 = 26;
 			changequest 7148,7149;
 			close;
 		}
@@ -1961,7 +1961,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 			mes "[Hooksha]";
 			mes "You can already feel the strong power from outside...";
 			mes "Don't hesitate to attack them.";
-			set para_suv01,27;
+			para_suv01 = 27;
 			changequest 7149,7150;
 			close;
 		}
@@ -1987,7 +1987,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 			mes "[Hooksha]";
 			mes "Go back and report to the Eden Group headquarters.";
 			mes "I'm sure they will have good news for you.";
-			set para_suv01,28;
+			para_suv01 = 28;
 			changequest 7150,7151;
 			close;
 		}
@@ -2039,7 +2039,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 		mes "[Hooksha]";
 		mes "They will attack you anywhere without hesitating.";
 		mes "May Freya bless you.";
-		set para_suv01,30;
+		para_suv01 = 30;
 		changequest 7152,7153;
 		close;
 	}
@@ -2063,7 +2063,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 			mes "[Hooksha]";
 			mes "Ok, cheer up and see you again.";
 			mes "Hunt 20 Orc Skeletons.";
-			set para_suv01,31;
+			para_suv01 = 31;
 			changequest 7153,7154;
 			close;
 		}
@@ -2087,7 +2087,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 			mes "I mean not due to you.";
 			mes "Anyway I will inform the group so go there and report.";
 			next;
-			set para_suv01,32;
+			para_suv01 = 32;
 			changequest 7154,7155;
 			close;
 		}
@@ -2167,7 +2167,7 @@ iz_dun04,43,46,3	script	Eden Member Callandiva	4_F_CRU,{
 		mes "[Callandiva]";
 		mes "Okay, go and hunt 15 Merman.";
 		mes "That will be your 1st training mission here.";
-		set para_suv01,34;
+		para_suv01 = 34;
 		changequest 7156,7157;
 		close;
 	}
@@ -2190,7 +2190,7 @@ iz_dun04,43,46,3	script	Eden Member Callandiva	4_F_CRU,{
 			next;
 			mes "[Callandiva]";
 			mes "Try avoiding the Mermans and hunt 10 Strouf, kill them.";
-			set para_suv01,35;
+			para_suv01 = 35;
 			changequest 7157,7158;
 			close;
 		}
@@ -2224,7 +2224,7 @@ iz_dun04,43,46,3	script	Eden Member Callandiva	4_F_CRU,{
 			next;
 			mes "[Callandiva]";
 			mes "Anyway you did great job!";
-			set para_suv01,36;
+			para_suv01 = 36;
 			changequest 7158,7159;
 			close;
 		}
@@ -2289,8 +2289,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 				mes "One pair of Eden Group Boots I.";
 				mes "One Eden Group Manteau.";
 				mes "A total of 4 supplies, that's all.";
-				set para_suv01,12;
-				set para_suv02,1;
+				para_suv01 = 12;
+				para_suv02 = 1;
 				getitem 5583,1; //Para_Team_Hat1
 				getitem 2560,1; //Para_Team_Manteau1
 				getitem 2456,1; //Para_Team_Boots1
@@ -2353,8 +2353,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 							mes "[Michael]";
 							mes "You don't have a record of receiving any supplies";
 							mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-							set para_suv01,23;
-							set para_suv02,2;
+							para_suv01 = 23;
+							para_suv02 = 2;
 							getitem 1192,1; //P_Slayer1
 							getitem 18514,1; //Para_Team_Hat2
 							getitem 2571,1; //Para_Team_Manteau2
@@ -2368,8 +2368,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "A Two-handed sword, Uniform and Boots all 3 supplies.";
 						mes "Please check it again.";
-						set para_suv01,23;
-						set para_suv02,2;
+						para_suv01 = 23;
+						para_suv02 = 2;
 						getitem 1192,1; //P_Slayer1
 						getitem 2457,1; //Para_Team_Boots2
 						getitem 15010,1; //Para_Team_Uniform2
@@ -2386,8 +2386,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 							mes "[Michael]";
 							mes "You don't have a record of receiving any supplies";
 							mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-							set para_suv01, 23;
-							set para_suv02, 2;
+							para_suv01 = 23;
+							para_suv02 = 2;
 							getitem 13423,1; //P_Sabre1
 							getitem 2457,1; //Para_Team_Boots2
 							getitem 15010,1; //Para_Team_Uniform2
@@ -2401,8 +2401,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "A One-handed sword, Uniform and Boots all 3 supplies.";
 						mes "Please check it again.";
-						set para_suv01,23;
-						set para_suv02,2;
+						para_suv01 = 23;
+						para_suv02 = 2;
 						getitem 13423,1; //P_Sabre1
 						getitem 2457,1; //Para_Team_Boots2
 						getitem 15010,1; //Para_Team_Uniform2
@@ -2434,8 +2434,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "You don't have a record of receiving any supplies";
 						mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-						set para_suv01,23;
-						set para_suv02,2;
+						para_suv01 = 23;
+						para_suv02 = 2;
 						getitem 13050,1; //P_Dagger1
 						getitem 2457,1; //Para_Team_Boots2
 						getitem 15010,1; //Para_Team_Uniform2
@@ -2449,8 +2449,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 					mes "[Michael]";
 					mes "A Dagger, Uniform and Boots all 3 supplies.";
 					mes "Please check it again.";
-					set para_suv01,23;
-					set para_suv02,2;
+					para_suv01 = 23;
+					para_suv02 = 2;
 					getitem 13050,1; //P_Dagger1
 					getitem 2457,1; //Para_Team_Boots2
 					getitem 15010,1; //Para_Team_Uniform2
@@ -2484,8 +2484,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 							mes "[Michael]";
 							mes "You don't have a record of receiving any supplies";
 							mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-							set para_suv01,23;
-							set para_suv02,2;
+							para_suv01 = 23;
+							para_suv02 = 2;
 							getitem 13423,1; //P_Sabre1
 							getitem 2457,1; //Para_Team_Boots2
 							getitem 15010,1; //Para_Team_Uniform2
@@ -2499,8 +2499,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "A One-handed Sword, Uniform and Boots all 3 supplies.";
 						mes "Please check it again.";
-						set para_suv01,23;
-						set para_suv02,2;
+						para_suv01 = 23;
+						para_suv02 = 2;
 						getitem 13423,1; //P_Sabre1
 						getitem 2457,1; //Para_Team_Boots2
 						getitem 15010,1; //Para_Team_Uniform2
@@ -2518,8 +2518,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 							mes "[Michael]";
 							mes "You don't have a record of receiving any supplies";
 							mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-							set para_suv01,23;
-							set para_suv02,2;
+							para_suv01 = 23;
+							para_suv02 = 2;
 							getitem 16004,1; //P_Mace1
 							getitem 2457,1; //Para_Team_Boots2
 							getitem 15010,1; //Para_Team_Uniform2
@@ -2533,8 +2533,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "A Mace, Uniform and Boots all 3 supplies.";
 						mes "Please check it again.";
-						set para_suv01,23;
-						set para_suv02,2;
+						para_suv01 = 23;
+						para_suv02 = 2;
 						getitem 16004,1; //P_Mace1
 						getitem 2457,1; //Para_Team_Boots2
 						getitem 15010,1; //Para_Team_Uniform2
@@ -2565,8 +2565,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "You don't have a record of receiving any supplies";
 						mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-						set para_suv01, 23;
-						set para_suv02, 2;
+						para_suv01 = 23;
+						para_suv02 = 2;
 						getitem 1747,1; //P_Bow1
 						getitem 2457,1; //Para_Team_Boots2
 						getitem 15010,1; //Para_Team_Uniform2
@@ -2580,8 +2580,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 					mes "[Michael]";
 					mes "A Bow, Uniform and Boots all 3 supplies.";
 					mes "Please check it again.";
-					set para_suv01,23;
-					set para_suv02,2;
+					para_suv01 = 23;
+					para_suv02 = 2;
 					getitem 1747,1; //P_Bow1
 					getitem 2457,1; //Para_Team_Boots2
 					getitem 15010,1; //Para_Team_Uniform2
@@ -2614,8 +2614,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 							mes "[Michael]";
 							mes "You don't have a record of receiving any supplies";
 							mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-							set para_suv01,23;
-							set para_suv02,2;
+							para_suv01 = 23;
+							para_suv02 = 2;
 							getitem 1650,1; //P_Staff1
 							getitem 2457,1; //Para_Team_Boots2
 							getitem 15010,1; //Para_Team_Uniform2
@@ -2629,8 +2629,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "A Staff, Uniform and Boots all 3 supplies.";
 						mes "Please check it again.";
-						set para_suv01,23;
-						set para_suv02,2;
+						para_suv01 = 23;
+						para_suv02 = 2;
 						getitem 1650,1; //P_Staff1
 						getitem 2457,1; //Para_Team_Boots2
 						getitem 15010,1; //Para_Team_Uniform2
@@ -2647,8 +2647,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 							mes "[Michael]";
 							mes "You don't have a record of receiving any supplies";
 							mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-							set para_suv01,23;
-							set para_suv02,2;
+							para_suv01 = 23;
+							para_suv02 = 2;
 							getitem 16004,1; //P_Mace1
 							getitem 2457,1; //Para_Team_Boots2
 							getitem 15010,1; //Para_Team_Uniform2
@@ -2662,8 +2662,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "A Mace, Uniform and Boots all 3 supplies.";
 						mes "Please check it again.";
-						set para_suv01,23;
-						set para_suv02,2;
+						para_suv01 = 23;
+						para_suv02 = 2;
 						getitem 16004,1; //P_Mace1
 						getitem 2457,1; //Para_Team_Boots2
 						getitem 15010,1; //Para_Team_Uniform2
@@ -2694,8 +2694,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "You don't have a record of receiving any supplies";
 						mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-						set para_suv01, 23;
-						set para_suv02, 2;
+						para_suv01 = 23;
+						para_suv02 = 2;
 						getitem 1650,1; //P_Staff1
 						getitem 2457,1; //Para_Team_Boots2
 						getitem 15010,1; //Para_Team_Uniform2
@@ -2709,8 +2709,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 					mes "[Michael]";
 					mes "A Staff, Uniform and Boots all 3 supplies.";
 					mes "Please check it again.";
-					set para_suv01,23;
-					set para_suv02,2;
+					para_suv01 = 23;
+					para_suv02 = 2;
 					getitem 1650,1; //P_Staff1
 					getitem 2457,1; //Para_Team_Boots2
 					getitem 15010,1; //Para_Team_Uniform2
@@ -2740,8 +2740,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "You don't have a record of receiving any supplies";
 						mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-						set para_suv01, 23;
-						set para_suv02, 2;
+						para_suv01 = 23;
+						para_suv02 = 2;
 						getitem 13112,1; //P_Revolver1
 						getitem 2457,1; //Para_Team_Boots2
 						getitem 15010,1; //Para_Team_Uniform2
@@ -2755,8 +2755,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 					mes "[Michael]";
 					mes "A Revolver, Uniform and Boots all 3 supplies.";
 					mes "Please check it again.";
-					set para_suv01,23;
-					set para_suv02,2;
+					para_suv01 = 23;
+					para_suv02 = 2;
 					getitem 13112,1; //P_Revolver1
 					getitem 2457,1; //Para_Team_Boots2
 					getitem 15010,1; //Para_Team_Uniform2
@@ -2774,8 +2774,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 					mes "I don't know what weapon will suit you so, you'll get a Dagger.";
 					mes "You don't have a record of receiving any supplies";
 					mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-					set para_suv01,23;
-					set para_suv02,2;
+					para_suv01 = 23;
+					para_suv02 = 2;
 					getitem 13050,1; //P_Dagger1
 					getitem 2457,1; //Para_Team_Boots2
 					getitem 15010,1; //Para_Team_Uniform2
@@ -2790,8 +2790,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 				mes "A Weapon, Uniform and Boots all 3 supplies.";
 				mes "I don't know what weapon will suit you so, you'll get a Dagger.";
 				mes "Please check it again.";
-				set para_suv01,23;
-				set para_suv02,2;
+				para_suv01 = 23;
+				para_suv02 = 2;
 				getitem 13050,1; //P_Dagger1
 				getitem 2457,1; //Para_Team_Boots2
 				getitem 15010,1; //Para_Team_Uniform2
@@ -2844,8 +2844,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 							mes "[Michael]";
 							mes "You don't have a record of receiving any supplies";
 							mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-							set para_suv01, 38;
-							set para_suv02, 3;
+							para_suv01 = 38;
+							para_suv02 = 3;
 							getitem 13424,1; //P_Sabre2
 							getitem 2458,1; //Para_Team_Boots3
 							getitem 15011,1; //Para_Team_Uniform3
@@ -2859,8 +2859,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "A One-handed sword, Uniform, and Boots all 3 supplies.";
 						mes "Please check it again.";
-						set para_suv01,38;
-						set para_suv02,3;
+						para_suv01 = 38;
+						para_suv02 = 3;
 						getitem 13424,1; //P_Sabre2
 						getitem 2458,1; //Para_Team_Boots3
 						getitem 15011,1; //Para_Team_Uniform3
@@ -2877,8 +2877,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 							mes "[Michael]";
 							mes "You don't have a record of receiving any supplies";
 							mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-							set para_suv01,38;
-							set para_suv02,3;
+							para_suv01 = 38;
+							para_suv02 = 3;
 							getitem 1193,1; //P_Slayer2
 							getitem 2458,1; //Para_Team_Boots3
 							getitem 15011,1; //Para_Team_Uniform3
@@ -2892,8 +2892,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "A Two-handed sword, Uniform, and Boots all 3 supplies.";
 						mes "Please check it again.";
-						set para_suv01,38;
-						set para_suv02,3;
+						para_suv01 = 38;
+						para_suv02 = 3;
 						getitem 1193,1; //P_Slayer2
 						getitem 2458,1; //Para_Team_Boots3
 						getitem 15011,1; //Para_Team_Uniform3
@@ -2924,7 +2924,7 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "You don't have a record of receiving any supplies";
 						mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-						set para_suv02, 3;
+						para_suv02 = 3;
 						getitem 13051,1; //P_Dagger2
 						getitem 2458,1; //Para_Team_Boots3
 						getitem 15011,1; //Para_Team_Uniform3
@@ -2938,8 +2938,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 					mes "[Michael]";
 					mes "A Dagger, Uniform, and Boots all 3 supplies.";
 					mes "Please check it again.";
-					set para_suv01,38;
-					set para_suv02,3;
+					para_suv01 = 38;
+					para_suv02 = 3;
 					getitem 13051,1; //P_Dagger2
 					getitem 2458,1; //Para_Team_Boots3
 					getitem 15011,1; //Para_Team_Uniform3
@@ -2972,8 +2972,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 							mes "[Michael]";
 							mes "You don't have a record of receiving any supplies";
 							mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-							set para_suv01,38;
-							set para_suv02,3;
+							para_suv01 = 38;
+							para_suv02 = 3;
 							getitem 1651,1; //P_Staff2
 							getitem 2458,1; //Para_Team_Boots3
 							getitem 15011,1; //Para_Team_Uniform3
@@ -2987,8 +2987,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "A Staff, Uniform, and Boots all 3 supplies.";
 						mes "Please check it again.";
-						set para_suv01,38;
-						set para_suv02,3;
+						para_suv01 = 38;
+						para_suv02 = 3;
 						getitem 1651,1; //P_Staff2
 						getitem 2458,1; //Para_Team_Boots3
 						getitem 15011,1; //Para_Team_Uniform3
@@ -3005,8 +3005,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 							mes "[Michael]";
 							mes "You don't have a record of receiving any supplies";
 							mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-							set para_suv01,38;
-							set para_suv02,3;
+							para_suv01 = 38;
+							para_suv02 = 3;
 							getitem 16005,1; //P_Mace2
 							getitem 2458,1; //Para_Team_Boots3
 							getitem 15011,1; //Para_Team_Uniform3
@@ -3020,8 +3020,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "A Mace, Uniform, and Boots all 3 supplies.";
 						mes "Please check it again.";
-						set para_suv01,38;
-						set para_suv02,3;
+						para_suv01 = 38;
+						para_suv02 = 3;
 						getitem 16005,1; //P_Mace2
 						getitem 2458,1; //Para_Team_Boots3
 						getitem 15011,1; //Para_Team_Uniform3
@@ -3052,8 +3052,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "You don't have a record of receiving any supplies";
 						mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-						set para_suv01,38;
-						set para_suv02,3;
+						para_suv01 = 38;
+						para_suv02 = 3;
 						getitem 1748,1; //P_Bow2
 						getitem 2458,1; //Para_Team_Boots3
 						getitem 15011,1; //Para_Team_Uniform3
@@ -3067,8 +3067,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 					mes "[Michael]";
 					mes "A Bow, Uniform, and Boots all 3 supplies.";
 					mes "Please check it again.";
-					set para_suv01,38;
-					set para_suv02,3;
+					para_suv01 = 38;
+					para_suv02 = 3;
 					getitem 1748,1; //P_Bow2
 					getitem 2458,1; //Para_Team_Boots3
 					getitem 15011,1; //Para_Team_Uniform3
@@ -3098,8 +3098,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "You don't have a record of receiving any supplies";
 						mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-						set para_suv01,38;
-						set para_suv02,3;
+						para_suv01 = 38;
+						para_suv02 = 3;
 						getitem 13051,1; //P_Dagger2
 						getitem 2458,1; //Para_Team_Boots3
 						getitem 15011,1; //Para_Team_Uniform3
@@ -3113,8 +3113,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 					mes "[Michael]";
 					mes "A Dagger, Uniform, and Boots all 3 supplies.";
 					mes "Please check it again.";
-					set para_suv01, 38;
-					set para_suv02, 3;
+					para_suv01 = 38;
+					para_suv02 = 3;
 					getitem 13051,1; //P_Dagger2
 					getitem 2458,1; //Para_Team_Boots3
 					getitem 15011,1; //Para_Team_Uniform3
@@ -3144,8 +3144,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "You don't have a record of receiving any supplies";
 						mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-						set para_suv01,38;
-						set para_suv02,3;
+						para_suv01 = 38;
+						para_suv02 = 3;
 						getitem 1651,1; //P_Staff2
 						getitem 2458,1; //Para_Team_Boots3
 						getitem 15011,1; //Para_Team_Uniform3
@@ -3159,8 +3159,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 					mes "[Michael]";
 					mes "A Staff, Uniform, and Boots all 3 supplies.";
 					mes "Please check it again.";
-					set para_suv01,38;
-					set para_suv02,3;
+					para_suv01 = 38;
+					para_suv02 = 3;
 					getitem 1651,1; //P_Staff2
 					getitem 2458,1; //Para_Team_Boots3
 					getitem 15011,1; //Para_Team_Uniform3
@@ -3193,8 +3193,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 							mes "[Michael]";
 							mes "You don't have a record of receiving any supplies";
 							mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-							set para_suv01,38;
-							set para_suv02,3;
+							para_suv01 = 38;
+							para_suv02 = 3;
 							getitem 13424,1; //P_Sabre2
 							getitem 2458,1; //Para_Team_Boots3
 							getitem 15011,1; //Para_Team_Uniform3
@@ -3208,8 +3208,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "A One-handed sword, Uniform and Boots all 3 supplies.";
 						mes "Please check it again.";
-						set para_suv01,38;
-						set para_suv02,3;
+						para_suv01 = 38;
+						para_suv02 = 3;
 						getitem 13424,1; //P_Sabre2
 						getitem 2458,1; //Para_Team_Boots3
 						getitem 15011,1; //Para_Team_Uniform3
@@ -3226,8 +3226,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 							mes "[Michael]";
 							mes "You don't have a record of receiving any supplies";
 							mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-							set para_suv01, 38;
-							set para_suv02, 3;
+							para_suv01 = 38;
+							para_suv02 = 3;
 							getitem 16005,1; //P_Mace2
 							getitem 2458,1; //Para_Team_Boots3
 							getitem 15011,1; //Para_Team_Uniform3
@@ -3241,8 +3241,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "A Mace, Uniform and Boots all 3 supplies.";
 						mes "Please check it again.";
-						set para_suv01,38;
-						set para_suv02,3;
+						para_suv01 = 38;
+						para_suv02 = 3;
 						getitem 16005,1; //P_Mace2
 						getitem 2458,1; //Para_Team_Boots3
 						getitem 15011,1; //Para_Team_Uniform3
@@ -3273,8 +3273,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						mes "[Michael]";
 						mes "You don't have a record of receiving any supplies";
 						mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-						set para_suv01,38;
-						set para_suv02,3;
+						para_suv01 = 38;
+						para_suv02 = 3;
 						getitem 13113,1; //P_Revolver2
 						getitem 2458,1; //Para_Team_Boots3
 						getitem 15011,1; //Para_Team_Uniform3
@@ -3288,8 +3288,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 					mes "[Michael]";
 					mes "A Revolver, Uniform and Boots all 3 supplies.";
 					mes "Please check it again.";
-					set para_suv01,38;
-					set para_suv02,3;
+					para_suv01 = 38;
+					para_suv02 = 3;
 					getitem 13113,1; //P_Revolver2
 					getitem 2458,1; //Para_Team_Boots3
 					getitem 15011,1; //Para_Team_Uniform3
@@ -3306,8 +3306,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 					mes "[Michael]";
 					mes "You don't have a record of receiving any supplies";
 					mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-					set para_suv01,38;
-					set para_suv02,3;
+					para_suv01 = 38;
+					para_suv02 = 3;
 					getitem 2458,1; //Para_Team_Boots3
 					getitem 15011,1; //Para_Team_Uniform3
 					getitem 5583,1; //Para_Team_Hat
@@ -3320,8 +3320,8 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 				mes "[Michael]";
 				mes "A Uniform and Boots all 2 supplies.";
 				mes "Please check it again.";
-				set para_suv01,38;
-				set para_suv02,3;
+				para_suv01 = 38;
+				para_suv02 = 3;
 				getitem 2458,1; //Para_Team_Boots3
 				getitem 15011,1; //Para_Team_Uniform3
 				next;
@@ -3379,7 +3379,7 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						next;
 						mes "[Michael]";
 						mes "Here you are.";
-						set para_suv02,4;
+						para_suv02 = 4;
 						delitem 5583,1;
 						getitem2 5583, 1, 1, 0, 0, 0, 0, 0, 4701;
 						close;
@@ -3401,7 +3401,7 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						next;
 						mes "[Michael]";
 						mes "Here you are.";
-						set para_suv02,4;
+						para_suv02 = 4;
 						delitem 5583,1;
 						getitem2 5583, 1, 1, 0, 0, 0, 0, 0, 4731;
 						close;
@@ -3423,7 +3423,7 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						next;
 						mes "[Michael]";
 						mes "Here you are.";
-						set para_suv02,4;
+						para_suv02 = 4;
 						delitem 5583,1;
 						getitem2 5583, 1, 1, 0, 0, 0, 0, 0, 4741;
 						close;
@@ -3445,7 +3445,7 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						next;
 						mes "[Michael]";
 						mes "Here you are.";
-						set para_suv02,4;
+						para_suv02 = 4;
 						delitem 5583,1;
 						getitem2 5583, 1, 1, 0, 0, 0, 0, 0, 4711;
 						close;
@@ -3467,7 +3467,7 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						next;
 						mes "[Michael]";
 						mes "Here you are.";
-						set para_suv02, 4;
+						para_suv02 = 4;
 						delitem 5583,1;
 						getitem2 5583, 1, 1, 0, 0, 0, 0, 0, 4721;
 						close;
@@ -3489,7 +3489,7 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 						next;
 						mes "[Michael]";
 						mes "Here you are.";
-						set para_suv02, 4;
+						para_suv02 = 4;
 						delitem 5583,1;
 						getitem2 5583, 1, 1, 0, 0, 0, 0, 0, 4751;
 						close;
@@ -3851,7 +3851,7 @@ moc_para01,23,35,4	script	Instructor Ur	4_M_KNIGHT_BLACK,{
 			callsub L_GiveQuest;
 			mes "Great! I want you to go find ^0000FFRomeo in Comodo^000000.";
 			next;
-			set para_suv01,39;
+			para_suv01 = 39;
 			setquest 7214;
 			mes "[Instructor Ur]";
 			mes "You should see him near the entrance to the ^0000FFNorth Cave in Comodo^000000.";
@@ -3871,7 +3871,7 @@ moc_para01,23,35,4	script	Instructor Ur	4_M_KNIGHT_BLACK,{
 			callsub L_GiveQuest;
 			mes "Great! I want you to go find ^0000FFJohan in Glast Heim^000000.";
 			next;
-			set para_suv01,43;
+			para_suv01 = 43;
 			setquest 7219;
 			mes "[Instructor Ur]";
 			mes "You should see him near the entrance of the ^0000FFGlast Heim Church^000000.";
@@ -3891,7 +3891,7 @@ moc_para01,23,35,4	script	Instructor Ur	4_M_KNIGHT_BLACK,{
 			callsub L_GiveQuest;
 			mes "Great! I want you to go find ^0000FFKiren in Einbroch^000000.";
 			next;
-			set para_suv01,46;
+			para_suv01 = 46;
 			setquest 7223;
 			mes "[Instructor Ur]";
 			mes "You should see her near the ^0000FFSouth Enterance^000000 outside of town.";
@@ -3911,7 +3911,7 @@ moc_para01,23,35,4	script	Instructor Ur	4_M_KNIGHT_BLACK,{
 			callsub L_GiveQuest;
 			mes "Great! I want you to go find ^0000FFNaomi in Ice Dungeon^000000.";
 			next;
-			set para_suv01,49;
+			para_suv01 = 49;
 			setquest 7229;
 			mes "[Instructor Ur]";
 			mes "You should see her near the ^0000FFEntrance^000000 when you enter the dungeon.";
@@ -3931,7 +3931,7 @@ moc_para01,23,35,4	script	Instructor Ur	4_M_KNIGHT_BLACK,{
 			callsub L_GiveQuest;
 			mes "Great! I want you to go find ^0000FFMargaret in the Expedition Camp^000000.";
 			next;
-			set para_suv01,52;
+			para_suv01 = 52;
 			setquest 7233;
 			mes "[Instructor Ur]";
 			mes "You should see her near the ^0000FFBuilding in the Center^000000 of the Expedition Camp.";
@@ -3973,9 +3973,9 @@ L_GiveQuest:
 L_CompleteQuest:
 	mes "Done already? Great work!";
 	next;
-	set para_suv01, getarg(1);
+	para_suv01 = getarg(1);
 	completequest getarg(0);
-	if (para_suv02 < getarg(2)) set para_suv02, getarg(2);
+	if (para_suv02 < getarg(2)) para_suv02 = getarg(2);
 	mes "[Instructor Ur]";
 L_Toren:
 	mes "Go to the back room and talk to ^0000FFToren and the Weapons Expert^000000 for your rewards!";
@@ -3993,7 +3993,7 @@ comodo,173,354,6	script	Romeo#01	1_M_JOBTESTER,{
 		mes "[Romeo]";
 		mes "Before we begin, I want to test you.";
 		next;
-		set romeo,1;
+		romeo = 1;
 		changequest 7214,7215;
 		mes "[Romeo]";
 		mes "Enter the cave and kill ^0000FF3 Stalactic Golems^000000, then return to me.";
@@ -4008,7 +4008,7 @@ comodo,173,354,6	script	Romeo#01	1_M_JOBTESTER,{
 			mes "You should then have no trouble killing ^0000FF10 more Stalactic Golems^000000, right?";
 			next;
 			getexp 10000,10000;
-			set romeo,2;
+			romeo = 2;
 			changequest 7215,7216;
 			mes "[Romeo]";
 			mes "^0000FFMeet me at the north-east exit of the cave^000000 when you are done, I will be waiting for you outside.";
@@ -4041,7 +4041,7 @@ um_fild01,34,280,6	script	Romeo#02	1_M_JOBTESTER,{
 			mes "There is only one more thing I need you to do for me.";
 			next;
 			getexp 10000,10000;
-			set romeo,3;
+			romeo = 3;
 			changequest 7216,7217;
 			mes "[Romeo]";
 			mes "Bring me ^0000FF5 Shoulder Pads and 7 Sharp Leafs^000000.";
@@ -4059,8 +4059,8 @@ um_fild01,34,280,6	script	Romeo#02	1_M_JOBTESTER,{
 			delitem 7196,5; // Shoulder Pad
 			delitem 7100,7; // Sharp Leaf
 			getexp 10000,10000;
-			set romeo,4;
-			set para_suv01,40;
+			romeo = 4;
+			para_suv01 = 40;
 			changequest 7217,7218;
 			mes "[Romeo]";
 			mes "Return to the ^33CC33Paradise Group Headquarters^000000 for your reward.";
@@ -4091,7 +4091,7 @@ glast_01,195,131,6	script	Johan	4_F_SISTER,{
 		mes "[Johan]";
 		mes "I don't need to explain anything to you.";
 		next;
-		set johan,1;
+		johan = 1;
 		changequest 7219,7220;
 		mes "[Johan]";
 		mes "Go kill ^0000FF20 Wraiths^000000.";
@@ -4106,7 +4106,7 @@ glast_01,195,131,6	script	Johan	4_F_SISTER,{
 			mes "Next I want you to kill ^0000FF10 Evil Druids^000000.";
 			next;
 			getexp 20000,20000;
-			set johan,2;
+			johan = 2;
 			changequest 7220,7221;
 			mes "[Johan]";
 			mes "This time kill them quickly, I don't like to wait.";
@@ -4125,7 +4125,7 @@ glast_01,195,131,6	script	Johan	4_F_SISTER,{
 			mes "Ok, I'm done with you.";
 			next;
 			getexp 20000,20000;
-			set johan,3;
+			johan = 3;
 			changequest 7221,7222;
 			mes "[Johan]";
 			mes "Return to the ^33CC33Paradise Group Headquarters^000000 for your reward.";
@@ -4156,7 +4156,7 @@ ein_fild08,172,359,4	script	Kiren	4_M_4THPRIN1,{
 		mes "[Kiren]";
 		mes "You must be a member of the Paradise Group, come help me for a second.";
 		next;
-		set kiren,1;
+		kiren = 1;
 		changequest 7223,7224;
 		mes "[kiren]";
 		mes "Can you kill ^0000FF30 Porcellios^000000 for me and then return to me?";
@@ -4171,7 +4171,7 @@ ein_fild08,172,359,4	script	Kiren	4_M_4THPRIN1,{
 			mes "I think you need a challenge.";
 			next;
 			getexp 30000,30000;
-			set kiren,2;
+			kiren = 2;
 			changequest 7224,7226;
 			setquest 7227;
 			mes "[Kiren]";
@@ -4191,7 +4191,7 @@ ein_fild08,172,359,4	script	Kiren	4_M_4THPRIN1,{
 			mes "I have never seen anyone kill them all so fast, you are good at this.";
 			next;
 			getexp 30000,30000;
-			set kiren,3;
+			kiren = 3;
 			changequest 7226,7228;
 			completequest 7227;
 			mes "[Kiren]";
@@ -4223,7 +4223,7 @@ ice_dun01,154,13,6	script	Naomi	4_F_JOB_BLACKSMITH,{
 		mes "[Naomi]";
 		mes "I blame those annoying Siromas.";
 		next;
-		set naomi,1;
+		naomi = 1;
 		changequest 7229,7230;
 		mes "[Naomi]";
 		mes "Can you kill ^0000FF30 Siromas^000000 for me, please?";
@@ -4238,7 +4238,7 @@ ice_dun01,154,13,6	script	Naomi	4_F_JOB_BLACKSMITH,{
 			mes "I need to make a special drink to stay warm, please help me make it.";
 			next;
 			getexp 40000,40000;
-			set naomi,2;
+			naomi = 2;
 			changequest 7230,7231;
 			mes "[Naomi]";
 			mes "Can you kill another ^0000FF30 Siromas^000000 and bring me ^0000FF30 Ice Cubics, 1 Milk and 1 Sweet Sauce^000000?";
@@ -4260,7 +4260,7 @@ ice_dun01,154,13,6	script	Naomi	4_F_JOB_BLACKSMITH,{
 			delitem 519,1; // Milk
 			delitem 7453,1; // Sweet Sauce
 			getexp 40000,40000;
-			set naomi,3;
+			naomi = 3;
 			changequest 7231,7232;
 			mes "[Naomi]";
 			mes "Return to the ^33CC33Paradise Group Headquarters^000000 for your reward.";
@@ -4291,7 +4291,7 @@ mid_camp,212,229,4	script	Margaret	4_F_HUWOMAN,{
 		mes "[Margaret]";
 		mes "I have two friends here in the New World which need your help.";
 		next;
-		set margaret,1;
+		margaret = 1;
 		changequest 7233,7234;
 		mes "[Margaret]";
 		mes "Please start by helping the ^0000FFParadise Dispatch in Manuk Field^000000.";
@@ -4306,7 +4306,7 @@ mid_camp,212,229,4	script	Margaret	4_F_HUWOMAN,{
 		mes "[Margaret]";
 		mes "Ah good, you were able to help him.";
 		next;
-		set margaret,4;
+		margaret = 4;
 		mes "[Margaret]";
 		mes "Next can you help the ^0000FFParadise Dispatch in Splendide Field^000000, please?";
 		close;
@@ -4323,7 +4323,7 @@ mid_camp,212,229,4	script	Margaret	4_F_HUWOMAN,{
 		mes "[Margaret]";
 		mes "Thanks for helping them, I knew you could do it.";
 		next;
-		set margaret,7;
+		margaret = 7;
 		changequest 7234,7237;
 		mes "[Margaret]";
 		mes "Return to the ^33CC33Paradise Group Headquarters^000000 for your reward.";
@@ -4342,7 +4342,7 @@ man_fild01,43,234,2	script	Paradise Dispatch#01	4_DST_SOLDIER,{
 		mes "[Paradise Dispatch]";
 		mes "The plant monsters in this area have a long ranged attack.";
 		next;
-		set margaret,2;
+		margaret = 2;
 		changequest 7234,7235;
 		mes "[Paradise Dispatch]";
 		mes "Can you please kill ^0000FF1 Nepenthes^000000 so I can go back to the camp?";
@@ -4357,7 +4357,7 @@ man_fild01,43,234,2	script	Paradise Dispatch#01	4_DST_SOLDIER,{
 			mes "Ok, I'm out of here.";
 			next;
 			getexp 50000,50000;
-			set margaret,3;
+			margaret = 3;
 			changequest 7235,7234;
 			mes "[Paradise Dispatch]";
 			mes "Head back to ^0000FFMargaret^000000 and tell her thanks for me too!";
@@ -4388,7 +4388,7 @@ spl_fild02,377,149,4	script	Paradise Dispatch#02	4_M_DST_MASTER,{
 		mes "[Paradise Dispatch]";
 		mes "Ok, lets get started!";
 		next;
-		set margaret,5;
+		margaret = 5;
 		changequest 7234,7236;
 		mes "[Paradise Dispatch]";
 		mes "Kill ^0000FF5 Pinguicula^000000 and then return to me.";
@@ -4403,7 +4403,7 @@ spl_fild02,377,149,4	script	Paradise Dispatch#02	4_M_DST_MASTER,{
 			mes "Now is my chance to run to Splendide!";
 			next;
 			getexp 50000,50000;
-			set margaret,6;
+			margaret = 6;
 			changequest 7236,7234;
 			mes "[Paradise Dispatch]";
 			mes "Head back to ^0000FFMargaret^000000, I will be ok now.";
@@ -4549,9 +4549,9 @@ moc_para01,111,83,3	script	Toren	2_M_OLDBLSMITH,{
 			getitem 2571,1; //Paradise Mantle II
 			getitem 2473,1; //Paradise Boots IV
 			getitem 15031,1; //Paradise Uniform IV
-			set para_suv02,14;
+			para_suv02 = 14;
 			if (para_suv01 > 40)
-				set para_suv01, para_suv01+1;
+				para_suv01 += 1;
 			if (Class == Job_Taekwon) {
 				mes "I'm sorry, but Teakwon Class can't wear any of our weapons...";
 				next;
@@ -4562,7 +4562,7 @@ moc_para01,111,83,3	script	Toren	2_M_OLDBLSMITH,{
 		if (para_suv02 == 14) {
 			setarray .@check[0],18514,2571,2473,15031;
 			setarray .@item$[0],"Hat","Mantle","Boots","Uniform";
-			for(set .@i,0; .@i<4; set .@i,.@i+1)
+			for(.@i = 0; .@i<4; ++.@i)
 				if (countitem(.@check[.@i]) < 1) {
 					mes "[Toren]";
 					mes "Where is the Paradise "+.@item$[.@i]+" I gave you?";
@@ -4604,13 +4604,13 @@ moc_para01,111,83,3	script	Toren	2_M_OLDBLSMITH,{
 			mes "Alright, but I'll need a few items for the enchantment process.";
 			next;
 			if (BaseLevel >= 90) {
-				set paragearenchant,1;
+				paragearenchant = 1;
 				setquest 7239;
 				mes "[Toren]";
 				mes "Just bring me ^0000FF20 Used Iron Plates^000000.";
 				close;
 			}
-			set paragearenchant,2;
+			paragearenchant = 2;
 			setquest 7238;
 			mes "[Toren]";
 			mes "Just bring me ^0000FF20 Iron Ores and 10 Irons^000000.";
@@ -4622,7 +4622,7 @@ moc_para01,111,83,3	script	Toren	2_M_OLDBLSMITH,{
 				mes "Thanks, that's what I needed!";
 				next;
 				delitem 7319,20; // Used Iron Plate
-				set paragearenchant,3;
+				paragearenchant = 3;
 				changequest 7239,7240;
 				mes "[Toren]";
 				mes "Give me a second to prepare before I enchant your gears.";
@@ -4639,7 +4639,7 @@ moc_para01,111,83,3	script	Toren	2_M_OLDBLSMITH,{
 				next;
 				delitem 1002,20; // Iron Ore
 				delitem 998,10; // Iron
-				set paragearenchant,3;
+				paragearenchant = 3;
 				changequest 7238,7240;
 				mes "[Toren]";
 				mes "Give me a second to prepare before I enchant your gears.";
@@ -4660,42 +4660,42 @@ moc_para01,111,83,3	script	Toren	2_M_OLDBLSMITH,{
 			mes "Now pick which gear you would like me to enchant.";
 			next;
 			setarray .@item[0],2571,2473,15031;
-			set .@i, select("Paradise Mantle II.:Paradise Boots IV.:Paradise Uniform IV.")-1;
+			.@i = select("Paradise Mantle II.:Paradise Boots IV.:Paradise Uniform IV.")-1;
 			if (countitem(.@item[.@i]) < 1) {
 				mes "[Toren]";
 				mes "Bring one and I'll enchant it.";
 				close;
 			}
-			set .@paragearcount, .@item[.@i];
+			.@paragearcount = .@item[.@i];
 			mes "[Toren]";
 			mes "Here we go!";
 			close2;
 			specialeffect2 EF_MAPPILLAR;
 			progressbar "ffff00",4;
-			set .@enc_paragear,rand(1,42);
-			if (.@enc_paragear == 1) set .@addpart,4763;
-			else if (.@enc_paragear == 2) set .@addpart,4765;
-			else if (.@enc_paragear == 3) set .@addpart,4790;
-			else if (.@enc_paragear == 4) set .@addpart,4794;
-			else if (.@enc_paragear < 7) set .@addpart,4762;
-			else if (.@enc_paragear < 9) set .@addpart,4764;
-			else if (.@enc_paragear < 11) set .@addpart,4789;
-			else if (.@enc_paragear < 13) set .@addpart,4793;
-			else if (.@enc_paragear < 15) set .@addpart,4701;
-			else if (.@enc_paragear < 17) set .@addpart,4711;
-			else if (.@enc_paragear < 19) set .@addpart,4721;
-			else if (.@enc_paragear < 21) set .@addpart,4731;
-			else if (.@enc_paragear < 23) set .@addpart,4741;
-			else if (.@enc_paragear < 25) set .@addpart,4751;
-			else if (.@enc_paragear < 28) set .@addpart,4788;
-			else if (.@enc_paragear < 31) set .@addpart,4792;
-			else if (.@enc_paragear < 35) set .@addpart,4787;
-			else if (.@enc_paragear < 39) set .@addpart,4791;
-			else if (.@enc_paragear < 43) set .@addpart,4786;
-			set .@addpart2,4701+(10*rand(6));
+			.@enc_paragear = rand(1,42);
+			if (.@enc_paragear == 1) .@addpart = 4763;
+			else if (.@enc_paragear == 2) .@addpart = 4765;
+			else if (.@enc_paragear == 3) .@addpart = 4790;
+			else if (.@enc_paragear == 4) .@addpart = 4794;
+			else if (.@enc_paragear < 7) .@addpart = 4762;
+			else if (.@enc_paragear < 9) .@addpart = 4764;
+			else if (.@enc_paragear < 11) .@addpart = 4789;
+			else if (.@enc_paragear < 13) .@addpart = 4793;
+			else if (.@enc_paragear < 15) .@addpart = 4701;
+			else if (.@enc_paragear < 17) .@addpart = 4711;
+			else if (.@enc_paragear < 19) .@addpart = 4721;
+			else if (.@enc_paragear < 21) .@addpart = 4731;
+			else if (.@enc_paragear < 23) .@addpart = 4741;
+			else if (.@enc_paragear < 25) .@addpart = 4751;
+			else if (.@enc_paragear < 28) .@addpart = 4788;
+			else if (.@enc_paragear < 31) .@addpart = 4792;
+			else if (.@enc_paragear < 35) .@addpart = 4787;
+			else if (.@enc_paragear < 39) .@addpart = 4791;
+			else if (.@enc_paragear < 43) .@addpart = 4786;
+			.@addpart2 = 4701+(10*rand(6));
 			delitem .@paragearcount,1;
 			getitem2 .@paragearcount, 1, 1, 0, 0, 0, 0, .@addpart2, .@addpart;
-			set paragearenchant,4;
+			paragearenchant = 4;
 			changequest 7240,7241;
 			mes "[Toren]";
 			mes "It is finished! Come back tomorrow if you want to enchant more.";
@@ -4707,7 +4707,7 @@ moc_para01,111,83,3	script	Toren	2_M_OLDBLSMITH,{
 			close;
 		}
 		if ((paragearenchant == 4) && (questprogress(7241,PLAYTIME) == 2)) {
-			set paragearenchant,0;
+			paragearenchant = 0;
 			erasequest 7241;
 			mes "[Toren]";
 			mes "Another day, another piece of equipment to enchant!";
@@ -4718,14 +4718,14 @@ moc_para01,111,83,3	script	Toren	2_M_OLDBLSMITH,{
 L_Select:
 	next;
 	mes "[Toren]";
-	set .@menu$,"";
-	for(set .@i,0; .@i<getargcount(); set .@i,.@i+3) {
-		set .@menu$, .@menu$+getarg(.@i+1)+".:";
+	.@menu$ = "";
+	for(.@i = 0; .@i<getargcount(); .@i += 3) {
+		.@menu$ += getarg(.@i+1)+".:";
 		mes getarg(.@i+1)+": "+getarg(.@i+2)+".";
 		mes " ";
 	}
 	next;
-	set .@i, select(.@menu$)-1;
+	.@i = select(.@menu$)-1;
 	getitem getarg(.@i*3),1;
 	mes "[Toren]";
 	return;
@@ -4901,8 +4901,8 @@ moc_para01,112,79,3	script	Weapons Expert	4_M_REPAIR,{
 			mes "[Weapons Expert]";
 			mes "There are only 2 to choose from, which one would you like?";
 			next;
-			if(select("Atk + 3%:Matk + 3%") == 1) set paraweaponenchant,4767;
-			else set paraweaponenchant,4806;
+			if(select("Atk + 3%:Matk + 3%") == 1) paraweaponenchant = 4767;
+			else paraweaponenchant = 4806;
 			callsub L_GetWeapon;
 			mes "[Weapons Expert]";
 			mes "OK, gimmy a sec.";
@@ -4911,7 +4911,7 @@ moc_para01,112,79,3	script	Weapons Expert	4_M_REPAIR,{
 			progressbar "ffff00",4;
 			delitem paraweaponcount,1;
 			getitem2 paraweaponcount, 1, 1, 0, 0, 0, 0, 0, paraweaponenchant;
-			set para_suv01,45;
+			para_suv01 = 45;
 			mes "[Weapons Expert]";
 			mes "All done.";
 			close;
@@ -4927,8 +4927,8 @@ moc_para01,112,79,3	script	Weapons Expert	4_M_REPAIR,{
 				mes "[Weapons Expert]";
 				mes "There are only 2 to choose from, which one would you like?";
 				next;
-				if(select("Atk + 3%:Matk + 3%") == 1) set paraweaponenchant,4767;
-				else set paraweaponenchant,4806;
+				if(select("Atk + 3%:Matk + 3%") == 1) paraweaponenchant = 4767;
+				else paraweaponenchant = 4806;
 				callsub L_GetWeapon;
 				mes "[Weapons Expert]";
 				mes "Gotcha, now for the second enchantment.";
@@ -4942,27 +4942,27 @@ moc_para01,112,79,3	script	Weapons Expert	4_M_REPAIR,{
 			next;
 			switch(select("Animal Type","Plant Type","Insect Type","Fish Type","Dragon Type","Healing Power")) {
 			case 1:
-				if (paraweaponenchant == 4767) set paraweaponenchant2,4060;
-				if (paraweaponenchant == 4806) set paraweaponenchant2,4472;
+				if (paraweaponenchant == 4767) paraweaponenchant2 = 4060;
+				if (paraweaponenchant == 4806) paraweaponenchant2 = 4472;
 				break;
 			case 2:
-				if (paraweaponenchant == 4767) set paraweaponenchant2,4068;
-				if (paraweaponenchant == 4806) set paraweaponenchant2,4470;
+				if (paraweaponenchant == 4767) paraweaponenchant2 = 4068;
+				if (paraweaponenchant == 4806) paraweaponenchant2 = 4470;
 				break;
 			case 3:
-				if (paraweaponenchant == 4767) set paraweaponenchant2,4063;
-				if (paraweaponenchant == 4806) set paraweaponenchant2,4476;
+				if (paraweaponenchant == 4767) paraweaponenchant2 = 4063;
+				if (paraweaponenchant == 4806) paraweaponenchant2 = 4476;
 				break;
 			case 4:
-				if (paraweaponenchant == 4767) set paraweaponenchant2,4080;
-				if (paraweaponenchant == 4806) set paraweaponenchant2,4469;
+				if (paraweaponenchant == 4767) paraweaponenchant2 = 4080;
+				if (paraweaponenchant == 4806) paraweaponenchant2 = 4469;
 				break;
 			case 5:
-				if (paraweaponenchant == 4767) set paraweaponenchant2,4118;
-				if (paraweaponenchant == 4806) set paraweaponenchant2,4471;
+				if (paraweaponenchant == 4767) paraweaponenchant2 = 4118;
+				if (paraweaponenchant == 4806) paraweaponenchant2 = 4471;
 				break;
 			case 6:
-				set paraweaponenchant2,4805;
+				paraweaponenchant2 = 4805;
 				break;
 			}
 			mes "[Weapons Expert]";
@@ -4972,7 +4972,7 @@ moc_para01,112,79,3	script	Weapons Expert	4_M_REPAIR,{
 			progressbar "ffff00",4;
 			delitem paraweaponcount,1;
 			getitem2 paraweaponcount, 1, 1, 0, 0, 0, 0, paraweaponenchant2, paraweaponenchant;
-			set para_suv01,48;
+			para_suv01 = 48;
 			mes "[Weapons Expert]";
 			mes "All done.";
 			close;
@@ -4988,8 +4988,8 @@ moc_para01,112,79,3	script	Weapons Expert	4_M_REPAIR,{
 				mes "[Weapons Expert]";
 				mes "There are only 2 to choose from, which one would you like?";
 				next;
-				if(select("Atk + 3%:Matk + 3%") == 1) set paraweaponenchant,4767;
-				else set paraweaponenchant,4806;
+				if(select("Atk + 3%:Matk + 3%") == 1) paraweaponenchant = 4767;
+				else paraweaponenchant = 4806;
 				callsub L_GetWeapon;
 				mes "[Weapons Expert]";
 				mes "Gotcha, on to the next one.";
@@ -5007,27 +5007,27 @@ moc_para01,112,79,3	script	Weapons Expert	4_M_REPAIR,{
 				next;
 				switch(select("Animal Type","Plant Type","Insect Type","Fish Type","Dragon Type","Healing Power")) {
 				case 1:
-					if (paraweaponenchant == 4767) set paraweaponenchant2,4060;
-					if (paraweaponenchant == 4806) set paraweaponenchant2,4472;
+					if (paraweaponenchant == 4767) paraweaponenchant2 = 4060;
+					if (paraweaponenchant == 4806) paraweaponenchant2 = 4472;
 					break;
 				case 2:
-					if (paraweaponenchant == 4767) set paraweaponenchant2,4068;
-					if (paraweaponenchant == 4806) set paraweaponenchant2,4470;
+					if (paraweaponenchant == 4767) paraweaponenchant2 = 4068;
+					if (paraweaponenchant == 4806) paraweaponenchant2 = 4470;
 					break;
 				case 3:
-					if (paraweaponenchant == 4767) set paraweaponenchant2,4063;
-					if (paraweaponenchant == 4806) set paraweaponenchant2,4476;
+					if (paraweaponenchant == 4767) paraweaponenchant2 = 4063;
+					if (paraweaponenchant == 4806) paraweaponenchant2 = 4476;
 					break;
 				case 4:
-					if (paraweaponenchant == 4767) set paraweaponenchant2,4080;
-					if (paraweaponenchant == 4806) set paraweaponenchant2,4469;
+					if (paraweaponenchant == 4767) paraweaponenchant2 = 4080;
+					if (paraweaponenchant == 4806) paraweaponenchant2 = 4469;
 					break;
 				case 5:
-					if (paraweaponenchant == 4767) set paraweaponenchant2,4118;
-					if (paraweaponenchant == 4806) set paraweaponenchant2,4471;
+					if (paraweaponenchant == 4767) paraweaponenchant2 = 4118;
+					if (paraweaponenchant == 4806) paraweaponenchant2 = 4471;
 					break;
 				case 6:
-					set paraweaponenchant2,4805;
+					paraweaponenchant2 = 4805;
 					break;
 				}
 				mes "[Weapons Expert]";
@@ -5042,27 +5042,27 @@ moc_para01,112,79,3	script	Weapons Expert	4_M_REPAIR,{
 			next;
 			switch(select("Animal Type","Plant Type","Insect Type","Fish Type","Dragon Type","Healing Power")) {
 			case 1:
-				if (paraweaponenchant == 4767) set paraweaponenchant3,4060;
-				if (paraweaponenchant == 4806) set paraweaponenchant3,4472;
+				if (paraweaponenchant == 4767) paraweaponenchant3 = 4060;
+				if (paraweaponenchant == 4806) paraweaponenchant3 = 4472;
 				break;
 			case 2:
-				if (paraweaponenchant == 4767) set paraweaponenchant3,4068;
-				if (paraweaponenchant == 4806) set paraweaponenchant3,4470;
+				if (paraweaponenchant == 4767) paraweaponenchant3 = 4068;
+				if (paraweaponenchant == 4806) paraweaponenchant3 = 4470;
 				break;
 			case 3:
-				if (paraweaponenchant == 4767) set paraweaponenchant3,4063;
-				if (paraweaponenchant == 4806) set paraweaponenchant3,4476;
+				if (paraweaponenchant == 4767) paraweaponenchant3 = 4063;
+				if (paraweaponenchant == 4806) paraweaponenchant3 = 4476;
 				break;
 			case 4:
-				if (paraweaponenchant == 4767) set paraweaponenchant3,4080;
-				if (paraweaponenchant == 4806) set paraweaponenchant3,4469;
+				if (paraweaponenchant == 4767) paraweaponenchant3 = 4080;
+				if (paraweaponenchant == 4806) paraweaponenchant3 = 4469;
 				break;
 			case 5:
-				if (paraweaponenchant == 4767) set paraweaponenchant3,4118;
-				if (paraweaponenchant == 4806) set paraweaponenchant3,4471;
+				if (paraweaponenchant == 4767) paraweaponenchant3 = 4118;
+				if (paraweaponenchant == 4806) paraweaponenchant3 = 4471;
 				break;
 			case 6:
-				set paraweaponenchant3,4805;
+				paraweaponenchant3 = 4805;
 				break;
 			}
 			mes "[Weapons Expert]";
@@ -5072,7 +5072,7 @@ moc_para01,112,79,3	script	Weapons Expert	4_M_REPAIR,{
 			progressbar "ffff00",4;
 			delitem paraweaponcount,1;
 			getitem2 paraweaponcount, 1, 1, 0, 0, 0, paraweaponenchant3, paraweaponenchant2, paraweaponenchant;
-			set para_suv01,54;
+			para_suv01 = 54;
 			mes "[Weapons Expert]";
 			mes "All done.";
 			close;
@@ -5090,33 +5090,33 @@ moc_para01,112,79,3	script	Weapons Expert	4_M_REPAIR,{
 L_Select:
 	next;
 	mes "[Weapons Expert]";
-	set .@menu$,"";
-	for(set .@i,0; .@i<getargcount(); set .@i,.@i+3) {
-		set .@menu$, .@menu$+getarg(.@i+1)+".:";
+	.@menu$ = "";
+	for(.@i = 0; .@i<getargcount(); .@i += 3) {
+		.@menu$ += getarg(.@i+1)+".:";
 		mes getarg(.@i+1)+": "+getarg(.@i+2)+".";
 		mes " ";
 	}
 	next;
-	set .@i, select(.@menu$)-1;
+	.@i = select(.@menu$)-1;
 	getitem getarg(.@i*3),1;
 	mes "[Weapons Expert]";
 	return;
 L_GetWeapon:
-	if (countitem(1197)) set paraweaponcount,1197;
-	else if (countitem(1289)) set paraweaponcount,1289;
-	else if (countitem(1391)) set paraweaponcount,1391;
-	else if (countitem(1434)) set paraweaponcount,1434;
-	else if (countitem(1583)) set paraweaponcount,1583;
-	else if (countitem(1658)) set paraweaponcount,1658;
-	else if (countitem(1831)) set paraweaponcount,1831;
-	else if (countitem(1931)) set paraweaponcount,1931;
-	else if (countitem(1986)) set paraweaponcount,1986;
-	else if (countitem(13066)) set paraweaponcount,13066;
-	else if (countitem(13114)) set paraweaponcount,13114;
-	else if (countitem(13310)) set paraweaponcount,13310;
-	else if (countitem(13434)) set paraweaponcount,13434;
-	else if (countitem(16014)) set paraweaponcount,16014;
-	else if (countitem(18106)) set paraweaponcount,18106;
+	if (countitem(1197)) paraweaponcount = 1197;
+	else if (countitem(1289)) paraweaponcount = 1289;
+	else if (countitem(1391)) paraweaponcount = 1391;
+	else if (countitem(1434)) paraweaponcount = 1434;
+	else if (countitem(1583)) paraweaponcount = 1583;
+	else if (countitem(1658)) paraweaponcount = 1658;
+	else if (countitem(1831)) paraweaponcount = 1831;
+	else if (countitem(1931)) paraweaponcount = 1931;
+	else if (countitem(1986)) paraweaponcount = 1986;
+	else if (countitem(13066)) paraweaponcount = 13066;
+	else if (countitem(13114)) paraweaponcount = 13114;
+	else if (countitem(13310)) paraweaponcount = 13310;
+	else if (countitem(13434)) paraweaponcount = 13434;
+	else if (countitem(16014)) paraweaponcount = 16014;
+	else if (countitem(18106)) paraweaponcount = 18106;
 	return;
 }
 
@@ -5127,7 +5127,7 @@ sec_in02,25,33,4	script	Assistant#para_suvquest	4_M_BABYCAT,{
 	if (callfunc("F_GM_NPC",1854,0) == 1) {
 		mes "Please select the variable you want to modify.";
 		next;
-		set .@var, select("para_suv01:para_suv02");
+		.@var = select("para_suv01:para_suv02");
 		mes "Enter the modified value";
 		next;
 		input .@input,0,9999;

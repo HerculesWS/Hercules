@@ -73,7 +73,7 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 					close;
 				}
 				delitem 12636,10; //Malang_Sp_Can
-				set ep13_yong1,10;
+				ep13_yong1 = 10;
 				mes "[Investment Cat Helper]";
 				mes "Good!";
 				mes "Write down here~ and";
@@ -129,7 +129,7 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 		mes "smell... smell...";
 		next;
 		if (ep13_yong1 < 10000) {
-			set .@cans,10;
+			.@cans = 10;
 			mes "[Investment Cat Helper]";
 			mes "This is a familiar smell!!";
 			mes "If it's so...!!";
@@ -142,7 +142,7 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 			mes "From your smell~ you are below 10,000 accounts.";
 			mes "Until then, you can get an account by investing ten cans.";
 		} else {
-			set .@cans,20;
+			.@cans = 20;
 			mes "[Investment Cat Helper]";
 			mes "Such a stong smell!!";
 			mes "Then it must be!!";
@@ -178,7 +178,7 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 				mes "You can get a maximum of 10 accounts~";
 				close;
 			}
-			set .@required, .@input*.@cans;
+			.@required = .@input*.@cans;
 			mes "[Investment Cat Helper]";
 			mes "Total " + .@input + " accounts, right?";
 			mes "The number of cans you need is "+.@required+" pieces.";
@@ -199,7 +199,7 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 			}
 			if (ep13_yong1 < 10000) {
 				delitem 12636,.@required; //Malang_Sp_Can
-				set ep13_yong1, ep13_yong1+.@input;
+				ep13_yong1 += .@input;
 				mes "[Investment Cat Helper]";
 				mes .@input+" accounts were invested in.";
 				mes "Thank you for your help~";
@@ -213,7 +213,7 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 			} else {
 				if (.@input + ep13_yong1 > 20000) {
 					delitem 12636,.@required; //Malang_Sp_Can
-					set ep13_yong1,20000;
+					ep13_yong1 = 20000;
 					mes "[Investment Cat Helper]";
 					mes "You can have 20,000 accounts max";
 					mes "according to the trader policy...";
@@ -227,7 +227,7 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 					close;
 				} else {
 					delitem 12636,.@required; //Malang_Sp_Can
-					set ep13_yong1, ep13_yong1+.@input;
+					ep13_yong1 += .@input;
 					mes "[Investment Cat Helper]";
 					mes .@input+" accounts have been invested in.";
 					mes "Thank you for your help~";
@@ -318,13 +318,13 @@ malangdo,184,139,4	script	Storekeeper#mal	4_CAT_ADV2,{
 	mes "What do you take me for?";
 	next;
 	if (ep13_yong1 > 999) {
-		set .@cans,1;
-		set .@zeny,1500;
-		set .@i, select("Pay with Can ----- 1 unit:Pay with Zeny ------- 1,500z");
+		.@cans = 1;
+		.@zeny = 1500;
+		.@i = select("Pay with Can ----- 1 unit:Pay with Zeny ------- 1,500z");
 	} else {
-		set .@cans,2;
-		set .@zeny,3000;
-		set .@i, select("Pay with Can ----- 2units:Pay with Zeny ------- 3,000z");
+		.@cans = 2;
+		.@zeny = 3000;
+		.@i = select("Pay with Can ----- 2units:Pay with Zeny ------- 3,000z");
 	}
 	if (getskilllv("NV_BASIC") < 6) {
 		mes "[Storekeeper]";
@@ -504,7 +504,7 @@ mal_in02,22,62,3	script	Tomas#mal	4_CAT_ADMIRAL,{
 			mes "[Tomas, Village Chief]";
 			mes "You're just in time. Go to the ^0000FFregular meeting^000000 being held now.";
 			mes "The meeting place is ^0000FFat the end of the corridor^000000.";
-			set ma_tomas,1;
+			ma_tomas = 1;
 			setquest 11209;
 			close2;
 			cutin "",255;
@@ -612,7 +612,7 @@ mal_in02,22,62,3	script	Tomas#mal	4_CAT_ADMIRAL,{
 		next;
 		mes "[Tomas, Village Chief]";
 		mes "Then, as village chief and the admiral of the cat association, I'd like you to get along with me as well!";
-		set ma_tomas,100;
+		ma_tomas = 100;
 		completequest 11237;
 		getitem 6422,30; //Egrade_Coin
 		close2;
@@ -652,7 +652,7 @@ mal_in02,182,61,3	script	President of Meeting#mal	4_M_BOSSCAT,{
 		next;
 		mes "[President of Meeting]";
 		mes "Umm... Yes. Then, please say first, ^6666ccScottfold^000000.";
-		set ma_tomas,2;
+		ma_tomas = 2;
 		changequest 11209,11210;
 		emotion e_paper,0,"Scottfold#mal";
 		close;
@@ -720,7 +720,7 @@ mal_in02,178,66,5	script	Scottfold#mal	4_M_BABYCAT,{
 		next;
 		mes "[President of Meeting]";
 		mes "Then for the next... yes, Koon please speak now.";
-		set ma_tomas,3;
+		ma_tomas = 3;
 		changequest 11210,11211;
 		emotion e_paper,0,"Koon#mal";
 		close;
@@ -761,7 +761,7 @@ mal_in02,177,58,7	script	Koon#mal	4_CAT_SAILOR3,{
 		next;
 		mes "[President of Meeting]";
 		mes "Yes. Carry on please.";
-		set ma_tomas,4;
+		ma_tomas = 4;
 		changequest 11211,11212;
 		emotion e_paper,0,"Linguist Devore#mal";
 		close;
@@ -810,7 +810,7 @@ mal_in02,174,64,5	script	Linguist Devore#mal	4_CAT_MERMASTER,{
 		next;
 		mes "[Linguist Devore]";
 		mes "It's like this, for the question, ¬¬¬Ñ¬Ü ¬ã¬Ú?, it says, ¬¡¬Ù ¬ã¬ì¬Þ ¬Õ¬à¬Ò¬â¬Ö, ¬Ò¬Ý¬Ñ¬Ô¬à¬Õ¬Ñ¬â¬ñ. ¬¡ ¬£¬Ú¬Ö?";
- 		next;
+		next;
 		mes "[Linguist Devore]";
 		mes "Though I tried talking to Biscuit like this, there was no feedback.";
 		next;
@@ -820,7 +820,7 @@ mal_in02,174,64,5	script	Linguist Devore#mal	4_CAT_MERMASTER,{
 		mes "[President of Meeting]";
 		mes "Ok, we listened well to what Dr. Devore said.";
 		mes "Then, let's wrap up the progress of the language study, and listen to Geologist, Dr. Mali.";
-		set ma_tomas,5;
+		ma_tomas = 5;
 		changequest 11212,11213;
 		emotion e_paper,0,"Geologist Mali#mal";
 		close;
@@ -871,7 +871,7 @@ mal_in02,174,64,5	script	Linguist Devore#mal	4_CAT_MERMASTER,{
 		mes "[Linguist Devore]";
 		mes "Why are they here and what do they want!";
 		mes "I'd be good enough if I could just know it!";
-		set ma_tomas,19;
+		ma_tomas = 19;
 		changequest 11225,11226;
 		close;
 	} else if (ma_tomas == 19) {
@@ -897,7 +897,7 @@ mal_in02,174,64,5	script	Linguist Devore#mal	4_CAT_MERMASTER,{
 		next;
 		mes "[Linguist Devore]";
 		mes "Let's go and hear it together!!";
-		set ma_tomas,21;
+		ma_tomas = 21;
 		changequest 11227,11228;
 		close;
 	} else if (ma_tomas < 34) {
@@ -927,7 +927,7 @@ mal_in02,174,64,5	script	Linguist Devore#mal	4_CAT_MERMASTER,{
 		mes "Ah, and I really want to tell this happy news to our chief, Tomas.";
 		mes "Please!!";
 		emotion e_hlp;
-		set ma_tomas,35;
+		ma_tomas = 35;
 		changequest 11236,11237;
 		getitem 6422,30; //Egrade_Coin
 		close;
@@ -978,7 +978,7 @@ mal_in02,179,57,1	script	Geologist Mali#mal	4_CAT_ADV1,{
 		next;
 		mes "[President of Meeting]";
 		mes "Mr. Brie!! I understand what your situation is, but please clam dowm, since we're having a meeting.";
-		set ma_tomas,6;
+		ma_tomas = 6;
 		changequest 11213,11214;
 		emotion e_paper,0,"Brie#mal";
 		close;
@@ -1047,7 +1047,7 @@ mal_in02,179,57,1	script	Geologist Mali#mal	4_CAT_ADV1,{
 			mes "[Geologist Mali]";
 			mes "Please listen to ^6666ccmy assistant, Bob^000000 in detail, mew~";
 			mes "Get out of here and visit the ^6666cca room on your right^000000, mew~";
-			set ma_tomas,14;
+			ma_tomas = 14;
 			setquest 11221;
 			close;
 		case 2:
@@ -1093,7 +1093,7 @@ mal_in02,179,57,1	script	Geologist Mali#mal	4_CAT_ADV1,{
 		mes "[Geologist Mali]";
 		mes "Everyone knows how you, Dr. Devore, are studying hard, mew~!!!";
 		mes "You do your best, so be more confident, mew~!";
-		set ma_tomas,18;
+		ma_tomas = 18;
 		completequest 11224;
 		setquest 11225;
 		setquest 11243;
@@ -1157,10 +1157,10 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 	} else if (ma_tomas == 14) {
 		// Dialogue in repeatable quest is identical.
 		// Uses a variable to determine the quest mode.
-		set @mal_bob_q,1;
+		@mal_bob_q = 1;
 	L_Quest1:
-		set .@i, @mal_bob_q;
-		set @mal_bob_q,0;
+		.@i = @mal_bob_q;
+		@mal_bob_q = 0;
 		mes "[Bob]";
 		mes "You bow-wow! bow! wow! I mew! mew! mew!";
 		mes "I'm into juice from delicious fish, mew~";
@@ -1219,7 +1219,7 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 			mes "Ah, right...";
 			mes "^0000ffYou may fall into the gap of the crack, unfortunately, so please watch out.^000000";
 			if (.@i == 1) {
-				set ma_tomas,15;
+				ma_tomas = 15;
 				changequest 11221,11222;
 			} else
 				changequest 11240,11241;
@@ -1288,12 +1288,12 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 		mes "I will tell Dr. Mali!";
 		if (countitem(6434) > 0)
 			delitem 6434,1; //Fix_Kit
-		set ma_tomas,17;
+		ma_tomas = 17;
 		changequest 11223,11224;
 		close;
 	} else if (ma_tomas > 99) {
 		if (questprogress(11240)) {
-			set @mal_bob_q,2;
+			@mal_bob_q = 2;
 			goto L_Quest1;
 		} else if (questprogress(11241))
 			goto L_Quest2;
@@ -1313,11 +1313,11 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 			mes "- you need a Fix Kit. -";
 			close;
 		}
-		set .@ma_cr1, rand(1,10);
+		.@ma_cr1 = rand(1,10);
 		if (.@ma_cr1 < 5) {
 			mes "- Ground is a bit cracked. -";
 			mes "- Used a stapler. -";
-			set .off,1;
+			.off = 1;
 			donpcevent "Crackt"+substr(strnpcinfo(2),3,getstrlen(strnpcinfo(2))-1)+"#mal::OnEnable";
 			close;
 		} else if (.@ma_cr1 == 7) {
@@ -1360,7 +1360,7 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 					if (rand(1,3) == 2) {
 						mes "- Let's get back to report this. -";
 						if (ma_tomas == 15) {
-							set ma_tomas,16;
+							ma_tomas = 16;
 							changequest 11222,11223;
 						}
 						if (questprogress(11241)) {
@@ -1370,7 +1370,7 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 						mes "- Let's find -";
 						mes "- the other cracks. -";
 					}
-					set .off,1;
+					.off = 1;
 					donpcevent "Crackt"+substr(strnpcinfo(2),3,getstrlen(strnpcinfo(2))-1)+"#mal::OnEnable";
 					close;
 				}
@@ -1385,7 +1385,7 @@ OnEnable:
 	enablenpc strnpcinfo(0);
 	end;
 OnDisable:
-	set .off,0;
+	.off = 0;
 	disablenpc strnpcinfo(0);
 	end;
 }
@@ -1478,7 +1478,7 @@ mal_in02,181,55,3	script	Brie#mal	4_CAT_SAILOR2,{
 		mes "[President of Meeting]";
 		mes "Well, let's have a break for now.";
 		mes "In time, Samuel brought Seaweed and tuna here.";
-		set ma_tomas,7;
+		ma_tomas = 7;
 		completequest 11214;
 		setquest 11215;
 		close;
@@ -1505,7 +1505,7 @@ mal_in02,181,55,3	script	Brie#mal	4_CAT_SAILOR2,{
 			next;
 			mes "[Brie]";
 			mes "My father will be staying there saying he's really bored today again...";
-			set ma_tomas,8;
+			ma_tomas = 8;
 			changequest 11215,11216;
 			close;
 		case 2:
@@ -1552,7 +1552,7 @@ mal_in02,181,55,3	script	Brie#mal	4_CAT_SAILOR2,{
 		mes "[Geologist Mali]";
 		mes "Now as I get him back home, I'm going to find the participants, mew~";
 		mes "Cheers!";
-		set ma_tomas,13;
+		ma_tomas = 13;
 		completequest 11220;
 		close;
 	}
@@ -1722,7 +1722,7 @@ mal_in01,114,169,5	script	Rican#mal	4_CAT_SAILOR4,{
 			mes "Ah! Keep the secret to my son for sure~";
 			mes "Then please^ff99cc!!!^000000 please^ff99cc!!!^000000 please~~~";
 			emotion e_kis;
-			set ma_tomas,9;
+			ma_tomas = 9;
 			changequest 11216,11217;
 			close;
 		case 2:
@@ -1748,7 +1748,7 @@ mal_in01,114,169,5	script	Rican#mal	4_CAT_SAILOR4,{
 		next;
 		mes "[Rican]";
 		mes "Then would you put it in the machine in front of me?";
-		set ma_tomas,10;
+		ma_tomas = 10;
 		changequest 11217,11218;
 		close;
 	} else if (ma_tomas == 10) {
@@ -1793,7 +1793,7 @@ mal_in01,114,169,5	script	Rican#mal	4_CAT_SAILOR4,{
 		mes "[Rican]";
 		mes "If you see my son, please tell him to get back soon~";
 		mes "And this is for you to buy something delicious with, since you did hard work.";
-		set ma_tomas,12;
+		ma_tomas = 12;
 		getitem 6422,20; //Egrade_Coin
 		changequest 11219,11220;
 		setquest 11239;
@@ -1877,7 +1877,7 @@ mal_in01,116,168,0	script	Dry Machine#mal	2_SLOT_MACHINE,{
 			mes "- The machine starts operating -";
 			mes "- when he presses the button. -";
 			delitem 6435,30; //Fresh_Fruit
-			set ma_tomas,11;
+			ma_tomas = 11;
 			changequest 11218,11219;
 			close;
 		case 2:
@@ -1912,7 +1912,7 @@ mal_in01,116,168,0	script	Dry Machine#mal	2_SLOT_MACHINE,{
 			mes "- Ah, ah! Feels bad... -";
 			emotion e_omg,1;
 		}
-		set .off,1;
+		.off = 1;
 		donpcevent "Water Sand"+strnpcinfo(2)+"#mal::OnEnable";
 		close;
 	}
@@ -1923,7 +1923,7 @@ OnEnable:
 	enablenpc strnpcinfo(0);
 	end;
 OnDisable:
-	set .off,0;
+	.off = 0;
 	disablenpc strnpcinfo(0);
 	end;
 }
@@ -2085,7 +2085,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 		mes "Hey... Don't look down on me!";
 		emotion e_ag;
 		donpcevent "Linguist Devore#mald::OnDisable";
-		set ma_tomas,22;
+		ma_tomas = 22;
 		completequest 11228;
 		setquest 11229;
 		close;
@@ -2129,7 +2129,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 				mes "So we haven't needed any more explanation or flowery words...";
 				mes "Woo, it's bothering me so much!";
 				if (ma_tomas == 22)
-					set ma_tomas,23;
+					ma_tomas = 23;
 				if (ma_tomas == 25)
 					close;
 				next;
@@ -2149,7 +2149,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 				mes "It was a life like a flame... Sob sob sob sob";
 				emotion e_sob;
 				if (ma_tomas == 23)
-					set ma_tomas,24;
+					ma_tomas = 24;
 				if (ma_tomas == 25)
 					close;
 				next;
@@ -2162,7 +2162,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 				mes "Now, those cats already occupied it as they wanted.";
 				mes "It's a problem because Star Candy is too kind...";
 				if (ma_tomas == 24) {
-					set ma_tomas,25;
+					ma_tomas = 25;
 					changequest 11229,11230;
 				}
 				if (ma_tomas == 25)
@@ -2181,7 +2181,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 			mes "You can get the jellies around here.";
 			mes "It's not that difficult, and you should come back before Star Candy's meal time!";
 			mes "About 30 jellies would be okay for a meal.";
-			set ma_tomas,26;
+			ma_tomas = 26;
 			changequest 11230,11231;
 			close;
 		case 2:
@@ -2204,10 +2204,10 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 	} else if (ma_tomas == 26) {
 		// Dialogue in repeatable quest is identical.
 		// Uses a variable to determine the quest mode.
-		set @mal_bob_q,1;
+		@mal_bob_q = 1;
 	L_Quest:
-		set .@i, @mal_bob_q;
-		set @mal_bob_q,0;
+		.@i = @mal_bob_q;
+		@mal_bob_q = 0;
 		if (countitem(12624) < 30) {
 			mes "[Biscuit]";
 			mes "It's not enough at all~";
@@ -2219,7 +2219,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 		mes "There won't be any problem to prepare her meal.";
 		delitem 12624,30; //Delicious_Jelly
 		if (.@i == 1) {
-			set ma_tomas,27;
+			ma_tomas = 27;
 			changequest 11231,11232;
 		} else {
 			erasequest 11244;
@@ -2294,7 +2294,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 		mes "[Biscuit]";
 		mes "Then please find the brush to wash her and get a basket to move water here.";
 		mes "Maybe they're stacked in the storage.";
-		set ma_tomas,28;
+		ma_tomas = 28;
 		changequest 11232,11233;
 		close;
 	} else if (ma_tomas == 28) {
@@ -2304,7 +2304,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 			mes "You brought the tools successfully.";
 			mes "Now you can wash the dry skin in the counter-clockwise direction!";
 			mes "Right, then from her left leg...!";
-			set ma_tomas,29;
+			ma_tomas = 29;
 			changequest 11233,11234;
 			close;
 		} else if (countitem(6433) && countitem(6431)) {
@@ -2378,7 +2378,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 		mes "[Biscuit]";
 		mes "This is not for you... and all of you, either. It's rather for Star Candy to get rest as soon as possible, you know!";
 		emotion e_pif;
-		set ma_tomas,34;
+		ma_tomas = 34;
 		erasequest 11235;
 		setquest 11236;
 		getitem 6422,100; //Egrade_Coin
@@ -2386,7 +2386,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 		close;
 	} else if (ma_tomas > 99) {
 		if (questprogress(11244)) {
-			set @mal_bob_q,2;
+			@mal_bob_q = 2;
 			goto L_Quest;
 		} else if (questprogress(11245,PLAYTIME) == 1) {
 			mes "[Biscuit]";
@@ -2575,7 +2575,7 @@ mal_dun01,133,125,5	script	Star Candy#mal	4_F_STARFISHGIRL,{
 		mes "- Unlike the words of Dr. Devore, Biscuit appears fluent in speaking. -";
 		next;
 		mes "- I think it's better to let Dr. Devore know this soon. -";
-		set ma_tomas,20;
+		ma_tomas = 20;
 		changequest 11226,11227;
 		close;
 	}
@@ -2587,12 +2587,12 @@ mal_dun01,133,125,5	script	Star Candy#mal	4_F_STARFISHGIRL,{
 }
 
 -	script	#skin_mal	-1,{
-	set .@index, atoi(strnpcinfo(2));
+	.@index = atoi(strnpcinfo(2));
 	switch(.@index) {
-		case 29: set .@str$,"dry"; break;
-		case 30: set .@str$,"prickly"; break;
-		case 31: set .@str$,"chapped"; break;
-		case 32: set .@str$,"hard"; break;
+		case 29: .@str$ = "dry"; break;
+		case 30: .@str$ = "prickly"; break;
+		case 31: .@str$ = "chapped"; break;
+		case 32: .@str$ = "hard"; break;
 		default:
 			mes "An error has occurred.";
 			close;
@@ -2613,9 +2613,9 @@ mal_dun01,133,125,5	script	Star Candy#mal	4_F_STARFISHGIRL,{
 	getitem 6431,1; //Bucket
 	next;
 	if (rand(1,2) == 1)
-		set .@menu$,"Brush.:Stop.:";
+		.@menu$ = "Brush.:Stop.:";
 	else
-		set .@menu$,":Stop.:Brush.";
+		.@menu$ = ":Stop.:Brush.";
 	switch(select(.@menu$)) {
 	case 1:
 	case 3:
@@ -2657,13 +2657,13 @@ mal_dun01,133,125,5	script	Star Candy#mal	4_F_STARFISHGIRL,{
 			mes "Thanks so much.";
 			break;
 		default:
-			set ma_tomas, ma_tomas+1;
+			++ma_tomas;
 			if (.@index == 32)
 				changequest 11234,11235;
 			close;
 		}
 		cutin "ma_starcandy",2;
-		set ma_tomas, ma_tomas+1;
+		++ma_tomas;
 		if (.@index == 32)
 			changequest 11234,11235;
 		close2;
@@ -2772,13 +2772,13 @@ malangdo,137,200,6	script	Pipielle	4_CAT_MERMASTER,{
 		mes "^770099This cat is working on something, but she asks for help above level 60.^000000";
 		close;
 	}
-	set .@fish_ss1$, "What are you doing?";
+	.@fish_ss1$ = "What are you doing?";
 	if (countitem(6451) > 29)
-		set .@fish_ss2$, "I caught a lot of strange fishes!";
+		.@fish_ss2$ = "I caught a lot of strange fishes!";
 	else
-		set .@fish_ss2$, (30-countitem(6451))+" of ^bbbbbbUnidentified Fish are required.^000000";
+		.@fish_ss2$ = (30-countitem(6451))+" of ^bbbbbbUnidentified Fish are required.^000000";
 	if (ma_tomas == 100)
-		set .@fish_ss3$, "I met an Admiral Tomas...";
+		.@fish_ss3$ = "I met an Admiral Tomas...";
 	mes "[Pipielle]";
 	mes "Would you come here and open your bag for me?";
 	next;
@@ -2876,7 +2876,7 @@ malangdo,137,200,6	script	Pipielle	4_CAT_MERMASTER,{
 		next;
 		mes "[Pipielle]";
 		mes "And this is a small gift for looking after admiral Tomas.";
-		set ma_tomas,101;
+		ma_tomas = 101;
 		getitem 6422,200; //Egrade_Coin
 		mes "^0000ffReceived 200 E Class Coins.^000000";
 		close;
@@ -2900,11 +2900,11 @@ malangdo,175,206,3	script	Gobonge#ml	4_CAT_SAILOR5,{
 		close;
 	} else if (questprogress(1152,PLAYTIME) == 1) {
 		erasequest 1152;
-		set malang_bad_guys,0;
+		malang_bad_guys = 0;
 	} else if (questprogress(1152,PLAYTIME) == 2) {
 		completequest 1152;
 		erasequest 1152;
-		set malang_bad_guys,0;
+		malang_bad_guys = 0;
 	}
 	if (BaseLevel < 60) {
 		mes "[Gobonge]";
@@ -2970,7 +2970,7 @@ malangdo,175,206,3	script	Gobonge#ml	4_CAT_SAILOR5,{
 					mes "We should get them to help";
 					mes "our cats' well-being!";
 					setquest 1145;
-					set malang_bad_guys,1;
+					malang_bad_guys = 1;
 					close;
 				}
 			}
@@ -3008,7 +3008,7 @@ malangdo,175,206,3	script	Gobonge#ml	4_CAT_SAILOR5,{
 			mes "I need time to concentrate on my stomachache.";
 			mes "You can go now!";
 			erasequest 1151;
-			set malang_bad_guys,8;
+			malang_bad_guys = 8;
 			getitem 12636,20; //Malang_Sp_Can
 			delitem 6427,1; //Bad_Can_Sack
 			delitem 6426,30; //Bad_Can
@@ -3036,14 +3036,14 @@ malangdo,175,206,3	script	Gobonge#ml	4_CAT_SAILOR5,{
 			mes "Sorry, but you should go now";
 			mes "so that I can concentrate on my stomachache.";
 			setquest 1152;
-			set malang_bad_guys,9;
+			malang_bad_guys = 9;
 			close;
 		case 2:
 			mes "[Gobonge]";
 			mes "All right, then I will have time";
 			mes "to concentrate on my stomachache.";
 			setquest 1153;
-			set malang_bad_guys,10;
+			malang_bad_guys = 10;
 			close;
 		}
 	} else if (malang_bad_guys == 9) {
@@ -3071,7 +3071,7 @@ malangdo,175,206,3	script	Gobonge#ml	4_CAT_SAILOR5,{
 		mes "so let's investigate tomorrow!";
 		erasequest 1155;
 		setquest 1152;
-		set malang_bad_guys,13;
+		malang_bad_guys = 13;
 		getitem 6422,5; //Egrade_Coin
 		close;
 	} else if (malang_bad_guys == 13) {
@@ -3175,7 +3175,7 @@ OnTouch:
 		if (malang_bad_guys == 1) {
 			erasequest 1145;
 			setquest 1146;
-			set malang_bad_guys,2;
+			malang_bad_guys = 2;
 		}
 		close;
 	} else if (malang_bad_guys > 2 && malang_bad_guys < 8) {
@@ -3199,7 +3199,7 @@ OnTouch:
 		if (malang_bad_guys == 3) {
 			erasequest 1147;
 			setquest 1148;
-			set malang_bad_guys,4;
+			malang_bad_guys = 4;
 		}
 		close;
 	} else if (malang_bad_guys > 7) {
@@ -3229,7 +3229,7 @@ OnTouch:
 		if (malang_bad_guys == 2) {
 			erasequest 1146;
 			setquest 1147;
-			set malang_bad_guys,3;
+			malang_bad_guys = 3;
 		}
 		close;
 	}
@@ -3265,7 +3265,7 @@ malangdo,171,163,3	script	Awfully Suspious Dealer	4_MASK_SMOKEY,{
 			mes "You need to search lounge of ship Navi?";
 			erasequest 1148;
 			setquest 1149;
-			set malang_bad_guys,5;
+			malang_bad_guys = 5;
 			close;
 		}
 	} else if (malang_bad_guys == 5) {
@@ -3344,7 +3344,7 @@ malangdo,171,163,3	script	Awfully Suspious Dealer	4_MASK_SMOKEY,{
 				mes "located in the shining coral area.";
 				erasequest 1150;
 				setquest 1151;
-				set malang_bad_guys,7;
+				malang_bad_guys = 7;
 				close;
 			}
 		}
@@ -3396,7 +3396,7 @@ OnTouch:
 		mes "is in Awfully Suspious Dealer in deck.";
 		erasequest 1149;
 		setquest 1150;
-		set malang_bad_guys,6;
+		malang_bad_guys = 6;
 		getitem 6427,1; //Bad_Can_Sack
 		close;
 	} else if (malang_bad_guys == 6) {
@@ -3447,7 +3447,7 @@ malangdo,125,147,3	script	Patrol Leader#ml	4_CAT_SAILOR2,{
 			mes "I will expect various bad activities.";
 			erasequest 1153;
 			setquest 1154;
-			set malang_bad_guys,11;
+			malang_bad_guys = 11;
 			close;
 		}
 	} else if (malang_bad_guys == 11) {
@@ -3473,7 +3473,7 @@ malangdo,125,147,3	script	Patrol Leader#ml	4_CAT_SAILOR2,{
 			mes "Visit Gobonge now.";
 			erasequest 1154;
 			setquest 1155;
-			set malang_bad_guys,12;
+			malang_bad_guys = 12;
 			close;
 		}
 		mes "[Patrol Leader]";
@@ -3537,7 +3537,7 @@ malangdo,3,1,3	script	Guidance for quest#ml	4_MASK_SMOKEY,{
 	case 3:
 		mes "[Helper]";
 		mes "Yap!";
-		set malang_bad_guys,0;
+		malang_bad_guys = 0;
 		erasequest 1152;
 		close;
 	case 4:
@@ -3550,12 +3550,12 @@ malangdo,3,1,3	script	Guidance for quest#ml	4_MASK_SMOKEY,{
 		mes "Yap!";
 		erasequest 1150;
 		setquest 1151;
-		set malang_bad_guys,7;
+		malang_bad_guys = 7;
 		close;
 	case 6:
 		mes "[Helper]";
 		mes "Yap!";
-		set malang_bad_guys,10;
+		malang_bad_guys = 10;
 		close;
 	}
 }
@@ -3645,7 +3645,7 @@ mal_in02,76,63,7	script	Cleanyang	4_CAT_SAILOR1,{
 				mes "[Cleanyang]";
 				mes "There is definitely something I do not know. Meow.";
 				mes "Meow... I'll clean this place up. Please find something instead of me.";
-				set mal_qook,1;
+				mal_qook = 1;
 				setquest 7260;
 				close;
 			}
@@ -3698,7 +3698,7 @@ mal_in02,76,63,7	script	Cleanyang	4_CAT_SAILOR1,{
 			mes "Please show this to chef and tell him that Cleanyang really cleaned up very well.";
 			mes "Well... I'm still afraid of chef...";
 			mes "...please! Meow!";
-			set mal_qook,2;
+			mal_qook = 2;
 			erasequest 7261;
 			erasequest 7262;
 			erasequest 7263;
@@ -3805,7 +3805,7 @@ mal_in02,76,63,7	script	Cleanyang	4_CAT_SAILOR1,{
 		mes "[Cleanyang]";
 		mes "So let me see you everyday from provided cat's ship biscuit tomorrow.";
 		mes "You did good job. This is a token of thanks.";
-		set mal_qook,6;
+		mal_qook = 6;
 		getitem 12636,30; //Malang_Sp_Can
 		getexp 80000,80000;
 		setquest 7267;
@@ -4161,7 +4161,7 @@ malangdo,133,134,0	script	Strange Pile of Sand#7	4_SOIL,{
 		close;
 	}
 	if (questprogress(7268)) {
-		set .@quest, (strnpcinfo(0) == "Strange Pile of Sand#7")?7270:7275;
+		.@quest = (strnpcinfo(0) == "Strange Pile of Sand#7")?7270:7275;
 		if (!questprogress(.@quest)) {
 			mes "The pile of sand is billowed like a grave. Should be something in there.";
 			mes "According to rumors, cats have a habit to bury with sand after stool...";
@@ -4411,7 +4411,7 @@ mal_in02,187,58,3	script	Chef Nyas	4_CAT_CHEF,{
 		mes "Chef is outraged and very upset.";
 		mes "He mumbled and made a threatening sound with grind his teeth.";
 		mes "Come back later when he calms down.";
-		set mal_qook,3;
+		mal_qook = 3;
 		erasequest 7264;
 		setquest 7265;
 		close;
@@ -4445,7 +4445,7 @@ mal_in02,187,58,3	script	Chef Nyas	4_CAT_CHEF,{
 			next;
 			mes "A look of chef is quite serious.";
 			mes "Let me tell Cleanyang about the result first.";
-			set mal_qook,4;
+			mal_qook = 4;
 			erasequest 7265;
 			setquest 7266;
 			close;
@@ -4464,7 +4464,7 @@ mal_in02,187,58,3	script	Chef Nyas	4_CAT_CHEF,{
 			mes "If you don't mind, just come back tomorrow.";
 			delitem 577,10; //Grain
 			delitem 7454,1; //Plain_Sauce
-			set mal_qook,5;
+			mal_qook = 5;
 			erasequest 7266;
 			setquest 7276;
 			close;
@@ -4558,13 +4558,13 @@ mal_in02,187,58,3	script	Chef Nyas	4_CAT_CHEF,{
 				next;
 				mes "[Chef Nyas]";
 				mes "My curious food is...";
-				set .@i, rand(1,66);
+				.@i = rand(1,66);
 
 				// IDs grouped in 5s incrementally.
 				setarray .@StartID[0],12061,12091,12041,12071,12056,12086,12051,12081,12046,12076,12066,12096,12429,12434;
 				mes "^4d4dff "+getitemname(.@StartID[(.@i-1)/5]+((.@i-1)%5))+" ^000000 .";
 
-				set mal_food,.@i;
+				mal_food = .@i;
 				setquest 7280+.@i;
 				mes "Just one dish is enough, so please do it together.";
 				next;
@@ -4595,11 +4595,11 @@ mal_in02,187,58,3	script	Chef Nyas	4_CAT_CHEF,{
 		mes "Is that ingredients of cat's ship biscuit and the food of human?";
 		mes "Let me check what you brought...";
 		next;
-		set .@i, mal_food;
+		.@i = mal_food;
 
 		// IDs grouped in 5s incrementally.
 		setarray .@StartID[0],12061,12091,12041,12071,12056,12086,12051,12081,12046,12076,12066,12096,12429,12434;
-		set .@food, .@StartID[(.@i-1)/5]+((.@i-1)%5);
+		.@food = .@StartID[(.@i-1)/5]+((.@i-1)%5);
 
 		if (countitem(577) >= 10 && countitem(7454) > 0 && countitem(.@food) > 0) {
 			mes "[Chef Nyas]";
@@ -4610,7 +4610,7 @@ mal_in02,187,58,3	script	Chef Nyas	4_CAT_CHEF,{
 			delitem 7454,1; //Plain_Sauce
 			delitem .@food,1;
 			setquest 7276;
-			set mal_food,0;
+			mal_food = 0;
 			erasequest 7280+.@i;
 			
 			// Quantities grouped in 10s repeating.
@@ -4707,7 +4707,7 @@ malangdo,165,223,4	script	Expert Cat#nya_01	4_CAT_SAILOR5,{
 			mes "The youngest one is Charo, with gold fur.";
 			mes "Roku has black fur, and Rosy has white fur.";
 			mes "Please take care of them.";
-			set nyadven,1;
+			nyadven = 1;
 			setquest 7242;
 			close;
 		case 2:
@@ -4772,7 +4772,7 @@ malangdo,165,223,4	script	Expert Cat#nya_01	4_CAT_SAILOR5,{
 		mes "It's very kind of you to play with the kids.";
 		mes "This is for you.";
 		delitem 6430,6; //Picture_Piece
-		set nyadven,14;
+		nyadven = 14;
 		getitem 6422,100; //Egrade_Coin
 		completequest 7259;
 		next;
@@ -4877,7 +4877,7 @@ malangdo,211,203,4	script	[Meow Team] Charo#nya_11	4_CAT_ADV2,{
 				mes "made by the Meow Bravery Team!";
 				mes "Challenge it whenever you want to!";
 				delitem 746,1; //Glass_Bead
-				set nyadven,2;
+				nyadven = 2;
 				getitem 12636,30; //Malang_Sp_Can
 				close;
 			case 2:
@@ -4921,7 +4921,7 @@ malangdo,211,203,4	script	[Meow Team] Charo#nya_11	4_CAT_ADV2,{
 			next;
 			mes "Got Adventure Card from the yellow cat Charo.";
 			mes "It seems to work if I put this card in the slot in the Beginning Compass.";
-			set nyadven,3;
+			nyadven = 3;
 			getitem 6428,1; //Bravery_Card_A
 			changequest 7242,7243;
 			next;
@@ -4950,7 +4950,7 @@ malangdo,211,203,4	script	[Meow Team] Charo#nya_11	4_CAT_ADV2,{
 			mes "Oh? Isn't this failed stamp from Bubi?";
 			mes "I'm really disappointed.";
 			mes "Try again~ you can make it!";
-			set nyadven02,0;
+			nyadven02 = 0;
 			if (questprogress(7257))
 				erasequest 7257;
 			close;
@@ -4998,7 +4998,7 @@ malangdo,211,203,4	script	[Meow Team] Charo#nya_11	4_CAT_ADV2,{
 			mes "Oh, you might shut your eyes to the fact.";
 			mes "Give the Adventure Card back!";
 			delitem 6428,1; //Bravery_Card_A
-			set nyadven,5;
+			nyadven = 5;
 			erasequest 7243;
 			close;
 		case 2:
@@ -5013,7 +5013,7 @@ malangdo,211,203,4	script	[Meow Team] Charo#nya_11	4_CAT_ADV2,{
 			next;
 			mes "- Changed Adventure Card A into Adventure Card B. -";
 			delitem 6428,1; //Bravery_Card_A
-			set nyadven,6;
+			nyadven = 6;
 			getitem 6429,1; //Bravery_Card_B
 			setquest 7246;
 			erasequest 7243;
@@ -5039,7 +5039,7 @@ malangdo,211,203,4	script	[Meow Team] Charo#nya_11	4_CAT_ADV2,{
 			mes "It shouldn't happen that the detective misunderstands you as an enemy!";
 			next;
 			mes "- Changed Adventure Card A into Adventure Card B. -";
-			set nyadven,6;
+			nyadven = 6;
 			getitem 6429,1; //Bravery_Card_B
 			setquest 7246;
 			next;
@@ -5115,7 +5115,7 @@ malangdo,211,203,4	script	[Meow Team] Charo#nya_11	4_CAT_ADV2,{
 		mes "We couldn't make the Bravery Team without Rato.";
 		mes "Please.";
 		mes "Tell him we didn't forget our home island.";
-		set nyadven,13;
+		nyadven = 13;
 		changequest 7258,7259;
 		close;
 	} else if (nyadven == 13) {
@@ -5251,7 +5251,7 @@ malangdo,215,201,3	script	[Meow Team] Roku#nya_10	4_CAT_DOWN,{
 			mes "Charo likes you so much.";
 			mes "He will be happy if you come.";
 			delitem 6428,1; //Bravery_Card_A
-			set nyadven02,29;
+			nyadven02 = 29;
 			getitem 6422,3; //Egrade_Coin
 			getexp 20000,20000;
 			erasequest 7244;
@@ -5290,7 +5290,7 @@ malangdo,215,201,3	script	[Meow Team] Roku#nya_10	4_CAT_DOWN,{
 					mes "Beginning Compass, start!";
 					delitem 12636,1; //Malang_Sp_Can
 					getitem 6428,1; //Bravery_Card_A
-					set nyadven02,0;
+					nyadven02 = 0;
 					if (questprogress(7257))
 						erasequest 7257;
 					close;
@@ -5324,7 +5324,7 @@ malangdo,215,201,3	script	[Meow Team] Roku#nya_10	4_CAT_DOWN,{
 			mes "Is this because of the machine?";
 			mes "Let's make void for this race.";
 			delitem 6428,1; //Bravery_Card_A
-			set nyadven02,0;
+			nyadven02 = 0;
 			erasequest 7244;
 			erasequest 7245;
 			close;
@@ -5372,7 +5372,7 @@ malangdo,215,201,3	script	[Meow Team] Roku#nya_10	4_CAT_DOWN,{
 			mes "Beginning Compass, start!";
 			delitem 12636,1; //Malang_Sp_Can
 			getitem 6428,1; //Bravery_Card_A
-			set nyadven02,0;
+			nyadven02 = 0;
 			close;
 		case 2:
 			mes "[Roku]";
@@ -5403,13 +5403,13 @@ malangdo,212,204,0	script	Beginning Compass#nya_02	CLEAR_NPC,{
 			if (rand(20) < 10) {
 				callsub L_Viewpoint,1,1;
 				mes "The game has started already!";
-				set nyadven02,11;
+				nyadven02 = 11;
 				setquest 7244;
 				close;
 			} else {
 				callsub L_Viewpoint,2,1;
 				mes "The game has started already!";
-				set nyadven02,21;
+				nyadven02 = 21;
 				setquest 7245;
 				close;
 			}
@@ -5462,8 +5462,8 @@ L_Viewpoint:
 		viewpoint 1,213,89,4,0xFF0000;
 		break;
 	}
-	for(set .@i,1; .@i<=5; set .@i,.@i+1)
-		set .@str$, .@str$+((.@i >= getarg(1))?.@colors$[.@i]:"")+.@Text$[.@i]+" ";
+	for(.@i = 1; .@i<=5; ++.@i)
+		.@str$ += ((.@i >= getarg(1))?.@colors$[.@i]:"")+.@Text$[.@i]+" ";
 	if (getarg(1) > 1)
 		mes "After inserting the card and pressing the red button, the path to the destination lit up.";
 	mes "The order will be "+.@str$+"^000000.";
@@ -5476,27 +5476,27 @@ L_Viewpoint:
 		mes "This is the Duruduru compass from the Meow Bravery Team.";
 		close;
 	}
-	set .@index, atoi(strnpcinfo(2));
+	.@index = atoi(strnpcinfo(2));
 	switch(.@index) {
 	case 1:
 		setarray .@var[0],11,25;
-		set .@color$,"red";
+		.@color$ = "red";
 		break;
 	case 2:
 		setarray .@var[0],12,22;
-		set .@color$,"blue";
+		.@color$ = "blue";
 		break;
 	case 3:
 		setarray .@var[0],13,21;
-		set .@color$,"gold";
+		.@color$ = "gold";
 		break;
 	case 4:
 		setarray .@var[0],14,24;
-		set .@color$,"green";
+		.@color$ = "green";
 		break;
 	case 5:
 		setarray .@var[0],15,23;
-		set .@color$,"white";
+		.@color$ = "white";
 		break;
 	}
 	mes "Delicate "+.@color$+" lights surround the "+strnpcinfo(1)+".";
@@ -5514,33 +5514,33 @@ L_Viewpoint:
 		while(1) {
 			switch(.@index) {
 			case 1:
-				set .@nori_a, rand(1,999);
-				set .@nori_b, rand(1,999);
-				set .@nori_c, .@nori_a+.@nori_b;
+				.@nori_a = rand(1,999);
+				.@nori_b = rand(1,999);
+				.@nori_c = .@nori_a+.@nori_b;
 				mes .@nori_a+" + "+.@nori_b+" = ??";
 				break;
 			case 2:
-				set .@nori_a, rand(1,9);
-				set .@nori_b, rand(1,9);
-				set .@nori_c, .@nori_a*.@nori_b;
+				.@nori_a = rand(1,9);
+				.@nori_b = rand(1,9);
+				.@nori_c = .@nori_a*.@nori_b;
 				mes .@nori_a+" x "+.@nori_b+" = ??";
 				break;
 			case 3:
-				set .@nori_a, rand(600,999);
-				set .@nori_b, rand(1,599);
-				set .@nori_c, .@nori_a-.@nori_b;
+				.@nori_a = rand(600,999);
+				.@nori_b = rand(1,599);
+				.@nori_c = .@nori_a-.@nori_b;
 				mes .@nori_a+" - "+.@nori_b+" = ??";
 				break;
 			case 4:
-				set .@nori_a, rand(1,99);
-				set .@nori_b, rand(1,9);
-				set .@nori_d, rand(1,9);
-				set .@nori_c, .@nori_a+(.@nori_b*.@nori_d);
+				.@nori_a = rand(1,99);
+				.@nori_b = rand(1,9);
+				.@nori_d = rand(1,9);
+				.@nori_c = .@nori_a+(.@nori_b*.@nori_d);
 				mes .@nori_a+" + "+.@nori_b+" x "+.@nori_d+" = ??";
 				break;
 			case 5:
-				set .@nori_a, rand(1,9);
-				set .@nori_c, .@nori_a+(.@nori_a*.@nori_a);
+				.@nori_a = rand(1,9);
+				.@nori_c = .@nori_a+(.@nori_a*.@nori_a);
 				mes .@nori_a+" + "+.@nori_a+" x "+.@nori_a+" = ??";
 				break;
 			}
@@ -5550,7 +5550,7 @@ L_Viewpoint:
 				mes "The card slides out with a sound after entering the number.";
 				mes "^4d4dffYou have passed the "+strnpcinfo(1)+"! Run to the next destination!^000000";
 				mes "You should run for the next destination.";
-				set nyadven02, nyadven02+1;
+				++nyadven02;
 				close;
 			}
 			mes "You've got wrong answer!";
@@ -5597,9 +5597,9 @@ malangdo,175,163,0	script	Meowbell#nya_12	CLEAR_NPC,{
 		close;
 	}
 	if (nyadven02 == 16)
-		set .@quest,7244;
+		.@quest = 7244;
 	else if (nyadven02 == 26)
-		set .@quest,7245;
+		.@quest = 7245;
 	else {
 		mes "There is a one more little bell beside the huge notice bell in the deck.";
 		mes "This is the Meowbell from the Meow Bravery Team.";
@@ -5618,7 +5618,7 @@ malangdo,175,163,0	script	Meowbell#nya_12	CLEAR_NPC,{
 	viewpoint 2,1,1,5,0xFFFFFF;
 	if (questprogress(.@quest,PLAYTIME) == 1) {
 		mes "Knock Meowbell!!";
-		set nyadven02,27;
+		nyadven02 = 27;
 		changequest .@quest,7257;
 		next;
 		if (nyadven == 3) {
@@ -5635,7 +5635,7 @@ malangdo,175,163,0	script	Meowbell#nya_12	CLEAR_NPC,{
 			mes "[Deckhand Bubi]";
 			mes "Go to Charo with that Adventure Card.";
 			mes "I will give you a confirmation stamp for success.";
-			set nyadven,4;
+			nyadven = 4;
 			close;
 		} else {
 			mes "[Deckhand Bubi]";
@@ -5648,7 +5648,7 @@ malangdo,175,163,0	script	Meowbell#nya_12	CLEAR_NPC,{
 	} else {
 		mes "-- Beep --";
 		mes "The card has out with a warning sound.";
-		set nyadven02,28;
+		nyadven02 = 28;
 		changequest .@quest,7257;
 		next;
 		mes "[Deckhand Bubi]";
@@ -5790,7 +5790,7 @@ malangdo,172,178,7	script	Cat Detective#nya_14	4_CAT_ADV2,{
 			next;
 			mes "[Homnya]";
 			mes "Well, stop this machine!!!";
-			set nyadven,7;
+			nyadven = 7;
 			changequest 7246,7247;
 			close2;
 			break;
@@ -5844,7 +5844,7 @@ malangdo,172,178,7	script	Cat Detective#nya_14	4_CAT_ADV2,{
 			mes "Here is your Adventure Card.";
 			mes "Stop this machine this time.";
 			delitem 12636,1; //Malang_Sp_Can
-			set nyadven,7;
+			nyadven = 7;
 			getitem 6429,1; //Bravery_Card_B
 			close2;
 			break;
@@ -5894,7 +5894,7 @@ malangdo,172,178,7	script	Cat Detective#nya_14	4_CAT_ADV2,{
 			mes "[Nyangson]";
 			mes "It will be fine because it isn't really a large place.";
 			mes "I look forward to your active work!";
-			set nyadven,10;
+			nyadven = 10;
 			setquest 7250;
 			close2;
 			break;
@@ -5935,7 +5935,7 @@ malangdo,172,178,7	script	Cat Detective#nya_14	4_CAT_ADV2,{
 			mes "Please give it back to the Meow Bravery Team~";
 			mes "For everyone~ Meow~";
 			mes "These are real treasures!";
-			set nyadven,12;
+			nyadven = 12;
 			erasequest 7250;
 			erasequest 7251;
 			erasequest 7252;
@@ -5960,7 +5960,7 @@ malangdo,172,178,7	script	Cat Detective#nya_14	4_CAT_ADV2,{
 			erasequest 7254;
 			erasequest 7255;
 			erasequest 7256;
-			set nyadven,10;
+			nyadven = 10;
 			setquest 7250;
 			close2;
 		}
@@ -6162,7 +6162,7 @@ malangdo,174,175,0	script	Noisy Machine#nya_13	CLEAR_NPC,{
 	mes "You can get it after you have been through all the difficulties from the Meow Advanture Team.";
 	mes "And we are not sure if this machine will try to blow up agian, so please come again tomorrow.";
 	if (nyadven == 7) {
-		set nyadven,9;
+		nyadven = 9;
 		erasequest 7247;
 	}
 	delitem 6429,1; //Bravery_Card_B
@@ -6205,7 +6205,7 @@ malangdo,174,175,0	script	Noisy Machine#nya_13	CLEAR_NPC,{
 			mes "[Nyangson]";
 			mes "It will be fine because it isn't really a large place.";
 			mes "I look forward to your active work!";
-			set nyadven,10;
+			nyadven = 10;
 			setquest 7250;
 			close2;
 			break;
@@ -6230,9 +6230,9 @@ L_ShowLights:
 	mes "Luminous";
 	setarray .@color$[0],"Red","Blue","Yellow","Green";
 	setarray .@Cutin$[0],"nya_red","nya_blue","nya_yellow","nya_green";
-	for(set .@i,0; .@i<getarg(0); set .@i,.@i+1) {
-		set .@rand, rand(4);
-		set .@Lamp[.@i],.@rand;
+	for(.@i = 0; .@i<getarg(0); ++.@i) {
+		.@rand = rand(4);
+		.@Lamp[.@i] = .@rand;
 		mes .@color$[.@rand];
 		if (.@i+1 == getarg(0))
 			mes "Shines according to this order.";
@@ -6243,15 +6243,15 @@ L_ShowLights:
 	mes "The buttons below are shining now.";
 	mes "Stop the machine by pressing the right button within time.";
 	next;
-	set .@pass,0;
+	.@pass = 0;
 	setarray .@count$[0],"first","second","third","fourth","fifth","sixth","seventh","eighth";
-	for(set .@i,0; .@i<getarg(0); set .@i,.@i+1) {
+	for(.@i = 0; .@i<getarg(0); ++.@i) {
 		mes "Which color button do you want to press "+.@count$[.@i]+"?";
 		next;
 		// Red <-> Green, Blue <-> Yellow
-		set .@j, select("Red:Blue:Yellow:Green");
+		.@j = select("Red:Blue:Yellow:Green");
 		if (.@Lamp[.@i] == 4-.@j)
-			set .@pass,.@pass+1;
+			.@pass += 1;
 	}
 	if (.@pass < getarg(0)) {
 		mes "The speed of spinning is getting faster after pressing the buttons.";
@@ -6274,7 +6274,7 @@ L_ShowLights:
 		mes "with a huge explosion.";
 		delitem 6429,1; //Bravery_Card_B
 		if (nyadven == 7)
-			set nyadven,8;
+			nyadven = 8;
 		close;
 	}
 	mes "The speed of the spinning discs gets slower after pressing the buttons.";
@@ -6322,7 +6322,7 @@ function	script	F_Mal_Picture	{
 		if (questprogress(7251) && questprogress(7252) && questprogress(7253) && questprogress(7254) && questprogress(7255) && questprogress(7256)) {
 			mes "It looks like you can put these pieces of paintings together.";
 			mes "If I found all the pieces, I should go back to Homnya.";
-			set nyadven,11;
+			nyadven = 11;
 			close;
 		}
 		mes "I think this is the treasure Homnya and Nyangson mentioned.";
@@ -6544,7 +6544,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		next;
 		mes "[Cat Gamers Director]";
 		mes "We've got to find out the reason for this losing streak.";
-		set malang_gamer,1;
+		malang_gamer = 1;
 		next;
 		mes "You are getting interested in the cat's story. Let's hear more.";
 		close;
@@ -6576,7 +6576,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		mes "giving up too many points;";
 		mes "aggressive point betting;";
 		mes "and players disappearing?";
-		set malang_gamer,2;
+		malang_gamer = 2;
 		next;
 		mes "It seems like the gentle looking cat has finished thinking. Let's interrupt the conversion.";
 		close;
@@ -6646,7 +6646,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			mes "Wow. I respect you, "+strcharinfo(0)+".";
 			mes "Let me ask you a favor.";
 			mes "Please meet the hard working Manager Cat and ask about our team's attitude these days.";
-			set malang_gamer,3;
+			malang_gamer = 3;
 			setquest 5058;
 			next;
 			mes "[Cat Gamers Director]";
@@ -6681,7 +6681,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		emotion e_omg;
 		next;
 		mes "Cat Gamers Director seems to be in shock. Let's give him some time to calm down.";
-		set malang_gamer,5;
+		malang_gamer = 5;
 		erasequest 5059;
 		setquest 5060;
 		close;
@@ -6726,7 +6726,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		next;
 		mes "[Cat Gamers Director]";
 		mes "I appreciate your help, "+strcharinfo(0)+". heh~";
-		set malang_gamer,6;
+		malang_gamer = 6;
 		erasequest 5060;
 		setquest 5061;
 		close;
@@ -6761,7 +6761,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			mes "What? Really?";
 			next;
 			mes "The Cat Gamers Director seems to be shocked once again. Better give him more time to calm down.";
-			set malang_gamer,7;
+			malang_gamer = 7;
 			erasequest 5061;
 			setquest 5060;
 			close;
@@ -6804,7 +6804,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		next;
 		mes "[Cat Gamers Director]";
 		mes "Heh~ I would much appreciate your help, "+strcharinfo(0)+"~.";
-		set malang_gamer,8;
+		malang_gamer = 8;
 		erasequest 5060;
 		setquest 5066;
 		close;
@@ -6842,7 +6842,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		mes "Now I need to check with our players, see how they really feel.";
 		mes "Heh~ Why don't you come back tomorrow?";
 		mes "Heh~ Let me decide what to do after checking their honest petition letters. Heh~";
-		set malang_gamer,10;
+		malang_gamer = 10;
 		erasequest 5067;
 		setquest 5068;
 		close;
@@ -6958,7 +6958,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			mes "[Cat Gamers Director]";
 			mes "We will always welcome you, "+strcharinfo(0)+", as a guest member of the Cat Gamers.";
 			mes "Heh~";
-			set malang_gamer,11;
+			malang_gamer = 11;
 			erasequest 5068;
 			getitem 6422,100; //Egrade_Coin
 			next;
@@ -6980,7 +6980,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			mes "Since you will be our team's practicing partner, please come back in an hour.";
 			mes "Then I will give you our '^0000FFCat Gamers Certificate^000000'.";
 			mes "Heh~";
-			set malang_gamer,12;
+			malang_gamer = 12;
 			erasequest 5068;
 			setquest 5069;
 			getitem 6422,100; //Egrade_Coin
@@ -7014,7 +7014,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			mes "[Cat Gamers Director]";
 			mes "Come back in an hour and I will get you a '^0000FFCat Gamers Certificate^000000'.";
 			mes "Heh~";
-			set malang_gamer,12;
+			malang_gamer = 12;
 			setquest 5069;
 			close;
 		}
@@ -7051,7 +7051,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		mes "[Cat Gamers Director]";
 		mes "Heh~ Take this and show us what you've got.";
 		erasequest 5069;
-		set malang_gamer,20;
+		malang_gamer = 20;
 		getitem 2872,1; //G_Honor_Certificate
 		next;
 		mes "[Cat Gamers Director]";
@@ -7328,7 +7328,7 @@ malangdo,127,111,4	script	Strange Cat#gamer	4_CAT_SAILOR4,{
 		mes "What do you want?";
 		emotion e_what;
 		next;
-		set .@cat_gam, rand(1,10);
+		.@cat_gam = rand(1,10);
 		select("Ask about the team's attitude...");
 		if (.@cat_gam == 5) {
 			mes "[Manager Cat]";
@@ -7348,7 +7348,7 @@ malangdo,127,111,4	script	Strange Cat#gamer	4_CAT_SAILOR4,{
 			next;
 			mes "[Manager Cat]";
 			mes "Can you give me that?";
-			set malang_gamer,4;
+			malang_gamer = 4;
 			erasequest 5058;
 			setquest 5059;
 			next;
@@ -7422,7 +7422,7 @@ malangdo,127,111,4	script	Strange Cat#gamer	4_CAT_SAILOR4,{
 		mes "["+strcharinfo(0)+"]";
 		mes "Ok, I will go tell it to the Games Director~";
 		emotion e_ok,1;
-		set malang_gamer,9;
+		malang_gamer = 9;
 		erasequest 5066;
 		setquest 5067;
 		close;
@@ -7749,9 +7749,9 @@ malangdo,161,197,4	script	Eryu#gamer	4_CAT,{
 		if (.@inputstr$ == "Come back") {
 			erasequest 5083;
 			setquest 5084;
-			set .@str$, "You've delivered the message, so let's get away.";
+			.@str$ = "You've delivered the message, so let's get away.";
 		} else
-			set .@str$, "You didn't deliver the right message, but let's still get away.";
+			.@str$ = "You didn't deliver the right message, but let's still get away.";
 		mes "[Eryu]";
 		mes "What is this? What do you mean by '"+.@inputstr$+"'...?";
 		mes "Ah... aren't you the writer?";
@@ -7978,9 +7978,9 @@ malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 		if (.@inputstr$ == "Come back") {
 			erasequest 5085;
 			setquest 5086;
-			set .@str$, "You've delivered the message, so let's get away.";
+			.@str$ = "You've delivered the message, so let's get away.";
 		} else
-			set .@str$, "You didn't deliver the right message, but let's still get away.";
+			.@str$ = "You didn't deliver the right message, but let's still get away.";
 		mes "[Stew]";
 		mes "What is this? What do you mean by '"+.@inputstr$+"'? Meow...";
 		mes "And... Aren't you from the 'Boom Can' Company, meow?";
@@ -8427,9 +8427,9 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 		if (.@inputstr$ == "Come back") {
 			erasequest 5089;
 			setquest 5090;
-			set .@str$, "You've delivered the message, so let's get away.";
+			.@str$ = "You've delivered the message, so let's get away.";
 		} else
-			set .@str$, "You didn't deliver the right message, but let's still get away.";
+			.@str$ = "You didn't deliver the right message, but let's still get away.";
 		mes "[Eff]";
 		mes "What is this? What do you mean by '"+.@inputstr$+"'? Meow...";
 		mes "Meow...? Meow! You! Investor meow?";
@@ -8501,7 +8501,7 @@ mal_in01,91,216,4	script	Ser#gamer	4_CAT_SAILOR1,{
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
-	for(set .@i,5074; .@i<=5090; set .@i,.@i+1) {
+	for(.@i = 5074; .@i<=5090; ++.@i) {
 		if (questprogress(.@i)) {
 			mes "[Ser]";
 			mes "Hey, ^0000FF"+strcharinfo(0)+"^000000. You haven't done what we asked you for. A promise is a promise, you know.";
@@ -8606,7 +8606,7 @@ mal_in01,91,216,4	script	Ser#gamer	4_CAT_SAILOR1,{
 		mes .@count$[.@match]+" match ~~";
 		if (.@tie) {
 			mes "Result is even, so we play again.";
-			set .@tie,0;
+			.@tie = 0;
 		}
 		mes "Try your best!";
 		next;
@@ -8614,24 +8614,24 @@ mal_in01,91,216,4	script	Ser#gamer	4_CAT_SAILOR1,{
 		mes "Rock! Paper! Scissors!";
 		next;
 
-		set .@pc,  select("Rock:Paper:Scissors")-1;
-		set .@npc, rand(3);
+		.@pc = select("Rock:Paper:Scissors")-1;
+		.@npc = rand(3);
 		emotion .@emote[.@pc],1;
 		emotion .@emote[.@npc];
 		mes "["+strcharinfo(0)+"] "+.@rps$[.@pc];
 		mes "--------------------------------";
 		mes "[Ser] "+.@rps$[.@npc];
 		if (.@pc == .@npc) {
-			set .@tie,1;
-			set .@result$, "Hmm, we are even. Let's play again.";
+			.@tie = 1;
+			.@result$ = "Hmm, we are even. Let's play again.";
 		} else if ((.@pc == 0 && .@npc == 2) || (.@pc == 1 && .@npc == 0) || (.@pc == 2 && .@npc == 1)) {
-			set .@match, .@match+1;
-			set .@win, .@win+1;
-			set .@result$, "I lost!";
+			++.@match;
+			++.@win;
+			.@result$ = "I lost!";
 		} else {
-			set .@match, .@match+1;
-			set .@loss, .@loss+1;
-			set .@result$, "So I win!!";
+			++.@match;
+			++.@loss;
+			.@result$ = "So I win!!";
 		}
 		next;
 		mes "[Ser]";
@@ -8845,7 +8845,7 @@ mal_in01,86,222,4	script	Paa#gamer	4_CAT_SAILOR1,{
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
-	for(set .@i,5074; .@i<=5090; set .@i,.@i+1) {
+	for(.@i = 5074; .@i<=5090; ++.@i) {
 		if (questprogress(.@i)) {
 			mes "[Paa]";
 			mes "You haven't done what we asked you for meow. A promise is a promise, you know meow.";
@@ -8938,7 +8938,7 @@ mal_in01,86,222,4	script	Paa#gamer	4_CAT_SAILOR1,{
 		mes .@count$[.@match]+" match ~~ meow.";
 		if (.@tie) {
 			mes "Result is even, so we play again meow.";
-			set .@tie,0;
+			.@tie = 0;
 		}
 		mes "Try your best meow!";
 		next;
@@ -8946,24 +8946,24 @@ mal_in01,86,222,4	script	Paa#gamer	4_CAT_SAILOR1,{
 		mes "Rock! Paper! Scissors!";
 		next;
 
-		set .@pc,  select("Rock:Paper:Scissors")-1;
-		set .@npc, rand(3);
+		.@pc = select("Rock:Paper:Scissors")-1;
+		.@npc = rand(3);
 		emotion .@emote[.@pc],1;
 		emotion .@emote[.@npc];
 		mes "["+strcharinfo(0)+"] "+.@rps$[.@pc];
 		mes "--------------------------------";
 		mes "[Ser] "+.@rps$[.@npc];
 		if (.@pc == .@npc) {
-			set .@tie,1;
-			set .@result$, "Hmm, we are even. Let's play again meow.";
+			.@tie = 1;
+			.@result$ = "Hmm, we are even. Let's play again meow.";
 		} else if ((.@pc == 0 && .@npc == 2) || (.@pc == 1 && .@npc == 0) || (.@pc == 2 && .@npc == 1)) {
-			set .@match, .@match+1;
-			set .@win, .@win+1;
-			set .@result$, "I lost meow!";
+			++.@match;
+			++.@win;
+			.@result$ = "I lost meow!";
 		} else {
-			set .@match, .@match+1;
-			set .@loss, .@loss+1;
-			set .@result$, "So I win meow!!";
+			++.@match;
+			++.@loss;
+			.@result$ = "So I win meow!!";
 		}
 		next;
 		mes "[Paa]";
@@ -9175,7 +9175,7 @@ mal_in01,91,222,4	script	Kuka#gamer	4_M_BABYCAT,{
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
-	for(set .@i,5074; .@i<=5090; set .@i,.@i+1) {
+	for(.@i = 5074; .@i<=5090; ++.@i) {
 		if (questprogress(.@i)) {
 			mes "[Kuka]";
 			mes "You haven't done what we asked you for yo~. A promise is a promise, you know yo~.";
@@ -9277,19 +9277,19 @@ mal_in01,91,222,4	script	Kuka#gamer	4_M_BABYCAT,{
 		case 1:
 			if (rand(1000) < 500) {
 				cutin "g_cat_01",4;
-				set .@win, .@win+1;
+				++.@win;
 			} else {
 				cutin "g_cat_02",4;
-				set .@loss,1;
+				.@loss = 1;
 			}
 			break;
 		case 2:
 			if (rand(1000) < 500) {
 				cutin "g_cat_03",4;
-				set .@win, .@win+1;
+				++.@win;
 			} else {
 				cutin "g_cat_04",4;
-				set .@loss,1;
+				.@loss = 1;
 			}
 			break;
 		}
@@ -9317,13 +9317,13 @@ mal_in01,91,222,4	script	Kuka#gamer	4_M_BABYCAT,{
 		mes "Present is for 3 wins or more yo~ Nothing for today yo~ But, come again tomorrow yo~";
 		close;
 	} else {
-		set .@name_record$, $malangdo_gamer$;
-		set .@win_record, $malangdo_gamer;
-		set .@win_cnt, .@win-.@win_record;
-		set .@cans, .@win-2;
+		.@name_record$ = $malangdo_gamer$;
+		.@win_record = $malangdo_gamer;
+		.@win_cnt = .@win-.@win_record;
+		.@cans = .@win-2;
 		if (.@win > .@win_record) {
-			set $malangdo_gamer$, strcharinfo(0);
-			set $malangdo_gamer, .@win;
+			$malangdo_gamer$ = strcharinfo(0);
+			$malangdo_gamer = .@win;
 			mes "[Kuka]";
 			mes "Congrats yo~ You won ^DE2B21"+.@win+"^000000 in a row yo~";
 			if (strcharinfo(0) == .@name_record$)
@@ -9497,7 +9497,7 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
-	for(set .@i,5074; .@i<=5090; set .@i,.@i+1) {
+	for(.@i = 5074; .@i<=5090; ++.@i) {
 		if (questprogress(.@i)) {
 			mes "[KungKung]";
 			mes "You didn't keep your promise. I have no business with you.";
@@ -9585,8 +9585,8 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 		close;
 	}
 	while(1) {
-		set .@pc_dic,  rand(6);
-		set .@npc_dic, rand(6);
+		.@pc_dic = rand(6);
+		.@npc_dic = rand(6);
 
 		// Emote[58-63]:
 		// e_dice1, e_dice2, e_dice3, e_dice4, e_dice5, e_dice6
@@ -9596,13 +9596,13 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 		if (.@pc_dic > .@npc_dic) {
 			mes "[KungKung]";
 			mes "Your dice roll number is higher. You can attack first.";
-			set .@attack_turn,1;
+			.@attack_turn = 1;
 			next;
 			break;
 		} else if (.@pc_dic < .@npc_dic) {
 			mes "[KungKung]";
 			mes "My dice roll number is higher. I will attack first.";
-			set .@attack_turn,2;
+			.@attack_turn = 2;
 			next;
 			break;
 		} else {
@@ -9611,8 +9611,8 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 			next;
 		}
 	}
-	set .@pc_hp,100;
-	set .@npc_hp,100;
+	.@pc_hp = 100;
+	.@npc_hp = 100;
 	while(1) {
 		if (!.@pc_hp || !.@npc_hp) break;
 		mes strcharinfo(0)+" (^FF0000"+.@pc_hp+"^000000/100)";
@@ -9634,7 +9634,7 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 		emotion e_loud,1;
 		emotion e_loud;
 		next;
-		set .@cat_hand, rand(1,10);
+		.@cat_hand = rand(1,10);
 		switch(.@attack_turn) {
 		case 1: // Attack
 			mes "How would you like to attack?";
@@ -9646,7 +9646,7 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 			switch(select("Back:Palm")) {
 			case 1:
 				if (.@cat_hand <= 5) {
-					set .@npc_hp, .@npc_hp-10;
+					--.@npc_hp0;
 					cutin "cat_g_01",4;
 					specialeffect EF_BASH;
 					mes "Attack was successful.";
@@ -9654,7 +9654,7 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 					next;
 					cutin "",255;
 				} else {
-					set .@attack_turn,2;
+					.@attack_turn = 2;
 					cutin "cat_g_02",4;
 					mes "Attack has failed.";
 					mes "KungKung starts attack now.";
@@ -9664,14 +9664,14 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 				break;
 			case 2:
 				if (.@cat_hand <= 5) {
-					set .@attack_turn,2;
+					.@attack_turn = 2;
 					cutin "cat_g_03",4;
 					mes "Attack has failed.";
 					mes "KungKung starts attack now.";
 					next;
 					cutin "",255;
 				} else {
-					set .@npc_hp, .@npc_hp-10;
+					--.@npc_hp0;
 					cutin "cat_g_04",4;
 					specialeffect EF_BASH;
 					mes "Attack was successful.";
@@ -9692,7 +9692,7 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 			switch(select("Back:Palm")) {
 			case 1:
 				if (.@cat_hand <= 5) {
-					set .@pc_hp, .@pc_hp-10;
+					--.@pc_hp0;
 					cutin "cat_g_05",4;
 					specialeffect2 EF_BASH;
 					mes "Defending has failed.";
@@ -9700,7 +9700,7 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 					next;
 					cutin "",255;
 				} else {
-					set .@attack_turn,1;
+					.@attack_turn = 1;
 					cutin "cat_g_06",4;
 					mes "Defending was succesful.";
 					mes "You can start attack now.";
@@ -9710,14 +9710,14 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 				break;
 			case 2:
 				if (.@cat_hand <= 5) {
-					set .@attack_turn,1;
+					.@attack_turn = 1;
 					cutin "cat_g_07",4;
 					mes "Defending was succesful.";
 					mes "You can start attack now.";
 					next;
 					cutin "",255;
 				} else {
-					set .@pc_hp, .@pc_hp-10;
+					.@pc_hp -= 10;
 					cutin "cat_g_08",4;
 					specialeffect2 EF_BASH;
 					mes "Defending has failed.";
@@ -9915,7 +9915,7 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
-	for(set .@i,5074; .@i<=5090; set .@i,.@i+1) {
+	for(.@i = 5074; .@i<=5090; ++.@i) {
 		if (questprogress(.@i)) {
 			mes "[Leader]";
 			mes "You cannot challenge this Flag Game unless you are done with your assigned work.";
@@ -10001,7 +10001,7 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 	}
 
 	// Starting Flag Points (default 5).
-	set .@flag_point,5;
+	.@flag_point = 5;
 	setarray .@flag_point_cat[1],5,5,5,5,5;
 
 	// Cat players' names.
@@ -10025,69 +10025,69 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 		"3|4|5|6";	// Drooping
 
 	while(1) {
-		for(set .@i,1; .@i<=5; set .@i,.@i+1)
-			set .@cat_action[.@i], ((.@flag_point_cat[.@i])?rand(1,8):0);
+		for(.@i = 1; .@i<=5; ++.@i)
+			.@cat_action[.@i] = ((.@flag_point_cat[.@i])?rand(1,8):0);
 
 		switch(.@cat_action[1]) {
-			case 0: set .@cat_mes$[1], "cannot do anything with all points used"; break;
-			case 1: set .@cat_mes$[1], "focuses on hair picking, careless for the game"; break;
-			case 2: set .@cat_mes$[1], "looks around with round eyes"; break;
-			case 3: set .@cat_mes$[1], "picks out hair around the front paw"; break;
-			case 4: set .@cat_mes$[1], "is getting annoyed at tails smacking on the ground"; break;
-			case 5: set .@cat_mes$[1], "picks his hair while looking around"; break;
-			case 6: set .@cat_mes$[1], "shows off his front paw to the Leader Cat"; break;
-			case 7: set .@cat_mes$[1], "is picking some hair on his belly with a calm mind"; break;
-			case 8: set .@cat_mes$[1], "is drooping down with a pleasant face"; break;
+			case 0: .@cat_mes$[1] = "cannot do anything with all points used"; break;
+			case 1: .@cat_mes$[1] = "focuses on hair picking, careless for the game"; break;
+			case 2: .@cat_mes$[1] = "looks around with round eyes"; break;
+			case 3: .@cat_mes$[1] = "picks out hair around the front paw"; break;
+			case 4: .@cat_mes$[1] = "is getting annoyed at tails smacking on the ground"; break;
+			case 5: .@cat_mes$[1] = "picks his hair while looking around"; break;
+			case 6: .@cat_mes$[1] = "shows off his front paw to the Leader Cat"; break;
+			case 7: .@cat_mes$[1] = "is picking some hair on his belly with a calm mind"; break;
+			case 8: .@cat_mes$[1] = "is drooping down with a pleasant face"; break;
 		}
 		switch(.@cat_action[2]) {
-			case 0: set .@cat_mes$[2], "cannot do anything with all points used"; break;
-			case 1: set .@cat_mes$[2], "picks out hair around the front paw"; break;
-			case 2: set .@cat_mes$[2], "looks around with round eyes"; break;
-			case 3: set .@cat_mes$[2], "is getting annoyed with the Leader Cat"; break;
-			case 4: set .@cat_mes$[2], "observes flies flying around"; break;
-			case 5: set .@cat_mes$[2], "shows off picked hair proudly"; break;
-			case 6: set .@cat_mes$[2], "observes Leader Cat's tail curiously"; break;
-			case 7: set .@cat_mes$[2], "looks at you with drooping eyes"; break;
-			case 8: set .@cat_mes$[2], "is checking you out with a weird glimmer"; break;
+			case 0: .@cat_mes$[2] = "cannot do anything with all points used"; break;
+			case 1: .@cat_mes$[2] = "picks out hair around the front paw"; break;
+			case 2: .@cat_mes$[2] = "looks around with round eyes"; break;
+			case 3: .@cat_mes$[2] = "is getting annoyed with the Leader Cat"; break;
+			case 4: .@cat_mes$[2] = "observes flies flying around"; break;
+			case 5: .@cat_mes$[2] = "shows off picked hair proudly"; break;
+			case 6: .@cat_mes$[2] = "observes Leader Cat's tail curiously"; break;
+			case 7: .@cat_mes$[2] = "looks at you with drooping eyes"; break;
+			case 8: .@cat_mes$[2] = "is checking you out with a weird glimmer"; break;
 		}
 		switch(.@cat_action[3]) {
-			case 0: set .@cat_mes$[3], "cannot do anything with all points used"; break;
-			case 1: set .@cat_mes$[3], "is getting annoyed at tails smacking on the ground"; break;
-			case 2: set .@cat_mes$[3], "observes Leader Cat's tail curiously"; break;
-			case 3: set .@cat_mes$[3], "is getting annoyed while picking his hair"; break;
-			case 4: set .@cat_mes$[3], "scratches with a drooping face"; break;
-			case 5: set .@cat_mes$[3], "catches a flying fly and shows off"; break;
-			case 6: set .@cat_mes$[3], "is getting irritable with a tired face"; break;
-			case 7: set .@cat_mes$[3], "picks his hair while looking around"; break;
-			case 8: set .@cat_mes$[3], "is getting annoyed with the Leader Cat"; break;
+			case 0: .@cat_mes$[3] = "cannot do anything with all points used"; break;
+			case 1: .@cat_mes$[3] = "is getting annoyed at tails smacking on the ground"; break;
+			case 2: .@cat_mes$[3] = "observes Leader Cat's tail curiously"; break;
+			case 3: .@cat_mes$[3] = "is getting annoyed while picking his hair"; break;
+			case 4: .@cat_mes$[3] = "scratches with a drooping face"; break;
+			case 5: .@cat_mes$[3] = "catches a flying fly and shows off"; break;
+			case 6: .@cat_mes$[3] = "is getting irritable with a tired face"; break;
+			case 7: .@cat_mes$[3] = "picks his hair while looking around"; break;
+			case 8: .@cat_mes$[3] = "is getting annoyed with the Leader Cat"; break;
 		}
 		switch(.@cat_action[4]) {
-			case 0: set .@cat_mes$[4], "cannot do anything with all points used"; break;
-			case 1: set .@cat_mes$[4], "is picking some hair on his belly with a calm mind"; break;
-			case 2: set .@cat_mes$[4], "shows off his front paw to the Leader Cat"; break;
-			case 3: set .@cat_mes$[4], "is getting irritable with a tired face"; break;
-			case 4: set .@cat_mes$[4], "catches a flying fly and shows off"; break;
-			case 5: set .@cat_mes$[4], "shows off an attractive tail"; break;
-			case 6: set .@cat_mes$[4], "is drooping and mumbling"; break;
-			case 7: set .@cat_mes$[4], "shows off picked hair proudly"; break;
-			case 8: set .@cat_mes$[4], "is checking you out with a weird glimmer"; break;
+			case 0: .@cat_mes$[4] = "cannot do anything with all points used"; break;
+			case 1: .@cat_mes$[4] = "is picking some hair on his belly with a calm mind"; break;
+			case 2: .@cat_mes$[4] = "shows off his front paw to the Leader Cat"; break;
+			case 3: .@cat_mes$[4] = "is getting irritable with a tired face"; break;
+			case 4: .@cat_mes$[4] = "catches a flying fly and shows off"; break;
+			case 5: .@cat_mes$[4] = "shows off an attractive tail"; break;
+			case 6: .@cat_mes$[4] = "is drooping and mumbling"; break;
+			case 7: .@cat_mes$[4] = "shows off picked hair proudly"; break;
+			case 8: .@cat_mes$[4] = "is checking you out with a weird glimmer"; break;
 		}
 		switch(.@cat_action[5]) {
-			case 0: set .@cat_mes$[5], "cannot do anything with all points used"; break;
-			case 1: set .@cat_mes$[5], "is fighting with his tail"; break;
-			case 2: set .@cat_mes$[5], "is scratching with his hind foot"; break;
-			case 3: set .@cat_mes$[5], "is drooping down with a pleasant face"; break;
-			case 4: set .@cat_mes$[5], "checks you out with a drooping face"; break;
-			case 5: set .@cat_mes$[5], "scratches with a drooping face"; break;
-			case 6: set .@cat_mes$[5], "is drooping and mumbling"; break;
-			case 7: set .@cat_mes$[5], "is lying around~"; break;
-			case 8: set .@cat_mes$[5], "is doing nothing"; break;
+			case 0: .@cat_mes$[5] = "cannot do anything with all points used"; break;
+			case 1: .@cat_mes$[5] = "is fighting with his tail"; break;
+			case 2: .@cat_mes$[5] = "is scratching with his hind foot"; break;
+			case 3: .@cat_mes$[5] = "is drooping down with a pleasant face"; break;
+			case 4: .@cat_mes$[5] = "checks you out with a drooping face"; break;
+			case 5: .@cat_mes$[5] = "scratches with a drooping face"; break;
+			case 6: .@cat_mes$[5] = "is drooping and mumbling"; break;
+			case 7: .@cat_mes$[5] = "is lying around~"; break;
+			case 8: .@cat_mes$[5] = "is doing nothing"; break;
 		}
 
 		switch(rand(3)) {
-			case 0: set .@tip$, "You can predict if the cat will wave the flag or not with 'Observe cats'."; break;
-			case 1: set .@tip$, "1 Flag Point will be deducted if you choose 'Wave flag'."; break;
-			case 2: set .@tip$, "Choosing 'Wait', you can check the results and move on to the next game."; break;
+			case 0: .@tip$ = "You can predict if the cat will wave the flag or not with 'Observe cats'."; break;
+			case 1: .@tip$ = "1 Flag Point will be deducted if you choose 'Wave flag'."; break;
+			case 2: .@tip$ = "Choosing 'Wait', you can check the results and move on to the next game."; break;
 		}
 		while(1) {
 			mes "[Leader]";
@@ -10096,48 +10096,48 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 			mes " ";
 			mes "Tip: ^F86A08"+.@tip$+"^000000";
 			next;
-			set .@choice, select("Observe cats:Wave flag:Wait");
+			.@choice = select("Observe cats:Wave flag:Wait");
 			switch(.@choice) {
 			case 1:
 				mes "Observing cats...";
 				next;
-				for(set .@i,1; .@i<=5; set .@i,.@i+1) {
+				for(.@i = 1; .@i<=5; ++.@i) {
 					mes "[------ Observing cats ------]";
 					mes .@cat_name$[.@i]+.@cat_desc$[.@i]+" ^FF0000"+.@cat_mes$[.@i]+"^000000.";
 					next;
 				}
 				break;
 			case 2:
-				set .@flag_point, .@flag_point-1;
-				set .@you_flag,1;
+				--.@flag_point;
+				.@you_flag = 1;
 				break;
 			case 3:
 				break;
 			}
 			if (.@choice != 1) break;
 		}
-		set .@round, .@round+1;
-		set .@rounds_nowave, .@rounds_nowave+1;
+		++.@round;
+		++.@rounds_nowave;
 		if (.@you_flag == 1) {
-			set .@you_flag$, "You waved the flag";
-			set .@emotion[0], e_korea;
+			.@you_flag$ = "You waved the flag";
+			.@emotion[0] = e_korea;
 		} else {
-			set .@you_flag$, "You didn't wave the flag";
-			set .@emotion[0], e_swt2;
+			.@you_flag$ = "You didn't wave the flag";
+			.@emotion[0] = e_swt2;
 		}
-		for(set .@i,1; .@i<=5; set .@i,.@i+1) {
+		for(.@i = 1; .@i<=5; ++.@i) {
 			if (.@flag_point_cat[.@i] == 0) {
-				set .@cat_flag$[.@i], "Not enough Flag Points, could not wave";
-				set .@emotion[.@i], e_ho;
+				.@cat_flag$[.@i] = "Not enough Flag Points, could not wave";
+				.@emotion[.@i] = e_ho;
 			} else {
 				if (compare(.@cat_emotes$[.@i],""+.@cat_action[.@i])) {
-					set .@cat_flag$[.@i], "Didn't wave";
-					set .@emotion[.@i], .@cat_emote[.@i];
+					.@cat_flag$[.@i] = "Didn't wave";
+					.@emotion[.@i] = .@cat_emote[.@i];
 				} else {
-					set .@cat_flag$[.@i], "Did wave";
-					set .@flag_point_cat[.@i], .@flag_point_cat[.@i]-1;
-					set .@cat_flags_waved, .@cat_flags_waved+1;
-					set .@emotion[.@i], e_korea;
+					.@cat_flag$[.@i] = "Did wave";
+					--.@flag_point_cat[.@i];
+					++.@cat_flags_waved;
+					.@emotion[.@i] = e_korea;
 				}
 			}
 		}
@@ -10150,7 +10150,7 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 		mes .@flag_point+" Flag Point remaining.";
 		emotion .@emotion[0],1;
 		next;
-		for(set .@i,1; .@i<=5; set .@i,.@i+1) {
+		for(.@i = 1; .@i<=5; ++.@i) {
 			mes "[Leader]";
 			mes "~ "+.@cat_name$[.@i]+.@cat_desc$[.@i]+" ~";
 			mes "^FF0000"+.@cat_flag$[.@i]+"^000000 the flag for game ^C1653E"+.@round+"^000000.";
@@ -10159,7 +10159,7 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 			next;
 		}
 		if (.@you_flag == 1) {
-			set .@rounds_nowave,0;
+			.@rounds_nowave = 0;
 			if (.@cat_flags_waved == 0) {
 				// You win.
 				break;
@@ -10170,7 +10170,7 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 				next;
 				break;
 			} else {
-				set .@you_flag,0;
+				.@you_flag = 0;
 				mes "[Leader]";
 				mes "You have failed at flag waving.";
 				mes .@flag_point+" Flag Point remaining.";
@@ -10191,8 +10191,8 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 				next;
 			} else {
 				if (.@rounds_nowave == 10) {
-					set .@rounds_nowave,0;
-					set .@flag_point, .@flag_point-1;
+					.@rounds_nowave = 0;
+					--.@flag_point;
 					mes "[Leader]";
 					mes "Since you didn't wave your flag for 10 games, 1 Flag Point will be reduced according to the official Flag Game rules.";
 					next;
@@ -10219,7 +10219,7 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 				next;
 			}
 		}
-		set .@cat_flags_waved,0;
+		.@cat_flags_waved = 0;
 	}
 	mes "[Leader]";
 	mes "The Flag-Waving Game has ended.";
@@ -10240,11 +10240,11 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 			mes "But, only 3 Canned Foods will be given as the present since you didn't take a big part through the game.";
 		} else {
 			switch(.@flag_point) {
-				case 0: set .@cans,5; break;
-				case 1: set .@cans,7; break;
-				case 2: set .@cans,10; break;
-				case 3: set .@cans,15; break;
-				case 4: set .@cans,20; break;
+				case 0: .@cans = 5; break;
+				case 1: .@cans = 7; break;
+				case 2: .@cans = 10; break;
+				case 3: .@cans = 15; break;
+				case 4: .@cans = 20; break;
 			}
 			getitem 12636, .@cans; //Malang_Sp_Can
 			mes "[Leader]";
@@ -10526,11 +10526,11 @@ mal_in01,15,16,3	script	Fallen Angel#mal	4_F_VALKYRIE2,{
 	}
 	if (getequipid(EQI_GARMENT) == 2573) {
 		if (Zeny >= 1000000)
-			set .@menu$, "Enchant Archangel Wing";
+			.@menu$ = "Enchant Archangel Wing";
 		else
-			set .@menu$, "^999999You do not have enough zeny!^000000";
+			.@menu$ = "^999999You do not have enough zeny!^000000";
 	} else
-		set .@menu$, "^999999You have not equipped the Archangel Wing!^000000";
+		.@menu$ = "^999999You have not equipped the Archangel Wing!^000000";
 	mes "[Fallen Angel]";
 	mes "You seem like a poor guy!";
 	next;
@@ -10587,44 +10587,44 @@ mal_in01,15,16,3	script	Fallen Angel#mal	4_F_VALKYRIE2,{
 			mes "This Archangel Wing is enchanted! Please initialize it or bring another Archangel Wing for me!";
 			close;
 		}
-		set .@equip_refine, getequiprefinerycnt(EQI_GARMENT);
+		.@equip_refine = getequiprefinerycnt(EQI_GARMENT);
 		setarray .@equip_card[0], getequipcardid(EQI_GARMENT,0),getequipcardid(EQI_GARMENT,1),getequipcardid(EQI_GARMENT,2);
 
-		set .@i, rand(1,900);
-		     if (.@i < 2)   set .@enchant,4848; //Immuned1
-		else if (.@i < 3)   set .@enchant,4849; //Cranial1
-		else if (.@i < 4)   set .@enchant,4852; //Heal_Amount5
-		else if (.@i < 9)   set .@enchant,4853; //S_Str
-		else if (.@i < 14)  set .@enchant,4854; //S_Agi
-		else if (.@i < 19)  set .@enchant,4855; //S_Vital
-		else if (.@i < 24)  set .@enchant,4856; //S_Int
-		else if (.@i < 29)  set .@enchant,4857; //S_Dex
-		else if (.@i < 34)  set .@enchant,4858; //S_Luck
-		else if (.@i < 39)  set .@enchant,4851; //Heal_Amount4
-		else if (.@i < 49)  set .@enchant,4850; //Heal_Amount3
-		else if (.@i < 74)  set .@enchant,4760; //Matk1
-		else if (.@i < 84)  set .@enchant,4761; //Matk2
-		else if (.@i < 109) set .@enchant,4817; //Sharp2
-		else if (.@i < 119) set .@enchant,4816; //Sharp3
-		else if (.@i < 144) set .@enchant,4814; //Spell2
-		else if (.@i < 154) set .@enchant,4813; //Spell3
-		else if (.@i < 179) set .@enchant,4833; //Expert_Archer2
-		else if (.@i < 189) set .@enchant,4834; //Expert_Archer3
-		else if (.@i < 214) set .@enchant,4810; //Fighting_Spirit2
-		else if (.@i < 224) set .@enchant,4809; //Fighting_Spirit3
-		else if (.@i < 259) set .@enchant,4701; //Strength2
-		else if (.@i < 294) set .@enchant,4731; //Agility2
-		else if (.@i < 329) set .@enchant,4721; //Dexterity2
-		else if (.@i < 364) set .@enchant,4741; //Vitality2
-		else if (.@i < 399) set .@enchant,4751; //Luck2
-		else if (.@i < 434) set .@enchant,4711; //Inteligence2
-		else if (.@i < 504) set .@enchant,4700; //Strength1
-		else if (.@i < 574) set .@enchant,4730; //Agility1
-		else if (.@i < 644) set .@enchant,4720; //Dexterity1
-		else if (.@i < 714) set .@enchant,4740; //Vitality1
-		else if (.@i < 784) set .@enchant,4750; //Luck1
-		else if (.@i < 854) set .@enchant,4710; //Inteligence1
-		else set .@enchant,0;
+		.@i = rand(1,900);
+		     if (.@i < 2)   .@enchant = 4848; //Immuned1
+		else if (.@i < 3)   .@enchant = 4849; //Cranial1
+		else if (.@i < 4)   .@enchant = 4852; //Heal_Amount5
+		else if (.@i < 9)   .@enchant = 4853; //S_Str
+		else if (.@i < 14)  .@enchant = 4854; //S_Agi
+		else if (.@i < 19)  .@enchant = 4855; //S_Vital
+		else if (.@i < 24)  .@enchant = 4856; //S_Int
+		else if (.@i < 29)  .@enchant = 4857; //S_Dex
+		else if (.@i < 34)  .@enchant = 4858; //S_Luck
+		else if (.@i < 39)  .@enchant = 4851; //Heal_Amount4
+		else if (.@i < 49)  .@enchant = 4850; //Heal_Amount3
+		else if (.@i < 74)  .@enchant = 4760; //Matk1
+		else if (.@i < 84)  .@enchant = 4761; //Matk2
+		else if (.@i < 109) .@enchant = 4817; //Sharp2
+		else if (.@i < 119) .@enchant = 4816; //Sharp3
+		else if (.@i < 144) .@enchant = 4814; //Spell2
+		else if (.@i < 154) .@enchant = 4813; //Spell3
+		else if (.@i < 179) .@enchant = 4833; //Expert_Archer2
+		else if (.@i < 189) .@enchant = 4834; //Expert_Archer3
+		else if (.@i < 214) .@enchant = 4810; //Fighting_Spirit2
+		else if (.@i < 224) .@enchant = 4809; //Fighting_Spirit3
+		else if (.@i < 259) .@enchant = 4701; //Strength2
+		else if (.@i < 294) .@enchant = 4731; //Agility2
+		else if (.@i < 329) .@enchant = 4721; //Dexterity2
+		else if (.@i < 364) .@enchant = 4741; //Vitality2
+		else if (.@i < 399) .@enchant = 4751; //Luck2
+		else if (.@i < 434) .@enchant = 4711; //Inteligence2
+		else if (.@i < 504) .@enchant = 4700; //Strength1
+		else if (.@i < 574) .@enchant = 4730; //Agility1
+		else if (.@i < 644) .@enchant = 4720; //Dexterity1
+		else if (.@i < 714) .@enchant = 4740; //Vitality1
+		else if (.@i < 784) .@enchant = 4750; //Luck1
+		else if (.@i < 854) .@enchant = 4710; //Inteligence1
+		else .@enchant = 0;
 
 		Zeny -= 1000000;
 		delequip EQI_GARMENT;
@@ -10679,7 +10679,7 @@ mal_in01,15,16,3	script	Fallen Angel#mal	4_F_VALKYRIE2,{
 			mes "This equipment has not been enchanted, please check it again!";
 			close;
 		}
-		set .@equip_refine, getequiprefinerycnt(EQI_GARMENT);
+		.@equip_refine = getequiprefinerycnt(EQI_GARMENT);
 		setarray .@equip_card[0], getequipcardid(EQI_GARMENT,0),getequipcardid(EQI_GARMENT,1),getequipcardid(EQI_GARMENT,2);
 		delitem 6417,3; //Silvervine
 		delequip EQI_GARMENT;

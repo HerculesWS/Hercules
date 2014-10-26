@@ -79,7 +79,7 @@ moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 			102000,108000,
 			110000,138000,118000,96000,134000;
 		mes "You must be within level 91-99 to accept these missions.";
-		for(set .@quest,4181; .@quest<=4196; set .@quest,.@quest+1) {
+		for(.@quest = 4181; .@quest<=4196; ++.@quest) {
 			.@hunting = questprogress(.@quest,HUNTING);
 			if (.@hunting == 1) {
 				next;
@@ -159,8 +159,8 @@ moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 
 //callsub L_Quest,<quest ID>,"<monster name>",<reward EXP>,"<cutin image>","<description>"{,"s"};
 L_Quest:
-	set .@quest1, getarg(0);
-	set .@quest2, .@quest1+31;
+	.@quest1 = getarg(0);
+	.@quest2 = .@quest1+31;
 	.@playtime = questprogress(.@quest2,PLAYTIME);
 	if (.@playtime == 1) {
 		mes "[91-99 Mission Board]";
@@ -181,11 +181,11 @@ L_Quest:
 		setquest .@quest2;
 
 		// Job Experience calculation.
-		if (JobLevel > 50 && JobLevel < 56) set .@jexp,67000;
-		else if (JobLevel > 55 && JobLevel < 61) set .@jexp,94000;
-		else if (JobLevel > 60 && JobLevel < 66) set .@jexp,141000;
-		else if (JobLevel > 65 && JobLevel < 69) set .@jexp,212000;
-		else if (JobLevel == 69) set .@jexp,311000;
+		if (JobLevel > 50 && JobLevel < 56) .@jexp = 67000;
+		else if (JobLevel > 55 && JobLevel < 61) .@jexp = 94000;
+		else if (JobLevel > 60 && JobLevel < 66) .@jexp = 141000;
+		else if (JobLevel > 65 && JobLevel < 69) .@jexp = 212000;
+		else if (JobLevel == 69) .@jexp = 311000;
 
 		getexp getarg(2),.@jexp;
 		close;

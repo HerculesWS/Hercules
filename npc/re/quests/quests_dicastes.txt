@@ -120,7 +120,7 @@ dic_dun01,266,113,5	script	Curious Sapha#ep13_3_	4_MAN_BENKUNI,{
 		mes "How many do you want? You can buy up to 100.";
 		next;
 		input .@input;
-		set .@deal, 500 * .@input;
+		.@deal = 500 * .@input;
 		if (.@deal == 0) {
 			mes "[Curious Sapha]";
 			mes "You changed your mind?";
@@ -181,7 +181,7 @@ sec_in02,16,43,5	script	Scaraba Dungeon Entrance	4_MAN_BENKUNI,{
 	mes "Setting you for dungeon entry.";
 	mes "You will be able to go through if the password is correct.";
 	if (callfunc("F_GM_NPC",1854,0) == 1) {
-		set ep13_3_secret,6;
+		ep13_3_secret = 6;
 		getitem 2782,1; //Ring_Of_Wise_King
 		getitem 6437,2; //Scaraba_Perfume
 		mes "Setting Complete";
@@ -323,7 +323,7 @@ OnTouch:
 		mes "[Black Clothed Guy]";
 		mes "...Really?";
 		mes "You've found it at last.";
-		set ep13_3_secret, 24;
+		ep13_3_secret = 24;
 		next;
 		cutin "",255;
 		donpcevent "Suspicious Guy#ep133_::OnDisable";
@@ -394,7 +394,7 @@ OnEnable:
 		mes "[Capital City Guard]";
 		mes "Are you returning to El Dicastes?";
 		next;
-		set .@m, select("Yes. Going to the castle.:No.") - 1;
+		.@m = select("Yes. Going to the castle.:No.") - 1;
 		mes "[Capital City Guard]";
 		mes "Good luck.";
 		close2;
@@ -539,7 +539,7 @@ dic_in01,48,263,5	script	Hunting Dept. 1 Manager	4_MAN_BENKUNI,{
 	mes "Let me check your records first.";
 	next;
 	mes "[Hunting Dept. 1 Manager]";
-	set .@s$, "Oh, you completed all your requests. Confirmation complete.";
+	.@s$ = "Oh, you completed all your requests. Confirmation complete.";
 	que_dic(0,12099,4000,.@s$);
 	que_dic(0,12100,49000,.@s$);
 	que_dic(0,12101,18000,.@s$);
@@ -609,7 +609,7 @@ dic_in01,51,266,6	script	Hunting Dept. 2 Manager	4_MAN_BENKUNI,{
 	mes "Let me check your records first.";
 	next;
 	mes "[Hunting Dept. 2 Manager]";
-	set .@s$, "Oh, you completed all your requests. Confirmation complete.";
+	.@s$ = "Oh, you completed all your requests. Confirmation complete.";
 	que_dic(0,12106,77000,.@s$);
 	que_dic(0,12107,47000,.@s$);
 	que_dic(0,12108,50000,.@s$);
@@ -676,7 +676,7 @@ dic_in01,51,270,7	script	Supply Dept. 1 Manager	4_MAN_BENKUNI,{
 	mes "Let me check your records first.";
 	next;
 	mes "[Supply Dept. 1 Manager]";
-	set .@s$, "It's done. You can't start any other request till tomorrow, why don't you go to the famous pub and rest?";
+	.@s$ = "It's done. You can't start any other request till tomorrow, why don't you go to the famous pub and rest?";
 	que_dic(1,12117,26300,6086,6,.@s$);
 	que_dic(1,12118,25600,6090,3,.@s$);
 	que_dic(1,12119,51100,6073,16,.@s$);
@@ -744,7 +744,7 @@ dic_in01,48,273,8	script	Supply Dept. 2 Manager	4_MAN_BENKUNI,{
 	mes "Let me check your records first.";
 	next;
 	mes "[Supply Dept. 2 Manager]";
-	set .@s$, "" + strcharinfo(0) + ", you handle your requests quite well. You are not like the pub owner who just sends requests here every day.";
+	.@s$ = "" + strcharinfo(0) + ", you handle your requests quite well. You are not like the pub owner who just sends requests here every day.";
 	que_dic(1,12127,65300,6023,5,.@s$);
 	que_dic(1,12128,65300,6020,21,.@s$);
 	que_dic(1,12129,82800,1042,27,.@s$);
@@ -811,7 +811,7 @@ dic_in01,43,273,1	script	Transport Dept. 1 Mgr	4_MAN_BENKUNI,{
 	mes "Let me check your records first.";
 	next;
 	mes "[Transport Dept. 1 Manager]";
-	set .@s$, "Quantity check finished. Ahhh, you going to rest? Then why don't you visit the famous pub of the Capital? They have no yummy food though....";
+	.@s$ = "Quantity check finished. Ahhh, you going to rest? Then why don't you visit the famous pub of the Capital? They have no yummy food though....";
 	que_dic(1,12137,30000,7143,4,.@s$);
 	que_dic(1,12138,25000,744,5,.@s$);
 	que_dic(1,12139,47500,748,1,.@s$);
@@ -885,7 +885,7 @@ dic_in01,40,270,2	script	Transport Dept. 2 Mgr	4_MAN_BENKUNI,{
 	mes "Let me check your records first.";
 	next;
 	mes "[Transport Dept. 2 Manager.]";
-	set .@s$, "Well received. One less thing to worry about now.";
+	.@s$ = "Well received. One less thing to worry about now.";
 	que_dic(1,12148,23000,528,100,.@s$);
 	que_dic(1,12149,20750,512,100,.@s$);
 	que_dic(1,12150,20750,515,100,.@s$);
@@ -926,7 +926,7 @@ dic_in01,40,193,1	script	Papyrus#0001	4_MAN_NITT,{
 		mes "You won't need those documents even if you could read them. Looks like you haven't gotten enough training";
 		close;
 	}
-	set .@map_hi, rand(1,4);
+	.@map_hi = rand(1,4);
 	mes "[Papyrus]";
 	if (.@map_hi == 1) mes "Welcome, I am Papyrus, the manager of the Archive room here.";
 	else if (.@map_hi == 2) mes "The number of adventurers visiting the Archive room has increased";
@@ -1037,7 +1037,7 @@ dic_in01,40,193,1	script	Papyrus#0001	4_MAN_NITT,{
 	}
 	specialeffect2 EF_DISPELL;
 	progressbar "ffff00",4;
-	set .@doc,rand(1,70);
+	.@doc = rand(1,70);
 	if (.@doc > 50 && .@doc <= 60) {
 		mes "No documents look out of the ordinary.";
 		close;
@@ -1333,7 +1333,7 @@ OnTouch:
 		mes "But you see a human in high-ranking Sapha clothing in front of you.";
 		sc_end SC_BLIND;
 		emotion e_omg,1;
-		set ep13_3_secret, 14;
+		ep13_3_secret = 14;
 		erasequest 7198;
 		close2;
 		cutin "",255;
@@ -1390,7 +1390,7 @@ dic_in01,294,276,5	script	Secret Adjutant#ep133_2	4_M_CATMAN2,{
 		mes "Clear them out without anyone knowing.";
 		mes "And bring them here instead of throwing them away anywhere.";
 		mes "Bring back at least 10 of each.";
-		set ep13_3_secret, 17;
+		ep13_3_secret = 17;
 		setquest 7199;
 		next;
 		mes "[Cheshire]";
@@ -1409,10 +1409,10 @@ dic_in01,294,276,5	script	Secret Adjutant#ep133_2	4_M_CATMAN2,{
 			delitem 6306,10; //Solid_Bloodstain
 			delitem 6305,10; //Frozen_Skin_Piece
 			delitem 6307,10; //Suspicious_Magic_Stone
-			set ep13_3_secret, 18;
+			ep13_3_secret = 18;
 			erasequest 7199;
 			setquest 7200;
-			set ep13_3_ahtdayq, 2;
+			ep13_3_ahtdayq = 2;
 			close2;
 		}
 		else {
@@ -1448,7 +1448,7 @@ dic_in01,294,276,5	script	Secret Adjutant#ep133_2	4_M_CATMAN2,{
 				delitem 6306,10; //Solid_Bloodstain
 				delitem 6305,10; //Frozen_Skin_Piece
 				delitem 6307,10; //Suspicious_Magic_Stone
-				set ep13_3_ahtdayq, 2;
+				ep13_3_ahtdayq = 2;
 				getitem 6304,1; //Sapa_Feat_Cert
 				getexp 70000,0;
 				getexp 0,30000;
@@ -1481,7 +1481,7 @@ dic_in01,294,276,5	script	Secret Adjutant#ep133_2	4_M_CATMAN2,{
 				mes "[Cheshire]";
 				mes "Collect 10 of each as always.";
 				mes "Got it?";
-				set ep13_3_ahtdayq, 1;
+				ep13_3_ahtdayq = 1;
 				if (questprogress(7200,PLAYTIME)) erasequest 7200;
 				setquest 7201;
 				next;
@@ -1538,7 +1538,7 @@ dic_in01,300,280,5	script	Minister Ahat#ep133_21	4_HUMAN_GERUTOO,{
 		mes "But you see a human in high-ranking Sapha clothing in front of you.";
 		sc_end SC_BLIND;
 		emotion e_omg,1;
-		set ep13_3_secret, 14;
+		ep13_3_secret = 14;
 		erasequest 7198;
 		close2;
 	}
@@ -1590,7 +1590,7 @@ dic_in01,300,280,5	script	Minister Ahat#ep133_21	4_HUMAN_GERUTOO,{
 		mes "....";
 		next;
 		while (.@ahtlove < 4) {
-			set .@ahtlove, .@ahtlove + 1;
+			++.@ahtlove;
 			mes "- Ahat tries to hypnotize you again.";
 			mes "He must have erased himself by doing this over and over again.-";
 			next;
@@ -1678,7 +1678,7 @@ dic_in01,300,280,5	script	Minister Ahat#ep133_21	4_HUMAN_GERUTOO,{
 			mes "You are my loyal servant.";
 			mes "My hands and feet.";
 		}
-		set ep13_3_secret, 15;
+		ep13_3_secret = 15;
 		close2;
 	}
 	else if (ep13_3_secret == 15) {
@@ -1729,7 +1729,7 @@ dic_in01,300,280,5	script	Minister Ahat#ep133_21	4_HUMAN_GERUTOO,{
 		next;
 		mes "- Ahat doesn't suspect a thing yet.";
 		mes "He seems to believe that his spell was complete. -";
-		set ep13_3_secret, 16;
+		ep13_3_secret = 16;
 		close2;
 	}
 	else if (ep13_3_secret == 16) {
@@ -1775,7 +1775,7 @@ dic_in01,300,280,5	script	Minister Ahat#ep133_21	4_HUMAN_GERUTOO,{
 		mes "[Ahat]";
 		mes "And this is something to reward you for your deeds.";
 		mes "Nothing much but I hope you like it.";
-		set ep13_3_secret, 19;
+		ep13_3_secret = 19;
 		getitem 2790,1; //Bradium_Brooch
 		close2;
 	}
@@ -1860,7 +1860,7 @@ dic_in01,158,188,3	script	Jarute HesLanta#ep133_2	4_MAN_JERUTOO,{
 			mes "[HesLanta]";
 			mes "Jarute.. What did Ahat look like to you?";
 			next;
-			set .@m, select("I don't understand your question.:My master.") - 1;
+			.@m = select("I don't understand your question.:My master.") - 1;
 			if (.@m) {
 				mes "[HesLanta]";
 				mes "....huh....?";
@@ -1869,7 +1869,7 @@ dic_in01,158,188,3	script	Jarute HesLanta#ep133_2	4_MAN_JERUTOO,{
 				next;
 				mes "HesLanta is upset with my reply.";
 				mes "His expression is complex and dark.";
-				set ep13_3_secret, 20;
+				ep13_3_secret = 20;
 				close;
 			}
 			mes "[HesLanta]";
@@ -1992,7 +1992,7 @@ dic_in01,158,188,3	script	Jarute HesLanta#ep133_2	4_MAN_JERUTOO,{
 		mes "Ahat climbed the ladder up to where he is now after gaining Ravail's trust.";
 		mes "His working abilities is amazing.";
 		mes "He is the perfect Sapha.";
-		set ep13_3_secret, 21;
+		ep13_3_secret = 21;
 		next;
 		mes "HesLanta starts to think deeply after saying this.";
 		close;
@@ -2116,7 +2116,7 @@ dic_in01,158,188,3	script	Jarute HesLanta#ep133_2	4_MAN_JERUTOO,{
 				next;
 				mes "[" + strcharinfo(0) + "]";
 				mes "I must go back to the expedition camp to report to Doha!";
-				set ep13_3_secret, 22;
+				ep13_3_secret = 22;
 				setquest 7203;
 				close;
 			}
@@ -2130,7 +2130,7 @@ dic_in01,158,188,3	script	Jarute HesLanta#ep133_2	4_MAN_JERUTOO,{
 						mes "It was Cheshire";
 						mes "Cheshire is a feline.";
 						mes "and the bandana was to hid his ears.";
-						set .@yes, .@yes + 1;
+						++.@yes;
 						break;
 					case 2:
 						mes "[" + strcharinfo(0) + "]";
@@ -2161,7 +2161,7 @@ dic_in01,158,188,3	script	Jarute HesLanta#ep133_2	4_MAN_JERUTOO,{
 					mes "To bring conflict between the three countries?";
 					mes "What will Cheshire gain out of this?";
 				}
-				set .@yes, .@yes + 1;
+				++.@yes;
 				next;
 			}
 			else if (.@yes == 2) {
@@ -2179,7 +2179,7 @@ dic_in01,158,188,3	script	Jarute HesLanta#ep133_2	4_MAN_JERUTOO,{
 					mes "Yes. Ahat must have order him.";
 					mes "But why would Ahat do that?";
 					mes "Conflict between three countries? Or the report content?";
-					set .@yes, .@yes + 1;
+					++.@yes;
 				}
 				next;
 			}
@@ -2204,7 +2204,7 @@ dic_in01,158,188,3	script	Jarute HesLanta#ep133_2	4_MAN_JERUTOO,{
 					mes "A bit dramatic but we cannot rule out the evil lord Morroc.";
 					mes "Because the crack was created by the evil lord Morroc himself.";
 				}
-				set .@yes, .@yes + 1;
+				++.@yes;
 				next;
 			}
 			else if (.@yes == 4) {
@@ -2223,7 +2223,7 @@ dic_in01,158,188,3	script	Jarute HesLanta#ep133_2	4_MAN_JERUTOO,{
 					mes "[" + strcharinfo(0) + "]";
 					mes "Yes. There is a report from the tracking team led by Echinacea.";
 					mes "It was about the evil lord Morroc.";
-					set .@yes, .@yes + 1;
+					++.@yes;
 				}
 				next;
 			}
@@ -2231,7 +2231,7 @@ dic_in01,158,188,3	script	Jarute HesLanta#ep133_2	4_MAN_JERUTOO,{
 				mes "[" + strcharinfo(0) + "]";
 				mes "Oh no. I don't know.";
 				mes "Let's think it over.";
-				set .@yes, 0;
+				.@yes = 0;
 				next;
 			}
 		}
@@ -2265,7 +2265,7 @@ dic_in01,158,188,3	script	Jarute HesLanta#ep133_2	4_MAN_JERUTOO,{
 		cutin "",255;
 		end;
 	}
-	set .@yessay, rand(1,3);
+	.@yessay = rand(1,3);
 	if (.@yessay == 1) {
 		mes "[HesLanta]";
 		mes "I'm very tired because I had too much work today.";
@@ -2370,7 +2370,7 @@ dicastes01,223,190,1	script	Calyon#pa8029	4_MAN_NITT,{
 	mes "[Calyon]";
 	mes "Finally, I have a request for you. It is an important one so I need you to be focused.";
 	next;
-	set .@calyonrequest,rand(1,11);
+	.@calyonrequest = rand(1,11);
 	mes "[Calyon]";
 	if (.@calyonrequest == 1) {
 		setquest 12139;
@@ -2543,7 +2543,7 @@ dicastes01,211,178,2	script	Moltuka#pa0829	4_MAN_NITT,{
 	mes "[Moltuka]";
 	mes "..............(rustling sound)";
 	next;
-	set .@tut_13, rand(1,11);
+	.@tut_13 = rand(1,11);
 	if (.@tut_13 == 1) {
 		setquest 12148;
 		setquest 12164;
@@ -2777,8 +2777,8 @@ dicastes01,175,217,5	script	Kalipo#pa0829	4_MAN_NITT,{
 	mes "I actually have something";
 	mes "just right for you.";
 	next;
-	set .@tut_lv, (BaseLevel);
-	set .@rand, rand(100,BaseLevel);
+	.@tut_lv = (BaseLevel);
+	.@rand = rand(100,BaseLevel);
 	if (.@rand < 109) {
 		setquest 12106;
 		setquest 12160;
@@ -2925,7 +2925,7 @@ dicastes01,187,230,5	script	Laponte#pa0829	4_MAN_NITT,{
 	mes "I actually have something";
 	mes "just right for you.";
 	next;
-	set .@rand, rand(97,BaseLevel);
+	.@rand = rand(97,BaseLevel);
 	if (.@rand < 103) {
 		setquest 12099;
 		setquest 12159;
@@ -3091,7 +3091,7 @@ dicastes01,208,230,3	script	Pura#pa0829	4_MAN_NITT,{
 	mes "I actually have something";
 	mes "just right for you.";
 	next;
-	set .@tut_13, rand(1,10);
+	.@tut_13 = rand(1,10);
 	if (.@tut_13 == 1) {
 		setquest 12117;
 		setquest 12161;
@@ -3262,7 +3262,7 @@ dicastes01,225,211,3	script	Tragis#pa0829	4_MAN_NITT,{
 	mes "[Tragis]";
 	mes "I just got a request. It's good that none of us wasted time.";
 	next;
-	set .@tut_13, rand(1,10);
+	.@tut_13 = rand(1,10);
 	if (.@tut_13 == 1) {
 		setquest 12127;
 		setquest 12162;
@@ -3486,7 +3486,7 @@ mid_campin,168,170,3	script	Inspector Doha#ep133	1_M_ORIENT01,{
 			mes "Hmm... my throat is soar from talking too much.";
 			mes "Let's continue later after I get some rest.";
 			mes "I think I need a cup of water.";
-			set ep13_3_secret, 2;
+			ep13_3_secret = 2;
 			close;
 		}
 		mes "[Doha]";
@@ -3580,7 +3580,7 @@ mid_campin,168,170,3	script	Inspector Doha#ep133	1_M_ORIENT01,{
 		mes "[Doha]";
 		mes "Please bring back some clues. Anything you come by during your journey";
 		mes "Please report back to me if you have anything leads.";
-		set ep13_3_secret, 3;
+		ep13_3_secret = 3;
 		changequest 7185,7186;
 		close;
 	}
@@ -3634,7 +3634,7 @@ mid_campin,168,170,3	script	Inspector Doha#ep133	1_M_ORIENT01,{
 			delitem 6306,1; //Solid_Bloodstain
 			delitem 6305,1; //Frozen_Skin_Piece
 			delitem 6307,1; //Suspicious_Magic_Stone
-			set ep13_3_secret, 23;
+			ep13_3_secret = 23;
 			getitem 2553,1; //Dragon_Manteau
 			erasequest 7202;
 			completequest 7203;
@@ -3812,7 +3812,7 @@ dic_in01,245,119,4	script	Shay#ep133_13	4_M_ACROSS,{
 							mes "Well.. bigger then them?";
 							mes "Not sure. Haven't heard of it.";
 							mes "Why don't you ^4d4dffask Sapha's around here?^000000";
-							set ep13_3_secret, 4;
+							ep13_3_secret = 4;
 							erasequest 7186;
 							setquest 7187;
 							break;
@@ -3919,7 +3919,7 @@ dic_in01,245,119,4	script	Shay#ep133_13	4_M_ACROSS,{
 				next;
 				mes "[Shay]";
 				mes "And if he ignores you, tell him that ^4d4dffShay's special drink will be delivered^000000.";
-				set ep13_3_secret, 5;
+				ep13_3_secret = 5;
 				erasequest 7188;
 				erasequest 7189;
 				erasequest 7190;
@@ -3959,7 +3959,7 @@ dic_in01,245,119,4	script	Shay#ep133_13	4_M_ACROSS,{
 				mes "But there is a crack here too?";
 				mes "..Too many ill-fates.";
 				mes "Bit sorrowful.";
-				set ep13_3_secret, 10;
+				ep13_3_secret = 10;
 				changequest 7192,7193;
 				break;
 			}
@@ -3985,10 +3985,11 @@ dic_in01,245,119,4	script	Shay#ep133_13	4_M_ACROSS,{
 				setarray .@item, 6306,6305,6307;
 				setarray .@str$, "bloodstain","frozen piece of skin","strange magical stone fragment";
 				
-				for (set .@size, getarraysize(.@item); .@i < .@size; set .@i, .@i + 1) {
+				.@size = getarraysize(.@item);
+				for (.@i = 0; .@i < .@size; ++.@i) {
 					if (countitem(.@item[.@i])) {
 						mes "- You show the " + .@str$[.@i] + " you collected from near the crack.-";
-						set .@crack, 1;
+						.@crack = 1;
 						next;
 						break;
 					}
@@ -4050,7 +4051,7 @@ dic_in01,245,119,4	script	Shay#ep133_13	4_M_ACROSS,{
 				mes "First, think of what you have to do.";
 				mes "Meet Ahat by collecting exploit certifications.";
 				mes "And then find doubt what is the relationship between him and the crack.";
-				set ep13_3_secret, 12;
+				ep13_3_secret = 12;
 				for (.@i = 0; .@i < getarraysize(.@quest); ++.@i)
 					if (questprogress(.@quest[.@i])) erasequest .@quest[.@i];
 				setquest 7197;
@@ -4169,7 +4170,7 @@ dic_in01,245,119,4	script	Shay#ep133_13	4_M_ACROSS,{
 				mes "Ungrateful....";
 				break;
 			}
-			set .@shysay, rand(1,3);
+			.@shysay = rand(1,3);
 			if (.@shysay == 1) {
 				mes "[Shay]";
 				mes "What do you want?";
@@ -4608,7 +4609,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 			mes "[BK]";
 			mes "So I'll sell my information for exploit certifications.";
 			mes "Tell me when you are ready.";
-			set ep13_3_secret, 6;
+			ep13_3_secret = 6;
 			close;
 		}
 		mes "[" + strcharinfo(0) + "]";
@@ -4652,7 +4653,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 			mes "Hu hu...";
 			mes "Satisfied?";
 			delitem 6304,1; //Sapa_Feat_Cert
-			set ep13_3_secret, 7;
+			ep13_3_secret = 7;
 			next;
 			mes "- BK says this and takes the exploit certification out of your hand.";
 			mes "Information on the person with animal ears Doha mentioned!-";
@@ -4710,7 +4711,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 			mes "The new minister was picked up ^4d4dffnear the crack^000000.";
 			mes "He must be an alien!";
 			delitem 6304,1; //Sapa_Feat_Cert
-			set ep13_3_secret, 8;
+			ep13_3_secret = 8;
 			next;
 			select("What do you think so?");
 		}
@@ -4751,7 +4752,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 			mes "Well, I don't understand why because all Saphas";
 			mes "are beautiful.";
 			delitem 6304,1; //Sapa_Feat_Cert
-			set ep13_3_secret, 9;
+			ep13_3_secret = 9;
 			changequest 7191,7192;
 			next;
 			mes "- BK says this and takes the exploit certification out of your hand.";
@@ -4792,11 +4793,12 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 		mes "- You can too many items to proceed with the quest. -";
 		close;
 	}
-	set .@n$, strnpcinfo(1);
+	.@n$ = strnpcinfo(1);
 	setarray .@npc$, 	"Rock Pile",	"Dirt Pile",	"Split Earth";
 	setarray .@item, 	6307,			6306,			6305;
-	for (set .@size, getarraysize(.@npc$); .@i < .@size; set .@i, .@i + 1)
-		if (.@n$ == .@npc$[.@i]) set .@type, .@i;
+	.@size = getarraysize(.@npc$);
+	for (.@i = 0; .@i < .@size; ++.@i)
+		if (.@n$ == .@npc$[.@i]) .@type = .@i;
 	
 	if (ep13_3_secret == 10) {
 		if (.@npc$[.@type] == "Rock Pile") {
@@ -4814,7 +4816,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 		}
 		mes "Don't see anything suspicious.";
 		next;
-		set .@menu$, (.@npc$[.@type] == "Rock Pile")? "Try to knock down the rock pile.:Study the pile closely." : "Stomp on it with your feet.:Poke around in the dirt pile.";
+		.@menu$ = (.@npc$[.@type] == "Rock Pile")? "Try to knock down the rock pile.:Study the pile closely." : "Stomp on it with your feet.:Poke around in the dirt pile.";
 		if (select(.@menu$) == 1) {
 			if (.@npc$[.@type] == "Rock Pile") mes "Knock down the pebbles that make up the pile of rocks and spread them out.";
 			else if (.@npc$[.@type] == "Dirt Pile") mes "You step on the dug up dirt pile and make the ground flat.";
@@ -4839,7 +4841,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 			mes "You feel evil energy. Does this have anything to do with Ahat?";
 			mes "You collect the clotted bloodstains.";
 		}
-		set ep13_3_secret, 11;
+		ep13_3_secret = 11;
 		getitem .@item[.@type], 1;
 		erasequest 7193;
 		setquest 7194;
@@ -5016,7 +5018,7 @@ dicastes01,117,262,0	script	Frede#13_3	4_MAN_PIOM5,2,2,{
 			mes "[Frede]";
 			mes "Do you mind helping me get to the building over there?";
 			mes "I will feel better if I rest a little.";
-			set ep13_3_bra, 1;
+			ep13_3_bra = 1;
 			close2;
 			warp "dic_in01",165,101;
 			end;
@@ -5082,7 +5084,7 @@ dic_in01,165,104,0	script	Frede#13_3_in	4_MAN_PIOM,{
 			mes "[Frede]";
 			mes "Here, sit and eat this.";
 			mes "The cats outside gave it to me. It doesn't do much good for Saphas but I heard it's suppose to help you humans.";
-			set ep13_3_bra, 2;
+			ep13_3_bra = 2;
 			setquest 11171;
 			getitem 513,1; //Banana
 			close;
@@ -5178,14 +5180,14 @@ dic_in01,165,104,0	script	Frede#13_3_in	4_MAN_PIOM,{
 				next;
 				mes "[Frede]";
 				mes "I only hope they are all healthy and well.";
-				set ep13_3_bra, 4;
+				ep13_3_bra = 4;
 				changequest 11171,11172;
 				close;
 			}
 			mes "[Frede]";
 			mes "I guess I can't do anything about it.";
 			mes "But drag myself there.";
-			set ep13_3_bra, 3;
+			ep13_3_bra = 3;
 			close;
 		}
 		else if (ep13_3_bra == 3) {
@@ -5209,7 +5211,7 @@ dic_in01,165,104,0	script	Frede#13_3_in	4_MAN_PIOM,{
 				next;
 				mes "[Frede]";
 				mes "I only hope they are all healthy and well.";
-				set ep13_3_bra, 4;
+				ep13_3_bra = 4;
 				changequest 11171,11172;
 				close;
 			}
@@ -5243,9 +5245,9 @@ dic_in01,165,104,0	script	Frede#13_3_in	4_MAN_PIOM,{
 				mes "[Frede]";
 				mes "Ask ^f57d7dBouy at the building located northwest of the village^000000 and he will give you some refined Bradium.";
 				mes "I can't thank you enough.";
-				set ep13_3_bra, 5;
+				ep13_3_bra = 5;
 				changequest 11172,11173;
-				for (set .@i, 0; .@i < .@size; set .@i, .@i + 1)
+				for (.@i = 0; .@i < .@size; ++.@i)
 					erasequest .@quest_id[.@i];
 				close;
 			}
@@ -5330,9 +5332,9 @@ dic_in01,165,104,0	script	Frede#13_3_in	4_MAN_PIOM,{
 				mes "It's nothing much but I want you to have it.";
 				mes "We may be from different races but we can be great friends.";
 				completequest 11176;
-				set ep13_3_bra, 9;
+				ep13_3_bra = 9;
 				getitem 2788,1; //Bradium_Earing
-				for (set .@i, 0; .@i < .@size; set .@i, .@i + 1)
+				for (.@i = 0; .@i < .@size; ++.@i)
 					erasequest .@quest_id[.@i];
 				close;
 			}
@@ -6022,7 +6024,7 @@ dic_in01,349,129,5	script	Bouy#13_3	4_MAN_BENKUNI,{
 			next;
 			mes "[Bouy]";
 			mes "About ^f57d7d30 pieces of Bradium^000000 will be enough to share with 6 people.";
-			set ep13_3_bra, 6;
+			ep13_3_bra = 6;
 			changequest 11173,11174;
 			close;
 		}
@@ -6039,7 +6041,7 @@ dic_in01,349,129,5	script	Bouy#13_3	4_MAN_BENKUNI,{
 				mes "Please go rest while I get to work.";
 				delitem 6319,30; //Small_Bradium
 				changequest 11174,11175;
-				set ep13_3_bra, 7;
+				ep13_3_bra = 7;
 				close;
 			}
 			mes "[Bouy]";
@@ -6058,7 +6060,7 @@ dic_in01,349,129,5	script	Bouy#13_3	4_MAN_BENKUNI,{
 				mes "I did it!";
 				mes "I was a bit nervous because it has been a long time since I did manual work but I think I did a good job.";
 				mes "Please take these to them.";
-				set ep13_3_bra, 8;
+				ep13_3_bra = 8;
 				changequest 11175,11176;
 				close;
 			}
@@ -6214,7 +6216,7 @@ mid_campin,93,114,3	script	Guard Aello#ep133_is03	4_M_RUSMAN1,{
 			mes "There will be a guard standing in front";
 			mes "just tell him you got authorization.";
 			mes "He is interested in humans, so try to be courteous while talking to him.";
-			set ep13_3_invite, 1;
+			ep13_3_invite = 1;
 			setquest 7182;
 			close;
 		}
@@ -6358,7 +6360,7 @@ function	script	eldicastes_c	{
 			mes "If you are going to leave, better be now.";
 			mes "Come back to me once you are ready to leave.";
 			mes "I will let you know your mission.";
-			set ep13_3_invite, 3;
+			ep13_3_invite = 3;
 			close;
 		case 2:
 			mes "[Vyhannus]";
@@ -6377,7 +6379,7 @@ function	script	eldicastes_c	{
 			mes "I'm a little excited.";
 			mes "on what our meeting will bring in the future.";
 			mes "Only hope it won't be like a blizzard in the middle of the night.";
-			set ep13_3_invite, 4;
+			ep13_3_invite = 4;
 			changequest 7182,7183;
 			close;
 		case 3:
@@ -6486,8 +6488,8 @@ function	script	eldicastes_c	{
 			mes "Vyhannus? I'll come by to see you again.";
 			mes "And you should ^4d4dffmeet Inspector Doha after talking with Vyhannus^000000.";
 			mes "Then bye everyone.";
-			set ep13_3_invite, 2;
-			set ep13_3_secret, 1;
+			ep13_3_invite = 2;
+			ep13_3_secret = 1;
 			setquest 7185;
 			next;
 			disablenpc "Hibba Agip#ep133_is07";
@@ -6707,7 +6709,7 @@ man_in01,315,52,3	script	Guard Captain Avalanche	4_MAN_GALTUN,{
 		mes "[Avalanche]";
 		mes "Please let me know any news about the capital city when you come back.";
 		mes "Hahaha..";
-		set ep13_3_invite, 5;
+		ep13_3_invite = 5;
 		changequest 7183,7184;
 		close2;
 	}
@@ -6796,7 +6798,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 				mes "This is a little souvenir for visiting El Dicastes.";
 				mes "You can use it to return to El Dicastes whenever you wish.";
 				next;
-				set ep13_3_invite, 6;
+				ep13_3_invite = 6;
 				getitem 2844,1; //El_Dicastes_Light
 				completequest 7184;
 				mes "[Clerk Rhawyne]";
@@ -6836,7 +6838,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 							mes "It is a separate elevator that leads to the high minister's office";
 							mes "You will be guided in front of the office.";
 							delitem 6304,3; //Sapa_Feat_Cert
-							set ep13_3_secret, 13;
+							ep13_3_secret = 13;
 							changequest 7197,7198;
 							close;
 						}
@@ -6947,8 +6949,8 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 // Enchantment NPCs
 //============================================================
 -	script	dic_enc#main	-1,{
-	set .@re$, strnpcinfo(1);
-	set .@n$, "["+.@re$+"]";
+	.@re$ = strnpcinfo(1);
+	.@n$ = "["+.@re$+"]";
 	if (!checkweight (1201,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
@@ -6991,7 +6993,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 				delitem 6304,6; //Sapa_Feat_Cert
 				delitem 2844,1; //El_Dicastes_Light
 				getitem 2844,1; //El_Dicastes_Light
-				set ep13_3_ring2,0;
+				ep13_3_ring2 = 0;
 			}
 			close;
 		}
@@ -7028,12 +7030,12 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 			mes "Either you are not wearing or don't have the equipment to upgrade on you.";
 			close;
 		}
-		set .@v$, "ring2";
-		set .@Items_, 2844;
+		.@v$ = "ring2";
+		.@Items_ = 2844;
 	}
 	else {
 		mes .@n$;
-		set .@cat_hi, rand(1,30);
+		.@cat_hi = rand(1,30);
 		if (.@cat_hi == 1) mes "It is difficult to find fish here. Can't find any so Jahbong would forget that he's busy or angry at the sight of a Fish Tail.";
 		else if (.@cat_hi == 2) mes "Grrr... I was punished with a ladle for peeing on my blanket yesterday.";
 		else if (.@cat_hi == 3) mes "I dream sometimes of a giant patting me on the head. But I feel more annoyed than afraid.";
@@ -7085,18 +7087,18 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 		}
 		if (.@re$ == "Brare") {
 			mes "Do you want to look luxurious with Golden Bells?";
-			set .@Items_,2843;
-			set .@v$, "ring1";
+			.@Items_ = 2843;
+			.@v$ = "ring1";
 		}
 		else if (.@re$ == "Mancho") {
 			mes "You must be interested in the ^800080Feral Tail^000000?";
-			set .@Items_,2564;
-			set .@v$, "robe";
+			.@Items_ = 2564;
+			.@v$ = "robe";
 		}
 		else if (.@re$ == "Jalapeno") {
 			mes "You've come for Feral Boots. I have just the item for you.";
-			set .@Items_,2463;
-			set .@v$, "shoe";
+			.@Items_ = 2463;
+			.@v$ = "shoe";
 		}
 		next;
 		switch(select("Please explain.:I want to reset.:I want to upgrade.")) {
@@ -7191,7 +7193,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 		next;
 		mes .@n$;
 		mes "First upgrade step requires ^8000801 Sapha Certification^000000. Do you want to proceed?";
-		set .@req, 1;
+		.@req = 1;
 	}
 	else if (getd("ep13_3_"+.@v$) < 9) {
 		mes .@n$;
@@ -7203,7 +7205,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 		next;
 		mes .@n$;
 		mes "Second upgrade step requires ^9900992 Exploit Certifications of Sapha^000000. Do you want to proceed?";
-		set .@req, 2;
+		.@req = 2;
 	}
 	else if (getd("ep13_3_"+.@v$) < 69) {
 		mes .@n$;
@@ -7224,7 +7226,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 		mes "this is a delicate process of";
 		mes "casting immense power to the equipment.";
 		mes "Are you ready?";
-		set .@req, 3;
+		.@req = 3;
 	}
 	else if (getd("ep13_3_"+.@v$) > 68 && countitem(.@Items_)) {
 		mes .@n$;
@@ -7281,36 +7283,36 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 	delitem 6304,.@req;
 	if (getd("ep13_3_"+.@v$) == 0) {
 		if (.@re$ == "Kareka") {
-			set .@enc_en, rand(1,45);
+			.@enc_en = rand(1,45);
 			setarray .@rates, 45,32,30,22,20,12,10,2;
 		}
 		else {
-			set .@enc_en, rand(1,40);
+			.@enc_en = rand(1,40);
 			setarray .@rates, 40,34,30,24,20,14,10,4;
 		}
 		setarray .@var, 1,2,3,4,5,6,7,8;
 	}
 	else if (getd("ep13_3_"+.@v$) <= 8) {
 		if (.@re$ == "Kareka") {
-			set .@enc_en, rand(1,45);
+			.@enc_en = rand(1,45);
 			setarray .@rates, 45,32,30,17,15,2;
 		}
 		else {
-			set .@enc_en, rand(1,30);
+			.@enc_en = rand(1,30);
 			setarray .@rates, 30,24,20,14,10,4;
 		}
 		setarray .@var, 10,20,30,40,50,60;
 	}
 	else if (getd("ep13_3_"+.@v$) <= 68) {
 		if (compare(.@v$,"ring")) {
-			set .@enc_en, rand(1,90);
+			.@enc_en = rand(1,90);
 			setarray .@rates, 90,62,60,32,30,2;
 			setarray .@var, 100,200,400,500,700,800;
 		}
 		else {
-			set .@crs_yong, 140 - (ep13_yong1 / 100);
-			if (.@crs_yong < 95) set .@crs_yong, 95;
-			set .@enc_en, rand(1,.@crs_yong);
+			.@crs_yong = 140 - (ep13_yong1 / 100);
+			if (.@crs_yong < 95) .@crs_yong = 95;
+			.@enc_en = rand(1,.@crs_yong);
 			if (.@enc_en > 90) {
 				delitem .@Items_,1;
 				setd "ep13_3_"+.@v$, 0;
@@ -7332,13 +7334,13 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 	
 	// Enchant Constants
 	// Ex: .@dex[1]: DEX + 1 | .@cri[5]: CRI + 5 | .@eva[12]: FLEE + 12
-	set .@matk[1], 4760; set .@matk[2], 4761;
-	set .@eva[6], 4762;	set .@eva[12], 4763;
-	set .@cri[5], 4764;	set .@cri[7], 4765;
-	set .@atk[2], 4766;	set .@atk[3], 4767;
-	set .@dex[1], 4720;	set .@dex[2], 4721;	set .@dex[3], 4722;
-	set .@int[1], 4710;	set .@int[2], 4711;	set .@int[3], 4712;
-	set .@agi[1], 4730;	set .@agi[2], 4731;	set .@agi[3], 4732;
+	.@matk[1] = 4760; .@matk[2] = 4761;
+	.@eva[6] = 4762;  .@eva[12] = 4763;
+	.@cri[5] = 4764;  .@cri[7] = 4765;
+	.@atk[2] = 4766;  .@atk[3] = 4767;
+	.@dex[1] = 4720;  .@dex[2] = 4721;  .@dex[3] = 4722;
+	.@int[1] = 4710;  .@int[2] = 4711;  .@int[3] = 4712;
+	.@agi[1] = 4730;  .@agi[2] = 4731;  .@agi[3] = 4732;
 	
 	// Enchant attribute is determined by the digit position of variable value (ep13_3_<type>).
 	// For example, assume the variable value is 516:
@@ -7351,16 +7353,17 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 	else setarray .@f_2[1],.@agi[1],.@agi[2],.@agi[3],.@int[1],.@int[2],.@int[3],.@dex[1],.@dex[2],.@dex[3];
 	setarray .@f_3[1],.@agi[1],.@agi[2],.@int[1],.@int[2],.@dex[1],.@dex[2];
 	setarray .@f_4[1],.@atk[2],.@atk[3],.@cri[5],.@cri[7],.@eva[6],.@eva[12],.@matk[1],.@matk[2];
-	set .@str$, getd("ep13_3_"+.@v$) + "";
-	set .@len, getstrlen(.@str$);
-	set .@j, 4;
-	set .@c, 1;
+	.@str$ = getd("ep13_3_"+.@v$) + "";
+	.@len = getstrlen(.@str$);
+	.@j = 4;
+	.@c = 1;
 	while ((.@len - .@c) > -1 && getd("ep13_3_"+.@v$)) {
 		setd ".@e_"+.@j, getd(".@f_"+.@j+"["+atoi(charat(.@str$,.@len-.@c))+"]");
-		set .@c, .@c + 1;
-		set .@j, .@j - 1;
+		++.@c;
+		--.@j;
 	}
-	for (set .@size, getarraysize(.@rates); .@r <= .@size; set .@r, .@r + 1) {
+	.@size = getarraysize(.@rates);
+	for (.@r = 0; .@r <= .@size; ++.@r) {
 		if (.@enc_en > .@rates[.@r]) {
 			setd ".@e_"+.@j, getd(".@f_"+.@j+"["+.@r+"]");
 			break;
@@ -7385,7 +7388,7 @@ dic_fild01,228,159,4	script	Jahbong#pa0829	4_M_MERCAT2,{
 		mes "Come back to me once you have one. I'll give you something good in exchange.";
 		close;
 	}
-	set .@cattalkj,rand(1,9);
+	.@cattalkj = rand(1,9);
 	if (.@cattalkj == 1) mes "Don't touch my back! I might bite you unconsciously.";
 	else if (.@cattalkj == 2) mes "Pub owner Shay carried something away to make something strange! Be careful!";
 	else if (.@cattalkj == 3) mes "We cats can jump 5 times our size. Isn't it cool? But then, don't ask me to jump from here now.";
@@ -7400,7 +7403,7 @@ dic_fild01,228,159,4	script	Jahbong#pa0829	4_M_MERCAT2,{
 	mes "Why are you here?";
 	mes "Jahbong will exchange ^8000801 Sapha Certification^000000 for ^8000801 item^000000!";
 	next;
-	set .@i, select("Just came to see what you have.:I want the Feral Boots!:Give me the Feral Tail!:Give me the Golden Bell!:How much to buy you?")-1;
+	.@i = select("Just came to see what you have.:I want the Feral Boots!:Give me the Feral Tail!:Give me the Golden Bell!:How much to buy you?")-1;
 	switch (.@i) {
 		case 0:
 			mes "[Jahbong]";
@@ -7546,7 +7549,7 @@ moc_para01,44,19,3	script	Cat Hand Agent#gekk	4_M_MERCAT2,{
 								mes "With this, our contract is now complete.";
 								mes "Geck will help you to get to Ash-Vacuum in one piece.";
 								Zeny -= 50000;
-								set ep13_start, 100;
+								ep13_start = 100;
 								next;
 								mes "[Agent Geck]";
 								mes "Don't forget, human. The reason why Geck is helping you is to help the Cat Hand Merchant working hard in the other world.";

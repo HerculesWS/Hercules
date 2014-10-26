@@ -48,7 +48,7 @@ malaya,266,76,3	script	Rodel the Guard#malaya	4_MAL_SOLDIER,4,4,{
 		mes "I will mark on the map the location of Phong in Mumbaki.";
 		mes "I welcome your visit though the times are harsh.";
 		viewpoint 1, 185, 358, 0, 0x0A82FF;
-		set malaya_hi, 1;
+		malaya_hi = 1;
 		setquest 7350;
 		close;
 	} else if (malaya_hi == 1) {
@@ -258,7 +258,7 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 		mes "[Phong in Mumbaki]";
 		mes "Young friend. Your presence is welcomed anywhere.";
 		mes "The light from your pure soul will protect you from the darkness.";
-		set malaya_hi, 10;
+		malaya_hi = 10;
 		if (questprogress(7350))
 			erasequest 7350;
 		close;
@@ -356,7 +356,7 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 			mes "Yes, because you will become their heart's savior.";
 			next;
 			mes "^4d4dffListening to Phong in Mumbaki, you decided to give out Holy Water and Blue Gemstone to the villagers.";
-			set malaya_hi, 12;
+			malaya_hi = 12;
 			erasequest 7358;
 			setquest 7351;
 			close;
@@ -382,7 +382,7 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 		mes "My grandchild Imelda will create it.";
 		mes "So don't worry. You don't have to give out any more of your things.";
 		erasequest 7365;
-		set malaya_hi, 20;
+		malaya_hi = 20;
 		getexp 200000, 200000;
 //		SavePPL Soul_Protection
 		close;
@@ -437,7 +437,7 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 				mes "[Phong in Mumbaki]";
 				mes "Gather these flowers, and I'll make a Bouquet out of it and bless it.";
 				mes "Flowers can be found out side the village.";
-				set malaya_diwata, 3;
+				malaya_diwata = 3;
 				erasequest 7396;
 				setquest 7397;
 				close;
@@ -467,7 +467,7 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 				delitem 6510, 3; // Elegant_Flower
 				delitem 6511, 3; // Beautiful_Flower
 				getitem 6506, 1; // Memorial_Bouquet
-				set malaya_diwata, 4;
+				malaya_diwata = 4;
 				erasequest 7397;
 				setquest 7398;
 				close;
@@ -598,7 +598,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 			next;
 			mes "[Imelda]";
 			mes "Now's the time to prove your prowess!";
-			set malaya_hi, 21;
+			malaya_hi = 21;
 			setquest 7366;
 			close;
 		case 2:
@@ -635,7 +635,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 		mes "[Imelda]";
 		mes "Now I'm going through the holy ritual to make a traditional Spiritual Protection.";
 		mes "Give them to me! And don't bother me during the process!";
-		set malaya_hi, 22;
+		malaya_hi = 22;
 		delitem 6500, 6; // Sharp_Bamboo
 		delitem 6501, 6; // Salt_Bag
 		delitem 6502, 6; // Silver_Cross
@@ -661,7 +661,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 			next;
 			mes "Took the Spiritual Protection, despite her ridiculous logic and vigor.";
 			mes "Let's give them to the villagers.";
-			set malaya_hi, 23;
+			malaya_hi = 23;
 			getitem 6503, 6; // Soul_Protection
 			erasequest 7367;
 			setquest 7368;
@@ -700,7 +700,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 		next;
 		mes "[Imelda]";
 		mes "I'd be happy if you could help me, because the Spiritual Protections needs to be made every day.";
-		set malaya_hi, 25;
+		malaya_hi = 25;
 		erasequest 7374;
 		erasequest 7379;
 		setquest 7375;
@@ -940,7 +940,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 			if (questprogress(7352) + questprogress(7353) + questprogress(7354) + questprogress(7355) + questprogress(7356) + questprogress(7357) > 9) {
 				next;
 				mes "-So many have already asked you for this. Perhaps it will be better to speak with Phong in Mumbaki.-";
-				set malaya_hi, 11;
+				malaya_hi = 11;
 				setquest 7358;
 			}
 			close;
@@ -983,7 +983,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 		if (questprogress(7359) == 2 && questprogress(7360) == 2 && questprogress(7361) == 2
 		 && questprogress(7362) == 2 && questprogress(7363) == 2 && questprogress(7364) == 2) {
 			mes "-With the Old Man as last, enough Holy Artifacts have been given out.-";
-			set malaya_hi, 13;
+			malaya_hi = 13;
 			erasequest 7351;
 			setquest 7365;
 		}
@@ -1050,7 +1050,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 				if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {
 					mes "- With the Old Man as last, all Spiritual Protections have been delivered. Head back to Imelda.-";
 					if (malaya_hi == 23) {
-						set malaya_hi, 24;
+						malaya_hi = 24;
 					}
 					setquest 7379;
 					erasequest 7382;
@@ -1205,7 +1205,7 @@ malaya,224,267,3	script	Romel#malaya	4_M_MAYOR,{
 			if (questprogress(7352) + questprogress(7353) + questprogress(7354) + questprogress(7355) + questprogress(7356) + questprogress(7357) > 9) {
 				next;
 				mes "- So many have already asked you for this. Perhaps it will be better to speak with Phong in Mumbaki.-";
-				set malaya_hi, 11;
+				malaya_hi = 11;
 				setquest 7358;
 			}
 			close;
@@ -1249,7 +1249,7 @@ malaya,224,267,3	script	Romel#malaya	4_M_MAYOR,{
 		if (questprogress(7359) == 2 && questprogress(7360) == 2 && questprogress(7361) == 2
 		 && questprogress(7362) == 2 && questprogress(7363) == 2 && questprogress(7364) == 2) {
 			mes "-With Romel as last, I think enough Holy Artifacts have been given.-";
-			set malaya_hi, 13;
+			malaya_hi = 13;
 			erasequest 7351;
 			setquest 7365;
 		}
@@ -1311,7 +1311,7 @@ malaya,224,267,3	script	Romel#malaya	4_M_MAYOR,{
 		if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {
 			mes "- With Romel as last, all Spiritual Protections have been delivered. Head back to Imelda.-";
 			if (malaya_hi == 23) {
-				set malaya_hi, 24;
+				malaya_hi = 24;
 			}
 			setquest 7379;
 			erasequest 7382;
@@ -1360,7 +1360,7 @@ malaya,223,267,5	script	Talah#malaya	4_F_DST_CHILD,{
 			if (questprogress(7352) + questprogress(7353) + questprogress(7354) + questprogress(7355) + questprogress(7356) + questprogress(7357) > 9) {
 				next;
 				mes "- So many have already asked you for this. Perhaps it will be better to speak with Phong in Mumbaki. -";
-				set malaya_hi, 11;
+				malaya_hi = 11;
 				setquest 7358;
 			}
 			close;
@@ -1398,7 +1398,7 @@ malaya,223,267,5	script	Talah#malaya	4_F_DST_CHILD,{
 		if (questprogress(7359) == 2 && questprogress(7360) == 2 && questprogress(7361) == 2
 		 && questprogress(7362) == 2 && questprogress(7363) == 2 && questprogress(7364) == 2) {
 			mes "-With Talah as last, I think enough Holy Artifacts have been given.-";
-			set malaya_hi, 13;
+			malaya_hi = 13;
 			erasequest 7351;
 			setquest 7365;
 		}
@@ -1436,7 +1436,7 @@ malaya,223,267,5	script	Talah#malaya	4_F_DST_CHILD,{
 			if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {
 				mes "- With Talah as last, all Spiritual Protections have been delivered. Head back to Imelda. -";
 				if (malaya_hi == 23) {
-					set malaya_hi, 24;
+					malaya_hi = 24;
 				}
 				setquest 7379;
 				erasequest 7382;
@@ -1570,7 +1570,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 			if (questprogress(7352) + questprogress(7353) + questprogress(7354) + questprogress(7355) + questprogress(7356) + questprogress(7357) > 9) {
 				next;
 				mes "- So many have already asked you for this. Perhaps it will be better to speak with Phong in Mumbaki.-";
-				set malaya_hi, 11;
+				malaya_hi = 11;
 				setquest 7358;
 			}
 			close;
@@ -1624,7 +1624,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 		if (questprogress(7359) == 2 && questprogress(7360) == 2 && questprogress(7361) == 2
 		 && questprogress(7362) == 2 && questprogress(7363) == 2 && questprogress(7364) == 2) {
 			mes "-With Woeon as last, I think enough Holy Artifacts have been given.-";
-			set malaya_hi, 13;
+			malaya_hi = 13;
 			erasequest 7351;
 			setquest 7365;
 		}
@@ -1657,7 +1657,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 				if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {
 					mes "-With Woeon as last, all Spiritual Protections have been delivered.-";
 					if (malaya_hi == 23) {
-						set malaya_hi, 24;
+						malaya_hi = 24;
 					}
 					setquest 7379;
 					erasequest 7382;
@@ -1735,7 +1735,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 //					else
 //						getitem 6497, 1; // Lesser_Agimat
 					getexp 200000,200000;
-					set .@memo_name, rand(1,3);
+					.@memo_name = rand(1,3);
 					if (!rand(3))
 						$malayaNames$[1] = strcharinfo(0);
 					close;
@@ -1813,7 +1813,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 			if (questprogress(7352) + questprogress(7353) + questprogress(7354) + questprogress(7355) + questprogress(7356) + questprogress(7357) > 9) {
 				next;
 				mes "- So many have already asked you for this. Perhaps it will be better to speak with Phong in Mumbaki.-";
-				set malaya_hi, 11;
+				malaya_hi = 11;
 				setquest 7358;
 			}
 			close;
@@ -1857,7 +1857,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 		if (questprogress(7359) == 2 && questprogress(7360) == 2 && questprogress(7361) == 2
 		 && questprogress(7362) == 2 && questprogress(7363) == 2 && questprogress(7364) == 2) {
 			mes "-With Pandoi as last, I think I've given enough Holy Artifacts.-";
-			set malaya_hi, 13;
+			malaya_hi = 13;
 			erasequest 7351;
 			setquest 7365;
 		}
@@ -1914,7 +1914,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 			if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {
 				mes "-With Pandoi as last, all Spiritual Protections have been delivered.-";
 				if (malaya_hi == 23) {
-					set malaya_hi, 24;
+					malaya_hi = 24;
 				}
 				setquest 7379;
 				erasequest 7382;
@@ -2063,15 +2063,15 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 			next;
 			switch(select("Make 1 Silver Cross:Make 6 Silver Crosses:Input Number:Quit.")) {
 			case 1:
-				set .@amount,1;
+				.@amount = 1;
 			case 2:
-				if (!.@amount) set .@amount,6;
+				if (!.@amount) .@amount = 6;
 				if (countitem(6508) < (.@amount * 2)) {
 					mes "[Pandoi]";
 					mes "You need at least " + (.@amount * 2) + " Silver Bracelets to make " + .@amount + " Silver " + ((.@amount == 1) ? "Cross" : "Crosses") + ".";
 					close;
 				}
-				set .@time,5;
+				.@time = 5;
 				break;
 			case 3:
 				mes "[Pandoi]";
@@ -2094,7 +2094,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 					mes "To make " + .@amount + " Silver " + ((.@amount == 1) ? "Cross" : "Crosses") + ", I need at least " + (2 * .@amount) + " Silver Bracelets.";
 					close;
 				}
-				set .@time,15;
+				.@time = 15;
 				break;
 			case 4:
 				mes "[Pandoi]";
@@ -2176,7 +2176,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 		if (questprogress(7352) + questprogress(7353) + questprogress(7354) + questprogress(7355) + questprogress(7356) + questprogress(7357) > 9) {
 			next;
 			mes "- So many have already asked you for this. Perhaps it will be better to speak with Phong in Mumbaki. -";
-			set malaya_hi, 11;
+			malaya_hi = 11;
 			setquest 7358;
 		}
 		close;
@@ -2216,7 +2216,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 		if (questprogress(7359) == 2 && questprogress(7360) == 2 && questprogress(7361) == 2
 		 && questprogress(7362) == 2 && questprogress(7363) == 2 && questprogress(7364) == 2) {
 			mes "-With Pedro the Sailor as last, I think I gave enough Holy Artifacts.-";
-			set malaya_hi, 13;
+			malaya_hi = 13;
 			erasequest 7351;
 			setquest 7365;
 		}
@@ -2257,7 +2257,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 			if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {
 				mes "-With Pedro the Sailor as last, all Spiritual Protections have been delivered.-";
 				if (malaya_hi == 23) {
-					set malaya_hi, 24;
+					malaya_hi = 24;
 				}
 				setquest 7379;
 				erasequest 7382;
@@ -2324,7 +2324,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 			mes "[Pedro the Sailor]";
 			mes "If you don't believe me, see for yourself.";
 			mes "Then you'll believe me.";
-			set malaya_diwata, 1;
+			malaya_diwata = 1;
 			setquest 7395;
 			close;
 		} else if (malaya_diwata == 1) {
@@ -2375,7 +2375,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 			mes "I'd better get ready to set sail then.";
 			mes "It's not much, but this is for you.";
 			mes "If we can get back in business, I'll take you to Izlude for just 1000z.";
-			set malaya_diwata, 6;
+			malaya_diwata = 6;
 			erasequest 7399;
 			setquest 7401;
 //			if (IsPremiumPcCafe == 10)
@@ -2527,7 +2527,7 @@ OnTouch:
 			next;
 			cutin "", 255;
 			mes "-I was thrown out after the Little Girl's annoyed cry and flash from her eyes.-";
-			set malaya_diwata, 2;
+			malaya_diwata = 2;
 			setquest 7396;
 			erasequest 7395;
 			close2;
@@ -2540,7 +2540,7 @@ OnTouch:
 		next;
 		cutin "", 255;
 		mes "-I was thrown out after the Little Girl's resolute cry and flash from her eyes.-";
-		set malaya_diwata, 2;
+		malaya_diwata = 2;
 		setquest 7396;
 		erasequest 7395;
 		close2;
@@ -2624,7 +2624,7 @@ OnTouch:
 		next;
 		mes "[Diwata]";
 		mes "Now, g... go away!";
-		set malaya_diwata, 5;
+		malaya_diwata = 5;
 		delitem 6506, 1; // Memorial_Boquet
 		erasequest 7398;
 		setquest 7399;
@@ -3876,7 +3876,7 @@ malaya,305,281,3	script	Guard#buwaya	4_MAL_SOLDIER,7,7,{
 		next;
 		mes "[Guard]";
 		mes "I hear people are talking about a mysterious treasure hidden deep in the woods.";
-		set malaya_buwaya,1;
+		malaya_buwaya = 1;
 		setquest 2271;
 		next;
 	}
@@ -3984,7 +3984,7 @@ malaya,276,288,5	script	Port Malaya Villager::buwaya_A	4_M_MALAYA,{
 		emotion e_sob,0,"buwaya_B";
 		mes "[Port Malaya Villager]";
 		mes "Ah~~~ it is so hard to get something pretty these days ~~~!!!!";
-		set malaya_buwaya,2;
+		malaya_buwaya = 2;
 		erasequest 2271;
 		setquest 2272;
 		close;
@@ -4037,7 +4037,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		mes "[Totoy]";
 		mes "Can't talk long. I need to heal my eyes first.";
 		mes "There should be some ^3131FFGreen Potion^000000 left inside the drawer. Will you take it out for me?";
-		set malaya_buwaya,3;
+		malaya_buwaya = 3;
 		close;
 	} else if (malaya_buwaya == 3) {
 		if (!countitem(506)) {
@@ -4056,7 +4056,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 			mes "[Totoy]";
 			mes "Gulp, gulp...";
 			delitem 506,1; //Green_Potion
-			set malaya_buwaya,4;
+			malaya_buwaya = 4;
 		}
 		close;
 	} else if (malaya_buwaya == 4) {
@@ -4143,7 +4143,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		next;
 		mes "[Totoy]";
 		mes "And tell everyone else to stop spreading rumors about treasure. They don't know what I went through. Sniff! I'm going to put Ancient Worms in everyones clothes!";
-		set malaya_buwaya,5;
+		malaya_buwaya = 5;
 		erasequest 2272;
 		setquest 2273;
 		close;
@@ -4235,7 +4235,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		mes "[Totoy]";
 		mes "Anyway, thanks for bringing my best friend back.";
 		mes "I don't have much but would like to thank you. Wait, let me see what's inside my drawer. He he-";
-		set malaya_buwaya,13;
+		malaya_buwaya = 13;
 		erasequest 2278;
 		setquest 2279;
 		close;
@@ -4267,7 +4267,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		next;
 		mes "[Dog]";
 		mes "Woof woof woof!!!!";
-		set malaya_buwaya,14;
+		malaya_buwaya = 14;
 		getitem 6497,5; //Lesser_Agimat
 		disablenpc "Dog#buwaya_totoi";
 		erasequest 2279;
@@ -4357,7 +4357,7 @@ malaya,290,152,5	script	Master of Hunting#buwaya	4_M_BARYO_MAN,{
 		if (select("I will prove it.:Suspicious of Totoy.") == 2) {
 			mes "[Master of Hunting]";
 			mes "Kids tell stories for their own reasons. I'm sure Totoy is the same.";
-			set malaya_buwaya,6;
+			malaya_buwaya = 6;
 			close;
 		}
 		mes "[Master of Hunting]";
@@ -4371,7 +4371,7 @@ malaya,290,152,5	script	Master of Hunting#buwaya	4_M_BARYO_MAN,{
 		next;
 		mes "[Master of Hunting]";
 		mes (Sex) ? "It won't be pleasant but any brave man could easily do it, don't you agree?" : "I don't want the hands of a pretty girl to smell bad but I could care less with someone like you. Ha ha!";
-		set malaya_buwaya,7;
+		malaya_buwaya = 7;
 		erasequest 2273;
 		setquest 2274;
 		close;
@@ -4395,7 +4395,7 @@ malaya,290,152,5	script	Master of Hunting#buwaya	4_M_BARYO_MAN,{
 		next;
 		mes "[Master of Hunting]";
 		mes (Sex) ? "It won't be pleasant but any brave man could easily do it, don't you agree?" : "I don't want the hands of a pretty girl to smell bad but I could care less with someone like you. Ha ha!";
-		set malaya_buwaya,7;
+		malaya_buwaya = 7;
 		erasequest 2273;
 		setquest 2274;
 		close;
@@ -4410,7 +4410,7 @@ malaya,290,152,5	script	Master of Hunting#buwaya	4_M_BARYO_MAN,{
 		mes "You've really brought back the samples.";
 		mes "Ho! Leave it there and come back after washing your hands. Even god won't smile down at you with that stench.";
 		delitem 6519,10; //Collected_Sample
-		set malaya_buwaya,8;
+		malaya_buwaya = 8;
 		erasequest 2274;
 		setquest 2275;
 		close;
@@ -4435,7 +4435,7 @@ malaya,290,152,5	script	Master of Hunting#buwaya	4_M_BARYO_MAN,{
 		next;
 		mes "[Master of Hunting]";
 		mes "You! Come here and feel this!";
-		set malaya_buwaya,9;
+		malaya_buwaya = 9;
 		enablenpc "#buwaya_soil";
 		close;
 	} else if (malaya_buwaya == 9) {
@@ -4509,7 +4509,7 @@ malaya,291,152,3	script	#buwaya_soil	4_SOIL,{
 			mes "[Master of Hunting]";
 			mes "Please go and tell the Guard Leader that Buwaya is active again.";
 			mes "I will contact other hunters in the meantime and think of a plan to kill Buwaya.";
-			set malaya_buwaya,10;
+			malaya_buwaya = 10;
 			disablenpc "#buwaya_soil";
 			erasequest 2275;
 			setquest 2276;
@@ -4622,7 +4622,7 @@ malaya,290,340,3	script	Guard Leader#buwaya	4_MAL_CAPTAIN,{
 		next;
 		mes "[Guard Leader]";
 		mes "Then take care and good luck.";
-		set malaya_buwaya,11;
+		malaya_buwaya = 11;
 		erasequest 2276;
 		setquest 2277;
 	} else if (malaya_buwaya == 11) {
@@ -4644,7 +4644,7 @@ malaya,290,340,3	script	Guard Leader#buwaya	4_MAL_CAPTAIN,{
 		mes "Here, this is a symbol of our gratitude.";
 		mes "If you would like to help with Buwaya again, please look for me.";
 		mes "Hope you have a great journey.";
-		set malaya_buwaya,15;
+		malaya_buwaya = 15;
 		getexp 1000000, 600000;
 		completequest 2280;
 	} else {
@@ -4788,7 +4788,7 @@ ma_fild02,312,259,3	script	Dog#buwaya	4_DOG01,{
 		next;
 		mes "[Dog]";
 		mes "Bark bark!";
-		set malaya_buwaya,12;
+		malaya_buwaya = 12;
 		disablenpc "Dog#buwaya";
 		erasequest 2277;
 		setquest 2278;
@@ -5100,7 +5100,7 @@ malaya,285,332,4	script	Old Legend Teller#bako1	4_M_BARYO_OLD,{
 				mes "Down along this path";
 				mes "you will meet my granddaughter near the port.";
 				mes "Get the Slate Piece from there.";
-				set malaya_bakona1,1;
+				malaya_bakona1 = 1;
 				setquest 1174;
 				close;
 			}
@@ -5176,7 +5176,7 @@ malaya,285,332,4	script	Old Legend Teller#bako1	4_M_BARYO_OLD,{
 		mes "Good luck to you... for our sake...";
 		erasequest 1175;
 		setquest 1176;
-		set malaya_bakona1,3;
+		malaya_bakona1 = 3;
 		close;
 	} else if (malaya_bakona1 == 3) {
 		mes "[Old Legend Teller]";
@@ -5226,7 +5226,7 @@ malaya,285,332,4	script	Old Legend Teller#bako1	4_M_BARYO_OLD,{
 			mes "so that you can enter the Bakonawa Lake.";
 			mes "Please get rid of this monster for us.";
 			erasequest 1179;
-			set malaya_bakona1,7;
+			malaya_bakona1 = 7;
 //			if (IsPremiumPcCafe == 10)
 				getitem 6499,5; //Ancient_Grudge
 //			else
@@ -5319,7 +5319,7 @@ ma_fild02,40,240,4	script	Malaya Immigrant#bako1	4_M_BARYO_MAN,{
 			mes "of the traveling merchant.";
 			erasequest 1176;
 			setquest 1177;
-			set malaya_bakona1,4;
+			malaya_bakona1 = 4;
 			close;
 		case 4:
 			mes "[Malaya Immigrant]";
@@ -5425,7 +5425,7 @@ ma_fild01,165,237,4	script	Malaya Immigrant#bako2	4_M_MALAYA,{
 			mes "Investigate the stone ahead.";
 			erasequest 1177;
 			setquest 1178;
-			set malaya_bakona1,5;
+			malaya_bakona1 = 5;
 			close;
 		}
 	} else if (malaya_bakona1 == 5) {
@@ -5486,7 +5486,7 @@ OnTouch:
 		mes "The letters are not clear but you can still read it.";
 		next;
 		callsub L_Record;
-		set malaya_bakona1,6;
+		malaya_bakona1 = 6;
 		erasequest 1178;
 		setquest 1179;
 		close;
@@ -5573,7 +5573,7 @@ malaya,304,100,4	script	Old Man's Granddaughter	4_F_BARYO_GIRL,{
 		mes "now that I have the Slate Piece.";
 		erasequest 1174;
 		setquest 1175;
-		set malaya_bakona1,2;
+		malaya_bakona1 = 2;
 		close;
 	} else if (malaya_bakona1 == 2) {
 		mes "[Old Man's Granddaughter]";
@@ -5699,7 +5699,7 @@ malaya,283,265,4	script	Village Chief#bako2	4_BARYO_CHIEF,{
 			mes "retrieve two ^FF0000Lost Belongings^000000 from Tiucknuc";
 			mes "and take them to ^0000FFMissing Person's Father^000000";
 			mes "for me.";
-			set malaya_bakona2,1;
+			malaya_bakona2 = 1;
 			setquest 1180;
 			close;
 		}
@@ -5746,7 +5746,7 @@ malaya,283,265,4	script	Village Chief#bako2	4_BARYO_CHIEF,{
 		mes "saying that the energy of the moon seems strange.";
 		erasequest 1184;
 		setquest 1185;
-		set malaya_bakona2,6;
+		malaya_bakona2 = 6;
 //		if (IsPremiumPcCafe == 10)
 			getitem 12700,7; //Insideout_Shirt
 //		else
@@ -5800,7 +5800,7 @@ malaya,283,265,4	script	Village Chief#bako2	4_BARYO_CHIEF,{
 			mes "will be waiting for you. He will be very helpful.";
 			erasequest 1187;
 			setquest 1188;
-			set malaya_bakona2,9;
+			malaya_bakona2 = 9;
 			close;
 		}
 	} else if (malaya_bakona2 == 9) {
@@ -5851,7 +5851,7 @@ malaya,283,265,4	script	Village Chief#bako2	4_BARYO_CHIEF,{
 		mes "Please help us by";
 		mes "attacking his lair.";
 		erasequest 1193;
-		set malaya_bakona2,15;
+		malaya_bakona2 = 15;
 		getexp 1000000,600000;
 //		if (IsPremiumPcCafe == 10)
 			getitem 6497,7; //Lesser_Agimat
@@ -5937,7 +5937,7 @@ malaya,269,267,5	script	Missing Person's Father	4_M_MALAYA,{
 		delitem 6520,2; //Lost_Belongings
 		erasequest 1180;
 		setquest 1181;
-		set malaya_bakona2,2;
+		malaya_bakona2 = 2;
 		close;
 	} else if (malaya_bakona2 == 2) {
 		mes "[Missing Person's Father]";
@@ -5988,7 +5988,7 @@ malaya,265,274,5	script	Missing Person's Friend	4_M_BARYO_BOY,{
 		delitem 6520,7; //Lost_Belongings
 		erasequest 1181;
 		setquest 1182;
-		set malaya_bakona2,3;
+		malaya_bakona2 = 3;
 		close;
 	} else {
 		mes "[Missing Person's Friend]";
@@ -6037,7 +6037,7 @@ malaya,270,278,4	script	Missing Person's Son	4_M_BARYO_MAN,{
 		delitem 6520,3; //Lost_Belongings
 		erasequest 1182;
 		setquest 1183;
-		set malaya_bakona2,4;
+		malaya_bakona2 = 4;
 		close;
 	} else {
 		mes "[Missing Person's Son]";
@@ -6092,7 +6092,7 @@ malaya,265,284,4	script	Missing Person's Mother	4_F_BARYO_WOMAN,{
 		delitem 6520,5; //Lost_Belongings
 		erasequest 1183;
 		setquest 1184;
-		set malaya_bakona2,5;
+		malaya_bakona2 = 5;
 		close;
 	} else {
 		mes "[Missing Person's Mother]";
@@ -6152,7 +6152,7 @@ malaya,289,364,4	script	Young Fortune Teller	4_F_MALAYA,{
 			mes "there will be a great disaster.";
 			erasequest 1185;
 			setquest 1186;
-			set malaya_bakona2,7;
+			malaya_bakona2 = 7;
 			close;
 		}
 	} else if (malaya_bakona2 == 7) {
@@ -6165,7 +6165,7 @@ malaya,289,364,4	script	Young Fortune Teller	4_F_MALAYA,{
 			mes "the Village Chief for help.";
 			erasequest 1186;
 			setquest 1187;
-			set malaya_bakona2,8;
+			malaya_bakona2 = 8;
 //			if (IsPremiumPcCafe == 10)
 				getitem 12699,7; //Tikbalang_Belt
 //			else
@@ -6247,7 +6247,7 @@ OnTouch:
 		mes "Go and set up the trap together.";
 		erasequest 1188;
 		setquest 1189;
-		set malaya_bakona2,10;
+		malaya_bakona2 = 10;
 		close;
 	} else if (malaya_bakona2 == 10) {
 		mes "The trap has been set up here.";
@@ -6317,7 +6317,7 @@ OnTouch:
 		mes "Come on, move it!";
 		erasequest 1189;
 		setquest 1190;
-		set malaya_bakona2,11;
+		malaya_bakona2 = 11;
 		close;
 	} else if (malaya_bakona2 == 11) {
 		mes "The trap has been set up here.";
@@ -6389,7 +6389,7 @@ OnTouch:
 		mes "find the Gloomy Worker.";
 		erasequest 1190;
 		setquest 1191;
-		set malaya_bakona2,12;
+		malaya_bakona2 = 12;
 		close;
 	} else if (malaya_bakona2 == 12) {
 		mes "The trap has been set up here.";
@@ -6458,7 +6458,7 @@ OnTouch:
 		mes "Though I doubt it will be much help.";
 		erasequest 1191;
 		setquest 1192;
-		set malaya_bakona2,13;
+		malaya_bakona2 = 13;
 		close;
 	} else if (malaya_bakona2 == 13) {
 		mes "The trap has been set up here.";
@@ -6524,7 +6524,7 @@ OnTouch:
 		mes "now that the trap is set.";
 		erasequest 1192;
 		setquest 1193;
-		set malaya_bakona2,14;
+		malaya_bakona2 = 14;
 		close;
 	} else if (malaya_bakona2 == 14) {
 		mes "The trap is set here.";
@@ -6552,9 +6552,9 @@ sec_in02,10,16,5	script	Bakonawa Intro Helper	4_MASK_SMOKEY,{
 	switch(select("Reset all quests:Just before the end of first quest:Reset secondary quest:Distribution of lost belongings:Just after hunting")) {
 	case 1:
 		mes "Here you go!";
-		set malaya_bakona1,0;
-		set malaya_bakona2,0;
-		for(set .@i,1174; .@i<=1193; set .@i,.@i+1) {
+		malaya_bakona1 = 0;
+		malaya_bakona2 = 0;
+		for(.@i = 1174; .@i<=1193; ++.@i) {
 			if (questprogress(.@i))
 				erasequest .@i;
 		}
@@ -6562,8 +6562,8 @@ sec_in02,10,16,5	script	Bakonawa Intro Helper	4_MASK_SMOKEY,{
 	case 2:
 		mes "[Briquet Scheme]";
 		mes "Here you go!";
-		set malaya_bakona1,6;
-		for(set .@i,1174; .@i<=1178; set .@i,.@i+1) {
+		malaya_bakona1 = 6;
+		for(.@i = 1174; .@i<=1178; ++.@i) {
 			if (questprogress(.@i))
 				erasequest .@i;
 		}
@@ -6572,8 +6572,8 @@ sec_in02,10,16,5	script	Bakonawa Intro Helper	4_MASK_SMOKEY,{
 	case 3:
 		mes "[Briquet Scheme]";
 		mes "Here you go!";
-		set malaya_bakona2,0;
-		for(set .@i,1180; .@i<=1193; set .@i,.@i+1) {
+		malaya_bakona2 = 0;
+		for(.@i = 1180; .@i<=1193; ++.@i) {
 			if (questprogress(.@i))
 				erasequest .@i;
 		}
@@ -6586,9 +6586,9 @@ sec_in02,10,16,5	script	Bakonawa Intro Helper	4_MASK_SMOKEY,{
 	case 5:
 		mes "[Briquet Scheme]";
 		mes "Here you go!";
-		set malaya_bakona2,8;
+		malaya_bakona2 = 8;
 		setquest 1187;
-		for(set .@i,1178; .@i<=1193; set .@i,.@i+1) {
+		for(.@i = 1178; .@i<=1193; ++.@i) {
 			if (questprogress(.@i))
 				erasequest .@i;
 		}
@@ -6617,7 +6617,7 @@ function	script	F_Malaya_Nurse	{
 		mes "Oh!";
 		mes "Speaking of talismans, wouldn't that old lady know about them, since she put some around the village?";
 		mes "I think it'll be a good idea to ask her.";
-		set malaya_bang,32;
+		malaya_bang = 32;
 		changequest 11303,11304;
 		callsub L_Warp, getarg(0), 1;
 	} else if (malaya_bang == 32) {
@@ -6648,7 +6648,7 @@ function	script	F_Malaya_Nurse	{
 		next;
 		mes "[Nurse Las]";
 		mes "Maybe it will block the bad energy it's giving out.";
-		set malaya_bang,35;
+		malaya_bang = 35;
 		changequest 11306,11307;
 		callsub L_Warp, getarg(0), 1;
 	} else if (malaya_bang == 35) {
@@ -6689,7 +6689,7 @@ function	script	F_Malaya_Nurse	{
 			break;
 		}
 		callsub L_Incomplete;
-		set malaya_bang,42;
+		malaya_bang = 42;
 		changequest 11308,11309;
 		callsub L_Reward;
 		callsub L_Warp, getarg(0), 1;
@@ -6697,13 +6697,13 @@ function	script	F_Malaya_Nurse	{
 		callsub L_Weight;
 		if (questprogress(11309,HUNTING) == 2) {
 			callsub L_Complete;
-			set malaya_bang,41;
+			malaya_bang = 41;
 			completequest 11309;
 			callsub L_Reward;
 			callsub L_Warp, getarg(0), 1;
 		} else {
 			callsub L_Incomplete;
-			set malaya_bang,42;
+			malaya_bang = 42;
 			callsub L_Reward;
 			callsub L_Warp, getarg(0);
 		}
@@ -6711,7 +6711,7 @@ function	script	F_Malaya_Nurse	{
 		if (malaya_bang == 42) {
 			if (questprogress(11309,HUNTING) == 2) {
 				callsub L_Complete;
-				set malaya_bang,41;
+				malaya_bang = 41;
 				completequest 11309;
 				callsub L_Warp, getarg(0), 1;
 			} else {
@@ -7017,7 +7017,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 			next;
 			mes "[Nurse Las]";
 			mes "2 Rotten Bandages should do to wrap both my feet. They may look dirty, but they have special liquid on them that have amazing effects.";
-			set malaya_bang,1;
+			malaya_bang = 1;
 			setquest 11284;
 			close2;
 			cutin "",255;
@@ -7053,7 +7053,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 			mes "*Squish*";
 			mes "*Squelch*";
 			delitem 930,2; //Rotten_Bandage
-			set malaya_bang,2;
+			malaya_bang = 2;
 			close2;
 			cutin "",255;
 			end;
@@ -7084,7 +7084,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		mes "[Nurse Las]";
 		mes "Okay!!!!!!";
 		mes "I don't know if it's locked or stuck, let's try pushing it together!";
-		set malaya_bang,3;
+		malaya_bang = 3;
 		changequest 11284,11285;
 		close2;
 		cutin "",255;
@@ -7119,7 +7119,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		mes "[Nurse Las]";
 		mes "Hey, why don't you start with that girl over there?";
 		mes "Perhaps she'll tell you something.";
-		set malaya_bang,5;
+		malaya_bang = 5;
 		changequest 11286,11287;
 		close2;
 		cutin "",255;
@@ -7155,7 +7155,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		mes "I'll contact HQ again for more info.";
 		mes "Hey, why not ask that man over there?";
 		mes "I'm sure he'll know something.";
-		set malaya_bang,7;
+		malaya_bang = 7;
 		changequest 11288,11289;
 		close2;
 		cutin "",255;
@@ -7196,7 +7196,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		mes "[Nurse Las]";
 		mes "I have to be back here again anyway.";
 		mes "Thank you.";
-		set malaya_bang,9;
+		malaya_bang = 9;
 		changequest 11290,11291;
 		close2;
 		cutin "",255;
@@ -7227,7 +7227,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		mes "Keys?";
 		mes "Well this is one step closer to my goals!";
 		mes "Let's open the door right now!";
-		set malaya_bang,11;
+		malaya_bang = 11;
 		close2;
 		cutin "",255;
 		end;
@@ -7323,7 +7323,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		}
 		mes "The voice seems to be coming from the bushes near the entrance of the hospital.";
 		specialeffect EF_STEAL,AREA,"Bushes#ma";
-		set malaya_bang,13;
+		malaya_bang = 13;
 		changequest 11293,11294;
 		close;
 	} else if (malaya_bang == 13) {
@@ -7362,7 +7362,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 			next;
 			mes "[Nurse Las]";
 			mes "Hey you in the bushes, I'll tell on you if you don't go home now!";
-			set malaya_bang,16;
+			malaya_bang = 16;
 			changequest 11296,11297;
 			close2;
 			cutin "",255;
@@ -7407,7 +7407,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		mes "Anyway, the first floor door is open, so let's go inside.";
 		mes "Everything would be meaningless if the second floor door is not opened.";
 		emotion e_sob;
-		set malaya_bang,19;
+		malaya_bang = 19;
 		changequest 11299,11300;
 		close2;
 		cutin "",255;
@@ -7448,7 +7448,7 @@ ma_dun01,35,108,4	script	Nurse#ma_n2	4_F_NURSE,{
 			mes "The hospital is infested with monsters, like the old lady said.";
 			mes "How could she have gone back and forth to the 2nd floor with her feet like that....";
 			next;
-			set malaya_bang,20;
+			malaya_bang = 20;
 			changequest 11300,11301;
 		}
 		mes "[Nurse Las]";
@@ -7484,7 +7484,7 @@ ma_dun01,152,23,4	script	Suspicious Wooden Stick::MalayaStick0	4_BULLETIN_BOARD2
 	if (malaya_bang == 20) {
 		mes "There's a talisman similar to the ones outside the hospital.";
 		mes "Let's look around for something else.";
-		set malaya_bang,30;
+		malaya_bang = 30;
 		changequest 11301,11302;
 		close;
 	} else if (malaya_bang == 30) {
@@ -7532,7 +7532,7 @@ ma_dun01,152,23,4	script	Suspicious Wooden Stick::MalayaStick0	4_BULLETIN_BOARD2
 		mes "[Nurse Las]";
 		mes "This is your lucky day!";
 		mes "*Snigger*";
-		set malaya_bang,36;
+		malaya_bang = 36;
 		changequest 11307,11308;
 		close2;
 		cutin "",255;
@@ -7552,7 +7552,7 @@ malaya,48,76,4	script	Hospital Door#ma_n1	CLEAR_NPC,{
 	if (malaya_bang == 3) {
 		mes "Pushed hard on the door, but it won't open.";
 		mes "It doesn't feel like it's locked or stuck, but encased by a layer of something.";
-		set malaya_bang,4;
+		malaya_bang = 4;
 		changequest 11285,11286;
 		close;
 	} else if (malaya_bang == 4) {
@@ -7564,7 +7564,7 @@ malaya,48,76,4	script	Hospital Door#ma_n1	CLEAR_NPC,{
 		mes "But it's not locked as expected.";
 		next;
 		mes "Then why is the door not opening?";
-		set malaya_bang,12;
+		malaya_bang = 12;
 		changequest 11292,11293;
 		close;
 	} else if (malaya_bang == 12) {
@@ -7619,7 +7619,7 @@ malaya,64,78,4	script	Village Woman#mab	4_F_MALAYA,{
 			mes "I don't know.";
 			mes "I haven't given it a thought.";
 			mes "It is strange to have a new nurse coming to a closed hospital.";
-			set malaya_bang,6;
+			malaya_bang = 6;
 			changequest 11287,11288;
 			close;
 		case 2:
@@ -7633,7 +7633,7 @@ malaya,64,78,4	script	Village Woman#mab	4_F_MALAYA,{
 		mes "I don't know.";
 		mes "I haven't given it a thought.";
 		mes "It is strange to have a new nurse coming to a closed hospital.";
-		set malaya_bang,6;
+		malaya_bang = 6;
 		changequest 11287,11288;
 		close;
 	} else {
@@ -7700,7 +7700,7 @@ malaya,62,37,4	script	Village Man#mab	4_M_MALAYA,{
 			mes "[Village Man]";
 			mes "That's where the doctor is staying.";
 			mes "He's been there ever since the hospital was closed.";
-			set malaya_bang,8;
+			malaya_bang = 8;
 			changequest 11289,11290;
 			close;
 		case 2:
@@ -7774,7 +7774,7 @@ malaya,210,200,5	script	Dr. Boon#ma	4_LGTSCIENCE,{
 			mes "[Dr. Boon]";
 			mes "I'll be there as soon as I'm done here.";
 			mes "Good luck~";
-			set malaya_bang,10;
+			malaya_bang = 10;
 			changequest 11291,11292;
 			close;
 		}
@@ -7865,7 +7865,7 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 			next;
 			mes "[???]";
 			mes "I couldn't see what she was doing from here, but I found some sticks there after she'd left.";
-			set malaya_bang,14;
+			malaya_bang = 14;
 			changequest 11294,11295;
 			close;
 		case 5:
@@ -7937,7 +7937,7 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 				mes "Pulled out the deeply planted stick.";
 				mes "The hospital seems to have become more gloomy.";
 				if (rand(2)) {
-					set malaya_bang,15;
+					malaya_bang = 15;
 					changequest 11295,11296;
 					getitem 6497,1; //Lesser_Agimat
 					donpcevent "Tent"+replacestr(strnpcinfo(3),"MalayaStick","")+"#ma::OnEnable";
@@ -8090,7 +8090,7 @@ malaya,114,183,3	script	Bent Old Lady#ma	4_F_BARYO_OLD,{
 			mes "But the administrator wouldn't listen.";
 			mes "Far from curing people, they started to die.";
 			mes "So did my daughter...";
-			set malaya_bang,17;
+			malaya_bang = 17;
 			changequest 11297,11298;
 			close;
 		case 2:
@@ -8147,7 +8147,7 @@ malaya,114,183,3	script	Bent Old Lady#ma	4_F_BARYO_OLD,{
 		next;
 		mes "Nurse Las may be in danger, standing alone in front of the hospital.";
 		mes "If I don't return quickly...";
-		set malaya_bang,18;
+		malaya_bang = 18;
 		changequest 11298,11299;
 		close;
 	} else if (malaya_bang == 18) {
@@ -8161,7 +8161,7 @@ malaya,114,183,3	script	Bent Old Lady#ma	4_F_BARYO_OLD,{
 		next;
 		mes "[Bent Old Lady]";
 		mes "Not famous, but a talented shaman.";
-		set malaya_bang,33;
+		malaya_bang = 33;
 		changequest 11304,11305;
 		close;
 	} else {
@@ -8227,7 +8227,7 @@ malaya,276,367,4	script	Bent Shaman#ma	4_F_UMOLDWOMAN,{
 		mes "It's okay.";
 		mes "No need for money.";
 		mes "It's the karma this village must face...";
-		set malaya_bang,34;
+		malaya_bang = 34;
 		changequest 11305,11306;
 	}
 	close;
@@ -8273,7 +8273,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 		next;
 		switch(select("Start Pintados Festival:End Pintados Festival:NPC_ON:NPC_OFF")) {
 		case 1:
-			set $malaya_pintados_00,1;
+			$malaya_pintados_00 = 1;
 			donpcevent "Pintados Manager#pin::OnEnable";
 			mes "Start the Pintados Festival.";
 			close;
@@ -8313,7 +8313,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 				input .@input;
 				if (.@input < 0 || .@input > 344)
 					close;
-				set $malaya_pintados_00, .@input;
+				$malaya_pintados_00 = .@input;
 				break;
 			case 3:
 				mes "Adjust the accumulated value for the Lesser Agimat.";
@@ -8322,7 +8322,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 				input .@input;
 				if (.@input < 0 || .@input > 1000)
 					close;
-				set $malaya_pintados_01, .@input;
+				$malaya_pintados_01 = .@input;
 				break;
 			case 4:
 				mes "Adjust the accumulated value of the Silver Cross.";
@@ -8331,7 +8331,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 				input .@input;
 				if (.@input < 0 || .@input > 1000)
 					close;
-				set $malaya_pintados_02, .@input;
+				$malaya_pintados_02 = .@input;
 				break;
 			case 5:
 				mes "Adjust the accumulated value for the Dyestuff.";
@@ -8340,7 +8340,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 				input .@input;
 				if (.@input < 0 || .@input > 300)
 					close;
-				set $malaya_pintados_03, .@input;
+				$malaya_pintados_03 = .@input;
 				break;
 			}
 			mes "Time Value: ("+$malaya_pintados_00+"/344)";
@@ -8366,13 +8366,13 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 //	end;
 
 OnTimer1800000:
-	set $malaya_pintados_00, $malaya_pintados_00;
+	//$malaya_pintados_00 = $malaya_pintados_00;
 	if ($malaya_pintados_00 > 0 && $malaya_pintados_00 < 344) {
-		set $malaya_pintados_00,$malaya_pintados_00+1;
+		++$malaya_pintados_00;
 		stopnpctimer;
 		initnpctimer;
 	} else {
-		set $malaya_pintados_00,0;
+		$malaya_pintados_00 = 0;
 		donpcevent "Pintados Manager#pin::OnDisable";
 	}
 	end;
@@ -8383,18 +8383,18 @@ OnEnable:
 	end;
 OnDisable:
 	stopnpctimer;
-	set $malaya_pintados_00,0;
-	set $malaya_pintados_01,0;
-	set $malaya_pintados_02,0;
-	set $malaya_pintados_03,0;
+	$malaya_pintados_00 = 0;
+	$malaya_pintados_01 = 0;
+	$malaya_pintados_02 = 0;
+	$malaya_pintados_03 = 0;
 	donpcevent "Pintados Manager#pin::OnDisableNPC";
 	announce "The 'Pintados Festival' ended with great success.",bc_all,"0xFB9D04",FW_NORMAL,12;
 	end;
 OnEnableNPC:
-	set .@str$, "::OnEnable";
+	.@str$ = "::OnEnable";
 OnDisableNPC:
 	if (.@str$ == "")
-		set .@str$, "::OnDisable";
+		.@str$ = "::OnDisable";
 	donpcevent "Tourist#pin01"+.@str$;
 	donpcevent "Tourist#pin02"+.@str$;
 	donpcevent "Tourist#pin03"+.@str$;
@@ -8416,7 +8416,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 	}
 	if ($malaya_pintados_00 == 0) {
 		if ($malaya_pintados_01 > 999 && $malaya_pintados_02 > 999 && $malaya_pintados_03 > 299) {
-			set $malaya_pintados_00,1;
+			$malaya_pintados_00 = 1;
 			donpcevent "Pintados Manager#pin::OnEnable";
 			emotion e_lv;
 			mes "[Isco]";
@@ -8516,7 +8516,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 		mes "Sigh... We are still short of materials to start the '^7A96E0Pintados Festival^000000'.";
 		close;
 	case 3:
-		set .@str$, (Sex)?"Bro":"Sis";
+		.@str$ = (Sex)?"Bro":"Sis";
 		break;
 	}
 	emotion e_lv;
@@ -8525,26 +8525,26 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 	mes "Thanks! "+strcharinfo(0)+" "+.@str$+"!!";
 	mes "He he. What did you bring?";
 	next;
-	set .@i, select(
+	.@i = select(
 		"Lesser Agimat (^FF0000"+(($malaya_pintados_01 > 999)?"Collection complete":(1000 - $malaya_pintados_01)+" short")+"^000000):"+
 		"Silver Cross (^FF0000"+(($malaya_pintados_02 > 999)?"Collection complete":(1000 - $malaya_pintados_02)+" short")+"^000000):"+
 		"Dyestuff (^FF0000"+(($malaya_pintados_03 > 299)?"Collection complete":(300 - $malaya_pintados_03)+" short")+"^000000)"
 	);
 	switch(.@i) {
 	case 1:
-		set .@item,6497; //Lesser_Agimat
-		set .@name$,"Lesser Agimats";
-		set .@total,1000;
+		.@item = 6497; //Lesser_Agimat
+		.@name$ = "Lesser Agimats";
+		.@total = 1000;
 		break;
 	case 2:
-		set .@item,6502; //Silver_Cross
-		set .@name$,"Silver Crosses";
-		set .@total,1000;
+		.@item = 6502; //Silver_Cross
+		.@name$ = "Silver Crosses";
+		.@total = 1000;
 		break;
 	case 3:
 		setarray .@items[0],975,976,978,979,980,981,982,983;
-		set .@name$,"Dyestuffs";
-		set .@total,300;
+		.@name$ = "Dyestuffs";
+		.@total = 300;
 		break;
 	}
 	mes "[Isco]";
@@ -8561,7 +8561,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 		next;
 		switch(select("One?!:Enter quantity.")) {
 		case 1:
-			set .@amount,1;
+			.@amount = 1;
 			mes "[Isco]";
 			mes "He he... You've brought back one.";
 			next;
@@ -8586,9 +8586,9 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 	} else {
 		mes "I am "+(.@total - getd("$malaya_pintados_0"+.@i))+" short of Dyestuffs. What kind of Dyestuff did you bring?";
 		next;
-		for(set .@j,0; .@j<getarraysize(.@items); set .@j,.@j+1)
-			set .@menu$, .@menu$+getitemname(.@items[.@j])+" (^FF0000"+countitem(.@items[.@j])+"^000000):";
-		set .@item, .@items[select(.@menu$)-1];
+		for(.@j = 0; .@j<getarraysize(.@items); ++.@j)
+			.@menu$ += getitemname(.@items[.@j])+" (^FF0000"+countitem(.@items[.@j])+"^000000):";
+		.@item = .@items[select(.@menu$)-1];
 		if (countitem(.@item) == 0) {
 			mes "[Isco]";
 			mes "Sigh~ You don't have any "+getitemname(.@item)+".";
@@ -8610,7 +8610,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 			}
 			break;
 		case 2:
-			set .@amount, countitem(.@item);
+			.@amount = countitem(.@item);
 			break;
 		}
 		if (countitem(.@item) < .@amount) {
@@ -8621,7 +8621,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 	}
 	delitem .@item,.@amount;
 	setd "$malaya_pintados_0"+.@i, getd("$malaya_pintados_0"+.@i)+.@amount;
-	set .@amount_left, .@total - getd("$malaya_pintados_0"+.@i);
+	.@amount_left = .@total - getd("$malaya_pintados_0"+.@i);
 	mes "[Isco]";
 	mes "He he... Thanks. "+.@str$+"!";
 	if (.@amount_left <= 0)
@@ -8749,22 +8749,22 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 		mes "Hope you enjoy the '^7A96E0Pintados Festival^000000'.";
 		close;
 	case 2:
-		set .@tattoo,2911; //Bangungot_Tattoo
-		set .@doll,6517; //Bangungot_Doll
-		set .@spirit,6524; //Bangungot_Spirit_Piece
-		set .@name$,"Bangungot";
+		.@tattoo = 2911; //Bangungot_Tattoo
+		.@doll = 6517; //Bangungot_Doll
+		.@spirit = 6524; //Bangungot_Spirit_Piece
+		.@name$ = "Bangungot";
 		break;
 	case 3:
-		set .@tattoo,2907; //Buwaya_Tattoo
-		set .@doll,6518; //Buwaya_Doll
-		set .@spirit,6525; //Buwaya_Spirit_Piece
-		set .@name$,"Buwaya";
+		.@tattoo = 2907; //Buwaya_Tattoo
+		.@doll = 6518; //Buwaya_Doll
+		.@spirit = 6525; //Buwaya_Spirit_Piece
+		.@name$ = "Buwaya";
 		break;
 	case 4:
-		set .@tattoo,2910; //Bakonawa_Tattoo
-		set .@doll,6516; //Bakonawa_Doll
-		set .@spirit,6523; //Bakonawa_Spirit_Piece
-		set .@name$,"Bakonawa";
+		.@tattoo = 2910; //Bakonawa_Tattoo
+		.@doll = 6516; //Bakonawa_Doll
+		.@spirit = 6523; //Bakonawa_Spirit_Piece
+		.@name$ = "Bakonawa";
 		break;
 	}
 	if (countitem(6499) < 10 || countitem(.@spirit) == 0 || countitem(.@doll) == 0) {
@@ -8920,7 +8920,7 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	delitem .@spirit,1;
 	delitem .@doll,1;
 	getitem .@tattoo,1;
-	set $malaya_pintados_04$, strcharinfo(0);
+	$malaya_pintados_04$ = strcharinfo(0);
 	mes "[Tattooist]";
 	mes "I'm sorry you had to wait for a long time. But it was worth it cause I haven't created a Tattoo of this quality in a long time.";
 	next;

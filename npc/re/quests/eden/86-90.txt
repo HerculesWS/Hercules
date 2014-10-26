@@ -77,7 +77,7 @@ moc_para01,48,175,3	script	86-90 Mission Board	4_BOARD3,{
 			72000,78000,82000,80000,
 			72000,72000,72000,86000,80000;
 		mes "You must be within level 86-90 to accept these missions.";
-		for(set .@quest,4167; .@quest<=4180; set .@quest,.@quest+1) {
+		for(.@quest = 4167; .@quest<=4180; ++.@quest) {
 			.@hunting = questprogress(.@quest,HUNTING);
 			if (.@hunting == 1) {
 				next;
@@ -150,8 +150,8 @@ moc_para01,48,175,3	script	86-90 Mission Board	4_BOARD3,{
 
 //callsub L_Quest,<quest ID>,"<monster name>",<reward EXP>,"<cutin image>","<description>"{,"s"};
 L_Quest:
-	set .@quest1, getarg(0);
-	set .@quest2, .@quest1+31;
+	.@quest1 = getarg(0);
+	.@quest2 = .@quest1+31;
 	.@playtime = questprogress(.@quest2,PLAYTIME);
 	if (.@playtime == 1) {
 		mes "[86-90 Mission Board]";

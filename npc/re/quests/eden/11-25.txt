@@ -19,9 +19,9 @@ moc_para01,36,38,3	script	Mission [11 - 25]#Tuto	4_BOARD3,{
 		mes "- to receive these missions. -";
 		close;
 	}
-	for(set .@i,11124; .@i<11134; set .@i,.@i+1)
+	for(.@i = 11124; .@i<11134; ++.@i)
 		if (questprogress(.@i,PLAYTIME) == 2) erasequest .@i;
-	for(set .@i,11114; .@i<11123; set .@i,.@i+1) {
+	for(.@i = 11114; .@i<11123; ++.@i) {
 		.@state = questprogress(.@i,HUNTING);
 		if (.@state == 2) {
 			mes " - You must collect your - ";
@@ -79,7 +79,7 @@ L_Quest:
 		close;
 	}
 	mes " - Mission '"+getarg(1)+"' - ";
-	for(set .@i,2; .@i<getargcount(); set .@i,.@i+1)
+	for(.@i = 2; .@i<getargcount(); ++.@i)
 		mes getarg(.@i);
 	mes " ";
 	mes " - Manager : Spike - ";
@@ -89,7 +89,7 @@ L_Quest:
 		mes " - other missions. - ";
 		close;
 	}
-	for(set .@i,2; .@i<getargcount(); set .@i,.@i+1)
+	for(.@i = 2; .@i<getargcount(); ++.@i)
 		mes getarg(.@i);
 	if (getarg(0) == 11123 && questprogress(11123,PLAYTIME) == 2)
 		erasequest 11133;	// Special case for "Collect Poison Spores"
@@ -98,7 +98,7 @@ L_Quest:
 }
 
 moc_para01,32,30,6	script	Spike	4_F_CHILD,{
-	for(set .@i,11114; .@i<11124; set .@i,.@i+1) {
+	for(.@i = 11114; .@i<11124; ++.@i) {
 		.@state = questprogress(.@i,HUNTING);
 		if (.@state == 2) switch(.@i) {
 			case 11114: callsub L_Quest,.@i,"Hornet Hunting",900;

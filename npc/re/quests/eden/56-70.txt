@@ -70,9 +70,9 @@ L_Quest:
 	}
 	if (getargcount() > 5) {
 		if (countitem(getarg(5)) < getarg(6))
-			set .@items,1; //incomplete
+			.@items = 1; //incomplete
 		else
-			set .@items,2; //complete
+			.@items = 2; //complete
 	}
 	if (questprogress(getarg(0)) != 2 && (countitem(getarg(3)) < getarg(4) || .@items == 1)) {
 		mes "You have an on-going mission. Would you like to check the details?";
@@ -115,9 +115,9 @@ L_HuntingQuest:
 	}
 	if (getargcount() > 3) {
 		if (countitem(getarg(3)) < getarg(4))
-			set .@items,1; //incomplete
+			.@items = 1; //incomplete
 		else
-			set .@items,2; //complete
+			.@items = 2; //complete
 	}
 	if (questprogress(getarg(0),HUNTING) != 2 || .@items == 1) {
 		mes "You have an on-going mission. Would you like to check the details?";

@@ -202,7 +202,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 	case 1:
 		mes "[Eden Teleport Officer]";
 		mes "Let's go to our secret base!";
-		set nak_warp,strnpcinfo(2);
+		nak_warp = strnpcinfo(2);
 		close2;
 		warp "moc_para01",31,14;
 		end;
@@ -324,10 +324,10 @@ moc_para01,16,22,7	script	Old Adventurer#eden	4_M_HUMERCHANT,{
 }
 
 moc_para01,182,48,3	script	Eden's Chief#eden	4_COOK,{
-	set .@eggf,rand(1,118);
-	set .@eggf_1,.@eggf + 1;
-	set .@eggf_2,.@eggf + 2;
-	set .@eggf_6,.@eggf + 6;
+	.@eggf = rand(1,118);
+	.@eggf_1 = .@eggf + 1;
+	.@eggf_2 = .@eggf + 2;
+	.@eggf_6 = .@eggf + 6;
 	mes "[Eden's Chief]";
 	mes ""+.@eggf+".. "+.@eggf_1+"... "+.@eggf_2+".... "+.@eggf_6+"..?";
 	next;

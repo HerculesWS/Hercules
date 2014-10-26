@@ -46,22 +46,21 @@
 	mes "[Teleport Cat]";
 	mes "We provide teleport service between various regions based on our accumulated knowledge. We accept Malangdo Canned Specialties or Zeny, so you can pay however you like it~";
 	next;
-	set .@menu$,"Forget it:";
-	for(set .@i,0; .@i<getarraysize(.@map$); set .@i,.@i+1) {
-		set .@menu$, .@menu$+
-			.@map$[.@i]+" ("+.@cost[.@i]+" Canned Food):"+
-			.@map$[.@i]+" ("+.@cost[.@i]+",000 Zeny):";
+	.@menu$ = "Forget it:";
+	for(.@i = 0; .@i<getarraysize(.@map$); ++.@i) {
+		.@menu$ += .@map$[.@i]+" ("+.@cost[.@i]+" Canned Food):"+
+		           .@map$[.@i]+" ("+.@cost[.@i]+",000 Zeny):";
 	}
-	set .@i, select(.@menu$)-2;
+	.@i = select(.@menu$)-2;
 	if (.@i == -1) {
 		mes "[Teleport Cat]";
 		mes "I'll see you later then.";
 		close;
 	}
-	set .@choice$, .@map$[.@i/2];
-	set .@price, .@cost[.@i/2];
+	.@choice$ = .@map$[.@i/2];
+	.@price = .@cost[.@i/2];
 	if (.@i % 2) {
-		set .@price, .@price*1000;
+		.@price *= 1000;
 		if (Zeny < .@price) {
 			mes "[Teleport Cat]";
 			mes "I'm afraid it's not enough. Sorry, but it can't be done for free~";
@@ -136,7 +135,7 @@ ecl_fild01,94,322,5	script	Security Guard#ep14_2	4_M_FAIRYSOLDIER,{
 		mes "[Security Guard]";
 		mes "If you completed your forms, please submit them to the administrator over there.";
 		mes "There may be some waiting time, so take your time.";
-		set ep14_2_enter,1;
+		ep14_2_enter = 1;
 		setquest 11310;
 		close;
 	} else if (ep14_2_enter == 1) {
@@ -154,7 +153,7 @@ ecl_fild01,94,322,5	script	Security Guard#ep14_2	4_M_FAIRYSOLDIER,{
 		next;
 		mes "[Security Guard]";
 		mes "There would be no need for any separate translation, and there are enough bridges for on-foot races, so I hope you have a comfortable visit.";
-		set ep14_2_enter,3;
+		ep14_2_enter = 3;
 		erasequest 11311;
 		close2;
 		warp "eclage",100,28;
@@ -321,7 +320,7 @@ ecl_fild01,111,320,2	script	Immigration Officer#ep1	4_M_FAIRYKID4,{
 		mes "[Mark Esha]";
 		mes "My goodness......";
 		emotion e_swt2,1;
-		set ep14_2_enter,2;
+		ep14_2_enter = 2;
 		erasequest 11310;
 		setquest 11311;
 		close2;
@@ -781,7 +780,7 @@ function	script	F_Eclage_Traveler	{
 		erasequest 7412;
 		erasequest 7413;
 		setquest 7414;
-		set ep14_2_tl,1;
+		ep14_2_tl = 1;
 		donpcevent "Eclage Guard#tl01::OnDisable";
 		close2;
 		cutin "minuel01.bmp",255;
@@ -1111,7 +1110,7 @@ ecl_in01,82,70,2	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 			mes "Please follow me then.";
 			erasequest 7414;
 			setquest 7415;
-			set ep14_2_tl,2;
+			ep14_2_tl = 2;
 			close2;
 			warp "ecl_in03",244,89;
 			cutin "minuel02.bmp",255;
@@ -1176,7 +1175,7 @@ ecl_in01,82,70,2	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 		case 1:
 			mes "[Eclage Guard]";
 			mes "Follow me, please.";
-			set ep14_2_tl,4;
+			ep14_2_tl = 4;
 			close2;
 			warp "ecl_in03",58,72;
 			cutin "minuel02.bmp",255;
@@ -1423,7 +1422,7 @@ ecl_in03,245,93,2	script	Chief of Staff#tl01	4_F_FAIRY,{
 		mes "By the way, the guard who is going to lead you will be at the east gate. Don't forget the time.";
 		erasequest 7415;
 		setquest 7416;
-		set ep14_2_tl,3;
+		ep14_2_tl = 3;
 		close2;
 		warp "ecl_in01",47,28;
 		end;
@@ -1572,7 +1571,7 @@ ecl_in03,41,90,2	script	Mayor Jun Kardui#tl01	4_M_FARIYKING,{
 		mes "I'll be looking forward to seeing you, stranger who will be my friend.";
 		erasequest 7416;
 		setquest 7417;
-		set ep14_2_tl,5;
+		ep14_2_tl = 5;
 		close2;
 		cutin "kardui01.bmp",255;
 		end;

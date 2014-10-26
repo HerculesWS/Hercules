@@ -464,23 +464,23 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 			switch(select("Eira:Sera:Dieter:Bayeri:Eleanor")) {
 			case 1:
 				cutin "Mer_Eira_Card",3;
-				set .@Homunculus,6048; //MER_EIRA
+				.@Homunculus = 6048; //MER_EIRA
 				break;
 			case 2:
 				cutin "Mer_Sera_Card",3;
-				set .@Homunculus,6050; //MER_SERA
+				.@Homunculus = 6050; //MER_SERA
 				break;
 			case 3:
 				cutin "Mer_Dieter_Card",3;
-				set .@Homunculus,6051; //MER_DIETER
+				.@Homunculus = 6051; //MER_DIETER
 				break;
 			case 4:
 				cutin "Mer_Bayeri_Card",3;
-				set .@Homunculus,6049; //MER_BAYERI
+				.@Homunculus = 6049; //MER_BAYERI
 				break;
 			case 5:
 				cutin "Mer_Eleanor_Card",3;
-				set .@Homunculus,6052; //MER_ELEANOR
+				.@Homunculus = 6052; //MER_ELEANOR
 				break;
 			}
 			mes "[Viorel]";
@@ -591,7 +591,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 		mes "has only just begun~!";
 		close;
 	} else {
-		for(set .@i,4154; .@i<=4160; set .@i,.@i+1) {
+		for(.@i = 4154; .@i<=4160; ++.@i) {
 			if (questprogress(.@i))
 				erasequest .@i;
 		}

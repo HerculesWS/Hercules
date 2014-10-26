@@ -51,13 +51,13 @@ brasilis,297,307,5	script	Angelo#br	1_M_04,{
 		mes "Oh, thank you. You found all of 3 puppies.";
 		mes "Thanks a lot.";
 		mes "I hope this is useful to you. hoho.";
-		set .@randexp,rand(50000,112500);
+		.@randexp = rand(50000,112500);
 		getexp .@randexp,0;
 		erasequest 9031;
 		setquest 9032;
 		specialeffect2 EF_ASSUMPTIO;
 		consumeitem 607; //Yggdrasilberry
-		set .@rand,rand(1,10);
+		.@rand = rand(1,10);
 		if (.@rand > 4 && .@rand < 9) getitem 504,2; //White_Potion
 		else if (.@rand > 8) getitem 608,1; //Seed_Of_Yggdrasil
 		close;
@@ -94,12 +94,12 @@ OnGo:
 			mes "[Puppy]";
 			mes "bow wow bow wow!!";
 			next;
-			set brazil_kid,brazil_kid+1;
+			++brazil_kid;
 			mes "[" + strcharinfo(0) + "]";
 			if (brazil_kid == 3) {
 				mes "Good. I found all 3 puppies.";
 				mes "Now I need to go tell Angelo.";
-				set brazil_kid,0;
+				brazil_kid = 0;
 				erasequest 9030;
 				setquest 9031;
 			}
@@ -403,7 +403,7 @@ brasilis,187,162,5	script	Candy Maker	4_M_BRZ_MAN1,{
 				mes "If you can't find him in the city, go to museum.";
 				mes "He's a vain person so he likes to act big.";
 				mes "He's probably wandering in the museum trying to show off to someone for sure.";
-				set brazil_gua,1;
+				brazil_gua = 1;
 				setquest 2192;
 				close;
 			case 2:
@@ -448,7 +448,7 @@ brasilis,187,162,5	script	Candy Maker	4_M_BRZ_MAN1,{
 		mes "[Candy Maker]";
 		mes "Look! It's the popular guarana candy.";
 		mes "Try to savor its amazing taste hey~ take it easy. hahaha!!";
-		set brazil_gua,11;
+		brazil_gua = 11;
 		completequest 2200;
 		getitem 12414,1; //Guarana_Candy
 		getexp 70000,10000;
@@ -575,7 +575,7 @@ bra_in01,95,179,3	script	Cherto	4_M_BRZ_MAN2,{
 		mes "[Cherto]";
 		mes "If Cherto tells you, you might get us into trouble. But you look like you really wanna know so let me give you a tip.";
 		mes "Come closer. Cherto will whisper so nobody can listen in.";
-		set brazil_gua,2;
+		brazil_gua = 2;
 		close;
 	}
 	else if (brazil_gua == 2) {
@@ -605,7 +605,7 @@ bra_in01,95,179,3	script	Cherto	4_M_BRZ_MAN2,{
 		mes "What about you?";
 		mes "Who is the guarana kid?";
 		mes "Will you figure out it? hohohhhhh~";
-		set brazil_gua,3;
+		brazil_gua = 3;
 		changequest 2192,2193;
 		close;
 	}
@@ -644,7 +644,7 @@ bra_in01,95,179,3	script	Cherto	4_M_BRZ_MAN2,{
 		mes "His name is Paje.";
 		mes "Take this note over to him.";
 		mes "He will show the solution for you and the kid.";
-		set brazil_gua,5;
+		brazil_gua = 5;
 		changequest 2194,2195;
 		close;
 	}
@@ -700,7 +700,7 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 				mes "["+strcharinfo(0)+"]";
 				mes "He makes strange sound like an animals.";
 				mes "Should I ask advice from Cherto?";
-				set brazil_gua,4;
+				brazil_gua = 4;
 				changequest 2193,2194;
 				close;
 			}
@@ -790,7 +790,7 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 		mes "["+strcharinfo(0)+"]";
 		mes "If I have this, I can make a guarana candy.";
 		mes "I better find that Candy Maker!";
-		set brazil_gua,10;
+		brazil_gua = 10;
 		changequest 2199,2200;
 		getitem 6237,1; //Guarana_Fruit
 		close;
@@ -851,7 +851,7 @@ brasilis,56,224,7	script	Mage Paje#bra	4_M_BIBI,{
 	next;
 	mes "[Mage Paje]";
 	mes "Good luck~!";
-	set brazil_gua,6;
+	brazil_gua = 6;
 	changequest 2195,2196;
 	specialeffect2 EF_ASSUMPTIO;
 	close;
@@ -908,7 +908,7 @@ OnTouch:
 		next;
 		mes "[Toucan]";
 		mes "Fly fly far away. bbaaaeeeccckkk--!";
-		set brazil_gua,7;
+		brazil_gua = 7;
 		changequest 2196,2197;
 		specialeffect2 EF_SEISMICWEAPON;
 		close2;
@@ -973,7 +973,7 @@ OnTouch_:
 		mes "I will give you a Jaguar's high blessing.";
 		mes "Go to monkey by flowing through the wind like a bee.";
 		mes "Let's meet again my friend!";
-		set brazil_gua,8;
+		brazil_gua = 8;
 		changequest 2197,2198;
 		close2;
 		consumeitem 12016; //Speed_Up_Potion
@@ -1026,7 +1026,7 @@ bra_fild01,245,52,3	script	Monkey#bra	HIDDEN_NPC,{
 		next;
 		mes "["+strcharinfo(0)+"]";
 		mes "Good~ Now it's time to go back to the kid~!!";
-		set brazil_gua,9;
+		brazil_gua = 9;
 		changequest 2198,2199;
 		close;
 	}
@@ -1070,7 +1070,7 @@ brasilis,203,286,3	script	Botanist Karmen#bra	4_F_HUWOMAN,{
 		mes "[Karmen]";
 		mes "Ah, if you are interested more in the Water Lily story, find someone named Marta.";
 		mes "She is wise and knows lots of stories here in Brasilis.";
-		set brazil_regia,1;
+		brazil_regia = 1;
 		setquest 2201;
 		close;
 	}
@@ -1091,7 +1091,7 @@ brasilis,203,286,3	script	Botanist Karmen#bra	4_F_HUWOMAN,{
 		mes "[Karmen]";
 		mes "I am so grateful that I met you.";
 		mes "The water lily must truly be a lucky flower. hahaha";
-		set brazil_regia,10;
+		brazil_regia = 10;
 		completequest 2207;
 		getexp 50000,10000;
 		close;
@@ -1237,7 +1237,7 @@ bra_in01,142,27,5	script	Marta#bra	4_F_BRZ_INDOLD,{
 		mes "Did you enjoy this story?";
 		mes "If you want to listen to another story, just come to me.";
 		mes "If you don't mind playing with my grandson a ~ little. hoohoo.";
-		set brazil_regia,2;
+		brazil_regia = 2;
 		close;
 	}
 	else if (brazil_regia > 1) {
@@ -1388,7 +1388,7 @@ bra_in01,145,27,3	script	Brasilis Boy#bra	4_M_BRZ_INDIAN,{
 		mes "Did you enjoy this story?";
 		mes "If you want to listen to another story, just come to me.";
 		mes "If you don't mind playing with my grandson a ~ little. hoohoo.";
-		set brazil_regia,2;
+		brazil_regia = 2;
 		close;
 	}
 	else if (brazil_regia > 1) {
@@ -1584,7 +1584,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "[Jasira]";
 		mes "Give him 10 Banana and tell him that I really miss him.";
 		mes "Sorry for ignoring you before. Please, only you can help me!";
-		set brazil_regia,3;
+		brazil_regia = 3;
 		changequest 2201,2202;
 		close;
 	}
@@ -1631,7 +1631,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		next;
 		mes "["+strcharinfo(0)+"]";
 		mes "Thanks Jasira!";
-		set brazil_regia,6;
+		brazil_regia = 6;
 		changequest 2204,2205;
 		close;
 	}
@@ -1670,7 +1670,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "[Jasira]";
 		mes "I know, I know! I'm the best...";
 		delitem 7553,1; //Lotus_Flower
-		set brazil_regia,9;
+		brazil_regia = 9;
 		changequest 2206,2207;
 		setarray .@card[0],4195,4177,4188; //Leaf_Cat_Card, Dryad_Card, Leib_Olmai_Card
 		getitem2 5302,1,1,0,0,.@card[rand(3)],0,0,0; //Lotus_Flower_Hat
@@ -1764,7 +1764,7 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 		mes "I got it.";
 		mes "As you can see, there are lots of Brasilis water lily around here.";
 		mes "If you make sure that you won't destroy them you can appreciate them as you wish.";
-		set brazil_regia,4;
+		brazil_regia = 4;
 		changequest 2202,2203;
 		close;
 	}
@@ -1808,7 +1808,7 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 			mes "Oh, can you tell that girl Jasira something for me?";
 			mes "Tell her that I am not the moon from the story, but I want to become the moon to shine only for her.";
 			delitem 11515,5; //Coconut
-			set brazil_regia,7;
+			brazil_regia = 7;
 			changequest 2205,2206;
 			close;
 		}
@@ -1901,7 +1901,7 @@ bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 		mes "[Jasi]";
 		mes "If you bring 5 of those things, I will reconsider your suggestion.";
 		delitem 513,10; //Banana
-		set brazil_regia,5;
+		brazil_regia = 5;
 		changequest 2203,2204;
 		next;
 		mes "["+strcharinfo(0)+"]";
@@ -1928,7 +1928,7 @@ bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 			close;
 		}
 		mes "- You take a beautiful water lily carefully in your hands. -";
-		set brazil_regia,8;
+		brazil_regia = 8;
 		getitem 7553,1; //Lotus_Flower
 		close;
 	}
@@ -2131,7 +2131,7 @@ brasilis,185,246,5	script	Pedro#bra	1_M_SIZ,{
 		next;
 		mes "[Fabio]";
 		mes "Maybe you're just scared...";
-		set brazil_ghost,1;
+		brazil_ghost = 1;
 		setquest 2208;
 		close;
 	}
@@ -2229,8 +2229,8 @@ bra_in01,149,184,3	script	Door#bra	CLEAR_NPC,{
 			mes "["+strcharinfo(0)+"]";
 			mes .@input$;
 			next;
-			set .@braspell$,"Mother the door won't open!";
-			set .@chkspell,compare(.@braspell$,.@input$);
+			.@braspell$ = "Mother the door won't open!";
+			.@chkspell = compare(.@braspell$,.@input$);
 			if (!.@chkspell) {
 				mes "Seems like you said something wrong.";
 				close;
@@ -2270,7 +2270,7 @@ bra_in01,149,184,3	script	Door#bra	CLEAR_NPC,{
 							next;
 							specialeffect2 EF_VENOMDUST;
 							mes "Faint laughing can be heard off in the direction of the toilet.";
-							set brazil_ghost,3;
+							brazil_ghost = 3;
 							changequest 2208,60351;
 							close;
 						}
@@ -2331,8 +2331,8 @@ bra_in01,144,187,3	script	Toilet#bra	CLEAR_NPC,{
 			mes "["+strcharinfo(0)+"]";
 			mes .@input$;
 			next;
-			set .@braspell$,"Mother the water is flooding!";
-			set .@chkspell,compare(.@braspell$,.@input$);
+			.@braspell$ = "Mother the water is flooding!";
+			.@chkspell = compare(.@braspell$,.@input$);
 			if (!.@chkspell) {
 				mes "Seems like you said something wrong.";
 				close;
@@ -2360,7 +2360,7 @@ bra_in01,144,187,3	script	Toilet#bra	CLEAR_NPC,{
 							next;
 							specialeffect2 EF_VENOMDUST;
 							mes "Faint laughing can be heard off in the direction of the faucet.";
-							set brazil_ghost,4;
+							brazil_ghost = 4;
 							changequest 60351,60352;
 							close;
 						}
@@ -2404,8 +2404,8 @@ bra_in01,134,189,3	script	Faucet#bra	CLEAR_NPC,{
 			mes "["+strcharinfo(0)+"]";
 			mes .@input$;
 			next;
-			set .@braspell$,"Mother the drought has started!";
-			set .@chkspell,compare(.@braspell$,.@input$);
+			.@braspell$ = "Mother the drought has started!";
+			.@chkspell = compare(.@braspell$,.@input$);
 			if (!.@chkspell) {
 				mes "Seems like you said something wrong.";
 				close;
@@ -2439,7 +2439,7 @@ bra_in01,134,189,3	script	Faucet#bra	CLEAR_NPC,{
 							next;
 							specialeffect2 EF_VENOMDUST;
 							mes "Faint laughing can be heard off in the direction of the carpet.";
-							set brazil_ghost,5;
+							brazil_ghost = 5;
 							changequest 60352,60353;
 							close;
 						}
@@ -2479,8 +2479,8 @@ bra_in01,138,184,3	script	Carpet#bra	CLEAR_NPC,{
 			mes "["+strcharinfo(0)+"]";
 			mes .@input$;
 			next;
-			set .@braspell$,"Mother where are my friends?";
-			set .@chkspell,compare(.@braspell$,.@input$);
+			.@braspell$ = "Mother where are my friends?";
+			.@chkspell = compare(.@braspell$,.@input$);
 			if (!.@chkspell) {
 				mes "Seems like you said something wrong.";
 				close;
@@ -2521,7 +2521,7 @@ bra_in01,138,184,3	script	Carpet#bra	CLEAR_NPC,{
 							next;
 							specialeffect2 EF_VENOMDUST;
 							mes "Faint laughing can be heard off in the direction of the mirror.";
-							set brazil_ghost,6;
+							brazil_ghost = 6;
 							changequest 60353,60354;
 							close;
 						}
@@ -2561,8 +2561,8 @@ bra_in01,151,180,3	script	Mirror#bra	CLEAR_NPC,{
 			mes "["+strcharinfo(0)+"]";
 			mes .@input$;
 			next;
-			set .@braspell$,"Where are you mom?";
-			set .@chkspell,compare(.@braspell$,.@input$);
+			.@braspell$ = "Where are you mom?";
+			.@chkspell = compare(.@braspell$,.@input$);
 			if (!.@chkspell) {
 				mes "Seems like you said something wrong.";
 				close;
@@ -2606,8 +2606,8 @@ bra_in01,151,180,3	script	Mirror#bra	CLEAR_NPC,{
 					switch(select("Take the eye bandage off.:Run away~.")) {
 					case 1:
 						while(1) {
-							set .@cpudice,rand(1,6);
-							set .@pcdice,rand(1,6);
+							.@cpudice = rand(1,6);
+							.@pcdice = rand(1,6);
 							if (.@cpudice != .@pcdice) {
 								emotion (57+.@cpudice),0,"Ghost#bra";
 								emotion (57+.@cpudice),1;
@@ -2618,7 +2618,7 @@ bra_in01,151,180,3	script	Mirror#bra	CLEAR_NPC,{
 							specialeffect2 EF_DEVIL;
 							mes "[Ghost]";
 							mes "^FF0000Go away!^000000";
-							set brazil_ghost,1;
+							brazil_ghost = 1;
 							changequest 60354,2208;
 							percentheal -50,-50;
 							close2;
@@ -2631,7 +2631,7 @@ bra_in01,151,180,3	script	Mirror#bra	CLEAR_NPC,{
 							mes "[Ghost]";
 							mes "^FF0000Ahh!^000000";
 							mes "The Ghost disappeared into the toilet.";
-							set brazil_ghost,7;
+							brazil_ghost = 7;
 							changequest 60354,60355;
 							close2;
 							disablenpc "Ghost#bra";
@@ -2641,7 +2641,7 @@ bra_in01,151,180,3	script	Mirror#bra	CLEAR_NPC,{
 					case 2:
 						mes "You run away from the ghost.";
 						close2;
-						set brazil_ghost,1;
+						brazil_ghost = 1;
 						changequest 60354,2208;
 						warp "bra_in01",12,183;
 						disablenpc "Ghost#bra";
@@ -2712,7 +2712,7 @@ bra_in01,7,181,5	script	Curator#bra	4_M_BRZ_MAN2,{
 				next;
 				mes "The curator looks around calmly then opens the door.";
 				delitem 11515,1; //Coconut
-				set brazil_ghost,2;
+				brazil_ghost = 2;
 				close2;
 				warp "bra_in01",138,176;
 				end;
@@ -2798,7 +2798,7 @@ bra_in01,206,188,1	script	Open Manhole#todunbra	CLEAR_NPC,{
 		mes "[Ghost]";
 		mes "I guess now I can finally rest in peace.";
 		mes "Thank you friend.";
-		set brazil_ghost,8;
+		brazil_ghost = 8;
 		//completequest 2208;
 		completequest 60355;
 		getexp 90000,0;
