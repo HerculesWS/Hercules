@@ -28,40 +28,19 @@
 
 struct login_interface login_s;
 struct Login_Config login_config;
-
-int login_fd; // login server socket
 struct mmo_char_server server[MAX_SERVERS]; // char server data
 
-static struct account_engine {
-	AccountDB* (*constructor)(void);
-	AccountDB* db;
-} account_engine[] = {
+struct Account_engine account_engine[] = {
 	{account_db_sql, NULL}
 };
 
 // account database
 AccountDB* accounts = NULL;
 
-//Account registration flood protection [Kevin]
-int allowed_regs = 1;
-int time_allowed = 10; //in seconds
-
-// Advanced subnet check [LuzZza]
-struct s_subnet {
-	uint32 mask;
-	uint32 char_ip;
-	uint32 map_ip;
-} subnet[16];
-
-int subnet_count = 0;
-
 //-----------------------------------------------------
 // Auth database
 //-----------------------------------------------------
 #define AUTH_TIMEOUT 30000
-
-static DBMap* auth_db; // int account_id -> struct auth_node*
-static DBMap* online_db; // int account_id -> struct online_login_data*
 
 /**
  * @see DBCreateData
@@ -79,7 +58,7 @@ static DBData login_create_online_user(DBKey key, va_list args)
 struct online_login_data* login_add_online_user(int char_server, int account_id)
 {
 	struct online_login_data* p;
-	p = idb_ensure(online_db, account_id, login->create_online_user);
+	p = idb_ensure(login->online_db, account_id, login->create_online_user);
 	p->char_server = char_server;
 	if( p->waiting_disconnect != INVALID_TIMER )
 	{
@@ -92,22 +71,22 @@ struct online_login_data* login_add_online_user(int char_server, int account_id)
 void login_remove_online_user(int account_id)
 {
 	struct online_login_data* p;
-	p = (struct online_login_data*)idb_get(online_db, account_id);
+	p = (struct online_login_data*)idb_get(login->online_db, account_id);
 	if( p == NULL )
 		return;
 	if( p->waiting_disconnect != INVALID_TIMER )
 		timer->delete(p->waiting_disconnect, login->waiting_disconnect_timer);
 
-	idb_remove(online_db, account_id);
+	idb_remove(login->online_db, account_id);
 }
 
 static int login_waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data) {
-	struct online_login_data* p = (struct online_login_data*)idb_get(online_db, id);
+	struct online_login_data* p = (struct online_login_data*)idb_get(login->online_db, id);
 	if( p != NULL && p->waiting_disconnect == tid && p->account_id == id )
 	{
 		p->waiting_disconnect = INVALID_TIMER;
 		login->remove_online_user(id);
-		idb_remove(auth_db, id);
+		idb_remove(login->auth_db, id);
 	}
 	return 0;
 }
@@ -145,7 +124,7 @@ static int login_online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
 }
 
 static int login_online_data_cleanup(int tid, int64 tick, int id, intptr_t data) {
-	online_db->foreach(online_db, login->online_data_cleanup_sub);
+	login->online_db->foreach(login->online_db, login->online_data_cleanup_sub);
 	return 0;
 }
 
@@ -195,7 +174,7 @@ void chrif_server_destroy(int id)
 /// Resets all the data related to a server.
 void chrif_server_reset(int id)
 {
-	online_db->foreach(online_db, login->online_db_setoffline, id); //Set all chars from this char server to offline.
+	login->online_db->foreach(login->online_db, login->online_db_setoffline, id); //Set all chars from this char server to offline.
 	chrif_server_destroy(id);
 	chrif_server_init(id);
 }
@@ -256,8 +235,8 @@ bool login_check_password(const char* md5key, int passwdenc, const char* passwd,
 int login_lan_subnetcheck(uint32 ip)
 {
 	int i;
-	ARR_FIND( 0, subnet_count, i, (subnet[i].char_ip & subnet[i].mask) == (ip & subnet[i].mask) );
-	return ( i < subnet_count ) ? subnet[i].char_ip : 0;
+	ARR_FIND( 0, login_config.subnet_count, i, (login_config.subnet[i].char_ip & login_config.subnet[i].mask) == (ip & login_config.subnet[i].mask) );
+	return ( i < login_config.subnet_count ) ? login_config.subnet[i].char_ip : 0;
 }
 
 //----------------------------------
@@ -287,22 +266,24 @@ int login_lan_config_read(const char *lancfgName)
 
 		if( strcmpi(w1, "subnet") == 0 )
 		{
-			subnet[subnet_count].mask = str2ip(w2);
-			subnet[subnet_count].char_ip = str2ip(w3);
-			subnet[subnet_count].map_ip = str2ip(w4);
+			login_config.subnet[login_config.subnet_count].mask = str2ip(w2);
+			login_config.subnet[login_config.subnet_count].char_ip = str2ip(w3);
+			login_config.subnet[login_config.subnet_count].map_ip = str2ip(w4);
 
-			if( (subnet[subnet_count].char_ip & subnet[subnet_count].mask) != (subnet[subnet_count].map_ip & subnet[subnet_count].mask) )
+			if( (login_config.subnet[login_config.subnet_count].char_ip
+			     & login_config.subnet[login_config.subnet_count].mask) != (login_config.subnet[login_config.subnet_count].map_ip
+			     & login_config.subnet[login_config.subnet_count].mask) )
 			{
 				ShowError("%s: Configuration Error: The char server (%s) and map server (%s) belong to different subnetworks!\n", lancfgName, w3, w4);
 				continue;
 			}
 
-			subnet_count++;
+			login_config.subnet_count++;
 		}
 	}
 
-	if( subnet_count > 1 ) /* only useful if there is more than 1 available */
-		ShowStatus("Read information about %d subnetworks.\n", subnet_count);
+	if( login_config.subnet_count > 1 ) /* only useful if there is more than 1 available */
+		ShowStatus("Read information about %d subnetworks.\n", login_config.subnet_count);
 
 	fclose(fp);
 	return 0;
@@ -349,7 +330,7 @@ void login_fromchar_parse_auth(int fd, int id, const char *const ip)
 	int request_id = RFIFOL(fd,19);
 	RFIFOSKIP(fd,23);
 
-	node = (struct auth_node*)idb_get(auth_db, account_id);
+	node = (struct auth_node*)idb_get(login->auth_db, account_id);
 	if( runflag == LOGINSERVER_ST_RUNNING &&
 		node != NULL &&
 		node->account_id == account_id &&
@@ -363,7 +344,7 @@ void login_fromchar_parse_auth(int fd, int id, const char *const ip)
 		// send ack
 		login->fromchar_auth_ack(fd, account_id, login_id1, login_id2, sex, request_id, node);
 		// each auth entry can only be used once
-		idb_remove(auth_db, account_id);
+		idb_remove(login->auth_db, account_id);
 	}
 	else
 	{// authentication not found
@@ -699,11 +680,11 @@ void login_fromchar_parse_online_accounts(int fd, int id)
 	struct online_login_data *p;
 	int aid;
 	uint32 i, users;
-	online_db->foreach(online_db, login->online_db_setoffline, id); //Set all chars from this char-server offline first
+	login->online_db->foreach(login->online_db, login->online_db_setoffline, id); //Set all chars from this char-server offline first
 	users = RFIFOW(fd,4);
 	for (i = 0; i < users; i++) {
 		aid = RFIFOL(fd,6+i*4);
-		p = idb_ensure(online_db, aid, login->create_online_user);
+		p = idb_ensure(login->online_db, aid, login->create_online_user);
 		p->char_server = id;
 		if (p->waiting_disconnect != INVALID_TIMER)
 		{
@@ -732,7 +713,7 @@ void login_fromchar_parse_update_wan_ip(int fd, int id)
 void login_fromchar_parse_all_offline(int fd, int id)
 {
 	ShowInfo("Setting accounts from char-server %d offline.\n", id);
-	online_db->foreach(online_db, login->online_db_setoffline, id);
+	login->online_db->foreach(login->online_db, login->online_db_setoffline, id);
 	RFIFOSKIP(fd,2);
 }
 
@@ -755,7 +736,7 @@ bool login_fromchar_parse_wrong_pincode(int fd)
 	if( accounts->load_num(accounts, &acc, RFIFOL(fd,2) ) ) {
 		struct online_login_data* ld;
 
-		if( ( ld = (struct online_login_data*)idb_get(online_db,acc.account_id) ) == NULL )
+		if( ( ld = (struct online_login_data*)idb_get(login->online_db,acc.account_id) ) == NULL )
 		{
 			RFIFOSKIP(fd,6);
 			return true;
@@ -1033,7 +1014,7 @@ int login_mmo_auth_new(const char* userid, const char* pass, const char sex, con
 	//Account Registration Flood Protection by [Kevin]
 	if( new_reg_tick == 0 )
 		new_reg_tick = timer->gettick();
-	if( DIFF_TICK(tick, new_reg_tick) < 0 && num_regs >= allowed_regs ) {
+	if( DIFF_TICK(tick, new_reg_tick) < 0 && num_regs >= login_config.allowed_regs ) {
 		ShowNotice("Account registration denied (registration limit exceeded)\n");
 		return 3;
 	}
@@ -1072,7 +1053,7 @@ int login_mmo_auth_new(const char* userid, const char* pass, const char sex, con
 
 	if( DIFF_TICK(tick, new_reg_tick) > 0 ) {// Update the registration check.
 		num_regs = 0;
-		new_reg_tick = tick + time_allowed*1000;
+		new_reg_tick = tick + login_config.time_allowed*1000;
 	}
 	++num_regs;
 
@@ -1273,7 +1254,7 @@ void login_auth_ok(struct login_session_data* sd)
 	}
 
 	{
-		struct online_login_data* data = (struct online_login_data*)idb_get(online_db, sd->account_id);
+		struct online_login_data* data = (struct online_login_data*)idb_get(login->online_db, sd->account_id);
 		if( data )
 		{// account is already marked as online!
 			if( data->char_server > -1 )
@@ -1290,7 +1271,7 @@ void login_auth_ok(struct login_session_data* sd)
 			if( data->char_server == -1 )
 			{// client has authed but did not access char-server yet
 				// wipe previous session
-				idb_remove(auth_db, sd->account_id);
+				idb_remove(login->auth_db, sd->account_id);
 				login->remove_online_user(sd->account_id);
 				data = NULL;
 			}
@@ -1343,7 +1324,7 @@ void login_auth_ok(struct login_session_data* sd)
 	node->clienttype = sd->clienttype;
 	node->group_id = sd->group_id;
 	node->expiration_time = sd->expiration_time;
-	idb_put(auth_db, sd->account_id, node);
+	idb_put(login->auth_db, sd->account_id, node);
 
 	{
 		struct online_login_data* data;
@@ -1736,6 +1717,8 @@ void login_set_defaults()
 	login_config.min_group_id_to_connect = -1;
 	login_config.check_client_version = false;
 	login_config.client_version_to_connect = 20;
+	login_config.allowed_regs = 1;
+	login_config.time_allowed = 10;
 
 	login_config.ipban = true;
 	login_config.dynamic_pass_failure_ban = true;
@@ -1747,6 +1730,7 @@ void login_set_defaults()
 
 	login_config.client_hash_check = 0;
 	login_config.client_hash_nodes = NULL;
+	login_config.subnet_count = 0;
 }
 
 //-----------------------------------
@@ -1808,9 +1792,9 @@ int login_config_read(const char* cfgName)
 		else if(!strcmpi(w1, "date_format"))
 			safestrncpy(login_config.date_format, w2, sizeof(login_config.date_format));
 		else if(!strcmpi(w1, "allowed_regs")) //account flood protection system
-			allowed_regs = atoi(w2);
+			login_config.allowed_regs = atoi(w2);
 		else if(!strcmpi(w1, "time_allowed"))
-			time_allowed = atoi(w2);
+			login_config.time_allowed = atoi(w2);
 		else if(!strcmpi(w1, "use_dnsbl"))
 			login_config.use_dnsbl = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "dnsbl_servers"))
@@ -1898,16 +1882,16 @@ int do_final(void) {
 		account_engine[0].db = NULL;
 	}
 	accounts = NULL; // destroyed in account_engine
-	online_db->destroy(online_db, NULL);
-	auth_db->destroy(auth_db, NULL);
+	login->online_db->destroy(login->online_db, NULL);
+	login->auth_db->destroy(login->auth_db, NULL);
 	
 	for( i = 0; i < ARRAYLENGTH(server); ++i )
 		chrif_server_destroy(i);
 
-	if( login_fd != -1 )
+	if( login->fd != -1 )
 	{
-		do_close(login_fd);
-		login_fd = -1;
+		do_close(login->fd);
+		login->fd = -1;
 	}
 
 	HPM_login_do_final();
@@ -2008,11 +1992,11 @@ int do_init(int argc, char** argv)
 	ipban_init();
 	
 	// Online user database init
-	online_db = idb_alloc(DB_OPT_RELEASE_DATA);
+	login->online_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	timer->add_func_list(login->waiting_disconnect_timer, "login->waiting_disconnect_timer");
 
 	// Interserver auth init
-	auth_db = idb_alloc(DB_OPT_RELEASE_DATA);
+	login->auth_db = idb_alloc(DB_OPT_RELEASE_DATA);
 
 	// set default parser as login_parse_login function
 	set_defaultparse(login->parse_login);
@@ -2036,7 +2020,7 @@ int do_init(int argc, char** argv)
 	HPM->event(HPET_INIT);
 	
 	// server port open & binding
-	if( (login_fd = make_listen_bind(login_config.login_ip,login_config.login_port)) == -1 ) {
+	if( (login->fd = make_listen_bind(login_config.login_ip,login_config.login_port)) == -1 ) {
 		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",login_config.login_port);
 		exit(EXIT_FAILURE);
 	}
@@ -2056,6 +2040,7 @@ int do_init(int argc, char** argv)
 
 void login_defaults(void) {
 	login = &login_s;
+
 	login->mmo_auth = login_mmo_auth;
 	login->mmo_auth_new = login_mmo_auth_new;
 	login->waiting_disconnect_timer = login_waiting_disconnect_timer;

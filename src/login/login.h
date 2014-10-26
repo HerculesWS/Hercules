@@ -81,6 +81,8 @@ struct Login_Config {
 	int min_group_id_to_connect;                    // minimum group id to connect
 	bool check_client_version;                      // check the clientversion set in the clientinfo ?
 	uint32 client_version_to_connect;               // the client version needed to connect (if checking is enabled)
+	int allowed_regs;                               // account registration flood protection [Kevin]
+	int time_allowed;                               // time in seconds
 
 	bool ipban;                                     // perform IP blocking (via contents of `ipbanlist`) ?
 	bool dynamic_pass_failure_ban;                  // automatic IP blocking due to failed login attemps ?
@@ -92,6 +94,14 @@ struct Login_Config {
 
 	int client_hash_check;							// flags for checking client md5
 	struct client_hash_node *client_hash_nodes;		// linked list containg md5 hash for each gm group
+
+	// Advanced subnet check [LuzZza]
+	struct s_subnet {
+		uint32 mask;
+		uint32 char_ip;
+		uint32 map_ip;
+	} subnet[16];
+	int subnet_count;
 };
 
 struct auth_node {
@@ -123,6 +133,10 @@ extern struct mmo_char_server server[MAX_SERVERS];
 extern struct Login_Config login_config;
 
 struct login_interface {
+	DBMap* auth_db;
+	DBMap* online_db;
+	int fd;
+
 	int (*mmo_auth) (struct login_session_data* sd, bool isServer);
 	int (*mmo_auth_new) (const char* userid, const char* pass, const char sex, const char* last_ip);
 	int (*waiting_disconnect_timer) (int tid, int64 tick, int id, intptr_t data);
