@@ -4276,7 +4276,7 @@ void npc_read_event_script(void)
 				script_event[i].event_count++;
 #ifdef ENABLE_CASE_CHECK
 			} else if( p && strcasecmp(name, p) == 0 ) {
-				DeprecationCaseWarning2("npc_read_event_script", p, name, config[i].event_name); // TODO
+				DeprecationCaseWarning("npc_read_event_script", p, name, config[i].event_name); // TODO
 #endif // ENABLE_CASE_CHECK
 			}
 		}

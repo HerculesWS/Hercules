@@ -26,8 +26,7 @@ struct eri;
 // TODO: Remove temporary code
 #define ENABLE_CASE_CHECK
 #define get_script_source(source) ((source) ? (source) : "Unknown (Possibly source or variables stored in database")
-#define DeprecationCaseWarning2(func, bad, good, where) ShowError("%s: detected possible use of wrong case in a script. Found '%s', probably meant to be '%s' (in '%s').\n", (func), (bad), (good), get_script_source(where))
-#define disp_deprecation_message(func, good, p) disp_warning_message(func": use of deprecated keyword (use '"good"' instead).", (p))
+#define DeprecationCaseWarning(func, bad, good, where) ShowError("%s: detected possible use of wrong case in a script. Found '%s', probably meant to be '%s' (in '%s').\n", (func), (bad), (good), get_script_source(where))
 
 #define DeprecationWarning(p) disp_warning_message("This command is deprecated and it will be removed in a future update. Please see the script documentation for an alternative.\n", (p))
 
