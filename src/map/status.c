@@ -8798,7 +8798,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				struct block_list * src2;
 				val3 = st->agi * val1 / 60; // ASPD increase: [(Target AGI x Skill Level) / 60] %
 				if( (src2 = map->id2bl(val2)) ){
-					val4 = ( 200/status_get_int(src2)?status_get_int(src2):1 ) * val1;// MDEF decrease: MDEF [(200 / Caster INT) x Skill Level]
+					val4 = ( 200/(status_get_int(src2)?status_get_int(src2):1) ) * val1;// MDEF decrease: MDEF [(200 / Caster INT) x Skill Level]
 					val2 = ( status_get_dex(src2)/4 + status_get_str(src2)/2 ) * val1 / 5; // ATK increase: ATK [{(Caster DEX / 4) + (Caster STR / 2)} x Skill Level / 5]
 				}
 			}
