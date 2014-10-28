@@ -5614,10 +5614,7 @@ int do_init(int argc, char *argv[])
 	map_load_defaults();
 
 	HPM_map_do_init();
-	HPM->DataCheck = HPM_map_DataCheck;
-	HPM->load_sub = HPM_map_plugin_load_sub;
 	HPM->symbol_defaults_sub = map_hp_symbols;
-	HPM->grabHPDataSub = HPM_map_grabHPData;
 	for( i = 1; i < argc; i++ ) {
 		const char* arg = argv[i];
 		if( strcmp(arg, "--load-plugin") == 0 ) {

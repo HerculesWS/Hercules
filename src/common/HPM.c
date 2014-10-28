@@ -31,6 +31,13 @@
 struct malloc_interface iMalloc_HPM;
 struct malloc_interface *HPMiMalloc;
 
+/**
+ * (char*) data name -> (unsigned int) HPMDataCheck[] index
+ **/
+DBMap *datacheck_db;
+int datacheck_version;
+const struct s_HPMDataCheck *datacheck_data;
+
 void hplugin_trigger_event(enum hp_event_types type) {
 	unsigned int i;
 	for( i = 0; i < HPM->plugin_count; i++ ) {
@@ -122,6 +129,7 @@ struct hplugin *hplugin_load(const char* filename) {
 	bool anyEvent = false;
 	void **import_symbol_ref;
 	Sql **sql_handle;
+	int *HPMDataCheckVer;
 	unsigned int *HPMDataCheckLen;
 	struct s_HPMDataCheck *HPMDataCheck;
 		
@@ -217,13 +225,20 @@ struct hplugin *hplugin_load(const char* filename) {
 		return NULL;
 	}
 	
+	if( !( HPMDataCheckVer = plugin_import(plugin->dll, "HPMDataCheckVer", int *) ) ) {
+		ShowWarning("HPM:plugin_load: failed to retrieve 'HPMDataCheckVer' for '"CL_WHITE"%s"CL_RESET"', most likely an outdated plugin, skipping...\n", filename);
+		HPM->unload(plugin);
+		return NULL;
+	}
+
 	if( !( HPMDataCheck = plugin_import(plugin->dll, "HPMDataCheck", struct s_HPMDataCheck *) ) ) {
 		ShowWarning("HPM:plugin_load: failed to retrieve 'HPMDataCheck' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h, skipping...\n", filename);
 		HPM->unload(plugin);
 		return NULL;
 	}
 	
-	if( HPM->DataCheck && !HPM->DataCheck(HPMDataCheck,*HPMDataCheckLen,plugin->info->name) ) {
+	// TODO: Remove the HPM->DataCheck != NULL check once login and char support is complete
+	if (HPM->DataCheck != NULL && !HPM->DataCheck(HPMDataCheck,*HPMDataCheckLen,*HPMDataCheckVer,plugin->info->name)) {
 		ShowWarning("HPM:plugin_load: '"CL_WHITE"%s"CL_RESET"' failed DataCheck, out of sync from the core (recompile plugin), skipping...\n", filename);
 		HPM->unload(plugin);
 		return NULL;
@@ -281,12 +296,6 @@ void hplugins_config_read(const char * const *extra_plugins, int extra_plugins_c
 	const char *config_filename = "conf/plugins.conf"; // FIXME hardcoded name
 	FILE *fp;
 	int i;
-	
-// uncomment once login/char support is wrapped up
-//	if( !HPM->DataCheck ) {
-//		ShowError("HPM:config_read: HPM->DataCheck not set! Failure\n");
-//		return;
-//	}
 	
 	/* yes its ugly, its temporary and will be gone as soon as the new inter-server.conf is set */
 	if( (fp = fopen("conf/import/plugins.conf","r")) ) {
@@ -688,6 +697,56 @@ bool hplugins_parse_conf(const char *w1, const char *w2, enum HPluginConfType po
 	return false;
 }
 
+/**
+ * Called by HPM->DataCheck on a plugins incoming data, ensures data structs in use are matching!
+ **/
+bool HPM_DataCheck(struct s_HPMDataCheck *src, unsigned int size, int version, char *name) {
+	unsigned int i, j;
+
+	if (version != datacheck_version) {
+		ShowError("HPMDataCheck:%s: DataCheck API version mismatch %d != %d\n", name, datacheck_version, version);
+		return false;
+	}
+	
+	for (i = 0; i < size; i++) {
+		if (!(src[i].type|SERVER_TYPE))
+			continue;
+
+		if (!strdb_exists(datacheck_db, src[i].name)) {
+			ShowError("HPMDataCheck:%s: '%s' was not found\n",name,src[i].name);
+			return false;
+		} else {
+			j = strdb_uiget(datacheck_db, src[i].name);/* not double lookup; exists sets cache to found data */
+			if (src[i].size != datacheck_data[j].size) {
+				ShowWarning("HPMDataCheck:%s: '%s' size mismatch %u != %u\n",name,src[i].name,src[i].size,datacheck_data[j].size);
+				return false;
+			}
+		}
+	}
+	
+	return true;
+}
+
+void HPM_datacheck_init(const struct s_HPMDataCheck *src, unsigned int length, int version) {
+	unsigned int i;
+
+	datacheck_version = version;
+	datacheck_data = src;
+	
+	/**
+	 * Populates datacheck_db for easy lookup later on
+	 **/
+	datacheck_db = strdb_alloc(DB_OPT_BASE,0);
+	
+	for(i = 0; i < length; i++) {
+		strdb_uiput(datacheck_db, src[i].name, i);
+	}
+}
+
+void HPM_datacheck_final(void) {
+	db_destroy(datacheck_db);
+}
+
 void hplugins_share_defaults(void) {
 	/* console */
 #ifdef CONSOLE_INPUT
@@ -729,6 +788,9 @@ void hplugins_share_defaults(void) {
 
 void hpm_init(void) {
 	unsigned int i;
+	datacheck_db = NULL;
+	datacheck_data = NULL;
+	datacheck_version = 0;
 	
 	HPM->symbols = NULL;
 	HPM->plugins = NULL;
@@ -866,5 +928,7 @@ void hpm_defaults(void) {
 	HPM->grabHPData = hplugins_grabHPData;
 	HPM->grabHPDataSub = NULL;
 	HPM->parseConf = hplugins_parse_conf;
-	HPM->DataCheck = NULL;
+	HPM->DataCheck = HPM_DataCheck;
+	HPM->datacheck_init = HPM_datacheck_init;
+	HPM->datacheck_final = HPM_datacheck_final;
 }

@@ -22,8 +22,6 @@ void HPM_map_do_final(void);
 
 void HPM_map_add_group_permission(unsigned int pluginID, char *name, unsigned int *mask);
 
-bool HPM_map_DataCheck(struct s_HPMDataCheck *src, unsigned int size, char *name);
-
 void HPM_map_do_init(void);
 
 #endif /* MAP_HPMMAP_H */

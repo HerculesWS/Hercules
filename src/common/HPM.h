@@ -151,7 +151,9 @@ struct HPM_interface {
 	/* for custom config parsing */
 	bool (*parseConf) (const char *w1, const char *w2, enum HPluginConfType point);
 	/* validates plugin data */
-	bool (*DataCheck) (struct s_HPMDataCheck *src, unsigned int size, char *name);
+	bool (*DataCheck) (struct s_HPMDataCheck *src, unsigned int size, int version, char *name);
+	void (*datacheck_init) (const struct s_HPMDataCheck *src, unsigned int length, int version);
+	void (*datacheck_final) (void);
 } HPM_s;
 
 struct HPM_interface *HPM;
