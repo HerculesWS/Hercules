@@ -318,27 +318,40 @@ void hplugins_config_read(const char * const *extra_plugins, int extra_plugins_c
 	if (plist != NULL) {
 		int length = libconfig->setting_length(plist);
 		char filename[60];
-		for(i = 0; i < length; i++) {
-			if( !strcmpi(libconfig->setting_get_string_elem(plist,i),"HPMHooking") ) {//must load it first
+		char hooking_plugin_name[32];
+		const char *plugin_name_suffix = "";
+		if (SERVER_TYPE == SERVER_TYPE_LOGIN)
+			plugin_name_suffix = "_login";
+		else if (SERVER_TYPE == SERVER_TYPE_CHAR)
+			plugin_name_suffix = "_char";
+		else if (SERVER_TYPE == SERVER_TYPE_MAP)
+			plugin_name_suffix = "_map";
+		snprintf(hooking_plugin_name, sizeof(hooking_plugin_name), "HPMHooking%s", plugin_name_suffix);
+
+		for (i = 0; i < length; i++) {
+			const char *plugin_name = libconfig->setting_get_string_elem(plist,i);
+			if (strcmpi(plugin_name, "HPMHooking") == 0 || strcmpi(plugin_name, hooking_plugin_name) == 0) { //must load it first
 				struct hplugin *plugin;
-				snprintf(filename, 60, "plugins/%s%s", libconfig->setting_get_string_elem(plist,i), DLL_EXT);
-				if( ( plugin = HPM->load(filename) )  ) {
+				snprintf(filename, 60, "plugins/%s%s", hooking_plugin_name, DLL_EXT);
+				if ((plugin = HPM->load(filename))) {
 					bool (*func)(bool *fr);
 					bool (*addhook_sub) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
-					if( ( func = plugin_import(plugin->dll, "Hooked",bool (*)(bool *)) ) && ( addhook_sub = plugin_import(plugin->dll, "HPM_Plugin_AddHook",bool (*)(enum HPluginHookType, const char *, void *, unsigned int)) ) ) {
-						if( func(&HPM->force_return) ) {
+					if ((func = plugin_import(plugin->dll, "Hooked",bool (*)(bool *)))
+					 && (addhook_sub = plugin_import(plugin->dll, "HPM_Plugin_AddHook",bool (*)(enum HPluginHookType, const char *, void *, unsigned int)))) {
+						if (func(&HPM->force_return)) {
 							HPM->hooking = true;
 							HPM->addhook_sub = addhook_sub;
 						}
 					}
 				}
+				break;
 			}
 		}
-		for(i = 0; i < length; i++) {
-			if( strcmpi(libconfig->setting_get_string_elem(plist,i),"HPMHooking") ) {//now all others
-				snprintf(filename, 60, "plugins/%s%s", libconfig->setting_get_string_elem(plist,i), DLL_EXT);
-				HPM->load(filename);
-			}
+		for (i = 0; i < length; i++) {
+			if (strncmpi(libconfig->setting_get_string_elem(plist,i),"HPMHooking", 10) == 0) // Already loaded, skip
+				continue;
+			snprintf(filename, 60, "plugins/%s%s", libconfig->setting_get_string_elem(plist,i), DLL_EXT);
+			HPM->load(filename);
 		}
 		libconfig->destroy(&plugins_conf);
 	}
