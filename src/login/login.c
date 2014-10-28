@@ -2093,6 +2093,7 @@ void login_defaults(void) {
 	login->parse_request_coding_key = login_parse_request_coding_key;
 	login->parse_request_connection = login_parse_request_connection;
 	login->auth_ok = login_auth_ok;
+	login->auth_failed = login_auth_failed;
 	login->char_server_connection_status = login_char_server_connection_status;
 	login->connection_problem = login_connection_problem;
 	login->kick = login_kick;
