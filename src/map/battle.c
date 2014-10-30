@@ -3687,8 +3687,15 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	s_ele = skill->get_ele(skill_id, skill_lv);
 	if (s_ele < 0 && s_ele != -3) //Attack that takes weapon's element for misc attacks? Make it neutral [Skotlex]
 		s_ele = ELE_NEUTRAL;
-	else if (s_ele == -3) //Use random element
-		s_ele = rnd()%ELE_MAX;
+	else if (s_ele == -3) { //Use random element
+		if (skill_id == SN_FALCONASSAULT) {
+			if (sstatus->rhw.ele && !status_get_attack_sc_element(src, status->get_sc(src)))
+				s_ele = sstatus->rhw.ele;
+			else
+				s_ele = status_get_attack_sc_element(src, status->get_sc(src));
+		} else
+			s_ele = rnd()%ELE_MAX;
+	}
 
 	//Skill Range Criteria
 	md.flag |= battle->range_type(src, target, skill_id, skill_lv);
@@ -3877,14 +3884,13 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
  	case RA_ICEBOUNDTRAP:
 		md.damage = skill_lv * sstatus->dex + sstatus->int_ * 5 ;
 		RE_LVL_TMDMOD();
-		if(sd)
-		{
+		if(sd) {
 			int researchskill_lv = pc->checkskill(sd,RA_RESEARCHTRAP);
 			if(researchskill_lv)
 				md.damage = md.damage * 20 * researchskill_lv / (skill_id == RA_CLUSTERBOMB?50:100);
 			else
 				md.damage = 0;
-		}else
+		} else
 			md.damage = md.damage * 200 / (skill_id == RA_CLUSTERBOMB?50:100);
 
 		break;
@@ -4637,10 +4643,9 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					ATK_ADD(sstatus->rhw.atk2); //Else use Atk2
 				break;
 			case HFLI_SBR44:	//[orn]
-				if(src->type == BL_HOM) {
+				if(src->type == BL_HOM)
 					wd.damage = ((TBL_HOM*)src)->homunculus.intimacy ;
 					break;
-				}
 			default:
 			{
 				i = (flag.cri
