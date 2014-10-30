@@ -11384,7 +11384,7 @@ int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk, int fl
 
 	if( !(flag&1) ){
 		if( max > min )
-			max = min + rnd()%(max - min);
+			max = min + rnd()%(max - min + 1);
 		else
 			max = min;
 	}
