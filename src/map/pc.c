@@ -3102,11 +3102,11 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 
 			if(sd->skillfixcastrate[i].id == type2)
-				sd->skillfixcastrate[i].val += val;
+				sd->skillfixcastrate[i].val -= val;
 
 			else {
 				sd->skillfixcastrate[i].id = type2;
-				sd->skillfixcastrate[i].val = val;
+				sd->skillfixcastrate[i].val -= val;
 			}
 
 			break;

@@ -14316,9 +14316,8 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 				break;
 			}
 		for( i = 0; i < ARRAYLENGTH(sd->skillfixcastrate) && sd->skillfixcastrate[i].id; i++ )
-
 			if( sd->skillfixcastrate[i].id == skill_id ){ // bonus2 bFixedCastrate
-				fixcast_r = sd->skillfixcastrate[i].val; // just speculation
+				fixcast_r = sd->skillfixcastrate[i].val;
 				break;
 			}
 	}
