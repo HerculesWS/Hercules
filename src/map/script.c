@@ -17967,6 +17967,7 @@ BUILDIN(montransform) {
 	struct block_list* bl;
 	char msg[CHAT_SIZE_MAX];
 	int mob_id, val1, val2, val3, val4;
+	val1 = val2 = val3 = val4 = 0;
 
 	if( (bl = map->id2bl(st->rid)) == NULL )
 		return true;
@@ -17986,12 +17987,17 @@ BUILDIN(montransform) {
 	}
 
 	tick = script_getnum(st, 3);
-	type = (sc_type)script_getnum(st, 4);
-	val1 = val2 = val3 = val4 = 0;
 
-	if( !(type > SC_NONE && type < SC_MAX) ) {
-		ShowWarning("buildin_montransform: Unsupported status change id %d\n", type);
-		return false;
+	if (script_hasdata(st, 4))
+		type = (sc_type)script_getnum(st, 4);
+	else
+		type = SC_NONE;
+
+	if (script_hasdata(st, 4)) {
+		if( !(type > SC_NONE && type < SC_MAX) ) {
+			ShowWarning("buildin_montransform: Unsupported status change id %d\n", type);
+			return false;
+		}
 	}
 
 	if (script_hasdata(st, 5))
@@ -18027,8 +18033,11 @@ BUILDIN(montransform) {
 		clif->ShowScript(&sd->bl, msg);
 		status_change_end(bl, SC_MONSTER_TRANSFORM, INVALID_TIMER); // Clear previous
 		sc_start2(NULL, bl, SC_MONSTER_TRANSFORM, 100, mob_id, type, tick);
-		sc_start4(NULL, bl, type, 100, val1, val2, val3, val4, tick);
+		
+		if (script_hasdata(st, 4))
+			sc_start4(NULL, bl, type, 100, val1, val2, val3, val4, tick);
 	}
+
 	return true;
 }
 
@@ -19460,7 +19469,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(stand, "?"),
 		BUILDIN_DEF(issit, "?"),
 
-		BUILDIN_DEF(montransform, "vii????"), // Monster Transform [malufett/Hercules]
+		BUILDIN_DEF(montransform, "vi?????"), // Monster Transform [malufett/Hercules]
 
 		/* New BG Commands [Hercules] */
 		BUILDIN_DEF(bg_create_team,"sii"),

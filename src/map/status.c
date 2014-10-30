@@ -935,13 +935,16 @@ void initChangeTables(void) {
 	status->ChangeFlagTable[SC_INCHITRATE] |= SCB_HIT;
 	status->ChangeFlagTable[SC_INCFLEE] |= SCB_FLEE;
 	status->ChangeFlagTable[SC_INCFLEERATE] |= SCB_FLEE;
+	status->ChangeFlagTable[SC_MTF_HITFLEE] |= SCB_HIT|SCB_FLEE;
 	status->ChangeFlagTable[SC_CRITICALPERCENT] |= SCB_CRI;
 	status->ChangeFlagTable[SC_INCASPDRATE] |= SCB_ASPD;
 	status->ChangeFlagTable[SC_PLUSAVOIDVALUE] |= SCB_FLEE2;
 	status->ChangeFlagTable[SC_INCMHPRATE] |= SCB_MAXHP;
 	status->ChangeFlagTable[SC_INCMSPRATE] |= SCB_MAXSP;
 	status->ChangeFlagTable[SC_INCMHP] |= SCB_MAXHP;
+	status->ChangeFlagTable[SC_MTF_MHP] |= SCB_MAXHP;
 	status->ChangeFlagTable[SC_INCMSP] |= SCB_MAXSP;
+	status->ChangeFlagTable[SC_MTF_MSP] |= SCB_MAXSP;
 	status->ChangeFlagTable[SC_INCATKRATE] |= SCB_BATK|SCB_WATK;
 	status->ChangeFlagTable[SC_INCMATKRATE] |= SCB_MATK;
 	status->ChangeFlagTable[SC_INCDEFRATE] |= SCB_DEF;
@@ -4805,6 +4808,8 @@ signed short status_calc_hit(struct block_list *bl, struct status_change *sc, in
 
 	if(sc->data[SC_INCHIT])
 		hit += sc->data[SC_INCHIT]->val1;
+	if(sc->data[SC_MTF_HITFLEE])
+		hit += sc->data[SC_MTF_HITFLEE]->val1;
 	if(sc->data[SC_FOOD_BASICHIT])
 		hit += sc->data[SC_FOOD_BASICHIT]->val1;
 	if(sc->data[SC_TRUESIGHT])
@@ -4856,6 +4861,8 @@ signed short status_calc_flee(struct block_list *bl, struct status_change *sc, i
 
 	if(sc->data[SC_INCFLEE])
 		flee += sc->data[SC_INCFLEE]->val1;
+	if(sc->data[SC_MTF_HITFLEE])
+		flee += sc->data[SC_MTF_HITFLEE]->val2;
 	if(sc->data[SC_FOOD_BASICAVOIDANCE])
 		flee += sc->data[SC_FOOD_BASICAVOIDANCE]->val1;
 	if(sc->data[SC_WHISTLE])
@@ -5700,6 +5707,8 @@ unsigned int status_calc_maxhp(struct block_list *bl, struct status_change *sc, 
 		maxhp += maxhp * sc->data[SC_INCMHPRATE]->val1/100;
 	if(sc->data[SC_INCMHP])
 		maxhp += (sc->data[SC_INCMHP]->val1);
+	if(sc->data[SC_MTF_MHP])
+		maxhp += (sc->data[SC_MTF_MHP]->val1);
 	if(sc->data[SC_APPLEIDUN])
 		maxhp += maxhp * sc->data[SC_APPLEIDUN]->val2/100;
 	if(sc->data[SC_DELUGE])
@@ -5767,6 +5776,8 @@ unsigned int status_calc_maxsp(struct block_list *bl, struct status_change *sc, 
 		maxsp += maxsp * sc->data[SC_INCMSPRATE]->val1/100;
 	if(sc->data[SC_INCMSP])
 		maxsp += (sc->data[SC_INCMSP]->val1);
+	if(sc->data[SC_MTF_MSP])
+		maxsp += (sc->data[SC_MTF_MSP]->val1);
 	if(sc->data[SC_SERVICEFORYOU])
 		maxsp += maxsp * sc->data[SC_SERVICEFORYOU]->val2/100;
 	if(sc->data[SC_MER_SP])
