@@ -700,7 +700,7 @@ void inter_savereg(int account_id, int char_id, const char *key, unsigned int in
 	/* to login server we go! */
 	if( key[0] == '#' && key[1] == '#' ) {/* global account reg */
 		if( session_isValid(login_fd) )
-			global_accreg_to_login_add(key,index,val,is_string);
+			char_global_accreg_to_login_add(key,index,val,is_string);
 		else {
 			ShowError("Login server unavailable, cant perform update on '%s' variable for AID:%d CID:%d\n",key,account_id,char_id);
 		}
@@ -1313,7 +1313,7 @@ int mapif_parse_Registry(int fd)
 		bool isLoginActive = session_isActive(login_fd);
 
 		if( isLoginActive )
-			global_accreg_to_login_start(account_id,char_id);
+			char_global_accreg_to_login_start(account_id,char_id);
 		
 		for(i = 0; i < count; i++) {
 			safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
@@ -1349,7 +1349,7 @@ int mapif_parse_Registry(int fd)
 		}
 
 		if( isLoginActive )		
-			global_accreg_to_login_send();
+			char_global_accreg_to_login_send();
 	}
 	return 0;
 }
@@ -1362,7 +1362,7 @@ int mapif_parse_RegistryRequest(int fd)
 	//Load Account Registry
 	if (RFIFOB(fd,11)) mapif_account_reg_reply(fd,RFIFOL(fd,2),RFIFOL(fd,6),2);
 	//Ask Login Server for Account2 values.
-	if (RFIFOB(fd,10)) request_accreg2(RFIFOL(fd,2),RFIFOL(fd,6));
+	if (RFIFOB(fd,10)) char_request_accreg2(RFIFOL(fd,2),RFIFOL(fd,6));
 	return 1;
 }
 

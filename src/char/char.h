@@ -55,20 +55,20 @@ enum {
 	TABLE_GUILD_STORAGE,
 };
 
-int memitemdata_to_sql(const struct item items[], int max, int id, int tableswitch);
+int char_memitemdata_to_sql(const struct item items[], int max, int id, int tableswitch);
 
 int mapif_sendall(unsigned char *buf,unsigned int len);
 int mapif_sendallwos(int fd,unsigned char *buf,unsigned int len);
 int mapif_send(int fd,unsigned char *buf,unsigned int len);
 void mapif_on_parse_accinfo(int account_id,int u_fd, int aid, int castergroup, int map_fd);
 
-void disconnect_player(int account_id);
+void char_disconnect_player(int account_id);
 
-int char_married(int pl1,int pl2);
-int char_child(int parent_id, int child_id);
-int char_family(int pl1,int pl2,int pl3);
+int char_char_married(int pl1,int pl2);
+int char_char_child(int parent_id, int child_id);
+int char_char_family(int pl1,int pl2,int pl3);
 
-int request_accreg2(int account_id, int char_id);
+int char_request_accreg2(int account_id, int char_id);
 int login_fd;
 extern int char_name_option;
 extern char char_name_letters[];
@@ -117,8 +117,8 @@ extern int db_use_sql_mob_skill_db;
 extern int guild_exp_rate;
 extern int log_inter;
 
-void global_accreg_to_login_start (int account_id, int char_id);
-void global_accreg_to_login_send (void);
-void global_accreg_to_login_add (const char *key, unsigned int index, intptr_t val, bool is_string);
+void char_global_accreg_to_login_start (int account_id, int char_id);
+void char_global_accreg_to_login_send (void);
+void char_global_accreg_to_login_add (const char *key, unsigned int index, intptr_t val, bool is_string);
 
 #endif /* COMMON_CHAR_H */

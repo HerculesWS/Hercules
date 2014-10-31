@@ -81,7 +81,7 @@ static void int_party_calc_state(struct party_data *p)
 		if(p->party.member[i].online)
 			p->party.count++;
 	}
-	if( p->size == 2 && ( char_child(p->party.member[0].char_id,p->party.member[1].char_id) || char_child(p->party.member[1].char_id,p->party.member[0].char_id) ) ) {
+	if( p->size == 2 && ( char_char_child(p->party.member[0].char_id,p->party.member[1].char_id) || char_char_child(p->party.member[1].char_id,p->party.member[0].char_id) ) ) {
 		//Child should be able to share with either of their parents  [RoM]
 		if(p->party.member[0].class_&0x2000) //first slot is the child?
 			p->family = p->party.member[0].char_id;
@@ -89,7 +89,7 @@ static void int_party_calc_state(struct party_data *p)
 			p->family = p->party.member[1].char_id;
 	} else if( p->size == 3 ) {
 		//Check Family State.
-		p->family = char_family(
+		p->family = char_char_family(
 			p->party.member[0].char_id,
 			p->party.member[1].char_id,
 			p->party.member[2].char_id
