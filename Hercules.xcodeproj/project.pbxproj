@@ -158,6 +158,10 @@
 		A58A5A281858025D0099683E /* HPMHooking.c in Sources */ = {isa = PBXBuildFile; fileRef = A58A5A271858025D0099683E /* HPMHooking.c */; };
 		A5AA94EE185796CB00C940C8 /* sample.c in Sources */ = {isa = PBXBuildFile; fileRef = A5AA94ED185796CB00C940C8 /* sample.c */; };
 		A5AA94FA185799E400C940C8 /* db2sql.c in Sources */ = {isa = PBXBuildFile; fileRef = A5AA94F8185799DF00C940C8 /* db2sql.c */; };
+		A5B894AA1A03CDD4005AD22E /* HPMlogin.c in Sources */ = {isa = PBXBuildFile; fileRef = A5B894A81A03CDD4005AD22E /* HPMlogin.c */; };
+		A5B894AD1A03CDFA005AD22E /* HPMchar.c in Sources */ = {isa = PBXBuildFile; fileRef = A5B894AB1A03CDFA005AD22E /* HPMchar.c */; };
+		A5B894B01A03CE25005AD22E /* HPMHooking.c in Sources */ = {isa = PBXBuildFile; fileRef = A58A5A271858025D0099683E /* HPMHooking.c */; };
+		A5B894B91A03CE5D005AD22E /* HPMHooking.c in Sources */ = {isa = PBXBuildFile; fileRef = A58A5A271858025D0099683E /* HPMHooking.c */; };
 		A5F7946C191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
 		A5F7946D191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
 		A5F7946E191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
@@ -389,17 +393,33 @@
 		A56CC7B618565812009EB79C /* unit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = unit.h; path = src/map/unit.h; sourceTree = SOURCE_ROOT; };
 		A56CC7B718565812009EB79C /* vending.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vending.c; path = src/map/vending.c; sourceTree = SOURCE_ROOT; };
 		A56CC7B818565812009EB79C /* vending.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vending.h; path = src/map/vending.h; sourceTree = SOURCE_ROOT; };
-		A58A5A26185801FF0099683E /* HPMHooking.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = HPMHooking.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		A58A5A26185801FF0099683E /* HPMHooking_map.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = HPMHooking_map.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A58A5A271858025D0099683E /* HPMHooking.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = HPMHooking.c; path = src/plugins/HPMHooking.c; sourceTree = "<group>"; };
-		A58A5A2A1858028C0099683E /* HPMHooking.GetSymbol.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = HPMHooking.GetSymbol.inc; path = src/plugins/HPMHooking/HPMHooking.GetSymbol.inc; sourceTree = "<group>"; };
-		A58A5A2B1858028C0099683E /* HPMHooking.HookingPoints.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = HPMHooking.HookingPoints.inc; path = src/plugins/HPMHooking/HPMHooking.HookingPoints.inc; sourceTree = "<group>"; };
-		A58A5A2C1858028C0099683E /* HPMHooking.Hooks.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = HPMHooking.Hooks.inc; path = src/plugins/HPMHooking/HPMHooking.Hooks.inc; sourceTree = "<group>"; };
-		A58A5A2D1858028C0099683E /* HPMHooking.HPMHooksCore.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = HPMHooking.HPMHooksCore.inc; path = src/plugins/HPMHooking/HPMHooking.HPMHooksCore.inc; sourceTree = "<group>"; };
-		A58A5A2E1858028C0099683E /* HPMHooking.sources.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = HPMHooking.sources.inc; path = src/plugins/HPMHooking/HPMHooking.sources.inc; sourceTree = "<group>"; };
 		A5AA94E71857956100C940C8 /* sample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = sample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5AA94ED185796CB00C940C8 /* sample.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sample.c; path = src/plugins/sample.c; sourceTree = "<group>"; };
 		A5AA94F3185799B700C940C8 /* db2sql.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = db2sql.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5AA94F8185799DF00C940C8 /* db2sql.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = db2sql.c; path = src/plugins/db2sql.c; sourceTree = "<group>"; };
+		A5B894A81A03CDD4005AD22E /* HPMlogin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = HPMlogin.c; path = src/login/HPMlogin.c; sourceTree = SOURCE_ROOT; };
+		A5B894A91A03CDD4005AD22E /* HPMlogin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HPMlogin.h; path = src/login/HPMlogin.h; sourceTree = SOURCE_ROOT; };
+		A5B894AB1A03CDFA005AD22E /* HPMchar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = HPMchar.c; path = src/char/HPMchar.c; sourceTree = SOURCE_ROOT; };
+		A5B894AC1A03CDFA005AD22E /* HPMchar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HPMchar.h; path = src/char/HPMchar.h; sourceTree = SOURCE_ROOT; };
+		A5B894B61A03CE25005AD22E /* HPMHooking_char.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = HPMHooking_char.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5B894BF1A03CE5D005AD22E /* HPMHooking_login.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = HPMHooking_login.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5B894C01A03CEE1005AD22E /* HPMHooking_char.GetSymbol.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_char.GetSymbol.inc; path = src/plugins/HPMHooking/HPMHooking_char.GetSymbol.inc; sourceTree = "<group>"; };
+		A5B894C11A03CEE1005AD22E /* HPMHooking_char.HookingPoints.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_char.HookingPoints.inc; path = src/plugins/HPMHooking/HPMHooking_char.HookingPoints.inc; sourceTree = "<group>"; };
+		A5B894C21A03CEE1005AD22E /* HPMHooking_char.Hooks.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_char.Hooks.inc; path = src/plugins/HPMHooking/HPMHooking_char.Hooks.inc; sourceTree = "<group>"; };
+		A5B894C31A03CEE1005AD22E /* HPMHooking_char.HPMHooksCore.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_char.HPMHooksCore.inc; path = src/plugins/HPMHooking/HPMHooking_char.HPMHooksCore.inc; sourceTree = "<group>"; };
+		A5B894C41A03CEE1005AD22E /* HPMHooking_char.sources.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_char.sources.inc; path = src/plugins/HPMHooking/HPMHooking_char.sources.inc; sourceTree = "<group>"; };
+		A5B894C51A03CEE1005AD22E /* HPMHooking_login.GetSymbol.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_login.GetSymbol.inc; path = src/plugins/HPMHooking/HPMHooking_login.GetSymbol.inc; sourceTree = "<group>"; };
+		A5B894C61A03CEE1005AD22E /* HPMHooking_login.HookingPoints.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_login.HookingPoints.inc; path = src/plugins/HPMHooking/HPMHooking_login.HookingPoints.inc; sourceTree = "<group>"; };
+		A5B894C71A03CEE1005AD22E /* HPMHooking_login.Hooks.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_login.Hooks.inc; path = src/plugins/HPMHooking/HPMHooking_login.Hooks.inc; sourceTree = "<group>"; };
+		A5B894C81A03CEE1005AD22E /* HPMHooking_login.HPMHooksCore.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_login.HPMHooksCore.inc; path = src/plugins/HPMHooking/HPMHooking_login.HPMHooksCore.inc; sourceTree = "<group>"; };
+		A5B894C91A03CEE1005AD22E /* HPMHooking_login.sources.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_login.sources.inc; path = src/plugins/HPMHooking/HPMHooking_login.sources.inc; sourceTree = "<group>"; };
+		A5B894CA1A03CEE1005AD22E /* HPMHooking_map.GetSymbol.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_map.GetSymbol.inc; path = src/plugins/HPMHooking/HPMHooking_map.GetSymbol.inc; sourceTree = "<group>"; };
+		A5B894CB1A03CEE1005AD22E /* HPMHooking_map.HookingPoints.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_map.HookingPoints.inc; path = src/plugins/HPMHooking/HPMHooking_map.HookingPoints.inc; sourceTree = "<group>"; };
+		A5B894CC1A03CEE1005AD22E /* HPMHooking_map.Hooks.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_map.Hooks.inc; path = src/plugins/HPMHooking/HPMHooking_map.Hooks.inc; sourceTree = "<group>"; };
+		A5B894CD1A03CEE1005AD22E /* HPMHooking_map.HPMHooksCore.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_map.HPMHooksCore.inc; path = src/plugins/HPMHooking/HPMHooking_map.HPMHooksCore.inc; sourceTree = "<group>"; };
+		A5B894CE1A03CEE1005AD22E /* HPMHooking_map.sources.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; name = HPMHooking_map.sources.inc; path = src/plugins/HPMHooking/HPMHooking_map.sources.inc; sourceTree = "<group>"; };
 		A5F79468191CA34E002293AB /* HPMDataCheck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HPMDataCheck.h; path = src/common/HPMDataCheck.h; sourceTree = "<group>"; };
 		A5F79469191CA34E002293AB /* sysinfo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sysinfo.c; path = src/common/sysinfo.c; sourceTree = "<group>"; };
 		A5F7946A191CA34E002293AB /* sysinfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sysinfo.h; path = src/common/sysinfo.h; sourceTree = "<group>"; };
@@ -457,6 +477,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A5B894B11A03CE25005AD22E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A5B894BA1A03CE5D005AD22E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -488,7 +522,9 @@
 				A5380CCD1856CE180090CBC4 /* mapcache */,
 				A5AA94E71857956100C940C8 /* sample.dylib */,
 				A5AA94F3185799B700C940C8 /* db2sql.dylib */,
-				A58A5A26185801FF0099683E /* HPMHooking.dylib */,
+				A58A5A26185801FF0099683E /* HPMHooking_map.dylib */,
+				A5B894B61A03CE25005AD22E /* HPMHooking_char.dylib */,
+				A5B894BF1A03CE5D005AD22E /* HPMHooking_login.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -496,6 +532,8 @@
 		A56CC66B18564315009EB79C /* login-server */ = {
 			isa = PBXGroup;
 			children = (
+				A5B894A81A03CDD4005AD22E /* HPMlogin.c */,
+				A5B894A91A03CDD4005AD22E /* HPMlogin.h */,
 				A56CC68118564387009EB79C /* account_sql.c */,
 				A56CC68218564387009EB79C /* account.h */,
 				A56CC68318564387009EB79C /* ipban_sql.c */,
@@ -511,6 +549,8 @@
 		A56CC6741856434D009EB79C /* char-server */ = {
 			isa = PBXGroup;
 			children = (
+				A5B894AB1A03CDFA005AD22E /* HPMchar.c */,
+				A5B894AC1A03CDFA005AD22E /* HPMchar.h */,
 				A56CC743185657D9009EB79C /* char.c */,
 				A56CC744185657D9009EB79C /* char.h */,
 				A56CC745185657D9009EB79C /* int_auction.c */,
@@ -752,11 +792,21 @@
 		A58A5A291858026F0099683E /* HPMHooking */ = {
 			isa = PBXGroup;
 			children = (
-				A58A5A2A1858028C0099683E /* HPMHooking.GetSymbol.inc */,
-				A58A5A2B1858028C0099683E /* HPMHooking.HookingPoints.inc */,
-				A58A5A2C1858028C0099683E /* HPMHooking.Hooks.inc */,
-				A58A5A2D1858028C0099683E /* HPMHooking.HPMHooksCore.inc */,
-				A58A5A2E1858028C0099683E /* HPMHooking.sources.inc */,
+				A5B894C01A03CEE1005AD22E /* HPMHooking_char.GetSymbol.inc */,
+				A5B894C11A03CEE1005AD22E /* HPMHooking_char.HookingPoints.inc */,
+				A5B894C21A03CEE1005AD22E /* HPMHooking_char.Hooks.inc */,
+				A5B894C31A03CEE1005AD22E /* HPMHooking_char.HPMHooksCore.inc */,
+				A5B894C41A03CEE1005AD22E /* HPMHooking_char.sources.inc */,
+				A5B894C51A03CEE1005AD22E /* HPMHooking_login.GetSymbol.inc */,
+				A5B894C61A03CEE1005AD22E /* HPMHooking_login.HookingPoints.inc */,
+				A5B894C71A03CEE1005AD22E /* HPMHooking_login.Hooks.inc */,
+				A5B894C81A03CEE1005AD22E /* HPMHooking_login.HPMHooksCore.inc */,
+				A5B894C91A03CEE1005AD22E /* HPMHooking_login.sources.inc */,
+				A5B894CA1A03CEE1005AD22E /* HPMHooking_map.GetSymbol.inc */,
+				A5B894CB1A03CEE1005AD22E /* HPMHooking_map.HookingPoints.inc */,
+				A5B894CC1A03CEE1005AD22E /* HPMHooking_map.Hooks.inc */,
+				A5B894CD1A03CEE1005AD22E /* HPMHooking_map.HPMHooksCore.inc */,
+				A5B894CE1A03CEE1005AD22E /* HPMHooking_map.sources.inc */,
 				A58A5A271858025D0099683E /* HPMHooking.c */,
 			);
 			name = HPMHooking;
@@ -806,6 +856,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A5AA94F1185799B700C940C8 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A5B894B21A03CE25005AD22E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A5B894BB1A03CE5D005AD22E /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -887,9 +951,9 @@
 			productReference = A56CC67C18564356009EB79C /* map-server */;
 			productType = "com.apple.product-type.tool";
 		};
-		A58A5A1E185801FF0099683E /* HPMHooking */ = {
+		A58A5A1E185801FF0099683E /* HPMHooking_map */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A58A5A23185801FF0099683E /* Build configuration list for PBXNativeTarget "HPMHooking" */;
+			buildConfigurationList = A58A5A23185801FF0099683E /* Build configuration list for PBXNativeTarget "HPMHooking_map" */;
 			buildPhases = (
 				A58A5A1F185801FF0099683E /* Sources */,
 				A58A5A21185801FF0099683E /* Frameworks */,
@@ -899,9 +963,9 @@
 			);
 			dependencies = (
 			);
-			name = HPMHooking;
+			name = HPMHooking_map;
 			productName = sample;
-			productReference = A58A5A26185801FF0099683E /* HPMHooking.dylib */;
+			productReference = A58A5A26185801FF0099683E /* HPMHooking_map.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 		A5AA94E61857956100C940C8 /* sample */ = {
@@ -938,6 +1002,40 @@
 			productReference = A5AA94F3185799B700C940C8 /* db2sql.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		A5B894AE1A03CE25005AD22E /* HPMHooking_char */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A5B894B31A03CE25005AD22E /* Build configuration list for PBXNativeTarget "HPMHooking_char" */;
+			buildPhases = (
+				A5B894AF1A03CE25005AD22E /* Sources */,
+				A5B894B11A03CE25005AD22E /* Frameworks */,
+				A5B894B21A03CE25005AD22E /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HPMHooking_char;
+			productName = sample;
+			productReference = A5B894B61A03CE25005AD22E /* HPMHooking_char.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		A5B894B71A03CE5D005AD22E /* HPMHooking_login */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A5B894BC1A03CE5D005AD22E /* Build configuration list for PBXNativeTarget "HPMHooking_login" */;
+			buildPhases = (
+				A5B894B81A03CE5D005AD22E /* Sources */,
+				A5B894BA1A03CE5D005AD22E /* Frameworks */,
+				A5B894BB1A03CE5D005AD22E /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HPMHooking_login;
+			productName = sample;
+			productReference = A5B894BF1A03CE5D005AD22E /* HPMHooking_login.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -963,7 +1061,9 @@
 				A56CC6721856434D009EB79C /* char-server */,
 				A56CC67B18564356009EB79C /* map-server */,
 				A5380CCC1856CE180090CBC4 /* mapcache */,
-				A58A5A1E185801FF0099683E /* HPMHooking */,
+				A5B894B71A03CE5D005AD22E /* HPMHooking_login */,
+				A5B894AE1A03CE25005AD22E /* HPMHooking_char */,
+				A58A5A1E185801FF0099683E /* HPMHooking_map */,
 				A5AA94F2185799B700C940C8 /* db2sql */,
 				A5AA94E61857956100C940C8 /* sample */,
 			);
@@ -1056,6 +1156,7 @@
 				A56CC6EA185643BB009EB79C /* md5calc.c in Sources */,
 				A5F7946C191CA34E002293AB /* sysinfo.c in Sources */,
 				A56CC74018564C23009EB79C /* mt19937ar.c in Sources */,
+				A5B894AA1A03CDD4005AD22E /* HPMlogin.c in Sources */,
 				A56CC6DE185643BB009EB79C /* grfio.c in Sources */,
 				A56CC68C18564387009EB79C /* loginlog_sql.c in Sources */,
 				A56CC73118564C05009EB79C /* libconfig.c in Sources */,
@@ -1103,6 +1204,7 @@
 				A56CC768185657D9009EB79C /* inter.c in Sources */,
 				A56CC73818564C05009EB79C /* scanner.c in Sources */,
 				A56CC700185643BB009EB79C /* random.c in Sources */,
+				A5B894AD1A03CDFA005AD22E /* HPMchar.c in Sources */,
 				A56CC761185657D9009EB79C /* int_homun.c in Sources */,
 				A56CC6FA185643BB009EB79C /* nullpo.c in Sources */,
 				A56CC6E5185643BB009EB79C /* malloc.c in Sources */,
@@ -1227,6 +1329,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				A5AA94FA185799E400C940C8 /* db2sql.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A5B894AF1A03CE25005AD22E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A5B894B01A03CE25005AD22E /* HPMHooking.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A5B894B81A03CE5D005AD22E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A5B894B91A03CE5D005AD22E /* HPMHooking.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1405,6 +1523,7 @@
 					"-DHAVE_XLOCALE_H=1",
 					"-DHAVE_LIBZ=1",
 					"-DHAVE_LIBPTHREAD=1",
+					"-DHPMHOOKING_LOGIN",
 				);
 				OTHER_LDFLAGS = (
 					"-lpthread",
@@ -1482,6 +1601,7 @@
 					"-DHAVE_XLOCALE_H=1",
 					"-DHAVE_LIBZ=1",
 					"-DHAVE_LIBPTHREAD=1",
+					"-DHPMHOOKING_LOGIN",
 				);
 				OTHER_LDFLAGS = (
 					"-lpthread",
@@ -1549,24 +1669,22 @@
 		A58A5A24185801FF0099683E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
 				EXECUTABLE_PREFIX = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				PRODUCT_NAME = HPMHooking;
+				PRODUCT_NAME = HPMHooking_map;
 			};
 			name = Debug;
 		};
 		A58A5A25185801FF0099683E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
 				EXECUTABLE_PREFIX = "";
-				PRODUCT_NAME = HPMHooking;
+				PRODUCT_NAME = HPMHooking_map;
 			};
 			name = Release;
 		};
@@ -1618,6 +1736,50 @@
 			};
 			name = Release;
 		};
+		A5B894B41A03CE25005AD22E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
+				EXECUTABLE_PREFIX = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				PRODUCT_NAME = HPMHooking_char;
+			};
+			name = Debug;
+		};
+		A5B894B51A03CE25005AD22E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
+				EXECUTABLE_PREFIX = "";
+				PRODUCT_NAME = HPMHooking_char;
+			};
+			name = Release;
+		};
+		A5B894BD1A03CE5D005AD22E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
+				EXECUTABLE_PREFIX = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				PRODUCT_NAME = HPMHooking_login;
+			};
+			name = Debug;
+		};
+		A5B894BE1A03CE5D005AD22E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
+				EXECUTABLE_PREFIX = "";
+				PRODUCT_NAME = HPMHooking_login;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1666,7 +1828,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A58A5A23185801FF0099683E /* Build configuration list for PBXNativeTarget "HPMHooking" */ = {
+		A58A5A23185801FF0099683E /* Build configuration list for PBXNativeTarget "HPMHooking_map" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A58A5A24185801FF0099683E /* Debug */,
@@ -1689,6 +1851,24 @@
 			buildConfigurations = (
 				A5AA94F5185799B700C940C8 /* Debug */,
 				A5AA94F6185799B700C940C8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A5B894B31A03CE25005AD22E /* Build configuration list for PBXNativeTarget "HPMHooking_char" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A5B894B41A03CE25005AD22E /* Debug */,
+				A5B894B51A03CE25005AD22E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A5B894BC1A03CE5D005AD22E /* Build configuration list for PBXNativeTarget "HPMHooking_login" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A5B894BD1A03CE5D005AD22E /* Debug */,
+				A5B894BE1A03CE5D005AD22E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
