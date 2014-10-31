@@ -15261,9 +15261,10 @@ int skill_cell_overlap(struct block_list *bl, va_list ap) {
 					break;
 			}
 			break;
+		case WZ_ICEWALL:
 		case HP_BASILICA:
-			if (su->group->skill_id == HP_BASILICA) {
-				//Basilica can't be placed on top of itself to avoid map-cell stacking problems. [Skotlex]
+			if (su->group->skill_id == skill_id) {
+				//These can't be placed on top of themselves (duration can't be refreshed)
 				(*alive) = 0;
 				return 1;
 			}
