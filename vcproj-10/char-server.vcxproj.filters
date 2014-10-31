@@ -115,6 +115,9 @@
     <ClCompile Include="..\src\common\conf.c">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\char\HPMchar.c">
+      <Filter>char_sql</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\common\cbasetypes.h">
@@ -248,6 +251,9 @@
     </ClInclude>
     <ClInclude Include="..\src\common\conf.h">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\HPMchar.h">
+      <Filter>char_sql</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -453,6 +453,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\char\HPMchar.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\char\HPMchar.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\char\int_auction.c"
 				>
 			</File>
