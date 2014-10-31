@@ -8761,6 +8761,7 @@ BUILDIN(setmount)
 				           flag == SETMOUNT_TYPE_DRAGON_RED ? OPTION_DRAGON5 :
 				           OPTION_DRAGON1); // default value
 				pc->setridingdragon(sd, option);
+			}
 		} else if ((sd->class_&MAPID_THIRDMASK) == MAPID_RANGER) {
 			// Ranger (Warg)
 			if (pc->checkskill(sd, RA_WUGRIDER))
@@ -8769,8 +8770,6 @@ BUILDIN(setmount)
 			// Mechanic (Mado Gear)
 			if (pc->checkskill(sd, NC_MADOLICENCE))
 				pc->setmadogear(sd, true);
-		} else if (flag != SETMOUNT_TYPE_PECO)
-			flag = SETMOUNT_TYPE_PECO;
 		} else {
 			// Knight / Crusader (Peco Peco)
 			if (pc->checkskill(sd, KN_RIDING))

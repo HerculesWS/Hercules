@@ -11346,7 +11346,7 @@ int status_change_timer_sub(struct block_list* bl, va_list ap) {
 				if (sce && skill->attack(BF_MAGIC,src,src,bl,WZ_SIGHTBLASTER,sce->val1,tick,0x4000)
 					&& (!su || !su->group || !(skill->get_inf2(su->group->skill_id)&INF2_TRAP))) { // The hit is not counted if it's against a trap
 					sce->val2 = 0; // This signals it to end.
-				} else if((bl->type&BL_SKILL) && sce->val4%2 == 0) {
+				} else if ((bl->type&BL_SKILL) && sce && sce->val4%2 == 0) {
 					//Remove trap immunity temporarily so it triggers if you still stand on it
 					sce->val4++;
 				}
