@@ -250,14 +250,19 @@ sub parse($$) {
 my %key2original;
 my @files = grep { -f } glob 'doxyoutput/xml/*interface*.xml';
 my %ifs;
-my @keys;
+my %keys = (
+	login => [ ],
+	char => [ ],
+	map => [ ],
+);
 foreach my $file (@files) { # Loop through the xml files
 
 	my $xml = new XML::Simple;
 	my $data = $xml->XMLin($file);
 
 	my $loc = $data->{compounddef}->{location};
-	next unless $loc->{file} =~ /src\/map\//; # We only handle mapserver for the time being
+	next unless $loc->{file} =~ /src\/(map|char|login)\//;
+	my $servertype = $1;
 
 	my $key = $data->{compounddef}->{compoundname};
 	my $original = $key;
@@ -370,25 +375,27 @@ foreach my $file (@files) { # Loop through the xml files
 			push(@{ $ifs{$key} }, $if);
 		}
 	}
-	push(@keys, $key) if $key2original{$key};
+	push($keys{$servertype}, $key) if $key2original{$key};
 }
 
-# Some interfaces use different names
-my %exportsymbols = map {
-	$_ => &{ sub ($) {
-		return 'battlegrounds' if $_ =~ /^bg$/;
-		return 'pc_groups' if $_ =~ /^pcg$/;
-		return $_;
-	}}($_);
-} @keys;
+foreach my $servertype (keys %keys) {
+	my $keysref = $keys{$servertype};
+	# Some interfaces use different names
+	my %exportsymbols = map {
+		$_ => &{ sub ($) {
+			return 'battlegrounds' if $servertype eq 'map' and $_ =~ /^bg$/;
+			return 'pc_groups' if $servertype eq 'map' and $_ =~ /^pcg$/;
+			return $_;
+		}}($_);
+	} @$keysref;
 
-my ($maxlen, $idx) = (0, 0);
-my $fname;
-$fname = "../../src/plugins/HPMHooking/HPMHooking.HookingPoints.inc";
-open(FH, ">", $fname)
-	or die "cannot open > $fname: $!";
+	my ($maxlen, $idx) = (0, 0);
+	my $fname;
+	$fname = "../../src/plugins/HPMHooking/HPMHooking_${servertype}.HookingPoints.inc";
+	open(FH, ">", $fname)
+		or die "cannot open > $fname: $!";
 
-print FH <<"EOF";
+	print FH <<"EOF";
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 //
@@ -398,30 +405,30 @@ print FH <<"EOF";
 struct HookingPointData HookingPoints[] = {
 EOF
 
-foreach my $key (@keys) {
-	print FH "/* ".$key." */\n";
-	foreach my $if (@{ $ifs{$key} }) {
+	foreach my $key (@$keysref) {
+		print FH "/* ".$key." */\n";
+		foreach my $if (@{ $ifs{$key} }) {
 
-		print FH <<"EOF";
+			print FH <<"EOF";
 	{ HP_POP($key\->$if->{name}, $if->{hname}) },
 EOF
 
-		$idx += 2;
-		$maxlen = length($key."->".$if->{name}) if( length($key."->".$if->{name}) > $maxlen )
+			$idx += 2;
+			$maxlen = length($key."->".$if->{name}) if( length($key."->".$if->{name}) > $maxlen )
+		}
 	}
-}
-print FH <<"EOF";
+	print FH <<"EOF";
 };
 
 int HookingPointsLenMax = $maxlen;
 EOF
-close FH;
+	close FH;
 
-$fname = "../../src/plugins/HPMHooking/HPMHooking.sources.inc";
-open(FH, ">", $fname)
-	or die "cannot open > $fname: $!";
+	$fname = "../../src/plugins/HPMHooking/HPMHooking_${servertype}.sources.inc";
+	open(FH, ">", $fname)
+		or die "cannot open > $fname: $!";
 
-print FH <<"EOF";
+	print FH <<"EOF";
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 //
@@ -429,19 +436,19 @@ print FH <<"EOF";
 //       as it will get overwritten.
 
 EOF
-foreach my $key (@keys) {
+	foreach my $key (@$keysref) {
 
-	print FH <<"EOF";
+		print FH <<"EOF";
 memcpy(&HPMHooks.source.$key, $key, sizeof(struct $key2original{$key}));
 EOF
-}
-close FH;
+	}
+	close FH;
 
-$fname = "../../src/plugins/HPMHooking/HPMHooking.GetSymbol.inc";
-open(FH, ">", $fname)
-	or die "cannot open > $fname: $!";
+	$fname = "../../src/plugins/HPMHooking/HPMHooking_${servertype}.GetSymbol.inc";
+	open(FH, ">", $fname)
+		or die "cannot open > $fname: $!";
 
-print FH <<"EOF";
+	print FH <<"EOF";
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 //
@@ -449,19 +456,19 @@ print FH <<"EOF";
 //       as it will get overwritten.
 
 EOF
-foreach my $key (@keys) {
+	foreach my $key (@$keysref) {
 
-	print FH <<"EOF";
+		print FH <<"EOF";
 if( !($key = GET_SYMBOL("$exportsymbols{$key}") ) ) return false;
 EOF
-}
-close FH;
+	}
+	close FH;
 
-$fname = "../../src/plugins/HPMHooking/HPMHooking.HPMHooksCore.inc";
-open(FH, ">", $fname)
-	or die "cannot open > $fname: $!";
+	$fname = "../../src/plugins/HPMHooking/HPMHooking_${servertype}.HPMHooksCore.inc";
+	open(FH, ">", $fname)
+		or die "cannot open > $fname: $!";
 
-print FH <<"EOF";
+	print FH <<"EOF";
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 //
@@ -471,53 +478,53 @@ print FH <<"EOF";
 struct {
 EOF
 
-foreach my $key (@keys) {
-	foreach my $if (@{ $ifs{$key} }) {
+	foreach my $key (@$keysref) {
+		foreach my $if (@{ $ifs{$key} }) {
 
-		print FH <<"EOF";
+			print FH <<"EOF";
 	struct HPMHookPoint *$if->{hname}_pre;
 	struct HPMHookPoint *$if->{hname}_post;
 EOF
+		}
 	}
-}
-print FH <<"EOF";
+	print FH <<"EOF";
 } list;
 
 struct {
 EOF
 
-foreach my $key (@keys) {
-	foreach my $if (@{ $ifs{$key} }) {
+	foreach my $key (@$keysref) {
+		foreach my $if (@{ $ifs{$key} }) {
 
-		print FH <<"EOF";
+			print FH <<"EOF";
 	int $if->{hname}_pre;
 	int $if->{hname}_post;
 EOF
+		}
 	}
-}
-print FH <<"EOF";
+	print FH <<"EOF";
 } count;
 
 struct {
 EOF
 
-foreach my $key (@keys) {
+	foreach my $key (@$keysref) {
 
-	print FH <<"EOF";
+		print FH <<"EOF";
 	struct $key2original{$key} $key;
 EOF
-}
+	}
 
-print FH <<"EOF";
+	print FH <<"EOF";
 } source;
 EOF
-close FH;
+	close FH;
 
-$fname = "../../src/plugins/HPMHooking/HPMHooking.Hooks.inc";
-open(FH, ">", $fname)
-	or die "cannot open > $fname: $!";
+	$fname = "../../src/plugins/HPMHooking/HPMHooking_${servertype}.Hooks.inc";
+	open(FH, ">", $fname)
+		or die "cannot open > $fname: $!";
 
-print FH <<"EOF";
+	print FH <<"EOF";
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 //
@@ -525,27 +532,27 @@ print FH <<"EOF";
 //       as it will get overwritten.
 
 EOF
-foreach my $key (@keys) {
+	foreach my $key (@$keysref) {
 
-	print FH <<"EOF";
+		print FH <<"EOF";
 /* $key */
 EOF
 
-	foreach my $if (@{ $ifs{$key} }) {
-		my ($initialization, $beforeblock3, $beforeblock2, $afterblock3, $afterblock2, $retval) = ('', '', '', '', '', '');
+		foreach my $if (@{ $ifs{$key} }) {
+			my ($initialization, $beforeblock3, $beforeblock2, $afterblock3, $afterblock2, $retval) = ('', '', '', '', '', '');
 
-		unless ($if->{type} eq 'void') {
-			$initialization  = "\n\t$if->{type} retVal___$if->{typeinit};";
-			$initialization .= "\n\tmemset(&retVal___, '\\0', sizeof($if->{type}));" if $if->{memset};
-		}
+			unless ($if->{type} eq 'void') {
+				$initialization  = "\n\t$if->{type} retVal___$if->{typeinit};";
+				$initialization .= "\n\tmemset(&retVal___, '\\0', sizeof($if->{type}));" if $if->{memset};
+			}
 
-		$beforeblock3 .= "\n\t\t\t$_" foreach (@{ $if->{before} });
-		$afterblock3 .= "\n\t\t\t$_" foreach (@{ $if->{after} });
-		$beforeblock2 .= "\n\t\t$_" foreach (@{ $if->{before} });
-		$afterblock2 .= "\n\t\t$_" foreach (@{ $if->{after} });
-		$retval = ' retVal___' unless $if->{type} eq 'void';
+			$beforeblock3 .= "\n\t\t\t$_" foreach (@{ $if->{before} });
+			$afterblock3 .= "\n\t\t\t$_" foreach (@{ $if->{after} });
+			$beforeblock2 .= "\n\t\t$_" foreach (@{ $if->{before} });
+			$afterblock2 .= "\n\t\t$_" foreach (@{ $if->{after} });
+			$retval = ' retVal___' unless $if->{type} eq 'void';
 
-		print FH <<"EOF";
+			print FH <<"EOF";
 $if->{handlerdef} {$if->{notes}
 	int hIndex = 0;${initialization}
 	if( HPMHooks.count.$if->{hname}_pre ) {
@@ -573,8 +580,8 @@ $if->{handlerdef} {$if->{notes}
 	return$retval;
 }
 EOF
+		}
 	}
+
+	close FH;
 }
-
-close FH;
-

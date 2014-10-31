@@ -169,6 +169,10 @@ static bool account_db_sql_init(AccountDB* self)
 	if( codepage[0] != '\0' && SQL_ERROR == SQL->SetEncoding(sql_handle, codepage) )
 		Sql_ShowDebug(sql_handle);
 
+	Sql_HerculesUpdateCheck(db->accounts);
+#ifdef CONSOLE_INPUT
+	console->input->setSQL(db->accounts);
+#endif
 	return true;
 }
 
@@ -655,11 +659,7 @@ static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, boo
 
 Sql* account_db_sql_up(AccountDB* self) {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
-	Sql_HerculesUpdateCheck(db->accounts);
-#ifdef CONSOLE_INPUT
-	console->input->setSQL(db->accounts);
-#endif
-	return db->accounts;
+	return db ? db->accounts : NULL;
 }
 void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id) {
 	Sql* sql_handle = ((AccountDB_SQL*)self)->accounts;

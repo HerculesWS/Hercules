@@ -11,6 +11,29 @@
 #include "../common/malloc.h"
 #include "../common/mmo.h"
 #include "../common/socket.h"
+
+#if defined (HPMHOOKING_LOGIN)
+#define HPM_SERVER_TYPE SERVER_TYPE_LOGIN
+#define HPM_CORE_INCLUDE "../plugins/HPMHooking/HPMHooking_login.HPMHooksCore.inc"
+#define HPM_SYMBOL_INCLUDE "../plugins/HPMHooking/HPMHooking_login.GetSymbol.inc"
+#define HPM_HOOKS_INCLUDE "../plugins/HPMHooking/HPMHooking_login.Hooks.inc"
+#define HPM_POINTS_INCLUDE "../plugins/HPMHooking/HPMHooking_login.HookingPoints.inc"
+#define HPM_SOURCES_INCLUDE "../plugins/HPMHooking/HPMHooking_login.sources.inc"
+#elif defined (HPMHOOKING_CHAR)
+#define HPM_SERVER_TYPE SERVER_TYPE_CHAR
+#define HPM_CORE_INCLUDE "../plugins/HPMHooking/HPMHooking_char.HPMHooksCore.inc"
+#define HPM_SYMBOL_INCLUDE "../plugins/HPMHooking/HPMHooking_char.GetSymbol.inc"
+#define HPM_HOOKS_INCLUDE "../plugins/HPMHooking/HPMHooking_char.Hooks.inc"
+#define HPM_POINTS_INCLUDE "../plugins/HPMHooking/HPMHooking_char.HookingPoints.inc"
+#define HPM_SOURCES_INCLUDE "../plugins/HPMHooking/HPMHooking_char.sources.inc"
+#include "../char/pincode.h"
+#elif defined (HPMHOOKING_MAP)
+#define HPM_SERVER_TYPE SERVER_TYPE_MAP
+#define HPM_CORE_INCLUDE "../plugins/HPMHooking/HPMHooking_map.HPMHooksCore.inc"
+#define HPM_SYMBOL_INCLUDE "../plugins/HPMHooking/HPMHooking_map.GetSymbol.inc"
+#define HPM_HOOKS_INCLUDE "../plugins/HPMHooking/HPMHooking_map.Hooks.inc"
+#define HPM_POINTS_INCLUDE "../plugins/HPMHooking/HPMHooking_map.HookingPoints.inc"
+#define HPM_SOURCES_INCLUDE "../plugins/HPMHooking/HPMHooking_map.sources.inc"
 #include "../map/atcommand.h"
 #include "../map/battle.h"
 #include "../map/battleground.h"
@@ -44,13 +67,22 @@
 #include "../map/storage.h"
 #include "../map/trade.h"
 #include "../map/unit.h"
+#else
+#define HPM_SERVER_TYPE SERVER_TYPE_UNKNOWN
+#define HPM_CORE_INCLUDE "../plugins/HPMHooking/HPMHooking.HPMHooksCore.inc"
+#define HPM_SYMBOL_INCLUDE "../plugins/HPMHooking/HPMHooking.GetSymbol.inc"
+#define HPM_HOOKS_INCLUDE "../plugins/HPMHooking/HPMHooking.Hooks.inc"
+#define HPM_POINTS_INCLUDE "../plugins/HPMHooking/HPMHooking.HookingPoints.inc"
+#define HPM_SOURCES_INCLUDE "../plugins/HPMHooking/HPMHooking.sources.inc"
+#error HPMHooking plugin needs to be compiled for a specific server type. Please make sure your Makefiles are up to date.
+#endif
 
 #include "../common/HPMDataCheck.h"
 
 HPExport struct hplugin_info pinfo = {
 	"HPMHooking",   // Plugin name
-	SERVER_TYPE_MAP,// Which server types this plugin works with?
-	"0.1",          // Plugin version
+	HPM_SERVER_TYPE,// Which server types this plugin works with?
+	"0.2",          // Plugin version
 	HPM_VERSION,    // HPM Version (don't change, macro is automatically updated)
 };
 
@@ -70,7 +102,7 @@ struct HPMHookPoint {
 };
 
 struct HPMHooksCore {
-	#include "../plugins/HPMHooking/HPMHooking.HPMHooksCore.inc"
+	#include HPM_CORE_INCLUDE
 	struct {
 		int total;
 	} data;
@@ -89,7 +121,7 @@ HPExport bool Hooked (bool *fr) {
 	HPMforce_return = fr;
 	DB = GET_SYMBOL("DB");
 	iMalloc = GET_SYMBOL("iMalloc");
-#include "../plugins/HPMHooking/HPMHooking.GetSymbol.inc"
+#include HPM_SYMBOL_INCLUDE
 	HPM_HP_load();
 	return true;
 }
@@ -127,7 +159,7 @@ HPExport bool HPM_Plugin_AddHook(enum HPluginHookType type, const char *target, 
 	return false;
 }
 
-#include "../plugins/HPMHooking/HPMHooking.Hooks.inc"
+#include HPM_HOOKS_INCLUDE
 
 void HPM_HP_final(void) {
 	int i, len = HPMHooks.data.total * 2;
@@ -149,7 +181,7 @@ void HPM_HP_final(void) {
 }
 
 void HPM_HP_load(void) {
-	#include "../plugins/HPMHooking/HPMHooking.HookingPoints.inc"
+	#include HPM_POINTS_INCLUDE
 	int i, len = ARRAYLENGTH(HookingPoints), idx = 0;
 	
 	memset(&HPMHooks,0,sizeof(struct HPMHooksCore));
@@ -171,6 +203,6 @@ void HPM_HP_load(void) {
 		HPMHooks.data.total++;
 	}
 	
-	#include "../plugins/HPMHooking/HPMHooking.sources.inc"
+	#include HPM_SOURCES_INCLUDE
 }
 

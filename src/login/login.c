@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "HPMlogin.h"
 #include "account.h"
 #include "ipban.h"
 #include "loginlog.h"
@@ -1737,6 +1738,10 @@ int do_final(void) {
 		login_fd = -1;
 	}
 
+	HPM_login_do_final();
+
+	HPM->event(HPET_POST_FINAL);
+
 	ShowStatus("Finished.\n");
 	return EXIT_SUCCESS;
 }
@@ -1770,6 +1775,9 @@ void do_shutdown(void)
 	}
 }
 
+void login_hp_symbols(void) {
+	HPM->share(account_db_sql_up(accounts),"sql_handle");
+}
 
 //------------------------------
 // Login server initialization
@@ -1780,9 +1788,38 @@ int do_init(int argc, char** argv)
 
 	// initialize engine (to accept config settings)
 	account_engine[0].db = account_engine[0].constructor();
+	accounts = account_engine[0].db;
+	if( accounts == NULL ) {
+		ShowFatalError("do_init: account engine 'sql' not found.\n");
+		exit(EXIT_FAILURE);
+	}
 
 	// read login-server configuration
 	login_set_defaults();
+
+	HPM_login_do_init();
+	HPM->symbol_defaults_sub = login_hp_symbols;
+	HPM->config_read(NULL, 0);
+#if 0
+	/* TODO: Move to common code */
+	for( i = 1; i < argc; i++ ) {
+		const char* arg = argv[i];
+		if( strcmp(arg, "--load-plugin") == 0 ) {
+			if( map->arg_next_value(arg, i, argc, true) ) {
+				RECREATE(load_extras, char *, ++load_extras_count);
+				load_extras[load_extras_count-1] = argv[++i];
+			}
+		}
+	}
+	HPM->config_read((const char * const *)load_extras, load_extras_count);
+	if (load_extras) {
+		aFree(load_extras);
+		load_extras = NULL;
+		load_extras_count = 0;
+	}
+#endif
+	HPM->event(HPET_PRE_INIT);
+
 	login_config_read((argc > 1) ? argv[1] : LOGIN_CONF_NAME);
 	login_lan_config_read((argc > 2) ? argv[2] : LAN_CONF_NAME);
 		
@@ -1817,20 +1854,11 @@ int do_init(int argc, char** argv)
 	}
 
 	// Account database init
-	accounts = account_engine[0].db;
-	if( accounts == NULL ) {
-		ShowFatalError("do_init: account engine 'sql' not found.\n");
+	if(!accounts->init(accounts)) {
+		ShowFatalError("do_init: Failed to initialize account engine 'sql'.\n");
 		exit(EXIT_FAILURE);
-	} else {
-
-		if(!accounts->init(accounts)) {
-			ShowFatalError("do_init: Failed to initialize account engine 'sql'.\n");
-			exit(EXIT_FAILURE);
-		}
 	}
 
-	HPM->share(account_db_sql_up(accounts),"sql_handle");
-	HPM->config_read(NULL, 0);
 	HPM->event(HPET_INIT);
 	
 	// server port open & binding
