@@ -997,8 +997,6 @@ ACMD(kill)
 {
 	status_kill(&sd->bl);
 	clif->message(sd->fd, msg_txt(13)); // A pity! You've died.
-	if (fd != sd->fd)
-		clif->message(fd, msg_txt(14)); // Character killed.
 	return true;
 }
 
