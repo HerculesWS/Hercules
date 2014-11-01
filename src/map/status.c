@@ -1798,9 +1798,9 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 	//If targeting, cloak+hide protect you, otherwise only hiding does.
 	hide_flag = flag?OPTION_HIDE:(OPTION_HIDE|OPTION_CLOAK|OPTION_CHASEWALK);
 
-	// There is no NF for ground skills, but every earth type skill out there
-	// affects hidding except Stone Curse
-	if( skill->get_ele(skill_id,1) == ELE_EARTH && skill_id != MG_STONECURSE)
+	// Applies even if the target hides
+	if ((skill->get_ele(skill_id,1) == ELE_EARTH && skill_id != MG_STONECURSE) // Ground type
+	  || (flag&1 && skill->get_nk(skill_id)&NK_NO_DAMAGE && skill_id != ALL_RESURRECTION)) // Buff/debuff skills started before hiding
 		hide_flag &= ~OPTION_HIDE;
 
 	switch( target->type ) {
@@ -1812,7 +1812,6 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 					return 0;
 				if( tsc ) {
 					if (tsc->option&hide_flag && !is_boss &&
-						!(flag&1 && skill->get_nk(skill_id)&NK_NO_DAMAGE) && // Buff/debuff skills that started casting before hiding still applies
 						((sd->special_state.perfect_hiding || !is_detect) ||
 						(tsc->data[SC_CLOAKINGEXCEED] && is_detect)))
 						return 0;
