@@ -995,10 +995,22 @@ ACMD(jobchange) {
  *------------------------------------------*/
 ACMD(kill)
 {
-	status_kill(&sd->bl);
-	clif->message(sd->fd, msg_txt(13)); // A pity! You've died.
-	if (fd != sd->fd)
+	struct map_session_data* pl_sd;
+	memset(atcmd_player_name, '\0', sizeof atcmd_player_name);
+	
+	if (!message || !*message || sscanf(message, "%23[^\n]", atcmd_player_name) < 1) {
+		status_kill(&sd->bl);
+		clif->message(sd->fd, msg_txt(13)); // You've died.
+	} else {
+		pl_sd = map->nick2sd(atcmd_player_name);
+		if (pl_sd == NULL || strncmp(pl_sd->status.name, atcmd_player_name, NAME_LENGTH) != 0) {
+			clif->message(fd, msg_txt(3)); // Character not found.
+			return false;
+		}
+		status_kill(&pl_sd->bl);
 		clif->message(fd, msg_txt(14)); // Character killed.
+	}
+	
 	return true;
 }
 
