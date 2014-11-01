@@ -8325,7 +8325,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			if( flag&1 || (splash = skill->get_splash(skill_id, skill_lv)) < 1 ) {
 				int i;
 				//As of the behavior in official server Clearance is just a super version of Dispell skill. [Jobbie]
-				if( bl->type != BL_MOB && battle->check_target(src,bl,BCT_PARTY) <= 0 ) // Only affect mob or party.
+				if( bl->type != BL_MOB && battle->check_target(src,bl,BCT_PARTY) <= 0 && sd ) // Only affect mob, party or self.
 					break;
 								
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
@@ -13174,17 +13174,6 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 				}
 			}
 			break;
-		/**
-		 * Keeping as a note:
-		 * Bug Report #17 provides a link to a sep-2011 changelog that shows this requirement was removed
-		 **/
-		//case AB_LAUDAAGNUS:
-		//case AB_LAUDARAMUS:
-		//	if( !sd->status.party_id ) {
-		//		clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-		//		return 0;
-		//	}
-		//	break;
 
 		case AB_ADORAMUS:
 		/**

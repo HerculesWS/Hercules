@@ -1406,6 +1406,12 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 			}
 		}
 	break;
+	case AB_CLEARANCE:
+		if( target->type != BL_MOB && battle->check_target(src,target,BCT_PARTY) <= 0 && sd ) {
+			clif->skill_fail(sd, skill_id, USESKILL_FAIL_TOTARGET, 0);
+			return 0;
+		}
+	break;
 	case SR_GATEOFHELL:
 	case SR_TIGERCANNON:
 		if (sc && sc->data[SC_COMBOATTACK] &&
