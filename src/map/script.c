@@ -19132,7 +19132,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(clone,"siisi????"),
 		BUILDIN_DEF(doevent,"s"),
 		BUILDIN_DEF(donpcevent,"s"),
-		BUILDIN_DEF(cmdothernpc,"ss"),
+		BUILDIN_DEF_DEPRECATED(cmdothernpc,"ss"), // Deprecated 2014-11-02 [Haru]
 		BUILDIN_DEF(addtimer,"is"),
 		BUILDIN_DEF(deltimer,"s"),
 		BUILDIN_DEF(addtimercount,"si"),
