@@ -20,7 +20,7 @@
 #include "../common/strlib.h"
 #include "../common/timer.h"
 
-static int mail_fromsql(int char_id, struct mail_data* md)
+static int inter_mail_fromsql(int char_id, struct mail_data* md)
 {
 	int i, j;
 	struct mail_message *msg;
@@ -105,7 +105,7 @@ static int mail_fromsql(int char_id, struct mail_data* md)
 
 /// Stores a single message in the database.
 /// Returns the message's ID if successful (or 0 if it fails).
-int mail_savemessage(struct mail_message* msg)
+int inter_mail_savemessage(struct mail_message* msg)
 {
 	StringBuf buf;
 	SqlStmt* stmt;
@@ -144,7 +144,7 @@ int mail_savemessage(struct mail_message* msg)
 
 /// Retrieves a single message from the database.
 /// Returns true if the operation succeeds (or false if it fails).
-static bool mail_loadmessage(int mail_id, struct mail_message* msg)
+static bool inter_mail_loadmessage(int mail_id, struct mail_message* msg)
 {
 	int j;
 	StringBuf buf;
@@ -208,7 +208,7 @@ static void mapif_Mail_sendinbox(int fd, int char_id, unsigned char flag)
 {
 	struct mail_data md;
 	memset(&md, 0, sizeof(md));
-	mail_fromsql(char_id, &md);
+	inter_mail_fromsql(char_id, &md);
 
 	//FIXME: dumping the whole structure like this is unsafe [ultramage]
 	WFIFOHEAD(fd, sizeof(md) + 9);
@@ -238,7 +238,7 @@ static void mapif_parse_Mail_read(int fd)
 /*==========================================
  * Client Attachment Request
  *------------------------------------------*/
-static bool mail_DeleteAttach(int mail_id)
+static bool inter_mail_DeleteAttach(int mail_id)
 {
 	StringBuf buf;
 	int i;
@@ -266,7 +266,7 @@ static void mapif_Mail_getattach(int fd, int char_id, int mail_id)
 	struct mail_message msg;
 	memset(&msg, 0, sizeof(msg));
 
-	if( !mail_loadmessage(mail_id, &msg) )
+	if( !inter_mail_loadmessage(mail_id, &msg) )
 		return;
 
 	if( msg.dest_id != char_id )
@@ -278,7 +278,7 @@ static void mapif_Mail_getattach(int fd, int char_id, int mail_id)
 	if( (msg.item.nameid < 1 || msg.item.amount < 1) && msg.zeny < 1 )
 		return; // No Attachment
 
-	if( !mail_DeleteAttach(mail_id) )
+	if( !inter_mail_DeleteAttach(mail_id) )
 		return;
 
 	WFIFOHEAD(fd, sizeof(struct item) + 12);
@@ -346,7 +346,7 @@ static void mapif_Mail_return(int fd, int char_id, int mail_id)
 	struct mail_message msg;
 	int new_mail = 0;
 
-	if( mail_loadmessage(mail_id, &msg) )
+	if( inter_mail_loadmessage(mail_id, &msg) )
 	{
 		if( msg.dest_id != char_id)
 			return;
@@ -369,7 +369,7 @@ static void mapif_Mail_return(int fd, int char_id, int mail_id)
 			msg.status = MAIL_NEW;
 			msg.timestamp = time(NULL);
 
-			new_mail = mail_savemessage(&msg);
+			new_mail = inter_mail_savemessage(&msg);
 			mapif_Mail_new(&msg);
 		}
 	}
@@ -432,13 +432,13 @@ static void mapif_parse_Mail_send(int fd)
 	msg.status = MAIL_NEW;
 
 	if( msg.dest_id > 0 )
-		msg.id = mail_savemessage(&msg);
+		msg.id = inter_mail_savemessage(&msg);
 
 	mapif_Mail_send(fd, &msg); // notify sender
 	mapif_Mail_new(&msg); // notify recipient
 }
 
-void mail_sendmail(int send_id, const char* send_name, int dest_id, const char* dest_name, const char* title, const char* body, int zeny, struct item *item)
+void inter_mail_sendmail(int send_id, const char* send_name, int dest_id, const char* dest_name, const char* title, const char* body, int zeny, struct item *item)
 {
 	struct mail_message msg;
 	memset(&msg, 0, sizeof(struct mail_message));
@@ -455,7 +455,7 @@ void mail_sendmail(int send_id, const char* send_name, int dest_id, const char* 
 
 	msg.timestamp = time(NULL);
 
-	mail_savemessage(&msg);
+	inter_mail_savemessage(&msg);
 	mapif_Mail_new(&msg);
 }
 
