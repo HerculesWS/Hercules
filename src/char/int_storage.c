@@ -23,14 +23,14 @@
 #define STORAGE_MEMINC	16
 
 /// Save storage data to sql
-int storage_tosql(int account_id, struct storage_data* p)
+int inter_storage_tosql(int account_id, struct storage_data* p)
 {
 	char_memitemdata_to_sql(p->items, MAX_STORAGE, account_id, TABLE_STORAGE);
 	return 0;
 }
 
 /// Load storage data to mem
-int storage_fromsql(int account_id, struct storage_data* p)
+int inter_storage_fromsql(int account_id, struct storage_data* p)
 {
 	StringBuf buf;
 	struct item* item;
@@ -79,7 +79,7 @@ int storage_fromsql(int account_id, struct storage_data* p)
 }
 
 /// Save guild_storage data to sql
-int guild_storage_tosql(int guild_id, struct guild_storage* p)
+int inter_storage_guild_storage_tosql(int guild_id, struct guild_storage* p)
 {
 	char_memitemdata_to_sql(p->items, MAX_GUILD_STORAGE, guild_id, TABLE_GUILD_STORAGE);
 	ShowInfo ("guild storage save to DB - guild: %d\n", guild_id);
@@ -87,7 +87,7 @@ int guild_storage_tosql(int guild_id, struct guild_storage* p)
 }
 
 /// Load guild_storage data to mem
-int guild_storage_fromsql(int guild_id, struct guild_storage* p)
+int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storage* p)
 {
 	StringBuf buf;
 	struct item* item;
@@ -154,7 +154,7 @@ int inter_storage_delete(int account_id)
 		Sql_ShowDebug(sql_handle);
 	return 0;
 }
-int inter_guild_storage_delete(int guild_id)
+int inter_storage_guild_storage_delete(int guild_id)
 {
 	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `guild_id`='%d'", guild_storage_db, guild_id) )
 		Sql_ShowDebug(sql_handle);
@@ -176,7 +176,7 @@ int mapif_load_guild_storage(int fd,int account_id,int guild_id, char flag)
 		WFIFOL(fd,4) = account_id;
 		WFIFOL(fd,8) = guild_id;
 		WFIFOB(fd,12) = flag; //1 open storage, 0 don't open
-		guild_storage_fromsql(guild_id, (struct guild_storage*)WFIFOP(fd,13));
+		inter_storage_guild_storage_fromsql(guild_id, (struct guild_storage*)WFIFOP(fd,13));
  		WFIFOSET(fd, WFIFOW(fd,2));
 		return 0;
 	}
@@ -228,7 +228,7 @@ int mapif_parse_SaveGuildStorage(int fd)
 		} else if(SQL->NumRows(sql_handle) > 0) {
 			// guild exists
 			SQL->FreeResult(sql_handle);
-			guild_storage_tosql(guild_id, (struct guild_storage*)RFIFOP(fd,12));
+			inter_storage_guild_storage_tosql(guild_id, (struct guild_storage*)RFIFOP(fd,12));
 			mapif_save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 0);
 			return 0;
 		}
