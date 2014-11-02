@@ -72,7 +72,7 @@ static int wis_dellist[WISDELLIST_MAX], wis_delnum;
 #define MAX_JOB_NAMES 150
 static char* msg_table[MAX_JOB_NAMES]; //  messages 550 ~ 699 are job names
 
-const char* msg_txt(int msg_number) {
+const char* inter_msg_txt(int msg_number) {
 	msg_number -= 550;
 	if (msg_number >= 0 && msg_number < MAX_JOB_NAMES &&
 	    msg_table[msg_number] != NULL && msg_table[msg_number][0] != '\0')
@@ -84,14 +84,14 @@ const char* msg_txt(int msg_number) {
 /**
  * Reads Message Data.
  *
- * This is a modified version of the mapserver's msg_config_read to
+ * This is a modified version of the mapserver's inter_msg_config_read to
  * only read messages with IDs between 550 and 550+MAX_JOB_NAMES.
  *
  * @param[in] cfg_name       configuration filename to read.
  * @param[in] allow_override whether to allow duplicate message IDs to override the original value.
  * @return success state.
  */
-bool msg_config_read(const char *cfg_name, bool allow_override) {
+bool inter_msg_config_read(const char *cfg_name, bool allow_override) {
 	int msg_number;
 	char line[1024], w1[1024], w2[1024];
 	FILE *fp;
@@ -112,7 +112,7 @@ bool msg_config_read(const char *cfg_name, bool allow_override) {
 			continue;
 
 		if (strcmpi(w1, "import") == 0)
-			msg_config_read(w2, true);
+			inter_msg_config_read(w2, true);
 		else {
 			msg_number = atoi(w1);
 			if( msg_number < 550 || msg_number > (550+MAX_JOB_NAMES) )
@@ -141,13 +141,13 @@ bool msg_config_read(const char *cfg_name, bool allow_override) {
 /*==========================================
  * Cleanup Message Data
  *------------------------------------------*/
-void do_final_msg(void) {
+void inter_do_final_msg(void) {
 	int i;
 	for (i = 0; i < MAX_JOB_NAMES; i++)
 		aFree(msg_table[i]);
 }
 /* from pc.c due to @accinfo. any ideas to replace this crap are more than welcome. */
-const char* job_name(int class_) {
+const char* inter_job_name(int class_) {
 	switch (class_) {
 		case JOB_NOVICE:   // 550
 		case JOB_SWORDMAN: // 551
@@ -156,7 +156,7 @@ const char* job_name(int class_) {
 		case JOB_ACOLYTE:  // 554
 		case JOB_MERCHANT: // 555
 		case JOB_THIEF:    // 556
-			return msg_txt(550 - JOB_NOVICE+class_);
+			return inter_msg_txt(550 - JOB_NOVICE+class_);
 
 		case JOB_KNIGHT:     // 557
 		case JOB_PRIEST:     // 558
@@ -164,10 +164,10 @@ const char* job_name(int class_) {
 		case JOB_BLACKSMITH: // 560
 		case JOB_HUNTER:     // 561
 		case JOB_ASSASSIN:   // 562
-			return msg_txt(557 - JOB_KNIGHT+class_);
+			return inter_msg_txt(557 - JOB_KNIGHT+class_);
 
 		case JOB_KNIGHT2:
-			return msg_txt(557);
+			return inter_msg_txt(557);
 
 		case JOB_CRUSADER:  // 563
 		case JOB_MONK:      // 564
@@ -176,20 +176,20 @@ const char* job_name(int class_) {
 		case JOB_ALCHEMIST: // 567
 		case JOB_BARD:      // 568
 		case JOB_DANCER:    // 569
-			return msg_txt(563 - JOB_CRUSADER+class_);
+			return inter_msg_txt(563 - JOB_CRUSADER+class_);
 
 		case JOB_CRUSADER2:
-			return msg_txt(563);
+			return inter_msg_txt(563);
 
 		case JOB_WEDDING:      // 570
 		case JOB_SUPER_NOVICE: // 571
 		case JOB_GUNSLINGER:   // 572
 		case JOB_NINJA:        // 573
 		case JOB_XMAS:         // 574
-			return msg_txt(570 - JOB_WEDDING+class_);
+			return inter_msg_txt(570 - JOB_WEDDING+class_);
 
 		case JOB_SUMMER:
-			return msg_txt(621);
+			return inter_msg_txt(621);
 
 		case JOB_NOVICE_HIGH:   // 575
 		case JOB_SWORDMAN_HIGH: // 576
@@ -198,7 +198,7 @@ const char* job_name(int class_) {
 		case JOB_ACOLYTE_HIGH:  // 579
 		case JOB_MERCHANT_HIGH: // 580
 		case JOB_THIEF_HIGH:    // 581
-			return msg_txt(575 - JOB_NOVICE_HIGH+class_);
+			return inter_msg_txt(575 - JOB_NOVICE_HIGH+class_);
 
 		case JOB_LORD_KNIGHT:    // 582
 		case JOB_HIGH_PRIEST:    // 583
@@ -206,10 +206,10 @@ const char* job_name(int class_) {
 		case JOB_WHITESMITH:     // 585
 		case JOB_SNIPER:         // 586
 		case JOB_ASSASSIN_CROSS: // 587
-			return msg_txt(582 - JOB_LORD_KNIGHT+class_);
+			return inter_msg_txt(582 - JOB_LORD_KNIGHT+class_);
 
 		case JOB_LORD_KNIGHT2:
-			return msg_txt(582);
+			return inter_msg_txt(582);
 
 		case JOB_PALADIN:   // 588
 		case JOB_CHAMPION:  // 589
@@ -218,10 +218,10 @@ const char* job_name(int class_) {
 		case JOB_CREATOR:   // 592
 		case JOB_CLOWN:     // 593
 		case JOB_GYPSY:     // 594
-			return msg_txt(588 - JOB_PALADIN + class_);
+			return inter_msg_txt(588 - JOB_PALADIN + class_);
 
 		case JOB_PALADIN2:
-			return msg_txt(588);
+			return inter_msg_txt(588);
 
 		case JOB_BABY:          // 595
 		case JOB_BABY_SWORDMAN: // 596
@@ -230,7 +230,7 @@ const char* job_name(int class_) {
 		case JOB_BABY_ACOLYTE:  // 599
 		case JOB_BABY_MERCHANT: // 600
 		case JOB_BABY_THIEF:    // 601
-			return msg_txt(595 - JOB_BABY + class_);
+			return inter_msg_txt(595 - JOB_BABY + class_);
 
 		case JOB_BABY_KNIGHT:     // 602
 		case JOB_BABY_PRIEST:     // 603
@@ -238,10 +238,10 @@ const char* job_name(int class_) {
 		case JOB_BABY_BLACKSMITH: // 605
 		case JOB_BABY_HUNTER:     // 606
 		case JOB_BABY_ASSASSIN:   // 607
-			return msg_txt(602 - JOB_BABY_KNIGHT + class_);
+			return inter_msg_txt(602 - JOB_BABY_KNIGHT + class_);
 
 		case JOB_BABY_KNIGHT2:
-			return msg_txt(602);
+			return inter_msg_txt(602);
 
 		case JOB_BABY_CRUSADER:  // 608
 		case JOB_BABY_MONK:      // 609
@@ -250,26 +250,26 @@ const char* job_name(int class_) {
 		case JOB_BABY_ALCHEMIST: // 612
 		case JOB_BABY_BARD:      // 613
 		case JOB_BABY_DANCER:    // 614
-			return msg_txt(608 - JOB_BABY_CRUSADER + class_);
+			return inter_msg_txt(608 - JOB_BABY_CRUSADER + class_);
 
 		case JOB_BABY_CRUSADER2:
-			return msg_txt(608);
+			return inter_msg_txt(608);
 
 		case JOB_SUPER_BABY:
-			return msg_txt(615);
+			return inter_msg_txt(615);
 
 		case JOB_TAEKWON:
-			return msg_txt(616);
+			return inter_msg_txt(616);
 		case JOB_STAR_GLADIATOR:
 		case JOB_STAR_GLADIATOR2:
-			return msg_txt(617);
+			return inter_msg_txt(617);
 		case JOB_SOUL_LINKER:
-			return msg_txt(618);
+			return inter_msg_txt(618);
 
 		case JOB_GANGSI:         // 622
 		case JOB_DEATH_KNIGHT:   // 623
 		case JOB_DARK_COLLECTOR: // 624
-			return msg_txt(622 - JOB_GANGSI+class_);
+			return inter_msg_txt(622 - JOB_GANGSI+class_);
 
 		case JOB_RUNE_KNIGHT:      // 625
 		case JOB_WARLOCK:          // 626
@@ -277,7 +277,7 @@ const char* job_name(int class_) {
 		case JOB_ARCH_BISHOP:      // 628
 		case JOB_MECHANIC:         // 629
 		case JOB_GUILLOTINE_CROSS: // 630
-			return msg_txt(625 - JOB_RUNE_KNIGHT+class_);
+			return inter_msg_txt(625 - JOB_RUNE_KNIGHT+class_);
 
 		case JOB_RUNE_KNIGHT_T:      // 656
 		case JOB_WARLOCK_T:          // 657
@@ -285,7 +285,7 @@ const char* job_name(int class_) {
 		case JOB_ARCH_BISHOP_T:      // 659
 		case JOB_MECHANIC_T:         // 660
 		case JOB_GUILLOTINE_CROSS_T: // 661
-			return msg_txt(656 - JOB_RUNE_KNIGHT_T+class_);
+			return inter_msg_txt(656 - JOB_RUNE_KNIGHT_T+class_);
 
 		case JOB_ROYAL_GUARD:   // 631
 		case JOB_SORCERER:      // 632
@@ -294,7 +294,7 @@ const char* job_name(int class_) {
 		case JOB_SURA:          // 635
 		case JOB_GENETIC:       // 636
 		case JOB_SHADOW_CHASER: // 637
-			return msg_txt(631 - JOB_ROYAL_GUARD+class_);
+			return inter_msg_txt(631 - JOB_ROYAL_GUARD+class_);
 
 		case JOB_ROYAL_GUARD_T:   // 662
 		case JOB_SORCERER_T:      // 663
@@ -303,31 +303,31 @@ const char* job_name(int class_) {
 		case JOB_SURA_T:          // 666
 		case JOB_GENETIC_T:       // 667
 		case JOB_SHADOW_CHASER_T: // 668
-			return msg_txt(662 - JOB_ROYAL_GUARD_T+class_);
+			return inter_msg_txt(662 - JOB_ROYAL_GUARD_T+class_);
 
 		case JOB_RUNE_KNIGHT2:
-			return msg_txt(625);
+			return inter_msg_txt(625);
 
 		case JOB_RUNE_KNIGHT_T2:
-			return msg_txt(656);
+			return inter_msg_txt(656);
 
 		case JOB_ROYAL_GUARD2:
-			return msg_txt(631);
+			return inter_msg_txt(631);
 
 		case JOB_ROYAL_GUARD_T2:
-			return msg_txt(662);
+			return inter_msg_txt(662);
 
 		case JOB_RANGER2:
-			return msg_txt(627);
+			return inter_msg_txt(627);
 
 		case JOB_RANGER_T2:
-			return msg_txt(658);
+			return inter_msg_txt(658);
 
 		case JOB_MECHANIC2:
-			return msg_txt(629);
+			return inter_msg_txt(629);
 
 		case JOB_MECHANIC_T2:
-			return msg_txt(660);
+			return inter_msg_txt(660);
 
 		case JOB_BABY_RUNE:     // 638
 		case JOB_BABY_WARLOCK:  // 639
@@ -342,33 +342,33 @@ const char* job_name(int class_) {
 		case JOB_BABY_SURA:     // 648
 		case JOB_BABY_GENETIC:  // 649
 		case JOB_BABY_CHASER:   // 650
-			return msg_txt(638 - JOB_BABY_RUNE+class_);
+			return inter_msg_txt(638 - JOB_BABY_RUNE+class_);
 
 		case JOB_BABY_RUNE2:
-			return msg_txt(638);
+			return inter_msg_txt(638);
 
 		case JOB_BABY_GUARD2:
-			return msg_txt(644);
+			return inter_msg_txt(644);
 
 		case JOB_BABY_RANGER2:
-			return msg_txt(640);
+			return inter_msg_txt(640);
 
 		case JOB_BABY_MECHANIC2:
-			return msg_txt(642);
+			return inter_msg_txt(642);
 
 		case JOB_SUPER_NOVICE_E: // 651
 		case JOB_SUPER_BABY_E:   // 652
-			return msg_txt(651 - JOB_SUPER_NOVICE_E+class_);
+			return inter_msg_txt(651 - JOB_SUPER_NOVICE_E+class_);
 
 		case JOB_KAGEROU: // 653
 		case JOB_OBORO:   // 654
-			return msg_txt(653 - JOB_KAGEROU+class_);
+			return inter_msg_txt(653 - JOB_KAGEROU+class_);
 
 		case JOB_REBELLION:
-			return msg_txt(655);
+			return inter_msg_txt(655);
 
 		default:
-			return msg_txt(620); // "Unknown Job"
+			return inter_msg_txt(620); // "Unknown Job"
 	}
 }
 
@@ -619,7 +619,7 @@ void mapif_parse_accinfo(int fd) {
 					SQL->GetData(sql_handle, 4, &data, NULL); job_level = atoi(data);
 					SQL->GetData(sql_handle, 5, &data, NULL); online = atoi(data);
 
-					inter_msg_to_fd(fd, u_fd, aid, "[AID: %d] %s | %s | Level: %d/%d | %s", account_id, name, job_name(class_), base_level, job_level, online?"Online":"Offline");
+					inter_msg_to_fd(fd, u_fd, aid, "[AID: %d] %s | %s | Level: %d/%d | %s", account_id, name, inter_job_name(class_), base_level, job_level, online?"Online":"Offline");
 				}
 				SQL->FreeResult(sql_handle);
 				return;
@@ -683,7 +683,7 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
 			SQL->GetData(sql_handle, 5, &data, NULL); job_level = atoi(data);
 			SQL->GetData(sql_handle, 6, &data, NULL); online = atoi(data);
 
-			inter_msg_to_fd(map_fd, u_fd, u_aid, "[Slot/CID: %d/%d] %s | %s | Level: %d/%d | %s", char_num, char_id, name, job_name(class_), base_level, job_level, online?"On":"Off");
+			inter_msg_to_fd(map_fd, u_fd, u_aid, "[Slot/CID: %d/%d] %s | %s | Level: %d/%d | %s", char_num, char_id, name, inter_job_name(class_), base_level, job_level, online?"On":"Off");
 		}
 	}
 	SQL->FreeResult(sql_handle);
@@ -1036,7 +1036,7 @@ int inter_init_sql(const char *file)
 	inter_auction_sql_init();
 
 	geoip_init();
-	msg_config_read("conf/messages.conf", false);
+	inter_msg_config_read("conf/messages.conf", false);
 	return 0;
 }
 
@@ -1056,7 +1056,7 @@ void inter_final(void)
 	inter_auction_sql_final();
 
 	geoip_final(true);
-	do_final_msg();
+	inter_do_final_msg();
 	return;
 }
 
@@ -1151,7 +1151,7 @@ int mapif_disconnectplayer(int fd, int account_id, int char_id, int reason)
  * Existence check of WISP data
  * @see DBApply
  */
-int check_ttl_wisdata_sub(DBKey key, DBData *data, va_list ap)
+int inter_check_ttl_wisdata_sub(DBKey key, DBData *data, va_list ap)
 {
 	int64 tick;
 	struct WisData *wd = DB->data2ptr(data);
@@ -1163,14 +1163,14 @@ int check_ttl_wisdata_sub(DBKey key, DBData *data, va_list ap)
 	return 0;
 }
 
-int check_ttl_wisdata(void)
+int inter_check_ttl_wisdata(void)
 {
 	int64 tick = timer->gettick();
 	int i;
 
 	do {
 		wis_delnum = 0;
-		wis_db->foreach(wis_db, check_ttl_wisdata_sub, tick);
+		wis_db->foreach(wis_db, inter_check_ttl_wisdata_sub, tick);
 		for(i = 0; i < wis_delnum; i++) {
 			struct WisData *wd = (struct WisData*)idb_get(wis_db, wis_dellist[i]);
 			ShowWarning("inter: wis data id=%d time out : from %s to %s\n", wd->id, wd->src, wd->dst);
@@ -1250,7 +1250,7 @@ int mapif_parse_WisRequest(int fd)
 			CREATE(wd, struct WisData, 1);
 
 			// Whether the failure of previous wisp/page transmission (timeout)
-			check_ttl_wisdata();
+			inter_check_ttl_wisdata();
 
 			wd->id = ++wisid;
 			wd->fd = fd;
