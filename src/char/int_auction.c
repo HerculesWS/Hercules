@@ -24,10 +24,10 @@
 
 static DBMap* auction_db_ = NULL; // int auction_id -> struct auction_data*
 
-void auction_delete(struct auction_data *auction);
-static int auction_end_timer(int tid, int64 tick, int id, intptr_t data);
+void inter_auction_delete(struct auction_data *auction);
+static int inter_auction_end_timer(int tid, int64 tick, int id, intptr_t data);
 
-static int auction_count(int char_id, bool buy)
+static int inter_auction_count(int char_id, bool buy)
 {
 	int i = 0;
 	struct auction_data *auction;
@@ -43,7 +43,7 @@ static int auction_count(int char_id, bool buy)
 	return i;
 }
 
-void auction_save(struct auction_data *auction)
+void inter_auction_save(struct auction_data *auction)
 {
 	int j;
 	StringBuf buf;
@@ -73,7 +73,7 @@ void auction_save(struct auction_data *auction)
 	StrBuf->Destroy(&buf);
 }
 
-unsigned int auction_create(struct auction_data *auction)
+unsigned int inter_auction_create(struct auction_data *auction)
 {
 	int j;
 	StringBuf buf;
@@ -114,7 +114,7 @@ unsigned int auction_create(struct auction_data *auction)
 		auction->item.expire_time = 0;
 
 		auction->auction_id = (unsigned int)SQL->StmtLastInsertId(stmt);
-		auction->auction_end_timer = timer->add( timer->gettick() + tick , auction_end_timer, auction->auction_id, 0);
+		auction->auction_end_timer = timer->add( timer->gettick() + tick , inter_auction_end_timer, auction->auction_id, 0);
 		ShowInfo("New Auction %u | time left %"PRId64" ms | By %s.\n", auction->auction_id, tick, auction->seller_name);
 
 		CREATE(auction_, struct auction_data, 1);
@@ -138,7 +138,7 @@ static void mapif_Auction_message(int char_id, unsigned char result)
 	mapif_sendall(buf,7);
 }
 
-static int auction_end_timer(int tid, int64 tick, int id, intptr_t data) {
+static int inter_auction_end_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct auction_data *auction;
 	if( (auction = (struct auction_data *)idb_get(auction_db_, id)) != NULL )
 	{
@@ -154,13 +154,13 @@ static int auction_end_timer(int tid, int64 tick, int id, intptr_t data) {
 		ShowInfo("Auction End: id %u.\n", auction->auction_id);
 
 		auction->auction_end_timer = INVALID_TIMER;
-		auction_delete(auction);
+		inter_auction_delete(auction);
 	}
 
 	return 0;
 }
 
-void auction_delete(struct auction_data *auction)
+void inter_auction_delete(struct auction_data *auction)
 {
 	unsigned int auction_id = auction->auction_id;
 
@@ -168,7 +168,7 @@ void auction_delete(struct auction_data *auction)
 		Sql_ShowDebug(sql_handle);
 
 	if( auction->auction_end_timer != INVALID_TIMER )
-		timer->delete(auction->auction_end_timer, auction_end_timer);
+		timer->delete(auction->auction_end_timer, inter_auction_end_timer);
 
 	idb_remove(auction_db_, auction_id);
 }
@@ -232,7 +232,7 @@ void inter_auctions_fromsql(void)
 		else
 			endtick = tick + 10000; // 10 seconds to process ended auctions
 
-		auction->auction_end_timer = timer->add(endtick, auction_end_timer, auction->auction_id, 0);
+		auction->auction_end_timer = timer->add(endtick, inter_auction_end_timer, auction->auction_id, 0);
 		idb_put(auction_db_, auction->auction_id, auction);
 	}
 
@@ -314,8 +314,8 @@ static void mapif_parse_Auction_register(int fd)
 		return;
 
 	memcpy(&auction, RFIFOP(fd,4), sizeof(struct auction_data));
-	if( auction_count(auction.seller_id, false) < 5 )
-		auction.auction_id = auction_create(&auction);
+	if( inter_auction_count(auction.seller_id, false) < 5 )
+		auction.auction_id = inter_auction_create(&auction);
 
 	mapif_Auction_register(fd, &auction);
 }
@@ -353,7 +353,7 @@ static void mapif_parse_Auction_cancel(int fd)
 	}
 
 	mail_sendmail(0, "Auction Manager", auction->seller_id, auction->seller_name, "Auction", "Auction canceled.", 0, &auction->item);
-	auction_delete(auction);
+	inter_auction_delete(auction);
 
 	mapif_Auction_cancel(fd, char_id, 0); // The auction has been canceled
 }
@@ -395,7 +395,7 @@ static void mapif_parse_Auction_close(int fd)
 	// Send Item to Buyer
 	mail_sendmail(0, "Auction Manager", auction->buyer_id, auction->buyer_name, "Auction", "Auction winner.", 0, &auction->item);
 	mapif_Auction_message(auction->buyer_id, 6); // You have won the auction
-	auction_delete(auction);
+	inter_auction_delete(auction);
 
 	mapif_Auction_close(fd, char_id, 0); // You have ended the auction
 }
@@ -422,7 +422,7 @@ static void mapif_parse_Auction_bid(int fd)
 		return;
 	}
 
-	if( auction_count(char_id, true) > 4 && bid < auction->buynow && auction->buyer_id != char_id )
+	if( inter_auction_count(char_id, true) > 4 && bid < auction->buynow && auction->buyer_id != char_id )
 	{
 		mapif_Auction_bid(fd, char_id, bid, 9); // You cannot place more than 5 bids at a time
 		return;
@@ -451,11 +451,11 @@ static void mapif_parse_Auction_bid(int fd)
 		mapif_Auction_message(char_id, 6); // You have won the auction
 		mail_sendmail(0, "Auction Manager", auction->seller_id, auction->seller_name, "Auction", "Payment for your auction!.", auction->buynow, NULL);
 
-		auction_delete(auction);
+		inter_auction_delete(auction);
 		return;
 	}
 
-	auction_save(auction);
+	inter_auction_save(auction);
 
 	mapif_Auction_bid(fd, char_id, 0, 1); // You have successfully bid in the auction
 }
