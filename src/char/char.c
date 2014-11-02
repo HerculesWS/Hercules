@@ -552,7 +552,7 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 		(p->spear_calls != cp->spear_calls) || (p->spear_faith != cp->spear_faith) ||
 		(p->sword_calls != cp->sword_calls) || (p->sword_faith != cp->sword_faith) )
 	{
-		if (mercenary_owner_tosql(char_id, p))
+		if (inter_mercenary_owner_tosql(char_id, p))
 			strcat(save_status, " mercenary");
 		else
 			errors++;
@@ -1405,7 +1405,7 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 #endif
 
 	/* Mercenary Owner DataBase */
-	mercenary_owner_fromsql(char_id, p);
+	inter_mercenary_owner_fromsql(char_id, p);
 	strcat(t_msg, " mercenary");
 
 	/* default */
@@ -1835,7 +1835,7 @@ int char_delete_char_sql(int char_id)
 		mapif_elemental_delete(elemental_id);
 
 	/* remove mercenary data */
-	mercenary_owner_delete(char_id);
+	inter_mercenary_owner_delete(char_id);
 
 	/* delete char's friends list */
 	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d'", friend_db, char_id) )

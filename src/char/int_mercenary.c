@@ -20,7 +20,7 @@
 #include "../common/strlib.h"
 #include "../common/utils.h"
 
-bool mercenary_owner_fromsql(int char_id, struct mmo_charstatus *status)
+bool inter_mercenary_owner_fromsql(int char_id, struct mmo_charstatus *status)
 {
 	char* data;
 
@@ -48,7 +48,7 @@ bool mercenary_owner_fromsql(int char_id, struct mmo_charstatus *status)
 	return true;
 }
 
-bool mercenary_owner_tosql(int char_id, struct mmo_charstatus *status)
+bool inter_mercenary_owner_tosql(int char_id, struct mmo_charstatus *status)
 {
 	if( SQL_ERROR == SQL->Query(sql_handle, "REPLACE INTO `%s` (`char_id`, `merc_id`, `arch_calls`, `arch_faith`, `spear_calls`, `spear_faith`, `sword_calls`, `sword_faith`) VALUES ('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
 		mercenary_owner_db, char_id, status->mer_id, status->arch_calls, status->arch_faith, status->spear_calls, status->spear_faith, status->sword_calls, status->sword_faith) )
@@ -60,7 +60,7 @@ bool mercenary_owner_tosql(int char_id, struct mmo_charstatus *status)
 	return true;
 }
 
-bool mercenary_owner_delete(int char_id)
+bool inter_mercenary_owner_delete(int char_id)
 {
 	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d'", mercenary_owner_db, char_id) )
 		Sql_ShowDebug(sql_handle);
