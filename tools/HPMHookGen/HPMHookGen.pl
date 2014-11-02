@@ -375,7 +375,7 @@ foreach my $file (@files) { # Loop through the xml files
 			push(@{ $ifs{$key} }, $if);
 		}
 	}
-	push($keys{$servertype}, $key) if $key2original{$key};
+	push(@{ $keys{$servertype} }, $key) if $key2original{$key};
 }
 
 foreach my $servertype (keys %keys) {
