@@ -14835,6 +14835,36 @@ BUILDIN(distance)
 
 // <--- [zBuffer] List of mathematics commands
 
+BUILDIN(min)
+{
+	int i, min;
+
+	min = script_getnum(st, 2);
+	for (i = 3; script_hasdata(st, i); i++) {
+		int next = script_getnum(st, i);
+		if (next < min)
+			min = next;
+	}
+	script_pushint(st, min);
+
+	return true;
+}
+
+BUILDIN(max)
+{
+	int i, max;
+
+	max = script_getnum(st, 2);
+	for (i = 3; script_hasdata(st, i); i++) {
+		int next = script_getnum(st, i);
+		if (next > max)
+			max = next;
+	}
+	script_pushint(st, max);
+
+	return true;
+}
+
 BUILDIN(md5)
 {
 	const char *tmpstr;
@@ -19283,6 +19313,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(pow,"ii"),
 		BUILDIN_DEF(distance,"iiii"),
 		// <--- [zBuffer] List of mathematics commands
+		BUILDIN_DEF(min, "i*"),
+		BUILDIN_DEF(max, "i*"),
 		BUILDIN_DEF(md5,"s"),
 		// [zBuffer] List of dynamic var commands --->
 		BUILDIN_DEF(getd,"s"),

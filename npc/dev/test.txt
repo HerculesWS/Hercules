@@ -565,6 +565,10 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "array shrink", .@x[1], 0);
 	callsub(OnCheck, "array shrink and getarraysize", getarraysize(.@x), 0);
 
+	// min and max
+	callsub(OnCheck, "min()", min(5, -10, 8, 3, -2, 1000), -10);
+	callsub(OnCheck, "max()", max(5, -10, 8, 3, -2, 1000), 1000);
+
 
 	// Constants
 	callsub(OnCheck, "'true' constant", true, 1);
