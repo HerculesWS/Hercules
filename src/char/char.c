@@ -1964,7 +1964,7 @@ int mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p) {
 	WBUFW(buf,52) = p->class_;
 	WBUFW(buf,54) = p->hair;
 
-#if PACKETVER > 20140000
+#if PACKETVER >= 20141022
 	//When the weapon is sent and your option is riding, the client crashes on login!?
 	WBUFL(buf,56) = p->option&(0x20|0x80000|0x100000|0x200000|0x400000|0x800000|0x1000000|0x2000000|0x4000000|0x8000000) ? 0 : p->weapon;
 	offset+=2;
