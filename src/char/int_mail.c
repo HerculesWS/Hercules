@@ -201,28 +201,29 @@ static bool inter_mail_loadmessage(int mail_id, struct mail_message* msg)
 	return true;
 }
 
-/*==========================================
- * Client Inbox Request
- *------------------------------------------*/
-static void mapif_Mail_sendinbox(int fd, int char_id, unsigned char flag)
+void mapif_Mail_sendinbox(int fd, int char_id, unsigned char flag, struct mail_data *md)
 {
-	struct mail_data md;
-	memset(&md, 0, sizeof(md));
-	inter_mail_fromsql(char_id, &md);
-
 	//FIXME: dumping the whole structure like this is unsafe [ultramage]
-	WFIFOHEAD(fd, sizeof(md) + 9);
+	WFIFOHEAD(fd, sizeof(struct mail_data) + 9);
 	WFIFOW(fd,0) = 0x3848;
-	WFIFOW(fd,2) = sizeof(md) + 9;
+	WFIFOW(fd,2) = sizeof(struct mail_data) + 9;
 	WFIFOL(fd,4) = char_id;
 	WFIFOB(fd,8) = flag;
-	memcpy(WFIFOP(fd,9),&md,sizeof(md));
+	memcpy(WFIFOP(fd,9),md,sizeof(struct mail_data));
 	WFIFOSET(fd,WFIFOW(fd,2));
 }
 
+/*==========================================
+ * Client Inbox Request
+ *------------------------------------------*/
 static void mapif_parse_Mail_requestinbox(int fd)
 {
-	mapif_Mail_sendinbox(fd, RFIFOL(fd,2), RFIFOB(fd,6));
+	int char_id = RFIFOL(fd,2);
+	unsigned char flag = RFIFOB(fd,6);
+	struct mail_data md;
+	memset(&md, 0, sizeof(md));
+	inter_mail_fromsql(char_id, &md);
+	mapif_Mail_sendinbox(fd, char_id, flag, &md);
 }
 
 /*==========================================
@@ -261,6 +262,17 @@ static bool inter_mail_DeleteAttach(int mail_id)
 	return true;
 }
 
+void mapif_Mail_sendattach(int fd, int char_id, struct mail_message *msg)
+{
+	WFIFOHEAD(fd, sizeof(struct item) + 12);
+	WFIFOW(fd,0) = 0x384a;
+	WFIFOW(fd,2) = sizeof(struct item) + 12;
+	WFIFOL(fd,4) = char_id;
+	WFIFOL(fd,8) = (msg->zeny > 0)?msg->zeny:0;
+	memcpy(WFIFOP(fd,12), &msg->item, sizeof(struct item));
+	WFIFOSET(fd,WFIFOW(fd,2));
+}
+
 static void mapif_Mail_getattach(int fd, int char_id, int mail_id)
 {
 	struct mail_message msg;
@@ -281,13 +293,7 @@ static void mapif_Mail_getattach(int fd, int char_id, int mail_id)
 	if( !inter_mail_DeleteAttach(mail_id) )
 		return;
 
-	WFIFOHEAD(fd, sizeof(struct item) + 12);
-	WFIFOW(fd,0) = 0x384a;
-	WFIFOW(fd,2) = sizeof(struct item) + 12;
-	WFIFOL(fd,4) = char_id;
-	WFIFOL(fd,8) = (msg.zeny > 0)?msg.zeny:0;
-	memcpy(WFIFOP(fd,12), &msg.item, sizeof(struct item));
-	WFIFOSET(fd,WFIFOW(fd,2));
+	mapif_Mail_sendattach(fd, char_id, &msg);
 }
 
 static void mapif_parse_Mail_getattach(int fd)
@@ -298,15 +304,8 @@ static void mapif_parse_Mail_getattach(int fd)
 /*==========================================
  * Delete Mail
  *------------------------------------------*/
-static void mapif_Mail_delete(int fd, int char_id, int mail_id)
+void mapif_Mail_delete(int fd, int char_id, int mail_id, bool failed)
 {
-	bool failed = false;
-	if ( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `id` = '%d'", mail_db, mail_id) )
-	{
-		Sql_ShowDebug(sql_handle);
-		failed = true;
-	}
-
 	WFIFOHEAD(fd,11);
 	WFIFOW(fd,0) = 0x384b;
 	WFIFOL(fd,2) = char_id;
@@ -317,7 +316,15 @@ static void mapif_Mail_delete(int fd, int char_id, int mail_id)
 
 static void mapif_parse_Mail_delete(int fd)
 {
-	mapif_Mail_delete(fd, RFIFOL(fd,2), RFIFOL(fd,6));
+	int char_id = RFIFOL(fd,2);
+	int mail_id = RFIFOL(fd,6);
+	bool failed = false;
+	if ( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `id` = '%d'", mail_db, mail_id) )
+	{
+		Sql_ShowDebug(sql_handle);
+		failed = true;
+	}
+	mapif_Mail_delete(fd, char_id, mail_id, failed);
 }
 
 /*==========================================
@@ -341,8 +348,20 @@ void mapif_Mail_new(struct mail_message *msg)
 /*==========================================
  * Return Mail
  *------------------------------------------*/
-static void mapif_Mail_return(int fd, int char_id, int mail_id)
+static void mapif_Mail_return(int fd, int char_id, int mail_id, int new_mail)
 {
+	WFIFOHEAD(fd,11);
+	WFIFOW(fd,0) = 0x384c;
+	WFIFOL(fd,2) = char_id;
+	WFIFOL(fd,6) = mail_id;
+	WFIFOB(fd,10) = (new_mail == 0);
+	WFIFOSET(fd,11);
+}
+
+static void mapif_parse_Mail_return(int fd)
+{
+	int char_id = RFIFOL(fd,2);
+	int mail_id = RFIFOL(fd,6);
 	struct mail_message msg;
 	int new_mail = 0;
 
@@ -374,17 +393,7 @@ static void mapif_Mail_return(int fd, int char_id, int mail_id)
 		}
 	}
 
-	WFIFOHEAD(fd,11);
-	WFIFOW(fd,0) = 0x384c;
-	WFIFOL(fd,2) = char_id;
-	WFIFOL(fd,6) = mail_id;
-	WFIFOB(fd,10) = (new_mail == 0);
-	WFIFOSET(fd,11);
-}
-
-static void mapif_parse_Mail_return(int fd)
-{
-	mapif_Mail_return(fd, RFIFOL(fd,2), RFIFOL(fd,6));
+	mapif_Mail_return(fd, char_id, mail_id, new_mail);
 }
 
 /*==========================================
