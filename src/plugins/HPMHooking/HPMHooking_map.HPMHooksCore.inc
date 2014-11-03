@@ -2687,6 +2687,8 @@ struct {
 	struct HPMHookPoint *HP_map_get_new_object_id_post;
 	struct HPMHookPoint *HP_map_search_freecell_pre;
 	struct HPMHookPoint *HP_map_search_freecell_post;
+	struct HPMHookPoint *HP_map_closest_freecell_pre;
+	struct HPMHookPoint *HP_map_closest_freecell_post;
 	struct HPMHookPoint *HP_map_quit_pre;
 	struct HPMHookPoint *HP_map_quit_post;
 	struct HPMHookPoint *HP_map_addnpc_pre;
@@ -7748,6 +7750,8 @@ struct {
 	int HP_map_get_new_object_id_post;
 	int HP_map_search_freecell_pre;
 	int HP_map_search_freecell_post;
+	int HP_map_closest_freecell_pre;
+	int HP_map_closest_freecell_post;
 	int HP_map_quit_pre;
 	int HP_map_quit_post;
 	int HP_map_addnpc_pre;

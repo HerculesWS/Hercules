@@ -35481,15 +35481,15 @@ int HP_map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 	}
 	return retVal___;
 }
-int HP_map_count_oncell(int16 m, int16 x, int16 y, int type) {
+int HP_map_count_oncell(int16 m, int16 x, int16 y, int type, int flag) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_count_oncell_pre ) {
-		int (*preHookFunc) (int16 *m, int16 *x, int16 *y, int *type);
+		int (*preHookFunc) (int16 *m, int16 *x, int16 *y, int *type, int *flag);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_count_oncell_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_map_count_oncell_pre[hIndex].func;
-			retVal___ = preHookFunc(&m, &x, &y, &type);
+			retVal___ = preHookFunc(&m, &x, &y, &type, &flag);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -35497,13 +35497,13 @@ int HP_map_count_oncell(int16 m, int16 x, int16 y, int type) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.map.count_oncell(m, x, y, type);
+		retVal___ = HPMHooks.source.map.count_oncell(m, x, y, type, flag);
 	}
 	if( HPMHooks.count.HP_map_count_oncell_post ) {
-		int (*postHookFunc) (int retVal___, int16 *m, int16 *x, int16 *y, int *type);
+		int (*postHookFunc) (int retVal___, int16 *m, int16 *x, int16 *y, int *type, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_count_oncell_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_map_count_oncell_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &m, &x, &y, &type);
+			retVal___ = postHookFunc(retVal___, &m, &x, &y, &type, &flag);
 		}
 	}
 	return retVal___;
@@ -35585,6 +35585,33 @@ int HP_map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 *y, 
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_search_freecell_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_map_search_freecell_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, src, &m, x, y, &rx, &ry, &flag);
+		}
+	}
+	return retVal___;
+}
+bool HP_map_closest_freecell(int16 m, int16 *x, int16 *y, int type, int flag) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_map_closest_freecell_pre ) {
+		bool (*preHookFunc) (int16 *m, int16 *x, int16 *y, int *type, int *flag);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_closest_freecell_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_map_closest_freecell_pre[hIndex].func;
+			retVal___ = preHookFunc(&m, x, y, &type, &flag);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.map.closest_freecell(m, x, y, type, flag);
+	}
+	if( HPMHooks.count.HP_map_closest_freecell_post ) {
+		bool (*postHookFunc) (bool retVal___, int16 *m, int16 *x, int16 *y, int *type, int *flag);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_closest_freecell_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_map_closest_freecell_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &m, x, y, &type, &flag);
 		}
 	}
 	return retVal___;
