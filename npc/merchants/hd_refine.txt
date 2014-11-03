@@ -31,10 +31,10 @@
 	mes "So lets kick this into overdrive, what d' ya say? What item do you want to refine?";
 	next;
 	setarray .@position$[1],"Head","Body","Left Hand","Right Hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
-	set .@menu$,"";
-	for(set .@i,1; .@i<=10; set .@i,.@i+1)
-		set .@menu$, .@menu$+((getequipisequiped(.@i))?getequipname(.@i):.@position$[.@i]+"-[Not equipped]")+":";
-	set .@part, select(.@menu$);
+	.@menu$ = "";
+	for(.@i = 1; .@i<=10; ++.@i)
+		.@menu$ += ((getequipisequiped(.@i))?getequipname(.@i):.@position$[.@i]+"-[Not equipped]")+":";
+	.@part = select(.@menu$);
 	if (!getequipisequiped(.@part)) {
 		mes "[Blacksmith Mighty Hammer]";
 		switch(.@part) {
@@ -85,15 +85,15 @@
 	switch(getequipweaponlv(.@part)) {
 	default:
 	case 0:
-		set .@price,20000;
-		set .@material,6241; //HD_Elunium
+		.@price = 20000;
+		.@material = 6241; //HD_Elunium
 		break;
 	case 1:
 	case 2:
 	case 3:
 	case 4:
-		set .@price,20000;
-		set .@material,6240; //HD_Oridecon
+		.@price = 20000;
+		.@material = 6240; //HD_Oridecon
 		break;
 	}
 	mes "[Blacksmith Mighty Hammer]";
@@ -170,10 +170,10 @@ lhz_in02,280,19,3	duplicate(MightyHammer)	Mighty Hammer#lhz	4_M_DWARF
 	mes "Which equipment do you want to refine?";
 	next;
 	setarray .@position$[1],"Head","Body","Left Hand","Right Hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
-	set .@menu$,"";
-	for(set .@i,1; .@i<=10; set .@i,.@i+1)
-		set .@menu$, .@menu$+((getequipisequiped(.@i))?getequipname(.@i):.@position$[.@i]+"-[Unequipped]")+":";
-	set .@part, select(.@menu$);
+	.@menu$ = "";
+	for(.@i = 1; .@i<=10; ++.@i)
+		.@menu$ += ((getequipisequiped(.@i))?getequipname(.@i):.@position$[.@i]+"-[Unequipped]")+":";
+	.@part = select(.@menu$);
 	if (!getequipisequiped(.@part)) {
 		mes "[Basta]";
 		switch(.@part) {
@@ -229,17 +229,17 @@ lhz_in02,280,19,3	duplicate(MightyHammer)	Mighty Hammer#lhz	4_M_DWARF
 	switch(getequipweaponlv(.@part)) {
 	default:
 	case 0:
-		set .@price,100000;
-		set .@material,6225; //HD_Carnium
-		set .@type$,"armor";
+		.@price = 100000;
+		.@material = 6225; //HD_Carnium
+		.@type$ = "armor";
 		break;
 	case 1:
 	case 2:
 	case 3:
 	case 4:
-		set .@price,100000;
-		set .@material,6226; //HD_Bradium
-		set .@type$,"weapon";
+		.@price = 100000;
+		.@material = 6226; //HD_Bradium
+		.@type$ = "weapon";
 		break;
 	}
 	mes "[Basta]";

@@ -16,7 +16,7 @@
 //============================================================
 -	script	Nuernberg#1::OutsideFlagsA3	GUILD_FLAG,{
 
-	set .@GID, getcastledata("aldeg_cas03",1);
+	.@GID = getcastledata("aldeg_cas03",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";

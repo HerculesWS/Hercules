@@ -124,7 +124,7 @@ prt_in,88,105,2	script	Recruiter	8W_SOLDIER,{
 	}
 
 S_Volunteer:
-	set MISC_QUEST,MISC_QUEST | 8;
+	MISC_QUEST |= 8;
 	mes "[Recruiter]";
 	mes "Your registration...";
 	mes "is now complete.";
@@ -396,7 +396,7 @@ prontera,248,212,3	script	Busy Boy#prt	4_M_KID1,3,3,{
 			mes "business, I know, but";
 			mes "I'm just so desperate...";
 			emotion e_sob;
-			set prt_curse,2;
+			prt_curse = 2;
 			close;
 		}
 		else if (prt_curse == 2) {
@@ -482,7 +482,7 @@ OnTouch:
 				mes "might really break";
 				mes "something if you're";
 				mes "always that careless!";
-				set prt_curse,1;
+				prt_curse = 1;
 				close;
 			}
 			mes "[Busy-Looking Boy]";
@@ -530,7 +530,7 @@ OnTouch:
 			mes "business, I know, but";
 			mes "I'm just so desperate...";
 			emotion e_sob;
-			set prt_curse,2;
+			prt_curse = 2;
 			close;
 		}
 		else if (prt_curse == 3) {
@@ -562,7 +562,7 @@ S_GetBooks:
 		mes "careful with them! Anyway,";
 		mes "thanks for doing this for me.";
 		mes "I was really at my wit's end...";
-		set prt_curse,3;
+		prt_curse = 3;
 		getitem 7431,1; //Books
 		close;
 	}
@@ -713,7 +713,7 @@ yuno,311,195,3	script	Historian#prt01	4_M_SAGE_A,{
 		mes "to stay and chat for a bit?";
 		mes "Just give me a minute to get";
 		mes "a cool drink of water first~";
-		set prt_curse,4;
+		prt_curse = 4;
 		delitem 7431,1; //Books
 		close;
 	}
@@ -834,7 +834,7 @@ yuno,311,195,3	script	Historian#prt01	4_M_SAGE_A,{
 		mes "praise the 7 warriors' exploits";
 		mes "through this song. Isn't that";
 		mes "interesting to know about?";
-		set prt_curse,5;
+		prt_curse = 5;
 		close;
 	}
 	else if (prt_curse == 5) {
@@ -860,7 +860,7 @@ yuno,311,195,3	script	Historian#prt01	4_M_SAGE_A,{
 		mes "Ah, her name is Rodafrian.";
 		mes "I'm certain you can find her";
 		mes "somewhere in that desert town.";
-		set prt_curse,6;
+		prt_curse = 6;
 		getitem 7342,1; //File01
 		close;
 	}
@@ -1064,7 +1064,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 					mes "right at all. Are you sure";
 					mes "that's the lyric you heard?";
 					delitem 7342,1; //File01
-					set prt_curse,7;
+					prt_curse = 7;
 					close;
 				}
 
@@ -1083,7 +1083,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 				mes "["+strcharinfo(0)+"]";
 				input .@line$;
 				if (.@line$ == "The great serpent swallowed the sea.") {
-					set .@total,.@total+1;
+					.@total += 1;
 					mes "*The great serpent*";
 					mes "*swallowed the sea.*";
 				}
@@ -1091,7 +1091,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 
 				input .@line$;
 				if (.@line$ == "The eagle of the rainbow swallowed the serpent.") {
-					set .@total,.@total+1;
+					.@total += 1;
 					mes "*The eagle of the rainbow*";
 					mes "*swallowed the serpent.*";
 				}
@@ -1099,14 +1099,14 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 
 				input .@line$;
 				if (.@line$ == "Then the eagle built its nest.") {
-					set .@total,.@total+1;
+					.@total += 1;
 					mes "*Then the eagle built its nest.*";
 				}
 				else mes "*"+.@line$+"*";
 
 				input .@line$;
 				if (.@line$ == "A nest upon the swallowed sea.") {
-					set .@total,.@total+1;
+					.@total += 1;
 					mes "*A nest upon the swallowed sea.*";
 				}
 				else mes "*"+.@line$+"*";
@@ -1128,7 +1128,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 					mes "at all. Are you sure those";
 					mes "are the lyrics you heard?";
 					delitem 7342,1; //File01
-					set prt_curse,7;
+					prt_curse = 7;
 					close;
 				}
 
@@ -1251,10 +1251,10 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 			mes "Oh well, I guess I better head";
 			mes "back to the priests...)^000000";
 			if (prt_curse == 30)  {
-				set prt_curse,31;
+				prt_curse = 31;
 				changequest 18042,18044;
 			} else {
-				set prt_curse,60;
+				prt_curse = 60;
 				changequest 18051,18052;
 			}
 			close;
@@ -1282,10 +1282,10 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 		mes "For now, it would be best";
 		mes "to return to Father Bamph.^000000";
 		if (prt_curse == 30) {
-			set prt_curse,40;
+			prt_curse = 40;
 			changequest 18042,18045;
 		} else {
-			set prt_curse,56;
+			prt_curse = 56;
 			completequest 18051;
 		}
 		close;
@@ -1361,7 +1361,7 @@ S_GiveName:
 	mes "need to know this song's lyrics";
 	mes "for the sake of my research...";
 	if (getarg(0) == 1) delitem 7342,1; //File01
-	set prt_curse,8;
+	prt_curse = 8;
 	changequest 18031,18032;
 	close;
 }
@@ -1500,7 +1500,7 @@ mjolnir_01,135,168,3	script	Historian#prt03	4_M_SAGE_A,{
 		mes "find what you're looking";
 		mes "for. Good luck in your";
 		mes "travels, adventurer.";
-		set prt_curse,11;
+		prt_curse = 11;
 		changequest 18032,18033;
 		close;
 	}
@@ -1519,7 +1519,7 @@ S_Song:
 	mes "["+strcharinfo(0)+"]";
 	input .@line$;
 	if (.@line$ == "The great serpent swallowed the sea.") {
-		set .@total,.@total+1;
+		.@total += 1;
 		mes "*The great serpent*";
 		mes "*swallowed the sea.*";
 	}
@@ -1527,21 +1527,21 @@ S_Song:
 
 	input .@line$;
 	if (.@line$ == "The eagle of the rainbow swallowed the serpent.") {
-		set .@total,.@total+1;
+		.@total += 1;
 		mes "*The eagle of the rainbow*";
 		mes "*swallowed the serpent.*";
 	}
 	else mes "*"+.@line$+"*";
 
 	input .@line$;
-	if (.@line$ == "Then the eagle built its nest.") set .@total,.@total+1;
+	if (.@line$ == "Then the eagle built its nest.") .@total += 1;
 	mes "*"+.@line$+"*";
 
 	input .@line$;
-	if (.@line$ == "A nest upon the swallowed sea.") set .@total,.@total+1;
+	if (.@line$ == "A nest upon the swallowed sea.") .@total += 1;
 	mes "*"+.@line$+"*";
 
-	if (.@total == 4) set prt_curse,10;
+	if (.@total == 4) prt_curse = 10;
 	else {
 		next;
 		mes "["+strcharinfo(0)+"]";
@@ -1549,7 +1549,7 @@ S_Song:
 		mes "I think I messed up!";
 		mes "(Those weren't the";
 		mes "correct lyrics...)";
-		set prt_curse,9;
+		prt_curse = 9;
 	}
 	close;
 }
@@ -1692,7 +1692,7 @@ mjolnir_01,313,269,5	script	Dazed Boy#prt	4_M_KID1,{
 				next;
 				mes "[Exhausted-Looking Woman]";
 				mes "........";
-				set prt_curse,12;
+				prt_curse = 12;
 				close;
 			}
 			mes "[Exhausted-Looking Woman]";
@@ -1710,7 +1710,7 @@ mjolnir_01,313,269,5	script	Dazed Boy#prt	4_M_KID1,{
 			mes "swallowed the serpent.";
 			mes "Then snake scales grew on";
 			mes "the eagle, and it slowly died.";
-			set prt_curse,12;
+			prt_curse = 12;
 			close;
 		}
 		mes "[Absent-Minded Boy]";
@@ -1849,7 +1849,7 @@ mjolnir_01,316,268,3	script	Exhausted-Looking Woman	4_F_CAPEGIRL,{
 				next;
 				mes "[Exhausted-Looking Woman]";
 				mes "........";
-				set prt_curse,12;
+				prt_curse = 12;
 				close;
 			}
 			mes "[Exhausted-Looking Woman]";
@@ -1867,7 +1867,7 @@ mjolnir_01,316,268,3	script	Exhausted-Looking Woman	4_F_CAPEGIRL,{
 			mes "swallowed the serpent.";
 			mes "Then snake scales grew on";
 			mes "the eagle, and it slowly died.";
-			set prt_curse,12;
+			prt_curse = 12;
 			close;
 		}
 		mes "[Exhausted-Looking Woman]";
@@ -1943,7 +1943,7 @@ mjolnir_01,316,268,3	script	Exhausted-Looking Woman	4_F_CAPEGIRL,{
 		mes "herbs to Prontera Church";
 		mes "before I talk to Rodafrian.)^000000";
 		getitem 7432,1; //Leather_Pouch
-		set prt_curse,13;
+		prt_curse = 13;
 		changequest 18033,18034;
 		close;
 	}
@@ -2042,7 +2042,7 @@ mjolnir_01,316,268,3	script	Exhausted-Looking Woman	4_F_CAPEGIRL,{
 		mes "to Prontera Church";
 		mes "and let Father Bamph";
 		mes "know about this information.)^000000";
-		set prt_curse,17;
+		prt_curse = 17;
 		changequest 18035,18036;
 		close;
 	}
@@ -2119,17 +2119,17 @@ mjolnir_01,316,268,3	script	Exhausted-Looking Woman	4_F_CAPEGIRL,{
 		mes "this burdensome guilt...";
 		mes "Thank you, kind adventurer~";
 		if (prt_curse == 35) {
-			set prt_curse,36;
+			prt_curse = 36;
 			completequest 18050;
 		} else if (prt_curse == 44) {
-			set prt_curse,45;
+			prt_curse = 45;
 			completequest 18049;
 		} else {
 			next;
 			mes "^3355FFNow, you can return to";
 			mes "Rodafrian, the historian";
 			mes "stationed in Morroc.^000000";
-			set prt_curse,55;
+			prt_curse = 55;
 			changequest 18049,18051;
 		}
 
@@ -2271,7 +2271,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "Well then, adventurer, give";
 		mes "me the opportunity to tell you";
 		mes "something very important. But, you must not tell anyone else...";
-		set prt_curse,14;
+		prt_curse = 14;
 		delitem 7432,1; //Leather_Pouch
 		close;
 	}
@@ -2377,7 +2377,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "listen to what we have";
 		mes "to ask from here on...";
 		emotion e_dots;
-		set prt_curse,15;
+		prt_curse = 15;
 		close;
 	}
 	else if (prt_curse == 15) {
@@ -2456,7 +2456,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "and the song, or if she can";
 		mes "remember anything that happened";
 		mes "after the exorcism failed...";
-		set prt_curse,16;
+		prt_curse = 16;
 		changequest 18034,18035;
 		close;
 	}
@@ -2497,7 +2497,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "Just use the switch hidden";
 		mes "within the bookshelf and";
 		mes "I will meet you there.";
-		set prt_curse,18;
+		prt_curse = 18;
 		changequest 18036,18037;
 		close;
 	}
@@ -2534,7 +2534,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "can learn anything about how";
 		mes "we can verify whether poison";
 		mes "was used to kill the princes?";
-		set prt_curse,23;
+		prt_curse = 23;
 		changequest 18039,18040;
 		close;
 	}
@@ -2568,7 +2568,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "Gemstone and 1 Green Potion";
 		mes "to the secret ceremonial grounds as soon as you can? I will wait";
 		mes "over there for you once again.";
-		set prt_curse,32;
+		prt_curse = 32;
 		changequest 18044,18046;
 		close;
 	}
@@ -2609,7 +2609,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "that I cannot personally thank";
 		mes "you for all of your help. I'm very grateful for what you have done,";
 		mes "adventurer. May safety accompany you on all of your journeys.";
-		set prt_curse,35;
+		prt_curse = 35;
 		changequest 18047,18050;
 		close;
 	}
@@ -2642,7 +2642,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "Gemstone^000000 and ^3131FF1 Green Potion^000000";
 		mes "to the secret ceremonial grounds as soon as you can? I will wait";
 		mes "over there for you once again.";
-		set prt_curse,41;
+		prt_curse = 41;
 		changequest 18045,18046;
 		close;
 	}
@@ -2682,9 +2682,9 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "you for all of your help. I'm very grateful for what you have done,";
 		mes "adventurer. May safety accompany you on all of your journeys.";
 		if (prt_curse == 43)
-			set prt_curse,44;
+			prt_curse = 44;
 		else
-			set prt_curse,54;
+			prt_curse = 54;
 		changequest 18047,18049;
 		getexp (checkre(3))?90000:1600000,0;
 		close;
@@ -2720,7 +2720,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "Gemstone^000000 and ^3131FF1 Green Potion^000000";
 		mes "to the secret ceremonial grounds as soon as you can? I will wait";
 		mes "over there for you once again.";
-		set prt_curse,51;
+		prt_curse = 51;
 		changequest 18043,18046;
 		close;
 	}
@@ -2775,7 +2775,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "you refrain from entering the";
 		mes "secret ceremonial grounds";
 		mes "from now on. Thanks again for your help, "+strcharinfo(0)+".";
-		set prt_curse,61;
+		prt_curse = 61;
 		completequest 18052;
 		close;
 	}
@@ -2819,7 +2819,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 				mes "speak to our informant, ^6B8E23Larjes^000000,";
 				mes "and he will assist you in your";
 				mes "search for the lost official.";
-				set aru_monas,2;
+				aru_monas = 2;
 				changequest 17000,17001;
 				close;
 			}
@@ -2849,7 +2849,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 				mes "think they would make";
 				mes "their move so soon. Hmm...";
 				mes "Give me a moment to think.";
-				set aru_monas,5;
+				aru_monas = 5;
 				close;
 			}
 			else if (aru_monas == 5) {
@@ -2893,7 +2893,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 					mes "Please accept this money";
 					mes "to cover your Airship fee.";
 					mes "Thank you, and good luck.";
-					set aru_monas,6;
+					aru_monas = 6;
 					Zeny += (checkre(0)?5000:1500);
 					changequest 17002,17003;
 					close;
@@ -3010,7 +3010,7 @@ prt_church,184,110,3	script	Father Biscuss	1_M_PASTOR,{
 		mes "on behalf of the Prontera";
 		mes "Church, I want to thank";
 		mes "you for all of your help.";
-		set prt_curse,36;
+		prt_curse = 36;
 		completequest 18048;
 		getexp (checkre(3))?90000:1600000,0;
 		close;
@@ -3076,7 +3076,7 @@ prt_church,16,114,4	script	Father Bamph#tomb	1_M_PASTOR,{
 		mes "that were killed during";
 		mes "the exorcism. Please take";
 		mes "a look at the body to the left.";
-		set prt_curse,19;
+		prt_curse = 19;
 		close;
 	}
 	else if (prt_curse == 19) {
@@ -3137,9 +3137,9 @@ prt_church,16,114,4	script	Father Bamph#tomb	1_M_PASTOR,{
 		mes "and to think about all of";
 		mes "this carefully. For now,";
 		mes "let's go back upstairs.";
-		if (prt_curse == 33) set prt_curse,34;
-		else if (prt_curse == 42) set prt_curse,43;
-		else set prt_curse,53;
+		if (prt_curse == 33) prt_curse = 34;
+		else if (prt_curse == 42) prt_curse = 43;
+		else prt_curse = 53;
 		close;
 	}
 	else if (prt_curse == 43 || prt_curse == 53) {
@@ -3169,7 +3169,7 @@ prt_church,19,111,5	script	#prince1	4_M_LIEMAN,{
 		mes "pulling up the sleeve, you";
 		mes "note that the mark resembles";
 		mes "the scales of a serpent.^000000";
-		set prt_curse,20;
+		prt_curse = 20;
 		changequest 18037,18038;
 		close;
 	}
@@ -3230,7 +3230,7 @@ prt_church,21,111,5	script	#prince2	4_M_LIEMAN,{
 		mes "that a conspiracy may be";
 		mes "involved. Let's go check";
 		mes "the body of the third prince.";
-		set prt_curse,21;
+		prt_curse = 21;
 		changequest 18038,18039;
 		close;
 	}
@@ -3307,7 +3307,7 @@ prt_church,24,111,5	script	#prince3	4_M_LIEMAN,{
 		mes "continue this conversation";
 		mes "outside, shall we? I'd prefer";
 		mes "not to disturb these bodies...";
-		set prt_curse,22;
+		prt_curse = 22;
 		close;
 	}
 	else if (prt_curse == 22) {
@@ -3339,9 +3339,9 @@ prt_church,24,111,5	script	#prince3	4_M_LIEMAN,{
 			mes "fade until they disappear.^000000";
 			delitem 506,1; //Green_Potion
 			delitem 715,1; //Yellow_Gemstone
-			if (prt_curse == 32) set prt_curse,33;
-			else if (prt_curse == 41) set prt_curse,42;
-			else set prt_curse,52;
+			if (prt_curse == 32) prt_curse = 33;
+			else if (prt_curse == 41) prt_curse = 42;
+			else prt_curse = 52;
 			changequest 18046,18047;
 			close;
 		}
@@ -3401,7 +3401,7 @@ moc_fild16,201,295,5	script	Assassin Guildsman#poiso	4_M_ACROSS,{
 			mes "in the 7 o'clock direction";
 			mes "in Morroc. Go find someone";
 			mes "named ^3131FFMarjana^000000 inside.";
-			set prt_curse,24;
+			prt_curse = 24;
 			changequest 18040,18041;
 			close;
 		}
@@ -3525,7 +3525,7 @@ que_job01,10,16,5	script	Marjana#poison	4_F_ACROSS,{
 		mes "won't work if too much time";
 		mes "has passed after the murder.";
 		mes "You better try this soon...";
-		set prt_curse,25;
+		prt_curse = 25;
 		close;
 	}
 
@@ -3588,7 +3588,7 @@ OnTouch:
 			mes "She's much closer than";
 			mes "Father Bamph, so I guess";
 			mes "that I'll go talk to her first.";
-			set prt_curse,30;
+			prt_curse = 30;
 			changequest 18041,18042;
 			close;
 		}
@@ -3598,7 +3598,7 @@ OnTouch:
 		mes "and investigate the princes'";
 		mes "bodies. I better head over";
 		mes "to Prontera right away.";
-		set prt_curse,50;
+		prt_curse = 50;
 		changequest 18041,18043;
 		close;
 	}

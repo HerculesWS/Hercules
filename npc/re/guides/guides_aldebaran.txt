@@ -21,11 +21,11 @@ aldebaran,139,63,4	script	Guide#01aldebaran::GuideAldearan	8W_SOLDIER,{
 	mes "Do you need help navigating the city?";
 	F_Navi("[Al De Baran Guide]");
 	next;
-	set .@str$,"Would you like to check any other locations?";
+	.@str$ = "Would you like to check any other locations?";
 	while (1) {
 		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
 		case 1:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Kafra Headquarters ]:[ Alchemist Guild ]:[ Clock Tower ]:[ Inn & Tool Shop ]:[ Repair & Buy Equipment ]:[ Tavern ]:Previous Menu")) {
 				case 1:
@@ -70,13 +70,13 @@ aldebaran,139,63,4	script	Guide#01aldebaran::GuideAldearan	8W_SOLDIER,{
 					next;
 					break;
 				case 7:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
 			break;
 		case 2:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Eden Teleport Officer ]:[ Kafra Employee ]:[ Mr. Claus ]:[ Chef Assistant ]:Previous Menu")) {
 				case 1:
@@ -107,7 +107,7 @@ aldebaran,139,63,4	script	Guide#01aldebaran::GuideAldearan	8W_SOLDIER,{
 					next;
 					break;
 				case 5:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}

@@ -18,7 +18,7 @@
 //============================================================
 -	script	Bamboo Grove Hill#1::OutsideFlagsPA5	GUILD_FLAG,{
 
-	set .@GID, getcastledata("payg_cas05",1);
+	.@GID = getcastledata("payg_cas05",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";

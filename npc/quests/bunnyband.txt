@@ -32,7 +32,7 @@ alberta,26,229,0	script	Kafra Employee#bunny	4_M_01,{
 			mes "all the items...";
 			next;
 			setarray .@items[0],949,100,706,1,722,1,2213,1;
-			for(set .@i,0; .@i<8; set .@i,.@i+2)
+			for(.@i = 0; .@i<8; .@i += 2)
 				if (countitem(.@items[.@i]) < .@items[.@i+1]) {
 					mes "[Kafra Employee]";
 					mes "Ooh, I'm sorry";
@@ -49,7 +49,7 @@ alberta,26,229,0	script	Kafra Employee#bunny	4_M_01,{
 			mes "Please wait a moment";
 			mes "while I put it together...";
 			next;
-			for(set .@i,0; .@i<8; set .@i,.@i+2)
+			for(.@i = 0; .@i<8; .@i += 2)
 				if (countitem(.@items[.@i]) < .@items[.@i+1]) {
 					mes "[Kafra Employee]";
 					mes "Hm? I'm sorry,";
@@ -69,7 +69,7 @@ alberta,26,229,0	script	Kafra Employee#bunny	4_M_01,{
 			mes "The perfect Bunny Band!";
 			mes "Well, I hope you enjoy it.";
 			getitem 2214,1; //Bunny_Band
-			set BUNYBND,0;
+			BUNYBND = 0;
 			next;
 			mes "[Kafra Employee]";
 			mes "Thank you for";
@@ -93,7 +93,7 @@ alberta,26,229,0	script	Kafra Employee#bunny	4_M_01,{
 	next;
 	switch(select("Join the Event:Event Information:Cancel")) {
 	case 1:
-		set BUNYBND,1;
+		BUNYBND = 1;
 		mes "[Kafra Employee]";
 		mes "Great! Thanks for";
 		mes "participating! If you";

@@ -19,7 +19,7 @@
 
 HPExport struct hplugin_info pinfo = {
 	"Sample",		// Plugin name
-	SERVER_TYPE_MAP,// Which server types this plugin works with?
+	SERVER_TYPE_LOGIN|SERVER_TYPE_MAP,// Which server types this plugin works with?
 	"0.1",			// Plugin version
 	HPM_VERSION,	// HPM Version (don't change, macro is automatically updated)
 };

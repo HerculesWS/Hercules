@@ -25,7 +25,7 @@ morocc,153,286,6	script	Guide#moc::MocGuide	4_M_MOC_SOLDIER,{
 	mes "Please ask me for help if";
 	mes "you're having any trouble";
 	mes "finding anything in town.";
-	set .@loop1,1;
+	.@loop1 = 1;
 	while (.@loop1) {
 		next;
 		switch(select("City Guide:Remove Marks from Mini-Map:Notice:Cancel")) {
@@ -39,11 +39,11 @@ morocc,153,286,6	script	Guide#moc::MocGuide	4_M_MOC_SOLDIER,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes.:No.") == 1) set .@compass_check,1;
+				if (select("Yes.:No.") == 1) .@compass_check = 1;
 			}
-			set .@loop2,1;
+			.@loop2 = 1;
 			while(.@loop2) {
-				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 				
 				switch(select("^FF0000Thief Guild^000000:Weapon Shop:Inn:Pub:Mercenary Guild:Forge:Cancel")) {
@@ -108,7 +108,7 @@ morocc,153,286,6	script	Guide#moc::MocGuide	4_M_MOC_SOLDIER,{
 					mes "no longer wish to have the";
 					mes "location marks displayed";
 					mes "on your Mini-Map.";
-					set .@loop2,0;
+					.@loop2 = 0;
 				}
 			}
 			break;
@@ -119,7 +119,7 @@ morocc,153,286,6	script	Guide#moc::MocGuide	4_M_MOC_SOLDIER,{
 			viewpoint 2,175,220,5,0xFF0000;
 			viewpoint 2,175,220,6,0xFF0000;
 			viewpoint 2,175,220,7,0xFF0000;
-			set .@compass_check,0;
+			.@compass_check = 0;
 			break;
 		case 3:
 			mes "[Morroc Guide]";
@@ -152,7 +152,7 @@ morocc,153,286,6	script	Guide#moc::MocGuide	4_M_MOC_SOLDIER,{
 			mes "too much trouble";
 			mes "out there, adventurer.";
 			close2;
-			set .@loop1,0;
+			.@loop1 = 0;
 		}
 	}
 	cutin "moc_soldier",255;

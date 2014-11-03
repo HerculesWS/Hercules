@@ -444,6 +444,7 @@ typedef enum {
 	CELL_NOVENDING,
 	CELL_NOCHAT,
 	CELL_ICEWALL,
+	CELL_NOICEWALL,
 
 } cell_t;
 
@@ -467,6 +468,7 @@ typedef enum {
 	CELL_CHKNOVENDING,
 	CELL_CHKNOCHAT,
 	CELL_CHKICEWALL,
+	CELL_CHKNOICEWALL,
 
 } cell_chk;
 
@@ -484,7 +486,8 @@ struct mapcell {
 		landprotector : 1,
 		novending : 1,
 		nochat : 1,
-		icewall : 1;
+		icewall : 1,
+		noicewall : 1;
 
 #ifdef CELL_NOSTACK
 	int cell_bl; //Holds amount of bls in this cell.
@@ -847,7 +850,7 @@ struct map_interface {
 	int server_port;
 	char server_ip[32];
 	char server_id[32];
-	char server_pw[32];
+	char server_pw[100];
 	char server_db[32];
 	Sql* mysql_handle;
 	

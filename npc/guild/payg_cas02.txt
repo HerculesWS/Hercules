@@ -19,7 +19,7 @@
 //============================================================
 -	script	Scarlet Palace#1::OutsideFlagsPA2	GUILD_FLAG,{
 
-	set .@GID, getcastledata("payg_cas02",1);
+	.@GID = getcastledata("payg_cas02",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";

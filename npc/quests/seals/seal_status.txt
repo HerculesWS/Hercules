@@ -16,16 +16,16 @@
 prontera,113,294,3	script	Sign Post#god	2_BULLETIN_BOARD,{
 	mes "======== God Seal Status ========";
 	setarray .@seal$[1], "Sleipnir","Megingjard","Brisingamen","Mjolnir";
-	for(set .@i,1; .@i<=4; set .@i,.@i+1) {
-		set .@val, getd("$God"+.@i);
+	for(.@i = 1; .@i<=4; ++.@i) {
+		.@val = getd("$God"+.@i);
 		if (.@val == 0)
-			set .@status$,"Unseen";
+			.@status$ = "Unseen";
 		else if (.@val < $@god_check1)
-			set .@status$,"Active";
+			.@status$ = "Active";
 		else if (.@val < $@god_check2)
-			set .@status$,"Appeared";
+			.@status$ = "Appeared";
 		else
-			set .@status$,"Released";
+			.@status$ = "Released";
 		mes .@seal$[.@i]+" Seal: "+.@status$;
 	}
 	mes " ";

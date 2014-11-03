@@ -36,6 +36,7 @@ struct hplugin_info {
 struct s_HPMDataCheck {
 	char *name;
 	unsigned int size;
+	int type;
 };
 
 HPExport void *(*import_symbol) (char *name, unsigned int pID);

@@ -355,7 +355,7 @@ function	script	F_PotExchange	{
 					break;
 				}
 			}
-			set .@put_out_item,.@input * getarg(1);
+			.@put_out_item = .@input * getarg(1);
 			if (countitem(getarg(0)) < .@put_out_item) {
 				mes "[Merchant]";
 				mes "Uh oh, the number you entered doesn't seem right. You better check the number of Red Potions that you can trade for again.";

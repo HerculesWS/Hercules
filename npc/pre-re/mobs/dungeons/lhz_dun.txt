@@ -271,26 +271,26 @@ OnTimer7800000:
 OnSummon:
 	// Select Coordinates to summon a random MVP on
 	switch(rand(1,6)) {
-	case 1: set .@x,140;	set .@y,232;	break;
-	case 2: set .@x,75;	set .@y,138;	break;
-	case 3: set .@x,140;	set .@y,87;		break;
-	case 4: set .@x,205;	set .@y,140;	break;
-	case 5: set .@x,123;	set .@y,137;	break;
-	case 6: set .@x,175;	set .@y,137;	break;
+	case 1: .@x = 140; .@y = 232; break;
+	case 2: .@x =  75; .@y = 138; break;
+	case 3: .@x = 140; .@y =  87; break;
+	case 4: .@x = 205; .@y = 140; break;
+	case 5: .@x = 123; .@y = 137; break;
+	case 6: .@x = 175; .@y = 137; break;
 	}
-	set .@mob,rand(1646,1651);
+	.@mob = rand(1646,1651);
 	monster "lhz_dun03",.@x,.@y,strmobinfo(1,.@mob),.@mob,1,"summon_boss_lt::OnMyMVPDead";
 
 	// Select Coordinates to summon a random 99 on
 	switch(rand(1,6)) {
-	case 1: set .@x2,183;	set .@y2,97;	break;
-	case 2: set .@x2,97;	set .@y2,96;	break;
-	case 3: set .@x2,47;	set .@y2,139;	break;
-	case 4: set .@x2,231;	set .@y2,140;	break;
-	case 5: set .@x2,139;	set .@y2,211;	break;
-	case 6: set .@x2,139;	set .@y2,259;	break;
+	case 1: .@x2 = 183; .@y2 =  97; break;
+	case 2: .@x2 =  97; .@y2 =  96; break;
+	case 3: .@x2 =  47; .@y2 = 139; break;
+	case 4: .@x2 = 231; .@y2 = 140; break;
+	case 5: .@x2 = 139; .@y2 = 211; break;
+	case 6: .@x2 = 139; .@y2 = 259; break;
 	}
-	set .@mob2,rand(1640,1645);
+	.@mob2 = rand(1640,1645);
 	monster "lhz_dun03",.@x2,.@y2,strmobinfo(1,.@mob2),.@mob2,1,"summon_boss_lt::OnMVP";
 	end;
 

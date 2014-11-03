@@ -92,7 +92,7 @@ OnTouch:
 function	script	F_Malaya_Warp	{
 	mes "Where would you like to go?";
 	next;
-	set .@i$, getarg(select("Back outside",getarg(1)+" Jeepney",getarg(2)+" Jeepney") - 1);
+	.@i$ = getarg(select("Back outside",getarg(1)+" Jeepney",getarg(2)+" Jeepney") - 1);
 	close2;
 	switch(getarg(3)) {
 	case 1: // 12 passenger

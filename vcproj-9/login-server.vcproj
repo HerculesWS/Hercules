@@ -215,6 +215,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\login\HPMlogin.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\login\HPMlogin.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\login\ipban.h"
 				>
 			</File>

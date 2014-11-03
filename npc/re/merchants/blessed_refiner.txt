@@ -29,10 +29,10 @@
 	mes "How about it? Do you want to refine?";
 	next;
 	setarray .@position$[1],"Head","Body","Left Hand","Right Hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
-	set .@menu$,"";
-	for(set .@i,1; .@i<=10; set .@i,.@i+1)
-		set .@menu$, .@menu$+((getequipisequiped(.@i))?getequipname(.@i):.@position$[.@i]+"-[Unequipped]")+":";
-	set .@part, select(.@menu$);
+	.@menu$ = "";
+	for(.@i = 1; .@i<=10; ++.@i)
+		.@menu$ += ((getequipisequiped(.@i))?getequipname(.@i):.@position$[.@i]+"-[Unequipped]")+":";
+	.@part = select(.@menu$);
 	if (!getequipisequiped(.@part)) {
 		mes "[Blacksmith Dister]";
 		switch(.@part) {
@@ -70,42 +70,42 @@
 		mes "This item cannot be refined.";
 		close;
 	}
-	set .@equip_refine, getequiprefinerycnt(.@part);
+	.@equip_refine = getequiprefinerycnt(.@part);
 	if (.@equip_refine < 6 || .@equip_refine > 12) {
 		mes "[Blacksmith Dister]";
 		mes "This equipment has refined to "+.@equip_refine+". I only handle items with refine levels from +6 to +12!";
 		close;
 	}
-	set .@equip_lv, getequipweaponlv(.@part);
+	.@equip_lv = getequipweaponlv(.@part);
 	switch(.@equip_lv) {
 	default:
 	case 0:
-		set .@price,20000;
-		set .@material,6439; //Unbreakable_Def
-		set .@type$,"Armor";
+		.@price = 20000;
+		.@material = 6439; //Unbreakable_Def
+		.@type$ = "Armor";
 		break;
 	case 1:
-		set .@price,1000;
-		set .@material,6438; //Unbreakable_Weap
-		set .@type$,"Weapon";
+		.@price = 1000;
+		.@material = 6438; //Unbreakable_Weap
+		.@type$ = "Weapon";
 		break;
 	case 2:
-		set .@price,2000;
-		set .@material,6438; //Unbreakable_Weap
-		set .@type$,"Weapon";
+		.@price = 2000;
+		.@material = 6438; //Unbreakable_Weap
+		.@type$ = "Weapon";
 		break;
 	case 3:
-		set .@price,20000;
-		set .@material,6438; //Unbreakable_Weap
-		set .@type$,"Weapon";
+		.@price = 20000;
+		.@material = 6438; //Unbreakable_Weap
+		.@type$ = "Weapon";
 		break;
 	case 4:
-		set .@price,40000;
-		set .@material,6438; //Unbreakable_Weap
-		set .@type$,"Weapon";
+		.@price = 40000;
+		.@material = 6438; //Unbreakable_Weap
+		.@type$ = "Weapon";
 		break;
 	}
-	set .@ore$,"^ff9999Blessed "+.@type$+" Ore^000000";
+	.@ore$ = "^ff9999Blessed "+.@type$+" Ore^000000";
 	mes "[Blacksmith Dister]";
 	mes "This "+.@type$+" has been refined to "+.@equip_refine+". To refine it, I need "+.@ore$+" and a "+(.@price/1000)+",000 zeny refining fee.";
 	mes "Do you want to proceed?";

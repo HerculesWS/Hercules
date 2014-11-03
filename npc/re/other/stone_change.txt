@@ -25,14 +25,14 @@ geffen_in,99,174,5	script	Ore Tester#sorty	8_F_GIRL,{
 		mes "[Ore Tester Sorty]";
 		mes "So, would you like me to organize your ores?";
 		next;
-		set .@i, select("Steel, please.:Iron, please.:Iron Ore, please.:Rough Oridecon, please.:No, thanks.");
+		.@i = select("Steel, please.:Iron, please.:Iron Ore, please.:Rough Oridecon, please.:No, thanks.");
 		if (.@i == 5) {
 			mes "[Ore Tester Sorty]";
 			mes "Huh, I really hate messy people!";
 			close;
 		}
 		setarray .@ores[0],999,998,1002,756;
-		set .@item, .@ores[.@i-1];
+		.@item = .@ores[.@i-1];
 		if (countitem(.@item) == 0) {
 			mes "[Ore Tester Sorty]";
 			mes "You don't have any "+getitemname(.@item)+"...";
@@ -40,8 +40,8 @@ geffen_in,99,174,5	script	Ore Tester#sorty	8_F_GIRL,{
 		}
 		while(1) {
 			if (countitem(.@item)) {
-				set .@count, countitem(.@item);
-				set .@total, .@total + .@count;
+				.@count = countitem(.@item);
+				.@total += .@count;
 				delitem .@item, .@count;
 			} else {
 				getitem .@item, .@total;

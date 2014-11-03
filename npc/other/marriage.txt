@@ -363,7 +363,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 				delitem 2338,1; //Wedding_Dress
 			}
 			delitem 2613,1; //Diamond_Ring
-			set wedding_sign,1;
+			wedding_sign = 1;
 			goto L_End;
 		}
 		mes "[Marry Happy]";
@@ -563,10 +563,10 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 		if (!$@wedding) {
 			if (wedding_sign == 1) {
 				getpartymember(getcharid(1));
-				set .@partymembercount,$@partymembercount;
+				.@partymembercount = $@partymembercount;
 				if (.@partymembercount == 2) {
 					if (Sex) {
-						set $@wedding,1;
+						$@wedding = 1;
 						initnpctimer;
 						mes "[Vomars]";
 						mes "Young lovers, please";
@@ -593,7 +593,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 						mes "Miss " + $@wed_bride$ + "?";
 						next;
 						select("I do.");
-						set $@wed_groom$,strcharinfo(0);
+						$@wed_groom$ = strcharinfo(0);
 						mes "[Vomars]";
 						mes "Now, it is time for";
 						mes "your bride to make";
@@ -634,7 +634,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 		else if ($@wedding == 1) {
 			if (wedding_sign == 1) {
 				getpartymember(getcharid(1));
-				set .@partymembercount,$@partymembercount;
+				.@partymembercount = $@partymembercount;
 				if (.@partymembercount == 2) {
 					if (Sex == 0) {
 						if (strcharinfo(0) == $@wed_bride$) {
@@ -662,7 +662,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 								mes "want to marry? Hmm.";
 								mes "I'm truly sorry for this";
 								mes "misunderstanding...";
-								set $@wedding,0;
+								$@wedding = 0;
 								close2;
 								stopnpctimer;
 								cutin "",255;
@@ -702,9 +702,9 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 										mes "And lastly...";
 										mes "Always be happy,";
 										mes "dear "+$@wed_bride$+"...";
-										set $@wed_groom$,"";
-										set $@wed_bride$,"";
-										set $@wedding,0;
+										$@wed_groom$ = "";
+										$@wed_bride$ = "";
+										$@wedding = 0;
 										close2;
 										stopnpctimer;
 										cutin "",255;
@@ -732,9 +732,9 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 								mes "must do what your heart";
 								mes "tells you is right. Now, run!";
 							}
-							set $@wed_groom$,"";
-							set $@wed_bride$,"";
-							set $@wedding,0;
+							$@wed_groom$ = "";
+							$@wed_bride$ = "";
+							$@wedding = 0;
 							close2;
 							stopnpctimer;
 							cutin "",255;
@@ -795,9 +795,9 @@ OnStop:
 	end;
 
 OnReset:
-	set $@wed_groom$,"";
-	set $@wed_bride$,"";
-	set $@wedding,0;
+	$@wed_groom$ = "";
+	$@wed_bride$ = "";
+	$@wedding = 0;
 	end;
 
 OnTimer180000:
@@ -876,7 +876,7 @@ prt_church,20,179,4	script	Divorce Staff	1_F_LIBRARYGIRL,{
 	next;
 	switch(select("Drop 1 Wedding Ring.:Keep it.")) {
 	case 1:
-		set .@ring, (Sex)?2634:2635; //Bridegroom_Ring, Bride_Ring
+		.@ring = (Sex)?2634:2635; //Bridegroom_Ring, Bride_Ring
 		if (countitem(.@ring)) {
 			delitem .@ring,1;
 			mes "[Bad Ending]";
@@ -931,7 +931,7 @@ prt_church,22,179,4	script	Remarry Staff	1_F_LIBRARYGIRL,{
 	next;
 	switch(select("Make new Wedding Ring.:Cancel.")) {
 	case 1:
-		set .@ring, (Sex)?2634:2635; //Bridegroom_Ring, Bride_Ring
+		.@ring = (Sex)?2634:2635; //Bridegroom_Ring, Bride_Ring
 		if (countitem(.@ring) || isequipped(.@ring)) {
 			mes "[Wedding Again]";
 			mes "Wait, wait...";

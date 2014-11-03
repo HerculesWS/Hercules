@@ -41,10 +41,10 @@ prontera,98,121,4	script	Acolyte#Prtclear	4_F_01,{
 		setarray .@maps$[0],  "izlude", "geffen", "payon", "morocc", "alberta",   "aldebaran", "comodo", "umbala", "yuno";
 		setarray .@cost[0],        600,     1200,    1200,     1200,      1800,          2200,     2200,     2200,   1800;
 
-		set .@size, getarraysize(.@towns$);
-		for(set .@i,0; .@i<.@size; set .@i,.@i+1)
-			set .@menu$, .@menu$+.@towns$[.@i]+" -> "+.@cost[.@i]+"z:";
-		set .@i, select(.@menu$+"Cancel")-1;
+		.@size = getarraysize(.@towns$);
+		for(.@i = 0; .@i<.@size; ++.@i)
+			.@menu$ += .@towns$[.@i]+" -> "+.@cost[.@i]+"z:";
+		.@i = select(.@menu$+"Cancel")-1;
 		if (.@i == .@size)
 			close;
 		if (Zeny < .@cost[.@i]) {
@@ -104,10 +104,10 @@ yuno,142,184,6	script	Acolyte#Junoclear	4_F_01,{
 		setarray .@maps$[0],  "einbroch", "lighthalzen", "hugel", "rachel", "prontera";
 		setarray .@cost[0],         2200,          2200,    2200,     2200,       1800;
 
-		set .@size, getarraysize(.@towns$);
-		for(set .@i,0; .@i<.@size; set .@i,.@i+1)
-			set .@menu$, .@menu$+.@towns$[.@i]+" -> "+.@cost[.@i]+"z:";
-		set .@i, select(.@menu$+"Cancel")-1;
+		.@size = getarraysize(.@towns$);
+		for(.@i = 0; .@i<.@size; ++.@i)
+			.@menu$ += .@towns$[.@i]+" -> "+.@cost[.@i]+"z:";
+		.@i = select(.@menu$+"Cancel")-1;
 		if (.@i == .@size)
 			close;
 		if (Zeny < .@cost[.@i]) {

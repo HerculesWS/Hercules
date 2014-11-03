@@ -21,13 +21,12 @@ job3_rune01,88,62,5	script	Dragon Breeder	8W_SOLDIER,{
 		next;
 		switch(select("Yes:No")) {
 		case 1:
-			//if (!getskilllv("RK_DRAGONTRAINING")) {
-			if (!getskilllv("KN_RIDING")) {
+			//if (!getskilllv(RK_DRAGONTRAINING)) {
+			if (!getskilllv(KN_RIDING)) {
 				mes "[Dragon Breeder]";
 				mes "Please learn how to ride a Dragon first.";
 				close;
-			}
-			else if (checkriding()) {
+			} else if (checkmount()) {
 				mes "[Dragon Breeder]";
 				mes "You already have a Dragon.";
 				close;
@@ -36,7 +35,7 @@ job3_rune01,88,62,5	script	Dragon Breeder	8W_SOLDIER,{
 				mes "Please remove your cash mount.";
 				close;
 			}
-			setdragon;
+			setmount(MOUNT_DRAGON);
 			close;
 		case 2:
 			mes "[Dragon Breeder]";
@@ -58,13 +57,12 @@ prontera,130,213,5	script	Riding Creature Master	8W_SOLDIER,{
 		next;
 		switch(select("Yes:No")) {
 		case 1:
-			//if (!getskilllv("RK_DRAGONTRAINING")) {
-			if (!getskilllv("KN_RIDING")) {
+			//if (!getskilllv(RK_DRAGONTRAINING)) {
+			if (!getskilllv(KN_RIDING)) {
 				mes "[Riding Creature Master]";
 				mes "Please learn how to ride a Dragon first.";
 				close;
-			}
-			else if (checkriding()) {
+			} else if (checkmount()) {
 				mes "[Riding Creature Master]";
 				mes "You already have a Dragon.";
 				close;
@@ -73,7 +71,7 @@ prontera,130,213,5	script	Riding Creature Master	8W_SOLDIER,{
 				mes "Please remove your cash mount.";
 				close;
 			}
-			setdragon;
+			setmount(MOUNT_DRAGON);
 			close;
 		case 2:
 			mes "[Riding Creature Master]";
@@ -86,12 +84,11 @@ prontera,130,213,5	script	Riding Creature Master	8W_SOLDIER,{
 		next;
 		switch(select("Yes:No")) {
 		case 1:
-			if(!getskilllv("KN_RIDING")) {
+			if(!getskilllv(KN_RIDING)) {
 				mes "[Riding Creature Master]";
 				mes "Please learn how to ride a Gryphon first.";
 				close;
-			}
-			else if (checkriding()) {
+			} else if (checkmount()) {
 				mes "[Riding Creature Master]";
 				mes "You already have a Gryphon.";
 				close;
@@ -100,7 +97,7 @@ prontera,130,213,5	script	Riding Creature Master	8W_SOLDIER,{
 				mes "Please remove your cash mount.";
 				close;
 			}
-			setriding;
+			setmount(MOUNT_PECO);
 			close;
 		case 2:
 			mes "[Riding Creature Master]";
@@ -119,7 +116,7 @@ prontera,125,208,5	script	Peco Peco Remover	8W_SOLDIER,{
 	mes "If you're unable to dismount from a Peco Peco";
 	mes "for some unknown reason,";
 	mes "please feel free to use my services.";
-	if (checkriding()) {
+	if (checkmount() == MOUNT_PECO) {
 		next;
 		mes "[Soldier]";
 		mes "You're riding a Peco Peco.";
@@ -127,7 +124,7 @@ prontera,125,208,5	script	Peco Peco Remover	8W_SOLDIER,{
 		next;
 		switch(select("Yes:No")) {
 		case 1:
-			setriding 0;
+			setmount(MOUNT_NONE);
 			mes "[Soldier]";
 			mes "Say, how does it feel to";
 			mes "step on the ground on your own";
@@ -165,13 +162,12 @@ prontera,125,208,5	script	Peco Peco Remover	8W_SOLDIER,{
 			mes "There you go!";
 			close;
 		case 2:
-			if (checkmadogear()) {
+			if (checkmount() == MOUNT_MADO) {
 				mes "[Magic Gear Master]";
 				mes "I'm sorry, but you're already";
 				mes "riding a Magic Gear.";
 				close;
-			}
-			else if (!getskilllv("NC_MADOLICENCE")) {
+			} else if (!getskilllv(NC_MADOLICENCE)) {
 				mes "[Magic Gear Master]";
 				mes "Please learn the skill to get the Magic Gear License first.";
 				close;
@@ -180,7 +176,7 @@ prontera,125,208,5	script	Peco Peco Remover	8W_SOLDIER,{
 				mes "Please remove your cash mount.";
 				close;
 			}
-			setmadogear;
+			setmount(MOUNT_MADO);
 			mes "[Magic Gear Master]";
 			mes "Have fun, and please come again!";
 			close;

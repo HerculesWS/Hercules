@@ -13,8 +13,8 @@
 //============================================================
 
 moc_fild17,66,273,5	script	Lemly#Frilldora_Hunt	4_F_JOB_ASSASSIN,{
-	if (checkquest(60134) != -1) {
-		if (checkquest(60134,HUNTING) != 2 ) {
+	if (questprogress(60134)) {
+		if (questprogress(60134,HUNTING) != 2) {
 			mes "[Lemly]";
 			mes "Have you finished hunting the 50 Frilldora?";
 			next;
@@ -53,8 +53,8 @@ moc_fild17,66,273,5	script	Lemly#Frilldora_Hunt	4_F_JOB_ASSASSIN,{
 			close;
 		}
 	}
-	if (checkquest(60135) != -1) {
-		if (checkquest(60135,HUNTING) != 2 ) {
+	if (questprogress(60135)) {
+		if (questprogress(60135,HUNTING) != 2) {
 			mes "[Lemly]";
 			mes "Have you finished hunting the 50 Frilldora?";
 			next;
@@ -94,8 +94,8 @@ moc_fild17,66,273,5	script	Lemly#Frilldora_Hunt	4_F_JOB_ASSASSIN,{
 			close;
 		}
 	}
-	if (checkquest(60136) != -1) {
-		if (checkquest(60136,HUNTING) != 2 ) {
+	if (questprogress(60136)) {
+		if (questprogress(60136,HUNTING) != 2) {
 			mes "[Lemly]";
 			mes "Have you finished hunting the 150 Frilldora?";
 			next;

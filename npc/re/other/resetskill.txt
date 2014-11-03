@@ -61,10 +61,10 @@ izlude,127,175,3	script	Hypnotist#novice	4_F_TELEPORTER,{
 		mes "work, or will backfire...";
 		close;
 	case 2:
-		set .@str$,"Stat";
+		.@str$ = "Stat";
 	case 3:
 		if (.@str$ == "")
-			set .@str$,"Skill";
+			.@str$ = "Skill";
 		mes "[Hypnotist]";
 		mes "Are you sure that you";
 		mes "want to proceed with";

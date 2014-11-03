@@ -131,7 +131,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "sitting! I'm bushed, so it's";
 		mes "time for a break. But we'll";
 		mes "continue this later, okay?";
-		set tu_magician01, 1;
+		tu_magician01 = 1;
 		if (checkre(3))
 			getexp BaseLevel*3,BaseLevel*2;
 		else
@@ -209,7 +209,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "only slightly injured and the";
 				mes "Fire Wall won't necessarily";
 				mes "block its approach. So beware!";
-				set .@eread_1,1;
+				.@eread_1 = 1;
 				next;
 				break;
 			case 2:
@@ -244,7 +244,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "afterwards, like Fire Bolt and";
 				mes "Fire Ball, to take advantage of";
 				mes "the monster's Earth property.";
-				set .@eread_2,1;
+				.@eread_2 = 1;
 				next;
 				break;
 			case 3:
@@ -282,7 +282,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "the ^93DB70Wind^000000 property skills";
 				mes "that we Mages can use are";
 				mes "Lighning Bolt and Thunder Storm.";
-				set .@eread_3,1;
+				.@eread_3 = 1;
 				next;
 				break;
 			case 4:
@@ -319,7 +319,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "actually freeze monsters.";
 				mes "While monsters are frozen by";
 				mes "Frost Diver, they're considered Water monsters. Interesting, huh?";
-				set .@eread_4,1;
+				.@eread_4 = 1;
 				next;
 				break;
 			case 5:
@@ -352,7 +352,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "shield against long range";
 				mes "attacks or strong property";
 				mes "attacks, so be really careful!";
-				set .@eread_5,1;
+				.@eread_5 = 1;
 				next;
 				break;
 			case 6:
@@ -369,7 +369,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 					mes "Alrighty, we'll";
 					mes "move on to the next";
 					mes "subject then. Ho ho ho~!";
-					set tu_magician01,2;
+					tu_magician01 = 2;
 					specialeffect2 EF_HIT5;
 					if(.@eread_1) getexp 150,70;
 					if(.@eread_2) getexp 150,70;
@@ -456,7 +456,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "until you've collected";
 		mes "10 Chrysalis from them.";
 		mes "Then bring them to me, okay?";
-		set tu_magician01, 3;
+		tu_magician01 = 3;
 		getexp 400,200;
 		specialeffect2 EF_HIT5;
 		close;
@@ -474,7 +474,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 			mes "from here and hunt Pupa";
 			mes "to get more Chrysalis, okay?";
 			mes "For now, I'll just heal you up.";
-			set tu_magician01, 4;
+			tu_magician01 = 4;
 			percentheal 100,100;
 			close;
 		} else {
@@ -484,7 +484,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 			mes "By now, you must be more";
 			mes "used to using your skills, huh?";
 			mes "Anyway, let me know when you're ready for the next lesson, okay?";
-			set tu_magician01, 5;
+			tu_magician01 = 5;
 			getexp 400,200;
 			specialeffect2 EF_HIT5;
 			close;
@@ -512,7 +512,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 			mes "By now, you must be more";
 			mes "used to using your skills, huh?";
 			mes "Anyway, let me know when you're ready for the next lesson, okay?";
-			set tu_magician01, 5;
+			tu_magician01 = 5;
 			getexp 400,200;
 			specialeffect2 EF_HIT5;
 			close;
@@ -542,7 +542,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "of Soul Strike and increase";
 				mes "that skill's level, it will grow in strength and you'll be able";
 				mes "to cast it much more quickly.";
-				set .@skill_e1,1;
+				.@skill_e1 = 1;
 				next;
 				break;
 			case 2:
@@ -562,7 +562,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "certain number of attacks,";
 				mes "depending on the level of the";
 				mes "Safety Wall skill that you use.";
-				set .@skill_e2,1;
+				.@skill_e2 = 1;
 				next;
 				break;
 			case 3:
@@ -582,7 +582,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "good use of the destructive";
 				mes "power of the Fire Ball!";
 				next;
-				set .@skill_e3,1;
+				.@skill_e3 = 1;
 				break;
 			case 4:
 				mes "[Mana]";
@@ -608,7 +608,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "skill, its damage and chance";
 				mes "of freezing monsters will also";
 				mes "increase. Pretty dangerous, eh? ^FFFFFFkamenriderblack^000000";
-				set .@skill_e4,1;
+				.@skill_e4 = 1;
 				next;
 				break;
 			case 5:
@@ -627,7 +627,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "within a certain range.";
 				mes "It's an incredibly potent";
 				mes "ground targeting attack.";
-				set .@skill_e5,1;
+				.@skill_e5 = 1;
 				next;
 				break;
 			case 6:
@@ -653,7 +653,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "Fire Well strategically";
 				mes "and effectively, it can";
 				mes "be a very powerful skill~";
-				set .@skill_e6,1;
+				.@skill_e6 = 1;
 				next;
 				break;
 			case 7:
@@ -672,7 +672,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "learn Energy Coat, I'm";
 				mes "sure Blizardis will tell";
 				mes "you all you need to know.";
-				set .@skill_e7,1;
+				.@skill_e7 = 1;
 				next;
 				break;
 			case 8:
@@ -690,7 +690,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "you to help you in your";
 				mes "training. I hope it comes";
 				mes "in handy when fighting...";
-				set tu_magician01, 6;
+				tu_magician01 = 6;
 				getitem 1604,1; //Wand
 				specialeffect2 EF_HIT5;
 				if(.@skill_e1) getexp 300,100;
@@ -737,7 +737,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 			mes "done with what Yierhan";
 			mes "has you do, come back";
 			mes "and report to me, okay?";
-			set tu_magician01, 7;
+			tu_magician01 = 7;
 			emotion e_heh;
 			warp "morocc",182,286;
 			close;
@@ -784,7 +784,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "a little reward for helping";
 		mes "out both of our guilds. Once";
 		mes "again, thanks very much~";
-		set tu_magician01, 28;
+		tu_magician01 = 28;
 		getitem 2321,1; //Silk_Robe
 		Zeny += 3000;
 		getexp 3000,1000;

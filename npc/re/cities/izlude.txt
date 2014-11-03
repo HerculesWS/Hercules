@@ -89,7 +89,7 @@ function	script	F_IzludeChannel	{
 	mes "I can send you to another copy of Izlude.";
 	mes "Do you want to go to another copy?";
 	next;
-	set .@i, select(getarg(0)+":Never mind");
+	.@i = select(getarg(0)+":Never mind");
 	if (.@i < 6) {
 		setarray .@maps$[1],"izlude","izlude_a","izlude_b","izlude_c","izlude_d";
 		savepoint .@maps$[.@i],128,98;

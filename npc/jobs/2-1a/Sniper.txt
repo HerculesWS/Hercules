@@ -15,7 +15,7 @@
 
 valkyrie,44,55,5	script	Sniper#Valkyrie	4_F_JOB_HUNTER,{
 	if (ADVJOB == 0 || Upper != 1) {
-		set .@karma_d,rand(1,10);
+		.@karma_d = rand(1,10);
 		if (.@karma_d > 4) {
 			mes "[Sniper]";
 			mes "Congratulations.";
@@ -57,7 +57,7 @@ valkyrie,44,55,5	script	Sniper#Valkyrie	4_F_JOB_HUNTER,{
 			close;
 		}
 		jobchange Job_Sniper;
-		set ADVJOB,0;
+		ADVJOB = 0;
 		mes "[Sniper]";
 		mes "Congratulations!";
 		mes "As a Sniper, I hope";

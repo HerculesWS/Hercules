@@ -34,18 +34,18 @@
 	mes "Each Herb costs 4,000 zeny.";
 	mes "What would you like?";
 	next;
-	set .@i, select("Nerium:Rantana:Makulata:Seratum:Scopolia:Amoena:Poison Kit:Cancel")-1;
+	.@i = select("Nerium:Rantana:Makulata:Seratum:Scopolia:Amoena:Poison Kit:Cancel")-1;
 	mes "[Poison Herb Merchant]";
 	if (.@i < 6) {
-		set .@item,7932+.@i;
-		set .@price,4000;
-		set .@max,2000;
-		set .@max$,"2,000";
+		.@item = 7932+.@i;
+		.@price = 4000;
+		.@max = 2000;
+		.@max$ = "2,000";
 	} else if (.@i == 6) {
-		set .@item,7931;
-		set .@price,5000;
-		set .@max,500;
-		set .@max$,"500";
+		.@item = 7931;
+		.@price = 5000;
+		.@max = 500;
+		.@max$ = "500";
 		mes "Each Poison Kit costs 5,000 zeny.";
 	} else {
 		mes "Well, I see. Come back again~!";
@@ -66,7 +66,7 @@
 		mes "The number must be less than "+.@max$+"!";
 		close;
 	}
-	set .@total, .@amount * .@price;
+	.@total = .@amount * .@price;
 	if (Zeny < .@total) {
 		mes "[Poison Herb Merchant]";
 		mes "You don't have enough money.";
@@ -99,18 +99,18 @@ lhz_in02,16,205,4	duplicate(phs)	Poison Herb Merchant#lhz	4_F_YUNYANG
 	mes "I sell all sorts of Rune Stones!";
 	mes "What would you like?";
 	next;
-	set .@i, select("Buy high-quality Rune Stones.:Buy ordinary Rune Stones.");
+	.@i = select("Buy high-quality Rune Stones.:Buy ordinary Rune Stones.");
 	mes "[Rune Merchant]";
 	if (.@i == 1) {
 		mes "High-quality Runes!";
 		mes "They cost 2,500 zeny each!";
-		set .@item,12734; //Runstone_Quality
-		set .@price,2500;
+		.@item = 12734; //Runstone_Quality
+		.@price = 2500;
 	} else {
 		mes "Ordinary Rune Stones?";
 		mes "They cost 1,000 zeny each!";
-		set .@item,12737; //Runstone_Ordinary
-		set .@price,1000;
+		.@item = 12737; //Runstone_Ordinary
+		.@price = 1000;
 		setarray .@rune[0],12737,1000;
 	}
 	mes "Tell me how many you want,";
@@ -128,7 +128,7 @@ lhz_in02,16,205,4	duplicate(phs)	Poison Herb Merchant#lhz	4_F_YUNYANG
 		mes "The number must be less than 2,000!";
 		close;
 	}
-	set .@total, .@amount * .@price;
+	.@total = .@amount * .@price;
 	if (Zeny < .@total) {
 		mes "[Rune Merchant]";
 		mes "Zeny! Zeny!";
@@ -166,7 +166,7 @@ job3_guil01,91,93,3	script	Rare Herb Collector	1_M_03,{
 		mes "[Rare Poison Herb Collector]";
 		mes "I wander around the world and collect rare poison herbs. Recently, I started dealing in the herb called Izidor. If you are interested, you can buy them.";
 		next;
-		set .@i, select("How can I buy them?:Exchange it for Animal Blood:Exchange it for a Bitter Herb:Exchange it for a Deadly Noxious Herb:Exchange it for a Frozen Rose:Exchange it for Ment:Exchange it for Hinalle")-2;
+		.@i = select("How can I buy them?:Exchange it for Animal Blood:Exchange it for a Bitter Herb:Exchange it for a Deadly Noxious Herb:Exchange it for a Frozen Rose:Exchange it for Ment:Exchange it for Hinalle")-2;
 		if (.@i == -1) {
 			mes "[Rare Poison Herb Collector]";
 			mes "You can buy them for 10,000 zeny and one of these rare items, Animal Blood, Bitter Herb, Deadly Noxious Herb, Frozen Rose, Ment or an Hinalle.";
@@ -176,8 +176,8 @@ job3_guil01,91,93,3	script	Rare Herb Collector	1_M_03,{
 			close;
 		} else {
 			setarray .@exchange[0],702,621,631,749,605,703;
-			set .@item, .@exchange[.@i];
-			set .@price, 10000;
+			.@item = .@exchange[.@i];
+			.@price = 10000;
 
 			mes "[Rare Poison Herb Collector]";
 			mes "How many do you want?";
@@ -195,7 +195,7 @@ job3_guil01,91,93,3	script	Rare Herb Collector	1_M_03,{
 				mes "The number must be less than 2,000!";
 				close;
 			}
-			set .@total, .@amount * .@price;
+			.@total = .@amount * .@price;
 			if (countitem(.@item) < .@amount || Zeny < .@total) {
 				mes "[Rare Poison Herb Collector]";
 				mes "Hey, come back when you have all the requirements for the exchange.";
@@ -228,7 +228,7 @@ job3_guil01,91,93,3	script	Rare Herb Collector	1_M_03,{
 	mes "[Point Merchant]";
 	mes "Hello. I'm selling a catalyst called ^FF0000Points^000000 for Sorcerers. What would you like?";
 	next;
-	set .@i, select("Scarlet Points - 200z:Lime Green Points - 200z:Indigo Points - 200z:Yellow Wish Points - 200z:Cancel")-1;
+	.@i = select("Scarlet Points - 200z:Lime Green Points - 200z:Indigo Points - 200z:Yellow Wish Points - 200z:Cancel")-1;
 	mes "[Point Merchant]";
 	if (.@i == 4) {
 		mes "You can't find the stuff you need?";

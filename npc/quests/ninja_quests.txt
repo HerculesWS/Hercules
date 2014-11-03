@@ -92,7 +92,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 			mes "Oh, Very well.";
 			mes "Get a move on.";
 			mes "Find the shield called ^ff0000Guard[1]^000000 and bring it to me.";
-			set ninbo,1;
+			ninbo = 1;
 			close;
 		}
 	}
@@ -119,7 +119,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 			mes "Hmm, Ok.";
 			mes "I'm so grateful that I was able to see such a rare thing from overseas.";
 			mes "Thanks for everything.";
-			set ninbo,0;
+			ninbo = 0;
 			close;
 		}else{
 			mes "[Boshuu]";
@@ -132,7 +132,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 			mes "[Boshuu]";
 			mes "Then I'll slot your slotless Arm Guard.";
 			mes "Come back when you have all the required materials.";
-			set ninbo,2;
+			ninbo = 2;
 			close;
 		}
 	}
@@ -182,14 +182,14 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 			delitem 2102,1;
 			delitem 2117,1;
 			Zeny -= 10000;
-			set ninbo,0;
-			set MISC_QUEST,MISC_QUEST | 2048;
+			ninbo = 0;
+			MISC_QUEST |= 2048;
 			getitem 2118,1;
 			close;
 		}
 	}
 	else if (MISC_QUEST & 2048){
-		set ninbo,0;
+		ninbo = 0;
 		mes "[Boshuu]";
 		mes "Oh~ I see you've come back.";
 		mes "Is it because you need another slotted Arm Guard?";
@@ -256,7 +256,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 		}
 	}
 	else{
-		set ninbo,0;
+		ninbo = 0;
 		mes "[Boshuu]";
 		mes "Oh~ You~!";
 		mes "Is what you have there the shield from overseas called a Guard? Let me take a look.";
@@ -352,7 +352,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 				delitem 2102,1;
 				delitem 2117,1;
 				Zeny -= 10000;
-				set MISC_QUEST,MISC_QUEST | 2048;
+				MISC_QUEST |= 2048;
 				getitem 2118,1;
 				close;
 			}
@@ -415,7 +415,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 			mes "[Basshu]";
 			mes "Oh, thank you.";
 			mes "If you could really find me a Mirror Shield, I might get some really good ideas.";
-			set ninbot,1;
+			ninbot = 1;
 			close;
 		}
 	}
@@ -447,7 +447,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 			next;
 			mes "[Basshu]";
 			mes "Thanks for everything.";
-			set ninbot,0;
+			ninbot = 0;
 			close;
 		}else{
 			mes "[Basshu]";
@@ -462,7 +462,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 			next;
 			mes "[Basshu]";
 			mes "Come and see me when you have everything ready.";
-			set ninbot,2;
+			ninbot = 2;
 			close;
 		}
 	}
@@ -522,14 +522,14 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 			delitem 2107,1;
 			delitem 2117,1;
 			Zeny -= 20000;
-			set ninbot,0;
-			set MISC_QUEST,MISC_QUEST | 4096;
+			ninbot = 0;
+			MISC_QUEST |= 4096;
 			getitem 2119,1;
 			close;
 		}
 	}
 	else if (MISC_QUEST & 4096){
-		set ninbot,0;
+		ninbot = 0;
 		mes "[Basshu]";
 		mes "Oh~ I see you've come back.";
 		mes "Are you here because you need an Improved Arm Guard?";
@@ -601,7 +601,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 		}
 	}
 	else{
-		set ninbot,0;
+		ninbot = 0;
 		mes "[Basshu]";
 		mes "Why~ That's~!";
 		mes "Is what you have there that shield which is called a 'Mirror Shield' overseas?";
@@ -703,7 +703,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 				delitem 2107,1;
 				delitem 2117,1;
 				Zeny -= 20000;
-				set MISC_QUEST,MISC_QUEST | 4096;
+				MISC_QUEST |= 4096;
 				getitem 2119,1;
 				close;
 			}
@@ -712,7 +712,6 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 }
 
 que_ng,27,18,3	script	Toshu	4_M_SEAMAN,{
-	
 	if(BaseClass != Job_Ninja){
 		mes "[Toshu]";
 		mes "How are you~";
@@ -1148,217 +1147,214 @@ que_ng,22,62,3	script	Tetsu	4_M_SEAMAN,{
 	mes "I may not look it, but if it's about any items related to Fuuma, there's none who come close to my craftsmenship.";
 	mes "Well, look around, look around.";
 	next;
-	menu "Fuuma Shuriken Beneki",M_BENEKI,"Fuuma Shuriken Daisharin",M_DAIS,
-		"Fuuma Shuriken Daisharin[4]",M_DAIS4,"Fuuma Shuriken Rekka",M_REKKA,"Cancel",M_CANCEL;
-
-//=====================BENEKI========================
-M_BENEKI:
-	mes "[Tetsu]";
-	mes "Hmm~ You've chose the ^ff0000Fuuma Beneki^000000.";
-	mes "In order to make the Fuuma Beneki, I need";
-	mes "50 Steel, 20 Harpy Feather";
-	mes "5 Oridecon, and 90,000 Zeny.";
-	mes "Do you want me to create this item for you?";
-	next;
-	menu "Well .. erm .. it's kind of pricey.",M_NOPE,"Yes! Make it for me!",-;
-	
-	if(countitem(999)<50 || countitem(7115)<20 || countitem(984)<5){
+	switch (select("Fuuma Shuriken Beneki","Fuuma Shuriken Daisharin","Fuuma Shuriken Daisharin[4]","Fuuma Shuriken Rekka","Cancel")) {
+	case 1: // Beneki
 		mes "[Tetsu]";
-		mes "It looks like you haven't brought me enough materials to make you a Fuuma Shuriken Beneki.";
+		mes "Hmm~ You've chose the ^ff0000Fuuma Beneki^000000.";
+		mes "In order to make the Fuuma Beneki, I need";
+		mes "50 Steel, 20 Harpy Feather";
+		mes "5 Oridecon, and 90,000 Zeny.";
+		mes "Do you want me to create this item for you?";
+		next;
+		if (select("Well .. erm .. it's kind of pricey.","Yes! Make it for me!") != 2) {
+			break;
+		}
+
+		if(countitem(999)<50 || countitem(7115)<20 || countitem(984)<5){
+			mes "[Tetsu]";
+			mes "It looks like you haven't brought me enough materials to make you a Fuuma Shuriken Beneki.";
+			next;
+			mes "[Tetsu]";
+			mes "In order to create a Fuuma shuriken Beneki, I require...";
+			mes "^ff000050 Steel,^000000";
+			mes "^ff000020 Harpy Feathers^000000,";
+			mes "^ff00005 Oridecons^000000,";
+			mes "and ^ff000090,000 Zeny^000000.";
+			mes "Remember these needed materials, and come back after you're positive you have them all.";
+			close;
+		}
+		if(Zeny < 90000){
+			mes "[Tetsu]";
+			mes "Hmm.. You brought plenty of materials, but you're short on zeny.";
+			next;
+			mes "[Tetsu]";
+			mes "In order to create a Fuuma Shuriken Beneki, I require...";
+			mes "^ff000050 Steel,^000000";
+			mes "^ff000020 Harpy Feathers^000000,";
+			mes "^ff00005 Oridecons^000000,";
+			mes "and ^ff000090,000 Zeny^000000.";
+			mes "Remember these needed materials, and come back after you're positive you have them all.";
+			close;
+		}
+		delitem 999,50;
+		delitem 7115,20;
+		delitem 984,5;
+		Zeny -= 90000;
+		getitem 13300,1;
+		mes "[Tetsu]";
+		mes "Hmm, very well.";
+		mes "Looks like you've brought me the correct amount of materials and Zeny";
+		mes "Here is your completed Fuuma Shuriken Beneki";
+		close;
+	case 2: // Daisharin
+		mes "[Tetsu]";
+		mes "Hmm~ I see you've chose the ^ff0000Fuuma Shuriken Daisharin^000000.";
+		mes "In order to create Fuuma Shuriken Daisharin, I require...";
+		mes "30 Steel, 100 Tassels";
+		mes "2 Oridecons, and 40,000 Zeny.";
+		mes "Do you want me to create this item for you?";
+		next;
+		if (select("Well .. erm .. it's kind of pricey.","Yes! Make it for me!") != 2) {
+			break;
+		}
+
+		if(countitem(999)<30 || countitem(7301)<100 || countitem(984)<2){
+			mes "[Tetsu]";
+			mes "It looks like you haven't brought me enough materials to make you a Fuuma Shuriken Daisharin.";
+			next;
+			mes "[Tetsu]";
+			mes "Fuuma Shuriken Daisharin, I require...";
+			mes "^ff000030 Steel^000000, ";
+			mes "^ff0000100 Tassels^000000,";
+			mes "^ff00002 Oridecons^000000,";
+			mes "and ^ff000040,000 Zeny^000000.";
+			mes "Remember these needed materials, and come back after you're positive you have them all.";
+			close;
+		}
+		if(Zeny < 40000){
+			mes "[Tetsu]";
+			mes "Hmm.. You brought plenty of materials, but you're short on zeny.";
+			next;
+			mes "[Tetsu]";
+			mes "Fuuma Shuriken Daisharin, I require...";
+			mes "^ff000030 Steel^000000, ";
+			mes "^ff0000100 Tassels^000000,";
+			mes "^ff00002 Oridecons^000000,";
+			mes "and ^ff000040,000 Zeny^000000.";
+			mes "Remember these needed materials, and come back after you're positive you have them all.";
+			close;
+		}
+		delitem 999,30;
+		delitem 7301,100;
+		delitem 984,2;
+		Zeny -= 40000;
+		getitem 13301,1;
+		mes "[Tetsu]";
+		mes "Hmm, very well.";
+		mes "Looks like you've brought me the correct amount of materials and Zeny";
+		mes "Here is your completed Fuuma Shuriken Daisharin";
+		close;
+	case 3: // Daisharin[4]
+		mes "[Tetsu]";
+		mes "Hmm~ I see you've chose the ^ff0000Fuuma Shuriken Daisharin[4]^000000.";
+		mes "In order to create Fuuma Shuriken Daisharin[4], I require...";
+		mes "20 Cracked Diamonds, 1 Fuuma Shuriken Daisharin";
+		mes "3 Oridecons, and 40,000 Zeny.";
+		mes "Do you want me to create this item for you?";
 		next;
 		mes "[Tetsu]";
-		mes "In order to create a Fuuma shuriken Beneki, I require...";
-		mes "^ff000050 Steel,^000000";
-		mes "^ff000020 Harpy Feathers^000000,";
-		mes "^ff00005 Oridecons^000000,";
-		mes "and ^ff000090,000 Zeny^000000.";
-		mes "Remember these needed materials, and come back after you're positive you have them all.";
-		close;
-	}
-	if(Zeny < 90000){
-		mes "[Tetsu]";
-		mes "Hmm.. You brought plenty of materials, but you're short on zeny.";
+		mes "And in case you don't know...";
+		mes "In the process of slotting a weapon, your weapon will lose any refine points and slotted cards, if any.";
+		mes "Think this over with caution, and then decide if you really want to do this or not.";
 		next;
+		if (select("No thanks.. It's a little pricey..","Yes! Make it for me!") != 2) {
+			break;
+		}
+
+		if(countitem(733)<20 || countitem(13301)<1 || countitem(984)<3){
+			mes "[Tetsu]";
+			mes "It looks like you haven't brought me enough materials to make you a Fuuma Shuriken Daisharin[4].";
+			next;
+			mes "[Tetsu]";
+			mes "In order to create a Fuuma Shuriken Daisharin[4], I require...";
+			mes "^ff000020 Cracked Diamonds^000000,";
+			mes "^ff00003 Oridecons^000000,";
+			mes "1 Fuuma Shuriken Daisharin, and";
+			mes "^ff000040,000 Zeny^000000.";
+			mes "Remember these needed materials, and come back after you're positive you have them all.";
+			close;
+		}
+		if(Zeny < 40000){
+			mes "[Tetsu]";
+			mes "Hmm.. You brought plenty of materials, but you're short on zeny.";
+			next;
+			mes "[Tetsu]";
+			mes "In order to create a Fuuma Shuriken Daisharin[4], I require...";
+			mes "^ff000020 Cracked Diamonds^000000,";
+			mes "^ff00003 Oridecons^000000,";
+			mes "1 Fuuma Shuriken Daisharin, and";
+			mes "^ff000040,000 Zeny^000000.";
+			mes "Remember these needed materials, and come back after you're positive you have them all.";
+			close;
+		}
+		delitem 733,20;
+		delitem 984,3;
+		Zeny -= 40000;
+		delitem 13301,1;
+		getitem 13302,1;
 		mes "[Tetsu]";
-		mes "In order to create a Fuuma Shuriken Beneki, I require...";
-		mes "^ff000050 Steel,^000000";
-		mes "^ff000020 Harpy Feathers^000000,";
-		mes "^ff00005 Oridecons^000000,";
-		mes "and ^ff000090,000 Zeny^000000.";
-		mes "Remember these needed materials, and come back after you're positive you have them all.";
+		mes "Hmm, very well.";
+		mes "Looks like you've brought me the correct amount of materials and Zeny";
+		mes "Here is your completed Fuuma Shuriken Daisharin[4].";
 		close;
-	}
-	delitem 999,50;
-	delitem 7115,20;
-	delitem 984,5;
-	Zeny -= 90000;
-	getitem 13300,1;
-	mes "[Tetsu]";
-	mes "Hmm, very well.";
-	mes "Looks like you've brought me the correct amount of materials and Zeny";
-	mes "Here is your completed Fuuma Shuriken Beneki";
-	close;
-
-//=====================DAISHARIN========================
-M_DAIS:
-	mes "[Tetsu]";
-	mes "Hmm~ I see you've chose the ^ff0000Fuuma Shuriken Daisharin^000000.";
-	mes "Fuuma Shuriken Daisharin In order to create Fuuma Shuriken Daisharin, I require...";
-	mes "30 Steel, 100 Tassels";
-	mes "2 Oridecons, and 40,000 Zeny.";
-	mes "Do you want me to create this item for you?";
-	next;
-	menu "Well .. erm .. it's kind of pricey.",M_NOPE,"Yes! Make it for me!",-;
-
-	if(countitem(999)<30 || countitem(7301)<100 || countitem(984)<2){
+	case 4: // Rekka
 		mes "[Tetsu]";
-		mes "It looks like you haven't brought me enough materials to make you a Fuuma Shuriken Daisharin.";
+		mes "Hmm~ I see you've chose the ^ff0000Fuuma Shuriken Rekka^000000.";
+		mes "In order to create a Fuuma Shuriken Rekka, I require";
+		mes "50 Steel, 100 Live Coal";
+		mes "100 Burning Hearts, 50 Burning Stones";
+		mes "and 78,000 Zeny.";
+		mes "Do you want me to create this item for you?";
 		next;
-		mes "[Tetsu]";
-		mes "Fuuma Shuriken Daisharin, I require...";
-		mes "^ff000030 Steel^000000, ";
-		mes "^ff0000100 Tassels^000000,";
-		mes "^ff00002 Oridecons^000000,";
-		mes "and ^ff000040,000 Zeny^000000.";
-		mes "Remember these needed materials, and come back after you're positive you have them all.";
-		close;
-	}
-	if(Zeny < 40000){
-		mes "[Tetsu]";
-		mes "Hmm.. You brought plenty of materials, but you're short on zeny.";
-		next;
-		mes "[Tetsu]";
-		mes "Fuuma Shuriken Daisharin, I require...";
-		mes "^ff000030 Steel^000000, ";
-		mes "^ff0000100 Tassels^000000,";
-		mes "^ff00002 Oridecons^000000,";
-		mes "and ^ff000040,000 Zeny^000000.";
-		mes "Remember these needed materials, and come back after you're positive you have them all.";
-		close;
-	}
-	delitem 999,30;
-	delitem 7301,100;
-	delitem 984,2;
-	Zeny -= 40000;
-	getitem 13301,1;
-	mes "[Tetsu]";
-	mes "Hmm, very well.";
-	mes "Looks like you've brought me the correct amount of materials and Zeny";
-	mes "Here is your completed Fuuma Shuriken Daisharin";
-	close;
+		if (select("Well .. erm .. it's kind of pricey","Yes! Make it for me!") != 2) {
+			break;
+		}
 
-//=====================DAISHARIN4========================
-M_DAIS4:
-	mes "[Tetsu]";
-	mes "Hmm~ I see you've chose the ^ff0000Fuuma Shuriken Daisharin[4]^000000.";
-	mes "In order to create Fuuma Shuriken Daisharin[4], I require...";
-	mes "20 Cracked Diamonds, 1 Fuuma Shuriken Daisharin";
-	mes "3 Oridecons, and 40,000 Zeny.";
-	mes "Do you want me to create this item for you?";
-	next;
-	mes "[Tetsu]";
-	mes "And in case you don't know...";
-	mes "In the process of slotting a weapon, your weapon will lose any refine points and slotted cards, if any.";
-	mes "Think this over with caution, and then decide if you really want to do this or not.";
-	next;
-	menu "No thanks.. It's a little pricey..",M_NOPE,"Yes! Make it for me!",-;
-
-	if(countitem(733)<20 || countitem(13301)<1 || countitem(984)<3){
+		if(countitem(999)<50 || countitem(7098)<100 || countitem(7097)<100 || countitem(7521)<50){
+			mes "[Tetsu]";
+			mes "It looks like you haven't brought me enough materials to make you a Fuuma Shuriken Rekka.";
+			next;
+			mes "[Tetsu]";
+			mes "In order to create a Fuuma Shuriken Rekka, I require...";
+			mes "^ff000050 Steel^000000,^ff000050 Burning Stones^000000,";
+			mes "^ff0000100 Burning Hearts^000000,^ff0000100 Live Coal^000000,";
+			mes "and ^ff000078,000 Zeny^000000";
+			mes "Remember these needed materials, and come back after you're positive you have them all.";
+			close;
+		}
+		if(Zeny < 78000){
+			mes "[Tetsu]";
+			mes "Hmm.. You brought plenty of materials, but you're short on zeny.";
+			next;
+			mes "[Tetsu]";
+			mes "In order to create a Fuuma Shuriken Rekka, I require...";
+			mes "^ff000050 Steel^000000,^ff000050 Burning Stones^000000,";
+			mes "^ff0000100 Burning Hearts^000000,^ff0000100 Live Coal^000000,";
+			mes "and ^ff000078,000 Zeny^000000";
+			mes "Remember these needed materials, and come back after you're positive you have them all.";
+			close;
+		}
+		delitem 999,50;
+		delitem 7098,100;
+		delitem 7097,100;
+		delitem 7521,50;
+		Zeny -= 78000;
+		getitem 13303,1;
 		mes "[Tetsu]";
-		mes "It looks like you haven't brought me enough materials to make you a Fuuma Shuriken Daisharin[4].";
-		next;
+		mes "Hmm, very well.";
+		mes "Looks like you've brought me the correct amount of materials and Zeny";
+		mes "Here is your completed Fuuma Shuriken Rekka.";
+		close;
+	default: // Cancel
 		mes "[Tetsu]";
-		mes "In order to create a Fuuma Shuriken Daisharin[4], I require...";
-		mes "^ff000020 Cracked Diamonds^000000,";
-		mes "^ff00003 Oridecons^000000,";
-		mes "1 Fuuma Shuriken Daisharin, and";
-		mes "^ff000040,000 Zeny^000000.";
-		mes "Remember these needed materials, and come back after you're positive you have them all.";
+		mes "What a shame.";
+		mes "I wanted to show you the weapons I put my heart and soul into making them.";
+		mes "If you ever have second thoughts, it's never too late to come back and ask.";
 		close;
 	}
-	if(Zeny < 40000){
-		mes "[Tetsu]";
-		mes "Hmm.. You brought plenty of materials, but you're short on zeny.";
-		next;
-		mes "[Tetsu]";
-		mes "In order to create a Fuuma Shuriken Daisharin[4], I require...";
-		mes "^ff000020 Cracked Diamonds^000000,";
-		mes "^ff00003 Oridecons^000000,";
-		mes "1 Fuuma Shuriken Daisharin, and";
-		mes "^ff000040,000 Zeny^000000.";
-		mes "Remember these needed materials, and come back after you're positive you have them all.";
-		close;
-	}
-	delitem 733,20;
-	delitem 984,3;
-	Zeny -= 40000;
-	delitem 13301,1;
-	getitem 13302,1;
-	mes "[Tetsu]";
-	mes "Hmm, very well.";
-	mes "Looks like you've brought me the correct amount of materials and Zeny";
-	mes "Here is your completed Fuuma Shuriken Daisharin[4].";
-	close;
-
-//=====================REKKA========================
-M_REKKA:
-	mes "[Tetsu]";
-	mes "Hmm~ I see you've chose the ^ff0000Fuuma Shuriken Rekka^000000.";
-	mes "In order to create a Fuuma Shuriken Rekka, I require";
-	mes "50 Steel, 100 Live Coal";
-	mes "100 Burning Hearts, 50 Burning Stones";
-	mes "and 78,000 Zeny.";
-	mes "Do you want me to create this item for you?";
-	next;
-	menu "Well .. erm .. it's kind of pricey",M_NOPE,"Yes! Make it for me!",-;
-
-	if(countitem(999)<50 || countitem(7098)<100 || countitem(7097)<100 || countitem(7521)<50){
-		mes "[Tetsu]";
-		mes "It looks like you haven't brought me enough materials to make you a Fuuma Shuriken Rekka.";
-		next;
-		mes "[Tetsu]";
-		mes "In order to create a Fuuma Shuriken Rekka, I require...";
-		mes "^ff000050 Steel^000000,^ff000050 Burning Stones^000000,";
-		mes "^ff0000100 Burning Hearts^000000,^ff0000100 Live Coal^000000,";
-		mes "and ^ff000078,000 Zeny^000000";
-		mes "Remember these needed materials, and come back after you're positive you have them all.";
-		close;
-	}
-	if(Zeny < 78000){
-		mes "[Tetsu]";
-		mes "Hmm.. You brought plenty of materials, but you're short on zeny.";
-		next;
-		mes "[Tetsu]";
-		mes "In order to create a Fuuma Shuriken Rekka, I require...";
-		mes "^ff000050 Steel^000000,^ff000050 Burning Stones^000000,";
-		mes "^ff0000100 Burning Hearts^000000,^ff0000100 Live Coal^000000,";
-		mes "and ^ff000078,000 Zeny^000000";
-		mes "Remember these needed materials, and come back after you're positive you have them all.";
-		close;
-	}
-	delitem 999,50;
-	delitem 7098,100;
-	delitem 7097,100;
-	delitem 7521,50;
-	Zeny -= 78000;
-	getitem 13303,1;
-	mes "[Tetsu]";
-	mes "Hmm, very well.";
-	mes "Looks like you've brought me the correct amount of materials and Zeny";
-	mes "Here is your completed Fuuma Shuriken Rekka.";
-	close;
-
-//=====================I'M SORRY========================
-M_NOPE:
+	// It's kind of pricey
 	mes "[Tetsu]";
 	mes "Hmm. The cost to create this item is kind of expensive...";
 	mes "All right. If you do gather all the required materials one day, come back and see me.";
-	close;
-
-M_CANCEL:
-	mes "[Tetsu]";
-	mes "What a shame.";
-	mes "I wanted to show you the weapons I put my heart and soul into making them.";
-	mes "If you ever have second thoughts, it's never too late to come back and ask.";
 	close;
 }

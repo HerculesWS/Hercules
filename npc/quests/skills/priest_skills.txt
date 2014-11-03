@@ -59,7 +59,7 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 			}
 		}
 		else if (PRIEST_SK == 0) {
-			set redemp,1014;
+			redemp = 1014;
 			if (getskilllv("PR_REDEMPTIO")) {
 				mes "[Sister Linus]";
 				mes "I'll always be praying";
@@ -67,7 +67,7 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 				mes "and I hope that you can bring";
 				mes "love and compassion to all";
 				mes "whom you meet in your travels.";
-				set PRIEST_SK,100;
+				PRIEST_SK = 100;
 				close;
 			}
 			mes "[Sister Linus]";
@@ -209,7 +209,7 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 			mes "happen to find her, please";
 			mes "let her know that I am";
 			mes "praying for her safety.";
-			set PRIEST_SK,1;
+			PRIEST_SK = 1;
 			close;
 		}
 		else if (PRIEST_SK == 1) {
@@ -240,7 +240,7 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 				mes "20 Blue Gemstones^000000";
 				mes "so you can attempt";
 				mes "to learn the skill.";
-				set PRIEST_SK,2;
+				PRIEST_SK = 2;
 				next;
 				mes "[Sister Linus]";
 				mes "Um, but if you fail to";
@@ -283,17 +283,17 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 					mes "strength to walk the path of";
 					mes "love and sacrifice. Redemptio!^000000";
 					next;
-					set .@redem_s,JobLevel+getskilllv("ALL_RESURRECTION");
-					set .@red_suc,rand(1,100);
+					.@redem_s = JobLevel+getskilllv("ALL_RESURRECTION");
+					.@red_suc = rand(1,100);
 					if( .@redem_s < 31 ) {
 						if( .@red_suc > 20 && .@red_suc < 41 )
-							set .@success,1;
+							.@success = 1;
 					} else if( .@redem_s < 41 ) {
 						if( .@red_suc > 10 && .@red_suc < 41 )
-							set .@success,1;
+							.@success = 1;
 					} else {
 						if( .@red_suc > 10 && .@red_suc < 51 )
-							set .@success,1;
+							.@success = 1;
 					}
 
 					if (.@success) {
@@ -307,7 +307,7 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 						mes "critical situations.";
 						delitem 717,20; //Blue_Gemstone
 						delitem 523,30; //Holy_Water
-						set PRIEST_SK,100;
+						PRIEST_SK = 100;
 						skill "PR_REDEMPTIO",1,0;
 						close;
 					}

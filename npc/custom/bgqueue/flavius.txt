@@ -426,14 +426,14 @@ OnTouch:
 
 bat_b01,87,76,0	script	A_CODE#bat_b01	-1,5,5,{
 OnTouch:
-	if (checkquest(2070) < 0)
+	if (!questprogress(2070))
 		setquest 2070;
 	end;
 }
 
 bat_b01,312,224,0	script	B_CODE#bat_b01	-1,5,5,{
 OnTouch:
-	if (checkquest(2070) < 0)
+	if (!questprogress(2070))
 		setquest 2070;
 	end;
 }

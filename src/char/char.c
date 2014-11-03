@@ -15,6 +15,7 @@
 #include <sys/types.h>
 #include <time.h>
 
+#include "HPMchar.h"
 #include "int_elemental.h"
 #include "int_guild.h"
 #include "int_homun.h"
@@ -5423,6 +5424,8 @@ int do_final(void) {
 		char_fd = -1;
 	}
 
+	HPM_char_do_final();
+
 	SQL->Free(sql_handle);
 	mapindex->final();
 
@@ -5430,6 +5433,8 @@ int do_final(void) {
 		if( server[i].map )
 			aFree(server[i].map);
 	
+	HPM->event(HPET_POST_FINAL);
+
 	ShowStatus("Finished.\n");
 	return EXIT_SUCCESS;
 }
@@ -5464,6 +5469,9 @@ void do_shutdown(void)
 	}
 }
 
+void char_hp_symbols(void) {
+	HPM->share(sql_handle,"sql_handle");
+}
 
 int do_init(int argc, char **argv) {
 	int i;
@@ -5474,6 +5482,29 @@ int do_init(int argc, char **argv) {
 
 	mapindex_defaults();
 	pincode_defaults();
+
+	HPM_char_do_init();
+	HPM->symbol_defaults_sub = char_hp_symbols;
+#if 0
+	/* TODO: Move to common code */
+	for( i = 1; i < argc; i++ ) {
+		const char* arg = argv[i];
+		if( strcmp(arg, "--load-plugin") == 0 ) {
+			if( map->arg_next_value(arg, i, argc, true) ) {
+				RECREATE(load_extras, char *, ++load_extras_count);
+				load_extras[load_extras_count-1] = argv[++i];
+			}
+		}
+	}
+	HPM->config_read((const char * const *)load_extras, load_extras_count);
+	if (load_extras) {
+		aFree(load_extras);
+		load_extras = NULL;
+		load_extras_count = 0;
+	}
+#endif
+	HPM->config_read(NULL, 0);
+	HPM->event(HPET_PRE_INIT);
 	
 	//Read map indexes
 	mapindex->init();
@@ -5494,8 +5525,6 @@ int do_init(int argc, char **argv) {
 	auth_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	online_char_db = idb_alloc(DB_OPT_RELEASE_DATA);
 
-	HPM->share(sql_handle,"sql_handle");
-	HPM->config_read(NULL, 0);
 	HPM->event(HPET_INIT);
 	
 	mmo_char_sql_init();

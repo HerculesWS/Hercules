@@ -18,7 +18,7 @@
 //============================================================
 -	script	Fadhgridh#1::OutsideFlagsPR3	GUILD_FLAG,{
 
-	set .@GID, getcastledata("prtg_cas03",1);
+	.@GID = getcastledata("prtg_cas03",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";

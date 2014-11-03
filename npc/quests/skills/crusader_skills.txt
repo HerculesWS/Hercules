@@ -13,7 +13,7 @@
 
 geffen,110,117,3	script	Ford#11	4_M_CRU_OLD,{
 	if (BaseJob == Job_Crusader) {
-		if (CRUS_SK == 8 && getskilllv("CR_SHRINK") == 0) {
+		if (CRUS_SK == 8 && getskilllv(CR_SHRINK) == 0) {
 			mes "[Ford]";
 			mes "Hey, it's been a while~";
 			mes "And you even managed to";
@@ -21,7 +21,7 @@ geffen,110,117,3	script	Ford#11	4_M_CRU_OLD,{
 			mes "have forgotten how to perform";
 			mes "the Shrink skill, so I'll teach";
 			mes "it to you real quick... There!";
-			set CRUS_SK,10;
+			CRUS_SK = 10;
 			skill "CR_SHRINK",1,0;
 			close;
 		}
@@ -100,7 +100,7 @@ geffen,110,117,3	script	Ford#11	4_M_CRU_OLD,{
 				mes "stationed south of Geffen,";
 				mes "and deliver his report to me.";
 				mes "Your help is a great relief...";
-				set CRUS_SK,1;
+				CRUS_SK = 1;
 				close;
 			case 2:
 				mes "[Ford]";
@@ -176,7 +176,7 @@ geffen,110,117,3	script	Ford#11	4_M_CRU_OLD,{
 			mes "antidote for Goblin Poison.";
 			mes "If you don't hurry, it might";
 			mes "be too late for Sloutii--!";
-			set CRUS_SK,4;
+			CRUS_SK = 4;
 			close;
 		}
 		else if (CRUS_SK == 4) {
@@ -352,7 +352,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 			mes "give me his report. I better";
 			mes "bring him a Red Potion to";
 			mes "alleviate his suffering...)^000000";
-			set CRUS_SK,2;
+			CRUS_SK = 2;
 			close;
 		}
 		else if (CRUS_SK == 2) {
@@ -383,7 +383,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 				mes "pages are smudged with";
 				mes "the blood from his wound.^000000";
 				delitem 501,1; //Red_Potion
-				set CRUS_SK,3;
+				CRUS_SK = 3;
 				close;
 			}
 			else {
@@ -461,7 +461,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 			close;
 		}
 		else if (CRUS_SK == 7) {
-			set .@rand,rand(1,5);
+			.@rand = rand(1,5);
 			if (.@rand == 1 || .@rand == 5) {
 				mes "^3355FFYou carefully pour the";
 				mes "Goblin poison antidote";
@@ -516,7 +516,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 				mes "this ability to combat evil";
 				mes "and protect the weak. Ah, and";
 				mes "if I learn any new skills, I'll be sure to teach you right away.";
-				set CRUS_SK,8;
+				CRUS_SK = 8;
 				skill "CR_SHRINK",1,0;
 				close;
 			}
@@ -534,7 +534,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 			mes "from Father Arthur to Sloutii.";
 			mes "You've got to return to Father";
 			mes "Arthur and make another one.^000000";
-			set CRUS_SK,9;
+			CRUS_SK = 9;
 			close;
 		}
 		else if (CRUS_SK == 8 || CRUS_SK == 10) {
@@ -645,7 +645,7 @@ prt_church,87,127,3	script	Pastor#1011	4_M_SAGE_C,{
 			mes "^0000FF1 Unripe Apple^000000.";
 			mes "Now hurry, he won't";
 			mes "last long if he's poisoned!";
-			set CRUS_SK,5;
+			CRUS_SK = 5;
 			close;
 		}
 		else if (CRUS_SK == 5) {
@@ -686,7 +686,7 @@ prt_church,87,127,3	script	Pastor#1011	4_M_SAGE_C,{
 				delitem 1003,1; //Coal
 				delitem 7053,3; //Cyfar
 				delitem 713,3; //Empty_Bottle
-				set CRUS_SK,6;
+				CRUS_SK = 6;
 				close;
 			}
 			else {
@@ -740,7 +740,7 @@ prt_church,87,127,3	script	Pastor#1011	4_M_SAGE_C,{
 			mes "Here, take the";
 			mes "antidote. Now go!";
 			mes "Godspeed, adventurer!";
-			set CRUS_SK,7;
+			CRUS_SK = 7;
 			close;
 		}
 		else if (CRUS_SK == 7) {
@@ -776,7 +776,7 @@ prt_church,87,127,3	script	Pastor#1011	4_M_SAGE_C,{
 			mes "antidote and run as";
 			mes "fast as you can to";
 			mes "the wounded! Go!";
-			set CRUS_SK,7;
+			CRUS_SK = 7;
 			close;
 		}
 		else if (CRUS_SK == 10) {

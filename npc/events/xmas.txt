@@ -22,22 +22,21 @@
 
 xmas_in,100,96,4	script	Santa Claus::Santa2	4_M_SANTA,{
 	mes "[Santa Claus]";
-	if(xmas_npc==0) set xmas_npc, 1; // For Lutie & Bard quest
+	if(xmas_npc==0) xmas_npc = 1; // For Lutie & Bard quest
 	if(#event_xmas > 0 && #event_xmas < 30 ) goto L_Start;
 	mes "Merry Christmas!";
 	if(Class==0 || #event_xmas>=30 ) close; //anti exploit protection
 	mes "I have a gift for you! Ho Ho Ho!";
 	getitem rand(664,667),1; //gives one of 4 gift boxes
-	set #event_xmas,#event_xmas+1;
+	++#event_xmas;
 	close;
 
 L_Start:
 	mes "I'm having a bit of a problem...";
 	mes "Do you care to listen?";
 	next;
-	menu "Listen to Santa Claus.",M_0, "Give Santa Claus proof.",M_1, "Cancel.",M_End;
-
-	M_0:
+	switch (select("Listen to Santa Claus.","Give Santa Claus proof.","Cancel.")) {
+	case 1: // Listen
 		mes "[Santa Claus]";
 		mes "My problem is this.";
 		mes "There seems to be a man out there";
@@ -76,7 +75,7 @@ L_Start:
 		mes "lab. It spits out random presents";
 		mes "and saves me a ton of work.";
 		close;
-	M_1:
+	case 2: // Give proof
 		mes "[Santa Claus]";
 		if(countitem(7034) < 3) goto L_NotEnuf;
 		delitem 7034,3;
@@ -85,7 +84,7 @@ L_Start:
 		mes "fake Santas. Keep it up!";
 		next;
 		getitem 644,1; //Gift Box Prototype
-		set #event_xmas,#event_xmas+1;
+		++#event_xmas;
 		mes "[Santa Claus]";
 		mes "There's your reward.";
 		mes "If you get 3 more, I'll give you another.";
@@ -97,11 +96,12 @@ L_Start:
 			mes "Go take down those evil Santas";
 			mes "and get more for me and I'll reward you.";
 			close;
-	M_End:
+	default: // Cancel
 		mes "[Santa Claus]";
 		mes "I see. Well, at the very least";
 		mes "we shall meet again on Christmas morning.";
 		close;
+	}
 
 OnInit:
 	disablenpc "Santa Claus";

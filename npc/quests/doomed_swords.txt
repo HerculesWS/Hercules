@@ -37,7 +37,7 @@ prt_in,162,11,2	script	Ghatu#magum	4_M_04,{
 			mes "hiding in the mountains";
 			mes "since too many people want^FFFFFF ^000000 to use his talents for the wrong";
 			mes "purposes. Apparently, there is^FFFFFF ^000000 a godly quality to his weapons...";
-			set event_magum,1;
+			event_magum = 1;
 			close;
 		}
 		mes "[Ghatu]";
@@ -69,7 +69,7 @@ prt_in,162,11,2	script	Ghatu#magum	4_M_04,{
 		mes "hammer. If you can manage to";
 		mes "find him, perhaps you can ask";
 		mes "him to forge something for you?";
-		set event_magum,5;
+		event_magum = 5;
 		close;
 
 	}
@@ -103,7 +103,7 @@ prt_in,162,11,2	script	Ghatu#magum	4_M_04,{
 		mes "hammer. If you can manage to";
 		mes "find him, perhaps you can ask";
 		mes "him to forge something for you?";
-		set event_magum,5;
+		event_magum = 5;
 		close;
 	}
 	mes "[Ghatu]";
@@ -151,8 +151,8 @@ prontera,197,188,2	script	Veeyop#magum	1_M_04,{
 	mes "Prontera, but then he moved";
 	mes "away for some weird reason.";
 	if (event_magum == 1)
-		set event_magum,5;
-	set dmdswrd_Q2,dmdswrd_Q2 | 1;
+		event_magum = 5;
+	dmdswrd_Q2 |= 1;
 	close;
 }
 
@@ -203,8 +203,8 @@ morocc,281,178,2	script	Cetsu#magum	4W_M_01,{
 	mes "did seem to be pretty";
 	mes "high in demand back then...";
 	if (event_magum == 1)
-		set event_magum,5;
-	set dmdswrd_Q2,dmdswrd_Q2 | 2;
+		event_magum = 5;
+	dmdswrd_Q2 |= 2;
 	close;
 }
 
@@ -247,8 +247,8 @@ izlude_in,173,88,2	script	Nain#magum	8_F,{
 	mes "can forge that accursed";
 	mes "Executioner anew...";
 	if (event_magum == 1)
-		set event_magum,5;
-	set dmdswrd_Q2,dmdswrd_Q2 | 4;
+		event_magum = 5;
+	dmdswrd_Q2 |= 4;
 	close;
 }
 
@@ -458,8 +458,8 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 					mes "and an Emperium to prove your";
 					mes "worthiness to me. I will wait";
 					mes "for your return, adventurer.";
-					set dmdswrd_Q2,dmdswrd_Q2 | 8;
-					set event_magum,6;
+					dmdswrd_Q2 |= 8;
+					event_magum = 6;
 					close;
 				}
 				mes "[Mysterious Blacksmith]";
@@ -523,8 +523,8 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 					mes "require you to prove that you";
 					mes "are worthy of the Grimtooth's";
 					mes "power. Can you truly handle it?";
-					set dmdswrd_Q2,dmdswrd_Q2 | 16;
-					set event_magum,6;
+					dmdswrd_Q2 |= 16;
+					event_magum = 6;
 					close;
 				}
 				mes "[Mysterious Blacksmith]";
@@ -579,8 +579,8 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 					mes "evil power. As for the Emperium, consider it my test to see if you";
 					mes "are truly capable of wielding";
 					mes "the accursed Executioner...";
-					set dmdswrd_Q2,dmdswrd_Q2 | 32;
-					set event_magum,6;
+					dmdswrd_Q2 |= 32;
+					event_magum = 6;
 					close;
 				}
 				mes "[Mysterious Blacksmith]";
@@ -874,7 +874,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 					mes "and an Emperium to prove your";
 					mes "worthiness to me. I will wait";
 					mes "for your return, adventurer.";
-					set dmdswrd_Q2,dmdswrd_Q2 | 8;
+					dmdswrd_Q2 |= 8;
 					close;
 				}
 				mes "[Mysterious Blacksmith]";
@@ -1019,7 +1019,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 					mes "require you to prove that you";
 					mes "are worthy of the Grimtooth's";
 					mes "power. Can you truly handle it?";
-					set dmdswrd_Q2,dmdswrd_Q2 | 16;
+					dmdswrd_Q2 |= 16;
 					close;
 				}
 				mes "[Mysterious Blacksmith]";
@@ -1151,7 +1151,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 					mes "evil power. As for the Emperium, consider it my test to see if you";
 					mes "are truly capable of wielding";
 					mes "the accursed Executioner...";
-					set dmdswrd_Q2,dmdswrd_Q2 | 4;
+					dmdswrd_Q2 |= 4;
 					close;
 				}
 				mes "[Mysterious Blacksmith]";

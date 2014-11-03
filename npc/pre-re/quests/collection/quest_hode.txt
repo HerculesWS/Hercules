@@ -13,8 +13,8 @@
 //============================================================
 
 moc_fild17,208,346,5	script	Shone#Hode_Hunt	4_M_MOC_SOLDIER,{
-	if (checkquest(60104) != -1) {
-		if (checkquest(60104,HUNTING) != 2 ) {
+	if (questprogress(60104)) {
+		if (questprogress(60104,HUNTING) != 2) {
 			mes "[Shone]";
 			mes "Have you finished hunting the 50 Hodes?";
 			next;
@@ -53,8 +53,8 @@ moc_fild17,208,346,5	script	Shone#Hode_Hunt	4_M_MOC_SOLDIER,{
 			close;
 		}
 	}
-	if (checkquest(60105) != -1) {
-		if (checkquest(60105,HUNTING) != 2 ) {
+	if (questprogress(60105)) {
+		if (questprogress(60105,HUNTING) != 2) {
 			mes "[Shone]";
 			mes "Have you finished hunting the 50 Hodes?";
 			next;
@@ -94,8 +94,8 @@ moc_fild17,208,346,5	script	Shone#Hode_Hunt	4_M_MOC_SOLDIER,{
 			close;
 		}
 	}
-	if (checkquest(60106) != -1) {
-		if (checkquest(60106,HUNTING) != 2 ) {
+	if (questprogress(60106)) {
+		if (questprogress(60106,HUNTING) != 2) {
 			mes "[Shone]";
 			mes "Have you finished hunting the 150 Hodes?";
 			next;

@@ -15,9 +15,9 @@
 
 ayothaya,203,169,4	script	Ayothaya Guide Noi#01ay	4_F_THAIGIRL,{
 	if (strnpcinfo(0) == "Ayothaya Guide Noi#01ay")
-		set .@n$, "[Noi]";
+		.@n$ = "[Noi]";
 	else
-		set .@n$, "[Noa]";
+		.@n$ = "[Noa]";
 	mes .@n$;
 	mes "Hello~";
 	mes "Welcome to ^8B4513Ayothaya^000000.";

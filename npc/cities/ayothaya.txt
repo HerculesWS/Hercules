@@ -122,7 +122,7 @@ ayothaya,189,120,3	script	Young Man#Thang	4_M_THAIONGBAK,{
 }
 	
 ayothaya,171,152,5	script	Girl#Lalitha	4_F_THAIAYO,{
-	set .@sit,rand(1,5);
+	.@sit = rand(1,5);
 	if (.@sit > 0 && .@sit < 3) {
 		mes "[Lalitha]";
 		mes "Hello!";

@@ -66,7 +66,7 @@ payon_in03,117,128,5	script	Fortune Teller	4_M_BIBI,{
 				mes "[Lhimetorra]";
 				mes " I see it... I see a sign of love... ";
 				next;
-				set .@card_1_love,rand(1,74);
+				.@card_1_love = rand(1,74);
 				if (.@card_1_love == 1) {
 					cutin "가이아스카드",4; // Giearth Card
 					mes "[Lhimetorra]";
@@ -768,7 +768,7 @@ payon_in03,117,128,5	script	Fortune Teller	4_M_BIBI,{
 				mes "[Lhimetorra]";
 				mes " Ooh... something about your fortune is starting to show... ";
 				next;
-				set .@card_1_money,rand(1,73);
+				.@card_1_money = rand(1,73);
 				if (.@card_1_money == 1) {
 					cutin "가이아스카드",4; // Giearth Card
 					mes "[Lhimetorra]";
@@ -1438,7 +1438,7 @@ payon_in03,117,128,5	script	Fortune Teller	4_M_BIBI,{
 				mes "[Lhimetorra]";
 				mes " Future... the card that sees the future is beginning to speak...... Prepare yourself... ";
 				next;
-				set .@card_1_future,rand(1,67);
+				.@card_1_future = rand(1,67);
 				if (.@card_1_future == 1) {
 					cutin "가이아스카드",4; // Giearth Card
 					mes "[Lhimetorra]";
@@ -2088,7 +2088,7 @@ payon_in03,117,128,5	script	Fortune Teller	4_M_BIBI,{
 				mes "[Lhimetorra]";
 				mes " Someone that knows of the dangers you do not, will warn you in the form of cards... so listen carefully-! ";
 				next;
-				set .@card_1_warning,rand(1,70);
+				.@card_1_warning = rand(1,70);
 				if (.@card_1_warning == 1) {
 					cutin "가이아스카드",4; // Giearth Card
 					mes "[Lhimetorra]";
@@ -2770,7 +2770,7 @@ payon_in03,75,129,5	script	Poring Fortune Teller	4_M_BIBI,{
 				mes " Ohh! Cute love fortune! Heh! Lets look at the cards! ";
 				next;
 				mes "[Chocarle]";
-				set .@card_2_love,rand(1,33);
+				.@card_2_love = rand(1,33);
 				if (.@card_2_love == 1) {
 					cutin "고스트링카드",4; // Ghostring Card
 					mes " Oh! Your lover is about to leave your side! Hold on tight! ";
@@ -2918,7 +2918,7 @@ payon_in03,75,129,5	script	Poring Fortune Teller	4_M_BIBI,{
 				mes " Issues about studying is a serious matter! Lets take a look! Yap! ";
 				next;
 				mes "[Chocarle]";
-				set .@card_2_study,rand(1,33);
+				.@card_2_study = rand(1,33);
 				if (.@card_2_study == 1) {
 					cutin "고스트링카드",4; // Ghostring Card
 					mes " Agh! Don't die from studying! Take breaks while you're at it! You need some rest! ";
@@ -3066,7 +3066,7 @@ payon_in03,75,129,5	script	Poring Fortune Teller	4_M_BIBI,{
 				mes " Relationships among friends is more difficult than people think! Let's use the cards to try and solve this complicated puzzle of friendship! ";
 				next;
 				mes "[Chocarle]";
-				set .@card_2_buddy,rand(1,33);
+				.@card_2_buddy = rand(1,33);
 				if (.@card_2_buddy == 1) {
 					cutin "고스트링카드",4; // Ghostring Card
 					mes " Ah! Your friend has gone crazy! They need the heal of friendship! ";
@@ -3214,7 +3214,7 @@ payon_in03,75,129,5	script	Poring Fortune Teller	4_M_BIBI,{
 				mes " If you say fortunetelling! Of course it is about the future! Let's try to figure this out! ";
 				next;
 				mes "[Chocarle]";
-				set .@card_2_future,rand(1,33);
+				.@card_2_future = rand(1,33);
 				if (.@card_2_future == 1) {
 					cutin "고스트링카드",4; // Ghostring Card
 					mes " Oh no! You are not confident about the future! Trust yourself a little more! Hope! ";
@@ -3364,7 +3364,7 @@ payon_in03,75,129,5	script	Poring Fortune Teller	4_M_BIBI,{
 				mes " Ok! Let's try it! ";
 				next;
 				mes "[Chocarle]";
-				set .@card_2_fortune,rand(1,33);
+				.@card_2_fortune = rand(1,33);
 				if (.@card_2_fortune == 1) {
 					cutin "고스트링카드",4; // Ghostring Card
 					mes " Uh oh! You're about to be robbed! You must save a little first! ";

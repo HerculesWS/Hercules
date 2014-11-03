@@ -32,7 +32,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 	if (thai_head >= 1 && thai_head <= 5) {
 		switch(thai_head) {
 		case 1:
-			set .@th_rand,rand(1,100);
+			.@th_rand = rand(1,100);
 			if (.@th_rand > 6 && .@th_rand < 20) {
 				mes "[Tourist]";
 				mes "...........";
@@ -63,7 +63,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				next;
 				mes "[Tourist]";
 				mes "Alright, alright, but you don't have to be mean.";
-				set thai_head,2;
+				thai_head = 2;
 				close;
 			}
 			mes "[Tourist]";
@@ -102,7 +102,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				mes "food...I can't stay here much longer...";
 				next;
 				if (select("Do you want me to help you?:Well, good luck with everything.") == 1) {
-					set thai_head,3;
+					thai_head = 3;
 					mes "[Tourist]";
 					mes "Thank god! Thank you so much.";
 					mes "I knew you would help me~!";
@@ -122,7 +122,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 					mes "of a choice...";
 					close;
 				}
-				set thai_head,1;
+				thai_head = 1;
 				mes "[Tourist]";
 				mes ".........";
 				mes "How could you be so cold";
@@ -153,7 +153,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				mes "food...I can't stay here much longer...";
 				next;
 				if (select("Do you want me to help you?:Well, good luck with everything.") == 1) {
-					set thai_head,3;
+					thai_head = 3;
 					mes "[Tourist]";
 					mes "Thank god! Thank you so much.";
 					mes "I knew you would help me~!";
@@ -173,7 +173,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 					mes "of a choice...";
 					close;
 				}
-				set thai_head,1;
+				thai_head = 1;
 				mes "[Tourist]";
 				mes ".........";
 				mes "How could you be so cold";
@@ -205,7 +205,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				mes "*Sob*...so... hungry...";
 				close;
 			}
-			set .@th_rand,rand(1,100);
+			.@th_rand = rand(1,100);
 			if (.@th_rand > 0 && .@th_rand < 10) {
 				if (countitem(517) == 10) {
 					mes "[Tourist]";
@@ -307,7 +307,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 					close;
 				}
 			}
-			set thai_head,4;
+			thai_head = 4;
 			mes "^3355FFHe seemed to have been";
 			mes "starving for a long time.";
 			mes "He ate all the meat I gave him";
@@ -369,7 +369,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				mes "There really are many good";
 				mes "people like you in this world.";
 				next;
-				set thai_head,5;
+				thai_head = 5;
 				delitem 538,20; //Well_Baked_Cookie
 				mes "[Tourist]";
 				mes "I appreciate what you've done for";
@@ -460,7 +460,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				mes "Doncha want me to help you?";
 				close;
 			}
-			set thai_head,6;
+			thai_head = 6;
 			getitem 1205,1; //Cutter_
 			next;
 			mes "[Tourist]";
@@ -580,7 +580,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 			mes "Oh right, everywhere...but Lutie.";
 			mes "Man, this stinks.";
 			close2;
-			set thai_head,2;
+			thai_head = 2;
 			end;
 		case 3:
 			mes "[Tourist]";
@@ -600,7 +600,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				mes "to feel like...";
 				mes "you're pullin' my";
 				mes "chain...";
-				set thai_head,1;
+				thai_head = 1;
 				close;
 			}
 			mes "[Tourist]";
@@ -680,7 +680,7 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 			mes "*Sigh* For now, I have a favor to";
 			mes "ask of you. Could you bring me";
 			mes "^0000FF1 No Recipient^000000?";
-			set thai_head,7;
+			thai_head = 7;
 			next;
 			mes "[Jacob]";
 			mes "I need this kid to calm down first...";
@@ -749,7 +749,7 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 					next;
 					mes "[Jacob]";
 					mes "(...*Phew!* Thank you~)";
-					set thai_head,9;
+					thai_head = 9;
 					close;
 				case 2:
 					mes "[Tommy]";
@@ -777,10 +777,10 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 						next;
 						mes "[Jacob]";
 						mes "(...*Phew* Thank you~)";
-						set thai_head,9;
+						thai_head = 9;
 						close;
 					case 2:
-						set thai_head,8;
+						thai_head = 8;
 						mes "[Tommy]";
 						mes "I knew it!! Daddy, you're a liar!!";
 						next;
@@ -813,11 +813,11 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 						mes "[Jacob]";
 						mes "Tommy...Tommy please...";
 						mes "Will you let me explain...?";
-						set thai_head,8;
+						thai_head = 8;
 						close;
 					}
 				case 3:
-					set thai_head,8;
+					thai_head = 8;
 					mes "[Tommy]";
 					mes "I knew it!! Daddy, you're a liar!!";
 					next;
@@ -847,7 +847,7 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 					mes "[Jacob]";
 					mes "Tommy...Tommy, please...";
 					mes "Will you let me explain...?";
-					set thai_head,8;
+					thai_head = 8;
 					close;
 				}
 			}
@@ -867,7 +867,7 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 				mes "I will give you a chance";
 				mes "to make up for your mistake.";
 				mes "Please get me a No Recipient as soon as you can.";
-				set thai_head,7;
+				thai_head = 7;
 				close;
 			}
 			mes "[Jacob]";
@@ -965,10 +965,10 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 			next;
 			mes "[Tommy]";
 			mes "...I'm sorry...*bows head*";
-			set thai_head,10;
+			thai_head = 10;
 			close;
 		case 10:
-			set .@rem,rand(1,11);
+			.@rem = rand(1,11);
 			if (.@rem == 1) {
 				mes "[Jacob]";
 				mes "Ah~ yes! Didn't you say Pandger Mayer introduced me to you?";
@@ -992,7 +992,7 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 				mes "People say that many adventurers";
 				mes "are visiting this man for some";
 				mes "reason. Why don't you go talk to him and see if he has some wisdom for you?";
-				set thai_head,11;
+				thai_head = 11;
 				close;
 			}
 			else if (.@rem > 1 && .@remrem < 7) {
@@ -1105,14 +1105,14 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 					mes "...";
 					mes "Get out of my sight,";
 					mes "you greedy fool.";
-					set thai_head,12;
+					thai_head = 12;
 					close;
 				case 2:
 					mes "[Elder Creek]";
 					mes "Bah! The more ignorant they are, the more arrogantly they act!";
 					mes "Did you think that I would accept just any meaning?";
 					mes "Take care, you ignorant fool.";
-					set thai_head,12;
+					thai_head = 12;
 					close;
 				case 3:
 					mes "[Elder Creek]";
@@ -1131,14 +1131,14 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 					mes "[Elder Creek]";
 					mes "Of course, this rule applies to";
 					mes "you as well. That sort of thing is a universal principle, after all.";
-					set thai_head,13;
+					thai_head = 13;
 					close;
 				case 4:
 					mes "[Elder Creek]";
 					mes ".....";
 					mes "Did you think that I would accept just any meaning??";
 					mes "Take care, you ignorant fool.";
-					set thai_head,12;
+					thai_head = 12;
 					close;
 				}
 			case 2:
@@ -1193,7 +1193,7 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 					mes "you. I hope you will be happy";
 					mes "with that nugget of wisdom.";
 					close2;
-					set thai_head,14;
+					thai_head = 14;
 					end;
 				case 2:
 					mes "[Elder Creek]";
@@ -1241,7 +1241,7 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 					mes "After all...I am a Sage.";
 					mes "I hope you will be happy with my wise advice.";
 					close2;
-					set thai_head,14;
+					thai_head = 14;
 					end;
 				case 3:
 					mes "[Elder Creek]";
@@ -1307,7 +1307,7 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 					mes "I hope you will be happy";
 					mes "with my wise advice.";
 					close2;
-					set thai_head,14;
+					thai_head = 14;
 					end;
 				case 4:
 					mes "[Elder Creek]";
@@ -1324,7 +1324,7 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 					mes "....that's all I can say.";
 					mes "I hope you will be happy with my wise advice.";
 					close2;
-					set thai_head,14;
+					thai_head = 14;
 					end;
 				case 5:
 					mes "[Elder Creek]";
@@ -1341,7 +1341,7 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 					next;
 					mes "[Elder Creek]";
 					mes "Get out of my sight immediately! I don't talk to trash!";
-					set thai_head,12;
+					thai_head = 12;
 					close;
 				}
 			case 3:
@@ -1354,7 +1354,7 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 				mes "[Elder Creek]";
 				mes "....*Sigh* Okay.";
 				mes "I forgive you.";
-				set thai_head,11;
+				thai_head = 11;
 				close;
 			}
 			mes "[Elder Creek]";
@@ -1393,14 +1393,14 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 			next;
 			mes "[Elder Creek]";
 			mes "Do me this favor, young man.";
-			set thai_head,15;
+			thai_head = 15;
 			close;
 		case 14:
 			if (rand(1,30) == 5) {
 				mes "[Elder Creek]";
 				mes "....hmm. I see you want more.";
 				mes "Come back later.";
-				set thai_head,13;
+				thai_head = 13;
 				close;
 			}
 			mes "[Elder Creek]";
@@ -1422,7 +1422,7 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 				delitem 964,10; //Crap_Shell
 				delitem 7053,50; //Cyfar
 				next;
-				set thai_head,16;
+				thai_head = 16;
 				getitem 603,1; //Old_Blue_Box
 				mes "[Elder Creek]";
 				mes "Please, take this first.";

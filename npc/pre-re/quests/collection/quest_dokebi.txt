@@ -13,8 +13,8 @@
 //============================================================
 
 pay_fild10,108,357,5	script	Li#Dokebi_Hunt	4_F_01,{
-	if (checkquest(60128) != -1) {
-		if (checkquest(60128,HUNTING) != 2 ) {
+	if (questprogress(60128)) {
+		if (questprogress(60128,HUNTING) != 2) {
 			mes "[Li]";
 			mes "Have you finished hunting the 50 Dokebis?";
 			next;
@@ -53,8 +53,8 @@ pay_fild10,108,357,5	script	Li#Dokebi_Hunt	4_F_01,{
 			close;
 		}
 	}
-	if (checkquest(60129) != -1) {
-		if (checkquest(60129,HUNTING) != 2 ) {
+	if (questprogress(60129)) {
+		if (questprogress(60129,HUNTING) != 2) {
 			mes "[Li]";
 			mes "Have you finished hunting the 50 Dokebis?";
 			next;
@@ -94,8 +94,8 @@ pay_fild10,108,357,5	script	Li#Dokebi_Hunt	4_F_01,{
 			close;
 		}
 	}
-	if (checkquest(60130) != -1) {
-		if (checkquest(60130,HUNTING) != 2 ) {
+	if (questprogress(60130)) {
+		if (questprogress(60130,HUNTING) != 2) {
 			mes "[Li]";
 			mes "Have you finished hunting the 150 Dokebis?";
 			next;

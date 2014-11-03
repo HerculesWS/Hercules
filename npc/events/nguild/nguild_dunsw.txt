@@ -14,7 +14,7 @@
 
 //==================================================
 function	script	F_GldDunSw	{
-	set .@GID, getcastledata(getarg(0),1);
+	.@GID = getcastledata(getarg(0),1);
 	if (.@GID == 0) {
 		mes "[ Echoing Voice ]";
 		mes " ' The one who can overcome an ordeal and show true bravery... will find the way... ' ";

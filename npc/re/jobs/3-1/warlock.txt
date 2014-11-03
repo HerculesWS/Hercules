@@ -182,14 +182,14 @@ function	script	F_Warlock	{
 				mes "[Master Egnoloria]";
 				mes "Talk to the guy with the weird hair.";
 				mes "He'll let you know what you should do.";
-				set job_wl,2;
+				job_wl = 2;
 				setquest 11106;
 				close;
 			case 2:
 				mes "[Master Egnoloria]";
 				mes "Good.";
 				mes "You are a human being so that's for you.";
-				set job_wl,1;
+				job_wl = 1;
 				close2;
 				warp "splendide",200,100;
 				end;
@@ -250,7 +250,7 @@ spl_in02,77,107,5	script	Assistant#Warlock1	4_M_FAIRYKID5,{
 		}
 		if (SkillPoint != 0) {
 			mes "First, use all of your remaining job skill points before continuing.";
-			set job_wl,3;
+			job_wl = 3;
 			close;
 		}
 		mes "This is the Master's";
@@ -303,7 +303,7 @@ L_Quest:
 	if (getarg(0)) {
 		mes "[Yoop]";
 		mes "Show us how strong you are. And don't forget to wear this.";
-		set job_wl,4;
+		job_wl = 4;
 		getitem 2796,1; //Magical_Stone
 		getitem 2797,1; //Magical_Stone_
 		changequest 11106,11107;
@@ -373,7 +373,7 @@ spl_in02,60,231,5	script	Yoop#Warlock	4_M_FAIRYKID5,{
 				delitem 2797,countitem(2797); //Magical_Stone_
 				delitem 6152,countitem(6152); //Glittering_Crystal
 				delitem 6151,countitem(6151); //Peice_Of_Great_Bradium
-				set job_wl,5;
+				job_wl = 5;
 				changequest 11107,11108;
 				close;
 			}
@@ -479,7 +479,7 @@ spl_in02,84,103,3	script	Assistant#Warlock2	4_F_FAIRYKID4,{
 		next;
 		mes "[Yoop]";
 		mes "I will guide you into the magic room.";
-		set job_wl,7;
+		job_wl = 7;
 		changequest 11109,11110;
 		getitem 12384,5; //Rainbow_Ruby_Water
 		getitem 12386,5; //Rainbow_Ruby_Wind
@@ -521,7 +521,7 @@ spl_in02,84,103,3	script	Assistant#Warlock2	4_F_FAIRYKID4,{
 		mes "[Yoop]";
 		mes "All of the tests are done. Now talk to Master Engoloria.";
 		mes "I'm so happy that you have succeeded.";
-		set job_wl,9;
+		job_wl = 9;
 		changequest 11111,11112;
 		close;
 	} else if (job_wl == 9) {
@@ -600,7 +600,7 @@ spl_in02,80,108,5	script	Guild Master#Warlock	4_F_FAIRY1,{
 			mes "[Master Egnoloria]";
 			mes "Talk to the guy with the weird hair.";
 			mes "He'll let you know what you should do.";
-			set job_wl,2;
+			job_wl = 2;
 			setquest 11106;
 			close;
 		case 2:
@@ -645,7 +645,7 @@ spl_in02,80,108,5	script	Guild Master#Warlock	4_F_FAIRY1,{
 		mes "Yup, Master.";
 		mes "Please follow me.";
 		emotion e_ic,0,"Assistant#Warlock2";
-		set job_wl,6;
+		job_wl = 6;
 		changequest 11108,11109;
 		close;
 	} else if (job_wl < 9) {
@@ -692,11 +692,11 @@ spl_in02,80,108,5	script	Guild Master#Warlock	4_F_FAIRY1,{
 		mes "[Master Egnoloria]";
 		mes "This crystallized magical stone will keep you safe.";
 		if (Class == Job_High_Wizard) {
-			if (JobLevel > 69) set job_wl,13;
-			else if (JobLevel > 59) set job_wl,12;
-			else set job_wl,11;
+			if (JobLevel > 69) job_wl = 13;
+			else if (JobLevel > 59) job_wl = 12;
+			else job_wl = 11;
 		}
-		else set job_wl,10;
+		else job_wl = 10;
 		jobchange roclass(eaclass()|EAJL_THIRD);
 		completequest 11112;
 		getitem 5753,1; //Magic_Stone_Hat
@@ -809,7 +809,7 @@ OnMyMobDead:
 	if (mobcount("job3_war02",strnpcinfo(0)+"::OnMyMobDead") < 1) {
 		stopnpctimer;
 		mapannounce "job3_war02","The Monster Invasion has been stopped.",bc_map;
-		set .@str$, "The chamber of magic#"+((strnpcinfo(0) == "The chamber of magic#2")?"3":"4");
+		.@str$ = "The chamber of magic#"+((strnpcinfo(0) == "The chamber of magic#2")?"3":"4");
 		donpcevent .@str$+"::OnEnable";
 	}
 	end;
@@ -952,7 +952,7 @@ OnDisable:
 OnMyMobDead:
 	if (mobcount("job3_war02","Hollow Stone#Warlock::OnMyMobDead") < 1) {
 		mapannounce "job3_war02","The Hollow Stone is crystallized with enough magic power.",bc_map;
-		set job_wl,8;
+		job_wl = 8;
 		changequest 11110,11111;
 		donpcevent "Hollow Stone#Warlock::OnReset";
 		donpcevent "Hollow Stone#Warlock::OnDisable";

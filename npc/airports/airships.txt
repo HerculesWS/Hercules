@@ -51,7 +51,7 @@ OnTimer50000:
 	mapannounce "airplane","We will arrive in Einbroch shortly.",bc_map,"0x00ff00";
 	end;
 OnTimer60000:
-	set $@airplanelocation,1;
+	$@airplanelocation = 1;
 	donpcevent "#AirshipWarp-1::OnUnhide";
 	donpcevent "#AirshipWarp-2::OnUnhide";
 	mapannounce "airplane","Welcome to Einbroch. Have a safe trip.",bc_map,"0x00ff00";
@@ -71,7 +71,7 @@ OnTimer130000:
 	mapannounce "airplane","We will arrive in Lighthalzen shortly.",bc_map,"0x70dbdb";
 	end;
 OnTimer140000:
-	set $@airplanelocation,2;
+	$@airplanelocation = 2;
 	donpcevent "#AirshipWarp-1::OnUnhide";
 	donpcevent "#AirshipWarp-2::OnUnhide";
 	mapannounce "airplane","Welcome to Lighthalzen. Have a safe trip.",bc_map,"0x70dbdb";
@@ -91,7 +91,7 @@ OnTimer210000:
 	mapannounce "airplane","We will arrive in Einbroch shortly.",bc_map,"0x00FF00";
 	end;
 OnTimer220000:
-	set $@airplanelocation,1;
+	$@airplanelocation = 1;
 	donpcevent "#AirshipWarp-1::OnUnhide";
 	donpcevent "#AirshipWarp-2::OnUnhide";
 	mapannounce "airplane","Welcome to Einbroch. Have a safe trip.",bc_map,"0x00ff00";
@@ -111,7 +111,7 @@ OnTimer290000:
 	mapannounce "airplane","We will arrive in Juno shortly.",bc_map,"0xff8200";
 	end;
 OnTimer300000:
-	set $@airplanelocation,0;
+	$@airplanelocation = 0;
 	donpcevent "#AirshipWarp-1::OnUnhide";
 	donpcevent "#AirshipWarp-2::OnUnhide";
 	mapannounce "airplane","Welcome to Juno. Have a safe trip.",bc_map,"0xff8200";
@@ -131,7 +131,7 @@ OnTimer370000:
 	mapannounce "airplane","We will arrive in Hugel shortly.",bc_map,"0xca4bf3";
 	end;
 OnTimer380000:
-	set $@airplanelocation,3;
+	$@airplanelocation = 3;
 	donpcevent "#AirshipWarp-1::OnUnhide";
 	donpcevent "#AirshipWarp-2::OnUnhide";
 	mapannounce "airplane","Welcome to Hugel. Have a safe trip.",bc_map,"0xca4bf3";
@@ -151,7 +151,7 @@ OnTimer450000:
 	mapannounce "airplane","We will arrive in Juno shortly.",bc_map,"0xff8200";
 	end;
 OnTimer460000:
-	set $@airplanelocation,0;
+	$@airplanelocation = 0;
 	donpcevent "#AirshipWarp-1::OnUnhide";
 	donpcevent "#AirshipWarp-2::OnUnhide";
 	mapannounce "airplane","Welcome to Juno. Have a safe trip.",bc_map,"0xff8200";
@@ -476,7 +476,7 @@ airplane,50,66,5	script	Apple Merchant#airplane	4_M_04,{
 		next;
 		while (1) {
 			input .@input;
-			set .@pay, .@input * 15;
+			.@pay = .@input * 15;
 			if (.@input == 0) {
 				mes "[Fruitz]";
 				mes "Thanks for stopping";
@@ -690,7 +690,7 @@ OnTimer50000:
 	mapannounce "airplane_01","We will arrive in Izlude shortly.",bc_map,"0x00ff00";
 	end;
 OnTimer60000:
-	set $@airplanelocation2,1;
+	$@airplanelocation2 = 1;
 	donpcevent "#AirshipWarp-3::OnUnhide";
 	donpcevent "#AirshipWarp-4::OnUnhide";
 	mapannounce "airplane_01","Welcome to Izlude. Have a safe trip.",bc_map,"0x00ff00";
@@ -710,7 +710,7 @@ OnTimer130000:
 	mapannounce "airplane_01","We will arrive in Juno shortly.",bc_map,"0x70dbdb";
 	end;
 OnTimer140000:
-	set $@airplanelocation2,2;
+	$@airplanelocation2 = 2;
 	donpcevent "#AirshipWarp-3::OnUnhide";
 	donpcevent "#AirshipWarp-4::OnUnhide";
 	mapannounce "airplane_01","Welcome to Juno. Have a safe trip.",bc_map,"0x70dbdb";
@@ -730,7 +730,7 @@ OnTimer210000:
 	mapannounce "airplane_01","We will arrive in Rachel shortly.",bc_map,"0xFF8200";
 	end;
 OnTimer220000:
-	set $@airplanelocation2,0;
+	$@airplanelocation2 = 0;
 	donpcevent "#AirshipWarp-3::OnUnhide";
 	donpcevent "#AirshipWarp-4::OnUnhide";
 	mapannounce "airplane_01","Welcome to Rachel. Have a safe trip.",bc_map,"0xFF8200";
@@ -743,13 +743,13 @@ OnTimer240000:
 	donpcevent "#AirshipWarp-4::OnHide";
 	mapannounce "airplane_01","The Airship is now taking off. Our next destination is Izlude.",bc_map,"0x00ff00";
 	stopnpctimer;
-	set .moninv, .moninv + 1;
+	++.moninv;
 	if (.moninv == 7) {
 		if (rand(1,3) == 3) {
 			donpcevent "Airship#airplane02::OnEnable";
 			end;
 		}
-		set .moninv, 0;
+		.moninv = 0;
 	}
 	initnpctimer;
 	end;
@@ -840,7 +840,7 @@ airplane_01,50,66,5	script	Apple Merchant#air01	4_M_04,{
 		next;
 		while (1) {
 			input .@input;
-			set .@pay, .@input * 15;
+			.@pay = .@input * 15;
 			if (.@input == 0) {
 				mes "[Meltz]";
 				mes "Thanks for stopping";
@@ -1129,26 +1129,26 @@ airplane_01,32,61,4	script	Nils#ein	1_M_03,1,1,{
 					1740,
 					1440,
 					1450;
-		set .@wordtest, rand(7);
+		.@wordtest = rand(7);
 		next;
 		mes "[Nils]";
 		mes .@line1_1$[.@wordtest];
 		mes .@line1_2$[.@wordtest];
 		mes .@line1_3$[.@wordtest];
-		set .@start_time, gettime(3)*60*60 + gettime(2)*60 + gettime(1);
+		.@start_time = gettime(3)*60*60 + gettime(2)*60 + gettime(1);
 		next;
 		input .@save1$;
-		set .@end_time, gettime(3)*60*60 + gettime(2)*60 + gettime(1);
-		set .@total_time, .@end_time - .@start_time;
+		.@end_time = gettime(3)*60*60 + gettime(2)*60 + gettime(1);
+		.@total_time = .@end_time - .@start_time;
 		mes "[Nils]";
 		mes .@line2_1$[.@wordtest];
 		mes .@line2_2$[.@wordtest];
-		set .@start_time, gettime(3)*60*60 + gettime(2)*60 + gettime(1);
+		.@start_time = gettime(3)*60*60 + gettime(2)*60 + gettime(1);
 		next;
 		input .@save2$;
-		set .@end_time, gettime(3)*60*60 + gettime(2)*60 + gettime(1);
-		set .@total_time, .@total_time + (.@start_time - .@end_time);
-		set .@tasoo, (.@letters[.@wordtest] / .@total_time) * 6;
+		.@end_time = gettime(3)*60*60 + gettime(2)*60 + gettime(1);
+		.@total_time = .@total_time + (.@start_time - .@end_time);
+		.@tasoo = (.@letters[.@wordtest] / .@total_time) * 6;
 		if ((.@save1$ == .@word1$[.@wordtest]) && (.@save2$ == .@word2$[.@wordtest])) {
 			mes "[Nils]";
 			mes "Your record is ^ff0000" + .@total_time + " seconds^000000 and";
@@ -1171,8 +1171,8 @@ airplane_01,32,61,4	script	Nils#ein	1_M_03,1,1,{
 				mes "However, ^ff0000" + strcharinfo(0) + "^000000,";
 				mes "you made the new top record";
 				mes "this time. Congratulations!";
-				set $050320_minus1_typing$, strcharinfo(0);
-				set $050320_ein_typing, .@tasoo;
+				$050320_minus1_typing$ = strcharinfo(0);
+				$050320_ein_typing = .@tasoo;
 				close;
 			}
 			else {
@@ -1363,11 +1363,11 @@ function	script	applegamble	{
 	}
 	mes "^3355FF*Rolling and rumbling*^000000";
 	next;
-	set .@giveapple, .@amount*2;
-	set .@table1, rand(1,6);
-	set .@table2, rand(1,6);
-	set .@tablesub, .@table1 + .@table2;
-	set .@tabletotal, .@tablesub;
+	.@giveapple = .@amount*2;
+	.@table1 = rand(1,6);
+	.@table2 = rand(1,6);
+	.@tablesub = .@table1 + .@table2;
+	.@tabletotal = .@tablesub;
 	mes "["+getarg(0)+"]";
 	mes "I got a ^0000FF" + .@table1 + "^000000 and a ^0000FF" + .@table2 + "^000000.";
 	mes "That's a total of ^0000FF" + .@tablesub + "^000000.";
@@ -1375,15 +1375,15 @@ function	script	applegamble	{
 	next;
 	select("Cast Dice.");
 	mes "^3355FF*Rolling and rumbling*^000000";
-	set .@player1, rand(1,6);
-	set .@player2, rand(1,6);
-	set .@playersub, .@player1 + .@player2;
+	.@player1 = rand(1,6);
+	.@player2 = rand(1,6);
+	.@playersub = .@player1 + .@player2;
 	if (.@playersub > 9 && .@amount > 39) {
-		set .@player1, rand(1,6);
-		set .@player2, rand(1,6);
-		set .@playersub, .@player1 + .@player2;
+		.@player1 = rand(1,6);
+		.@player2 = rand(1,6);
+		.@playersub = .@player1 + .@player2;
 	}
-	set .@playertotal, .@playersub;
+	.@playertotal = .@playersub;
 	next;
 	mes "["+getarg(0)+"]";
 	mes "^FF0000" + strcharinfo(0) + "^000000, you have ^FF0000" + .@player1 + "^000000 and ^FF0000" + .@player2 + "^000000. The total is ^FF0000" + .@playersub + "^000000 .";
@@ -1400,8 +1400,8 @@ function	script	applegamble	{
 	switch (select("Cast dice.:Cancel.")) {
 	case 1:
 		mes "^3355FF*Rolling and rumbling*^000000";
-		set .@player3, rand(1,6);
-		set .@playertotal, .@playertotal + .@player3;
+		.@player3 = rand(1,6);
+		.@playertotal += .@player3;
 		next;
 		mes "["+getarg(0)+"]";
 		if (.@playertotal > 12) {
@@ -1450,8 +1450,8 @@ function	script	applegamble	{
 	}
 	next;
 	mes "^3355FF*Rolling and rumbling*^000000";
-	set .@table3, rand(1,6);
-	set .@tabletotal, .@tabletotal + .@table3;
+	.@table3 = rand(1,6);
+	.@tabletotal += .@table3;
 	next;
 	mes "["+getarg(0)+"]";
 	if (.@tabletotal > 12) {

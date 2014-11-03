@@ -779,7 +779,7 @@ aldeba_in,84,166,4	script	Kafra Service#alde	4_F_KAFRA1,{
 			end;
 		}
 		else {
-			set .@kafrapassmoney,countitem(1084)*2000;
+			.@kafrapassmoney = countitem(1084)*2000;
 			mes "[Kafra Pavianne]";
 			mes "Let's see...";
 			if (countitem(1084) == 1) {
@@ -1058,180 +1058,77 @@ aldeba_in,79,161,6	script	Kafra#04	4_F_KAFRA3,{
 	next;
 	mes "[Kafra]";
 	mes "The amount of special reserve points that you have is: ^FF0000"+RESRVPTS+"^000000 pts.  Please make a choice based on your point total.";
-M_Menu:
-	next;
-	menu 	"100- Potato 7 ea",M_1a, "200- Potato 15 ea",M_1b, "300- Potato 25 ea",M_1c, "400- Potato 35 ea",M_1d,
-		"500- Potato 50 ea",M_1e, "600- Potato 60 ea",M_1f, "700- Potato 75 ea",M_1g, "800- Potato 85 ea",M_1h,
-		"900- Potato 100 ea",M_1i, "1000- 1st Lottery Chance!",M_1j, "Next items",M_2, "Cancel",M_End;
-
-	M_1a:
-		if(RESRVPTS < 100) goto sL_LowPts1;
-		mes "[Kafra]";
-		mes "Here you are.";
-		getitem 516, 7;
-		set RESRVPTS, RESRVPTS - 100;
-		close;
-	M_1b:
-		if(RESRVPTS < 200) goto sL_LowPts1;
-		mes "[Kafra]";
-		mes "Here you are.";
-		getitem 516, 15;
-		set RESRVPTS, RESRVPTS - 200;
-		close;
-	M_1c:
-		if(RESRVPTS < 300) goto sL_LowPts1;
-		mes "[Kafra]";
-		mes "Here you are.";
-		getitem 516, 25;
-		set RESRVPTS, RESRVPTS - 300;
-		close;
-	M_1d:
-		if(RESRVPTS < 400) goto sL_LowPts1;
-		mes "[Kafra]";
-		mes "Here you are.";
-		getitem 516, 35;
-		set RESRVPTS, RESRVPTS - 400;
-		close;
-	M_1e:
-		if(RESRVPTS < 500) goto sL_LowPts1;
-		mes "[Kafra]";
-		mes "Here you are.";
-		getitem 516, 50;
-		set RESRVPTS, RESRVPTS - 500;
-		close;
-	M_1f:
-		if(RESRVPTS < 600) goto sL_LowPts1;
-		mes "[Kafra]";
-		mes "Here you are.";
-		getitem 516, 60;
-		set RESRVPTS, RESRVPTS - 600;
-		close;
-	M_1g:
-		if(RESRVPTS < 700) goto sL_LowPts1;
-		mes "[Kafra]";
-		mes "Here you are.";
-		getitem 516, 75;
-		set RESRVPTS, RESRVPTS - 700;
-		close;
-	M_1h:
-		if(RESRVPTS < 800) goto sL_LowPts1;
-		mes "[Kafra]";
-		mes "Here you are.";
-		getitem 516, 85;
-		set RESRVPTS, RESRVPTS - 800;
-		close;
-	M_1i:
-		if(RESRVPTS < 900) goto sL_LowPts1;
-		mes "[Kafra]";
-		mes "Here you are.";
-		getitem 516, 100;
-		set RESRVPTS, RESRVPTS - 900;
-		close;
-	M_1j:
-		if(RESRVPTS < 1000) goto sL_LowPts1;
-		set RESRVPTS, RESRVPTS - 1000;
-		mes "[Kafra]";
-		mes "^0000FF1st Lottery Opportunity!!^000000";
-		set @Lotto, 1;
+	.@page = 1;
+	while (true) {
+		if (.@page == 1) {
+			//                Points,      Item ID, amount
+			setarray .@choices,  100, Sweet_Potato,   7,
+			                     200, Sweet_Potato,  15,
+			                     300, Sweet_Potato,  25,
+			                     400, Sweet_Potato,  35,
+			                     500, Sweet_Potato,  50,
+			                     600, Sweet_Potato,  60,
+			                     700, Sweet_Potato,  75,
+			                     800, Sweet_Potato,  85,
+			                     900, Sweet_Potato, 100,
+			                    1000,         null,   0;
+			.@ordinal$ = "1st";
+			.@changepage$ = "Next items";
+		} else { // .@page == 2
+			setarray .@choices, 1100, Sweet_Potato,   7,
+			                    1300, Sweet_Potato,  15,
+			                    1500, Sweet_Potato,  25,
+			                    1700, Sweet_Potato,  35,
+			                    1900, Sweet_Potato,  50,
+			                    2100, Sweet_Potato,  60,
+			                    2300, Sweet_Potato,  75,
+			                    2500, Sweet_Potato,  85,
+			                    2800, Sweet_Potato, 100,
+			                    3000,         null,   0;
+			.@ordinal$ = "2nd";
+			.@changepage$ = "Previous List";
+		}
+		.@list$ = "";
+		.@numitemchoices = 0;
+		for (.@i = 0; .@i < getarraysize(.@choices) - 3; .@i += 3) { // Skip the last entry as it's handled separately
+			.@list$ += .@choices[i] + "- " + getitemname(.@choices[.@i+1]) + " " + .@choices[.@i+2] + " ea:";
+			++.@numitemchoices;
+		}
+		.@list$ += .@choices[.@i] + "- " + .@ordinal$ + " Lottery Chance!:" + .@changepage$ +":Cancel";
 		next;
-		callfunc "F_Lottery";
-		goto M_End;
-
-	sL_LowPts1:
-		mes "[Kafra]";
-		mes "I'm sorry but you do not have enough reserve points for that selection.";
-		goto M_Menu;
-
-	M_2:
-		menu 	"1100- Red Potion 7 ea",M_2a, "1300- Red Potion 15 ea",M_2b, "1500- Red Potion 25 ea",M_2c,
-			"1700- Red Potion 35 ea",M_2d, "1900- Red Potion 50 ea",M_2e, "2100- Red Potion 60 ea",M_2f,
-			"2300- Red Potion 75 ea",M_2g, "2500- Red Potion 85 ea",M_2h, "2800- Red Potion 100 ea",M_2i,
-			"3000- 2nd Lotery Chance!",M_2j, "Previous List",M_Menu, "Cancel",M_End;
-		
-		M_2a:
-			if(RESRVPTS < 1100) goto sL_LowPts2;
-			mes "[Kafra]";
-			mes "Here you are.";
-			getitem 501, 7;
-			set RESRVPTS, RESRVPTS - 1100;
-			close;
-		M_2b:
-			if(RESRVPTS < 1300) goto sL_LowPts2;
-			mes "[Kafra]";
-			mes "Here you are.";
-			getitem 501, 15;
-			set RESRVPTS, RESRVPTS - 1300;
-			close;
-		M_2c:
-			if(RESRVPTS < 1500) goto sL_LowPts2;
-			mes "[Kafra]";
-			mes "Here you are.";
-			getitem 501, 25;
-			set RESRVPTS, RESRVPTS - 1500;
-			close;
-		M_2d:
-			if(RESRVPTS < 1700) goto sL_LowPts2;
-			mes "[Kafra]";
-			mes "Here you are.";
-			getitem 501, 35;
-			set RESRVPTS, RESRVPTS - 1700;
-			close;
-		M_2e:
-			if(RESRVPTS < 1900) goto sL_LowPts2;
-			mes "[Kafra]";
-			mes "Here you are.";
-			getitem 501, 50;
-			set RESRVPTS, RESRVPTS - 1900;
-			close;
-		M_2f:
-			if(RESRVPTS < 2100) goto sL_LowPts2;
-			mes "[Kafra]";
-			mes "Here you are.";
-			getitem 501, 60;
-			set RESRVPTS, RESRVPTS - 2100;
-			close;
-		M_2g:
-			if(RESRVPTS < 2300) goto sL_LowPts2;
-			mes "[Kafra]";
-			mes "Here you are.";
-			getitem 501, 75;
-			set RESRVPTS, RESRVPTS - 2300;
-			close;
-		M_2h:
-			if(RESRVPTS < 2500) goto sL_LowPts2;
-			mes "[Kafra]";
-			mes "Here you are.";
-			getitem 501, 85;
-			set RESRVPTS, RESRVPTS - 2500;
-			close;
-		M_2i:
-			if(RESRVPTS < 2800) goto sL_LowPts2;
-			mes "[Kafra]";
-			mes "Here you are.";
-			getitem 501, 100;
-			set RESRVPTS, RESRVPTS - 2800;
-			close;
-		M_2j:
-			if(RESRVPTS < 3000) goto sL_LowPts2;
-			set RESRVPTS, RESRVPTS - 3000;
-			mes "[Kafra]";
-			mes "^0000FF2nd Lottery Opportunity!!^000000";
-			set @Lotto, 2;
+		.@chosen = select(.@list$) - 1;
+		if (.@chosen <= .@numitemchoices) {
+			if (RESRVPTS < .@choices[.@chosen*3]) {
+				mes "[Kafra]";
+				mes "I'm sorry but you do not have enough reserve points for that selection.";
+				continue;
+			}
+			RESRVPTS -= .@choices[.@chosen * 3];
+			if (.@chosen < .@numitemchances) {
+				// Item
+				mes "[Kafra]";
+				mes "Here you are.";
+				getitem .@choices[.@chosen*3 + 1], .@choices[.@chosen*3 + 2];
+				close;
+			}
+			// Lottery chance
+			mes "^0000FF"+ .@ordinal$ + " Lottery Opportunity!!^000000";
+			@Lotto = .@page;
 			next;
 			callfunc "F_Lottery";
-			goto M_End;
+			break;
+		} else if (.@chosen == .@numitemchoices + 1) { // next/previous items
+			.@page = (.@page == 1 ? 2 : 1);
+			continue;
+		} else { // Cancel
+			break;
+		}
+	}
 
-		sL_LowPts2:
-			mes "[Kafra]";
-			mes "I'm sorry but you do not have enough reserve points for that selection.";
-			next;
-			goto M_2;
-
-	M_End:
-		mes "[Kafra]";
-		mes "Please come back anytime when you have more reserve points.";
-		cutin "",255;
-		close;
+	mes "[Kafra]";
+	mes "Please come back anytime when you have more reserve points.";
+	cutin "",255;
+	close;
 }
 
 // Special Reserve 2 ----------------------------------------------
@@ -1244,44 +1141,45 @@ aldeba_in,88,161,3	script	Kafra#05	4_F_KAFRA3,{
 	mes "[Kafra]";
 	mes "Would you like to use your points?";
 	next;
-	menu "Yes I would.",-, "Maybe next time.",M_End;
-
+	if (select("Yes I would.","Maybe next time.") == 1) {
 		mes "[Kafra]";
 		mes "You have the following amount of special reserve points: ^5544FF"+RESRVPTS+"^000000.";
 		mes "Make a choice and test your luck!";
 		next;
-		menu "5000pts = 1st Lottery Chance!",sM_1st, "7000pts = 2nd Lottery Chance!",sM_2nd, "10000pts = 3rd Lottery Chance!",sM_3rd, "Cancel",M_End;
+		switch (select("5000pts = 1st Lottery Chance!","7000pts = 2nd Lottery Chance!","10000pts = 3rd Lottery Chance!","Cancel")) {
+		case 1: // 5000
+			.@points = 5000;
+			@Lotto = 3;
+			break;
+		case 2: // 7000
+			.@points = 7000;
+			@Lotto = 4;
+			break;
+		case 3: // 10000
+			.@points = 10000;
+			@Lotto = 5;
+			break;
+		case 4: // Cancel
+			.@points = 0;
+			break;
+		}
 
-		sM_1st:
-			if(RESRVPTS < 5000) goto sL_NotEnuf;
-			set RESRVPTS, RESRVPTS - 5000;
-			set @Lotto, 3;
-			callfunc "F_Lottery";
-			goto M_End;
-		sM_2nd:
-			if(RESRVPTS < 7000) goto sL_NotEnuf;
-			set RESRVPTS, RESRVPTS - 7000;
-			set @Lotto, 4;
-			callfunc "F_Lottery";
-			goto M_End;
-		sM_3rd:
-			if(RESRVPTS < 10000) goto sL_NotEnuf;
-			set RESRVPTS, RESRVPTS - 10000;
-			set @Lotto, 5;
-			callfunc "F_Lottery";
-			goto M_End;
-
-			sL_NotEnuf:
+		if (.@points) {
+			if (RESRVPTS < .@points) {
 				mes "[Kafra]";
 				mes "I'm sorry dear but you do not have enough points for this selection.";
 				cutin "",255;
 				close;
-	M_End:
-		mes "[Kafra]";
-		mes "No problem.  Collect more and more special reserve points by using the Kafra Services found throughout Rune Midgard.";
-		mes "Thank you for using Kafra Corp. services.";
-		cutin "",255;
-		close;
+			}
+			RESRVPTS -= .@points;
+			callfunc "F_Lottery";
+		}
+	}
+	mes "[Kafra]";
+	mes "No problem.  Collect more and more special reserve points by using the Kafra Services found throughout Rune Midgard.";
+	mes "Thank you for using Kafra Corp. services.";
+	cutin "",255;
+	close;
 }
 
 // Function F_Lottery ------------------------------------------------------------------------------------------
@@ -1296,7 +1194,7 @@ function	script	F_Lottery	{
 	mes "How many times do you want the Lottery Machine to spin? You can choose up to 5 times.";
 	next;
 	input @input;
-	if(@input < 1 || @input > 5) set @input, rand(1,5); //Lupus's fix
+	if(@input < 1 || @input > 5) @input = rand(1,5); //Lupus's fix
 	callsub sF_Spin;
 	mes "[Kafra]";
 	mes "Ok~ Let me check the results~ guess what it is?";
@@ -1369,8 +1267,8 @@ sF_Spin:
 	mes "[Lottery Machine]";
 	mes "(rumble~rumble~rumble~)...";
 	next;
-	set @temp, rand(10);
-	set @input, @input -1;
+	@temp = rand(10);
+	--@input;
 	if(@input <= 0) return;
 	goto sF_Spin;
 }

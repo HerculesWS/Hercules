@@ -16,9 +16,9 @@
 prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 	disable_items;
 	if (countitem(6238) || countitem(6228) || countitem(6229) || countitem(6230) || countitem(6231) || countitem(6456))
-		set .@bWeaponUp,1;
+		.@bWeaponUp = 1;
 	if (countitem(6239) || countitem(6232) || countitem(6233) || countitem(6234) || countitem(6235) || countitem(6457))
-		set .@bArmorUp,1;
+		.@bArmorUp = 1;
 	if (!.@bWeaponUp && !.@bArmorUp) {
 		mes "[Refine Master]";
 		mes "Hello!";
@@ -55,10 +55,10 @@ prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 	mes "Which equipment would you like to refine?";
 	next;
 	setarray .@position$[1],"Head upper","Armor","Left hand","Right hand","Robe","Shoes","Accessory 1","Accessory 2","Head middle","Head lower";
-	set .@menu$,"";
-	for(set .@i,1; .@i<=10; set .@i,.@i+1)
-		set .@menu$, .@menu$+((getequipisequiped(.@i))?getequipname(.@i):.@position$[.@i]+"- [Empty]")+":";
-	set .@part, select(.@menu$);
+	.@menu$ = "";
+	for(.@i = 1; .@i<=10; ++.@i)
+		.@menu$ += ((getequipisequiped(.@i))?getequipname(.@i):.@position$[.@i]+"- [Empty]")+":";
+	.@part = select(.@menu$);
 	if (!getequipisequiped(.@part)) {
 		mes "[Refine Master]";
 		mes "You have to equip the item you want to refine.";
@@ -76,8 +76,8 @@ prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 	case 0:
 		setarray .@tickets[0],6457,6235,6234,6233,6232,6239;
 		setarray .@levels[0],5,6,7,8,9,11;
-		set .@type$,"Armor";
-		set .@check,.@bArmorUp;
+		.@type$ = "Armor";
+		.@check = .@bArmorUp;
 		break;
 	case 1:
 	case 2:
@@ -85,8 +85,8 @@ prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 	case 4:
 		setarray .@tickets[0],6456,6231,6230,6229,6228,6238;
 		setarray .@levels[0],5,6,7,8,9,11;
-		set .@type$,"Weapon";
-		set .@check,.@bWeaponUp;
+		.@type$ = "Weapon";
+		.@check = .@bWeaponUp;
 		break;
 	}
 	if (!.@check) {
@@ -99,12 +99,12 @@ prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 	mes "[Refine Master]";
 	mes "Please choose which ^006400"+.@type$+" Refine Ticket^000000 you want to use.";
 	next;
-	set .@menu$,"";
-	for(set .@i,0; .@i<getarraysize(.@tickets); set .@i,.@i+1)
-		set .@menu$, .@menu$+getitemname(.@tickets[.@i])+":";
-	set .@select, select(.@menu$)-1;
-	set .@ticket_lv, .@levels[.@select];
-	set .@ticket_id, .@tickets[.@select];
+	.@menu$ = "";
+	for(.@i = 0; .@i<getarraysize(.@tickets); ++.@i)
+		.@menu$ += getitemname(.@tickets[.@i])+":";
+	.@select = select(.@menu$)-1;
+	.@ticket_lv = .@levels[.@select];
+	.@ticket_id = .@tickets[.@select];
 	if (countitem(.@ticket_id) == 0) {
 		emotion e_what;
 		mes "[Refine Master]";
@@ -146,7 +146,7 @@ prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 		mes "Please report this.";
 		close;
 	}
-	for(set .@i,getequiprefinerycnt(.@part); .@i<.@ticket_lv; set .@i,.@i+1)
+	for(.@i = getequiprefinerycnt(.@part); .@i<.@ticket_lv; ++.@i)
 		successrefitem .@part;
 	next;
 	emotion e_ho;

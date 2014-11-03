@@ -253,7 +253,7 @@ geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe6	4_M_02
 	close;
 
 L_Warp:
-	set .@map$,getarg(0);
+	.@map$ = getarg(0);
 	if (checkre(0)) {
 		switch(rand(1,10)) {
 			case 1: warp .@map$,34,38; break;
@@ -291,7 +291,7 @@ function	script	F_PVP_FSRS	{
 		}
 	}
 	if (strnpcinfo(4) == "pvp_y_room") {
-		set .@base$, "pvp_y_"+strnpcinfo(2);
+		.@base$ = "pvp_y_"+strnpcinfo(2);
 		setarray .@maps$[0],	.@base$+"-1",	.@base$+"-2",	.@base$+"-3",	.@base$+"-4",	.@base$+"-5";
 		setarray .@name$[0],	"Prontera",		"Izlude",		"Payon",		"Alberta",		"Morroc";
 		setarray .@Limit[0],	128,			128,			128,			128,			128;
@@ -300,10 +300,10 @@ function	script	F_PVP_FSRS	{
 		setarray .@name$[0],	"Sandwich",		"Lock on",		"Four Room",	"Under cross",	"Compass Room";
 		setarray .@Limit[0],	64,				32,				32,				32,				32;
 	}
-	for(set .@i,0; .@i<5; set .@i,.@i+1)
-		set .@menu$, .@menu$+.@name$[.@i]+" ["+getmapusers(.@maps$[.@i])+" / "+.@Limit[.@i]+"]:";
-	set .@menu$, .@menu$+"Cancel.";
-	set .@i, select(.@menu$)-1;
+	for (.@i = 0; .@i<5; ++.@i)
+		.@menu$ += .@name$[.@i]+" ["+getmapusers(.@maps$[.@i])+" / "+.@Limit[.@i]+"]:";
+	.@menu$ += "Cancel.";
+	.@i = select(.@menu$)-1;
 	if (.@i == 5) close;
 	if (getmapusers(.@maps$[.@i]) >= .@Limit[.@i]) {
 		mes "[PVP Fight Square Reception Staff]";
@@ -326,7 +326,7 @@ pvp_room,54,85,4	script	Registration Staff#1	8W_SOLDIER,{
 		mes "For details about viewers please proceed to the Register Staff on your right.";
 		close;
 	}
-	set .@size, getarraysize(.warp_x);
+	.@size = getarraysize(.warp_x);
 	if (.@size == 0) {
 		setarray .warp_x,40,59,20,40;
 		setarray .warp_y,59,40,40,20;
@@ -342,7 +342,7 @@ pvp_room,54,85,4	script	Registration Staff#1	8W_SOLDIER,{
 			mes "Good luck!";
 			close2;
 			delitem 7028,1; //Invite_For_Duel
-			set .@rand, rand(.@size);
+			.@rand = rand(.@size);
 			warp "pvp_2vs2", .warp_x[.@rand], .warp_y[.@rand];
 			deletearray .warp_x[.@rand],1;
 			deletearray .warp_y[.@rand],1;

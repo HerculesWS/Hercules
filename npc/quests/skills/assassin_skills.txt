@@ -232,8 +232,8 @@ in_moc_16,14,27,5	script	Assassin#realman	4_M_ACROSS,{
 							mes "of this skill, but for the most";
 							mes "part, you can use Venom";
 							mes "Knife pretty easily in battle.";
-							set ASSN_SK2,1;
-							set ASSN_SK,1;
+							ASSN_SK2 = 1;
+							ASSN_SK = 1;
 							skill "AS_VENOMKNIFE",1,0;
 							next;
 							mes "[Killtin]";
@@ -359,7 +359,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 			mes "Very well executed.";
 			mes "Good work, "+ strcharinfo(0) +".";
 			skill "AS_SONICACCEL",1,0;
-			set ASSN_SK,7;
+			ASSN_SK = 7;
 			next;
 			mes "[Esmille]";
 			mes "Do you understand now?";
@@ -456,7 +456,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 		mes "Very well executed.";
 		mes "Good work, "+ strcharinfo(0) +".";
 		skill "AS_SONICACCEL",1,0;
-		set ASSN_SK,7;
+		ASSN_SK = 7;
 		next;
 		mes "[Esmille]";
 		mes "Do you understand now?";
@@ -488,7 +488,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 			mes "to keep. In truth, I don't";
 			mes "really need any treasure, just^FFFFFF ^000000 some proof of your qualification.";
 			mes "It looks like you're ready for me^FFFFFF ^000000 to teach you Sonic Acceleration.";
-			set ASSN_SK,6;
+			ASSN_SK = 6;
 			next;
 			mes "[Esmille]";
 			mes "Now, right before you";
@@ -539,7 +539,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 			mes "Very well executed.";
 			mes "Good work, "+ strcharinfo(0) +".";
 			skill 1003,1,0;
-			set ASSN_SK,7;
+			ASSN_SK = 7;
 			next;
 			mes "[Esmille]";
 			mes "Do you understand now?";
@@ -662,7 +662,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 					mes "are there for precious";
 					mes "valuables. Consider this";
 					mes "a test of your strength.";
-					set ASSN_SK,2;
+					ASSN_SK = 2;
 					next;
 					mes "[Esmille]";
 					mes "Whether you can complete";
@@ -678,7 +678,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 					mes "there for precious valuables.";
 					mes "Consider this excursion as";
 					mes "a test of your strength.";
-					set ASSN_SK,3;
+					ASSN_SK = 3;
 					next;
 					mes "[Esmille]";
 					mes "Whether you can complete";
@@ -694,7 +694,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 					mes "the bottom floor for precious";
 					mes "valuables^000000. Consider this as";
 					mes "a test of your strength.";
-					set ASSN_SK,4;
+					ASSN_SK = 4;
 					next;
 					mes "[Esmille]";
 					mes "Whether you can complete";
@@ -842,7 +842,7 @@ OnTouch:
 					mes "that you pull out of the";
 					mes "coffin. You have obtained";
 					mes "a Sapphire for Esmille.^000000";
-					set ASSN_SK,5;
+					ASSN_SK = 5;
 					getitem 726,1; //Blue_Jewel
 					close;
 				}
@@ -911,7 +911,7 @@ OnTouch:
 			mes "all gas in your lungs in time";
 			mes "to escape its effects. You've";
 			mes "retrieved a Ruby for Esmille.^000000";
-			set ASSN_SK,5;
+			ASSN_SK = 5;
 			getitem 723,1; //Cardinal_Jewel
 		}
 		close;
@@ -981,7 +981,7 @@ OnTouch:
 			mes "before the water can";
 			mes "freeze you. You obtained";
 			mes "an Aquamarine for Esmille.^000000";
-			set ASSN_SK,5;
+			ASSN_SK = 5;
 			getitem 720,1; //Skyblue_Jewel
 		}
 		close;

@@ -22,9 +22,9 @@
 prt_in,284,168,2	script	Dyer Ginedin Rephere	1_M_JOBTESTER,{
 function Dyes;
 
-	set .@EnableDyes,1;	// Disable (set to 0) if palettes cause errors [see note v2.4]
+	.@EnableDyes = 1;	// Disable (set to 0) if palettes cause errors [see note v2.4]
 
-	set .n$,"[Dyer Ginedin Rephere]";
+	.n$ = "[Dyer Ginedin Rephere]";
 	mes .n$;
 	mes "11... 12... Mmm... good. I think I'll be able to finish before tonight's party. Oh! I didn't notice you were here!";
 	while(1) {
@@ -135,11 +135,11 @@ L_End:
 function Dyes {
 	setarray .@DyeName$[0],"the default color","Orange","Violet","Red","Black","Green","Blue","White","Yellow";
 	setarray .@DyeItems[0],0,980,981,975,983,979,978,982,976;
-	set .@menu$,"- Default:";
-	for(set .@i,0; .@i<getargcount(); set .@i,.@i+2)
-		set .@menu$, .@menu$+"- "+.@DyeName$[getarg(.@i)]+":";
-	set .@menu$, .@menu$+"- ^777777Cancel^000000";
-	set .@s, select(.@menu$)-1;
+	.@menu$ = "- Default:";
+	for(.@i = 0; .@i<getargcount(); .@i += 2)
+		.@menu$ += "- "+.@DyeName$[getarg(.@i)]+":";
+	.@menu$ += "- ^777777Cancel^000000";
+	.@s = select(.@menu$)-1;
 	if (.@s == (getargcount()/2)+1) goto L_End;
 	mes .n$;
 	if (.@s == 0) {

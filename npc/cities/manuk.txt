@@ -219,7 +219,7 @@ manuk,286,147,3	script	Piom#ep13_2_2	4_MAN_PIOM,{
 }
 
 manuk,183,185,5	script	Piom#ep13_2_3	4_MAN_PIOM,{
-	set tongyeok,Ring_Of_Wise_King;
+	tongyeok = Ring_Of_Wise_King;
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Piom]";
 		mes "Our lives exist for Saphas.";

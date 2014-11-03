@@ -2705,14 +2705,15 @@ void read_channels_config(void) {
 				} else {
 					unsigned char d = 0, dlen = strlen(irc_server);
 					char server[40];
-
+					if (dlen > 39)
+						dlen = 39;
 					memset(server, '\0', sizeof(server));
 
 					for(d = 0; d < dlen; d++) {
 						if(irc_server[d] == ':') {
 							memcpy(server, irc_server, d);
 							safestrncpy(hChSys.irc_server, server, 40);
-							memcpy(server, &irc_server[d+1], dlen);
+							memcpy(server, &irc_server[d+1], dlen - d - 1);
 							hChSys.irc_server_port = atoi(server);
 							break;
 						}

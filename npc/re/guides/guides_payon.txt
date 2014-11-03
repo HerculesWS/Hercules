@@ -24,7 +24,7 @@ payon,163,64,3	script	Guide#01payon::GuidePayon	4_M_PAY_SOLDIER,{
 	while (1) {
 		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
 		case 1:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Archer Village ]:[ Tool Shop ]:[ Weapon & Armor Shop ]:[ Inn & Tavern ]:[ Central Palace ]:[ Palace Court ]:[ Royal Kitchen ]:Previous Menu")) {
 				case 1:
@@ -67,13 +67,13 @@ payon,163,64,3	script	Guide#01payon::GuidePayon	4_M_PAY_SOLDIER,{
 					next;
 					break;
 				case 8:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
 			break;
 		case 2:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Eden Teleport Officer ]:[ Kafra Shop ]:[ Repair / Armsmith ]:[ Kafra Employee ]:[ Trap Specialist ]:[ Seiayblem ]:[ Leablem ]:[ Jade ]:[ Pet Groomer ]:[ Chef Assistant ]:Previous Menu")) {
 				case 1:
@@ -144,7 +144,7 @@ payon,163,64,3	script	Guide#01payon::GuidePayon	4_M_PAY_SOLDIER,{
 					next;
 					break;
 				case 11:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
@@ -203,7 +203,7 @@ pay_arche,86,33,4	script	Guide#05payon	4_M_PAY_SOLDIER,{
 	mes "Do you need help navigating the village?";
 	F_Navi("[Payon Guide]");
 	next;
-	set .@str$,"Would you like to check any other locations?";
+	.@str$ = "Would you like to check any other locations?";
 	while (1) {
 		switch(select("[ Payon Dungeon ]:[ Archer Guild ]:[ Tool Shop ]:[ Kafra Employee ]:[ Mercenary Guildsman ]:[ Alchemist Guildsman ]:[ Eden Teleport Officer ]:Remove Marks from Mini-Map:Cancel")) {
 		case 1:

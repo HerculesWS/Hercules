@@ -8325,7 +8325,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			if( flag&1 || (splash = skill->get_splash(skill_id, skill_lv)) < 1 ) {
 				int i;
 				//As of the behavior in official server Clearance is just a super version of Dispell skill. [Jobbie]
-				if( bl->type != BL_MOB && battle->check_target(src,bl,BCT_PARTY) <= 0 ) // Only affect mob or party.
+				if( bl->type != BL_MOB && battle->check_target(src,bl,BCT_PARTY) <= 0 && sd ) // Only affect mob, party or self.
 					break;
 								
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
@@ -10078,7 +10078,6 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case MG_THUNDERSTORM:
 
 		case AL_PNEUMA:
-		case WZ_ICEWALL:
 		case WZ_FIREPILLAR:
 		case WZ_QUAGMIRE:
 		case WZ_VERMILION:
@@ -10186,6 +10185,11 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			if ( skill_id == WM_SEVERE_RAINSTORM )
 				sc_start(src,src,SC_NO_SWITCH_EQUIP,100,0,skill->get_time(skill_id,skill_lv));
 			skill->unitsetting(src,skill_id,skill_lv,x,y,0);
+			break;
+		case WZ_ICEWALL:
+			flag |= 1;
+			if( skill->unitsetting(src,skill_id,skill_lv,x,y,0) )
+				map->list[src->m].setcell(src->m, x, y, CELL_NOICEWALL, true);
 			break;
 		case RG_GRAFFITI:			/* Graffiti [Valaris] */
 			skill->clear_unitgroup(src);
@@ -10995,11 +10999,11 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 				val1 += pc->checkskill(sd,BA_MUSICALLESSON);
 			break;
 		case DC_SERVICEFORYOU:
-			val1 = 15+skill_lv+(st->int_/10); // MaxSP percent increase TO-DO: this INT bonus value is guessed
+			val1 = 15+skill_lv+(st->int_/10); // MaxSP percent increase
 			val2 = 20+3*skill_lv+(st->int_/10); // SP cost reduction
 			if(sd){
-				val1 += (pc->checkskill(sd,DC_DANCINGLESSON) + 1) / 2;
-				val2 += (pc->checkskill(sd,DC_DANCINGLESSON) + 1) / 2;
+				val1 += pc->checkskill(sd,DC_DANCINGLESSON) / 2;
+				val2 += pc->checkskill(sd,DC_DANCINGLESSON) / 2;
 			}
 			break;
 		case BA_ASSASSINCROSS:
@@ -13170,17 +13174,6 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 				}
 			}
 			break;
-		/**
-		 * Keeping as a note:
-		 * Bug Report #17 provides a link to a sep-2011 changelog that shows this requirement was removed
-		 **/
-		//case AB_LAUDAAGNUS:
-		//case AB_LAUDARAMUS:
-		//	if( !sd->status.party_id ) {
-		//		clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-		//		return 0;
-		//	}
-		//	break;
 
 		case AB_ADORAMUS:
 		/**
@@ -14312,9 +14305,8 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 				break;
 			}
 		for( i = 0; i < ARRAYLENGTH(sd->skillfixcastrate) && sd->skillfixcastrate[i].id; i++ )
-
 			if( sd->skillfixcastrate[i].id == skill_id ){ // bonus2 bFixedCastrate
-				fixcast_r = sd->skillfixcastrate[i].val; // just speculation
+				fixcast_r = sd->skillfixcastrate[i].val;
 				break;
 			}
 	}
@@ -15258,9 +15250,10 @@ int skill_cell_overlap(struct block_list *bl, va_list ap) {
 					break;
 			}
 			break;
+		case WZ_ICEWALL:
 		case HP_BASILICA:
-			if (su->group->skill_id == HP_BASILICA) {
-				//Basilica can't be placed on top of itself to avoid map-cell stacking problems. [Skotlex]
+			if (su->group->skill_id == skill_id) {
+				//These can't be placed on top of themselves (duration can't be refreshed)
 				(*alive) = 0;
 				return 1;
 			}
@@ -15626,6 +15619,7 @@ int skill_delunit (struct skill_unit* su) {
 		}
 			break;
 		case WZ_ICEWALL:
+			map->list[su->bl.m].setcell(su->bl.m, su->bl.x, su->bl.y, CELL_NOICEWALL, false);
 			map->setgatcell(su->bl.m,su->bl.x,su->bl.y,su->val2);
 			clif->changemapcell(0,su->bl.m,su->bl.x,su->bl.y,su->val2,ALL_SAMEMAP); // hack to avoid clientside cell bug
 			skill->unitsetmapcell(su,WZ_ICEWALL,group->skill_lv,CELL_ICEWALL,false);

@@ -232,17 +232,20 @@ niflheim,350,258,1	script	Cursed Spirit#nif	4_NFWISP,{
 		mes "lost to the ages~!";
 		emotion e_gg;
 		next;
-		if (select("Clover:Klaatu:Klaytos") == 2)
-			set .@spell,.@spell+1;
-		if (select("Verit:Veritas:Verata") == 3)
-			set .@spell,.@spell+1;
-		if (select("Necktie:Necklace:Nero:^FFFFFFNictu!!!^000000") == 4)
-			set .@spell,.@spell+1;
+		if (select("Clover:Klaatu:Klaytos") == 2) {
+			++.@spell;
+		}
+		if (select("Verit:Veritas:Verata") == 3) {
+			++.@spell;
+		}
+		if (select("Necktie:Necklace:Nero:^FFFFFFNictu!!!^000000") == 4) {
+			++.@spell;
+		}
 		if (.@spell == 3) {
 			switch(rand(1,5)) {
 			case 1:
 				if (morison_meat < 15) {
-					set morrison_meat,15;
+					morrison_meat = 15;
 					mes "[Ashe Bruce]";
 					mes "You... You broke the curse!";
 					mes "How did you know that spell?!";
@@ -262,7 +265,7 @@ niflheim,350,258,1	script	Cursed Spirit#nif	4_NFWISP,{
 				close;
 			case 2:
 				if (thai_head == 1) {
-					set thai_head,2;
+					thai_head = 2;
 					mes "[Ashe Bruce]";
 					mes "What's...";
 					mes "this feeling?";
@@ -285,7 +288,7 @@ niflheim,350,258,1	script	Cursed Spirit#nif	4_NFWISP,{
 				close;
 			case 3:
 				if (thai_head == 8) {
-					set thai_head,7;
+					thai_head = 7;
 					mes "[Ashe Bruce]";
 					mes "You... You broke the curse!";
 					mes "Who taught you that spell?!";

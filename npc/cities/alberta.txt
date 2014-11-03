@@ -277,7 +277,7 @@ alberta,195,151,2	script	Paul	4_M_04,{
 }
 
 alberta,190,173,4	script	Phelix	4_M_03,{
-	set .@weight,MaxWeight-Weight;
+	.@weight = MaxWeight-Weight;
 	mes "[Phelix]";
 	if ((.@weight) < 10000) {
 		mes "Wait a moment!!";
@@ -297,7 +297,7 @@ alberta,190,173,4	script	Phelix	4_M_03,{
 		next;
 		mes "[Phelix]";
 		mes "If you're interested in my offer, get me the stuff I mentioned.";
-		set @event_zelopy,1;
+		@event_zelopy = 1;
 		close;
 	} else {
 		mes "Hmm.. you want to exchange jellopies for Red Potions or some Carrots eh? Well.. which one?";
@@ -314,7 +314,7 @@ alberta,190,173,4	script	Phelix	4_M_03,{
 				mes "Hey! Weren't you listening?. I said 10 jellopies for 1 Red Potion.. are ya deaf?";
 				close;
 			} else {
-				set .@max,countitem(909)/10;
+				.@max = countitem(909)/10;
 				mes "Hmm, not bad...";
 				mes "How many potions";
 				mes "do you want to get?";
@@ -365,7 +365,7 @@ alberta,190,173,4	script	Phelix	4_M_03,{
 				mes "Hmm, look pansy ass, I said 3 jellopies for 1 Carrot.. got it?";
 				close;
 			} else {
-				set .@max,countitem(909)/3;
+				.@max = countitem(909)/3;
 				mes "Not too bad pansy...";
 				mes "How many do you want?";
 				next;

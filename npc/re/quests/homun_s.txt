@@ -20,13 +20,13 @@ job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 	if (countitem(6415)) {
 		if (Class == Job_Genetic || Class == Job_Genetic_T || Class == Job_Baby_Genetic) {
 			disable_items;
-			if (checkquest(4159) == -1 && checkquest(4160) == -1) {
+			if (!questprogress(4159) && !questprogress(4160)) {
 				mes "[Viorel]";
 				mes "Why are you here?";
 				mes "Shouldn't you be at ^005DFFJeyna^000000's house?";
 				close2;
-				for(set .@i,4154; .@i<=4160; set .@i,.@i+1) {
-					if (checkquest(.@i) > -1)
+				for(.@i = 4154; .@i <= 4160; ++.@i) {
+					if (questprogress(.@i))
 						erasequest .@i;
 				}
 				setquest 4154;
@@ -64,8 +64,8 @@ job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 			close;
 		}
 	}
-	if ((Class == Job_Genetic || Class == Job_Genetic_T || Class == Job_Baby_Genetic) && (checkquest(4154) > -1)) {
-		if ((checkquest(4155) > -1) || (checkquest(4160) > -1)) {
+	if ((Class == Job_Genetic || Class == Job_Genetic_T || Class == Job_Baby_Genetic) && questprogress(4154)) {
+		if (questprogress(4155) || questprogress(4160)) {
 			mes "[Viorel]";
 			mes "Weather's great.";
 			next;
@@ -270,7 +270,7 @@ L_CheckHomunculus:
 }
 
 que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
-	if (checkquest(4155) > -1) {
+	if (questprogress(4155)) {
 		emotion e_dum;
 		mes "[Viorel]";
 		mes "Good.";
@@ -400,7 +400,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 				end;
 			}
 		}
-	} else if (checkquest(4160) > -1) {
+	} else if (questprogress(4160)) {
 		playbgm "33.mp3"; // Yuna Song
 		mes "[Viorel]";
 		mes "The ^FF4800Homunculus^000000 I saw before has returned to its ^0000FFembryo^000000 state.";
@@ -464,23 +464,23 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 			switch(select("Eira:Sera:Dieter:Bayeri:Eleanor")) {
 			case 1:
 				cutin "Mer_Eira_Card",3;
-				set .@Homunculus,6048; //MER_EIRA
+				.@Homunculus = 6048; //MER_EIRA
 				break;
 			case 2:
 				cutin "Mer_Sera_Card",3;
-				set .@Homunculus,6050; //MER_SERA
+				.@Homunculus = 6050; //MER_SERA
 				break;
 			case 3:
 				cutin "Mer_Dieter_Card",3;
-				set .@Homunculus,6051; //MER_DIETER
+				.@Homunculus = 6051; //MER_DIETER
 				break;
 			case 4:
 				cutin "Mer_Bayeri_Card",3;
-				set .@Homunculus,6049; //MER_BAYERI
+				.@Homunculus = 6049; //MER_BAYERI
 				break;
 			case 5:
 				cutin "Mer_Eleanor_Card",3;
-				set .@Homunculus,6052; //MER_ELEANOR
+				.@Homunculus = 6052; //MER_ELEANOR
 				break;
 			}
 			mes "[Viorel]";
@@ -591,8 +591,8 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 		mes "has only just begun~!";
 		close;
 	} else {
-		for(set .@i,4154; .@i<=4160; set .@i,.@i+1) {
-			if (checkquest(.@i) > -1)
+		for(.@i = 4154; .@i<=4160; ++.@i) {
+			if (questprogress(.@i))
 				erasequest .@i;
 		}
 		mes "[Viorel]";
@@ -605,7 +605,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 }
 
 que_house_s,80,42,3	script	Jeyna#homun_s	4_F_ALCHE_A,{
-	if (checkquest(4156) > -1) {
+	if (questprogress(4156)) {
 		playbgm "28.mp3"; // You're in Ruins
 		emotion e_gasp;
 		mes "[Jeyna]";
@@ -661,14 +661,14 @@ que_house_s,80,42,3	script	Jeyna#homun_s	4_F_ALCHE_A,{
 		setquest 4157;
 		erasequest 4156;
 		end;
-	} else if (checkquest(4157) > -1) {
+	} else if (questprogress(4157)) {
 		emotion e_what;
 		mes "[Jeyna]";
 		mes "Take a look at the board behind me, on the right.";
 		close2;
 		emotion e_gasp,0,"Magic Board#homun_s";
 		end;
-	} else if (checkquest(4158) > -1) {
+	} else if (questprogress(4158)) {
 		playbgm "28.mp3"; // You're in Ruins
 		disable_items;
 		mes "[Jeyna]";
@@ -772,7 +772,7 @@ que_house_s,80,42,3	script	Jeyna#homun_s	4_F_ALCHE_A,{
 			mes "Maybe I shouldn't have asked in the first place.";
 			close;
 		}
-	} else if (checkquest(4159) > -1 || checkquest(4160) > -1) {
+	} else if (questprogress(4159) || questprogress(4160)) {
 		playbgm "28.mp3"; // You're in Ruins
 		mes "[Jeyna]";
 		mes "^005DFFViorel^000000 will finish the mutation process.";
@@ -790,7 +790,7 @@ que_house_s,80,42,3	script	Jeyna#homun_s	4_F_ALCHE_A,{
 		warp "que_house_s",19,42;
 		end;
 	} else {
-		if (checkquest(4154) > -1)
+		if (questprogress(4154))
 			erasequest 4154;
 		mes "[Jeyna]";
 		mes "Hey, how did you get in here?";
@@ -847,7 +847,7 @@ que_house_s,83,47,3	script	Magic Board#homun_s	4_BOARD3,{
 	mes "--------------------------";
 	mes "The rest is sealed because it seems to be a private message.";
 	close2;
-	if (checkquest(4157) > -1) {
+	if (questprogress(4157)) {
 		setquest 4158;
 		erasequest 4157;
 	}

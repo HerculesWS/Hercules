@@ -15,7 +15,7 @@
 
 valkyrie,44,47,5	script	High Wizard#Valkyrie	4_M_JOB_WIZARD,{
 	if (ADVJOB == 0 ||  Upper != 1) {
-		set .@karma_d,rand(1,10);
+		.@karma_d = rand(1,10);
 		if (.@karma_d > 4) {
 			mes "[High Wizard]";
 			mes "Congratulations.";
@@ -61,7 +61,7 @@ valkyrie,44,47,5	script	High Wizard#Valkyrie	4_M_JOB_WIZARD,{
 			close;
 		}
 		jobchange Job_High_Wizard;
-		set ADVJOB,0;
+		ADVJOB = 0;
 		mes "[High Wizard]";
 		mes "Congratulations.";
 		mes "As a High Wizard,";

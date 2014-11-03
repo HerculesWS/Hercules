@@ -76,7 +76,7 @@ prt_in,234,133,4	script	Nami	1_F_01,{
 					mes "If you go and find these items, ";
 					mes "I will be happy to teach you this skill.";
 					mes "Well, I will be awaiting your return.";
-					set skill_nov,1;
+					skill_nov = 1;
 					close;
 				case 1:
 					mes "[Nami]";
@@ -136,7 +136,7 @@ prt_in,234,133,4	script	Nami	1_F_01,{
 						mes "Presto !!";
 						next;
 						skill "NV_FIRSTAID",1,0;
-						set skill_nov,3;
+						skill_nov = 3;
 						mes "[Nami]";
 						mes "Yes yes, that's right!";
 						mes "Now that you have this";
@@ -282,7 +282,7 @@ prt_in,73,87,4	script	Chivalry Member	1_M_YOUNGKNIGHT,{
 			mes "If you are late, you have to do it again! !";
 			mes "Now GO ! GO ! GO !";
 			mes "Run ~~~~~!!!!";
-			set skill_nov, 4;
+			skill_nov = 4;
 			close;
 		case 4:
 			mes "[Bulma]";
@@ -310,7 +310,7 @@ prt_in,73,87,4	script	Chivalry Member	1_M_YOUNGKNIGHT,{
 				mes "use this skill as you see fit.";
 				mes " ' Play Dead ' ";
 				mes "Okay okay, See you around ! ! !";
-				set skill_nov,6;
+				skill_nov = 6;
 				delitem 7039,1; //Novice_Nametag
 				skill "NV_TRICKDEAD",1,0;
 				close;
@@ -330,7 +330,7 @@ prt_in,73,87,4	script	Chivalry Member	1_M_YOUNGKNIGHT,{
 			mes "In order for you to have another chance,";
 			mes "you must start from the beginning. . .";
 			mes "Do it right this time ! ! ! !";
-			set skill_nov,4;
+			skill_nov = 4;
 			close;
 		}
 	}
@@ -413,7 +413,7 @@ prt_castle,175,146,4	script	Nursing Instructor	1_M_04,{
 			mes "go and get killed, be careful. -";
 			next;
 			mes "^3355FF- Got 1 Sterilized Bandages -^000000";
-			set skill_nov,2;
+			skill_nov = 2;
 			close;
 		case 2:
 			mes "[Dread Lord]";
@@ -441,7 +441,7 @@ prt_castle,175,146,4	script	Nursing Instructor	1_M_04,{
 				mes "-woosh - *storms away*";
 				next;
 				mes "^3355FF- Got 1 Newbie Tag -^000000";
-				set skill_nov,5;
+				skill_nov = 5;
 				getitem 7039,1; //Novice_Nametag
 				close;
 			}

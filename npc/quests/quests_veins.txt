@@ -187,7 +187,7 @@
 						mes "in the Tool Shop, then";
 						mes "you might want to stop";
 						mes "by the Tavern. A-auuugh!";
-						set veins_stone,1;
+						veins_stone = 1;
 						close;
 				}
 			}
@@ -262,7 +262,7 @@
 		mes "to the factory in town? It's";
 		mes "near the airport or airship or";
 		mes "something. It won't take long.";
-		set veins_stone,5;
+		veins_stone = 5;
 		close;
 	}
 	else if (veins_stone > 4 && veins_stone < 7) {
@@ -290,7 +290,7 @@
 		mes "I was told that adventurers";
 		mes "find these useful. Anyway,";
 		mes "I hope you like these rocks...";
-		set veins_stone,8;
+		veins_stone = 8;
 		getexp (checkre(3))?30000:300000,0;
 		getitem 985,3; //Elunium
 		close;
@@ -399,7 +399,7 @@ ve_in,169,310,6	script	Strange Old Man#ve	2_M_MOLGENSTEIN,{
 		mes "come back soon, then";
 		mes "I won't help you. I've got";
 		mes "projects I'm working on!";
-		set veins_stone,2;
+		veins_stone = 2;
 		close;
 	}
 	else if (veins_stone == 2) {
@@ -419,7 +419,7 @@ ve_in,169,310,6	script	Strange Old Man#ve	2_M_MOLGENSTEIN,{
 			delitem 999,5; //Steel
 			delitem 1033,5; //Root_Of_Maneater
 			delitem 7561,2; //Ice_Heart
-			set veins_stone,3;
+			veins_stone = 3;
 			close2;
 			specialeffect EF_FIRESPLASHHIT;
 			end;
@@ -456,7 +456,7 @@ ve_in,169,310,6	script	Strange Old Man#ve	2_M_MOLGENSTEIN,{
 		mes "that he doesn't owe me";
 		mes "anything anymore. He'll...";
 		mes "He'll know what I mean...";
-		set veins_stone,4;
+		veins_stone = 4;
 		close;
 	}
 	mes "[Absar]";
@@ -513,7 +513,7 @@ ve_in02,37,28,4	script	Factory Manager	4_M_HUMAN_01,{
 		mes "Bring those rocks over";
 		mes "to Bahed over there.";
 		mes "He'll take care of them.";
-		set veins_stone,6;
+		veins_stone = 6;
 		close;
 	}
 	mes "[Mirhen]";
@@ -622,7 +622,7 @@ ve_in02,54,49,2	script	Factory Worker#ve1	4_M_DESERT,{
 		mes "to those hearts. That's";
 		mes "all I know. Anyway, please";
 		mes "leave the stones over there~";
-		set veins_stone,7;
+		veins_stone = 7;
 		close;
 	}
 	mes "[Bahed]";
@@ -690,7 +690,7 @@ prontera,202,122,0	script	Kid#sch	4_F_KID2,{
 		mes "looks like a Bard, but I'm";
 		mes "not having any luck. If you";
 		mes "find him, would you tell me?";
-		set que_sch,1;
+		que_sch = 1;
 		close;
 	}
 	else if (que_sch == 1) {
@@ -723,7 +723,7 @@ prontera,202,122,0	script	Kid#sch	4_F_KID2,{
 		mes "Hey, alright! Thanks";
 		mes "for the cash! Heh heh~";
 		Zeny -= 100;
-		set que_sch,3;
+		que_sch = 3;
 		close;
 	}
 	mes "[Rooney]";
@@ -817,7 +817,7 @@ prt_church,89,108,6	script	Bard#sch	2_M_BARD_ORIENT,{
 		mes "this money to that";
 		mes "kid that was supposed";
 		mes "to come find me here.";
-		set que_sch,2;
+		que_sch = 2;
 		Zeny += 100;
 		next;
 		mes "[Lasda]";
@@ -865,7 +865,7 @@ prt_church,89,108,6	script	Bard#sch	2_M_BARD_ORIENT,{
 				mes "my friend in a prison in";
 				mes "^FF0000Morroc^000000, and see what";
 				mes "you can do to help him..";
-				set que_sch,4;
+				que_sch = 4;
 				close;
 			}
 			mes "[Lasda]";
@@ -905,7 +905,7 @@ prt_church,89,108,6	script	Bard#sch	2_M_BARD_ORIENT,{
 		mes "you a letter or recommendation.";
 		mes "Hopefully, it'll be enough to";
 		mes "let you enter the prison.";
-		set que_sch,9;
+		que_sch = 9;
 		close;
 	}
 	else if (que_sch == 9) {
@@ -973,7 +973,7 @@ prt_church,89,108,6	script	Bard#sch	2_M_BARD_ORIENT,{
 		mes "couldn't have done it without";
 		mes "your help. Please take this";
 		mes "reward with our sincere thanks.";
-		set que_sch,26;
+		que_sch = 26;
 		getitem 12106,1; //Accessory_Box
 		getexp (checkre(3))?60000:600000,0;
 		close;
@@ -1008,7 +1008,7 @@ morocc,53,87,7	script	Prison Ward#sch	4_M_MOC_SOLDIER,{
 		mes "see anyone since he was";
 		mes "arrested on suspicion";
 		mes "of espionage.";
-		set que_sch,5;
+		que_sch = 5;
 		close;
 	}
 	else if (que_sch == 5) {
@@ -1025,7 +1025,7 @@ morocc,53,87,7	script	Prison Ward#sch	4_M_MOC_SOLDIER,{
 		mes "actually let you meet the";
 		mes "prisoner is another matter.";
 		mes "So do we have a deal?";
-		set que_sch,6;
+		que_sch = 6;
 		close;
 	}
 	else if (que_sch == 6) {
@@ -1038,7 +1038,7 @@ morocc,53,87,7	script	Prison Ward#sch	4_M_MOC_SOLDIER,{
 			mes "Morroc Castle. Get his";
 			mes "approval, and I'll let you in.";
 			delitem 12066,1; //Luk_Dish01
-			set que_sch,7;
+			que_sch = 7;
 			close;
 		}
 		mes "[Jesse]";
@@ -1142,7 +1142,7 @@ morocc_in,79,163,0	script	Public Security Officer	4_M_ALCHE_A,{
 		mes "reconsider letting you";
 		mes "meet Vitre. Otherwise,";
 		mes "I just can't do it.";
-		set que_sch,8;
+		que_sch = 8;
 		close;
 	}
 	else if (que_sch == 8) {
@@ -1172,7 +1172,7 @@ morocc_in,79,163,0	script	Public Security Officer	4_M_ALCHE_A,{
 		mes "Vitre. I'll send a message";
 		mes "to the prison ward so that";
 		mes "he'll let you talk to him.";
-		set que_sch,10;
+		que_sch = 10;
 		close;
 	}
 	else if (que_sch < 26) {
@@ -1271,7 +1271,7 @@ ra_in01,50,387,4	script	Upset Looking Bard#sch	1_M_BARD,{
 			mes "I wonder how the lady";
 			mes "in the Dancer Job Change";
 			mes "place is doing by now...";
-			set que_sch,11;
+			que_sch = 11;
 			close;
 		}
 	}
@@ -1343,7 +1343,7 @@ ra_in01,50,387,4	script	Upset Looking Bard#sch	1_M_BARD,{
 			next;
 			delitem 1901,1; //Violin
 			delitem 7040,1; //Megaphone
-			set que_sch,19;
+			que_sch = 19;
 			close2;
 			disablenpc "Jesse#sch";
 			warp "morocc",294,153;
@@ -1535,7 +1535,7 @@ job_duncer,93,106,6	script	Dance Instructor#sch	4_F_HUGRANMA,{
 				mes "so bring them over to the";
 				mes "Schwaltzvalt Republic as";
 				mes "soon as you're ready.";
-				set que_sch,12;
+				que_sch = 12;
 				close;
 			}
 			mes "[Hianna]";
@@ -1582,7 +1582,7 @@ job_duncer,93,106,6	script	Dance Instructor#sch	4_F_HUGRANMA,{
 			mes "for everything, and I'll see";
 			mes "you around, adventurer~";
 			Zeny -= 500000;
-			set que_sch,18;
+			que_sch = 18;
 			getitem 7040,1; //Megaphone
 			close;
 		}
@@ -1670,7 +1670,7 @@ job_duncer,85,49,0	script	Young Dancer#sch1	4_F_07,{
 			mes "[Dancer]";
 			mes "Alright, then.";
 			mes "Here we go~";
-			set que_sch,13;
+			que_sch = 13;
 			close2;
 			warp "airplane",75,55;
 			end;
@@ -1708,7 +1708,7 @@ job_duncer,83,52,6	script	Cheerful Dancer#sch1	4_F_07,{
 			mes "[Dancer]";
 			mes "Alright, then.";
 			mes "Here we go~";
-			set que_sch,13;
+			que_sch = 13;
 			close2;
 			warp "airplane",75,55;
 			end;
@@ -1745,7 +1745,7 @@ job_duncer,87,50,2	script	Mature Looking Dancer#s1	4_F_07,{
 			mes "[Dancer]";
 			mes "Alright, then.";
 			mes "Here we go~";
-			set que_sch,13;
+			que_sch = 13;
 			close2;
 			warp "airplane",75,55;
 			end;
@@ -1841,7 +1841,7 @@ airplane,79,55,2	script	Mature Looking Dancer#s2	4_F_07,{
 		mes "Alright, I'll give this next";
 		mes "performance my all!";
 		close2;
-		set que_sch,14;
+		que_sch = 14;
 		warp "ein_in01",278,223;
 		end;
 	}
@@ -1960,7 +1960,7 @@ ein_in01,279,221,0	script	Hotel Manager#sch	4_M_KHKYEL,5,5,{
 		mes "have one of my employees";
 		mes "send you your payment";
 		mes "Have a safe trip back~";
-		set que_sch,17;
+		que_sch = 17;
 		close;
 	}
 	end;
@@ -1974,7 +1974,7 @@ OnTouch:
 		mes "safely. The dinner party";
 		mes "will start shortly, so";
 		mes "please get ready~";
-		set que_sch,15;
+		que_sch = 15;
 		close;
 	}
 	end;
@@ -2089,7 +2089,7 @@ OnTouch:
 		mes "Please follow me,";
 		mes "I already have";
 		mes "a place prepared.";
-		set que_sch,16;
+		que_sch = 16;
 		close2;
 		disablenpc "Corporate Figure";
 		disablenpc "Arunafeltz Figure";
@@ -2189,7 +2189,7 @@ morocc,297,154,0	script	Thin-Faced Bard#sch	1_M_BARD,{
 		mes "songs when you come back.";
 		mes "Thanks, you have no idea how";
 		mes "much I appreciate your help.";
-		set que_sch,20;
+		que_sch = 20;
 		close;
 	}
 	else if (que_sch == 20) {
@@ -2232,7 +2232,7 @@ morocc,297,154,0	script	Thin-Faced Bard#sch	1_M_BARD,{
 			mes "Perfect~ Here's a little";
 			mes "something to show my";
 			mes "gratitude. Hope you like it.";
-			set que_sch,24;
+			que_sch = 24;
 			getitem 603,1; //Old_Blue_Box
 			next;
 			mes "[Vitre]";
@@ -2298,7 +2298,7 @@ morocc,297,154,0	script	Thin-Faced Bard#sch	1_M_BARD,{
 			mes "but I better dispose of";
 			mes "this trash with the rest of";
 			mes "his scum buddies... in jail!";
-			set que_sch,25;
+			que_sch = 25;
 			close2;
 			disablenpc "????#sch1";
 			disablenpc "????#sch2";
@@ -2376,7 +2376,7 @@ morocc,297,154,0	script	Thin-Faced Bard#sch	1_M_BARD,{
 		mes "but I better dispose of";
 		mes "this trash with the rest of";
 		mes "his scum buddies... in jail!";
-		set que_sch,25;
+		que_sch = 25;
 		close2;
 		disablenpc "????#sch1";
 		disablenpc "????#sch2";
@@ -2453,7 +2453,7 @@ prontera,109,161,6	script	Young Man#sch	4_M_01,{
 		mes "such a wonderful song?";
 		mes "Let Vitre know each and";
 		mes "every word to it, okay?";
-		set que_sch,21;
+		que_sch = 21;
 		close;
 	}
 	else if (que_sch < 30) {
@@ -2520,7 +2520,7 @@ geffen,196,167,4	script	Young Woman#sch	4W_F_01,{
 		mes "Wasn't that poetic?";
 		mes "Now sing that song exactly";
 		mes "as you heard it to Vitre.";
-		set que_sch,22;
+		que_sch = 22;
 		close;
 	}
 	else if (que_sch < 30) {
@@ -2604,7 +2604,7 @@ comodo,135,299,0	script	Young Man#sch2	1_M_SIGNMONK,{
 		mes "artistic quirk I guess.";
 		mes "Oh, please sing that song";
 		mes "to Vitre for me, okay?";
-		set que_sch,23;
+		que_sch = 23;
 		close;
 	}
 	else if (que_sch < 30) {
@@ -2655,7 +2655,7 @@ sec_in02,10,43,4	script	Extra Story Patch	1_M_SIGNMONK,{
 	next;
 	if(select("Now:How many?") == 2) {
 		input .@input,0,1000;
-		set que_sch, .@input;
+		que_sch = .@input;
 	}
 	mes " ";
 	mes ""+que_sch;
@@ -2801,7 +2801,7 @@ veins,327,185,3	script	Kid#camelcamel	4_M_DST_CHILD,{
 				mes "Volcano to find your";
 				mes "little sister Curdie.";
 				setquest 3060;
-				set rachel_camel,1;
+				rachel_camel = 1;
 				close;
 			}
 		}
@@ -2841,7 +2841,7 @@ veins,327,185,3	script	Kid#camelcamel	4_M_DST_CHILD,{
 			mes "street! You can ask him";
 			mes "to help free Curdie!";
 			changequest 3061,3062;
-			set rachel_camel,3;
+			rachel_camel = 3;
 			close;
 		}
 		else if (rachel_camel == 3) {
@@ -3056,7 +3056,7 @@ veins,327,185,3	script	Kid#camelcamel	4_M_DST_CHILD,{
 			mes "It's a promise, then.";
 			mes "I'll see you later~";
 			completequest 3083;
-			set rachel_camel,25;
+			rachel_camel = 25;
 			specialeffect2 EF_ABSORBSPIRITS;
 			if (checkre(3))
 				getexp 100000,50000;
@@ -3144,7 +3144,7 @@ veins,327,185,3	script	Kid#camelcamel	4_M_DST_CHILD,{
 				mes "Heh heh! Thanks!";
 				mes "I'm happy that";
 				mes "I can help you too!";
-				set aru_monas,16;
+				aru_monas = 16;
 				changequest 17011,17012;
 				close;
 			}
@@ -3257,7 +3257,7 @@ que_thor,36,66,5	script	Little Curdie	4_F_DST_CHILD,{
 		mes "to unlock your shackles.";
 		mes "I'll be back as soon as I can!";
 		changequest 3060,3061;
-		set rachel_camel,2;
+		rachel_camel = 2;
 		close;
 	}
 	else if (rachel_camel == 2) {
@@ -3440,7 +3440,7 @@ que_thor,36,66,5	script	Little Curdie	4_F_DST_CHILD,{
 		mes "the mold back to town";
 		mes "to Mr. Lockenlock.^000000";
 		changequest 3079,3080;
-		set rachel_camel,21;
+		rachel_camel = 21;
 		close;
 	}
 	else if (rachel_camel == 21) {
@@ -3505,7 +3505,7 @@ que_thor,36,66,5	script	Little Curdie	4_F_DST_CHILD,{
 		mes "dangerous... Something";
 		mes "related to the Rachel Army...";
 		changequest 3082,3083;
-		set rachel_camel,24;
+		rachel_camel = 24;
 		close;
 	}
 	else {
@@ -3656,7 +3656,7 @@ veins,181,166,3	script	Lockenlock	4_M_HUMERCHANT,{
 			mes "...........";
 			delitem 503,1; //Yellow_Potion
 			changequest 3063,3064;
-			set rachel_camel,5;
+			rachel_camel = 5;
 			close;
 		}
 		else {
@@ -3839,7 +3839,7 @@ veins,181,166,3	script	Lockenlock	4_M_HUMERCHANT,{
 		mes "["+strcharinfo(0)+"]";
 		mes "Alright.";
 		changequest 3078,3079;
-		set rachel_camel,20;
+		rachel_camel = 20;
 		close;
 	}
 	else if (rachel_camel == 20) {
@@ -3886,7 +3886,7 @@ veins,181,166,3	script	Lockenlock	4_M_HUMERCHANT,{
 		mes "as soon as you can bring";
 		mes "me the Steel. I'll be waiting.";
 		changequest 3080,3081;
-		set rachel_camel,22;
+		rachel_camel = 22;
 		close;
 	}
 	else if (rachel_camel == 22) {
@@ -3980,7 +3980,7 @@ veins,181,166,3	script	Lockenlock	4_M_HUMERCHANT,{
 			mes "bring that child back";
 			mes "safe to her family!";
 			changequest 3081,3082;
-			set rachel_camel,23;
+			rachel_camel = 23;
 			close;
 		}
 		else {
@@ -4160,7 +4160,7 @@ veins,227,127,5	script	Ivory	4_F_DESERT,{
 		mes "Then we can move";
 		mes "on to the hard part.";
 		changequest 3064,3065;
-		set rachel_camel,6;
+		rachel_camel = 6;
 		close;
 	}
 	else if (rachel_camel == 6) {
@@ -4206,7 +4206,7 @@ veins,227,127,5	script	Ivory	4_F_DESERT,{
 			mes "him if I really need you";
 			mes "to make the soap...";
 			changequest 3065,3066;
-			set rachel_camel,7;
+			rachel_camel = 7;
 			close;
 		}
 		else {
@@ -4367,7 +4367,7 @@ veins,227,127,5	script	Ivory	4_F_DESERT,{
 		mes "you should bring it";
 		mes "to Mr. Lockenlock.^000000";
 		changequest 3077,3078;
-		set rachel_camel,19;
+		rachel_camel = 19;
 		close;
 	}
 	else if (rachel_camel == 19) {
@@ -4513,7 +4513,7 @@ veins,115,59,5	script	Saraman	4_M_EINOLD,{
 		mes "^4D4DFF1 Empty Bottle^000000, and";
 		mes "^4D4DFF1 Yellow Potion^000000.";
 		changequest 3066,3067;
-		set rachel_camel,8;
+		rachel_camel = 8;
 		close;
 	}
 	else if (rachel_camel == 8) {
@@ -4558,7 +4558,7 @@ veins,115,59,5	script	Saraman	4_M_EINOLD,{
 			delitem 619,1; //Unripe_Apple
 			delitem 713,1; //Empty_Bottle
 			changequest 3067,3068;
-			set rachel_camel,9;
+			rachel_camel = 9;
 			close;
 		}
 		else {
@@ -4641,7 +4641,7 @@ veins,115,59,5	script	Saraman	4_M_EINOLD,{
 		mes "here. Please find my camel";
 		mes "Soony as soon as you can!";
 		changequest 3069,3070;
-		set rachel_camel,11;
+		rachel_camel = 11;
 		close;
 	}
 	else if (rachel_camel == 11) {
@@ -4712,7 +4712,7 @@ veins,115,59,5	script	Saraman	4_M_EINOLD,{
 		mes "that soap you want made.";
 		changequest 3076,3077;
 		getitem 617,1; //Old_Violet_Box
-		set rachel_camel,18;
+		rachel_camel = 18;
 		close;
 	}
 	else if (rachel_camel == 18) {
@@ -4750,7 +4750,7 @@ veins,78,226,5	script	Camel#camelcc1::VeinsCamel	4_DST_CAMEL,{
 		mes "brusquely turned its";
 		mes "nose away from it.^000000";
 		changequest 3068,3069;
-		set rachel_camel,10;
+		rachel_camel = 10;
 		close;
 	}
 	else if (rachel_camel == 10) {
@@ -4802,7 +4802,7 @@ ve_fild07,235,42,3	script	Silk Sand Camel	4_DST_CAMEL,{
 		mes "do is collect some of";
 		mes "that precious camel dung.";
 		changequest 3070,3071;
-		set rachel_camel,12;
+		rachel_camel = 12;
 		close;
 	}
 	else if (rachel_camel > 11 && rachel_camel < 17) {
@@ -4854,14 +4854,14 @@ ve_fild07,235,42,3	script	Silk Sand Camel	4_DST_CAMEL,{
 					mes "Now all I need is";
 					mes "just 4 more lumps";
 					mes "of this nasty old dung.";
-					set rachel_camel, 13;
+					rachel_camel = 13;
 					changequest 3071,3072;
 				}
 				else if (rachel_camel == 13) {
 					mes "Awesome! I got";
 					mes "2 glorious camel dung";
 					mes "lumps! Only 3 more to go!";
-					set rachel_camel, 14;
+					rachel_camel = 14;
 					changequest 3072,3073;
 				}
 				else if (rachel_camel == 14) {
@@ -4869,7 +4869,7 @@ ve_fild07,235,42,3	script	Silk Sand Camel	4_DST_CAMEL,{
 					mes "3 camel dung lumps.";
 					mes "Just 2 more... I'm more";
 					mes "than halfway done!";
-					set rachel_camel, 15;
+					rachel_camel = 15;
 					changequest 3073,3074;
 				}
 				else if (rachel_camel == 15) {
@@ -4877,7 +4877,7 @@ ve_fild07,235,42,3	script	Silk Sand Camel	4_DST_CAMEL,{
 					mes "Heh heh! This is going";
 					mes "better than I thought!";
 					mes "Only 1 more to go!";
-					set rachel_camel, 16;
+					rachel_camel = 16;
 					changequest 3074,3075;
 				}
 				else if (rachel_camel == 16) {
@@ -4904,7 +4904,7 @@ ve_fild07,235,42,3	script	Silk Sand Camel	4_DST_CAMEL,{
 					next;
 					mes "^3355FFIt's time for you to";
 					mes "return to Mr. Saraman.^000000";
-					set rachel_camel, 17;
+					rachel_camel = 17;
 					changequest 3075,3076;
 				}
 				delitem 519,2; //Milk
@@ -5035,7 +5035,7 @@ veins,221,120,5	script	Young Town Native	4_M_DESERT,{
 		mes "in the market street, and";
 		mes "bring him a Yellow Potion.^000000";
 		changequest 3062,3063;
-		set rachel_camel,4;
+		rachel_camel = 4;
 		close;
 	}
 	else if (rachel_camel == 4) {
@@ -5164,7 +5164,7 @@ ra_temin,87,133,1	script	Rachel Guard#vol1	4_M_RASWORD,5,2,{
 		mes "I've made my choice, and";
 		mes "I choose true love! I can't";
 		mes "keep Lamir waiting any longer!";
-		set aru_vol,3;
+		aru_vol = 3;
 		donpcevent "vol_time::OnEnable";
 		close2;
 		disablenpc "Rachel Guard#vol1";
@@ -5250,7 +5250,7 @@ ra_temin,115,140,1	script	Flower Vase#vol	HIDDEN_NPC,{
 			disablenpc "Rachel Guard#vol2";
 			enablenpc "Rachel Guard#vol2_1";
 			donpcevent "vol_time2::OnEnable";
-			set aru_vol,4;
+			aru_vol = 4;
 			disablenpc "Flower Vase#vol";
 			close;
 		}
@@ -5329,7 +5329,7 @@ ra_temin,40,124,3	script	Female Follower#vol	4_F_TRAINEE,{
 	mes "office, but come on! Why can't";
 	mes "he bother another girl?";
 	if (aru_vol == 1) {
-		set aru_vol,2;
+		aru_vol = 2;
 	}
 	close;
 }
@@ -5475,7 +5475,7 @@ ra_temin,85,118,3	script	Drawer#vol3	HIDDEN_NPC,{
 			mes "the cover, and then you";
 			mes "close the drawer.^000000";
 			changequest 2114,2115;
-			set aru_vol,5;
+			aru_vol = 5;
 			getitem 7342,1; //File01
 			close;
 		}
@@ -5565,7 +5565,7 @@ OnTouch:
 		mes "I can guess who wrote it. ";
 		mes "Speaking of which...";
 		mes "Where's the geologist?";
-		set aru_vol,7;
+		aru_vol = 7;
 		close;
 	}
 	else if (aru_vol < 6) {
@@ -5835,7 +5835,7 @@ ve_in,233,116,3	script	Drunken Man#vol	4_M_HUOLDARMY,{
 		mes "all turn out in your favor.";
 		mes "You know that feeling, right?^000000";
 		changequest 2116,2117;
-		set aru_vol,8;
+		aru_vol = 8;
 		getitem 7705,1; //Note_Of_Geologist
 		close;
 	}
@@ -5958,7 +5958,7 @@ ve_in,233,116,3	script	Drunken Man#vol	4_M_HUOLDARMY,{
 		mes "I expected nothing less";
 		mes "from my star pupil!";
 		changequest 60211,60212;
-		set aru_vol,25;
+		aru_vol = 25;
 		delitem 7342,1; //File01
 		delitem 7704,1; //Broken_Thermometer
 		delitem 7705,1; //Note_Of_Geologist
@@ -6086,8 +6086,8 @@ ve_in,281,214,3	script	Bookshelf#vol	HIDDEN_NPC,{
 		mes "Gio's purple box of goodies.^000000";
 		next;
 		changequest 60212,60213;
-		set aru_vol,26;
-		set .@box_box,rand(1,20);
+		aru_vol = 26;
+		.@box_box = rand(1,20);
 		if (.@box_box < 7) {
 			getitem 12104,1; //Random_Quiver
 		}
@@ -6130,7 +6130,7 @@ thor_v01,37,234,3	script	Hot Land Surface#1	HIDDEN_NPC,{
 			mes "temperature in";
 			mes "your report.^000000";
 			changequest 2117,2118;
-			set aru_vol,9;
+			aru_vol = 9;
 			next;
 			mes "["+strcharinfo(0)+"]";
 			mes "I should take a few more";
@@ -6168,7 +6168,7 @@ thor_v02,165,37,3	script	Hot Land Surface#2	HIDDEN_NPC,{
 			mes "temperature in";
 			mes "your report.^000000";
 			changequest 2118,2119;
-			set aru_vol,10;
+			aru_vol = 10;
 			close;
 		}
 		mes "^3355FFYou need both the";
@@ -6206,7 +6206,7 @@ thor_v02,170,100,3	script	Hot Land Surface#3	HIDDEN_NPC,{
 			mes "submit this report to the";
 			mes "geological camp now~";
 			changequest 2119,2120;
-			set aru_vol,11;
+			aru_vol = 11;
 			close;
 		}
 		mes "^3355FFYou need both the";
@@ -6253,7 +6253,7 @@ que_thor,145,66,3	script	Guard#vol::VeinsGuard	4_DST_SOLDIER,{
 		mes "He's at the airship just";
 		mes "south of the train station.";
 		changequest 2120,2121;
-		set aru_vol,12;
+		aru_vol = 12;
 		close2;
 		warp "thor_camp",248,190;
 		end;
@@ -6366,7 +6366,7 @@ thor_camp,250,104,3	script	Sahedi#vol	4_M_RASWORD,{
 		mes "see if this camp will be";
 		mes "safe from any disaster.";
 		changequest 2121,2122;
-		set aru_vol,13;
+		aru_vol = 13;
 		delitem 7342,1; //File01
 		close;
 	}
@@ -6481,7 +6481,7 @@ thor_camp,250,104,3	script	Sahedi#vol	4_M_RASWORD,{
 		mes "advice for what we can";
 		mes "do about this disaster...";
 		changequest 2128,60211;
-		set aru_vol,24;
+		aru_vol = 24;
 		getitem 7342,1; //File01
 		close;
 	}
@@ -6526,7 +6526,7 @@ OnTouch:
 		mes "you into a true warrior for";
 		mes "Freya! Now follow me!";
 		changequest 2122,2123;
-		set aru_vol,14;
+		aru_vol = 14;
 		close2;
 		disablenpc "Colonel Vito#1";
 		warp "thor_camp",156,68;
@@ -6581,7 +6581,7 @@ OnTouch:
 		mes "you into a true warrior for";
 		mes "Freya! Now follow me!";
 		changequest 2122,2123;
-		set aru_vol,14;
+		aru_vol = 14;
 		disablenpc "Colonel Vito#2";
 		close2;
 		warp "thor_camp",156,68;
@@ -6642,7 +6642,7 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 		mes "Take a break first, and";
 		mes "prepare yourself. We will";
 		mes "begin as soon as you're ready.";
-		set aru_vol,15;
+		aru_vol = 15;
 		close;
 	}
 	else if (aru_vol == 15) {
@@ -6726,7 +6726,7 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 			mes "of Goddess Freya";
 			next;
 			input .@input$;
-			set .@answer$,"as a devoted servant of Goddess Freya";
+			.@answer$ = "as a devoted servant of Goddess Freya";
 			if (.@input$ == .@answer$) {
 				mes "["+strcharinfo(0)+"]";
 				mes "as a devoted servant";
@@ -6748,7 +6748,7 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 			mes "overthrow our mortal enemy";
 			next;
 			input .@input$;
-			set .@answer$,"I pledge my honor to overthrow our mortal enemy";
+			.@answer$ = "I pledge my honor to overthrow our mortal enemy";
 			if (.@input$ == .@answer$) {
 				mes "["+strcharinfo(0)+"]";
 				mes "I pledge my honor to";
@@ -6768,7 +6768,7 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 			mes "^FF0000I will show no mercy^000000";
 			next;
 			input .@input$;
-			set .@answer$,"I will show no mercy";
+			.@answer$ = "I will show no mercy";
 			if (.@input$ == .@answer$) {
 				mes "["+strcharinfo(0)+"]";
 				mes "I will show no mercy.";
@@ -6788,7 +6788,7 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 			mes "my entire life^000000";
 			next;
 			input .@input$;
-			set .@answer$,"I shall devote my entire life";
+			.@answer$ = "I shall devote my entire life";
 			if (.@input$ == .@answer$) {
 				mes "["+strcharinfo(0)+"]";
 				mes "I shall devote my";
@@ -6810,7 +6810,7 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 			mes "Rune-Midgarts Kingdom!^000000";
 			next;
 			input .@input$;
-			set .@answer$,"Down with the Rune-Midgarts Kingdom!";
+			.@answer$ = "Down with the Rune-Midgarts Kingdom!";
 			if (.@input$ == .@answer$) {
 				mes "["+strcharinfo(0)+"]";
 				mes "Down with the";
@@ -6832,7 +6832,7 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 		mes "is all for the first exercise,";
 		mes "but there's one more left.";
 		changequest 2123,2124;
-		set aru_vol,16;
+		aru_vol = 16;
 		close;
 	}
 	else if (aru_vol == 16) {
@@ -6843,7 +6843,7 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 		mes "you. Find the huge pipe zone";
 		mes "to the north of this building";
 		mes "and find any broken machines.";
-		set aru_vol,17;
+		aru_vol = 17;
 		close;
 	}
 	else if (aru_vol == 17) {
@@ -6874,7 +6874,7 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 		mes "front of you? Practice by";
 		mes "chopping it 10 times. Go!";
 		changequest 2125,2126;
-		set aru_vol,19;
+		aru_vol = 19;
 		next;
 		if (select("Yes, sir!:What do you mean by chop?") == 1) {
 			mes "[Colonel Vito]";
@@ -6925,7 +6925,7 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 		mes "a geological researcher";
 		mes "instead of as a soldier.^000000)";
 		changequest 2126,2127;
-		set aru_vol,21;
+		aru_vol = 21;
 		close;
 	}
 	mes "[Colonel Vito]";
@@ -6959,7 +6959,7 @@ OnTouch:
 		mes "sound of hammering, as if";
 		mes "iron was being manufactured";
 		mes "from deep underground.^000000";
-		set aru_vol,22;
+		aru_vol = 22;
 		close;
 	}
 	end;
@@ -6979,7 +6979,7 @@ OnTouch:
 		mes "I should go back";
 		mes "to Sahedi now.";
 		changequest 2127,2128;
-		set aru_vol,23;
+		aru_vol = 23;
 		close;
 	}
 	end;
@@ -7035,7 +7035,7 @@ thor_camp,109,167,3	script	Control Panel#vol	HIDDEN_NPC,{
 		mes "I guess I can go";
 		mes "back to that colonel.";
 		changequest 2124,2125;
-		set aru_vol,18;
+		aru_vol = 18;
 		close;
 	}
 	end;
@@ -7105,7 +7105,7 @@ thor_camp,150,65,3	script	Dummy#1::VeinsDummy	HIDDEN_NPC,{
 		specialeffect EF_HIT2;
 		mes "["+strcharinfo(0)+"]";
 		mes "Ten!";
-		set aru_vol,20;
+		aru_vol = 20;
 		close;
 	}
 	else if (aru_vol == 20) {
@@ -7135,7 +7135,7 @@ thor_camp,150,65,3	script	Dummy#1::VeinsDummy	HIDDEN_NPC,{
 		mes "Listen to your orders";
 		mes "this time, and do it";
 		mes "again properly!";
-		set aru_vol,19;
+		aru_vol = 19;
 		close;
 	}
 }

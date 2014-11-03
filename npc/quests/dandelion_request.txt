@@ -74,7 +74,7 @@ izlude,103,106,3	script	Guildsman#1	1_M_02,3,3,{
 			mes "a letter of recommendation";
 			mes "to get you started on this";
 			mes "mission, alright?";
-			set mao_request,1;
+			mao_request = 1;
 			getitem 7416,1;
 			close;
 		}
@@ -113,7 +113,7 @@ izlude,103,106,3	script	Guildsman#1	1_M_02,3,3,{
 			mes "You name it. This is gonna be";
 			mes "huge. Listen, if you're going";
 			mes "to help, then let me give you this letter of recommendation...";
-			set mao_request,1;
+			mao_request = 1;
 			getitem 7416,1;
 			close;
 		}
@@ -153,7 +153,7 @@ izlude,103,106,3	script	Guildsman#1	1_M_02,3,3,{
 			mes "if you plan to follow these";
 			mes "orders. I hope you take that";
 			mes "mission for those kids' sake...";
-			set mao_request,1;
+			mao_request = 1;
 			getitem 7416,1;
 			close;
 		}
@@ -186,7 +186,7 @@ izlude,103,106,3	script	Guildsman#1	1_M_02,3,3,{
 			mes "supposed to give you if you";
 			mes "plan on taking the mission.";
 			mes "For the sake of those missing kids, I really hope that you do.";
-			set mao_request,1;
+			mao_request = 1;
 			getitem 7416,1;
 			close;
 		}
@@ -322,7 +322,7 @@ OnTouch:
 				mes "a letter of recommendation";
 				mes "to get you started on this";
 				mes "mission, alright?";
-				set mao_request,1;
+				mao_request = 1;
 				getitem 7416,1;
 				close;
 			}
@@ -361,7 +361,7 @@ OnTouch:
 				mes "You name it. This is gonna be";
 				mes "huge. Listen, if you're going";
 				mes "to help, then let me give you this letter of recommendation...";
-				set mao_request,1;
+				mao_request = 1;
 				getitem 7416,1;
 				close;
 			}
@@ -401,7 +401,7 @@ OnTouch:
 				mes "if you plan to follow these";
 				mes "orders. I hope you take that";
 				mes "mission for those kids' sake...";
-				set mao_request,1;
+				mao_request = 1;
 				getitem 7416,1;
 				close;
 			}
@@ -434,7 +434,7 @@ OnTouch:
 				mes "supposed to give you if you";
 				mes "plan on taking the mission.";
 				mes "For the sake of those missing kids, I really hope that you do.";
-				set mao_request,1;
+				mao_request = 1;
 				getitem 7416,1;
 				close;
 			}
@@ -523,7 +523,7 @@ prontera,237,313,3	script	Nun#moc	1_F_PRIEST,3,3,{
 		mes "will need the Bishop's";
 		mes "letter of recommendation,";
 		mes "so please take it now.";
-		set mao_request,1;
+		mao_request = 1;
 		getitem 7416,1;
 		close;
 	}
@@ -629,7 +629,7 @@ OnTouch:
 				mes "will need the Bishop's";
 				mes "letter of recommendation,";
 				mes "so please take it now.";
-				set mao_request,1;
+				mao_request = 1;
 				getitem 7416,1;
 				close;
 			}
@@ -724,7 +724,7 @@ alberta,129,59,3	script	Guildsman#2	1_M_03,3,3,{
 			mes "letter of recommendation!";
 			mes " ";
 			mes "^71637DOh, right! Here, take this!^000000";
-			set mao_request,1;
+			mao_request = 1;
 			getitem 7416,1;
 			next;
 			mes "[Guildsman]";
@@ -760,7 +760,7 @@ alberta,129,59,3	script	Guildsman#2	1_M_03,3,3,{
 			mes "from Morroc. If you want to";
 			mes "help them, you'll need this";
 			mes "letter of recommendation, okay?";
-			set mao_request,1;
+			mao_request = 1;
 			getitem 7416,1;
 			close;
 		}
@@ -788,7 +788,7 @@ alberta,129,59,3	script	Guildsman#2	1_M_03,3,3,{
 			mes "a very difficult mission.";
 			mes "You should prepare yourself";
 			mes "if you plan to get involved...";
-			set mao_request,1;
+			mao_request = 1;
 			getitem 7416,1;
 			close;
 		}
@@ -824,7 +824,7 @@ alberta,129,59,3	script	Guildsman#2	1_M_03,3,3,{
 			mes "head over to Morroc as soon";
 			mes "as you can. If even the Assassin Guild needs help, I'm sure that";
 			mes "spells really big trouble...";
-			set mao_request,1;
+			mao_request = 1;
 			getitem 7416,1;
 			close;
 		}
@@ -1064,7 +1064,7 @@ OnTouch:
 				mes "letter of recommendation!";
 				mes " ";
 				mes "^71637DOh, right! Here, take this!^000000";
-				set mao_request,1;
+				mao_request = 1;
 				getitem 7416,1;
 				next;
 				mes "[Guildsman]";
@@ -1100,7 +1100,7 @@ OnTouch:
 				mes "from Morroc. If you want to";
 				mes "help them, you'll need this";
 				mes "letter of recommendation, okay?";
-				set mao_request,1;
+				mao_request = 1;
 				getitem 7416,1;
 				close;
 			}
@@ -1128,7 +1128,7 @@ OnTouch:
 				mes "a very difficult mission.";
 				mes "You should prepare yourself";
 				mes "if you plan to get involved...";
-				set mao_request,1;
+				mao_request = 1;
 				getitem 7416,1;
 				close;
 			}
@@ -1164,7 +1164,7 @@ OnTouch:
 				mes "head over to Morroc as soon";
 				mes "as you can. If even the Assassin Guild needs help, I'm sure that";
 				mes "spells really big trouble...";
-				set mao_request,1;
+				mao_request = 1;
 				getitem 7416,1;
 				close;
 			}
@@ -1224,7 +1224,7 @@ geffen,123,109,3	script	Academy Staff	2_M_SAGE_B,3,3,{
 		mes "assisting the Assassins";
 		mes "in this mission. Please take";
 		mes "this letter of recommendation.";
-		set mao_request,1;
+		mao_request = 1;
 		getitem 7416,1;
 		next;
 		mes "[Academy Staff]";
@@ -1316,7 +1316,7 @@ OnTouch:
 				mes "assisting the Assassins";
 				mes "in this mission. Please take";
 				mes "this letter of recommendation.";
-				set mao_request,1;
+				mao_request = 1;
 				getitem 7416,1;
 				next;
 				mes "[Academy Staff]";
@@ -1397,7 +1397,7 @@ morocc,155,56,3	script	Miya	4_F_04,3,3,{
 			mes "the west, somewhere around";
 			mes "here in this city. Well, that's";
 			mes "all he told me, so I'll seeya~";
-			set mao_request,1;
+			mao_request = 1;
 			getitem 7416,1;
 			close;
 		}
@@ -1417,7 +1417,7 @@ morocc,155,56,3	script	Miya	4_F_04,3,3,{
 			mes "we can. Here, take this letter";
 			mes "of recommendation and talk to";
 			mes "Jack, our contact west in this city. You better go right away...";
-			set mao_request,1;
+			mao_request = 1;
 			getitem 7416,1;
 			close;
 		}
@@ -1449,7 +1449,7 @@ morocc,155,56,3	script	Miya	4_F_04,3,3,{
 			mes "this mission is pretty major.";
 			mes "We'll need all the help that";
 			mes "we can possibly get...";
-			set mao_request,1;
+			mao_request = 1;
 			getitem 7416,1;
 			close;
 		}
@@ -1562,7 +1562,7 @@ OnTouch:
 				mes "the west, somewhere around";
 				mes "here in this city. Well, that's";
 				mes "all he told me, so I'll seeya~";
-				set mao_request,1;
+				mao_request = 1;
 				getitem 7416,1;
 				close;
 			}
@@ -1582,7 +1582,7 @@ OnTouch:
 				mes "we can. Here, take this letter";
 				mes "of recommendation and talk to";
 				mes "Jack, our contact west in this city. You better go right away...";
-				set mao_request,1;
+				mao_request = 1;
 				getitem 7416,1;
 				close;
 			}
@@ -1614,7 +1614,7 @@ OnTouch:
 				mes "this mission is pretty major.";
 				mes "We'll need all the help that";
 				mes "we can possibly get...";
-				set mao_request,1;
+				mao_request = 1;
 				close;
 			}
 		}
@@ -1678,7 +1678,7 @@ payon,231,323,3	script	Guildsman#3	1_M_ORIENT01,3,3,{
 			mes "assisting them, please take";
 			mes "this Letter of Recommendation";
 			mes "and bring it to the contact from the Assassin Guild in Morroc.";
-			set mao_request,1;
+			mao_request = 1;
 			getitem 7416,1;
 			next;
 			mes "[Guildsman]";
@@ -1713,7 +1713,7 @@ payon,231,323,3	script	Guildsman#3	1_M_ORIENT01,3,3,{
 			mes "Guild contact to the west";
 			mes "of the Oasis in Morroc.";
 			mes "Well, good luck, pal~";
-			set mao_request,1;
+			mao_request = 1;
 			getitem 7416,1;
 			close;
 		}
@@ -1741,7 +1741,7 @@ payon,231,323,3	script	Guildsman#3	1_M_ORIENT01,3,3,{
 			mes "Guild and a recommendation";
 			mes "that you help them. Yeah.";
 			mes "Here's the letter he wrote.";
-			set mao_request,1;
+			mao_request = 1;
 			getitem 7416,1;
 			next;
 			mes "[Guildsman]";
@@ -1783,7 +1783,7 @@ payon,231,323,3	script	Guildsman#3	1_M_ORIENT01,3,3,{
 			mes "this letter of recommendation.";
 			mes "I guess she thinks you'll do";
 			mes "the best job. So, um, congrats~";
-			set mao_request,1;
+			mao_request = 1;
 			getitem 7416,1;
 			next;
 			mes "[Guildsman]";
@@ -1951,7 +1951,7 @@ OnTouch:
 				mes "assisting them, please take";
 				mes "this Letter of Recommendation";
 				mes "and bring it to the contact from the Assassin Guild in Morroc.";
-				set mao_request,1;
+				mao_request = 1;
 				getitem 7416,1;
 				next;
 				mes "[Guildsman]";
@@ -1986,7 +1986,7 @@ OnTouch:
 				mes "Guild contact to the west";
 				mes "of the Oasis in Morroc.";
 				mes "Well, good luck, pal~";
-				set mao_request,1;
+				mao_request = 1;
 				getitem 7416,1;
 				close;
 			}
@@ -2014,7 +2014,7 @@ OnTouch:
 				mes "Guild and a recommendation";
 				mes "that you help them. Yeah.";
 				mes "Here's the letter he wrote.";
-				set mao_request,1;
+				mao_request = 1;
 				getitem 7416,1;
 				next;
 				mes "[Guildsman]";
@@ -2056,7 +2056,7 @@ OnTouch:
 				mes "this letter of recommendation.";
 				mes "I guess she thinks you'll do";
 				mes "the best job. So, um, congrats~";
-				set mao_request,1;
+				mao_request = 1;
 				getitem 7416,1;
 				next;
 				mes "[Guildsman]";
@@ -2162,7 +2162,7 @@ OnTouch:
 	if(mao_request || Class == Job_Assassin || Class == Job_Assassin_Cross) warp "que_job01",9,94;
 	else
 	{
-		set .@mao_pass,rand(1,3);
+		.@mao_pass = rand(1,3);
 		if(.@mao_pass == 2)
 		{
 			mes "[Jack]";
@@ -2203,7 +2203,6 @@ OnTouch:
 					mes "one drink at this joint.";
 					mes "Just drink at home, willya?";
 					close;
-					
 				case 2:
 					mes "[Jack]";
 					mes "Hmm...";
@@ -2330,7 +2329,6 @@ OnTouch:
 					close2;
 					warp "que_job01",85,77;
 					end;
-					
 				case 2:
 					mes "[Litheron]";
 					mes "Not the saavy type,";
@@ -2439,8 +2437,7 @@ que_job01,82,95,3	script	Bar Master	1_ETC_01,{
 			switch( select( "Tropical Sograt","Vermilion on the Beach","Do you have anything cheaper?" ) )
 			{
 				case 1:
-					set .@maodrink,1;
-					
+					.@maodrink = 1;
 				case 2:
 					if(checkweight(12112,1) != 1)
 					{
@@ -2499,7 +2496,6 @@ que_job01,82,95,3	script	Bar Master	1_ETC_01,{
 					if(.@maodrink) getitem 12112,1;
 					else getitem 12113,1;
 					close;
-				
 				case 3:
 					mes "[Master]";
 					mes "What are you...?";
@@ -2510,7 +2506,6 @@ que_job01,82,95,3	script	Bar Master	1_ETC_01,{
 					mes "go someplace else.";
 					close;
 			}
-		
 		case 2:
 			if(mao_request == 1)
 			{
@@ -2522,7 +2517,7 @@ que_job01,82,95,3	script	Bar Master	1_ETC_01,{
 					mes "Alright, just go inside. Hey,";
 					mes "but be careful. This won't be";
 					mes "easy like most assignments...";
-					set mao_request,2;
+					mao_request = 2;
 					close;
 				}
 				mes "[Master]";
@@ -2557,7 +2552,7 @@ que_job01,82,95,3	script	Bar Master	1_ETC_01,{
 					mes "Hey, since when did";
 					mes "I become your doorman?!";
 					mes "Eh, ah well. You got it.";
-					set mao_request,2;
+					mao_request = 2;
 					close;
 				}
 				mes "^3355FFYou forgot to bring your";
@@ -2659,7 +2654,6 @@ que_job01,82,95,3	script	Bar Master	1_ETC_01,{
 				mes "order something to drink.";
 				close;
 			}
-		
 		case 3:
 			mes "[Master]";
 			mes "...";
@@ -2710,7 +2704,6 @@ que_job01,49,49,5	script	Tao	4_F_YUNYANG,{
 			mes "safe from people that";
 			mes "don't belong here, meow.";
 			close;
-	
 		case 2:
 			mes "[Tao]";
 			mes "Meow, meow.";
@@ -2729,7 +2722,7 @@ OnTouch:
 	{
 		if(!$@maobar_room)
 		{
-			set $@maobar_room,1;
+			$@maobar_room = 1;
 			donpcevent "#maobartimer1::OnEnter";
 			if(mao_request == 2 || mao_request == 28 || mao_request == 29 || mao_request == 126 || mao_request == 127)
 			{
@@ -2786,7 +2779,7 @@ OnEnter:
 	initnpctimer;
 	mapannounce "que_job01","You will now enter the Master Zone, Area 1.",1,0x70DBDB;
 	end;
-	
+
 OnStop:
 	mapannounce "que_job01","The security magic in the Master Zone, Area 1 is deactivated.",1,0x70DBDB;
 	donpcevent "#maobar6::OnInit";
@@ -2801,11 +2794,11 @@ OnStop:
 	donpcevent "#roombar1::OnInit";
 	stopnpctimer;
 	end;
-	
+
 OnTimer240000:
 	donpcevent "#maobar6::OnEnter";
 	end;
-	
+
 OnTimer245000:
 	donpcevent "#maobar6::OnInit";
 	donpcevent "Valdes#1::OnInit";
@@ -2817,7 +2810,7 @@ OnTimer245000:
 	donpcevent "Marjana#poison::OnInit";
 	donpcevent "#mao_table::OnInit";
 	end;
-	
+
 OnTimer250000:
 	mapannounce "que_job01","The security magic in the Master Zone, Area 1 is deactivated.",1,0x70DBDB;
 	donpcevent "#roombar1::OnInit";
@@ -2826,15 +2819,14 @@ OnTimer250000:
 }
 
 que_job01,12,13,1	script	#maobar6	HIDDEN_WARP_NPC,1,1,{
-
 OnInit:
 	disablenpc "#maobar7";
 	end;
-	
+
 OnEnter:
 	enablenpc "#maobar7";
 	end;
-	
+
 OnTouch:
 	warp "que_job01",52,50;
 	end;
@@ -2858,7 +2850,7 @@ OnTouch:
 		}
 		if(!$@maobar_room2)
 		{
-			set $@maobar_room2,1;
+			$@maobar_room2 = 1;
 			donpcevent "#maobartimer2::OnEnter";
 			if(mao_request == 25)
 			{
@@ -2917,7 +2909,7 @@ OnEnter:
 	initnpctimer;
 	mapannounce "que_job01","Security Level in the Master Zone, Area 2 has activated.",1,0x70DBDB;
 	end;
-	
+
 OnStop:
 	mapannounce "que_job01","Security Level in the Master Zone, Area 2 deactivated.",1,0x70DBDB;
 	donpcevent "#maobar7::OnInit";
@@ -2930,12 +2922,12 @@ OnStop:
 	donpcevent "#roombar2::OnInit";
 	stopnpctimer;
 	end;
-	
+
 OnTimer240000:
 	donpcevent "#maobar7::OnEnter";
 	donpcevent "#maobar8::OnEnter";
 	end;
-	
+
 OnTimer245000:
 	donpcevent "#maobar7::OnInit";
 	donpcevent "#maobar8::OnInit";
@@ -2946,7 +2938,7 @@ OnTimer245000:
 	donpcevent "#mao_empty::OnInit";
 	donpcevent "#roombar2::OnInit";
 	end;
-	
+
 OnTimer250000:
 	mapannounce "que_job01","Security Level in the Master Zone, Area 2 deactivated.",1,0x70DBDB;
 	donpcevent "#roombar2::OnInit";
@@ -2959,11 +2951,11 @@ que_job01,80,17,1	script	#maobar7	WARPNPC,1,1,{
 OnInit:
 	disablenpc "#maobar7";
 	end;
-	
+
 OnEnter:
 	enablenpc "#maobar7";
 	end;
-	
+
 OnTouch:
 	warp "que_job01",52,50;
 	end;
@@ -2974,11 +2966,11 @@ que_job01,144,51,1	script	#maobar8	WARPNPC,1,1,{
 OnInit:
 	disablenpc "#maobar8";
 	end;
-	
+
 OnEnter:
 	enablenpc "#maobar8";
 	end;
-	
+
 OnTouch:
 	warp "que_job01",52,50;
 	end;
@@ -3108,7 +3100,7 @@ que_job01,16,21,5	script	Valdes#1	1_M_JOBTESTER,{
 				mes "the Dandelion representative";
 				mes "in the pub. He'll brief you";
 				mes "further on your mission.";
-				set mao_request,3;
+				mao_request = 3;
 				getitem 7417,1;
 				next;
 				cutin "",255;
@@ -3120,7 +3112,6 @@ que_job01,16,21,5	script	Valdes#1	1_M_JOBTESTER,{
 				mes "That is all. Dismissed!";
 				close2;
 				break;
-				
 			case 2:
 				mes "[Valdes]";
 				mes "Alright. Lin will be";
@@ -3144,7 +3135,7 @@ que_job01,16,21,5	script	Valdes#1	1_M_JOBTESTER,{
 				mes "This document will prove to";
 				mes "him that you have been assigned";
 				mes "as his personal bodyguard.";
-				set mao_request,103;
+				mao_request = 103;
 				getitem 7418,1;
 				close2;
 				break;
@@ -3274,7 +3265,7 @@ que_job01,16,21,5	script	Valdes#1	1_M_JOBTESTER,{
 		delitem 7417,countitem(7417);
 		if(mao_request == 28) getexp 1050000,0;
 		else if(mao_request == 29) getexp 1280000,0;
-		set mao_request,30;
+		mao_request = 30;
 		getitem 12107,1;
 		next;
 		mes "[Valdes]";
@@ -3415,7 +3406,7 @@ que_job01,16,21,5	script	Valdes#1	1_M_JOBTESTER,{
 		delitem 7418,countitem(7418);
 		if(mao_request == 126) getexp 1050000,0;
 		else if(mao_request == 127) getexp 1280000,0;
-		set mao_request,128;
+		mao_request = 128;
 		getitem 12106,1;
 		next;
 		mes "[Valdes]";
@@ -3494,7 +3485,7 @@ que_job01,16,21,5	script	Valdes#1	1_M_JOBTESTER,{
 OnInit:
 	disablenpc "Valdes#1";
 	end;
-	
+
 OnEnter:
 	enablenpc "Valdes#1";
 	end;
@@ -3505,7 +3496,7 @@ que_job01,17,11,3	script	Valdes#2	1_M_JOBTESTER,{
 OnInit:
 	disablenpc "Valdes#2";
 	end;
-	
+
 OnEnter:
 	disablenpc "Valdes#2";
 	end;
@@ -3516,7 +3507,7 @@ que_job01,142,56,5	script	Valdes#3	1_M_JOBTESTER,{
 OnInit:
 	disablenpc "Valdes#3";
 	end;
-	
+
 OnEnter:
 	disablenpc "Valdes#3";
 	end;
@@ -3583,7 +3574,7 @@ que_job01,19,18,3	script	Lin#1	4_F_ACROSS,{
 	}
 	cutin "",255;
 	end;
-	
+
 OnInit:
 	disablenpc "Lin#1";
 	end;
@@ -3598,7 +3589,7 @@ que_job01,13,9,7	script	Lin#2	4_F_ACROSS,{
 OnInit:
 	disablenpc "Lin#2";
 	end;
-	
+
 OnEnter:
 	disablenpc "Lin#2";
 	end;
@@ -3645,7 +3636,7 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 		mes "against his forehead, and then";
 		mes "quickly mumbled something";
 		mes "before raising his head.^000000";
-		set mao_request,104;
+		mao_request = 104;
 		close2;
 	}
 	else if(mao_request == 104)
@@ -3710,7 +3701,6 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 				mes "will go to the Juno Library to";
 				mes "find his research documents.";
 				break;
-				
 			case 2:
 				mes "[" + strcharinfo(0) + "]";
 				mes "Won't they attack";
@@ -3778,7 +3768,7 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 		mes "help make your job a lot";
 		mes "easier. Okay then, good luck~";
 		mes "Good luck!";
-		set mao_request,105;
+		mao_request = 105;
 		close2;
 	}
 	else if(mao_request == 105)
@@ -3826,7 +3816,7 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 		mes "bring them to him and";
 		mes "see what he wants us";
 		mes "to do for him next.";
-		set mao_request,108;
+		mao_request = 108;
 		next;
 		cutin "mocseal_dan01.bmp",0;
 		mes "[R. Moore]";
@@ -3901,7 +3891,7 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 		mes "historian in Morroc about Morroc Satan and all that. There's";
 		mes "too much we don't know, and";
 		mes "I don't wanna take chances.";
-		set mao_request,116;
+		mao_request = 116;
 		next;
 		cutin "mocseal_dan01.bmp",0;
 		mes "[R. Moore]";
@@ -4044,7 +4034,7 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 		mes "believe you, but we need some";
 		mes "time to consider your request";
 		mes "before we can go ahead with the investigation you're asking for...";
-		set mao_request,119;
+		mao_request = 119;
 		close2;
 	}
 	else if(mao_request == 119)
@@ -4107,7 +4097,7 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 		mes "historical record that proves";
 		mes "that Satan Morroc really";
 		mes "existed in our world.";
-		set mao_request,120;
+		mao_request = 120;
 		close2;
 	}
 	else if(mao_request == 120)
@@ -4126,7 +4116,7 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 		mes "we've collected so far, as well";
 		mes "as keep an eye on Mr. R. Moore.";
 		mes "Good luck, and be careful.";
-		set mao_request,121;
+		mao_request = 121;
 		close2;
 	}
 	else if(mao_request == 121)
@@ -4190,7 +4180,7 @@ que_job01,79,15,1	script	R	4_M_MASKMAN,{
 		mes "against his forehead, and then";
 		mes "quickly mumbled something";
 		mes "before raising his head.^000000";
-		set mao_request,104;
+		mao_request = 104;
 		close2;
 	}
 	else if(mao_request == 104)
@@ -4264,7 +4254,7 @@ que_job01,79,15,1	script	R	4_M_MASKMAN,{
 		mes "We need to protect you, but";
 		mes "we still want to help those";
 		mes "missing children if we can.";
-		set mao_request,108;
+		mao_request = 108;
 		close2;
 	}
 	else if(mao_request == 108)
@@ -4326,7 +4316,7 @@ que_job01,79,15,1	script	R	4_M_MASKMAN,{
 		mes "did not want me to repair";
 		mes "Morroc's elemental equilibrium.";
 		mes "At least, that's what I believe. ^FFFFFF ^000000";
-		set mao_request,109;
+		mao_request = 109;
 		next;
 		mes "[R. Moore]";
 		mes "You can't possibly";
@@ -4543,7 +4533,7 @@ que_job01,79,15,1	script	R	4_M_MASKMAN,{
 		mes "believe you, but we need some";
 		mes "time to consider your request";
 		mes "before we can go ahead with the investigation you're asking for...";
-		set mao_request,119;
+		mao_request = 119;
 		close2;
 	}
 	else if(mao_request == 119)
@@ -4593,7 +4583,7 @@ que_job01,147,54,3	script	Lin#3	4_F_ACROSS,{
 OnInit:
 	disablenpc "Lin#3";
 	end;
-	
+
 OnEnter:
 	disablenpc "Lin#3";
 	end;
@@ -4663,7 +4653,7 @@ que_job01,13,17,5	script	Kidd#1	4_M_ACROSS,{
 OnInit:
 	disablenpc "Kidd#1";
 	end;
-	
+
 OnEnter:
 	enablenpc "Kidd#1";
 	end;
@@ -4674,7 +4664,7 @@ que_job01,12,8,7	script	Kidd#2	4_M_ACROSS,{
 OnInit:
 	disablenpc "Kidd#2";
 	end;
-	
+
 OnEnter:
 	disablenpc "Kidd#2";
 	end;
@@ -4685,7 +4675,7 @@ que_job01,148,54,3	script	Kidd#3	4_M_ACROSS,{
 OnInit:
 	disablenpc "Kidd#3";
 	end;
-	
+
 OnEnter:
 	disablenpc "Kidd#3";
 	end;
@@ -4783,7 +4773,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		mes "from under his shirt, pressed";
 		mes "it to his forehead, and then";
 		mes "quickly mumbled some words.^000000";
-		set mao_request,4;
+		mao_request = 4;
 		close2;
 	}
 	else if(mao_request == 4)
@@ -4827,7 +4817,6 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 				mes "and where he might be now.";
 				mes "Pretty good idea, huh?";
 				break;
-				
 			case 2:
 				mes "[Kidd]";
 				mes "I know that Juno is pretty";
@@ -4845,7 +4834,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		mes "be familiar with Raiyan's work";
 		mes "and could point us in the right";
 		mes "direction. Alright then, I'll meet up with you in the Juno Library.";
-		set mao_request,5;
+		mao_request = 5;
 		close2;
 	}
 	else if(mao_request > 4 && mao_request < 8)
@@ -4884,7 +4873,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		mes "Although he's probably";
 		mes "gone by now, we need to";
 		mes "follow through on this lead... If we're lucky, we'll catch Moore.";
-		set mao_request,9;
+		mao_request = 9;
 		close2;
 	}
 	else if(mao_request == 9)
@@ -4909,7 +4898,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		mes "probably be best for you to";
 		mes "investigate the pyramids west";
 		mes "of Morroc. If you happen to find anything, then meet me back here.";
-		set mao_request,10;
+		mao_request = 10;
 		next;
 		cutin "mocseal_dan01.bmp",0;
 		mes "[Dandelion Member]";
@@ -4982,7 +4971,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		mes "local historian and see what";
 		mes "I can learn about those crests";
 		mes "and Raiyan Moore's intentions.";
-		set mao_request,12;
+		mao_request = 12;
 		close2;
 	}
 	else if(mao_request == 12)
@@ -5055,7 +5044,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		mes "guessing something must";
 		mes "have happened when he";
 		mes "went to visit that historian.";
-		set mao_request,17;
+		mao_request = 17;
 		close2;
 	}
 	else if(mao_request == 17)
@@ -5098,7 +5087,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 			mes "Alright, alright.";
 			mes "I'll try talking";
 			mes "to him for you...";
-			set mao_request,18;
+			mao_request = 18;
 			close2;
 		}
 		else
@@ -5107,7 +5096,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 			mes "Alright, alright.";
 			mes "I'll try talking";
 			mes "to him for you...";
-			set mao_request,18;
+			mao_request = 18;
 			close2;
 		}
 	}
@@ -5155,7 +5144,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		mes "Coming right up.";
 		mes "Here you are, enjoy.";
 		mes "Take this.";
-		set mao_request,20;
+		mao_request = 20;
 		getitem 12112,1;
 		next;
 		cutin "mocseal_kid01.bmp",2;
@@ -5220,7 +5209,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		mes "truly exists. It might be";
 		mes "possible to do that by";
 		mes "offering a blood sacrifice.";
-		set mao_request,21;
+		mao_request = 21;
 		next;
 		mes "[Kidd]";
 		mes "Then that would mean";
@@ -5264,7 +5253,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		mes "you can find those kids, Raiyan";
 		mes "Moore, or concrete proof of";
 		mes "Satan Morroc's existence.";
-		set mao_request,22;
+		mao_request = 22;
 		next;
 		mes "[Kidd]";
 		mes "If you're lucky enough to";
@@ -5327,7 +5316,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 					mes "Raiyan Moore now!";
 					mes "We're running out of";
 					mes "time! What'll we do?!";
-					set mao_request,23;
+					mao_request = 23;
 					close2;
 				}
 				else
@@ -5341,7 +5330,6 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 					close2;
 				}
 				break;
-				
 			case 2:
 				cutin "mocseal_kid01.bmp",2;
 				mes "[Kidd]";
@@ -5428,9 +5416,8 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 				mes "a bad feeling about this!";
 				mes "We gotta go talk to our";
 				mes "commanding officer!";
-				set mao_request,24;
+				mao_request = 24;
 				break;
-				
 			case 2:
 				mes "[Kidd]";
 				mes "That's right! She's";
@@ -5439,7 +5426,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 				mes "How could we overlook this?!";
 				mes "Damn it, we need to talk to our";
 				mes "commanding officer right now!";
-				set mao_request,24;
+				mao_request = 24;
 				break;
 		}
 		next;
@@ -5591,7 +5578,6 @@ que_job01,89,85,5	script	Dandelion Member	4_M_MASKMAN,{
 				mes "can ever forgive ourselves.";
 				close2;
 				break;
-				
 			case 2:
 				mes "[Dandelion Member]";
 				mes "You really haven't?";
@@ -5674,7 +5660,7 @@ que_job01,89,85,5	script	Dandelion Member	4_M_MASKMAN,{
 		mes "from under his shirt, pressed";
 		mes "it to his forehead, and then";
 		mes "quickly mumbled some words.^000000";
-		set mao_request,4;
+		mao_request = 4;
 		close2;
 	}
 	else if(mao_request == 4)
@@ -5797,7 +5783,7 @@ que_job01,89,85,5	script	Dandelion Member	4_M_MASKMAN,{
 		mes "guessing something must";
 		mes "have happened when he";
 		mes "went to visit that historian.";
-		set mao_request,17;
+		mao_request = 17;
 		close2;
 	}
 	else if(mao_request == 17)
@@ -5859,7 +5845,7 @@ que_job01,89,85,5	script	Dandelion Member	4_M_MASKMAN,{
 		mes "Coming right up.";
 		mes "Here you are, enjoy.";
 		mes "Take this.";
-		set mao_request,20;
+		mao_request = 20;
 		getitem 12112,1;
 		next;
 		cutin "mocseal_kid01.bmp",2;
@@ -6092,9 +6078,8 @@ yuno_in04,180,106,3	script	Reading Girl	1_F_MERCHANT_01,{
 						mes "some historic documents";
 						mes "before he ran off. They're";
 						mes "all about history, so I couldn't really understand them at all...";
-						set mao_request,6;
+						mao_request = 6;
 						close;
-						
 					case 2:
 						mes "[Yunia]";
 						mes "Mm... I really don't";
@@ -6103,10 +6088,9 @@ yuno_in04,180,106,3	script	Reading Girl	1_F_MERCHANT_01,{
 						mes "he was researching so that";
 						mes "they'll be ready when he";
 						mes "comes back to the library.";
-						set mao_request,6;
+						mao_request = 6;
 						close;
 				}
-		
 			case 2:
 				mes "[Yunia]";
 				mes "Oh... you know.";
@@ -6160,7 +6144,7 @@ yuno_in04,180,106,3	script	Reading Girl	1_F_MERCHANT_01,{
 		mes "you try reading his notes";
 		mes "and his journal on his desk?";
 		mes "That might be really helpful.";
-		set mao_request,7;
+		mao_request = 7;
 		close;
 	}
 	else if(mao_request == 7)
@@ -6223,9 +6207,8 @@ yuno_in04,180,106,3	script	Reading Girl	1_F_MERCHANT_01,{
 				mes "that the documents you're";
 				mes "delivering are the ones";
 				mes "that he needs, am I right?";
-				set mao_request,106;
+				mao_request = 106;
 				close;
-			
 			case 2:
 				mes "[Yunia]";
 				mes "Oh... You know. Just this";
@@ -6280,7 +6263,7 @@ yuno_in04,180,106,3	script	Reading Girl	1_F_MERCHANT_01,{
 		mes "Oh, and please give";
 		mes "my regards to Mr. Moore";
 		mes "when you see him, okay?";
-		set mao_request,107;
+		mao_request = 107;
 		close;
 	}
 	else
@@ -6322,7 +6305,7 @@ yuno_in04,175,129,0	script	Workbook#mao	HIDDEN_NPC,{
 	{
 		if(!.mao_book)
 		{
-			set .mao_book,.mao_book +1;
+			++.mao_book;
 			donpcevent "#maobooktimer::OnEnter";
 			mes "^3355FFYou find a crumpled piece";
 			mes "of paper filled with scribbles.";
@@ -6386,7 +6369,7 @@ yuno_in04,175,129,0	script	Workbook#mao	HIDDEN_NPC,{
 			mes "gonna bring this part of";
 			mes "his journal with me. I'll";
 			mes "meet you back in Morroc.";
-			set mao_request,8;
+			mao_request = 8;
 			close2;
 			cutin "mocseal_kid01.bmp",255;
 			donpcevent "Kidd#book::OnInit";
@@ -6422,7 +6405,7 @@ yuno_in04,175,129,0	script	Workbook#mao	HIDDEN_NPC,{
 	}
 
 OnInit:
-	set .mao_book,0;
+	.mao_book = 0;
 	end;
 }
 
@@ -6432,11 +6415,11 @@ yuno_in04,174,130,5	script	Kidd#book	4_M_ACROSS,{
 	mes "......";
 	mes ".........";
 	close;
-	
+
 OnInit:
 	disablenpc "Kidd#book";
 	end;
-	
+
 OnEnter:
 	enablenpc "Kidd#book";
 	end;
@@ -6447,11 +6430,11 @@ yuno_in04,1,1,1	script	#maobooktimer	-1,{
 OnEnter:
 	initnpctimer;
 	end;
-	
+
 OnStop:
 	donpcevent "Workbook#mao::OnInit";
 	stopnpctimer;
-	
+
 OnTimer180000:
 	donpcevent "Workbook#mao::OnInit";
 	stopnpctimer;
@@ -6462,7 +6445,7 @@ que_job01,6,79,5	script	Lin#stairs	4_F_ACROSS,{
 OnInit:
 	disablenpc "Lin#stairs";
 	end;
-	
+
 OnEnter:
 	enablenpc "Lin#stairs";
 	end;
@@ -6499,7 +6482,7 @@ que_job01,8,77,1	script	#linstairs	HIDDEN_WARP_NPC,3,3,{
 		mes "that Mr. R isn't telling us the";
 		mes "truth for some reason, let";
 		mes "me know. I'll see you soon.";
-		set mao_request,110;
+		mao_request = 110;
 		close2;
 		cutin "mocseal_rin01.bmp",255;
 		donpcevent "Lin#stairs::OnInit";
@@ -6548,7 +6531,7 @@ que_job01,8,77,1	script	#linstairs	HIDDEN_WARP_NPC,3,3,{
 		mes "Okay then, I'll see";
 		mes "you later. Remember,";
 		mes "the Morroc Inn, alright?";
-		set mao_request,116;
+		mao_request = 116;
 		close2;
 		cutin "mocseal_rin01.bmp",255;
 		donpcevent "Lin#stairs::OnInit";
@@ -6605,7 +6588,7 @@ que_job01,8,77,1	script	#linstairs	HIDDEN_WARP_NPC,3,3,{
 		mes "missing from Morroc lately.";
 		mes "What'll be our next move?";
 		mes "I guess we'll talk to Mr. R.";
-		set mao_request,118;
+		mao_request = 118;
 		next;
 		mes "[Lin]";
 		mes "The way things are going,";
@@ -6672,7 +6655,7 @@ que_job01,8,77,1	script	#linstairs	HIDDEN_WARP_NPC,3,3,{
 		mes "we might be the ones who'll";
 		mes "have to keep Satan Morroc";
 		mes "from returning to this world...";
-		set mao_request,122;
+		mao_request = 122;
 		close2;
 		cutin "mocseal_rin01.bmp",255;
 		donpcevent "Lin#stairs::OnInit";
@@ -6708,7 +6691,7 @@ moc_fild10,281,148,1	script	Upturned Spot#water	HIDDEN_NPC,{
 			mes "this crest's Water element.^000000";
 			specialeffect EF_SPHERE;
 			delitem 996,1;
-			set mao_request,15;
+			mao_request = 15;
 			next;
 			mes "[" + strcharinfo(0) + "]";
 			mes "Alright...";
@@ -6753,7 +6736,7 @@ moc_fild10,281,148,1	script	Upturned Spot#water	HIDDEN_NPC,{
 			mes "waves in the oasis.^000000";
 			specialeffect EF_BEGINSPELL2;
 			delitem 995,1;
-			set mao_request,114;
+			mao_request = 114;
 			next;
 			mes "[" + strcharinfo(0) + "]";
 			mes "Alright...";
@@ -6799,7 +6782,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 		mes "interested in. Well,";
 		mes "I better go inform Kidd";
 		mes "about what I found here.";
-		set mao_request,11;
+		mao_request = 11;
 		close2;
 	}
 	else if(mao_request == 11)
@@ -6848,7 +6831,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 			mes "Wind in this area to stabilize.^000000";
 			specialeffect EF_SPHERE;
 			delitem 997,1;
-			set mao_request,13;
+			mao_request = 13;
 			next;
 			mes "[" + strcharinfo(0) + "]";
 			mes "Great, now that I'm done";
@@ -6934,7 +6917,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 		mes "for. It looks like an artifact of the Wind element, but the wind";
 		mes "around here isn't as strong as it should be. I think I might need";
 		mes "to bring a ^4D4DFFRough Wind^000000 here...";
-		set mao_request,111;
+		mao_request = 111;
 		close2;
 	}
 	else if(mao_request == 111)
@@ -6956,7 +6939,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 			mes "the wind to blow stronger.^000000";
 			specialeffect EF_BEGINSPELL4;
 			delitem 996,1;
-			set mao_request,112;
+			mao_request = 112;
 			next;
 			cutin "mocseal_wind01.bmp",2;
 			mes "[" + strcharinfo(0) + "]";
@@ -7024,7 +7007,7 @@ moc_fild12,280,36,1	script	Unturned Spot#earth	HIDDEN_NPC,{
 			cutin "mocseal_earth02.bmp",2;
 			specialeffect EF_SPHERE;
 			delitem 994,1;
-			set mao_request,14;
+			mao_request = 14;
 			next;
 			mes "[" + strcharinfo(0) + "]";
 			mes "That was simple.";
@@ -7075,7 +7058,7 @@ moc_fild12,280,36,1	script	Unturned Spot#earth	HIDDEN_NPC,{
 			mes "towards the crest.^000000";
 			specialeffect EF_BEGINSPELL5;
 			delitem 997,1;
-			set mao_request,113;
+			mao_request = 113;
 			next;
 			mes "[" + strcharinfo(0) + "]";
 			mes "Great, I think that actually";
@@ -7138,7 +7121,7 @@ moc_fild07,192,166,1	script	Unturned Spot#fire	HIDDEN_NPC,{
 			cutin "mocseal_fire02.bmp",2;
 			specialeffect EF_SPHERE;
 			delitem 995,1;
-			set mao_request,16;
+			mao_request = 16;
 			next;
 			mes "[" + strcharinfo(0) + "]";
 			mes "It looks like my work";
@@ -7182,7 +7165,7 @@ moc_fild07,192,166,1	script	Unturned Spot#fire	HIDDEN_NPC,{
 			specialeffect EF_BEGINSPELL3;
 			cutin "mocseal_fire01.bmp",2;
 			delitem 994,1;
-			set mao_request,115;
+			mao_request = 115;
 			next;
 			mes "[" + strcharinfo(0) + "]";
 			mes "Well, that's the";
@@ -7350,7 +7333,7 @@ morocc_in,46,125,5	script	Assistant	4_F_NOVICE,{
 		mes "regulate this region's elements";
 		mes "to make it possible for people";
 		mes "to live here in the desert.";
-		set mao_request,19;
+		mao_request = 19;
 		close;
 	}
 	else if(mao_request == 116)
@@ -7462,7 +7445,7 @@ morocc_in,46,125,5	script	Assistant	4_F_NOVICE,{
 		mes "regulate this region's elements";
 		mes "to make it possible for people";
 		mes "to live here in the desert.";
-		set mao_request,117;
+		mao_request = 117;
 		close;
 	}
 	else
@@ -7538,7 +7521,7 @@ OnTouch:
 		mes "too serious. Valdes,";
 		mes "wait, I'm coming with you!";
 		mes ""+ strcharinfo(0) +", come on, quickly!";
-		set mao_request,25;
+		mao_request = 25;
 		close2;
 		donpcevent "Kidd#2::OnInit";
 		end;
@@ -7625,7 +7608,7 @@ OnTouch:
 		mes "If Satan Morroc really";
 		mes "exists, we can't let";
 		mes "him enter our world!";
-		set mao_request,124;
+		mao_request = 124;
 		close2;
 		warp "que_job01",11,4;
 		end;
@@ -7634,7 +7617,7 @@ OnTouch:
 OnInit:
 	disablenpc "#mao_table";
 	end;
-	
+
 OnEnter:
 	enablenpc "#mao_table";
 	end;
@@ -7653,14 +7636,14 @@ OnTouch:
 		mes "like Lin's voice...";
 		mes "Where are they?";
 		mes "Where have they gone?!";
-		set mao_request,123;
+		mao_request = 123;
 		close;
 	}
 
 OnInit:
 	disablenpc "#mao_empty";
 	end;
-	
+
 OnEnter:
 	enablenpc "#mao_empty";
 	end;
@@ -7725,7 +7708,7 @@ OnTouch:
 		mes "happening. Hurry,";
 		mes "the fate of the world";
 		mes "hangs in the balance!";
-		set mao_request,26;
+		mao_request = 26;
 		close2;
 		warp "que_job01",144,61;
 		end;
@@ -7733,7 +7716,7 @@ OnTouch:
 OnInit:
 	disablenpc "#Rabsent";
 	end;
-	
+
 OnEnter:
 	enablenpc "#Rabsent";
 	end;
@@ -7766,7 +7749,7 @@ moc_castle,40,20,3	script	Man	4_M_DIEMAN,{
 		{
 			close2;
 			warp "que_job02",14,182;
-			set $mao_gate1,1;
+			$mao_gate1 = 1;
 			end;
 		}
 	}
@@ -7784,15 +7767,15 @@ moc_castle,40,20,3	script	Man	4_M_DIEMAN,{
 		{
 			close2;
 			warp "que_job03",14,182;
-			set $mao_gate2,1;
+			$mao_gate2 = 1;
 			end;
 		}
 	}
 	close;
 
 OnInit:
-	set $mao_gate1,0;
-	set $mao_gate2,0;
+	$mao_gate1 = 0;
+	$mao_gate2 = 0;
 	end;
 }
 
@@ -7801,11 +7784,11 @@ que_job02,14,182,1	script	#maogate1	HIDDEN_WARP_NPC,1,1,{
 OnEnter:
 	enablenpc "#maogate1";
 	end;
-	
+
 OnStop:
 	disablenpc "#maogate1";
 	end;
-	
+
 OnTouch:
 	if (mao_request == 26 || mao_request == 27)
 	{
@@ -7819,7 +7802,7 @@ OnTouch:
 		mes "teleported outside.^000000";
 		close2;
 		warp "morocc",100,100;
-		set $mao_gate1,0;
+		$mao_gate1 = 0;
 	}
 	end;
 
@@ -7863,7 +7846,7 @@ OnTimer596000:
 
 OnTimer597000:
 	enablenpc "#maogate1";
-	set $mao_gate1,0;
+	$mao_gate1 = 0;
 	stopnpctimer;
 	end;
 }
@@ -7877,7 +7860,7 @@ OnInit:
 OnEnter:
 	enablenpc "#maogate1_talk1";
 	end;
-	
+
 OnTouch:
 	mes "^333333Holy... ritual... of...";
 	mes "blood... I am proud...";
@@ -7918,7 +7901,7 @@ OnStop:
 OnEnter:
 	enablenpc "#maogate1_talk2";
 	end;
-	
+
 OnTouch:
 	mes "...";
 	mes "......";
@@ -7964,7 +7947,7 @@ OnStop:
 OnEnter:
 	enablenpc "#maogate1_talk3";
 	end;
-	
+
 OnTouch:
 	mes "......";
 	mes ".........";
@@ -8021,7 +8004,7 @@ OnStop:
 OnEnter:
 	enablenpc "#maogate1_talk4";
 	end;
-	
+
 OnTouch:
 	mes "......";
 	mes ".........";
@@ -8073,7 +8056,7 @@ OnStop:
 OnEnter:
 	enablenpc "#maogate1_talk5";
 	end;
-	
+
 OnTouch:
 	mes "......";
 	mes ".........";
@@ -8110,7 +8093,7 @@ OnStop:
 OnEnter:
 	enablenpc "#maogate1_talk6";
 	end;
-	
+
 OnTouch:
 	mes "......";
 	mes ".........";
@@ -8183,7 +8166,7 @@ OnStop:
 OnEnter:
 	enablenpc "#maogate1_talk7";
 	end;
-	
+
 OnTouch:
 	mes "......";
 	mes ".........";
@@ -8237,16 +8220,16 @@ OnStop:
 OnEnter:
 	enablenpc "#maogate1_talk8";
 	end;
-	
+
 OnStop2:
 	stopnpctimer;
 	end;
-	
+
 OnTouch:
 	initnpctimer;
 	disablenpc "#maogate1_talk8";
 	end;
-	
+
 OnTimer1000:
 	mapannounce "que_job02","...Blood... is the currency... of the soul...",1,0x7B68EE;
 	end;
@@ -8370,7 +8353,7 @@ que_job02,66,85,5	script	Dandelion Member#1_bt	4_M_MASKMAN,{
 		mes "in there and help him...";
 		close2;
 		emotion e_gasp,1;
-		set mao_request,27;
+		mao_request = 27;
 		disablenpc "Dandelion Member#1_bt";
 		end;
 	}
@@ -8546,7 +8529,7 @@ OnTouch:
 	mes "Let me go!";
 	mes "I'm gonna chase";
 	mes "Moore myself!";
-	set mao_request,28;
+	mao_request = 28;
 	close2;
 	donpcevent "Lin#maogate1_2::OnInit";
 	disablenpc "#maogate1_end";
@@ -8577,7 +8560,7 @@ OnTimer5000:
 	end;
 
 OnTimer5500:
-	set $@maogate1mobs,3;
+	$@maogate1mobs = 3;
 	monster "que_job02",128,105,"Mummy",1041,1,"Kidd#maogate1_2::OnMyMobDead";
 	monster "que_job02",115,106,"Mummy",1041,1,"Kidd#maogate1_2::OnMyMobDead";
 	monster "que_job02",121,112,"Mummy",1041,1,"Kidd#maogate1_2::OnMyMobDead";
@@ -8595,7 +8578,7 @@ OnTimer10000:
 	donpcevent "Dandelion#maogate1_1::OnInit";
 	stopnpctimer;
 	end;
-	
+
 OnMyMobDead:
 	end;
 }
@@ -8624,7 +8607,7 @@ OnEnter:
 	end;
 
 OnMyMobDead:
-	set $@maogate1mobs,$@maogate1mobs -1;
+	--$@maogate1mobs;
 	if($@maogate1mobs < 1) donpcevent "#maogate1_end2::OnEnter";
 	end;
 }
@@ -8747,7 +8730,7 @@ OnTouch:
 		mes "back, the other members";
 		mes "of the Assassin Guild";
 		mes "will take care of this...";
-		set mao_request,29;
+		mao_request = 29;
 		close2;
 		mapwarp "que_job02","que_job01",59,49;
 		donpcevent "#maogate1_talk1::OnInit";
@@ -8774,7 +8757,7 @@ OnTouch:
 		donpcevent "#maogate1_battle::OnStop";
 		donpcevent "#maogate1_battle::OnEnter";
 		enablenpc "#maogate1";
-		set $mao_gate1,0;
+		$mao_gate1 = 0;
 		end;
 	}
 }
@@ -8784,11 +8767,11 @@ que_job03,14,182,1	script	#maogate2	HIDDEN_WARP_NPC,1,1,{
 OnEnter:
 	enablenpc "#maogate2";
 	end;
-	
+
 OnStop:
 	disablenpc "#maogate2";
 	end;
-	
+
 OnTouch:
 	if (mao_request == 124 || mao_request == 125)
 	{
@@ -8802,7 +8785,7 @@ OnTouch:
 		mes "teleported outside.^000000";
 		close2;
 		warp "morocc",100,100;
-		set $mao_gate2,0;
+		$mao_gate2 = 0;
 	}
 	end;
 
@@ -8846,7 +8829,7 @@ OnTimer596000:
 
 OnTimer597000:
 	enablenpc "#maogate2";
-	set $mao_gate2,0;
+	$mao_gate2 = 0;
 	stopnpctimer;
 	end;
 }
@@ -8860,7 +8843,7 @@ OnInit:
 OnEnter:
 	enablenpc "#maogate2_talk1";
 	end;
-	
+
 OnTouch:
 	mes "^333333Holy... ritual... of...";
 	mes "blood... I am proud...";
@@ -8901,7 +8884,7 @@ OnStop:
 OnEnter:
 	enablenpc "#maogate2_talk2";
 	end;
-	
+
 OnTouch:
 	mes "...";
 	mes "......";
@@ -8947,7 +8930,7 @@ OnStop:
 OnEnter:
 	enablenpc "#maogate2_talk3";
 	end;
-	
+
 OnTouch:
 	mes "......";
 	mes ".........";
@@ -9004,7 +8987,7 @@ OnStop:
 OnEnter:
 	enablenpc "#maogate2_talk4";
 	end;
-	
+
 OnTouch:
 	mes "......";
 	mes ".........";
@@ -9056,7 +9039,7 @@ OnStop:
 OnEnter:
 	enablenpc "#maogate2_talk5";
 	end;
-	
+
 OnTouch:
 	mes "......";
 	mes ".........";
@@ -9093,7 +9076,7 @@ OnStop:
 OnEnter:
 	enablenpc "#maogate2_talk6";
 	end;
-	
+
 OnTouch:
 	mes "......";
 	mes ".........";
@@ -9166,7 +9149,7 @@ OnStop:
 OnEnter:
 	enablenpc "#maogate2_talk7";
 	end;
-	
+
 OnTouch:
 	mes "......";
 	mes ".........";
@@ -9220,16 +9203,16 @@ OnStop:
 OnEnter:
 	enablenpc "#maogate2_talk8";
 	end;
-	
+
 OnStop2:
 	stopnpctimer;
 	end;
-	
+
 OnTouch:
 	initnpctimer;
 	disablenpc "#maogate2_talk8";
 	end;
-	
+
 OnTimer1000:
 	mapannounce "que_job03","...Blood... is the currency... of the soul...",1,0x7B68EE;
 	end;
@@ -9268,39 +9251,39 @@ OnStop:
 OnEnter:
 	enablenpc "#maogate2_battle";
 	end;
-	
+
 OnStop2:
 	stopnpctimer;
 	killmonster "que_job03","#maogate2_battle::OnMyMobDead";
 	end;
-	
+
 OnTouch:
 	initnpctimer;
 	emotion e_wah,1;
 	disablenpc "#maogate2_battle";
 	end;
-	
+
 OnTimer500:
 	monster "que_job03",71,85,"Mummy",1041,1,"#maogate2_battle::OnMyMobDead";
 	monster "que_job03",79,85,"Mummy",1041,1,"#maogate2_battle::OnMyMobDead";
 	monster "que_job03",71,80,"Mummy",1041,1,"#maogate2_battle::OnMyMobDead";
 	monster "que_job03",79,80,"Mummy",1041,1,"#maogate2_battle::OnMyMobDead";
 	end;
-	
+
 OnTimer5000:
 	mapannounce "que_job03","Watch out!",1,0x90EE90;
 	donpcevent "Dandelion Member#2_bt::OnEnter";
 	end;
-	
+
 OnTimer6000:
 	specialeffect EF_LORD;
 	end;
-	
+
 OnTimer6500:
 	killmonster "que_job03","#maogate2_battle::OnMyMobDead";
 	stopnpctimer;
 	end;
-	
+
 OnMyMobDead:
 	end;
 }
@@ -9363,7 +9346,7 @@ que_job03,66,85,5	script	Dandelion Member#2_bt	4_M_MASKMAN,{
 		mes "and try to find her as";
 		mes "soon as I can!";
 		close2;
-		set mao_request,125;
+		mao_request = 125;
 		disablenpc "Dandelion Member#2_bt";
 		end;
 	}
@@ -9371,7 +9354,7 @@ que_job03,66,85,5	script	Dandelion Member#2_bt	4_M_MASKMAN,{
 OnInit:
 	disablenpc "Dandelion Member#2_bt";
 	end;
-	
+
 OnEnter:
 	enablenpc "Dandelion Member#2_bt";
 	end;
@@ -9382,11 +9365,11 @@ que_job03,87,83,1	script	#maogate2_setting	HIDDEN_WARP_NPC,2,2,{
 OnStop:
 	disablenpc "#maogate2_setting";
 	end;
-	
+
 OnEnter:
 	enablenpc "#maogate2_setting";
 	end;
-	
+
 OnTouch:
 	if (mao_request == 125)
 	{
@@ -9405,20 +9388,20 @@ que_job03,117,101,1	script	#maogate2_end	HIDDEN_WARP_NPC,3,3,{
 OnInit:
 	disablenpc "#maogate2_end";
 	end;
-	
+
 OnReset:
 	killmonster "que_job03","#maogate2_end::OnMyMobDead";
 	end;
-	
+
 OnStop:
 	killmonster "que_job03","#maogate2_end::OnMyMobDead";
 	stopnpctimer;
 	end;
-	
+
 OnEnter:
 	enablenpc "#maogate2_end";
 	end;
-	
+
 OnTouch:
 	donpcevent "#maogate2_setting::OnStop";
 	mes "[" + strcharinfo(0) + "]";
@@ -9539,8 +9522,8 @@ OnTouch:
 	mes "Let me go!";
 	mes "I'm gonna chase";
 	mes "Moore myself!";
-	set mao_request,126;
-	set $maoattack,$maoattack +1;
+	mao_request = 126;
+	++$maoattack;
 	close2;
 	donpcevent "Lin#maogate2_2::OnInit";
 	disablenpc "#maogate2_end";
@@ -9571,7 +9554,7 @@ OnTimer5000:
 	end;
 
 OnTimer5500:
-	set $@maogate2mobs,3;
+	$@maogate2mobs = 3;
 	monster "que_job03",128,105,"Mummy",1041,1,"Kidd#maogate2_2::OnMyMobDead";
 	monster "que_job03",115,106,"Mummy",1041,1,"Kidd#maogate2_2::OnMyMobDead";
 	monster "que_job03",121,112,"Mummy",1041,1,"Kidd#maogate2_2::OnMyMobDead";
@@ -9618,7 +9601,7 @@ OnEnter:
 	end;
 
 OnMyMobDead:
-	set $@maogate2mobs,$@maogate2mobs -1;
+	--$@maogate2mobs;
 	if($@maogate2mobs < 1) donpcevent "#maogate2_end2::OnEnter";
 	end;
 }
@@ -9725,7 +9708,7 @@ que_job03,122,106,1	script	#maogate2_end2	HIDDEN_WARP_NPC,15,15,{
 OnInit:
 	disablenpc "#maogate2_end2";
 	end;
-	
+
 OnEnter:
 	enablenpc "#maogate2_end2";
 	end;
@@ -9740,7 +9723,7 @@ OnTouch:
 		mes "You don't look so hot. Come";
 		mes "on, we gotta get you back";
 		mes "to the guild for now...";
-		set mao_request,127;
+		mao_request = 127;
 		close2;
 		mapwarp "que_job03","que_job01",59,49;
 		donpcevent "#maogate2_talk1::OnInit";
@@ -9767,7 +9750,7 @@ OnTouch:
 		donpcevent "#maogate2_battle::OnStop";
 		donpcevent "#maogate2_battle::OnEnter";
 		enablenpc "#maogate2";
-		set $mao_gate2,0;
+		$mao_gate2 = 0;
 		end;
 	}
 }
@@ -9803,11 +9786,11 @@ morocc,30,29,5	script	Member#mao1	4_M_MASKMAN,10,15,{
 OnStop:
 	disablenpc "Member#mao1";
 	end;
-	
+
 OnEnter:
 	enablenpc "Member#mao1";
 	end;
-	
+
 OnTouch:
 	if (mao_request == 30 || mao_request == 128)
 	{
@@ -9848,7 +9831,7 @@ OnTouch:
 		if($maoattack > 49)
 		{
 			donpcevent "#mao_manager::OnStart";
-			set $maoattack,0;
+			$maoattack = 0;
 		}
 		else donpcevent "#mao_timer::OnStart";
 		end;
@@ -9886,7 +9869,7 @@ morocc,29,26,0	script	Member#mao2	4_M_MASKMAN,{
 OnStop:
 	disablenpc "Member#mao2";
 	end;
-	
+
 OnEnter:
 	enablenpc "Member#mao2";
 	end;
@@ -9923,7 +9906,7 @@ morocc,33,27,1	script	Member#mao3	4_M_MASKMAN,{
 OnStop:
 	disablenpc "Member#mao3";
 	end;
-	
+
 OnEnter:
 	enablenpc "Member#mao3";
 	end;
@@ -9960,7 +9943,7 @@ morocc,34,30,3	script	Member#mao4	4_M_MASKMAN,{
 OnStop:
 	disablenpc "Member#mao4";
 	end;
-	
+
 OnEnter:
 	enablenpc "Member#mao4";
 	end;
@@ -9971,7 +9954,7 @@ morocc,1,1,1	script	#mao_timer	-1,{
 OnStart:
 	initnpctimer;
 	end;
-	
+
 OnTimer300000:
 OnStop:
 	donpcevent "Member#mao1::OnEnter";
@@ -9987,7 +9970,7 @@ morocc,1,2,1	script	#mao_manager	-1,{
 OnStart:
 	initnpctimer;
 	end;
-	
+
 OnStop:
 	killmonster "morocc","#mao_manager::OnMyMobDead";
 	donpcevent "Member#mao1::OnEnter";
@@ -9996,27 +9979,27 @@ OnStop:
 	donpcevent "Member#mao4::OnEnter";
 	stopnpctimer;
 	end;
-	
+
 OnTimer300000:
 	mapannounce "morocc","How dare... you... interrupt... the holy ritual...",1,0x7B68EE;
 	end;
-	
+
 OnTimer305000:
 	mapannounce "morocc","...The seal... no... it won't... it's not...",1,0x7B68EE;
 	end;
-	
+
 OnTimer310000:
 	mapannounce "morocc","...Accursed humans... interfering with... my revival...",1,0x7B68EE;
 	end;
-	
+
 OnTimer315000:
 	mapannounce "morocc","...Take this... blessing... of blood... Accept your.... death...",1,0x7B68EE;
 	end;
-	
+
 OnTimer320000:
 	mapannounce "morocc","...Beg for... my forgiveness... in the afterlife...!",1,0x7B68EE;
 	end;
-	
+
 OnTimer325000:
 	mapannounce "morocc","???: Morroc Satan's angry! Oh Freya, please protect us from the evil being...",1,0x7B68EE;
 	monster "morocc",163,185,"Satan's Wrath",1041,1,"#mao_manager::OnMyMobDead";
@@ -10030,7 +10013,7 @@ OnTimer325000:
 	monster "morocc",157,191,"Satan's Wrath",1041,1,"#mao_manager::OnMyMobDead";
 	monster "morocc",155,191,"Satan's Wrath",1041,1,"#mao_manager::OnMyMobDead";
 	end;
-	
+
 OnTimer327000:
 	monster "morocc",163,194,"Satan's Despair",1041,1,"#mao_manager::OnMyMobDead";
 	monster "morocc",161,194,"Satan's Despair",1041,1,"#mao_manager::OnMyMobDead";
@@ -10048,7 +10031,7 @@ OnTimer327000:
 	monster "morocc",157,200,"Satan's Wrath",1041,1,"#mao_manager::OnMyMobDead";
 	monster "morocc",155,200,"Satan's Wrath",1041,1,"#mao_manager::OnMyMobDead";
 	end;
-	
+
 OnTimer329000:
 	announce "Kafra Pavianne: This is the Morroc Kafra Branch! The m-monsters are... Aaaaahhh!",bc_all,0x70DBDB;
 	monster "morocc",163,203,"Satan's Wrath",1154,1,"#mao_manager::OnMyMobDead";
@@ -10067,7 +10050,7 @@ OnTimer329000:
 	monster "morocc",157,209,"Satan's Wrath",1154,1,"#mao_manager::OnMyMobDead";
 	monster "morocc",155,209,"Satan's Wrath",1154,1,"#mao_manager::OnMyMobDead";
 	end;
-	
+
 OnTimer331000:
 	monster "morocc",163,212,"Satan's Wrath",1154,1,"#mao_manager::OnMyMobDead";
 	monster "morocc",161,212,"Satan's Wrath",1154,1,"#mao_manager::OnMyMobDead";
@@ -10080,7 +10063,7 @@ OnTimer331000:
 	monster "morocc",157,212,"Satan's Wrath",1154,1,"#mao_manager::OnMyMobDead";
 	monster "morocc",155,212,"Satan's Wrath",1154,1,"#mao_manager::OnMyMobDead";
 	end;
-	
+
 OnTimer333000:
 	monster "morocc",138,162,"Satan's Wrath",1041,1,"#mao_manager::OnMyMobDead";
 	monster "morocc",140,162,"Satan's Wrath",1041,1,"#mao_manager::OnMyMobDead";
@@ -10126,7 +10109,7 @@ OnTimer333000:
 	monster "morocc",178,160,"Satan's Wrath",1154,1,"#mao_manager::OnMyMobDead";
 	monster "morocc",180,160,"Satan's Wrath",1154,1,"#mao_manager::OnMyMobDead";
 	end;
-	
+
 OnTimer335000:
 	monster "morocc",138,158,"Satan's Despair",1041,1,"#mao_manager::OnMyMobDead";
 	monster "morocc",140,158,"Satan's Despair",1041,1,"#mao_manager::OnMyMobDead";
@@ -10152,7 +10135,7 @@ OnTimer335000:
 	monster "morocc",0,0,"Satan's Despair",1041,20,"#mao_manager::OnMyMobDead";
 	monster "morocc",0,0,"Satan's Wrath",1041,20,"#mao_manager::OnMyMobDead";
 	end;
-	
+
 OnTimer1800000:
 	killmonster "morocc","#mao_manager::OnMyMobDead";
 	donpcevent "Member#mao1::OnEnter";
@@ -10161,7 +10144,7 @@ OnTimer1800000:
 	donpcevent "Member#mao4::OnEnter";
 	stopnpctimer;
 	end;
-	
+
 OnMyMobDead:
 	end;
 }
@@ -10252,23 +10235,22 @@ sec_in02,38,162,0	script	Morroc Invasion Manager	4_F_SITDOWN,{
 					mes "must be completed 1 more";
 					mes "time before the Satan Morroc";
 					mes "invasion can be triggered.";
-					set $maoattack,49;
+					$maoattack = 49;
 					close;
 
 				case 2:
 					mes "The GlobalVar has been";
 					mes "set to 50. The Satan Morroc";
 					mes "invasion can now be triggered.";
-					set $maoattack,50;
+					$maoattack = 50;
 					close;
-				
 				case 3:
 					mes "The GlobalVar has been";
 					mes "set to 0. The Lin Quest";
 					mes "must be completed 1 more";
 					mes "time before the Satan Morroc";
 					mes "invasion can be triggered.";
-					set $maoattack,0;
+					$maoattack = 0;
 					close;
 			}
 

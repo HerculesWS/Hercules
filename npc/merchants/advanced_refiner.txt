@@ -35,20 +35,20 @@ payon,157,146,6	script	Suhnbi#cash	4_M_03,{
 	next;
 
 	setarray .@position$[1], "Head","Body","Left hand","Right hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
-	set .@menu$,"";
-	for(set .@i,1; .@i<=10; set .@i,.@i+1) {
+	.@menu$ = "";
+	for(.@i = 1; .@i<=10; ++.@i) {
 		if (getequipisequiped(.@i)) {
-			set .@menu$, .@menu$ + .@position$[.@i] + "-" + "[" + getequipname(.@i) + "]";
-			set .@equipped,1;
+			.@menu$ += .@position$[.@i] + "-" + "[" + getequipname(.@i) + "]";
+			.@equipped = 1;
 		}
-		set .@menu$, .@menu$ + ":";
+		.@menu$ += ":";
 	}
 	if (.@equipped == 0) {
 		mes "[Suhnbi]";
 		mes "I don't think I can refine any items you have...";
 		close;
 	}
-	set .@part, select(.@menu$);
+	.@part = select(.@menu$);
 
 	if (!getequipisequiped(.@part)) //custom check
 		close;

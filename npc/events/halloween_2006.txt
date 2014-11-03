@@ -296,7 +296,7 @@ geffen,145,132,3	script	Hoirin#06_hw	4_F_NOVICE,{
 			mes "[Hoirin]";
 			mes "Just Bring Pumpkin Mojo, Pumpkin, and a Egg.";
 			mes "Leave the rest for me..You'll get to try the best pumkin pie!";
-			set halloween, 100;
+			halloween = 100;
 			close;
 		}
 		mes "[Hoirin]";
@@ -355,7 +355,7 @@ geffen,145,132,3	script	Hoirin#06_hw	4_F_NOVICE,{
 				if (select("Send me.:It's ok.") == 1) {
 					mes "[Hoirin]";
 					mes "Ok, go get the eggs.";
-					set halloween, 101;
+					halloween = 101;
 					close2;
 					warp "nif_fild01", 162, 113;
 					end;
@@ -434,7 +434,7 @@ nif_in,19,32,3	script	Deviruchi#06_hw	4_DEVIRUCHI,{
 			mes "Hmm...This would be good.";
 			mes "Here take this, and thanks again~";
 			delitem 12192, 1;//Pumpkin_Pie
-			set @hw_temp,rand(1,3);
+			@hw_temp = rand(1,3);
 			if (@hw_temp == 2) getitem 12130,1; //Cookie_Bag
 			else getitem 7460,3; //Nifl_Express_Ticket
 			close;
@@ -518,7 +518,7 @@ nif_fild01,165,115,3	script	Chicken Masta#06_hw	4_M_NFDEADMAN2,{
 					mes "Thanks.";
 					mes "Here are the eggs.";
 					Zeny -= 2000;
-					set halloween, 102;
+					halloween = 102;
 					getitem 574,2; //Egg
 					close;
 				}
@@ -534,7 +534,7 @@ nif_fild01,165,115,3	script	Chicken Masta#06_hw	4_M_NFDEADMAN2,{
 					mes "Thanks.";
 					mes "Here are the eggs.";
 					Zeny -= 1000;
-					set halloween, 102;
+					halloween = 102;
 					getitem 574,1; //Egg
 					close;
 				}
@@ -614,7 +614,7 @@ nif_fild01,165,115,3	script	Chicken Masta#06_hw	4_M_NFDEADMAN2,{
 			else
 				break;
 		}
-		set .@hw_egg, .@input * 1000;
+		.@hw_egg = .@input * 1000;
 		if (Zeny < @hw_egg) {
 			mes "[Chicken Masta]";
 			mes "You don't seem to have enough zeny.";
@@ -626,7 +626,7 @@ nif_fild01,165,115,3	script	Chicken Masta#06_hw	4_M_NFDEADMAN2,{
 		mes "If you want more eggs, find me more chickens.";
 		Zeny -= @hw_egg;
 		getitem 574, @input;//Egg
-		set halloween, 102;
+		halloween = 102;
 		close;
 	}
 	else {
@@ -656,7 +656,7 @@ nif_fild01,167,113,3	script	Masta's chicken#06_hw01	4_NFCOCK,{
 			emotion e_omg;
 			specialeffect EF_TELEPORTATION;
 			mes "The magic spell has been casted.";
-			set halloween, 103;
+			halloween = 103;
 			disablenpc "Masta's chicken#"+strnpcinfo(1);
 			close2;
 			sleep 180000;
@@ -676,7 +676,7 @@ nif_fild01,167,113,3	script	Masta's chicken#06_hw01	4_NFCOCK,{
 }
 
 -	script	HwChicken2::HwChicken2	-1,{
-	set @egg_temp,rand(1,4);
+	@egg_temp = rand(1,4);
 	if( @egg_temp == 3) {
 		mes "As soon as you got close to the chicken and touched it, it disappeared completely.";
 		mes "You got an 'egg' in the place where the chicken disappeared.";
@@ -692,7 +692,7 @@ nif_fild01,167,113,3	script	Masta's chicken#06_hw01	4_NFCOCK,{
 }
 
 -	script	HwChicken3::HwChicken3	-1,{
-	set @egg_temp,rand(1,4);
+	@egg_temp = rand(1,4);
 	if( @egg_temp == 3) {
 		mes "As soon as you got close to the chicken and touched it, it disappeared completely.";
 		mes "You got an 'egg' in the place where the chicken disappeared.";

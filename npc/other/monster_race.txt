@@ -30,7 +30,7 @@ hugel,51,61,0	script	#race_timer1-1	-1,{
 OnInit:
 OnEnable:
 	enablenpc "#race_timer1-1";
-	set $@mon_time_1_1,2;
+	$@mon_time_1_1 = 2;
 	initnpctimer;
 	end;
 
@@ -45,7 +45,7 @@ OnTimer10000:
 
 OnTimer30000:
 	mapannounce "hugel","The Single Monster Race Arena has just opened.",bc_map,"0x87ceeb";
-	set $@mon_time_1_1,1;
+	$@mon_time_1_1 = 1;
 	donpcevent "Race Progress Timer::OnEnable";
 	end;
 
@@ -67,7 +67,7 @@ OnTimer272000:
 
 OnTimer330000:
 	mapannounce "hugel","The race is now starting. If you missed your chance to enter this race, please try again next time~!",bc_map,"0x87ceeb";
-	set $@mon_time_1_1,0;
+	$@mon_time_1_1 = 0;
 	donpcevent "#race_timer1-1::OnDisable";
 	stopnpctimer;
 	end;
@@ -77,9 +77,9 @@ p_track01,58,0,0	script	Race Progress Timer	-1,{
 OnEnable:
 	enablenpc "Race Progress Timer";
 	initnpctimer;
-	for (set .@i, 1; .@i <= 6; set .@i, .@i + 1)
+	for (.@i = 1; .@i <= 6; ++.@i)
 		enablenpc "starting#"+.@i;
-	set .@c, 1;
+	.@c = 1;
 	while (.@c <= 6) {
 		setd ".@line_"+.@c,rand(1,70);
 		if (getd(".@line_"+.@c) <= 10) {
@@ -109,29 +109,29 @@ OnEnable:
 			enablenpc "Luk"+.@c+"#2";
 			set getd(".@tired"+.@c),rand(20,40);
 			setd "$@mr_1_tire"+.@c,getd(".@tired"+.@c);
-			for (set .@i, 1; .@i <= 3; set .@i, .@i + 1)
+			for (.@i = 1; .@i <= 3; ++.@i)
 				enablenpc "Tire"+.@c+"#"+.@i;
 			if (getd(".@tired"+.@c) < 30) enablenpc "Tire"+.@c+"#4";
 		} else if (getd(".@line_"+.@c)) <= 60 {
 			setd "$@mr_1_luk"+.@c,getd(".@line_"+.@c);
-			for (set .@i, 1; .@i <= 3; set .@i, .@i + 1)
+			for (.@i = 1; .@i <= 3; ++.@i)
 				enablenpc "Luk"+.@c+"#"+.@i;
 			set getd(".@tired"+.@c),rand(10,30);
 			setd "$@mr_1_tire"+.@c,getd(".@tired"+.@c);
-			for (set .@i, 1; .@i <= 4; set .@i, .@i + 1)
+			for (.@i = 1; .@i <= 4; ++.@i)
 				enablenpc "Tire"+.@c+"#"+.@i;
 			if (getd(".@tired"+.@c) < 20) enablenpc "Tire"+.@c+"#5";
 		} else if (getd(".@line_"+.@c) <= 70) {
 			setd "$@mr_1_luk"+.@c,getd(".@line_"+.@c);
-			for (set .@i, 1; .@i <= 4; set .@i, .@i + 1)
+			for (.@i = 1; .@i <= 4; ++.@i)
 				enablenpc "Luk"+.@c+"#"+.@i;
 			set getd(".@tired"+.@c),rand(0,20);
 			setd "$@mr_1_tire"+.@c,getd(".@tired"+.@c);
-			for (set .@i, 1; .@i <= 5; set .@i, .@i + 1)
+			for (.@i = 1; .@i <= 5; ++.@i)
 				enablenpc "Tire"+.@c+"#"+.@i;
 			if (getd(".@tired"+.@c) < 10) enablenpc "Tire"+.@c+"#6";
 		}
-		set .@c, .@c + 1;
+		++.@c;
 	}
 	end;
 
@@ -170,10 +170,10 @@ OnTimer243000:
 
 OnTimer300000:
 	mapannounce "p_track01","The Monster Race has already begun. Good luck to all the participants.",bc_map,"0xffb6c1";
-	set $@mon_time_1_1,0;
-	set $@monster_race,0;
+	$@mon_time_1_1 = 0;
+	$@monster_race = 0;
 	disablenpc "Ticket Helper#single";
-	for (set .@i, 1; .@i <= 6; set .@i, .@i + 1)
+	for (.@i = 1; .@i <= 6; ++.@i)
 		donpcevent "Runner No. "+.@i+"::OnEnable";
 	stopnpctimer;
 	end;
@@ -201,11 +201,11 @@ p_track01,73,22,1	script	Ticket Helper#single	4_M_HUMAN_02,{
 		mes "too many things...";
 		close;
 	}
-	for (set .@i, 1; .@i <= 6; set .@i, .@i + 1)
-		set .@m$, .@m$ + "Monster "+.@i+":";
-	set .@m, select ("Monster Status:"+.@m$) - 1;
+	for (.@i = 1; .@i <= 6; ++.@i)
+		.@m$ += "Monster "+.@i+":";
+	.@m = select ("Monster Status:"+.@m$) - 1;
 	if (!.@m) {
-		for (set .@i, 1; .@i <= 6; set .@i, .@i + 1)
+		for (.@i = 1; .@i <= 6; ++.@i)
 			mes "Monster "+.@i+" [^CC6600Luck^000000: " + getd("$@mr_1_luk"+.@i) + "] [^EE0000HP^000000: " + getd("$@mr_1_tire"+.@i) + "]";
 		close;
 	} else {
@@ -227,7 +227,7 @@ p_track01,73,22,1	script	Ticket Helper#single	4_M_HUMAN_02,{
 			mes "announced. If the monster you";
 			mes "picked wins, then please use this ticket to redeem your prize.";
 			getitem 7514,1; //Monster_Ticket
-			set monster_race_1,.@m;
+			monster_race_1 = .@m;
 			close;
 		}
 		mes "[Ticket Helper]";
@@ -259,9 +259,9 @@ OnDisable:
 
 OnTouchNPC:
 	initnpctimer;
-	set .@n, WN(0);
-	set $@monster_race,.@n;
-	for (set .@i, 1; .@i <= 6; set .@i, .@i + 1) {
+	.@n = WN(0);
+	$@monster_race = .@n;
+	for (.@i = 1; .@i <= 6; ++.@i) {
 		if (.@n == .@i) continue;
 		donpcevent "Runner No. "+.@i+"::OnDisable";
 	}
@@ -291,7 +291,7 @@ OnTimer9000:
 	end;
 	
 	function	WN	{
-		set .@n, charat(strnpcinfo(0),getstrlen(strnpcinfo(0))-1);
+		.@n = charat(strnpcinfo(0),getstrlen(strnpcinfo(0))-1);
 		if (!getarg(0)) return .@n;
 		return ((.@n <= 3)?((.@n == 1)?"1st":((.@n == 2)?"2nd":"3rd")):.@n+"th");
 	}
@@ -317,7 +317,7 @@ p_track01,67,45,5	script	Medal Distributor#single	4_F_RACING,{
 		mes "available in your Inventory.";
 		close;
 	}
-	set .@insa,rand(1,1000);
+	.@insa = rand(1,1000);
 	if (countitem(7514)) {
 		mes "[Medal Distributor]";
 		mes "Hello there~";
@@ -389,7 +389,7 @@ p_track01,67,45,5	script	Medal Distributor#single	4_F_RACING,{
 						mes "Wayne in Hugel for some";
 						mes "interesting items. Thank you~";
 						delitem 7514,1; //Monster_Ticket
-						set monster_race_1,0;
+						monster_race_1 = 0;
 						getitem 7515,4; //Marvelous_Medal
 						close;
 					}
@@ -478,25 +478,25 @@ OnTimer249000:
 
 OnTimer252000:
 	mapannounce "p_track01","We hope that you enjoyed the Monster Race arena. Come back again soon~",bc_map,"0xFFFF00";
-	for (set .@i, 1; .@i <= 6; set .@i, .@i + 1) {
+	for (.@i = 1; .@i <= 6; ++.@i) {
 		donpcevent "starting#"+.@i+"::OnDisable";
 		setd "$@mr_1_luk"+.@i,0;
 		setd "$@mr_1_tire"+.@i,0;
 	}
-	set .@c, 1;
+	.@c = 1;
 	while (.@c <= 6) {
-		for (set .@i, 1; .@i <= 6; set .@i, .@i + 1) {
+		for (.@i = 1; .@i <= 6; ++.@i) {
 			disablenpc "Tire"+.@c+"#"+.@i;
 			disablenpc "Luk"+.@c+"#"+.@i;
 		}
-		set .@c, .@c + 1;
+		++.@c;
 	}
 	end;
 
 OnTimer300000:
 	donpcevent "#race_timer1-1::OnEnable";
-	set $@mon_time_1_1,2;
-	set $@monster_race,0;
+	$@mon_time_1_1 = 2;
+	$@monster_race = 0;
 	mapwarp "p_track01","hugel",63,73;
 	end;
 
@@ -552,7 +552,7 @@ p_track01,76,36,1	script	Exit Guide#single	4_M_NFMAN,{
 		mes "here in the Monster Race Arena.";
 		delitem 7514,1; //Monster_Ticket
 	}
-	set monster_race_1,0;
+	monster_race_1 = 0;
 	close2;
 	warp "hugel",63,73;
 	end;
@@ -658,7 +658,7 @@ hugel,58,72,6	script	Eckar Ellebird#single	4_M_NFMAN,{
 			mes "Let me guide you inside";
 			mes "the Monster Race Arena now.";
 			Zeny -= 2000;
-			set monster_race_1,0;
+			monster_race_1 = 0;
 			close2;
 			warp "p_track01",75,41;
 			end;
@@ -679,7 +679,7 @@ hugel,58,72,6	script	Eckar Ellebird#single	4_M_NFMAN,{
 			mes "Let me guide you now";
 			mes "to the Monster Race Arena.";
 			Zeny -= 2000;
-			set monster_race_1,0;
+			monster_race_1 = 0;
 			close2;
 			warp "p_track01",75,41;
 			end;
@@ -716,7 +716,7 @@ hugel,58,72,6	script	Eckar Ellebird#single	4_M_NFMAN,{
 			mes "I hope you enjoy";
 			mes "watching this race!";
 			Zeny -= 500;
-			set monster_race_1,0;
+			monster_race_1 = 0;
 			close2;
 			warp "p_track01",75,41;
 			end;
@@ -843,26 +843,26 @@ p_track01,39,49,3	script	Game Guide#single	4_F_RACING,{
 
 -	script	starting_1	-1,{
 OnDisable:
-	for(set .@i,1; .@i<7; set .@i,.@i+1)
+	for(.@i = 1; .@i<7; ++.@i)
 		enablenpc "Luk1#"+.@i;
-	for(set .@i,1; .@i<7; set .@i,.@i+1)
+	for(.@i = 1; .@i<7; ++.@i)
 		enablenpc "Tire1#"+.@i;
 	setd "$@mr_1_luk"+strnpcinfo(2),0;
 	setd "$@mr_1_tire"+strnpcinfo(2),0;
 	end;
 
 OnTouchNPC:
-	set .@start,rand(1,100);
-	if (.@start < 11) set .@speed,60;
-	else if (.@start < 21) set .@speed,70;
-	else if (.@start < 31) set .@speed,80;
-	else if (.@start < 41) set .@speed,90;
-	else if (.@start < 51) set .@speed,100;
-	else if (.@start < 61) set .@speed,110;
-	else if (.@start < 71) set .@speed,120;
-	else if (.@start < 81) set .@speed,130;
-	else if (.@start < 91) set .@speed,140;
-	else set .@speed,150;
+	.@start = rand(1,100);
+	if (.@start < 11) .@speed = 60;
+	else if (.@start < 21) .@speed = 70;
+	else if (.@start < 31) .@speed = 80;
+	else if (.@start < 41) .@speed = 90;
+	else if (.@start < 51) .@speed = 100;
+	else if (.@start < 61) .@speed = 110;
+	else if (.@start < 71) .@speed = 120;
+	else if (.@start < 81) .@speed = 130;
+	else if (.@start < 91) .@speed = 140;
+	else .@speed = 150;
 	sc_start SC_WALKSPEED,5000,.@speed;
 	end;
 	
@@ -874,12 +874,12 @@ OnInit:
 
 -	script	Luk_1	-1,{
 OnTouchNPC:
-	set .@start,rand(1,100);
-	if (.@start < 61) set .@speed,110;
-	else if (.@start < 71) set .@speed,120;
-	else if (.@start < 81) set .@speed,130;
-	else if (.@start < 91) set .@speed,140;
-	else set .@speed,150;
+	.@start = rand(1,100);
+	if (.@start < 61) .@speed = 110;
+	else if (.@start < 71) .@speed = 120;
+	else if (.@start < 81) .@speed = 130;
+	else if (.@start < 91) .@speed = 140;
+	else .@speed = 150;
 	sc_start SC_WALKSPEED,10000,.@speed;
 	end;
 	
@@ -890,11 +890,11 @@ OnInit:
 
 -	script	Luk_2	-1,{
 OnTouchNPC:
-	set .@start,rand(1,100);
-	if (.@start < 61) set .@time,1000;
-	else if (.@start < 71) set .@time,2000;
-	else if (.@start < 81) set .@time,3000;
-	else if (.@start < 91) set .@time,4000;
+	.@start = rand(1,100);
+	if (.@start < 61) .@time = 1000;
+	else if (.@start < 71) .@time = 2000;
+	else if (.@start < 81) .@time = 3000;
+	else if (.@start < 91) .@time = 4000;
 	if (.@time) sc_start SC_STUN,.@time,0;
 	end;
 	
@@ -905,11 +905,11 @@ OnInit:
 
 -	script	Tire_1	-1,{
 OnTouchNPC:
-	set .@start,rand(1,100);
-	if (.@start < 61) set .@time,1000;
-	else if (.@start < 71) set .@time,2000;
-	else if (.@start < 81) set .@time,3000;
-	else if (.@start < 91) set .@time,4000;
+	.@start = rand(1,100);
+	if (.@start < 61) .@time = 1000;
+	else if (.@start < 71) .@time = 2000;
+	else if (.@start < 81) .@time = 3000;
+	else if (.@start < 91) .@time = 4000;
 	if (.@time) sc_start SC_SLEEP,.@time,0;
 	end;
 	
@@ -1005,7 +1005,7 @@ p_track01,47,28,0	duplicate(Tire_1)	Tire6#6	-1,0,0
 hugel,47,56,0	script	#race_timer2-1	-1,{
 OnEnable:
 	enablenpc "#race_timer2-1";
-	set $@mon_time_2_1,2;
+	$@mon_time_2_1 = 2;
 	initnpctimer;
 	end;
 
@@ -1020,7 +1020,7 @@ OnTimer10000:
 
 OnTimer30000:
 	mapannounce "hugel","The Dual Monster Race Arena has just opened.",bc_map,"0xffb6c1";
-	set $@mon_time_2_1,1;
+	$@mon_time_2_1 = 1;
 	donpcevent "#race_timer2-2::OnEnable";
 	enablenpc "Ticket Helper#2";
 	donpcevent "TrapGlobal#race02::OnEnable";
@@ -1044,14 +1044,14 @@ OnTimer272000:
 
 OnTimer330000:
 	mapannounce "hugel","The race is now starting. If you missed your chance to enter this race, please try again next time~!",bc_map,"0xffb6c1";
-	set $@mon_time_2_1,0;
+	$@mon_time_2_1 = 0;
 	donpcevent "#race_timer2-1::OnDisable";
 	stopnpctimer;
 	end;
 	
 OnInit:
 	enablenpc "#race_timer2-1";
-	set $@mon_time_2_1,2;
+	$@mon_time_2_1 = 2;
 	initnpctimer;
 	end;
 }
@@ -1059,7 +1059,7 @@ OnInit:
 p_track02,42,23,0	script	#race_timer2-2	-1,{
 OnEnable:
 	enablenpc "#race_timer2-2";
-	set $@mon_time_2_2,0;
+	$@mon_time_2_2 = 0;
 	initnpctimer;
 	end;
 
@@ -1094,9 +1094,9 @@ OnTimer242000:
 
 OnTimer300000:
 	mapannounce "p_track02","The Monster Race is starting now. Good luck, everybody!",bc_map,"0x87ceeb";
-	set $@mon_time_2_2,1;
-	set $@mon_race_2_1,0;
-	set $@mon_race_2_2,0;
+	$@mon_time_2_2 = 1;
+	$@mon_race_2_1 = 0;
+	$@mon_race_2_2 = 0;
 	disablenpc "Ticket Helper#2";
 	donpcevent "#poring1::OnEnable";
 	donpcevent "#lunatic1::OnEnable";
@@ -1109,7 +1109,7 @@ OnTimer300000:
 	
 OnInit:
 	disablenpc "#race_timer2-2";
-	set $@mon_time_2_2,0;
+	$@mon_time_2_2 = 0;
 	end;
 }
 
@@ -1172,8 +1172,8 @@ OnTimer300000:
 	mapwarp "p_track02","hugel",63,73;
 	disablenpc "Medal Distributor#medal";
 	donpcevent "#race_timer2-1::OnEnable";
-	set $@mon_race_2_1,0;
-	set $@mon_race_2_2,0;
+	$@mon_race_2_1 = 0;
+	$@mon_race_2_2 = 0;
 	donpcevent "#race_timer2-3::OnDisable";
 	stopnpctimer;
 	end;
@@ -1282,8 +1282,8 @@ hugel,62,69,1	script	Eckar Erenes#double	4_M_NFMAN,{
 			mes "Let me guide you inside";
 			mes "the Monster Race Arena now.";
 			Zeny -= 2000;
-			set monster_race_2_1,0;
-			set monster_race_2_2,0;
+			monster_race_2_1 = 0;
+			monster_race_2_2 = 0;
 			close2;
 			warp "p_track02",75,41;
 			end;
@@ -1305,8 +1305,8 @@ hugel,62,69,1	script	Eckar Erenes#double	4_M_NFMAN,{
 			mes "Let me guide you now";
 			mes "to the Monster Race Arena.";
 			Zeny -= 2000;
-			set monster_race_2_1,0;
-			set monster_race_2_2,0;
+			monster_race_2_1 = 0;
+			monster_race_2_2 = 0;
 			close2;
 			warp "p_track02",75,41;
 			end;
@@ -1343,8 +1343,8 @@ hugel,62,69,1	script	Eckar Erenes#double	4_M_NFMAN,{
 			mes "I hope you enjoy";
 			mes "watching this race!";
 			Zeny -= 500;
-			set monster_race_2_1,0;
-			set monster_race_2_2,0;
+			monster_race_2_1 = 0;
+			monster_race_2_2 = 0;
 			close2;
 			warp "p_track02",75,41;
 			end;
@@ -1400,7 +1400,7 @@ p_track02,73,22,1	script	Ticket Helper#2	4_M_HUMAN_02,{
 		next;
 		switch(select("Check Monster Status:Wager on Race:Monster Race?:Cancel")) {
 		case 1:
-			for (set .@i, 1; .@i <= 6; set .@i, .@i + 1)
+			for (.@i = 1; .@i <= 6; ++.@i)
 				mes "Monster "+.@i+" [^CC6600Luck^000000: " + getd("$@mon_r02_Luk"+.@i) + "] [^EE0000HP^000000: " + getd("$@mon_r02_tire"+.@i) + "]";
 			close;
 		case 2:
@@ -1419,11 +1419,10 @@ p_track02,73,22,1	script	Ticket Helper#2	4_M_HUMAN_02,{
 			mes "will win this race.";
 			next;
 			while (1) {
-				set .@m$, "";
-				for (set .@i, 1; .@i <= 6; set .@i, .@i + 1)
-					set .@m$, .@m$ + ((.@i != .@m1)?"Monster "+.@i:"")+":";
-				set .@m, 0;
-				set .@m, select (.@m$);
+				.@m$ = "";
+				for (.@i = 1; .@i <= 6; ++.@i)
+					.@m$ += ((.@i != .@m1)?"Monster "+.@i:"")+":";
+				.@m = select (.@m$);
 				switch (.@m) {
 					case 1: setarray .@w$, "a friendly","Poring type monster"; break;
 					case 2: setarray .@w$, "an adorable","Lunatic type monster"; break;
@@ -1456,7 +1455,7 @@ p_track02,73,22,1	script	Ticket Helper#2	4_M_HUMAN_02,{
 					mes "you think will place";
 					mes "1st or 2nd in this race.";
 					next;
-					set .@m1, .@m;
+					.@m1 = .@m;
 				} else {
 					if (!$@mon_time_2_2) {
 						mes "[Ticket Helper]";
@@ -1466,8 +1465,8 @@ p_track02,73,22,1	script	Ticket Helper#2	4_M_HUMAN_02,{
 						mes "I really hope that the odds";
 						mes "work out in your favor~";
 						emotion e_kis;
-						set monster_race_2_1,.@m1;
-						set monster_race_2_2,.@m;
+						monster_race_2_1 = .@m1;
+						monster_race_2_2 = .@m;
 						getitem 7514,1; //Monster_Ticket
 						close;
 					} else {
@@ -1710,8 +1709,8 @@ p_track02,67,45,5	script	Medal Distributor#medal	4_F_RACING,{
 			mes "visit Wayne in Hugel. We hope";
 			mes "you enjoyed the Monster Race~";
 			delitem 7514,1; //Monster_Ticket
-			set monster_race_2_1,7;
-			set monster_race_2_2,7;
+			monster_race_2_1 = 7;
+			monster_race_2_2 = 7;
 			getitem 7515,15; //Marvelous_Medal
 			close;
 		}
@@ -1788,8 +1787,8 @@ p_track02,76,38,1	script	Exit Guide#double	4_M_NFMAN,{
 		mes "here in the Monster Race Arena.";
 		delitem 7514,1; //Monster_Ticket
 	}
-	set monster_race_2_1,0;
-	set monster_race_2_2,0;
+	monster_race_2_1 = 0;
+	monster_race_2_2 = 0;
 	close2;
 	warp "hugel",63,73;
 	end;
@@ -1801,7 +1800,7 @@ OnEnable:
 	enablenpc strnpcinfo(0);
 	setarray .@n[1], 1725,1726,1727,1728,1730,1729;
 	getmapxy(.@m$,.@x,.@y,1);
-	set .@i, MN;
+	.@i = MN;
 	monster "p_track02",58,.@y,"Monster "+.@i,.@n[.@i],1,strnpcinfo(0)+"::OnMyMobDead";
 	end;
 
@@ -1811,18 +1810,18 @@ OnDisable:
 	end;
 
 OnTouchNPC:
-	set .@i, MN;
+	.@i = MN;
 	if (!$@mon_race_2_1) {
 		emotion e_lv;
 		specialeffect EF_MVP;
 		mapannounce "p_track02","Monster "+.@i+" has reached the Finish Line!",bc_map,"0x66FFCC";
-		set $@mon_race_2_1,1;
+		$@mon_race_2_1 = 1;
 		donpcevent strnpcinfo(0)+"::OnDisable";
 	} else {
 		emotion e_lv;
 		specialeffect EF_MVP;
 		mapannounce "p_track02","The race is over! Monster "+.@i+" has reached the Finish Line!",bc_map,"0x66FFCC";
-		set $@mon_race_2_2,1;
+		$@mon_race_2_2 = 1;
 		donpcevent "#poring1::OnDisable";
 		donpcevent "#lunatic1::OnDisable";
 		donpcevent "#savagebebe1::OnDisable";
@@ -1840,7 +1839,7 @@ OnMyMobDead:
 	
 	function	MN	{
 		setarray .@n$[1], "poring","lunatic","savagebebe","desertwolf","deviruchi","baphomet";
-		for (set .@i, 1; .@i <= getarraysize(.@n$); set .@i, .@i + 1) {
+		for (.@i = 1; .@i <= getarraysize(.@n$); ++.@i) {
 			if (compare(strnpcinfo(0),.@n$[.@i]))
 				break;
 		}
@@ -1862,9 +1861,9 @@ p_track02,30,28,0	duplicate(mob1#main)	#baphomet1	HIDDEN_WARP_NPC,0,0
 p_track02,19,48,0	script	TrapGlobal#race02	-1,{
 OnEnable:
 	enablenpc "TrapGlobal#race02";
-	for (set .@i, 1; .@i <= 6; set .@i, .@i + 1)
+	for (.@i = 1; .@i <= 6; ++.@i)
 		enablenpc "starting#race02_"+.@i;
-	set .@c, 1;
+	.@c = 1;
 	while (.@c <= 6) {
 		setd ".@line_"+.@c,rand(1,70);
 		if (getd(".@line_"+.@c) <= 10) {
@@ -1895,40 +1894,40 @@ OnEnable:
 			enablenpc "Luk#race02_"+.@c+"_2";
 			setd ".@tired_"+.@c,rand(20,40);
 			setd "$@mon_r02_tire"+.@c,getd(".@tired_"+.@c);
-			for (set .@i, 1; .@i <= 3; set .@i, .@i + 1)
+			for (.@i = 1; .@i <= 3; ++.@i)
 				enablenpc "Tire#race02_"+.@c+"_"+.@i;
 			if (getd(".@tired_"+.@c) < 30) enablenpc "Tire#race02_"+.@c+"_4";
 		} else if (getd(".@line_"+.@c) <= 60) {
 			setd "$@mon_r02_luk"+.@c,getd(".@line_"+.@c);
-			for (set .@i, 1; .@i <= 3; set .@i, .@i + 1)
+			for (.@i = 1; .@i <= 3; ++.@i)
 				enablenpc "Luk#race02_"+.@c+"_"+.@i;
 			setd ".@tired_"+.@c,rand(10,30);
 			setd "$@mon_r02_tire"+.@c,getd(".@tired_"+.@c);
-			for (set .@i, 1; .@i <= 4; set .@i, .@i + 1)
+			for (.@i = 1; .@i <= 4; ++.@i)
 				enablenpc "Tire#race02_"+.@c+"_"+.@i;
 			if (getd(".@tired_"+.@c) < 20) enablenpc "Tire#race02_"+.@c+"_5";
 		}	else if (getd(".@line_"+.@c) <= 70) {
 			setd "$@mon_r02_luk"+.@c,getd(".@line_"+.@c);
-			for (set .@i, 1; .@i <= 4; set .@i, .@i + 1)
+			for (.@i = 1; .@i <= 4; ++.@i)
 				enablenpc "Luk#race02_"+.@c+"_"+.@i;
 			setd ".@tired_"+.@c,rand(0,20);
 			setd "$@mon_r02_tire"+.@c,getd(".@tired_"+.@c);
-			for (set .@i, 1; .@i <= 5; set .@i, .@i + 1)
+			for (.@i = 1; .@i <= 5; ++.@i)
 				enablenpc "Tire#race02_"+.@c+"_"+.@i;
 			if (getd(".@tired_"+.@c) < 10) enablenpc "Tire#race02_"+.@c+"_6";
 		}
-		set .@c, .@c + 1;
+		++.@c;
 	}
 	end;
 
 OnDisable:
 	disablenpc "TrapGlobal#race02";
-	for (set .@i, 1; .@i <= 6; set .@i, .@i + 1)
+	for (.@i = 1; .@i <= 6; ++.@i)
 		donpcevent "starting#race02_"+.@i+"::OnDisable";
 	end;
 	
 OnInit:
-	for (set .@i, 1; .@i <= 6; set .@i, .@i + 1) {
+	for (.@i = 1; .@i <= 6; ++.@i) {
 		setd "$@mon_r02_luk"+.@i,0;
 		setd "$@mon_r02_tire"+.@i,0;
 	}
@@ -1938,24 +1937,24 @@ OnInit:
 -	script	starting_2	-1,{
 OnDisable:
 	disablenpc strnpcinfo(0);
-	for(set .@i,1; .@i<7; set .@i,.@i+1)
+	for(.@i = 1; .@i<7; ++.@i)
 		disablenpc "Luk#"+strnpcinfo(2)+"_"+.@i;
-	for(set .@i,1; .@i<7; set .@i,.@i+1)
+	for(.@i = 1; .@i<7; ++.@i)
 		disablenpc "Tire#"+strnpcinfo(2)+"_"+.@i;
 	end;
 
 OnTouchNPC:
-	set .@start,rand(1,100);
-	if (.@start < 11) set .@speed,60;
-	else if (.@start < 21) set .@speed,70;
-	else if (.@start < 31) set .@speed,80;
-	else if (.@start < 41) set .@speed,90;
-	else if (.@start < 51) set .@speed,100;
-	else if (.@start < 61) set .@speed,110;
-	else if (.@start < 71) set .@speed,120;
-	else if (.@start < 81) set .@speed,130;
-	else if (.@start < 91) set .@speed,140;
-	else set .@speed,150;
+	.@start = rand(1,100);
+	if (.@start < 11) .@speed = 60;
+	else if (.@start < 21) .@speed = 70;
+	else if (.@start < 31) .@speed = 80;
+	else if (.@start < 41) .@speed = 90;
+	else if (.@start < 51) .@speed = 100;
+	else if (.@start < 61) .@speed = 110;
+	else if (.@start < 71) .@speed = 120;
+	else if (.@start < 81) .@speed = 130;
+	else if (.@start < 91) .@speed = 140;
+	else .@speed = 150;
 	sc_start SC_WALKSPEED,5000,.@speed;
 	end;
 	
@@ -2286,7 +2285,7 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 			}
 		}
 		setarray .@m$, "Dagger","One Handed Sword","Two Handed Sword","Axe","Mace","Bow","Staff","Book","Spear","Katar","Knuckle","Whip","Musical Instrument";
-		set .@m, select (implode(.@m$,":")) - 1;
+		.@m = select (implode(.@m$,":")) - 1;
 		mes "[Ei'felle]";
 		mes "So you'd like to have a";
 		mes .@m$[.@m]+"? Please choose";
@@ -2346,7 +2345,7 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 				setarray .@mw, 1918,1913;
 				break;
 		}
-		set .@j, select (.@mw$+":Cancel") - 1;
+		.@j = select (.@mw$+":Cancel") - 1;
 		explode(.@mw$,.@mw$,":");
 		if (.@j == getarraysize(.@mw$)) close;
 		callsub S_BonusReward,1500,.@mw[.@j];
@@ -2581,9 +2580,9 @@ S_Reward:
 				mes "advance my research,";
 				mes "and I promise to repay";
 				mes "you as soon as I can!";
-				set .@medals,countitem(7515);
+				.@medals = countitem(7515);
 				delitem 7515,.@medals; //Marvelous_Medal
-				set ein_medal01,ein_medal01+.@medals;
+				ein_medal01 += .@medals;
 				close;
 			case 2:
 				mes "[Ei'felle]";
@@ -2631,7 +2630,7 @@ S_Reward:
 					mes "and I promise to repay";
 					mes "you as soon as I can!";
 					delitem 7515,.@input; //Marvelous_Medal
-					set ein_medal01,ein_medal01+.@input;
+					ein_medal01 += .@input;
 					close;
 				}
 			case 3:
@@ -2735,7 +2734,7 @@ S_BonusReward:
 		mes "difficult. In any case, I would";
 		mes "appreciate your continued help~";
 	}
-	set ein_medal01,ein_medal01-getarg(0);
+	ein_medal01 -= getarg(0);
 	getitem getarg(1),1;
 	close;
 }
@@ -2800,9 +2799,9 @@ hugel,71,83,4	script	Wayne	4_M_HUMERCHANT,{
 		mes "more Prize Medals at a time.";
 		next;
 		setarray .@pm, 1,3,7,8,16,25,42,59;
-		for (set .@i, 0; .@i < getarraysize(.@pm); set .@i, .@i + 1)
-			set .@m$, .@m$ + .@pm[.@i] + " Prize medal:";
-		set .@m, select (.@m$) - 1;
+		for (.@i = 0; .@i < getarraysize(.@pm); ++.@i)
+			.@m$ += .@pm[.@i] + " Prize medal:";
+		.@m = select (.@m$) - 1;
 		switch (.@m) {
 			case 0:
 				setarray .@mr$, "2 Hinale Leaflets:2 Aloe Leaflets:1 Mastela Fruit:5 Witch Starsands:4 Condensed Red Potions";
@@ -2817,23 +2816,23 @@ hugel,71,83,4	script	Wayne	4_M_HUMERCHANT,{
 				setarray .@mr, 12130,1,12110,1;
 				break;
 			case 3:
-				set .@mr$, "1 Gift Box";
+				.@mr$ = "1 Gift Box";
 				setarray .@mr, 644,1;
 				break;
 			case 4:
-				set .@mr$, "1 Old Blue Box";
+				.@mr$ = "1 Old Blue Box";
 				setarray .@mr, 603,1;
 				break;
 			case 5:
-				set .@mr$, "1 Taming Gift Set";
+				.@mr$ = "1 Taming Gift Set";
 				setarray .@mr, 12105,1;
 				break;
 			case 6:
-				set .@mr$, "1 Old Purple Box";
+				.@mr$ = "1 Old Purple Box";
 				setarray .@mr, 617,1;
 				break;
 			case 7:
-				set .@mr$, "1 Poring Box";
+				.@mr$ = "1 Poring Box";
 				setarray .@mr, 12109,1;
 				break;
 		}
@@ -2843,7 +2842,7 @@ hugel,71,83,4	script	Wayne	4_M_HUMERCHANT,{
 		mes "sets that you'd like to receive";
 		mes "in exchange for "+.@pm[.@m]+" Prize Medal."+((getarraysize(.@mr)<3)?" Well, we have only 1 set, but...":"");
 		next;
-		set .@m2, select (.@mr$) - 1;
+		.@m2 = select (.@mr$) - 1;
 		if (countitem(7515) < .@pm[.@m]) {
 			mes "[Wayne]";
 			mes "Hey, you don't have";
@@ -3074,12 +3073,12 @@ hugel,5,5,3	script	Monster Race Manager	4_M_LGTGUARD,{
 	mes "Entry NPCs for the Single";
 	mes "and Dual Monster Races.";
 	next;
-	set .@select, select("Single Race Entry - ON:Dual Race Entry - ON:Single Race Entry - OFF:Dual Race Entry - OFF");
+	.@select = select("Single Race Entry - ON:Dual Race Entry - ON:Single Race Entry - OFF:Dual Race Entry - OFF");
 	mes "[Monster Race Manager]";
 	mes "Please enter";
 	mes "the password.";
 	next;
-	set .@i, callfunc("F_GM_NPC",1854,0,0,2000);
+	.@i = callfunc("F_GM_NPC",1854,0,0,2000);
 	if (.@i == -2) {
 		mes "[Monster Race Manager]";
 		mes "Error.";

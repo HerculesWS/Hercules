@@ -26,10 +26,10 @@ malangdo,221,174,6	script	Holink#mal_cash	4_CAT_ADV1,{
 	mes "What should Holink~ refine today?";
 	next;
 	setarray .@position$[1],"Head","Body","Left Hand","Right Hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
-	set .@menu$,"";
-	for(set .@i,1; .@i<=10; set .@i,.@i+1)
-		set .@menu$, .@menu$+((getequipisequiped(.@i))?getequipname(.@i):.@position$[.@i]+"-[Empty]")+":";
-	set .@part, select(.@menu$);
+	.@menu$ = "";
+	for(.@i = 1; .@i<=10; ++.@i)
+		.@menu$ = .@menu$+((getequipisequiped(.@i))?getequipname(.@i):.@position$[.@i]+"-[Empty]")+":";
+	.@part = select(.@menu$);
 	if (!getequipisequiped(.@part)) {
 		mes "[Holink]";
 		switch(.@part) {
@@ -77,33 +77,33 @@ malangdo,221,174,6	script	Holink#mal_cash	4_CAT_ADV1,{
 	switch(getequipweaponlv(.@part)) {
 	default:
 	case 0: // Armor
-		set .@price,15000;
-		set .@material,7619; //Enriched_Elunium
-		set .@type$,"armor";
+		.@price = 15000;
+		.@material = 7619; //Enriched_Elunium
+		.@type$ = "armor";
 		mes "You have chosen an armor, meow~";
 		break;
 	case 1: // Level 1 Weapon
-		set .@price,500;
-		set .@material,7620; //Enriched_Oridecon
-		set .@type$,"weapon";
+		.@price = 500;
+		.@material = 7620; //Enriched_Oridecon
+		.@type$ = "weapon";
 		mes "A level 1 weapon...?";
 		break;
 	case 2: // Level 2 Weapon
-		set .@price,2000;
-		set .@material,7620; //Enriched_Oridecon
-		set .@type$,"weapon";
+		.@price = 2000;
+		.@material = 7620; //Enriched_Oridecon
+		.@type$ = "weapon";
 		mes "Meow, a level 2 weapon...?";
 		break;
 	case 3: // Level 3 Weapon
-		set .@price,20000;
-		set .@material,7620; //Enriched_Oridecon
-		set .@type$,"weapon";
+		.@price = 20000;
+		.@material = 7620; //Enriched_Oridecon
+		.@type$ = "weapon";
 		mes "Meow Meow~~ A level 3 weapon~~";
 		break;
 	case 4: // Level 4 Weapon
-		set .@price,50000;
-		set .@material,7620; //Enriched_Oridecon
-		set .@type$,"weapon";
+		.@price = 50000;
+		.@material = 7620; //Enriched_Oridecon
+		.@type$ = "weapon";
 		mes "Me-Meow!... A level 4 weapon...!";
 		mes "I've only seen it twice while";
 		mes "learning from Aragam... Me-Meow!!";

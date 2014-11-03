@@ -19,11 +19,11 @@ moc_para01,36,38,3	script	Mission [11 - 25]#Tuto	4_BOARD3,{
 		mes "- to receive these missions. -";
 		close;
 	}
-	for(set .@i,11124; .@i<11134; set .@i,.@i+1)
-		if (checkquest(.@i,PLAYTIME) == 2) erasequest .@i;
-	for(set .@i,11114; .@i<11123; set .@i,.@i+1) {
-		set .@j, checkquest(.@i,HUNTING);
-		if (.@j == 2) {
+	for(.@i = 11124; .@i<11134; ++.@i)
+		if (questprogress(.@i,PLAYTIME) == 2) erasequest .@i;
+	for(.@i = 11114; .@i<11123; ++.@i) {
+		.@state = questprogress(.@i,HUNTING);
+		if (.@state == 2) {
 			mes " - You must collect your - ";
 			mes " - reward before starting - ";
 			mes " - a new mission. - ";
@@ -31,7 +31,7 @@ moc_para01,36,38,3	script	Mission [11 - 25]#Tuto	4_BOARD3,{
 			mes " - Manager : Spike - ";
 			close;
 		}
-		else if (.@j >= 0) {
+		else if (.@state) {
 			mes " - You can only request - ";
 			mes " - one mission at a time. - ";
 			mes " ";
@@ -71,7 +71,7 @@ moc_para01,36,38,3	script	Mission [11 - 25]#Tuto	4_BOARD3,{
 	}
 	end;
 L_Quest:
-	if (checkquest(getarg(0),PLAYTIME) == 1) {
+	if (questprogress(getarg(0),PLAYTIME) == 1) {
 		mes " - Mission ^4d4dff"+getarg(1)+"^000000 - ";
 		mes " - is already finished for today. - ";
 		mes " ";
@@ -79,7 +79,7 @@ L_Quest:
 		close;
 	}
 	mes " - Mission '"+getarg(1)+"' - ";
-	for(set .@i,2; .@i<getargcount(); set .@i,.@i+1)
+	for(.@i = 2; .@i<getargcount(); ++.@i)
 		mes getarg(.@i);
 	mes " ";
 	mes " - Manager : Spike - ";
@@ -89,18 +89,18 @@ L_Quest:
 		mes " - other missions. - ";
 		close;
 	}
-	for(set .@i,2; .@i<getargcount(); set .@i,.@i+1)
+	for(.@i = 2; .@i<getargcount(); ++.@i)
 		mes getarg(.@i);
-	if (getarg(0) == 11123 && checkquest(11123,PLAYTIME) == 2)
+	if (getarg(0) == 11123 && questprogress(11123,PLAYTIME) == 2)
 		erasequest 11133;	// Special case for "Collect Poison Spores"
 	setquest getarg(0);
 	close;
 }
 
 moc_para01,32,30,6	script	Spike	4_F_CHILD,{
-	for(set .@i,11114; .@i<11124; set .@i,.@i+1) {
-		set .@j, checkquest(.@i,HUNTING);
-		if (.@j == 2) switch(.@i) {
+	for(.@i = 11114; .@i<11124; ++.@i) {
+		.@state = questprogress(.@i,HUNTING);
+		if (.@state == 2) switch(.@i) {
 			case 11114: callsub L_Quest,.@i,"Hornet Hunting",900;
 			case 11115: callsub L_Quest,.@i,"Condor Hunting",1800;
 			case 11116: callsub L_Quest,.@i,"Grasshopper's Leg",1400,940,10;
@@ -112,7 +112,7 @@ moc_para01,32,30,6	script	Spike	4_F_CHILD,{
 			case 11122: callsub L_Quest,.@i,"Collect Feathers",5400;
 			case 11123: callsub L_Quest,.@i,"Collect Poison Spores",6000,7033,5;
 		}
-		else if (.@j >= 0) {
+		else if (.@state) {
 			mes "[Spike]";
 			mes "You haven't finished your mission yet.";
 			mes "Keep up the good work. You are almost done.";
@@ -127,7 +127,7 @@ moc_para01,32,30,6	script	Spike	4_F_CHILD,{
 	mes "Why don't you look around and find some interesting tasks?";
 	close;
 L_Quest:
-	if (checkquest(getarg(0),HUNTING) == 2) {
+	if (questprogress(getarg(0),HUNTING) == 2) {
 		if (getarg(3,0))
 			if (countitem(getarg(3)) < getarg(4)) {
 				mes "[Spike]";

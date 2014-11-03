@@ -43,6 +43,7 @@ enum item_itemid {
 	ITEMID_BLUE_POTION           = 505,
 	ITEMID_APPLE                 = 512,
 	ITEMID_HOLY_WATER            = 523,
+	ITEMID_PUMPKIN               = 535,
 	ITEMID_RED_SLIM_POTION       = 545,
 	ITEMID_YELLOW_SLIM_POTION    = 546,
 	ITEMID_WHITE_SLIM_POTION     = 547,

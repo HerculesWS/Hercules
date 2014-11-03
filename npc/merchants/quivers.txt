@@ -76,10 +76,10 @@ S_BuyQuiver:
 		next;
 		switch(select("Store as many Arrows in quivers as possible:Purchase 1 quiver:Cancel")) {
 		case 1:
-			set .@arrows,countitem(getarg(0));
-			set .@quiver,.@arrows / getarg(1);
-			set .@arrows_used,.@quiver * getarg(1);
-			set .@arrow_zeny01,.@quiver * getarg(2);
+			.@arrows = countitem(getarg(0));
+			.@quiver = .@arrows / getarg(1);
+			.@arrows_used = .@quiver * getarg(1);
+			.@arrow_zeny01 = .@quiver * getarg(2);
 			mes "Number of";
 			mes "Arrows: ^3131FF"+.@arrows+" ^000000";
 			mes "Maximum Number";

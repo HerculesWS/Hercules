@@ -440,7 +440,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 						next;
 						mes "[Nelliorde]";
 						mes "Alright, I shall contact him right away! Oh, and you can find the Monster Organization west of Juno's central plaza. It shouldn't be hard to find. Good luck!";
-						set god_brising,1;
+						god_brising = 1;
 						close2;
 						break;
 					case 2:
@@ -888,7 +888,7 @@ yuno_in04,47,113,1	script	Studying Scholar#1	4_M_ALCHE_B,{
 			mes "[Enrico Kaili]";
 			mes "Please...";
 			mes "Take this.";
-			set god_brising,50;
+			god_brising = 50;
 			getitem 616,1; // Old_Card_Album
 			getexp (checkre(3))?60000:600000,0;
 			next;
@@ -896,7 +896,7 @@ yuno_in04,47,113,1	script	Studying Scholar#1	4_M_ALCHE_B,{
 			mes "Please accept this as my way of thanking you for assisting in my";
 			mes "research. If the opportunity arises, I would like to ask you for your help once again. Now please, take care.";
 			if ($God3 < $@god_check2)
-				set $God3,$God3 +1;
+				$God3 += 1;
 			if ($God3 == $@god_check1)
 				announce "The 3rd Seal of [Brisingamen] has appeared.",bc_all;
 			else if ($God3 == $@god_check2) {
@@ -961,7 +961,7 @@ yuno_in04,47,113,1	script	Studying Scholar#1	4_M_ALCHE_B,{
 				mes "waiting for? Please";
 				mes "come back as soon";
 				mes "as possible.";
-				set god_brising,48;
+				god_brising = 48;
 				close;
 			case 2:
 				mes "[" + strcharinfo(0) + "]";
@@ -981,7 +981,7 @@ yuno_in04,47,113,1	script	Studying Scholar#1	4_M_ALCHE_B,{
 				mes "Hurry and seek him";
 				mes "out! And I thank you";
 				mes "in advance.";
-				set god_brising,48;
+				god_brising = 48;
 				close;
 			}
 		}
@@ -1192,7 +1192,7 @@ yuno_in04,47,113,1	script	Studying Scholar#1	4_M_ALCHE_B,{
 				mes "able to learn what";
 				mes "the goddess Freya has";
 				mes "left behind in Rune-Midgard...";
-				set god_brising,40;
+				god_brising = 40;
 				close;
 			case 2:
 				mes "[Enrico Kaili]";
@@ -1211,7 +1211,7 @@ yuno_in04,47,113,1	script	Studying Scholar#1	4_M_ALCHE_B,{
 				mes "able to learn what";
 				mes "the goddess Freya has";
 				mes "left behind in Rune-Midgard...";
-				set god_brising,40;
+				god_brising = 40;
 				close;
 			}
 		}
@@ -1306,7 +1306,7 @@ yuno_in04,47,113,1	script	Studying Scholar#1	4_M_ALCHE_B,{
 				mes "letter addressed to Hermite";
 				mes "Charles that is sealed with";
 				mes "red wax.^000000";
-				set god_brising,3;
+				god_brising = 3;
 				close;
 			}
 		}
@@ -1329,7 +1329,7 @@ yuno_in04,47,113,1	script	Studying Scholar#1	4_M_ALCHE_B,{
 				next;
 				mes "[Enrico Kaili]";
 				mes "I suppose I can try to find another adventurer to help me. But if you change your mind later, please do not hesitate to lend me your assistance.";
-				set god_brising,2;
+				god_brising = 2;
 				close;
 			case 2:
 				mes "[Enrico Kaili]";
@@ -1363,7 +1363,7 @@ yuno_in04,47,113,1	script	Studying Scholar#1	4_M_ALCHE_B,{
 				mes "letter addressed to Hermite";
 				mes "Charles that is sealed with";
 				mes "red wax.^000000";
-				set god_brising,3;
+				god_brising = 3;
 				close;
 			}
 		}
@@ -1395,7 +1395,7 @@ yuno_in04,47,113,1	script	Studying Scholar#1	4_M_ALCHE_B,{
 }
 
 prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
- 	if ($God2 < $@god_check1) {
+	if ($God2 < $@god_check1) {
 		mes "[Praying Man]";
 		mes "Let everyone live a life";
 		mes "of happiness. Let there be";
@@ -1475,7 +1475,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 		mes "You know everything now.";
 		mes "Please leave me alone.";
 		mes "^333333*Sigh...*^000000";
-		set god_brising,35;
+		god_brising = 35;
 		close;
 	}
 	else if (god_brising > 19 && god_brising < 34) {
@@ -1495,7 +1495,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 		mes "for the trouble,";
 		mes "but I think you";
 		mes "better try again.";
-		set god_brising,10;
+		god_brising = 10;
 		close;
 	}
 	else if (god_brising == 11) {
@@ -1519,7 +1519,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 		mes "killed her?!";
 		mes "Don't you understand";
 		mes "the way I feel?";
-		set god_brising,20;
+		god_brising = 20;
 		close;
 	}
 	else if (god_brising == 10) {
@@ -1629,14 +1629,14 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 						mes "anything that";
 						mes "you can. I beg";
 						mes "of you...";
-						set god_brising,10;
+						god_brising = 10;
 						close;
 					case 2:
 						mes "[Hermite Charles]";
 						mes "^333333*Sigh*^000000";
 						mes "I understand.";
 						mes "But if you don't help me, then Kaili won't get the help he needs...";
-						set god_brising,9;
+						god_brising = 9;
 						close;
 					}
 				case 2:
@@ -1649,7 +1649,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 					next;
 					mes "[Hermite Charles]";
 					mes "All I can do for her is just earnestly pray. I had no idea it'd be so horrible not to be able to see her anymore...";
-					set god_brising,9;
+					god_brising = 9;
 					close;
 				case 3:
 					mes "[Hermite Charles]";
@@ -1674,7 +1674,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 					mes "That was the last time...";
 					mes "Please find out anything";
 					mes "you can. I beg you...";
-					set god_brising,10;
+					god_brising = 10;
 					close;
 				}
 			case 2:
@@ -1686,7 +1686,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 				mes "I won't waste any more of";
 				mes "your time. I'll accept Kaili's letter and wait until I find someone who'll listen to";
 				mes "my story and help me.";
-				set god_brising,5;
+				god_brising = 5;
 				close;
 			}
 		}
@@ -1715,7 +1715,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 		switch(select("Leave him alone.:Give him Kaili's Letter.")) {
 		case 1:
 			mes "^3355FFYou're not sure why he's so upset, but it doesn't seem to be the best time to try to speak with him. Perhaps later would be better...^000000";
-			set god_brising,4;
+			god_brising = 4;
 			close;
 		case 2:
 			mes "[Hermite Charles]";
@@ -1818,14 +1818,14 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 						mes "anything that";
 						mes "you can. I beg";
 						mes "of you...";
-						set god_brising,10;
+						god_brising = 10;
 						close;
 					case 2:
 						mes "[Hermite Charles]";
 						mes "^333333*Sigh*^000000";
 						mes "I understand.";
 						mes "But if you don't help me, then Kaili won't get the help he needs...";
-						set god_brising,9;
+						god_brising = 9;
 						close;
 					}
 				case 2:
@@ -1838,7 +1838,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 					next;
 					mes "[Hermite Charles]";
 					mes "All I can do for her is just earnestly pray. I had no idea it'd be so horrible not to be able to see her anymore...";
-					set god_brising,9;
+					god_brising = 9;
 					close;
 				case 3:
 					mes "[Hermite Charles]";
@@ -1863,7 +1863,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 					mes "That was the last time...";
 					mes "Please find out anything";
 					mes "you can. I beg you...";
-					set god_brising,10;
+					god_brising = 10;
 					close;
 				}
 			case 2:
@@ -1875,7 +1875,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 				mes "I won't waste any more of";
 				mes "your time. I'll accept Kaili's letter and wait until I find someone who'll listen to";
 				mes "my story and help me.";
-				set god_brising,5;
+				god_brising = 5;
 				close;
 			}
 		}
@@ -1903,7 +1903,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 		switch(select("Leave him alone.:Give him Kaili's Letter.")) {
 		case 1:
 			mes "^3355FFYou're not sure why he's so upset, but it doesn't seem to be the best time to try to speak with him. Perhaps later would be better...^000000";
-			set god_brising,4;
+			god_brising = 4;
 			close;
 		case 2:
 			mes "[Hermite Charles]";
@@ -2006,14 +2006,14 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 						mes "anything that";
 						mes "you can. I beg";
 						mes "of you...";
-						set god_brising,10;
+						god_brising = 10;
 						close;
 					case 2:
 						mes "[Hermite Charles]";
 						mes "^333333*Sigh*^000000";
 						mes "I understand.";
 						mes "But if you don't help me, then Kaili won't get the help he needs...";
-						set god_brising,9;
+						god_brising = 9;
 						close;
 					}
 				case 2:
@@ -2026,7 +2026,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 					next;
 					mes "[Hermite Charles]";
 					mes "All I can do for her is just earnestly pray. I had no idea it'd be so horrible not to be able to see her anymore...";
-					set god_brising,9;
+					god_brising = 9;
 					close;
 				case 3:
 					mes "[Hermite Charles]";
@@ -2051,7 +2051,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 					mes "That was the last time...";
 					mes "Please find out anything";
 					mes "you can. I beg you...";
-					set god_brising,10;
+					god_brising = 10;
 					close;
 				}
 			case 2:
@@ -2063,7 +2063,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 				mes "I won't waste any more of";
 				mes "your time. I'll accept Kaili's letter and wait until I find someone who'll listen to";
 				mes "my story and help me.";
-				set god_brising,5;
+				god_brising = 5;
 				close;
 			}
 		}
@@ -2110,7 +2110,7 @@ prt_castle,80,52,0	script	Personnel Record#book1	HIDDEN_NPC,{
 		mes "saying anything. Huh.";
 		mes "Now let's see...";
 		next;
-		set .@bookrand,rand(1,3);
+		.@bookrand = rand(1,3);
 		if (.@bookrand == 1) {
 			mes "[Personnel Record]";
 			mes "^663300Lowen, of the 2nd squad, returned to her detachment 3 days after the incident. A trial was held, and she was judged guilty of fleeing when ordered to fight.^000000";
@@ -2145,7 +2145,7 @@ prt_castle,80,52,0	script	Personnel Record#book1	HIDDEN_NPC,{
 			mes "who are you!";
 			mes "Get the hell";
 			mes "out of here!";
-			set god_brising,30;
+			god_brising = 30;
 			close2;
 			warp "prt_castle",94,37;
 			end;
@@ -2178,7 +2178,7 @@ prt_castle,80,52,0	script	Personnel Record#book1	HIDDEN_NPC,{
 		mes "information the";
 		mes "Librarian told me!";
 		next;
-		set .@bookrand,rand(1,3);
+		.@bookrand = rand(1,3);
 		if (.@bookrand == 1) {
 			mes "[" + strcharinfo(0) + "]";
 			mes "I should read this";
@@ -2230,7 +2230,7 @@ prt_castle,80,52,0	script	Personnel Record#book1	HIDDEN_NPC,{
 			mes "who are you!";
 			mes "Get the hell";
 			mes "out of here!";
-			set god_brising,30;
+			god_brising = 30;
 			close2;
 			warp "prt_castle",94,37;
 			end;
@@ -2242,7 +2242,7 @@ prt_castle,80,52,0	script	Personnel Record#book1	HIDDEN_NPC,{
 			mes "who are you!";
 			mes "Get the hell";
 			mes "out of here!";
-			set god_brising,26;
+			god_brising = 26;
 			next;
 			mes "["+ strcharinfo(0) +"]";
 			mes "(Nuts...!";
@@ -2269,13 +2269,13 @@ prt_castle,84,51,5	script	Librarian#2	8W_SOLDIER,{
 		mes "Don't touch anything!";
 		close;
 	}
- 	if ($God3 >= $@god_check2) {
+	if ($God3 >= $@god_check2) {
 		mes "[Librarian]";
 		mes "What are you doing here?";
 		mes "Don't touch anything!";
 		close;
 	}
- 	if (god_brising > 24 && god_brising < 27) {
+	if (god_brising > 24 && god_brising < 27) {
 		mes "[Librarian]";
 		mes "Zzzzz...";
 		mes "...Zzzzz...";
@@ -2283,8 +2283,7 @@ prt_castle,84,51,5	script	Librarian#2	8W_SOLDIER,{
 		next;
 		mes "^3355FFThis librarian seems to be deeply asleep. It'd be smarter not to wake him if you want to check the Crusader Personnel Records.^000000";
 		close;
-	}
- 	else if (god_brising == 10) {
+	} else if (god_brising == 10) {
 		mes "[Librarian]";
 		mes "All confidential personnel records are kept here in the royal library. However, you need authorization";
 		mes "for full access.";
@@ -2341,7 +2340,7 @@ prt_castle,84,51,5	script	Librarian#2	8W_SOLDIER,{
 				mes "I'm sorry, but";
 				mes "that's all I know.";
 				mes "Thank you...";
-				set god_brising,11;
+				god_brising = 11;
 				close;
 			}
 		case 2:
@@ -2369,7 +2368,7 @@ prt_castle,84,51,5	script	Librarian#2	8W_SOLDIER,{
 				mes "information I have,";
 				mes "sir. I'm truly sorry";
 				mes "for your loss.";
-				set god_brising,11;
+				god_brising = 11;
 				close;
 			}
 			else {
@@ -2416,7 +2415,7 @@ prt_castle,84,51,5	script	Librarian#2	8W_SOLDIER,{
 			next;
 			mes "[Librarian]";
 			mes "He retired from the service a few years ago. I'd like to give you his address, but we don't have any of that information.";
-			set god_brising,12;
+			god_brising = 12;
 			close;
 		}
 	}
@@ -2526,10 +2525,9 @@ prontera,260,354,4	script	Woman#Rosa Ellenen	4W_F_01,{
 		mes "Crusader Personnel";
 		mes "Records that might";
 		mes "explain something?";
-		set god_brising,25;
+		god_brising = 25;
 		close;
-	}
- 	else if ((god_brising) > 9 && (god_brising < 20)) {
+	} else if ((god_brising) > 9 && (god_brising < 20)) {
 		mes "[Rosa Ellenen]";
 		mes "This is my little";
 		mes "sister's grave...";
@@ -2548,10 +2546,9 @@ prontera,260,354,4	script	Woman#Rosa Ellenen	4W_F_01,{
 		mes "[Rosa Ellenen]";
 		mes "Anyway, thank you for visiting";
 		mes "my little sister. It's good to know she has friends, even after she's passed on.";
-		set god_brising,11;
+		god_brising = 11;
 		close;
-	}
-	else {
+	} else {
 		mes "[Rosa Ellenen]";
 		mes "Oh hello...";
 		mes "Have you come";
@@ -2588,7 +2585,7 @@ prontera,262,353,0	script	Gravestone	HIDDEN_NPC,{
 		close;
 	}
 }
- 
+
 gef_dun01,89,192,0	script	#lowentrace	HIDDEN_NPC,3,3,{
 	if ($God2 < $@god_check1) {
 		mes "^3355FFIt's just an old,";
@@ -2694,7 +2691,7 @@ gef_dun01,89,192,0	script	#lowentrace	HIDDEN_NPC,3,3,{
 				mes "[The voice of a female]";
 				mes "^6E7B8BUm...";
 				mes "If you want to meet me again, just say my name out loud. '^000000Lowen^6E7B8B.'^000000";
-				set god_brising,21;
+				god_brising = 21;
 				close;
 			}
 		}
@@ -2826,7 +2823,7 @@ gef_dun01,203,48,0	script	#lowentrace1	HIDDEN_NPC,3,3,{
 				mes "[The voice of a female]";
 				mes "^6E7B8BUm...";
 				mes "If you want to meet me again, just say my name out loud. '^000000Lowen^6E7B8B.'^000000";
-				set god_brising,21;
+				god_brising = 21;
 				close;
 			}
 		}
@@ -2929,7 +2926,7 @@ que_god02,48,55,3	script	Lowen Ellenen	4_F_CRU,{
 			mes "[" + strcharinfo(0) + "]";
 			mes "Now,";
 			mes "shall we go in?";
-			set god_brising,31;
+			god_brising = 31;
 			close;
 		}
 	}
@@ -2952,7 +2949,7 @@ que_god02,48,55,3	script	Lowen Ellenen	4_F_CRU,{
 }
 
 que_god02,54,64,4	script	Soldier#1_brising	8W_SOLDIER,1,1,{
- 	if (god_brising == 31) {
+	if (god_brising == 31) {
 		mes "[Soldier]";
 		mes "Have you volunteered for monster subjugation? Would you like to start the mission now?";
 		next;
@@ -3040,7 +3037,7 @@ OnTimer550500:
 	end;
 
 }
-	
+
 que_god02,1,1,1	script	#brisinsummon	-1,{
 
 OnInit:
@@ -3111,7 +3108,7 @@ OnLowen2Off:
 	end;
 
 OnSummon:
-	set .brisinmobdead,9;
+	.brisinmobdead = 9;
 	monster "que_god02",34,128,"",1015,1,"#brisinsummon::OnMobDeath";
 	monster "que_god02",34,127,"",1015,1,"#brisinsummon::OnMobDeath";
 	monster "que_god02",80,127,"",1015,1,"#brisinsummon::OnMobDeath";
@@ -3124,9 +3121,9 @@ OnSummon:
 	end;
 
 OnMobDeath:
-	set .brisinmobdead,.brisinmobdead -1;
+	--.brisinmobdead;
 	if (.brisinmobdead > 0) end;
-	set god_brising,31;
+	god_brising = 31;
 	hideoffnpc "Valkyrie#1";
 	end;
 
@@ -3237,7 +3234,7 @@ OnTouch:
 }
 
 que_god02,124,59,7	script	#hermite	4_M_NFMAN,{ end; }
- 
+
 que_god02,120,52,0	script	#monologue	HIDDEN_WARP_NPC,0,0,{
 
 OnTouch:
@@ -3400,7 +3397,7 @@ que_god02,178,127,3	script	Valkyrie#1	4_F_VALKYRIE,{
 			mes "I shall send you";
 			mes "back to where you";
 			mes "belong.";
-			set god_brising,34;
+			god_brising = 34;
 			next;
 			mes "[Valkyrie]";
 			mes "For Odin's honor...";
@@ -3484,7 +3481,7 @@ que_god02,178,127,3	script	Valkyrie#1	4_F_VALKYRIE,{
 			mes "I shall send you";
 			mes "back to where you";
 			mes "belong.";
-			set god_brising,34;
+			god_brising = 34;
 			next;
 			mes "[Valkyrie]";
 			mes "For Odin's honor...";
@@ -3553,7 +3550,7 @@ xmas,38,105,0	script	#brisindwarf1	HIDDEN_NPC,3,3,{
 				case 4:
 					mes "[" + strcharinfo(0) + "]";
 					mes "The beauty of the stars";
-					set .@point,.@point + 10;
+					.@point += 10;
 					break;
 				case 5:
 					mes "[" + strcharinfo(0) + "]";
@@ -3566,7 +3563,7 @@ xmas,38,105,0	script	#brisindwarf1	HIDDEN_NPC,3,3,{
 					break;
 				case 2:
 					mes "Wanes in comparison.";
-					set .@point,.@point + 10;
+					.@point += 10;
 					break;
 				case 3:
 					mes "All of our hearts in";
@@ -3593,13 +3590,13 @@ xmas,38,105,0	script	#brisindwarf1	HIDDEN_NPC,3,3,{
 					break;
 				case 5:
 					mes "We lost our hearts";
-					set .@point,.@point + 10;
+					.@point += 10;
 					break;
 				}
 				switch(select("To that golden hair:To that beautiful hair:All of our hearts in:To the steps in:To those dazzling eyes")) {
 				case 1:
 					mes "To that golden hair";
-					set .@point,.@point + 10;
+					.@point += 10;
 					break;
 				case 2:
 					mes "To that beautiful hair";
@@ -3623,7 +3620,7 @@ xmas,38,105,0	script	#brisindwarf1	HIDDEN_NPC,3,3,{
 					break;
 				case 3:
 					mes "And those dazzling eyes.";
-					set .@point,.@point + 10;
+					.@point += 10;
 					break;
 				case 4:
 					mes "To the steps in";
@@ -3736,7 +3733,7 @@ xmas,36,103,4	script	Alfrik#1	4_M_DWARF,{
 			mes "Now...";
 			mes "Leave me";
 			mes "in peace.";
-			set god_brising,49;
+			god_brising = 49;
 			close2;
 			hideonnpc "Alfrik#1";
 			end;
@@ -3801,7 +3798,7 @@ xmas,36,103,4	script	Alfrik#1	4_M_DWARF,{
 				mes "[Alfrik]";
 				mes "Go wake all my brothers!";
 				mes "Let's see if the Brisingamen can be made once again! First, go and wake Dvalin before the gods and giants find out!";
-				set god_brising,41;
+				god_brising = 41;
 				close2;
 				hideonnpc "Alfrik#1";
 				end;
@@ -3855,7 +3852,7 @@ xmas,36,103,4	script	Alfrik#1	4_M_DWARF,{
 			mes "[Alfrik]";
 			mes "Go wake all my brothers!";
 			mes "Let's see if the Brisingamen can be made once again! First, go and wake Dvalin before the gods and giants find out!";
-			set god_brising,41;
+			god_brising = 41;
 			close2;
 			hideonnpc "Alfrik#1";
 			end;
@@ -3893,7 +3890,7 @@ xmas,36,103,4	script	Alfrik#1	4_M_DWARF,{
 			mes "We surrendered our hearts";
 			mes "To those tender teardrops";
 			mes "Those seductive red lips.^000000";
-			set god_brising,42;
+			god_brising = 42;
 			close2;
 			hideonnpc "Alfrik#1";
 			end;
@@ -3931,7 +3928,7 @@ xmas,36,103,4	script	Alfrik#1	4_M_DWARF,{
 			mes "We surrendered our hearts";
 			mes "To those tender teardrops";
 			mes "Those seductive red lips.^000000";
-			set god_brising,42;
+			god_brising = 42;
 			close2;
 			hideonnpc "Alfrik#1";
 			end;
@@ -4021,7 +4018,7 @@ prt_fild02,185,269,0	script	#brisindwarf2	HIDDEN_NPC,3,3,{
 			mes "[" + strcharinfo(0) + "]";
 			mes "Another puzzle?";
 			mes "This was just like when I had to give Alfrik's password. Okay, let me see...";
-			set .@point,0;
+			.@point = 0;
 			next;
 			switch(select("To the tear drops dripping on the way:Her lovely scent:We gave:To the seducing red lips:Our hearts in")) {
 			case 1:
@@ -4031,7 +4028,7 @@ prt_fild02,185,269,0	script	#brisindwarf2	HIDDEN_NPC,3,3,{
 			case 2:
 				mes "["+ strcharinfo(0) +"]";
 				mes "Her lovely scent";
-				set .@point,.@point + 10;
+				.@point += 10;
 			break;
 			case 3:
 				mes "["+ strcharinfo(0) +"]";
@@ -4049,7 +4046,7 @@ prt_fild02,185,269,0	script	#brisindwarf2	HIDDEN_NPC,3,3,{
 			switch(select("Still lingers in the wind.:To the scent drifted in the wind:We gave:To the seducing red lips:Our hearts in")) {
 			case 1:
 				mes "Still lingers in the wind.";
-				set .@point,.@point + 10;
+				.@point += 10;
 				break;
 			case 2:
 				mes "To the scent drifted in the wind";
@@ -4075,7 +4072,7 @@ prt_fild02,185,269,0	script	#brisindwarf2	HIDDEN_NPC,3,3,{
 				break;
 			case 4:
 				mes "We surrendered our hearts";
-				set .@point,.@point + 10;
+				.@point += 10;
 			case 5:
 				mes "Our hearts in";
 				break;
@@ -4089,7 +4086,7 @@ prt_fild02,185,269,0	script	#brisindwarf2	HIDDEN_NPC,3,3,{
 				break;
 			case 3:
 				mes "To those tender teardrops";
-				set .@point,.@point + 10;
+				.@point += 10;
 				break;
 			case 4:
 				mes "To the seducing red lips";
@@ -4113,7 +4110,7 @@ prt_fild02,185,269,0	script	#brisindwarf2	HIDDEN_NPC,3,3,{
 				break;
 			case 5:
 				mes "Those seductive red lips";
-				set .@point,.@point + 10;
+				.@point += 10;
 				break;
 			}
 			next;
@@ -4245,7 +4242,7 @@ prt_fild02,185,270,3	script	Dvalin#1	4_M_DWARF,{
 			mes "you are the one who";
 			mes "can answer the question.";
 			mes "Hahahaha!";
-			set god_brising,43;
+			god_brising = 43;
 			close2;
 			hideonnpc "Dvalin#1";
 			end;
@@ -4429,7 +4426,7 @@ mjolnir_09,87,129,3	script	Berling#1	4_M_DWARF,{
 				mes "[Berling]";
 				mes "Memorize all five lines of this song exactly. Now take this golden teardrop and please seek out Grer.";
 				specialeffect2 EF_IMPOSITIO;
-				set god_brising,44;
+				god_brising = 44;
 				close2;
 				hideonnpc "Berling#1";
 				end;
@@ -4509,35 +4506,35 @@ mjo_dun02,126,36,0	script	#brisindwarf4	HIDDEN_NPC,3,3,{
 		mes "What was the first line...?";
 		next;
 		input @dwarfsong1$;
-		if (@dwarfsong1$ == "No jewel in the world can compare.") set @point,@point +1;
+		if (@dwarfsong1$ == "No jewel in the world can compare.") @point += 1;
 		mes "[" + strcharinfo(0) + "]";
 		mes " " + @dwarfsong1$ + "";
 		mes "Then...ummm..";
 		mes "The second line?";
 		next;
 		input @dwarfsong2$;
-		if (@dwarfsong2$ == "Our masterpiece made from love.") set @point,@point +1;
+		if (@dwarfsong2$ == "Our masterpiece made from love.") @point += 1;
 		mes "[" + strcharinfo(0) + "]";
 		mes " " + @dwarfsong2$ + "";
 		mes "Now, what was";
 		mes "the third line...?";
 		next;
 		input @dwarfsong3$;
-		if (@dwarfsong3$ == "She wanted the dazzling necklace.") set @point,@point +1;
+		if (@dwarfsong3$ == "She wanted the dazzling necklace.") @point += 1;
 		mes "[" + strcharinfo(0) + "]";
 		mes " " + @dwarfsong3$ + "";
 		mes "Now, the fourth";
 		mes "line after that...";
 		next;
 		input @dwarfsong4$;
-		if (@dwarfsong4$ == "We wanted the goddess of beauty.") set @point,@point +1;
+		if (@dwarfsong4$ == "We wanted the goddess of beauty.") @point += 1;
 		mes "[" + strcharinfo(0) + "]";
 		mes " " + @dwarfsong4$ + "";
 		mes "Alright, now";
 		mes "for the last line...";
 		next;
 		input @dwarfsong5$;
-		if (@dwarfsong5$ == "Our happiest times were with her.") set @point,@point +1;
+		if (@dwarfsong5$ == "Our happiest times were with her.") @point += 1;
 		mes "[" + strcharinfo(0) + "]";
 		mes " " + @dwarfsong5$ + "";
 		mes "Alright, let's give it a try.";
@@ -4555,7 +4552,7 @@ mjo_dun02,126,36,0	script	#brisindwarf4	HIDDEN_NPC,3,3,{
 			mes "Wha--?";
 			mes "Berling";
 			mes "did send you!";
-			set god_brising,46;
+			god_brising = 46;
 			stopnpctimer;
 			close;
 		}
@@ -4599,7 +4596,7 @@ OnTouch:
 			mes "Lies! Lies!";
 			mes "Prove it!";
 			mes "Prove yourself!";
-			set god_brising,45;
+			god_brising = 45;
 			initnpctimer;
 			close;
 		case 2:
@@ -4691,7 +4688,7 @@ mjo_dun02,126,34,1	script	Grer#1	4_M_DWARF,{
 		mes "Okay, you";
 		mes "may go back now!";
 		mes "Farewell.";
-		set god_brising,47;
+		god_brising = 47;
 		close2;
 		hideonnpc "Grer#1";
 		end;

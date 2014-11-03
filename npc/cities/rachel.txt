@@ -306,7 +306,7 @@ rachel,206,30,3	script	Freya's Priest#play	4_F_TRAINEE,{
 	mes "item of yours can do...";
 	mes "Oh? Oh! That's wonderful!";
 	close2;
-	set .@play,rand(1,10);
+	.@play = rand(1,10);
 	if (.@play < 3)
 		consumeitem 601; //Wing_Of_Fly
 	else if (.@play < 5)

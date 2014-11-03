@@ -4,6 +4,9 @@
     <ClCompile Include="..\src\login\account_sql.c">
       <Filter>login_sql</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\login\HPMlogin.c">
+      <Filter>login_sql</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\login\ipban_sql.c">
       <Filter>login_sql</Filter>
     </ClCompile>
@@ -91,6 +94,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\login\account.h">
+      <Filter>login_sql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\login\HPMlogin.h">
       <Filter>login_sql</Filter>
     </ClInclude>
     <ClInclude Include="..\src\login\ipban.h">

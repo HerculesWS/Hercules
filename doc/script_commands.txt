@@ -974,14 +974,14 @@ Within executable script code, some lines can be labels:
 <label name>:
 
 Labels are points of reference in your script, which can be used to route 
-execution with 'goto', 'menu' and 'jump_zero' commands, invoked with 
-'doevent' and 'donpcevent' commands and are otherwise essential. A label's 
-name may not be longer than 22 characters. (23rd is the ':'.) There is 
-some confusion in the source about whether it's 22, 23 or 24 all over the 
-place, so keeping labels under 22 characters could be wise. It may only 
-contain alphanumeric characters and underscore. In addition to labels you 
-name yourself, there are also some special labels which the script engine 
-will start execution from if a special event happens:
+execution with 'goto' and 'menu' commands, invoked with 'doevent', 'donpcevent'
+and 'callsub' commands and are otherwise essential. A label's name may not be
+longer than 22 characters. (23rd is the ':'.) There is some confusion in the
+source about whether it's 22, 23 or 24 all over the place, so keeping labels
+under 22 characters could be wise. It may only contain alphanumeric characters
+and underscore. In addition to labels you name yourself, there are also some
+special labels which the script engine will start execution from if a special
+event happens:
 
 OnClock<hour><minute>:
 OnMinute<minute>:
@@ -2057,6 +2057,14 @@ else if (<condition 2>) {
 ---------------------------------------
 
 *jump_zero (<condition>),<label>;
+
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it is
+scheduled to be removed at any time on or after November 27th, 2014. Please
+consider using 'if', 'switch', 'for', 'while', as appropriate.
 
 This command works like an 'if'+'goto' combination in one go. (See 'if'). 
 If the condition is false (equal to zero) this command will immediately 
@@ -3871,7 +3879,13 @@ regardless of color.
 *setriding {<flag>};
 *checkriding()
 
-[ DEPRECATED - Please use setmount / checkmount]
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it
+is scheduled to be removed on or after November 30th, 2014. Please consider
+using setmount and checkmount() instead.
 
 If <flag> is 0 this command will remove the mount from the character.
 Otherwise it gives the invoking character a PecoPeco (if they are a Knight 
@@ -3890,7 +3904,13 @@ riding a bird and 0 if they aren't.
 *setdragon {<color>};
 *checkdragon()
 
-[ DEPRECATED - Please use setmount / checkmount]
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it
+is scheduled to be removed on or after November 30th, 2014. Please consider
+using setmount and checkmount() instead.
 
 The 'setdragon' function toggles mounting a dragon for the invoking 
 character. It will return 1 if successful, 0 otherwise.
@@ -3913,7 +3933,13 @@ riding a dragon and 0 if they aren't.
 *setmadogear {<flag>};
 *checkmadogear()
 
-[ DEPRECATED - Please use setmount / checkmount]
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it
+is scheduled to be removed on or after November 30th, 2014. Please consider
+using setmount and checkmount() instead.
 
 If <flag> is 0 this command will remove the mount from the character.
 Otherwise it gives the invoking character a Mado (if they are a Mechanic).
@@ -4249,7 +4275,6 @@ character is not married, or if there's no invoking character (no RID).
 ---------------------------------------
 
 *savepoint "<map name>",<x>,<y>;
-*save "<map name>",<x>,<y>;
 
 This command saves where the invoking character will return to upon 
 'return to save point', if dead or in some other cases. The two versions 
@@ -4258,6 +4283,16 @@ perfectly obvious. This ignores any and all map flags, and can make a
 character respawn where no teleportation is otherwise possible.
 
 	savepoint "place",350,75;
+
+*save "<map name>",<x>,<y>;
+
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it
+is scheduled to be removed on or after December 2nd, 2014. Please consider
+using savepoint() instead.
 
 ---------------------------------------
 
@@ -6241,6 +6276,14 @@ A debug message also shows on the console when no events are triggered.
 
 *cmdothernpc "<npc name>","<command>";
 
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it
+is scheduled to be removed on or after December 2nd, 2014. Please consider
+using donpcevent() instead.
+
 This is simply "donpcevent <npc name>::OnCommand<command>".
 It is an approximation of official server script language's 'cmdothernpc'.
 
@@ -6716,8 +6759,6 @@ It's not clear what happens to a waiting room if the NPC is disabled with
 
 *enablewaitingroomevent {"<NPC object name>"};
 *disablewaitingroomevent {"<NPC object name>"};
-*enablearena;
-*disablearena;
 
 This will enable and disable triggering the waiting room event (see 
 'waitingroom') respectively. Optionally giving an NPC object name will do 
@@ -6730,6 +6771,17 @@ amount and trigger the event accordingly.
 Normally, whenever a waiting room was created to make sure that only one 
 character is, for example, trying to pass a job quest trial, and no other 
 characters are present in the room to mess up the script.
+
+*enablearena;
+*disablearena;
+
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it
+is scheduled to be removed on or after December 2nd, 2014. Please consider
+using enablewaitingroomevent and disablewaitingroomevent instead.
 
 The 'enablearena'/'disablearena' commands are just aliases with no 
 parameter. These are supposedly left here for compatibility with official 
@@ -7560,6 +7612,18 @@ Example:
 
 ---------------------------------------
 
+*min(<number>{,<number>...<number>})
+*max(<number>{,<number>...<number>})
+
+Returns the smallest (or biggest) from the set of given numbers.
+
+Example:
+	.@minimum = min(1, -6, -2, 8, 2); // .@minimum will be equal to -6
+	.@maximum = max(0, 5, 10, 4); // .@maximum will be equal to 10
+	.@level = min(BaseLevel, 70); // .@level will be the character's base level, capped to 70
+
+---------------------------------------
+
 *md5("<string>")
 
 Returns the md5 checksum of a number or string.
@@ -7963,16 +8027,23 @@ reached or when pet performance is activated.
 
 *petskillsupport <skill id>,<skill level>,<delay>,<percent hp>,<percent sp>;
 *petskillsupport "<skill name>",<skill level>,<delay>,<percent hp>,<percent sp>;
-*petheal <level>,<delay>,<percent hp>,<percent sp>;
 
 This will make the pet use a specified support skill on the owner whenever 
 the HP and SP are below the given percent values, with a specified delay 
 time between activations. The skill numbers are as per 
 'db/(pre-)re/skill_db.txt'.
-'petheal' works the same as 'petskillsupport' but has the skill ID 
-hard-coded to 28 (Heal). This command is deprecated.
 It's not quite certain who's stats will be used for the skills cast, the 
 character's or the pets. Probably, Skotlex can answer that question.
+
+*petheal <level>,<delay>,<percent hp>,<percent sp>;
+
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+The petheal command is deprecated and it should not be used in new scripts, as
+it is scheduled to be removed after November 27th, 2014. Please consider using
+petskillsupport by specifying the AL_HEAL skill id instead.
 
 *petskillattack <skill id>,<skill level>,<rate>,<bonusrate>;
 *petskillattack "<skill name>",<skill level>,<rate>,<bonusrate>;
@@ -8422,7 +8493,13 @@ Add quest of the <ID2> to the the quest log, and the state is "active".
 
 *checkquest(<ID>{,PLAYTIME|HUNTING})
 
-DEPRECATED - use questprogress instead.
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it
+is scheduled to be removed on or after November 28th, 2014. Please consider
+using questprogress() instead. Or, in special cases, questactive().
 
 If no additional argument supplied, return the state of the quest: 
 	-1 = Quest not started (not in quest log)

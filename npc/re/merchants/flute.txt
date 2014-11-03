@@ -43,10 +43,10 @@
 		if (eaclass()&EAJL_THIRD) {
 			mes "[Falcon Flute Trader]";
 			mes "For Rangers, however, I have a special price of 10,000 zeny!";
-			set .@price,10000;
+			.@price = 10000;
 			next;
 		} else
-			set .@price,12500;
+			.@price = 12500;
 		if(select("Don't buy one:Buy a Falcon Flute") == 1) {
 			mes "[Falcon Flute Trader]";
 			mes "That's too bad. If you need one, come back!";

@@ -2586,6 +2586,8 @@ int map_getcellp(struct map_data* m,int16 x,int16 y,cell_chk cellchk) {
 		return (cell.nochat);
 	case CELL_CHKICEWALL:
 		return (cell.icewall);
+	case CELL_CHKNOICEWALL:
+		return (cell.noicewall);
 
 		// special checks
 	case CELL_CHKPASS:
@@ -2645,6 +2647,8 @@ void map_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag) {
 	case CELL_NOVENDING:     map->list[m].cell[j].novending = flag;     break;
 	case CELL_NOCHAT:        map->list[m].cell[j].nochat = flag;        break;
 	case CELL_ICEWALL:       map->list[m].cell[j].icewall = flag;       break;
+	case CELL_NOICEWALL:     map->list[m].cell[j].noicewall = flag;     break;
+
 	default:
 		ShowWarning("map_setcell: invalid cell type '%d'\n", (int)cell);
 		break;
@@ -5610,10 +5614,7 @@ int do_init(int argc, char *argv[])
 	map_load_defaults();
 
 	HPM_map_do_init();
-	HPM->DataCheck = HPM_map_DataCheck;
-	HPM->load_sub = HPM_map_plugin_load_sub;
 	HPM->symbol_defaults_sub = map_hp_symbols;
-	HPM->grabHPDataSub = HPM_map_grabHPData;
 	for( i = 1; i < argc; i++ ) {
 		const char* arg = argv[i];
 		if( strcmp(arg, "--load-plugin") == 0 ) {

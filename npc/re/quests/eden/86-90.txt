@@ -77,9 +77,9 @@ moc_para01,48,175,3	script	86-90 Mission Board	4_BOARD3,{
 			72000,78000,82000,80000,
 			72000,72000,72000,86000,80000;
 		mes "You must be within level 86-90 to accept these missions.";
-		for(set .@quest,4167; .@quest<=4180; set .@quest,.@quest+1) {
-			set .@hunting, checkquest(.@quest,HUNTING);
-			if (.@hunting == 0 || .@hunting == 1) {
+		for(.@quest = 4167; .@quest<=4180; ++.@quest) {
+			.@hunting = questprogress(.@quest,HUNTING);
+			if (.@hunting == 1) {
 				next;
 				mes ":: You cannot proceed in";
 				mes ":: ^0000FF"+.@names$[.@quest-4167]+" Hunting^000000.";
@@ -150,16 +150,16 @@ moc_para01,48,175,3	script	86-90 Mission Board	4_BOARD3,{
 
 //callsub L_Quest,<quest ID>,"<monster name>",<reward EXP>,"<cutin image>","<description>"{,"s"};
 L_Quest:
-	set .@quest1, getarg(0);
-	set .@quest2, .@quest1+31;
-	set .@playtime, checkquest(.@quest2,PLAYTIME);
-	if (.@playtime == 0 || .@playtime == 1) {
+	.@quest1 = getarg(0);
+	.@quest2 = .@quest1+31;
+	.@playtime = questprogress(.@quest2,PLAYTIME);
+	if (.@playtime == 1) {
 		mes "[86-90 Mission Board]";
 		mes "You need to wait 3 hours before you can take this mission again.";
 		close;
 	}
-	set .@hunting, checkquest(.@quest1,HUNTING);
-	if (.@hunting == 0 || .@hunting == 1) {
+	.@hunting = questprogress(.@quest1,HUNTING);
+	if (.@hunting == 1) {
 		mes "[86-90 Mission Board]";
 		mes "Have you finished hunting all 30 "+getarg(1)+getarg(5,"")+" yet?";
 		close;
@@ -168,7 +168,7 @@ L_Quest:
 		mes "You have completed the hunting.";
 		mes "Please accept this reward as a compensation.";
 		erasequest .@quest1;
-		if (.@playtime > -1) erasequest .@quest2;
+		if (.@playtime) erasequest .@quest2;
 		setquest .@quest2;
 		getexp getarg(2),0;
 		close;
@@ -190,7 +190,7 @@ L_Quest:
 		if(select("I'll hunt them.:No thanks.") == 1) {
 			mes "[86-90 Mission Board]";
 			mes "When you have completed the mission, post it on this board and collect your reward.";
-			if (.@playtime > -1) erasequest .@quest2;
+			if (.@playtime) erasequest .@quest2;
 			setquest .@quest1;
 		}
 		close;

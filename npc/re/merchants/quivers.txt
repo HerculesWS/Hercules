@@ -73,10 +73,10 @@ S_BuyQuiver:
 	next;
 	switch(select("Trade all the arrows you have:Get only one quiver:Don't trade")) {
 	case 1:
-		set .@arrows, countitem(getarg(0));
-		set .@quiver, .@arrows / getarg(1);
-		set .@arrows_used, .@quiver * getarg(1);
-		set .@arrow_zeny01, .@quiver * getarg(2);
+		.@arrows = countitem(getarg(0));
+		.@quiver = .@arrows / getarg(1);
+		.@arrows_used = .@quiver * getarg(1);
+		.@arrow_zeny01 = .@quiver * getarg(2);
 		mes "The number of arrows you have : ^3131FF"+.@arrows+"^000000";
 		mes "The number of quivers available : ^3131FF"+.@quiver+"^000000";
 		mes "Zeny needed for trade : ^3131FF"+.@arrow_zeny01+" zeny^000000";
@@ -90,10 +90,10 @@ S_BuyQuiver:
 		}
 		break;
 	case 2:
-		set .@quiver, 1;
-		set .@arrows_used, getarg(1);
-		set .@arrow_zeny01, getarg(2);
-		set .@zeny_mes,1;
+		.@quiver = 1;
+		.@arrows_used = getarg(1);
+		.@arrow_zeny01 = getarg(2);
+		.@zeny_mes = 1;
 		break;
 	case 3:
 		mes "[Quiver Maker]";

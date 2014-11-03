@@ -18,9 +18,9 @@ prt_in,168,56,4	script	Monster Encyclopedia#prt	HIDDEN_NPC,{
 	mes "containing information on Water,";
 	mes "Wind and Ghost property monsters.";
 	next;
-	set .@loop1,1;
+	.@loop1 = 1;
 	while(.@loop1) {
-		set .@loop2,1;
+		.@loop2 = 1;
 		switch(select("Water Property Monsters:Wind Property Monsters:Spritual Property Monsters:Cancel")) {
 		case 1:
 			while(.@loop2) {
@@ -213,7 +213,7 @@ prt_in,168,56,4	script	Monster Encyclopedia#prt	HIDDEN_NPC,{
 					break;
 				case 4:
 					close2;
-					set .@loop2,0;
+					.@loop2 = 0;
 					end;
 				}
 			}
@@ -325,7 +325,7 @@ prt_in,168,56,4	script	Monster Encyclopedia#prt	HIDDEN_NPC,{
 					break;
 				case 4:
 					close2;
-					set .@loop2,0;
+					.@loop2 = 0;
 					end;
 				}
 			}
@@ -379,14 +379,14 @@ prt_in,168,56,4	script	Monster Encyclopedia#prt	HIDDEN_NPC,{
 					break;
 				case 4:
 					close2;
-					set .@loop2,0;
+					.@loop2 = 0;
 					end;
 				}
 			}
 
 		case 4:
 			close2;
-			set .@loop1,0;
+			.@loop1 = 0;
 			end;
 		}
 	}
@@ -399,9 +399,9 @@ prt_in,159,56,4	script	Monster Encyclopedia#2pr	HIDDEN_NPC,{
 	mes "Fire and Neutral property";
 	mes "monsters.";
 	next;
-	set .@loop1,1;
+	.@loop1 = 1;
 	while(.@loop1) {
-		set .@loop2,1;
+		.@loop2 = 1;
 		switch(select("Earth Property Monsters:Fire Property Monsters:Neutral Property Monsters:Cancel")) {
 		case 1:
 			while(.@loop2) {
@@ -648,7 +648,7 @@ prt_in,159,56,4	script	Monster Encyclopedia#2pr	HIDDEN_NPC,{
 					break;
 				case 4:
 					close2;
-					set .@loop2,0;
+					.@loop2 = 0;
 					end;
 				}
 			}
@@ -783,7 +783,7 @@ prt_in,159,56,4	script	Monster Encyclopedia#2pr	HIDDEN_NPC,{
 					break;
 				case 4:
 					close2;
-					set .@loop2,0;
+					.@loop2 = 0;
 					end;
 				}
 			}
@@ -858,14 +858,14 @@ prt_in,159,56,4	script	Monster Encyclopedia#2pr	HIDDEN_NPC,{
 					break;
 				case 4:
 					close2;
-					set .@loop2,0;
+					.@loop2 = 0;
 					end;
 				}
 			}
 
 		case 4:
 			close2;
-			set .@loop1,0;
+			.@loop1 = 0;
 			end;
 		}
 	}
@@ -877,9 +877,9 @@ prt_in,161,50,4	script	Monster Encyclopedia#3pr	 111,{
 	mes "containing information on Dark,";
 	mes "Poison and Undead monsters.";
 	next;
-	set .@loop1,1;
+	.@loop1 = 1;
 	while(.@loop1) {
-		set .@loop2,1;
+		.@loop2 = 1;
 		switch(select("Dark Property Monsters:Poison Property Monsters:Undead Property Monsters:Cancel")) {
 		case 1:
 			while(.@loop2) {
@@ -1011,7 +1011,7 @@ prt_in,161,50,4	script	Monster Encyclopedia#3pr	 111,{
 					break;
 				case 4:
 					close2;
-					set .@loop2,0;
+					.@loop2 = 0;
 					end;
 				}
 			}
@@ -1099,7 +1099,7 @@ prt_in,161,50,4	script	Monster Encyclopedia#3pr	 111,{
 					break;
 				case 4:
 					close2;
-					set .@loop2,0;
+					.@loop2 = 0;
 					end;
 				}
 			}
@@ -1226,14 +1226,14 @@ prt_in,161,50,4	script	Monster Encyclopedia#3pr	 111,{
 					break;
 				case 4:
 					close2;
-					set .@loop2,0;
+					.@loop2 = 0;
 					end;
 				}
 			}
 
 		case 4:
 			close2;
-			set .@loop,0;
+			.@loop = 0;
 			end;
 		}
 	}
@@ -1244,7 +1244,7 @@ prt_in,172,96,4	script	Monster Encyclopedia#4pr	HIDDEN_NPC,{
 	mes "This is an Encyclopedia describing";
 	mes "monsters living in Dungeons.";
 	next;
-	set .@loop1,1;
+	.@loop1 = 1;
 	switch(select("Ant Hell:Geffen Tower:Sphinx:Cancel")) {
 	case 1:
 		while(.@loop1) {
@@ -1350,7 +1350,7 @@ prt_in,172,96,4	script	Monster Encyclopedia#4pr	HIDDEN_NPC,{
 				break;
 			case 3:
 				close2;
-				set .@loop1,0;
+				.@loop1 = 0;
 				end;
 			}
 		}
@@ -1547,7 +1547,7 @@ prt_in,172,96,4	script	Monster Encyclopedia#4pr	HIDDEN_NPC,{
 				break;
 			case 5:
 				close2;
-				set .@loop1,0;
+				.@loop1 = 0;
 				end;
 			}
 		}
@@ -1710,7 +1710,7 @@ prt_in,172,96,4	script	Monster Encyclopedia#4pr	HIDDEN_NPC,{
 				break;
 			case 6:
 				close2;
-				set .@loop1,0;
+				.@loop1 = 0;
 				end;
 			}
 		}
@@ -1726,7 +1726,7 @@ prt_in,164,96,4	script	Monster Encyclopedia#5pr	HIDDEN_NPC,{
 	mes "This is an Encyclopedia describing";
 	mes "Monsters living in Dungeons.";
 	next;
-	set .@loop1,1;
+	.@loop1 = 1;
 	switch(select("Orc Dungeon:Byalan Cave near Izlude:Prontera Culvert")){
 	case 1:
 		while(.@loop1) {
@@ -1803,7 +1803,7 @@ prt_in,164,96,4	script	Monster Encyclopedia#5pr	HIDDEN_NPC,{
 				break;
 			case 3:
 				close2;
-				set .@loop1,0;
+				.@loop1 = 0;
 				end;
 			}
 		}
@@ -2065,7 +2065,7 @@ prt_in,164,96,4	script	Monster Encyclopedia#5pr	HIDDEN_NPC,{
 				break;
 			case 6:
 				close2;
-				set .@loop1,0;
+				.@loop1 = 0;
 				end;
 			}
 		}
@@ -2290,7 +2290,7 @@ prt_in,164,96,4	script	Monster Encyclopedia#5pr	HIDDEN_NPC,{
 				break;
 			case 5:
 				close2;
-				set .@loop1,0;
+				.@loop1 = 0;
 				end;
 			}
 		}
@@ -2304,7 +2304,7 @@ prt_in,172,102,4	script	Monster Encyclopedia#6pr	HIDDEN_NPC,{
 	mes "This is an Encyclopedia describing";
 	mes "Monsters living in Dungeons.";
 	next;
-	set .@loop1,1;
+	.@loop1 = 1;
 	switch(select("Mjolnir Dead Pit:Payon Cave:Pyramid")) {
 	case 1:
 		while(.@loop1) {
@@ -2405,7 +2405,7 @@ prt_in,172,102,4	script	Monster Encyclopedia#6pr	HIDDEN_NPC,{
 				break;
 			case 4:
 				close2;
-				set .@loop1,0;
+				.@loop1 = 0;
 				end;
 			}
 		}
@@ -2583,7 +2583,7 @@ prt_in,172,102,4	script	Monster Encyclopedia#6pr	HIDDEN_NPC,{
 				break;
 			case 6:
 				close2;
-				set .@loop1,0;
+				.@loop1 = 0;
 				end;
 			}
 		}
@@ -2797,7 +2797,7 @@ prt_in,172,102,4	script	Monster Encyclopedia#6pr	HIDDEN_NPC,{
 				break;
 			case 7:
 				close2;
-				set .@loop1,0;
+				.@loop1 = 0;
 				end;
 			}
 		}
@@ -2812,7 +2812,7 @@ prt_in,164,102,4	script	Monster Encyclopedia#7pr	HIDDEN_NPC,{
 	mes "This is an Encyclopedia describing";
 	mes "Monsters living in Dungeons.";
 	next;
-	set .@loop1,1;
+	.@loop1 = 1;
 	switch(select("Sunken Ship near Alberta:Prontera Maze")) {
 	case 1:
 		while(.@loop1) {
@@ -2947,7 +2947,7 @@ prt_in,164,102,4	script	Monster Encyclopedia#7pr	HIDDEN_NPC,{
 				break;
 			case 3:
 				close2;
-				set .@loop1,0;
+				.@loop1 = 0;
 				end;
 			}
 		}
@@ -3442,7 +3442,7 @@ prt_in,164,102,4	script	Monster Encyclopedia#7pr	HIDDEN_NPC,{
 				break;
 			case 3:
 				close2;
-				set .@loop1,0;
+				.@loop1 = 0;
 				end;
 			}
 		}

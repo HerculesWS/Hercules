@@ -16,7 +16,7 @@
 //============================================================
 -	script	Mersetzdeitz#1::OutsideFlagsG5	GUILD_FLAG,{
 
-	set .@GID, getcastledata("gefg_cas05",1);
+	.@GID = getcastledata("gefg_cas05",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";

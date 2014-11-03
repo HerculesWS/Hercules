@@ -274,7 +274,7 @@ OnTouch:
 			else
 				break;
 		}
-		set .@Red_potion_hap,.@input * 500;
+		.@Red_potion_hap = .@input * 500;
 		if (Zeny < .@Red_potion_hap) {
 			mes "[Suspicious Guy]";
 			mes "Oh maaan~";
@@ -344,7 +344,7 @@ OnTouch:
 			else
 				break;
 		}
-		set .@Main_gauche_hap,.@input * 9400;
+		.@Main_gauche_hap = .@input * 9400;
 		if (Zeny < .@Main_gauche_hap) {
 			mes "[Suspicious Guy]";
 			mes "Short on zeny?";
@@ -396,7 +396,7 @@ OnTouch:
 			else
 				break;
 		}
-		set .@Hood__hap,.@input * 930;
+		.@Hood__hap = .@input * 930;
 		if (Zeny < .@Hood__hap) {
 			mes "[Suspicious Guy]";
 			mes "Oh nuts...";

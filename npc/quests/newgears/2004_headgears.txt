@@ -1441,7 +1441,7 @@ geffen,83,189,5	script	Seth#1	4_M_KID2,{
 		close;
 	}
 }
-	
+
 // Party Hat, Straw Hat, Cowboy Hat, Sombrero, Beanie
 //============================================================
 xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
@@ -2472,31 +2472,31 @@ OnTouch:
 		close2;
 		set getvariableofnpc(.MyMobs1,"SpawnManager#Kitsune"),1;
 		switch(rand(1,25)) {
-		case 1: set .@x,118;	set .@y,66;	break;
-		case 2: set .@x,103;	set .@y,194;	break;
-		case 3: set .@x,116;	set .@y,50;	break;
-		case 4: set .@x,49;	set .@y,94;	break;
-		case 5: set .@x,232;	set .@y,232;	break;
-		case 6: set .@x,245;	set .@y,86;	break;
-		case 7: set .@x,217;	set .@y,133;	break;
-		case 8: set .@x,50;	set .@y,157;	break;
-		case 9: set .@x,245;	set .@y,60;	break;
-		case 10: set .@x,220;	set .@y,77;	break;
-		case 11: set .@x,198;	set .@y,62;	break;
-		case 12: set .@x,158;	set .@y,41;	break;
-		case 13: set .@x,57;	set .@y,210;	break;
-		case 14: set .@x,251;	set .@y,207;	break;
-		case 15: set .@x,86;	set .@y,130;	break;
-		case 16: set .@x,216;	set .@y,233;	break;
-		case 17: set .@x,192;	set .@y,245;	break;
-		case 18: set .@x,117;	set .@y,234;	break;
-		case 19: set .@x,144;	set .@y,255;	break;
-		case 20: set .@x,190;	set .@y,216;	break;
-		case 21: set .@x,63;	set .@y,66;	break;
-		case 22: set .@x,247;	set .@y,183;	break;
-		case 23: set .@x,37;	set .@y,225;	break;
-		case 24: set .@x,247;	set .@y,118;	break;
-		case 25: set .@x,154;	set .@y,130;	break;
+		case 1:  .@x = 118; .@y =  66; break;
+		case 2:  .@x = 103; .@y = 194; break;
+		case 3:  .@x = 116; .@y =  50; break;
+		case 4:  .@x =  49; .@y =  94; break;
+		case 5:  .@x = 232; .@y = 232; break;
+		case 6:  .@x = 245; .@y =  86; break;
+		case 7:  .@x = 217; .@y = 133; break;
+		case 8:  .@x =  50; .@y = 157; break;
+		case 9:  .@x = 245; .@y =  60; break;
+		case 10: .@x = 220; .@y =  77; break;
+		case 11: .@x = 198; .@y =  62; break;
+		case 12: .@x = 158; .@y =  41; break;
+		case 13: .@x =  57; .@y = 210; break;
+		case 14: .@x = 251; .@y = 207; break;
+		case 15: .@x =  86; .@y = 130; break;
+		case 16: .@x = 216; .@y = 233; break;
+		case 17: .@x = 192; .@y = 245; break;
+		case 18: .@x = 117; .@y = 234; break;
+		case 19: .@x = 144; .@y = 255; break;
+		case 20: .@x = 190; .@y = 216; break;
+		case 21: .@x =  63; .@y =  66; break;
+		case 22: .@x = 247; .@y = 183; break;
+		case 23: .@x =  37; .@y = 225; break;
+		case 24: .@x = 247; .@y = 118; break;
+		case 25: .@x = 154; .@y = 130; break;
 		}
 		monster "pay_dun03",.@x,.@y,"Nine Tail",1180,1,"SpawnManager#Kitsune::OnMyMobDead";
 		specialeffect EF_FLASHER;
@@ -2571,31 +2571,31 @@ pay_dun03,48,84,4	script	Nine Tails#Kitsune Man	4_M_JPN2,{
 	}
 	set getvariableofnpc(.MyMobs2,"SpawnManager#Kitsune"),1;
 	switch(rand(1,25)) {
-	case 1: set .@x,118;	set .@y,66;	break;
-	case 2: set .@x,103;	set .@y,194;	break;
-	case 3: set .@x,116;	set .@y,50;	break;
-	case 4: set .@x,49;	set .@y,94;	break;
-	case 5: set .@x,232;	set .@y,232;	break;
-	case 6: set .@x,245;	set .@y,86;	break;
-	case 7: set .@x,217;	set .@y,133;	break;
-	case 8: set .@x,50;	set .@y,157;	break;
-	case 9: set .@x,245;	set .@y,60;	break;
-	case 10: set .@x,220;	set .@y,77;	break;
-	case 11: set .@x,198;	set .@y,62;	break;
-	case 12: set .@x,158;	set .@y,41;	break;
-	case 13: set .@x,57;	set .@y,210;	break;
-	case 14: set .@x,251;	set .@y,207;	break;
-	case 15: set .@x,86;	set .@y,130;	break;
-	case 16: set .@x,216;	set .@y,233;	break;
-	case 17: set .@x,192;	set .@y,245;	break;
-	case 18: set .@x,117;	set .@y,234;	break;
-	case 19: set .@x,144;	set .@y,255;	break;
-	case 20: set .@x,190;	set .@y,216;	break;
-	case 21: set .@x,63;	set .@y,66;	break;
-	case 22: set .@x,247;	set .@y,183;	break;
-	case 23: set .@x,37;	set .@y,225;	break;
-	case 24: set .@x,247;	set .@y,118;	break;
-	case 25: set .@x,154;	set .@y,130;	break;
+	case 1:  .@x = 118; .@y =  66; break;
+	case 2:  .@x = 103; .@y = 194; break;
+	case 3:  .@x = 116; .@y =  50; break;
+	case 4:  .@x =  49; .@y =  94; break;
+	case 5:  .@x = 232; .@y = 232; break;
+	case 6:  .@x = 245; .@y =  86; break;
+	case 7:  .@x = 217; .@y = 133; break;
+	case 8:  .@x =  50; .@y = 157; break;
+	case 9:  .@x = 245; .@y =  60; break;
+	case 10: .@x = 220; .@y =  77; break;
+	case 11: .@x = 198; .@y =  62; break;
+	case 12: .@x = 158; .@y =  41; break;
+	case 13: .@x =  57; .@y = 210; break;
+	case 14: .@x = 251; .@y = 207; break;
+	case 15: .@x =  86; .@y = 130; break;
+	case 16: .@x = 216; .@y = 233; break;
+	case 17: .@x = 192; .@y = 245; break;
+	case 18: .@x = 117; .@y = 234; break;
+	case 19: .@x = 144; .@y = 255; break;
+	case 20: .@x = 190; .@y = 216; break;
+	case 21: .@x =  63; .@y =  66; break;
+	case 22: .@x = 247; .@y = 183; break;
+	case 23: .@x =  37; .@y = 225; break;
+	case 24: .@x = 247; .@y = 118; break;
+	case 25: .@x = 154; .@y = 130; break;
 	}
 	monster "pay_dun03",.@x,.@y,"Nine Tail",1180,1,"SpawnManager#Kitsune::OnMyMobDead2";
 	specialeffect EF_BLASTMINEBOMB;
@@ -2611,18 +2611,18 @@ OnInit:
 
 pay_dun03,48,84,4	script	SpawnManager#Kitsune	-1,{
 OnInit:
-	set .MyMobs1,1;
-	set .MyMobs2,1;
+	.MyMobs1 = 1;
+	.MyMobs2 = 1;
 	end;
 
 OnMyMobDead:
-	set .MyMobs1,.MyMobs1-1;
+	--.MyMobs1;
 	if (.MyMobs1 < 1)
 		enablenpc "Nine Tails#Kitsune Man";
 	end;
 
 OnMyMobDead2:
-	set .MyMobs2,.MyMobs2-1;
+	--.MyMobs2;
 	if (.MyMobs2 < 1)
 		enablenpc "Nine Tails#Kitsune Mask";
 	end;
@@ -2684,7 +2684,7 @@ OnTouch:
 				warp "gef_fild10",100,100;
 				end;
 			}
-			set orcs_hero_hat,1;
+			orcs_hero_hat = 1;
 			mes "[Orc Warrior]";
 			mes "Hah! It's a promise then!";
 			mes "Bwahahahahhahahahahahaha!";
@@ -2758,7 +2758,7 @@ OnTouch:
 			mes "I hate humans! In fact, all Orcs hate humans! Hate you hate you hate you with a passion!";
 			next;
 			delitem 909,1000; //Jellopy
-			set orcs_hero_hat,2;
+			orcs_hero_hat = 2;
 			mes "[Orc Warrior]";
 			mes "So...";
 			mes "Still in the mood to talk?!";
@@ -2817,7 +2817,7 @@ OnTouch:
 			mes "Bah! Humans have built their own towns and cities. Do they keep their senseless killing amongst each other?! NO! Humans have to rampage and ravage everything!!";
 			next;
 			delitem 909,1000; //Jellopy
-			set orcs_hero_hat,3;
+			orcs_hero_hat = 3;
 			mes "[Orc Warrior]";
 			mes "Now, if you want";
 			mes "to listen to more,";
@@ -2882,7 +2882,7 @@ OnTouch:
 			mes "That's enough for today!";
 			next;
 			delitem 909,1000; //Jellopy
-			set orcs_hero_hat,4;
+			orcs_hero_hat = 4;
 			mes "[Orc Warrior]";
 			mes "Grrr~! If you want to listen longer go bring me ^FF00001000 Jellopy^000000 again.";
 			close;
@@ -2918,7 +2918,7 @@ OnTouch:
 			mes "That's the end of the conversation for today.";
 			next;
 			delitem 909,1000; //Jellopy
-			set orcs_hero_hat,5;
+			orcs_hero_hat = 5;
 			mes "[Orc Warrior]";
 			mes "Now, if you want to listen some more, go bring me";
 			mes "^FF00001000 Jellopy^000000 again tomorrow.";
@@ -2954,7 +2954,7 @@ OnTouch:
 			mes "Orcs never restore health during battle using your silly medicines. Hmpf. Humans can be so weak, drinking bottles of Potion to keep up in a fight. Oh well, though, I'm not sure if you're the same.";
 			next;
 			delitem 909,1000; //Jellopy
-			set orcs_hero_hat,6;
+			orcs_hero_hat = 6;
 			mes "[Orc Warrior]";
 			mes "Now, if you want";
 			mes "to listen to me";
@@ -2996,7 +2996,7 @@ OnTouch:
 			mes "Hm, well to you humans, we may all look the same, but we Orcs can tell each other apart. How about you, human? Do I look the same as every Warrior outside to you?";
 			next;
 			delitem 909,1000; //Jellopy
-			set orcs_hero_hat,7;
+			orcs_hero_hat = 7;
 			mes "[Orc Warrior]";
 			mes "Now...";
 			mes "If you want to";
@@ -3043,7 +3043,7 @@ OnTouch:
 			mes "Well, humans rarely get the chance to see this helmet unless they're in battle with an Orc Hero themselves...";
 			next;
 			delitem 909,1000; //Jellopy
-			set orcs_hero_hat,8;
+			orcs_hero_hat = 8;
 			mes "[Orc Warrior]";
 			mes "Now, if you want";
 			mes "to listen longer,";
@@ -3087,7 +3087,7 @@ OnTouch:
 			mes "Every Orc can recognize him by his distinguished helm with the three horns.";
 			next;
 			delitem 909,1000; //Jellopy
-			set orcs_hero_hat,9;
+			orcs_hero_hat = 9;
 			mes "[Orc Warrior]";
 			mes "Now...";
 			mes "If you want to";
@@ -3133,7 +3133,7 @@ OnTouch:
 			mes "I don't think there is a curse which transforms humans into a totally ugly creature depending on their deeds. So it is difficult to tell which humans are honorable...";
 			next;
 			delitem 909,1000; //Jellopy
-			set orcs_hero_hat,10;
+			orcs_hero_hat = 10;
 			mes "[Orc Warrior]";
 			mes "Now...";
 			mes "If you want";
@@ -3164,7 +3164,7 @@ OnTouch:
 			mes "I suggest you that you experience more battles with the many different Orcs out there. That's the best way of understanding and learning about the Orc tribe.";
 			next;
 			delitem 909,1000; //Jellopy
-			set orcs_hero_hat,11;
+			orcs_hero_hat = 11;
 			getitem 1304,1; //Orcish_Axe
 			mes "[Orc Warrior]";
 			mes "This is a small token of my gratitue. This axe used to aid me in many battles and is very precious to me. I hope you will take care of this.";
@@ -3223,8 +3223,8 @@ OnTouch:
 				mes "Ah, spoken like a true warrior. Alright then, go forth and do battle with others of my tribe, and bring me 10,000 Orcish Vouchers.";
 				next;
 				delitem 931,100; //Orcish_Voucher
-				set orcs_hero_hat,13;
-				set orcs_hero_hat2,100;
+				orcs_hero_hat = 13;
+				orcs_hero_hat2 = 100;
 				mes "[Orc Warrior]";
 				mes "I took 100 Orcish Voucher from you now. Now, fight and fight until you have defeated 10,000 more Orc Warriors so that the whole tribe will have to recognize you!";
 				close;
@@ -3251,7 +3251,7 @@ OnTouch:
 	else if (orcs_hero_hat2 > 99 && orcs_hero_hat2 < 10000) {
 		if (countitem(931) > 0) {
 			if (orcs_hero_hat2 > 9999)
-				set orcs_hero_hat2,10000;
+				orcs_hero_hat2 = 10000;
 			mes "[Orc Warrior]";
 			mes "You've come back...";
 			mes "It doesn't seem that you've accomplished your goal yet, but I do not expect you to defeat 10,000 Orc Warriors so easily.";
@@ -3265,10 +3265,10 @@ OnTouch:
 			mes "victory with me?";
 			next;
 			if (select("Yes, I do.:I will do it later.") == 1) {
-				set .@total_vouchers,orcs_hero_hat2+countitem(931);
+				.@total_vouchers = orcs_hero_hat2+countitem(931);
 				if (.@total_vouchers < 10000) {
 					delitem 931,countitem(931); //Orcish_Voucher
-					set orcs_hero_hat2,.@total_vouchers;
+					orcs_hero_hat2 = .@total_vouchers;
 					mes "[Orc Warrior]";
 					mes "I hope you will";
 					mes "continue your efforts";
@@ -3306,8 +3306,8 @@ OnTouch:
 						mes "an Orc Lady!!";
 					next;
 					delitem 931,countitem(931); //Orcish_Voucher
-					set orcs_hero_hat,14;
-					set orcs_hero_hat2,10000;
+					orcs_hero_hat = 14;
+					orcs_hero_hat2 = 10000;
 					getitem 2299,1; //Viking_Helm
 					mes "[Orc Warrior]";
 					mes "This is a present for you. I am not sure if it will fit to your head or not, but try it. If your head is too big to wear this, I suggest that you carry this with you.";
@@ -3389,7 +3389,7 @@ OnTouch:
 				mes "[Orc Warrior]";
 				mes "Go fight with 100 Orc Heroes and bring me the tokens of the battles you have endured. Even if you're an excellent warrior, I assure you this test will be the hardest one you'll ever get.";
 				next;
-				set orcs_hero_hat,15;
+				orcs_hero_hat = 15;
 				mes "[Orc Warrior]";
 				mes "Now, go, warrior! I believe that you have a chance to succeed. Fight with 100 Orc Heroes, and I will grant you, a human, recognition as an Orc Hero!";
 				close;
@@ -3443,7 +3443,7 @@ OnTouch:
 				mes "You deserve to be an Orc Hero, the most powerful Orc warrior! As of today, you are now an Orc Hero!";
 				next;
 				delitem 968,100; //Voucher_Of_Orcish_Hero
-				set orcs_hero_hat,16;
+				orcs_hero_hat = 16;
 				getitem 1124,1; //Orcish_Sword
 				mes "[Orc Warrior]";
 				mes "This is a sword only given to our heroes. I am not sure if you can use this or not, but as an Orc Hero, you're obligated to carry this with you always.";
@@ -3578,7 +3578,7 @@ OnTouch:
 					mes "Although you're a human, you're an Orc Hero amongst us now, so you should have a helm suitable for your position...";
 					next;
 					delitem 2299,1; //Viking_Helm
-					set orcs_hero_hat,17;
+					orcs_hero_hat = 17;
 					getnameditem 5094,strcharinfo(0); //Orc_Hero_Helm
 					mes "[Orc Hero]";
 					mes "There you go. I marked a small indication on it. So wear this helm from now on. Do you understand? My human Orc Hero.";

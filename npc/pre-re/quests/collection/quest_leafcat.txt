@@ -13,8 +13,8 @@
 //============================================================
 
 ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
-	if (checkquest(60143) != -1) {
-		if (checkquest(60143,HUNTING) != 2 ) {
+	if (questprogress(60143)) {
+		if (questprogress(60143,HUNTING) != 2) {
 			mes "[Lella]";
 			mes "Have you finished hunting the 50 Leaf Cats?";
 			next;
@@ -53,8 +53,8 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 			close;
 		}
 	}
-	if (checkquest(60144) != -1) {
-		if (checkquest(60144,HUNTING) != 2 ) {
+	if (questprogress(60144)) {
+		if (questprogress(60144,HUNTING) != 2) {
 			mes "[Lella]";
 			mes "Have you finished hunting the 50 Leaf Cats?";
 			next;
@@ -94,8 +94,8 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 			close;
 		}
 	}
-	if (checkquest(60145) != -1) {
-		if (checkquest(60145,HUNTING) != 2 ) {
+	if (questprogress(60145)) {
+		if (questprogress(60145,HUNTING) != 2) {
 			mes "[Lella]";
 			mes "Have you finished hunting the 150 Leaf Cats?";
 			next;

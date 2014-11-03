@@ -1429,7 +1429,7 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 			//No valid target
 			if (mob->warpchase(md, tbl))
 				return true; //Chasing this target.
-			if(md->ud.walktimer != INVALID_TIMER && md->ud.walkpath.path_pos <= battle_config.mob_chase_refresh)
+			if(md->ud.walktimer != INVALID_TIMER && (!can_move || md->ud.walkpath.path_pos <= battle_config.mob_chase_refresh))
 				return true; //Walk at least "mob_chase_refresh" cells before dropping the target
 			mob_unlocktarget(md, tick); //Unlock target
 			tbl = NULL;
@@ -1442,13 +1442,14 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 		if( md->attacked_id == md->target_id )
 		{	//Rude attacked check.
 			if( !battle->check_range(&md->bl, tbl, md->status.rhw.range)
-			   &&  ( //Can't attack back and can't reach back.
+			&&  ( //Can't attack back and can't reach back.
 					(!can_move && DIFF_TICK(tick, md->ud.canmove_tick) > 0 && (battle_config.mob_ai&0x2 || (md->sc.data[SC_SPIDERWEB] && md->sc.data[SC_SPIDERWEB]->val1)
-					|| md->sc.data[SC_WUGBITE] || md->sc.data[SC_VACUUM_EXTREME] || md->sc.data[SC_THORNS_TRAP]
-					|| md->sc.data[SC__MANHOLE])) // Not yet confirmed if boss will teleport once it can't reach target.
-					|| !mob->can_reach(md, tbl, md->min_chase, MSS_RUSH)
-					|| md->walktoxy_fail_count > 0
+						|| md->sc.data[SC_WUGBITE] || md->sc.data[SC_VACUUM_EXTREME] || md->sc.data[SC_THORNS_TRAP]
+						|| md->sc.data[SC__MANHOLE] // Not yet confirmed if boss will teleport once it can't reach target.
+						|| md->walktoxy_fail_count > 0)
 					)
+					|| !mob->can_reach(md, tbl, md->min_chase, MSS_RUSH)
+				)
 			&&  md->state.attacked_count++ >= RUDE_ATTACKED_COUNT
 			&&  !mob->skill_use(md, tick, MSC_RUDEATTACKED) // If can't rude Attack
 			&&  can_move && unit->escape(&md->bl, tbl, rnd()%10 +1)) // Attempt escape
@@ -1466,11 +1467,12 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 			 || (battle_config.mob_ai&0x2 && !status->check_skilluse(&md->bl, abl, 0, 0)) // Cannot normal attack back to Attacker
 			 || (!battle->check_range(&md->bl, abl, md->status.rhw.range) // Not on Melee Range and ...
 			    && ( // Reach check
-			         (!can_move && DIFF_TICK(tick, md->ud.canmove_tick) > 0 && (battle_config.mob_ai&0x2 || (md->sc.data[SC_SPIDERWEB] && md->sc.data[SC_SPIDERWEB]->val1)
-			       || md->sc.data[SC_WUGBITE] || md->sc.data[SC_VACUUM_EXTREME] || md->sc.data[SC_THORNS_TRAP]
-			       || md->sc.data[SC__MANHOLE])) // Not yet confirmed if boss will teleport once it can't reach target.
-			       || !mob->can_reach(md, abl, dist+md->db->range3, MSS_RUSH)
-			       || md->walktoxy_fail_count > 0
+					(!can_move && DIFF_TICK(tick, md->ud.canmove_tick) > 0 && (battle_config.mob_ai&0x2 || (md->sc.data[SC_SPIDERWEB] && md->sc.data[SC_SPIDERWEB]->val1)
+						|| md->sc.data[SC_WUGBITE] || md->sc.data[SC_VACUUM_EXTREME] || md->sc.data[SC_THORNS_TRAP]
+						|| md->sc.data[SC__MANHOLE] // Not yet confirmed if boss will teleport once it can't reach target.
+						|| md->walktoxy_fail_count > 0)
+					)
+					   || !mob->can_reach(md, abl, dist+md->db->range3, MSS_RUSH)
 			       )
 			    )
 			) {
@@ -1636,6 +1638,9 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 	if(battle->check_range(&md->bl, tbl, md->status.rhw.range))
 		return true;
 
+	//Only update target cell / drop target after having moved at least "mob_chase_refresh" cells
+	if(md->ud.walktimer != INVALID_TIMER && (!can_move || md->ud.walkpath.path_pos <= battle_config.mob_chase_refresh))
+		return true;
 
 	//Out of range...
 	if (!(mode&MD_CANMOVE) || (!can_move && DIFF_TICK(tick, md->ud.canmove_tick) > 0))
@@ -1653,10 +1658,6 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 			!(battle_config.mob_ai&0x1) ||
 			check_distance_blxy(tbl, md->ud.to_x, md->ud.to_y, md->status.rhw.range)
 	)) //Current target tile is still within attack range.
-		return true;
-
-	//Only update target cell after having moved at least "mob_chase_refresh" cells
-	if(md->ud.walktimer != INVALID_TIMER && md->ud.walkpath.path_pos <= battle_config.mob_chase_refresh)
 		return true;
 
 	//Follow up if possible.

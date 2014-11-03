@@ -289,7 +289,7 @@ gon_in,73,82,5	script	Ji Chung Zhe#gon	4_M_TWTEAMAN,{
 		close;
 	}
 	if (nakha == 3) {
-		set cha,1;
+		cha = 1;
 		mes "[Ji Chung Zhe]";
 		mes "I am Ji Chung Zhe, a renown brewer";
 		mes "of teas. Everyday, I put all my";

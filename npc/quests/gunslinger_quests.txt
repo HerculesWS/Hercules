@@ -113,7 +113,7 @@ que_ng,182,85,3	script	Garrison	4_M_MANAGER,{
 							mes "[Garrison]";
 							mes "10 Steel, 1 Elunium, 10 Emveretarcon, 30 Coal, and 10 Rusty Screws.";
 							mes "I need this exact amount. Don't forget.";
-							set gun_gs,1;
+							gun_gs = 1;
 							close;
 					}
 
@@ -163,7 +163,7 @@ que_ng,182,85,3	script	Garrison	4_M_MANAGER,{
 			delitem 7317,10;
 			delitem 985,1;
 			delitem 1003,30;
-			set gun_gs,2;
+			gun_gs = 2;
 			close;
 
 		case 2:
@@ -206,7 +206,7 @@ que_ng,182,85,3	script	Garrison	4_M_MANAGER,{
 				mes "Did you sell off your gun while you were gone?";
 				mes "I said I'd slot your gun, but I never said I'd slot a gun that isn't here.";
 				mes "Go and get your Garrison and then get back to me.";
-				set gun_gs,4;
+				gun_gs = 4;
 				close;
 			}
 			mes "[Garrison]";
@@ -217,7 +217,7 @@ que_ng,182,85,3	script	Garrison	4_M_MANAGER,{
 			mes "Please use it well.";
 			delitem 13104,1;
 			getitem 13105,1;
-			set gun_gs, 5;
+			gun_gs = 5;
 			close;
 		case 4:
 			if(countitem(13104) < 1)
@@ -233,7 +233,7 @@ que_ng,182,85,3	script	Garrison	4_M_MANAGER,{
 			mes "Do use it well.";
 			delitem 13104, 1;
 			getitem 13105, 1;
-			set gun_gs,5;
+			gun_gs = 5;
 			close;
 		case 5:
 			mes "[Garrison]";
@@ -373,7 +373,6 @@ SubGarrison_:
 			delitem 13104, 1;
 			getitem 13105, 1;
 			close;
-		
 		case 3:
 			mes "[Garrison]";
 			mes "I'll see you when I see you~";
@@ -393,7 +392,7 @@ lighthalzen,322,247,6	script	Ravey	 86,{
 		mes "You!!!";
 		mes "Huuut~!!";
 		mes "Die!!!";
-		set gun_gs,3;
+		gun_gs = 3;
 		percentheal 100,0;
 		percentheal -90,0;
 		next;
@@ -528,7 +527,7 @@ que_ng,187,163,3	script	Ingrid	4_F_ALCHE,{
 					mes "I need 100 Used Iron Plates, 10 Oridecons, 50 Rusty Old Screws, 100 Burning Hearts, and 200,000 Zeny.";
 					mes "You must bring me the correct number of materials.";
 					mes "Please don't forget that.";
-					set gun_inf,1;
+					gun_inf = 1;
 					close;
 			}
 
@@ -592,7 +591,7 @@ SubInferno:
 		delitem 7317,50;
 		delitem 7097,100;
 		getitem 13162,1;
-		if(gun_inf == 1) set gun_inf,2;
+		if(gun_inf == 1) gun_inf = 2;
 		close;
 	}
 }
@@ -741,7 +740,6 @@ que_ng,185,180,3	script	Vanessa	4_F_JOB_BLACKSMITH,{
 					mes "Then see you next time~";
 					mes "Bye~Bye~";
 					close;
-           
 				case 2:
 					mes "[Vanessa]";
 					mes "Mm, Okay.";
@@ -750,13 +748,11 @@ que_ng,185,180,3	script	Vanessa	4_F_JOB_BLACKSMITH,{
 					mes "5 Oridecons, 70 Rusty Old Screws";
 					mes "and a fee of 100,000 zeny.";
 					mes "You must bring me these exact materials. Understood?";
-					set gunst,1;
+					gunst = 1;
 					close;
 			}
-
 		case 1:
 			callsub SubDestroyer;
-			
 		case 2:
 			mes "[Vanessa]";
 			mes "Oh~ You're back.?";
@@ -778,17 +774,16 @@ que_ng,185,180,3	script	Vanessa	4_F_JOB_BLACKSMITH,{
 					next;
 					switch( select( "Maybe next time.","Okay.") )
 					{
-               					case 1:
-							mes "[Vanessa]";
-							mes "What~ C'mon";
-							mes "What's there to think about?";
-							mes "Ok, well, think about it";
-							mes "and come back...";
-							close;
-							case 2:
-							callsub SubDestroyer;
+					case 1:
+						mes "[Vanessa]";
+						mes "What~ C'mon";
+						mes "What's there to think about?";
+						mes "Ok, well, think about it";
+						mes "and come back...";
+						close;
+					case 2:
+						callsub SubDestroyer;
 					}
-							
 				case 2:
 					mes "[Vanessa]";
 					mes "Oh~ The Slotted Destroyer~";
@@ -804,19 +799,16 @@ que_ng,185,180,3	script	Vanessa	4_F_JOB_BLACKSMITH,{
 					next;
 					switch( select( "I'll think about it.","OK! I do!") )
 					{
-               					case 1:
-							mes "[Vanessa]";
-							mes "What~ C'mon";
-							mes "What's there to think about?";
-							mes "Ok, well, think about it";
-							mes "and come back...";
-							close;
-			
-						case 2:
-							callsub SubDestroyer_;
-			
+					case 1:
+						mes "[Vanessa]";
+						mes "What~ C'mon";
+						mes "What's there to think about?";
+						mes "Ok, well, think about it";
+						mes "and come back...";
+						close;
+					case 2:
+						callsub SubDestroyer_;
 					}
-           
 				case 3:
 					mes "[Vanessa]";
 					mes "Hmm~ Yeah~";
@@ -864,7 +856,7 @@ SubDestroyer:
 		delitem 984,5;
 		delitem 7317,70;
 		getitem 13160,1;
-		if(gunst == 1) set gunst,2;
+		if(gunst == 1) gunst = 2;
 		next;
 		mes "[Vanessa]";
 		mes "If you ever need one again later,";
@@ -918,7 +910,7 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 		if(countitem(1043) > 999 && countitem(932) > 999){
 			delitem 1043,1000;
 			delitem 932,1000;
-			set gun_na,2;
+			gun_na = 2;
 			mes "[N. A]";
 			mes "Ahh, it's all here! Ahh, and I";
 			mes "was worried about that no one";
@@ -958,7 +950,7 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 				mes "if you can't handle the test.";
 				mes "You may come back later to";
 				mes "take the challenge again.";
-				set gun_na,0;
+				gun_na = 0;
 				close;
 			}
 		}
@@ -994,7 +986,7 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 				close;
 			}
 			Zeny -= 100000;
-			set gun_na,0;
+			gun_na = 0;
 			getitem 13158,1;
 			mes "[N. A]";
 			mes "One, two, three, four, five,";
@@ -1023,7 +1015,7 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 			delitem 1003,70;
 			delitem 7317,50;
 			Zeny -= 50000;
-			set gun_na,11;
+			gun_na = 11;
 			mes "[N. A]";
 			mes "Aha, you got me all the";
 			mes "materials. Here, let me get down";
@@ -1059,7 +1051,7 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 				mes "a Drifter for you is cancelled.";
 				mes "I wish you good luck";
 				mes "in your future.";
-				set gun_na,0;
+				gun_na = 0;
 				close;
 			}
 		}
@@ -1073,7 +1065,7 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 			mes "Please clear your inventory.";
 			close;
 		}
-		set gun_na,0;
+		gun_na = 0;
 		getitem 13157,1;
 		mes "[N. A]";
 		mes "Ahh, here's the completed";
@@ -1147,7 +1139,7 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 		mes "30 Lightning Sphere, 30 Blind";
 		mes "Sphere, or 30 Freezing Sphere.";
 		mes "Find me 30 of each Element.";
-		set gun_na,102;
+		gun_na = 102;
 		close;
 	}
 	else if(gun_na == 102){
@@ -1167,31 +1159,31 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 		case 2:
 			if(countitem(13205) >= 30){
 				delitem 13205,30;
-				set gun_na,103;
+				gun_na = 103;
 			}
 			break;
 		case 3:
 			if(countitem(13203) >= 30){
 				delitem 13203,30;
-				set gun_na,103;
+				gun_na = 103;
 			}
 			break;
 		case 4:
 			if(countitem(13204) >= 30){
 				delitem 13204,30;
-				set gun_na,103;
+				gun_na = 103;
 			}
 			break;
 		case 5:
 			if(countitem(13206) >= 30){
 				delitem 13206,30;
-				set gun_na,103;
+				gun_na = 103;
 			}
 			break;
 		case 6:
 			if(countitem(13207) >= 30){
 				delitem 13207,30;
-				set gun_na,103;
+				gun_na = 103;
 			}
 			break;
 		}
@@ -1315,7 +1307,7 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 			mes "[N. A]";
 			mes "Easy, ain't it? Go and prove";
 			mes "your ability then! Heheheh...";
-			set gun_na,1;
+			gun_na = 1;
 			close;
 		}
 	case 2:
@@ -1347,7 +1339,7 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 			mes "some time, come back here.";
 			close;
 		}else{
-			set gun_na,10;
+			gun_na = 10;
 			mes "[N. A]";
 			mes "Since it's really hard to find";
 			mes "the materials for constructing";
@@ -1465,7 +1457,7 @@ lighthalzen,205,284,6	script	F. Harrison	4_M_03,{
 		mes "you bring all those materials";
 		mes "to me once you find them all!";
 		mes "Promise me!!!";
-		set gun_na,101;
+		gun_na = 101;
 		getitem 13102,1;
 		close;
 	}
@@ -1488,7 +1480,7 @@ lighthalzen,205,284,6	script	F. Harrison	4_M_03,{
 				delitem 984,1;
 				delitem 1003,20;
 				delitem 13102,1;
-				set gun_na,104;
+				gun_na = 104;
 				mes "[F. Harrison]";
 				mes "Aha! You got all the materials";
 				mes "for me! I'll get to the repair";
@@ -1525,7 +1517,7 @@ lighthalzen,205,284,6	script	F. Harrison	4_M_03,{
 			mes "stuff first.-";
 			close;
 		}
-		set gun_na,0;
+		gun_na = 0;
 		getitem 13159,1;
 		mes "[F. Harrison]";
 		mes "Whew... Finally it's fixed, thanks";
@@ -1589,7 +1581,7 @@ lighthalzen,205,284,6	script	F. Harrison	4_M_03,{
 			mes "I won't break it!";
 			mes "That's that! Let's go~";
 			delitem 13158,1;
-			set gun_na,100;
+			gun_na = 100;
 			close;
 		}
 	}

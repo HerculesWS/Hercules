@@ -17,7 +17,7 @@ veins,210,345,5	script	Veins Guide#1::ve_guide	4_M_RASWORD,{
 	mes "[Veins Guide]";
 	mes "Desert City Veins welcomes adventurers seeking shelter from harsh sandstorms.";
 	mes "If this is the first time for you to use the guide services, why don't you check the...";
-	set .@loop1,1;
+	.@loop1 = 1;
 	while(.@loop1) {
 		next;
 		switch(select("Village Guide:Remove Marks from Mini-Map:Notice:Cancel")) {
@@ -30,11 +30,11 @@ veins,210,345,5	script	Veins Guide#1::ve_guide	4_M_RASWORD,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes:No") == 1) set .@compass_check,1;
+				if (select("Yes:No") == 1) .@compass_check = 1;
 			}
-			set .@loop2,1;
+			.@loop2 = 1;
 			while(.@loop2) {
-				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 
 				switch(select("Temple:Inn:Weapon Shop:Tool Shop:Airship:Tavern:Geological Research Institute:Cancel")) {
@@ -88,7 +88,7 @@ veins,210,345,5	script	Veins Guide#1::ve_guide	4_M_RASWORD,{
 					mes "[Veins Guide]";
 					mes "If you like to get rid of all the location marks on your Mini-Map,";
 					mes "just ask me again, and choose 'Remove Marks from Mini-Map' menu.";
-					set .@loop2,0;
+					.@loop2 = 0;
 					break;
 				}
 			}
@@ -117,7 +117,7 @@ veins,210,345,5	script	Veins Guide#1::ve_guide	4_M_RASWORD,{
 			mes "[Veins Guide]";
 			mes "Enjoy your stay in Veins.";
 			close2;
-			set .@loop1,0;
+			.@loop1 = 0;
 			break;
 		}
 	}

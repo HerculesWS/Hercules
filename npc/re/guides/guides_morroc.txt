@@ -24,7 +24,7 @@ morocc,153,286,6	script	Guide#01morocc::GuideMorroc	4_M_MOC_SOLDIER,{
 	while (1) {
 		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
 		case 1:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Thief Guild ]:[ Sphinx Dungeon ]:[ Oasis Entrance ]:[ Forge ]:[ Weapon & Armor Shop ]:[ Inn ]:[ Tavern ]:Previous Menu")) {
 				case 1:
@@ -78,13 +78,13 @@ morocc,153,286,6	script	Guide#01morocc::GuideMorroc	4_M_MOC_SOLDIER,{
 					next;
 					break;
 				case 8:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
 			break;
 		case 2:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Kafra Employee ]:[ Poison Herb Salesman ]:[ Dye Maker ]:[ Seiyablem ]:Previous Menu")) {
 				case 1:
@@ -121,7 +121,7 @@ morocc,153,286,6	script	Guide#01morocc::GuideMorroc	4_M_MOC_SOLDIER,{
 					next;
 					break;
 				case 5:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
@@ -176,7 +176,7 @@ moc_ruins,159,53,3	script	Guide#01ruins::GuideMocRuins	4_M_MOC_SOLDIER,{
 	while (1) {
 		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
 		case 1:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Thief Guild ]:[ Sphinx Dungeon ]:[ Morroc Entrance ]:Previous Menu")) {
 				case 1:
@@ -208,13 +208,13 @@ moc_ruins,159,53,3	script	Guide#01ruins::GuideMocRuins	4_M_MOC_SOLDIER,{
 					next;
 					break;
 				case 4:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
 			break;
 		case 2:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Eden Teleport Officer ]:[ Tool Dealer ]:[ Kafra Employee ]:[ Repairman ]:[ Pet Groomer ]:[ Chef Assistant ]:[ Leablem ]:Previous Menu")) {
 				case 1:
@@ -265,7 +265,7 @@ moc_ruins,159,53,3	script	Guide#01ruins::GuideMocRuins	4_M_MOC_SOLDIER,{
 					next;
 					break;
 				case 8:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}

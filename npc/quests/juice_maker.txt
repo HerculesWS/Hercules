@@ -22,9 +22,9 @@ prt_in,49,172,3	script	Marianne#juice	1_M_INNKEEPER,{
 		mes "Whew...!";
 		mes "Still, he won't eat anything unless it's Meat. But maybe he will eat fruit if it was cut so that it was easy to eat. Like, if it was blended into juice...";
 		next;
-		set mother_marienu,0;
-		set morison_meat,0;
-		set MISC_QUEST,MISC_QUEST | 1;
+		mother_marienu = 0;
+		morison_meat = 0;
+		MISC_QUEST |= 1;
 		mes "[Housewife Marianne]";
 		mes "Ah! Come to think of it, I heard they were making fruit juice somewhere. Now where was it... Payon Village, or Morroc?";
 		close;
@@ -47,7 +47,7 @@ prt_in,49,172,3	script	Marianne#juice	1_M_INNKEEPER,{
 		close;
 	}
 	if (morison_meat > 0) {
-		set mother_marienu,1;
+		mother_marienu = 1;
 		mes "[Housewife Marianne]";
 		mes "Oh!!.... This...";
 		mes "what is this...??";
@@ -91,7 +91,7 @@ prt_in,47,173,3	script	Morrison#juice	4W_M_01,{
 		mes "You don't have to give me any more Meat. I feel like I'm going to explode if I eat any more.";
 		if (morison_meat == 10) {
 			next;
-			set morison_meat,morison_meat+1;
+			++morison_meat;
 			mes "[Little Morrison]";
 			mes "Oh... and... um.";
 			mes "Take this.";
@@ -127,7 +127,7 @@ prt_in,47,173,3	script	Morrison#juice	4W_M_01,{
 			next;
 			if (select("Give Meat:Don't Give Meat") == 1) {
 				delitem 517,1; //Meat
-				set morison_meat,morison_meat+1;
+				++morison_meat;
 				mes "[Little Morrison]";
 				mes "Wow~!!! Meat!!";
 				mes "So yummy!";
@@ -137,7 +137,7 @@ prt_in,47,173,3	script	Morrison#juice	4W_M_01,{
 				mes "*Chew chew*";
 				close;
 			}
-			set morison_meat,15;
+			morison_meat = 15;
 			mes "[Little Morrison]";
 			mes "Waah...!";
 			mes "Fine, I get it now.";
@@ -189,20 +189,20 @@ payon_in03,188,146,5	script	Marx Hansen#juice	4_M_04,{
 			next;
 			switch(select("Apple Juice:Banana Juice:Carrot Juice:Grape Juice:Cancel")) {
 			case 1:
-				set .@fruit,512;
-				set .@juice,531;
+				.@fruit = 512;
+				.@juice = 531;
 				break;
 			case 2:
-				set .@fruit,513;
-				set .@juice,532;
+				.@fruit = 513;
+				.@juice = 532;
 				break;
 			case 3:
-				set .@fruit,515;
-				set .@juice,534;
+				.@fruit = 515;
+				.@juice = 534;
 				break;
 			case 4:
-				set .@fruit,514;
-				set .@juice,533;
+				.@fruit = 514;
+				.@juice = 533;
 				break;
 			case 5:
 				mes "[Merchant Marx Hansen]";
@@ -225,9 +225,9 @@ payon_in03,188,146,5	script	Marx Hansen#juice	4_M_04,{
 			next;
 			switch(select("As many as I can.:I want a certain amount.:Cancel.")) {
 			case 1:
-				set .@make,countitem(.@fruit);
-				if (countitem(713) < .@make) set .@make, countitem(713);
-				if (Zeny/3 < .@make) set .@make, Zeny/3;
+				.@make = countitem(.@fruit);
+				if (countitem(713) < .@make) .@make = countitem(713);
+				if (Zeny/3 < .@make) .@make = Zeny/3;
 				break;
 			case 2:
 				mes "[Merchant Marx Hansen]";
@@ -250,7 +250,7 @@ payon_in03,188,146,5	script	Marx Hansen#juice	4_M_04,{
 						break;
 					}
 				}
-				set .@make,.@input;
+				.@make = .@input;
 				break;
 			case 3:
 				mes "[Merchant Marx Hansen]";
@@ -259,7 +259,7 @@ payon_in03,188,146,5	script	Marx Hansen#juice	4_M_04,{
 				close;
 			}
 
-			set .@total_zeny,3 * .@make;
+			.@total_zeny = 3 * .@make;
 
 			if (countitem(.@fruit) < .@make || countitem(713) < .@make || Zeny < .@total_zeny) {
 				mes "[Merchant Marx Hansen]";

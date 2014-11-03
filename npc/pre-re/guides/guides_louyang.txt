@@ -141,7 +141,7 @@ louyang,224,104,3	script	Representative#lou	4_F_CHNWOMAN,{
 	next;
 	switch(select("Ask Building Locations.:Remove all marks from mini-map.:Cancel.")) {
 	case 1:
-		set .@compass_check,1;
+		.@compass_check = 1;
 		mes "[Representative]";
 		mes "Where would you like to go?";
 		next;

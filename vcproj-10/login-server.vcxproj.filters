@@ -88,6 +88,9 @@
     <ClCompile Include="..\src\common\conf.c">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\login\HPMlogin.c">
+      <Filter>login_sql</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\login\account.h">
@@ -194,6 +197,9 @@
     </ClInclude>
     <ClInclude Include="..\src\common\conf.h">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\login\HPMlogin.h">
+      <Filter>login_sql</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -132,7 +132,7 @@ brasilis,137,77,5	script	Ice-Cream Maker	4_M_03,{
 			else
 				break;
 		}
-		set .@icecream_hap,.@input*100;
+		.@icecream_hap = .@input*100;
 		if (Zeny < .@icecream_hap) {
 			mes "[Ice Cream Maker]";
 			mes "Dood~! You don't have enough money.";

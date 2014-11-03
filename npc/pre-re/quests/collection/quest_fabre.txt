@@ -13,8 +13,8 @@
 //============================================================
 
 gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
-	if (checkquest(60107) != -1) {
-		if (checkquest(60107,HUNTING) != 2 ) {
+	if (questprogress(60107)) {
+		if (questprogress(60107,HUNTING) != 2) {
 			mes "[Langry]";
 			mes "Have you finished hunting the 50 Fabres?";
 			next;
@@ -53,8 +53,8 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 			close;
 		}
 	}
-	if (checkquest(60108) != -1) {
-		if (checkquest(60108,HUNTING) != 2 ) {
+	if (questprogress(60108)) {
+		if (questprogress(60108,HUNTING) != 2) {
 			mes "[Langry]";
 			mes "Have you finished hunting the 50 Fabres?";
 			next;
@@ -94,8 +94,8 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 			close;
 		}
 	}
-	if (checkquest(60109) != -1) {
-		if (checkquest(60109,HUNTING) != 2 ) {
+	if (questprogress(60109)) {
+		if (questprogress(60109,HUNTING) != 2) {
 			mes "[Langry]";
 			mes "Have you finished hunting the 150 Fabres?";
 			next;

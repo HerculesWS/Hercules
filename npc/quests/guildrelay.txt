@@ -19,30 +19,30 @@
 // Floating NPCs to duplicate from.
 //============================================================
 -	script	RelayDummy1::GuildRelay1	4_M_SAGE_A,{
-	set .@name$,strnpcinfo(1);
+	.@name$ = strnpcinfo(1);
 	if (.@name$ == "Buzz") {
-		set .@name2$,"Lenya";
-		set .@name3$,"Gealuve";
-		set .@name4$,"Pariz";
-		set .@GID, getcastledata("aldeg_cas"+strnpcinfo(2),1);
+		.@name2$ = "Lenya";
+		.@name3$ = "Gealuve";
+		.@name4$ = "Pariz";
+		.@GID = getcastledata("aldeg_cas"+strnpcinfo(2),1);
 	}
 	else if (.@name$ == "Jody") {
-		set .@name2$,"Ron Haware";
-		set .@name3$,"Vers";
-		set .@name4$,"Gen Garish";
-		set .@GID, getcastledata("gefg_cas"+strnpcinfo(2),1);
+		.@name2$ = "Ron Haware";
+		.@name3$ = "Vers";
+		.@name4$ = "Gen Garish";
+		.@GID = getcastledata("gefg_cas"+strnpcinfo(2),1);
 	}
 	else if (.@name$ == "Chungye") {
-		set .@name2$,"Dosuhlji";
-		set .@name3$,"Yayula";
-		set .@name4$,"Ashin";
-		set .@GID, getcastledata("payg_cas"+strnpcinfo(2),1);
+		.@name2$ = "Dosuhlji";
+		.@name3$ = "Yayula";
+		.@name4$ = "Ashin";
+		.@GID = getcastledata("payg_cas"+strnpcinfo(2),1);
 	}
 	else if (.@name$ == "Hermod") {
-		set .@name2$,"Atila";
-		set .@name3$,"Cecil";
-		set .@name4$,"Diligo";
-		set .@GID, getcastledata("prtg_cas"+strnpcinfo(2),1);
+		.@name2$ = "Atila";
+		.@name3$ = "Cecil";
+		.@name4$ = "Diligo";
+		.@GID = getcastledata("prtg_cas"+strnpcinfo(2),1);
 	}
 	if (checkweight(908,630) == 0) {
 		mes "^3355FFWait a minute! You're";
@@ -86,7 +86,7 @@
 						mes "guild is going to be solid,";
 						mes "you need to think how much";
 						mes "trust there is in the guild.";
-						set guildrelay_q,8;
+						guildrelay_q = 8;
 						getitem 7240,1; //Soul_Of_Confidence
 						next;
 						mes "[" + .@name$ + "]";
@@ -143,7 +143,7 @@
 						mes "guild is going to be solid,";
 						mes "you need to think how much";
 						mes "trust there is in the guild.";
-						set guildrelay_q,8;
+						guildrelay_q = 8;
 						getitem 7240,1; //Soul_Of_Confidence
 						next;
 						mes "[" + .@name$ + "]";
@@ -199,7 +199,7 @@
 					mes "guild is going to be solid,";
 					mes "you need to think how much";
 					mes "trust there is in the guild.";
-					set guildrelay_q,8;
+					guildrelay_q = 8;
 					getitem 7240,1; //Soul_Of_Confidence
 					next;
 					mes "[" + .@name$ + "]";
@@ -256,7 +256,7 @@
 					mes "It seems contradictive that";
 					mes "strongholds and might can";
 					mes "bring peace, but it's true.";
-					set guildrelay_q,15;
+					guildrelay_q = 15;
 					getitem 7246,1; //Soul_Of_Peace
 					next;
 					mes "[" + .@name$ + "]";
@@ -317,7 +317,7 @@
 					mes "to report your trial results,";
 					mes "and lost my composure for a";
 					mes "moment. It won't happen again.";
-					set guildrelay_q,999;
+					guildrelay_q = 999;
 					close;
 				}
 				else {
@@ -367,7 +367,7 @@
 					mes "the ^4D4DFFSpirit of Guild^000000, and";
 					mes "give it to your most trusted";
 					mes "Knight or Lord Knight.";
-					set guildrelay_q,1;
+					guildrelay_q = 1;
 					getitem 7234,1; //Soul_Of_Guild
 					next;
 					mes "[" + .@name$ + "]";
@@ -413,9 +413,9 @@
 					mes "Hand me the spirit, and allow";
 					mes "me to give you your guild's reward.";
 					delitem 7239,1; //Soul_Of_Proceeding
-					set guildtime,gettime(3);
-					set guildrelay_q,100;
-					set .@incen_item,rand(1,100);
+					guildtime = gettime(3);
+					guildrelay_q = 100;
+					.@incen_item = rand(1,100);
 					if ((.@incen_item > 0) && (.@incen_item < 25)) {
 						getitem 608,20; //Seed_Of_Yggdrasil
 						getitem 678,2; //Poison_Bottle
@@ -481,9 +481,9 @@
 					mes "challenges that you will all";
 					mes "face together. Good work!";
 					delitem 7245,1; //Soul_Of_Friendship
-					set guildtime,gettime(3);
-					set guildrelay_q,150;
-					set .@incen_item,rand(1,100);
+					guildtime = gettime(3);
+					guildrelay_q = 150;
+					.@incen_item = rand(1,100);
 					if ((.@incen_item > 0) && (.@incen_item < 16)) {
 						getitem 607,10; //Yggdrasilberry
 						getitem 644,5; //Gift_Box
@@ -574,9 +574,9 @@
 					mes "Tristan III, and share it with";
 					mes "guild. Once again, good work.";
 					delitem 7251,1; //Soul_Of_Victory
-					set guildtime,gettime(3);
-					set guildrelay_q,25;
-					set .@incen_item,rand(1,100);
+					guildtime = gettime(3);
+					guildrelay_q = 25;
+					.@incen_item = rand(1,100);
 					if ((.@incen_item > 0) && (.@incen_item < 26)) {
 						getitem 608,10; //Seed_Of_Yggdrasil
 						getitem 607,5; //Yggdrasilberry
@@ -693,7 +693,7 @@
 					mes "to a Knight or Lord Knight.";
 					mes "The test has now officially";
 					mes "begun. Good luck to you.";
-					set guildrelay_q,1;
+					guildrelay_q = 1;
 					getitem 7234,1; //Soul_Of_Guild
 					close;
 				case 2:
@@ -1219,9 +1219,9 @@
 }
 
 -	script	RelayDummy2::GuildRelay2	4_M_SAGE_A,{
-	set .@name$,strnpcinfo(1);
+	.@name$ = strnpcinfo(1);
 	getmapxy(.@m$,.@x,.@x,1);
-	set .@GID, getcastledata(.@m$,1);
+	.@GID = getcastledata(.@m$,1);
 	if (checkweight(1201,1) == 0) {
 		mes "^3355FFWait a minute! You're";
 		mes "carrying too many items";
@@ -1286,7 +1286,7 @@
 					mes "That shouldn't be too";
 					mes "hard now, right?";
 					delitem 7234,1; //Soul_Of_Guild
-					set guildrelay_q,2;
+					guildrelay_q = 2;
 					close;
 				case 2:
 					mes "[" + .@name$ + "]";
@@ -1296,7 +1296,7 @@
 					mes "That shouldn't be too";
 					mes "hard now, right?";
 					delitem 7234,1; //Soul_Of_Guild
-					set guildrelay_q,3;
+					guildrelay_q = 3;
 					close;
 				case 3:
 					mes "[" + .@name$ + "]";
@@ -1306,7 +1306,7 @@
 					mes "That shouldn't be too";
 					mes "hard now, right?";
 					delitem 7234,1; //Soul_Of_Guild
-					set guildrelay_q,89;
+					guildrelay_q = 89;
 					close;
 				}
 			}
@@ -1321,7 +1321,7 @@
 				delitem 1015,30; //Thin_N'_Long_Tongue
 				delitem 7196,30; //Shoulder_Protection
 				delitem 7157,30; //Black_Mask
-				set guildrelay_q,88;
+				guildrelay_q = 88;
 				getitem 7235,1; //Soul_Of_Courage
 				close;
 			}
@@ -1346,7 +1346,7 @@
 				delitem 1097,30; //Worn_Out_Page
 				delitem 1017,30; //Moustache_Of_Mole
 				delitem 1096,30; //Round_Shell
-				set guildrelay_q,88;
+				guildrelay_q = 88;
 				getitem 7235,1; //Soul_Of_Courage
 				close;
 			}
@@ -1371,7 +1371,7 @@
 				delitem 7112,30; //Fright_Paper_Blade
 				delitem 1012,30; //Lizard_Scruff
 				delitem 1040,30; //Elder_Pixie's_Beard
-				set guildrelay_q,88;
+				guildrelay_q = 88;
 				getitem 7235,1; //Soul_Of_Courage
 				close;
 			}
@@ -1408,8 +1408,8 @@
 				mes "when the time is right so";
 				mes "don't you worry about it.";
 				delitem 7235,1; //Soul_Of_Courage
-				set guildrelay_q,4;
-				set guildtime,gettime(3);
+				guildrelay_q = 4;
+				guildtime = gettime(3);
 				close;
 			}
 			if ((guildtime > 22) && (guildrelay_q == 4) && (BaseJob == Job_Blacksmith)) {
@@ -1421,7 +1421,7 @@
 					mes "Please give this to an";
 					mes "Alchemist or Biochemist.";
 					mes "Your work here is done.";
-					set guildrelay_q,87;
+					guildrelay_q = 87;
 					getitem 7237,1; //Soul_Of_Partnership
 					close;
 				}
@@ -1435,7 +1435,7 @@
 					mes "Please give this to an";
 					mes "Alchemist or Biochemist.";
 					mes "Your work here is done.";
-					set guildrelay_q,87;
+					guildrelay_q = 87;
 					getitem 7237,1; //Soul_Of_Partnership
 					close;
 				}
@@ -1449,7 +1449,7 @@
 					mes "Please give this to an";
 					mes "Alchemist or Biochemist.";
 					mes "Your work here is done.";
-					set guildrelay_q,87;
+					guildrelay_q = 87;
 					getitem 7237,1; //Soul_Of_Partnership
 					close;
 				}
@@ -1462,7 +1462,7 @@
 				mes "Please give this to an";
 				mes "Alchemist or Biochemist.";
 				mes "Your work here is done.";
-				set guildrelay_q,87;
+				guildrelay_q = 87;
 				getitem 7237,1; //Soul_Of_Partnership
 				close;
 			}
@@ -1492,7 +1492,7 @@
 					mes "gain 3 more levels.";
 					mes "How about that, eh?";
 					delitem 7237,1; //Soul_Of_Partnership
-					set guildrelay_q,5;
+					guildrelay_q = 5;
 					close;
 				}
 				if ((BaseLevel > 57) && (BaseLevel < 76)) {
@@ -1503,7 +1503,7 @@
 					mes "gain 2 more levels.";
 					mes "How about that, eh?";
 					delitem 7237,1; //Soul_Of_Partnership
-					set guildrelay_q,6;
+					guildrelay_q = 6;
 					close;
 				}
 				if ((BaseLevel > 75) && (BaseLevel < 94)) {
@@ -1514,7 +1514,7 @@
 					mes "gain 1 more level.";
 					mes "How about that, eh?";
 					delitem 7237,1; //Soul_Of_Partnership
-					set guildrelay_q,7;
+					guildrelay_q = 7;
 					close;
 				}
 				if (BaseLevel > 93) {
@@ -1526,7 +1526,7 @@
 					mes "Fine, fine. You pass! Give this";
 					mes "to a ^FF0000Hunter^000000 or ^FF0000Sniper^000000 now~";
 					delitem 7237,1; //Soul_Of_Partnership
-					set guildrelay_q,86;
+					guildrelay_q = 86;
 					getitem 7238,1; //Soul_Of_Correspondence
 					close;
 				}
@@ -1539,7 +1539,7 @@
 				mes "give it to a ^FF0000Hunter^000000 or ^FF0000Sniper^000000";
 				mes "in your guild. Nice work,";
 				mes "and I'll see you around.";
-				set guildrelay_q,86;
+				guildrelay_q = 86;
 				getitem 7238,1; //Soul_Of_Correspondence
 				close;
 			}
@@ -1551,7 +1551,7 @@
 				mes "give it to a ^FF0000Hunter^000000 or ^FF0000Sniper^000000";
 				mes "in your guild. Nice work,";
 				mes "and I'll see you around.";
-				set guildrelay_q,86;
+				guildrelay_q = 86;
 				getitem 7238,1; //Soul_Of_Correspondence
 				close;
 			}
@@ -1563,7 +1563,7 @@
 				mes "give it to a ^FF0000Hunter^000000 or ^FF0000Sniper^000000";
 				mes "in your guild. Nice work,";
 				mes "and I'll see you around.";
-				set guildrelay_q,86;
+				guildrelay_q = 86;
 				getitem 7238,1; //Soul_Of_Correspondence
 				close;
 			}
@@ -1602,7 +1602,7 @@
 						mes "soon as you can, alright?";
 						setfalcon;
 						delitem 7238,1; //Soul_Of_Correspondence
-						set guildrelay_q,85;
+						guildrelay_q = 85;
 						getitem 7239,1; //Soul_Of_Proceeding
 						close;
 					}
@@ -1728,9 +1728,9 @@
 }
 
 -	script	RelayDummy3::GuildRelay3	4_M_SAGE_A,{
-	set .@name$,strnpcinfo(1);
+	.@name$ = strnpcinfo(1);
 	getmapxy(.@m$,.@x,.@x,1);
-	set .@GID, getcastledata(.@m$,1);
+	.@GID = getcastledata(.@m$,1);
 	if (checkweight(1201,1) == 0) {
 		mes "^3355FFWait a minute! You're";
 		mes "carrying too many items";
@@ -1794,8 +1794,8 @@
 				mes "guild must have solidarity";
 				mes "in order to be successful.";
 				delitem 7240,1; //Soul_Of_Confidence
-				set guildrelay_q,9;
-				set guildtime,gettime(3);
+				guildrelay_q = 9;
+				guildtime = gettime(3);
 				close;
 			}
 			if ((guildtime > 22) && (guildrelay_q == 9) && (BaseJob == Job_Sage)) {
@@ -1814,7 +1814,7 @@
 					mes "is. Please give this spirit";
 					mes "to a ^42426FBard^000000, ^42426FMinstrel^000000, ^42426FDancer^000000,";
 					mes "or ^42426FGypsy^000000. Good luck to you.";
-					set guildrelay_q,81;
+					guildrelay_q = 81;
 					getitem 7241,1; //Soul_Of_Agreement
 					close;
 				}
@@ -1845,7 +1845,7 @@
 					mes "is. Please give this spirit";
 					mes "to a ^42426FBard^000000, ^42426FMinstrel^000000, ^42426FDancer^000000,";
 					mes "or ^42426FGypsy^000000. Good luck to you.";
-					set guildrelay_q,71;
+					guildrelay_q = 71;
 					getitem 7241,1; //Soul_Of_Agreement
 					close;
 				}
@@ -1876,7 +1876,7 @@
 					mes "is. Please give this spirit";
 					mes "to a ^42426FBard^000000, ^42426FMinstrel^000000, ^42426FDancer^000000,";
 					mes "or ^42426FGypsy^000000. Good luck to you.";
-					set guildrelay_q,71;
+					guildrelay_q = 71;
 					getitem 7241,1; //Soul_Of_Agreement
 					close;
 				}
@@ -1906,7 +1906,7 @@
 				mes "Please give it to a ^42426FBard^000000 or ^42426FClown^000000";
 				mes "You can also give it to ^42426FDancer^000000 or ^42426FGypsy^000000";
 				mes "Good luck.";
-				set guildrelay_q,71;
+				guildrelay_q = 71;
 				getitem 7241,1; //Soul_Of_Agreement
 				close;
 			}
@@ -1945,7 +1945,7 @@
 					mes "these down so you don't";
 					mes "forget. Good luck to you.";
 					delitem 7241,1; //Soul_Of_Agreement
-					set guildrelay_q,10;
+					guildrelay_q = 10;
 					break;
 				case 2:
 					mes "[" + .@name$ + "]";
@@ -1956,7 +1956,7 @@
 					mes "these down so you don't";
 					mes "forget. Good luck to you.";
 					delitem 7241,1; //Soul_Of_Agreement
-					set guildrelay_q,11;
+					guildrelay_q = 11;
 					break;
 				case 3:
 					mes "[" + .@name$ + "]";
@@ -1967,7 +1967,7 @@
 					mes "these down so you don't";
 					mes "forget. Good luck to you.";
 					delitem 7241,1; //Soul_Of_Agreement
-					set guildrelay_q,80;
+					guildrelay_q = 80;
 					break;
 				}
 				next;
@@ -1992,10 +1992,10 @@
 				delitem 7172,30; //Leopard_Talon
 				delitem 920,30; //Claw_Of_Wolves
 				if (BaseJob == Job_Dancer) {
-					set guildrelay_q,72;
+					guildrelay_q = 72;
 				}
 				else {
-					set guildrelay_q,72;
+					guildrelay_q = 72;
 				}
 				getitem 7242,1; //Soul_Of_Harmony
 				close;
@@ -2012,10 +2012,10 @@
 				delitem 7194,30; //Soft_Leaf
 				delitem 7155,30; //Poison_Toad's_Skin
 				if (BaseJob == Job_Dancer) {
-					set guildrelay_q,72;
+					guildrelay_q = 72;
 				}
 				else {
-					set guildrelay_q,72;
+					guildrelay_q = 72;
 				}
 				getitem 7242,1; //Soul_Of_Harmony
 				close;
@@ -2032,10 +2032,10 @@
 				delitem 7121,30; //Honey_Jar
 				delitem 1027,30; //Porcupine_Spike
 				if (BaseJob == Job_Dancer) {
-					set guildrelay_q,72;
+					guildrelay_q = 72;
 				}
 				else {
-					set guildrelay_q,72;
+					guildrelay_q = 72;
 				}
 				getitem 7242,1; //Soul_Of_Harmony
 				close;
@@ -2099,7 +2099,7 @@
 				mes "that to a ^2F4F2FWizard^000000 or";
 				mes "a ^2F4F2FHigh Wizard^000000.";
 				delitem 7242,1; //Soul_Of_Harmony
-				set guildrelay_q,74;
+				guildrelay_q = 74;
 				getitem 7244,1; //Soul_Of_Unity
 				close;
 			}
@@ -2129,7 +2129,7 @@
 					mes "you'll be able to reach";
 					mes "this goal. Good luck to you.";
 					delitem 7244,1; //Soul_Of_Unity
-					set guildrelay_q,12;
+					guildrelay_q = 12;
 					close;
 				}
 				else if ((BaseLevel > 60) && (BaseLevel < 76)) {
@@ -2141,7 +2141,7 @@
 					mes "you'll be able to reach";
 					mes "this goal. Good luck to you.";
 					delitem 7244,1; //Soul_Of_Unity
-					set guildrelay_q,13;
+					guildrelay_q = 13;
 					close;
 				}
 				else if ((BaseLevel > 75) && (BaseLevel < 97)) {
@@ -2153,7 +2153,7 @@
 					mes "you'll be able to reach";
 					mes "this goal. Good luck to you.";
 					delitem 7244,1; //Soul_Of_Unity
-					set guildrelay_q,14;
+					guildrelay_q = 14;
 					close;
 				}
 				else if (BaseLevel > 96) {
@@ -2179,7 +2179,7 @@
 					mes "to your ^FF0000Guild Master^000000.";
 					mes "You're done for now.";
 					delitem 7244,1; //Soul_Of_Unity
-					set guildrelay_q,75;
+					guildrelay_q = 75;
 					getitem 7245,1; //Soul_Of_Friendship
 					close;
 				}
@@ -2198,7 +2198,7 @@
 				mes "Please give this spirit";
 				mes "to your ^FF0000Guild Master^000000.";
 				mes "You've done well.";
-				set guildrelay_q,75;
+				guildrelay_q = 75;
 				getitem 7245,1; //Soul_Of_Friendship
 				close;
 			}
@@ -2216,7 +2216,7 @@
 				mes "Please give this spirit";
 				mes "to your ^FF0000Guild Master^000000.";
 				mes "You've done well.";
-				set guildrelay_q,75;
+				guildrelay_q = 75;
 				getitem 7245,1; //Soul_Of_Friendship
 				close;
 			}
@@ -2234,7 +2234,7 @@
 				mes "Please give this spirit";
 				mes "to your ^FF0000Guild Master^000000.";
 				mes "You've done well.";
-				set guildrelay_q,75;
+				guildrelay_q = 75;
 				getitem 7245,1; //Soul_Of_Friendship
 				close;
 			}
@@ -2413,9 +2413,9 @@
 }
 
 -	script	GuildDummy4::GuildRelay4	4_M_SAGE_A,{
-	set .@name$,strnpcinfo(1);
+	.@name$ = strnpcinfo(1);
 	getmapxy(.@m$,.@x,.@x,1);
-	set .@GID, getcastledata(.@m$,1);
+	.@GID = getcastledata(.@m$,1);
 	if (checkweight(1201,1) == 0) {
 		mes "^3355FFWait a minute! You're";
 		mes "carrying too many items";
@@ -2478,7 +2478,7 @@
 					mes "to me that your people";
 					mes "skills are up to par.";
 					delitem 7246,1; //Soul_Of_Peace
-					set guildrelay_q,91;
+					guildrelay_q = 91;
 					close;
 				case 2:
 					mes "a party with 8 members^000000.";
@@ -2491,7 +2491,7 @@
 					mes "to me that your people";
 					mes "skills are up to par.";
 					delitem 7246,1; //Soul_Of_Peace
-					set guildrelay_q,92;
+					guildrelay_q = 92;
 					close;
 				case 3:
 					mes "a party with 10 members^000000.";
@@ -2504,13 +2504,13 @@
 					mes "to me that your people";
 					mes "skills are up to par.";
 					delitem 7246,1; //Soul_Of_Peace
-					set guildrelay_q,93;
+					guildrelay_q = 93;
 					close;
 				}
 			}
 			getpartymember(getcharid(1));
-			set .@partymembercount,$@partymembercount;
-			set .@partyleader,getpartyleader(getcharid(1),2);
+			.@partymembercount = $@partymembercount;
+			.@partyleader = getpartyleader(getcharid(1),2);
 			if (guildrelay_q == 91) {
 				if (.@partymembercount == 6) {
 					mes "[" + .@name$ + "]";
@@ -2526,7 +2526,7 @@
 					mes "this spirit, and then give";
 					mes "it to a Priest or High";
 					mes "Priest in your guild.";
-					set guildrelay_q,95;
+					guildrelay_q = 95;
 					getitem 7247,1; //Soul_Of_Spirit
 					close;
 				}
@@ -2555,7 +2555,7 @@
 					mes "this spirit, and then give";
 					mes "it to a Priest or High";
 					mes "Priest in your guild.";
-					set guildrelay_q,95;
+					guildrelay_q = 95;
 					getitem 7247,1; //Soul_Of_Spirit
 					close;
 				}
@@ -2583,7 +2583,7 @@
 					mes "this spirit, and then give";
 					mes "it to a Priest or High";
 					mes "Priest in your guild.";
-					set guildrelay_q,95;
+					guildrelay_q = 95;
 					getitem 7247,1; //Soul_Of_Spirit
 					close;
 				}
@@ -2621,7 +2621,7 @@
 					mes "this. Come back to me";
 					mes "when you are ready.";
 					delitem 7247,1; //Soul_Of_Spirit
-					set guildrelay_q,18;
+					guildrelay_q = 18;
 					close;
 				}
 				if ((BaseLevel > 60) && (BaseLevel < 76)) {
@@ -2639,7 +2639,7 @@
 					mes "this. Come back to me";
 					mes "when you are ready.";
 					delitem 7247,1; //Soul_Of_Spirit
-					set guildrelay_q,19;
+					guildrelay_q = 19;
 					close;
 				}
 				if ((BaseLevel > 75) && (BaseLevel < 97)) {
@@ -2657,7 +2657,7 @@
 					mes "this. Come back to me";
 					mes "when you are ready.";
 					delitem 7247,1; //Soul_Of_Spirit
-					set guildrelay_q,20;
+					guildrelay_q = 20;
 					close;
 				}
 				if (BaseLevel > 96) {
@@ -2676,7 +2676,7 @@
 					mes "^4D4DFFCrusader^000000 or ^4D4DFFPaladin^000000";
 					mes "in your guild.";
 					delitem 7247,1; //Soul_Of_Spirit
-					set guildrelay_q,98;
+					guildrelay_q = 98;
 					getitem 7249,1; //Soul_Of_Service
 					close;
 				}
@@ -2697,7 +2697,7 @@
 				mes "sure to give it to a";
 				mes "^4D4DFFCrusader^000000 or ^4D4DFFPaladin^000000";
 				mes "in your guild.";
-				set guildrelay_q,98;
+				guildrelay_q = 98;
 				getitem 7249,1; //Soul_Of_Service
 				close;
 			}
@@ -2717,7 +2717,7 @@
 				mes "sure to give it to a";
 				mes "^4D4DFFCrusader^000000 or ^4D4DFFPaladin^000000";
 				mes "in your guild.";
-				set guildrelay_q,98;
+				guildrelay_q = 98;
 				getitem 7249,1; //Soul_Of_Service
 				close;
 			}
@@ -2735,7 +2735,7 @@
 				mes "Crusader or Paladin";
 				mes "who is in our guild.";
 				mes "Good luck!";
-				set guildrelay_q,98;
+				guildrelay_q = 98;
 				getitem 7249,1; //Soul_Of_Service
 				close;
 			}
@@ -2764,8 +2764,8 @@
 				mes "You'll need to really listen";
 				mes "to your feelings this time...";
 				delitem 7249,1; //Soul_Of_Service
-				set guildrelay_q,21;
-				set guildtime,gettime(3);
+				guildrelay_q = 21;
+				guildtime = gettime(3);
 				close;
 			}
 			if ((guildtime > 22) && (guildrelay_q == 21) && (BaseJob == Job_Crusader)) {
@@ -2777,7 +2777,7 @@
 					mes "and trust it when it comes";
 					mes "again. Now give this spirit to";
 					mes "a ^FF0000Monk^000000 or ^FF0000Champion^000000 for me...";
-					set guildrelay_q,96;
+					guildrelay_q = 96;
 					getitem 7250,1; //Soul_Of_Glory
 					close;
 				}
@@ -2799,7 +2799,7 @@
 					mes "and trust it when it comes";
 					mes "again. Now give this spirit to";
 					mes "a ^FF0000Monk^000000 or ^FF0000Champion^000000 for me...";
-					set guildrelay_q,96;
+					guildrelay_q = 96;
 					getitem 7250,1; //Soul_Of_Glory
 					close;
 				}
@@ -2821,7 +2821,7 @@
 					mes "and trust it when it comes";
 					mes "again. Now give this spirit to";
 					mes "a ^FF0000Monk^000000 or ^FF0000Champion^000000 for me...";
-					set guildrelay_q,96;
+					guildrelay_q = 96;
 					getitem 7250,1; //Soul_Of_Glory
 					close;
 				}
@@ -2842,7 +2842,7 @@
 				mes "and trust it when it comes";
 				mes "again. Now give this spirit to";
 				mes "a ^FF0000Monk^000000 or ^FF0000Champion^000000 for me...";
-				set guildrelay_q,96;
+				guildrelay_q = 96;
 				getitem 7250,1; //Soul_Of_Glory
 				close;
 			}
@@ -2872,7 +2872,7 @@
 					mes "I shall be waiting";
 					mes "for you right here.";
 					delitem 7250,1; //Soul_Of_Glory
-					set guildrelay_q,23;
+					guildrelay_q = 23;
 					close;
 				case 2:
 					mes "[" + .@name$ + "]";
@@ -2883,7 +2883,7 @@
 					mes "I shall be waiting";
 					mes "for you right here.";
 					delitem 7250,1; //Soul_Of_Glory
-					set guildrelay_q,24;
+					guildrelay_q = 24;
 					close;
 				case 3:
 					mes "[" + .@name$ + "]";
@@ -2894,7 +2894,7 @@
 					mes "I shall be waiting";
 					mes "for you right here.";
 					delitem 7250,1; //Soul_Of_Glory
-					set guildrelay_q,94;
+					guildrelay_q = 94;
 					close;
 				}
 			}
@@ -2909,7 +2909,7 @@
 				delitem 7165,30; //Limpid_Celestial_Robe
 				delitem 1021,30; //Dokkaebi_Horn
 				delitem 1023,30; //Fish_Tail
-				set guildrelay_q,97;
+				guildrelay_q = 97;
 				getitem 7251,1; //Soul_Of_Victory
 				close;
 			}
@@ -2932,7 +2932,7 @@
 				delitem 1048,30; //Slender_Snake
 				delitem 1013,30; //Colorful_Shell
 				delitem 7200,30; //Flexible_String
-				set guildrelay_q,97;
+				guildrelay_q = 97;
 				getitem 7251,1; //Soul_Of_Victory
 				close;
 			}
@@ -2957,7 +2957,7 @@
 				delitem 7003,30; //Anolian_Skin
 				delitem 7101,30; //Peco_Wing_Feather
 				delitem 7153,30; //Old_Japaness_Clothes
-				set guildrelay_q,97;
+				guildrelay_q = 97;
 				getitem 7251,1; //Soul_Of_Victory
 				close;
 			}

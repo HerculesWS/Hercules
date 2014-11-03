@@ -16,10 +16,10 @@
 
 // Function for OnAgitStart =========================================
 function	script	F_AgitStart	{
-	set .@map$, getarg(0);
-	set .@castle$, getarg(1);
-	set .@empx, getarg(2);
-	set .@empy, getarg(3);
+	.@map$ = getarg(0);
+	.@castle$ = getarg(1);
+	.@empx = getarg(2);
+	.@empy = getarg(3);
 
 	maprespawnguildid .@map$,getcastledata(.@map$,1),2;
 	monster .@map$,.@empx,.@empy,"Emperium",1288,1,"Agit_"+.@castle$+"::OnAgitBreak";
@@ -30,8 +30,8 @@ function	script	F_AgitStart	{
 
 // Function for OnGuildBreak ======================================
 function	script	F_GuildBreak	{
-	set .@map$, getarg(0);
-	set .@castle$, getarg(1);
+	.@map$ = getarg(0);
+	.@castle$ = getarg(1);
 
 	killmonsterall .@map$;
 
@@ -44,18 +44,18 @@ function	script	F_GuildBreak	{
 
 // Function for OnAgitBreak ======================================
 function	script	F_AgitBreak	{
-	set .@map$, getarg(0);
-	set .@castle$, getarg(1);
+	.@map$ = getarg(0);
+	.@castle$ = getarg(1);
 
-	set .@GID,getcharid(2);
+	.@GID = getcharid(2);
 	if (.@GID <= 0) return;
 
-	set .@Economy,getcastledata(.@map$,2) - 5;
-	if (.@Economy < 0) set .@Economy, 0;
+	.@Economy = getcastledata(.@map$,2) - 5;
+	if (.@Economy < 0) .@Economy = 0;
 	setcastledata .@map$, 2, .@Economy;
 
-	set .@defence,getcastledata(.@map$,3) - 5;
-	if (.@defence < 0) set .@defence, 0;
+	.@defence = getcastledata(.@map$,3) - 5;
+	if (.@defence < 0) .@defence = 0;
 	setcastledata .@map$, 3, .@defence;
 
 	setcastledata .@map$,1, .@GID;
@@ -66,12 +66,12 @@ function	script	F_AgitBreak	{
 	disablenpc "Kafra Staff#"+.@castle$;
 
 	// remove investment data and kafra
-	for( set .@i, 4; .@i <= 9; set .@i, .@i+1 )
+	for (.@i = 4; .@i <= 9; ++.@i)
 		setcastledata .@map$, .@i, 0;
 
 	// if the new guild doesn't have Guardian Research, erase guardians
 	if( getgdskilllv(.@GID,10002) == 0 )
-		for( set .@i, 10; .@i <= 17; set .@i, .@i+1 )
+		for (.@i = 10; .@i <= 17; ++.@i)
 			setcastledata .@map$, .@i, 0;
 
 	return;
@@ -80,8 +80,8 @@ function	script	F_AgitBreak	{
 
 // Function for OnAgitEnd ======================================
 function	script	F_AgitEnd	{
-	set .@map$, getarg(0);
-	set .@castle$, getarg(1);
+	.@map$ = getarg(0);
+	.@castle$ = getarg(1);
 
 	gvgoff .@map$;
 	// Disable the following if statment to keep empty

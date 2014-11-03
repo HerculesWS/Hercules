@@ -13,8 +13,8 @@
 //============================================================
 
 cmd_fild01,362,256,3	script	Cuir#Gator_Hunt	1_M_MOC_LORD,{
-	if (checkquest(60119) != -1) {
-		if (checkquest(60119,HUNTING) != 2 ) {
+	if (questprogress(60119)) {
+		if (questprogress(60119,HUNTING) != 2) {
 			mes "[Cuir]";
 			mes "Have you finished hunting the 50 Alligators?";
 			next;
@@ -53,8 +53,8 @@ cmd_fild01,362,256,3	script	Cuir#Gator_Hunt	1_M_MOC_LORD,{
 			close;
 		}
 	}
-	if (checkquest(60120) != -1) {
-		if (checkquest(60120,HUNTING) != 2 ) {
+	if (questprogress(60120)) {
+		if (questprogress(60120,HUNTING) != 2) {
 			mes "[Cuir]";
 			mes "Have you finished hunting the 50 Alligators?";
 			next;
@@ -94,8 +94,8 @@ cmd_fild01,362,256,3	script	Cuir#Gator_Hunt	1_M_MOC_LORD,{
 			close;
 		}
 	}
-	if (checkquest(60121) != -1) {
-		if (checkquest(60121,HUNTING) != 2 ) {
+	if (questprogress(60121)) {
+		if (questprogress(60121,HUNTING)) {
 			mes "[Cuir]";
 			mes "Have you finished hunting the 150 Alligators?";
 			next;

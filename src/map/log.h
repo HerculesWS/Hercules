@@ -98,7 +98,7 @@ struct log_interface {
 	char db_ip[32];
 	int db_port;
 	char db_id[32];
-	char db_pw[32];
+	char db_pw[100];
 	char db_name[32];
 	Sql* mysql_handle;
 	/* */

@@ -392,7 +392,7 @@ L_Contract:
 			mes "to the 2nd Floor Guide.";
 			mes "Thank you, and welcome";
 			mes "to the Rekenber Corporation~";
-			set thana_tower, 1;
+			thana_tower = 1;
 			close;
 		case 2:
 			mes "[Ditze]";
@@ -456,7 +456,7 @@ tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 	mes "of mission proof you brought?";
 	next;
 	setarray .@items[1],7435,7440,7441,7442;
-	set .@i, select("Golden Ornament:Red Feather:Blue Feather:Cursed Seal");
+	.@i = select("Golden Ornament:Red Feather:Blue Feather:Cursed Seal");
 	mes "[Liei]";
 	if (!countitem(.@items[.@i])) {
 		mes "I'm sorry, but you are not";
@@ -473,8 +473,8 @@ tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 	mes "1,000 zeny";
 	//mes "2,000 EXP";
 	next;
-	set .@zeny_tt,(countitem(.@items[.@i]) * 1000);
-	//set .@exp_tt,(countitem(.@items[.@i]) * 2000);
+	.@zeny_tt = (countitem(.@items[.@i]) * 1000);
+	//.@exp_tt = (countitem(.@items[.@i]) * 2000);
 	mes "[Liei]";
 	mes countitem(.@items[.@i])+" "+getitemname(.@items[.@i])+"s, then";
 	mes "you will receive a total of...";
@@ -693,7 +693,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 				mes "I talked a lot.";
 				mes "Sorry, I am not supposed to talk about this case like this...";
 				mes "I've been quite concerned about it, that's all.";
-				set thana_tower, 3;
+				thana_tower = 3;
 				close;
 			case 2:
 				mes "[Burled]";
@@ -809,7 +809,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 			mes " ";
 			mes "^4d4dffYou acquire one Old Violet Box,";
 			mes "as well as a little EXP.^000000";
-			set thana_tower, 10;
+			thana_tower = 10;
 			completequest 7053;
 			getexp 120000,10000;
 			getitem 617,1; //Old_Violet_Box
@@ -863,7 +863,7 @@ L_Request:
 	mes "He seriously wants to know about it.";
 	mes "His hands are trembling now...";
 	mes "I nodd without answering.";
-	set thana_tower, 4;
+	thana_tower = 4;
 	setquest 7048;
 	return;
 }
@@ -998,7 +998,7 @@ L_Key:
 		next;
 		mes "That's all.";
 		mes "The letters fly away in the form of a red key...";
-		set thana_tower, 5;
+		thana_tower = 5;
 		changequest 7048,7049;
 		specialeffect2 EF_COMBOATTACK1;
 		close;
@@ -1021,9 +1021,9 @@ tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 		mes "once or use the number 0.";
 		next;
 		while (1) {
-			set .@yagu100, rand(1,9);
-			set .@yagu10, rand(1,9);
-			set .@yagu1, rand(1,9);
+			.@yagu100 = rand(1,9);
+			.@yagu10 = rand(1,9);
+			.@yagu1 = rand(1,9);
 			if (((.@yagu100 != .@yagu10) && (.@yagu100 != .@yagu1)) && (.@yagu10 != .@yagu1))
 				break;
 		}
@@ -1039,8 +1039,8 @@ tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 					mes "3 digit number.";
 					close;
 				}
-				set .@input100, .@input / 100;
-				set .@input10, (.@input % 100) / 10;
+				.@input100 = .@input / 100;
+				.@input10 = (.@input % 100) / 10;
 				if (((.@input100 > 0) && (.@input10 > 0)) && (.@input % 10 > 0)) {
 					if (((.@input100 != .@input10) && (.@input100 != .@input % 10)) && (.@input10 != .@input % 10))
 						break;
@@ -1053,7 +1053,7 @@ tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 					next;
 				}
 			}
-			set .@retry, .@retry + 1;
+			++.@retry;
 			mes "[Screen]";
 			mes "You have input...";
 			mes "^0000ff" + .@input100 + "^000000, ^0000ff" + .@input10 + "^000000, ^0000ff" + (.@input % 10) + "^000000";
@@ -1061,14 +1061,14 @@ tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 			mes "Calculating Results...";
 			mes "Please wait a moment...";
 			next;
-			set .@strike, 0;
-			set .@ball, 0;
-			if (.@yagu100 == .@input100) set .@strike, .@strike + 1;
-			if (.@yagu10 == .@input10) set .@strike, .@strike + 1;
-			if (.@yagu1 == .@input % 10) set .@strike, .@strike + 1;
-			if ((.@yagu100 == .@input10) || (.@yagu100 == .@input % 10)) set .@ball, .@ball + 1;
-			if ((.@yagu10 == .@input100) || (.@yagu10 == .@input % 10)) set .@ball, .@ball + 1;
-			if ((.@yagu1 == .@input100) || (.@yagu1 == .@input10)) set .@ball, .@ball + 1;
+			.@strike = 0;
+			.@ball = 0;
+			if (.@yagu100 == .@input100) .@strike += 1;
+			if (.@yagu10 == .@input10) .@strike += 1;
+			if (.@yagu1 == .@input % 10) .@strike += 1;
+			if ((.@yagu100 == .@input10) || (.@yagu100 == .@input % 10)) .@ball += 1;
+			if ((.@yagu10 == .@input100) || (.@yagu10 == .@input % 10)) .@ball += 1;
+			if ((.@yagu1 == .@input100) || (.@yagu1 == .@input10)) .@ball += 1;
 			if (.@strike == 3) {
 				mes "[Screen]";
 				mes "Input number accepted.";
@@ -1115,7 +1115,7 @@ tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 					mes "^b22222This tower set up for...^000000";
 					next;
 					mes "It suddenly shakes, then disappears.";
-					set thana_tower, 6;
+					thana_tower = 6;
 					changequest 7049,7050;
 					specialeffect2 EF_COMBOATTACK1;
 					close;
@@ -1220,7 +1220,7 @@ tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
 				mes "The truth is..........^000000";
 				next;
 				mes "The illusion shakes, then melts on the surface of the key as light.";
-				set thana_tower, 7;
+				thana_tower = 7;
 				changequest 7050,7051;
 				specialeffect2 EF_COMBOATTACK1;
 				close;
@@ -1270,11 +1270,11 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 				mes "is still blank and deactivated.^000000";
 				close;
 			case 2:
-				set .@small_1, 0;
-				set .@small_2, 0;
-				set .@big_1, 0;
-				set .@big_2, 0;
-				set .@big_3, 0;
+				.@small_1 = 0;
+				.@small_2 = 0;
+				.@big_1 = 0;
+				.@big_2 = 0;
+				.@big_3 = 0;
 				mes "^3355FFYou touch the wheels and";
 				mes "find that they are actually";
 				mes "moving very slowly. You note";
@@ -1302,17 +1302,17 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 						switch(select("Raise Wheel:Lower Wheel:Press Wheel")) {
 						case 1:
 							mes "^EE0000*Choom*^000000";
-							set .@small_1, 2;
+							.@small_1 = 2;
 							if ((.@small_1 == 2) && (.@small_2 == 2) && (.@big_1 == 2) && (.@big_2 == 2) && (.@big_3 == 2)) break;
 							continue;
 						case 2:
 							mes "^00B2EE*Sneeeep*^000000";
-							set .@small_1, 1;
+							.@small_1 = 1;
 							if ((.@small_1 == 1) && (.@small_2 == 1) && (.@big_1 == 1) && (.@big_2 == 1) && (.@big_3 == 1)) break;
 							continue;
 						case 3:
 							mes "^5C246E*Mrreeem*^000000";
-							set .@small_1, 3;
+							.@small_1 = 3;
 							if ((.@small_1 == 3) && (.@small_2 == 3) && (.@big_1 == 3) && (.@big_2 == 3) && (.@big_3 == 3)) break;
 							continue;
 						}
@@ -1321,17 +1321,17 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 						switch(select("Raise Wheel:Lower Wheel:Press Wheel")) {
 						case 1:
 							mes "^5C246E*Mrreeem*^000000";
-							set .@small_2, 3;
+							.@small_2 = 3;
 							if ((.@small_1 == 3) && (.@small_2 == 3) && (.@big_1 == 3) && (.@big_2 == 3) && (.@big_3 == 3)) break;
 							continue;
 						case 2:
 							mes "^EE0000*Choom*^000000";
-							set .@small_2, 2;
+							.@small_2 = 2;
 							if ((.@small_1 == 2) && (.@small_2 == 2) && (.@big_1 == 2) && (.@big_2 == 2) && (.@big_3 == 2)) break;
 							continue;
 						case 3:
 							mes "^00B2EE*Sneeeep*^000000";
-							set .@small_2, 1;
+							.@small_2 = 1;
 							if ((.@small_1 == 1) && (.@small_2 == 1) && (.@big_1 == 1) && (.@big_2 == 1) && (.@big_3 == 1)) break;
 							continue;
 						}
@@ -1340,17 +1340,17 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 						switch(select("Raise Wheel:Lower Wheel:Vertically Shift Wheel")) {
 						case 1:
 							mes "^00B2EE*Sneeeep*^000000";
-							set .@big_1, 1;
+							.@big_1 = 1;
 							if ((.@small_1 == 1) && (.@small_2 == 1) && (.@big_1 == 1) && (.@big_2 == 1) && (.@big_3 == 1)) break;
 							continue;
 						case 2:
 							mes "^5C246E*Mrreeem*^000000";
-							set .@big_1, 3;
+							.@big_1 = 3;
 							if ((.@small_1 == 3) && (.@small_2 == 3) && (.@big_1 == 3) && (.@big_2 == 3) && (.@big_3 == 3)) break;
 							continue;
 						case 3:
 							mes "^EE0000*Choom*^000000";
-							set .@big_1, 2;
+							.@big_1 = 2;
 							if ((.@small_1 == 2) && (.@small_2 == 2) && (.@big_1 == 2) && (.@big_2 == 2) && (.@big_3 == 2)) break;
 							continue;
 						}
@@ -1359,17 +1359,17 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 						switch(select("Raise Wheel:Lower Wheel:Vertically Shift Wheel")) {
 						case 1:
 							mes "^EE0000*Choom*^000000";
-							set .@big_2, 2;
+							.@big_2 = 2;
 							if ((.@small_1 == 2) && (.@small_2 == 2) && (.@big_1 == 2) && (.@big_2 == 2) && (.@big_3 == 2)) break;
 							continue;
 						case 2:
 							mes "^5C246E*Mrreeem*^000000";
-							set .@big_2, 3;
+							.@big_2 = 3;
 							if ((.@small_1 == 3) && (.@small_2 == 3) && (.@big_1 == 3) && (.@big_2 == 3) && (.@big_3 == 3)) break;
 							continue;
 						case 3:
 							mes "^00B2EE*Sneeeep*^000000";
-							set .@big_2, 1;
+							.@big_2 = 1;
 							if ((.@small_1 == 1) && (.@small_2 == 1) && (.@big_1 == 1) && (.@big_2 == 1) && (.@big_3 == 1)) break;
 							continue;
 						}
@@ -1378,17 +1378,17 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 						switch(select("Raise Wheel:Lower Wheel:Vertically Shift Wheel")) {
 						case 1:
 							mes "^EE0000*Choom*^000000";
-							set .@big_3, 2;
+							.@big_3 = 2;
 							if ((.@small_1 == 2) && (.@small_2 == 2) && (.@big_1 == 2) && (.@big_2 == 2) && (.@big_3 == 2)) break;
 							continue;
 						case 2:
 							mes "^00B2EE*Sneeeep*^000000";
-							set .@big_3, 1;
+							.@big_3 = 1;
 							if ((.@small_1 == 1) && (.@small_2 == 1) && (.@big_1 == 1) && (.@big_2 == 1) && (.@big_3 == 1)) break;
 							continue;
 						case 3:
 							mes "^5C246E*Mrreeem*^000000";
-							set .@big_3, 3;
+							.@big_3 = 3;
 							if ((.@small_1 == 3) && (.@small_2 == 3) && (.@big_1 == 3) && (.@big_2 == 3) && (.@big_3 == 3)) break;
 							continue;
 						}
@@ -1420,11 +1420,11 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 						else mes "3rd Big Wheel: Moved";
 						continue;
 					case 7:
-						set .@small_1, 0;
-						set .@small_2, 0;
-						set .@big_1, 0;
-						set .@big_2, 0;
-						set .@big_3, 0;
+						.@small_1 = 0;
+						.@small_2 = 0;
+						.@big_1 = 0;
+						.@big_2 = 0;
+						.@big_3 = 0;
 						continue;
 					}
 					break;
@@ -1487,7 +1487,7 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 					next;
 					mes "The hallucination wobbles";
 					mes "and fades into the key.";
-					set thana_tower, 8;
+					thana_tower = 8;
 					changequest 7051,7052;
 					specialeffect2 EF_BEGINSPELL6;
 					specialeffect2 EF_SPELLBREAKER;
@@ -1573,7 +1573,7 @@ tha_t06,204,181,0	script	Splendid Sword#tt5	HIDDEN_NPC,3,3,{
 					next;
 					mes "^4d4dffYou decide to show the notebook and the keys to Burled.";
 					mes "You received Varmunt's Journal.^000000";
-					set thana_tower, 9;
+					thana_tower = 9;
 					changequest 7052,7053;
 					getitem 11011,1; //Barmund_Note
 					close;
@@ -1804,7 +1804,7 @@ tha_t12,161,57,0	script	Gold Religious Statue#tt	HIDDEN_NPC,{
 				mes "After inserting the Yellow Charm Stone into the sword, the statue begins to react.";
 				specialeffect EF_BEGINSPELL5;
 				delitem 7427,1; //Magic_Gem_Yellow
-				set $@thana_summon, 1;
+				$@thana_summon = 1;
 				donpcevent "#tteffect01::OnEnable";
 				mapannounce "tha_t12","The golden magic power has released part of the seal.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
 				close;
@@ -1834,7 +1834,7 @@ tha_t12,154,17,0	script	Green Wiseman Statue#tt	HIDDEN_NPC,{
 				mes "After inserting the Green Charm Stone into the wand, the statue begins to react.";
 				specialeffect EF_BEGINSPELL4;
 				delitem 7429,1; //Magic_Gem_Green
-				set $@thana_summon, 2;
+				$@thana_summon = 2;
 				donpcevent "#tteffect02::OnEnable";
 				mapannounce "tha_t12","The green magic power has released part of the seal.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
 				close;
@@ -1864,7 +1864,7 @@ tha_t12,103,17,0	script	Blue Angel Statue#tt	HIDDEN_NPC,{
 				mes "After inserting the Blue Charm Stone into the belt, the statue begins to react.";
 				specialeffect EF_BEGINSPELL2;
 				delitem 7428,1; //Magic_Gem_Blue
-				set $@thana_summon, 3;
+				$@thana_summon = 3;
 				donpcevent "#tteffect03::OnEnable";
 				mapannounce "tha_t12","The blue magic power has released part of the seal.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
 				close;
@@ -1894,7 +1894,7 @@ tha_t12,96,57,0	script	Bloody Knight Statue#tt	HIDDEN_NPC,{
 				mes "After inserting the Red Charm Stone into the armor, the statue begins to react.";
 				specialeffect EF_BEGINSPELL3;
 				delitem 7426,1; //Magic_Gem_Red
-				set $@thana_summon, 4;
+				$@thana_summon = 4;
 				donpcevent "#tteffect04::OnEnable";
 				mapannounce "tha_t12","The red magic power has released part of the seal.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
 				close;
@@ -1924,7 +1924,7 @@ tha_t12,129,86,0	script	Dark Devil Statue#tt	HIDDEN_NPC,{
 				mes "After inserting the Red Charm Stone into the eye socket, the statue begins to react.";
 				specialeffect EF_BEGINSPELL7;
 				delitem 7430,1; //Magic_Gem_Black
-				set $@thana_summon, 5;
+				$@thana_summon = 5;
 				donpcevent "#gateto_thanatos::OnEnable";
 				donpcevent "#tteffect01::OnStop";
 				donpcevent "#tteffect02::OnStop";
@@ -2055,7 +2055,7 @@ OnOn2:
 	initnpctimer;
 	end;
 OnTouch:
-	set .@touch,1;
+	.@touch = 1;
 OnTimer6000:
 	if (($@thana_summon == 0) || ($@thana_summon == 6)) {
 		disablenpc "#gateto_thanatos";
@@ -2067,7 +2067,7 @@ OnTimer6000:
 	end;
 OnTimer1000:
 OnTimer5000:
-	set .@pillar,1;
+	.@pillar = 1;
 OnTimer3000:
 	specialeffect EF_BEGINSPELL7,AREA,"#tteffect05";
 	specialeffect EF_BEGINSPELL3,AREA,"#tteffect04";
@@ -2082,14 +2082,14 @@ thana_boss,217,167,3	script	Memory Seal#tt1	G_THA_MAERO,3,3,{
 	end;
 OnEnable:
 	hideoffnpc strnpcinfo(0);
-	set .hide,0;
+	.hide = 0;
 	end;
 OnDisable:
 	hideonnpc strnpcinfo(0);
-	set .hide,0;
+	.hide = 0;
 	end;
 OnTouch:
-	set .@seal, atoi(charat(strnpcinfo(2),2));
+	.@seal = atoi(charat(strnpcinfo(2),2));
 	if (.hide & (1<<.@seal)) end;
 
 	//  .@i: ItemID,MobID,MapX,MapY,EffectNum
@@ -2097,19 +2097,19 @@ OnTouch:
 	switch(.@seal) {
 	case 1:
 		setarray .@i[0],7437,1711,217,167,238;
-		set .@j$,"Misery";
+		.@j$ = "Misery";
 		break;
 	case 2:
 		setarray .@i[0],7436,1712,202,75,102;
-		set .@j$,"Agony";
+		.@j$ = "Agony";
 		break;
 	case 3:
 		setarray .@i[0],7438,1709,80,76,101;
-		set .@j$,"Hatred";
+		.@j$ = "Hatred";
 		break;
 	case 4:
 		setarray .@i[0],7439,1710,62,171,100;
-		set .@j$,"Despair";
+		.@j$ = "Despair";
 		break;
 	}
 
@@ -2125,7 +2125,7 @@ OnTouch:
 	mes "Surely I saw a familiar fragment before...";
 	next;
 	input .@inputstr$;
-	set .@exact_tt$, "Fragment of "+.@j$;
+	.@exact_tt$ = "Fragment of "+.@j$;
 	if (countitem(.@i[0]) > 0 && .@exact_tt$ == .@inputstr$) {
 		mes "^3355FFYou insert the";
 		mes .@exact_tt$;
@@ -2133,15 +2133,15 @@ OnTouch:
 		mes "its glow to intensify.^000000";
 		close2;
 		hideonnpc strnpcinfo(0);
-		set .hide, .hide | (1<<.@seal);
+		.hide |= (1<<.@seal);
 		delitem .@i[0],1;
 		specialeffect .@i[4];
 		monster "thana_boss",.@i[2],.@i[3],.@j$,.@i[1],1,strnpcinfo(0)+"::OnMyMobDead";
 		switch($@thana_summon2) {
-			case 0: set .@str$,"... who... released... the... Memory... of... "+.@j$+"...?"; break;
-			case 1: set .@str$,"... why... did you... release... the... Memory... of... "+.@j$+"...?"; break;
-			case 2: set .@str$,"... ugh... stop it... the Memory of "+.@j$+"..."; break;
-			default: set .@str$,"... finally... you released the last piece of Memory..."; break;
+			case 0: .@str$ = "... who... released... the... Memory... of... "+.@j$+"...?"; break;
+			case 1: .@str$ = "... why... did you... release... the... Memory... of... "+.@j$+"...?"; break;
+			case 2: .@str$ = "... ugh... stop it... the Memory of "+.@j$+"..."; break;
+			default: .@str$ = "... finally... you released the last piece of Memory..."; break;
 		}
 		mapannounce "thana_boss",.@str$,bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
 		end;
@@ -2152,7 +2152,7 @@ OnTouch:
 	close;
 
 OnMyMobDead:
-	set $@thana_summon2, $@thana_summon2+1;
+	++$@thana_summon2;
 	if ($@thana_summon2 == 4)
 		mapwarp "thana_boss","thana_boss",141,228;
 	end;
@@ -2195,7 +2195,7 @@ OnTimer16000:
 	mapannounce "thana_boss","Thanatos : Come, be the first to fall before my might!",bc_map,"0xff0000"; //FW_NORMAL 12 0 0
 	donpcevent "Memory Seal#tt5::OnDisable";
 	donpcevent "#sommon_thanatos::OnEnable";
-	set $@thana_summon2, 5;
+	$@thana_summon2 = 5;
 	stopnpctimer;
 	end;
 }
@@ -2224,7 +2224,7 @@ OnMyMobDead:
 	if (mobcount("thana_boss","#sommon_thanatos::OnMyMobDead") < 1) {
 		mapannounce "thana_boss","RAWWWWWWWWWWR........ This can't be.........................",bc_map,"0xff0000"; //FW_NORMAL 12 0 0
 		donpcevent "#cooltime_thana::OnEnable";
-		set $@thana_summon, 6;
+		$@thana_summon = 6;
 	}
 	end;
 }
@@ -2232,8 +2232,8 @@ OnMyMobDead:
 thana_boss,1,1,0	script	#cooltime_thana	CLEAR_NPC,{
 	end;
 OnInit:
-	set $@thana_summon, 0;
-	set $@thana_summon2, 0;
+	$@thana_summon = 0;
+	$@thana_summon2 = 0;
 	end;
 OnEnable:
 	initnpctimer;
@@ -2273,8 +2273,8 @@ OnTimer37000:
 	mapwarp "thana_boss","tha_t12",130,52;
 	end;
 OnTimer7200000:
-	set $@thana_summon, 0;
-	set $@thana_summon2, 0;
+	$@thana_summon = 0;
+	$@thana_summon2 = 0;
 	donpcevent "Memory Seal#tt1::OnEnable";
 	donpcevent "Memory Seal#tt2::OnEnable";
 	donpcevent "Memory Seal#tt3::OnEnable";

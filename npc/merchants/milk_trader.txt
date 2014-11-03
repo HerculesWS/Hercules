@@ -46,9 +46,9 @@ prontera,73,140,0	script	Milk Vendor	4_M_04,{
 			mes "way, you know...";
 			close;
 		}
-		set .@bottles,countitem(713);
-		set .@total_weight,.@bottles * 50;
-		set .@total_cost,.@bottles * 15;
+		.@bottles = countitem(713);
+		.@total_weight = .@bottles * 50;
+		.@total_cost = .@bottles * 15;
 		if (Zeny < .@total_cost) {
 			mes "[Milk Vendor]";
 			mes "Oh, whoa~!";

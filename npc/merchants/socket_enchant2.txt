@@ -277,7 +277,7 @@
 						mes "Shall we start now?";
 						mes "Pray to your gods for good luck.";
 						next;
-						set .@a, rand(1,100);
+						.@a = rand(1,100);
 						if ((.@a > 4) && (.@a < 95))
 						{
 							specialeffect EF_LORD;
@@ -417,7 +417,7 @@ function	script	Func_Socket2	{
 				mes "Alright then, let the work begin!";
 				mes "You'd better pray for a successful result.";
 				next;
-				set .@a, rand(1,100);
+				.@a = rand(1,100);
 				if ((.@a > getarg(2)) && (.@a < getarg(3)))
 				{
 					specialeffect EF_LORD;

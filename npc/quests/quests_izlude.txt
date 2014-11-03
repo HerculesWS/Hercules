@@ -69,7 +69,7 @@
 		mes "Fine fine. Me, being the captain of a ship, can afford to bring you there at a lower price. How does 250 Zeny sound?";
 		next;
 		if (select("Alrighty~!:Bah, what a rip off!!") == 1) {
-			set MISC_QUEST,MISC_QUEST | 16;
+			MISC_QUEST |= 16;
 			if (Zeny < 250) {
 				mes "[Edgar]";
 				mes "Um...";
