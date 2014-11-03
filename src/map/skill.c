@@ -6948,7 +6948,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				}
 
 				clif->skill_nodamage(src,bl,TK_HIGHJUMP,skill_lv,1);
-				if(!map->count_oncell(src->m,x,y,BL_PC|BL_NPC|BL_MOB) && map->getcell(src->m,x,y,CELL_CHKREACH)) {
+				if(!map->count_oncell(src->m,x,y,BL_PC|BL_NPC|BL_MOB,0) && map->getcell(src->m,x,y,CELL_CHKREACH)) {
 					clif->slide(src,x,y);
 					unit->movepos(src, x, y, 1, 0);
 				}
@@ -10385,7 +10385,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		// Plant Cultivation [Celest]
 		case CR_CULTIVATION:
 			if (sd) {
-				if( map->count_oncell(src->m,x,y,BL_CHAR) > 0 ) {
+				if( map->count_oncell(src->m,x,y,BL_CHAR,0) > 0 ) {
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					return 1;
 				}
@@ -11588,7 +11588,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 		ts->tick = tick+sg->interval;
 
 		if ((skill_id==CR_GRANDCROSS || skill_id==NPC_GRANDDARKNESS) && !battle_config.gx_allhit)
-			ts->tick += sg->interval*(map->count_oncell(bl->m,bl->x,bl->y,BL_CHAR)-1);
+			ts->tick += sg->interval*(map->count_oncell(bl->m,bl->x,bl->y,BL_CHAR,0)-1);
 	}
 
 	switch (sg->unit_id) {

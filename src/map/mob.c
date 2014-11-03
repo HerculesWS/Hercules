@@ -1303,6 +1303,10 @@ int mob_unlocktarget(struct mob_data *md, int64 tick) {
 		md->ud.target_to = 0;
 		unit->set_target(&md->ud, 0);
 	}
+	if(map->count_oncell(md->bl.m, md->bl.x, md->bl.y, BL_CHAR|BL_NPC, 1) > battle_config.official_cell_stack_limit) {
+		unit->walktoxy(&md->bl, md->bl.x, md->bl.y, 8);
+	}
+
 	return 0;
 }
 /*==========================================
@@ -1330,7 +1334,7 @@ int mob_randomwalk(struct mob_data *md, int64 tick) {
 		x+=md->bl.x;
 		y+=md->bl.y;
 
-		if(((x != md->bl.x) || (y != md->bl.y)) && map->getcell(md->bl.m,x,y,CELL_CHKPASS) && unit->walktoxy(&md->bl,x,y,0)){
+		if(((x != md->bl.x) || (y != md->bl.y)) && map->getcell(md->bl.m,x,y,CELL_CHKPASS) && unit->walktoxy(&md->bl,x,y,8)){
 			break;
 		}
 	}
@@ -1429,8 +1433,9 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 			//No valid target
 			if (mob->warpchase(md, tbl))
 				return true; //Chasing this target.
-			if(md->ud.walktimer != INVALID_TIMER && (!can_move || md->ud.walkpath.path_pos <= battle_config.mob_chase_refresh))
-				return true; //Walk at least "mob_chase_refresh" cells before dropping the target
+			if(md->ud.walktimer != INVALID_TIMER && (!can_move || md->ud.walkpath.path_pos <= battle_config.mob_chase_refresh)
+				&& (tbl || md->ud.walkpath.path_pos == 0))
+				return true; //Walk at least "mob_chase_refresh" cells before dropping the target unless target is non-existent
 			mob_unlocktarget(md, tick); //Unlock target
 			tbl = NULL;
 		}

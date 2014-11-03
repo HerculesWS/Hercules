@@ -917,11 +917,12 @@ struct map_interface {
 	int (*delblock) (struct block_list* bl);
 	int (*moveblock) (struct block_list *bl, int x1, int y1, int64 tick);
 	//blocklist nb in one cell
-	int (*count_oncell) (int16 m,int16 x,int16 y,int type);
+	int (*count_oncell) (int16 m,int16 x,int16 y,int type,int flag);
 	struct skill_unit * (*find_skill_unit_oncell) (struct block_list* target,int16 x,int16 y,uint16 skill_id,struct skill_unit* out_unit, int flag);
 	// search and creation
 	int (*get_new_object_id) (void);
 	int (*search_freecell) (struct block_list *src, int16 m, int16 *x, int16 *y, int16 rx, int16 ry, int flag);
+	bool (*closest_freecell) (int16 m, int16 *x, int16 *y, int type, int flag);
 	//
 	int (*quit) (struct map_session_data *sd);
 	// npc
