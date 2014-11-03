@@ -2042,6 +2042,8 @@ int do_init(int argc, char** argv)
 void login_defaults(void) {
 	login = &login_s;
 
+	login->lc = &login_config;
+
 	login->mmo_auth = login_mmo_auth;
 	login->mmo_auth_new = login_mmo_auth_new;
 	login->waiting_disconnect_timer = login_waiting_disconnect_timer;

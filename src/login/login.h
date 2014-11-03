@@ -139,6 +139,7 @@ struct login_interface {
 	DBMap* auth_db;
 	DBMap* online_db;
 	int fd;
+	struct Login_Config *lc;
 
 	int (*mmo_auth) (struct login_session_data* sd, bool isServer);
 	int (*mmo_auth_new) (const char* userid, const char* pass, const char sex, const char* last_ip);
