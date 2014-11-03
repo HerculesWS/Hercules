@@ -18313,7 +18313,7 @@ void clif_parse_RouletteOpen(int fd, struct map_session_data* sd) {
 	p.Result = 0;
 	p.Serial = 0;
 	p.Step = sd->roulette.stage - 1;
-	p.Idx = sd->roulette.prizeIdx;
+	p.Idx = (char)sd->roulette.prizeIdx;
 	p.AdditionItemID = -1; /** TODO **/
 	p.BronzePoint = pc_readglobalreg(sd, script->add_str("TmpRouletteBronze"));
 	p.GoldPoint = pc_readglobalreg(sd, script->add_str("TmpRouletteGold"));
