@@ -174,6 +174,15 @@ bool mapif_quest_update(int char_id, struct quest qd) {
 	return true;
 }
 
+void mapif_quest_save_ack(int fd, int char_id, bool success)
+{
+	WFIFOHEAD(fd,7);
+	WFIFOW(fd,0) = 0x3861;
+	WFIFOL(fd,2) = char_id;
+	WFIFOB(fd,6) = success?1:0;
+	WFIFOSET(fd,7);
+}
+
 /**
  * Handles the save request from mapserver for a character's questlog.
  *
@@ -220,13 +229,22 @@ int mapif_parse_quest_save(int fd) {
 		aFree(old_qd);
 
 	// Send ack
-	WFIFOHEAD(fd,7);
-	WFIFOW(fd,0) = 0x3861;
-	WFIFOL(fd,2) = char_id;
-	WFIFOB(fd,6) = success?1:0;
-	WFIFOSET(fd,7);
+	mapif_quest_save_ack(fd, char_id, success);
 
 	return 0;
+}
+
+void mapif_send_quests(int fd, int char_id, struct quest *tmp_questlog, int num_quests)
+{
+	WFIFOHEAD(fd,num_quests*sizeof(struct quest)+8);
+	WFIFOW(fd,0) = 0x3860;
+	WFIFOW(fd,2) = num_quests*sizeof(struct quest)+8;
+	WFIFOL(fd,4) = char_id;
+
+	if (num_quests > 0)
+		memcpy(WFIFOP(fd,8), tmp_questlog, sizeof(struct quest)*num_quests);
+
+	WFIFOSET(fd,num_quests*sizeof(struct quest)+8);
 }
 
 /**
@@ -244,16 +262,7 @@ int mapif_parse_quest_load(int fd) {
 	int num_quests;
 
 	tmp_questlog = mapif_quests_fromsql(char_id, &num_quests);
-
-	WFIFOHEAD(fd,num_quests*sizeof(struct quest)+8);
-	WFIFOW(fd,0) = 0x3860;
-	WFIFOW(fd,2) = num_quests*sizeof(struct quest)+8;
-	WFIFOL(fd,4) = char_id;
-
-	if (num_quests > 0)
-		memcpy(WFIFOP(fd,8), tmp_questlog, sizeof(struct quest)*num_quests);
-
-	WFIFOSET(fd,num_quests*sizeof(struct quest)+8);
+	mapif_send_quests(fd, char_id, tmp_questlog, num_quests);
 
 	if (tmp_questlog)
 		aFree(tmp_questlog);
