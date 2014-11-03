@@ -453,6 +453,9 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 	if (idx == 0)
 		return 1; // invalid skill id
 
+	if( pc_has_permission(sd, PC_PERM_DISABLE_SKILL_USAGE) )
+		return 1;
+
 	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL))
 		return 0; // can do any damn thing they want
 

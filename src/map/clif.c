@@ -10902,7 +10902,7 @@ void clif_parse_NpcBuyListSend(int fd, struct map_session_data* sd)
 	unsigned short* item_list = (unsigned short*)RFIFOP(fd,4);
 	int result;
 
-	if( sd->state.trading || !sd->npc_shopid )
+	if( sd->state.trading || !sd->npc_shopid || pc_has_permission(sd,PC_PERM_DISABLE_STORE) )
 		result = 1;
 	else
 		result = npc->buylist(sd,n,item_list);
@@ -15621,7 +15621,7 @@ void clif_parse_cashshop_buy(int fd, struct map_session_data *sd)
     int fail = 0;
     nullpo_retv(sd);
 
-    if( sd->state.trading || !sd->npc_shopid )
+    if( sd->state.trading || !sd->npc_shopid || pc_has_permission(sd,PC_PERM_DISABLE_STORE) )
         fail = 1;
     else {
 #if PACKETVER < 20101116
