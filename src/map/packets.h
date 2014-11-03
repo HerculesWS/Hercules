@@ -2800,6 +2800,88 @@ packet(0x020d,-1);
 	packet(0x0438,36,clif->pStoragePassword,0);
 #endif
 
+// 2014-10-16aRagexe - YomRawr
+#if PACKETVER >= 20141016
+	packet(0x0369,7,clif->pActionRequest,2,6);
+	packet(0x083C,10,clif->pUseSkillToId,2,4,6);
+	packet(0x0437,5,clif->pWalkToXY,2);
+	packet(0x035F,6,clif->pTickSend,2);
+	packet(0x0967,5,clif->pChangeDir,2,4);
+	packet(0x07E4,6,clif->pTakeItem,2);
+	packet(0x0362,6,clif->pDropItem,2,4);
+	packet(0x07EC,8,clif->pMoveToKafra,2,4);
+	packet(0x022D,8,clif->pMoveFromKafra,2,4);
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x096A,6,clif->pGetCharNameRequest,2);
+	packet(0x0368,6,clif->pSolveCharName,2);
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);
+	// packet(0x0363,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x086E,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x0802,26,clif->pPartyInvite2,2);
+	// packet(0x0922,4); // CZ_GANGSI_RANK
+	packet(0x094B,26,clif->pFriendsListAdd,2);
+	packet(0x0364,5,clif->pHomMenu,2,4);
+	packet(0x0936,36,clif->pStoragePassword,0);
+	packet(0x09DF,7);
+	packet(0x0a00,269);
+#endif
+
+// 2014-10-22bRagexe - YomRawr
+#if PACKETVER >= 20141022
+	packet(0x0369,7,clif->pActionRequest,2,6);
+	packet(0x083C,10,clif->pUseSkillToId,2,4,6);
+	packet(0x0437,5,clif->pWalkToXY,2);
+	packet(0x035F,6,clif->pTickSend,2);
+	packet(0x08AD,5,clif->pChangeDir,2,4);
+	packet(0x094E,6,clif->pTakeItem,2);
+	packet(0x087D,6,clif->pDropItem,2,4);
+	packet(0x0878,8,clif->pMoveToKafra,2,4);
+	packet(0x08AA,8,clif->pMoveFromKafra,2,4);
+	packet(0x023B,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x096A,6,clif->pGetCharNameRequest,2);
+	packet(0x0368,6,clif->pSolveCharName,2);
+	packet(0x0835,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0940,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x0955,18,clif->pPartyBookingRegisterReq,2,4);
+	// packet(0x092B,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x093B,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x0896,26,clif->pPartyInvite2,2);
+	// packet(0x08AB,4); // CZ_GANGSI_RANK
+	packet(0x091A,26,clif->pFriendsListAdd,2);
+	packet(0x0899,5,clif->pHomMenu,2,4);
+	packet(0x0438,36,clif->pStoragePassword,0);
+#endif
+
+/* Roulette System [Yommy/Hercules] */
+#if PACKETVER >= 20141016
+	packet(0x0A19,2,clif->pRouletteOpen,0);     // HEADER_CZ_REQ_OPEN_ROULETTE
+	packet(0x0A1A,23);                          // HEADER_ZC_ACK_OPEN_ROULETTE
+	packet(0x0A1B,2,clif->pRouletteInfo,0);     // HEADER_CZ_REQ_ROULETTE_INFO
+	packet(0x0A1C,-1);                          // HEADER_ZC_ACK_ROULEITTE_INFO
+	packet(0x0A1D,2,clif->pRouletteClose,0);    // HEADER_CZ_REQ_CLOSE_ROULETTE
+	packet(0x0A1E,3);                           // HEADER_ZC_ACK_CLOSE_ROULETTE
+	packet(0x0A1F,2,clif->pRouletteGenerate,0); // HEADER_CZ_REQ_GENERATE_ROULETTE
+	packet(0x0A20,21);                          // HEADER_ZC_ACK_GENERATE_ROULETTE
+	packet(0x0A21,3,clif->pRouletteRecvItem,2); // HEADER_CZ_RECV_ROULETTE_ITEM
+	packet(0x0A22,5);                           // HEADER_ZC_RECV_ROULETTE_ITEM
+#endif
+
 /* PacketKeys: http://hercules.ws/board/topic/1105-hercules-wpe-free-june-14th-patch/ */
 #if PACKETVER >= 20110817
 	packetKeys(0x053D5CED,0x3DED6DED,0x6DED6DED); /* Thanks to Shakto */
@@ -3029,6 +3111,14 @@ packet(0x020d,-1);
 
 #if PACKETVER >= 20140416
 	packetKeys(0x04810281,0x42814281,0x42814281); /* Themon */
+#endif
+
+#if PACKETVER >= 20141022
+	packetKeys(0x290551EA,0x2B952C75,0x2D67669B); /* YomRawr */
+#endif
+
+#if PACKETVER >= 20141016
+	packetKeys(0x2DFF467C,0x444B37EE,0x2C1B634F); /* YomRawr */
 #endif
 
 #if PACKETVER >= 20141022

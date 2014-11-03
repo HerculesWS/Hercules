@@ -543,6 +543,13 @@ struct map_session_data {
 	bool vars_ok;
 	bool vars_dirty;
 	
+	struct {
+		short stage;
+		short prizeIdx;
+		short prizeStage;
+		bool claimPrize;
+	} roulette;
+	
 	// temporary debugging of bug #3504
 	const char* delunit_prevfile;
 	int delunit_prevline;

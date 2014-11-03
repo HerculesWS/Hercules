@@ -479,6 +479,8 @@ struct Battle_Config {
 
 	int song_timer_reset; // [csnv]
 	int snap_dodge; // Enable or disable dodging damage snapping away [csnv]
+	
+	int feature_roulette;
 };
 
 extern struct Battle_Config battle_config;

@@ -2248,6 +2248,10 @@ void do_init_itemdb(bool minimal) {
 		return;
 
 	clif->cashshop_load();
+	
+	/** it failed? we disable it **/
+	if( !clif->parse_roulette_db() )
+		battle_config.feature_roulette = 0;
 }
 void itemdb_defaults(void) {
 	itemdb = &itemdb_s;

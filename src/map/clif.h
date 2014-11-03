@@ -48,6 +48,8 @@ struct skill_cd;
 #define clif_disp_onlyself(sd,mes,len) clif->disp_message( &(sd)->bl, (mes), (len), SELF )
 #define clif_viewequip_fail( sd ) clif_msg( (sd), 0x54d );
 #define HCHSYS_NAME_LENGTH 20
+#define MAX_ROULETTE_LEVEL 7 /** client-defined value **/
+#define MAX_ROULETTE_COLUMNS 9 /** client-defined value **/
 
 /**
  * Enumerations
@@ -476,6 +478,35 @@ enum e_trade_item_ok {
 	TIO_INDROCKS   = 0x9,
 };
 
+enum RECV_ROULETTE_ITEM_REQ {
+	RECV_ITEM_SUCCESS =  0x0,
+	RECV_ITEM_FAILED =  0x1,
+	RECV_ITEM_OVERCOUNT =  0x2,
+	RECV_ITEM_OVERWEIGHT =  0x3,
+};
+
+enum RECV_ROULETTE_ITEM_ACK {
+	RECV_ITEM_NORMAL =  0x0,
+	RECV_ITEM_LOSING =  0x1,
+};
+
+enum GENERATE_ROULETTE_ACK {
+	GENERATE_ROULETTE_SUCCESS =  0x0,
+	GENERATE_ROULETTE_FAILED =  0x1,
+	GENERATE_ROULETTE_NO_ENOUGH_POINT =  0x2,
+	GENERATE_ROULETTE_LOSING =  0x3,
+};
+
+enum OPEN_ROULETTE_ACK{
+	OPEN_ROULETTE_SUCCESS =  0x0,
+	OPEN_ROULETTE_FAILED =  0x1,
+};
+
+enum CLOSE_ROULETTE_ACK {
+	CLOSE_ROULETTE_SUCCESS =  0x0,
+	CLOSE_ROULETTE_FAILED =  0x1,
+};
+
 /**
  * Structures
  **/
@@ -552,6 +583,12 @@ struct clif_interface {
 		struct hCSData **data[CASHSHOP_TAB_MAX];
 		unsigned int item_count[CASHSHOP_TAB_MAX];
 	} cs;
+	/* roulette data */
+	struct {
+		int *nameid[MAX_ROULETTE_LEVEL];//nameid
+		int *qty[MAX_ROULETTE_LEVEL];//qty of nameid
+		int items[MAX_ROULETTE_LEVEL];//number of items in the list for each 
+	} rd;
 	/* */
 	unsigned int cryptKey[3];
 	/* */
@@ -1051,6 +1088,9 @@ struct clif_interface {
 	/* NPC Market */
 	void (*npc_market_open) (struct map_session_data *sd, struct npc_data *nd);
 	void (*npc_market_purchase_ack) (struct map_session_data *sd, struct packet_npc_market_purchase *req, unsigned char response);
+	/* */
+	bool (*parse_roulette_db) (void);
+	void (*roulette_generate_ack) (struct map_session_data *sd, unsigned char result, short stage, short prizeIdx, short bonusItemID);
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/
@@ -1278,6 +1318,12 @@ struct clif_interface {
 	void (*pBankCheck) (int fd, struct map_session_data *sd);
 	void (*pBankOpen) (int fd, struct map_session_data *sd);
 	void (*pBankClose) (int fd, struct map_session_data *sd);
+	/* Roulette System [Yommy/Hercules] */
+	void (*pRouletteOpen) (int fd, struct map_session_data *sd);
+	void (*pRouletteInfo) (int fd, struct map_session_data *sd);
+	void (*pRouletteClose) (int fd, struct map_session_data *sd);
+	void (*pRouletteGenerate) (int fd, struct map_session_data *sd);
+	void (*pRouletteRecvItem) (int fd, struct map_session_data *sd);
 	/* */
 	void (*pNPCShopClosed) (int fd, struct map_session_data *sd);
 	/* NPC Market (by Ind after an extensive debugging of the packet, only possible thanks to Yommy <3) */

@@ -6837,7 +6837,8 @@ static const struct battle_data {
 	{ "song_timer_reset",                   &battle_config.song_timer_reset,                0,      0,      1,              },
 	{ "snap_dodge",                         &battle_config.snap_dodge,                      0,      0,      1,              },
 	{ "monster_chase_refresh",              &battle_config.mob_chase_refresh,               1,      0,      30,             },
-	{ "icewall_walk_block",                 &battle_config.icewall_walk_block,              75,     0,      255,            }
+	{ "icewall_walk_block",                 &battle_config.icewall_walk_block,              75,     0,      255,            },
+	{ "feature.roulette",                   &battle_config.feature_roulette,                1,      0,      1,              }
 };
 #ifndef STATS_OPT_OUT
 /**
@@ -7086,6 +7087,13 @@ void battle_adjust_conf(void) {
 	if( battle_config.feature_banking ) {
 		ShowWarning("conf/battle/feature.conf banking is enabled but it requires PACKETVER 2013-07-24 or newer, disabling...\n");
 		battle_config.feature_banking = 0;
+	}
+#endif
+	
+#if PACKETVER < 20141022
+	if( battle_config.feature_roulette ) {
+		ShowWarning("conf/battle/feature.conf roulette is enabled but it requires PACKETVER 2014-10-22 or newer, disabling...\n");
+		battle_config.feature_roulette = 0;
 	}
 #endif
 

@@ -77,8 +77,10 @@ enum packet_headers {
 #endif
 #if PACKETVER < 20080102
 	authokType = 0x73,
-#else
+#elif PACKETVER < 20141022
 	authokType = 0x2eb,
+#else
+	authokType = 0xa18,
 #endif
 	script_clearType = 0x8d6,
 	package_item_announceType = 0x7fd,
@@ -210,6 +212,9 @@ enum packet_headers {
 	wisendType = 0x98,
 #endif
 	partyleaderchangedType = 0x7fc,
+	rouletteinfoackType = 0xa1c,
+	roulettgenerateackType = 0xA20,
+	roulettercvitemackType = 0xA22,
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -297,6 +302,9 @@ struct packet_authok {
 	unsigned char ySize;
 #if PACKETVER >= 20080102
 	short font;
+#endif
+#if PACKETVER >= 20141022
+	unsigned char sex;
 #endif
 } __attribute__((packed));
 
@@ -760,6 +768,58 @@ struct packet_banking_withdraw_ack {
 	short Reason;
 	int64 Money;
 	int Balance;
+} __attribute__((packed));
+
+/* Roulette System [Yommy/Hercules] */
+struct packet_roulette_open_ack {
+	short PacketType;
+	char Result;
+	int Serial;
+	char Step;
+	char Idx;
+	short AdditionItemID;
+	int GoldPoint;
+	int SilverPoint;
+	int BronzePoint;
+} __attribute__((packed));
+
+struct packet_roulette_info_ack {
+	short PacketType;
+	short PacketLength;
+	unsigned int RouletteSerial;
+	struct {
+		unsigned short Row;
+		unsigned short Position;
+		unsigned short ItemId;
+		unsigned short Count;
+	} ItemInfo[42];
+} __attribute__((packed));
+
+struct packet_roulette_close_ack {
+	short PacketType;
+	unsigned char Result;
+} __attribute__((packed));
+
+struct packet_roulette_generate_ack {
+	short PacketType;
+	unsigned char Result;
+	unsigned short Step;
+	unsigned short Idx;
+	unsigned short AdditionItemID;
+	int RemainGold;
+	int RemainSilver;
+	int RemainBronze;
+} __attribute__((packed));
+
+struct packet_roulette_itemrecv_req {
+	short PacketType;
+	unsigned char Condition;
+} __attribute__((packed));
+
+struct packet_roulette_itemrecv_ack {
+	short PacketType;
+	unsigned char Result;
+	unsigned short AdditionItemID;
 } __attribute__((packed));
 
 struct packet_itemlist_normal {
