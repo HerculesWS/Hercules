@@ -15776,7 +15776,7 @@ int skill_delunitgroup(struct skill_unit_group *group, const char* file, int lin
 		return 0;
 	}
 
-	if( !status->isdead(src) && ((TBL_PC*)src)->state.warping && !((TBL_PC*)src)->state.changemap ) {
+	if( src->type == BL_PC && !status->isdead(src) && ((TBL_PC*)src)->state.warping && !((TBL_PC*)src)->state.changemap ) {
 		switch( group->skill_id ) {
 			case BA_DISSONANCE:
 			case BA_POEMBRAGI:
