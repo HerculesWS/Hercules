@@ -1105,15 +1105,19 @@ int mapif_wis_message(struct WisData *wd)
 	return 0;
 }
 
+void mapif_wis_response(int fd, unsigned char *src, int flag)
+{
+	unsigned char buf[27];
+	WBUFW(buf, 0)=0x3802;
+	memcpy(WBUFP(buf, 2),src,24);
+	WBUFB(buf,26)=flag;
+	mapif_send(fd,buf,27);
+}
+
 // Wis sending result
 int mapif_wis_end(struct WisData *wd, int flag)
 {
-	unsigned char buf[27];
-
-	WBUFW(buf, 0)=0x3802;
-	memcpy(WBUFP(buf, 2),wd->src,24);
-	WBUFB(buf,26)=flag;
-	mapif_send(wd->fd,buf,27);
+	mapif_wis_response(wd->fd, wd->src, flag);
 	return 0;
 }
 
@@ -1223,11 +1227,7 @@ int mapif_parse_WisRequest(int fd)
 	// search if character exists before to ask all map-servers
 	if( SQL_SUCCESS != SQL->NextRow(sql_handle) )
 	{
-		unsigned char buf[27];
-		WBUFW(buf, 0) = 0x3802;
-		memcpy(WBUFP(buf, 2), RFIFOP(fd, 4), NAME_LENGTH);
-		WBUFB(buf,26) = 1; // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
-		mapif_send(fd, buf, 27);
+		mapif_wis_response(fd, RFIFOP(fd, 4), 1);
 	}
 	else
 	{// Character exists. So, ask all map-servers
@@ -1238,15 +1238,10 @@ int mapif_parse_WisRequest(int fd)
 		// if source is destination, don't ask other servers.
 		if( strncmp((const char*)RFIFOP(fd,4), name, NAME_LENGTH) == 0 )
 		{
-			uint8 buf[27];
-			WBUFW(buf, 0) = 0x3802;
-			memcpy(WBUFP(buf, 2), RFIFOP(fd, 4), NAME_LENGTH);
-			WBUFB(buf,26) = 1; // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
-			mapif_send(fd, buf, 27);
+			mapif_wis_response(fd, RFIFOP(fd, 4), 1);
 		}
 		else
 		{
-
 			CREATE(wd, struct WisData, 1);
 
 			// Whether the failure of previous wisp/page transmission (timeout)
