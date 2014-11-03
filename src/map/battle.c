@@ -6840,6 +6840,7 @@ static const struct battle_data {
 	{ "monster_chase_refresh",              &battle_config.mob_chase_refresh,               1,      0,      30,             },
 	{ "mob_icewall_walk_block",             &battle_config.mob_icewall_walk_block,          75,     0,      255,            },
 	{ "boss_icewall_walk_block",            &battle_config.boss_icewall_walk_block,         0,      0,      255,            },
+	{ "feature.roulette",                   &battle_config.feature_roulette,                1,      0,      1,              },
 };
 #ifndef STATS_OPT_OUT
 /**
@@ -7091,6 +7092,13 @@ void battle_adjust_conf(void) {
 	}
 #endif
 
+#if PACKETVER < 20141022
+	if( battle_config.feature_roulette ) {
+		ShowWarning("conf/battle/feature.conf roulette is enabled but it requires PACKETVER 2014-10-22 or newer, disabling...\n");
+		battle_config.feature_roulette = 0;
+	}
+#endif
+	
 #if PACKETVER > 20120000 && PACKETVER < 20130515 /* exact date (when it started) not known */
 	if( battle_config.feature_auction == 1 ) {
 		ShowWarning("conf/battle/feature.conf:feature.auction is enabled but it is not stable on PACKETVER "EXPAND_AND_QUOTE(PACKETVER)", disabling...\n");
