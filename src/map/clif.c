@@ -18373,25 +18373,25 @@ void clif_parse_RouletteGenerate(int fd, struct map_session_data* sd) {
 	if( sd->roulette.stage >= MAX_ROULETTE_LEVEL )
 		stage = sd->roulette.stage = 0;
 	
-	if( stage <= 2 ) {
-		if( pc_readglobalreg(sd, script->add_str("TmpRouletteBronze")) <= 0 )
-			result = GENERATE_ROULETTE_NO_ENOUGH_POINT;
-	} else if ( stage <= 4 ) {
-		if( pc_readglobalreg(sd, script->add_str("TmpRouletteSilver")) <= 0 )
-			result = GENERATE_ROULETTE_NO_ENOUGH_POINT;
-	} else if ( stage <= 6 ) {
-		if( pc_readglobalreg(sd, script->add_str("TmpRouletteGold")) <= 0 )
+	if( stage == 0 ) {
+		if( pc_readglobalreg(sd, script->add_str("TmpRouletteBronze")) <= 0 &&
+		    pc_readglobalreg(sd, script->add_str("TmpRouletteSilver")) < 10 &&
+		    pc_readglobalreg(sd, script->add_str("TmpRouletteGold")) < 10 )
 			result = GENERATE_ROULETTE_NO_ENOUGH_POINT;
 	}
 	
 	if( result == GENERATE_ROULETTE_SUCCESS ) {
 		
-		if( stage <= 2 ) {
-			pc_setglobalreg(sd, script->add_str("TmpRouletteBronze"), pc_readglobalreg(sd, script->add_str("TmpRouletteBronze")) - 1);
-		} else if ( stage <= 4 ) {
-			pc_setglobalreg(sd, script->add_str("TmpRouletteSilver"), pc_readglobalreg(sd, script->add_str("TmpRouletteSilver")) - 1);
-		} else if ( stage <= 6 ) {
-			pc_setglobalreg(sd, script->add_str("TmpRouletteGold"), pc_readglobalreg(sd, script->add_str("TmpRouletteGold")) - 1);
+		if( stage == 0 ) {
+			if( pc_readglobalreg(sd, script->add_str("TmpRouletteBronze")) > 0 ) {
+				pc_setglobalreg(sd, script->add_str("TmpRouletteBronze"), pc_readglobalreg(sd, script->add_str("TmpRouletteBronze")) - 1);
+			} else if( pc_readglobalreg(sd, script->add_str("TmpRouletteSilver")) > 9 ) {
+				pc_setglobalreg(sd, script->add_str("TmpRouletteSilver"), pc_readglobalreg(sd, script->add_str("TmpRouletteSilver")) - 10);
+				stage = sd->roulette.stage = 2;
+			} else if( pc_readglobalreg(sd, script->add_str("TmpRouletteGold")) > 9 ) {
+				pc_setglobalreg(sd, script->add_str("TmpRouletteGold"), pc_readglobalreg(sd, script->add_str("TmpRouletteGold")) - 10);
+				stage = sd->roulette.stage = 4;
+			}
 		}
 		
 		sd->roulette.prizeStage = stage;
