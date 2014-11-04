@@ -171,7 +171,7 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 			mes "Chivalry. Someone there should";
 			mes "be willing to teach you more";
 			mes "about Push Backs in skills...";
-			set WIZ_SK,1;
+			WIZ_SK = 1;
 			close;
 		}
 		else if (WIZ_SK == 1) {
@@ -212,7 +212,7 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 			mes "come back as soon as you";
 			mes "can. While you're out there,";
 			mes "I'm going to take another nap~";
-			set WIZ_SK,3;
+			WIZ_SK = 3;
 			close;
 		}
 		else if (WIZ_SK == 3) {
@@ -292,7 +292,7 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 			delitem 993,10; //Yellow_Live
 			delitem 990,10; //Boody_Red
 			delitem 992,10; //Wind_Of_Verdure
-			set WIZ_SK,100;
+			WIZ_SK = 100;
 			skill "WZ_SIGHTBLASTER",1,0;
 			next;
 			mes "[Meow]";
@@ -417,7 +417,7 @@ prt_in,82,98,3	script	Simon Mayace#q_wiz	1_ETC_01,{
 		mes "Concentrate and practice the";
 		mes "theory on your own, and you";
 		mes "should be able to do it. Good^FFFFFF ^000000luck on your travels, adventurer~";
-		set WIZ_SK,2;
+		WIZ_SK = 2;
 		close;
 	}
 	else {

@@ -106,7 +106,7 @@ um_in,39,122,5	script	Utan Chief	4_M_UMCHIEF,{
 		mes "local people. When you think";
 		mes "you understand enough about Utan";
 		mes "culture, come back to me and show me what you have learned.";
-		set event_umbala,1;
+		event_umbala = 1;
 		close;
 	}
 	else if (event_umbala == 1) {
@@ -167,7 +167,7 @@ um_in,39,122,5	script	Utan Chief	4_M_UMCHIEF,{
 				mes "^3377FF1 Feather of Birds^000000.";
 				mes "Please bring me those, and I will";
 				mes "teach you when you're ready.";
-				set event_umbala,2;
+				event_umbala = 2;
 				close;
 			}
 			else {
@@ -264,7 +264,7 @@ um_in,39,122,5	script	Utan Chief	4_M_UMCHIEF,{
 			delitem 7111,5; //Smooth_Paper
 			delitem 1024,1; //Chinese_Ink
 			delitem 916,1; //Feather_Of_Birds
-			set event_umbala,3;
+			event_umbala = 3;
 			next;
 			mes "[Karkatan]";
 			mes "Okay, if you have any business";
@@ -311,7 +311,7 @@ um_in,39,122,5	script	Utan Chief	4_M_UMCHIEF,{
 			mes "present is considered an";
 			mes "honor. Maybe Puchuchartan";
 			mes "wants you to show us your respect by doing so.";
-			set event_umbala,5;
+			event_umbala = 5;
 			close;
 		}
 		else if (event_umbala == 5) {
@@ -330,7 +330,7 @@ um_in,39,122,5	script	Utan Chief	4_M_UMCHIEF,{
 				mes "am not sure what help she can give";
 				mes "you, I hope we will be able to return this favor.";
 				delitem 2278,1; //Mr_Smile
-				set event_umbala,6;
+				event_umbala = 6;
 				close;
 			}
 			else {
@@ -423,7 +423,7 @@ um_in,44,71,2	script	Utan Shaman	4_F_UMOLDWOMAN,{
 		mes "outsiders talking to the tribe";
 		mes "more than they have to...";
 		mes "We want to live a peaceful life, so do not disturb us.";
-		set event_umbala,4;
+		event_umbala = 4;
 		close;
 	case 4:
 	case 5:
@@ -456,7 +456,7 @@ um_in,44,71,2	script	Utan Shaman	4_F_UMOLDWOMAN,{
 		mes "So come and speak to me when";
 		mes "you think my power may be";
 		mes "of service to you.";
-		set event_umbala,7;
+		event_umbala = 7;
 		close;
 	case 7:
 		mes "[Puchuchartan]";
@@ -512,24 +512,24 @@ um_in,44,71,2	script	Utan Shaman	4_F_UMOLDWOMAN,{
 		next;
 		switch (select("Earth:Water:Fire:Wind")) {
 		case 1:
-			set .@consume,947; //Horn
-			set .@amount,15;
-			set .@success,993; //Yellow_Live
+			.@consume = 947; //Horn
+			.@amount = 15;
+			.@success = 993; //Yellow_Live
 			break;
 		case 2:
-			set .@consume,946; //Snail's_Shell
-			set .@amount,20;
-			set .@success,991; //Crystal_Blue
+			.@consume = 946; //Snail's_Shell
+			.@amount = 20;
+			.@success = 991; //Crystal_Blue
 			break;
 		case 3:
-			set .@consume,904; //Scorpion's_Tail
-			set .@amount,20;
-			set .@success,990; //Boody_Red
+			.@consume = 904; //Scorpion's_Tail
+			.@amount = 20;
+			.@success = 990; //Boody_Red
 			break;
 		case 4:
-			set .@consume,1013; //Colorful_Shell
-			set .@amount,25;
-			set .@success,992; //Wind_Of_Verdure
+			.@consume = 1013; //Colorful_Shell
+			.@amount = 25;
+			.@success = 992; //Wind_Of_Verdure
 			break;
 		}
 		if (countitem(.@consume) >= .@amount) {
@@ -676,16 +676,16 @@ um_in,44,71,2	script	Utan Shaman	4_F_UMOLDWOMAN,{
 		next;
 		switch(select("Earth:Water:Fire:Wind")) {
 		case 1:
-			set .@divide,997; //Great_Nature
+			.@divide = 997; //Great_Nature
 			break;
 		case 2:
-			set .@divide,995; //Mistic_Frozen
+			.@divide = 995; //Mistic_Frozen
 			break;
 		case 3:
-			set .@divide,994; //Flame_Heart
+			.@divide = 994; //Flame_Heart
 			break;
 		case 4:
-			set .@divide,996; //Rough_Wind
+			.@divide = 996; //Rough_Wind
 			break;
 		}
 		mes "[Puchuchartan]";
@@ -756,8 +756,8 @@ um_in,44,71,2	script	Utan Shaman	4_F_UMOLDWOMAN,{
 						break;
 					}
 					else {
-						set .@shaman_max,.@shaman_max + rand(6,10);
-						set .@sha_man,.@sha_man + 1;
+						.@shaman_max += rand(6,10);
+						++.@sha_man;
 					}
 				}
 				switch(.@divide) {
@@ -850,13 +850,13 @@ umbala,221,193,1	script	#Skulldoor	HIDDEN_NPC,{
 				next;
 				break;
 			case 2:
-				set .@insert,717;
+				.@insert = 717;
 				break;
 			case 3:
-				set .@insert,715;
+				.@insert = 715;
 				break;
 			case 4:
-				set .@insert,716;
+				.@insert = 716;
 				break;
 			}
 			if (.@insert) {
@@ -866,11 +866,11 @@ umbala,221,193,1	script	#Skulldoor	HIDDEN_NPC,{
 					next;
 					mes "^3355FFThe gemstone rolled back out of";
 					mes "the mouth of the skull.^000000";
-					set .@skulldoor,.@skulldoor+1;
+					++.@skulldoor;
 					switch (.@insert) {
-					case 715: set .@skull,2; break;
-					case 716: set .@skull,3; break;
-					case 717: set .@skull,1; break;
+					case 715: .@skull = 2; break;
+					case 716: .@skull = 3; break;
+					case 717: .@skull = 1; break;
 					}
 					delitem .@insert,1;
 					getitem .@insert,1;
@@ -892,13 +892,13 @@ umbala,221,193,1	script	#Skulldoor	HIDDEN_NPC,{
 				next;
 				break;
 			case 2:
-				set .@insert2,717;
+				.@insert2 = 717;
 				break;
 			case 3:
-				set .@insert2,715;
+				.@insert2 = 715;
 				break;
 			case 4:
-				set .@insert2,716;
+				.@insert2 = 716;
 				break;
 			}
 			if (.@insert2) {
@@ -909,10 +909,10 @@ umbala,221,193,1	script	#Skulldoor	HIDDEN_NPC,{
 					mes "^3355FFThe gemstone rolled back out of";
 					mes "the mouth of the skull.^000000";
 					if (.@insert2 == .@insert) {
-						set .@skulldoor,.@skulldoor+1;
+						.@skulldoor += 1;
 					}
 					else {
-						set .@skulldoor,.@skulldoor+2;
+						.@skulldoor += 2;
 					}
 					delitem .@insert2,1;
 					getitem .@insert2,1;
@@ -937,17 +937,17 @@ umbala,221,193,1	script	#Skulldoor	HIDDEN_NPC,{
 			switch(.@skulldoor) {
 			case 3:
 				if (rand(1,4) != 1) {
-					set .@skullopen,1;
+					.@skullopen = 1;
 				}
 				break;
 			case 2:
 				if (rand(1,2) == 2) {
-					set .@skullopen,1;
+					.@skullopen = 1;
 				}
 				break;
 			case 1:
 				if (rand(1,4) == 1) {
-					set .@skullopen,1;
+					.@skullopen = 1;
 				}
 				break;
 			default:
@@ -1001,7 +1001,7 @@ um_in,139,48,5	script	Phrenetan	4_F_UMWOMAN,{
 		close;
 	}
 	if (um_wind <= 3 && (MISC_QUEST & 32768) == 0) {
-		if (um_wind) set um_wind,1;
+		if (um_wind) um_wind = 1;
 		emotion e_an;
 		mes "[Phrenetan]";
 		mes "Umbaumbah wooga wooga";
@@ -1127,7 +1127,7 @@ um_in,101,73,3	script	Wainatan	4_F_UMWOMAN,{
 	}
 	if (um_wind == 1) {
 		if (gettime(3) > 18) {
-			set um_wind,2;
+			um_wind = 2;
 			emotion e_an;
 			mes "[Wainatan]";
 			mes "Umbaumbah umgagaga.";
@@ -1171,7 +1171,7 @@ um_in,94,123,5	script	Bertztan	4_F_UMWOMAN,{
 	}
 	if (um_wind == 2) {
 		if (gettime(3) > 18) {
-			set um_wind,3;
+			um_wind = 3;
 			emotion e_an;
 			mes "[Bertztan]";
 			mes "Umbaumbah umgagaga.";
@@ -1223,7 +1223,7 @@ umbala,145,217,3	script	Chabimatan	4_F_UMWOMAN,{
 	}
 	if (um_wind == 3) {
 		if (gettime(3) > 18) {
-			set um_wind,4;
+			um_wind = 4;
 			emotion e_an;
 			mes "[Chabimatan]";
 			mes "Umbabah umbarbar woogawooga um";
@@ -1267,7 +1267,7 @@ OnInit:
 
 OnTouch:
 	if (um_wind == 4) {
-		set um_wind,5;
+		um_wind = 5;
 		mes "^3355FFAs you enter the house";
 		mes "you happen to witness";
 		mes "Phrenetan beating a guy";
@@ -1303,14 +1303,14 @@ OnTouch:
 		next;
 		if (select("Take it.:Leave it.") == 1) {
 			close2;
-			set um_wind,0;
-			set MISC_QUEST,MISC_QUEST | 32768;
+			um_wind = 0;
+			MISC_QUEST |= 32768;
 			getitem 610,1; //Leaf_Of_Yggdrasil
 			disablenpc "#unpc";
 			end;
 		}
-		set um_wind,0;
-		set MISC_QUEST,MISC_QUEST | 32768;
+		um_wind = 0;
+		MISC_QUEST |= 32768;
 		mes "[" + strcharinfo(0) + "]";
 		mes "I am not supposed to take";
 		mes "what may belong to other people.";

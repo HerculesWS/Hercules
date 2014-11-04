@@ -22,7 +22,7 @@ yuno,59,212,4	script	Juno Guide#yuno01::GuideJuno	8_F_GIRL,{
 	while (1) {
 		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove marks from Mini-Map:Cancel")) {
 		case 1:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Tool Shop ]:[ Forge ]:[ Airport ]:[ Government Building ]:[ Street of Book Stores ]:[ Inn & Pub ]:[ Sage Castle ]:[ Monster Academy ]:[ Library of the Republic ]:[ Weapon & Armor Shop ]:[ Juphero Plaza ]:[ Monster Museum ]:[ Schweicherbil Magic Academy ]:Previous Menu")) {
 				case 1:
@@ -95,13 +95,13 @@ yuno,59,212,4	script	Juno Guide#yuno01::GuideJuno	8_F_GIRL,{
 					next;
 					break;
 				case 14:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
 			break;
 		case 2:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Kafra Employees ]:[ Eden Teleport Officer ]:Previous Menu")) {
 				case 1:
@@ -117,7 +117,7 @@ yuno,59,212,4	script	Juno Guide#yuno01::GuideJuno	8_F_GIRL,{
 					next;
 					break;
 				case 3:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}

@@ -261,7 +261,7 @@ prontera,155,285,3	script	Enjoy#enjoy	4_M_MONK,{
 			next;
 			mes "["+ strcharinfo(0) +"]";
 			mes "Let's punish!!!!!!!!!!!!!!!!!!!!!!!!!!!";
-			set christ_solo05,1;
+			christ_solo05 = 1;
 			close;
 		case 2:
 			mes "[Enjoy]";
@@ -287,8 +287,8 @@ prontera,155,285,3	script	Enjoy#enjoy	4_M_MONK,{
 			mes "Get lost,you devil!!!!!!";
 			specialeffect EF_BEGINASURA;
 			specialeffect2 EF_HIT2;
-			set Hp,Hp/2;
-			set Hp,Hp/2;
+			Hp /= 2;
+			Hp /= 2;
 			close2;
 			warp "prontera",155,230;
 			end;
@@ -397,7 +397,7 @@ prontera,155,285,3	script	Enjoy#enjoy	4_M_MONK,{
 			donpcevent "Event#event02::OnCommandEmotion";
 			misceffect EF_HITLINE2;
 			delitem 604,5; //Branch_of_Dead_Tree
-			set christ_solo05,6;
+			christ_solo05 = 6;
 			donpcevent "Happymerry#happymerry02::OnCommandOff";
 			donpcevent "Christ#christ02::OnCommandOff";
 			donpcevent "Mas#mas02::OnCommandOff";
@@ -458,7 +458,7 @@ prontera,155,285,3	script	Enjoy#enjoy	4_M_MONK,{
 		mes "Cheer up everybody!!!";
 		mes "Let's rock till you get happy~!";
 		mes "";
-		set christ_solo05,0;
+		christ_solo05 = 0;
 		close;
 	}
 
@@ -636,7 +636,7 @@ prontera,188,177,4	script	Happymerry#happymerry	4_M_LGTMAN,{
 		mes "Call him for me!";
 		mes "I'll go ahead with my bags packed up.";
 		mes "See ya!";
-		set christ_solo05,2;
+		christ_solo05 = 2;
 		close;
 	}
 	else if (christ_solo05 > 1) {
@@ -716,7 +716,7 @@ prontera,62,339,3	script	Christ#christ	4_M_PECOKNIGHT,{
 		mes "Go tell ^0000FFMas^000000";
 		mes "about this!!!";
 		mes "See ya~~!";
-		set christ_solo05,3;
+		christ_solo05 = 3;
 		close;
 	}
 	else if (christ_solo05 > 2) {
@@ -807,7 +807,7 @@ prontera,163,66,7	script	Mas#mas	4_M_ALCHE_A,{
 		mes "Well,bye~.";
 		mes "I'll meet you there!!...";
 		mes "Herbs~?! Couples?! Whatever~~";
-		set christ_solo05,4;
+		christ_solo05 = 4;
 		close;
 	}
 	else if (christ_solo05 > 3) {
@@ -888,7 +888,7 @@ prontera,35,209,5	script	Event#event	4_M_SITDOWN,{
 		mes "Now I should get my ^0000FFBranch of Dead Tree^000000s packed up";
 		mes "and go punish singles!!!";
 		mes "Hahahaha..";
-		set christ_solo05,5;
+		christ_solo05 = 5;
 		close;
 	}
 	else if (christ_solo05 > 4) {
@@ -1052,7 +1052,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 			mes "Well then, hope you a good luck!!!";
 			mes " ";
 			emotion e_no1;
-			set christ_carol05,1;
+			christ_carol05 = 1;
 			close;
 		case 4:
 			mes "[Oholy]";
@@ -1186,7 +1186,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 				mes "Merry Christmas!";
 				emotion e_heh;
 				delitem 1097,1;//Worn_Out_Page
-				set christ_carol05,3;
+				christ_carol05 = 3;
 				getitem 12130,7;//Cookie_Bag
 				close;
 			case 2:
@@ -1198,7 +1198,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 				mes "Merry Christmas!";
 				emotion e_heh;
 				delitem 1097,1;//Worn_Out_Page
-				set christ_carol05,3;
+				christ_carol05 = 3;
 				getitem 529,20;//Candy
 				close;
 			case 3:
@@ -1210,7 +1210,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 				mes "Merry Christmas!";
 				emotion e_heh;
 				delitem 1097,1;//Worn_Out_Page
-				set christ_carol05,3;
+				christ_carol05 = 3;
 				getitem 530,15;//Candy_Striper
 				close;
 			case 4:
@@ -1222,7 +1222,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 				mes "Merry Christmas!";
 				emotion e_heh;
 				delitem 1097,1;//Worn_Out_Page
-				set christ_carol05,3;
+				christ_carol05 = 3;
 				getitem 539,5;//Piece_of_Cake
 				close;
 			case 5:
@@ -1234,7 +1234,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 				mes "Merry Christmas!";
 				emotion e_heh;
 				delitem 1097,1;//Worn_Out_Page
-				set christ_carol05,3;
+				christ_carol05 = 3;
 				getitem 538,10;//Well_baked_Cookie
 				close;
 			case 6:
@@ -1246,7 +1246,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 				mes "Merry Christmas!";
 				emotion e_heh;
 				delitem 1097,1;//Worn_Out_Page
-				set christ_carol05,3;
+				christ_carol05 = 3;
 				getitem 743,1;//Spore_Doll
 				close;
 			case 7:
@@ -1258,7 +1258,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 				mes "Merry Christmas!";
 				emotion e_heh;
 				delitem 1097,1;//Worn_Out_Page
-				set christ_carol05,3;
+				christ_carol05 = 3;
 				getitem 750,1;//Baphomet_Doll
 				close;
 			case 8:
@@ -1270,7 +1270,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 				mes "Merry Christmas!";
 				emotion e_heh;
 				delitem 1097,1;//Worn_Out_Page
-				set christ_carol05,3;
+				christ_carol05 = 3;
 				getitem 751,1;//Osiris_Doll
 				close;
 			case 9:
@@ -1282,7 +1282,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 				mes "Merry Christmas!";
 				emotion e_heh;
 				delitem 1097,1;//Worn_Out_Page
-				set christ_carol05,3;
+				christ_carol05 = 3;
 				getitem 752,1;//Grasshopper_Doll
 				close;
 
@@ -1295,7 +1295,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 				mes "Merry Christmas!";
 				emotion e_heh;
 				delitem 1097,1;//Worn_Out_Page
-				set christ_carol05,3;
+				christ_carol05 = 3;
 				getitem 753,1;//Monkey_Doll
 				close;
 			case 11:
@@ -1307,7 +1307,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 				mes "Merry Christmas!";
 				emotion e_heh;
 				delitem 1097,1;//Worn_Out_Page
-				set christ_carol05,3;
+				christ_carol05 = 3;
 				getitem 754,1;//Raccoondog_Doll
 				close;
 			case 12:
@@ -1320,7 +1320,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 				mes "Merry Christmas!";
 				emotion e_heh;
 				delitem 1097,1;//Worn_Out_Page
-				set christ_carol05,3;
+				christ_carol05 = 3;
 				getitem 7206,1;//Black_Kitty_Doll
 				close;
 			case 13:
@@ -1331,7 +1331,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 				mes "Merry Christmas!";
 				emotion e_heh;
 				delitem 1097,1;//Worn_Out_Page
-				set christ_carol05,3;
+				christ_carol05 = 3;
 				getitem 7212,1;//Hanging_Doll
 				close;
 			case 14:
@@ -1344,7 +1344,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 				mes "Merry Christmas!";
 				emotion e_heh;
 				delitem 1097,1;//Worn_Out_Page
-				set christ_carol05,3;
+				christ_carol05 = 3;
 				getitem 7277,1;//Munak_Doll
 				close;
 			case 15:
@@ -1356,7 +1356,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 				mes "Merry Christmas!";
 				emotion e_heh;
 				delitem 1097,1;//Worn_Out_Page
-				set christ_carol05,3;
+				christ_carol05 = 3;
 				getitem 2236,1;//Santa's_Hat
 				close;
 			}
@@ -1381,7 +1381,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 		mes "[Oholy]";
 		mes "Let's think about the neighbors";
 		mes "and do a good deed during Christmas!";
-		set christ_carol05,0;
+		christ_carol05 = 0;
 		close;
 	}
 }
@@ -1423,7 +1423,7 @@ function	script	F_carol_devi	{
 			mes "Sledge... Reindeer...";
 			mes "Hmm, I think I got what I need.";
 			mes "Let's go back to Ms.Oholy.";
-			set christ_carol05,2;
+			christ_carol05 = 2;
 			getitem 1097,1; //Worn_Out_Page
 			close;
 		case 2:

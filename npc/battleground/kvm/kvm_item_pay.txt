@@ -18,9 +18,9 @@
 
 bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 	if (countitem(7773)) {
-		set .@pointstoadd,countitem(7773);
+		.@pointstoadd = countitem(7773);
 		delitem 7773,.@pointstoadd;
-		set kvm_point,kvm_point+.@pointstoadd;
+		kvm_point += .@pointstoadd;
 		mes "[Logistics]";
 		mes "Are those "+getitemname(7773)+"s I see?";
 		mes "We no longer accept that currency,";
@@ -45,7 +45,7 @@ bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 	mes "be reversed. Please be carefull.";
 	mes "Select the next step please.";
 	next;
-	set .@name$,strcharinfo(0);
+	.@name$ = strcharinfo(0);
 	switch(select("Read the KVM Catalogue.:Purchase KVM Items.:Confirm KVM Points.:Explanation of KVM Rewards.:Explanation of KVM Points.")) {
 	case 1:
 		mes "[Logistics]";
@@ -283,7 +283,7 @@ PurchaseItem:
 		break;
 	case 2:
 		if (kvm_point >= .@prices[getarg(1)]) {
-			set kvm_point,kvm_point-.@prices[getarg(1)];
+			kvm_point -= .@prices[getarg(1)];
 			getitem getarg(0),1;
 			mes "[Logistics]";
 			mes "You have purchased a "+getitemname(getarg(0))+".";

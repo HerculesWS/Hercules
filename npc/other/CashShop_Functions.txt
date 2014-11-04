@@ -59,10 +59,10 @@ function	script	F_CashPartyCall	{
 // - Reset players skills. Weight must be 0, options must be off.
 // - No arguments.
 function	script	F_CashReset	{
-	if (Class != Job_Novice && Weight == 0 && !checkriding() && !checkfalcon() && !checkcart() && !hascashmount()) {
+	if (Class != Job_Novice && Weight == 0 && !checkmount() && !checkfalcon() && !checkcart() && !hascashmount()) {
 		resetskill;
 		sc_end SC_ALL;
-		if (countitem(12213)) delitem 12213,1;
+		if (countitem(Neuralizer)) delitem Neuralizer,1;
 	}
 	return;
 }

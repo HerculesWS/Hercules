@@ -41,7 +41,7 @@ OnTouch:
 		donpcevent "Soldier1#mos::OnInit";
 		donpcevent "Soldier2#mos::OnInit";
 		donpcevent "Soldier3#mos::OnInit";
-		set mos_nowinter,12;
+		mos_nowinter = 12;
 		warp "mosk_in",125,92;
 		end;
 	}

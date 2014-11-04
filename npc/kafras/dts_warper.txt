@@ -57,9 +57,9 @@
 einbroch,246,70,0	script	Vote Timer#ein	-1,{
 OnInit:
 	if ($dts) {
-		set $dts,0;
-		set $dtsvote,0;
-		set $dtsday,0;
+		$dts = 0;
+		$dtsvote = 0;
+		$dtsday = 0;
 	}
 	initnpctimer;
 	end;
@@ -120,45 +120,45 @@ OnTimer60000:
 				if ($DTS_JondaVotes > $DTS_KafraVotes) {
 					if ($DTS_JondaWins == 0) {
 						if ($DTS_KafraWins < 2) {
-							set $DTS_KafraWins,$DTS_KafraWins+1;
-							set $DTS_Result,1;
-							set $DTS_Time,0;
+							++$DTS_KafraWins;
+							$DTS_Result = 1;
+							$DTS_Time = 0;
 							donpcevent "Scrutiny Association#6::OnEnable";
 							donpcevent "Vote Timer2#ein::OnEnable";
 						}
 						else if ($DTS_KafraWins == 2) {
-							set $DTS_Result,1;
-							set $DTS_Time,0;
+							$DTS_Result = 1;
+							$DTS_Time = 0;
 							donpcevent "Scrutiny Association#6::OnEnable";
 							donpcevent "Vote Timer2#ein::OnEnable";
 						}
 					}
 					else if ($DTS_JondaWins == 1) {
 						if ($DTS_KafraWins < 2) {
-							set $DTS_KafraWins,$DTS_KafraWins+1;
-							set $DTS_Result,1;
-							set $DTS_Time,0;
+							++$DTS_KafraWins;
+							$DTS_Result = 1;
+							$DTS_Time = 0;
 							donpcevent "Scrutiny Association#6::OnEnable";
 							donpcevent "Vote Timer2#ein::OnEnable";
 						}
 						else {
-							set $DTS_Time,0;
-							set $DTS_Result,1;
+							$DTS_Time = 0;
+							$DTS_Result = 1;
 							donpcevent "Scrutiny Association#6::OnEnable";
 							donpcevent "Vote Timer3#ein::OnEnable";
 						}
 					}
 					else {
 						if ($DTS_KafraWins < 2) {
-							set $DTS_KafraWins,$DTS_KafraWins+1;
-							set $DTS_Result,1;
-							set $DTS_Time,0;
+							++$DTS_KafraWins;
+							$DTS_Result = 1;
+							$DTS_Time = 0;
 							donpcevent "Scrutiny Association#6::OnEnable";
 							donpcevent "Vote Timer2#ein::OnEnable";
 						}
 						else {
-							set $DTS_Result,1;
-							set $DTS_Time,0;
+							$DTS_Result = 1;
+							$DTS_Time = 0;
 							donpcevent "Scrutiny Association#6::OnEnable";
 							donpcevent "Vote Timer3#ein::OnEnable";
 						}
@@ -167,45 +167,45 @@ OnTimer60000:
 				else {
 					if ($DTS_KafraWins == 0) {
 						if ($DTS_JondaWins < 2) {
-							set $DTS_JondaWins,$DTS_JondaWins+1;
-							set $DTS_Result,2;
-							set $DTS_Time,0;
+							++$DTS_JondaWins;
+							$DTS_Result = 2;
+							$DTS_Time = 0;
 							donpcevent "Scrutiny Association#7::OnEnable";
 							donpcevent "Vote Timer2#ein::OnEnable";
 						}
 						else {
-							set $DTS_Result,2;
-							set $DTS_Time,0;
+							$DTS_Result = 2;
+							$DTS_Time = 0;
 							donpcevent "Scrutiny Association#7::OnEnable";
 							donpcevent "Vote Timer2#ein::OnEnable";
 						}
 					}
 					else if ($DTS_KafraWins == 1) {
 						if ($DTS_JondaWins < 2) {
-							set $DTS_JondaWins,$DTS_JondaWins+1;
-							set $DTS_Result,2;
-							set $DTS_Time,0;
+							++$DTS_JondaWins;
+							$DTS_Result = 2;
+							$DTS_Time = 0;
 							donpcevent "Scrutiny Association#7::OnEnable";
 							donpcevent "Vote Timer2#ein::OnEnable";
 						}
 						else {
-							set $DTS_Result,2;
-							set $DTS_Time,0;
+							$DTS_Result = 2;
+							$DTS_Time = 0;
 							donpcevent "Scrutiny Association#7::OnEnable";
 							donpcevent "Vote Timer4#ein::OnEnable";
 						}
 					}
 					else {
 						if ($DTS_JondaWins < 2) {
-							set $DTS_JondaWins,$DTS_JondaWins+1;
-							set $DTS_Result,2;
-							set $DTS_Time,0;
+							++$DTS_JondaWins;
+							$DTS_Result = 2;
+							$DTS_Time = 0;
 							donpcevent "Scrutiny Association#7::OnEnable";
 							donpcevent "Vote Timer2#ein::OnEnable";
 						}
 						else {
-							set $DTS_Result,2;
-							set $DTS_Time,0;
+							$DTS_Result = 2;
+							$DTS_Time = 0;
 							donpcevent "Scrutiny Association#7::OnEnable";
 							donpcevent "Vote Timer4#ein::OnEnable";
 						}
@@ -213,13 +213,13 @@ OnTimer60000:
 				}
 			}
 			else {
-				set $DTS_Result,3;
-				set $DTS_Time,0;
+				$DTS_Result = 3;
+				$DTS_Time = 0;
 				donpcevent "Vote Timer#ein::OnEnable";
 			}
 		}
 		else {
-			set $DTS_Time,$DTS_Time+1;
+			++$DTS_Time;
 			donpcevent "Vote Timer#ein::OnEnable";
 		}
 	}
@@ -234,15 +234,14 @@ OnEnable:
 OnTimer60000:
 	stopnpctimer;
 	if ($DTS_PeriodCheck == 8640) {
-		set $DTS_PeriodCheck,0;
-		set $DTS_Result,0;
-		set $DTS_KafraVotes,0;
-		set $DTS_JondaVotes,0;
-		set $DTS_VoteCount,$DTS_VoteCount+1;
+		$DTS_PeriodCheck = 0;
+		$DTS_Result = 0;
+		$DTS_KafraVotes = 0;
+		$DTS_JondaVotes = 0;
+		++$DTS_VoteCount;
 		donpcevent "Vote Timer#ein::OnEnable";
-	}
-	else {
-		set $DTS_PeriodCheck,$DTS_PeriodCheck+1;
+	} else {
+		++$DTS_PeriodCheck;
 		donpcevent "Vote Timer2#ein::OnEnable";
 	}
 	end;
@@ -256,16 +255,15 @@ OnEnable:
 OnTimer60000:
 	stopnpctimer;
 	if ($DTS_PeriodCheck == 8640) {
-		set $DTS_PeriodCheck,0; //Global Variable
-		set $DTS_Result,0; //Global Variable
-		set $DTS_KafraVotes,0; //Global Variable
-		set $DTS_JondaVotes,0; //Global Variable
-		set $DTS_JondaWins,$DTS_JondaWins-1;
-		set $DTS_VoteCount,$DTS_VoteCount+1;
+		$DTS_PeriodCheck = 0; //Global Variable
+		$DTS_Result = 0; //Global Variable
+		$DTS_KafraVotes = 0; //Global Variable
+		$DTS_JondaVotes = 0; //Global Variable
+		--$DTS_JondaWins;
+		++$DTS_VoteCount;
 		donpcevent "Vote Timer#ein::OnEnable";
-	}
-	else {
-		set $DTS_PeriodCheck,$DTS_PeriodCheck+1; //Global Variable
+	} else {
+		++$DTS_PeriodCheck; //Global Variable
 		donpcevent "Vote Timer3#ein::OnEnable";
 	}
 	end;
@@ -279,16 +277,15 @@ OnEnable:
 OnTimer60000:
 	stopnpctimer;
 	if ($DTS_PeriodCheck == 8640) {
-		set $DTS_PeriodCheck,0; //Global Variable
-		set $DTS_Result,0; //Global Variable
-		set $DTS_KafraVotes,0; //Global Variable
-		set $DTS_JondaVotes,0; //Global Variable
-		set $DTS_KafraWins,$DTS_KafraWins-1;
-		set $DTS_VoteCount,$DTS_VoteCount+1;
+		$DTS_PeriodCheck = 0; //Global Variable
+		$DTS_Result = 0; //Global Variable
+		$DTS_KafraVotes = 0; //Global Variable
+		$DTS_JondaVotes = 0; //Global Variable
+		--$DTS_KafraWins;
+		++$DTS_VoteCount;
 		donpcevent "Vote Timer#ein::OnEnable";
-	}
-	else {
-		set $DTS_PeriodCheck,$DTS_PeriodCheck+1; //Global Variable
+	} else {
+		++$DTS_PeriodCheck; //Global Variable
 		donpcevent "Vote Timer4#ein::OnEnable";
 	}
 	end;
@@ -405,8 +402,8 @@ function	script	F_VoteKafra	{
 						mes "have a good day, adventurer.";
 						break;
 					case 2:
-						set lhz_vote,$DTS_VoteCount+1;
-						set $DTS_KafraVotes,$DTS_KafraVotes+1;
+						lhz_vote = $DTS_VoteCount+1;
+						++$DTS_KafraVotes;
 						mes "[Kafra Voting Staff]";
 						mes "Thanks for your vote!";
 						mes "We'll continue to do our best";
@@ -474,8 +471,8 @@ function	script	F_VoteKafra	{
 						mes "have a good day, adventurer.";
 						break;
 					case 2:
-						set lhz_vote,$DTS_VoteCount+1;
-						set $DTS_KafraVotes,$DTS_KafraVotes+1;
+						lhz_vote = $DTS_VoteCount+1;
+						++$DTS_KafraVotes;
 						mes "[Kafra Voting Staff]";
 						mes "Thanks for your vote!";
 						mes "We'll continue to do our best";
@@ -810,8 +807,8 @@ lighthalzen,163,60,4	script	Kafra Voting Staff#lght	4_F_KAFRA9,{
 						mes "Corp, alright? Have a nice day~";
 						break;
 					case 2:
-						set lhz_vote,$DTS_VoteCount+1;
-						set $DTS_JondaVotes,$DTS_JondaVotes+1;
+						lhz_vote = $DTS_VoteCount+1;
+						++$DTS_JondaVotes;
 						mes "[Cool Event Corp. Voting Staff]";
 						mes "Thank you for your vote!";
 						mes "It's customers like you who";
@@ -882,8 +879,8 @@ lighthalzen,163,60,4	script	Kafra Voting Staff#lght	4_F_KAFRA9,{
 						mes "Corp, alright? Have a nice day~";
 						break;
 					case 2:
-						set lhz_vote,$DTS_VoteCount+1;
-						set $DTS_JondaVotes,$DTS_JondaVotes+1;
+						lhz_vote = $DTS_VoteCount+1;
+						++$DTS_JondaVotes;
 						mes "[Cool Event Corp. Voting Staff]";
 						mes "Thank you for your vote!";
 						mes "It's customers like you who";
@@ -1202,7 +1199,7 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 			mes "Current Setitem value is "+lhz_vote+".";
 			close;
 		case 2:
-			set lhz_vote,0;
+			lhz_vote = 0;
 			close;
 		case 3:
 			mes "[Christy's Maid]";
@@ -1219,7 +1216,7 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 					mes "The value is incorrect.";
 					close;
 				}
-				set $DTS_Time,.@input;
+				$DTS_Time = .@input;
 				mes "[Christy's Maid]";
 				mes "The value has been modified.";
 				close;
@@ -1233,7 +1230,7 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 					mes "The value is incorrect.";
 					close;
 				}
-				set $DTS_JondaVotes,.@input;
+				$DTS_JondaVotes = .@input;
 				mes "[Christy's Maid]";
 				mes "The value has been modified.";
 				close;
@@ -1247,7 +1244,7 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 					mes "The value is incorrect.";
 					close;
 				}
-				set $DTS_KafraVotes,.@input;
+				$DTS_KafraVotes = .@input;
 				mes "[Christy's Maid]";
 				mes "The value has been modified.";
 				close;
@@ -1261,7 +1258,7 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 					mes "The value is incorrect.";
 					close;
 				}
-				set $DTS_Result,.@input;
+				$DTS_Result = .@input;
 				mes "[Christy's Maid]";
 				mes "The value has been modified.";
 				close;
@@ -1275,7 +1272,7 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 					mes "The value is incorrect.";
 					close;
 				}
-				set $DTS_PeriodCheck,.@input;
+				$DTS_PeriodCheck = .@input;
 				mes "[Christy's Maid]";
 				mes "The value has been modified.";
 				close;
@@ -1289,7 +1286,7 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 					mes "The value is incorrect.";
 					close;
 				}
-				set $DTS_KafraWins,.@input;
+				$DTS_KafraWins = .@input;
 				mes "[Christy's Maid]";
 				mes "The value has been modified.";
 				close;
@@ -1303,7 +1300,7 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 					mes "The value is incorrect.";
 					close;
 				}
-				set $DTS_JondaWins,.@input;
+				$DTS_JondaWins = .@input;
 				mes "[Christy's Maid]";
 				mes "The value has been modified.";
 				close;
@@ -1317,7 +1314,7 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 					mes "The value is incorrect.";
 					close;
 				}
-				set $DTS_VoteCount,.@input;
+				$DTS_VoteCount = .@input;
 				mes "[Christy's Maid]";
 				mes "The value has been modified.";
 				close;

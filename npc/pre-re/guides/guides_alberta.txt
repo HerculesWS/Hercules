@@ -28,7 +28,7 @@ alberta,23,238,4	script	Guide#alb::AlbGuide	8W_SOLDIER,{
 	mes "trouble finding anything in";
 	mes "town, or if you just need";
 	mes "guidance around the city.";
-	set .@loop1,1;
+	.@loop1 = 1;
 	while (.@loop1) {
 		next;
 		switch(select("City Guide:Remove Marks from Mini-Map:Notice:Cancel")) {
@@ -42,11 +42,11 @@ alberta,23,238,4	script	Guide#alb::AlbGuide	8W_SOLDIER,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes:No") == 1) set .@compass_check,1;
+				if (select("Yes:No") == 1) .@compass_check = 1;
 			}
-			set .@loop2,1;
+			.@loop2 = 1;
 			while (.@loop2) {
-				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 				
 				switch(select("^FF0000Merchant Guild^000000:Weapon Shop:Tool Shop:Inn:Forge:Cancel")) {
@@ -104,7 +104,7 @@ alberta,23,238,4	script	Guide#alb::AlbGuide	8W_SOLDIER,{
 					mes "no longer wish to have the";
 					mes "location marks displayed";
 					mes "on your Mini-Map.";
-					set .@loop2,0;
+					.@loop2 = 0;
 				}
 			}
 			break;
@@ -114,7 +114,7 @@ alberta,23,238,4	script	Guide#alb::AlbGuide	8W_SOLDIER,{
 			viewpoint 2,46,345,4,0xFF00FF;
 			viewpoint 2,175,220,5,0xFF00FF;
 			viewpoint 2,175,220,6,0xFF00FF;
-			set .@compass_check,0;
+			.@compass_check = 0;
 			break;
 		case 3:
 			mes "[Alberta Guide]";
@@ -147,7 +147,7 @@ alberta,23,238,4	script	Guide#alb::AlbGuide	8W_SOLDIER,{
 			mes "to ask me if you have any";
 			mes "questions about Alberta.";
 			close2;
-			set .@loop1,0;
+			.@loop1 = 0;
 		}
 	}
 	cutin "prt_soldier",255;

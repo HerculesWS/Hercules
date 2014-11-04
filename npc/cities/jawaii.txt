@@ -837,7 +837,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 	mes "like to drink?";
 	next;
 	if (Zeny < 99) {
-		set .@r_jaw,rand(1,100);
+		.@r_jaw = rand(1,100);
 		mes "[Bartender]";
 		if (.@r_jaw > 29) {
 			mes "Hm, I'm sorry";
@@ -867,7 +867,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 	while (1) {
 		switch(select("Follow Bartender's Recommendation.:I want a Gunslinger.:I want a Cobo.:I want a Bomb.:I want a Boogieman.")) {
 		case 1:
-			set .@roof_jaw,.@roof_jaw+3;
+			.@roof_jaw += 3;
 			if (.@roof_jaw > 9) {
 				mes "[Bartender]";
 				mes "Hmmm...";
@@ -1106,7 +1106,7 @@ S_KillChar:
 		end;
 	}
 	if (Zeny > 99) Zeny -= 100;
-	set .@roof_jaw,.@roof_jaw+getarg(0);
+	.@roof_jaw += getarg(0);
 	mes "[Bartender]";
 	mes "There you go.";
 	next;
@@ -1254,7 +1254,7 @@ prt_in,173,13,4	script	Customer#SoloHan	4_M_04,{
 		mes "^3355FF* Gulp Gulp Gulp *^000000";
 		percentheal -10,0;
 		next;
-		set .@jaw_roof,1;
+		.@jaw_roof = 1;
 		mes "[SoloHan]";
 		mes "So, what do you say?";
 		mes "Let's go somewhere";
@@ -1280,7 +1280,7 @@ prt_in,173,13,4	script	Customer#SoloHan	4_M_04,{
 				mes "^3355FF* Gulp Gulp Gulp *^000000";
 				percentheal -10,0;
 				next;
-				set .@jaw_roof,.@jaw_roof+2;
+				.@jaw_roof += 2;
 				mes "[SoloHan]";
 				if (.@jaw_roof > 8) {
 					mes "Whoa...";
@@ -1330,7 +1330,7 @@ prt_in,173,13,4	script	Customer#SoloHan	4_M_04,{
 				close2;
 				end;
 			}
-			set .@jaw_roof,.@jaw_roof+3;
+			.@jaw_roof += 3;
 			mes "[SoloHan]";
 			mes "Drink, drink!";
 			mes "That's not enough!";

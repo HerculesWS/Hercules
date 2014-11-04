@@ -18,7 +18,7 @@
 //============================================================
 -	script	Skoegul#1::OutsideFlagsPR4	GUILD_FLAG,{
 
-	set .@GID, getcastledata("prtg_cas04",1);
+	.@GID = getcastledata("prtg_cas04",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";

@@ -58,14 +58,14 @@ prt_in,243,168,4	script	Jovovich	4_F_02,{
 
 				while(1) {
 					switch(select("Red, please.:Yellow, please.:Violet, please.:Orange, please.:Green, please.:Blue, please.:White, please.:Black, please.:Actually, I like my hair as it is.")) {
-					case 1: set .@headpalette,8; break;
-					case 2: set .@headpalette,1; break;
-					case 3: set .@headpalette,2; break;
-					case 4: set .@headpalette,3; break;
-					case 5: set .@headpalette,4; break;
-					case 6: set .@headpalette,5; break;
-					case 7: set .@headpalette,6; break;
-					case 8: set .@headpalette,7; break;
+					case 1: .@headpalette = 8; break;
+					case 2: .@headpalette = 1; break;
+					case 3: .@headpalette = 2; break;
+					case 4: .@headpalette = 3; break;
+					case 5: .@headpalette = 4; break;
+					case 6: .@headpalette = 5; break;
+					case 7: .@headpalette = 6; break;
+					case 8: .@headpalette = 7; break;
 					case 9:
 						if (.@choose_success != 0) {
 							mes "[Hairdresser Jovovich]";
@@ -111,7 +111,7 @@ prt_in,243,168,4	script	Jovovich	4_F_02,{
 						}
 						Zeny -= 1000;
 						setlook VAR_HEADPALETTE,.@headpalette;
-						set .@choose_success,1;
+						.@choose_success = 1;
 						break;
 					}
 
@@ -203,35 +203,35 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 						mes "for using my service and";
 						mes "I hope you come by again!";
 						close2;
-						set .@choose_success,2;
+						.@choose_success = 2;
 						break;
 					}
 				}
 				while (.@choose_success != 2) {
 					switch(select("Red, please.:Yellow, please.:Purple, please.:Orange, please.:Green, please.:Blue, please.:White, please.:Dark Brown, please.:I like my hair color.")) {
 					case 1:
-						set .@headpalette,8;
+						.@headpalette = 8;
 						break;
 					case 2:
-						set .@headpalette,1;
+						.@headpalette = 1;
 						break;
 					case 3:
-						set .@headpalette,2;
+						.@headpalette = 2;
 						break;
 					case 4:
-						set .@headpalette,3;
+						.@headpalette = 3;
 						break;
 					case 5:
-						set .@headpalette,4;
+						.@headpalette = 4;
 						break;
 					case 6:
-						set .@headpalette,5;
+						.@headpalette = 5;
 						break;
 					case 7:
-						set .@headpalette,6;
+						.@headpalette = 6;
 						break;
 					case 8:
-						set .@headpalette,7;
+						.@headpalette = 7;
 						break;
 					case 9:
 						if (.@choose_success != 0) {
@@ -242,7 +242,7 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 							mes "your beauty and to tell";
 							mes "the truth, I agree with you~";
 							close2;
-							set .@choose_success,2;
+							.@choose_success = 2;
 						}
 						else {
 							mes "[Rossa]";
@@ -251,7 +251,7 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 							mes "You'd look so good if you dyed";
 							mes "your hair a different color~";
 							close2;
-							set .@choose_success,2;
+							.@choose_success = 2;
 						}
 						break;
 					}
@@ -272,7 +272,7 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 							mes "hair if you didn't bring";
 							mes "Scarlet Dyestuffs with you...";
 							close2;
-							set .@choose_success,2;
+							.@choose_success = 2;
 							break;
 						}
 						else if ((.@headpalette == 1) && (countitem(976) == 0)) {
@@ -282,7 +282,7 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 							mes "hair if you didn't bring";
 							mes "Lemon Dyestuffs with you...";
 							close2;
-							set .@choose_success,2;
+							.@choose_success = 2;
 							break;
 						}
 						else if ((.@headpalette == 2) && (countitem(981) == 0)) {
@@ -292,7 +292,7 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 							mes "hair if you didn't bring";
 							mes "Violet Dyestuffs with you...";
 							close2;
-							set .@choose_success,2;
+							.@choose_success = 2;
 							break;
 						}
 						else if ((.@headpalette == 3) && (countitem(980) == 0)) {
@@ -302,7 +302,7 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 							mes "hair if you didn't bring";
 							mes "Orange Dyestuffs with you...";
 							close2;
-							set .@choose_success,2;
+							.@choose_success = 2;
 							break;
 						}
 						else if ((.@headpalette == 4) && (countitem(979) == 0)) {
@@ -314,7 +314,7 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 							mes "with you. Would you come";
 							mes "back after you get some?";
 							close2;
-							set .@choose_success,2;
+							.@choose_success = 2;
 							break;
 						}
 						else if ((.@headpalette == 5) && (countitem(978) == 0)) {
@@ -326,7 +326,7 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 							mes "with you. Would you come";
 							mes "back after you get some?";
 							close2;
-							set .@choose_success,2;
+							.@choose_success = 2;
 							break;
 						}
 						else if ((.@headpalette == 6) && (countitem(982) == 0)) {
@@ -336,7 +336,7 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 							mes "hair if you didn't bring";
 							mes "White Dyestuffs with you...";
 							close2;
-							set .@choose_success,2;
+							.@choose_success = 2;
 							break;
 						}
 						else if ((.@headpalette == 7) && (countitem(983) == 0)) {
@@ -346,7 +346,7 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 							mes "hair if you didn't bring";
 							mes "Black Dyestuffs with you...";
 							close2;
-							set .@choose_success,2;
+							.@choose_success = 2;
 							break;
 						}
 						if (Zeny < 1000) {
@@ -356,7 +356,7 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 							mes "1,000 zeny. Did you forget";
 							mes "to bring your money with you?";
 							close2;
-							set .@choose_success,2;
+							.@choose_success = 2;
 							break;
 						}
 						if (.@headpalette == 8) delitem 975,1; //Scarlet_Dyestuffs
@@ -369,7 +369,7 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 						else if (.@headpalette == 7) delitem 983,1; //Black_Dyestuffs
 						Zeny -= 1000;
 						setlook VAR_HEADPALETTE,.@headpalette;
-						set .@choose_success,1;
+						.@choose_success = 1;
 						break;
 					}
 				}

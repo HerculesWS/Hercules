@@ -425,28 +425,28 @@ alberta_in,55,142,7	script	Hair Dresser	4_F_02,{
 					next;
 					switch(select("Red.:Yellow.:Purple.:Orange.:Green.:Blue.:White.:Dark Brown.:Cancel.")) {
 					case 1:
-						set .@pallete,8;
+						.@pallete = 8;
 						break;
 					case 2:
-						set .@pallete,1;
+						.@pallete = 1;
 						break;
 					case 3:
-						set .@pallete,2;
+						.@pallete = 2;
 						break;
 					case 4:
-						set .@pallete,3;
+						.@pallete = 3;
 						break;
 					case 5:
-						set .@pallete,4;
+						.@pallete = 4;
 						break;
 					case 6:
-						set .@pallete,5;
+						.@pallete = 5;
 						break;
 					case 7:
-						set .@pallete,6;
+						.@pallete = 6;
 						break;
 					case 8:
-						set .@pallete,7;
+						.@pallete = 7;
 						break;
 					case 9:
 						mes "[Veronica]";
@@ -1006,28 +1006,28 @@ lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 					next;
 					switch(select("Red:Yellow:Purple:Orange:Green:Blue:White:Dark Brown")) {
 					case 1:
-						set .@headpalette,8;
+						.@headpalette = 8;
 						break;
 					case 2:
-						set .@headpalette,1;
+						.@headpalette = 1;
 						break;
 					case 3:
-						set .@headpalette,2;
+						.@headpalette = 2;
 						break;
 					case 4:
-						set .@headpalette,3;
+						.@headpalette = 3;
 						break;
 					case 5:
-						set .@headpalette,4;
+						.@headpalette = 4;
 						break;
 					case 6:
-						set .@headpalette,5;
+						.@headpalette = 5;
 						break;
 					case 7:
-						set .@headpalette,6;
+						.@headpalette = 6;
 						break;
 					case 8:
-						set .@headpalette,7;
+						.@headpalette = 7;
 						break;
 					}
 				}
@@ -1244,8 +1244,8 @@ lhz_in02,91,155,5	script	Assistant Beautician#li	4_F_LGTGIRL,{
 				mes "Wait, I can...";
 				mes "I can fix this!";
 				next;
-				set .@style_r,rand(1,23);
-				set .@color_r,rand(1,8);
+				.@style_r = rand(1,23);
+				.@color_r = rand(1,8);
 				mes "[Assistant Beautician]";
 				mes "^333333*Pant Pant Pant*^000000";
 				next;

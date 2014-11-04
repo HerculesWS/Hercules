@@ -108,11 +108,11 @@ int unit_walktoxy_sub(struct block_list *bl)
 		uint8 dir;
 		//Trim the last part of the path to account for range,
 		//but always move at least one cell when requested to move.
-		for (i = ud->chaserange*10; i > 0 && ud->walkpath.path_len>1;) {
+		for (i = (ud->chaserange*10)-10; i > 0 && ud->walkpath.path_len>1;) {
 		   ud->walkpath.path_len--;
 			dir = ud->walkpath.path[ud->walkpath.path_len];
 			if(dir&1)
-				i -= MOVE_DIAGONAL_COST;
+				i -= MOVE_COST*20; //When chasing, units will target a diamond-shaped area in range [Playtester]
 			else
 				i -= MOVE_COST;
 			ud->to_x -= dirx[dir];
@@ -197,7 +197,7 @@ int unit_step_timer(int tid, int64 tick, int id, intptr_t data)
 		}
 		if(ud->stepskill_id == 0) {
 			//Execute normal attack
-			unit->attack(bl, tbl->id, ud->state.attack_continue);
+			unit->attack(bl, tbl->id, (ud->state.attack_continue) + 2);
 		} else {
 			//Execute non-ground skill
 			unit->skilluse_id(bl, tbl->id, ud->stepskill_id, ud->stepskill_lv);
@@ -211,6 +211,7 @@ int unit_step_timer(int tid, int64 tick, int id, intptr_t data)
 int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 	int i;
 	int x,y,dx,dy;
+	unsigned char icewall_walk_block;
 	uint8 dir;
 	struct block_list       *bl;
 	struct map_session_data *sd;
@@ -249,19 +250,29 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 	dx = dirx[(int)dir];
 	dy = diry[(int)dir];
 
+	//Get icewall walk block depending on boss mode (players can't be trapped)
+	if(md && md->status.mode&MD_BOSS)
+		icewall_walk_block = battle_config.boss_icewall_walk_block;
+	else if(md)
+		icewall_walk_block = battle_config.mob_icewall_walk_block;
+	else
+		icewall_walk_block = 0;
+
 	//Monsters will walk into an icewall from the west and south if they already started walking
 	if(map->getcell(bl->m,x+dx,y+dy,CELL_CHKNOPASS)
-	&& (battle_config.icewall_walk_block == 0 || !map->getcell(bl->m,x+dx,y+dy,CELL_CHKICEWALL) || dx < 0 || dy < 0))
+	&& (icewall_walk_block == 0 || !map->getcell(bl->m,x+dx,y+dy,CELL_CHKICEWALL) || dx < 0 || dy < 0))
 		return unit->walktoxy_sub(bl);
 
 	//Monsters can only leave icewalls to the west and south
 	//But if movement fails more than icewall_walk_block times, they can ignore this rule
-	if(md && md->walktoxy_fail_count < battle_config.icewall_walk_block && map->getcell(bl->m,x,y,CELL_CHKICEWALL) && (dx > 0 || dy > 0)) {
+	if(md && md->walktoxy_fail_count < icewall_walk_block && map->getcell(bl->m,x,y,CELL_CHKICEWALL) && (dx > 0 || dy > 0)) {
 		//Needs to be done here so that rudeattack skills are invoked
 		md->walktoxy_fail_count++;
 		clif->fixpos(bl);
+		//Monsters in this situation first use a chase skill, then unlock target and then use an idle skill
+		if (!(++ud->walk_count%WALK_SKILL_INTERVAL))
+			mob->skill_use(md, tick, -1);
 		mob->unlocktarget(md, tick);
-		//Use idle skill at this point
 		if (!(++ud->walk_count%WALK_SKILL_INTERVAL))
 			mob->skill_use(md, tick, -1);
 		return 0;
@@ -428,6 +439,16 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 		//Stopped walking. Update to_x and to_y to current location [Skotlex]
 		ud->to_x = bl->x;
 		ud->to_y = bl->y;
+
+		if(map->count_oncell(bl->m, x, y, BL_CHAR|BL_NPC, 1) > battle_config.official_cell_stack_limit) {
+			//Walked on occupied cell, call unit_walktoxy again
+			if(ud->steptimer != INVALID_TIMER) {
+				//Execute step timer on next step instead
+				timer->delete(ud->steptimer, unit_step_timer);
+				ud->steptimer = INVALID_TIMER;
+			}
+			return unit->walktoxy(bl, x, y, 8);
+		}
 	}
 	return 0;
 }
@@ -445,6 +466,7 @@ int unit_delay_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 //&1 -> 1/0 = easy/hard
 //&2 -> force walking
 //&4 -> Delay walking if the reason you can't walk is the canwalk delay
+//&8 -> Search for an unoccupied cell and cancel if none available
 int unit_walktoxy( struct block_list *bl, short x, short y, int flag)
 {
 	struct unit_data* ud = NULL;
@@ -456,6 +478,9 @@ int unit_walktoxy( struct block_list *bl, short x, short y, int flag)
 	ud = unit->bl2ud(bl);
 
 	if( ud == NULL) return 0;
+
+	if ((flag&8) && !map->closest_freecell(bl->m, &x, &y, BL_CHAR|BL_NPC, 1)) //This might change x and y
+		return 0;
 
 	if (!path->search(&wpd, bl->m, bl->x, bl->y, x, y, flag&1, CELL_CHKNOPASS)) // Count walk path cells
 		return 0;
@@ -643,7 +668,7 @@ bool unit_run( struct block_list *bl, struct map_session_data *sd, enum sc_type 
 			break;
 
 		//if sprinting and there's a PC/Mob/NPC, block the path [Kevin]
-		if( map->count_oncell(bl->m, to_x+dir_x, to_y+dir_y, BL_PC|BL_MOB|BL_NPC) )
+		if( map->count_oncell(bl->m, to_x+dir_x, to_y+dir_y, BL_PC|BL_MOB|BL_NPC, 0) )
 			break;
 
 		to_x += dir_x;
@@ -1060,6 +1085,17 @@ int unit_can_move(struct block_list *bl) {
 			return 0;
 
 	}
+
+	// Icewall walk block special trapped monster mode
+	if(bl->type == BL_MOB) {
+		struct mob_data *md = BL_CAST(BL_MOB, bl);
+		if(md && ((md->status.mode&MD_BOSS && battle_config.boss_icewall_walk_block == 1 && map->getcell(bl->m,bl->x,bl->y,CELL_CHKICEWALL))
+			|| (!(md->status.mode&MD_BOSS) && battle_config.mob_icewall_walk_block == 1 && map->getcell(bl->m,bl->x,bl->y,CELL_CHKICEWALL)))) {
+			md->walktoxy_fail_count = 1; //Make sure rudeattacked skills are invoked
+			return 0;
+		}
+	}
+
 	return 1;
 }
 
@@ -1382,6 +1418,12 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 					return 0; // Can't cast on other characters when limit is reached
 				}	
 			}
+		}
+	break;
+	case AB_CLEARANCE:
+		if( target->type != BL_MOB && battle->check_target(src,target,BCT_PARTY) <= 0 && sd ) {
+			clif->skill_fail(sd, skill_id, USESKILL_FAIL_TOTARGET, 0);
+			return 0;
 		}
 	break;
 	case SR_GATEOFHELL:
@@ -1764,6 +1806,7 @@ int unit_unattackable(struct block_list *bl)
 	struct unit_data *ud = unit->bl2ud(bl);
 	if (ud) {
 		ud->state.attack_continue = 0;
+		ud->state.step_attack = 0;
 		unit->set_target(ud, 0);
 	}
 
@@ -1810,7 +1853,8 @@ int unit_attack(struct block_list *src,int target_id,int continuous) {
 		unit->unattackable(src);
 		return 1;
 	}
-	ud->state.attack_continue = continuous;
+	ud->state.attack_continue = (continuous&1)?1:0;
+	ud->state.step_attack = (continuous&2)?1:0;
 	unit->set_target(ud, target_id);
 
 	range = status_get_range(src);
@@ -2036,7 +2080,8 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick) {
 	sstatus = status->get_status_data(src);
 	range = sstatus->rhw.range;
 
-	if( unit->is_walking(target) && (target->type == BL_PC || !map->getcell(target->m,target->x,target->y,CELL_CHKICEWALL)) )
+	if( (unit_is_walking(target) || ud->state.step_attack)
+		&& (target->type == BL_PC || !map->getcell(target->m,target->x,target->y,CELL_CHKICEWALL)) )
 		range++; // Extra range when chasing (does not apply to mobs locked in an icewall)
 
 	if(sd && !check_distance_client_bl(src,target,range)) {

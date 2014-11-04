@@ -63,7 +63,7 @@ prontera,182,214,4	script	Lauds#Memorial	1_M_MERCHANT,{
 		mes "[Mad Sago Lauds]";
 		mes "Listen closely.";
 		mes "Bring me ^FF000030 Fabric and 20 Fluffs^000000.";
-		set Memorial08,1;
+		Memorial08 = 1;
 		close;
 	}
 
@@ -91,7 +91,7 @@ prontera,182,214,4	script	Lauds#Memorial	1_M_MERCHANT,{
 			delitem 914,20;
 			getitem 6025,1;
 			getnameditem 6025," + strcharinfo(0) + ";
-			set Memorial08,2;
+			Memorial08 = 2;
 			close;
 		}
 	}
@@ -114,7 +114,7 @@ prontera,182,214,4	script	Lauds#Memorial	1_M_MERCHANT,{
 		mes "[Mad Sago Lauds]";
 		mes "It seems you're just carrying it without understanding its meaning.";
 		mes "What a shame! You should go speak to ^FF0000Grast in Prontera^000000.";
-		set Memorial08,3;
+		Memorial08 = 3;
 		close;
 	}
 
@@ -149,7 +149,7 @@ prontera,182,214,4	script	Lauds#Memorial	1_M_MERCHANT,{
 		mes "What? Why are you giving me your garbage!";
 		mes "Those items are not useful to me at all.";
 		mes "You should be going to the plaque!";
-		set Memorial08,8;
+		Memorial08 = 8;
 		close;
 	}
 
@@ -161,7 +161,7 @@ prontera,182,214,4	script	Lauds#Memorial	1_M_MERCHANT,{
 	}
 	
 	else if (Memorial08 >= 9) {
-		set .@RandomMsg, rand(1,5);
+		.@RandomMsg = rand(1,5);
 		if (.@RandomMsg == 1) {
 			mes "[Mad Sago Lauds]";
 			mes "Don't panic!";
@@ -207,7 +207,7 @@ prontera,153,286,4	script	Memorial Plaque#Memorial	4_BOARD3,{
 		mes "'This must be what Lauds was talking about.'";
 		mes "'Let's dust it off with the towel.'";
 		next;
-		set Memorial08,9;
+		Memorial08 = 9;
 		getexp 93750,43750;
 		goto L_CleanPlaque;
 	}
@@ -244,7 +244,7 @@ prontera,153,286,4	script	Memorial Plaque#Memorial	4_BOARD3,{
 		mes "- Arthur Ashe -";
 		if (Memorial08 == 9) {
 			getexp 93750,43750;
-			set Memorial08,10;
+			Memorial08 = 10;
 		}
 		close;
 }
@@ -273,7 +273,7 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 		mes "[Grast]";
 		mes "Please bring me ^FF0000one of each Red Potion, Green Potion, Awakening Potion, and Butterfly Wing^000000.";
 		mes "I'll be waiting for your return.";
-		set Memorial08,4;
+		Memorial08 = 4;
 		close;
 	}
 
@@ -303,7 +303,7 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			mes "[Grast]";
 			mes "Please bring me ^FF0000one of each Trap, Yggdrasil Leaf, Blue Gemstone, Crystal Mirror, Meat, and Carrot.^000000";
 			mes "I'll be waiting for your return.";
-			set Memorial08,5;
+			Memorial08 = 5;
 			close;
 		}
 	}
@@ -330,7 +330,7 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			next;
 			mes "[Grast]";
 			mes "Please bring me ^FF0000one of each Pet Incubator, Firecracker, Poring Doll, and Bouquet^000000.";
-			set Memorial08,6;
+			Memorial08 = 6;
 			close;
 		}
 	}
@@ -376,7 +376,7 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 				mes "You've selected my right hand.";
 				mes "Here's the gift for you.";
 				mes "Now, please bring all these materials to Lauds.";
-				set Memorial08, 7;
+				Memorial08 = 7;
 				getitem 617,1;
 				close;
 			}
@@ -384,7 +384,7 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			mes "You've selected my left hand.";
 			mes "Here's the gift for you.";
 			mes "Now, please bring all these materials to Lauds.";
-			set Memorial08, 7;
+			Memorial08 = 7;
 			getitem 12109,1;
 			close;
 		}
@@ -413,7 +413,7 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 		mes "I crushed all the items together into a more compact form for you.";
 		mes "You can thank me later for that extra service.";
 		mes "Please bring them to Lauds.";
-		set Memorial08,7;
+		Memorial08 = 7;
 		getitem 7126,1;
 		next;
 		mes "[Grast]";

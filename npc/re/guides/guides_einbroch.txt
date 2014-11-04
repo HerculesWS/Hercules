@@ -25,7 +25,7 @@ einbroch,72,202,4	script	Einbroch Guide#ein01::GuideEinbroch	4_M_EIN_SOLDIER,{
 	while (1) {
 		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
 		case 1:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Airport ]:[ Factory ]:[ Plaza ]:[ Hotel ]:[ Train Station ]:[ Weapon Shop ]:[ Laboratory ]:[ Monument ]:[ Blacksmith Guild ]:[ Gunslinger Guild ]:Previous Menu")) {
 				case 1:
@@ -124,13 +124,13 @@ einbroch,72,202,4	script	Einbroch Guide#ein01::GuideEinbroch	4_M_EIN_SOLDIER,{
 					next;
 					break;
 				case 11:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
 			break;
 		case 2:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Armsmith ]:[ Kafra Employees ]:[ Eden Teleport Officer ]:Previous Menu")) {
 				case 1:
@@ -172,7 +172,7 @@ einbroch,72,202,4	script	Einbroch Guide#ein01::GuideEinbroch	4_M_EIN_SOLDIER,{
 					next;
 					break;
 				case 4:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}

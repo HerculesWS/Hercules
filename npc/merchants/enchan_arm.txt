@@ -36,25 +36,25 @@ prontera,165,60,2	script	Apprentice Craftsman	1_F_MERCHANT_01,{
 		switch(select("Non Slotted Armor.:Slotted Armor.:High Grade Armor.:Maybe next time.")) {
 		case 1:
 			setarray .@items[0],2307,2309,2314,2316,2321,2325,2327,2328,2330,2332,2334,2335,2341,2344,2346,2348,2350,2337,2386,2394,2395,2396;
-			set .@j,50;
+			.@j = 50;
 			break;
 		case 2:
 			setarray .@items[0],2311,2318,2319,2320,2308,2310,2315,2317,2322,2324,2326,2331,2333,2336,2342,2345,2347,2349,2351;
-			set .@j,55;
-			set .@k,1;
+			.@j = 55;
+			.@k = 1;
 			break;
 		case 3:
 			setarray .@items[0],2364,2365,2391,2374,2375,2376,2377,2378,2379,2380,2381,2382,2387,2388,2389,2390;
-			set .@j,60;
+			.@j = 60;
 			break;
 		case 4:
 			mes "[Apprentice Craftsman]";
 			mes "Please come back when you have any interest in enchanting your armor.";
 			close;
 		}
-		set .@menu$,"";
-		for(set .@i,0; .@i<getarraysize(.@items); set .@i,.@i+1)
-			set .@menu$, .@menu$+getitemname(.@items[.@i])+((.@k)?" [1]":"")+":";
+		.@menu$ = "";
+		for(.@i = 0; .@i<getarraysize(.@items); ++.@i)
+			.@menu$ += getitemname(.@items[.@i])+((.@k)?" [1]":"")+":";
 		callsub S_EnchantArmor, .@items[select(.@menu$)-1], .@j;
 		end;
 	}
@@ -65,8 +65,8 @@ prontera,165,60,2	script	Apprentice Craftsman	1_F_MERCHANT_01,{
 	close;
 
 S_EnchantArmor:
-	set .@itemid,getarg(0);
-	set .@failrate,getarg(1);
+	.@itemid = getarg(0);
+	.@failrate = getarg(1);
 	mes "[Apprentice Craftsman]";
 	if (countitem(.@itemid) == 1) {
 		mes "Socket enchant will cost you 400,000 zeny. And there will be a random option enchanted. Of course, there is a chance of breaking your armor.";
@@ -96,42 +96,42 @@ S_EnchantArmor:
 		Zeny -= 400000;
 		delitem .@itemid,1;
 		switch (rand(1,.@failrate)) {
-			case 1: set .@addpart,4702;break;
-			case 2: set .@addpart,4712;break;
-			case 3: set .@addpart,4722;break;
-			case 4: set .@addpart,4732;break;
-			case 5: set .@addpart,4742;break;
-			case 6: set .@addpart,4752;break;
+			case 1: .@addpart = 4702;break;
+			case 2: .@addpart = 4712;break;
+			case 3: .@addpart = 4722;break;
+			case 4: .@addpart = 4732;break;
+			case 5: .@addpart = 4742;break;
+			case 6: .@addpart = 4752;break;
 			case 7:
-			case 8: set .@addpart,4701;break;
+			case 8: .@addpart = 4701;break;
 			case 9:
-			case 10: set .@addpart,4711;break;
+			case 10: .@addpart = 4711;break;
 			case 11:
-			case 12: set .@addpart,4721;break;
+			case 12: .@addpart = 4721;break;
 			case 13:
-			case 14: set .@addpart,4731;break;
+			case 14: .@addpart = 4731;break;
 			case 15:
-			case 16: set .@addpart,4741;break;
+			case 16: .@addpart = 4741;break;
 			case 17:
-			case 18: set .@addpart,4751;break;
+			case 18: .@addpart = 4751;break;
 			case 19:
 			case 20:
-			case 21: set .@addpart,4700;break;
+			case 21: .@addpart = 4700;break;
 			case 22:
 			case 23:
-			case 24: set .@addpart,4710;break;
+			case 24: .@addpart = 4710;break;
 			case 25:
 			case 26:
-			case 27: set .@addpart,4720;break;
+			case 27: .@addpart = 4720;break;
 			case 28:
 			case 29:
-			case 30: set .@addpart,4730;break;
+			case 30: .@addpart = 4730;break;
 			case 31:
 			case 32:
-			case 33: set .@addpart,4740;break;
+			case 33: .@addpart = 4740;break;
 			case 34:
 			case 35:
-			case 36: set .@addpart,4750;break;
+			case 36: .@addpart = 4750;break;
 			default:
 				specialeffect2 EF_PHARMACY_FAIL;
 				mes "[Apprentice Craftsman]";

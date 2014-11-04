@@ -113,7 +113,7 @@ OnReset_09:
 -	script	Trocco#aco1	-1,{
 OnEnable:
 	initnpctimer;
-	set $@arn_1,gettimetick(2);
+	$@arn_1 = gettimetick(2);
 	end;
 
 OnTimer2000:
@@ -302,7 +302,7 @@ OnMyMobDead:
 
 force_5-1,25,69,0	script	force_02start#aco	-1,1,1,{
 OnTouch:
-	set $@drop_gate,0;
+	$@drop_gate = 0;
 	donpcevent "force_02mob#aco::OnEnable";
 	disablenpc "force_02start#aco";
 	end;
@@ -320,7 +320,7 @@ OnReset:
 
 OnMyMobDead:
 	if ((mobcount("force_5-1","force_02mob#aco::OnMyMobDead") < 11) && ($@drop_gate == 0)) {
-		set $@drop_gate,1;
+		$@drop_gate = 1;
 		donpcevent "Trocco#aco1::On02_End";
 		donpcevent "arena_aco1::OnReset_02";
 	}
@@ -482,7 +482,7 @@ OnReset:
 OnMyMobDead:
 	if (mobcount("force_5-1","force_09mob#aco::OnMyMobDead") < 1) {
 		donpcevent "Trocco#aco1::On09_End";
-		set $@arn_2,gettimetick(2);
+		$@arn_2 = gettimetick(2);
 		donpcevent "arena_aco1::OnReset_09";
 	}
 	end;
@@ -541,7 +541,7 @@ OnReset_09:
 -	script	Trocco#aco2	-1,{
 OnEnable:
 	initnpctimer;
-	set $@arn_1,gettimetick(2);
+	$@arn_1 = gettimetick(2);
 	end;
 
 OnTimer2000:
@@ -1018,7 +1018,7 @@ OnReset:
 OnMyMobDead:
 	if (mobcount("force_5-1","force_09mob#pri::OnMyMobDead") < 1) {
 		donpcevent "Trocco#aco2::On09_End";
-		set $@arn_2,gettimetick(2);
+		$@arn_2 = gettimetick(2);
 		donpcevent "arena_aco2::OnReset_09";
 	}
 	end;
@@ -1062,7 +1062,7 @@ prt_are_in,181,83,3	script	Staff#aco-1	1_F_02,{
 		next;
 	}
 	else {
-		set arena_point,arena_point+1;
+		++arena_point;
 	}
 	mes "[Staff]";
 	mes "Well, let me guide";
@@ -1076,23 +1076,23 @@ prt_are_in,181,83,3	script	Staff#aco-1	1_F_02,{
 }
 
 prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
-	set .@start_timeaco, $@arn_1;
-	set .@hour_startaco, .@start_timeaco / 10000;
-	set .@min_startaco, ((.@start_timeaco % 10000) / 100);
-	set .@sec_startaco, .@start_timeaco % 100;
-	set .@end_timeaco, $@arn_2;
-	set .@hour_endaco, .@end_timeaco / 10000;
-	set .@min_endaco, ((.@end_timeaco % 10000) / 100);
-	set .@sec_endaco, .@end_timeaco % 100;
+	.@start_timeaco = $@arn_1;
+	.@hour_startaco = .@start_timeaco / 10000;
+	.@min_startaco = ((.@start_timeaco % 10000) / 100);
+	.@sec_startaco = .@start_timeaco % 100;
+	.@end_timeaco = $@arn_2;
+	.@hour_endaco = .@end_timeaco / 10000;
+	.@min_endaco = ((.@end_timeaco % 10000) / 100);
+	.@sec_endaco = .@end_timeaco % 100;
 	if ((.@hour_startaco == 23) && (.@hour_endaco == 0)) {
-		set .@hour_endaco,24;
+		.@hour_endaco = 24;
 	}
-	set .@st_to_secaco, ((.@hour_startaco * 3600) + (.@min_startaco * 60) + (.@sec_startaco));
-	set .@et_to_secaco, ((.@hour_endaco * 3600) + (.@min_endaco * 60) + (.@sec_endaco));
-	set .@record_timeaco, (.@et_to_secaco - .@st_to_secaco);
-	set .@record_houraco, .@record_timeaco / 3600;
-	set .@record_minaco, ((.@record_timeaco % 3600) / 60);
-	set .@record_secaco, .@record_timeaco % 60;
+	.@st_to_secaco = ((.@hour_startaco * 3600) + (.@min_startaco * 60) + (.@sec_startaco));
+	.@et_to_secaco = ((.@hour_endaco * 3600) + (.@min_endaco * 60) + (.@sec_endaco));
+	.@record_timeaco = (.@et_to_secaco - .@st_to_secaco);
+	.@record_houraco = .@record_timeaco / 3600;
+	.@record_minaco = ((.@record_timeaco % 3600) / 60);
+	.@record_secaco = .@record_timeaco % 60;
 	if ((.@record_timeaco < 0 ) || (.@record_houraco < 0) || (.@record_minaco < 0 ) || (.@record_secaco < 0)) {
 		emotion e_omg;
 		mes "[Staff]";
@@ -1126,7 +1126,7 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 		mes "your time in the Arena~";
 		close2;
 		if (arena_point < 29981) {
-			set arena_point,arena_point+20;
+			arena_point += 20;
 			warp "arena_room",100,75;
 			donpcevent "#arn_timer_aco::OnStop";
 			donpcevent "Acolyte Waiting Room::OnStart";
@@ -1140,30 +1140,30 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 	}
 	else {
 		if (BaseJob == Job_Acolyte) {
-			set .@acotop_t,$arn_acotop;
-			set .@acotop_n$,$arn_acotopn$;
+			.@acotop_t = $arn_acotop;
+			.@acotop_n$ = $arn_acotopn$;
 		}
 		else {
 			if (BaseLevel < 70) {
-				set .@acotop_t,$arn_pritop60;
-				set .@acotop_n$,$arn_pritopn60$;
+				.@acotop_t = $arn_pritop60;
+				.@acotop_n$ = $arn_pritopn60$;
 			}
 			else if (BaseLevel < 80) {
-				set .@acotop_t,$arn_pritop70;
-				set .@acotop_n$,$arn_pritopn70$;
+				.@acotop_t = $arn_pritop70;
+				.@acotop_n$ = $arn_pritopn70$;
 			}
 			else if (BaseLevel < 90) {
-				set .@acotop_t,$arn_pritop80;
-				set .@acotop_n$,$arn_pritopn80$;
+				.@acotop_t = $arn_pritop80;
+				.@acotop_n$ = $arn_pritopn80$;
 			}
 			else {
-				set .@acotop_t,$arn_pritop90;
-				set .@acotop_n$,$arn_pritopn90$;
+				.@acotop_t = $arn_pritop90;
+				.@acotop_n$ = $arn_pritopn90$;
 			}
 		}
-		set .@topbunaco, ((.@acotop_t % 3600) / 60);
-		set .@topchoaco, .@acotop_t % 60;
-		set .@gapaco, .@acotop_t - .@record_timeaco;
+		.@topbunaco = ((.@acotop_t % 3600) / 60);
+		.@topchoaco = .@acotop_t % 60;
+		.@gapaco = .@acotop_t - .@record_timeaco;
 		mes "[Staff]";
 		mes "^3131FF"+strcharinfo(0)+"^000000, right?";
 		mes "Hey, you did great! You";
@@ -1196,26 +1196,26 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 			mes "under the Time Force Battle";
 			mes "Arena - Acolyte Class Record!";
 			if (BaseJob == Job_Acolyte) {
-				set $arn_acotop,.@record_timeaco;
-				set $arn_acotopn$, strcharinfo(0);
+				$arn_acotop = .@record_timeaco;
+				$arn_acotopn$ = strcharinfo(0);
 				donpcevent "Vendigos::OnLineRec_aco";
 			}
 			else {
 				if (BaseLevel < 70) {
-					set $arn_pritop60,.@record_timeaco;
-					set $arn_pritopn60$, strcharinfo(0);
+					$arn_pritop60 = .@record_timeaco;
+					$arn_pritopn60$ = strcharinfo(0);
 				}
 				else if (BaseLevel < 80) {
-					set $arn_pritop70,.@record_timeaco;
-					set $arn_pritopn70$, strcharinfo(0);
+					$arn_pritop70 = .@record_timeaco;
+					$arn_pritopn70$ = strcharinfo(0);
 				}
 				else if (BaseLevel < 90) {
-					set $arn_pritop80,.@record_timeaco;
-					set $arn_pritopn80$, strcharinfo(0);
+					$arn_pritop80 = .@record_timeaco;
+					$arn_pritopn80$ = strcharinfo(0);
 				}
 				else {
-					set $arn_pritop90,.@record_timeaco;
-					set $arn_pritopn90$, strcharinfo(0);
+					$arn_pritop90 = .@record_timeaco;
+					$arn_pritopn90$ = strcharinfo(0);
 				}
 				donpcevent "Vendigos::OnLineRec_pri";
 			}
@@ -1251,7 +1251,7 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 				mes "Now let me guide you";
 				mes "back to the Arena Lobby...";
 				close2;
-				set arena_point,30000;
+				arena_point = 30000;
 			}
 			else {
 				mes "[Staff]";
@@ -1268,7 +1268,7 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 				mes "Now let me guide you";
 				mes "back to the Arena Lobby...";
 				close2;
-				set arena_point,arena_point+50;
+				arena_point += 50;
 			}
 			specialeffect2 EF_EXIT;
 			warp "arena_room",100,75;
@@ -1315,7 +1315,7 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 				mes "Now let me guide you";
 				mes "back to the Arena Lobby...";
 				close2;
-				set arena_point,30000;
+				arena_point = 30000;
 			}
 			else {
 				mes "[Staff]";
@@ -1332,7 +1332,7 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 				mes "Now let me guide you";
 				mes "back to the Arena Lobby...";
 				close2;
-				set arena_point,arena_point+20;
+				arena_point += 20;
 			}
 			specialeffect2 EF_EXIT;
 			warp "arena_room",100,75;
@@ -1355,29 +1355,29 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 			mes "Acolyte Class Records.";
 			mes "Congratulations~";
 			if (BaseJob == Job_Acolyte) {
-				set $arn_acotop,.@record_timeaco;
-				set $arn_acotopn$, strcharinfo(0);
+				$arn_acotop = .@record_timeaco;
+				$arn_acotopn$ = strcharinfo(0);
 				donpcevent "#Vendigos::OnLineRec_aco";
 			}
 			else {
 				if (BaseLevel < 70) {
-					set $arn_pritop60,.@record_timeaco;
-					set $arn_pritopn60$, strcharinfo(0);
+					$arn_pritop60 = .@record_timeaco;
+					$arn_pritopn60$ = strcharinfo(0);
 					donpcevent "#Vendigos::OnLineRec_pri60";
 				}
 				else if (BaseLevel < 80) {
-					set $arn_pritop70,.@record_timeaco;
-					set $arn_pritopn70$, strcharinfo(0);
+					$arn_pritop70 = .@record_timeaco;
+					$arn_pritopn70$ = strcharinfo(0);
 					donpcevent "#Vendigos::OnLineRec_pri70";
 				}
 				else if (BaseLevel < 90) {
-					set $arn_pritop80,.@record_timeaco;
-					set $arn_pritopn80$, strcharinfo(0);
+					$arn_pritop80 = .@record_timeaco;
+					$arn_pritopn80$ = strcharinfo(0);
 					donpcevent "#Vendigos::OnLineRec_pri80";
 				}
 				else {
-					set $arn_pritop90,.@record_timeaco;
-					set $arn_pritopn90$, strcharinfo(0);
+					$arn_pritop90 = .@record_timeaco;
+					$arn_pritopn90$ = strcharinfo(0);
 					donpcevent "#Vendigos::OnLineRec_pri90";
 				}
 			}
@@ -1413,7 +1413,7 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 				mes "Now let me guide you";
 				mes "back to the Arena Lobby...";
 				close2;
-				set arena_point,30000;
+				arena_point = 30000;
 			}
 			else {
 				mes "[Staff]";
@@ -1430,7 +1430,7 @@ prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 				mes "Now let me guide you";
 				mes "back to the Arena Lobby...";
 				close2;
-				set arena_point,arena_point+20;
+				arena_point += 20;
 			}
 			specialeffect2 EF_EXIT;
 			warp "arena_room",100,75;
@@ -1570,10 +1570,10 @@ arena_room,94,82,7	script	Arena Record Staff#aco	1_F_PRIEST,{
 	next;
 	switch(select("Acolyte Mode:Priest - Level 70 or lower:Priest - Level 80 or lower:Priest - Level 90 or lower:Priest - Level 91 ~ "+(checkre(0)?"160":"99"))) {
 	case 1:
-		set .@acotop_t,$arn_acotop;
-		set .@acotop_n$,$arn_acotopn$;
-		set .@acotopbun, ((.@acotop_t % 3600) / 60 );
-		set .@acotopcho, (.@acotop_t % 60);
+		.@acotop_t = $arn_acotop;
+		.@acotop_n$ = $arn_acotopn$;
+		.@acotopbun = ((.@acotop_t % 3600) / 60 );
+		.@acotopcho = (.@acotop_t % 60);
 		mes "[Mathea]";
 		mes "^3131FF"+.@acotop_n$+"^000000";
 		mes "is the top player of the";
@@ -1583,24 +1583,24 @@ arena_room,94,82,7	script	Arena Record Staff#aco	1_F_PRIEST,{
 		mes "for participating in the Arena.";
 		close;
 	case 2:
-		set .@pritop_t,$arn_pritop60;
-		set .@pritop_n$,$arn_pritopn60$;
+		.@pritop_t = $arn_pritop60;
+		.@pritop_n$ = $arn_pritopn60$;
 		break;
 	case 3:
-		set .@pritop_t,$arn_pritop70;
-		set .@pritop_n$,$arn_pritopn70$;
+		.@pritop_t = $arn_pritop70;
+		.@pritop_n$ = $arn_pritopn70$;
 		break;
 	case 4:
-		set .@pritop_t,$arn_pritop80;
-		set .@pritop_n$,$arn_pritopn80$;
+		.@pritop_t = $arn_pritop80;
+		.@pritop_n$ = $arn_pritopn80$;
 		break;
 	case 5:
-		set .@pritop_t,$arn_pritop90;
-		set .@pritop_n$,$arn_pritopn90$;
+		.@pritop_t = $arn_pritop90;
+		.@pritop_n$ = $arn_pritopn90$;
 		break;
 	}
-	set .@pritopbun, ((.@pritop_t % 3600) / 60 );
-	set .@pritopcho, (.@pritop_t % 60);
+	.@pritopbun = ((.@pritop_t % 3600) / 60 );
+	.@pritopcho = (.@pritop_t % 60);
 	mes "[Mathea]";
 	mes "^3131FF"+.@pritop_n$+"^000000";
 	mes "is the top player of this";
@@ -1612,16 +1612,16 @@ arena_room,94,82,7	script	Arena Record Staff#aco	1_F_PRIEST,{
 
 OnInit:
 	if ($arn_acotopn$ == "") {
-		set $arn_pritop60, 480;
-		set $arn_pritop70, 480;
-		set $arn_pritop80, 480;
-		set $arn_pritop90, 480;
-		set $arn_acotop, 480;
-		set $arn_pritopn60$, "Default";
-		set $arn_pritopn70$, "Default";
-		set $arn_pritopn80$, "Default";
-		set $arn_pritopn90$, "Default";
-		set $arn_acotopn$, "Default";
+		$arn_pritop60 = 480;
+		$arn_pritop70 = 480;
+		$arn_pritop80 = 480;
+		$arn_pritop90 = 480;
+		$arn_acotop = 480;
+		$arn_pritopn60$ = "Default";
+		$arn_pritopn70$ = "Default";
+		$arn_pritopn80$ = "Default";
+		$arn_pritopn90$ = "Default";
+		$arn_acotopn$ = "Default";
 	}
 	end;
 }
@@ -1709,7 +1709,7 @@ arena_room,140,136,3	script	Guide Alias	4_F_NOVICE,{
 }
 
 arena_room,195,5,3	script	log-on-aco#arena	4_NFWISP,{
-	set .@i, callfunc("F_GM_NPC",1357,0);
+	.@i = callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
 		mes "^3355FFIncorrect Password.^000000";
 		close;
@@ -1728,24 +1728,24 @@ arena_room,195,5,3	script	log-on-aco#arena	4_NFWISP,{
 			mes "been canceled.^000000";
 			close;
 		case 2:
-			set $arn_acotop, 480;
-			set $arn_acotopn$, "Default";
+			$arn_acotop = 480;
+			$arn_acotopn$ = "Default";
 			break;
 		case 3:
-			set $arn_pritop60, 480;
-			set $arn_pritopn60$, "Default";
+			$arn_pritop60 = 480;
+			$arn_pritopn60$ = "Default";
 			break;
 		case 4:
-			set $arn_pritop70, 480;
-			set $arn_pritopn70$, "Default";
+			$arn_pritop70 = 480;
+			$arn_pritopn70$ = "Default";
 			break;
 		case 5:
-			set $arn_pritop80, 480;
-			set $arn_pritopn80$, "Default";
+			$arn_pritop80 = 480;
+			$arn_pritopn80$ = "Default";
 			break;
 		case 6:
-			set $arn_pritop90, 480;
-			set $arn_pritopn90$, "Default";
+			$arn_pritop90 = 480;
+			$arn_pritopn90$ = "Default";
 			break;
 		}
 		close;
@@ -1753,7 +1753,7 @@ arena_room,195,5,3	script	log-on-aco#arena	4_NFWISP,{
 }
 
 arena_room,195,10,3	script	acolink#arena	4_NFWISP,{
-	set .@i, callfunc("F_GM_NPC",1357,0);
+	.@i = callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
 		mes "Command has";
 		mes "been canceled.";

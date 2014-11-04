@@ -64,7 +64,7 @@ gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 		mes "[Merito]";
 		mes "Give me a second to register your name.";
 		mes "Talk to me again in a second.";
-		set job_soc,1;
+		job_soc = 1;
 		close;
 	} else if (job_soc == 1) {
 		mes "Good, then I'll give you a short explanation about the Sorcerer.";
@@ -111,7 +111,7 @@ gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 			mes "[Merito]";
 			mes "Okay. ";
 			mes "Then I'll hand it over to Karacas who is on the 4th floor. He will guide you through the process of the test.";
-			set job_soc,2;
+			job_soc = 2;
 			setquest 12096;
 			close;
 		case 2:
@@ -224,7 +224,7 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 		next;
 		mes "[Karacas]";
 		mes "When you bring these materials, I'll tell you the next step.";
-		set job_soc,3;
+		job_soc = 3;
 		changequest 12096,12097;
 		close;
 	} else if (job_soc == 3) {
@@ -295,7 +295,7 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 			mes "Then I'll write down the progress that I've summarized shortly. Wait...";
 			next;
 			mes "^000099You got a paper on which the way of communicating with spirits is written. For more information please open your quest window^000000.";
-			set job_soc,4;
+			job_soc = 4;
 			changequest 12097,12098;
 			close;
 		}
@@ -321,7 +321,7 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 			delitem 6276,1; //Clear_Reagent
 			delitem 6278,1; //Black_Reagent
 			delitem 6277,1; //Red_Reagent
-			set job_soc,5;
+			job_soc = 5;
 			completequest 12098;
 			close;
 		}
@@ -379,7 +379,7 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 	if (job_soc == 4 && countitem(.@id[0]) > 2) {
 		progressbar "ffff00",5;
 		delitem .@id[0],3; //Boody_Red,Crystal_Blue,Yellow_Live,Wind_Of_Verdure
-		set .@soc_ran, rand(1,70);
+		.@soc_ran = rand(1,70);
 		if (.@soc_ran < 10) {
 			if (countitem(.@id[2]) == 0) {
 				mes "You got a reagent by communicating with an unseen spirit.";

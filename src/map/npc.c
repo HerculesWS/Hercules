@@ -4181,9 +4181,6 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 			if( strcmp(w1,"function") == 0 ) {
 				p = npc->parse_function(w1, w2, w3, w4, p, buffer, filepath, &success);
 			} else {
-#ifdef ENABLE_CASE_CHECK
-				if( strcasecmp(w1, "function") == 0 ) DeprecationCaseWarning("npc_parsesrcfile", w1, "function", filepath, strline(buffer, p-buffer)); // TODO
-#endif // ENABLE_CASE_CHECK
 				p = npc->parse_script(w1,w2,w3,w4, p, buffer, filepath,runOnInit?NPO_ONINIT:NPO_NONE, &success);
 			}
 		}
@@ -4208,22 +4205,6 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 		}
 		else
 		{
-#ifdef ENABLE_CASE_CHECK
-			if( strcasecmp(w2, "warp") == 0 ) { DeprecationCaseWarning("npc_parsesrcfile", w2, "warp", filepath, strline(buffer, p-buffer)); } // TODO
-			else if( strcasecmp(w2,"shop") == 0 ) { DeprecationCaseWarning("npc_parsesrcfile", w2, "shop", filepath, strline(buffer, p-buffer)); } // TODO
-			else if( strcasecmp(w2,"cashshop") == 0 ) { DeprecationCaseWarning("npc_parsesrcfile", w2, "cashshop", filepath, strline(buffer, p-buffer)); } // TODO
-			else if( strcasecmp(w2, "script") == 0 ) { DeprecationCaseWarning("npc_parsesrcfile", w2, "script", filepath, strline(buffer, p-buffer)); } // TODO
-			else if( strcasecmp(w2,"trader") == 0 ) { DeprecationCaseWarning("npc_parsesrcfile", w2, "trader", filepath, strline(buffer, p-buffer)); } // TODO
-			else if( strncasecmp(w2, "duplicate", 9) == 0 ) {
-				char temp[10];
-				safestrncpy(temp, w2, 10);
-				DeprecationCaseWarning("npc_parsesrcfile", temp, "duplicate", filepath, strline(buffer, p-buffer)); // TODO
-			}
-			else if( strcasecmp(w2,"monster") == 0 ) { DeprecationCaseWarning("npc_parsesrcfile", w2, "monster", filepath, strline(buffer, p-buffer)); } // TODO:
-			else if( strcasecmp(w2,"boss_monster") == 0 ) { DeprecationCaseWarning("npc_parsesrcfile", w2, "boss_monster", filepath, strline(buffer, p-buffer)); } // TODO
-			else if( strcasecmp(w2, "mapflag") == 0 ) { DeprecationCaseWarning("npc_parsesrcfile", w2, "mapflag", filepath, strline(buffer, p-buffer)); } // TODO
-			else
-#endif // ENABLE_CASE_CHECK
 			ShowError("npc_parsesrcfile: Unable to parse, probably a missing or extra TAB in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,p-buffer), w1, w2, w3, w4);
 			p = strchr(p,'\n');// skip and continue
 			success = EXIT_FAILURE;
@@ -4295,7 +4276,7 @@ void npc_read_event_script(void)
 				script_event[i].event_count++;
 #ifdef ENABLE_CASE_CHECK
 			} else if( p && strcasecmp(name, p) == 0 ) {
-				DeprecationCaseWarning2("npc_read_event_script", p, name, config[i].event_name); // TODO
+				DeprecationCaseWarning("npc_read_event_script", p, name, config[i].event_name); // TODO
 #endif // ENABLE_CASE_CHECK
 			}
 		}

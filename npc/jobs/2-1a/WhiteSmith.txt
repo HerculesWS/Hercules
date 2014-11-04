@@ -15,7 +15,7 @@
 
 valkyrie,44,50,5	script	MasterSmith#Valkyrie	4_M_JOB_BLACKSMITH,{
 	if (ADVJOB == 0 || Upper != 1) {
-		set .@karma_d,rand(1,10);
+		.@karma_d = rand(1,10);
 		if (.@karma_d > 4) {
 			mes "[MasterSmith]";
 			mes "Congratulations.";
@@ -63,7 +63,7 @@ valkyrie,44,50,5	script	MasterSmith#Valkyrie	4_M_JOB_BLACKSMITH,{
 			close;
 		}
 		jobchange Job_Whitesmith;
-		set ADVJOB,0;
+		ADVJOB = 0;
 		mes "[MasterSmith]";
 		mes "Congratulations!";
 		mes "As a MasterSmith,";

@@ -22,13 +22,13 @@
 
 xmas_in,100,96,4	script	Santa Claus::Santa2	4_M_SANTA,{
 	mes "[Santa Claus]";
-	if(xmas_npc==0) set xmas_npc, 1; // For Lutie & Bard quest
+	if(xmas_npc==0) xmas_npc = 1; // For Lutie & Bard quest
 	if(#event_xmas > 0 && #event_xmas < 30 ) goto L_Start;
 	mes "Merry Christmas!";
 	if(Class==0 || #event_xmas>=30 ) close; //anti exploit protection
 	mes "I have a gift for you! Ho Ho Ho!";
 	getitem rand(664,667),1; //gives one of 4 gift boxes
-	set #event_xmas,#event_xmas+1;
+	++#event_xmas;
 	close;
 
 L_Start:
@@ -84,7 +84,7 @@ L_Start:
 		mes "fake Santas. Keep it up!";
 		next;
 		getitem 644,1; //Gift Box Prototype
-		set #event_xmas,#event_xmas+1;
+		++#event_xmas;
 		mes "[Santa Claus]";
 		mes "There's your reward.";
 		mes "If you get 3 more, I'll give you another.";

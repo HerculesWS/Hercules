@@ -33,14 +33,14 @@ typedef struct AccountDB_SQL
 	char   global_db_hostname[32];
 	uint16 global_db_port;
 	char   global_db_username[32];
-	char   global_db_password[32];
+	char   global_db_password[100];
 	char   global_db_database[32];
 	char   global_codepage[32];
 	// local sql settings
 	char   db_hostname[32];
 	uint16 db_port;
 	char   db_username[32];
-	char   db_password[32];
+	char   db_password[100];
 	char   db_database[32];
 	char   codepage[32];
 	// other settings
@@ -169,6 +169,10 @@ static bool account_db_sql_init(AccountDB* self)
 	if( codepage[0] != '\0' && SQL_ERROR == SQL->SetEncoding(sql_handle, codepage) )
 		Sql_ShowDebug(sql_handle);
 
+	Sql_HerculesUpdateCheck(db->accounts);
+#ifdef CONSOLE_INPUT
+	console->input->setSQL(db->accounts);
+#endif
 	return true;
 }
 
@@ -655,11 +659,7 @@ static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, boo
 
 Sql* account_db_sql_up(AccountDB* self) {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
-	Sql_HerculesUpdateCheck(db->accounts);
-#ifdef CONSOLE_INPUT
-	console->input->setSQL(db->accounts);
-#endif
-	return db->accounts;
+	return db ? db->accounts : NULL;
 }
 void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id) {
 	Sql* sql_handle = ((AccountDB_SQL*)self)->accounts;

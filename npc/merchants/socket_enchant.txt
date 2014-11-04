@@ -281,7 +281,7 @@ function	script	Func_Socket	{
 				mes "Alright then, let the work begin!";
 				mes "You'd better pray for a successful result.";
 				next;
-				set .@a, rand(1,100);
+				.@a = rand(1,100);
 				if ((.@a > getarg(2)) && (.@a < getarg(3)))
 				{
 					specialeffect getarg(3) == 51 ? EF_LORD : EF_SANCTUARY; // only S Class items have Lord of Vermillion effect

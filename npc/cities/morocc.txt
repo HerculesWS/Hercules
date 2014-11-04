@@ -762,7 +762,7 @@ moc_fild16,195,281,4	script	Assassin Guardian#1::SinGuard	4_M_MOC_SOLDIER,{
 		mes "Welcome.";
 		close;
 	}
-	set .@temp, rand(1,4);
+	.@temp = rand(1,4);
 	if(.@temp == 1) mes "........";
 	if(.@temp == 2) mes "Hmmm..........";
 	if(.@temp == 3) mes "Hmmm... you shouldn't be here.....";

@@ -33,3 +33,7 @@ disable_pvp : Ability to disable Player vs. Player.
 disable_commands_when_dead : Ability to disable @command usage when dead.
 can_trade_bound: Ability to trade or otherwise distribute bound items (drop, storage, vending etc...).
 hchsys_admin : Hercules Chat System Admin (Ability to modify channel settings regardless of ownership and join password-protected channels without requiring a password.)
+disable_pickup: Ability to disable the player from picking up any item from ground, they can still receive items picked up by others means like party share píck.
+disable_exp: Ability to disable the player from gaining any experience point.
+disable_store: Ability to disable the player from using/openning npc and player stores.
+disable_skill_usage: Ability to disable the player from using any skill.

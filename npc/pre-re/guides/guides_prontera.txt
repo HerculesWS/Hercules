@@ -28,7 +28,7 @@ prontera,154,187,4	script	Guide#prt::PrtGuide	8W_SOLDIER,{
 	mes "the beautiful capital of the";
 	mes "Rune-Midgarts Kingdom. If";
 	mes "you have questions or need help finding something in the city, don't hesitate to ask.";
-	set .@loop1,1;
+	.@loop1 = 1;
 	while (.@loop1) {
 		next;
 		switch(select("City Guide.:Remove Marks from Mini-Map:Notice:Cancel")) {
@@ -42,11 +42,11 @@ prontera,154,187,4	script	Guide#prt::PrtGuide	8W_SOLDIER,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes:No") == 1) set .@compass_check,1;
+				if (select("Yes:No") == 1) .@compass_check = 1;
 			}
-			set .@loop2,1;
+			.@loop2 = 1;
 			while (.@loop2) {
-				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 
 				switch(select("Swordman Association:^0000FFSanctuary^000000:Prontera Chivalry:Weapon Shop:Tool Shop:Inn:Trading Post:Pub:Library:Job Agency:Prontera Castle:City Hall:Cancel")) {
@@ -170,7 +170,7 @@ prontera,154,187,4	script	Guide#prt::PrtGuide	8W_SOLDIER,{
 					mes "no longer wish to have the";
 					mes "location marks displayed";
 					mes "on your Mini-Map.";
-					set .@loop2,0;
+					.@loop2 = 0;
 					break;
 				}
 			}
@@ -190,7 +190,7 @@ prontera,154,187,4	script	Guide#prt::PrtGuide	8W_SOLDIER,{
 			viewpoint 2,133,183,15,0x00FF00;
 			viewpoint 2,156,360,16,0x00FF00;
 			viewpoint 2,75,91,17,0x00FF00;
-			set .@compass_check,0;
+			.@compass_check = 0;
 			break;
 		case 3:
 			mes "[Prontera Guide]";
@@ -223,7 +223,7 @@ prontera,154,187,4	script	Guide#prt::PrtGuide	8W_SOLDIER,{
 			mes "through Rune-Midgard";
 			mes "are both fun and safe.";
 			close2;
-			set .@loop1,0;
+			.@loop1 = 0;
 			break;
 		}
 	}

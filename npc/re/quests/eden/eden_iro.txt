@@ -42,10 +42,10 @@ moc_para01,14,32,5	script	Aperture#acolytewarp	4_F_01,{
 		setarray .@towns$[0], "Prontera", "Izlude", "Geffen", "Payon", "Morroc", "Alberta", "Al De Baran", "Comodo", "Umbala", "Juno", "Einbroch", "Lighthalzen", "Hugel", "Rachel";
 		setarray .@cost[0],          600,      600,     1200,    1200,     1200,      1800,          2200,     2200,     2200,   1800,       2200,          2200,    2200,     2200;
 
-		set .@size, getarraysize(.@towns$);
-		for(set .@i,0; .@i<.@size; set .@i,.@i+1)
-			set .@menu$, .@menu$+.@towns$[.@i]+" -> "+.@cost[.@i]+"z:";
-		set .@i, select(.@menu$+"Cancel")-1;
+		.@size = getarraysize(.@towns$);
+		for(.@i = 0; .@i<.@size; ++.@i)
+			.@menu$ += .@towns$[.@i]+" -> "+.@cost[.@i]+"z:";
+		.@i = select(.@menu$+"Cancel")-1;
 		if (.@i == .@size) {
 			mes "[Aperture]";
 			mes "Come back when you need a warp.";
@@ -114,10 +114,10 @@ moc_para01,166,51,3	script	Phelix#edco	4_M_03,{
 	next;
 	switch(select("As many as I can get, please.:I want to choose.:Never mind, I like my Jellopy.")) {
 	case 1:
-		set .@amount, countitem(909) / 3;
+		.@amount = countitem(909) / 3;
 		break;
 	case 2:
-		set .@available, countitem(909) / 3;
+		.@available = countitem(909) / 3;
 		mes "[Phelix]";
 		mes "How many do you want?";
 		mes "^ff0000You have enough for up to " + .@available + " Carrots.^000000";
@@ -133,7 +133,7 @@ moc_para01,166,51,3	script	Phelix#edco	4_M_03,{
 			mes "Dude, I said for every 3 Jellopy I'll give you 1 Carrot.";
 			close;
 		}
-		set .@amount, .@input;
+		.@amount = .@input;
 		break;
 	case 3:
 		mes "[Phelix]";
@@ -180,19 +180,19 @@ moc_para01,163,51,7	script	Izaac#edco	4_M_04,{
 		setarray .@items[0], 935, 914, 909, 902, 955, 916, 915;
 		setarray .@count[0],   5,  10,  10,   6,   1,   7,   6;
 
-		set .@size, getarraysize(.@items);
-		for(set .@i,0; .@i<.@size; set .@i,.@i+1)
-			set .@menu$, .@menu$+getitemname(.@items[.@i])+":";
-		set .@select, select(.@menu$+"Cancel")-1;
+		.@size = getarraysize(.@items);
+		for(.@i = 0; .@i<.@size; ++.@i)
+			.@menu$ += getitemname(.@items[.@i])+":";
+		.@select = select(.@menu$+"Cancel")-1;
 		if (.@select == .@size) {
 			mes "[Izaac]";
 			mes "Sure~";
 			mes "No problem.";
 			close;
 		}
-		set .@item, .@items[.@select];
-		set .@item$, getitemname(.@item);
-		set .@price, .@count[.@select];
+		.@item = .@items[.@select];
+		.@item$ = getitemname(.@item);
+		.@price = .@count[.@select];
 
 		if (countitem(.@item) < .@price) {
 			mes "[Izaac]";
@@ -208,8 +208,8 @@ moc_para01,163,51,7	script	Izaac#edco	4_M_04,{
 		mes "you have on you.";
 		mes "Hmm...";
 		next;
-		set .@amount, countitem(.@item) / .@price;
-		set .@trade_amount, .@amount * .@price;
+		.@amount = countitem(.@item) / .@price;
+		.@trade_amount = .@amount * .@price;
 		mes "[Izaac]";
 		mes "You have";
 		mes "a total of "+countitem(.@item)+" "+.@item$+"...";
@@ -286,15 +286,15 @@ moc_para01,50,39,4	script	Eve Natalia	4_F_SITDOWN,{
 		mes "I'm going to ask you which piece of gear you want to trade in, please verify that the 1st one in your inventory is one you want to give up.";
 		mes "^CC0000So if it is carded, upgraded, enchanted etc, you should put it in storage before we continue.^000000";
 		next;
-		set .@i, select("Wait a minute:Nidhoggur's Shadow Garb 4:Valkyrja's Shield 4:Valkyrian Armor 5:Diabolus Robe 5:Diabolus Armor 2:Diabolus Boots 2:Diabolus Manteau 4:Twin Edge of Naght Sieger Blue 2:Twin Edge of Naght Sieger Red 2")-2;
+		.@i = select("Wait a minute:Nidhoggur's Shadow Garb 4:Valkyrja's Shield 4:Valkyrian Armor 5:Diabolus Robe 5:Diabolus Armor 2:Diabolus Boots 2:Diabolus Manteau 4:Twin Edge of Naght Sieger Blue 2:Twin Edge of Naght Sieger Red 2")-2;
 		if (.@i == -1)
 			break;
 
 		setarray .@items[0],   2554, 2115, 2357, 2374, 2375, 2433, 2537, 13412, 13413;
 		setarray .@tickets[0],    4,    4,    5,    5,    2,    2,    4,     2,     2;
 
-		set .@item, .@items[.@i];
-		set .@amount, .@tickets[.@i];
+		.@item = .@items[.@i];
+		.@amount = .@tickets[.@i];
 
 		mes "[Eve Natalia]";
 		mes "I see you have "+countitem(.@item)+" "+getitemname(.@item)+".";
@@ -319,7 +319,7 @@ moc_para01,50,39,4	script	Eve Natalia	4_F_SITDOWN,{
 		mes "[Eve Natalia]";
 		mes "Oh perfect, you get ^CC0000" + .@amount + "^000000 Safe to 7 Certificates!";
 		delitem .@item,1;
-		for(set .@i,0; .@i<.@amount; set .@i,.@i+1) {
+		for(.@i = 0; .@i<.@amount; ++.@i) {
 			// Note: iRO lists item 6235 as "Safe to 7 Headgear Certificate", but it's Guarantee_Armor_6Up in our database.
 			if (rand(2))
 				getitem 6230,1; //Guarantee_Weapon_7Up
@@ -415,8 +415,8 @@ L_Exchange:
 	next;
 	if(select("Yes, give them to me!:No, wait not yet.") == 2)
 		close;
-	set .@cost, getarg(1) * .@amount;
-	set .@total_amount, getarg(3) * .@amount;
+	.@cost = getarg(1) * .@amount;
+	.@total_amount = getarg(3) * .@amount;
 	if (countitem(getarg(0)) < .@cost) {
 		mes "[Trader Machine]";
 		mes "You don't have enough "+getitemname(getarg(0))+" to make that trade.";

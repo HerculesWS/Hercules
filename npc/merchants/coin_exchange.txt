@@ -16,7 +16,7 @@
 // Manuk & Splendide
 //============================================================
 -	script	::merchant_13_2	-1,{
-	set .@n$, "["+strnpcinfo(1)+"]";
+	.@n$ = "["+strnpcinfo(1)+"]";
 	mes .@n$;
 	if (isequipped(2782) && ep13_2_rhea == 100) {
 		if (!checkweight(1201,1)) {
@@ -29,15 +29,15 @@
 		next;
 		if (strnpcinfo(1) == "Merchant of Manuk") {
 			setarray .@items[2],12342,12343,12348;
-			set .@Book,11019; //Manuk_Selling_Item
-			set .@coin,6080; //Manuk_Coin
-			set .@i, select("View item description:Manuk's Opportunity:Manuk's Courage:Manuk's Faith:Cancel");
+			.@Book = 11019; //Manuk_Selling_Item
+			.@coin = 6080; //Manuk_Coin
+			.@i = select("View item description:Manuk's Opportunity:Manuk's Courage:Manuk's Faith:Cancel");
 		}
 		else {
 			setarray .@items[2],12344,12345,12349;
-			set .@Book,11018; //Splendide_Selling_Item
-			set .@coin,6081; //Splendide_Coin
-			set .@i, select("View item description:Buy Pinguicula's Fruit Jam:Buy Luciola's Honey Jam:Buy Cornus' Tears:Do nothing");
+			.@Book = 11018; //Splendide_Selling_Item
+			.@coin = 6081; //Splendide_Coin
+			.@i = select("View item description:Buy Pinguicula's Fruit Jam:Buy Luciola's Honey Jam:Buy Cornus' Tears:Do nothing");
 		}
 		mes .@n$;
 		if (.@i == 1) {

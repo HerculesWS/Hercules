@@ -80,7 +80,7 @@ ama_in02,61,27,7	script	Alchemist#ama	4_M_ALCHE_B,{
 	mes "Uh-huh, what did you bring?";
 	next;
 	setarray .@items[1],995,997,994,996;
-	set .@i, .@items[select("Mystic Frozen:Great Nature:Flame Heart:Rough Wind")];
+	.@i = .@items[select("Mystic Frozen:Great Nature:Flame Heart:Rough Wind")];
 	mes "[Laspuchin Gregory]";
 	if (countitem(.@i) > 7) {
 		mes "I will take 8 of them and";
@@ -91,13 +91,13 @@ ama_in02,61,27,7	script	Alchemist#ama	4_M_ALCHE_B,{
 		mes "[Laspuchin Gregory]";
 		mes "HeeHee, what do you want? Choose one!";
 		next;
-		set .@menu$, "";
-		for(set .@j,1; .@j<5; set .@j,.@j+1) {
-			if (.@items[.@j] != .@i) set .@menu$, .@menu$+getitemname(.@items[.@j]);
-			set .@menu$, .@menu$+":";
+		.@menu$ = "";
+		for(.@j = 1; .@j < 5; ++.@j) {
+			if (.@items[.@j] != .@i) .@menu$ += getitemname(.@items[.@j]);
+			.@menu$ += ":";
 		}
-		set .@menu$, .@menu$+"Cancel the trade";
-		set .@j, select(.@menu$);
+		.@menu$ += "Cancel the trade";
+		.@j = select(.@menu$);
 		mes "[Laspuchin Gregory]";
 		if (.@j == 5) {
 			mes "Oh, well.";

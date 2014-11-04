@@ -23,7 +23,7 @@
 //==============================================
 function	script	F_GldManager	{
 
-	set @GID, getcastledata(getarg(1),1);
+	@GID = getcastledata(getarg(1),1);
 	mes "[ "+getarg(0)+" ]";
 	if (@GID == 0){
 		mes "I am waiting for my master.  Brave adventurer, follow your destiny!";

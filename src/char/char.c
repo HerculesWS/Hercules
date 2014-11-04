@@ -15,6 +15,7 @@
 #include <sys/types.h>
 #include <time.h>
 
+#include "HPMchar.h"
 #include "int_elemental.h"
 #include "int_guild.h"
 #include "int_homun.h"
@@ -1011,6 +1012,7 @@ int mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 	int j = 0, i;
 	char last_map[MAP_NAME_LENGTH_EXT];
 	time_t unban_time = 0;
+	char sex[2];
 
 	stmt = SQL->StmtMalloc(sql_handle);
 	if( stmt == NULL ) {
@@ -1030,7 +1032,7 @@ int mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 		"`str`,`agi`,`vit`,`int`,`dex`,`luk`,`max_hp`,`hp`,`max_sp`,`sp`,"
 		"`status_point`,`skill_point`,`option`,`karma`,`manner`,`hair`,`hair_color`,"
 		"`clothes_color`,`weapon`,`shield`,`head_top`,`head_mid`,`head_bottom`,`last_map`,`rename`,`delete_date`,"
-		"`robe`,`slotchange`,`unban_time`"
+		"`robe`,`slotchange`,`unban_time`,`sex`"
 		" FROM `%s` WHERE `account_id`='%d' AND `char_num` < '%d'", char_db, sd->account_id, MAX_CHARS)
 	||	SQL_ERROR == SQL->StmtExecute(stmt)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 0,  SQLDT_INT,    &p.char_id, 0, NULL, NULL)
@@ -1071,6 +1073,7 @@ int mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 35, SQLDT_SHORT,  &p.robe, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 36, SQLDT_USHORT, &p.slotchange, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 37, SQLDT_LONG,   &unban_time, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 38, SQLDT_ENUM,   &sex, sizeof(sex), NULL, NULL)
 	)
 	{
 		SqlStmt_ShowDebug(stmt);
@@ -1082,6 +1085,18 @@ int mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 		p.last_point.map = mapindex->name2id(last_map);
 		sd->found_char[p.slot] = p.char_id;
 		sd->unban_time[p.slot] = unban_time;
+		switch( sex[0] ) {
+			case 'M':
+				p.sex = 1;
+				break;
+			case 'F':
+				p.sex = 0;
+				break;
+			case 'U':
+			default:
+				p.sex = 99;
+				break;
+		}
 		j += mmo_char_tobuf(WBUFP(buf, j), &p);
 	}
 	
@@ -1112,6 +1127,7 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 #endif
 	unsigned int opt;
 	int account_id;
+	char sex[2];
 
 	memset(p, 0, sizeof(struct mmo_charstatus));
 
@@ -1131,7 +1147,7 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 		"`status_point`,`skill_point`,`option`,`karma`,`manner`,`party_id`,`guild_id`,`pet_id`,`homun_id`,`elemental_id`,`hair`,"
 		"`hair_color`,`clothes_color`,`weapon`,`shield`,`head_top`,`head_mid`,`head_bottom`,`last_map`,`last_x`,`last_y`,"
 		"`save_map`,`save_x`,`save_y`,`partner_id`,`father`,`mother`,`child`,`fame`,`rename`,`delete_date`,`robe`,`slotchange`,"
-		"`char_opt`,`font`,`uniqueitem_counter`"
+		"`char_opt`,`font`,`uniqueitem_counter`,`sex`"
 		" FROM `%s` WHERE `char_id`=? LIMIT 1", char_db)
 	||	SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, 0)
 	||	SQL_ERROR == SQL->StmtExecute(stmt)
@@ -1191,6 +1207,7 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 53, SQLDT_UINT,   &opt, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 54, SQLDT_UCHAR,  &p->font, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 55, SQLDT_UINT,   &p->uniqueitem_counter, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 56, SQLDT_ENUM,  &sex, sizeof(sex), NULL, NULL)
 	)
 	{
 		SqlStmt_ShowDebug(stmt);
@@ -1202,6 +1219,19 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 		ShowError("Requested non-existant character id: %d!\n", char_id);
 		SQL->StmtFree(stmt);
 		return 0;
+	}
+	
+	switch( sex[0] ) {
+		case 'M':
+			p->sex = 1;
+			break;
+		case 'F':
+			p->sex = 0;
+			break;
+		case 'U':
+		default:
+			p->sex = 99;
+			break;
 	}
 	
 	account_id = p->account_id;
@@ -1899,7 +1929,7 @@ int count_users(void)
 // Writes char data to the buffer in the format used by the client.
 // Used in packets 0x6b (chars info) and 0x6d (new char info)
 // Returns the size
-#define MAX_CHAR_BUF 144 //Max size (for WFIFOHEAD calls)
+#define MAX_CHAR_BUF 150 //Max size (for WFIFOHEAD calls)
 int mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p) {
 	unsigned short offset = 0;
 	uint8* buf;
@@ -1934,9 +1964,16 @@ int mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p) {
 	WBUFW(buf,52) = p->class_;
 	WBUFW(buf,54) = p->hair;
 
+#if PACKETVER >= 20141022
+	//When the weapon is sent and your option is riding, the client crashes on login!?
+	WBUFL(buf,56) = p->option&(0x20|0x80000|0x100000|0x200000|0x400000|0x800000|0x1000000|0x2000000|0x4000000|0x8000000) ? 0 : p->weapon;
+	offset+=2;
+	buf = WBUFP(buffer,offset);
+#else
 	//When the weapon is sent and your option is riding, the client crashes on login!?
 	WBUFW(buf,56) = p->option&(0x20|0x80000|0x100000|0x200000|0x400000|0x800000|0x1000000|0x2000000|0x4000000|0x8000000) ? 0 : p->weapon;
-
+#endif
+	
 	WBUFW(buf,58) = p->base_level;
 	WBUFW(buf,60) = min(p->skill_point, INT16_MAX);
 	WBUFW(buf,62) = p->head_bottom;
@@ -1971,12 +2008,16 @@ int mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p) {
 #endif
 #if PACKETVER != 20111116 //2011-11-16 wants 136, ask gravity.
 	#if PACKETVER >= 20110928
-	WBUFL(buf,132) = ( p->slotchange > 0 ) ? 1 : 0;  // change slot feature (0 = disabled, otherwise enabled)
+		WBUFL(buf,132) = ( p->slotchange > 0 ) ? 1 : 0;  // change slot feature (0 = disabled, otherwise enabled)
 		offset += 4;
 	#endif
 	#if PACKETVER >= 20111025
 		WBUFL(buf,136) = ( p->rename > 0 ) ? 1 : 0;  // (0 = disabled, otherwise displays "Add-Ons" sidebar)
 		offset += 4;
+	#endif
+	#if PACKETVER >= 20141016
+		WBUFB(buf,140) = p->sex;// sex - (0 = female, 1 = male, 99 = logindefined)
+		offset += 1;
 	#endif
 #endif
 
@@ -2044,8 +2085,8 @@ void mmo_char_send082d(int fd, struct char_session_data* sd) {
 	WFIFOB(fd,8) = sd->char_slots;
 	memset(WFIFOP(fd,9), 0, 20); // unused bytes
 	WFIFOSET(fd,29);
-	mmo_char_send006b(fd,sd);
 	
+	mmo_char_send006b(fd,sd);
 }
 //----------------------------------------
 // Function to send characters to a player
@@ -3698,11 +3739,12 @@ int parse_frommap(int fd)
 					node != NULL &&
 					node->account_id == account_id &&
 					node->char_id == char_id &&
-					node->login_id1 == login_id1 &&
-					node->sex == sex /*&&
+					node->login_id1 == login_id1 /*&&
+					node->sex == sex &&
 					node->ip == ip*/ )
 				{// auth ok
-					cd->sex = sex;
+					if( cd->sex == 99 )
+						cd->sex = sex;
 
 					WFIFOHEAD(fd,25 + sizeof(struct mmo_charstatus));
 					WFIFOW(fd,0) = 0x2afd;
@@ -4338,7 +4380,8 @@ int parse_char(int fd)
 
 				//Have to switch over to the DB instance otherwise data won't propagate [Kevin]
 				cd = (struct mmo_charstatus *)idb_get(char_db_, char_id);
-				cd->sex = sd->sex;
+				if( cd->sex == 99 )
+					cd->sex = sd->sex;
 
 				if (log_char) {
 					char esc_name[NAME_LENGTH*2+1];
@@ -4795,6 +4838,12 @@ int parse_char(int fd)
 				RFIFOSKIP(fd,10);
 			break;
 			
+			case 0x9a1:
+				FIFOSD_CHECK(2);
+				mmo_char_send099d(fd, sd);
+				RFIFOSKIP(fd,2);
+			break;
+				
 			/* 0x8d4 <from>.W <to>.W <unused>.W (2+2+2+2) */
 			case 0x8d4:
 				FIFOSD_CHECK(8);
@@ -5375,6 +5424,8 @@ int do_final(void) {
 		char_fd = -1;
 	}
 
+	HPM_char_do_final();
+
 	SQL->Free(sql_handle);
 	mapindex->final();
 
@@ -5382,6 +5433,8 @@ int do_final(void) {
 		if( server[i].map )
 			aFree(server[i].map);
 	
+	HPM->event(HPET_POST_FINAL);
+
 	ShowStatus("Finished.\n");
 	return EXIT_SUCCESS;
 }
@@ -5416,6 +5469,9 @@ void do_shutdown(void)
 	}
 }
 
+void char_hp_symbols(void) {
+	HPM->share(sql_handle,"sql_handle");
+}
 
 int do_init(int argc, char **argv) {
 	int i;
@@ -5426,6 +5482,29 @@ int do_init(int argc, char **argv) {
 
 	mapindex_defaults();
 	pincode_defaults();
+
+	HPM_char_do_init();
+	HPM->symbol_defaults_sub = char_hp_symbols;
+#if 0
+	/* TODO: Move to common code */
+	for( i = 1; i < argc; i++ ) {
+		const char* arg = argv[i];
+		if( strcmp(arg, "--load-plugin") == 0 ) {
+			if( map->arg_next_value(arg, i, argc, true) ) {
+				RECREATE(load_extras, char *, ++load_extras_count);
+				load_extras[load_extras_count-1] = argv[++i];
+			}
+		}
+	}
+	HPM->config_read((const char * const *)load_extras, load_extras_count);
+	if (load_extras) {
+		aFree(load_extras);
+		load_extras = NULL;
+		load_extras_count = 0;
+	}
+#endif
+	HPM->config_read(NULL, 0);
+	HPM->event(HPET_PRE_INIT);
 	
 	//Read map indexes
 	mapindex->init();
@@ -5446,8 +5525,6 @@ int do_init(int argc, char **argv) {
 	auth_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	online_char_db = idb_alloc(DB_OPT_RELEASE_DATA);
 
-	HPM->share(sql_handle,"sql_handle");
-	HPM->config_read(NULL, 0);
 	HPM->event(HPET_INIT);
 	
 	mmo_char_sql_init();

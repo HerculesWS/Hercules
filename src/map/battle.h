@@ -381,7 +381,8 @@ struct Battle_Config {
 	int allow_skill_without_day; // [Komurka]
 	int allow_es_magic_pc; // [Skotlex]
 	int skill_wall_check; // [Skotlex]
-	int cell_stack_limit; // [Skotlex]
+	int official_cell_stack_limit; // [Playtester]
+	int custom_cell_stack_limit; // [Skotlex]
 	int skill_caster_check; // [Skotlex]
 	int sc_castcancel; // [Skotlex]
 	int pc_sc_def_rate; // [Skotlex]
@@ -452,7 +453,8 @@ struct Battle_Config {
 	int mob_size_influence; // Enable modifications on earned experience, drop rates and monster status depending on monster size. [mkbu95]
 	int bowling_bash_area;
 	int mob_chase_refresh; //How often a monster should refresh its chase [Playtester]
-	int icewall_walk_block; //How long a monster should stay trapped in icewall [Playtester]
+	int mob_icewall_walk_block; //How a normal monster should be trapped in icewall [Playtester]
+	int boss_icewall_walk_block; //How a boss monster should be trapped in icewall [Playtester]
 
 	/** Hercules **/
 	int skill_trap_type;
@@ -479,6 +481,8 @@ struct Battle_Config {
 
 	int song_timer_reset; // [csnv]
 	int snap_dodge; // Enable or disable dodging damage snapping away [csnv]
+	
+	int feature_roulette;
 };
 
 extern struct Battle_Config battle_config;

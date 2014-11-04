@@ -13,8 +13,8 @@
 //============================================================
 
 gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
-	if (checkquest(60110) != -1) {
-		if (checkquest(60110,HUNTING) != 2 ) {
+	if (questprogress(60110)) {
+		if (questprogress(60110,HUNTING) != 2) {
 			mes "[Halgus]";
 			mes "Have you gotten rid of the Pupa?";
 			next;
@@ -54,8 +54,8 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 			close;
 		}
 	}
-	if (checkquest(60111) != -1) {
-		if (checkquest(60111,HUNTING) != 2 ) {
+	if (questprogress(60111)) {
+		if (questprogress(60111,HUNTING) != 2) {
 			mes "[Halgus]";
 			mes "Have you gotten rid of the Pupa?";
 			next;
@@ -96,8 +96,8 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 			close;
 		}
 	}
-	if (checkquest(60112) != -1) {
-		if (checkquest(60112,HUNTING) != 2 ) {
+	if (questprogress(60112)) {
+		if (questprogress(60112,HUNTING) != 2) {
 			mes "[Halgus]";
 			mes "Have you gotten rid of the Pupa?";
 			next;

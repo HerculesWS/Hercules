@@ -28,7 +28,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 			mes "zeny that we made the last time.^FFFFFF ^000000 Do you remember how to perform";
 			mes "Dubious Salesmanship? You";
 			mes "should be able to use it now...";
-			set BLACK_SK,8;
+			BLACK_SK = 8;
 			skill "BS_UNFAIRLYTRICK",1,0;
 			close;
 		}
@@ -151,7 +151,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 					mes "I promise! This skill is sooo";
 					mes "useful! So just bring me those";
 					mes "materials soon, alright?";
-					set BLACK_SK,1;
+					BLACK_SK = 1;
 					close;
 				}
 				mes "[Akkie]";
@@ -185,7 +185,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 						delitem 971,1; //Detrimindexta
 						delitem 613,1; //Iron_Hammer
 						Zeny -= 500;
-						set BLACK_SK,2;
+						BLACK_SK = 2;
 						close;
 					}
 					else {
@@ -264,7 +264,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 				mes "you for being so generous!";
 				mes "Just bring me ^FF00001 Steel^000000 and";
 				mes "^FF00003 Coals^000000 and we'll try again!";
-				set BLACK_SK,3;
+				BLACK_SK = 3;
 				close;
 			}
 			else if (BLACK_SK == 3) {
@@ -278,7 +278,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 					mes "a minute to prepare...";
 					delitem 999,1; //Steel
 					delitem 1003,3; //Coal
-					set BLACK_SK,4;
+					BLACK_SK = 4;
 					close;
 				}
 				else {
@@ -316,7 +316,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 				mes "really bring her a new";
 				mes "^FF0000Iron Hammer^333333, or else";
 				mes "I'll never learn this skill!)^000000";
-				set BLACK_SK,5;
+				BLACK_SK = 5;
 				close;
 			}
 			else if (BLACK_SK == 5) {
@@ -334,7 +334,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 					mes "I'm going to try";
 					mes "one more time.";
 					delitem 613,1; //Iron_Hammer
-					set BLACK_SK,6;
+					BLACK_SK = 6;
 					close;
 				}
 				else {
@@ -368,7 +368,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 				mes "is making this fake zeny. Watch";
 				mes "this... Isn't it easy? Of course, you can only use this in battle to";
 				mes "reduce Mammonite's zeny cost...";
-				set BLACK_SK,7;
+				BLACK_SK = 7;
 				skill "BS_UNFAIRLYTRICK",1,0;
 				next;
 				mes "[Akkie]";
@@ -489,7 +489,7 @@ geffen,172,52,1	script	Goodman#qsk_bs	4_M_DWARF,{
 			mes "jog the memories you require";
 			mes "to use this skill once again~";
 			skill "BS_GREED",1,0;
-			set BLACK_SK2,3;
+			BLACK_SK2 = 3;
 			close;
 		}
 		else if (BLACK_SK2 == 3) {
@@ -549,7 +549,7 @@ geffen,172,52,1	script	Goodman#qsk_bs	4_M_DWARF,{
 					mes "task, come back and";
 					mes "talk to me. Alright";
 						mes "then, good luck~";
-					set BLACK_SK2,1;
+					BLACK_SK2 = 1;
 					close;
 				}
 				mes "[Goodman]";
@@ -607,7 +607,7 @@ geffen,172,52,1	script	Goodman#qsk_bs	4_M_DWARF,{
 					mes "Don't forget that, and I hope";
 					mes "you craft true masterpieces.";
 					skill "BS_GREED",1,0;
-					set BLACK_SK2,2;
+					BLACK_SK2 = 2;
 					close;
 				}
 				else {

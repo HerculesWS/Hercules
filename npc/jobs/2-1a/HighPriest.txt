@@ -15,7 +15,7 @@
 
 valkyrie,44,42,5	script	High Priest#Valkyrie	1_M_PASTOR,{
 	if (ADVJOB == 0 || Upper != 1) {
-		set .@karma_d,rand(1,10);
+		.@karma_d = rand(1,10);
 		if (.@karma_d > 4) {
 			mes "[High Priest]";
 			mes "Congratulations.";
@@ -57,7 +57,7 @@ valkyrie,44,42,5	script	High Priest#Valkyrie	1_M_PASTOR,{
 			close;
 		}
 		jobchange Job_High_Priest;
-		set ADVJOB,0;
+		ADVJOB = 0;
 		mes "[High Priest]";
 		mes "Congratulations.";
 		mes "As a High Priest,";

@@ -24,11 +24,11 @@
 	mes "Do you need help navigating the town?";
 	F_Navi("[Izlude Guide]");
 	next;
-	set .@map$, strnpcinfo(4);
+	.@map$ = strnpcinfo(4);
 	while (1) {
 		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
 		case 1:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Cryptura Academy ]:[ Marina ]:[ International Airship ]:[ Arena ]:[ Kit Shop ]:[ Swordsman Guild ]:[ Enchant Association ]:[ Forge ]:Previous Menu")) {
 				case 1:
@@ -95,13 +95,13 @@
 					next;
 					break;
 				case 9:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
 			break;
 		case 2:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Eden Teleport Officer ]:[ Kafra Employee ]:[ Hypnotist ]:[ Newlywed Helper ]:[ Mercenary Guildsman ]:[ Pet Groomer ]:Previous Menu")) {
 				case 1:
@@ -145,7 +145,7 @@
 					next;
 					break;
 				case 7:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}

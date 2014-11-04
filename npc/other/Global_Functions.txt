@@ -48,74 +48,74 @@
 
 function	script	F_ClearJobVar	{
 	// Misc ---------------------------------
-	set JBLVL,0;
-	set FIRSTAID,0;
-	set PLAYDEAD,0;
-	set got_bandage,0;
-	set got_novnametag,0;
+	JBLVL = 0;
+	FIRSTAID = 0;
+	PLAYDEAD = 0;
+	got_bandage = 0;
+	got_novnametag = 0;
 	// First Class Jobs ---------------------
-	set job_acolyte_q,0; set job_acolyte_q2,0;
-	set job_archer_q,0;
-	set job_magician_q,0;
-	set job_merchant_q,0; set job_merchant_q2,0; set job_merchant_q3,0;
-	set job_sword_q,0; set SWTEST, 0;
-	set job_thief_q,0;
+	job_acolyte_q = 0; job_acolyte_q2 = 0;
+	job_archer_q = 0;
+	job_magician_q = 0;
+	job_merchant_q = 0; job_merchant_q2 = 0; job_merchant_q3 = 0;
+	job_sword_q = 0; SWTEST = 0;
+	job_thief_q = 0;
 	// Super Novice
-	set SUPNOV_Q,0;
+	SUPNOV_Q = 0;
 	// 2-1 Jobs ------------------------------
-	set ASSIN_Q,0; set ASSIN_Q2,0; set ASSIN_Q3,0;
-	set BSMITH_Q,0; set BSMITH_Q2,0;
-	set HNTR_Q,0; set HNTR_Q2,0;
-	set KNIGHT_Q,0; set KNIGHT_Q2,0;
-	set PRIEST_Q,0; set PRIEST_Q2,0; set PRIEST_Q3,0;
-	set WIZ_Q,0; set WIZ_Q2,0;
+	ASSIN_Q = 0; ASSIN_Q2 = 0; ASSIN_Q3 = 0;
+	BSMITH_Q = 0; BSMITH_Q2 = 0;
+	HNTR_Q = 0; HNTR_Q2 = 0;
+	KNIGHT_Q = 0; KNIGHT_Q2 = 0;
+	PRIEST_Q = 0; PRIEST_Q2 = 0; PRIEST_Q3 = 0;
+	WIZ_Q = 0; WIZ_Q2 = 0;
 	// 2-2 Jobs ------------------------------
-	set ROGUE_Q,0; set ROGUE_Q2,0;
-	set ALCH_Q,0; set ALCH_Q2,0;
-	set CRUS_Q,0;
-	set MONK_Q,0; set JOB_MONK_C,0;
-	set SAGE_Q,0; set SAGE_Q2,0;
-	set DANC_Q,0;
-	set BARD_Q,0;
+	ROGUE_Q = 0; ROGUE_Q2 = 0;
+	ALCH_Q = 0; ALCH_Q2 = 0;
+	CRUS_Q = 0;
+	MONK_Q = 0; JOB_MONK_C = 0;
+	SAGE_Q = 0; SAGE_Q2 = 0;
+	DANC_Q = 0;
+	BARD_Q = 0;
 	// Extended Classes
-	set TAEK_Q,0; set TK_Q,0;
-	set STGL_Q,0;
-	set SOUL_Q,0;
-	set GUNS_Q,0;
-	set NINJ_Q,0;
+	TAEK_Q = 0; TK_Q = 0;
+	STGL_Q = 0;
+	SOUL_Q = 0;
+	GUNS_Q = 0;
+	NINJ_Q = 0;
 	return;
 }
 
 function	script	F_ClearGarbage	{
 	// Clear outdated global VARS
 	//Clear TURTLE var if the Turtle Islans Quest is already done
-		if(TURTLE==20) set MISC_QUEST,MISC_QUEST | 65536;
-		if(MISC_QUEST & 65536) set TURTLE,0; //now clear the var if the quest is over
+		if(TURTLE==20) MISC_QUEST |= 65536;
+		if(MISC_QUEST & 65536) TURTLE = 0; //now clear the var if the quest is over
 	//Clear previously saved Quest Skills (now it isn't used)
-		set ADV_QSK,0;
-		set ADV_QSK2,0;
+		ADV_QSK = 0;
+		ADV_QSK2 = 0;
 	//Old Seset Skill Event used to use RES_SKILL var
-		set RES_SKILL,0;
+		RES_SKILL = 0;
 	//Here you put outdated variables from your outdated EVENTS
 	//e.g. Is XMAS done? Add the EVENT var clearing code here.
 	
 	//due to bugs in BS quest:
-	set wizard_m2,0;
+	wizard_m2 = 0;
 	
 	// Old Novice Ground Variables.
-	set NEW_MES_FLAG0,0;
-	set NEW_MES_FLAG1,0;
-	set NEW_MES_FLAG2,0;
-	set NEW_MES_FLAG3,0;
-	set NEW_MES_FLAG4,0;
-	set NEW_MES_FLAG5,0;
-	set NEW_LVUP0,0;
-	set NEW_LVUP1,0;
-	set NEW_JOBLVUP,0;
+	NEW_MES_FLAG0 = 0;
+	NEW_MES_FLAG1 = 0;
+	NEW_MES_FLAG2 = 0;
+	NEW_MES_FLAG3 = 0;
+	NEW_MES_FLAG4 = 0;
+	NEW_MES_FLAG5 = 0;
+	NEW_LVUP0 = 0;
+	NEW_LVUP1 = 0;
+	NEW_JOBLVUP = 0;
 	
 	// Old DTS variables that are no longer used.
-	set dtseligible,0;
-	set MISC_QUEST,MISC_QUEST & ~128;
+	dtseligible = 0;
+	MISC_QUEST = MISC_QUEST & ~128;
 	
 	return;
 }
@@ -144,7 +144,7 @@ function	script	Job_Change	{
 //returns random argument
 // Example: check F_Bye or F_Hi functions
 // READ AND THINK: You can use it to pick a random number from a list:
-// set @itemIDfromList, callfunc("F_Rand",1129,1222,1163,1357,1360,1522,1811,1410);
+// @itemIDfromList = callfunc("F_Rand",1129,1222,1163,1357,1360,1522,1811,1410);
 
 function	script	F_Rand	{
 	return getarg(rand(getargcount()));
@@ -196,20 +196,20 @@ function	script	F_Bye	{
 
 function	script	F_ItemName	{
 	if(getarg(3))
-		set .@t$,.@t$+"+"+getarg(3)+" ";
+		.@t$ += "+"+getarg(3)+" ";
 	switch(getarg(2)) {
 		case 0: break;
-		case 1: set .@t$,.@t$+"VS "; break;
-		case 2: set .@t$,.@t$+"VVS "; break;
-		case 3: set .@t$,.@t$+"VVVS "; break;
-		default: set .@t$,.@t$+getarg(2)+"xVS "; break;
+		case 1: .@t$ += "VS "; break;
+		case 2: .@t$ += "VVS "; break;
+		case 3: .@t$ += "VVVS "; break;
+		default: .@t$ += getarg(2)+"xVS "; break;
 	}
 	switch(getarg(1)) {
-		case 1: set .@t$,.@t$+"Ice "; break;
-		case 2: set .@t$,.@t$+"Earth "; break;
-		case 3: set .@t$,.@t$+"Fire "; break;
-		case 4: set .@t$,.@t$+"Wind "; break;
-		default: set .@t$,.@t$+"Strange "; break;
+		case 1: .@t$ += "Ice "; break;
+		case 2: .@t$ += "Earth "; break;
+		case 3: .@t$ += "Fire "; break;
+		case 4: .@t$ += "Wind "; break;
+		default: .@t$ += "Strange "; break;
 	}
 	return "^000090"+.@t$+getitemname(getarg(0))+"^000000";
 }
@@ -218,14 +218,14 @@ function	script	F_ItemName	{
 // *** Function "F_SaveQuestSkills": Store learnt quest skills
 //////////////////////////////////////////////////////////////////////////////////
 function	script	F_SaveQuestSkills	{
-	set ADV_QSK,0; set ADV_QSK2,0;
+	ADV_QSK = 0; ADV_QSK2 = 0;
 	//1st classes quest skills
-	for(set .@i, 0; .@i < 14; set .@i, .@i + 1){
-		if(getskilllv(144+.@i)) set ADV_QSK,ADV_QSK|pow(2,.@i);
+	for (.@i = 0; .@i < 14; ++.@i) {
+		if(getskilllv(144+.@i)) ADV_QSK |= pow(2,.@i);
 	}
 	//2nd classes quest skills
-	for(set .@i, 0; .@i < 19; set .@i, .@i + 1){
-		if(getskilllv(1001+.@i)) set ADV_QSK2,ADV_QSK2|pow(2,.@i);
+	for (.@i = 0; .@i < 19; ++.@i) {
+		if(getskilllv(1001+.@i)) ADV_QSK2 |= pow(2,.@i);
 	}
 	return;
 }
@@ -235,10 +235,10 @@ function	script	F_SaveQuestSkills	{
 //////////////////////////////////////////////////////////////////////////////////
 function	script	F_Load1Skills	{
 	//1st classes quest skills
-	for(set .@i, 0; .@i < 14; set .@i, .@i + 1){
+	for(.@i = 0; .@i < 14; ++.@i) {
 		if(ADV_QSK|pow(2,.@i) == ADV_QSK) skill 144+.@i,1,0;
 	}
-	set ADV_QSK,0; //Clear var
+	ADV_QSK = 0; //Clear var
 	return;
 }
 
@@ -247,10 +247,10 @@ function	script	F_Load1Skills	{
 //////////////////////////////////////////////////////////////////////////////////
 function	script	F_Load2Skills	{
 	//2nd classes quest skills
-	for(set .@i, 0; .@i < 19; set .@i, .@i + 1){
+	for (.@i = 0; .@i < 19; ++.@i) {
 		if(ADV_QSK2|pow(2,.@i) == ADV_QSK2) skill 1001+.@i,1,0;
 	}
-	set ADV_QSK2,0; //Clear var
+	ADV_QSK2 = 0; //Clear var
 	return;
 }
 
@@ -309,35 +309,35 @@ function	script	F_GetArmorType	{
 // Time calculation Function
 // *********************************************************************
 function	script	Time2Str	{
-	set .@time_left, getarg(0) - gettimetick(2);
+	.@time_left = getarg(0) - gettimetick(2);
 	
-	set .@Days, .@time_left / 86400;
-	set .@time_left, .@time_left - (.@Days * 86400);
-	set .@Hours, .@time_left / 3600;
-	set .@time_left, .@time_left - (.@Hours * 3600);
-	set .@Minutes, .@time_left / 60;
-	set .@time_left, .@time_left - (.@Minutes * 60);
+	.@Days = .@time_left / 86400;
+	.@time_left -= (.@Days * 86400);
+	.@Hours = .@time_left / 3600;
+	.@time_left -= (.@Hours * 3600);
+	.@Minutes = .@time_left / 60;
+	.@time_left -= (.@Minutes * 60);
 	
-	set .@Time$, "";
+	.@Time$ = "";
 	if( .@Days > 1 )
-		set .@Time$, .@Time$ + .@Days + " days, ";
+		.@Time$ += .@Days + " days, ";
 	else if( .@Days > 0 )
-		set .@Time$, .@Time$ + .@Days + " day, ";
+		.@Time$ += .@Days + " day, ";
 
 	if( .@Hours > 1 )
-		set .@Time$, .@Time$ + .@Hours + " hours, ";
+		.@Time$ += .@Hours + " hours, ";
 	else if( .@Hours > 0 )
-		set .@Time$, .@Time$ + .@Hours + " hour, ";
+		.@Time$ += .@Hours + " hour, ";
 
 	if( .@Minutes > 1 )
-		set .@Time$, .@Time$ + .@Minutes + " minutes, ";
+		.@Time$ += .@Minutes + " minutes, ";
 	else if( .@Minutes > 0 )
-		set .@Time$, .@Time$ + .@Minutes + " minute, ";
+		.@Time$ += .@Minutes + " minute, ";
 
 	if( .@time_left > 1 || .@time_left == 0 )
-		set .@Time$, .@Time$ + .@time_left + " seconds";
+		.@Time$ += .@time_left + " seconds";
 	else if( .@time_left == 1 )
-		set .@Time$, .@Time$ + .@time_left + " second";
+		.@Time$ += .@time_left + " second";
 	
 	return .@Time$;
 }

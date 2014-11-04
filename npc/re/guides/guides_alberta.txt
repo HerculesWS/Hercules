@@ -20,11 +20,11 @@ alberta,23,238,4	script	Guide#01alberta::AlbertaGuide	8W_SOLDIER,{
 	mes "Do you need help navigating the city?";
 	F_Navi("[Alberta Guide]");
 	next;
-	set .@str$,"Would you like to check any other locations?";
+	.@str$ = "Would you like to check any other locations?";
 	while (1) {
 		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:[ Destination Ports ]:Remove Marks from Mini-Map:Cancel")) {
 		case 1:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Tool Shop ]:[ Forge ]:[ Weapon & Armor Shop ]:[ Inn ]:[ Beauty Salon ]:[ Merchant Guild ]:Previous Menu")) {
 				case 1:
@@ -82,13 +82,13 @@ alberta,23,238,4	script	Guide#01alberta::AlbertaGuide	8W_SOLDIER,{
 					next;
 					break;
 				case 7:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
 			break;
 		case 2:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Eden Teleport Officer ]:[ Kafra Employee ]:[ Cool Event Employee ]:[ Bullet Merchant ]:[ Cooking Ingredient Merchant ]:Previous Menu")) {
 				case 1:
@@ -138,13 +138,13 @@ alberta,23,238,4	script	Guide#01alberta::AlbertaGuide	8W_SOLDIER,{
 					next;
 					break;
 				case 6:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
 			break;
 		case 3:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Port - Northern Dock ]:[ Port - Central Dock ]:[ Port - Southern Dock ]:Previous Menu")) {
 				case 1:
@@ -172,7 +172,7 @@ alberta,23,238,4	script	Guide#01alberta::AlbertaGuide	8W_SOLDIER,{
 					next;
 					break;
 				case 4:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}

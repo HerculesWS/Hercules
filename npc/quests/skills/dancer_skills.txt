@@ -101,7 +101,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 			mes "This tool is imperative";
 			mes "to the lesson, so fetch it";
 			mes "and bring it to me quickly!";
-			set DANCER_SK,1;
+			DANCER_SK = 1;
 			close;
 		}
 		else if (DANCER_SK == 1) {
@@ -149,7 +149,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 				mes "you've managed to avoid";
 				mes "becoming a prima donna.^000000";
 				delitem 747,1; //Crystal_Mirror
-				set DANCER_SK,2;
+				DANCER_SK = 2;
 				close;
 			}
 			else {
@@ -190,7 +190,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 			mes "^3355FFIt figures that she'd";
 			mes "keep your mirror.^000000";
 			emotion e_ag,1;
-			set DANCER_SK,3;
+			DANCER_SK = 3;
 			close;
 		}
 		else if (DANCER_SK > 2 && DANCER_SK < 7) {
@@ -248,7 +248,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 			mes "But she just hit you!";
 			mes "Lightly, of course, but";
 			mes "still, a smack is a smack.^000000";
-			set DANCER_SK,8;
+			DANCER_SK = 8;
 			close;
 		}
 		else if (DANCER_SK == 8) {
@@ -313,7 +313,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 				next;
 				mes "^3355FFYou have finally learned";
 				mes "the Charming Wink skill.^000000";
-				set DANCER_SK,9;
+				DANCER_SK = 9;
 				specialeffect2 EF_ABSORBSPIRITS;
 				skill "DC_WINKCHARM",1,0;
 				close;
@@ -430,7 +430,7 @@ prontera,183,333,1	script	Aelle#qsk_dan02	1_F_PRIEST,{
 			mes "So... You didn't come";
 			mes "here to buy these warps?";
 			mes "You sure you don't want any?";
-			set DANCER_SK,4;
+			DANCER_SK = 4;
 			close;
 		}
 		else if (DANCER_SK == 4) {
@@ -485,7 +485,7 @@ prontera,183,333,1	script	Aelle#qsk_dan02	1_F_PRIEST,{
 			mes "in the church know what";
 			mes "we're doing. I don't wanna";
 			mes "get in too much trouble!";
-			set DANCER_SK,5;
+			DANCER_SK = 5;
 			close;
 		}
 		else if (DANCER_SK == 5) {
@@ -567,7 +567,7 @@ prontera,183,333,1	script	Aelle#qsk_dan02	1_F_PRIEST,{
 				delitem 513,3; //Banana
 				delitem 538,5; //Well_Baked_Cookie
 				delitem 736,1; //White_Platter
-				set DANCER_SK,6;
+				DANCER_SK = 6;
 				close;
 			}
 			else {
@@ -615,7 +615,7 @@ prontera,183,333,1	script	Aelle#qsk_dan02	1_F_PRIEST,{
 			mes "G-go away. Talk to";
 			mes "Canell, my sister...";
 			mes "...ZzzzzZzZZZzzzZZ....";
-			set DANCER_SK,7;
+			DANCER_SK = 7;
 			close2;
 			warp "prontera",156,272;
 			end;

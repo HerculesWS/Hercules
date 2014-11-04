@@ -3879,7 +3879,13 @@ regardless of color.
 *setriding {<flag>};
 *checkriding()
 
-[ DEPRECATED - Please use setmount / checkmount]
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it
+is scheduled to be removed on or after November 30th, 2014. Please consider
+using setmount and checkmount() instead.
 
 If <flag> is 0 this command will remove the mount from the character.
 Otherwise it gives the invoking character a PecoPeco (if they are a Knight 
@@ -3898,7 +3904,13 @@ riding a bird and 0 if they aren't.
 *setdragon {<color>};
 *checkdragon()
 
-[ DEPRECATED - Please use setmount / checkmount]
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it
+is scheduled to be removed on or after November 30th, 2014. Please consider
+using setmount and checkmount() instead.
 
 The 'setdragon' function toggles mounting a dragon for the invoking 
 character. It will return 1 if successful, 0 otherwise.
@@ -3921,7 +3933,13 @@ riding a dragon and 0 if they aren't.
 *setmadogear {<flag>};
 *checkmadogear()
 
-[ DEPRECATED - Please use setmount / checkmount]
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it
+is scheduled to be removed on or after November 30th, 2014. Please consider
+using setmount and checkmount() instead.
 
 If <flag> is 0 this command will remove the mount from the character.
 Otherwise it gives the invoking character a Mado (if they are a Mechanic).
@@ -4257,7 +4275,6 @@ character is not married, or if there's no invoking character (no RID).
 ---------------------------------------
 
 *savepoint "<map name>",<x>,<y>;
-*save "<map name>",<x>,<y>;
 
 This command saves where the invoking character will return to upon 
 'return to save point', if dead or in some other cases. The two versions 
@@ -4266,6 +4283,16 @@ perfectly obvious. This ignores any and all map flags, and can make a
 character respawn where no teleportation is otherwise possible.
 
 	savepoint "place",350,75;
+
+*save "<map name>",<x>,<y>;
+
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it
+is scheduled to be removed on or after December 2nd, 2014. Please consider
+using savepoint() instead.
 
 ---------------------------------------
 
@@ -6249,6 +6276,14 @@ A debug message also shows on the console when no events are triggered.
 
 *cmdothernpc "<npc name>","<command>";
 
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it
+is scheduled to be removed on or after December 2nd, 2014. Please consider
+using donpcevent() instead.
+
 This is simply "donpcevent <npc name>::OnCommand<command>".
 It is an approximation of official server script language's 'cmdothernpc'.
 
@@ -6724,8 +6759,6 @@ It's not clear what happens to a waiting room if the NPC is disabled with
 
 *enablewaitingroomevent {"<NPC object name>"};
 *disablewaitingroomevent {"<NPC object name>"};
-*enablearena;
-*disablearena;
 
 This will enable and disable triggering the waiting room event (see 
 'waitingroom') respectively. Optionally giving an NPC object name will do 
@@ -6738,6 +6771,17 @@ amount and trigger the event accordingly.
 Normally, whenever a waiting room was created to make sure that only one 
 character is, for example, trying to pass a job quest trial, and no other 
 characters are present in the room to mess up the script.
+
+*enablearena;
+*disablearena;
+
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it
+is scheduled to be removed on or after December 2nd, 2014. Please consider
+using enablewaitingroomevent and disablewaitingroomevent instead.
 
 The 'enablearena'/'disablearena' commands are just aliases with no 
 parameter. These are supposedly left here for compatibility with official 
@@ -7565,6 +7609,18 @@ Returns distance between 2 points.
 
 Example:
 	.@i = distance(100,200,101,202);
+
+---------------------------------------
+
+*min(<number>{,<number>...<number>})
+*max(<number>{,<number>...<number>})
+
+Returns the smallest (or biggest) from the set of given numbers.
+
+Example:
+	.@minimum = min(1, -6, -2, 8, 2); // .@minimum will be equal to -6
+	.@maximum = max(0, 5, 10, 4); // .@maximum will be equal to 10
+	.@level = min(BaseLevel, 70); // .@level will be the character's base level, capped to 70
 
 ---------------------------------------
 
@@ -8437,7 +8493,13 @@ Add quest of the <ID2> to the the quest log, and the state is "active".
 
 *checkquest(<ID>{,PLAYTIME|HUNTING})
 
-DEPRECATED - use questprogress instead.
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it
+is scheduled to be removed on or after November 28th, 2014. Please consider
+using questprogress() instead. Or, in special cases, questactive().
 
 If no additional argument supplied, return the state of the quest: 
 	-1 = Quest not started (not in quest log)

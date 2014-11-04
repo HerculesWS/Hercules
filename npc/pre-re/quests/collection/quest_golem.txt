@@ -13,8 +13,8 @@
 //============================================================
 
 moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
-	if (checkquest(60140) != -1) {
-		if (checkquest(60140,HUNTING) != 2 ) {
+	if (questprogress(60140)) {
+		if (questprogress(60140,HUNTING) != 2) {
 			mes "[Private Jeremy]";
 			mes "Have you finished hunting the 50 Golems?";
 			next;
@@ -53,8 +53,8 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 			close;
 		}
 	}
-	if (checkquest(60141) != -1) {
-		if (checkquest(60141,HUNTING) != 2 ) {
+	if (questprogress(60141)) {
+		if (questprogress(60141,HUNTING) != 2) {
 			mes "[Private Jeremy]";
 			mes "Have you finished hunting the 50 Golems?";
 			next;
@@ -94,8 +94,8 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 			close;
 		}
 	}
-	if (checkquest(60142) != -1) {
-		if (checkquest(60142,HUNTING) != 2 ) {
+	if (questprogress(60142)) {
+		if (questprogress(60142,HUNTING) != 2) {
 			mes "[Private Jeremy]";
 			mes "Have you finished hunting the 150 Golems?";
 			next;

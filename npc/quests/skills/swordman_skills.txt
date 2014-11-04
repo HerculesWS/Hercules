@@ -65,7 +65,7 @@ izlude_in,118,175,4	script	Knight De Thomas	4W_M_02,{
 			mes "Don't you think it is pitiful that I have to stay in once place everyday, not being able to go outside?";
 			mes "Please, find me one...*sniffsniff*";
 			mes "If you don't...";
-			set sm_movingrecovery_x,1;
+			sm_movingrecovery_x = 1;
 			mes "You won't get anything! Muahahaha.";
 			close;
 		case 2:
@@ -101,7 +101,7 @@ izlude_in,118,175,4	script	Knight De Thomas	4W_M_02,{
 				delitem 713,200; //Empty_Bottle
 				delitem 1058,1; //Wing_Of_Moth
 				skill "SM_MOVINGRECOVERY",1,0;
-				set sm_movingrecovery_x,2;
+				sm_movingrecovery_x = 2;
 				mes "[De Thomas]";
 				mes "There you go!";
 				mes "Try it yourself.";

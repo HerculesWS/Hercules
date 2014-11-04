@@ -15,7 +15,7 @@
 function	script	F_Navi	{
 
 	// Uncomment to disable the navigation system.
-	//set .@disabled,1;
+	//.@disabled = 1;
 
 	// This function takes 0 ~ 3 parameters.
 	switch(getargcount()) {

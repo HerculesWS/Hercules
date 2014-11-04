@@ -50,7 +50,7 @@ payon_in01,193,30,4	script	Rice Mill Grandma#rat	1_F_ORIENT_04,{
 		mes "think you can help me?";
 		next;
 		if (select("Of course.:I don't even know you.") == 1) {
-			set lunar_rat,1;
+			lunar_rat = 1;
 			mes "[" + strcharinfo(0)+"]";
 			mes "Of course.";
 			mes "What can I do?";
@@ -93,7 +93,7 @@ payon_in01,193,30,4	script	Rice Mill Grandma#rat	1_F_ORIENT_04,{
 			mes "Please wait here a moment,";
 			mes "and I'll make you some pastry~";
 			delitem 7770,1; //Sweet_rice
-			set lunar_rat,3;
+			lunar_rat = 3;
 			close;
 		}
 		else if (lunar_rat == 4) {
@@ -104,7 +104,7 @@ payon_in01,193,30,4	script	Rice Mill Grandma#rat	1_F_ORIENT_04,{
 				mes "Please wait here a moment,";
 				mes "and I'll make you some pastry~";
 				delitem 7770,1; //Sweet_rice
-				set lunar_rat,5;
+				lunar_rat = 5;
 				close;
 			}
 			mes "Oh, where are all the";
@@ -127,15 +127,15 @@ payon_in01,193,30,4	script	Rice Mill Grandma#rat	1_F_ORIENT_04,{
 		mes "Would you mind being";
 		mes "a dear, and delivering";
 		mes "that to my son for me?";
-		set lunar_rat,2;
+		lunar_rat = 2;
 		close;
 	}
 	else if (lunar_rat == 3 || lunar_rat == 5) {
-		set .@reward,rand(1,100);
+		.@reward = rand(1,100);
 		if (.@reward <= 5) {
 			if (lunar_rat == 3) {
 				getitem 9038,1; // New_Year_Doll_Egg
-				set lunar_rat,4;
+				lunar_rat = 4;
 			}
 			else if (lunar_rat == 5) {
 				getitem 668,1; // Red_Envelope
@@ -152,8 +152,8 @@ payon_in01,193,30,4	script	Rice Mill Grandma#rat	1_F_ORIENT_04,{
 		// After getting the egg there is a chance to get an envelope with each turn in
 		if (rand(1,20) <= 5 && lunar_rat == 4) getitem 668,1; // Red_Envelope
 		// Set the quest accordingly for repeat turn-ins.
-		if (lunar_rat == 3) set lunar_rat,2;
-		else if (lunar_rat == 5) set lunar_rat,4;
+		if (lunar_rat == 3) lunar_rat = 2;
+		else if (lunar_rat == 5) lunar_rat = 4;
 		mes "It's not nearly enough";
 		mes "to repay you for what you've";
 		mes "done for me, but I'd like";

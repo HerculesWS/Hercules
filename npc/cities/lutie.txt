@@ -115,7 +115,7 @@ xmas_in,167,173,4	script	Duffle	4_F_05,{
 		mes "[Duffle]";
 		mes "Well then...";
 		mes "Merry Christmas!!";
-		set xmas_npc,2;
+		xmas_npc = 2;
 		close;
 	}
 	else if (xmas_npc > 1) {
@@ -182,7 +182,7 @@ xmas_in,27,103,4	script	Lenient Aunt	4_F_GODEMOM,{
 		mes "Now be a dear";
 		mes "and hurry up.";
 		mes "Come back quickly~";
-		set xmas_npc,6;
+		xmas_npc = 6;
 		close;
 	case 6:
 		mes "[Thachentze]";
@@ -213,7 +213,7 @@ xmas_in,27,103,4	script	Lenient Aunt	4_F_GODEMOM,{
 		mes "Let's see, let's see...";
 		mes "Thank you dear,Thank you.";
 		next;
-		set xmas_npc,8;
+		xmas_npc = 8;
 		mes "^3355FFYou gave her the";
 		mes "roughest salt in the world.^000000";
 		next;
@@ -296,7 +296,7 @@ xmas,117,304,4	script	Poze	4_M_06,{
 		next;
 		mes "[Poze]";
 		mes "But that's pretty much all I know. For the actual details, you should ask ^3355FFUncle Hairy Cantata^000000.";
-		set xmas_npc,4;
+		xmas_npc = 4;
 		close;
 	} else {
 		mes "[Poze]";
@@ -381,7 +381,7 @@ xmas,176,236,4	script	Uncle Hairy	4_M_05,{
 			next;
 			mes "[Cantata]";
 			mes "^3355FFThachentze^000000, that lovely pickle maker, knows more about it. So if you're curious, you should go talk to her. Alrighty then, Merry Christmas!";
-			set xmas_npc,5;
+			xmas_npc = 5;
 			close;
 		} else {
 			mes "[Cantata]";
@@ -538,7 +538,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 				next;
 				mes "^3355FFSnowysnow is immersed in his deep thoughts, and seems^000000";
 				mes "^3355FFfixated on Poze's memento.^000000";
-				set xmas_npc,3;
+				xmas_npc = 3;
 				close2;
 				cutin "",255;
 				end;
@@ -600,7 +600,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 				mes "[Snowysnow]";
 				mes "Yeah, she's a pickle expert, alright. Oh right, would you give this to her? I've been keeping the roughest salt in the world for her as a bit of a favor.";
 				next;
-				set xmas_npc,7;
+				xmas_npc = 7;
 				mes "^3355FFSnowysnow gave you the roughest salt in the world^000000.";
 				next;
 				mes "[Snowysnow]";
@@ -655,11 +655,11 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 				mes "^3355FFYou gingerly stir";
 				mes "your hand around in";
 				mes "Snowysnow's magical gift bag^000000.";
-				set .@snownow,rand(1,8);
+				.@snownow = rand(1,8);
 				next;
 				switch(.@snownow) {
 				case 1:
-					set xmas_npc,11;
+					xmas_npc = 11;
 					getitem 529,5; // Candy
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
@@ -668,7 +668,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					mes "Congratulations!";
 					break;
 				case 2:
-					set xmas_npc,11;
+					xmas_npc = 11;
 					getitem 529,10; // Candy
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
@@ -676,7 +676,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					mes "^3355FF10 Candy^000000!";
 					break;
 				case 3:
-					set xmas_npc,11;
+					xmas_npc = 11;
 					getitem 530,5; // Candy_Striper
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
@@ -684,7 +684,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					mes "^3355FF5 Candy Cane^000000!";
 					break;
 				case 4:
-					set xmas_npc,11;
+					xmas_npc = 11;
 					getitem 530,10; // Candy_Striper
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
@@ -692,7 +692,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					mes "^3355FF10 Candy Cane^000000!";
 					break;
 				case 5:
-					set xmas_npc,11;
+					xmas_npc = 11;
 					getitem 539,1; // Piece_Of_Cake
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
@@ -700,7 +700,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					mes "^3355FF1 Piece Of Cake^000000!";
 					break;
 				case 6:
-					set xmas_npc,11;
+					xmas_npc = 11;
 					getitem 539,2; // Piece_Of_Cake
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
@@ -708,7 +708,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					mes "^3355FF2 Piece Of Cake^000000!";
 					break;
 				case 7:
-					set xmas_npc,11;
+					xmas_npc = 11;
 					getitem 538,5; // Well_Baked_Cookie
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
@@ -716,7 +716,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					mes "^3355FF5 Cookie^000000!";
 					break;
 				case 8:
-					set xmas_npc,11;
+					xmas_npc = 11;
 					getitem 538,10; // Well_Baked_Cookie
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
@@ -811,7 +811,7 @@ xmas,146,136,4	script	Hashokii	4_M_PIERROT,{
 			next;
 			mes "[Hashokii]";
 			mes "Why don't you go meet those 2 children? They might tell you the story we've never got the chance to hear. Okay then, good luck~! Bye bye!";
-			set xmas_npc,9;
+			xmas_npc = 9;
 			close;
 		} else {
 			mes "[Hashokii]";
@@ -917,7 +917,7 @@ xmas,208,168,4	script	Little Girl	4_F_KID2,{
 			mes "[Marcell]";
 			mes "Oh, now I see . . . . .";
 			mes "You wanna learn all about Snowysnow because you want to become his friend! He'll be so happy to know that! Ooh! Maybe he'll give you a present! Good luck!";
-			set xmas_npc,10;
+			xmas_npc = 10;
 			close;
 		case 10:
 			mes "[Marcell]";

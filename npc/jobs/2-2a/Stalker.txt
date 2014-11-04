@@ -15,7 +15,7 @@
 
 valkyrie,53,58,3	script	Stalker#Valkyrie	4_F_ROGUE,{
 	if (ADVJOB == 0 || Upper != 1) {
-		set .@karma_d,rand(1,10);
+		.@karma_d = rand(1,10);
 		if (.@karma_d > 4) {
 			mes "[Stalker]";
 			mes "Congratulations.";
@@ -67,7 +67,7 @@ valkyrie,53,58,3	script	Stalker#Valkyrie	4_F_ROGUE,{
 			close;
 		}
 		jobchange Job_Stalker;
-		set ADVJOB,0;
+		ADVJOB = 0;
 		mes "[Stalker]";
 		mes "Congratulations!";
 		mes "As a Stalker, I hope";

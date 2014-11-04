@@ -15,7 +15,7 @@
 
 valkyrie,53,42,3	script	Champion#Valkyrie	1_M_HOF,{
 	if (ADVJOB == 0 || Upper != 1) {
-		set .@karma_d,rand(1,10);
+		.@karma_d = rand(1,10);
 		if (.@karma_d > 4) {
 			mes "[Champion]";
 			mes "Congratulations.";
@@ -62,7 +62,7 @@ valkyrie,53,42,3	script	Champion#Valkyrie	1_M_HOF,{
 			close;
 		}
 		jobchange Job_Champion;
-		set ADVJOB,0;
+		ADVJOB = 0;
 		mes "[Champion]";
 		mes "Congratulations!";
 		mes "Live as a Champion,";

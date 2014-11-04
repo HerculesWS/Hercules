@@ -21,7 +21,7 @@ prontera,147,61,3	script	Driller#pron	4_M_BARBER,{
 		mes "You cannot proceed because you're overweight.";
 		close;
 	}
-	set .@part, EQI_ACC_L;
+	.@part = EQI_ACC_L;
 	if (!getequipisequiped(.@part)) {
 		mes "[Driller]";
 		mes "My job is to drill a card slot into RWC Memorial accessories.";
@@ -33,7 +33,7 @@ prontera,147,61,3	script	Driller#pron	4_M_BARBER,{
 	mes "[Driller]";
 	mes "My job is to drill a card slot into RWC Memorial accessories. Moreover, I only treat ^ff0000pure items^000000, or those which have not been enchanted.";
 	next;
-	set .@equip_id, getequipid(.@part);
+	.@equip_id = getequipid(.@part);
 	if (.@equip_id != 2966 && .@equip_id != 2968) {
 		mes "[Driller]";
 		mes "However, I can see that the accessory you are wearing on the right side cannot be treated. Please equip a RWC Memorial accessory.";
@@ -48,13 +48,13 @@ prontera,147,61,3	script	Driller#pron	4_M_BARBER,{
 		close;
 	}
 	if (.@equip_id == 2966) {
-		set .@slotted, 2967; //RWC_2012_Ring_
-		set .@name$,"RWC 2012 Memorial Ring";
-		set .@str$,"ring";
+		.@slotted = 2967; //RWC_2012_Ring_
+		.@name$ = "RWC 2012 Memorial Ring";
+		.@str$ = "ring";
 	} else if (.@equip_id == 2968) {
-		set .@slotted, 2969; //RWC_2012_Pendant_
-		set .@name$,"RWC 2012 Memorial Pendant";
-		set .@str$,"pendant";
+		.@slotted = 2969; //RWC_2012_Pendant_
+		.@name$ = "RWC 2012 Memorial Pendant";
+		.@str$ = "pendant";
 	} else {
 		mes "[Driller]";
 		mes "I can't identify the accessory item you're wearing on your right hand. I can't work on it.";
@@ -93,25 +93,25 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 	mes "[Goldberg]";
 	mes "Hello! I am in charge of enchanting RWC Memorial accessories with some mystic powers.";
 	next;
-	set .@part, EQI_ACC_L;
+	.@part = EQI_ACC_L;
 	if (!getequipisequiped(.@part)) {
 		mes "[Goldberg]";
 		mes "I'm sorry but you don't have any item equipped on your right accessory position.";
 		close;
 	}
-	set .@equip_id, getequipid(.@part);
+	.@equip_id = getequipid(.@part);
 	if (.@equip_id < 2966 || .@equip_id > 2969) {
 		mes "[Goldberg]";
 		mes "However, I can see that the accessory you are wearing is not something I can work on. Please equip a RWC Memorial accessory.";
 		close;
 	}
-	set .@select, select("Sorry, not interested.:Please, empower my accessory.:Remove the Enchant.")-1;
+	.@select = select("Sorry, not interested.:Please, empower my accessory.:Remove the Enchant.")-1;
 	if (.@select == 0) {
 		mes "[Goldberg]";
 		mes "Alright, then, see you next time...";
 		close;
 	}
-	set .@equip_refine, getequiprefinerycnt(.@part);
+	.@equip_refine = getequiprefinerycnt(.@part);
 	setarray .@equip_card[0], getequipcardid(.@part,0),getequipcardid(.@part,1),getequipcardid(.@part,2),getequipcardid(.@part,3);
 	if (.@select == 1) {
 		switch(getequipid(.@part)) {
@@ -133,10 +133,10 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 			mes "If you have equipped your RWC Memorial accessory on the left side, try to swap it to the right side.";
 			close;
 		}
-		for(set .@i,3; .@i>=0; set .@i,.@i-1) {
+		for(.@i = 3; .@i >= 0; --.@i) {
 			if (.@equip_card[.@i] == 0) {
-				set .@slot, .@i;
-				set .@op_type, .@option[.@i];
+				.@slot = .@i;
+				.@op_type = .@option[.@i];
 				break;
 			}
 		}
@@ -146,25 +146,25 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 			mes "Which enchantment would you like to infuse?";
 			next;
 			setarray .@enchant_select[0],1,2,3,4;
-			set .@i, select("Cancel:Fighting Spirit:ATK (%):Max HP:HP")-2;
+			.@i = select("Cancel:Fighting Spirit:ATK (%):Max HP:HP")-2;
 			break;
 		case 3:
 			setarray .@enchant_select[0],5,6,7;
-			set .@i, select("Cancel:Spell:MATK (%):SP")-2;
+			.@i = select("Cancel:Spell:MATK (%):SP")-2;
 			break;
 		case 2:
 			mes "[Goldberg]";
 			mes "^ff0000Be careful! There is about a 25% chance that the enchantment will fail. If this happens, the item will be destroyed.^000000 Which enchantment would you like to infuse?";
 			next;
 			setarray .@enchant_select[0],8,9,10,11,12,13,14;
-			set .@i, select("Cancel:STR:AGI:VIT:INT:DEX:LUK:SP")-2;
+			.@i = select("Cancel:STR:AGI:VIT:INT:DEX:LUK:SP")-2;
 			break;
 		case 1:
 			mes "[Goldberg]";
 			mes "^ff0000There is about a 25% chance that the enchantment will fail. If this happens, the item will be destroyed.^000000 Which enchantment would you like to infuse?";
 			next;
 			setarray .@enchant_select[0],8,9,10,11,12,13,15,16;
-			set .@i, select("Cancel:STR:AGI:VIT:INT:DEX:LUK:MHP:HP")-2;
+			.@i = select("Cancel:STR:AGI:VIT:INT:DEX:LUK:MHP:HP")-2;
 			break;
 		case 0:
 			mes "[Goldberg]";
@@ -184,7 +184,7 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 			mes "Alright, then, see you next time...";
 			close;
 		}
-		set .@enchant_type, .@enchant_select[.@i];
+		.@enchant_type = .@enchant_select[.@i];
 		if (!getequipisequiped(.@part)) {
 			mes "[Goldberg]";
 			mes "Do not take off your equipment while I'm working, okay?";
@@ -246,25 +246,25 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 		}
 
 		if (.@enchant_type < 8)
-			set .@i, rand(1,300); // 0% break chance.
+			.@i = rand(1,300); // 0% break chance.
 		else
-			set .@i, rand(1,400); // 25% break chance.
+			.@i = rand(1,400); // 25% break chance.
 
-		     if (.@i < 151) set .@enchant, .@enc[0];
-		else if (.@i < 251) set .@enchant, .@enc[1];
-		else if (.@i < 301) set .@enchant, .@enc[2];
-		else set .@enchant,9;
+		     if (.@i < 151) .@enchant = .@enc[0];
+		else if (.@i < 251) .@enchant = .@enc[1];
+		else if (.@i < 301) .@enchant = .@enc[2];
+		else .@enchant = 9;
 
-		set .@equip_card[.@slot], .@enchant;
+		.@equip_card[.@slot] = .@enchant;
 		if (.@slot == 2 && .@enchant == 0) {
-			set .@equip_card[3],0;
+			.@equip_card[3] = 0;
 		} else if (.@slot == 1 && .@enchant == 0) {
-			set .@equip_card[2],0;
-			set .@equip_card[3],0;
+			.@equip_card[2] = 0;
+			.@equip_card[3] = 0;
 		} else if (.@slot == 0 && .@enchant == 0) {
-			set .@equip_card[1],0;
-			set .@equip_card[2],0;
-			set .@equip_card[3],0;
+			.@equip_card[1] = 0;
+			.@equip_card[2] = 0;
+			.@equip_card[3] = 0;
 		}
 
 		delequip .@part;
@@ -315,9 +315,9 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 		delequip .@part;
 	
 //		GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@equip_card[3]
-		for(set .@i,0; .@i<4; set .@i,.@i+1) {
+		for(.@i = 0; .@i < 4; ++.@i) {
 			if (.@equip_card[.@i] >= 4700) // Armor Enchant System
-				set .@equip_card[.@i],0;
+				.@equip_card[.@i] = 0;
 		}
 		getitem2 .@equip_id,1,1,.@equip_refine,0,.@equip_card[0],.@equip_card[1],.@equip_card[2],.@equip_card[3];
 		

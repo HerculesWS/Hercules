@@ -453,6 +453,9 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 	if (idx == 0)
 		return 1; // invalid skill id
 
+	if( pc_has_permission(sd, PC_PERM_DISABLE_SKILL_USAGE) )
+		return 1;
+
 	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL))
 		return 0; // can do any damn thing they want
 
@@ -6948,7 +6951,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				}
 
 				clif->skill_nodamage(src,bl,TK_HIGHJUMP,skill_lv,1);
-				if(!map->count_oncell(src->m,x,y,BL_PC|BL_NPC|BL_MOB) && map->getcell(src->m,x,y,CELL_CHKREACH)) {
+				if(!map->count_oncell(src->m,x,y,BL_PC|BL_NPC|BL_MOB,0) && map->getcell(src->m,x,y,CELL_CHKREACH)) {
 					clif->slide(src,x,y);
 					unit->movepos(src, x, y, 1, 0);
 				}
@@ -8325,7 +8328,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			if( flag&1 || (splash = skill->get_splash(skill_id, skill_lv)) < 1 ) {
 				int i;
 				//As of the behavior in official server Clearance is just a super version of Dispell skill. [Jobbie]
-				if( bl->type != BL_MOB && battle->check_target(src,bl,BCT_PARTY) <= 0 ) // Only affect mob or party.
+				if( bl->type != BL_MOB && battle->check_target(src,bl,BCT_PARTY) <= 0 && sd ) // Only affect mob, party or self.
 					break;
 								
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
@@ -10385,7 +10388,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		// Plant Cultivation [Celest]
 		case CR_CULTIVATION:
 			if (sd) {
-				if( map->count_oncell(src->m,x,y,BL_CHAR) > 0 ) {
+				if( map->count_oncell(src->m,x,y,BL_CHAR,0) > 0 ) {
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					return 1;
 				}
@@ -11588,7 +11591,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 		ts->tick = tick+sg->interval;
 
 		if ((skill_id==CR_GRANDCROSS || skill_id==NPC_GRANDDARKNESS) && !battle_config.gx_allhit)
-			ts->tick += sg->interval*(map->count_oncell(bl->m,bl->x,bl->y,BL_CHAR)-1);
+			ts->tick += sg->interval*(map->count_oncell(bl->m,bl->x,bl->y,BL_CHAR,0)-1);
 	}
 
 	switch (sg->unit_id) {
@@ -13174,17 +13177,6 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 				}
 			}
 			break;
-		/**
-		 * Keeping as a note:
-		 * Bug Report #17 provides a link to a sep-2011 changelog that shows this requirement was removed
-		 **/
-		//case AB_LAUDAAGNUS:
-		//case AB_LAUDARAMUS:
-		//	if( !sd->status.party_id ) {
-		//		clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-		//		return 0;
-		//	}
-		//	break;
 
 		case AB_ADORAMUS:
 		/**
@@ -14316,9 +14308,8 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 				break;
 			}
 		for( i = 0; i < ARRAYLENGTH(sd->skillfixcastrate) && sd->skillfixcastrate[i].id; i++ )
-
 			if( sd->skillfixcastrate[i].id == skill_id ){ // bonus2 bFixedCastrate
-				fixcast_r = sd->skillfixcastrate[i].val; // just speculation
+				fixcast_r = sd->skillfixcastrate[i].val;
 				break;
 			}
 	}
@@ -15262,9 +15253,10 @@ int skill_cell_overlap(struct block_list *bl, va_list ap) {
 					break;
 			}
 			break;
+		case WZ_ICEWALL:
 		case HP_BASILICA:
-			if (su->group->skill_id == HP_BASILICA) {
-				//Basilica can't be placed on top of itself to avoid map-cell stacking problems. [Skotlex]
+			if (su->group->skill_id == skill_id) {
+				//These can't be placed on top of themselves (duration can't be refreshed)
 				(*alive) = 0;
 				return 1;
 			}
@@ -15781,7 +15773,7 @@ int skill_delunitgroup(struct skill_unit_group *group, const char* file, int lin
 		return 0;
 	}
 
-	if( !status->isdead(src) && ((TBL_PC*)src)->state.warping && !((TBL_PC*)src)->state.changemap ) {
+	if( src->type == BL_PC && !status->isdead(src) && ((TBL_PC*)src)->state.warping && !((TBL_PC*)src)->state.changemap ) {
 		switch( group->skill_id ) {
 			case BA_DISSONANCE:
 			case BA_POEMBRAGI:

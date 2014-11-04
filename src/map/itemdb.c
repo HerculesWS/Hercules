@@ -1713,7 +1713,7 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 	if( libconfig->setting_lookup_int(it, "Type", &i32) )
 		id.type = i32;
 	else if( !inherit )
-		id.type = IT_UNKNOWN;
+		id.type = IT_ETC;
 
 	if( libconfig->setting_lookup_int(it, "Buy", &i32) )
 		id.value_buy = i32;
@@ -2248,6 +2248,10 @@ void do_init_itemdb(bool minimal) {
 		return;
 
 	clif->cashshop_load();
+	
+	/** it failed? we disable it **/
+	if( !clif->parse_roulette_db() )
+		battle_config.feature_roulette = 0;
 }
 void itemdb_defaults(void) {
 	itemdb = &itemdb_s;

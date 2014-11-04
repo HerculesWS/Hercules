@@ -36,8 +36,8 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 		mes "Take care~!";
 		close;
 	}
-	set .@quest1, checkquest(9117);
-	if (.@quest1 == -1) {
+	.@quest1 = questprogress(9117);
+	if (!.@quest1) {
 		playbgm "30.mp3"; // One Step Closer
 		mes "[Rina]";
 		mes "Hi~!";
@@ -96,7 +96,7 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 		mes "Let me know when you are ready.";
 		setquest 9117;
 		close;
-	} else if (.@quest1 == 0 || .@quest1 == 1) {
+	} else if (.@quest1 == 1) {
 	L_HuntingInfo:
 		mes "[Rina]";
 		mes "What you need to do is";
@@ -123,8 +123,8 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 		npcskill "AL_BLESSING",1,0,0;
 		end;
 	} else if (.@quest1 == 2) {
-		if (checkquest(9118) < 2 || checkquest(9119) < 2 || checkquest(9120) < 2 || checkquest(9121) < 2) {
-			if (checkquest(9118,HUNTING) == 2 || checkquest(9119,HUNTING) == 2 || checkquest(9120,HUNTING) == 2 || checkquest(9121,HUNTING) == 2) {
+		if (questprogress(9118) != 2 || questprogress(9119) != 2 || questprogress(9120) != 2 || questprogress(9121) != 2) {
+			if (questprogress(9118,HUNTING) == 2 || questprogress(9119,HUNTING) == 2 || questprogress(9120,HUNTING) == 2 || questprogress(9121,HUNTING) == 2) {
 				mes "[Rina]";
 				mes "You did it.";
 				mes "I can feel that my body is recovering.";
@@ -144,8 +144,7 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 			end;
 		}
 	}
-	set .@quest2, checkquest(9122);
-	if (.@quest2 == 0 || .@quest2 == 1) {
+	if (questprogress(9122) == 1) {
 		mes "[Rina]";
 		mes "I will check one thing.";
 		mes "For this task,";
@@ -185,10 +184,10 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 			else if (oversea_event9 == 197) playbgm "94.mp3"; // Theme of Rachel
 			else {
 				switch(rand(1,4)) {
-					case 1: playbgm "13.mp3"; set oversea_event2,520; break;
-					case 2: playbgm "59.mp3"; set oversea_event3,270; break;
-					case 3: playbgm "70.mp3"; set oversea_event6,245; break;
-					case 4: playbgm "94.mp3"; set oversea_event9,197; break;
+					case 1: playbgm "13.mp3"; oversea_event2 = 520; break;
+					case 2: playbgm "59.mp3"; oversea_event3 = 270; break;
+					case 3: playbgm "70.mp3"; oversea_event6 = 245; break;
+					case 4: playbgm "94.mp3"; oversea_event9 = 197; break;
 				}
 			}
 		}
@@ -215,87 +214,84 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 		close2;
 		emotion e_sigh;
 		end;
-	} else {
-		set .@quest3, checkquest(9123);
-		if (.@quest3 == 0 || .@quest3 == 1) {
-			emotion e_kis;
-			mes "[Rina]";
-			mes "You're back~!";
-			mes "My curse has been released.";
-			mes "Thank you so much.";
-			next;
-			if (checkweight(5852,1) == 0) {
-				mes "[Rina]";
-				mes "Your bag is too full.";
-				mes "I have a present for you";
-				mes "so make your bag lighter.";
-				mes "I'll wait for you.";
-				close;
-			}
-			completequest 9123;
-			getitem 5852,1; //Easter_Egg_Shell
-			set .@BaseExp, (BaseLevel * (BaseLevel / 4)) * ((BaseLevel / 29) + (BaseLevel / 6)) + (5 * BaseLevel / 2);
-			if (ADVJOB == 0) {
-				     if (BaseLevel < 40) set .@nBaseExp, .@BaseExp;
-				else if (BaseLevel < 50) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel);
-				else if (BaseLevel < 60) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 20));
-				else if (BaseLevel < 70) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 10));
-				else if (BaseLevel < 80) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 5));
-				else if (BaseLevel < 90) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 3));
-				else if (BaseLevel < 99) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 2));
-				else set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 2) * 2);
-
-				set .@nJobExp, (JobLevel * (JobLevel - 3) * (JobLevel / 25 + 1) + (16 - (JobLevel * 2))) * 2;
-			} else {
-				     if (BaseLevel < 30) set .@nBaseExp, .@BaseExp;
-				else if (BaseLevel < 40) set .@nBaseExp, .@BaseExp + (BaseLevel * 10);
-				else if (BaseLevel < 50) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * 2);
-				else if (BaseLevel < 60) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 10));
-				else if (BaseLevel < 70) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 5));
-				else if (BaseLevel < 80) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 3));
-				else if (BaseLevel < 90) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 2));
-				else if (BaseLevel < 98) set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * BaseLevel);
-				else set .@nBaseExp, .@BaseExp + (BaseLevel * BaseLevel * BaseLevel * 2);
-
-				set .@nJobExp, (JobLevel * JobLevel * (JobLevel / 5 + 2) + (20 - JobLevel)) * 3;
-			}
-			getexp .@nBaseExp,.@nJobExp;
-			mes "[Rina]";
-			mes "This is the present for you.";
-			mes "It's not a big one";
-			mes "but please take it";
-			mes "as a token of my gratitude.";
-			next;
-			mes "[Rina]";
-			mes "I'll take a rest for a few days";
-			mes "and then I'll go on an adventure.";
-			mes "See you again.";
-			close2;
-			consumeitem 607; //Yggdrasilberry
-			consumeitem 12068; //Luk_Dish03
-			consumeitem 12063; //Dex_Dish03
-			consumeitem 12053; //Vit_Dish03
-			npcskill "AL_INCAGI",1,0,0;
-			npcskill "AL_BLESSING",1,0,0;
-			end;
-		} else {
-			mes "[Rina]";
-			mes "Thank you for releasing my curse.";
-			mes "I'll take a rest for a few days";
-			mes "and then go on an adventure again.";
-			mes "Have a happy day~!";
-			close2;
-			consumeitem 607; //Yggdrasilberry
-			npcskill "AL_INCAGI",1,0,0;
-			npcskill "AL_BLESSING",1,0,0;
-			end;
-		}
 	}
+	if (questprogress(9123) == 1) {
+		emotion e_kis;
+		mes "[Rina]";
+		mes "You're back~!";
+		mes "My curse has been released.";
+		mes "Thank you so much.";
+		next;
+		if (checkweight(5852,1) == 0) {
+			mes "[Rina]";
+			mes "Your bag is too full.";
+			mes "I have a present for you";
+			mes "so make your bag lighter.";
+			mes "I'll wait for you.";
+			close;
+		}
+		completequest 9123;
+		getitem 5852,1; //Easter_Egg_Shell
+		.@BaseExp = (BaseLevel * (BaseLevel / 4)) * ((BaseLevel / 29) + (BaseLevel / 6)) + (5 * BaseLevel / 2);
+		if (ADVJOB == 0) {
+			if (BaseLevel < 40) .@nBaseExp = .@BaseExp;
+			else if (BaseLevel < 50) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel);
+			else if (BaseLevel < 60) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 20));
+			else if (BaseLevel < 70) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 10));
+			else if (BaseLevel < 80) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 5));
+			else if (BaseLevel < 90) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 3));
+			else if (BaseLevel < 99) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 2));
+			else .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 2) * 2);
+
+			.@nJobExp = (JobLevel * (JobLevel - 3) * (JobLevel / 25 + 1) + (16 - (JobLevel * 2))) * 2;
+		} else {
+			if (BaseLevel < 30) .@nBaseExp = .@BaseExp;
+			else if (BaseLevel < 40) .@nBaseExp = .@BaseExp + (BaseLevel * 10);
+			else if (BaseLevel < 50) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * 2);
+			else if (BaseLevel < 60) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 10));
+			else if (BaseLevel < 70) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 5));
+			else if (BaseLevel < 80) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 3));
+			else if (BaseLevel < 90) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * (BaseLevel / 2));
+			else if (BaseLevel < 98) .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * BaseLevel);
+			else .@nBaseExp = .@BaseExp + (BaseLevel * BaseLevel * BaseLevel * 2);
+
+			.@nJobExp = (JobLevel * JobLevel * (JobLevel / 5 + 2) + (20 - JobLevel)) * 3;
+		}
+		getexp .@nBaseExp,.@nJobExp;
+		mes "[Rina]";
+		mes "This is the present for you.";
+		mes "It's not a big one";
+		mes "but please take it";
+		mes "as a token of my gratitude.";
+		next;
+		mes "[Rina]";
+		mes "I'll take a rest for a few days";
+		mes "and then I'll go on an adventure.";
+		mes "See you again.";
+		close2;
+		consumeitem 607; //Yggdrasilberry
+		consumeitem 12068; //Luk_Dish03
+		consumeitem 12063; //Dex_Dish03
+		consumeitem 12053; //Vit_Dish03
+		npcskill "AL_INCAGI",1,0,0;
+		npcskill "AL_BLESSING",1,0,0;
+		end;
+	}
+	mes "[Rina]";
+	mes "Thank you for releasing my curse.";
+	mes "I'll take a rest for a few days";
+	mes "and then go on an adventure again.";
+	mes "Have a happy day~!";
+	close2;
+	consumeitem 607; //Yggdrasilberry
+	npcskill "AL_INCAGI",1,0,0;
+	npcskill "AL_BLESSING",1,0,0;
+	end;
 }
 
 geffen,207,114,4	script	#Hiddne01Easter	CLEAR_NPC,{
 	if (oversea_event2 > 519) {
-	OnRelease:
+OnRelease:
 		specialeffect EF_PATTACK;
 		mes "- I found ^0000FFthe strange mark^000000. -";
 		next;
@@ -304,7 +300,7 @@ geffen,207,114,4	script	#Hiddne01Easter	CLEAR_NPC,{
 		mes "- ^0000FFRina^000000 has been released";
 		mes "- from the curse.";
 		mes "- ^006400Let's go back to Rina!^000000";
-		if (checkquest(9122) < 2) {
+		if (questprogress(9122) != 2) {
 			completequest 9122;
 			setquest 9123;
 		}
@@ -333,7 +329,7 @@ rachel,36,132,4	script	#Hiddne04Easter	CLEAR_NPC,{
 
 prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 	disable_items;
-	if (checkquest(9117) == -1) {
+	if (!questprogress(9117)) {
 		emotion e_swt2;
 		mes "[Rina's Little Friend]";
 		mes ".......";
@@ -341,7 +337,7 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 		mes "^787878( No response. )^000000";
 		close;
 	}
-	if (checkquest(9123) == 2) {
+	if (questprogress(9123) == 2) {
 		emotion e_meh;
 		mes "[Rina's Little Friend]";
 		mes "Hi.";
@@ -352,13 +348,13 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 		case 1:
 			if (ADVJOB == 0) {
 				if (BaseLevel < 70)
-					set .@nCharge,400000;
+					.@nCharge = 400000;
 				else if (BaseLevel < 90)
-					set .@nCharge,450000;
+					.@nCharge = 450000;
 				else
-					set .@nCharge,480000;
+					.@nCharge = 480000;
 			} else
-				set .@nCharge,500000;
+				.@nCharge = 500000;
 			if (countitem(574) < 1 || countitem(1001) < 20 || Zeny < .@nCharge) {
 				mes "[Rina's Little Friend]";
 				mes "Hmm.";
@@ -385,7 +381,7 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 			delitem 574,1; //Egg
 			delitem 1001,20; //Sparkling_Dust
 			Zeny -= .@nCharge;
-			set .@nPercentage, rand(1,100);
+			.@nPercentage = rand(1,100);
 			if (.@nPercentage <= 41) {
 				mes "[Rina's Little Friend]";
 				mes "Life is given to the egg.";

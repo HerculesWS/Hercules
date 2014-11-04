@@ -20,11 +20,11 @@ hugel,98,56,3	script	Hugel Guide Granny#hugel	4_F_LGTGRAND,{
 	mes "If this is the first time for you to use the guide services, you should ask a lot of questions.";
 	F_Navi("[Hugel Guide Granny]");
 	next;
-	set .@str$,"Would you like to know more locations?";
+	.@str$ = "Would you like to know more locations?";
 	while (1) {
 		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
 		case 1:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Church ]:[ Inn ]:[ Pub ]:[ Airport ]:[ Weapon Shop ]:[ Tool Shop ]:[ Bingo Game Room ]:[ ^3131FFHunter Guild^000000 ]:[ Party Supplies Shop ]:[ ^3131FFShrine Expedition^000000 ]:Previous Menu")) {
 				case 1:
@@ -111,13 +111,13 @@ hugel,98,56,3	script	Hugel Guide Granny#hugel	4_F_LGTGRAND,{
 					next;
 					break;
 				case 11:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
 			break;
 		case 2:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Monster Race Arena ]:[ Cool Event Corp. Staff ]:Previous Menu")) {
 				case 1:
@@ -138,7 +138,7 @@ hugel,98,56,3	script	Hugel Guide Granny#hugel	4_F_LGTGRAND,{
 					next;
 					break;
 				case 3:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
@@ -184,7 +184,7 @@ hugel,187,172,6	script	Guide Rich King#hugel	4_M_CRU_KNT,{
 	while (1) {
 		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
 		case 1:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Church ]:[ Inn ]:[ Pub ]:[ Airport ]:[ Weapon Shop ]:[ Tool Shop ]:[ Bingo Game Room ]:[ Hunter Guild ]:[ Party Supplies Shop ]:[ Shrine Expedition ]:Previous Menu")) {
 				case 1:
@@ -238,13 +238,13 @@ hugel,187,172,6	script	Guide Rich King#hugel	4_M_CRU_KNT,{
 					next;
 					break;
 				case 11:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
 			break;
 		case 2:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Monster Race Arena ]:[ Cool Event Corp. Staff ]:Previous Menu")) {
 				case 1:
@@ -258,7 +258,7 @@ hugel,187,172,6	script	Guide Rich King#hugel	4_M_CRU_KNT,{
 					next;
 					break;
 				case 3:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}

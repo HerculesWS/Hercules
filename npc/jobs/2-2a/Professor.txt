@@ -15,7 +15,7 @@
 
 valkyrie,53,47,3	script	Scholar#Valkyrie	2_M_SAGE_OLD,{
 	if (ADVJOB == 0 || Upper != 1) {
-		set .@karma_d,rand(1,10);
+		.@karma_d = rand(1,10);
 		if (.@karma_d > 4) {
 			mes "[Scholar]";
 			mes "Congratulations.";
@@ -66,7 +66,7 @@ valkyrie,53,47,3	script	Scholar#Valkyrie	2_M_SAGE_OLD,{
 			close;
 		}
 		jobchange Job_Professor;
-		set ADVJOB,0;
+		ADVJOB = 0;
 		mes "[Scholar]";
 		mes "Congratulations!";
 		mes "As a Professor, I hope";

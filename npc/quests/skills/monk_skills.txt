@@ -56,7 +56,7 @@ prt_monk,270,198,3	script	Apprentice Monk#qsk_mo	4_M_MONK,{
 			mes "tap-tap-tap-tap-tap-tap-tap-tap- tap-tap-tap-tap-tap-tap-tap-tap-";
 			mes "tap-tap-tap-tap-tap-tap-tap-tap- tap-tap-tap-tap-tap-tap-tap-tap-";
 			mes "tap-tap-tap-tap-tap-tap* *POKE*^000000";
-			set MONK_SK,7;
+			MONK_SK = 7;
 			skill "MO_KITRANSLATION",1,0;
 			skill "MO_BALKYOUNG",1,0;
 			next;
@@ -144,7 +144,7 @@ prt_monk,270,198,3	script	Apprentice Monk#qsk_mo	4_M_MONK,{
 				mes "fighting may be necessary at";
 				mes "times, but it is a means to an";
 				mes "end, and not an end in itself.";
-				set MONK_SK,3;
+				MONK_SK = 3;
 				skill "MO_KITRANSLATION",1,0;
 				next;
 				mes "[Monk]";
@@ -195,7 +195,7 @@ prt_monk,270,198,3	script	Apprentice Monk#qsk_mo	4_M_MONK,{
 			mes "the skills I teach you for";
 			mes "peace and justice. Prove that";
 			mes "you are free from selfishness.";
-			set MONK_SK,2;
+			MONK_SK = 2;
 			close;
 		}
 	}
@@ -249,7 +249,7 @@ monk_test,316,69,5	script	Monk#qsk_mo	4_M_CHNMONK,{
 			mes "You should definitely be able";
 			mes "to do it since you've learned";
 			mes "Spiritual Endowment.";
-			set MONK_SK,6;
+			MONK_SK = 6;
 			skill "MO_BALKYOUNG",1,0;
 			next;
 			mes "[Monk]";
@@ -278,7 +278,7 @@ monk_test,316,69,5	script	Monk#qsk_mo	4_M_CHNMONK,{
 			mes "that I can finish preparations.";
 			delitem 905,20; //Stem
 			delitem 711,3; //Shoot
-			set MONK_SK,5;
+			MONK_SK = 5;
 			close;
 		}
 		if (MONK_SK == 4) {
@@ -355,7 +355,7 @@ monk_test,316,69,5	script	Monk#qsk_mo	4_M_CHNMONK,{
 			mes "if you do not first learn the";
 			mes "Spiritual Bestowment skill.";
 			mes "I wish you luck with that...";
-			set MONK_SK,4;
+			MONK_SK = 4;
 			close;
 		}
 		if (MONK_SK == 1) {
@@ -411,7 +411,7 @@ monk_test,316,69,5	script	Monk#qsk_mo	4_M_CHNMONK,{
 			mes "that he should popularize his";
 			mes "teaching of that skill, I must respect his decision. Still, you";
 			mes "may try talking to him if you wish to try to learn some new skills.";
-			set MONK_SK,1;
+			MONK_SK = 1;
 			next;
 			mes "[Monk]";
 			mes "To find him, simply seek";

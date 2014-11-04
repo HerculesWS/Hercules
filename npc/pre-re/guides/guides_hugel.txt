@@ -30,11 +30,11 @@ hugel,98,56,3	script	Hugel Guide Granny#huge	4_F_LGTGRAND,0,0,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes.:No.") == 1) set .@compass_check,1;
+				if (select("Yes.:No.") == 1) .@compass_check = 1;
 			}
-			set .@loop,1;
+			.@loop = 1;
 			while(.@loop) {
-				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 				switch(select("Church:Inn:Pub:Airport:Weapon Shop:Tool Shop:Party Supplies Shop:^3131FFHunter Job Change Place^000000:^3131FFShrine Expedition's Place^000000:Monster Race Arena:Bingo Game Room:Cancel")) {
 				case 1:
@@ -118,7 +118,7 @@ hugel,98,56,3	script	Hugel Guide Granny#huge	4_F_LGTGRAND,0,0,{
 					mes "[Hugel Guide Granny]";
 					mes "If you like to get rid of all the location marks on your Mini-Map,";
 					mes "just ask me again, and choose ''Remove Marks from Mini-Map'' menu.";
-					set .@loop,0;
+					.@loop = 0;
 				}
 			}
 			break;
@@ -134,7 +134,7 @@ hugel,98,56,3	script	Hugel Guide Granny#huge	4_F_LGTGRAND,0,0,{
 			viewpoint 2,52,91,10,0xFFFFFF;
 			viewpoint 2,58,72,11,0xFF9900;
 			viewpoint 2,55,209,12,0x66FFFF;
-			set .@compass_check,0;
+			.@compass_check = 0;
 			mes "[Hugel Guide Granny]";
 			mes "Okay, they are gone now. If you have more locations to ask, just let me know.";
 			break;

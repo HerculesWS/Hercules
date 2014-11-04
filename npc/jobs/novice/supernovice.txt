@@ -209,7 +209,7 @@ aldeba_in,223,167,3	script	Tzerero#sn	4_M_SEAMAN,{
 			mes "an ordinary number.";
 			mes "Hahahahaha~";
 			next;
-			set SUPNOV_Q,1;
+			SUPNOV_Q = 1;
 			setquest 6010;
 			mes "[Tzerero]";
 			mes "Good luck, my friend.";
@@ -430,7 +430,7 @@ aldebaran,54,238,5	script	Kafra Employee#sn	4_F_KAFRA1,{
 					close;
 				}
 				if (Zeny >= 1899) {
-					set RESRVPTS, RESRVPTS + 190;
+					RESRVPTS += 190;
 					Zeny -= 1900;
 					if (getskilllv("MC_PUSHCART") > 0) setcart;
 					mes "[Kafra Employee]";

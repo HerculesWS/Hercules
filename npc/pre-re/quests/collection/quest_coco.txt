@@ -13,8 +13,8 @@
 //============================================================
 
 mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
-	if (checkquest(60113) != -1) {
-		if (checkquest(60113,HUNTING) != 2 ) {
+	if (questprogress(60113)) {
+		if (questprogress(60113,HUNTING) != 2) {
 			mes "[Nutters]";
 			mes "Have you finished hunting the 50 Cocos?";
 			next;
@@ -53,8 +53,8 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 			close;
 		}
 	}
-	if (checkquest(60114) != -1) {
-		if (checkquest(60114,HUNTING) != 2 ) {
+	if (questprogress(60114)) {
+		if (questprogress(60114,HUNTING) != 2) {
 			mes "[Nutters]";
 			mes "Have you finished hunting the 50 Cocos?";
 			next;
@@ -94,8 +94,8 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 			close;
 		}
 	}
-	if (checkquest(60115) != -1) {
-		if (checkquest(60115,HUNTING) != 2 ) {
+	if (questprogress(60115)) {
+		if (questprogress(60115,HUNTING) != 2) {
 			mes "[Nutters]";
 			mes "Have you finished hunting the 150 Cocos?";
 			next;

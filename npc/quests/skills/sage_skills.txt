@@ -36,8 +36,8 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		close;
 	}
 	if(SAG_SK == 100) {
-		set .@Element, getskilllv("SA_ELEMENTFIRE") + getskilllv("SA_ELEMENTGROUND") + getskilllv("SA_ELEMENTWIND") + getskilllv("SA_ELEMENTWATER");
-		set .@Convert, getskilllv("SA_CREATECON");
+		.@Element = getskilllv(SA_ELEMENTFIRE) + getskilllv(SA_ELEMENTGROUND) + getskilllv(SA_ELEMENTWIND) + getskilllv(SA_ELEMENTWATER);
+		.@Convert = getskilllv(SA_CREATECON);
 		if(.@Element && .@Convert) {
 			mes "[Mishuna]";
 			mes "If you have any Sage or";
@@ -83,7 +83,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 			setarray .@skill[0],1018,1017,1019,1008;
 			setarray .@skill$[0],"Fire","Earth","Wind","Water";
 			while(1) {
-				set .@i, select("Fire Elemental Change:Earth Elemental Change:Wind Elemental Change:Water Elemental Change")-1;
+				.@i = select("Fire Elemental Change:Earth Elemental Change:Wind Elemental Change:Water Elemental Change")-1;
 				if(getskilllv(.@ReqSkill[.@i]) == 0) {
 					mes "[Mishuna]";
 					mes "I'm sorry, but you haven't";
@@ -237,7 +237,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		mes "return. Remember that we";
 		mes "need these items to create";
 		mes "a converter so that you can^FFFFFF ^000000 learn the skill from my example...";
-		set SAG_SK,1;
+		SAG_SK = 1;
 		close;
 	}
 	else if(SAG_SK == 1) {
@@ -313,7 +313,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 			delitem 1013,12; // Rainbow_Shell
 			delitem 946,10; // Snail's_Shell
 			delitem 7433,4; // Blank_Scroll
-			set SAG_SK,2;
+			SAG_SK = 2;
 			skill "SA_CREATECON",1,0;
 			next;
 			mes "[Mishuna]";
@@ -358,7 +358,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		setarray .@ReqItem$[0],"Red Bloods","Green Lives","Wind of Verdure","Crystal Blues";
 		setarray .@skill$[0],"Fire","Earth","Wind","Water";
 		while(1) {
-			set .@i, select("Fire Elemental Change:Earth Elemental Change:Wind Elemental Change:Water Elemental Change")-1;
+			.@i = select("Fire Elemental Change:Earth Elemental Change:Wind Elemental Change:Water Elemental Change")-1;
 			if(getskilllv(.@ReqSkill[.@i]) == 0) {
 				mes "[Mishuna]";
 				mes "I'm sorry, but you have not";
@@ -380,7 +380,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 				mes "^FF00001 Morroc Solution^000000. Please";
 				mes "return to me once you have";
 				mes "all the materials ready.";
-				set SAG_SK, 10 * (.@i+1); //10,20,30,40
+				SAG_SK = 10 * (.@i+1); //10,20,30,40
 				close;
 			}
 		}
@@ -391,7 +391,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 			mes "- I recalled ^ff0000Elemental Converter Creation skill^000000 While I talk to Mishuna! -";
 			next;
 		}
-		set .@i, (SAG_SK/10) - 1;
+		.@i = (SAG_SK/10) - 1;
 		setarray .@ReqItem[0],990,993,992,991;
 		setarray .@ReqItem$[0],"Red Bloods","Green Lives","Wind of Verdure","Crystal Blues";
 		setarray .@skill[0],1018,1017,1019,1008;
@@ -449,7 +449,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		delitem .@ReqItem[.@i],20;
 		delitem 1089,1; // Payon Potion
 		delitem 1088,1; // Morocc Potion
-		set SAG_SK,100;
+		SAG_SK = 100;
 		skill .@skill[.@i],1,0;
 		next;
 		mes "[Mishuna]";

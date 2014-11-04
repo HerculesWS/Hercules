@@ -193,7 +193,7 @@ nif_in,190,112,5	script	Deviruchi#divorce	4_DEVIRUCHI,{
 		next;
 		specialeffect EF_MAGICROD;
 		specialeffect2 EF_DEVIL;
-		set wedding_sign,0;
+		wedding_sign = 0;
 		Zeny -= 2500000;
 		percentheal -100,-100;
 		divorce;

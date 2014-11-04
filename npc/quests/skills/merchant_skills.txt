@@ -356,7 +356,7 @@ alberta,119,221,6	script	Charlron	1_M_PAY_ELDER,{
 			next;
 			switch (select("Hey~ that's why I came.:What's that?")) {
 			case 1:
-				set .@care_random,rand(1,3);
+				.@care_random = rand(1,3);
 				if (.@care_random == 1) {
 					if ((countitem(533) > 1) && (countitem(998) > 19) && (countitem(938) > 29) && (countitem(601) > 19) && (countitem(962) > 4)) {
 						mes "[Gershaun]";

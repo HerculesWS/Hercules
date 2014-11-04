@@ -42,10 +42,10 @@ sec_in02,15,170,0	script	Golbal var	4_F_CHNDRESS3,{
 				mes "[Check]";
 				mes "Now, the entire list of God Globalvar is being reset.";
 				next;
-				set $God1,0;
-				set $God2,0;
-				set $God3,0;
-				set $God4,0;
+				$God1 = 0;
+				$God2 = 0;
+				$God3 = 0;
+				$God4 = 0;
 				mes "^0000FF$God1^000000 = ^FF0000" + $God1 + "^000000.";
 				mes "^0000FF$God2^000000 = ^FF0000" + $God2 + "^000000.";
 				mes "^0000FF$God3^000000 = ^FF0000" + $God3 + "^000000.";
@@ -101,11 +101,11 @@ L_Var:
 OnInit:
 	// Seals roll at 25/50 in Renewal and 50/100 in Pre-Renewal.
 	if (checkre(0)) {
-		set $@god_check1,25;
-		set $@god_check2,50;
+		$@god_check1 = 25;
+		$@god_check2 = 50;
 	} else {
-		set $@god_check1,50;
-		set $@god_check2,100;
+		$@god_check1 = 50;
+		$@god_check2 = 100;
 	}
 	end;
 }

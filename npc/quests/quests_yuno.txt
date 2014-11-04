@@ -48,7 +48,7 @@ yuno_in03,26,39,3	script	Metto#juno	4_M_SEAMAN,{
 		close;
 	}
 	else if (metto_q == 1) {
-		set metto_q,2;
+		metto_q = 2;
 		mes "I'm going to ask my colleague ^FF0000Stangckle^000000 to help me. I am sure he will be more than willing to help out an old friend.";
 		next;
 		mes "[Metto]";
@@ -56,7 +56,7 @@ yuno_in03,26,39,3	script	Metto#juno	4_M_SEAMAN,{
 		close;
 	}
 	else if (metto_q == 3) {
-		set metto_q,4;
+		metto_q = 4;
 		mes "What? That punk Stangckle said he doesn't want to help me?! This is not good. This will slow my research considerably.";
 		next;
 		mes "[Metto]";
@@ -78,7 +78,7 @@ yuno_in03,26,39,3	script	Metto#juno	4_M_SEAMAN,{
 		close;
 	}
 	else if (metto_q == 5) {
-		set metto_q,6;
+		metto_q = 6;
 		mes "What? You mean to tell me that the very thing I need to continue my research, the mighty Great Z, has been destroyed?!!";
 		next;
 		mes "[Metto]";
@@ -98,7 +98,7 @@ yuno_in03,26,39,3	script	Metto#juno	4_M_SEAMAN,{
 		close;
 	}
 	else if (metto_q == 7) {
-		set metto_q,8;
+		metto_q = 8;
 		mes "...";
 		next;
 		mes "[Metto]";
@@ -180,7 +180,7 @@ yuno_in01,17,30,5	script	Wagan#juno	4_M_03,{
 				mes "offended by this.";
 				close;
 			}
-			set metto_q,1;
+			metto_q = 1;
 			mes "[Wagan]";
 			mes "Oh, are you going to take care of this for us? We would be very grateful.";
 			next;
@@ -231,7 +231,7 @@ yuno_in01,17,30,5	script	Wagan#juno	4_M_03,{
 				mes "Oh no, it seems that you are carrying too much stuff! Would you make some room?";
 				close;
 			}
-			set metto_q,9;
+			metto_q = 9;
 			mes "I wish you luck in your future endeavors...";
 			getitem 715,10; //Yellow_Gemstone
 			close;
@@ -240,7 +240,7 @@ yuno_in01,17,30,5	script	Wagan#juno	4_M_03,{
 			mes "Oh no, it seems that you are carrying too much! Would you make some room?";
 			close;
 		}
-		set metto_q,9;
+		metto_q = 9;
 		mes "I wish you luck in your future endeavors...";
 		getitem 717,5; //Blue_Gemstone
 		close;
@@ -261,7 +261,7 @@ yuno_in01,17,95,5	script	Stangckle#juno	4W_M_03,{
 		mes "What can I do for you? My colleague Metto is coming here soon, so I don't have much time. So what did you say you needed?";
 		next;
 		if (select("I'm here to stop your research.:I don't need anything.") == 1) {
-			set metto_q,3;
+			metto_q = 3;
 			mes "[Stangckle]";
 			mes "...";
 			next;
@@ -326,7 +326,7 @@ yuno_in01,19,183,5	script	Kato#juno	1_M_JOBTESTER,{
 		mes "Of course, my research is private and confidential. But is there anything I can do for you?";
 		next;
 		if (select("I want to stop you from making a mistake.:Just saying hello.") == 1) {
-			set metto_q,5;
+			metto_q = 5;
 			mes "[Kato]";
 			mes "What? Metto said, my Great Z is inferior to Stangckles research?!";
 			next;
@@ -378,7 +378,7 @@ yuno_in03,178,43,0	script	CiCi#juno	2_M_MOLGENSTEIN,{
 		next;
 		switch(select("I want to warn you.:Nothing, just saying Hi.")) {
 		case 1:
-			set metto_q,7;
+			metto_q = 7;
 			mes "[CiCi]";
 			mes "Hm? Metto said that he doesn't need my Riding Engine theory?! Hmpf, what an ingrate!";
 			next;
@@ -432,8 +432,8 @@ yuno_in01,103,157,3	script	Bain#juno	4W_M_02,{
 		close;
 	}
 	if (countitem(974) > 0 && countitem(612) > 4 && countitem(1003) > 4 && countitem(7068) > 4 && countitem(7043) > 4 && countitem(757) > 2 && countitem(756) > 2 && Zeny > 2000) {
-		if (ALCH_Q == 23) set ALCH_Q,24;
-		set .@kyulkwa,rand(1,10);
+		if (ALCH_Q == 23) ALCH_Q = 24;
+		.@kyulkwa = rand(1,10);
 		mes "[Bain]";
 		mes "Oh ho ho... These are the parts that I needed. Thank you so much.";
 		next;
@@ -493,7 +493,7 @@ yuno_in01,103,157,3	script	Bain#juno	4W_M_02,{
 		mes "powerful. How will I continue my research?";
 		next;
 		if (select("I'll get them for you.:Good luck.") == 1) {
-			set bros_q,1;
+			bros_q = 1;
 			mes "[Bain]";
 			mes "Really? Such benevolence is rare";
 			mes "in this day and age. We would be";
@@ -553,7 +553,7 @@ S_DelItems:
 	mes "I wish you luck in your journeys!";
 	close;
 }
-	
+
 yuno_in01,100,153,7	script	Bajin	1_M_01,0,0,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";
@@ -564,8 +564,8 @@ yuno_in01,100,153,7	script	Bajin	1_M_01,0,0,{
 		close;
 	}
 	if (countitem(974) > 0 && countitem(612) > 4 && countitem(1003) > 4 && countitem(7068) > 4 && countitem(7043) > 4 && countitem(757) > 2 && countitem(756) > 2 && Zeny > 2000) {
-		if (ALCH_Q == 23) set ALCH_Q,24;
-		set .@kyulkwa,rand(1,10);
+		if (ALCH_Q == 23) ALCH_Q = 24;
+		.@kyulkwa = rand(1,10);
 		mes "[Bajin]";
 		mes "Oh ho ho... These are the parts";
 		mes "that I needed. Thank you so much.";
@@ -626,7 +626,7 @@ yuno_in01,100,153,7	script	Bajin	1_M_01,0,0,{
 		mes "powerful. How will I continue my research?";
 		next;
 		if (select("I'll get them for you.:Good luck.") == 1) {
-			set bros_q,1;
+			bros_q = 1;
 			mes "[Bajin]";
 			mes "Oh, you are too kind.";
 			mes "We would be grateful for your assistance.";
@@ -762,7 +762,7 @@ yuno,261,99,4	script	Sage Yklah#juno	4_M_JOB_WIZARD,{
 				next;
 				mes "[Yklah]";
 				mes "As you already possess the Stamp of Muriniel, I am more than willing to help you.";
-				set dmdswrd_Q,24;
+				dmdswrd_Q = 24;
 				close;
 			case 2:
 				mes "[Yklah]";
@@ -817,7 +817,7 @@ yuno,261,99,4	script	Sage Yklah#juno	4_M_JOB_WIZARD,{
 				next;
 				mes "^3355FFYou got the";
 				mes "True Stamp of Muriniel.^000000";
-				set dmdswrd_Q,25;
+				dmdswrd_Q = 25;
 				next;
 				mes "[Yklah]";
 				mes "Oh? This pattern is...!! Ah, now I see how it works. Now, please listen...";
@@ -919,7 +919,7 @@ yuno,261,99,4	script	Sage Yklah#juno	4_M_JOB_WIZARD,{
 		close;
 	}
 }
-	
+
 yuno,305,207,4	script	Sage Syklah#juno	4_M_JOB_WIZARD,{
 	if (dmdswrd_Q == 25 || dmdswrd_Q == 26 || dmdswrd_Q == 27) {
 		switch(dmdswrd_Q) {
@@ -969,7 +969,7 @@ yuno,305,207,4	script	Sage Syklah#juno	4_M_JOB_WIZARD,{
 			next;
 			mes "[Syklah]";
 			mes "I think that's all I need. Anyway, I believe that gathering these items shouldn't be a difficult task for you. Good luck to you.";
-			set dmdswrd_Q,26;
+			dmdswrd_Q = 26;
 			close;
 		case 26:
 			if (countitem(7049) > 4 && countitem(953) > 0 && countitem(507) > 19) {
@@ -992,7 +992,7 @@ yuno,305,207,4	script	Sage Syklah#juno	4_M_JOB_WIZARD,{
 				mes "- Pah ahhhh !! -";
 				next;
 				mes "^3355FFThe Stamping Ink of Muriniel has been created, and has been given to you by the sage Syklah.^000000";
-				set dmdswrd_Q,27;
+				dmdswrd_Q = 27;
 				next;
 				mes "[Syklah]";
 				mes "Now, with this stamping ink, you are able to use the Stamp of Muriniel.";
@@ -1042,7 +1042,7 @@ yuno,305,207,4	script	Sage Syklah#juno	4_M_JOB_WIZARD,{
 		close;
 	}
 }
-	
+
 yuno,213,298,4	script	Sage Esklah#juno	4_M_JOB_WIZARD,{
 	if (dmdswrd_Q == 27 || dmdswrd_Q == 28 || dmdswrd_Q == 29 || dmdswrd_Q == 30) {
 		switch(dmdswrd_Q) {
@@ -1095,7 +1095,7 @@ yuno,213,298,4	script	Sage Esklah#juno	4_M_JOB_WIZARD,{
 			next;
 			mes "[Esklah]";
 			mes "For someone seeking the doomed sword, this should be a relatively simple task. Now go, and bring me what I have asked.";
-			set dmdswrd_Q,28;
+			dmdswrd_Q = 28;
 			close;
 		case 28:
 			if (countitem(1002) > 1 && countitem(1026) > 9 && countitem(957) > 4) {
@@ -1122,7 +1122,7 @@ yuno,213,298,4	script	Sage Esklah#juno	4_M_JOB_WIZARD,{
 				mes "^3355FF1 Phracon^000000.";
 				mes "Now isn't that simple?";
 				mes "Muhahahaha!!";
-				set dmdswrd_Q,29;
+				dmdswrd_Q = 29;
 				close;
 			}
 			mes "[Esklah]";
@@ -1160,7 +1160,7 @@ yuno,213,298,4	script	Sage Esklah#juno	4_M_JOB_WIZARD,{
 				next;
 				mes "[Esklah]";
 				mes "Look at the middle of compass carefully to find the place you must use the stamp. I wish you the best of luck in your journey.";
-				set dmdswrd_Q,30;
+				dmdswrd_Q = 30;
 				close;
 			}
 			mes "[Esklah]";
@@ -1199,7 +1199,7 @@ yuno,213,298,4	script	Sage Esklah#juno	4_M_JOB_WIZARD,{
 		close;
 	}
 }
-	
+
 mjolnir_02,170,193,4	script	Muriniel's Cottage#juno	HIDDEN_NPC,{
 	if (dmdswrd_Q == 30 || dmdswrd_Q == 31) {
 		switch(dmdswrd_Q) {
@@ -1242,7 +1242,7 @@ mjolnir_02,170,193,4	script	Muriniel's Cottage#juno	HIDDEN_NPC,{
 			mes "^3355FFSuddenly, the Stamp of Muriniel and the Compass of Muriniel break open to reveal a small, shining object.^000000";
 			next;
 			mes "^3355FFYou have received the ^9999FFDignity of Muriniel^000000.";
-			set dmdswrd_Q,31;
+			dmdswrd_Q = 31;
 			close;
 		case 31:
 			mes "^3355FFYou can faintly hear someone's voice coming from somewhere...^000000";

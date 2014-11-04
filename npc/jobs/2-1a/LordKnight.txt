@@ -15,7 +15,7 @@
 
 valkyrie,44,39,5	script	Lord Knight#Valkyrie	1_M_KNIGHTMASTER,{
 	if (ADVJOB == 0 || Upper != 1) {
-		set .@karma_d,rand(1,10);
+		.@karma_d = rand(1,10);
 		if (.@karma_d > 4) {
 			mes "[Lord Knight]";
 			mes "Congratulations.";
@@ -59,7 +59,7 @@ valkyrie,44,39,5	script	Lord Knight#Valkyrie	1_M_KNIGHTMASTER,{
 			close;
 		}
 		jobchange Job_Lord_Knight;
-		set ADVJOB,0;
+		ADVJOB = 0;
 		mes "[Lord Knight]";
 		mes "Congratulations!";
 		mes "As a Lord Knight,";

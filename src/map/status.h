@@ -730,13 +730,19 @@ typedef enum sc_type {
 	
 	SC__FEINTBOMB_MASTER,
 	SC_FALLENEMPIRE,
-	SC_FLASHCOMBO,
+	SC_FLASHCOMBO, // 580
 
 	//Vellum Weapon reductions
 	SC_DEFSET,
 	SC_MDEFSET,
 
 	SC_NO_SWITCH_EQUIP,
+
+	// 2014 Halloween Event
+	SC_MTF_MHP,
+	SC_MTF_MSP,
+	SC_MTF_PUMPKIN,
+	SC_MTF_HITFLEE,
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;

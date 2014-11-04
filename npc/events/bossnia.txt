@@ -67,7 +67,7 @@ prontera,132,125,4	script	Bossnia Staff#1	4_M_PHILMAN,{
 		mes "Would you really like to take the challenge?";
 		mes "Ok, just choose the course.";
 		next;
-		set .@i, select("First","Second","Third","Fourth");
+		.@i = select("First","Second","Third","Fourth");
 		mes "[Riss]";
 		mes "Take care, boy~";
 		mes "Don't hold a grudge against me.";

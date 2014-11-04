@@ -134,7 +134,7 @@ S_Participate:
 	Hallow08Kill = 1;
 	@Hallow08Warp = rand(1,3);
 	percentheal -98,0;
-	setriding 0;
+	setmount(MOUNT_NONE);
 	setcart 0;
 	warp "evt_zombie",155,246;
 	end;

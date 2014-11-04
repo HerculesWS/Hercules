@@ -13,8 +13,8 @@
 
 nif_fild02,332,327,4	script	Deadman	4_M_NFDEADMAN,{
 
-	if (checkquest(60173) != -1) {
-		if (checkquest(60173,HUNTING) != 2 ) {
+	if (questprogress(60173)) {
+		if (questprogress(60173,HUNTING) != 2) {
 			mes "[Deadman]";
 			mes "Have you finished hunting the 50 Disguise?";
 			next;
@@ -51,8 +51,8 @@ nif_fild02,332,327,4	script	Deadman	4_M_NFDEADMAN,{
 		erasequest 60173;
 		close;
 	}
-	if (checkquest(60176) != -1) {
-		if (checkquest(60176,HUNTING) != 2 ) {
+	if (questprogress(60176)) {
+		if (questprogress(60176,HUNTING) != 2) {
 			mes "[Deadman]";
 			mes "Have you finished hunting the 50 Loli Ruri?";
 			next;

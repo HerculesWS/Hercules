@@ -217,9 +217,9 @@ bat_room,156,178,5	script	Tierra Valley Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	if( checkquest(2069,PLAYTIME) == 2 ) erasequest 2069;
-	if( checkquest(2069,PLAYTIME) != -1 )
-	{
+	if (questprogress(2069,PLAYTIME) == 2)
+		erasequest 2069;
+	if (questprogress(2069,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at Tierra Gorge. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[Tierra Officer]";
@@ -287,9 +287,9 @@ bat_room,156,121,1	script	Tierra Valley Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	if( checkquest(2069,PLAYTIME) == 2 ) erasequest 2069;
-	if( checkquest(2069,PLAYTIME) != -1 )
-	{
+	if (questprogress(2069,PLAYTIME) == 2)
+		erasequest 2069;
+	if (questprogress(2069,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at Tierra Gorge. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[Tierra Officer]";
@@ -357,9 +357,9 @@ bat_room,164,178,5	script	Tierra Valley Officer#3	4_M_KY_KNT,{
 		close;
 	}
 
-	if( checkquest(2069,PLAYTIME) == 2 ) erasequest 2069;
-	if( checkquest(2069,PLAYTIME) != -1 )
-	{
+	if (questprogress(2069,PLAYTIME) == 2)
+		erasequest 2069;
+	if (questprogress(2069,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at Tierra Gorge. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[Tierra Officer]";
@@ -427,9 +427,9 @@ bat_room,164,121,1	script	Tierra Valley Officer#4	4_M_CRU_KNT,{
 		close;
 	}
 
-	if( checkquest(2069,PLAYTIME) == 2 ) erasequest 2069;
-	if( checkquest(2069,PLAYTIME) != -1 )
-	{
+	if (questprogress(2069,PLAYTIME) == 2)
+		erasequest 2069;
+	if (questprogress(2069,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at Tierra Gorge. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[Tierra Officer]";
@@ -498,9 +498,9 @@ bat_room,172,178,5	script	Flavius Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	if( checkquest(2070,PLAYTIME) == 2 ) erasequest 2070;
-	if( checkquest(2070,PLAYTIME) != -1 )
-	{
+	if (questprogress(2070,PLAYTIME) == 2)
+		erasequest 2070;
+	if (questprogress(2070,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at Flavius. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[Flavius Officer]";
@@ -569,9 +569,9 @@ bat_room,172,121,1	script	Flavius Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	if( checkquest(2070,PLAYTIME) == 2 ) erasequest 2070;
-	if( checkquest(2070,PLAYTIME) != -1 )
-	{
+	if (questprogress(2070,PLAYTIME) == 2)
+		erasequest 2070;
+	if (questprogress(2070,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at Flavius. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[Flavius Officer]";
@@ -640,9 +640,9 @@ bat_room,148,178,5	script	Flavius Officer#3	4_M_KY_KNT,{
 		close;
 	}
 
-	if( checkquest(2070,PLAYTIME) == 2 ) erasequest 2070;
-	if( checkquest(2070,PLAYTIME) != -1 )
-	{
+	if (questprogress(2070,PLAYTIME) == 2)
+		erasequest 2070;
+	if (questprogress(2070,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at Flavius. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[Flavius Officer]";
@@ -711,9 +711,9 @@ bat_room,148,121,1	script	Flavius Officer#4	4_M_CRU_KNT,{
 		close;
 	}
 
-	if( checkquest(2070,PLAYTIME) == 2 ) erasequest 2070;
-	if( checkquest(2070,PLAYTIME) != -1 )
-	{
+	if (questprogress(2070,PLAYTIME) == 2)
+		erasequest 2070;
+	if (questprogress(2070,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at Flavius. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[Flavius Officer]";
@@ -779,9 +779,9 @@ bat_room,140,178,5	script	KVM [80-99] Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	if( checkquest(6025,PLAYTIME) == 2 ) erasequest 6025;
-	if( checkquest(6025,PLAYTIME) != -1 )
-	{
+	if (questprogress(6025,PLAYTIME) == 2)
+		erasequest 6025;
+	if (questprogress(6025,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[KVM Officer]";
@@ -847,9 +847,9 @@ bat_room,140,121,1	script	KVM [80-99] Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	if( checkquest(6025,PLAYTIME) == 2 ) erasequest 6025;
-	if( checkquest(6025,PLAYTIME) != -1 )
-	{
+	if (questprogress(6025,PLAYTIME) == 2)
+		erasequest 6025;
+	if (questprogress(6025,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[KVM Officer]";
@@ -915,9 +915,9 @@ bat_room,132,178,5	script	KVM [60-79] Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	if( checkquest(6025,PLAYTIME) == 2 ) erasequest 6025;
-	if( checkquest(6025,PLAYTIME) != -1 )
-	{
+	if (questprogress(6025,PLAYTIME) == 2)
+		erasequest 6025;
+	if (questprogress(6025,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[KVM Officer]";
@@ -983,9 +983,9 @@ bat_room,132,121,1	script	KVM [60-79] Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	if( checkquest(6025,PLAYTIME) == 2 ) erasequest 6025;
-	if( checkquest(6025,PLAYTIME) != -1 )
-	{
+	if (questprogress(6025,PLAYTIME) == 2)
+		erasequest 6025;
+	if (questprogress(6025,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[KVM Officer]";
@@ -1051,9 +1051,9 @@ bat_room,124,178,5	script	KVM [1-59] Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	if( checkquest(6025,PLAYTIME) == 2 ) erasequest 6025;
-	if( checkquest(6025,PLAYTIME) != -1 )
-	{
+	if (questprogress(6025,PLAYTIME) == 2)
+		erasequest 6025;
+	if (questprogress(6025,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[KVM Officer]";
@@ -1119,9 +1119,9 @@ bat_room,124,121,1	script	KVM [1-59] Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	if( checkquest(6025,PLAYTIME) == 2 ) erasequest 6025;
-	if( checkquest(6025,PLAYTIME) != -1 )
-	{
+	if (questprogress(6025,PLAYTIME) == 2)
+		erasequest 6025;
+	if (questprogress(6025,PLAYTIME)) {
 		mes "You have received an indicator showing that you've participated in the Battle at KvM. I can't let you participate in any other battles until the indicator goes off.";
 		next;
 		mes "[KVM Officer]";

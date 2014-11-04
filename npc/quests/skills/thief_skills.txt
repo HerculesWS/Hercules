@@ -58,7 +58,7 @@ moc_prydb1,154,128,4	script	Alcouskou	2_M_THIEFMASTER,{
 					mes "west Payon. That is where I";
 					mes "heard he is these days.";
 					delitem 7041,5; //Fine_Grit
-					set skill_thief_1,1;
+					skill_thief_1 = 1;
 					close;
 				}
 				mes "[Alcouskou]";
@@ -468,7 +468,7 @@ payon,91,77,3	script	Bag Seller	4W_M_03,{
 			delitem 952,1; //Cactus_Needle
 			delitem 1055,1; //Earthworm_Peeling
 			delitem 1025,1; //Spiderweb
-			set skill_thief_1,2;
+			skill_thief_1 = 2;
 			getitem 7042,1; //Leather_Bag_Of_Infinity
 			close;
 		}

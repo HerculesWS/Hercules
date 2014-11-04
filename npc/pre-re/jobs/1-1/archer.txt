@@ -95,7 +95,7 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 			mes "If so, you need to fill out this application form.";
 			next;
 			if (select("Apply.:Cancel") == 1) {
-				set job_archer_q,1;
+				job_archer_q = 1;
 				setquest 1004;
 				mes "[Archer Guildsman]";
 				mes "Okay, sign here. Alright, um, I'll promote you once you meet the requirements.";
@@ -132,12 +132,12 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 			close;
 		}
 		if (job_archer_q == 1) {
-			set .@archer_item1,countitem(1066) * 5;
-			set .@archer_item2,countitem(1067) * 3;
-			set .@archer_item3,countitem(1068) * 2;
-			set .@archer_item4,countitem(1019);
-			set .@total_archer,.@archer_item1 + .@archer_item2 + .@archer_item3 + .@archer_item4;
-			set .@total_archer2,(((.@archer_item2 + .@archer_item3) * 2) + .@archer_item4);
+			.@archer_item1 = countitem(1066) * 5;
+			.@archer_item2 = countitem(1067) * 3;
+			.@archer_item3 = countitem(1068) * 2;
+			.@archer_item4 = countitem(1019);
+			.@total_archer = .@archer_item1 + .@archer_item2 + .@archer_item3 + .@archer_item4;
+			.@total_archer2 = (((.@archer_item2 + .@archer_item3) * 2) + .@archer_item4);
 			mes "[Archer Guildsman]";
 			mes "Excellent!";
 			mes "Now then,";

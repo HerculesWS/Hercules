@@ -109,7 +109,7 @@ izlude_in,74,172,4	script	Swordman#swd_1	2_M_SWORDMASTER,{
 			next;
 			if (select("Sign up.:Cancel.") == 1) {
 				savepoint "izlude_in",65,165;
-				set job_sword_q,1;
+				job_sword_q = 1;
 				setquest 1014;
 				mes "[Swordman]";
 				mes "Ah, yes. Your application will be reviewed as soon as possible.";
@@ -154,7 +154,7 @@ izlude_in,74,172,4	script	Swordman#swd_1	2_M_SWORDMASTER,{
 			mes "Hahaha! Congratulations! Now you are fully qualified to be a real Swordman! I will transform you right away!";
 			next;
 			callfunc "Job_Change",Job_Swordman;
-			set job_sword_q,0;
+			job_sword_q = 0;
 			completequest 1014;
 			mes "[Swordman]";
 			mes "Once again, congratulations. I expect that you will be a good representative of the Swordman Association.";
@@ -279,12 +279,12 @@ izlude_in,30,163,0	script	Test Hall Staff#swd_1	8W_SOLDIER,{
 		next;
 		mes "[Test Hall Staff]";
 		mes "Try to relax and do your best. This course isn't so difficult.";
-		set job_sword_q,2;
+		job_sword_q = 2;
 	}
 	else if (job_sword_q == 2) {
 		mes "Retesting? Try not to worry about it. It's good that you don't back down from a challenge! Here, take these and cheer up!";
 		getitem 512,5; //Apple
-		set job_sword_q,3;
+		job_sword_q = 3;
 	}
 	else if (job_sword_q == 3)
 		mes "Don't ever give up! Now retesting!";
@@ -310,7 +310,7 @@ job_sword1,230,204,2	script	Test Hall Staff#2swd_3	8W_SOLDIER,{
 }
 job_sword1,223,167,2	script	Mae#swd_1_success	4_F_03,{
 	mapannounce "job_sword1","Applicant " + strcharinfo(0) + ". You successfully passed the test.",bc_map;
-	set job_sword_q,4;
+	job_sword_q = 4;
 	mes "[Mae]";
 	mes "I sencerely congratulate you for passing the test!";
 	mes "I already sent your test result to the Job Department.Please inquire at the Officer in Centre.Thank you.";

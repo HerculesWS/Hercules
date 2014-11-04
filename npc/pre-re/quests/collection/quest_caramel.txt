@@ -13,8 +13,8 @@
 //============================================================
 
 mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
-	if (checkquest(60116) != -1) {
-		if (checkquest(60116,HUNTING) != 2 ) {
+	if (questprogress(60116)) {
+		if (questprogress(60116,HUNTING) != 2) {
 			mes "[Yullo]";
 			mes "Have you finished hunting the 50 Caramels?";
 			next;
@@ -53,8 +53,8 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 			close;
 		}
 	}
-	if (checkquest(60117) != -1) {
-		if (checkquest(60117,HUNTING) != 2 ) {
+	if (questprogress(60117)) {
+		if (questprogress(60117,HUNTING) != 2) {
 			mes "[Yullo]";
 			mes "Have you finished hunting the 50 Caramels?";
 			next;
@@ -94,8 +94,8 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 			close;
 		}
 	}
-	if (checkquest(60118) != -1) {
-		if (checkquest(60118,HUNTING) != 2 ) {
+	if (questprogress(60118)) {
+		if (questprogress(60118,HUNTING) != 2) {
 			mes "[Yullo]";
 			mes "Have you finished hunting the 150 Caramels?";
 			next;

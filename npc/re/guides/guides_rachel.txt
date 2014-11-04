@@ -21,7 +21,7 @@ rachel,138,146,5	script	Rachel Guide#rachel	4_M_RASWORD,{
 	while (1) {
 		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
 		case 1:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Inn ]:[ Weapon Shop ]:[ Tool Shop ]:[ Airport ]:[ Cheshrumnir ]:[ Priest Zed's Mansion ]:Previous Menu")) {
 				case 1:
@@ -70,13 +70,13 @@ rachel,138,146,5	script	Rachel Guide#rachel	4_M_RASWORD,{
 					next;
 					break;
 				case 7:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}
 			break;
 		case 2:
-			set .@loop,1;
+			.@loop = 1;
 			while (.@loop) {
 				switch(select("[ Cool Event Corp. Staff ]:[ Eden Teleport Officer ]:Previous Menu")) {
 				case 1:
@@ -98,7 +98,7 @@ rachel,138,146,5	script	Rachel Guide#rachel	4_M_RASWORD,{
 					next;
 					break;
 				case 3:
-					set .@loop,0;
+					.@loop = 0;
 					break;
 				}
 			}

@@ -143,7 +143,7 @@ prt_fild03,365,255,2	script	Ascetic#aco	4_M_ORIENT02,{
 				mes "Farewell.";
 				close2;
 				savepoint "prt_fild03",361,255;
-				set job_acolyte_q,6;
+				job_acolyte_q = 6;
 				end;
 			}
 			else {
@@ -211,7 +211,7 @@ moc_fild07,41,355,4	script	Ascetic#2aco	4_F_SISTER,{
 				mes "Please return to the Prontera Sanctuary and speak to the Priest in charge.";
 				close2;
 				savepoint "moc_fild07",35,355;
-				set job_acolyte_q,7;
+				job_acolyte_q = 7;
 				end;
 			}
 			else {
@@ -288,7 +288,7 @@ prt_fild00,208,218,6	script	Ascetic#3aco	4W_M_02,{
 				mes "Now go back to the Santuary and finish becoming an Acolyte, kid.";
 				close2;
 				savepoint "prt_fild00",206,230;
-				set job_acolyte_q,8;
+				job_acolyte_q = 8;
 				end;
 			}
 			else {

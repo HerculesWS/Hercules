@@ -90,7 +90,7 @@ prontera,111,99,5	script	Egg Salesman#prt::EggVendor	4W_M_02,{
 					next;
 				}
 				else {
-					set .@egg_zeny,.@input*500;
+					.@egg_zeny = .@input*500;
 					if (Zeny < .@egg_zeny) {
 						mes "[Egg Salesman]";
 						mes "You don't have enough Zeny.";
@@ -173,7 +173,7 @@ prontera,108,96,5	script	Cantankerous Geezer#prt::EggGeezer	4_M_SEAMAN,{
 	mes "giving to them in return?";
 	close2;
 	if (easter2008 < 1) {
-		set easter2008,1;
+		easter2008 = 1;
 	}
 	end;
 }
@@ -341,7 +341,7 @@ morocc,131,26,5	script	Secret Corps#egg	4_M_MASKMAN,{
 				mes "more, then why don't you";
 				mes "bring me 10 Holy Eggs?";
 				mes "That is my condition.";
-				set easter2008,2;
+				easter2008 = 2;
 				close;
 			case 2:
 				mes "[Corps Member]";
@@ -388,7 +388,7 @@ morocc,131,26,5	script	Secret Corps#egg	4_M_MASKMAN,{
 				mes "for joining us. Now, I can";
 				mes "tell you about what we do.";
 				delitem 12019,10; //Holy_Egg
-				set easter2008,3;
+				easter2008 = 3;
 				getitem 644,2; //Gift_Box
 				next;
 				mes "[Corps Member]";
@@ -441,7 +441,7 @@ morocc,131,26,5	script	Secret Corps#egg	4_M_MASKMAN,{
 		mes "Go and bring me";
 		mes "33 Holy Eggs! I shall be";
 		mes "waiting here for your return...";
-		set easter2008,4;
+		easter2008 = 4;
 		close;
 	}
 	else if (easter2008 == 4) {
@@ -468,7 +468,7 @@ morocc,131,26,5	script	Secret Corps#egg	4_M_MASKMAN,{
 					mes "Sacrifice the Holy Eggs there,";
 					mes "and then return to me. Now...";
 					mes "Go, and bring him back to life!";
-					set easter2008,5;
+					easter2008 = 5;
 					close;
 				}
 				else if ((BaseLevel > 40) && (BaseLevel < 61)) {
@@ -479,7 +479,7 @@ morocc,131,26,5	script	Secret Corps#egg	4_M_MASKMAN,{
 					mes "at the entrance to the 4th";
 					mes "level. Sacrifice the Holy Eggs";
 					mes "there, and return him to life!";
-					set easter2008,6;
+					easter2008 = 6;
 					close;
 				}
 				else if ((BaseLevel > 60) && (BaseLevel < 81)) {
@@ -490,7 +490,7 @@ morocc,131,26,5	script	Secret Corps#egg	4_M_MASKMAN,{
 					mes "Sacrifice the Holy Eggs as soon";
 					mes "as you get to the 3rd floor.";
 					mes "Go, and bring him back to life!";
-					set easter2008,7;
+					easter2008 = 7;
 					close;
 				}
 				else {
@@ -501,7 +501,7 @@ morocc,131,26,5	script	Secret Corps#egg	4_M_MASKMAN,{
 					mes "2nd floor. A hero perished";
 					mes "there, but you shall bring";
 					mes "him back to the living!";
-					set easter2008,8;
+					easter2008 = 8;
 					close;
 				}
 			}
@@ -593,7 +593,7 @@ morocc,131,26,5	script	Secret Corps#egg	4_M_MASKMAN,{
 		mes "and then try again next year.";
 		mes "Farewell, my friend, and I hope";
 		mes "that you'll assist us again.";
-		set easter2008,10;
+		easter2008 = 10;
 		if (BaseLevel < 41) {
 			getexp 5000,0;
 			getexp 5000,0;
@@ -658,7 +658,7 @@ pay_dun00,22,127,0	script	Trace#egg1	CLEAR_NPC,{
 			mes "him know that it didn't work.";
 			close2;
 			delitem 12019,33; //Holy_Egg
-			set easter2008,9;
+			easter2008 = 9;
 			end;
 		}
 		else {
@@ -710,7 +710,7 @@ iz_dun02,340,346,0	script	Trace#egg	CLEAR_NPC,{
 			mes "him know that it didn't work.";
 			close2;
 			delitem 12019,33; //Holy_Egg
-			set easter2008,9;
+			easter2008 = 9;
 			end;
 		}
 		else {
@@ -762,7 +762,7 @@ mjo_dun03,308,256,0	script	Trace#egg2	CLEAR_NPC,{
 			mes "him know that it didn't work.";
 			close2;
 			delitem 12019,33; //Holy_Egg
-			set easter2008,9;
+			easter2008 = 9;
 			end;
 		}
 		else {
@@ -814,7 +814,7 @@ gl_prison,157,176,0	script	Trace#egg3	CLEAR_NPC,{
 			mes "him know that it didn't work.";
 			close2;
 			delitem 12019,33; //Holy_Egg
-			set easter2008,9;
+			easter2008 = 9;
 			end;
 		}
 		else {

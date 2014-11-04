@@ -935,13 +935,16 @@ void initChangeTables(void) {
 	status->ChangeFlagTable[SC_INCHITRATE] |= SCB_HIT;
 	status->ChangeFlagTable[SC_INCFLEE] |= SCB_FLEE;
 	status->ChangeFlagTable[SC_INCFLEERATE] |= SCB_FLEE;
+	status->ChangeFlagTable[SC_MTF_HITFLEE] |= SCB_HIT|SCB_FLEE;
 	status->ChangeFlagTable[SC_CRITICALPERCENT] |= SCB_CRI;
 	status->ChangeFlagTable[SC_INCASPDRATE] |= SCB_ASPD;
 	status->ChangeFlagTable[SC_PLUSAVOIDVALUE] |= SCB_FLEE2;
 	status->ChangeFlagTable[SC_INCMHPRATE] |= SCB_MAXHP;
 	status->ChangeFlagTable[SC_INCMSPRATE] |= SCB_MAXSP;
 	status->ChangeFlagTable[SC_INCMHP] |= SCB_MAXHP;
+	status->ChangeFlagTable[SC_MTF_MHP] |= SCB_MAXHP;
 	status->ChangeFlagTable[SC_INCMSP] |= SCB_MAXSP;
+	status->ChangeFlagTable[SC_MTF_MSP] |= SCB_MAXSP;
 	status->ChangeFlagTable[SC_INCATKRATE] |= SCB_BATK|SCB_WATK;
 	status->ChangeFlagTable[SC_INCMATKRATE] |= SCB_MATK;
 	status->ChangeFlagTable[SC_INCDEFRATE] |= SCB_DEF;
@@ -1795,9 +1798,9 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 	//If targeting, cloak+hide protect you, otherwise only hiding does.
 	hide_flag = flag?OPTION_HIDE:(OPTION_HIDE|OPTION_CLOAK|OPTION_CHASEWALK);
 
-	// There is no NF for ground skills, but every earth type skill out there
-	// affects hidding except Stone Curse
-	if( skill->get_ele(skill_id,1) == ELE_EARTH && skill_id != MG_STONECURSE)
+	// Applies even if the target hides
+	if ((skill->get_ele(skill_id,1) == ELE_EARTH && skill_id != MG_STONECURSE) // Ground type
+	  || (flag&1 && skill->get_nk(skill_id)&NK_NO_DAMAGE && skill_id != ALL_RESURRECTION)) // Buff/debuff skills started before hiding
 		hide_flag &= ~OPTION_HIDE;
 
 	switch( target->type ) {
@@ -1809,7 +1812,6 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 					return 0;
 				if( tsc ) {
 					if (tsc->option&hide_flag && !is_boss &&
-						!(flag&1 && skill->get_nk(skill_id)&NK_NO_DAMAGE) && // Buff/debuff skills that started casting before hiding still applies
 						((sd->special_state.perfect_hiding || !is_detect) ||
 						(tsc->data[SC_CLOAKINGEXCEED] && is_detect)))
 						return 0;
@@ -4713,6 +4715,8 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
+		if (sc->data[SC_MINDBREAKER])
+			matk += matk * sc->data[SC_MINDBREAKER]->val2/100;
 		return (unsigned short)cap_value(matk,0,USHRT_MAX);
 	}
 
@@ -4737,8 +4741,6 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 	if (sc->data[SC_IZAYOI])
 		matk += 25 * sc->data[SC_IZAYOI]->val1;
 #endif
-	if (sc->data[SC_MINDBREAKER])
-		matk += matk * sc->data[SC_MINDBREAKER]->val2/100;
 	if( sc->data[SC_ZANGETSU] )
 		matk += sc->data[SC_ZANGETSU]->val3;
 	if (sc->data[SC_MAGICPOWER] && sc->data[SC_MAGICPOWER]->val4)
@@ -4805,6 +4807,8 @@ signed short status_calc_hit(struct block_list *bl, struct status_change *sc, in
 
 	if(sc->data[SC_INCHIT])
 		hit += sc->data[SC_INCHIT]->val1;
+	if(sc->data[SC_MTF_HITFLEE])
+		hit += sc->data[SC_MTF_HITFLEE]->val1;
 	if(sc->data[SC_FOOD_BASICHIT])
 		hit += sc->data[SC_FOOD_BASICHIT]->val1;
 	if(sc->data[SC_TRUESIGHT])
@@ -4856,6 +4860,8 @@ signed short status_calc_flee(struct block_list *bl, struct status_change *sc, i
 
 	if(sc->data[SC_INCFLEE])
 		flee += sc->data[SC_INCFLEE]->val1;
+	if(sc->data[SC_MTF_HITFLEE])
+		flee += sc->data[SC_MTF_HITFLEE]->val2;
 	if(sc->data[SC_FOOD_BASICAVOIDANCE])
 		flee += sc->data[SC_FOOD_BASICAVOIDANCE]->val1;
 	if(sc->data[SC_WHISTLE])
@@ -5700,6 +5706,8 @@ unsigned int status_calc_maxhp(struct block_list *bl, struct status_change *sc, 
 		maxhp += maxhp * sc->data[SC_INCMHPRATE]->val1/100;
 	if(sc->data[SC_INCMHP])
 		maxhp += (sc->data[SC_INCMHP]->val1);
+	if(sc->data[SC_MTF_MHP])
+		maxhp += (sc->data[SC_MTF_MHP]->val1);
 	if(sc->data[SC_APPLEIDUN])
 		maxhp += maxhp * sc->data[SC_APPLEIDUN]->val2/100;
 	if(sc->data[SC_DELUGE])
@@ -5767,6 +5775,8 @@ unsigned int status_calc_maxsp(struct block_list *bl, struct status_change *sc, 
 		maxsp += maxsp * sc->data[SC_INCMSPRATE]->val1/100;
 	if(sc->data[SC_INCMSP])
 		maxsp += (sc->data[SC_INCMSP]->val1);
+	if(sc->data[SC_MTF_MSP])
+		maxsp += (sc->data[SC_MTF_MSP]->val1);
 	if(sc->data[SC_SERVICEFORYOU])
 		maxsp += maxsp * sc->data[SC_SERVICEFORYOU]->val2/100;
 	if(sc->data[SC_MER_SP])
@@ -11335,7 +11345,7 @@ int status_change_timer_sub(struct block_list* bl, va_list ap) {
 				if (sce && skill->attack(BF_MAGIC,src,src,bl,WZ_SIGHTBLASTER,sce->val1,tick,0x4000)
 					&& (!su || !su->group || !(skill->get_inf2(su->group->skill_id)&INF2_TRAP))) { // The hit is not counted if it's against a trap
 					sce->val2 = 0; // This signals it to end.
-				} else if((bl->type&BL_SKILL) && sce->val4%2 == 0) {
+				} else if ((bl->type&BL_SKILL) && sce && sce->val4%2 == 0) {
 					//Remove trap immunity temporarily so it triggers if you still stand on it
 					sce->val4++;
 				}
@@ -11384,7 +11394,7 @@ int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk, int fl
 
 	if( !(flag&1) ){
 		if( max > min )
-			max = min + rnd()%(max - min);
+			max = min + rnd()%(max - min + 1);
 		else
 			max = min;
 	}

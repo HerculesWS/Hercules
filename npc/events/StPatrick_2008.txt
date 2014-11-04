@@ -99,7 +99,7 @@ prt_fild05,170,286,4	script	Anxious Leprechaun#8pday	4_M_PATRICK,{
 		mes "[O'Riley the Leprechaun]";
 		mes "Ye might try some Firecrackers.";
 		mes "Course, Ye would need a great number of them, Ye would need at least ^FF0000200 Firecreackers^000000";
-		set StPatrick2008,1;
+		StPatrick2008 = 1;
 		close;
 	}
 	else if (StPatrick2008 == 1) {
@@ -136,7 +136,7 @@ prt_fild05,170,286,4	script	Anxious Leprechaun#8pday	4_M_PATRICK,{
 		mes "[O'Riley the Leprechaun]";
 		mes "When ye have had a moment to rest ye legs, come talk to me again and we may speak again";
 		close2;
-		set StPatrick2008,3;
+		StPatrick2008 = 3;
     		getexp 200000,70000;
 		delitem 7721,1;
 		end;
@@ -153,7 +153,7 @@ prt_fild05,170,286,4	script	Anxious Leprechaun#8pday	4_M_PATRICK,{
 		mes "I would be so generous to give you some of my famous brew if you would bring me the ill-gotten gains carried by those vile snakes";
 		next;
 		mes "And if you find one of the treasures of my kin please bring me those coins so that the snakes don't get them.";
-		set StPatrick2008,4;
+		StPatrick2008 = 4;
 		close;
 	}
 	else if (StPatrick2008 == 4) {
@@ -229,7 +229,7 @@ OnTouch:
 			mes "This box must contain O'Riley's valuables.";
 			mes "Let's bring the box to O'Riley.";
 			close2;
-			set StPatrick2008,2;
+			StPatrick2008 = 2;
 			delitem 12018,200;
 			getitem 7721,1;
 		}

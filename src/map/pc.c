@@ -3102,11 +3102,11 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 
 			if(sd->skillfixcastrate[i].id == type2)
-				sd->skillfixcastrate[i].val += val;
+				sd->skillfixcastrate[i].val -= val;
 
 			else {
 				sd->skillfixcastrate[i].id = type2;
-				sd->skillfixcastrate[i].val = val;
+				sd->skillfixcastrate[i].val -= val;
 			}
 
 			break;
@@ -4152,6 +4152,9 @@ int pc_takeitem(struct map_session_data *sd,struct flooritem_data *fitem)
 
 	if(!check_distance_bl(&fitem->bl, &sd->bl, 2) && sd->ud.skill_id!=BS_GREED)
 		return 0;	// Distance is too far
+
+	if( pc_has_permission(sd,PC_PERM_DISABLE_PICK_UP) )
+		return 0;
 
 	if (sd->status.party_id)
 		p = party->search(sd->status.party_id);
@@ -6029,6 +6032,9 @@ bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned in
 	if(!battle_config.pvp_exp && map->list[sd->bl.m].flag.pvp)  // [MouseJstr]
 		return false; // no exp on pvp maps
 
+	if( pc_has_permission(sd,PC_PERM_DISABLE_EXP) )
+		return false;
+
 	if(sd->status.guild_id>0)
 		base_exp-=guild->payexp(sd,base_exp);
 
@@ -7633,6 +7639,10 @@ int pc_itemheal(struct map_session_data *sd,int itemid, int hp,int sp)
 		// Recovery Potion
 		if( sd->sc.data[SC_HEALPLUS] )
 			hp += (int)(hp * sd->sc.data[SC_HEALPLUS]->val1/100.);
+
+		// 2014 Halloween Event : Pumpkin Bonus
+		if ( sd->sc.data[SC_MTF_PUMPKIN] && itemid == ITEMID_PUMPKIN )
+			hp += (int)(hp * sd->sc.data[SC_MTF_PUMPKIN]->val1/100);
 	}
 	if(sp) {
 		bonus = 100 + (sd->battle_status.int_<<1)

@@ -526,7 +526,7 @@ int script_add_str(const char* p)
 		}
 	}
 	if( existingentry ) {
-		DeprecationCaseWarning2("script_add_str", p, existingentry, script->parser_current_file); // TODO
+		DeprecationCaseWarning("script_add_str", p, existingentry, script->parser_current_file); // TODO
 	}
 #endif // ENABLE_CASE_CHECK
 
@@ -1433,10 +1433,6 @@ const char* parse_syntax(const char* p)
 			// Closing decision if, for , while
 			p = script->parse_syntax_close(p + 1);
 			return p;
-#ifdef ENABLE_CASE_CHECK
-		} else if( p2 - p == 5 && strncasecmp(p, "break", 5) == 0 ) {
-			disp_deprecation_message("parse_syntax", "break", p); // TODO
-#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	case 'c':
@@ -1547,12 +1543,6 @@ const char* parse_syntax(const char* p)
 			//Closing decision if, for , while
 			p = script->parse_syntax_close(p + 1);
 			return p;
-#ifdef ENABLE_CASE_CHECK
-		} else if( p2 - p == 4 && strncasecmp(p, "case", 4) == 0 ) {
-			disp_deprecation_message("parse_syntax", "case", p); // TODO
-		} else if( p2 - p == 8 && strncasecmp(p, "continue", 8) == 0 ) {
-			disp_deprecation_message("parse_syntax", "continue", p); // TODO
-#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	case 'd':
@@ -1606,12 +1596,6 @@ const char* parse_syntax(const char* p)
 			script->set_label(l,script->pos,p);
 			script->syntax.curly_count++;
 			return p;
-#ifdef ENABLE_CASE_CHECK
-		} else if( p2 - p == 7 && strncasecmp(p, "default", 7) == 0 ) {
-			disp_deprecation_message("parse_syntax", "default", p); // TODO
-		} else if( p2 - p == 2 && strncasecmp(p, "do", 2) == 0 ) {
-			disp_deprecation_message("parse_syntax", "do", p); // TODO
-#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	case 'f':
@@ -1751,12 +1735,6 @@ const char* parse_syntax(const char* p)
 			{
 				disp_error_message("expect ';' or '{' at function syntax",p);
 			}
-#ifdef ENABLE_CASE_CHECK
-		} else if( p2 - p == 3 && strncasecmp(p, "for", 3) == 0 ) {
-			disp_deprecation_message("parse_syntax", "for", p); // TODO
-		} else if( p2 - p == 8 && strncasecmp(p, "function", 8) == 0 ) {
-			disp_deprecation_message("parse_syntax", "function", p); // TODO
-#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	case 'i':
@@ -1781,10 +1759,6 @@ const char* parse_syntax(const char* p)
 			script->addl(script->add_str(label));
 			script->addc(C_FUNC);
 			return p;
-#ifdef ENABLE_CASE_CHECK
-		} else if( p2 - p == 2 && strncasecmp(p, "if", 2) == 0 ) {
-			disp_deprecation_message("parse_syntax", "if", p); // TODO
-#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	case 's':
@@ -1812,10 +1786,6 @@ const char* parse_syntax(const char* p)
 			}
 			script->addc(C_FUNC);
 			return p + 1;
-#ifdef ENABLE_CASE_CHECK
-		} else if( p2 - p == 6 && strncasecmp(p, "switch", 6) == 0 ) {
-			disp_deprecation_message("parse_syntax", "switch", p); // TODO
-#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	case 'w':
@@ -1846,10 +1816,6 @@ const char* parse_syntax(const char* p)
 			script->addl(script->add_str(label));
 			script->addc(C_FUNC);
 			return p;
-#ifdef ENABLE_CASE_CHECK
-		} else if( p2 - p == 5 && strncasecmp(p, "while", 5) == 0 ) {
-			disp_deprecation_message("parse_syntax", "while", p); // TODO
-#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	}
@@ -1919,10 +1885,6 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 				script->addc(C_FUNC);
 				*flag = 0;
 				return p;
-#ifdef ENABLE_CASE_CHECK
-			} else if( p2 - p == 2 && strncasecmp(p, "if", 2) == 0 ) {
-				disp_deprecation_message("parse_syntax", "if", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			} else {
 				// else
 				if(!script->syntax.curly[pos].flag) {
@@ -1931,10 +1893,6 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 					return p;
 				}
 			}
-#ifdef ENABLE_CASE_CHECK
-		} else if( !script->syntax.curly[pos].flag && p2 - p == 4 && strncasecmp(p, "else", 4) == 0 ) {
-			disp_deprecation_message("parse_syntax", "else", p); // TODO
-#endif // ENABLE_CASE_CHECK
 		}
 		// Close if
 		script->syntax.curly_count--;
@@ -1961,9 +1919,6 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		p = script->skip_space(p);
 		p2 = script->skip_word(p);
 		if( p2 - p != 5 || strncmp(p, "while", 5) != 0 ) {
-#ifdef ENABLE_CASE_CHECK
-			if( p2 - p == 5 && strncasecmp(p, "while", 5) == 0 ) disp_deprecation_message("parse_syntax", "while", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			disp_error_message("parse_syntax: need 'while'",p);
 		}
 
@@ -8806,6 +8761,7 @@ BUILDIN(setmount)
 				           flag == SETMOUNT_TYPE_DRAGON_RED ? OPTION_DRAGON5 :
 				           OPTION_DRAGON1); // default value
 				pc->setridingdragon(sd, option);
+			}
 		} else if ((sd->class_&MAPID_THIRDMASK) == MAPID_RANGER) {
 			// Ranger (Warg)
 			if (pc->checkskill(sd, RA_WUGRIDER))
@@ -8814,8 +8770,6 @@ BUILDIN(setmount)
 			// Mechanic (Mado Gear)
 			if (pc->checkskill(sd, NC_MADOLICENCE))
 				pc->setmadogear(sd, true);
-		} else if (flag != SETMOUNT_TYPE_PECO)
-			flag = SETMOUNT_TYPE_PECO;
 		} else {
 			// Knight / Crusader (Peco Peco)
 			if (pc->checkskill(sd, KN_RIDING))
@@ -14881,6 +14835,36 @@ BUILDIN(distance)
 
 // <--- [zBuffer] List of mathematics commands
 
+BUILDIN(min)
+{
+	int i, min;
+
+	min = script_getnum(st, 2);
+	for (i = 3; script_hasdata(st, i); i++) {
+		int next = script_getnum(st, i);
+		if (next < min)
+			min = next;
+	}
+	script_pushint(st, min);
+
+	return true;
+}
+
+BUILDIN(max)
+{
+	int i, max;
+
+	max = script_getnum(st, 2);
+	for (i = 3; script_hasdata(st, i); i++) {
+		int next = script_getnum(st, i);
+		if (next > max)
+			max = next;
+	}
+	script_pushint(st, max);
+
+	return true;
+}
+
 BUILDIN(md5)
 {
 	const char *tmpstr;
@@ -18012,6 +17996,7 @@ BUILDIN(montransform) {
 	struct block_list* bl;
 	char msg[CHAT_SIZE_MAX];
 	int mob_id, val1, val2, val3, val4;
+	val1 = val2 = val3 = val4 = 0;
 
 	if( (bl = map->id2bl(st->rid)) == NULL )
 		return true;
@@ -18031,12 +18016,17 @@ BUILDIN(montransform) {
 	}
 
 	tick = script_getnum(st, 3);
-	type = (sc_type)script_getnum(st, 4);
-	val1 = val2 = val3 = val4 = 0;
 
-	if( !(type > SC_NONE && type < SC_MAX) ) {
-		ShowWarning("buildin_montransform: Unsupported status change id %d\n", type);
-		return false;
+	if (script_hasdata(st, 4))
+		type = (sc_type)script_getnum(st, 4);
+	else
+		type = SC_NONE;
+
+	if (script_hasdata(st, 4)) {
+		if( !(type > SC_NONE && type < SC_MAX) ) {
+			ShowWarning("buildin_montransform: Unsupported status change id %d\n", type);
+			return false;
+		}
 	}
 
 	if (script_hasdata(st, 5))
@@ -18072,8 +18062,11 @@ BUILDIN(montransform) {
 		clif->ShowScript(&sd->bl, msg);
 		status_change_end(bl, SC_MONSTER_TRANSFORM, INVALID_TIMER); // Clear previous
 		sc_start2(NULL, bl, SC_MONSTER_TRANSFORM, 100, mob_id, type, tick);
-		sc_start4(NULL, bl, type, 100, val1, val2, val3, val4, tick);
+		
+		if (script_hasdata(st, 4))
+			sc_start4(NULL, bl, type, 100, val1, val2, val3, val4, tick);
 	}
+
 	return true;
 }
 
@@ -19114,14 +19107,14 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(checkcart,""),
 		BUILDIN_DEF(setfalcon,"?"),
 		BUILDIN_DEF(checkfalcon,""),
-		BUILDIN_DEF(setriding,"?"),
-		BUILDIN_DEF(checkriding,""),
+		BUILDIN_DEF_DEPRECATED(setriding,"?"), // Deprecated 2014-10-30 [Haru]
+		BUILDIN_DEF_DEPRECATED(checkriding,""), // Deprecated 2014-10-30 [Haru]
 		BUILDIN_DEF(setmount,"?"),
 		BUILDIN_DEF(checkmount,""),
 		BUILDIN_DEF(checkwug,""),
-		BUILDIN_DEF(checkmadogear,""),
-		BUILDIN_DEF(setmadogear,"?"),
-		BUILDIN_DEF2(savepoint,"save","sii"),
+		BUILDIN_DEF_DEPRECATED(checkmadogear,""), // Deprecated 2014-10-30 [Haru]
+		BUILDIN_DEF_DEPRECATED(setmadogear,"?"),  // Deprecated 2014-10-30 [Haru]
+		BUILDIN_DEF2_DEPRECATED(savepoint,"save","sii"), // Deprecated 2014-11-02 [Haru]
 		BUILDIN_DEF(savepoint,"sii"),
 		BUILDIN_DEF(gettimetick,"i"),
 		BUILDIN_DEF(gettime,"i"),
@@ -19139,7 +19132,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(clone,"siisi????"),
 		BUILDIN_DEF(doevent,"s"),
 		BUILDIN_DEF(donpcevent,"s"),
-		BUILDIN_DEF(cmdothernpc,"ss"),
+		BUILDIN_DEF_DEPRECATED(cmdothernpc,"ss"), // Deprecated 2014-11-02 [Haru]
 		BUILDIN_DEF(addtimer,"is"),
 		BUILDIN_DEF(deltimer,"s"),
 		BUILDIN_DEF(addtimercount,"si"),
@@ -19183,8 +19176,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF2(waitingroomkickall,"kickwaitingroomall","?"),
 		BUILDIN_DEF(enablewaitingroomevent,"?"),
 		BUILDIN_DEF(disablewaitingroomevent,"?"),
-		BUILDIN_DEF2(enablewaitingroomevent,"enablearena",""),   // Added by RoVeRT
-		BUILDIN_DEF2(disablewaitingroomevent,"disablearena",""), // Added by RoVeRT
+		BUILDIN_DEF2_DEPRECATED(enablewaitingroomevent,"enablearena",""),   // Deprecated 2014-11-02 [Haru]
+		BUILDIN_DEF2_DEPRECATED(disablewaitingroomevent,"disablearena",""), // Deprecated 2014-11-02 [Haru]
 		BUILDIN_DEF(getwaitingroomstate,"i?"),
 		BUILDIN_DEF(warpwaitingpc,"sii?"),
 		BUILDIN_DEF(attachrid,"i"),
@@ -19320,6 +19313,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(pow,"ii"),
 		BUILDIN_DEF(distance,"iiii"),
 		// <--- [zBuffer] List of mathematics commands
+		BUILDIN_DEF(min, "i*"),
+		BUILDIN_DEF(max, "i*"),
 		BUILDIN_DEF(md5,"s"),
 		// [zBuffer] List of dynamic var commands --->
 		BUILDIN_DEF(getd,"s"),
@@ -19441,8 +19436,8 @@ void script_parse_builtin(void) {
 		 * 3rd-related
 		 **/
 		BUILDIN_DEF(makerune,"i"),
-		BUILDIN_DEF(checkdragon,""),//[Ind]
-		BUILDIN_DEF(setdragon,"?"),//[Ind]
+		BUILDIN_DEF_DEPRECATED(checkdragon,""), // Deprecated 2014-10-30 [Haru]
+		BUILDIN_DEF_DEPRECATED(setdragon,"?"), // Deprecated 2014-10-30 [Haru]
 		BUILDIN_DEF(hascashmount,""),//[Ind]
 		BUILDIN_DEF(setcashmount,""),//[Ind]
 		BUILDIN_DEF(checkre,"i"),
@@ -19479,7 +19474,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(setquest, "i"),
 		BUILDIN_DEF(erasequest, "i?"),
 		BUILDIN_DEF(completequest, "i?"),
-		BUILDIN_DEF(checkquest, "i?"),
+		BUILDIN_DEF_DEPRECATED(checkquest, "i?"), // Deprecated 2014-10-28 [Haru]
 		BUILDIN_DEF(questprogress, "i?"),
 		BUILDIN_DEF(questactive, "i"),
 		BUILDIN_DEF(changequest, "ii"),
@@ -19505,7 +19500,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(stand, "?"),
 		BUILDIN_DEF(issit, "?"),
 
-		BUILDIN_DEF(montransform, "vii????"), // Monster Transform [malufett/Hercules]
+		BUILDIN_DEF(montransform, "vi?????"), // Monster Transform [malufett/Hercules]
 
 		/* New BG Commands [Hercules] */
 		BUILDIN_DEF(bg_create_team,"sii"),

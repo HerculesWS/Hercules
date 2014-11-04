@@ -5812,6 +5812,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 			if( --(sc->data[SC_SPELLFIST]->val1) >= 0 ){
 				struct Damage ad = battle->calc_attack(BF_MAGIC,src,target,sc->data[SC_SPELLFIST]->val3,sc->data[SC_SPELLFIST]->val4,flag|BF_SHORT);
 				wd.damage = ad.damage;
+				damage_div_fix(wd.damage, wd.div_);
 			}else
 				status_change_end(src,SC_SPELLFIST,INVALID_TIMER);
 		}
@@ -6638,7 +6639,8 @@ static const struct battle_data {
 	{ "bone_drop",                          &battle_config.bone_drop,                       0,      0,      2,              },
 	{ "buyer_name",                         &battle_config.buyer_name,                      1,      0,      1,              },
 	{ "skill_wall_check",                   &battle_config.skill_wall_check,                1,      0,      1,              },
-	{ "cell_stack_limit",                   &battle_config.cell_stack_limit,                1,      1,      255,            },
+	{ "official_cell_stack_limit",          &battle_config.official_cell_stack_limit,       1,      1,      255,            },
+	{ "custom_cell_stack_limit",            &battle_config.custom_cell_stack_limit,         1,      1,      255,            },
 	{ "dancing_weaponswitch_fix",           &battle_config.dancing_weaponswitch_fix,        1,      0,      1,              },
 
 // eAthena additions
@@ -6837,7 +6839,9 @@ static const struct battle_data {
 	{ "song_timer_reset",                   &battle_config.song_timer_reset,                0,      0,      1,              },
 	{ "snap_dodge",                         &battle_config.snap_dodge,                      0,      0,      1,              },
 	{ "monster_chase_refresh",              &battle_config.mob_chase_refresh,               1,      0,      30,             },
-	{ "icewall_walk_block",                 &battle_config.icewall_walk_block,              75,     0,      255,            }
+	{ "mob_icewall_walk_block",             &battle_config.mob_icewall_walk_block,          75,     0,      255,            },
+	{ "boss_icewall_walk_block",            &battle_config.boss_icewall_walk_block,         0,      0,      255,            },
+	{ "feature.roulette",                   &battle_config.feature_roulette,                1,      0,      1,              },
 };
 #ifndef STATS_OPT_OUT
 /**
@@ -7089,6 +7093,13 @@ void battle_adjust_conf(void) {
 	}
 #endif
 
+#if PACKETVER < 20141022
+	if( battle_config.feature_roulette ) {
+		ShowWarning("conf/battle/feature.conf roulette is enabled but it requires PACKETVER 2014-10-22 or newer, disabling...\n");
+		battle_config.feature_roulette = 0;
+	}
+#endif
+	
 #if PACKETVER > 20120000 && PACKETVER < 20130515 /* exact date (when it started) not known */
 	if( battle_config.feature_auction == 1 ) {
 		ShowWarning("conf/battle/feature.conf:feature.auction is enabled but it is not stable on PACKETVER "EXPAND_AND_QUOTE(PACKETVER)", disabling...\n");
@@ -7099,8 +7110,8 @@ void battle_adjust_conf(void) {
 
 
 #ifndef CELL_NOSTACK
-	if (battle_config.cell_stack_limit != 1)
-		ShowWarning("Battle setting 'cell_stack_limit' takes no effect as this server was compiled without Cell Stack Limit support (CELL_NOSTACK).\n");
+	if (battle_config.custom_cell_stack_limit != 1)
+		ShowWarning("Battle setting 'custom_cell_stack_limit' takes no effect as this server was compiled without Cell Stack Limit support.\n");
 #endif
 }
 

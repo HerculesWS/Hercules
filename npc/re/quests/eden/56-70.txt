@@ -51,7 +51,7 @@ moc_para01,42,38,3	script	Mission [56 - 70]	4_BOARD3,{
 	end;
 
 L_Quest:
-	if (checkquest(getarg(0)) == -1) {
+	if (!questprogress(getarg(0))) {
 		callsub L_Details, getarg(0);
 		next;
 		mes "Would you like to accept this mission?";
@@ -70,11 +70,11 @@ L_Quest:
 	}
 	if (getargcount() > 5) {
 		if (countitem(getarg(5)) < getarg(6))
-			set .@items,1; //incomplete
+			.@items = 1; //incomplete
 		else
-			set .@items,2; //complete
+			.@items = 2; //complete
 	}
-	if (checkquest(getarg(0)) < 2 && (countitem(getarg(3)) < getarg(4) || .@items == 1)) {
+	if (questprogress(getarg(0)) != 2 && (countitem(getarg(3)) < getarg(4) || .@items == 1)) {
 		mes "You have an on-going mission. Would you like to check the details?";
 		next;
 		if(select("Check the details.:Cancel.") == 1)
@@ -96,7 +96,7 @@ L_Quest:
 	end;
 
 L_HuntingQuest:
-	if (checkquest(getarg(0)) == -1) {
+	if (!questprogress(getarg(0))) {
 		callsub L_Details, getarg(0);
 		next;
 		mes "Would you like to accept this mission?";
@@ -115,17 +115,17 @@ L_HuntingQuest:
 	}
 	if (getargcount() > 3) {
 		if (countitem(getarg(3)) < getarg(4))
-			set .@items,1; //incomplete
+			.@items = 1; //incomplete
 		else
-			set .@items,2; //complete
+			.@items = 2; //complete
 	}
-	if (checkquest(getarg(0),HUNTING) < 2 || .@items == 1) {
+	if (questprogress(getarg(0),HUNTING) != 2 || .@items == 1) {
 		mes "You have an on-going mission. Would you like to check the details?";
 		next;
 		if(select("Check the details.:Cancel.") == 1)
 			callsub L_Details, getarg(0);
 		close;
-	} else if (checkquest(getarg(0),HUNTING) == 2) {
+	} else if (questprogress(getarg(0),HUNTING) == 2) {
 		mes "I have done pretty well for the mission. Should I report it now?";
 		next;
 		if(select("Report the mission.:Do not report it yet.") == 1) {

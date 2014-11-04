@@ -1690,10 +1690,9 @@ lhz_dun04,151,276,3	script	Researcher#memo	4_LGTSCIENCE,{
 		mes "^FF0000You cannot continue the process due to possessing too many belongings.^000000";
 		close;
 	}
-	.@quest_time = checkquest(5112, PLAYTIME);
 	.@killed_bosses = true;
 	for(.@quest_id = 5113; .@quest_id <= 5125; .@quest_id++) {
-		if(checkquest(.@quest_id, HUNTING) <= 1)
+		if(questprogress(.@quest_id, HUNTING) != 2)
 			.@killed_bosses = false;
 	}
 	if (lght_duk01 < 6) {
@@ -1780,14 +1779,15 @@ lhz_dun04,151,276,3	script	Researcher#memo	4_LGTSCIENCE,{
 				mes "And just so you know, please do not touch random things out of curiosity. I don't want you to get hurt.";
 				close;
 			case 2:
-				if (.@quest_time == 0) {
+				.@quest_time = questprogress(5112, PLAYTIME);
+				if (!.@quest_time) {
 					mes "[Wolfchev]";
 					mes "I'm sorry, but it seems you still cannot enter to the laboratory yet. Will you come back later? The system is kind of tricky you know.";
 					close;
 				} else {
 					//if (.@quest_time == 2)
 						//recall_completequest 5112;
-					if (.@quest_time >= 0)
+					if (.@quest_time)
 						erasequest 5112;
 					if (!.@killed_bosses) {
 						if (lght_duk01 == 9) {
@@ -1908,13 +1908,13 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		mes "^FF0000You cannot continue the process due to possessing too many belongings.^000000";
 		close;
 	}
-	.@lhz_time = checkquest(5112, PLAYTIME);
+	.@lhz_time = questprogress(5112, PLAYTIME);
 	if (lght_duk01 < 7) {
 		mes "It says,";
 		mes "'^0000FF****'s laboratory member only^000000'";
 		close;
 	}
-	if (.@lhz_time == -1) {
+	if (!.@lhz_time) {
 		mes "This is an entrance towards Wolfchev's laboratory. Something is howling over the entrance.";
 		next;
 		if(select("Go inside", "Think one more time") == 2) {
@@ -1938,7 +1938,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 			warp "1@lhz.gat", 45, 148;
 			close;
 		}
-	} else if (.@lhz_time == 0) {
+	} else if (.@lhz_time == 1) {
 		mes "Di Rit- Di- Di- Dit-";
 		next;
 		mes ""+ strcharinfo(PC_NAME) +". . .";
@@ -1946,7 +1946,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		next;
 		mes "The system denied your entrance.";
 		close;
-	} else if (.@lhz_time >= 1) {
+	} else if (.@lhz_time == 2) {
 		mes "Di Rit- Di- Di- Dit-";
 		next;
 		//if (.@lhz_time == 2)
@@ -3113,7 +3113,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 	}
 	.@all_quests_complete = true;
 	for(.@i = 5113; .@i <= 5125; .@i++) {
-		if(checkquest(.@i, HUNTING) != 2)
+		if(questprogress(.@i, HUNTING) != 2)
 			.@all_quests_complete = false;
 	}
 	if (.@all_quests_complete) {

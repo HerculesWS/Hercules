@@ -316,9 +316,9 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		mes "then, what shall we cook?";
 		next;
 		cutin "orleans_6",0;
-		set .@cook_m1,rand(1,6);
+		.@cook_m1 = rand(1,6);
 		if (.@cook_m1 == 1) {
-			set cooking_q,1;
+			cooking_q = 1;
 			mes "[Charles Orleans]";
 			mes "Ahhh, how about";
 			mes "'Fried Grasshopper Legs?'";
@@ -335,7 +335,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			goto L_End;
 		}
 		else if (.@cook_m1 == 2) {
-			set cooking_q,2;
+			cooking_q = 2;
 			mes "[Charles Orleans]";
 			mes "Ah, I've got it!";
 			mes "Let's make ''Grape Juice";
@@ -352,7 +352,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			goto L_End;
 		}
 		else if (.@cook_m1 == 3) {
-			set cooking_q,3;
+			cooking_q = 3;
 			mes "[Charles Orleans]";
 			mes "I've got it~";
 			mes "We can make";
@@ -368,7 +368,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			goto L_End;
 		}
 		else if (.@cook_m1 == 4) {
-			set cooking_q,4;
+			cooking_q = 4;
 			mes "[Charles Orleans]";
 			mes "Mmm, why don't we";
 			mes "make ''Frog Egg and";
@@ -386,7 +386,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			goto L_End;
 		}
 		else if (.@cook_m1 == 5) {
-			set cooking_q,5;
+			cooking_q = 5;
 			mes "[Charles Orleans]";
 			mes "Ah, I know what";
 			mes "would be perfect right";
@@ -402,7 +402,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "^4D4DFF1 Yellow Potion^000000.";
 			goto L_End;
 		}
-		set cooking_q,6;
+		cooking_q = 6;
 		mes "[Charles Orleans]";
 		mes "Ooh, you know what";
 		mes "would be scrumptious?";
@@ -455,12 +455,12 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			delitem 940,5; //Grasshopper's_Leg
 			delitem 7031,1; //Old_Frying_Pan
 			delitem 7457,1; //Cooking_Oil
-			set cooking_q,7;
+			cooking_q = 7;
 			getitem 12041,1; //Str_Dish01
 			goto L_End;
 		}
 		cutin "orleans_6",0;
-		set .@talk_j,rand(1,2);
+		.@talk_j = rand(1,2);
 		if (.@talk_j == 1) {
 			mes "[Charles Orleans]";
 			mes "Hurry and bring me";
@@ -512,12 +512,12 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "and practice on your own now.";
 			delitem 514,3; //Grape
 			delitem 501,2; //Red_Potion
-			set cooking_q,7;
+			cooking_q = 7;
 			getitem 12046,1; //Int_Dish01
 			goto L_End;
 		}
 		cutin "orleans_6",0;
-		set .@talk_j,rand(1,2);
+		.@talk_j = rand(1,2);
 		if (.@talk_j == 1) {
 			mes "[Charles Orleans]";
 			mes "What are you doing?";
@@ -573,12 +573,12 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			delitem 518,1; //Honey
 			delitem 514,2; //Grape
 			delitem 501,1; //Red_Potion
-			set cooking_q,7;
+			cooking_q = 7;
 			getitem 12061,1; //Dex_Dish01
 			goto L_End;
 		}
 		cutin "orleans_6",0;
-		set .@talk_j,rand(1,2);
+		.@talk_j = rand(1,2);
 		if (.@talk_j == 1) {
 			mes "[Charles Orleans]";
 			mes "What's taking you so";
@@ -634,12 +634,12 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			delitem 577,1; //Grain
 			delitem 908,10; //Spawn
 			delitem 1024,1; //Chinese_ink
-			set cooking_q,7;
+			cooking_q = 7;
 			getitem 12056,1; //Agi_Dish01
 			goto L_End;
 		}
 		cutin "orleans_6",0;
-		set .@talk_j,rand(1,2);
+		.@talk_j = rand(1,2);
 		if (.@talk_j == 1) {
 			mes "[Charles Orleans]";
 			mes "What are you doing?";
@@ -694,12 +694,12 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			delitem 960,10; //Nipper
 			delitem 511,10; //Green_Herb
 			delitem 503,1; //Yellow_Potion
-			set cooking_q,7;
+			cooking_q = 7;
 			getitem 12051,1; //Vit_Dish01
 			goto L_End;
 		}
 		cutin "orleans_6",0;
-		set .@talk_j,rand(1,2);
+		.@talk_j = rand(1,2);
 		if (.@talk_j == 1) {
 			mes "[Charles Orleans]";
 			mes "Shouldn't you be";
@@ -755,12 +755,12 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			delitem 942,5; //Yoyo_Tail
 			delitem 7031,1; //Old_Frying_Pan
 			delitem 7457,1; //Cooking_Oil
-			set cooking_q,7;
+			cooking_q = 7;
 			getitem 12066,1; //Luk_Dish01
 			goto L_End;
 		}
 		cutin "orleans_6",0;
-		set .@talk_j,rand(1,2);
+		.@talk_j = rand(1,2);
 		if (.@talk_j == 1) {
 			mes "[Charles Orleans]";
 			mes "You better go prepare";
@@ -1690,7 +1690,7 @@ prt_castle,45,35,5	script	Madeleine Chu#cook	4_COOK,{
 		mes "improve as you practice. ";
 		mes "Please take this cookbook";
 		mes "with the basic Level 1 recipes.";
-		set cooking_q,8;
+		cooking_q = 8;
 		getitem 7472,1; //Cookbook01
 		next;
 		mes "[Madeleine Chu]";
@@ -1768,7 +1768,7 @@ prt_castle,45,35,5	script	Madeleine Chu#cook	4_COOK,{
 				delitem 12056,1; //Agi_Dish01
 				delitem 12051,1; //Vit_Dish01
 				delitem 12066,1; //Luk_Dish01
-				set cooking_q,9;
+				cooking_q = 9;
 				getitem 12111,1; //Food_Package
 				mes "[Madeleine Chu]";
 				mes "There you go, it's ready";
@@ -1865,7 +1865,7 @@ prt_castle,45,35,5	script	Madeleine Chu#cook	4_COOK,{
 				mes "very ashamed of you...";
 				next;
 				delitem 7472,1; //Cookbook01
-				set cooking_q,0;
+				cooking_q = 0;
 				mes "[Madeleine Chu]";
 				mes "First of all, I'd like";
 				mes "you to return my cookbook.";
@@ -1899,7 +1899,7 @@ prt_castle,45,35,5	script	Madeleine Chu#cook	4_COOK,{
 		mes "skills are the most important";
 		mes "factor in quality cuisine.";
 		next;
-		set cooking_q,11;
+		cooking_q = 11;
 		getitem 12126,10; //Indoor_Cooking_Kits
 		mes "[Madeleine Chu]";
 		mes "Please try these Indoor";
@@ -1982,7 +1982,7 @@ prt_castle,45,35,5	script	Madeleine Chu#cook	4_COOK,{
 			mes "even small things. Still,";
 			mes "I guess it's understandable.";
 			next;
-			set .@talk_j,rand(1,3);
+			.@talk_j = rand(1,3);
 			if (.@talk_j == 1) {
 				mes "[Madeleine Chu]";
 				mes "You know, when I first";
@@ -2059,8 +2059,8 @@ prt_castle,45,35,5	script	Madeleine Chu#cook	4_COOK,{
 	close;
 
 S_SellSets:
-	set .@item_cost,getiteminfo(getarg(0),0);
-	set .@item_weight,getiteminfo(getarg(0),6);
+	.@item_cost = getiteminfo(getarg(0),0);
+	.@item_weight = getiteminfo(getarg(0),6);
 	mes "[Madeleine Chu]";
 	mes "How many " + (getarg(0)==12125 ? "Outdoor":"Indoor");
 	mes "Cooking Kits would";
@@ -2089,8 +2089,8 @@ S_SellSets:
 		}
 		else break;
 	}
-	set .@total_cost,.@sell * .@item_cost;
-	set .@total_weight,.@sell * .@item_weight;
+	.@total_cost = .@sell * .@item_cost;
+	.@total_weight = .@sell * .@item_weight;
 	if (Zeny < .@total_cost) {
 		mes "[Madeleine Chu]";
 		mes "Oh, I'm sorry, but you";
@@ -2118,7 +2118,7 @@ S_SellSets:
 }
 
 prt_castle,45,28,3	script	Child with Cat#cook	4_F_YUNYANG,{
-	set .@nyu,rand(1,2);
+	.@nyu = rand(1,2);
 	if (.@nyu == 1) {
 		cutin "nyuang_1",2;
 		emotion e_what;
@@ -2288,7 +2288,7 @@ payon,209,127,3	script	Servant	4_M_ORIENT01,{
 				mes "to tell me. In return, please have one of my humble Rice Cakes.";
 				next;
 				delitem 12111,1; //Food_Package
-				set cooking_q,10;
+				cooking_q = 10;
 				getitem 555,1; //Rice_Cake
 				mes "[Chulsoo]";
 				mes "I better visit Prontera";
