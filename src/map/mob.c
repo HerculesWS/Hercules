@@ -1616,17 +1616,6 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 		{ //Only attack if no more attack delay left
 			if(tbl->type == BL_PC)
 				mob->log_damage(md, tbl, 0); //Log interaction (counts as 'attacker' for the exp bonus)
-
-			if( !(mode&MD_RANDOMTARGET) )
-				unit->attack(&md->bl,tbl->id,1);
-			else { // Attack once and find a new random target
-				int search_size = (view_range < md->status.rhw.range) ? view_range : md->status.rhw.range;
-				unit->attack(&md->bl,tbl->id, 0);
-				if ((tbl = battle->get_enemy(&md->bl, DEFAULT_ENEMY_TYPE(md), search_size))) {
-					md->target_id = tbl->id;
-					md->min_chase = md->db->range3;
-				}
-			}
 		}
 		return true;
 	}
@@ -3082,7 +3071,6 @@ int mobskill_use(struct mob_data *md, int64 tick, int event) {
 	struct block_list *bl;
 	struct mob_data *fmd = NULL;
 	int i,j,n;
-	short skill_target;
 
 	nullpo_ret(md);
 	nullpo_ret(ms = md->db->skill);
@@ -3181,12 +3169,10 @@ int mobskill_use(struct mob_data *md, int64 tick, int event) {
 		if (!flag)
 			continue; //Skill requisite failed to be fulfilled.
 
-
 		//Execute skill
-		skill_target = (md->db->status.mode&MD_RANDOMTARGET)? MST_RANDOM : ms[i].target;
 		if (skill->get_casttype(ms[i].skill_id) == CAST_GROUND) {//Ground skill.
 			short x, y;
-			switch (skill_target) {
+			switch (ms[i].target) {
 				case MST_RANDOM: //Pick a random enemy within skill range.
 					bl = battle->get_enemy(&md->bl, DEFAULT_ENEMY_TYPE(md),
 						skill->get_range2(&md->bl, ms[i].skill_id, ms[i].skill_lv));
@@ -3216,10 +3202,10 @@ int mobskill_use(struct mob_data *md, int64 tick, int event) {
 			x = bl->x;
 		  	y = bl->y;
 			// Look for an area to cast the spell around...
-			if (skill_target >= MST_AROUND1 || skill_target >= MST_AROUND5) {
-				j = skill_target >= MST_AROUND1?
-					(skill_target-MST_AROUND1) +1:
-					(skill_target-MST_AROUND5) +1;
+			if (ms[i].target >= MST_AROUND1 || ms[i].target >= MST_AROUND5) {
+				j = ms[i].target >= MST_AROUND1?
+					(ms[i].target-MST_AROUND1) +1:
+					(ms[i].target-MST_AROUND5) +1;
 				map->search_freecell(&md->bl, md->bl.m, &x, &y, j, j, 3);
 			}
 			md->skill_idx = i;
@@ -3232,7 +3218,7 @@ int mobskill_use(struct mob_data *md, int64 tick, int event) {
 			}
 		} else {
 			//Targeted skill
-			switch (skill_target) {
+			switch (ms[i].target) {
 				case MST_RANDOM: //Pick a random enemy within skill range.
 					bl = battle->get_enemy(&md->bl, DEFAULT_ENEMY_TYPE(md),
 						skill->get_range2(&md->bl, ms[i].skill_id, ms[i].skill_lv));
