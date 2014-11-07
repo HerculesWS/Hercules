@@ -23,6 +23,7 @@
 #include "int_pet.h"
 #include "int_quest.h"
 #include "int_storage.h"
+#include "mapif.h"
 #include "../common/cbasetypes.h"
 #include "../common/db.h"
 #include "../common/malloc.h"
@@ -630,7 +631,7 @@ void mapif_parse_accinfo(int fd) {
 	/* it will only get here if we have a single match */
 	/* and we will send packet with account id to login server asking for account info */
 	if( account_id ) {
-		mapif_on_parse_accinfo(account_id, u_fd, aid, castergroup, fd);
+		mapif->on_parse_accinfo(account_id, u_fd, aid, castergroup, fd);
 	}
 
 	return;
@@ -700,7 +701,7 @@ void inter_savereg(int account_id, int char_id, const char *key, unsigned int in
 	/* to login server we go! */
 	if( key[0] == '#' && key[1] == '#' ) {/* global account reg */
 		if( session_isValid(login_fd) )
-			char_global_accreg_to_login_add(key,index,val,is_string);
+			chr->global_accreg_to_login_add(key,index,val,is_string);
 		else {
 			ShowError("Login server unavailable, cant perform update on '%s' variable for AID:%d CID:%d\n",key,account_id,char_id);
 		}
@@ -1081,7 +1082,7 @@ int mapif_broadcast(unsigned char *mes, int len, unsigned int fontColor, short f
 	WBUFW(buf,12) = fontAlign;
 	WBUFW(buf,14) = fontY;
 	memcpy(WBUFP(buf,16), mes, len - 16);
-	mapif_sendallwos(sfd, buf, len);
+	mapif->sendallwos(sfd, buf, len);
 
 	if (buf)
 		aFree(buf);
@@ -1100,7 +1101,7 @@ int mapif_wis_message(struct WisData *wd)
 	memcpy(WBUFP(buf, 8), wd->src, NAME_LENGTH);
 	memcpy(WBUFP(buf,32), wd->dst, NAME_LENGTH);
 	memcpy(WBUFP(buf,56), wd->msg, wd->len);
-	wd->count = mapif_sendall(buf,WBUFW(buf,2));
+	wd->count = mapif->sendall(buf,WBUFW(buf,2));
 
 	return 0;
 }
@@ -1111,7 +1112,7 @@ void mapif_wis_response(int fd, unsigned char *src, int flag)
 	WBUFW(buf, 0)=0x3802;
 	memcpy(WBUFP(buf, 2),src,24);
 	WBUFB(buf,26)=flag;
-	mapif_send(fd,buf,27);
+	mapif->send(fd,buf,27);
 }
 
 // Wis sending result
@@ -1125,7 +1126,7 @@ int mapif_wis_end(struct WisData *wd, int flag)
 //static void mapif_account_reg(int fd, unsigned char *src)
 //{
 //	WBUFW(src,0)=0x3804; //NOTE: writing to RFIFO
-//	mapif_sendallwos(fd, src, WBUFW(src,2));
+//	mapif->sendallwos(fd, src, WBUFW(src,2));
 //}
 
 // Send the requested account_reg
@@ -1291,7 +1292,7 @@ int mapif_parse_WisToGM(int fd)
 
 	memcpy(WBUFP(buf,0), RFIFOP(fd,0), RFIFOW(fd,2));
 	WBUFW(buf, 0) = 0x3803;
-	mapif_sendall(buf, RFIFOW(fd,2));
+	mapif->sendall(buf, RFIFOW(fd,2));
 
 	return 0;
 }
@@ -1308,7 +1309,7 @@ int mapif_parse_Registry(int fd)
 		bool isLoginActive = session_isActive(login_fd);
 
 		if( isLoginActive )
-			char_global_accreg_to_login_start(account_id,char_id);
+			chr->global_accreg_to_login_start(account_id,char_id);
 		
 		for(i = 0; i < count; i++) {
 			safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
@@ -1344,7 +1345,7 @@ int mapif_parse_Registry(int fd)
 		}
 
 		if( isLoginActive )		
-			char_global_accreg_to_login_send();
+			chr->global_accreg_to_login_send();
 	}
 	return 0;
 }
@@ -1357,7 +1358,7 @@ int mapif_parse_RegistryRequest(int fd)
 	//Load Account Registry
 	if (RFIFOB(fd,11)) mapif_account_reg_reply(fd,RFIFOL(fd,2),RFIFOL(fd,6),2);
 	//Ask Login Server for Account2 values.
-	if (RFIFOB(fd,10)) char_request_accreg2(RFIFOL(fd,2),RFIFOL(fd,6));
+	if (RFIFOB(fd,10)) chr->request_accreg2(RFIFOL(fd,2),RFIFOL(fd,6));
 	return 1;
 }
 

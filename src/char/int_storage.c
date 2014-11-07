@@ -25,7 +25,7 @@
 /// Save storage data to sql
 int inter_storage_tosql(int account_id, struct storage_data* p)
 {
-	char_memitemdata_to_sql(p->items, MAX_STORAGE, account_id, TABLE_STORAGE);
+	chr->memitemdata_to_sql(p->items, MAX_STORAGE, account_id, TABLE_STORAGE);
 	return 0;
 }
 
@@ -81,7 +81,7 @@ int inter_storage_fromsql(int account_id, struct storage_data* p)
 /// Save guild_storage data to sql
 int inter_storage_guild_storage_tosql(int guild_id, struct guild_storage* p)
 {
-	char_memitemdata_to_sql(p->items, MAX_GUILD_STORAGE, guild_id, TABLE_GUILD_STORAGE);
+	chr->memitemdata_to_sql(p->items, MAX_GUILD_STORAGE, guild_id, TABLE_GUILD_STORAGE);
 	ShowInfo ("guild storage save to DB - guild: %d\n", guild_id);
 	return 0;
 }
@@ -379,9 +379,9 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 
 	//Now let's update the guild storage with those deleted items
 	/// TODO/FIXME:
-	/// This approach is basically the same as the one from char_memitemdata_to_sql, but
+	/// This approach is basically the same as the one from chr->memitemdata_to_sql, but
 	/// the latter compares current database values and this is not needed in this case
-	/// maybe sometime separate char_memitemdata_to_sql into different methods in order to use
+	/// maybe sometime separate chr->memitemdata_to_sql into different methods in order to use
 	/// call that function here as well [Panikon]
 	StrBuf->Clear(&buf);
 	StrBuf->Printf(&buf,"INSERT INTO `%s` (`guild_id`,`nameid`,`amount`,`equip`,`identify`,`refine`,"
@@ -419,7 +419,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 	mapif_load_guild_storage(fd,aid,guild_id,0);
 
 	// If character is logged in char, disconnect
-	char_disconnect_player(aid);
+	chr->disconnect_player(aid);
 #endif
 	return 0;
 }

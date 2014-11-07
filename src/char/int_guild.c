@@ -13,6 +13,7 @@
 
 #include "char.h"
 #include "inter.h"
+#include "mapif.h"
 #include "../common/cbasetypes.h"
 #include "../common/db.h"
 #include "../common/malloc.h"
@@ -907,9 +908,9 @@ int mapif_guild_noinfo(int fd,int guild_id)
 	WBUFL(buf,4)=guild_id;
 	ShowWarning("int_guild: info not found %d\n",guild_id);
 	if(fd<0)
-		mapif_sendall(buf,8);
+		mapif->sendall(buf,8);
 	else
-		mapif_send(fd,buf,8);
+		mapif->send(fd,buf,8);
 	return 0;
 }
 
@@ -921,9 +922,9 @@ int mapif_guild_info(int fd,struct guild *g)
 	WBUFW(buf,2)=4+sizeof(struct guild);
 	memcpy(buf+4,g,sizeof(struct guild));
 	if(fd<0)
-		mapif_sendall(buf,WBUFW(buf,2));
+		mapif->sendall(buf,WBUFW(buf,2));
 	else
-		mapif_send(fd,buf,WBUFW(buf,2));
+		mapif->send(fd,buf,WBUFW(buf,2));
 	return 0;
 }
 
@@ -951,7 +952,7 @@ int mapif_guild_withdraw(int guild_id,int account_id,int char_id,int flag, const
 	WBUFB(buf,14)=flag;
 	memcpy(WBUFP(buf,15),mes,40);
 	memcpy(WBUFP(buf,55),name,NAME_LENGTH);
-	mapif_sendall(buf,55+NAME_LENGTH);
+	mapif->sendall(buf,55+NAME_LENGTH);
 	ShowInfo("int_guild: guild withdraw (%d - %d: %s - %s)\n",guild_id,account_id,name,mes);
 	return 0;
 }
@@ -967,7 +968,7 @@ int mapif_guild_memberinfoshort(struct guild *g,int idx)
 	WBUFB(buf,14)=(unsigned char)g->member[idx].online;
 	WBUFW(buf,15)=g->member[idx].lv;
 	WBUFW(buf,17)=g->member[idx].class_;
-	mapif_sendall(buf,19);
+	mapif->sendall(buf,19);
 	return 0;
 }
 
@@ -978,7 +979,7 @@ int mapif_guild_broken(int guild_id,int flag)
 	WBUFW(buf,0)=0x3836;
 	WBUFL(buf,2)=guild_id;
 	WBUFB(buf,6)=flag;
-	mapif_sendall(buf,7);
+	mapif->sendall(buf,7);
 	ShowInfo("int_guild: Guild broken (%d)\n",guild_id);
 	return 0;
 }
@@ -994,7 +995,7 @@ int mapif_guild_message(int guild_id,int account_id,char *mes,int len, int sfd)
 	WBUFL(buf,4)=guild_id;
 	WBUFL(buf,8)=account_id;
 	memcpy(WBUFP(buf,12),mes,len);
-	mapif_sendallwos(sfd, buf,len+12);
+	mapif->sendallwos(sfd, buf,len+12);
 	return 0;
 }
 
@@ -1009,7 +1010,7 @@ int mapif_guild_basicinfochanged(int guild_id,int type,const void *data,int len)
 	WBUFL(buf, 4)=guild_id;
 	WBUFW(buf, 8)=type;
 	memcpy(WBUFP(buf,10),data,len);
-	mapif_sendall(buf,len+10);
+	mapif->sendall(buf,len+10);
 	return 0;
 }
 
@@ -1026,7 +1027,7 @@ int mapif_guild_memberinfochanged(int guild_id,int account_id,int char_id, int t
 	WBUFL(buf,12)=char_id;
 	WBUFW(buf,16)=type;
 	memcpy(WBUFP(buf,18),data,len);
-	mapif_sendall(buf,len+18);
+	mapif->sendall(buf,len+18);
 	return 0;
 }
 
@@ -1038,7 +1039,7 @@ int mapif_guild_skillupack(int guild_id,uint16 skill_id,int account_id)
 	WBUFL(buf, 2)=guild_id;
 	WBUFL(buf, 6)=skill_id;
 	WBUFL(buf,10)=account_id;
-	mapif_sendall(buf,14);
+	mapif->sendall(buf,14);
 	return 0;
 }
 
@@ -1054,7 +1055,7 @@ int mapif_guild_alliance(int guild_id1,int guild_id2,int account_id1,int account
 	WBUFB(buf,18)=flag;
 	memcpy(WBUFP(buf,19),name1,NAME_LENGTH);
 	memcpy(WBUFP(buf,19+NAME_LENGTH),name2,NAME_LENGTH);
-	mapif_sendall(buf,19+2*NAME_LENGTH);
+	mapif->sendall(buf,19+2*NAME_LENGTH);
 	return 0;
 }
 
@@ -1067,7 +1068,7 @@ int mapif_guild_position(struct guild *g,int idx)
 	WBUFL(buf,4)=g->guild_id;
 	WBUFL(buf,8)=idx;
 	memcpy(WBUFP(buf,12),&g->position[idx],sizeof(struct guild_position));
-	mapif_sendall(buf,WBUFW(buf,2));
+	mapif->sendall(buf,WBUFW(buf,2));
 	return 0;
 }
 
@@ -1079,7 +1080,7 @@ int mapif_guild_notice(struct guild *g)
 	WBUFL(buf,2)=g->guild_id;
 	memcpy(WBUFP(buf,6),g->mes1,MAX_GUILDMES1);
 	memcpy(WBUFP(buf,66),g->mes2,MAX_GUILDMES2);
-	mapif_sendall(buf,186);
+	mapif->sendall(buf,186);
 	return 0;
 }
 
@@ -1092,7 +1093,7 @@ int mapif_guild_emblem(struct guild *g)
 	WBUFL(buf,4)=g->guild_id;
 	WBUFL(buf,8)=g->emblem_id;
 	memcpy(WBUFP(buf,12),g->emblem_data,g->emblem_len);
-	mapif_sendall(buf,WBUFW(buf,2));
+	mapif->sendall(buf,WBUFW(buf,2));
 	return 0;
 }
 
@@ -1103,7 +1104,7 @@ int mapif_guild_master_changed(struct guild *g, int aid, int cid)
 	WBUFL(buf,2)=g->guild_id;
 	WBUFL(buf,6)=aid;
 	WBUFL(buf,10)=cid;
-	mapif_sendall(buf,14);
+	mapif->sendall(buf,14);
 	return 0;
 }
 

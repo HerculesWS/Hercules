@@ -12,6 +12,7 @@
 
 #include "char.h"
 #include "inter.h"
+#include "mapif.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h"
 #include "../common/showmsg.h"
@@ -342,7 +343,7 @@ void mapif_Mail_new(struct mail_message *msg)
 	WBUFL(buf,6) = msg->id;
 	memcpy(WBUFP(buf,10), msg->send_name, NAME_LENGTH);
 	memcpy(WBUFP(buf,34), msg->title, MAIL_TITLE_LENGTH);
-	mapif_sendall(buf, 74);
+	mapif->sendall(buf, 74);
 }
 
 /*==========================================

@@ -13,6 +13,7 @@
 #include "char.h"
 #include "int_mail.h"
 #include "inter.h"
+#include "mapif.h"
 #include "../common/db.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h"
@@ -135,7 +136,7 @@ static void mapif_Auction_message(int char_id, unsigned char result)
 	WBUFW(buf,0) = 0x3854;
 	WBUFL(buf,2) = char_id;
 	WBUFL(buf,6) = result;
-	mapif_sendall(buf,7);
+	mapif->sendall(buf,7);
 }
 
 static int inter_auction_end_timer(int tid, int64 tick, int id, intptr_t data) {
