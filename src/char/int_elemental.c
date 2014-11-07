@@ -12,6 +12,7 @@
 
 #include "char.h"
 #include "inter.h"
+#include "mapif.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h"
 #include "../common/showmsg.h"
@@ -19,6 +20,8 @@
 #include "../common/sql.h"
 #include "../common/strlib.h"
 #include "../common/utils.h"
+
+struct inter_elemental_interface inter_elemental_s;
 
 bool mapif_elemental_save(struct s_elemental* ele) {
 	bool flag = true;
@@ -99,7 +102,7 @@ bool mapif_elemental_delete(int ele_id) {
 	return true;
 }
 
-static void mapif_elemental_send(int fd, struct s_elemental *ele, unsigned char flag) {
+void mapif_elemental_send(int fd, struct s_elemental *ele, unsigned char flag) {
 	int size = sizeof(struct s_elemental) + 5;
 	
 	WFIFOHEAD(fd,size);
@@ -110,44 +113,45 @@ static void mapif_elemental_send(int fd, struct s_elemental *ele, unsigned char 
 	WFIFOSET(fd,size);
 }
 
-static void mapif_parse_elemental_create(int fd, struct s_elemental* ele) {
-	bool result = mapif_elemental_save(ele);
-	mapif_elemental_send(fd, ele, result);
+void mapif_parse_elemental_create(int fd, struct s_elemental* ele) {
+	bool result = mapif->elemental_save(ele);
+	mapif->elemental_send(fd, ele, result);
 }
 
-static void mapif_parse_elemental_load(int fd, int ele_id, int char_id) {
+void mapif_parse_elemental_load(int fd, int ele_id, int char_id) {
 	struct s_elemental ele;
-	bool result = mapif_elemental_load(ele_id, char_id, &ele);
-	mapif_elemental_send(fd, &ele, result);
+	bool result = mapif->elemental_load(ele_id, char_id, &ele);
+	mapif->elemental_send(fd, &ele, result);
 }
 
-static void mapif_elemental_deleted(int fd, unsigned char flag) {
+void mapif_elemental_deleted(int fd, unsigned char flag) {
 	WFIFOHEAD(fd,3);
 	WFIFOW(fd,0) = 0x387d;
 	WFIFOB(fd,2) = flag;
 	WFIFOSET(fd,3);
 }
 
-static void mapif_parse_elemental_delete(int fd, int ele_id) {
-	bool result = mapif_elemental_delete(ele_id);
-	mapif_elemental_deleted(fd, result);
+void mapif_parse_elemental_delete(int fd, int ele_id) {
+	bool result = mapif->elemental_delete(ele_id);
+	mapif->elemental_deleted(fd, result);
 }
 
-static void mapif_elemental_saved(int fd, unsigned char flag) {
+void mapif_elemental_saved(int fd, unsigned char flag) {
 	WFIFOHEAD(fd,3);
 	WFIFOW(fd,0) = 0x387e;
 	WFIFOB(fd,2) = flag;
 	WFIFOSET(fd,3);
 }
 
-static void mapif_parse_elemental_save(int fd, struct s_elemental* ele) {
-	bool result = mapif_elemental_save(ele);
-	mapif_elemental_saved(fd, result);
+void mapif_parse_elemental_save(int fd, struct s_elemental* ele) {
+	bool result = mapif->elemental_save(ele);
+	mapif->elemental_saved(fd, result);
 }
 
 void inter_elemental_sql_init(void) {
 	return;
 }
+
 void inter_elemental_sql_final(void) {
 	return;
 }
@@ -159,12 +163,21 @@ int inter_elemental_parse_frommap(int fd) {
 	unsigned short cmd = RFIFOW(fd,0);
 	
 	switch( cmd ) {
-		case 0x307c: mapif_parse_elemental_create(fd, (struct s_elemental*)RFIFOP(fd,4)); break;
-		case 0x307d: mapif_parse_elemental_load(fd, (int)RFIFOL(fd,2), (int)RFIFOL(fd,6)); break;
-		case 0x307e: mapif_parse_elemental_delete(fd, (int)RFIFOL(fd,2)); break;
-		case 0x307f: mapif_parse_elemental_save(fd, (struct s_elemental*)RFIFOP(fd,4)); break;
+		case 0x307c: mapif->parse_elemental_create(fd, (struct s_elemental*)RFIFOP(fd,4)); break;
+		case 0x307d: mapif->parse_elemental_load(fd, (int)RFIFOL(fd,2), (int)RFIFOL(fd,6)); break;
+		case 0x307e: mapif->parse_elemental_delete(fd, (int)RFIFOL(fd,2)); break;
+		case 0x307f: mapif->parse_elemental_save(fd, (struct s_elemental*)RFIFOP(fd,4)); break;
 		default:
 			return 0;
 	}
 	return 1;
+}
+
+void inter_elemental_defaults(void)
+{
+    inter_elemental = &inter_elemental_s;
+
+    inter_elemental->sql_init = inter_elemental_sql_init;
+    inter_elemental->sql_final = inter_elemental_sql_final;
+    inter_elemental->parse_frommap = inter_elemental_parse_frommap;
 }

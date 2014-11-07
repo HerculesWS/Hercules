@@ -1817,7 +1817,7 @@ int char_delete_char_sql(int char_id)
 
 	/* remove elemental */
 	if (elemental_id)
-		mapif_elemental_delete(elemental_id);
+		mapif->elemental_delete(elemental_id);
 
 	/* remove mercenary data */
 	inter_mercenary_owner_delete(char_id);
@@ -6006,6 +6006,7 @@ void char_load_defaults(void)
 	loginif_defaults();
 	mapif_defaults();
 	inter_auction_defaults();
+	inter_elemental_defaults();
 }
 
 void char_defaults(void)

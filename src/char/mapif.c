@@ -39,6 +39,16 @@ void mapif_auction_close(int fd, int char_id, unsigned char result);
 void mapif_parse_auction_close(int fd);
 void mapif_auction_bid(int fd, int char_id, int bid, unsigned char result);
 void mapif_parse_auction_bid(int fd);
+bool mapif_elemental_save(struct s_elemental* ele);
+bool mapif_elemental_load(int ele_id, int char_id, struct s_elemental *ele);
+bool mapif_elemental_delete(int ele_id);
+void mapif_elemental_send(int fd, struct s_elemental *ele, unsigned char flag);
+void mapif_parse_elemental_create(int fd, struct s_elemental* ele);
+void mapif_parse_elemental_load(int fd, int ele_id, int char_id);
+void mapif_elemental_deleted(int fd, unsigned char flag);
+void mapif_parse_elemental_delete(int fd, int ele_id);
+void mapif_elemental_saved(int fd, unsigned char flag);
+void mapif_parse_elemental_save(int fd, struct s_elemental* ele);
 
 void mapif_defaults(void) {
 	mapif = &mapif_s;
@@ -65,4 +75,14 @@ void mapif_defaults(void) {
 	mapif->parse_auction_close = mapif_parse_auction_close;
 	mapif->auction_bid = mapif_auction_bid;
 	mapif->parse_auction_bid = mapif_parse_auction_bid;
+	mapif->elemental_save = mapif_elemental_save;
+	mapif->elemental_load = mapif_elemental_load;
+	mapif->elemental_delete = mapif_elemental_delete;
+	mapif->elemental_send = mapif_elemental_send;
+	mapif->parse_elemental_create = mapif_parse_elemental_create;
+	mapif->parse_elemental_load = mapif_parse_elemental_load;
+	mapif->elemental_deleted = mapif_elemental_deleted;
+	mapif->parse_elemental_delete = mapif_parse_elemental_delete;
+	mapif->elemental_saved = mapif_elemental_saved;
+	mapif->parse_elemental_save = mapif_parse_elemental_save;
 }
