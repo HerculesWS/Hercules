@@ -16,6 +16,7 @@
 #include <time.h>
 
 #include "HPMchar.h"
+#include "int_auction.h"
 #include "int_elemental.h"
 #include "int_guild.h"
 #include "int_homun.h"
@@ -6004,6 +6005,7 @@ void char_load_defaults(void)
 	char_defaults();
 	loginif_defaults();
 	mapif_defaults();
+	inter_auction_defaults();
 }
 
 void char_defaults(void)

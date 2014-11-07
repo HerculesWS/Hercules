@@ -1034,7 +1034,7 @@ int inter_init_sql(const char *file)
 	inter_mercenary_sql_init();
 	inter_elemental_sql_init();
 	inter_mail_sql_init();
-	inter_auction_sql_init();
+	inter_auction->sql_init();
 
 	geoip_init();
 	inter_msg_config_read("conf/messages.conf", false);
@@ -1054,7 +1054,7 @@ void inter_final(void)
 	inter_mercenary_sql_final();
 	inter_elemental_sql_final();
 	inter_mail_sql_final();
-	inter_auction_sql_final();
+	inter_auction->sql_final();
 
 	geoip_final(true);
 	inter_do_final_msg();
@@ -1461,7 +1461,7 @@ int inter_parse_frommap(int fd)
 		  || inter_mercenary_parse_frommap(fd)
 		  || inter_elemental_parse_frommap(fd)
 		  || inter_mail_parse_frommap(fd)
-		  || inter_auction_parse_frommap(fd)
+		  || inter_auction->parse_frommap(fd)
 		  || inter_quest_parse_frommap(fd)
 		   )
 			break;

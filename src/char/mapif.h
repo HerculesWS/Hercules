@@ -20,6 +20,17 @@ struct mapif_interface {
     int (*sendallwos) (int sfd, unsigned char *buf, unsigned int len);
     int (*send) (int fd, unsigned char *buf, unsigned int len);
     void (*send_users_count) (int users);
+    void (*auction_message) (int char_id, unsigned char result);
+    void (*auction_sendlist) (int fd, int char_id, short count, short pages, unsigned char *buf);
+    void (*parse_auction_requestlist) (int fd);
+    void (*auction_register) (int fd, struct auction_data *auction);
+    void (*parse_auction_register) (int fd);
+    void (*auction_cancel) (int fd, int char_id, unsigned char result);
+    void (*parse_auction_cancel) (int fd);
+    void (*auction_close) (int fd, int char_id, unsigned char result);
+    void (*parse_auction_close) (int fd);
+    void (*auction_bid) (int fd, int char_id, int bid, unsigned char result);
+    void (*parse_auction_bid) (int fd);
 } mapif_s;
 
 struct mapif_interface *mapif;
