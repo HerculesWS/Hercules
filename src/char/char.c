@@ -1813,7 +1813,7 @@ int char_delete_char_sql(int char_id)
 
 	/* remove homunculus */
 	if( hom_id )
-		mapif_homunculus_delete(hom_id);
+		mapif->homunculus_delete(hom_id);
 
 	/* remove elemental */
 	if (elemental_id)
@@ -6008,6 +6008,7 @@ void char_load_defaults(void)
 	inter_auction_defaults();
 	inter_elemental_defaults();
 	inter_guild_defaults();
+	inter_homunculus_defaults();
 }
 
 void char_defaults(void)

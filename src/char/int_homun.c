@@ -12,6 +12,7 @@
 
 #include "char.h"
 #include "inter.h"
+#include "mapif.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h"
 #include "../common/showmsg.h"
@@ -19,6 +20,8 @@
 #include "../common/sql.h"
 #include "../common/strlib.h"
 #include "../common/utils.h"
+
+struct inter_homunculus_interface inter_homunculus_s;
 
 int inter_homunculus_sql_init(void)
 {
@@ -29,7 +32,7 @@ void inter_homunculus_sql_final(void)
 	return;
 }
 
-static void mapif_homunculus_created(int fd, int account_id, struct s_homunculus *sh, unsigned char flag)
+void mapif_homunculus_created(int fd, int account_id, struct s_homunculus *sh, unsigned char flag)
 {
 	WFIFOHEAD(fd, sizeof(struct s_homunculus)+9);
 	WFIFOW(fd,0) = 0x3890;
@@ -40,7 +43,7 @@ static void mapif_homunculus_created(int fd, int account_id, struct s_homunculus
 	WFIFOSET(fd, WFIFOW(fd,2));
 }
 
-static void mapif_homunculus_deleted(int fd, int flag)
+void mapif_homunculus_deleted(int fd, int flag)
 {
 	WFIFOHEAD(fd, 3);
 	WFIFOW(fd, 0) = 0x3893;
@@ -48,7 +51,7 @@ static void mapif_homunculus_deleted(int fd, int flag)
 	WFIFOSET(fd, 3);
 }
 
-static void mapif_homunculus_loaded(int fd, int account_id, struct s_homunculus *hd)
+void mapif_homunculus_loaded(int fd, int account_id, struct s_homunculus *hd)
 {
 	WFIFOHEAD(fd, sizeof(struct s_homunculus)+9);
 	WFIFOW(fd,0) = 0x3891;
@@ -67,7 +70,7 @@ static void mapif_homunculus_loaded(int fd, int account_id, struct s_homunculus 
 	WFIFOSET(fd, sizeof(struct s_homunculus)+9);
 }
 
-static void mapif_homunculus_saved(int fd, int account_id, bool flag)
+void mapif_homunculus_saved(int fd, int account_id, bool flag)
 {
 	WFIFOHEAD(fd, 7);
 	WFIFOW(fd,0) = 0x3892;
@@ -76,7 +79,7 @@ static void mapif_homunculus_saved(int fd, int account_id, bool flag)
 	WFIFOSET(fd, 7);
 }
 
-static void mapif_homunculus_renamed(int fd, int account_id, int char_id, unsigned char flag, char* name)
+void mapif_homunculus_renamed(int fd, int account_id, int char_id, unsigned char flag, char* name)
 {
 	WFIFOHEAD(fd, NAME_LENGTH+12);
 	WFIFOW(fd, 0) = 0x3894;
@@ -148,8 +151,6 @@ bool mapif_homunculus_save(struct s_homunculus* hd)
 
 	return flag;
 }
-
-
 
 // Load an homunculus
 bool mapif_homunculus_load(int homun_id, struct s_homunculus* hd)
@@ -266,35 +267,35 @@ bool mapif_homunculus_rename(char *name)
 }
 
 
-static void mapif_parse_homunculus_create(int fd, int len, int account_id, struct s_homunculus* phd)
+void mapif_parse_homunculus_create(int fd, int len, int account_id, struct s_homunculus* phd)
 {
-	bool result = mapif_homunculus_save(phd);
-	mapif_homunculus_created(fd, account_id, phd, result);
+	bool result = mapif->homunculus_save(phd);
+	mapif->homunculus_created(fd, account_id, phd, result);
 }
 
-static void mapif_parse_homunculus_delete(int fd, int homun_id)
+void mapif_parse_homunculus_delete(int fd, int homun_id)
 {
-	bool result = mapif_homunculus_delete(homun_id);
-	mapif_homunculus_deleted(fd, result);
+	bool result = mapif->homunculus_delete(homun_id);
+	mapif->homunculus_deleted(fd, result);
 }
 
-static void mapif_parse_homunculus_load(int fd, int account_id, int homun_id)
+void mapif_parse_homunculus_load(int fd, int account_id, int homun_id)
 {
 	struct s_homunculus hd;
-	bool result = mapif_homunculus_load(homun_id, &hd);
-	mapif_homunculus_loaded(fd, account_id, ( result ? &hd : NULL ));
+	bool result = mapif->homunculus_load(homun_id, &hd);
+	mapif->homunculus_loaded(fd, account_id, ( result ? &hd : NULL ));
 }
 
-static void mapif_parse_homunculus_save(int fd, int len, int account_id, struct s_homunculus* phd)
+void mapif_parse_homunculus_save(int fd, int len, int account_id, struct s_homunculus* phd)
 {
-	bool result = mapif_homunculus_save(phd);
-	mapif_homunculus_saved(fd, account_id, result);
+	bool result = mapif->homunculus_save(phd);
+	mapif->homunculus_saved(fd, account_id, result);
 }
 
-static void mapif_parse_homunculus_rename(int fd, int account_id, int char_id, char* name)
+void mapif_parse_homunculus_rename(int fd, int account_id, int char_id, char* name)
 {
-	bool result = mapif_homunculus_rename(name);
-	mapif_homunculus_renamed(fd, account_id, char_id, result, name);
+	bool result = mapif->homunculus_rename(name);
+	mapif->homunculus_renamed(fd, account_id, char_id, result, name);
 }
 
 /*==========================================
@@ -306,13 +307,22 @@ int inter_homunculus_parse_frommap(int fd)
 
 	switch( cmd )
 	{
-		case 0x3090: mapif_parse_homunculus_create(fd, (int)RFIFOW(fd,2), (int)RFIFOL(fd,4), (struct s_homunculus*)RFIFOP(fd,8)); break;
-		case 0x3091: mapif_parse_homunculus_load  (fd, (int)RFIFOL(fd,2), (int)RFIFOL(fd,6)); break;
-		case 0x3092: mapif_parse_homunculus_save  (fd, (int)RFIFOW(fd,2), (int)RFIFOL(fd,4), (struct s_homunculus*)RFIFOP(fd,8)); break;
-		case 0x3093: mapif_parse_homunculus_delete(fd, (int)RFIFOL(fd,2)); break;
-		case 0x3094: mapif_parse_homunculus_rename(fd, (int)RFIFOL(fd,2), (int)RFIFOL(fd,6), (char*)RFIFOP(fd,10)); break;
+		case 0x3090: mapif->parse_homunculus_create(fd, (int)RFIFOW(fd,2), (int)RFIFOL(fd,4), (struct s_homunculus*)RFIFOP(fd,8)); break;
+		case 0x3091: mapif->parse_homunculus_load  (fd, (int)RFIFOL(fd,2), (int)RFIFOL(fd,6)); break;
+		case 0x3092: mapif->parse_homunculus_save  (fd, (int)RFIFOW(fd,2), (int)RFIFOL(fd,4), (struct s_homunculus*)RFIFOP(fd,8)); break;
+		case 0x3093: mapif->parse_homunculus_delete(fd, (int)RFIFOL(fd,2)); break;
+		case 0x3094: mapif->parse_homunculus_rename(fd, (int)RFIFOL(fd,2), (int)RFIFOL(fd,6), (char*)RFIFOP(fd,10)); break;
 		default:
 			return 0;
 	}
 	return 1;
+}
+
+void inter_homunculus_defaults(void)
+{
+	inter_homunculus = &inter_homunculus_s;
+
+	inter_homunculus->sql_init = inter_homunculus_sql_init;
+	inter_homunculus->sql_final = inter_homunculus_sql_final;
+	inter_homunculus->parse_frommap = inter_homunculus_parse_frommap;
 }

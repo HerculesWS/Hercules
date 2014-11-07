@@ -10,6 +10,7 @@
 
 #include "char.h"
 #include "int_auction.h"
+#include "int_homun.h"
 #include "int_guild.h"
 #include "../common/cbasetypes.h"
 #include "../common/mmo.h"
@@ -85,6 +86,20 @@ int mapif_parse_GuildEmblem(int fd, int len, int guild_id, int dummy, const char
 int mapif_parse_GuildCastleDataLoad(int fd, int len, int *castle_ids);
 int mapif_parse_GuildCastleDataSave(int fd, int castle_id, int index, int value);
 int mapif_parse_GuildMasterChange(int fd, int guild_id, const char* name, int len);
+void mapif_homunculus_created(int fd, int account_id, struct s_homunculus *sh, unsigned char flag);
+void mapif_homunculus_deleted(int fd, int flag);
+void mapif_homunculus_loaded(int fd, int account_id, struct s_homunculus *hd);
+void mapif_homunculus_saved(int fd, int account_id, bool flag);
+void mapif_homunculus_renamed(int fd, int account_id, int char_id, unsigned char flag, char* name);
+bool mapif_homunculus_save(struct s_homunculus* hd);
+bool mapif_homunculus_load(int homun_id, struct s_homunculus* hd);
+bool mapif_homunculus_delete(int homun_id);
+bool mapif_homunculus_rename(char *name);
+void mapif_parse_homunculus_create(int fd, int len, int account_id, struct s_homunculus* phd);
+void mapif_parse_homunculus_delete(int fd, int homun_id);
+void mapif_parse_homunculus_load(int fd, int account_id, int homun_id);
+void mapif_parse_homunculus_save(int fd, int len, int account_id, struct s_homunculus* phd);
+void mapif_parse_homunculus_rename(int fd, int account_id, int char_id, char* name);
 
 void mapif_defaults(void) {
 	mapif = &mapif_s;
@@ -156,4 +171,18 @@ void mapif_defaults(void) {
 	mapif->parse_GuildCastleDataLoad = mapif_parse_GuildCastleDataLoad;
 	mapif->parse_GuildCastleDataSave = mapif_parse_GuildCastleDataSave;
 	mapif->parse_GuildMasterChange = mapif_parse_GuildMasterChange;
+	mapif->homunculus_created = mapif_homunculus_created;
+	mapif->homunculus_deleted = mapif_homunculus_deleted;
+	mapif->homunculus_loaded = mapif_homunculus_loaded;
+	mapif->homunculus_saved = mapif_homunculus_saved;
+	mapif->homunculus_renamed = mapif_homunculus_renamed;
+	mapif->homunculus_save = mapif_homunculus_save;
+	mapif->homunculus_load = mapif_homunculus_load;
+	mapif->homunculus_delete = mapif_homunculus_delete;
+	mapif->homunculus_rename = mapif_homunculus_rename;
+	mapif->parse_homunculus_create = mapif_parse_homunculus_create;
+	mapif->parse_homunculus_delete = mapif_parse_homunculus_delete;
+	mapif->parse_homunculus_load = mapif_parse_homunculus_load;
+	mapif->parse_homunculus_save = mapif_parse_homunculus_save;
+	mapif->parse_homunculus_rename = mapif_parse_homunculus_rename;
 }

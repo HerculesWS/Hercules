@@ -1030,7 +1030,7 @@ int inter_init_sql(const char *file)
 	inter_storage_sql_init();
 	inter_party_sql_init();
 	inter_pet_sql_init();
-	inter_homunculus_sql_init();
+	inter_homunculus->sql_init();
 	inter_mercenary_sql_init();
 	inter_elemental->sql_init();
 	inter_mail_sql_init();
@@ -1050,7 +1050,7 @@ void inter_final(void)
 	inter_storage_sql_final();
 	inter_party_sql_final();
 	inter_pet_sql_final();
-	inter_homunculus_sql_final();
+	inter_homunculus->sql_final();
 	inter_mercenary_sql_final();
 	inter_elemental->sql_final();
 	inter_mail_sql_final();
@@ -1457,7 +1457,7 @@ int inter_parse_frommap(int fd)
 		  || inter_guild->parse_frommap(fd)
 		  || inter_storage_parse_frommap(fd)
 		  || inter_pet_parse_frommap(fd)
-		  || inter_homunculus_parse_frommap(fd)
+		  || inter_homunculus->parse_frommap(fd)
 		  || inter_mercenary_parse_frommap(fd)
 		  || inter_elemental->parse_frommap(fd)
 		  || inter_mail_parse_frommap(fd)

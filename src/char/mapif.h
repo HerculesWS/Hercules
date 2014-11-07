@@ -8,6 +8,7 @@
 #include "char.h"
 
 struct s_elemental;
+struct s_homunculus;
 
 /* mapif interface */
 struct mapif_interface {
@@ -78,6 +79,20 @@ struct mapif_interface {
     int (*parse_GuildCastleDataLoad) (int fd, int len, int *castle_ids);
     int (*parse_GuildCastleDataSave) (int fd, int castle_id, int index, int value);
     int (*parse_GuildMasterChange) (int fd, int guild_id, const char* name, int len);
+    void (*homunculus_created) (int fd, int account_id, struct s_homunculus *sh, unsigned char flag);
+    void (*homunculus_deleted) (int fd, int flag);
+    void (*homunculus_loaded) (int fd, int account_id, struct s_homunculus *hd);
+    void (*homunculus_saved) (int fd, int account_id, bool flag);
+    void (*homunculus_renamed) (int fd, int account_id, int char_id, unsigned char flag, char* name);
+    bool (*homunculus_save) (struct s_homunculus* hd);
+    bool (*homunculus_load) (int homun_id, struct s_homunculus* hd);
+    bool (*homunculus_delete) (int homun_id);
+    bool (*homunculus_rename) (char *name);
+    void (*parse_homunculus_create) (int fd, int len, int account_id, struct s_homunculus* phd);
+    void (*parse_homunculus_delete) (int fd, int homun_id);
+    void (*parse_homunculus_load) (int fd, int account_id, int homun_id);
+    void (*parse_homunculus_save) (int fd, int len, int account_id, struct s_homunculus* phd);
+    void (*parse_homunculus_rename) (int fd, int account_id, int char_id, char* name);
 } mapif_s;
 
 struct mapif_interface *mapif;
