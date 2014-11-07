@@ -1026,7 +1026,7 @@ int inter_init_sql(const char *file)
 	}
 
 	wis_db = idb_alloc(DB_OPT_RELEASE_DATA);
-	inter_guild_sql_init();
+	inter_guild->sql_init();
 	inter_storage_sql_init();
 	inter_party_sql_init();
 	inter_pet_sql_init();
@@ -1046,7 +1046,7 @@ void inter_final(void)
 {
 	wis_db->destroy(wis_db, NULL);
 
-	inter_guild_sql_final();
+	inter_guild->sql_final();
 	inter_storage_sql_final();
 	inter_party_sql_final();
 	inter_pet_sql_final();
@@ -1454,7 +1454,7 @@ int inter_parse_frommap(int fd)
 	/* 0x3008 is used by the report stuff */
 	default:
 		if(  inter_party_parse_frommap(fd)
-		  || inter_guild_parse_frommap(fd)
+		  || inter_guild->parse_frommap(fd)
 		  || inter_storage_parse_frommap(fd)
 		  || inter_pet_parse_frommap(fd)
 		  || inter_homunculus_parse_frommap(fd)

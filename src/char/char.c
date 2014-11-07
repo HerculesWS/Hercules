@@ -272,7 +272,7 @@ void char_set_char_online(int map_id, int char_id, int account_id)
 
 	//Set char online in guild cache. If char is in memory, use the guild id on it, otherwise seek it.
 	cp = (struct mmo_charstatus*)idb_get(char_db_,char_id);
-	inter_guild_CharOnline(char_id, cp?cp->guild_id:-1);
+	inter_guild->CharOnline(char_id, cp?cp->guild_id:-1);
 
 	//Notify login server
 	if (login_fd > 0 && !session[login_fd]->flag.eof)
@@ -291,7 +291,7 @@ void char_set_char_offline(int char_id, int account_id)
 	else
 	{
 		struct mmo_charstatus* cp = (struct mmo_charstatus*)idb_get(char_db_,char_id);
-		inter_guild_CharOffline(char_id, cp?cp->guild_id:-1);
+		inter_guild->CharOffline(char_id, cp?cp->guild_id:-1);
 		if (cp)
 			idb_remove(char_db_,char_id);
 
@@ -1529,7 +1529,7 @@ int char_rename_char_sql(struct char_session_data *sd, int char_id)
 
 	// Change character's name into guild_db.
 	if( char_dat.guild_id )
-		inter_guild_charname_changed(char_dat.guild_id, sd->account_id, char_id, sd->new_name);
+		inter_guild->charname_changed(char_dat.guild_id, sd->account_id, char_id, sd->new_name);
 
 	safestrncpy(char_dat.name, sd->new_name, NAME_LENGTH);
 	memset(sd->new_name,0,sizeof(sd->new_name));
@@ -1880,7 +1880,7 @@ int char_delete_char_sql(int char_id)
 			Sql_ShowDebug(sql_handle);
 	}
 
-	/* No need as we used inter_guild_leave [Skotlex]
+	/* No need as we used inter_guild->leave [Skotlex]
 	// Also delete info from guildtables.
 	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", guild_member_db, char_id) )
 		Sql_ShowDebug(sql_handle);
@@ -1889,9 +1889,9 @@ int char_delete_char_sql(int char_id)
 	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `guild_id` FROM `%s` WHERE `char_id` = '%d'", guild_db, char_id) )
 		Sql_ShowDebug(sql_handle);
 	else if( SQL->NumRows(sql_handle) > 0 )
-		mapif_parse_BreakGuild(0,guild_id);
+		mapif->parse_BreakGuild(0,guild_id);
 	else if( guild_id )
-		inter_guild_leave(guild_id, account_id, char_id);// Leave your guild.
+		inter_guild->leave(guild_id, account_id, char_id);// Leave your guild.
 	return 0;
 }
 
@@ -2486,7 +2486,7 @@ int char_parse_fromlogin_changesex_reply(int fd)
 			Sql_ShowDebug(sql_handle);
 
 		if( guild_id[i] )// If there is a guild, update the guild_member data [Skotlex]
-			inter_guild_sex_changed(guild_id[i], acc, char_id[i], sex);
+			inter_guild->sex_changed(guild_id[i], acc, char_id[i], sex);
 	}
 	SQL->FreeResult(sql_handle);
 
@@ -6007,6 +6007,7 @@ void char_load_defaults(void)
 	mapif_defaults();
 	inter_auction_defaults();
 	inter_elemental_defaults();
+	inter_guild_defaults();
 }
 
 void char_defaults(void)

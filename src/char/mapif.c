@@ -10,6 +10,7 @@
 
 #include "char.h"
 #include "int_auction.h"
+#include "int_guild.h"
 #include "../common/cbasetypes.h"
 #include "../common/mmo.h"
 #include "../common/random.h"
@@ -49,6 +50,41 @@ void mapif_elemental_deleted(int fd, unsigned char flag);
 void mapif_parse_elemental_delete(int fd, int ele_id);
 void mapif_elemental_saved(int fd, unsigned char flag);
 void mapif_parse_elemental_save(int fd, struct s_elemental* ele);
+int mapif_guild_created(int fd, int account_id, struct guild *g);
+int mapif_guild_noinfo(int fd, int guild_id);
+int mapif_guild_info(int fd, struct guild *g);
+int mapif_guild_memberadded(int fd, int guild_id, int account_id, int char_id, int flag);
+int mapif_guild_withdraw(int guild_id, int account_id, int char_id, int flag, const char *name, const char *mes);
+int mapif_guild_memberinfoshort(struct guild *g, int idx);
+int mapif_guild_broken(int guild_id, int flag);
+int mapif_guild_message(int guild_id,int account_id,char *mes,int len, int sfd);
+int mapif_guild_basicinfochanged(int guild_id, int type, const void *data, int len);
+int mapif_guild_memberinfochanged(int guild_id, int account_id, int char_id, int type, const void *data, int len);
+int mapif_guild_skillupack(int guild_id, uint16 skill_id, int account_id);
+int mapif_guild_alliance(int guild_id1, int guild_id2, int account_id1, int account_id2, int flag, const char *name1, const char *name2);
+int mapif_guild_position(struct guild *g, int idx);
+int mapif_guild_notice(struct guild *g);
+int mapif_guild_emblem(struct guild *g);
+int mapif_guild_master_changed(struct guild *g, int aid, int cid);
+int mapif_guild_castle_dataload(int fd, int sz, int *castle_ids);
+int mapif_parse_CreateGuild(int fd,int account_id,char *name,struct guild_member *master);
+int mapif_parse_GuildInfo(int fd, int guild_id);
+int mapif_parse_GuildAddMember(int fd, int guild_id, struct guild_member *m);
+int mapif_parse_GuildLeave(int fd, int guild_id, int account_id, int char_id, int flag, const char *mes);
+int mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int class_);
+int mapif_parse_BreakGuild(int fd, int guild_id);
+int mapif_parse_GuildMessage(int fd, int guild_id, int account_id, char *mes, int len);
+int mapif_parse_GuildBasicInfoChange(int fd, int guild_id, int type, const void *data, int len);
+int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int char_id, int type, const char *data, int len);
+int mapif_parse_GuildPosition(int fd, int guild_id, int idx, struct guild_position *p);
+int mapif_parse_GuildSkillUp(int fd, int guild_id, uint16 skill_id, int account_id, int max);
+int mapif_parse_GuildDeleteAlliance(struct guild *g, int guild_id, int account_id1, int account_id2, int flag);
+int mapif_parse_GuildAlliance(int fd, int guild_id1, int guild_id2, int account_id1, int account_id2, int flag);
+int mapif_parse_GuildNotice(int fd, int guild_id, const char *mes1, const char *mes2);
+int mapif_parse_GuildEmblem(int fd, int len, int guild_id, int dummy, const char *data);
+int mapif_parse_GuildCastleDataLoad(int fd, int len, int *castle_ids);
+int mapif_parse_GuildCastleDataSave(int fd, int castle_id, int index, int value);
+int mapif_parse_GuildMasterChange(int fd, int guild_id, const char* name, int len);
 
 void mapif_defaults(void) {
 	mapif = &mapif_s;
@@ -85,4 +121,39 @@ void mapif_defaults(void) {
 	mapif->parse_elemental_delete = mapif_parse_elemental_delete;
 	mapif->elemental_saved = mapif_elemental_saved;
 	mapif->parse_elemental_save = mapif_parse_elemental_save;
+	mapif->guild_created = mapif_guild_created;
+	mapif->guild_noinfo = mapif_guild_noinfo;
+	mapif->guild_info = mapif_guild_info;
+	mapif->guild_memberadded = mapif_guild_memberadded;
+	mapif->guild_withdraw = mapif_guild_withdraw;
+	mapif->guild_memberinfoshort = mapif_guild_memberinfoshort;
+	mapif->guild_broken = mapif_guild_broken;
+	mapif->guild_message = mapif_guild_message;
+	mapif->guild_basicinfochanged = mapif_guild_basicinfochanged;
+	mapif->guild_memberinfochanged = mapif_guild_memberinfochanged;
+	mapif->guild_skillupack = mapif_guild_skillupack;
+	mapif->guild_alliance = mapif_guild_alliance;
+	mapif->guild_position = mapif_guild_position;
+	mapif->guild_notice = mapif_guild_notice;
+	mapif->guild_emblem = mapif_guild_emblem;
+	mapif->guild_master_changed = mapif_guild_master_changed;
+	mapif->guild_castle_dataload = mapif_guild_castle_dataload;
+	mapif->parse_CreateGuild = mapif_parse_CreateGuild;
+	mapif->parse_GuildInfo = mapif_parse_GuildInfo;
+	mapif->parse_GuildAddMember = mapif_parse_GuildAddMember;
+	mapif->parse_GuildLeave = mapif_parse_GuildLeave;
+	mapif->parse_GuildChangeMemberInfoShort = mapif_parse_GuildChangeMemberInfoShort;
+	mapif->parse_BreakGuild = mapif_parse_BreakGuild;
+	mapif->parse_GuildMessage = mapif_parse_GuildMessage;
+	mapif->parse_GuildBasicInfoChange = mapif_parse_GuildBasicInfoChange;
+	mapif->parse_GuildMemberInfoChange = mapif_parse_GuildMemberInfoChange;
+	mapif->parse_GuildPosition = mapif_parse_GuildPosition;
+	mapif->parse_GuildSkillUp = mapif_parse_GuildSkillUp;
+	mapif->parse_GuildDeleteAlliance = mapif_parse_GuildDeleteAlliance;
+	mapif->parse_GuildAlliance = mapif_parse_GuildAlliance;
+	mapif->parse_GuildNotice = mapif_parse_GuildNotice;
+	mapif->parse_GuildEmblem = mapif_parse_GuildEmblem;
+	mapif->parse_GuildCastleDataLoad = mapif_parse_GuildCastleDataLoad;
+	mapif->parse_GuildCastleDataSave = mapif_parse_GuildCastleDataSave;
+	mapif->parse_GuildMasterChange = mapif_parse_GuildMasterChange;
 }
