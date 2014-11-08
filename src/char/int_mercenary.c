@@ -12,6 +12,7 @@
 
 #include "char.h"
 #include "inter.h"
+#include "mapif.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h"
 #include "../common/showmsg.h"
@@ -19,6 +20,8 @@
 #include "../common/sql.h"
 #include "../common/strlib.h"
 #include "../common/utils.h"
+
+struct inter_mercenary_interface inter_mercenary_s;
 
 bool inter_mercenary_owner_fromsql(int char_id, struct mmo_charstatus *status)
 {
@@ -141,7 +144,7 @@ bool mapif_mercenary_delete(int merc_id)
 	return true;
 }
 
-static void mapif_mercenary_send(int fd, struct s_mercenary *merc, unsigned char flag)
+void mapif_mercenary_send(int fd, struct s_mercenary *merc, unsigned char flag)
 {
 	int size = sizeof(struct s_mercenary) + 5;
 
@@ -153,20 +156,20 @@ static void mapif_mercenary_send(int fd, struct s_mercenary *merc, unsigned char
 	WFIFOSET(fd,size);
 }
 
-static void mapif_parse_mercenary_create(int fd, struct s_mercenary* merc)
+void mapif_parse_mercenary_create(int fd, struct s_mercenary* merc)
 {
-	bool result = mapif_mercenary_save(merc);
-	mapif_mercenary_send(fd, merc, result);
+	bool result = mapif->mercenary_save(merc);
+	mapif->mercenary_send(fd, merc, result);
 }
 
-static void mapif_parse_mercenary_load(int fd, int merc_id, int char_id)
+void mapif_parse_mercenary_load(int fd, int merc_id, int char_id)
 {
 	struct s_mercenary merc;
-	bool result = mapif_mercenary_load(merc_id, char_id, &merc);
-	mapif_mercenary_send(fd, &merc, result);
+	bool result = mapif->mercenary_load(merc_id, char_id, &merc);
+	mapif->mercenary_send(fd, &merc, result);
 }
 
-static void mapif_mercenary_deleted(int fd, unsigned char flag)
+void mapif_mercenary_deleted(int fd, unsigned char flag)
 {
 	WFIFOHEAD(fd,3);
 	WFIFOW(fd,0) = 0x3871;
@@ -174,13 +177,13 @@ static void mapif_mercenary_deleted(int fd, unsigned char flag)
 	WFIFOSET(fd,3);
 }
 
-static void mapif_parse_mercenary_delete(int fd, int merc_id)
+void mapif_parse_mercenary_delete(int fd, int merc_id)
 {
-	bool result = mapif_mercenary_delete(merc_id);
-	mapif_mercenary_deleted(fd, result);
+	bool result = mapif->mercenary_delete(merc_id);
+	mapif->mercenary_deleted(fd, result);
 }
 
-static void mapif_mercenary_saved(int fd, unsigned char flag)
+void mapif_mercenary_saved(int fd, unsigned char flag)
 {
 	WFIFOHEAD(fd,3);
 	WFIFOW(fd,0) = 0x3872;
@@ -188,10 +191,10 @@ static void mapif_mercenary_saved(int fd, unsigned char flag)
 	WFIFOSET(fd,3);
 }
 
-static void mapif_parse_mercenary_save(int fd, struct s_mercenary* merc)
+void mapif_parse_mercenary_save(int fd, struct s_mercenary* merc)
 {
-	bool result = mapif_mercenary_save(merc);
-	mapif_mercenary_saved(fd, result);
+	bool result = mapif->mercenary_save(merc);
+	mapif->mercenary_saved(fd, result);
 }
 
 int inter_mercenary_sql_init(void)
@@ -212,12 +215,25 @@ int inter_mercenary_parse_frommap(int fd)
 
 	switch( cmd )
 	{
-		case 0x3070: mapif_parse_mercenary_create(fd, (struct s_mercenary*)RFIFOP(fd,4)); break;
-		case 0x3071: mapif_parse_mercenary_load(fd, (int)RFIFOL(fd,2), (int)RFIFOL(fd,6)); break;
-		case 0x3072: mapif_parse_mercenary_delete(fd, (int)RFIFOL(fd,2)); break;
-		case 0x3073: mapif_parse_mercenary_save(fd, (struct s_mercenary*)RFIFOP(fd,4)); break;
+		case 0x3070: mapif->parse_mercenary_create(fd, (struct s_mercenary*)RFIFOP(fd,4)); break;
+		case 0x3071: mapif->parse_mercenary_load(fd, (int)RFIFOL(fd,2), (int)RFIFOL(fd,6)); break;
+		case 0x3072: mapif->parse_mercenary_delete(fd, (int)RFIFOL(fd,2)); break;
+		case 0x3073: mapif->parse_mercenary_save(fd, (struct s_mercenary*)RFIFOP(fd,4)); break;
 		default:
 			return 0;
 	}
 	return 1;
+}
+
+void inter_mercenary_defaults(void)
+{
+	inter_mercenary = &inter_mercenary_s;
+
+	inter_mercenary->owner_fromsql = inter_mercenary_owner_fromsql;
+	inter_mercenary->owner_tosql = inter_mercenary_owner_tosql;
+	inter_mercenary->owner_delete = inter_mercenary_owner_delete;
+
+	inter_mercenary->sql_init = inter_mercenary_sql_init;
+	inter_mercenary->sql_final = inter_mercenary_sql_final;
+	inter_mercenary->parse_frommap = inter_mercenary_parse_frommap;
 }

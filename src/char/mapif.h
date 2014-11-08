@@ -9,6 +9,7 @@
 
 struct s_elemental;
 struct s_homunculus;
+struct s_mercenary;
 struct mail_message;
 
 /* mapif interface */
@@ -107,6 +108,16 @@ struct mapif_interface {
     void (*parse_mail_return) (int fd);
     void (*mail_send) (int fd, struct mail_message* msg);
     void (*parse_mail_send) (int fd);
+    bool (*mercenary_save) (struct s_mercenary* merc);
+    bool (*mercenary_load) (int merc_id, int char_id, struct s_mercenary *merc);
+    bool (*mercenary_delete) (int merc_id);
+    void (*mercenary_send) (int fd, struct s_mercenary *merc, unsigned char flag);
+    void (*parse_mercenary_create) (int fd, struct s_mercenary* merc);
+    void (*parse_mercenary_load) (int fd, int merc_id, int char_id);
+    void (*mercenary_deleted) (int fd, unsigned char flag);
+    void (*parse_mercenary_delete) (int fd, int merc_id);
+    void (*mercenary_saved) (int fd, unsigned char flag);
+    void (*parse_mercenary_save) (int fd, struct s_mercenary* merc);
 } mapif_s;
 
 struct mapif_interface *mapif;
