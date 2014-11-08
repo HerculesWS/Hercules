@@ -123,6 +123,24 @@ void mapif_mercenary_deleted(int fd, unsigned char flag);
 void mapif_parse_mercenary_delete(int fd, int merc_id);
 void mapif_mercenary_saved(int fd, unsigned char flag);
 void mapif_parse_mercenary_save(int fd, struct s_mercenary* merc);
+int mapif_party_created(int fd, int account_id, int char_id, struct party *p);
+void mapif_party_noinfo(int fd, int party_id, int char_id);
+void mapif_party_info(int fd, struct party* p, int char_id);
+int mapif_party_memberadded(int fd, int party_id, int account_id, int char_id, int flag);
+int mapif_party_optionchanged(int fd, struct party *p, int account_id, int flag);
+int mapif_party_withdraw(int party_id,int account_id, int char_id);
+int mapif_party_membermoved(struct party *p, int idx);
+int mapif_party_broken(int party_id, int flag);
+int mapif_party_message(int party_id, int account_id, char *mes, int len, int sfd);
+int mapif_parse_CreateParty(int fd, char *name, int item, int item2, struct party_member *leader);
+void mapif_parse_PartyInfo(int fd, int party_id, int char_id);
+int mapif_parse_PartyAddMember(int fd, int party_id, struct party_member *member);
+int mapif_parse_PartyChangeOption(int fd,int party_id,int account_id,int exp,int item);
+int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id);
+int mapif_parse_PartyChangeMap(int fd, int party_id, int account_id, int char_id, unsigned short map, int online, unsigned int lv);
+int mapif_parse_BreakParty(int fd, int party_id);
+int mapif_parse_PartyMessage(int fd, int party_id, int account_id, char *mes, int len);
+int mapif_parse_PartyLeaderChange(int fd, int party_id, int account_id, int char_id);
 
 void mapif_defaults(void) {
 	mapif = &mapif_s;
@@ -231,4 +249,22 @@ void mapif_defaults(void) {
 	mapif->parse_mercenary_delete = mapif_parse_mercenary_delete;
 	mapif->mercenary_saved = mapif_mercenary_saved;
 	mapif->parse_mercenary_save = mapif_parse_mercenary_save;
+	mapif->party_created = mapif_party_created;
+	mapif->party_noinfo = mapif_party_noinfo;
+	mapif->party_info = mapif_party_info;
+	mapif->party_memberadded = mapif_party_memberadded;
+	mapif->party_optionchanged = mapif_party_optionchanged;
+	mapif->party_withdraw = mapif_party_withdraw;
+	mapif->party_membermoved = mapif_party_membermoved;
+	mapif->party_broken = mapif_party_broken;
+	mapif->party_message = mapif_party_message;
+	mapif->parse_CreateParty = mapif_parse_CreateParty;
+	mapif->parse_PartyInfo = mapif_parse_PartyInfo;
+	mapif->parse_PartyAddMember = mapif_parse_PartyAddMember;
+	mapif->parse_PartyChangeOption = mapif_parse_PartyChangeOption;
+	mapif->parse_PartyLeave = mapif_parse_PartyLeave;
+	mapif->parse_PartyChangeMap = mapif_parse_PartyChangeMap;
+	mapif->parse_BreakParty = mapif_parse_BreakParty;
+	mapif->parse_PartyMessage = mapif_parse_PartyMessage;
+	mapif->parse_PartyLeaderChange = mapif_parse_PartyLeaderChange;
 }

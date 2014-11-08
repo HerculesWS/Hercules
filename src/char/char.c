@@ -1799,7 +1799,7 @@ int char_delete_char_sql(int char_id)
 
 	//Make the character leave the party [Skotlex]
 	if (party_id)
-		inter_party_leave(party_id, account_id, char_id);
+		inter_party->leave(party_id, account_id, char_id);
 
 	/* delete char's pet */
 	//Delete the hatched pet if you have one...
@@ -6012,6 +6012,7 @@ void char_load_defaults(void)
 	inter_homunculus_defaults();
 	inter_mail_defaults();
 	inter_mercenary_defaults();
+	inter_party_defaults();
 }
 
 void char_defaults(void)

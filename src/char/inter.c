@@ -1028,7 +1028,7 @@ int inter_init_sql(const char *file)
 	wis_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	inter_guild->sql_init();
 	inter_storage_sql_init();
-	inter_party_sql_init();
+	inter_party->sql_init();
 	inter_pet_sql_init();
 	inter_homunculus->sql_init();
 	inter_mercenary->sql_init();
@@ -1048,7 +1048,7 @@ void inter_final(void)
 
 	inter_guild->sql_final();
 	inter_storage_sql_final();
-	inter_party_sql_final();
+	inter_party->sql_final();
 	inter_pet_sql_final();
 	inter_homunculus->sql_final();
 	inter_mercenary->sql_final();
@@ -1453,7 +1453,7 @@ int inter_parse_frommap(int fd)
 	case 0x3007: mapif_parse_accinfo(fd); break;
 	/* 0x3008 is used by the report stuff */
 	default:
-		if(  inter_party_parse_frommap(fd)
+		if(  inter_party->parse_frommap(fd)
 		  || inter_guild->parse_frommap(fd)
 		  || inter_storage_parse_frommap(fd)
 		  || inter_pet_parse_frommap(fd)
