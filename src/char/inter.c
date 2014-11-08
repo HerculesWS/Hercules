@@ -1462,7 +1462,7 @@ int inter_parse_frommap(int fd)
 		  || inter_elemental->parse_frommap(fd)
 		  || inter_mail->parse_frommap(fd)
 		  || inter_auction->parse_frommap(fd)
-		  || inter_quest_parse_frommap(fd)
+		  || inter_quest->parse_frommap(fd)
 		   )
 			break;
 		else

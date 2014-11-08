@@ -24,6 +24,7 @@
 #include "int_mercenary.h"
 #include "int_party.h"
 #include "int_pet.h"
+#include "int_quest.h"
 #include "int_storage.h"
 #include "inter.h"
 #include "loginif.h"
@@ -6015,6 +6016,7 @@ void char_load_defaults(void)
 	inter_mercenary_defaults();
 	inter_party_defaults();
 	inter_pet_defaults();
+	inter_quest_defaults();
 }
 
 void char_defaults(void)
