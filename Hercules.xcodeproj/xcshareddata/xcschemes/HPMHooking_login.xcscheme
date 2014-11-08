@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A5B894B71A03CE5D005AD22E"
-               BuildableName = "HPMHooking_char copy.dylib"
+               BuildableName = "HPMHooking_login.dylib"
                BlueprintName = "HPMHooking_login"
                ReferencedContainer = "container:Hercules.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A5B894B71A03CE5D005AD22E"
-            BuildableName = "HPMHooking_char copy.dylib"
+            BuildableName = "HPMHooking_login.dylib"
             BlueprintName = "HPMHooking_login"
             ReferencedContainer = "container:Hercules.xcodeproj">
          </BuildableReference>
@@ -61,7 +61,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A5B894B71A03CE5D005AD22E"
-            BuildableName = "HPMHooking_char copy.dylib"
+            BuildableName = "HPMHooking_login.dylib"
             BlueprintName = "HPMHooking_login"
             ReferencedContainer = "container:Hercules.xcodeproj">
          </BuildableReference>

@@ -1042,7 +1042,7 @@
 		A56CC652185642B4009EB79C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = hercules.ws;
 			};
 			buildConfigurationList = A56CC655185642B4009EB79C /* Build configuration list for PBXProject "Hercules" */;
@@ -1669,6 +1669,7 @@
 		A58A5A24185801FF0099683E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
 				EXECUTABLE_PREFIX = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1682,6 +1683,7 @@
 		A58A5A25185801FF0099683E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
 				EXECUTABLE_PREFIX = "";
 				PRODUCT_NAME = HPMHooking_map;
@@ -1739,6 +1741,7 @@
 		A5B894B41A03CE25005AD22E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
 				EXECUTABLE_PREFIX = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1752,6 +1755,7 @@
 		A5B894B51A03CE25005AD22E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
 				EXECUTABLE_PREFIX = "";
 				PRODUCT_NAME = HPMHooking_char;
@@ -1761,6 +1765,7 @@
 		A5B894BD1A03CE5D005AD22E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
 				EXECUTABLE_PREFIX = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1774,6 +1779,7 @@
 		A5B894BE1A03CE5D005AD22E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
 				EXECUTABLE_PREFIX = "";
 				PRODUCT_NAME = HPMHooking_login;
