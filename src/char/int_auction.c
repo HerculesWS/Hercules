@@ -144,12 +144,12 @@ static int inter_auction_end_timer(int tid, int64 tick, int id, intptr_t data) {
 	{
 		if( auction->buyer_id )
 		{
-			inter_mail_sendmail(0, "Auction Manager", auction->buyer_id, auction->buyer_name, "Auction", "Thanks, you won the auction!.", 0, &auction->item);
+			inter_mail->sendmail(0, "Auction Manager", auction->buyer_id, auction->buyer_name, "Auction", "Thanks, you won the auction!.", 0, &auction->item);
 			mapif->auction_message(auction->buyer_id, 6); // You have won the auction
-			inter_mail_sendmail(0, "Auction Manager", auction->seller_id, auction->seller_name, "Auction", "Payment for your auction!.", auction->price, NULL);
+			inter_mail->sendmail(0, "Auction Manager", auction->seller_id, auction->seller_name, "Auction", "Payment for your auction!.", auction->price, NULL);
 		}
 		else
-			inter_mail_sendmail(0, "Auction Manager", auction->seller_id, auction->seller_name, "Auction", "No buyers have been found for your auction.", 0, &auction->item);
+			inter_mail->sendmail(0, "Auction Manager", auction->seller_id, auction->seller_name, "Auction", "No buyers have been found for your auction.", 0, &auction->item);
 		
 		ShowInfo("Auction End: id %u.\n", auction->auction_id);
 
@@ -352,7 +352,7 @@ void mapif_parse_auction_cancel(int fd)
 		return;
 	}
 
-	inter_mail_sendmail(0, "Auction Manager", auction->seller_id, auction->seller_name, "Auction", "Auction canceled.", 0, &auction->item);
+	inter_mail->sendmail(0, "Auction Manager", auction->seller_id, auction->seller_name, "Auction", "Auction canceled.", 0, &auction->item);
 	inter_auction->delete_(auction);
 
 	mapif->auction_cancel(fd, char_id, 0); // The auction has been canceled
@@ -391,9 +391,9 @@ void mapif_parse_auction_close(int fd)
 	}
 
 	// Send Money to Seller
-	inter_mail_sendmail(0, "Auction Manager", auction->seller_id, auction->seller_name, "Auction", "Auction closed.", auction->price, NULL);
+	inter_mail->sendmail(0, "Auction Manager", auction->seller_id, auction->seller_name, "Auction", "Auction closed.", auction->price, NULL);
 	// Send Item to Buyer
-	inter_mail_sendmail(0, "Auction Manager", auction->buyer_id, auction->buyer_name, "Auction", "Auction winner.", 0, &auction->item);
+	inter_mail->sendmail(0, "Auction Manager", auction->buyer_id, auction->buyer_name, "Auction", "Auction winner.", 0, &auction->item);
 	mapif->auction_message(auction->buyer_id, 6); // You have won the auction
 	inter_auction->delete_(auction);
 
@@ -432,11 +432,11 @@ void mapif_parse_auction_bid(int fd)
 	{ // Send Money back to the previous Buyer
 		if( auction->buyer_id != char_id )
 		{
-			inter_mail_sendmail(0, "Auction Manager", auction->buyer_id, auction->buyer_name, "Auction", "Someone has placed a higher bid.", auction->price, NULL);
+			inter_mail->sendmail(0, "Auction Manager", auction->buyer_id, auction->buyer_name, "Auction", "Someone has placed a higher bid.", auction->price, NULL);
 			mapif->auction_message(auction->buyer_id, 7); // You have failed to win the auction
 		}
 		else
-			inter_mail_sendmail(0, "Auction Manager", auction->buyer_id, auction->buyer_name, "Auction", "You have placed a higher bid.", auction->price, NULL);
+			inter_mail->sendmail(0, "Auction Manager", auction->buyer_id, auction->buyer_name, "Auction", "You have placed a higher bid.", auction->price, NULL);
 	}
 
 	auction->buyer_id = char_id;
@@ -447,9 +447,9 @@ void mapif_parse_auction_bid(int fd)
 	{ // Automatic won the auction
 		mapif->auction_bid(fd, char_id, bid - auction->buynow, 1); // You have successfully bid in the auction
 
-		inter_mail_sendmail(0, "Auction Manager", auction->buyer_id, auction->buyer_name, "Auction", "You have won the auction.", 0, &auction->item);
+		inter_mail->sendmail(0, "Auction Manager", auction->buyer_id, auction->buyer_name, "Auction", "You have won the auction.", 0, &auction->item);
 		mapif->auction_message(char_id, 6); // You have won the auction
-		inter_mail_sendmail(0, "Auction Manager", auction->seller_id, auction->seller_name, "Auction", "Payment for your auction!.", auction->buynow, NULL);
+		inter_mail->sendmail(0, "Auction Manager", auction->seller_id, auction->seller_name, "Auction", "Payment for your auction!.", auction->buynow, NULL);
 
 		inter_auction->delete_(auction);
 		return;

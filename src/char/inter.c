@@ -1033,7 +1033,7 @@ int inter_init_sql(const char *file)
 	inter_homunculus->sql_init();
 	inter_mercenary_sql_init();
 	inter_elemental->sql_init();
-	inter_mail_sql_init();
+	inter_mail->sql_init();
 	inter_auction->sql_init();
 
 	geoip_init();
@@ -1053,7 +1053,7 @@ void inter_final(void)
 	inter_homunculus->sql_final();
 	inter_mercenary_sql_final();
 	inter_elemental->sql_final();
-	inter_mail_sql_final();
+	inter_mail->sql_final();
 	inter_auction->sql_final();
 
 	geoip_final(true);
@@ -1460,7 +1460,7 @@ int inter_parse_frommap(int fd)
 		  || inter_homunculus->parse_frommap(fd)
 		  || inter_mercenary_parse_frommap(fd)
 		  || inter_elemental->parse_frommap(fd)
-		  || inter_mail_parse_frommap(fd)
+		  || inter_mail->parse_frommap(fd)
 		  || inter_auction->parse_frommap(fd)
 		  || inter_quest_parse_frommap(fd)
 		   )

@@ -100,6 +100,19 @@ void mapif_parse_homunculus_delete(int fd, int homun_id);
 void mapif_parse_homunculus_load(int fd, int account_id, int homun_id);
 void mapif_parse_homunculus_save(int fd, int len, int account_id, struct s_homunculus* phd);
 void mapif_parse_homunculus_rename(int fd, int account_id, int char_id, char* name);
+void mapif_mail_sendinbox(int fd, int char_id, unsigned char flag, struct mail_data *md);
+void mapif_parse_mail_requestinbox(int fd);
+void mapif_parse_mail_read(int fd);
+void mapif_mail_sendattach(int fd, int char_id, struct mail_message *msg);
+void mapif_mail_getattach(int fd, int char_id, int mail_id);
+void mapif_parse_mail_getattach(int fd);
+void mapif_mail_delete(int fd, int char_id, int mail_id, bool failed);
+void mapif_parse_mail_delete(int fd);
+void mapif_mail_new(struct mail_message *msg);
+void mapif_mail_return(int fd, int char_id, int mail_id, int new_mail);
+void mapif_parse_mail_return(int fd);
+void mapif_mail_send(int fd, struct mail_message* msg);
+void mapif_parse_mail_send(int fd);
 
 void mapif_defaults(void) {
 	mapif = &mapif_s;
@@ -185,4 +198,17 @@ void mapif_defaults(void) {
 	mapif->parse_homunculus_load = mapif_parse_homunculus_load;
 	mapif->parse_homunculus_save = mapif_parse_homunculus_save;
 	mapif->parse_homunculus_rename = mapif_parse_homunculus_rename;
+	mapif->mail_sendinbox = mapif_mail_sendinbox;
+	mapif->parse_mail_requestinbox = mapif_parse_mail_requestinbox;
+	mapif->parse_mail_read = mapif_parse_mail_read;
+	mapif->mail_sendattach = mapif_mail_sendattach;
+	mapif->mail_getattach = mapif_mail_getattach;
+	mapif->parse_mail_getattach = mapif_parse_mail_getattach;
+	mapif->mail_delete = mapif_mail_delete;
+	mapif->parse_mail_delete = mapif_parse_mail_delete;
+	mapif->mail_new = mapif_mail_new;
+	mapif->mail_return = mapif_mail_return;
+	mapif->parse_mail_return = mapif_parse_mail_return;
+	mapif->mail_send = mapif_mail_send;
+	mapif->parse_mail_send = mapif_parse_mail_send;
 }

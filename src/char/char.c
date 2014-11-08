@@ -20,6 +20,7 @@
 #include "int_elemental.h"
 #include "int_guild.h"
 #include "int_homun.h"
+#include "int_mail.h"
 #include "int_mercenary.h"
 #include "int_party.h"
 #include "int_storage.h"
@@ -6009,6 +6010,7 @@ void char_load_defaults(void)
 	inter_elemental_defaults();
 	inter_guild_defaults();
 	inter_homunculus_defaults();
+	inter_mail_defaults();
 }
 
 void char_defaults(void)
