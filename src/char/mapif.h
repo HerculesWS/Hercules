@@ -15,6 +15,7 @@ struct guild_storage;
 struct storage_data;
 struct quest;
 struct mail_message;
+struct WisData;
 
 /* mapif interface */
 struct mapif_interface {
@@ -169,6 +170,23 @@ struct mapif_interface {
     int (*itembound_ack) (int fd, int aid, int guild_id);
     int (*parse_ItemBoundRetrieve_sub) (int fd);
     void (*parse_ItemBoundRetrieve) (int fd);
+    void (*parse_accinfo) (int fd);
+    void (*parse_accinfo2) (bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass,
+        const char *email, const char *last_ip, const char *lastlogin, const char *pin_code, const char *birthdate, int group_id, int logincount, int state);
+    int (*broadcast) (unsigned char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, int sfd);
+    int (*wis_message) (struct WisData *wd);
+    void (*wis_response) (int fd, unsigned char *src, int flag);
+    int (*wis_end) (struct WisData *wd, int flag);
+    int (*account_reg_reply) (int fd,int account_id,int char_id, int type);
+    int (*disconnectplayer) (int fd, int account_id, int char_id, int reason);
+    int (*parse_broadcast) (int fd);
+    int (*parse_WisRequest) (int fd);
+    int (*parse_WisReply) (int fd);
+    int (*parse_WisToGM) (int fd);
+    int (*parse_Registry) (int fd);
+    int (*parse_RegistryRequest) (int fd);
+    void (*namechange_ack) (int fd, int account_id, int char_id, int type, int flag, const char *const name);
+    int (*parse_NameChangeRequest) (int fd);
 } mapif_s;
 
 struct mapif_interface *mapif;

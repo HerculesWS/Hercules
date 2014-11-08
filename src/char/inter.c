@@ -36,6 +36,7 @@
 #define WISDATA_TTL (60*1000)	//Wis data Time To Live (60 seconds)
 #define WISDELLIST_MAX 256		// Number of elements in the list Delete data Wis
 
+struct inter_interface inter_s;
 
 Sql* sql_handle = NULL;
 
@@ -85,14 +86,15 @@ const char* inter_msg_txt(int msg_number) {
 /**
  * Reads Message Data.
  *
- * This is a modified version of the mapserver's inter_msg_config_read to
+ * This is a modified version of the mapserver's inter->msg_config_read to
  * only read messages with IDs between 550 and 550+MAX_JOB_NAMES.
  *
  * @param[in] cfg_name       configuration filename to read.
  * @param[in] allow_override whether to allow duplicate message IDs to override the original value.
  * @return success state.
  */
-bool inter_msg_config_read(const char *cfg_name, bool allow_override) {
+bool inter_msg_config_read(const char *cfg_name, bool allow_override)
+{
 	int msg_number;
 	char line[1024], w1[1024], w2[1024];
 	FILE *fp;
@@ -113,7 +115,7 @@ bool inter_msg_config_read(const char *cfg_name, bool allow_override) {
 			continue;
 
 		if (strcmpi(w1, "import") == 0)
-			inter_msg_config_read(w2, true);
+			inter->msg_config_read(w2, true);
 		else {
 			msg_number = atoi(w1);
 			if( msg_number < 550 || msg_number > (550+MAX_JOB_NAMES) )
@@ -142,13 +144,15 @@ bool inter_msg_config_read(const char *cfg_name, bool allow_override) {
 /*==========================================
  * Cleanup Message Data
  *------------------------------------------*/
-void inter_do_final_msg(void) {
+void inter_do_final_msg(void)
+{
 	int i;
 	for (i = 0; i < MAX_JOB_NAMES; i++)
 		aFree(msg_table[i]);
 }
 /* from pc.c due to @accinfo. any ideas to replace this crap are more than welcome. */
-const char* inter_job_name(int class_) {
+const char* inter_job_name(int class_)
+{
 	switch (class_) {
 		case JOB_NOVICE:   // 550
 		case JOB_SWORDMAN: // 551
@@ -157,7 +161,7 @@ const char* inter_job_name(int class_) {
 		case JOB_ACOLYTE:  // 554
 		case JOB_MERCHANT: // 555
 		case JOB_THIEF:    // 556
-			return inter_msg_txt(550 - JOB_NOVICE+class_);
+			return inter->msg_txt(550 - JOB_NOVICE+class_);
 
 		case JOB_KNIGHT:     // 557
 		case JOB_PRIEST:     // 558
@@ -165,10 +169,10 @@ const char* inter_job_name(int class_) {
 		case JOB_BLACKSMITH: // 560
 		case JOB_HUNTER:     // 561
 		case JOB_ASSASSIN:   // 562
-			return inter_msg_txt(557 - JOB_KNIGHT+class_);
+			return inter->msg_txt(557 - JOB_KNIGHT+class_);
 
 		case JOB_KNIGHT2:
-			return inter_msg_txt(557);
+			return inter->msg_txt(557);
 
 		case JOB_CRUSADER:  // 563
 		case JOB_MONK:      // 564
@@ -177,20 +181,20 @@ const char* inter_job_name(int class_) {
 		case JOB_ALCHEMIST: // 567
 		case JOB_BARD:      // 568
 		case JOB_DANCER:    // 569
-			return inter_msg_txt(563 - JOB_CRUSADER+class_);
+			return inter->msg_txt(563 - JOB_CRUSADER+class_);
 
 		case JOB_CRUSADER2:
-			return inter_msg_txt(563);
+			return inter->msg_txt(563);
 
 		case JOB_WEDDING:      // 570
 		case JOB_SUPER_NOVICE: // 571
 		case JOB_GUNSLINGER:   // 572
 		case JOB_NINJA:        // 573
 		case JOB_XMAS:         // 574
-			return inter_msg_txt(570 - JOB_WEDDING+class_);
+			return inter->msg_txt(570 - JOB_WEDDING+class_);
 
 		case JOB_SUMMER:
-			return inter_msg_txt(621);
+			return inter->msg_txt(621);
 
 		case JOB_NOVICE_HIGH:   // 575
 		case JOB_SWORDMAN_HIGH: // 576
@@ -199,7 +203,7 @@ const char* inter_job_name(int class_) {
 		case JOB_ACOLYTE_HIGH:  // 579
 		case JOB_MERCHANT_HIGH: // 580
 		case JOB_THIEF_HIGH:    // 581
-			return inter_msg_txt(575 - JOB_NOVICE_HIGH+class_);
+			return inter->msg_txt(575 - JOB_NOVICE_HIGH+class_);
 
 		case JOB_LORD_KNIGHT:    // 582
 		case JOB_HIGH_PRIEST:    // 583
@@ -207,10 +211,10 @@ const char* inter_job_name(int class_) {
 		case JOB_WHITESMITH:     // 585
 		case JOB_SNIPER:         // 586
 		case JOB_ASSASSIN_CROSS: // 587
-			return inter_msg_txt(582 - JOB_LORD_KNIGHT+class_);
+			return inter->msg_txt(582 - JOB_LORD_KNIGHT+class_);
 
 		case JOB_LORD_KNIGHT2:
-			return inter_msg_txt(582);
+			return inter->msg_txt(582);
 
 		case JOB_PALADIN:   // 588
 		case JOB_CHAMPION:  // 589
@@ -219,10 +223,10 @@ const char* inter_job_name(int class_) {
 		case JOB_CREATOR:   // 592
 		case JOB_CLOWN:     // 593
 		case JOB_GYPSY:     // 594
-			return inter_msg_txt(588 - JOB_PALADIN + class_);
+			return inter->msg_txt(588 - JOB_PALADIN + class_);
 
 		case JOB_PALADIN2:
-			return inter_msg_txt(588);
+			return inter->msg_txt(588);
 
 		case JOB_BABY:          // 595
 		case JOB_BABY_SWORDMAN: // 596
@@ -231,7 +235,7 @@ const char* inter_job_name(int class_) {
 		case JOB_BABY_ACOLYTE:  // 599
 		case JOB_BABY_MERCHANT: // 600
 		case JOB_BABY_THIEF:    // 601
-			return inter_msg_txt(595 - JOB_BABY + class_);
+			return inter->msg_txt(595 - JOB_BABY + class_);
 
 		case JOB_BABY_KNIGHT:     // 602
 		case JOB_BABY_PRIEST:     // 603
@@ -239,10 +243,10 @@ const char* inter_job_name(int class_) {
 		case JOB_BABY_BLACKSMITH: // 605
 		case JOB_BABY_HUNTER:     // 606
 		case JOB_BABY_ASSASSIN:   // 607
-			return inter_msg_txt(602 - JOB_BABY_KNIGHT + class_);
+			return inter->msg_txt(602 - JOB_BABY_KNIGHT + class_);
 
 		case JOB_BABY_KNIGHT2:
-			return inter_msg_txt(602);
+			return inter->msg_txt(602);
 
 		case JOB_BABY_CRUSADER:  // 608
 		case JOB_BABY_MONK:      // 609
@@ -251,26 +255,26 @@ const char* inter_job_name(int class_) {
 		case JOB_BABY_ALCHEMIST: // 612
 		case JOB_BABY_BARD:      // 613
 		case JOB_BABY_DANCER:    // 614
-			return inter_msg_txt(608 - JOB_BABY_CRUSADER + class_);
+			return inter->msg_txt(608 - JOB_BABY_CRUSADER + class_);
 
 		case JOB_BABY_CRUSADER2:
-			return inter_msg_txt(608);
+			return inter->msg_txt(608);
 
 		case JOB_SUPER_BABY:
-			return inter_msg_txt(615);
+			return inter->msg_txt(615);
 
 		case JOB_TAEKWON:
-			return inter_msg_txt(616);
+			return inter->msg_txt(616);
 		case JOB_STAR_GLADIATOR:
 		case JOB_STAR_GLADIATOR2:
-			return inter_msg_txt(617);
+			return inter->msg_txt(617);
 		case JOB_SOUL_LINKER:
-			return inter_msg_txt(618);
+			return inter->msg_txt(618);
 
 		case JOB_GANGSI:         // 622
 		case JOB_DEATH_KNIGHT:   // 623
 		case JOB_DARK_COLLECTOR: // 624
-			return inter_msg_txt(622 - JOB_GANGSI+class_);
+			return inter->msg_txt(622 - JOB_GANGSI+class_);
 
 		case JOB_RUNE_KNIGHT:      // 625
 		case JOB_WARLOCK:          // 626
@@ -278,7 +282,7 @@ const char* inter_job_name(int class_) {
 		case JOB_ARCH_BISHOP:      // 628
 		case JOB_MECHANIC:         // 629
 		case JOB_GUILLOTINE_CROSS: // 630
-			return inter_msg_txt(625 - JOB_RUNE_KNIGHT+class_);
+			return inter->msg_txt(625 - JOB_RUNE_KNIGHT+class_);
 
 		case JOB_RUNE_KNIGHT_T:      // 656
 		case JOB_WARLOCK_T:          // 657
@@ -286,7 +290,7 @@ const char* inter_job_name(int class_) {
 		case JOB_ARCH_BISHOP_T:      // 659
 		case JOB_MECHANIC_T:         // 660
 		case JOB_GUILLOTINE_CROSS_T: // 661
-			return inter_msg_txt(656 - JOB_RUNE_KNIGHT_T+class_);
+			return inter->msg_txt(656 - JOB_RUNE_KNIGHT_T+class_);
 
 		case JOB_ROYAL_GUARD:   // 631
 		case JOB_SORCERER:      // 632
@@ -295,7 +299,7 @@ const char* inter_job_name(int class_) {
 		case JOB_SURA:          // 635
 		case JOB_GENETIC:       // 636
 		case JOB_SHADOW_CHASER: // 637
-			return inter_msg_txt(631 - JOB_ROYAL_GUARD+class_);
+			return inter->msg_txt(631 - JOB_ROYAL_GUARD+class_);
 
 		case JOB_ROYAL_GUARD_T:   // 662
 		case JOB_SORCERER_T:      // 663
@@ -304,31 +308,31 @@ const char* inter_job_name(int class_) {
 		case JOB_SURA_T:          // 666
 		case JOB_GENETIC_T:       // 667
 		case JOB_SHADOW_CHASER_T: // 668
-			return inter_msg_txt(662 - JOB_ROYAL_GUARD_T+class_);
+			return inter->msg_txt(662 - JOB_ROYAL_GUARD_T+class_);
 
 		case JOB_RUNE_KNIGHT2:
-			return inter_msg_txt(625);
+			return inter->msg_txt(625);
 
 		case JOB_RUNE_KNIGHT_T2:
-			return inter_msg_txt(656);
+			return inter->msg_txt(656);
 
 		case JOB_ROYAL_GUARD2:
-			return inter_msg_txt(631);
+			return inter->msg_txt(631);
 
 		case JOB_ROYAL_GUARD_T2:
-			return inter_msg_txt(662);
+			return inter->msg_txt(662);
 
 		case JOB_RANGER2:
-			return inter_msg_txt(627);
+			return inter->msg_txt(627);
 
 		case JOB_RANGER_T2:
-			return inter_msg_txt(658);
+			return inter->msg_txt(658);
 
 		case JOB_MECHANIC2:
-			return inter_msg_txt(629);
+			return inter->msg_txt(629);
 
 		case JOB_MECHANIC_T2:
-			return inter_msg_txt(660);
+			return inter->msg_txt(660);
 
 		case JOB_BABY_RUNE:     // 638
 		case JOB_BABY_WARLOCK:  // 639
@@ -343,33 +347,33 @@ const char* inter_job_name(int class_) {
 		case JOB_BABY_SURA:     // 648
 		case JOB_BABY_GENETIC:  // 649
 		case JOB_BABY_CHASER:   // 650
-			return inter_msg_txt(638 - JOB_BABY_RUNE+class_);
+			return inter->msg_txt(638 - JOB_BABY_RUNE+class_);
 
 		case JOB_BABY_RUNE2:
-			return inter_msg_txt(638);
+			return inter->msg_txt(638);
 
 		case JOB_BABY_GUARD2:
-			return inter_msg_txt(644);
+			return inter->msg_txt(644);
 
 		case JOB_BABY_RANGER2:
-			return inter_msg_txt(640);
+			return inter->msg_txt(640);
 
 		case JOB_BABY_MECHANIC2:
-			return inter_msg_txt(642);
+			return inter->msg_txt(642);
 
 		case JOB_SUPER_NOVICE_E: // 651
 		case JOB_SUPER_BABY_E:   // 652
-			return inter_msg_txt(651 - JOB_SUPER_NOVICE_E+class_);
+			return inter->msg_txt(651 - JOB_SUPER_NOVICE_E+class_);
 
 		case JOB_KAGEROU: // 653
 		case JOB_OBORO:   // 654
-			return inter_msg_txt(653 - JOB_KAGEROU+class_);
+			return inter->msg_txt(653 - JOB_KAGEROU+class_);
 
 		case JOB_REBELLION:
-			return inter_msg_txt(655);
+			return inter->msg_txt(655);
 
 		default:
-			return inter_msg_txt(620); // "Unknown Job"
+			return inter->msg_txt(620); // "Unknown Job"
 	}
 }
 
@@ -538,7 +542,8 @@ void geoip_init(void) {
  * Argument-list version of inter_msg_to_fd
  * @see inter_msg_to_fd
  */
-void inter_vmsg_to_fd(int fd, int u_fd, int aid, char* msg, va_list ap) {
+void inter_vmsg_to_fd(int fd, int u_fd, int aid, char* msg, va_list ap)
+{
 	char msg_out[512];
 	va_list apcopy;
 	int len = 1;/* yes we start at 1 */
@@ -570,15 +575,17 @@ void inter_vmsg_to_fd(int fd, int u_fd, int aid, char* msg, va_list ap) {
  * @param ...  Additional parameters for (v)sprinf
  */
 void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...) __attribute__((format(printf, 4, 5)));
-void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...) {
+void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...)
+{
 	va_list ap;
 	va_start(ap,msg);
-	inter_vmsg_to_fd(fd, u_fd, aid, msg, ap);
+	inter->vmsg_to_fd(fd, u_fd, aid, msg, ap);
 	va_end(ap);
 }
 
 /* [Dekamaster/Nightroad] */
-void mapif_parse_accinfo(int fd) {
+void mapif_parse_accinfo(int fd)
+{
 	int u_fd = RFIFOL(fd,2), aid = RFIFOL(fd,6), castergroup = RFIFOL(fd,10);
 	char query[NAME_LENGTH], query_esq[NAME_LENGTH*2+1];
 	int account_id;
@@ -594,10 +601,10 @@ void mapif_parse_accinfo(int fd) {
 		if ( SQL_ERROR == SQL->Query(sql_handle, "SELECT `account_id`,`name`,`class`,`base_level`,`job_level`,`online` FROM `%s` WHERE `name` LIKE '%s' LIMIT 10", char_db, query_esq)
 				|| SQL->NumRows(sql_handle) == 0 ) {
 			if( SQL->NumRows(sql_handle) == 0 ) {
-				inter_msg_to_fd(fd, u_fd, aid, "No matches were found for your criteria, '%s'",query);
+				inter->msg_to_fd(fd, u_fd, aid, "No matches were found for your criteria, '%s'",query);
 			} else {
 				Sql_ShowDebug(sql_handle);
-				inter_msg_to_fd(fd, u_fd, aid, "An error occurred, bother your admin about it.");
+				inter->msg_to_fd(fd, u_fd, aid, "An error occurred, bother your admin about it.");
 			}
 			SQL->FreeResult(sql_handle);
 			return;
@@ -607,7 +614,7 @@ void mapif_parse_accinfo(int fd) {
 				SQL->GetData(sql_handle, 0, &data, NULL); account_id = atoi(data);
 				SQL->FreeResult(sql_handle);
 			} else {// more than one, listing... [Dekamaster/Nightroad]
-				inter_msg_to_fd(fd, u_fd, aid, "Your query returned the following %d results, please be more specific...",(int)SQL->NumRows(sql_handle));
+				inter->msg_to_fd(fd, u_fd, aid, "Your query returned the following %d results, please be more specific...",(int)SQL->NumRows(sql_handle));
 				while ( SQL_SUCCESS == SQL->NextRow(sql_handle) ) {
 					int class_;
 					short base_level, job_level, online;
@@ -620,7 +627,7 @@ void mapif_parse_accinfo(int fd) {
 					SQL->GetData(sql_handle, 4, &data, NULL); job_level = atoi(data);
 					SQL->GetData(sql_handle, 5, &data, NULL); online = atoi(data);
 
-					inter_msg_to_fd(fd, u_fd, aid, "[AID: %d] %s | %s | Level: %d/%d | %s", account_id, name, inter_job_name(class_), base_level, job_level, online?"Online":"Offline");
+					inter->msg_to_fd(fd, u_fd, aid, "[AID: %d] %s | %s | Level: %d/%d | %s", account_id, name, inter->job_name(class_), base_level, job_level, online?"Online":"Offline");
 				}
 				SQL->FreeResult(sql_handle);
 				return;
@@ -636,37 +643,39 @@ void mapif_parse_accinfo(int fd) {
 
 	return;
 }
-void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass, const char *email, const char *last_ip, const char *lastlogin, const char *pin_code, const char *birthdate, int group_id, int logincount, int state) {
+void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass,
+    const char *email, const char *last_ip, const char *lastlogin, const char *pin_code, const char *birthdate, int group_id, int logincount, int state)
+{
 	if (map_fd <= 0 || !session_isActive(map_fd))
 		return; // check if we have a valid fd
 
 	if (!success) {
-		inter_msg_to_fd(map_fd, u_fd, u_aid, "No account with ID '%d' was found.", account_id);
+		inter->msg_to_fd(map_fd, u_fd, u_aid, "No account with ID '%d' was found.", account_id);
 		return;
 	}
 
-	inter_msg_to_fd(map_fd, u_fd, u_aid, "-- Account %d --", account_id);
-	inter_msg_to_fd(map_fd, u_fd, u_aid, "User: %s | GM Group: %d | State: %d", userid, group_id, state);
+	inter->msg_to_fd(map_fd, u_fd, u_aid, "-- Account %d --", account_id);
+	inter->msg_to_fd(map_fd, u_fd, u_aid, "User: %s | GM Group: %d | State: %d", userid, group_id, state);
 
 	if (user_pass && *user_pass != '\0') { /* password is only received if your gm level is greater than the one you're searching for */
 		if (pin_code && *pin_code != '\0')
-			inter_msg_to_fd(map_fd, u_fd, u_aid, "Password: %s (PIN:%s)", user_pass, pin_code);
+			inter->msg_to_fd(map_fd, u_fd, u_aid, "Password: %s (PIN:%s)", user_pass, pin_code);
 		else
-			inter_msg_to_fd(map_fd, u_fd, u_aid, "Password: %s", user_pass );
+			inter->msg_to_fd(map_fd, u_fd, u_aid, "Password: %s", user_pass );
 	}
 
-	inter_msg_to_fd(map_fd, u_fd, u_aid, "Account e-mail: %s | Birthdate: %s", email, birthdate);
-	inter_msg_to_fd(map_fd, u_fd, u_aid, "Last IP: %s (%s)", last_ip, geoip_getcountry(str2ip(last_ip)));
-	inter_msg_to_fd(map_fd, u_fd, u_aid, "This user has logged %d times, the last time were at %s", logincount, lastlogin);
-	inter_msg_to_fd(map_fd, u_fd, u_aid, "-- Character Details --");
+	inter->msg_to_fd(map_fd, u_fd, u_aid, "Account e-mail: %s | Birthdate: %s", email, birthdate);
+	inter->msg_to_fd(map_fd, u_fd, u_aid, "Last IP: %s (%s)", last_ip, geoip_getcountry(str2ip(last_ip)));
+	inter->msg_to_fd(map_fd, u_fd, u_aid, "This user has logged %d times, the last time were at %s", logincount, lastlogin);
+	inter->msg_to_fd(map_fd, u_fd, u_aid, "-- Character Details --");
 
 	if ( SQL_ERROR == SQL->Query(sql_handle, "SELECT `char_id`, `name`, `char_num`, `class`, `base_level`, `job_level`, `online` "
 	                                         "FROM `%s` WHERE `account_id` = '%d' ORDER BY `char_num` LIMIT %d", char_db, account_id, MAX_CHARS)
 	  || SQL->NumRows(sql_handle) == 0 ) {
 		if (SQL->NumRows(sql_handle) == 0) {
-			inter_msg_to_fd(map_fd, u_fd, u_aid, "This account doesn't have characters.");
+			inter->msg_to_fd(map_fd, u_fd, u_aid, "This account doesn't have characters.");
 		} else {
-			inter_msg_to_fd(map_fd, u_fd, u_aid, "An error occurred, bother your admin about it.");
+			inter->msg_to_fd(map_fd, u_fd, u_aid, "An error occurred, bother your admin about it.");
 			Sql_ShowDebug(sql_handle);
 		}
 	} else {
@@ -684,7 +693,7 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
 			SQL->GetData(sql_handle, 5, &data, NULL); job_level = atoi(data);
 			SQL->GetData(sql_handle, 6, &data, NULL); online = atoi(data);
 
-			inter_msg_to_fd(map_fd, u_fd, u_aid, "[Slot/CID: %d/%d] %s | %s | Level: %d/%d | %s", char_num, char_id, name, inter_job_name(class_), base_level, job_level, online?"On":"Off");
+			inter->msg_to_fd(map_fd, u_fd, u_aid, "[Slot/CID: %d/%d] %s | %s | Level: %d/%d | %s", char_num, char_id, name, inter->job_name(class_), base_level, job_level, online?"On":"Off");
 		}
 	}
 	SQL->FreeResult(sql_handle);
@@ -697,7 +706,8 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
  * @param val either str or int, depending on type
  * @param type false when int, true otherwise
  **/
-void inter_savereg(int account_id, int char_id, const char *key, unsigned int index, intptr_t val, bool is_string) {
+void inter_savereg(int account_id, int char_id, const char *key, unsigned int index, intptr_t val, bool is_string)
+{
 	/* to login server we go! */
 	if( key[0] == '#' && key[1] == '#' ) {/* global account reg */
 		if( session_isValid(login_fd) )
@@ -762,10 +772,10 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 				Sql_ShowDebug(sql_handle);
 			break;
 		case 1: //account2 reg
-			ShowError("inter_accreg_fromsql: Char server shouldn't handle type 1 registry values (##). That is the login server's work!\n");
+			ShowError("inter->accreg_fromsql: Char server shouldn't handle type 1 registry values (##). That is the login server's work!\n");
 			return 0;
 		default:
-			ShowError("inter_accreg_fromsql: Invalid type %d\n", type);
+			ShowError("inter->accreg_fromsql: Invalid type %d\n", type);
 			return 0;
 	}
 	
@@ -845,7 +855,7 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 				Sql_ShowDebug(sql_handle);
 			break;
 		case 1: //account2 reg
-			ShowError("inter_accreg_fromsql: Char server shouldn't handle type 1 registry values (##). That is the login server's work!\n");
+			ShowError("inter->accreg_fromsql: Char server shouldn't handle type 1 registry values (##). That is the login server's work!\n");
 			return 0;
 	}
 
@@ -957,7 +967,7 @@ static int inter_config_read(const char* cfgName)
 		else if(!strcmpi(w1,"log_inter"))
 			log_inter = atoi(w2);
 		else if(!strcmpi(w1,"import"))
-			inter_config_read(w2);
+			inter->config_read(w2);
 	}
 	fclose(fp);
 
@@ -970,7 +980,8 @@ static int inter_config_read(const char* cfgName)
  * Save interlog into sql (arglist version)
  * @see inter_log
  */
-int inter_vlog(char* fmt, va_list ap) {
+int inter_vlog(char* fmt, va_list ap)
+{
 	char str[255];
 	char esc_str[sizeof(str)*2+1];// escaped str
 	va_list apcopy;
@@ -992,12 +1003,13 @@ int inter_vlog(char* fmt, va_list ap) {
  * @param ... Additional (printf-like) arguments
  * @return Always 0 // FIXME
  */
-int inter_log(char* fmt, ...) {
+int inter_log(char* fmt, ...)
+{
 	va_list ap;
 	int ret;
 
 	va_start(ap,fmt);
-	ret = inter_vlog(fmt, ap);
+	ret = inter->vlog(fmt, ap);
 	va_end(ap);
 
 	return ret;
@@ -1008,7 +1020,7 @@ int inter_init_sql(const char *file)
 {
 	//int i;
 
-	inter_config_read(file);
+	inter->config_read(file);
 
 	//DB connection initialized
 	sql_handle = SQL->Malloc();
@@ -1037,7 +1049,7 @@ int inter_init_sql(const char *file)
 	inter_auction->sql_init();
 
 	geoip_init();
-	inter_msg_config_read("conf/messages.conf", false);
+	inter->msg_config_read("conf/messages.conf", false);
 	return 0;
 }
 
@@ -1057,7 +1069,7 @@ void inter_final(void)
 	inter_auction->sql_final();
 
 	geoip_final(true);
-	inter_do_final_msg();
+	inter->do_final_msg();
 	return;
 }
 
@@ -1118,7 +1130,7 @@ void mapif_wis_response(int fd, unsigned char *src, int flag)
 // Wis sending result
 int mapif_wis_end(struct WisData *wd, int flag)
 {
-	mapif_wis_response(wd->fd, wd->src, flag);
+	mapif->wis_response(wd->fd, wd->src, flag);
 	return 0;
 }
 
@@ -1130,8 +1142,9 @@ int mapif_wis_end(struct WisData *wd, int flag)
 //}
 
 // Send the requested account_reg
-int mapif_account_reg_reply(int fd,int account_id,int char_id, int type) {
-	inter_accreg_fromsql(account_id,char_id,fd,type);
+int mapif_account_reg_reply(int fd,int account_id,int char_id, int type)
+{
+	inter->accreg_fromsql(account_id,char_id,fd,type);
 	return 0;
 }
 
@@ -1175,12 +1188,12 @@ int inter_check_ttl_wisdata(void)
 
 	do {
 		wis_delnum = 0;
-		wis_db->foreach(wis_db, inter_check_ttl_wisdata_sub, tick);
+		wis_db->foreach(wis_db, inter->check_ttl_wisdata_sub, tick);
 		for(i = 0; i < wis_delnum; i++) {
 			struct WisData *wd = (struct WisData*)idb_get(wis_db, wis_dellist[i]);
 			ShowWarning("inter: wis data id=%d time out : from %s to %s\n", wd->id, wd->src, wd->dst);
 			// removed. not send information after a timeout. Just no answer for the player
-			//mapif_wis_end(wd, 1); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
+			//mapif->wis_end(wd, 1); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
 			idb_remove(wis_db, wd->id);
 		}
 	} while(wis_delnum >= WISDELLIST_MAX);
@@ -1193,7 +1206,7 @@ int inter_check_ttl_wisdata(void)
 // broadcast sending
 int mapif_parse_broadcast(int fd)
 {
-	mapif_broadcast(RFIFOP(fd,16), RFIFOW(fd,2), RFIFOL(fd,4), RFIFOW(fd,8), RFIFOW(fd,10), RFIFOW(fd,12), RFIFOW(fd,14), fd);
+	mapif->broadcast(RFIFOP(fd,16), RFIFOW(fd,2), RFIFOL(fd,4), RFIFOW(fd,8), RFIFOW(fd,10), RFIFOW(fd,12), RFIFOW(fd,14), fd);
 	return 0;
 }
 
@@ -1228,7 +1241,7 @@ int mapif_parse_WisRequest(int fd)
 	// search if character exists before to ask all map-servers
 	if( SQL_SUCCESS != SQL->NextRow(sql_handle) )
 	{
-		mapif_wis_response(fd, RFIFOP(fd, 4), 1);
+		mapif->wis_response(fd, RFIFOP(fd, 4), 1);
 	}
 	else
 	{// Character exists. So, ask all map-servers
@@ -1239,14 +1252,14 @@ int mapif_parse_WisRequest(int fd)
 		// if source is destination, don't ask other servers.
 		if( strncmp((const char*)RFIFOP(fd,4), name, NAME_LENGTH) == 0 )
 		{
-			mapif_wis_response(fd, RFIFOP(fd, 4), 1);
+			mapif->wis_response(fd, RFIFOP(fd, 4), 1);
 		}
 		else
 		{
 			CREATE(wd, struct WisData, 1);
 
 			// Whether the failure of previous wisp/page transmission (timeout)
-			inter_check_ttl_wisdata();
+			inter->check_ttl_wisdata();
 
 			wd->id = ++wisid;
 			wd->fd = fd;
@@ -1256,7 +1269,7 @@ int mapif_parse_WisRequest(int fd)
 			memcpy(wd->msg, RFIFOP(fd,52), wd->len);
 			wd->tick = timer->gettick();
 			idb_put(wis_db, wd->id, wd);
-			mapif_wis_message(wd);
+			mapif->wis_message(wd);
 		}
 	}
 
@@ -1278,7 +1291,7 @@ int mapif_parse_WisReply(int fd)
 		return 0;	// This wisp was probably suppress before, because it was timeout of because of target was found on another map-server
 
 	if ((--wd->count) <= 0 || flag != 1) {
-		mapif_wis_end(wd, flag); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
+		mapif->wis_end(wd, flag); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
 		idb_remove(wis_db, id);
 	}
 
@@ -1321,24 +1334,24 @@ int mapif_parse_Registry(int fd)
 			switch (RFIFOB(fd, cursor++)) {
 				/* int */
 				case 0:
-					inter_savereg(account_id,char_id,key,index,RFIFOL(fd, cursor),false);
+					inter->savereg(account_id,char_id,key,index,RFIFOL(fd, cursor),false);
 					cursor += 4;
 					break;
 				case 1:
-					inter_savereg(account_id,char_id,key,index,0,false);
+					inter->savereg(account_id,char_id,key,index,0,false);
 					break;
 				/* str */
 				case 2:
 					safestrncpy(sval, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
 					cursor += RFIFOB(fd, cursor) + 1;
-					inter_savereg(account_id,char_id,key,index,(intptr_t)sval,true);
+					inter->savereg(account_id,char_id,key,index,(intptr_t)sval,true);
 					break;
 				case 3:
-					inter_savereg(account_id,char_id,key,index,0,true);
+					inter->savereg(account_id,char_id,key,index,0,true);
 					break;
 					
 				default:
-					ShowError("mapif_parse_Registry: unknown type %d\n",RFIFOB(fd, cursor - 1));
+					ShowError("mapif->parse_Registry: unknown type %d\n",RFIFOB(fd, cursor - 1));
 					return 1;
 			}
 
@@ -1354,15 +1367,15 @@ int mapif_parse_Registry(int fd)
 int mapif_parse_RegistryRequest(int fd)
 {
 	//Load Char Registry
-	if (RFIFOB(fd,12)) mapif_account_reg_reply(fd,RFIFOL(fd,2),RFIFOL(fd,6),3);
+	if (RFIFOB(fd,12)) mapif->account_reg_reply(fd,RFIFOL(fd,2),RFIFOL(fd,6),3);
 	//Load Account Registry
-	if (RFIFOB(fd,11)) mapif_account_reg_reply(fd,RFIFOL(fd,2),RFIFOL(fd,6),2);
+	if (RFIFOB(fd,11)) mapif->account_reg_reply(fd,RFIFOL(fd,2),RFIFOL(fd,6),2);
 	//Ask Login Server for Account2 values.
 	if (RFIFOB(fd,10)) chr->request_accreg2(RFIFOL(fd,2),RFIFOL(fd,6));
 	return 1;
 }
 
-static void mapif_namechange_ack(int fd, int account_id, int char_id, int type, int flag, char *name)
+void mapif_namechange_ack(int fd, int account_id, int char_id, int type, int flag, const char *const name)
 {
 	WFIFOHEAD(fd, NAME_LENGTH+13);
 	WFIFOW(fd, 0) = 0x3806;
@@ -1389,13 +1402,13 @@ int mapif_parse_NameChangeRequest(int fd)
 	if (char_name_option == 1) { // only letters/symbols in char_name_letters are authorized
 		for (i = 0; i < NAME_LENGTH && name[i]; i++)
 		if (strchr(char_name_letters, name[i]) == NULL) {
-			mapif_namechange_ack(fd, account_id, char_id, type, 0, name);
+			mapif->namechange_ack(fd, account_id, char_id, type, 0, name);
 			return 0;
 		}
 	} else if (char_name_option == 2) { // letters/symbols in char_name_letters are forbidden
 		for (i = 0; i < NAME_LENGTH && name[i]; i++)
 		if (strchr(char_name_letters, name[i]) != NULL) {
-			mapif_namechange_ack(fd, account_id, char_id, type, 0, name);
+			mapif->namechange_ack(fd, account_id, char_id, type, 0, name);
 			return 0;
 		}
 	}
@@ -1404,7 +1417,7 @@ int mapif_parse_NameChangeRequest(int fd)
 	//updated here, because changing it on the map won't make it be saved [Skotlex]
 
 	//name allowed.
-	mapif_namechange_ack(fd, account_id, char_id, type, 1, name);
+	mapif->namechange_ack(fd, account_id, char_id, type, 1, name);
 	return 0;
 }
 
@@ -1439,18 +1452,18 @@ int inter_parse_frommap(int fd)
 		return 0;
 
 	// Check packet length
-	if((len = inter_check_length(fd, inter_recv_packet_length[cmd - 0x3000])) == 0)
+	if((len = inter->check_length(fd, inter_recv_packet_length[cmd - 0x3000])) == 0)
 		return 2;
 
 	switch(cmd) {
-	case 0x3000: mapif_parse_broadcast(fd); break;
-	case 0x3001: mapif_parse_WisRequest(fd); break;
-	case 0x3002: mapif_parse_WisReply(fd); break;
-	case 0x3003: mapif_parse_WisToGM(fd); break;
-	case 0x3004: mapif_parse_Registry(fd); break;
-	case 0x3005: mapif_parse_RegistryRequest(fd); break;
-	case 0x3006: mapif_parse_NameChangeRequest(fd); break;
-	case 0x3007: mapif_parse_accinfo(fd); break;
+	case 0x3000: mapif->parse_broadcast(fd); break;
+	case 0x3001: mapif->parse_WisRequest(fd); break;
+	case 0x3002: mapif->parse_WisReply(fd); break;
+	case 0x3003: mapif->parse_WisToGM(fd); break;
+	case 0x3004: mapif->parse_Registry(fd); break;
+	case 0x3005: mapif->parse_RegistryRequest(fd); break;
+	case 0x3006: mapif->parse_NameChangeRequest(fd); break;
+	case 0x3007: mapif->parse_accinfo(fd); break;
 	/* 0x3008 is used by the report stuff */
 	default:
 		if(  inter_party->parse_frommap(fd)
@@ -1473,4 +1486,26 @@ int inter_parse_frommap(int fd)
 	return 1;
 }
 
+void inter_defaults(void)
+{
+	inter = &inter_s;
 
+	inter->msg_txt = inter_msg_txt;
+	inter->msg_config_read = inter_msg_config_read;
+	inter->do_final_msg = inter_do_final_msg;
+	inter->job_name = inter_job_name;
+	inter->vmsg_to_fd = inter_vmsg_to_fd;
+	inter->msg_to_fd = inter_msg_to_fd;
+	inter->savereg = inter_savereg;
+	inter->accreg_fromsql = inter_accreg_fromsql;
+	inter->config_read = inter_config_read;
+	inter->vlog = inter_vlog;
+	inter->log = inter_log;
+	inter->init_sql = inter_init_sql;
+	inter->mapif_init = inter_mapif_init;
+	inter->check_ttl_wisdata_sub = inter_check_ttl_wisdata_sub;
+	inter->check_ttl_wisdata = inter->check_ttl_wisdata;
+	inter->check_length = inter_check_length;
+	inter->parse_frommap = inter_parse_frommap;
+	inter->final = inter_final;
+}

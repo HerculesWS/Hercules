@@ -257,7 +257,7 @@ void char_set_char_online(int map_id, int char_id, int account_id)
 	{
 		ShowNotice("chr->set_char_online: Character %d:%d marked in map server %d, but map server %d claims to have (%d:%d) online!\n",
 			character->account_id, character->char_id, character->server, map_id, account_id, char_id);
-		mapif_disconnectplayer(server[character->server].fd, character->account_id, character->char_id, 2);
+		mapif->disconnectplayer(server[character->server].fd, character->account_id, character->char_id, 2);
 	}
 
 	//Update state data
@@ -360,7 +360,7 @@ static int char_db_kickoffline(DBKey key, DBData *data, va_list ap)
 
 	//Kick out any connected characters, and set them offline as appropriate.
 	if (character->server > -1)
-		mapif_disconnectplayer(server[character->server].fd, character->account_id, character->char_id, 1);
+		mapif->disconnectplayer(server[character->server].fd, character->account_id, character->char_id, 1);
 	else if (character->waiting_disconnect == INVALID_TIMER)
 		chr->set_char_offline(character->char_id, character->account_id);
 	else
@@ -2206,7 +2206,7 @@ static void char_auth_ok(int fd, struct char_session_data *sd)
 	{	// check if character is not online already. [Skotlex]
 		if (character->server > -1)
 		{	//Character already online. KICK KICK KICK
-			mapif_disconnectplayer(server[character->server].fd, character->account_id, character->char_id, 2);
+			mapif->disconnectplayer(server[character->server].fd, character->account_id, character->char_id, 2);
 			if (character->waiting_disconnect == INVALID_TIMER)
 				character->waiting_disconnect = timer->add(timer->gettick()+20000, chr->waiting_disconnect, character->account_id, 0);
 			if (character)
@@ -2536,7 +2536,7 @@ void char_parse_fromlogin_kick(int fd)
 	{// account is already marked as online!
 		if( character->server > -1 )
 		{	//Kick it from the map server it is on.
-			mapif_disconnectplayer(server[character->server].fd, character->account_id, character->char_id, 2);
+			mapif->disconnectplayer(server[character->server].fd, character->account_id, character->char_id, 2);
 			if (character->waiting_disconnect == INVALID_TIMER)
 				character->waiting_disconnect = timer->add(timer->gettick()+AUTH_TIMEOUT, chr->waiting_disconnect, character->account_id, 0);
 		}
@@ -2590,14 +2590,14 @@ void char_parse_fromlogin_update_ip(int fd)
 
 void char_parse_fromlogin_accinfo2_failed(int fd)
 {
-	mapif_parse_accinfo2(false, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOL(fd,14),
+	mapif->parse_accinfo2(false, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOL(fd,14),
 	                     NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1, 0, 0);
 	RFIFOSKIP(fd,18);
 }
 
 void char_parse_fromlogin_accinfo2_ok(int fd)
 {
-	mapif_parse_accinfo2(true, RFIFOL(fd,167), RFIFOL(fd,171), RFIFOL(fd,175), RFIFOL(fd,179),
+	mapif->parse_accinfo2(true, RFIFOL(fd,167), RFIFOL(fd,171), RFIFOL(fd,175), RFIFOL(fd,179),
 	                     (char*)RFIFOP(fd,2), (char*)RFIFOP(fd,26), (char*)RFIFOP(fd,59),
 	                     (char*)RFIFOP(fd,99), (char*)RFIFOP(fd,119), (char*)RFIFOP(fd,151),
 	                     (char*)RFIFOP(fd,156), RFIFOL(fd,115), RFIFOL(fd,143), RFIFOL(fd,147));
@@ -3208,7 +3208,7 @@ void char_parse_frommap_set_users(int fd, int id)
 		{
 			ShowNotice("Set map user: Character (%d:%d) marked on map server %d, but map server %d claims to have (%d:%d) online!\n",
 				character->account_id, character->char_id, character->server, id, aid, cid);
-			mapif_disconnectplayer(server[character->server].fd, character->account_id, character->char_id, 2);
+			mapif->disconnectplayer(server[character->server].fd, character->account_id, character->char_id, 2);
 		}
 		character->server = id;
 		character->char_id = cid;
@@ -4119,7 +4119,7 @@ int char_parse_frommap(int fd)
 			default:
 			{
 				// inter server - packet
-				int r = inter_parse_frommap(fd);
+				int r = inter->parse_frommap(fd);
 				if (r == 1) break;		// processed
 				if (r == 2) return 0;	// need more packet
 
@@ -4172,7 +4172,7 @@ int char_search_mapserver(unsigned short map, uint32 ip, uint16 port)
 // Initialization process (currently only initialization inter_mapif)
 static int char_mapif_init(int fd)
 {
-	return inter_mapif_init(fd);
+	return inter->mapif_init(fd);
 }
 
 //--------------------------------------------
@@ -5428,7 +5428,7 @@ int char_check_connect_login_server(int tid, int64 tick, int id, intptr_t data) 
 }
 
 //------------------------------------------------
-//Invoked 15 seconds after mapif_disconnectplayer in case the map server doesn't
+//Invoked 15 seconds after mapif->disconnectplayer in case the map server doesn't
 //replies/disconnect the player we tried to kick. [Skotlex]
 //------------------------------------------------
 static int char_waiting_disconnect(int tid, int64 tick, int id, intptr_t data) {
@@ -5809,7 +5809,7 @@ int do_final(void) {
 	chr->set_all_offline(-1);
 	chr->set_all_offline_sql();
 
-	inter_final();
+	inter->final();
 
 	flush_fifos();
 
@@ -5922,7 +5922,7 @@ int do_init(int argc, char **argv) {
 		ShowNotice("And then change the user/password to use in conf/char-server.conf (or conf/import/char_conf.txt)\n");
 	}
 	
-	inter_init_sql((argc > 2) ? argv[2] : inter_cfgName); // inter server configuration
+	inter->init_sql((argc > 2) ? argv[2] : inter_cfgName); // inter server configuration
 
 	auth_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	online_char_db = idb_alloc(DB_OPT_RELEASE_DATA);
@@ -6018,6 +6018,7 @@ void char_load_defaults(void)
 	inter_pet_defaults();
 	inter_quest_defaults();
 	inter_storage_defaults();
+	inter_defaults();
 }
 
 void char_defaults(void)
