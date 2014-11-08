@@ -16,6 +16,7 @@
 #include <time.h>
 
 #include "HPMchar.h"
+#include "geoip.h"
 #include "int_auction.h"
 #include "int_elemental.h"
 #include "int_guild.h"
@@ -6019,6 +6020,7 @@ void char_load_defaults(void)
 	inter_quest_defaults();
 	inter_storage_defaults();
 	inter_defaults();
+	geoip_defaults();
 }
 
 void char_defaults(void)

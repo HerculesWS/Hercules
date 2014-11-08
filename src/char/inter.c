@@ -13,6 +13,7 @@
 #include <sys/stat.h> // for stat/lstat/fstat - [Dekamaster/Ultimate GM Tool]
 
 #include "char.h"
+#include "geoip.h"
 #include "int_auction.h"
 #include "int_elemental.h"
 #include "int_guild.h"
@@ -408,27 +409,21 @@ const char * geoip_countryname[GEOIP_MAX_COUNTRIES] = {"Unknown","Asia/Pacific R
 		"Virgin Islands, British","Virgin Islands, U.S.","Vietnam","Vanuatu","Wallis and Futuna","Samoa","Yemen","Mayotte","Serbia","South Africa",
 		"Zambia","Montenegro","Zimbabwe","Anonymous Proxy","Satellite Provider","Other","Aland Islands","Guernsey","Isle of Man","Jersey",
 		"Saint Barthelemy", "Saint Martin", "Bonaire, Saint Eustatius and Saba", "South Sudan"};
-/**
- * GeoIP information
- **/
-struct s_geoip {
-	unsigned char *cache; // GeoIP.dat information see geoip_init()
-	bool active;
-} geoip;
 
 /* [Dekamaster/Nightroad] */
 /* WHY NOT A DBMAP: There are millions of entries in GeoIP and it has its own algorithm to go quickly through them, a DBMap wouldn't be efficient */
-const char* geoip_getcountry(uint32 ipnum){
+const char* geoip_getcountry(uint32 ipnum)
+{
 	int depth;
 	unsigned int x;
 	const unsigned char *buf;
 	unsigned int offset = 0;
 
-	if( geoip.active == false )
+	if( geoip->data->active == false )
 		return geoip_countryname[0];
 
 	for (depth = 31; depth >= 0; depth--) {
-		buf = geoip.cache + (long)6 *offset;
+		buf = geoip->data->cache + (long)6 *offset;
 		if (ipnum & (1 << depth)) {
 			/* Take the right-hand branch */
 			x =   (buf[3*1 + 0] << (0*8))
@@ -460,16 +455,17 @@ const char* geoip_getcountry(uint32 ipnum){
  * Disables GeoIP
  * frees geoip.cache
  **/
-void geoip_final(bool shutdown) {
-	if (geoip.cache) {
-		aFree(geoip.cache);
-		geoip.cache = NULL;
+void geoip_final(bool shutdown)
+{
+	if (geoip->data->cache) {
+		aFree(geoip->data->cache);
+		geoip->data->cache = NULL;
 	}
 
-	if (geoip.active) {
+	if (geoip->data->active) {
 		if (!shutdown)
 			ShowStatus("GeoIP "CL_RED"disabled"CL_RESET".\n");
-		geoip.active = false;
+		geoip->data->active = false;
 	}
 }
 
@@ -478,32 +474,33 @@ void geoip_final(bool shutdown) {
  * geoip.cache should be freed after use!
  * http://dev.maxmind.com/geoip/legacy/geolite/
  **/
-void geoip_init(void) {
+void geoip_init(void)
+{
 	int i, fno;
 	char db_type = 1;
 	unsigned char delim[3];
 	struct stat bufa;
 	FILE *db;
 
-	geoip.active = true;
+	geoip->data->active = true;
 
 	db = fopen("./db/GeoIP.dat","rb");
 	if (db == NULL) {
 		ShowError("geoip_readdb: Error reading GeoIP.dat!\n");
-		geoip_final(false);
+		geoip->final(false);
 		return;
 	}
 	fno = fileno(db);
 	if (fstat(fno, &bufa) < 0) {
 		ShowError("geoip_readdb: Error stating GeoIP.dat! Error %d\n", errno);
-		geoip_final(false);
+		geoip->final(false);
 		return;
 	}
-	geoip.cache = aMalloc( (sizeof(geoip.cache) * bufa.st_size) );
-	if (fread(geoip.cache, sizeof(unsigned char), bufa.st_size, db) != bufa.st_size) {
+	geoip->data->cache = aMalloc( (sizeof(geoip->data->cache) * bufa.st_size) );
+	if (fread(geoip->data->cache, sizeof(unsigned char), bufa.st_size, db) != bufa.st_size) {
 		ShowError("geoip_cache: Couldn't read all elements!\n");
 		fclose(db);
-		geoip_final(false);
+		geoip->final(false);
 		return;
 	}
 
@@ -532,7 +529,7 @@ void geoip_init(void) {
 		else
 			ShowError("geoip_init(): GeoIP is corrupted!\n");
 
-		geoip_final(false);
+		geoip->final(false);
 		return;
 	}
 	ShowStatus("Finished Reading "CL_GREEN"GeoIP"CL_RESET" Database.\n");
@@ -665,7 +662,7 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
 	}
 
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "Account e-mail: %s | Birthdate: %s", email, birthdate);
-	inter->msg_to_fd(map_fd, u_fd, u_aid, "Last IP: %s (%s)", last_ip, geoip_getcountry(str2ip(last_ip)));
+	inter->msg_to_fd(map_fd, u_fd, u_aid, "Last IP: %s (%s)", last_ip, geoip->getcountry(str2ip(last_ip)));
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "This user has logged %d times, the last time were at %s", logincount, lastlogin);
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "-- Character Details --");
 
@@ -1048,7 +1045,7 @@ int inter_init_sql(const char *file)
 	inter_mail->sql_init();
 	inter_auction->sql_init();
 
-	geoip_init();
+	geoip->init();
 	inter->msg_config_read("conf/messages.conf", false);
 	return 0;
 }
@@ -1068,7 +1065,7 @@ void inter_final(void)
 	inter_mail->sql_final();
 	inter_auction->sql_final();
 
-	geoip_final(true);
+	geoip->final(true);
 	inter->do_final_msg();
 	return;
 }
