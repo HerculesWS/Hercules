@@ -23,6 +23,7 @@
 #include "int_mail.h"
 #include "int_mercenary.h"
 #include "int_party.h"
+#include "int_pet.h"
 #include "int_storage.h"
 #include "inter.h"
 #include "loginif.h"
@@ -6013,6 +6014,7 @@ void char_load_defaults(void)
 	inter_mail_defaults();
 	inter_mercenary_defaults();
 	inter_party_defaults();
+	inter_pet_defaults();
 }
 
 void char_defaults(void)

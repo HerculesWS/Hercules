@@ -12,6 +12,7 @@
 
 #include "char.h"
 #include "inter.h"
+#include "mapif.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h"
 #include "../common/showmsg.h"
@@ -19,6 +20,8 @@
 #include "../common/sql.h"
 #include "../common/strlib.h"
 #include "../common/utils.h"
+
+struct inter_pet_interface inter_pet_s;
 
 struct s_pet *pet_pt;
 
@@ -106,17 +109,17 @@ int inter_pet_fromsql(int pet_id, struct s_pet* p)
 }
 //----------------------------------------------
 
-int inter_pet_sql_init(void){
+int inter_pet_sql_init(void) {
 	//memory alloc
 	pet_pt = (struct s_pet*)aCalloc(sizeof(struct s_pet), 1);
 	return 0;
 }
-void inter_pet_sql_final(void){
+void inter_pet_sql_final(void) {
 	if (pet_pt) aFree(pet_pt);
 	return;
 }
 //----------------------------------
-int inter_pet_delete(int pet_id){
+int inter_pet_delete(int pet_id) {
 	ShowInfo("delete pet request: %d...\n",pet_id);
 
 	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `pet_id`='%d'", pet_db, pet_id) )
@@ -142,7 +145,8 @@ int mapif_pet_created(int fd, int account_id, struct s_pet *p)
 	return 0;
 }
 
-int mapif_pet_info(int fd, int account_id, struct s_pet *p){
+int mapif_pet_info(int fd, int account_id, struct s_pet *p)
+{
 	WFIFOHEAD(fd, sizeof(struct s_pet) + 9);
 	WFIFOW(fd, 0) =0x3881;
 	WFIFOW(fd, 2) =sizeof(struct s_pet) + 9;
@@ -154,7 +158,8 @@ int mapif_pet_info(int fd, int account_id, struct s_pet *p){
 	return 0;
 }
 
-int mapif_pet_noinfo(int fd, int account_id){
+int mapif_pet_noinfo(int fd, int account_id)
+{
 	WFIFOHEAD(fd, sizeof(struct s_pet) + 9);
 	WFIFOW(fd, 0) =0x3881;
 	WFIFOW(fd, 2) =sizeof(struct s_pet) + 9;
@@ -166,7 +171,8 @@ int mapif_pet_noinfo(int fd, int account_id){
 	return 0;
 }
 
-int mapif_save_pet_ack(int fd, int account_id, int flag){
+int mapif_save_pet_ack(int fd, int account_id, int flag)
+{
 	WFIFOHEAD(fd, 7);
 	WFIFOW(fd, 0) =0x3882;
 	WFIFOL(fd, 2) =account_id;
@@ -176,7 +182,8 @@ int mapif_save_pet_ack(int fd, int account_id, int flag){
 	return 0;
 }
 
-int mapif_delete_pet_ack(int fd, int flag){
+int mapif_delete_pet_ack(int fd, int flag)
+{
 	WFIFOHEAD(fd, 3);
 	WFIFOW(fd, 0) =0x3883;
 	WFIFOB(fd, 2) =flag;
@@ -215,36 +222,38 @@ int mapif_create_pet(int fd, int account_id, int char_id, short pet_class, short
 		pet_pt->intimate = 1000;
 
 	pet_pt->pet_id = -1; //Signal NEW pet.
-	if (inter_pet_tosql(pet_pt->pet_id,pet_pt))
-		mapif_pet_created(fd, account_id, pet_pt);
+	if (inter_pet->tosql(pet_pt->pet_id,pet_pt))
+		mapif->pet_created(fd, account_id, pet_pt);
 	else	//Failed...
-		mapif_pet_created(fd, account_id, NULL);
+		mapif->pet_created(fd, account_id, NULL);
 
 	return 0;
 }
 
-int mapif_load_pet(int fd, int account_id, int char_id, int pet_id){
+int mapif_load_pet(int fd, int account_id, int char_id, int pet_id)
+{
 	memset(pet_pt, 0, sizeof(struct s_pet));
 
-	inter_pet_fromsql(pet_id, pet_pt);
+	inter_pet->fromsql(pet_id, pet_pt);
 
 	if(pet_pt!=NULL) {
 		if(pet_pt->incubate == 1) {
 			pet_pt->account_id = pet_pt->char_id = 0;
-			mapif_pet_info(fd, account_id, pet_pt);
+			mapif->pet_info(fd, account_id, pet_pt);
 		}
 		else if(account_id == pet_pt->account_id && char_id == pet_pt->char_id)
-			mapif_pet_info(fd, account_id, pet_pt);
+			mapif->pet_info(fd, account_id, pet_pt);
 		else
-			mapif_pet_noinfo(fd, account_id);
+			mapif->pet_noinfo(fd, account_id);
 	}
 	else
-		mapif_pet_noinfo(fd, account_id);
+		mapif->pet_noinfo(fd, account_id);
 
 	return 0;
 }
 
-int mapif_save_pet(int fd, int account_id, struct s_pet *data) {
+int mapif_save_pet(int fd, int account_id, struct s_pet *data)
+{
 	//here process pet save request.
 	int len;
 	RFIFOHEAD(fd);
@@ -262,52 +271,69 @@ int mapif_save_pet(int fd, int account_id, struct s_pet *data) {
 		data->intimate = 0;
 	else if (data->intimate > 1000)
 		data->intimate = 1000;
-	inter_pet_tosql(data->pet_id,data);
-	mapif_save_pet_ack(fd, account_id, 0);
+	inter_pet->tosql(data->pet_id,data);
+	mapif->save_pet_ack(fd, account_id, 0);
 
 	return 0;
 }
 
-int mapif_delete_pet(int fd, int pet_id){
-	mapif_delete_pet_ack(fd, inter_pet_delete(pet_id));
+int mapif_delete_pet(int fd, int pet_id)
+{
+	mapif->delete_pet_ack(fd, inter_pet->delete_(pet_id));
 
 	return 0;
 }
 
-int mapif_parse_CreatePet(int fd){
+int mapif_parse_CreatePet(int fd)
+{
 	RFIFOHEAD(fd);
-	mapif_create_pet(fd, RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOW(fd, 10), RFIFOW(fd, 12), RFIFOW(fd, 14), RFIFOW(fd, 16), RFIFOW(fd, 18),
+	mapif->create_pet(fd, RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOW(fd, 10), RFIFOW(fd, 12), RFIFOW(fd, 14), RFIFOW(fd, 16), RFIFOW(fd, 18),
 		RFIFOW(fd, 20), RFIFOB(fd, 22), RFIFOB(fd, 23), (char*)RFIFOP(fd, 24));
 	return 0;
 }
 
-int mapif_parse_LoadPet(int fd){
+int mapif_parse_LoadPet(int fd)
+{
 	RFIFOHEAD(fd);
-	mapif_load_pet(fd, RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10));
+	mapif->load_pet(fd, RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10));
 	return 0;
 }
 
-int mapif_parse_SavePet(int fd){
+int mapif_parse_SavePet(int fd)
+{
 	RFIFOHEAD(fd);
-	mapif_save_pet(fd, RFIFOL(fd, 4), (struct s_pet *) RFIFOP(fd, 8));
+	mapif->save_pet(fd, RFIFOL(fd, 4), (struct s_pet *) RFIFOP(fd, 8));
 	return 0;
 }
 
-int mapif_parse_DeletePet(int fd){
+int mapif_parse_DeletePet(int fd)
+{
 	RFIFOHEAD(fd);
-	mapif_delete_pet(fd, RFIFOL(fd, 2));
+	mapif->delete_pet(fd, RFIFOL(fd, 2));
 	return 0;
 }
 
-int inter_pet_parse_frommap(int fd){
+int inter_pet_parse_frommap(int fd)
+{
 	RFIFOHEAD(fd);
 	switch(RFIFOW(fd, 0)){
-	case 0x3080: mapif_parse_CreatePet(fd); break;
-	case 0x3081: mapif_parse_LoadPet(fd); break;
-	case 0x3082: mapif_parse_SavePet(fd); break;
-	case 0x3083: mapif_parse_DeletePet(fd); break;
+	case 0x3080: mapif->parse_CreatePet(fd); break;
+	case 0x3081: mapif->parse_LoadPet(fd); break;
+	case 0x3082: mapif->parse_SavePet(fd); break;
+	case 0x3083: mapif->parse_DeletePet(fd); break;
 	default:
 		return 0;
 	}
 	return 1;
+}
+
+void inter_pet_defaults(void)
+{
+	inter_pet = &inter_pet_s;
+
+	inter_pet->tosql = inter_pet_tosql;
+	inter_pet->fromsql = inter_pet_fromsql;
+	inter_pet->sql_init = inter_pet_sql_init;
+	inter_pet->sql_final = inter_pet_sql_final;
+	inter_pet->delete_ = inter_pet_delete;
 }

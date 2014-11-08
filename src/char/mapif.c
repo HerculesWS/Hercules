@@ -141,6 +141,20 @@ int mapif_parse_PartyChangeMap(int fd, int party_id, int account_id, int char_id
 int mapif_parse_BreakParty(int fd, int party_id);
 int mapif_parse_PartyMessage(int fd, int party_id, int account_id, char *mes, int len);
 int mapif_parse_PartyLeaderChange(int fd, int party_id, int account_id, int char_id);
+int mapif_pet_created(int fd, int account_id, struct s_pet *p);
+int mapif_pet_info(int fd, int account_id, struct s_pet *p);
+int mapif_pet_noinfo(int fd, int account_id);
+int mapif_save_pet_ack(int fd, int account_id, int flag);
+int mapif_delete_pet_ack(int fd, int flag);
+int mapif_create_pet(int fd, int account_id, int char_id, short pet_class, short pet_lv, short pet_egg_id,
+	short pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name);
+int mapif_load_pet(int fd, int account_id, int char_id, int pet_id);
+int mapif_save_pet(int fd, int account_id, struct s_pet *data);
+int mapif_delete_pet(int fd, int pet_id);
+int mapif_parse_CreatePet(int fd);
+int mapif_parse_LoadPet(int fd);
+int mapif_parse_SavePet(int fd);
+int mapif_parse_DeletePet(int fd);
 
 void mapif_defaults(void) {
 	mapif = &mapif_s;
@@ -267,4 +281,17 @@ void mapif_defaults(void) {
 	mapif->parse_BreakParty = mapif_parse_BreakParty;
 	mapif->parse_PartyMessage = mapif_parse_PartyMessage;
 	mapif->parse_PartyLeaderChange = mapif_parse_PartyLeaderChange;
+	mapif->pet_created = mapif_pet_created;
+	mapif->pet_info = mapif_pet_info;
+	mapif->pet_noinfo = mapif_pet_noinfo;
+	mapif->save_pet_ack = mapif_save_pet_ack;
+	mapif->delete_pet_ack = mapif_delete_pet_ack;
+	mapif->create_pet = mapif_create_pet;
+	mapif->load_pet = mapif_load_pet;
+	mapif->save_pet = mapif_save_pet;
+	mapif->delete_pet = mapif_delete_pet;
+	mapif->parse_CreatePet = mapif_parse_CreatePet;
+	mapif->parse_LoadPet = mapif_parse_LoadPet;
+	mapif->parse_SavePet = mapif_parse_SavePet;
+	mapif->parse_DeletePet = mapif_parse_DeletePet;
 }
