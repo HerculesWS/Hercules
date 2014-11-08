@@ -1027,7 +1027,7 @@ int inter_init_sql(const char *file)
 
 	wis_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	inter_guild->sql_init();
-	inter_storage_sql_init();
+	inter_storage->sql_init();
 	inter_party->sql_init();
 	inter_pet->sql_init();
 	inter_homunculus->sql_init();
@@ -1047,7 +1047,7 @@ void inter_final(void)
 	wis_db->destroy(wis_db, NULL);
 
 	inter_guild->sql_final();
-	inter_storage_sql_final();
+	inter_storage->sql_final();
 	inter_party->sql_final();
 	inter_pet->sql_final();
 	inter_homunculus->sql_final();
@@ -1455,7 +1455,7 @@ int inter_parse_frommap(int fd)
 	default:
 		if(  inter_party->parse_frommap(fd)
 		  || inter_guild->parse_frommap(fd)
-		  || inter_storage_parse_frommap(fd)
+		  || inter_storage->parse_frommap(fd)
 		  || inter_pet->parse_frommap(fd)
 		  || inter_homunculus->parse_frommap(fd)
 		  || inter_mercenary->parse_frommap(fd)

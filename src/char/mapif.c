@@ -163,6 +163,13 @@ void mapif_quest_save_ack(int fd, int char_id, bool success);
 int mapif_parse_quest_save(int fd);
 void mapif_send_quests(int fd, int char_id, struct quest *tmp_questlog, int num_quests);
 int mapif_parse_quest_load(int fd);
+int mapif_load_guild_storage(int fd,int account_id,int guild_id, char flag);
+int mapif_save_guild_storage_ack(int fd, int account_id, int guild_id, int fail);
+int mapif_parse_LoadGuildStorage(int fd);
+int mapif_parse_SaveGuildStorage(int fd);
+int mapif_itembound_ack(int fd, int aid, int guild_id);
+int mapif_parse_ItemBoundRetrieve_sub(int fd);
+void mapif_parse_ItemBoundRetrieve(int fd);
 
 void mapif_defaults(void) {
 	mapif = &mapif_s;
@@ -310,4 +317,11 @@ void mapif_defaults(void) {
 	mapif->parse_quest_save = mapif_parse_quest_save;
 	mapif->send_quests = mapif_send_quests;
 	mapif->parse_quest_load = mapif_parse_quest_load;
+	mapif->load_guild_storage = mapif_load_guild_storage;
+	mapif->save_guild_storage_ack = mapif_save_guild_storage_ack;
+	mapif->parse_LoadGuildStorage = mapif_parse_LoadGuildStorage;
+	mapif->parse_SaveGuildStorage = mapif_parse_SaveGuildStorage;
+	mapif->itembound_ack = mapif_itembound_ack;
+	mapif->parse_ItemBoundRetrieve_sub = mapif_parse_ItemBoundRetrieve_sub;
+	mapif->parse_ItemBoundRetrieve = mapif_parse_ItemBoundRetrieve;
 }

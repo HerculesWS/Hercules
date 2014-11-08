@@ -11,6 +11,8 @@ struct s_elemental;
 struct s_homunculus;
 struct s_mercenary;
 struct s_pet;
+struct guild_storage;
+struct storage_data;
 struct quest;
 struct mail_message;
 
@@ -160,6 +162,13 @@ struct mapif_interface {
     int (*parse_quest_save) (int fd);
     void (*send_quests) (int fd, int char_id, struct quest *tmp_questlog, int num_quests);
     int (*parse_quest_load) (int fd);
+    int (*load_guild_storage) (int fd, int account_id, int guild_id, char flag);
+    int (*save_guild_storage_ack) (int fd, int account_id, int guild_id, int fail);
+    int (*parse_LoadGuildStorage) (int fd);
+    int (*parse_SaveGuildStorage) (int fd);
+    int (*itembound_ack) (int fd, int aid, int guild_id);
+    int (*parse_ItemBoundRetrieve_sub) (int fd);
+    void (*parse_ItemBoundRetrieve) (int fd);
 } mapif_s;
 
 struct mapif_interface *mapif;

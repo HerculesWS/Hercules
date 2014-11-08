@@ -13,6 +13,7 @@
 
 #include "char.h"
 #include "inter.h"
+#include "mapif.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h"
 #include "../common/showmsg.h"
@@ -21,6 +22,8 @@
 #include "../common/strlib.h" // StringBuf
 
 #define STORAGE_MEMINC	16
+
+struct inter_storage_interface inter_storage_s;
 
 /// Save storage data to sql
 int inter_storage_tosql(int account_id, struct storage_data* p)
@@ -164,7 +167,7 @@ int inter_storage_guild_storage_delete(int guild_id)
 //---------------------------------------------------------
 // packet from map server
 
-int mapif_load_guild_storage(int fd,int account_id,int guild_id, char flag)
+int mapif_load_guild_storage(int fd, int account_id, int guild_id, char flag)
 {
 	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `guild_id` FROM `%s` WHERE `guild_id`='%d'", guild_db, guild_id) )
 		Sql_ShowDebug(sql_handle);
@@ -176,7 +179,7 @@ int mapif_load_guild_storage(int fd,int account_id,int guild_id, char flag)
 		WFIFOL(fd,4) = account_id;
 		WFIFOL(fd,8) = guild_id;
 		WFIFOB(fd,12) = flag; //1 open storage, 0 don't open
-		inter_storage_guild_storage_fromsql(guild_id, (struct guild_storage*)WFIFOP(fd,13));
+		inter_storage->guild_storage_fromsql(guild_id, (struct guild_storage*)WFIFOP(fd,13));
  		WFIFOSET(fd, WFIFOW(fd,2));
 		return 0;
 	}
@@ -190,7 +193,7 @@ int mapif_load_guild_storage(int fd,int account_id,int guild_id, char flag)
 	WFIFOSET(fd, 12);
 	return 0;
 }
-int mapif_save_guild_storage_ack(int fd,int account_id,int guild_id,int fail)
+int mapif_save_guild_storage_ack(int fd, int account_id, int guild_id, int fail)
 {
 	WFIFOHEAD(fd,11);
 	WFIFOW(fd,0)=0x3819;
@@ -207,7 +210,7 @@ int mapif_save_guild_storage_ack(int fd,int account_id,int guild_id,int fail)
 int mapif_parse_LoadGuildStorage(int fd)
 {
 	RFIFOHEAD(fd);
-	mapif_load_guild_storage(fd,RFIFOL(fd,2),RFIFOL(fd,6),1);
+	mapif->load_guild_storage(fd,RFIFOL(fd,2),RFIFOL(fd,6),1);
 	return 0;
 }
 
@@ -228,13 +231,13 @@ int mapif_parse_SaveGuildStorage(int fd)
 		} else if(SQL->NumRows(sql_handle) > 0) {
 			// guild exists
 			SQL->FreeResult(sql_handle);
-			inter_storage_guild_storage_tosql(guild_id, (struct guild_storage*)RFIFOP(fd,12));
-			mapif_save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 0);
+			inter_storage->guild_storage_tosql(guild_id, (struct guild_storage*)RFIFOP(fd,12));
+			mapif->save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 0);
 			return 0;
 		}
 		SQL->FreeResult(sql_handle);
 	}
-	mapif_save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 1);
+	mapif->save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 1);
 	return 0;
 }
 
@@ -249,6 +252,7 @@ int mapif_itembound_ack(int fd, int aid, int guild_id)
 #endif
 	return 0;
 }
+
 //------------------------------------------------
 //Guild bound items pull for offline characters [Akinari]
 //Revised by [Mhalicot]
@@ -416,29 +420,47 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 	SQL->StmtFree(stmt);
 
 	//Finally reload storage and tell map we're done
-	mapif_load_guild_storage(fd,aid,guild_id,0);
+	mapif->load_guild_storage(fd,aid,guild_id,0);
 
 	// If character is logged in char, disconnect
 	chr->disconnect_player(aid);
 #endif
 	return 0;
 }
-void mapif_parse_ItemBoundRetrieve(int fd) {
-	mapif_parse_ItemBoundRetrieve_sub(fd);
+
+void mapif_parse_ItemBoundRetrieve(int fd)
+{
+	mapif->parse_ItemBoundRetrieve_sub(fd);
 	/* tell map server the operation is over and it can unlock the storage */
-	mapif_itembound_ack(fd,RFIFOL(fd,6),RFIFOW(fd,10));
+	mapif->itembound_ack(fd,RFIFOL(fd,6),RFIFOW(fd,10));
 }
+
 int inter_storage_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);
 	switch(RFIFOW(fd,0)){
-		case 0x3018: mapif_parse_LoadGuildStorage(fd); break;
-		case 0x3019: mapif_parse_SaveGuildStorage(fd); break;
+		case 0x3018: mapif->parse_LoadGuildStorage(fd); break;
+		case 0x3019: mapif->parse_SaveGuildStorage(fd); break;
 #ifdef GP_BOUND_ITEMS
-		case 0x3056: mapif_parse_ItemBoundRetrieve(fd); break;
+		case 0x3056: mapif->parse_ItemBoundRetrieve(fd); break;
 #endif
 		default:
 			return 0;
 	}
 	return 1;
+}
+
+void inter_storage_defaults(void)
+{
+	inter_storage = &inter_storage_s;
+
+	inter_storage->tosql = inter_storage_tosql;
+	inter_storage->fromsql = inter_storage_fromsql;
+	inter_storage->guild_storage_tosql = inter_storage_guild_storage_tosql;
+	inter_storage->guild_storage_fromsql = inter_storage_guild_storage_fromsql;
+	inter_storage->sql_init = inter_storage_sql_init;
+	inter_storage->sql_final = inter_storage_sql_final;
+	inter_storage->delete_ = inter_storage_delete;
+	inter_storage->guild_storage_delete = inter_storage_guild_storage_delete;
+	inter_storage->parse_frommap = inter_storage_parse_frommap;
 }

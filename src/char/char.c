@@ -1334,7 +1334,7 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	strcat(t_msg, " cart");
 
 	//read storage
-	inter_storage_fromsql(p->account_id, &p->storage);
+	inter_storage->fromsql(p->account_id, &p->storage);
 	strcat(t_msg, " storage");
 
 	//read skill
@@ -6017,6 +6017,7 @@ void char_load_defaults(void)
 	inter_party_defaults();
 	inter_pet_defaults();
 	inter_quest_defaults();
+	inter_storage_defaults();
 }
 
 void char_defaults(void)
