@@ -19,6 +19,7 @@
 #define HPM_HOOKS_INCLUDE "../plugins/HPMHooking/HPMHooking_login.Hooks.inc"
 #define HPM_POINTS_INCLUDE "../plugins/HPMHooking/HPMHooking_login.HookingPoints.inc"
 #define HPM_SOURCES_INCLUDE "../plugins/HPMHooking/HPMHooking_login.sources.inc"
+#include "../login/login.h"
 #elif defined (HPMHOOKING_CHAR)
 #define HPM_SERVER_TYPE SERVER_TYPE_CHAR
 #define HPM_CORE_INCLUDE "../plugins/HPMHooking/HPMHooking_char.HPMHooksCore.inc"
