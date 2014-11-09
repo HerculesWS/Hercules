@@ -26,6 +26,8 @@ struct party_data {
 void inter_party_defaults(void);
 
 struct inter_party_interface {
+    struct party_data *pt;
+    DBMap* db;  // int party_id -> struct party_data*
     int (*check_lv) (struct party_data *p);
     void (*calc_state) (struct party_data *p);
     int (*tosql) (struct party *p, int flag, int index);

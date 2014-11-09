@@ -25,9 +25,6 @@
 
 struct inter_party_interface inter_party_s;
 
-static struct party_data *party_pt;
-static DBMap* party_db_; // int party_id -> struct party_data*
-
 //Updates party's level range and unsets even share if broken.
 static int inter_party_check_lv(struct party_data *p) {
 	int i;
@@ -129,7 +126,7 @@ int inter_party_tosql(struct party *p, int flag, int index)
 		if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `party_id`='%d'", party_db, party_id) )
 			Sql_ShowDebug(sql_handle);
 		//Remove from memory
-		idb_remove(party_db_, party_id);
+		idb_remove(inter_party->db, party_id);
 		return 1;
 	}
 
@@ -197,11 +194,11 @@ struct party_data *inter_party_fromsql(int party_id)
 		return NULL;
 	
 	//Load from memory
-	p = (struct party_data*)idb_get(party_db_, party_id);
+	p = (struct party_data*)idb_get(inter_party->db, party_id);
 	if( p != NULL )
 		return p;
 
-	p = party_pt;
+	p = inter_party->pt;
 	memset(p, 0, sizeof(struct party_data));
 
 	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `party_id`, `name`,`exp`,`item`, `leader_id`, `leader_char` FROM `%s` WHERE `party_id`='%d'", party_db, party_id) )
@@ -245,19 +242,19 @@ struct party_data *inter_party_fromsql(int party_id)
 		ShowInfo("Party loaded (%d - %s).\n", party_id, p->party.name);
 	//Add party to memory.
 	CREATE(p, struct party_data, 1);
-	memcpy(p, party_pt, sizeof(struct party_data));
+	memcpy(p, inter_party->pt, sizeof(struct party_data));
 	//init state
 	inter_party->calc_state(p);
-	idb_put(party_db_, party_id, p);
+	idb_put(inter_party->db, party_id, p);
 	return p;
 }
 
 int inter_party_sql_init(void)
 {
 	//memory alloc
-	party_db_ = idb_alloc(DB_OPT_RELEASE_DATA);
-	party_pt = (struct party_data*)aCalloc(sizeof(struct party_data), 1);
-	if (!party_pt) {
+	inter_party->db = idb_alloc(DB_OPT_RELEASE_DATA);
+	inter_party->pt = (struct party_data*)aCalloc(sizeof(struct party_data), 1);
+	if (!inter_party->pt) {
 		ShowFatalError("inter_party->sql_init: Out of Memory!\n");
 		exit(EXIT_FAILURE);
 	}
@@ -273,8 +270,8 @@ int inter_party_sql_init(void)
 
 void inter_party_sql_final(void)
 {
-	party_db_->destroy(party_db_, NULL);
-	aFree(party_pt);
+	inter_party->db->destroy(inter_party->db, NULL);
+	aFree(inter_party->pt);
 	return;
 }
 
@@ -499,7 +496,7 @@ int mapif_parse_CreateParty(int fd, char *name, int item, int item2, struct part
 	if (inter_party->tosql(&p->party,PS_CREATE|PS_ADDMEMBER,0)) {
 		//Add party to db
 		inter_party->calc_state(p);
-		idb_put(party_db_, p->party.party_id, p);
+		idb_put(inter_party->db, p->party.party_id, p);
 		mapif->party_info(fd, &p->party, 0);
 		mapif->party_created(fd,leader->account_id,leader->char_id,&p->party);
 	} else { //Failed to create party.
@@ -856,13 +853,16 @@ int inter_party_CharOffline(int char_id, int party_id) {
 
 	if(!p->party.count)
 		//Parties don't have any data that needs be saved at this point... so just remove it from memory.
-		idb_remove(party_db_, party_id);
+		idb_remove(inter_party->db, party_id);
 	return 1;
 }
 
 void inter_party_defaults(void)
 {
 	inter_party = &inter_party_s;
+
+	inter_party->pt = NULL;
+	inter_party->db = NULL;
 
 	inter_party->sql_init = inter_party_sql_init;
 	inter_party->sql_final = inter_party_sql_final;
