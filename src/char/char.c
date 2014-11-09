@@ -6048,6 +6048,7 @@ void char_defaults(void)
     chr->mmo_char_fromsql = char_mmo_char_fromsql;
     chr->mmo_char_sql_init = char_mmo_char_sql_init;
     chr->char_slotchange = char_char_slotchange;
+    chr->rename_char_sql = char_rename_char_sql;
     chr->check_char_name = char_check_char_name;
     chr->make_new_char_sql = char_make_new_char_sql;
     chr->divorce_char_sql = char_divorce_char_sql;
@@ -6075,6 +6076,7 @@ void char_defaults(void)
     chr->parse_fromlogin_account_reg2 = char_parse_fromlogin_account_reg2;
     chr->parse_fromlogin_ban = char_parse_fromlogin_ban;
     chr->parse_fromlogin_kick = char_parse_fromlogin_kick;
+    chr->update_ip = char_update_ip;
     chr->parse_fromlogin_update_ip = char_parse_fromlogin_update_ip;
     chr->parse_fromlogin_accinfo2_failed = char_parse_fromlogin_accinfo2_failed;
     chr->parse_fromlogin_accinfo2_ok = char_parse_fromlogin_accinfo2_ok;
@@ -6082,11 +6084,13 @@ void char_defaults(void)
     chr->request_accreg2 = char_request_accreg2;
     chr->global_accreg_to_login_start = char_global_accreg_to_login_start;
     chr->global_accreg_to_login_send = char_global_accreg_to_login_send;
+    chr->global_accreg_to_login_add = char_global_accreg_to_login_add;
     chr->read_fame_list = char_read_fame_list;
     chr->send_fame_list = char_send_fame_list;
     chr->update_fame_list = char_update_fame_list;
     chr->loadName = char_loadName;
     chr->parse_frommap_datasync = char_parse_frommap_datasync;
+    chr->parse_frommap_skillid2idx = char_parse_frommap_skillid2idx;
     chr->map_received_ok = char_map_received_ok;
     chr->send_maps = char_send_maps;
     chr->parse_frommap_map_names = char_parse_frommap_map_names;
@@ -6121,6 +6125,7 @@ void char_defaults(void)
     chr->map_auth_ok = char_map_auth_ok;
     chr->map_auth_failed = char_map_auth_failed;
     chr->parse_frommap_auth_request = char_parse_frommap_auth_request;
+    chr->parse_frommap_update_ip = char_parse_frommap_update_ip;
     chr->parse_frommap_request_stats_report = char_parse_frommap_request_stats_report;
     chr->parse_frommap_scdata_update = char_parse_frommap_scdata_update;
     chr->parse_frommap_scdata_delete = char_parse_frommap_scdata_delete;
@@ -6168,10 +6173,12 @@ void char_defaults(void)
     chr->parse_char_request_chars = char_parse_char_request_chars;
     chr->change_character_slot_ack = char_change_character_slot_ack;
     chr->parse_char_move_character = char_parse_char_move_character;
+    chr->parse_char_unknown_packet = char_parse_char_unknown_packet;
     chr->parse_char = char_parse_char;
     chr->broadcast_user_count = char_broadcast_user_count;
     chr->send_accounts_tologin_sub = char_send_accounts_tologin_sub;
     chr->send_accounts_tologin = char_send_accounts_tologin;
+    chr->check_connect_login_server = char_check_connect_login_server;
     chr->online_data_cleanup_sub = char_online_data_cleanup_sub;
     chr->online_data_cleanup = char_online_data_cleanup;
     chr->lan_config_read = char_lan_config_read;
