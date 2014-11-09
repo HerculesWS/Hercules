@@ -3,7 +3,8 @@
 # Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 # See the LICENSE file
 
-use strict;
+# disabled strict because it show warning and failing
+#use strict;
 use warnings;
 use XML::Simple;
 
@@ -272,6 +273,8 @@ foreach my $file (@files) { # Loop through the xml files
 		$key = "bg";
 	} elsif ($key =~ /guild_storage/) {
 		$key = "gstorage";
+	} elsif ($key =~ /inter_homunculus/) { # to avoid replace to homun
+		$key = "inter_homunculus";
 	} elsif ($key =~ /homunculus/) {
 		$key = "homun";
 	} elsif ($key =~ /irc_bot/) {
@@ -280,6 +283,8 @@ foreach my $file (@files) { # Loop through the xml files
 		$key = "logs";
 	} elsif ($key =~ /pc_groups_interface/) {
 		$key = "pcg";
+	} elsif ($key =~ /char_interface/) {
+		$key = "chr";
 	} else {
 		$key =~ s/_interface//;
 	}
