@@ -1313,7 +1313,7 @@ void clif_weather(int16 m)
 	for( sd = (struct map_session_data*)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data*)mapit->next(iter) )
 	{
 		if( sd->bl.m == m )
-			clif_weather_check(sd);
+			clif->weather_check(sd);
 	}
 	mapit->free(iter);
 }
@@ -5216,7 +5216,7 @@ int clif_skill_damage2(struct block_list *src, struct block_list *dst, int64 tic
 	nullpo_ret(src);
 	nullpo_ret(dst);
 
-	type = (type>0)?type:skill_get_hit(skill_id);
+	type = (type>0)?type:skill->get_hit(skill_id);
 	type = clif_calc_delay(type,div,damage,ddelay);
 	sc = status->get_sc(dst);
 
@@ -5259,7 +5259,7 @@ int clif_skill_damage2(struct block_list *src, struct block_list *dst, int64 tic
 	}
 
 	//Because the damage delay must be synced with the client, here is where the can-walk tick must be updated. [Skotlex]
-	return clif_calc_walkdelay(dst,ddelay,type,damage,div);
+	return clif->calc_walkdelay(dst,ddelay,type,damage,div);
 }
 #endif // 0
 
@@ -5424,7 +5424,7 @@ void clif_skill_estimation(struct map_session_data *sd,struct block_list *dst) {
 	for(i=0;i<9;i++)
 		WBUFB(buf,20+i)= (unsigned char)battle->attr_ratio(i+1,dstatus->def_ele, dstatus->ele_lv);
 //		The following caps negative attributes to 0 since the client displays them as 255-fix. [Skotlex]
-//		WBUFB(buf,20+i)= (unsigned char)((fix=battle_attr_ratio(i+1,dstatus->def_ele, dstatus->ele_lv))<0?0:fix);
+//		WBUFB(buf,20+i)= (unsigned char)((fix=battle->attr_ratio(i+1,dstatus->def_ele, dstatus->ele_lv))<0?0:fix);
 
 	clif->send(buf,packet_len(0x18c),&sd->bl,sd->status.party_id>0?PARTY_SAMEMAP:SELF);
 }
@@ -9935,7 +9935,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 			sd->fontcolor_tid = timer->add(timer->gettick()+5000, clif->undisguise_timer, sd->bl.id, 0);
 			pc->disguise(sd,sd->status.class_);
 			if( pc_isdead(sd) )
-				clif_clearunit_single(-sd->bl.id, CLR_DEAD, sd->fd);
+				clif->clearunit_single(-sd->bl.id, CLR_DEAD, sd->fd);
 			if( unit->is_walking(&sd->bl) )
 				clif->move(&sd->ud);
 		} else if ( sd->disguise == sd->status.class_ && sd->fontcolor_tid != INVALID_TIMER ) {
@@ -10833,7 +10833,7 @@ void clif_parse_NpcClicked(int fd,struct map_session_data *sd)
 	struct block_list *bl;
 
 	if( pc_isdead(sd) ) {
-		clif_clearunit_area(&sd->bl,CLR_DEAD);
+		clif->clearunit_area(&sd->bl,CLR_DEAD);
 		return;
 	}
 	if( sd->npc_id || sd->state.workinprogress&2 ){

@@ -10020,7 +10020,7 @@ void atcommand_config_read(const char* config_filename) {
 			if (config_setting_type(command) != CONFIG_TYPE_ARRAY)
 				continue;
 			commandname = config_setting_name(command);
-			if ( !( commandinfo = atcommand_exists(commandname) ) ) {
+			if ( !( commandinfo = atcommand->exists(commandname) ) ) {
 				ShowConfigWarning(command, "atcommand_config_read: can not set alias for non-existent command %s", commandname);
 				continue;
 			}
@@ -10055,7 +10055,7 @@ void atcommand_config_read(const char* config_filename) {
 			
 			command = libconfig->setting_get_elem(nolog, i);
 			commandname = config_setting_name(command);
-			if ( !( commandinfo = atcommand_exists(commandname) ) ) {
+			if ( !( commandinfo = atcommand->exists(commandname) ) ) {
 				ShowConfigWarning(command, "atcommand_config_read: can not disable logging for non-existent command %s", commandname);
 				continue;
 			}
@@ -10077,7 +10077,7 @@ void atcommand_config_read(const char* config_filename) {
 
 			command = libconfig->setting_get_elem(help, i);
 			commandname = config_setting_name(command);
-			if ( !( commandinfo = atcommand_exists(commandname) ) )
+			if ( !( commandinfo = atcommand->exists(commandname) ) )
 				ShowConfigWarning(command, "atcommand_config_read: command %s does not exist", commandname);
 			else {
 				if( commandinfo->help == NULL ) {

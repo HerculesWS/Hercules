@@ -1436,7 +1436,7 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 			if(md->ud.walktimer != INVALID_TIMER && (!can_move || md->ud.walkpath.path_pos <= battle_config.mob_chase_refresh)
 				&& (tbl || md->ud.walkpath.path_pos == 0))
 				return true; //Walk at least "mob_chase_refresh" cells before dropping the target unless target is non-existent
-			mob_unlocktarget(md, tick); //Unlock target
+			mob->unlocktarget(md, tick); //Unlock target
 			tbl = NULL;
 		}
 	}
@@ -1737,7 +1737,7 @@ int mob_ai_sub_lazy(struct mob_data *md, va_list args) {
 
 	if( DIFF_TICK(md->next_walktime,tick) < 0 && (status_get_mode(&md->bl)&MD_CANMOVE) && unit->can_move(&md->bl) ) {
 		if( rnd()%1000 < MOB_LAZYMOVEPERC(md) )
-			mob_randomwalk(md, tick);
+			mob->randomwalk(md, tick);
 	}
 	else if( md->ud.walktimer == INVALID_TIMER )
 	{
