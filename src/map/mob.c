@@ -1616,6 +1616,7 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 		{ //Only attack if no more attack delay left
 			if(tbl->type == BL_PC)
 				mob->log_damage(md, tbl, 0); //Log interaction (counts as 'attacker' for the exp bonus)
+			unit->attack(&md->bl,tbl->id,1);
 		}
 		return true;
 	}
