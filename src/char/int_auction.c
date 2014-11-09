@@ -25,13 +25,11 @@
 
 struct inter_auction_interface inter_auction_s;
 
-static DBMap* auction_db_ = NULL; // int auction_id -> struct auction_data*
-
 static int inter_auction_count(int char_id, bool buy)
 {
 	int i = 0;
 	struct auction_data *auction;
-	DBIterator *iter = db_iterator(auction_db_);
+	DBIterator *iter = db_iterator(inter_auction->db);
 
 	for( auction = dbi_first(iter); dbi_exists(iter); auction = dbi_next(iter) )
 	{
@@ -119,7 +117,7 @@ unsigned int inter_auction_create(struct auction_data *auction)
 
 		CREATE(auction_, struct auction_data, 1);
 		memcpy(auction_, auction, sizeof(struct auction_data));
-		idb_put(auction_db_, auction_->auction_id, auction_);
+		idb_put(inter_auction->db, auction_->auction_id, auction_);
 	}
 
 	SQL->StmtFree(stmt);
@@ -140,7 +138,7 @@ void mapif_auction_message(int char_id, unsigned char result)
 
 static int inter_auction_end_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct auction_data *auction;
-	if( (auction = (struct auction_data *)idb_get(auction_db_, id)) != NULL )
+	if( (auction = (struct auction_data *)idb_get(inter_auction->db, id)) != NULL )
 	{
 		if( auction->buyer_id )
 		{
@@ -170,7 +168,7 @@ void inter_auction_delete(struct auction_data *auction)
 	if( auction->auction_end_timer != INVALID_TIMER )
 		timer->delete(auction->auction_end_timer, inter_auction->end_timer);
 
-	idb_remove(auction_db_, auction_id);
+	idb_remove(inter_auction->db, auction_id);
 }
 
 void inter_auctions_fromsql(void)
@@ -233,7 +231,7 @@ void inter_auctions_fromsql(void)
 			endtick = tick + 10000; // 10 seconds to process ended auctions
 
 		auction->auction_end_timer = timer->add(endtick, inter_auction->end_timer, auction->auction_id, 0);
-		idb_put(auction_db_, auction->auction_id, auction);
+		idb_put(inter_auction->db, auction->auction_id, auction);
 	}
 
 	SQL->FreeResult(sql_handle);
@@ -260,7 +258,7 @@ void mapif_parse_auction_requestlist(int fd)
 	int price = RFIFOL(fd,10);
 	short type = RFIFOW(fd,8), page = max(1,RFIFOW(fd,14));
 	unsigned char buf[5 * sizeof(struct auction_data)];
-	DBIterator *iter = db_iterator(auction_db_);
+	DBIterator *iter = db_iterator(inter_auction->db);
 	struct auction_data *auction;
 	short i = 0, j = 0, pages = 1;
 
@@ -334,7 +332,7 @@ void mapif_parse_auction_cancel(int fd)
 	int char_id = RFIFOL(fd,2), auction_id = RFIFOL(fd,6);
 	struct auction_data *auction;
 
-	if( (auction = (struct auction_data *)idb_get(auction_db_, auction_id)) == NULL )
+	if( (auction = (struct auction_data *)idb_get(inter_auction->db, auction_id)) == NULL )
 	{
 		mapif->auction_cancel(fd, char_id, 1); // Bid Number is Incorrect
 		return;
@@ -372,7 +370,7 @@ void mapif_parse_auction_close(int fd)
 	int char_id = RFIFOL(fd,2), auction_id = RFIFOL(fd,6);
 	struct auction_data *auction;
 
-	if( (auction = (struct auction_data *)idb_get(auction_db_, auction_id)) == NULL )
+	if( (auction = (struct auction_data *)idb_get(inter_auction->db, auction_id)) == NULL )
 	{
 		mapif->auction_close(fd, char_id, 2); // Bid Number is Incorrect
 		return;
@@ -416,7 +414,7 @@ void mapif_parse_auction_bid(int fd)
 	unsigned int auction_id = RFIFOL(fd,8);
 	struct auction_data *auction;
 
-	if( (auction = (struct auction_data *)idb_get(auction_db_, auction_id)) == NULL || auction->price >= bid || auction->seller_id == char_id )
+	if( (auction = (struct auction_data *)idb_get(inter_auction->db, auction_id)) == NULL || auction->price >= bid || auction->seller_id == char_id )
 	{
 		mapif->auction_bid(fd, char_id, bid, 0); // You have failed to bid in the auction
 		return;
@@ -480,7 +478,7 @@ int inter_auction_parse_frommap(int fd)
 
 int inter_auction_sql_init(void)
 {
-	auction_db_ = idb_alloc(DB_OPT_RELEASE_DATA);
+	inter_auction->db = idb_alloc(DB_OPT_RELEASE_DATA);
 	inter_auction->fromsql();
 
 	return 0;
@@ -488,7 +486,7 @@ int inter_auction_sql_init(void)
 
 void inter_auction_sql_final(void)
 {
-	auction_db_->destroy(auction_db_,NULL);
+	inter_auction->db->destroy(inter_auction->db,NULL);
 
 	return;
 }
@@ -496,6 +494,8 @@ void inter_auction_sql_final(void)
 void inter_auction_defaults(void)
 {
     inter_auction = &inter_auction_s;
+
+    inter_auction->db = NULL; // int auction_id -> struct auction_data*
 
     inter_auction->count = inter_auction_count;
     inter_auction->save = inter_auction_save;

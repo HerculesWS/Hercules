@@ -9,6 +9,7 @@
 void inter_auction_defaults(void);
 
 struct inter_auction_interface {
+    DBMap* db; // int auction_id -> struct auction_data*
     int (*count) (int char_id, bool buy);
     void (*save) (struct auction_data *auction);
     unsigned int (*create) (struct auction_data *auction);
