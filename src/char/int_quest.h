@@ -6,6 +6,9 @@
 
 void inter_quest_defaults(void);
 
+/**
+ * inter_quest interface
+ **/
 struct inter_quest_interface {
     int (*parse_frommap) (int fd);
 };

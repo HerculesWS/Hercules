@@ -116,6 +116,9 @@ struct char_auth_node {
 	unsigned changing_mapservers : 1;
 };
 
+/**
+ * char interface
+ **/
 struct char_interface {
 	int login_fd;
 	int char_fd;

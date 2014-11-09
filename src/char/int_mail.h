@@ -12,6 +12,9 @@ struct mail_message;
 
 void inter_mail_defaults(void);
 
+/**
+ * inter_mail interface
+ **/
 struct inter_mail_interface {
     int (*sql_init) (void);
     void (*sql_final) (void);

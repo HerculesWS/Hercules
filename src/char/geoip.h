@@ -15,7 +15,9 @@ struct s_geoip {
     bool active;
 };
 
-/* geoip interface */
+/**
+ * geoip interface
+ **/
 struct geoip_interface {
     struct s_geoip *data;
     const char* (*getcountry) (uint32 ipnum);

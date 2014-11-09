@@ -24,6 +24,9 @@ enum {
 
 void inter_guild_defaults(void);
 
+/**
+ * inter_guild interface
+ **/
 struct inter_guild_interface {
     DBMap* guild_db; // int guild_id -> struct guild*
     DBMap* castle_db;

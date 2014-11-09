@@ -17,7 +17,9 @@ struct quest;
 struct mail_message;
 struct WisData;
 
-/* mapif interface */
+/**
+ * mapif interface
+ **/
 struct mapif_interface {
     void (*ban) (int id, unsigned int flag, int status);
     void (*server_init) (int id);

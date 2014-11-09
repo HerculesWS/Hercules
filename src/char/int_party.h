@@ -25,6 +25,9 @@ struct party_data {
 
 void inter_party_defaults(void);
 
+/**
+ * inter_party interface
+ **/
 struct inter_party_interface {
     struct party_data *pt;
     DBMap* db;  // int party_id -> struct party_data*

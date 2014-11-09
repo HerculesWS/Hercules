@@ -8,6 +8,9 @@ struct s_pet;
 
 void inter_pet_defaults(void);
 
+/**
+ * inter_pet interface
+ **/
 struct inter_pet_interface {
     struct s_pet *pt;
     int (*tosql) (int pet_id, struct s_pet* p);

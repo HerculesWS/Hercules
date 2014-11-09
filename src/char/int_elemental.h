@@ -8,6 +8,9 @@
 
 void inter_elemental_defaults(void);
 
+/**
+ * inter_elemental_interface interface
+ **/
 struct inter_elemental_interface {
     void (*sql_init) (void);
     void (*sql_final) (void);

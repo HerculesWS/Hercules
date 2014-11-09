@@ -10,6 +10,9 @@ struct s_homunculus;
 
 void inter_homunculus_defaults(void);
 
+/**
+ * inter_homunculus interface
+ **/
 struct inter_homunculus_interface {
     int (*sql_init) (void);
     void (*sql_final) (void);

@@ -9,6 +9,9 @@ struct guild_storage;
 
 void inter_storage_defaults(void);
 
+/**
+ * inter_storage interface
+ **/
 struct inter_storage_interface {
     int (*tosql) (int account_id, struct storage_data* p);
     int (*fromsql) (int account_id, struct storage_data* p);

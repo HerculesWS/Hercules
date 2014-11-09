@@ -7,7 +7,9 @@
 
 #include "char.h"
 
-/* loginif interface */
+/**
+ * loginif interface
+ **/
 struct loginif_interface {
     void (*reset) (void);
     void (*check_shutdown) (void);

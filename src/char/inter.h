@@ -17,6 +17,9 @@ extern unsigned int party_share_level;
 
 void inter_defaults(void);
 
+/**
+ * inter interface
+ **/
 struct inter_interface {
     Sql* sql_handle;
     const char* (*msg_txt) (int msg_number);

@@ -10,6 +10,9 @@ struct mmo_charstatus;
 
 void inter_mercenary_defaults(void);
 
+/**
+ * inter_mercenary interface
+ **/
 struct inter_mercenary_interface {
     bool (*owner_fromsql) (int char_id, struct mmo_charstatus *status);
     bool (*owner_tosql) (int char_id, struct mmo_charstatus *status);
