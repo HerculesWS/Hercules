@@ -25,6 +25,10 @@ enum {
 void inter_guild_defaults(void);
 
 struct inter_guild_interface {
+    DBMap* guild_db; // int guild_id -> struct guild*
+    DBMap* castle_db;
+    unsigned int exp[MAX_GUILDLEVEL];
+
     int (*save_timer) (int tid, int64 tick, int id, intptr_t data);
     int (*removemember_tosql) (int account_id, int char_id);
     int (*tosql) (struct guild *g, int flag);

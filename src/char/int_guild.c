@@ -38,16 +38,10 @@ struct inter_guild_interface inter_guild_s;
 
 static const char dataToHex[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
-//Guild cache
-static DBMap* guild_db_; // int guild_id -> struct guild*
-static DBMap *castle_db;
-
-static unsigned int inter_guild_exp[MAX_GUILDLEVEL];
-
 int inter_guild_save_timer(int tid, int64 tick, int id, intptr_t data) {
 	static int last_id = 0; //To know in which guild we were.
 	int state = 0; //0: Have not reached last guild. 1: Reached last guild, ready for save. 2: Some guild saved, don't do further saving.
-	DBIterator *iter = db_iterator(guild_db_);
+	DBIterator *iter = db_iterator(inter_guild->guild_db);
 	DBKey key;
 	struct guild* g;
 
@@ -73,7 +67,7 @@ int inter_guild_save_timer(int tid, int64 tick, int id, intptr_t data) {
 		{// Nothing to save, guild is ready for removal.
 			if (save_log)
 				ShowInfo("Guild Unloaded (%d - %s)\n", g->guild_id, g->name);
-			db_remove(guild_db_, key);
+			db_remove(inter_guild->guild_db, key);
 		}
 	}
 	dbi_destroy(iter);
@@ -81,7 +75,7 @@ int inter_guild_save_timer(int tid, int64 tick, int id, intptr_t data) {
 	if( state != 2 ) //Reached the end of the guild db without saving.
 		last_id = 0; //Reset guild saved, return to beginning.
 
-	state = guild_db_->size(guild_db_);
+	state = inter_guild->guild_db->size(inter_guild->guild_db);
 	if( state < 1 ) state = 1; //Calculate the time slot for the next save.
 	timer->add(tick + autosave_interval/state, inter_guild->save_timer, 0, 0);
 	return 0;
@@ -344,7 +338,7 @@ struct guild * inter_guild_fromsql(int guild_id)
 	if( guild_id <= 0 )
 		return NULL;
 
-	g = (struct guild*)idb_get(guild_db_, guild_id);
+	g = (struct guild*)idb_get(inter_guild->guild_db, guild_id);
 	if( g )
 		return g;
 
@@ -512,7 +506,7 @@ struct guild * inter_guild_fromsql(int guild_id)
 	}
 	SQL->FreeResult(sql_handle);
 
-	idb_put(guild_db_, guild_id, g); //Add to cache
+	idb_put(inter_guild->guild_db, guild_id, g); //Add to cache
 	g->save_flag |= GS_REMOVE; //But set it to be removed, in case it is not needed for long.
 
 	if (save_log)
@@ -550,7 +544,7 @@ struct guild_castle* inter_guild_castle_fromsql(int castle_id)
 	char *data;
 	int i;
 	StringBuf buf;
-	struct guild_castle *gc = idb_get(castle_db, castle_id);
+	struct guild_castle *gc = idb_get(inter_guild->castle_db, castle_id);
 
 	if (gc != NULL)
 		return gc;
@@ -587,7 +581,7 @@ struct guild_castle* inter_guild_castle_fromsql(int castle_id)
 	}
 	SQL->FreeResult(sql_handle);
 
-	idb_put(castle_db, castle_id, gc);
+	idb_put(inter_guild->castle_db, castle_id, gc);
 
 	if (save_log)
 		ShowInfo("Loaded guild castle (%d - guild %d)\n", castle_id, gc->guild_id);
@@ -605,7 +599,7 @@ bool inter_guild_exp_parse_row(char* split[], int column, int current) {
 		return false;
 	}
 
-	inter_guild_exp[current] = (unsigned int)exp;
+	inter_guild->exp[current] = (unsigned int)exp;
 	return true;
 }
 
@@ -718,8 +712,8 @@ int inter_guild_CharOffline(int char_id, int guild_id)
 int inter_guild_sql_init(void)
 {
 	//Initialize the guild cache
-	guild_db_= idb_alloc(DB_OPT_RELEASE_DATA);
-	castle_db = idb_alloc(DB_OPT_RELEASE_DATA);
+	inter_guild->guild_db= idb_alloc(DB_OPT_RELEASE_DATA);
+	inter_guild->castle_db = idb_alloc(DB_OPT_RELEASE_DATA);
 
 	//Read exp file
 	sv->readdb("db", DBPATH"exp_guild.txt", ',', 1, 1, MAX_GUILDLEVEL, inter_guild->exp_parse_row);
@@ -744,8 +738,8 @@ int inter_guild_db_final(DBKey key, DBData *data, va_list ap)
 
 void inter_guild_sql_final(void)
 {
-	guild_db_->destroy(guild_db_, inter_guild->db_final);
-	db_destroy(castle_db);
+	inter_guild->guild_db->destroy(inter_guild->guild_db, inter_guild->db_final);
+	db_destroy(inter_guild->castle_db);
 	return;
 }
 
@@ -797,7 +791,7 @@ unsigned int inter_guild_nextexp(int level) {
 	if (level <= 0 || level >= MAX_GUILDLEVEL)
 		return 0;
 
-	return inter_guild_exp[level-1];
+	return inter_guild->exp[level-1];
 }
 
 int inter_guild_checkskill(struct guild *g,int id)
@@ -1191,7 +1185,7 @@ int mapif_parse_CreateGuild(int fd,int account_id,char *name,struct guild_member
 	ShowInfo("Created Guild %d - %s (Guild Master: %s)\n", g->guild_id, g->name, g->master);
 
 	//Add to cache
-	idb_put(guild_db_, g->guild_id, g);
+	idb_put(inter_guild->guild_db, g->guild_id, g);
 
 	// Report to client
 	mapif->guild_created(fd,account_id,g);
@@ -1410,7 +1404,7 @@ int mapif_parse_BreakGuild(int fd, int guild_id)
 		inter->log("guild %s (id=%d) broken\n",g->name,guild_id);
 
 	//Remove the guild from memory. [Skotlex]
-	idb_remove(guild_db_, guild_id);
+	idb_remove(inter_guild->guild_db, guild_id);
 	return 0;
 }
 
@@ -1780,7 +1774,7 @@ int mapif_parse_GuildCastleDataSave(int fd, int castle_id, int index, int value)
 		case 1:
 			if (log_inter && gc->guild_id != value) {
 				int gid = (value) ? value : gc->guild_id;
-				struct guild *g = idb_get(guild_db_, gid);
+				struct guild *g = idb_get(inter_guild->guild_db, gid);
 				inter->log("guild %s (id=%d) %s castle id=%d\n",
 				          (g) ? g->name : "??", gid, (value) ? "occupy" : "abandon", castle_id);
 			}
@@ -1893,6 +1887,9 @@ int inter_guild_broken(int guild_id)
 void inter_guild_defaults(void)
 {
 	inter_guild = &inter_guild_s;
+
+	inter_guild->guild_db = NULL;
+	inter_guild->castle_db = NULL;
 
 	inter_guild->save_timer = inter_guild_save_timer;
 	inter_guild->removemember_tosql = inter_guild_removemember_tosql;
