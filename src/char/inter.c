@@ -707,7 +707,7 @@ void inter_savereg(int account_id, int char_id, const char *key, unsigned int in
 {
 	/* to login server we go! */
 	if( key[0] == '#' && key[1] == '#' ) {/* global account reg */
-		if( session_isValid(login_fd) )
+		if( session_isValid(chr->login_fd) )
 			chr->global_accreg_to_login_add(key,index,val,is_string);
 		else {
 			ShowError("Login server unavailable, cant perform update on '%s' variable for AID:%d CID:%d\n",key,account_id,char_id);
@@ -1316,7 +1316,7 @@ int mapif_parse_Registry(int fd)
 		int cursor = 14, i;
 		char key[32], sval[254];
 		unsigned int index;
-		bool isLoginActive = session_isActive(login_fd);
+		bool isLoginActive = session_isActive(chr->login_fd);
 
 		if( isLoginActive )
 			chr->global_accreg_to_login_start(account_id,char_id);

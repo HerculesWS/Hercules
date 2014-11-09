@@ -24,7 +24,7 @@ unsigned int pincode_multiplier = 0x3498;
 unsigned int pincode_baseSeed = 0x881234;
 
 void pincode_handle ( int fd, struct char_session_data* sd ) {
-	struct online_char_data* character = (struct online_char_data*)idb_get(online_char_db, sd->account_id);
+	struct online_char_data* character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id);
 	
 	if( character && character->pincode_enable > *pincode->charselect ){
 		character->pincode_enable = *pincode->charselect * 2;
@@ -53,7 +53,7 @@ void pincode_check(int fd, struct char_session_data* sd) {
 	pincode->decrypt(sd->pincode_seed, pin);
 	if( pincode->compare( fd, sd, pin ) ){
 		struct online_char_data* character;
-		if( (character = (struct online_char_data*)idb_get(online_char_db, sd->account_id)) )
+		if( (character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id)) )
 			character->pincode_enable = *pincode->charselect * 2;
 		pincode->sendstate( fd, sd, PINCODE_OK );
 	}
@@ -116,18 +116,18 @@ void pincode_sendstate(int fd, struct char_session_data* sd, uint16 state) {
 }
 
 void pincode_notifyLoginPinUpdate(int account_id, char* pin) {
-	WFIFOHEAD(login_fd,11);
-	WFIFOW(login_fd,0) = 0x2738;
-	WFIFOL(login_fd,2) = account_id;
-	strncpy( (char*)WFIFOP(login_fd,6), pin, 5 );
-	WFIFOSET(login_fd,11);
+	WFIFOHEAD(chr->login_fd,11);
+	WFIFOW(chr->login_fd,0) = 0x2738;
+	WFIFOL(chr->login_fd,2) = account_id;
+	strncpy( (char*)WFIFOP(chr->login_fd,6), pin, 5 );
+	WFIFOSET(chr->login_fd,11);
 }
 
 void pincode_notifyLoginPinError(int account_id) {
-	WFIFOHEAD(login_fd,6);
-	WFIFOW(login_fd,0) = 0x2739;
-	WFIFOL(login_fd,2) = account_id;
-	WFIFOSET(login_fd,6);
+	WFIFOHEAD(chr->login_fd,6);
+	WFIFOW(chr->login_fd,0) = 0x2739;
+	WFIFOL(chr->login_fd,2) = account_id;
+	WFIFOSET(chr->login_fd,6);
 }
 
 void pincode_decrypt(unsigned int userSeed, char* pin) {

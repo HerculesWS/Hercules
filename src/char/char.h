@@ -42,7 +42,6 @@ struct online_char_data {
 	int pincode_enable;
 };
 
-DBMap* online_char_db; // int account_id -> struct online_char_data*
 
 #define MAX_MAP_SERVERS 2
 
@@ -55,7 +54,6 @@ enum {
 	TABLE_GUILD_STORAGE,
 };
 
-int login_fd;
 extern int char_name_option;
 extern char char_name_letters[];
 extern bool char_gm_read;
@@ -119,6 +117,10 @@ struct char_auth_node {
 };
 
 struct char_interface {
+	int login_fd;
+	int char_fd;
+	DBMap* online_char_db; // int account_id -> struct online_char_data*
+	DBMap* char_db_;
 	int (*waiting_disconnect) (int tid, int64 tick, int id, intptr_t data);
 	int (*delete_char_sql) (int char_id);
 	DBData (*create_online_char_data) (DBKey key, va_list args);
