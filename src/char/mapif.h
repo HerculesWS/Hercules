@@ -187,7 +187,7 @@ struct mapif_interface {
     int (*parse_WisToGM) (int fd);
     int (*parse_Registry) (int fd);
     int (*parse_RegistryRequest) (int fd);
-    void (*namechange_ack) (int fd, int account_id, int char_id, int type, int flag, const char *const name);
+    void (*namechange_ack) (int fd, int account_id, int char_id, int type, int flag, const char *name);
     int (*parse_NameChangeRequest) (int fd);
 } mapif_s;
 

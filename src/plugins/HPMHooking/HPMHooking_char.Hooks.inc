@@ -11506,10 +11506,10 @@ int HP_mapif_parse_RegistryRequest(int fd) {
 	}
 	return retVal___;
 }
-void HP_mapif_namechange_ack(int fd, int account_id, int char_id, int type, int flag, const char *constname) {
+void HP_mapif_namechange_ack(int fd, int account_id, int char_id, int type, int flag, const char *name) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_mapif_namechange_ack_pre ) {
-		void (*preHookFunc) (int *fd, int *account_id, int *char_id, int *type, int *flag, const char *constname);
+		void (*preHookFunc) (int *fd, int *account_id, int *char_id, int *type, int *flag, const char *name);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mapif_namechange_ack_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_mapif_namechange_ack_pre[hIndex].func;
@@ -11524,7 +11524,7 @@ void HP_mapif_namechange_ack(int fd, int account_id, int char_id, int type, int 
 		HPMHooks.source.mapif.namechange_ack(fd, account_id, char_id, type, flag, name);
 	}
 	if( HPMHooks.count.HP_mapif_namechange_ack_post ) {
-		void (*postHookFunc) (int *fd, int *account_id, int *char_id, int *type, int *flag, const char *constname);
+		void (*postHookFunc) (int *fd, int *account_id, int *char_id, int *type, int *flag, const char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mapif_namechange_ack_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_mapif_namechange_ack_post[hIndex].func;
 			postHookFunc(&fd, &account_id, &char_id, &type, &flag, name);
