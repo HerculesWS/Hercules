@@ -3628,7 +3628,7 @@ ACMD(reloadscript) {
 	mapit->free(iter);
 
 	flush_fifos();
-	map->reloadnpc(true, NULL, 0); // reload config files seeking for npcs
+	map->reloadnpc(true); // reload config files seeking for npcs
 	script->reload();
 	npc->reload();
 

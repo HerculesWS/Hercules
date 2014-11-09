@@ -144,6 +144,11 @@ struct char_interface {
 	int server_type;
 	int new_display;
 
+	char *CHAR_CONF_NAME;
+	char *LAN_CONF_NAME;
+	char *SQL_CONF_NAME;
+	char *INTER_CONF_NAME;
+
 	int (*waiting_disconnect) (int tid, int64 tick, int id, intptr_t data);
 	int (*delete_char_sql) (int char_id);
 	DBData (*create_online_char_data) (DBKey key, va_list args);

@@ -812,7 +812,13 @@ struct map_cache_map_info {
 struct map_interface {
 
 	/* vars */
-	bool minimal;
+	bool minimal;     ///< Starts the server in minimal initialization mode.
+	bool scriptcheck; ///< Starts the server in script-check mode.
+
+	/** Additional scripts requested through the command-line */
+	char **extra_scripts;
+	int extra_scripts_count;
+
 	int retval;
 	int count;
 
@@ -1005,7 +1011,7 @@ struct map_interface {
 	struct mob_data * (*getmob_boss) (int16 m);
 	struct mob_data * (*id2boss) (int id);
 	// reload config file looking only for npcs
-	void (*reloadnpc) (bool clear, const char * const *extra_scripts, int extra_scripts_count);
+	void (*reloadnpc) (bool clear);
 
 	int (*check_dir) (int s_dir,int t_dir);
 	uint8 (*calc_dir) (struct block_list *src,int16 x,int16 y);
@@ -1068,9 +1074,6 @@ struct map_interface {
 	int (*nick_db_final) (DBKey key, DBData *data, va_list args);
 	int (*cleanup_db_sub) (DBKey key, DBData *data, va_list va);
 	int (*abort_sub) (struct map_session_data *sd, va_list ap);
-	void (*helpscreen) (bool do_exit);
-	void (*versionscreen) (bool do_exit);
-	bool (*arg_next_value) (const char *option, int i, int argc, bool must);
 	void (*update_cell_bl) (struct block_list *bl, bool increase);
 	int (*get_new_bonus_id) (void);
 	void (*add_questinfo) (int m, struct questinfo *qi);

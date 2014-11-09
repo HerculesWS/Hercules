@@ -59,12 +59,6 @@
 
 ////////////////////////////////////////////////
 
-//void malloc_memory_check(void);
-//bool malloc_verify_ptr(void* ptr);
-//size_t malloc_usage (void);
-//void malloc_init (void);
-//void malloc_final (void);
-
 #ifdef HERCULES_CORE
 void malloc_defaults(void);
 
@@ -87,6 +81,7 @@ struct malloc_interface {
 	size_t (*usage) (void);
 	/* */
 	void (*post_shutdown) (void);
+	void (*init_messages) (void);
 };
 
 struct malloc_interface *iMalloc;

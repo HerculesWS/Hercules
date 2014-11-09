@@ -769,12 +769,24 @@ void memmgr_report (int extra) {
 
 }
 
-static void memmgr_init (void)
+/**
+ * Initializes the Memory Manager.
+ */
+static void memmgr_init(void)
+{
+#ifdef LOG_MEMMGR
+	memset(hash_unfill, 0, sizeof(hash_unfill));
+#endif /* LOG_MEMMGR */
+}
+
+/**
+ * Prints initialization messages from the Memory Manager.
+ */
+static void memmgr_init_messages(void)
 {
 #ifdef LOG_MEMMGR
 	sprintf(memmer_logfile, "log/%s.leaks", SERVER_NAME);
 	ShowStatus("Memory manager initialized: "CL_WHITE"%s"CL_RESET"\n", memmer_logfile);
-	memset(hash_unfill, 0, sizeof(hash_unfill));
 #endif /* LOG_MEMMGR */
 }
 #endif /* USE_MEMMGR */
@@ -821,7 +833,22 @@ void malloc_final (void) {
 		iMalloc->post_shutdown();
 }
 
-void malloc_init (void) {
+/**
+ * Prints initialization status messages.
+ *
+ * This is separated from malloc_init() in order to be run after giving the
+ * chance to other modules to initialize, in case they want to silence any
+ * status messages, but at the same time require malloc.
+ */
+void malloc_init_messages(void)
+{
+#ifdef USE_MEMMGR
+	memmgr_init_messages();
+#endif
+}
+
+void malloc_init(void)
+{
 #ifdef USE_MEMMGR
 	memmgr_usage_bytes_t = 0;
 	memmgr_usage_bytes = 0;
@@ -836,7 +863,7 @@ void malloc_init (void) {
 	GC_INIT();
 #endif
 #ifdef USE_MEMMGR
-	memmgr_init ();
+	memmgr_init();
 #endif
 }
 
@@ -865,4 +892,5 @@ void malloc_defaults(void) {
 	iMalloc->free     = aFree_;
 #endif
 	iMalloc->post_shutdown = NULL;
+	iMalloc->init_messages = malloc_init_messages;
 }

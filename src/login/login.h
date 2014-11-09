@@ -18,9 +18,6 @@ enum E_LOGINSERVER_ST
 	LOGINSERVER_ST_LAST
 };
 
-#define LOGIN_CONF_NAME "conf/login-server.conf"
-#define LAN_CONF_NAME "conf/subnet.conf"
-
 // supported encryption types: 1- passwordencrypt, 2- passwordencrypt2, 3- both
 #define PASSWORDENC 3
 #define PASSWD_LEN (32+1) // 23+1 for plaintext, 32+1 for md5-ed passwords
@@ -200,6 +197,8 @@ struct login_interface {
 	void (*char_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
 	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip);
 	int (*parse_login) (int fd);
+	char *LOGIN_CONF_NAME;
+	char *LAN_CONF_NAME;
 };
 
 struct login_interface *login;

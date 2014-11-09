@@ -10,6 +10,7 @@
 #include <string.h>
 
 #include "../common/cbasetypes.h"
+#include "../common/core.h"
 #include "../common/grfio.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h"
@@ -23,9 +24,9 @@
 
 #define NO_WATER 1000000
 
-char grf_list_file[256] = "conf/grf-files.txt";
-char map_list_file[256] = "db/map_index.txt";
-char map_cache_file[256];
+char *grf_list_file;
+char *map_list_file;
+char *map_cache_file;
 int rebuild = 0;
 
 FILE *map_cache_fp;
@@ -184,25 +185,67 @@ char *remove_extension(char *mapname)
 	return mapname;
 }
 
-// Processes command-line arguments
-void process_args(int argc, char *argv[])
+/**
+ * --grf-list handler
+ *
+ * Overrides the default grf list filename.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(grflist)
 {
-	int i;
+	aFree(grf_list_file);
+	grf_list_file = aStrdup(params);
+	return true;
+}
 
-	for(i = 0; i < argc; i++) {
-		if(strcmp(argv[i], "-grf") == 0) {
-			if(++i < argc)
-				safestrncpy(grf_list_file, argv[i], sizeof(grf_list_file));
-		} else if(strcmp(argv[i], "-list") == 0) {
-			if(++i < argc)
-				safestrncpy(map_list_file, argv[i], sizeof(map_list_file));
-		} else if(strcmp(argv[i], "-cache") == 0) {
-			if(++i < argc)
-				safestrncpy(map_cache_file, argv[i], sizeof(map_cache_file));
-		} else if(strcmp(argv[i], "-rebuild") == 0)
-			rebuild = 1;
-	}
+/**
+ * --map-list handler
+ *
+ * Overrides the default map list filename.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(maplist)
+{
+	aFree(map_list_file);
+	map_list_file = aStrdup(params);
+	return true;
+}
 
+/**
+ * --map-cache handler
+ *
+ * Overrides the default map cache filename.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(mapcache)
+{
+	aFree(map_cache_file);
+	map_cache_file = aStrdup(params);
+	return true;
+}
+
+/**
+ * --rebuild handler
+ *
+ * Forces a rebuild of the mapcache, rather than only adding missing maps.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(rebuild)
+{
+	rebuild = 1;
+	return true;
+}
+
+/**
+ * Defines the local command line arguments
+ */
+void cmdline_args_init_local(void)
+{
+	CMDLINEARG_DEF2(grf-list, grflist, "Alternative grf list file", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(map-list, maplist, "Alternative map list file", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(map-cache, mapcache, "Alternative map cache file", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(rebuild, rebuild, "Forces a rebuild of the map cache, rather than only adding missing maps", CMDLINE_OPT_NORMAL);
+	
 }
 
 int do_init(int argc, char** argv)
@@ -212,17 +255,13 @@ int do_init(int argc, char** argv)
 	struct map_data map;
 	char name[MAP_NAME_LENGTH_EXT];
 
+	grf_list_file = aStrdup("conf/grf-files.txt");
+	map_list_file = aStrdup("db/map_index.txt");
 	/* setup pre-defined, #define-dependant */
-	sprintf(map_cache_file,"db/%s/map_cache.dat",
-#ifdef RENEWAL
-			"re"
-#else
-			"pre-re"
-#endif
-			);
+	map_cache_file = aStrdup("db/"DBPATH"map_cache.dat");
 
-	// Process the command-line arguments
-	process_args(argc, argv);
+	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
+	cmdline->exec(argc, argv, CMDLINE_OPT_NORMAL);
 
 	ShowStatus("Initializing grfio with %s\n", grf_list_file);
 	grfio_init(grf_list_file);
@@ -302,9 +341,14 @@ int do_init(int argc, char** argv)
 
 	ShowInfo("%d maps now in cache\n", header.map_count);
 
+	aFree(grf_list_file);
+	aFree(map_list_file);
+	aFree(map_cache_file);
+
 	return 0;
 }
 
-void do_final(void)
+int do_final(void)
 {
+	return EXIT_SUCCESS;
 }
