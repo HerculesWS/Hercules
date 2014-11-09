@@ -9,6 +9,7 @@ struct s_pet;
 void inter_pet_defaults(void);
 
 struct inter_pet_interface {
+    struct s_pet *pt;
     int (*tosql) (int pet_id, struct s_pet* p);
     int (*fromsql) (int pet_id, struct s_pet* p);
     int (*sql_init) (void);

@@ -23,8 +23,6 @@
 
 struct inter_pet_interface inter_pet_s;
 
-struct s_pet *pet_pt;
-
 //---------------------------------------------------------
 int inter_pet_tosql(int pet_id, struct s_pet* p)
 {
@@ -111,11 +109,11 @@ int inter_pet_fromsql(int pet_id, struct s_pet* p)
 
 int inter_pet_sql_init(void) {
 	//memory alloc
-	pet_pt = (struct s_pet*)aCalloc(sizeof(struct s_pet), 1);
+	inter_pet->pt = (struct s_pet*)aCalloc(sizeof(struct s_pet), 1);
 	return 0;
 }
 void inter_pet_sql_final(void) {
-	if (pet_pt) aFree(pet_pt);
+	if (inter_pet->pt) aFree(inter_pet->pt);
 	return;
 }
 //----------------------------------
@@ -195,35 +193,35 @@ int mapif_delete_pet_ack(int fd, int flag)
 int mapif_create_pet(int fd, int account_id, int char_id, short pet_class, short pet_lv, short pet_egg_id,
 	short pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name)
 {
-	memset(pet_pt, 0, sizeof(struct s_pet));
-	safestrncpy(pet_pt->name, pet_name, NAME_LENGTH);
+	memset(inter_pet->pt, 0, sizeof(struct s_pet));
+	safestrncpy(inter_pet->pt->name, pet_name, NAME_LENGTH);
 	if(incubate == 1)
-		pet_pt->account_id = pet_pt->char_id = 0;
+		inter_pet->pt->account_id = inter_pet->pt->char_id = 0;
 	else {
-		pet_pt->account_id = account_id;
-		pet_pt->char_id = char_id;
+		inter_pet->pt->account_id = account_id;
+		inter_pet->pt->char_id = char_id;
 	}
-	pet_pt->class_ = pet_class;
-	pet_pt->level = pet_lv;
-	pet_pt->egg_id = pet_egg_id;
-	pet_pt->equip = pet_equip;
-	pet_pt->intimate = intimate;
-	pet_pt->hungry = hungry;
-	pet_pt->rename_flag = rename_flag;
-	pet_pt->incubate = incubate;
+	inter_pet->pt->class_ = pet_class;
+	inter_pet->pt->level = pet_lv;
+	inter_pet->pt->egg_id = pet_egg_id;
+	inter_pet->pt->equip = pet_equip;
+	inter_pet->pt->intimate = intimate;
+	inter_pet->pt->hungry = hungry;
+	inter_pet->pt->rename_flag = rename_flag;
+	inter_pet->pt->incubate = incubate;
 
-	if(pet_pt->hungry < 0)
-		pet_pt->hungry = 0;
-	else if(pet_pt->hungry > 100)
-		pet_pt->hungry = 100;
-	if(pet_pt->intimate < 0)
-		pet_pt->intimate = 0;
-	else if(pet_pt->intimate > 1000)
-		pet_pt->intimate = 1000;
+	if(inter_pet->pt->hungry < 0)
+		inter_pet->pt->hungry = 0;
+	else if(inter_pet->pt->hungry > 100)
+		inter_pet->pt->hungry = 100;
+	if(inter_pet->pt->intimate < 0)
+		inter_pet->pt->intimate = 0;
+	else if(inter_pet->pt->intimate > 1000)
+		inter_pet->pt->intimate = 1000;
 
-	pet_pt->pet_id = -1; //Signal NEW pet.
-	if (inter_pet->tosql(pet_pt->pet_id,pet_pt))
-		mapif->pet_created(fd, account_id, pet_pt);
+	inter_pet->pt->pet_id = -1; //Signal NEW pet.
+	if (inter_pet->tosql(inter_pet->pt->pet_id,inter_pet->pt))
+		mapif->pet_created(fd, account_id, inter_pet->pt);
 	else	//Failed...
 		mapif->pet_created(fd, account_id, NULL);
 
@@ -232,17 +230,17 @@ int mapif_create_pet(int fd, int account_id, int char_id, short pet_class, short
 
 int mapif_load_pet(int fd, int account_id, int char_id, int pet_id)
 {
-	memset(pet_pt, 0, sizeof(struct s_pet));
+	memset(inter_pet->pt, 0, sizeof(struct s_pet));
 
-	inter_pet->fromsql(pet_id, pet_pt);
+	inter_pet->fromsql(pet_id, inter_pet->pt);
 
-	if(pet_pt!=NULL) {
-		if(pet_pt->incubate == 1) {
-			pet_pt->account_id = pet_pt->char_id = 0;
-			mapif->pet_info(fd, account_id, pet_pt);
+	if(inter_pet->pt!=NULL) {
+		if(inter_pet->pt->incubate == 1) {
+			inter_pet->pt->account_id = inter_pet->pt->char_id = 0;
+			mapif->pet_info(fd, account_id, inter_pet->pt);
 		}
-		else if(account_id == pet_pt->account_id && char_id == pet_pt->char_id)
-			mapif->pet_info(fd, account_id, pet_pt);
+		else if(account_id == inter_pet->pt->account_id && char_id == inter_pet->pt->char_id)
+			mapif->pet_info(fd, account_id, inter_pet->pt);
 		else
 			mapif->pet_noinfo(fd, account_id);
 	}
@@ -330,6 +328,8 @@ int inter_pet_parse_frommap(int fd)
 void inter_pet_defaults(void)
 {
 	inter_pet = &inter_pet_s;
+
+	inter_pet->pt = NULL;
 
 	inter_pet->tosql = inter_pet_tosql;
 	inter_pet->fromsql = inter_pet_fromsql;
