@@ -1432,6 +1432,7 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 	char password[PASSWD_LEN];
 	unsigned char passhash[16];
 	uint8 clienttype;
+	int result;
 	uint16 command = RFIFOW(fd,0);
 	bool israwpass = (command==0x0064 || command==0x0277 || command==0x02b0 || command == 0x0825);
 
@@ -1495,7 +1496,7 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 		return true;
 	}
 
-	int result = login->mmo_auth(sd, false);
+	result = login->mmo_auth(sd, false);
 
 	if( result == -1 )
 		login->auth_ok(sd);
@@ -1538,6 +1539,7 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 	uint16 server_port;
 	uint16 type;
 	uint16 new_;
+	int result;
 
 	safestrncpy(sd->userid, (char*)RFIFOP(fd,2), NAME_LENGTH);
 	safestrncpy(sd->passwd, (char*)RFIFOP(fd,26), NAME_LENGTH);
@@ -1556,7 +1558,7 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 	sprintf(message, "charserver - %s@%u.%u.%u.%u:%u", server_name, CONVIP(server_ip), server_port);
 	login_log(session[fd]->client_addr, sd->userid, 100, message);
 
-	int result = login->mmo_auth(sd, true);
+	result = login->mmo_auth(sd, true);
 	if( runflag == LOGINSERVER_ST_RUNNING &&
 		result == -1 &&
 		sd->sex == 'S' &&
