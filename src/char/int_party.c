@@ -868,11 +868,13 @@ void inter_party_defaults(void)
 	inter_party->sql_final = inter_party_sql_final;
 	inter_party->check_lv = inter_party_check_lv;
 	inter_party->calc_state = inter_party_calc_state;
+	inter_party->tosql = inter_party_tosql;
 	inter_party->fromsql = inter_party_fromsql;
 	inter_party->search_partyname = inter_party_search_partyname;
 	inter_party->check_exp_share = inter_party_check_exp_share;
 	inter_party->check_empty = inter_party_check_empty;
 	inter_party->parse_frommap = inter_party_parse_frommap;
+	inter_party->leave = inter_party_leave;
 	inter_party->CharOnline = inter_party_CharOnline;
 	inter_party->CharOffline = inter_party_CharOffline;
 }

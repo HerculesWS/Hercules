@@ -336,4 +336,5 @@ void inter_pet_defaults(void)
 	inter_pet->sql_init = inter_pet_sql_init;
 	inter_pet->sql_final = inter_pet_sql_final;
 	inter_pet->delete_ = inter_pet_delete;
+	inter_pet->parse_frommap = inter_pet_parse_frommap;
 }
