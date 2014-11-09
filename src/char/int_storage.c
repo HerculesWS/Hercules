@@ -51,31 +51,31 @@ int inter_storage_fromsql(int account_id, struct storage_data* p)
 		StrBuf->Printf(&buf, ",`card%d`", j);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `account_id`='%d' ORDER BY `nameid`", storage_db, account_id);
 
-	if( SQL_ERROR == SQL->Query(sql_handle, StrBuf->Value(&buf)) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, StrBuf->Value(&buf)) )
+		Sql_ShowDebug(inter->sql_handle);
 
 	StrBuf->Destroy(&buf);
 
-	for( i = 0; i < MAX_STORAGE && SQL_SUCCESS == SQL->NextRow(sql_handle); ++i )
+	for( i = 0; i < MAX_STORAGE && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i )
 	{
 		item = &p->items[i];
-		SQL->GetData(sql_handle, 0, &data, NULL); item->id = atoi(data);
-		SQL->GetData(sql_handle, 1, &data, NULL); item->nameid = atoi(data);
-		SQL->GetData(sql_handle, 2, &data, NULL); item->amount = atoi(data);
-		SQL->GetData(sql_handle, 3, &data, NULL); item->equip = atoi(data);
-		SQL->GetData(sql_handle, 4, &data, NULL); item->identify = atoi(data);
-		SQL->GetData(sql_handle, 5, &data, NULL); item->refine = atoi(data);
-		SQL->GetData(sql_handle, 6, &data, NULL); item->attribute = atoi(data);
-		SQL->GetData(sql_handle, 7, &data, NULL); item->expire_time = (unsigned int)atoi(data);
-		SQL->GetData(sql_handle, 8, &data, NULL); item->bound = atoi(data);
-		SQL->GetData(sql_handle, 9, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
+		SQL->GetData(inter->sql_handle, 0, &data, NULL); item->id = atoi(data);
+		SQL->GetData(inter->sql_handle, 1, &data, NULL); item->nameid = atoi(data);
+		SQL->GetData(inter->sql_handle, 2, &data, NULL); item->amount = atoi(data);
+		SQL->GetData(inter->sql_handle, 3, &data, NULL); item->equip = atoi(data);
+		SQL->GetData(inter->sql_handle, 4, &data, NULL); item->identify = atoi(data);
+		SQL->GetData(inter->sql_handle, 5, &data, NULL); item->refine = atoi(data);
+		SQL->GetData(inter->sql_handle, 6, &data, NULL); item->attribute = atoi(data);
+		SQL->GetData(inter->sql_handle, 7, &data, NULL); item->expire_time = (unsigned int)atoi(data);
+		SQL->GetData(inter->sql_handle, 8, &data, NULL); item->bound = atoi(data);
+		SQL->GetData(inter->sql_handle, 9, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
  		for( j = 0; j < MAX_SLOTS; ++j )
 		{
-			SQL->GetData(sql_handle, 10+j, &data, NULL); item->card[j] = atoi(data);
+			SQL->GetData(inter->sql_handle, 10+j, &data, NULL); item->card[j] = atoi(data);
 		}
 	}
 	p->storage_amount = i;
-	SQL->FreeResult(sql_handle);
+	SQL->FreeResult(inter->sql_handle);
 
 	ShowInfo("storage load complete from DB - id: %d (total: %d)\n", account_id, p->storage_amount);
 	return 1;
@@ -109,30 +109,30 @@ int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storage* p)
 		StrBuf->Printf(&buf, ",`card%d`", j);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `guild_id`='%d' ORDER BY `nameid`", guild_storage_db, guild_id);
 
-	if( SQL_ERROR == SQL->Query(sql_handle, StrBuf->Value(&buf)) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, StrBuf->Value(&buf)) )
+		Sql_ShowDebug(inter->sql_handle);
 
 	StrBuf->Destroy(&buf);
 
-	for( i = 0; i < MAX_GUILD_STORAGE && SQL_SUCCESS == SQL->NextRow(sql_handle); ++i ) {
+	for( i = 0; i < MAX_GUILD_STORAGE && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i ) {
 		item = &p->items[i];
-		SQL->GetData(sql_handle, 0, &data, NULL); item->id = atoi(data);
-		SQL->GetData(sql_handle, 1, &data, NULL); item->nameid = atoi(data);
-		SQL->GetData(sql_handle, 2, &data, NULL); item->amount = atoi(data);
-		SQL->GetData(sql_handle, 3, &data, NULL); item->equip = atoi(data);
-		SQL->GetData(sql_handle, 4, &data, NULL); item->identify = atoi(data);
-		SQL->GetData(sql_handle, 5, &data, NULL); item->refine = atoi(data);
-		SQL->GetData(sql_handle, 6, &data, NULL); item->attribute = atoi(data);
-		SQL->GetData(sql_handle, 7, &data, NULL); item->bound = atoi(data);
-		SQL->GetData(sql_handle, 8, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
+		SQL->GetData(inter->sql_handle, 0, &data, NULL); item->id = atoi(data);
+		SQL->GetData(inter->sql_handle, 1, &data, NULL); item->nameid = atoi(data);
+		SQL->GetData(inter->sql_handle, 2, &data, NULL); item->amount = atoi(data);
+		SQL->GetData(inter->sql_handle, 3, &data, NULL); item->equip = atoi(data);
+		SQL->GetData(inter->sql_handle, 4, &data, NULL); item->identify = atoi(data);
+		SQL->GetData(inter->sql_handle, 5, &data, NULL); item->refine = atoi(data);
+		SQL->GetData(inter->sql_handle, 6, &data, NULL); item->attribute = atoi(data);
+		SQL->GetData(inter->sql_handle, 7, &data, NULL); item->bound = atoi(data);
+		SQL->GetData(inter->sql_handle, 8, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
  		item->expire_time = 0;
 
 		for( j = 0; j < MAX_SLOTS; ++j ) {
-			SQL->GetData(sql_handle, 9+j, &data, NULL); item->card[j] = atoi(data);
+			SQL->GetData(inter->sql_handle, 9+j, &data, NULL); item->card[j] = atoi(data);
 		}
 	}
 	p->storage_amount = i;
-	SQL->FreeResult(sql_handle);
+	SQL->FreeResult(inter->sql_handle);
 
 	ShowInfo("guild storage load complete from DB - id: %d (total: %d)\n", guild_id, p->storage_amount);
 	return 0;
@@ -153,14 +153,14 @@ void inter_storage_sql_final(void)
 // q?f[^?
 int inter_storage_delete(int account_id)
 {
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id`='%d'", storage_db, account_id) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id`='%d'", storage_db, account_id) )
+		Sql_ShowDebug(inter->sql_handle);
 	return 0;
 }
 int inter_storage_guild_storage_delete(int guild_id)
 {
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `guild_id`='%d'", guild_storage_db, guild_id) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `guild_id`='%d'", guild_storage_db, guild_id) )
+		Sql_ShowDebug(inter->sql_handle);
 	return 0;
 }
 
@@ -169,9 +169,9 @@ int inter_storage_guild_storage_delete(int guild_id)
 
 int mapif_load_guild_storage(int fd, int account_id, int guild_id, char flag)
 {
-	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `guild_id` FROM `%s` WHERE `guild_id`='%d'", guild_db, guild_id) )
-		Sql_ShowDebug(sql_handle);
-	else if( SQL->NumRows(sql_handle) > 0 )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `guild_id` FROM `%s` WHERE `guild_id`='%d'", guild_db, guild_id) )
+		Sql_ShowDebug(inter->sql_handle);
+	else if( SQL->NumRows(inter->sql_handle) > 0 )
 	{// guild exists
 		WFIFOHEAD(fd, sizeof(struct guild_storage)+13);
 		WFIFOW(fd,0) = 0x3818;
@@ -184,7 +184,7 @@ int mapif_load_guild_storage(int fd, int account_id, int guild_id, char flag)
 		return 0;
 	}
 	// guild does not exist
-	SQL->FreeResult(sql_handle);
+	SQL->FreeResult(inter->sql_handle);
 	WFIFOHEAD(fd, 12);
 	WFIFOW(fd,0) = 0x3818;
 	WFIFOW(fd,2) = 12;
@@ -226,16 +226,16 @@ int mapif_parse_SaveGuildStorage(int fd)
 	if (sizeof(struct guild_storage) != len - 12) {
 		ShowError("inter storage: data size mismatch: %d != %"PRIuS"\n", len - 12, sizeof(struct guild_storage));
 	} else {
-		if (SQL_ERROR == SQL->Query(sql_handle, "SELECT `guild_id` FROM `%s` WHERE `guild_id`='%d'", guild_db, guild_id)) {
-			Sql_ShowDebug(sql_handle);
-		} else if(SQL->NumRows(sql_handle) > 0) {
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `guild_id` FROM `%s` WHERE `guild_id`='%d'", guild_db, guild_id)) {
+			Sql_ShowDebug(inter->sql_handle);
+		} else if(SQL->NumRows(inter->sql_handle) > 0) {
 			// guild exists
-			SQL->FreeResult(sql_handle);
+			SQL->FreeResult(inter->sql_handle);
 			inter_storage->guild_storage_tosql(guild_id, (struct guild_storage*)RFIFOP(fd,12));
 			mapif->save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 0);
 			return 0;
 		}
-		SQL->FreeResult(sql_handle);
+		SQL->FreeResult(inter->sql_handle);
 	}
 	mapif->save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 1);
 	return 0;
@@ -276,11 +276,11 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 		StrBuf->Printf(&buf, ", `card%d`", j);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `char_id`='%d' AND `bound` = '%d'",inventory_db,char_id,IBT_GUILD);
 
-	stmt = SQL->StmtMalloc(sql_handle);
+	stmt = SQL->StmtMalloc(inter->sql_handle);
 	if( SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
 	||  SQL_ERROR == SQL->StmtExecute(stmt) )
 	{
-		Sql_ShowDebug(sql_handle);
+		Sql_ShowDebug(inter->sql_handle);
 		SQL->StmtFree(stmt);
 		StrBuf->Destroy(&buf);
 		return 1;
@@ -304,7 +304,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 		memcpy(&items[i],&item,sizeof(struct item));
 		i++;
 	}
-	SQL->FreeResult(sql_handle);
+	SQL->FreeResult(inter->sql_handle);
 	
 	if(!i) { //No items found - No need to continue
 		StrBuf->Destroy(&buf);
@@ -339,7 +339,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 	if( SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
 	||  SQL_ERROR == SQL->StmtExecute(stmt) )
 	{
-		Sql_ShowDebug(sql_handle);
+		Sql_ShowDebug(inter->sql_handle);
 		SQL->StmtFree(stmt);
 		StrBuf->Destroy(&buf);
 		return 1;
@@ -373,7 +373,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 		if( SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
 		||  SQL_ERROR == SQL->StmtExecute(stmt) )
 		{
-			Sql_ShowDebug(sql_handle);
+			Sql_ShowDebug(inter->sql_handle);
 			SQL->StmtFree(stmt);
 			StrBuf->Destroy(&buf);
 			return 1;
@@ -410,7 +410,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 	if( SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
 	||  SQL_ERROR == SQL->StmtExecute(stmt) )
 	{
-		Sql_ShowDebug(sql_handle);
+		Sql_ShowDebug(inter->sql_handle);
 		SQL->StmtFree(stmt);
 		StrBuf->Destroy(&buf);
 		return 1;

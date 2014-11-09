@@ -246,8 +246,8 @@ void char_set_char_online(int map_id, int char_id, int account_id)
 	struct mmo_charstatus *cp;
 
 	//Update DB
-	if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `online`='1' WHERE `char_id`='%d' LIMIT 1", char_db, char_id) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `online`='1' WHERE `char_id`='%d' LIMIT 1", char_db, char_id) )
+		Sql_ShowDebug(inter->sql_handle);
 
 	//Check to see for online conflicts
 	character = (struct online_char_data*)idb_ensure(chr->online_char_db, account_id, chr->create_online_char_data);
@@ -286,8 +286,8 @@ void char_set_char_offline(int char_id, int account_id)
 
 	if ( char_id == -1 )
 	{
-		if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `online`='0' WHERE `account_id`='%d'", char_db, account_id) )
-			Sql_ShowDebug(sql_handle);
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `online`='0' WHERE `account_id`='%d'", char_db, account_id) )
+			Sql_ShowDebug(inter->sql_handle);
 	}
 	else
 	{
@@ -296,8 +296,8 @@ void char_set_char_offline(int char_id, int account_id)
 		if (cp)
 			idb_remove(chr->char_db_,char_id);
 
-		if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `online`='0' WHERE `char_id`='%d' LIMIT 1", char_db, char_id) )
-			Sql_ShowDebug(sql_handle);
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `online`='0' WHERE `char_id`='%d' LIMIT 1", char_db, char_id) )
+			Sql_ShowDebug(inter->sql_handle);
 	}
 
 	if ((character = (struct online_char_data*)idb_get(chr->online_char_db, account_id)) != NULL)
@@ -391,12 +391,12 @@ void char_set_all_offline(int id)
 void char_set_all_offline_sql(void)
 {
 	//Set all players to 'OFFLINE'
-	if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `online` = '0'", char_db) )
-		Sql_ShowDebug(sql_handle);
-	if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `online` = '0'", guild_member_db) )
-		Sql_ShowDebug(sql_handle);
-	if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `connect_member` = '0'", guild_db) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `online` = '0'", char_db) )
+		Sql_ShowDebug(inter->sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `online` = '0'", guild_member_db) )
+		Sql_ShowDebug(inter->sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `connect_member` = '0'", guild_db) )
+		Sql_ShowDebug(inter->sql_handle);
 }
 
 /**
@@ -478,7 +478,7 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 		if( p->show_equip )
 			opt |= OPT_SHOW_EQUIP;
 		
-		if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `base_level`='%d', `job_level`='%d',"
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `base_level`='%d', `job_level`='%d',"
 			"`base_exp`='%u', `job_exp`='%u', `zeny`='%d',"
 			"`max_hp`='%d',`hp`='%d',`max_sp`='%d',`sp`='%d',`status_point`='%d',`skill_point`='%d',"
 			"`str`='%d',`agi`='%d',`vit`='%d',`int`='%d',`dex`='%d',`luk`='%d',"
@@ -499,15 +499,15 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 			p->robe,p->slotchange,opt,p->font,p->uniqueitem_counter,
 			p->account_id, p->char_id) )
 		{
-			Sql_ShowDebug(sql_handle);
+			Sql_ShowDebug(inter->sql_handle);
 			errors++;
 		} else
 			strcat(save_status, " status");
 	}
 	
 	if( p->bank_vault != cp->bank_vault || p->mod_exp != cp->mod_exp || p->mod_drop != cp->mod_drop || p->mod_death != cp->mod_death ) {
-		if( SQL_ERROR == SQL->Query(sql_handle, "REPLACE INTO `%s` (`account_id`,`bank_vault`,`base_exp`,`base_drop`,`base_death`) VALUES ('%d','%d','%d','%d','%d')",account_data_db,p->account_id,p->bank_vault,p->mod_exp,p->mod_drop,p->mod_death) ) {
-			Sql_ShowDebug(sql_handle);
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`bank_vault`,`base_exp`,`base_drop`,`base_death`) VALUES ('%d','%d','%d','%d','%d')",account_data_db,p->account_id,p->bank_vault,p->mod_exp,p->mod_drop,p->mod_death) ) {
+			Sql_ShowDebug(inter->sql_handle);
 			errors++;
 		} else
 			strcat(save_status, " accdata");
@@ -523,7 +523,7 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 		(p->fame != cp->fame)
 	)
 	{
-		if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `class`='%d',"
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `class`='%d',"
 			"`hair`='%d',`hair_color`='%d',`clothes_color`='%d',"
 			"`partner_id`='%d', `father`='%d', `mother`='%d', `child`='%d',"
 			"`karma`='%d',`manner`='%d', `fame`='%d'"
@@ -534,7 +534,7 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 			p->karma, p->manner, p->fame,
 			p->account_id, p->char_id) )
 		{
-			Sql_ShowDebug(sql_handle);
+			Sql_ShowDebug(inter->sql_handle);
 			errors++;
 		} else
 			strcat(save_status, " status2");
@@ -558,9 +558,9 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 		char esc_mapname[NAME_LENGTH*2+1];
 
 		//`memo` (`memo_id`,`char_id`,`map`,`x`,`y`)
-		if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", memo_db, p->char_id) )
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", memo_db, p->char_id) )
 		{
-			Sql_ShowDebug(sql_handle);
+			Sql_ShowDebug(inter->sql_handle);
 			errors++;
 		}
 
@@ -573,16 +573,16 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 			{
 				if( count )
 					StrBuf->AppendStr(&buf, ",");
-				SQL->EscapeString(sql_handle, esc_mapname, mapindex_id2name(p->memo_point[i].map));
+				SQL->EscapeString(inter->sql_handle, esc_mapname, mapindex_id2name(p->memo_point[i].map));
 				StrBuf->Printf(&buf, "('%d', '%s', '%d', '%d')", char_id, esc_mapname, p->memo_point[i].x, p->memo_point[i].y);
 				++count;
 			}
 		}
 		if( count )
 		{
-			if( SQL_ERROR == SQL->QueryStr(sql_handle, StrBuf->Value(&buf)) )
+			if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) )
 			{
-				Sql_ShowDebug(sql_handle);
+				Sql_ShowDebug(inter->sql_handle);
 				errors++;
 			}
 		}
@@ -592,8 +592,8 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 	//skills
 	if( memcmp(p->skill, cp->skill, sizeof(p->skill)) ) {
 		//`skill` (`char_id`, `id`, `lv`)
-		if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", skill_db, p->char_id) ) {
-			Sql_ShowDebug(sql_handle);
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", skill_db, p->char_id) ) {
+			Sql_ShowDebug(inter->sql_handle);
 			errors++;
 		}
 
@@ -617,9 +617,9 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 		}
 		if( count )
 		{
-			if( SQL_ERROR == SQL->QueryStr(sql_handle, StrBuf->Value(&buf)) )
+			if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) )
 			{
-				Sql_ShowDebug(sql_handle);
+				Sql_ShowDebug(inter->sql_handle);
 				errors++;
 			}
 		}
@@ -638,9 +638,9 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 
 	if(diff == 1)
 	{	//Save friends
-		if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", friend_db, char_id) )
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", friend_db, char_id) )
 		{
-			Sql_ShowDebug(sql_handle);
+			Sql_ShowDebug(inter->sql_handle);
 			errors++;
 		}
 
@@ -658,9 +658,9 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 		}
 		if( count )
 		{
-			if( SQL_ERROR == SQL->QueryStr(sql_handle, StrBuf->Value(&buf)) )
+			if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) )
 			{
-				Sql_ShowDebug(sql_handle);
+				Sql_ShowDebug(inter->sql_handle);
 				errors++;
 			}
 		}
@@ -682,9 +682,9 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 		}
 	}
 	if(diff) {
-		if( SQL_ERROR == SQL->QueryStr(sql_handle, StrBuf->Value(&buf)) )
+		if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) )
 		{
-			Sql_ShowDebug(sql_handle);
+			Sql_ShowDebug(inter->sql_handle);
 			errors++;
 		} else
 			strcat(save_status, " hotkeys");
@@ -735,7 +735,7 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 		StrBuf->Printf(&buf, ", `card%d`", j);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `%s`='%d'", tablename, selectoption, id);
 
-	stmt = SQL->StmtMalloc(sql_handle);
+	stmt = SQL->StmtMalloc(inter->sql_handle);
 	if( SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
 	||  SQL_ERROR == SQL->StmtExecute(stmt) )
 	{
@@ -796,9 +796,9 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 						StrBuf->Printf(&buf, ", `card%d`=%d", j, items[i].card[j]);
  					StrBuf->Printf(&buf, " WHERE `id`='%d' LIMIT 1", item.id);
 
-					if( SQL_ERROR == SQL->QueryStr(sql_handle, StrBuf->Value(&buf)) )
+					if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) )
 					{
-						Sql_ShowDebug(sql_handle);
+						Sql_ShowDebug(inter->sql_handle);
 						errors++;
 					}
 				}
@@ -809,9 +809,9 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 		}
 		if( !found )
 		{// Item not present in inventory, remove it.
-			if( SQL_ERROR == SQL->Query(sql_handle, "DELETE from `%s` where `id`='%d' LIMIT 1", tablename, item.id) )
+			if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE from `%s` where `id`='%d' LIMIT 1", tablename, item.id) )
 			{
-				Sql_ShowDebug(sql_handle);
+				Sql_ShowDebug(inter->sql_handle);
 				errors++;
 			}
 		}
@@ -844,9 +844,9 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 		StrBuf->AppendStr(&buf, ")");
 	}
 
-	if( found && SQL_ERROR == SQL->QueryStr(sql_handle, StrBuf->Value(&buf)) )
+	if( found && SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) )
 	{
-		Sql_ShowDebug(sql_handle);
+		Sql_ShowDebug(inter->sql_handle);
 		errors++;
 	}
 
@@ -879,7 +879,7 @@ int char_inventory_to_sql(const struct item items[], int max, int id) {
 		StrBuf->Printf(&buf, ", `card%d`", j);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `char_id`='%d'", inventory_db, id);
 
-	stmt = SQL->StmtMalloc(sql_handle);
+	stmt = SQL->StmtMalloc(inter->sql_handle);
 	if( SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
 	   ||  SQL_ERROR == SQL->StmtExecute(stmt) )
 	{
@@ -939,8 +939,8 @@ int char_inventory_to_sql(const struct item items[], int max, int id) {
  						StrBuf->Printf(&buf, ", `card%d`=%d", j, items[i].card[j]);
 					StrBuf->Printf(&buf, " WHERE `id`='%d' LIMIT 1", item.id);
 
-					if( SQL_ERROR == SQL->QueryStr(sql_handle, StrBuf->Value(&buf)) ) {
-						Sql_ShowDebug(sql_handle);
+					if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) ) {
+						Sql_ShowDebug(inter->sql_handle);
 						errors++;
 					}
 				}
@@ -950,8 +950,8 @@ int char_inventory_to_sql(const struct item items[], int max, int id) {
 			}
 		}
 		if( !found ) {// Item not present in inventory, remove it.
-			if( SQL_ERROR == SQL->Query(sql_handle, "DELETE from `%s` where `id`='%d' LIMIT 1", inventory_db, item.id) ) {
-				Sql_ShowDebug(sql_handle);
+			if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE from `%s` where `id`='%d' LIMIT 1", inventory_db, item.id) ) {
+				Sql_ShowDebug(inter->sql_handle);
 				errors++;
 			}
 		}
@@ -983,8 +983,8 @@ int char_inventory_to_sql(const struct item items[], int max, int id) {
 		StrBuf->AppendStr(&buf, ")");
 	}
 
-	if( found && SQL_ERROR == SQL->QueryStr(sql_handle, StrBuf->Value(&buf)) ) {
-		Sql_ShowDebug(sql_handle);
+	if( found && SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) ) {
+		Sql_ShowDebug(inter->sql_handle);
 		errors++;
 	}
 
@@ -1005,7 +1005,7 @@ int char_mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 	time_t unban_time = 0;
 	char sex[2];
 
-	stmt = SQL->StmtMalloc(sql_handle);
+	stmt = SQL->StmtMalloc(inter->sql_handle);
 	if( stmt == NULL ) {
 		SqlStmt_ShowDebug(stmt);
 		return 0;
@@ -1124,7 +1124,7 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 
 	if (save_log) ShowInfo("Char load request (%d)\n", char_id);
 
-	stmt = SQL->StmtMalloc(sql_handle);
+	stmt = SQL->StmtMalloc(inter->sql_handle);
 	if( stmt == NULL )
 	{
 		SqlStmt_ShowDebug(stmt);
@@ -1466,30 +1466,30 @@ bool char_char_slotchange(struct char_session_data *sd, int fd, unsigned short f
 	if( sd->found_char[to] > 0 ) {/* moving char to occupied slot */
 		bool result = false;
 		/* update both at once */
-		if( SQL_SUCCESS != SQL->QueryStr(sql_handle, "START TRANSACTION")
-		   ||  SQL_SUCCESS != SQL->Query(sql_handle, "UPDATE `%s` SET `char_num`='%d' WHERE `char_id`='%d' LIMIT 1", char_db, from, sd->found_char[to])
-		   ||  SQL_SUCCESS != SQL->Query(sql_handle, "UPDATE `%s` SET `char_num`='%d' WHERE `char_id`='%d' LIMIT 1", char_db, to, sd->found_char[from]) )
-			Sql_ShowDebug(sql_handle);
+		if( SQL_SUCCESS != SQL->QueryStr(inter->sql_handle, "START TRANSACTION")
+		   ||  SQL_SUCCESS != SQL->Query(inter->sql_handle, "UPDATE `%s` SET `char_num`='%d' WHERE `char_id`='%d' LIMIT 1", char_db, from, sd->found_char[to])
+		   ||  SQL_SUCCESS != SQL->Query(inter->sql_handle, "UPDATE `%s` SET `char_num`='%d' WHERE `char_id`='%d' LIMIT 1", char_db, to, sd->found_char[from]) )
+			Sql_ShowDebug(inter->sql_handle);
 		else
 			result = true;
 		
-		if( SQL_ERROR == SQL->QueryStr(sql_handle, (result == true) ? "COMMIT" : "ROLLBACK") ) {
-			Sql_ShowDebug(sql_handle);
+		if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, (result == true) ? "COMMIT" : "ROLLBACK") ) {
+			Sql_ShowDebug(inter->sql_handle);
 			result = false;
 		}
 		if( !result )
 			return false;
 		
 	} else {/* slot is free. */
-		if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `char_num`='%d' WHERE `char_id`='%d' LIMIT 1", char_db, to, sd->found_char[from] ) ) {
-			Sql_ShowDebug(sql_handle);
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `char_num`='%d' WHERE `char_id`='%d' LIMIT 1", char_db, to, sd->found_char[from] ) ) {
+			Sql_ShowDebug(inter->sql_handle);
 			return false;
 		}
 	}
 	
 	/* update count */
-	if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `slotchange`=`slotchange`-1 WHERE `char_id`='%d' LIMIT 1", char_db, from_id ) ) {
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `slotchange`=`slotchange`-1 WHERE `char_id`='%d' LIMIT 1", char_db, from_id ) ) {
+		Sql_ShowDebug(inter->sql_handle);
 		return false;
 	}
 	
@@ -1513,18 +1513,18 @@ int char_rename_char_sql(struct char_session_data *sd, int char_id)
 	if( char_dat.rename == 0 )
 		return 1;
 
-	SQL->EscapeStringLen(sql_handle, esc_name, sd->new_name, strnlen(sd->new_name, NAME_LENGTH));
+	SQL->EscapeStringLen(inter->sql_handle, esc_name, sd->new_name, strnlen(sd->new_name, NAME_LENGTH));
 
 	// check if the char exist
-	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT 1 FROM `%s` WHERE `name` LIKE '%s' LIMIT 1", char_db, esc_name) )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT 1 FROM `%s` WHERE `name` LIKE '%s' LIMIT 1", char_db, esc_name) )
 	{
-		Sql_ShowDebug(sql_handle);
+		Sql_ShowDebug(inter->sql_handle);
 		return 4;
 	}
 
-	if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `name` = '%s', `rename` = '%d' WHERE `char_id` = '%d'", char_db, esc_name, --char_dat.rename, char_id) )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `name` = '%s', `rename` = '%d' WHERE `char_id` = '%d'", char_db, esc_name, --char_dat.rename, char_id) )
 	{
-		Sql_ShowDebug(sql_handle);
+		Sql_ShowDebug(inter->sql_handle);
 		return 3;
 	}
 
@@ -1538,11 +1538,11 @@ int char_rename_char_sql(struct char_session_data *sd, int char_id)
 	// log change
 	if( log_char )
 	{
-		if( SQL_ERROR == SQL->Query(sql_handle,
+		if( SQL_ERROR == SQL->Query(inter->sql_handle,
 			"INSERT INTO `%s` (`time`, `char_msg`,`account_id`,`char_id`,`char_num`,`name`,`str`,`agi`,`vit`,`int`,`dex`,`luk`,`hair`,`hair_color`)"
 			"VALUES (NOW(), '%s', '%d', '%d', '%d', '%s', '0', '0', '0', '0', '0', '0', '0', '0')",
 			charlog_db, "change char name", sd->account_id, char_dat.char_id, char_dat.slot, esc_name) )
-			Sql_ShowDebug(sql_handle);
+			Sql_ShowDebug(inter->sql_handle);
 	}
 
 	return 0;
@@ -1583,17 +1583,17 @@ int char_check_char_name(char * name, char * esc_name)
 				return -5;
 	}
 	if( name_ignoring_case ) {
-		if( SQL_ERROR == SQL->Query(sql_handle, "SELECT 1 FROM `%s` WHERE BINARY `name` = '%s' LIMIT 1", char_db, esc_name) ) {
-			Sql_ShowDebug(sql_handle);
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT 1 FROM `%s` WHERE BINARY `name` = '%s' LIMIT 1", char_db, esc_name) ) {
+			Sql_ShowDebug(inter->sql_handle);
 			return -2;
 		}
 	} else {
-		if( SQL_ERROR == SQL->Query(sql_handle, "SELECT 1 FROM `%s` WHERE `name` = '%s' LIMIT 1", char_db, esc_name) ) {
-			Sql_ShowDebug(sql_handle);
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT 1 FROM `%s` WHERE `name` = '%s' LIMIT 1", char_db, esc_name) ) {
+			Sql_ShowDebug(inter->sql_handle);
 			return -2;
 		}
 	}
-	if( SQL->NumRows(sql_handle) > 0 )
+	if( SQL->NumRows(inter->sql_handle) > 0 )
 		return -1; // name already exists
 
 	return 0;
@@ -1616,7 +1616,7 @@ int char_make_new_char_sql(struct char_session_data* sd, char* name_, int str, i
 
 	safestrncpy(name, name_, NAME_LENGTH);
 	normalize_name(name,TRIM_CHARS);
-	SQL->EscapeStringLen(sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
+	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
 
 	flag = chr->check_char_name(name,esc_name);
 	if( flag < 0 )
@@ -1643,41 +1643,41 @@ int char_make_new_char_sql(struct char_session_data* sd, char* name_, int str, i
 
 #if PACKETVER >= 20120307
 	//Insert the new char entry to the database
-	if( SQL_ERROR == SQL->Query(sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `zeny`, `status_point`,`str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `zeny`, `status_point`,`str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
 		"`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`) VALUES ("
 		"'%d', '%d', '%s', '%d',  '%d','%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d')",
 		char_db, sd->account_id , slot, esc_name, start_zeny, 48, str, agi, vit, int_, dex, luk,
 		(40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
 		mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y) )
 	{
-		Sql_ShowDebug(sql_handle);
+		Sql_ShowDebug(inter->sql_handle);
 		return -2; //No, stop the procedure!
 	}
 #else
 	//Insert the new char entry to the database
-	if( SQL_ERROR == SQL->Query(sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `zeny`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `zeny`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
 							   "`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`) VALUES ("
 							   "'%d', '%d', '%s', '%d',  '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d')",
 							   char_db, sd->account_id , slot, esc_name, start_zeny, str, agi, vit, int_, dex, luk,
 							   (40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
 							   mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y) )
 	{
-		Sql_ShowDebug(sql_handle);
+		Sql_ShowDebug(inter->sql_handle);
 		return -2; //No, stop the procedure!
 	}
 #endif
 	//Retrieve the newly auto-generated char id
-	char_id = (int)SQL->LastInsertId(sql_handle);
+	char_id = (int)SQL->LastInsertId(inter->sql_handle);
 
 	if( !char_id )
 		return -2;
 
 	// Validation success, log result
 	if (log_char) {
-		if( SQL_ERROR == SQL->Query(sql_handle, "INSERT INTO `%s` (`time`, `char_msg`,`account_id`,`char_id`,`char_num`,`name`,`str`,`agi`,`vit`,`int`,`dex`,`luk`,`hair`,`hair_color`)"
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`time`, `char_msg`,`account_id`,`char_id`,`char_num`,`name`,`str`,`agi`,`vit`,`int`,`dex`,`luk`,`hair`,`hair_color`)"
 			"VALUES (NOW(), '%s', '%d', '%d', '%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
 			charlog_db, "make new char", sd->account_id, char_id, slot, esc_name, str, agi, vit, int_, dex, luk, hair_style, hair_color) )
-			Sql_ShowDebug(sql_handle);
+			Sql_ShowDebug(inter->sql_handle);
 	}
 
 	//Give the char the default items
@@ -1685,21 +1685,21 @@ int char_make_new_char_sql(struct char_session_data* sd, char* name_, int str, i
 		// FIXME: How to define if an item is stackable without having to lookup itemdb? [panikon]
 		if( start_items[k+2] == 1 )
 		{
-			if( SQL_ERROR == SQL->Query(sql_handle,
+			if( SQL_ERROR == SQL->Query(inter->sql_handle,
 				"INSERT INTO `%s` (`char_id`,`nameid`, `amount`, `identify`) VALUES ('%d', '%d', '%d', '%d')",
 				inventory_db, char_id, start_items[k], start_items[k + 1], 1) )
-					Sql_ShowDebug(sql_handle);
+					Sql_ShowDebug(inter->sql_handle);
 		}
 		else if( start_items[k+2] == 0 )
 		{
 			// Non-stackable items should have their own entries (issue: 7279)
 			for( l = 0; l < start_items[k+1]; l++ )
 			{
-				if( SQL_ERROR == SQL->Query(sql_handle,
+				if( SQL_ERROR == SQL->Query(inter->sql_handle,
 					"INSERT INTO `%s` (`char_id`,`nameid`, `amount`, `identify`) VALUES ('%d', '%d', '%d', '%d')",
 					inventory_db, char_id, start_items[k], 1, 1)
 					)
-					Sql_ShowDebug(sql_handle);
+					Sql_ShowDebug(inter->sql_handle);
 			}
 		}
 	}
@@ -1715,10 +1715,10 @@ int char_divorce_char_sql(int partner_id1, int partner_id2)
 {
 	unsigned char buf[64];
 
-	if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `partner_id`='0' WHERE `char_id`='%d' OR `char_id`='%d' LIMIT 2", char_db, partner_id1, partner_id2) )
-		Sql_ShowDebug(sql_handle);
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE (`nameid`='%d' OR `nameid`='%d') AND (`char_id`='%d' OR `char_id`='%d') LIMIT 2", inventory_db, WEDDING_RING_M, WEDDING_RING_F, partner_id1, partner_id2) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `partner_id`='0' WHERE `char_id`='%d' OR `char_id`='%d' LIMIT 2", char_db, partner_id1, partner_id2) )
+		Sql_ShowDebug(inter->sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE (`nameid`='%d' OR `nameid`='%d') AND (`char_id`='%d' OR `char_id`='%d') LIMIT 2", inventory_db, WEDDING_RING_M, WEDDING_RING_F, partner_id1, partner_id2) )
+		Sql_ShowDebug(inter->sql_handle);
 
 	WBUFW(buf,0) = 0x2b12;
 	WBUFL(buf,2) = partner_id1;
@@ -1742,30 +1742,30 @@ int char_delete_char_sql(int char_id)
 	char *data;
 	size_t len;
 
-	if (SQL_ERROR == SQL->Query(sql_handle, "SELECT `name`,`account_id`,`party_id`,`guild_id`,`base_level`,`homun_id`,`partner_id`,`father`,`mother`,`elemental_id` FROM `%s` WHERE `char_id`='%d'", char_db, char_id))
-		Sql_ShowDebug(sql_handle);
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `name`,`account_id`,`party_id`,`guild_id`,`base_level`,`homun_id`,`partner_id`,`father`,`mother`,`elemental_id` FROM `%s` WHERE `char_id`='%d'", char_db, char_id))
+		Sql_ShowDebug(inter->sql_handle);
 
-	if( SQL_SUCCESS != SQL->NextRow(sql_handle) )
+	if( SQL_SUCCESS != SQL->NextRow(inter->sql_handle) )
 	{
 		ShowError("chr->delete_char_sql: Unable to fetch character data, deletion aborted.\n");
-		SQL->FreeResult(sql_handle);
+		SQL->FreeResult(inter->sql_handle);
 		return -1;
 	}
 
-	SQL->GetData(sql_handle, 0, &data, &len); safestrncpy(name, data, NAME_LENGTH);
-	SQL->GetData(sql_handle, 1, &data, NULL); account_id = atoi(data);
-	SQL->GetData(sql_handle, 2, &data, NULL); party_id = atoi(data);
-	SQL->GetData(sql_handle, 3, &data, NULL); guild_id = atoi(data);
-	SQL->GetData(sql_handle, 4, &data, NULL); base_level = atoi(data);
-	SQL->GetData(sql_handle, 5, &data, NULL); hom_id = atoi(data);
-	SQL->GetData(sql_handle, 6, &data, NULL); partner_id = atoi(data);
-	SQL->GetData(sql_handle, 7, &data, NULL); father_id = atoi(data);
-	SQL->GetData(sql_handle, 8, &data, NULL); mother_id = atoi(data);
-	SQL->GetData(sql_handle, 9, &data, NULL);
+	SQL->GetData(inter->sql_handle, 0, &data, &len); safestrncpy(name, data, NAME_LENGTH);
+	SQL->GetData(inter->sql_handle, 1, &data, NULL); account_id = atoi(data);
+	SQL->GetData(inter->sql_handle, 2, &data, NULL); party_id = atoi(data);
+	SQL->GetData(inter->sql_handle, 3, &data, NULL); guild_id = atoi(data);
+	SQL->GetData(inter->sql_handle, 4, &data, NULL); base_level = atoi(data);
+	SQL->GetData(inter->sql_handle, 5, &data, NULL); hom_id = atoi(data);
+	SQL->GetData(inter->sql_handle, 6, &data, NULL); partner_id = atoi(data);
+	SQL->GetData(inter->sql_handle, 7, &data, NULL); father_id = atoi(data);
+	SQL->GetData(inter->sql_handle, 8, &data, NULL); mother_id = atoi(data);
+	SQL->GetData(inter->sql_handle, 9, &data, NULL);
 	elemental_id = atoi(data);
 
-	SQL->EscapeStringLen(sql_handle, esc_name, name, min(len, NAME_LENGTH));
-	SQL->FreeResult(sql_handle);
+	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, min(len, NAME_LENGTH));
+	SQL->FreeResult(inter->sql_handle);
 
 	//check for config char del condition [Lupus]
 	// TODO: Move this out to packet processing (0x68/0x1fb).
@@ -1785,10 +1785,10 @@ int char_delete_char_sql(int char_id)
 	{ // Char is Baby
 		unsigned char buf[64];
 
-		if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `child`='0' WHERE `char_id`='%d' OR `char_id`='%d'", char_db, father_id, mother_id) )
-			Sql_ShowDebug(sql_handle);
-		if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `id` = '410'AND (`char_id`='%d' OR `char_id`='%d')", skill_db, father_id, mother_id) )
-			Sql_ShowDebug(sql_handle);
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `child`='0' WHERE `char_id`='%d' OR `char_id`='%d'", char_db, father_id, mother_id) )
+			Sql_ShowDebug(inter->sql_handle);
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `id` = '410'AND (`char_id`='%d' OR `char_id`='%d')", skill_db, father_id, mother_id) )
+			Sql_ShowDebug(inter->sql_handle);
 
 		WBUFW(buf,0) = 0x2b25;
 		WBUFL(buf,2) = father_id;
@@ -1803,14 +1803,14 @@ int char_delete_char_sql(int char_id)
 
 	/* delete char's pet */
 	//Delete the hatched pet if you have one...
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d' AND `incubate` = '0'", pet_db, char_id) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d' AND `incubate` = '0'", pet_db, char_id) )
+		Sql_ShowDebug(inter->sql_handle);
 
 	//Delete all pets that are stored in eggs (inventory + cart)
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` USING `%s` JOIN `%s` ON `pet_id` = `card1`|`card2`<<16 WHERE `%s`.char_id = '%d' AND card0 = -256", pet_db, pet_db, inventory_db, inventory_db, char_id) )
-		Sql_ShowDebug(sql_handle);
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` USING `%s` JOIN `%s` ON `pet_id` = `card1`|`card2`<<16 WHERE `%s`.char_id = '%d' AND card0 = -256", pet_db, pet_db, cart_db, cart_db, char_id) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` USING `%s` JOIN `%s` ON `pet_id` = `card1`|`card2`<<16 WHERE `%s`.char_id = '%d' AND card0 = -256", pet_db, pet_db, inventory_db, inventory_db, char_id) )
+		Sql_ShowDebug(inter->sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` USING `%s` JOIN `%s` ON `pet_id` = `card1`|`card2`<<16 WHERE `%s`.char_id = '%d' AND card0 = -256", pet_db, pet_db, cart_db, cart_db, char_id) )
+		Sql_ShowDebug(inter->sql_handle);
 
 	/* remove homunculus */
 	if( hom_id )
@@ -1824,72 +1824,72 @@ int char_delete_char_sql(int char_id)
 	inter_mercenary->owner_delete(char_id);
 
 	/* delete char's friends list */
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d'", friend_db, char_id) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d'", friend_db, char_id) )
+		Sql_ShowDebug(inter->sql_handle);
 
 	/* delete char from other's friend list */
 	//NOTE: Won't this cause problems for people who are already online? [Skotlex]
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `friend_id` = '%d'", friend_db, char_id) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `friend_id` = '%d'", friend_db, char_id) )
+		Sql_ShowDebug(inter->sql_handle);
 
 #ifdef HOTKEY_SAVING
 	/* delete hotkeys */
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", hotkey_db, char_id) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", hotkey_db, char_id) )
+		Sql_ShowDebug(inter->sql_handle);
 #endif
 
 	/* delete inventory */
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", inventory_db, char_id) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", inventory_db, char_id) )
+		Sql_ShowDebug(inter->sql_handle);
 
 	/* delete cart inventory */
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", cart_db, char_id) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", cart_db, char_id) )
+		Sql_ShowDebug(inter->sql_handle);
 
 	/* delete memo areas */
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", memo_db, char_id) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", memo_db, char_id) )
+		Sql_ShowDebug(inter->sql_handle);
 
 	/* delete character registry */
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", char_reg_str_db, char_id) )
-		Sql_ShowDebug(sql_handle);
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", char_reg_num_db, char_id) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", char_reg_str_db, char_id) )
+		Sql_ShowDebug(inter->sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", char_reg_num_db, char_id) )
+		Sql_ShowDebug(inter->sql_handle);
 
 	/* delete skills */
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", skill_db, char_id) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", skill_db, char_id) )
+		Sql_ShowDebug(inter->sql_handle);
 
 	/* delete mails (only received) */
-	if (SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `dest_id`='%d'", mail_db, char_id))
-		Sql_ShowDebug(sql_handle);
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `dest_id`='%d'", mail_db, char_id))
+		Sql_ShowDebug(inter->sql_handle);
 
 #ifdef ENABLE_SC_SAVING
 	/* status changes */
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `char_id`='%d'", scdata_db, account_id, char_id) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `char_id`='%d'", scdata_db, account_id, char_id) )
+		Sql_ShowDebug(inter->sql_handle);
 #endif
 
 	/* delete character */
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", char_db, char_id) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", char_db, char_id) )
+		Sql_ShowDebug(inter->sql_handle);
 	else if( log_char ) {
-		if( SQL_ERROR == SQL->Query(sql_handle,
+		if( SQL_ERROR == SQL->Query(inter->sql_handle,
 			"INSERT INTO `%s`(`time`, `account_id`, `char_id`, `char_num`, `char_msg`, `name`)"
 			" VALUES (NOW(), '%d', '%d', '%d', 'Deleted character', '%s')",
 			charlog_db, account_id, char_id, 0, esc_name) )
-			Sql_ShowDebug(sql_handle);
+			Sql_ShowDebug(inter->sql_handle);
 	}
 
 	/* No need as we used inter_guild->leave [Skotlex]
 	// Also delete info from guildtables.
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", guild_member_db, char_id) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", guild_member_db, char_id) )
+		Sql_ShowDebug(inter->sql_handle);
 	*/
 
-	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `guild_id` FROM `%s` WHERE `char_id` = '%d'", guild_db, char_id) )
-		Sql_ShowDebug(sql_handle);
-	else if( SQL->NumRows(sql_handle) > 0 )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `guild_id` FROM `%s` WHERE `char_id` = '%d'", guild_db, char_id) )
+		Sql_ShowDebug(inter->sql_handle);
+	else if( SQL->NumRows(inter->sql_handle) > 0 )
 		mapif->parse_BreakGuild(0,guild_id);
 	else if( guild_id )
 		inter_guild->leave(guild_id, account_id, char_id);// Leave your guild.
@@ -2044,8 +2044,8 @@ void char_mmo_char_send_ban_list(int fd, struct char_session_data *sd) {
 					WFIFOL(fd, 4 + (24*c)) = 0;
 					/* also update on mysql */
 					sd->unban_time[i] = 0;
-					if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `unban_time`='0' WHERE `char_id`='%d' LIMIT 1", char_db, sd->found_char[i]) )
-						Sql_ShowDebug(sql_handle);
+					if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `unban_time`='0' WHERE `char_id`='%d' LIMIT 1", char_db, sd->found_char[i]) )
+						Sql_ShowDebug(inter->sql_handle);
 				}
 				c++;
 			}
@@ -2103,66 +2103,66 @@ int char_mmo_char_send_characters(int fd, struct char_session_data* sd)
 
 int char_char_married(int pl1, int pl2)
 {
-	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `partner_id` FROM `%s` WHERE `char_id` = '%d'", char_db, pl1) )
-		Sql_ShowDebug(sql_handle);
-	else if( SQL_SUCCESS == SQL->NextRow(sql_handle) )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `partner_id` FROM `%s` WHERE `char_id` = '%d'", char_db, pl1) )
+		Sql_ShowDebug(inter->sql_handle);
+	else if( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) )
 	{
 		char* data;
 
-		SQL->GetData(sql_handle, 0, &data, NULL);
+		SQL->GetData(inter->sql_handle, 0, &data, NULL);
 		if( pl2 == atoi(data) )
 		{
-			SQL->FreeResult(sql_handle);
+			SQL->FreeResult(inter->sql_handle);
 			return 1;
 		}
 	}
-	SQL->FreeResult(sql_handle);
+	SQL->FreeResult(inter->sql_handle);
 	return 0;
 }
 
 int char_char_child(int parent_id, int child_id)
 {
-	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `child` FROM `%s` WHERE `char_id` = '%d'", char_db, parent_id) )
-		Sql_ShowDebug(sql_handle);
-	else if( SQL_SUCCESS == SQL->NextRow(sql_handle) )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `child` FROM `%s` WHERE `char_id` = '%d'", char_db, parent_id) )
+		Sql_ShowDebug(inter->sql_handle);
+	else if( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) )
 	{
 		char* data;
 
-		SQL->GetData(sql_handle, 0, &data, NULL);
+		SQL->GetData(inter->sql_handle, 0, &data, NULL);
 		if( child_id == atoi(data) )
 		{
-			SQL->FreeResult(sql_handle);
+			SQL->FreeResult(inter->sql_handle);
 			return 1;
 		}
 	}
-	SQL->FreeResult(sql_handle);
+	SQL->FreeResult(inter->sql_handle);
 	return 0;
 }
 
 int char_char_family(int cid1, int cid2, int cid3)
 {
-	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `char_id`,`partner_id`,`child` FROM `%s` WHERE `char_id` IN ('%d','%d','%d')", char_db, cid1, cid2, cid3) )
-		Sql_ShowDebug(sql_handle);
-	else while( SQL_SUCCESS == SQL->NextRow(sql_handle) )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `char_id`,`partner_id`,`child` FROM `%s` WHERE `char_id` IN ('%d','%d','%d')", char_db, cid1, cid2, cid3) )
+		Sql_ShowDebug(inter->sql_handle);
+	else while( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) )
 	{
 		int charid;
 		int partnerid;
 		int childid;
 		char* data;
 
-		SQL->GetData(sql_handle, 0, &data, NULL); charid = atoi(data);
-		SQL->GetData(sql_handle, 1, &data, NULL); partnerid = atoi(data);
-		SQL->GetData(sql_handle, 2, &data, NULL); childid = atoi(data);
+		SQL->GetData(inter->sql_handle, 0, &data, NULL); charid = atoi(data);
+		SQL->GetData(inter->sql_handle, 1, &data, NULL); partnerid = atoi(data);
+		SQL->GetData(inter->sql_handle, 2, &data, NULL); childid = atoi(data);
 
 		if( (cid1 == charid    && ((cid2 == partnerid && cid3 == childid  ) || (cid2 == childid   && cid3 == partnerid))) ||
 			(cid1 == partnerid && ((cid2 == charid    && cid3 == childid  ) || (cid2 == childid   && cid3 == charid   ))) ||
 			(cid1 == childid   && ((cid2 == charid    && cid3 == partnerid) || (cid2 == partnerid && cid3 == charid   ))) )
 		{
-			SQL->FreeResult(sql_handle);
+			SQL->FreeResult(inter->sql_handle);
 			return childid;
 		}
 	}
-	SQL->FreeResult(sql_handle);
+	SQL->FreeResult(inter->sql_handle);
 	return 0;
 }
 
@@ -2441,13 +2441,13 @@ int char_parse_fromlogin_changesex_reply(int fd)
 		node->sex = sex;
 
 	// get characters
-	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `char_id`,`class`,`guild_id` FROM `%s` WHERE `account_id` = '%d'", char_db, acc) )
-		Sql_ShowDebug(sql_handle);
-	for( i = 0; i < MAX_CHARS && SQL_SUCCESS == SQL->NextRow(sql_handle); ++i )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `char_id`,`class`,`guild_id` FROM `%s` WHERE `account_id` = '%d'", char_db, acc) )
+		Sql_ShowDebug(inter->sql_handle);
+	for( i = 0; i < MAX_CHARS && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i )
 	{
-		SQL->GetData(sql_handle, 0, &data, NULL); char_id[i] = atoi(data);
-		SQL->GetData(sql_handle, 1, &data, NULL); class_[i] = atoi(data);
-		SQL->GetData(sql_handle, 2, &data, NULL); guild_id[i] = atoi(data);
+		SQL->GetData(inter->sql_handle, 0, &data, NULL); char_id[i] = atoi(data);
+		SQL->GetData(inter->sql_handle, 1, &data, NULL); class_[i] = atoi(data);
+		SQL->GetData(inter->sql_handle, 2, &data, NULL); guild_id[i] = atoi(data);
 	}
 	num = i;
 	for( i = 0; i < num; ++i )
@@ -2477,19 +2477,19 @@ int char_parse_fromlogin_changesex_reply(int fd)
 				class_[i] = (sex ? JOB_KAGEROU : JOB_OBORO);
 		}
 
-		if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `equip`='0' WHERE `char_id`='%d'", inventory_db, char_id[i]) )
-			Sql_ShowDebug(sql_handle);
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `equip`='0' WHERE `char_id`='%d'", inventory_db, char_id[i]) )
+			Sql_ShowDebug(inter->sql_handle);
 
-		if( SQL_ERROR == SQL->Query(sql_handle,
+		if( SQL_ERROR == SQL->Query(inter->sql_handle,
 			"UPDATE `%s` SET `class`='%d', `weapon`='0', `shield`='0', `head_top`='0', `head_mid`='0', "
 			"`head_bottom`='0' WHERE `char_id`='%d'",
 			char_db, class_[i], char_id[i]) )
-			Sql_ShowDebug(sql_handle);
+			Sql_ShowDebug(inter->sql_handle);
 
 		if( guild_id[i] )// If there is a guild, update the guild_member data [Skotlex]
 			inter_guild->sex_changed(guild_id[i], acc, char_id[i], sex);
 	}
-	SQL->FreeResult(sql_handle);
+	SQL->FreeResult(inter->sql_handle);
 
 	// disconnect player if online on char-server
 	chr->disconnect_player(acc);
@@ -2849,51 +2849,51 @@ void char_read_fame_list(void) {
 	memset(chemist_fame_list, 0, sizeof(chemist_fame_list));
 	memset(taekwon_fame_list, 0, sizeof(taekwon_fame_list));
 	// Build Blacksmith ranking list
-	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `char_id`,`fame`,`name` FROM `%s` WHERE `fame`>0 AND (`class`='%d' OR `class`='%d' OR `class`='%d' OR `class`='%d' OR `class`='%d' OR `class`='%d') ORDER BY `fame` DESC LIMIT 0,%d", char_db, JOB_BLACKSMITH, JOB_WHITESMITH, JOB_BABY_BLACKSMITH, JOB_MECHANIC, JOB_MECHANIC_T, JOB_BABY_MECHANIC, fame_list_size_smith) )
-		Sql_ShowDebug(sql_handle);
-	for( i = 0; i < fame_list_size_smith && SQL_SUCCESS == SQL->NextRow(sql_handle); ++i )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `char_id`,`fame`,`name` FROM `%s` WHERE `fame`>0 AND (`class`='%d' OR `class`='%d' OR `class`='%d' OR `class`='%d' OR `class`='%d' OR `class`='%d') ORDER BY `fame` DESC LIMIT 0,%d", char_db, JOB_BLACKSMITH, JOB_WHITESMITH, JOB_BABY_BLACKSMITH, JOB_MECHANIC, JOB_MECHANIC_T, JOB_BABY_MECHANIC, fame_list_size_smith) )
+		Sql_ShowDebug(inter->sql_handle);
+	for( i = 0; i < fame_list_size_smith && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i )
 	{
 		// char_id
-		SQL->GetData(sql_handle, 0, &data, NULL);
+		SQL->GetData(inter->sql_handle, 0, &data, NULL);
 		smith_fame_list[i].id = atoi(data);
 		// fame
-		SQL->GetData(sql_handle, 1, &data, &len);
+		SQL->GetData(inter->sql_handle, 1, &data, &len);
 		smith_fame_list[i].fame = atoi(data);
 		// name
-		SQL->GetData(sql_handle, 2, &data, &len);
+		SQL->GetData(inter->sql_handle, 2, &data, &len);
 		memcpy(smith_fame_list[i].name, data, min(len, NAME_LENGTH));
 	}
 	// Build Alchemist ranking list
-	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `char_id`,`fame`,`name` FROM `%s` WHERE `fame`>0 AND (`class`='%d' OR `class`='%d' OR `class`='%d' OR `class`='%d' OR `class`='%d' OR `class`='%d') ORDER BY `fame` DESC LIMIT 0,%d", char_db, JOB_ALCHEMIST, JOB_CREATOR, JOB_BABY_ALCHEMIST, JOB_GENETIC, JOB_GENETIC_T, JOB_BABY_GENETIC, fame_list_size_chemist) )
-		Sql_ShowDebug(sql_handle);
-	for( i = 0; i < fame_list_size_chemist && SQL_SUCCESS == SQL->NextRow(sql_handle); ++i )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `char_id`,`fame`,`name` FROM `%s` WHERE `fame`>0 AND (`class`='%d' OR `class`='%d' OR `class`='%d' OR `class`='%d' OR `class`='%d' OR `class`='%d') ORDER BY `fame` DESC LIMIT 0,%d", char_db, JOB_ALCHEMIST, JOB_CREATOR, JOB_BABY_ALCHEMIST, JOB_GENETIC, JOB_GENETIC_T, JOB_BABY_GENETIC, fame_list_size_chemist) )
+		Sql_ShowDebug(inter->sql_handle);
+	for( i = 0; i < fame_list_size_chemist && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i )
 	{
 		// char_id
-		SQL->GetData(sql_handle, 0, &data, NULL);
+		SQL->GetData(inter->sql_handle, 0, &data, NULL);
 		chemist_fame_list[i].id = atoi(data);
 		// fame
-		SQL->GetData(sql_handle, 1, &data, &len);
+		SQL->GetData(inter->sql_handle, 1, &data, &len);
 		chemist_fame_list[i].fame = atoi(data);
 		// name
-		SQL->GetData(sql_handle, 2, &data, &len);
+		SQL->GetData(inter->sql_handle, 2, &data, &len);
 		memcpy(chemist_fame_list[i].name, data, min(len, NAME_LENGTH));
 	}
 	// Build Taekwon ranking list
-	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `char_id`,`fame`,`name` FROM `%s` WHERE `fame`>0 AND (`class`='%d') ORDER BY `fame` DESC LIMIT 0,%d", char_db, JOB_TAEKWON, fame_list_size_taekwon) )
-		Sql_ShowDebug(sql_handle);
-	for( i = 0; i < fame_list_size_taekwon && SQL_SUCCESS == SQL->NextRow(sql_handle); ++i )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `char_id`,`fame`,`name` FROM `%s` WHERE `fame`>0 AND (`class`='%d') ORDER BY `fame` DESC LIMIT 0,%d", char_db, JOB_TAEKWON, fame_list_size_taekwon) )
+		Sql_ShowDebug(inter->sql_handle);
+	for( i = 0; i < fame_list_size_taekwon && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i )
 	{
 		// char_id
-		SQL->GetData(sql_handle, 0, &data, NULL);
+		SQL->GetData(inter->sql_handle, 0, &data, NULL);
 		taekwon_fame_list[i].id = atoi(data);
 		// fame
-		SQL->GetData(sql_handle, 1, &data, &len);
+		SQL->GetData(inter->sql_handle, 1, &data, &len);
 		taekwon_fame_list[i].fame = atoi(data);
 		// name
-		SQL->GetData(sql_handle, 2, &data, &len);
+		SQL->GetData(inter->sql_handle, 2, &data, &len);
 		memcpy(taekwon_fame_list[i].name, data, min(len, NAME_LENGTH));
 	}
-	SQL->FreeResult(sql_handle);
+	SQL->FreeResult(inter->sql_handle);
 }
 
 // Send map-servers the fame ranking lists
@@ -2948,11 +2948,11 @@ int char_loadName(int char_id, char* name)
 	char* data;
 	size_t len;
 
-	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `name` FROM `%s` WHERE `char_id`='%d'", char_db, char_id) )
-		Sql_ShowDebug(sql_handle);
-	else if( SQL_SUCCESS == SQL->NextRow(sql_handle) )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `name` FROM `%s` WHERE `char_id`='%d'", char_db, char_id) )
+		Sql_ShowDebug(inter->sql_handle);
+	else if( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) )
 	{
-		SQL->GetData(sql_handle, 0, &data, &len);
+		SQL->GetData(inter->sql_handle, 0, &data, &len);
 		safestrncpy(name, data, NAME_LENGTH);
 		return 1;
 	}
@@ -2999,8 +2999,8 @@ void mapif_server_reset(int id)
 		WBUFW(buf,2) = j * 4 + 10;
 		mapif->sendallwos(fd, buf, WBUFW(buf,2));
 	}
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `index`='%d'", ragsrvinfo_db, server[id].fd) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `index`='%d'", ragsrvinfo_db, server[id].fd) )
+		Sql_ShowDebug(inter->sql_handle);
 	chr->online_char_db->foreach(chr->online_char_db,chr->db_setoffline,id); //Tag relevant chars as 'in disconnected' server.
 	mapif->server_destroy(id);
 	mapif->server_init(id);
@@ -3119,14 +3119,14 @@ void char_parse_frommap_map_names(int fd, int id)
 void char_send_scdata(int fd, int aid, int cid)
 {
 	#ifdef ENABLE_SC_SAVING
-	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `type`, `tick`, `val1`, `val2`, `val3`, `val4` "
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `type`, `tick`, `val1`, `val2`, `val3`, `val4` "
 		"FROM `%s` WHERE `account_id` = '%d' AND `char_id`='%d'",
 		scdata_db, aid, cid) )
 	{
-		Sql_ShowDebug(sql_handle);
+		Sql_ShowDebug(inter->sql_handle);
 		return;
 	}
-	if( SQL->NumRows(sql_handle) > 0 ) {
+	if( SQL->NumRows(inter->sql_handle) > 0 ) {
 		struct status_change_data scdata;
 		int count;
 		char* data;
@@ -3136,14 +3136,14 @@ void char_send_scdata(int fd, int aid, int cid)
 		WFIFOW(fd,0) = 0x2b1d;
 		WFIFOL(fd,4) = aid;
 		WFIFOL(fd,8) = cid;
-		for( count = 0; count < 50 && SQL_SUCCESS == SQL->NextRow(sql_handle); ++count )
+		for( count = 0; count < 50 && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++count )
 		{
-			SQL->GetData(sql_handle, 0, &data, NULL); scdata.type = atoi(data);
-			SQL->GetData(sql_handle, 1, &data, NULL); scdata.tick = atoi(data);
-			SQL->GetData(sql_handle, 2, &data, NULL); scdata.val1 = atoi(data);
-			SQL->GetData(sql_handle, 3, &data, NULL); scdata.val2 = atoi(data);
-			SQL->GetData(sql_handle, 4, &data, NULL); scdata.val3 = atoi(data);
-			SQL->GetData(sql_handle, 5, &data, NULL); scdata.val4 = atoi(data);
+			SQL->GetData(inter->sql_handle, 0, &data, NULL); scdata.type = atoi(data);
+			SQL->GetData(inter->sql_handle, 1, &data, NULL); scdata.tick = atoi(data);
+			SQL->GetData(inter->sql_handle, 2, &data, NULL); scdata.val1 = atoi(data);
+			SQL->GetData(inter->sql_handle, 3, &data, NULL); scdata.val2 = atoi(data);
+			SQL->GetData(inter->sql_handle, 4, &data, NULL); scdata.val3 = atoi(data);
+			SQL->GetData(inter->sql_handle, 5, &data, NULL); scdata.val4 = atoi(data);
 			memcpy(WFIFOP(fd, 14+count*sizeof(struct status_change_data)), &scdata, sizeof(struct status_change_data));
 		}
 		if (count >= 50)
@@ -3154,8 +3154,8 @@ void char_send_scdata(int fd, int aid, int cid)
 			WFIFOSET(fd,WFIFOW(fd,2));
 
 			//Clear the data once loaded.
-			if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `char_id`='%d'", scdata_db, aid, cid) )
-				Sql_ShowDebug(sql_handle);
+			if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `char_id`='%d'", scdata_db, aid, cid) )
+				Sql_ShowDebug(inter->sql_handle);
 		}
 	} else { //no sc (needs a response)
 		WFIFOHEAD(fd,14);
@@ -3166,7 +3166,7 @@ void char_send_scdata(int fd, int aid, int cid)
 		WFIFOW(fd,12) = 0;
 		WFIFOSET(fd,WFIFOW(fd,2));
 	}
-	SQL->FreeResult(sql_handle);
+	SQL->FreeResult(inter->sql_handle);
 	#endif
 }
 
@@ -3371,9 +3371,9 @@ void char_parse_frommap_remove_friend(int fd)
 {
 	int char_id = RFIFOL(fd,2);
 	int friend_id = RFIFOL(fd,6);
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d' AND `friend_id`='%d' LIMIT 1",
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d' AND `friend_id`='%d' LIMIT 1",
 		friend_db, char_id, friend_id) ) {
-		Sql_ShowDebug(sql_handle);
+		Sql_ShowDebug(inter->sql_handle);
 	}
 	RFIFOSKIP(fd,10);
 }
@@ -3457,7 +3457,7 @@ void char_ban(int account_id, int char_id, time_t *unban_time, short year, short
 {
 	time_t timestamp;
 	struct tm *tmtime;
-	SqlStmt* stmt = SQL->StmtMalloc(sql_handle);
+	SqlStmt* stmt = SQL->StmtMalloc(inter->sql_handle);
 
 	if (*unban_time == 0 || *unban_time < time(NULL))
 		timestamp = time(NULL); // new ban
@@ -3497,8 +3497,8 @@ void char_ban(int account_id, int char_id, time_t *unban_time, short year, short
 void char_unban(int char_id, int *result)
 {
 	/* handled by char server, so no redirection */
-	if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `unban_time` = '0' WHERE `char_id` = '%d' LIMIT 1", char_db, char_id) ) {
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `unban_time` = '0' WHERE `char_id` = '%d' LIMIT 1", char_db, char_id) ) {
+		Sql_ShowDebug(inter->sql_handle);
 		*result = 1;
 	}
 }
@@ -3530,23 +3530,23 @@ void char_parse_frommap_change_account(int fd)
 	short second = RFIFOW(fd,42);
 	RFIFOSKIP(fd,44);
 
-	SQL->EscapeStringLen(sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
+	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
 
-	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `account_id`,`char_id`,`unban_time` FROM `%s` WHERE `name` = '%s'", char_db, esc_name) )
-		Sql_ShowDebug(sql_handle);
-	else if( SQL->NumRows(sql_handle) == 0 ) {
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id`,`char_id`,`unban_time` FROM `%s` WHERE `name` = '%s'", char_db, esc_name) )
+		Sql_ShowDebug(inter->sql_handle);
+	else if( SQL->NumRows(inter->sql_handle) == 0 ) {
 		result = 1; // 1-player not found
-	} else if( SQL_SUCCESS != SQL->NextRow(sql_handle) ) {
-		Sql_ShowDebug(sql_handle);
+	} else if( SQL_SUCCESS != SQL->NextRow(inter->sql_handle) ) {
+		Sql_ShowDebug(inter->sql_handle);
 		result = 1; // 1-player not found
 	} else {
 		int account_id, char_id;
 		char* data;
 		time_t unban_time;
 
-		SQL->GetData(sql_handle, 0, &data, NULL); account_id = atoi(data);
-		SQL->GetData(sql_handle, 1, &data, NULL); char_id = atoi(data);
-		SQL->GetData(sql_handle, 2, &data, NULL); unban_time = atol(data);
+		SQL->GetData(inter->sql_handle, 0, &data, NULL); account_id = atoi(data);
+		SQL->GetData(inter->sql_handle, 1, &data, NULL); char_id = atoi(data);
+		SQL->GetData(inter->sql_handle, 2, &data, NULL); unban_time = atol(data);
 
 		if( chr->login_fd <= 0 )
 			result = 3; // 3-login-server offline
@@ -3585,7 +3585,7 @@ void char_parse_frommap_change_account(int fd)
 		}
 	}
 
-	SQL->FreeResult(sql_handle);
+	SQL->FreeResult(inter->sql_handle);
 
 	// send answer if a player ask, not if the server ask
 	if( acc != -1 && type != 5 ) { // Don't send answer for changesex
@@ -3650,12 +3650,12 @@ void char_parse_frommap_ragsrvinfo(int fd)
 {
 	char esc_server_name[sizeof(server_name)*2+1];
 
-	SQL->EscapeString(sql_handle, esc_server_name, server_name);
+	SQL->EscapeString(inter->sql_handle, esc_server_name, server_name);
 
-	if( SQL_ERROR == SQL->Query(sql_handle, "INSERT INTO `%s` SET `index`='%d',`name`='%s',`exp`='%d',`jexp`='%d',`drop`='%d'",
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` SET `index`='%d',`name`='%s',`exp`='%d',`jexp`='%d',`drop`='%d'",
 		ragsrvinfo_db, fd, esc_server_name, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10)) )
 	{
-		Sql_ShowDebug(sql_handle);
+		Sql_ShowDebug(inter->sql_handle);
 	}
 	RFIFOSKIP(fd,14);
 }
@@ -3693,8 +3693,8 @@ void char_parse_frommap_save_status_change_data(int fd)
 	int count = RFIFOW(fd, 12);
 
 	/* clear; ensure no left overs e.g. permanent */
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `char_id`='%d'", scdata_db, aid, cid) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `char_id`='%d'", scdata_db, aid, cid) )
+		Sql_ShowDebug(inter->sql_handle);
 
 	if( count > 0 )
 	{
@@ -3712,8 +3712,8 @@ void char_parse_frommap_save_status_change_data(int fd)
 			StrBuf->Printf(&buf, "('%d','%d','%hu','%d','%d','%d','%d','%d')", aid, cid,
 				data.type, data.tick, data.val1, data.val2, data.val3, data.val4);
 		}
-		if( SQL_ERROR == SQL->QueryStr(sql_handle, StrBuf->Value(&buf)) )
-			Sql_ShowDebug(sql_handle);
+		if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) )
+			Sql_ShowDebug(inter->sql_handle);
 		StrBuf->Destroy(&buf);
 	}
 	#endif
@@ -3871,10 +3871,10 @@ void char_parse_frommap_scdata_update(int fd)
 	int val4 = RFIFOL(fd, 24);
 	short type = RFIFOW(fd, 10);
 
-	if( SQL_ERROR == SQL->Query(sql_handle, "REPLACE INTO `%s` (`account_id`,`char_id`,`type`,`tick`,`val1`,`val2`,`val3`,`val4`) VALUES ('%d','%d','%d',-1,'%d','%d','%d','%d')",
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`char_id`,`type`,`tick`,`val1`,`val2`,`val3`,`val4`) VALUES ('%d','%d','%d',-1,'%d','%d','%d','%d')",
 								scdata_db, account_id, char_id, type, val1, val2, val3, val4) )
 	{
-		Sql_ShowDebug(sql_handle);
+		Sql_ShowDebug(inter->sql_handle);
 	}
 	RFIFOSKIP(fd, 28);
 }
@@ -3885,10 +3885,10 @@ void char_parse_frommap_scdata_delete(int fd)
 	int char_id = RFIFOL(fd, 6);
 	short type = RFIFOW(fd, 10);
 
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `char_id` = '%d' AND `type` = '%d' LIMIT 1",
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `char_id` = '%d' AND `type` = '%d' LIMIT 1",
 								scdata_db, account_id, char_id, type) )
 	{
-		Sql_ShowDebug(sql_handle);
+		Sql_ShowDebug(inter->sql_handle);
 	}
 	RFIFOSKIP(fd, 12);
 }
@@ -4270,14 +4270,14 @@ static void char_delete2_req(int fd, struct char_session_data* sd)
 		return;
 	}
 
-	if( SQL_SUCCESS != SQL->Query(sql_handle, "SELECT `delete_date` FROM `%s` WHERE `char_id`='%d'", char_db, char_id) || SQL_SUCCESS != SQL->NextRow(sql_handle) )
+	if( SQL_SUCCESS != SQL->Query(inter->sql_handle, "SELECT `delete_date` FROM `%s` WHERE `char_id`='%d'", char_db, char_id) || SQL_SUCCESS != SQL->NextRow(inter->sql_handle) )
 	{
-		Sql_ShowDebug(sql_handle);
+		Sql_ShowDebug(inter->sql_handle);
 		chr->delete2_ack(fd, char_id, 3, 0);
 		return;
 	}
 
-	SQL->GetData(sql_handle, 0, &data, NULL); delete_date = strtoul(data, NULL, 10);
+	SQL->GetData(inter->sql_handle, 0, &data, NULL); delete_date = strtoul(data, NULL, 10);
 
 	if( delete_date ) {// character already queued for deletion
 		chr->delete2_ack(fd, char_id, 0, 0);
@@ -4289,16 +4289,16 @@ static void char_delete2_req(int fd, struct char_session_data* sd)
 	// see issue: 7338
 	if( char_aegis_delete )
 	{
-		if( SQL_SUCCESS != SQL->Query(sql_handle, "SELECT `party_id`, `guild_id` FROM `%s` WHERE `char_id`='%d'", char_db, char_id)
-		|| SQL_SUCCESS != SQL->NextRow(sql_handle)
+		if( SQL_SUCCESS != SQL->Query(inter->sql_handle, "SELECT `party_id`, `guild_id` FROM `%s` WHERE `char_id`='%d'", char_db, char_id)
+		|| SQL_SUCCESS != SQL->NextRow(inter->sql_handle)
 		)
 		{
-			Sql_ShowDebug(sql_handle);
+			Sql_ShowDebug(inter->sql_handle);
 			chr->delete2_ack(fd, char_id, 3, 0);
 			return;
 		}
-		SQL->GetData(sql_handle, 0, &data, NULL); party_id = atoi(data);
-		SQL->GetData(sql_handle, 1, &data, NULL); guild_id = atoi(data);
+		SQL->GetData(inter->sql_handle, 0, &data, NULL); party_id = atoi(data);
+		SQL->GetData(inter->sql_handle, 1, &data, NULL); guild_id = atoi(data);
 
 		if( guild_id )
 		{
@@ -4316,9 +4316,9 @@ static void char_delete2_req(int fd, struct char_session_data* sd)
 	// success
 	delete_date = time(NULL)+char_del_delay;
 
-	if( SQL_SUCCESS != SQL->Query(sql_handle, "UPDATE `%s` SET `delete_date`='%lu' WHERE `char_id`='%d'", char_db, (unsigned long)delete_date, char_id) )
+	if( SQL_SUCCESS != SQL->Query(inter->sql_handle, "UPDATE `%s` SET `delete_date`='%lu' WHERE `char_id`='%d'", char_db, (unsigned long)delete_date, char_id) )
 	{
-		Sql_ShowDebug(sql_handle);
+		Sql_ShowDebug(inter->sql_handle);
 		chr->delete2_ack(fd, char_id, 3, 0);
 		return;
 	}
@@ -4356,15 +4356,15 @@ static void char_delete2_accept(int fd, struct char_session_data* sd)
 		return;
 	}
 
-	if( SQL_SUCCESS != SQL->Query(sql_handle, "SELECT `base_level`,`delete_date` FROM `%s` WHERE `char_id`='%d'", char_db, char_id) || SQL_SUCCESS != SQL->NextRow(sql_handle) )
+	if( SQL_SUCCESS != SQL->Query(inter->sql_handle, "SELECT `base_level`,`delete_date` FROM `%s` WHERE `char_id`='%d'", char_db, char_id) || SQL_SUCCESS != SQL->NextRow(inter->sql_handle) )
 	{// data error
-		Sql_ShowDebug(sql_handle);
+		Sql_ShowDebug(inter->sql_handle);
 		chr->delete2_accept_ack(fd, char_id, 3);
 		return;
 	}
 
-	SQL->GetData(sql_handle, 0, &data, NULL); base_level = (unsigned int)strtoul(data, NULL, 10);
-	SQL->GetData(sql_handle, 1, &data, NULL); delete_date = strtoul(data, NULL, 10);
+	SQL->GetData(inter->sql_handle, 0, &data, NULL); base_level = (unsigned int)strtoul(data, NULL, 10);
+	SQL->GetData(inter->sql_handle, 1, &data, NULL); delete_date = strtoul(data, NULL, 10);
 
 	if( !delete_date || delete_date>time(NULL) )
 	{// not queued or delay not yet passed
@@ -4413,9 +4413,9 @@ static void char_delete2_cancel(int fd, struct char_session_data* sd)
 	// there is no need to check, whether or not the character was
 	// queued for deletion, as the client prints an error message by
 	// itself, if it was not the case (@see chr->delete2_cancel_ack)
-	if( SQL_SUCCESS != SQL->Query(sql_handle, "UPDATE `%s` SET `delete_date`='0' WHERE `char_id`='%d'", char_db, char_id) )
+	if( SQL_SUCCESS != SQL->Query(inter->sql_handle, "UPDATE `%s` SET `delete_date`='0' WHERE `char_id`='%d'", char_db, char_id) )
 	{
-		Sql_ShowDebug(sql_handle);
+		Sql_ShowDebug(inter->sql_handle);
 		chr->delete2_cancel_ack(fd, char_id, 2);
 		return;
 	}
@@ -4589,18 +4589,18 @@ void char_parse_char_select(int fd, struct char_session_data* sd, uint32 ipl)
 		return;
 	}
 
-	if ( SQL_SUCCESS != SQL->Query(sql_handle, "SELECT `char_id` FROM `%s` WHERE `account_id`='%d' AND `char_num`='%d'", char_db, sd->account_id, slot)
-	  || SQL_SUCCESS != SQL->NextRow(sql_handle)
-	  || SQL_SUCCESS != SQL->GetData(sql_handle, 0, &data, NULL) )
+	if ( SQL_SUCCESS != SQL->Query(inter->sql_handle, "SELECT `char_id` FROM `%s` WHERE `account_id`='%d' AND `char_num`='%d'", char_db, sd->account_id, slot)
+	  || SQL_SUCCESS != SQL->NextRow(inter->sql_handle)
+	  || SQL_SUCCESS != SQL->GetData(inter->sql_handle, 0, &data, NULL) )
 	{	//Not found?? May be forged packet.
-		Sql_ShowDebug(sql_handle);
-		SQL->FreeResult(sql_handle);
+		Sql_ShowDebug(inter->sql_handle);
+		SQL->FreeResult(inter->sql_handle);
 		chr->auth_error(fd, 0);
 		return;
 	}
 
 	char_id = atoi(data);
-	SQL->FreeResult(sql_handle);
+	SQL->FreeResult(inter->sql_handle);
 
 	/* client doesn't let it get to this point if you're banned, so its a forged packet */
 	if( sd->found_char[slot] == char_id && sd->unban_time[slot] > time(NULL) ) {
@@ -4625,11 +4625,11 @@ void char_parse_char_select(int fd, struct char_session_data* sd, uint32 ipl)
 	if (log_char) {
 		char esc_name[NAME_LENGTH*2+1];
 		// FIXME: Why are we re-escaping the name if it was already escaped in rename/make_new_char? [Panikon]
-		SQL->EscapeStringLen(sql_handle, esc_name, char_dat.name, strnlen(char_dat.name, NAME_LENGTH));
-		if( SQL_ERROR == SQL->Query(sql_handle,
+		SQL->EscapeStringLen(inter->sql_handle, esc_name, char_dat.name, strnlen(char_dat.name, NAME_LENGTH));
+		if( SQL_ERROR == SQL->Query(inter->sql_handle,
 			"INSERT INTO `%s`(`time`, `account_id`, `char_id`, `char_num`, `name`) VALUES (NOW(), '%d', '%d', '%d', '%s')",
 			charlog_db, sd->account_id, cd->char_id, slot, esc_name) )
-			Sql_ShowDebug(sql_handle);
+			Sql_ShowDebug(inter->sql_handle);
 	}
 	ShowInfo("Selected char: (Account %d: %d - %s)\n", sd->account_id, slot, char_dat.name);
 
@@ -4844,7 +4844,7 @@ void char_parse_char_rename_char(int fd, struct char_session_data* sd)
 		return;
 
 	normalize_name(name,TRIM_CHARS);
-	SQL->EscapeStringLen(sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
+	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
 	if( !chr->check_char_name(name,esc_name) ) {
 		i = 1;
 		safestrncpy(sd->new_name, name, NAME_LENGTH);
@@ -4870,7 +4870,7 @@ void char_parse_char_rename_char2(int fd, struct char_session_data* sd)
 		return;
 
 	normalize_name(name,TRIM_CHARS);
-	SQL->EscapeStringLen(sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
+	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
 	if( !chr->check_char_name(name,esc_name) )
 	{
 		i = 1;
@@ -5814,8 +5814,8 @@ int do_final(void) {
 	do_final_mapif();
 	do_final_loginif();
 
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s`", ragsrvinfo_db) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s`", ragsrvinfo_db) )
+		Sql_ShowDebug(inter->sql_handle);
 
 	chr->char_db_->destroy(chr->char_db_, NULL);
 	chr->online_char_db->destroy(chr->online_char_db, NULL);
@@ -5828,7 +5828,7 @@ int do_final(void) {
 
 	HPM_char_do_final();
 
-	SQL->Free(sql_handle);
+	SQL->Free(inter->sql_handle);
 	mapindex->final();
 
 	for(i = 0; i < MAX_MAP_SERVERS; i++ )
@@ -5871,7 +5871,7 @@ void do_shutdown(void)
 }
 
 void char_hp_symbols(void) {
-	HPM->share(sql_handle,"sql_handle");
+	HPM->share(inter->sql_handle,"sql_handle");
 }
 
 int do_init(int argc, char **argv) {
@@ -5964,16 +5964,16 @@ int do_init(int argc, char **argv) {
 
 	//Cleaning the tables for NULL entries @ startup [Sirius]
 	//Chardb clean
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = '0'", char_db) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '0'", char_db) )
+		Sql_ShowDebug(inter->sql_handle);
 
 	//guilddb clean
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `guild_lv` = '0' AND `max_member` = '0' AND `exp` = '0' AND `next_exp` = '0' AND `average_lv` = '0'", guild_db) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `guild_lv` = '0' AND `max_member` = '0' AND `exp` = '0' AND `next_exp` = '0' AND `average_lv` = '0'", guild_db) )
+		Sql_ShowDebug(inter->sql_handle);
 
 	//guildmemberdb clean
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `guild_id` = '0' AND `account_id` = '0' AND `char_id` = '0'", guild_member_db) )
-		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `guild_id` = '0' AND `account_id` = '0' AND `char_id` = '0'", guild_member_db) )
+		Sql_ShowDebug(inter->sql_handle);
 
 	set_defaultparse(chr->parse_char);
 	
@@ -5982,9 +5982,9 @@ int do_init(int argc, char **argv) {
 		exit(EXIT_FAILURE);
 	}
 	
-	Sql_HerculesUpdateCheck(sql_handle);
+	Sql_HerculesUpdateCheck(inter->sql_handle);
 #ifdef CONSOLE_INPUT
-	console->input->setSQL(sql_handle);
+	console->input->setSQL(inter->sql_handle);
 #endif
 	ShowStatus("The char-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %d).\n\n", char_port);
 	

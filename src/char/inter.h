@@ -15,12 +15,10 @@ struct accreg;
 
 extern unsigned int party_share_level;
 
-extern Sql* sql_handle;
-extern Sql* lsql_handle;
-
 void inter_defaults(void);
 
 struct inter_interface {
+    Sql* sql_handle;
     const char* (*msg_txt) (int msg_number);
     bool (*msg_config_read) (const char *cfg_name, bool allow_override);
     void (*do_final_msg) (void);

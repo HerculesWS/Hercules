@@ -44,7 +44,7 @@ struct quest *mapif_quests_fromsql(int char_id, int *count)
 	if (!count)
 		return NULL;
 
-	stmt = SQL->StmtMalloc(sql_handle);
+	stmt = SQL->StmtMalloc(inter->sql_handle);
 	if (stmt == NULL) {
 		SqlStmt_ShowDebug(stmt);
 		*count = 0;
@@ -112,8 +112,8 @@ struct quest *mapif_quests_fromsql(int char_id, int *count)
  */
 bool mapif_quest_delete(int char_id, int quest_id)
 {
-	if (SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `quest_id` = '%d' AND `char_id` = '%d'", quest_db, quest_id, char_id)) {
-		Sql_ShowDebug(sql_handle);
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `quest_id` = '%d' AND `char_id` = '%d'", quest_db, quest_id, char_id)) {
+		Sql_ShowDebug(inter->sql_handle);
 		return false;
 	}
 
@@ -142,8 +142,8 @@ bool mapif_quest_add(int char_id, struct quest qd)
 		StrBuf->Printf(&buf, ", '%d'", qd.count[i]);
 	}
 	StrBuf->AppendStr(&buf, ")");
-	if (SQL_ERROR == SQL->Query(sql_handle, StrBuf->Value(&buf))) {
-		Sql_ShowDebug(sql_handle);
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, StrBuf->Value(&buf))) {
+		Sql_ShowDebug(inter->sql_handle);
 		StrBuf->Destroy(&buf);
 		return false;
 	}
@@ -171,8 +171,8 @@ bool mapif_quest_update(int char_id, struct quest qd)
 	}
 	StrBuf->Printf(&buf, " WHERE `quest_id` = '%d' AND `char_id` = '%d'", qd.quest_id, char_id);
 
-	if (SQL_ERROR == SQL->Query(sql_handle, StrBuf->Value(&buf))) {
-		Sql_ShowDebug(sql_handle);
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, StrBuf->Value(&buf))) {
+		Sql_ShowDebug(inter->sql_handle);
 		StrBuf->Destroy(&buf);
 		return false;
 	}
