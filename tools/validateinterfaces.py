@@ -5,9 +5,11 @@
 
 import os
 import re
+import sys
 from sets import Set
 
 interfaceRe = re.compile("struct (?P<name1>[a-z_]+)_interface (?P<name2>[a-z_]+)_s;")
+silent = False
 
 class Tracker:
     pass
@@ -155,14 +157,21 @@ def reportMethods(tracker):
 tracker = Tracker()
 tracker.arr = dict()
 tracker.methods = Set()
-print "Checking initerfaces initialisation"
-processIfDir(tracker, "../src/char");
-processIfDir(tracker, "../src/map");
-processIfDir(tracker, "../src/login");
-processIfDir(tracker, "../src/common");
-print "Checking interfaces usage"
-processDir(tracker, "../src/char");
-processDir(tracker, "../src/map");
-processDir(tracker, "../src/login");
-processDir(tracker, "../src/common");
-reportMethods(tracker)
+if len(sys.argv) > 1 and sys.argv[1] == "silent":
+    silent = True
+    processIfDir(tracker, "../src/char");
+    processIfDir(tracker, "../src/map");
+    processIfDir(tracker, "../src/login");
+    processIfDir(tracker, "../src/common");
+else:
+    print "Checking initerfaces initialisation"
+    processIfDir(tracker, "../src/char");
+    processIfDir(tracker, "../src/map");
+    processIfDir(tracker, "../src/login");
+    processIfDir(tracker, "../src/common");
+    print "Checking interfaces usage"
+    processDir(tracker, "../src/char");
+    processDir(tracker, "../src/map");
+    processDir(tracker, "../src/login");
+    processDir(tracker, "../src/common");
+    reportMethods(tracker)
