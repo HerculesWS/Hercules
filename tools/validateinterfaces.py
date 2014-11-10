@@ -9,7 +9,6 @@ import sys
 from sets import Set
 
 interfaceRe = re.compile("struct (?P<name1>[a-z_]+)_interface (?P<name2>[a-z_]+)_s;")
-silent = False
 
 class Tracker:
     pass
@@ -90,6 +89,7 @@ def checkIfFile(tracker, cFile, hFile):
             tracker.methods.add(ifname + "_" + method)
             if method not in cMethods:
                 print "Missing initialisation in file {0}: {1}".format(cFile, method)
+                tracker.retCode = 1
 #        for method in cMethods:
 #            if method not in hMethods:
 #                print "Extra method in file {0}: {1}".format(cFile, method)
@@ -157,8 +157,8 @@ def reportMethods(tracker):
 tracker = Tracker()
 tracker.arr = dict()
 tracker.methods = Set()
+tracker.retCode = 0
 if len(sys.argv) > 1 and sys.argv[1] == "silent":
-    silent = True
     processIfDir(tracker, "../src/char");
     processIfDir(tracker, "../src/map");
     processIfDir(tracker, "../src/login");
@@ -175,3 +175,4 @@ else:
     processDir(tracker, "../src/login");
     processDir(tracker, "../src/common");
     reportMethods(tracker)
+exit(tracker.retCode)
