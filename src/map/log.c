@@ -20,6 +20,7 @@
 #include "../common/showmsg.h"
 #include "../common/sql.h" // SQL_INNODB
 #include "../common/strlib.h"
+#include "../common/HPM.h"
 
 struct log_interface log_s;
 
@@ -453,6 +454,8 @@ int log_config_read(const char* cfgName) {
 			//support the import command, just like any other config
 			else if( strcmpi(w1,"import") == 0 )
 				logs->config_read(w2);
+			else if (HPM->parseConf(w1, w2, HPCT_LOG))
+				; // handled by plugins
 			else
 				ShowWarning("Unknown setting '%s' in file %s\n", w1, cfgName);
 		}
