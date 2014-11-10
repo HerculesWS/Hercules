@@ -88,6 +88,7 @@ enum HPluginConfType {
 	HPCT_LOGIN,      /* login-server.conf (login-server) */
 	HPCT_CHAR,       /* char-server.conf (char-server) */
 	HPCT_CHAR_INTER, /* inter-server.conf (char-server) */
+	HPCT_MAP_INTER,  /* inter-server.conf (map-server) */
 	HPCT_MAX,
 };
 
@@ -165,7 +166,9 @@ enum HPluginConfType {
 /* HPMi->addChar */
 #define addCharConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_CHAR,bcname,funcname)
 /* HPMi->addCharInter */
-#define addCharInterConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_SQL,bcname,funcname)
+#define addCharInterConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_CHAR_INTER,bcname,funcname)
+/* HPMi->addMapInter */
+#define addMapInterConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_MAP_INTER,bcname,funcname)
 
 /* HPMi->addPCGPermission */
 #define addGroupPermission(pcgname,maskptr) HPMi->addPCGPermission(HPMi->pid,pcgname,&maskptr)

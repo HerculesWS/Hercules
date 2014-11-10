@@ -3780,6 +3780,8 @@ int inter_config_read(char *cfgName) {
 		/* import */
 		else if(strcmpi(w1,"import")==0)
 			map->inter_config_read(w2);
+		else
+			HPM->parseConf(w1, w2, HPCT_MAP_INTER);
 	}
 	fclose(fp);
 
