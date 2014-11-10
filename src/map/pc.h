@@ -780,9 +780,6 @@ struct pc_interface {
 	
 	struct map_session_data* (*get_dummy_sd) (void);
 	int (*class2idx) (int class_);
-	//int (*getrefinebonus) (int lv,int type); FIXME: This function does not exist, nor it is ever called
-	bool (*can_give_items) (struct map_session_data *sd);
-	bool (*can_give_bound_items) (struct map_session_data *sd);
 	bool (*can_talk) (struct map_session_data *sd);
 	bool (*can_attack) ( struct map_session_data *sd, int target_id );
  	
