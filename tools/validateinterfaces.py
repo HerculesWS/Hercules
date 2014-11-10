@@ -156,7 +156,13 @@ tracker = Tracker()
 tracker.arr = dict()
 tracker.methods = Set()
 print "Checking initerfaces initialisation"
-processIfDir(tracker, "../src");
+processIfDir(tracker, "../src/char");
+processIfDir(tracker, "../src/map");
+processIfDir(tracker, "../src/login");
+processIfDir(tracker, "../src/common");
 print "Checking interfaces usage"
-processDir(tracker, "../src");
+processDir(tracker, "../src/char");
+processDir(tracker, "../src/map");
+processDir(tracker, "../src/login");
+processDir(tracker, "../src/common");
 reportMethods(tracker)
