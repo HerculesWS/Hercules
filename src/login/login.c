@@ -1840,6 +1840,8 @@ int login_config_read(const char* cfgName)
 		}
 		else if(!strcmpi(w1, "import"))
 			login_config_read(w2);
+		else if(HPM->parseConf(w1, w2, HPCT_LOGIN))
+		    ; // handled by plugin
 		else
 		{
 			AccountDB* db = account_engine[0].db;
