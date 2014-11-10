@@ -84,9 +84,10 @@ enum HPluginDataTypes {
 
 /* used in macros and conf storage */
 enum HPluginConfType {
-	HPCT_BATTLE, /* battle-conf (map-server */
-	HPCT_LOGIN,  /* login-server.conf (login-server) */
-	HPCT_CHAR,   /* char-server.conf (char-server) */
+	HPCT_BATTLE,     /* battle-conf (map-server */
+	HPCT_LOGIN,      /* login-server.conf (login-server) */
+	HPCT_CHAR,       /* char-server.conf (char-server) */
+	HPCT_CHAR_INTER, /* inter-server.conf (char-server) */
 	HPCT_MAX,
 };
 
@@ -163,6 +164,8 @@ enum HPluginConfType {
 #define addLoginConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_LOGIN,bcname,funcname)
 /* HPMi->addChar */
 #define addCharConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_CHAR,bcname,funcname)
+/* HPMi->addCharInter */
+#define addCharInterConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_SQL,bcname,funcname)
 
 /* HPMi->addPCGPermission */
 #define addGroupPermission(pcgname,maskptr) HPMi->addPCGPermission(HPMi->pid,pcgname,&maskptr)
