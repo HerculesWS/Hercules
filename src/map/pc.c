@@ -9326,7 +9326,7 @@ int pc_checkitem(struct map_session_data *sd)
 			int j;
 			for ( j = 0; j < map->list[sd->bl.m].zone->disabled_items_count; j++ ) {
 				if ( map->list[sd->bl.m].zone->disabled_items[j] == sd->status.inventory[i].nameid ) {
-					pc_unequipitem( sd, i, 2 );
+					pc->unequipitem( sd, i, 2 );
 					calc_flag = 1;
 				}
 			}
@@ -9338,7 +9338,7 @@ int pc_checkitem(struct map_session_data *sd)
 				for ( slot = 0; slot < MAX_SLOTS; slot++ ) {
 					for ( j = 0; j < map->list[sd->bl.m].zone->disabled_items_count; j++ ) {
 						if ( map->list[sd->bl.m].zone->disabled_items[j] == sd->status.inventory[i].card[slot] ) {
-							pc_unequipitem( sd, i, 2 );
+							pc->unequipitem( sd, i, 2 );
 							calc_flag = 1;
 						}
 					}

@@ -1010,7 +1010,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 		case LK_SPIRALPIERCE:
 		case ML_SPIRALPIERCE:
 			if( dstsd || ( dstmd && !is_boss(bl) ) ) //Does not work on bosses
-				sc_start(src,bl,SC_STOP,100,0,skill_get_time2(skill_id,skill_lv));
+				sc_start(src,bl,SC_STOP,100,0,skill->get_time2(skill_id,skill_lv));
 			break;
 
 		case ST_REJECTSWORD:
@@ -3928,7 +3928,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 					// If target cell is a wall then break
 					if(map->getcell(bl->m,tx,ty,CELL_CHKWALL))
 						break;
-					skill_blown(src,bl,1,dir,0);
+					skill->blown(src,bl,1,dir,0);
 					// Splash around target cell, but only cells inside area; we first have to check the area is not negative
 					if((max(min_x,tx-1) <= min(max_x,tx+1)) &&
 						(max(min_y,ty-1) <= min(max_y,ty+1)) &&
@@ -5151,7 +5151,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				if((p = party->search(sd->status.party_id)) == NULL)
 					break;
 
-				range = skill_get_splash(skill_id,skill_lv);
+				range = skill->get_splash(skill_id,skill_lv);
 				x0 = sd->bl.x - range;
 				y0 = sd->bl.y - range;
 				x1 = sd->bl.x + range;
@@ -8255,7 +8255,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			if( sd == NULL || sd->status.party_id == 0 || flag&1 ) {
 				if( sd && tstatus && !battle->check_undead(tstatus->race, tstatus->def_ele) && !tsc->data[SC_BERSERK] ) {
 					int lv = pc->checkskill(sd, AL_HEAL);
-					int heal = skill_calc_heal(src, bl, AL_HEAL, lv, true);
+					int heal = skill->calc_heal(src, bl, AL_HEAL, lv, true);
 
 					if( sd->status.party_id ) {
 						int partycount = party->foreachsamemap(party->sub_count, sd, 0);
@@ -10613,7 +10613,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 					int tmpx = x - area + rnd()%(area * 2 + 1);
 					int tmpy = y - area + rnd()%(area * 2 + 1);
 
-					skill_addtimerskill(src,tick+r*250,0,tmpx,tmpy,GN_CRAZYWEED_ATK,skill_lv,-1,0);
+					skill->addtimerskill(src,tick+r*250,0,tmpx,tmpy,GN_CRAZYWEED_ATK,skill_lv,-1,0);
 				}
 			}
 			break;
@@ -15459,7 +15459,7 @@ bool skill_can_cloak(struct map_session_data *sd) {
 	//Avoid cloaking with no wall and low skill level. [Skotlex]
 	//Due to the cloaking card, we have to check the wall versus to known
 	//skill level rather than the used one. [Skotlex]
-	//if (sd && val1 < 3 && skill_check_cloaking(bl,NULL))
+	//if (sd && val1 < 3 && skill->check_cloaking(bl,NULL))
 	if (pc->checkskill(sd, AS_CLOAKING) < 3 && !skill->check_cloaking(&sd->bl,NULL))
 		return false;
 

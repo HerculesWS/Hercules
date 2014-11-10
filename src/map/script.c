@@ -140,7 +140,7 @@ static void script_dump_stack(struct script_state* st)
 	for( i = 0; i < st->stack->sp; ++i )
 	{
 		struct script_data* data = &st->stack->stack_data[i];
-		ShowMessage("\t[%d] %s", i, script_op2name(data->type));
+		ShowMessage("\t[%d] %s", i, script->op2name(data->type));
 		switch( data->type )
 		{
 		case C_INT:
@@ -2865,7 +2865,7 @@ int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, co
 					}
 				} else {
 					ShowError("script_set_reg: cannot write instance variable '%s', NPC not in a instance!\n", name);
-					script_reportsrc(st);
+					script->reportsrc(st);
 				}
 				return 1;
 			default:
@@ -2931,7 +2931,7 @@ int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, co
 					}
 				} else {
 					ShowError("script_set_reg: cannot write instance variable '%s', NPC not in a instance!\n", name);
-					script_reportsrc(st);
+					script->reportsrc(st);
 				}
 				return 1;
 			default:
@@ -10201,7 +10201,7 @@ BUILDIN(sc_start) {
 	enum sc_type type;
 	int tick, val1, val2, val3, val4=0, rate, flag;
 	char start_type;
-	const char* command = script_getfuncname(st);
+	const char* command = script->getfuncname(st);
 
 	if(strstr(command, "4"))
 		start_type = 4;

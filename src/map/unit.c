@@ -158,7 +158,7 @@ int unit_step_timer(int tid, int64 tick, int id, intptr_t data)
 	if (!bl || bl->prev == NULL)
 		return 0;
 
-	ud = unit_bl2ud(bl);
+	ud = unit->bl2ud(bl);
 
 	if(!ud)
 		return 0;
@@ -444,7 +444,7 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 			//Walked on occupied cell, call unit_walktoxy again
 			if(ud->steptimer != INVALID_TIMER) {
 				//Execute step timer on next step instead
-				timer->delete(ud->steptimer, unit_step_timer);
+				timer->delete(ud->steptimer, unit->step_timer);
 				ud->steptimer = INVALID_TIMER;
 			}
 			return unit->walktoxy(bl, x, y, 8);
@@ -1761,11 +1761,11 @@ void unit_stop_attack(struct block_list *bl)
 {
 	struct unit_data *ud;
 	nullpo_retv(bl);
-	ud = unit_bl2ud(bl);
+	ud = unit->bl2ud(bl);
 	nullpo_retv(ud);
 
 	//Clear target
-	unit_set_target(ud, 0);
+	unit->set_target(ud, 0);
 
 	if(ud->attacktimer == INVALID_TIMER)
 		return;
@@ -1783,7 +1783,7 @@ void unit_stop_stepaction(struct block_list *bl)
 {
 	struct unit_data *ud;
 	nullpo_retv(bl);
-	ud = unit_bl2ud(bl);
+	ud = unit->bl2ud(bl);
 	nullpo_retv(ud);
 
 	//Clear remembered step action
@@ -2080,7 +2080,7 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick) {
 	sstatus = status->get_status_data(src);
 	range = sstatus->rhw.range;
 
-	if( (unit_is_walking(target) || ud->state.step_attack)
+	if( (unit->is_walking(target) || ud->state.step_attack)
 		&& (target->type == BL_PC || !map->getcell(target->m,target->x,target->y,CELL_CHKICEWALL)) )
 		range++; // Extra range when chasing (does not apply to mobs locked in an icewall)
 
@@ -2090,7 +2090,7 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick) {
 		return 1;
 	} else if(md && !check_distance_bl(src,target,range)) {
 		// Monster: Chase if required
-		unit_walktobl(src,target,ud->chaserange,ud->state.walk_easy|2);
+		unit->walktobl(src,target,ud->chaserange,ud->state.walk_easy|2);
 		return 1;
 	}
 	if( !battle->check_range(src,target,range) ) {

@@ -46,7 +46,7 @@ struct skill_cd;
 #define P2PTR(fd) RFIFO2PTR(fd)
 #define clif_menuskill_clear(sd) ((sd)->menuskill_id = (sd)->menuskill_val = (sd)->menuskill_val2 = 0)
 #define clif_disp_onlyself(sd,mes,len) clif->disp_message( &(sd)->bl, (mes), (len), SELF )
-#define clif_viewequip_fail( sd ) clif_msg( (sd), 0x54d );
+#define clif_viewequip_fail( sd ) clif->msg( (sd), 0x54d );
 #define HCHSYS_NAME_LENGTH 20
 #define MAX_ROULETTE_LEVEL 7 /** client-defined value **/
 #define MAX_ROULETTE_COLUMNS 9 /** client-defined value **/

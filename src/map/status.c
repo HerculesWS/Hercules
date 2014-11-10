@@ -6390,7 +6390,7 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 
 	sd = BL_CAST(BL_PC,bl);
 	st = status->get_status_data(bl);
-	bst = status_get_base_status(bl);
+	bst = status->get_base_status(bl);
 	sc = status->get_sc(bl);
 	if( sc && !sc->count )
 		sc = NULL;
@@ -10985,7 +10985,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 
 		case SC__REPRODUCE:
 			if( --(sce->val4) >= 0 ) {
-				if( !status_charge(bl, 0, 9 - (1 + sce->val1) / 2) )
+				if( !status->charge(bl, 0, 9 - (1 + sce->val1) / 2) )
 					break;
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
@@ -11056,10 +11056,10 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 
 		case SC_SIRCLEOFNATURE:
 			if( --(sce->val4) >= 0 ) {
-				if( !status_charge(bl,0,sce->val3) )
+				if( !status->charge(bl,0,sce->val3) )
 					break;
 				status->heal(bl, sce->val2, 0, 1);
-				sc_timer_next(1000 + tick, status_change_timer, bl->id, data);
+				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
@@ -11075,7 +11075,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 
 		case SC_SATURDAY_NIGHT_FEVER:
 			if( --(sce->val3) >= 0 ) {
-				if( !status_charge(bl, st->max_hp * 1 / 100, st->max_sp * 1 / 100) )
+				if( !status->charge(bl, st->max_hp * 1 / 100, st->max_sp * 1 / 100) )
 				break;
 				sc_timer_next(3000+tick, status->change_timer, bl->id, data);
 				return 0;
@@ -11084,7 +11084,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 
 		case SC_MELODYOFSINK:
 			if( --(sce->val4) >= 0 ) {
-				status_charge(bl, 0, st->max_sp * ( 2 * sce->val1 + 2 * sce->val2 ) / 100);
+				status->charge(bl, 0, st->max_sp * ( 2 * sce->val1 + 2 * sce->val2 ) / 100);
 				sc_timer_next(1000+tick, status->change_timer, bl->id, data);
 				return 0;
 			}
@@ -11167,7 +11167,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 				if( st->sp <= sp )
 					status_change_end(bl,SC_STEALTHFIELD_MASTER,INVALID_TIMER);
 
-				if( !status_charge(bl,0,sp) )
+				if( !status->charge(bl,0,sp) )
 					break;
 
 				if( !sc->data[SC_STEALTHFIELD_MASTER] )

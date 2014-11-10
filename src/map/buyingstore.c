@@ -169,7 +169,7 @@ void buyingstore_create(struct map_session_data* sd, int zenylimit, unsigned cha
 
 	// success
 	sd->state.buyingstore = true;
-	sd->buyer_id = buyingstore_getuid();
+	sd->buyer_id = buyingstore->getuid();
 	sd->buyingstore.zenylimit = zenylimit;
 	sd->buyingstore.slots = i;  // store actual amount of items
 	safestrncpy(sd->message, storename, sizeof(sd->message));
@@ -384,7 +384,7 @@ void buyingstore_trade(struct map_session_data* sd, int account_id, unsigned int
 	}
 
 	// cannot continue buying
-	buyingstore_close(pl_sd);
+	buyingstore->close(pl_sd);
 
 	// remove auto-trader
 	if( pl_sd->state.autotrade ) {
