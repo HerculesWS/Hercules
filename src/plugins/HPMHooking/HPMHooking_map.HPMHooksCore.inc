@@ -3521,10 +3521,6 @@ struct {
 	struct HPMHookPoint *HP_pc_get_dummy_sd_post;
 	struct HPMHookPoint *HP_pc_class2idx_pre;
 	struct HPMHookPoint *HP_pc_class2idx_post;
-	struct HPMHookPoint *HP_pc_can_give_items_pre;
-	struct HPMHookPoint *HP_pc_can_give_items_post;
-	struct HPMHookPoint *HP_pc_can_give_bound_items_pre;
-	struct HPMHookPoint *HP_pc_can_give_bound_items_post;
 	struct HPMHookPoint *HP_pc_can_talk_pre;
 	struct HPMHookPoint *HP_pc_can_talk_post;
 	struct HPMHookPoint *HP_pc_can_attack_pre;
@@ -8584,10 +8580,6 @@ struct {
 	int HP_pc_get_dummy_sd_post;
 	int HP_pc_class2idx_pre;
 	int HP_pc_class2idx_post;
-	int HP_pc_can_give_items_pre;
-	int HP_pc_can_give_items_post;
-	int HP_pc_can_give_bound_items_pre;
-	int HP_pc_can_give_bound_items_post;
 	int HP_pc_can_talk_pre;
 	int HP_pc_can_talk_post;
 	int HP_pc_can_attack_pre;
