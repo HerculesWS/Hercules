@@ -90,6 +90,7 @@ enum HPluginConfType {
 	HPCT_CHAR_INTER, /* inter-server.conf (char-server) */
 	HPCT_MAP_INTER,  /* inter-server.conf (map-server) */
 	HPCT_LOG,        /* logs.conf (map-server) */
+	HPCT_SCRIPT,     /* script.conf (map-server) */
 	HPCT_MAX,
 };
 
@@ -172,6 +173,8 @@ enum HPluginConfType {
 #define addMapInterConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_MAP_INTER,bcname,funcname)
 /* HPMi->addLog */
 #define addLogConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_LOG,bcname,funcname)
+/* HPMi->addScript */
+#define addScriptConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_SCRIPT,bcname,funcname)
 
 /* HPMi->addPCGPermission */
 #define addGroupPermission(pcgname,maskptr) HPMi->addPCGPermission(HPMi->pid,pcgname,&maskptr)

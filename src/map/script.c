@@ -55,6 +55,7 @@
 #include "../common/sysinfo.h"
 #include "../common/timer.h"
 #include "../common/utils.h"
+#include "../common/HPM.h"
 
 #ifndef WIN32
 	#include <sys/time.h>
@@ -4141,7 +4142,9 @@ int script_config_read(char *cfgName) {
 		else if(strcmpi(w1,"import")==0) {
 			script->config_read(w2);
 		}
-		else {
+		else if(HPM->parseConf(w1, w2, HPCT_SCRIPT)) {
+			; // handled by plugin
+		} else {
 			ShowWarning("Unknown setting '%s' in file %s\n", w1, cfgName);
 		}
 	}
