@@ -119,18 +119,20 @@ def checkFile(tracker, cFile):
     print "Checking: " + cFile
     with open(cFile, "r") as r:
         for line in r:
-            for method in tracker.methods:
-                idx = line.find(method)
-                if idx > 0:
-                    if idx + len(method) >= len(line):
-                        continue
-                    if checkChr(line[idx + len(method)]):
-                        continue
-                    if checkChr(line[idx - 1]):
-                        continue
-                    if line[-1] == "\n":
-                        line = line[:-1]
-                    tracker.arr[method].append(line)
+            parts = re.findall(r'[\w_]+', line)
+            for part in parts:
+                if part in tracker.methods:
+                    idx = line.find(part)
+                    if idx > 0:
+                        if idx + len(part) >= len(line):
+                            continue
+                        if checkChr(line[idx + len(part)]):
+                            continue
+                        if checkChr(line[idx - 1]):
+                            continue
+                        if line[-1] == "\n":
+                            line = line[:-1]
+                        tracker.arr[part].append(line)
 
 def processDir(tracker, srcDir):
     files = os.listdir(srcDir)
