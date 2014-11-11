@@ -146,6 +146,7 @@ void libconfig_defaults(void) {
 	/* */
 	libconfig->setting_set_int = config_setting_set_int;
 	libconfig->setting_set_int64 = config_setting_set_int64;
+	libconfig->setting_set_float = config_setting_set_float;
 	libconfig->setting_set_bool = config_setting_set_bool;
 	libconfig->setting_set_string = config_setting_set_string;
 	/* */

@@ -12,7 +12,7 @@ before_script:
   - ./travis.sh importdb ragnarok travis
   - mysql -u root -e "SET PASSWORD FOR 'travis'@'localhost' = PASSWORD('travis');"
 
-script: 
+script:
   - ./travis.sh build $CONFIGURE_FLAGS
   - ./travis.sh test ragnarok travis travis
 

@@ -54,6 +54,7 @@ case "$MODE" in
 		mysql $DBUSER $DBPASS $DBNAME < sql-files/logs.sql || aborterror "Unable to import logs database."
 		;;
 	build)
+		(cd tools && ./validateinterfaces.py silent) || aborterror "Interface validation error."
 		./configure $@ || aborterror "Configure error, aborting build."
 		make sql -j3 || aborterror "Build failed."
 		if [ -f src/plugins/script_mapquit.c ]; then

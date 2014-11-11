@@ -47094,60 +47094,6 @@ int HP_pc_class2idx(int class_) {
 	}
 	return retVal___;
 }
-bool HP_pc_can_give_items(struct map_session_data *sd) {
-	int hIndex = 0;
-	bool retVal___ = false;
-	if( HPMHooks.count.HP_pc_can_give_items_pre ) {
-		bool (*preHookFunc) (struct map_session_data *sd);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_can_give_items_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_pc_can_give_items_pre[hIndex].func;
-			retVal___ = preHookFunc(sd);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.pc.can_give_items(sd);
-	}
-	if( HPMHooks.count.HP_pc_can_give_items_post ) {
-		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_can_give_items_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_pc_can_give_items_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd);
-		}
-	}
-	return retVal___;
-}
-bool HP_pc_can_give_bound_items(struct map_session_data *sd) {
-	int hIndex = 0;
-	bool retVal___ = false;
-	if( HPMHooks.count.HP_pc_can_give_bound_items_pre ) {
-		bool (*preHookFunc) (struct map_session_data *sd);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_can_give_bound_items_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_pc_can_give_bound_items_pre[hIndex].func;
-			retVal___ = preHookFunc(sd);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.pc.can_give_bound_items(sd);
-	}
-	if( HPMHooks.count.HP_pc_can_give_bound_items_post ) {
-		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_can_give_bound_items_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_pc_can_give_bound_items_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd);
-		}
-	}
-	return retVal___;
-}
 bool HP_pc_can_talk(struct map_session_data *sd) {
 	int hIndex = 0;
 	bool retVal___ = false;
