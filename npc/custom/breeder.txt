@@ -43,7 +43,7 @@ prontera,124,201,1	script	Universal Rental NPC	4_F_JOB_BLACKSMITH,{
 		setcart;
 	} else if (!checkfalcon() && getskilllv(HT_FALCON) && !checkwug()) {
 		setfalcon;
-	} else if (checkmount() == MOUNT_PECO && getskilllv(KN_RIDING)) {
+	} else if (!checkmount() == MOUNT_PECO && getskilllv(KN_RIDING)) {
 		setmount; // Peco or Dragon
 	} else if (checkmount() != MOUNT_MADO && getskilllv(NC_MADOLICENCE)) {
 		setmount(MOUNT_MADO);
