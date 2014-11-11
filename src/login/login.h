@@ -9,6 +9,7 @@
 #include "../common/mmo.h" // NAME_LENGTH,SEX_*
 
 struct mmo_account;
+struct AccountDB;
 
 enum E_LOGINSERVER_ST
 {
@@ -140,6 +141,7 @@ struct login_interface {
 	DBMap* online_db;
 	int fd;
 	struct Login_Config *lc;
+	struct AccountDB* accounts;
 
 	int (*mmo_auth) (struct login_session_data* sd, bool isServer);
 	int (*mmo_auth_new) (const char* userid, const char* pass, const char sex, const char* last_ip);

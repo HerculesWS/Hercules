@@ -1945,8 +1945,6 @@ int do_init(int argc, char** argv)
 {
 	int i;
 
-	login_defaults();
-
 	// initialize engine (to accept config settings)
 	account_engine[0].db = account_engine[0].constructor();
 	accounts = account_engine[0].db;
@@ -1954,6 +1952,8 @@ int do_init(int argc, char** argv)
 		ShowFatalError("do_init: account engine 'sql' not found.\n");
 		exit(EXIT_FAILURE);
 	}
+
+	login_defaults();
 
 	// read login-server configuration
 	login_set_defaults();
@@ -2045,6 +2045,7 @@ void login_defaults(void) {
 	login = &login_s;
 
 	login->lc = &login_config;
+	login->accounts = accounts;
 
 	login->mmo_auth = login_mmo_auth;
 	login->mmo_auth_new = login_mmo_auth_new;
