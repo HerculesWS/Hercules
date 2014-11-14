@@ -18985,12 +18985,12 @@ bool script_add_builtin(const struct script_function *buildin, bool override) {
 	return true;
 }
 
-bool script_hp_add(char *name, char *args, bool (*func)(struct script_state *st)) {
+bool script_hp_add(char *name, char *args, bool (*func)(struct script_state *st), bool isDeprecated) {
 	struct script_function buildin;
 	buildin.name = name;
 	buildin.arg = args;
 	buildin.func = func;
-	buildin.deprecated = false;
+	buildin.deprecated = isDeprecated;
 	return script->add_builtin(&buildin, true);
 }
 
