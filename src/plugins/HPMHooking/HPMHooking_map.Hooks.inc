@@ -54219,15 +54219,15 @@ void HP_script_warning(const char *src, const char *file, int start_line, const 
 	}
 	return;
 }
-bool HP_script_addScript(char *name, char *args, bool ( *func ) (struct script_state *st)) {
+bool HP_script_addScript(char *name, char *args, bool ( *func ) (struct script_state *st), bool isDeprecated) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if( HPMHooks.count.HP_script_addScript_pre ) {
-		bool (*preHookFunc) (char *name, char *args, bool ( *func ) (struct script_state *st));
+		bool (*preHookFunc) (char *name, char *args, bool ( *func ) (struct script_state *st), bool *isDeprecated);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_addScript_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_script_addScript_pre[hIndex].func;
-			retVal___ = preHookFunc(name, args, func);
+			retVal___ = preHookFunc(name, args, func, &isDeprecated);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -54235,13 +54235,13 @@ bool HP_script_addScript(char *name, char *args, bool ( *func ) (struct script_s
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.script.addScript(name, args, func);
+		retVal___ = HPMHooks.source.script.addScript(name, args, func, isDeprecated);
 	}
 	if( HPMHooks.count.HP_script_addScript_post ) {
-		bool (*postHookFunc) (bool retVal___, char *name, char *args, bool ( *func ) (struct script_state *st));
+		bool (*postHookFunc) (bool retVal___, char *name, char *args, bool ( *func ) (struct script_state *st), bool *isDeprecated);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_addScript_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_script_addScript_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, name, args, func);
+			retVal___ = postHookFunc(retVal___, name, args, func, &isDeprecated);
 		}
 	}
 	return retVal___;
