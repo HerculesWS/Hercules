@@ -15,6 +15,7 @@ memcpy(&HPMHooks.source.inter_mail, inter_mail, sizeof(struct inter_mail_interfa
 memcpy(&HPMHooks.source.inter_mercenary, inter_mercenary, sizeof(struct inter_mercenary_interface));
 memcpy(&HPMHooks.source.inter_party, inter_party, sizeof(struct inter_party_interface));
 memcpy(&HPMHooks.source.inter_pet, inter_pet, sizeof(struct inter_pet_interface));
+memcpy(&HPMHooks.source.inter_quest, inter_quest, sizeof(struct inter_quest_interface));
 memcpy(&HPMHooks.source.inter_storage, inter_storage, sizeof(struct inter_storage_interface));
 memcpy(&HPMHooks.source.loginif, loginif, sizeof(struct loginif_interface));
 memcpy(&HPMHooks.source.mapif, mapif, sizeof(struct mapif_interface));

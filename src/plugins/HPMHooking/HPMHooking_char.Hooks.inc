@@ -6612,6 +6612,34 @@ int HP_inter_pet_parse_frommap(int fd) {
 	}
 	return retVal___;
 }
+/* inter_quest */
+int HP_inter_quest_parse_frommap(int fd) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_inter_quest_parse_frommap_pre ) {
+		int (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_inter_quest_parse_frommap_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_inter_quest_parse_frommap_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.inter_quest.parse_frommap(fd);
+	}
+	if( HPMHooks.count.HP_inter_quest_parse_frommap_post ) {
+		int (*postHookFunc) (int retVal___, int *fd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_inter_quest_parse_frommap_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_inter_quest_parse_frommap_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &fd);
+		}
+	}
+	return retVal___;
+}
 /* inter_storage */
 int HP_inter_storage_tosql(int account_id, struct storage_data *p) {
 	int hIndex = 0;

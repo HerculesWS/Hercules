@@ -3,8 +3,7 @@
 # Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 # See the LICENSE file
 
-# disabled strict because it show warning and failing
-#use strict;
+use strict;
 use warnings;
 use XML::Simple;
 
@@ -259,13 +258,14 @@ my %keys = (
 foreach my $file (@files) { # Loop through the xml files
 
 	my $xml = new XML::Simple;
-	my $data = $xml->XMLin($file);
+	my $data = $xml->XMLin($file, ForceArray => 1);
 
-	my $loc = $data->{compounddef}->{location};
+	my $filekey = (keys $data->{compounddef})[0];
+	my $loc = $data->{compounddef}->{$filekey}->{location}->[0];
 	next unless $loc->{file} =~ /src\/(map|char|login)\//;
 	my $servertype = $1;
 
-	my $key = $data->{compounddef}->{compoundname};
+	my $key = $data->{compounddef}->{$filekey}->{compoundname}->[0];
 	my $original = $key;
 
 	# Some known interfaces with different names
@@ -289,19 +289,17 @@ foreach my $file (@files) { # Loop through the xml files
 		$key =~ s/_interface//;
 	}
 
-	foreach my $v ($data->{compounddef}->{sectiondef}) { # Loop through the sections
+	foreach my $v ($data->{compounddef}->{$filekey}->{sectiondef}->[0]) { # Loop through the sections
 		my $memberdef = $v->{memberdef};
-		foreach my $fk (sort { # Sort the members in declaration order according to what the xml says
-					my $astart = $memberdef->{$a}->{location}->{bodystart} || $memberdef->{$a}->{location}->{line};
-					my $bstart = $memberdef->{$b}->{location}->{bodystart} || $memberdef->{$b}->{location}->{line};
+		foreach my $f (sort { # Sort the members in declaration order according to what the xml says
+					my $astart = $a->{location}->[0]->{bodystart} || $a->{location}->[0]->{line};
+					my $bstart = $b->{location}->[0]->{bodystart} || $b->{location}->[0]->{line};
 					$astart <=> $bstart
-				} keys %$memberdef) { # Loop through the members
-			my $f = $memberdef->{$fk};
-
-			my $t = $f->{argsstring};
+				} @$memberdef) { # Loop through the members
+			my $t = $f->{argsstring}->[0];
 			next unless ref $t ne 'HASH' and $t =~ /^[^\[]/; # If it's not a string, or if it starts with an array subscript, we can skip it
 
-			my $if = parse($t, $f->{definition});
+			my $if = parse($t, $f->{definition}->[0]);
 			next unless scalar keys %$if; # If it returns an empty hash reference, an error must've occurred
 
 			# Skip variadic functions, we only allow hooks on their arglist equivalents.

@@ -499,6 +499,8 @@ struct {
 	struct HPMHookPoint *HP_inter_pet_delete__post;
 	struct HPMHookPoint *HP_inter_pet_parse_frommap_pre;
 	struct HPMHookPoint *HP_inter_pet_parse_frommap_post;
+	struct HPMHookPoint *HP_inter_quest_parse_frommap_pre;
+	struct HPMHookPoint *HP_inter_quest_parse_frommap_post;
 	struct HPMHookPoint *HP_inter_storage_tosql_pre;
 	struct HPMHookPoint *HP_inter_storage_tosql_post;
 	struct HPMHookPoint *HP_inter_storage_fromsql_pre;
@@ -1388,6 +1390,8 @@ struct {
 	int HP_inter_pet_delete__post;
 	int HP_inter_pet_parse_frommap_pre;
 	int HP_inter_pet_parse_frommap_post;
+	int HP_inter_quest_parse_frommap_pre;
+	int HP_inter_quest_parse_frommap_post;
 	int HP_inter_storage_tosql_pre;
 	int HP_inter_storage_tosql_post;
 	int HP_inter_storage_fromsql_pre;
@@ -1794,6 +1798,7 @@ struct {
 	struct inter_mercenary_interface inter_mercenary;
 	struct inter_party_interface inter_party;
 	struct inter_pet_interface inter_pet;
+	struct inter_quest_interface inter_quest;
 	struct inter_storage_interface inter_storage;
 	struct loginif_interface loginif;
 	struct mapif_interface mapif;

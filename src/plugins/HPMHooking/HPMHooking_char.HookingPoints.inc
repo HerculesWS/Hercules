@@ -263,6 +263,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(inter_pet->sql_final, HP_inter_pet_sql_final) },
 	{ HP_POP(inter_pet->delete_, HP_inter_pet_delete_) },
 	{ HP_POP(inter_pet->parse_frommap, HP_inter_pet_parse_frommap) },
+/* inter_quest */
+	{ HP_POP(inter_quest->parse_frommap, HP_inter_quest_parse_frommap) },
 /* inter_storage */
 	{ HP_POP(inter_storage->tosql, HP_inter_storage_tosql) },
 	{ HP_POP(inter_storage->fromsql, HP_inter_storage_fromsql) },

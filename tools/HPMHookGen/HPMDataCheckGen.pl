@@ -20,17 +20,18 @@ my %out;
 
 foreach my $file (@files) {
 	my $xml = new XML::Simple;
-	my $data = $xml->XMLin($file);
-	next unless $data->{compounddef}->{includes}; # means its a struct from a .c file, plugins cant access those so we don't care.
-	next if $data->{compounddef}->{compoundname} =~ /::/; # its a duplicate with a :: name e.g. struct script_state {<...>} ay;
-	my @filepath = split(/[\/\\]/, $data->{compounddef}->{location}->{file});
+	my $data = $xml->XMLin($file, ForceArray => 1);
+	my $filekey = (keys $data->{compounddef})[0];
+	next unless $data->{compounddef}->{$filekey}->{includes}; # means its a struct from a .c file, plugins cant access those so we don't care.
+	next if $data->{compounddef}->{$filekey}->{compoundname}->[0] =~ /::/; # its a duplicate with a :: name e.g. struct script_state {<...>} ay;
+	my @filepath = split(/[\/\\]/, $data->{compounddef}->{$filekey}->{location}->[0]->{file});
 	my $foldername = uc($filepath[-2]);
 	my $filename = uc($filepath[-1]); $filename =~ s/-/_/g; $filename =~ s/\.[^.]*$//;
 	my $plugintypes = 'SERVER_TYPE_UNKNOWN';
 	$plugintypes = 'SERVER_TYPE_ALL' if $foldername eq 'COMMON';
 	$plugintypes = "SERVER_TYPE_${foldername}" if $foldername =~ /^(LOGIN|CHAR|MAP)/;
 	my $symboldata = {
-		name => $data->{compounddef}->{compoundname},
+		name => $data->{compounddef}->{$filekey}->{compoundname}->[0],
 		type => $plugintypes,
 	};
 	my $name = "${foldername}_${filename}_H";
