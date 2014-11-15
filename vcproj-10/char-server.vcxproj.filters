@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="..\src\common\conf.c">
+      <Filter>common</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\common\core.c">
       <Filter>common</Filter>
     </ClCompile>
@@ -49,7 +52,13 @@
     <ClCompile Include="..\src\common\utils.c">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\char\HPMchar.c">
+      <Filter>char_sql</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\char\char.c">
+      <Filter>char_sql</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char\geoip.c">
       <Filter>char_sql</Filter>
     </ClCompile>
     <ClCompile Include="..\src\char\int_auction.c">
@@ -85,6 +94,12 @@
     <ClCompile Include="..\src\char\inter.c">
       <Filter>char_sql</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\char\loginif.c">
+      <Filter>char_sql</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char\mapif.c">
+      <Filter>char_sql</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\char\pincode.c">
       <Filter>char_sql</Filter>
     </ClCompile>
@@ -112,15 +127,12 @@
     <ClCompile Include="..\src\common\mutex.c">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\common\conf.c">
-      <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\char\HPMchar.c">
-      <Filter>char_sql</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\common\cbasetypes.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\conf.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\core.h">
@@ -177,13 +189,13 @@
     <ClInclude Include="..\src\common\utils.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\char\inter.h">
-      <Filter>char_sql</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\char\pincode.h">
+    <ClInclude Include="..\src\char\HPMchar.h">
       <Filter>char_sql</Filter>
     </ClInclude>
     <ClInclude Include="..\src\char\char.h">
+      <Filter>char_sql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\geoip.h">
       <Filter>char_sql</Filter>
     </ClInclude>
     <ClInclude Include="..\src\char\int_auction.h">
@@ -214,6 +226,18 @@
       <Filter>char_sql</Filter>
     </ClInclude>
     <ClInclude Include="..\src\char\int_storage.h">
+      <Filter>char_sql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\inter.h">
+      <Filter>char_sql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\loginif.h">
+      <Filter>char_sql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\mapif.h">
+      <Filter>char_sql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\pincode.h">
       <Filter>char_sql</Filter>
     </ClInclude>
     <ClInclude Include="..\3rdparty\mt19937ar\mt19937ar.h">
@@ -248,12 +272,6 @@
     </ClInclude>
     <ClInclude Include="..\src\common\mutex.h">
       <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\common\conf.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\char\HPMchar.h">
-      <Filter>char_sql</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
