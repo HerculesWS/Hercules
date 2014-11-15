@@ -12,6 +12,9 @@
 		A5380CD91856CF4A0090CBC4 /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC694185643BB009EB79C /* core.c */; };
 		A5380CDA1856D0650090CBC4 /* socket.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6BA185643BB009EB79C /* socket.c */; };
 		A5380CDB1856D0690090CBC4 /* malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* malloc.c */; };
+		A5467AD31A16FCB4008AFAA6 /* loginif.c in Sources */ = {isa = PBXBuildFile; fileRef = A5467AD11A16FCB4008AFAA6 /* loginif.c */; };
+		A5467AD61A16FCDC008AFAA6 /* mapif.c in Sources */ = {isa = PBXBuildFile; fileRef = A5467AD41A16FCDC008AFAA6 /* mapif.c */; };
+		A5467AD91A16FD08008AFAA6 /* geoip.c in Sources */ = {isa = PBXBuildFile; fileRef = A5467AD71A16FD08008AFAA6 /* geoip.c */; };
 		A567612D185D11D700997C0D /* nullpo.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6B2185643BB009EB79C /* nullpo.c */; };
 		A56CC68918564387009EB79C /* account_sql.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68118564387009EB79C /* account_sql.c */; };
 		A56CC68A18564387009EB79C /* ipban_sql.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68318564387009EB79C /* ipban_sql.c */; };
@@ -210,6 +213,12 @@
 /* Begin PBXFileReference section */
 		A5380CCD1856CE180090CBC4 /* mapcache */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mapcache; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5380CD61856CE3C0090CBC4 /* mapcache.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mapcache.c; path = src/tool/mapcache.c; sourceTree = "<group>"; };
+		A5467AD11A16FCB4008AFAA6 /* loginif.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = loginif.c; path = src/char/loginif.c; sourceTree = SOURCE_ROOT; };
+		A5467AD21A16FCB4008AFAA6 /* loginif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = loginif.h; path = src/char/loginif.h; sourceTree = SOURCE_ROOT; };
+		A5467AD41A16FCDC008AFAA6 /* mapif.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mapif.c; path = src/char/mapif.c; sourceTree = SOURCE_ROOT; };
+		A5467AD51A16FCDC008AFAA6 /* mapif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mapif.h; path = src/char/mapif.h; sourceTree = SOURCE_ROOT; };
+		A5467AD71A16FD08008AFAA6 /* geoip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = geoip.c; path = src/char/geoip.c; sourceTree = SOURCE_ROOT; };
+		A5467AD81A16FD08008AFAA6 /* geoip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geoip.h; path = src/char/geoip.h; sourceTree = SOURCE_ROOT; };
 		A56CC66A18564315009EB79C /* login-server */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "login-server"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A56CC6731856434D009EB79C /* char-server */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "char-server"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A56CC67C18564356009EB79C /* map-server */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "map-server"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -549,6 +558,12 @@
 		A56CC6741856434D009EB79C /* char-server */ = {
 			isa = PBXGroup;
 			children = (
+				A5467AD71A16FD08008AFAA6 /* geoip.c */,
+				A5467AD81A16FD08008AFAA6 /* geoip.h */,
+				A5467AD41A16FCDC008AFAA6 /* mapif.c */,
+				A5467AD51A16FCDC008AFAA6 /* mapif.h */,
+				A5467AD11A16FCB4008AFAA6 /* loginif.c */,
+				A5467AD21A16FCB4008AFAA6 /* loginif.h */,
 				A5B894AB1A03CDFA005AD22E /* HPMchar.c */,
 				A5B894AC1A03CDFA005AD22E /* HPMchar.h */,
 				A56CC743185657D9009EB79C /* char.c */,
@@ -1195,6 +1210,7 @@
 				A56CC75D185657D9009EB79C /* char.c in Sources */,
 				A56CC6D9185643BB009EB79C /* ers.c in Sources */,
 				A56CC6CA185643BB009EB79C /* conf.c in Sources */,
+				A5467AD91A16FD08008AFAA6 /* geoip.c in Sources */,
 				A56CC718185643BB009EB79C /* utils.c in Sources */,
 				A56CC715185643BB009EB79C /* timer.c in Sources */,
 				A56CC6CD185643BB009EB79C /* console.c in Sources */,
@@ -1202,6 +1218,7 @@
 				A56CC6EB185643BB009EB79C /* md5calc.c in Sources */,
 				A56CC760185657D9009EB79C /* int_guild.c in Sources */,
 				A56CC768185657D9009EB79C /* inter.c in Sources */,
+				A5467AD61A16FCDC008AFAA6 /* mapif.c in Sources */,
 				A56CC73818564C05009EB79C /* scanner.c in Sources */,
 				A56CC700185643BB009EB79C /* random.c in Sources */,
 				A5B894AD1A03CDFA005AD22E /* HPMchar.c in Sources */,
@@ -1224,6 +1241,7 @@
 				A56CC73518564C05009EB79C /* scanctx.c in Sources */,
 				A56CC712185643BB009EB79C /* thread.c in Sources */,
 				A56CC6D0185643BB009EB79C /* core.c in Sources */,
+				A5467AD31A16FCB4008AFAA6 /* loginif.c in Sources */,
 				A56CC767185657D9009EB79C /* int_storage.c in Sources */,
 				A56CC763185657D9009EB79C /* int_mercenary.c in Sources */,
 				A56CC6D3185643BB009EB79C /* db.c in Sources */,

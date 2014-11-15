@@ -461,6 +461,30 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\char\loginif.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\char\loginif.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\char\mapif.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\char\mapif.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\char\geoip.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\char\geoip.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\char\int_auction.c"
 				>
 			</File>

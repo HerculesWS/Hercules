@@ -16,14 +16,15 @@
 #include "../common/socket.h"
 #include "../common/strlib.h"
 
-int enabled = PINCODE_OK;
-int changetime = 0;
-int maxtry = 3;
-int charselect = 0;
-unsigned int multiplier = 0x3498, baseSeed = 0x881234;
+int pincode_enabled = PINCODE_OK;
+int pincode_changetime = 0;
+int pincode_maxtry = 3;
+int pincode_charselect = 0;
+unsigned int pincode_multiplier = 0x3498;
+unsigned int pincode_baseSeed = 0x881234;
 
 void pincode_handle ( int fd, struct char_session_data* sd ) {
-	struct online_char_data* character = (struct online_char_data*)idb_get(online_char_db, sd->account_id);
+	struct online_char_data* character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id);
 	
 	if( character && character->pincode_enable > *pincode->charselect ){
 		character->pincode_enable = *pincode->charselect * 2;
@@ -52,7 +53,7 @@ void pincode_check(int fd, struct char_session_data* sd) {
 	pincode->decrypt(sd->pincode_seed, pin);
 	if( pincode->compare( fd, sd, pin ) ){
 		struct online_char_data* character;
-		if( (character = (struct online_char_data*)idb_get(online_char_db, sd->account_id)) )
+		if( (character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id)) )
 			character->pincode_enable = *pincode->charselect * 2;
 		pincode->sendstate( fd, sd, PINCODE_OK );
 	}
@@ -115,18 +116,18 @@ void pincode_sendstate(int fd, struct char_session_data* sd, uint16 state) {
 }
 
 void pincode_notifyLoginPinUpdate(int account_id, char* pin) {
-	WFIFOHEAD(login_fd,11);
-	WFIFOW(login_fd,0) = 0x2738;
-	WFIFOL(login_fd,2) = account_id;
-	strncpy( (char*)WFIFOP(login_fd,6), pin, 5 );
-	WFIFOSET(login_fd,11);
+	WFIFOHEAD(chr->login_fd,11);
+	WFIFOW(chr->login_fd,0) = 0x2738;
+	WFIFOL(chr->login_fd,2) = account_id;
+	strncpy( (char*)WFIFOP(chr->login_fd,6), pin, 5 );
+	WFIFOSET(chr->login_fd,11);
 }
 
 void pincode_notifyLoginPinError(int account_id) {
-	WFIFOHEAD(login_fd,6);
-	WFIFOW(login_fd,0) = 0x2739;
-	WFIFOL(login_fd,2) = account_id;
-	WFIFOSET(login_fd,6);
+	WFIFOHEAD(chr->login_fd,6);
+	WFIFOW(chr->login_fd,0) = 0x2739;
+	WFIFOL(chr->login_fd,2) = account_id;
+	WFIFOSET(chr->login_fd,6);
 }
 
 void pincode_decrypt(unsigned int userSeed, char* pin) {
@@ -155,23 +156,23 @@ bool pincode_config_read(char *w1, char *w2) {
 	while ( true ) {
 		
 		if ( strcmpi(w1, "pincode_enabled") == 0 ) {
-			enabled = atoi(w2);
+			pincode_enabled = atoi(w2);
 #if PACKETVER < 20110309
-			if( enabled ) {
+			if( pincode_enabled ) {
 				ShowWarning("pincode_enabled requires PACKETVER 20110309 or higher. disabling...\n");
-				enabled = 0;
+				pincode_enabled = 0;
 			}
 #endif
 		} else if ( strcmpi(w1, "pincode_changetime") == 0 ) {
-			changetime = atoi(w2)*60;
+			pincode_changetime = atoi(w2)*60;
 		} else if ( strcmpi(w1, "pincode_maxtry") == 0 ) {
-			maxtry = atoi(w2);
-			if( maxtry > 3 ) {
-				ShowWarning("pincode_maxtry is too high (%d); maximum allowed: 3! capping to 3...\n",maxtry);
-				maxtry = 3;
+			pincode_maxtry = atoi(w2);
+			if( pincode_maxtry > 3 ) {
+				ShowWarning("pincode_maxtry is too high (%d); maximum allowed: 3! capping to 3...\n",pincode_maxtry);
+				pincode_maxtry = 3;
 			}
 		} else if ( strcmpi(w1, "pincode_charselect") == 0 ) {
-			charselect = atoi(w2);
+			pincode_charselect = atoi(w2);
 		} else
 			return false;
 		
@@ -184,12 +185,12 @@ bool pincode_config_read(char *w1, char *w2) {
 void pincode_defaults(void) {
 	pincode = &pincode_s;
 	
-	pincode->enabled = &enabled;
-	pincode->changetime = &changetime;
-	pincode->maxtry = &maxtry;
-	pincode->charselect = &charselect;
-	pincode->multiplier = &multiplier;
-	pincode->baseSeed = &baseSeed;
+	pincode->enabled = &pincode_enabled;
+	pincode->changetime = &pincode_changetime;
+	pincode->maxtry = &pincode_maxtry;
+	pincode->charselect = &pincode_charselect;
+	pincode->multiplier = &pincode_multiplier;
+	pincode->baseSeed = &pincode_baseSeed;
 	
 	pincode->handle = pincode_handle;
 	pincode->decrypt = pincode_decrypt;

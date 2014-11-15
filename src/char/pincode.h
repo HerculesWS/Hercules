@@ -14,7 +14,9 @@
 #define PINCODE_UNUSED 7
 #define	PINCODE_WRONG 8
 
-/* Pincode Interface */
+/**
+ * pincode interface
+ **/
 struct pincode_interface {
 	/* vars */
 	int *enabled;
