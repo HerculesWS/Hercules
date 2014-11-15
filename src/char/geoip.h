@@ -11,19 +11,19 @@
  * GeoIP information
  **/
 struct s_geoip {
-    unsigned char *cache; // GeoIP.dat information see geoip->init()
-    bool active;
+	unsigned char *cache; // GeoIP.dat information see geoip->init()
+	bool active;
 };
 
 /**
  * geoip interface
  **/
 struct geoip_interface {
-    struct s_geoip *data;
-    const char* (*getcountry) (uint32 ipnum);
-    void (*final) (bool shutdown);
-    void (*init) (void);
-} geoip_s;
+	struct s_geoip *data;
+	const char* (*getcountry) (uint32 ipnum);
+	void (*final) (bool shutdown);
+	void (*init) (void);
+};
 
 struct geoip_interface *geoip;
 
