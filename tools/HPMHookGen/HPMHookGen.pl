@@ -260,7 +260,7 @@ foreach my $file (@files) { # Loop through the xml files
 	my $xml = new XML::Simple;
 	my $data = $xml->XMLin($file, ForceArray => 1);
 
-	my $filekey = (keys $data->{compounddef})[0];
+	my $filekey = (keys %{ $data->{compounddef} })[0];
 	my $loc = $data->{compounddef}->{$filekey}->{location}->[0];
 	next unless $loc->{file} =~ /src\/(map|char|login)\//;
 	my $servertype = $1;

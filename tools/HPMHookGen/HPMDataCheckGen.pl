@@ -21,7 +21,7 @@ my %out;
 foreach my $file (@files) {
 	my $xml = new XML::Simple;
 	my $data = $xml->XMLin($file, ForceArray => 1);
-	my $filekey = (keys $data->{compounddef})[0];
+	my $filekey = (keys %{ $data->{compounddef} })[0];
 	next unless $data->{compounddef}->{$filekey}->{includes}; # means its a struct from a .c file, plugins cant access those so we don't care.
 	next if $data->{compounddef}->{$filekey}->{compoundname}->[0] =~ /::/; # its a duplicate with a :: name e.g. struct script_state {<...>} ay;
 	my @filepath = split(/[\/\\]/, $data->{compounddef}->{$filekey}->{location}->[0]->{file});
