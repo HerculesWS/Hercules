@@ -5604,10 +5604,11 @@ void char_sql_config_read(const char* cfgName)
 			safestrncpy(acc_reg_str_db, w2, sizeof(acc_reg_str_db));
 		else if(!strcmpi(w1,"acc_reg_num_db"))
 			safestrncpy(acc_reg_num_db, w2, sizeof(acc_reg_num_db));
-
 		//support the import command, just like any other config
 		else if(!strcmpi(w1,"import"))
 			chr->sql_config_read(w2);
+		else
+			HPM->parseConf(w1, w2, HPCT_CHAR_INTER);
 	}
 	fclose(fp);
 	ShowInfo("Done reading %s.\n", cfgName);
@@ -5623,6 +5624,8 @@ void char_config_dispatch(char *w1, char *w2) {
 		if( (*dispatch_to[i])(w1,w2) )
 			break;/* we found who this belongs to, can stop */
 	}
+	if (i == len)
+		HPM->parseConf(w1, w2, HPCT_CHAR);
 }
 
 int char_config_read(const char* cfgName)

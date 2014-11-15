@@ -1843,10 +1843,11 @@ int login_config_read(const char* cfgName)
 		else
 		{
 			AccountDB* db = account_engine[0].db;
-			if( db )
+			if (db)
 				db->set_property(db, w1, w2);
 			ipban_config_read(w1, w2);
 			loginlog_config_read(w1, w2);
+			HPM->parseConf(w1, w2, HPCT_LOGIN);
 		}
 	}
 	fclose(fp);

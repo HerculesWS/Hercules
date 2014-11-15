@@ -84,7 +84,13 @@ enum HPluginDataTypes {
 
 /* used in macros and conf storage */
 enum HPluginConfType {
-	HPCT_BATTLE, /* battle-conf (map-server */
+	HPCT_BATTLE,     /* battle-conf (map-server */
+	HPCT_LOGIN,      /* login-server.conf (login-server) */
+	HPCT_CHAR,       /* char-server.conf (char-server) */
+	HPCT_CHAR_INTER, /* inter-server.conf (char-server) */
+	HPCT_MAP_INTER,  /* inter-server.conf (map-server) */
+	HPCT_LOG,        /* logs.conf (map-server) */
+	HPCT_SCRIPT,     /* script.conf (map-server) */
 	HPCT_MAX,
 };
 
@@ -157,6 +163,18 @@ enum HPluginConfType {
 #define addPacket(cmd,len,receive,point) HPMi->addPacket(cmd,len,receive,point,HPMi->pid)
 /* HPMi->addBattleConf */
 #define addBattleConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_BATTLE,bcname,funcname)
+/* HPMi->addLogin */
+#define addLoginConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_LOGIN,bcname,funcname)
+/* HPMi->addChar */
+#define addCharConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_CHAR,bcname,funcname)
+/* HPMi->addCharInter */
+#define addCharInterConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_CHAR_INTER,bcname,funcname)
+/* HPMi->addMapInter */
+#define addMapInterConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_MAP_INTER,bcname,funcname)
+/* HPMi->addLog */
+#define addLogConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_LOG,bcname,funcname)
+/* HPMi->addScript */
+#define addScriptConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_SCRIPT,bcname,funcname)
 
 /* HPMi->addPCGPermission */
 #define addGroupPermission(pcgname,maskptr) HPMi->addPCGPermission(HPMi->pid,pcgname,&maskptr)
