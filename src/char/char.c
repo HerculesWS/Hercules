@@ -5624,6 +5624,8 @@ void char_config_dispatch(char *w1, char *w2) {
 		if( (*dispatch_to[i])(w1,w2) )
 			break;/* we found who this belongs to, can stop */
 	}
+	if (i == len)
+		HPM->parseConf(w1, w2, HPCT_CHAR);
 }
 
 int char_config_read(const char* cfgName)
@@ -5789,8 +5791,6 @@ int char_config_read(const char* cfgName)
 			char_maintenance_min_group_id = atoi(w2);
 		} else if (strcmpi(w1, "import") == 0) {
 			chr->config_read(w2);
-		} else if(HPM->parseConf(w1, w2, HPCT_CHAR)) {
-			; // handled by plugin
 		} else
 			chr->config_dispatch(w1,w2);
 	}
