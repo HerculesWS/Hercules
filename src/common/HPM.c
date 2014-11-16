@@ -30,6 +30,7 @@
 
 struct malloc_interface iMalloc_HPM;
 struct malloc_interface *HPMiMalloc;
+struct HPM_interface HPM_s;
 
 /**
  * (char*) data name -> (unsigned int) HPMDataCheck[] index

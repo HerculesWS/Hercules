@@ -204,8 +204,9 @@ HPExport struct HPMi_interface {
 	bool (*addConf) (unsigned int pluginID, enum HPluginConfType type, char *name, void (*func) (const char *val));
 	/* pc group permission */
 	void (*addPCGPermission) (unsigned int pluginID, char *name, unsigned int *mask);
-} HPMi_s;
+};
 #ifndef HERCULES_CORE
+HPExport struct HPMi_interface HPMi_s;
 HPExport struct HPMi_interface *HPMi;
 #endif
 
