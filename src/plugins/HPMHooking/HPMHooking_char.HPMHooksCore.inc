@@ -519,6 +519,10 @@ struct {
 	struct HPMHookPoint *HP_inter_storage_guild_storage_delete_post;
 	struct HPMHookPoint *HP_inter_storage_parse_frommap_pre;
 	struct HPMHookPoint *HP_inter_storage_parse_frommap_post;
+	struct HPMHookPoint *HP_loginif_init_pre;
+	struct HPMHookPoint *HP_loginif_init_post;
+	struct HPMHookPoint *HP_loginif_final_pre;
+	struct HPMHookPoint *HP_loginif_final_post;
 	struct HPMHookPoint *HP_loginif_reset_pre;
 	struct HPMHookPoint *HP_loginif_reset_post;
 	struct HPMHookPoint *HP_loginif_check_shutdown_pre;
@@ -1410,6 +1414,10 @@ struct {
 	int HP_inter_storage_guild_storage_delete_post;
 	int HP_inter_storage_parse_frommap_pre;
 	int HP_inter_storage_parse_frommap_post;
+	int HP_loginif_init_pre;
+	int HP_loginif_init_post;
+	int HP_loginif_final_pre;
+	int HP_loginif_final_post;
 	int HP_loginif_reset_pre;
 	int HP_loginif_reset_post;
 	int HP_loginif_check_shutdown_pre;

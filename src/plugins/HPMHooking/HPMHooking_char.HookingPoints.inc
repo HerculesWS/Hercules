@@ -276,6 +276,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(inter_storage->guild_storage_delete, HP_inter_storage_guild_storage_delete) },
 	{ HP_POP(inter_storage->parse_frommap, HP_inter_storage_parse_frommap) },
 /* loginif */
+	{ HP_POP(loginif->init, HP_loginif_init) },
+	{ HP_POP(loginif->final, HP_loginif_final) },
 	{ HP_POP(loginif->reset, HP_loginif_reset) },
 	{ HP_POP(loginif->check_shutdown, HP_loginif_check_shutdown) },
 	{ HP_POP(loginif->on_disconnect, HP_loginif_on_disconnect) },

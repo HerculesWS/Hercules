@@ -6884,6 +6884,58 @@ int HP_inter_storage_parse_frommap(int fd) {
 	return retVal___;
 }
 /* loginif */
+void HP_loginif_init(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_loginif_init_pre ) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_loginif_init_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_loginif_init_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.loginif.init();
+	}
+	if( HPMHooks.count.HP_loginif_init_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_loginif_init_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_loginif_init_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+void HP_loginif_final(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_loginif_final_pre ) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_loginif_final_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_loginif_final_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.loginif.final();
+	}
+	if( HPMHooks.count.HP_loginif_final_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_loginif_final_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_loginif_final_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
 void HP_loginif_reset(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_loginif_reset_pre ) {
