@@ -155,7 +155,7 @@ static void script_dump_stack(struct script_state* st)
 			break;
 
 		case C_NAME:
-			ShowMessage(" \"%s\" (id=%d ref=%p subtype=%s)\n", reference_getname(data), data->u.num, data->ref, script_op2name(script->str_data[data->u.num].type));
+			ShowMessage(" \"%s\" (id=%d ref=%p subtype=%s)\n", reference_getname(data), data->u.num, data->ref, script->op2name(script->str_data[data->u.num].type));
 			break;
 
 		case C_RETINFO:
