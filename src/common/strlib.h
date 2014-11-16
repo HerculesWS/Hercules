@@ -92,7 +92,7 @@ struct strlib_interface {
 	/// The output buffer must be at least count*2+1 in size.
 	/// Returns true on success, false on failure.
 	bool (*bin2hex) (char* output, unsigned char* input, size_t count);
-} strlib_s;
+};
 
 struct strlib_interface *strlib;
 
@@ -108,7 +108,7 @@ struct stringbuf_interface {
 	void (*Clear) (StringBuf* self);
 	void (*Destroy) (StringBuf* self);
 	void (*Free) (StringBuf* self);
-} stringbuf_s;
+};
 
 struct stringbuf_interface *StrBuf;
 
@@ -152,7 +152,7 @@ struct sv_interface {
 	/// Tracks the progress of the operation (current line number, number of successfully processed rows).
 	/// Returns 'true' if it was able to process the specified file, or 'false' if it could not be read.
 	bool (*readdb) (const char* directory, const char* filename, char delim, int mincols, int maxcols, int maxrows, bool (*parseproc)(char* fields[], int columns, int current));
-} sv_s;
+};
 
 struct sv_interface *sv;
 

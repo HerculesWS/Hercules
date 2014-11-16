@@ -18,6 +18,10 @@
 
 #define J_MAX_MALLOC_SIZE 65535
 
+struct strlib_interface strlib_s;
+struct stringbuf_interface stringbuf_s;
+struct sv_interface sv_s;
+
 // escapes a string in-place (' -> \' , \ -> \\ , % -> _)
 char* jstrescape (char* pt) {
 	//copy from here
