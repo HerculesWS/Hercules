@@ -5,6 +5,7 @@
 #ifndef COMMON_CHAR_H
 #define COMMON_CHAR_H
 
+#include "../common/cbasetypes.h"
 #include "../common/core.h" // CORE_ST_LAST
 #include "../common/db.h"
 
@@ -42,6 +43,14 @@ struct online_char_data {
 	int pincode_enable;
 };
 
+struct mmo_map_server {
+	int fd;
+	uint32 ip;
+	uint16 port;
+	int users;
+	unsigned short *map;
+	unsigned short maps;
+};
 
 #define MAX_MAP_SERVERS 2
 
@@ -120,10 +129,19 @@ struct char_auth_node {
  * char interface
  **/
 struct char_interface {
+	struct mmo_map_server server[MAX_MAP_SERVERS];
 	int login_fd;
 	int char_fd;
 	DBMap* online_char_db; // int account_id -> struct online_char_data*
 	DBMap* char_db_;
+	char userid[NAME_LENGTH];
+	char passwd[NAME_LENGTH];
+	char server_name[20];
+	uint32 ip;
+	uint16 port;
+	int server_type;
+	int new_display;
+
 	int (*waiting_disconnect) (int tid, int64 tick, int id, intptr_t data);
 	int (*delete_char_sql) (int char_id);
 	DBData (*create_online_char_data) (DBKey key, va_list args);
