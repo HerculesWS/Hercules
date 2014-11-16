@@ -40,7 +40,7 @@ struct duel_interface {
 	
 	void (*init) (bool minimal);
 	void (*final) (void);
-} duel_s;
+};
 
 struct duel_interface *duel;
 
