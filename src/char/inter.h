@@ -11,24 +11,37 @@
 
 struct accreg;
 
-int inter_init_sql(const char *file);
-void inter_final(void);
-int inter_parse_frommap(int fd);
-int inter_mapif_init(int fd);
-int mapif_send_gmaccounts(void);
-int mapif_disconnectplayer(int fd, int account_id, int char_id, int reason);
-void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass, const char *email, const char *last_ip, const char *lastlogin, const char *pin_code, const char *birthdate, int group_id, int logincount, int state);
-
-int inter_log(char *fmt, ...) __attribute__((format(printf, 1, 2)));
-int inter_vlog(char *fmt, va_list ap);
-
 #define inter_cfgName "conf/inter-server.conf"
 
 extern unsigned int party_share_level;
 
-extern Sql* sql_handle;
-extern Sql* lsql_handle;
+void inter_defaults(void);
 
-int inter_accreg_tosql(int account_id, int char_id, struct accreg *reg, int type);
+/**
+ * inter interface
+ **/
+struct inter_interface {
+	Sql* sql_handle;
+	const char* (*msg_txt) (int msg_number);
+	bool (*msg_config_read) (const char *cfg_name, bool allow_override);
+	void (*do_final_msg) (void);
+	const char* (*job_name) (int class_);
+	void (*vmsg_to_fd) (int fd, int u_fd, int aid, char* msg, va_list ap);
+	void (*msg_to_fd) (int fd, int u_fd, int aid, char *msg, ...);
+	void (*savereg) (int account_id, int char_id, const char *key, unsigned int index, intptr_t val, bool is_string);
+	int (*accreg_fromsql) (int account_id,int char_id, int fd, int type);
+	int (*config_read) (const char* cfgName);
+	int (*vlog) (char* fmt, va_list ap);
+	int (*log) (char* fmt, ...);
+	int (*init_sql) (const char *file);
+	int (*mapif_init) (int fd);
+	int (*check_ttl_wisdata_sub) (DBKey key, DBData *data, va_list ap);
+	int (*check_ttl_wisdata) (void);
+	int (*check_length) (int fd, int length);
+	int (*parse_frommap) (int fd);
+	void (*final) (void);
+};
+
+struct inter_interface *inter;
 
 #endif /* CHAR_INTER_H */

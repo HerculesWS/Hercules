@@ -79,22 +79,22 @@ struct elemental_interface {
 	/* funcs */
 	bool (*class) (int class_);
 	struct view_data * (*get_viewdata) (int class_);
-	
+
 	int (*create) (struct map_session_data *sd, int class_, unsigned int lifetime);
 	int (*data_received) (struct s_elemental *ele, bool flag);
 	int (*save) (struct elemental_data *ed);
-	
+
 	int (*change_mode_ack) (struct elemental_data *ed, int mode);
 	int (*change_mode) (struct elemental_data *ed, int mode);
-	
+
 	void (*heal) (struct elemental_data *ed, int hp, int sp);
 	int (*dead) (struct elemental_data *ed);
-	
+
 	int (*delete) (struct elemental_data *ed, int reply);
 	void (*summon_stop) (struct elemental_data *ed);
-	
+
 	int (*get_lifetime) (struct elemental_data *ed);
-	
+
 	int (*unlocktarget) (struct elemental_data *ed);
 	int (*skillnotok) (uint16 skill_id, struct elemental_data *ed);
 	int (*set_target) (struct map_session_data *sd, struct block_list *bl);
@@ -102,11 +102,11 @@ struct elemental_interface {
 	int (*clean_effect) (struct elemental_data *ed);
 	int (*action) (struct elemental_data *ed, struct block_list *bl, int64 tick);
 	struct skill_condition (*skill_get_requirements) (uint16 skill_id, uint16 skill_lv);
-	
+
 	int (*read_skilldb) (void);
 	void (*reload_db) (void);
 	void (*reload_skilldb) (void);
-	
+
 	int (*search_index) (int class_);
 	void (*summon_init) (struct elemental_data *ed);
 	int (*summon_end_timer) (int tid, int64 tick, int id, intptr_t data);

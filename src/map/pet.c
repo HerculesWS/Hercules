@@ -510,7 +510,7 @@ int pet_catch_process2(struct map_session_data* sd, int target_id) {
 	if (sd->catch_target_class == 0 && !(md->status.mode&MD_BOSS))
 		sd->catch_target_class = md->class_;
 	if(i < 0 || sd->catch_target_class != md->class_) {
-		clif->emotion(&md->bl, E_AG);	//mob will do /ag if wrong lure is used on them.
+		clif->emotion(&md->bl, E_AG); //mob will do /ag if wrong lure is used on them.
 		clif->pet_roulette(sd,0);
 		sd->catch_target_class = -1;
 		return 1;
@@ -911,17 +911,18 @@ int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int64 tick
 
 	if (target->type != BL_ITEM)
 	{ //enemy targetted
-		if(!battle->check_range(&pd->bl,target,pd->status.rhw.range))
-		{	//Chase
+		if(!battle->check_range(&pd->bl,target,pd->status.rhw.range)) {
+			//Chase
 			if(!unit->walktobl(&pd->bl, target, pd->status.rhw.range, 2))
 				pet->unlocktarget(pd); //Unreachable target.
 			return 0;
 		}
 		//Continuous attack.
 		unit->attack(&pd->bl, pd->target_id, 1);
-	} else {	//Item Targeted, attempt loot
-		if (!check_distance_bl(&pd->bl, target, 1))
-		{	//Out of range
+	} else {
+		//Item Targeted, attempt loot
+		if (!check_distance_bl(&pd->bl, target, 1)) {
+			//Out of range
 			if(!unit->walktobl(&pd->bl, target, 1, 1)) //Unreachable target.
 				pet->unlocktarget(pd);
 			return 0;
@@ -1036,7 +1037,7 @@ int pet_lootitem_drop(struct pet_data *pd,struct map_session_data *sd)
 	memset(pd->loot->item,0,pd->loot->max * sizeof(struct item));
 	pd->loot->count = 0;
 	pd->loot->weight = 0;
-	pd->ud.canact_tick = timer->gettick()+10000;	//prevent picked up during 10*1000ms
+	pd->ud.canact_tick = timer->gettick()+10000; //prevent picked up during 10*1000ms
 
 	if (dlist->item)
 		timer->add(timer->gettick()+540,pet->delay_item_drop,0,(intptr_t)dlist);
@@ -1103,8 +1104,8 @@ int pet_recovery_timer(int tid, int64 tick, int id, intptr_t data) {
 		return 0;
 	}
 
-	if(sd->sc.data[pd->recovery->type])
-	{	//Display a heal animation?
+	if (sd->sc.data[pd->recovery->type]) {
+		//Display a heal animation?
 		//Detoxify is chosen for now.
 		clif->skill_nodamage(&pd->bl,&sd->bl,TF_DETOXIFY,1,1);
 		status_change_end(&sd->bl, pd->recovery->type, INVALID_TIMER);
@@ -1170,8 +1171,8 @@ int pet_skill_support_timer(int tid, int64 tick, int id, intptr_t data) {
 	
 	st = status->get_status_data(&sd->bl);
 
-	if (DIFF_TICK(pd->ud.canact_tick, tick) > 0)
-	{	//Wait until the pet can act again.
+	if (DIFF_TICK(pd->ud.canact_tick, tick) > 0) {
+		//Wait until the pet can act again.
 		pd->s_skill->timer=timer->add(pd->ud.canact_tick,pet->skill_support_timer,sd->bl.id,0);
 		return 0;
 	}

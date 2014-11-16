@@ -41,16 +41,16 @@ struct s_pet_db {
 enum { PET_CLASS,PET_CATCH,PET_EGG,PET_EQUIP,PET_FOOD };
 
 struct pet_recovery { //Stat recovery
-	enum sc_type type;	//Status Change id
-	unsigned short delay; //How long before curing (secs).
+	enum sc_type type;    ///< Status Change id
+	unsigned short delay; ///< How long before curing (secs).
 	int timer;
 };
 
 struct pet_bonus {
-	unsigned short type; //bStr, bVit?
-	unsigned short val;	//Qty
+	unsigned short type;     //bStr, bVit?
+	unsigned short val;      //Qty
 	unsigned short duration; //in secs
-	unsigned short delay;	//Time before RENEWAL_CAST (secs)
+	unsigned short delay;    //Time before RENEWAL_CAST (secs)
 	int timer;
 };
 
@@ -93,7 +93,7 @@ struct pet_data {
 	} state;
 	int move_fail_count;
 	int64 next_walktime, last_thinktime;
-	short rate_fix;	//Support rate as modified by intimacy (1000 = 100%) [Skotlex]
+	short rate_fix; //Support rate as modified by intimacy (1000 = 100%) [Skotlex]
 
 	struct pet_recovery* recovery;
 	struct pet_bonus* bonus;

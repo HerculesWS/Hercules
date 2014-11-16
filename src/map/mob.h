@@ -106,7 +106,7 @@ struct mob_db {
 	unsigned int base_exp,job_exp;
 	unsigned int mexp;
 	short range2,range3;
-	short race2;	// celest
+	short race2; // celest
 	unsigned short lv;
 	struct { int nameid,p; } dropitem[MAX_MOB_DROP];
 	struct { int nameid,p; } mvpitem[MAX_MVP_DROP];
@@ -125,7 +125,7 @@ struct mob_data {
 	struct view_data *vd;
 	struct status_data status, *base_status; //Second one is in case of leveling up mobs, or tiny/large mobs.
 	struct status_change sc;
-	struct mob_db *db;	//For quick data access (saves doing mob_db(md->class_) all the time) [Skotlex]
+	struct mob_db *db; //For quick data access (saves doing mob_db(md->class_) all the time) [Skotlex]
 	char name[NAME_LENGTH];
 	struct {
 		unsigned int size : 2; //Small/Big monsters.
@@ -193,8 +193,8 @@ struct mob_data {
 
 
 enum {
-	MST_TARGET	=	0,
-	MST_RANDOM,	//Random Target!
+	MST_TARGET = 0,
+	MST_RANDOM, //Random Target!
 	MST_SELF,
 	MST_FRIEND,
 	MST_MASTER,
@@ -206,9 +206,9 @@ enum {
 	MST_AROUND2,
 	MST_AROUND3,
 	MST_AROUND4,
-	MST_AROUND	=	MST_AROUND4,
+	MST_AROUND = MST_AROUND4,
 
-	MSC_ALWAYS	=	0x0000,
+	MSC_ALWAYS = 0x0000,
 	MSC_MYHPLTMAXRATE,
 	MSC_MYHPINRATE,
 	MSC_FRIENDHPLTMAXRATE,

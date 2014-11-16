@@ -9,6 +9,7 @@
 #include "../common/mmo.h" // NAME_LENGTH,SEX_*
 
 struct mmo_account;
+struct AccountDB;
 
 enum E_LOGINSERVER_ST
 {
@@ -45,7 +46,7 @@ struct login_session_data {
 	int has_client_hash;
 
 	int fd;
-	
+
 	time_t expiration_time;
 };
 
@@ -68,34 +69,34 @@ struct client_hash_node {
 
 struct Login_Config {
 
-	uint32 login_ip;                                // the address to bind to
-	uint16 login_port;                              // the port to bind to
-	unsigned int ipban_cleanup_interval;            // interval (in seconds) to clean up expired IP bans
-	unsigned int ip_sync_interval;                  // interval (in minutes) to execute a DNS/IP update (for dynamic IPs)
-	bool log_login;                                 // whether to log login server actions or not
-	char date_format[32];                           // date format used in messages
-	bool new_account_flag,new_acc_length_limit;     // auto-registration via _M/_F ? / if yes minimum length is 4?
-	int start_limited_time;                         // new account expiration time (-1: unlimited)
-	bool use_md5_passwds;                           // work with password hashes instead of plaintext passwords?
-	int group_id_to_connect;                        // required group id to connect
-	int min_group_id_to_connect;                    // minimum group id to connect
-	bool check_client_version;                      // check the clientversion set in the clientinfo ?
-	uint32 client_version_to_connect;               // the client version needed to connect (if checking is enabled)
-	int allowed_regs;                               // account registration flood protection [Kevin]
-	int time_allowed;                               // time in seconds
+	uint32 login_ip;                                ///< the address to bind to
+	uint16 login_port;                              ///< the port to bind to
+	unsigned int ipban_cleanup_interval;            ///< interval (in seconds) to clean up expired IP bans
+	unsigned int ip_sync_interval;                  ///< interval (in minutes) to execute a DNS/IP update (for dynamic IPs)
+	bool log_login;                                 ///< whether to log login server actions or not
+	char date_format[32];                           ///< date format used in messages
+	bool new_account_flag,new_acc_length_limit;     ///< auto-registration via _M/_F ? / if yes minimum length is 4?
+	int start_limited_time;                         ///< new account expiration time (-1: unlimited)
+	bool use_md5_passwds;                           ///< work with password hashes instead of plaintext passwords?
+	int group_id_to_connect;                        ///< required group id to connect
+	int min_group_id_to_connect;                    ///< minimum group id to connect
+	bool check_client_version;                      ///< check the clientversion set in the clientinfo ?
+	uint32 client_version_to_connect;               ///< the client version needed to connect (if checking is enabled)
+	int allowed_regs;                               ///< account registration flood protection [Kevin]
+	int time_allowed;                               ///< time in seconds
 
-	bool ipban;                                     // perform IP blocking (via contents of `ipbanlist`) ?
-	bool dynamic_pass_failure_ban;                  // automatic IP blocking due to failed login attemps ?
-	unsigned int dynamic_pass_failure_ban_interval; // how far to scan the loginlog for password failures
-	unsigned int dynamic_pass_failure_ban_limit;    // number of failures needed to trigger the ipban
-	unsigned int dynamic_pass_failure_ban_duration; // duration of the ipban
-	bool use_dnsbl;                                 // dns blacklist blocking ?
-	char dnsbl_servs[1024];                         // comma-separated list of dnsbl servers
+	bool ipban;                                     ///< perform IP blocking (via contents of `ipbanlist`) ?
+	bool dynamic_pass_failure_ban;                  ///< automatic IP blocking due to failed login attemps ?
+	unsigned int dynamic_pass_failure_ban_interval; ///< how far to scan the loginlog for password failures
+	unsigned int dynamic_pass_failure_ban_limit;    ///< number of failures needed to trigger the ipban
+	unsigned int dynamic_pass_failure_ban_duration; ///< duration of the ipban
+	bool use_dnsbl;                                 ///< dns blacklist blocking ?
+	char dnsbl_servs[1024];                         ///< comma-separated list of dnsbl servers
 
-	int client_hash_check;							// flags for checking client md5
-	struct client_hash_node *client_hash_nodes;		// linked list containg md5 hash for each gm group
+	int client_hash_check;                          ///< flags for checking client md5
+	struct client_hash_node *client_hash_nodes;     ///< linked list containg md5 hash for each gm group
 
-	// Advanced subnet check [LuzZza]
+	/// Advanced subnet check [LuzZza]
 	struct s_subnet {
 		uint32 mask;
 		uint32 char_ip;
@@ -140,6 +141,7 @@ struct login_interface {
 	DBMap* online_db;
 	int fd;
 	struct Login_Config *lc;
+	struct AccountDB* accounts;
 
 	int (*mmo_auth) (struct login_session_data* sd, bool isServer);
 	int (*mmo_auth_new) (const char* userid, const char* pass, const char sex, const char* last_ip);

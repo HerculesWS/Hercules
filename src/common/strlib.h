@@ -63,36 +63,36 @@ struct strlib_interface {
 	char *(*trim) (char* str);
 	char *(*normalize_name) (char* str,const char* delims);
 	const char *(*stristr) (const char *haystack, const char *needle);
-		
+
 	/* only used when '!(defined(WIN32) && defined(_MSC_VER) && _MSC_VER >= 1400) && !defined(HAVE_STRNLEN)', needs to be defined at all times however  */
 	size_t (*strnlen) (const char* string, size_t maxlen);
 
 	/* only used when 'defined(WIN32) && defined(_MSC_VER) && _MSC_VER <= 1200', needs to be defined at all times however  */
 	uint64 (*strtoull) (const char* str, char** endptr, int base);
-	
+
 	int (*e_mail_check) (char* email);
 	int (*config_switch) (const char* str);
-	
+
 	/// strncpy that always null-terminates the string
 	char *(*safestrncpy) (char* dst, const char* src, size_t n);
-	
+
 	/// doesn't crash on null pointer
 	size_t (*safestrnlen) (const char* string, size_t maxlen);
-	
+
 	/// Works like snprintf, but always null-terminates the buffer.
 	/// Returns the size of the string (without null-terminator)
 	/// or -1 if the buffer is too small.
 	int (*safesnprintf) (char *buf, size_t sz, const char *fmt, ...) __attribute__((format(printf, 3, 4)));
-	
+
 	/// Returns the line of the target position in the string.
 	/// Lines start at 1.
 	int (*strline) (const char* str, size_t pos);
-	
+
 	/// Produces the hexadecimal representation of the given input.
 	/// The output buffer must be at least count*2+1 in size.
 	/// Returns true on success, false on failure.
 	bool (*bin2hex) (char* output, unsigned char* input, size_t count);
-} strlib_s;
+};
 
 struct strlib_interface *strlib;
 
@@ -108,7 +108,7 @@ struct stringbuf_interface {
 	void (*Clear) (StringBuf* self);
 	void (*Destroy) (StringBuf* self);
 	void (*Free) (StringBuf* self);
-} stringbuf_s;
+};
 
 struct stringbuf_interface *StrBuf;
 
@@ -119,14 +119,14 @@ struct sv_interface {
 	/// @param svstate Parse state
 	/// @return 1 if a field was parsed, 0 if done, -1 on error.
 	int (*parse_next) (struct s_svstate* svstate);
-	
+
 	/// Parses a delim-separated string.
 	/// Starts parsing at startoff and fills the pos array with position pairs.
 	/// out_pos[0] and out_pos[1] are the start and end of line.
 	/// Other position pairs are the start and end of fields.
 	/// Returns the number of fields found or -1 if an error occurs.
 	int (*parse) (const char* str, int len, int startoff, char delim, int* out_pos, int npos, enum e_svopt opt);
-	
+
 	/// Splits a delim-separated string.
 	/// WARNING: this function modifies the input string
 	/// Starts splitting at startoff and fills the out_fields array.
@@ -134,25 +134,25 @@ struct sv_interface {
 	/// Other entries are the start of fields (null-terminated).
 	/// Returns the number of fields found or -1 if an error occurs.
 	int (*split) (char* str, int len, int startoff, char delim, char** out_fields, int nfields, enum e_svopt opt);
-	
+
 	/// Escapes src to out_dest according to the format of the C compiler.
 	/// Returns the length of the escaped string.
 	/// out_dest should be len*4+1 in size.
 	size_t (*escape_c) (char* out_dest, const char* src, size_t len, const char* escapes);
-	
+
 	/// Unescapes src to out_dest according to the format of the C compiler.
 	/// Returns the length of the unescaped string.
 	/// out_dest should be len+1 in size and can be the same buffer as src.
 	size_t (*unescape_c) (char* out_dest, const char* src, size_t len);
-	
+
 	/// Skips a C escape sequence (starting with '\\').
 	const char* (*skip_escaped_c) (const char* p);
-	
+
 	/// Opens and parses a file containing delim-separated columns, feeding them to the specified callback function row by row.
 	/// Tracks the progress of the operation (current line number, number of successfully processed rows).
 	/// Returns 'true' if it was able to process the specified file, or 'false' if it could not be read.
 	bool (*readdb) (const char* directory, const char* filename, char delim, int mincols, int maxcols, int maxrows, bool (*parseproc)(char* fields[], int columns, int current));
-} sv_s;
+};
 
 struct sv_interface *sv;
 

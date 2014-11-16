@@ -28,7 +28,7 @@ HPMHOOKING = $(addprefix HPMHooking_, login char map)
 ALLPLUGINS = $(filter-out HPMHooking, $(basename $(wildcard *.c))) $(HPMHOOKING)
 
 # Plugins that will be built through 'make plugins' or 'make all'
-PLUGINS = sample db2sql HPMHooking_login HPMHooking_map $(MYPLUGINS)
+PLUGINS = sample db2sql HPMHooking_char HPMHooking_login HPMHooking_map $(MYPLUGINS)
 
 COMMON_D = ../common
 COMMON_H = $(wildcard $(COMMON_D)/*.h)

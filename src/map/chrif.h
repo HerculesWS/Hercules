@@ -48,7 +48,7 @@ struct auth_node {
 struct chrif_interface {
 
 	/* vars */
-	
+
 	int connected;
 	int other_mapserver_count; //Holds count of how many other map servers are online (apart of this instance) [Skotlex]
 
@@ -73,22 +73,22 @@ struct chrif_interface {
 	void (*checkdefaultlogin) (void);
 	bool (*setip) (const char* ip);
 	void (*setport) (uint16 port);
-	
+
 	int (*isconnected) (void);
 	void (*check_shutdown) (void);
-	
+
 	struct auth_node* (*search) (int account_id);
 	struct auth_node* (*auth_check) (int account_id, int char_id, enum sd_state state);
 	bool (*auth_delete) (int account_id, int char_id, enum sd_state state);
 	bool (*auth_finished) (struct map_session_data* sd);
-	
+
 	void (*authreq) (struct map_session_data* sd, bool hstandalone);
 	void (*authok) (int fd);
 	bool (*scdata_request) (int account_id, int char_id);
 	bool (*save) (struct map_session_data* sd, int flag);
 	bool (*charselectreq) (struct map_session_data* sd, uint32 s_ip);
 	bool (*changemapserver) (struct map_session_data* sd, uint32 ip, uint16 port);
-	
+
 	bool (*searchcharid) (int char_id);
 	bool (*changeemail) (int id, const char *actual_email, const char *new_email);
 	bool (*char_ask_name) (int acc, const char* character_name, unsigned short operation_type, int year, int month, int day, int hour, int minute, int second);
@@ -104,13 +104,13 @@ struct chrif_interface {
 	bool (*changesex) (struct map_session_data *sd);
 	//int (*chardisconnect) (struct map_session_data *sd); // FIXME: Commented out in clif.c, function does not exist
 	bool (*divorce) (int partner_id1, int partner_id2);
-	
+
 	bool (*removefriend) (int char_id, int friend_id);
 	void (*send_report) (char* buf, int len);
-			
+
 	bool (*flush) (void);
 	void (*skillid2idx) (int fd);
-	
+
 	bool (*sd_to_auth) (TBL_PC* sd, enum sd_state state);
 	int (*check_connect_char_server) (int tid, int64 tick, int id, intptr_t data);
 	bool (*auth_logout) (TBL_PC* sd, enum sd_state state);

@@ -20,6 +20,7 @@
 #include "../common/showmsg.h"
 #include "../common/sql.h" // SQL_INNODB
 #include "../common/strlib.h"
+#include "../common/HPM.h"
 
 struct log_interface log_s;
 
@@ -44,7 +45,7 @@ char log_picktype2char(e_log_pick_type type) {
 		case LOG_TYPE_BUYING_STORE:     return 'B';  // (B)uying Store
 		case LOG_TYPE_LOOT:             return 'L';  // (L)oot (consumed monster pick/drop)
 		case LOG_TYPE_BANK:             return 'K';  // Ban(K) Transactions
-		case LOG_TYPE_OTHER:			return 'X';  // Other
+		case LOG_TYPE_OTHER:            return 'X';  // Other
 	}
 
 	// should not get here, fallback
@@ -453,6 +454,8 @@ int log_config_read(const char* cfgName) {
 			//support the import command, just like any other config
 			else if( strcmpi(w1,"import") == 0 )
 				logs->config_read(w2);
+			else if (HPM->parseConf(w1, w2, HPCT_LOG))
+				; // handled by plugins
 			else
 				ShowWarning("Unknown setting '%s' in file %s\n", w1, cfgName);
 		}

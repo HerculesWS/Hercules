@@ -48,9 +48,9 @@
 
 struct mob_interface mob_s;
 
-#define ACTIVE_AI_RANGE 2	//Distance added on top of 'AREA_SIZE' at which mobs enter active AI mode.
+#define ACTIVE_AI_RANGE 2 //Distance added on top of 'AREA_SIZE' at which mobs enter active AI mode.
 
-#define IDLE_SKILL_INTERVAL 10	//Active idle skills should be triggered every 1 second (1000/MIN_MOBTHINKTIME)
+#define IDLE_SKILL_INTERVAL 10 //Active idle skills should be triggered every 1 second (1000/MIN_MOBTHINKTIME)
 
 // Probability for mobs far from players from doing their IDLE skill. (rate of 1000 minute)
 // in Aegis, this is 100% for mobs that have been activated by players and none otherwise.
@@ -59,8 +59,8 @@ struct mob_interface mob_s;
 // in Aegis, this is 100% for mobs that have been activated by players and none otherwise.
 #define MOB_LAZYMOVEPERC(md) ((md)->state.spotted?1000:0)
 #define MOB_MAX_DELAY (24*3600*1000)
-#define MAX_MINCHASE 30	//Max minimum chase value to use for mobs.
-#define RUDE_ATTACKED_COUNT 2	//After how many rude-attacks should the skill be used?
+#define MAX_MINCHASE 30 //Max minimum chase value to use for mobs.
+#define RUDE_ATTACKED_COUNT 2 //After how many rude-attacks should the skill be used?
 
 //Dynamic item drop ratio database for per-item drop ratio modifiers overriding global drop ratios.
 #define MAX_ITEMRATIO_MOBS 10
@@ -502,7 +502,7 @@ int mob_once_spawn(struct map_session_data* sd, int16 m, int16 x, int16 y, const
 				else if( gc->guild_id ) //Guild not yet available, retry in 5.
 					timer->add(timer->gettick()+5000,mob->spawn_guardian_sub,md->bl.id,gc->guild_id);
 			}
-		}	// end addition [Valaris]
+		} // end addition [Valaris]
 
 		mob->spawn(md);
 
@@ -677,8 +677,8 @@ int mob_spawn_guardian(const char* mapname, short x, short y, const char* mobnam
 	else
 		g = guild->search(gc->guild_id);
 
-	if( has_index && gc->guardian[guardian].id )
-  	{	//Check if guardian already exists, refuse to spawn if so.
+	if( has_index && gc->guardian[guardian].id ) {
+		//Check if guardian already exists, refuse to spawn if so.
 		struct mob_data *md2 = (TBL_MOB*)map->id2bl(gc->guardian[guardian].id);
 		if (md2 && md2->bl.type == BL_MOB
 		        && md2->guardian_data
@@ -805,7 +805,8 @@ int mob_linksearch(struct block_list *bl,va_list ap) {
 		&& !md->target_id)
 	{
 		md->last_linktime = tick;
-		if( mob->can_reach(md,target,md->db->range2, MSS_FOLLOW) ){	// Reachability judging
+		if (mob->can_reach(md,target,md->db->range2, MSS_FOLLOW)) {
+			// Reachability judging
 			md->target_id = target->id;
 			md->min_chase=md->db->range3;
 			return 1;
@@ -853,17 +854,20 @@ int mob_setdelayspawn(struct mob_data *md)
 	//Apply the spawn delay fix [Skotlex]
 	db = mob->db(md->spawn->class_);
 	mode = db->status.mode;
-	if (mode & MD_BOSS) {	//Bosses
+	if (mode & MD_BOSS) {
+		//Bosses
 		if (battle_config.boss_spawn_delay != 100) {
 			// Divide by 100 first to prevent overflows
 			//(precision loss is minimal as duration is in ms already)
 			spawntime = spawntime/100*battle_config.boss_spawn_delay;
 		}
-	} else if (mode&MD_PLANT) {	//Plants
+	} else if (mode&MD_PLANT) {
+		//Plants
 		if (battle_config.plant_spawn_delay != 100) {
 			spawntime = spawntime/100*battle_config.plant_spawn_delay;
 		}
-	} else if (battle_config.mob_spawn_delay != 100) {	//Normal mobs
+	} else if (battle_config.mob_spawn_delay != 100) {
+		//Normal mobs
 		spawntime = spawntime/100*battle_config.mob_spawn_delay;
 	}
 
@@ -943,7 +947,7 @@ int mob_spawn (struct mob_data *md)
 		md->spawn_timer = INVALID_TIMER;
 	}
 
-//	md->master_id = 0;
+	//md->master_id = 0;
 	md->master_dist = 0;
 
 	md->state.aggressive = md->status.mode&MD_ANGRY?1:0;
@@ -1027,7 +1031,7 @@ int mob_target(struct mob_data *md,struct block_list *bl,int dist)
 	if(!status->check_skilluse(&md->bl, bl, 0, 0))
 		return 0;
 
-	md->target_id = bl->id;	// Since there was no disturbance, it locks on to target.
+	md->target_id = bl->id; // Since there was no disturbance, it locks on to target.
 	if (md->state.provoke_flag && bl->id != md->state.provoke_flag)
 		md->state.provoke_flag = 0;
 	md->min_chase=dist+md->db->range3;
@@ -1197,8 +1201,8 @@ int mob_ai_sub_hard_slavemob(struct mob_data *md, int64 tick) {
 	if (bl->prev == NULL)
 		return 0; //Master not on a map? Could be warping, do not process.
 
-	if(status_get_mode(&md->bl)&MD_CANMOVE)
-	{	//If the mob can move, follow around. [Check by Skotlex]
+	if (status_get_mode(&md->bl)&MD_CANMOVE) {
+		//If the mob can move, follow around. [Check by Skotlex]
 		int old_dist;
 
 		// Distance with between slave and master is measured.
@@ -1235,8 +1239,7 @@ int mob_ai_sub_hard_slavemob(struct mob_data *md, int64 tick) {
 	}
 
 	//Avoid attempting to lock the master's target too often to avoid unnecessary overload. [Skotlex]
-	if (DIFF_TICK(md->last_linktime, tick) < MIN_MOBLINKTIME && !md->target_id)
-  	{
+	if (DIFF_TICK(md->last_linktime, tick) < MIN_MOBLINKTIME && !md->target_id) {
 		struct unit_data *ud = unit->bl2ud(bl);
 		md->last_linktime = tick;
 
@@ -1327,7 +1330,8 @@ int mob_randomwalk(struct mob_data *md, int64 tick) {
 	d =12-md->move_fail_count;
 	if(d<5) d=5;
 	if(d>7) d=7;
-	for(i=0;i<retrycount;i++){	// Search of a movable place
+	for (i = 0; i < retrycount; i++) {
+		// Search of a movable place
 		int r=rnd();
 		x=r%(d*2+1)-d;
 		y=r/(d*2+1)%(d*2+1)-d;
@@ -1442,23 +1446,23 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 	}
 
 	// Check for target change.
-	if( md->attacked_id && mode&MD_CANATTACK )
-	{
-		if( md->attacked_id == md->target_id )
-		{	//Rude attacked check.
-			if( !battle->check_range(&md->bl, tbl, md->status.rhw.range)
-			&&  ( //Can't attack back and can't reach back.
-					(!can_move && DIFF_TICK(tick, md->ud.canmove_tick) > 0 && (battle_config.mob_ai&0x2 || (md->sc.data[SC_SPIDERWEB] && md->sc.data[SC_SPIDERWEB]->val1)
-						|| md->sc.data[SC_WUGBITE] || md->sc.data[SC_VACUUM_EXTREME] || md->sc.data[SC_THORNS_TRAP]
-						|| md->sc.data[SC__MANHOLE] // Not yet confirmed if boss will teleport once it can't reach target.
-						|| md->walktoxy_fail_count > 0)
-					)
-					|| !mob->can_reach(md, tbl, md->min_chase, MSS_RUSH)
-				)
-			&&  md->state.attacked_count++ >= RUDE_ATTACKED_COUNT
-			&&  !mob->skill_use(md, tick, MSC_RUDEATTACKED) // If can't rude Attack
-			&&  can_move && unit->escape(&md->bl, tbl, rnd()%10 +1)) // Attempt escape
-			{	//Escaped
+	if (md->attacked_id && mode&MD_CANATTACK) {
+		if (md->attacked_id == md->target_id) {
+			//Rude attacked check.
+			if (!battle->check_range(&md->bl, tbl, md->status.rhw.range)
+			 && ( //Can't attack back and can't reach back.
+			       (!can_move && DIFF_TICK(tick, md->ud.canmove_tick) > 0 && (battle_config.mob_ai&0x2 || (md->sc.data[SC_SPIDERWEB] && md->sc.data[SC_SPIDERWEB]->val1)
+			      || md->sc.data[SC_WUGBITE] || md->sc.data[SC_VACUUM_EXTREME] || md->sc.data[SC_THORNS_TRAP]
+			      || md->sc.data[SC__MANHOLE] // Not yet confirmed if boss will teleport once it can't reach target.
+			      || md->walktoxy_fail_count > 0)
+			       )
+			    || !mob->can_reach(md, tbl, md->min_chase, MSS_RUSH)
+			    )
+			 && md->state.attacked_count++ >= RUDE_ATTACKED_COUNT
+			 && !mob->skill_use(md, tick, MSC_RUDEATTACKED) // If can't rude Attack
+			 && can_move && unit->escape(&md->bl, tbl, rnd()%10 +1) // Attempt escape
+			) {
+				//Escaped
 				md->attacked_id = 0;
 				return true;
 			}
@@ -1483,9 +1487,10 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 			) {
 				// Rude attacked
 				if (md->state.attacked_count++ >= RUDE_ATTACKED_COUNT
-				&& !mob->skill_use(md, tick, MSC_RUDEATTACKED) && can_move
-				&& !tbl && unit->escape(&md->bl, abl, rnd()%10 +1))
-				{	//Escaped.
+				 && !mob->skill_use(md, tick, MSC_RUDEATTACKED) && can_move
+				 && !tbl && unit->escape(&md->bl, abl, rnd()%10 +1)
+				) {
+					//Escaped.
 					//TODO: Maybe it shouldn't attempt to run if it has another, valid target?
 					md->attacked_id = 0;
 					return true;
@@ -1496,9 +1501,11 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 				//Can't attack back, but didn't invoke a rude attacked skill...
 			} else {
 				//Attackable
-				if (!tbl || dist < md->status.rhw.range || !check_distance_bl(&md->bl, tbl, dist)
-					|| battle->get_target(tbl) != md->bl.id)
-				{	//Change if the new target is closer than the actual one
+				if (!tbl || dist < md->status.rhw.range
+				 || !check_distance_bl(&md->bl, tbl, dist)
+				 || battle->get_target(tbl) != md->bl.id
+				) {
+					//Change if the new target is closer than the actual one
 					//or if the previous target is not attacking the mob. [Skotlex]
 					md->target_id = md->attacked_id; // set target
 					if (md->state.attacked_count)
@@ -1556,20 +1563,20 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 	}
 
 	//Target exists, attack or loot as applicable.
-	if (tbl->type == BL_ITEM)
-	{	//Loot time.
+	if (tbl->type == BL_ITEM) {
+		//Loot time.
 		struct flooritem_data *fitem;
 		if (md->ud.target == tbl->id && md->ud.walktimer != INVALID_TIMER)
 			return true; //Already locked.
-		if (md->lootitem == NULL)
-		{	//Can't loot...
+		if (md->lootitem == NULL) {
+			//Can't loot...
 			mob->unlocktarget (md, tick);
 			return true;
 		}
-		if (!check_distance_bl(&md->bl, tbl, 1))
-		{	//Still not within loot range.
-			if (!(mode&MD_CANMOVE))
-			{	//A looter that can't move? Real smart.
+		if (!check_distance_bl(&md->bl, tbl, 1)) {
+			//Still not within loot range.
+			if (!(mode&MD_CANMOVE)) {
+				//A looter that can't move? Real smart.
 				mob->unlocktarget(md,tick);
 				return true;
 			}
@@ -1590,14 +1597,15 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 
 		if (md->lootitem_count < LOOTITEM_SIZE) {
 			memcpy (&md->lootitem[md->lootitem_count++], &fitem->item_data, sizeof(md->lootitem[0]));
-		} else {	//Destroy first looted item...
+		} else {
+			//Destroy first looted item...
 			if (md->lootitem[0].card[0] == CARD0_PET)
 				intif->delete_petdata( MakeDWord(md->lootitem[0].card[1],md->lootitem[0].card[2]) );
 			memmove(&md->lootitem[0], &md->lootitem[1], (LOOTITEM_SIZE-1)*sizeof(md->lootitem[0]));
 			memcpy (&md->lootitem[LOOTITEM_SIZE-1], &fitem->item_data, sizeof(md->lootitem[0]));
 		}
-		if (pcdb_checkid(md->vd->class_))
-		{	//Give them walk act/delay to properly mimic players. [Skotlex]
+		if (pcdb_checkid(md->vd->class_)) {
+			//Give them walk act/delay to properly mimic players. [Skotlex]
 			clif->takeitem(&md->bl,tbl);
 			md->ud.canact_tick = tick + md->status.amotion;
 			unit->set_walkdelay(&md->bl, tick, md->status.amotion, 1);
@@ -1610,9 +1618,9 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 
 	//Attempt to attack.
 	//At this point we know the target is attackable, we just gotta check if the range matches.
-	if (battle->check_range(&md->bl, tbl, md->status.rhw.range) && !(md->sc.option&OPTION_HIDE))
-	{	//Target within range and able to use normal attack, engage
-		if (md->ud.target != tbl->id || md->ud.attacktimer == INVALID_TIMER) 
+	if (battle->check_range(&md->bl, tbl, md->status.rhw.range) && !(md->sc.option&OPTION_HIDE)) {
+		//Target within range and able to use normal attack, engage
+		if (md->ud.target != tbl->id || md->ud.attacktimer == INVALID_TIMER)
 		{ //Only attack if no more attack delay left
 			if(tbl->type == BL_PC)
 				mob->log_damage(md, tbl, 0); //Log interaction (counts as 'attacker' for the exp bonus)
@@ -1623,7 +1631,7 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 
 	//Monsters in berserk state, unable to use normal attacks, will always attempt a skill
 	if(md->ud.walktimer == INVALID_TIMER && (md->state.skillstate == MSS_BERSERK || md->state.skillstate == MSS_ANGRY)) {
-		if (DIFF_TICK(md->ud.canmove_tick, tick) <= MIN_MOBTHINKTIME && DIFF_TICK(md->ud.canact_tick, tick) < -MIN_MOBTHINKTIME*IDLE_SKILL_INTERVAL) 
+		if (DIFF_TICK(md->ud.canmove_tick, tick) <= MIN_MOBTHINKTIME && DIFF_TICK(md->ud.canact_tick, tick) < -MIN_MOBTHINKTIME*IDLE_SKILL_INTERVAL)
 		{ //Only use skill if able to walk on next tick and not used a skill the last second
 			mob->skill_use(md, tick, -1);
 		}
@@ -1638,15 +1646,15 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 		return true;
 
 	//Out of range...
-	if (!(mode&MD_CANMOVE) || (!can_move && DIFF_TICK(tick, md->ud.canmove_tick) > 0))
-	{	//Can't chase. Immobile and trapped mobs should unlock target and use an idle skill.
+	if (!(mode&MD_CANMOVE) || (!can_move && DIFF_TICK(tick, md->ud.canmove_tick) > 0)) {
+		//Can't chase. Immobile and trapped mobs should unlock target and use an idle skill.
 		if (md->ud.attacktimer == INVALID_TIMER)
 		{ //Only unlock target if no more attack delay left
 			//This handles triggering idle/walk skill.
 			mob->unlocktarget(md,tick);
 		}
 		return true;
- 	}
+	}
 
 	if (md->ud.walktimer != INVALID_TIMER && md->ud.target == tbl->id &&
 		(
@@ -1667,8 +1675,8 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 int mob_ai_sub_hard_timer(struct block_list *bl, va_list ap) {
 	struct mob_data *md = (struct mob_data*)bl;
 	int64 tick = va_arg(ap, int64);
-	if (mob->ai_sub_hard(md, tick))
-	{	//Hard AI triggered.
+	if (mob->ai_sub_hard(md, tick)) {
+		//Hard AI triggered.
 		if(!md->state.spotted)
 			md->state.spotted = 1;
 		md->last_pcneartime = tick;
@@ -1706,11 +1714,11 @@ int mob_ai_sub_lazy(struct mob_data *md, va_list args) {
 	if (md->bl.prev==NULL || md->status.hp == 0)
 		return 1;
 
-	if(battle_config.mob_active_time &&
-		md->last_pcneartime &&
- 		!(md->status.mode&MD_BOSS) &&
-		DIFF_TICK(tick,md->last_thinktime) > MIN_MOBTHINKTIME)
-	{
+	if (battle_config.mob_active_time
+	 && md->last_pcneartime
+	 && !(md->status.mode&MD_BOSS)
+	 && DIFF_TICK(tick,md->last_thinktime) > MIN_MOBTHINKTIME
+	) {
 		if (DIFF_TICK(tick,md->last_pcneartime) < battle_config.mob_active_time)
 			return (int)mob->ai_sub_hard(md, tick);
 		md->last_pcneartime = 0;
@@ -1840,7 +1848,8 @@ void mob_item_drop(struct mob_data *md, struct item_drop_list *dlist, struct ite
 		&& sd->bl.m == md->bl.m
 		&& check_distance_blxy(&sd->bl, dlist->x, dlist->y, AUTOLOOT_DISTANCE)
 #endif
-	) {	//Autoloot.
+	) {
+		//Autoloot.
 		if (party->share_loot(party->search(sd->status.party_id),
 			sd, &ditem->item_data, sd->status.char_id) == 0
 		) {
@@ -1995,13 +2004,14 @@ void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 			if(md->dmglog[i].id==char_id &&
 				md->dmglog[i].flag==flag)
 				break;
-			if(md->dmglog[i].id==0) {	//Store data in first empty slot.
+			if(md->dmglog[i].id==0) {
+				//Store data in first empty slot.
 				md->dmglog[i].id  = char_id;
 				md->dmglog[i].flag= flag;
 				break;
 			}
-			if(md->dmglog[i].dmg<mindmg && i)
-			{	//Never overwrite first hit slot (he gets double exp bonus)
+			if (md->dmglog[i].dmg<mindmg && i) {
+				//Never overwrite first hit slot (he gets double exp bonus)
 				minpos=i;
 				mindmg=md->dmglog[i].dmg;
 			}
@@ -2145,8 +2155,8 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 	// determines, if the monster was killed by homunculus' damage only
 	homkillonly = (bool)( ( dmgbltypes&BL_HOM ) && !( dmgbltypes&~BL_HOM ) );
 
-	if(!battle_config.exp_calc_type && count > 1)
-	{	//Apply first-attacker 200% exp share bonus
+	if (!battle_config.exp_calc_type && count > 1) {
+		//Apply first-attacker 200% exp share bonus
 		//TODO: Determine if this should go before calculating the MVP player instead of after.
 		if (UINT_MAX - md->dmglog[0].dmg > md->tdmg) {
 			md->tdmg += md->dmglog[0].dmg;
@@ -2246,7 +2256,8 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 					pnum++;
 					flag=0;
 				}
-			} else {	//Add to total
+			} else {
+				//Add to total
 				if (pt[j].base_exp > UINT_MAX - base_exp)
 					pt[j].base_exp = UINT_MAX;
 				else
@@ -2445,7 +2456,8 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 			timer->add(tick + (!battle_config.delay_battle_damage?500:0), mob->delay_item_drop, 0, (intptr_t)dlist);
 		else //No drops
 			ers_free(item_drop_list_ers, dlist);
-	} else if (md->lootitem && md->lootitem_count) {	//Loot MUST drop!
+	} else if (md->lootitem && md->lootitem_count) {
+		//Loot MUST drop!
 		struct item_drop_list *dlist = ers_alloc(item_drop_list_ers, struct item_drop_list);
 		dlist->m = md->bl.m;
 		dlist->x = md->bl.x;
@@ -2540,9 +2552,10 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		logs->mvpdrop(mvp_sd, md->class_, log_mvp);
 	}
 
-	if (type&2 && !sd && md->class_ == MOBID_EMPERIUM && md->guardian_data)
-	  	//Emperium destroyed by script. Discard mvp character. [Skotlex]
+	if (type&2 && !sd && md->class_ == MOBID_EMPERIUM && md->guardian_data) {
+		//Emperium destroyed by script. Discard mvp character. [Skotlex]
 		mvp_sd = NULL;
+	}
 
 	rebirth =  ( md->sc.data[SC_KAIZEL] || (md->sc.data[SC_REBIRTH] && !md->state.rebirth) );
 	if( !rebirth ) { // Only trigger event on final kill
@@ -2643,7 +2656,7 @@ void mob_revive(struct mob_data *md, unsigned int hp)
 	md->next_walktime = tick+rnd()%1000+MIN_RANDOMWALKTIME;
 	md->last_linktime = tick;
 	md->last_pcneartime = 0;
-	memset(md->dmglog, 0, sizeof(md->dmglog));	// Reset the damage done on the rebirthed monster, otherwise will grant full exp + damage done. [Valaris]
+	memset(md->dmglog, 0, sizeof(md->dmglog)); // Reset the damage done on the rebirthed monster, otherwise will grant full exp + damage done. [Valaris]
 	md->tdmg = 0;
 	if (!md->bl.prev)
 		map->addblock(&md->bl);
@@ -2662,8 +2675,8 @@ int mob_guardian_guildchange(struct mob_data *md)
 	if (!md->guardian_data)
 		return 0;
 
-	if( md->guardian_data->castle->guild_id == 0 )
-	{	//Castle with no owner? Delete the guardians.
+	if (md->guardian_data->castle->guild_id == 0) {
+		//Castle with no owner? Delete the guardians.
 		if( md->class_ == MOBID_EMPERIUM ) //But don't delete the emperium, just clear it's guild-data
 			md->guardian_data->g = NULL;
 		else {
@@ -2675,8 +2688,8 @@ int mob_guardian_guildchange(struct mob_data *md)
 	}
 
 	g = guild->search(md->guardian_data->castle->guild_id);
-	if( g == NULL )
-	{	//Properly remove guardian info from Castle data.
+	if (g == NULL) {
+		//Properly remove guardian info from Castle data.
 		ShowError("mob_guardian_guildchange: New Guild (id %d) does not exists!\n", md->guardian_data->castle->guild_id);
 		if (md->guardian_data->number >= 0 && md->guardian_data->number < MAX_GUARDIANS)
 			guild->castledatasave(md->guardian_data->castle->castle_id, 10+md->guardian_data->number, 0);
@@ -2700,7 +2713,7 @@ int mob_random_class (int *value, size_t count)
 	if (count < 1) {
 		count = 0;
 		while(count < 5 && mob->db_checkid(value[count])) count++;
-		if(count < 1)	// nothing found
+		if(count < 1) // nothing found
 			return 0;
 	} else {
 		// check if at least the first value is valid
@@ -2925,8 +2938,7 @@ int mob_summonslave(struct mob_data *md2,int *value,int amount,uint16 skill_id)
 			md->status.hp = md->status.max_hp*hp_rate/100;
 
 		//Inherit the aggressive mode of the master.
-		if (battle_config.slaves_inherit_mode && md->master_id)
-	  	{
+		if (battle_config.slaves_inherit_mode && md->master_id) {
 			switch (battle_config.slaves_inherit_mode) {
 			case 1: //Always aggressive
 				if (!(md->status.mode&MD_AGGRESSIVE))
@@ -3116,16 +3128,16 @@ int mobskill_use(struct mob_data *md, int64 tick, int event) {
 			{
 				case MSC_ALWAYS:
 					flag = 1; break;
-				case MSC_MYHPLTMAXRATE:		// HP< maxhp%
+				case MSC_MYHPLTMAXRATE: // HP< maxhp%
 					flag = get_percentage(md->status.hp, md->status.max_hp);
 					flag = (flag <= c2);
-				  	break;
+					break;
 				case MSC_MYHPINRATE:
 					flag = get_percentage(md->status.hp, md->status.max_hp);
 					flag = (flag >= c2 && flag <= ms[i].val[0]);
 					break;
-				case MSC_MYSTATUSON:		// status[num] on
-				case MSC_MYSTATUSOFF:		// status[num] off
+				case MSC_MYSTATUSON: // status[num] on
+				case MSC_MYSTATUSOFF: // status[num] off
 					if (!md->sc.count) {
 						flag = 0;
 					} else if (ms[i].cond2 == -1) {
@@ -3136,26 +3148,26 @@ int mobskill_use(struct mob_data *md, int64 tick, int event) {
 						flag = (md->sc.data[ms[i].cond2]!=NULL);
 					}
 					flag ^= (ms[i].cond1 == MSC_MYSTATUSOFF); break;
-				case MSC_FRIENDHPLTMAXRATE:	// friend HP < maxhp%
+				case MSC_FRIENDHPLTMAXRATE: // friend HP < maxhp%
 					flag = ((fbl = mob->getfriendhprate(md, 0, ms[i].cond2)) != NULL); break;
-				case MSC_FRIENDHPINRATE	:
+				case MSC_FRIENDHPINRATE:
 					flag = ((fbl = mob->getfriendhprate(md, ms[i].cond2, ms[i].val[0])) != NULL); break;
-				case MSC_FRIENDSTATUSON:	// friend status[num] on
-				case MSC_FRIENDSTATUSOFF:	// friend status[num] off
+				case MSC_FRIENDSTATUSON: // friend status[num] on
+				case MSC_FRIENDSTATUSOFF: // friend status[num] off
 					flag = ((fmd = mob->getfriendstatus(md, ms[i].cond1, ms[i].cond2)) != NULL); break;
-				case MSC_SLAVELT:		// slave < num
+				case MSC_SLAVELT: // slave < num
 					flag = (mob->countslave(&md->bl) < c2 ); break;
-				case MSC_ATTACKPCGT:	// attack pc > num
+				case MSC_ATTACKPCGT: // attack pc > num
 					flag = (unit->counttargeted(&md->bl) > c2); break;
-				case MSC_SLAVELE:		// slave <= num
+				case MSC_SLAVELE: // slave <= num
 					flag = (mob->countslave(&md->bl) <= c2 ); break;
-				case MSC_ATTACKPCGE:	// attack pc >= num
+				case MSC_ATTACKPCGE: // attack pc >= num
 					flag = (unit->counttargeted(&md->bl) >= c2); break;
 				case MSC_AFTERSKILL:
 					flag = (md->ud.skill_id == c2); break;
 				case MSC_RUDEATTACKED:
 					flag = (md->state.attacked_count >= RUDE_ATTACKED_COUNT);
-					if (flag) md->state.attacked_count = 0;	//Rude attacked count should be reset after the skill condition is met. Thanks to Komurka [Skotlex]
+					if (flag) md->state.attacked_count = 0; //Rude attacked count should be reset after the skill condition is met. Thanks to Komurka [Skotlex]
 					break;
 				case MSC_MASTERHPLTMAXRATE:
 					flag = ((fbl = mob->getmasterhpltmaxrate(md, ms[i].cond2)) != NULL); break;
@@ -3201,7 +3213,7 @@ int mobskill_use(struct mob_data *md, int64 tick, int event) {
 			if (!bl) continue;
 
 			x = bl->x;
-		  	y = bl->y;
+			y = bl->y;
 			// Look for an area to cast the spell around...
 			if (ms[i].target >= MST_AROUND1 || ms[i].target >= MST_AROUND5) {
 				j = ms[i].target >= MST_AROUND1?
@@ -3260,10 +3272,10 @@ int mobskill_use(struct mob_data *md, int64 tick, int event) {
 		if ( ms[ i ].msg_id ){ //Display color message [SnakeDrak]
 			struct mob_chat *mc = mob->chat(ms[i].msg_id);
 			char temp[CHAT_SIZE_MAX];
- 			char name[NAME_LENGTH];
- 			snprintf(name, sizeof name,"%s", md->name);
- 			strtok(name, "#"); // discard extra name identifier if present [Daegaladh]
- 			snprintf(temp, sizeof temp,"%s : %s", name, mc->msg);
+			char name[NAME_LENGTH];
+			snprintf(name, sizeof name,"%s", md->name);
+			strtok(name, "#"); // discard extra name identifier if present [Daegaladh]
+			snprintf(temp, sizeof temp,"%s : %s", name, mc->msg);
 			clif->messagecolor(&md->bl, mc->color, temp);
 		}
 		if(!(battle_config.mob_ai&0x200)) { //pass on delay to same skill.
@@ -3555,8 +3567,8 @@ int mob_makedummymobdb(int class_)
 	{
 		if (mob->db(class_) == mob->dummy)
 			return 1; //Using the mob->dummy data already. [Skotlex]
-		if (class_ > 0 && class_ <= MAX_MOB_DB)
-		{	//Remove the mob data so that it uses the dummy data instead.
+		if (class_ > 0 && class_ <= MAX_MOB_DB) {
+			//Remove the mob data so that it uses the dummy data instead.
 			aFree(mob->db_data[class_]);
 			mob->db_data[class_] = NULL;
 		}
@@ -3708,7 +3720,7 @@ bool mob_parse_dbrow(char** str) {
 	if (mstatus->luk < 1) mstatus->luk = 1;
 
 	//Tests showed that chase range is effectively 2 cells larger than expected [Playtester]
-	if	(db->range3 > 0)
+	if (db->range3 > 0)
 		db->range3 += 2;
 
 	db->range2 = atoi(str[20]);
@@ -3819,8 +3831,8 @@ bool mob_parse_dbrow(char** str) {
 		id = itemdb->search(db->dropitem[i].nameid);
 		type = id->type;
 		rate = atoi(str[k+1]);
-		if( (class_ >= 1324 && class_ <= 1363) || (class_ >= 1938 && class_ <= 1946) )
-		{	//Treasure box drop rates [Skotlex]
+		if( (class_ >= 1324 && class_ <= 1363) || (class_ >= 1938 && class_ <= 1946) ) {
+			//Treasure box drop rates [Skotlex]
 			rate_adjust = battle_config.item_rate_treasure;
 			ratemin = battle_config.item_drop_treasure_min;
 			ratemax = battle_config.item_drop_treasure_max;
@@ -3990,8 +4002,8 @@ bool mob_readdb_mobavail(char* str[], int columns, int current)
 
 	class_=atoi(str[0]);
 
-	if(mob->db(class_) == mob->dummy)	// invalid class (probably undefined in db)
-	{
+	if(mob->db(class_) == mob->dummy) {
+		// invalid class (probably undefined in db)
 		ShowWarning("mob_readdb_mobavail: Unknown mob id %d.\n", class_);
 		return false;
 	}
@@ -4042,7 +4054,7 @@ int mob_read_randommonster(void)
 
 	for( i = 0; i < ARRAYLENGTH(mobfile) && i < MAX_RANDOMMONSTER; i++ ) {
 		unsigned int count = 0;
-		mob->db_data[0]->summonper[i] = 1002;	// Default fallback value, in case the database does not provide one
+		mob->db_data[0]->summonper[i] = 1002; // Default fallback value, in case the database does not provide one
 		sprintf(line, "%s/%s", map->db_path, mobfile[i]);
 		fp=fopen(line,"r");
 		if(fp==NULL){
@@ -4209,16 +4221,16 @@ bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 		char str[32];
 		enum MobSkillState id;
 	} state[] = {
-		{	"any",		MSS_ANY		}, //All states except Dead
-		{	"idle",		MSS_IDLE	},
-		{	"walk",		MSS_WALK	},
-		{	"loot",		MSS_LOOT	},
-		{	"dead",		MSS_DEAD	},
-		{	"attack",	MSS_BERSERK	}, //Retaliating attack
-		{	"angry",	MSS_ANGRY	}, //Preemptive attack (aggressive mobs)
-		{	"chase",	MSS_RUSH	}, //Chase escaping target
-		{	"follow",	MSS_FOLLOW	}, //Preemptive chase (aggressive mobs)
-		{	"anytarget",MSS_ANYTARGET	}, //Berserk+Angry+Rush+Follow
+		{ "any",       MSS_ANY       }, //All states except Dead
+		{ "idle",      MSS_IDLE      },
+		{ "walk",      MSS_WALK      },
+		{ "loot",      MSS_LOOT      },
+		{ "dead",      MSS_DEAD      },
+		{ "attack",    MSS_BERSERK   }, //Retaliating attack
+		{ "angry",     MSS_ANGRY     }, //Preemptive attack (aggressive mobs)
+		{ "chase",     MSS_RUSH      }, //Chase escaping target
+		{ "follow",    MSS_FOLLOW    }, //Preemptive chase (aggressive mobs)
+		{ "anytarget", MSS_ANYTARGET }, //Berserk+Angry+Rush+Follow
 	};
 	static const struct {
 		char str[32];
@@ -4248,33 +4260,33 @@ bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 		{ "alchemist",         MSC_ALCHEMIST         },
 		{ "onspawn",           MSC_SPAWN             },
 	}, cond2[] ={
-		{	"anybad",		-1				},
-		{	"stone",		SC_STONE		},
-		{	"freeze",		SC_FREEZE		},
-		{	"stun",			SC_STUN			},
-		{	"sleep",		SC_SLEEP		},
-		{	"poison",		SC_POISON		},
-		{	"curse",		SC_CURSE		},
-		{	"silence",		SC_SILENCE		},
-		{	"confusion",	SC_CONFUSION	},
-		{	"blind",		SC_BLIND		},
-		{	"hiding",		SC_HIDING		},
-		{	"sight",		SC_SIGHT		},
+		{ "anybad",    -1           },
+		{ "stone",     SC_STONE     },
+		{ "freeze",    SC_FREEZE    },
+		{ "stun",      SC_STUN      },
+		{ "sleep",     SC_SLEEP     },
+		{ "poison",    SC_POISON    },
+		{ "curse",     SC_CURSE     },
+		{ "silence",   SC_SILENCE   },
+		{ "confusion", SC_CONFUSION },
+		{ "blind",     SC_BLIND     },
+		{ "hiding",    SC_HIDING    },
+		{ "sight",     SC_SIGHT     },
 	}, target[] = {
-		{	"target",	MST_TARGET	},
-		{	"randomtarget",	MST_RANDOM	},
-		{	"self",		MST_SELF	},
-		{	"friend",	MST_FRIEND	},
-		{	"master",	MST_MASTER	},
-		{	"around5",	MST_AROUND5	},
-		{	"around6",	MST_AROUND6	},
-		{	"around7",	MST_AROUND7	},
-		{	"around8",	MST_AROUND8	},
-		{	"around1",	MST_AROUND1	},
-		{	"around2",	MST_AROUND2	},
-		{	"around3",	MST_AROUND3	},
-		{	"around4",	MST_AROUND4	},
-		{	"around",	MST_AROUND	},
+		{ "target",       MST_TARGET  },
+		{ "randomtarget", MST_RANDOM  },
+		{ "self",         MST_SELF    },
+		{ "friend",       MST_FRIEND  },
+		{ "master",       MST_MASTER  },
+		{ "around5",      MST_AROUND5 },
+		{ "around6",      MST_AROUND6 },
+		{ "around7",      MST_AROUND7 },
+		{ "around8",      MST_AROUND8 },
+		{ "around1",      MST_AROUND1 },
+		{ "around2",      MST_AROUND2 },
+		{ "around3",      MST_AROUND3 },
+		{ "around4",      MST_AROUND4 },
+		{ "around",       MST_AROUND  },
 	};
 	static int last_mob_id = 0;  // ensures that only one error message per mob id is printed
 
@@ -4301,8 +4313,8 @@ bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 		return true;
 	}
 
-	if (mob_id < 0)
-	{	//Prepare global skill. [Skotlex]
+	if (mob_id < 0) {
+		//Prepare global skill. [Skotlex]
 		memset(&gms, 0, sizeof (struct mob_skill));
 		ms = &gms;
 	} else {
@@ -4413,8 +4425,8 @@ bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 		ms->val[1] = 0;
 		ms->val[4] = 1; //request to return mode to normal.
 	}
-	if(ms->skill_id == NPC_EMOTION_ON && mob_id>0 && ms->val[1])
-	{	//Adds a mode to the mob.
+	if (ms->skill_id == NPC_EMOTION_ON && mob_id>0 && ms->val[1]) {
+		//Adds a mode to the mob.
 		//Remove aggressive mode when the new mob type is passive.
 		if (!(ms->val[1]&MD_AGGRESSIVE))
 			ms->val[3]|=MD_AGGRESSIVE;
@@ -4432,8 +4444,8 @@ bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 	else
 		ms->msg_id=0;
 
-	if (mob_id < 0)
-	{	//Set this skill to ALL mobs. [Skotlex]
+	if (mob_id < 0) {
+		//Set this skill to ALL mobs. [Skotlex]
 		mob_id *= -1;
 		for (i = 1; i < MAX_MOB_DB; i++)
 		{
@@ -4638,8 +4650,11 @@ void mob_reload(void) {
 	mob->load(false);
 }
 
+/**
+ * Clears spawn related information for a script reload.
+ */
 void mob_clear_spawninfo()
-{	//Clears spawn related information for a script reload.
+{
 	int i;
 	for (i = 0; i < MAX_MOB_DB; i++)
 		if (mob->db_data[i])

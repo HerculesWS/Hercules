@@ -315,20 +315,20 @@ struct block_list {
 // Mob List Held in memory for Dynamic Mobs [Wizputer]
 // Expanded to specify all mob-related spawn data by [Skotlex]
 struct spawn_data {
-	short class_; //Class, used because a mob can change it's class
-	unsigned short m, x, y;	//Spawn information (map, point, spawn-area around point)
+	short class_;                ///< Class, used because a mob can change it's class
+	unsigned short m, x, y;      ///< Spawn information (map, point, spawn-area around point)
 	signed short xs, ys;
-	unsigned short num; //Number of mobs using this structure
-	unsigned short active;//Number of mobs that are already spawned (for mob_remove_damaged: no)
-	unsigned int delay1, delay2; //Spawn delay (fixed base + random variance)
+	unsigned short num;          ///< Number of mobs using this structure
+	unsigned short active;       ///< Number of mobs that are already spawned (for mob_remove_damaged: no)
+	unsigned int delay1, delay2; ///< Spawn delay (fixed base + random variance)
 	unsigned int level;
 	struct {
-		unsigned int size : 2; //Holds if mob has to be tiny/large
-		unsigned int ai : 4; //Special AI for summoned monsters.
+		unsigned int size : 2;    ///< Holds if mob has to be tiny/large
+		unsigned int ai : 4;      ///< Special AI for summoned monsters.
 		//0: Normal mob | 1: Standard summon, attacks mobs
 		//2: Alchemist Marine Sphere | 3: Alchemist Summon Flora | 4: Summon Zanzou
-		unsigned int dynamic : 1; //Whether this data is indexed by a map's dynamic mob list
-		unsigned int boss : 1; //0: Non-boss monster | 1: Boss monster
+		unsigned int dynamic : 1; ///< Whether this data is indexed by a map's dynamic mob list
+		unsigned int boss : 1;    ///< 0: Non-boss monster | 1: Boss monster
 	} state;
 	char name[NAME_LENGTH], eventname[EVENT_NAME_LENGTH]; //Name/event
 };
@@ -343,18 +343,18 @@ struct flooritem_data {
 };
 
 enum status_point_types {
-	SP_SPEED,SP_BASEEXP,SP_JOBEXP,SP_KARMA,SP_MANNER,SP_HP,SP_MAXHP,SP_SP,	// 0-7
-	SP_MAXSP,SP_STATUSPOINT,SP_0a,SP_BASELEVEL,SP_SKILLPOINT,SP_STR,SP_AGI,SP_VIT,	// 8-15
-	SP_INT,SP_DEX,SP_LUK,SP_CLASS,SP_ZENY,SP_SEX,SP_NEXTBASEEXP,SP_NEXTJOBEXP,	// 16-23
-	SP_WEIGHT,SP_MAXWEIGHT,SP_1a,SP_1b,SP_1c,SP_1d,SP_1e,SP_1f,	// 24-31
-	SP_USTR,SP_UAGI,SP_UVIT,SP_UINT,SP_UDEX,SP_ULUK,SP_26,SP_27,	// 32-39
-	SP_28,SP_ATK1,SP_ATK2,SP_MATK1,SP_MATK2,SP_DEF1,SP_DEF2,SP_MDEF1,	// 40-47
-	SP_MDEF2,SP_HIT,SP_FLEE1,SP_FLEE2,SP_CRITICAL,SP_ASPD,SP_36,SP_JOBLEVEL,	// 48-55
-	SP_UPPER,SP_PARTNER,SP_CART,SP_FAME,SP_UNBREAKABLE,	//56-60
-	SP_CARTINFO=99,	// 99
+	SP_SPEED,SP_BASEEXP,SP_JOBEXP,SP_KARMA,SP_MANNER,SP_HP,SP_MAXHP,SP_SP, // 0-7
+	SP_MAXSP,SP_STATUSPOINT,SP_0a,SP_BASELEVEL,SP_SKILLPOINT,SP_STR,SP_AGI,SP_VIT, // 8-15
+	SP_INT,SP_DEX,SP_LUK,SP_CLASS,SP_ZENY,SP_SEX,SP_NEXTBASEEXP,SP_NEXTJOBEXP, // 16-23
+	SP_WEIGHT,SP_MAXWEIGHT,SP_1a,SP_1b,SP_1c,SP_1d,SP_1e,SP_1f, // 24-31
+	SP_USTR,SP_UAGI,SP_UVIT,SP_UINT,SP_UDEX,SP_ULUK,SP_26,SP_27, // 32-39
+	SP_28,SP_ATK1,SP_ATK2,SP_MATK1,SP_MATK2,SP_DEF1,SP_DEF2,SP_MDEF1, // 40-47
+	SP_MDEF2,SP_HIT,SP_FLEE1,SP_FLEE2,SP_CRITICAL,SP_ASPD,SP_36,SP_JOBLEVEL, // 48-55
+	SP_UPPER,SP_PARTNER,SP_CART,SP_FAME,SP_UNBREAKABLE, //56-60
+	SP_CARTINFO=99, // 99
 
-	SP_BASEJOB=119,	// 100+19 - celest
-	SP_BASECLASS=120,	//Hmm.. why 100+19? I just use the next one... [Skotlex]
+	SP_BASEJOB=119, // 100+19 - celest
+	SP_BASECLASS=120, //Hmm.. why 100+19? I just use the next one... [Skotlex]
 	SP_KILLERRID=121,
 	SP_KILLEDRID=122,
 	SP_SLOTCHANGE=123,
@@ -367,10 +367,10 @@ enum status_point_types {
 	SP_MERCFLEE=165, SP_MERCKILLS=189, SP_MERCFAITH=190,
 
 	// original 1000-
-	SP_ATTACKRANGE=1000,	SP_ATKELE,SP_DEFELE,	// 1000-1002
+	SP_ATTACKRANGE=1000, SP_ATKELE,SP_DEFELE, // 1000-1002
 	SP_CASTRATE, SP_MAXHPRATE, SP_MAXSPRATE, SP_SPRATE, // 1003-1006
 	SP_ADDELE, SP_ADDRACE, SP_ADDSIZE, SP_SUBELE, SP_SUBRACE, // 1007-1011
-	SP_ADDEFF, SP_RESEFF,	// 1012-1013
+	SP_ADDEFF, SP_RESEFF, // 1012-1013
 	SP_BASE_ATK,SP_ASPD_RATE,SP_HP_RECOV_RATE,SP_SP_RECOV_RATE,SP_SPEED_RATE, // 1014-1018
 	SP_CRITICAL_DEF,SP_NEAR_ATK_DEF,SP_LONG_ATK_DEF, // 1019-1021
 	SP_DOUBLE_RATE, SP_DOUBLE_ADD_RATE, SP_SKILL_HEAL, SP_MATK_RATE, // 1022-1025
@@ -401,8 +401,8 @@ enum status_point_types {
 	SP_CRIT_ATK_RATE, SP_CRITICAL_ADDRACE, SP_NO_REGEN, SP_ADDEFF_WHENHIT, SP_AUTOSPELL_WHENHIT, // 2013-2017
 	SP_SKILL_ATK, SP_UNSTRIPABLE, SP_AUTOSPELL_ONSKILL, // 2018-2020
 	SP_SP_GAIN_VALUE, SP_HP_REGEN_RATE, SP_HP_LOSS_RATE, SP_ADDRACE2, SP_HP_GAIN_VALUE, // 2021-2025
-	SP_SUBSIZE, SP_HP_DRAIN_VALUE_RACE, SP_ADD_ITEM_HEAL_RATE, SP_SP_DRAIN_VALUE_RACE, SP_EXP_ADDRACE,	// 2026-2030
-	SP_SP_GAIN_RACE, SP_SUBRACE2, SP_UNBREAKABLE_SHOES,	// 2031-2033
+	SP_SUBSIZE, SP_HP_DRAIN_VALUE_RACE, SP_ADD_ITEM_HEAL_RATE, SP_SP_DRAIN_VALUE_RACE, SP_EXP_ADDRACE, // 2026-2030
+	SP_SP_GAIN_RACE, SP_SUBRACE2, SP_UNBREAKABLE_SHOES, // 2031-2033
 	SP_UNSTRIPABLE_WEAPON,SP_UNSTRIPABLE_ARMOR,SP_UNSTRIPABLE_HELM,SP_UNSTRIPABLE_SHIELD,  // 2034-2037
 	SP_INTRAVISION, SP_ADD_MONSTER_DROP_CHAINITEM, SP_SP_LOSS_RATE, // 2038-2040
 	SP_ADD_SKILL_BLOW, SP_SP_VANISH_RATE, SP_MAGIC_SP_GAIN_VALUE, SP_MAGIC_HP_GAIN_VALUE, SP_ADD_CLASS_DROP_ITEM, //2041-2045
@@ -410,8 +410,7 @@ enum status_point_types {
 	SP_SKILL_COOLDOWN,SP_SKILL_FIXEDCAST, SP_SKILL_VARIABLECAST, SP_FIXCASTRATE, SP_VARCASTRATE, //2050-2054
 	SP_SKILL_USE_SP,SP_MAGIC_ATK_ELE, SP_ADD_FIXEDCAST, SP_ADD_VARIABLECAST,  //2055-2058
 	SP_SET_DEF_RACE,SP_SET_MDEF_RACE, //2059-2060
-	
-	
+
 	/* must be the last, plugins add bonuses from this value onwards */
 	SP_LAST_KNOWN,
 };
@@ -450,17 +449,17 @@ typedef enum {
 
 // used by map->getcell()
 typedef enum {
-	CELL_GETTYPE,		// retrieves a cell's 'gat' type
+	CELL_GETTYPE,    ///< retrieves a cell's 'gat' type
 
-	CELL_CHKWALL,		// wall (gat type 1)
-	CELL_CHKWATER,		// water (gat type 3)
-	CELL_CHKCLIFF,		// cliff/gap (gat type 5)
+	CELL_CHKWALL,    ///< wall (gat type 1)
+	CELL_CHKWATER,   ///< water (gat type 3)
+	CELL_CHKCLIFF,   ///< cliff/gap (gat type 5)
 
-	CELL_CHKPASS,		// passable cell (gat type non-1/5)
-	CELL_CHKREACH,		// Same as PASS, but ignores the cell-stacking mod.
-	CELL_CHKNOPASS,		// non-passable cell (gat types 1 and 5)
-	CELL_CHKNOREACH,	// Same as NOPASS, but ignores the cell-stacking mod.
-	CELL_CHKSTACK,		// whether cell is full (reached cell stacking limit)
+	CELL_CHKPASS,    ///< passable cell (gat type non-1/5)
+	CELL_CHKREACH,   ///< Same as PASS, but ignores the cell-stacking mod.
+	CELL_CHKNOPASS,  ///< non-passable cell (gat types 1 and 5)
+	CELL_CHKNOREACH, ///< Same as NOPASS, but ignores the cell-stacking mod.
+	CELL_CHKSTACK,   ///< whether cell is full (reached cell stacking limit)
 
 	CELL_CHKNPC,
 	CELL_CHKBASILICA,
@@ -507,11 +506,11 @@ struct mapflag_skill_adjust {
 };
 
 enum map_zone_skill_subtype {
-	MZS_NONE	= 0x0,
-	MZS_CLONE	= 0x01,
-	MZS_BOSS	= 0x02,
+	MZS_NONE  = 0x0,
+	MZS_CLONE = 0x01,
+	MZS_BOSS  = 0x02,
 
-	MZS_ALL		= 0xFFF,
+	MZS_ALL   = 0xFFF
 };
 
 struct map_zone_disabled_skill_entry {
@@ -578,7 +577,7 @@ struct map_data {
 	char name[MAP_NAME_LENGTH];
 	uint16 index; // The map index used by the mapindex* functions.
 	struct mapcell* cell; // Holds the information of each map cell (NULL if the map is not on this map-server).
-	
+
 	/* 2D Orthogonal Range Search: Grid Implementation
 	   "Algorithms in Java, Parts 1-4" 3.18, Robert Sedgewick
 	   Map is divided into squares, called blocks (side length = BLOCK_SIZE).
@@ -590,7 +589,7 @@ struct map_data {
 	*/
 	struct block_list **block; // Grid array of block_lists containing only non-BL_MOB objects
 	struct block_list **block_mob; // Grid array of block_lists containing only BL_MOB objects
-	
+
 	int16 m;
 	int16 xs,ys; // map dimensions (in cells)
 	int16 bxs,bys; // map dimensions (in blocks)
@@ -633,10 +632,10 @@ struct map_data {
 		unsigned fireworks : 1;
 		unsigned sakura : 1; // [Valaris]
 		unsigned leaves : 1; // [Valaris]
-		unsigned nobaseexp	: 1; // [Lorky] added by Lupus
-		unsigned nojobexp	: 1; // [Lorky]
-		unsigned nomobloot	: 1; // [Lorky]
-		unsigned nomvploot	: 1; // [Lorky]
+		unsigned nobaseexp : 1; // [Lorky] added by Lupus
+		unsigned nojobexp : 1; // [Lorky]
+		unsigned nomobloot : 1; // [Lorky]
+		unsigned nomvploot : 1; // [Lorky]
 		unsigned nightenabled :1; //For night display. [Skotlex]
 		unsigned nodrop : 1;
 		unsigned novending : 1;
@@ -657,9 +656,9 @@ struct map_data {
 	unsigned short drop_list_count;
 
 	struct spawn_data *moblist[MAX_MOB_LIST_PER_MAP]; // [Wizputer]
-	int mob_delete_timer;	// [Skotlex]
-	int jexp;	// map experience multiplicator
-	int bexp;	// map experience multiplicator
+	int mob_delete_timer; // [Skotlex]
+	int jexp; // map experience multiplicator
+	int bexp; // map experience multiplicator
 	int nocommand; //Blocks @/# commands for non-gms. [Skotlex]
 
 	// Instance Variables
@@ -702,14 +701,14 @@ struct map_data {
 	int (*getcellp)(struct map_data* m,int16 x,int16 y,cell_chk cellchk);
 	void (*setcell) (int16 m, int16 x, int16 y, cell_t cell, bool flag);
 	char *cellPos;
-	
+
 	/* ShowEvent Data Cache */
 	struct questinfo *qi_data;
 	unsigned short qi_count;
-	
+
 	/* speeds up clif_updatestatus processing by causing hpmeter to run only when someone with the permission can view it */
 	unsigned short hpmeter_visible;
-	
+
 	/* HPM Custom Struct */
 	struct HPluginData **hdata;
 	unsigned int hdatac;
@@ -730,7 +729,7 @@ struct map_data_other_server {
 /// Bitfield of flags for the iterator.
 enum e_mapitflags {
 	MAPIT_NORMAL = 0,
-	//	MAPIT_PCISPLAYING = 1,// Unneeded as pc_db/id_db will only hold authed, active players.
+	//MAPIT_PCISPLAYING = 1,// Unneeded as pc_db/id_db will only hold authed, active players.
 };
 
 struct s_mapiterator;
@@ -764,7 +763,7 @@ typedef struct skill_unit       TBL_SKILL;
 typedef struct pet_data         TBL_PET;
 typedef struct homun_data       TBL_HOM;
 typedef struct mercenary_data   TBL_MER;
-typedef struct elemental_data	TBL_ELEM;
+typedef struct elemental_data   TBL_ELEM;
 
 #define BL_CAST(type_, bl) \
 	( ((bl) == (struct block_list*)NULL || (bl)->type != (type_)) ? (T ## type_ *)NULL : (T ## type_ *)(bl) )
@@ -846,17 +845,17 @@ struct map_interface {
 	char npc_market_data_db[32];
 
 	char default_codepage[32];
-	
+
 	int server_port;
 	char server_ip[32];
 	char server_id[32];
 	char server_pw[100];
 	char server_db[32];
 	Sql* mysql_handle;
-	
+
 	int port;
 	int users;
-	int enable_grf;	//To enable/disable reading maps from GRF files, bypassing mapcache [blackhole89]
+	int enable_grf; //To enable/disable reading maps from GRF files, bypassing mapcache [blackhole89]
 	bool ip_set;
 	bool char_ip_set;
 
@@ -1016,7 +1015,7 @@ struct map_interface {
 	void (*clean) (int i);
 
 	void (*do_shutdown) (void);
-	
+
 	int (*freeblock_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*searchrandfreecell) (int16 m, int16 *x, int16 *y, int stack);
 	int (*count_sub) (struct block_list *bl, va_list ap);

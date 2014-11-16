@@ -8,6 +8,87 @@
 
 
 HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
+	#ifdef CHAR_CHAR_H
+		{ "char_interface", sizeof(struct char_interface), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_CHAR_H
+	#endif // CHAR_CHAR_H
+	#ifdef CHAR_GEOIP_H
+		{ "geoip_interface", sizeof(struct geoip_interface), SERVER_TYPE_CHAR },
+		{ "s_geoip", sizeof(struct s_geoip), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_GEOIP_H
+	#endif // CHAR_GEOIP_H
+	#ifdef CHAR_INTER_H
+		{ "inter_interface", sizeof(struct inter_interface), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_INTER_H
+	#endif // CHAR_INTER_H
+	#ifdef CHAR_INT_AUCTION_H
+		{ "inter_auction_interface", sizeof(struct inter_auction_interface), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_INT_AUCTION_H
+	#endif // CHAR_INT_AUCTION_H
+	#ifdef CHAR_INT_ELEMENTAL_H
+		{ "inter_elemental_interface", sizeof(struct inter_elemental_interface), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_INT_ELEMENTAL_H
+	#endif // CHAR_INT_ELEMENTAL_H
+	#ifdef CHAR_INT_GUILD_H
+		{ "inter_guild_interface", sizeof(struct inter_guild_interface), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_INT_GUILD_H
+	#endif // CHAR_INT_GUILD_H
+	#ifdef CHAR_INT_HOMUN_H
+		{ "inter_homunculus_interface", sizeof(struct inter_homunculus_interface), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_INT_HOMUN_H
+	#endif // CHAR_INT_HOMUN_H
+	#ifdef CHAR_INT_MAIL_H
+		{ "inter_mail_interface", sizeof(struct inter_mail_interface), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_INT_MAIL_H
+	#endif // CHAR_INT_MAIL_H
+	#ifdef CHAR_INT_MERCENARY_H
+		{ "inter_mercenary_interface", sizeof(struct inter_mercenary_interface), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_INT_MERCENARY_H
+	#endif // CHAR_INT_MERCENARY_H
+	#ifdef CHAR_INT_PARTY_H
+		{ "inter_party_interface", sizeof(struct inter_party_interface), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_INT_PARTY_H
+	#endif // CHAR_INT_PARTY_H
+	#ifdef CHAR_INT_PET_H
+		{ "inter_pet_interface", sizeof(struct inter_pet_interface), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_INT_PET_H
+	#endif // CHAR_INT_PET_H
+	#ifdef CHAR_INT_QUEST_H
+		{ "inter_quest_interface", sizeof(struct inter_quest_interface), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_INT_QUEST_H
+	#endif // CHAR_INT_QUEST_H
+	#ifdef CHAR_INT_STORAGE_H
+		{ "inter_storage_interface", sizeof(struct inter_storage_interface), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_INT_STORAGE_H
+	#endif // CHAR_INT_STORAGE_H
+	#ifdef CHAR_LOGINIF_H
+		{ "loginif_interface", sizeof(struct loginif_interface), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_LOGINIF_H
+	#endif // CHAR_LOGINIF_H
+	#ifdef CHAR_MAPIF_H
+		{ "mapif_interface", sizeof(struct mapif_interface), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_MAPIF_H
+	#endif // CHAR_MAPIF_H
+	#ifdef CHAR_PINCODE_H
+		{ "pincode_interface", sizeof(struct pincode_interface), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_PINCODE_H
+	#endif // CHAR_PINCODE_H
 	#ifdef COMMON_CONF_H
 		{ "libconfig_interface", sizeof(struct libconfig_interface), SERVER_TYPE_ALL },
 	#else

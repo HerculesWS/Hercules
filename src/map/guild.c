@@ -63,10 +63,10 @@ int guild_skill_get_max (int id) {
 
 // Retrieve skill_lv learned by guild
 int guild_checkskill(struct guild *g, int id) {
-    int idx = id - GD_SKILLBASE;
-    if (idx < 0 || idx >= MAX_GUILDSKILL)
-        return 0;
-    return g->skill[idx].lv;
+	int idx = id - GD_SKILLBASE;
+	if (idx < 0 || idx >= MAX_GUILDSKILL)
+		return 0;
+	return g->skill[idx].lv;
 }
 
 /*==========================================
@@ -236,17 +236,17 @@ void guild_makemember(struct guild_member *m,struct map_session_data *sd)
 	nullpo_retv(sd);
 
 	memset(m,0,sizeof(struct guild_member));
-	m->account_id	=sd->status.account_id;
-	m->char_id		=sd->status.char_id;
-	m->hair			=sd->status.hair;
-	m->hair_color	=sd->status.hair_color;
-	m->gender		=sd->status.sex;
-	m->class_		=sd->status.class_;
-	m->lv			=sd->status.base_level;
-//	m->exp			=0;
-//	m->exp_payper	=0;
-	m->online		=1;
-	m->position		=MAX_GUILDPOSITION-1;
+	m->account_id = sd->status.account_id;
+	m->char_id    = sd->status.char_id;
+	m->hair       = sd->status.hair;
+	m->hair_color = sd->status.hair_color;
+	m->gender     = sd->status.sex;
+	m->class_     = sd->status.class_;
+	m->lv         = sd->status.base_level;
+	//m->exp        = 0;
+	//m->exp_payper = 0;
+	m->online     = 1;
+	m->position   = MAX_GUILDPOSITION-1;
 	memcpy(m->name,sd->status.name,NAME_LENGTH);
 	return;
 }
@@ -366,14 +366,14 @@ int guild_created(int account_id,int guild_id) {
 	if(sd==NULL)
 		return 0;
 	if(!guild_id) {
-        clif->guild_created(sd, 2); // Creation failure (presence of the same name Guild)
+		clif->guild_created(sd, 2); // Creation failure (presence of the same name Guild)
 		return 0;
 	}
 	//struct guild *g;
 	sd->status.guild_id=guild_id;
 	clif->guild_created(sd,0);
 	if(battle_config.guild_emperium_check)
-		pc->delitem(sd,pc->search_inventory(sd,ITEMID_EMPERIUM),1,0,0,LOG_TYPE_CONSUME);	//emperium consumption
+		pc->delitem(sd,pc->search_inventory(sd,ITEMID_EMPERIUM),1,0,0,LOG_TYPE_CONSUME); //emperium consumption
 	return 0;
 }
 
@@ -567,32 +567,32 @@ int guild_recv_info(struct guild *sg) {
 			bm++;
 	}
 
-    for (i = 0; i < g->max_member; i++) { //Transmission of information at all members
+	for (i = 0; i < g->max_member; i++) { //Transmission of information at all members
 		sd = g->member[i].sd;
 		if( sd==NULL )
 			continue;
 		sd->guild = g;
-        if (before.guild_lv != g->guild_lv || bm != m ||
-                before.max_member != g->max_member) {
-            clif->guild_basicinfo(sd); //Submit basic information
-            clif->guild_emblem(sd, g); //Submit emblem
-        }
+		if (before.guild_lv != g->guild_lv || bm != m
+		 || before.max_member != g->max_member) {
+			clif->guild_basicinfo(sd); //Submit basic information
+			clif->guild_emblem(sd, g); //Submit emblem
+		}
 
-        if (bm != m) { //Send members information
-            clif->guild_memberlist(g->member[i].sd);
-        }
+		if (bm != m) { //Send members information
+			clif->guild_memberlist(g->member[i].sd);
+		}
 
-        if (before.skill_point != g->skill_point)
-            clif->guild_skillinfo(sd); //Submit information skills
+		if (before.skill_point != g->skill_point)
+			clif->guild_skillinfo(sd); //Submit information skills
 
 		if (guild_new) { // Send information and affiliation if unsent
-            clif->guild_belonginfo(sd, g);
-            //clif->guild_notice(sd, g); Is already sent in clif_parse_LoadEndAck
-            sd->guild_emblem_id = g->emblem_id;
-        }
-    }
+			clif->guild_belonginfo(sd, g);
+			//clif->guild_notice(sd, g); Is already sent in clif_parse_LoadEndAck
+			sd->guild_emblem_id = g->emblem_id;
+		}
+	}
 
-    //Occurrence of an event
+	//Occurrence of an event
 	if (guild->infoevent_db->remove(guild->infoevent_db, DB->i2key(sg->guild_id), &data)) {
 		struct eventlist *ev = DB->data2ptr(&data), *ev2;
 		while(ev) {
@@ -610,8 +610,8 @@ int guild_recv_info(struct guild *sg) {
  * Player sd send a guild invatation to player tsd to join his guild
  *--------------------------------------------*/
 int guild_invite(struct map_session_data *sd, struct map_session_data *tsd) {
-    struct guild *g;
-    int i;
+	struct guild *g;
+	int i;
 
 	nullpo_ret(sd);
 
@@ -624,7 +624,7 @@ int guild_invite(struct map_session_data *sd, struct map_session_data *tsd) {
 		return 0; //Invite permission.
 
 	if(!battle_config.invite_request_check) {
-        if (tsd->party_invite > 0 || tsd->trade_partner || tsd->adopt_invite) { //checking if there no other invitation pending
+		if (tsd->party_invite > 0 || tsd->trade_partner || tsd->adopt_invite) { //checking if there no other invitation pending
 			clif->guild_inviteack(sd,0);
 			return 0;
 		}
@@ -635,8 +635,8 @@ int guild_invite(struct map_session_data *sd, struct map_session_data *tsd) {
 		return 0;
 	}
 
- 	if( tsd->status.guild_id > 0
- 	 || tsd->guild_invite > 0
+	if( tsd->status.guild_id > 0
+	 || tsd->guild_invite > 0
 	 || ( (map->agit_flag || map->agit2_flag)
 		   && map->list[tsd->bl.m].flag.gvg_castle
 		   && !battle_config.guild_castle_invite
@@ -730,7 +730,8 @@ void guild_member_joined(struct map_session_data *sd)
 		guild->request_info(sd->status.guild_id);
 		return;
 	}
-	if (strcmp(sd->status.name,g->master) == 0) {	// set the Guild Master flag
+	if (strcmp(sd->status.name,g->master) == 0) {
+		// set the Guild Master flag
 		sd->state.gmaster_flag = 1;
 		// prevent Guild Skills from being used directly after relog
 		if( battle_config.guild_skill_relog_delay )
@@ -823,8 +824,8 @@ int guild_leave(struct map_session_data* sd, int guild_id, int account_id, int c
 		return 0;
 
 	if( sd->status.account_id != account_id
- 	 || sd->status.char_id != char_id
- 	 || sd->status.guild_id != guild_id
+	 || sd->status.char_id != char_id
+	 || sd->status.guild_id != guild_id
 	 // Can't leave inside castles
 	 || ((map->agit_flag || map->agit2_flag)
 			&& map->list[sd->bl.m].flag.gvg_castle
@@ -855,11 +856,11 @@ int guild_expulsion(struct map_session_data* sd, int guild_id, int account_id, i
 		return 0;
 
 	if( (ps=guild->getposition(g,sd))<0 || !(g->position[ps].mode&0x0010) )
-		return 0;	//Expulsion permission
+		return 0; //Expulsion permission
 
 	//Can't leave inside guild castles.
- 	if ((tsd = map->id2sd(account_id))
- 	 && tsd->status.char_id == char_id
+	if ((tsd = map->id2sd(account_id))
+	 && tsd->status.char_id == char_id
 	 && ((map->agit_flag || map->agit2_flag)
 			&& map->list[sd->bl.m].flag.gvg_castle
 			&& !battle_config.guild_castle_expulsion)
@@ -976,8 +977,8 @@ int guild_send_memberinfoshort(struct map_session_data *sd,int online)
 		return 0;
 	}
 	
-	if(sd->state.connect_new)
-	{	//Note that this works because it is invoked in parse_LoadEndAck before connect_new is cleared.
+	if (sd->state.connect_new) {
+		//Note that this works because it is invoked in parse_LoadEndAck before connect_new is cleared.
 		clif->guild_belonginfo(sd,g);
 		sd->guild_emblem_id = g->emblem_id;
 	}
@@ -1392,8 +1393,8 @@ void guild_guildaura_refresh(struct map_session_data *sd, uint16 skill_id, uint1
 /*====================================================
  * Count number of relations the guild has.
  * Flag:
- *	0 = allied
- *	1 = enemy
+ *   0 = allied
+ *   1 = enemy
  *---------------------------------------------------*/
 int guild_get_alliance_count(struct guild *g,int flag)
 {
@@ -1401,9 +1402,8 @@ int guild_get_alliance_count(struct guild *g,int flag)
 
 	nullpo_ret(g);
 
-	for(i=c=0;i<MAX_GUILDALLIANCE;i++){
-		if(	g->alliance[i].guild_id>0 &&
-			g->alliance[i].opposition==flag )
+	for(i=c=0;i<MAX_GUILDALLIANCE;i++) {
+		if(g->alliance[i].guild_id>0 && g->alliance[i].opposition==flag)
 			c++;
 	}
 	return c;
@@ -1421,8 +1421,8 @@ void guild_block_skill(struct map_session_data *sd, int time)
 /*====================================================
  * Check relation between guild_id1 and guild_id2.
  * Flag:
- *	0 = allied
- *	1 = enemy
+ *   0 = allied
+ *   1 = enemy
  * Returns true if yes.
  *---------------------------------------------------*/
 int guild_check_alliance(int guild_id1, int guild_id2, int flag)
@@ -1467,7 +1467,7 @@ int guild_reqalliance(struct map_session_data *sd,struct map_session_data *tsd) 
 	if(sd->status.guild_id == tsd->status.guild_id)
 		return 0;
 
-	if( guild->get_alliance_count(g[0],0) >= battle_config.max_guild_alliance )	{
+	if( guild->get_alliance_count(g[0],0) >= battle_config.max_guild_alliance ) {
 		clif->guild_allianceack(sd,4);
 		return 0;
 	}
@@ -1481,9 +1481,8 @@ int guild_reqalliance(struct map_session_data *sd,struct map_session_data *tsd) 
 		return 0;
 	}
 
-    for (i = 0; i < MAX_GUILDALLIANCE; i++) { // check if already allied
-		if(	g[0]->alliance[i].guild_id==tsd->status.guild_id &&
-			g[0]->alliance[i].opposition==0){
+	for (i = 0; i < MAX_GUILDALLIANCE; i++) { // check if already allied
+		if(g[0]->alliance[i].guild_id==tsd->status.guild_id && g[0]->alliance[i].opposition==0) {
 			clif->guild_allianceack(sd,0);
 			return 0;
 		}
@@ -1509,13 +1508,13 @@ int guild_reply_reqalliance(struct map_session_data *sd,int account_id,int flag)
 		return 0;
 	}
 
-    if (sd->guild_alliance != tsd->status.guild_id) // proposed guild_id alliance doesn't match tsd guildid
+	if (sd->guild_alliance != tsd->status.guild_id) // proposed guild_id alliance doesn't match tsd guildid
 		return 0;
 
-    if (flag == 1) { // consent
+	if (flag == 1) { // consent
 		int i;
 
-        struct guild *g, *tg; // Reconfirm the number of alliance
+		struct guild *g, *tg; // Reconfirm the number of alliance
 		g=sd->guild;
 		tg=tsd->guild;
 		
@@ -1543,11 +1542,11 @@ int guild_reply_reqalliance(struct map_session_data *sd,int account_id,int flag)
 					tsd->status.account_id,sd->status.account_id,9 );
 		}
 
-        // inform other servers
+		// inform other servers
 		intif->guild_alliance( sd->status.guild_id,tsd->status.guild_id,
 			sd->status.account_id,tsd->status.account_id,0 );
 		return 0;
-    } else { // deny
+	} else { // deny
 		sd->guild_alliance=0;
 		sd->guild_alliance_account=0;
 		if(tsd!=NULL)
@@ -1590,7 +1589,7 @@ int guild_opposition(struct map_session_data *sd,struct map_session_data *tsd)
 	if(sd->status.guild_id == tsd->status.guild_id)
 		return 0;
 
-	if( guild->get_alliance_count(g,1) >= battle_config.max_guild_alliance )	{
+	if( guild->get_alliance_count(g,1) >= battle_config.max_guild_alliance ) {
 		clif->guild_oppositionack(sd,1);
 		return 0;
 	}
@@ -1711,7 +1710,8 @@ int guild_broken_sub(DBKey key, DBData *data, va_list ap)
 
 	nullpo_ret(g);
 
-	for(i=0;i<MAX_GUILDALLIANCE;i++){	// Destroy all relationships
+	for(i=0;i<MAX_GUILDALLIANCE;i++) {
+		// Destroy all relationships
 		if(g->alliance[i].guild_id==guild_id){
 			for(j=0;j<g->max_member;j++)
 				if( (sd=g->member[j].sd)!=NULL )
@@ -1757,7 +1757,8 @@ int guild_broken(int guild_id,int flag)
 	if(flag!=0 || g==NULL)
 		return 0;
 
-	for(i=0;i<g->max_member;i++){	// Destroy all relationships
+	for(i=0;i<g->max_member;i++){
+		// Destroy all relationships
 		if((sd=g->member[i].sd)!=NULL){
 			if(sd->state.storage_flag == 2)
 				gstorage->pc_quit(sd,1);
@@ -1886,11 +1887,13 @@ int guild_break(struct map_session_data *sd,char *name) {
 		return 0;
 	if(!sd->state.gmaster_flag)
 		return 0;
-	for(i=0;i<g->max_member;i++){
-		if(	g->member[i].account_id>0 && (
-			g->member[i].account_id!=sd->status.account_id ||
-			g->member[i].char_id!=sd->status.char_id ))
+	for (i = 0; i < g->max_member; i++) {
+		if (g->member[i].account_id > 0
+		 && (g->member[i].account_id!=sd->status.account_id
+		  || g->member[i].char_id!=sd->status.char_id
+		)) {
 			break;
+		}
 	}
 	if(i<g->max_member){
 		clif->guild_broken(sd,2);
@@ -2094,7 +2097,8 @@ int guild_castledataloadack(int len, struct guild_castle *gc)
  * Start normal woe and triggers all npc OnAgitStart
  *---------------------------------------------------*/
 void guild_agit_start(void)
-{	// Run All NPC_Event[OnAgitStart]
+{
+	// Run All NPC_Event[OnAgitStart]
 	int c = npc->event_doall("OnAgitStart");
 	ShowStatus("NPC_Event:[OnAgitStart] Run (%d) Events by @AgitStart.\n",c);
 }
@@ -2103,7 +2107,8 @@ void guild_agit_start(void)
  * End normal woe and triggers all npc OnAgitEnd
  *---------------------------------------------------*/
 void guild_agit_end(void)
-{	// Run All NPC_Event[OnAgitEnd]
+{
+	// Run All NPC_Event[OnAgitEnd]
 	int c = npc->event_doall("OnAgitEnd");
 	ShowStatus("NPC_Event:[OnAgitEnd] Run (%d) Events by @AgitEnd.\n",c);
 }
@@ -2112,7 +2117,8 @@ void guild_agit_end(void)
  * Start woe2 and triggers all npc OnAgitStart2
  *---------------------------------------------------*/
 void guild_agit2_start(void)
-{	// Run All NPC_Event[OnAgitStart2]
+{
+	// Run All NPC_Event[OnAgitStart2]
 	int c = npc->event_doall("OnAgitStart2");
 	ShowStatus("NPC_Event:[OnAgitStart2] Run (%d) Events by @AgitStart2.\n",c);
 }
@@ -2121,7 +2127,8 @@ void guild_agit2_start(void)
  * End woe2 and triggers all npc OnAgitEnd2
  *---------------------------------------------------*/
 void guild_agit2_end(void)
-{	// Run All NPC_Event[OnAgitEnd2]
+{
+	// Run All NPC_Event[OnAgitEnd2]
 	int c = npc->event_doall("OnAgitEnd2");
 	ShowStatus("NPC_Event:[OnAgitEnd2] Run (%d) Events by @AgitEnd2.\n",c);
 }

@@ -55,6 +55,7 @@
 #include "../common/sysinfo.h"
 #include "../common/timer.h"
 #include "../common/utils.h"
+#include "../common/HPM.h"
 
 #ifndef WIN32
 	#include <sys/time.h>
@@ -4141,7 +4142,9 @@ int script_config_read(char *cfgName) {
 		else if(strcmpi(w1,"import")==0) {
 			script->config_read(w2);
 		}
-		else {
+		else if(HPM->parseConf(w1, w2, HPCT_SCRIPT)) {
+			; // handled by plugin
+		} else {
 			ShowWarning("Unknown setting '%s' in file %s\n", w1, cfgName);
 		}
 	}
@@ -18985,12 +18988,12 @@ bool script_add_builtin(const struct script_function *buildin, bool override) {
 	return true;
 }
 
-bool script_hp_add(char *name, char *args, bool (*func)(struct script_state *st)) {
+bool script_hp_add(char *name, char *args, bool (*func)(struct script_state *st), bool isDeprecated) {
 	struct script_function buildin;
 	buildin.name = name;
 	buildin.arg = args;
 	buildin.func = func;
-	buildin.deprecated = false;
+	buildin.deprecated = isDeprecated;
 	return script->add_builtin(&buildin, true);
 }
 

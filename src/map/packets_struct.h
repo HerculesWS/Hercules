@@ -279,10 +279,10 @@ struct EQUIPITEM_INFO {
 	int HireExpireDate;
 #endif
 #if PACKETVER >= 20080102
-    unsigned short bindOnEquipType;
+	unsigned short bindOnEquipType;
 #endif
 #if PACKETVER >= 20100629
-    unsigned short wItemSpriteNumber;
+	unsigned short wItemSpriteNumber;
 #endif
 #if PACKETVER >= 20120925
 	struct {
@@ -672,7 +672,7 @@ struct packet_bgqueue_register {
 struct packet_bgqueue_update_info {
 	short PacketType;
 	char bg_name[NAME_LENGTH];
-	int	position;
+	int position;
 } __attribute__((packed));
 
 struct packet_bgqueue_checkstate {

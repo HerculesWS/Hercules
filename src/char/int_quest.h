@@ -4,7 +4,16 @@
 #ifndef CHAR_QUEST_H
 #define CHAR_QUEST_H
 
-int inter_quest_parse_frommap(int fd);
+void inter_quest_defaults(void);
+
+/**
+ * inter_quest interface
+ **/
+struct inter_quest_interface {
+	int (*parse_frommap) (int fd);
+};
+
+struct inter_quest_interface *inter_quest;
 
 #endif /* CHAR_QUEST_H */
 

@@ -187,7 +187,7 @@ typedef enum c_op {
 	C_USERFUNC, // internal script function
 	C_USERFUNC_POS, // internal script function label
 	C_REF, // the next call to c_op2 should push back a ref to the left operand
-	
+
 	// operators
 	C_OP3, // a ? b : c
 	C_LOR, // a || b
@@ -265,7 +265,7 @@ enum e_arglist {
  *------------------------------------------*/
 
 enum {
-	MF_NOMEMO,	//0
+	MF_NOMEMO, //0
 	MF_NOTELEPORT,
 	MF_NOSAVE,
 	MF_NOBRANCH,
@@ -275,7 +275,7 @@ enum {
 	MF_PVP_NOPARTY,
 	MF_PVP_NOGUILD,
 	MF_GVG,
-	MF_GVG_NOPARTY,	//10
+	MF_GVG_NOPARTY, //10
 	MF_NOTRADE,
 	MF_NOSKILL,
 	MF_NOWARP,
@@ -293,7 +293,7 @@ enum {
 	MF_GVG_DUNGEON,
 	MF_NIGHTENABLED,
 	MF_NOBASEEXP,
-	MF_NOJOBEXP,	//30
+	MF_NOJOBEXP, //30
 	MF_NOMOBLOOT,
 	MF_NOMVPLOOT,
 	MF_NORETURN,
@@ -303,7 +303,7 @@ enum {
 	MF_NOCOMMAND,
 	MF_NODROP,
 	MF_JEXP,
-	MF_BEXP,	//40
+	MF_BEXP, //40
 	MF_NOVENDING,
 	MF_LOADEVENT,
 	MF_NOCHAT,
@@ -313,7 +313,7 @@ enum {
 	MF_AUTOTRADE,
 	MF_ALLOWKS,
 	MF_MONSTER_NOTELEPORT,
-	MF_PVP_NOCALCRANK,	//50
+	MF_PVP_NOCALCRANK, //50
 	MF_BATTLEGROUND,
 	MF_RESET,
 	MF_NOTOMB,
@@ -460,9 +460,9 @@ struct script_syntax_data {
 		int count;
 		int flag;
 		struct linkdb_node *case_label;
-	} curly[256];		// Information right parenthesis
-	int curly_count;	// The number of right brackets
-	int index;			// Number of the syntax used in the script
+	} curly[256]; // Information right parenthesis
+	int curly_count; // The number of right brackets
+	int index; // Number of the syntax used in the script
 };
 
 struct casecheck_data {
@@ -576,7 +576,7 @@ struct script_interface {
 	void (*error) (const char* src, const char* file, int start_line, const char* error_msg, const char* error_pos);
 	void (*warning) (const char* src, const char* file, int start_line, const char* error_msg, const char* error_pos);
 	/* */
-	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st));
+	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st), bool isDeprecated);
 	int (*conv_num) (struct script_state *st,struct script_data *data);
 	const char* (*conv_str) (struct script_state *st,struct script_data *data);
 	TBL_PC *(*rid2sd) (struct script_state *st);

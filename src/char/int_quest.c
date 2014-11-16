@@ -12,6 +12,7 @@
 
 #include "char.h"
 #include "inter.h"
+#include "mapif.h"
 #include "../common/db.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h"
@@ -21,6 +22,8 @@
 #include "../common/strlib.h"
 #include "../common/timer.h"
 
+struct inter_quest_interface inter_quest_s;
+
 /**
  * Loads the entire questlog for a character.
  *
@@ -29,7 +32,8 @@
  * @return Array of found entries. It has *count entries, and it is care of the
  *         caller to aFree() it afterwards.
  */
-struct quest *mapif_quests_fromsql(int char_id, int *count) {
+struct quest *mapif_quests_fromsql(int char_id, int *count)
+{
 	struct quest *questlog = NULL;
 	struct quest tmp_quest;
 	SqlStmt *stmt;
@@ -40,7 +44,7 @@ struct quest *mapif_quests_fromsql(int char_id, int *count) {
 	if (!count)
 		return NULL;
 
-	stmt = SQL->StmtMalloc(sql_handle);
+	stmt = SQL->StmtMalloc(inter->sql_handle);
 	if (stmt == NULL) {
 		SqlStmt_ShowDebug(stmt);
 		*count = 0;
@@ -106,9 +110,10 @@ struct quest *mapif_quests_fromsql(int char_id, int *count) {
  * @param quest_id Quest ID
  * @return false in case of errors, true otherwise
  */
-bool mapif_quest_delete(int char_id, int quest_id) {
-	if (SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `quest_id` = '%d' AND `char_id` = '%d'", quest_db, quest_id, char_id)) {
-		Sql_ShowDebug(sql_handle);
+bool mapif_quest_delete(int char_id, int quest_id)
+{
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `quest_id` = '%d' AND `char_id` = '%d'", quest_db, quest_id, char_id)) {
+		Sql_ShowDebug(inter->sql_handle);
 		return false;
 	}
 
@@ -122,7 +127,8 @@ bool mapif_quest_delete(int char_id, int quest_id) {
  * @param qd      Quest data
  * @return false in case of errors, true otherwise
  */
-bool mapif_quest_add(int char_id, struct quest qd) {
+bool mapif_quest_add(int char_id, struct quest qd)
+{
 	StringBuf buf;
 	int i;
 
@@ -136,8 +142,8 @@ bool mapif_quest_add(int char_id, struct quest qd) {
 		StrBuf->Printf(&buf, ", '%d'", qd.count[i]);
 	}
 	StrBuf->AppendStr(&buf, ")");
-	if (SQL_ERROR == SQL->Query(sql_handle, StrBuf->Value(&buf))) {
-		Sql_ShowDebug(sql_handle);
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, StrBuf->Value(&buf))) {
+		Sql_ShowDebug(inter->sql_handle);
 		StrBuf->Destroy(&buf);
 		return false;
 	}
@@ -153,7 +159,8 @@ bool mapif_quest_add(int char_id, struct quest qd) {
  * @param qd      Quest data
  * @return false in case of errors, true otherwise
  */
-bool mapif_quest_update(int char_id, struct quest qd) {
+bool mapif_quest_update(int char_id, struct quest qd)
+{
 	StringBuf buf;
 	int i;
 
@@ -164,14 +171,23 @@ bool mapif_quest_update(int char_id, struct quest qd) {
 	}
 	StrBuf->Printf(&buf, " WHERE `quest_id` = '%d' AND `char_id` = '%d'", qd.quest_id, char_id);
 
-	if (SQL_ERROR == SQL->Query(sql_handle, StrBuf->Value(&buf))) {
-		Sql_ShowDebug(sql_handle);
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, StrBuf->Value(&buf))) {
+		Sql_ShowDebug(inter->sql_handle);
 		StrBuf->Destroy(&buf);
 		return false;
 	}
 	StrBuf->Destroy(&buf);
 
 	return true;
+}
+
+void mapif_quest_save_ack(int fd, int char_id, bool success)
+{
+	WFIFOHEAD(fd,7);
+	WFIFOW(fd,0) = 0x3861;
+	WFIFOL(fd,2) = char_id;
+	WFIFOB(fd,6) = success?1:0;
+	WFIFOSET(fd,7);
 }
 
 /**
@@ -181,7 +197,8 @@ bool mapif_quest_update(int char_id, struct quest qd) {
  *
  * @see inter_parse_frommap
  */
-int mapif_parse_quest_save(int fd) {
+int mapif_parse_quest_save(int fd)
+{
 	int i, j, k, old_n, new_n = (RFIFOW(fd,2)-8)/sizeof(struct quest);
 	int char_id = RFIFOL(fd,4);
 	struct quest *old_qd = NULL, *new_qd = NULL;
@@ -190,7 +207,7 @@ int mapif_parse_quest_save(int fd) {
 	if (new_n > 0)
 		new_qd = (struct quest*)RFIFOP(fd,8);
 
-	old_qd = mapif_quests_fromsql(char_id, &old_n);
+	old_qd = mapif->quests_fromsql(char_id, &old_n);
 
 	for (i = 0; i < new_n; i++) {
 		ARR_FIND( 0, old_n, j, new_qd[i].quest_id == old_qd[j].quest_id );
@@ -200,7 +217,7 @@ int mapif_parse_quest_save(int fd) {
 			// Only states and counts are changeable.
 			ARR_FIND( 0, MAX_QUEST_OBJECTIVES, k, new_qd[i].count[k] != old_qd[j].count[k] );
 			if (k != MAX_QUEST_OBJECTIVES || new_qd[i].state != old_qd[j].state)
-				success &= mapif_quest_update(char_id, new_qd[i]);
+				success &= mapif->quest_update(char_id, new_qd[i]);
 
 			if (j < (--old_n)) {
 				// Compact array
@@ -209,24 +226,33 @@ int mapif_parse_quest_save(int fd) {
 			}
 		} else {
 			// Add new quests
-			success &= mapif_quest_add(char_id, new_qd[i]);
+			success &= mapif->quest_add(char_id, new_qd[i]);
 		}
 	}
 
 	for (i = 0; i < old_n; i++) // Quests not in new_qd but in old_qd are to be erased.
-		success &= mapif_quest_delete(char_id, old_qd[i].quest_id);
+		success &= mapif->quest_delete(char_id, old_qd[i].quest_id);
 
 	if (old_qd)
 		aFree(old_qd);
 
 	// Send ack
-	WFIFOHEAD(fd,7);
-	WFIFOW(fd,0) = 0x3861;
-	WFIFOL(fd,2) = char_id;
-	WFIFOB(fd,6) = success?1:0;
-	WFIFOSET(fd,7);
+	mapif->quest_save_ack(fd, char_id, success);
 
 	return 0;
+}
+
+void mapif_send_quests(int fd, int char_id, struct quest *tmp_questlog, int num_quests)
+{
+	WFIFOHEAD(fd,num_quests*sizeof(struct quest)+8);
+	WFIFOW(fd,0) = 0x3860;
+	WFIFOW(fd,2) = num_quests*sizeof(struct quest)+8;
+	WFIFOL(fd,4) = char_id;
+
+	if (num_quests > 0)
+		memcpy(WFIFOP(fd,8), tmp_questlog, sizeof(struct quest)*num_quests);
+
+	WFIFOSET(fd,num_quests*sizeof(struct quest)+8);
 }
 
 /**
@@ -238,22 +264,14 @@ int mapif_parse_quest_save(int fd) {
  *
  * @see inter_parse_frommap
  */
-int mapif_parse_quest_load(int fd) {
+int mapif_parse_quest_load(int fd)
+{
 	int char_id = RFIFOL(fd,2);
 	struct quest *tmp_questlog = NULL;
 	int num_quests;
 
-	tmp_questlog = mapif_quests_fromsql(char_id, &num_quests);
-
-	WFIFOHEAD(fd,num_quests*sizeof(struct quest)+8);
-	WFIFOW(fd,0) = 0x3860;
-	WFIFOW(fd,2) = num_quests*sizeof(struct quest)+8;
-	WFIFOL(fd,4) = char_id;
-
-	if (num_quests > 0)
-		memcpy(WFIFOP(fd,8), tmp_questlog, sizeof(struct quest)*num_quests);
-
-	WFIFOSET(fd,num_quests*sizeof(struct quest)+8);
+	tmp_questlog = mapif->quests_fromsql(char_id, &num_quests);
+	mapif->send_quests(fd, char_id, tmp_questlog, num_quests);
 
 	if (tmp_questlog)
 		aFree(tmp_questlog);
@@ -266,12 +284,20 @@ int mapif_parse_quest_load(int fd) {
  *
  * @see inter_parse_frommap
  */
-int inter_quest_parse_frommap(int fd) {
+int inter_quest_parse_frommap(int fd)
+{
 	switch(RFIFOW(fd,0)) {
-		case 0x3060: mapif_parse_quest_load(fd); break;
-		case 0x3061: mapif_parse_quest_save(fd); break;
+		case 0x3060: mapif->parse_quest_load(fd); break;
+		case 0x3061: mapif->parse_quest_save(fd); break;
 		default:
 			return 0;
 	}
 	return 1;
+}
+
+void inter_quest_defaults(void)
+{
+	inter_quest = &inter_quest_s;
+
+	inter_quest->parse_frommap = inter_quest_parse_frommap;
 }

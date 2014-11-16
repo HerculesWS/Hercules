@@ -59,7 +59,7 @@ time_t start_time;
 
 
 /*----------------------------
- * 	Timer debugging
+ * Timer debugging
  *----------------------------*/
 struct timer_func_list {
 	struct timer_func_list* next;
@@ -101,31 +101,31 @@ char* search_timer_func_list(TimerFunc func)
 }
 
 /*----------------------------
- * 	Get tick time
+ * Get tick time
  *----------------------------*/
 
 #if defined(ENABLE_RDTSC)
 static uint64 RDTSC_BEGINTICK = 0,   RDTSC_CLOCK = 0;
 
 static __inline uint64 rdtsc_(void) {
-	register union{
-		uint64	qw;
-		uint32 	dw[2];
+	register union {
+		uint64 qw;
+		uint32 dw[2];
 	} t;
 
 	asm volatile("rdtsc":"=a"(t.dw[0]), "=d"(t.dw[1]) );
-	
+
 	return t.qw;
 }
 
 static void rdtsc_calibrate(void){
 	uint64 t1, t2;
 	int32 i;
-	
+
 	ShowStatus("Calibrating Timer Source, please wait... ");
-	
+
 	RDTSC_CLOCK = 0;
-	
+
 	for(i = 0; i < 5; i++){
 		t1 = rdtsc_();
 		usleep(1000000); //1000 MS
@@ -133,9 +133,9 @@ static void rdtsc_calibrate(void){
 		RDTSC_CLOCK += (t2 - t1) / 1000;
 	}
 	RDTSC_CLOCK /= 5;
-	
+
 	RDTSC_BEGINTICK = rdtsc_();
-	
+
 	ShowMessage(" done. (Frequency: %u Mhz)\n", (uint32)(RDTSC_CLOCK/1000) );
 }
 
@@ -233,7 +233,7 @@ int64 timer_gettick(void) {
 //////////////////////////////////////////////////////////////////////////
 
 /*======================================
- * 	CORE : Timer Heap
+ * CORE : Timer Heap
  *--------------------------------------*/
 
 /// Adds a timer to the timer_heap
@@ -243,7 +243,7 @@ static void push_timer_heap(int tid) {
 }
 
 /*==========================
- * 	Timer Management
+ * Timer Management
  *--------------------------*/
 
 /// Returns a free timer id.
@@ -281,7 +281,7 @@ static int acquire_timer(void) {
 /// Returns the timer's id.
 int timer_add(int64 tick, TimerFunc func, int id, intptr_t data) {
 	int tid;
-	
+
 	tid = acquire_timer();
 	timer_data[tid].tick     = tick;
 	timer_data[tid].func     = func;
@@ -304,7 +304,7 @@ int timer_add_interval(int64 tick, TimerFunc func, int id, intptr_t data, int in
 		          tick, func, search_timer_func_list(func), id, data, DIFF_TICK(tick, timer->gettick()));
 		return INVALID_TIMER;
 	}
-	
+
 	tid = acquire_timer();
 	timer_data[tid].tick     = tick;
 	timer_data[tid].func     = func;
@@ -351,7 +351,7 @@ int64 timer_addtick(int tid, int64 tick) {
 /// Returns the new tick value, or -1 if it fails.
 int64 timer_settick(int tid, int64 tick) {
 	size_t i;
-	
+
 	// search timer position
 	ARR_FIND(0, BHEAP_LENGTH(timer_heap), i, BHEAP_DATA(timer_heap)[i] == tid);
 	if( i == BHEAP_LENGTH(timer_heap) ) {
@@ -444,8 +444,8 @@ void timer_final(void) {
 	struct timer_func_list *next;
 
 	for( tfl=tfl_root; tfl != NULL; tfl = next ) {
-		next = tfl->next;	// copy next pointer
-		aFree(tfl->name);	// free structures
+		next = tfl->next; // copy next pointer
+		aFree(tfl->name); // free structures
 		aFree(tfl);
 	}
 

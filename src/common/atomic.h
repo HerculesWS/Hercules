@@ -8,9 +8,9 @@
 // (Interlocked CompareExchange, Add .. and so on ..)
 //
 // Implementation varies / depends on:
-//	- Architecture
-//	- Compiler
-//	- Operating System
+// - Architecture
+// - Compiler
+// - Operating System
 //
 // our Abstraction is fully API-Compatible to Microsoft's implementation @ NT5.0+
 //
@@ -29,13 +29,13 @@ forceinline int64 InterlockedCompareExchange64(volatile int64 *dest, int64 exch,
 	_asm{
 		lea esi,_cmp;
 		lea edi,exch;
-        
+
 		mov eax,[esi];
 		mov edx,4[esi];
 		mov ebx,[edi];
 		mov ecx,4[edi];
 		mov esi,dest;
-		
+
 		lock CMPXCHG8B [esi];
 	}
 }
@@ -109,7 +109,7 @@ static forceinline int64 InterlockedIncrement64(volatile int64 *addend){
 
 
 static forceinline int32 InterlockedIncrement(volatile int32 *addend){
-        return __sync_add_and_fetch(addend, 1);
+	return __sync_add_and_fetch(addend, 1);
 }//end: InterlockedIncrement()
 
 
@@ -139,7 +139,7 @@ static forceinline int64 InterlockedExchange64(volatile int64 *target, int64 val
 
 
 static forceinline int32 InterlockedExchange(volatile int32 *target, int32 val){
-    return __sync_lock_test_and_set(target, val);
+	return __sync_lock_test_and_set(target, val);
 }//end: InterlockedExchange()
 
 

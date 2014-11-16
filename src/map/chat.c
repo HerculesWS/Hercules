@@ -61,10 +61,10 @@ struct chat_data* chat_createchat(struct block_list* bl, const char* title, cons
 	}
 
 	map->addiddb(&cd->bl);
-	
+
 	if( bl->type != BL_NPC )
 		cd->kick_list = idb_alloc(DB_OPT_BASE);
-	
+
 	return cd;
 }
 
@@ -156,20 +156,20 @@ bool chat_joinchat(struct map_session_data* sd, int chatid, const char* pass) {
 
 	pc_setchatid(sd,cd->bl.id);
 
-    clif->joinchatok(sd, cd); //To the person who newly joined the list of all
-    clif->addchat(cd, sd); //Reports To the person who already in the chat
-    clif->dispchat(cd, 0); //Reported number of changes to the people around
+	clif->joinchatok(sd, cd); //To the person who newly joined the list of all
+	clif->addchat(cd, sd); //Reports To the person who already in the chat
+	clif->dispchat(cd, 0); //Reported number of changes to the people around
 
-    chat->trigger_event(cd); //Event
+	chat->trigger_event(cd); //Event
 
-    return true;
+	return true;
 }
 
 
 /*==========================================
  * Leave a chatroom
  * Return
- *	0: User not found in chatroom/Missing data
+ *  0: User not found in chatroom/Missing data
  *  1: Success
  *  2: Chat room deleted (chat room empty)
  *  3: Owner changed (Owner left and a new one as assigned)
@@ -188,8 +188,8 @@ int chat_leavechat(struct map_session_data* sd, bool kicked) {
 	}
 
 	ARR_FIND( 0, cd->users, i, cd->usersd[i] == sd );
-	if ( i == cd->users )
-	{	// Not found in the chatroom?
+	if (i == cd->users) {
+		// Not found in the chatroom?
 		pc_setchatid(sd, 0);
 		return 0;
 	}
@@ -213,7 +213,7 @@ int chat_leavechat(struct map_session_data* sd, bool kicked) {
 		map->deliddb(&cd->bl);
 		map->delblock(&cd->bl);
 		map->freeblock(&cd->bl);
-		
+
 		su = map->find_skill_unit_oncell(&sd->bl, sd->bl.x, sd->bl.y, AL_WARP, NULL, 0);
 		group = (su != NULL) ? su->group : NULL;
 		if (group != NULL)
@@ -326,7 +326,7 @@ bool chat_kickchat(struct map_session_data* sd, const char* kickusername) {
 	nullpo_ret(sd);
 
 	cd = (struct chat_data *)map->id2bl(sd->chatID);
-	
+
 	if( cd==NULL || (struct block_list *)sd != cd->owner )
 		return false;
 
@@ -336,7 +336,7 @@ bool chat_kickchat(struct map_session_data* sd, const char* kickusername) {
 
 	if (pc_has_permission(cd->usersd[i], PC_PERM_NO_CHAT_KICK))
 		return false; //gm kick protection [Valaris]
-	
+
 	idb_iput(cd->kick_list,cd->usersd[i]->status.char_id,1);
 
 	chat->leave(cd->usersd[i],1);
@@ -385,14 +385,14 @@ bool chat_deletenpcchat(struct npc_data* nd) {
 	cd = (struct chat_data*)map->id2bl(nd->chat_id);
 	if( cd == NULL )
 		return false;
-	
+
 	chat->npc_kick_all(cd);
 	clif->clearchat(cd, 0);
 	map->deliddb(&cd->bl);
 	map->delblock(&cd->bl);
 	map->freeblock(&cd->bl);
 	nd->chat_id = 0;
-	
+
 	return true;
 }
 
@@ -452,7 +452,7 @@ bool chat_npckickall(struct chat_data* cd)
 *-------------------------------------*/
 void chat_defaults(void) {
 	chat = &chat_s;
-	
+
 	/* funcs */
 	chat->create_pc_chat = chat_createpcchat;
 	chat->join = chat_joinchat;

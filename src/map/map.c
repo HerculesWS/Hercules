@@ -309,7 +309,7 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 		skill->unit_move(bl,tick,2);
 		status_change_end(bl, SC_RG_CCONFINE_M, INVALID_TIMER);
 		status_change_end(bl, SC_RG_CCONFINE_S, INVALID_TIMER);
-		//		status_change_end(bl, SC_BLADESTOP, INVALID_TIMER); //Won't stop when you are knocked away, go figure...
+		//status_change_end(bl, SC_BLADESTOP, INVALID_TIMER); //Won't stop when you are knocked away, go figure...
 		status_change_end(bl, SC_NJ_TATAMIGAESHI, INVALID_TIMER);
 		status_change_end(bl, SC_MAGICROD, INVALID_TIMER);
 		if (sc && sc->data[SC_PROPERTYWALK] &&
@@ -395,8 +395,8 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 
 /*==========================================
  * Counts specified number of objects on given cell.
-  * flag:
- *		0x1 - only count standing units
+ * flag:
+ *   0x1 - only count standing units
  * TODO: merge with bl_getall_area
  *------------------------------------------*/
 int map_count_oncell(int16 m, int16 x, int16 y, int type, int flag) {
@@ -1493,8 +1493,8 @@ int map_search_freecell(struct block_list *src, int16 m, int16 *x,int16 *y, int1
  * Returns true on success and sets x and y to cell found.
  * Otherwise returns false and x and y are not changed.
  * type: Types of block to count
- * flag: 
- *		0x1 - only count standing units
+ * flag:
+ *   0x1 - only count standing units
  *------------------------------------------*/
 bool map_closest_freecell(int16 m, int16 *x, int16 *y, int type, int flag)
 {
@@ -1520,7 +1520,7 @@ bool map_closest_freecell(int16 m, int16 *x, int16 *y, int type, int flag)
 				*y = ty;
 				return true;
 			}
-		} 
+		}
 		//Full diagonal search
 		else if(dir%2 == 1 && costrange%MOVE_DIAGONAL_COST == 0) {
 			tx = *x+dx*(costrange/MOVE_DIAGONAL_COST);
@@ -2507,35 +2507,31 @@ uint8 map_calc_dir(struct block_list* src, int16 x, int16 y)
 
 	dx = x-src->x;
 	dy = y-src->y;
-	if( dx == 0 && dy == 0 )
-	{	// both are standing on the same spot.
+	if (dx == 0 && dy == 0) {
+		// both are standing on the same spot.
 		// aegis-style, makes knockback default to the left.
 		// athena-style, makes knockback default to behind 'src'.
 		dir = (battle_config.knockback_left ? 6 : unit->getdir(src));
-	}
-	else if( dx >= 0 && dy >=0 )
-	{	// upper-right
-		if( dx*2 < dy || dx == 0 )         dir = 0;	// up
-		else if( dx > dy*2+1 || dy == 0 )  dir = 6;	// right
-		else                               dir = 7;	// up-right
-	}
-	else if( dx >= 0 && dy <= 0 )
-	{	// lower-right
-		if( dx*2 < -dy || dx == 0 )        dir = 4;	// down
-		else if( dx > -dy*2+1 || dy == 0 ) dir = 6;	// right
-		else                               dir = 5;	// down-right
-	}
-	else if( dx <= 0 && dy <= 0 )
-	{	// lower-left
-		if( dx*2 > dy || dx == 0 )         dir = 4;	// down
-		else if( dx < dy*2-1 || dy == 0 )  dir = 2;	// left
-		else                               dir = 3;	// down-left
-	}
-	else
-	{	// upper-left
-		if( -dx*2 < dy || dx == 0 )        dir = 0;	// up
-		else if( -dx > dy*2+1 || dy == 0)  dir = 2;	// left
-		else                               dir = 1;	// up-left
+	} else if (dx >= 0 && dy >=0) {
+		// upper-right
+		if( dx*2 < dy || dx == 0 )         dir = 0; // up
+		else if( dx > dy*2+1 || dy == 0 )  dir = 6; // right
+		else                               dir = 7; // up-right
+	} else if (dx >= 0 && dy <= 0) {
+		// lower-right
+		if( dx*2 < -dy || dx == 0 )        dir = 4; // down
+		else if( dx > -dy*2+1 || dy == 0 ) dir = 6; // right
+		else                               dir = 5; // down-right
+	} else if (dx <= 0 && dy <= 0) {
+		// lower-left
+		if( dx*2 > dy || dx == 0 )         dir = 4; // down
+		else if( dx < dy*2-1 || dy == 0 )  dir = 2; // left
+		else                               dir = 3; // down-left
+	} else {
+		// upper-left
+		if( -dx*2 < dy || dx == 0 )        dir = 0; // up
+		else if( -dx > dy*2+1 || dy == 0)  dir = 2; // left
+		else                               dir = 1; // up-left
 	}
 	return dir;
 }
@@ -3482,8 +3478,8 @@ int map_readallmaps (void) {
 		map->list[i].m = i;
 		map->addmap2db(&map->list[i]);
 
-		memset(map->list[i].moblist, 0, sizeof(map->list[i].moblist));	//Initialize moblist [Skotlex]
-		map->list[i].mob_delete_timer = INVALID_TIMER;	//Initialize timer [Skotlex]
+		memset(map->list[i].moblist, 0, sizeof(map->list[i].moblist)); //Initialize moblist [Skotlex]
+		map->list[i].mob_delete_timer = INVALID_TIMER; //Initialize timer [Skotlex]
 
 		map->list[i].bxs = (map->list[i].xs + BLOCK_SIZE - 1) / BLOCK_SIZE;
 		map->list[i].bys = (map->list[i].ys + BLOCK_SIZE - 1) / BLOCK_SIZE;
@@ -3780,6 +3776,8 @@ int inter_config_read(char *cfgName) {
 		/* import */
 		else if(strcmpi(w1,"import")==0)
 			map->inter_config_read(w2);
+		else
+			HPM->parseConf(w1, w2, HPCT_MAP_INTER);
 	}
 	fclose(fp);
 
@@ -5938,7 +5936,7 @@ int do_init(int argc, char *argv[])
 		exit(EXIT_SUCCESS);
 	}
 	
-	npc->event_do_oninit( false );	// Init npcs (OnInit)
+	npc->event_do_oninit( false ); // Init npcs (OnInit)
 	npc->market_fromsql(); /* after OnInit */
 	
 	if (battle_config.pk_mode)

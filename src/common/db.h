@@ -848,7 +848,7 @@ DBKey (*i642key) (int64 key);
  * @public
  */
 DBKey (*ui642key) (uint64 key);
-	
+
 /**
  * Manual cast from 'int' to the struct DBData.
  * @param data Data to be casted
@@ -914,7 +914,7 @@ void (*init) (void);
  * @see #db_init(void)
  */
 void (*final) (void);
-} DB_s;
+};
 
 struct db_interface *DB;
 
@@ -1500,7 +1500,7 @@ void  linkdb_foreach (struct linkdb_node** head, LinkDBFunc func, ...);
 		VECTOR_INDEX(__heap,0) = VECTOR_POP(__heap); /* put last at index */ \
 		if( !VECTOR_LENGTH(__heap) ) /* removed last, nothing to do */ \
 			break; \
-		BHEAP_SIFTUP(__heap,0,__topcmp,__swp);	\
+		BHEAP_SIFTUP(__heap,0,__topcmp,__swp); \
 	}while(0)
 
 
@@ -1562,7 +1562,7 @@ void  linkdb_foreach (struct linkdb_node** head, LinkDBFunc func, ...);
 /// @param __idx Index of an inserted element
 /// @param __topcmp Comparator
 /// @param __swp Swapper
-#define BHEAP_SIFTDOWN(__heap,__startidx,__idx,__topcmp,__swp)	\
+#define BHEAP_SIFTDOWN(__heap,__startidx,__idx,__topcmp,__swp) \
 	do{ \
 		size_t _i2_ = __idx; \
 		while( _i2_ > __startidx ) \

@@ -27,6 +27,21 @@
 #define HPM_HOOKS_INCLUDE "../plugins/HPMHooking/HPMHooking_char.Hooks.inc"
 #define HPM_POINTS_INCLUDE "../plugins/HPMHooking/HPMHooking_char.HookingPoints.inc"
 #define HPM_SOURCES_INCLUDE "../plugins/HPMHooking/HPMHooking_char.sources.inc"
+#include "../char/char.h"
+#include "../char/geoip.h"
+#include "../char/int_auction.h"
+#include "../char/int_elemental.h"
+#include "../char/int_guild.h"
+#include "../char/int_homun.h"
+#include "../char/int_mail.h"
+#include "../char/int_mercenary.h"
+#include "../char/int_party.h"
+#include "../char/int_pet.h"
+#include "../char/int_quest.h"
+#include "../char/int_storage.h"
+#include "../char/inter.h"
+#include "../char/loginif.h"
+#include "../char/mapif.h"
 #include "../char/pincode.h"
 #elif defined (HPMHOOKING_MAP)
 #define HPM_SERVER_TYPE SERVER_TYPE_MAP
@@ -130,11 +145,11 @@ HPExport bool Hooked (bool *fr) {
 
 HPExport bool HPM_Plugin_AddHook(enum HPluginHookType type, const char *target, void *hook, unsigned int pID) {
 	struct HookingPointData *hpd;
-	
+
 	if( hp_db && (hpd = strdb_get(hp_db,target)) ) {
 		struct HPMHookPoint **hp = NULL;
 		int *count = NULL;
-		
+
 		if( type == HOOK_TYPE_PRE ) {
 			hp = (struct HPMHookPoint **)((char *)&HPMHooks.list + (sizeof(struct HPMHookPoint *)*hpd->idx));
 			count = (int *)((char *)&HPMHooks.count + (sizeof(int)*hpd->idx));
@@ -142,21 +157,21 @@ HPExport bool HPM_Plugin_AddHook(enum HPluginHookType type, const char *target, 
 			hp = (struct HPMHookPoint **)((char *)&HPMHooks.list + (sizeof(struct HPMHookPoint *)*(hpd->idx+1)));
 			count = (int *)((char *)&HPMHooks.count + (sizeof(int)*(hpd->idx+1)));
 		}
-		
+
 		if( hp ) {
 			*count += 1;
-			
+
 			RECREATE(*hp, struct HPMHookPoint, *count);
-			
+
 			(*hp)[*count - 1].func = hook;
 			(*hp)[*count - 1].pID = pID;
-			
+
 			*(hpd->sref) = hpd->tref;
-			
+
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -164,46 +179,45 @@ HPExport bool HPM_Plugin_AddHook(enum HPluginHookType type, const char *target, 
 
 void HPM_HP_final(void) {
 	int i, len = HPMHooks.data.total * 2;
-	
+
 	if( hp_db )
 		db_destroy(hp_db);
-	
+
 	for(i = 0; i < len; i++) {
 		int *count = (int *)((char *)&HPMHooks.count + (sizeof(int)*(i)));
-		
+
 		if( count && *count ) {
 			struct HPMHookPoint **hp = (struct HPMHookPoint **)((char *)&HPMHooks.list + (sizeof(struct HPMHookPoint *)*(i)));
-			
+
 			if( hp && *hp )
 				aFree(*hp);
 		}
 	}
-	
 }
 
 void HPM_HP_load(void) {
 	#include HPM_POINTS_INCLUDE
 	int i, len = ARRAYLENGTH(HookingPoints), idx = 0;
-	
+
 	memset(&HPMHooks,0,sizeof(struct HPMHooksCore));
-	
+
 	hp_db = strdb_alloc(DB_OPT_BASE|DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, HookingPointsLenMax);
-	
+
 	for(i = 0; i < len; i++) {
 		struct HookingPointData *hpd = NULL;
-		
+
 		CREATE(hpd, struct HookingPointData, 1);
-		
+
 		memcpy(hpd, &HookingPoints[i], sizeof(struct HookingPointData));
-		
+
 		hpd->idx = idx;
 		idx += 2;
-		
+
 		strdb_put(hp_db, HookingPoints[i].name, hpd);
-		
+
 		HPMHooks.data.total++;
 	}
-	
+
 	#include HPM_SOURCES_INCLUDE
 }
 

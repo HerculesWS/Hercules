@@ -48,14 +48,14 @@ char **arg_v = NULL;
 
 char *SERVER_NAME = NULL;
 
-#ifndef MINICORE	// minimalist Core
+#ifndef MINICORE // minimalist Core
 // Added by Gabuzomeu
 //
 // This is an implementation of signal() using sigaction() for portability.
 // (sigaction() is POSIX; signal() is not.)  Taken from Stevens' _Advanced
 // Programming in the UNIX Environment_.
 //
-#ifdef WIN32	// windows don't have SIGPIPE
+#ifdef WIN32 // windows don't have SIGPIPE
 #define SIGPIPE SIGINT
 #endif
 
@@ -69,7 +69,7 @@ sigfunc *compat_signal(int signo, sigfunc *func) {
 	sigemptyset(&sact.sa_mask);
 	sact.sa_flags = 0;
 #ifdef SA_INTERRUPT
-	sact.sa_flags |= SA_INTERRUPT;	/* SunOS */
+	sact.sa_flags |= SA_INTERRUPT; /* SunOS */
 #endif
 
 	if (sigaction(signo, &sact, &oact) < 0)
@@ -80,7 +80,7 @@ sigfunc *compat_signal(int signo, sigfunc *func) {
 #endif
 
 /*======================================
- *	CORE : Console events for Windows
+ * CORE : Console events for Windows
  *--------------------------------------*/
 #ifdef _WIN32
 static BOOL WINAPI console_handler(DWORD c_event) {
@@ -106,7 +106,7 @@ static void cevents_init(void) {
 #endif
 
 /*======================================
- *	CORE : Signal Sub Function
+ * CORE : Signal Sub Function
  *--------------------------------------*/
 static void sig_proc(int sn) {
 	static int is_called = 0;
@@ -132,11 +132,11 @@ static void sig_proc(int sn) {
 		case SIGXFSZ:
 			// ignore and allow it to set errno to EFBIG
 			ShowWarning ("Max file size reached!\n");
-			//run_flag = 0;	// should we quit?
+			//run_flag = 0; // should we quit?
 			break;
 		case SIGPIPE:
-			//ShowInfo ("Broken pipe found... closing socket\n");	// set to eof in socket.c
-			break;	// does nothing here
+			//ShowInfo ("Broken pipe found... closing socket\n"); // set to eof in socket.c
+			break; // does nothing here
 	#endif
 	}
 }
@@ -185,7 +185,7 @@ void core_defaults(void) {
 #endif
 }
 /*======================================
- *	CORE : MAINROUTINE
+ * CORE : MAINROUTINE
  *--------------------------------------*/
 int main (int argc, char **argv) {
 	int retval = EXIT_SUCCESS;
@@ -209,7 +209,7 @@ int main (int argc, char **argv) {
 			}
 		}
 	}
-	
+
 	iMalloc->init();// needed for Show* in display_title() [FlavioJS]
 
 	sysinfo->init();
@@ -229,7 +229,7 @@ int main (int argc, char **argv) {
 	rathread_init();
 	DB->init();
 	signals_init();
-	
+
 #ifdef _WIN32
 	cevents_init();
 #endif
@@ -239,11 +239,11 @@ int main (int argc, char **argv) {
 	/* timer first */
 	rnd_init();
 	srand((unsigned int)timer->gettick());
-	
+
 	console->init();
-	
+
 	HCache->init();
-	
+
 	HPM->init();
 
 	sockt->init();
@@ -258,7 +258,7 @@ int main (int argc, char **argv) {
 	}
 
 	console->final();
-	
+
 	retval = do_final();
 	HPM->final();
 	timer->final();

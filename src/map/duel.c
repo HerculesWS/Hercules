@@ -16,6 +16,8 @@
 #include "pc.h"
 #include "../common/cbasetypes.h"
 
+struct duel_interface duel_s;
+
 /*==========================================
  * Duel organizing functions [LuzZza]
  *------------------------------------------*/

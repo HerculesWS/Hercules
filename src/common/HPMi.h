@@ -84,7 +84,13 @@ enum HPluginDataTypes {
 
 /* used in macros and conf storage */
 enum HPluginConfType {
-	HPCT_BATTLE, /* battle-conf (map-server */
+	HPCT_BATTLE,     /* battle-conf (map-server */
+	HPCT_LOGIN,      /* login-server.conf (login-server) */
+	HPCT_CHAR,       /* char-server.conf (char-server) */
+	HPCT_CHAR_INTER, /* inter-server.conf (char-server) */
+	HPCT_MAP_INTER,  /* inter-server.conf (map-server) */
+	HPCT_LOG,        /* logs.conf (map-server) */
+	HPCT_SCRIPT,     /* script.conf (map-server) */
 	HPCT_MAX,
 };
 
@@ -136,9 +142,15 @@ enum HPluginConfType {
 /* HPMi->addScript */
 #define addScriptCommand(cname,scinfo,funcname) \
 	if ( HPMi->addScript != NULL ) { \
-		HPMi->addScript(cname,scinfo,buildin_ ## funcname); \
+		HPMi->addScript(cname,scinfo,buildin_ ## funcname, false); \
 	} else { \
 		ShowWarning("HPM (%s):addScriptCommand(\"%s\",\"%s\",%s) failed, addScript sub is NULL!\n",pinfo.name,cname,scinfo,# funcname);\
+	}
+#define addScriptCommandDeprecated(cname,scinfo,funcname) \
+	if ( HPMi->addScript != NULL ) { \
+		HPMi->addScript(cname,scinfo,buildin_ ## funcname, true); \
+	} else { \
+		ShowWarning("HPM (%s):addScriptCommandDeprecated(\"%s\",\"%s\",%s) failed, addScript sub is NULL!\n",pinfo.name,cname,scinfo,# funcname);\
 	}
 /* HPMi->addCPCommand */
 #define addCPCommand(cname,funcname) \
@@ -151,6 +163,18 @@ enum HPluginConfType {
 #define addPacket(cmd,len,receive,point) HPMi->addPacket(cmd,len,receive,point,HPMi->pid)
 /* HPMi->addBattleConf */
 #define addBattleConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_BATTLE,bcname,funcname)
+/* HPMi->addLogin */
+#define addLoginConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_LOGIN,bcname,funcname)
+/* HPMi->addChar */
+#define addCharConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_CHAR,bcname,funcname)
+/* HPMi->addCharInter */
+#define addCharInterConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_CHAR_INTER,bcname,funcname)
+/* HPMi->addMapInter */
+#define addMapInterConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_MAP_INTER,bcname,funcname)
+/* HPMi->addLog */
+#define addLogConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_LOG,bcname,funcname)
+/* HPMi->addScript */
+#define addScriptConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_SCRIPT,bcname,funcname)
 
 /* HPMi->addPCGPermission */
 #define addGroupPermission(pcgname,maskptr) HPMi->addPCGPermission(HPMi->pid,pcgname,&maskptr)
@@ -162,7 +186,7 @@ HPExport struct HPMi_interface {
 	/* */
 	void (*event[HPET_MAX]) (void);
 	bool (*addCommand) (char *name, bool (*func)(const int fd, struct map_session_data* sd, const char* command, const char* message,struct AtCommandInfo *info));
-	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st));
+	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st), bool isDeprecated);
 	void (*addCPCommand) (char *name, CParseFunc func);
 	/* HPM Custom Data */
 	void (*addToHPData) (enum HPluginDataTypes type, unsigned int pluginID, void *ptr, void *data, unsigned int index, bool autofree);
@@ -180,8 +204,9 @@ HPExport struct HPMi_interface {
 	bool (*addConf) (unsigned int pluginID, enum HPluginConfType type, char *name, void (*func) (const char *val));
 	/* pc group permission */
 	void (*addPCGPermission) (unsigned int pluginID, char *name, unsigned int *mask);
-} HPMi_s;
+};
 #ifndef HERCULES_CORE
+HPExport struct HPMi_interface HPMi_s;
 HPExport struct HPMi_interface *HPMi;
 #endif
 

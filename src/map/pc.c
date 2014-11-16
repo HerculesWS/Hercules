@@ -388,7 +388,8 @@ int pc_setrestartvalue(struct map_session_data *sd,int type) {
 	bst = &sd->base_status;
 	st = &sd->battle_status;
 
-	if (type&1) {	//Normal resurrection
+	if (type&1) {
+		//Normal resurrection
 		st->hp = 1; //Otherwise status->heal may fail if dead.
 		status->heal(&sd->bl, bst->hp, 0, 1);
 		if( st->sp < bst->sp )
@@ -554,7 +555,7 @@ int pc_makesavestatus(struct map_session_data *sd)
 	if(!battle_config.save_clothcolor)
 		sd->status.clothes_color=0;
 
-  	//Only copy the Cart/Peco/Falcon options, the rest are handled via
+	//Only copy the Cart/Peco/Falcon options, the rest are handled via
 	//status change load/saving. [Skotlex]
 #ifdef NEW_CARTS
 	sd->status.option = sd->sc.option&(OPTION_INVISIBLE|OPTION_FALCON|OPTION_RIDING|OPTION_DRAGON|OPTION_WUG|OPTION_WUGRIDER|OPTION_MADOGEAR);
@@ -643,12 +644,15 @@ int pc_equippoint(struct map_session_data *sd,int n)
 		return 0; //Not equippable by players.
 
 	ep = sd->inventory_data[n]->equip;
-	if(sd->inventory_data[n]->look == W_DAGGER	||
-		sd->inventory_data[n]->look == W_1HSWORD ||
-		sd->inventory_data[n]->look == W_1HAXE) {
-		if(  (pc->checkskill(sd,AS_LEFT) > 0 ||
-			 (sd->class_&MAPID_UPPERMASK) == MAPID_ASSASSIN ||
-			 (sd->class_&MAPID_UPPERMASK) == MAPID_KAGEROUOBORO) ) { //Kagerou and Oboro can dual wield daggers. [Rytech]
+	if (sd->inventory_data[n]->look == W_DAGGER
+	 || sd->inventory_data[n]->look == W_1HSWORD
+	 || sd->inventory_data[n]->look == W_1HAXE
+	) {
+		if (pc->checkskill(sd,AS_LEFT) > 0
+		 || (sd->class_&MAPID_UPPERMASK) == MAPID_ASSASSIN
+		 || (sd->class_&MAPID_UPPERMASK) == MAPID_KAGEROUOBORO
+		) {
+			//Kagerou and Oboro can dual wield daggers. [Rytech]
 			if( ep == EQP_HAND_R )
 				return EQP_ARMS;
 			if( ep == EQP_SHADOW_WEAPON )
@@ -1201,8 +1205,8 @@ int pc_set_hate_mob(struct map_session_data *sd, int pos, struct block_list *bl)
 	int class_;
 	if (!sd || !bl || pos < 0 || pos > 2)
 		return 0;
-	if (sd->hate_mob[pos] != -1)
-	{	//Can't change hate targets.
+	if (sd->hate_mob[pos] != -1) {
+		//Can't change hate targets.
 		clif->hate_info(sd, pos, sd->hate_mob[pos], 0); //Display current
 		return 0;
 	}
@@ -1830,10 +1834,10 @@ int pc_bonus_autospell_onskill(struct s_autospell *spell, int max, short src_ski
 		return 0;
 	}
 
-	spell[i].flag = src_skill;
-	spell[i].id	= id;
-	spell[i].lv = lv;
-	spell[i].rate = rate;
+	spell[i].flag    = src_skill;
+	spell[i].id      = id;
+	spell[i].lv      = lv;
+	spell[i].rate    = rate;
 	spell[i].card_id = card_id;
 	return 1;
 }
@@ -1910,8 +1914,8 @@ int pc_bonus_item_drop(struct s_add_drop *drop, const short max, short id, short
 			&& race > 0
 		) {
 			drop[i].race |= race;
-			if(drop[i].rate > 0 && rate > 0)
-			{	//Both are absolute rates.
+			if (drop[i].rate > 0 && rate > 0) {
+				//Both are absolute rates.
 				if (drop[i].rate < rate)
 					drop[i].rate = rate;
 			} else
@@ -2308,19 +2312,19 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 				break;
 			}
 			break;
-		case SP_SPEED_RATE:	//Non stackable increase
+		case SP_SPEED_RATE: //Non stackable increase
 			if(sd->state.lr_flag != 2)
 				sd->bonus.speed_rate = min(sd->bonus.speed_rate, -val);
 			break;
-		case SP_SPEED_ADDRATE:	//Stackable increase
+		case SP_SPEED_ADDRATE: //Stackable increase
 			if(sd->state.lr_flag != 2)
 				sd->bonus.speed_add_rate -= val;
 			break;
-		case SP_ASPD:	//Raw increase
+		case SP_ASPD: //Raw increase
 			if(sd->state.lr_flag != 2)
 				sd->bonus.aspd_add -= 10*val;
 			break;
-		case SP_ASPD_RATE:	//Stackable increase - Made it linear as per rodatazone
+		case SP_ASPD_RATE: //Stackable increase - Made it linear as per rodatazone
 			if(sd->state.lr_flag != 2)
 	#ifndef RENEWAL_ASPD
 				bst->aspd_rate -= 10*val;
@@ -2533,7 +2537,7 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 			if(sd->state.lr_flag != 2)
 				sd->bonus.magic_damage_return += val;
 			break;
-		case SP_ALL_STATS:	// [Valaris]
+		case SP_ALL_STATS: // [Valaris]
 			if(sd->state.lr_flag!=2) {
 				sd->param_bonus[SP_STR-SP_STR]+=val;
 				sd->param_bonus[SP_AGI-SP_STR]+=val;
@@ -2543,13 +2547,13 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 				sd->param_bonus[SP_LUK-SP_STR]+=val;
 			}
 			break;
-		case SP_AGI_VIT:	// [Valaris]
+		case SP_AGI_VIT: // [Valaris]
 			if(sd->state.lr_flag!=2) {
 				sd->param_bonus[SP_AGI-SP_STR]+=val;
 				sd->param_bonus[SP_VIT-SP_STR]+=val;
 			}
 			break;
-		case SP_AGI_DEX_STR:	// [Valaris]
+		case SP_AGI_DEX_STR: // [Valaris]
 			if(sd->state.lr_flag!=2) {
 				sd->param_bonus[SP_AGI-SP_STR]+=val;
 				sd->param_bonus[SP_DEX-SP_STR]+=val;
@@ -2593,7 +2597,7 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 				sd->bonus.classchange=val;
 			break;
 		case SP_LONG_ATK_RATE:
-			if(sd->state.lr_flag != 2)	//[Lupus] it should stack, too. As any other cards rate bonuses
+			if(sd->state.lr_flag != 2) //[Lupus] it should stack, too. As any other cards rate bonuses
 				sd->bonus.long_attack_atk_rate+=val;
 			break;
 		case SP_BREAK_WEAPON_RATE:
@@ -3920,10 +3924,10 @@ int pc_getzeny(struct map_session_data *sd,int zeny, enum e_log_pick_type type, 
 
 /**
  * Searches for the specified item ID in inventory and return its inventory index.
- * 
+ *
  * If the item is found, the returned value is guaranteed to be a valid index
  * (non-negative, smaller than MAX_INVENTORY).
- * 
+ *
  * @param sd      Character to search on.
  * @param item_id The item ID to search.
  * @return the inventory index of the first instance of the requested item.
@@ -3940,14 +3944,14 @@ int pc_search_inventory(struct map_session_data *sd, int item_id) {
 /*==========================================
  * Attempt to add a new item to inventory.
  * Return:
-        0 = success
-        1 = invalid itemid not found or negative amount
-        2 = overweight
-        3 = ?
-        4 = no free place found
-        5 = max amount reached
-        6 = ?
-        7 = stack limitation
+ * 0 = success
+ * 1 = invalid itemid not found or negative amount
+ * 2 = overweight
+ * 3 = ?
+ * 4 = no free place found
+ * 5 = max amount reached
+ * 6 = ?
+ * 7 = stack limitation
  *------------------------------------------*/
 int pc_additem(struct map_session_data *sd,struct item *item_data,int amount,e_log_pick_type log_type)
 {
@@ -4060,11 +4064,11 @@ int pc_additem(struct map_session_data *sd,struct item *item_data,int amount,e_l
  * Remove an item at index n from inventory by amount.
  * Parameters :
  * @type
- *	1 : don't notify deletion
- *	2 : don't notify weight change
+ *   1 : don't notify deletion
+ *   2 : don't notify weight change
  * Return:
- *	0 = success
- *	1 = invalid itemid or negative amount
+ *   0 = success
+ *   1 = invalid itemid or negative amount
  *------------------------------------------*/
 int pc_delitem(struct map_session_data *sd,int n,int amount,int type, short reason, e_log_pick_type log_type)
 {
@@ -4094,8 +4098,8 @@ int pc_delitem(struct map_session_data *sd,int n,int amount,int type, short reas
 /*==========================================
  * Attempt to drop an item.
  * Return:
- *	0 = fail
- *	1 = success
+ *   0 = fail
+ *   1 = success
  *------------------------------------------*/
 int pc_dropitem(struct map_session_data *sd,int n,int amount)
 {
@@ -4137,8 +4141,8 @@ int pc_dropitem(struct map_session_data *sd,int n,int amount)
 /*==========================================
  * Attempt to pick up an item.
  * Return:
- *	0 = fail
- *	1 = success
+ *   0 = fail
+ *   1 = success
  *------------------------------------------*/
 int pc_takeitem(struct map_session_data *sd,struct flooritem_data *fitem)
 {
@@ -4151,7 +4155,7 @@ int pc_takeitem(struct map_session_data *sd,struct flooritem_data *fitem)
 	nullpo_ret(fitem);
 
 	if(!check_distance_bl(&fitem->bl, &sd->bl, 2) && sd->ud.skill_id!=BS_GREED)
-		return 0;	// Distance is too far
+		return 0; // Distance is too far
 
 	if( pc_has_permission(sd,PC_PERM_DISABLE_PICK_UP) )
 		return 0;
@@ -4208,8 +4212,8 @@ int pc_takeitem(struct map_session_data *sd,struct flooritem_data *fitem)
 /*==========================================
  * Check if item is usable.
  * Return:
- *	0 = no
- *	1 = yes
+ *   0 = no
+ *   1 = yes
  *------------------------------------------*/
 int pc_isUseitem(struct map_session_data *sd,int n)
 {
@@ -4392,8 +4396,8 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 /*==========================================
  * Last checks to use an item.
  * Return:
- *	0 = fail
- *	1 = success
+ *   0 = fail
+ *   1 = success
  *------------------------------------------*/
 int pc_useitem(struct map_session_data *sd,int n) {
 	int64 tick = timer->gettick();
@@ -4547,8 +4551,8 @@ int pc_useitem(struct map_session_data *sd,int n) {
 /*==========================================
  * Add item on cart for given index.
  * Return:
- *	0 = success
- *	1 = fail
+ *   0 = success
+ *   1 = fail
  *------------------------------------------*/
 int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amount,e_log_pick_type log_type)
 {
@@ -4567,8 +4571,8 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 		return 1;
 	}
 
-	if( !itemdb_cancartstore(item_data, pc_get_group_level(sd)) || (item_data->bound > IBT_ACCOUNT && !pc_can_give_bound_items(sd)))
- 	{ // Check item trade restrictions	[Skotlex]
+	if (!itemdb_cancartstore(item_data, pc_get_group_level(sd)) || (item_data->bound > IBT_ACCOUNT && !pc_can_give_bound_items(sd))) {
+		// Check item trade restrictions
 		clif->message (sd->fd, msg_txt(264));
 		return 1;/* TODO: there is no official response to this? */
 	}
@@ -4581,7 +4585,7 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 	{
 		ARR_FIND( 0, MAX_CART, i,
 			sd->status.cart[i].nameid == item_data->nameid && sd->status.cart[i].bound == item_data->bound &&
- 			sd->status.cart[i].card[0] == item_data->card[0] && sd->status.cart[i].card[1] == item_data->card[1] &&
+			sd->status.cart[i].card[0] == item_data->card[0] && sd->status.cart[i].card[1] == item_data->card[1] &&
 			sd->status.cart[i].card[2] == item_data->card[2] && sd->status.cart[i].card[3] == item_data->card[3] );
 	};
 
@@ -4616,8 +4620,8 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 /*==========================================
  * Delete item on cart for given index.
  * Return:
- *	0 = success
- *	1 = fail
+ *   0 = success
+ *   1 = fail
  *------------------------------------------*/
 int pc_cart_delitem(struct map_session_data *sd,int n,int amount,int type,e_log_pick_type log_type) {
 	struct item_data * data;
@@ -4645,8 +4649,8 @@ int pc_cart_delitem(struct map_session_data *sd,int n,int amount,int type,e_log_
 /*==========================================
  * Transfer item from inventory to cart.
  * Return:
- *	0 = fail
- *	1 = succes
+ *   0 = fail
+ *   1 = succes
  *------------------------------------------*/
 int pc_putitemtocart(struct map_session_data *sd,int idx,int amount)
 {
@@ -4672,8 +4676,8 @@ int pc_putitemtocart(struct map_session_data *sd,int idx,int amount)
 /*==========================================
  * Get number of item in cart.
  * Return:
-        -1 = itemid not found or no amount found
-        x = remaining itemid on cart after get
+ * -1 = itemid not found or no amount found
+ * x  = remaining itemid on cart after get
  *------------------------------------------*/
 int pc_cartitem_amount(struct map_session_data* sd, int idx, int amount)
 {
@@ -4691,8 +4695,8 @@ int pc_cartitem_amount(struct map_session_data* sd, int idx, int amount)
 /*==========================================
  * Retrieve an item at index idx from cart.
  * Return:
- *	0 = player not found or (FIXME) succes (from pc->cart_delitem)
- *	1 = failure
+ *   0 = player not found or (FIXME) succes (from pc->cart_delitem)
+ *   1 = failure
  *------------------------------------------*/
 int pc_getitemfromcart(struct map_session_data *sd,int idx,int amount)
 {
@@ -4772,8 +4776,8 @@ int pc_show_steal(struct block_list *bl,va_list ap)
 /*==========================================
  * Steal an item from bl (mob).
  * Return:
- *	0 = fail
- *	1 = succes
+ *   0 = fail
+ *   1 = succes
  *------------------------------------------*/
 int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skill_lv)
 {
@@ -4799,7 +4803,7 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 		map->list[bl->m].flag.nomobloot || // check noloot map flag [Lorky]
 		(battle_config.skill_steal_max_tries && //Reached limit of steal attempts. [Lupus]
 			md->state.steal_flag++ >= battle_config.skill_steal_max_tries)
-  	) { //Can't steal from
+	) { //Can't steal from
 		md->state.steal_flag = UCHAR_MAX;
 		return 0;
 	}
@@ -5118,8 +5122,8 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
  * Warp player sd to random location on current map.
  * May fail if no walkable cell found (1000 attempts).
  * Return:
- *	0 = fail or FIXME success (from pc->setpos)
- *	x(1|2) = fail
+ *   0 = fail or FIXME success (from pc->setpos)
+ *   x(1|2) = fail
  *------------------------------------------*/
 int pc_randomwarp(struct map_session_data *sd, clr_type type) {
 	int x,y,i=0;
@@ -5239,7 +5243,7 @@ int pc_checkskill2(struct map_session_data *sd,uint16 index) {
  * Chk if we still have the correct weapon to continue the skill (actually status)
  * If not ending it
  * Return
- *	0 - No status found or all done
+ *   0 - No status found or all done
  *------------------------------------------*/
 int pc_checkallowskill(struct map_session_data *sd)
 {
@@ -5735,7 +5739,7 @@ const char* job_name(int class_)
 	case JOB_ARCH_BISHOP_T:      // 659
 	case JOB_MECHANIC_T:         // 660
 	case JOB_GUILLOTINE_CROSS_T: // 661
-            return msg_txt(656 - JOB_RUNE_KNIGHT_T+class_);
+		return msg_txt(656 - JOB_RUNE_KNIGHT_T+class_);
 
 	case JOB_ROYAL_GUARD:   // 631
 	case JOB_SORCERER:      // 632
@@ -5753,7 +5757,7 @@ const char* job_name(int class_)
 	case JOB_SURA_T:          // 666
 	case JOB_GENETIC_T:       // 667
 	case JOB_SHADOW_CHASER_T: // 668
-            return msg_txt(662 - JOB_ROYAL_GUARD_T+class_);
+		return msg_txt(662 - JOB_ROYAL_GUARD_T+class_);
 
 	case JOB_RUNE_KNIGHT2:
 		return msg_txt(625);
@@ -5855,7 +5859,7 @@ int pc_follow_timer(int tid, int64 tick, int id, intptr_t data) {
 			pc->setpos(sd, map_id2index(tbl->m), tbl->x, tbl->y, CLR_TELEPORT);
 	}
 	sd->followtimer = timer->add(
-		tick + 1000,	// increase time a bit to loosen up map's load
+		tick + 1000, // increase time a bit to loosen up map's load
 		pc->follow_timer, sd->bl.id, 0);
 	return 0;
 }
@@ -5907,7 +5911,7 @@ int pc_checkbaselevelup(struct map_session_data *sd) {
 
 	} while ((next=pc->nextbaseexp(sd)) > 0 && sd->status.base_exp >= next);
 
-	if (battle_config.pet_lv_rate && sd->pd)	//<Skotlex> update pet's level
+	if (battle_config.pet_lv_rate && sd->pd) //<Skotlex> update pet's level
 		status_calc_pet(sd->pd,SCO_NONE);
 
 	clif->updatestatus(sd,SP_STATUSPOINT);
@@ -6109,12 +6113,12 @@ bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned in
  *------------------------------------------*/
 unsigned int pc_maxbaselv(struct map_session_data *sd)
 {
-  	return pc->max_level[pc->class2idx(sd->status.class_)][0];
+	return pc->max_level[pc->class2idx(sd->status.class_)][0];
 }
 
 unsigned int pc_maxjoblv(struct map_session_data *sd)
 {
-  	return pc->max_level[pc->class2idx(sd->status.class_)][1];
+	return pc->max_level[pc->class2idx(sd->status.class_)][1];
 }
 
 /*==========================================
@@ -6145,8 +6149,8 @@ unsigned int pc_thisbaseexp(struct map_session_data *sd)
 /*==========================================
  * job level exp lookup
  * Return:
- *	0 = not found
- *	x = exp for level
+ *   0 = not found
+ *   x = exp for level
  *------------------------------------------*/
 
 //Job exp needed for next level.
@@ -6470,7 +6474,7 @@ int pc_allskillup(struct map_session_data *sd)
 				continue; //Cannot be learned normally.
 
 			sd->status.skill[idx].id = id;
-			sd->status.skill[idx].lv = skill->tree_get_max(id, sd->status.class_);	// celest
+			sd->status.skill[idx].lv = skill->tree_get_max(id, sd->status.class_); // celest
 		}
 	}
 	status_calc_pc(sd,SCO_NONE);
@@ -6508,7 +6512,7 @@ int pc_resetlvl(struct map_session_data* sd,int type)
 		sd->status.dex=1;
 		sd->status.luk=1;
 		if(sd->status.class_ == JOB_NOVICE_HIGH) {
-			sd->status.status_point=100;	// not 88 [celest]
+			sd->status.status_point=100; // not 88 [celest]
 			// give platinum skills upon changing
 			pc->skill(sd,142,1,0);
 			pc->skill(sd,143,1,0);
@@ -6547,12 +6551,12 @@ int pc_resetlvl(struct map_session_data* sd,int type)
 	clif->updatestatus(sd,SP_NEXTJOBEXP);
 	clif->updatestatus(sd,SP_SKILLPOINT);
 
-	clif->updatestatus(sd,SP_USTR);	// Updates needed stat points - Valaris
+	clif->updatestatus(sd,SP_USTR); // Updates needed stat points - Valaris
 	clif->updatestatus(sd,SP_UAGI);
 	clif->updatestatus(sd,SP_UVIT);
 	clif->updatestatus(sd,SP_UINT);
 	clif->updatestatus(sd,SP_UDEX);
-	clif->updatestatus(sd,SP_ULUK);	// End Addition
+	clif->updatestatus(sd,SP_ULUK); // End Addition
 
 	for(i=0;i<EQI_MAX;i++) { // unequip items that can't be equipped by base 1 [Valaris]
 		if(sd->equip_index[i] >= 0)
@@ -6575,10 +6579,10 @@ int pc_resetstate(struct map_session_data* sd)
 {
 	nullpo_ret(sd);
 
-	if (battle_config.use_statpoint_table)
-	{	// New statpoint table used here - Dexity
-		if (sd->status.base_level > MAX_LEVEL)
-		{	//pc->statp[] goes out of bounds, can't reset!
+	if (battle_config.use_statpoint_table) {
+		// New statpoint table used here - Dexity
+		if (sd->status.base_level > MAX_LEVEL) {
+			//pc->statp[] goes out of bounds, can't reset!
 			ShowError("pc_resetstate: Can't reset stats of %d:%d, the base level (%d) is greater than the max level supported (%d)\n",
 				sd->status.account_id, sd->status.char_id, sd->status.base_level, MAX_LEVEL);
 			return 0;
@@ -6613,12 +6617,12 @@ int pc_resetstate(struct map_session_data* sd)
 	clif->updatestatus(sd,SP_DEX);
 	clif->updatestatus(sd,SP_LUK);
 
-	clif->updatestatus(sd,SP_USTR);	// Updates needed stat points - Valaris
+	clif->updatestatus(sd,SP_USTR); // Updates needed stat points - Valaris
 	clif->updatestatus(sd,SP_UAGI);
 	clif->updatestatus(sd,SP_UVIT);
 	clif->updatestatus(sd,SP_UINT);
 	clif->updatestatus(sd,SP_UDEX);
-	clif->updatestatus(sd,SP_ULUK);	// End Addition
+	clif->updatestatus(sd,SP_ULUK); // End Addition
 
 	clif->updatestatus(sd,SP_STATUSPOINT);
 
@@ -7001,12 +7005,13 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 			case BL_MOB:
 			{
 				struct mob_data *md=(struct mob_data *)src;
-				if(md->target_id==sd->bl.id)
+				if (md->target_id==sd->bl.id)
 					mob->unlocktarget(md,tick);
-				if(battle_config.mobs_level_up && md->status.hp &&
-					(unsigned int)md->level < pc->maxbaselv(sd) &&
-					!md->guardian_data && !md->special_state.ai// Guardians/summons should not level. [Skotlex]
-				) { 	// monster level up [Valaris]
+				if (battle_config.mobs_level_up && md->status.hp
+				 && (unsigned int)md->level < pc->maxbaselv(sd)
+				 && !md->guardian_data && !md->special_state.ai// Guardians/summons should not level. [Skotlex]
+				) {
+					// monster level up [Valaris]
 					clif->misceffect(&md->bl,0);
 					md->level++;
 					status_calc_mob(md, SCO_NONE);
@@ -7048,19 +7053,20 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 			// karma going down = more 'good' / more honourable.
 			// The Karma System way...
 
-			if (sd->status.karma > ssd->status.karma) {	// If player killed was more evil
+			if (sd->status.karma > ssd->status.karma) {
+				// If player killed was more evil
 				sd->status.karma--;
 				ssd->status.karma--;
 			}
-			else if (sd->status.karma < ssd->status.karma)	// If player killed was more good
+			else if (sd->status.karma < ssd->status.karma) // If player killed was more good
 				ssd->status.karma++;
 
 
 			// or the PK System way...
 
-			if (sd->status.karma > 0)	// player killed is dishonourable?
+			if (sd->status.karma > 0) // player killed is dishonourable?
 				ssd->status.karma--; // honour points earned
-			sd->status.karma++;	// honour points lost
+			sd->status.karma++; // honour points lost
 
 			// To-do: Receive exp on certain occasions
 #endif
@@ -7118,7 +7124,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 			}
 			
 			if(base_penalty) {
-			  	if (battle_config.pk_mode && src && src->type==BL_PC)
+				if (battle_config.pk_mode && src && src->type==BL_PC)
 					base_penalty*=2;
 				if( sd->status.mod_death != 100 )
 					base_penalty = base_penalty * sd->status.mod_death / 100;
@@ -7140,7 +7146,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 			}
 			
 			if(base_penalty) {
-			  	if (battle_config.pk_mode && src && src->type==BL_PC)
+				if (battle_config.pk_mode && src && src->type==BL_PC)
 					base_penalty*=2;
 				if( sd->status.mod_death != 100 )
 					base_penalty = base_penalty * sd->status.mod_death / 100;
@@ -7309,32 +7315,32 @@ int pc_readparam(struct map_session_data* sd,int type)
 		case SP_FAME:            val = sd->status.fame; break;
 		case SP_KILLERRID:       val = sd->killerrid; break;
 		case SP_KILLEDRID:       val = sd->killedrid; break;
-		case SP_SLOTCHANGE:		 val = sd->status.slotchange; break;
-		case SP_CHARRENAME:		 val = sd->status.rename; break;
+		case SP_SLOTCHANGE:      val = sd->status.slotchange; break;
+		case SP_CHARRENAME:      val = sd->status.rename; break;
 		case SP_MOD_EXP:         val = sd->status.mod_exp; break;
 		case SP_MOD_DROP:        val = sd->status.mod_drop; break;
 		case SP_MOD_DEATH:       val = sd->status.mod_death; break;
 		case SP_CRITICAL:        val = sd->battle_status.cri/10; break;
 		case SP_ASPD:            val = (2000-sd->battle_status.amotion)/10; break;
-		case SP_BASE_ATK:	     val = sd->battle_status.batk; break;
-		case SP_DEF1:		     val = sd->battle_status.def; break;
-		case SP_DEF2:		     val = sd->battle_status.def2; break;
-		case SP_MDEF1:		     val = sd->battle_status.mdef; break;
-		case SP_MDEF2:		     val = sd->battle_status.mdef2; break;
-		case SP_HIT:		     val = sd->battle_status.hit; break;
-		case SP_FLEE1:		     val = sd->battle_status.flee; break;
-		case SP_FLEE2:		     val = sd->battle_status.flee2; break;
-		case SP_DEFELE:		     val = sd->battle_status.def_ele; break;
+		case SP_BASE_ATK:        val = sd->battle_status.batk; break;
+		case SP_DEF1:            val = sd->battle_status.def; break;
+		case SP_DEF2:            val = sd->battle_status.def2; break;
+		case SP_MDEF1:           val = sd->battle_status.mdef; break;
+		case SP_MDEF2:           val = sd->battle_status.mdef2; break;
+		case SP_HIT:             val = sd->battle_status.hit; break;
+		case SP_FLEE1:           val = sd->battle_status.flee; break;
+		case SP_FLEE2:           val = sd->battle_status.flee2; break;
+		case SP_DEFELE:          val = sd->battle_status.def_ele; break;
 #ifndef RENEWAL_CAST
 		case SP_VARCASTRATE:
 #endif
 		case SP_CASTRATE:
 				val = sd->castrate+=val;
 			break;
-		case SP_MAXHPRATE:	     val = sd->hprate; break;
-		case SP_MAXSPRATE:	     val = sd->sprate; break;
-		case SP_SPRATE:		     val = sd->dsprate; break;
-		case SP_SPEED_RATE:	     val = sd->bonus.speed_rate; break;
+		case SP_MAXHPRATE:       val = sd->hprate; break;
+		case SP_MAXSPRATE:       val = sd->sprate; break;
+		case SP_SPRATE:          val = sd->dsprate; break;
+		case SP_SPEED_RATE:      val = sd->bonus.speed_rate; break;
 		case SP_SPEED_ADDRATE:   val = sd->bonus.speed_add_rate; break;
 		case SP_ASPD_RATE:
 #ifndef RENEWAL_ASPD
@@ -7847,7 +7853,7 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 	for(i=0;i<EQI_MAX;i++) {
 		if(sd->equip_index[i] >= 0)
 			if(!pc->isequip(sd,sd->equip_index[i]))
-				pc->unequipitem(sd,sd->equip_index[i],2);	// unequip invalid item for class
+				pc->unequipitem(sd,sd->equip_index[i],2); // unequip invalid item for class
 	}
 
 	//Change look, if disguised, you need to undisguise
@@ -7911,7 +7917,7 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 		chrif->buildfamelist();
 	} else if (sd->status.fame > 0) {
 		//It may be that now they are famous?
- 		switch (sd->class_&MAPID_UPPERMASK) {
+		switch (sd->class_&MAPID_UPPERMASK) {
 			case MAPID_BLACKSMITH:
 			case MAPID_ALCHEMIST:
 			case MAPID_TAEKWON:
@@ -7958,7 +7964,7 @@ int pc_changelook(struct map_session_data *sd,int type,int val)
 			clif->skillinfoblock(sd);
 			return 0;
 			break;
-		case LOOK_HAIR:	//Use the battle_config limits! [Skotlex]
+		case LOOK_HAIR: //Use the battle_config limits! [Skotlex]
 			val = cap_value(val, MIN_HAIR_STYLE, MAX_HAIR_STYLE);
 
 			if (sd->status.hair != val) {
@@ -7980,7 +7986,7 @@ int pc_changelook(struct map_session_data *sd,int type,int val)
 		case LOOK_HEAD_MID:
 			sd->status.head_mid=val;
 			break;
-		case LOOK_HAIR_COLOR:	//Use the battle_config limits! [Skotlex]
+		case LOOK_HAIR_COLOR: //Use the battle_config limits! [Skotlex]
 			val = cap_value(val, MIN_HAIR_COLOR, MAX_HAIR_COLOR);
 
 			if (sd->status.hair_color != val) {
@@ -7990,7 +7996,7 @@ int pc_changelook(struct map_session_data *sd,int type,int val)
 					GMI_HAIR_COLOR,&sd->status.hair_color,sizeof(sd->status.hair_color));
 			}
 			break;
-		case LOOK_CLOTHES_COLOR:	//Use the battle_config limits! [Skotlex]
+		case LOOK_CLOTHES_COLOR: //Use the battle_config limits! [Skotlex]
 			val = cap_value(val, MIN_CLOTH_COLOR, MAX_CLOTH_COLOR);
 
 			sd->status.clothes_color=val;
@@ -8154,7 +8160,7 @@ int pc_setcart(struct map_session_data *sd,int type) {
 }
 
 /* FIXME: These setter methods are inconsistent in their class/skill checks.
-          They should be changed so that they all either do or skip the checks.*/
+ *        They should be changed so that they all either do or skip the checks.*/
 
 /**
  * Gives/removes a falcon.
@@ -8310,7 +8316,7 @@ bool pc_can_talk( struct map_session_data *sd ) {
 int pc_candrop(struct map_session_data *sd, struct item *item)
 {
 	if( item && (item->expire_time || (item->bound && !pc_can_give_bound_items(sd))) )
- 		return 0;
+		return 0;
 	if( !pc_can_give_items(sd) ) //check if this GM level can drop items
 		return 0;
 	return (itemdb_isdropable(item, pc_get_group_level(sd)));
@@ -8847,13 +8853,13 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 		ShowInfo("equip %d(%d) %x:%x\n",sd->status.inventory[n].nameid,n,id?id->equip:0,req_pos);
 	if(!pc->isequip(sd,n) || !(pos&req_pos) || sd->status.inventory[n].equip != 0 || sd->status.inventory[n].attribute==1 ) { // [Valaris]
 		// FIXME: pc->isequip: equip level failure uses 2 instead of 0
-		clif->equipitemack(sd,n,0,EIA_FAIL);	// fail
+		clif->equipitemack(sd,n,0,EIA_FAIL); // fail
 		return 0;
 	}
 
 	if (sd->sc.data[SC_BERSERK] || sd->sc.data[SC_NO_SWITCH_EQUIP])
 	{
-		clif->equipitemack(sd,n,0,EIA_FAIL);	// fail
+		clif->equipitemack(sd,n,0,EIA_FAIL); // fail
 		return 0;
 	}
 
@@ -8868,7 +8874,7 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 		if (pos == EQP_ACC) //User specified both slots..
 			pos = sd->equip_index[EQI_ACC_R] >= 0 ? EQP_ACC_L : EQP_ACC_R;
 	} else if(pos == EQP_ARMS && id->equip == EQP_HAND_R) { //Dual wield capable weapon.
-	  	pos = (req_pos&EQP_ARMS);
+		pos = (req_pos&EQP_ARMS);
 		if (pos == EQP_ARMS) //User specified both slots, pick one for them.
 			pos = sd->equip_index[EQI_HAND_R] >= 0 ? EQP_HAND_L : EQP_HAND_R;
 	} else if(pos == EQP_SHADOW_ACC) { //Accesories should only go in one of the two,
@@ -8876,13 +8882,13 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 		if (pos == EQP_SHADOW_ACC) //User specified both slots..
 			pos = sd->equip_index[EQI_SHADOW_ACC_R] >= 0 ? EQP_SHADOW_ACC_L : EQP_SHADOW_ACC_R;
 	} else if( pos == EQP_SHADOW_ARMS && id->equip == EQP_SHADOW_WEAPON) { //Dual wield capable weapon.
-	  	pos = (req_pos&EQP_SHADOW_ARMS);
+		pos = (req_pos&EQP_SHADOW_ARMS);
 		if (pos == EQP_SHADOW_ARMS) //User specified both slots, pick one for them.
 			pos = sd->equip_index[EQI_SHADOW_WEAPON] >= 0 ? EQP_SHADOW_SHIELD : EQP_SHADOW_WEAPON;
 	}
 
-	if (pos&EQP_HAND_R && battle_config.use_weapon_skill_range&BL_PC)
-	{	//Update skill-block range database when weapon range changes. [Skotlex]
+	if (pos&EQP_HAND_R && battle_config.use_weapon_skill_range&BL_PC) {
+		//Update skill-block range database when weapon range changes. [Skotlex]
 		i = sd->equip_index[EQI_HAND_R];
 		if (i < 0 || !sd->inventory_data[i]) //No data, or no weapon equipped
 			flag = 1;
@@ -9414,8 +9420,8 @@ int pc_calc_pvprank_timer(int tid, int64 tick, int id, intptr_t data) {
 /*==========================================
  * Checking if sd is married
  * Return:
- *	partner_id = yes
- *	0 = no
+ *   partner_id = yes
+ *   0 = no
  *------------------------------------------*/
 int pc_ismarried(struct map_session_data *sd)
 {
@@ -9429,8 +9435,8 @@ int pc_ismarried(struct map_session_data *sd)
 /*==========================================
  * Marry player sd to player dstsd
  * Return:
- *	-1 = fail
- *	0 = success
+ *   -1 = fail
+ *   0 = success
  *------------------------------------------*/
 int pc_marriage(struct map_session_data *sd,struct map_session_data *dstsd)
 {
@@ -9446,8 +9452,8 @@ int pc_marriage(struct map_session_data *sd,struct map_session_data *dstsd)
 /*==========================================
  * Divorce sd from its partner
  * Return:
- *	-1 = fail
- *	0 = success
+ *   -1 = fail
+ *   0 = success
  *------------------------------------------*/
 int pc_divorce(struct map_session_data *sd)
 {
@@ -10199,11 +10205,11 @@ void pc_read_skill_tree(void) {
 	
 	libconfig->destroy(&skill_tree_conf);
 
-    /* lets update all players skill tree */
-    iter = mapit_getallusers();
-    for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
-        clif->skillinfoblock(sd);
-    mapit->free(iter);
+	/* lets update all players skill tree */
+	iter = mapit_getallusers();
+	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
+		clif->skillinfoblock(sd);
+	mapit->free(iter);
 }
 bool pc_readdb_levelpenalty(char* fields[], int columns, int current) {
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
@@ -10291,7 +10297,7 @@ int pc_readdb(void) {
 		//Reverse check in case the array has a bunch of trailing zeros... [Skotlex]
 		//The reasoning behind the -2 is this... if the max level is 5, then the array
 		//should look like this:
-	   //0: x, 1: x, 2: x: 3: x 4: 0 <- last valid value is at 3.
+		//0: x, 1: x, 2: x: 3: x 4: 0 <- last valid value is at 3.
 		while ((ui = pc->max_level[job][type]) >= 2 && pc->exp_table[job][type][ui-2] <= 0)
 			pc->max_level[job][type]--;
 		if (pc->max_level[job][type] < maxlv) {
@@ -10303,7 +10309,7 @@ int pc_readdb(void) {
 				pc->exp_table[job][type][ui] = pc->exp_table[job][type][ui-1];
 			pc->max_level[job][type] = maxlv;
 		}
-//		ShowDebug("%s - Class %d: %d\n", type?"Job":"Base", job_id, pc->max_level[job][type]);
+		//ShowDebug("%s - Class %d: %d\n", type?"Job":"Base", job_id, pc->max_level[job][type]);
 		for (i = 1; i < job_count; i++) {
 			job_id = jobs[i];
 			if (!pcdb_checkid(job_id)) {
@@ -10313,7 +10319,7 @@ int pc_readdb(void) {
 			job = pc->class2idx(job_id);
 			memcpy(pc->exp_table[job][type], pc->exp_table[jobs[0]][type], sizeof(pc->exp_table[0][0]));
 			pc->max_level[job][type] = maxlv;
-//			ShowDebug("%s - Class %d: %u\n", type?"Job":"Base", job_id, pc->max_level[job][type]);
+			//ShowDebug("%s - Class %d: %u\n", type?"Job":"Base", job_id, pc->max_level[job][type]);
 		}
 	}
 	fclose(fp);

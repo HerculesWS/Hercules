@@ -267,7 +267,7 @@ struct sql_interface {
 
 	void (*StmtShowDebug_)(SqlStmt* self, const char* debug_file, const unsigned long debug_line);
 
-} sql_s;
+};
 
 struct sql_interface *SQL;
 

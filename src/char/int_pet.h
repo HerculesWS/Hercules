@@ -6,16 +6,21 @@
 
 struct s_pet;
 
-int inter_pet_init(void);
-void inter_pet_sql_final(void);
-int inter_pet_save(void);
-int inter_pet_delete(int pet_id);
+void inter_pet_defaults(void);
 
-int inter_pet_parse_frommap(int fd);
-int inter_pet_sql_init(void);
-//extern char pet_txt[256];
+/**
+ * inter_pet interface
+ **/
+struct inter_pet_interface {
+	struct s_pet *pt;
+	int (*tosql) (int pet_id, struct s_pet* p);
+	int (*fromsql) (int pet_id, struct s_pet* p);
+	int (*sql_init) (void);
+	void (*sql_final) (void);
+	int (*delete_) (int pet_id);
+	int (*parse_frommap) (int fd);
+};
 
-//Exported for use in the TXT-SQL converter.
-int inter_pet_tosql(int pet_id, struct s_pet *p);
+struct inter_pet_interface *inter_pet;
 
 #endif /* CHAR_INT_PET_H */

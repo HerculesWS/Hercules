@@ -18,10 +18,10 @@
 #include "../common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
 
 HPExport struct hplugin_info pinfo = {
-	"Sample",		// Plugin name
-	SERVER_TYPE_LOGIN|SERVER_TYPE_MAP,// Which server types this plugin works with?
-	"0.1",			// Plugin version
-	HPM_VERSION,	// HPM Version (don't change, macro is automatically updated)
+	"Sample",    // Plugin name
+	SERVER_TYPE_CHAR|SERVER_TYPE_LOGIN|SERVER_TYPE_MAP,// Which server types this plugin works with?
+	"0.1",       // Plugin version
+	HPM_VERSION, // HPM Version (don't change, macro is automatically updated)
 };
 ACMD(sample) {//@sample command - 5 params: const int fd, struct map_session_data* sd, const char* command, const char* message, struct AtCommandInfo *info
 	printf("I'm being run! message -> '%s' by %s\n",message,sd->status.name);
@@ -46,20 +46,20 @@ struct sample_data_struct {
 void sample_packet0f3(int fd) {
 	struct map_session_data *sd = session[fd]->session_data;
 	struct sample_data_struct *data;
-	
+
 	if( !sd ) return;/* socket didn't fully log-in? this packet shouldn't do anything then! */
-	
+
 	ShowInfo("sample_packet0f3: Hello World! received 0xf3 for '%s', redirecting!\n",sd->status.name);
-	
+
 	/* sample usage of appending data to a socket_data (session[]) entry */
 	if( !(data = getFromSession(session[fd],0)) ) {
 		CREATE(data,struct sample_data_struct,1);
-		
+
 		data->lastMSGPosition.map = sd->status.last_point.map;
 		data->lastMSGPosition.x = sd->status.last_point.x;
 		data->lastMSGPosition.y = sd->status.last_point.y;
 		data->someNumber = rand()%777;
-		
+
 		ShowInfo("Created Appended session[] data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
 		addToSession(session[fd],data,0,true);
 	} else {
@@ -69,16 +69,16 @@ void sample_packet0f3(int fd) {
 			removeFromSession(session[fd],0);
 		}
 	}
-	
+
 	/* sample usage of appending data to a map_session_data (sd) entry */
 	if( !(data = getFromMSD(sd,0)) ) {
 		CREATE(data,struct sample_data_struct,1);
-		
+
 		data->lastMSGPosition.map = sd->status.last_point.map;
 		data->lastMSGPosition.x = sd->status.last_point.x;
 		data->lastMSGPosition.y = sd->status.last_point.y;
 		data->someNumber = rand()%777;
-		
+
 		ShowInfo("Created Appended map_session_data data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
 		addToMSD(sd,data,0,true);
 	} else {
@@ -89,7 +89,6 @@ void sample_packet0f3(int fd) {
 		}
 	}
 
-	
 	clif->pGlobalMessage(fd,sd);
 }
 int my_pc_dropitem_storage;/* storage var */
@@ -120,7 +119,7 @@ void parse_my_setting(const char *val) {
 HPExport void plugin_init (void) {
 	char *server_type;
 	char *server_name;
-		
+
 	/* core vars */
 	server_type = GET_SYMBOL("SERVER_TYPE");
 	server_name = GET_SYMBOL("SERVER_NAME");
@@ -138,40 +137,40 @@ HPExport void plugin_init (void) {
 	session = GET_SYMBOL("session");
 
 	ShowInfo ("Server type is ");
-	
+
 	switch (*server_type) {
 		case SERVER_TYPE_LOGIN: printf ("Login Server\n"); break;
 		case SERVER_TYPE_CHAR: printf ("Char Server\n"); break;
 		case SERVER_TYPE_MAP: printf ("Map Server\n"); break;
 	}
-	
+
 	ShowInfo ("I'm being run from the '%s' filename\n", server_name);
-	
+
 	/* addAtcommand("command-key",command-function) tells map server to call ACMD(sample) when "sample" command is used */
 	/* - it will print a warning when used on a non-map-server plugin */
 	addAtcommand("sample",sample);//link our '@sample' command
-	
+
 	/* addScriptCommand("script-command-name","script-command-params-info",script-function) tells map server to call BUILDIN(sample) for the "sample(i)" command */
 	/* - it will print a warning when used on a non-map-server plugin */
 	addScriptCommand("sample","i",sample);
-	
+
 	/* addCPCommand("console-command-name",command-function) tells server to call CPCMD(sample) for the 'this is a sample <optional-args>' console call */
 	/* in "console-command-name" usage of ':' indicates a category, for example 'this:is:a:sample' translates to 'this is a sample',
 	 * therefore 'this -> is -> a -> sample', it can be used to aggregate multiple commands under the same category or to append commands to existing categories
 	 * categories inherit the special keyword 'help' which prints the subsequent commands, e.g. 'server help' prints all categories and commands under 'server'
 	 * therefore 'this help' would inform about 'is (category) -> a (category) -> sample (command)'*/
 	addCPCommand("this:is:a:sample",sample);
-	
+
 	/* addPacket(packetID,packetLength,packetFunction,packetIncomingPoint) */
 	/* adds packetID of packetLength (-1 for dynamic length where length is defined in the packet { packetID (2 Byte) , packetLength (2 Byte) , ... })
 	 * to trigger packetFunction in the packetIncomingPoint section ( available points listed in enum HPluginPacketHookingPoints within src/common/HPMi.h ) */
 	addPacket(0xf3,-1,sample_packet0f3,hpClif_Parse);
-		
+
 	/* in this sample we add a PreHook to pc->dropitem */
 	/* to identify whether the item being dropped is on amount higher than 1 */
 	/* if so, it stores the amount on a variable (my_pc_dropitem_storage) and changes the amount to 1 */
 	addHookPre("pc->dropitem",my_pc_dropitem_pre);
-	
+
 	/* in this sample we add a PostHook to pc->dropitem */
 	/* if the original pc->dropitem was successful and the amount stored on my_pc_dropitem_storage is higher than 1, */
 	/* our posthook will display a message to the user about the cap */
@@ -187,7 +186,6 @@ HPExport void server_preinit (void) {
 }
 /* run when server is ready (online) */
 HPExport void server_online (void) {
-	
 }
 /* run when server is shutting down */
 HPExport void plugin_final (void) {

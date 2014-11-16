@@ -25,19 +25,19 @@ static volatile int32 done_threads = 0;
 
 static  void *worker(void *p){
 	register int i;
-	
+
 	for(i = 0; i < PERINC; i++){
 		EnterSpinLock(&lock);
 		EnterSpinLock(&lock);
-		
+
 		val++;
-		
+
 		LeaveSpinLock(&lock);
 		LeaveSpinLock(&lock);
 	}
-	
+
 	InterlockedIncrement(&done_threads);
-	
+
 	return NULL;
 }//end: worker()
 
@@ -46,34 +46,31 @@ int do_init(int argc, char **argv){
 	rAthread *t[THRC];
 	int j, i;
 	int ok;
-	
+
 	ShowStatus("==========\n");
 	ShowStatus("TEST: %u Runs,  (%u Threads)\n", LOOPS, THRC);
 	ShowStatus("This can take a while\n");
 	ShowStatus("\n\n");
-	
+
 	ok =0;
 	for(j = 0; j < LOOPS; j++){
 		val = 0;
 		done_threads = 0;
-		
+
 		InitializeSpinLock(&lock);
-		
 
 		for(i =0; i < THRC; i++){
 			t[i] = rathread_createEx( worker,  NULL,  1024*512,  RAT_PRIO_NORMAL);
 		}
-		
-		
+
 		while(1){
 			if(InterlockedCompareExchange(&done_threads, THRC, THRC) == THRC)
 				break;
-			
 			rathread_yield();
 		}
-		
+
 		FinalizeSpinLock(&lock);
-		
+
 		// Everything fine?
 		if(val != (THRC*PERINC) ){
 			printf("FAILED! (Result: %u, Expected: %u)\n",  val,  (THRC*PERINC) );
@@ -83,7 +80,6 @@ int do_init(int argc, char **argv){
 		}
 
 	}
-	
 
 	if(ok != LOOPS){
 		ShowFatalError("Test failed.\n");
