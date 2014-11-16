@@ -1130,6 +1130,7 @@ void strlib_defaults(void) {
 	sv = &sv_s;
 	/* link~u! */
 	strlib->jstrescape = jstrescape;
+	strlib->jstrescapecpy = jstrescapecpy;
 	strlib->jmemescapecpy = jmemescapecpy;
 	strlib->remove_control_chars = remove_control_chars;
 	strlib->trim = trim;
