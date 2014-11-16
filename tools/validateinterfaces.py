@@ -133,8 +133,16 @@ def checkFile(tracker, cFile):
                             continue
                         if checkChr(line[idx - 1]):
                             continue
+                        if line[0:3] == " * ":
+                            continue;
                         if line[-1] == "\n":
                             line = line[:-1]
+                        text = line.strip()
+                        if text[0:2] == "/*" or text[0:2] == "//":
+                            continue
+                        idx2 = line.find("//")
+                        if idx2 > 0 and idx2 < idx:
+                            continue
                         tracker.arr[part].append(line)
 
 def processDir(tracker, srcDir):
