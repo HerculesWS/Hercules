@@ -4223,7 +4223,7 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 		}
 		else
 		{
-			p = npc_parse_unknown_object(w1, w2, w3, w4, p, buffer, filepath, &success);
+			p = npc->parse_unknown_object(w1, w2, w3, w4, p, buffer, filepath, &success);
 		}
 	}
 	aFree(buffer);
