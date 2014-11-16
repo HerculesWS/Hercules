@@ -3606,6 +3606,14 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 
 	return strchr(start,'\n');// continue
 }
+
+void npc_parse_unknown_mapflag(const char *name, char *w3, char *w4, const char* start, const char* buffer, const char* filepath, int *retval)
+{
+	ShowError("npc_parse_mapflag: unrecognized mapflag '%s' in file '%s', line '%d'.\n", w3, filepath, strline(buffer,start-buffer));
+	if (retval)
+		*retval = EXIT_FAILURE;
+}
+
 /*==========================================
  * Set or disable mapflag on map
  * eg : bat_c01<TAB>mapflag<TAB>battleground<TAB>2
@@ -4013,8 +4021,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 	} else if ( !strcmpi(w3,"nocashshop") ) {
 		map->list[m].flag.nocashshop = (state) ? 1 : 0;
 	} else {
-		ShowError("npc_parse_mapflag: unrecognized mapflag '%s' in file '%s', line '%d'.\n", w3, filepath, strline(buffer,start-buffer));
-		if (retval) *retval = EXIT_FAILURE;
+		npc->parse_unknown_mapflag(mapname, w3, w4, start, buffer, filepath, retval);
 	}
 
 	return strchr(start,'\n');// continue
@@ -4682,6 +4689,7 @@ void npc_defaults(void) {
 	npc->parse_mob2 = npc_parse_mob2;
 	npc->parse_mob = npc_parse_mob;
 	npc->parse_mapflag = npc_parse_mapflag;
+	npc->parse_unknown_mapflag = npc_parse_unknown_mapflag;
 	npc->parsesrcfile = npc_parsesrcfile;
 	npc->script_event = npc_script_event;
 	npc->read_event_script = npc_read_event_script;
