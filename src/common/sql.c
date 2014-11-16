@@ -25,6 +25,8 @@ void hercules_mysql_error_handler(unsigned int ecode);
 int mysql_reconnect_type;
 unsigned int mysql_reconnect_count;
 
+struct sql_interface sql_s;
+
 /// Sql handle
 struct Sql {
 	StringBuf buf;
