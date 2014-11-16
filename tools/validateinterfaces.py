@@ -186,6 +186,25 @@ def processLostDir(tracker, srcDir):
         elif file1[-2:] == ".c":
             checkLostFile(tracker, cPath)
 
+def runIf():
+    processIfDir(tracker, "../src/char");
+    processIfDir(tracker, "../src/map");
+    processIfDir(tracker, "../src/login");
+    processIfDir(tracker, "../src/common");
+
+def runLost():
+    processLostDir(tracker, "../src/char");
+    processLostDir(tracker, "../src/map");
+    processLostDir(tracker, "../src/login");
+    processLostDir(tracker, "../src/common");
+
+def runLong():
+    processDir(tracker, "../src/char");
+    processDir(tracker, "../src/map");
+    processDir(tracker, "../src/login");
+    processDir(tracker, "../src/common");
+    reportMethods(tracker)
+
 tracker = Tracker()
 tracker.arr = dict()
 tracker.methods = Set()
@@ -193,26 +212,27 @@ tracker.fullmethods = Set()
 tracker.interfaces = Set()
 tracker.retCode = 0
 
-if len(sys.argv) > 1 and sys.argv[1] == "silent":
-    processIfDir(tracker, "../src/char");
-    processIfDir(tracker, "../src/map");
-    processIfDir(tracker, "../src/login");
-    processIfDir(tracker, "../src/common");
+if len(sys.argv) > 1:
+    cmd = sys.argv[1]
 else:
-    print "Checking initerfaces initialisation"
-    processIfDir(tracker, "../src/char");
-    processIfDir(tracker, "../src/map");
-    processIfDir(tracker, "../src/login");
-    processIfDir(tracker, "../src/common");
-    print "Checking not added functions to initerfaces"
-    processLostDir(tracker, "../src/char");
-    processLostDir(tracker, "../src/map");
-    processLostDir(tracker, "../src/login");
-    processLostDir(tracker, "../src/common");
+    cmd = "default"
+
+if cmd == "silent":
+    runIf()
+elif cmd == "init":
+    print "Checking interfaces initialisation"
+    runIf()
+elif cmd == "lost":
+    print "Checking not added functions to interfaces"
+    runLost();
+elif cmd == "long":
     print "Checking interfaces usage"
-    processDir(tracker, "../src/char");
-    processDir(tracker, "../src/map");
-    processDir(tracker, "../src/login");
-    processDir(tracker, "../src/common");
-    reportMethods(tracker)
+    runLong();
+else:
+    print "Checking interfaces initialisation"
+    runIf()
+    print "Checking not added functions to interfaces"
+    runLost();
+    print "Checking interfaces usage"
+    runLong();
 exit(tracker.retCode)
