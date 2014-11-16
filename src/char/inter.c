@@ -32,8 +32,8 @@
 #include "../common/strlib.h"
 #include "../common/timer.h"
 
-#define WISDATA_TTL (60*1000)	//Wis data Time To Live (60 seconds)
-#define WISDELLIST_MAX 256		// Number of elements in the list Delete data Wis
+#define WISDATA_TTL (60*1000) // Wis data Time To Live (60 seconds)
+#define WISDELLIST_MAX 256    // Number of elements in the list Delete data Wis
 
 struct inter_interface inter_s;
 
@@ -48,7 +48,7 @@ unsigned int party_share_level = 10;
 
 // recv. packet list
 int inter_recv_packet_length[] = {
-	-1,-1, 7,-1, -1,13,36, (2 + 4 + 4 + 4 + NAME_LENGTH),  0, 0, 0, 0,  0, 0,  0, 0,	// 3000-
+	-1,-1, 7,-1, -1,13,36, (2 + 4 + 4 + 4 + NAME_LENGTH),  0, 0, 0, 0,  0, 0,  0, 0, // 3000-
 	 6,-1, 0, 0,  0, 0, 0, 0, 10,-1, 0, 0,  0, 0,  0, 0,    // 3010-
 	-1,10,-1,14, 14,19, 6,-1, 14,14, 0, 0,  0, 0,  0, 0,    // 3020- Party
 	-1, 6,-1,-1, 55,19, 6,-1, 14,-1,-1,-1, 18,19,186,-1,    // 3030-
@@ -433,7 +433,8 @@ void mapif_parse_accinfo(int fd)
 
 	account_id = atoi(query);
 
-	if (account_id < START_ACCOUNT_NUM) {	// is string
+	if (account_id < START_ACCOUNT_NUM) {
+		// is string
 		if ( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id`,`name`,`class`,`base_level`,`job_level`,`online` FROM `%s` WHERE `name` LIKE '%s' LIMIT 10", char_db, query_esq)
 				|| SQL->NumRows(inter->sql_handle) == 0 ) {
 			if( SQL->NumRows(inter->sql_handle) == 0 ) {
@@ -480,7 +481,8 @@ void mapif_parse_accinfo(int fd)
 	return;
 }
 void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass,
-    const char *email, const char *last_ip, const char *lastlogin, const char *pin_code, const char *birthdate, int group_id, int logincount, int state)
+		const char *email, const char *last_ip, const char *lastlogin, const char *pin_code, const char *birthdate,
+		int group_id, int logincount, int state)
 {
 	if (map_fd <= 0 || !session_isActive(map_fd))
 		return; // check if we have a valid fd
@@ -588,7 +590,6 @@ void inter_savereg(int account_id, int char_id, const char *key, unsigned int in
 			}
 		}
 	}
-		
 }
 
 // Load account_reg from sql (type=2)
@@ -614,7 +615,7 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 			ShowError("inter->accreg_fromsql: Invalid type %d\n", type);
 			return 0;
 	}
-	
+
 	WFIFOHEAD(fd, 60000 + 300);
 	WFIFOW(fd, 0) = 0x3804;
 	/* 0x2 = length, set prior to being sent */
@@ -624,7 +625,7 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 	WFIFOB(fd, 13) = 1;/* is string type */
 	WFIFOW(fd, 14) = 0;/* count */
 	plen = 16;
-	
+
 	/**
 	 * Vessel!
 	 *
@@ -632,16 +633,15 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 	 * { keyLength(B), key(<keyLength>), index(L), valLength(B), val(<valLength>) }
 	 **/
 	while ( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) ) {
-					
 		SQL->GetData(inter->sql_handle, 0, &data, NULL);
 		len = strlen(data)+1;
-		
+
 		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 		plen += 1;
-		
+
 		safestrncpy((char*)WFIFOP(fd,plen), data, len);
 		plen += len;
-		
+
 		SQL->GetData(inter->sql_handle, 1, &data, NULL);
 
 		WFIFOL(fd, plen) = (unsigned int)atol(data);
@@ -652,16 +652,16 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 
 		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 254 */
 		plen += 1;
-		
+
 		safestrncpy((char*)WFIFOP(fd,plen), data, len);
 		plen += len;
 
 		WFIFOW(fd, 14) += 1;
-		
+
 		if( plen > 60000 ) {
 			WFIFOW(fd, 2) = plen;
 			WFIFOSET(fd, plen);
-			
+
 			/* prepare follow up */
 			WFIFOHEAD(fd, 60000 + 300);
 			WFIFOW(fd, 0) = 0x3804;
@@ -674,13 +674,13 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 			plen = 16;
 		}
 	}
-	
+
 	/* mark & go. */
 	WFIFOW(fd, 2) = plen;
 	WFIFOSET(fd, plen);
 
 	SQL->FreeResult(inter->sql_handle);
-	
+
 	switch( type ) {
 		case 3: //char reg
 			if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `key`, `index`, `value` FROM `%s` WHERE `char_id`='%d'", char_reg_num_db, char_id) )
@@ -704,7 +704,7 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 	WFIFOB(fd, 13) = 0;/* is int type */
 	WFIFOW(fd, 14) = 0;/* count */
 	plen = 16;
-	
+
 	/**
 	 * Vessel!
 	 *
@@ -712,32 +712,31 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 	 * { keyLength(B), key(<keyLength>), index(L), value(L) }
 	 **/
 	while ( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) ) {
-		
 		SQL->GetData(inter->sql_handle, 0, &data, NULL);
 		len = strlen(data)+1;
-		
+
 		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 		plen += 1;
-		
+
 		safestrncpy((char*)WFIFOP(fd,plen), data, len);
 		plen += len;
-		
+
 		SQL->GetData(inter->sql_handle, 1, &data, NULL);
-		
+
 		WFIFOL(fd, plen) = (unsigned int)atol(data);
 		plen += 4;
-		
+
 		SQL->GetData(inter->sql_handle, 2, &data, NULL);
-		
+
 		WFIFOL(fd, plen) = atoi(data);
 		plen += 4;
-		
+
 		WFIFOW(fd, 14) += 1;
-		
+
 		if( plen > 60000 ) {
 			WFIFOW(fd, 2) = plen;
 			WFIFOSET(fd, plen);
-			
+
 			/* prepare follow up */
 			WFIFOHEAD(fd, 60000 + 300);
 			WFIFOW(fd, 0) = 0x3804;
@@ -750,12 +749,12 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 			plen = 16;
 		}
 	}
-	
+
 	/* mark as complete & go. */
 	WFIFOB(fd, 12) = type;
 	WFIFOW(fd, 2) = plen;
 	WFIFOSET(fd, plen);
-	
+
 	SQL->FreeResult(inter->sql_handle);
 	return 1;
 }
@@ -970,12 +969,14 @@ int mapif_wis_end(struct WisData *wd, int flag)
 	return 0;
 }
 
+#if 0
 // Account registry transfer to map-server
-//static void mapif_account_reg(int fd, unsigned char *src)
-//{
-//	WBUFW(src,0)=0x3804; //NOTE: writing to RFIFO
-//	mapif->sendallwos(fd, src, WBUFW(src,2));
-//}
+static void mapif_account_reg(int fd, unsigned char *src)
+{
+	WBUFW(src,0)=0x3804; //NOTE: writing to RFIFO
+	mapif->sendallwos(fd, src, WBUFW(src,2));
+}
+#endif // 0
 
 // Send the requested account_reg
 int mapif_account_reg_reply(int fd,int account_id,int char_id, int type)
@@ -1124,7 +1125,7 @@ int mapif_parse_WisReply(int fd)
 	flag = RFIFOB(fd,6);
 	wd = (struct WisData*)idb_get(wis_db, id);
 	if (wd == NULL)
-		return 0;	// This wisp was probably suppress before, because it was timeout of because of target was found on another map-server
+		return 0; // This wisp was probably suppress before, because it was timeout of because of target was found on another map-server
 
 	if ((--wd->count) <= 0 || flag != 1) {
 		mapif->wis_end(wd, flag); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
@@ -1150,7 +1151,7 @@ int mapif_parse_WisToGM(int fd)
 int mapif_parse_Registry(int fd)
 {
 	int account_id = RFIFOL(fd, 4), char_id = RFIFOL(fd, 8), count = RFIFOW(fd, 12);
-	
+
 	if( count ) {
 		int cursor = 14, i;
 		char key[32], sval[254];
@@ -1159,7 +1160,7 @@ int mapif_parse_Registry(int fd)
 
 		if( isLoginActive )
 			chr->global_accreg_to_login_start(account_id,char_id);
-		
+
 		for(i = 0; i < count; i++) {
 			safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
 			cursor += RFIFOB(fd, cursor) + 1;
@@ -1185,7 +1186,6 @@ int mapif_parse_Registry(int fd)
 				case 3:
 					inter->savereg(account_id,char_id,key,index,0,true);
 					break;
-					
 				default:
 					ShowError("mapif->parse_Registry: unknown type %d\n",RFIFOB(fd, cursor - 1));
 					return 1;
@@ -1193,7 +1193,7 @@ int mapif_parse_Registry(int fd)
 
 		}
 
-		if( isLoginActive )		
+		if (isLoginActive)
 			chr->global_accreg_to_login_send();
 	}
 	return 0;

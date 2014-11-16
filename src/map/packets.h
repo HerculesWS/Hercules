@@ -1654,128 +1654,128 @@ packet(0x020d,-1);
 	packet(0x0802,18,clif->pPartyBookingRegisterReq,2,4,6); // Booking System
 	packet(0x0803,4);
 	packet(0x0804,8); // Booking System
-   	packet(0x0805,-1);
-   	packet(0x0806,4,clif->pPartyBookingDeleteReq,2);// Booking System
-   	//packet(0x0807,2);
-   	packet(0x0808,4); // Booking System
-  	//packet(0x0809,14);
-  	//packet(0x080A,50);
-  	//packet(0x080B,18);
-  	//packet(0x080C,6);
+	packet(0x0805,-1);
+	packet(0x0806,4,clif->pPartyBookingDeleteReq,2);// Booking System
+	//packet(0x0807,2);
+	packet(0x0808,4); // Booking System
+	//packet(0x0809,14);
+	//packet(0x080A,50);
+	//packet(0x080B,18);
+	//packet(0x080C,6);
 #endif
-  
-  //2009-12-29aRagexeRE
+
+	//2009-12-29aRagexeRE
 #if PACKETVER >= 20091229
-  	packet(0x0804,14,clif->pPartyBookingSearchReq,2,4,6,8,12);// Booking System
-  	packet(0x0806,2,clif->pPartyBookingDeleteReq,0);// Booking System
-  	packet(0x0807,4);
-  	packet(0x0808,14,clif->pPartyBookingUpdateReq,2); // Booking System
-  	packet(0x0809,50);
-  	packet(0x080A,18);
-  	packet(0x080B,6);// Booking System
+	packet(0x0804,14,clif->pPartyBookingSearchReq,2,4,6,8,12);// Booking System
+	packet(0x0806,2,clif->pPartyBookingDeleteReq,0);// Booking System
+	packet(0x0807,4);
+	packet(0x0808,14,clif->pPartyBookingUpdateReq,2); // Booking System
+	packet(0x0809,50);
+	packet(0x080A,18);
+	packet(0x080B,6);// Booking System
 #endif
-  
-  //2010-01-05aRagexeRE
+
+	//2010-01-05aRagexeRE
 #if PACKETVER >= 20100105
-  	packet(0x0801,-1,clif->pPurchaseReq2,2,4,8,12);
+	packet(0x0801,-1,clif->pPurchaseReq2,2,4,8,12);
 #endif
-  
-  //2010-01-26aRagexeRE
+
+	//2010-01-26aRagexeRE
 #if PACKETVER >= 20100126
-  	//packet(0x080C,2);
-  	//packet(0x080D,3);
-  	packet(0x080E,14);
+	//packet(0x080C,2);
+	//packet(0x080D,3);
+	packet(0x080E,14);
 #endif
-  
-  //2010-02-09aRagexeRE
+
+	//2010-02-09aRagexeRE
 #if PACKETVER >= 20100209
-  	//packet(0x07F0,6);
+	//packet(0x07F0,6);
 #endif
-  
-  //2010-02-23aRagexeRE
+
+	//2010-02-23aRagexeRE
 #if PACKETVER >= 20100223
-  	packet(0x080F,20);
+	packet(0x080F,20);
 #endif
-  
-  //2010-03-03aRagexeRE
+
+	//2010-03-03aRagexeRE
 #if PACKETVER >= 20100303
-  	packet(0x0810,3);
-  	packet(0x0811,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
-  	//packet(0x0812,86);
-  	//packet(0x0813,6);
-  	//packet(0x0814,6);
-  	//packet(0x0815,-1);
-  	//packet(0x0817,-1);
-  	//packet(0x0818,6);
-  	//packet(0x0819,4);
+	packet(0x0810,3);
+	packet(0x0811,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	//packet(0x0812,86);
+	//packet(0x0813,6);
+	//packet(0x0814,6);
+	//packet(0x0815,-1);
+	//packet(0x0817,-1);
+	//packet(0x0818,6);
+	//packet(0x0819,4);
 #endif
-  
-  //2010-03-09aRagexeRE
+
+	//2010-03-09aRagexeRE
 #if PACKETVER >= 20100309
-  	packet(0x0813,-1);
-  	//packet(0x0814,2);
-  	//packet(0x0815,6);
-  	packet(0x0816,6);
-  	packet(0x0818,-1);
-  	//packet(0x0819,10);
-  	//packet(0x081A,4);
-  	//packet(0x081B,4);
-  	//packet(0x081C,6);
-  	packet(0x081d,22);
-  	packet(0x081e,8);
+	packet(0x0813,-1);
+	//packet(0x0814,2);
+	//packet(0x0815,6);
+	packet(0x0816,6);
+	packet(0x0818,-1);
+	//packet(0x0819,10);
+	//packet(0x081A,4);
+	//packet(0x081B,4);
+	//packet(0x081C,6);
+	packet(0x081d,22);
+	packet(0x081e,8);
 #endif
-  
-  //2010-03-23aRagexeRE
+
+	//2010-03-23aRagexeRE
 #if PACKETVER >= 20100323
-  	//packet(0x081F,-1);
+	//packet(0x081F,-1);
 #endif
-  
-  //2010-04-06aRagexeRE
+
+	//2010-04-06aRagexeRE
 #if PACKETVER >= 20100406
-  	//packet(0x081A,6);
+	//packet(0x081A,6);
 #endif
-  
-  //2010-04-13aRagexeRE
+
+	//2010-04-13aRagexeRE
 #if PACKETVER >= 20100413
-  	//packet(0x081A,10);
-  	packet(0x0820,11);
-  	//packet(0x0821,2);
-  	//packet(0x0822,9);
-  	//packet(0x0823,-1);
+	//packet(0x081A,10);
+	packet(0x0820,11);
+	//packet(0x0821,2);
+	//packet(0x0822,9);
+	//packet(0x0823,-1);
 #endif
-  
-  //2010-04-14dRagexeRE
+
+	//2010-04-14dRagexeRE
 #if PACKETVER >= 20100414
-  	//packet(0x081B,8);
+	//packet(0x081B,8);
 #endif
-  
-  //2010-04-20aRagexeRE
+
+	//2010-04-20aRagexeRE
 #if PACKETVER >= 20100420
-  	packet(0x0812,8);
-  	packet(0x0814,86);
-  	packet(0x0815,2,clif->pReqCloseBuyingStore,0);
-  	packet(0x0817,6,clif->pReqClickBuyingStore,2);
-  	packet(0x0819,-1,clif->pReqTradeBuyingStore,2,4,8,12);
-  	packet(0x081a,4);
-  	packet(0x081b,10);
-  	packet(0x081c,10);
-  	packet(0x0824,6);
+	packet(0x0812,8);
+	packet(0x0814,86);
+	packet(0x0815,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0817,6,clif->pReqClickBuyingStore,2);
+	packet(0x0819,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x081a,4);
+	packet(0x081b,10);
+	packet(0x081c,10);
+	packet(0x0824,6);
 #endif
-  
-  //2010-06-01aRagexeRE
+
+	//2010-06-01aRagexeRE
 #if PACKETVER >= 20100601
-  	//packet(0x0825,-1);
-  	//packet(0x0826,4);
-  	packet(0x0835,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
-  	packet(0x0836,-1);
-  	packet(0x0837,3);
-  	//packet(0x0838,3);
+	//packet(0x0825,-1);
+	//packet(0x0826,4);
+	packet(0x0835,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0836,-1);
+	packet(0x0837,3);
+	//packet(0x0838,3);
 #endif
-  
-  //2010-06-08aRagexeRE
+
+	//2010-06-08aRagexeRE
 #if PACKETVER >= 20100608
-  	packet(0x0838,2,clif->pSearchStoreInfoNextPage,0);
-  	packet(0x083A,4); // Search Stalls Feature
+	packet(0x0838,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x083A,4); // Search Stalls Feature
 	packet(0x083B,2,clif->pCloseSearchStoreInfo,0);
 	packet(0x083C,12,clif->pSearchStoreInfoListItemClick,2,6,10);
 	packet(0x083D,6);
@@ -2415,7 +2415,7 @@ packet(0x020d,-1);
 	packet(0x0873,36,clif->pStoragePassword,0);
 	packet(0x097C,4,clif->pRanklist);
 #endif
-	
+
 //2013-08-07Ragexe (Shakto)
 #if PACKETVER >= 20130807
 	packet(0x0369,7,clif->pActionRequest,2,6);
@@ -2700,7 +2700,7 @@ packet(0x020d,-1);
 #endif
 
 // 2014-04-02gRagexe - Themon
-#if PACKETVER >= 20140402 
+#if PACKETVER >= 20140402
 	packet(0x0946,7,clif->pActionRequest,2,6);
 	packet(0x0868,10,clif->pUseSkillToId,2,4,6);
 	packet(0x093F,5,clif->pWalkToXY,2);
@@ -2734,7 +2734,7 @@ packet(0x020d,-1);
 #endif
 
 // 2014-04-16aRagexe - Themon
-#if PACKETVER >= 20140416 
+#if PACKETVER >= 20140416
 	packet(0x0369,7,clif->pActionRequest,2,6);
 	packet(0x083C,10,clif->pUseSkillToId,2,4,6);
 	packet(0x0437,5,clif->pWalkToXY,2);

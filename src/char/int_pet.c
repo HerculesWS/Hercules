@@ -222,7 +222,7 @@ int mapif_create_pet(int fd, int account_id, int char_id, short pet_class, short
 	inter_pet->pt->pet_id = -1; //Signal NEW pet.
 	if (inter_pet->tosql(inter_pet->pt->pet_id,inter_pet->pt))
 		mapif->pet_created(fd, account_id, inter_pet->pt);
-	else	//Failed...
+	else //Failed...
 		mapif->pet_created(fd, account_id, NULL);
 
 	return 0;

@@ -299,5 +299,5 @@ void inter_quest_defaults(void)
 {
 	inter_quest = &inter_quest_s;
 
-    inter_quest->parse_frommap = inter_quest_parse_frommap;
+	inter_quest->parse_frommap = inter_quest_parse_frommap;
 }

@@ -320,8 +320,8 @@ void itemdb_jobid2mapid(unsigned int *bclass, unsigned int jobmask)
 	int i;
 	bclass[0]= bclass[1]= bclass[2]= 0;
 	//Base classes
-	if (jobmask & 1<<JOB_NOVICE)
-	{	//Both Novice/Super-Novice are counted with the same ID
+	if (jobmask & 1<<JOB_NOVICE) {
+		//Both Novice/Super-Novice are counted with the same ID
 		bclass[0] |= 1<<MAPID_NOVICE;
 		bclass[1] |= 1<<MAPID_NOVICE;
 	}
@@ -354,9 +354,10 @@ void itemdb_jobid2mapid(unsigned int *bclass, unsigned int jobmask)
 		bclass[2] |= 1<<MAPID_MERCHANT;
 	if (jobmask & 1<<JOB_BARD)
 		bclass[2] |= 1<<MAPID_ARCHER;
-//	Bard/Dancer share the same slot now.
-//	if (jobmask & 1<<JOB_DANCER)
-//		bclass[2] |= 1<<MAPID_ARCHER;
+#if 0 // Bard/Dancer share the same slot now.
+	if (jobmask & 1<<JOB_DANCER)
+		bclass[2] |= 1<<MAPID_ARCHER;
+#endif // 0
 	if (jobmask & 1<<JOB_ROGUE)
 		bclass[2] |= 1<<MAPID_THIEF;
 	//Special classes that don't fit above.
@@ -487,16 +488,16 @@ int itemdb_isequip2(struct item_data *data) {
  *------------------------------------------*/
 int itemdb_isstackable(int nameid)
 {
-  int type=itemdb_type(nameid);
-  switch(type) {
-	  case IT_WEAPON:
-	  case IT_ARMOR:
-	  case IT_PETEGG:
-	  case IT_PETARMOR:
-		  return 0;
-	  default:
-		  return 1;
-  }
+	int type=itemdb_type(nameid);
+	switch(type) {
+		case IT_WEAPON:
+		case IT_ARMOR:
+		case IT_PETEGG:
+		case IT_PETARMOR:
+			return 0;
+		default:
+			return 1;
+	}
 }
 
 /*==========================================
@@ -504,16 +505,16 @@ int itemdb_isstackable(int nameid)
  *------------------------------------------*/
 int itemdb_isstackable2(struct item_data *data)
 {
-  nullpo_ret(data);
-  switch(data->type) {
-	  case IT_WEAPON:
-	  case IT_ARMOR:
-	  case IT_PETEGG:
-	  case IT_PETARMOR:
-		  return 0;
-	  default:
-		  return 1;
-  }
+	nullpo_ret(data);
+	switch(data->type) {
+		case IT_WEAPON:
+		case IT_ARMOR:
+		case IT_PETEGG:
+		case IT_PETARMOR:
+			return 0;
+		default:
+			return 1;
+	}
 }
 
 
@@ -576,7 +577,7 @@ int itemdb_isrestricted(struct item* item, int gmlv, int gmlv2, int (*func)(stru
 }
 
 /*==========================================
- *	Specifies if item-type should drop unidentified.
+ * Specifies if item-type should drop unidentified.
  *------------------------------------------*/
 int itemdb_isidentified(int nameid) {
 	int type=itemdb_type(nameid);

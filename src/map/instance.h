@@ -41,17 +41,17 @@ struct instance_data {
 	unsigned short users;
 
 	struct reg_db regs; ///< Instance variables for scripts
-	
+
 	int progress_timer;
 	unsigned int progress_timeout;
 
 	int idle_timer;
 	unsigned int idle_timeout, idle_timeoutval;
-	
+
 	unsigned int original_progress_timeout;
-	
+
 	struct point respawn; ///< reload spawn
-	
+
 	/** HPM Custom Struct */
 	struct HPluginData **hdata;
 	unsigned int hdatac;

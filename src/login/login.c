@@ -223,7 +223,7 @@ bool login_check_password(const char* md5key, int passwdenc, const char* passwd,
 	{
 		// password mode set to 1 -> md5(md5key, refpass) enable with <passwordencrypt></passwordencrypt>
 		// password mode set to 2 -> md5(refpass, md5key) enable with <passwordencrypt2></passwordencrypt2>
-		
+
 		return ((passwdenc&0x01) && login->check_encrypted(md5key, refpass, passwd)) ||
 		       ((passwdenc&0x02) && login->check_encrypted(refpass, md5key, passwd));
 	}
@@ -767,7 +767,7 @@ void login_fromchar_accinfo(int fd, int account_id, int u_fd, int u_aid, int u_g
 		safestrncpy((char*)WFIFOP(fd,119), acc->lastlogin, 24);
 		WFIFOL(fd,143) = acc->logincount;
 		WFIFOL(fd,147) = acc->state;
-		if (u_group >= acc->group_id) 
+		if (u_group >= acc->group_id)
 			safestrncpy((char*)WFIFOP(fd,151), acc->pincode, 5);
 		else
 			memset(WFIFOP(fd,151), '\0', 5);
@@ -840,7 +840,7 @@ int login_parse_fromchar(int fd)
 				if( j == 2 ) return 0;
 			}
 		}
-		
+
 		switch( command ) {
 
 		case 0x2712: // request from char-server to authenticate an account
@@ -880,7 +880,7 @@ int login_parse_fromchar(int fd)
 		break;
 
 		// Map server send information to change an email of an account via char-server
-		case 0x2722:	// 0x2722 <account_id>.L <actual_e-mail>.40B <new_e-mail>.40B
+		case 0x2722: // 0x2722 <account_id>.L <actual_e-mail>.40B <new_e-mail>.40B
 			if (RFIFOREST(fd) < 86)
 				return 0;
 		{
@@ -912,7 +912,7 @@ int login_parse_fromchar(int fd)
 		}
 		break;
 
-		case 0x2728:	// We receive account_reg2 from a char-server, and we send them to other map-servers.
+		case 0x2728: // We receive account_reg2 from a char-server, and we send them to other map-servers.
 			if( RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd,2) )
 				return 0;
 		{
@@ -920,7 +920,7 @@ int login_parse_fromchar(int fd)
 		}
 		break;
 
-		case 0x272a:	// Receiving of map-server via char-server an unban request
+		case 0x272a: // Receiving of map-server via char-server an unban request
 			if( RFIFOREST(fd) < 6 )
 				return 0;
 		{
@@ -940,7 +940,7 @@ int login_parse_fromchar(int fd)
 			login->fromchar_parse_account_offline(fd);
 		break;
 
-		case 0x272d:	// Receive list of all online accounts. [Skotlex]
+		case 0x272d: // Receive list of all online accounts. [Skotlex]
 			if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd,2))
 				return 0;
 			{
@@ -974,7 +974,7 @@ int login_parse_fromchar(int fd)
 				login->fromchar_parse_change_pincode(fd);
 			}
 			break;
-			
+
 		case 0x2739: // PIN Code was entered wrong too often
 			if( RFIFOREST(fd) < 6 )
 				return 0;
@@ -983,7 +983,7 @@ int login_parse_fromchar(int fd)
 					return 0;
 			}
 		break;
-				
+
 		case 0x2740: // Accinfo request forwarded by charserver on mapserver's account
 			if( RFIFOREST(fd) < 22 )
 				return 0;
@@ -1045,7 +1045,7 @@ int login_mmo_auth_new(const char* userid, const char* pass, const char sex, con
 	safestrncpy(acc.pincode, "\0", sizeof(acc.pincode));
 	acc.pincode_change = 0;
 	acc.char_slots = 0;
-	
+
 	if( !accounts->create(accounts, &acc) )
 		return 0;
 
@@ -1117,7 +1117,7 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 		ShowNotice("Empty userid (received pass: '%s', ip: %s)\n", sd->passwd, ip);
 		return 0; // 0 = Unregistered ID
 	}
-	
+
 	if( !accounts->load_str(accounts, &acc, sd->userid) ) {
 		ShowNotice("Unknown account (account: %s, received pass: %s, ip: %s)\n", sd->userid, sd->passwd, ip);
 		return 0; // 0 = Unregistered ID
@@ -1139,7 +1139,7 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 		ShowNotice("Connection refused (account: %s, pass: %s, state: %d, ip: %s)\n", sd->userid, sd->passwd, acc.state, ip);
 		return acc.state - 1;
 	}
-	
+
 	if( login_config.client_hash_check && !isServer ) {
 		struct client_hash_node *node = NULL;
 		bool match = false;
@@ -1302,12 +1302,12 @@ void login_auth_ok(struct login_session_data* sd)
 		WFIFOW(fd,47+n*32+4) = ntows(htons(server[i].port)); // [!] LE byte order here [!]
 		memcpy(WFIFOP(fd,47+n*32+6), server[i].name, 20);
 		WFIFOW(fd,47+n*32+26) = server[i].users;
-		
+
 		if( server[i].type == CST_PAYING && sd->expiration_time > time(NULL) )
 			WFIFOW(fd,47+n*32+28) = CST_NORMAL;
 		else
 			WFIFOW(fd,47+n*32+28) = server[i].type;
-		
+
 		WFIFOW(fd,47+n*32+30) = server[i].new_;
 		n++;
 	}
@@ -1634,10 +1634,10 @@ int login_parse_login(int fd)
 				if( result == 2 ) return 0;
 			}
 		}
-		
+
 		switch( command ) {
 
-		case 0x0200:		// New alive packet: structure: 0x200 <account.userid>.24B. used to verify if client is always alive.
+		case 0x0200: // New alive packet: structure: 0x200 <account.userid>.24B. used to verify if client is always alive.
 			if (RFIFOREST(fd) < 26)
 				return 0;
 			login->parse_ping(fd, sd);
@@ -1678,14 +1678,14 @@ int login_parse_login(int fd)
 		}
 		break;
 
-		case 0x01db:	// Sending request of the coding key
+		case 0x01db: // Sending request of the coding key
 			RFIFOSKIP(fd,2);
 		{
 			login->parse_request_coding_key(fd, sd);
 		}
 		break;
 
-		case 0x2710:	// Connection request of a char-server
+		case 0x2710: // Connection request of a char-server
 			if (RFIFOREST(fd) < 86)
 				return 0;
 		{
@@ -1863,9 +1863,9 @@ int do_final(void) {
 	struct client_hash_node *hn = login_config.client_hash_nodes;
 
 	ShowStatus("Terminating...\n");
-	
+
 	HPM->event(HPET_FINAL);
-	
+
 	while (hn) {
 		struct client_hash_node *tmp = hn;
 		hn = hn->next;
@@ -1887,7 +1887,7 @@ int do_final(void) {
 	accounts = NULL; // destroyed in account_engine
 	login->online_db->destroy(login->online_db, NULL);
 	login->auth_db->destroy(login->auth_db, NULL);
-	
+
 	for( i = 0; i < ARRAYLENGTH(server); ++i )
 		chrif_server_destroy(i);
 
@@ -1984,7 +1984,7 @@ int do_init(int argc, char** argv)
 
 	login_config_read((argc > 1) ? argv[1] : LOGIN_CONF_NAME);
 	login->lan_config_read((argc > 2) ? argv[2] : LAN_CONF_NAME);
-		
+
 	for( i = 0; i < ARRAYLENGTH(server); ++i )
 		chrif_server_init(i);
 
@@ -1994,7 +1994,7 @@ int do_init(int argc, char** argv)
 
 	// initialize static and dynamic ipban system
 	ipban_init();
-	
+
 	// Online user database init
 	login->online_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	timer->add_func_list(login->waiting_disconnect_timer, "login->waiting_disconnect_timer");
@@ -2022,23 +2022,23 @@ int do_init(int argc, char** argv)
 	}
 
 	HPM->event(HPET_INIT);
-	
+
 	// server port open & binding
 	if( (login->fd = make_listen_bind(login_config.login_ip,login_config.login_port)) == -1 ) {
 		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",login_config.login_port);
 		exit(EXIT_FAILURE);
 	}
-	
+
 	if( runflag != CORE_ST_STOP ) {
 		shutdown_callback = do_shutdown_login;
 		runflag = LOGINSERVER_ST_RUNNING;
 	}
-	
+
 	ShowStatus("The login-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %u).\n\n", login_config.login_port);
 	login_log(0, "login server", 100, "login server started");
-	
+
 	HPM->event(HPET_READY);
-	
+
 	return 0;
 }
 

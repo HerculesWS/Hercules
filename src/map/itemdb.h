@@ -374,7 +374,7 @@ enum ItemNouseRestrictions {
 struct item_data {
 	uint16 nameid;
 	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
-	
+
 	//Do not add stuff between value_buy and view_id (see how getiteminfo works)
 	int value_buy;
 	int value_sell;
@@ -396,21 +396,21 @@ struct item_data {
 
 	int delay;
 //Lupus: I rearranged order of these fields due to compatibility with ITEMINFO script command
-//		some script commands should be revised as well...
-	unsigned int class_base[3];	//Specifies if the base can wear this item (split in 3 indexes per type: 1-1, 2-1, 2-2)
-	unsigned class_upper : 6; //Specifies if the upper-type can equip it (bitfield, 0x01: normal, 0x02: upper, 0x04: baby normal, 0x08: third normal, 0x10: third upper, 0x20: third baby)
+//       some script commands should be revised as well...
+	unsigned int class_base[3]; ///< Specifies if the base can wear this item (split in 3 indexes per type: 1-1, 2-1, 2-2)
+	unsigned class_upper : 6;   ///< Specifies if the upper-type can equip it (bitfield, 0x01: normal, 0x02: upper, 0x04: baby normal, 0x08: third normal, 0x10: third upper, 0x20: third baby)
 	struct {
 		unsigned short chance;
 		int id;
-	} mob[MAX_SEARCH]; //Holds the mobs that have the highest drop rate for this item. [Skotlex]
-	struct script_code *script;	//Default script for everything.
-	struct script_code *equip_script;	//Script executed once when equipping.
-	struct script_code *unequip_script;//Script executed once when unequipping.
+	} mob[MAX_SEARCH];                  ///< Holds the mobs that have the highest drop rate for this item. [Skotlex]
+	struct script_code *script;         ///< Default script for everything.
+	struct script_code *equip_script;   ///< Script executed once when equipping.
+	struct script_code *unequip_script; ///< Script executed once when unequipping.
 	struct {
 		unsigned available : 1;
-		unsigned no_refine : 1;	// [celest]
-		unsigned delay_consume : 1;	// Signifies items that are not consumed immediately upon double-click [Skotlex]
-		unsigned trade_restriction : 9;	///< Item trade restrictions mask (@see enum ItemTradeRestrictions)
+		unsigned no_refine : 1; // [celest]
+		unsigned delay_consume : 1;     ///< Signifies items that are not consumed immediately upon double-click [Skotlex]
+		unsigned trade_restriction : 9; ///< Item trade restrictions mask (@see enum ItemTradeRestrictions)
 		unsigned autoequip: 1;
 		unsigned buyingstore : 1;
 		unsigned bindonequip : 1;
@@ -426,7 +426,7 @@ struct item_data {
 		unsigned int flag; ///< Item nouse restriction mask (@see enum ItemNouseRestrictions)
 		unsigned short override;
 	} item_usage;
-	short gm_lv_trade_override;	//GM-level to override trade_restriction
+	short gm_lv_trade_override; ///< GM-level to override trade_restriction
 	/* bugreport:309 */
 	struct item_combo **combos;
 	unsigned char combos_count;

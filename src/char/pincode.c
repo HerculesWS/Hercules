@@ -20,14 +20,14 @@ struct pincode_interface pincode_s;
 
 void pincode_handle ( int fd, struct char_session_data* sd ) {
 	struct online_char_data* character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id);
-	
+
 	if( character && character->pincode_enable > pincode->charselect ){
 		character->pincode_enable = pincode->charselect * 2;
 	}else{
 		pincode->sendstate( fd, sd, PINCODE_OK );
 		return;
 	}
-	
+
 	if( strlen(sd->pincode) == 4 ){
 		if( pincode->changetime && time(NULL) > (sd->pincode_change+pincode->changetime) ){ // User hasn't changed his PIN code for a long time
 			pincode->sendstate( fd, sd, PINCODE_EXPIRED );
@@ -43,7 +43,7 @@ void pincode_handle ( int fd, struct char_session_data* sd ) {
 
 void pincode_check(int fd, struct char_session_data* sd) {
 	char pin[5] = "\0\0\0\0";
-	
+
 	strncpy(pin, (char*)RFIFOP(fd, 6), 4+1);
 	pincode->decrypt(sd->pincode_seed, pin);
 	if( pincode->compare( fd, sd, pin ) ){
@@ -74,7 +74,7 @@ void pincode_change(int fd, struct char_session_data* sd) {
 	pincode->decrypt(sd->pincode_seed,oldpin);
 	if( !pincode->compare( fd, sd, oldpin ) )
 		return;
-	
+
 	strncpy(newpin, (char*)RFIFOP(fd,10), sizeof(newpin));
 	pincode->decrypt(sd->pincode_seed,newpin);
 	pincode->update( sd->account_id, newpin );
@@ -128,7 +128,7 @@ void pincode_notifyLoginPinError(int account_id) {
 void pincode_decrypt(unsigned int userSeed, char* pin) {
 	int i, pos;
 	char tab[10] = {0,1,2,3,4,5,6,7,8,9};
-	
+
 	for( i = 1; i < 10; i++ ){
 		userSeed = pincode->baseSeed + userSeed * pincode->multiplier;
 		pos = userSeed % (i + 1);
@@ -138,18 +138,17 @@ void pincode_decrypt(unsigned int userSeed, char* pin) {
 			tab[i] ^= tab[pos];
 		}
 	}
-	
+
 	for( i = 0; i < 4; i++ ){
 		pin[i] = tab[pin[i] - '0'];
 	}
-	
+
 	sprintf(pin, "%d%d%d%d", pin[0], pin[1], pin[2], pin[3]);
 }
 
 bool pincode_config_read(char *w1, char *w2) {
-	
+
 	while ( true ) {
-		
 		if ( strcmpi(w1, "pincode_enabled") == 0 ) {
 			pincode->enabled = atoi(w2);
 #if PACKETVER < 20110309
@@ -168,18 +167,18 @@ bool pincode_config_read(char *w1, char *w2) {
 			}
 		} else if ( strcmpi(w1, "pincode_charselect") == 0 ) {
 			pincode->charselect = atoi(w2);
-		} else
+		} else {
 			return false;
-		
+		}
 		break;
 	}
-	
+
 	return true;
 }
 
 void pincode_defaults(void) {
 	pincode = &pincode_s;
-	
+
 	pincode->enabled = PINCODE_OK;
 	pincode->changetime = 0;
 	pincode->maxtry = 3;

@@ -134,11 +134,11 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 			clif->buyvending(sd, idx, amount, 2); // you can not buy, because overweight
 			return;
 		}
-		
+
 		//Check to see if cart/vend info is in sync.
 		if( vend[j].amount > vsd->status.cart[idx].amount )
 			vend[j].amount = vsd->status.cart[idx].amount;
-		
+
 		// if they try to add packets (example: get twice or more 2 apples if marchand has only 3 apples).
 		// here, we check cumulative amounts
 		if( vend[j].amount < amount ) {
@@ -146,12 +146,12 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 			clif->buyvending(sd, idx, vsd->vending[j].amount, 4); // not enough quantity
 			return;
 		}
-		
+
 		vend[j].amount -= amount;
 
 		switch( pc->checkadditem(sd, vsd->status.cart[idx].nameid, amount) ) {
 			case ADDITEM_EXIST:
-				break;	//We'd add this item to the existing one (in buyers inventory)
+				break; //We'd add this item to the existing one (in buyers inventory)
 			case ADDITEM_NEW:
 				new_++;
 				if (new_ > blank)
@@ -190,7 +190,7 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 	for( i = 0, cursor = 0; i < vsd->vend_num; i++ ) {
 		if( vsd->vending[i].amount == 0 )
 			continue;
-		
+
 		if( cursor != i ) { // speedup
 			vsd->vending[cursor].index = vsd->vending[i].index;
 			vsd->vending[cursor].amount = vsd->vending[i].amount;
@@ -245,7 +245,7 @@ void vending_openvending(struct map_session_data* sd, const char* message, const
 		clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0);
 		return;
 	}
-    
+
 	// filter out invalid items
 	i = 0;
 	for( j = 0; j < count; j++ ) {
@@ -256,13 +256,13 @@ void vending_openvending(struct map_session_data* sd, const char* message, const
 		index -= 2; // offset adjustment (client says that the first cart position is 2)
 
 		if( index < 0 || index >= MAX_CART // invalid position
-		||  pc->cartitem_amount(sd, index, amount) < 0 // invalid item or insufficient quantity
+		 || pc->cartitem_amount(sd, index, amount) < 0 // invalid item or insufficient quantity
 		//NOTE: official server does not do any of the following checks!
-		||  !sd->status.cart[index].identify // unidentified item
-		||  sd->status.cart[index].attribute == 1 // broken item
-		||  sd->status.cart[index].expire_time // It should not be in the cart but just in case
-		||  (sd->status.cart[index].bound && !pc_can_give_bound_items(sd)) // can't trade bound items w/o permission
- 		||  !itemdb_cantrade(&sd->status.cart[index], pc_get_group_level(sd), pc_get_group_level(sd)) ) // untradeable item
+		 || !sd->status.cart[index].identify // unidentified item
+		 || sd->status.cart[index].attribute == 1 // broken item
+		 || sd->status.cart[index].expire_time // It should not be in the cart but just in case
+		 || (sd->status.cart[index].bound && !pc_can_give_bound_items(sd)) // can't trade bound items w/o permission
+		 || !itemdb_cantrade(&sd->status.cart[index], pc_get_group_level(sd), pc_get_group_level(sd)) ) // untradeable item
 			continue;
 
 		sd->vending[i].index = index;
@@ -287,7 +287,7 @@ void vending_openvending(struct map_session_data* sd, const char* message, const
 
 	clif->openvending(sd,sd->bl.id,sd->vending);
 	clif->showvendingboard(&sd->bl,message,0);
-	
+
 	idb_put(vending->db, sd->status.char_id, sd);
 }
 
@@ -372,10 +372,10 @@ void init(bool minimal) {
 
 void vending_defaults(void) {
 	vending = &vending_s;
-	
+
 	vending->init = init;
 	vending->final = final;
-	
+
 	vending->close = vending_closevending;
 	vending->open = vending_openvending;
 	vending->list = vending_vendinglistreq;

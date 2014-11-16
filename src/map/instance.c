@@ -273,7 +273,7 @@ int instance_add_map(const char *name, int instance_id, bool usebasename, const 
  * type : result (0 = map id | 1 = instance id)
  *--------------------------------------*/
 int instance_map2imap(int16 m, int instance_id) {
- 	int i;
+	int i;
 
 	if( !instance->valid(instance_id) ) {
 		return -1;
@@ -282,12 +282,12 @@ int instance_map2imap(int16 m, int instance_id) {
 	for( i = 0; i < instance->list[instance_id].num_map; i++ ) {
 		if( instance->list[instance_id].map[i] && map->list[instance->list[instance_id].map[i]].instance_src_map == m )
 			return instance->list[instance_id].map[i];
- 	}
- 	return -1;
+	}
+	return -1;
 }
 
 int instance_mapname2imap(const char *map_name, int instance_id) {
- 	int i;
+	int i;
 	
 	if( !instance->valid(instance_id) ) {
 		return -1;
@@ -296,8 +296,8 @@ int instance_mapname2imap(const char *map_name, int instance_id) {
 	for( i = 0; i < instance->list[instance_id].num_map; i++ ) {
 		if( instance->list[instance_id].map[i] && !strcmpi(map->list[map->list[instance->list[instance_id].map[i]].instance_src_map].name,map_name) )
 			return instance->list[instance_id].map[i];
- 	}
- 	return -1;
+	}
+	return -1;
 }
 
 

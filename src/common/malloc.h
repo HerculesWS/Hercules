@@ -68,19 +68,19 @@
 void malloc_defaults(void);
 
 struct malloc_interface {
-	void	(*init) (void);
-	void	(*final) (void);
+	void (*init) (void);
+	void (*final) (void);
 	/* */
-	void* (*malloc	)(size_t size, const char *file, int line, const char *func);
-	void* (*calloc	)(size_t num, size_t size, const char *file, int line, const char *func);
-	void* (*realloc	)(void *p, size_t size, const char *file, int line, const char *func);
+	void* (*malloc)(size_t size, const char *file, int line, const char *func);
+	void* (*calloc)(size_t num, size_t size, const char *file, int line, const char *func);
+	void* (*realloc)(void *p, size_t size, const char *file, int line, const char *func);
 	void* (*reallocz)(void *p, size_t size, const char *file, int line, const char *func);
-	char* (*astrdup	)(const char *p, const char *file, int line, const char *func);
-	void  (*free	)(void *p, const char *file, int line, const char *func);
+	char* (*astrdup)(const char *p, const char *file, int line, const char *func);
+	void  (*free)(void *p, const char *file, int line, const char *func);
 	/* */
-	void	(*memory_check)(void);
-	bool	(*verify_ptr)(void* ptr);
-	size_t	(*usage) (void);
+	void (*memory_check)(void);
+	bool (*verify_ptr)(void* ptr);
+	size_t (*usage) (void);
 	/* */
 	void (*post_shutdown) (void);
 };

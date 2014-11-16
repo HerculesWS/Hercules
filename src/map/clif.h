@@ -86,14 +86,14 @@ typedef enum send_target {
 	DUEL,
 	DUEL_WOS,
 	SELF,
-	
+
 	BG,                 // BattleGround System
 	BG_WOS,
 	BG_SAMEMAP,
 	BG_SAMEMAP_WOS,
 	BG_AREA,
 	BG_AREA_WOS,
-	
+
 	BG_QUEUE,
 } send_target;
 
@@ -352,16 +352,16 @@ enum clif_messages {
  * Used to answer CZ_PC_BUY_CASH_POINT_ITEM (clif_parse_cashshop_buy)
  **/
 enum cashshop_error {
-	ERROR_TYPE_NONE = 0,			// The deal has successfully completed. (ERROR_TYPE_NONE)
-	ERROR_TYPE_NPC,					// The Purchase has failed because the NPC does not exist. (ERROR_TYPE_NPC)
-	ERROR_TYPE_SYSTEM,				// The Purchase has failed because the Kafra Shop System is not working correctly. (ERROR_TYPE_SYSTEM)
-	ERROR_TYPE_INVENTORY_WEIGHT,	// You are over your Weight Limit. (ERROR_TYPE_INVENTORY_WEIGHT)
-	ERROR_TYPE_EXCHANGE,			// You cannot purchase items while you are in a trade. (ERROR_TYPE_EXCHANGE)
-	ERROR_TYPE_ITEM_ID,				// The Purchase has failed because the Item Information was incorrect. (ERROR_TYPE_ITEM_ID)
-	ERROR_TYPE_MONEY,				// You do not have enough Kafra Credit Points. (ERROR_TYPE_MONEY)
+	ERROR_TYPE_NONE             = 0, ///< The deal has successfully completed. (ERROR_TYPE_NONE)
+	ERROR_TYPE_NPC              = 1, ///< The Purchase has failed because the NPC does not exist. (ERROR_TYPE_NPC)
+	ERROR_TYPE_SYSTEM           = 2, ///< The Purchase has failed because the Kafra Shop System is not working correctly. (ERROR_TYPE_SYSTEM)
+	ERROR_TYPE_INVENTORY_WEIGHT = 3, ///< You are over your Weight Limit. (ERROR_TYPE_INVENTORY_WEIGHT)
+	ERROR_TYPE_EXCHANGE         = 4, ///< You cannot purchase items while you are in a trade. (ERROR_TYPE_EXCHANGE)
+	ERROR_TYPE_ITEM_ID          = 5, ///< The Purchase has failed because the Item Information was incorrect. (ERROR_TYPE_ITEM_ID)
+	ERROR_TYPE_MONEY            = 6, ///< You do not have enough Kafra Credit Points. (ERROR_TYPE_MONEY)
 	// Unofficial type names
-	ERROR_TYPE_QUANTITY,			// You can purchase up to 10 items. (ERROR_TYPE_QUANTITY)
-	ERROR_TYPE_NOT_ALL,				// Some items could not be purchased. (ERROR_TYPE_NOT_ALL)
+	ERROR_TYPE_QUANTITY         = 7, ///< You can purchase up to 10 items. (ERROR_TYPE_QUANTITY)
+	ERROR_TYPE_NOT_ALL          = 8, ///< Some items could not be purchased. (ERROR_TYPE_NOT_ALL)
 };
 
 /**
@@ -375,40 +375,40 @@ enum clif_colors {
 };
 
 enum hChSysChOpt {
-	hChSys_OPT_BASE				= 0x0,
-	hChSys_OPT_ANNOUNCE_JOIN	= 0x1,
-	hChSys_OPT_MSG_DELAY		= 0x2,
+	hChSys_OPT_BASE          = 0x0,
+	hChSys_OPT_ANNOUNCE_JOIN = 0x1,
+	hChSys_OPT_MSG_DELAY     = 0x2,
 };
 
 enum hChSysChType {
-	hChSys_PUBLIC	= 0,
-	hChSys_PRIVATE	= 1,
-	hChSys_MAP		= 2,
-	hChSys_ALLY		= 3,
-	hChSys_IRC		= 4,
+	hChSys_PUBLIC  = 0,
+	hChSys_PRIVATE = 1,
+	hChSys_MAP     = 2,
+	hChSys_ALLY    = 3,
+	hChSys_IRC     = 4,
 };
 
 enum CASH_SHOP_TABS {
-	CASHSHOP_TAB_NEW		= 0,
-	CASHSHOP_TAB_POPULAR	= 1,
-	CASHSHOP_TAB_LIMITED	= 2,
-	CASHSHOP_TAB_RENTAL		= 3,
+	CASHSHOP_TAB_NEW        = 0,
+	CASHSHOP_TAB_POPULAR    = 1,
+	CASHSHOP_TAB_LIMITED    = 2,
+	CASHSHOP_TAB_RENTAL     = 3,
 	CASHSHOP_TAB_PERPETUITY = 4,
-	CASHSHOP_TAB_BUFF		= 5,
-	CASHSHOP_TAB_RECOVERY	= 6,
-	CASHSHOP_TAB_ETC		= 7,
+	CASHSHOP_TAB_BUFF       = 5,
+	CASHSHOP_TAB_RECOVERY   = 6,
+	CASHSHOP_TAB_ETC        = 7,
 	CASHSHOP_TAB_MAX,
 };
 
 enum CASH_SHOP_BUY_RESULT {
-	CSBR_SUCCESS					= 0x0,
-	CSBR_SHORTTAGE_CASH				= 0x2,
-	CSBR_UNKONWN_ITEM				= 0x3,
-	CSBR_INVENTORY_WEIGHT			= 0x4,
-	CSBR_INVENTORY_ITEMCNT			= 0x5,
-	CSBR_RUNE_OVERCOUNT				= 0x9,
-	CSBR_EACHITEM_OVERCOUNT			= 0xa,
-	CSBR_UNKNOWN					= 0xb,
+	CSBR_SUCCESS            = 0x0,
+	CSBR_SHORTTAGE_CASH     = 0x2,
+	CSBR_UNKONWN_ITEM       = 0x3,
+	CSBR_INVENTORY_WEIGHT   = 0x4,
+	CSBR_INVENTORY_ITEMCNT  = 0x5,
+	CSBR_RUNE_OVERCOUNT     = 0x9,
+	CSBR_EACHITEM_OVERCOUNT = 0xa,
+	CSBR_UNKNOWN            = 0xb,
 };
 
 enum BATTLEGROUNDS_QUEUE_ACK {
@@ -587,7 +587,7 @@ struct clif_interface {
 	struct {
 		int *nameid[MAX_ROULETTE_LEVEL];//nameid
 		int *qty[MAX_ROULETTE_LEVEL];//qty of nameid
-		int items[MAX_ROULETTE_LEVEL];//number of items in the list for each 
+		int items[MAX_ROULETTE_LEVEL];//number of items in the list for each
 	} rd;
 	/* */
 	unsigned int cryptKey[3];

@@ -63,14 +63,16 @@ static struct view_data npc_viewdb2[MAX_NPC_CLASS2_END-MAX_NPC_CLASS2_START];
 unsigned int npc_market_qty[MAX_INVENTORY];
 
 static struct script_event_s
-{	//Holds pointers to the commonly executed scripts for speedup. [Skotlex]
+{
+	//Holds pointers to the commonly executed scripts for speedup. [Skotlex]
 	struct event_data *event[UCHAR_MAX];
 	const char *event_name[UCHAR_MAX];
 	uint8 event_count;
 } script_event[NPCE_MAX];
 
 struct view_data* npc_get_viewdata(int class_)
-{	//Returns the viewdata for normal npc classes.
+{
+	//Returns the viewdata for normal npc classes.
 	if( class_ == INVISIBLE_CLASS )
 		return &npc_viewdb[0];
 	if (npcdb_checkid(class_) || class_ == WARP_CLASS){
@@ -103,12 +105,12 @@ int npc_get_new_npc_id(void) {
 }
 
 int npc_isnear_sub(struct block_list* bl, va_list args) {
-    struct npc_data *nd = (struct npc_data*)bl;
-    
-    if( nd->option & (OPTION_HIDE|OPTION_INVISIBLE) )
-        return 0;
+	struct npc_data *nd = (struct npc_data*)bl;
 
-    return 1;
+	if( nd->option & (OPTION_HIDE|OPTION_INVISIBLE) )
+		return 0;
+
+	return 1;
 }
 
 bool npc_isnear(struct block_list * bl) {
@@ -885,9 +887,10 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 
 	nullpo_retr(1, sd);
 
-	// Why not enqueue it? [Inkfish]
-	//if(sd->npc_id)
-	//	return 1;
+#if 0 // Why not enqueue it? [Inkfish]
+	if(sd->npc_id)
+		return 1;
+#endif // 0
 
 	for(i=0;i<map->list[m].npc_num;i++) {
 		if (map->list[m].npc[i]->option&OPTION_INVISIBLE) {
@@ -1211,7 +1214,7 @@ int npc_scriptcont(struct map_session_data* sd, int id, bool closing) {
 		TBL_NPC* nd = BL_CAST(BL_NPC, target);
 		ShowDebug("npc_scriptcont: %s (sd->npc_id=%d) is not %s (id=%d).\n",
 			nd_sd?(char*)nd_sd->name:"'Unknown NPC'", (int)sd->npc_id,
-		  	nd?(char*)nd->name:"'Unknown NPC'", (int)id);
+			nd?(char*)nd->name:"'Unknown NPC'", (int)id);
 		return 1;
 	}
 	
@@ -1270,7 +1273,7 @@ int npc_buysellsel(struct map_session_data* sd, int id, int type) {
 			sd->npc_id = 0;
 		return 1;
 	}
-    
+
 	if (nd->option & OPTION_INVISIBLE) // can't buy if npc is not visible (hack?)
 		return 1;
 	
@@ -1807,11 +1810,11 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 		return npc->buylist_sub(sd,n,item_list,nd->master_nd);
 	
 	if( z > (double)sd->status.zeny )
-		return 1;	// Not enough Zeny
+		return 1; // Not enough Zeny
 	if( w + sd->weight > sd->max_weight )
-		return 2;	// Too heavy
+		return 2; // Too heavy
 	if( pc->inventoryblank(sd) < new_ )
-		return 3;	// Not enough space to store items
+		return 3; // Not enough space to store items
 	
 	pc->payzeny(sd,(int)z,LOG_TYPE_NPC, NULL);
 	
@@ -1920,13 +1923,13 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 	}
 
 	if( z > (double)sd->status.zeny ) /* TODO find official response for this */
-		return 1;	// Not enough Zeny
+		return 1; // Not enough Zeny
 
 	if( w + sd->weight > sd->max_weight ) /* TODO find official response for this */
-		return 1;	// Too heavy
+		return 1; // Too heavy
 
 	if( pc->inventoryblank(sd) < new_ ) /* TODO find official response for this */
-		return 1;	// Not enough space to store items
+		return 1; // Not enough space to store items
 
 	pc->payzeny(sd,(int)z,LOG_TYPE_NPC, NULL);
 	
@@ -2449,7 +2452,7 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 // Support for using Constants in place of NPC View IDs.
 int npc_parseview(const char* w4, const char* start, const char* buffer, const char* filepath) {
 	int val = -1, i = 0;
-	char viewid[1024];	// Max size of name from const.txt, see script->read_constdb.
+	char viewid[1024]; // Max size of name from const.txt, see script->read_constdb.
 
 	// Extract view ID / constant
 	while (w4[i] != '\0') {
@@ -2489,7 +2492,7 @@ bool npc_viewisid(const char * viewid)
 		}
 	}
 
-    return true;
+	return true;
 }
 
 //Add then display an npc warp on map
@@ -2839,7 +2842,7 @@ const char* npc_skip_script(const char* start, const char* buffer, const char* f
 /// <map name>,<x>,<y>,<facing>%TAB%script%TAB%<NPC Name>%TAB%<sprite id>,{<code>}
 /// <map name>,<x>,<y>,<facing>%TAB%script%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>,{<code>}
 const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int options, int *retval) {
-	int x, y, dir = 0, m, xs = 0, ys = 0;	// [Valaris] thanks to fov
+	int x, y, dir = 0, m, xs = 0, ys = 0; // [Valaris] thanks to fov
 	char mapname[32];
 	struct script_code *scriptroot;
 	int i;
@@ -3605,7 +3608,7 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 }
 /*==========================================
  * Set or disable mapflag on map
- * eg : bat_c01	mapflag	battleground	2
+ * eg : bat_c01<TAB>mapflag<TAB>battleground<TAB>2
  * also chking if mapflag conflict with another
  *------------------------------------------*/
 const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int *retval) {
@@ -3629,7 +3632,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 	}
 
 	if (w4 && !strcmpi(w4, "off"))
-		state = 0;	//Disable mapflag rather than enable it. [Skotlex]
+		state = 0; //Disable mapflag rather than enable it. [Skotlex]
 
 	if (!strcmpi(w3, "nosave")) {
 		char savemap[32];

@@ -21,7 +21,7 @@
 #include "../common/sql.h"
 #include "../common/strlib.h" // StringBuf
 
-#define STORAGE_MEMINC	16
+#define STORAGE_MEMINC 16
 
 struct inter_storage_interface inter_storage_s;
 
@@ -47,7 +47,7 @@ int inter_storage_fromsql(int account_id, struct storage_data* p)
 	// storage {`account_id`/`id`/`nameid`/`amount`/`equip`/`identify`/`refine`/`attribute`/`card0`/`card1`/`card2`/`card3`}
 	StrBuf->Init(&buf);
 	StrBuf->AppendStr(&buf, "SELECT `id`,`nameid`,`amount`,`equip`,`identify`,`refine`,`attribute`,`expire_time`,`bound`,`unique_id`");
- 	for( j = 0; j < MAX_SLOTS; ++j )
+	for( j = 0; j < MAX_SLOTS; ++j )
 		StrBuf->Printf(&buf, ",`card%d`", j);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `account_id`='%d' ORDER BY `nameid`", storage_db, account_id);
 
@@ -69,7 +69,7 @@ int inter_storage_fromsql(int account_id, struct storage_data* p)
 		SQL->GetData(inter->sql_handle, 7, &data, NULL); item->expire_time = (unsigned int)atoi(data);
 		SQL->GetData(inter->sql_handle, 8, &data, NULL); item->bound = atoi(data);
 		SQL->GetData(inter->sql_handle, 9, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
- 		for( j = 0; j < MAX_SLOTS; ++j )
+		for( j = 0; j < MAX_SLOTS; ++j )
 		{
 			SQL->GetData(inter->sql_handle, 10+j, &data, NULL); item->card[j] = atoi(data);
 		}
@@ -105,7 +105,7 @@ int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storage* p)
 	// storage {`guild_id`/`id`/`nameid`/`amount`/`equip`/`identify`/`refine`/`attribute`/`card0`/`card1`/`card2`/`card3`}
 	StrBuf->Init(&buf);
 	StrBuf->AppendStr(&buf, "SELECT `id`,`nameid`,`amount`,`equip`,`identify`,`refine`,`attribute`,`bound`,`unique_id`");
- 	for( j = 0; j < MAX_SLOTS; ++j )
+	for( j = 0; j < MAX_SLOTS; ++j )
 		StrBuf->Printf(&buf, ",`card%d`", j);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `guild_id`='%d' ORDER BY `nameid`", guild_storage_db, guild_id);
 
@@ -125,7 +125,7 @@ int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storage* p)
 		SQL->GetData(inter->sql_handle, 6, &data, NULL); item->attribute = atoi(data);
 		SQL->GetData(inter->sql_handle, 7, &data, NULL); item->bound = atoi(data);
 		SQL->GetData(inter->sql_handle, 8, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
- 		item->expire_time = 0;
+		item->expire_time = 0;
 
 		for( j = 0; j < MAX_SLOTS; ++j ) {
 			SQL->GetData(inter->sql_handle, 9+j, &data, NULL); item->card[j] = atoi(data);
@@ -180,7 +180,7 @@ int mapif_load_guild_storage(int fd, int account_id, int guild_id, char flag)
 		WFIFOL(fd,8) = guild_id;
 		WFIFOB(fd,12) = flag; //1 open storage, 0 don't open
 		inter_storage->guild_storage_fromsql(guild_id, (struct guild_storage*)WFIFOP(fd,13));
- 		WFIFOSET(fd, WFIFOW(fd,2));
+		WFIFOSET(fd, WFIFOW(fd,2));
 		return 0;
 	}
 	// guild does not exist
@@ -305,7 +305,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 		i++;
 	}
 	SQL->FreeResult(inter->sql_handle);
-	
+
 	if(!i) { //No items found - No need to continue
 		StrBuf->Destroy(&buf);
 		SQL->StmtFree(stmt);

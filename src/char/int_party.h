@@ -29,21 +29,21 @@ void inter_party_defaults(void);
  * inter_party interface
  **/
 struct inter_party_interface {
-    struct party_data *pt;
-    DBMap* db;  // int party_id -> struct party_data*
-    int (*check_lv) (struct party_data *p);
-    void (*calc_state) (struct party_data *p);
-    int (*tosql) (struct party *p, int flag, int index);
-    struct party_data* (*fromsql) (int party_id);
-    int (*sql_init) (void);
-    void (*sql_final) (void);
-    struct party_data* (*search_partyname) (const char *str);
-    int (*check_exp_share) (struct party_data *p);
-    int (*check_empty) (struct party_data *p);
-    int (*parse_frommap) (int fd);
-    int (*leave) (int party_id,int account_id, int char_id);
-    int (*CharOnline) (int char_id, int party_id);
-    int (*CharOffline) (int char_id, int party_id);
+	struct party_data *pt;
+	DBMap* db;  // int party_id -> struct party_data*
+	int (*check_lv) (struct party_data *p);
+	void (*calc_state) (struct party_data *p);
+	int (*tosql) (struct party *p, int flag, int index);
+	struct party_data* (*fromsql) (int party_id);
+	int (*sql_init) (void);
+	void (*sql_final) (void);
+	struct party_data* (*search_partyname) (const char *str);
+	int (*check_exp_share) (struct party_data *p);
+	int (*check_empty) (struct party_data *p);
+	int (*parse_frommap) (int fd);
+	int (*leave) (int party_id,int account_id, int char_id);
+	int (*CharOnline) (int char_id, int party_id);
+	int (*CharOffline) (int char_id, int party_id);
 };
 
 struct inter_party_interface *inter_party;

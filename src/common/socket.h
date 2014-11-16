@@ -97,7 +97,7 @@ struct socket_data {
 	ParseFunc func_parse;
 
 	void* session_data; // stores application-specific data related to the session
-	
+
 	struct HPluginData **hdata;
 	unsigned int hdatac;
 };

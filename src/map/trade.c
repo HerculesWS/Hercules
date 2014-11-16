@@ -43,8 +43,8 @@ void trade_traderequest(struct map_session_data *sd, struct map_session_data *ta
 		return;
 	}
 
-	if (target_sd->npc_id)
-	{	//Trade fails if you are using an NPC.
+	if (target_sd->npc_id) {
+		//Trade fails if you are using an NPC.
 		clif->tradestart(sd, 2);
 		return;
 	}
@@ -145,9 +145,10 @@ void trade_tradeack(struct map_session_data *sd, int type) {
 	}
 
 	//Check if you can start trade.
-	if (sd->npc_id || sd->state.vending || sd->state.buyingstore || sd->state.storage_flag ||
-		tsd->npc_id || tsd->state.vending || tsd->state.buyingstore || tsd->state.storage_flag)
-	{	//Fail
+	if (sd->npc_id || sd->state.vending || sd->state.buyingstore || sd->state.storage_flag
+	 || tsd->npc_id || tsd->state.vending || tsd->state.buyingstore || tsd->state.storage_flag
+	) {
+		//Fail
 		clif->tradestart(sd, 2);
 		clif->tradestart(tsd, 2);
 		sd->state.deal_locked = 0;
@@ -335,8 +336,8 @@ void trade_tradeadditem(struct map_session_data *sd, short index, short amount) 
 		return;
 	}
 
-	if( amount == 0 )
-	{	//Why do this.. ~.~ just send an ack, the item won't display on the trade window.
+	if (amount == 0) {
+		//Why do this.. ~.~ just send an ack, the item won't display on the trade window.
 		clif->tradeitemok(sd, index, TIO_SUCCESS);
 		return;
 	}
@@ -375,7 +376,7 @@ void trade_tradeadditem(struct map_session_data *sd, short index, short amount) 
 		clif->tradeitemok(sd, index+2, TIO_INDROCKS);
 		return;
 	}
-	
+
 	//Locate a trade position
 	ARR_FIND( 0, 10, trade_i, sd->deal.item[trade_i].index == index || sd->deal.item[trade_i].amount == 0 );
 	if( trade_i == 10 ) //No space left
@@ -385,23 +386,22 @@ void trade_tradeadditem(struct map_session_data *sd, short index, short amount) 
 	}
 
 	trade_weight = sd->inventory_data[index]->weight * amount;
-	if( target_sd->weight + sd->deal.weight + trade_weight > target_sd->max_weight )
-	{	//fail to add item -- the player was over weighted.
+	if (target_sd->weight + sd->deal.weight + trade_weight > target_sd->max_weight) {
+		//fail to add item -- the player was over weighted.
 		clif->tradeitemok(sd, index+2, TIO_OVERWEIGHT);
 		return;
 	}
 
-	if( sd->deal.item[trade_i].index == index )
-	{	//The same item as before is being readjusted.
-		if( sd->deal.item[trade_i].amount + amount > sd->status.inventory[index].amount )
-		{	//packet deal exploit check
+	if (sd->deal.item[trade_i].index == index) {
+		//The same item as before is being readjusted.
+		if (sd->deal.item[trade_i].amount + amount > sd->status.inventory[index].amount) {
+			//packet deal exploit check
 			amount = sd->status.inventory[index].amount - sd->deal.item[trade_i].amount;
 			trade_weight = sd->inventory_data[index]->weight * amount;
 		}
 		sd->deal.item[trade_i].amount += amount;
-	}
-	else
-	{	//New deal item
+	} else {
+		//New deal item
 		sd->deal.item[trade_i].index = index;
 		sd->deal.item[trade_i].amount = amount;
 	}
@@ -427,8 +427,8 @@ void trade_tradeaddzeny(struct map_session_data* sd, int amount)
 		return;
 	}
 
-	if( amount < 0 || amount > sd->status.zeny || amount > MAX_ZENY - target_sd->status.zeny )
-	{	// invalid values, no appropriate packet for it => abort
+	if (amount < 0 || amount > sd->status.zeny || amount > MAX_ZENY - target_sd->status.zeny) {
+		// invalid values, no appropriate packet for it => abort
 		trade->cancel(sd);
 		return;
 	}
@@ -606,8 +606,7 @@ void trade_tradecommit(struct map_session_data *sd) {
 	clif->tradecompleted(tsd, 0);
 
 	// save both player to avoid crash: they always have no advantage/disadvantage between the 2 players
-	if (map->save_settings&1)
-  	{
+	if (map->save_settings&1) {
 		chrif->save(sd,0);
 		chrif->save(tsd,0);
 	}
@@ -616,7 +615,7 @@ void trade_tradecommit(struct map_session_data *sd) {
 void trade_defaults(void)
 {
 	trade = &trade_s;
-	
+
 	trade->request = trade_traderequest;
 	trade->ack = trade_tradeack;
 	trade->check_impossible = impossible_trade_check;

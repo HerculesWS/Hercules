@@ -12,9 +12,9 @@ void inter_elemental_defaults(void);
  * inter_elemental_interface interface
  **/
 struct inter_elemental_interface {
-    void (*sql_init) (void);
-    void (*sql_final) (void);
-    int (*parse_frommap) (int fd);
+	void (*sql_init) (void);
+	void (*sql_final) (void);
+	int (*parse_frommap) (int fd);
 };
 
 struct inter_elemental_interface *inter_elemental;

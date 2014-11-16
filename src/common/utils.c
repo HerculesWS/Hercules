@@ -92,7 +92,8 @@ void ShowDump(const void *buffer, size_t length) {
 #ifdef WIN32
 
 static char* checkpath(char *path, const char *srcpath)
-{	// just make sure the char*path is not const
+{
+	// just make sure the char*path is not const
 	char *p=path;
 	if(NULL!=path && NULL!=srcpath)
 	while(*srcpath) {
@@ -112,16 +113,15 @@ void findfile(const char *p, const char *pat, void (func)(const char*))
 	WIN32_FIND_DATAA FindFileData;
 	HANDLE hFind;
 	char tmppath[MAX_PATH+1];
-	
 	const char *path    = (p  ==NULL)? "." : p;
 	const char *pattern = (pat==NULL)? "" : pat;
-	
+
 	checkpath(tmppath,path);
 	if( PATHSEP != tmppath[strlen(tmppath)-1])
 		strcat(tmppath, "\\*");
 	else
 		strcat(tmppath, "*");
-	
+
 	hFind = FindFirstFileA(tmppath, &FindFileData);
 	if (hFind != INVALID_HANDLE_VALUE)
 	{
@@ -153,7 +153,8 @@ void findfile(const char *p, const char *pat, void (func)(const char*))
 #define MAX_DIR_PATH 2048
 
 static char* checkpath(char *path, const char*srcpath)
-{	// just make sure the char*path is not const
+{
+	// just make sure the char*path is not const
 	char *p=path;
 	if(NULL!=path && NULL!=srcpath)
 	while(*srcpath) {
@@ -170,9 +171,9 @@ static char* checkpath(char *path, const char*srcpath)
 
 void findfile(const char *p, const char *pat, void (func)(const char*))
 {
-	DIR* dir;					// pointer to the scanned directory.
-	struct dirent* entry;		// pointer to one directory entry.
-	struct stat dir_stat;       // used by stat().
+	DIR* dir;             ///< pointer to the scanned directory.
+	struct dirent* entry; ///< pointer to one directory entry.
+	struct stat dir_stat; ///< used by stat().
 	char tmppath[MAX_DIR_PATH+1];
 	char path[MAX_DIR_PATH+1]= ".";
 	const char *pattern = (pat==NULL)? "" : pat;
@@ -289,17 +290,17 @@ int32 MakeLongLE(int32 val)
 // Reads an uint16 in little-endian from the buffer
 uint16 GetUShort(const unsigned char* buf)
 {
-	return	 ( ((uint16)(buf[0]))         )
-			|( ((uint16)(buf[1])) << 0x08 );
+	return ( ((uint16)(buf[0]))         )
+	     | ( ((uint16)(buf[1])) << 0x08 );
 }
 
 // Reads an uint32 in little-endian from the buffer
 uint32 GetULong(const unsigned char* buf)
 {
-	return	 ( ((uint32)(buf[0]))         )
-			|( ((uint32)(buf[1])) << 0x08 )
-			|( ((uint32)(buf[2])) << 0x10 )
-			|( ((uint32)(buf[3])) << 0x18 );
+	return ( ((uint32)(buf[0]))         )
+	     | ( ((uint32)(buf[1])) << 0x08 )
+	     | ( ((uint32)(buf[2])) << 0x10 )
+	     | ( ((uint32)(buf[3])) << 0x18 );
 }
 
 // Reads an int32 in little-endian from the buffer
@@ -356,15 +357,15 @@ bool HCache_check(const char *file) {
 	time_t rtime;
 
 	if( !(first = fopen(file,"rb")) )
-	   return false;
+		return false;
 
 	if( file[0] == '.' && file[1] == '/' )
-	   file += 2;
+		file += 2;
 	else if( file[0] == '.' )
-	   file++;
-	   
+		file++;
+
 	snprintf(s_path, 255, "./cache/%s", file);
-	   
+
 	if( !(second = fopen(s_path,"rb")) ) {
 		fclose(first);
 		return false;
@@ -375,34 +376,34 @@ bool HCache_check(const char *file) {
 		fclose(second);
 		return false;
 	}
-		
+
 	fstat(fileno(first), &bufa);
 	fstat(fileno(second), &bufb);
-	
+
 	fclose(first);
 	fclose(second);
-	   
+
 	if( bufa.st_mtime > bufb.st_mtime )
 		return false;
-	
+
 	return true;
 }
 
 FILE *HCache_open(const char *file, const char *opt) {
 	FILE *first;
 	char s_path[255];
-		
+
 	if( file[0] == '.' && file[1] == '/' )
 		file += 2;
 	else if( file[0] == '.' )
 		file++;
-	
+
 	snprintf(s_path, 255, "./cache/%s", file);
-	
+
 	if( !(first = fopen(s_path,opt)) ) {
 		return NULL;
 	}
-	
+
 	if( opt[0] != 'r' ) {
 		char dT[1];/* 1-byte key to ensure our method is the latest, we can modify to ensure the method matches */
 		dT[0] = HCACHE_KEY;
@@ -410,19 +411,19 @@ FILE *HCache_open(const char *file, const char *opt) {
 		hwrite(&HCache->recompile_time,sizeof(HCache->recompile_time),1,first);
 	}
 	fseek(first, 20, SEEK_SET);/* skip first 20, might wanna store something else later */
-	
+
 	return first;
 }
 void HCache_init(void) {
 	FILE *server;
-	
+
 	if( (server = fopen(SERVER_NAME,"rb")) ) {
 		struct stat buf;
-		
+
 		fstat(fileno(server), &buf);
 		HCache->recompile_time = buf.st_mtime;
 		fclose(server);
-		
+
 		HCache->enabled = true;
 	} else
 		ShowWarning("Unable to open '%s', caching capabilities have been disabled!\n",SERVER_NAME);
@@ -437,11 +438,10 @@ size_t hwrite(const void * ptr, size_t size, size_t count, FILE * stream) {
 }
 
 void HCache_defaults(void) {
-	
 	HCache = &HCache_s;
 
 	HCache->init = HCache_init;
-	
+
 	HCache->check = HCache_check;
 	HCache->open = HCache_open;
 	HCache->recompile_time = 0;

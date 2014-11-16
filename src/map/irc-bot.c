@@ -122,7 +122,7 @@ int irc_parse(int fd) {
 		ircbot->fails = 0;
 		ircbot->ip = host2ip(hChSys.irc_server);
 		timer->add(timer->gettick() + 120000, ircbot->connect_timer, 0, 0);
-      	return 0;
+		return 0;
 	}
 	
 	if( !RFIFOREST(fd) )

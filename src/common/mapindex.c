@@ -24,7 +24,7 @@ struct mapindex_interface mapindex_s;
 const char* mapindex_getmapname(const char* string, char* output) {
 	static char buf[MAP_NAME_LENGTH];
 	char* dest = (output != NULL) ? output : buf;
-	
+
 	size_t len = strnlen(string, MAP_NAME_LENGTH_EXT);
 	if (len == MAP_NAME_LENGTH_EXT) {
 		ShowWarning("(mapindex_normalize_name) Map name '%*s' is too long!\n", 2*MAP_NAME_LENGTH_EXT, string);
@@ -32,11 +32,11 @@ const char* mapindex_getmapname(const char* string, char* output) {
 	}
 	if (len >= 4 && stricmp(&string[len-4], ".gat") == 0)
 		len -= 4; // strip .gat extension
-	
+
 	len = min(len, MAP_NAME_LENGTH-1);
 	safestrncpy(dest, string, len+1);
 	memset(&dest[len], '\0', MAP_NAME_LENGTH-len);
-	
+
 	return dest;
 }
 
@@ -65,7 +65,7 @@ const char* mapindex_getmapname_ext(const char* string, char* output) {
 	}
 
 	memset(&dest[len], '\0', MAP_NAME_LENGTH_EXT-len);
-	
+
 	return dest;
 }
 
@@ -105,7 +105,7 @@ int mapindex_addmap(int index, const char* name) {
 
 	safestrncpy(mapindex->list[index].name, map_name, MAP_NAME_LENGTH);
 	strdb_iput(mapindex->db, map_name, index);
-	
+
 	if (mapindex->num <= index)
 		mapindex->num = index+1;
 
@@ -115,12 +115,12 @@ int mapindex_addmap(int index, const char* name) {
 unsigned short mapindex_name2id(const char* name) {
 	int i;
 	char map_name[MAP_NAME_LENGTH];
-	
+
 	mapindex->getmapname(name, map_name);
 
 	if( (i = strdb_iget(mapindex->db, map_name)) )
 		return i;
-	
+
 	ShowDebug("mapindex_name2id: Map \"%s\" not found in index list!\n", map_name);
 	return 0;
 }
@@ -139,14 +139,14 @@ int mapindex_init(void) {
 	int last_index = -1;
 	int index, total = 0;
 	char map_name[13];
-	
+
 	if( ( fp = fopen(mapindex->config_file,"r") ) == NULL ){
 		ShowFatalError("Unable to read mapindex config file %s!\n", mapindex->config_file);
 		exit(EXIT_FAILURE); //Server can't really run without this file.
 	}
 
 	mapindex->db = strdb_alloc(DB_OPT_DUP_KEY, MAP_NAME_LENGTH);
-	
+
 	while(fgets(line, sizeof(line), fp)) {
 		if(line[0] == '/' && line[1] == '/')
 			continue;
@@ -168,7 +168,7 @@ int mapindex_init(void) {
 	if( !strdb_iget(mapindex->db, MAP_DEFAULT) ) {
 		ShowError("mapindex_init: MAP_DEFAULT '%s' not found in cache! update mapindex.h MAP_DEFAULT var!!!\n",MAP_DEFAULT);
 	}
-	
+
 	return total;
 }
 
@@ -183,14 +183,14 @@ void mapindex_final(void) {
 
 void mapindex_defaults(void) {
 	mapindex = &mapindex_s;
-	
+
 	/* TODO: place it in inter-server.conf? */
 	snprintf(mapindex->config_file, 80, "%s","db/map_index.txt");
 	/* */
 	mapindex->db = NULL;
 	mapindex->num = 0;
 	memset (&mapindex->list, 0, sizeof (mapindex->list));
-	
+
 	/* */
 	mapindex->init = mapindex_init;
 	mapindex->final = mapindex_final;

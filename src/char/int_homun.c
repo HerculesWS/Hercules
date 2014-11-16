@@ -167,8 +167,8 @@ bool mapif_homunculus_load(int homun_id, struct s_homunculus* hd)
 		return false;
 	}
 
-	if( !SQL->NumRows(inter->sql_handle) )
-	{	//No homunculus found.
+	if (!SQL->NumRows(inter->sql_handle)) {
+		//No homunculus found.
 		SQL->FreeResult(inter->sql_handle);
 		return false;
 	}
@@ -236,8 +236,8 @@ bool mapif_homunculus_load(int homun_id, struct s_homunculus* hd)
 
 bool mapif_homunculus_delete(int homun_id)
 {
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `homun_id` = '%u'", homunculus_db, homun_id)
-	||	SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `homun_id` = '%u'", skill_homunculus_db, homun_id)
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `homun_id` = '%u'", homunculus_db, homun_id)
+	 || SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `homun_id` = '%u'", skill_homunculus_db, homun_id)
 	) {
 		Sql_ShowDebug(inter->sql_handle);
 		return false;

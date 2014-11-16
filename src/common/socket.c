@@ -274,7 +274,7 @@ const char* error_msg(void)
 }
 
 /*======================================
- *	CORE : Default processing functions
+ * CORE : Default processing functions
  *--------------------------------------*/
 int null_recv(int fd) { return 0; }
 int null_send(int fd) { return 0; }
@@ -289,7 +289,7 @@ void set_defaultparse(ParseFunc defaultparse)
 
 
 /*======================================
- *	CORE : Socket options
+ * CORE : Socket options
  *--------------------------------------*/
 void set_nonblocking(int fd, unsigned long yes)
 {
@@ -302,7 +302,7 @@ void set_nonblocking(int fd, unsigned long yes)
 void setsocketopts(int fd, struct hSockOpt *opt) {
 	int yes = 1; // reuse fix
 	struct linger lopt;
-		
+
 #if !defined(WIN32)
 	// set SO_REAUSEADDR to true, unix only. on windows this option causes
 	// the previous owner of the socket to give up, which is not desirable
@@ -319,14 +319,14 @@ void setsocketopts(int fd, struct hSockOpt *opt) {
 
 	if( opt && opt->setTimeo ) {
 		struct timeval timeout;
-		
+
 		timeout.tv_sec = 5;
 		timeout.tv_usec = 0;
-		
+
 		sSetsockopt(fd,SOL_SOCKET,SO_RCVTIMEO,(char *)&timeout,sizeof(timeout));
 		sSetsockopt(fd,SOL_SOCKET,SO_SNDTIMEO,(char *)&timeout,sizeof(timeout));
 	}
-	
+
 	// force the socket into no-wait, graceful-close mode (should be the default, but better make sure)
 	//(http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winsock/winsock/closesocket_2.asp)
 	lopt.l_onoff = 0; // SO_DONTLINGER
@@ -336,7 +336,7 @@ void setsocketopts(int fd, struct hSockOpt *opt) {
 }
 
 /*======================================
- *	CORE : Socket Sub Function
+ * CORE : Socket Sub Function
  *--------------------------------------*/
 void set_eof(int fd)
 {
@@ -448,7 +448,7 @@ void flush_fifos(void)
 }
 
 /*======================================
- *	CORE : Connection functions
+ * CORE : Connection functions
  *--------------------------------------*/
 int connect_client(int listen_fd) {
 	int fd;
@@ -659,19 +659,19 @@ int realloc_writefifo(int fd, size_t addition)
 	if( !sockt->session_isValid(fd) ) // might not happen
 		return 0;
 
-	if( session[fd]->wdata_size + addition  > session[fd]->max_wdata )
-	{	// grow rule; grow in multiples of WFIFO_SIZE
+	if (session[fd]->wdata_size + addition  > session[fd]->max_wdata) {
+		// grow rule; grow in multiples of WFIFO_SIZE
 		newsize = WFIFO_SIZE;
 		while( session[fd]->wdata_size + addition > newsize ) newsize += WFIFO_SIZE;
-	}
-	else
-	if( session[fd]->max_wdata >= (size_t)2*(session[fd]->flag.server?FIFOSIZE_SERVERLINK:WFIFO_SIZE)
-		&& (session[fd]->wdata_size+addition)*4 < session[fd]->max_wdata )
-	{	// shrink rule, shrink by 2 when only a quarter of the fifo is used, don't shrink below nominal size.
+	} else if (session[fd]->max_wdata >= (size_t)2*(session[fd]->flag.server?FIFOSIZE_SERVERLINK:WFIFO_SIZE)
+	       && (session[fd]->wdata_size+addition)*4 < session[fd]->max_wdata
+	) {
+		// shrink rule, shrink by 2 when only a quarter of the fifo is used, don't shrink below nominal size.
 		newsize = session[fd]->max_wdata / 2;
-	}
-	else // no change
+	} else {
+		// no change
 		return 0;
+	}
 
 	RECREATE(session[fd]->wdata, unsigned char, newsize);
 	session[fd]->max_wdata  = newsize;
@@ -682,7 +682,7 @@ int realloc_writefifo(int fd, size_t addition)
 /// advance the RFIFO cursor (marking 'len' bytes as processed)
 int RFIFOSKIP(int fd, size_t len)
 {
-    struct socket_data *s;
+	struct socket_data *s;
 
 	if ( !sockt->session_isActive(fd) )
 		return 0;
@@ -711,8 +711,8 @@ int WFIFOSET(int fd, size_t len)
 		return 0;
 
 	// we have written len bytes to the buffer already before calling WFIFOSET
-	if(s->wdata_size+len > s->max_wdata)
-	{	// actually there was a buffer overflow already
+	if (s->wdata_size+len > s->max_wdata) {
+		// actually there was a buffer overflow already
 		uint32 ip = s->client_addr;
 		ShowFatalError("WFIFOSET: Write Buffer Overflow. Connection %d (%d.%d.%d.%d) has written %u bytes on a %u/%u bytes buffer.\n", fd, CONVIP(ip), (unsigned int)len, (unsigned int)s->wdata_size, (unsigned int)s->max_wdata);
 		ShowDebug("Likely command that caused it: 0x%x\n", (*(uint16*)(s->wdata + s->wdata_size)));
@@ -839,8 +839,8 @@ int do_sockets(int next)
 		if(session[i]->wdata_size)
 			session[i]->func_send(i);
 
-		if(session[i]->flag.eof) //func_send can't free a session, this is safe.
-		{	//Finally, even if there is no data to parse, connections signaled eof should be closed, so we call parse_func [Skotlex]
+		if (session[i]->flag.eof) { //func_send can't free a session, this is safe.
+			//Finally, even if there is no data to parse, connections signaled eof should be closed, so we call parse_func [Skotlex]
 			session[i]->func_parse(i); //This should close the session immediately.
 		}
 	}
@@ -870,7 +870,7 @@ int do_sockets(int next)
 
 		if(!session[i])
 			continue;
-		
+
 		RFIFOFLUSH(i);
 		// after parse, check client's RFIFO size to know if there is an invalid packet (too big and not parsed)
 		if (session[i]->rdata_size == session[i]->max_rdata) {
@@ -883,7 +883,7 @@ int do_sockets(int next)
 	if (sockt->last_tick != socket_data_last_tick)
 	{
 		char buf[1024];
-		
+
 		sprintf(buf, "In: %.03f kB/s (%.03f kB/s, Q: %.03f kB) | Out: %.03f kB/s (%.03f kB/s, Q: %.03f kB) | RAM: %.03f MB", socket_data_i/1024., socket_data_ci/1024., socket_data_qi/1024., socket_data_o/1024., socket_data_co/1024., socket_data_qo/1024., iMalloc->usage()/1024.);
 #ifdef _WIN32
 		SetConsoleTitle(buf);
@@ -1232,7 +1232,7 @@ void socket_final(void)
 	aFree(session[0]->rdata);
 	aFree(session[0]->wdata);
 	aFree(session[0]);
-	
+
 	aFree(session);
 }
 
@@ -1396,7 +1396,7 @@ void socket_init(void)
 #endif
 
 	CREATE(session, struct socket_data *, FD_SETSIZE);
-	
+
 	socket_config_read(SOCKET_CONF_FILENAME);
 
 	// initialize last send-receive tick
@@ -1414,7 +1414,7 @@ void socket_init(void)
 #endif
 
 	ShowInfo("Server supports up to '"CL_WHITE"%"PRId64""CL_RESET"' concurrent connections.\n", rlim_cur);
-	
+
 	/* Hercules Plugin Manager */
 	HPM->share(session,"session");
 }
@@ -1498,11 +1498,11 @@ void socket_datasync(int fd, bool send) {
 
 		WFIFOW(fd, 0) = 0x2b0a;
 		WFIFOW(fd, 2) = p_len;
-		
+
 		for( i = 0; i < alen; i++ ) {
 			WFIFOL(fd, 4 + ( i * 4 ) ) = data_list[i].length;
 		}
-		
+
 		WFIFOSET(fd, p_len);
 	} else {
 		for( i = 0; i < alen; i++ ) {
@@ -1602,7 +1602,7 @@ void send_shortlist_do_sends()
 
 void socket_defaults(void) {
 	sockt = &sockt_s;
-	
+
 	sockt->fd_max = 0;
 	/* */
 	sockt->stall_time = 60;

@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "atcommand.h"	//msg_txt()
+#include "atcommand.h" //msg_txt()
 #include "battle.h"
 #include "clif.h"
 #include "instance.h"
@@ -41,7 +41,7 @@ struct party_interface party_s;
  * Used when creating/adding people to a party. [Skotlex]
  *------------------------------------------*/
 void party_fill_member(struct party_member* member, struct map_session_data* sd, unsigned int leader) {
-  	member->account_id = sd->status.account_id;
+	member->account_id = sd->status.account_id;
 	member->char_id    = sd->status.char_id;
 	safestrncpy(member->name, sd->status.name, NAME_LENGTH);
 	member->class_     = sd->status.class_;
@@ -87,8 +87,8 @@ TBL_PC* party_sd_check(int party_id, int account_id, int char_id) {
 
 	if( sd->status.party_id == 0 )
 		sd->status.party_id = party_id;// auto-join if not in a party
-	if (sd->status.party_id != party_id)
-	{	//If player belongs to a different party, kick him out.
+	if (sd->status.party_id != party_id) {
+		//If player belongs to a different party, kick him out.
 		intif->party_leave(party_id,account_id,char_id);
 		return NULL;
 	}
@@ -674,8 +674,8 @@ bool party_changeleader(struct map_session_data *sd, struct map_session_data *ts
 	if (mi == MAX_PARTY)
 		return false; //Shouldn't happen
 
-	if (!p->party.member[mi].leader)
-	{	//Need to be a party leader.
+	if (!p->party.member[mi].leader) {
+		//Need to be a party leader.
 		clif->message(sd->fd, msg_txt(282));
 		return false;
 	}
@@ -979,14 +979,14 @@ int party_share_loot(struct party_data* p, struct map_session_data* sd, struct i
 	if (p && p->party.item&2 && (first_charid || !(battle_config.party_share_type&1)))
 	{
 		//item distribution to party members.
-		if (battle_config.party_share_type&2)
-		{	//Round Robin
+		if (battle_config.party_share_type&2) {
+			//Round Robin
 			TBL_PC* psd;
 			i = p->itemc;
 			do {
 				i++;
 				if (i >= MAX_PARTY)
-					i = 0;	// reset counter to 1st person in party so it'll stop when it reaches "itemc"
+					i = 0; // reset counter to 1st person in party so it'll stop when it reaches "itemc"
 
 				if( (psd = p->data[i].sd) == NULL || sd->bl.m != psd->bl.m || pc_isdead(psd) || (battle_config.idle_no_share && pc_isidle(psd)) )
 					continue;
@@ -999,9 +999,8 @@ int party_share_loot(struct party_data* p, struct map_session_data* sd, struct i
 				target = psd;
 				break;
 			} while (i != p->itemc);
-		}
-		else
-		{	//Random pick
+		} else {
+			//Random pick
 			TBL_PC* psd[MAX_PARTY];
 			int count = 0;
 			//Collect pick candidates
@@ -1013,11 +1012,12 @@ int party_share_loot(struct party_data* p, struct map_session_data* sd, struct i
 			}
 			while (count > 0) { //Pick a random member.
 				i = rnd()%count;
-				if (pc->additem(psd[i],item_data,item_data->amount,LOG_TYPE_PICKDROP_PLAYER))
-				{	//Discard this receiver.
+				if (pc->additem(psd[i],item_data,item_data->amount,LOG_TYPE_PICKDROP_PLAYER)) {
+					//Discard this receiver.
 					psd[i] = psd[count-1];
 					count--;
-				} else { //Successful pick.
+				} else {
+					//Successful pick.
 					target = psd[i];
 					break;
 				}
@@ -1172,7 +1172,7 @@ void party_recruit_register(struct map_session_data *sd, short level, const char
 
 	memcpy(pb_ad->charname,sd->status.name,NAME_LENGTH);
 	pb_ad->expiretime = (int)time(NULL);
- 	pb_ad->p_detail.level = level;
+	pb_ad->p_detail.level = level;
 	safestrncpy(pb_ad->p_detail.notice, notice, PB_NOTICE_LENGTH);
 
 	clif->PartyRecruitRegisterAck(sd, 0);
@@ -1185,7 +1185,7 @@ void party_recruit_register(struct map_session_data *sd, short level, const char
 void party_booking_register(struct map_session_data *sd, short level, short mapid, short* job) {
 #ifndef PARTY_RECRUIT
 	struct party_booking_ad_info *pb_ad;
- 	int i;
+	int i;
 	
 	pb_ad = (struct party_booking_ad_info*)idb_get(party->booking_db, sd->status.char_id);
 	
@@ -1202,7 +1202,7 @@ void party_booking_register(struct map_session_data *sd, short level, short mapi
 	
 	memcpy(pb_ad->charname,sd->status.name,NAME_LENGTH);
 	pb_ad->expiretime = (int)time(NULL);
- 	pb_ad->p_detail.level = level;
+	pb_ad->p_detail.level = level;
 	pb_ad->p_detail.mapid = mapid;
 	
 	for(i=0;i<PARTY_BOOKING_JOBS;i++)

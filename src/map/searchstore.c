@@ -333,7 +333,7 @@ bool searchstore_result(struct map_session_data* sd, unsigned int store_id, int 
 
 void searchstore_defaults (void) {
 	searchstore = &searchstore_s;
-	
+
 	searchstore->open = searchstore_open;
 	searchstore->query = searchstore_query;
 	searchstore->querynext = searchstore_querynext;
@@ -344,5 +344,5 @@ void searchstore_defaults (void) {
 	searchstore->queryremote = searchstore_queryremote;
 	searchstore->clearremote = searchstore_clearremote;
 	searchstore->result = searchstore_result;
-	
+
 }

@@ -42,7 +42,7 @@ struct mercenary_data {
 
 	struct map_session_data *master;
 	int contract_timer;
-	
+
 	unsigned devotion_flag : 1;
 	int64 masterteleport_timer;
 };
@@ -55,26 +55,26 @@ struct mercenary_data {
 struct mercenary_interface {
 
 	/* vars */
-	
+
 	struct s_mercenary_db db[MAX_MERCENARY_CLASS];
 
 	/* funcs */
 
 	void (*init) (bool minimal);
-	
+
 	bool (*class) (int class_);
 	struct view_data * (*get_viewdata) (int class_);
-	
+
 	int (*create) (struct map_session_data *sd, int class_, unsigned int lifetime);
 	int (*data_received) (struct s_mercenary *merc, bool flag);
 	int (*save) (struct mercenary_data *md);
-	
+
 	void (*heal) (struct mercenary_data *md, int hp, int sp);
 	int (*dead) (struct mercenary_data *md);
-	
+
 	int (*delete) (struct mercenary_data *md, int reply);
 	void (*contract_stop) (struct mercenary_data *md);
-	
+
 	int (*get_lifetime) (struct mercenary_data *md);
 	int (*get_guild) (struct mercenary_data *md);
 	int (*get_faith) (struct mercenary_data *md);
@@ -82,14 +82,14 @@ struct mercenary_interface {
 	int (*get_calls) (struct mercenary_data *md);
 	int (*set_calls) (struct mercenary_data *md, int value);
 	int (*kills) (struct mercenary_data *md);
-	
+
 	int (*checkskill) (struct mercenary_data *md, uint16 skill_id);
 	int (*read_db) (void);
 	int (*read_skilldb) (void);
-	
+
 	int (*killbonus) (struct mercenary_data *md);
 	int (*search_index) (int class_);
-	
+
 	int (*contract_end_timer) (int tid, int64 tick, int id, intptr_t data);
 	bool (*read_db_sub) (char* str[], int columns, int current);
 	bool (*read_skill_db_sub) (char* str[], int columns, int current);

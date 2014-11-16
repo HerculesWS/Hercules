@@ -65,7 +65,7 @@ struct homun_data {
 	int hungry_timer;                     //[orn]
 	unsigned int exp_next;
 	char blockskill[MAX_SKILL];           // [orn]
-	
+
 	int64 masterteleport_timer;
 };
 

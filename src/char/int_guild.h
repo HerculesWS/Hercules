@@ -28,32 +28,32 @@ void inter_guild_defaults(void);
  * inter_guild interface
  **/
 struct inter_guild_interface {
-    DBMap* guild_db; // int guild_id -> struct guild*
-    DBMap* castle_db;
-    unsigned int exp[MAX_GUILDLEVEL];
+	DBMap* guild_db; // int guild_id -> struct guild*
+	DBMap* castle_db;
+	unsigned int exp[MAX_GUILDLEVEL];
 
-    int (*save_timer) (int tid, int64 tick, int id, intptr_t data);
-    int (*removemember_tosql) (int account_id, int char_id);
-    int (*tosql) (struct guild *g, int flag);
-    struct guild* (*fromsql) (int guild_id);
-    int (*castle_tosql) (struct guild_castle *gc);
-    struct guild_castle* (*castle_fromsql) (int castle_id);
-    bool (*exp_parse_row) (char* split[], int column, int current);
-    int (*CharOnline) (int char_id, int guild_id);
-    int (*CharOffline) (int char_id, int guild_id);
-    int (*sql_init) (void);
-    int (*db_final) (DBKey key, DBData *data, va_list ap);
-    void (*sql_final) (void);
-    int (*search_guildname) (char *str);
-    bool (*check_empty) (struct guild *g);
-    unsigned int (*nextexp) (int level);
-    int (*checkskill) (struct guild *g, int id);
-    int (*calcinfo) (struct guild *g);
-    int (*sex_changed) (int guild_id, int account_id, int char_id, short gender);
-    int (*charname_changed) (int guild_id, int account_id, int char_id, char *name);
-    int (*parse_frommap) (int fd);
-    int (*leave) (int guild_id, int account_id, int char_id);
-    int (*broken) (int guild_id);
+	int (*save_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*removemember_tosql) (int account_id, int char_id);
+	int (*tosql) (struct guild *g, int flag);
+	struct guild* (*fromsql) (int guild_id);
+	int (*castle_tosql) (struct guild_castle *gc);
+	struct guild_castle* (*castle_fromsql) (int castle_id);
+	bool (*exp_parse_row) (char* split[], int column, int current);
+	int (*CharOnline) (int char_id, int guild_id);
+	int (*CharOffline) (int char_id, int guild_id);
+	int (*sql_init) (void);
+	int (*db_final) (DBKey key, DBData *data, va_list ap);
+	void (*sql_final) (void);
+	int (*search_guildname) (char *str);
+	bool (*check_empty) (struct guild *g);
+	unsigned int (*nextexp) (int level);
+	int (*checkskill) (struct guild *g, int id);
+	int (*calcinfo) (struct guild *g);
+	int (*sex_changed) (int guild_id, int account_id, int char_id, short gender);
+	int (*charname_changed) (int guild_id, int account_id, int char_id, char *name);
+	int (*parse_frommap) (int fd);
+	int (*leave) (int guild_id, int account_id, int char_id);
+	int (*broken) (int guild_id);
 };
 
 struct inter_guild_interface *inter_guild;

@@ -25,7 +25,7 @@ struct inter_elemental_interface inter_elemental_s;
 
 bool mapif_elemental_save(struct s_elemental* ele) {
 	bool flag = true;
-	
+
 	if( ele->elemental_id == 0 ) { // Create new DB entry
 		if( SQL_ERROR == SQL->Query(inter->sql_handle,
 			"INSERT INTO `%s` (`char_id`,`class`,`mode`,`hp`,`sp`,`max_hp`,`max_sp`,`atk1`,`atk2`,`matk`,`aspd`,`def`,`mdef`,`flee`,`hit`,`life_time`)"
@@ -52,11 +52,11 @@ bool mapif_elemental_save(struct s_elemental* ele) {
 
 bool mapif_elemental_load(int ele_id, int char_id, struct s_elemental *ele) {
 	char* data;
-	
+
 	memset(ele, 0, sizeof(struct s_elemental));
 	ele->elemental_id = ele_id;
 	ele->char_id = char_id;
-	
+
 	if( SQL_ERROR == SQL->Query(inter->sql_handle,
 		"SELECT `class`, `mode`, `hp`, `sp`, `max_hp`, `max_sp`, `atk1`, `atk2`, `matk`, `aspd`,"
 		"`def`, `mdef`, `flee`, `hit`, `life_time` FROM `%s` WHERE `ele_id` = '%d' AND `char_id` = '%d'",
@@ -65,12 +65,12 @@ bool mapif_elemental_load(int ele_id, int char_id, struct s_elemental *ele) {
 		Sql_ShowDebug(inter->sql_handle);
 		return false;
 	}
-	
+
 	if( SQL_SUCCESS != SQL->NextRow(inter->sql_handle) ) {
 		SQL->FreeResult(inter->sql_handle);
 		return false;
 	}
-	
+
 	SQL->GetData(inter->sql_handle,  0, &data, NULL); ele->class_ = atoi(data);
 	SQL->GetData(inter->sql_handle,  1, &data, NULL); ele->mode = atoi(data);
 	SQL->GetData(inter->sql_handle,  2, &data, NULL); ele->hp = atoi(data);
@@ -89,7 +89,7 @@ bool mapif_elemental_load(int ele_id, int char_id, struct s_elemental *ele) {
 	SQL->FreeResult(inter->sql_handle);
 	if( save_log )
 		ShowInfo("Elemental loaded (%d - %d).\n", ele->elemental_id, ele->char_id);
-	
+
 	return true;
 }
 
@@ -98,13 +98,13 @@ bool mapif_elemental_delete(int ele_id) {
 		Sql_ShowDebug(inter->sql_handle);
 		return false;
 	}
-	
+
 	return true;
 }
 
 void mapif_elemental_send(int fd, struct s_elemental *ele, unsigned char flag) {
 	int size = sizeof(struct s_elemental) + 5;
-	
+
 	WFIFOHEAD(fd,size);
 	WFIFOW(fd,0) = 0x387c;
 	WFIFOW(fd,2) = size;
@@ -161,7 +161,7 @@ void inter_elemental_sql_final(void) {
  *------------------------------------------*/
 int inter_elemental_parse_frommap(int fd) {
 	unsigned short cmd = RFIFOW(fd,0);
-	
+
 	switch( cmd ) {
 		case 0x307c: mapif->parse_elemental_create(fd, (struct s_elemental*)RFIFOP(fd,4)); break;
 		case 0x307d: mapif->parse_elemental_load(fd, (int)RFIFOL(fd,2), (int)RFIFOL(fd,6)); break;
@@ -175,9 +175,9 @@ int inter_elemental_parse_frommap(int fd) {
 
 void inter_elemental_defaults(void)
 {
-    inter_elemental = &inter_elemental_s;
+	inter_elemental = &inter_elemental_s;
 
-    inter_elemental->sql_init = inter_elemental_sql_init;
-    inter_elemental->sql_final = inter_elemental_sql_final;
-    inter_elemental->parse_frommap = inter_elemental_parse_frommap;
+	inter_elemental->sql_init = inter_elemental_sql_init;
+	inter_elemental->sql_final = inter_elemental_sql_final;
+	inter_elemental->parse_frommap = inter_elemental_parse_frommap;
 }

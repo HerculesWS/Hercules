@@ -117,56 +117,56 @@
 // Integers with guaranteed _exact_ size.
 //////////////////////////////////////////////////////////////////////////
 
-typedef int8_t		int8;
-typedef int16_t		int16;
-typedef int32_t		int32;
-typedef int64_t		int64;
+typedef int8_t   int8;
+typedef int16_t  int16;
+typedef int32_t  int32;
+typedef int64_t  int64;
 
-typedef int8_t		sint8;
-typedef int16_t		sint16;
-typedef int32_t		sint32;
-typedef int64_t		sint64;
+typedef int8_t   sint8;
+typedef int16_t  sint16;
+typedef int32_t  sint32;
+typedef int64_t  sint64;
 
-typedef uint8_t		uint8;
-typedef uint16_t	uint16;
-typedef uint32_t	uint32;
-typedef uint64_t	uint64;
+typedef uint8_t  uint8;
+typedef uint16_t uint16;
+typedef uint32_t uint32;
+typedef uint64_t uint64;
 
 #undef UINT8_MIN
 #undef UINT16_MIN
 #undef UINT32_MIN
 #undef UINT64_MIN
-#define UINT8_MIN	((uint8) UINT8_C(0x00))
-#define UINT16_MIN	((uint16)UINT16_C(0x0000))
-#define UINT32_MIN	((uint32)UINT32_C(0x00000000))
-#define UINT64_MIN	((uint64)UINT64_C(0x0000000000000000))
+#define UINT8_MIN  ((uint8) UINT8_C(0x00))
+#define UINT16_MIN ((uint16)UINT16_C(0x0000))
+#define UINT32_MIN ((uint32)UINT32_C(0x00000000))
+#define UINT64_MIN ((uint64)UINT64_C(0x0000000000000000))
 
 #undef UINT8_MAX
 #undef UINT16_MAX
 #undef UINT32_MAX
 #undef UINT64_MAX
-#define UINT8_MAX	((uint8) UINT8_C(0xFF))
-#define UINT16_MAX	((uint16)UINT16_C(0xFFFF))
-#define UINT32_MAX	((uint32)UINT32_C(0xFFFFFFFF))
-#define UINT64_MAX	((uint64)UINT64_C(0xFFFFFFFFFFFFFFFF))
+#define UINT8_MAX  ((uint8) UINT8_C(0xFF))
+#define UINT16_MAX ((uint16)UINT16_C(0xFFFF))
+#define UINT32_MAX ((uint32)UINT32_C(0xFFFFFFFF))
+#define UINT64_MAX ((uint64)UINT64_C(0xFFFFFFFFFFFFFFFF))
 
 #undef SINT8_MIN
 #undef SINT16_MIN
 #undef SINT32_MIN
 #undef SINT64_MIN
-#define SINT8_MIN	((sint8) INT8_C(0x80))
-#define SINT16_MIN	((sint16)INT16_C(0x8000))
-#define SINT32_MIN	((sint32)INT32_C(0x80000000))
-#define SINT64_MIN	((sint32)INT64_C(0x8000000000000000))
+#define SINT8_MIN  ((sint8) INT8_C(0x80))
+#define SINT16_MIN ((sint16)INT16_C(0x8000))
+#define SINT32_MIN ((sint32)INT32_C(0x80000000))
+#define SINT64_MIN ((sint32)INT64_C(0x8000000000000000))
 
 #undef SINT8_MAX
 #undef SINT16_MAX
 #undef SINT32_MAX
 #undef SINT64_MAX
-#define SINT8_MAX	((sint8) INT8_C(0x7F))
-#define SINT16_MAX	((sint16)INT16_C(0x7FFF))
-#define SINT32_MAX	((sint32)INT32_C(0x7FFFFFFF))
-#define SINT64_MAX	((sint64)INT64_C(0x7FFFFFFFFFFFFFFF))
+#define SINT8_MAX  ((sint8) INT8_C(0x7F))
+#define SINT16_MAX ((sint16)INT16_C(0x7FFF))
+#define SINT32_MAX ((sint32)INT32_C(0x7FFFFFFF))
+#define SINT64_MAX ((sint64)INT64_C(0x7FFFFFFFFFFFFFFF))
 
 //////////////////////////////////////////////////////////////////////////
 // Integers with guaranteed _minimum_ size.
@@ -191,10 +191,10 @@ typedef unsigned long int   ppuint32;
 
 #if defined(WIN32) && !defined(MINGW) // does not have a signed size_t
 //////////////////////////////
-#if defined(_WIN64)	// native 64bit windows platform
-typedef __int64			ssize_t;
+#if defined(_WIN64) // native 64bit windows platform
+typedef __int64 ssize_t;
 #else
-typedef int				ssize_t;
+typedef int     ssize_t;
 #endif
 //////////////////////////////
 #endif
@@ -236,22 +236,22 @@ typedef uintptr_t uintptr;
 // some redefine of function redefines for some Compilers
 //////////////////////////////////////////////////////////////////////////
 #if defined(_MSC_VER) || defined(__BORLANDC__)
-#define strcasecmp			stricmp
-#define strncasecmp			strnicmp
-#define strncmpi			strnicmp
-#define snprintf			_snprintf
+#define strcasecmp  stricmp
+#define strncasecmp strnicmp
+#define strncmpi    strnicmp
+#define snprintf    _snprintf
 #if defined(_MSC_VER) && _MSC_VER < 1400
-#define vsnprintf			_vsnprintf
+#define vsnprintf   _vsnprintf
 #endif
 #else
-#define strcmpi				strcasecmp
-#define stricmp				strcasecmp
-#define strncmpi			strncasecmp
-#define strnicmp			strncasecmp
+#define strcmpi     strcasecmp
+#define stricmp     strcasecmp
+#define strncmpi    strncasecmp
+#define strnicmp    strncasecmp
 #endif
 #if defined(_MSC_VER) && _MSC_VER > 1200
-#define strtoull			_strtoui64
-#define strtoll				_strtoi64
+#define strtoull    _strtoui64
+#define strtoll     _strtoi64
 #endif
 
 // keyword replacement
@@ -286,8 +286,8 @@ typedef uintptr_t uintptr;
 #ifndef __bool_true_false_are_defined
 // If stdbool.h is not available or does not define this
 typedef char bool;
-#define false	(1==0)
-#define true	(1==1)
+#define false (1==0)
+#define true  (1==1)
 #define __bool_true_false_are_defined
 #endif // __bool_true_false_are_defined
 
@@ -308,18 +308,17 @@ typedef char bool;
 #if 0 //to be activated soon, more tests needed on how VS works with the macro above
 #ifdef WIN32
 #undef swap
-#define swap(a,b)__asm	\
-{	\
-	__asm mov		eax, dword ptr [a]	\
-	__asm cmp		eax, dword ptr [b]	\
-	__asm je		_ret	\
-	__asm xor		eax, dword ptr [b]	\
-	__asm mov		dword ptr [a], eax	\
-	__asm xor		eax, dword ptr [b]	\
-	__asm mov		dword ptr [b], eax	\
-	__asm xor		eax, dword ptr [a]	\
-	__asm mov		dword ptr [a], eax	\
-	__asm _ret:	\
+#define swap(a,b)__asm { \
+	__asm mov eax, dword ptr [a] \
+	__asm cmp eax, dword ptr [b] \
+	__asm je  _ret               \
+	__asm xor eax, dword ptr [b] \
+	__asm mov dword ptr [a], eax \
+	__asm xor eax, dword ptr [b] \
+	__asm mov dword ptr [b], eax \
+	__asm xor eax, dword ptr [a] \
+	__asm mov dword ptr [a], eax \
+	__asm _ret:                  \
 }
 #endif
 #endif
@@ -343,7 +342,7 @@ typedef char bool;
 //////////////////////////////////////////////////////////////////////////
 // number of bits in a byte
 #ifndef NBBY
-#define	NBBY 8
+#define NBBY 8
 #endif
 
 //////////////////////////////////////////////////////////////////////////

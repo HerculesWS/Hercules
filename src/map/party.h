@@ -30,12 +30,12 @@ struct party_data {
 	short *instance;
 	unsigned short instances;
 	struct {
-		unsigned monk : 1; //There's at least one monk in party?
-		unsigned sg : 1;	//There's at least one Star Gladiator in party?
-		unsigned snovice :1; //There's a Super Novice
-		unsigned tk : 1; //There's a taekwon
+		unsigned monk : 1;   ///< There's at least one monk in party?
+		unsigned sg : 1;     ///< There's at least one Star Gladiator in party?
+		unsigned snovice :1; ///< There's a Super Novice
+		unsigned tk : 1;     ///< There's a taekwon
 	} state;
-	
+
 	/* HPM Custom Struct */
 	struct HPluginData **hdata;
 	unsigned int hdatac;
@@ -46,8 +46,8 @@ struct party_data {
 #ifndef PARTY_RECRUIT
 struct party_booking_detail {
 	short level;
-    short mapid;
-    short job[PARTY_BOOKING_JOBS];
+	short mapid;
+	short job[PARTY_BOOKING_JOBS];
 };
 
 struct party_booking_ad_info {
@@ -87,7 +87,7 @@ struct party_interface {
 	struct party_data* (*searchname) (const char* str);
 	int (*getmemberid) (struct party_data* p, struct map_session_data* sd);
 	struct map_session_data* (*getavailablesd) (struct party_data *p);
-	
+
 	int (*create) (struct map_session_data *sd,char *name, int item, int item2);
 	void (*created) (int account_id,int char_id,int fail,int party_id,char *name);
 	int (*request_info) (int party_id, int char_id);

@@ -160,7 +160,7 @@ void geoip_init(void)
 			fseek(db, -4l, SEEK_CUR);
 		}
 	}
-	
+
 	fclose(db);
 
 	if (db_type != 1) {

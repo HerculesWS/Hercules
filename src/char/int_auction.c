@@ -129,7 +129,7 @@ unsigned int inter_auction_create(struct auction_data *auction)
 void mapif_auction_message(int char_id, unsigned char result)
 {
 	unsigned char buf[74];
-	
+
 	WBUFW(buf,0) = 0x3854;
 	WBUFL(buf,2) = char_id;
 	WBUFL(buf,6) = result;
@@ -148,7 +148,7 @@ static int inter_auction_end_timer(int tid, int64 tick, int id, intptr_t data) {
 		}
 		else
 			inter_mail->sendmail(0, "Auction Manager", auction->seller_id, auction->seller_name, "Auction", "No buyers have been found for your auction.", 0, &auction->item);
-		
+
 		ShowInfo("Auction End: id %u.\n", auction->auction_id);
 
 		auction->auction_end_timer = INVALID_TIMER;
@@ -201,7 +201,7 @@ void inter_auctions_fromsql(void)
 		SQL->GetData(inter->sql_handle, 2, &data, NULL); safestrncpy(auction->seller_name, data, NAME_LENGTH);
 		SQL->GetData(inter->sql_handle, 3, &data, NULL); auction->buyer_id = atoi(data);
 		SQL->GetData(inter->sql_handle, 4, &data, NULL); safestrncpy(auction->buyer_name, data, NAME_LENGTH);
-		SQL->GetData(inter->sql_handle, 5, &data, NULL); auction->price	= atoi(data);
+		SQL->GetData(inter->sql_handle, 5, &data, NULL); auction->price = atoi(data);
 		SQL->GetData(inter->sql_handle, 6, &data, NULL); auction->buynow = atoi(data);
 		SQL->GetData(inter->sql_handle, 7, &data, NULL); auction->hours = atoi(data);
 		SQL->GetData(inter->sql_handle, 8, &data, NULL); auction->timestamp = atoi(data);
@@ -493,17 +493,17 @@ void inter_auction_sql_final(void)
 
 void inter_auction_defaults(void)
 {
-    inter_auction = &inter_auction_s;
+	inter_auction = &inter_auction_s;
 
-    inter_auction->db = NULL; // int auction_id -> struct auction_data*
+	inter_auction->db = NULL; // int auction_id -> struct auction_data*
 
-    inter_auction->count = inter_auction_count;
-    inter_auction->save = inter_auction_save;
-    inter_auction->create = inter_auction_create;
-    inter_auction->end_timer = inter_auction_end_timer;
-    inter_auction->delete_ = inter_auction_delete;
-    inter_auction->fromsql = inter_auctions_fromsql;
-    inter_auction->parse_frommap = inter_auction_parse_frommap;
-    inter_auction->sql_init = inter_auction_sql_init;
-    inter_auction->sql_final = inter_auction_sql_final;
+	inter_auction->count = inter_auction_count;
+	inter_auction->save = inter_auction_save;
+	inter_auction->create = inter_auction_create;
+	inter_auction->end_timer = inter_auction_end_timer;
+	inter_auction->delete_ = inter_auction_delete;
+	inter_auction->fromsql = inter_auctions_fromsql;
+	inter_auction->parse_frommap = inter_auction_parse_frommap;
+	inter_auction->sql_init = inter_auction_sql_init;
+	inter_auction->sql_final = inter_auction_sql_final;
 }

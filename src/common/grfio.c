@@ -21,7 +21,7 @@
 #include "../common/utils.h"
 
 //----------------------------
-//	file entry table struct
+// file entry table struct
 //----------------------------
 typedef struct FILELIST {
 	int srclen;         ///< compressed size
@@ -50,14 +50,14 @@ typedef struct FILELIST {
 
 
 // stores info about every loaded file
-FILELIST* filelist		= NULL;
-int filelist_entrys		= 0;
-int filelist_maxentry	= 0;
+FILELIST* filelist    = NULL;
+int filelist_entrys   = 0;
+int filelist_maxentry = 0;
 
 // stores grf file names
-char** gentry_table		= NULL;
-int gentry_entrys		= 0;
-int gentry_maxentry		= 0;
+char** gentry_table = NULL;
+int gentry_entrys   = 0;
+int gentry_maxentry = 0;
 
 // the path to the data directory
 char data_dir[1024] = "";
@@ -109,22 +109,23 @@ static uint8_t grf_substitution(uint8_t in)
 	return out;
 }
 
-/* this is not used anywhere, is it ok to delete?  */
-//static void grf_shuffle_enc(BIT64* src) {
-//	BIT64 out;
-//
-//	out.b[0] = src->b[3];
-//	out.b[1] = src->b[4];
-//	out.b[2] = src->b[5];
-//	out.b[3] = src->b[0];
-//	out.b[4] = src->b[1];
-//	out.b[5] = src->b[6];
-//	out.b[6] = src->b[2];
-//	out.b[7] = grf_substitution(src->b[7]);
-//
-//	*src = out;
-//}
+#if 0 /* this is not used anywhere, is it ok to delete?  */
+static void grf_shuffle_enc(BIT64* src)
+{
+	BIT64 out;
 
+	out.b[0] = src->b[3];
+	out.b[1] = src->b[4];
+	out.b[2] = src->b[5];
+	out.b[3] = src->b[0];
+	out.b[4] = src->b[1];
+	out.b[5] = src->b[6];
+	out.b[6] = src->b[2];
+	out.b[7] = grf_substitution(src->b[7]);
+
+	*src = out;
+}
+#endif // 0
 
 static void grf_shuffle_dec(BIT64* src)
 {
@@ -425,7 +426,7 @@ void* grfio_reads(const char* fname, int* size)
 				*size = declen;
 		} else {
 			if (entry != NULL && entry->gentry < 0) {
-				entry->gentry = -entry->gentry;	// local file checked
+				entry->gentry = -entry->gentry; // local file checked
 			} else {
 				ShowError("grfio_reads: %s not found (local file: %s)\n", fname, lfname);
 				return NULL;
@@ -515,7 +516,7 @@ static int grfio_entryread(const char* grfname, int gentry)
 	FILE* fp = fopen(grfname, "rb");
 	if( fp == NULL ) {
 		ShowWarning("GRF data file not found: '%s'\n",grfname);
-		return 1;	// 1:not found error
+		return 1; // 1:not found error
 	} else
 		ShowInfo("GRF data file found: '%s'\n",grfname);
 
@@ -527,7 +528,7 @@ static int grfio_entryread(const char* grfname, int gentry)
 	if( strcmp((const char*)grf_header,"Master of Magic") != 0 || fseek(fp,getlong(grf_header+0x1e),SEEK_CUR) != 0 ) {
 		fclose(fp);
 		ShowError("GRF %s read error\n", grfname);
-		return 2;	// 2:file format error
+		return 2; // 2:file format error
 	}
 
 	grf_version = getlong(grf_header+0x2a) >> 8;
@@ -565,11 +566,11 @@ static int grfio_entryread(const char* grfname, int gentry)
 				aentry.srcpos         = getlong(grf_filelist+ofs2+13)+0x2e;
 				aentry.type           = type;
 				safestrncpy(aentry.fn, fname, sizeof(aentry.fn));
-				aentry.fnd			  = NULL;
-#ifdef	GRFIO_LOCAL
-				aentry.gentry         = -(gentry+1);	// As Flag for making it a negative number carrying out the first time LocalFileCheck
+				aentry.fnd            = NULL;
+#ifdef GRFIO_LOCAL
+				aentry.gentry         = -(gentry+1); // As Flag for making it a negative number carrying out the first time LocalFileCheck
 #else
-				aentry.gentry         = (char)(gentry+1);		// With no first time LocalFileCheck
+				aentry.gentry         = (char)(gentry+1); // With no first time LocalFileCheck
 #endif
 				filelist_modify(&aentry);
 			}
@@ -584,8 +585,8 @@ static int grfio_entryread(const char* grfname, int gentry)
 		uLongf rSize, eSize;
 
 		if(fread(eheader,1,8,fp) != 8) ShowError("An error occurred in fread while reading header buffer\n");
-		rSize = getlong(eheader);	// Read Size
-		eSize = getlong(eheader+4);	// Extend Size
+		rSize = getlong(eheader); // Read Size
+		eSize = getlong(eheader+4); // Extend Size
 
 		if( (long)rSize > grf_size-ftell(fp) ) {
 			fclose(fp);
@@ -593,11 +594,11 @@ static int grfio_entryread(const char* grfname, int gentry)
 			return 4;
 		}
 
-		rBuf = (unsigned char *)aMalloc(rSize);	// Get a Read Size
-		grf_filelist = (unsigned char *)aMalloc(eSize);	// Get a Extend Size
+		rBuf = (unsigned char *)aMalloc(rSize); // Get a Read Size
+		grf_filelist = (unsigned char *)aMalloc(eSize); // Get a Extend Size
 		if(fread(rBuf,1,rSize,fp) != rSize) ShowError("An error occurred in fread \n");
 		fclose(fp);
-		decode_zip(grf_filelist, &eSize, rBuf, rSize);	// Decode function
+		decode_zip(grf_filelist, &eSize, rBuf, rSize); // Decode function
 		aFree(rBuf);
 
 		entrys = getlong(grf_header+0x26) - 7;
@@ -623,11 +624,11 @@ static int grfio_entryread(const char* grfname, int gentry)
 				aentry.srcpos         = getlong(grf_filelist+ofs2+13)+0x2e;
 				aentry.type           = (char)type;
 				safestrncpy(aentry.fn, fname, sizeof(aentry.fn));
-				aentry.fnd			  = NULL;
-#ifdef	GRFIO_LOCAL
-				aentry.gentry         = -(gentry+1);	// As Flag for making it a negative number carrying out the first time LocalFileCheck
+				aentry.fnd            = NULL;
+#ifdef GRFIO_LOCAL
+				aentry.gentry         = -(gentry+1); // As Flag for making it a negative number carrying out the first time LocalFileCheck
 #else
-				aentry.gentry         = (char)(gentry+1);		// With no first time LocalFileCheck
+				aentry.gentry         = (char)(gentry+1); // With no first time LocalFileCheck
 #endif
 				filelist_modify(&aentry);
 			}
@@ -642,9 +643,9 @@ static int grfio_entryread(const char* grfname, int gentry)
 		return 4;
 	}
 
-	filelist_compact();	// Unnecessary area release of filelist
+	filelist_compact(); // Unnecessary area release of filelist
 
-	return 0;	// 0:no error
+	return 0; // 0:no error
 }
 
 
@@ -714,7 +715,7 @@ static void grfio_resourcecheck(void)
 
 		fclose(fp);
 		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, "resnametable.txt");
-		return;	// we're done here!
+		return; // we're done here!
 	}
 
 	// read resnametable from loaded GRF's, only if it cannot be loaded from the data directory
@@ -745,12 +746,12 @@ static void grfio_resourcecheck(void)
 /// Reads a grf file and adds it to the list.
 static int grfio_add(const char* fname)
 {
-	if( gentry_entrys >= gentry_maxentry )
-	{
-		#define	GENTRY_ADDS	4	// The number increment of gentry_table entries
+	if (gentry_entrys >= gentry_maxentry) {
+#define GENTRY_ADDS 4 // The number increment of gentry_table entries
 		gentry_maxentry += GENTRY_ADDS;
 		gentry_table = (char**)aRealloc(gentry_table, gentry_maxentry * sizeof(char*));
 		memset(gentry_table + (gentry_maxentry - GENTRY_ADDS), 0, sizeof(char*) * GENTRY_ADDS);
+#undef GENTRY_ADDS
 	}
 
 	gentry_table[gentry_entrys++] = aStrdup(fname);
@@ -792,7 +793,7 @@ void grfio_init(const char* fname)
 	FILE* data_conf;
 	int grf_num = 0;
 
-	hashinit();	// hash table initialization
+	hashinit(); // hash table initialization
 
 	data_conf = fopen(fname, "r");
 	if( data_conf != NULL )

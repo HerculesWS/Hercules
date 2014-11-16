@@ -26,29 +26,29 @@ struct status_change_entry;
 /**
  * Defines
  **/
-#define MAX_SKILL_DB			MAX_SKILL
-#define MAX_SKILL_PRODUCE_DB	270
-#define MAX_PRODUCE_RESOURCE	10
-#define MAX_SKILL_ARROW_DB		140
-#define MAX_ARROW_RESOURCE		5
-#define MAX_SKILL_ABRA_DB		210
-#define MAX_SKILL_IMPROVISE_DB 30
-#define MAX_SKILL_LEVEL 10
-#define MAX_SKILL_UNIT_LAYOUT	45
-#define MAX_SQUARE_LAYOUT		5	// 11*11 Placement of a maximum unit
-#define MAX_SKILL_UNIT_COUNT ((MAX_SQUARE_LAYOUT*2+1)*(MAX_SQUARE_LAYOUT*2+1))
-#define MAX_SKILLTIMERSKILL 15
-#define MAX_SKILLUNITGROUP 25
-#define MAX_SKILL_ITEM_REQUIRE	10
+#define MAX_SKILL_DB              MAX_SKILL
+#define MAX_SKILL_PRODUCE_DB      270
+#define MAX_PRODUCE_RESOURCE      10
+#define MAX_SKILL_ARROW_DB        140
+#define MAX_ARROW_RESOURCE        5
+#define MAX_SKILL_ABRA_DB         210
+#define MAX_SKILL_IMPROVISE_DB    30
+#define MAX_SKILL_LEVEL           10
+#define MAX_SKILL_UNIT_LAYOUT     45
+#define MAX_SQUARE_LAYOUT         5 // 11*11 Placement of a maximum unit
+#define MAX_SKILL_UNIT_COUNT      ((MAX_SQUARE_LAYOUT*2+1)*(MAX_SQUARE_LAYOUT*2+1))
+#define MAX_SKILLTIMERSKILL       15
+#define MAX_SKILLUNITGROUP        25
+#define MAX_SKILL_ITEM_REQUIRE    10
 #define MAX_SKILLUNITGROUPTICKSET 25
-#define MAX_SKILL_NAME_LENGTH 30
+#define MAX_SKILL_NAME_LENGTH     30
 
 // (Epoque:) To-do: replace this macro with some sort of skill tree check (rather than hard-coded skill names)
 #define skill_ischangesex(id) ( \
 	((id) >= BD_ADAPTATION     && (id) <= DC_SERVICEFORYOU) || ((id) >= CG_ARROWVULCAN && (id) <= CG_MARIONETTE) || \
 	((id) >= CG_LONGINGFREEDOM && (id) <= CG_TAROTCARD)     || ((id) >= WA_SWING_DANCE && (id) <= WM_UNLIMITED_HUMMING_VOICE))
 
-#define MAX_SKILL_SPELLBOOK_DB	17
+#define MAX_SKILL_SPELLBOOK_DB     17
 #define MAX_SKILL_MAGICMUSHROOM_DB 23
 
 //Walk intervals at which chase-skills are attempted to be triggered.
@@ -99,7 +99,7 @@ enum e_skill_inf2 {
 	INF2_GUILD_ONLY     = 0x0800,
 	INF2_NO_ENEMY       = 0x1000,
 	INF2_NOLP           = 0x2000, // Spells that can ignore Land Protector
-	INF2_CHORUS_SKILL	= 0x4000, // Chorus skill
+	INF2_CHORUS_SKILL   = 0x4000, // Chorus skill
 };
 
 
@@ -112,19 +112,19 @@ enum e_skill_display {
 };
 
 enum {
-	UF_DEFNOTENEMY   = 0x0001,	 // If 'defunit_not_enemy' is set, the target is changed to 'friend'
-	UF_NOREITERATION = 0x0002,	 // Spell cannot be stacked
-	UF_NOFOOTSET     = 0x0004,	 // Spell cannot be cast near/on targets
-	UF_NOOVERLAP     = 0x0008,	 // Spell effects do not overlap
-	UF_PATHCHECK     = 0x0010,	 // Only cells with a shootable path will be placed
-	UF_NOPC          = 0x0020,	 // May not target players
-	UF_NOMOB         = 0x0040,	 // May not target mobs
-	UF_SKILL         = 0x0080,	 // May target skills
-	UF_DANCE         = 0x0100,	 // Dance
-	UF_ENSEMBLE      = 0x0200,	 // Duet
-	UF_SONG          = 0x0400,	 // Song
-	UF_DUALMODE      = 0x0800,	 // Spells should trigger both ontimer and onplace/onout/onleft effects.
-    UF_RANGEDSINGLEUNIT = 0x2000 // Hack for ranged layout, only display center
+	UF_DEFNOTENEMY      = 0x0001, // If 'defunit_not_enemy' is set, the target is changed to 'friend'
+	UF_NOREITERATION    = 0x0002, // Spell cannot be stacked
+	UF_NOFOOTSET        = 0x0004, // Spell cannot be cast near/on targets
+	UF_NOOVERLAP        = 0x0008, // Spell effects do not overlap
+	UF_PATHCHECK        = 0x0010, // Only cells with a shootable path will be placed
+	UF_NOPC             = 0x0020, // May not target players
+	UF_NOMOB            = 0x0040, // May not target mobs
+	UF_SKILL            = 0x0080, // May target skills
+	UF_DANCE            = 0x0100, // Dance
+	UF_ENSEMBLE         = 0x0200, // Duet
+	UF_SONG             = 0x0400, // Song
+	UF_DUALMODE         = 0x0800, // Spells should trigger both ontimer and onplace/onout/onleft effects.
+	UF_RANGEDSINGLEUNIT = 0x2000, // Hack for ranged layout, only display center
 };
 
 //Returns the cast type of the skill: ground cast, castend damage, castend no damage
@@ -1623,14 +1623,14 @@ enum {
 	UNT_MAKIBISHI,
 	UNT_VENOMFOG,
 	UNT_ICEMINE,
- 	UNT_FLAMECROSS,
- 	UNT_HELLBURNING,
- 	UNT_MAGMA_ERUPTION,
+	UNT_FLAMECROSS,
+	UNT_HELLBURNING,
+	UNT_MAGMA_ERUPTION,
 	UNT_KINGS_GRACE,
 	UNT_GLITTERING_GREED,
 	UNT_B_TRAP,
 	UNT_FIRE_RAIN,
-	
+
 	/**
 	 * Guild Auras
 	 **/
@@ -1638,7 +1638,7 @@ enum {
 	UNT_GD_GLORYWOUNDS = 0xc2,
 	UNT_GD_SOULCOLD = 0xc3,
 	UNT_GD_HAWKEYES = 0xc4,
-	
+
 	UNT_MAX = 0x190
 };
 
@@ -1703,10 +1703,10 @@ struct skill_unit_group {
 	int bg_id;
 	int map;
 	int target_flag; //Holds BCT_* flag for battle_check_target
-	int bl_flag;	//Holds BL_* flag for map_foreachin* functions
+	int bl_flag;     //Holds BL_* flag for map_foreachin* functions
 	int64 tick;
 	int limit,interval;
-	
+
 	uint16 skill_id,skill_lv;
 	int val1,val2,val3;
 	char *valstr;
@@ -1724,9 +1724,9 @@ struct skill_unit_group {
 
 struct skill_unit {
 	struct block_list bl;
-	
+
 	struct skill_unit_group *group;
-	
+
 	int limit;
 	int val1,val2;
 	short alive,range;
@@ -1852,49 +1852,49 @@ struct skill_interface {
 	int unit_temp[20];  // temporary storage for tracking skill unit skill ids as players move in/out of them
 	int unit_group_newid;
 	/* accesssors */
-	int	(*get_index) ( uint16 skill_id );
-	int	(*get_type) ( uint16 skill_id );
-	int	(*get_hit) ( uint16 skill_id );
-	int	(*get_inf) ( uint16 skill_id );
-	int	(*get_ele) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_nk) ( uint16 skill_id );
-	int	(*get_max) ( uint16 skill_id );
-	int	(*get_range) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_range2) (struct block_list *bl, uint16 skill_id, uint16 skill_lv);
-	int	(*get_splash) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_hp) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_mhp) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_sp) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_state) (uint16 skill_id);
-	int	(*get_spiritball) (uint16 skill_id, uint16 skill_lv);
-	int	(*get_zeny) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_num) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_cast) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_delay) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_walkdelay) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_time) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_time2) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_castnodex) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_delaynodex) ( uint16 skill_id ,uint16 skill_lv );
-	int	(*get_castdef) ( uint16 skill_id );
-	int	(*get_weapontype) ( uint16 skill_id );
-	int	(*get_ammotype) ( uint16 skill_id );
-	int	(*get_ammo_qty) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_unit_id) (uint16 skill_id,int flag);
-	int	(*get_inf2) ( uint16 skill_id );
-	int	(*get_castcancel) ( uint16 skill_id );
-	int	(*get_maxcount) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_blewcount) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_unit_flag) ( uint16 skill_id );
-	int	(*get_unit_target) ( uint16 skill_id );
-	int	(*get_unit_interval) ( uint16 skill_id );
-	int	(*get_unit_bl_target) ( uint16 skill_id );
-	int	(*get_unit_layout_type) ( uint16 skill_id ,uint16 skill_lv );
-	int	(*get_unit_range) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_cooldown) ( uint16 skill_id, uint16 skill_lv );
-	int	(*tree_get_max) ( uint16 skill_id, int b_class );
-	const char*	(*get_name) ( uint16 skill_id );
-	const char*	(*get_desc) ( uint16 skill_id );
+	int (*get_index) ( uint16 skill_id );
+	int (*get_type) ( uint16 skill_id );
+	int (*get_hit) ( uint16 skill_id );
+	int (*get_inf) ( uint16 skill_id );
+	int (*get_ele) ( uint16 skill_id, uint16 skill_lv );
+	int (*get_nk) ( uint16 skill_id );
+	int (*get_max) ( uint16 skill_id );
+	int (*get_range) ( uint16 skill_id, uint16 skill_lv );
+	int (*get_range2) (struct block_list *bl, uint16 skill_id, uint16 skill_lv);
+	int (*get_splash) ( uint16 skill_id, uint16 skill_lv );
+	int (*get_hp) ( uint16 skill_id, uint16 skill_lv );
+	int (*get_mhp) ( uint16 skill_id, uint16 skill_lv );
+	int (*get_sp) ( uint16 skill_id, uint16 skill_lv );
+	int (*get_state) (uint16 skill_id);
+	int (*get_spiritball) (uint16 skill_id, uint16 skill_lv);
+	int (*get_zeny) ( uint16 skill_id, uint16 skill_lv );
+	int (*get_num) ( uint16 skill_id, uint16 skill_lv );
+	int (*get_cast) ( uint16 skill_id, uint16 skill_lv );
+	int (*get_delay) ( uint16 skill_id, uint16 skill_lv );
+	int (*get_walkdelay) ( uint16 skill_id, uint16 skill_lv );
+	int (*get_time) ( uint16 skill_id, uint16 skill_lv );
+	int (*get_time2) ( uint16 skill_id, uint16 skill_lv );
+	int (*get_castnodex) ( uint16 skill_id, uint16 skill_lv );
+	int (*get_delaynodex) ( uint16 skill_id ,uint16 skill_lv );
+	int (*get_castdef) ( uint16 skill_id );
+	int (*get_weapontype) ( uint16 skill_id );
+	int (*get_ammotype) ( uint16 skill_id );
+	int (*get_ammo_qty) ( uint16 skill_id, uint16 skill_lv );
+	int (*get_unit_id) (uint16 skill_id,int flag);
+	int (*get_inf2) ( uint16 skill_id );
+	int (*get_castcancel) ( uint16 skill_id );
+	int (*get_maxcount) ( uint16 skill_id, uint16 skill_lv );
+	int (*get_blewcount) ( uint16 skill_id, uint16 skill_lv );
+	int (*get_unit_flag) ( uint16 skill_id );
+	int (*get_unit_target) ( uint16 skill_id );
+	int (*get_unit_interval) ( uint16 skill_id );
+	int (*get_unit_bl_target) ( uint16 skill_id );
+	int (*get_unit_layout_type) ( uint16 skill_id ,uint16 skill_lv );
+	int (*get_unit_range) ( uint16 skill_id, uint16 skill_lv );
+	int (*get_cooldown) ( uint16 skill_id, uint16 skill_lv );
+	int (*tree_get_max) ( uint16 skill_id, int b_class );
+	const char *(*get_name) ( uint16 skill_id );
+	const char *(*get_desc) ( uint16 skill_id );
 	/* check */
 	void (*chk) (uint16* skill_id);
 	/* whether its CAST_GROUND, CAST_DAMAGE or CAST_NODAMAGE */

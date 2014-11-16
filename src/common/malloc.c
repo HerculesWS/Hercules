@@ -143,7 +143,7 @@ void aFree_(void *p, const char *file, int line, const char *func)
 *     Since the complex processing, I might be slightly heavier.
 *
 * (I'm sorry for the poor description ^ ^;) such as data structures
-*		Divided into "blocks" of a plurality of memory, "unit" of a plurality of blocks further
+*      Divided into "blocks" of a plurality of memory, "unit" of a plurality of blocks further
 *      I have to divide. Size of the unit, a plurality of distribution equal to the capacity of one block
 *      That's what you have. For example, if one unit of 32KB, one block 1 Yu 32Byte
 *      Knit, or are able to gather 1024, gathered 512 units 64Byte
@@ -155,33 +155,33 @@ void aFree_(void *p, const char *file, int line, const char *func)
 */
 
 /* Alignment of the block */
-#define BLOCK_ALIGNMENT1	16
-#define BLOCK_ALIGNMENT2	64
+#define BLOCK_ALIGNMENT1 16
+#define BLOCK_ALIGNMENT2 64
 
 /* Amount of data entering a block */
-#define BLOCK_DATA_COUNT1	128
-#define BLOCK_DATA_COUNT2	608
+#define BLOCK_DATA_COUNT1 128
+#define BLOCK_DATA_COUNT2 608
 
 /* The size of the block: 16*128 + 64*576 = 40KB */
-#define BLOCK_DATA_SIZE1	( BLOCK_ALIGNMENT1 * BLOCK_DATA_COUNT1 )
-#define BLOCK_DATA_SIZE2	( BLOCK_ALIGNMENT2 * BLOCK_DATA_COUNT2 )
-#define BLOCK_DATA_SIZE		( BLOCK_DATA_SIZE1 + BLOCK_DATA_SIZE2 )
+#define BLOCK_DATA_SIZE1 ( BLOCK_ALIGNMENT1 * BLOCK_DATA_COUNT1 )
+#define BLOCK_DATA_SIZE2 ( BLOCK_ALIGNMENT2 * BLOCK_DATA_COUNT2 )
+#define BLOCK_DATA_SIZE  ( BLOCK_DATA_SIZE1 + BLOCK_DATA_SIZE2 )
 
 /* The number of blocks to be allocated at a time. */
-#define BLOCK_ALLOC		104
+#define BLOCK_ALLOC 104
 
 /* block */
 struct block {
-	struct block* block_next;		/* Then the allocated area */
-	struct block* unfill_prev;		/* The previous area not filled */
-	struct block* unfill_next;		/* The next area not filled */
-	unsigned short unit_size;		/* The size of the unit */
-	unsigned short unit_hash;		/* The hash of the unit */
-	unsigned short unit_count;		/* The number of units */
-	unsigned short unit_used;		/* The number of used units */
-	unsigned short unit_unfill;		/* The number of unused units */
-	unsigned short unit_maxused;	/* The maximum value of units used */
-	char   data[ BLOCK_DATA_SIZE ];
+	struct block *block_next;    ///< Then the allocated area
+	struct block *unfill_prev;   ///< The previous area not filled
+	struct block *unfill_next;   ///< The next area not filled
+	unsigned short unit_size;    ///< The size of the unit
+	unsigned short unit_hash;    ///< The hash of the unit
+	unsigned short unit_count;   ///< The number of units
+	unsigned short unit_used;    ///< The number of used units
+	unsigned short unit_unfill;  ///< The number of unused units
+	unsigned short unit_maxused; ///< The maximum value of units used
+	char data[BLOCK_DATA_SIZE];
 };
 
 struct unit_head {
@@ -222,7 +222,7 @@ static unsigned short size2hash( size_t size )
 		return (unsigned short)(size - BLOCK_DATA_SIZE1 + BLOCK_ALIGNMENT2 - 1) / BLOCK_ALIGNMENT2
 			+ BLOCK_DATA_COUNT1;
 	} else {
-		return 0xffff;	// If it exceeds the block length hash I do not
+		return 0xffff; // If it exceeds the block length hash I do not
 	}
 }
 
@@ -375,13 +375,13 @@ void *mrealloc_(void *memblock, size_t size, const char *file, int line, const c
 void *mreallocz_(void *memblock, size_t size, const char *file, int line, const char *func) {
 	size_t old_size;
 	void *p = NULL;
-	
+
 	if(memblock == NULL) {
 		p = iMalloc->malloc(size,file,line,func);
 		memset(p,0,size);
 		return p;
 	}
-	
+
 	old_size = ((struct unit_head *)((char *)memblock - sizeof(struct unit_head) + sizeof(long)))->size;
 	if( old_size == 0 ) {
 		old_size = ((struct unit_head_large *)((char *)memblock - sizeof(struct unit_head_large) + sizeof(long)))->size;
@@ -702,7 +702,7 @@ void memmgr_report (int extra) {
 		unsigned int count;
 	} data[100];
 	memset(&data, 0, sizeof(data));
-	
+
 	if( extra != 0 )
 		msize = extra;
 
@@ -732,7 +732,7 @@ void memmgr_report (int extra) {
 		}
 		block = block->block_next;
 	}
-	
+
 	while(large) {
 		if( large->size > msize ) {
 			for( j = 0; j < 100; j++ ) {
@@ -760,7 +760,7 @@ void memmgr_report (int extra) {
 	}
 	ShowMessage("[malloc] : reporting %u instances | %.2f MB\n",count,(double)((size)/1024)/1024);
 	ShowMessage("[malloc] : internal usage %.2f MB | %.2f MB\n",(double)((memmgr_usage_bytes_t-memmgr_usage_bytes)/1024)/1024,(double)((memmgr_usage_bytes_t)/1024)/1024);
-	
+
 	if (extra) {
 		ShowMessage("[malloc] : unit_head_large: %"PRIuS" bytes\n", sizeof(struct unit_head_large));
 		ShowMessage("[malloc] : unit_head: %"PRIuS" bytes\n", sizeof(struct unit_head));
@@ -848,19 +848,19 @@ void malloc_defaults(void) {
 
 // Athena's built-in Memory Manager
 #ifdef USE_MEMMGR
-	iMalloc->malloc  =	 mmalloc_;
-	iMalloc->calloc  =	 mcalloc_;
-	iMalloc->realloc =	 mrealloc_;
-	iMalloc->reallocz=	 mreallocz_;
-	iMalloc->astrdup =	 mstrdup_;
-	iMalloc->free    =	 mfree_;
+	iMalloc->malloc   = mmalloc_;
+	iMalloc->calloc   = mcalloc_;
+	iMalloc->realloc  = mrealloc_;
+	iMalloc->reallocz = mreallocz_;
+	iMalloc->astrdup  = mstrdup_;
+	iMalloc->free     = mfree_;
 #else
-	iMalloc->malloc  =	aMalloc_;
-	iMalloc->calloc  =	aCalloc_;
-	iMalloc->realloc =	aRealloc_;
-	iMalloc->reallocz=	aRealloc_;/* not using memory manager huhum o.o perhaps we could still do something about */
-	iMalloc->astrdup =	aStrdup_;
-	iMalloc->free    =	aFree_;
+	iMalloc->malloc   = aMalloc_;
+	iMalloc->calloc   = aCalloc_;
+	iMalloc->realloc  = aRealloc_;
+	iMalloc->reallocz = aRealloc_;/* not using memory manager huhum o.o perhaps we could still do something about */
+	iMalloc->astrdup  = aStrdup_;
+	iMalloc->free     = aFree_;
 #endif
 	iMalloc->post_shutdown = NULL;
 }

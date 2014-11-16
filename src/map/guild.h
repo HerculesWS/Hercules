@@ -13,8 +13,8 @@
 /**
  * Defines
  **/
-#define GUILD_SEND_XY_INVERVAL	5000 // Interval of sending coordinates and HP
-#define GUILD_PAYEXP_INVERVAL 10000 //Interval (maximum survival time of the cache, in milliseconds)
+#define GUILD_SEND_XY_INVERVAL  5000 // Interval of sending coordinates and HP
+#define GUILD_PAYEXP_INVERVAL   10000 //Interval (maximum survival time of the cache, in milliseconds)
 #define MAX_GUILD_SKILL_REQUIRE 5
 
 /**

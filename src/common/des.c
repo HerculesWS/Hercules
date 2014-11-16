@@ -103,14 +103,14 @@ static void E(BIT64* src)
 	}
 #endif
 	// optimized
-	tmp.b[0] = ((src->b[7]<<5) | (src->b[4]>>3)) & 0x3f;	// ..0 vutsr
-	tmp.b[1] = ((src->b[4]<<1) | (src->b[5]>>7)) & 0x3f;	// ..srqpo n
-	tmp.b[2] = ((src->b[4]<<5) | (src->b[5]>>3)) & 0x3f;	// ..o nmlkj
-	tmp.b[3] = ((src->b[5]<<1) | (src->b[6]>>7)) & 0x3f;	// ..kjihg f
-	tmp.b[4] = ((src->b[5]<<5) | (src->b[6]>>3)) & 0x3f;	// ..g fedcb
-	tmp.b[5] = ((src->b[6]<<1) | (src->b[7]>>7)) & 0x3f;	// ..cba98 7
-	tmp.b[6] = ((src->b[6]<<5) | (src->b[7]>>3)) & 0x3f;	// ..8 76543
-	tmp.b[7] = ((src->b[7]<<1) | (src->b[4]>>7)) & 0x3f;	// ..43210 v
+	tmp.b[0] = ((src->b[7]<<5) | (src->b[4]>>3)) & 0x3f; // ..0 vutsr
+	tmp.b[1] = ((src->b[4]<<1) | (src->b[5]>>7)) & 0x3f; // ..srqpo n
+	tmp.b[2] = ((src->b[4]<<5) | (src->b[5]>>3)) & 0x3f; // ..o nmlkj
+	tmp.b[3] = ((src->b[5]<<1) | (src->b[6]>>7)) & 0x3f; // ..kjihg f
+	tmp.b[4] = ((src->b[5]<<5) | (src->b[6]>>3)) & 0x3f; // ..g fedcb
+	tmp.b[5] = ((src->b[6]<<1) | (src->b[7]>>7)) & 0x3f; // ..cba98 7
+	tmp.b[6] = ((src->b[6]<<5) | (src->b[7]>>3)) & 0x3f; // ..8 76543
+	tmp.b[7] = ((src->b[7]<<1) | (src->b[4]>>7)) & 0x3f; // ..43210 v
 
 	*src = tmp;
 }
