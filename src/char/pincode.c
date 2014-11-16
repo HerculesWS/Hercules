@@ -16,25 +16,20 @@
 #include "../common/socket.h"
 #include "../common/strlib.h"
 
-int pincode_enabled = PINCODE_OK;
-int pincode_changetime = 0;
-int pincode_maxtry = 3;
-int pincode_charselect = 0;
-unsigned int pincode_multiplier = 0x3498;
-unsigned int pincode_baseSeed = 0x881234;
+struct pincode_interface pincode_s;
 
 void pincode_handle ( int fd, struct char_session_data* sd ) {
 	struct online_char_data* character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id);
 	
-	if( character && character->pincode_enable > *pincode->charselect ){
-		character->pincode_enable = *pincode->charselect * 2;
+	if( character && character->pincode_enable > pincode->charselect ){
+		character->pincode_enable = pincode->charselect * 2;
 	}else{
 		pincode->sendstate( fd, sd, PINCODE_OK );
 		return;
 	}
 	
 	if( strlen(sd->pincode) == 4 ){
-		if( *pincode->changetime && time(NULL) > (sd->pincode_change+*pincode->changetime) ){ // User hasn't changed his PIN code for a long time
+		if( pincode->changetime && time(NULL) > (sd->pincode_change+pincode->changetime) ){ // User hasn't changed his PIN code for a long time
 			pincode->sendstate( fd, sd, PINCODE_EXPIRED );
 		} else { // Ask user for his PIN code
 			pincode->sendstate( fd, sd, PINCODE_ASK );
@@ -54,7 +49,7 @@ void pincode_check(int fd, struct char_session_data* sd) {
 	if( pincode->compare( fd, sd, pin ) ){
 		struct online_char_data* character;
 		if( (character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id)) )
-			character->pincode_enable = *pincode->charselect * 2;
+			character->pincode_enable = pincode->charselect * 2;
 		pincode->sendstate( fd, sd, PINCODE_OK );
 	}
 }
@@ -65,7 +60,7 @@ int pincode_compare(int fd, struct char_session_data* sd, char* pin) {
 		return 1;
 	} else {
 		pincode->sendstate( fd, sd, PINCODE_WRONG );
-		if( *pincode->maxtry && ++sd->pincode_try >= *pincode->maxtry ){
+		if( pincode->maxtry && ++sd->pincode_try >= pincode->maxtry ){
 			pincode->error( sd->account_id );
 		}
 		return 0;
@@ -135,7 +130,7 @@ void pincode_decrypt(unsigned int userSeed, char* pin) {
 	char tab[10] = {0,1,2,3,4,5,6,7,8,9};
 	
 	for( i = 1; i < 10; i++ ){
-		userSeed = *pincode->baseSeed + userSeed * *pincode->multiplier;
+		userSeed = pincode->baseSeed + userSeed * pincode->multiplier;
 		pos = userSeed % (i + 1);
 		if( i != pos ){
 			tab[i] ^= tab[pos];
@@ -156,7 +151,7 @@ bool pincode_config_read(char *w1, char *w2) {
 	while ( true ) {
 		
 		if ( strcmpi(w1, "pincode_enabled") == 0 ) {
-			pincode_enabled = atoi(w2);
+			pincode->enabled = atoi(w2);
 #if PACKETVER < 20110309
 			if( pincode_enabled ) {
 				ShowWarning("pincode_enabled requires PACKETVER 20110309 or higher. disabling...\n");
@@ -164,15 +159,15 @@ bool pincode_config_read(char *w1, char *w2) {
 			}
 #endif
 		} else if ( strcmpi(w1, "pincode_changetime") == 0 ) {
-			pincode_changetime = atoi(w2)*60;
+			pincode->changetime = atoi(w2)*60;
 		} else if ( strcmpi(w1, "pincode_maxtry") == 0 ) {
-			pincode_maxtry = atoi(w2);
-			if( pincode_maxtry > 3 ) {
-				ShowWarning("pincode_maxtry is too high (%d); maximum allowed: 3! capping to 3...\n",pincode_maxtry);
-				pincode_maxtry = 3;
+			pincode->maxtry = atoi(w2);
+			if( pincode->maxtry > 3 ) {
+				ShowWarning("pincode_maxtry is too high (%d); maximum allowed: 3! capping to 3...\n", pincode->maxtry);
+				pincode->maxtry = 3;
 			}
 		} else if ( strcmpi(w1, "pincode_charselect") == 0 ) {
-			pincode_charselect = atoi(w2);
+			pincode->charselect = atoi(w2);
 		} else
 			return false;
 		
@@ -185,13 +180,13 @@ bool pincode_config_read(char *w1, char *w2) {
 void pincode_defaults(void) {
 	pincode = &pincode_s;
 	
-	pincode->enabled = &pincode_enabled;
-	pincode->changetime = &pincode_changetime;
-	pincode->maxtry = &pincode_maxtry;
-	pincode->charselect = &pincode_charselect;
-	pincode->multiplier = &pincode_multiplier;
-	pincode->baseSeed = &pincode_baseSeed;
-	
+	pincode->enabled = PINCODE_OK;
+	pincode->changetime = 0;
+	pincode->maxtry = 3;
+	pincode->charselect = 0;
+	pincode->multiplier = 0x3498;
+	pincode->baseSeed = 0x881234;
+
 	pincode->handle = pincode_handle;
 	pincode->decrypt = pincode_decrypt;
 	pincode->error = pincode_notifyLoginPinError;

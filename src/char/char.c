@@ -213,7 +213,7 @@ void char_set_char_charselect(int account_id)
 	character->char_id = -1;
 	character->server = -1;
 	if(character->pincode_enable == -1)
-		character->pincode_enable = *pincode->charselect + *pincode->enabled;
+		character->pincode_enable = pincode->charselect + pincode->enabled;
 
 	if(character->waiting_disconnect != INVALID_TIMER) {
 		timer->delete(character->waiting_disconnect, chr->waiting_disconnect);
@@ -4437,7 +4437,7 @@ void char_parse_char_select(int fd, struct char_session_data* sd, uint32 ipl)
 	RFIFOSKIP(fd,3);
 
 #if PACKETVER >= 20110309
-	if( *pincode->enabled ){ // hack check
+	if( pincode->enabled ){ // hack check
 		struct online_char_data* character;
 		character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id);
 		if( character && character->pincode_enable == -1){
@@ -4636,7 +4636,7 @@ void char_parse_char_delete_char(int fd, struct char_session_data* sd, unsigned 
 	int cid = RFIFOL(fd,2);
 	int i;
 #if PACKETVER >= 20110309
-	if( *pincode->enabled ){ // hack check
+	if( pincode->enabled ){ // hack check
 		struct online_char_data* character;
 		character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id);
 		if( character && character->pincode_enable == -1 ){
