@@ -4027,6 +4027,14 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 	return strchr(start,'\n');// continue
 }
 
+const char* npc_parse_unknown_object(char *w1, char *w2, char *w3, char *w4, const char* start, const char* buffer, const char* filepath, int *retval)
+{
+	ShowError("npc_parsesrcfile: Unable to parse, probably a missing or extra TAB in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
+	start = strchr(start,'\n');// skip and continue
+	*retval = EXIT_FAILURE;
+	return start;
+}
+
 /**
  * Parses a script file and creates NPCs/functions/mapflags/monsters/etc
  * accordingly.
@@ -4215,9 +4223,7 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 		}
 		else
 		{
-			ShowError("npc_parsesrcfile: Unable to parse, probably a missing or extra TAB in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,p-buffer), w1, w2, w3, w4);
-			p = strchr(p,'\n');// skip and continue
-			success = EXIT_FAILURE;
+			p = npc_parse_unknown_object(w1, w2, w3, w4, p, buffer, filepath, &success);
 		}
 	}
 	aFree(buffer);
@@ -4691,6 +4697,7 @@ void npc_defaults(void) {
 	npc->parse_mapflag = npc_parse_mapflag;
 	npc->parse_unknown_mapflag = npc_parse_unknown_mapflag;
 	npc->parsesrcfile = npc_parsesrcfile;
+	npc->parse_unknown_object = npc_parse_unknown_object;
 	npc->script_event = npc_script_event;
 	npc->read_event_script = npc_read_event_script;
 	npc->path_db_clear_sub = npc_path_db_clear_sub;
