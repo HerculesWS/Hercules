@@ -3307,6 +3307,8 @@ struct {
 	struct HPMHookPoint *HP_npc_parse_warp_post;
 	struct HPMHookPoint *HP_npc_parse_shop_pre;
 	struct HPMHookPoint *HP_npc_parse_shop_post;
+	struct HPMHookPoint *HP_npc_parse_unknown_object_pre;
+	struct HPMHookPoint *HP_npc_parse_unknown_object_post;
 	struct HPMHookPoint *HP_npc_convertlabel_db_pre;
 	struct HPMHookPoint *HP_npc_convertlabel_db_post;
 	struct HPMHookPoint *HP_npc_skip_script_pre;
@@ -3339,6 +3341,8 @@ struct {
 	struct HPMHookPoint *HP_npc_parse_mob_post;
 	struct HPMHookPoint *HP_npc_parse_mapflag_pre;
 	struct HPMHookPoint *HP_npc_parse_mapflag_post;
+	struct HPMHookPoint *HP_npc_parse_unknown_mapflag_pre;
+	struct HPMHookPoint *HP_npc_parse_unknown_mapflag_post;
 	struct HPMHookPoint *HP_npc_parsesrcfile_pre;
 	struct HPMHookPoint *HP_npc_parsesrcfile_post;
 	struct HPMHookPoint *HP_npc_script_event_pre;
@@ -8366,6 +8370,8 @@ struct {
 	int HP_npc_parse_warp_post;
 	int HP_npc_parse_shop_pre;
 	int HP_npc_parse_shop_post;
+	int HP_npc_parse_unknown_object_pre;
+	int HP_npc_parse_unknown_object_post;
 	int HP_npc_convertlabel_db_pre;
 	int HP_npc_convertlabel_db_post;
 	int HP_npc_skip_script_pre;
@@ -8398,6 +8404,8 @@ struct {
 	int HP_npc_parse_mob_post;
 	int HP_npc_parse_mapflag_pre;
 	int HP_npc_parse_mapflag_post;
+	int HP_npc_parse_unknown_mapflag_pre;
+	int HP_npc_parse_unknown_mapflag_post;
 	int HP_npc_parsesrcfile_pre;
 	int HP_npc_parsesrcfile_post;
 	int HP_npc_script_event_pre;

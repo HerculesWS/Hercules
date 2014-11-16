@@ -44196,6 +44196,33 @@ const char* HP_npc_parse_shop(char *w1, char *w2, char *w3, char *w4, const char
 	}
 	return retVal___;
 }
+const char* HP_npc_parse_unknown_object(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if( HPMHooks.count.HP_npc_parse_unknown_object_pre ) {
+		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_unknown_object_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_parse_unknown_object_pre[hIndex].func;
+			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath, retval);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.npc.parse_unknown_object(w1, w2, w3, w4, start, buffer, filepath, retval);
+	}
+	if( HPMHooks.count.HP_npc_parse_unknown_object_post ) {
+		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_unknown_object_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_parse_unknown_object_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath, retval);
+		}
+	}
+	return retVal___;
+}
 void HP_npc_convertlabel_db(struct npc_label_list *label_list, const char *filepath) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_npc_convertlabel_db_pre ) {
@@ -44626,6 +44653,32 @@ const char* HP_npc_parse_mapflag(char *w1, char *w2, char *w3, char *w4, const c
 		}
 	}
 	return retVal___;
+}
+void HP_npc_parse_unknown_mapflag(const char *name, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_npc_parse_unknown_mapflag_pre ) {
+		void (*preHookFunc) (const char *name, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_unknown_mapflag_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_parse_unknown_mapflag_pre[hIndex].func;
+			preHookFunc(name, w3, w4, start, buffer, filepath, retval);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.npc.parse_unknown_mapflag(name, w3, w4, start, buffer, filepath, retval);
+	}
+	if( HPMHooks.count.HP_npc_parse_unknown_mapflag_post ) {
+		void (*postHookFunc) (const char *name, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_unknown_mapflag_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_parse_unknown_mapflag_post[hIndex].func;
+			postHookFunc(name, w3, w4, start, buffer, filepath, retval);
+		}
+	}
+	return;
 }
 int HP_npc_parsesrcfile(const char *filepath, bool runOnInit) {
 	int hIndex = 0;
