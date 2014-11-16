@@ -914,7 +914,7 @@ void (*init) (void);
  * @see #db_init(void)
  */
 void (*final) (void);
-} DB_s;
+};
 
 struct db_interface *DB;
 

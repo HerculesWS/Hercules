@@ -81,6 +81,8 @@
 #include "../common/showmsg.h"
 #include "../common/strlib.h"
 
+struct db_interface DB_s;
+
 /*****************************************************************************\
  *  (1) Private typedefs, enums, structures, defines and global variables of *
  *  the database system.                                                     *
