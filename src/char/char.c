@@ -2947,9 +2947,10 @@ void char_parse_frommap_datasync(int fd)
 
 void char_parse_frommap_skillid2idx(int fd)
 {
-	memset(&skillid2idx, 0, sizeof(skillid2idx));
 	int i;
 	int j = RFIFOW(fd, 2) - 4;
+
+	memset(&skillid2idx, 0, sizeof(skillid2idx));	
 	if( j )
 		j /= 4;
 	for(i = 0; i < j; i++) {
@@ -2974,7 +2975,8 @@ void char_map_received_ok(int fd)
 void char_send_maps(int fd, int id, int j)
 {
 	unsigned char buf[16384];
-	int x;
+	int x,i;
+
 	if (j == 0) {
 		ShowWarning("Map-server %d has NO maps.\n", id);
 	} else {
@@ -2994,7 +2996,6 @@ void char_send_maps(int fd, int id, int j)
 			WFIFOL(fd,4) = htonl(chr->server[x].ip);
 			WFIFOW(fd,8) = htons(chr->server[x].port);
 			j = 0;
-			int i;
 			for(i = 0; i < ARRAYLENGTH(chr->server[x].map); i++)
 				if (chr->server[x].map[i])
 					WFIFOW(fd,10+(j++)*4) = chr->server[x].map[i];
@@ -3008,13 +3009,14 @@ void char_send_maps(int fd, int id, int j)
 
 void char_parse_frommap_map_names(int fd, int id)
 {
+	int i,j = 0;
+
 	if( chr->server[id].map != NULL ) { aFree(chr->server[id].map); chr->server[id].map = NULL; }
 
 	chr->server[id].maps = ( RFIFOW(fd, 2) - 4 ) / 4;
 	CREATE(chr->server[id].map, unsigned short, chr->server[id].maps);
 
-	int i;
-	int j = 0;
+
 	for(i = 4; i < RFIFOW(fd,2); i += 4) {
 		chr->server[id].map[j] = RFIFOW(fd,i);
 		j++;
@@ -3107,12 +3109,11 @@ void char_parse_frommap_set_users_count(int fd, int id)
 void char_parse_frommap_set_users(int fd, int id)
 {
 	//TODO: When data mismatches memory, update guild/party online/offline states.
-	int aid, cid;
+	int aid, cid, i;
 	struct online_char_data* character;
 
 	chr->server[id].users = RFIFOW(fd,4);
 	chr->online_char_db->foreach(chr->online_char_db,chr->db_setoffline,id); //Set all chars from this server as 'unknown'
-	int i;
 	for(i = 0; i < chr->server[id].users; i++) {
 		aid = RFIFOL(fd,6+i*8);
 		cid = RFIFOL(fd,6+i*8+4);
@@ -3576,10 +3577,10 @@ void char_parse_frommap_save_status_change_data(int fd)
 	{
 		struct status_change_data data;
 		StringBuf buf;
+		int i;
 
 		StrBuf->Init(&buf);
 		StrBuf->Printf(&buf, "INSERT INTO `%s` (`account_id`, `char_id`, `type`, `tick`, `val1`, `val2`, `val3`, `val4`) VALUES ", scdata_db);
-		int i;
 		for( i = 0; i < count; ++i )
 		{
 			memcpy (&data, RFIFOP(fd, 14+i*sizeof(struct status_change_data)), sizeof(struct status_change_data));
@@ -3650,6 +3651,8 @@ void char_map_auth_failed(int fd, int account_id, int char_id, int login_id1, ch
 void char_parse_frommap_auth_request(int fd, int id)
 {
 	struct mmo_charstatus char_dat;
+	struct char_auth_node* node;
+	struct mmo_charstatus* cd;
 
 	int account_id  = RFIFOL(fd,2);
 	int char_id     = RFIFOL(fd,6);
@@ -3659,8 +3662,8 @@ void char_parse_frommap_auth_request(int fd, int id)
 	char standalone = RFIFOB(fd, 19);
 	RFIFOSKIP(fd,20);
 
-	struct char_auth_node* node = (struct char_auth_node*)idb_get(auth_db, account_id);
-	struct mmo_charstatus* cd = (struct mmo_charstatus*)uidb_get(chr->char_db_,char_id);
+	node = (struct char_auth_node*)idb_get(auth_db, account_id);
+	cd = (struct mmo_charstatus*)uidb_get(chr->char_db_,char_id);
 
 	if( cd == NULL ) { //Really shouldn't happen.
 		chr->mmo_char_fromsql(char_id, &char_dat, true);
@@ -4308,6 +4311,8 @@ void char_parse_char_connect(int fd, struct char_session_data* sd, uint32 ipl)
 	uint32 login_id1 = RFIFOL(fd,6);
 	uint32 login_id2 = RFIFOL(fd,10);
 	int sex = RFIFOB(fd,16);
+	struct char_auth_node* node;
+
 	RFIFOSKIP(fd,17);
 
 	ShowInfo("request connect - account_id:%d/login_id1:%d/login_id2:%d\n", account_id, login_id1, login_id2);
@@ -4336,7 +4341,7 @@ void char_parse_char_connect(int fd, struct char_session_data* sd, uint32 ipl)
 	}
 
 	// search authentication
-	struct char_auth_node* node = (struct char_auth_node*)idb_get(auth_db, account_id);
+	node = (struct char_auth_node*)idb_get(auth_db, account_id);
 	if( node != NULL &&
 		node->account_id == account_id &&
 		node->login_id1  == login_id1 &&
@@ -4421,12 +4426,15 @@ void char_parse_char_select(int fd, struct char_session_data* sd, uint32 ipl)
 {
 	struct mmo_charstatus char_dat;
 	struct mmo_charstatus *cd;
+	struct char_auth_node* node;
 	char* data;
 	int char_id;
 	int server_id = 0;
 	int i;
-
+	int map_fd;
+	uint32 subnet_map_ip;
 	int slot = RFIFOB(fd,2);
+
 	RFIFOSKIP(fd,3);
 
 #if PACKETVER >= 20110309
@@ -4515,7 +4523,6 @@ void char_parse_char_select(int fd, struct char_session_data* sd, uint32 ipl)
 		}
 	}
 
-	int map_fd;
 	//Send NEW auth packet [Kevin]
 	//FIXME: is this case even possible? [ultramage]
 	if ((map_fd = chr->server[i].fd) < 1 || session[map_fd] == NULL)
@@ -4528,11 +4535,10 @@ void char_parse_char_select(int fd, struct char_session_data* sd, uint32 ipl)
 		return;
 	}
 
-	uint32 subnet_map_ip = chr->lan_subnetcheck(ipl); // Advanced subnet check [LuzZza]
+	subnet_map_ip = chr->lan_subnetcheck(ipl); // Advanced subnet check [LuzZza]
 	//Send player to map
 	chr->send_map_info(fd, i, subnet_map_ip, cd);
 
-	struct char_auth_node* node;
 	// create temporary auth entry
 	CREATE(node, struct char_auth_node, 1);
 	node->account_id = sd->account_id;
@@ -4571,10 +4577,12 @@ void char_creation_failed(int fd, int result)
 
 void char_creation_ok(int fd, struct mmo_charstatus *char_dat)
 {
+	int len;
+
 	// send to player
 	WFIFOHEAD(fd,2+MAX_CHAR_BUF);
 	WFIFOW(fd,0) = 0x6d;
-	int len = 2 + chr->mmo_char_tobuf(WFIFOP(fd,2), char_dat);
+	len = 2 + chr->mmo_char_tobuf(WFIFOP(fd,2), char_dat);
 	WFIFOSET(fd,len);
 }
 
@@ -4627,8 +4635,10 @@ void char_delete_char_ok(int fd)
 
 void char_parse_char_delete_char(int fd, struct char_session_data* sd, unsigned short cmd)
 {
+	char email[40];
 	int cid = RFIFOL(fd,2);
 	int i;
+
 #if PACKETVER >= 20110309
 	if( pincode->enabled ){ // hack check
 		struct online_char_data* character;
@@ -4641,7 +4651,6 @@ void char_parse_char_delete_char(int fd, struct char_session_data* sd, unsigned 
 	}
 #endif
 	ShowInfo(CL_RED"Request Char Deletion: "CL_GREEN"%d (%d)"CL_RESET"\n", sd->account_id, cid);
-	char email[40];
 	memcpy(email, RFIFOP(fd,6), 40);
 	RFIFOSKIP(fd,( cmd == 0x68) ? 46 : 56);
 
