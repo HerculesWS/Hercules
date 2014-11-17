@@ -4519,7 +4519,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	if( sd->inventory_data[n]->flag.delay_consume )
 		clif->useitemack(sd,n,amount,true);
 	else {
-		if( sd->status.inventory[n].expire_time == 0 ) {
+		if (sd->status.inventory[n].expire_time == 0 && !(sd->inventory_data[n]->flag.keepafteruse)) {
 			clif->useitemack(sd,n,amount-1,true);
 			pc->delitem(sd,n,1,1,0,LOG_TYPE_CONSUME); // Rental Usable Items are not deleted until expiration
 		} else

@@ -36,6 +36,7 @@ item_db: (
 	BindOnEquip: true/false       (boolean, defaults to false)
 	BuyingStore: true/false       (boolean, defaults to false)
 	Delay: Delay to use item      (int, defaults to 0)
+	KeepAfterUse: true/false      (boolean, defaults to false)
 	Trade: {                      (defaults to no restrictions)
 		override: GroupID             (int, defaults to 100)
 		nodrop: true/false            (boolean, defaults to false)
