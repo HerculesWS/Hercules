@@ -2658,7 +2658,8 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 				break;
 			// This ensures the storm randomly pushes instead of exactly a cell backwards per official mechanics.
 			case WZ_STORMGUST:
-				dir = rnd()%8;
+				if(!battle_config.stormgust_knockback)
+					dir = rand()%8;
 				break;
 			case WL_CRIMSONROCK:
 				dir = map->calc_dir(bl,skill->area_temp[4],skill->area_temp[5]);
@@ -2856,9 +2857,11 @@ int skill_check_unit_range_sub (struct block_list *bl, va_list ap) {
 	g_skill_id = su->group->skill_id;
 
 	switch (skill_id) {
-		case MH_STEINWAND:
-		case MG_SAFETYWALL:
 		case AL_PNEUMA:
+		case MG_SAFETYWALL:
+			if(g_skill_id == SA_LANDPROTECTOR)
+				break;
+		case MH_STEINWAND:
 		case SC_MAELSTROM:
 		case SO_ELEMENTAL_SHIELD:
 			if(g_skill_id != MH_STEINWAND && g_skill_id != MG_SAFETYWALL && g_skill_id != AL_PNEUMA && g_skill_id != SC_MAELSTROM && g_skill_id != SO_ELEMENTAL_SHIELD)
@@ -3303,7 +3306,8 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 						int x = skl->type>>16, y = skl->type&0xFFFF;
 						if( path->search_long(NULL, src->m, src->x, src->y, x, y, CELL_CHKWALL) )
 							skill->unitsetting(src,skl->skill_id,skl->skill_lv,x,y,skl->flag);
-						if( path->search_long(NULL, src->m, src->x, src->y, skl->x, skl->y, CELL_CHKWALL) )
+						if( path->search_long(NULL, src->m, src->x, src->y, skl->x, skl->y, CELL_CHKWALL)
+							&& !map->getcell(src->m, skl->x, skl->y, CELL_CHKLANDPROTECTOR) )
 							clif->skill_poseffect(src,skl->skill_id,skl->skill_lv,skl->x,skl->y,tick);
 					}
 					else if( path->search_long(NULL, src->m, src->x, src->y, skl->x, skl->y, CELL_CHKWALL) )
@@ -10265,7 +10269,8 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 					tmpx = x - area + rnd()%(area * 2 + 1);
 					tmpy = y - area + rnd()%(area * 2 + 1);
 
-					if( i == 0 && path->search_long(NULL, src->m, src->x, src->y, tmpx, tmpy, CELL_CHKWALL) )
+					if( i == 0 && path->search_long(NULL, src->m, src->x, src->y, tmpx, tmpy, CELL_CHKWALL)
+						&& !map->getcell(src->m, tmpx, tmpy, CELL_CHKLANDPROTECTOR))
 						clif->skill_poseffect(src,skill_id,skill_lv,tmpx,tmpy,tick);
 
 					if( i > 0 )
@@ -11288,8 +11293,7 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 		if (skill->get_unit_flag(skill_id) & UF_RANGEDSINGLEUNIT && i == (layout->count / 2))
 			val2 |= UF_RANGEDSINGLEUNIT; // center.
 
-		if( range <= 0 )
-			map->foreachincell(skill->cell_overlap,src->m,ux,uy,BL_SKILL,skill_id, &alive, src);
+		map->foreachincell(skill->cell_overlap,src->m,ux,uy,BL_SKILL,skill_id, &alive, src);
 		if( !alive )
 			continue;
 
@@ -11344,7 +11348,7 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 	nullpo_ret(sg=src->group);
 	nullpo_ret(ss=map->id2bl(sg->src_id));
 
-	if( skill->get_type(sg->skill_id) == BF_MAGIC && map->getcell(bl->m, bl->x, bl->y, CELL_CHKLANDPROTECTOR) && sg->skill_id != SA_LANDPROTECTOR )
+	if( skill->get_type(sg->skill_id) == BF_MAGIC && map->getcell(src->bl.m, src->bl.x, src->bl.y, CELL_CHKLANDPROTECTOR) && sg->skill_id != SA_LANDPROTECTOR )
 		return 0; //AoE skills are ineffective. [Skotlex]
 	sc = status->get_sc(bl);
 
@@ -16010,7 +16014,7 @@ int skill_unit_timer_sub_onplace(struct block_list* bl, va_list ap) {
 
 	nullpo_ret(group);
 
-	if( !(skill->get_inf2(group->skill_id)&(INF2_SONG_DANCE|INF2_TRAP|INF2_NOLP)) && map->getcell(bl->m, bl->x, bl->y, CELL_CHKLANDPROTECTOR) )
+	if( !(skill->get_inf2(group->skill_id)&(INF2_SONG_DANCE|INF2_TRAP|INF2_NOLP)) && map->getcell(su->bl.m, su->bl.x, su->bl.y, CELL_CHKLANDPROTECTOR) )
 		return 0; //AoE skills are ineffective. [Skotlex]
 
 	if( battle->check_target(&su->bl,bl,group->target_flag) <= 0 )
