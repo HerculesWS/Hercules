@@ -941,6 +941,7 @@ int mob_spawn (struct mob_data *md)
 	md->move_fail_count = 0;
 	md->ud.state.attack_continue = 0;
 	md->ud.target_to = 0;
+	md->ud.dir = 0;
 	if( md->spawn_timer != INVALID_TIMER )
 	{
 		timer->delete(md->spawn_timer, mob->delayspawn);
@@ -1080,6 +1081,15 @@ int mob_ai_sub_hard_activesearch(struct block_list *bl,va_list ap)
 				((*target) == NULL || !check_distance_bl(&md->bl, *target, dist)) &&
 				battle->check_range(&md->bl,bl,md->db->range2)
 			) { //Pick closest target?
+#ifdef ACTIVEPATHSEARCH
+			struct walkpath_data wpd;
+			if (!path->search(&wpd, md->bl.m, md->bl.x, md->bl.y, bl->x, bl->y, 0, CELL_CHKNOPASS)) // Count walk path cells
+				return 0;
+			//Standing monsters use range2, walking monsters use range3
+			if ((md->ud.walktimer == INVALID_TIMER && wpd.path_len > md->db->range2)
+				|| (md->ud.walktimer != INVALID_TIMER && wpd.path_len > md->db->range3))
+				return 0;
+#endif
 				(*target) = bl;
 				md->target_id=bl->id;
 				md->min_chase= dist + md->db->range3;

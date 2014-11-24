@@ -100,6 +100,13 @@ int unit_walktoxy_sub(struct block_list *bl)
 	if( !path->search(&wpd,bl->m,bl->x,bl->y,ud->to_x,ud->to_y,ud->state.walk_easy,CELL_CHKNOPASS) )
 		return 0;
 
+#ifdef OFFICIAL_WALKPATH
+	if( !path->search_long(NULL, bl->m, bl->x, bl->y, ud->to_x, ud->to_y, CELL_CHKNOPASS) // Check if there is an obstacle between
+		&& wpd.path_len > 14	// Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett]
+		&& (bl->type != BL_NPC) ) // If type is a NPC, please disregard.
+			return 0;
+#endif
+
 	memcpy(&ud->walkpath,&wpd,sizeof(wpd));
 
 	if (ud->target_to && ud->chaserange>1) {
@@ -391,8 +398,14 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 		ud->steptimer = timer->add(tick+i, unit->step_timer, bl->id, 0);
 	}
 
-	if(ud->state.change_walk_target)
-		return unit->walktoxy_sub(bl);
+	if(ud->state.change_walk_target) {
+		if(unit_walktoxy_sub(bl)) {
+			return 1;	
+		} else {
+			clif->fixpos(bl);
+			return 0;
+		}
+	}
 
 	ud->walkpath.path_pos++;
 	if(ud->walkpath.path_pos>=ud->walkpath.path_len)
@@ -572,6 +585,10 @@ int unit_walktobl(struct block_list *bl, struct block_list *tbl, int range, int 
 		ud->to_y = bl->y;
 		ud->target_to = 0;
 		return 0;
+	} else if (range == 0) {
+		//Should walk on the same cell as target (for looters)
+		ud->to_x = tbl->x;
+		ud->to_y = tbl->y;
 	}
 
 	ud->state.walk_easy = flag&1;
@@ -1131,6 +1148,10 @@ int unit_set_walkdelay(struct block_list *bl, int64 tick, int delay, int type) {
 	if (delay <= 0 || !ud) return 0;
 
 	if (type) {
+		//Bosses can ignore skill induced walkdelay (but not damage induced)
+		if(bl->type == BL_MOB && (((TBL_MOB*)bl)->status.mode&MD_BOSS))
+			return 0;
+		//Make sure walk delay is not decreased
 		if (DIFF_TICK(ud->canmove_tick, tick+delay) > 0)
 			return 0;
 	} else {

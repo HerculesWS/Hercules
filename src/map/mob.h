@@ -42,6 +42,15 @@
 
 #define MAX_MOB_CHAT 250 //Max Skill's messages
 
+// On official servers, monsters will only seek targets that are closer to walk to than their
+// search range. The search range is affected depending on if the monster is walking or not.
+// On some maps there can be a quite long path for just walking two cells in a direction and
+// the client does not support displaying walk paths that are longer than 14 cells, so this
+// option reduces position lag in such situation. But doing a complex search for every possible
+// target, might be CPU intensive.
+// Disable this to make monsters not do any path search when looking for a target (old behavior).
+#define ACTIVEPATHSEARCH
+
 //Mob skill states.
 enum MobSkillState {
 	MSS_ANY = -1,

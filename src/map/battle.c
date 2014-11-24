@@ -1463,9 +1463,9 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					break;
 				case WZ_FIREPILLAR:
 					if (skill_lv > 10)
-						skillratio += 100;
+						skillratio += 2300; //200% MATK each hit
 					else
-						skillratio -= 80;
+						skillratio += -60 + 20*skill_lv; //20% MATK each hit
 					break;
 				case WZ_SIGHTRASHER:
 					skillratio += 20 * skill_lv;
@@ -3384,11 +3384,10 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 
 	switch(skill_id) {
 		case MG_FIREWALL:
-		case NJ_KAENSIN:
-			ad.dmotion = 0; //No flinch animation.
 			if ( tstatus->def_ele == ELE_FIRE || battle->check_undead(tstatus->race, tstatus->def_ele) )
 				ad.blewcount = 0; //No knockback
 			break;
+		case NJ_KAENSIN:
 		case PR_SANCTUARY:
 			ad.dmotion = 0; //No flinch animation.
 			break;
@@ -3495,7 +3494,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 				}
 				//Constant/misc additions from skills
 				if (skill_id == WZ_FIREPILLAR)
-					MATK_ADD(50);
+					MATK_ADD(100+50*skill_lv);
 				if( sd && ( sd->status.class_ == JOB_ARCH_BISHOP_T || sd->status.class_ == JOB_ARCH_BISHOP ) &&
 					(i=pc->checkskill(sd,AB_EUCHARISTICA)) > 0 &&
 					(tstatus->race == RC_DEMON || tstatus->def_ele == ELE_DARK) )

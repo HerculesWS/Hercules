@@ -3762,8 +3762,6 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 		case NPC_SPLASHATTACK:
 			flag |= SD_PREAMBLE; // a fake packet will be sent for the first target to be hit
 		case AS_SPLASHER:
-		case SM_MAGNUM:
-		case MS_MAGNUM:
 		case HT_BLITZBEAT:
 		case AC_SHOWER:
 		case MA_SHOWER:
@@ -3870,6 +3868,14 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 
 				// recursive invocation of skill->castend_damage_id() with flag|1
 				map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), splash_target(src), src, skill_id, skill_lv, tick, flag|BCT_ENEMY|SD_SPLASH|1, skill->castend_damage_id);
+			}
+			break;
+
+		case SM_MAGNUM:
+		case MS_MAGNUM:
+			if( flag&1 ) {
+				//Damage depends on distance, so add it to flag if it is > 1
+				skill_attack(skill_get_type(skill_id), src, src, bl, skill_id, skill_lv, tick, flag|distance_bl(src, bl));
 			}
 			break;
 
@@ -9900,7 +9906,6 @@ int skill_castend_map (struct map_session_data *sd, uint16 skill_id, const char 
 	}
 
 	pc_stop_attack(sd);
-	pc_stop_walking(sd,0);
 
 	if(battle_config.skill_log && battle_config.skill_log&BL_PC)
 		ShowInfo("PC %d skill castend skill =%d map=%s\n",sd->bl.id,skill_id,mapname);

@@ -3639,6 +3639,21 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
 	if (!bst || !st)
 		return;
 
+	/** [Playtester]
+	* This needs to be done even if there is currently no status change active, because
+	* we need to update the speed on the client when the last status change ends.
+	**/
+	if(flag&SCB_SPEED) {
+		struct unit_data *ud = unit->bl2ud(bl);
+		/** [Skotlex]
+		* Re-walk to adjust speed (we do not check if walktimer != INVALID_TIMER
+		* because if you step on something while walking, the moment this
+		* piece of code triggers the walk-timer is set on INVALID_TIMER)
+		**/
+		if (ud)
+			ud->state.change_walk_target = ud->state.speed_changed = 1;
+	}
+
 	if((!(bl->type&BL_REGEN)) && (!sc || !sc->count)) { //No difference.
 		status_cpy(st, bst);
 		return;
@@ -3815,15 +3830,8 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
 	}
 
 	if(flag&SCB_SPEED) {
-		struct unit_data *ud = unit->bl2ud(bl);
 
 		st->speed = status->calc_speed(bl, sc, bst->speed);
-
-		//Re-walk to adjust speed (we do not check if walktimer != INVALID_TIMER
-		//because if you step on something while walking, the moment this
-		//piece of code triggers the walk-timer is set on INVALID_TIMER) [Skotlex]
-		if (ud)
-			ud->state.change_walk_target = ud->state.speed_changed = 1;
 
 		if( bl->type&BL_PC && !(sd && sd->state.permanent_speed) && st->speed < battle_config.max_walk_speed )
 			st->speed = battle_config.max_walk_speed;
@@ -4200,8 +4208,6 @@ unsigned short status_calc_str(struct block_list *bl, struct status_change *sc, 
 	}
 	if(sc->data[SC_BEYOND_OF_WARCRY])
 		str += sc->data[SC_BEYOND_OF_WARCRY]->val3;
-	if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH && str < 50)
-		return 50;
 	if(sc->data[SC_INCALLSTATUS])
 		str += sc->data[SC_INCALLSTATUS]->val1;
 	if(sc->data[SC_CHASEWALK2])
@@ -4232,6 +4238,8 @@ unsigned short status_calc_str(struct block_list *bl, struct status_change *sc, 
 		str -= ((sc->data[SC_MARIONETTE_MASTER]->val3)>>16)&0xFF;
 	if(sc->data[SC_MARIONETTE])
 		str += ((sc->data[SC_MARIONETTE]->val3)>>16)&0xFF;
+	if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+		str += ((sc->data[SC_SOULLINK]->val3)>>16)&0xFF;
 	if(sc->data[SC_GIANTGROWTH])
 		str += 30;
 	if(sc->data[SC_SAVAGE_STEAK])
@@ -4257,8 +4265,6 @@ unsigned short status_calc_agi(struct block_list *bl, struct status_change *sc, 
 		agi -= sc->data[SC_HARMONIZE]->val2;
 		return (unsigned short)cap_value(agi,0,USHRT_MAX);
 	}
-	if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH && agi < 50)
-		return 50;
 	if(sc->data[SC_CONCENTRATION] && !sc->data[SC_QUAGMIRE])
 		agi += (agi-sc->data[SC_CONCENTRATION]->val3)*sc->data[SC_CONCENTRATION]->val2/100;
 	if(sc->data[SC_INCALLSTATUS])
@@ -4287,6 +4293,8 @@ unsigned short status_calc_agi(struct block_list *bl, struct status_change *sc, 
 		agi -= ((sc->data[SC_MARIONETTE_MASTER]->val3)>>8)&0xFF;
 	if(sc->data[SC_MARIONETTE])
 		agi += ((sc->data[SC_MARIONETTE]->val3)>>8)&0xFF;
+	if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+		agi += ((sc->data[SC_SOULLINK]->val3)>>8)&0xFF;
 	if(sc->data[SC_ADORAMUS])
 		agi -= sc->data[SC_ADORAMUS]->val2;
 	if(sc->data[SC_DROCERA_HERB_STEAMED])
@@ -4315,8 +4323,6 @@ unsigned short status_calc_vit(struct block_list *bl, struct status_change *sc, 
 		vit -= sc->data[SC_HARMONIZE]->val2;
 		return (unsigned short)cap_value(vit,0,USHRT_MAX);
 	}
-	if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH && vit < 50)
-		return 50;
 	if(sc->data[SC_INCALLSTATUS])
 		vit += sc->data[SC_INCALLSTATUS]->val1;
 	if(sc->data[SC_INCVIT])
@@ -4335,6 +4341,8 @@ unsigned short status_calc_vit(struct block_list *bl, struct status_change *sc, 
 		vit -= sc->data[SC_MARIONETTE_MASTER]->val3&0xFF;
 	if(sc->data[SC_MARIONETTE])
 		vit += sc->data[SC_MARIONETTE]->val3&0xFF;
+	if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+		vit += sc->data[SC_SOULLINK]->val3&0xFF;
 	if(sc->data[SC_LAUDAAGNUS])
 		vit += 4 + sc->data[SC_LAUDAAGNUS]->val1;
 	if(sc->data[SC_MINOR_BBQ])
@@ -4365,8 +4373,6 @@ unsigned short status_calc_int(struct block_list *bl, struct status_change *sc, 
 	}
 	if(sc->data[SC_MELODYOFSINK])
 		int_ -= sc->data[SC_MELODYOFSINK]->val3;
-	if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH && int_ < 50)
-		return 50;
 	if(sc->data[SC_INCALLSTATUS])
 		int_ += sc->data[SC_INCALLSTATUS]->val1;
 	if(sc->data[SC_INCINT])
@@ -4393,6 +4399,8 @@ unsigned short status_calc_int(struct block_list *bl, struct status_change *sc, 
 		int_ -= ((sc->data[SC_MARIONETTE_MASTER]->val4)>>16)&0xFF;
 	if(sc->data[SC_MARIONETTE])
 		int_ += ((sc->data[SC_MARIONETTE]->val4)>>16)&0xFF;
+	if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+		int_ += ((sc->data[SC_SOULLINK]->val4)>>16)&0xFF;
 	if(sc->data[SC_MANDRAGORA])
 		int_ -= 4 * sc->data[SC_MANDRAGORA]->val1;
 	if(sc->data[SC_COCKTAIL_WARG_BLOOD])
@@ -4425,8 +4433,6 @@ unsigned short status_calc_dex(struct block_list *bl, struct status_change *sc, 
 		dex -= sc->data[SC_HARMONIZE]->val2;
 		return (unsigned short)cap_value(dex,0,USHRT_MAX);
 	}
-	if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH && dex < 50)
-		return 50;
 	if(sc->data[SC_CONCENTRATION] && !sc->data[SC_QUAGMIRE])
 		dex += (dex-sc->data[SC_CONCENTRATION]->val4)*sc->data[SC_CONCENTRATION]->val2/100;
 	if(sc->data[SC_INCALLSTATUS])
@@ -4457,6 +4463,8 @@ unsigned short status_calc_dex(struct block_list *bl, struct status_change *sc, 
 		dex -= ((sc->data[SC_MARIONETTE_MASTER]->val4)>>8)&0xFF;
 	if(sc->data[SC_MARIONETTE])
 		dex += ((sc->data[SC_MARIONETTE]->val4)>>8)&0xFF;
+	if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+		dex += ((sc->data[SC_SOULLINK]->val4)>>8)&0xFF;
 	if(sc->data[SC_SIROMA_ICE_TEA])
 		dex += sc->data[SC_SIROMA_ICE_TEA]->val1;
 	if(sc->data[SC_INSPIRATION])
@@ -4487,8 +4495,6 @@ unsigned short status_calc_luk(struct block_list *bl, struct status_change *sc, 
 	}
 	if(sc->data[SC_CURSE])
 		return 0;
-	if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH && luk < 50)
-		return 50;
 	if(sc->data[SC_INCALLSTATUS])
 		luk += sc->data[SC_INCALLSTATUS]->val1;
 	if(sc->data[SC_INCLUK])
@@ -4505,6 +4511,8 @@ unsigned short status_calc_luk(struct block_list *bl, struct status_change *sc, 
 		luk -= sc->data[SC_MARIONETTE_MASTER]->val4&0xFF;
 	if(sc->data[SC_MARIONETTE])
 		luk += sc->data[SC_MARIONETTE]->val4&0xFF;
+	if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+		luk += sc->data[SC_SOULLINK]->val4&0xFF;
 	if(sc->data[SC_PUTTI_TAILS_NOODLES])
 		luk += sc->data[SC_PUTTI_TAILS_NOODLES]->val1;
 	if(sc->data[SC_INSPIRATION])
@@ -7231,9 +7239,13 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				if (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
 					status_change_end(bl, SC_STONE, INVALID_TIMER);
 			}
+			if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+				status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
 			break;
 		case SC_INC_AGI:
 			status_change_end(bl, SC_DEC_AGI, INVALID_TIMER);
+			if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+				status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
 			break;
 		case SC_QUAGMIRE:
 			status_change_end(bl, SC_CONCENTRATION, INVALID_TIMER);
@@ -8050,6 +8062,23 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				stat = (psce->val4 >> 8)&0xFF; stat = min(stat, max_stat - tst->dex ); val4 |= cap_value(stat,0,0xFF)<<8;
 				stat = (psce->val4 >> 0)&0xFF; stat = min(stat, max_stat - tst->luk ); val4 |= cap_value(stat,0,0xFF);
 			}
+				break;
+			case SC_SOULLINK:
+				//1st Transcendent Spirit works similar to Marionette Control
+				if(sd && val2 == SL_HIGH) {
+					int stat,max_stat;
+					// Fetch target's stats
+					struct status_data* status2 = status_get_status_data(bl); // Battle status
+					val3 = 0;
+					val4 = 0;
+					max_stat = (status_get_lv(bl)-10<50)?status_get_lv(bl)-10:50;
+					stat = max(0, max_stat - status2->str ); val3 |= cap_value(stat,0,0xFF)<<16;
+					stat = max(0, max_stat - status2->agi ); val3 |= cap_value(stat,0,0xFF)<<8;
+					stat = max(0, max_stat - status2->vit ); val3 |= cap_value(stat,0,0xFF);
+					stat = max(0, max_stat - status2->int_); val4 |= cap_value(stat,0,0xFF)<<16;
+					stat = max(0, max_stat - status2->dex ); val4 |= cap_value(stat,0,0xFF)<<8;
+					stat = max(0, max_stat - status2->luk ); val4 |= cap_value(stat,0,0xFF);
+				}
 				break;
 			case SC_SWORDREJECT:
 				val2 = 15*val1; //Reflect chance
