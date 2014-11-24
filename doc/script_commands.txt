@@ -2944,7 +2944,7 @@ recreate these items perfectly if they are destroyed. Here's what you get:
 
 @inventorylist_id[]        - array of item ids.
 @inventorylist_amount[]    - their corresponding item amounts.
-@inventorylist_equip[]     - whether the item is equipped or not.
+@inventorylist_equip[]     - will return the slot item is equipped on, if at all.
 @inventorylist_refine[]    - for how much it is refined.
 @inventorylist_identify[]  - whether it is identified.
 @inventorylist_attribute[] - whether it is broken.
@@ -2955,8 +2955,8 @@ recreate these items perfectly if they are destroyed. Here's what you get:
                              made by a specific craftsman.
 @inventorylist_expire[]    - expire time (Unix time stamp). 0 means never 
                              expires.
-@inventorylist_count       - the number of items in these lists.
 @inventorylist_bound       - whether it is an account bounded item or not.
+@inventorylist_count       - the number of items in these lists.
 
 This could be handy to save/restore a character's inventory, since no 
 other command returns such a complete set of data, and could also be the
@@ -2970,6 +2970,42 @@ attached to the character, and integer.
 Be sure to use @inventorylist_count to go through these arrays, and not 
 'getarraysize', because the arrays are not automatically cleared between 
 runs of 'getinventorylist'.
+
+---------------------------------------
+
+*getcartinventorylist;
+
+This command sets a bunch of arrays with a complete list of whatever the 
+invoking character has in its cart_inventory, including all the data needed to 
+recreate these items perfectly if they are destroyed. Here's what you get:
+
+@cartinventorylist_id[]        - array of item ids.
+@cartinventorylist_amount[]    - their corresponding item amounts.
+@cartinventorylist_refine[]    - for how much it is refined.
+@cartinventorylist_identify[]  - whether it is identified.
+@cartinventorylist_attribute[] - whether it is broken.
+@cartinventorylist_card1[]     - These four arrays contain card data for the
+@cartinventorylist_card2[]       items. These data slots are also used to store
+@cartinventorylist_card3[]       names inscribed on the items, so you can
+@cartinventorylist_card4[]       explicitly check if the character owns an item
+								 made by a specific craftsman.
+@cartinventorylist_expire[]    - expire time (Unix time stamp). 0 means never 
+								 expires.
+@cartinventorylist_bound       - whether it is an account bounded item or not.
+@cartinventorylist_count       - the number of items in these lists.
+
+This could be handy to save/restore a character's cart_inventory, since no 
+other command returns such a complete set of data, and could also be the
+only way to correctly handle an NPC trader for carded and named items who 
+could resell them - since NPC objects cannot own items, so they have to 
+store item data in variables and recreate the items.
+
+Notice that the variables this command generates are all temporary, 
+attached to the character, and integer.
+
+Be sure to use @cartinventorylist_count to go through these arrays, and not 
+'getarraysize', because the arrays are not automatically cleared between 
+runs of 'getcartinventorylist'.
 
 ---------------------------------------
 
@@ -4809,6 +4845,41 @@ Example:
 
 ---------------------------------------
 
+*checkbound(<item_id>{,<bound_type>{,<refine>{,<attribute>{,<card_1>{,<card_2>{,<card_3>{,<card_4>}}}}}}});
+
+This command allows you to check whether or not the attached player has the specified bound item in their inventory.
+
+Valid bound types are:
+ 1 - Account Bound
+ 2 - Guild Bound
+ 3 - Party Bound
+ 4 - Character Bound
+
+Optional Parameters:
+ refine - checks to see if the item is refined to the given number.
+ attribute - whether the item is broken (1) or not (0)
+ card 1,2,3,4 - checks to see if the specified cards are compounded on the item as well.
+
+Example:
+	// This will check if you have a bound (any type) 1205 (Cutter).
+	if (checkbound(1205)) {
+		mes "You have a bound Cutter";
+		close;
+	} else {
+		mes "You do not have a bound Cutter";
+		close;
+	}
+	
+	// This will check if you have a 'guild_bound' +7 1205 (Cutter).
+	if (checkbound(1205, 2, 7)) {
+		mes "You have a +7 guild_bound Cutter.";
+		close;
+	} else {
+		mes "You don't have the required item.";
+		close;
+	}
+---------------------------------------
+
 *getnameditem <item id>,<character name|character ID>;
 *getnameditem "<item name>",<character name|character ID>;
 
@@ -5208,6 +5279,7 @@ like storage or cart.
 ---------------------------------------
 
 *equip <item id>;
+*equip2 <item id>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>{,<account ID>};
 *autoequip <item id>,<option>;
 
 These commands are to equip a equipment on the attached character. 
@@ -5221,7 +5293,11 @@ Examples:
 //This will equip a 1104 (falchion) on the character if this is in the 
 //inventory.
 	equip 1104;
-	
+
+//This will equip a +10 1104 (falchion)on the character if this is in the
+//inventory.
+	equip2 1104 10 0 0 0 0 0;
+
 //The invoked character will now automatically equip a falchion when it's 
 //looted.
 	autoequip 1104,1;
@@ -8376,6 +8452,27 @@ if (instance_check_party(getcharid(1),2,2,149)) {
 	mes "Sorry, your party does not meet requirements.";
 	close;
 }
+
+---------------------------------------
+
+*instance_check_guild(<guild_id>{,<amount>{,<min>{,<max>}}});
+
+This function checks if a guild meets certain requirements, returning 1 if
+all conditions are met and 0 otherwise. it will only check online characters.
+
+amount - number of online guild members (default is 1).
+min - minimum level of all characters in the guild (default is 1).
+max - maximum level of all characters in the guild (default is max level in conf).
+
+Example:
+	if (instance_check_guild(getcharid(2), 2, 1, 150)) {
+		mes "Your guild meets the Memorial Dungeon requirements.",
+		mes "All online members are between levels 1-150 and at least two are online.";
+		close;
+	} else {
+		mes "Sorry, your guild does not meet requirements.";
+		close;
+	}
 
 ---------------------------------------
 *instance_set_respawn(<map_name>,<x>,<y>{,<instance_id>});

@@ -12424,32 +12424,73 @@ BUILDIN(petloot)
  * @inventorylist_card(0..3), @inventorylist_expire
  * @inventorylist_count = scalar
  *------------------------------------------*/
-BUILDIN(getinventorylist)
-{
+BUILDIN(getinventorylist){
+	TBL_PC *sd=script->rid2sd(st);
+	char card_var[NAME_LENGTH];
+	struct item_data *item;
+
+	int id;
+	int i,j=0,k,l;
+	if(!sd) return true;
+
+		for(i=0;i<MAX_INVENTORY;i++) {
+			if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].amount > 0) {
+				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_id"), j),sd->status.inventory[i].nameid);
+				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_amount"), j),sd->status.inventory[i].amount);
+				if(sd->status.inventory[i].equip) {
+					for (k = 0; k < ARRAYLENGTH(script->equip); k++) {
+						id = pc->checkequip(sd,script->equip[k]);
+						item = sd->inventory_data[id];
+						if( item != 0 ){
+							if(item->nameid == sd->status.inventory[i].nameid) {
+								pc->setreg(sd,reference_uid(script->add_str("@inventorylist_equip"), j),k+1);
+							}
+						}
+					}
+				} else {
+					pc->setreg(sd,reference_uid(script->add_str("@inventorylist_equip"), j),0);
+				}
+				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_refine"), j),sd->status.inventory[i].refine);
+				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_identify"), j),sd->status.inventory[i].identify);
+				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_attribute"), j),sd->status.inventory[i].attribute);
+				for (l = 0; l < MAX_SLOTS; l++) {
+					sprintf(card_var, "@inventorylist_card%d",l+1);
+					pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.inventory[i].card[l]);
+				}
+				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_expire"), j),sd->status.inventory[i].expire_time);
+				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_bound"), j),sd->status.inventory[i].bound);
+				j++;
+			}
+		}
+	pc->setreg(sd,script->add_str("@inventorylist_count"),j);
+	return true;
+}
+
+BUILDIN(getcartinventorylist){
 	TBL_PC *sd=script->rid2sd(st);
 	char card_var[NAME_LENGTH];
 
 	int i,j=0,k;
 	if(!sd) return true;
-	for(i=0;i<MAX_INVENTORY;i++) {
-		if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].amount > 0) {
-			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_id"), j),sd->status.inventory[i].nameid);
-			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_amount"), j),sd->status.inventory[i].amount);
-			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_equip"), j),sd->status.inventory[i].equip);
-			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_refine"), j),sd->status.inventory[i].refine);
-			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_identify"), j),sd->status.inventory[i].identify);
-			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_attribute"), j),sd->status.inventory[i].attribute);
-			for (k = 0; k < MAX_SLOTS; k++)
-			{
-				sprintf(card_var, "@inventorylist_card%d",k+1);
-				pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.inventory[i].card[k]);
+
+		for(i=0;i<MAX_CART;i++) {
+			if(sd->status.cart[i].nameid > 0 && sd->status.cart[i].amount > 0) {
+				pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_id"), j),sd->status.cart[i].nameid);
+				pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_amount"), j),sd->status.cart[i].amount);
+				pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_equip"), j),sd->status.cart[i].equip);
+				pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_refine"), j),sd->status.cart[i].refine);
+				pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_identify"), j),sd->status.cart[i].identify);
+				pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_attribute"), j),sd->status.cart[i].attribute);
+				for (k = 0; k < MAX_SLOTS; k++) {
+					sprintf(card_var, "@cartinventorylist_card%d",k+1);
+					pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.cart[i].card[k]);
+				}
+				pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_expire"), j),sd->status.cart[i].expire_time);
+				pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_bound"), j),sd->status.cart[i].bound);
+				j++;
 			}
-			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_expire"), j),sd->status.inventory[i].expire_time);
-			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_bound"), j),sd->status.inventory[i].bound);
-			j++;
 		}
-	}
-	pc->setreg(sd,script->add_str("@inventorylist_count"),j);
+	pc->setreg(sd,script->add_str("@cartinventorylist_count"),j);
 	return true;
 }
 
@@ -13897,6 +13938,60 @@ BUILDIN(autoequip)
 	}
 
 	item_data->flag.autoequip = flag>0?1:0;
+	return true;
+}
+
+/*=======================================================
+ * Equip2
+ * equip2 <item id>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>{,<account ID>};
+ *-------------------------------------------------------*/
+BUILDIN(equip2)
+{
+	int i,nameid,ref,attr,c0,c1,c2,c3,bound;
+	struct item_data *item_data;
+	TBL_PC *sd;
+
+	if ( script_hasdata(st,9) )
+		sd = map->id2sd(script_getnum(st,9));
+	else
+		sd = script->rid2sd(st);
+
+	if ( sd == NULL ) {
+		script_pushint(st,0);
+		return true;
+	}
+	
+	nameid = script_getnum(st,2);
+	if( (item_data = itemdb->exists(nameid)) == NULL )
+	{
+		ShowError("Wrong item ID : equip2(%i)\n",nameid);
+		script_pushint(st,0);
+		return false;
+	}
+
+	ref    = script_getnum(st,3);
+	attr   = script_getnum(st,4);
+	c0     = (short)script_getnum(st,5);
+	c1     = (short)script_getnum(st,6);
+	c2     = (short)script_getnum(st,7);
+	c3     = (short)script_getnum(st,8);
+
+	ARR_FIND( 0, MAX_INVENTORY, i,( sd->status.inventory[i].equip == 0 &&
+									sd->status.inventory[i].nameid == nameid &&
+									sd->status.inventory[i].refine == ref &&
+									sd->status.inventory[i].attribute == attr &&
+									sd->status.inventory[i].card[0] == c0 &&
+									sd->status.inventory[i].card[1] == c1 &&
+									sd->status.inventory[i].card[2] == c2 &&
+									sd->status.inventory[i].card[3] == c3 ) );
+
+	if( i < MAX_INVENTORY ) {
+		script_pushint(st,1);
+		pc->equipitem(sd,i,item_data->equip);
+	}
+	else
+		script_pushint(st,0);
+
 	return true;
 }
 
@@ -17186,6 +17281,63 @@ BUILDIN(instance_check_party) {
 }
 
 /*==========================================
+ * instance_check_guild
+ * Values:
+ * guild_id : Guild ID of the invoking character. [Required Parameter]
+ * amount : Amount of needed Guild Members for the Instance. [Optional Parameter]
+ * min : Minimum Level needed to join the Instance. [Optional Parameter]
+ * max : Maxium Level allowed to join the Instance. [Optional Parameter]
+ * Example: instance_check_guild (getcharid(2){,amount}{,min}{,max});
+ * Example 2: instance_check_guild (getcharid(2),1,1,99);
+ *------------------------------------------*/
+BUILDIN(instance_check_guild){
+	struct map_session_data *pl_sd;
+	int amount, min, max, i, guild_id, c = 0;
+	struct guild *g = NULL;
+
+	amount = script_hasdata(st,3) ? script_getnum(st,3) : 1;
+	min = script_hasdata(st,4) ? script_getnum(st,4) : 1;
+	max = script_hasdata(st,5) ? script_getnum(st,5) : MAX_LEVEL;
+
+	if( min < 1 || min > MAX_LEVEL ){
+		ShowError("instance_check_guild: Invalid min level, %d\n", min);
+		return true;
+	} else if( max < 1 || max > MAX_LEVEL ){
+		ShowError("instance_check_guild: Invalid max level, %d\n", max);
+		return true;
+	}
+
+	if( script_hasdata(st,2) )
+		guild_id = script_getnum(st,2);
+	else return true;
+
+	if( !(g = guild->search(guild_id)) ){
+		script_pushint(st,0);
+		return true;
+	}
+
+	for( i = 0; i < MAX_GUILD; i++ )
+		if( (pl_sd = g->member[i].sd) )
+			if( map->id2bl(pl_sd->bl.id) ){
+				if( pl_sd->status.base_level < min ){
+					script_pushint(st,0);
+					return true;
+				} else if( pl_sd->status.base_level > max ){
+					script_pushint(st,0);
+					return true;
+				}
+				c++;
+			}
+		
+	if( c < amount )
+		script_pushint(st,0);
+	else
+		script_pushint(st,1);
+
+	return true;
+}
+
+/*==========================================
  * Custom Fonts
  *------------------------------------------*/
 BUILDIN(setfont)
@@ -18533,6 +18685,53 @@ BUILDIN(countbound)
 	return 0;
 }
 
+/*==========================================
+ * checkbound(<item_id>{,<bound_type>{,<refine>{,<attribute>{,<card_1>{,<card_2>{,<card_3>{,<card_4>}}}}}}});
+ * Checks to see if specified item is in inventory.
+ * Returns the bound type of item found.
+ * Type:
+ * 1 - Account Bound
+ * 2 - Guild Bound
+ * 3 - Party Bound
+ * 4 - Character Bound
+ *------------------------------------------*/
+BUILDIN(checkbound){
+	int i, nameid = script_getnum(st,2);
+	int bound_type, ref, attr, c1, c2, c3, c4;
+	TBL_PC *sd;
+
+	sd = script->rid2sd(st);
+	if( sd == NULL )
+		return false;
+
+	if( !(itemdb->exists(nameid)) ){
+		ShowError("script_checkbound: Invalid item ID = %d\n", nameid);
+		return false;
+	}
+
+	bound_type = ( script_hasdata(st,3) ? script_getnum(st,3) : -1 );
+	if( bound_type < -1 || bound_type > IBT_MAX ){
+		ShowError("script_checkbound: Not a valid bind type! Type=%d\n", bound_type);
+	}
+
+	ARR_FIND( 0, MAX_INVENTORY, i, (sd->status.inventory[i].nameid == nameid &&
+								   ( sd->status.inventory[i].refine == (script_hasdata(st,4)? (ref = script_getnum(st,4)) : sd->status.inventory[i].refine) ) &&
+								   ( sd->status.inventory[i].attribute == (script_hasdata(st,5)? (attr = script_getnum(st,5)) : sd->status.inventory[i].attribute) ) &&
+								   ( sd->status.inventory[i].card[0] == (script_hasdata(st,6)? (c1 = script_getnum(st,6)) : sd->status.inventory[i].card[0]) ) &&
+								   ( sd->status.inventory[i].card[1] == (script_hasdata(st,7)? (c2 = script_getnum(st,7)) : sd->status.inventory[i].card[1]) ) &&
+								   ( sd->status.inventory[i].card[2] == (script_hasdata(st,8)? (c3 = script_getnum(st,8)) : sd->status.inventory[i].card[2]) ) &&
+								   ( sd->status.inventory[i].card[3] == (script_hasdata(st,9)? (c4 = script_getnum(st,9)) : sd->status.inventory[i].card[3]) ) &&
+								   ( sd->status.inventory[i].bound > 0 && bound_type == -1 || sd->status.inventory[i].bound == bound_type )) );
+
+	if( i < MAX_INVENTORY ){
+		script_pushint(st, sd->status.inventory[i].bound);
+		return true;
+	} else
+		script_pushint(st,0);
+	
+	return true;
+}
+
 /* bg_match_over( arena_name {, optional canceled } ) */
 /* returns 0 when successful, 1 otherwise */
 BUILDIN(bg_match_over) {
@@ -19221,6 +19420,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(makepet,"i"),
 		BUILDIN_DEF(getexp,"ii"),
 		BUILDIN_DEF(getinventorylist,""),
+		BUILDIN_DEF(getcartinventorylist,""),
 		BUILDIN_DEF(getskilllist,""),
 		BUILDIN_DEF(clearitem,""),
 		BUILDIN_DEF(classchange,"ii"),
@@ -19331,6 +19531,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(npcshopattach,"s?"),
 		BUILDIN_DEF(equip,"i"),
 		BUILDIN_DEF(autoequip,"ii"),
+		BUILDIN_DEF(equip2,"iiiiiii?"),
 		BUILDIN_DEF(setbattleflag,"si"),
 		BUILDIN_DEF(getbattleflag,"s"),
 		BUILDIN_DEF(setitemscript,"is?"), //Set NEW item bonus script. Lupus
@@ -19431,6 +19632,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(has_instance,"s?"),
 		BUILDIN_DEF(instance_warpall,"sii?"),
 		BUILDIN_DEF(instance_check_party,"i???"),
+		BUILDIN_DEF(instance_check_guild,"i???"),
 		BUILDIN_DEF(instance_mapname,"s?"),
 		BUILDIN_DEF(instance_set_respawn,"sii?"),
 		BUILDIN_DEF2(has_instance,"has_instance2","s"),
@@ -19471,6 +19673,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF2(getitem,"getitembound","vii?"),
 		BUILDIN_DEF2(getitem2,"getitembound2","viiiiiiiii?"),
 		BUILDIN_DEF(countbound, "?"),
+		BUILDIN_DEF(checkbound, "i???????"),
 
 		//Quest Log System [Inkfish]
 		BUILDIN_DEF(questinfo, "ii??"),
