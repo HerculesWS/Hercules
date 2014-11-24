@@ -482,6 +482,7 @@ struct Battle_Config {
 
 	int song_timer_reset; // [csnv]
 	int snap_dodge; // Enable or disable dodging damage snapping away [csnv]
+	int stormgust_knockback;
 
 	int feature_roulette;
 };
