@@ -2858,9 +2858,9 @@ int skill_check_unit_range_sub (struct block_list *bl, va_list ap) {
 
 	switch (skill_id) {
 		case AL_PNEUMA:
-		case MG_SAFETYWALL:
 			if(g_skill_id == SA_LANDPROTECTOR)
 				break;
+		case MG_SAFETYWALL:
 		case MH_STEINWAND:
 		case SC_MAELSTROM:
 		case SO_ELEMENTAL_SHIELD:
@@ -10107,6 +10107,11 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			}
 
 		case MG_SAFETYWALL:
+			if (map->foreachincell(skill->cell_overlap,src->m,x,y,BL_SKILL)) {
+				skill->unitsetting(src,skill_id,skill_lv,x,y,0);
+				return 0; // Don't consume gems if cast on LP
+			}
+
 		case MG_FIREWALL:
 		case MG_THUNDERSTORM:
 
