@@ -12433,35 +12433,35 @@ BUILDIN(getinventorylist){
 	int i,j=0,k,l;
 	if(!sd) return true;
 
-		for(i=0;i<MAX_INVENTORY;i++) {
-			if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].amount > 0) {
-				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_id"), j),sd->status.inventory[i].nameid);
-				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_amount"), j),sd->status.inventory[i].amount);
-				if(sd->status.inventory[i].equip) {
-					for (k = 0; k < ARRAYLENGTH(script->equip); k++) {
-						id = pc->checkequip(sd,script->equip[k]);
-						item = sd->inventory_data[id];
-						if( item != 0 ){
-							if(item->nameid == sd->status.inventory[i].nameid) {
-								pc->setreg(sd,reference_uid(script->add_str("@inventorylist_equip"), j),k+1);
-							}
+	for(i=0;i<MAX_INVENTORY;i++) {
+		if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].amount > 0) {
+			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_id"), j),sd->status.inventory[i].nameid);
+			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_amount"), j),sd->status.inventory[i].amount);
+			if(sd->status.inventory[i].equip) {
+				for (k = 0; k < ARRAYLENGTH(script->equip); k++) {
+					id = pc->checkequip(sd,script->equip[k]);
+					item = sd->inventory_data[id];
+					if( item != 0 ){
+						if(item->nameid == sd->status.inventory[i].nameid) {
+							pc->setreg(sd,reference_uid(script->add_str("@inventorylist_equip"), j),k+1);
 						}
 					}
-				} else {
-					pc->setreg(sd,reference_uid(script->add_str("@inventorylist_equip"), j),0);
 				}
-				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_refine"), j),sd->status.inventory[i].refine);
-				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_identify"), j),sd->status.inventory[i].identify);
-				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_attribute"), j),sd->status.inventory[i].attribute);
-				for (l = 0; l < MAX_SLOTS; l++) {
-					sprintf(card_var, "@inventorylist_card%d",l+1);
-					pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.inventory[i].card[l]);
-				}
-				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_expire"), j),sd->status.inventory[i].expire_time);
-				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_bound"), j),sd->status.inventory[i].bound);
-				j++;
+			} else {
+				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_equip"), j),0);
 			}
+			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_refine"), j),sd->status.inventory[i].refine);
+			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_identify"), j),sd->status.inventory[i].identify);
+			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_attribute"), j),sd->status.inventory[i].attribute);
+			for (l = 0; l < MAX_SLOTS; l++) {
+				sprintf(card_var, "@inventorylist_card%d",l+1);
+				pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.inventory[i].card[l]);
+			}
+			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_expire"), j),sd->status.inventory[i].expire_time);
+			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_bound"), j),sd->status.inventory[i].bound);
+			j++;
 		}
+	}
 	pc->setreg(sd,script->add_str("@inventorylist_count"),j);
 	return true;
 }
@@ -12473,23 +12473,23 @@ BUILDIN(getcartinventorylist){
 	int i,j=0,k;
 	if(!sd) return true;
 
-		for(i=0;i<MAX_CART;i++) {
-			if(sd->status.cart[i].nameid > 0 && sd->status.cart[i].amount > 0) {
-				pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_id"), j),sd->status.cart[i].nameid);
-				pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_amount"), j),sd->status.cart[i].amount);
-				pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_equip"), j),sd->status.cart[i].equip);
-				pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_refine"), j),sd->status.cart[i].refine);
-				pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_identify"), j),sd->status.cart[i].identify);
-				pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_attribute"), j),sd->status.cart[i].attribute);
-				for (k = 0; k < MAX_SLOTS; k++) {
-					sprintf(card_var, "@cartinventorylist_card%d",k+1);
-					pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.cart[i].card[k]);
-				}
-				pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_expire"), j),sd->status.cart[i].expire_time);
-				pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_bound"), j),sd->status.cart[i].bound);
-				j++;
+	for(i=0;i<MAX_CART;i++) {
+		if(sd->status.cart[i].nameid > 0 && sd->status.cart[i].amount > 0) {
+			pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_id"), j),sd->status.cart[i].nameid);
+			pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_amount"), j),sd->status.cart[i].amount);
+			pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_equip"), j),sd->status.cart[i].equip);
+			pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_refine"), j),sd->status.cart[i].refine);
+			pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_identify"), j),sd->status.cart[i].identify);
+			pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_attribute"), j),sd->status.cart[i].attribute);
+			for (k = 0; k < MAX_SLOTS; k++) {
+				sprintf(card_var, "@cartinventorylist_card%d",k+1);
+				pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.cart[i].card[k]);
 			}
+			pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_expire"), j),sd->status.cart[i].expire_time);
+			pc->setreg(sd,reference_uid(script->add_str("@cartinventorylist_bound"), j),sd->status.cart[i].bound);
+			j++;
 		}
+	}
 	pc->setreg(sd,script->add_str("@cartinventorylist_count"),j);
 	return true;
 }

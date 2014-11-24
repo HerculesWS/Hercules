@@ -8449,7 +8449,7 @@ if (instance_check_party(getcharid(1),2,2,149)) {
 	mes "All online members are between levels 1-150 and at least two are online.";
 	close;
 } else {
-	mes "Sorry, your party does not meet requirements.";
+	mes "Sorry, your party does not meet the requirements.";
 	close;
 }
 
@@ -8470,7 +8470,7 @@ Example:
 		mes "All online members are between levels 1-150 and at least two are online.";
 		close;
 	} else {
-		mes "Sorry, your guild does not meet requirements.";
+		mes "Sorry, your guild does not meet the requirements.";
 		close;
 	}
 
