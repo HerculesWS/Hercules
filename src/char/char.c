@@ -1216,15 +1216,15 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	p->save_point.map = mapindex->name2id(save_map);
 
 	if( p->last_point.map == 0 ) {
-		p->last_point.map = (unsigned short)strdb_iget(mapindex->db, MAP_DEFAULT);
-		p->last_point.x = MAP_DEFAULT_X;
-		p->last_point.y = MAP_DEFAULT_Y;
+		p->last_point.map = (unsigned short)strdb_iget(mapindex->db, mapindex->default_map);
+		p->last_point.x = mapindex->default_x;
+		p->last_point.y = mapindex->default_y;
 	}
 
 	if( p->save_point.map == 0 ) {
-		p->save_point.map = (unsigned short)strdb_iget(mapindex->db, MAP_DEFAULT);
-		p->save_point.x = MAP_DEFAULT_X;
-		p->save_point.y = MAP_DEFAULT_Y;
+		p->save_point.map = (unsigned short)strdb_iget(mapindex->db, mapindex->default_map);
+		p->save_point.x = mapindex->default_x;
+		p->save_point.y = mapindex->default_y;
 	}
 
 	strcat(t_msg, " status");

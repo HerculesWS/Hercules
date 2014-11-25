@@ -172,8 +172,8 @@ int mapindex_init(void) {
 
 bool mapindex_check_default(void)
 {
-	if (!strdb_iget(mapindex->db, MAP_DEFAULT)) {
-		ShowError("mapindex_init: MAP_DEFAULT '%s' not found in cache! update mapindex.h MAP_DEFAULT var!!!\n",MAP_DEFAULT);
+	if (!strdb_iget(mapindex->db, mapindex->default_map)) {
+		ShowError("mapindex_init: MAP_DEFAULT '%s' not found in cache! update mapindex.h MAP_DEFAULT var!!!\n", mapindex->default_map);
 		return false;
 	}
 	return true;
@@ -196,6 +196,9 @@ void mapindex_defaults(void) {
 	/* */
 	mapindex->db = NULL;
 	mapindex->num = 0;
+	mapindex->default_map = MAP_DEFAULT;
+	mapindex->default_x = MAP_DEFAULT_X;
+	mapindex->default_y = MAP_DEFAULT_Y;
 	memset (&mapindex->list, 0, sizeof (mapindex->list));
 
 	/* */
