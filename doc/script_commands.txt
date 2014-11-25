@@ -5296,7 +5296,7 @@ Examples:
 
 //This will equip a +10 1104 (falchion)on the character if this is in the
 //inventory.
-	equip2 1104 10 0 0 0 0 0;
+	equip2 1104,10,0,0,0,0,0;
 
 //The invoked character will now automatically equip a falchion when it's 
 //looted.
