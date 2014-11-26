@@ -2569,7 +2569,7 @@ int map_random_dir(struct block_list *bl, int16 *x, int16 *y)
 }
 
 // gat system
-inline static struct mapcell map_gat2cell(int gat) {
+struct mapcell map_gat2cell(int gat) {
 	struct mapcell cell;
 
 	memset(&cell,0,sizeof(struct mapcell));
@@ -2616,9 +2616,6 @@ void map_cellfromcache(struct map_data *m) {
 		// Set cell properties
 		for( xy = 0; xy < size; ++xy ) {
 			m->cell[xy] = map->gat2cell(decode_buffer[xy]);
-#ifdef CELL_NOSTACK
-			m->cell[xy].cell_bl = 0;
-#endif
 		}
 
 		m->getcellp = map->getcellp;
@@ -3394,9 +3391,6 @@ int map_readgat (struct map_data* m)
 			type = 3; // Cell is 0 (walkable) but under water level, set to 3 (walkable water)
 
 		m->cell[xy] = map->gat2cell(type);
-#ifdef CELL_NOSTACK
-		m->cell[xy].cell_bl = 0;
-#endif
 	}
 
 	aFree(gat);
