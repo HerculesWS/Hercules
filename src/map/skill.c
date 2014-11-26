@@ -10200,6 +10200,8 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case GN_THORNS_TRAP:
 		case GN_DEMONIC_FIRE:
 		case GN_HELLS_PLANT:
+		case GN_FIRE_EXPANSION_SMOKE_POWDER:
+		case GN_FIRE_EXPANSION_TEAR_GAS:
 		case SO_EARTHGRAVE:
 		case SO_DIAMONDDUST:
 		case SO_FIRE_INSIGNIA:
@@ -10656,13 +10658,14 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 
 		case GN_FIRE_EXPANSION: {
 			int i;
+			int aciddemocast = 5;//If player doesent know Acid Demonstration or knows level 5 or lower, effect 5 will cast level 5 Acid Demo.
 			struct unit_data *ud = unit->bl2ud(src);
 
 			if( !ud ) break;
 
 			for( i = 0; i < MAX_SKILLUNITGROUP && ud->skillunit[i]; i ++ ) {
 				if( ud->skillunit[i]->skill_id == GN_DEMONIC_FIRE &&
-				   distance_xy(x, y, ud->skillunit[i]->unit->bl.x, ud->skillunit[i]->unit->bl.y) < 4 ) {
+				   distance_xy(x, y, ud->skillunit[i]->unit->bl.x, ud->skillunit[i]->unit->bl.y) < 3 ) {
 					switch( skill_lv ) {
 						case 3:
 							ud->skillunit[i]->unit_id = UNT_FIRE_EXPANSION_SMOKE_POWDER;
@@ -10672,11 +10675,13 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 							ud->skillunit[i]->unit_id = UNT_FIRE_EXPANSION_TEAR_GAS;
 							clif->changetraplook(&ud->skillunit[i]->unit->bl, UNT_FIRE_EXPANSION_TEAR_GAS);
 							break;
-						case 5:
+						case 5:// If player knows a level of Acid Demonstration greater then 5, that level will be casted.
+							if ( pc->checkskill(sd, CR_ACIDDEMONSTRATION) > 5 )
+								aciddemocast = pc->checkskill(sd, CR_ACIDDEMONSTRATION);
 							map->foreachinarea(skill->area_sub, src->m,
-							                   ud->skillunit[i]->unit->bl.x - 3, ud->skillunit[i]->unit->bl.y - 3,
-							                   ud->skillunit[i]->unit->bl.x + 3, ud->skillunit[i]->unit->bl.y + 3, BL_CHAR,
-							                   src, CR_ACIDDEMONSTRATION, sd ? pc->checkskill(sd, CR_ACIDDEMONSTRATION) : skill_lv, tick, flag|BCT_ENEMY|1|SD_LEVEL, skill->castend_damage_id);
+							                   ud->skillunit[i]->unit->bl.x - 2, ud->skillunit[i]->unit->bl.y - 2,
+							                   ud->skillunit[i]->unit->bl.x + 2, ud->skillunit[i]->unit->bl.y + 2, BL_CHAR,
+							                   src, CR_ACIDDEMONSTRATION, aciddemocast, tick, flag|BCT_ENEMY|1|SD_LEVEL, skill->castend_damage_id);
 							skill->delunit(ud->skillunit[i]->unit);
 							break;
 						default:
@@ -12156,11 +12161,11 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			break;
 
 		case UNT_FIRE_EXPANSION_SMOKE_POWDER:
-			sc_start(ss, bl, status->skill2sc(GN_FIRE_EXPANSION_SMOKE_POWDER), 100, sg->skill_lv, 1000);
+			sc_start(ss, bl, SC_FIRE_EXPANSION_SMOKE_POWDER, 100, sg->skill_lv, 1000);
 			break;
 
 		case UNT_FIRE_EXPANSION_TEAR_GAS:
-			sc_start(ss, bl, status->skill2sc(GN_FIRE_EXPANSION_TEAR_GAS), 100, sg->skill_lv, 1000);
+			sc_start(ss, bl, SC_FIRE_EXPANSION_TEAR_GAS, 100, sg->skill_lv, 1000);
 			break;
 
 		case UNT_HELLS_PLANT:

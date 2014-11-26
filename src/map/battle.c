@@ -2910,6 +2910,13 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if ( sc->data[SC_WATER_BARRIER] )
 			damage = damage * ( 100 - 20 ) / 100;
 
+		if( sc->data[SC_FIRE_EXPANSION_SMOKE_POWDER] ) {
+			if( (flag&(BF_SHORT|BF_WEAPON)) == (BF_SHORT|BF_WEAPON) )
+				damage -= 15 * damage / 100;//15% reduction to physical melee attacks
+			else if( (flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON) )
+				damage -= 50 * damage / 100;//50% reduction to physical ranged attacks
+		}
+
 		// Compressed code, fixed by map.h [Epoque]
 		if (src->type == BL_MOB) {
 			int i;

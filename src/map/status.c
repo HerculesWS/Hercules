@@ -4202,6 +4202,8 @@ unsigned short status_calc_str(struct block_list *bl, struct status_change *sc, 
 	if(!sc || !sc->count)
 		return cap_value(str,0,USHRT_MAX);
 
+	if(sc->data[SC_FULL_THROTTLE])
+		str += str * 20 / 100;
 	if(sc->data[SC_HARMONIZE]) {
 		str -= sc->data[SC_HARMONIZE]->val2;
 		return (unsigned short)cap_value(str,0,USHRT_MAX);
@@ -4250,8 +4252,6 @@ unsigned short status_calc_str(struct block_list *bl, struct status_change *sc, 
 		str -= sc->data[SC_STOMACHACHE]->val1;
 	if(sc->data[SC_KYOUGAKU])
 		str -= sc->data[SC_KYOUGAKU]->val3;
-	if(sc->data[SC_FULL_THROTTLE])
-		str += str * 20 / 100;
 
 	return (unsigned short)cap_value(str,0,USHRT_MAX);
 }
@@ -4261,6 +4261,8 @@ unsigned short status_calc_agi(struct block_list *bl, struct status_change *sc, 
 	if(!sc || !sc->count)
 		return cap_value(agi,0,USHRT_MAX);
 
+	if(sc->data[SC_FULL_THROTTLE])
+		agi += agi * 20 / 100;
 	if(sc->data[SC_HARMONIZE]) {
 		agi -= sc->data[SC_HARMONIZE]->val2;
 		return (unsigned short)cap_value(agi,0,USHRT_MAX);
@@ -4308,8 +4310,6 @@ unsigned short status_calc_agi(struct block_list *bl, struct status_change *sc, 
 
 	if(sc->data[SC_MARSHOFABYSS])
 		agi -= agi * sc->data[SC_MARSHOFABYSS]->val2 / 100;
-	if(sc->data[SC_FULL_THROTTLE])
-		agi += agi * 20 / 100;
 
 	return (unsigned short)cap_value(agi,0,USHRT_MAX);
 }
@@ -4319,6 +4319,8 @@ unsigned short status_calc_vit(struct block_list *bl, struct status_change *sc, 
 	if(!sc || !sc->count)
 		return cap_value(vit,0,USHRT_MAX);
 
+	if(sc->data[SC_FULL_THROTTLE])
+		vit += vit * 20 / 100;
 	if(sc->data[SC_HARMONIZE]) {
 		vit -= sc->data[SC_HARMONIZE]->val2;
 		return (unsigned short)cap_value(vit,0,USHRT_MAX);
@@ -4356,8 +4358,6 @@ unsigned short status_calc_vit(struct block_list *bl, struct status_change *sc, 
 
 	if(sc->data[SC_NOEQUIPARMOR])
 		vit -= vit * sc->data[SC_NOEQUIPARMOR]->val2/100;
-	if(sc->data[SC_FULL_THROTTLE])
-		vit += vit * 20 / 100;
 
 	return (unsigned short)cap_value(vit,0,USHRT_MAX);
 }
@@ -4367,6 +4367,8 @@ unsigned short status_calc_int(struct block_list *bl, struct status_change *sc, 
 	if(!sc || !sc->count)
 		return cap_value(int_,0,USHRT_MAX);
 
+	if(sc->data[SC_FULL_THROTTLE])
+		int_ += int_ * 20 / 100;
 	if(sc->data[SC_HARMONIZE]) {
 		int_ -= sc->data[SC_HARMONIZE]->val2;
 		return (unsigned short)cap_value(int_,0,USHRT_MAX);
@@ -4418,8 +4420,6 @@ unsigned short status_calc_int(struct block_list *bl, struct status_change *sc, 
 		if(sc->data[SC__STRIPACCESSARY])
 			int_ -= int_ * sc->data[SC__STRIPACCESSARY]->val2 / 100;
 	}
-	if(sc->data[SC_FULL_THROTTLE])
-		int_ += int_ * 20 / 100;
 
 	return (unsigned short)cap_value(int_,0,USHRT_MAX);
 }
@@ -4429,6 +4429,8 @@ unsigned short status_calc_dex(struct block_list *bl, struct status_change *sc, 
 	if(!sc || !sc->count)
 		return cap_value(dex,0,USHRT_MAX);
 
+	if(sc->data[SC_FULL_THROTTLE])
+		dex += dex * 20 / 100;
 	if(sc->data[SC_HARMONIZE]) {
 		dex -= sc->data[SC_HARMONIZE]->val2;
 		return (unsigned short)cap_value(dex,0,USHRT_MAX);
@@ -4478,8 +4480,6 @@ unsigned short status_calc_dex(struct block_list *bl, struct status_change *sc, 
 		dex -= dex * sc->data[SC_MARSHOFABYSS]->val2 / 100;
 	if(sc->data[SC__STRIPACCESSARY] && bl->type != BL_PC)
 		dex -= dex * sc->data[SC__STRIPACCESSARY]->val2 / 100;
-	if(sc->data[SC_FULL_THROTTLE])
-		dex += dex * 20 / 100;
 
 	return (unsigned short)cap_value(dex,0,USHRT_MAX);
 }
@@ -4489,6 +4489,8 @@ unsigned short status_calc_luk(struct block_list *bl, struct status_change *sc, 
 	if(!sc || !sc->count)
 		return cap_value(luk,0,USHRT_MAX);
 
+	if(sc->data[SC_FULL_THROTTLE])
+		luk += luk * 20 / 100;
 	if(sc->data[SC_HARMONIZE]) {
 		luk -= sc->data[SC_HARMONIZE]->val2;
 		return (unsigned short)cap_value(luk,0,USHRT_MAX);
@@ -4528,8 +4530,6 @@ unsigned short status_calc_luk(struct block_list *bl, struct status_change *sc, 
 		luk -= luk * sc->data[SC__STRIPACCESSARY]->val2 / 100;
 	if(sc->data[SC_BANANA_BOMB])
 		luk -= luk * sc->data[SC_BANANA_BOMB]->val1 / 100;
-	if(sc->data[SC_FULL_THROTTLE])
-		luk += luk * 20 / 100;
 
 	return (unsigned short)cap_value(luk,0,USHRT_MAX);
 }
@@ -4845,6 +4845,8 @@ signed short status_calc_hit(struct block_list *bl, struct status_change *sc, in
 		hit += hit * sc->data[SC_INCHITRATE]->val1/100;
 	if(sc->data[SC_BLIND])
 		hit -= hit * 25/100;
+	if(sc->data[SC_FIRE_EXPANSION_TEAR_GAS])
+		hit -= hit * 50 / 100;
 	if(sc->data[SC__GROOMY])
 		hit -= hit * sc->data[SC__GROOMY]->val3 / 100;
 	if(sc->data[SC_FEAR])
@@ -4930,6 +4932,10 @@ signed short status_calc_flee(struct block_list *bl, struct status_change *sc, i
 		flee -= flee * ( 20 + 5 * sc->data[SC_GLOOMYDAY]->val1 ) / 100;
 	if( sc->data[SC_SATURDAY_NIGHT_FEVER] )
 		flee -= flee * (40 + 10 * sc->data[SC_SATURDAY_NIGHT_FEVER]->val1) / 100;
+	if ( sc->data[SC_FIRE_EXPANSION_SMOKE_POWDER] )
+		flee += flee * 20 / 100;
+	if ( sc->data[SC_FIRE_EXPANSION_TEAR_GAS] )
+		flee -= flee * 50 / 100;
 	if( sc->data[SC_WIND_STEP_OPTION] )
 		flee += flee * sc->data[SC_WIND_STEP_OPTION]->val2 / 100;
 	if( sc->data[SC_ZEPHYR] )
@@ -5379,7 +5385,7 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 			if( sc->data[SC_WIND_STEP_OPTION] )
 				val = max( val, sc->data[SC_WIND_STEP_OPTION]->val2 );
 			if( sc->data[SC_FULL_THROTTLE] )
-				val = max( val, 30);
+				val = max( val, 25);
 			//FIXME: official items use a single bonus for this [ultramage]
 			if( sc->data[SC_MOVHASTE_HORSE] ) // temporary item-based speedup
 				val = max( val, 25 );
