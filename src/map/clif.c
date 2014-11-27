@@ -3179,17 +3179,14 @@ void clif_changestatus(struct map_session_data* sd,int type,int val)
 	clif->send(buf,packet_len(0x1ab),&sd->bl,AREA_WOS);
 }
 
-
 /// Updates sprite/style properties of an object.
-/// 00c3 <id>.L <type>.B <value>.B (ZC_SPRITE_CHANGE)
-/// 01d7 <id>.L <type>.B <value>.L (ZC_SPRITE_CHANGE2)
 void clif_changelook(struct block_list *bl,int type,int val)
 {
-	unsigned char buf[16];
 	struct map_session_data* sd;
 	struct status_change* sc;
 	struct view_data* vd;
 	enum send_target target = AREA;
+	int val2;
 	nullpo_retv(bl);
 
 	sd = BL_CAST(BL_PC, bl);
@@ -3297,56 +3294,32 @@ void clif_changelook(struct block_list *bl,int type,int val)
 	// prevent leaking the presence of GM-hidden objects
 	if( sc && sc->option&OPTION_INVISIBLE && !disguised(bl) )
 		target = SELF;
-
 #if PACKETVER < 4
-	WBUFW(buf,0)=0xc3;
-	WBUFL(buf,2)=bl->id;
-	WBUFB(buf,6)=type;
-	WBUFB(buf,7)=val;
-	clif->send(buf,packet_len(0xc3),bl,target);
+	clif->sendlook(bl, bl->id, type, val, 0, target);
 #else
-	WBUFW(buf,0)=0x1d7;
-	WBUFL(buf,2)=bl->id;
 	if(type == LOOK_WEAPON || type == LOOK_SHIELD) {
 		nullpo_retv(vd);
-		WBUFB(buf,6)=LOOK_WEAPON;
-		WBUFW(buf,7)=vd->weapon;
-		WBUFW(buf,9)=vd->shield;
-	} else {
-		WBUFB(buf,6)=type;
-		WBUFL(buf,7)=val;
+		type = LOOK_WEAPON;
+		val = vd->weapon;
+		val2 = vd->shield;
 	}
 	if( disguised(bl) ) {
-		clif->send(buf,packet_len(0x1d7),bl,AREA_WOS);
-		WBUFL(buf,2)=-bl->id;
-		clif->send(buf,packet_len(0x1d7),bl,SELF);
+		clif->sendlook(bl, bl->id, type, val, val2, AREA_WOS);
+		clif->sendlook(bl, -bl->id, type, val, val2, SELF);
 	} else
-		clif->send(buf,packet_len(0x1d7),bl,target);
+		clif->sendlook(bl, bl->id, type, val, val2, target);
 #endif
 }
 
 //Sends a change-base-look packet required for traps as they are triggered.
 void clif_changetraplook(struct block_list *bl,int val)
 {
-	unsigned char buf[32];
-#if PACKETVER < 4
-	WBUFW(buf,0)=0xc3;
-	WBUFL(buf,2)=bl->id;
-	WBUFB(buf,6)=LOOK_BASE;
-	WBUFB(buf,7)=val;
-	clif->send(buf,packet_len(0xc3),bl,AREA);
-#else
-	WBUFW(buf,0)=0x1d7;
-	WBUFL(buf,2)=bl->id;
-	WBUFB(buf,6)=LOOK_BASE;
-	WBUFW(buf,7)=val;
-	WBUFW(buf,9)=0;
-	clif->send(buf,packet_len(0x1d7),bl,AREA);
-#endif
+	clif->sendlook(bl, bl->id, LOOK_BASE, val, 0, AREA);
 }
 
-//For the stupid cloth-dye bug. Resends the given view data to the area specified by bl.
-void clif_refreshlook(struct block_list *bl,int id,int type,int val,enum send_target target)
+/// 00c3 <id>.L <type>.B <value>.B (ZC_SPRITE_CHANGE)
+/// 01d7 <id>.L <type>.B <value>.L (ZC_SPRITE_CHANGE2)
+void clif_sendlook(struct block_list *bl, int id, int type, int val, int val2, enum send_target target)
 {
 	unsigned char buf[32];
 #if PACKETVER < 4
@@ -3360,9 +3333,15 @@ void clif_refreshlook(struct block_list *bl,int id,int type,int val,enum send_ta
 	WBUFL(buf,2)=id;
 	WBUFB(buf,6)=type;
 	WBUFW(buf,7)=val;
-	WBUFW(buf,9)=0;
+	WBUFW(buf,9)=val2;
 	clif->send(buf,packet_len(0x1d7),bl,target);
 #endif
+}
+
+//For the stupid cloth-dye bug. Resends the given view data to the area specified by bl.
+void clif_refreshlook(struct block_list *bl,int id,int type,int val,enum send_target target)
+{
+	clif->sendlook(bl, id, type, val, 0, target);
 }
 
 
@@ -18971,6 +18950,7 @@ void clif_defaults(void) {
 	clif->changelook = clif_changelook;
 	clif->changetraplook = clif_changetraplook;
 	clif->refreshlook = clif_refreshlook;
+	clif->sendlook = clif_sendlook;
 	clif->class_change = clif_class_change;
 	clif->skill_delunit = clif_skill_delunit;
 	clif->skillunit_update = clif_skillunit_update;

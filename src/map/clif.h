@@ -648,6 +648,7 @@ struct clif_interface {
 	void (*changelook) (struct block_list *bl,int type,int val);
 	void (*changetraplook) (struct block_list *bl,int val);
 	void (*refreshlook) (struct block_list *bl,int id,int type,int val,enum send_target target);
+	void (*sendlook) (struct block_list *bl, int id, int type, int val, int val2, enum send_target target);
 	void (*class_change) (struct block_list *bl,int class_,int type);
 	void (*skill_delunit) (struct skill_unit *su);
 	void (*skillunit_update) (struct block_list* bl);
