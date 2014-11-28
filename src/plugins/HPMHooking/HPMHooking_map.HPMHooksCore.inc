@@ -423,6 +423,8 @@ struct {
 	struct HPMHookPoint *HP_clif_send_post;
 	struct HPMHookPoint *HP_clif_send_sub_pre;
 	struct HPMHookPoint *HP_clif_send_sub_post;
+	struct HPMHookPoint *HP_clif_send_actual_pre;
+	struct HPMHookPoint *HP_clif_send_actual_post;
 	struct HPMHookPoint *HP_clif_parse_pre;
 	struct HPMHookPoint *HP_clif_parse_post;
 	struct HPMHookPoint *HP_clif_parse_cmd_pre;
@@ -505,6 +507,8 @@ struct {
 	struct HPMHookPoint *HP_clif_changetraplook_post;
 	struct HPMHookPoint *HP_clif_refreshlook_pre;
 	struct HPMHookPoint *HP_clif_refreshlook_post;
+	struct HPMHookPoint *HP_clif_sendlook_pre;
+	struct HPMHookPoint *HP_clif_sendlook_post;
 	struct HPMHookPoint *HP_clif_class_change_pre;
 	struct HPMHookPoint *HP_clif_class_change_post;
 	struct HPMHookPoint *HP_clif_skill_delunit_pre;
@@ -5490,6 +5494,8 @@ struct {
 	int HP_clif_send_post;
 	int HP_clif_send_sub_pre;
 	int HP_clif_send_sub_post;
+	int HP_clif_send_actual_pre;
+	int HP_clif_send_actual_post;
 	int HP_clif_parse_pre;
 	int HP_clif_parse_post;
 	int HP_clif_parse_cmd_pre;
@@ -5572,6 +5578,8 @@ struct {
 	int HP_clif_changetraplook_post;
 	int HP_clif_refreshlook_pre;
 	int HP_clif_refreshlook_post;
+	int HP_clif_sendlook_pre;
+	int HP_clif_sendlook_post;
 	int HP_clif_class_change_pre;
 	int HP_clif_class_change_post;
 	int HP_clif_skill_delunit_pre;
