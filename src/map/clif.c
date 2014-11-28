@@ -334,6 +334,11 @@ int clif_send_sub(struct block_list *bl, va_list ap) {
 	if( clif->ally_only && !sd->sc.data[SC_CLAIRVOYANCE] && !sd->special_state.intravision && battle->check_target( src_bl, &sd->bl, BCT_ENEMY ) > 0 )
 		return 0;
 
+	return clif->send_actual(fd, buf, len);
+}
+
+int clif_send_actual(int fd, void *buf, int len)
+{
 	WFIFOHEAD(fd, len);
 	if (WFIFOP(fd,0) == buf) {
 		ShowError("WARNING: Invalid use of clif->send function\n");
@@ -18906,6 +18911,7 @@ void clif_defaults(void) {
 	clif->refresh_ip = clif_refresh_ip;
 	clif->send = clif_send;
 	clif->send_sub = clif_send_sub;
+	clif->send_actual = clif_send_actual;
 	clif->parse = clif_parse;
 	clif->parse_cmd = clif_parse_cmd_optional;
 	clif->decrypt_cmd = clif_decrypt_cmd;

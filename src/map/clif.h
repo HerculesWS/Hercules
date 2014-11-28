@@ -604,6 +604,7 @@ struct clif_interface {
 	uint32 (*refresh_ip) (void);
 	bool (*send) (const void* buf, int len, struct block_list* bl, enum send_target type);
 	int (*send_sub) (struct block_list *bl, va_list ap);
+	int (*send_actual) (int fd, void *buf, int len);
 	int (*parse) (int fd);
 	unsigned short (*parse_cmd) ( int fd, struct map_session_data *sd );
 	unsigned short (*decrypt_cmd) ( int cmd, struct map_session_data *sd );
