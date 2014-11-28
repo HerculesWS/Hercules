@@ -44115,6 +44115,33 @@ bool HP_npc_viewisid(const char *viewid) {
 	}
 	return retVal___;
 }
+struct npc_data* HP_npc_create_npc(int m, int x, int y) {
+	int hIndex = 0;
+	struct npc_data* retVal___ = NULL;
+	if( HPMHooks.count.HP_npc_create_npc_pre ) {
+		struct npc_data* (*preHookFunc) (int *m, int *x, int *y);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_create_npc_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_create_npc_pre[hIndex].func;
+			retVal___ = preHookFunc(&m, &x, &y);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.npc.create_npc(m, x, y);
+	}
+	if( HPMHooks.count.HP_npc_create_npc_post ) {
+		struct npc_data* (*postHookFunc) (struct npc_data* retVal___, int *m, int *x, int *y);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_create_npc_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_create_npc_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &m, &x, &y);
+		}
+	}
+	return retVal___;
+}
 struct npc_data* HP_npc_add_warp(char *name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y) {
 	int hIndex = 0;
 	struct npc_data* retVal___ = NULL;

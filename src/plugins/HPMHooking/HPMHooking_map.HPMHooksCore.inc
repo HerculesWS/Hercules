@@ -3301,6 +3301,8 @@ struct {
 	struct HPMHookPoint *HP_npc_parseview_post;
 	struct HPMHookPoint *HP_npc_viewisid_pre;
 	struct HPMHookPoint *HP_npc_viewisid_post;
+	struct HPMHookPoint *HP_npc_create_npc_pre;
+	struct HPMHookPoint *HP_npc_create_npc_post;
 	struct HPMHookPoint *HP_npc_add_warp_pre;
 	struct HPMHookPoint *HP_npc_add_warp_post;
 	struct HPMHookPoint *HP_npc_parse_warp_pre;
@@ -8364,6 +8366,8 @@ struct {
 	int HP_npc_parseview_post;
 	int HP_npc_viewisid_pre;
 	int HP_npc_viewisid_post;
+	int HP_npc_create_npc_pre;
+	int HP_npc_create_npc_post;
 	int HP_npc_add_warp_pre;
 	int HP_npc_add_warp_post;
 	int HP_npc_parse_warp_pre;

@@ -1677,6 +1677,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(npc->parsename, HP_npc_parsename) },
 	{ HP_POP(npc->parseview, HP_npc_parseview) },
 	{ HP_POP(npc->viewisid, HP_npc_viewisid) },
+	{ HP_POP(npc->create_npc, HP_npc_create_npc) },
 	{ HP_POP(npc->add_warp, HP_npc_add_warp) },
 	{ HP_POP(npc->parse_warp, HP_npc_parse_warp) },
 	{ HP_POP(npc->parse_shop, HP_npc_parse_shop) },
