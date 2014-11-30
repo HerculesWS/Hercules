@@ -5718,6 +5718,7 @@ void do_shutdown(void)
 }
 
 void char_hp_symbols(void) {
+	HPM->share(mapindex,"mapindex");
 	HPM->share(chr, "chr");
 	HPM->share(geoip, "geoip");
 	HPM->share(inter_auction, "inter_auction");
