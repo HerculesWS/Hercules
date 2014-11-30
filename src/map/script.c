@@ -12427,10 +12427,8 @@ BUILDIN(petloot)
 BUILDIN(getinventorylist){
 	TBL_PC *sd=script->rid2sd(st);
 	char card_var[NAME_LENGTH];
-	struct item_data *item;
 
-	int id;
-	int i,j=0,k,l;
+	int i,j=0,k;
 	if(!sd) return true;
 
 	for(i=0;i<MAX_INVENTORY;i++) {
@@ -12438,24 +12436,16 @@ BUILDIN(getinventorylist){
 			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_id"), j),sd->status.inventory[i].nameid);
 			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_amount"), j),sd->status.inventory[i].amount);
 			if(sd->status.inventory[i].equip) {
-				for (k = 0; k < ARRAYLENGTH(script->equip); k++) {
-					id = pc->checkequip(sd,script->equip[k]);
-					item = sd->inventory_data[id];
-					if( item != 0 ){
-						if(item->nameid == sd->status.inventory[i].nameid) {
-							pc->setreg(sd,reference_uid(script->add_str("@inventorylist_equip"), j),k+1);
-						}
-					}
-				}
+				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_equip"), j),pc->equippoint(sd,i));
 			} else {
 				pc->setreg(sd,reference_uid(script->add_str("@inventorylist_equip"), j),0);
 			}
 			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_refine"), j),sd->status.inventory[i].refine);
 			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_identify"), j),sd->status.inventory[i].identify);
 			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_attribute"), j),sd->status.inventory[i].attribute);
-			for (l = 0; l < MAX_SLOTS; l++) {
-				sprintf(card_var, "@inventorylist_card%d",l+1);
-				pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.inventory[i].card[l]);
+			for (k = 0; k < MAX_SLOTS; k++) {
+				sprintf(card_var, "@inventorylist_card%d",k+1);
+				pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.inventory[i].card[k]);
 			}
 			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_expire"), j),sd->status.inventory[i].expire_time);
 			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_bound"), j),sd->status.inventory[i].bound);
@@ -13947,7 +13937,7 @@ BUILDIN(autoequip)
  *-------------------------------------------------------*/
 BUILDIN(equip2)
 {
-	int i,nameid,ref,attr,c0,c1,c2,c3,bound;
+	int i,nameid,ref,attr,c0,c1,c2,c3;
 	struct item_data *item_data;
 	TBL_PC *sd;
 
