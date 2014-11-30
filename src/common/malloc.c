@@ -822,8 +822,10 @@ void malloc_final (void) {
 }
 
 void malloc_init (void) {
+#ifdef USE_MEMMGR
 	memmgr_usage_bytes_t = 0;
 	memmgr_usage_bytes = 0;
+#endif
 #if defined(DMALLOC) && defined(CYGWIN)
 	// http://dmalloc.com/docs/latest/online/dmalloc_19.html
 	dmalloc_debug_setup(getenv("DMALLOC_OPTIONS"));
