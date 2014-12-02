@@ -43,10 +43,6 @@
 //Casts a support skill when the health levels are below the specified hp% and
 //sp%. Delay is the minimum time in seconds before the skill can be cast again
 
-//petheal amount, delay, hp%, sp%
-//Similar to petskillsupport, but the skill is fixed to heal (28) and the
-//heal-amount is fixed to the value given.
-
 //petrecovery type, delay: Cures the "type" status effect after "delay" seconds
 
 //petskillbonus type, value, duration, delay
@@ -55,8 +51,7 @@
 //delay is the time elapsed after the bonus ends and before it starts again.
 
 //A single pet can have petloot, petskillbonus, petskillattack (or
-//petskillattack2) and petskillsupport (or petheal) at the same time,
-//but only one of each.
+//petskillattack2) and petskillsupport at the same time, but only one of each.
 
 1002,PORING,Poring,619,9001,10013,531,80,60,50,100,250,20,2000,150,1,0,350,400,800,{ petloot 10; },{ bonus bLuk,2; bonus bCritical,1; }
 1113,DROPS,Drops,620,9002,10013,508,80,60,40,100,250,20,1500,150,1,0,300,400,500,{ petloot 10; },{ bonus bHit,3; bonus bAtk,3; }

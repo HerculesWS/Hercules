@@ -688,10 +688,7 @@ int pet_equipitem(struct map_session_data *sd,int index) {
 		//Skotlex: start support timers if need
 		int64 tick = timer->gettick();
 		if (pd->s_skill && pd->s_skill->timer == INVALID_TIMER) {
-			if (pd->s_skill->id)
-				pd->s_skill->timer=timer->add(tick+pd->s_skill->delay*1000, pet->skill_support_timer, sd->bl.id, 0);
-			else
-				pd->s_skill->timer=timer->add(tick+pd->s_skill->delay*1000, pet->heal_timer, sd->bl.id, 0);
+			pd->s_skill->timer=timer->add(tick+pd->s_skill->delay*1000, pet->skill_support_timer, sd->bl.id, 0);
 		}
 		if (pd->bonus && pd->bonus->timer == INVALID_TIMER)
 			pd->bonus->timer=timer->add(tick+pd->bonus->delay*1000, pet->skill_bonus_timer, sd->bl.id, 0);
@@ -725,12 +722,8 @@ int pet_unequipitem(struct map_session_data *sd, struct pet_data *pd) {
 			pd->state.skillbonus = 0;
 			status_calc_pc(sd,SCO_NONE);
 		}
-		if( pd->s_skill && pd->s_skill->timer != INVALID_TIMER )
-		{
-			if( pd->s_skill->id )
-				timer->delete(pd->s_skill->timer, pet->skill_support_timer);
-			else
-				timer->delete(pd->s_skill->timer, pet->heal_timer);
+		if (pd->s_skill && pd->s_skill->timer != INVALID_TIMER) {
+			timer->delete(pd->s_skill->timer, pet->skill_support_timer);
 			pd->s_skill->timer = INVALID_TIMER;
 		}
 		if( pd->bonus && pd->bonus->timer != INVALID_TIMER )
@@ -1117,40 +1110,6 @@ int pet_recovery_timer(int tid, int64 tick, int id, intptr_t data) {
 	return 0;
 }
 
-int pet_heal_timer(int tid, int64 tick, int id, intptr_t data) {
-	struct map_session_data *sd=map->id2sd(id);
-	struct status_data *st;
-	struct pet_data *pd;
-	unsigned int rate = 100;
-	
-	if(sd==NULL || sd->pd == NULL || sd->pd->s_skill == NULL)
-		return 1;
-	
-	pd=sd->pd;
-	
-	if(pd->s_skill->timer != tid) {
-		ShowError("pet_heal_timer %d != %d\n",pd->s_skill->timer,tid);
-		return 0;
-	}
-	
-	st = status->get_status_data(&sd->bl);
-	
-	if(pc_isdead(sd) ||
-		(rate = get_percentage(st->sp, st->max_sp)) > pd->s_skill->sp ||
-		(rate = get_percentage(st->hp, st->max_hp)) > pd->s_skill->hp ||
-		(rate = (pd->ud.skilltimer != INVALID_TIMER)) //Another skill is in effect
-	) {  //Wait (how long? 1 sec for every 10% of remaining)
-		pd->s_skill->timer=timer->add(timer->gettick()+(rate>10?rate:10)*100,pet->heal_timer,sd->bl.id,0);
-		return 0;
-	}
-	pet_stop_attack(pd);
-	pet_stop_walking(pd,1);
-	clif->skill_nodamage(&pd->bl,&sd->bl,AL_HEAL,pd->s_skill->lv,1);
-	status->heal(&sd->bl, pd->s_skill->lv,0, 0);
-	pd->s_skill->timer=timer->add(tick+pd->s_skill->delay*1000,pet->heal_timer,sd->bl.id,0);
-	return 0;
-}
-
 /*==========================================
  * pet support skills [Skotlex]
  *------------------------------------------*/
@@ -1361,7 +1320,6 @@ int do_init_pet(bool minimal) {
 	timer->add_func_list(pet->delay_item_drop,"pet_delay_item_drop");
 	timer->add_func_list(pet->skill_support_timer, "pet_skill_support_timer"); // [Skotlex]
 	timer->add_func_list(pet->recovery_timer,"pet_recovery_timer"); // [Valaris]
-	timer->add_func_list(pet->heal_timer,"pet_heal_timer"); // [Valaris]
 	timer->add_interval(timer->gettick()+MIN_PETTHINKTIME,pet->ai_hard,0,0,MIN_PETTHINKTIME);
 
 	return 0;
@@ -1433,7 +1391,6 @@ void pet_defaults(void) {
 	pet->lootitem_drop = pet_lootitem_drop;
 	pet->skill_bonus_timer = pet_skill_bonus_timer;
 	pet->recovery_timer = pet_recovery_timer;
-	pet->heal_timer = pet_heal_timer;
 	pet->skill_support_timer = pet_skill_support_timer;
 	pet->read_db = read_petdb;
 }

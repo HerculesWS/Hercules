@@ -2673,10 +2673,7 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 			if( pd->s_skill )
 			{
 				if (pd->s_skill->timer != INVALID_TIMER) {
-					if (pd->s_skill->id)
-						timer->delete(pd->s_skill->timer, pet->skill_support_timer);
-					else
-						timer->delete(pd->s_skill->timer, pet->heal_timer);
+					timer->delete(pd->s_skill->timer, pet->skill_support_timer);
 				}
 				aFree(pd->s_skill);
 				pd->s_skill = NULL;
