@@ -4001,8 +4001,6 @@ struct {
 	struct HPMHookPoint *HP_pet_skill_bonus_timer_post;
 	struct HPMHookPoint *HP_pet_recovery_timer_pre;
 	struct HPMHookPoint *HP_pet_recovery_timer_post;
-	struct HPMHookPoint *HP_pet_heal_timer_pre;
-	struct HPMHookPoint *HP_pet_heal_timer_post;
 	struct HPMHookPoint *HP_pet_skill_support_timer_pre;
 	struct HPMHookPoint *HP_pet_skill_support_timer_post;
 	struct HPMHookPoint *HP_pet_read_db_pre;
@@ -9066,8 +9064,6 @@ struct {
 	int HP_pet_skill_bonus_timer_post;
 	int HP_pet_recovery_timer_pre;
 	int HP_pet_recovery_timer_post;
-	int HP_pet_heal_timer_pre;
-	int HP_pet_heal_timer_post;
 	int HP_pet_skill_support_timer_pre;
 	int HP_pet_skill_support_timer_post;
 	int HP_pet_read_db_pre;

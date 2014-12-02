@@ -53572,33 +53572,6 @@ int HP_pet_recovery_timer(int tid, int64 tick, int id, intptr_t data) {
 	}
 	return retVal___;
 }
-int HP_pet_heal_timer(int tid, int64 tick, int id, intptr_t data) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if( HPMHooks.count.HP_pet_heal_timer_pre ) {
-		int (*preHookFunc) (int *tid, int64 *tick, int *id, intptr_t *data);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_heal_timer_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_pet_heal_timer_pre[hIndex].func;
-			retVal___ = preHookFunc(&tid, &tick, &id, &data);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.pet.heal_timer(tid, tick, id, data);
-	}
-	if( HPMHooks.count.HP_pet_heal_timer_post ) {
-		int (*postHookFunc) (int retVal___, int *tid, int64 *tick, int *id, intptr_t *data);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_heal_timer_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_pet_heal_timer_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &tid, &tick, &id, &data);
-		}
-	}
-	return retVal___;
-}
 int HP_pet_skill_support_timer(int tid, int64 tick, int id, intptr_t data) {
 	int hIndex = 0;
 	int retVal___ = 0;

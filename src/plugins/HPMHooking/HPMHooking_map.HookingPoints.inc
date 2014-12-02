@@ -2032,7 +2032,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pet->lootitem_drop, HP_pet_lootitem_drop) },
 	{ HP_POP(pet->skill_bonus_timer, HP_pet_skill_bonus_timer) },
 	{ HP_POP(pet->recovery_timer, HP_pet_recovery_timer) },
-	{ HP_POP(pet->heal_timer, HP_pet_heal_timer) },
 	{ HP_POP(pet->skill_support_timer, HP_pet_skill_support_timer) },
 	{ HP_POP(pet->read_db, HP_pet_read_db) },
 /* quest */
