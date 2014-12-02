@@ -1787,9 +1787,12 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 	if ( (t = libconfig->setting_get_member(it, "BuyingStore")) )
 		id.flag.buyingstore = libconfig->setting_get_bool(t) ? 1 : 0;
 
+	if ((t = libconfig->setting_get_member(it, "KeepAfterUse")))
+		id.flag.keepafteruse = libconfig->setting_get_bool(t) ? 1 : 0;
+
 	if (libconfig->setting_lookup_int(it, "Delay", &i32) && i32 >= 0)
 		id.delay = i32;
-	
+
 	if ( (t = libconfig->setting_get_member(it, "Trade")) ) {
 		if (config_setting_is_group(t)) {
 			config_setting_t *tt = NULL;
