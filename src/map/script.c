@@ -16430,23 +16430,6 @@ BUILDIN(changequest) {
 	return true;
 }
 
-// Deprecated
-// Please use questprogress instead.
-BUILDIN(checkquest) {
-	struct map_session_data *sd = script->rid2sd(st);
-	enum quest_check_type type = HAVEQUEST;
-
-	if( sd == NULL )
-		return false;
-
-	if( script_hasdata(st, 3) )
-		type = (enum quest_check_type)script_getnum(st, 3);
-
-	script_pushint(st, quest->check(sd, script_getnum(st, 2), type));
-
-	return true;
-}
-
 BUILDIN(questactive) {
 	struct map_session_data *sd = script->rid2sd(st);
 	int quest_progress = 0;
@@ -19433,7 +19416,6 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(setquest, "i"),
 		BUILDIN_DEF(erasequest, "i?"),
 		BUILDIN_DEF(completequest, "i?"),
-		BUILDIN_DEF_DEPRECATED(checkquest, "i?"), // Deprecated 2014-10-28 [Haru]
 		BUILDIN_DEF(questprogress, "i?"),
 		BUILDIN_DEF(questactive, "i"),
 		BUILDIN_DEF(changequest, "ii"),

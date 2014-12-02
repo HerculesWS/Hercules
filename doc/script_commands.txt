@@ -8382,7 +8382,7 @@ that fails, the command returns an empty string instead.
 
 *questinfo <Quest ID>, <Icon> {, <Map Mark Color>{, <Job Class>}};
 
-This is esentially a combination of checkquest and showevent. Use this only
+This is esentially a combination of questprogress and showevent. Use this only
 in an OnInit label. For the Quest ID, specify the quest ID that you want
 checked if it has been started yet.
 
@@ -8455,39 +8455,6 @@ will be erased.
 
 Remove quest of the given <ID> from the user's quest log.
 Add quest of the <ID2> to the the quest log, and the state is "active".
-
----------------------------------------
-
-*checkquest(<ID>{,PLAYTIME|HUNTING})
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @ /!\ This command is deprecated @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-This command is deprecated and it should not be used in new scripts, as it
-is scheduled to be removed on or after November 28th, 2014. Please consider
-using questprogress() instead. Or, in special cases, questactive().
-
-If no additional argument supplied, return the state of the quest: 
-	-1 = Quest not started (not in quest log)
-	0  = Quest has been given, but the state is "inactive"
-	1  = Quest has been given, and the state is "active"
-	2  = Quest completed
-
-If parameter "PLAYTIME" is supplied:
-	-1 = Quest not started (not in quest log)
-	0  = the time limit has not yet been reached
-	1  = the time limit has not been reached but the quest is marked as 
-		 complete
-	2  = the time limit has been reached
-
-If parameter "HUNTING" is supplied:
-   -1 = Quest not started (not in quest log)
-	0 = you haven't killed all of the target monsters and the time limit 
-		has not been reached.
-	1 = you haven't killed all of the target monsters but the time limit 
-		has been reached.
-	2 = you've killed all of the target monsters
 
 ---------------------------------------
 
