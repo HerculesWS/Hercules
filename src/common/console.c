@@ -112,7 +112,9 @@ CPCMD_C(ers_report,server) {
  * Displays memory usage
  **/
 CPCMD_C(mem_report,server) {
+#ifdef USE_MEMMGR
 	memmgr_report(line?atoi(line):0);
+#endif
 }
 
 /**
