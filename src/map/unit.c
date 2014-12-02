@@ -400,7 +400,7 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 
 	if(ud->state.change_walk_target) {
 		if(unit_walktoxy_sub(bl)) {
-			return 1;	
+			return 1;
 		} else {
 			clif->fixpos(bl);
 			return 0;
