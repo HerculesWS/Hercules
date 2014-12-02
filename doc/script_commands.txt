@@ -2056,28 +2056,6 @@ else if (<condition 2>) {
 
 ---------------------------------------
 
-*jump_zero (<condition>),<label>;
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @ /!\ This command is deprecated @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-This command is deprecated and it should not be used in new scripts, as it is
-scheduled to be removed at any time on or after November 27th, 2014. Please
-consider using 'if', 'switch', 'for', 'while', as appropriate.
-
-This command works like an 'if'+'goto' combination in one go. (See 'if'). 
-If the condition is false (equal to zero) this command will immediately 
-jump to the specified label like in 'goto'.
-
-This command should not be used in scripts directly.
-
-The main reason for this command is that other control statements, like 
-'switch', 'for' or 'while', are disassembled into simple expressions 
-together with this command when a script is parsed.
-
----------------------------------------
-
 *while (<condition>) <statement>;
 
 This is probably the simplest and most frequently used loop structure. The 
