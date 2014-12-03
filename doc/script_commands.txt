@@ -7558,6 +7558,17 @@ config, and will not work properly if the NPC has a mob sprite.
 
 ---------------------------------------
 
+*setnpcdistance <distance>
+
+This command can reduce distance from where npc can be clicked.
+Usefull to use from OnInit event.
+
+	// Set distance to one tile on server load
+	OnInit:
+	setnpcdistance 1;
+
+---------------------------------------
+
 *day;
 *night;
 

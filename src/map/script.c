@@ -13311,6 +13311,16 @@ BUILDIN(npcstop) {
 	return true;
 }
 
+BUILDIN(setnpcdistance) {
+	struct npc_data *nd = (struct npc_data *) map->id2bl (st->oid);
+	if (!nd)
+		return false;
+
+	nd->area_size = script_getnum(st, 2);
+
+	return true;
+}
+
 
 /*==========================================
  * getlook char info. getlook(arg)
@@ -19378,6 +19388,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(npcspeed,"i"), // [Valaris]
 		BUILDIN_DEF(npcwalkto,"ii"), // [Valaris]
 		BUILDIN_DEF(npcstop,""), // [Valaris]
+		BUILDIN_DEF(setnpcdistance,"i"), // [4144]
 		BUILDIN_DEF(getmapxy,"rrri?"), //by Lorky [Lupus]
 		BUILDIN_DEF(checkoption1,"i"),
 		BUILDIN_DEF(checkoption2,"i"),
