@@ -3697,8 +3697,12 @@ struct {
 	struct HPMHookPoint *HP_pc_resethate_post;
 	struct HPMHookPoint *HP_pc_equipitem_pre;
 	struct HPMHookPoint *HP_pc_equipitem_post;
+	struct HPMHookPoint *HP_pc_equipitem_pos_pre;
+	struct HPMHookPoint *HP_pc_equipitem_pos_post;
 	struct HPMHookPoint *HP_pc_unequipitem_pre;
 	struct HPMHookPoint *HP_pc_unequipitem_post;
+	struct HPMHookPoint *HP_pc_unequipitem_pos_pre;
+	struct HPMHookPoint *HP_pc_unequipitem_pos_post;
 	struct HPMHookPoint *HP_pc_checkitem_pre;
 	struct HPMHookPoint *HP_pc_checkitem_post;
 	struct HPMHookPoint *HP_pc_useitem_pre;
@@ -8760,8 +8764,12 @@ struct {
 	int HP_pc_resethate_post;
 	int HP_pc_equipitem_pre;
 	int HP_pc_equipitem_post;
+	int HP_pc_equipitem_pos_pre;
+	int HP_pc_equipitem_pos_post;
 	int HP_pc_unequipitem_pre;
 	int HP_pc_unequipitem_post;
+	int HP_pc_unequipitem_pos_pre;
+	int HP_pc_unequipitem_pos_post;
 	int HP_pc_checkitem_pre;
 	int HP_pc_checkitem_post;
 	int HP_pc_useitem_pre;

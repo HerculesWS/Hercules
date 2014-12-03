@@ -49467,6 +49467,32 @@ int HP_pc_equipitem(struct map_session_data *sd, int n, int req_pos) {
 	}
 	return retVal___;
 }
+void HP_pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int pos) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_pc_equipitem_pos_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, struct item_data *id, int *pos);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_equipitem_pos_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_equipitem_pos_pre[hIndex].func;
+			preHookFunc(sd, id, &pos);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pc.equipitem_pos(sd, id, pos);
+	}
+	if( HPMHooks.count.HP_pc_equipitem_pos_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, struct item_data *id, int *pos);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_equipitem_pos_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_equipitem_pos_post[hIndex].func;
+			postHookFunc(sd, id, &pos);
+		}
+	}
+	return;
+}
 int HP_pc_unequipitem(struct map_session_data *sd, int n, int flag) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -49493,6 +49519,32 @@ int HP_pc_unequipitem(struct map_session_data *sd, int n, int flag) {
 		}
 	}
 	return retVal___;
+}
+void HP_pc_unequipitem_pos(struct map_session_data *sd, int n, int pos) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_pc_unequipitem_pos_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, int *n, int *pos);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_unequipitem_pos_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_unequipitem_pos_pre[hIndex].func;
+			preHookFunc(sd, &n, &pos);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pc.unequipitem_pos(sd, n, pos);
+	}
+	if( HPMHooks.count.HP_pc_unequipitem_pos_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, int *n, int *pos);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_unequipitem_pos_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_unequipitem_pos_post[hIndex].func;
+			postHookFunc(sd, &n, &pos);
+		}
+	}
+	return;
 }
 int HP_pc_checkitem(struct map_session_data *sd) {
 	int hIndex = 0;
