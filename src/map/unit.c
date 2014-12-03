@@ -2323,7 +2323,7 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 
 	//Clear target even if there is no timer
 	if (ud->target || ud->attacktimer != INVALID_TIMER)
-		unit_stop_attack(bl);
+		unit->stop_attack(bl);
 
 	//Clear stepaction even if there is no timer
 	if (ud->stepaction || ud->steptimer != INVALID_TIMER)

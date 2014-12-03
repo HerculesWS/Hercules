@@ -26,7 +26,7 @@ def searchStructStart(r, ifname):
             return True
     return False
 
-def readCFile(cFile):
+def readCFile(tracker, cFile):
     methods = Set()
     shortIfName = ""
     with open(cFile, "r") as r:
@@ -38,7 +38,7 @@ def readCFile(cFile):
                 ifname = m.group("name1")
                 if searchDefault(r, ifname) == False:
                     return (None, shortIfName, methods)
-                lineRe = re.compile("(?P<ifname>[a-z_]+)->(?P<method>[\w_]+) ")
+                lineRe = re.compile("(?P<ifname>[a-z_]+)->(?P<method>[\w_]+)[ ][=][ ](?P<fullmethod>[^;]+);")
                 for line in r:
 #                    print "cline2: " + line
                     test = line.strip()
@@ -55,10 +55,12 @@ def readCFile(cFile):
                             shortIfName = m.group("ifname")
 #                        print "{2}: add {0}, from: {1}".format(m.group("method"), line, ifname)
                         methods.add(m.group("method"))
+                        tracker.interfaces.add(ifname);
+                        tracker.fullmethods.add(m.group("fullmethod"));
                 return (ifname, shortIfName, methods)
     return (None, shortIfName, methods)
 
-def readHFile(hFile, ifname):
+def readHFile(tracker, hFile, ifname):
     methods = Set()
     with open(hFile, "r") as r:
         if searchStructStart(r, ifname) == False:
@@ -75,15 +77,16 @@ def readHFile(hFile, ifname):
             if m != None:
 #                print "{2}: add {0}, from: {1}".format(m.group("method"), line, ifname)
                 methods.add(m.group("method"))
+                tracker.fullmethods.add(ifname + "_" + m.group("method"))
     return methods
 
 def checkIfFile(tracker, cFile, hFile):
-    data = readCFile(cFile)
+    data = readCFile(tracker, cFile)
     cMethods = data[2]
     ifname = data[0]
     shortIfName = data[1]
     if len(cMethods) > 0:
-        hMethods = readHFile(hFile, ifname)
+        hMethods = readHFile(tracker, hFile, ifname)
         for method in hMethods:
             tracker.arr[ifname + "_" + method] = list()
             tracker.methods.add(ifname + "_" + method)
@@ -116,7 +119,7 @@ def checkChr(ch):
     return False
 
 def checkFile(tracker, cFile):
-    print "Checking: " + cFile
+#    print "Checking: " + cFile
     with open(cFile, "r") as r:
         for line in r:
             parts = re.findall(r'[\w_]+', line)
@@ -130,8 +133,16 @@ def checkFile(tracker, cFile):
                             continue
                         if checkChr(line[idx - 1]):
                             continue
+                        if line[0:3] == " * ":
+                            continue;
                         if line[-1] == "\n":
                             line = line[:-1]
+                        text = line.strip()
+                        if text[0:2] == "/*" or text[0:2] == "//":
+                            continue
+                        idx2 = line.find("//")
+                        if idx2 > 0 and idx2 < idx:
+                            continue
                         tracker.arr[part].append(line)
 
 def processDir(tracker, srcDir):
@@ -156,25 +167,80 @@ def reportMethods(tracker):
             print "\n"
 
 
-tracker = Tracker()
-tracker.arr = dict()
-tracker.methods = Set()
-tracker.retCode = 0
-if len(sys.argv) > 1 and sys.argv[1] == "silent":
+def checkLostFile(tracker, cFile):
+#    print "Checking: " + cFile
+    methodRe = re.compile("^([\w0-9* _]*)([ ]|[*])(?P<ifname>[a-z_]+)_(?P<method>[\w_]+)(|[ ])[(]")
+    with open(cFile, "r") as r:
+        for line in r:
+            if line.find("(") < 1 or len(line) < 3 or line[0] == "\t" or line[0] == " " or line.find("_defaults") > 0:
+                continue
+            m = methodRe.search(line)
+            if m != None:
+                name = "{0}_{1}".format(m.group("ifname"), m.group("method"))
+                if m.group("ifname") not in tracker.interfaces:
+                    continue
+                if name not in tracker.fullmethods:
+#                    print "src  : " + line
+                    print name
+
+def processLostDir(tracker, srcDir):
+    files = os.listdir(srcDir)
+    for file1 in files:
+        if file1[0] == '.' or file1 == "..":
+            continue
+        cPath = os.path.abspath(srcDir + os.path.sep + file1)
+        if not os.path.isfile(cPath):
+            processLostDir(tracker, cPath)
+        elif file1[-2:] == ".c":
+            checkLostFile(tracker, cPath)
+
+def runIf():
     processIfDir(tracker, "../src/char");
     processIfDir(tracker, "../src/map");
     processIfDir(tracker, "../src/login");
     processIfDir(tracker, "../src/common");
-else:
-    print "Checking initerfaces initialisation"
-    processIfDir(tracker, "../src/char");
-    processIfDir(tracker, "../src/map");
-    processIfDir(tracker, "../src/login");
-    processIfDir(tracker, "../src/common");
-    print "Checking interfaces usage"
+
+def runLost():
+    processLostDir(tracker, "../src/char");
+    processLostDir(tracker, "../src/map");
+    processLostDir(tracker, "../src/login");
+    processLostDir(tracker, "../src/common");
+
+def runLong():
     processDir(tracker, "../src/char");
     processDir(tracker, "../src/map");
     processDir(tracker, "../src/login");
     processDir(tracker, "../src/common");
     reportMethods(tracker)
+
+tracker = Tracker()
+tracker.arr = dict()
+tracker.methods = Set()
+tracker.fullmethods = Set()
+tracker.interfaces = Set()
+tracker.retCode = 0
+
+if len(sys.argv) > 1:
+    cmd = sys.argv[1]
+else:
+    cmd = "default"
+
+if cmd == "silent":
+    runIf()
+elif cmd == "init":
+    print "Checking interfaces initialisation"
+    runIf()
+elif cmd == "lost":
+    print "Checking not added functions to interfaces"
+    runLost();
+elif cmd == "long":
+    print "Checking interfaces usage"
+    runLong();
+else:
+    print "Checking interfaces initialisation"
+    runIf()
+    print "Checking not added functions to interfaces"
+    runLost();
+    print "Checking interfaces usage"
+    runLong();
 exit(tracker.retCode)
