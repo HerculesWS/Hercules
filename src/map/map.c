@@ -1787,7 +1787,7 @@ int map_quit(struct map_session_data *sd) {
 	if( sd->bg_id && !sd->bg_queue.arena ) /* TODO: dump this chunk after bg_queue is fully enabled */
 		bg->team_leave(sd,BGTL_QUIT);
 
-	if( sd->state.autotrade && runflag != MAPSERVER_ST_SHUTDOWN && !hChSys.closing )
+	if (sd->state.autotrade && runflag != MAPSERVER_ST_SHUTDOWN && !clif->hChSys->closing)
 		pc->autotrade_update(sd,PAUC_REMOVE);
 
 	skill->cooldown_save(sd);
@@ -1844,7 +1844,7 @@ int map_quit(struct map_session_data *sd) {
 		unit->remove_map(&sd->ed->bl,CLR_TELEPORT,ALC_MARK);
 	}
 
-	if( hChSys.local && map->list[sd->bl.m].channel && idb_exists(map->list[sd->bl.m].channel->users, sd->status.char_id) ) {
+	if (clif->hChSys->local && map->list[sd->bl.m].channel && idb_exists(map->list[sd->bl.m].channel->users, sd->status.char_id)) {
 		clif->chsys_left(map->list[sd->bl.m].channel,sd);
 	}
 
@@ -5340,7 +5340,7 @@ int do_final(void) {
 
 	ShowStatus("Terminating...\n");
 	
-	hChSys.closing = true;
+	clif->hChSys->closing = true;
 	HPM->event(HPET_FINAL);
 	
 	if (map->cpsd) aFree(map->cpsd);

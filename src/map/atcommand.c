@@ -8609,14 +8609,14 @@ ACMD(join) {
 		clif->message(fd, atcmd_output);
 		return false;
 	}
-	if( hChSys.local && strcmpi(name + 1, hChSys.local_name) == 0 ) {
+	if (clif->hChSys->local && strcmpi(name + 1, clif->hChSys->local_name) == 0) {
 		if( !map->list[sd->bl.m].channel ) {
 			clif->chsys_mjoin(sd);
 			if( map->list[sd->bl.m].channel ) /* join might have refused, map has chatting capabilities disabled */
 				return true;
 		} else
 			channel = map->list[sd->bl.m].channel;
-	} else if( hChSys.ally && sd->status.guild_id && strcmpi(name + 1, hChSys.ally_name) == 0 ) {
+	} else if (clif->hChSys->ally && sd->status.guild_id && strcmpi(name + 1, clif->hChSys->ally_name) == 0) {
 		struct guild *g = sd->guild;
 		if( !g ) return false;/* unlikely, but we wont let it crash anyway. */
 		channel = g->channel;
@@ -8653,7 +8653,7 @@ ACMD(join) {
 		return false;
 	}
 
-	if( !( channel->opt & hChSys_OPT_ANNOUNCE_JOIN ) ) {
+	if (!(channel->opt & hChSys_OPT_ANNOUNCE_JOIN)) {
 		sprintf(atcmd_output, msg_txt(1403),name); // You're now in the '%s' channel
 		clif->message(fd, atcmd_output);
 	}
@@ -8730,11 +8730,11 @@ ACMD(channel) {
 	sub1[0] = sub2[0] = sub3[0] = '\0';
 
 	if (!message || !*message || sscanf(message, "%19s %19s %19s %19s", subcmd, sub1, sub2, sub3) < 1) {
-		atcmd_channel_help(fd,command,( hChSys.allow_user_channel_creation || pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ));
+		atcmd_channel_help(fd,command, (clif->hChSys->allow_user_channel_creation || pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN)));
 		return true;
 	}
 
-	if (strcmpi(subcmd,"create") == 0 && (hChSys.allow_user_channel_creation || pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN))) {
+	if (strcmpi(subcmd,"create") == 0 && (clif->hChSys->allow_user_channel_creation || pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN))) {
 		// sub1 = channel name; sub2 = password; sub3 = unused
 		if (sub1[0] != '#') {
 			clif->message(fd, msg_txt(1405));// Channel name must start with a '#'
@@ -8747,7 +8747,7 @@ ACMD(channel) {
 			clif->message(fd, msg_txt(1408)); // Channel password may not contain spaces
 			return false;
 		}
-		if (strcmpi(sub1 + 1,hChSys.local_name) == 0 || strcmpi(sub1 + 1,hChSys.ally_name) == 0 || strdb_exists(clif->channel_db, sub1 + 1)) {
+		if (strcmpi(sub1 + 1, clif->hChSys->local_name) == 0 || strcmpi(sub1 + 1, clif->hChSys->ally_name) == 0 || strdb_exists(clif->channel_db, sub1 + 1)) {
 			sprintf(atcmd_output, msg_txt(1407), sub1);// Channel '%s' is not available
 			clif->message(fd, atcmd_output);
 			return false;
@@ -8769,15 +8769,15 @@ ACMD(channel) {
 		// sub1 = list type; sub2 = unused; sub3 = unused
 		if (sub1[0] != '\0' && strcmpi(sub1,"colors") == 0) {
 			char mout[40];
-			for (k = 0; k < hChSys.colors_count; k++) {
+			for (k = 0; k < clif->hChSys->colors_count; k++) {
 				unsigned short msg_len = 1;
-				msg_len += sprintf(mout, "[ %s list colors ] : %s",command,hChSys.colors_name[k]);
+				msg_len += sprintf(mout, "[ %s list colors ] : %s", command, clif->hChSys->colors_name[k]);
 
 				WFIFOHEAD(fd,msg_len + 12);
 				WFIFOW(fd,0) = 0x2C1;
 				WFIFOW(fd,2) = msg_len + 12;
 				WFIFOL(fd,4) = 0;
-				WFIFOL(fd,8) = hChSys.colors[k];
+				WFIFOL(fd,8) = clif->hChSys->colors[k];
 				safestrncpy((char*)WFIFOP(fd,12), mout, msg_len);
 				WFIFOSET(fd, msg_len + 12);
 			}
@@ -8785,14 +8785,14 @@ ACMD(channel) {
 			DBIterator *iter = db_iterator(clif->channel_db);
 			bool show_all = pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ? true : false;
 			clif->message(fd, msg_txt(1410)); // -- Public Channels
-			if (hChSys.local) {
-				sprintf(atcmd_output, msg_txt(1409), hChSys.local_name, map->list[sd->bl.m].channel ? db_size(map->list[sd->bl.m].channel->users) : 0);// - #%s ( %d users )
+			if (clif->hChSys->local) {
+				sprintf(atcmd_output, msg_txt(1409), clif->hChSys->local_name, map->list[sd->bl.m].channel ? db_size(map->list[sd->bl.m].channel->users) : 0);// - #%s ( %d users )
 				clif->message(fd, atcmd_output);
 			}
-			if (hChSys.ally && sd->status.guild_id) {
+			if (clif->hChSys->ally && sd->status.guild_id) {
 				struct guild *g = sd->guild;
 				if( !g ) { dbi_destroy(iter); return false; }
-				sprintf(atcmd_output, msg_txt(1409), hChSys.ally_name, db_size(g->channel->users));// - #%s ( %d users )
+				sprintf(atcmd_output, msg_txt(1409), clif->hChSys->ally_name, db_size(g->channel->users));// - #%s ( %d users )
 				clif->message(fd, atcmd_output);
 			}
 			for (channel = dbi_first(iter); dbi_exists(iter); channel = dbi_next(iter)) {
@@ -8822,17 +8822,17 @@ ACMD(channel) {
 			return false;
 		}
 
-		for (k = 0; k < hChSys.colors_count; k++) {
-			if (strcmpi(sub2, hChSys.colors_name[k]) == 0)
+		for (k = 0; k < clif->hChSys->colors_count; k++) {
+			if (strcmpi(sub2, clif->hChSys->colors_name[k]) == 0)
 				break;
 		}
-		if (k == hChSys.colors_count) {
+		if (k == clif->hChSys->colors_count) {
 			sprintf(atcmd_output, msg_txt(1411), sub2);// Unknown color '%s'
 			clif->message(fd, atcmd_output);
 			return false;
 		}
 		channel->color = k;
-		sprintf(atcmd_output, msg_txt(1413),sub1,hChSys.colors_name[k]);// '%s' channel color updated to '%s'
+		sprintf(atcmd_output, msg_txt(1413), sub1, clif->hChSys->colors_name[k]);// '%s' channel color updated to '%s'
 		clif->message(fd, atcmd_output);
 	} else if (strcmpi(subcmd,"leave") == 0) {
 		// sub1 = channel name; sub2 = unused; sub3 = unused
@@ -9167,7 +9167,7 @@ ACMD(channel) {
 			}
 		}
 	} else {
-		atcmd_channel_help(fd,command,( hChSys.allow_user_channel_creation || pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ));
+		atcmd_channel_help(fd, command, (clif->hChSys->allow_user_channel_creation || pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN)));
 	}
 	return true;
 }
@@ -9178,14 +9178,14 @@ ACMD(fontcolor) {
 	char mout[40];
 
 	if( !message || !*message ) {
-		for( k = 0; k < hChSys.colors_count; k++ ) {
-			msg_len += sprintf(mout, "[ %s ] : %s",command,hChSys.colors_name[k]);
+		for( k = 0; k < clif->hChSys->colors_count; k++ ) {
+			msg_len += sprintf(mout, "[ %s ] : %s", command, clif->hChSys->colors_name[k]);
 
 			WFIFOHEAD(fd,msg_len + 12);
 			WFIFOW(fd,0) = 0x2C1;
 			WFIFOW(fd,2) = msg_len + 12;
 			WFIFOL(fd,4) = 0;
-			WFIFOL(fd,8) = hChSys.colors[k];
+			WFIFOL(fd,8) = clif->hChSys->colors[k];
 			safestrncpy((char*)WFIFOP(fd,12), mout, msg_len);
 			WFIFOSET(fd, msg_len + 12);
 		}
@@ -9197,24 +9197,24 @@ ACMD(fontcolor) {
 		return true;
 	}
 
-	for( k = 0; k < hChSys.colors_count; k++ ) {
-		if( strcmpi(message,hChSys.colors_name[k]) == 0 )
+	for( k = 0; k < clif->hChSys->colors_count; k++ ) {
+		if (strcmpi(message, clif->hChSys->colors_name[k]) == 0)
 			break;
 	}
-	if( k == hChSys.colors_count ) {
+	if( k == clif->hChSys->colors_count ) {
 		sprintf(atcmd_output, msg_txt(1411), message);// Unknown color '%s'
 		clif->message(fd, atcmd_output);
 		return false;
 	}
 
 	sd->fontcolor = k + 1;
-	msg_len += sprintf(mout, "Color changed to '%s'",hChSys.colors_name[k]);
+	msg_len += sprintf(mout, "Color changed to '%s'", clif->hChSys->colors_name[k]);
 
 	WFIFOHEAD(fd,msg_len + 12);
 	WFIFOW(fd,0) = 0x2C1;
 	WFIFOW(fd,2) = msg_len + 12;
 	WFIFOL(fd,4) = 0;
-	WFIFOL(fd,8) = hChSys.colors[k];
+	WFIFOL(fd,8) = clif->hChSys->colors[k];
 	safestrncpy((char*)WFIFOP(fd,12), mout, msg_len);
 	WFIFOSET(fd, msg_len + 12);
 	return true;

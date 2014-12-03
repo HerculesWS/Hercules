@@ -470,15 +470,15 @@ int guild_recv_info(struct guild *sg) {
 		g->instance = NULL;
 		g->instances = 0;
 		idb_put(guild->db,sg->guild_id,g);
-		if( hChSys.ally ) {
+		if (clif->hChSys->ally) {
 			struct hChSysCh *channel;
-			
+
 			CREATE(channel, struct hChSysCh , 1);
-			safestrncpy(channel->name, hChSys.ally_name, HCHSYS_NAME_LENGTH);
+			safestrncpy(channel->name, clif->hChSys->ally_name, HCHSYS_NAME_LENGTH);
 			channel->type = hChSys_ALLY;
 			
-			clif->chsys_create(channel,NULL,NULL,hChSys.ally_color);
-			if( hChSys.ally_autojoin ) {
+			clif->chsys_create(channel, NULL, NULL, clif->hChSys->ally_color);
+			if (clif->hChSys->ally_autojoin) {
 				struct s_mapiterator* iter = mapit_getallusers();
 				struct guild *tg[MAX_GUILDALLIANCE];
 				
@@ -745,7 +745,7 @@ void guild_member_joined(struct map_session_data *sd)
 		g->member[i].sd = sd;
 		sd->guild = g;
 		
-		if( hChSys.ally && hChSys.ally_autojoin ) {
+		if (clif->hChSys->ally && clif->hChSys->ally_autojoin) {
 			struct guild* sg = NULL;
 			struct hChSysCh *channel = g->channel;
 
@@ -913,7 +913,7 @@ int guild_member_withdraw(int guild_id, int account_id, int char_id, int flag, c
 		if (sd->state.storage_flag == 2) //Close the guild storage.
 			gstorage->close(sd);
 		guild->send_dot_remove(sd);
-		if( hChSys.ally ) {
+		if (clif->hChSys->ally) {
 			clif->chsys_quitg(sd);
 		}
 		sd->status.guild_id = 0;
@@ -1646,9 +1646,9 @@ int guild_allianceack(int guild_id1,int guild_id2,int account_id1,int account_id
 		return 0;
 	}
 
-	if( g[0] && g[1] && hChSys.ally && ( flag & 1 ) == 0 ) {
+	if (g[0] && g[1] && clif->hChSys->ally && ( flag & 1 ) == 0) {
 		if( !(flag & 0x08) ) {
-			if( hChSys.ally_autojoin )
+			if (clif->hChSys->ally_autojoin)
 				clif->chsys_gjoin(g[0],g[1]);
 		} else {
 			clif->chsys_gleave(g[0],g[1]);
@@ -1777,7 +1777,7 @@ int guild_broken(int guild_id,int flag)
 	guild->db->foreach(guild->db,guild->broken_sub,guild_id);
 	guild->castle_db->foreach(guild->castle_db,guild->castle_broken_sub,guild_id);
 	gstorage->delete(guild_id);
-	if( hChSys.ally ) {
+	if (clif->hChSys->ally) {
 		if( g->channel != NULL ) {
 			clif->chsys_delete(g->channel);
 		}

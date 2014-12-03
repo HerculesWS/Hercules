@@ -517,7 +517,7 @@ struct s_packet_db {
 	short pos[MAX_PACKET_POS];
 };
 
-struct {
+struct hChSysConfig {
 	unsigned int *colors;
 	char **colors_name;
 	unsigned char colors_count;
@@ -530,7 +530,7 @@ struct {
 	char irc_server[40], irc_channel[50], irc_nick[40], irc_nick_pw[30];
 	unsigned short irc_server_port;
 	bool irc_use_ghost;
-} hChSys;
+};
 
 struct hChSysBanEntry {
 	char name[NAME_LENGTH];
@@ -576,6 +576,7 @@ struct clif_interface {
 	char map_ip_str[128];
 	int map_fd;
 	DBMap* channel_db;
+	struct hChSysConfig *hChSys;
 	/* for clif_clearunit_delayed */
 	struct eri *delay_clearunit_ers;
 	/* Cash Shop [Ind/Hercules] */
