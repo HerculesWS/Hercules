@@ -61,6 +61,7 @@ struct npc_data {
 	int touching_id;
 	int64 next_walktime;
 	uint8 dir;
+	uint8 area_size;
 
 	unsigned size : 2;
 
