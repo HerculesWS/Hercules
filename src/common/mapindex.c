@@ -165,11 +165,18 @@ int mapindex_init(void) {
 	}
 	fclose(fp);
 
-	if( !strdb_iget(mapindex->db, MAP_DEFAULT) ) {
-		ShowError("mapindex_init: MAP_DEFAULT '%s' not found in cache! update mapindex.h MAP_DEFAULT var!!!\n",MAP_DEFAULT);
-	}
+	mapindex->check_default();
 
 	return total;
+}
+
+bool mapindex_check_default(void)
+{
+	if (!strdb_iget(mapindex->db, MAP_DEFAULT)) {
+		ShowError("mapindex_init: MAP_DEFAULT '%s' not found in cache! update mapindex.h MAP_DEFAULT var!!!\n",MAP_DEFAULT);
+		return false;
+	}
+	return true;
 }
 
 void mapindex_removemap(int index){
@@ -201,4 +208,5 @@ void mapindex_defaults(void) {
 	mapindex->getmapname_ext = mapindex_getmapname_ext;
 	mapindex->name2id = mapindex_name2id;
 	mapindex->id2name = mapindex_id2name_sub;
+	mapindex->check_default = mapindex_check_default;
 }
