@@ -1093,7 +1093,7 @@ struct npc_data* npc_checknear(struct map_session_data* sd, struct block_list* b
 	if (bl->type != BL_NPC) return NULL;
 	nd = (TBL_NPC*)bl;
 
-	if (sd->state.using_fake_npc && sd->npc_id == bl->id)
+	if (sd->npc_id == bl->id)
 		return nd;
 
 	if (nd->class_<0) //Class-less npc, enable click from anywhere.
