@@ -13933,7 +13933,7 @@ BUILDIN(autoequip)
 
 /*=======================================================
  * Equip2
- * equip2 <item id>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>{,<account ID>};
+ * equip2 <item id>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>;
  *-------------------------------------------------------*/
 BUILDIN(equip2)
 {
@@ -13941,10 +13941,7 @@ BUILDIN(equip2)
 	struct item_data *item_data;
 	TBL_PC *sd;
 
-	if ( script_hasdata(st,9) )
-		sd = map->id2sd(script_getnum(st,9));
-	else
-		sd = script->rid2sd(st);
+	sd = script->rid2sd(st);
 
 	if ( sd == NULL ) {
 		script_pushint(st,0);
@@ -18687,7 +18684,7 @@ BUILDIN(countbound)
  *------------------------------------------*/
 BUILDIN(checkbound){
 	int i, nameid = script_getnum(st,2);
-	int bound_type, ref, attr, c1, c2, c3, c4;
+	int bound_type = 0, ref, attr, c1, c2, c3, c4;
 	TBL_PC *sd;
 
 	sd = script->rid2sd(st);
@@ -18699,8 +18696,10 @@ BUILDIN(checkbound){
 		return false;
 	}
 
-	bound_type = ( script_hasdata(st,3) ? script_getnum(st,3) : -1 );
-	if( bound_type < -1 || bound_type > IBT_MAX ){
+	if (script_hasdata(st,3))
+		bound_type = script_getnum(st,3);
+
+	if( bound_type <= -1 || bound_type > IBT_MAX ){
 		ShowError("script_checkbound: Not a valid bind type! Type=%d\n", bound_type);
 	}
 
@@ -18711,7 +18710,7 @@ BUILDIN(checkbound){
 								   ( sd->status.inventory[i].card[1] == (script_hasdata(st,7)? (c2 = script_getnum(st,7)) : sd->status.inventory[i].card[1]) ) &&
 								   ( sd->status.inventory[i].card[2] == (script_hasdata(st,8)? (c3 = script_getnum(st,8)) : sd->status.inventory[i].card[2]) ) &&
 								   ( sd->status.inventory[i].card[3] == (script_hasdata(st,9)? (c4 = script_getnum(st,9)) : sd->status.inventory[i].card[3]) ) &&
-								   ( sd->status.inventory[i].bound > 0 && bound_type == -1 || sd->status.inventory[i].bound == bound_type )) );
+								   ( sd->status.inventory[i].bound > 0 && !bound_type || sd->status.inventory[i].bound == bound_type )) );
 
 	if( i < MAX_INVENTORY ){
 		script_pushint(st, sd->status.inventory[i].bound);

@@ -4848,36 +4848,63 @@ Example:
 *checkbound(<item_id>{,<bound_type>{,<refine>{,<attribute>{,<card_1>{,<card_2>{,<card_3>{,<card_4>}}}}}}});
 
 This command allows you to check whether or not the attached player has the specified bound item in their inventory.
+If a bound type is not specified or a bound type of 0 is used, it will search the player's inventory for a bound item
+of any type, so long as the other parameters match. In all cases, this command will return the bound type of the
+item found, or 0 if the specified item was not found.
 
 Valid bound types are:
+ 0 - All Bound types.
  1 - Account Bound
  2 - Guild Bound
  3 - Party Bound
  4 - Character Bound
 
 Optional Parameters:
+ bound_type - checks to see if the item has the specified bound type.
  refine - checks to see if the item is refined to the given number.
- attribute - whether the item is broken (1) or not (0)
+ attribute - whether the item is broken (1) or not (0).
  card 1,2,3,4 - checks to see if the specified cards are compounded on the item as well.
 
 Example:
 	// This will check if you have a bound (any type) 1205 (Cutter).
 	if (checkbound(1205)) {
 		mes "You have a bound Cutter";
-		close;
 	} else {
 		mes "You do not have a bound Cutter";
-		close;
 	}
+	close;
+	
+	// This will also check if you have a bound (any type) 1205 (Cutter).
+	if (checkbound(1205,0)) {
+		mes "You have a bound Cutter";
+	} else {
+		mes "You do not have a bound Cutter";
+	}
+	close;
+	
+	// This will check if the player doesn't have a bound 1205 (Cutter).
+	if (!checkbound(1205)) {
+		mes "You do not have a bound Cutter";
+	} else {
+		mes "You do have a bound Cutter";
+	}
+	close;
+	
+	// This will check if the item found, has a bound type of 2 (guild_bound)
+	if (checkbound(1205) == 2) {
+		mes "You have a guild_bound Cutter";
+	} else {
+		mes "You do not have a guild_bound Cutter.";
+	}
+	close;
 	
 	// This will check if you have a 'guild_bound' +7 1205 (Cutter).
 	if (checkbound(1205, 2, 7)) {
 		mes "You have a +7 guild_bound Cutter.";
-		close;
 	} else {
 		mes "You don't have the required item.";
-		close;
 	}
+	close;
 ---------------------------------------
 
 *getnameditem <item id>,<character name|character ID>;
@@ -5279,7 +5306,7 @@ like storage or cart.
 ---------------------------------------
 
 *equip <item id>;
-*equip2 <item id>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>{,<account ID>};
+*equip2 <item id>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>;
 *autoequip <item id>,<option>;
 
 These commands are to equip a equipment on the attached character. 
