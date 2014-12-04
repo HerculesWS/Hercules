@@ -18710,7 +18710,7 @@ BUILDIN(checkbound){
 								   ( sd->status.inventory[i].card[1] == (script_hasdata(st,7)? (c2 = script_getnum(st,7)) : sd->status.inventory[i].card[1]) ) &&
 								   ( sd->status.inventory[i].card[2] == (script_hasdata(st,8)? (c3 = script_getnum(st,8)) : sd->status.inventory[i].card[2]) ) &&
 								   ( sd->status.inventory[i].card[3] == (script_hasdata(st,9)? (c4 = script_getnum(st,9)) : sd->status.inventory[i].card[3]) ) &&
-								   ( sd->status.inventory[i].bound > 0 && !bound_type || sd->status.inventory[i].bound == bound_type )) );
+								   ((sd->status.inventory[i].bound > 0 && !bound_type) || sd->status.inventory[i].bound == bound_type )) );
 
 	if( i < MAX_INVENTORY ){
 		script_pushint(st, sd->status.inventory[i].bound);
