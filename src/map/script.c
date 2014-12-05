@@ -10677,15 +10677,8 @@ BUILDIN(changebase) {
 			return true;
 	}
 
-	if(sd->disguise == -1 && vclass != sd->vd.class_) {
-		status->set_viewdata(&sd->bl, vclass);
-		//Updated client view. Base, Weapon and Cloth Colors.
-		clif->changelook(&sd->bl,LOOK_BASE,sd->vd.class_);
-		clif->changelook(&sd->bl,LOOK_WEAPON,sd->status.weapon);
-		if (sd->vd.cloth_color)
-			clif->changelook(&sd->bl,LOOK_CLOTHES_COLOR,sd->vd.cloth_color);
-		clif->skillinfoblock(sd);
-	}
+	if(sd->disguise == -1 && vclass != sd->vd.class_)
+		pc->changelook(sd,LOOK_BASE,vclass); //Updated client view. Base, Weapon and Cloth Colors.
 
 	return true;
 }
