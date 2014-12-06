@@ -152,9 +152,9 @@ bool pincode_config_read(char *w1, char *w2) {
 		if ( strcmpi(w1, "pincode_enabled") == 0 ) {
 			pincode->enabled = atoi(w2);
 #if PACKETVER < 20110309
-			if( pincode_enabled ) {
+			if( pincode->enabled ) {
 				ShowWarning("pincode_enabled requires PACKETVER 20110309 or higher. disabling...\n");
-				pincode_enabled = 0;
+				pincode->enabled = 0;
 			}
 #endif
 		} else if ( strcmpi(w1, "pincode_changetime") == 0 ) {
