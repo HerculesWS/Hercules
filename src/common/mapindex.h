@@ -67,6 +67,12 @@ struct mapindex_interface {
 	DBMap *db;
 	/* number of entries in the index table */
 	int num;
+	/* default map name */
+	char *default_map;
+	/* default x on map */
+	int default_x;
+	/* default y on map */
+	int default_y;
 	/* index list -- since map server map count is *unlimited* this should be too */
 	struct {
 		char name[MAP_NAME_LENGTH];

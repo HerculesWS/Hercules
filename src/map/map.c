@@ -5581,9 +5581,9 @@ void map_cp_defaults(void) {
 	/* default HCP data */
 	map->cpsd = pc->get_dummy_sd();
 	strcpy(map->cpsd->status.name, "Hercules Console");
-	map->cpsd->bl.x = MAP_DEFAULT_X;
-	map->cpsd->bl.y = MAP_DEFAULT_Y;
-	map->cpsd->bl.m = map->mapname2mapid(MAP_DEFAULT);
+	map->cpsd->bl.x = mapindex->default_x;
+	map->cpsd->bl.y = mapindex->default_y;
+	map->cpsd->bl.m = map->mapname2mapid(mapindex->default_map);
 
 	console->input->addCommand("gm:info",CPCMD_A(gm_position));
 	console->input->addCommand("gm:use",CPCMD_A(gm_use));
