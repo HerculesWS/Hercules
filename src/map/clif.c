@@ -72,6 +72,8 @@ static struct packet_npc_market_open npcmarket_open;
 //#define DUMP_UNKNOWN_PACKET
 //#define DUMP_INVALID_PACKET
 
+static struct hChSysConfig clif_hChSys;
+
 //Converts item type in case of pet eggs.
 static inline int itemtype(int type) {
 	switch( type ) {
@@ -334,6 +336,11 @@ int clif_send_sub(struct block_list *bl, va_list ap) {
 	if( clif->ally_only && !sd->sc.data[SC_CLAIRVOYANCE] && !sd->special_state.intravision && battle->check_target( src_bl, &sd->bl, BCT_ENEMY ) > 0 )
 		return 0;
 
+	return clif->send_actual(fd, buf, len);
+}
+
+int clif_send_actual(int fd, void *buf, int len)
+{
 	WFIFOHEAD(fd, len);
 	if (WFIFOP(fd,0) == buf) {
 		ShowError("WARNING: Invalid use of clif->send function\n");
@@ -2674,36 +2681,36 @@ void read_channels_config(void) {
 
 		if( !libconfig->setting_lookup_string(settings, "map_local_channel_name", &local_name) )
 			local_name = "map";
-		safestrncpy(hChSys.local_name, local_name, HCHSYS_NAME_LENGTH);
+		safestrncpy(clif->hChSys->local_name, local_name, HCHSYS_NAME_LENGTH);
 
 		if( !libconfig->setting_lookup_string(settings, "ally_channel_name", &ally_name) )
 			ally_name = "ally";
-		safestrncpy(hChSys.ally_name, ally_name, HCHSYS_NAME_LENGTH);
+		safestrncpy(clif->hChSys->ally_name, ally_name, HCHSYS_NAME_LENGTH);
 
 		if( !libconfig->setting_lookup_string(settings, "irc_channel_name", &irc_name) )
 			irc_name = "irc";
-		safestrncpy(hChSys.irc_name, irc_name, HCHSYS_NAME_LENGTH);
+		safestrncpy(clif->hChSys->irc_name, irc_name, HCHSYS_NAME_LENGTH);
 
 		libconfig->setting_lookup_bool(settings, "map_local_channel", &local_enabled);
 		libconfig->setting_lookup_bool(settings, "ally_channel_enabled", &ally_enabled);
 		libconfig->setting_lookup_bool(settings, "irc_channel_enabled", &irc_enabled);
 
-		if( local_enabled )
-			hChSys.local = true;
-		if( ally_enabled )
-			hChSys.ally = true;
-		if( irc_enabled )
-			hChSys.irc = true;
+		if (local_enabled)
+			clif->hChSys->local = true;
+		if (ally_enabled)
+			clif->hChSys->ally = true;
+		if (irc_enabled)
+			clif->hChSys->irc = true;
 
-		hChSys.irc_server[0] = hChSys.irc_channel[0] = hChSys.irc_nick[0] = hChSys.irc_nick_pw[0] = '\0';
+		clif->hChSys->irc_server[0] = clif->hChSys->irc_channel[0] = clif->hChSys->irc_nick[0] = clif->hChSys->irc_nick_pw[0] = '\0';
 
-		if( hChSys.irc ) {
+		if (clif->hChSys->irc) {
 			const char *irc_server, *irc_channel,
 				 *irc_nick, *irc_nick_pw;
 			int irc_use_ghost = 0;
 			if( libconfig->setting_lookup_string(settings, "irc_channel_network", &irc_server) ) {
 				if( !strstr(irc_server,":") ) {
-					hChSys.irc = false;
+					clif->hChSys->irc = false;
 					ShowWarning("channels.conf : network port wasn't found in 'irc_channel_network', disabling irc channel...\n");
 				} else {
 					unsigned char d = 0, dlen = strlen(irc_server);
@@ -2715,36 +2722,36 @@ void read_channels_config(void) {
 					for(d = 0; d < dlen; d++) {
 						if(irc_server[d] == ':') {
 							memcpy(server, irc_server, d);
-							safestrncpy(hChSys.irc_server, server, 40);
+							safestrncpy(clif->hChSys->irc_server, server, 40);
 							memcpy(server, &irc_server[d+1], dlen - d - 1);
-							hChSys.irc_server_port = atoi(server);
+							clif->hChSys->irc_server_port = atoi(server);
 							break;
 						}
 					}
 				}
 			} else {
-				hChSys.irc = false;
+				clif->hChSys->irc = false;
 				ShowWarning("channels.conf : irc channel enabled but irc_channel_network wasn't found, disabling irc channel...\n");
 			}
 			if( libconfig->setting_lookup_string(settings, "irc_channel_channel", &irc_channel) )
-				safestrncpy(hChSys.irc_channel, irc_channel, 50);
+				safestrncpy(clif->hChSys->irc_channel, irc_channel, 50);
 			else {
-				hChSys.irc = false;
+				clif->hChSys->irc = false;
 				ShowWarning("channels.conf : irc channel enabled but irc_channel_channel wasn't found, disabling irc channel...\n");
 			}
 			if( libconfig->setting_lookup_string(settings, "irc_channel_nick", &irc_nick) ) {
 				if( strcmpi(irc_nick,"Hercules_chSysBot") == 0 ) {
-					sprintf(hChSys.irc_nick, "Hercules_chSysBot%d",rand()%777);
+					sprintf(clif->hChSys->irc_nick, "Hercules_chSysBot%d",rand()%777);
 				} else
-					safestrncpy(hChSys.irc_nick, irc_nick, 40);
+					safestrncpy(clif->hChSys->irc_nick, irc_nick, 40);
 			} else {
-				hChSys.irc = false;
+				clif->hChSys->irc = false;
 				ShowWarning("channels.conf : irc channel enabled but irc_channel_nick wasn't found, disabling irc channel...\n");
 			}
 			if( libconfig->setting_lookup_string(settings, "irc_channel_nick_pw", &irc_nick_pw) ) {
-				safestrncpy(hChSys.irc_nick_pw, irc_nick_pw, 30);
+				safestrncpy(clif->hChSys->irc_nick_pw, irc_nick_pw, 30);
 				config_setting_lookup_bool(settings, "irc_channel_use_ghost", &irc_use_ghost);
-				hChSys.irc_use_ghost = irc_use_ghost;
+				clif->hChSys->irc_use_ghost = irc_use_ghost;
 			}
 
 		}
@@ -2752,83 +2759,83 @@ void read_channels_config(void) {
 		libconfig->setting_lookup_bool(settings, "map_local_channel_autojoin", &local_autojoin);
 		libconfig->setting_lookup_bool(settings, "ally_channel_autojoin", &ally_autojoin);
 
-		if( local_autojoin )
-			hChSys.local_autojoin = true;
-		if( ally_autojoin )
-			hChSys.ally_autojoin = true;
+		if (local_autojoin)
+			clif->hChSys->local_autojoin = true;
+		if (ally_autojoin)
+			clif->hChSys->ally_autojoin = true;
 
 		libconfig->setting_lookup_bool(settings, "allow_user_channel_creation", &allow_user_channel_creation);
 
 		if( allow_user_channel_creation )
-			hChSys.allow_user_channel_creation = true;
+			clif->hChSys->allow_user_channel_creation = true;
 
 		if( (colors = libconfig->setting_get_member(settings, "colors")) != NULL ) {
 			int color_count = libconfig->setting_length(colors);
-			CREATE( hChSys.colors, unsigned int, color_count );
-			CREATE( hChSys.colors_name, char *, color_count );
+			CREATE(clif->hChSys->colors, unsigned int, color_count);
+			CREATE(clif->hChSys->colors_name, char *, color_count);
 			for(i = 0; i < color_count; i++) {
 				config_setting_t *color = libconfig->setting_get_elem(colors, i);
 
-				CREATE( hChSys.colors_name[i], char, HCHSYS_NAME_LENGTH );
+				CREATE(clif->hChSys->colors_name[i], char, HCHSYS_NAME_LENGTH);
 
-				safestrncpy(hChSys.colors_name[i], config_setting_name(color), HCHSYS_NAME_LENGTH);
+				safestrncpy(clif->hChSys->colors_name[i], config_setting_name(color), HCHSYS_NAME_LENGTH);
 
-				hChSys.colors[i] = (unsigned int)strtoul(libconfig->setting_get_string_elem(colors,i),NULL,0);
-				hChSys.colors[i] = (hChSys.colors[i] & 0x0000FF) << 16 | (hChSys.colors[i] & 0x00FF00) | (hChSys.colors[i] & 0xFF0000) >> 16;//RGB to BGR
+				clif->hChSys->colors[i] = (unsigned int)strtoul(libconfig->setting_get_string_elem(colors,i),NULL,0);
+				clif->hChSys->colors[i] = (clif->hChSys->colors[i] & 0x0000FF) << 16 | (clif->hChSys->colors[i] & 0x00FF00) | (clif->hChSys->colors[i] & 0xFF0000) >> 16;//RGB to BGR
 			}
-			hChSys.colors_count = color_count;
+			clif->hChSys->colors_count = color_count;
 		}
 
 		libconfig->setting_lookup_string(settings, "map_local_channel_color", &local_color);
 
-		for (k = 0; k < hChSys.colors_count; k++) {
-			if( strcmpi(hChSys.colors_name[k],local_color) == 0 )
+		for (k = 0; k < clif->hChSys->colors_count; k++) {
+			if (strcmpi(clif->hChSys->colors_name[k], local_color) == 0)
 				break;
 		}
 
-		if( k < hChSys.colors_count ) {
-			hChSys.local_color = k;
+		if (k < clif->hChSys->colors_count) {
+			clif->hChSys->local_color = k;
 		} else {
 			ShowError("channels.conf: unknown color '%s' for 'map_local_channel_color', disabling '#%s'...\n",local_color,local_name);
-			hChSys.local = false;
+			clif->hChSys->local = false;
 		}
 
 		libconfig->setting_lookup_string(settings, "ally_channel_color", &ally_color);
 
-		for (k = 0; k < hChSys.colors_count; k++) {
-			if( strcmpi(hChSys.colors_name[k],ally_color) == 0 )
+		for (k = 0; k < clif->hChSys->colors_count; k++) {
+			if (strcmpi(clif->hChSys->colors_name[k], ally_color) == 0)
 				break;
 		}
 
-		if( k < hChSys.colors_count ) {
-			hChSys.ally_color = k;
+		if( k < clif->hChSys->colors_count ) {
+			clif->hChSys->ally_color = k;
 		} else {
 			ShowError("channels.conf: unknown color '%s' for 'ally_channel_color', disabling '#%s'...\n",ally_color,ally_name);
-			hChSys.ally = false;
+			clif->hChSys->ally = false;
 		}
 
 		libconfig->setting_lookup_string(settings, "irc_channel_color", &irc_color);
 
-		for (k = 0; k < hChSys.colors_count; k++) {
-			if( strcmpi(hChSys.colors_name[k],irc_color) == 0 )
+		for (k = 0; k < clif->hChSys->colors_count; k++) {
+			if (strcmpi(clif->hChSys->colors_name[k], irc_color) == 0)
 				break;
 		}
 
-		if( k < hChSys.colors_count ) {
-			hChSys.irc_color = k;
+		if (k < clif->hChSys->colors_count) {
+			clif->hChSys->irc_color = k;
 		} else {
 			ShowError("channels.conf: unknown color '%s' for 'irc_channel_color', disabling '#%s'...\n",irc_color,irc_name);
-			hChSys.irc = false;
+			clif->hChSys->irc = false;
 		}
 
-		if( hChSys.irc ) {
+		if (clif->hChSys->irc) {
 			struct hChSysCh *chd;
-			CREATE( chd, struct hChSysCh, 1 );
+			CREATE(chd, struct hChSysCh, 1);
 
-			safestrncpy(chd->name, hChSys.irc_name, HCHSYS_NAME_LENGTH);
+			safestrncpy(chd->name, clif->hChSys->irc_name, HCHSYS_NAME_LENGTH);
 			chd->type = hChSys_IRC;
 
-			clif->chsys_create(chd,NULL,NULL,hChSys.irc_color);
+			clif->chsys_create(chd, NULL, NULL, clif->hChSys->irc_color);
 			ircbot->channel = chd;
 		}
 
@@ -2841,15 +2848,15 @@ void read_channels_config(void) {
 				const char *color = libconfig->setting_get_string_elem(channels,i);
 				struct hChSysCh *chd;
 
-				for (k = 0; k < hChSys.colors_count; k++) {
-					if( strcmpi(hChSys.colors_name[k],color) == 0 )
+				for (k = 0; k < clif->hChSys->colors_count; k++) {
+					if (strcmpi(clif->hChSys->colors_name[k],color) == 0)
 						break;
 				}
-				if( k == hChSys.colors_count ) {
+				if( k == clif->hChSys->colors_count) {
 					ShowError("channels.conf: unknown color '%s' for channel '%s', skipping channel...\n",color,name);
 					continue;
 				}
-				if( strcmpi(name,hChSys.local_name) == 0 || strcmpi(name,hChSys.ally_name) == 0 || strcmpi(name,hChSys.irc_name) == 0 || strdb_exists(clif->channel_db, name) ) {
+				if( strcmpi(name, clif->hChSys->local_name) == 0 || strcmpi(name, clif->hChSys->ally_name) == 0 || strcmpi(name, clif->hChSys->irc_name) == 0 || strdb_exists(clif->channel_db, name) ) {
 					ShowError("channels.conf: duplicate channel '%s', skipping channel...\n",name);
 					continue;
 
@@ -3179,17 +3186,14 @@ void clif_changestatus(struct map_session_data* sd,int type,int val)
 	clif->send(buf,packet_len(0x1ab),&sd->bl,AREA_WOS);
 }
 
-
 /// Updates sprite/style properties of an object.
-/// 00c3 <id>.L <type>.B <value>.B (ZC_SPRITE_CHANGE)
-/// 01d7 <id>.L <type>.B <value>.L (ZC_SPRITE_CHANGE2)
 void clif_changelook(struct block_list *bl,int type,int val)
 {
-	unsigned char buf[16];
 	struct map_session_data* sd;
 	struct status_change* sc;
 	struct view_data* vd;
 	enum send_target target = AREA;
+	int val2 = 0;
 	nullpo_retv(bl);
 
 	sd = BL_CAST(BL_PC, bl);
@@ -3297,56 +3301,32 @@ void clif_changelook(struct block_list *bl,int type,int val)
 	// prevent leaking the presence of GM-hidden objects
 	if( sc && sc->option&OPTION_INVISIBLE && !disguised(bl) )
 		target = SELF;
-
 #if PACKETVER < 4
-	WBUFW(buf,0)=0xc3;
-	WBUFL(buf,2)=bl->id;
-	WBUFB(buf,6)=type;
-	WBUFB(buf,7)=val;
-	clif->send(buf,packet_len(0xc3),bl,target);
+	clif->sendlook(bl, bl->id, type, val, 0, target);
 #else
-	WBUFW(buf,0)=0x1d7;
-	WBUFL(buf,2)=bl->id;
 	if(type == LOOK_WEAPON || type == LOOK_SHIELD) {
 		nullpo_retv(vd);
-		WBUFB(buf,6)=LOOK_WEAPON;
-		WBUFW(buf,7)=vd->weapon;
-		WBUFW(buf,9)=vd->shield;
-	} else {
-		WBUFB(buf,6)=type;
-		WBUFL(buf,7)=val;
+		type = LOOK_WEAPON;
+		val = vd->weapon;
+		val2 = vd->shield;
 	}
 	if( disguised(bl) ) {
-		clif->send(buf,packet_len(0x1d7),bl,AREA_WOS);
-		WBUFL(buf,2)=-bl->id;
-		clif->send(buf,packet_len(0x1d7),bl,SELF);
+		clif->sendlook(bl, bl->id, type, val, val2, AREA_WOS);
+		clif->sendlook(bl, -bl->id, type, val, val2, SELF);
 	} else
-		clif->send(buf,packet_len(0x1d7),bl,target);
+		clif->sendlook(bl, bl->id, type, val, val2, target);
 #endif
 }
 
 //Sends a change-base-look packet required for traps as they are triggered.
 void clif_changetraplook(struct block_list *bl,int val)
 {
-	unsigned char buf[32];
-#if PACKETVER < 4
-	WBUFW(buf,0)=0xc3;
-	WBUFL(buf,2)=bl->id;
-	WBUFB(buf,6)=LOOK_BASE;
-	WBUFB(buf,7)=val;
-	clif->send(buf,packet_len(0xc3),bl,AREA);
-#else
-	WBUFW(buf,0)=0x1d7;
-	WBUFL(buf,2)=bl->id;
-	WBUFB(buf,6)=LOOK_BASE;
-	WBUFW(buf,7)=val;
-	WBUFW(buf,9)=0;
-	clif->send(buf,packet_len(0x1d7),bl,AREA);
-#endif
+	clif->sendlook(bl, bl->id, LOOK_BASE, val, 0, AREA);
 }
 
-//For the stupid cloth-dye bug. Resends the given view data to the area specified by bl.
-void clif_refreshlook(struct block_list *bl,int id,int type,int val,enum send_target target)
+/// 00c3 <id>.L <type>.B <value>.B (ZC_SPRITE_CHANGE)
+/// 01d7 <id>.L <type>.B <value>.L (ZC_SPRITE_CHANGE2)
+void clif_sendlook(struct block_list *bl, int id, int type, int val, int val2, enum send_target target)
 {
 	unsigned char buf[32];
 #if PACKETVER < 4
@@ -3360,9 +3340,15 @@ void clif_refreshlook(struct block_list *bl,int id,int type,int val,enum send_ta
 	WBUFL(buf,2)=id;
 	WBUFB(buf,6)=type;
 	WBUFW(buf,7)=val;
-	WBUFW(buf,9)=0;
+	WBUFW(buf,9)=val2;
 	clif->send(buf,packet_len(0x1d7),bl,target);
 #endif
+}
+
+//For the stupid cloth-dye bug. Resends the given view data to the area specified by bl.
+void clif_refreshlook(struct block_list *bl,int id,int type,int val,enum send_target target)
+{
+	clif->sendlook(bl, id, type, val, 0, target);
 }
 
 
@@ -9140,7 +9126,7 @@ void clif_hercules_chsys_msg(struct hChSysCh *channel, struct map_session_data *
 	WFIFOW(sd->fd,0) = 0x2C1;
 	WFIFOW(sd->fd,2) = msg_len + 12;
 	WFIFOL(sd->fd,4) = 0;
-	WFIFOL(sd->fd,8) = hChSys.colors[channel->color];
+	WFIFOL(sd->fd,8) = clif->hChSys->colors[channel->color];
 	safestrncpy((char*)WFIFOP(sd->fd,12), msg, msg_len);
 
 	for( user = dbi_first(iter); dbi_exists(iter); user = dbi_next(iter) ) {
@@ -9165,7 +9151,7 @@ void clif_hercules_chsys_msg2(struct hChSysCh *channel, char *msg) {
 	WBUFW(buf,0) = 0x2C1;
 	WBUFW(buf,2) = msg_len + 12;
 	WBUFL(buf,4) = 0;
-	WBUFL(buf,8) = hChSys.colors[channel->color];
+	WBUFL(buf,8) = clif->hChSys->colors[channel->color];
 	safestrncpy((char*)WBUFP(buf,12), msg, msg_len);
 
 	for( user = dbi_first(iter); dbi_exists(iter); user = dbi_next(iter) ) {
@@ -9266,11 +9252,11 @@ void clif_hercules_chsys_mjoin(struct map_session_data *sd) {
 			return;
 
 		CREATE(map->list[sd->bl.m].channel, struct hChSysCh , 1);
-		safestrncpy(map->list[sd->bl.m].channel->name, hChSys.local_name, HCHSYS_NAME_LENGTH);
+		safestrncpy(map->list[sd->bl.m].channel->name, clif->hChSys->local_name, HCHSYS_NAME_LENGTH);
 		map->list[sd->bl.m].channel->type = hChSys_MAP;
 		map->list[sd->bl.m].channel->m = sd->bl.m;
 
-		clif->chsys_create(map->list[sd->bl.m].channel,NULL,NULL,hChSys.local_color);
+		clif->chsys_create(map->list[sd->bl.m].channel, NULL, NULL, clif->hChSys->local_color);
 	}
 
 	if( map->list[sd->bl.m].channel->banned && idb_exists(map->list[sd->bl.m].channel->banned, sd->status.account_id) ) {
@@ -9281,7 +9267,7 @@ void clif_hercules_chsys_mjoin(struct map_session_data *sd) {
 
 	if( !( map->list[sd->bl.m].channel->opt & hChSys_OPT_ANNOUNCE_JOIN ) ) {
 		char mout[60];
-		sprintf(mout, msg_txt(1435),hChSys.local_name,map->list[sd->bl.m].name); // You're now in the '#%s' channel for '%s'
+		sprintf(mout, msg_txt(1435), clif->hChSys->local_name, map->list[sd->bl.m].name); // You're now in the '#%s' channel for '%s'
 		clif->colormes(sd->fd, COLOR_DEFAULT, mout);
 	}
 }
@@ -9556,7 +9542,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 		status_calc_pc(sd, SCO_NONE);/* some conditions are map-dependent so we must recalculate */
 		sd->state.changemap = false;
 
-		if( hChSys.local && hChSys.local_autojoin ) {
+		if (clif->hChSys->local && clif->hChSys->local_autojoin) {
 			clif->chsys_mjoin(sd);
 		}
 	}
@@ -9959,7 +9945,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 		WFIFOW(fd,0) = 0x2C1;
 		WFIFOW(fd,2) = mylen + 12;
 		WFIFOL(fd,4) = sd->bl.id;
-		WFIFOL(fd,8) = hChSys.colors[sd->fontcolor - 1];
+		WFIFOL(fd,8) = clif->hChSys->colors[sd->fontcolor - 1];
 		safestrncpy((char*)WFIFOP(fd,12), mout, mylen);
 		clif->send(WFIFOP(fd,0), WFIFOW(fd,2), &sd->bl, AREA_WOS);
 		WFIFOL(fd,4) = -sd->bl.id;
@@ -10236,7 +10222,7 @@ void clif_hercules_chsys_left(struct hChSysCh *channel, struct map_session_data 
 
 	if( !db_size(channel->users) && channel->type == hChSys_PRIVATE ) {
 		clif->chsys_delete(channel);
-	} else if( !hChSys.closing && (channel->opt & hChSys_OPT_ANNOUNCE_JOIN) ) {
+	} else if( !clif->hChSys->closing && (channel->opt & hChSys_OPT_ANNOUNCE_JOIN) ) {
 		char message[60];
 		sprintf(message, "#%s '%s' left",channel->name,sd->status.name);
 		clif->chsys_msg(channel,sd,message);
@@ -10280,9 +10266,9 @@ void clif_hercules_chsys_quitg(struct map_session_data *sd) {
 			if( channel == sd->gcbind )
 				sd->gcbind = NULL;
 
-			if( !db_size(channel->users) && channel->type == hChSys_PRIVATE ) {
+			if (!db_size(channel->users) && channel->type == hChSys_PRIVATE) {
 				clif->chsys_delete(channel);
-			} else if( !hChSys.closing && (channel->opt & hChSys_OPT_ANNOUNCE_JOIN) ) {
+			} else if (!clif->hChSys->closing && (channel->opt & hChSys_OPT_ANNOUNCE_JOIN)) {
 				char message[60];
 				sprintf(message, "#%s '%s' left",channel->name,sd->status.name);
 				clif->chsys_msg(channel,sd,message);
@@ -10321,9 +10307,9 @@ void clif_hercules_chsys_quit(struct map_session_data *sd) {
 			if( channel == sd->gcbind )
 				sd->gcbind = NULL;
 
-			if( !db_size(channel->users) && channel->type == hChSys_PRIVATE ) {
+			if (!db_size(channel->users) && channel->type == hChSys_PRIVATE) {
 				clif->chsys_delete(channel);
-			} else if( !hChSys.closing && (channel->opt & hChSys_OPT_ANNOUNCE_JOIN) ) {
+			} else if (!clif->hChSys->closing && (channel->opt & hChSys_OPT_ANNOUNCE_JOIN)) {
 				char message[60];
 				sprintf(message, "#%s '%s' left",channel->name,sd->status.name);
 				clif->chsys_msg(channel,sd,message);
@@ -10462,12 +10448,12 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 
 		chname++;
 
-		if( hChSys.local && strcmpi(chname, hChSys.local_name) == 0 ) {
+		if (clif->hChSys->local && strcmpi(chname, clif->hChSys->local_name) == 0) {
 			if( !map->list[sd->bl.m].channel ) {
 				clif->chsys_mjoin(sd);
 			}
 			channel = map->list[sd->bl.m].channel;
-		} else if( hChSys.ally && sd->status.guild_id && strcmpi(chname, hChSys.ally_name) == 0 ) {
+		} else if (clif->hChSys->ally && sd->status.guild_id && strcmpi(chname, clif->hChSys->ally_name) == 0) {
 			struct guild *g = sd->guild;
 			if( !g ) return;
 			channel = g->channel;
@@ -10718,7 +10704,7 @@ void clif_parse_EquipItem(int fd,struct map_session_data *sd) {
 }
 
 void clif_hercules_chsys_delete(struct hChSysCh *channel) {
-	if( db_size(channel->users) && !hChSys.closing ) {
+	if (db_size(channel->users) && !clif->hChSys->closing) {
 		DBIterator *iter;
 		struct map_session_data *sd;
 		unsigned char i;
@@ -10758,7 +10744,7 @@ void clif_hercules_chsys_delete(struct hChSysCh *channel) {
 		aFree(channel);
 	} else if ( channel->type == hChSys_ALLY )
 		aFree(channel);
-	else if( !hChSys.closing )
+	else if (!clif->hChSys->closing)
 		strdb_remove(clif->channel_db, channel->name);
 }
 void clif_hercules_chsys_gjoin(struct guild *g1,struct guild *g2) {
@@ -18865,7 +18851,7 @@ int do_init_clif(bool minimal) {
 	clif->delayed_damage_ers = ers_new(sizeof(struct cdelayed_damage),"clif.c::delayed_damage_ers",ERS_OPT_CLEAR);
 
 	clif->channel_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, HCHSYS_NAME_LENGTH);
-	hChSys.ally = hChSys.local = hChSys.irc = hChSys.ally_autojoin = hChSys.local_autojoin = false;
+	clif->hChSys->ally = clif->hChSys->local = clif->hChSys->irc = clif->hChSys->ally_autojoin = clif->hChSys->local_autojoin = false;
 	clif->chann_config_read();
 
 	return 0;
@@ -18882,13 +18868,13 @@ void do_final_clif(void) {
 
 	dbi_destroy(iter);
 
-	for(i = 0; i < hChSys.colors_count; i++) {
-		aFree(hChSys.colors_name[i]);
+	for(i = 0; i < clif->hChSys->colors_count; i++) {
+		aFree(clif->hChSys->colors_name[i]);
 	}
 
-	if( hChSys.colors_count ) {
-		aFree(hChSys.colors_name);
-		aFree(hChSys.colors);
+	if (clif->hChSys->colors_count) {
+		aFree(clif->hChSys->colors_name);
+		aFree(clif->hChSys->colors);
 	}
 
 	db_destroy(clif->channel_db);
@@ -18927,6 +18913,7 @@ void clif_defaults(void) {
 	clif->refresh_ip = clif_refresh_ip;
 	clif->send = clif_send;
 	clif->send_sub = clif_send_sub;
+	clif->send_actual = clif_send_actual;
 	clif->parse = clif_parse;
 	clif->parse_cmd = clif_parse_cmd_optional;
 	clif->decrypt_cmd = clif_decrypt_cmd;
@@ -18971,6 +18958,7 @@ void clif_defaults(void) {
 	clif->changelook = clif_changelook;
 	clif->changetraplook = clif_changetraplook;
 	clif->refreshlook = clif_refreshlook;
+	clif->sendlook = clif_sendlook;
 	clif->class_change = clif_class_change;
 	clif->skill_delunit = clif_skill_delunit;
 	clif->skillunit_update = clif_skillunit_update;
@@ -19385,6 +19373,7 @@ void clif_defaults(void) {
 	clif->bc_ready = clif_bc_ready;
 	clif->undisguise_timer = clif_undisguise_timer;
 	/* Hercules Channel System */
+	clif->hChSys = &clif_hChSys;
 	clif->chsys_create = clif_hercules_chsys_create;
 	clif->chsys_msg = clif_hercules_chsys_msg;
 	clif->chsys_msg2 = clif_hercules_chsys_msg2;

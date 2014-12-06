@@ -517,7 +517,7 @@ struct s_packet_db {
 	short pos[MAX_PACKET_POS];
 };
 
-struct {
+struct hChSysConfig {
 	unsigned int *colors;
 	char **colors_name;
 	unsigned char colors_count;
@@ -530,7 +530,7 @@ struct {
 	char irc_server[40], irc_channel[50], irc_nick[40], irc_nick_pw[30];
 	unsigned short irc_server_port;
 	bool irc_use_ghost;
-} hChSys;
+};
 
 struct hChSysBanEntry {
 	char name[NAME_LENGTH];
@@ -576,6 +576,7 @@ struct clif_interface {
 	char map_ip_str[128];
 	int map_fd;
 	DBMap* channel_db;
+	struct hChSysConfig *hChSys;
 	/* for clif_clearunit_delayed */
 	struct eri *delay_clearunit_ers;
 	/* Cash Shop [Ind/Hercules] */
@@ -604,6 +605,7 @@ struct clif_interface {
 	uint32 (*refresh_ip) (void);
 	bool (*send) (const void* buf, int len, struct block_list* bl, enum send_target type);
 	int (*send_sub) (struct block_list *bl, va_list ap);
+	int (*send_actual) (int fd, void *buf, int len);
 	int (*parse) (int fd);
 	unsigned short (*parse_cmd) ( int fd, struct map_session_data *sd );
 	unsigned short (*decrypt_cmd) ( int cmd, struct map_session_data *sd );
@@ -648,6 +650,7 @@ struct clif_interface {
 	void (*changelook) (struct block_list *bl,int type,int val);
 	void (*changetraplook) (struct block_list *bl,int val);
 	void (*refreshlook) (struct block_list *bl,int id,int type,int val,enum send_target target);
+	void (*sendlook) (struct block_list *bl, int id, int type, int val, int val2, enum send_target target);
 	void (*class_change) (struct block_list *bl,int class_,int type);
 	void (*skill_delunit) (struct skill_unit *su);
 	void (*skillunit_update) (struct block_list* bl);

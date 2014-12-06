@@ -5025,7 +5025,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 			vending->close(sd);
 		}
 		
-		if( hChSys.local && map->list[sd->bl.m].channel && idb_exists(map->list[sd->bl.m].channel->users, sd->status.char_id) ) {
+		if (clif->hChSys->local && map->list[sd->bl.m].channel && idb_exists(map->list[sd->bl.m].channel->users, sd->status.char_id)) {
 			clif->chsys_left(map->list[sd->bl.m].channel,sd);
 		}
 	}

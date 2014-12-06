@@ -5688,6 +5688,33 @@ int HP_clif_send_sub(struct block_list *bl, va_list ap) {
 	}
 	return retVal___;
 }
+int HP_clif_send_actual(int fd, void *buf, int len) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_clif_send_actual_pre ) {
+		int (*preHookFunc) (int *fd, void *buf, int *len);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_send_actual_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_send_actual_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd, buf, &len);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.clif.send_actual(fd, buf, len);
+	}
+	if( HPMHooks.count.HP_clif_send_actual_post ) {
+		int (*postHookFunc) (int retVal___, int *fd, void *buf, int *len);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_send_actual_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_send_actual_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &fd, buf, &len);
+		}
+	}
+	return retVal___;
+}
 int HP_clif_parse(int fd) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -6753,6 +6780,32 @@ void HP_clif_refreshlook(struct block_list *bl, int id, int type, int val, enum 
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_refreshlook_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_clif_refreshlook_post[hIndex].func;
 			postHookFunc(bl, &id, &type, &val, &target);
+		}
+	}
+	return;
+}
+void HP_clif_sendlook(struct block_list *bl, int id, int type, int val, int val2, enum send_target target) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_sendlook_pre ) {
+		void (*preHookFunc) (struct block_list *bl, int *id, int *type, int *val, int *val2, enum send_target *target);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_sendlook_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_sendlook_pre[hIndex].func;
+			preHookFunc(bl, &id, &type, &val, &val2, &target);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.sendlook(bl, id, type, val, val2, target);
+	}
+	if( HPMHooks.count.HP_clif_sendlook_post ) {
+		void (*postHookFunc) (struct block_list *bl, int *id, int *type, int *val, int *val2, enum send_target *target);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_sendlook_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_sendlook_post[hIndex].func;
+			postHookFunc(bl, &id, &type, &val, &val2, &target);
 		}
 	}
 	return;
