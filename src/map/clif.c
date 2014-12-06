@@ -3193,7 +3193,7 @@ void clif_changelook(struct block_list *bl,int type,int val)
 	struct status_change* sc;
 	struct view_data* vd;
 	enum send_target target = AREA;
-	int val2;
+	int val2 = 0;
 	nullpo_retv(bl);
 
 	sd = BL_CAST(BL_PC, bl);
