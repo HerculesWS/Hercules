@@ -13388,6 +13388,35 @@ BUILDIN(setnpcdir)
 	return true;
 }
 
+// return npc class [4144]
+BUILDIN(getnpcclass)
+{
+	struct npc_data *nd = 0;
+
+	if (script_hasdata(st, 2))
+	{
+		nd = npc->name2id (script_getstr(st, 2));
+	}
+	if (!nd && !st->oid)
+	{
+		script_pushint(st, -1);
+		return false;
+	}
+
+	if (!nd)
+		nd = (struct npc_data *) map->id2bl(st->oid);
+
+	if (!nd)
+	{
+		script_pushint(st, -1);
+		return false;
+	}
+
+	script_pushint(st, (int)nd->class_);
+
+	return true;
+}
+
 
 /*==========================================
  * getlook char info. getlook(arg)
@@ -19458,6 +19487,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(setnpcdistance,"i"), // [4144]
 		BUILDIN_DEF(getnpcdir,"?"), // [4144]
 		BUILDIN_DEF(setnpcdir,"*"), // [4144]
+		BUILDIN_DEF(getnpcclass,"?"), // [4144]
 		BUILDIN_DEF(getmapxy,"rrri?"), //by Lorky [Lupus]
 		BUILDIN_DEF(checkoption1,"i"),
 		BUILDIN_DEF(checkoption2,"i"),

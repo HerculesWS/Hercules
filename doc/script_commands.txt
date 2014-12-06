@@ -7588,6 +7588,16 @@ Example:
 
 ---------------------------------------
 
+*getnpcclass {<name>};
+
+Return npc class/sprite id for npc with given name or for attached npc.
+If name missing and no attached npc, return -1.
+
+Example:
+	.@class = getnpcclass();
+
+---------------------------------------
+
 *day;
 *night;
 
