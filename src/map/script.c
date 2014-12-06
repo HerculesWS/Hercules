@@ -19513,7 +19513,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(npcshopattach,"s?"),
 		BUILDIN_DEF(equip,"i"),
 		BUILDIN_DEF(autoequip,"ii"),
-		BUILDIN_DEF(equip2,"iiiiiii?"),
+		BUILDIN_DEF(equip2,"iiiiiii"),
 		BUILDIN_DEF(setbattleflag,"si"),
 		BUILDIN_DEF(getbattleflag,"s"),
 		BUILDIN_DEF(setitemscript,"is?"), //Set NEW item bonus script. Lupus

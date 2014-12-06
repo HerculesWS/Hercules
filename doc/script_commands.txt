@@ -5321,7 +5321,7 @@ Examples:
 //inventory.
 	equip 1104;
 
-//This will equip a +10 1104 (falchion)on the character if this is in the
+//This will equip a +10 1104 (falchion) on the character if this is in the
 //inventory.
 	equip2 1104,10,0,0,0,0,0;
 
