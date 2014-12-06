@@ -7569,6 +7569,25 @@ Usefull to use from OnInit event.
 
 ---------------------------------------
 
+*getnpcdir {<name>};
+
+Return current npc direction for parameter "name" or for attached npc
+if it missing. If name missing and not attached npc, return -1.
+
+Example:
+	.@dir = getnpcdir();
+
+---------------------------------------
+
+*setnpcdir {<name>,} <direction>;
+
+Set npc direction. If npc name missing, will be used attached npc.
+
+Example:
+	setnpcdir 2;
+
+---------------------------------------
+
 *day;
 *night;
 

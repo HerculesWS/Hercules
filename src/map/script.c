@@ -13311,12 +13311,79 @@ BUILDIN(npcstop) {
 	return true;
 }
 
+// set click npc distance [4144]
 BUILDIN(setnpcdistance) {
 	struct npc_data *nd = (struct npc_data *) map->id2bl (st->oid);
 	if (!nd)
 		return false;
 
 	nd->area_size = script_getnum(st, 2);
+
+	return true;
+}
+
+// return current npc direction [4144]
+BUILDIN(getnpcdir)
+{
+	struct npc_data *nd = 0;
+
+	if (script_hasdata(st, 2))
+	{
+		nd = npc->name2id (script_getstr(st, 2));
+	}
+	if (!nd && !st->oid)
+	{
+		script_pushint(st, -1);
+		return true;
+	}
+
+	if (!nd)
+		nd = (struct npc_data *) map->id2bl (st->oid);
+
+	if (!nd)
+	{
+		script_pushint(st, -1);
+		return true;
+	}
+
+	script_pushint(st, (int)nd->dir);
+
+	return true;
+}
+
+// set npc direction [4144]
+BUILDIN(setnpcdir)
+{
+	int newdir;
+	struct npc_data *nd = 0;
+
+	if (script_hasdata(st, 3))
+	{
+		nd = npc->name2id (script_getstr(st, 2));
+		newdir = script_getnum(st, 3);
+	}
+	else if (script_hasdata(st, 2))
+	{
+		if (!st->oid)
+			return false;
+
+		nd = (struct npc_data *) map->id2bl (st->oid);
+		newdir = script_getnum(st, 2);
+	}
+	if (!nd)
+		return false;
+
+	if (newdir < 0)
+		newdir = 0;
+	else if (newdir > 7)
+		newdir = 7;
+
+	nd->dir = newdir;
+	if (nd->ud)
+		nd->ud->dir = newdir;
+
+	clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);
+	clif->spawn(&nd->bl);
 
 	return true;
 }
@@ -19389,6 +19456,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(npcwalkto,"ii"), // [Valaris]
 		BUILDIN_DEF(npcstop,""), // [Valaris]
 		BUILDIN_DEF(setnpcdistance,"i"), // [4144]
+		BUILDIN_DEF(getnpcdir,"?"), // [4144]
+		BUILDIN_DEF(setnpcdir,"*"), // [4144]
 		BUILDIN_DEF(getmapxy,"rrri?"), //by Lorky [Lupus]
 		BUILDIN_DEF(checkoption1,"i"),
 		BUILDIN_DEF(checkoption2,"i"),
