@@ -975,6 +975,16 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 	return 0;
 }
 
+/*==========================================
+ * Exec OnUnTouch for player if out range of area event
+ *------------------------------------------*/
+int npc_untouch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
+{
+	nullpo_retr(1, sd);
+	sd->areanpc_id = 0;
+	return 0;
+}
+
 // OnTouch NPC or Warp for Mobs
 // Return 1 if Warped
 int npc_touch_areanpc2(struct mob_data *md)
@@ -4650,6 +4660,7 @@ void npc_defaults(void) {
 	npc->touch_areanpc_sub = npc_touch_areanpc_sub;
 	npc->touchnext_areanpc = npc_touchnext_areanpc;
 	npc->touch_areanpc = npc_touch_areanpc;
+	npc->untouch_areanpc = npc_untouch_areanpc;
 	npc->touch_areanpc2 = npc_touch_areanpc2;
 	npc->check_areanpc = npc_check_areanpc;
 	npc->checknear = npc_checknear;

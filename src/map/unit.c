@@ -309,7 +309,7 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 			if (bl->prev == NULL) //Script could have warped char, abort remaining of the function.
 				return 0;
 		} else
-			sd->areanpc_id=0;
+			npc->untouch_areanpc(sd, bl->m, x, y);
 
 		if( sd->md ) { // mercenary should be warped after being 3 seconds too far from the master [greenbox]
 			if( !check_distance_bl(&sd->bl, &sd->md->bl, MAX_MER_DISTANCE) ) {
@@ -767,7 +767,7 @@ int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int easy, bool
 			if (bl->prev == NULL) //Script could have warped char, abort remaining of the function.
 				return 0;
 		} else
-			sd->areanpc_id=0;
+			npc->untouch_areanpc(sd, bl->m, bl->x, bl->y);
 
 		if( sd->status.pet_id > 0 && sd->pd && sd->pd->pet.intimate > 0 )
 		{ // Check if pet needs to be teleported. [Skotlex]
@@ -867,7 +867,7 @@ int unit_blown(struct block_list* bl, int dx, int dy, int count, int flag)
 				if(map->getcell(bl->m, bl->x, bl->y, CELL_CHKNPC)) {
 					npc->touch_areanpc(sd, bl->m, bl->x, bl->y);
 				} else {
-					sd->areanpc_id = 0;
+					npc->untouch_areanpc(sd, bl->m, bl->x, bl->y);;
 				}
 			}
 		}

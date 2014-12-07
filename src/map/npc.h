@@ -207,6 +207,7 @@ struct npc_interface {
 	int (*touch_areanpc_sub) (struct block_list *bl, va_list ap);
 	int (*touchnext_areanpc) (struct map_session_data *sd, bool leavemap);
 	int (*touch_areanpc) (struct map_session_data *sd, int16 m, int16 x, int16 y);
+	int (*untouch_areanpc) (struct map_session_data *sd, int16 m, int16 x, int16 y);
 	int (*touch_areanpc2) (struct mob_data *md);
 	int (*check_areanpc) (int flag, int16 m, int16 x, int16 y, int16 range);
 	struct npc_data* (*checknear) (struct map_session_data *sd, struct block_list *bl);
