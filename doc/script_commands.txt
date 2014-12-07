@@ -259,7 +259,8 @@ direction across Y. Walking into that area will trigger the NPC. If no
 'OnTouch:' special label is present in the NPC code, the execution will 
 start from the beginning of the script, otherwise, it will start from the 
 'OnTouch:' label. Monsters can also trigger the NPC, though the label 
-'OnTouchNPC:' is used in this case.
+'OnTouchNPC:' is used in this case. If player left area npc will called
+if present label 'OnUnTouch'.
 
 The code part is the script code that will execute whenever the NPC is 
 triggered. It may contain commands and function calls, descriptions of 
@@ -1039,6 +1040,12 @@ OnTouch_:
 
 Similar to OnTouch, but will only run one instance. Another character is
 chosen once the triggering character leaves the area.
+
+OnUnTouch:
+
+This label will be executed if plater leave trigger area is defined for the NPC 
+object it's in. If it isn't present, nothing will happend.
+The RID of the triggering character object will be attached.
 
 OnPCLoginEvent:
 OnPCLogoutEvent:
