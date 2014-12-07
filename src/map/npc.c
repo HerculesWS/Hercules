@@ -150,7 +150,7 @@ int npc_onuntouch_event(struct map_session_data *sd, struct npc_data *nd)
 {
 	char name[EVENT_NAME_LENGTH];
 
-	if (sd->areanpc_id == nd->bl.id)
+	if (sd->areanpc_id != nd->bl.id)
 		return 0;
 
 	snprintf(name, ARRAYLENGTH(name), "%s::%s", nd->exname, script->config.onuntouch_name);
@@ -980,7 +980,14 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
  *------------------------------------------*/
 int npc_untouch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 {
+	struct npc_data *nd;
 	nullpo_retr(1, sd);
+
+	if (!sd->areanpc_id)
+		return 0;
+
+	nd = (struct npc_data *) map->id2bl(sd->areanpc_id);
+	npc->onuntouch_event(sd, nd);
 	sd->areanpc_id = 0;
 	return 0;
 }
