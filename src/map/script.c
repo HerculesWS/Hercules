@@ -10093,21 +10093,64 @@ int buildin_getareausers_sub(struct block_list *bl,va_list ap)
 }
 BUILDIN(getareausers)
 {
-	const char *str;
-	int16 m,x0,y0,x1,y1;
+	int16 m = -1, x0, y0, x1, y1;
 	int users = 0;
-	str=script_getstr(st,2);
-	x0=script_getnum(st,3);
-	y0=script_getnum(st,4);
-	x1=script_getnum(st,5);
-	y1=script_getnum(st,6);
-	if( (m=map->mapname2mapid(str))< 0) {
-		script_pushint(st,-1);
-		return true;
+	int idx = 2;
+	struct npc_data *nd = NULL;
+	if (script_hasdata(st, 2) && script_isstringtype(st, 2)) {
+		const char *str = script_getstr(st, 2);
+		if ((m = map->mapname2mapid(str)) < 0) {
+			script_pushint(st, -1);
+			return true;
+		}
+		idx = 3;
+	}
+	if (m == -1)
+	{
+		TBL_PC *sd = NULL;
+		sd = script->rid2sd(st);
+		if (!sd)
+		{
+			script_pushint(st, -1);
+			return false;
+		}
+		m = sd->bl.m;
+	}
+	if (st->oid)
+		nd = map->id2nd(st->oid);
+	if (script_hasdata(st, idx + 3)) {
+		x0 = script_getnum(st, idx + 0);
+		y0 = script_getnum(st, idx + 1);
+		x1 = script_getnum(st, idx + 2);
+		y1 = script_getnum(st, idx + 3);
+	} else if (script_hasdata(st, idx)) {
+		if (!nd)
+		{
+			script_pushint(st, -1);
+			return true;
+		}
+		int sz = script_getnum(st, idx);
+		x0 = nd->bl.x - sz;
+		y0 = nd->bl.y - sz;
+		x1 = nd->bl.x + sz;
+		y1 = nd->bl.y + sz;
+	} else if (st->oid) {
+		if (!nd || nd->u.scr.xs == -1 || nd->u.scr.ys == -1)
+		{
+			script_pushint(st, -1);
+			return true;
+		}
+		x0 = nd->bl.x - nd->u.scr.xs;
+		y0 = nd->bl.y - nd->u.scr.ys;
+		x1 = nd->bl.x + nd->u.scr.xs;
+		y1 = nd->bl.y + nd->u.scr.ys;
+	} else {
+		script_pushint(st, -1);
+		return false;
 	}
 	map->foreachinarea(script->buildin_getareausers_sub,
-	                   m,x0,y0,x1,y1,BL_PC,&users);
-	script_pushint(st,users);
+	                   m, x0, y0, x1, y1, BL_PC, &users);
+	script_pushint(st, users);
 	return true;
 }
 
@@ -19382,7 +19425,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getusers,"i"),
 		BUILDIN_DEF(getmapguildusers,"si"),
 		BUILDIN_DEF(getmapusers,"s"),
-		BUILDIN_DEF(getareausers,"siiii"),
+		BUILDIN_DEF(getareausers,"*"),
 		BUILDIN_DEF(getareadropitem,"siiiiv"),
 		BUILDIN_DEF(enablenpc,"s"),
 		BUILDIN_DEF(disablenpc,"s"),

@@ -3226,14 +3226,21 @@ let you enter.
 
 ---------------------------------------
 
-*getareausers("<map name>",<x1>,<y1>,<x2>,<y2>)
+*getareausers({"<map name>",}{<x1>,<y1>,<x2>,<y2>})
+*getareausers({"<map name>",}{<radius>})
 
 This function will return the count of connected characters which are 
-located within the specified area - an x1/y1-x2/y2 square - on the 
-specified map.
+located within the specified area. Area can be x1/y1-x2/y2 square,
+or radius from npc position. If map name missing, used attached player map.
 
 This is useful for maps that are split into many buildings, such as all 
 the "*_in" maps, due to all the shops and houses.
+
+Examples:
+	// return players in area npc area on current map.
+	.@num = getareausers();
+	// return players in square (1, 1) - (10, 10)
+	.@num = "players: " + getareausers(1, 1, 10, 10);
 
 ---------------------------------------
 
