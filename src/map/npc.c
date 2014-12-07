@@ -139,11 +139,22 @@ int npc_ontouch2_event(struct map_session_data *sd, struct npc_data *nd)
 {
 	char name[EVENT_NAME_LENGTH];
 
-	if( sd->areanpc_id == nd->bl.id )
+	if (sd->areanpc_id == nd->bl.id)
 		return 0;
 
 	snprintf(name, ARRAYLENGTH(name), "%s::%s", nd->exname, script->config.ontouch2_name);
-	return npc->event(sd,name,2);
+	return npc->event(sd, name, 2);
+}
+
+int npc_onuntouch_event(struct map_session_data *sd, struct npc_data *nd)
+{
+	char name[EVENT_NAME_LENGTH];
+
+	if (sd->areanpc_id == nd->bl.id)
+		return 0;
+
+	snprintf(name, ARRAYLENGTH(name), "%s::%s", nd->exname, script->config.onuntouch_name);
+	return npc->event(sd, name, 2);
 }
 
 /*==========================================
@@ -4614,6 +4625,7 @@ void npc_defaults(void) {
 	npc->isnear = npc_isnear;
 	npc->ontouch_event = npc_ontouch_event;
 	npc->ontouch2_event = npc_ontouch2_event;
+	npc->onuntouch_event = npc_onuntouch_event;
 	npc->enable_sub = npc_enable_sub;
 	npc->enable = npc_enable;
 	npc->name2id = npc_name2id;

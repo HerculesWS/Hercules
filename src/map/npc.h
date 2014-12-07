@@ -182,6 +182,7 @@ struct npc_interface {
 	bool (*isnear) (struct block_list *bl);
 	int (*ontouch_event) (struct map_session_data *sd, struct npc_data *nd);
 	int (*ontouch2_event) (struct map_session_data *sd, struct npc_data *nd);
+	int (*onuntouch_event) (struct map_session_data *sd, struct npc_data *nd);
 	int (*enable_sub) (struct block_list *bl, va_list ap);
 	int (*enable) (const char *name, int flag);
 	struct npc_data* (*name2id) (const char *name);
