@@ -347,6 +347,8 @@ bool homunculus_levelup(struct homun_data *hd) {
 	hom->int_+= growth_int;
 	hom->luk += growth_luk;
 
+	APPLY_HOMUN_LEVEL_STATWEIGHT();
+
 	if ( battle_config.homunculus_show_growth ) {
 		char output[256] ;
 		sprintf(output,

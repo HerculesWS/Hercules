@@ -1939,6 +1939,13 @@ struct status_change {
 #define status_get_size(bl)                  (status->get_status_data(bl)->size)
 #define status_get_mode(bl)                  (status->get_status_data(bl)->mode)
 
+#define status_get_homstr(bl)                   (st->str + ((TBL_HOM*)bl)->homunculus.str_value)
+#define status_get_homagi(bl)                   (st->agi + ((TBL_HOM*)bl)->homunculus.agi_value)
+#define status_get_homvit(bl)                   (st->vit + ((TBL_HOM*)bl)->homunculus.vit_value)
+#define status_get_homint(bl)                   (st->int_ + ((TBL_HOM*)bl)->homunculus.int_value)
+#define status_get_homdex(bl)                   (st->dex + ((TBL_HOM*)bl)->homunculus.dex_value)
+#define status_get_homluk(bl)                   (st->luk + ((TBL_HOM*)bl)->homunculus.luk_value)
+
 //Short version, receives rate in 1->100 range, and does not uses a flag setting.
 #define sc_start(src, bl, type, rate, val1, tick)                    (status->change_start((src),(bl),(type),100*(rate),(val1),0,0,0,(tick),SCFLAG_NONE))
 #define sc_start2(src, bl, type, rate, val1, val2, tick)             (status->change_start((src),(bl),(type),100*(rate),(val1),(val2),0,0,(tick),SCFLAG_NONE))
@@ -2062,7 +2069,7 @@ struct status_interface {
 	defType (*calc_mdef) (struct block_list *bl, struct status_change *sc, int mdef, bool viewable);
 	short (*calc_mdef2) (struct block_list *bl, struct status_change *sc, int mdef2, bool viewable);
 	unsigned short (*calc_batk)(struct block_list *bl, struct status_change *sc, int batk, bool viewable);
-	unsigned short (*base_matk) (const struct status_data *st, int level);
+	unsigned short(*base_matk) (struct block_list *bl, const struct status_data *st, int level);
 	int (*get_weapon_atk) (struct block_list *src, struct weapon_atk *watk, int flag);
 	int (*get_total_mdef) (struct block_list *src);
 	int (*get_total_def) (struct block_list *src);

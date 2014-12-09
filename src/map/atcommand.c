@@ -6564,8 +6564,14 @@ ACMD(mobinfo)
 				monster->status.vit, monster->status.int_, monster->status.dex, monster->status.luk);
 		clif->message(fd, atcmd_output);
 
+		
+#ifdef RENEWAL
+		sprintf(atcmd_output, msg_txt(1291), //  ATK : %d~%d MATK : %d~%d Range : %d~%d~%d  Size : %s  Race : %s  Element : %s(Lv : %d)
+				MOB_ATK1(monster), MOB_ATK2(monster), MOB_MATK1(monster), MOB_MATK2(monster), monster->status.rhw.range,
+#else
 		sprintf(atcmd_output, msg_txt(1244), //  ATK:%d~%d  Range:%d~%d~%d  Size:%s  Race: %s  Element: %s (Lv:%d)
 				monster->status.rhw.atk, monster->status.rhw.atk2, monster->status.rhw.range,
+#endif
 				monster->range2 , monster->range3, msize[monster->status.size],
 				mrace[monster->status.race], melement[monster->status.def_ele], monster->status.ele_lv);
 		clif->message(fd, atcmd_output);

@@ -902,6 +902,16 @@ int pc_isequip(struct map_session_data *sd,int n)
 	if(item->sex != 2 && sd->status.sex != item->sex)
 		return 0;
 
+	if ( item->equip & EQP_AMMO ) {
+		if ( !pc_iscarton(sd) && (sd->status.class_ == JOB_GENETIC_T || sd->status.class_ == JOB_GENETIC) ) {
+			clif->msg(sd, 0x5EF);
+			return 0;
+		}
+		if ( !pc_ismadogear(sd) && (sd->status.class_ == JOB_MECHANIC_T || sd->status.class_ == JOB_MECHANIC) ) {
+			clif->msg(sd, 0x59B);
+			return 0;
+		}
+	}
 	if (sd->sc.count) {
 
 		if(item->equip & EQP_ARMS && item->type == IT_WEAPON && sd->sc.data[SC_NOEQUIPWEAPON]) // Also works with left-hand weapons [DracoRPG]
@@ -8047,6 +8057,8 @@ int pc_setoption(struct map_session_data *sd,int type)
 		clif->clearcart(sd->fd);
 		if(pc->checkskill(sd, MC_PUSHCART) < 10)
 			status_calc_pc(sd,SCO_NONE); //Remove speed penalty.
+		if ( sd->equip_index[EQI_AMMO] > 0 )
+			pc->unequipitem(sd, sd->equip_index[EQI_AMMO], 2);
 	}
 #endif
 
@@ -8082,6 +8094,8 @@ int pc_setoption(struct map_session_data *sd,int type)
 			}
 			status_change_end(&sd->bl, (sc_type)i, INVALID_TIMER);
 		}
+		if ( sd->equip_index[EQI_AMMO] > 0 )
+			pc->unequipitem(sd, sd->equip_index[EQI_AMMO], 2);
 	}
 
 	if (type&OPTION_FLYING && !(p_type&OPTION_FLYING))
@@ -8134,6 +8148,8 @@ int pc_setcart(struct map_session_data *sd,int type) {
 			status_change_end(&sd->bl,SC_PUSH_CART,INVALID_TIMER);
 			clif->clearcart(sd->fd);
 			clif->updatestatus(sd, SP_CARTINFO);
+			if ( sd->equip_index[EQI_AMMO] > 0 )
+				pc->unequipitem(sd, sd->equip_index[EQI_AMMO], 2);
 			break;
 		default:/* everything else is an allowed ID so we can move on */
 			if( !sd->sc.data[SC_PUSH_CART] ) /* first time, so fill cart data */

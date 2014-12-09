@@ -376,6 +376,14 @@ struct s_homunculus { //[orn]
 	int int_;
 	int dex;
 	int luk;
+
+	int str_value;
+	int agi_value;
+	int vit_value;
+	int int_value;
+	int dex_value;
+	int luk_value;
+
 	int8 spiritball; //for homun S [lighta]
 };
 

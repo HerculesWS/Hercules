@@ -52,10 +52,14 @@
 	#define DEFTYPE_MAX CHAR_MAX
 #endif
 
-/* ATCMD_FUNC(mobinfo) HIT and FLEE calculations */
+/* ATCMD_FUNC(mobinfo) HIT, FLEE, ATK, ATK2, MATK and MATK2 calculations */
 #ifdef RENEWAL
 	#define MOB_FLEE(mobdata) ( (mobdata)->lv + (mobdata)->status.agi + 100 )
 	#define MOB_HIT(mobdata)  ( (mobdata)->lv + (mobdata)->status.dex + 150 )
+	#define MOB_ATK1(mobdata) ( ((mobdata)->lv + (mobdata)->status.str) + (mobdata)->status.rhw.atk * 8 / 10 )
+	#define MOB_ATK2(mobdata) ( ((mobdata)->lv + (mobdata)->status.str) + (mobdata)->status.rhw.atk * 12 / 10 )
+	#define MOB_MATK1(mobdata)( ((mobdata)->lv + (mobdata)->status.int_) + (mobdata)->status.rhw.atk2 * 7 / 10 )
+	#define MOB_MATK2(mobdata)( ((mobdata)->lv + (mobdata)->status.int_) + (mobdata)->status.rhw.atk2 * 13 / 10 )
 	#define RE_SKILL_REDUCTION() do { \
 		wd.damage = battle->calc_elefix(src, target, skill_id, skill_lv, battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage, 0, wd.flag), nk, n_ele, s_ele, s_ele_, false, flag.arrow); \
 		if( flag.lh ) \

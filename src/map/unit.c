@@ -1315,31 +1315,31 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 
 	tstatus = status->get_status_data(target);
 	// Record the status of the previous skill)
-	if(sd) {
+	if (sd) {
 
-		if( (skill->get_inf2(skill_id)&INF2_ENSEMBLE_SKILL) && skill->check_pc_partner(sd, skill_id, &skill_lv, 1, 0) < 1 ) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+		if ((skill->get_inf2(skill_id)&INF2_ENSEMBLE_SKILL) && skill->check_pc_partner(sd, skill_id, &skill_lv, 1, 0) < 1) {
+			clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
 			return 0;
 		}
 
-		switch(skill_id){
+		switch (skill_id){
 			case SA_CASTCANCEL:
-				if(ud->skill_id != skill_id){
+				if (ud->skill_id != skill_id){
 					sd->skill_id_old = ud->skill_id;
 					sd->skill_lv_old = ud->skill_lv;
 				}
 				break;
 			case BD_ENCORE:
 				//Prevent using the dance skill if you no longer have the skill in your tree.
-				if(!sd->skill_id_dance || pc->checkskill(sd,sd->skill_id_dance)<=0){
-					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				if (!sd->skill_id_dance || pc->checkskill(sd, sd->skill_id_dance) <= 0){
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
 					return 0;
 				}
 				sd->skill_id_old = skill_id;
 				break;
 			case WL_WHITEIMPRISON:
-				if( battle->check_target(src,target,BCT_SELF|BCT_ENEMY) < 0 ) {
-					clif->skill_fail(sd,skill_id,USESKILL_FAIL_TOTARGET,0);
+				if (battle->check_target(src, target, BCT_SELF | BCT_ENEMY) < 0) {
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_TOTARGET, 0);
 					return 0;
 				}
 				break;
@@ -1350,13 +1350,20 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 				sd->skill_lv_old = skill_lv;
 				break;
 		}
-		/* temporarily disabled, awaiting for kenpachi to detail this so we can make it work properly */
+	}
+
+	if (sd || src->type == BL_HOM){
+		if (!sd && (target = battle->get_master(src)))
+			sd = map->id2sd(target->id);
+		if (sd){
+			/* temporarily disabled, awaiting for kenpachi to detail this so we can make it work properly */
 #if 0
-		if ( sd->skillitem != skill_id && !skill->check_condition_castbegin(sd, skill_id, skill_lv) )
+			if (sd->skillitem != skill_id && !skill->check_condition_castbegin(sd, skill_id, skill_lv))
 #else
-		if ( !skill->check_condition_castbegin(sd, skill_id, skill_lv) )
+			if (!skill->check_condition_castbegin(sd, skill_id, skill_lv))
 #endif
-			return 0;
+				return 0;
+		}
 	}
 
 	if( src->type == BL_MOB )

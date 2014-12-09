@@ -340,6 +340,7 @@ typedef enum useskill_fail_cause { // clif_skill_fail
 	USESKILL_FAIL_STYLE_CHANGE_FIGHTER = 81,
 	USESKILL_FAIL_STYLE_CHANGE_GRAPPLER = 82,
 	USESKILL_FAIL_THERE_ARE_NPC_AROUND = 83,
+	USESKILL_FAIL_NEED_MORE_BULLET = 84,
 }useskill_fail_cause;
 
 enum clif_messages {

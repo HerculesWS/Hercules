@@ -9599,7 +9599,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					if (tsc->data[scs[i]]) status_change_end(bl, scs[i], INVALID_TIMER);
 				}
 			}
-			heal = 5 * status->get_lv(&hd->bl) + status->base_matk(&hd->battle_status, status->get_lv(&hd->bl));
+			heal = 5 * status->get_lv(&hd->bl) + status->base_matk(&hd->bl, &hd->battle_status, status->get_lv(&hd->bl));
 			status->heal(bl, heal, 0, 0);
 			clif->skill_nodamage(src, src, skill_id, skill_lv, clif->skill_nodamage(src, bl, AL_HEAL, heal, 1));
 			status->change_start(src, src, type, 1000, skill_lv, 0, 0, 0, skill->get_time(skill_id,skill_lv), SCFLAG_NOAVOID|SCFLAG_FIXEDTICK|SCFLAG_FIXEDRATE);
