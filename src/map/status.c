@@ -11569,6 +11569,16 @@ void status_get_matk_sub(struct block_list *bl, int flag, unsigned short *matk_m
 }
 
 /**
+* Gets a random matk value depending on min matk and max matk
+**/
+unsigned short status_get_rand_matk(unsigned short matk_max, unsigned short matk_min) {
+	if ( matk_max > matk_min )
+		return matk_min + rnd() % (matk_max - matk_min);
+	else
+		return matk_min;
+}
+
+/**
 * Get bl's matk value depending on flag
 * @param flag [malufett]
 *   1 - Get MATK w/o SC bonuses
@@ -11628,16 +11638,6 @@ void status_update_matk(struct block_list *bl) {
 	st->matk_max = status->calc_matk(bl, sc, matk_max, true);
 
 	return;
-}
-
-/**
- * Gets a random matk value depending on min matk and max matk
- **/
-unsigned short status_get_rand_matk( unsigned short matk_max, unsigned short matk_min ) {
-		if( matk_max > matk_min )
-			return matk_min + rnd()%(matk_max - matk_min);
-		else
-			return matk_min;
 }
 
 /*==========================================
