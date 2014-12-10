@@ -64851,15 +64851,15 @@ unsigned short HP_status_calc_batk(struct block_list *bl, struct status_change *
 	}
 	return retVal___;
 }
-unsigned short HP_status_base_matk(const struct status_data *st, int level) {
+unsigned short HP_status_base_matk(struct block_list *bl, const struct status_data *st, int level) {
 	int hIndex = 0;
 	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_status_base_matk_pre ) {
-		unsigned short (*preHookFunc) (const struct status_data *st, int *level);
+		unsigned short (*preHookFunc) (struct block_list *bl, const struct status_data *st, int *level);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_base_matk_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_status_base_matk_pre[hIndex].func;
-			retVal___ = preHookFunc(st, &level);
+			retVal___ = preHookFunc(bl, st, &level);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -64867,13 +64867,13 @@ unsigned short HP_status_base_matk(const struct status_data *st, int level) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.status.base_matk(st, level);
+		retVal___ = HPMHooks.source.status.base_matk(bl, st, level);
 	}
 	if( HPMHooks.count.HP_status_base_matk_post ) {
-		unsigned short (*postHookFunc) (unsigned short retVal___, const struct status_data *st, int *level);
+		unsigned short (*postHookFunc) (unsigned short retVal___, struct block_list *bl, const struct status_data *st, int *level);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_base_matk_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_status_base_matk_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, st, &level);
+			retVal___ = postHookFunc(retVal___, bl, st, &level);
 		}
 	}
 	return retVal___;
