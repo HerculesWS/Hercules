@@ -177,7 +177,7 @@ def checkLostFile(tracker, cFile):
             m = methodRe.search(line)
             if m != None:
                 name = "{0}_{1}".format(m.group("ifname"), m.group("method"))
-                if m.group("ifname") not in tracker.interfaces:
+                if name[:name.find("_")] not in tracker.interfaces and m.group("ifname") not in tracker.interfaces:
                     continue
                 if name not in tracker.fullmethods:
 #                    print "src  : " + line
