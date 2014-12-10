@@ -3875,7 +3875,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 		case MS_MAGNUM:
 			if( flag&1 ) {
 				//Damage depends on distance, so add it to flag if it is > 1
-				skill_attack(skill_get_type(skill_id), src, src, bl, skill_id, skill_lv, tick, flag|distance_bl(src, bl));
+				skill->attack(skill->get_type(skill_id), src, src, bl, skill_id, skill_lv, tick, flag|distance_bl(src, bl));
 			}
 			break;
 
