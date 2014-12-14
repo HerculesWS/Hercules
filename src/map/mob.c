@@ -3715,7 +3715,12 @@ bool mob_parse_dbrow(char** str) {
 	mstatus->int_ = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[17]));
 	mstatus->dex  = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[18]));
 	mstatus->luk  = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[19]));
-	
+
+	/*
+	* Disabled for renewal since difference of 0 and 1 still has an impact in the formulas
+	* Just in case there is a mishandled division by zero please let us know. [malufett]
+	*/
+#ifndef RENEWAL
 	//All status should be min 1 to prevent divisions by zero from some skills. [Skotlex]
 	if (mstatus->str < 1) mstatus->str = 1;
 	if (mstatus->agi < 1) mstatus->agi = 1;
@@ -3723,6 +3728,7 @@ bool mob_parse_dbrow(char** str) {
 	if (mstatus->int_< 1) mstatus->int_= 1;
 	if (mstatus->dex < 1) mstatus->dex = 1;
 	if (mstatus->luk < 1) mstatus->luk = 1;
+#endif
 
 	//Tests showed that chase range is effectively 2 cells larger than expected [Playtester]
 	if (db->range3 > 0)

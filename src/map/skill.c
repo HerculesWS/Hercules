@@ -10107,11 +10107,13 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			}
 
 		case MG_SAFETYWALL:
-			if (map->foreachincell(skill->cell_overlap,src->m,x,y,BL_SKILL)) {
-				skill->unitsetting(src,skill_id,skill_lv,x,y,0);
+		{
+			int alive = 1;
+			if ( map->foreachincell(skill->cell_overlap, src->m, x, y, BL_SKILL, skill_id, &alive, src) ) {
+				skill->unitsetting(src, skill_id, skill_lv, x, y, 0);
 				return 0; // Don't consume gems if cast on LP
 			}
-
+		}
 		case MG_FIREWALL:
 		case MG_THUNDERSTORM:
 
