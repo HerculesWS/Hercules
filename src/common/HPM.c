@@ -273,7 +273,7 @@ void hplugin_unload(struct hplugin* plugin) {
 	if( plugin->dll )
 		plugin_close(plugin->dll);
 	/* TODO: for manual packet unload */
-	/* - Go thru known packets and unlink any belonging to the plugin being removed */
+	/* - Go through known packets and unlink any belonging to the plugin being removed */
 	aFree(plugin);
 	if( !HPM->off ) {
 		HPM->plugins[i] = NULL;

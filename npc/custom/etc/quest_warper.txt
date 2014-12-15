@@ -55,7 +55,7 @@
 // - when all towns and dungeons are collected a new option on the main menu will show
 // - it will only show when you setup the mapname of the warp !
 //= 2.0a - Dungeon Level Limit & Split dungeon fees
-// - Limits dungeon based on Depth, access special setup menu thru GM-Menu
+// - Limits dungeon based on Depth, access to special setup menu through the GM-Menu
 // - Dungeon fees split up based on  Basic , Advanced & Overseas
 // - Old Dungeon fee system removed, all dungeon fees now set to 0
 //= 2.0b - Special warpname menu option name bug fixed

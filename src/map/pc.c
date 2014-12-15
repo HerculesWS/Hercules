@@ -6990,7 +6990,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 			sd->st->state = END;
 	}
 
-	/* e.g. not killed thru pc->damage */
+	/* e.g. not killed through pc->damage */
 	if( pc_issit(sd) ) {
 		clif->sc_end(&sd->bl,sd->bl.id,SELF,SI_SIT);
 	}
@@ -10587,8 +10587,8 @@ int pc_expiration_timer(int tid, int64 tick, int id, intptr_t data) {
 	
 	return 0;
 }
-/* this timer exists only when a character with a expire timer > 24h is online */
-/* it loops thru online players once an hour to check whether a new < 24h is available */
+/* This timer exists only when a character with an expire timer > 24h is online */
+/* It loops through online players once an hour to check whether a new < 24h is available */
 int pc_global_expiration_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct s_mapiterator* iter;
 	struct map_session_data* sd;

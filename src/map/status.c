@@ -1138,7 +1138,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 	struct status_change *sc;
 	int hp,sp;
 
-	/* here onwards we consider it a 32-type, the client does not support higher and from here onwards the value doesn't get thru percentage modifiers */
+	/* From here onwards, we consider it a 32-type as the client does not support higher and the value doesn't get through percentage modifiers */
 	hp = (int)cap_value(in_hp,INT_MIN,INT_MAX);
 	sp = (int)cap_value(in_sp,INT_MIN,INT_MAX);
 
@@ -1371,7 +1371,7 @@ int status_heal(struct block_list *bl,int64 in_hp,int64 in_sp, int flag) {
 	if (st == &status->dummy || !st->hp)
 		return 0;
 
-	/* here onwards we consider it a 32-type, the client does not support higher and from here onwards the value doesn't get thru percentage modifiers */
+	/* From here onwards, we consider it a 32-type as the client does not support higher and the value doesn't get through percentage modifiers */
 	hp = (int)cap_value(in_hp,INT_MIN,INT_MAX);
 	sp = (int)cap_value(in_sp,INT_MIN,INT_MAX);
 
@@ -6959,7 +6959,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				return 0; //Overthrust can't take effect if under Max Overthrust. [Skotlex]
 		case SC_OVERTHRUSTMAX:
 			if( sc->option&OPTION_MADOGEAR )
-				return 0;//Overthrust and Overthrust Max cannot be used on Mado Gear [Ind]
+				return 0; //Overthrust and Overthrust Max cannot be used on Mado Gear [Ind]
 			break;
 		case SC_ADRENALINE:
 			if(sd && !pc_check_weapontype(sd,skill->get_weapontype(BS_ADRENALINE)))
@@ -6995,7 +6995,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_CARTBOOST:
 		case SC_ASSNCROS:
 			if(sc->option&OPTION_MADOGEAR)
-				return 0;//Mado is immune to wind walk, cart boost, etc (others above) [Ind]
+				return 0; //Mado is immune to wind walk, cart boost, etc (others above) [Ind]
 		case SC_INC_AGI:
 			if (sc->data[SC_QUAGMIRE])
 				return 0;

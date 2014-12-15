@@ -5484,7 +5484,7 @@ void map_helpscreen(bool do_exit)
 	ShowInfo("                            scripts passed through --load-script.\n");
 	ShowInfo("  --load-script <file>      Loads an additional script (can be repeated).\n");
 	ShowInfo("  --load-plugin <name>      Loads an additional plugin (can be repeated).\n");
-	HPM->arg_help();/* display help for commands implemented thru HPM */
+	HPM->arg_help(); /* display help for commands implemented through HPM */
 	if( do_exit )
 		exit(EXIT_SUCCESS);
 }
