@@ -1312,6 +1312,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(itemdb->final_sub, HP_itemdb_final_sub) },
 	{ HP_POP(itemdb->clear, HP_itemdb_clear) },
 	{ HP_POP(itemdb->id2combo, HP_itemdb_id2combo) },
+	{ HP_POP(itemdb->is_item_usable, HP_itemdb_is_item_usable) },
 /* logs */
 	{ HP_POP(logs->pick_pc, HP_logs_pick_pc) },
 	{ HP_POP(logs->pick_mob, HP_logs_pick_mob) },
