@@ -610,6 +610,7 @@ struct itemdb_interface {
 	int (*final_sub) (DBKey key, DBData *data, va_list ap);
 	void (*clear) (bool total);
 	struct item_combo * (*id2combo) (unsigned short id);
+	bool (*is_item_usable) (struct item_data *item);
 };
 
 struct itemdb_interface *itemdb;
