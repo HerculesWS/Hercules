@@ -343,6 +343,7 @@ struct Script_Config {
 
 	const char* ontouch_name;
 	const char* ontouch2_name;
+	const char* onuntouch_name;
 };
 
 /**

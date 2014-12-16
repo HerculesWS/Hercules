@@ -10093,20 +10093,64 @@ int buildin_getareausers_sub(struct block_list *bl,va_list ap)
 }
 BUILDIN(getareausers)
 {
-	const char *str;
-	int16 m,x0,y0,x1,y1,users=0; //doubt we can have more then 32k users on
-	str=script_getstr(st,2);
-	x0=script_getnum(st,3);
-	y0=script_getnum(st,4);
-	x1=script_getnum(st,5);
-	y1=script_getnum(st,6);
-	if( (m=map->mapname2mapid(str))< 0) {
-		script_pushint(st,-1);
-		return true;
+	int16 m = -1, x0, y0, x1, y1;
+	int users = 0;
+	int idx = 2;
+	struct npc_data *nd = NULL;
+	if (script_hasdata(st, 2) && script_isstringtype(st, 2)) {
+		const char *str = script_getstr(st, 2);
+		if ((m = map->mapname2mapid(str)) < 0) {
+			script_pushint(st, -1);
+			return true;
+		}
+		idx = 3;
+	}
+	if (m == -1)
+	{
+		TBL_PC *sd = NULL;
+		sd = script->rid2sd(st);
+		if (!sd)
+		{
+			script_pushint(st, -1);
+			return false;
+		}
+		m = sd->bl.m;
+	}
+	if (st->oid)
+		nd = map->id2nd(st->oid);
+	if (script_hasdata(st, idx + 3)) {
+		x0 = script_getnum(st, idx + 0);
+		y0 = script_getnum(st, idx + 1);
+		x1 = script_getnum(st, idx + 2);
+		y1 = script_getnum(st, idx + 3);
+	} else if (script_hasdata(st, idx)) {
+		if (!nd)
+		{
+			script_pushint(st, -1);
+			return true;
+		}
+		int sz = script_getnum(st, idx);
+		x0 = nd->bl.x - sz;
+		y0 = nd->bl.y - sz;
+		x1 = nd->bl.x + sz;
+		y1 = nd->bl.y + sz;
+	} else if (st->oid) {
+		if (!nd || nd->u.scr.xs == -1 || nd->u.scr.ys == -1)
+		{
+			script_pushint(st, -1);
+			return true;
+		}
+		x0 = nd->bl.x - nd->u.scr.xs;
+		y0 = nd->bl.y - nd->u.scr.ys;
+		x1 = nd->bl.x + nd->u.scr.xs;
+		y1 = nd->bl.y + nd->u.scr.ys;
+	} else {
+		script_pushint(st, -1);
+		return false;
 	}
 	map->foreachinarea(script->buildin_getareausers_sub,
-	                   m,x0,y0,x1,y1,BL_PC,&users);
-	script_pushint(st,users);
+	                   m, x0, y0, x1, y1, BL_PC, &users);
+	script_pushint(st, users);
 	return true;
 }
 
@@ -13307,6 +13351,112 @@ BUILDIN(npcstop) {
 		unit->bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
 		unit->stop_walking(&nd->bl,1|4);
 	}
+
+	return true;
+}
+
+// set click npc distance [4144]
+BUILDIN(setnpcdistance) {
+	struct npc_data *nd = (struct npc_data *) map->id2bl (st->oid);
+	if (!nd)
+		return false;
+
+	nd->area_size = script_getnum(st, 2);
+
+	return true;
+}
+
+// return current npc direction [4144]
+BUILDIN(getnpcdir)
+{
+	struct npc_data *nd = 0;
+
+	if (script_hasdata(st, 2))
+	{
+		nd = npc->name2id (script_getstr(st, 2));
+	}
+	if (!nd && !st->oid)
+	{
+		script_pushint(st, -1);
+		return true;
+	}
+
+	if (!nd)
+		nd = (struct npc_data *) map->id2bl (st->oid);
+
+	if (!nd)
+	{
+		script_pushint(st, -1);
+		return true;
+	}
+
+	script_pushint(st, (int)nd->dir);
+
+	return true;
+}
+
+// set npc direction [4144]
+BUILDIN(setnpcdir)
+{
+	int newdir;
+	struct npc_data *nd = 0;
+
+	if (script_hasdata(st, 3))
+	{
+		nd = npc->name2id (script_getstr(st, 2));
+		newdir = script_getnum(st, 3);
+	}
+	else if (script_hasdata(st, 2))
+	{
+		if (!st->oid)
+			return false;
+
+		nd = (struct npc_data *) map->id2bl (st->oid);
+		newdir = script_getnum(st, 2);
+	}
+	if (!nd)
+		return false;
+
+	if (newdir < 0)
+		newdir = 0;
+	else if (newdir > 7)
+		newdir = 7;
+
+	nd->dir = newdir;
+	if (nd->ud)
+		nd->ud->dir = newdir;
+
+	clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);
+	clif->spawn(&nd->bl);
+
+	return true;
+}
+
+// return npc class [4144]
+BUILDIN(getnpcclass)
+{
+	struct npc_data *nd = 0;
+
+	if (script_hasdata(st, 2))
+	{
+		nd = npc->name2id (script_getstr(st, 2));
+	}
+	if (!nd && !st->oid)
+	{
+		script_pushint(st, -1);
+		return false;
+	}
+
+	if (!nd)
+		nd = (struct npc_data *) map->id2bl(st->oid);
+
+	if (!nd)
+	{
+		script_pushint(st, -1);
+		return false;
+	}
+
+	script_pushint(st, (int)nd->class_);
 
 	return true;
 }
@@ -19275,7 +19425,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getusers,"i"),
 		BUILDIN_DEF(getmapguildusers,"si"),
 		BUILDIN_DEF(getmapusers,"s"),
-		BUILDIN_DEF(getareausers,"siiii"),
+		BUILDIN_DEF(getareausers,"*"),
 		BUILDIN_DEF(getareadropitem,"siiiiv"),
 		BUILDIN_DEF(enablenpc,"s"),
 		BUILDIN_DEF(disablenpc,"s"),
@@ -19378,6 +19528,10 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(npcspeed,"i"), // [Valaris]
 		BUILDIN_DEF(npcwalkto,"ii"), // [Valaris]
 		BUILDIN_DEF(npcstop,""), // [Valaris]
+		BUILDIN_DEF(setnpcdistance,"i"), // [4144]
+		BUILDIN_DEF(getnpcdir,"?"), // [4144]
+		BUILDIN_DEF(setnpcdir,"*"), // [4144]
+		BUILDIN_DEF(getnpcclass,"?"), // [4144]
 		BUILDIN_DEF(getmapxy,"rrri?"), //by Lorky [Lupus]
 		BUILDIN_DEF(checkoption1,"i"),
 		BUILDIN_DEF(checkoption2,"i"),
@@ -19970,8 +20124,9 @@ void script_defaults(void) {
 	script->config.loadmap_event_name = "OnPCLoadMapEvent";
 	script->config.baselvup_event_name = "OnPCBaseLvUpEvent";
 	script->config.joblvup_event_name = "OnPCJobLvUpEvent";
-	script->config.ontouch_name = "OnTouch_";//ontouch_name (runs on first visible char to enter area, picks another char if the first char leaves)
-	script->config.ontouch2_name = "OnTouch";//ontouch2_name (run whenever a char walks into the OnTouch area)
+	script->config.ontouch_name = "OnTouch_";  //ontouch_name (runs on first visible char to enter area, picks another char if the first char leaves)
+	script->config.ontouch2_name = "OnTouch";  //ontouch2_name (run whenever a char walks into the OnTouch area)
+	script->config.onuntouch_name = "OnUnTouch";  //onuntouch_name (run whenever a char walks from the OnTouch area)
 
 	// for ENABLE_CASE_CHECK
 	script->calc_hash_ci = calc_hash_ci;
