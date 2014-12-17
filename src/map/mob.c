@@ -3550,8 +3550,7 @@ int mob_clone_delete(struct mob_data *md)
 	const int class_ = md->class_;
 	if (class_ >= MOB_CLONE_START && class_ < MOB_CLONE_END
 		&& mob->db_data[class_]!=NULL) {
-		aFree(mob->db_data[class_]);
-		mob->db_data[class_]=NULL;
+		mob->destroy_mob_db(class_);
 		//Clear references to the db
 		md->db = mob->dummy;
 		md->vd = NULL;
@@ -3574,8 +3573,7 @@ int mob_makedummymobdb(int class_)
 			return 1; //Using the mob->dummy data already. [Skotlex]
 		if (class_ > 0 && class_ <= MAX_MOB_DB) {
 			//Remove the mob data so that it uses the dummy data instead.
-			aFree(mob->db_data[class_]);
-			mob->db_data[class_] = NULL;
+			mob->destroy_mob_db(class_);
 		}
 		return 0;
 	}
@@ -4701,6 +4699,12 @@ int do_init_mob(bool minimal) {
 	return 0;
 }
 
+void mob_destroy_mob_db(int index)
+{
+	aFree(mob->db_data[index]);
+	mob->db_data[index] = NULL;
+}
+
 /*==========================================
  * Clean memory usage.
  *------------------------------------------*/
@@ -4716,8 +4720,7 @@ int do_final_mob(void)
 	{
 		if (mob->db_data[i] != NULL)
 		{
-			aFree(mob->db_data[i]);
-			mob->db_data[i] = NULL;
+			mob->destroy_mob_db(i);
 		}
 	}
 	for (i = 0; i <= MAX_MOB_CHAT; i++)
@@ -4852,4 +4855,5 @@ void mob_defaults(void) {
 	mob->readdb_itemratio = mob_readdb_itemratio;
 	mob->load = mob_load;
 	mob->clear_spawninfo = mob_clear_spawninfo;
+	mob->destroy_mob_db = mob_destroy_mob_db;
 }
