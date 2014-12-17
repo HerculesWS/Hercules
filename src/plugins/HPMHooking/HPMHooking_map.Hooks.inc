@@ -33991,6 +33991,32 @@ int HP_itemdb_validate_entry(struct item_data *entry, int n, const char *source)
 	}
 	return retVal___;
 }
+void HP_itemdb_readdb_additional_fields(int itemid, config_setting_t *it, int n, const char *source) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_itemdb_readdb_additional_fields_pre ) {
+		void (*preHookFunc) (int *itemid, config_setting_t *it, int *n, const char *source);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_additional_fields_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_itemdb_readdb_additional_fields_pre[hIndex].func;
+			preHookFunc(&itemid, it, &n, source);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.itemdb.readdb_additional_fields(itemid, it, n, source);
+	}
+	if( HPMHooks.count.HP_itemdb_readdb_additional_fields_post ) {
+		void (*postHookFunc) (int *itemid, config_setting_t *it, int *n, const char *source);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_additional_fields_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_itemdb_readdb_additional_fields_post[hIndex].func;
+			postHookFunc(&itemid, it, &n, source);
+		}
+	}
+	return;
+}
 int HP_itemdb_readdb_sql_sub(Sql *handle, int n, const char *source) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -42584,6 +42610,32 @@ void HP_mob_clear_spawninfo(void) {
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_clear_spawninfo_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_mob_clear_spawninfo_post[hIndex].func;
 			postHookFunc();
+		}
+	}
+	return;
+}
+void HP_mob_destroy_mob_db(int index) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_mob_destroy_mob_db_pre ) {
+		void (*preHookFunc) (int *index);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_destroy_mob_db_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_mob_destroy_mob_db_pre[hIndex].func;
+			preHookFunc(&index);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mob.destroy_mob_db(index);
+	}
+	if( HPMHooks.count.HP_mob_destroy_mob_db_post ) {
+		void (*postHookFunc) (int *index);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_destroy_mob_db_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_mob_destroy_mob_db_post[hIndex].func;
+			postHookFunc(&index);
 		}
 	}
 	return;

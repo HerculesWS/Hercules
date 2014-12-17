@@ -2567,6 +2567,8 @@ struct {
 	struct HPMHookPoint *HP_itemdb_gendercheck_post;
 	struct HPMHookPoint *HP_itemdb_validate_entry_pre;
 	struct HPMHookPoint *HP_itemdb_validate_entry_post;
+	struct HPMHookPoint *HP_itemdb_readdb_additional_fields_pre;
+	struct HPMHookPoint *HP_itemdb_readdb_additional_fields_post;
 	struct HPMHookPoint *HP_itemdb_readdb_sql_sub_pre;
 	struct HPMHookPoint *HP_itemdb_readdb_sql_sub_post;
 	struct HPMHookPoint *HP_itemdb_readdb_libconfig_sub_pre;
@@ -3191,6 +3193,8 @@ struct {
 	struct HPMHookPoint *HP_mob_load_post;
 	struct HPMHookPoint *HP_mob_clear_spawninfo_pre;
 	struct HPMHookPoint *HP_mob_clear_spawninfo_post;
+	struct HPMHookPoint *HP_mob_destroy_mob_db_pre;
+	struct HPMHookPoint *HP_mob_destroy_mob_db_post;
 	struct HPMHookPoint *HP_npc_init_pre;
 	struct HPMHookPoint *HP_npc_init_post;
 	struct HPMHookPoint *HP_npc_final_pre;
@@ -7644,6 +7648,8 @@ struct {
 	int HP_itemdb_gendercheck_post;
 	int HP_itemdb_validate_entry_pre;
 	int HP_itemdb_validate_entry_post;
+	int HP_itemdb_readdb_additional_fields_pre;
+	int HP_itemdb_readdb_additional_fields_post;
 	int HP_itemdb_readdb_sql_sub_pre;
 	int HP_itemdb_readdb_sql_sub_post;
 	int HP_itemdb_readdb_libconfig_sub_pre;
@@ -8268,6 +8274,8 @@ struct {
 	int HP_mob_load_post;
 	int HP_mob_clear_spawninfo_pre;
 	int HP_mob_clear_spawninfo_post;
+	int HP_mob_destroy_mob_db_pre;
+	int HP_mob_destroy_mob_db_post;
 	int HP_npc_init_pre;
 	int HP_npc_init_post;
 	int HP_npc_final_pre;
