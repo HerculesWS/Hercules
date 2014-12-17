@@ -1502,6 +1502,11 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 	return item->nameid;
 }
 
+void itemdb_readdb_additional_fields(int itemid, config_setting_t *it, int n, const char *source)
+{
+    // do nothing. plugins can do own work
+}
+
 /**
  * Processes one itemdb entry from the sql backend, loading and inserting it
  * into the item database.
@@ -1937,6 +1942,7 @@ int itemdb_readdb_libconfig(const char *filename) {
 		if( !nameid )
 			continue;
 
+		itemdb->readdb_additional_fields(nameid, it, i - 1, filename);
 		count++;
 
 		if( duplicate[nameid] ) {
@@ -2345,6 +2351,7 @@ void itemdb_defaults(void) {
 	itemdb->read_combos = itemdb_read_combos;
 	itemdb->gendercheck = itemdb_gendercheck;
 	itemdb->validate_entry = itemdb_validate_entry;
+	itemdb->readdb_additional_fields = itemdb_readdb_additional_fields;
 	itemdb->readdb_sql_sub = itemdb_readdb_sql_sub;
 	itemdb->readdb_libconfig_sub = itemdb_readdb_libconfig_sub;
 	itemdb->readdb_libconfig = itemdb_readdb_libconfig;

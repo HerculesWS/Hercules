@@ -604,6 +604,7 @@ struct itemdb_interface {
 	void (*read_combos) ();
 	int (*gendercheck) (struct item_data *id);
 	int (*validate_entry) (struct item_data *entry, int n, const char *source);
+	void (*readdb_additional_fields) (int itemid, config_setting_t *it, int n, const char *source);
 	int (*readdb_sql_sub) (Sql *handle, int n, const char *source);
 	int (*readdb_libconfig_sub) (config_setting_t *it, int n, const char *source);
 	int (*readdb_libconfig) (const char *filename);
