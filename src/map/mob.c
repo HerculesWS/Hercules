@@ -34,6 +34,7 @@
 #include "script.h"
 #include "skill.h"
 #include "status.h"
+#include "../common/HPM.h"
 #include "../common/cbasetypes.h"
 #include "../common/db.h"
 #include "../common/ers.h"
@@ -4701,7 +4702,17 @@ int do_init_mob(bool minimal) {
 
 void mob_destroy_mob_db(int index)
 {
-	aFree(mob->db_data[index]);
+	struct mob_db *data = mob->db_data[index];
+	int v;
+	for (v = 0; v < data->hdatac; v++ ) {
+		if (data->hdata[v]->flag.free ) {
+			aFree(data->hdata[v]->data);
+		}
+		aFree(data->hdata[v]);
+	}
+	if (data->hdata)
+		aFree(data->hdata);
+	aFree(data);
 	mob->db_data[index] = NULL;
 }
 
