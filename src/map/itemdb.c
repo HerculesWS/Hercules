@@ -16,6 +16,7 @@
 #include "mob.h"    // MAX_MOB_DB
 #include "pc.h"     // W_MUSICAL, W_WHIP
 #include "script.h" // item script processing
+#include "../common/HPM.h"
 #include "../common/conf.h"
 #include "../common/malloc.h"
 #include "../common/nullpo.h"
@@ -2069,6 +2070,7 @@ bool itemdb_is_item_usable(struct item_data *item)
 /// Destroys the item_data.
 void destroy_item_data(struct item_data* self, int free_self)
 {
+	int v;
 	if( self == NULL )
 		return;
 	// free scripts
@@ -2080,6 +2082,14 @@ void destroy_item_data(struct item_data* self, int free_self)
 		script->free_code(self->unequip_script);
 	if( self->combos )
 		aFree(self->combos);
+	for (v = 0; v < self->hdatac; v++ ) {
+		if (self->hdata[v]->flag.free ) {
+			aFree(self->hdata[v]->data);
+		}
+		aFree(self->hdata[v]);
+	}
+	if (self->hdata)
+		aFree(self->hdata);
 #if defined(DEBUG)
 	// trash item
 	memset(self, 0xDD, sizeof(struct item_data));
