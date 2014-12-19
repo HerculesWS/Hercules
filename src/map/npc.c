@@ -139,11 +139,22 @@ int npc_ontouch2_event(struct map_session_data *sd, struct npc_data *nd)
 {
 	char name[EVENT_NAME_LENGTH];
 
-	if( sd->areanpc_id == nd->bl.id )
+	if (sd->areanpc_id == nd->bl.id)
 		return 0;
 
 	snprintf(name, ARRAYLENGTH(name), "%s::%s", nd->exname, script->config.ontouch2_name);
-	return npc->event(sd,name,2);
+	return npc->event(sd, name, 2);
+}
+
+int npc_onuntouch_event(struct map_session_data *sd, struct npc_data *nd)
+{
+	char name[EVENT_NAME_LENGTH];
+
+	if (sd->areanpc_id != nd->bl.id)
+		return 0;
+
+	snprintf(name, ARRAYLENGTH(name), "%s::%s", nd->exname, script->config.onuntouch_name);
+	return npc->event(sd, name, 2);
 }
 
 /*==========================================
@@ -964,6 +975,23 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 	return 0;
 }
 
+/*==========================================
+ * Exec OnUnTouch for player if out range of area event
+ *------------------------------------------*/
+int npc_untouch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
+{
+	struct npc_data *nd;
+	nullpo_retr(1, sd);
+
+	if (!sd->areanpc_id)
+		return 0;
+
+	nd = (struct npc_data *) map->id2bl(sd->areanpc_id);
+	npc->onuntouch_event(sd, nd);
+	sd->areanpc_id = 0;
+	return 0;
+}
+
 // OnTouch NPC or Warp for Mobs
 // Return 1 if Warped
 int npc_touch_areanpc2(struct mob_data *md)
@@ -1086,22 +1114,28 @@ int npc_check_areanpc(int flag, int16 m, int16 x, int16 y, int16 range) {
 struct npc_data* npc_checknear(struct map_session_data* sd, struct block_list* bl)
 {
 	struct npc_data *nd;
+	int distance = AREA_SIZE + 1;
 
 	nullpo_retr(NULL, sd);
-	if(bl == NULL) return NULL;
-	if(bl->type != BL_NPC) return NULL;
+	if (bl == NULL) return NULL;
+	if (bl->type != BL_NPC) return NULL;
 	nd = (TBL_NPC*)bl;
 
-	if(sd->state.using_fake_npc && sd->npc_id == bl->id)
+	if (sd->npc_id == bl->id)
 		return nd;
 
 	if (nd->class_<0) //Class-less npc, enable click from anywhere.
 		return nd;
 
-	if (bl->m!=sd->bl.m ||
-	   bl->x<sd->bl.x-AREA_SIZE-1 || bl->x>sd->bl.x+AREA_SIZE+1 ||
-	   bl->y<sd->bl.y-AREA_SIZE-1 || bl->y>sd->bl.y+AREA_SIZE+1)
+	if (distance > nd->area_size)
+		distance = nd->area_size;
+
+	if (bl->m != sd->bl.m ||
+	   bl->x < sd->bl.x - distance || bl->x > sd->bl.x + distance ||
+	   bl->y < sd->bl.y - distance || bl->y > sd->bl.y + distance)
+	{
 		return NULL;
+	}
 
 	return nd;
 }
@@ -2505,6 +2539,7 @@ struct npc_data* npc_create_npc(int m, int x, int y)
 	nd->bl.m = m;
 	nd->bl.x = x;
 	nd->bl.y = y;
+	nd->area_size = AREA_SIZE + 1;
 
 	return nd;
 }
@@ -4607,6 +4642,7 @@ void npc_defaults(void) {
 	npc->isnear = npc_isnear;
 	npc->ontouch_event = npc_ontouch_event;
 	npc->ontouch2_event = npc_ontouch2_event;
+	npc->onuntouch_event = npc_onuntouch_event;
 	npc->enable_sub = npc_enable_sub;
 	npc->enable = npc_enable;
 	npc->name2id = npc_name2id;
@@ -4631,6 +4667,7 @@ void npc_defaults(void) {
 	npc->touch_areanpc_sub = npc_touch_areanpc_sub;
 	npc->touchnext_areanpc = npc_touchnext_areanpc;
 	npc->touch_areanpc = npc_touch_areanpc;
+	npc->untouch_areanpc = npc_untouch_areanpc;
 	npc->touch_areanpc2 = npc_touch_areanpc2;
 	npc->check_areanpc = npc_check_areanpc;
 	npc->checknear = npc_checknear;

@@ -2054,6 +2054,14 @@ struct item_combo * itemdb_id2combo( unsigned short id ) {
 	return itemdb->combos[id];
 }
 
+/**
+ * check is item have usable type
+ **/
+bool itemdb_is_item_usable(struct item_data *item)
+{
+	return item->type == IT_HEALING || item->type == IT_USABLE || item->type == IT_CASH;
+}
+
 /*==========================================
  * Initialize / Finalize
  *------------------------------------------*/
@@ -2337,4 +2345,5 @@ void itemdb_defaults(void) {
 	itemdb->final_sub = itemdb_final_sub;
 	itemdb->clear = itemdb_clear;
 	itemdb->id2combo = itemdb_id2combo;
+	itemdb->is_item_usable = itemdb_is_item_usable;
 }

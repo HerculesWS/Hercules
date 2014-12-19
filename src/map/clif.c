@@ -9597,7 +9597,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 	if (map->getcell(sd->bl.m,sd->bl.x,sd->bl.y,CELL_CHKNPC))
 		npc->touch_areanpc(sd,sd->bl.m,sd->bl.x,sd->bl.y);
 	else
-		sd->areanpc_id = 0;
+		npc->untouch_areanpc(sd, sd->bl.m, sd->bl.x, sd->bl.y);
 
 	/* it broke at some point (e.g. during a crash), so we make it visibly dead again. */
 	if( !sd->status.hp && !pc_isdead(sd) && status->isdead(&sd->bl) )
@@ -17749,7 +17749,10 @@ void clif_parse_CashShopReqTab(int fd, struct map_session_data *sd) {
 void clif_maptypeproperty2(struct block_list *bl,enum send_target t) {
 #if PACKETVER >= 20121010
 	struct packet_maptypeproperty2 p;
-	struct map_session_data *sd = BL_CAST(BL_PC, bl);
+	struct map_session_data *sd = NULL;
+	nullpo_retv(bl);
+
+	sd = BL_CAST(BL_PC, bl);
 
 	p.PacketType = maptypeproperty2Type;
 	p.type = 0x28;

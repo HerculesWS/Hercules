@@ -1312,6 +1312,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(itemdb->final_sub, HP_itemdb_final_sub) },
 	{ HP_POP(itemdb->clear, HP_itemdb_clear) },
 	{ HP_POP(itemdb->id2combo, HP_itemdb_id2combo) },
+	{ HP_POP(itemdb->is_item_usable, HP_itemdb_is_item_usable) },
 /* logs */
 	{ HP_POP(logs->pick_pc, HP_logs_pick_pc) },
 	{ HP_POP(logs->pick_mob, HP_logs_pick_mob) },
@@ -1629,6 +1630,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(npc->isnear, HP_npc_isnear) },
 	{ HP_POP(npc->ontouch_event, HP_npc_ontouch_event) },
 	{ HP_POP(npc->ontouch2_event, HP_npc_ontouch2_event) },
+	{ HP_POP(npc->onuntouch_event, HP_npc_onuntouch_event) },
 	{ HP_POP(npc->enable_sub, HP_npc_enable_sub) },
 	{ HP_POP(npc->enable, HP_npc_enable) },
 	{ HP_POP(npc->name2id, HP_npc_name2id) },
@@ -1653,6 +1655,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(npc->touch_areanpc_sub, HP_npc_touch_areanpc_sub) },
 	{ HP_POP(npc->touchnext_areanpc, HP_npc_touchnext_areanpc) },
 	{ HP_POP(npc->touch_areanpc, HP_npc_touch_areanpc) },
+	{ HP_POP(npc->untouch_areanpc, HP_npc_untouch_areanpc) },
 	{ HP_POP(npc->touch_areanpc2, HP_npc_touch_areanpc2) },
 	{ HP_POP(npc->check_areanpc, HP_npc_check_areanpc) },
 	{ HP_POP(npc->checknear, HP_npc_checknear) },

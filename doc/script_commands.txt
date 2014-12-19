@@ -259,7 +259,8 @@ direction across Y. Walking into that area will trigger the NPC. If no
 'OnTouch:' special label is present in the NPC code, the execution will 
 start from the beginning of the script, otherwise, it will start from the 
 'OnTouch:' label. Monsters can also trigger the NPC, though the label 
-'OnTouchNPC:' is used in this case.
+'OnTouchNPC:' is used in this case. If player left area npc will called
+if present label 'OnUnTouch'.
 
 The code part is the script code that will execute whenever the NPC is 
 triggered. It may contain commands and function calls, descriptions of 
@@ -1039,6 +1040,12 @@ OnTouch_:
 
 Similar to OnTouch, but will only run one instance. Another character is
 chosen once the triggering character leaves the area.
+
+OnUnTouch:
+
+This label will be executed if plater leave trigger area is defined for the NPC 
+object it's in. If it isn't present, nothing will happend.
+The RID of the triggering character object will be attached.
 
 OnPCLoginEvent:
 OnPCLogoutEvent:
@@ -3226,14 +3233,21 @@ let you enter.
 
 ---------------------------------------
 
-*getareausers("<map name>",<x1>,<y1>,<x2>,<y2>)
+*getareausers({"<map name>",}{<x1>,<y1>,<x2>,<y2>})
+*getareausers({"<map name>",}{<radius>})
 
 This function will return the count of connected characters which are 
-located within the specified area - an x1/y1-x2/y2 square - on the 
-specified map.
+located within the specified area. Area can be x1/y1-x2/y2 square,
+or radius from npc position. If map name missing, used attached player map.
 
 This is useful for maps that are split into many buildings, such as all 
 the "*_in" maps, due to all the shops and houses.
+
+Examples:
+	// return players in area npc area on current map.
+	.@num = getareausers();
+	// return players in square (1, 1) - (10, 10)
+	.@num = "players: " + getareausers(1, 1, 10, 10);
 
 ---------------------------------------
 
@@ -7555,6 +7569,46 @@ config, and will not work properly if the NPC has a mob sprite.
 	// Casts Level 10 Heal on the attached player, calculated with
 	// all stats 99 and base level 60.
 	npcskill "AL_HEAL",10,99,60;
+
+---------------------------------------
+
+*setnpcdistance <distance>
+
+This command can reduce distance from where npc can be clicked.
+Usefull to use from OnInit event.
+
+	// Set distance to one tile on server load
+	OnInit:
+	setnpcdistance 1;
+
+---------------------------------------
+
+*getnpcdir {<name>};
+
+Return current npc direction for parameter "name" or for attached npc
+if it missing. If name missing and not attached npc, return -1.
+
+Example:
+	.@dir = getnpcdir();
+
+---------------------------------------
+
+*setnpcdir {<name>,} <direction>;
+
+Set npc direction. If npc name missing, will be used attached npc.
+
+Example:
+	setnpcdir 2;
+
+---------------------------------------
+
+*getnpcclass {<name>};
+
+Return npc class/sprite id for npc with given name or for attached npc.
+If name missing and no attached npc, return -1.
+
+Example:
+	.@class = getnpcclass();
 
 ---------------------------------------
 

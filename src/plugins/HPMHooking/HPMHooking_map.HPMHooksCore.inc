@@ -2587,6 +2587,8 @@ struct {
 	struct HPMHookPoint *HP_itemdb_clear_post;
 	struct HPMHookPoint *HP_itemdb_id2combo_pre;
 	struct HPMHookPoint *HP_itemdb_id2combo_post;
+	struct HPMHookPoint *HP_itemdb_is_item_usable_pre;
+	struct HPMHookPoint *HP_itemdb_is_item_usable_post;
 	struct HPMHookPoint *HP_logs_pick_pc_pre;
 	struct HPMHookPoint *HP_logs_pick_pc_post;
 	struct HPMHookPoint *HP_logs_pick_mob_pre;
@@ -3205,6 +3207,8 @@ struct {
 	struct HPMHookPoint *HP_npc_ontouch_event_post;
 	struct HPMHookPoint *HP_npc_ontouch2_event_pre;
 	struct HPMHookPoint *HP_npc_ontouch2_event_post;
+	struct HPMHookPoint *HP_npc_onuntouch_event_pre;
+	struct HPMHookPoint *HP_npc_onuntouch_event_post;
 	struct HPMHookPoint *HP_npc_enable_sub_pre;
 	struct HPMHookPoint *HP_npc_enable_sub_post;
 	struct HPMHookPoint *HP_npc_enable_pre;
@@ -3253,6 +3257,8 @@ struct {
 	struct HPMHookPoint *HP_npc_touchnext_areanpc_post;
 	struct HPMHookPoint *HP_npc_touch_areanpc_pre;
 	struct HPMHookPoint *HP_npc_touch_areanpc_post;
+	struct HPMHookPoint *HP_npc_untouch_areanpc_pre;
+	struct HPMHookPoint *HP_npc_untouch_areanpc_post;
 	struct HPMHookPoint *HP_npc_touch_areanpc2_pre;
 	struct HPMHookPoint *HP_npc_touch_areanpc2_post;
 	struct HPMHookPoint *HP_npc_check_areanpc_pre;
@@ -7658,6 +7664,8 @@ struct {
 	int HP_itemdb_clear_post;
 	int HP_itemdb_id2combo_pre;
 	int HP_itemdb_id2combo_post;
+	int HP_itemdb_is_item_usable_pre;
+	int HP_itemdb_is_item_usable_post;
 	int HP_logs_pick_pc_pre;
 	int HP_logs_pick_pc_post;
 	int HP_logs_pick_mob_pre;
@@ -8276,6 +8284,8 @@ struct {
 	int HP_npc_ontouch_event_post;
 	int HP_npc_ontouch2_event_pre;
 	int HP_npc_ontouch2_event_post;
+	int HP_npc_onuntouch_event_pre;
+	int HP_npc_onuntouch_event_post;
 	int HP_npc_enable_sub_pre;
 	int HP_npc_enable_sub_post;
 	int HP_npc_enable_pre;
@@ -8324,6 +8334,8 @@ struct {
 	int HP_npc_touchnext_areanpc_post;
 	int HP_npc_touch_areanpc_pre;
 	int HP_npc_touch_areanpc_post;
+	int HP_npc_untouch_areanpc_pre;
+	int HP_npc_untouch_areanpc_post;
 	int HP_npc_touch_areanpc2_pre;
 	int HP_npc_touch_areanpc2_post;
 	int HP_npc_check_areanpc_pre;

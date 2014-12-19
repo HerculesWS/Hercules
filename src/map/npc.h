@@ -61,6 +61,7 @@ struct npc_data {
 	int touching_id;
 	int64 next_walktime;
 	uint8 dir;
+	uint8 area_size;
 
 	unsigned size : 2;
 
@@ -181,6 +182,7 @@ struct npc_interface {
 	bool (*isnear) (struct block_list *bl);
 	int (*ontouch_event) (struct map_session_data *sd, struct npc_data *nd);
 	int (*ontouch2_event) (struct map_session_data *sd, struct npc_data *nd);
+	int (*onuntouch_event) (struct map_session_data *sd, struct npc_data *nd);
 	int (*enable_sub) (struct block_list *bl, va_list ap);
 	int (*enable) (const char *name, int flag);
 	struct npc_data* (*name2id) (const char *name);
@@ -205,6 +207,7 @@ struct npc_interface {
 	int (*touch_areanpc_sub) (struct block_list *bl, va_list ap);
 	int (*touchnext_areanpc) (struct map_session_data *sd, bool leavemap);
 	int (*touch_areanpc) (struct map_session_data *sd, int16 m, int16 x, int16 y);
+	int (*untouch_areanpc) (struct map_session_data *sd, int16 m, int16 x, int16 y);
 	int (*touch_areanpc2) (struct mob_data *md);
 	int (*check_areanpc) (int flag, int16 m, int16 x, int16 y, int16 range);
 	struct npc_data* (*checknear) (struct map_session_data *sd, struct block_list *bl);
