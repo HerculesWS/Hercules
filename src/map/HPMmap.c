@@ -101,6 +101,18 @@ bool HPM_map_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataType
 			ret->HPDataSRCPtr = (void**)(&((struct instance_data *)ptr)->hdata);
 			ret->hdatac = &((struct instance_data *)ptr)->hdatac;
 			break;
+		case HPDT_MOBDB:
+			ret->HPDataSRCPtr = (void**)(&((struct mob_db *)ptr)->hdata);
+			ret->hdatac = &((struct mob_db *)ptr)->hdatac;
+			break;
+		case HPDT_MOBDATA:
+			ret->HPDataSRCPtr = (void**)(&((struct mob_data *)ptr)->hdata);
+			ret->hdatac = &((struct mob_data *)ptr)->hdatac;
+			break;
+		case HPDT_ITEMDATA:
+			ret->HPDataSRCPtr = (void**)(&((struct item_data *)ptr)->hdata);
+			ret->hdatac = &((struct item_data *)ptr)->hdatac;
+			break;
 		default:
 			return false;
 	}
