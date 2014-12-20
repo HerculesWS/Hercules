@@ -8773,47 +8773,6 @@ BUILDIN(checkwug)
 	return true;
 }
 
-/// Returns if the player is wearing MADO Gear.
-///
-/// checkmadogear() -> <bool>
-///
-BUILDIN(checkmadogear)
-{
-	TBL_PC* sd;
-
-	sd = script->rid2sd(st);
-	if( sd == NULL )
-		return true;// no player attached, report source
-
-	if( pc_ismadogear(sd) )
-		script_pushint(st, 1);
-	else
-		script_pushint(st, 0);
-
-	return true;
-}
-
-/// Sets if the player is riding MADO Gear.
-/// <flag> defaults to 1
-///
-/// setmadogear <flag>;
-/// setmadogear;
-BUILDIN(setmadogear)
-{
-	bool flag = true;
-	TBL_PC* sd;
-
-	sd = script->rid2sd(st);
-	if (sd == NULL)
-		return true;// no player attached, report source
-
-	if (script_hasdata(st,2))
-		flag = script_getnum(st,2) ? true : false;
-	pc->setmadogear(sd, flag);
-
-	return true;
-}
-
 /// Sets the save point of the player.
 ///
 /// save "<map name>",<x>,<y>
@@ -19338,8 +19297,6 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(setmount,"?"),
 		BUILDIN_DEF(checkmount,""),
 		BUILDIN_DEF(checkwug,""),
-		BUILDIN_DEF_DEPRECATED(checkmadogear,""), // Deprecated 2014-10-30 [Haru]
-		BUILDIN_DEF_DEPRECATED(setmadogear,"?"),  // Deprecated 2014-10-30 [Haru]
 		BUILDIN_DEF2_DEPRECATED(savepoint,"save","sii"), // Deprecated 2014-11-02 [Haru]
 		BUILDIN_DEF(savepoint,"sii"),
 		BUILDIN_DEF(gettimetick,"i"),
