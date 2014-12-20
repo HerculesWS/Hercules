@@ -434,6 +434,10 @@ struct item_data {
 	/* TODO add a pointer to some sort of (struct extra) and gather all the not-common vals into it to save memory */
 	struct item_group *group;
 	struct item_package *package;
+
+	/* HPM Custom Struct */
+	struct HPluginData **hdata;
+	unsigned int hdatac;
 };
 
 struct item_combo {
@@ -600,6 +604,7 @@ struct itemdb_interface {
 	void (*read_combos) ();
 	int (*gendercheck) (struct item_data *id);
 	int (*validate_entry) (struct item_data *entry, int n, const char *source);
+	void (*readdb_additional_fields) (int itemid, config_setting_t *it, int n, const char *source);
 	int (*readdb_sql_sub) (Sql *handle, int n, const char *source);
 	int (*readdb_libconfig_sub) (config_setting_t *it, int n, const char *source);
 	int (*readdb_libconfig) (const char *filename);

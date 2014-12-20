@@ -2720,6 +2720,7 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 		}
 		case BL_MOB:
 		{
+			unsigned int k;
 			struct mob_data *md = (struct mob_data*)bl;
 			if( md->spawn_timer != INVALID_TIMER )
 			{
@@ -2774,6 +2775,15 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 				mob->clone_delete(md);
 			if( md->tomb_nid )
 				mob->mvptomb_destroy(md);
+
+			for (k = 0; k < md->hdatac; k++) {
+				if( md->hdata[k]->flag.free ) {
+					aFree(md->hdata[k]->data);
+				}
+				aFree(md->hdata[k]);
+			}
+			if (md->hdata)
+				aFree(md->hdata);
 			break;
 		}
 		case BL_HOM:

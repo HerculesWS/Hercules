@@ -16,6 +16,7 @@
 #include "mob.h"    // MAX_MOB_DB
 #include "pc.h"     // W_MUSICAL, W_WHIP
 #include "script.h" // item script processing
+#include "../common/HPM.h"
 #include "../common/conf.h"
 #include "../common/malloc.h"
 #include "../common/nullpo.h"
@@ -1501,6 +1502,11 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 	return item->nameid;
 }
 
+void itemdb_readdb_additional_fields(int itemid, config_setting_t *it, int n, const char *source)
+{
+    // do nothing. plugins can do own work
+}
+
 /**
  * Processes one itemdb entry from the sql backend, loading and inserting it
  * into the item database.
@@ -1936,6 +1942,7 @@ int itemdb_readdb_libconfig(const char *filename) {
 		if( !nameid )
 			continue;
 
+		itemdb->readdb_additional_fields(nameid, it, i - 1, filename);
 		count++;
 
 		if( duplicate[nameid] ) {
@@ -2069,6 +2076,7 @@ bool itemdb_is_item_usable(struct item_data *item)
 /// Destroys the item_data.
 void destroy_item_data(struct item_data* self, int free_self)
 {
+	int v;
 	if( self == NULL )
 		return;
 	// free scripts
@@ -2080,6 +2088,14 @@ void destroy_item_data(struct item_data* self, int free_self)
 		script->free_code(self->unequip_script);
 	if( self->combos )
 		aFree(self->combos);
+	for (v = 0; v < self->hdatac; v++ ) {
+		if (self->hdata[v]->flag.free ) {
+			aFree(self->hdata[v]->data);
+		}
+		aFree(self->hdata[v]);
+	}
+	if (self->hdata)
+		aFree(self->hdata);
 #if defined(DEBUG)
 	// trash item
 	memset(self, 0xDD, sizeof(struct item_data));
@@ -2335,6 +2351,7 @@ void itemdb_defaults(void) {
 	itemdb->read_combos = itemdb_read_combos;
 	itemdb->gendercheck = itemdb_gendercheck;
 	itemdb->validate_entry = itemdb_validate_entry;
+	itemdb->readdb_additional_fields = itemdb_readdb_additional_fields;
 	itemdb->readdb_sql_sub = itemdb_readdb_sql_sub;
 	itemdb->readdb_libconfig_sub = itemdb_readdb_libconfig_sub;
 	itemdb->readdb_libconfig = itemdb_readdb_libconfig;

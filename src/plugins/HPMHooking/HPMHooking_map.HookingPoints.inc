@@ -1302,6 +1302,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(itemdb->read_combos, HP_itemdb_read_combos) },
 	{ HP_POP(itemdb->gendercheck, HP_itemdb_gendercheck) },
 	{ HP_POP(itemdb->validate_entry, HP_itemdb_validate_entry) },
+	{ HP_POP(itemdb->readdb_additional_fields, HP_itemdb_readdb_additional_fields) },
 	{ HP_POP(itemdb->readdb_sql_sub, HP_itemdb_readdb_sql_sub) },
 	{ HP_POP(itemdb->readdb_libconfig_sub, HP_itemdb_readdb_libconfig_sub) },
 	{ HP_POP(itemdb->readdb_libconfig, HP_itemdb_readdb_libconfig) },
@@ -1621,6 +1622,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mob->readdb_itemratio, HP_mob_readdb_itemratio) },
 	{ HP_POP(mob->load, HP_mob_load) },
 	{ HP_POP(mob->clear_spawninfo, HP_mob_clear_spawninfo) },
+	{ HP_POP(mob->destroy_mob_db, HP_mob_destroy_mob_db) },
 /* npc */
 	{ HP_POP(npc->init, HP_npc_init) },
 	{ HP_POP(npc->final, HP_npc_final) },
