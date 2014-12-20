@@ -8623,49 +8623,6 @@ BUILDIN(setfalcon)
 	return true;
 }
 
-/// Returns if the player is riding.
-///
-/// checkriding() -> <bool>
-///
-/// @author Valaris
-BUILDIN(checkriding)
-{
-	TBL_PC* sd;
-
-	sd = script->rid2sd(st);
-	if (sd == NULL)
-		return true; // no player attached, report source
-
-	if (pc_hasmount(sd))
-		script_pushint(st, 1);
-	else
-		script_pushint(st, 0);
-
-	return true;
-}
-
-/// Sets if the player is riding.
-/// <flag> defaults to 1
-///
-/// setriding <flag>;
-/// setriding;
-BUILDIN(setriding)
-{
-	int flag = 1;
-	TBL_PC* sd;
-
-	sd = script->rid2sd(st);
-
-	if (sd == NULL)
-		return true;// no player attached, report source
-
-	if (script_hasdata(st,2))
-		flag = script_getnum(st,2);
-	pc->setridingpeco(sd, flag ? true : false);
-
-	return true;
-}
-
 enum setmount_type {
 	SETMOUNT_TYPE_AUTODETECT   = -1,
 	SETMOUNT_TYPE_NONE         = 0,
@@ -19378,8 +19335,6 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(checkcart,""),
 		BUILDIN_DEF(setfalcon,"?"),
 		BUILDIN_DEF(checkfalcon,""),
-		BUILDIN_DEF_DEPRECATED(setriding,"?"), // Deprecated 2014-10-30 [Haru]
-		BUILDIN_DEF_DEPRECATED(checkriding,""), // Deprecated 2014-10-30 [Haru]
 		BUILDIN_DEF(setmount,"?"),
 		BUILDIN_DEF(checkmount,""),
 		BUILDIN_DEF(checkwug,""),
