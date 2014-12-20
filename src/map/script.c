@@ -17559,58 +17559,6 @@ BUILDIN(makerune) {
 	sd->itemid = script_getnum(st,2);
 	return true;
 }
-/**
- * checkdragon() returns 1 if mounting a dragon or 0 otherwise.
- **/
-BUILDIN(checkdragon) {
-	TBL_PC* sd;
-	if( (sd = script->rid2sd(st)) == NULL )
-		return true;
-	if( pc_isridingdragon(sd) )
-		script_pushint(st,1);
-	else
-		script_pushint(st,0);
-	return true;
-}
-/**
- * setdragon({optional Color}) returns 1 on success or 0 otherwise
- * - Toggles the dragon on a RK if he can mount;
- * @param Color - when not provided uses the green dragon;
- * - 1 : Green Dragon
- * - 2 : Brown Dragon
- * - 3 : Gray Dragon
- * - 4 : Blue Dragon
- * - 5 : Red Dragon
- **/
-BUILDIN(setdragon) {
-	TBL_PC* sd;
-	int color = script_hasdata(st,2) ? script_getnum(st,2) : 0;
-
-	if( (sd = script->rid2sd(st)) == NULL )
-		return true;
-	if( !pc->checkskill(sd,RK_DRAGONTRAINING) || (sd->class_&MAPID_THIRDMASK) != MAPID_RUNE_KNIGHT )
-		script_pushint(st,0);//Doesn't have the skill or it's not a Rune Knight
-	else if ( pc_isridingdragon(sd) ) {//Is mounted; release
-		pc->setoption(sd, sd->sc.option&~OPTION_DRAGON);
-		script_pushint(st,1);
-	} else {//Not mounted; Mount now.
-		unsigned int option = OPTION_DRAGON1;
-		if( color ) {
-			option = ( color == 1 ? OPTION_DRAGON1 :
-			           color == 2 ? OPTION_DRAGON2 :
-			           color == 3 ? OPTION_DRAGON3 :
-			           color == 4 ? OPTION_DRAGON4 :
-			           color == 5 ? OPTION_DRAGON5 : 0);
-			if( !option ) {
-				ShowWarning("script_setdragon: Unknown Color %d used; changing to green (1)\n",color);
-				option = OPTION_DRAGON1;
-			}
-		}
-		pc->setoption(sd, sd->sc.option|option);
-		script_pushint(st,1);
-	}
-	return true;
-}
 
 /**
  * hascashmount() returns 1 if mounting a cash mount or 0 otherwise
@@ -19624,8 +19572,6 @@ void script_parse_builtin(void) {
 		 * 3rd-related
 		 **/
 		BUILDIN_DEF(makerune,"i"),
-		BUILDIN_DEF_DEPRECATED(checkdragon,""), // Deprecated 2014-10-30 [Haru]
-		BUILDIN_DEF_DEPRECATED(setdragon,"?"), // Deprecated 2014-10-30 [Haru]
 		BUILDIN_DEF(hascashmount,""),//[Ind]
 		BUILDIN_DEF(setcashmount,""),//[Ind]
 		BUILDIN_DEF(checkre,"i"),
