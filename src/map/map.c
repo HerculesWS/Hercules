@@ -397,6 +397,7 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
  * Counts specified number of objects on given cell.
  * flag:
  *   0x1 - only count standing units
+ *   0x2 - don't count invinsible units
  * TODO: merge with bl_getall_area
  *------------------------------------------*/
 int map_count_oncell(int16 m, int16 x, int16 y, int type, int flag) {
@@ -412,11 +413,19 @@ int map_count_oncell(int16 m, int16 x, int16 y, int type, int flag) {
 
 	if (type&~BL_MOB)
 		for( bl = map->list[m].block[bx+by*map->list[m].bxs] ; bl != NULL ; bl = bl->next )
-			if(bl->x == x && bl->y == y && bl->type&type) {
-				if(flag&1) {
-					struct unit_data *ud = unit->bl2ud(bl);
-					if(!ud || ud->walktimer == INVALID_TIMER)
-						count++;
+			if ( bl->x == x && bl->y == y && bl->type&type ) {
+				if ( flag ) {
+					if ( flag & 2 ) { // priority over other flags
+						struct status_change *sc = status->get_sc(bl);
+						if ( !(sc && sc->option&OPTION_INVISIBLE) )
+							count++;
+					} else {
+						if ( flag & 1 ) {
+							struct unit_data *ud = unit->bl2ud(bl);
+							if ( !ud || ud->walktimer == INVALID_TIMER )
+								count++;
+						}
+					}
 				} else {
 					count++;
 				}
@@ -424,11 +433,19 @@ int map_count_oncell(int16 m, int16 x, int16 y, int type, int flag) {
 
 	if (type&BL_MOB)
 		for( bl = map->list[m].block_mob[bx+by*map->list[m].bxs] ; bl != NULL ; bl = bl->next )
-			if(bl->x == x && bl->y == y) {
-				if(flag&1) {
-					struct unit_data *ud = unit->bl2ud(bl);
-					if(!ud || ud->walktimer == INVALID_TIMER)
-						count++;
+			if ( bl->x == x && bl->y == y ) {
+				if ( flag ) {
+					if ( flag & 2 ) { // priority over other flags
+						struct status_change *sc = status->get_sc(bl);
+						if ( !(sc && sc->option&OPTION_INVISIBLE) )
+							count++;
+					} else {
+						if ( flag & 1 ) {
+							struct unit_data *ud = unit->bl2ud(bl);
+							if ( !ud || ud->walktimer == INVALID_TIMER )
+								count++;
+						}
+					}
 				} else {
 					count++;
 				}

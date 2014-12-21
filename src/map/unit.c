@@ -685,7 +685,7 @@ bool unit_run( struct block_list *bl, struct map_session_data *sd, enum sc_type 
 			break;
 
 		//if sprinting and there's a PC/Mob/NPC, block the path [Kevin]
-		if( map->count_oncell(bl->m, to_x+dir_x, to_y+dir_y, BL_PC|BL_MOB|BL_NPC, 0) )
+		if ( map->count_oncell(bl->m, to_x + dir_x, to_y + dir_y, BL_PC | BL_MOB | BL_NPC, 0x2) )
 			break;
 
 		to_x += dir_x;
