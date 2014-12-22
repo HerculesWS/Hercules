@@ -11475,7 +11475,7 @@ int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk, int fl
 			&& (refine = sd->status.inventory[index].refine) < 16 && refine ) {
 			int r = status->refine_info[watk->wlv].randombonus_max[refine + (4 - watk->wlv)] / 100;
 			if ( r )
-				max += (rnd() % 100) % (r / 10) + 1;
+				max += (rnd() % 100) % r + 1;
 		}
 	}
 
@@ -11567,7 +11567,7 @@ void status_get_matk_sub(struct block_list *bl, int flag, unsigned short *matk_m
 			&& (refine = sd->status.inventory[index].refine) < 16 && refine ) {
 			int r =  status->refine_info[sd->inventory_data[index]->wlv].randombonus_max[refine + (4 - sd->inventory_data[index]->wlv)] / 100;
 			if ( r )
-				st->matk_max += (rnd() % 100) % (r / 10) + 1;
+				st->matk_max += (rnd() % 100) % r + 1;
 		}
 	}
 #endif
