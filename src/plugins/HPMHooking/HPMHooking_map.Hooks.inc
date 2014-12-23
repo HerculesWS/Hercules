@@ -34317,6 +34317,33 @@ bool HP_itemdb_is_item_usable(struct item_data *item) {
 	}
 	return retVal___;
 }
+bool HP_itemdb_lookup_const(const config_setting_t *it, const char *name, int *value) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_itemdb_lookup_const_pre ) {
+		bool (*preHookFunc) (const config_setting_t *it, const char *name, int *value);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_lookup_const_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_itemdb_lookup_const_pre[hIndex].func;
+			retVal___ = preHookFunc(it, name, value);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.itemdb.lookup_const(it, name, value);
+	}
+	if( HPMHooks.count.HP_itemdb_lookup_const_post ) {
+		bool (*postHookFunc) (bool retVal___, const config_setting_t *it, const char *name, int *value);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_lookup_const_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_itemdb_lookup_const_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, it, name, value);
+		}
+	}
+	return retVal___;
+}
 /* logs */
 void HP_logs_pick_pc(struct map_session_data *sd, e_log_pick_type type, int amount, struct item *itm, struct item_data *data) {
 	int hIndex = 0;
