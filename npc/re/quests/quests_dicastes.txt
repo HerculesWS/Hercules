@@ -4317,7 +4317,7 @@ dicastes01,207,210,5	script	Walking Knit#ep133_15	4_MAN_BENKUNI,{
 			mes "Ah, did you see the group of cats in front of the castle?";
 			mes "They are really soft and cuddly unlike us.";
 			next;
-			if (questprogress(7188)) {
+			if (!questprogress(7188)) {
 				mes "[Knit]";
 				mes "And especially their ear and tail!!";
 				next;
@@ -4406,7 +4406,7 @@ dicastes01,112,248,5	script	Resting Piom#ep133_16	4_MAN_PIOM5,{
 		mes "Huh? You're... human!";
 		mes "Why are you here?";
 		next;
-		if (questprogress(7189)) {
+		if (!questprogress(7189)) {
 			select("About a human with cat ears..");
 			mes "[Piom]";
 			mes "HAHAHAHA!!!";
@@ -4478,7 +4478,7 @@ dicastes01,249,140,3	script	Training Galten#ep133_17	4_MAN_GALTUN,{
 		mes "Hmm? Aren't you the outsider that came here awhile ago?";
 		mes "Have you come to see the training grounds?";
 		next;
-		if (questprogress(7190)) {
+		if (!questprogress(7190)) {
 			select("About a human with cat ears..");
 			mes "[Galten]";
 			mes "Cat ears?";
