@@ -67,15 +67,15 @@
 312,0xa4,    ,  4, 0,  -1,party, 0x240	//BD_INTOABYSS
 313,0xa5,    ,  4, 0,  -1,party, 0x200	//BD_SIEGFRIED
 317,0xa6,    ,  3, 0,3000,enemy, 0x400	//BA_DISSONANCE
-319,0xa7,    ,  3, 0,  -1,all,   0x440	//BA_WHISTLE
-320,0xa8,    ,  3, 0,  -1,all,   0x440	//BA_ASSASSINCROSS
-321,0xa9,    ,  3, 0,  -1,all,   0x440	//BA_POEMBRAGI
+319,0xa7,    ,  3, 0,3000,all,   0xC40	//BA_WHISTLE
+320,0xa8,    ,  3, 0,3000,all,   0xC40	//BA_ASSASSINCROSS
+321,0xa9,    ,  3, 0,3000,all,   0xC40	//BA_POEMBRAGI
 322,0xaa,    ,  3, 0,6000,all,   0xC40	//BA_APPLEIDUN
 325,0xab,    ,  3, 0,3000,enemy, 0x100	//DC_UGLYDANCE
-327,0xac,    ,  3, 0,  -1,all,   0x140	//DC_HUMMING
-328,0xad,    ,  3, 0,  -1,enemy, 0x100	//DC_DONTFORGETME
-329,0xae,    ,  3, 0,  -1,all,   0x140	//DC_FORTUNEKISS
-330,0xaf,    ,  3, 0,  -1,all,   0x140	//DC_SERVICEFORYOU
+327,0xac,    ,  3, 0,3000,all,   0x940	//DC_HUMMING
+328,0xad,    ,  3, 0,3000,enemy, 0x900	//DC_DONTFORGETME
+329,0xae,    ,  3, 0,3000,all,   0x940	//DC_FORTUNEKISS
+330,0xaf,    ,  3, 0,3000,all,   0x940	//DC_SERVICEFORYOU
 336,0xb2,    ,  0,-1,  -1,noone, 0x000	//WE_CALLPARTNER
 339,0x86,    , -1, 0, 300,enemy, 0x000	//NPC_DARKGRANDCROSS
 362,0xb4,    ,  0, 2, 300,all,   0x000	//HP_BASILICA
