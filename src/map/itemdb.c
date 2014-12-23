@@ -1682,7 +1682,7 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 	 * OnUnequipScript: <" OnUnequip Script ">
 	 * Inherit: inherit or override
 	 */
-	if( !libconfig->setting_lookup_int(it, "Id", &i32) ) {
+	if( !itemdb->lookup_const(it, "Id", &i32) ) {
 		ShowWarning("itemdb_readdb_libconfig_sub: Invalid or missing id in \"%s\", entry #%d, skipping.\n", source, n);
 		return 0;
 	}
@@ -1717,57 +1717,57 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 		safestrncpy(id.jname, str, sizeof(id.jname));
 	}
 
-	if( libconfig->setting_lookup_int(it, "Type", &i32) )
+	if( itemdb->lookup_const(it, "Type", &i32) )
 		id.type = i32;
 	else if( !inherit )
 		id.type = IT_ETC;
 
-	if( libconfig->setting_lookup_int(it, "Buy", &i32) )
+	if( itemdb->lookup_const(it, "Buy", &i32) )
 		id.value_buy = i32;
 	else if( !inherit )
 		id.value_buy = -1;
-	if( libconfig->setting_lookup_int(it, "Sell", &i32) )
+	if( itemdb->lookup_const(it, "Sell", &i32) )
 		id.value_sell = i32;
 	else if( !inherit )
 		id.value_sell = -1;
 
-	if( libconfig->setting_lookup_int(it, "Weight", &i32) && i32 >= 0 )
+	if( itemdb->lookup_const(it, "Weight", &i32) && i32 >= 0 )
 		id.weight = i32;
 
-	if( libconfig->setting_lookup_int(it, "Atk", &i32) && i32 >= 0 )
+	if( itemdb->lookup_const(it, "Atk", &i32) && i32 >= 0 )
 		id.atk = i32;
 
-	if( libconfig->setting_lookup_int(it, "Matk", &i32) && i32 >= 0 )
+	if( itemdb->lookup_const(it, "Matk", &i32) && i32 >= 0 )
 		id.matk = i32;
 
-	if( libconfig->setting_lookup_int(it, "Def", &i32) && i32 >= 0 )
+	if( itemdb->lookup_const(it, "Def", &i32) && i32 >= 0 )
 		id.def = i32;
 
-	if( libconfig->setting_lookup_int(it, "Range", &i32) && i32 >= 0 )
+	if( itemdb->lookup_const(it, "Range", &i32) && i32 >= 0 )
 		id.range = i32;
 
-	if( libconfig->setting_lookup_int(it, "Slots", &i32) && i32 >= 0 )
+	if( itemdb->lookup_const(it, "Slots", &i32) && i32 >= 0 )
 		id.slot = i32;
 
-	if( libconfig->setting_lookup_int(it, "Job", &i32) ) // This is an unsigned value, do not check for >= 0
+	if( itemdb->lookup_const(it, "Job", &i32) ) // This is an unsigned value, do not check for >= 0
 		itemdb->jobid2mapid(id.class_base, (unsigned int)i32);
 	else if( !inherit )
 		itemdb->jobid2mapid(id.class_base, UINT_MAX);
 
-	if( libconfig->setting_lookup_int(it, "Upper", &i32) && i32 >= 0 )
+	if( itemdb->lookup_const(it, "Upper", &i32) && i32 >= 0 )
 		id.class_upper = (unsigned int)i32;
 	else if( !inherit )
 		id.class_upper = ITEMUPPER_ALL;
 
-	if( libconfig->setting_lookup_int(it, "Gender", &i32) && i32 >= 0 )
+	if( itemdb->lookup_const(it, "Gender", &i32) && i32 >= 0 )
 		id.sex = i32;
 	else if( !inherit )
 		id.sex = 2;
 
-	if( libconfig->setting_lookup_int(it, "Loc", &i32) && i32 >= 0 )
+	if( itemdb->lookup_const(it, "Loc", &i32) && i32 >= 0 )
 		id.equip = i32;
 
-	if( libconfig->setting_lookup_int(it, "WeaponLv", &i32) && i32 >= 0 )
+	if( itemdb->lookup_const(it, "WeaponLv", &i32) && i32 >= 0 )
 		id.wlv = i32;
 
 	if( (t = libconfig->setting_get_member(it, "EquipLv")) ) {
@@ -1784,7 +1784,7 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 	if( (t = libconfig->setting_get_member(it, "Refine")) )
 		id.flag.no_refine = libconfig->setting_get_bool(t) ? 0 : 1;
 
-	if( libconfig->setting_lookup_int(it, "View", &i32) && i32 >= 0 )
+	if( itemdb->lookup_const(it, "View", &i32) && i32 >= 0 )
 		id.look = i32;
 
 	if( (t = libconfig->setting_get_member(it, "BindOnEquip")) )
@@ -1796,7 +1796,7 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 	if ((t = libconfig->setting_get_member(it, "KeepAfterUse")))
 		id.flag.keepafteruse = libconfig->setting_get_bool(t) ? 1 : 0;
 
-	if (libconfig->setting_lookup_int(it, "Delay", &i32) && i32 >= 0)
+	if (itemdb->lookup_const(it, "Delay", &i32) && i32 >= 0)
 		id.delay = i32;
 
 	if ( (t = libconfig->setting_get_member(it, "Trade")) ) {
@@ -1898,7 +1898,7 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 		}
 	}
 
-	if (libconfig->setting_lookup_int(it, "Sprite", &i32) && i32 >= 0) {
+	if (itemdb->lookup_const(it, "Sprite", &i32) && i32 >= 0) {
 		id.flag.available = 1;
 		id.view_id = i32;
 	}
@@ -1913,6 +1913,24 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 		id.unequip_script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
 
 	return itemdb->validate_entry(&id, n, source);
+}
+
+bool itemdb_lookup_const(const config_setting_t *it, const char *name, int *value)
+{
+	if (libconfig->setting_lookup_int(it, name, value))
+	{
+		return true;
+	}
+	else
+	{
+		const char *str = NULL;
+		if (libconfig->setting_lookup_string(it, name, &str))
+		{
+			if (*str && script->get_constant(str, value))
+				return true;
+		}
+	}
+	return false;
 }
 
 /**
@@ -2363,4 +2381,5 @@ void itemdb_defaults(void) {
 	itemdb->clear = itemdb_clear;
 	itemdb->id2combo = itemdb_id2combo;
 	itemdb->is_item_usable = itemdb_is_item_usable;
+	itemdb->lookup_const = itemdb_lookup_const;
 }
