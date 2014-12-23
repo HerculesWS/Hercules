@@ -11055,7 +11055,7 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 			break;
 		case BA_ASSASSINCROSS:
 			if(sd)
-				val1 = (pc->checkskill(sd,BA_MUSICALLESSON) + 1) / 2;
+				val1 = pc->checkskill(sd,BA_MUSICALLESSON) / 2;
 #ifdef RENEWAL
 			// This formula was taken from a RE calculator
 			// and the changes published on irowiki
@@ -11896,18 +11896,31 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			int heal;
 #ifdef RENEWAL
 			struct mob_data *md = BL_CAST(BL_MOB, bl);
-			if( md && md->class_ == MOBID_EMPERIUM )
+			if (md && md->class_ == MOBID_EMPERIUM)
 				break;
 #endif
-			if( (sg->src_id == bl->id && !(tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_BARDDANCER))
-			  || (!(battle_config.song_timer_reset) && tsc && tsc->data[type] && tsc->data[type]->val4 == 1))
+			if ((sg->src_id == bl->id && !(tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_BARDDANCER))
+			  || (!(battle_config.song_timer_reset) && tsc && tsc->data[type] && tsc->data[type]->val4 == 1)	)
 				break;
+
 			heal = skill->calc_heal(ss,bl,sg->skill_id, sg->skill_lv, true);
 			if( tsc->data[SC_AKAITSUKI] && heal )
 				heal = ~heal + 1;
 			clif->skill_nodamage(&src->bl, bl, AL_HEAL, heal, 1);
 			status->heal(bl, heal, 0, 0);
 		}
+		case UNT_POEMBRAGI:
+		case UNT_WHISTLE:
+		case UNT_ASSASSINCROSS:
+		case UNT_HUMMING:
+		case UNT_DONTFORGETME:
+		case UNT_FORTUNEKISS:
+		case UNT_SERVICEFORYOU:
+			if (battle_config.song_timer_reset
+			  || (!(battle_config.song_timer_reset) && tsc && tsc->data[type] && tsc->data[type]->val4 == 1)	)
+				break;
+
+			sc_start4(ss, bl, type, 100, sg->skill_lv, sg->val1, sg->val2, 0, sg->limit);	
 			break;
 		case UNT_TATAMIGAESHI:
 		case UNT_DEMONSTRATION:
@@ -12427,7 +12440,9 @@ int skill_unit_onleft(uint16 skill_id, struct block_list *bl, int64 tick) {
 		case DC_DONTFORGETME:
 		case DC_FORTUNEKISS:
 		case DC_SERVICEFORYOU:
-			if ((battle_config.song_timer_reset && sce) || (!battle_config.song_timer_reset && sce && sce->val4 != 1)) {
+			if ((battle_config.song_timer_reset && sce) // athena style
+			  || (!battle_config.song_timer_reset && sce && sce->val4 != 1)
+			) {
 				timer->delete(sce->timer, status->change_timer);
 				//NOTE: It'd be nice if we could get the skill_lv for a more accurate extra time, but alas...
 				//not possible on our current implementation.
