@@ -793,7 +793,7 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 					StrBuf->Clear(&buf);
 					StrBuf->Printf(&buf, "UPDATE `%s` SET `amount`='%d', `equip`='%d', `identify`='%d', `refine`='%d',`attribute`='%d', `expire_time`='%u', `bound`='%d'",
 						tablename, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].bound);
-					for( j = 0; j < MAX_SLOTS; ++j )for( j = 0; j < MAX_SLOTS; ++j )
+					for( j = 0; j < MAX_SLOTS; ++j )
 						StrBuf->Printf(&buf, ", `card%d`=%d", j, items[i].card[j]);
 					StrBuf->Printf(&buf, " WHERE `id`='%d' LIMIT 1", item.id);
 
