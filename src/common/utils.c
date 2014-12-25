@@ -134,7 +134,7 @@ void findfile(const char *p, const char *pat, void (func)(const char*))
 
 			sprintf(tmppath,"%s%c%s",path,PATHSEP,FindFileData.cFileName);
 
-			if (FindFileData.cFileName && strstr(FindFileData.cFileName, pattern)) {
+			if (strstr(FindFileData.cFileName, pattern)) {
 				func( tmppath );
 			}
 

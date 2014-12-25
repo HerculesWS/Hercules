@@ -1427,7 +1427,7 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 		entry->type = IT_ETC;
 	}
 
-	if (entry->flag.trade_restriction < 0 || entry->flag.trade_restriction > ITR_ALL) {
+	if (entry->flag.trade_restriction > ITR_ALL) {
 		ShowWarning("itemdb_validate_entry: Invalid trade restriction flag 0x%x for item %d (%s) in '%s', defaulting to none.\n",
 		            entry->flag.trade_restriction, entry->nameid, entry->jname, source);
 		entry->flag.trade_restriction = ITR_NONE;

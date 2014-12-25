@@ -6675,7 +6675,7 @@ ACMD(showmobs)
 		return false;
 	}
 
-	if(mob_id == atoi(mob_name) && mob->db(mob_id)->jname)
+	if(mob_id == atoi(mob_name))
 		strcpy(mob_name,mob->db(mob_id)->jname);    // --ja--
 	//strcpy(mob_name,mob_db(mob_id)->name);    // --en--
 
@@ -6799,7 +6799,7 @@ ACMD(hommutate) {
 	m_class = homun->class2type(sd->hd->homunculus.class_);
 	m_id    = homun->class2type(homun_id);
 
-	if( m_class != HT_INVALID && m_id != HT_INVALID && m_class == HT_EVO && m_id == HT_S && sd->hd->homunculus.level >= 99 ) {
+	if (m_class == HT_EVO && m_id == HT_S && sd->hd->homunculus.level >= 99) {
 		homun->mutate(sd->hd, homun_id);
 	} else {
 		clif->emotion(&sd->hd->bl, E_SWT);

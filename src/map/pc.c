@@ -3566,7 +3566,7 @@ int pc_skill(TBL_PC* sd, int id, int level, int flag) {
 	uint16 index = 0;
 	nullpo_ret(sd);
 
-	if( !(index = skill->get_index(id)) || skill->db[index].name == NULL) {
+	if (!(index = skill->get_index(id))) {
 		ShowError("pc_skill: Skill with id %d does not exist in the skill database\n", id);
 		return 0;
 	}
@@ -4859,7 +4859,7 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 	//A Rare Steal Global Announce by Lupus
 	if(md->db->dropitem[i].p<=battle_config.rare_drop_announce) {
 		char message[128];
-		sprintf (message, msg_txt(542), (sd->status.name != NULL)?sd->status.name :"GM", md->db->jname, data->jname, (float)md->db->dropitem[i].p/100);
+		sprintf (message, msg_txt(542), sd->status.name, md->db->jname, data->jname, (float)md->db->dropitem[i].p / 100);
 		//MSG: "'%s' stole %s's %s (chance: %0.02f%%)"
 		intif->broadcast(message, strlen(message)+1, BC_DEFAULT);
 	}
