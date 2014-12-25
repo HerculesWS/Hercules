@@ -633,14 +633,16 @@ static void delete_session(int fd)
 		aFree(session[fd]->wdata);
 		if( session[fd]->session_data )
 			aFree(session[fd]->session_data);
-		for(i = 0; i < session[fd]->hdatac; i++) {
-			if( session[fd]->hdata[i]->flag.free ) {
-				aFree(session[fd]->hdata[i]->data);
-			}
-			aFree(session[fd]->hdata[i]);
-		}
 		if( session[fd]->hdata )
+		{
+			for(i = 0; i < session[fd]->hdatac; i++) {
+				if( session[fd]->hdata[i]->flag.free ) {
+					aFree(session[fd]->hdata[i]->data);
+				}
+				aFree(session[fd]->hdata[i]);
+			}
 			aFree(session[fd]->hdata);
+		}
 		aFree(session[fd]);
 		session[fd] = NULL;
 	}

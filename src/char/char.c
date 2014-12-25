@@ -2209,8 +2209,7 @@ static void char_auth_ok(int fd, struct char_session_data *sd)
 			mapif->disconnectplayer(chr->server[character->server].fd, character->account_id, character->char_id, 2);
 			if (character->waiting_disconnect == INVALID_TIMER)
 				character->waiting_disconnect = timer->add(timer->gettick()+20000, chr->waiting_disconnect, character->account_id, 0);
-			if (character)
-				character->pincode_enable = -1;
+			character->pincode_enable = -1;
 			chr->authfail_fd(fd, 8);
 			return;
 		}

@@ -3158,10 +3158,10 @@ void map_clean(int i) {
 	}
 
 	if( map->list[i].unit_count ) {
-		for(v = 0; v < map->list[i].unit_count; v++) {
-			aFree(map->list[i].units[v]);
-		}
 		if( map->list[i].units ) {
+			for(v = 0; v < map->list[i].unit_count; v++) {
+				aFree(map->list[i].units[v]);
+			}
 			aFree(map->list[i].units);
 			map->list[i].units = NULL;
 		}
@@ -3169,10 +3169,10 @@ void map_clean(int i) {
 	}
 
 	if( map->list[i].skill_count ) {
-		for(v = 0; v < map->list[i].skill_count; v++) {
-			aFree(map->list[i].skills[v]);
-		}
 		if( map->list[i].skills ) {
+			for(v = 0; v < map->list[i].skill_count; v++) {
+					aFree(map->list[i].skills[v]);
+				}
 			aFree(map->list[i].skills);
 			map->list[i].skills = NULL;
 		}
@@ -3180,10 +3180,10 @@ void map_clean(int i) {
 	}
 
 	if( map->list[i].zone_mf_count ) {
-		for(v = 0; v < map->list[i].zone_mf_count; v++) {
-			aFree(map->list[i].zone_mf[v]);
-		}
 		if( map->list[i].zone_mf ) {
+			for(v = 0; v < map->list[i].zone_mf_count; v++) {
+					aFree(map->list[i].zone_mf[v]);
+				}
 			aFree(map->list[i].zone_mf);
 			map->list[i].zone_mf = NULL;
 		}
@@ -3211,10 +3211,10 @@ void do_final_maps(void) {
 		}
 
 		if( map->list[i].unit_count ) {
-			for(v = 0; v < map->list[i].unit_count; v++) {
-				aFree(map->list[i].units[v]);
-			}
 			if( map->list[i].units ) {
+				for(v = 0; v < map->list[i].unit_count; v++) {
+					aFree(map->list[i].units[v]);
+				}
 				aFree(map->list[i].units);
 				map->list[i].units = NULL;
 			}
@@ -3222,10 +3222,10 @@ void do_final_maps(void) {
 		}
 
 		if( map->list[i].skill_count ) {
-			for(v = 0; v < map->list[i].skill_count; v++) {
-				aFree(map->list[i].skills[v]);
-			}
 			if( map->list[i].skills ) {
+				for(v = 0; v < map->list[i].skill_count; v++) {
+					aFree(map->list[i].skills[v]);
+				}
 				aFree(map->list[i].skills);
 				map->list[i].skills = NULL;
 			}
@@ -3233,10 +3233,10 @@ void do_final_maps(void) {
 		}
 
 		if( map->list[i].zone_mf_count ) {
-			for(v = 0; v < map->list[i].zone_mf_count; v++) {
-				aFree(map->list[i].zone_mf[v]);
-			}
 			if( map->list[i].zone_mf ) {
+				for(v = 0; v < map->list[i].zone_mf_count; v++) {
+					aFree(map->list[i].zone_mf[v]);
+				}
 				aFree(map->list[i].zone_mf);
 				map->list[i].zone_mf = NULL;
 			}
@@ -3255,14 +3255,16 @@ void do_final_maps(void) {
 		if( map->list[i].qi_data )
 			aFree(map->list[i].qi_data);
 		
-		for( v = 0; v < map->list[i].hdatac; v++ ) {
-			if( map->list[i].hdata[v]->flag.free ) {
-				aFree(map->list[i].hdata[v]->data);
-			}
-			aFree(map->list[i].hdata[v]);
-		}
 		if( map->list[i].hdata )
+		{
+			for( v = 0; v < map->list[i].hdatac; v++ ) {
+				if( map->list[i].hdata[v]->flag.free ) {
+					aFree(map->list[i].hdata[v]->data);
+				}
+				aFree(map->list[i].hdata[v]);
+			}
 			aFree(map->list[i].hdata);
+		}
 	}
 
 	map->zone_db_clear();
@@ -5927,13 +5929,15 @@ int do_init(int argc, char *argv[])
 	vending->init(minimal);
 
 	if (scriptcheck) {
-		bool failed = load_extras_count > 0 ? false : true;
-		for (i = 0; i < load_extras_count; i++) {
-			if (npc->parsesrcfile(load_extras[i], false) != EXIT_SUCCESS)
-				failed = true;
+		if (load_extras) {
+			bool failed = load_extras_count > 0 ? false : true;
+			for (i = 0; i < load_extras_count; i++) {
+				if (npc->parsesrcfile(load_extras[i], false) != EXIT_SUCCESS)
+					failed = true;
+			}
+			if (failed)
+				exit(EXIT_FAILURE);
 		}
-		if (failed)
-			exit(EXIT_FAILURE);
 		exit(EXIT_SUCCESS);
 	}
 	if (load_extras) {

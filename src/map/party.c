@@ -103,15 +103,17 @@ int party_db_final(DBKey key, DBData *data, va_list ap) {
 		
 		if( p->instance )
 			aFree(p->instance);
-		
-		for( j = 0; j < p->hdatac; j++ ) {
-			if( p->hdata[j]->flag.free ) {
-				aFree(p->hdata[j]->data);
+
+		if (p->hdata)
+		{
+			for (j = 0; j < p->hdatac; j++) {
+				if (p->hdata[j]->flag.free) {
+					aFree(p->hdata[j]->data);
+				}
+				aFree(p->hdata[j]);
 			}
-			aFree(p->hdata[j]);
-		}
-		if( p->hdata )
 			aFree(p->hdata);
+		}
 	}
 	
 	return 0;
@@ -609,15 +611,16 @@ int party_broken(int party_id)
 	if( p->instance )
 		aFree(p->instance);
 
-	for( j = 0; j < p->hdatac; j++ ) {
-		if( p->hdata[j]->flag.free ) {
-			aFree(p->hdata[j]->data);
-		}
-		aFree(p->hdata[j]);
-	}
 	if( p->hdata )
+	{
+		for( j = 0; j < p->hdatac; j++ ) {
+			if( p->hdata[j]->flag.free ) {
+				aFree(p->hdata[j]->data);
+			}
+			aFree(p->hdata[j]);
+		}
 		aFree(p->hdata);
-	
+	}
 	idb_remove(party->db,party_id);
 	return 0;
 }

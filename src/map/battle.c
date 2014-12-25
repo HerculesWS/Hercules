@@ -2594,6 +2594,8 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 
 	nullpo_ret(bl);
 
+	// need check src for null pointer?
+
 	if( !damage )
 		return 0;
 	if( battle_config.ksprotection && mob->ksprotected(src, bl) )

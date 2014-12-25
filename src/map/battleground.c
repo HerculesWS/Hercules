@@ -860,13 +860,14 @@ void do_final_battleground(void) {
 
 	db_destroy(bg->team_db);
 
-	for( i = 0; i < bg->arenas; i++ ) {
-		if( bg->arena[i] )
-			aFree(bg->arena[i]);
-	}
-
 	if( bg->arena )
+	{
+		for( i = 0; i < bg->arenas; i++ ) {
+			if( bg->arena[i] )
+				aFree(bg->arena[i]);
+		}
 		aFree(bg->arena);
+	}
 }
 void battleground_defaults(void) {
 	bg = &bg_s;

@@ -3093,10 +3093,12 @@ int status_calc_elemental_(struct elemental_data *ed, enum e_status_calc_opt opt
 }
 
 int status_calc_npc_(struct npc_data *nd, enum e_status_calc_opt opt) {
-	struct status_data *nstatus = &nd->status;
+	struct status_data *nstatus;
 
 	if (!nd)
 		return 0;
+
+	nstatus = &nd->status;
 
 	if ( opt&SCO_FIRST ) {
 		nstatus->hp = 1;
@@ -3646,7 +3648,8 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
 	if(flag&SCB_MAXHP) {
 		if( bl->type&BL_PC ) {
 			st->max_hp = status->base_pc_maxhp(sd,st);
-			st->max_hp += bst->max_hp - sd->status.max_hp;
+			if (sd)
+				st->max_hp += bst->max_hp - sd->status.max_hp;
 
 			st->max_hp = status->calc_maxhp(bl, sc, st->max_hp);
 
@@ -3666,7 +3669,8 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
 	if(flag&SCB_MAXSP) {
 		if( bl->type&BL_PC ) {
 			st->max_sp = status->base_pc_maxsp(sd,st);
-			st->max_sp += bst->max_sp - sd->status.max_sp;
+			if (sd)
+				st->max_sp += bst->max_sp - sd->status.max_sp;
 
 			st->max_sp = status->calc_maxsp(&sd->bl, &sd->sc, st->max_sp);
 
@@ -9541,10 +9545,12 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 	if(opt_flag) {
 		clif->changeoption(bl);
 		if( sd && opt_flag&0x4 ) {
-			clif->changelook(bl,LOOK_BASE,vd->class_);
+			if (vd)
+				clif->changelook(bl,LOOK_BASE,vd->class_);
 			clif->changelook(bl,LOOK_WEAPON,0);
 			clif->changelook(bl,LOOK_SHIELD,0);
-			clif->changelook(bl,LOOK_CLOTHES_COLOR,vd->cloth_color);
+			if (vd)
+				clif->changelook(bl,LOOK_CLOTHES_COLOR,vd->cloth_color);
 		}
 	}
 	if (calc_flag&SCB_DYE) {

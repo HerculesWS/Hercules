@@ -2308,16 +2308,18 @@ int npc_unload(struct npc_data* nd, bool single) {
 		aFree(nd->ud);
 		nd->ud = NULL;
 	}
-	
-	for( i = 0; i < nd->hdatac; i++ ) {
-		if( nd->hdata[i]->flag.free ) {
-			aFree(nd->hdata[i]->data);
-		}
-		aFree(nd->hdata[i]);
-	}
+
 	if( nd->hdata )
+	{
+		for( i = 0; i < nd->hdatac; i++ ) {
+			if( nd->hdata[i]->flag.free ) {
+				aFree(nd->hdata[i]->data);
+			}
+			aFree(nd->hdata[i]);
+		}
 		aFree(nd->hdata);
-	
+	}
+
 	aFree(nd);
 
 	return 0;

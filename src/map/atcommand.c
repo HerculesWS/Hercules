@@ -1315,9 +1315,7 @@ ACMD(baselevelup)
 {
 	int level=0, i=0, status_point=0;
 
-	level = atoi(message);
-
-	if (!message || !*message || !level) {
+	if (!message || !*message || !(level = atoi(message))) {
 		clif->message(fd, msg_txt(986)); // Please enter a level adjustment (usage: @lvup/@blevel/@baselvlup <number of levels>).
 		return false;
 	}
@@ -1376,9 +1374,7 @@ ACMD(joblevelup)
 {
 	int level=0;
 
-	level = atoi(message);
-
-	if (!message || !*message || !level) {
+	if (!message || !*message || !(level = atoi(message))) {
 		clif->message(fd, msg_txt(987)); // Please enter a level adjustment (usage: @joblvup/@jlevel/@joblvlup <number of levels>).
 		return false;
 	}
@@ -8570,10 +8566,12 @@ ACMD(cart) {
 	sd->status.skill[idx].flag = (x)?1:0; \
 } while(0)
 
-	int val = atoi(message);
+	int val;
 	bool need_skill = pc->checkskill(sd, MC_PUSHCART) ? false : true;
 	unsigned int index = skill->get_index(MC_PUSHCART);
 
+	if (message)
+		val = atoi(message);
 	if( !message || !*message || val < 0 || val > MAX_CARTS ) {
 		sprintf(atcmd_output, msg_txt(1390),command,MAX_CARTS); // Unknown Cart (usage: %s <0-%d>).
 		clif->message(fd, atcmd_output);

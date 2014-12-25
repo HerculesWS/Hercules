@@ -767,6 +767,7 @@ const char* parse_callfunc(const char* p, int require_paren, int is_custom)
 	char null_arg = '\0';
 	int func;
 
+	// is need add check for arg null pointer below?
 	func = script->add_word(p);
 	if( script->str_data[func].type == C_FUNC ) {
 		// buildin function
@@ -2593,10 +2594,11 @@ void* get_val2(struct script_state* st, int64 uid, struct reg_db *ref) {
  **/
 void script_array_ensure_zero(struct script_state *st, struct map_session_data *sd, int64 uid, struct reg_db *ref) {
 	const char *name = script->get_str(script_getvarid(uid));
+	// is here st can be null pointer and st->rid is wrong?
 	struct reg_db *src = script->array_src(st, sd ? sd : st->rid ? map->id2sd(st->rid) : NULL, name, ref);
 	struct script_array *sa = NULL;
 	bool insert = false;
-	
+
 	if( sd && !st ) /* when sd comes, st isn't available */
 		insert = true;
 	else {
@@ -4385,7 +4387,7 @@ void do_final_script(void) {
 				aFree(script->hq[i].item);
 		}
 	}
-	if( script->hqis ) {
+	if (script->hqis && script->hqi) {
 		for( i = 0; i < script->hqis; i++ ) {
 			if( script->hqi[i].item != NULL )
 				aFree(script->hqi[i].item);
