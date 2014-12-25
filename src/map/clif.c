@@ -1277,11 +1277,15 @@ void clif_spiritball_single(int fd, struct map_session_data *sd) {
  * Kagerou/Oboro amulet spirit
  *------------------------------------------*/
 void clif_charm_single(int fd, struct map_session_data *sd, short type) {
+
+	if ( type <= SPIRITS_TYPE_NONE || type >= SPIRITS_TYPE_SPHERE )
+		return;
+
 	WFIFOHEAD(fd, packet_len(0x08cf));
 	WFIFOW(fd,0)=0x08cf;
 	WFIFOL(fd,2)=sd->bl.id;
 	WFIFOW(fd,6)=type;
-	WFIFOW(fd,8)=sd->charm[type];
+	WFIFOW(fd,8)=sd->spiritcharm[type];
 	WFIFOSET(fd, packet_len(0x08cf));
 }
 
@@ -1367,10 +1371,8 @@ bool clif_spawn(struct block_list *bl)
 				for( i = 0; i < sd->sc_display_count; i++ ) {
 					clif->sc_load(&sd->bl, sd->bl.id,AREA,status->IconChangeTable[sd->sc_display[i]->type],sd->sc_display[i]->val1,sd->sc_display[i]->val2,sd->sc_display[i]->val3);
 				}
-				for(i = 1; i < 5; i++){
-					if( sd->charm[i] > 0 )
-						clif->charm(sd, i);
-				}
+				ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, i, sd->spiritcharm[i] > 0);
+				clif->spiritcharm(sd, i);
 				if (sd->status.robe)
 					clif->refreshlook(bl,bl->id,LOOK_ROBE,sd->status.robe,AREA);
 			}
@@ -4269,10 +4271,9 @@ void clif_getareachar_pc(struct map_session_data* sd,struct map_session_data* ds
 
 	if(dstsd->spiritball > 0)
 		clif->spiritball_single(sd->fd, dstsd);
-	for(i = 1; i < 5; i++){
-		if( dstsd->charm[i] > 0 )
-			clif->charm_single(sd->fd, dstsd, i);
-	}
+	ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, i, sd->spiritcharm[i] > 0);
+	clif->charm_single(sd->fd, dstsd, i);
+
 	for( i = 0; i < dstsd->sc_display_count; i++ ) {
 		clif->sc_load(&sd->bl,dstsd->bl.id,SELF,status->IconChangeTable[dstsd->sc_display[i]->type],dstsd->sc_display[i]->val1,dstsd->sc_display[i]->val2,dstsd->sc_display[i]->val3);
 	}
@@ -8489,10 +8490,9 @@ void clif_refresh(struct map_session_data *sd)
 	clif->updatestatus(sd,SP_LUK);
 	if (sd->spiritball)
 		clif->spiritball_single(sd->fd, sd);
-	for(i = 1; i < 5; i++){
-		if( sd->charm[i] > 0 )
-			clif->charm_single(sd->fd, sd, i);
-	}
+	ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, i, sd->spiritcharm[i] > 0);
+	clif->charm_single(sd->fd, sd, i);
+
 	if (sd->vd.cloth_color)
 		clif->refreshlook(&sd->bl,sd->bl.id,LOOK_CLOTHES_COLOR,sd->vd.cloth_color,SELF);
 	if(homun_alive(sd->hd))
@@ -17458,10 +17458,13 @@ void clif_charm(struct map_session_data *sd,short type)
 
 	nullpo_retv(sd);
 
+	if ( type <= SPIRITS_TYPE_NONE || type >= SPIRITS_TYPE_SPHERE )
+		return;
+
 	WBUFW(buf,0)=0x08cf;
 	WBUFL(buf,2)=sd->bl.id;
 	WBUFW(buf,6)=type;
-	WBUFW(buf,8)=sd->charm[type];
+	WBUFW(buf,8)=sd->spiritcharm[type];
 	clif->send(buf,packet_len(0x08cf),&sd->bl,AREA);
 }
 /// Move Item from or to Personal Tab (CZ_WHATSOEVER) [FE]
@@ -19155,7 +19158,7 @@ void clif_defaults(void) {
 	clif->specialeffect_single = clif_specialeffect_single;
 	clif->specialeffect_value = clif_specialeffect_value;
 	clif->millenniumshield = clif_millenniumshield;
-	clif->charm = clif_charm;
+	clif->spiritcharm = clif_charm;
 	clif->charm_single = clif_charm_single;
 	clif->snap = clif_snap;
 	clif->weather_check = clif_weather_check;

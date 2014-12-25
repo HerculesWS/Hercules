@@ -8635,7 +8635,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				break;
 			case SC__ENERVATION:
 				val2 = 20 + 10 * val1; // ATK Reduction
-				if( sd ) pc->delspiritball(sd,sd->spiritball,0);
+				if ( sd ) RESET_SPIRITS(sd);
 				break;
 			case SC__GROOMY:
 				val2 = 20 + 10 * val1; //ASPD. Need to confirm if Movement Speed reduction is the same. [Jobbie]
@@ -11477,6 +11477,9 @@ int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk, int fl
 			if ( r )
 				max += (rnd() % 100) % r + 1;
 		}
+
+		if ( sd->spiritcharm[SPIRITS_TYPE_CHARM_LAND] > 0 )
+			max += 10 * max * sd->spiritcharm[SPIRITS_TYPE_CHARM_LAND] / 100;
 	}
 
 	max = status->calc_watk(bl, sc, max, false);

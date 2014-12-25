@@ -11027,7 +11027,7 @@ void HP_clif_charm(struct map_session_data *sd, short type) {
 		}
 	}
 	{
-		HPMHooks.source.clif.charm(sd, type);
+		HPMHooks.source.clif.spiritcharm(sd, type);
 	}
 	if( HPMHooks.count.HP_clif_charm_post ) {
 		void (*postHookFunc) (struct map_session_data *sd, short *type);

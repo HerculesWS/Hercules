@@ -820,7 +820,7 @@ struct clif_interface {
 	void (*specialeffect_single) (struct block_list* bl, int type, int fd);
 	void (*specialeffect_value) (struct block_list* bl, int effect_id, int num, send_target target);
 	void (*millenniumshield) (struct block_list *bl, short shields );
-	void (*charm) (struct map_session_data *sd, short type);
+	void (*spiritcharm) (struct map_session_data *sd, short type);
 	void (*charm_single) (int fd, struct map_session_data *sd, short type);
 	void (*snap) ( struct block_list *bl, short x, short y );
 	void (*weather_check) (struct map_session_data *sd);

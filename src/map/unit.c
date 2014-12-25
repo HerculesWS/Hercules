@@ -2619,8 +2619,8 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 			pc->cleareventtimer(sd);
 			pc->inventory_rental_clear(sd);
 			pc->delspiritball(sd,sd->spiritball,1);
-			for(i = 1; i < 5; i++)
-				pc->del_charm(sd, sd->charm[i], i);
+			for(i = SPIRITS_TYPE_CHARM_WATER; i < SPIRITS_TYPE_SPHERE; i++)
+				pc->del_charm(sd, sd->spiritcharm[i], i);
 
 			if( sd->st && sd->st->state != RUN ) {// free attached scripts that are waiting
 				script->free_state(sd->st);

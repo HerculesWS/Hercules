@@ -6047,7 +6047,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			) {
 				// split the if for readability, and included gunslingers in the check so that their coins cannot be removed [Reddozen]
 				sp = dstsd->spiritball * 7;
-				pc->delspiritball(dstsd,dstsd->spiritball,0);
+				RESET_SPIRITS(dstsd);
 			} else if (dstmd && !(tstatus->mode&MD_BOSS) && rnd() % 100 < 20) {
 				// check if target is a monster and not a Boss, for the 20% chance to absorb 2 SP per monster's level [Reddozen]
 				sp = 2 * dstmd->level;
@@ -8914,7 +8914,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				if( dstsd && dstsd->spiritball && (sd == dstsd || map_flag_vs(src->m)) && (dstsd->class_&MAPID_BASEMASK)!=MAPID_GUNSLINGER )
 				{
 					sp = dstsd->spiritball; //1%sp per spiritball.
-					pc->delspiritball(dstsd, dstsd->spiritball, 0);
+					RESET_SPIRITS(dstsd);
 					status_percent_heal(src, 0, sp);
 				}
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, sp ? 1:0);
@@ -9455,10 +9455,10 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				int i;
 				int ttype = skill->get_ele(skill_id, skill_lv);
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
-				ARR_FIND(1, 6, i, sd->charm[i] > 0 && ttype != i);
-				if( i < 6 )
-					pc->del_charm(sd, sd->charm[i], i); // replace with a new one.
-				pc->add_charm(sd, skill->get_time(skill_id, skill_lv), 10, ttype);
+				ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, i, sd->spiritcharm[i] > 0 && ttype != i);
+				if( i < SPIRITS_TYPE_SPHERE )
+					pc->del_charm(sd, sd->spiritcharm[i], i); // replace with a new one.
+				pc->add_charm(sd, skill->get_time(skill_id, skill_lv), MAX_SPIRITCHARM, ttype);
 			}
 			break;
 
@@ -11192,13 +11192,13 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 			break;
 		case KO_ZENKAI:
 			if( sd ){
-				ARR_FIND(1, 6, i, sd->charm[i] > 0);
-				if( i < 5 ){
-					val1 = sd->charm[i]; // no. of aura
+				ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, i, sd->spiritcharm[i] > 0);
+				if( i < SPIRITS_TYPE_SPHERE ){
+					val1 = sd->spiritcharm[i]; // no. of aura
 					val2 = i; // aura type
 					limit += val1 * 1000;
 					subunt = i - 1;
-					pc->del_charm(sd, sd->charm[i], i);
+					pc->del_charm(sd, sd->spiritcharm[i], i);
 				}
 			}
 			break;
@@ -13476,7 +13476,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 		case KO_DOHU_KOUKAI:
 			{
 				int ttype = skill->get_ele(skill_id, skill_lv);
-				if( sd->charm[ttype] >= 10 ){
+				if( sd->spiritcharm[ttype] >= MAX_SPIRITCHARM ){
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_SUMMON, 0);
 					return 0;
 				}
@@ -13486,8 +13486,8 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 		case KO_ZENKAI:
 		{
 			int i;
-			ARR_FIND(1, 6, i, sd->charm[i] > 0); // FIXME: 4 or 6?
-			if( i > 4 ) {
+			ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, i, sd->spiritcharm[i] > 0);
+			if( i >= SPIRITS_TYPE_SPHERE ) {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_SUMMON,0);
 				return 0;
 			}

@@ -31,6 +31,15 @@
 #define MAX_PC_FEELHATE 3
 #define PVP_CALCRANK_INTERVAL 1000 // PVP calculation interval
 
+#define RESET_SPIRITS(target) do { \
+	if ( target ) {  \
+		if ( target->spiritball ) \
+			pc->delspiritball(target, target->spiritball, 0); \
+		for ( int c = SPIRITS_TYPE_CHARM_WATER; c < SPIRITS_TYPE_SPHERE; c++ ) \
+			pc->del_charm(target, target->spiritcharm[c], c); \
+	} \
+}while ( 0 )
+
 //Equip indexes constants. (eg: sd->equip_index[EQI_AMMO] returns the index
 //where the arrows are equipped)
 enum equip_index {
@@ -366,8 +375,8 @@ struct map_session_data {
 	short catch_target_class; // pet catching, stores a pet class to catch (short now) [zzo]
 	short spiritball, spiritball_old;
 	int spirit_timer[MAX_SPIRITBALL];
-	short charm[ELE_POISON+1]; // There are actually 5 charm Fire, Ice, Wind, Earth & Poison maybe because its color violet.
-	int charm_timer[ELE_POISON+1][10];
+	short spiritcharm[SPIRITS_TYPE_SPHERE];
+	int charm_timer[SPIRITS_TYPE_SPHERE][MAX_SPIRITCHARM];
 	unsigned char potion_success_counter; //Potion successes in row counter
 	unsigned char mission_count; //Stores the bounty kill count for TK_MISSION
 	short mission_mobid; //Stores the target mob_id for TK_MISSION
