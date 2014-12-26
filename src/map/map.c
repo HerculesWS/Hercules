@@ -3810,7 +3810,7 @@ int map_sql_init(void)
 		exit(EXIT_FAILURE);
 	ShowStatus("connect success! (Map Server Connection)\n");
 
-	if( strlen(map->default_codepage) > 0 )
+	if (map->default_codepage[0] != '\0')
 		if ( SQL_ERROR == SQL->SetEncoding(map->mysql_handle, map->default_codepage) )
 			Sql_ShowDebug(map->mysql_handle);
 

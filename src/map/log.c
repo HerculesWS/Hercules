@@ -368,7 +368,7 @@ void log_sql_init(void) {
 		exit(EXIT_FAILURE);
 	ShowStatus(""CL_WHITE"[SQL]"CL_RESET": Successfully '"CL_GREEN"connected"CL_RESET"' to Database '"CL_WHITE"%s"CL_RESET"'.\n", logs->db_name);
 	
-	if( strlen(map->default_codepage) > 0 )
+	if (map->default_codepage[0] != '\0')
 		if ( SQL_ERROR == SQL->SetEncoding(logs->mysql_handle, map->default_codepage) )
 			Sql_ShowDebug(logs->mysql_handle);
 }

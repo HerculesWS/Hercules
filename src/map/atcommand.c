@@ -8740,10 +8740,11 @@ ACMD(channel) {
 
 	if (strcmpi(subcmd,"create") == 0 && (clif->hChSys->allow_user_channel_creation || pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN))) {
 		// sub1 = channel name; sub2 = password; sub3 = unused
+		size_t len = strlen(sub1);
 		if (sub1[0] != '#') {
 			clif->message(fd, msg_txt(1405));// Channel name must start with a '#'
 			return false;
-		} else if (strlen(sub1) < 3 || strlen(sub1) > HCHSYS_NAME_LENGTH) {
+		} else if (len < 3 || len > HCHSYS_NAME_LENGTH) {
 			sprintf(atcmd_output, msg_txt(1406), HCHSYS_NAME_LENGTH);// Channel length must be between 3 and %d
 			clif->message(fd, atcmd_output);
 			return false;

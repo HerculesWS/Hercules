@@ -409,7 +409,7 @@ void login_fromchar_account(int fd, int account_id, struct mmo_account *acc)
 		char_slots = acc->char_slots;
 		safestrncpy(pincode, acc->pincode, sizeof(pincode));
 		safestrncpy(birthdate, acc->birthdate, sizeof(birthdate));
-		if( strlen(pincode) == 0 )
+		if (pincode[0] == '\0')
 			memset(pincode,'\0',sizeof(pincode));
 
 		safestrncpy((char*)WFIFOP(fd,6), email, 40);
@@ -1097,9 +1097,9 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 
 	// Account creation with _M/_F
 	if( login_config.new_account_flag ) {
-		if( len > 2 && strnlen(sd->passwd, NAME_LENGTH) > 0 && // valid user and password lengths
+		if (len > 2 && sd->passwd[0] != '\0' && // valid user and password lengths
 			sd->passwdenc == 0 && // unencoded password
-			sd->userid[len-2] == '_' && memchr("FfMm", sd->userid[len-1], 4) ) // _M/_F suffix
+			sd->userid[len-2] == '_' && memchr("FfMm", sd->userid[len-1], 4)) // _M/_F suffix
 		{
 			int result;
 
