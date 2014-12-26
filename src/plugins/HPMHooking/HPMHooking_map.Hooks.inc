@@ -11012,13 +11012,13 @@ void HP_clif_millenniumshield(struct block_list *bl, short shields) {
 	}
 	return;
 }
-void HP_clif_charm(struct map_session_data *sd, short type) {
+void HP_clif_spiritcharm(struct map_session_data *sd, short type) {
 	int hIndex = 0;
-	if( HPMHooks.count.HP_clif_charm_pre ) {
+	if( HPMHooks.count.HP_clif_spiritcharm_pre ) {
 		void (*preHookFunc) (struct map_session_data *sd, short *type);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_charm_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_clif_charm_pre[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_spiritcharm_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_spiritcharm_pre[hIndex].func;
 			preHookFunc(sd, &type);
 		}
 		if( *HPMforce_return ) {
@@ -11029,10 +11029,10 @@ void HP_clif_charm(struct map_session_data *sd, short type) {
 	{
 		HPMHooks.source.clif.spiritcharm(sd, type);
 	}
-	if( HPMHooks.count.HP_clif_charm_post ) {
+	if( HPMHooks.count.HP_clif_spiritcharm_post ) {
 		void (*postHookFunc) (struct map_session_data *sd, short *type);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_charm_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_clif_charm_post[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_spiritcharm_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_spiritcharm_post[hIndex].func;
 			postHookFunc(sd, &type);
 		}
 	}

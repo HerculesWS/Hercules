@@ -829,8 +829,8 @@ struct {
 	struct HPMHookPoint *HP_clif_specialeffect_value_post;
 	struct HPMHookPoint *HP_clif_millenniumshield_pre;
 	struct HPMHookPoint *HP_clif_millenniumshield_post;
-	struct HPMHookPoint *HP_clif_charm_pre;
-	struct HPMHookPoint *HP_clif_charm_post;
+	struct HPMHookPoint *HP_clif_spiritcharm_pre;
+	struct HPMHookPoint *HP_clif_spiritcharm_post;
 	struct HPMHookPoint *HP_clif_charm_single_pre;
 	struct HPMHookPoint *HP_clif_charm_single_post;
 	struct HPMHookPoint *HP_clif_snap_pre;
@@ -5912,8 +5912,8 @@ struct {
 	int HP_clif_specialeffect_value_post;
 	int HP_clif_millenniumshield_pre;
 	int HP_clif_millenniumshield_post;
-	int HP_clif_charm_pre;
-	int HP_clif_charm_post;
+	int HP_clif_spiritcharm_pre;
+	int HP_clif_spiritcharm_post;
 	int HP_clif_charm_single_pre;
 	int HP_clif_charm_single_post;
 	int HP_clif_snap_pre;

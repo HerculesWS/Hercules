@@ -424,7 +424,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->specialeffect_single, HP_clif_specialeffect_single) },
 	{ HP_POP(clif->specialeffect_value, HP_clif_specialeffect_value) },
 	{ HP_POP(clif->millenniumshield, HP_clif_millenniumshield) },
-	{ HP_POP(clif->spiritcharm, HP_clif_charm) },
+	{ HP_POP(clif->spiritcharm, HP_clif_spiritcharm) },
 	{ HP_POP(clif->charm_single, HP_clif_charm_single) },
 	{ HP_POP(clif->snap, HP_clif_snap) },
 	{ HP_POP(clif->weather_check, HP_clif_weather_check) },
