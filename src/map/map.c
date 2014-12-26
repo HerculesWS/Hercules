@@ -5563,7 +5563,7 @@ CPCMD(gm_position) {
 		return;
 	}
 
-	if ( (m = map->mapname2mapid(map_name) <= 0 ) ) {
+	if ((m = map->mapname2mapid(map_name)) <= 0) {
 		ShowError("gm:info '"CL_WHITE"%s"CL_RESET"' is not a known map\n",map_name);
 		return;
 	}
