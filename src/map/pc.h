@@ -31,15 +31,6 @@
 #define MAX_PC_FEELHATE 3
 #define PVP_CALCRANK_INTERVAL 1000 // PVP calculation interval
 
-#define RESET_SPIRITS(target) do { \
-	if ( target ) {  \
-		if ( target->spiritball ) \
-			pc->delspiritball(target, target->spiritball, 0); \
-		for ( int c = SPIRITS_TYPE_CHARM_WATER; c < SPIRITS_TYPE_SPHERE; c++ ) \
-			pc->del_charm(target, target->spiritcharm[c], c); \
-	} \
-}while ( 0 )
-
 //Equip indexes constants. (eg: sd->equip_index[EQI_AMMO] returns the index
 //where the arrows are equipped)
 enum equip_index {

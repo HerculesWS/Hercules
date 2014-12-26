@@ -8635,7 +8635,11 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				break;
 			case SC__ENERVATION:
 				val2 = 20 + 10 * val1; // ATK Reduction
-				if ( sd ) RESET_SPIRITS(sd);
+				if ( sd ) {
+					pc->delspiritball(sd, sd->spiritball, 0);
+					for ( int i = SPIRITS_TYPE_CHARM_WATER; i < SPIRITS_TYPE_SPHERE; i++ )
+						pc->del_charm(sd, sd->spiritcharm[i], i);
+				}
 				break;
 			case SC__GROOMY:
 				val2 = 20 + 10 * val1; //ASPD. Need to confirm if Movement Speed reduction is the same. [Jobbie]

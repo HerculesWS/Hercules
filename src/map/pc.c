@@ -7004,7 +7004,10 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	//Reset ticks.
 	sd->hp_loss.tick = sd->sp_loss.tick = sd->hp_regen.tick = sd->sp_regen.tick = 0;
 
-	RESET_SPIRITS(sd);
+	if ( sd->spiritball )
+		pc->delspiritball(sd, sd->spiritball, 0);
+	for ( i = SPIRITS_TYPE_CHARM_WATER; i < SPIRITS_TYPE_SPHERE; i++ )
+		pc->del_charm(sd, sd->spiritcharm[i], i);
 
 	if (src) {
 		switch (src->type) {

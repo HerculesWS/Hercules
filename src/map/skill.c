@@ -6041,17 +6041,21 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case MO_ABSORBSPIRITS:
 		{
 			int sp = 0;
-			if (dstsd && dstsd->spiritball
-			 && (sd == dstsd || map_flag_vs(src->m) || (sd->duel_group && sd->duel_group == dstsd->duel_group))
-			 && ((dstsd->class_&MAPID_BASEMASK)!=MAPID_GUNSLINGER || (dstsd->class_&MAPID_UPPERMASK)!=MAPID_REBELLION)
-			) {
+			if ( dstsd && dstsd->spiritball
+				&& (sd == dstsd || map_flag_vs(src->m) || (sd->duel_group && sd->duel_group == dstsd->duel_group))
+				&& ((dstsd->class_&MAPID_BASEMASK) != MAPID_GUNSLINGER || (dstsd->class_&MAPID_UPPERMASK) != MAPID_REBELLION)
+				) {
 				// split the if for readability, and included gunslingers in the check so that their coins cannot be removed [Reddozen]
 				sp = dstsd->spiritball * 7;
-				RESET_SPIRITS(dstsd);
-			} else if (dstmd && !(tstatus->mode&MD_BOSS) && rnd() % 100 < 20) {
+				pc->delspiritball(dstsd, dstsd->spiritball, 0);
+			} else if ( dstmd && !(tstatus->mode&MD_BOSS) && rnd() % 100 < 20 ) {
 				// check if target is a monster and not a Boss, for the 20% chance to absorb 2 SP per monster's level [Reddozen]
 				sp = 2 * dstmd->level;
 				mob->target(dstmd,src,0);
+			}
+			if ( dstsd ) {
+				for ( int i = SPIRITS_TYPE_CHARM_WATER; i < SPIRITS_TYPE_SPHERE; i++ )
+					pc->del_charm(dstsd, dstsd->spiritcharm[i], i);
 			}
 			if (sp) status->heal(src, 0, sp, 3);
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,sp?1:0);
@@ -8914,8 +8918,12 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				if( dstsd && dstsd->spiritball && (sd == dstsd || map_flag_vs(src->m)) && (dstsd->class_&MAPID_BASEMASK)!=MAPID_GUNSLINGER )
 				{
 					sp = dstsd->spiritball; //1%sp per spiritball.
-					RESET_SPIRITS(dstsd);
+					pc->delspiritball(dstsd, dstsd->spiritball, 0);
 					status_percent_heal(src, 0, sp);
+				}
+				if ( dstsd ) {
+					for ( int i = SPIRITS_TYPE_CHARM_WATER; i < SPIRITS_TYPE_SPHERE; i++ )
+						pc->del_charm(dstsd, dstsd->spiritcharm[i], i);
 				}
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, sp ? 1:0);
 			} else {
