@@ -6041,6 +6041,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case MO_ABSORBSPIRITS:
 		{
 			int sp = 0;
+			int i;
 			if ( dstsd && dstsd->spiritball
 				&& (sd == dstsd || map_flag_vs(src->m) || (sd->duel_group && sd->duel_group == dstsd->duel_group))
 				&& ((dstsd->class_&MAPID_BASEMASK) != MAPID_GUNSLINGER || (dstsd->class_&MAPID_UPPERMASK) != MAPID_REBELLION)
@@ -6054,7 +6055,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				mob->target(dstmd,src,0);
 			}
 			if ( dstsd ) {
-				for ( int i = SPIRITS_TYPE_CHARM_WATER; i < SPIRITS_TYPE_SPHERE; i++ )
+				for (i = SPIRITS_TYPE_CHARM_WATER; i < SPIRITS_TYPE_SPHERE; i++)
 					pc->del_charm(dstsd, dstsd->spiritcharm[i], i);
 			}
 			if (sp) status->heal(src, 0, sp, 3);
@@ -8922,7 +8923,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					status_percent_heal(src, 0, sp);
 				}
 				if ( dstsd ) {
-					for ( int i = SPIRITS_TYPE_CHARM_WATER; i < SPIRITS_TYPE_SPHERE; i++ )
+					int i;
+					for (i = SPIRITS_TYPE_CHARM_WATER; i < SPIRITS_TYPE_SPHERE; i++)
 						pc->del_charm(dstsd, dstsd->spiritcharm[i], i);
 				}
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, sp ? 1:0);
