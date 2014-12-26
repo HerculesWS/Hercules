@@ -411,45 +411,41 @@ int map_count_oncell(int16 m, int16 x, int16 y, int type, int flag) {
 	bx = x/BLOCK_SIZE;
 	by = y/BLOCK_SIZE;
 
-	if (type&~BL_MOB)
-		for( bl = map->list[m].block[bx+by*map->list[m].bxs] ; bl != NULL ; bl = bl->next )
-			if ( bl->x == x && bl->y == y && bl->type&type ) {
-				if ( flag ) {
-					if ( flag & 2 ) { // priority over other flags
-						struct status_change *sc = status->get_sc(bl);
-						if ( !(sc && sc->option&OPTION_INVISIBLE) )
-							count++;
-					} else {
-						if ( flag & 1 ) {
-							struct unit_data *ud = unit->bl2ud(bl);
-							if ( !ud || ud->walktimer == INVALID_TIMER )
-								count++;
-						}
-					}
-				} else {
-					count++;
+	if (type&~BL_MOB) {
+		for (bl = map->list[m].block[bx+by*map->list[m].bxs]; bl != NULL; bl = bl->next) {
+			if (bl->x == x && bl->y == y && bl->type&type) {
+				if (flag&0x2) {
+					struct status_change *sc = status->get_sc(bl);
+					if (sc && (sc->option&OPTION_INVISIBLE))
+						continue;
 				}
+				if (flag&0x1) {
+					struct unit_data *ud = unit->bl2ud(bl);
+					if (ud && ud->walktimer != INVALID_TIMER)
+						continue;
+				}
+				count++;
 			}
+		}
+	}
 
-	if (type&BL_MOB)
-		for( bl = map->list[m].block_mob[bx+by*map->list[m].bxs] ; bl != NULL ; bl = bl->next )
-			if ( bl->x == x && bl->y == y ) {
-				if ( flag ) {
-					if ( flag & 2 ) { // priority over other flags
-						struct status_change *sc = status->get_sc(bl);
-						if ( !(sc && sc->option&OPTION_INVISIBLE) )
-							count++;
-					} else {
-						if ( flag & 1 ) {
-							struct unit_data *ud = unit->bl2ud(bl);
-							if ( !ud || ud->walktimer == INVALID_TIMER )
-								count++;
-						}
-					}
-				} else {
-					count++;
+	if (type&BL_MOB) {
+		for (bl = map->list[m].block_mob[bx+by*map->list[m].bxs]; bl != NULL; bl = bl->next) {
+			if (bl->x == x && bl->y == y) {
+				if (flag&0x2) {
+					struct status_change *sc = status->get_sc(bl);
+					if (sc && (sc->option&OPTION_INVISIBLE))
+						continue;
 				}
+				if (flag&0x1) {
+					struct unit_data *ud = unit->bl2ud(bl);
+					if (ud && ud->walktimer != INVALID_TIMER)
+						continue;
+				}
+				count++;
 			}
+		}
+	}
 
 	return count;
 }
