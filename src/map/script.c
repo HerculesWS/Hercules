@@ -10639,23 +10639,47 @@ BUILDIN(changebase) {
 	return true;
 }
 
+static TBL_PC *prepareChangeSex(struct script_state* st)
+{
+	int i;
+	TBL_PC *sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return NULL;
+
+	pc->resetskill(sd, 4);
+	// to avoid any problem with equipment and invalid sex, equipment is unequiped.
+	for (i=0; i<EQI_MAX; i++)
+		if (sd->equip_index[i] >= 0) pc->unequipitem(sd, sd->equip_index[i], 3);
+	return sd;
+}
+
 /*==========================================
  * Unequip all item and request for a changesex to char-serv
  *------------------------------------------*/
 BUILDIN(changesex)
 {
-	int i;
-	TBL_PC *sd = NULL;
-	sd = script->rid2sd(st);
-
-	if( sd == NULL )
+	TBL_PC *sd = prepareChangeSex(st);
+	if (sd == NULL)
 		return false;
-
-	pc->resetskill(sd,4);
-	// to avoid any problem with equipment and invalid sex, equipment is unequiped.
-	for( i=0; i<EQI_MAX; i++ )
-		if( sd->equip_index[i] >= 0 ) pc->unequipitem(sd, sd->equip_index[i], 3);
 	chrif->changesex(sd);
+	return true;
+}
+
+/*==========================================
+ * Unequip all items and change character sex [4144]
+ *------------------------------------------*/
+BUILDIN(changecharsex)
+{
+	TBL_PC *sd = prepareChangeSex(st);
+	if (sd == NULL)
+		return false;
+	if (sd->status.sex == 99)
+		sd->status.sex = 0;
+	sd->status.sex = sd->status.sex ? 0 : 1;
+	chrif->save(sd, 0);
+	if (sd->fd)
+		clif->authfail_fd(sd->fd, 15);
 	return true;
 }
 
@@ -19302,6 +19326,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(skillpointcount,""),
 		BUILDIN_DEF(changebase,"i?"),
 		BUILDIN_DEF(changesex,""),
+		BUILDIN_DEF(changecharsex,""), // [4144]
 		BUILDIN_DEF(waitingroom,"si?????"),
 		BUILDIN_DEF(delwaitingroom,"?"),
 		BUILDIN_DEF2(waitingroomkickall,"kickwaitingroomall","?"),
