@@ -11908,7 +11908,11 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 				heal = ~heal + 1;
 			clif->skill_nodamage(&src->bl, bl, AL_HEAL, heal, 1);
 			status->heal(bl, heal, 0, 0);
+
+			if (!battle_config.song_timer_reset)
+				sc_start4(ss, bl, type, 100, sg->skill_lv, sg->val1, sg->val2, 0, sg->limit);
 		}
+			break;
 		case UNT_POEMBRAGI:
 		case UNT_WHISTLE:
 		case UNT_ASSASSINCROSS:
@@ -11917,9 +11921,11 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 		case UNT_FORTUNEKISS:
 		case UNT_SERVICEFORYOU:
 			if (battle_config.song_timer_reset
-			  || (!(battle_config.song_timer_reset) && tsc && tsc->data[type] && tsc->data[type]->val4 == 1)	)
+			  || (!(battle_config.song_timer_reset) && tsc && tsc->data[type] && tsc->data[type]->val4 == 1)
+			  || (sg->src_id == bl->id && !(tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_BARDDANCER))
+			)
 				break;
-
+			
 			sc_start4(ss, bl, type, 100, sg->skill_lv, sg->val1, sg->val2, 0, sg->limit);	
 			break;
 		case UNT_TATAMIGAESHI:
