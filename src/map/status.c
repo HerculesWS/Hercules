@@ -8636,8 +8636,9 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC__ENERVATION:
 				val2 = 20 + 10 * val1; // ATK Reduction
 				if ( sd ) {
+					int i;
 					pc->delspiritball(sd, sd->spiritball, 0);
-					for ( int i = SPIRITS_TYPE_CHARM_WATER; i < SPIRITS_TYPE_SPHERE; i++ )
+					for (i = SPIRITS_TYPE_CHARM_WATER; i < SPIRITS_TYPE_SPHERE; i++)
 						pc->del_charm(sd, sd->spiritcharm[i], i);
 				}
 				break;
