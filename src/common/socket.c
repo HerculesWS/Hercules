@@ -29,8 +29,12 @@
 #	include <errno.h>
 #	include <net/if.h>
 #	include <netdb.h>
+#if defined __linux__ || defined __linux
+#       include <linux/tcp.h>
+#else
 #	include <netinet/in.h>
 #	include <netinet/tcp.h>
+#endif
 #	include <sys/ioctl.h>
 #	include <sys/socket.h>
 #	include <sys/time.h>
@@ -333,6 +337,13 @@ void setsocketopts(int fd, struct hSockOpt *opt) {
 	lopt.l_linger = 0; // Do not care
 	if( sSetsockopt(fd, SOL_SOCKET, SO_LINGER, (char*)&lopt, sizeof(lopt)) )
 		ShowWarning("setsocketopts: Unable to set SO_LINGER mode for connection #%d!\n", fd);
+
+#ifdef TCP_THIN_LINEAR_TIMEOUTS
+    setsockopt(fd, IPPROTO_TCP, TCP_THIN_LINEAR_TIMEOUTS, &yes, sizeof yes);
+#endif
+#ifdef TCP_THIN_DUPACK
+    setsockopt(fd, IPPROTO_TCP, TCP_THIN_DUPACK, &yes, sizeof yes);
+#endif
 }
 
 /*======================================
