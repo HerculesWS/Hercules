@@ -1064,7 +1064,7 @@
 3006,7:8:9:10:11,6,2,0,0x2,2,5,0,no,0,0,0,weapon,0,	KO_BAKURETSU,Bakuretsu Kunai
 3007,0,6,4,-1,0x42,4:4:4:4:5,5,0,no,0,0,0,misc,0,	KO_HAPPOKUNAI,Happo Kunai
 3008,9,8,2,0,0x12,2,10,-10,no,0,0,0,misc,0,	KO_MUCHANAGE,Mucha Nage
-3009,9:10:11:12:13,8,2,-1,0x2,3,5,2,no,0,0,0,weapon,0,	KO_HUUMARANKA,Huuma Shuriken Ranka 
+3009,9:10:11:12:13,8,2,-1,0x2,3,5,-5,no,0,0,0,weapon,0,	KO_HUUMARANKA,Huuma Shuriken Ranka 
 3010,3,6,4,0,0x42,0,5,1,no,0,0x80,0,weapon,0,	KO_MAKIBISHI,Makibishi
 3011,0,6,4,0,0x1,0,5,0,yes,0,0,0,none,0,	KO_MEIKYOUSISUI,Meikyo Shisui
 3012,0,6,4,0,0x1,0,5,0,no,0,0,1,none,3:4:5:6:7,		KO_ZANZOU,Zanzou

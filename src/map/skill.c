@@ -3574,7 +3574,6 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 		case WM_SEVERE_RAINSTORM_MELEE:
 		case WM_GREAT_ECHO:
 		case GN_SLINGITEM_RANGEMELEEATK:
-		case KO_JYUMONJIKIRI:
 		case KO_SETSUDAN:
 		case GC_DARKCROW:
 		case LG_OVERBRAND_BRANDISH:
@@ -4216,27 +4215,27 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 		}
 			break;
 
+		case KO_JYUMONJIKIRI:
 		case GC_DARKILLUSION:
 			{
 				short x, y;
-				short dir = map->calc_dir(src,bl->x,bl->y);
+				short dir = map->calc_dir(bl, src->x, src->y);
 
-				if( dir > 0 && dir < 4) x = 2;
-				else if( dir > 4 ) x = -2;
-				else x = 0;
-				if( dir > 2 && dir < 6 ) y = 2;
-				else if( dir == 7 || dir < 2 ) y = -2;
-				else y = 0;
-
-				if( unit->movepos(src, bl->x+x, bl->y+y, 1, 1) )
-				{
-					clif->slide(src,bl->x+x,bl->y+y);
-					clif->fixpos(src); // the official server send these two packets.
-					skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
-					if( rnd()%100 < 4 * skill_lv )
-						skill->castend_damage_id(src,bl,GC_CROSSIMPACT,skill_lv,tick,flag);
+				if ( dir < 4 ) {
+					x = bl->x + 2 * (dir > 0) - 3 * (dir > 0);
+					y = bl->y + 1 - (dir / 2) - (dir > 2);
+				} else {
+					x = bl->x + 2 * (dir > 4) - 1 * (dir > 4);
+					y = bl->y + (dir / 6) - 1 + (dir > 6);
 				}
 
+				if ( unit->movepos(src, x, y, 1, 1) ) {
+					clif->slide(src, x, y);
+					clif->fixpos(src); // the official server send these two packets.
+					skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
+					if ( rnd() % 100 < 4 * skill_lv &&	skill_id == GC_DARKILLUSION )
+						skill->castend_damage_id(src, bl, GC_CROSSIMPACT, skill_lv, tick, flag);
+				}
 			}
 			break;
 		case GC_WEAPONCRUSH:
@@ -6041,7 +6040,6 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case MO_ABSORBSPIRITS:
 		{
 			int sp = 0;
-			int i;
 			if ( dstsd && dstsd->spiritball
 				&& (sd == dstsd || map_flag_vs(src->m) || (sd->duel_group && sd->duel_group == dstsd->duel_group))
 				&& ((dstsd->class_&MAPID_BASEMASK) != MAPID_GUNSLINGER || (dstsd->class_&MAPID_UPPERMASK) != MAPID_REBELLION)
@@ -6055,7 +6053,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				mob->target(dstmd,src,0);
 			}
 			if ( dstsd ) {
-				for (i = SPIRITS_TYPE_CHARM_WATER; i < SPIRITS_TYPE_SPHERE; i++)
+				int i;
+				for ( i = SPIRITS_TYPE_CHARM_WATER; i < SPIRITS_TYPE_SPHERE; i++ )
 					pc->del_charm(dstsd, dstsd->spiritcharm[i], i);
 			}
 			if (sp) status->heal(src, 0, sp, 3);

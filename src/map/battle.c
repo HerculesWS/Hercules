@@ -2078,11 +2078,6 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case NJ_KIRIKAGE:
 					skillratio += 100 * (skill_lv-1);
 					break;
-#ifdef RENEWAL
-				case NJ_KUNAI:
-					skillratio += 50 + 150 * skill_lv;
-					break;
-#endif
 				case KN_CHARGEATK:
 					{
 						int k = (flag-1)/3; //+100% every 3 cells of distance
@@ -2521,17 +2516,13 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					RE_LVL_DMOD(120);
 					if( tsc && tsc->data[SC_KO_JYUMONJIKIRI] )
 						skillratio += status->get_lv(src) * skill_lv;
+					break;
 				case KO_HUUMARANKA:
 					skillratio += -100 + 150 * skill_lv + status_get_agi(src) + status_get_dex(src) + 100 * (sd ? pc->checkskill(sd, NJ_HUUMA) : 0);
 					break;
 				case KO_SETSUDAN:
 					skillratio += -100 + 100 * skill_lv;
 					RE_LVL_DMOD(100);
-					break;
-				case KO_BAKURETSU:
-					skillratio += -100 + (50 + status_get_dex(src) / 4) * skill_lv * (sd?pc->checkskill(sd,NJ_TOBIDOUGU):10) * 4 / 100;
-					RE_LVL_DMOD(120);
-					skillratio += 10 * (sd ? sd->status.job_level : 0);
 					break;
 				case MH_NEEDLE_OF_PARALYZE:
 					skillratio += 600 + 100 * skill_lv;
@@ -3933,14 +3924,16 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 		break;
 	case KO_HAPPOKUNAI:
 		{
-			struct Damage wd = battle->calc_weapon_attack(src,target,skill_id,skill_lv,mflag);
+			struct Damage wd = battle->calc_weapon_attack(src, target, 0, 1, mflag);
 #ifdef RENEWAL
 			short totaldef = status->get_total_def(target);
 #else
 			short totaldef = tstatus->def2 + (short)status->get_def(target);
 #endif
-			md.damage = 3 * wd.damage * (5 + skill_lv) / 5;
+			if ( sd )	wd.damage += sd->bonus.arrow_atk;
+			md.damage = (int)(3 * (1 + wd.damage) * (5 + skill_lv) / 5.0f);
 			md.damage -= totaldef;
+
 		}
 		break;
 	}
@@ -4242,10 +4235,14 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					wd.div_ = tstatus->size + 2 + ( (rnd()%100 < 50-tstatus->size*10) ? 1 : 0 );
 				break;
 #ifdef RENEWAL
+			case NJ_KUNAI:
 			case HW_MAGICCRASHER:
+			case NJ_SYURIKEN:
+			case GS_MAGICALBULLET:
+#endif
+			case KO_BAKURETSU:
 				flag.tdef = 1;
 				break;
-#endif
 		}
 	} else //Range for normal attacks.
 		wd.flag |= flag.arrow?BF_LONG:BF_SHORT;
@@ -4597,7 +4594,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				break;
 			case NJ_SYURIKEN: // [malufett]
 				GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0) );
-				wd.damage += battle->calc_masteryfix(src, target, skill_id, skill_lv, 4 * skill_lv + (sd ? sd->bonus.arrow_atk : 0), wd.div_, 0, flag.weapon) - status->get_total_def(target);
+				wd.damage += battle->calc_masteryfix(src, target, skill_id, skill_lv, 4 * skill_lv + (sd ? sd->bonus.arrow_atk : 0), wd.div_, 0, flag.weapon);
 				break;
 			case MO_EXTREMITYFIST: // [malufett]
 				{
@@ -4736,13 +4733,6 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			status_change_end(src, SC_EXEEDBREAK, INVALID_TIMER);
 		}
 
-
-	#ifdef RENEWAL
-		if( sd && skill_id == NJ_KUNAI ){
-			flag.tdef = 1;
-			ATK_ADD( sd->bonus.arrow_atk );
-		}
-	#endif
 		switch(skill_id){
 			case SR_GATEOFHELL:
 				if (wd.dmg_lv != ATK_FLEE)
@@ -4776,6 +4766,15 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					wd.damage = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage, wd.div_, 0, flag.weapon);
 				}
 	#endif
+
+			case KO_BAKURETSU:
+			{
+				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | (sc && sc->data[SC_WEAPONPERFECT] ? 8 : 0));
+				skillratio = skill_lv * (50 + status_get_dex(src) / 4);
+				skillratio = (int)(skillratio * (sd ? pc->checkskill(sd, NJ_TOBIDOUGU) : 10) * 40.f / 100.0f * status->get_lv(src) / 120);
+				ATK_RATE(skillratio + 10 * (sd ? sd->status.job_level : 0));
+			}
+				break;
 			default:
 				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
 		}
@@ -4805,7 +4804,6 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				ATK_ADD( status->get_matk(src, 2) );
 #else
 				ATK_ADD( battle->calc_magic_attack(src, target, skill_id, skill_lv, wflag).damage );
-				flag.tdef = 1;
 #endif
 #ifndef RENEWAL
 			case NJ_SYURIKEN:
