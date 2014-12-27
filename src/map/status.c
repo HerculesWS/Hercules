@@ -10439,6 +10439,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 
 #ifdef ANTI_MAYAP_CHEAT
 	if (invisible && !(sc->option&(OPTION_HIDE|OPTION_CLOAK|OPTION_INVISIBLE))) {
+		clif->slide(bl, bl->x, bl->y);
 		clif->fixpos(bl);
 	}
 #endif

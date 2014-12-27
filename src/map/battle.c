@@ -440,12 +440,12 @@ int64 battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, u
 	if( sc && sc->count ){
 		if( sc->data[SC_ZENKAI] && watk->ele == sc->data[SC_ZENKAI]->val2 )
 			eatk += 200;
-	#ifdef RENEWAL_EDP
+#ifdef RENEWAL_EDP
 		if( sc->data[SC_EDP] && skill_id != AS_GRIMTOOTH && skill_id != AS_VENOMKNIFE && skill_id != ASC_BREAKER ){
 			eatk = eatk * (sc->data[SC_EDP]->val4 / 100 - 1);
 			damage = damage * (sc->data[SC_EDP]->val4 / 100);
 		}
-	#endif
+#endif
 	}
 
 	if( skill_id != ASC_METEORASSAULT ){
@@ -4878,10 +4878,8 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 #ifndef RENEWAL_EDP
 			if( sc->data[SC_EDP] ){
 				switch(skill_id){
-					case AS_SPLASHER:
-					case AS_GRIMTOOTH:
+					case AS_SPLASHER: // Needs more info
 					case ASC_BREAKER:
-					case AS_VENOMKNIFE:
 					case ASC_METEORASSAULT: break;
 					default:
 						ATK_ADDRATE(sc->data[SC_EDP]->val3);
