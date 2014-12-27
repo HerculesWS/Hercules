@@ -2593,8 +2593,6 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 		case BL_PC:
 		{
 			struct map_session_data *sd = (struct map_session_data*)bl;
-			int i;
-			unsigned int k;
 
 			sd->state.loggingout = 1;
 
@@ -2619,8 +2617,7 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 			pc->cleareventtimer(sd);
 			pc->inventory_rental_clear(sd);
 			pc->delspiritball(sd,sd->spiritball,1);
-			for(i = SPIRITS_TYPE_CHARM_WATER; i < SPIRITS_TYPE_SPHERE; i++)
-				pc->del_charm(sd, sd->spiritcharm[i], i);
+			pc->del_charm(sd, sd->charm_count, sd->charm_type);
 
 			if( sd->st && sd->st->state != RUN ) {// free attached scripts that are waiting
 				script->free_state(sd->st);
@@ -2634,6 +2631,7 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 			sd->combo_count = 0;
 			/* [Ind/Hercules] */
 			if( sd->sc_display_count ) {
+				int i;
 				for(i = 0; i < sd->sc_display_count; i++) {
 					ers_free(pc->sc_display_ers, sd->sc_display[i]);
 				}
@@ -2657,8 +2655,8 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 				sd->num_quests = sd->avail_quests = 0;
 			}
 
-			if( sd->hdata )
-			{
+			if (sd->hdata) {
+				unsigned int k;
 				for( k = 0; k < sd->hdatac; k++ ) {
 					if( sd->hdata[k]->flag.free ) {
 						aFree(sd->hdata[k]->data);

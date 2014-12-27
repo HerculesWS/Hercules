@@ -283,7 +283,7 @@ enum {
 	RC2_MAX
 };
 
-enum {
+enum elements {
 	ELE_NEUTRAL=0,
 	ELE_WATER,
 	ELE_EARTH,
@@ -297,14 +297,17 @@ enum {
 	ELE_MAX
 };
 
-enum {
-	SPIRITS_TYPE_NONE = 0,
-	SPIRITS_TYPE_CHARM_WATER,
-	SPIRITS_TYPE_CHARM_LAND,
-	SPIRITS_TYPE_CHARM_FIRE,
-	SPIRITS_TYPE_CHARM_WIND,
-	SPIRITS_TYPE_SPHERE,
-	SPIRITS_TYPE_END
+/**
+ * Types of spirit charms.
+ *
+ * Note: Code assumes that this matches the first entries in enum elements.
+ */
+enum spirit_charm_types {
+	CHARM_TYPE_NONE = 0,
+	CHARM_TYPE_WATER,
+	CHARM_TYPE_LAND,
+	CHARM_TYPE_FIRE,
+	CHARM_TYPE_WIND
 };
 
 enum auto_trigger_flag {

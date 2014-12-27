@@ -6168,10 +6168,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				sp = 2 * dstmd->level;
 				mob->target(dstmd,src,0);
 			}
-			if ( dstsd ) {
-				int i;
-				for ( i = SPIRITS_TYPE_CHARM_WATER; i < SPIRITS_TYPE_SPHERE; i++ )
-					pc->del_charm(dstsd, dstsd->spiritcharm[i], i);
+			if (dstsd && dstsd->charm_type != CHARM_TYPE_NONE && dstsd->charm_count > 0) {
+				pc->del_charm(dstsd, dstsd->charm_count, dstsd->charm_type);
 			}
 			if (sp) status->heal(src, 0, sp, 3);
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,sp?1:0);
@@ -9039,10 +9037,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					pc->delspiritball(dstsd, dstsd->spiritball, 0);
 					status_percent_heal(src, 0, sp);
 				}
-				if ( dstsd ) {
-					int i;
-					for (i = SPIRITS_TYPE_CHARM_WATER; i < SPIRITS_TYPE_SPHERE; i++)
-						pc->del_charm(dstsd, dstsd->spiritcharm[i], i);
+				if (dstsd && dstsd->charm_type != CHARM_TYPE_NONE && dstsd->charm_count > 0) {
+					pc->del_charm(dstsd, dstsd->charm_count, dstsd->charm_type);
 				}
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, sp ? 1:0);
 			} else {
@@ -9620,13 +9616,9 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case KO_KAZEHU_SEIRAN:
 		case KO_DOHU_KOUKAI:
 			if(sd) {
-				int i;
 				int ttype = skill->get_ele(skill_id, skill_lv);
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
-				ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, i, sd->spiritcharm[i] > 0 && ttype != i);
-				if( i < SPIRITS_TYPE_SPHERE )
-					pc->del_charm(sd, sd->spiritcharm[i], i); // replace with a new one.
-				pc->add_charm(sd, skill->get_time(skill_id, skill_lv), MAX_SPIRITCHARM, ttype);
+				pc->add_charm(sd, skill->get_time(skill_id, skill_lv), MAX_SPIRITCHARM, ttype); // replace existing charms of other type
 			}
 			break;
 
@@ -11397,14 +11389,13 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 			val3 = (x<<16)|y;
 			break;
 		case KO_ZENKAI:
-			if( sd ){
-				ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, i, sd->spiritcharm[i] > 0);
-				if( i < SPIRITS_TYPE_SPHERE ){
-					val1 = sd->spiritcharm[i]; // no. of aura
-					val2 = i; // aura type
+			if (sd) {
+				if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0) {
+					val1 = sd->charm_count; // no. of aura
+					val2 = sd->charm_type; // aura type
 					limit += val1 * 1000;
-					subunt = i - 1;
-					pc->del_charm(sd, sd->spiritcharm[i], i);
+					subunt = sd->charm_type - 1;
+					pc->del_charm(sd, sd->charm_count, sd->charm_type);
 				}
 			}
 			break;
@@ -13732,24 +13723,17 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 		case KO_HYOUHU_HUBUKI:
 		case KO_KAZEHU_SEIRAN:
 		case KO_DOHU_KOUKAI:
-			{
-				int ttype = skill->get_ele(skill_id, skill_lv);
-				if( sd->spiritcharm[ttype] >= MAX_SPIRITCHARM ){
-					clif->skill_fail(sd, skill_id, USESKILL_FAIL_SUMMON, 0);
-					return 0;
-				}
+			if (sd->charm_type == skill->get_ele(skill_id, skill_lv) && sd->charm_count >= MAX_SPIRITCHARM) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL_SUMMON, 0);
+				return 0;
 			}
 			break;
 		case KO_KAIHOU:
 		case KO_ZENKAI:
-		{
-			int i;
-			ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, i, sd->spiritcharm[i] > 0);
-			if( i >= SPIRITS_TYPE_SPHERE ) {
+			if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0) {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_SUMMON,0);
 				return 0;
 			}
-		}
 			break;
 		default:
 		{

@@ -1280,16 +1280,13 @@ void clif_spiritball_single(int fd, struct map_session_data *sd) {
 /*==========================================
  * Kagerou/Oboro amulet spirit
  *------------------------------------------*/
-void clif_charm_single(int fd, struct map_session_data *sd, short type) {
-
-	if ( type <= SPIRITS_TYPE_NONE || type >= SPIRITS_TYPE_SPHERE )
-		return;
-
+void clif_charm_single(int fd, struct map_session_data *sd)
+{
 	WFIFOHEAD(fd, packet_len(0x08cf));
-	WFIFOW(fd,0)=0x08cf;
-	WFIFOL(fd,2)=sd->bl.id;
-	WFIFOW(fd,6)=type;
-	WFIFOW(fd,8)=sd->spiritcharm[type];
+	WFIFOW(fd,0) = 0x08cf;
+	WFIFOL(fd,2) = sd->bl.id;
+	WFIFOW(fd,6) = sd->charm_type;
+	WFIFOW(fd,8) = sd->charm_count;
 	WFIFOSET(fd, packet_len(0x08cf));
 }
 
@@ -1375,8 +1372,8 @@ bool clif_spawn(struct block_list *bl)
 				for( i = 0; i < sd->sc_display_count; i++ ) {
 					clif->sc_load(&sd->bl, sd->bl.id,AREA,status->IconChangeTable[sd->sc_display[i]->type],sd->sc_display[i]->val1,sd->sc_display[i]->val2,sd->sc_display[i]->val3);
 				}
-				ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, i, sd->spiritcharm[i] > 0);
-				clif->spiritcharm(sd, i);
+				if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
+					clif->spiritcharm(sd);
 				if (sd->status.robe)
 					clif->refreshlook(bl,bl->id,LOOK_ROBE,sd->status.robe,AREA);
 			}
@@ -4275,8 +4272,8 @@ void clif_getareachar_pc(struct map_session_data* sd,struct map_session_data* ds
 
 	if(dstsd->spiritball > 0)
 		clif->spiritball_single(sd->fd, dstsd);
-	ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, i, sd->spiritcharm[i] > 0);
-	clif->charm_single(sd->fd, dstsd, i);
+	if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
+		clif->charm_single(sd->fd, dstsd);
 
 	for( i = 0; i < dstsd->sc_display_count; i++ ) {
 		clif->sc_load(&sd->bl,dstsd->bl.id,SELF,status->IconChangeTable[dstsd->sc_display[i]->type],dstsd->sc_display[i]->val1,dstsd->sc_display[i]->val2,dstsd->sc_display[i]->val3);
@@ -8473,7 +8470,6 @@ void clif_refresh_storagewindow( struct map_session_data *sd ) {
 // refresh the client's screen, getting rid of any effects
 void clif_refresh(struct map_session_data *sd)
 {
-	int i;
 	nullpo_retv(sd);
 
 	clif->changemap(sd,sd->bl.m,sd->bl.x,sd->bl.y);
@@ -8492,8 +8488,8 @@ void clif_refresh(struct map_session_data *sd)
 	clif->updatestatus(sd,SP_LUK);
 	if (sd->spiritball)
 		clif->spiritball_single(sd->fd, sd);
-	ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, i, sd->spiritcharm[i] > 0);
-	clif->charm_single(sd->fd, sd, i);
+	if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
+		clif->charm_single(sd->fd, sd);
 
 	if (sd->vd.cloth_color)
 		clif->refreshlook(&sd->bl,sd->bl.id,LOOK_CLOTHES_COLOR,sd->vd.cloth_color,SELF);
@@ -17471,19 +17467,16 @@ void clif_parse_SkillSelectMenu(int fd, struct map_session_data *sd) {
 /*==========================================
  * Kagerou/Oboro amulet spirit
  *------------------------------------------*/
-void clif_charm(struct map_session_data *sd,short type)
+void clif_charm(struct map_session_data *sd)
 {
 	unsigned char buf[10];
 
 	nullpo_retv(sd);
 
-	if ( type <= SPIRITS_TYPE_NONE || type >= SPIRITS_TYPE_SPHERE )
-		return;
-
-	WBUFW(buf,0)=0x08cf;
-	WBUFL(buf,2)=sd->bl.id;
-	WBUFW(buf,6)=type;
-	WBUFW(buf,8)=sd->spiritcharm[type];
+	WBUFW(buf,0) = 0x08cf;
+	WBUFL(buf,2) = sd->bl.id;
+	WBUFW(buf,6) = sd->charm_type;
+	WBUFW(buf,8) = sd->charm_count;
 	clif->send(buf,packet_len(0x08cf),&sd->bl,AREA);
 }
 /// Move Item from or to Personal Tab (CZ_WHATSOEVER) [FE]

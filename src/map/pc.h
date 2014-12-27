@@ -366,8 +366,9 @@ struct map_session_data {
 	short catch_target_class; // pet catching, stores a pet class to catch (short now) [zzo]
 	short spiritball, spiritball_old;
 	int spirit_timer[MAX_SPIRITBALL];
-	short spiritcharm[SPIRITS_TYPE_END];
-	int charm_timer[SPIRITS_TYPE_END][MAX_SPIRITCHARM];
+	short charm_count;
+	int charm_type;
+	int charm_timer[MAX_SPIRITCHARM];
 	unsigned char potion_success_counter; //Potion successes in row counter
 	unsigned char mission_count; //Stores the bounty kill count for TK_MISSION
 	short mission_mobid; //Stores the target mob_id for TK_MISSION
@@ -970,8 +971,8 @@ struct pc_interface {
 
 	int (*load_combo) (struct map_session_data *sd);
 
-	int (*add_charm) (struct map_session_data *sd,int interval,int max,int type);
-	int (*del_charm) (struct map_session_data *sd,int count,int type);
+	void (*add_charm) (struct map_session_data *sd, int interval, int max, int type);
+	void (*del_charm) (struct map_session_data *sd, int count, int type);
 
 	void (*baselevelchanged) (struct map_session_data *sd);
 	int (*level_penalty_mod) (int diff, unsigned char race, unsigned short mode, int type);

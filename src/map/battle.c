@@ -1251,8 +1251,8 @@ int64 battle_calc_defense(int attack_type, struct block_list *src, struct block_
 					def1 -= def1 * i / 100;
 					def2 -= def2 * i / 100;
 				}
-				if ( sd->spiritcharm[SPIRITS_TYPE_CHARM_LAND] > 0 ) // hidden from status window
-					def1 += 10 * def1 * sd->spiritcharm[SPIRITS_TYPE_CHARM_LAND] / 100;
+				if (sd->charm_type == CHARM_TYPE_LAND && sd->charm_count > 0 ) // hidden from status window
+					def1 += 10 * def1 * sd->charm_count / 100;
 			}
 
 			if( sc && sc->data[SC_EXPIATIO] ){
@@ -1491,39 +1491,39 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					break;
 				case NJ_KOUENKA:
 					skillratio -= 10;
-					if ( sd && sd->spiritcharm[SPIRITS_TYPE_CHARM_FIRE] > 0 )
-						skillratio += 20 * sd->spiritcharm[SPIRITS_TYPE_CHARM_FIRE];
+					if (sd && sd->charm_type == CHARM_TYPE_FIRE && sd->charm_count > 0)
+						skillratio += 20 * sd->charm_count;
 					break;
 				case NJ_KAENSIN:
 					skillratio -= 50;
-					if ( sd && sd->spiritcharm[SPIRITS_TYPE_CHARM_FIRE] > 0 )
-						skillratio += 10 * sd->spiritcharm[SPIRITS_TYPE_CHARM_FIRE];
+					if (sd && sd->charm_type == CHARM_TYPE_FIRE && sd->charm_count > 0)
+						skillratio += 10 * sd->charm_count;
 					break;
 				case NJ_BAKUENRYU:
 					skillratio += 50 * (skill_lv - 1);
-					if ( sd && sd->spiritcharm[SPIRITS_TYPE_CHARM_FIRE] > 0 )
-						skillratio += 15 * sd->spiritcharm[SPIRITS_TYPE_CHARM_FIRE];
+					if (sd && sd->charm_type == CHARM_TYPE_FIRE && sd->charm_count > 0)
+						skillratio += 15 * sd->charm_count;
 					break;
 #ifdef RENEWAL
 				case NJ_HYOUSENSOU:
 					skillratio -= 30;
-					if ( sd && sd->spiritcharm[SPIRITS_TYPE_CHARM_WATER] > 0 )
-						skillratio += 5 * sd->spiritcharm[SPIRITS_TYPE_CHARM_WATER];
+					if (sd && sd->charm_type == CHARM_TYPE_WATER && sd->charm_count > 0)
+						skillratio += 5 * sd->charm_count;
 #endif
 					/* Fall through */
 				case NJ_HYOUSYOURAKU:
 					skillratio += 50 * skill_lv;
-					if ( sd && sd->spiritcharm[SPIRITS_TYPE_CHARM_WATER] > 0 )
-						skillratio += 25 * sd->spiritcharm[SPIRITS_TYPE_CHARM_WATER];
+					if (sd && sd->charm_type == CHARM_TYPE_WATER && sd->charm_count > 0)
+						skillratio += 25 * sd->charm_count;
 					break;
 				case NJ_RAIGEKISAI:
 					skillratio += 60 + 40 * skill_lv;
-					if ( sd && sd->spiritcharm[SPIRITS_TYPE_CHARM_WIND] > 0 )
-						skillratio += 15 * sd->spiritcharm[SPIRITS_TYPE_CHARM_WIND];
+					if (sd && sd->charm_type == CHARM_TYPE_WIND && sd->charm_count > 0)
+						skillratio += 15 * sd->charm_count;
 					break;
 				case NJ_KAMAITACHI:
-					if ( sd && sd->spiritcharm[SPIRITS_TYPE_CHARM_WIND] > 0 )
-						skillratio += 10 * sd->spiritcharm[SPIRITS_TYPE_CHARM_WIND];
+					if (sd && sd->charm_type == CHARM_TYPE_WIND && sd->charm_count > 0)
+						skillratio += 10 * sd->charm_count;
 					/* Fall through */
 				case NPC_ENERGYDRAIN:
 					skillratio += 100 * skill_lv;
@@ -1550,8 +1550,8 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					break;
 				case NJ_HUUJIN:
 					skillratio += 50;
-					if ( sd && sd->spiritcharm[SPIRITS_TYPE_CHARM_WIND] > 0 )
-						skillratio += 20 * sd->spiritcharm[SPIRITS_TYPE_CHARM_WIND];
+					if (sd && sd->charm_type == CHARM_TYPE_WIND && sd->charm_count > 0)
+						skillratio += 20 * sd->charm_count;
 					break;
 			#else
 				case WZ_VERMILION:
@@ -1773,13 +1773,10 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					skillratio += 100 * skill_lv;
 					break;
 				case KO_KAIHOU:
-					if ( sd ) {
-						ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, i, sd->spiritcharm[i] > 0);
-						if ( i < SPIRITS_TYPE_SPHERE ) {
-							skillratio += -100 + 200 * sd->spiritcharm[i];
-							RE_LVL_DMOD(100);
-							pc->del_charm(sd, sd->spiritcharm[i], i);
-						}
+					if (sd && sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0) {
+						skillratio += -100 + 200 * sd->charm_count;
+						RE_LVL_DMOD(100);
+						pc->del_charm(sd, sd->charm_count, sd->charm_type);
 					}
 					break;
 				default:
@@ -3389,10 +3386,9 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 
 	if (s_ele == -1){ // pl=-1 : the skill takes the weapon's element
 		s_ele = sstatus->rhw.ele;
-		if( sd ){ //Summoning 10 spiritcharm will endow your weapon
-			int i;
-			ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, i, sd->spiritcharm[i] >= MAX_SPIRITCHARM);
-			if( i < SPIRITS_TYPE_SPHERE ) s_ele = i;
+		if (sd && sd->charm_type != CHARM_TYPE_NONE && sd->charm_count >= MAX_SPIRITCHARM) {
+			//Summoning 10 spiritcharm will endow your weapon
+			s_ele = sd->charm_type;
 		}
 	}else if (s_ele == -2) //Use status element
 		s_ele = status_get_attack_sc_element(src,status->get_sc(src));
@@ -3434,11 +3430,8 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 				s_ele = ELE_DARK;
 			break;
 		case KO_KAIHOU:
-			if (sd) {
-				int i;
-				ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, i, sd->spiritcharm[i] > 0);
-				if( i < SPIRITS_TYPE_SPHERE )
-					s_ele = i;
+			if (sd && sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0) {
+				s_ele = sd->charm_type;
 			}
 			break;
 #ifdef RENEWAL
@@ -4296,9 +4289,9 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 	{ //Take weapon's element
 		s_ele = sstatus->rhw.ele;
 		s_ele_ = sstatus->lhw.ele;
-		if( sd ){ //Summoning 10 spiritcharm will endow your weapon.
-			ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, i, sd->spiritcharm[i] >= MAX_SPIRITCHARM);
-			if( i < SPIRITS_TYPE_SPHERE ) s_ele = s_ele_ = i;
+		if (sd && sd->charm_type != CHARM_TYPE_NONE && sd->charm_count >= MAX_SPIRITCHARM) {
+			//Summoning 10 spiritcharm will endow your weapon.
+			s_ele = s_ele_ = sd->charm_type;
 		}
 		if( flag.arrow && sd && sd->bonus.arrow_ele )
 			s_ele = sd->bonus.arrow_ele;

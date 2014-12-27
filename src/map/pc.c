@@ -7017,8 +7017,8 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 
 	if ( sd->spiritball )
 		pc->delspiritball(sd, sd->spiritball, 0);
-	for ( i = SPIRITS_TYPE_CHARM_WATER; i < SPIRITS_TYPE_SPHERE; i++ )
-		pc->del_charm(sd, sd->spiritcharm[i], i);
+	if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
+		pc->del_charm(sd, sd->charm_count, sd->charm_type);
 
 	if (src) {
 		switch (src->type) {
@@ -9794,103 +9794,124 @@ bool pc_can_use_command(struct map_session_data *sd, const char *command) {
 	return atcommand->can_use(sd,command);
 }
 
-int pc_charm_timer(int tid, int64 tick, int id, intptr_t data) {
+/**
+ * Spirit Charm expiration timer.
+ * 
+ * @see TimerFunc
+ */
+int pc_charm_timer(int tid, int64 tick, int id, intptr_t data)
+{
 	struct map_session_data *sd;
-	int i, type;
+	int i;
 
 	if( (sd=(struct map_session_data *)map->id2sd(id)) == NULL || sd->bl.type!=BL_PC )
 		return 1;
 
-	ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, type, sd->spiritcharm[type] > 0);
-
-	if( sd->spiritcharm[type] <= 0 )
-	{
-		ShowError("pc_charm_timer: %d spiritcharm's available. (aid=%d cid=%d tid=%d)\n", sd->spiritcharm[type], sd->status.account_id, sd->status.char_id, tid);
-		sd->spiritcharm[type] = 0;
+	if (sd->charm_count <= 0) {
+		ShowError("pc_charm_timer: %d spiritcharm's available. (aid=%d cid=%d tid=%d)\n", sd->charm_count, sd->status.account_id, sd->status.char_id, tid);
+		sd->charm_count = 0;
 		return 0;
 	}
 
-	ARR_FIND(0, sd->spiritcharm[type], i, sd->charm_timer[type][i] == tid);
-	if( i == sd->spiritcharm[type] )
-	{
+	ARR_FIND(0, sd->charm_count, i, sd->charm_timer[i] == tid);
+	if (i == sd->charm_count) {
 		ShowError("pc_charm_timer: timer not found (aid=%d cid=%d tid=%d)\n", sd->status.account_id, sd->status.char_id, tid);
 		return 0;
 	}
 
-	sd->spiritcharm[type]--;
-	if( i != sd->spiritcharm[type] )
-		memmove(sd->charm_timer[type]+i, sd->charm_timer[type]+i+1, (sd->spiritcharm[type]-i)*sizeof(int));
-	sd->charm_timer[type][sd->spiritcharm[type]] = INVALID_TIMER;
+	sd->charm_count--;
+	if(i != sd->charm_count)
+		memmove(sd->charm_timer+i, sd->charm_timer+i+1, (sd->charm_count-i)*sizeof(int));
+	sd->charm_timer[sd->charm_count] = INVALID_TIMER;
 
-	clif->spiritcharm(sd, type);
+	clif->spiritcharm(sd);
 
 	return 0;
 }
 
-int pc_add_charm(struct map_session_data *sd,int interval,int max,int type)
+/**
+ * Adds a spirit charm.
+ * 
+ * @param sd       Target character.
+ * @param interval Duration.
+ * @param max      Maximum amount of charms to add.
+ * @param type     Charm type (@see spirit_charm_types)
+ */
+void pc_add_charm(struct map_session_data *sd, int interval, int max, int type)
 {
 	int tid, i;
 
-	nullpo_ret(sd);
+	nullpo_retv(sd);
 
-	if(max > 10)
-		max = 10;
-	if(sd->spiritcharm[type] < 0)
-		sd->spiritcharm[type] = 0;
+	if (sd->charm_type != CHARM_TYPE_NONE && type != sd->charm_type) {
+		pc->del_charm(sd, sd->charm_count, sd->charm_type);
+	}
 
-	if( sd->spiritcharm[type] && sd->spiritcharm[type] >= max )
-	{
-		if(sd->charm_timer[type][0] != INVALID_TIMER)
-			timer->delete(sd->charm_timer[type][0],pc->charm_timer);
-		sd->spiritcharm[type]--;
-		if( sd->spiritcharm[type] != 0 )
-			memmove(sd->charm_timer[type]+0, sd->charm_timer[type]+1, (sd->spiritcharm[type])*sizeof(int));
-		sd->charm_timer[type][sd->spiritcharm[type]] = INVALID_TIMER;
+	if (max > MAX_SPIRITCHARM)
+		max = MAX_SPIRITCHARM;
+	if (sd->charm_count < 0)
+		sd->charm_count = 0;
+
+	if (sd->charm_count && sd->charm_count >= max) {
+		if (sd->charm_timer[0] != INVALID_TIMER)
+			timer->delete(sd->charm_timer[0],pc->charm_timer);
+		sd->charm_count--;
+		if (sd->charm_count != 0)
+			memmove(sd->charm_timer+0, sd->charm_timer+1, sd->charm_count*sizeof(int));
+		sd->charm_timer[sd->charm_count] = INVALID_TIMER;
 	}
 
 	tid = timer->add(timer->gettick()+interval, pc->charm_timer, sd->bl.id, 0);
-	ARR_FIND(0, sd->spiritcharm[type], i, sd->charm_timer[type][i] == INVALID_TIMER || DIFF_TICK(timer->get(tid)->tick, timer->get(sd->charm_timer[type][i])->tick) < 0);
-	if( i != sd->spiritcharm[type] )
-		memmove(sd->charm_timer[type]+i+1, sd->charm_timer[type]+i, (sd->spiritcharm[type]-i)*sizeof(int));
-	sd->charm_timer[type][i] = tid;
-	sd->spiritcharm[type]++;
+	ARR_FIND(0, sd->charm_count, i, sd->charm_timer[i] == INVALID_TIMER || DIFF_TICK(timer->get(tid)->tick, timer->get(sd->charm_timer[i])->tick) < 0);
+	if (i != sd->charm_count)
+		memmove(sd->charm_timer+i+1, sd->charm_timer+i, (sd->charm_count-i)*sizeof(int));
+	sd->charm_timer[i] = tid;
+	sd->charm_count++;
 
-	clif->spiritcharm(sd, type);
-	return 0;
+	clif->spiritcharm(sd);
 }
 
-int pc_del_charm(struct map_session_data *sd,int count,int type)
+/**
+ * Removes one or more spirit charms.
+ * 
+ * @param sd    The target character.
+ * @param count Amount of charms to remove.
+ * @param type  Type of charm to remove.
+ */
+void pc_del_charm(struct map_session_data *sd, int count, int type)
 {
 	int i;
 
-	nullpo_ret(sd);
+	nullpo_retv(sd);
 
-	if( sd->spiritcharm[type] <= 0 ) {
-		sd->spiritcharm[type] = 0;
-		return 0;
+	if (sd->charm_type != type)
+		return;
+
+	if (sd->charm_count <= 0) {
+		sd->charm_count = 0;
+		return;
 	}
 
-	if( count <= 0 )
-		return 0;
-	if( count > sd->spiritcharm[type] )
-		count = sd->spiritcharm[type];
-	sd->spiritcharm[type] -= count;
-	if( count > 10 )
-		count = 10;
+	if (count <= 0)
+		return;
+	if (count > sd->charm_count)
+		count = sd->charm_count;
+	sd->charm_count -= count;
+	if (count > MAX_SPIRITCHARM)
+		count = MAX_SPIRITCHARM;
 
-	for(i = 0; i < count; i++) {
-		if(sd->charm_timer[type][i] != INVALID_TIMER) {
-			timer->delete(sd->charm_timer[type][i],pc->charm_timer);
-			sd->charm_timer[type][i] = INVALID_TIMER;
+	for (i = 0; i < count; i++) {
+		if(sd->charm_timer[i] != INVALID_TIMER) {
+			timer->delete(sd->charm_timer[i],pc->charm_timer);
+			sd->charm_timer[i] = INVALID_TIMER;
 		}
 	}
-	for(i = count; i < 10; i++) {
-		sd->charm_timer[type][i-count] = sd->charm_timer[type][i];
-		sd->charm_timer[type][i] = INVALID_TIMER;
+	for (i = count; i < MAX_SPIRITCHARM; i++) {
+		sd->charm_timer[i-count] = sd->charm_timer[i];
+		sd->charm_timer[i] = INVALID_TIMER;
 	}
 
-	clif->spiritcharm(sd, type);
-	return 0;
+	clif->spiritcharm(sd);
 }
 /*==========================================
  * Renewal EXP/Itemdrop rate modifier base on level penalty

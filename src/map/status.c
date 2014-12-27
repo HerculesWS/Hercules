@@ -8648,11 +8648,9 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				break;
 			case SC__ENERVATION:
 				val2 = 20 + 10 * val1; // ATK Reduction
-				if ( sd ) {
-					int i;
+				if (sd) {
 					pc->delspiritball(sd, sd->spiritball, 0);
-					for (i = SPIRITS_TYPE_CHARM_WATER; i < SPIRITS_TYPE_SPHERE; i++)
-						pc->del_charm(sd, sd->spiritcharm[i], i);
+					pc->del_charm(sd, sd->charm_count, sd->charm_type);
 				}
 				break;
 			case SC__GROOMY:
@@ -11495,8 +11493,8 @@ int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk, int fl
 				max += (rnd() % 100) % r + 1;
 		}
 
-		if ( sd->spiritcharm[SPIRITS_TYPE_CHARM_LAND] > 0 )
-			max += 10 * max * sd->spiritcharm[SPIRITS_TYPE_CHARM_LAND] / 100;
+		if (sd->charm_type == CHARM_TYPE_LAND && sd->charm_count > 0)
+			max += 10 * max * sd->charm_count / 100;
 	}
 
 	max = status->calc_watk(bl, sc, max, false);
