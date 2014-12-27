@@ -12179,7 +12179,7 @@ int status_readdb(void)
 	sv->readdb(map->db_path, "pre-re/job_db1.txt",  ',', 5+MAX_WEAPON_TYPE, 5+MAX_WEAPON_TYPE, -1,                       status->readdb_job1);
 #endif
 	sv->readdb(map->db_path, "job_db2.txt",         ',', 1,                 1+MAX_LEVEL,       -1,                       status->readdb_job2);
-	sv->readdb(map->db_path, "size_fix.txt",        ',', MAX_WEAPON_TYPE,   MAX_WEAPON_TYPE,   ARRAYLENGTH(status->atkmods),     status->readdb_sizefix);
+	sv->readdb(map->db_path, DBPATH"size_fix.txt", ',', MAX_WEAPON_TYPE, MAX_WEAPON_TYPE, ARRAYLENGTH(status->atkmods), status->readdb_sizefix);
 	sv->readdb(map->db_path, DBPATH"refine_db.txt", ',', 4+MAX_REFINE,      4+MAX_REFINE,      ARRAYLENGTH(status->refine_info), status->readdb_refine);
 	sv->readdb(map->db_path, "sc_config.txt",       ',', 2,                 2,                 SC_MAX,                   status->readdb_scconfig);
 
