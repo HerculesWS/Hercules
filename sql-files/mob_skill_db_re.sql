@@ -1,9 +1,9 @@
 --
--- Table structure for table `mob_skill_db`
+-- Table structure for table `mob_skill_db_re`
 --
 
-DROP TABLE IF EXISTS `mob_skill_db`;
-CREATE TABLE `mob_skill_db` (
+DROP TABLE IF EXISTS `mob_skill_db_re`;
+CREATE TABLE `mob_skill_db_re` (
   `MOB_ID` SMALLINT(6) NOT NULL,
   `INFO` TEXT NOT NULL,
   `STATE` TEXT NOT NULL,

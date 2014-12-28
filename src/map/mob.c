@@ -3942,7 +3942,13 @@ void mob_readdb(void) {
  * mob_db table reading
  *------------------------------------------*/
 int mob_read_sqldb(void) {
-	const char* mob_db_name[] = { map->mob_db_db, map->mob_db2_db };
+	const char* mob_db_name[] = { 
+#ifdef RENEWAL
+		map->mob_db_re_db
+#else
+		map->mob_db_db
+#endif
+		, map->mob_db2_db };
 	int fi;
 
 	for( fi = 0; fi < ARRAYLENGTH(mob_db_name); ++fi ) {
@@ -4515,7 +4521,13 @@ void mob_readskilldb(void) {
  * seems to work though...
  */
 int mob_read_sqlskilldb(void) {
-	const char* mob_skill_db_name[] = { map->mob_skill_db_db, map->mob_skill_db2_db };
+	const char* mob_skill_db_name[] = { 
+#ifdef RENEWAL
+		map->mob_skill_db_re_db
+#else
+		map->mob_skill_db_db
+#endif
+		, map->mob_skill_db2_db };
 	int fi;
 
 	if( battle_config.mob_skill_rate == 0 ) {
