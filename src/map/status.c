@@ -11576,10 +11576,14 @@ void status_get_matk_sub(struct block_list *bl, int flag, unsigned short *matk_m
 			&& (refine = sd->status.inventory[index].refine) < 16 && refine ) {
 			int r =  status->refine_info[sd->inventory_data[index]->wlv].randombonus_max[refine + (4 - sd->inventory_data[index]->wlv)] / 100;
 			if ( r )
-				st->matk_max += (rnd() % 100) % r + 1;
+				*matk_max += (rnd() % 100) % r + 1;
 		}
 	}
 #endif
+
+	*matk_min = status->calc_matk(bl, sc, *matk_min, false);
+	*matk_max = status->calc_matk(bl, sc, *matk_max, false);
+
 	return;
 }
 
