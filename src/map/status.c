@@ -4726,12 +4726,13 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 	if(!sc || !sc->count)
 		return cap_value(matk,0,USHRT_MAX);
 
+#if 0
+	// This is useless and should be removed or fixed to work properly
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
-		if (sc->data[SC_MINDBREAKER])
-			matk += matk * sc->data[SC_MINDBREAKER]->val2/100;
 		return (unsigned short)cap_value(matk,0,USHRT_MAX);
 	}
+#endif
 
 #ifndef RENEWAL
 	// take note fixed value first before % modifiers
@@ -4754,6 +4755,8 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 	if (sc->data[SC_IZAYOI])
 		matk += 25 * sc->data[SC_IZAYOI]->val1;
 #endif
+	if (sc->data[SC_MINDBREAKER])
+		matk += matk * sc->data[SC_MINDBREAKER]->val2/100;
 	if( sc->data[SC_ZANGETSU] )
 		matk += sc->data[SC_ZANGETSU]->val3;
 	if (sc->data[SC_MAGICPOWER] && sc->data[SC_MAGICPOWER]->val4)
@@ -11738,64 +11741,64 @@ int status_change_spread( struct block_list *src, struct block_list *bl ) {
 		switch( i ) {
 			//Debuffs that can be spreaded.
 			// NOTE: We'll add/delte SCs when we are able to confirm it.
-		case SC_CURSE:
-		case SC_SILENCE:
-		case SC_CONFUSION:
-		case SC_BLIND:
-		case SC_NOCHAT:
-		case SC_ILLUSION:
-		case SC_CRUCIS:
-		case SC_DEC_AGI:
-		case SC_SLOWDOWN:
-		case SC_MINDBREAKER:
-		case SC_DC_WINKCHARM:
-		case SC_STOP:
-		case SC_ORCISH:
-			//case SC_NOEQUIPWEAPON://Omg I got infected and had the urge to strip myself physically.
-			//case SC_NOEQUIPSHIELD://No this is stupid and shouldnt be spreadable at all.
-			//case SC_NOEQUIPARMOR:// Disabled until I can confirm if it does or not. [Rytech]
-			//case SC_NOEQUIPHELM:
-			//case SC__STRIPACCESSARY:
-		case SC_WUGBITE:
-		case SC_FROSTMISTY:
-		case SC_VENOMBLEED:
-		case SC_DEATHHURT:
-		case SC_PARALYSE:
-			if( sc->data[i]->timer != INVALID_TIMER ) {
-				const struct TimerData *td = timer->get(sc->data[i]->timer);
-				if (td == NULL || td->func != status->change_timer || DIFF_TICK(td->tick,tick) < 0)
-					continue;
-				data.tick = DIFF_TICK32(td->tick,tick);
-			} else
-				data.tick = INVALID_TIMER;
-			break;
-			// Special cases
-		case SC_POISON:
-		case SC_DPOISON:
-			data.tick = sc->data[i]->val3 * 1000;
-			break;
-		case SC_FEAR:
-		case SC_LEECHESEND:
-			data.tick = sc->data[i]->val4 * 1000;
-			break;
-		case SC_BURNING:
-			data.tick = sc->data[i]->val4 * 2000;
-			break;
-		case SC_PYREXIA:
-		case SC_OBLIVIONCURSE:
-			data.tick = sc->data[i]->val4 * 3000;
-			break;
-		case SC_MAGICMUSHROOM:
-			data.tick = sc->data[i]->val4 * 4000;
-			break;
-		case SC_TOXIN:
-		case SC_BLOODING:
-			data.tick = sc->data[i]->val4 * 10000;
-			break;
-		default:
-			continue;
+			case SC_CURSE:
+			case SC_SILENCE:
+			case SC_CONFUSION:
+			case SC_BLIND:
+			case SC_NOCHAT:
+			case SC_ILLUSION:
+			case SC_CRUCIS:
+			case SC_DEC_AGI:
+			case SC_SLOWDOWN:
+			case SC_MINDBREAKER:
+			case SC_DC_WINKCHARM:
+			case SC_STOP:
+			case SC_ORCISH:
+				//case SC_NOEQUIPWEAPON://Omg I got infected and had the urge to strip myself physically.
+				//case SC_NOEQUIPSHIELD://No this is stupid and shouldnt be spreadable at all.
+				//case SC_NOEQUIPARMOR:// Disabled until I can confirm if it does or not. [Rytech]
+				//case SC_NOEQUIPHELM:
+				//case SC__STRIPACCESSARY:
+			case SC_WUGBITE:
+			case SC_FROSTMISTY:
+			case SC_VENOMBLEED:
+			case SC_DEATHHURT:
+			case SC_PARALYSE:
+				if( sc->data[i]->timer != INVALID_TIMER ) {
+					const struct TimerData *td = timer->get(sc->data[i]->timer);
+					if (td == NULL || td->func != status->change_timer || DIFF_TICK(td->tick,tick) < 0)
+						continue;
+					data.tick = DIFF_TICK32(td->tick,tick);
+				} else
+					data.tick = INVALID_TIMER;
+				break;
+				// Special cases
+			case SC_POISON:
+			case SC_DPOISON:
+				data.tick = sc->data[i]->val3 * 1000;
+				break;
+			case SC_FEAR:
+			case SC_LEECHESEND:
+				data.tick = sc->data[i]->val4 * 1000;
+				break;
+			case SC_BURNING:
+				data.tick = sc->data[i]->val4 * 2000;
+				break;
+			case SC_PYREXIA:
+			case SC_OBLIVIONCURSE:
+				data.tick = sc->data[i]->val4 * 3000;
+				break;
+			case SC_MAGICMUSHROOM:
+				data.tick = sc->data[i]->val4 * 4000;
+				break;
+			case SC_TOXIN:
+			case SC_BLOODING:
+				data.tick = sc->data[i]->val4 * 10000;
+				break;
+			default:
+				continue;
 		}
-		if( i ) {
+		if (i) {
 			data.val1 = sc->data[i]->val1;
 			data.val2 = sc->data[i]->val2;
 			data.val3 = sc->data[i]->val3;
@@ -11954,7 +11957,7 @@ int status_natural_heal(struct block_list* bl, va_list args) {
 	//Skill regen
 	sregen = regen->sregen;
 
-	if(flag&RGN_SHP) {
+	if (flag&RGN_SHP) {
 		//Skill HP regen
 		sregen->tick.hp += status->natural_heal_diff_tick * sregen->rate.hp;
 
@@ -11985,7 +11988,7 @@ int status_natural_heal(struct block_list* bl, va_list args) {
 				}
 			}
 			sregen->tick.sp -= battle_config.natural_heal_skill_interval;
-			if(status->heal(bl, 0, val, 3) < val)
+			if (status->heal(bl, 0, val, 3) < val)
 				break; //Full
 		}
 	}
