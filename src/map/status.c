@@ -5423,121 +5423,123 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 // flag&2 - percentage value
 short status_calc_aspd(struct block_list *bl, struct status_change *sc, short flag) {
 #ifdef RENEWAL_ASPD
-	int i, pots = 0, skills1 = 0, skills2 = 0;
+	int i, pots = 0, bonus = 0;
 
-	if(!sc || !sc->count)
+	if (!sc || !sc->count)
 		return 0;
 
-	if(sc->data[i=SC_ATTHASTE_INFINITY] ||
-		sc->data[i=SC_ATTHASTE_POTION3] ||
-		sc->data[i=SC_ATTHASTE_POTION2] ||
-		sc->data[i=SC_ATTHASTE_POTION1])
-		pots += sc->data[i]->val1;
-
-	if( !sc->data[SC_QUAGMIRE] ){
-		if(sc->data[SC_TWOHANDQUICKEN] && skills1 < 7)
-			skills1 = 7;
-
-		if(sc->data[SC_ONEHANDQUICKEN] && skills1 < 7) skills1 = 7;
-
-		if(sc->data[SC_MER_QUICKEN] && skills1 < 7) // needs more info
-			skills1 = 7;
-
-		if(sc->data[SC_ADRENALINE2] && skills1 < 6)
-			skills1 = 6;
-
-		if(sc->data[SC_ADRENALINE] && skills1 < 7)
-			skills1 = 7;
-
-		if(sc->data[SC_SPEARQUICKEN] && skills1 < 7)
-			skills1 = 7;
-
-		if(sc->data[SC_HLIF_FLEET] && skills1 < 5)
-			skills1 = 5;
-	}
-
-	if( sc->data[SC_ASSNCROS] && skills1 < sc->data[SC_ASSNCROS]->val2){
-		if (bl->type!=BL_PC)
-			skills1 = sc->data[SC_ASSNCROS]->val2;
-		else
-			switch(((TBL_PC*)bl)->status.weapon)
-		{
-			case W_BOW:
-			case W_REVOLVER:
-			case W_RIFLE:
-			case W_GATLING:
-			case W_SHOTGUN:
-			case W_GRENADE:
-				break;
-			default:
-				skills1 = sc->data[SC_ASSNCROS]->val2;
+	if (flag&1) {
+		// ASPD fixed values
+		if (sc->data[i=SC_ATTHASTE_INFINITY]
+		  || sc->data[i=SC_ATTHASTE_POTION3]
+		  || sc->data[i=SC_ATTHASTE_POTION2]
+		  || sc->data[i=SC_ATTHASTE_POTION1]
+		)
+			pots += sc->data[i]->val1;
+		
+		if (!sc->data[SC_QUAGMIRE]) {
+			if(sc->data[SC_TWOHANDQUICKEN] && bonus < 7)
+				bonus = 7;
+			if(sc->data[SC_ONEHANDQUICKEN] && bonus < 7)
+				bonus = 7;
+			if(sc->data[SC_MER_QUICKEN] && bonus < 7) // needs more info
+				bonus = 7;
+			if(sc->data[SC_ADRENALINE2] && bonus < 6)
+				bonus = 6;
+			if(sc->data[SC_ADRENALINE] && bonus < 7)
+				bonus = 7;
+			if(sc->data[SC_SPEARQUICKEN] && bonus < 7)
+				bonus = 7;
+			if(sc->data[SC_HLIF_FLEET] && bonus < 5)
+				bonus = 5;
 		}
+
+		if (sc->data[SC_ASSNCROS] && bonus < sc->data[SC_ASSNCROS]->val2) {
+			if (bl->type!=BL_PC)
+				bonus = sc->data[SC_ASSNCROS]->val2;
+			else {
+				switch (((TBL_PC*)bl)->status.weapon)
+				{
+					case W_BOW:
+					case W_REVOLVER:
+					case W_RIFLE:
+					case W_GATLING:
+					case W_SHOTGUN:
+					case W_GRENADE:
+						break;
+					default:
+						bonus = sc->data[SC_ASSNCROS]->val2;
+				}
+			}
+		}
+
+		if ((sc->data[SC_BERSERK]) && bonus < 15)
+			bonus = 15;
+		else if (sc->data[SC_GS_MADNESSCANCEL] && bonus < 20)
+			bonus = 20;
+
+	} else {
+		// ASPD percentage values
+		if (sc->data[SC_DONTFORGETME])
+			bonus -= sc->data[SC_DONTFORGETME]->val2;
+		if (sc->data[SC_LONGING])
+			bonus -= sc->data[SC_LONGING]->val2;
+		if (sc->data[SC_STEELBODY])
+			bonus -= 25;
+		if (sc->data[SC_SKA])
+			bonus -= 25;
+		if (sc->data[SC_DEFENDER])
+			bonus -= sc->data[SC_DEFENDER]->val4 / 10;
+		if (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_ENEMY) // needs more info
+			bonus -= 25;
+		if (sc->data[SC_GRAVITATION])
+			bonus -= sc->data[SC_GRAVITATION]->val2; // needs more info
+		if (sc->data[SC_JOINTBEAT]) { // needs more info
+			if (sc->data[SC_JOINTBEAT]->val2&BREAK_WRIST)
+				bonus -= 25;
+			if (sc->data[SC_JOINTBEAT]->val2&BREAK_KNEE)
+				bonus -= 10;
+		}
+		if (sc->data[SC_FROSTMISTY])
+			bonus -= 15;
+		if (sc->data[SC_HALLUCINATIONWALK_POSTDELAY])
+			bonus -= 50;
+		if (sc->data[SC_PARALYSE])
+			bonus -= 10;
+		if (sc->data[SC__BODYPAINT])
+			bonus -= sc->data[SC__BODYPAINT]->val1;
+		if (sc->data[SC__INVISIBILITY])
+			bonus -= sc->data[SC__INVISIBILITY]->val2 ;
+		if (sc->data[SC__GROOMY])
+			bonus -= sc->data[SC__GROOMY]->val2;
+		if (sc->data[SC_GLOOMYDAY])
+			bonus -= (15 + 5 * sc->data[SC_GLOOMYDAY]->val1);
+		if (sc->data[SC_EARTHDRIVE])
+			bonus -= 25;
+		if (sc->data[SC_MELON_BOMB])
+			bonus -= sc->data[SC_MELON_BOMB]->val1;
+		if (sc->data[SC_PAIN_KILLER])
+			bonus -= sc->data[SC_PAIN_KILLER]->val2;
+
+		if (sc->data[SC_SWING]) // TODO: SC_SWING shouldn't stack with skill1 modifiers
+			bonus += sc->data[SC_SWING]->val3;
+		if (sc->data[SC_DANCE_WITH_WUG])
+			bonus += sc->data[SC_DANCE_WITH_WUG]->val3;
+		if (sc->data[SC_GENTLETOUCH_CHANGE])
+			bonus += sc->data[SC_GENTLETOUCH_CHANGE]->val3;
+		if (sc->data[SC_BOOST500])
+			bonus += sc->data[SC_BOOST500]->val1;
+		if (sc->data[SC_EXTRACT_SALAMINE_JUICE])
+			bonus += sc->data[SC_EXTRACT_SALAMINE_JUICE]->val1;
+		if (sc->data[SC_INCASPDRATE])
+			bonus += sc->data[SC_INCASPDRATE]->val1;
+		if (sc->data[SC_GS_GATLINGFEVER])
+			bonus += sc->data[SC_GS_GATLINGFEVER]->val1;
+		if (sc->data[SC_STAR_COMFORT])
+			bonus += 3 * sc->data[SC_STAR_COMFORT]->val1;
 	}
 
-	if((sc->data[SC_BERSERK]) && skills1 < 15)
-		skills1 = 15;
-	else if(sc->data[SC_GS_MADNESSCANCEL] && skills1 < 20)
-		skills1 = 20;
-
-	if(sc->data[SC_DONTFORGETME])
-		skills2 -= sc->data[SC_DONTFORGETME]->val2;
-	if(sc->data[SC_LONGING])
-		skills2 -= sc->data[SC_LONGING]->val2;
-	if(sc->data[SC_STEELBODY])
-		skills2 -= 25;
-	if(sc->data[SC_SKA])
-		skills2 -= 25;
-	if(sc->data[SC_DEFENDER])
-		skills2 -= sc->data[SC_DEFENDER]->val4 / 10;
-	if(sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_ENEMY) // needs more info
-		skills2 -= 25;
-	if(sc->data[SC_GRAVITATION])
-		skills2 -= sc->data[SC_GRAVITATION]->val2; // needs more info
-	if(sc->data[SC_JOINTBEAT]) { // needs more info
-		if( sc->data[SC_JOINTBEAT]->val2&BREAK_WRIST )
-			skills2 -= 25;
-		if( sc->data[SC_JOINTBEAT]->val2&BREAK_KNEE )
-			skills2 -= 10;
-	}
-	if( sc->data[SC_FROSTMISTY] )
-		skills2 -= 15;
-	if( sc->data[SC_HALLUCINATIONWALK_POSTDELAY] )
-		skills2 -= 50;
-	if( sc->data[SC_PARALYSE] )
-		skills2 -= 10;
-	if( sc->data[SC__BODYPAINT] )
-		skills2 -= sc->data[SC__BODYPAINT]->val1;
-	if( sc->data[SC__INVISIBILITY] )
-		skills2 -= sc->data[SC__INVISIBILITY]->val2 ;
-	if( sc->data[SC__GROOMY] )
-		skills2 -= sc->data[SC__GROOMY]->val2;
-	if( sc->data[SC_GLOOMYDAY] )
-		skills2 -= ( 15 + 5 * sc->data[SC_GLOOMYDAY]->val1 );
-	if( sc->data[SC_EARTHDRIVE] )
-		skills2 -= 25;
-	if( sc->data[SC_MELON_BOMB] )
-		skills2 -= sc->data[SC_MELON_BOMB]->val1;
-	if( sc->data[SC_PAIN_KILLER] )
-		skills2 -= sc->data[SC_PAIN_KILLER]->val2;
-
-	if( sc->data[SC_SWING] ) // TODO: SC_SWING shouldn't stack with skill1 modifiers
-		skills2 += sc->data[SC_SWING]->val3;
-	if( sc->data[SC_DANCE_WITH_WUG] )
-		skills2 += sc->data[SC_DANCE_WITH_WUG]->val3;
-	if( sc->data[SC_GENTLETOUCH_CHANGE] )
-		skills2 += sc->data[SC_GENTLETOUCH_CHANGE]->val3;
-	if( sc->data[SC_BOOST500] )
-		skills2 += sc->data[SC_BOOST500]->val1;
-	if( sc->data[SC_EXTRACT_SALAMINE_JUICE] )
-		skills2 += sc->data[SC_EXTRACT_SALAMINE_JUICE]->val1;
-	if( sc->data[SC_INCASPDRATE] )
-		skills2 += sc->data[SC_INCASPDRATE]->val1;
-	if( sc->data[SC_GS_GATLINGFEVER] )
-		skills2 += sc->data[SC_GS_GATLINGFEVER]->val1;
-	if( sc->data[SC_STAR_COMFORT] )
-		skills2 += 3 * sc->data[SC_STAR_COMFORT]->val1;
-
-	return ( flag&1? (skills1 + pots) : skills2 );
+	return (bonus + pots);
 #else
 	return 0;
 #endif
