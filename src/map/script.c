@@ -9441,18 +9441,6 @@ BUILDIN(donpcevent)
 	return true;
 }
 
-/// for Aegis compatibility
-/// basically a specialized 'donpcevent', with the event specified as two arguments instead of one [RoVeRT]
-BUILDIN(cmdothernpc) {
-	const char* npc_name = script_getstr(st,2);
-	const char* command = script_getstr(st,3);
-	char event[EVENT_NAME_LENGTH];
-	snprintf(event, sizeof(event), "%s::OnCommand%s", npc_name, command);
-	script->check_event(st, event);
-	npc->event_do(event);
-	return true;
-}
-
 /*==========================================
  *------------------------------------------*/
 BUILDIN(addtimer)
@@ -19288,7 +19276,6 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(clone,"siisi????"),
 		BUILDIN_DEF(doevent,"s"),
 		BUILDIN_DEF(donpcevent,"s"),
-		BUILDIN_DEF_DEPRECATED(cmdothernpc,"ss"), // Deprecated 2014-11-02 [Haru]
 		BUILDIN_DEF(addtimer,"is"),
 		BUILDIN_DEF(deltimer,"s"),
 		BUILDIN_DEF(addtimercount,"si"),
