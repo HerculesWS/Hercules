@@ -19333,8 +19333,6 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF2(waitingroomkickall,"kickwaitingroomall","?"),
 		BUILDIN_DEF(enablewaitingroomevent,"?"),
 		BUILDIN_DEF(disablewaitingroomevent,"?"),
-		BUILDIN_DEF2_DEPRECATED(enablewaitingroomevent,"enablearena",""),   // Deprecated 2014-11-02 [Haru]
-		BUILDIN_DEF2_DEPRECATED(disablewaitingroomevent,"disablearena",""), // Deprecated 2014-11-02 [Haru]
 		BUILDIN_DEF(getwaitingroomstate,"i?"),
 		BUILDIN_DEF(warpwaitingpc,"sii?"),
 		BUILDIN_DEF(attachrid,"i"),
