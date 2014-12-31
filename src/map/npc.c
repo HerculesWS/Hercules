@@ -987,6 +987,12 @@ int npc_untouch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 		return 0;
 
 	nd = (struct npc_data *) map->id2bl(sd->areanpc_id);
+	if (!nd)
+	{
+		sd->areanpc_id = 0;
+		return 1;
+	}
+
 	npc->onuntouch_event(sd, nd);
 	sd->areanpc_id = 0;
 	return 0;
