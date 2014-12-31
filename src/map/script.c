@@ -19271,7 +19271,6 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(setmount,"?"),
 		BUILDIN_DEF(checkmount,""),
 		BUILDIN_DEF(checkwug,""),
-		BUILDIN_DEF2_DEPRECATED(savepoint,"save","sii"), // Deprecated 2014-11-02 [Haru]
 		BUILDIN_DEF(savepoint,"sii"),
 		BUILDIN_DEF(gettimetick,"i"),
 		BUILDIN_DEF(gettime,"i"),
