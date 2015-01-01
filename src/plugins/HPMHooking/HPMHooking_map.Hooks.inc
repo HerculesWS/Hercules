@@ -45435,6 +45435,33 @@ void HP_npc_market_delfromsql_sub(const char *npcname, unsigned short index) {
 	}
 	return;
 }
+bool HP_npc_db_checkid(const int id) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_npc_db_checkid_pre ) {
+		bool (*preHookFunc) (const int *id);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_db_checkid_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_db_checkid_pre[hIndex].func;
+			retVal___ = preHookFunc(&id);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.npc.db_checkid(id);
+	}
+	if( HPMHooks.count.HP_npc_db_checkid_post ) {
+		bool (*postHookFunc) (bool retVal___, const int *id);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_db_checkid_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_db_checkid_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &id);
+		}
+	}
+	return retVal___;
+}
 int HP_npc_secure_timeout_timer(int tid, int64 tick, int id, intptr_t data) {
 	int hIndex = 0;
 	int retVal___ = 0;
