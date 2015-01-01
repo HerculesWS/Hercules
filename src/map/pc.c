@@ -1422,6 +1422,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 		{ //Enable Bard/Dancer spirit linked skills.
 			if( sd->status.sex )
 			{ //Link dancer skills to bard.
+				// i can be < 8?
 				if( sd->status.skill[i-8].lv < 10 )
 					continue;
 				sd->status.skill[i].id = skill->db[i].nameid;
@@ -1430,6 +1431,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 			} else { //Link bard skills to dancer.
 				if( sd->status.skill[i].lv < 10 )
 					continue;
+				// i can be < 8?
 				sd->status.skill[i-8].id = skill->db[i-8].nameid;
 				sd->status.skill[i-8].lv = sd->status.skill[i].lv; // Set the level to the same as the linking skill
 				sd->status.skill[i-8].flag = SKILL_FLAG_TEMPORARY; // Tag it as a non-savable, non-uppable, bonus skill
@@ -3564,7 +3566,7 @@ int pc_skill(TBL_PC* sd, int id, int level, int flag) {
 	uint16 index = 0;
 	nullpo_ret(sd);
 
-	if( !(index = skill->get_index(id)) || skill->db[index].name == NULL) {
+	if (!(index = skill->get_index(id))) {
 		ShowError("pc_skill: Skill with id %d does not exist in the skill database\n", id);
 		return 0;
 	}
@@ -4857,7 +4859,7 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 	//A Rare Steal Global Announce by Lupus
 	if(md->db->dropitem[i].p<=battle_config.rare_drop_announce) {
 		char message[128];
-		sprintf (message, msg_txt(542), (sd->status.name != NULL)?sd->status.name :"GM", md->db->jname, data->jname, (float)md->db->dropitem[i].p/100);
+		sprintf (message, msg_txt(542), sd->status.name, md->db->jname, data->jname, (float)md->db->dropitem[i].p / 100);
 		//MSG: "'%s' stole %s's %s (chance: %0.02f%%)"
 		intif->broadcast(message, strlen(message)+1, BC_DEFAULT);
 	}
@@ -6912,6 +6914,8 @@ void pc_damage(struct map_session_data *sd,struct block_list *src,unsigned int h
 int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	int i=0,j=0;
 	int64 tick = timer->gettick();
+
+	nullpo_retr(0, sd);
 
 	for(j = 0; j < 5; j++) {
 		if (sd->devotion[j]){

@@ -4324,7 +4324,7 @@ bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 	if( strcmp(str[1],"clear")==0 ){
 		if (mob_id < 0)
 			return false;
-		memset(mob->db_data[mob_id]->skill,0,sizeof(struct mob_skill));
+		memset(mob->db_data[mob_id]->skill,0,sizeof(struct mob_skill) * MAX_MOBSKILL);
 		mob->db_data[mob_id]->maxskill=0;
 		return true;
 	}
@@ -4716,14 +4716,16 @@ void mob_destroy_mob_db(int index)
 {
 	struct mob_db *data = mob->db_data[index];
 	int v;
-	for (v = 0; v < data->hdatac; v++ ) {
-		if (data->hdata[v]->flag.free ) {
-			aFree(data->hdata[v]->data);
-		}
-		aFree(data->hdata[v]);
-	}
 	if (data->hdata)
+	{
+		for (v = 0; v < data->hdatac; v++ ) {
+			if (data->hdata[v]->flag.free ) {
+				aFree(data->hdata[v]->data);
+			}
+			aFree(data->hdata[v]);
+		}
 		aFree(data->hdata);
+	}
 	aFree(data);
 	mob->db_data[index] = NULL;
 }

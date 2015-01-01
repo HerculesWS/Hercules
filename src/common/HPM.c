@@ -844,12 +844,13 @@ void hpm_memdown(void) {
 
 	/* this memory is handled outside of the server's memory manager and thus cleared after memory manager goes down */
 
-	for( i = 0; i < HPM->fnamec; i++ ) {
-		free(HPM->fnames[i].name);
-	}
-
-	if( HPM->fnames )
+	if (HPM->fnames)
+	{
+		for( i = 0; i < HPM->fnamec; i++ ) {
+			free(HPM->fnames[i].name);
+		}
 		free(HPM->fnames);
+	}
 }
 int hpm_arg_db_clear_sub(DBKey key, DBData *data, va_list args) {
 	struct HPMArgData *a = DB->data2ptr(data);
@@ -863,19 +864,21 @@ void hpm_final(void) {
 
 	HPM->off = true;
 
-	for( i = 0; i < HPM->plugin_count; i++ ) {
-		HPM->unload(HPM->plugins[i]);
-	}
-
 	if( HPM->plugins )
+	{
+		for( i = 0; i < HPM->plugin_count; i++ ) {
+			HPM->unload(HPM->plugins[i]);
+		}
 		aFree(HPM->plugins);
-
-	for( i = 0; i < HPM->symbol_count; i++ ) {
-		aFree(HPM->symbols[i]);
 	}
 
 	if( HPM->symbols )
+	{
+		for( i = 0; i < HPM->symbol_count; i++ ) {
+			aFree(HPM->symbols[i]);
+		}
 		aFree(HPM->symbols);
+	}
 
 	for( i = 0; i < hpPHP_MAX; i++ ) {
 		if( HPM->packets[i] )

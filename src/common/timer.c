@@ -260,6 +260,7 @@ static int acquire_timer(void) {
 
 	// check available space
 	if( tid >= timer_data_num )
+		// possible timer_data null pointer
 		for (tid = timer_data_num; tid < timer_data_max && timer_data[tid].type; tid++);
 	if (tid >= timer_data_num && tid >= timer_data_max)
 	{// expand timer array

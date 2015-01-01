@@ -1653,7 +1653,7 @@ int skill_onskillusage(struct map_session_data *sd, struct block_list *bl, uint1
 		sd->state.autocast = 0;
 	}
 
-	if( sd && sd->autobonus3[0].rate ) {
+	if (sd->autobonus3[0].rate) {
 		for( i = 0; i < ARRAYLENGTH(sd->autobonus3); i++ ) {
 			if( rnd()%1000 >= sd->autobonus3[i].rate )
 				continue;
@@ -16255,6 +16255,7 @@ int skill_unit_timer_sub(DBKey key, DBData *data, va_list ap) {
 		}
 	}
 
+	// useless check for !group ?
 	//Don't continue if unit or even group is expired and has been deleted.
 	if( !group || !su->alive )
 		return 0;

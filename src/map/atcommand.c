@@ -1315,9 +1315,7 @@ ACMD(baselevelup)
 {
 	int level=0, i=0, status_point=0;
 
-	level = atoi(message);
-
-	if (!message || !*message || !level) {
+	if (!message || !*message || !(level = atoi(message))) {
 		clif->message(fd, msg_txt(986)); // Please enter a level adjustment (usage: @lvup/@blevel/@baselvlup <number of levels>).
 		return false;
 	}
@@ -1376,9 +1374,7 @@ ACMD(joblevelup)
 {
 	int level=0;
 
-	level = atoi(message);
-
-	if (!message || !*message || !level) {
+	if (!message || !*message || !(level = atoi(message))) {
 		clif->message(fd, msg_txt(987)); // Please enter a level adjustment (usage: @joblvup/@jlevel/@joblvlup <number of levels>).
 		return false;
 	}
@@ -6679,7 +6675,7 @@ ACMD(showmobs)
 		return false;
 	}
 
-	if(mob_id == atoi(mob_name) && mob->db(mob_id)->jname)
+	if(mob_id == atoi(mob_name))
 		strcpy(mob_name,mob->db(mob_id)->jname);    // --ja--
 	//strcpy(mob_name,mob_db(mob_id)->name);    // --en--
 
@@ -6803,7 +6799,7 @@ ACMD(hommutate) {
 	m_class = homun->class2type(sd->hd->homunculus.class_);
 	m_id    = homun->class2type(homun_id);
 
-	if( m_class != HT_INVALID && m_id != HT_INVALID && m_class == HT_EVO && m_id == HT_S && sd->hd->homunculus.level >= 99 ) {
+	if (m_class == HT_EVO && m_id == HT_S && sd->hd->homunculus.level >= 99) {
 		homun->mutate(sd->hd, homun_id);
 	} else {
 		clif->emotion(&sd->hd->bl, E_SWT);
@@ -8570,10 +8566,12 @@ ACMD(cart) {
 	sd->status.skill[idx].flag = (x)?1:0; \
 } while(0)
 
-	int val = atoi(message);
+	int val;
 	bool need_skill = pc->checkskill(sd, MC_PUSHCART) ? false : true;
 	unsigned int index = skill->get_index(MC_PUSHCART);
 
+	if (message)
+		val = atoi(message);
 	if( !message || !*message || val < 0 || val > MAX_CARTS ) {
 		sprintf(atcmd_output, msg_txt(1390),command,MAX_CARTS); // Unknown Cart (usage: %s <0-%d>).
 		clif->message(fd, atcmd_output);
@@ -8742,10 +8740,11 @@ ACMD(channel) {
 
 	if (strcmpi(subcmd,"create") == 0 && (clif->hChSys->allow_user_channel_creation || pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN))) {
 		// sub1 = channel name; sub2 = password; sub3 = unused
+		size_t len = strlen(sub1);
 		if (sub1[0] != '#') {
 			clif->message(fd, msg_txt(1405));// Channel name must start with a '#'
 			return false;
-		} else if (strlen(sub1) < 3 || strlen(sub1) > HCHSYS_NAME_LENGTH) {
+		} else if (len < 3 || len > HCHSYS_NAME_LENGTH) {
 			sprintf(atcmd_output, msg_txt(1406), HCHSYS_NAME_LENGTH);// Channel length must be between 3 and %d
 			clif->message(fd, atcmd_output);
 			return false;

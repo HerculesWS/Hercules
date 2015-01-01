@@ -281,7 +281,8 @@ void irc_privmsg_ctcp(int fd, char *cmd, char *source, char *target, char *msg) 
  * @see irc_parse_sub
  */
 void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
-	if( msg && *msg == '\001' && strlen(msg) > 2 && msg[strlen(msg)-1] == '\001' ) {
+	size_t len = msg ? strlen(msg) : 0;
+	if (msg && *msg == '\001' && len > 2 && msg[len - 1] == '\001') {
 		// CTCP
 		char command[IRC_MESSAGE_LENGTH], message[IRC_MESSAGE_LENGTH];
 		command[0] = message[0] = '\0';

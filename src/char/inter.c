@@ -1342,7 +1342,7 @@ void inter_defaults(void)
 	inter->init_sql = inter_init_sql;
 	inter->mapif_init = inter_mapif_init;
 	inter->check_ttl_wisdata_sub = inter_check_ttl_wisdata_sub;
-	inter->check_ttl_wisdata = inter->check_ttl_wisdata;
+	inter->check_ttl_wisdata = inter_check_ttl_wisdata;
 	inter->check_length = inter_check_length;
 	inter->parse_frommap = inter_parse_frommap;
 	inter->final = inter_final;

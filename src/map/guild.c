@@ -1785,14 +1785,16 @@ int guild_broken(int guild_id,int flag)
 	if( g->instance )
 		aFree(g->instance);
 	
-	for( i = 0; i < g->hdatac; i++ ) {
-		if( g->hdata[i]->flag.free ) {
-			aFree(g->hdata[i]->data);
-		}
-		aFree(g->hdata[i]);
-	}
 	if( g->hdata )
+	{
+		for( i = 0; i < g->hdatac; i++ ) {
+			if( g->hdata[i]->flag.free ) {
+				aFree(g->hdata[i]->data);
+			}
+			aFree(g->hdata[i]);
+		}
 		aFree(g->hdata);
+	}
 	
 	idb_remove(guild->db,guild_id);
 	return 0;
@@ -2279,14 +2281,16 @@ void do_final_guild(void) {
 			aFree(g->instance);
 			g->instance = NULL;
 		}
-		for( i = 0; i < g->hdatac; i++ ) {
-			if( g->hdata[i]->flag.free ) {
-				aFree(g->hdata[i]->data);
-			}
-			aFree(g->hdata[i]);
-		}
 		if( g->hdata )
+		{
+			for( i = 0; i < g->hdatac; i++ ) {
+				if( g->hdata[i]->flag.free ) {
+					aFree(g->hdata[i]->data);
+				}
+				aFree(g->hdata[i]);
+			}
 			aFree(g->hdata);
+		}
 	}
 	
 	dbi_destroy(iter);

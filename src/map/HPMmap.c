@@ -181,11 +181,13 @@ void HPM_map_do_final(void) {
 	 * why is pcg->HPM being cleared here? because PCG's do_final is not final,
 	 * is used on reload, and would thus cause plugin-provided permissions to go away
 	 **/
-	for( i = 0; i < pcg->HPMpermissions_count; i++ ) {
-		aFree(pcg->HPMpermissions[i].name);
-	}
 	if( pcg->HPMpermissions )
+	{
+		for( i = 0; i < pcg->HPMpermissions_count; i++ ) {
+			aFree(pcg->HPMpermissions[i].name);
+		}
 		aFree(pcg->HPMpermissions);
+	}
 	
 	HPM->datacheck_final();
 }

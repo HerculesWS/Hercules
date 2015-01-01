@@ -4749,6 +4749,7 @@ int clif_outsight(struct block_list *bl,va_list ap)
 	TBL_PC *sd, *tsd;
 	tbl=va_arg(ap,struct block_list*);
 	if(bl == tbl) return 0;
+	// bl can be null pointer? and after if BL_PC, sd will be null pointer too
 	sd = BL_CAST(BL_PC, bl);
 	tsd = BL_CAST(BL_PC, tbl);
 
@@ -14495,8 +14496,8 @@ void clif_ranking_pk(struct map_session_data* sd) {
 
 	WFIFOHEAD(fd,packet_len(0x238));
 	WFIFOW(fd,0) = 0x238;
-	for(i=0;i<10;i++){
-		memcpy(WFIFOP(fd,i*24+2), "Unknown", NAME_LENGTH);
+	for (i = 0; i < 10;i ++) {
+		strncpy((char*)WFIFOP(fd, i * 24 + 2), "Unknown", NAME_LENGTH);
 		WFIFOL(fd,i*4+242) = 0;
 	}
 	WFIFOSET(fd, packet_len(0x238));

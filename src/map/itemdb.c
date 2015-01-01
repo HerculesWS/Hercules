@@ -1427,7 +1427,7 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 		entry->type = IT_ETC;
 	}
 
-	if (entry->flag.trade_restriction < 0 || entry->flag.trade_restriction > ITR_ALL) {
+	if (entry->flag.trade_restriction > ITR_ALL) {
 		ShowWarning("itemdb_validate_entry: Invalid trade restriction flag 0x%x for item %d (%s) in '%s', defaulting to none.\n",
 		            entry->flag.trade_restriction, entry->nameid, entry->jname, source);
 		entry->flag.trade_restriction = ITR_NONE;
@@ -2106,14 +2106,16 @@ void destroy_item_data(struct item_data* self, int free_self)
 		script->free_code(self->unequip_script);
 	if( self->combos )
 		aFree(self->combos);
-	for (v = 0; v < self->hdatac; v++ ) {
-		if (self->hdata[v]->flag.free ) {
-			aFree(self->hdata[v]->data);
-		}
-		aFree(self->hdata[v]);
-	}
 	if (self->hdata)
+	{
+		for (v = 0; v < self->hdatac; v++ ) {
+			if (self->hdata[v]->flag.free ) {
+				aFree(self->hdata[v]->data);
+			}
+			aFree(self->hdata[v]);
+		}
 		aFree(self->hdata);
+	}
 #if defined(DEBUG)
 	// trash item
 	memset(self, 0xDD, sizeof(struct item_data));
@@ -2143,52 +2145,58 @@ void itemdb_clear(bool total) {
 			itemdb->destroy_item_data(itemdb->array[i], 1);
 	}
 	
-	for( i = 0; i < itemdb->group_count; i++ ) {
-		if( itemdb->groups[i].nameid )
-			aFree(itemdb->groups[i].nameid);
-	}
-	
 	if( itemdb->groups )
+	{
+		for( i = 0; i < itemdb->group_count; i++ ) {
+			if( itemdb->groups[i].nameid )
+				aFree(itemdb->groups[i].nameid);
+		}
 		aFree(itemdb->groups);
-	
+	}
+
 	itemdb->groups = NULL;
 	itemdb->group_count = 0;
 	
-	for( i = 0; i < itemdb->chain_count; i++ ) {
-		if( itemdb->chains[i].items )
-			aFree(itemdb->chains[i].items);
-	}
-	
 	if( itemdb->chains )
+	{
+		for( i = 0; i < itemdb->chain_count; i++ ) {
+			if( itemdb->chains[i].items )
+				aFree(itemdb->chains[i].items);
+		}
 		aFree(itemdb->chains);
-	
+	}
+
 	itemdb->chains = NULL;
 	itemdb->chain_count = 0;
 	
-	for( i = 0; i < itemdb->package_count; i++ ) {
-		int c;
-		for( c = 0; c < itemdb->packages[i].random_qty; c++ )
-			aFree(itemdb->packages[i].random_groups[c].random_list);
-		if( itemdb->packages[i].random_groups )
-			aFree(itemdb->packages[i].random_groups);
-		if( itemdb->packages[i].must_items )
-			aFree(itemdb->packages[i].must_items);
-	}
-	
 	if( itemdb->packages )
+	{
+		for( i = 0; i < itemdb->package_count; i++ ) {
+			int c;
+			if (itemdb->packages[i].random_groups)
+			{
+				for( c = 0; c < itemdb->packages[i].random_qty; c++ )
+					aFree(itemdb->packages[i].random_groups[c].random_list);
+				aFree(itemdb->packages[i].random_groups);
+			}
+			if( itemdb->packages[i].must_items )
+				aFree(itemdb->packages[i].must_items);
+		}
 		aFree(itemdb->packages);
-	
-	itemdb->packages = NULL;
+		itemdb->packages = NULL;
+	}
 	itemdb->package_count = 0;
 	
-	for(i = 0; i < itemdb->combo_count; i++) {
-		if( itemdb->combos[i]->script ) // Check if script was loaded
-			script->free_code(itemdb->combos[i]->script);
-		aFree(itemdb->combos[i]);
-	}
 	if( itemdb->combos )
+	{
+		for(i = 0; i < itemdb->combo_count; i++) {
+			if( itemdb->combos[i]->script ) // Check if script was loaded
+				script->free_code(itemdb->combos[i]->script);
+			aFree(itemdb->combos[i]);
+		}
 		aFree(itemdb->combos);
-	
+	}
+
 	itemdb->combos = NULL;
 	itemdb->combo_count = 0;
 	

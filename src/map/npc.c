@@ -2314,16 +2314,18 @@ int npc_unload(struct npc_data* nd, bool single) {
 		aFree(nd->ud);
 		nd->ud = NULL;
 	}
-	
-	for( i = 0; i < nd->hdatac; i++ ) {
-		if( nd->hdata[i]->flag.free ) {
-			aFree(nd->hdata[i]->data);
-		}
-		aFree(nd->hdata[i]);
-	}
+
 	if( nd->hdata )
+	{
+		for( i = 0; i < nd->hdatac; i++ ) {
+			if( nd->hdata[i]->flag.free ) {
+				aFree(nd->hdata[i]->data);
+			}
+			aFree(nd->hdata[i]);
+		}
 		aFree(nd->hdata);
-	
+	}
+
 	aFree(nd);
 
 	return 0;
@@ -3147,7 +3149,7 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 
 	nd->u.scr.timerid = INVALID_TIMER;
 
-	if( type == SCRIPT && options&NPO_ONINIT ) {
+	if (options&NPO_ONINIT) {
 		// From npc_parse_script
 		char evname[EVENT_NAME_LENGTH];
 		struct event_data *ev;
@@ -3513,13 +3515,13 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 		return strchr(start,'\n');// skip and continue
 	}
 
-	if( (mobspawn.state.size < 0 || mobspawn.state.size > 2) && size != -1 ) {
+	if (mobspawn.state.size > 2 && size != -1) {
 		ShowError("npc_parse_mob: Invalid size number %d for mob ID %d in file '%s', line '%d'.\n", mobspawn.state.size, class_, filepath, strline(buffer, start - buffer));
 		if (retval) *retval = EXIT_FAILURE;
 		return strchr(start, '\n');
 	}
 
-	if( (mobspawn.state.ai < 0 || mobspawn.state.ai > 4) && ai != -1 ) {
+	if (mobspawn.state.ai > 4 && ai != -1) {
 		ShowError("npc_parse_mob: Invalid ai %d for mob ID %d in file '%s', line '%d'.\n", mobspawn.state.ai, class_, filepath, strline(buffer, start - buffer));
 		if (retval) *retval = EXIT_FAILURE;
 		return strchr(start, '\n');

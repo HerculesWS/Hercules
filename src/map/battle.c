@@ -348,7 +348,7 @@ int64 battle_attr_fix(struct block_list *src, struct block_list *target, int64 d
 			struct skill_unit_group *sg;
 			struct block_list *sgsrc;
 
-			if( !su || !su->alive
+			if(!su->alive
 			 || (sg = su->group) == NULL || sg->val3 == -1
 			 || (sgsrc = map->id2bl(sg->src_id)) == NULL || status->isdead(sgsrc)
 			)
@@ -2593,6 +2593,8 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 	int div_ = d->div_, flag = d->flag;
 
 	nullpo_ret(bl);
+
+	// need check src for null pointer?
 
 	if( !damage )
 		return 0;

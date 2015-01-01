@@ -430,28 +430,25 @@ void instance_del_map(int16 m) {
 	aFree(map->list[m].block);
 	aFree(map->list[m].block_mob);
 	
-	if( map->list[m].unit_count ) {
+	if (map->list[m].unit_count && map->list[m].units) {
 		for(i = 0; i < map->list[m].unit_count; i++) {
 			aFree(map->list[m].units[i]);
 		}
-		if( map->list[m].units )
-			aFree(map->list[m].units);
+		aFree(map->list[m].units);
 	}
 	
-	if( map->list[m].skill_count ) {
+	if (map->list[m].skill_count && map->list[m].skills) {
 		for(i = 0; i < map->list[m].skill_count; i++) {
 			aFree(map->list[m].skills[i]);
 		}
-		if( map->list[m].skills )
-			aFree(map->list[m].skills);
+		aFree(map->list[m].skills);
 	}
 	
-	if( map->list[m].zone_mf_count ) {
+	if (map->list[m].zone_mf_count && map->list[m].zone_mf) {
 		for(i = 0; i < map->list[m].zone_mf_count; i++) {
 			aFree(map->list[m].zone_mf[i]);
 		}
-		if( map->list[m].zone_mf )
-			aFree(map->list[m].zone_mf);
+		aFree(map->list[m].zone_mf);
 	}
 	
 	if( map->list[m].qi_data )
@@ -548,9 +545,12 @@ void instance_destroy(int instance_id) {
 			iptr[j] = -1;
 	}
 	
-	while( instance->list[instance_id].num_map && last != instance->list[instance_id].map[0] ) { // Remove all maps from instance
-		last = instance->list[instance_id].map[0];
-		instance->del_map( instance->list[instance_id].map[0] );
+	if (instance->list[instance_id].map)
+	{
+		while( instance->list[instance_id].num_map && last != instance->list[instance_id].map[0] ) { // Remove all maps from instance
+			last = instance->list[instance_id].map[0];
+			instance->del_map( instance->list[instance_id].map[0] );
+		}
 	}
 	
 	if( instance->list[instance_id].regs.vars )
@@ -572,14 +572,16 @@ void instance_destroy(int instance_id) {
 	instance->list[instance_id].state = INSTANCE_FREE;
 	instance->list[instance_id].num_map = 0;
 	
-	for( j = 0; j < instance->list[instance_id].hdatac; j++ ) {
-		if( instance->list[instance_id].hdata[j]->flag.free ) {
-			aFree(instance->list[instance_id].hdata[j]->data);
+	if (instance->list[instance_id].hdata)
+	{
+		for( j = 0; j < instance->list[instance_id].hdatac; j++ ) {
+			if( instance->list[instance_id].hdata[j]->flag.free ) {
+				aFree(instance->list[instance_id].hdata[j]->data);
+			}
+			aFree(instance->list[instance_id].hdata[j]);
 		}
-		aFree(instance->list[instance_id].hdata[j]);
-	}
-	if( instance->list[instance_id].hdata )
 		aFree(instance->list[instance_id].hdata);
+	}
 	
 	instance->list[instance_id].hdata = NULL;
 	instance->list[instance_id].hdatac = 0;
