@@ -12488,7 +12488,7 @@ BUILDIN(disguise)
 
 	id = script_getnum(st,2);
 
-	if (mob->db_checkid(id) || npcdb_checkid(id)) {
+	if (mob->db_checkid(id) || npc->db_checkid(id)) {
 		pc->disguise(sd, id);
 		script_pushint(st,id);
 	} else
