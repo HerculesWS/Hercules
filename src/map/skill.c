@@ -2394,7 +2394,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 				break;
 		} //Switch End
 		if (combo) { //Possible to chain
-			if ( (combo = DIFF_TICK32(sd->ud.canact_tick, tick)) < 50 ) combo = 50;/* less is a waste. */
+			combo = max(status_get_amotion(src), DIFF_TICK32(sd->ud.canact_tick, tick));
 			sc_start2(NULL,src,SC_COMBOATTACK,100,skill_id,bl->id,combo);
 			clif->combo_delay(src, combo);
 		}
