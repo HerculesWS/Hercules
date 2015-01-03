@@ -16,9 +16,11 @@
 /**
  * Declarations
  **/
+struct Damage;
 struct homun_data;
 struct map_session_data;
 struct mercenary_data;
+struct unit_data;
 struct skill_unit;
 struct square;
 struct status_change_entry;
@@ -2040,6 +2042,39 @@ struct skill_interface {
 	void (*cooldown_save) (struct map_session_data * sd);
 	int (*get_new_group_id) (void);
 	bool (*check_shadowform) (struct block_list *bl, int64 damage, int hit);
+
+	bool (*castend_damage_id_unknown) (struct block_list* src, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, struct status_data *tstatus, struct status_change *sc);
+	void (*additional_effect_unknown) (struct block_list* src, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int *attack_type, int *dmg_lv, int64 *tick);
+	void (*counter_additional_effect_unknown) (struct block_list* src, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int *attack_type, int64 *tick);
+	void (*attack_combo1_unknown) (int *attack_type, struct block_list* src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, struct status_change_entry *sce, int *combo);
+	void (*attack_combo2_unknown) (int *attack_type, struct block_list* src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, int *combo);
+	void (*attack_display_unknown) (int *attack_type, struct block_list* src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, int *type, struct Damage *dmg, int64 *damage);
+	int (*attack_copy_unknown) (int *attack_type, struct block_list* src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+	int (*attack_dir_unknown) (int *attack_type, struct block_list* src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+	void (*attack_blow_unknown) (int *attack_type, struct block_list* src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, int *type, struct Damage *dmg, int64 *damage, int8 *dir);
+	void (*attack_post_unknown) (int *attack_type, struct block_list* src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+	bool (*timerskill_dead_unknown) (struct block_list *src, struct unit_data *ud, struct skill_timerskill *skl);
+	void (*timerskill_target_unknown) (int tid, int64 tick, struct block_list *src, struct block_list *target, struct unit_data *ud, struct skill_timerskill *skl);
+	void (*timerskill_notarget_unknown) (int tid, int64 tick, struct block_list *src, struct block_list *target, struct unit_data *ud, struct skill_timerskill *skl);
+	void (*cleartimerskill_unknown) (int skill_id);
+	bool (*castend_id_unknown) (struct unit_data *ud, struct block_list *src, struct block_list *target);
+	bool (*castend_nodamage_id_dead_unknown) (struct block_list *src, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+	bool (*castend_nodamage_id_undead_unknown) (struct block_list *src, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+	bool (*castend_nodamage_id_mado_unknown) (struct block_list *src, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+	bool (*castend_nodamage_id_unknown) (struct block_list *src, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+	void (*castend_pos2_effect_unknown) (struct block_list* src, int *x, int *y, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+	bool (*castend_pos2_unknown) (struct block_list* src, int *x, int *y, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+	void (*unitsetting1_unknown) (struct block_list *src, uint16 *skill_id, uint16 *skill_lv, int16 *x, int16 *y, int *flag, int *val1, int *val2, int *val3);
+	void (*unitsetting2_unknown) (struct block_list *src, uint16 *skill_id, uint16 *skill_lv, int16 *x, int16 *y, int *flag, int *unit_flag, int *val1, int *val2, int *val3, struct skill_unit_group *group);
+	void (*unit_onplace_unknown) (struct skill_unit *src, struct block_list *bl, int64 *tick);
+	int (*check_condition_castbegin_off_unknown) (struct status_change *sc, uint16 *skill_id);
+	int (*check_condition_castbegin_mount_unknown) (struct status_change *sc, uint16 *skill_id);
+	int (*check_condition_castbegin_madogear_unknown) (struct status_change *sc, uint16 *skill_id);
+	int (*check_condition_castbegin_unknown) (struct status_change *sc, uint16 *skill_id);
+	void (*check_condition_castend_unknown) (struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv);
+	bool (*get_requirement_off_unknown) (struct status_change *sc, uint16 *skill_id);
+	int (*get_requirement_item_unknown) (struct status_change *sc, struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv, uint16 *idx, int *i);
+	void (*get_requirement_unknown) (struct status_change *sc, struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv, struct skill_condition *req);
 };
 
 struct skill_interface *skill;
