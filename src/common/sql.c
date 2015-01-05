@@ -410,6 +410,7 @@ void Sql_Free(Sql* self) {
 		SQL->FreeResult(self);
 		StrBuf->Destroy(&self->buf);
 		if( self->keepalive != INVALID_TIMER ) timer->delete(self->keepalive, Sql_P_KeepaliveTimer);
+		mysql_close(&self->handle);
 		aFree(self);
 	}
 }
