@@ -124,10 +124,6 @@ enum actor_classes {
 #define MAX_NPC_CLASS2_START 10000
 #define MAX_NPC_CLASS2_END 10110
 
-//Checks if a given id is a valid npc id. [Skotlex]
-//Since new npcs are added all the time, the max valid value is the one before the first mob (Scorpion = 1001)
-#define npcdb_checkid(id) ( ( (id) >= 46 && (id) <= 125) || (id) == HIDDEN_WARP_CLASS || ( (id) > 400 && (id) < MAX_NPC_CLASS ) || (id) == INVISIBLE_CLASS || ( (id) > MAX_NPC_CLASS2_START && (id) < MAX_NPC_CLASS2_END ) )
-
 //Script NPC events.
 enum npce_event {
 	NPCE_LOGIN,
@@ -276,6 +272,7 @@ struct npc_interface {
 	void (*market_tosql) (struct npc_data *nd, unsigned short index);
 	void (*market_delfromsql) (struct npc_data *nd, unsigned short index);
 	void (*market_delfromsql_sub) (const char *npcname, unsigned short index);
+	bool (*db_checkid) (const int id);
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
 	 **/

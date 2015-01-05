@@ -4591,7 +4591,7 @@ ACMD(disguise)
 
 	if ((id = atoi(message)) > 0) {
 		//Acquired an ID
-		if (!mob->db_checkid(id) && !npcdb_checkid(id))
+		if (!mob->db_checkid(id) && !npc->db_checkid(id))
 			id = 0; //Invalid id for either mobs or npcs.
 	} else {
 		//Acquired a Name
@@ -4643,7 +4643,7 @@ ACMD(disguiseall)
 	if ((mob_id = mob->db_searchname(message)) == 0) // check name first (to avoid possible name begining by a number)
 		mob_id = atoi(message);
 
-	if (!mob->db_checkid(mob_id) && !npcdb_checkid(mob_id)) { //if mob or npc...
+	if (!mob->db_checkid(mob_id) && !npc->db_checkid(mob_id)) { //if mob or npc...
 		clif->message(fd, msg_txt(123)); // Monster/NPC name/id not found.
 		return false;
 	}
@@ -4676,7 +4676,7 @@ ACMD(disguiseguild)
 	}
 
 	if( (id = atoi(monster)) > 0 ) {
-		if( !mob->db_checkid(id) && !npcdb_checkid(id) )
+		if( !mob->db_checkid(id) && !npc->db_checkid(id) )
 			id = 0;
 	} else {
 		if( (id = mob->db_searchname(monster)) == 0 ) {

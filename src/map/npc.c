@@ -75,7 +75,7 @@ struct view_data* npc_get_viewdata(int class_)
 	//Returns the viewdata for normal npc classes.
 	if( class_ == INVISIBLE_CLASS )
 		return &npc_viewdb[0];
-	if (npcdb_checkid(class_) || class_ == WARP_CLASS){
+	if (npc->db_checkid(class_) || class_ == WARP_CLASS){
 		if( class_ > MAX_NPC_CLASS2_START ){
 			return &npc_viewdb2[class_-MAX_NPC_CLASS2_START];
 		}else{
@@ -83,6 +83,13 @@ struct view_data* npc_get_viewdata(int class_)
 		}
 	}
 	return NULL;
+}
+
+//Checks if a given id is a valid npc id. [Skotlex]
+//Since new npcs are added all the time, the max valid value is the one before the first mob (Scorpion = 1001)
+bool npc_db_checkid(int id)
+{
+    return ((id >= 46 && id <= 125) || id == HIDDEN_WARP_CLASS || (id > 400 && id < MAX_NPC_CLASS) || id == INVISIBLE_CLASS || (id > MAX_NPC_CLASS2_START && id < MAX_NPC_CLASS2_END));
 }
 
 /// Returns a new npc id that isn't being used in id_db.
@@ -4745,4 +4752,5 @@ void npc_defaults(void) {
 	npc->market_tosql = npc_market_tosql;
 	npc->market_delfromsql = npc_market_delfromsql;
 	npc->market_delfromsql_sub = npc_market_delfromsql_sub;
+	npc->db_checkid = npc_db_checkid;
 }

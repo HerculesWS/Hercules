@@ -6203,7 +6203,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 	nullpo_retv(bl);
 	if (mob->db_checkid(class_) || mob->is_clone(class_))
 		vd = mob->get_viewdata(class_);
-	else if (npcdb_checkid(class_) || (bl->type == BL_NPC && class_ == WARP_CLASS))
+	else if (npc->db_checkid(class_) || (bl->type == BL_NPC && class_ == WARP_CLASS))
 		vd = npc->get_viewdata(class_);
 	else if (homdb_checkid(class_))
 		vd = homun->get_viewdata(class_);
