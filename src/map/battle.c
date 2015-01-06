@@ -4742,6 +4742,18 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				else
 					wd.dmg_lv = ATK_DEF;
 				break;
+				
+			case KO_BAKURETSU:
+			{
+#ifdef RENEWAL
+				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | (sc && sc->data[SC_WEAPONPERFECT] ? 8 : 0));
+#endif
+				skillratio = skill_lv * (50 + status_get_dex(src) / 4);
+				skillratio = (int)(skillratio * (sd ? pc->checkskill(sd, NJ_TOBIDOUGU) : 10) * 40.f / 100.0f * status->get_lv(src) / 120);
+				ATK_RATE(skillratio + 10 * (sd ? sd->status.job_level : 0));
+			}
+				break;
+
 	#ifdef RENEWAL
 			case NJ_TATAMIGAESHI:
 					ATK_RATE(200);
@@ -4768,17 +4780,6 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					wd.damage = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage, wd.div_, 0, flag.weapon);
 				}
 	#endif
-
-			case KO_BAKURETSU:
-			{
-#ifdef RENEWAL
-				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | (sc && sc->data[SC_WEAPONPERFECT] ? 8 : 0));
-#endif
-				skillratio = skill_lv * (50 + status_get_dex(src) / 4);
-				skillratio = (int)(skillratio * (sd ? pc->checkskill(sd, NJ_TOBIDOUGU) : 10) * 40.f / 100.0f * status->get_lv(src) / 120);
-				ATK_RATE(skillratio + 10 * (sd ? sd->status.job_level : 0));
-			}
-				break;
 			default:
 				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
 		}
