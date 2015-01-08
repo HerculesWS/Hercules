@@ -1005,6 +1005,7 @@ struct pc_interface {
 	int (*autosave) (int tid, int64 tick, int id, intptr_t data);
 	int (*follow_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*read_skill_tree) (void);
+	int (*convert_custom_class_name_to_id) (const char* name);
 	int (*isUseitem) (struct map_session_data *sd,int n);
 	int (*show_steal) (struct block_list *bl,va_list ap);
 	int (*checkcombo) (struct map_session_data *sd, struct item_data *data );
