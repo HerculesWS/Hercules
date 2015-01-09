@@ -2005,6 +2005,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->expiration_timer, HP_pc_expiration_timer) },
 	{ HP_POP(pc->global_expiration_timer, HP_pc_global_expiration_timer) },
 	{ HP_POP(pc->expire_check, HP_pc_expire_check) },
+	{ HP_POP(pc->db_checkid, HP_pc_db_checkid) },
 	{ HP_POP(pc->autotrade_load, HP_pc_autotrade_load) },
 	{ HP_POP(pc->autotrade_update, HP_pc_autotrade_update) },
 	{ HP_POP(pc->autotrade_start, HP_pc_autotrade_start) },
