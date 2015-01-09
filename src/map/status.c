@@ -6218,7 +6218,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 	case BL_PC:
 		{
 			TBL_PC* sd = (TBL_PC*)bl;
-			if (pcdb_checkid(class_)) {
+			if (pc->db_checkid(class_)) {
 				if (pc_isridingpeco(sd)) {
 					switch (class_) {
 						//Adapt class to a Mounted one.
@@ -6285,7 +6285,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 			TBL_PET* pd = (TBL_PET*)bl;
 			if (vd) {
 				memcpy(&pd->vd, vd, sizeof(struct view_data));
-				if (!pcdb_checkid(vd->class_)) {
+				if (!pc->db_checkid(vd->class_)) {
 					pd->vd.hair_style = battle_config.pet_hair_style;
 					if(pd->pet.equip) {
 						pd->vd.head_bottom = itemdb_viewid(pd->pet.equip);
@@ -12046,7 +12046,7 @@ bool status_readdb_job1(char* fields[], int columns, int current)
 
 	class_ = atoi(fields[0]);
 
-	if(!pcdb_checkid(class_))
+	if(!pc->db_checkid(class_))
 	{
 		ShowWarning("status_readdb_job1: Invalid job class %d specified.\n", class_);
 		return false;
@@ -12074,7 +12074,7 @@ bool status_readdb_job2(char* fields[], int columns, int current)
 
 	class_ = atoi(fields[0]);
 
-	if(!pcdb_checkid(class_))
+	if(!pc->db_checkid(class_))
 	{
 		ShowWarning("status_readdb_job2: Invalid job class %d specified.\n", class_);
 		return false;

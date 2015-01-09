@@ -258,13 +258,13 @@ uint32 clif_refresh_ip(void) {
 #if PACKETVER >= 20071106
 static inline unsigned char clif_bl_type(struct block_list *bl) {
 	switch (bl->type) {
-		case BL_PC:    return (disguised(bl) && !pcdb_checkid(status->get_viewdata(bl)->class_))? 0x1:0x0; //PC_TYPE
+		case BL_PC:    return (disguised(bl) && !pc->db_checkid(status->get_viewdata(bl)->class_))? 0x1:0x0; //PC_TYPE
 		case BL_ITEM:  return 0x2; //ITEM_TYPE
 		case BL_SKILL: return 0x3; //SKILL_TYPE
 		case BL_CHAT:  return 0x4; //UNKNOWN_TYPE
-		case BL_MOB:   return pcdb_checkid(status->get_viewdata(bl)->class_)?0x0:0x5; //NPC_MOB_TYPE
-		case BL_NPC:   return pcdb_checkid(status->get_viewdata(bl)->class_)?0x0:0x6; //NPC_EVT_TYPE
-		case BL_PET:   return pcdb_checkid(status->get_viewdata(bl)->class_)?0x0:0x7; //NPC_PET_TYPE
+		case BL_MOB:   return pc->db_checkid(status->get_viewdata(bl)->class_)?0x0:0x5; //NPC_MOB_TYPE
+		case BL_NPC:   return pc->db_checkid(status->get_viewdata(bl)->class_)?0x0:0x6; //NPC_EVT_TYPE
+		case BL_PET:   return pc->db_checkid(status->get_viewdata(bl)->class_)?0x0:0x7; //NPC_PET_TYPE
 		case BL_HOM:   return 0x8; //NPC_HOM_TYPE
 		case BL_MER:   return 0x9; //NPC_MERSOL_TYPE
 		case BL_ELEM:  return 0xa; //NPC_ELEMENTAL_TYPE
@@ -955,7 +955,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	nullpo_retv(bl);
 	
 #if PACKETVER < 20091103
-	if( !pcdb_checkid(vd->class_) ) {
+	if( !pc->db_checkid(vd->class_) ) {
 		clif->set_unit_idle2(bl,tsd,target);
 		return;
 	}
@@ -1022,7 +1022,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 
 	if( disguised(bl) ) {
 #if PACKETVER >= 20091103
-		p.objecttype = pcdb_checkid(status->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+		p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
 		p.GID = -bl->id;
 #else
 		p.GID = -bl->id;
@@ -1086,7 +1086,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	nullpo_retv(bl);
 
 #if PACKETVER < 20091103
-	if( !pcdb_checkid(vd->class_) ) {
+	if( !pc->db_checkid(vd->class_) ) {
 		clif->spawn_unit2(bl,target);
 		return;
 	}
@@ -1152,7 +1152,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 		if( sd->status.class_ != sd->disguise )
 			clif->send(&p,sizeof(p),bl,target);
 #if PACKETVER >= 20091103
-		p.objecttype = pcdb_checkid(status->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+		p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
 		p.GID = -bl->id;
 #else
 		p.GID = -bl->id;
@@ -1233,7 +1233,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 
 	if( disguised(bl) ) {
 #if PACKETVER >= 20091103
-		p.objecttype = pcdb_checkid(status->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+		p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
 		p.GID = -bl->id;
 #else
 		p.GID = -bl->id;
@@ -1250,7 +1250,7 @@ void clif_class_change(struct block_list *bl,int class_,int type)
 {
 	nullpo_retv(bl);
 
-	if(!pcdb_checkid(class_))
+	if(!pc->db_checkid(class_))
 	{// player classes yield missing sprites
 		unsigned char buf[16];
 		WBUFW(buf,0)=0x1b0;
@@ -8879,7 +8879,7 @@ void clif_feel_info(struct map_session_data* sd, unsigned char feel_level, unsig
  *------------------------------------------*/
 void clif_hate_info(struct map_session_data *sd, unsigned char hate_level,int class_, unsigned char type)
 {
-	if( pcdb_checkid(class_) ) {
+	if( pc->db_checkid(class_) ) {
 		clif->starskill(sd, pc->job_name(class_), class_, hate_level, type ? 10 : 11);
 	} else if( mob->db_checkid(class_) ) {
 		clif->starskill(sd, mob->db(class_)->jname, class_, hate_level, type ? 10 : 11);
