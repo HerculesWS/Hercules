@@ -18,7 +18,7 @@
 
 -	script	RareDiamondMerchant	1_M_MERCHANT,{
 
-	.@npc$ = "[Rare Diamond Merchant]";
+	set .@npc$, "[Rare Diamond Merchant]";
 
 	mes .@npc$;
 	mes "Ladies and Gentlemen! ! !";
@@ -47,9 +47,9 @@
 	mes "It is the ^FF82FF'17 Carat Diamond'^000000!";
 	next;
 
-	.@menu$ = "^FF82FF'17 Carat Diamond'^000000?";
+	set .@menu$, "^FF82FF'17 Carat Diamond'^000000?";
 	if (countitem(6024))
-		.@menu$ += ":Exchange my 17 Carat Diamond for zeny...";
+		set .@menu$, .@menu$ + ":Exchange my 17 Carat Diamond for zeny...";
 
 	switch(select(.@menu$)) {
 	case 1:

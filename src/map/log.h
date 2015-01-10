@@ -98,7 +98,7 @@ struct log_interface {
 	char db_ip[32];
 	int db_port;
 	char db_id[32];
-	char db_pw[100];
+	char db_pw[32];
 	char db_name[32];
 	Sql* mysql_handle;
 	/* */
@@ -110,7 +110,7 @@ struct log_interface {
 	void (*atcommand) (struct map_session_data* sd, const char* message);
 	void (*branch) (struct map_session_data* sd);
 	void (*mvpdrop) (struct map_session_data* sd, int monster_id, int* log_mvp);
-
+	
 	void (*pick_sub) (int id, int16 m, e_log_pick_type type, int amount, struct item* itm, struct item_data *data);
 	void (*zeny_sub) (struct map_session_data* sd, e_log_pick_type type, struct map_session_data* src_sd, int amount);
 	void (*npc_sub) (struct map_session_data* sd, const char *message);
@@ -118,12 +118,12 @@ struct log_interface {
 	void (*atcommand_sub) (struct map_session_data* sd, const char* message);
 	void (*branch_sub) (struct map_session_data* sd);
 	void (*mvpdrop_sub) (struct map_session_data* sd, int monster_id, int* log_mvp);
-
+	
 	int (*config_read) (const char* cfgName);
 	void (*config_done) (void);
 	void (*sql_init) (void);
 	void (*sql_final) (void);
-
+	
 	char (*picktype2char) (e_log_pick_type type);
 	char (*chattype2char) (e_log_chat_type type);
 	bool (*should_log_item) (int nameid, int amount, int refine, struct item_data *id);

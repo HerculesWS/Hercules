@@ -26,9 +26,9 @@ struct eri;
 // TODO: Remove temporary code
 #define ENABLE_CASE_CHECK
 #define get_script_source(source) ((source) ? (source) : "Unknown (Possibly source or variables stored in database")
-#define DeprecationCaseWarning(func, bad, good, where) ShowError("%s: detected possible use of wrong case in a script. Found '%s', probably meant to be '%s' (in '%s').\n", (func), (bad), (good), get_script_source(where))
-
-#define DeprecationWarning(p) disp_warning_message("This command is deprecated and it will be removed in a future update. Please see the script documentation for an alternative.\n", (p))
+#define DeprecationWarning(func, bad, good, file, line) ShowError("%s: use of deprecated keyword '%s' (use '%s' instead) in file '%s', line '%d'.\n", (func), (bad), (good), get_script_source(file), (line));
+#define DeprecationWarning2(func, bad, good, where) ShowError("%s: detected possible use of wrong case in a script. Found '%s', probably meant to be '%s' (in '%s').\n", (func), (bad), (good), get_script_source(where));
+#define disp_deprecation_message(func, good, p) disp_warning_message(func": use of deprecated keyword (use '"good"' instead).", (p));
 
 #define NUM_WHISPER_VAR 10
 
@@ -187,7 +187,7 @@ typedef enum c_op {
 	C_USERFUNC, // internal script function
 	C_USERFUNC_POS, // internal script function label
 	C_REF, // the next call to c_op2 should push back a ref to the left operand
-
+	
 	// operators
 	C_OP3, // a ? b : c
 	C_LOR, // a || b
@@ -265,7 +265,7 @@ enum e_arglist {
  *------------------------------------------*/
 
 enum {
-	MF_NOMEMO, //0
+	MF_NOMEMO,	//0
 	MF_NOTELEPORT,
 	MF_NOSAVE,
 	MF_NOBRANCH,
@@ -275,7 +275,7 @@ enum {
 	MF_PVP_NOPARTY,
 	MF_PVP_NOGUILD,
 	MF_GVG,
-	MF_GVG_NOPARTY, //10
+	MF_GVG_NOPARTY,	//10
 	MF_NOTRADE,
 	MF_NOSKILL,
 	MF_NOWARP,
@@ -293,7 +293,7 @@ enum {
 	MF_GVG_DUNGEON,
 	MF_NIGHTENABLED,
 	MF_NOBASEEXP,
-	MF_NOJOBEXP, //30
+	MF_NOJOBEXP,	//30
 	MF_NOMOBLOOT,
 	MF_NOMVPLOOT,
 	MF_NORETURN,
@@ -303,7 +303,7 @@ enum {
 	MF_NOCOMMAND,
 	MF_NODROP,
 	MF_JEXP,
-	MF_BEXP, //40
+	MF_BEXP,	//40
 	MF_NOVENDING,
 	MF_LOADEVENT,
 	MF_NOCHAT,
@@ -313,7 +313,7 @@ enum {
 	MF_AUTOTRADE,
 	MF_ALLOWKS,
 	MF_MONSTER_NOTELEPORT,
-	MF_PVP_NOCALCRANK, //50
+	MF_PVP_NOCALCRANK,	//50
 	MF_BATTLEGROUND,
 	MF_RESET,
 	MF_NOTOMB,
@@ -343,7 +343,6 @@ struct Script_Config {
 
 	const char* ontouch_name;
 	const char* ontouch2_name;
-	const char* onuntouch_name;
 };
 
 /**
@@ -434,7 +433,6 @@ struct script_function {
 	bool (*func)(struct script_state *st);
 	char *name;
 	char *arg;
-	bool deprecated;
 };
 
 // String buffer structures.
@@ -447,7 +445,6 @@ struct str_data_struct {
 	bool (*func)(struct script_state *st);
 	int val;
 	int next;
-	uint8 deprecated : 1;
 };
 
 struct script_label_entry {
@@ -461,9 +458,9 @@ struct script_syntax_data {
 		int count;
 		int flag;
 		struct linkdb_node *case_label;
-	} curly[256]; // Information right parenthesis
-	int curly_count; // The number of right brackets
-	int index; // Number of the syntax used in the script
+	} curly[256];		// Information right parenthesis
+	int curly_count;	// The number of right brackets
+	int index;			// Number of the syntax used in the script
 };
 
 struct casecheck_data {
@@ -577,7 +574,7 @@ struct script_interface {
 	void (*error) (const char* src, const char* file, int start_line, const char* error_msg, const char* error_pos);
 	void (*warning) (const char* src, const char* file, int start_line, const char* error_msg, const char* error_pos);
 	/* */
-	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st), bool isDeprecated);
+	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st));
 	int (*conv_num) (struct script_state *st,struct script_data *data);
 	const char* (*conv_str) (struct script_state *st,struct script_data *data);
 	TBL_PC *(*rid2sd) (struct script_state *st);

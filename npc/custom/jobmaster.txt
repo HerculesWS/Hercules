@@ -24,8 +24,8 @@ prontera,153,193,6	script	Job Master	2_F_MAGICMASTER,{
 		mes "No more jobs are available.";
 		close;
 	}
-	if (checkfalcon() || checkcart() || checkmount() || hascashmount()) {
-		mes "Please remove your "+((checkfalcon())?"falcon":"")+((checkcart())?"cart":"")+((checkmount() || hascashmount())?"mount":"")
+	if (checkfalcon() || checkcart() || checkriding() || ismounting()) {
+		mes "Please remove your "+((checkfalcon())?"falcon":"")+((checkcart())?"cart":"")+((checkriding())?"Peco":"")+((ismounting())?"mount":"")
 		    +" before proceeding.";
 		close;
 	}

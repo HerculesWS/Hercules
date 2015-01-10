@@ -1,9 +1,9 @@
 --
--- Table structure for table `mob_db_re`
+-- Table structure for table `mob_db`
 -- 
 
-DROP TABLE IF EXISTS `mob_db_re`;
-CREATE TABLE `mob_db_re` (
+DROP TABLE IF EXISTS `mob_db`;
+CREATE TABLE `mob_db` (
   `ID` MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
   `Sprite` TEXT NOT NULL,
   `kName` TEXT NOT NULL,

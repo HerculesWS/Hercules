@@ -8,20 +8,15 @@
 
 struct mmo_charstatus;
 
-void inter_mercenary_defaults(void);
+int inter_mercenary_sql_init(void);
+void inter_mercenary_sql_final(void);
+int inter_mercenary_parse_frommap(int fd);
 
-/**
- * inter_mercenary interface
- **/
-struct inter_mercenary_interface {
-	bool (*owner_fromsql) (int char_id, struct mmo_charstatus *status);
-	bool (*owner_tosql) (int char_id, struct mmo_charstatus *status);
-	bool (*owner_delete) (int char_id);
-	int (*sql_init) (void);
-	void (*sql_final) (void);
-	int (*parse_frommap) (int fd);
-};
+// Mercenary Owner Database
+bool mercenary_owner_fromsql(int char_id, struct mmo_charstatus *status);
+bool mercenary_owner_tosql(int char_id, struct mmo_charstatus *status);
+bool mercenary_owner_delete(int char_id);
 
-struct inter_mercenary_interface *inter_mercenary;
+bool mapif_mercenary_delete(int merc_id);
 
 #endif /* CHAR_INT_MERCENARY_H */

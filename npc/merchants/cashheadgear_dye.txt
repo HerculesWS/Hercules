@@ -15,7 +15,7 @@
 prt_in,253,168,4	script	Alora	4_F_LGTGIRL,{
 
 // Mysterious Dyestuff
-	.@dyeID = 6220;
+	set .@dyeID, 6220;
 // Headgear Choices
 	setarray .@hgn$[1], "Mage Hat","Beanie","Drooping Cat","Deviruchi Hat","Wig","Ribbon","Magestic Goat";
 // Mage Hats - Normal, Yellow, Blue, Brown, Gray, Red
@@ -39,12 +39,12 @@ prt_in,253,168,4	script	Alora	4_F_LGTGIRL,{
 	mes "[Alora]";
 	mes "Do you have a headgear that you would like to dye?";
 	next;
-	for(.@i = 1; .@i < getarraysize(.@hgn$); ++.@i) {
-		if(.@i == 1)    .@menu$ = .@hgn$[.@i];
-		else            .@menu$ += ":"+ .@hgn$[.@i];
+	for(set .@i,1; .@i < getarraysize(.@hgn$); set .@i,.@i+1) {
+		if(.@i == 1)    set .@menu$, .@hgn$[.@i];
+		else            set .@menu$, .@menu$ +":"+ .@hgn$[.@i];
 	}
-	.@menu$ += ":Cancel";
-	.@t = select(.@menu$);
+	set .@menu$, .@menu$ +":Cancel";
+	set .@t, select(.@menu$);
 	if(.@t == getarraysize(.@hgn$)) {
 		mes "[Alora]";
 		mes "Have a good journey adventurer!";
@@ -54,24 +54,24 @@ prt_in,253,168,4	script	Alora	4_F_LGTGIRL,{
 	mes "[Alora]";
 	mes "Okay, what color do you want to change it to?";
 	next;
-	for(.@i = 1; .@i < getarraysize(getd(".@hg_"+.@t+"")); ++.@i) {
+	for(set .@i,1; .@i < getarraysize(getd(".@hg_"+.@t+"")); set .@i,.@i+1) {
 		if(.@i == 1 && .@t != 5)
-			.@menu$ = "Normal";
+			set .@menu$, "Normal";
 		else if(.@i == 1 && .@t == 5)
-			.@menu$ = getitemname(getd(".@hg_"+.@t+"["+.@i+"]"));
+			set .@menu$, getitemname(getd(".@hg_"+.@t+"["+.@i+"]"));
 		else {
 			sscanf(getitemname(getd(".@hg_"+.@t+"["+.@i+"]")),"%s "+ .@hgn$[.@t],.@colour$);
-			.@menu$ += ":"+ .@colour$;
+			set .@menu$, .@menu$ +":"+ .@colour$;
 		}
 	}
-	.@menu$ += ":Cancel";
-	.@c = select(.@menu$);
+	set .@menu$, .@menu$ +":Cancel";
+	set .@c, select(.@menu$);
 	if(.@c == getarraysize(getd(".@hg_"+.@t+""))) {
 		mes "[Alora]";
 		mes "Oh, okay no problem!";
 		close;
 	}
-	.@dyHG = getd(".@hg_"+.@t+"["+.@c+"]");
+	set .@dyHG, getd(".@hg_"+.@t+"["+.@c+"]");
 	mes "[Alora]";
 	mes "Oh I'm so excited aren't you?";
 	mes "And just to be sure, what color is the "+ .@hgn$[.@t] +" you want me to use?";
@@ -85,18 +85,18 @@ prt_in,253,168,4	script	Alora	4_F_LGTGIRL,{
 	mes "["+ strcharinfo(0) +"]";
 	mes "Ok, thanks for the warning, I think I'll give you my";
 	next;
-	.@menu$ = "Nevermind";
-	for(.@i = 1; .@i < getarraysize(getd(".@hg_"+.@t+"")); ++.@i) {
-		if(.@i == 1)    .@menu$ += ":Normal "+ getitemname(getd(".@hg_"+.@t+"["+.@i+"]"));
-		else            .@menu$ += ":"+ getitemname(getd(".@hg_"+.@t+"["+.@i+"]"));
+	set .@menu$, "Nevermind";
+	for(set .@i,1; .@i < getarraysize(getd(".@hg_"+.@t+"")); set .@i,.@i+1) {
+		if(.@i == 1)    set .@menu$, .@menu$ +":Normal "+ getitemname(getd(".@hg_"+.@t+"["+.@i+"]"));
+		else            set .@menu$, .@menu$ +":"+ getitemname(getd(".@hg_"+.@t+"["+.@i+"]"));
 	}
-	.@mine = select(.@menu$) - 1;
+	set .@mine, select(.@menu$) - 1;
 	if(!.@mine) {
 		mes "[Alora]";
 		mes "It's best to be very sure, have a safe journey.";
 		close;
 	}
-	.@myHG = getd(".@hg_"+.@t+"["+.@mine+"]");
+	set .@myHG, getd(".@hg_"+.@t+"["+.@mine+"]");
 	if(.@dyHG == .@myHG) {
 		mes "[Alora]";
 		mes "Woah what happened?";

@@ -52,10 +52,6 @@ struct AccountDBIterator
 	bool (*next)(AccountDBIterator* self, struct mmo_account* acc);
 };
 
-struct Account_engine {
-	AccountDB* (*constructor)(void);
-	AccountDB* db;
-};
 
 struct AccountDB
 {

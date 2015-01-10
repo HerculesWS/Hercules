@@ -273,7 +273,7 @@ int instance_add_map(const char *name, int instance_id, bool usebasename, const 
  * type : result (0 = map id | 1 = instance id)
  *--------------------------------------*/
 int instance_map2imap(int16 m, int instance_id) {
-	int i;
+ 	int i;
 
 	if( !instance->valid(instance_id) ) {
 		return -1;
@@ -282,12 +282,12 @@ int instance_map2imap(int16 m, int instance_id) {
 	for( i = 0; i < instance->list[instance_id].num_map; i++ ) {
 		if( instance->list[instance_id].map[i] && map->list[instance->list[instance_id].map[i]].instance_src_map == m )
 			return instance->list[instance_id].map[i];
-	}
-	return -1;
+ 	}
+ 	return -1;
 }
 
 int instance_mapname2imap(const char *map_name, int instance_id) {
-	int i;
+ 	int i;
 	
 	if( !instance->valid(instance_id) ) {
 		return -1;
@@ -296,8 +296,8 @@ int instance_mapname2imap(const char *map_name, int instance_id) {
 	for( i = 0; i < instance->list[instance_id].num_map; i++ ) {
 		if( instance->list[instance_id].map[i] && !strcmpi(map->list[map->list[instance->list[instance_id].map[i]].instance_src_map].name,map_name) )
 			return instance->list[instance_id].map[i];
-	}
-	return -1;
+ 	}
+ 	return -1;
 }
 
 
@@ -430,25 +430,28 @@ void instance_del_map(int16 m) {
 	aFree(map->list[m].block);
 	aFree(map->list[m].block_mob);
 	
-	if (map->list[m].unit_count && map->list[m].units) {
+	if( map->list[m].unit_count ) {
 		for(i = 0; i < map->list[m].unit_count; i++) {
 			aFree(map->list[m].units[i]);
 		}
-		aFree(map->list[m].units);
+		if( map->list[m].units )
+			aFree(map->list[m].units);
 	}
 	
-	if (map->list[m].skill_count && map->list[m].skills) {
+	if( map->list[m].skill_count ) {
 		for(i = 0; i < map->list[m].skill_count; i++) {
 			aFree(map->list[m].skills[i]);
 		}
-		aFree(map->list[m].skills);
+		if( map->list[m].skills )
+			aFree(map->list[m].skills);
 	}
 	
-	if (map->list[m].zone_mf_count && map->list[m].zone_mf) {
+	if( map->list[m].zone_mf_count ) {
 		for(i = 0; i < map->list[m].zone_mf_count; i++) {
 			aFree(map->list[m].zone_mf[i]);
 		}
-		aFree(map->list[m].zone_mf);
+		if( map->list[m].zone_mf )
+			aFree(map->list[m].zone_mf);
 	}
 	
 	if( map->list[m].qi_data )
@@ -545,12 +548,9 @@ void instance_destroy(int instance_id) {
 			iptr[j] = -1;
 	}
 	
-	if (instance->list[instance_id].map)
-	{
-		while( instance->list[instance_id].num_map && last != instance->list[instance_id].map[0] ) { // Remove all maps from instance
-			last = instance->list[instance_id].map[0];
-			instance->del_map( instance->list[instance_id].map[0] );
-		}
+	while( instance->list[instance_id].num_map && last != instance->list[instance_id].map[0] ) { // Remove all maps from instance
+		last = instance->list[instance_id].map[0];
+		instance->del_map( instance->list[instance_id].map[0] );
 	}
 	
 	if( instance->list[instance_id].regs.vars )
@@ -572,16 +572,14 @@ void instance_destroy(int instance_id) {
 	instance->list[instance_id].state = INSTANCE_FREE;
 	instance->list[instance_id].num_map = 0;
 	
-	if (instance->list[instance_id].hdata)
-	{
-		for( j = 0; j < instance->list[instance_id].hdatac; j++ ) {
-			if( instance->list[instance_id].hdata[j]->flag.free ) {
-				aFree(instance->list[instance_id].hdata[j]->data);
-			}
-			aFree(instance->list[instance_id].hdata[j]);
+	for( j = 0; j < instance->list[instance_id].hdatac; j++ ) {
+		if( instance->list[instance_id].hdata[j]->flag.free ) {
+			aFree(instance->list[instance_id].hdata[j]->data);
 		}
-		aFree(instance->list[instance_id].hdata);
+		aFree(instance->list[instance_id].hdata[j]);
 	}
+	if( instance->list[instance_id].hdata )
+		aFree(instance->list[instance_id].hdata);
 	
 	instance->list[instance_id].hdata = NULL;
 	instance->list[instance_id].hdatac = 0;

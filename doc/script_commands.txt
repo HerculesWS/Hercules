@@ -259,8 +259,7 @@ direction across Y. Walking into that area will trigger the NPC. If no
 'OnTouch:' special label is present in the NPC code, the execution will 
 start from the beginning of the script, otherwise, it will start from the 
 'OnTouch:' label. Monsters can also trigger the NPC, though the label 
-'OnTouchNPC:' is used in this case. If player left area npc will called
-if present label 'OnUnTouch'.
+'OnTouchNPC:' is used in this case.
 
 The code part is the script code that will execute whenever the NPC is 
 triggered. It may contain commands and function calls, descriptions of 
@@ -975,14 +974,14 @@ Within executable script code, some lines can be labels:
 <label name>:
 
 Labels are points of reference in your script, which can be used to route 
-execution with 'goto' and 'menu' commands, invoked with 'doevent', 'donpcevent'
-and 'callsub' commands and are otherwise essential. A label's name may not be
-longer than 22 characters. (23rd is the ':'.) There is some confusion in the
-source about whether it's 22, 23 or 24 all over the place, so keeping labels
-under 22 characters could be wise. It may only contain alphanumeric characters
-and underscore. In addition to labels you name yourself, there are also some
-special labels which the script engine will start execution from if a special
-event happens:
+execution with 'goto', 'menu' and 'jump_zero' commands, invoked with 
+'doevent' and 'donpcevent' commands and are otherwise essential. A label's 
+name may not be longer than 22 characters. (23rd is the ':'.) There is 
+some confusion in the source about whether it's 22, 23 or 24 all over the 
+place, so keeping labels under 22 characters could be wise. It may only 
+contain alphanumeric characters and underscore. In addition to labels you 
+name yourself, there are also some special labels which the script engine 
+will start execution from if a special event happens:
 
 OnClock<hour><minute>:
 OnMinute<minute>:
@@ -1040,12 +1039,6 @@ OnTouch_:
 
 Similar to OnTouch, but will only run one instance. Another character is
 chosen once the triggering character leaves the area.
-
-OnUnTouch:
-
-This label will be executed if plater leave trigger area is defined for the NPC 
-object it's in. If it isn't present, nothing will happend.
-The RID of the triggering character object will be attached.
 
 OnPCLoginEvent:
 OnPCLogoutEvent:
@@ -2063,6 +2056,20 @@ else if (<condition 2>) {
 
 ---------------------------------------
 
+*jump_zero (<condition>),<label>;
+
+This command works like an 'if'+'goto' combination in one go. (See 'if'). 
+If the condition is false (equal to zero) this command will immediately 
+jump to the specified label like in 'goto'.
+
+This command should not be used in scripts directly.
+
+The main reason for this command is that other control statements, like 
+'switch', 'for' or 'while', are disassembled into simple expressions 
+together with this command when a script is parsed.
+
+---------------------------------------
+
 *while (<condition>) <statement>;
 
 This is probably the simplest and most frequently used loop structure. The 
@@ -2781,13 +2788,6 @@ such item is found.
 
 ---------------------------------------
 
-*getbrokencount()
-
-This function will return the total amount of broken equipment on the
-invoking character.
-
----------------------------------------
-
 *getequipisequiped(<equipment slot>)
 
 This functions will return 1 if there is an equipment placed on the 
@@ -2929,7 +2929,7 @@ recreate these items perfectly if they are destroyed. Here's what you get:
 
 @inventorylist_id[]        - array of item ids.
 @inventorylist_amount[]    - their corresponding item amounts.
-@inventorylist_equip[]     - will return the slot the item is equipped on, if at all.
+@inventorylist_equip[]     - whether the item is equipped or not.
 @inventorylist_refine[]    - for how much it is refined.
 @inventorylist_identify[]  - whether it is identified.
 @inventorylist_attribute[] - whether it is broken.
@@ -2940,8 +2940,8 @@ recreate these items perfectly if they are destroyed. Here's what you get:
                              made by a specific craftsman.
 @inventorylist_expire[]    - expire time (Unix time stamp). 0 means never 
                              expires.
-@inventorylist_bound       - whether it is an account bounded item or not.
 @inventorylist_count       - the number of items in these lists.
+@inventorylist_bound       - whether it is an account bounded item or not.
 
 This could be handy to save/restore a character's inventory, since no 
 other command returns such a complete set of data, and could also be the
@@ -2955,42 +2955,6 @@ attached to the character, and integer.
 Be sure to use @inventorylist_count to go through these arrays, and not 
 'getarraysize', because the arrays are not automatically cleared between 
 runs of 'getinventorylist'.
-
----------------------------------------
-
-*getcartinventorylist;
-
-This command sets a bunch of arrays with a complete list of whatever the 
-invoking character has in its cart_inventory, including all the data needed to 
-recreate these items perfectly if they are destroyed. Here's what you get:
-
-@cartinventorylist_id[]        - array of item ids.
-@cartinventorylist_amount[]    - their corresponding item amounts.
-@cartinventorylist_refine[]    - for how much it is refined.
-@cartinventorylist_identify[]  - whether it is identified.
-@cartinventorylist_attribute[] - whether it is broken.
-@cartinventorylist_card1[]     - These four arrays contain card data for the
-@cartinventorylist_card2[]       items. These data slots are also used to store
-@cartinventorylist_card3[]       names inscribed on the items, so you can
-@cartinventorylist_card4[]       explicitly check if the character owns an item
-								 made by a specific craftsman.
-@cartinventorylist_expire[]    - expire time (Unix time stamp). 0 means never 
-								 expires.
-@cartinventorylist_bound       - whether it is an account bounded item or not.
-@cartinventorylist_count       - the number of items in these lists.
-
-This could be handy to save/restore a character's cart_inventory, since no 
-other command returns such a complete set of data, and could also be the
-only way to correctly handle an NPC trader for carded and named items who 
-could resell them - since NPC objects cannot own items, so they have to 
-store item data in variables and recreate the items.
-
-Notice that the variables this command generates are all temporary, 
-attached to the character, and integer.
-
-Be sure to use @cartinventorylist_count to go through these arrays, and not 
-'getarraysize', because the arrays are not automatically cleared between 
-runs of 'getcartinventorylist'.
 
 ---------------------------------------
 
@@ -3233,21 +3197,14 @@ let you enter.
 
 ---------------------------------------
 
-*getareausers({"<map name>",}{<x1>,<y1>,<x2>,<y2>})
-*getareausers({"<map name>",}{<radius>})
+*getareausers("<map name>",<x1>,<y1>,<x2>,<y2>)
 
 This function will return the count of connected characters which are 
-located within the specified area. Area can be x1/y1-x2/y2 square,
-or radius from npc position. If map name missing, used attached player map.
+located within the specified area - an x1/y1-x2/y2 square - on the 
+specified map.
 
 This is useful for maps that are split into many buildings, such as all 
 the "*_in" maps, due to all the shops and houses.
-
-Examples:
-	// return players in area npc area on current map.
-	.@num = getareausers();
-	// return players in square (1, 1) - (10, 10)
-	.@num = "players: " + getareausers(1, 1, 10, 10);
 
 ---------------------------------------
 
@@ -3855,59 +3812,59 @@ falcon and 0 if they don't.
 
 ---------------------------------------
 
-*setmount {<flag>};
-*checkmount()
+*setriding {<flag>};
+*checkriding()
 
-If <flag> is MOUNT_NONE (or 0) this command will remove the mount from the
-character.
+If <flag> is 0 this command will remove the mount from the character.
+Otherwise it gives the invoking character a PecoPeco (if they are a Knight 
+series class), a GrandPeco (if they are a Crusader series class), or 
+a Gryphon (if they are a Royal Guard). Unlike 'setfalcon' and 'setcart' 
+this will not work at all if they aren't of a class which can ride.
+Note: the character needs to have the skill KN_RIDING to gain a mount.
 
-Otherwise it gives the invoking character the desired combat mount, where
-allowed by their class and skills.
+The accompanying function will return 1 if the invoking character is 
+riding a bird and 0 if they aren't.
 
-If no flag is specified, the mount is automatically chosen according to the
-character's class and skills.
-
-The following flag values are accepted:
-
-    MOUNT_NONE:
-        - Dismount
-    MOUNT_PECO:
-        - PecoPeco (Knight series class)
-        - GrandPeco (Crusader series class)
-        - Gryphon (Royal Guard)
-    MOUNT_WUG:
-        - Warg (Ranger)
-    MOUNT_MADO:
-        - Mado Gear (Mechanic)
-    MOUNT_DRAGON:
-    MOUNT_DRAGON_GREEN:
-    MOUNT_DRAGON_BROWN:
-    MOUNT_DRAGON_GRAY:
-    MOUNT_DRAGON_BLUE:
-    MOUNT_DRAGON_RED:
-        - Dragon (Rune Knight)
-          if MOUNT_DRAGON is specified, a the default (green) dragon will be used.
-
-Unlike 'setfalcon' and 'setcart' this will not work at all if they aren't of a 
-class which can ride a mount.
-
-The accompanying function will return 0 if the invoking character is not on a
-mount, and a non-zero value (according to the above constants) if they are.
-Note: in case of dragons, the returned value will always be MOUNT_DRAGON,
-regardless of color.
-
-	if (checkmount())
-		mes "Leave your mount outside! No riding mounts on the floor here!";
-
-	if (checkmount() == MOUNT_DRAGON)
-		mes "Wow, your dragon is cool! Can I pet it?";
+	if (checkriding()) mes "PLEASE leave your bird outside! No riding birds on the floor here!";
 
 ---------------------------------------
 
-*setcashmount;
-*hascashmount()
+*setdragon {<color>};
+*checkdragon()
 
-The 'setcashmount' function toggles cash mount for the invoking character.
+The 'setdragon' function toggles mounting a dragon for the invoking 
+character. It will return 1 if successful, 0 otherwise.
+
+If the character can mount a dragon, the <color> options are:
+ 1 - Green Dragon (default when omitted)
+ 2 - Brown Dragon
+ 3 - Gray Dragon
+ 4 - Blue Dragon
+ 5 - Red Dragon
+
+Note: the character must be a Rune Knight and have the skill 
+	  RK_DRAGONTRAINING to gain a mount.
+
+The accompanying function will return 1 if the invoking character is 
+riding a dragon and 0 if they aren't.
+
+---------------------------------------
+
+*setmadogear {<flag>};
+*checkmadogear()
+
+If <flag> is 0 this command will remove the mount from the character.
+Otherwise it gives the invoking character a Mado (if they are a Mechanic).
+
+The accompanying function will return 1 if the invoking character has a 
+Mado and 0 if they don't.
+
+---------------------------------------
+
+*setmounting;
+*ismounting()
+
+The 'setmounting' function toggles cash mount for the invoking character.
 It will return 1 if successful, 0 otherwise.
 
 Note: Character must not be mounting a non-cash mount (eg. dragon, peco, 
@@ -4230,6 +4187,7 @@ character is not married, or if there's no invoking character (no RID).
 ---------------------------------------
 
 *savepoint "<map name>",<x>,<y>;
+*save "<map name>",<x>,<y>;
 
 This command saves where the invoking character will return to upon 
 'return to save point', if dead or in some other cases. The two versions 
@@ -4754,68 +4712,6 @@ Example:
 
 ---------------------------------------
 
-*checkbound(<item_id>{,<bound_type>{,<refine>{,<attribute>{,<card_1>{,<card_2>{,<card_3>{,<card_4>}}}}}}});
-
-This command allows you to check whether or not the attached player has the specified bound item in their inventory.
-If a bound type is not specified or a bound type of 0 is used, it will search the player's inventory for a bound item
-of any type, so long as the other parameters match. In all cases, this command will return the bound type of the
-item found, or 0 if the specified item was not found.
-
-Valid bound types are:
- 0 - All Bound types.
- 1 - Account Bound
- 2 - Guild Bound
- 3 - Party Bound
- 4 - Character Bound
-
-Optional Parameters:
- bound_type - checks to see if the item has the specified bound type.
- refine - checks to see if the item is refined to the given number.
- attribute - whether the item is broken (1) or not (0).
- card 1,2,3,4 - checks to see if the specified cards are compounded on the item as well.
-
-Example:
-	// This will check if you have a bound (any type) 1205 (Cutter).
-	if (checkbound(1205)) {
-		mes "You have a bound Cutter";
-	} else {
-		mes "You do not have a bound Cutter";
-	}
-	close;
-	
-	// This will also check if you have a bound (any type) 1205 (Cutter).
-	if (checkbound(1205,0)) {
-		mes "You have a bound Cutter";
-	} else {
-		mes "You do not have a bound Cutter";
-	}
-	close;
-	
-	// This will check if the player doesn't have a bound 1205 (Cutter).
-	if (!checkbound(1205)) {
-		mes "You do not have a bound Cutter";
-	} else {
-		mes "You do have a bound Cutter";
-	}
-	close;
-	
-	// This will check if the item found, has a bound type of 2 (guild_bound)
-	if (checkbound(1205) == 2) {
-		mes "You have a guild_bound Cutter";
-	} else {
-		mes "You do not have a guild_bound Cutter.";
-	}
-	close;
-	
-	// This will check if you have a 'guild_bound' +7 1205 (Cutter).
-	if (checkbound(1205, 2, 7)) {
-		mes "You have a +7 guild_bound Cutter.";
-	} else {
-		mes "You don't have the required item.";
-	}
-	close;
----------------------------------------
-
 *getnameditem <item id>,<character name|character ID>;
 *getnameditem "<item name>",<character name|character ID>;
 
@@ -5215,7 +5111,6 @@ like storage or cart.
 ---------------------------------------
 
 *equip <item id>;
-*equip2 <item id>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>;
 *autoequip <item id>,<option>;
 
 These commands are to equip a equipment on the attached character. 
@@ -5229,11 +5124,7 @@ Examples:
 //This will equip a 1104 (falchion) on the character if this is in the 
 //inventory.
 	equip 1104;
-
-//This will equip a +10 1104 (falchion) on the character if this is in the
-//inventory.
-	equip2 1104,10,0,0,0,0,0;
-
+	
 //The invoked character will now automatically equip a falchion when it's 
 //looted.
 	autoequip 1104,1;
@@ -5466,12 +5357,10 @@ This is used primarily in item scripts. When used in an NPC script, a flag MUST
 be defined for the rate to work.
 
 Optional value <flag> is how the status change start will be handled (a bitmask).
- SCFLAG_NONE      = 0x00: No special behavior.
- SCFLAG_NOAVOID   = 0x01: Status change cannot be avoided.
- SCFLAG_FIXEDTICK = 0x02: Tick cannot be reduced by stats (default).
- SCFLAG_LOADED    = 0x04: sc_data was loaded, no value will be altered.
- SCFLAG_FIXEDRATE = 0x08: Rate cannot be reduced.
- SCFLAG_NOICON    = 0x10: Status icon (SI) won't be shown.
+ 1: Status change cannot be avoided.
+ 2: Tick cannot be reduced by stats (default).
+ 4: sc_data loaded, so no value will be altered.
+ 8: Rate cannot be reduced.
 
 If a <GID> is given, the status change will be invoked on the specified character
 instead of the one attached to the script. This can only be defined after setting
@@ -6286,6 +6175,13 @@ A debug message also shows on the console when no events are triggered.
 
 ---------------------------------------
 
+*cmdothernpc "<npc name>","<command>";
+
+This is simply "donpcevent <npc name>::OnCommand<command>".
+It is an approximation of official server script language's 'cmdothernpc'.
+
+---------------------------------------
+
 *npctalk "<message>";
 
 This command will display a message to the surrounding area as if the NPC 
@@ -6756,6 +6652,8 @@ It's not clear what happens to a waiting room if the NPC is disabled with
 
 *enablewaitingroomevent {"<NPC object name>"};
 *disablewaitingroomevent {"<NPC object name>"};
+*enablearena;
+*disablearena;
 
 This will enable and disable triggering the waiting room event (see 
 'waitingroom') respectively. Optionally giving an NPC object name will do 
@@ -6768,6 +6666,10 @@ amount and trigger the event accordingly.
 Normally, whenever a waiting room was created to make sure that only one 
 character is, for example, trying to pass a job quest trial, and no other 
 characters are present in the room to mess up the script.
+
+The 'enablearena'/'disablearena' commands are just aliases with no 
+parameter. These are supposedly left here for compatibility with official 
+server scripts, but no Hercules script uses these at the moment.
 
 ---------------------------------------
 
@@ -7346,16 +7248,12 @@ when not provided, "group level char" defaults to 99.
 (1 = log, 0 = no log), default is to not log.
 
 The following variables are set upon execution:
-	.@atcmd_command$      =  The name of the @command used.
-	.@atcmd_parameters$[] =  Array containing the given parameters,
-	                         starting from an index of 0.
-	.@atcmd_numparameters =  The number of parameters defined.
+	.@atcmd_command$       =  The name of the @command used.
+	.@atcmd_parameters$[]  =  Array containing the given parameters, 
+                              starting from an index of 0.
+	.@atcmd_numparameters  =  The number of parameters defined.
 
-Parameters are split on spaces. Multiple spaces aren't grouped together, and
-will create multiple (empty) arguments.
-Any leading spaces before the first parameter will be omitted.
-
-Usage example:
+Example:
 
 When a user types the command "@test", an angel effect will be shown.
 
@@ -7365,50 +7263,6 @@ OnInit:
 	end;
 OnAtcommand:
 	specialeffect2 338;
-	end;
-}
-
-Parameter splitting example:
-	@mycommand
-		.@atcmd_numparameters -> 0
-		.@atcmd_parameters$   -> { }
-	@mycommand<space><space>
-		.@atcmd_numparameters -> 0
-		.@atcmd_parameters$   -> { }
-	@mycommand<space>foo
-		.@atcmd_numparameters -> 1
-		.@atcmd_parameters$   -> { "foo" }
-	@mycommand<space><space>foo
-		.@atcmd_numparameters -> 1
-		.@atcmd_parameters$   -> { "foo" }
-	@mycommand<space>foo<space>bar
-		.@atcmd_numparameters -> 2
-		.@atcmd_parameters$   -> { "foo", "bar" }
-	@mycommand<space>foo<space><space>bar
-		.@atcmd_numparameters -> 3
-		.@atcmd_parameters$   -> { "foo", "", "bar" }
-	@mycommand<space>foo<space>
-		.@atcmd_numparameters -> 2
-		.@atcmd_parameters$   -> { "foo", "" }
-	@mycommand<space>foo<space><space>
-		.@atcmd_numparameters -> 3
-		.@atcmd_parameters$   -> { "foo", "", "" }
-
-The called event label needs to take care of joining arguments together, in
-case it expects spaces. For example:
-
--	script	atcmd_example	-1,{
-OnInit:
-	bindatcmd "test",strnpcinfo(3)+"::OnAtcommand";
-	end;
-OnAtcommand:
-	// This command expects a character name (that may contain spaces) as
-	// the only parameter.
-	.@name$ = "";
-	for (.@i = 0; .@i < .@atcmd_numparameters; ++.@i) {
-		.@name$ += (.@i > 0 ? " " : "") + .@atcmd_parameters$[.@i];
-	}
-	dispbottom("The specified name is: '" + .@name$ + "'");
 	end;
 }
 
@@ -7456,46 +7310,6 @@ config, and will not work properly if the NPC has a mob sprite.
 	// Casts Level 10 Heal on the attached player, calculated with
 	// all stats 99 and base level 60.
 	npcskill "AL_HEAL",10,99,60;
-
----------------------------------------
-
-*setnpcdistance <distance>
-
-This command can reduce distance from where npc can be clicked.
-Usefull to use from OnInit event.
-
-	// Set distance to one tile on server load
-	OnInit:
-	setnpcdistance 1;
-
----------------------------------------
-
-*getnpcdir {<name>};
-
-Return current npc direction for parameter "name" or for attached npc
-if it missing. If name missing and not attached npc, return -1.
-
-Example:
-	.@dir = getnpcdir();
-
----------------------------------------
-
-*setnpcdir {<name>,} <direction>;
-
-Set npc direction. If npc name missing, will be used attached npc.
-
-Example:
-	setnpcdir 2;
-
----------------------------------------
-
-*getnpcclass {<name>};
-
-Return npc class/sprite id for npc with given name or for attached npc.
-If name missing and no attached npc, return -1.
-
-Example:
-	.@class = getnpcclass();
 
 ---------------------------------------
 
@@ -7631,18 +7445,6 @@ Returns distance between 2 points.
 
 Example:
 	.@i = distance(100,200,101,202);
-
----------------------------------------
-
-*min(<number>{,<number>...<number>})
-*max(<number>{,<number>...<number>})
-
-Returns the smallest (or biggest) from the set of given numbers.
-
-Example:
-	.@minimum = min(1, -6, -2, 8, 2); // .@minimum will be equal to -6
-	.@maximum = max(0, 5, 10, 4); // .@maximum will be equal to 10
-	.@level = min(BaseLevel, 70); // .@level will be the character's base level, capped to 70
 
 ---------------------------------------
 
@@ -8025,7 +7827,8 @@ decision-making for the current pet of the invoking character, and will
 NOT have any independent effect by themselves, which is why only one of 
 them each may be in effect at any time for a specific pet. A pet may 
 have 'petloot', 'petskillbonus', 'petskillattack' OR 'petpetskillattack2' 
-and 'petskillsupport' at the same time.
+and 'petskillsupport' OR 'petheal' at the same time. 'petheal' is 
+deprecated and is no longer used in the default pet scripts. 
 
 *petskillbonus <bonus type>,<value>,<duration>,<delay>;
 
@@ -8048,11 +7851,14 @@ reached or when pet performance is activated.
 
 *petskillsupport <skill id>,<skill level>,<delay>,<percent hp>,<percent sp>;
 *petskillsupport "<skill name>",<skill level>,<delay>,<percent hp>,<percent sp>;
+*petheal <level>,<delay>,<percent hp>,<percent sp>;
 
 This will make the pet use a specified support skill on the owner whenever 
 the HP and SP are below the given percent values, with a specified delay 
 time between activations. The skill numbers are as per 
 'db/(pre-)re/skill_db.txt'.
+'petheal' works the same as 'petskillsupport' but has the skill ID 
+hard-coded to 28 (Heal). This command is deprecated.
 It's not quite certain who's stats will be used for the skills cast, the 
 character's or the pets. Probably, Skotlex can answer that question.
 
@@ -8384,30 +8190,9 @@ if (instance_check_party(getcharid(1),2,2,149)) {
 	mes "All online members are between levels 1-150 and at least two are online.";
 	close;
 } else {
-	mes "Sorry, your party does not meet the requirements.";
+	mes "Sorry, your party does not meet requirements.";
 	close;
 }
-
----------------------------------------
-
-*instance_check_guild(<guild_id>{,<amount>{,<min>{,<max>}}});
-
-This function checks if a guild meets certain requirements, returning 1 if
-all conditions are met and 0 otherwise. it will only check online characters.
-
-amount - number of online guild members (default is 1).
-min - minimum level of all characters in the guild (default is 1).
-max - maximum level of all characters in the guild (default is max level in conf).
-
-Example:
-	if (instance_check_guild(getcharid(2), 2, 1, 150)) {
-		mes "Your guild meets the Memorial Dungeon requirements.",
-		mes "All online members are between levels 1-150 and at least two are online.";
-		close;
-	} else {
-		mes "Sorry, your guild does not meet the requirements.";
-		close;
-	}
 
 ---------------------------------------
 *instance_set_respawn(<map_name>,<x>,<y>{,<instance_id>});
@@ -8447,7 +8232,7 @@ that fails, the command returns an empty string instead.
 
 *questinfo <Quest ID>, <Icon> {, <Map Mark Color>{, <Job Class>}};
 
-This is esentially a combination of questprogress and showevent. Use this only
+This is esentially a combination of checkquest and showevent. Use this only
 in an OnInit label. For the Quest ID, specify the quest ID that you want
 checked if it has been started yet.
 
@@ -8497,22 +8282,16 @@ If *questinfo is set, and the same ID is specified here, the icon will be cleare
 
 ---------------------------------------
 
-*completequest <ID>{,<ID2>};
+*completequest <ID>;
 
 Change the state for the given quest <ID> to "complete" and remove from 
 the users quest log.
 
-If a second quest id of greater value is specified, all quests between the two
-will be completed.
-
 ---------------------------------------
 
-*erasequest <ID>{,<ID2>};
+*erasequest <ID>;
 
 Remove the quest of the given <ID> from the user's quest log.
-
-If a second quest id of greater value is specified, all quests between the two
-will be erased.
 
 ---------------------------------------
 
@@ -8523,31 +8302,28 @@ Add quest of the <ID2> to the the quest log, and the state is "active".
 
 ---------------------------------------
 
-*questprogress(<ID>{,PLAYTIME|HUNTING})
+*checkquest(<ID>{,PLAYTIME|HUNTING})
 
-If no additional argument supplied, return the state of the quest:
-	0 = Quest not started (not in quest log)
-	1 = Quest has been given
-	2 = Quest completed
+If no additional argument supplied, return the state of the quest: 
+	-1 = Quest not started (not in quest log)
+	0  = Quest has been given, but the state is "inactive"
+	1  = Quest has been given, and the state is "active"
+	2  = Quest completed
 
-If parameter 'PLAYTIME' is supplied:
-	0 = Quest not started (not in quest log)
-	1 = The time limit has not yet been reached
-	2 = The time limit has been reached
+If parameter "PLAYTIME" is supplied:
+	-1 = Quest not started (not in quest log)
+	0  = the time limit has not yet been reached
+	1  = the time limit has not been reached but the quest is marked as 
+		 complete
+	2  = the time limit has been reached
 
-If parameter 'HUNTING' is supplied:
-	0 = Quest not started (not in quest log)
-	1 = Player hasn't killed all of the target monsters
-	2 = Player has killed all of the target monsters
-
----------------------------------------
-
-*questactive(<ID>)
-
-Check whether the given quest is in its active state.
-
-Returns true if the quest is active, false otherwise (quest not started,
-inactive or completed)
+If parameter "HUNTING" is supplied:
+   -1 = Quest not started (not in quest log)
+	0 = you haven't killed all of the target monsters and the time limit 
+		has not been reached.
+	1 = you haven't killed all of the target monsters but the time limit 
+		has been reached.
+	2 = you've killed all of the target monsters
 
 ---------------------------------------
 

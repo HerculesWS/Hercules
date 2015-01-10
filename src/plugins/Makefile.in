@@ -24,11 +24,10 @@ MYPLUGINS =
 #########  DO NOT EDIT ANYTHING BELOW THIS LINE!!!  ##################
 
 # All plugins in the src/plugins directory
-HPMHOOKING = $(addprefix HPMHooking_, login char map)
-ALLPLUGINS = $(filter-out HPMHooking, $(basename $(wildcard *.c))) $(HPMHOOKING)
+ALLPLUGINS = $(basename $(wildcard *.c))
 
 # Plugins that will be built through 'make plugins' or 'make all'
-PLUGINS = sample db2sql HPMHooking_char HPMHooking_login HPMHooking_map $(MYPLUGINS)
+PLUGINS = sample db2sql HPMHooking $(MYPLUGINS)
 
 COMMON_D = ../common
 COMMON_H = $(wildcard $(COMMON_D)/*.h)
@@ -47,14 +46,11 @@ CC = @CC@
 export CC
 
 #####################################################################
-.PHONY: all $(ALLPLUGINS) HPMHooking clean buildclean help
+.PHONY: all $(ALLPLUGINS) clean buildclean help
 
 all: $(PLUGINS) Makefile
 
 $(ALLPLUGINS): %: ../../plugins/%@DLLEXT@
-	@echo "	PLUGIN	$@"
-
-HPMHooking: $(HPMHOOKING)
 
 buildclean:
 	@echo "	CLEAN	plugins (build temp files)"
@@ -84,12 +80,4 @@ Makefile: Makefile.in
 
 ../../plugins/%@DLLEXT@: %.c $(ALL_H) $$(shell ls %/* 2>/dev/null)
 	@echo "	CC	$<"
-	@$(CC) @PLUGINSTATIC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o $@ $<
-
-../../plugins/HPMHooking_login@DLLEXT@: HPMHOOKINGTYPE = LOGIN
-../../plugins/HPMHooking_char@DLLEXT@: HPMHOOKINGTYPE = CHAR
-../../plugins/HPMHooking_map@DLLEXT@: HPMHOOKINGTYPE = MAP
-
-../../plugins/HPMHooking_%@DLLEXT@: HPMHooking.c $(ALL_H) $$(shell ls HPMHooking/*_%* HPMHooking/*_common* 2>/dev/null)
-	@echo "	CC	$< ($(HPMHOOKINGTYPE))"
-	@$(CC) -DHPMHOOKING_$(HPMHOOKINGTYPE) @PLUGINSTATIC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o $@ $<
+	@$(CC) @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o $@ $<

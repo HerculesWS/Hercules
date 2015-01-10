@@ -8,17 +8,13 @@
 
 struct s_homunculus;
 
-void inter_homunculus_defaults(void);
+int inter_homunculus_sql_init(void);
+void inter_homunculus_sql_final(void);
+int inter_homunculus_parse_frommap(int fd);
 
-/**
- * inter_homunculus interface
- **/
-struct inter_homunculus_interface {
-	int (*sql_init) (void);
-	void (*sql_final) (void);
-	int (*parse_frommap) (int fd);
-};
-
-struct inter_homunculus_interface *inter_homunculus;
+bool mapif_homunculus_save(struct s_homunculus* hd);
+bool mapif_homunculus_load(int homun_id, struct s_homunculus* hd);
+bool mapif_homunculus_delete(int homun_id);
+bool mapif_homunculus_rename(char *name);
 
 #endif /* CHAR_INT_HOMUN_H */
