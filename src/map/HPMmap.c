@@ -74,6 +74,11 @@ struct HPM_atcommand_list {
 struct HPM_atcommand_list *atcommand_list = NULL;
 unsigned int atcommand_list_items = 0;
 
+/**
+ * (char*) data name -> (unsigned int) HPMDataCheck[] index
+ **/
+DBMap *datacheck_db;
+
 bool HPM_map_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr) {
 	/* record address */
 	switch( type ) {
@@ -100,18 +105,6 @@ bool HPM_map_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataType
 		case HPDT_INSTANCE:
 			ret->HPDataSRCPtr = (void**)(&((struct instance_data *)ptr)->hdata);
 			ret->hdatac = &((struct instance_data *)ptr)->hdatac;
-			break;
-		case HPDT_MOBDB:
-			ret->HPDataSRCPtr = (void**)(&((struct mob_db *)ptr)->hdata);
-			ret->hdatac = &((struct mob_db *)ptr)->hdatac;
-			break;
-		case HPDT_MOBDATA:
-			ret->HPDataSRCPtr = (void**)(&((struct mob_data *)ptr)->hdata);
-			ret->hdatac = &((struct mob_data *)ptr)->hdatac;
-			break;
-		case HPDT_ITEMDATA:
-			ret->HPDataSRCPtr = (void**)(&((struct item_data *)ptr)->hdata);
-			ret->hdatac = &((struct item_data *)ptr)->hdatac;
 			break;
 		default:
 			return false;
@@ -154,6 +147,29 @@ void HPM_map_atcommands(void) {
 }
 
 /**
+ * Called by HPM->DataCheck on a plugins incoming data, ensures data structs in use are matching!
+ **/
+bool HPM_map_DataCheck (struct s_HPMDataCheck *src, unsigned int size, char *name) {
+	unsigned int i, j;
+	
+	for(i = 0; i < size; i++) {
+		
+		if( !strdb_exists(datacheck_db, src[i].name) ) {
+			ShowError("HPMDataCheck:%s: '%s' was not found\n",name,src[i].name);
+			return false;
+		} else {
+			j = strdb_uiget(datacheck_db, src[i].name);/* not double lookup; exists sets cache to found data */
+			if( src[i].size != HPMDataCheck[j].size ) {
+				ShowWarning("HPMDataCheck:%s: '%s' size mismatch %u != %u\n",name,src[i].name,src[i].size,HPMDataCheck[j].size);
+				return false;
+			}
+		}
+	}
+	
+	return true;
+}
+
+/**
  * Adds a new group permission to the HPM-provided list
  **/
 void HPM_map_add_group_permission(unsigned int pluginID, char *name, unsigned int *mask) {
@@ -167,9 +183,17 @@ void HPM_map_add_group_permission(unsigned int pluginID, char *name, unsigned in
 }
 
 void HPM_map_do_init(void) {
-	HPM->load_sub = HPM_map_plugin_load_sub;
-	HPM->grabHPDataSub = HPM_map_grabHPData;
-	HPM->datacheck_init(HPMDataCheck, HPMDataCheckLen, HPMDataCheckVer);
+	unsigned int i;
+	
+	/**
+	 * Populates datacheck_db for easy lookup later on
+	 **/
+	datacheck_db = strdb_alloc(DB_OPT_BASE,0);
+	
+	for(i = 0; i < HPMDataCheckLen; i++) {
+		strdb_uiput(datacheck_db, HPMDataCheck[i].name, i);
+	}
+	
 }
 
 void HPM_map_do_final(void) {
@@ -181,13 +205,11 @@ void HPM_map_do_final(void) {
 	 * why is pcg->HPM being cleared here? because PCG's do_final is not final,
 	 * is used on reload, and would thus cause plugin-provided permissions to go away
 	 **/
-	if( pcg->HPMpermissions )
-	{
-		for( i = 0; i < pcg->HPMpermissions_count; i++ ) {
-			aFree(pcg->HPMpermissions[i].name);
-		}
-		aFree(pcg->HPMpermissions);
+	for( i = 0; i < pcg->HPMpermissions_count; i++ ) {
+		aFree(pcg->HPMpermissions[i].name);
 	}
+	if( pcg->HPMpermissions )
+		aFree(pcg->HPMpermissions);
 	
-	HPM->datacheck_final();
+	db_destroy(datacheck_db);
 }

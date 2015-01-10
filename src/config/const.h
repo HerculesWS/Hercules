@@ -52,14 +52,10 @@
 	#define DEFTYPE_MAX CHAR_MAX
 #endif
 
-/* ATCMD_FUNC(mobinfo) HIT, FLEE, ATK, ATK2, MATK and MATK2 calculations */
+/* ATCMD_FUNC(mobinfo) HIT and FLEE calculations */
 #ifdef RENEWAL
 	#define MOB_FLEE(mobdata) ( (mobdata)->lv + (mobdata)->status.agi + 100 )
 	#define MOB_HIT(mobdata)  ( (mobdata)->lv + (mobdata)->status.dex + 150 )
-	#define MOB_ATK1(mobdata) ( ((mobdata)->lv + (mobdata)->status.str) + (mobdata)->status.rhw.atk * 8 / 10 )
-	#define MOB_ATK2(mobdata) ( ((mobdata)->lv + (mobdata)->status.str) + (mobdata)->status.rhw.atk * 12 / 10 )
-	#define MOB_MATK1(mobdata)( ((mobdata)->lv + (mobdata)->status.int_) + (mobdata)->status.rhw.atk2 * 7 / 10 )
-	#define MOB_MATK2(mobdata)( ((mobdata)->lv + (mobdata)->status.int_) + (mobdata)->status.rhw.atk2 * 13 / 10 )
 	#define RE_SKILL_REDUCTION() do { \
 		wd.damage = battle->calc_elefix(src, target, skill_id, skill_lv, battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage, 0, wd.flag), nk, n_ele, s_ele, s_ele_, false, flag.arrow); \
 		if( flag.lh ) \
@@ -73,16 +69,17 @@
 /* Renewal's dmg level modifier, used as a macro for a easy way to turn off. */
 #ifdef RENEWAL_LVDMG
 	#define RE_LVL_DMOD(val) do { \
-		if( (val) > 0 ) \
+		if( status->get_lv(src) > 100 && (val) > 0 ) \
 			skillratio = skillratio * status->get_lv(src) / (val); \
 	} while(0)
 	#define RE_LVL_MDMOD(val) do { \
-		if ( (val) > 0 ) \
+		if( status->get_lv(src) > 100 && (val) > 0) \
 			md.damage = md.damage * status->get_lv(src) / (val); \
 	} while(0)
 	/* ranger traps special */
 	#define RE_LVL_TMDMOD() do { \
-		md.damage = md.damage * 150 / 100 + md.damage * status->get_lv(src) / 100; \
+		if( status->get_lv(src) > 100 ) \
+			md.damage = md.damage * 150 / 100 + md.damage * status->get_lv(src) / 100; \
 	} while(0)
 #else
 	#define RE_LVL_DMOD(val)

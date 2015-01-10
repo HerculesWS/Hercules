@@ -40,7 +40,7 @@ prontera,146,91,5	script	Pandit chacha#child07	1_M_PUBMASTER,{
 			mes "Whenever come back again if you want it...";
 			close;
 		}
-		oversea_event9 = 1;
+		set oversea_event9,1;
 		getitem 11705,10; //Special_White_Potion
 		mes "[Pandit chacha]";
 		mes "Look. This is a child Potion.";
@@ -68,7 +68,7 @@ prontera,146,91,5	script	Pandit chacha#child07	1_M_PUBMASTER,{
 			close2;
 			delitem 745,1; //Wedding_Bouquet
 			delitem 748,1; //Witherless_Rose
-			oversea_event9 = 2;
+			set oversea_event9,2;
 			getitem 11705,50; //Special_White_Potion
 			end;
 		}

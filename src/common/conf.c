@@ -34,10 +34,10 @@ void config_setting_copy_simple(config_setting_t *parent, const config_setting_t
 	}
 	else {
 		config_setting_t *set;
-
+		
 		if( libconfig->setting_get_member(parent, config_setting_name(src)) != NULL )
 			return;
-
+		
 		if ((set = libconfig->setting_add(parent, config_setting_name(src), config_setting_type(src))) == NULL)
 			return;
 
@@ -83,14 +83,14 @@ void config_setting_copy_aggregate(config_setting_t *parent, const config_settin
 
 	if( libconfig->setting_get_member(parent, config_setting_name(src)) != NULL )
 		return;
-
+	
 	newAgg = libconfig->setting_add(parent, config_setting_name(src), config_setting_type(src));
 
 	if (newAgg == NULL)
 		return;
 
 	n = config_setting_length(src);
-
+	
 	for (i = 0; i < n; i++) {
 		if (config_setting_is_group(src)) {
 			libconfig->setting_copy_simple(newAgg, libconfig->setting_get_elem(src, i));
@@ -101,6 +101,7 @@ void config_setting_copy_aggregate(config_setting_t *parent, const config_settin
 }
 
 int config_setting_copy(config_setting_t *parent, const config_setting_t *src) {
+	
 	if (!config_setting_is_group(parent) && !config_setting_is_list(parent))
 		return CONFIG_FALSE;
 
@@ -114,7 +115,7 @@ int config_setting_copy(config_setting_t *parent, const config_setting_t *src) {
 
 void libconfig_defaults(void) {
 	libconfig = &libconfig_s;
-
+	
 	libconfig->read = config_read;
 	libconfig->write = config_write;
 	/* */
@@ -145,7 +146,6 @@ void libconfig_defaults(void) {
 	/* */
 	libconfig->setting_set_int = config_setting_set_int;
 	libconfig->setting_set_int64 = config_setting_set_int64;
-	libconfig->setting_set_float = config_setting_set_float;
 	libconfig->setting_set_bool = config_setting_set_bool;
 	libconfig->setting_set_string = config_setting_set_string;
 	/* */

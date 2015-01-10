@@ -8,9 +8,6 @@
 #include "../common/core.h" // CORE_ST_LAST
 #include "../common/mmo.h" // NAME_LENGTH,SEX_*
 
-struct mmo_account;
-struct AccountDB;
-
 enum E_LOGINSERVER_ST
 {
 	LOGINSERVER_ST_RUNNING = CORE_ST_LAST,
@@ -46,7 +43,7 @@ struct login_session_data {
 	int has_client_hash;
 
 	int fd;
-
+	
 	time_t expiration_time;
 };
 
@@ -69,61 +66,30 @@ struct client_hash_node {
 
 struct Login_Config {
 
-	uint32 login_ip;                                ///< the address to bind to
-	uint16 login_port;                              ///< the port to bind to
-	unsigned int ipban_cleanup_interval;            ///< interval (in seconds) to clean up expired IP bans
-	unsigned int ip_sync_interval;                  ///< interval (in minutes) to execute a DNS/IP update (for dynamic IPs)
-	bool log_login;                                 ///< whether to log login server actions or not
-	char date_format[32];                           ///< date format used in messages
-	bool new_account_flag,new_acc_length_limit;     ///< auto-registration via _M/_F ? / if yes minimum length is 4?
-	int start_limited_time;                         ///< new account expiration time (-1: unlimited)
-	bool use_md5_passwds;                           ///< work with password hashes instead of plaintext passwords?
-	int group_id_to_connect;                        ///< required group id to connect
-	int min_group_id_to_connect;                    ///< minimum group id to connect
-	bool check_client_version;                      ///< check the clientversion set in the clientinfo ?
-	uint32 client_version_to_connect;               ///< the client version needed to connect (if checking is enabled)
-	int allowed_regs;                               ///< account registration flood protection [Kevin]
-	int time_allowed;                               ///< time in seconds
+	uint32 login_ip;                                // the address to bind to
+	uint16 login_port;                              // the port to bind to
+	unsigned int ipban_cleanup_interval;            // interval (in seconds) to clean up expired IP bans
+	unsigned int ip_sync_interval;                  // interval (in minutes) to execute a DNS/IP update (for dynamic IPs)
+	bool log_login;                                 // whether to log login server actions or not
+	char date_format[32];                           // date format used in messages
+	bool new_account_flag,new_acc_length_limit;     // auto-registration via _M/_F ? / if yes minimum length is 4?
+	int start_limited_time;                         // new account expiration time (-1: unlimited)
+	bool use_md5_passwds;                           // work with password hashes instead of plaintext passwords?
+	int group_id_to_connect;                        // required group id to connect
+	int min_group_id_to_connect;                    // minimum group id to connect
+	bool check_client_version;                      // check the clientversion set in the clientinfo ?
+	uint32 client_version_to_connect;               // the client version needed to connect (if checking is enabled)
 
-	bool ipban;                                     ///< perform IP blocking (via contents of `ipbanlist`) ?
-	bool dynamic_pass_failure_ban;                  ///< automatic IP blocking due to failed login attemps ?
-	unsigned int dynamic_pass_failure_ban_interval; ///< how far to scan the loginlog for password failures
-	unsigned int dynamic_pass_failure_ban_limit;    ///< number of failures needed to trigger the ipban
-	unsigned int dynamic_pass_failure_ban_duration; ///< duration of the ipban
-	bool use_dnsbl;                                 ///< dns blacklist blocking ?
-	char dnsbl_servs[1024];                         ///< comma-separated list of dnsbl servers
+	bool ipban;                                     // perform IP blocking (via contents of `ipbanlist`) ?
+	bool dynamic_pass_failure_ban;                  // automatic IP blocking due to failed login attemps ?
+	unsigned int dynamic_pass_failure_ban_interval; // how far to scan the loginlog for password failures
+	unsigned int dynamic_pass_failure_ban_limit;    // number of failures needed to trigger the ipban
+	unsigned int dynamic_pass_failure_ban_duration; // duration of the ipban
+	bool use_dnsbl;                                 // dns blacklist blocking ?
+	char dnsbl_servs[1024];                         // comma-separated list of dnsbl servers
 
-	int client_hash_check;                          ///< flags for checking client md5
-	struct client_hash_node *client_hash_nodes;     ///< linked list containg md5 hash for each gm group
-
-	/// Advanced subnet check [LuzZza]
-	struct s_subnet {
-		uint32 mask;
-		uint32 char_ip;
-		uint32 map_ip;
-	} subnet[16];
-	int subnet_count;
-};
-
-struct login_auth_node {
-	int account_id;
-	uint32 login_id1;
-	uint32 login_id2;
-	uint32 ip;
-	char sex;
-	uint32 version;
-	uint8 clienttype;
-	int group_id;
-	time_t expiration_time;
-};
-
-//-----------------------------------------------------
-// Online User Database [Wizputer]
-//-----------------------------------------------------
-struct online_login_data {
-	int account_id;
-	int waiting_disconnect;
-	int char_server;
+	int client_hash_check;							// flags for checking client md5
+	struct client_hash_node *client_hash_nodes;		// linked list containg md5 hash for each gm group
 };
 
 #define sex_num2str(num) ( ((num) ==  SEX_FEMALE) ? 'F' : ((num) ==  SEX_MALE) ? 'M' : 'S' )
@@ -133,75 +99,5 @@ struct online_login_data {
 extern struct mmo_char_server server[MAX_SERVERS];
 extern struct Login_Config login_config;
 
-/**
- * Login.c Interface
- **/
-struct login_interface {
-	DBMap* auth_db;
-	DBMap* online_db;
-	int fd;
-	struct Login_Config *lc;
-	struct AccountDB* accounts;
-
-	int (*mmo_auth) (struct login_session_data* sd, bool isServer);
-	int (*mmo_auth_new) (const char* userid, const char* pass, const char sex, const char* last_ip);
-	int (*waiting_disconnect_timer) (int tid, int64 tick, int id, intptr_t data);
-	DBData (*create_online_user) (DBKey key, va_list args);
-	struct online_login_data* (*add_online_user) (int char_server, int account_id);
-	void (*remove_online_user) (int account_id);
-	int (*online_db_setoffline) (DBKey key, DBData *data, va_list ap);
-	int (*online_data_cleanup_sub) (DBKey key, DBData *data, va_list ap);
-	int (*online_data_cleanup) (int tid, int64 tick, int id, intptr_t data);
-	int (*sync_ip_addresses) (int tid, int64 tick, int id, intptr_t data);
-	bool (*check_encrypted) (const char* str1, const char* str2, const char* passwd);
-	bool (*check_password) (const char* md5key, int passwdenc, const char* passwd, const char* refpass);
-	int (*lan_subnetcheck) (uint32 ip);
-	int (*lan_config_read) (const char *lancfgName);
-	void (*fromchar_accinfo) (int fd, int account_id, int u_fd, int u_aid, int u_group, int map_fd, struct mmo_account *acc);
-	void (*fromchar_account) (int fd, int account_id, struct mmo_account *acc);
-	void (*fromchar_account_update_other) (int account_id, unsigned int state);
-	void (*fromchar_auth_ack) (int fd, int account_id, uint32 login_id1, uint32 login_id2, uint8 sex, int request_id, struct login_auth_node* node);
-	void (*fromchar_ban) (int account_id, time_t timestamp);
-	void (*fromchar_change_sex_other) (int account_id, char sex);
-	void (*fromchar_pong) (int fd);
-	void (*fromchar_parse_auth) (int fd, int id, const char *ip);
-	void (*fromchar_parse_update_users) (int fd, int id);
-	void (*fromchar_parse_request_change_email) (int fd, int id, const char *ip);
-	void (*fromchar_parse_account_data) (int fd, int id, const char *ip);
-	void (*fromchar_parse_ping) (int fd);
-	void (*fromchar_parse_change_email) (int fd, int id, const char *ip);
-	void (*fromchar_parse_account_update) (int fd, int id, const char *ip);
-	void (*fromchar_parse_ban) (int fd, int id, const char *ip);
-	void (*fromchar_parse_change_sex) (int fd, int id, const char *ip);
-	void (*fromchar_parse_account_reg2) (int fd, int id, const char *ip);
-	void (*fromchar_parse_unban) (int fd, int id, const char *ip);
-	void (*fromchar_parse_account_online) (int fd, int id);
-	void (*fromchar_parse_account_offline) (int fd);
-	void (*fromchar_parse_online_accounts) (int fd, int id);
-	void (*fromchar_parse_request_account_reg2) (int fd);
-	void (*fromchar_parse_update_wan_ip) (int fd, int id);
-	void (*fromchar_parse_all_offline) (int fd, int id);
-	void (*fromchar_parse_change_pincode) (int fd);
-	bool (*fromchar_parse_wrong_pincode) (int fd);
-	void (*fromchar_parse_accinfo) (int fd);
-	int (*parse_fromchar) (int fd);
-	void (*connection_problem) (int fd, uint8 status);
-	void (*kick) (struct login_session_data* sd);
-	void (*auth_ok) (struct login_session_data* sd);
-	void (*auth_failed) (struct login_session_data* sd, int result);
-	void (*login_error) (int fd, uint8 status);
-	void (*parse_ping) (int fd, struct login_session_data* sd);
-	void (*parse_client_md5) (int fd, struct login_session_data* sd);
-	bool (*parse_client_login) (int fd, struct login_session_data* sd, const char *ip);
-	void (*send_coding_key) (int fd, struct login_session_data* sd);
-	void (*parse_request_coding_key) (int fd, struct login_session_data* sd);
-	void (*char_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
-	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip);
-	int (*parse_login) (int fd);
-};
-
-struct login_interface *login;
-
-void login_defaults(void);
 
 #endif /* LOGIN_LOGIN_H */

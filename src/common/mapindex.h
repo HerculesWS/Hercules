@@ -67,12 +67,6 @@ struct mapindex_interface {
 	DBMap *db;
 	/* number of entries in the index table */
 	int num;
-	/* default map name */
-	char *default_map;
-	/* default x on map */
-	int default_x;
-	/* default y on map */
-	int default_y;
 	/* index list -- since map server map count is *unlimited* this should be too */
 	struct {
 		char name[MAP_NAME_LENGTH];
@@ -90,7 +84,6 @@ struct mapindex_interface {
 	/* TODO: Hello World! make up your mind, this thing is int on some places and unsigned short on others */
 	unsigned short (*name2id) (const char*);
 	const char* (*id2name) (unsigned short,const char *file, int line, const char *func);
-	bool (*check_default) (void);
 };
 
 struct mapindex_interface *mapindex;

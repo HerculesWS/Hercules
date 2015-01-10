@@ -16,7 +16,7 @@
 // Change this to increase the table size in your mob_db to accommodate a larger mob database.
 // Be sure to note that IDs 4001 to 4048 are reserved for advanced/baby/expanded classes.
 // Notice that the last 1000 entries are used for player clones, so always set this to desired value +1000
-#define MAX_MOB_DB 5000
+#define MAX_MOB_DB 4000
 
 //The number of drops all mobs have and the max drop-slot that the steal skill will attempt to steal from.
 #define MAX_MOB_DROP 10
@@ -27,8 +27,6 @@
 #define MIN_MOBTHINKTIME 100
 //Min time before mobs do a check to call nearby friends for help (or for slaves to support their master)
 #define MIN_MOBLINKTIME 1000
-//Min time between random walks
-#define MIN_RANDOMWALKTIME 4000
 
 //Distance that slaves should keep from their master.
 #define MOB_SLAVEDISTANCE 2
@@ -41,15 +39,6 @@
 #define DEFAULT_ENEMY_TYPE(md) ((md)->special_state.ai?BL_CHAR:BL_MOB|BL_PC|BL_HOM|BL_MER)
 
 #define MAX_MOB_CHAT 250 //Max Skill's messages
-
-// On official servers, monsters will only seek targets that are closer to walk to than their
-// search range. The search range is affected depending on if the monster is walking or not.
-// On some maps there can be a quite long path for just walking two cells in a direction and
-// the client does not support displaying walk paths that are longer than 14 cells, so this
-// option reduces position lag in such situation. But doing a complex search for every possible
-// target, might be CPU intensive.
-// Disable this to make monsters not do any path search when looking for a target (old behavior).
-#define ACTIVEPATHSEARCH
 
 //Mob skill states.
 enum MobSkillState {
@@ -73,8 +62,8 @@ enum MobDamageLogFlag
 };
 
 enum size {
-	SZ_SMALL = 0,
-	SZ_MEDIUM,
+	SZ_MEDIUM = 0,
+	SZ_SMALL,
 	SZ_BIG,
 };
 
@@ -115,7 +104,7 @@ struct mob_db {
 	unsigned int base_exp,job_exp;
 	unsigned int mexp;
 	short range2,range3;
-	short race2; // celest
+	short race2;	// celest
 	unsigned short lv;
 	struct { int nameid,p; } dropitem[MAX_MOB_DROP];
 	struct { int nameid,p; } mvpitem[MAX_MVP_DROP];
@@ -126,10 +115,6 @@ struct mob_db {
 	int maxskill;
 	struct mob_skill skill[MAX_MOBSKILL];
 	struct spawn_info spawn[10];
-
-	/* HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
 };
 
 struct mob_data {
@@ -138,7 +123,7 @@ struct mob_data {
 	struct view_data *vd;
 	struct status_data status, *base_status; //Second one is in case of leveling up mobs, or tiny/large mobs.
 	struct status_change sc;
-	struct mob_db *db; //For quick data access (saves doing mob_db(md->class_) all the time) [Skotlex]
+	struct mob_db *db;	//For quick data access (saves doing mob_db(md->class_) all the time) [Skotlex]
 	char name[NAME_LENGTH];
 	struct {
 		unsigned int size : 2; //Small/Big monsters.
@@ -184,7 +169,6 @@ struct mob_data {
 	short move_fail_count;
 	short lootitem_count;
 	short min_chase;
-	unsigned char walktoxy_fail_count; //Pathfinding succeeds but the actual walking failed (e.g. Icewall lock)
 
 	int deletetimer;
 	int master_id,master_dist;
@@ -201,17 +185,13 @@ struct mob_data {
 	 * MvP Tombstone NPC ID
 	 **/
 	int tomb_nid;
-
-	/* HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
 };
 
 
 
 enum {
-	MST_TARGET = 0,
-	MST_RANDOM, //Random Target!
+	MST_TARGET	=	0,
+	MST_RANDOM,	//Random Target!
 	MST_SELF,
 	MST_FRIEND,
 	MST_MASTER,
@@ -223,9 +203,9 @@ enum {
 	MST_AROUND2,
 	MST_AROUND3,
 	MST_AROUND4,
-	MST_AROUND = MST_AROUND4,
+	MST_AROUND	=	MST_AROUND4,
 
-	MSC_ALWAYS = 0x0000,
+	MSC_ALWAYS	=	0x0000,
 	MSC_MYHPLTMAXRATE,
 	MSC_MYHPINRATE,
 	MSC_FRIENDHPLTMAXRATE,
@@ -377,7 +357,6 @@ struct mob_interface {
 	bool (*readdb_itemratio) (char *str[], int columns, int current);
 	void (*load) (bool minimal);
 	void (*clear_spawninfo) ();
-	void (*destroy_mob_db) (int index);
 };
 
 struct mob_interface *mob;

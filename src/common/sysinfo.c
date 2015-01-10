@@ -594,7 +594,7 @@ void sysinfo_osversion_retrieve(void) {
 
 	// Include service pack (if any) and build number.
 
-	if (osvi.szCSDVersion[0] != '\0') {
+	if (strlen(osvi.szCSDVersion) > 0) {
 		StrBuf->Printf(&buf, " %s", osvi.szCSDVersion);
 	}
 

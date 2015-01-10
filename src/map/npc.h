@@ -61,8 +61,7 @@ struct npc_data {
 	int touching_id;
 	int64 next_walktime;
 	uint8 dir;
-	uint8 area_size;
-
+	
 	unsigned size : 2;
 
 	struct status_data status;
@@ -124,6 +123,10 @@ enum actor_classes {
 #define MAX_NPC_CLASS2_START 10000
 #define MAX_NPC_CLASS2_END 10110
 
+//Checks if a given id is a valid npc id. [Skotlex]
+//Since new npcs are added all the time, the max valid value is the one before the first mob (Scorpion = 1001)
+#define npcdb_checkid(id) ( ( (id) >= 46 && (id) <= 125) || (id) == HIDDEN_WARP_CLASS || ( (id) > 400 && (id) < MAX_NPC_CLASS ) || (id) == INVISIBLE_CLASS || ( (id) > MAX_NPC_CLASS2_START && (id) < MAX_NPC_CLASS2_END ) )
+
 //Script NPC events.
 enum npce_event {
 	NPCE_LOGIN,
@@ -178,7 +181,6 @@ struct npc_interface {
 	bool (*isnear) (struct block_list *bl);
 	int (*ontouch_event) (struct map_session_data *sd, struct npc_data *nd);
 	int (*ontouch2_event) (struct map_session_data *sd, struct npc_data *nd);
-	int (*onuntouch_event) (struct map_session_data *sd, struct npc_data *nd);
 	int (*enable_sub) (struct block_list *bl, va_list ap);
 	int (*enable) (const char *name, int flag);
 	struct npc_data* (*name2id) (const char *name);
@@ -203,7 +205,6 @@ struct npc_interface {
 	int (*touch_areanpc_sub) (struct block_list *bl, va_list ap);
 	int (*touchnext_areanpc) (struct map_session_data *sd, bool leavemap);
 	int (*touch_areanpc) (struct map_session_data *sd, int16 m, int16 x, int16 y);
-	int (*untouch_areanpc) (struct map_session_data *sd, int16 m, int16 x, int16 y);
 	int (*touch_areanpc2) (struct mob_data *md);
 	int (*check_areanpc) (int flag, int16 m, int16 x, int16 y, int16 range);
 	struct npc_data* (*checknear) (struct map_session_data *sd, struct block_list *bl);
@@ -230,11 +231,9 @@ struct npc_interface {
 	void (*parsename) (struct npc_data *nd, const char *name, const char *start, const char *buffer, const char *filepath);
 	int (*parseview) (const char *w4, const char *start, const char *buffer, const char *filepath);
 	bool (*viewisid) (const char *viewid);
-	struct npc_data* (*create_npc) (int m, int x, int y);
 	struct npc_data* (*add_warp) (char *name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y);
 	const char* (*parse_warp) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	const char* (*parse_shop) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
-	const char* (*parse_unknown_object) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	void (*convertlabel_db) (struct npc_label_list *label_list, const char *filepath);
 	const char* (*skip_script) (const char *start, const char *buffer, const char *filepath, int *retval);
 	const char* (*parse_script) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int options, int *retval);
@@ -251,7 +250,6 @@ struct npc_interface {
 	void (*parse_mob2) (struct spawn_data *mobspawn);
 	const char* (*parse_mob) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	const char* (*parse_mapflag) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
-	void (*parse_unknown_mapflag) (const char *name, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	int (*parsesrcfile) (const char *filepath, bool runOnInit);
 	int (*script_event) (struct map_session_data *sd, enum npce_event type);
 	void (*read_event_script) (void);
@@ -272,7 +270,6 @@ struct npc_interface {
 	void (*market_tosql) (struct npc_data *nd, unsigned short index);
 	void (*market_delfromsql) (struct npc_data *nd, unsigned short index);
 	void (*market_delfromsql_sub) (const char *npcname, unsigned short index);
-	bool (*db_checkid) (const int id);
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
 	 **/

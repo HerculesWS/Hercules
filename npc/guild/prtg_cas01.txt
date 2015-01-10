@@ -18,7 +18,7 @@
 //============================================================
 -	script	Kriemhild#1::OutsideFlagsPR1	GUILD_FLAG,{
 
-	.@GID = getcastledata("prtg_cas01",1);
+	set .@GID, getcastledata("prtg_cas01",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";

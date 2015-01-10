@@ -41,7 +41,7 @@ int irc_connect_timer(int tid, int64 tick, int id, intptr_t data) {
 	
 	ircbot->last_try = timer->gettick();
 
-	if ((ircbot->fd = make_connection(ircbot->ip, clif->hChSys->irc_server_port, &opt)) > 0) {
+	if( ( ircbot->fd = make_connection(ircbot->ip,hChSys.irc_server_port,&opt) ) > 0 ){
 		session[ircbot->fd]->func_parse = ircbot->parse;
 		session[ircbot->fd]->flag.server = 1;
 		timer->add(timer->gettick() + 3000, ircbot->identify_timer, 0, 0);
@@ -60,7 +60,7 @@ int irc_identify_timer(int tid, int64 tick, int id, intptr_t data) {
 	
 	sprintf(send_string, "USER HerculesWS%d 8 * : Hercules IRC Bridge",rand()%777);
 	ircbot->send(send_string);
-	sprintf(send_string, "NICK %s", clif->hChSys->irc_nick);
+	sprintf(send_string, "NICK %s", hChSys.irc_nick);
 	ircbot->send(send_string);
 
 	timer->add(timer->gettick() + 3000, ircbot->join_timer, 0, 0);
@@ -76,15 +76,15 @@ int irc_join_timer(int tid, int64 tick, int id, intptr_t data) {
 	if( !ircbot->isOn )
 		return 0;
 	
-	if (clif->hChSys->irc_nick_pw[0] != '\0') {
-		sprintf(send_string, "PRIVMSG NICKSERV : IDENTIFY %s", clif->hChSys->irc_nick_pw);
+	if( hChSys.irc_nick_pw[0] != '\0' ) {
+		sprintf(send_string, "PRIVMSG NICKSERV : IDENTIFY %s", hChSys.irc_nick_pw);
 		ircbot->send(send_string);
-		if (clif->hChSys->irc_use_ghost) {
-			sprintf(send_string, "PRIVMSG NICKSERV : GHOST %s %s", clif->hChSys->irc_nick, clif->hChSys->irc_nick_pw);
+		if( hChSys.irc_use_ghost ) {
+			sprintf(send_string, "PRIVMSG NICKSERV : GHOST %s %s", hChSys.irc_nick, hChSys.irc_nick_pw);
 		}
 	}
 	
-	sprintf(send_string, "JOIN %s", clif->hChSys->irc_channel);
+	sprintf(send_string, "JOIN %s", hChSys.irc_channel);
 	ircbot->send(send_string);
 	ircbot->isIn = true;
 
@@ -120,9 +120,9 @@ int irc_parse(int fd) {
 		ircbot->isOn = false;
 		ircbot->isIn = false;
 		ircbot->fails = 0;
-		ircbot->ip = host2ip(clif->hChSys->irc_server);
+		ircbot->ip = host2ip(hChSys.irc_server);
 		timer->add(timer->gettick() + 120000, ircbot->connect_timer, 0, 0);
-		return 0;
+      	return 0;
 	}
 	
 	if( !RFIFOREST(fd) )
@@ -281,8 +281,7 @@ void irc_privmsg_ctcp(int fd, char *cmd, char *source, char *target, char *msg) 
  * @see irc_parse_sub
  */
 void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
-	size_t len = msg ? strlen(msg) : 0;
-	if (msg && *msg == '\001' && len > 2 && msg[len - 1] == '\001') {
+	if( msg && *msg == '\001' && strlen(msg) > 2 && msg[strlen(msg)-1] == '\001' ) {
 		// CTCP
 		char command[IRC_MESSAGE_LENGTH], message[IRC_MESSAGE_LENGTH];
 		command[0] = message[0] = '\0';
@@ -290,10 +289,10 @@ void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 
 		irc_privmsg_ctcp(fd, command, source, target, message);
 #ifdef IRCBOT_DEBUG
-	} else if (strcmpi(target, clif->hChSys->irc_nick) == 0) {
+	} else if( strcmpi(target,hChSys.irc_nick) == 0 ) {
 		ShowDebug("irc_privmsg: Received message from %s: '%s'\n", source ? source : "(null)", msg);
 #endif // IRCBOT_DEBUG
-	} else if (msg && strcmpi(target, clif->hChSys->irc_channel) == 0) {
+	} else if( msg && strcmpi(target,hChSys.irc_channel) == 0 ) {
 		char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
 
 		source_nick[0] = source_ident[0] = source_host[0] = '\0';
@@ -383,7 +382,7 @@ void irc_usernick(int fd, char *cmd, char *source, char *target, char *msg) {
 void irc_relay(char *name, const char *msg) {
 	if( !ircbot->isIn )
 		return;
-	sprintf(send_string,"PRIVMSG %s :[ %s ] : %s", clif->hChSys->irc_channel, name, msg);
+	sprintf(send_string,"PRIVMSG %s :[ %s ] : %s",hChSys.irc_channel,name,msg);
 	ircbot->send(send_string);
 }
 
@@ -406,12 +405,12 @@ void irc_bot_init(bool minimal) {
 	if (minimal)
 		return;
 
-	if (!clif->hChSys->irc)
+	if( !hChSys.irc )
 		return;
 
-	if (!(ircbot->ip = host2ip(clif->hChSys->irc_server))) {
-		ShowError("Unable to resolve '%s' (irc server), disabling irc channel...\n", clif->hChSys->irc_server);
-		clif->hChSys->irc = false;
+	if (!(ircbot->ip = host2ip(hChSys.irc_server))) {
+		ShowError("Unable to resolve '%s' (irc server), disabling irc channel...\n", hChSys.irc_server);
+		hChSys.irc = false;
 		return;
 	}
 	
@@ -444,7 +443,7 @@ void irc_bot_init(bool minimal) {
 void irc_bot_final(void) {
 	int i;
 	
-	if (!clif->hChSys->irc)
+	if( !hChSys.irc )
 		return;
 	if( ircbot->isOn ) {
 		ircbot->send("QUIT :Hercules is shutting down");

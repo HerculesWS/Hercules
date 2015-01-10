@@ -14,17 +14,6 @@
 #define homdb_checkid(id) ((id) >=  HM_CLASS_BASE && (id) <= HM_CLASS_MAX)
 #define homun_alive(x) ((x) && (x)->homunculus.vaporize == HOM_ST_ACTIVE && (x)->battle_status.hp > 0)
 
-#ifdef RENEWAL
-#define	HOMUN_LEVEL_STATWEIGHT_VALUE 0
-#define APPLY_HOMUN_LEVEL_STATWEIGHT()( \
-	hom->str_value = hom->agi_value = \
-	hom->vit_value = hom->int_value = \
-	hom->dex_value = hom->luk_value = hom->level / 10 - HOMUN_LEVEL_STATWEIGHT_VALUE \
-	)
-#else
-#define APPLY_HOMUN_LEVEL_STATWEIGHT()
-#endif
-
 struct h_stats {
 	unsigned int HP, SP;
 	unsigned short str, agi, vit, int_, dex, luk;
@@ -76,7 +65,7 @@ struct homun_data {
 	int hungry_timer;                     //[orn]
 	unsigned int exp_next;
 	char blockskill[MAX_SKILL];           // [orn]
-
+	
 	int64 masterteleport_timer;
 };
 

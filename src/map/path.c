@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 
 #include "map.h"
 #include "../common/cbasetypes.h"
@@ -53,7 +52,7 @@ BHEAP_STRUCT_DECL(node_heap, struct path_node*);
 
 /// Estimates the cost from (x0,y0) to (x1,y1).
 /// This is inadmissible (overestimating) heuristic used by game client.
-#define heuristic(x0, y0, x1, y1) (MOVE_COST * (abs((x1) - (x0)) + abs((y1) - (y0)))) // Manhattan distance
+#define heuristic(x0, y0, x1, y1)	(MOVE_COST * (abs((x1) - (x0)) + abs((y1) - (y0)))) // Manhattan distance
 /// @}
 
 // Translates dx,dy into walking direction
@@ -129,6 +128,9 @@ bool path_search_long(struct shootpath_data *spd,int16 m,int16 x0,int16 y0,int16
 	spd->x[0] = x0;
 	spd->y[0] = y0;
 
+	if (md->getcellp(md,x1,y1,cell))
+		return false;
+
 	if (dx > abs(dy)) {
 		weight = dx;
 		spd->ry = 1;
@@ -139,6 +141,8 @@ bool path_search_long(struct shootpath_data *spd,int16 m,int16 x0,int16 y0,int16
 
 	while (x0 != x1 || y0 != y1)
 	{
+		if (md->getcellp(md,x0,y0,cell))
+			return false;
 		wx += dx;
 		wy += dy;
 		if (wx >= weight) {
@@ -158,8 +162,6 @@ bool path_search_long(struct shootpath_data *spd,int16 m,int16 x0,int16 y0,int16
 			spd->y[spd->len] = y0;
 			spd->len++;
 		}
-		if (md->getcellp(md,x0,y0,cell))
-			return false;
 	}
 
 	return true;
@@ -174,7 +176,7 @@ static void heap_push_node(struct node_heap *heap, struct path_node *node)
 {
 #ifndef __clang_analyzer__ // TODO: Figure out why clang's static analyzer doesn't like this
 	BHEAP_ENSURE(*heap, 1, 256);
-	BHEAP_PUSH2(*heap, node, NODE_MINTOPCMP, swap_ptr);
+	BHEAP_PUSH(*heap, node, NODE_MINTOPCMP, swap_ptr);
 #endif // __clang_analyzer__
 }
 
@@ -187,7 +189,8 @@ static int heap_update_node(struct node_heap *heap, struct path_node *node)
 		ShowError("heap_update_node: node not found\n");
 		return 1;
 	}
-	BHEAP_UPDATE(*heap, i, NODE_MINTOPCMP, swap_ptr);
+	BHEAP_POPINDEX(*heap, i, NODE_MINTOPCMP, swap_ptr);
+	BHEAP_PUSH(*heap, node, NODE_MINTOPCMP, swap_ptr);
 	return 0;
 }
 
@@ -248,8 +251,12 @@ bool path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x
 		return false;
 	md = &map->list[m];
 
+#ifdef CELL_NOSTACK
 	//Do not check starting cell as that would get you stuck.
+	if (x0 < 0 || x0 >= md->xs || y0 < 0 || y0 >= md->ys)
+#else
 	if (x0 < 0 || x0 >= md->xs || y0 < 0 || y0 >= md->ys /*|| md->getcellp(md,x0,y0,cell)*/)
+#endif
 		return false;
 
 	// Check destination cell
@@ -297,7 +304,7 @@ bool path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x
 		// A* (A-star) pathfinding
 		// We always use A* for finding walkpaths because it is what game client uses.
 		// Easy pathfinding cuts corners of non-walkable cells, but client always walks around it.
-
+		
 		BHEAP_STRUCT_VAR(node_heap, open_set); // 'Open' set
 
 		// FIXME: This array is too small to ensure all paths shorter than MAX_WALKPATH
@@ -320,8 +327,8 @@ bool path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x
 		tp[i].flag   = SET_OPEN;
 
 		heap_push_node(&open_set, &tp[i]); // Put start node to 'open' set
-
-		for(;;) {
+		for(;;)
+		{
 			int e = 0; // error flag
 
 			// Saves allowed directions for the current cell. Diagonal directions
@@ -340,7 +347,7 @@ bool path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x
 			}
 
 			current = BHEAP_PEEK(open_set); // Look for the lowest f_cost node in the 'open' set
-			BHEAP_POP2(open_set, NODE_MINTOPCMP, swap_ptr); // Remove it from 'open' set
+			BHEAP_POP(open_set, NODE_MINTOPCMP, swap_ptr); // Remove it from 'open' set
 
 			x      = current->x;
 			y      = current->y;
@@ -360,22 +367,24 @@ bool path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x
 
 #define chk_dir(d) ((allowed_dirs & (d)) == (d))
 			// Process neighbors of current node
-			if (chk_dir(DIR_SOUTH|DIR_EAST) && !md->getcellp(md, x+1, y-1, cell))
-				e += add_path(&open_set, tp, x+1, y-1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x+1, y-1, x1, y1)); // (x+1, y-1) 5
-			if (chk_dir(DIR_EAST))
-				e += add_path(&open_set, tp, x+1, y, g_cost + MOVE_COST, current, heuristic(x+1, y, x1, y1)); // (x+1, y) 6
-			if (chk_dir(DIR_NORTH|DIR_EAST) && !md->getcellp(md, x+1, y+1, cell))
-				e += add_path(&open_set, tp, x+1, y+1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x+1, y+1, x1, y1)); // (x+1, y+1) 7
-			if (chk_dir(DIR_NORTH))
-				e += add_path(&open_set, tp, x, y+1, g_cost + MOVE_COST, current, heuristic(x, y+1, x1, y1)); // (x, y+1) 0
-			if (chk_dir(DIR_NORTH|DIR_WEST) && !md->getcellp(md, x-1, y+1, cell))
-				e += add_path(&open_set, tp, x-1, y+1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x-1, y+1, x1, y1)); // (x-1, y+1) 1
-			if (chk_dir(DIR_WEST))
-				e += add_path(&open_set, tp, x-1, y, g_cost + MOVE_COST, current, heuristic(x-1, y, x1, y1)); // (x-1, y) 2
-			if (chk_dir(DIR_SOUTH|DIR_WEST) && !md->getcellp(md, x-1, y-1, cell))
-				e += add_path(&open_set, tp, x-1, y-1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x-1, y-1, x1, y1)); // (x-1, y-1) 3
+			// TODO: Processing order affects chosen path if there is more than one path with same cost.
+			// In few cases path found by server will be different than path found by game client.
 			if (chk_dir(DIR_SOUTH))
 				e += add_path(&open_set, tp, x, y-1, g_cost + MOVE_COST, current, heuristic(x, y-1, x1, y1)); // (x, y-1) 4
+			if (chk_dir(DIR_SOUTH|DIR_WEST) && !md->getcellp(md, x-1, y-1, cell))
+				e += add_path(&open_set, tp, x-1, y-1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x-1, y-1, x1, y1)); // (x-1, y-1) 3
+			if (chk_dir(DIR_WEST))
+				e += add_path(&open_set, tp, x-1, y, g_cost + MOVE_COST, current, heuristic(x-1, y, x1, y1)); // (x-1, y) 2
+			if (chk_dir(DIR_NORTH|DIR_WEST) && !md->getcellp(md, x-1, y+1, cell))
+				e += add_path(&open_set, tp, x-1, y+1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x-1, y+1, x1, y1)); // (x-1, y+1) 1
+			if (chk_dir(DIR_NORTH))
+				e += add_path(&open_set, tp, x, y+1, g_cost + MOVE_COST, current, heuristic(x, y+1, x1, y1)); // (x, y+1) 0
+			if (chk_dir(DIR_NORTH|DIR_EAST) && !md->getcellp(md, x+1, y+1, cell))
+				e += add_path(&open_set, tp, x+1, y+1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x+1, y+1, x1, y1)); // (x+1, y+1) 7
+			if (chk_dir(DIR_EAST))
+				e += add_path(&open_set, tp, x+1, y, g_cost + MOVE_COST, current, heuristic(x+1, y, x1, y1)); // (x+1, y) 6
+			if (chk_dir(DIR_SOUTH|DIR_EAST) && !md->getcellp(md, x+1, y-1, cell))
+				e += add_path(&open_set, tp, x+1, y-1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x+1, y-1, x1, y1)); // (x+1, y-1) 5
 #undef chk_dir
 			if (e) {
 				BHEAP_CLEAR(open_set);
@@ -404,7 +413,7 @@ bool path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x
 
 
 //Distance functions, taken from http://www.flipcode.com/articles/article_fastdistance.shtml
-bool check_distance(int dx, int dy, int distance)
+int check_distance(int dx, int dy, int distance)
 {
 #ifdef CIRCULAR_AREA
 	//In this case, we just do a square comparison. Add 1 tile grace for diagonal range checks.
@@ -435,7 +444,7 @@ unsigned int distance(int dx, int dy)
 		min = dy;
 		max = dx;
 	}
-	// coefficients equivalent to ( 123/128 * max ) and ( 51/128 * min )
+   // coefficients equivalent to ( 123/128 * max ) and ( 51/128 * min )
 	return ((( max << 8 ) + ( max << 3 ) - ( max << 4 ) - ( max << 1 ) +
 		( min << 7 ) - ( min << 5 ) + ( min << 3 ) - ( min << 1 )) >> 8 );
 #else
@@ -444,42 +453,6 @@ unsigned int distance(int dx, int dy)
 	return (dx<dy?dy:dx);
 #endif
 }
-
-/**
- * The client uses a circular distance instead of the square one. The circular distance
- * is only used by units sending their attack commands via the client (not monsters).
- * @param dx: Horizontal distance
- * @param dy: Vertical distance
- * @param distance: Distance to check against
- * @return Within distance(1); Not within distance(0);
- */
-bool check_distance_client(int dx, int dy, int distance)
-{
-	if(distance < 0) distance = 0;
-
-	return (path->distance_client(dx,dy) <= distance);
-}
-
-/**
- * The client uses a circular distance instead of the square one. The circular distance
- * is only used by units sending their attack commands via the client (not monsters).
- * @param dx: Horizontal distance
- * @param dy: Vertical distance
- * @return Circular distance
- */
-int distance_client(int dx, int dy)
-{
-	double temp_dist = sqrt((double)(dx*dx + dy*dy));
-
-	//Bonus factor used by client
-	//This affects even horizontal/vertical lines so they are one cell longer than expected
-	temp_dist -= 0.0625;
-
-	if(temp_dist < 0) temp_dist = 0;
-
-	return ((int)temp_dist);
-}
-
 void path_defaults(void) {
 	path = &path_s;
 	
@@ -488,6 +461,4 @@ void path_defaults(void) {
 	path->search = path_search;
 	path->check_distance = check_distance;
 	path->distance = distance;
-	path->check_distance_client = check_distance_client;
-	path->distance_client = distance_client;
 }

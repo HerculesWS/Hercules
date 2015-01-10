@@ -35,16 +35,15 @@
 //#define STATS_OPT_OUT
 
 /// Uncomment to enable the Cell Stack Limit mod.
-/// It's only config is the battle_config custom_cell_stack_limit.
-/// Only chars affected are those defined in BL_CHAR
+/// It's only config is the battle_config cell_stack_limit.
+/// Only chars affected are those defined in BL_CHAR (mobs and players currently)
 //#define CELL_NOSTACK
 
 /// Uncomment to enable circular area checks.
-/// By default, most server-sided range checks in Aegis are of square shapes, so a monster
-/// with a range of 4 can attack anything within a 9x9 area.
-/// Client-sided range checks are, however, are always circular.
-/// Enabling this changes all checks to circular checks, which is more realistic,
-/// - but is not the official behaviour.
+/// By default, all range checks in Aegis are of Square shapes, so a weapon range
+/// - of 10 allows you to attack from anywhere within a 21x21 area.
+/// Enabling this changes such checks to circular checks, which is more realistic,
+/// - but is not the official behavior.
 //#define CIRCULAR_AREA
 
 //This is the distance at which @autoloot works,

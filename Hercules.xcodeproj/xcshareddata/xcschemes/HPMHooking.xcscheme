@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0610"
+   LastUpgradeVersion = "0500"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A5B894AE1A03CE25005AD22E"
-               BuildableName = "HPMHooking_char.dylib"
-               BlueprintName = "HPMHooking_char"
+               BlueprintIdentifier = "A58A5A1E185801FF0099683E"
+               BuildableName = "HPMHooking.dylib"
+               BlueprintName = "HPMHooking"
                ReferencedContainer = "container:Hercules.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -39,15 +39,6 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A5B894AE1A03CE25005AD22E"
-            BuildableName = "HPMHooking_char.dylib"
-            BlueprintName = "HPMHooking_char"
-            ReferencedContainer = "container:Hercules.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -57,15 +48,6 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A5B894AE1A03CE25005AD22E"
-            BuildableName = "HPMHooking_char.dylib"
-            BlueprintName = "HPMHooking_char"
-            ReferencedContainer = "container:Hercules.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

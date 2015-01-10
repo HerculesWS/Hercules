@@ -18,6 +18,8 @@
  **/
 struct item;
 struct item_data;
+struct storage_data;
+struct guild_storage;
 struct unit_data;
 struct map_session_data;
 struct homun_data;
@@ -46,10 +48,8 @@ struct skill_cd;
 #define P2PTR(fd) RFIFO2PTR(fd)
 #define clif_menuskill_clear(sd) ((sd)->menuskill_id = (sd)->menuskill_val = (sd)->menuskill_val2 = 0)
 #define clif_disp_onlyself(sd,mes,len) clif->disp_message( &(sd)->bl, (mes), (len), SELF )
-#define clif_viewequip_fail( sd ) clif->msg( (sd), 0x54d );
+#define clif_viewequip_fail( sd ) clif_msg( (sd), 0x54d );
 #define HCHSYS_NAME_LENGTH 20
-#define MAX_ROULETTE_LEVEL 7 /** client-defined value **/
-#define MAX_ROULETTE_COLUMNS 9 /** client-defined value **/
 
 /**
  * Enumerations
@@ -86,14 +86,14 @@ typedef enum send_target {
 	DUEL,
 	DUEL_WOS,
 	SELF,
-
+	
 	BG,                 // BattleGround System
 	BG_WOS,
 	BG_SAMEMAP,
 	BG_SAMEMAP_WOS,
 	BG_AREA,
 	BG_AREA_WOS,
-
+	
 	BG_QUEUE,
 } send_target;
 
@@ -340,7 +340,6 @@ typedef enum useskill_fail_cause { // clif_skill_fail
 	USESKILL_FAIL_STYLE_CHANGE_FIGHTER = 81,
 	USESKILL_FAIL_STYLE_CHANGE_GRAPPLER = 82,
 	USESKILL_FAIL_THERE_ARE_NPC_AROUND = 83,
-	USESKILL_FAIL_NEED_MORE_BULLET = 84,
 }useskill_fail_cause;
 
 enum clif_messages {
@@ -353,16 +352,16 @@ enum clif_messages {
  * Used to answer CZ_PC_BUY_CASH_POINT_ITEM (clif_parse_cashshop_buy)
  **/
 enum cashshop_error {
-	ERROR_TYPE_NONE             = 0, ///< The deal has successfully completed. (ERROR_TYPE_NONE)
-	ERROR_TYPE_NPC              = 1, ///< The Purchase has failed because the NPC does not exist. (ERROR_TYPE_NPC)
-	ERROR_TYPE_SYSTEM           = 2, ///< The Purchase has failed because the Kafra Shop System is not working correctly. (ERROR_TYPE_SYSTEM)
-	ERROR_TYPE_INVENTORY_WEIGHT = 3, ///< You are over your Weight Limit. (ERROR_TYPE_INVENTORY_WEIGHT)
-	ERROR_TYPE_EXCHANGE         = 4, ///< You cannot purchase items while you are in a trade. (ERROR_TYPE_EXCHANGE)
-	ERROR_TYPE_ITEM_ID          = 5, ///< The Purchase has failed because the Item Information was incorrect. (ERROR_TYPE_ITEM_ID)
-	ERROR_TYPE_MONEY            = 6, ///< You do not have enough Kafra Credit Points. (ERROR_TYPE_MONEY)
+	ERROR_TYPE_NONE = 0,			// The deal has successfully completed. (ERROR_TYPE_NONE)
+	ERROR_TYPE_NPC,					// The Purchase has failed because the NPC does not exist. (ERROR_TYPE_NPC)
+	ERROR_TYPE_SYSTEM,				// The Purchase has failed because the Kafra Shop System is not working correctly. (ERROR_TYPE_SYSTEM)
+	ERROR_TYPE_INVENTORY_WEIGHT,	// You are over your Weight Limit. (ERROR_TYPE_INVENTORY_WEIGHT)
+	ERROR_TYPE_EXCHANGE,			// You cannot purchase items while you are in a trade. (ERROR_TYPE_EXCHANGE)
+	ERROR_TYPE_ITEM_ID,				// The Purchase has failed because the Item Information was incorrect. (ERROR_TYPE_ITEM_ID)
+	ERROR_TYPE_MONEY,				// You do not have enough Kafra Credit Points. (ERROR_TYPE_MONEY)
 	// Unofficial type names
-	ERROR_TYPE_QUANTITY         = 7, ///< You can purchase up to 10 items. (ERROR_TYPE_QUANTITY)
-	ERROR_TYPE_NOT_ALL          = 8, ///< Some items could not be purchased. (ERROR_TYPE_NOT_ALL)
+	ERROR_TYPE_QUANTITY,			// You can purchase up to 10 items. (ERROR_TYPE_QUANTITY)
+	ERROR_TYPE_NOT_ALL,				// Some items could not be purchased. (ERROR_TYPE_NOT_ALL)
 };
 
 /**
@@ -376,40 +375,40 @@ enum clif_colors {
 };
 
 enum hChSysChOpt {
-	hChSys_OPT_BASE          = 0x0,
-	hChSys_OPT_ANNOUNCE_JOIN = 0x1,
-	hChSys_OPT_MSG_DELAY     = 0x2,
+	hChSys_OPT_BASE				= 0x0,
+	hChSys_OPT_ANNOUNCE_JOIN	= 0x1,
+	hChSys_OPT_MSG_DELAY		= 0x2,
 };
 
 enum hChSysChType {
-	hChSys_PUBLIC  = 0,
-	hChSys_PRIVATE = 1,
-	hChSys_MAP     = 2,
-	hChSys_ALLY    = 3,
-	hChSys_IRC     = 4,
+	hChSys_PUBLIC	= 0,
+	hChSys_PRIVATE	= 1,
+	hChSys_MAP		= 2,
+	hChSys_ALLY		= 3,
+	hChSys_IRC		= 4,
 };
 
 enum CASH_SHOP_TABS {
-	CASHSHOP_TAB_NEW        = 0,
-	CASHSHOP_TAB_POPULAR    = 1,
-	CASHSHOP_TAB_LIMITED    = 2,
-	CASHSHOP_TAB_RENTAL     = 3,
+	CASHSHOP_TAB_NEW		= 0,
+	CASHSHOP_TAB_POPULAR	= 1,
+	CASHSHOP_TAB_LIMITED	= 2,
+	CASHSHOP_TAB_RENTAL		= 3,
 	CASHSHOP_TAB_PERPETUITY = 4,
-	CASHSHOP_TAB_BUFF       = 5,
-	CASHSHOP_TAB_RECOVERY   = 6,
-	CASHSHOP_TAB_ETC        = 7,
+	CASHSHOP_TAB_BUFF		= 5,
+	CASHSHOP_TAB_RECOVERY	= 6,
+	CASHSHOP_TAB_ETC		= 7,
 	CASHSHOP_TAB_MAX,
 };
 
 enum CASH_SHOP_BUY_RESULT {
-	CSBR_SUCCESS            = 0x0,
-	CSBR_SHORTTAGE_CASH     = 0x2,
-	CSBR_UNKONWN_ITEM       = 0x3,
-	CSBR_INVENTORY_WEIGHT   = 0x4,
-	CSBR_INVENTORY_ITEMCNT  = 0x5,
-	CSBR_RUNE_OVERCOUNT     = 0x9,
-	CSBR_EACHITEM_OVERCOUNT = 0xa,
-	CSBR_UNKNOWN            = 0xb,
+	CSBR_SUCCESS					= 0x0,
+	CSBR_SHORTTAGE_CASH				= 0x2,
+	CSBR_UNKONWN_ITEM				= 0x3,
+	CSBR_INVENTORY_WEIGHT			= 0x4,
+	CSBR_INVENTORY_ITEMCNT			= 0x5,
+	CSBR_RUNE_OVERCOUNT				= 0x9,
+	CSBR_EACHITEM_OVERCOUNT			= 0xa,
+	CSBR_UNKNOWN					= 0xb,
 };
 
 enum BATTLEGROUNDS_QUEUE_ACK {
@@ -479,35 +478,6 @@ enum e_trade_item_ok {
 	TIO_INDROCKS   = 0x9,
 };
 
-enum RECV_ROULETTE_ITEM_REQ {
-	RECV_ITEM_SUCCESS =  0x0,
-	RECV_ITEM_FAILED =  0x1,
-	RECV_ITEM_OVERCOUNT =  0x2,
-	RECV_ITEM_OVERWEIGHT =  0x3,
-};
-
-enum RECV_ROULETTE_ITEM_ACK {
-	RECV_ITEM_NORMAL =  0x0,
-	RECV_ITEM_LOSING =  0x1,
-};
-
-enum GENERATE_ROULETTE_ACK {
-	GENERATE_ROULETTE_SUCCESS =  0x0,
-	GENERATE_ROULETTE_FAILED =  0x1,
-	GENERATE_ROULETTE_NO_ENOUGH_POINT =  0x2,
-	GENERATE_ROULETTE_LOSING =  0x3,
-};
-
-enum OPEN_ROULETTE_ACK{
-	OPEN_ROULETTE_SUCCESS =  0x0,
-	OPEN_ROULETTE_FAILED =  0x1,
-};
-
-enum CLOSE_ROULETTE_ACK {
-	CLOSE_ROULETTE_SUCCESS =  0x0,
-	CLOSE_ROULETTE_FAILED =  0x1,
-};
-
 /**
  * Structures
  **/
@@ -518,7 +488,7 @@ struct s_packet_db {
 	short pos[MAX_PACKET_POS];
 };
 
-struct hChSysConfig {
+struct {
 	unsigned int *colors;
 	char **colors_name;
 	unsigned char colors_count;
@@ -531,7 +501,7 @@ struct hChSysConfig {
 	char irc_server[40], irc_channel[50], irc_nick[40], irc_nick_pw[30];
 	unsigned short irc_server_port;
 	bool irc_use_ghost;
-};
+} hChSys;
 
 struct hChSysBanEntry {
 	char name[NAME_LENGTH];
@@ -577,7 +547,6 @@ struct clif_interface {
 	char map_ip_str[128];
 	int map_fd;
 	DBMap* channel_db;
-	struct hChSysConfig *hChSys;
 	/* for clif_clearunit_delayed */
 	struct eri *delay_clearunit_ers;
 	/* Cash Shop [Ind/Hercules] */
@@ -585,12 +554,6 @@ struct clif_interface {
 		struct hCSData **data[CASHSHOP_TAB_MAX];
 		unsigned int item_count[CASHSHOP_TAB_MAX];
 	} cs;
-	/* roulette data */
-	struct {
-		int *nameid[MAX_ROULETTE_LEVEL];//nameid
-		int *qty[MAX_ROULETTE_LEVEL];//qty of nameid
-		int items[MAX_ROULETTE_LEVEL];//number of items in the list for each
-	} rd;
 	/* */
 	unsigned int cryptKey[3];
 	/* */
@@ -606,7 +569,6 @@ struct clif_interface {
 	uint32 (*refresh_ip) (void);
 	bool (*send) (const void* buf, int len, struct block_list* bl, enum send_target type);
 	int (*send_sub) (struct block_list *bl, va_list ap);
-	int (*send_actual) (int fd, void *buf, int len);
 	int (*parse) (int fd);
 	unsigned short (*parse_cmd) ( int fd, struct map_session_data *sd );
 	unsigned short (*decrypt_cmd) ( int cmd, struct map_session_data *sd );
@@ -651,7 +613,6 @@ struct clif_interface {
 	void (*changelook) (struct block_list *bl,int type,int val);
 	void (*changetraplook) (struct block_list *bl,int val);
 	void (*refreshlook) (struct block_list *bl,int id,int type,int val,enum send_target target);
-	void (*sendlook) (struct block_list *bl, int id, int type, int val, int val2, enum send_target target);
 	void (*class_change) (struct block_list *bl,int class_,int type);
 	void (*skill_delunit) (struct skill_unit *su);
 	void (*skillunit_update) (struct block_list* bl);
@@ -820,7 +781,7 @@ struct clif_interface {
 	void (*specialeffect_single) (struct block_list* bl, int type, int fd);
 	void (*specialeffect_value) (struct block_list* bl, int effect_id, int num, send_target target);
 	void (*millenniumshield) (struct block_list *bl, short shields );
-	void (*spiritcharm) (struct map_session_data *sd, short type);
+	void (*charm) (struct map_session_data *sd, short type);
 	void (*charm_single) (int fd, struct map_session_data *sd, short type);
 	void (*snap) ( struct block_list *bl, short x, short y );
 	void (*weather_check) (struct map_session_data *sd);
@@ -905,7 +866,6 @@ struct clif_interface {
 	void (*party_xy_remove) (struct map_session_data *sd);
 	void (*party_show_picker) (struct map_session_data * sd, struct item * item_data);
 	void (*partyinvitationstate) (struct map_session_data* sd);
-	void (*PartyLeaderChanged) (struct map_session_data *sd, int prev_leader_aid, int new_leader_aid);
 	/* guild-specific */
 	void (*guild_created) (struct map_session_data *sd,int flag);
 	void (*guild_belonginfo) (struct map_session_data *sd, struct guild *g);
@@ -1092,9 +1052,6 @@ struct clif_interface {
 	/* NPC Market */
 	void (*npc_market_open) (struct map_session_data *sd, struct npc_data *nd);
 	void (*npc_market_purchase_ack) (struct map_session_data *sd, struct packet_npc_market_purchase *req, unsigned char response);
-	/* */
-	bool (*parse_roulette_db) (void);
-	void (*roulette_generate_ack) (struct map_session_data *sd, unsigned char result, short stage, short prizeIdx, short bonusItemID);
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/
@@ -1322,12 +1279,6 @@ struct clif_interface {
 	void (*pBankCheck) (int fd, struct map_session_data *sd);
 	void (*pBankOpen) (int fd, struct map_session_data *sd);
 	void (*pBankClose) (int fd, struct map_session_data *sd);
-	/* Roulette System [Yommy/Hercules] */
-	void (*pRouletteOpen) (int fd, struct map_session_data *sd);
-	void (*pRouletteInfo) (int fd, struct map_session_data *sd);
-	void (*pRouletteClose) (int fd, struct map_session_data *sd);
-	void (*pRouletteGenerate) (int fd, struct map_session_data *sd);
-	void (*pRouletteRecvItem) (int fd, struct map_session_data *sd);
 	/* */
 	void (*pNPCShopClosed) (int fd, struct map_session_data *sd);
 	/* NPC Market (by Ind after an extensive debugging of the packet, only possible thanks to Yommy <3) */
