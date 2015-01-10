@@ -493,6 +493,7 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 		case AL_WARP:
 		case RETURN_TO_ELDICASTES:
 		case ALL_GUARDIAN_RECALL:
+		case ECLAGE_RECALL:
 			if(map->list[m].flag.nowarp) {
 				clif->skill_mapinfomessage(sd,0);
 				return 1;
@@ -9167,32 +9168,72 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			}
 			break;
 
-
 		case RETURN_TO_ELDICASTES:
 		case ALL_GUARDIAN_RECALL:
-			if( sd )
-			{
-				short x, y; // Destiny position.
-				unsigned short map_index;
+		case ECLAGE_RECALL:
+			if( sd ) {
+				short x = 0, y = 0; //Destiny position.
+				unsigned short map_index = 0;
 
-				if( skill_id == RETURN_TO_ELDICASTES) {
-					x = 198;
-					y = 187;
-					map_index  = mapindex->name2id(MAP_DICASTES);
-				} else {
-					x = 44;
-					y = 151;
-					map_index  = mapindex->name2id(MAP_MORA);
+				switch( skill_id ) {
+					default:
+					case RETURN_TO_ELDICASTES:
+						x = 198;
+						y = 187;
+						map_index  = mapindex->name2id(MAP_DICASTES);
+						break;
+					case ALL_GUARDIAN_RECALL:
+						x = 44;
+						y = 151;
+						map_index  = mapindex->name2id(MAP_MORA);
+						break;
+					case ECLAGE_RECALL:
+						x = 47;
+						y = 31;
+						map_index  = mapindex->name2id(MAP_ECLAGE_IN);
+						break;
 				}
-
-				if(!map_index) {
-					//Given map not found?
+				if( !mapindex ) { //Given map not found?
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					map->freeblock_unlock();
 					return 0;
 				}
-				pc->setpos(sd, map_index, x, y, CLR_TELEPORT);
+				pc->setpos(sd,map_index,x,y,CLR_TELEPORT);
 			}
+			break;
+
+		case ECL_SNOWFLIP:
+		case ECL_PEONYMAMY:
+		case ECL_SADAGUI:
+		case ECL_SEQUOIADUST:
+			switch( skill_id ) {
+				case ECL_SNOWFLIP:
+					status_change_end(bl,SC_SLEEP,INVALID_TIMER);
+					status_change_end(bl,SC_BLOODING,INVALID_TIMER);
+					status_change_end(bl,SC_BURNING,INVALID_TIMER);
+					status_change_end(bl,SC_DEEP_SLEEP,INVALID_TIMER);
+					break;
+				case ECL_PEONYMAMY:
+					status_change_end(bl,SC_FREEZE,INVALID_TIMER);
+					status_change_end(bl,SC_FROSTMISTY,INVALID_TIMER);
+					status_change_end(bl,SC_COLD,INVALID_TIMER);
+					break;
+				case ECL_SADAGUI:
+					status_change_end(bl,SC_STUN,INVALID_TIMER);
+					status_change_end(bl,SC_CONFUSION,INVALID_TIMER);
+					status_change_end(bl,SC_ILLUSION,INVALID_TIMER);
+					status_change_end(bl,SC_FEAR,INVALID_TIMER);
+					break;
+				case ECL_SEQUOIADUST:
+					status_change_end(bl,SC_STONE,INVALID_TIMER);
+					status_change_end(bl,SC_POISON,INVALID_TIMER);
+					status_change_end(bl,SC_CURSE,INVALID_TIMER);
+					status_change_end(bl,SC_BLIND,INVALID_TIMER);
+					status_change_end(bl,SC_ORCISH,INVALID_TIMER);
+					break;
+			}
+			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+			clif->skill_damage(src,bl,tick, status_get_amotion(src), 0, 0, 1, skill_id, -2, 6);
 			break;
 
 		case GM_SANDMAN:
