@@ -5979,7 +5979,7 @@ ACMD(mobsearch)
 		clif->message(fd, atcmd_output);
 		return false;
 	}
-	if(mob_id == atoi(mob_name) && mob->db(mob_id)->jname)
+	if (mob_id == atoi(mob_name))
 		strcpy(mob_name,mob->db(mob_id)->jname); // --ja--
 		//strcpy(mob_name,mob_db(mob_id)->name); // --en--
 

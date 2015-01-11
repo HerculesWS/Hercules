@@ -198,7 +198,7 @@ void findfile(const char *p, const char *pat, void (func)(const char*))
 		sprintf(tmppath,"%s%c%s",path, PATHSEP, entry->d_name);
 
 		// check if the pattern matches.
-		if (entry->d_name && strstr(entry->d_name, pattern)) {
+		if (strstr(entry->d_name, pattern)) {
 			func( tmppath );
 		}
 		// check if it is a directory.
