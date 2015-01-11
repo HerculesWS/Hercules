@@ -3460,9 +3460,8 @@ int skill_cleartimerskill (struct block_list *src)
 				case SR_SKYNETBLOW:
 					continue;
 				default:
-					skill->cleartimerskill_unknown(ud->skilltimerskill[i]->skill_id);
-					continue;
-
+					if(skill->cleartimerskill_exception(ud->skilltimerskill[i]->skill_id))
+						continue;
 			}
 			timer->delete(ud->skilltimerskill[i]->timer, skill->timerskill);
 			ers_free(skill->timer_ers, ud->skilltimerskill[i]);
@@ -3472,8 +3471,9 @@ int skill_cleartimerskill (struct block_list *src)
 	return 1;
 }
 
-void skill_cleartimerskill_unknown(int skill_id)
+bool skill_cleartimerskill_exception(int skill_id)
 {
+	return false;
 }
 
 int skill_activate_reverberation(struct block_list *bl, va_list ap) {
@@ -19318,7 +19318,7 @@ void skill_defaults(void) {
 	skill->timerskill_dead_unknown = skill_timerskill_dead_unknown;
 	skill->timerskill_target_unknown = skill_timerskill_target_unknown;
 	skill->timerskill_notarget_unknown = skill_timerskill_notarget_unknown;
-	skill->cleartimerskill_unknown = skill_cleartimerskill_unknown;
+	skill->cleartimerskill_exception = skill_cleartimerskill_exception;
 	skill->castend_damage_id_unknown = skill_castend_damage_id_unknown;
 	skill->castend_id_unknown = skill_castend_id_unknown;
 	skill->castend_nodamage_id_dead_unknown = skill_castend_nodamage_id_dead_unknown;

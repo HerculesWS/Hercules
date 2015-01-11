@@ -2056,7 +2056,7 @@ struct skill_interface {
 	bool (*timerskill_dead_unknown) (struct block_list *src, struct unit_data *ud, struct skill_timerskill *skl);
 	void (*timerskill_target_unknown) (int tid, int64 tick, struct block_list *src, struct block_list *target, struct unit_data *ud, struct skill_timerskill *skl);
 	void (*timerskill_notarget_unknown) (int tid, int64 tick, struct block_list *src, struct block_list *target, struct unit_data *ud, struct skill_timerskill *skl);
-	void (*cleartimerskill_unknown) (int skill_id);
+	bool (*cleartimerskill_exception) (int skill_id);
 	bool (*castend_id_unknown) (struct unit_data *ud, struct block_list *src, struct block_list *target);
 	bool (*castend_nodamage_id_dead_unknown) (struct block_list *src, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
 	bool (*castend_nodamage_id_undead_unknown) (struct block_list *src, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);

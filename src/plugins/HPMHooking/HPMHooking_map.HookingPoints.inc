@@ -2409,7 +2409,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->timerskill_dead_unknown, HP_skill_timerskill_dead_unknown) },
 	{ HP_POP(skill->timerskill_target_unknown, HP_skill_timerskill_target_unknown) },
 	{ HP_POP(skill->timerskill_notarget_unknown, HP_skill_timerskill_notarget_unknown) },
-	{ HP_POP(skill->cleartimerskill_unknown, HP_skill_cleartimerskill_unknown) },
+	{ HP_POP(skill->cleartimerskill_exception, HP_skill_cleartimerskill_exception) },
 	{ HP_POP(skill->castend_id_unknown, HP_skill_castend_id_unknown) },
 	{ HP_POP(skill->castend_nodamage_id_dead_unknown, HP_skill_castend_nodamage_id_dead_unknown) },
 	{ HP_POP(skill->castend_nodamage_id_undead_unknown, HP_skill_castend_nodamage_id_undead_unknown) },

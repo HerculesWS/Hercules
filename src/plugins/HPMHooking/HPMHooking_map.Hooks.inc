@@ -63837,31 +63837,32 @@ void HP_skill_timerskill_notarget_unknown(int tid, int64 tick, struct block_list
 	}
 	return;
 }
-void HP_skill_cleartimerskill_unknown(int skill_id) {
+bool HP_skill_cleartimerskill_exception(int skill_id) {
 	int hIndex = 0;
-	if( HPMHooks.count.HP_skill_cleartimerskill_unknown_pre ) {
-		void (*preHookFunc) (int *skill_id);
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_skill_cleartimerskill_exception_pre ) {
+		bool (*preHookFunc) (int *skill_id);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_cleartimerskill_unknown_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_skill_cleartimerskill_unknown_pre[hIndex].func;
-			preHookFunc(&skill_id);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_cleartimerskill_exception_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_cleartimerskill_exception_pre[hIndex].func;
+			retVal___ = preHookFunc(&skill_id);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
-			return;
+			return retVal___;
 		}
 	}
 	{
-		HPMHooks.source.skill.cleartimerskill_unknown(skill_id);
+		retVal___ = HPMHooks.source.skill.cleartimerskill_exception(skill_id);
 	}
-	if( HPMHooks.count.HP_skill_cleartimerskill_unknown_post ) {
-		void (*postHookFunc) (int *skill_id);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_cleartimerskill_unknown_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_skill_cleartimerskill_unknown_post[hIndex].func;
-			postHookFunc(&skill_id);
+	if( HPMHooks.count.HP_skill_cleartimerskill_exception_post ) {
+		bool (*postHookFunc) (bool retVal___, int *skill_id);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_cleartimerskill_exception_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_cleartimerskill_exception_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &skill_id);
 		}
 	}
-	return;
+	return retVal___;
 }
 bool HP_skill_castend_id_unknown(struct unit_data *ud, struct block_list *src, struct block_list *target) {
 	int hIndex = 0;

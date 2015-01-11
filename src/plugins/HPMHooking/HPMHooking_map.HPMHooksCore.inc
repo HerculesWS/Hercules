@@ -4747,8 +4747,8 @@ struct {
 	struct HPMHookPoint *HP_skill_timerskill_target_unknown_post;
 	struct HPMHookPoint *HP_skill_timerskill_notarget_unknown_pre;
 	struct HPMHookPoint *HP_skill_timerskill_notarget_unknown_post;
-	struct HPMHookPoint *HP_skill_cleartimerskill_unknown_pre;
-	struct HPMHookPoint *HP_skill_cleartimerskill_unknown_post;
+	struct HPMHookPoint *HP_skill_cleartimerskill_exception_pre;
+	struct HPMHookPoint *HP_skill_cleartimerskill_exception_post;
 	struct HPMHookPoint *HP_skill_castend_id_unknown_pre;
 	struct HPMHookPoint *HP_skill_castend_id_unknown_post;
 	struct HPMHookPoint *HP_skill_castend_nodamage_id_dead_unknown_pre;
@@ -9906,8 +9906,8 @@ struct {
 	int HP_skill_timerskill_target_unknown_post;
 	int HP_skill_timerskill_notarget_unknown_pre;
 	int HP_skill_timerskill_notarget_unknown_post;
-	int HP_skill_cleartimerskill_unknown_pre;
-	int HP_skill_cleartimerskill_unknown_post;
+	int HP_skill_cleartimerskill_exception_pre;
+	int HP_skill_cleartimerskill_exception_post;
 	int HP_skill_castend_id_unknown_pre;
 	int HP_skill_castend_id_unknown_post;
 	int HP_skill_castend_nodamage_id_dead_unknown_pre;
