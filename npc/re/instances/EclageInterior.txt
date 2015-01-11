@@ -10,7 +10,7 @@
 //= 1.0 Converted from the official Aegis script. [Dastgir]
 //============================================================ 
 
-ecl_hub01,132,12,3	script	Chief of Staff#tl01	4_F_FAIRY,{
+ecl_hub01,132,12,3	script	Chief of Staff#tl01::EclInstance	4_F_FAIRY,{
 	.@party_id = getcharid(1);
 	.@md_name$ = "Eclage Interior";
 	if (!.@party_id){
@@ -224,7 +224,7 @@ OnTouch:
 	hideonnpc instance_npcname("Suspicious Creature#5");
 	hideonnpc instance_npcname("Suspicious Creature#6");
 	hideonnpc instance_npcname("Suspicious Creature#7");
-	hideonpc instance_npcname("Suspicious Creature#8");
+	hideonnpc instance_npcname("Suspicious Creature#8");
 	.@eclmap$ = instance_mapname("1@ecl");
 	.@sndmaster$ = instance_npcname("#sndmaster");
 	monster .@eclmap$,42,80,"Subordinate of the King of Demons",MOROCC_2_142,1,.@sndmaster$+"::OnMyMobDead";
