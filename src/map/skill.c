@@ -5100,7 +5100,8 @@ int skill_castend_id(int tid, int64 tick, int id, intptr_t data) {
 			ud->skill_lv = ud->skilltarget = 0;
 		}
 
-		unit->setdir(src, map->calc_dir(src, target->x, target->y));
+		if (src->id != target->id)
+			unit->setdir(src, map->calc_dir(src, target->x, target->y));
 
 		map->freeblock_unlock();
 		return 1;
