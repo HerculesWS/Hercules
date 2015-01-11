@@ -757,6 +757,9 @@ int64 battle_calc_masteryfix(struct block_list *src, struct block_list *target, 
 		case HT_FREEZINGTRAP:
 			damage += 40 * pc->checkskill(sd, RA_RESEARCHTRAP);
 			break;
+		default:
+			battle->calc_masteryfix_unknown(src, target, &skill_id, &skill_lv, &damage, &div, &left, &weapon);
+			break;
 	}
 
 	if( sc ){ // sc considered as masteries
@@ -837,6 +840,10 @@ int64 battle_calc_masteryfix(struct block_list *src, struct block_list *target, 
 
 	return damage;
 }
+
+void battle_calc_masteryfix_unknown(struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int64 *damage, int *div, bool *left, bool *weapon) {
+}
+
 /*==========================================
  * Elemental attribute fix.
  *------------------------------------------*/
@@ -1771,6 +1778,9 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 						}
 					}
 					break;
+				default:
+					battle->calc_skillratio_magic_unknown(&attack_type, src, target, &skill_id, &skill_lv, &skillratio, &flag);
+					break;
 			}
 			break;
 		case BF_WEAPON:
@@ -2537,6 +2547,9 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case MH_MAGMA_FLOW:
 					skillratio += -100 + 100 * skill_lv;
 					break;
+				default:
+					battle->calc_skillratio_weapon_unknown(&attack_type, src, target, &skill_id, &skill_lv, &skillratio, &flag);
+					break;
 			}
 			//Skill damage modifiers that stack linearly
 			if(sc && skill_id != PA_SACRIFICE){
@@ -2581,6 +2594,13 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 		return 0;
 	return skillratio;
 }
+
+void battle_calc_skillratio_magic_unknown(int *attack_type, struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int *skillratio, int *flag) {
+}
+
+void battle_calc_skillratio_weapon_unknown(int *attack_type, struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int *skillratio, int *flag) {
+}
+
 /*==========================================
  * Check damage trough status.
  * ATK may be MISS, BLOCKED FAIL, reduce, increase, end status...
@@ -3938,6 +3958,9 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 
 		}
 		break;
+	default:
+		battle->calc_misc_attack_unknown(src, target, &skill_id, &skill_lv, &mflag, &md);
+		break;
 	}
 
 	if (nk&NK_SPLASHSPLIT){ // Divide ATK among targets
@@ -4076,6 +4099,9 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	}
 
 	return md;
+}
+
+void battle_calc_misc_attack_unknown(struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int *mflag, struct Damage *md) {
 }
 
 /*==========================================
@@ -7262,4 +7288,8 @@ void battle_defaults(void) {
 	battle->config_adjust = battle_adjust_conf;
 	battle->get_enemy_area = battle_getenemyarea;
 	battle->damage_area = battle_damage_area;
+	battle->calc_masteryfix_unknown = battle_calc_masteryfix_unknown;
+	battle->calc_skillratio_magic_unknown = battle_calc_skillratio_magic_unknown;
+	battle->calc_skillratio_weapon_unknown = battle_calc_skillratio_weapon_unknown;
+	battle->calc_misc_attack_unknown = battle_calc_misc_attack_unknown;
 }
