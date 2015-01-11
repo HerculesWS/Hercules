@@ -95,7 +95,7 @@ cmd_fild01,362,256,3	script	Cuir#Gator_Hunt	1_M_MOC_LORD,{
 		}
 	}
 	if (questprogress(60121)) {
-		if (questprogress(60121,HUNTING)) {
+		if (questprogress(60121,HUNTING) != 2) {
 			mes "[Cuir]";
 			mes "Have you finished hunting the 150 Alligators?";
 			next;
