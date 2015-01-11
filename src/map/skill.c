@@ -3382,7 +3382,7 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 						skill->get_type(skl->skill_id),src,src,skl->skill_id,skl->skill_lv,tick,skl->flag,BCT_ENEMY);
 					break;
 				default:
-					skill->timerskill_notarget_unknown(tid, tick, src, target, ud, skl);
+					skill->timerskill_notarget_unknown(tid, tick, src, ud, skl);
 					break;
 			}
 		}
@@ -3402,7 +3402,7 @@ void skill_timerskill_target_unknown(int tid, int64 tick, struct block_list *src
 	skill->attack(skl->type, src, src, target, skl->skill_id, skl->skill_lv, tick, skl->flag);
 }
 
-void skill_timerskill_notarget_unknown(int tid, int64 tick, struct block_list *src, struct block_list *target, struct unit_data *ud, struct skill_timerskill *skl)
+void skill_timerskill_notarget_unknown(int tid, int64 tick, struct block_list *src, struct unit_data *ud, struct skill_timerskill *skl)
 {
 }
 
