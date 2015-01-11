@@ -2395,7 +2395,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 				break;
 		} //Switch End
 		if (combo) { //Possible to chain
-			if ( (combo = DIFF_TICK32(sd->ud.canact_tick, tick)) < 50 ) combo = 50;/* less is a waste. */
+			combo = max(status_get_amotion(src), DIFF_TICK32(sd->ud.canact_tick, tick));
 			sc_start2(NULL,src,SC_COMBOATTACK,100,skill_id,bl->id,combo);
 			clif->combo_delay(src, combo);
 		}
@@ -5009,6 +5009,9 @@ int skill_castend_id(int tid, int64 tick, int id, intptr_t data) {
 			else ud->skill_id = 0; //mobs can't clear this one as it is used for skill condition 'afterskill'
 			ud->skill_lv = ud->skilltarget = 0;
 		}
+
+		unit->setdir(src, map->calc_dir(src, target->x, target->y));
+
 		map->freeblock_unlock();
 		return 1;
 	} while(0);
@@ -9883,6 +9886,8 @@ int skill_castend_pos(int tid, int64 tick, int id, intptr_t data) {
 			else ud->skill_id = 0; //Non mobs can't clear this one as it is used for skill condition 'afterskill'
 			ud->skill_lv = ud->skillx = ud->skilly = 0;
 		}
+
+		unit->setdir(src, map->calc_dir(src, ud->skillx, ud->skilly));
 
 		map->freeblock_unlock();
 		return 1;
@@ -15355,7 +15360,9 @@ int skill_cell_overlap(struct block_list *bl, va_list ap) {
 				skill->delunit(su);
 				return 1;
 			}
-			if( !(skill->get_inf2(su->group->skill_id)&(INF2_SONG_DANCE|INF2_TRAP)) || su->group->skill_id == WZ_FIREPILLAR || su->group->skill_id == GN_HELLS_PLANT) { //It deletes everything except songs/dances and traps
+			// SA_LANDPROTECTOR blocks everything except songs/dances/traps (and NOLP)
+			// TODO: Do these skills ignore land protector when placed on top?
+			if( !(skill->get_inf2(su->group->skill_id)&(INF2_SONG_DANCE|INF2_TRAP|INF2_NOLP)) || su->group->skill_id == WZ_FIREPILLAR || su->group->skill_id == GN_HELLS_PLANT) {
 				skill->delunit(su);
 				return 1;
 			}
@@ -15412,8 +15419,8 @@ int skill_cell_overlap(struct block_list *bl, va_list ap) {
 			break;
 	}
 
-	if (su->group->skill_id == SA_LANDPROTECTOR && !(skill->get_inf2(skill_id)&(INF2_SONG_DANCE|INF2_TRAP))) {
-		//It deletes everything except songs/dances/traps
+	if (su->group->skill_id == SA_LANDPROTECTOR && !(skill->get_inf2(skill_id)&(INF2_SONG_DANCE|INF2_TRAP|INF2_NOLP))) {
+		//SA_LANDPROTECTOR blocks everything except songs/dances/traps (and NOLP)
 		(*alive) = 0;
 		return 1;
 	}
