@@ -618,19 +618,6 @@ struct map_session_data {
 //Weapon check considering dual wielding.
 #define pc_check_weapontype(sd, type) ((type)&((sd)->status.weapon < MAX_WEAPON_TYPE? \
 	1<<(sd)->status.weapon:(1<<(sd)->weapontype1)|(1<<(sd)->weapontype2)|(1<<(sd)->status.weapon)))
-//Checks if the given class value corresponds to a player class. [Skotlex]
-//JOB_NOVICE isn't checked for class_ is supposed to be unsigned
-#define pcdb_checkid_sub(class_) \
-( \
-    ( (class_) <  JOB_MAX_BASIC ) \
- || ( (class_) >= JOB_NOVICE_HIGH    && (class_) <= JOB_DARK_COLLECTOR ) \
- || ( (class_) >= JOB_RUNE_KNIGHT    && (class_) <= JOB_MECHANIC_T2    ) \
- || ( (class_) >= JOB_BABY_RUNE      && (class_) <= JOB_BABY_MECHANIC2 ) \
- || ( (class_) >= JOB_SUPER_NOVICE_E && (class_) <= JOB_SUPER_BABY_E   ) \
- || ( (class_) >= JOB_KAGEROU        && (class_) <= JOB_OBORO          ) \
- || ( (class_) >= JOB_REBELLION      && (class_) <  JOB_MAX            ) \
-)
-#define pcdb_checkid(class_) pcdb_checkid_sub((unsigned int)(class_))
 
 // clientside display macros (values to the left/right of the "+")
 #ifdef RENEWAL
@@ -1022,6 +1009,8 @@ struct pc_interface {
 	int (*expiration_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*global_expiration_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*expire_check) (struct map_session_data *sd);
+
+	bool (*db_checkid) (unsigned int class_);
 
 	/**
 	 * Autotrade persistency [Ind/Hercules <3]

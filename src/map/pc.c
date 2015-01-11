@@ -59,7 +59,7 @@ struct pc_interface pc_s;
 
 //Converts a class to its array index for CLASS_COUNT defined arrays.
 //Note that it does not do a validity check for speed purposes, where parsing
-//player input make sure to use a pcdb_checkid first!
+//player input make sure to use a pc->db_checkid first!
 int pc_class2idx(int class_) {
 	if (class_ >= JOB_NOVICE_HIGH)
 		return class_- JOB_NOVICE_HIGH+JOB_MAX_BASIC;
@@ -1222,7 +1222,7 @@ int pc_set_hate_mob(struct map_session_data *sd, int pos, struct block_list *bl)
 	}
 
 	class_ = status->get_class(bl);
-	if (!pcdb_checkid(class_)) {
+	if (!pc->db_checkid(class_)) {
 		unsigned int max_hp = status_get_max_hp(bl);
 		if ((pos == 1 && max_hp < 6000) || (pos == 2 && max_hp < 20000))
 			return 0;
@@ -10307,7 +10307,7 @@ int pc_readdb(void) {
 		if (job_count < 1)
 			continue;
 		job_id = jobs[0];
-		if (!pcdb_checkid(job_id)) {
+		if (!pc->db_checkid(job_id)) {
 			ShowError("pc_readdb: Invalid job ID %d.\n", job_id);
 			continue;
 		}
@@ -10343,7 +10343,7 @@ int pc_readdb(void) {
 		//ShowDebug("%s - Class %d: %d\n", type?"Job":"Base", job_id, pc->max_level[job][type]);
 		for (i = 1; i < job_count; i++) {
 			job_id = jobs[i];
-			if (!pcdb_checkid(job_id)) {
+			if (!pc->db_checkid(job_id)) {
 				ShowError("pc_readdb: Invalid job ID %d.\n", job_id);
 				continue;
 			}
@@ -10355,7 +10355,7 @@ int pc_readdb(void) {
 	}
 	fclose(fp);
 	for (i = 0; i < JOB_MAX; i++) {
-		if (!pcdb_checkid(i)) continue;
+		if (!pc->db_checkid(i)) continue;
 		if (i == JOB_WEDDING || i == JOB_XMAS || i == JOB_SUMMER)
 			continue; //Classes that do not need exp tables.
 		j = pc->class2idx(i);
@@ -10846,6 +10846,20 @@ void pc_autotrade_populate(struct map_session_data *sd) {
 	
 	idb_remove(pc->at_db, sd->status.char_id);
 }
+
+//Checks if the given class value corresponds to a player class. [Skotlex]
+//JOB_NOVICE isn't checked for class_ is supposed to be unsigned
+bool pc_db_checkid(unsigned int class_)
+{
+	return class_ < JOB_MAX_BASIC
+		|| (class_ >= JOB_NOVICE_HIGH    && class_ <= JOB_DARK_COLLECTOR )
+		|| (class_ >= JOB_RUNE_KNIGHT    && class_ <= JOB_MECHANIC_T2    )
+		|| (class_ >= JOB_BABY_RUNE      && class_ <= JOB_BABY_MECHANIC2 )
+		|| (class_ >= JOB_SUPER_NOVICE_E && class_ <= JOB_SUPER_BABY_E   )
+		|| (class_ >= JOB_KAGEROU        && class_ <= JOB_OBORO          )
+		|| (class_ >= JOB_REBELLION      && class_ <  JOB_MAX            );
+}
+
 void do_final_pc(void) {
 	
 	db_destroy(pc->itemcd_db);
@@ -11201,7 +11215,8 @@ void pc_defaults(void) {
 	pc->expiration_timer = pc_expiration_timer;
 	pc->global_expiration_timer = pc_global_expiration_timer;
 	pc->expire_check = pc_expire_check;
-	
+	pc->db_checkid = pc_db_checkid;
+
 	/**
 	 * Autotrade persistency [Ind/Hercules <3]
 	 **/

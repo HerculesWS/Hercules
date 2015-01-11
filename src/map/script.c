@@ -5548,7 +5548,7 @@ BUILDIN(jobchange)
 	if( script_hasdata(st,3) )
 		upper=script_getnum(st,3);
 
-	if (pcdb_checkid(job))
+	if (pc->db_checkid(job))
 	{
 		TBL_PC* sd;
 
@@ -16487,7 +16487,7 @@ BUILDIN(questinfo)
 	if(script_hasdata(st, 5)) {
 		job = script_getnum(st, 5);
 
-		if (!pcdb_checkid(job))
+		if (!pc->db_checkid(job))
 			ShowError("buildin_questinfo: Nonexistant Job Class.\n");
 		else {
 			qi.hasJob = true;

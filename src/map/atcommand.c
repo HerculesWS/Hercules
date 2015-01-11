@@ -971,7 +971,7 @@ ACMD(jobchange) {
 		return true;
 	}
 
-	if (pcdb_checkid(job)) {
+	if (pc->db_checkid(job)) {
 		if (pc->jobchange(sd, job, upper) == 0)
 			clif->message(fd, msg_txt(12)); // Your job has been changed.
 		else {

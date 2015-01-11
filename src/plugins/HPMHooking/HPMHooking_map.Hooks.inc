@@ -52854,6 +52854,33 @@ void HP_pc_expire_check(struct map_session_data *sd) {
 	}
 	return;
 }
+bool HP_pc_db_checkid(unsigned int class_) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_pc_db_checkid_pre ) {
+		bool (*preHookFunc) (unsigned int *class_);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_db_checkid_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_db_checkid_pre[hIndex].func;
+			retVal___ = preHookFunc(&class_);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.db_checkid(class_);
+	}
+	if( HPMHooks.count.HP_pc_db_checkid_post ) {
+		bool (*postHookFunc) (bool retVal___, unsigned int *class_);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_db_checkid_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_db_checkid_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &class_);
+		}
+	}
+	return retVal___;
+}
 void HP_pc_autotrade_load(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_pc_autotrade_load_pre ) {
