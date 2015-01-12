@@ -14552,9 +14552,9 @@ bool skill_get_requirement_off_unknown(struct status_change *sc, uint16 *skill_i
     return false;
 }
 
-int skill_get_requirement_item_unknown(struct status_change *sc, struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv, uint16 *idx, int *i)
+bool skill_get_requirement_item_unknown(struct status_change *sc, struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv, uint16 *idx, int *i)
 {
-    return -1;
+    return false;
 }
 
 void skill_get_requirement_unknown(struct status_change *sc, struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv, struct skill_condition *req)
