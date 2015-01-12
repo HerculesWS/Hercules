@@ -382,6 +382,8 @@ struct mob_interface {
 
 struct mob_interface *mob;
 
+#ifdef HERCULES_CORE
 void mob_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_MOB_H */

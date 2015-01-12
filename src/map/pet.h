@@ -155,6 +155,8 @@ struct pet_interface {
 
 struct pet_interface *pet;
 
+#ifdef HERCULES_CORE
 void pet_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_PET_H */

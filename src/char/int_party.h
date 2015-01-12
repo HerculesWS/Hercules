@@ -23,7 +23,9 @@ struct party_data {
 	unsigned char size; //Total size of party.
 };
 
+#ifdef HERCULES_CORE
 void inter_party_defaults(void);
+#endif // HERCULES_CORE
 
 /**
  * inter_party interface

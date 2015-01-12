@@ -44,6 +44,8 @@ struct duel_interface {
 
 struct duel_interface *duel;
 
+#ifdef HERCULES_CORE
 void duel_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_DUEL_H */

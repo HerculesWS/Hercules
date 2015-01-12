@@ -281,7 +281,9 @@ struct npc_interface {
 
 struct npc_interface *npc;
 
+#ifdef HERCULES_CORE
 void npc_defaults(void);
+#endif // HERCULES_CORE
 
 
 /* comes from npc_chat.c */
@@ -347,7 +349,9 @@ struct pcre_interface *libpcre;
 /**
  * Also defaults libpcre
  **/
+#ifdef HERCULES_CORE
 void npc_chat_defaults(void);
-#endif
+#endif // HERCULES_CORE
+#endif // PCRE_SUPPORT
 
 #endif /* MAP_NPC_H */

@@ -1337,6 +1337,8 @@ struct clif_interface {
 
 struct clif_interface *clif;
 
+#ifdef HERCULES_CORE
 void clif_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_CLIF_H */

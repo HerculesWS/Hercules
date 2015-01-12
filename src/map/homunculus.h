@@ -157,6 +157,8 @@ struct homunculus_interface {
 
 struct homunculus_interface *homun;
 
+#ifdef HERCULES_CORE
 void homunculus_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_HOMUNCULUS_H */

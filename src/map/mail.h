@@ -25,6 +25,8 @@ struct mail_interface {
 
 struct mail_interface *mail;
 
+#ifdef HERCULES_CORE
 void mail_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_MAIL_H */

@@ -193,6 +193,8 @@ struct mapif_interface {
 
 struct mapif_interface *mapif;
 
+#ifdef HERCULES_CORE
 void mapif_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* CHAR_MAPIF_H */

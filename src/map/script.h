@@ -716,6 +716,8 @@ struct script_interface {
 
 struct script_interface *script;
 
+#ifdef HERCULES_CORE
 void script_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_SCRIPT_H */

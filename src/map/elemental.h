@@ -119,6 +119,8 @@ struct elemental_interface {
 
 struct elemental_interface *elemental;
 
+#ifdef HERCULES_CORE
 void elemental_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_ELEMENTAL_H */

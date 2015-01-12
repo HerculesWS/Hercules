@@ -42,6 +42,8 @@ struct pincode_interface {
 
 struct pincode_interface *pincode;
 
+#ifdef HERCULES_CORE
 void pincode_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* CHAR_PINCODE_H */

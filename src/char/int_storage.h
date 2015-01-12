@@ -7,7 +7,9 @@
 struct storage_data;
 struct guild_storage;
 
+#ifdef HERCULES_CORE
 void inter_storage_defaults(void);
+#endif // HERCULES_CORE
 
 /**
  * inter_storage interface

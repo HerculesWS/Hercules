@@ -2122,6 +2122,8 @@ struct status_interface {
 
 struct status_interface *status;
 
+#ifdef HERCULES_CORE
 void status_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_STATUS_H */

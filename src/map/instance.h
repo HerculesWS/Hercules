@@ -86,6 +86,8 @@ struct instance_interface {
 
 struct instance_interface *instance;
 
+#ifdef HERCULES_CORE
 void instance_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_INSTANCE_H */

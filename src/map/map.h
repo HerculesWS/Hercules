@@ -1078,6 +1078,8 @@ struct map_interface {
 
 struct map_interface *map;
 
+#ifdef HERCULES_CORE
 void map_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_MAP_H */

@@ -46,6 +46,8 @@ struct sysinfo_interface {
 
 struct sysinfo_interface *sysinfo;
 
+#ifdef HERCULES_CORE
 void sysinfo_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* COMMON_SYSINFO_H */

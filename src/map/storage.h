@@ -56,7 +56,9 @@ struct guild_storage_interface {
 
 struct guild_storage_interface *gstorage;
 
+#ifdef HERCULES_CORE
 void storage_defaults(void);
 void gstorage_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_STORAGE_H */

@@ -8,9 +8,9 @@
 /// One 64-bit block.
 typedef struct BIT64 { uint8_t b[8]; } BIT64;
 
-
+#ifdef HERCULES_CORE
 void des_decrypt_block(BIT64* block);
 void des_decrypt(unsigned char* data, size_t size);
-
+#endif // HERCULES_CORE
 
 #endif // COMMON_DES_H

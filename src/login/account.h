@@ -13,8 +13,10 @@ typedef struct AccountDB AccountDB;
 typedef struct AccountDBIterator AccountDBIterator;
 
 
+#ifdef HERCULES_CORE
 // standard engines
 AccountDB* account_db_sql(void);
+#endif // HERCULES_CORE
 
 struct mmo_account
 {
@@ -139,9 +141,11 @@ struct AccountDB
 	AccountDBIterator* (*iterator)(AccountDB* self);
 };
 
+#ifdef HERCULES_CORE
 Sql *account_db_sql_up(AccountDB* self);
 
 void mmo_send_accreg2(AccountDB* self, int fd, int account_id, int char_id);
 void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id);
+#endif // HERCULES_CORE
 
 #endif /* LOGIN_ACCOUNT_H */

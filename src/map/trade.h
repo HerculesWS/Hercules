@@ -25,6 +25,8 @@ struct trade_interface {
 
 struct trade_interface *trade;
 
+#ifdef HERCULES_CORE
 void trade_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_TRADE_H */

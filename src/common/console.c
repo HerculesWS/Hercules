@@ -40,6 +40,11 @@
 struct console_interface console_s;
 #ifdef CONSOLE_INPUT
 struct console_input_interface console_input_s;
+
+struct {
+	char queue[CONSOLE_PARSE_SIZE][MAX_CONSOLE_INPUT];
+	unsigned short count;
+} cinput;
 #endif
 
 /*======================================

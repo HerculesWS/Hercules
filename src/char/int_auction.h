@@ -6,7 +6,9 @@
 
 #include "../common/mmo.h"
 
+#ifdef HERCULES_CORE
 void inter_auction_defaults(void);
+#endif // HERCULES_CORE
 
 /**
  * inter_auction_interface interface

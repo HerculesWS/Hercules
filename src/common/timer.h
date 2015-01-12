@@ -65,6 +65,8 @@ struct timer_interface {
 
 struct timer_interface *timer;
 
+#ifdef HERCULES_CORE
 void timer_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* COMMON_TIMER_H */

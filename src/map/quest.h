@@ -50,6 +50,8 @@ struct quest_interface {
 
 struct quest_interface *quest;
 
+#ifdef HERCULES_CORE
 void quest_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_QUEST_H */

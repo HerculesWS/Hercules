@@ -2079,6 +2079,8 @@ struct skill_interface {
 
 struct skill_interface *skill;
 
+#ifdef HERCULES_CORE
 void skill_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_SKILL_H */

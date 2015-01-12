@@ -44,11 +44,6 @@ struct CParseEntry {
 	unsigned short next_count;
 };
 
-struct {
-	char queue[CONSOLE_PARSE_SIZE][MAX_CONSOLE_INPUT];
-	unsigned short count;
-} cinput;
-
 #ifdef CONSOLE_INPUT
 struct console_input_interface {
 	/* vars */
@@ -91,6 +86,8 @@ struct console_interface {
 
 struct console_interface *console;
 
+#ifdef HERCULES_CORE
 void console_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* COMMON_CONSOLE_H */

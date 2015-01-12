@@ -184,6 +184,8 @@ struct intif_interface {
 
 struct intif_interface *intif;
 
+#ifdef HERCULES_CORE
 void intif_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_INTIF_H */

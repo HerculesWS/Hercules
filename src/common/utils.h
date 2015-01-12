@@ -13,15 +13,16 @@
 /* [HCache] 1-byte key to ensure our method is the latest, we can modify to ensure the method matches */
 #define HCACHE_KEY 'k'
 
+//Caps values to min/max
+#define cap_value(a, min, max) (((a) >= (max)) ? (max) : ((a) <= (min)) ? (min) : (a))
+
+#ifdef HERCULES_CORE
 // generate a hex dump of the first 'length' bytes of 'buffer'
 void WriteDump(FILE* fp, const void* buffer, size_t length);
 void ShowDump(const void* buffer, size_t length);
 
 void findfile(const char *p, const char *pat, void (func)(const char*));
 bool exists(const char* filename);
-
-//Caps values to min/max
-#define cap_value(a, min, max) (((a) >= (max)) ? (max) : ((a) <= (min)) ? (min) : (a))
 
 /// calculates the value of A / B, in percent (rounded down)
 unsigned int get_percentage(const unsigned int A, const unsigned int B);
@@ -49,6 +50,7 @@ extern float GetFloat(const unsigned char* buf);
 
 size_t hread(void * ptr, size_t size, size_t count, FILE * stream);
 size_t hwrite(const void * ptr, size_t size, size_t count, FILE * stream);
+#endif // HERCULES_CORE
 
 /* [Ind/Hercules] Caching */
 struct HCache_interface {
@@ -63,6 +65,8 @@ struct HCache_interface {
 
 struct HCache_interface *HCache;
 
+#ifdef HERCULES_CORE
 void HCache_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* COMMON_UTILS_H */

@@ -65,7 +65,11 @@
 //void malloc_init (void);
 //void malloc_final (void);
 
+#ifdef HERCULES_CORE
 void malloc_defaults(void);
+
+void memmgr_report(int extra);
+#endif // HERCULES_CORE
 
 struct malloc_interface {
 	void (*init) (void);
@@ -84,8 +88,6 @@ struct malloc_interface {
 	/* */
 	void (*post_shutdown) (void);
 };
-
-void memmgr_report (int extra);
 
 struct malloc_interface *iMalloc;
 #endif /* COMMON_MALLOC_H */

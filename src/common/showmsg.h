@@ -76,11 +76,6 @@
 
 #define CL_SPACE		"           "	// space equivalent of the print messages
 
-extern int stdout_with_ansisequence; //If the color ANSI sequences are to be used. [flaviojs]
-extern int msg_silent; //Specifies how silent the console is. [Skotlex]
-extern int console_msg_log; //Specifies what error messages to log. [Ind]
-extern char timestamp_format[20]; //For displaying Timestamps [Skotlex]
-
 enum msg_type {
 	MSG_NONE,
 	MSG_STATUS,
@@ -93,8 +88,15 @@ enum msg_type {
 	MSG_FATALERROR
 };
 
-extern void ClearScreen(void);
 #ifdef HERCULES_CORE
+extern int stdout_with_ansisequence; //If the color ANSI sequences are to be used. [flaviojs]
+extern int msg_silent; //Specifies how silent the console is. [Skotlex]
+extern int console_msg_log; //Specifies what error messages to log. [Ind]
+extern char timestamp_format[20]; //For displaying Timestamps [Skotlex]
+
+extern void ClearScreen(void);
+extern int vShowMessage_(enum msg_type flag, const char *string, va_list ap);
+
 	extern void ShowMessage(const char *, ...) __attribute__((format(printf, 1, 2)));
 	extern void ShowStatus(const char *, ...) __attribute__((format(printf, 1, 2)));
 	extern void ShowSQL(const char *, ...) __attribute__((format(printf, 1, 2)));
@@ -116,7 +118,5 @@ extern void ClearScreen(void);
 	HPExport void (*ShowError) (const char *, ...) __attribute__((format(printf, 1, 2)));
 	HPExport void (*ShowFatalError) (const char *, ...) __attribute__((format(printf, 1, 2)));
 #endif
-
-extern int vShowMessage_(enum msg_type flag, const char *string, va_list ap);
 
 #endif /* COMMON_SHOWMSG_H */
