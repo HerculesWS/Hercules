@@ -3152,7 +3152,7 @@ int skill_area_sub_count(struct block_list *src, struct block_list *target, uint
  *
  *------------------------------------------*/
 int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
-	struct block_list *src = map->id2bl(id),*target;
+	struct block_list *src = map->id2bl(id),*target = NULL;
 	struct unit_data *ud = unit->bl2ud(src);
 	struct skill_timerskill *skl;
 	int range;
