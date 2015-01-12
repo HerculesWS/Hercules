@@ -63811,14 +63811,14 @@ void HP_skill_timerskill_target_unknown(int tid, int64 tick, struct block_list *
 	}
 	return;
 }
-void HP_skill_timerskill_notarget_unknown(int tid, int64 tick, struct block_list *src, struct block_list *target, struct unit_data *ud, struct skill_timerskill *skl) {
+void HP_skill_timerskill_notarget_unknown(int tid, int64 tick, struct block_list *src, struct unit_data *ud, struct skill_timerskill *skl) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_skill_timerskill_notarget_unknown_pre ) {
-		void (*preHookFunc) (int *tid, int64 *tick, struct block_list *src, struct block_list *target, struct unit_data *ud, struct skill_timerskill *skl);
+		void (*preHookFunc) (int *tid, int64 *tick, struct block_list *src, struct unit_data *ud, struct skill_timerskill *skl);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_timerskill_notarget_unknown_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_skill_timerskill_notarget_unknown_pre[hIndex].func;
-			preHookFunc(&tid, &tick, src, target, ud, skl);
+			preHookFunc(&tid, &tick, src, ud, skl);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -63826,13 +63826,13 @@ void HP_skill_timerskill_notarget_unknown(int tid, int64 tick, struct block_list
 		}
 	}
 	{
-		HPMHooks.source.skill.timerskill_notarget_unknown(tid, tick, src, target, ud, skl);
+		HPMHooks.source.skill.timerskill_notarget_unknown(tid, tick, src, ud, skl);
 	}
 	if( HPMHooks.count.HP_skill_timerskill_notarget_unknown_post ) {
-		void (*postHookFunc) (int *tid, int64 *tick, struct block_list *src, struct block_list *target, struct unit_data *ud, struct skill_timerskill *skl);
+		void (*postHookFunc) (int *tid, int64 *tick, struct block_list *src, struct unit_data *ud, struct skill_timerskill *skl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_timerskill_notarget_unknown_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_skill_timerskill_notarget_unknown_post[hIndex].func;
-			postHookFunc(&tid, &tick, src, target, ud, skl);
+			postHookFunc(&tid, &tick, src, ud, skl);
 		}
 	}
 	return;
