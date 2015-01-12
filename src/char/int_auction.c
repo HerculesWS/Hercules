@@ -188,7 +188,7 @@ void inter_auctions_fromsql(void)
 		StrBuf->Printf(&buf, ",`card%d`", i);
 	StrBuf->Printf(&buf, " FROM `%s` ORDER BY `auction_id` DESC", auction_db);
 
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, StrBuf->Value(&buf)) )
+	if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)))
 		Sql_ShowDebug(inter->sql_handle);
 
 	StrBuf->Destroy(&buf);

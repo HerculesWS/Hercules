@@ -215,7 +215,7 @@ int inter_guild_tosql(struct guild *g,int flag)
 			StrBuf->Printf(&buf, "`guild_lv`=%d, `skill_point`=%d, `exp`=%"PRIu64", `next_exp`=%u, `max_member`=%d", g->guild_lv, g->skill_point, g->exp, g->next_exp, g->max_member);
 		}
 		StrBuf->Printf(&buf, " WHERE `guild_id`=%d", g->guild_id);
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "%s", StrBuf->Value(&buf)) )
+		if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) )
 			Sql_ShowDebug(inter->sql_handle);
 		StrBuf->Destroy(&buf);
 	}
@@ -531,7 +531,7 @@ int inter_guild_castle_tosql(struct guild_castle *gc)
 	for (i = 0; i < MAX_GUARDIANS; ++i)
 		StrBuf->Printf(&buf, ", `visibleG%d`='%d'", i, gc->guardian[i].visible);
 
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, StrBuf->Value(&buf)))
+	if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)))
 		Sql_ShowDebug(inter->sql_handle);
 	else if(save_log)
 		ShowInfo("Saved guild castle (%d)\n", gc->castle_id);
@@ -557,7 +557,7 @@ struct guild_castle* inter_guild_castle_fromsql(int castle_id)
 	for (i = 0; i < MAX_GUARDIANS; ++i)
 		StrBuf->Printf(&buf, ", `visibleG%d`", i);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `castle_id`='%d'", guild_castle_db, castle_id);
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, StrBuf->Value(&buf))) {
+	if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf))) {
 		Sql_ShowDebug(inter->sql_handle);
 		StrBuf->Destroy(&buf);
 		return NULL;

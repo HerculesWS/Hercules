@@ -45,7 +45,7 @@ static int inter_mail_fromsql(int char_id, struct mail_data* md)
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `dest_id`='%d' AND `status` < 3 ORDER BY `id` LIMIT %d",
 		mail_db, char_id, MAIL_MAX_INBOX + 1);
 
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, StrBuf->Value(&buf)) )
+	if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)))
 		Sql_ShowDebug(inter->sql_handle);
 
 	StrBuf->Destroy(&buf);
@@ -160,16 +160,13 @@ static bool inter_mail_loadmessage(int mail_id, struct mail_message* msg)
 		StrBuf->Printf(&buf, ",`card%d`", j);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `id` = '%d'", mail_db, mail_id);
 
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, StrBuf->Value(&buf))
-	||  SQL_SUCCESS != SQL->NextRow(inter->sql_handle) )
-	{
+	if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf))
+	 || SQL_SUCCESS != SQL->NextRow(inter->sql_handle)) {
 		Sql_ShowDebug(inter->sql_handle);
 		SQL->FreeResult(inter->sql_handle);
 		StrBuf->Destroy(&buf);
 		return false;
-	}
-	else
-	{
+	} else {
 		char* data;
 
 		SQL->GetData(inter->sql_handle, 0, &data, NULL); msg->id = atoi(data);
@@ -253,8 +250,7 @@ static bool inter_mail_DeleteAttach(int mail_id)
 		StrBuf->Printf(&buf, ", `card%d` = '0'", i);
 	StrBuf->Printf(&buf, " WHERE `id` = '%d'", mail_id);
 
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, StrBuf->Value(&buf)) )
-	{
+	if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf))) {
 		Sql_ShowDebug(inter->sql_handle);
 		StrBuf->Destroy(&buf);
 

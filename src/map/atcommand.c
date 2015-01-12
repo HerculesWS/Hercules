@@ -626,9 +626,9 @@ ACMD(who) {
 
 	if (map_id < 0) {
 		if (count == 0)
-			StrBuf->Printf(&buf, msg_txt(28)); // No player found.
+			StrBuf->AppendStr(&buf, msg_txt(28)); // No player found.
 		else if (count == 1)
-			StrBuf->Printf(&buf, msg_txt(29)); // 1 player found.
+			StrBuf->AppendStr(&buf, msg_txt(29)); // 1 player found.
 		else
 			StrBuf->Printf(&buf, msg_txt(30), count); // %d players found.
 	} else {
