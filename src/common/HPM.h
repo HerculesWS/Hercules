@@ -19,6 +19,7 @@
 	#define plugin_open(x)        LoadLibraryA(x)
 	#define plugin_import(x,y,z)  (z)GetProcAddress((x),(y))
 	#define plugin_close(x)       FreeLibrary(x)
+	#define plugin_geterror(buf)  (FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), 0, buf, sizeof(buf), NULL) ? buf : "Unknown error")
 
 	#define DLL_EXT               ".dll"
 	#define DLL                   HINSTANCE
@@ -31,6 +32,7 @@
 	#endif // RTLD_DEEPBIND
 	#define plugin_import(x,y,z)   (z)dlsym((x),(y))
 	#define plugin_close(x)        dlclose(x)
+	#define plugin_geterror(buf)   ((void)buf, dlerror())
 
 	#if defined CYGWIN
 		#define DLL_EXT        ".dll"
