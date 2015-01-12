@@ -64291,11 +64291,11 @@ bool HP_skill_get_requirement_off_unknown(struct status_change *sc, uint16 *skil
 	}
 	return retVal___;
 }
-int HP_skill_get_requirement_item_unknown(struct status_change *sc, struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv, uint16 *idx, int *i) {
+bool HP_skill_get_requirement_item_unknown(struct status_change *sc, struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv, uint16 *idx, int *i) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_skill_get_requirement_item_unknown_pre ) {
-		int (*preHookFunc) (struct status_change *sc, struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv, uint16 *idx, int *i);
+		bool (*preHookFunc) (struct status_change *sc, struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv, uint16 *idx, int *i);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_requirement_item_unknown_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_skill_get_requirement_item_unknown_pre[hIndex].func;
@@ -64310,7 +64310,7 @@ int HP_skill_get_requirement_item_unknown(struct status_change *sc, struct map_s
 		retVal___ = HPMHooks.source.skill.get_requirement_item_unknown(sc, sd, skill_id, skill_lv, idx, i);
 	}
 	if( HPMHooks.count.HP_skill_get_requirement_item_unknown_post ) {
-		int (*postHookFunc) (int retVal___, struct status_change *sc, struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv, uint16 *idx, int *i);
+		bool (*postHookFunc) (bool retVal___, struct status_change *sc, struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv, uint16 *idx, int *i);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_requirement_item_unknown_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_skill_get_requirement_item_unknown_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sc, sd, skill_id, skill_lv, idx, i);
