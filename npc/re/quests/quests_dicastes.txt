@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= Gennosuke Kouga, Muad_Dib
 //===== Current Version: =====================================
-//= 2.3
+//= 2.4
 //===== File Encoding ========================================
 //= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //===== Description: =========================================
@@ -33,6 +33,7 @@
 //= 2.1 Added reset option to "Kareka". [Euphy]
 //= 2.2 Added Izlude duplicates. [Euphy]
 //= 2.3 Added GM management NPCs. [Euphy]
+//= 2.4 Corrected NPC Location. [Dastgir]
 //============================================================
 
 // Entrance
@@ -1139,7 +1140,7 @@ function	script	unknown_d	{
 	}
 	close;
 }
-prt_fild03,144,95,0	script	Tree Roots	CLEAR_NPC,{ unknown_d(12166,902); }
+pay_fild03,144,95,0	script	Tree Roots	CLEAR_NPC,{ unknown_d(12166,902); }
 prt_fild09,371,255,0	script	Reptile Tongues	CLEAR_NPC,{ unknown_d(12167,903); }
 prt_fild09,352,241,0	script	Scorpion Tails	CLEAR_NPC,{ unknown_d(12168,904); }
 pay_fild02,177,108,0	script	Stems	CLEAR_NPC,{ unknown_d(12169,905); }
