@@ -14718,7 +14718,7 @@ ecl_in01,32,52,5	script	Traveler Fome#tl01	4_F_DOGTRAVELER,3,3,{
 		mes "The fact that you made it here actually seems just short of a miracle...";
 		close;
 	}
-	.@totaltemp =  questprogress(7424) + questprogress(7424) + questprogress(7425) + questprogress(7426);
+	.@totaltemp =  questprogress(7423) + questprogress(7424) + questprogress(7425) + questprogress(7426);
 	.@total =  questprogress(7411) + questprogress(7412) + questprogress(7413);
 	if (ep14_2_mylord < 2 || (ep14_2_mylord == 2 && questprogress(7411) != 1)) {
 		mes "[Fome]";
