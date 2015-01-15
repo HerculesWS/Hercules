@@ -103,7 +103,7 @@
 #define MAX_ZENY 1000000000
 
 //Official Limit: 2.1b ( the var that stores the money doesn't go much higher than this by default )
-#define MAX_BANK_ZENY 2100000000
+#define MAX_BANK_ZENY INT_MAX
 
 #define MAX_LEVEL 175
 #define MAX_FAME 1000000000
