@@ -156,7 +156,9 @@ struct sv_interface {
 
 struct sv_interface *sv;
 
+#ifdef HERCULES_CORE
 void strlib_defaults(void);
+#endif // HERCULES_CORE
 
 /* the purpose of these macros is simply to not make calling them be an annoyance */
 #ifndef H_STRLIB_C

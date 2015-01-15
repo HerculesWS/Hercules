@@ -120,6 +120,8 @@ struct battleground_interface {
 
 struct battleground_interface *bg;
 
+#ifdef HERCULES_CORE
 void battleground_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_BATTLEGROUND_H */

@@ -10,10 +10,7 @@
 
 #include "thread.h"
 
-#include "../common/sysinfo.h" // sysinfo->getpagesize()
 #include "../common/cbasetypes.h"
-#include "../common/malloc.h"
-#include "../common/showmsg.h"
 
 #ifdef WIN32
 #	include "../common/winapi.h"
@@ -26,6 +23,10 @@
 #	include <string.h>
 #	include <unistd.h>
 #endif
+
+#include "../common/malloc.h"
+#include "../common/showmsg.h"
+#include "../common/sysinfo.h" // sysinfo->getpagesize()
 
 // When Compiling using MSC (on win32..) we know we have support in any case!
 #ifdef _MSC_VER
@@ -122,10 +123,10 @@ static void *raThreadMainRedirector( void *p ){
 	// the threads inherits the Signal mask from the thread which spawned
 	// this thread
 	// so we've to block everything we don't care about.
-	sigemptyset(&set);
-	sigaddset(&set, SIGINT);
-	sigaddset(&set, SIGTERM);
-	sigaddset(&set, SIGPIPE);
+	(void)sigemptyset(&set);
+	(void)sigaddset(&set, SIGINT);
+	(void)sigaddset(&set, SIGTERM);
+	(void)sigaddset(&set, SIGPIPE);
 
 	pthread_sigmask(SIG_BLOCK, &set, NULL);
 

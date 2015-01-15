@@ -148,6 +148,7 @@ typedef struct eri {
 #	define ers_destroy(obj)    ((obj)->destroy(obj))
 #	define ers_chunk_size(obj,size) ((obj)->chunk_size((obj),(size)))
 
+#ifdef HERCULES_CORE
 /**
  * Get a new instance of the manager that handles the specified entry size.
  * Size has to greater than 0.
@@ -173,6 +174,7 @@ void ers_report(void);
  * Clears the remainder of the managers
  **/
 void ers_final(void);
+#endif // HERCULES_CORE
 #endif /* DISABLE_ERS / not DISABLE_ERS */
 
 #endif /* COMMON_ERS_H */

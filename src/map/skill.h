@@ -2055,7 +2055,7 @@ struct skill_interface {
 	void (*attack_post_unknown) (int *attack_type, struct block_list* src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
 	bool (*timerskill_dead_unknown) (struct block_list *src, struct unit_data *ud, struct skill_timerskill *skl);
 	void (*timerskill_target_unknown) (int tid, int64 tick, struct block_list *src, struct block_list *target, struct unit_data *ud, struct skill_timerskill *skl);
-	void (*timerskill_notarget_unknown) (int tid, int64 tick, struct block_list *src, struct block_list *target, struct unit_data *ud, struct skill_timerskill *skl);
+	void (*timerskill_notarget_unknown) (int tid, int64 tick, struct block_list *src, struct unit_data *ud, struct skill_timerskill *skl);
 	bool (*cleartimerskill_exception) (int skill_id);
 	bool (*castend_id_unknown) (struct unit_data *ud, struct block_list *src, struct block_list *target);
 	bool (*castend_nodamage_id_dead_unknown) (struct block_list *src, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
@@ -2073,12 +2073,14 @@ struct skill_interface {
 	int (*check_condition_castbegin_unknown) (struct status_change *sc, uint16 *skill_id);
 	void (*check_condition_castend_unknown) (struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv);
 	bool (*get_requirement_off_unknown) (struct status_change *sc, uint16 *skill_id);
-	int (*get_requirement_item_unknown) (struct status_change *sc, struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv, uint16 *idx, int *i);
+	bool (*get_requirement_item_unknown) (struct status_change *sc, struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv, uint16 *idx, int *i);
 	void (*get_requirement_unknown) (struct status_change *sc, struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv, struct skill_condition *req);
 };
 
 struct skill_interface *skill;
 
+#ifdef HERCULES_CORE
 void skill_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_SKILL_H */

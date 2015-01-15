@@ -6,7 +6,9 @@
 
 #include "../common/cbasetypes.h"
 
+#ifdef HERCULES_CORE
 void inter_elemental_defaults(void);
+#endif // HERCULES_CORE
 
 /**
  * inter_elemental_interface interface

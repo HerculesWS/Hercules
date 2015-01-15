@@ -1024,6 +1024,8 @@ struct pc_interface {
 
 struct pc_interface *pc;
 
+#ifdef HERCULES_CORE
 void pc_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_PC_H */

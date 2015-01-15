@@ -28,6 +28,8 @@ struct loginif_interface {
 
 struct loginif_interface *loginif;
 
+#ifdef HERCULES_CORE
 void loginif_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* CHAR_LOGINIF_H */

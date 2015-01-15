@@ -4,6 +4,10 @@
 #ifndef MAP_HPMMAP_H
 #define MAP_HPMMAP_H
 
+#ifndef HERCULES_CORE
+#error You should never include HPMmap.h from a plugin.
+#endif
+
 #include "../common/cbasetypes.h"
 #include "../map/atcommand.h"
 #include "../common/HPM.h"

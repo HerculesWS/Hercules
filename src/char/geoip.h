@@ -27,6 +27,8 @@ struct geoip_interface {
 
 struct geoip_interface *geoip;
 
+#ifdef HERCULES_CORE
 void geoip_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* CHAR_GEOIP_H */

@@ -123,6 +123,8 @@
 	if (Assert_chk(t)) break; else (void)0
 
 
+#ifdef HERCULES_CORE
 void assert_report(const char *file, int line, const char *func, const char *targetname, const char *title);
+#endif // HERCULES_CORE
 
 #endif /* COMMON_NULLPO_H */

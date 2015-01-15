@@ -141,6 +141,8 @@ struct party_interface {
 
 struct party_interface *party;
 
+#ifdef HERCULES_CORE
 void party_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_PARTY_H */

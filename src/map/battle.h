@@ -487,7 +487,9 @@ struct Battle_Config {
 	int feature_roulette;
 };
 
+#ifdef HERCULES_CORE
 extern struct Battle_Config battle_config;
+#endif // HERCULES_CORE
 
 /* criteria for battle_config.idletime_critera */
 enum e_battle_config_idletime {
@@ -620,5 +622,8 @@ struct battle_interface {
 
 struct battle_interface *battle;
 
+#ifdef HERCULES_CORE
 void battle_defaults(void);
+#endif // HERCULES_CORE
+
 #endif /* MAP_BATTLE_H */

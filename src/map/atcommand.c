@@ -626,9 +626,9 @@ ACMD(who) {
 
 	if (map_id < 0) {
 		if (count == 0)
-			StrBuf->Printf(&buf, msg_txt(28)); // No player found.
+			StrBuf->AppendStr(&buf, msg_txt(28)); // No player found.
 		else if (count == 1)
-			StrBuf->Printf(&buf, msg_txt(29)); // 1 player found.
+			StrBuf->AppendStr(&buf, msg_txt(29)); // 1 player found.
 		else
 			StrBuf->Printf(&buf, msg_txt(30), count); // %d players found.
 	} else {
@@ -5979,7 +5979,7 @@ ACMD(mobsearch)
 		clif->message(fd, atcmd_output);
 		return false;
 	}
-	if(mob_id == atoi(mob_name) && mob->db(mob_id)->jname)
+	if (mob_id == atoi(mob_name))
 		strcpy(mob_name,mob->db(mob_id)->jname); // --ja--
 		//strcpy(mob_name,mob_db(mob_id)->name); // --en--
 

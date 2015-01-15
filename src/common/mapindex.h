@@ -96,6 +96,8 @@ struct mapindex_interface {
 
 struct mapindex_interface *mapindex;
 
+#ifdef HERCULES_CORE
 void mapindex_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* COMMON_MAPINDEX_H */

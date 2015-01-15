@@ -48,6 +48,8 @@ struct mapreg_interface {
 
 struct mapreg_interface *mapreg;
 
+#ifdef HERCULES_CORE
 void mapreg_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_MAPREG_H */

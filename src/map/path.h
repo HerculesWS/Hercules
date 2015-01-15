@@ -55,6 +55,8 @@ struct path_interface {
 
 struct path_interface *path;
 
+#ifdef HERCULES_CORE
 void path_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_PATH_H */

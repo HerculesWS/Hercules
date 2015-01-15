@@ -60,7 +60,7 @@ struct quest *mapif_quests_fromsql(int char_id, int *count)
 
 	memset(&tmp_quest, 0, sizeof(struct quest));
 
-	if (SQL_ERROR == SQL->StmtPrepare(stmt, StrBuf->Value(&buf))
+	if (SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
 	 || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, 0)
 	 || SQL_ERROR == SQL->StmtExecute(stmt)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT,  &tmp_quest.quest_id, 0, NULL, NULL)
@@ -142,7 +142,7 @@ bool mapif_quest_add(int char_id, struct quest qd)
 		StrBuf->Printf(&buf, ", '%d'", qd.count[i]);
 	}
 	StrBuf->AppendStr(&buf, ")");
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, StrBuf->Value(&buf))) {
+	if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf))) {
 		Sql_ShowDebug(inter->sql_handle);
 		StrBuf->Destroy(&buf);
 		return false;
@@ -171,7 +171,7 @@ bool mapif_quest_update(int char_id, struct quest qd)
 	}
 	StrBuf->Printf(&buf, " WHERE `quest_id` = '%d' AND `char_id` = '%d'", qd.quest_id, char_id);
 
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, StrBuf->Value(&buf))) {
+	if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf))) {
 		Sql_ShowDebug(inter->sql_handle);
 		StrBuf->Destroy(&buf);
 		return false;

@@ -141,8 +141,9 @@ struct hplugin *hplugin_load(const char* filename) {
 
 	plugin = HPM->create();
 
-	if( !( plugin->dll = plugin_open(filename) ) ){
-		ShowWarning("HPM:plugin_load: failed to load '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
+	if (!(plugin->dll = plugin_open(filename))) {
+		char buf[1024];
+		ShowWarning("HPM:plugin_load: failed to load '"CL_WHITE"%s"CL_RESET"' (error: %s), skipping...\n", filename, plugin_geterror(buf));
 		HPM->unload(plugin);
 		return NULL;
 	}

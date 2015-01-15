@@ -23,7 +23,7 @@ enum E_LOGINSERVER_ST
 
 // supported encryption types: 1- passwordencrypt, 2- passwordencrypt2, 3- both
 #define PASSWORDENC 3
-#define PASSWD_LEN 32+1 // 23+1 for plaintext, 32+1 for md5-ed passwords
+#define PASSWD_LEN (32+1) // 23+1 for plaintext, 32+1 for md5-ed passwords
 
 struct login_session_data {
 	int account_id;
@@ -130,8 +130,10 @@ struct online_login_data {
 #define sex_str2num(str) ( ((str) == 'F') ? SEX_FEMALE : ((str) == 'M') ? SEX_MALE : SEX_SERVER )
 
 #define MAX_SERVERS 30
+#ifdef HERCULES_CORE
 extern struct mmo_char_server server[MAX_SERVERS];
 extern struct Login_Config login_config;
+#endif // HERCULES_CORE
 
 /**
  * Login.c Interface
@@ -202,6 +204,8 @@ struct login_interface {
 
 struct login_interface *login;
 
+#ifdef HERCULES_CORE
 void login_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* LOGIN_LOGIN_H */

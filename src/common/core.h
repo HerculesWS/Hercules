@@ -13,14 +13,7 @@
 #	include <signal.h>
 #endif
 
-extern int arg_c;
-extern char **arg_v;
-
 #define HERC_UNKNOWN_VER '\x02'
-
-/// @see E_CORE_ST
-extern int runflag;
-extern char *SERVER_NAME;
 
 enum server_types {
 	SERVER_TYPE_UNKNOWN = 0x0,
@@ -29,13 +22,6 @@ enum server_types {
 	SERVER_TYPE_MAP     = 0x4,
 };
 
-enum server_types SERVER_TYPE;
-
-extern int do_init(int,char**);
-extern void set_server_type(void);
-extern void do_abort(void);
-extern int do_final(void);
-
 /// The main loop continues until runflag is CORE_ST_STOP
 enum E_CORE_ST {
 	CORE_ST_STOP = 0,
@@ -43,8 +29,24 @@ enum E_CORE_ST {
 	CORE_ST_LAST
 };
 
+#ifdef HERCULES_CORE
+extern int arg_c;
+extern char **arg_v;
+
+/// @see E_CORE_ST
+extern int runflag;
+extern char *SERVER_NAME;
+
+enum server_types SERVER_TYPE;
+
+extern int do_init(int,char**);
+extern void set_server_type(void);
+extern void do_abort(void);
+extern int do_final(void);
+
 /// Called when a terminate signal is received. (Ctrl+C pressed)
 /// If NULL, runflag is set to CORE_ST_STOP instead.
 extern void (*shutdown_callback)(void);
+#endif // HERCULES_CORE
 
 #endif /* COMMON_CORE_H */

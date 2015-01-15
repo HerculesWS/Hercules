@@ -621,6 +621,8 @@ struct itemdb_interface {
 
 struct itemdb_interface *itemdb;
 
+#ifdef HERCULES_CORE
 void itemdb_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_ITEMDB_H */

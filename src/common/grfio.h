@@ -4,6 +4,7 @@
 #ifndef COMMON_GRFIO_H
 #define COMMON_GRFIO_H
 
+#ifdef HERCULES_CORE
 void grfio_init(const char* fname);
 void grfio_final(void);
 void* grfio_reads(const char* fname, int* size);
@@ -13,5 +14,6 @@ char* grfio_find_file(const char* fname);
 unsigned long grfio_crc32(const unsigned char *buf, unsigned int len);
 int decode_zip(void* dest, unsigned long* destLen, const void* source, unsigned long sourceLen);
 int encode_zip(void* dest, unsigned long* destLen, const void* source, unsigned long sourceLen);
+#endif // HERCULES_CORE
 
 #endif /* COMMON_GRFIO_H */

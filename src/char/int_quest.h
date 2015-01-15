@@ -4,7 +4,9 @@
 #ifndef CHAR_QUEST_H
 #define CHAR_QUEST_H
 
+#ifdef HERCULES_CORE
 void inter_quest_defaults(void);
+#endif // HERCULES_CORE
 
 /**
  * inter_quest interface

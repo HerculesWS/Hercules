@@ -8,7 +8,9 @@
 
 struct s_homunculus;
 
+#ifdef HERCULES_CORE
 void inter_homunculus_defaults(void);
+#endif // HERCULES_CORE
 
 /**
  * inter_homunculus interface

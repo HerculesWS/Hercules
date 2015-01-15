@@ -10,7 +10,9 @@ struct item;
 struct mail_data;
 struct mail_message;
 
+#ifdef HERCULES_CORE
 void inter_mail_defaults(void);
+#endif // HERCULES_CORE
 
 /**
  * inter_mail interface

@@ -97,6 +97,8 @@ struct mercenary_interface {
 
 struct mercenary_interface *mercenary;
 
+#ifdef HERCULES_CORE
 void mercenary_defaults(void);
+#endif // HERCULES_CORE
 
 #endif /* MAP_MERCENARY_H */
