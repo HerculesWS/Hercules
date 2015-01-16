@@ -52802,6 +52802,32 @@ bool HP_pc_db_checkid(unsigned int class_) {
 	}
 	return retVal___;
 }
+void HP_pc_validate_levels(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_pc_validate_levels_pre ) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_validate_levels_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_validate_levels_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pc.validate_levels();
+	}
+	if( HPMHooks.count.HP_pc_validate_levels_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_validate_levels_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_validate_levels_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
 void HP_pc_autotrade_load(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_pc_autotrade_load_pre ) {
