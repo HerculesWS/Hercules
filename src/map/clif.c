@@ -16096,13 +16096,27 @@ void clif_mercenary_info(struct map_session_data *sd) {
 	WFIFOL(fd,2) = md->bl.id;
 
 	// Mercenary shows ATK as a random value between ATK ~ ATK2
-	atk = rnd()%(mstatus->rhw.atk2 - mstatus->rhw.atk + 1) + mstatus->rhw.atk;
-	WFIFOW(fd,6) = cap_value(atk, 0, INT16_MAX);
+#ifdef RENEWAL
+	atk = status->get_weapon_atk(&md->bl, &mstatus->rhw, 0);
+#else
+	atk = rnd() % (mstatus->rhw.atk2 - mstatus->rhw.atk + 1) + mstatus->rhw.atk;
+#endif
+	WFIFOW(fd, 6) = cap_value(atk, 0, INT16_MAX);
+#ifdef RENEWAL
+	atk = status->base_matk(&md->bl, mstatus, status->get_lv(&md->bl));
+	WFIFOW(fd,8) = cap_value(atk, 0, INT16_MAX);
+#else
 	WFIFOW(fd,8) = cap_value(mstatus->matk_max, 0, INT16_MAX);
+#endif
 	WFIFOW(fd,10) = mstatus->hit;
 	WFIFOW(fd,12) = mstatus->cri/10;
+#ifdef RENEWAL
+	WFIFOW(fd, 14) = mstatus->def2;
+	WFIFOW(fd, 16) = mstatus->mdef2;
+#else
 	WFIFOW(fd,14) = mstatus->def;
 	WFIFOW(fd,16) = mstatus->mdef;
+#endif
 	WFIFOW(fd,18) = mstatus->flee;
 	WFIFOW(fd,20) = mstatus->amotion;
 	safestrncpy((char*)WFIFOP(fd,22), md->db->name, NAME_LENGTH);
