@@ -10357,16 +10357,7 @@ int pc_readdb(void) {
 		}
 	}
 	fclose(fp);
-	for (i = 0; i < JOB_MAX; i++) {
-		if (!pc->db_checkid(i)) continue;
-		if (i == JOB_WEDDING || i == JOB_XMAS || i == JOB_SUMMER)
-			continue; //Classes that do not need exp tables.
-		j = pc->class2idx(i);
-		if (!pc->max_level[j][0])
-			ShowWarning("Class %s (%d) does not has a base exp table.\n", pc->job_name(i), i);
-		if (!pc->max_level[j][1])
-			ShowWarning("Class %s (%d) does not has a job exp table.\n", pc->job_name(i), i);
-	}
+	pc->validate_levels();
 	ShowStatus("Done reading '"CL_WHITE"%u"CL_RESET"' entries in '"CL_WHITE"%s/"DBPATH"%s"CL_RESET"'.\n",count,map->db_path,"exp.txt");
 	count = 0;
 	// Reset and read skilltree
@@ -10479,6 +10470,21 @@ int pc_readdb(void) {
 	battle_config.use_statpoint_table = k; //restore setting
 
 	return 0;
+}
+
+void pc_validate_levels(void) {
+	int i;
+	int j;
+	for (i = 0; i < JOB_MAX; i++) {
+		if (!pc->db_checkid(i)) continue;
+		if (i == JOB_WEDDING || i == JOB_XMAS || i == JOB_SUMMER)
+			continue; //Classes that do not need exp tables.
+		j = pc->class2idx(i);
+		if (!pc->max_level[j][0])
+			ShowWarning("Class %s (%d) does not has a base exp table.\n", pc->job_name(i), i);
+		if (!pc->max_level[j][1])
+			ShowWarning("Class %s (%d) does not has a job exp table.\n", pc->job_name(i), i);
+	}
 }
 
 void pc_itemcd_do(struct map_session_data *sd, bool load) {
@@ -11219,6 +11225,7 @@ void pc_defaults(void) {
 	pc->global_expiration_timer = pc_global_expiration_timer;
 	pc->expire_check = pc_expire_check;
 	pc->db_checkid = pc_db_checkid;
+	pc->validate_levels = pc_validate_levels;
 
 	/**
 	 * Autotrade persistency [Ind/Hercules <3]

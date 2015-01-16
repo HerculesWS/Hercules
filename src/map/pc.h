@@ -1012,6 +1012,8 @@ struct pc_interface {
 
 	bool (*db_checkid) (unsigned int class_);
 
+	void (*validate_levels) (void);
+
 	/**
 	 * Autotrade persistency [Ind/Hercules <3]
 	 **/
