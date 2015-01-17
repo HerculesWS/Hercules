@@ -1,25 +1,34 @@
 language: c
 sudo: false
 addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - gcc-5
-    - gcc-6
+  #apt:
+  #  sources:
+  #  - ubuntu-toolchain-r-test
+  #  packages:
+  #  - gcc-5
+  #  - gcc-6
+  coverity_scan:
+    # GitHub project metadata
+    project:
+      name: "HerculesWS/Hercules"
+      description: "Build submitted via Travis CI"
+      #version: 1.0
+    # Where email notification of build analysis results will be sent
+    notification_email: "haru@dotalux.com"
+    # Commands to prepare for build_command
+    build_command_prepend: "./configure --enable-debug; make clean"
+    # The command that will be added as an argument to "cov-build" to compile your project for analysis,
+    build_command: "make"
+    # Pattern to match selecting branches that will run analysis.
+    branch_pattern: coverity_scan
 
-install:
-  - ./travis.sh getplugins || true
-  
-before_script:
-  - uname -a
-  - ./travis.sh createdb ragnarok root
-  - ./travis.sh importdb ragnarok travis
-  - mysql -u root -e "SET PASSWORD FOR 'travis'@'localhost' = PASSWORD('travis');"
+env:
+  global:
+    # COVERITY_SCAN_TOKEN
+    - secure: "gcrI+3sx7SFz9N0NN1Ap+qlrAJjOe9xIxMQkV78LmhBBc8wG3lkSF4ASEf7690yo3bcp0gsvkfIUL8fXl68ImOxgnVTuR7oxCkjHdtCdszsoU8eGU7Kg8H0ggq/8G6493/l6sNUgZodXJOS0oyl0hHzcf5ViVM8EcoyC9USd06U="
 
 script:
-  - ./travis.sh build $CONFIGURE_FLAGS
-  - ./travis.sh test ragnarok travis travis
+  - true
 
 # We can't use this, unfortunately
 # http://github.com/travis-ci/travis-ci/issues/979
@@ -31,26 +40,12 @@ matrix:
   exclude:
   - env: ignore=this
   include:
-  - compiler: clang
-    env: CONFIGURE_FLAGS="--enable-debug --enable-Werror --enable-buildbot"
-  - compiler: clang
-    env: CONFIGURE_FLAGS="--enable-debug --disable-renewal --enable-Werror --enable-buildbot"
   - compiler: gcc
-    env: CONFIGURE_FLAGS="--enable-debug --enable-Werror --enable-buildbot"
-  - compiler: gcc
-    env: CONFIGURE_FLAGS="--enable-debug --disable-renewal --enable-Werror --enable-buildbot"
-  - compiler: gcc
-    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-5 --disable-manager --enable-Werror --enable-buildbot"
-  - compiler: gcc
-    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-5 --disable-manager --disable-renewal --enable-Werror --enable-buildbot"
-  - compiler: gcc
-    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-6 --disable-manager --enable-Werror --enable-buildbot"
-  - compiler: gcc
-    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-6 --disable-manager --disable-renewal --enable-Werror --enable-buildbot"
+    env: CONFIGURE_FLAGS="--enable-debug"
   
 notifications:
   email: false
-  
+
 branches:
   except:
     - rathena
