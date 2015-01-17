@@ -1461,7 +1461,7 @@ bool char_char_slotchange(struct char_session_data *sd, int fd, unsigned short f
 	struct mmo_charstatus char_dat;
 	int from_id = 0;
 
-	if( from > MAX_CHARS || to > MAX_CHARS || ( sd->char_slots && to > sd->char_slots ) || sd->found_char[from] <= 0 )
+	if( from >= MAX_CHARS || to >= MAX_CHARS || ( sd->char_slots && to > sd->char_slots ) || sd->found_char[from] <= 0 )
 		return false;
 
 	if( !chr->mmo_char_fromsql(sd->found_char[from], &char_dat, false) ) // Only the short data is needed.
