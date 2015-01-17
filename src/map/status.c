@@ -4170,28 +4170,30 @@ void status_calc_misc(struct block_list *bl, struct status_data *st, int level) 
 		st->batk = cap_value(temp, 0, USHRT_MAX);
 	} else
 		st->batk = status->base_atk(bl, st);
-	if ( st->cri )
+	if ( st->cri ) {
 		switch ( bl->type ) {
-		case BL_MOB:
-			if ( battle_config.mob_critical_rate != 100 )
-				st->cri = st->cri*battle_config.mob_critical_rate / 100;
-			if ( !st->cri && battle_config.mob_critical_rate )
-				st->cri = 10;
-			break;
-		case BL_PC:
-			//Players don't have a critical adjustment setting as of yet.
-			break;
-		case BL_MER:
-#ifdef RENEWAL
-			st->matk_min = st->matk_max = status_base_matk_max(st);
-			st->def2 = st->vit + level / 10 + st->vit / 5;
-			st->mdef2 = level / 10 + st->int_ / 5;
-#endif
-		default:
-			if ( battle_config.critical_rate != 100 )
-				st->cri = st->cri*battle_config.critical_rate / 100;
-			if ( !st->cri && battle_config.critical_rate )
-				st->cri = 10;
+			case BL_MOB:
+				if ( battle_config.mob_critical_rate != 100 )
+					st->cri = st->cri*battle_config.mob_critical_rate / 100;
+				if ( !st->cri && battle_config.mob_critical_rate )
+					st->cri = 10;
+				break;
+			case BL_PC:
+				//Players don't have a critical adjustment setting as of yet.
+				break;
+			case BL_MER:
+	#ifdef RENEWAL
+				st->matk_min = st->matk_max = status_base_matk_max(st);
+				st->def2 = st->vit + level / 10 + st->vit / 5;
+				st->mdef2 = level / 10 + st->int_ / 5;
+	#endif
+			/* Fall through */
+			default:
+				if ( battle_config.critical_rate != 100 )
+					st->cri = st->cri*battle_config.critical_rate / 100;
+				if ( !st->cri && battle_config.critical_rate )
+					st->cri = 10;
+		}
 	}
 	if ( bl->type&BL_REGEN )
 		status->calc_regen(bl, st, status->get_regen_data(bl));
@@ -9995,6 +9997,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 						status_change_end(src, SC_RG_CCONFINE_M, INVALID_TIMER);
 				}
 			}
+			/* Fall through */
 		case SC_RG_CCONFINE_M:
 			if (sce->val2 > 0) {
 				//Caster has been unlocked... nearby chars need to be unlocked.
@@ -10610,9 +10613,9 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 		case SC_RUWACH:
 		case SC_WZ_SIGHTBLASTER:
 			if(type == SC_WZ_SIGHTBLASTER) {
-			//Restore trap immunity
-			if(sce->val4%2)
-				sce->val4--;
+				//Restore trap immunity
+				if(sce->val4%2)
+					sce->val4--;
 				map->foreachinrange(status->change_timer_sub, bl, sce->val3, BL_CHAR|BL_SKILL, bl, sce, type, tick);
 			} else
 				map->foreachinrange(status->change_timer_sub, bl, sce->val3, BL_CHAR, bl, sce, type, tick);

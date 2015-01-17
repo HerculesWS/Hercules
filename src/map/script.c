@@ -14460,7 +14460,7 @@ BUILDIN(sprintf) {
 		}
 		if(arg>=argc) {
 			ShowError("buildin_sprintf: Not enough arguments passed!\n");
-			if(buf) aFree(buf);
+			aFree(buf);
 			if(buf2) aFree(buf2);
 			StrBuf->Destroy(&final_buf);
 			script_pushconststr(st,"");
@@ -14496,7 +14496,7 @@ BUILDIN(sprintf) {
 			}
 		} else {  // Unsupported type
 			ShowError("buildin_sprintf: Unknown argument type!\n");
-			if(buf) aFree(buf);
+			aFree(buf);
 			if(buf2) aFree(buf2);
 			StrBuf->Destroy(&final_buf);
 			script_pushconststr(st,"");
@@ -14518,7 +14518,7 @@ BUILDIN(sprintf) {
 
 	script_pushstrcopy(st, StrBuf->Value(&final_buf));
 
-	if(buf) aFree(buf);
+	aFree(buf);
 	if(buf2) aFree(buf2);
 	StrBuf->Destroy(&final_buf);
 
@@ -14577,7 +14577,7 @@ BUILDIN(sscanf) {
 		if(arg>=argc) {
 			ShowError("buildin_sscanf: Not enough arguments passed!\n");
 			script_pushint(st, -1);
-			if(buf) aFree(buf);
+			aFree(buf);
 			if(ref_str) aFree(ref_str);
 			return false;
 		}
@@ -14629,7 +14629,7 @@ BUILDIN(sscanf) {
 	}
 
 	script_pushint(st, arg);
-	if(buf) aFree(buf);
+	aFree(buf);
 	if(ref_str) aFree(ref_str);
 
 	return true;
@@ -18055,7 +18055,10 @@ BUILDIN(npcskill) {
 	skill_level = script_getnum(st, 3);
 	stat_point  = script_getnum(st, 4);
 	npc_level   = script_getnum(st, 5);
-	sd          = script->rid2sd(st);
+	
+	if( !(sd = script->rid2sd(st)) )
+		return false;
+	
 	nd          = (struct npc_data *)map->id2bl(sd->npc_id);
 
 	if (stat_point > battle_config.max_third_parameter) {
@@ -18066,7 +18069,7 @@ BUILDIN(npcskill) {
 		ShowError("npcskill: level exceeded maximum of %d.\n", MAX_LEVEL);
 		return false;
 	}
-	if (sd == NULL || nd == NULL) {
+	if (nd == NULL) {
 		return false;
 	}
 
@@ -18977,7 +18980,8 @@ BUILDIN(tradertype) {
 	}
 #endif
 
-	nd->u.scr.shop->type = type;
+	if( nd->u.scr.shop )
+		nd->u.scr.shop->type = type;
 
 	return true;
 }

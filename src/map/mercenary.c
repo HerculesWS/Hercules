@@ -333,7 +333,7 @@ int merc_data_received(struct s_mercenary *merc, bool flag) {
 		mercenary->set_calls(md, 1);
 	sd->status.mer_id = merc->mercenary_id;
 
-	if( md && md->bl.prev == NULL && sd->bl.prev != NULL ) {
+	if( md->bl.prev == NULL && sd->bl.prev != NULL ) {
 		map->addblock(&md->bl);
 		clif->spawn(&md->bl);
 		clif->mercenary_info(sd);

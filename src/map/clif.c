@@ -5706,8 +5706,7 @@ void clif_broadcast(struct block_list* bl, const char* mes, size_t len, int type
 	memcpy(WBUFP(buf, 4 + lp), mes, len);
 	clif->send(buf, WBUFW(buf,2), bl, target);
 
-	if (buf)
-		aFree(buf);
+	aFree(buf);
 }
 
 /*==========================================
@@ -5753,8 +5752,7 @@ void clif_broadcast2(struct block_list* bl, const char* mes, size_t len, unsigne
 	memcpy(WBUFP(buf,16), mes, len);
 	clif->send(buf, WBUFW(buf,2), bl, target);
 
-	if (buf)
-		aFree(buf);
+	aFree(buf);
 }
 
 
@@ -16299,6 +16297,7 @@ void clif_bg_message(struct battleground_data *bgd, int src_id, const char *name
 {
 	struct map_session_data *sd;
 	unsigned char *buf;
+	
 	if( !bgd->count || (sd = bg->getavailablesd(bgd)) == NULL )
 		return;
 
@@ -16311,8 +16310,7 @@ void clif_bg_message(struct battleground_data *bgd, int src_id, const char *name
 	memcpy(WBUFP(buf,32), mes, len);
 	clif->send(buf,WBUFW(buf,2), &sd->bl, BG);
 
-	if( buf )
-		aFree(buf);
+	aFree(buf);
 }
 
 
@@ -18816,10 +18814,12 @@ static void __attribute__ ((unused)) packetdb_addpacket(short cmd, int len, ...)
 
 	pos = va_arg(va, int);
 
-	if( pos == 0xFFFF ) /* nothing more to do */
-		return;
-
 	va_end(va);
+
+	if( pos == 0xFFFF ) { /* nothing more to do */
+		return;
+	}
+
 	va_start(va,len);
 
 	func = va_arg(va,pFunc);

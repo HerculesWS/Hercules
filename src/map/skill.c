@@ -2071,7 +2071,7 @@ int skill_blown(struct block_list* src, struct block_list* target, int count, in
 			break;
 		case BL_SKILL:
 			su = (struct skill_unit *)target;
-			if( su && su->group && (su->group->unit_id == UNT_ANKLESNARE || su->group->unit_id == UNT_REVERBERATION))
+			if( su->group && (su->group->unit_id == UNT_ANKLESNARE || su->group->unit_id == UNT_REVERBERATION))
 				return 0; // ankle snare cannot be knocked back
 			break;
 	}
@@ -2362,9 +2362,11 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 					party->skill_check(sd, sd->status.party_id, MO_COMBOFINISH, skill_lv);
 				if (pc->checkskill(sd, CH_TIGERFIST) > 0 && sd->spiritball > 0)
 					combo=1;
+			/* Fall through */
 			case CH_TIGERFIST:
 				if (!combo && pc->checkskill(sd, CH_CHAINCRUSH) > 0 && sd->spiritball > 1)
 					combo=1;
+			/* Fall through */
 			case CH_CHAINCRUSH:
 				if (!combo && pc->checkskill(sd, MO_EXTREMITYFIST) > 0 && sd->spiritball > 0 && sd->sc.data[SC_EXPLOSIONSPIRITS])
 					combo=1;
@@ -3310,17 +3312,13 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 				case SR_FALLENEMPIRE:
 				case SR_TIGERCANNON:
 				case SR_SKYNETBLOW:
-				{
-					struct map_session_data *sd = NULL;
-
-					if( src->type == BL_PC && (sd = ((TBL_PC*)src)) ) {
+					if( src->type == BL_PC ) {
 						if( distance_xy(src->x, src->y, target->x, target->y) >= 3 )
 							break;
 
-						skill->castend_damage_id(src, target, skl->skill_id, pc->checkskill(sd, skl->skill_id), tick, 0);
+						skill->castend_damage_id(src, target, skl->skill_id, pc->checkskill(((TBL_PC*)src), skl->skill_id), tick, 0);
 					}
 					break;
-				}
 				case SC_ESCAPE:
 					if( skl->type < 4+skl->skill_lv ){
 						clif->skill_damage(src,src,tick,0,0,-30000,1,skl->skill_id,skl->skill_lv,5);
@@ -3918,6 +3916,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 					case GC_COUNTERSLASH:
 					case GC_ROLLINGCUTTER:
 						flag |= SD_ANIMATION;
+						/* Fall through */
 					case LG_MOONSLASHER:
 					case MH_XENO_SLASHER:
 						clif->skill_damage(src,bl,tick, status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, 6);
@@ -4176,6 +4175,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 
 		case SL_SMA:
 			status_change_end(src, SC_SMA_READY, INVALID_TIMER);
+			/* Fall through */
 		case SL_STIN:
 		case SL_STUN:
 			if (sd && !battle_config.allow_es_magic_pc && bl->type != BL_MOB) {
@@ -5465,7 +5465,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 							if (exp < 1) exp = 1;
 						}
 						if(jlv > 0 && pc->nextjobexp(dstsd)) {
-							jexp = (int)((double)dstsd->status.job_exp * (double)lv * (double)battle_config.resurrection_exp / 1000000.);
+							jexp = (int)((double)dstsd->status.job_exp * (double)jlv * (double)battle_config.resurrection_exp / 1000000.);
 							if (jexp < 1) jexp = 1;
 						}
 						if(exp > 0 || jexp > 0)
@@ -9155,6 +9155,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 		case WM_SIRCLEOFNATURE:
 			flag |= BCT_SELF|BCT_PARTY|BCT_GUILD;
+			/* Fall through */
 		case WM_VOICEOFSIREN:
 			if( skill_id != WM_SIRCLEOFNATURE )
 				flag &= ~BCT_SELF;
@@ -12114,7 +12115,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 				break;
 
 			heal = skill->calc_heal(ss,bl,sg->skill_id, sg->skill_lv, true);
-			if( tsc->data[SC_AKAITSUKI] && heal )
+			if( tsc && tsc->data[SC_AKAITSUKI] && heal )
 				heal = ~heal + 1;
 			clif->skill_nodamage(&src->bl, bl, AL_HEAL, heal, 1);
 			status->heal(bl, heal, 0, 0);
@@ -15495,8 +15496,10 @@ int skill_graffitiremover (struct block_list *bl, va_list ap) {
 	nullpo_ret(bl);
 	nullpo_ret(ap);
 
-	if(bl->type!=BL_SKILL || (su=(struct skill_unit *)bl) == NULL)
+	if(bl->type != BL_SKILL)
 		return 0;
+	
+	su = ((struct skill_unit *)bl);
 
 	if((su->group) && (su->group->unit_id == UNT_GRAFFITI))
 		skill->delunit(su);
@@ -15506,14 +15509,12 @@ int skill_graffitiremover (struct block_list *bl, va_list ap) {
 
 int skill_greed (struct block_list *bl, va_list ap) {
 	struct block_list *src;
-	struct map_session_data *sd=NULL;
-	struct flooritem_data *fitem=NULL;
 
 	nullpo_ret(bl);
 	nullpo_ret(src = va_arg(ap, struct block_list *));
 
-	if(src->type == BL_PC && (sd=(struct map_session_data *)src) && bl->type==BL_ITEM && (fitem=(struct flooritem_data *)bl))
-		pc->takeitem(sd, fitem);
+	if(src->type == BL_PC && bl->type==BL_ITEM )
+		pc->takeitem(((TBL_PC*)src), ((TBL_ITEM*)bl));
 
 	return 0;
 }
@@ -15527,9 +15528,12 @@ int skill_detonator(struct block_list *bl, va_list ap) {
 	nullpo_ret(ap);
 	src = va_arg(ap,struct block_list *);
 
-	if( bl->type != BL_SKILL || (su = (struct skill_unit *)bl) == NULL || !su->group )
+	if( bl->type != BL_SKILL )
 		return 0;
-	if( su->group->src_id != src->id )
+	
+	su = (struct skill_unit *)bl;
+	
+	if( !su->group || su->group->src_id != src->id )
 		return 0;
 
 	unit_id = su->group->unit_id;
@@ -16532,9 +16536,8 @@ int skill_unit_timer_sub(DBKey key, DBData *data, va_list ap) {
 		}
 	}
 
-	// useless check for !group ?
 	//Don't continue if unit or even group is expired and has been deleted.
-	if( !group || !su->alive )
+	if( !su->alive )
 		return 0;
 
 	dissonance = skill->dance_switch(su, 0);

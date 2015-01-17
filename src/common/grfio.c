@@ -509,7 +509,7 @@ static bool isFullEncrypt(const char* fname)
 static int grfio_entryread(const char* grfname, int gentry)
 {
 	long grf_size;
-	unsigned char grf_header[0x2e];
+	unsigned char grf_header[0x2e] = { 0 };
 	int entry,entrys,ofs,grf_version;
 	unsigned char *grf_filelist;
 

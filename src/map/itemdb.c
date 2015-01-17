@@ -764,7 +764,7 @@ void itemdb_write_cached_packages(const char *config_filename) {
 }
 bool itemdb_read_cached_packages(const char *config_filename) {
 	FILE *file;
-	unsigned short pcount;
+	unsigned short pcount = 0;
 	unsigned short i;
 
 	if( !(file = HCache->open(config_filename,"rb")) ) {

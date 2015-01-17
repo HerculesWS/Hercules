@@ -3683,7 +3683,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			map->list[m].save.map = 0;
 			map->list[m].save.x = -1;
 			map->list[m].save.y = -1;
-		} else if (sscanf(w4, "%31[^,],%d,%d", savemap, &savex, &savey) == 3) {
+		} else if (w4 && sscanf(w4, "%31[^,],%d,%d", savemap, &savex, &savey) == 3) {
 			map->list[m].save.map = mapindex->name2id(savemap);
 			map->list[m].save.x = savex;
 			map->list[m].save.y = savey;

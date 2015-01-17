@@ -780,24 +780,18 @@ static int inter_config_read(const char* cfgName)
 			continue;
 
 		if(!strcmpi(w1,"char_server_ip")) {
-			strcpy(char_server_ip,w2);
-		} else
-		if(!strcmpi(w1,"char_server_port")) {
+			safestrncpy(char_server_ip, w2, sizeof(char_server_ip));
+		} else if(!strcmpi(w1,"char_server_port")) {
 			char_server_port = atoi(w2);
-		} else
-		if(!strcmpi(w1,"char_server_id")) {
-			strcpy(char_server_id,w2);
-		} else
-		if(!strcmpi(w1,"char_server_pw")) {
-			strcpy(char_server_pw,w2);
-		} else
-		if(!strcmpi(w1,"char_server_db")) {
-			strcpy(char_server_db,w2);
-		} else
-		if(!strcmpi(w1,"default_codepage")) {
-			strcpy(default_codepage,w2);
-		}
-		else if(!strcmpi(w1,"party_share_level"))
+		} else if(!strcmpi(w1,"char_server_id")) {
+			safestrncpy(char_server_id, w2, sizeof(char_server_id));
+		} else if(!strcmpi(w1,"char_server_pw")) {
+			safestrncpy(char_server_pw, w2, sizeof(char_server_pw));
+		} else if(!strcmpi(w1,"char_server_db")) {
+			safestrncpy(char_server_db, w2, sizeof(char_server_db));
+		} else if(!strcmpi(w1,"default_codepage")) {
+			safestrncpy(default_codepage, w2, sizeof(default_codepage));
+		} else if(!strcmpi(w1,"party_share_level"))
 			party_share_level = atoi(w2);
 		else if(!strcmpi(w1,"log_inter"))
 			log_inter = atoi(w2);
@@ -931,8 +925,7 @@ int mapif_broadcast(unsigned char *mes, int len, unsigned int fontColor, short f
 	memcpy(WBUFP(buf,16), mes, len - 16);
 	mapif->sendallwos(sfd, buf, len);
 
-	if (buf)
-		aFree(buf);
+	aFree(buf);
 	return 0;
 }
 
@@ -940,8 +933,9 @@ int mapif_broadcast(unsigned char *mes, int len, unsigned int fontColor, short f
 int mapif_wis_message(struct WisData *wd)
 {
 	unsigned char buf[2048];
-	if (wd->len > 2047-56) wd->len = 2047-56; //Force it to fit to avoid crashes. [Skotlex]
-
+	//if (wd->len > 2047-56) wd->len = 2047-56; //Force it to fit to avoid crashes. [Skotlex]
+	if( wd->len >= sizeof(wd->msg) - 1 ) wd->len = sizeof(wd->msg) - 1;
+	
 	WBUFW(buf, 0) = 0x3801;
 	WBUFW(buf, 2) = 56 +wd->len;
 	WBUFL(buf, 4) = wd->id;
