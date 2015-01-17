@@ -45,6 +45,10 @@
 #include "../common/timer.h"
 #include "../common/utils.h"
 
+#ifndef WIN32
+	#include <unistd.h>
+#endif
+
 // private declarations
 #define CHAR_CONF_NAME "conf/char-server.conf"
 #define LAN_CONF_NAME  "conf/subnet.conf"
@@ -3746,7 +3750,14 @@ void char_parse_frommap_request_stats_report(int fd)
 
 	WFIFOSET(sfd, RFIFOW(fd,2) );
 
-	flush_fifo(sfd);
+	do {
+		flush_fifo(sfd);
+#ifdef WIN32
+		Sleep(1);
+#else
+		sleep(1);
+#endif
+	} while( !session[sfd]->flag.eof && session[sfd]->wdata_size );
 
 	do_close(sfd);
 
