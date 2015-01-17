@@ -722,7 +722,7 @@ void login_fromchar_parse_change_pincode(int fd)
 	struct mmo_account acc;
 
 	if( accounts->load_num(accounts, &acc, RFIFOL(fd,2) ) ) {
-		strncpy( acc.pincode, (char*)RFIFOP(fd,6), 5 );
+		safestrncpy( acc.pincode, (char*)RFIFOP(fd,6), sizeof(acc.pincode) );
 		acc.pincode_change = ((unsigned int)time( NULL ));
 		accounts->save(accounts, &acc);
 	}

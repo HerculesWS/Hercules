@@ -17670,7 +17670,7 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 		short tab = RFIFOW(fd, 18 + ( i * 10 ));
 		enum CASH_SHOP_BUY_RESULT result = CSBR_UNKNOWN;
 
-		if( tab < 0 || tab > CASHSHOP_TAB_MAX )
+		if( tab < 0 || tab >= CASHSHOP_TAB_MAX )
 			continue;
 
 		for( j = 0; j < clif->cs.item_count[tab]; j++ ) {

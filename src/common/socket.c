@@ -1319,6 +1319,7 @@ int socket_getips(uint32* ips, int max)
 		if( sIoctl(fd, SIOCGIFCONF, &ic) == -1 )
 		{
 			ShowError("socket_getips: SIOCGIFCONF failed!\n");
+			sClose(fd);
 			return 0;
 		}
 		else

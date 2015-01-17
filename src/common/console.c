@@ -311,12 +311,12 @@ void console_parse_list_subs(struct CParseEntry *cmd, unsigned char depth) {
 	for( i = 0; i < cmd->next_count; i++ ) {
 		if( cmd->u.next[i]->next_count ) {
 			memset(msg, '-', depth);
-			snprintf(msg + depth,CP_CMD_LENGTH * 2, " '"CL_WHITE"%s"CL_RESET"'",cmd->u.next[i]->cmd);
+			snprintf(msg + depth,( CP_CMD_LENGTH * 2 ) - depth, " '"CL_WHITE"%s"CL_RESET"'",cmd->u.next[i]->cmd);
 			ShowInfo("%s subs\n",msg);
 			console->input->parse_list_subs(cmd->u.next[i],depth + 1);
 		} else {
 			memset(msg, '-', depth);
-			snprintf(msg + depth,CP_CMD_LENGTH * 2, " %s",cmd->u.next[i]->cmd);
+			snprintf(msg + depth,(CP_CMD_LENGTH * 2) - depth, " %s",cmd->u.next[i]->cmd);
 			ShowInfo("%s\n",msg);
 		}
 	}

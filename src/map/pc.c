@@ -3497,7 +3497,7 @@ int pc_bonus4(struct map_session_data *sd,int type,int type2,int type3,int type4
 		break;
 
 	case SP_SET_DEF_RACE: //bonus4 bSetDefRace,n,x,r,y;
-		if( type2 > RC_MAX ) {
+		if( type2 >= RC_MAX ) {
 			ShowWarning("pc_bonus4 (DEF_SET): %d is not supported.\n", type2);
 			break;
 		}
@@ -3509,7 +3509,7 @@ int pc_bonus4(struct map_session_data *sd,int type,int type2,int type3,int type4
 		break;
 
 	case SP_SET_MDEF_RACE: //bonus4 bSetMDefRace,n,x,r,y;
-		if( type2 > RC_MAX ) {
+		if( type2 >= RC_MAX ) {
 			ShowWarning("pc_bonus4 (MDEF_SET): %d is not supported.\n", type2);
 			break;
 		}

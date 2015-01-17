@@ -44,7 +44,7 @@ void pincode_handle ( int fd, struct char_session_data* sd ) {
 void pincode_check(int fd, struct char_session_data* sd) {
 	char pin[5] = "\0\0\0\0";
 
-	strncpy(pin, (char*)RFIFOP(fd, 6), 4+1);
+	safestrncpy(pin, (char*)RFIFOP(fd, 6), sizeof(pin));
 	pincode->decrypt(sd->pincode_seed, pin);
 	if( pincode->compare( fd, sd, pin ) ){
 		struct online_char_data* character;
@@ -70,12 +70,12 @@ int pincode_compare(int fd, struct char_session_data* sd, char* pin) {
 void pincode_change(int fd, struct char_session_data* sd) {
 	char oldpin[5] = "\0\0\0\0", newpin[5] = "\0\0\0\0";
 
-	strncpy(oldpin, (char*)RFIFOP(fd,6), sizeof(oldpin));
+	safestrncpy(oldpin, (char*)RFIFOP(fd,6), sizeof(oldpin));
 	pincode->decrypt(sd->pincode_seed,oldpin);
 	if( !pincode->compare( fd, sd, oldpin ) )
 		return;
 
-	strncpy(newpin, (char*)RFIFOP(fd,10), sizeof(newpin));
+	safestrncpy(newpin, (char*)RFIFOP(fd,10), sizeof(newpin));
 	pincode->decrypt(sd->pincode_seed,newpin);
 	pincode->update( sd->account_id, newpin );
 	strncpy(sd->pincode, newpin, sizeof(sd->pincode));
@@ -85,10 +85,10 @@ void pincode_change(int fd, struct char_session_data* sd) {
 void pincode_setnew(int fd, struct char_session_data* sd) {
 	char newpin[5] = "\0\0\0\0";
 
-	strncpy(newpin, (char*)RFIFOP(fd,6), sizeof(newpin));
+	safestrncpy(newpin, (char*)RFIFOP(fd,6), sizeof(newpin));
 	pincode->decrypt(sd->pincode_seed,newpin);
 	pincode->update( sd->account_id, newpin );
-	strncpy(sd->pincode, newpin, sizeof(sd->pincode));
+	safestrncpy(sd->pincode, newpin, sizeof(sd->pincode));
 	pincode->sendstate( fd, sd, PINCODE_ASK );
 }
 

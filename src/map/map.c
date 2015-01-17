@@ -3722,38 +3722,38 @@ int inter_config_read(char *cfgName) {
 			continue;
 		/* table names */
 		if(strcmpi(w1,"item_db_db")==0)
-			strcpy(map->item_db_db,w2);
+			safestrncpy(map->item_db_db, w2, sizeof(map->item_db_db));
 		else if(strcmpi(w1,"mob_db_db")==0)
-			strcpy(map->mob_db_db, w2);
+			safestrncpy(map->mob_db_db, w2, sizeof(map->mob_db_db));
 		else if (strcmpi(w1, "mob_db_re_db") == 0)
-			strcpy(map->mob_db_re_db, w2);
+			safestrncpy(map->mob_db_re_db, w2, sizeof(map->mob_db_re_db));
 		else if(strcmpi(w1,"item_db2_db")==0)
-			strcpy(map->item_db2_db,w2);
+			safestrncpy(map->item_db2_db, w2, sizeof(map->item_db2_db));
 		else if(strcmpi(w1,"item_db_re_db")==0)
-			strcpy(map->item_db_re_db,w2);
+			safestrncpy(map->item_db_re_db, w2, sizeof(map->item_db_re_db));
 		else if(strcmpi(w1,"mob_db2_db")==0)
-			strcpy(map->mob_db2_db, w2);
+			safestrncpy(map->mob_db2_db, w2, sizeof(map->mob_db2_db));
 		else if(strcmpi(w1, "mob_skill_db_db") == 0)
-			strcpy(map->mob_skill_db_db, w2);
+			safestrncpy(map->mob_skill_db_db, w2, sizeof(map->mob_skill_db_db));
 		else if(strcmpi(w1, "mob_skill_db_re_db") == 0)
-			strcpy(map->mob_skill_db_re_db, w2);
+			safestrncpy(map->mob_skill_db_re_db, w2, sizeof(map->mob_skill_db_re_db));
 		else if(strcmpi(w1,"mob_skill_db2_db")==0)
-			strcpy(map->mob_skill_db2_db,w2);
+			safestrncpy(map->mob_skill_db2_db, w2, sizeof(map->mob_skill_db2_db));
 		else if(strcmpi(w1,"interreg_db")==0)
-			strcpy(map->interreg_db,w2);
+			safestrncpy(map->interreg_db, w2, sizeof(map->interreg_db));
 		/* map sql stuff */
 		else if(strcmpi(w1,"map_server_ip")==0)
-			strcpy(map->server_ip, w2);
+			safestrncpy(map->server_ip, w2, sizeof(map->server_ip));
 		else if(strcmpi(w1,"map_server_port")==0)
 			map->server_port=atoi(w2);
 		else if(strcmpi(w1,"map_server_id")==0)
-			strcpy(map->server_id, w2);
+			safestrncpy(map->server_id, w2, sizeof(map->server_id));
 		else if(strcmpi(w1,"map_server_pw")==0)
-			strcpy(map->server_pw, w2);
+			safestrncpy(map->server_pw, w2, sizeof(map->server_pw));
 		else if(strcmpi(w1,"map_server_db")==0)
-			strcpy(map->server_db, w2);
+			safestrncpy(map->server_db, w2, sizeof(map->server_db));
 		else if(strcmpi(w1,"default_codepage")==0)
-			strcpy(map->default_codepage, w2);
+			safestrncpy(map->default_codepage, w2, sizeof(map->default_codepage));
 		else if(strcmpi(w1,"use_sql_item_db")==0) {
 			map->db_use_sql_item_db = config_switch(w2);
 			ShowStatus ("Using item database as SQL: '%s'\n", w2);
@@ -3767,22 +3767,22 @@ int inter_config_read(char *cfgName) {
 			ShowStatus ("Using monster skill database as SQL: '%s'\n", w2);
 		}
 		else if(strcmpi(w1,"autotrade_merchants_db")==0)
-			strcpy(map->autotrade_merchants_db, w2);
+			safestrncpy(map->autotrade_merchants_db, w2, sizeof(map->autotrade_merchants_db));
 		else if(strcmpi(w1,"autotrade_data_db")==0)
-			strcpy(map->autotrade_data_db, w2);
+			safestrncpy(map->autotrade_data_db, w2, sizeof(map->autotrade_data_db));
 		else if(strcmpi(w1,"npc_market_data_db")==0)
-			strcpy(map->npc_market_data_db, w2);
+			safestrncpy(map->npc_market_data_db, w2, sizeof(map->npc_market_data_db));
 		/* sql log db */
 		else if(strcmpi(w1,"log_db_ip")==0)
-			strcpy(logs->db_ip, w2);
+			safestrncpy(logs->db_ip, w2, sizeof(logs->db_ip));
 		else if(strcmpi(w1,"log_db_id")==0)
-			strcpy(logs->db_id, w2);
+			safestrncpy(logs->db_id, w2, sizeof(logs->db_id));
 		else if(strcmpi(w1,"log_db_pw")==0)
-			strcpy(logs->db_pw, w2);
+			safestrncpy(logs->db_pw, w2, sizeof(logs->db_pw));
 		else if(strcmpi(w1,"log_db_port")==0)
 			logs->db_port = atoi(w2);
 		else if(strcmpi(w1,"log_db_db")==0)
-			strcpy(logs->db_name, w2);
+			safestrncpy(logs->db_name, w2, sizeof(logs->db_name));
 		/* mapreg */
 		else if( mapreg->config_read(w1,w2) )
 			continue;

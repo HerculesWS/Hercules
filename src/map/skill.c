@@ -11592,7 +11592,7 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 			} else if( sc && battle->check_target(&sg->unit->bl,bl,sg->target_flag) > 0 ) {
 				int sec = skill->get_time2(sg->skill_id,sg->skill_lv);
 				if( status->change_start(ss, bl,type,10000,sg->skill_lv,1,sg->group_id,0,sec,SCFLAG_FIXEDRATE) ) {
-					const struct TimerData* td = sc->data[type]?timer->get(sc->data[type]->timer):NULL;
+					const struct TimerData* td = sce?timer->get(sce->timer):NULL;
 					if( td )
 						sec = DIFF_TICK32(td->tick, tick);
 					map->moveblock(bl, src->bl.x, src->bl.y, tick);
@@ -18923,6 +18923,7 @@ bool skill_parse_row_changematerialdb(char* split[], int columns, int current) {
 
 	if( current >= MAX_SKILL_PRODUCE_DB ) {
 		ShowError("skill_changematerial_db: Maximum amount of entries reached (%d), increase MAX_SKILL_PRODUCE_DB\n",MAX_SKILL_PRODUCE_DB);
+		return false;
 	}
 
 	skill->changematerial_db[current].itemid = skill_id;

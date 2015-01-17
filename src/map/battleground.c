@@ -825,7 +825,7 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 						return BGQA_NOT_PARTY_GUILD_LEADER;
 
 					if( count < arena->min_team_players ) {
-						char response[100];
+						char response[117];
 						if( count != p->party.count && p->party.count >= arena->min_team_players )
 							sprintf(response, "Can't apply: not enough members in your team/party that have not entered the queue in individual mode, minimum is %d",arena->min_team_players);
 						else

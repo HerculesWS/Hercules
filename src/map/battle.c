@@ -325,7 +325,7 @@ int64 battle_attr_fix(struct block_list *src, struct block_list *target, int64 d
 	if (atk_elem < 0 || atk_elem >= ELE_MAX)
 		atk_elem = rnd()%ELE_MAX;
 
-	if (def_type < 0 || def_type > ELE_MAX ||
+	if (def_type < 0 || def_type >= ELE_MAX ||
 		def_lv < 1 || def_lv > 4) {
 		ShowError("battle_attr_fix: unknown attr type: atk=%d def_type=%d def_lv=%d\n",atk_elem,def_type,def_lv);
 		return damage;
