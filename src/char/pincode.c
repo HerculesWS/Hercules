@@ -78,7 +78,7 @@ void pincode_change(int fd, struct char_session_data* sd) {
 	safestrncpy(newpin, (char*)RFIFOP(fd,10), sizeof(newpin));
 	pincode->decrypt(sd->pincode_seed,newpin);
 	pincode->update( sd->account_id, newpin );
-	strncpy(sd->pincode, newpin, sizeof(sd->pincode));
+	safestrncpy(sd->pincode, newpin, sizeof(sd->pincode));
 	pincode->sendstate( fd, sd, PINCODE_ASK );
 }
 
@@ -114,7 +114,7 @@ void pincode_notifyLoginPinUpdate(int account_id, char* pin) {
 	WFIFOHEAD(chr->login_fd,11);
 	WFIFOW(chr->login_fd,0) = 0x2738;
 	WFIFOL(chr->login_fd,2) = account_id;
-	strncpy( (char*)WFIFOP(chr->login_fd,6), pin, 5 );
+	safestrncpy( (char*)WFIFOP(chr->login_fd,6), pin, 5 );
 	WFIFOSET(chr->login_fd,11);
 }
 

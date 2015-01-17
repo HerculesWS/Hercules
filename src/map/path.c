@@ -255,6 +255,12 @@ bool path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x
 	// Check destination cell
 	if (x1 < 0 || x1 >= md->xs || y1 < 0 || y1 >= md->ys || md->getcellp(md,x1,y1,cell))
 		return false;
+	
+	if( x0 == x1 && y0 == y1 ) {
+		wpd->path_len = 0;
+		wpd->path_pos = 0;
+		return true;
+	}
 
 	if (flag&1) {
 		// Try finding direct path to target

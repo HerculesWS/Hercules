@@ -12421,7 +12421,7 @@ BUILDIN(getinventorylist){
 
 BUILDIN(getcartinventorylist){
 	TBL_PC *sd=script->rid2sd(st);
-	char card_var[NAME_LENGTH];
+	char card_var[26];
 
 	int i,j=0,k;
 	if(!sd) return true;

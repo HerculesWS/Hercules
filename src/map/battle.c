@@ -303,7 +303,7 @@ int battle_attr_ratio(int atk_elem,int def_type, int def_lv)
 	if (atk_elem < 0 || atk_elem >= ELE_MAX)
 		return 100;
 
-	if (def_type < 0 || def_type > ELE_MAX || def_lv < 1 || def_lv > 4)
+	if (def_type < 0 || def_type >= ELE_MAX || def_lv < 1 || def_lv > 4)
 		return 100;
 
 	return battle->attr_fix_table[def_lv-1][atk_elem][def_type];
