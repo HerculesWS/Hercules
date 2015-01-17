@@ -43,7 +43,7 @@ struct quest_interface quest_s;
  * @return Quest entry (equals to &quest->dummy if the ID is invalid)
  */
 struct quest_db *quest_db(int quest_id) {
-	if (quest_id < 0 || quest_id > MAX_QUEST_DB || quest->db_data[quest_id] == NULL)
+	if (quest_id < 0 || quest_id >= MAX_QUEST_DB || quest->db_data[quest_id] == NULL)
 		return &quest->dummy;
 	return quest->db_data[quest_id];
 }

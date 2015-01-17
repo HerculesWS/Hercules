@@ -505,7 +505,7 @@ int connect_client(int listen_fd) {
 
 int make_listen_bind(uint32 ip, uint16 port)
 {
-	struct sockaddr_in server_address;
+	struct sockaddr_in server_address = { 0 };
 	int fd;
 	int result;
 
@@ -555,7 +555,7 @@ int make_listen_bind(uint32 ip, uint16 port)
 }
 
 int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt) {
-	struct sockaddr_in remote_address;
+	struct sockaddr_in remote_address = { 0 };
 	int fd;
 	int result;
 

@@ -2468,7 +2468,7 @@ int16 map_mapname2mapid(const char* name) {
  *------------------------------------------*/
 int16 map_mapindex2mapid(unsigned short map_index) {
 
-	if (!map_index || map_index > MAX_MAPINDEX)
+	if (!map_index || map_index >= MAX_MAPINDEX)
 		return -1;
 
 	return map->index2mapid[map_index];

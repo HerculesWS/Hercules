@@ -1031,8 +1031,10 @@ void Sql_HerculesUpdateCheck(Sql* self) {
 			continue;
 		}
 
-		if( fgetc(ufp) != '#' )
+		if( fgetc(ufp) != '#' ) {
+			fclose(ufp);
 			continue;
+		}
 
 		fseek (ufp,1,SEEK_SET);/* woo. skip the # */
 
