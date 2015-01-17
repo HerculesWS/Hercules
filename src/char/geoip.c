@@ -78,7 +78,7 @@ const char* geoip_getcountry(uint32 ipnum)
 		if (x >= GEOIP_COUNTRY_BEGIN) {
 			x = x-GEOIP_COUNTRY_BEGIN;
 
-			if( x > GEOIP_MAX_COUNTRIES )
+			if( x >= GEOIP_MAX_COUNTRIES )
 				return geoip_countryname[0];
 
 			return geoip_countryname[x];
@@ -133,6 +133,7 @@ void geoip_init(void)
 	fno = fileno(db);
 	if (fstat(fno, &bufa) < 0) {
 		ShowError("geoip_readdb: Error stating GeoIP.dat! Error %d\n", errno);
+		fclose(db);
 		geoip->final(false);
 		return;
 	}
