@@ -15,6 +15,7 @@
 #include "../common/mmo.h"
 #include "../common/showmsg.h"
 #include "../common/utils.h"
+#include "../common/strlib.h"
 
 #ifndef _WIN32
 #include <unistd.h>
