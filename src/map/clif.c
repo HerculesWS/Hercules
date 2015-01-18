@@ -13887,7 +13887,7 @@ void clif_parse_PMIgnore(int fd, struct map_session_data* sd) {
 		}
 		// move everything one place down to overwrite removed entry
 		if( i != MAX_IGNORE_LIST - 1 )
-			memmove(sd->ignore[i].name, sd->ignore[i+1].name, (MAX_IGNORE_LIST-i-1)*sizeof(sd->ignore[0].name));
+			memmove(&sd->ignore[i], &sd->ignore[i+1], (MAX_IGNORE_LIST-i-1)*sizeof(sd->ignore[0]));
 		// wipe last entry
 		memset(sd->ignore[MAX_IGNORE_LIST-1].name, 0, sizeof(sd->ignore[0].name));
 	}
