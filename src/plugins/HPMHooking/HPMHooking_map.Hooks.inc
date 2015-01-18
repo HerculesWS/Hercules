@@ -37147,14 +37147,14 @@ struct mob_data* HP_map_id2boss(int id) {
 	}
 	return retVal___;
 }
-void HP_map_reloadnpc(bool clear, const char *const *extra_scripts, int extra_scripts_count) {
+void HP_map_reloadnpc(bool clear) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_map_reloadnpc_pre ) {
-		void (*preHookFunc) (bool *clear, const char *const *extra_scripts, int *extra_scripts_count);
+		void (*preHookFunc) (bool *clear);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_reloadnpc_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_map_reloadnpc_pre[hIndex].func;
-			preHookFunc(&clear, extra_scripts, &extra_scripts_count);
+			preHookFunc(&clear);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -37162,13 +37162,13 @@ void HP_map_reloadnpc(bool clear, const char *const *extra_scripts, int extra_sc
 		}
 	}
 	{
-		HPMHooks.source.map.reloadnpc(clear, extra_scripts, extra_scripts_count);
+		HPMHooks.source.map.reloadnpc(clear);
 	}
 	if( HPMHooks.count.HP_map_reloadnpc_post ) {
-		void (*postHookFunc) (bool *clear, const char *const *extra_scripts, int *extra_scripts_count);
+		void (*postHookFunc) (bool *clear);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_reloadnpc_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_map_reloadnpc_post[hIndex].func;
-			postHookFunc(&clear, extra_scripts, &extra_scripts_count);
+			postHookFunc(&clear);
 		}
 	}
 	return;
@@ -38673,85 +38673,6 @@ int HP_map_abort_sub(struct map_session_data *sd, va_list ap) {
 			postHookFunc = HPMHooks.list.HP_map_abort_sub_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, ap___copy);
 			va_end(ap___copy);
-		}
-	}
-	return retVal___;
-}
-void HP_map_helpscreen(bool do_exit) {
-	int hIndex = 0;
-	if( HPMHooks.count.HP_map_helpscreen_pre ) {
-		void (*preHookFunc) (bool *do_exit);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_helpscreen_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_map_helpscreen_pre[hIndex].func;
-			preHookFunc(&do_exit);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return;
-		}
-	}
-	{
-		HPMHooks.source.map.helpscreen(do_exit);
-	}
-	if( HPMHooks.count.HP_map_helpscreen_post ) {
-		void (*postHookFunc) (bool *do_exit);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_helpscreen_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_map_helpscreen_post[hIndex].func;
-			postHookFunc(&do_exit);
-		}
-	}
-	return;
-}
-void HP_map_versionscreen(bool do_exit) {
-	int hIndex = 0;
-	if( HPMHooks.count.HP_map_versionscreen_pre ) {
-		void (*preHookFunc) (bool *do_exit);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_versionscreen_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_map_versionscreen_pre[hIndex].func;
-			preHookFunc(&do_exit);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return;
-		}
-	}
-	{
-		HPMHooks.source.map.versionscreen(do_exit);
-	}
-	if( HPMHooks.count.HP_map_versionscreen_post ) {
-		void (*postHookFunc) (bool *do_exit);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_versionscreen_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_map_versionscreen_post[hIndex].func;
-			postHookFunc(&do_exit);
-		}
-	}
-	return;
-}
-bool HP_map_arg_next_value(const char *option, int i, int argc, bool must) {
-	int hIndex = 0;
-	bool retVal___ = false;
-	if( HPMHooks.count.HP_map_arg_next_value_pre ) {
-		bool (*preHookFunc) (const char *option, int *i, int *argc, bool *must);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_arg_next_value_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_map_arg_next_value_pre[hIndex].func;
-			retVal___ = preHookFunc(option, &i, &argc, &must);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.map.arg_next_value(option, i, argc, must);
-	}
-	if( HPMHooks.count.HP_map_arg_next_value_post ) {
-		bool (*postHookFunc) (bool retVal___, const char *option, int *i, int *argc, bool *must);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_arg_next_value_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_map_arg_next_value_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, option, &i, &argc, &must);
 		}
 	}
 	return retVal___;
