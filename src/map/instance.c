@@ -151,7 +151,7 @@ int instance_create(int owner_id, const char *name, enum instance_owner_type typ
 int instance_add_map(const char *name, int instance_id, bool usebasename, const char *map_name) {
 	int16 m = map->mapname2mapid(name);
 	int i, im = -1;
-	size_t num_cell, size;
+	size_t num_cell, size, j;
 
 	if( m < 0 )
 		return -1; // source map not found
@@ -205,6 +205,15 @@ int instance_add_map(const char *name, int instance_id, bool usebasename, const 
 	CREATE( map->list[im].cell, struct mapcell, num_cell );
 	memcpy( map->list[im].cell, map->list[m].cell, num_cell * sizeof(struct mapcell) );
 
+	// Appropriately clear cell data
+	for(j = 0; j < num_cell; j++) {
+		map->list[im].cell[j].cell_bl = 0;
+		map->list[im].cell[j].basilica = 0;
+		map->list[im].cell[j].icewall = 0;
+		map->list[im].cell[j].npc = 0;
+		map->list[im].cell[j].landprotector = 0;
+	}
+	
 	size = map->list[im].bxs * map->list[im].bys * sizeof(struct block_list*);
 	map->list[im].block = (struct block_list**)aCalloc(size, 1);
 	map->list[im].block_mob = (struct block_list**)aCalloc(size, 1);

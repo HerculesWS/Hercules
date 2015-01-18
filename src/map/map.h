@@ -5,6 +5,8 @@
 #ifndef MAP_MAP_H
 #define MAP_MAP_H
 
+#include "../config/core.h"
+
 #include <stdarg.h>
 
 #include "atcommand.h"
