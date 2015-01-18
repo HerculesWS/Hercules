@@ -10017,13 +10017,13 @@ int skill_castend_pos(int tid, int64 tick, int id, intptr_t data) {
 		if( sd && sd->skillitem != AL_WARP ) // Warp-Portal thru items will clear data in skill_castend_map. [Inkfish]
 			sd->skillitem = sd->skillitemlv = 0;
 
+		unit->setdir(src, map->calc_dir(src, ud->skillx, ud->skilly));
+
 		if (ud->skilltimer == INVALID_TIMER) {
 			if (md) md->skill_idx = -1;
 			else ud->skill_id = 0; //Non mobs can't clear this one as it is used for skill condition 'afterskill'
 			ud->skill_lv = ud->skillx = ud->skilly = 0;
 		}
-
-		unit->setdir(src, map->calc_dir(src, ud->skillx, ud->skilly));
 
 		map->freeblock_unlock();
 		return 1;
