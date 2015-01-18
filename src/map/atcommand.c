@@ -9315,6 +9315,50 @@ ACMD(skdebug) {
 	return true;
 }
 /**
+ * cooldown-debug
+ **/
+ACMD(cddebug) {
+	int i;
+	struct skill_cd* cd = NULL;
+	
+	if( !(cd = idb_get(skill->cd_db,sd->status.char_id)) ) {
+		clif->message(fd,"No cool down list found");
+	} else {
+		clif->messages(fd,"Found %d registered cooldowns",cd->cursor);
+		for(i = 0; i < cd->cursor; i++) {
+			if( cd->entry[i] ) {
+				const struct TimerData *td = timer->get(cd->entry[i]->timer);
+				
+				if( !td || td->func != skill->blockpc_end ) {
+					clif->messages(fd,"Found invalid entry in slot %d for skill %s",i,skill->db[cd->entry[i]->skidx].name);
+					sd->blockskill[cd->entry[i]->skidx] = false;
+				}
+			}
+		}
+	}
+	
+	if( !cd || (message && *message && strcmpi(message,"reset")) ) {
+		for(i = 0; i < MAX_SKILL; i++) {
+			if( sd->blockskill[i] ) {
+				clif->messages(fd,"Found skill '%s', unblocking...",skill->db[i].name);
+				sd->blockskill[i] = false;
+			}
+		}
+		if( cd ) {//reset
+			for(i = 0; i < cd->cursor; i++) {
+				if( !cd->entry[i] ) continue;
+				timer->delete(cd->entry[i]->timer,skill->blockpc_end);
+				ers_free(skill->cd_entry_ers, cd->entry[i]);
+			}
+			
+			idb_remove(skill->cd_db,sd->status.char_id);
+			ers_free(skill->cd_ers, cd);
+		}
+	}
+	
+	return true;
+}
+/**
  * Fills the reference of available commands in atcommand DBMap
  **/
 #define ACMD_DEF(x) { #x, atcommand_ ## x, NULL, NULL, NULL, true }
@@ -9583,6 +9627,7 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(searchstore),
 		ACMD_DEF(costume),
 		ACMD_DEF(skdebug),
+		ACMD_DEF(cddebug),
 	};
 	int i;
 
