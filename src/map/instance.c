@@ -12,6 +12,7 @@
 #include <string.h>
 #include <time.h>
 
+#include "../config/core.h" // CELL_NOSTACK
 #include "clif.h"
 #include "map.h"
 #include "npc.h"
@@ -207,7 +208,9 @@ int instance_add_map(const char *name, int instance_id, bool usebasename, const 
 
 	// Appropriately clear cell data
 	for(j = 0; j < num_cell; j++) {
+#ifdef CELL_NOSTACK
 		map->list[im].cell[j].cell_bl = 0;
+#endif // CELL_NOSTACK
 		map->list[im].cell[j].basilica = 0;
 		map->list[im].cell[j].icewall = 0;
 		map->list[im].cell[j].npc = 0;
