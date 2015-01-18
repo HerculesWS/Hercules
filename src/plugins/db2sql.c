@@ -348,8 +348,10 @@ void do_db2sql(void) {
 CPCMD(db2sql) {
 	do_db2sql();
 }
-void db2sql_arg(char *param) {
+CMDLINEARG(db2sql)
+{
 	map->minimal = torun = true;
+	return true;
 }
 HPExport void server_preinit (void) {
 	SQL = GET_SYMBOL("SQL");
@@ -360,7 +362,7 @@ HPExport void server_preinit (void) {
 	libconfig = GET_SYMBOL("libconfig");
 	StrBuf = GET_SYMBOL("StrBuf");
 
-	addArg("--db2sql",false,db2sql_arg,NULL);
+	addArg("--db2sql",false,db2sql,NULL);
 }
 HPExport void plugin_init (void) {
 	addCPCommand("server:tools:db2sql",db2sql);

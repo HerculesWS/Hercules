@@ -3689,7 +3689,12 @@ void map_reloadnpc_sub(char *cfgName) {
 	fclose(fp);
 }
 
-void map_reloadnpc(bool clear, const char * const *extra_scripts, int extra_scripts_count) {
+/**
+ * Reloads all the scripts.
+ *
+ * @param clear whether to clear the script list before reloading.
+ */
+void map_reloadnpc(bool clear) {
 	int i;
 	if (clear)
 		npc->addsrcfile("clear"); // this will clear the current script list
@@ -3701,8 +3706,8 @@ void map_reloadnpc(bool clear, const char * const *extra_scripts, int extra_scri
 #endif
 
 	// Append extra scripts
-	for( i = 0; i < extra_scripts_count; i++ ) {
-		npc->addsrcfile(extra_scripts[i]);
+	for( i = 0; i < map->extra_scripts_count; i++ ) {
+		npc->addsrcfile(map->extra_scripts[i]);
 	}
 }
 
@@ -5381,6 +5386,14 @@ int do_final(void) {
 	}
 	ShowStatus("Cleaned up %d maps."CL_CLL"\n", map->count);
 
+	if (map->extra_scripts) {
+		for (i = 0; i < map->extra_scripts_count; i++)
+			aFree(map->extra_scripts[i]);
+		aFree(map->extra_scripts);
+		map->extra_scripts = NULL;
+		map->extra_scripts_count = 0;
+	}
+
 	map->id_db->foreach(map->id_db,map->cleanup_db_sub);
 	chrif->char_reset_offline();
 	chrif->flush();
@@ -5444,8 +5457,17 @@ int do_final(void) {
 	if( !map->enable_grf )
 		aFree(map->cache_buffer);
 
-	HPM->event(HPET_POST_FINAL);
+	aFree(map->MAP_CONF_NAME);
+	aFree(map->BATTLE_CONF_FILENAME);
+	aFree(map->ATCOMMAND_CONF_FILENAME);
+	aFree(map->SCRIPT_CONF_NAME);
+	aFree(map->MSG_CONF_NAME);
+	aFree(map->GRF_PATH_FILENAME);
+	aFree(map->INTER_CONF_NAME);
+	aFree(map->LOG_CONF_NAME);
 	
+	HPM->event(HPET_POST_FINAL);
+
 	ShowStatus("Finished.\n");
 	return map->retval;
 }
@@ -5480,45 +5502,6 @@ void do_abort(void)
 	chrif->flush();
 }
 
-/*======================================================
-* Map-Server Version Screen [MC Cameri]
-*------------------------------------------------------*/
-void map_helpscreen(bool do_exit)
-{
-	ShowInfo("Usage: %s [options]\n", SERVER_NAME);
-	ShowInfo("\n");
-	ShowInfo("Options:\n");
-	ShowInfo("  -?, -h [--help]           Displays this help screen.\n");
-	ShowInfo("  -v [--version]            Displays the server's version.\n");
-	ShowInfo("  --run-once                Closes server after loading (testing).\n");
-	ShowInfo("  --map-config <file>       Alternative map-server configuration.\n");
-	ShowInfo("  --battle-config <file>    Alternative battle configuration.\n");
-	ShowInfo("  --atcommand-config <file> Alternative atcommand configuration.\n");
-	ShowInfo("  --script-config <file>    Alternative script configuration.\n");
-	ShowInfo("  --msg-config <file>       Alternative message configuration.\n");
-	ShowInfo("  --grf-path <file>         Alternative GRF path configuration.\n");
-	ShowInfo("  --inter-config <file>     Alternative inter-server configuration.\n");
-	ShowInfo("  --log-config <file>       Alternative logging configuration.\n");
-	ShowInfo("  --script-check            Doesn't run the server, only tests the\n");
-	ShowInfo("                            scripts passed through --load-script.\n");
-	ShowInfo("  --load-script <file>      Loads an additional script (can be repeated).\n");
-	ShowInfo("  --load-plugin <name>      Loads an additional plugin (can be repeated).\n");
-	HPM->arg_help(); /* display help for commands implemented through HPM */
-	if( do_exit )
-		exit(EXIT_SUCCESS);
-}
-
-/*======================================================
- * Map-Server Version Screen [MC Cameri]
- *------------------------------------------------------*/
-void map_versionscreen(bool do_exit) {
-	ShowInfo(CL_GREEN"Website/Forum:"CL_RESET"\thttp://hercules.ws/\n");
-	ShowInfo(CL_GREEN"IRC Channel:"CL_RESET"\tirc://irc.rizon.net/#Hercules\n");
-	ShowInfo("Open "CL_WHITE"readme.txt"CL_RESET" for more information.\n");
-	if( do_exit )
-		exit(EXIT_SUCCESS);
-}
-
 void set_server_type(void) {
 	SERVER_TYPE = SERVER_TYPE_MAP;
 }
@@ -5541,17 +5524,6 @@ void do_shutdown(void)
 		}
 		chrif->check_shutdown();
 	}
-}
-
-bool map_arg_next_value(const char* option, int i, int argc, bool must)
-{
-	if( i >= argc-1 ) {
-		if( must )
-			ShowWarning("Missing value for option '%s'.\n", option);
-		return false;
-	}
-
-	return true;
 }
 
 CPCMD(gm_position) {
@@ -5706,12 +5678,160 @@ void map_load_defaults(void) {
 	npc_chat_defaults();
 #endif
 }
+/**
+ * --run-once handler
+ *
+ * Causes the server to run its loop once, and shutdown. Useful for testing.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(runonce)
+{
+	runflag = CORE_ST_STOP;
+	return true;
+}
+/**
+ * --map-config handler
+ *
+ * Overrides the default map-server configuration filename.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(mapconfig)
+{
+	aFree(map->MAP_CONF_NAME);
+	map->MAP_CONF_NAME = aStrdup(params);
+	return true;
+}
+/**
+ * --battle-config handler
+ *
+ * Overrides the default battle configuration filename.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(battleconfig)
+{
+	aFree(map->BATTLE_CONF_FILENAME);
+	map->BATTLE_CONF_FILENAME = aStrdup(params);
+	return true;
+}
+/**
+ * --atcommand-config handler
+ *
+ * Overrides the default atcommands configuration filename.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(atcommandconfig)
+{
+	aFree(map->ATCOMMAND_CONF_FILENAME);
+	map->ATCOMMAND_CONF_FILENAME = aStrdup(params);
+	return true;
+}
+/**
+ * --script-config handler
+ *
+ * Overrides the default script configuration filename.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(scriptconfig)
+{
+	aFree(map->SCRIPT_CONF_NAME);
+	map->SCRIPT_CONF_NAME = aStrdup(params);
+	return true;
+}
+/**
+ * --msg-config handler
+ *
+ * Overrides the default messages configuration filename.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(msgconfig)
+{
+	aFree(map->MSG_CONF_NAME);
+	map->MSG_CONF_NAME = aStrdup(params);
+	return true;
+}
+/**
+ * --grf-path handler
+ *
+ * Overrides the default grf configuration filename.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(grfpath)
+{
+	aFree(map->GRF_PATH_FILENAME);
+	map->GRF_PATH_FILENAME = aStrdup(params);
+	return true;
+}
+/**
+ * --inter-config handler
+ *
+ * Overrides the default inter-server configuration filename.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(interconfig)
+{
+	aFree(map->INTER_CONF_NAME);
+	map->INTER_CONF_NAME = aStrdup(params);
+	return true;
+}
+/**
+ * --log-config handler
+ *
+ * Overrides the default log configuration filename.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(logconfig)
+{
+	aFree(map->LOG_CONF_NAME);
+	map->LOG_CONF_NAME = aStrdup(params);
+	return true;
+}
+/**
+ * --script-check handler
+ *
+ * Enables script-check mode. Checks scripts and quits without running.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(scriptcheck)
+{
+	map->minimal = true;
+	runflag = CORE_ST_STOP;
+	map->scriptcheck = true;
+	return true;
+}
+/**
+ * --load-script handler
+ *
+ * Adds a filename to the script auto-load list.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(loadscript)
+{
+	RECREATE(map->extra_scripts, char *, ++map->extra_scripts_count);
+	map->extra_scripts[map->extra_scripts_count-1] = aStrdup(params);
+	return true;
+}
+/**
+ * Defines the local command line arguments
+ */
+void cmdline_args_init_local(void)
+{
+	CMDLINEARG_DEF2(run-once, runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
+	CMDLINEARG_DEF2(map-config, mapconfig, "Alternative map-server configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(battle-config, battleconfig, "Alternative battle configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(atcommand-config, atcommandconfig, "Alternative atcommand configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(script-config, scriptconfig, "Alternative script configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(msg-config, msgconfig, "Alternative message configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(grf-path, grfpath, "Alternative GRF path configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(inter-config, interconfig, "Alternative inter-server configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(log-config, logconfig, "Alternative logging configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(script-check, scriptcheck, "Doesn't run the server, only tests the scripts passed through --load-script.", CMDLINE_OPT_SILENT);
+	CMDLINEARG_DEF2(load-script, loadscript, "Loads an additional script (can be repeated).", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+}
+
 int do_init(int argc, char *argv[])
 {
 	bool minimal = false;
-	bool scriptcheck = false;
-	int i, load_extras_count = 0;
-	char **load_extras = NULL;
+	int i;
 
 #ifdef GCOLLECT
 	GC_enable_incremental();
@@ -5719,98 +5839,23 @@ int do_init(int argc, char *argv[])
 	
 	map_load_defaults();
 
+	map->INTER_CONF_NAME         = aStrdup("conf/inter-server.conf");
+	map->LOG_CONF_NAME           = aStrdup("conf/logs.conf");
+	map->MAP_CONF_NAME           = aStrdup("conf/map-server.conf");
+	map->BATTLE_CONF_FILENAME    = aStrdup("conf/battle.conf");
+	map->ATCOMMAND_CONF_FILENAME = aStrdup("conf/atcommand.conf");
+	map->SCRIPT_CONF_NAME        = aStrdup("conf/script.conf");
+	map->MSG_CONF_NAME           = aStrdup("conf/messages.conf");
+	map->GRF_PATH_FILENAME       = aStrdup("conf/grf-files.txt");
+
 	HPM_map_do_init();
 	HPM->symbol_defaults_sub = map_hp_symbols;
-	for( i = 1; i < argc; i++ ) {
-		const char* arg = argv[i];
-		if( strcmp(arg, "--load-plugin") == 0 ) {
-			if( map->arg_next_value(arg, i, argc, true) ) {
-				RECREATE(load_extras, char *, ++load_extras_count);
-				load_extras[load_extras_count-1] = argv[++i];
-			}
-		}
-	}
-	HPM->config_read((const char * const *)load_extras, load_extras_count);
-	if (load_extras) {
-		aFree(load_extras);
-		load_extras = NULL;
-		load_extras_count = 0;
-	}
+	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
+	HPM->config_read();
 	
 	HPM->event(HPET_PRE_INIT);
 	
-	for( i = 1; i < argc ; i++ ) {
-		const char* arg = argv[i];
-
-		if( arg[0] != '-' && ( arg[0] != '/' || arg[1] == '-' ) ) {// -, -- and /
-			ShowError("Unknown option '%s'.\n", argv[i]);
-			exit(EXIT_FAILURE);
-		} else if ( HPM->parse_arg(arg,&i,argv,map->arg_next_value(arg, i, argc, false)) ) {
-			continue; /* HPM Triggered */
-		} else if( (++arg)[0] == '-' ) {// long option
-			arg++;
-
-			if( strcmp(arg, "help") == 0 ) {
-				map->helpscreen(true);
-			} else if( strcmp(arg, "version") == 0 ) {
-				map->versionscreen(true);
-			} else if( strcmp(arg, "map-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc, true) )
-					map->MAP_CONF_NAME = argv[++i];
-			} else if( strcmp(arg, "battle-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc, true) )
-					map->BATTLE_CONF_FILENAME = argv[++i];
-			} else if( strcmp(arg, "atcommand-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc, true) )
-					map->ATCOMMAND_CONF_FILENAME = argv[++i];
-			} else if( strcmp(arg, "script-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc, true) )
-					map->SCRIPT_CONF_NAME = argv[++i];
-			} else if( strcmp(arg, "msg-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc, true) )
-					map->MSG_CONF_NAME = argv[++i];
-			} else if( strcmp(arg, "grf-path-file") == 0 ) {
-				if( map->arg_next_value(arg, i, argc, true) )
-					map->GRF_PATH_FILENAME = argv[++i];
-			} else if( strcmp(arg, "inter-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc, true) )
-					map->INTER_CONF_NAME = argv[++i];
-			} else if( strcmp(arg, "log-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc, true) )
-					map->LOG_CONF_NAME = argv[++i];
-			} else if( strcmp(arg, "run-once") == 0 ) { // close the map-server as soon as its done.. for testing [Celest]
-				runflag = CORE_ST_STOP;
-			} else if( strcmp(arg, "script-check") == 0 ) {
-				map->minimal = true;
-				runflag = CORE_ST_STOP;
-				scriptcheck = true;
-			} else if( strcmp(arg, "load-plugin") == 0 ) {
-				if( map->arg_next_value(arg, i, argc, true) )
-					i++;
-			} else if( strcmp(arg, "load-script") == 0 ) {
-				if( map->arg_next_value(arg, i, argc, true) ) {
-					RECREATE(load_extras, char *, ++load_extras_count);
-					load_extras[load_extras_count-1] = argv[++i];
-				}
-			} else {
-				ShowError("Unknown option '%s'.\n", argv[i]);
-				exit(EXIT_FAILURE);
-			}
-		} else {
-			switch( arg[0] ) {// short option
-				case '?':
-				case 'h':
-					map->helpscreen(true);
-					break;
-				case 'v':
-					map->versionscreen(true);
-					break;
-				default:
-					ShowError("Unknown option '%s'.\n", argv[i]);
-					exit(EXIT_FAILURE);
-			}
-		}
-	}
+	cmdline->exec(argc, argv, CMDLINE_OPT_NORMAL);
 	minimal = map->minimal;/* temp (perhaps make minimal a mask with options of what to load? e.g. plugin 1 does minimal |= mob_db; */
 	if (!minimal) {
 		map->config_read(map->MAP_CONF_NAME);
@@ -5819,7 +5864,7 @@ int do_init(int argc, char *argv[])
 		map->config_read_sub(map->MAP_CONF_NAME);
 
 		// loads npcs
-		map->reloadnpc(false, (const char * const *)load_extras, load_extras_count);
+		map->reloadnpc(false);
 
 		chrif->checkdefaultlogin();
 
@@ -5928,22 +5973,15 @@ int do_init(int argc, char *argv[])
 	duel->init(minimal);
 	vending->init(minimal);
 
-	if (scriptcheck) {
-		if (load_extras) {
-			bool failed = load_extras_count > 0 ? false : true;
-			for (i = 0; i < load_extras_count; i++) {
-				if (npc->parsesrcfile(load_extras[i], false) != EXIT_SUCCESS)
-					failed = true;
-			}
-			if (failed)
-				exit(EXIT_FAILURE);
+	if (map->scriptcheck) {
+		bool failed = map->extra_scripts_count > 0 ? false : true;
+		for (i = 0; i < map->extra_scripts_count; i++) {
+			if (npc->parsesrcfile(map->extra_scripts[i], false) != EXIT_SUCCESS)
+				failed = true;
 		}
+		if (failed)
+			exit(EXIT_FAILURE);
 		exit(EXIT_SUCCESS);
-	}
-	if (load_extras) {
-		aFree(load_extras);
-		load_extras = NULL;
-		//load_extras_count = 0; // Dead store. Uncomment if needed again.
 	}
 
 	if( minimal ) {
@@ -5987,8 +6025,12 @@ void map_defaults(void) {
 
 	/* */
 	map->minimal = false;
+	map->scriptcheck = false;
 	map->count = 0;
 	map->retval = EXIT_SUCCESS;
+
+	map->extra_scripts = NULL;
+	map->extra_scripts_count = 0;
 	
 	sprintf(map->db_path ,"db");
 	sprintf(map->help_txt ,"conf/help.txt");
@@ -6242,9 +6284,6 @@ void map_defaults(void) {
 	map->nick_db_final = nick_db_final;
 	map->cleanup_db_sub = cleanup_db_sub;
 	map->abort_sub = map_abort_sub;
-	map->helpscreen = map_helpscreen;
-	map->versionscreen = map_versionscreen;
-	map->arg_next_value = map_arg_next_value;
 
 	map->update_cell_bl = map_update_cell_bl;
 	

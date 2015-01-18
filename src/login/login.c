@@ -1899,6 +1899,9 @@ int do_final(void) {
 
 	HPM_login_do_final();
 
+	aFree(login->LOGIN_CONF_NAME);
+	aFree(login->LAN_CONF_NAME);
+
 	HPM->event(HPET_POST_FINAL);
 
 	ShowStatus("Finished.\n");
@@ -1939,6 +1942,39 @@ void login_hp_symbols(void) {
 	HPM->share(login,"login");
 }
 
+/**
+ * --login-config handler
+ *
+ * Overrides the default login configuration file.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(loginconfig)
+{
+	aFree(login->LOGIN_CONF_NAME);
+	login->LOGIN_CONF_NAME = aStrdup(params);
+	return true;
+}
+/**
+ * --lan-config handler
+ *
+ * Overrides the default subnet configuration file.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(lanconfig)
+{
+	aFree(login->LAN_CONF_NAME);
+	login->LAN_CONF_NAME = aStrdup(params);
+	return true;
+}
+/**
+ * Defines the local command line arguments
+ */
+void cmdline_args_init_local(void)
+{
+	CMDLINEARG_DEF2(login-config, loginconfig, "Alternative login-server configuration.", CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(lan-config, lanconfig, "Alternative subnet configuration.", CMDLINE_OPT_PARAM);
+}
+
 //------------------------------
 // Login server initialization
 //------------------------------
@@ -1959,31 +1995,18 @@ int do_init(int argc, char** argv)
 	// read login-server configuration
 	login_set_defaults();
 
+	login->LOGIN_CONF_NAME = aStrdup("conf/login-server.conf");
+	login->LAN_CONF_NAME   = aStrdup("conf/subnet.conf");
+
 	HPM_login_do_init();
 	HPM->symbol_defaults_sub = login_hp_symbols;
-	HPM->config_read(NULL, 0);
-#if 0
-	/* TODO: Move to common code */
-	for( i = 1; i < argc; i++ ) {
-		const char* arg = argv[i];
-		if( strcmp(arg, "--load-plugin") == 0 ) {
-			if( map->arg_next_value(arg, i, argc, true) ) {
-				RECREATE(load_extras, char *, ++load_extras_count);
-				load_extras[load_extras_count-1] = argv[++i];
-			}
-		}
-	}
-	HPM->config_read((const char * const *)load_extras, load_extras_count);
-	if (load_extras) {
-		aFree(load_extras);
-		load_extras = NULL;
-		load_extras_count = 0;
-	}
-#endif
+	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
+	HPM->config_read();
 	HPM->event(HPET_PRE_INIT);
 
-	login_config_read((argc > 1) ? argv[1] : LOGIN_CONF_NAME);
-	login->lan_config_read((argc > 2) ? argv[2] : LAN_CONF_NAME);
+	cmdline->exec(argc, argv, CMDLINE_OPT_NORMAL);
+	login_config_read(login->LOGIN_CONF_NAME);
+	login->lan_config_read(login->LAN_CONF_NAME);
 
 	for( i = 0; i < ARRAYLENGTH(server); ++i )
 		chrif_server_init(i);
@@ -2105,4 +2128,7 @@ void login_defaults(void) {
 	login->kick = login_kick;
 	login->login_error = login_login_error;
 	login->send_coding_key = login_send_coding_key;
+
+	login->LOGIN_CONF_NAME = NULL;
+	login->LAN_CONF_NAME = NULL;
 }

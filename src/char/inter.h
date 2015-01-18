@@ -11,8 +11,6 @@
 
 struct accreg;
 
-#define inter_cfgName "conf/inter-server.conf"
-
 #ifdef HERCULES_CORE
 extern unsigned int party_share_level;
 

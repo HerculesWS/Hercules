@@ -2907,12 +2907,6 @@ struct {
 	struct HPMHookPoint *HP_map_cleanup_db_sub_post;
 	struct HPMHookPoint *HP_map_abort_sub_pre;
 	struct HPMHookPoint *HP_map_abort_sub_post;
-	struct HPMHookPoint *HP_map_helpscreen_pre;
-	struct HPMHookPoint *HP_map_helpscreen_post;
-	struct HPMHookPoint *HP_map_versionscreen_pre;
-	struct HPMHookPoint *HP_map_versionscreen_post;
-	struct HPMHookPoint *HP_map_arg_next_value_pre;
-	struct HPMHookPoint *HP_map_arg_next_value_post;
 	struct HPMHookPoint *HP_map_update_cell_bl_pre;
 	struct HPMHookPoint *HP_map_update_cell_bl_post;
 	struct HPMHookPoint *HP_map_get_new_bonus_id_pre;
@@ -8066,12 +8060,6 @@ struct {
 	int HP_map_cleanup_db_sub_post;
 	int HP_map_abort_sub_pre;
 	int HP_map_abort_sub_post;
-	int HP_map_helpscreen_pre;
-	int HP_map_helpscreen_post;
-	int HP_map_versionscreen_pre;
-	int HP_map_versionscreen_post;
-	int HP_map_arg_next_value_pre;
-	int HP_map_arg_next_value_post;
 	int HP_map_update_cell_bl_pre;
 	int HP_map_update_cell_bl_post;
 	int HP_map_get_new_bonus_id_pre;

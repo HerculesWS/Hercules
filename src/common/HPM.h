@@ -82,14 +82,6 @@ struct HPMFileNameCache {
 	char *name;
 };
 
-struct HPMArgData {
-	unsigned int pluginID;
-	char *name;/* e.g. "--my-arg","-v","--whatever" */
-	void (*help) (void);/* to display when --help is used */
-	void (*func) (char *param);/* NULL when no param is available */
-	bool has_param;/* because of the weird "--arg<space>param" instead of the "--arg=param" */
-};
-
 struct HPDataOperationStorage {
 	void **HPDataSRCPtr;
 	unsigned int *hdatac;
@@ -123,8 +115,9 @@ struct HPM_interface {
 	/* config listen */
 	struct HPConfListenStorage *confs[HPCT_MAX];
 	unsigned int confsc[HPCT_MAX];
-	/* --command-line */
-	DBMap *arg_db;
+	/** Plugins requested through the command line */
+	char **cmdline_plugins;
+	int cmdline_plugins_count;
 	/* funcs */
 	void (*init) (void);
 	void (*final) (void);
@@ -137,16 +130,13 @@ struct HPM_interface {
 	void *(*import_symbol) (char *name, unsigned int pID);
 	void (*share) (void *, char *);
 	void (*symbol_defaults) (void);
-	void (*config_read) (const char * const *extra_plugins, int extra_plugins_count);
+	void (*config_read) (void);
 	bool (*populate) (struct hplugin *plugin,const char *filename);
 	void (*symbol_defaults_sub) (void);//TODO drop
 	char *(*pid2name) (unsigned int pid);
 	unsigned char (*parse_packets) (int fd, enum HPluginPacketHookingPoints point);
 	void (*load_sub) (struct hplugin *plugin);
 	bool (*addhook_sub) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
-	bool (*parse_arg) (const char *arg, int* index, char *argv[], bool param);
-	void (*arg_help) (void);
-	int (*arg_db_clear_sub) (DBKey key, DBData *data, va_list args);
 	void (*grabHPData) (struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
 	/* for server-specific HPData e.g. map_session_data */
 	bool (*grabHPDataSub) (struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
@@ -157,6 +147,8 @@ struct HPM_interface {
 	void (*datacheck_init) (const struct s_HPMDataCheck *src, unsigned int length, int version);
 	void (*datacheck_final) (void);
 };
+
+CMDLINEARG(loadplugin);
 
 struct HPM_interface *HPM;
 

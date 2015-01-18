@@ -104,7 +104,7 @@ enum HPluginConfType {
 #define hookStop() (HPMi->HookStop(__func__,HPMi->pid))
 #define hookStopped() (HPMi->HookStopped())
 
-#define addArg(name,param,func,help) (HPMi->addArg(HPMi->pid,(name),(param),(func),(help)))
+#define addArg(name, param,func,help) (HPMi->addArg(HPMi->pid,(name),(param),(cmdline_arg_ ## func),(help)))
 /* HPData handy redirects */
 /* session[] */
 #define addToSession(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_SESSION,HPMi->pid,(ptr),(data),(index),(autofree)))
@@ -214,7 +214,7 @@ HPExport struct HPMi_interface {
 	void (*HookStop) (const char *func, unsigned int pID);
 	bool (*HookStopped) (void);
 	/* program --arg/-a */
-	bool (*addArg) (unsigned int pluginID, char *name, bool has_param,void (*func) (char *param),void (*help) (void));
+	bool (*addArg) (unsigned int pluginID, char *name, bool has_param, CmdlineExecFunc func, const char *help);
 	/* battle-config recv param */
 	bool (*addConf) (unsigned int pluginID, enum HPluginConfType type, char *name, void (*func) (const char *val));
 	/* pc group permission */
