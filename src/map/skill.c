@@ -17890,7 +17890,7 @@ int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick)
 		sd->blockskill[idx] = false;
 		return -1;
 	}
-
+	
 	if( battle_config.display_status_timers )
 		clif->skill_cooldown(sd, skill_id, tick);
 	
@@ -17898,9 +17898,10 @@ int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick)
 		cd = ers_alloc(skill->cd_ers, struct skill_cd);
 				
 		idb_put( skill->cd_db, sd->status.char_id, cd );
+		
 	} else {
 		int i;
-		
+
 		for(i = 0; i < cd->cursor; i++) {
 			if( cd->entry[i] && cd->entry[i]->skidx == idx )
 				break;
@@ -17912,8 +17913,25 @@ int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick)
 			cd->entry[i]->total = tick;
 #endif
 			cd->entry[i]->started = now;
-			timer->settick(cd->entry[i]->timer,now+tick);
-			return 0;
+			if( timer->settick(cd->entry[i]->timer,now+tick) != -1 )
+				return 0;
+			else {
+				int cursor;
+				/**	somehow, the timer vanished. (bugreport:8367) **/
+				ers_free(skill->cd_entry_ers, cd->entry[i]);
+	
+				cd->entry[i] = NULL;
+				
+				for( i = 0, cursor = 0; i < cd->cursor; i++ ) {
+					if( !cd->entry[i] )
+						continue;
+					if( cursor != i )
+						cd->entry[cursor] = cd->entry[i];
+					cursor++;
+				}
+				
+				cd->cursor = cursor;
+			}
 		}
 		
 	}
