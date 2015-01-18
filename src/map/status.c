@@ -9025,7 +9025,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			{
 				int hp = status_get_hp(bl), sp = status_get_sp(bl), lv = 5;
 
-				if( rand()%100 > (25 + 10 * val1) - status_get_int(bl) / 2)
+				if( rnd()%100 > (25 + 10 * val1) - status_get_int(bl) / 2)
 					return 0;
 
 				PER( 100 / (status_get_max_hp(bl) / hp), lv );

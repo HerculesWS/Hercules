@@ -2756,7 +2756,7 @@ void read_channels_config(void) {
 			}
 			if( libconfig->setting_lookup_string(settings, "irc_channel_nick", &irc_nick) ) {
 				if( strcmpi(irc_nick,"Hercules_chSysBot") == 0 ) {
-					sprintf(clif->hChSys->irc_nick, "Hercules_chSysBot%d",rand()%777);
+					sprintf(clif->hChSys->irc_nick, "Hercules_chSysBot%d",rnd()%777);
 				} else
 					safestrncpy(clif->hChSys->irc_nick, irc_nick, 40);
 			} else {

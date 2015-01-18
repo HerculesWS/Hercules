@@ -2508,7 +2508,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 
 			for(i = 0; i < MAX_MVP_DROP; i++) {
 				while( 1 ) {
-					int va = rand()%MAX_MVP_DROP;
+					int va = rnd()%MAX_MVP_DROP;
 					if( !mdrop_id[va] || !md->db->mvpitem[i].nameid ) {
 						mdrop_id[va] = md->db->mvpitem[i].nameid;
 						mdrop_p[va]  = md->db->mvpitem[i].p;

@@ -2672,7 +2672,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			}
 		}
 
-		if( sc->data[SC_ZEPHYR] && ((flag&BF_LONG) || rand()%100 < 10) ) {
+		if( sc->data[SC_ZEPHYR] && ((flag&BF_LONG) || rnd()%100 < 10) ) {
 				d->dmg_lv = ATK_BLOCK;
 				return 0;
 		}
@@ -3042,7 +3042,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 				status_change_end(bl, SC_KYRIE, INVALID_TIMER);
 		}
 
-		if( sc->data[SC_MEIKYOUSISUI] && rand()%100 < 40 ) // custom value
+		if( sc->data[SC_MEIKYOUSISUI] && rnd()%100 < 40 ) // custom value
 			damage = 0;
 
 
@@ -3850,14 +3850,14 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 
 	case KO_MUCHANAGE:
 		md.damage = skill->get_zeny(skill_id ,skill_lv);
-		md.damage = md.damage * (50 + rand()%50) / 100;
+		md.damage = md.damage * (50 + rnd()%50) / 100;
 		if ( is_boss(target) || (sd && !pc->checkskill(sd,NJ_TOBIDOUGU)) )
 			md.damage >>= 1;
 		break;
 	case NJ_ZENYNAGE:
 		md.damage = skill->get_zeny(skill_id ,skill_lv);
 		if (!md.damage) md.damage = 2;
-		md.damage = rand()%md.damage + md.damage;
+		md.damage = rnd()%md.damage + md.damage;
 		if (is_boss(target))
 			md.damage=md.damage / 3;
 		else if (tsd)
@@ -5540,7 +5540,7 @@ void battle_reflect_damage(struct block_list *target, struct block_list *src, st
 
 					delay += 100;/* gradual increase so the numbers don't clip in the client */
 				}
-				if( sc->data[SC_LG_REFLECTDAMAGE] && rand()%100 < (30 + 10*sc->data[SC_LG_REFLECTDAMAGE]->val1) ) {
+				if( sc->data[SC_LG_REFLECTDAMAGE] && rnd()%100 < (30 + 10*sc->data[SC_LG_REFLECTDAMAGE]->val1) ) {
 					bool change = false;
 
 					NORMALIZE_RDAMAGE(damage * sc->data[SC_LG_REFLECTDAMAGE]->val2 / 100);

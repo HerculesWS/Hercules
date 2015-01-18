@@ -1219,9 +1219,9 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 		case LG_HESPERUSLIT:
 			if ( sc && sc->data[SC_BANDING] ) {
 				if ( sc->data[SC_BANDING]->val2 == 4 ) // 4 banding RGs: Targets will be stunned at 100% chance for 4 ~ 8 seconds, irreducible by STAT.
-					status->change_start(src, bl, SC_STUN, 10000, skill_lv, 0, 0, 0, 1000*(4+rand()%4), SCFLAG_FIXEDTICK);
+					status->change_start(src, bl, SC_STUN, 10000, skill_lv, 0, 0, 0, 1000*(4+rnd()%4), SCFLAG_FIXEDTICK);
 				else if ( sc->data[SC_BANDING]->val2 == 6 ) // 6 banding RGs: activate Pinpoint Attack Lv1-5
-					skill->castend_damage_id(src,bl,LG_PINPOINTATTACK,1+rand()%5,tick,0);
+					skill->castend_damage_id(src,bl,LG_PINPOINTATTACK,1+rnd()%5,tick,0);
 			}
 			break;
 		case LG_PINPOINTATTACK:
@@ -2677,7 +2677,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 			// This ensures the storm randomly pushes instead of exactly a cell backwards per official mechanics.
 			case WZ_STORMGUST:
 				if(!battle_config.stormgust_knockback)
-					dir = rand()%8;
+					dir = rnd()%8;
 				break;
 			case WL_CRIMSONROCK:
 				dir = map->calc_dir(bl,skill->area_temp[4],skill->area_temp[5]);
@@ -9663,7 +9663,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 		case KO_JYUSATSU:
 			if( dstsd && tsc && !tsc->data[type]
-			 && rand()%100 < (10 * (5 * skill_lv - status_get_int(bl) / 2 + 45 + 5 * skill_lv))
+			 && rnd()%100 < (10 * (5 * skill_lv - status_get_int(bl) / 2 + 45 + 5 * skill_lv))
 			) {
 				clif->skill_nodamage(src, bl, skill_id, skill_lv,
 				                     status->change_start(src, bl, type, 10000, skill_lv, 0, 0, 0, skill->get_time(skill_id, skill_lv), SCFLAG_NOAVOID));

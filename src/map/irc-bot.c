@@ -58,7 +58,7 @@ int irc_identify_timer(int tid, int64 tick, int id, intptr_t data) {
 	if( !ircbot->isOn )
 		return 0;
 	
-	sprintf(send_string, "USER HerculesWS%d 8 * : Hercules IRC Bridge",rand()%777);
+	sprintf(send_string, "USER HerculesWS%d 8 * : Hercules IRC Bridge",rnd()%777);
 	ircbot->send(send_string);
 	sprintf(send_string, "NICK %s", clif->hChSys->irc_nick);
 	ircbot->send(send_string);

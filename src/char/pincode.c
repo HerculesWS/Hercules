@@ -104,7 +104,7 @@ void pincode_setnew(int fd, struct char_session_data* sd) {
 void pincode_sendstate(int fd, struct char_session_data* sd, uint16 state) {
 	WFIFOHEAD(fd, 12);
 	WFIFOW(fd, 0) = 0x8b9;
-	WFIFOL(fd, 2) = sd->pincode_seed = rand() % 0xFFFF;
+	WFIFOL(fd, 2) = sd->pincode_seed = rnd() % 0xFFFF;
 	WFIFOL(fd, 6) = sd->account_id;
 	WFIFOW(fd,10) = state;
 	WFIFOSET(fd,12);
