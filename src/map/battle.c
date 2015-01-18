@@ -6179,7 +6179,18 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 	switch( target->type ) { // Checks on actual target
 		case BL_PC: {
 				struct status_change* sc = status->get_sc(src);
-				if (((TBL_PC*)target)->invincible_timer != INVALID_TIMER || pc_isinvisible((TBL_PC*)target))
+			
+				if( ((TBL_PC*)target)->invincible_timer != INVALID_TIMER ) {
+					switch( battle->get_current_skill(src) ) {
+						/* TODO a proper distinction should be established bugreport:8397 */
+						case PR_SANCTUARY:
+						case PR_MAGNIFICAT:
+							break;
+						default:
+							return -1;
+					}
+				}
+				if ( pc_isinvisible((TBL_PC*)target) )
 					return -1; //Cannot be targeted yet.
 				if( sc && sc->count ) {
 					if( sc->data[SC_SIREN] && sc->data[SC_SIREN]->val2 == target->id )
