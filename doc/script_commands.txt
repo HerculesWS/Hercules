@@ -4295,10 +4295,56 @@ effects.
 
 ---------------------------------------
 
-*recovery;
+*recovery {<type>{,<flag>{,<option>{,"<map name>"{<x1>,<y1>,<x2>,<y2>}}}}};
 
-This command will revive and restore full HP and SP to all characters 
-currently connected to the server.
+This command will revive and fully restore the HP/SP of the selected characters.
+It returns amount of recovered characters. Returns -1 on unsuccessful use.
+
+A quick list of available types are :-
+ *  recovery ALL_CLIENT {,<flag>};
+ *  recovery ALL_SAMEMAP {,<flag> {,"<map name>"}};
+ *  recovery AREA {,<flag> {,"<map name>", <x1>, <y1>, <x2>, <y2>}};
+ *  recovery PARTY {,<flag> {,<party ID> {,"<map name>"}}};
+ *  recovery GUILD {,<flag> {, <guild ID> {,"<map name>"}}};
+ *  recovery SELF {,<flag>};
+ *  recovery BG {, <flag> {, <battleground ID>}};
+
+<type> is the target, and determines the <option> parameter:
+ ALL_CLIENT  -> None
+ ALL_SAMEMAP -> Map name (a string)
+ AREA        -> Map name, <x1>, <y1>, <x2>, <y2>
+ PARTY       -> Party ID number
+ GUILD       -> GUILD ID number
+ SELF        -> None
+ BG          -> Battleground ID number
+
+If no <option> is specified, it depends on the invoking player's data.
+ ALL_SAMEMAP -> invoking player's map
+ AREA        -> invoking player's sight range (battle_config.area_size)
+ PARTY       -> invoking player's party
+ GUILD       -> invoking player's guild
+ BG          -> invoking player's battleground ID
+
+<flag> determines the action:
+ 1 : Revive dead players only
+ 2 : Heal living players only
+ 3 : Revive and heal all players (default)
+
+<map name> can optionally be used to define a single map to execute the command
+for types PARTY and GUILD.
+
+Examples:
+	// Only revive all dead characters on server
+	recovery ALL_CLIENT, 1;
+
+	// Revive and fully heal everyone in map "prontera"
+	recovery ALL_SAMEMAP, 3, "prontera";
+
+	// Fully heal (don't revive) all members of invoking character's party
+	recovery PARTY, 2;
+
+	// Only revive characters in invoking guild on map "morocc"
+	recovery GUILD, 1, getcharid(2), "morocc";
 
 ---------------------------------------
 
