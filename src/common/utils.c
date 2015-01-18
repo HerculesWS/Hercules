@@ -19,6 +19,7 @@
 #include "../common/mmo.h"
 #include "../common/showmsg.h"
 #include "../common/socket.h"
+#include "../common/strlib.h"
 
 #ifdef WIN32
 #	include "../common/winapi.h"
@@ -156,16 +157,18 @@ static char* checkpath(char *path, const char*srcpath)
 {
 	// just make sure the char*path is not const
 	char *p=path;
-	if(NULL!=path && NULL!=srcpath)
-	while(*srcpath) {
-		if (*srcpath=='\\') {
-			*p++ = '/';
-			srcpath++;
+	
+	if(NULL!=path && NULL!=srcpath) {
+		while(*srcpath) {
+			if (*srcpath=='\\') {
+				*p++ = '/';
+				srcpath++;
+			}
+			else
+				*p++ = *srcpath++;
 		}
-		else
-			*p++ = *srcpath++;
+		*p = *srcpath; //EOS
 	}
-	*p = *srcpath; //EOS
 	return path;
 }
 
@@ -177,7 +180,7 @@ void findfile(const char *p, const char *pat, void (func)(const char*))
 	char tmppath[MAX_DIR_PATH+1];
 	char path[MAX_DIR_PATH+1]= ".";
 	const char *pattern = (pat==NULL)? "" : pat;
-	if(p!=NULL) strcpy(path,p);
+	if(p!=NULL) safestrncpy(path,p,sizeof(path));
 
 	// open the directory for reading
 	dir = opendir( checkpath(path, path) );

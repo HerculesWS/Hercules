@@ -1541,12 +1541,12 @@ int status_fixed_revive(struct block_list *bl, unsigned int per_hp, unsigned int
 
 	if(hp > st->max_hp - st->hp)
 		hp = st->max_hp - st->hp;
-	else if (per_hp && !hp)
+	else if (!hp)
 		hp = 1;
 
 	if(sp > st->max_sp - st->sp)
 		sp = st->max_sp - st->sp;
-	else if (per_sp && !sp)
+	else if (!sp)
 		sp = 1;
 
 	st->hp += hp;
@@ -6576,6 +6576,7 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 		break;
 	case SC_OBLIVIONCURSE: // 100% - (100 - 0.8 x INT)
 		sc_def = st->int_*80;
+		/* Fall through */
 	case SC_TOXIN:
 	case SC_PARALYSE:
 	case SC_VENOMBLEED:
@@ -8722,13 +8723,14 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				val3 = 5 * val1 + val2;//Movement Speed And ASPD Increase
 				break;
 			case SC_SYMPHONY_LOVE:
-				val2 = 12 * val1 + val2 + sd->status.job_level / 4;//MDEF Increase In %
+				val2 = 12 * val1 + val2 + (sd ? sd->status.job_level : 70) / 4;//MDEF Increase In %
+				break;
 			case SC_MOONLIT_SERENADE:
 			case SC_RUSH_WINDMILL:
-				val2 = 6 * val1 + val2 + sd->status.job_level / 5;
+				val2 = 6 * val1 + val2 + (sd ? sd->status.job_level : 70) / 5;
 				break;
 			case SC_ECHOSONG:
-				val3 = 6 * val1 + val2 + sd->status.job_level / 4;//DEF Increase In %
+				val3 = 6 * val1 + val2 + (sd ? sd->status.job_level : 70) / 4;//DEF Increase In %
 				break;
 			case SC_HARMONIZE:
 				val2 = 5 + 5 * val1;
@@ -10306,6 +10308,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		case SC_CLOAKING:
 		case SC_CLOAKINGEXCEED:
 			sc->option &= ~OPTION_CLOAK;
+			/* Fall through */
 		case SC_CAMOUFLAGE:
 			opt_flag|= 2;
 			break;
@@ -11395,6 +11398,7 @@ int status_change_timer_sub(struct block_list* bl, va_list ap) {
 			if( tsc && tsc->data[SC__SHADOWFORM] && (sce && sce->val4 >0 && sce->val4%2000 == 0) && // for every 2 seconds do the checking
 				rnd()%100 < 100-tsc->data[SC__SHADOWFORM]->val1*10 ) // [100 - (Skill Level x 10)] %
 				status_change_end(bl, SC__SHADOWFORM, INVALID_TIMER);
+			/* Fall through */
 		case SC_CONCENTRATION:
 			status_change_end(bl, SC_HIDING, INVALID_TIMER);
 			status_change_end(bl, SC_CLOAKING, INVALID_TIMER);

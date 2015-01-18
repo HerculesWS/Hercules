@@ -6177,14 +6177,15 @@ ACMD(users)
 	}
 	mapit->free(iter);
 
-	// display results for each map
-	for( i = 0; i < MAX_MAPINDEX; ++i )
-	{
-		if( users[i] == 0 )
-			continue;// empty
+	if( users_all ) {
+		// display results for each map
+		for( i = 0; i < MAX_MAPINDEX; ++i ) {
+			if( users[i] == 0 )
+				continue;// empty
 
-		safesnprintf(buf, sizeof(buf), "%s: %d (%.2f%%)", mapindex_id2name(i), users[i], (float)(100.0f*users[i]/users_all));
-		clif->message(sd->fd, buf);
+			safesnprintf(buf, sizeof(buf), "%s: %d (%.2f%%)", mapindex_id2name(i), users[i], (float)(100.0f*users[i]/users_all));
+			clif->message(sd->fd, buf);
+		}
 	}
 
 	// display overall count
@@ -6616,7 +6617,7 @@ ACMD(mobinfo)
 			sprintf(atcmd_output, msg_txt(1247), monster->mexp); //  MVP Bonus EXP:%u
 			clif->message(fd, atcmd_output);
 
-			strcpy(atcmd_output, msg_txt(1248)); //  MVP Items:
+			safestrncpy(atcmd_output, msg_txt(1248), sizeof(atcmd_output)); //  MVP Items:
 			j = 0;
 			for (i = 0; i < MAX_MVP_DROP; i++) {
 				if (monster->mvpitem[i].nameid <= 0 || (item_data = itemdb->exists(monster->mvpitem[i].nameid)) == NULL)
@@ -7086,12 +7087,12 @@ ACMD(iteminfo)
 		clif->message(fd, atcmd_output);
 
 		if (item_data->maxchance == -1)
-			strcpy(atcmd_output, msg_txt(1281)); //  - Available in the shops only.
+			safestrncpy(atcmd_output, msg_txt(1281), sizeof(atcmd_output)); //  - Available in the shops only.
 		else if ( !battle_config.atcommand_mobinfo_type ) {
 			if( item_data->maxchance )
 				sprintf(atcmd_output, msg_txt(1282), (float)item_data->maxchance / 100 ); //  - Maximal monsters drop chance: %02.02f%%
 			else
-				strcpy(atcmd_output, msg_txt(1283)); //  - Monsters don't drop this item.
+				safestrncpy(atcmd_output, msg_txt(1283), sizeof(atcmd_output)); //  - Monsters don't drop this item.
 		}
 		clif->message(fd, atcmd_output);
 
@@ -7130,7 +7131,7 @@ ACMD(whodrops)
 		clif->message(fd, atcmd_output);
 
 		if (item_data->mob[0].chance == 0) {
-			strcpy(atcmd_output, msg_txt(1286)); //  - Item is not dropped by mobs.
+			safestrncpy(atcmd_output, msg_txt(1286), sizeof(atcmd_output)); //  - Item is not dropped by mobs.
 			clif->message(fd, atcmd_output);
 		} else {
 			sprintf(atcmd_output, msg_txt(1287), MAX_SEARCH); //  - Common mobs with highest drop chance (only max %d are listed):

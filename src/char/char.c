@@ -3009,12 +3009,12 @@ void char_send_maps(int fd, int id, int j)
 	// Transmitting the maps of the other map-servers to the new map-server
 	for(x = 0; x < ARRAYLENGTH(chr->server); x++) {
 		if (chr->server[x].fd > 0 && x != id) {
-			WFIFOHEAD(fd,10 +4*ARRAYLENGTH(chr->server[x].map));
+			WFIFOHEAD(fd,10 +4*chr->server[x].maps);
 			WFIFOW(fd,0) = 0x2b04;
 			WFIFOL(fd,4) = htonl(chr->server[x].ip);
 			WFIFOW(fd,8) = htons(chr->server[x].port);
 			j = 0;
-			for(i = 0; i < ARRAYLENGTH(chr->server[x].map); i++)
+			for(i = 0; i < chr->server[x].maps; i++)
 				if (chr->server[x].map[i])
 					WFIFOW(fd,10+(j++)*4) = chr->server[x].map[i];
 			if (j > 0) {

@@ -382,7 +382,7 @@ void console_parse_sub(char *line) {
 				return;
 			} else
 				cmd = cmd->u.next[i];
-			len += snprintf(sublist + len,CP_CMD_LENGTH * 5,":%s", cmd->cmd);
+			len += snprintf(sublist + len,(CP_CMD_LENGTH * 5) - len,":%s", cmd->cmd);
 		}
 		ShowError("Is only a category, type '"CL_WHITE"%s help"CL_RESET"' to list its subcommands\n",sublist);
 	}

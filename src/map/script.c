@@ -5372,6 +5372,7 @@ BUILDIN(warpparty)
 			//"SavePoint" uses save point of the currently attached player
 			if (( sd = script->rid2sd(st) ) == NULL )
 				return true;
+			/* Fall through */
 		default:
 			map_index = 0;
 			break;
@@ -6774,7 +6775,7 @@ BUILDIN(grouprandomitem) {
  *------------------------------------------*/
 BUILDIN(makeitem)
 {
-	int nameid,amount,flag = 0;
+	int nameid,amount;
 	int x,y,m;
 	const char *mapname;
 	struct item item_tmp;
@@ -6813,12 +6814,9 @@ BUILDIN(makeitem)
 
 
 	memset(&item_tmp,0,sizeof(item_tmp));
-	item_tmp.nameid=nameid;
-	if(!flag)
-		item_tmp.identify=1;
-	else
-		item_tmp.identify=itemdb->isidentified2(item_data);
-
+	item_tmp.nameid = nameid;
+	item_tmp.identify=1;
+	
 	map->addflooritem(&item_tmp,amount,m,x,y,0,0,0,0);
 
 	return true;
@@ -8719,7 +8717,7 @@ BUILDIN(setmount)
 				option = ( flag == SETMOUNT_TYPE_DRAGON_GREEN ? OPTION_DRAGON1 :
 				           flag == SETMOUNT_TYPE_DRAGON_BROWN ? OPTION_DRAGON2 :
 				           flag == SETMOUNT_TYPE_DRAGON_GRAY ? OPTION_DRAGON3 :
-				           flag == SETMOUNT_TYPE_DRAGON_RED ? OPTION_DRAGON4 :
+				           flag == SETMOUNT_TYPE_DRAGON_BLUE ? OPTION_DRAGON4 :
 				           flag == SETMOUNT_TYPE_DRAGON_RED ? OPTION_DRAGON5 :
 				           OPTION_DRAGON1); // default value
 				pc->setridingdragon(sd, option);
@@ -14600,7 +14598,7 @@ BUILDIN(sscanf) {
 		buf_p = reference_getname(data);
 		if(not_server_variable(*buf_p) && (sd = script->rid2sd(st))==NULL) {
 			script_pushint(st, -1);
-			if(buf) aFree(buf);
+			aFree(buf);
 			if(ref_str) aFree(ref_str);
 			return true;
 		}

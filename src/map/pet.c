@@ -1177,7 +1177,7 @@ int read_petdb()
 		if( pet->db[j].equip_script )
 		{
 			script->free_code(pet->db[j].equip_script);
-			pet->db[j].pet_script = NULL;
+			pet->db[j].equip_script = NULL;
 		}
 	}
 

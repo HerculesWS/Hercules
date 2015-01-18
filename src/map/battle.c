@@ -749,7 +749,8 @@ int64 battle_calc_masteryfix(struct block_list *src, struct block_list *target, 
 #endif
 		case RA_WUGDASH://(Caster Current Weight x 10 / 8)
 			if( sd->weight )
-				damage += sd->weight / 8 ;
+				damage += sd->weight / 8;
+			/* Fall through */
 		case RA_WUGSTRIKE:
 		case RA_WUGBITE:
 			damage += 30*pc->checkskill(sd, RA_TOOTHOFWUG);
@@ -1508,6 +1509,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					if ( sd && sd->spiritcharm[SPIRITS_TYPE_CHARM_WATER] > 0 )
 						skillratio += 5 * sd->spiritcharm[SPIRITS_TYPE_CHARM_WATER];
 #endif
+					/* Fall through */
 				case NJ_HYOUSYOURAKU:
 					skillratio += 50 * skill_lv;
 					if ( sd && sd->spiritcharm[SPIRITS_TYPE_CHARM_WATER] > 0 )
@@ -1521,6 +1523,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case NJ_KAMAITACHI:
 					if ( sd && sd->spiritcharm[SPIRITS_TYPE_CHARM_WIND] > 0 )
 						skillratio += 10 * sd->spiritcharm[SPIRITS_TYPE_CHARM_WIND];
+					/* Fall through */
 				case NPC_ENERGYDRAIN:
 					skillratio += 100 * skill_lv;
 					break;
@@ -2459,6 +2462,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					break;
 				case GN_SPORE_EXPLOSION:
 					skillratio = 100 * skill_lv + (200 + st->int_) * status->get_lv(src) / 100;
+					/* Fall through */
 				case GN_CRAZYWEED_ATK:
 					skillratio += 400 + 100 * skill_lv;
 					break;
@@ -3521,6 +3525,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 							ad.flag = BF_WEAPON|BF_SHORT;
 							ad.type = 0;
 						}
+					/* Fall through */
 					default:
 						MATK_RATE(battle->calc_skillratio(BF_MAGIC, src, target, skill_id, skill_lv, skillratio, mflag));
 				}
@@ -4806,6 +4811,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					}
 					wd.damage = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage, wd.div_, 0, flag.weapon);
 				}
+				/* Fall through */
 	#endif
 			default:
 				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));

@@ -1248,9 +1248,6 @@ void intif_parse_GuildBasicInfoChanged(int fd) {
 			int idx, max;
 			struct guild_skill *gs = (struct guild_skill *)RFIFOP(fd,10);
 
-			if( gs == NULL )
-				return;
-
 			idx = gs->id - GD_SKILLBASE;
 			max = guild->skill_get_max(gs->id);
 			if( gs->lv > max )

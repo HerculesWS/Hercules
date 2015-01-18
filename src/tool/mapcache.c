@@ -192,13 +192,13 @@ void process_args(int argc, char *argv[])
 	for(i = 0; i < argc; i++) {
 		if(strcmp(argv[i], "-grf") == 0) {
 			if(++i < argc)
-				strcpy(grf_list_file, argv[i]);
+				safestrncpy(grf_list_file, argv[i], sizeof(grf_list_file));
 		} else if(strcmp(argv[i], "-list") == 0) {
 			if(++i < argc)
-				strcpy(map_list_file, argv[i]);
+				safestrncpy(map_list_file, argv[i], sizeof(map_list_file));
 		} else if(strcmp(argv[i], "-cache") == 0) {
 			if(++i < argc)
-				strcpy(map_cache_file, argv[i]);
+				safestrncpy(map_cache_file, argv[i], sizeof(map_cache_file));
 		} else if(strcmp(argv[i], "-rebuild") == 0)
 			rebuild = 1;
 	}

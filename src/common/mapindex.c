@@ -48,7 +48,7 @@ const char* mapindex_getmapname_ext(const char* string, char* output) {
 
 	size_t len;
 
-	strcpy(buf,string);
+	safestrncpy(buf,string, sizeof(buf));
 	sscanf(string, "%*[^#]%*[#]%15s", buf);
 
 	len = safestrnlen(buf, MAP_NAME_LENGTH);
@@ -154,6 +154,7 @@ int mapindex_init(void) {
 		switch (sscanf(line, "%12s\t%d", map_name, &index)) {
 			case 1: //Map with no ID given, auto-assign
 				index = last_index+1;
+				/* Fall through */
 			case 2: //Map with ID given
 				mapindex->addmap(index,map_name);
 				total++;

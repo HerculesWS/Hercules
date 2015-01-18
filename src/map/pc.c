@@ -4265,6 +4265,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		case ITEMID_ANODYNE:
 			if( map_flag_gvg2(sd->bl.m) )
 				return 0;
+			/* Fall through */
 		case ITEMID_ALOEBERA:
 			if( pc_issit(sd) )
 				return 0;
@@ -4275,6 +4276,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 				clif->skill_mapinfomessage(sd,0);
 				return 0;
 			}
+			/* Fall through */
 		case ITEMID_WING_OF_BUTTERFLY:
 		case ITEMID_DUN_TELE_SCROLL1:
 		case ITEMID_DUN_TELE_SCROLL2:
@@ -9046,22 +9048,20 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 	status_calc_pc(sd,SCO_NONE);
 	if (flag) //Update skill data
 		clif->skillinfoblock(sd);
-
+	
 	//OnEquip script [Skotlex]
-	if (id) {
-		if (id->equip_script)
-			script->run(id->equip_script,0,sd->bl.id,npc->fake_nd->bl.id);
-		if(itemdb_isspecial(sd->status.inventory[n].card[0]))
-			; //No cards
-		else {
-			for( i = 0; i < id->slot; i++ ) {
-				struct item_data *data;
-				if (!sd->status.inventory[n].card[i])
-					continue;
-				if ( ( data = itemdb->exists(sd->status.inventory[n].card[i]) ) != NULL ) {
-					if( data->equip_script )
-						script->run(data->equip_script,0,sd->bl.id,npc->fake_nd->bl.id);
-				}
+	if (id->equip_script)
+		script->run(id->equip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+	if(itemdb_isspecial(sd->status.inventory[n].card[0]))
+		; //No cards
+	else {
+		for( i = 0; i < id->slot; i++ ) {
+			struct item_data *data;
+			if (!sd->status.inventory[n].card[i])
+				continue;
+			if ( ( data = itemdb->exists(sd->status.inventory[n].card[i]) ) != NULL ) {
+				if( data->equip_script )
+					script->run(data->equip_script,0,sd->bl.id,npc->fake_nd->bl.id);
 			}
 		}
 	}
@@ -9709,7 +9709,7 @@ int map_day_timer(int tid, int64 tick, int id, intptr_t data) {
 
 	map->night_flag = 0; // 0=day, 1=night [Yor]
 	map->foreachpc(pc->daynight_timer_sub);
-	strcpy(tmp_soutput, (data == 0) ? msg_txt(502) : msg_txt(60)); // The day has arrived!
+	safestrncpy(tmp_soutput, (data == 0) ? msg_txt(502) : msg_txt(60), sizeof(tmp_soutput)); // The day has arrived!
 	intif->broadcast(tmp_soutput, strlen(tmp_soutput) + 1, BC_DEFAULT);
 	return 0;
 }
@@ -9729,7 +9729,7 @@ int map_night_timer(int tid, int64 tick, int id, intptr_t data) {
 
 	map->night_flag = 1; // 0=day, 1=night [Yor]
 	map->foreachpc(pc->daynight_timer_sub);
-	strcpy(tmp_soutput, (data == 0) ? msg_txt(503) : msg_txt(59)); // The night has fallen...
+	safestrncpy(tmp_soutput, (data == 0) ? msg_txt(503) : msg_txt(59), sizeof(tmp_soutput)); // The night has fallen...
 	intif->broadcast(tmp_soutput, strlen(tmp_soutput) + 1, BC_DEFAULT);
 	return 0;
 }

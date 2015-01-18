@@ -3876,7 +3876,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		map->list[m].flag.nomvploot=state;
 	else if (!strcmpi(w3,"nocommand")) {
 		if (state) {
-			if (sscanf(w4, "%d", &state) == 1)
+			if (w4 && sscanf(w4, "%d", &state) == 1)
 				map->list[m].nocommand =state;
 			else //No level specified, block everyone.
 				map->list[m].nocommand =100;
@@ -4113,7 +4113,6 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 		// More info at http://unicode.org/faq/utf_bom.html#bom5 and http://en.wikipedia.org/wiki/Byte_order_mark#UTF-8
 		ShowError("npc_parsesrcfile: Detected unsupported UTF-8 BOM in file '%s'. Stopping (please consider using another character set.)\n", filepath);
 		aFree(buffer);
-		fclose(fp);
 		return EXIT_FAILURE;
 	}
 

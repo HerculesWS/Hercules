@@ -631,6 +631,7 @@ int elemental_ai_sub_timer_activesearch(struct block_list *bl, va_list ap) {
 		case BL_PC:
 			if( !map_flag_vs(ed->bl.m) )
 				return 0;
+			/* Fall through */
 		default:
 			dist = distance_bl(&ed->bl, bl);
 			if( ((*target) == NULL || !check_distance_bl(&ed->bl, *target, dist)) && battle->check_range(&ed->bl,bl,ed->db->range2) ) { //Pick closest target?

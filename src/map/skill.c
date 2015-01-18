@@ -583,12 +583,13 @@ int skillnotok_hom(uint16 skill_id, struct homun_data *hd)
 			}
 			break;
 	    case MH_GOLDENE_FERSE: //can be used with angriff
-		if(hd->sc.data[SC_ANGRIFFS_MODUS])
-		    return 1;
+			if(hd->sc.data[SC_ANGRIFFS_MODUS])
+				return 1;
+			/* Fall through */
 	    case MH_ANGRIFFS_MODUS:
-		if(hd->sc.data[SC_GOLDENE_FERSE])
-		    return 1;
-		break;
+			if(hd->sc.data[SC_GOLDENE_FERSE])
+				return 1;
+			break;
 	}
 
 	//Use master's criteria.
@@ -806,6 +807,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 		case AS_VENOMKNIFE:
 			if (sd) //Poison chance must be that of Envenom. [Skotlex]
 				skill_lv = pc->checkskill(sd, TF_POISON);
+			/* Fall through */
 		case TF_POISON:
 		case AS_SPLASHER:
 			if (!sc_start2(src,bl,SC_POISON,(4*skill_lv+10),skill_lv,src->id,skill->get_time2(skill_id,skill_lv))
@@ -1408,7 +1410,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			if (sd->def_set_race[tstatus->race].rate)
 					status->change_start(src,bl, SC_DEFSET, sd->def_set_race[tstatus->race].rate, sd->def_set_race[tstatus->race].value,
 					0, 0, 0, sd->def_set_race[tstatus->race].tick, SCFLAG_FIXEDTICK);
-			if (sd->def_set_race[tstatus->race].rate)
+			if (sd->mdef_set_race[tstatus->race].rate)
 					status->change_start(src,bl, SC_MDEFSET, sd->mdef_set_race[tstatus->race].rate, sd->mdef_set_race[tstatus->race].value,
 					0, 0, 0, sd->mdef_set_race[tstatus->race].tick, SCFLAG_FIXEDTICK);
 		}
@@ -2461,6 +2463,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 			break;
 		case LG_OVERBRAND_BRANDISH:
 		case LG_OVERBRAND:
+			/* Fall through */
 			dmg.amotion = status_get_amotion(src) * 2;
 		case LG_OVERBRAND_PLUSATK:
 			dmg.dmotion = clif->skill_damage(dsrc,bl,tick,status_get_amotion(src),dmg.dmotion,damage,dmg.div_,skill_id,-1,5);
@@ -3666,6 +3669,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 		case NC_PILEBUNKER:
 		case NC_COLDSLOWER:
 			if (sd) pc->overheat(sd,1);
+			/* Fall through */
 		case RK_WINDCUTTER:
 			skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag|SD_ANIMATION);
 			break;
@@ -3727,6 +3731,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 
 		case NC_FLAMELAUNCHER:
 			if (sd) pc->overheat(sd,1);
+			/* Fall through */
 		case SN_SHARPSHOOTING:
 		case MA_SHARPSHOOTING:
 		case NJ_KAMAITACHI:
@@ -4188,6 +4193,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 
 		case NPC_DARKBREATH:
 			clif->emotion(src,E_AG);
+			/* Fall through */
 		case SN_FALCONASSAULT:
 		case PA_PRESSURE:
 		case CR_ACIDDEMONSTRATION:
@@ -4877,6 +4883,7 @@ int skill_castend_id(int tid, int64 tick, int id, intptr_t data) {
 			//These should become skill_castend_pos
 			case WE_CALLPARTNER:
 				if(sd) clif->callpartner(sd);
+				/* Fall through */
 			case WE_CALLPARENT:
 			case WE_CALLBABY:
 			case AM_RESURRECTHOMUN:
@@ -6233,6 +6240,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case SR_WINDMILL:
 		case GN_CART_TORNADO:
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+			/* Fall through */
 		case SR_EARTHSHAKER:
 		case NC_INFRAREDSCAN:
 		case NPC_EARTHQUAKE:
@@ -10419,7 +10427,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			flag|=1;
 			break;
 		case HP_BASILICA:
-			if( sc->data[SC_BASILICA] )
+			if( sc && sc->data[SC_BASILICA] )
 				status_change_end(src, SC_BASILICA, INVALID_TIMER); // Cancel Basilica
 			else { // Create Basilica. Start SC on caster. Unit timer start SC on others.
 				if( map->foreachinrange(skill_count_wos, src, 2, BL_MOB|BL_PC, src) ) {
@@ -10448,6 +10456,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 
 		case SO_WARMER:
 			flag|= 8;
+			/* Fall through */
 		case SO_CLOUD_KILL:
 			skill->unitsetting(src,skill_id,skill_lv,x,y,0);
 			break;
@@ -10669,6 +10678,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 
 		case RK_WINDCUTTER:
 			clif->skill_damage(src, src, tick, status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, 6);
+			/* Fall through */
 		case NC_COLDSLOWER:
 		case RK_DRAGONBREATH:
 		case RK_DRAGONBREATH_WATER:
@@ -12624,6 +12634,7 @@ int skill_unit_onleft(uint16 skill_id, struct block_list *bl, int64 tick) {
 				//your own. Let's pray that scenario is pretty unlikely and none will complain too much about it.
 				status_change_end(bl, SC_DANCING, INVALID_TIMER);
 			}
+			/* Fall through */
 		case MH_STEINWAND:
 		case MG_SAFETYWALL:
 		case AL_PNEUMA:
@@ -14125,6 +14136,7 @@ int skill_check_condition_castend(struct map_session_data* sd, uint16 skill_id, 
 						case ITEMID_REPAIR_KIT:
 						case ITEMID_MONKEY_SPANNER:
 							cause = USESKILL_FAIL_NEED_EQUIPMENT;
+							/* Fall through */
 						default:
 							clif->skill_fail(sd, skill_id, cause, max(1,require.amount[i])|(require.itemid[i] << 16));
 							return 0;
@@ -14269,12 +14281,11 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 		case KO_YAMIKUMO:
 			if( sc && sc->data[status->skill2sc(skill_id)] )
 				return req;
+			/* Fall through */
 		default:
-		{
 			if (skill->get_requirement_off_unknown(sc, &skill_id))
 				return req;
 			break;
-		}
 	}
 
 	idx = skill->get_index(skill_id);
@@ -17393,6 +17404,7 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 		switch (skill_id) {
 			case ASC_CDP: //25% Damage yourself, and display same effect as failed potion.
 				status_percent_damage(NULL, &sd->bl, -25, 0, true);
+				/* Fall through */
 			case AM_PHARMACY:
 			case AM_TWILIGHT1:
 			case AM_TWILIGHT2:

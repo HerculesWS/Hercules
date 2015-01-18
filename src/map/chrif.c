@@ -952,14 +952,14 @@ void chrif_idbanned(int fd) {
 		time_t timestamp;
 		char tmpstr[2048];
 		timestamp = (time_t)RFIFOL(fd,7); // status or final date of a banishment
-		strcpy(tmpstr, msg_txt(423)); //"Your account has been banished until "
+		safestrncpy(tmpstr, msg_txt(423), sizeof(tmpstr)); //"Your account has been banished until "
 		strftime(tmpstr + strlen(tmpstr), 24, "%d-%m-%Y %H:%M:%S", localtime(&timestamp));
 		clif->message(sd->fd, tmpstr);
 	} else if (RFIFOB(fd,6) == 2) { // 2: change of status for character
 		time_t timestamp;
 		char tmpstr[2048];
 		timestamp = (time_t)RFIFOL(fd,7); // status or final date of a banishment
-		strcpy(tmpstr, msg_txt(433)); //"This character has been banned until  "
+		safestrncpy(tmpstr, msg_txt(433), sizeof(tmpstr)); //"This character has been banned until  "
 		strftime(tmpstr + strlen(tmpstr), 24, "%d-%m-%Y %H:%M:%S", localtime(&timestamp));
 		clif->message(sd->fd, tmpstr);
 	}

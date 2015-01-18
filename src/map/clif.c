@@ -404,6 +404,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 		case AREA_WOSC:
 			if (sd && bl->prev == NULL) //Otherwise source misses the packet.[Skotlex]
 				clif->send (buf, len, bl, SELF);
+			/* Fall through */
 		case AREA_WOC:
 		case AREA_WOS:
 			map->foreachinarea(clif->send_sub, bl->m, bl->x-AREA_SIZE, bl->y-AREA_SIZE, bl->x+AREA_SIZE, bl->y+AREA_SIZE,
@@ -443,6 +444,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 			y0 = bl->y - AREA_SIZE;
 			x1 = bl->x + AREA_SIZE;
 			y1 = bl->y + AREA_SIZE;
+			/* Fall through */
 		case PARTY:
 		case PARTY_WOS:
 		case PARTY_SAMEMAP:
@@ -518,6 +520,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 			y0 = bl->y - AREA_SIZE;
 			x1 = bl->x + AREA_SIZE;
 			y1 = bl->y + AREA_SIZE;
+			/* Fall through */
 		case GUILD_SAMEMAP:
 		case GUILD_SAMEMAP_WOS:
 		case GUILD:
@@ -569,6 +572,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 			y0 = bl->y - AREA_SIZE;
 			x1 = bl->x + AREA_SIZE;
 			y1 = bl->y + AREA_SIZE;
+			/* Fall through */
 		case BG_SAMEMAP:
 		case BG_SAMEMAP_WOS:
 		case BG:
@@ -5629,7 +5633,7 @@ void clif_displaymessage2(const int fd, const char* mes) {
 	nullpo_retv(mes);
 
 	//Scrapped, as these are shared by disconnected players =X [Skotlex]
-	if (fd == 0)
+	if (fd == 0 && !map->cpsd_active)
 		;
 	else {
 		// Limit message to 255+1 characters (otherwise it causes a buffer overflow in the client)
