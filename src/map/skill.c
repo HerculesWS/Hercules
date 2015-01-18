@@ -6648,7 +6648,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					map->freeblock_unlock();
 					return 1;
 				}
-				status_zap(src,0,skill->db[skill->get_index(skill_id)].sp[skill_lv]); // consume sp only if succeeded
+				if( sd->skillitem != skill_id )
+					status_zap(src,0,skill->db[skill->get_index(skill_id)].sp[skill_lv]); // consume sp only if succeeded
 			}
 			break;
 
