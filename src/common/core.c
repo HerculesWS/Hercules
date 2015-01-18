@@ -20,6 +20,7 @@
 #include "../common/showmsg.h"
 #include "../common/strlib.h"
 #include "../common/sysinfo.h"
+#include "../common/nullpo.h"
 
 #ifndef MINICORE
 #	include "../common/HPM.h"
@@ -168,6 +169,7 @@ void usercheck(void) {
 }
 
 void core_defaults(void) {
+	nullpo_defaults();
 #ifndef MINICORE
 	hpm_defaults();
 	HCache_defaults();

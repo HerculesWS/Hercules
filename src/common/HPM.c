@@ -23,6 +23,7 @@
 #include "../common/sysinfo.h"
 #include "../common/timer.h"
 #include "../common/utils.h"
+#include "../common/nullpo.h"
 
 #ifndef WIN32
 #	include <unistd.h>
@@ -784,6 +785,7 @@ void hplugins_share_defaults(void) {
 	HPM->share(&SERVER_TYPE,"SERVER_TYPE");
 	HPM->share(DB, "DB");
 	HPM->share(HPMiMalloc, "iMalloc");
+	HPM->share(nullpo,"nullpo");
 	/* socket */
 	HPM->share(sockt,"sockt");
 	/* strlib */
