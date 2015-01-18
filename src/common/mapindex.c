@@ -126,7 +126,7 @@ unsigned short mapindex_name2id(const char* name) {
 }
 
 const char* mapindex_id2name_sub(unsigned short id,const char *file, int line, const char *func) {
-	if (id > MAX_MAPINDEX || !mapindex_exists(id)) {
+	if (id >= MAX_MAPINDEX || !mapindex_exists(id)) {
 		ShowDebug("mapindex_id2name: Requested name for non-existant map index [%d] in cache. %s:%s:%d\n", id,file,func,line);
 		return mapindex->list[0].name; // dummy empty string so that the callee doesn't crash
 	}
