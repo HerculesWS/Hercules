@@ -918,7 +918,6 @@ int do_sockets(int next)
 // IP rules and DDoS protection
 
 typedef struct connect_history {
-	struct connect_history* next;
 	uint32 ip;
 	int64 tick;
 	int count;
@@ -945,9 +944,7 @@ static int access_debug    = 0;
 static int ddos_count      = 10;
 static int ddos_interval   = 3*1000;
 static int ddos_autoreset  = 10*60*1000;
-/// Connection history, an array of linked lists.
-/// The array's index for any ip is ip&0xFFFF
-static ConnectHistory* connect_history[0x10000];
+DBMap *connect_history = NULL;
 
 static int connect_check_(uint32 ip);
 
@@ -967,7 +964,7 @@ static int connect_check(uint32 ip)
 ///  1 or 2 : Connection Accepted
 static int connect_check_(uint32 ip)
 {
-	ConnectHistory* hist = connect_history[ip&0xFFFF];
+	ConnectHistory* hist = NULL;
 	int i;
 	int is_allowip = 0;
 	int is_denyip = 0;
@@ -1004,99 +1001,86 @@ static int connect_check_(uint32 ip)
 	//  1 : Accept
 	//  2 : Unconditional Accept (accepts even if flagged as DDoS)
 	switch(access_order) {
-	case ACO_DENY_ALLOW:
-	default:
-		if( is_denyip )
-			connect_ok = 0; // Reject
-		else if( is_allowip )
-			connect_ok = 2; // Unconditional Accept
-		else
-			connect_ok = 1; // Accept
-		break;
-	case ACO_ALLOW_DENY:
-		if( is_allowip )
-			connect_ok = 2; // Unconditional Accept
-		else if( is_denyip )
-			connect_ok = 0; // Reject
-		else
-			connect_ok = 1; // Accept
-		break;
-	case ACO_MUTUAL_FAILURE:
-		if( is_allowip && !is_denyip )
-			connect_ok = 2; // Unconditional Accept
-		else
-			connect_ok = 0; // Reject
-		break;
+		case ACO_DENY_ALLOW:
+		default:
+			if( is_denyip )
+				connect_ok = 0; // Reject
+			else if( is_allowip )
+				connect_ok = 2; // Unconditional Accept
+			else
+				connect_ok = 1; // Accept
+			break;
+		case ACO_ALLOW_DENY:
+			if( is_allowip )
+				connect_ok = 2; // Unconditional Accept
+			else if( is_denyip )
+				connect_ok = 0; // Reject
+			else
+				connect_ok = 1; // Accept
+			break;
+		case ACO_MUTUAL_FAILURE:
+			if( is_allowip && !is_denyip )
+				connect_ok = 2; // Unconditional Accept
+			else
+				connect_ok = 0; // Reject
+			break;
 	}
 
 	// Inspect connection history
-	while( hist ) {
-		if( ip == hist->ip )
-		{// IP found
-			if( hist->ddos )
-			{// flagged as DDoS
-				return (connect_ok == 2 ? 1 : 0);
-			} else if( DIFF_TICK(timer->gettick(),hist->tick) < ddos_interval )
-			{// connection within ddos_interval
+	if( ( hist = uidb_get(connect_history, ip)) ) { //IP found
+		if( hist->ddos ) {// flagged as DDoS
+			return (connect_ok == 2 ? 1 : 0);
+		} else if( DIFF_TICK(timer->gettick(),hist->tick) < ddos_interval ) {// connection within ddos_interval
 				hist->tick = timer->gettick();
-				if( hist->count++ >= ddos_count )
-				{// DDoS attack detected
+				if( ++hist->count >= ddos_count ) {// DDoS attack detected
 					hist->ddos = 1;
 					ShowWarning("connect_check: DDoS Attack detected from %d.%d.%d.%d!\n", CONVIP(ip));
 					return (connect_ok == 2 ? 1 : 0);
 				}
 				return connect_ok;
-			} else
-			{// not within ddos_interval, clear data
-				hist->tick  = timer->gettick();
-				hist->count = 0;
-				return connect_ok;
-			}
+		} else {// not within ddos_interval, clear data
+			hist->tick  = timer->gettick();
+			hist->count = 0;
+			return connect_ok;
 		}
-		hist = hist->next;
 	}
 	// IP not found, add to history
 	CREATE(hist, ConnectHistory, 1);
-	memset(hist, 0, sizeof(ConnectHistory));
 	hist->ip   = ip;
 	hist->tick = timer->gettick();
-	hist->next = connect_history[ip&0xFFFF];
-	connect_history[ip&0xFFFF] = hist;
+	uidb_put(connect_history, ip, hist);
 	return connect_ok;
 }
 
 /// Timer function.
 /// Deletes old connection history records.
 static int connect_check_clear(int tid, int64 tick, int id, intptr_t data) {
-	int i;
 	int clear = 0;
 	int list  = 0;
-	ConnectHistory root;
-	ConnectHistory* prev_hist;
-	ConnectHistory* hist;
-
-	for( i=0; i < 0x10000 ; ++i ){
-		prev_hist = &root;
-		root.next = hist = connect_history[i];
-		while( hist ){
-			if( (!hist->ddos && DIFF_TICK(tick,hist->tick) > ddos_interval*3) ||
-					(hist->ddos && DIFF_TICK(tick,hist->tick) > ddos_autoreset) )
+	ConnectHistory *hist = NULL;
+	DBIterator *iter;
+	
+	if( !db_size(connect_history) )
+		return 0;
+	
+	iter = db_iterator(connect_history);
+	
+	for( hist = dbi_first(iter); dbi_exists(iter); hist = dbi_next(iter) ){
+		if( (!hist->ddos && DIFF_TICK(tick,hist->tick) > ddos_interval*3) ||
+			(hist->ddos && DIFF_TICK(tick,hist->tick) > ddos_autoreset) )
 			{// Remove connection history
-				prev_hist->next = hist->next;
-				aFree(hist);
-				hist = prev_hist->next;
+				uidb_remove(connect_history, hist->ip);
 				clear++;
-			} else {
-				prev_hist = hist;
-				hist = hist->next;
 			}
-			list++;
-		}
-		connect_history[i] = root.next;
-	}
+		list++;
+ 	}
+	
+	dbi_destroy(iter);
+	
 	if( access_debug ){
 		ShowInfo("connect_check_clear: Cleared %d of %d from IP list.\n", clear, list);
 	}
+	
 	return list;
 }
 
@@ -1220,17 +1204,8 @@ void socket_final(void)
 {
 	int i;
 #ifndef MINICORE
-	ConnectHistory* hist;
-	ConnectHistory* next_hist;
-
-	for( i=0; i < 0x10000; ++i ){
-		hist = connect_history[i];
-		while( hist ){
-			next_hist = hist->next;
-			aFree(hist);
-			hist = next_hist;
-		}
-	}
+	if( connect_history )
+		db_destroy(connect_history);
 	if( access_allow )
 		aFree(access_allow);
 	if( access_deny )
@@ -1422,7 +1397,7 @@ void socket_init(void)
 
 #ifndef MINICORE
 	// Delete old connection history every 5 minutes
-	memset(connect_history, 0, sizeof(connect_history));
+	connect_history = uidb_alloc(DB_OPT_RELEASE_DATA);
 	timer->add_func_list(connect_check_clear, "connect_check_clear");
 	timer->add_interval(timer->gettick()+1000, connect_check_clear, 0, 0, 5*60*1000);
 #endif
