@@ -2451,6 +2451,33 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 				if (!i) i = 1;
 				pc->getzeny(sd, 1+rnd()%i, LOG_TYPE_PICKDROP_MONSTER, NULL);
 			}
+
+			// process quest-granted extra drop bonuses
+			for (i = 0; i < sd->avail_quests; i++) {
+				struct quest_db *qi = quest->db(sd->quest_log[i].quest_id);
+				int j;
+				for (j = 0; j < qi->dropitem_count; j++) {
+					// FIXME: Is it affected by server rates?
+					struct item item;
+					struct item_data *data;
+					if (qi->dropitem[j].mob_id != 0 && qi->dropitem[j].mob_id != md->class_)
+						continue;
+					drop_rate = qi->dropitem[j].rate;
+					if (rnd()%10000 >= drop_rate)
+						continue;
+					itemid = qi->dropitem[j].nameid;
+					if (!(data = itemdb->exists(itemid)))
+						continue;
+					memset(&item,0,sizeof(item));
+					item.nameid=itemid;
+					item.identify= itemdb->isidentified2(data);
+					if((temp = pc->additem(sd, &item, 1, LOG_TYPE_PICKDROP_PLAYER)) != 0) {
+						clif->additem(sd, 0, 0, temp);
+						map->addflooritem(&item, 1, sd->bl.m, sd->bl.x, sd->bl.y, sd->status.char_id, 0, 0, 1);
+					}
+					logs->pick_mob(md, LOG_TYPE_PICKDROP_MONSTER, -1, &item, data);
+				}
+			}
 		}
 
 		// process items looted by the mob

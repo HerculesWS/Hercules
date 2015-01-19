@@ -387,6 +387,14 @@ struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *sour
 	 *     },
 	 *     ... (can repeated up to MAX_QUEST_OBJECTIVES times)
 	 * )
+	 * Drops: (
+	 *     {
+	 *         ItemId: Item ID to drop [int]
+	 *         Rate: Drop rate         [int]
+	 *         MobId: Mob ID to match  [int, optional]
+	 *     },
+	 *     ... (can be repeated)
+	 * )
 	 */
 	if (!libconfig->setting_lookup_int(cs, "Id", &quest_id)) {
 		ShowWarning("quest_read_db: Missing id in \"%s\", entry #%d, skipping.\n", source, n);
@@ -427,6 +435,28 @@ struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *sour
 			entry->num_objectives++;
 		}
 	}
+
+	if ((t=libconfig->setting_get_member(cs, "Drops")) && config_setting_is_list(t)) {
+		int i, len = libconfig->setting_length(t);
+		for (i = 0; i < len; i++) {
+			config_setting_t *tt = libconfig->setting_get_elem(t, i);
+			int mob_id = 0, nameid = 0, rate = 0;
+			if (!tt)
+				break;
+			if (!config_setting_is_group(tt))
+				continue;
+			if (!libconfig->setting_lookup_int(tt, "MobId", &mob_id))
+				mob_id = 0;
+			if (!libconfig->setting_lookup_int(tt, "ItemId", &nameid) || !itemdb->exists(nameid))
+				continue;
+			if (!libconfig->setting_lookup_int(tt, "Rate", &rate) || rate <= 0)
+				continue;
+			RECREATE(entry->dropitem, struct quest_dropitem, ++entry->dropitem_count);
+			entry->dropitem[entry->dropitem_count-1].mob_id = mob_id;
+			entry->dropitem[entry->dropitem_count-1].nameid = nameid;
+			entry->dropitem[entry->dropitem_count-1].rate = rate;
+		}
+	}
 	return entry;
 }
 
@@ -455,6 +485,8 @@ int quest_read_db(void)
 
 		if (quest->db_data[entry->id] != NULL) {
 			ShowWarning("quest_read_db: Duplicate quest %d.\n", entry->id);
+			if (quest->db_data[entry->id]->dropitem_count)
+				aFree(quest->db_data[entry->id]->dropitem);
 			aFree(quest->db_data[entry->id]);
 		}
 		quest->db_data[entry->id] = entry;
@@ -507,6 +539,9 @@ void quest_clear_db(void) {
 
 	for (i = 0; i < MAX_QUEST_DB; i++) {
 		if (quest->db_data[i]) {
+			if (quest->db_data[i]->dropitem_count) {
+				aFree(quest->db_data[i]->dropitem);
+			}
 			aFree(quest->db_data[i]);
 			quest->db_data[i] = NULL;
 		}
