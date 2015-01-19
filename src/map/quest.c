@@ -29,6 +29,7 @@
 #include "../common/conf.h"
 #include "../common/malloc.h"
 #include "../common/nullpo.h"
+#include "../common/random.h"
 #include "../common/showmsg.h"
 #include "../common/socket.h"
 #include "../common/strlib.h"
@@ -245,7 +246,7 @@ int quest_update_objective_sub(struct block_list *bl, va_list ap) {
 
 
 /**
- * Updates the quest objectives for a character after killing a monster.
+ * Updates the quest objectives for a character after killing a monster, including the handling of quest-granted drops.
  *
  * @param sd     Character's data
  * @param mob_id Monster ID
@@ -253,19 +254,42 @@ int quest_update_objective_sub(struct block_list *bl, va_list ap) {
 void quest_update_objective(TBL_PC *sd, int mob_id) {
 	int i,j;
 
-	for( i = 0; i < sd->avail_quests; i++ ) {
+	for (i = 0; i < sd->avail_quests; i++) {
 		struct quest_db *qi = NULL;
 
-		if( sd->quest_log[i].state != Q_ACTIVE ) // Skip inactive quests
+		if (sd->quest_log[i].state != Q_ACTIVE) // Skip inactive quests
 			continue;
 
 		qi = quest->db(sd->quest_log[i].quest_id);
 
-		for( j = 0; j < qi->num_objectives; j++ ) {
-			if( qi->mob[j] == mob_id && sd->quest_log[i].count[j] < qi->count[j] )  {
+		for (j = 0; j < qi->num_objectives; j++) {
+			if (qi->mob[j] == mob_id && sd->quest_log[i].count[j] < qi->count[j]) {
 				sd->quest_log[i].count[j]++;
 				sd->save_quest = true;
 				clif->quest_update_objective(sd, &sd->quest_log[i]);
+			}
+		}
+
+		// process quest-granted extra drop bonuses
+		for (j = 0; j < qi->dropitem_count; j++) {
+			struct quest_dropitem *dropitem = &qi->dropitem[j];
+			struct item item;
+			struct item_data *data = NULL;
+			int temp;
+			if (dropitem->mob_id != 0 && dropitem->mob_id != mob_id)
+				continue;
+			// TODO: Should this be affected by server rates?
+			if (rnd()%10000 >= dropitem->rate)
+				continue;
+			if (!(data = itemdb->exists(dropitem->nameid)))
+				continue;
+			memset(&item,0,sizeof(item));
+			item.nameid = dropitem->nameid;
+			item.identify = itemdb->isidentified2(data);
+			item.amount = 1;
+			if((temp = pc->additem(sd, &item, 1, LOG_TYPE_OTHER)) != 0) { // TODO: We might want a new log type here?
+				// Failed to obtain the item
+				clif->additem(sd, 0, 0, temp);
 			}
 		}
 	}
@@ -387,6 +411,14 @@ struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *sour
 	 *     },
 	 *     ... (can repeated up to MAX_QUEST_OBJECTIVES times)
 	 * )
+	 * Drops: (
+	 *     {
+	 *         ItemId: Item ID to drop [int]
+	 *         Rate: Drop rate         [int]
+	 *         MobId: Mob ID to match  [int, optional]
+	 *     },
+	 *     ... (can be repeated)
+	 * )
 	 */
 	if (!libconfig->setting_lookup_int(cs, "Id", &quest_id)) {
 		ShowWarning("quest_read_db: Missing id in \"%s\", entry #%d, skipping.\n", source, n);
@@ -428,6 +460,30 @@ struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *sour
 			entry->num_objectives++;
 		}
 	}
+
+	if ((t=libconfig->setting_get_member(cs, "Drops")) && config_setting_is_list(t)) {
+		int i, len = libconfig->setting_length(t);
+		for (i = 0; i < len; i++) {
+			config_setting_t *tt = libconfig->setting_get_elem(t, i);
+			int mob_id = 0, nameid = 0, rate = 0;
+			if (!tt)
+				break;
+			if (!config_setting_is_group(tt))
+				continue;
+			if (!libconfig->setting_lookup_int(tt, "MobId", &mob_id))
+				mob_id = 0; // Zero = any monster
+			if (mob_id < 0)
+				continue;
+			if (!libconfig->setting_lookup_int(tt, "ItemId", &nameid) || !itemdb->exists(nameid))
+				continue;
+			if (!libconfig->setting_lookup_int(tt, "Rate", &rate) || rate <= 0)
+				continue;
+			RECREATE(entry->dropitem, struct quest_dropitem, ++entry->dropitem_count);
+			entry->dropitem[entry->dropitem_count-1].mob_id = mob_id;
+			entry->dropitem[entry->dropitem_count-1].nameid = nameid;
+			entry->dropitem[entry->dropitem_count-1].rate = rate;
+		}
+	}
 	return entry;
 }
 
@@ -442,9 +498,10 @@ int quest_read_db(void)
 	config_t quest_db_conf;
 	config_setting_t *qdb = NULL, *q = NULL;
 	int i = 0, count = 0;
+	const char *filename = "quest_db.conf";
 
-	sprintf(filepath, "%s/quest_db.txt", map->db_path);
-	if (libconfig->read_file(&quest_db_conf, filepath) || !(qdb = libconfig->setting_get_member(quest_db_conf.root, "quest_db"))) {
+	sprintf(filepath, "%s/%s", map->db_path, filename);
+	if (libconfig->read_file(&quest_db_conf, filepath) || !(qdb = libconfig->setting_get_member(quest_db_conf.root, filename))) {
 		ShowError("can't read %s\n", filepath);
 		return -1;
 	}
@@ -456,13 +513,15 @@ int quest_read_db(void)
 
 		if (quest->db_data[entry->id] != NULL) {
 			ShowWarning("quest_read_db: Duplicate quest %d.\n", entry->id);
+			if (quest->db_data[entry->id]->dropitem)
+				aFree(quest->db_data[entry->id]->dropitem);
 			aFree(quest->db_data[entry->id]);
 		}
 		quest->db_data[entry->id] = entry;
 
 		count++;
 	}
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, "quest_db.txt");
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
 	return count;
 }
 
@@ -508,6 +567,8 @@ void quest_clear_db(void) {
 
 	for (i = 0; i < MAX_QUEST_DB; i++) {
 		if (quest->db_data[i]) {
+			if (quest->db_data[i]->dropitem)
+				aFree(quest->db_data[i]->dropitem);
 			aFree(quest->db_data[i]);
 			quest->db_data[i] = NULL;
 		}

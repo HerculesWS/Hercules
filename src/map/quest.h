@@ -12,12 +12,20 @@
 
 #define MAX_QUEST_DB (60355+1) // Highest quest ID + 1
 
+struct quest_dropitem {
+	int mob_id;
+	int nameid;
+	int rate;
+};
+
 struct quest_db {
 	int id;
 	unsigned int time;
 	int mob[MAX_QUEST_OBJECTIVES];
 	int count[MAX_QUEST_OBJECTIVES];
 	int num_objectives;
+	int dropitem_count;
+	struct quest_dropitem *dropitem;
 	//char name[NAME_LENGTH];
 };
 
