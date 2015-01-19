@@ -3945,6 +3945,8 @@ struct {
 	struct HPMHookPoint *HP_pc_expire_check_post;
 	struct HPMHookPoint *HP_pc_db_checkid_pre;
 	struct HPMHookPoint *HP_pc_db_checkid_post;
+	struct HPMHookPoint *HP_pc_validate_levels_pre;
+	struct HPMHookPoint *HP_pc_validate_levels_post;
 	struct HPMHookPoint *HP_pc_autotrade_load_pre;
 	struct HPMHookPoint *HP_pc_autotrade_load_post;
 	struct HPMHookPoint *HP_pc_autotrade_update_pre;
@@ -9098,6 +9100,8 @@ struct {
 	int HP_pc_expire_check_post;
 	int HP_pc_db_checkid_pre;
 	int HP_pc_db_checkid_post;
+	int HP_pc_validate_levels_pre;
+	int HP_pc_validate_levels_post;
 	int HP_pc_autotrade_load_pre;
 	int HP_pc_autotrade_load_post;
 	int HP_pc_autotrade_update_pre;
