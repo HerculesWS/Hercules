@@ -26,6 +26,7 @@
 #include "script.h"
 #include "unit.h"
 #include "../common/cbasetypes.h"
+#include "../common/conf.h"
 #include "../common/malloc.h"
 #include "../common/nullpo.h"
 #include "../common/showmsg.h"
@@ -361,77 +362,107 @@ int quest_check(TBL_PC *sd, int quest_id, enum quest_check_type type) {
 }
 
 /**
+ * Reads and parses an entry from the quest_db.
+ *
+ * @param cs     The config setting containing the entry.
+ * @param n      The sequential index of the current config setting.
+ * @param source The source configuration file.
+ * @return The parsed quest entry.
+ * @retval NULL in case of errors.
+ */
+struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *source)
+{
+	struct quest_db *entry = NULL;
+	config_setting_t *t = NULL;
+	int i32 = 0, quest_id;
+	const char *str = NULL;
+	/*
+	 * Id: Quest ID                    [int]
+	 * Name: Quest Name                [string]
+	 * TimeLimit: Time Limit (seconds) [int, optional]
+	 * Targets: (                      [array, optional]
+	 *     {
+	 *         MobId: Mob ID           [int]
+	 *         Count:                  [int]
+	 *     },
+	 *     ... (can repeated up to MAX_QUEST_OBJECTIVES times)
+	 * )
+	 */
+	if (!libconfig->setting_lookup_int(cs, "Id", &quest_id)) {
+		ShowWarning("quest_read_db: Missing id in \"%s\", entry #%d, skipping.\n", source, n);
+		return NULL;
+	}
+	if (quest_id < 0 || quest_id >= MAX_QUEST_DB) {
+		ShowWarning("quest_read_db: Invalid quest ID '%d' in \"%s\", entry #%d (min: 0, max: %d), skipping.\n", quest_id, source, n, MAX_QUEST_DB);
+		return NULL;
+	}
+
+	if (!libconfig->setting_lookup_string(cs, "Name", &str) || !*str) {
+		ShowWarning("quest_read_db_sub: Missing Name in quest %d of \"%s\", skipping.\n", quest_id, source);
+		return NULL;
+	}
+	//safestrncpy(qi.name, str, sizeof(qi.name));
+
+	entry = aMalloc(sizeof(struct quest_db));
+
+	if (libconfig->setting_lookup_int(cs, "TimeLimit", &i32)) // This is an unsigned value, do not check for >= 0
+		entry->time = (unsigned int)i32;
+
+	if ((t=libconfig->setting_get_member(cs, "Targets")) && config_setting_is_list(t)) {
+		int i, len = libconfig->setting_length(t);
+		for (i = 0; i < len && entry->num_objectives < MAX_QUEST_OBJECTIVES; i++) {
+			config_setting_t *tt = libconfig->setting_get_elem(t, i);
+			if (!tt)
+				break;
+			if (!config_setting_is_group(tt))
+				continue;
+			if (libconfig->setting_lookup_int(tt, "MobId", &i32) && i32 > 0)
+				entry->mob[entry->num_objectives] = i32;
+			if (libconfig->setting_lookup_int(tt, "Count", &i32) && i32 > 0) {
+				entry->count[entry->num_objectives] = i32;
+			} else {
+				entry->mob[entry->num_objectives] = 0;
+				continue;
+			}
+			entry->num_objectives++;
+		}
+	}
+	return entry;
+}
+
+/**
  * Loads quests from the quest db.
  *
  * @return Number of loaded quests, or -1 if the file couldn't be read.
  */
-int quest_read_db(void) {
-	// TODO[Haru] This duplicates some sv_readdb functionalities, and it would be
-	// nice if it could be replaced by it. The reason why it wasn't is probably
-	// because we need to accept commas (which is also used as delimiter) in the
-	// last field (quest name), and sv_readdb isn't capable of doing so.
-	FILE *fp;
-	char line[1024];
-	int i, count = 0;
-	char *str[20], *p, *np;
-	struct quest_db entry;
+int quest_read_db(void)
+{
+	char filepath[256];
+	config_t quest_db_conf;
+	config_setting_t *qdb = NULL, *q = NULL;
+	int i = 0, count = 0;
 
-	sprintf(line, "%s/quest_db.txt", map->db_path);
-	if ((fp=fopen(line,"r"))==NULL) {
-		ShowError("can't read %s\n", line);
+	sprintf(filepath, "%s/quest_db.txt", map->db_path);
+	if (libconfig->read_file(&quest_db_conf, filepath) || !(qdb = libconfig->setting_get_member(quest_db_conf.root, "quest_db"))) {
+		ShowError("can't read %s\n", filepath);
 		return -1;
 	}
 
-	while (fgets(line, sizeof(line), fp)) {
-		if (line[0]=='/' && line[1]=='/')
-			continue;
-		memset(str,0,sizeof(str));
-
-		for (i = 0, p = line; i < 8; i++) {
-			if (( np = strchr(p,',') ) != NULL) {
-				str[i] = p;
-				*np = 0;
-				p = np + 1;
-			} else if (str[0] == NULL) {
-				break;
-			} else {
-				ShowError("quest_read_db: insufficient columns in line %s\n", line);
-				continue;
-			}
-		}
-		if (str[0] == NULL)
+	while ((q = libconfig->setting_get_elem(qdb, i++))) {
+		struct quest_db *entry = quest->read_db_sub(q, i-1, filepath);
+		if (!entry)
 			continue;
 
-		memset(&entry, 0, sizeof(entry));
-
-		entry.id = atoi(str[0]);
-
-		if (entry.id < 0 || entry.id >= MAX_QUEST_DB) {
-			ShowError("quest_read_db: Invalid quest ID '%d' in line '%s' (min: 0, max: %d.)\n", entry.id, line, MAX_QUEST_DB);
-			continue;
+		if (quest->db_data[entry->id] != NULL) {
+			ShowWarning("quest_read_db: Duplicate quest %d.\n", entry->id);
+			aFree(quest->db_data[entry->id]);
 		}
+		quest->db_data[entry->id] = entry;
 
-		entry.time = atoi(str[1]);
-
-		for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
-			entry.mob[i] = atoi(str[2*i+2]);
-			entry.count[i] = atoi(str[2*i+3]);
-
-			if (!entry.mob[i] || !entry.count[i])
-				break;
-		}
-
-		entry.num_objectives = i;
-
-		if (quest->db_data[entry.id] == NULL)
-			quest->db_data[entry.id] = aMalloc(sizeof(struct quest_db));
-
-		memcpy(quest->db_data[entry.id], &entry, sizeof(struct quest_db));
 		count++;
 	}
-	fclose(fp);
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, "quest_db.txt");
-	return 0;
+	return count;
 }
 
 /**
@@ -537,4 +568,5 @@ void quest_defaults(void) {
 	quest->check = quest_check;
 	quest->clear = quest_clear_db;
 	quest->read_db = quest_read_db;
+	quest->read_db_sub = quest_read_db_sub;
 }
