@@ -56,14 +56,13 @@ const char* geoip_getcountry(uint32 ipnum)
 {
 	int depth;
 	unsigned int x;
-	const unsigned char *buf;
 	unsigned int offset = 0;
 
 	if( geoip->data->active == false )
 		return geoip_countryname[0];
 
 	for (depth = 31; depth >= 0; depth--) {
-		buf = geoip->data->cache + (long)6 *offset;
+		const unsigned char *buf = geoip->data->cache + (long)6 *offset;
 		if (ipnum & (1 << depth)) {
 			/* Take the right-hand branch */
 			x =   (buf[3*1 + 0] << (0*8))

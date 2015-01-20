@@ -120,7 +120,7 @@ int pet_attackskill(struct pet_data *pd, int target_id) {
 		if (inf & INF_GROUND_SKILL)
 			unit->skilluse_pos(&pd->bl, bl->x, bl->y, pd->a_skill->id, pd->a_skill->lv);
 		else //Offensive self skill? Could be stuff like GX.
-			unit->skilluse_id(&pd->bl,(inf&INF_SELF_SKILL?pd->bl.id:bl->id), pd->a_skill->id, pd->a_skill->lv);
+			unit->skilluse_id(&pd->bl,(inf&INF_SELF_SKILL) ? pd->bl.id : bl->id, pd->a_skill->id, pd->a_skill->lv);
 		return 1; //Skill invoked.
 	}
 	return 0;
@@ -786,14 +786,15 @@ int pet_randomwalk(struct pet_data *pd, int64 tick) {
 
 	Assert((pd->msd == 0) || (pd->msd->pd == pd));
 
-	if(DIFF_TICK(pd->next_walktime,tick) < 0 && unit->can_move(&pd->bl)) {
+	if (DIFF_TICK(pd->next_walktime,tick) < 0 && unit->can_move(&pd->bl)) {
 		const int retrycount=20;
-		int i,x,y,c,d=12-pd->move_fail_count;
-		if(d<5) d=5;
-		for(i=0;i<retrycount;i++){
+		int i,c,d=12-pd->move_fail_count;
+		if (d < 5)
+			d=5;
+		for (i = 0; i < retrycount; i++) {
 			int r=rnd();
-			x=pd->bl.x+r%(d*2+1)-d;
-			y=pd->bl.y+r/(d*2+1)%(d*2+1)-d;
+			int x=pd->bl.x+r%(d*2+1)-d;
+			int y=pd->bl.y+r/(d*2+1)%(d*2+1)-d;
 			if(map->getcell(pd->bl.m,x,y,CELL_CHKPASS) && unit->walktoxy(&pd->bl,x,y,0)) {
 				pd->move_fail_count=0;
 				break;
@@ -976,10 +977,11 @@ int pet_ai_sub_hard_lootsearch(struct block_list *bl,va_list ap)
 
 int pet_delay_item_drop(int tid, int64 tick, int id, intptr_t data) {
 	struct item_drop_list *list;
-	struct item_drop *ditem, *ditem_prev;
+	struct item_drop *ditem;
 	list=(struct item_drop_list *)data;
 	ditem = list->item;
 	while (ditem) {
+		struct item_drop *ditem_prev;
 		map->addflooritem(&ditem->item_data,ditem->item_data.amount,
 			list->m,list->x,list->y,
 			list->first_charid,list->second_charid,list->third_charid,0);
@@ -996,7 +998,6 @@ int pet_lootitem_drop(struct pet_data *pd,struct map_session_data *sd)
 	int i,flag=0;
 	struct item_drop_list *dlist;
 	struct item_drop *ditem;
-	struct item *it;
 	if(!pd || !pd->loot || !pd->loot->count)
 		return 0;
 	dlist = ers_alloc(pet->item_drop_list_ers, struct item_drop_list);
@@ -1008,18 +1009,17 @@ int pet_lootitem_drop(struct pet_data *pd,struct map_session_data *sd)
 	dlist->third_charid = 0;
 	dlist->item = NULL;
 
-	for(i=0;i<pd->loot->count;i++) {
-		it = &pd->loot->item[i];
-		if(sd){
-			if((flag = pc->additem(sd,it,it->amount,LOG_TYPE_PICKDROP_PLAYER))){
+	for (i = 0; i < pd->loot->count; i++) {
+		struct item *it = &pd->loot->item[i];
+		if (sd) {
+			if ((flag = pc->additem(sd,it,it->amount,LOG_TYPE_PICKDROP_PLAYER))) {
 				clif->additem(sd,0,0,flag);
 				ditem = ers_alloc(pet->item_drop_ers, struct item_drop);
 				memcpy(&ditem->item_data, it, sizeof(struct item));
 				ditem->next = dlist->item;
 				dlist->item = ditem;
 			}
-		}
-		else {
+		} else {
 			ditem = ers_alloc(pet->item_drop_ers, struct item_drop);
 			memcpy(&ditem->item_data, it, sizeof(struct item));
 			ditem->next = dlist->item;
@@ -1163,7 +1163,6 @@ int pet_skill_support_timer(int tid, int64 tick, int id, intptr_t data) {
 int read_petdb()
 {
 	char* filename[] = {"pet_db.txt","pet_db2.txt"};
-	FILE *fp;
 	int nameid,i,j,k;
 
 	// Remove any previous scripts in case reloaddb was invoked.
@@ -1188,6 +1187,7 @@ int read_petdb()
 	for( i = 0; i < ARRAYLENGTH(filename); i++ ) {
 		char line[1024];
 		int lines, entries;
+		FILE *fp;
 
 		sprintf(line, "%s/%s", map->db_path, filename[i]);
 		fp=fopen(line,"r");

@@ -95,7 +95,6 @@ struct hplugin *hplugin_create(void) {
 }
 #define HPM_POP(x) { #x , x }
 bool hplugin_populate(struct hplugin *plugin, const char *filename) {
-	void **Link;
 	struct {
 		const char* name;
 		void *Ref;
@@ -113,7 +112,8 @@ bool hplugin_populate(struct hplugin *plugin, const char *filename) {
 	int i, length = ARRAYLENGTH(ToLink);
 
 	for(i = 0; i < length; i++) {
-		if( !( Link = plugin_import(plugin->dll, ToLink[i].name,void **) ) ) {
+		void **Link;
+		if (!( Link = plugin_import(plugin->dll, ToLink[i].name,void **))) {
 			ShowWarning("HPM:plugin_load: failed to retrieve '%s' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", ToLink[i].name, filename);
 			HPM->unload(plugin);
 			return false;
@@ -268,7 +268,7 @@ struct hplugin *hplugin_load(const char* filename) {
 }
 
 void hplugin_unload(struct hplugin* plugin) {
-	unsigned int i = plugin->idx, cursor = 0;
+	unsigned int i = plugin->idx;
 
 	if( plugin->filename )
 		aFree(plugin->filename);
@@ -277,7 +277,8 @@ void hplugin_unload(struct hplugin* plugin) {
 	/* TODO: for manual packet unload */
 	/* - Go through known packets and unlink any belonging to the plugin being removed */
 	aFree(plugin);
-	if( !HPM->off ) {
+	if (!HPM->off) {
+		int cursor = 0;
 		HPM->plugins[i] = NULL;
 		for(i = 0; i < HPM->plugin_count; i++) {
 			if( HPM->plugins[i] == NULL )
@@ -838,14 +839,13 @@ void hpm_init(void) {
 #endif
 	return;
 }
-void hpm_memdown(void) {
-	unsigned int i;
-
+void hpm_memdown(void)
+{
 	/* this memory is handled outside of the server's memory manager and thus cleared after memory manager goes down */
 
-	if (HPM->fnames)
-	{
-		for( i = 0; i < HPM->fnamec; i++ ) {
+	if (HPM->fnames) {
+		unsigned int i;
+		for (i = 0; i < HPM->fnamec; i++) {
 			free(HPM->fnames[i].name);
 		}
 		free(HPM->fnames);

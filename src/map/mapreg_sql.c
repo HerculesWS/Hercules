@@ -220,13 +220,11 @@ void script_load_mapreg(void) {
  * Saves permanent variables to database.
  */
 void script_save_mapreg(void) {
-	DBIterator* iter;
-	struct mapreg_save *m = NULL;
-
-	if( mapreg->dirty ) {
-		iter = db_iterator(mapreg->regs.vars);
-		for( m = dbi_first(iter); dbi_exists(iter); m = dbi_next(iter) ) {
-			if( m->save ) {
+	if (mapreg->dirty) {
+		DBIterator *iter = db_iterator(mapreg->regs.vars);
+		struct mapreg_save *m;
+		for (m = dbi_first(iter); dbi_exists(iter); m = dbi_next(iter)) {
+			if (m->save) {
 				int num = script_getvarid(m->uid);
 				int i   = script_getvaridx(m->uid);
 				const char* name = script->get_str(num);

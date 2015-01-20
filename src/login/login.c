@@ -677,14 +677,12 @@ void login_fromchar_parse_account_offline(int fd)
 
 void login_fromchar_parse_online_accounts(int fd, int id)
 {
-	struct online_login_data *p;
-	int aid;
 	uint32 i, users;
 	login->online_db->foreach(login->online_db, login->online_db_setoffline, id); //Set all chars from this char-server offline first
 	users = RFIFOW(fd,4);
 	for (i = 0; i < users; i++) {
-		aid = RFIFOL(fd,6+i*4);
-		p = idb_ensure(login->online_db, aid, login->create_online_user);
+		int aid = RFIFOL(fd,6+i*4);
+		struct online_login_data *p = idb_ensure(login->online_db, aid, login->create_online_user);
 		p->char_server = id;
 		if (p->waiting_disconnect != INVALID_TIMER)
 		{
@@ -734,15 +732,14 @@ bool login_fromchar_parse_wrong_pincode(int fd)
 	struct mmo_account acc;
 
 	if( accounts->load_num(accounts, &acc, RFIFOL(fd,2) ) ) {
-		struct online_login_data* ld;
+		struct online_login_data* ld = (struct online_login_data*)idb_get(login->online_db,acc.account_id);
 
-		if( ( ld = (struct online_login_data*)idb_get(login->online_db,acc.account_id) ) == NULL )
-		{
+		if (ld == NULL) {
 			RFIFOSKIP(fd,6);
 			return true;
 		}
 
-		login_log( host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed" );
+		login_log(host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed");
 	}
 
 	login->remove_online_user(acc.account_id);
@@ -1814,12 +1811,12 @@ int login_config_read(const char* cfgName)
 
 			if (sscanf(w2, "%d, %32s", &group, md5) == 2) {
 				struct client_hash_node *nnode;
-				int i;
 				CREATE(nnode, struct client_hash_node, 1);
 
 				if (strcmpi(md5, "disabled") == 0) {
 					nnode->hash[0] = '\0';
 				} else {
+					int i;
 					for (i = 0; i < 32; i += 2) {
 						char buf[3];
 						unsigned int byte;

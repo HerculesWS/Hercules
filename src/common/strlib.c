@@ -946,7 +946,6 @@ bool sv_readdb(const char* directory, const char* filename, char delim, int minc
 	char** fields; // buffer for fields ([0] is reserved)
 	int columns, fields_length;
 	char path[1024], line[1024];
-	char* match;
 
 	snprintf(path, sizeof(path), "%s/%s", directory, filename);
 
@@ -962,9 +961,11 @@ bool sv_readdb(const char* directory, const char* filename, char delim, int minc
 
 	// process rows one by one
 	while( fgets(line, sizeof(line), fp) ) {
+		char *match;
 		lines++;
 
-		if( ( match = strstr(line, "//") ) != NULL ) {// strip comments
+		if ((match = strstr(line, "//") ) != NULL) {
+			// strip comments
 			match[0] = 0;
 		}
 
@@ -1039,13 +1040,11 @@ int StringBuf_Printf(StringBuf *self, const char *fmt, ...) {
 
 /// Appends the result of vprintf to the StringBuf
 int StringBuf_Vprintf(StringBuf* self, const char* fmt, va_list ap) {
-	int n, off;
-	size_t size;
-
 	for(;;) {
 		va_list apcopy;
+		int n, off;
 		/* Try to print in the allocated space. */
-		size = self->max_ - (self->ptr_ - self->buf_);
+		size_t size = self->max_ - (self->ptr_ - self->buf_);
 		va_copy(apcopy, ap);
 		n = vsnprintf(self->ptr_, size, fmt, apcopy);
 		va_end(apcopy);

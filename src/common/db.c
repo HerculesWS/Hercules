@@ -497,7 +497,6 @@ static void db_rebalance_erase(DBNode *node, DBNode **root)
 	DBNode *y = node;
 	DBNode *x = NULL;
 	DBNode *x_parent = NULL;
-	DBNode *w;
 
 	DB_COUNTSTAT(db_rebalance_erase);
 	// Select where to change the tree
@@ -565,6 +564,7 @@ static void db_rebalance_erase(DBNode *node, DBNode **root)
 	// Restore the RED-BLACK properties
 	if (y->color != RED) {
 		while (x != *root && (x == NULL || x->color == BLACK)) {
+			DBNode *w;
 			if (x == x_parent->left) {
 				w = x_parent->right;
 				if (w->color == RED) {
@@ -1526,7 +1526,6 @@ static bool db_obj_exists(DBMap* self, DBKey key)
 {
 	DBMap_impl* db = (DBMap_impl*)self;
 	DBNode *node;
-	int c;
 	bool found = false;
 
 	DB_COUNTSTAT(db_exists);
@@ -1548,7 +1547,7 @@ static bool db_obj_exists(DBMap* self, DBKey key)
 	db_free_lock(db);
 	node = db->ht[db->hash(key, db->maxlen)%HASH_SIZE];
 	while (node) {
-		c = db->cmp(key, node->key, db->maxlen);
+		int c = db->cmp(key, node->key, db->maxlen);
 		if (c == 0) {
 			if (!(node->deleted)) {
 				db->cache = node;
@@ -1577,7 +1576,6 @@ static DBData* db_obj_get(DBMap* self, DBKey key)
 {
 	DBMap_impl* db = (DBMap_impl*)self;
 	DBNode *node;
-	int c;
 	DBData *data = NULL;
 
 	DB_COUNTSTAT(db_get);
@@ -1600,7 +1598,7 @@ static DBData* db_obj_get(DBMap* self, DBKey key)
 	db_free_lock(db);
 	node = db->ht[db->hash(key, db->maxlen)%HASH_SIZE];
 	while (node) {
-		c = db->cmp(key, node->key, db->maxlen);
+		int c = db->cmp(key, node->key, db->maxlen);
 		if (c == 0) {
 			if (!(node->deleted)) {
 				data = &node->data;
@@ -1970,7 +1968,7 @@ static int db_obj_remove(DBMap* self, DBKey key, DBData *out_data)
 	DBMap_impl* db = (DBMap_impl*)self;
 	DBNode *node;
 	unsigned int hash;
-	int c = 0, retval = 0;
+	int retval = 0;
 
 	DB_COUNTSTAT(db_remove);
 	if (db == NULL) return 0; // nullpo candidate
@@ -1988,7 +1986,7 @@ static int db_obj_remove(DBMap* self, DBKey key, DBData *out_data)
 	db_free_lock(db);
 	hash = db->hash(key, db->maxlen)%HASH_SIZE;
 	for(node = db->ht[hash]; node; ){
-		c = db->cmp(key, node->key, db->maxlen);
+		int c = db->cmp(key, node->key, db->maxlen);
 		if (c == 0) {
 			if (!(node->deleted)) {
 				if (db->cache == node)

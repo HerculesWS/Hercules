@@ -54,7 +54,6 @@ static int inter_party_check_lv(struct party_data *p) {
 static void inter_party_calc_state(struct party_data *p)
 {
 	int i;
-	unsigned int lv;
 	p->min_lv = UINT_MAX;
 	p->max_lv = 0;
 	p->party.count =
@@ -83,13 +82,12 @@ static void inter_party_calc_state(struct party_data *p)
 		);
 	}
 	//max/min levels.
-	for(i=0;i<MAX_PARTY;i++){
-		lv=p->party.member[i].lv;
+	for (i = 0; i < MAX_PARTY; i++) {
+		unsigned int lv = p->party.member[i].lv;
 		if (!lv) continue;
-		if(p->party.member[i].online &&
-			//On families, the kid is not counted towards exp share rules.
-			p->party.member[i].char_id != p->family)
-		{
+		if (p->party.member[i].online
+		 && p->party.member[i].char_id != p->family /* In families, the kid is not counted towards exp share rules. */
+		) {
 			if( lv < p->min_lv ) p->min_lv=lv;
 			if( p->max_lv < lv ) p->max_lv=lv;
 		}

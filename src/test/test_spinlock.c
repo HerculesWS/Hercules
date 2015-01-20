@@ -20,7 +20,7 @@
 
 
 static SPIN_LOCK lock;
-static int val = 0;
+static unsigned int val = 0;
 static volatile int32 done_threads = 0;
 
 static  void *worker(void *p){
@@ -72,10 +72,10 @@ int do_init(int argc, char **argv){
 		FinalizeSpinLock(&lock);
 
 		// Everything fine?
-		if(val != (THRC*PERINC) ){
-			printf("FAILED! (Result: %u, Expected: %u)\n",  val,  (THRC*PERINC) );
-		}else{
-			printf("OK! (Result: %u, Expected: %u)\n", val, (THRC*PERINC) );
+		if (val != (THRC*PERINC)) {
+			printf("FAILED! (Result: %u, Expected: %u)\n",  val,  (THRC*PERINC));
+		} else {
+			printf("OK! (Result: %u, Expected: %u)\n", val, (THRC*PERINC));
 			ok++;
 		}
 

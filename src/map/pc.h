@@ -599,7 +599,14 @@ struct map_session_data {
 #define pc_isinvisible(sd)    ( (sd)->sc.option&OPTION_INVISIBLE )
 #define pc_is50overweight(sd) ( (sd)->weight*100 >= (sd)->max_weight*battle->bc->natural_heal_weight_rate )
 #define pc_is90overweight(sd) ( (sd)->weight*10 >= (sd)->max_weight*9 )
-#define pc_maxparameter(sd)   ( (((sd)->class_&MAPID_UPPERMASK) == MAPID_KAGEROUOBORO || ((sd)->class_&MAPID_UPPERMASK) == MAPID_REBELLION || ((sd)->class_&MAPID_THIRDMASK) == MAPID_SUPER_NOVICE_E) ? battle->bc->max_extended_parameter : (sd)->class_&JOBL_THIRD ? ((sd)->class_&JOBL_BABY ? battle->bc->max_baby_third_parameter : battle->bc->max_third_parameter) : ((sd)->class_&JOBL_BABY ? battle->bc->max_baby_parameter : battle->bc->max_parameter) )
+#define pc_maxparameter(sd)   ( \
+	( ((sd)->class_&MAPID_UPPERMASK) == MAPID_KAGEROUOBORO \
+	 || ((sd)->class_&MAPID_UPPERMASK) == MAPID_REBELLION \
+	 || ((sd)->class_&MAPID_THIRDMASK) == MAPID_SUPER_NOVICE_E \
+	) ? battle->bc->max_extended_parameter : ((sd)->class_&JOBL_THIRD) ? \
+	    (((sd)->class_&JOBL_BABY) ? battle->bc->max_baby_third_parameter : battle->bc->max_third_parameter ) : \
+	    (((sd)->class_&JOBL_BABY) ? battle->bc->max_baby_parameter : battle->bc->max_parameter) \
+	)
 /// Generic check for mounts
 #define pc_hasmount(sd)       ( (sd)->sc.option&(OPTION_RIDING|OPTION_WUGRIDER|OPTION_DRAGON|OPTION_MADOGEAR) )
 /// Knight classes Peco / Gryphon

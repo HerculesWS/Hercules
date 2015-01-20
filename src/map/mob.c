@@ -96,9 +96,8 @@ struct mob_chat *mob_chat(short id) {
 int mobdb_searchname(const char *str)
 {
 	int i;
-	struct mob_db* monster;
 	for(i=0;i<=MAX_MOB_DB;i++){
-		monster = mob->db(i);
+		struct mob_db *monster = mob->db(i);
 		if(monster == mob->dummy) //Skip dummy mobs.
 			continue;
 		if(strcmpi(monster->name,str)==0 || strcmpi(monster->jname,str)==0)
@@ -345,7 +344,6 @@ bool mob_ksprotected(struct block_list *src, struct block_list *target) {
 		*sd,    // Source
 		*pl_sd, // Owner
 		*t_sd;  // Mob Target
-	struct status_change_entry *sce;
 	struct mob_data *md;
 	int64 tick = timer->gettick();
 	char output[128];
@@ -369,6 +367,7 @@ bool mob_ksprotected(struct block_list *src, struct block_list *target) {
 	t_sd = BL_CAST(BL_PC,s_bl);
 
 	do {
+		struct status_change_entry *sce;
 		if( map->list[md->bl.m].flag.allowks || map_flag_ks(md->bl.m) )
 			return false; // Ignores GVG, PVP and AllowKS map flags
 
@@ -947,7 +946,7 @@ int mob_spawn (struct mob_data *md)
 	//md->master_id = 0;
 	md->master_dist = 0;
 
-	md->state.aggressive = md->status.mode&MD_ANGRY?1:0;
+	md->state.aggressive = (md->status.mode&MD_ANGRY) ? 1 : 0;
 	md->state.skillstate = MSS_IDLE;
 	md->next_walktime = tick+rnd()%1000+MIN_RANDOMWALKTIME;
 	md->last_linktime = tick;
@@ -1323,7 +1322,7 @@ int mob_unlocktarget(struct mob_data *md, int64 tick) {
  *------------------------------------------*/
 int mob_randomwalk(struct mob_data *md, int64 tick) {
 	const int retrycount=20;
-	int i,x,y,c,d;
+	int i,c,d;
 	int speed;
 
 	nullpo_ret(md);
@@ -1339,8 +1338,8 @@ int mob_randomwalk(struct mob_data *md, int64 tick) {
 	for (i = 0; i < retrycount; i++) {
 		// Search of a movable place
 		int r=rnd();
-		x=r%(d*2+1)-d;
-		y=r/(d*2+1)%(d*2+1)-d;
+		int x=r%(d*2+1)-d;
+		int y=r/(d*2+1)%(d*2+1)-d;
 		x+=md->bl.x;
 		y+=md->bl.y;
 
@@ -1814,10 +1813,11 @@ struct item_drop* mob_setlootitem(struct item* item)
  *------------------------------------------*/
 int mob_delay_item_drop(int tid, int64 tick, int id, intptr_t data) {
 	struct item_drop_list *list;
-	struct item_drop *ditem, *ditem_prev;
+	struct item_drop *ditem;
 	list=(struct item_drop_list *)data;
 	ditem = list->item;
 	while (ditem) {
+		struct item_drop *ditem_prev;
 		map->addflooritem(&ditem->item_data,ditem->item_data.amount,
 		                  list->m,list->x,list->y,
 		                  list->first_charid,list->second_charid,list->third_charid,0);
@@ -2095,7 +2095,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		int id,zeny;
 		unsigned int base_exp,job_exp;
 	} pt[DAMAGELOG_SIZE];
-	int i, temp, count, m = md->bl.m, pnum = 0;
+	int i, temp, count, m = md->bl.m;
 	int dmgbltypes = 0;  // bitfield of all bl types, that caused damage to the mob and are eligible for exp distribution
 	unsigned int mvp_damage;
 	int64 tick = timer->gettick();
@@ -2179,6 +2179,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 	 && (!map->list[m].flag.nobaseexp || !map->list[m].flag.nojobexp) //Gives Exp
 	) { //Experience calculation.
 		int bonus = 100; //Bonus on top of your share (common to all attackers).
+		int pnum = 0;
 		if (md->sc.data[SC_RICHMANKIM])
 			bonus += md->sc.data[SC_RICHMANKIM]->val2;
 		if(sd) {
@@ -2422,7 +2423,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 				if ( sd->add_drop[i].race == -md->class_ ||
 					( sd->add_drop[i].race > 0 && (
 						sd->add_drop[i].race & (1<<mstatus->race) ||
-						sd->add_drop[i].race & (1<<(mstatus->mode&MD_BOSS?RC_BOSS:RC_NONBOSS))
+						sd->add_drop[i].race & (1<<((mstatus->mode&MD_BOSS)?RC_BOSS:RC_NONBOSS))
 					)))
 				{
 					//check if the bonus item drop rate should be multiplied with mob level/10 [Lupus]
@@ -3101,7 +3102,7 @@ int mobskill_use(struct mob_data *md, int64 tick, int event) {
 		return 0; //Skill act delay only affects non-event skills.
 
 	//Pick a starting position and loop from that.
-	i = battle_config.mob_ai&0x100?rnd()%md->db->maxskill:0;
+	i = (battle_config.mob_ai&0x100) ? rnd()%md->db->maxskill : 0;
 	for (n = 0; n < md->db->maxskill; i++, n++) {
 		int c2, flag = 0;
 
@@ -3346,7 +3347,7 @@ int mob_is_clone(int class_)
 //Returns: ID of newly crafted copy.
 int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, const char *event, int master_id, int mode, int flag, unsigned int duration) {
 	int class_;
-	int i,j,h,inf,skill_id, fd;
+	int i,j,h,inf, fd;
 	struct mob_data *md;
 	struct mob_skill *ms;
 	struct mob_db* db;
@@ -3399,7 +3400,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 	//Go Backwards to give better priority to advanced skills.
 	for (i=0,j = MAX_SKILL_TREE-1;j>=0 && i< MAX_MOBSKILL ;j--) {
 		int idx = pc->skill_tree[pc->class2idx(sd->status.class_)][j].idx;
-		skill_id = pc->skill_tree[pc->class2idx(sd->status.class_)][j].id;
+		int skill_id = pc->skill_tree[pc->class2idx(sd->status.class_)][j].id;
 		if (!skill_id || sd->status.skill[idx].lv < 1 ||
 			(skill->db[idx].inf2&(INF2_WEDDING_SKILL|INF2_GUILD_SKILL))
 		)
@@ -3660,7 +3661,7 @@ static inline int mob_parse_dbrow_cap_value(int class_, int min, int max, int va
 bool mob_parse_dbrow(char** str) {
 	struct mob_db *db, entry;
 	struct status_data *mstatus;
-	int class_, i, k;
+	int class_, i;
 	double exp, maxhp;
 	struct mob_data data;
 
@@ -3832,7 +3833,7 @@ bool mob_parse_dbrow(char** str) {
 		int rate = 0, rate_adjust, type;
 		unsigned short ratemin, ratemax;
 		struct item_data *id;
-		k = 31 + MAX_MVP_DROP*2 + i*2;
+		int k = 31 + MAX_MVP_DROP*2 + i*2;
 		db->dropitem[i].nameid = atoi(str[k]);
 		if (!db->dropitem[i].nameid) {
 			db->dropitem[i].p = 0; //No drop.
@@ -4055,7 +4056,6 @@ bool mob_readdb_mobavail(char* str[], int columns, int current)
  *------------------------------------------*/
 int mob_read_randommonster(void)
 {
-	FILE *fp;
 	char line[1024];
 	char *str[10],*p;
 	int i,j;
@@ -4068,7 +4068,8 @@ int mob_read_randommonster(void)
 
 	memset(&summon, 0, sizeof(summon));
 
-	for( i = 0; i < ARRAYLENGTH(mobfile) && i < MAX_RANDOMMONSTER; i++ ) {
+	for (i = 0; i < ARRAYLENGTH(mobfile) && i < MAX_RANDOMMONSTER; i++) {
+		FILE *fp;
 		unsigned int count = 0;
 		mob->db_data[0]->summonper[i] = 1002; // Default fallback value, in case the database does not provide one
 		sprintf(line, "%s/%s", map->db_path, mobfile[i]);
@@ -4577,21 +4578,18 @@ int mob_read_sqlskilldb(void) {
  *------------------------------------------*/
 bool mob_readdb_race2(char* fields[], int columns, int current)
 {
-	int race, mobid, i;
+	int race, i;
 
 	race = atoi(fields[0]);
 
-	if (race < RC2_NONE || race >= RC2_MAX)
-	{
+	if (race < RC2_NONE || race >= RC2_MAX) {
 		ShowWarning("mob_readdb_race2: Unknown race2 %d.\n", race);
 		return false;
 	}
 
-	for(i = 1; i<columns; i++)
-	{
-		mobid = atoi(fields[i]);
-		if (mob->db(mobid) == mob->dummy)
-		{
+	for (i = 1; i < columns; i++) {
+		int mobid = atoi(fields[i]);
+		if (mob->db(mobid) == mob->dummy) {
 			ShowWarning("mob_readdb_race2: Unknown mob id %d for race2 %d.\n", mobid, race);
 			continue;
 		}
@@ -4715,14 +4713,13 @@ int do_init_mob(bool minimal) {
 void mob_destroy_mob_db(int index)
 {
 	struct mob_db *data = mob->db_data[index];
-	int v;
-	if (data->hdata)
-	{
-		for (v = 0; v < data->hdatac; v++ ) {
-			if (data->hdata[v]->flag.free ) {
-				aFree(data->hdata[v]->data);
+	if (data->hdata) {
+		int i;
+		for (i = 0; i < data->hdatac; i++) {
+			if (data->hdata[i]->flag.free ) {
+				aFree(data->hdata[i]->data);
 			}
-			aFree(data->hdata[v]);
+			aFree(data->hdata[i]);
 		}
 		aFree(data->hdata);
 	}

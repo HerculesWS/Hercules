@@ -646,12 +646,11 @@ int npc_timerevent_start(struct npc_data* nd, int rid) {
 int npc_timerevent_stop(struct npc_data* nd)
 {
 	struct map_session_data *sd = NULL;
-	const struct TimerData *td = NULL;
 	int *tid;
 
 	nullpo_ret(nd);
 
-	if( nd->u.scr.rid && !(sd = map->id2sd(nd->u.scr.rid)) ) {
+	if (nd->u.scr.rid && !(sd = map->id2sd(nd->u.scr.rid))) {
 		ShowError("npc_timerevent_stop: Attached player not found!\n");
 		return 1;
 	}
@@ -660,17 +659,15 @@ int npc_timerevent_stop(struct npc_data* nd)
 		return 0;
 
 	// Delete timer
-	if ( *tid != INVALID_TIMER )
-	{
-		td = timer->get(*tid);
-		if( td && td->data )
+	if (*tid != INVALID_TIMER) {
+		const struct TimerData *td = timer->get(*tid);
+		if (td && td->data)
 			ers_free(npc->timer_event_ers, (void*)td->data);
 		timer->delete(*tid,npc->timerevent);
 		*tid = INVALID_TIMER;
 	}
 
-	if( !sd && nd->u.scr.timertick )
-	{
+	if (!sd && nd->u.scr.timertick) {
 		nd->u.scr.timer += DIFF_TICK32(timer->gettick(),nd->u.scr.timertick); // Set 'timer' to the time that has passed since the beginning of the timers
 		nd->u.scr.timertick = 0; // Set 'tick' to zero so that we know it's off.
 	}
@@ -2013,7 +2010,7 @@ int npc_selllist_sub(struct map_session_data* sd, int n, unsigned short* item_li
 {
 	char npc_ev[EVENT_NAME_LENGTH];
 	char card_slot[NAME_LENGTH];
-	int i, j, idx;
+	int i, j;
 	int key_nameid = 0;
 	int key_amount = 0;
 	int key_refine = 0;
@@ -2036,21 +2033,20 @@ int npc_selllist_sub(struct map_session_data* sd, int n, unsigned short* item_li
 	}
 
 	// save list of to be sold items
-	for( i = 0; i < n; i++ )
-	{
-		idx = item_list[i*2]-2;
+	for (i = 0; i < n; i++) {
+		int idx = item_list[i*2]-2;
 
 		script->setarray_pc(sd, "@sold_nameid", i, (void*)(intptr_t)sd->status.inventory[idx].nameid, &key_nameid);
 		script->setarray_pc(sd, "@sold_quantity", i, (void*)(intptr_t)item_list[i*2+1], &key_amount);
 
-		if( itemdb->isequip(sd->status.inventory[idx].nameid) )
-		{// process equipment based information into the arrays
+		if (itemdb->isequip(sd->status.inventory[idx].nameid)) {
+			// process equipment based information into the arrays
 			script->setarray_pc(sd, "@sold_refine", i, (void*)(intptr_t)sd->status.inventory[idx].refine, &key_refine);
 			script->setarray_pc(sd, "@sold_attribute", i, (void*)(intptr_t)sd->status.inventory[idx].attribute, &key_attribute);
 			script->setarray_pc(sd, "@sold_identify", i, (void*)(intptr_t)sd->status.inventory[idx].identify, &key_identify);
 
-			for( j = 0; j < MAX_SLOTS; j++ )
-			{// store each of the cards from the equipment in the array
+			for (j = 0; j < MAX_SLOTS; j++) {
+				// store each of the cards from the equipment in the array
 				snprintf(card_slot, sizeof(card_slot), "@sold_card%d", j + 1);
 				script->setarray_pc(sd, card_slot, i, (void*)(intptr_t)sd->status.inventory[idx].card[j], &key_card[j]);
 			}
@@ -2224,9 +2220,8 @@ void npc_unload_duplicates(struct npc_data* nd) {
 
 //Removes an npc from map and db.
 //Single is to free name (for duplicates).
-int npc_unload(struct npc_data* nd, bool single) {
-	unsigned int i;
-	
+int npc_unload(struct npc_data* nd, bool single)
+{
 	nullpo_ret(nd);
 
 	if( nd->ud && nd->ud != &npc->base_ud ) {
@@ -2322,10 +2317,10 @@ int npc_unload(struct npc_data* nd, bool single) {
 		nd->ud = NULL;
 	}
 
-	if( nd->hdata )
-	{
-		for( i = 0; i < nd->hdatac; i++ ) {
-			if( nd->hdata[i]->flag.free ) {
+	if (nd->hdata) {
+		unsigned int i;
+		for (i = 0; i < nd->hdatac; i++) {
+			if (nd->hdata[i]->flag.free) {
 				aFree(nd->hdata[i]->data);
 			}
 			aFree(nd->hdata[i]);
@@ -2346,11 +2341,9 @@ int npc_unload(struct npc_data* nd, bool single) {
 void npc_clearsrcfile(void)
 {
 	struct npc_src_list* file = npc->src_files;
-	struct npc_src_list* file_tofree;
 
-	while( file != NULL )
-	{
-		file_tofree = file;
+	while (file != NULL) {
+		struct npc_src_list *file_tofree = file;
 		file = file->next;
 		aFree(file_tofree);
 	}
@@ -2889,9 +2882,9 @@ const char* npc_skip_script(const char* start, const char* buffer, const char* f
 /// -%TAB%script%TAB%<NPC Name>%TAB%-1,{<code>}
 /// <map name>,<x>,<y>,<facing>%TAB%script%TAB%<NPC Name>%TAB%<sprite id>,{<code>}
 /// <map name>,<x>,<y>,<facing>%TAB%script%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>,{<code>}
-const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int options, int *retval) {
+const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int options, int *retval)
+{
 	int x, y, dir = 0, m, xs = 0, ys = 0; // [Valaris] thanks to fov
-	char mapname[32];
 	struct script_code *scriptroot;
 	int i;
 	const char* end;
@@ -2901,13 +2894,15 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 	int label_list_num;
 	struct npc_data* nd;
 
-	if( strcmp(w1, "-") == 0 )
-	{// floating npc
+	if (strcmp(w1, "-") == 0) {
+		// floating npc
 		x = 0;
 		y = 0;
 		m = -1;
-	} else {// npc in a map
-		if( sscanf(w1, "%31[^,],%d,%d,%d", mapname, &x, &y, &dir) != 4 ) {
+	} else {
+		// npc in a map
+		char mapname[32];
+		if (sscanf(w1, "%31[^,],%d,%d,%d", mapname, &x, &y, &dir) != 4) {
 			ShowError("npc_parse_script: Invalid placement format for a script in file '%s', line '%d'. Skipping the rest of file...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 			if (retval) *retval = EXIT_FAILURE;
 			return NULL;// unknown format, don't continue
@@ -3020,7 +3015,6 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 /// !!Only NPO_ONINIT is available trough options!!
 const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int options, int *retval) {
 	int x, y, dir, m, xs = -1, ys = -1;
-	char mapname[32];
 	char srcname[128];
 	int i;
 	const char* end;
@@ -3053,14 +3047,18 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 	type = dnd->subtype;
 
 	// get placement
-	if( (type==SHOP || type==CASHSHOP || type==SCRIPT) && strcmp(w1, "-") == 0 ) {// floating shop/chashshop/script
+	if ((type==SHOP || type==CASHSHOP || type==SCRIPT) && strcmp(w1, "-") == 0) {
+		// floating shop/chashshop/script
 		x = y = dir = 0;
 		m = -1;
 	} else {
+		char mapname[32];
 		int fields = sscanf(w1, "%31[^,],%d,%d,%d", mapname, &x, &y, &dir);
-		if( type == WARP && fields == 3 ) { // <map name>,<x>,<y>
+		if (type == WARP && fields == 3) {
+			// <map name>,<x>,<y>
 			dir = 0;
-		} else if( fields != 4 ) {// <map name>,<x>,<y>,<facing>
+		} else if (fields != 4) {
+			// <map name>,<x>,<y>,<facing>
 			ShowError("npc_parse_duplicate: Invalid placement format for duplicate in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 			if (retval) *retval = EXIT_FAILURE;
 			return end;// next line, try to continue
@@ -4383,7 +4381,6 @@ void npc_process_files( int npc_min ) {
 
 //Clear then reload npcs files
 int npc_reload(void) {
-	int16 m, i;
 	int npc_new_min = npc_id;
 	struct s_mapiterator* iter;
 	struct block_list* bl;
@@ -4421,7 +4418,9 @@ int npc_reload(void) {
 	mapit->free(iter);
 
 	if(battle_config.dynamic_mobs) {// dynamic check by [random]
+		int16 m;
 		for (m = 0; m < map->count; m++) {
+			int16 i;
 			for (i = 0; i < MAX_MOB_LIST_PER_MAP; i++) {
 				if (map->list[m].moblist[i] != NULL) {
 					aFree(map->list[m].moblist[i]);

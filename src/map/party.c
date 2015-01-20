@@ -98,19 +98,17 @@ TBL_PC* party_sd_check(int party_id, int account_id, int char_id) {
 int party_db_final(DBKey key, DBData *data, va_list ap) {
 	struct party_data *p;
 	
-	if( ( p = DB->data2ptr(data) ) ) {
-		int j;
-		
-		if( p->instance )
+	if ((p = DB->data2ptr(data))) {
+		if (p->instance)
 			aFree(p->instance);
 
-		if (p->hdata)
-		{
-			for (j = 0; j < p->hdatac; j++) {
-				if (p->hdata[j]->flag.free) {
-					aFree(p->hdata[j]->data);
+		if (p->hdata) {
+			int i;
+			for (i = 0; i < p->hdatac; i++) {
+				if (p->hdata[i]->flag.free) {
+					aFree(p->hdata[i]->data);
 				}
-				aFree(p->hdata[j]);
+				aFree(p->hdata[i]);
 			}
 			aFree(p->hdata);
 		}
@@ -245,31 +243,32 @@ int party_recv_info(struct party* sp, int char_id)
 	int removed_count = 0;
 	int added[MAX_PARTY];// member_id in new data
 	int added_count = 0;
-	int i,j;
+	int j;
 	int member_id;
 
 	nullpo_ret(sp);
 
 	p = (struct party_data*)idb_get(party->db, sp->party_id);
 	if( p != NULL ) {// diff members
-		for( member_id = 0; member_id < MAX_PARTY; ++member_id ) {
+		int i;
+		for (member_id = 0; member_id < MAX_PARTY; ++member_id) {
 			member = &p->party.member[member_id];
-			if( member->char_id == 0 )
+			if (member->char_id == 0)
 				continue;// empty
 			ARR_FIND(0, MAX_PARTY, i,
 				sp->member[i].account_id == member->account_id &&
 				sp->member[i].char_id == member->char_id);
-			if( i == MAX_PARTY )
+			if (i == MAX_PARTY)
 				removed[removed_count++] = member_id;
 		}
-		for( member_id = 0; member_id < MAX_PARTY; ++member_id ) {
+		for (member_id = 0; member_id < MAX_PARTY; ++member_id) {
 			member = &sp->member[member_id];
-			if( member->char_id == 0 )
+			if (member->char_id == 0)
 				continue;// empty
 			ARR_FIND(0, MAX_PARTY, i,
 				p->party.member[i].account_id == member->account_id &&
 				p->party.member[i].char_id == member->char_id);
-			if( i == MAX_PARTY )
+			if (i == MAX_PARTY)
 				added[added_count++] = member_id;
 		}
 	} else {

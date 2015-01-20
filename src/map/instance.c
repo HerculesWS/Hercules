@@ -57,7 +57,7 @@ int instance_create(int owner_id, const char *name, enum instance_owner_type typ
 	struct party_data *p = NULL;
 	struct guild *g = NULL;
 	short *iptr = NULL;
-	int i, j;
+	int i;
 	
 	switch ( type ) {
 		case IOT_NONE:
@@ -122,8 +122,9 @@ int instance_create(int owner_id, const char *name, enum instance_owner_type typ
 	safestrncpy( instance->list[i].name, name, sizeof(instance->list[i].name) );
 	
 	if( type != IOT_NONE ) {
+		int j;
 		ARR_FIND(0, *icptr, j, iptr[j] == -1);
-		if( j == *icptr ) {
+		if (j == *icptr) {
 			switch( type ) {
 				case IOT_CHAR:
 					RECREATE(sd->instance, short, ++*icptr);
@@ -138,8 +139,9 @@ int instance_create(int owner_id, const char *name, enum instance_owner_type typ
 					g->instance[g->instances-1] = i;
 					break;
 			}
-		} else
+		} else {
 			iptr[j] = i;
+		}
 	}
 	
 	clif->instance(i, 1, 0); // Start instancing window
@@ -507,7 +509,7 @@ void instance_destroy(int instance_id) {
 	struct party_data *p = NULL;
 	struct guild *g = NULL;
 	short *iptr = NULL;
-	int type, j, last = 0;
+	int type, j;
 	unsigned int now = (unsigned int)time(NULL);
 	
 	if( !instance->valid(instance_id) )
@@ -557,9 +559,10 @@ void instance_destroy(int instance_id) {
 			iptr[j] = -1;
 	}
 	
-	if (instance->list[instance_id].map)
-	{
-		while( instance->list[instance_id].num_map && last != instance->list[instance_id].map[0] ) { // Remove all maps from instance
+	if (instance->list[instance_id].map) {
+		int last = 0;
+		while (instance->list[instance_id].num_map && last != instance->list[instance_id].map[0]) {
+			// Remove all maps from instance
 			last = instance->list[instance_id].map[0];
 			instance->del_map( instance->list[instance_id].map[0] );
 		}

@@ -764,7 +764,6 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
  *------------------------------------------*/
 static int inter_config_read(const char* cfgName)
 {
-	int i;
 	char line[1024], w1[1024], w2[1024];
 	FILE* fp;
 
@@ -775,7 +774,7 @@ static int inter_config_read(const char* cfgName)
 	}
 
 	while (fgets(line, sizeof(line), fp)) {
-		i = sscanf(line, "%1023[^:]: %1023[^\r\n]", w1, w2);
+		int i = sscanf(line, "%1023[^:]: %1023[^\r\n]", w1, w2);
 		if(i != 2)
 			continue;
 
@@ -1149,13 +1148,13 @@ int mapif_parse_Registry(int fd)
 	if( count ) {
 		int cursor = 14, i;
 		char key[32], sval[254];
-		unsigned int index;
 		bool isLoginActive = session_isActive(chr->login_fd);
 
 		if( isLoginActive )
 			chr->global_accreg_to_login_start(account_id,char_id);
 
 		for(i = 0; i < count; i++) {
+			unsigned int index;
 			safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
 			cursor += RFIFOB(fd, cursor) + 1;
 

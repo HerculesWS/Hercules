@@ -1961,7 +1961,7 @@ int char_mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p) {
 #endif
 
 	//When the weapon is sent and your option is riding, the client crashes on login!?
-	WBUFW(buf,56) = p->option&(0x20|0x80000|0x100000|0x200000|0x400000|0x800000|0x1000000|0x2000000|0x4000000|0x8000000) ? 0 : p->weapon;
+	WBUFW(buf,56) = (p->option&(0x20|0x80000|0x100000|0x200000|0x400000|0x800000|0x1000000|0x2000000|0x4000000|0x8000000)) ? 0 : p->weapon;
 
 	WBUFW(buf,58) = p->base_level;
 	WBUFW(buf,60) = min(p->skill_point, INT16_MAX);
@@ -2988,12 +2988,12 @@ void char_map_received_ok(int fd)
 
 void char_send_maps(int fd, int id, int j)
 {
-	unsigned char buf[16384];
-	int x,i;
+	int k,i;
 
 	if (j == 0) {
 		ShowWarning("Map-server %d has NO maps.\n", id);
 	} else {
+		unsigned char buf[16384];
 		// Transmitting maps information to the other map-servers
 		WBUFW(buf,0) = 0x2b04;
 		WBUFW(buf,2) = j * 4 + 10;
@@ -3003,16 +3003,16 @@ void char_send_maps(int fd, int id, int j)
 		mapif->sendallwos(fd, buf, WBUFW(buf,2));
 	}
 	// Transmitting the maps of the other map-servers to the new map-server
-	for(x = 0; x < ARRAYLENGTH(chr->server); x++) {
-		if (chr->server[x].fd > 0 && x != id) {
-			WFIFOHEAD(fd,10 +4*chr->server[x].maps);
+	for(k = 0; k < ARRAYLENGTH(chr->server); k++) {
+		if (chr->server[k].fd > 0 && k != id) {
+			WFIFOHEAD(fd,10 +4*chr->server[k].maps);
 			WFIFOW(fd,0) = 0x2b04;
-			WFIFOL(fd,4) = htonl(chr->server[x].ip);
-			WFIFOW(fd,8) = htons(chr->server[x].port);
+			WFIFOL(fd,4) = htonl(chr->server[k].ip);
+			WFIFOW(fd,8) = htons(chr->server[k].port);
 			j = 0;
-			for(i = 0; i < chr->server[x].maps; i++)
-				if (chr->server[x].map[i])
-					WFIFOW(fd,10+(j++)*4) = chr->server[x].map[i];
+			for(i = 0; i < chr->server[k].maps; i++)
+				if (chr->server[k].map[i])
+					WFIFOW(fd,10+(j++)*4) = chr->server[k].map[i];
 			if (j > 0) {
 				WFIFOW(fd,2) = j * 4 + 10;
 				WFIFOSET(fd,WFIFOW(fd,2));
@@ -3123,17 +3123,15 @@ void char_parse_frommap_set_users_count(int fd, int id)
 void char_parse_frommap_set_users(int fd, int id)
 {
 	//TODO: When data mismatches memory, update guild/party online/offline states.
-	int aid, cid, i;
-	struct online_char_data* character;
+	int i;
 
 	chr->server[id].users = RFIFOW(fd,4);
 	chr->online_char_db->foreach(chr->online_char_db,chr->db_setoffline,id); //Set all chars from this server as 'unknown'
 	for(i = 0; i < chr->server[id].users; i++) {
-		aid = RFIFOL(fd,6+i*8);
-		cid = RFIFOL(fd,6+i*8+4);
-		character = idb_ensure(chr->online_char_db, aid, chr->create_online_char_data);
-		if( character->server > -1 && character->server != id )
-		{
+		int aid = RFIFOL(fd,6+i*8);
+		int cid = RFIFOL(fd,6+i*8+4);
+		struct online_char_data *character = idb_ensure(chr->online_char_db, aid, chr->create_online_char_data);
+		if (character->server > -1 && character->server != id) {
 			ShowNotice("Set map user: Character (%d:%d) marked on map server %d, but map server %d claims to have (%d:%d) online!\n",
 				character->account_id, character->char_id, character->server, id, aid, cid);
 			mapif->disconnectplayer(chr->server[character->server].fd, character->account_id, character->char_id, 2);
@@ -4153,7 +4151,7 @@ void char_delete2_cancel_ack(int fd, int char_id, uint32 result)
 
 static void char_delete2_req(int fd, struct char_session_data* sd)
 {// CH: <0827>.W <char id>.L
-	int char_id, party_id, guild_id, i;
+	int char_id, i;
 	char* data;
 	time_t delete_date;
 
@@ -4183,12 +4181,11 @@ static void char_delete2_req(int fd, struct char_session_data* sd)
 	// This check is imposed by Aegis to avoid dead entries in databases
 	// _it is not needed_ as we clear data properly
 	// see issue: 7338
-	if( char_aegis_delete )
-	{
+	if (char_aegis_delete) {
+		int party_id = 0, guild_id = 0;
 		if( SQL_SUCCESS != SQL->Query(inter->sql_handle, "SELECT `party_id`, `guild_id` FROM `%s` WHERE `char_id`='%d'", char_db, char_id)
-		|| SQL_SUCCESS != SQL->NextRow(inter->sql_handle)
-		)
-		{
+		 || SQL_SUCCESS != SQL->NextRow(inter->sql_handle)
+		) {
 			Sql_ShowDebug(inter->sql_handle);
 			chr->delete2_ack(fd, char_id, 3, 0);
 			return;
@@ -5585,12 +5582,12 @@ int char_config_read(const char* cfgName)
 			start_point.y = y;
 		} else if (strcmpi(w1, "start_items") == 0) {
 			int i;
-			char *split, *split2;
+			char *split;
 
 			i = 0;
 			split = strtok(w2, ",");
 			while (split != NULL && i < MAX_START_ITEMS*3) {
-				split2 = split;
+				char *split2 = split;
 				split = strtok(NULL, ",");
 				start_items[i] = atoi(split2);
 

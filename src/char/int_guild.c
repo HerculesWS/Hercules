@@ -220,14 +220,12 @@ int inter_guild_tosql(struct guild *g,int flag)
 		StrBuf->Destroy(&buf);
 	}
 
-	if (flag&GS_MEMBER)
-	{
-		struct guild_member *m;
+	if (flag&GS_MEMBER) {
 
 		strcat(t_info, " members");
 		// Update only needed players
 		for(i=0;i<g->max_member;i++){
-			m = &g->member[i];
+			struct guild_member *m = &g->member[i];
 			if (!m->modified)
 				continue;
 			if(m->account_id) {
@@ -1509,12 +1507,11 @@ int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int 
 		  }
 		case GMI_EXP:
 		{
-			uint64 exp, old_exp=g->member[i].exp;
+			uint64 old_exp = g->member[i].exp;
 			g->member[i].exp=*((uint64 *)data);
 			g->member[i].modified = GS_MEMBER_MODIFIED;
-			if (g->member[i].exp > old_exp)
-			{
-				exp = g->member[i].exp - old_exp;
+			if (g->member[i].exp > old_exp) {
+				uint64 exp = g->member[i].exp - old_exp;
 
 				// Compute gained exp
 				if (guild_exp_rate != 100)

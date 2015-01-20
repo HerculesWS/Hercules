@@ -240,7 +240,7 @@ static CMDLINEARG(help)
 		} else {
 			*altname = '\0';
 		}
-		snprintf(paramnames, sizeof(paramnames), "%s%s%s", data->name, altname, data->options&CMDLINE_OPT_PARAM ? " <name>" : "");
+		snprintf(paramnames, sizeof(paramnames), "%s%s%s", data->name, altname, (data->options&CMDLINE_OPT_PARAM) ? " <name>" : "");
 		ShowInfo("  %-30s %s [%s]\n", paramnames, data->help ? data->help : "<no description provided>", cmdline->arg_source(data));
 	}
 	return false;
@@ -439,12 +439,11 @@ int main (int argc, char **argv) {
 	sockt->init();
 
 	do_init(argc,argv);
-	{// Main runtime cycle
-		int next;
-		while (runflag != CORE_ST_STOP) {
-			next = timer->perform(timer->gettick_nocache());
-			sockt->perform(next);
-		}
+
+	// Main runtime cycle
+	while (runflag != CORE_ST_STOP) {
+		int next = timer->perform(timer->gettick_nocache());
+		sockt->perform(next);
 	}
 
 	console->final();

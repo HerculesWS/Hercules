@@ -112,13 +112,13 @@ int unit_walktoxy_sub(struct block_list *bl)
 	if (ud->target_to && ud->chaserange>1) {
 		//Generally speaking, the walk path is already to an adjacent tile
 		//so we only need to shorten the path if the range is greater than 1.
-		uint8 dir;
+
 		//Trim the last part of the path to account for range,
 		//but always move at least one cell when requested to move.
 		for (i = (ud->chaserange*10)-10; i > 0 && ud->walkpath.path_len>1;) {
-		   ud->walkpath.path_len--;
-			dir = ud->walkpath.path[ud->walkpath.path_len];
-			if(dir&1)
+			ud->walkpath.path_len--;
+			uint8 dir = ud->walkpath.path[ud->walkpath.path_len];
+			if (dir&1)
 				i -= MOVE_COST*20; //When chasing, units will target a diamond-shaped area in range [Playtester]
 			else
 				i -= MOVE_COST;
@@ -594,7 +594,7 @@ int unit_walktobl(struct block_list *bl, struct block_list *tbl, int range, int 
 	ud->state.walk_easy = flag&1;
 	ud->target_to = tbl->id;
 	ud->chaserange = range; //Note that if flag&2, this SHOULD be attack-range
-	ud->state.attack_continue = flag&2?1:0; //Chase to attack.
+	ud->state.attack_continue = (flag&2) ? 1 : 0; //Chase to attack.
 	unit->stop_attack(bl); //Sets target to 0
 
 	sc = status->get_sc(bl);
@@ -1760,12 +1760,11 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
  *----------------------------------------*/
 int unit_set_target(struct unit_data* ud, int target_id)
 {
-	struct unit_data * ux;
-	struct block_list* target;
-
 	nullpo_ret(ud);
 
-	if( ud->target != target_id ) {
+	if (ud->target != target_id) {
+		struct unit_data * ux;
+		struct block_list* target;
 		if( ud->target && (target = map->id2bl(ud->target)) && (ux = unit->bl2ud(target)) && ux->target_count > 0 )
 			ux->target_count --;
 		if( target_id && (target = map->id2bl(target_id)) && (ux = unit->bl2ud(target)) )
@@ -1949,7 +1948,6 @@ bool unit_can_reach_pos(struct block_list *bl,int x,int y, int easy)
  *------------------------------------------*/
 bool unit_can_reach_bl(struct block_list *bl,struct block_list *tbl, int range, int easy, short *x, short *y)
 {
-	int i;
 	short dx,dy;
 	nullpo_retr(false, bl);
 	nullpo_retr(false, tbl);
@@ -1970,6 +1968,7 @@ bool unit_can_reach_bl(struct block_list *bl,struct block_list *tbl, int range, 
 	dy=(dy>0)?1:((dy<0)?-1:0);
 
 	if (map->getcell(tbl->m,tbl->x-dx,tbl->y-dy,CELL_CHKNOPASS)) {
+		int i;
 		//Look for a suitable cell to place in.
 		for(i=0;i<8 && map->getcell(tbl->m,tbl->x-dirx[i],tbl->y-diry[i],CELL_CHKNOPASS);i++);
 		if (i==8) return false; //No valid cells.
@@ -1986,7 +1985,7 @@ bool unit_can_reach_bl(struct block_list *bl,struct block_list *tbl, int range, 
  *------------------------------------------*/
 int unit_calc_pos(struct block_list *bl, int tx, int ty, uint8 dir)
 {
-	int dx, dy, x, y, i, k;
+	int dx, dy, x, y;
 	struct unit_data *ud = unit->bl2ud(bl);
 	nullpo_ret(ud);
 
@@ -2002,33 +2001,29 @@ int unit_calc_pos(struct block_list *bl, int tx, int ty, uint8 dir)
 	x = tx + dx;
 	y = ty + dy;
 
-	if( !unit->can_reach_pos(bl, x, y, 0) )
-	{
+	if (!unit->can_reach_pos(bl, x, y, 0)) {
 		if( dx > 0 ) x--; else if( dx < 0 ) x++;
 		if( dy > 0 ) y--; else if( dy < 0 ) y++;
-		if( !unit->can_reach_pos(bl, x, y, 0) )
-		{
-			for( i = 0; i < 12; i++ )
-			{
-				k = rnd()%8; // Pick a Random Dir
+		if (!unit->can_reach_pos(bl, x, y, 0)) {
+			int i;
+			for (i = 0; i < 12; i++) {
+				int k = rnd()%8; // Pick a Random Dir
 				dx = -dirx[k] * 2;
 				dy = -diry[k] * 2;
 				x = tx + dx;
 				y = ty + dy;
-				if( unit->can_reach_pos(bl, x, y, 0) )
+				if (unit->can_reach_pos(bl, x, y, 0)) {
 					break;
-				else
-				{
+				} else {
 					if( dx > 0 ) x--; else if( dx < 0 ) x++;
 					if( dy > 0 ) y--; else if( dy < 0 ) y++;
 					if( unit->can_reach_pos(bl, x, y, 0) )
 						break;
 				}
 			}
-			if( i == 12 )
-			{
+			if (i == 12) {
 				x = tx; y = tx; // Exactly Master Position
-				if( !unit->can_reach_pos(bl, x, y, 0) )
+				if (!unit->can_reach_pos(bl, x, y, 0))
 					return 1;
 			}
 		}
@@ -2726,7 +2721,6 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 		}
 		case BL_MOB:
 		{
-			unsigned int k;
 			struct mob_data *md = (struct mob_data*)bl;
 			if( md->spawn_timer != INVALID_TIMER )
 			{
@@ -2784,6 +2778,7 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 
 			if (md->hdata)
 			{
+				unsigned int k;
 				for (k = 0; k < md->hdatac; k++) {
 					if( md->hdata[k]->flag.free ) {
 						aFree(md->hdata[k]->data);

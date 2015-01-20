@@ -1251,7 +1251,6 @@ int map_vforeachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 
 
 	//method specific variables
 	int magnitude2, len_limit; //The square of the magnitude
-	int k;
 	int mx0 = x0, mx1 = x1, my0 = y0, my1 = y1;
 
 	len_limit = magnitude2 = MAGNITUDE2(x0, y0, x1, y1);
@@ -1260,7 +1259,7 @@ int map_vforeachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 
 
 	if (length) { //Adjust final position to fit in the given area.
 		//TODO: Find an alternate method which does not requires a square root calculation.
-		k = (int)sqrt((float)magnitude2);
+		int k = (int)sqrt((float)magnitude2);
 		mx1 = x0 + (x1 - x0) * length / k;
 		my1 = y0 + (y1 - y0) * length / k;
 		len_limit = MAGNITUDE2(x0, y0, mx1, my1);
@@ -1596,7 +1595,7 @@ int map_addflooritem(struct item *item_data,int amount,int16 m,int16 x,int16 y,i
 
 	nullpo_ret(item_data);
 
-	if(!map->searchrandfreecell(m,&x,&y,flags&2?1:0))
+	if (!map->searchrandfreecell(m, &x, &y, (flags&2)?1:0))
 		return 0;
 	r=rnd();
 
@@ -1614,11 +1613,11 @@ int map_addflooritem(struct item *item_data,int amount,int16 m,int16 x,int16 y,i
 	}
 
 	fitem->first_get_charid = first_charid;
-	fitem->first_get_tick = timer->gettick() + (flags&1 ? battle_config.mvp_item_first_get_time : battle_config.item_first_get_time);
+	fitem->first_get_tick = timer->gettick() + ((flags&1) ? battle_config.mvp_item_first_get_time : battle_config.item_first_get_time);
 	fitem->second_get_charid = second_charid;
-	fitem->second_get_tick = fitem->first_get_tick + (flags&1 ? battle_config.mvp_item_second_get_time : battle_config.item_second_get_time);
+	fitem->second_get_tick = fitem->first_get_tick + ((flags&1) ? battle_config.mvp_item_second_get_time : battle_config.item_second_get_time);
 	fitem->third_get_charid = third_charid;
-	fitem->third_get_tick = fitem->second_get_tick + (flags&1 ? battle_config.mvp_item_third_get_time : battle_config.item_third_get_time);
+	fitem->third_get_tick = fitem->second_get_tick + ((flags&1) ? battle_config.mvp_item_third_get_time : battle_config.item_third_get_time);
 
 	memcpy(&fitem->item_data,item_data,sizeof(*item_data));
 	fitem->item_data.amount=amount;
@@ -1649,7 +1648,6 @@ void map_addnickdb(int charid, const char* nick)
 {
 	struct charid2nick* p;
 	struct charid_request* req;
-	struct map_session_data* sd;
 
 	if( map->charid2sd(charid) )
 		return;// already online
@@ -1657,11 +1655,12 @@ void map_addnickdb(int charid, const char* nick)
 	p = idb_ensure(map->nick_db, charid, map->create_charid2nick);
 	safestrncpy(p->nick, nick, sizeof(p->nick));
 
-	while( p->requests ) {
+	while (p->requests) {
+		struct map_session_data* sd;
 		req = p->requests;
 		p->requests = req->next;
 		sd = map->charid2sd(req->charid);
-		if( sd )
+		if (sd)
 			clif->solved_charname(sd->fd, charid, p->nick);
 		aFree(req);
 	}
@@ -1673,17 +1672,17 @@ void map_delnickdb(int charid, const char* name)
 {
 	struct charid2nick* p;
 	struct charid_request* req;
-	struct map_session_data* sd;
 	DBData data;
 
 	if (!map->nick_db->remove(map->nick_db, DB->i2key(charid), &data) || (p = DB->data2ptr(&data)) == NULL)
 		return;
 
-	while( p->requests ) {
+	while (p->requests) {
+		struct map_session_data* sd;
 		req = p->requests;
 		p->requests = req->next;
 		sd = map->charid2sd(req->charid);
-		if( sd )
+		if (sd)
 			clif->solved_charname(sd->fd, charid, name);
 		aFree(req);
 	}
@@ -2557,16 +2556,15 @@ int map_random_dir(struct block_list *bl, int16 *x, int16 *y)
 {
 	short xi = *x-bl->x;
 	short yi = *y-bl->y;
-	short i=0, j;
+	short i=0;
 	int dist2 = xi*xi + yi*yi;
 	short dist = (short)sqrt((float)dist2);
-	short segment;
 
 	if (dist < 1) dist =1;
 
 	do {
-		j = 1 + 2*(rnd()%4); //Pick a random diagonal direction
-		segment = 1+(rnd()%dist); //Pick a random interval from the whole vector in that direction
+		int j = 1 + 2*(rnd()%4); //Pick a random diagonal direction
+		short segment = 1+(rnd()%dist); //Pick a random interval from the whole vector in that direction
 		xi = bl->x + segment*dirx[j];
 		segment = (short)sqrt((float)(dist2 - segment*segment)); //The complement of the previously picked segment
 		yi = bl->y + segment*diry[j];
@@ -2613,10 +2611,10 @@ int map_cell2gat(struct mapcell cell) {
 	return 1; // default to 'wall'
 }
 void map_cellfromcache(struct map_data *m) {
-	char decode_buffer[MAX_MAP_SIZE];
-	struct map_cache_map_info *info = NULL;
+	struct map_cache_map_info *info = (struct map_cache_map_info *)m->cellPos;
 
-	if( (info = (struct map_cache_map_info *)m->cellPos) ) {
+	if (info) {
+		char decode_buffer[MAX_MAP_SIZE];
 		unsigned long size, xy;
 		int i;
 
@@ -4588,7 +4586,7 @@ bool map_zone_mf_cache(int m, char *flag, char *params) {
 	} else if ( !strcmpi(flag,"invincible_time_inc") ) {
 		if( !state ) {
 			if( map->list[m].invincible_time_inc != 0 ) {
-				sprintf(rflag,"invincible_time_inc\t%d",map->list[m].invincible_time_inc);
+				sprintf(rflag,"invincible_time_inc\t%u",map->list[m].invincible_time_inc);
 				map_zone_mf_cache_add(m,rflag);
 			}
 		} if( sscanf(params, "%d", &state) == 1 ) {

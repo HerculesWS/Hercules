@@ -1512,7 +1512,7 @@ void clif_homskillinfoblock(struct map_session_data *sd) {
 	struct homun_data *hd;
 	int fd;
 	int i,j;
-	int len=4,id;
+	int len=4;
 	nullpo_retv(sd);
 
 	fd = sd->fd;
@@ -1525,7 +1525,8 @@ void clif_homskillinfoblock(struct map_session_data *sd) {
 	WFIFOW(fd,0)=0x235;
 
 	for ( i = 0; i < MAX_HOMUNSKILL; i++){
-		if( (id = hd->homunculus.hskill[i].id) != 0 ){
+		int id = hd->homunculus.hskill[i].id;
+		if (id != 0) {
 			j = id - HM_SKILLBASE;
 			WFIFOW(fd,len  ) = id;
 			WFIFOW(fd,len+2) = skill->get_inf(id);
@@ -2421,7 +2422,7 @@ void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *i, struct
 #endif
 
 #if PACKETVER >= 20100629
-	p->wItemSpriteNumber = id->equip&EQP_VISIBLE ? id->look : 0;
+	p->wItemSpriteNumber = (id->equip&EQP_VISIBLE) ? id->look : 0;
 #endif
 
 #if PACKETVER >= 20120925
@@ -3242,18 +3243,16 @@ void clif_changelook(struct block_list *bl,int type,int val)
 				if( !vd->cloth_color )
 					break;
 
-				if( sd ) {
-					if( sd->sc.option&OPTION_WEDDING && battle_config.wedding_ignorepalette )
-						vd->cloth_color = 0;
-					if( sd->sc.option&OPTION_XMAS && battle_config.xmas_ignorepalette )
-						vd->cloth_color = 0;
-					if( sd->sc.option&OPTION_SUMMER && battle_config.summer_ignorepalette )
-						vd->cloth_color = 0;
-					if( sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette )
-						vd->cloth_color = 0;
-					if( sd->sc.option&OPTION_OKTOBERFEST /* TODO: config? */ )
-						vd->cloth_color = 0;
-				}
+				if (sd->sc.option&OPTION_WEDDING && battle_config.wedding_ignorepalette)
+					vd->cloth_color = 0;
+				if (sd->sc.option&OPTION_XMAS && battle_config.xmas_ignorepalette)
+					vd->cloth_color = 0;
+				if (sd->sc.option&OPTION_SUMMER && battle_config.summer_ignorepalette)
+					vd->cloth_color = 0;
+				if (sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette)
+					vd->cloth_color = 0;
+				if (sd->sc.option&OPTION_OKTOBERFEST /* TODO: config? */)
+					vd->cloth_color = 0;
 			break;
 			case LOOK_HAIR:
 				vd->hair_style = val;
@@ -3477,7 +3476,7 @@ void clif_arrow_fail(struct map_session_data *sd,int type)
 /// 01ad <packet len>.W { <name id>.W }*
 void clif_arrow_create_list(struct map_session_data *sd)
 {
-	int i, c, j;
+	int i, c;
 	int fd;
 
 	nullpo_retv(sd);
@@ -3487,6 +3486,7 @@ void clif_arrow_create_list(struct map_session_data *sd)
 	WFIFOW(fd,0) = 0x1ad;
 
 	for (i = 0, c = 0; i < MAX_SKILL_ARROW_DB; i++) {
+		int j;
 		if (skill->arrow_db[i].nameid > 0
 		 && (j = pc->search_inventory(sd, skill->arrow_db[i].nameid)) != INDEX_NOT_FOUND
 		 && !sd->status.inventory[j].equip && sd->status.inventory[j].identify
@@ -5420,11 +5420,11 @@ void clif_skill_estimation(struct map_session_data *sd,struct block_list *dst) {
 	WBUFW(buf, 4) = status->get_lv(dst);
 	WBUFW(buf, 6) = dstatus->size;
 	WBUFL(buf, 8) = dstatus->hp;
-	WBUFW(buf,12) = (battle_config.estimation_type&1?dstatus->def:0)
-	              + (battle_config.estimation_type&2?dstatus->def2:0);
+	WBUFW(buf,12) = ((battle_config.estimation_type&1) ? dstatus->def : 0)
+	              + ((battle_config.estimation_type&2) ? dstatus->def2 : 0);
 	WBUFW(buf,14) = dstatus->race;
-	WBUFW(buf,16) = (battle_config.estimation_type&1?dstatus->mdef:0)
-	              + (battle_config.estimation_type&2?dstatus->mdef2:0);
+	WBUFW(buf,16) = ((battle_config.estimation_type&1) ? dstatus->mdef : 0)
+	              + ((battle_config.estimation_type&2) ? dstatus->mdef2 : 0);
 	WBUFW(buf,18) = dstatus->def_ele;
 	for(i=0;i<9;i++) {
 		WBUFB(buf,20+i)= (unsigned char)battle->attr_ratio(i+1,dstatus->def_ele, dstatus->ele_lv);
@@ -6103,7 +6103,6 @@ void clif_item_repair_list(struct map_session_data *sd,struct map_session_data *
 {
 	int i,c;
 	int fd;
-	int nameid;
 
 	nullpo_retv(sd);
 	nullpo_retv(dstsd);
@@ -6112,8 +6111,9 @@ void clif_item_repair_list(struct map_session_data *sd,struct map_session_data *
 
 	WFIFOHEAD(fd, MAX_INVENTORY * 13 + 4);
 	WFIFOW(fd,0)=0x1fc;
-	for(i=c=0;i<MAX_INVENTORY;i++){
-		if((nameid=dstsd->status.inventory[i].nameid) > 0 && dstsd->status.inventory[i].attribute!=0){// && skill_can_repair(sd,nameid)){
+	for (i = c = 0; i < MAX_INVENTORY; i++) {
+		int nameid = dstsd->status.inventory[i].nameid;
+		if (nameid > 0 && dstsd->status.inventory[i].attribute != 0) { // && skill_can_repair(sd,nameid)) {
 			WFIFOW(fd,c*13+4) = i;
 			WFIFOW(fd,c*13+6) = nameid;
 			WFIFOB(fd,c*13+8) = dstsd->status.inventory[i].refine;
@@ -6177,7 +6177,6 @@ void clif_item_refine_list(struct map_session_data *sd)
 	int i,c;
 	int fd;
 	uint16 skill_lv;
-	int wlv;
 
 	nullpo_retv(sd);
 
@@ -6187,9 +6186,9 @@ void clif_item_refine_list(struct map_session_data *sd)
 
 	WFIFOHEAD(fd, MAX_INVENTORY * 13 + 4);
 	WFIFOW(fd,0)=0x221;
-	for(i=c=0;i<MAX_INVENTORY;i++){
+	for (i = c = 0; i < MAX_INVENTORY; i++) {
 		if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].identify
-			&& (wlv=itemdb_wlv(sd->status.inventory[i].nameid)) >=1
+			&& itemdb_wlv(sd->status.inventory[i].nameid) >= 1
 			&& !sd->inventory_data[i]->flag.no_refine
 			&& !(sd->status.inventory[i].equip&EQP_ARMS)){
 			WFIFOW(fd,c*13+ 4)=i+2;
@@ -8540,7 +8539,7 @@ void clif_refresh(struct map_session_data *sd)
 void clif_charnameack (int fd, struct block_list *bl)
 {
 	unsigned char buf[103];
-	int cmd = 0x95, i, ps = -1;
+	int cmd = 0x95;
 
 	nullpo_retv(bl);
 
@@ -8553,6 +8552,7 @@ void clif_charnameack (int fd, struct block_list *bl)
 				struct map_session_data *ssd = (struct map_session_data *)bl;
 				struct party_data *p = NULL;
 				struct guild *g = NULL;
+				int ps = -1;
 
 				//Requesting your own "shadow" name. [Skotlex]
 				if (ssd->fd == fd && ssd->disguise != -1)
@@ -8570,7 +8570,8 @@ void clif_charnameack (int fd, struct block_list *bl)
 					p = party->search(ssd->status.party_id);
 				}
 				if( ssd->status.guild_id ) {
-					if( ( g = ssd->guild ) != NULL ) {
+					if ((g = ssd->guild ) != NULL) {
+						int i;
 						ARR_FIND(0, g->max_member, i, g->member[i].account_id == ssd->status.account_id && g->member[i].char_id == ssd->status.char_id);
 						if( i < g->max_member ) ps = g->member[i].position;
 					}
@@ -8634,7 +8635,7 @@ void clif_charnameack (int fd, struct block_list *bl)
 					if( battle_config.show_mob_info&1 )
 						str_p += sprintf(str_p, "HP: %u/%u | ", md->status.hp, md->status.max_hp);
 					if( battle_config.show_mob_info&2 )
-						str_p += sprintf(str_p, "HP: %d%% | ", get_percentage(md->status.hp, md->status.max_hp));
+						str_p += sprintf(str_p, "HP: %u%% | ", get_percentage(md->status.hp, md->status.max_hp));
 					//Even thought mobhp ain't a name, we send it as one so the client
 					//can parse it. [Skotlex]
 					if( str_p != mobhp )
@@ -8952,19 +8953,18 @@ void clif_equpcheckbox(struct map_session_data* sd)
 /// 0859 <packet len>.W <name>.24B <class>.W <hairstyle>.W <bottom-viewid>.W <mid-viewid>.W <up-viewid>.W <haircolor>.W <cloth-dye>.W <gender>.B {equip item}.28B* (ZC_EQUIPWIN_MICROSCOPE2, PACKETVER >= 20101124)
 /// 0859 <packet len>.W <name>.24B <class>.W <hairstyle>.W <bottom-viewid>.W <mid-viewid>.W <up-viewid>.W <robe>.W <haircolor>.W <cloth-dye>.W <gender>.B {equip item}.28B* (ZC_EQUIPWIN_MICROSCOPE2, PACKETVER >= 20110111)
 void clif_viewequip_ack(struct map_session_data* sd, struct map_session_data* tsd) {
-	int i, k, equip = 0;
+	int i, equip = 0;
 
 	nullpo_retv(sd);
 	nullpo_retv(tsd);
 
-	for( i = 0; i < EQI_MAX; i++ ) {
-		if( (k = tsd->equip_index[i]) >= 0 ) {
-
+	for (i = 0; i < EQI_MAX; i++) {
+		int k = tsd->equip_index[i];
+		if (k >= 0) {
 			if (tsd->status.inventory[k].nameid <= 0 || tsd->inventory_data[k] == NULL) // Item doesn't exist
 				continue;
 
 			clif_item_equip(k+2,&viewequip_list.list[equip++],&tsd->status.inventory[k],tsd->inventory_data[k],pc->equippoint(tsd,k));
-
 		}
 	}
 
@@ -10267,12 +10267,11 @@ void clif_hercules_chsys_left(struct hChSysCh *channel, struct map_session_data 
 
 void clif_hercules_chsys_quitg(struct map_session_data *sd) {
 	unsigned char i;
-	struct hChSysCh *channel = NULL;
 
 	for( i = 0; i < sd->channel_count; i++ ) {
-		if( (channel = sd->channels[i] ) != NULL && channel->type == hChSys_ALLY ) {
-
-			if ( !idb_remove(channel->users,sd->status.char_id) )
+		struct hChSysCh *channel = sd->channels[i];
+		if (channel != NULL && channel->type == hChSys_ALLY) {
+			if (!idb_remove(channel->users,sd->status.char_id))
 				continue;
 
 			if( channel == sd->gcbind )
@@ -10310,10 +10309,10 @@ void clif_hercules_chsys_quitg(struct map_session_data *sd) {
 
 void clif_hercules_chsys_quit(struct map_session_data *sd) {
 	unsigned char i;
-	struct hChSysCh *channel = NULL;
 
-	for( i = 0; i < sd->channel_count; i++ ) {
-		if( (channel = sd->channels[i] ) != NULL ) {
+	for (i = 0; i < sd->channel_count; i++) {
+		struct hChSysCh *channel = sd->channels[i];
+		if (channel != NULL) {
 			idb_remove(channel->users,sd->status.char_id);
 
 			if( channel == sd->gcbind )
@@ -10480,8 +10479,9 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 				clif->chsys_send(channel,sd,message);
 			} else if( channel->pass[0] == '\0' && !(channel->banned && idb_exists(channel->banned, sd->status.account_id)) ) {
 				if( channel->type == hChSys_ALLY ) {
-					struct guild *g = sd->guild, *sg = NULL;
+					struct guild *g = sd->guild;
 					for (k = 0; k < MAX_GUILDALLIANCE; k++) {
+						struct guild *sg = NULL;
 						if( g->alliance[k].opposition == 0 && g->alliance[k].guild_id && (sg = guild->search(g->alliance[k].guild_id) ) ) {
 							if( !(sg->channel->banned && idb_exists(sg->channel->banned, sd->status.account_id)))
 								clif->chsys_join(sg->channel,sd);
@@ -13081,7 +13081,7 @@ bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len) {
 #endif // not NetBSD < 6 / Solaris
 	uint8 buf[1800]; // no well-formed emblem bitmap is larger than 1782 (24 bit) / 1654 (8 bit) bytes
 	unsigned long buf_len = sizeof(buf);
-	int header = 0, bitmap = 0, offbits = 0, palettesize = 0, i = 0;
+	int header = 0, bitmap = 0, offbits = 0, palettesize = 0;
 
 	if( decode_zip(buf, &buf_len, emblem, emblem_len) != 0 || buf_len < BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE
 	 || RBUFW(buf,0) != 0x4d42 // BITMAPFILEHEADER.bfType (signature)
@@ -13127,6 +13127,7 @@ bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len) {
 	if( battle_config.client_emblem_max_blank_percent < 100 ) {
 		int required_pixels = BITMAP_WIDTH * BITMAP_HEIGHT * (100 - battle_config.client_emblem_max_blank_percent) / 100;
 		int found_pixels = 0;
+		int i;
 		/// Checks what percentage of a guild emblem is blank. A blank emblem
 		/// consists solely of magenta pixels. Since the client uses 16-bit
 		/// colors, any magenta shade that reduces to #ff00ff passes off as
@@ -13141,7 +13142,7 @@ bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len) {
 				const uint8 *indexes = (const uint8 *)RBUFP(buf,offbits);
 				const uint32 *palette = (const uint32 *)RBUFP(buf,BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE);
 
-				for( i = 0; i < BITMAP_WIDTH * BITMAP_HEIGHT; i++ ) {
+				for (i = 0; i < BITMAP_WIDTH * BITMAP_HEIGHT; i++) {
 					if( indexes[i] >= palettesize ) // Invalid color
 						return false;
 
@@ -13159,7 +13160,7 @@ bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len) {
 			{
 				const struct s_bitmaptripple *pixels = (const struct s_bitmaptripple*)RBUFP(buf,offbits);
 
-				for( i = 0; i < BITMAP_WIDTH * BITMAP_HEIGHT; i++ ) {
+				for (i = 0; i < BITMAP_WIDTH * BITMAP_HEIGHT; i++) {
 					// if( pixels[i].r < 0xF8 || pixels[i].g > 0x07 || pixels[i].b < 0xF8 )
 					if( ( pixels[i].rgb&0xF8F8F8 ) != 0xF800F8 ) {
 						if( ++found_pixels >= required_pixels ) {
@@ -15221,7 +15222,6 @@ void clif_Auction_results(struct map_session_data *sd, short count, short pages,
 	int i, fd = sd->fd, len = sizeof(struct auction_data);
 	struct auction_data auction;
 	struct item_data *item;
-	int k;
 
 	WFIFOHEAD(fd,12 + (count * 83));
 	WFIFOW(fd,0) = 0x252;
@@ -15230,8 +15230,8 @@ void clif_Auction_results(struct map_session_data *sd, short count, short pages,
 	WFIFOL(fd,8) = count;
 
 	for( i = 0; i < count; i++ ) {
+		int k = 12 + (i * 83);
 		memcpy(&auction, RBUFP(buf,i * len), len);
-		k = 12 + (i * 83);
 
 		WFIFOL(fd,k) = auction.auction_id;
 		safestrncpy((char*)WFIFOP(fd,4+k), auction.seller_name, NAME_LENGTH);
@@ -15904,7 +15904,6 @@ void clif_quest_send_mission(struct map_session_data *sd) {
 void clif_quest_add(struct map_session_data *sd, struct quest *qd) {
 	int fd = sd->fd;
 	int i;
-	struct mob_db *monster;
 	struct quest_db *qi = quest->db(qd->quest_id);
 
 	WFIFOHEAD(fd, packet_len(0x2b3));
@@ -15916,6 +15915,7 @@ void clif_quest_add(struct map_session_data *sd, struct quest *qd) {
 	WFIFOW(fd, 15) = qi->num_objectives;
 
 	for( i = 0; i < qi->num_objectives; i++ ) {
+		struct mob_db *monster;
 		WFIFOL(fd, i*30+17) = qi->mob[i];
 		WFIFOW(fd, i*30+21) = qd->count[i];
 		monster = mob->db(qi->mob[i]);
@@ -16142,7 +16142,7 @@ void clif_mercenary_info(struct map_session_data *sd) {
 void clif_mercenary_skillblock(struct map_session_data *sd)
 {
 	struct mercenary_data *md;
-	int fd, i, len = 4, id, j;
+	int fd, i, len = 4, j;
 
 	if( sd == NULL || (md = sd->md) == NULL )
 		return;
@@ -16150,9 +16150,9 @@ void clif_mercenary_skillblock(struct map_session_data *sd)
 	fd = sd->fd;
 	WFIFOHEAD(fd,4+37*MAX_MERCSKILL);
 	WFIFOW(fd,0) = 0x29d;
-	for( i = 0; i < MAX_MERCSKILL; i++ )
-	{
-		if( (id = md->db->skill[i].id) == 0 )
+	for (i = 0; i < MAX_MERCSKILL; i++) {
+		int id = md->db->skill[i].id;
+		if (id == 0)
 			continue;
 		j = id - MC_SKILLBASE;
 		WFIFOW(fd,len) = id;
@@ -16177,10 +16177,11 @@ void clif_mercenary_skillblock(struct map_session_data *sd)
 void clif_parse_mercenary_action(int fd, struct map_session_data* sd)
 {
 	int option = RFIFOB(fd,2);
-	if( sd->md == NULL )
+	if (sd->md == NULL)
 		return;
 
-	if( option == 2 ) mercenary->delete(sd->md, 2);
+	if (option == 2)
+		mercenary->delete(sd->md, 2);
 }
 
 
@@ -18264,11 +18265,11 @@ void clif_npc_market_open(struct map_session_data *sd, struct npc_data *nd) {
 #if PACKETVER >= 20131223
 	struct npc_item_list *shop = nd->u.scr.shop->item;
 	unsigned short shop_size = nd->u.scr.shop->items, i, c;
-	struct item_data *id = NULL;
 
 	npcmarket_open.PacketType = npcmarketopenType;
 
 	for(i = 0, c = 0; i < shop_size; i++) {
+		struct item_data *id = NULL;
 		if( shop[i].nameid && (id = itemdb->exists(shop[i].nameid)) ) {
 			npcmarket_open.list[c].nameid = shop[i].nameid;
 			npcmarket_open.list[c].price  = shop[i].value;

@@ -746,12 +746,12 @@ void guild_member_joined(struct map_session_data *sd)
 		sd->guild = g;
 		
 		if (clif->hChSys->ally && clif->hChSys->ally_autojoin) {
-			struct guild* sg = NULL;
 			struct hChSysCh *channel = g->channel;
 
 			if( !(channel->banned && idb_exists(channel->banned, sd->status.account_id) ) )
 				clif->chsys_join(channel,sd);
 			for (i = 0; i < MAX_GUILDALLIANCE; i++) {
+				struct guild* sg = NULL;
 				if( g->alliance[i].opposition == 0 && g->alliance[i].guild_id && (sg = guild->search(g->alliance[i].guild_id) ) ) {
 					if( !(sg->channel->banned && idb_exists(sg->channel->banned, sd->status.account_id)))
 						clif->chsys_join(sg->channel,sd);
@@ -1155,7 +1155,6 @@ int guild_change_notice(struct map_session_data *sd,int guild_id,const char *mes
 int guild_notice_changed(int guild_id,const char *mes1,const char *mes2)
 {
 	int i;
-	struct map_session_data *sd;
 	struct guild *g=guild->search(guild_id);
 	if(g==NULL)
 		return 0;
@@ -1164,7 +1163,8 @@ int guild_notice_changed(int guild_id,const char *mes1,const char *mes2)
 	memcpy(g->mes2,mes2,MAX_GUILDMES2);
 
 	for(i=0;i<g->max_member;i++){
-		if((sd=g->member[i].sd)!=NULL)
+		struct map_session_data *sd = g->member[i].sd;
+		if (sd != NULL)
 			clif->guild_notice(sd,g);
 	}
 	return 0;
@@ -1688,11 +1688,13 @@ int guild_allianceack(int guild_id1,int guild_id2,int account_id1,int account_id
 
 
 	for (i = 0; i < 2 - (flag & 1); i++) { // Retransmission of the relationship list to all members
-		struct map_session_data *msd;
-		if(g[i]!=NULL)
-			for(j=0;j<g[i]->max_member;j++)
-				if((msd=g[i]->member[j].sd)!=NULL)
+		if (g[i] != NULL) {
+			for (j = 0; j < g[i]->max_member; j++) {
+				struct map_session_data *msd = g[i]->member[j].sd;
+				if (msd != NULL)
 					clif->guild_allianceinfo(msd);
+			}
+		}
 	}
 	return 0;
 }
@@ -1939,12 +1941,12 @@ int guild_break(struct map_session_data *sd,char *name) {
  */
 void guild_castle_map_init(void)
 {
-	DBIterator* iter = NULL;
 	int num = db_size(guild->castle_db);
 
 	if (num > 0) {
 		struct guild_castle* gc = NULL;
 		int *castle_ids, *cursor;
+		DBIterator* iter = NULL;
 
 		CREATE(castle_ids, int, num);
 		cursor = castle_ids;
@@ -1980,11 +1982,12 @@ int guild_castledatasave(int castle_id, int index, int value)
 	case 1: // The castle's owner has changed? Update or remove Guardians too. [Skotlex]
 	{
 		int i;
-		struct mob_data *gd;
 		gc->guild_id = value;
-		for (i = 0; i < MAX_GUARDIANS; i++)
+		for (i = 0; i < MAX_GUARDIANS; i++) {
+			struct mob_data *gd;
 			if (gc->guardian[i].visible && (gd = map->id2md(gc->guardian[i].id)) != NULL)
 				mob->guardian_guildchange(gd);
+		}
 		break;
 	}
 	case 2:
@@ -1992,11 +1995,12 @@ int guild_castledatasave(int castle_id, int index, int value)
 	case 3: // defense invest change -> recalculate guardian hp
 	{
 		int i;
-		struct mob_data *gd;
 		gc->defense = value;
-		for (i = 0; i < MAX_GUARDIANS; i++)
+		for (i = 0; i < MAX_GUARDIANS; i++) {
+			struct mob_data *gd;
 			if (gc->guardian[i].visible && (gd = map->id2md(gc->guardian[i].id)) != NULL)
 				status_calc_mob(gd, SCO_NONE);
+		}
 		break;
 	}
 	case 4:

@@ -395,9 +395,9 @@ int intif_request_registry(struct map_session_data *sd, int flag)
 	WFIFOW(inter_fd,0) = 0x3005;
 	WFIFOL(inter_fd,2) = sd->status.account_id;
 	WFIFOL(inter_fd,6) = sd->status.char_id;
-	WFIFOB(inter_fd,10) = (flag&1?1:0); //Request Acc Reg 2
-	WFIFOB(inter_fd,11) = (flag&2?1:0); //Request Acc Reg
-	WFIFOB(inter_fd,12) = (flag&4?1:0); //Request Char Reg
+	WFIFOB(inter_fd,10) = (flag&1) ? 1 : 0; //Request Acc Reg 2
+	WFIFOB(inter_fd,11) = (flag&2) ? 1 : 0; //Request Acc Reg
+	WFIFOB(inter_fd,12) = (flag&4) ? 1 : 0; //Request Char Reg
 	WFIFOSET(inter_fd,13);
 
 	return 0;
@@ -968,7 +968,7 @@ void mapif_parse_WisToGM(int fd)
 {
 	int permission, mes_len;
 	char Wisp_name[NAME_LENGTH];
-	char mbuf[255];
+	char mbuf[255] = { 0 };
 	char *message;
 
 	mes_len =  RFIFOW(fd,2) - 32;
@@ -987,7 +987,7 @@ void mapif_parse_WisToGM(int fd)
 // Request player registre
 void intif_parse_Registers(int fd)
 {
-	int i, flag;
+	int flag;
 	struct map_session_data *sd;
 	int account_id = RFIFOL(fd,4), char_id = RFIFOL(fd,8);
 	struct auth_node *node = chrif->auth_check(account_id, char_id, ST_LOGIN);
@@ -1025,9 +1025,9 @@ void intif_parse_Registers(int fd)
 	pc->reg_load = true;
 	
 	if( RFIFOW(fd, 14) ) {
-		char key[32], sval[254];
+		char key[32];
 		unsigned int index;
-		int max = RFIFOW(fd, 14), cursor = 16, ival;
+		int max = RFIFOW(fd, 14), cursor = 16, i;
 		
 		script->parser_current_file = "loading char/acc variables";//for script_add_str to refer to here in case errors occur
 		
@@ -1037,8 +1037,9 @@ void intif_parse_Registers(int fd)
 		 * str type
 		 * { keyLength(B), key(<keyLength>), index(L), valLength(B), val(<valLength>) }
 		 **/
-		if( type ) {
+		if (type) {
 			for(i = 0; i < max; i++) {
+				char sval[254];
 				safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
 				cursor += RFIFOB(fd, cursor) + 1;
 				
@@ -1058,6 +1059,7 @@ void intif_parse_Registers(int fd)
 		 **/
 		} else {
 			for(i = 0; i < max; i++) {
+				int ival;
 				safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
 				cursor += RFIFOB(fd, cursor) + 1;
 				

@@ -666,12 +666,12 @@ void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id) {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
 	int count = RFIFOW(fd, 12);
 
-	if( count ) {
+	if (count) {
 		int cursor = 14, i;
 		char key[32], sval[254];
-		unsigned int index;
 
-		for(i = 0; i < count; i++) {
+		for (i = 0; i < count; i++) {
+			unsigned int index;
 			safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
 			cursor += RFIFOB(fd, cursor) + 1;
 

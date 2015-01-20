@@ -160,7 +160,7 @@ static inline const char* atcommand_help_string(AtCommandInfo *info) {
  *------------------------------------------*/
 ACMD(send)
 {
-	int len=0,off,end,type;
+	int len=0,type;
 	long num;
 
 	// read message type as hex number (without the 0x)
@@ -200,24 +200,24 @@ ACMD(send)
 } while(0) //define GET_VALUE
 
 	if (type > 0 && type < MAX_PACKET_DB) {
-		if(len)
-		{// show packet length
+		int off = 2;
+		if (len) {
+			// show packet length
 			sprintf(atcmd_output, msg_txt(904), type, packet_db[type].len); // Packet 0x%x length: %d
 			clif->message(fd, atcmd_output);
 			return true;
 		}
 
 		len=packet_db[type].len;
-		off=2;
-		if(len == 0)
-		{// unknown packet - ERROR
+		if (len == 0) {
+			// unknown packet - ERROR
 			sprintf(atcmd_output, msg_txt(905), type); // Unknown packet: 0x%x
 			clif->message(fd, atcmd_output);
 			return false;
-		} else if(len == -1)
-		{// dynamic packet
-			len=SHRT_MAX-4; // maximum length
-			off=4;
+		} else if (len == -1) {
+			// dynamic packet
+			len = SHRT_MAX-4; // maximum length
+			off = 4;
 		}
 		WFIFOHEAD(sd->fd, len);
 		WFIFOW(sd->fd,0)=TOW(type);
@@ -251,6 +251,7 @@ ACMD(send)
 			} else if(TOUPPER(*message) == 'S')
 			{// string - escapes are valid
 				// get string length - num <= 0 means not fixed length (default)
+				int end;
 				++message;
 				if(*message == '"'){
 					num=0;
@@ -551,7 +552,6 @@ ACMD(jump)
 ACMD(who) {
 	struct map_session_data *pl_sd = NULL;
 	struct s_mapiterator *iter = NULL;
-	char map_name[MAP_NAME_LENGTH_EXT] = "";
 	char player_name[NAME_LENGTH] = "";
 	int count = 0;
 	int level = 0;
@@ -565,6 +565,7 @@ ACMD(who) {
 	int map_id = -1;
 
 	if (stristr(info->command, "map") != NULL) {
+		char map_name[MAP_NAME_LENGTH_EXT] = "";
 		if (sscanf(message, "%15s %23s", map_name, player_name) < 1 || (map_id = map->mapname2mapid(map_name)) < 0)
 			map_id = sd->bl.m;
 	} else {
@@ -652,7 +653,7 @@ ACMD(whogm)
 	struct map_session_data* pl_sd;
 	struct s_mapiterator* iter;
 	int j, count;
-	int pl_level, level;
+	int level;
 	char match_text[CHAT_SIZE_MAX];
 	char player_name[NAME_LENGTH];
 	struct guild *g;
@@ -671,14 +672,12 @@ ACMD(whogm)
 	level = pc_get_group_level(sd);
 
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
-	{
-		pl_level = pc_get_group_level(pl_sd);
+	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter)) {
+		int pl_level = pc_get_group_level(pl_sd);
 		if (!pl_level)
 			continue;
 
-		if (match_text[0])
-		{
+		if (match_text[0]) {
 			memcpy(player_name, pl_sd->status.name, NAME_LENGTH);
 			for (j = 0; player_name[j]; j++)
 				player_name[j] = TOLOWER(player_name[j]);
@@ -1716,7 +1715,6 @@ ACMD(hair_color)
  * @go [city_number or city_name] - Updated by Harbin
  *------------------------------------------*/
 ACMD(go) {
-	int i;
 	int town = INT_MAX; // Initialized to INT_MAX instead of -1 to avoid conflicts with those who map [-3:-1] to @memo locations.
 	char map_name[MAP_NAME_LENGTH];
 
@@ -1792,6 +1790,7 @@ ACMD(go) {
 	}
 
 	if (town < 0 || town >= ARRAYLENGTH(data)) {
+		int i;
 		map_name[MAP_NAME_LENGTH-1] = '\0';
 
 		// Match maps on the list
@@ -1861,7 +1860,7 @@ ACMD(monster)
 	int mob_id;
 	int number = 0;
 	int count;
-	int i, k, range;
+	int i, range;
 	short mx, my;
 	unsigned int size;
 
@@ -1921,6 +1920,7 @@ ACMD(monster)
 	count = 0;
 	range = (int)sqrt((float)number) +2; // calculation of an odd number (+ 4 area around)
 	for (i = 0; i < number; i++) {
+		int k;
 		map->search_freecell(&sd->bl, 0, &mx,  &my, range, range, 0);
 		k = mob->once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, eventname, size, AI_NONE|(mob_id == MOBID_EMPERIUM?0x200:0x0));
 		count += (k != 0) ? 1 : 0;
@@ -1989,7 +1989,7 @@ ACMD(killmonster) {
  *------------------------------------------*/
 ACMD(refine)
 {
-	int i,j, position = 0, refine = 0, current_position, final_refine;
+	int j, position = 0, refine = 0, current_position, final_refine;
 	int count;
 
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
@@ -2023,28 +2023,29 @@ ACMD(refine)
 
 	count = 0;
 	for (j = 0; j < EQI_MAX; j++) {
-		if ((i = sd->equip_index[j]) < 0)
+		int idx = sd->equip_index[j];
+		if (idx < 0)
 			continue;
 		if(j == EQI_AMMO) continue; /* can't equip ammo */
-		if(j == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == i)
+		if(j == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == idx)
 			continue;
-		if(j == EQI_HEAD_MID && sd->equip_index[EQI_HEAD_LOW] == i)
+		if(j == EQI_HEAD_MID && sd->equip_index[EQI_HEAD_LOW] == idx)
 			continue;
-		if(j == EQI_HEAD_TOP && (sd->equip_index[EQI_HEAD_MID] == i || sd->equip_index[EQI_HEAD_LOW] == i))
-			continue;
-
-		if(position && !(sd->status.inventory[i].equip & position))
+		if(j == EQI_HEAD_TOP && (sd->equip_index[EQI_HEAD_MID] == idx || sd->equip_index[EQI_HEAD_LOW] == idx))
 			continue;
 
-		final_refine = cap_value(sd->status.inventory[i].refine + refine, 0, MAX_REFINE);
-		if (sd->status.inventory[i].refine != final_refine) {
-			sd->status.inventory[i].refine = final_refine;
-			current_position = sd->status.inventory[i].equip;
-			pc->unequipitem(sd, i, 3);
-			clif->refine(fd, 0, i, sd->status.inventory[i].refine);
-			clif->delitem(sd, i, 1, 3);
-			clif->additem(sd, i, 1, 0);
-			pc->equipitem(sd, i, current_position);
+		if(position && !(sd->status.inventory[idx].equip & position))
+			continue;
+
+		final_refine = cap_value(sd->status.inventory[idx].refine + refine, 0, MAX_REFINE);
+		if (sd->status.inventory[idx].refine != final_refine) {
+			sd->status.inventory[idx].refine = final_refine;
+			current_position = sd->status.inventory[idx].equip;
+			pc->unequipitem(sd, idx, 3);
+			clif->refine(fd, 0, idx, sd->status.inventory[idx].refine);
+			clif->delitem(sd, idx, 1, 3);
+			clif->additem(sd, idx, 1, 0);
+			pc->equipitem(sd, idx, current_position);
 			clif->misceffect(&sd->bl, 3);
 			count++;
 		}
@@ -2707,8 +2708,8 @@ ACMD(char_block)
  *------------------------------------------*/
 ACMD(char_ban)
 {
-	char * modif_p;
-	int year, month, day, hour, minute, second, value;
+	char *modif_p;
+	int year, month, day, hour, minute, second;
 	time_t timestamp;
 	struct tm *tmtime;
 
@@ -2725,7 +2726,7 @@ ACMD(char_ban)
 	modif_p = atcmd_output;
 	year = month = day = hour = minute = second = 0;
 	while (modif_p[0] != '\0') {
-		value = atoi(modif_p);
+		int value = atoi(modif_p);
 		if (value == 0)
 			modif_p++;
 		else {
@@ -3649,7 +3650,6 @@ ACMD(reloadscript) {
 ACMD(mapinfo) {
 	struct map_session_data* pl_sd;
 	struct s_mapiterator* iter;
-	struct npc_data *nd = NULL;
 	struct chat_data *cd = NULL;
 	char direction[12];
 	int i, m_id, chat_num = 0, list = 0, vend_num = 0;
@@ -3841,7 +3841,7 @@ ACMD(mapinfo) {
 		case 2:
 			clif->message(fd, msg_txt(1100)); // ----- NPCs in Map -----
 			for (i = 0; i < map->list[m_id].npc_num;) {
-				nd = map->list[m_id].npc[i];
+				struct npc_data *nd = map->list[m_id].npc[i];
 				switch(nd->dir) {
 					case 0:  strcpy(direction, msg_txt(1101)); break; // North
 					case 1:  strcpy(direction, msg_txt(1102)); break; // North West
@@ -4441,7 +4441,7 @@ ACMD(unjail) {
 
 ACMD(jailfor) {
 	struct map_session_data *pl_sd = NULL;
-	int year, month, day, hour, minute, value;
+	int year, month, day, hour, minute;
 	char * modif_p;
 	int jailtime = 0,x,y;
 	short m_index = 0;
@@ -4456,7 +4456,7 @@ ACMD(jailfor) {
 	modif_p = atcmd_output;
 	year = month = day = hour = minute = 0;
 	while (modif_p[0] != '\0') {
-		value = atoi(modif_p);
+		int value = atoi(modif_p);
 		if (value == 0)
 			modif_p++;
 		else {
@@ -4664,7 +4664,6 @@ ACMD(disguiseguild)
 {
 	int id = 0, i;
 	char monster[NAME_LENGTH], guild_name[NAME_LENGTH];
-	struct map_session_data *pl_sd;
 	struct guild *g;
 
 	memset(monster, '\0', sizeof(monster));
@@ -4696,9 +4695,11 @@ ACMD(disguiseguild)
 		return false;
 	}
 
-	for (i = 0; i < g->max_member; i++)
-		if ((pl_sd = g->member[i].sd) && !pc_hasmount(pl_sd))
+	for (i = 0; i < g->max_member; i++) {
+		struct map_session_data *pl_sd = g->member[i].sd;
+		if (pl_sd && !pc_hasmount(pl_sd))
 			pc->disguise(pl_sd, id);
+	}
 
 	clif->message(fd, msg_txt(122)); // Disguise applied.
 	return true;
@@ -4745,7 +4746,6 @@ ACMD(undisguiseall) {
 ACMD(undisguiseguild)
 {
 	char guild_name[NAME_LENGTH];
-	struct map_session_data *pl_sd;
 	struct guild *g;
 	int i;
 
@@ -4761,9 +4761,11 @@ ACMD(undisguiseguild)
 		return false;
 	}
 
-	for(i = 0; i < g->max_member; i++)
-		if( (pl_sd = g->member[i].sd) && pl_sd->disguise != -1 )
+	for(i = 0; i < g->max_member; i++) {
+		struct map_session_data *pl_sd = g->member[i].sd;
+		if (pl_sd && pl_sd->disguise != -1)
 			pc->disguise(pl_sd, -1);
+	}
 
 	clif->message(fd, msg_txt(124)); // Disguise removed.
 
@@ -5177,7 +5179,7 @@ ACMD(clearcart)
 #define MAX_SKILLID_PARTIAL_RESULTS 5
 #define MAX_SKILLID_PARTIAL_RESULTS_LEN 74 /* "skill " (6) + "%d:" (up to 5) + "%s" (up to 30) + " (%s)" (up to 33) */
 ACMD(skillid) {
-	int idx, i, found = 0;
+	int i, found = 0;
 	size_t skillen;
 	DBIterator* iter;
 	DBKey key;
@@ -5193,8 +5195,8 @@ ACMD(skillid) {
 
 	iter = db_iterator(skill->name2id_db);
 
-	for( data = iter->first(iter,&key); iter->exists(iter); data = iter->next(iter,&key) ) {
-		idx = skill->get_index(DB->data2i(data));
+	for (data = iter->first(iter,&key); iter->exists(iter); data = iter->next(iter,&key)) {
+		int idx = skill->get_index(DB->data2i(data));
 		if (strnicmp(key.str, message, skillen) == 0 || strnicmp(skill->db[idx].desc, message, skillen) == 0) {
 			sprintf(atcmd_output, msg_txt(1164), DB->data2i(data), skill->db[idx].desc, key.str); // skill %d: %s (%s)
 			clif->message(fd, atcmd_output);
@@ -5703,7 +5705,6 @@ ACMD(autolootitem)
  *    chriser,Aleos
  *------------------------------------------*/
 ACMD(autoloottype) {
-	int i;
 	uint8 action = 3; // 1=add, 2=remove, 3=help+list (default), 4=reset
 	enum item_types type = -1;
 	int ITEM_NONE = 0;
@@ -5777,6 +5778,7 @@ ACMD(autoloottype) {
 			if (sd->state.autoloottype == ITEM_NONE) {
 				clif->message(fd, msg_txt(1495)); // Your autoloottype list is empty.
 			} else {
+				int i;
 				clif->message(fd, msg_txt(1496)); // Item types on your autoloottype list:
 				for(i=0; i < IT_MAX; i++) {
 					if (sd->state.autoloottype&(1<<i)) {
@@ -6153,7 +6155,6 @@ ACMD(pettalk)
 ACMD(users)
 {
 	char buf[CHAT_SIZE_MAX];
-	int i;
 	int users[MAX_MAPINDEX];
 	int users_all;
 	struct s_mapiterator* iter;
@@ -6177,11 +6178,12 @@ ACMD(users)
 	}
 	mapit->free(iter);
 
-	if( users_all ) {
+	if (users_all) {
+		int i;
 		// display results for each map
-		for( i = 0; i < MAX_MAPINDEX; ++i ) {
-			if( users[i] == 0 )
-				continue;// empty
+		for (i = 0; i < MAX_MAPINDEX; ++i) {
+			if (users[i] == 0)
+				continue; // empty
 
 			safesnprintf(buf, sizeof(buf), "%s: %d (%.2f%%)", mapindex_id2name(i), users[i], (float)(100.0f*users[i]/users_all));
 			clif->message(sd->fd, buf);
@@ -6504,7 +6506,7 @@ ACMD(mobinfo)
 	struct item_data *item_data;
 	struct mob_db *monster, *mob_array[MAX_SEARCH];
 	int count;
-	int i, j, k;
+	int i, k;
 
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 	memset(atcmd_output2, '\0', sizeof(atcmd_output2));
@@ -6534,6 +6536,7 @@ ACMD(mobinfo)
 
 	for (k = 0; k < count; k++) {
 		unsigned int job_exp, base_exp;
+		int j;
 
 		monster = mob_array[k];
 
@@ -6566,12 +6569,14 @@ ACMD(mobinfo)
 #ifdef RENEWAL
 		sprintf(atcmd_output, msg_txt(1291), //  ATK : %d~%d MATK : %d~%d Range : %d~%d~%d  Size : %s  Race : %s  Element : %s(Lv : %d)
 				MOB_ATK1(monster), MOB_ATK2(monster), MOB_MATK1(monster), MOB_MATK2(monster), monster->status.rhw.range,
+				monster->range2 , monster->range3, msize[monster->status.size],
+				mrace[monster->status.race], melement[monster->status.def_ele], monster->status.ele_lv);
 #else
 		sprintf(atcmd_output, msg_txt(1244), //  ATK:%d~%d  Range:%d~%d~%d  Size:%s  Race: %s  Element: %s (Lv:%d)
 				monster->status.rhw.atk, monster->status.rhw.atk2, monster->status.rhw.range,
-#endif
 				monster->range2 , monster->range3, msize[monster->status.size],
 				mrace[monster->status.race], melement[monster->status.def_ele], monster->status.ele_lv);
+#endif
 		clif->message(fd, atcmd_output);
 
 		// drops
@@ -7054,7 +7059,7 @@ ACMD(homshuffle)
  *------------------------------------------*/
 ACMD(iteminfo)
 {
-	struct item_data *item_data, *item_array[MAX_SEARCH];
+	struct item_data *item_array[MAX_SEARCH];
 	int i, count = 1;
 
 	if (!message || !*message) {
@@ -7075,7 +7080,7 @@ ACMD(iteminfo)
 		count = MAX_SEARCH;
 	}
 	for (i = 0; i < count; i++) {
-		item_data = item_array[i];
+		struct item_data *item_data = item_array[i];
 		sprintf(atcmd_output, msg_txt(1277), // Item: '%s'/'%s'[%d] (%d) Type: %s | Extra Effect: %s
 				item_data->name,item_data->jname,item_data->slot,item_data->nameid,
 				itemdb->typename(item_data->type),
@@ -7105,7 +7110,7 @@ ACMD(iteminfo)
  *------------------------------------------*/
 ACMD(whodrops)
 {
-	struct item_data *item_data, *item_array[MAX_SEARCH];
+	struct item_data *item_array[MAX_SEARCH];
 	int i,j, count = 1;
 
 	if (!message || !*message) {
@@ -7126,7 +7131,7 @@ ACMD(whodrops)
 		count = MAX_SEARCH;
 	}
 	for (i = 0; i < count; i++) {
-		item_data = item_array[i];
+		struct item_data *item_data = item_array[i];
 		sprintf(atcmd_output, msg_txt(1285), item_data->jname,item_data->slot); // Item: '%s'[%d]
 		clif->message(fd, atcmd_output);
 
@@ -7149,7 +7154,7 @@ ACMD(whodrops)
 
 ACMD(whereis)
 {
-	struct mob_db *monster, *mob_array[MAX_SEARCH];
+	struct mob_db *mob_array[MAX_SEARCH];
 	int count;
 	int i, j, k;
 
@@ -7177,7 +7182,7 @@ ACMD(whereis)
 		count = MAX_SEARCH;
 	}
 	for (k = 0; k < count; k++) {
-		monster = mob_array[k];
+		struct mob_db *monster = mob_array[k];
 		snprintf(atcmd_output, sizeof atcmd_output, msg_txt(1289), monster->jname); // %s spawns in:
 		clif->message(fd, atcmd_output);
 
@@ -7650,7 +7655,7 @@ ACMD(duel) {
 	}
 
 	if( message[0] ) {
-		if(sscanf(message, "%d", &maxpl) >= 1) {
+		if(sscanf(message, "%u", &maxpl) >= 1) {
 			if(maxpl < 2 || maxpl > 65535) {
 				clif->message(fd, msg_txt(357)); // "Duel: Invalid value."
 				return false;
@@ -8664,9 +8669,10 @@ ACMD(join) {
 		clif->message(fd, atcmd_output);
 	}
 	if( channel->type == hChSys_ALLY ) {
-		struct guild *g = sd->guild, *sg = NULL;
+		struct guild *g = sd->guild;
 		int i;
 		for (i = 0; i < MAX_GUILDALLIANCE; i++) {
+			struct guild *sg = NULL;
 			if( g->alliance[i].opposition == 0 && g->alliance[i].guild_id && (sg = guild->search(g->alliance[i].guild_id) ) ) {
 				if( !(sg->channel->banned && idb_exists(sg->channel->banned, sd->status.account_id))) {
 					clif->chsys_join(sg->channel,sd);
@@ -9304,7 +9310,7 @@ ACMD(costume){
 /* for debugging purposes (so users can easily provide us with debug info) */
 /* should be trashed as soon as its no longer necessary */
 ACMD(skdebug) {
-	sprintf(atcmd_output,"second: %d; third: %d",sd->sktree.second,sd->sktree.third);
+	sprintf(atcmd_output,"second: %u; third: %u", sd->sktree.second, sd->sktree.third);
 	clif->message(fd,atcmd_output);
 	sprintf(atcmd_output,"pc_calc_skilltree_normalize_job: %d",pc->calc_skilltree_normalize_job(sd));
 	clif->message(fd,atcmd_output);
@@ -9767,7 +9773,7 @@ void atcommand_get_suggestions(struct map_session_data* sd, const char *name, bo
  */
 bool atcommand_exec(const int fd, struct map_session_data *sd, const char *message, bool player_invoked) {
 	char charname[NAME_LENGTH], params[100];
-	char charname2[NAME_LENGTH], params2[100];
+	char charname2[NAME_LENGTH];
 	char command[100];
 	char output[CHAT_SIZE_MAX];
 
@@ -9805,6 +9811,7 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 
 	if (*message == atcommand->char_symbol) {
 		do {
+			char params2[100];
 			int x, y, z;
 
 			//Checks to see if #command has a name or a name + parameters.

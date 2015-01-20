@@ -95,8 +95,9 @@ void ShowDump(const void *buffer, size_t length) {
 static char* checkpath(char *path, const char *srcpath)
 {
 	// just make sure the char*path is not const
-	char *p=path;
-	if(NULL!=path && NULL!=srcpath)
+	char *p = path;
+	if (NULL == path || NULL == srcpath)
+		return path;
 	while(*srcpath) {
 		if (*srcpath=='/') {
 			*p++ = '\\';

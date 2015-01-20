@@ -155,7 +155,6 @@ bool mapif_homunculus_save(struct s_homunculus* hd)
 // Load an homunculus
 bool mapif_homunculus_load(int homun_id, struct s_homunculus* hd)
 {
-	int i;
 	char* data;
 	size_t len;
 
@@ -207,24 +206,23 @@ bool mapif_homunculus_load(int homun_id, struct s_homunculus* hd)
 	hd->hunger = cap_value(hd->hunger, 0, 100);
 
 	// Load Homunculus Skill
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `id`,`lv` FROM `%s` WHERE `homun_id`=%d", skill_homunculus_db, homun_id) )
-	{
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `id`,`lv` FROM `%s` WHERE `homun_id`=%d", skill_homunculus_db, homun_id)) {
 		Sql_ShowDebug(inter->sql_handle);
 		return false;
 	}
-	while( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) )
-	{
+	while (SQL_SUCCESS == SQL->NextRow(inter->sql_handle)) {
+		int idx;
 		// id
 		SQL->GetData(inter->sql_handle, 0, &data, NULL);
-		i = atoi(data);
-		if( i < HM_SKILLBASE || i >= HM_SKILLBASE + MAX_HOMUNSKILL )
+		idx = atoi(data);
+		if (idx < HM_SKILLBASE || idx >= HM_SKILLBASE + MAX_HOMUNSKILL)
 			continue;// invalid skill id
-		i = i - HM_SKILLBASE;
-		hd->hskill[i].id = (unsigned short)atoi(data);
+		idx -= HM_SKILLBASE;
+		hd->hskill[idx].id = (unsigned short)atoi(data);
 
 		// lv
 		SQL->GetData(inter->sql_handle, 1, &data, NULL);
-		hd->hskill[i].lv = (unsigned char)atoi(data);
+		hd->hskill[idx].lv = (unsigned char)atoi(data);
 	}
 	SQL->FreeResult(inter->sql_handle);
 

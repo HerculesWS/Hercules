@@ -261,7 +261,7 @@ int battle_delay_damage(int64 tick, int amotion, struct block_list *src, struct 
 	if (sc && sc->data[SC_DEVOTION] && sc->data[SC_DEVOTION]->val1)
 		d_tbl = map->id2bl(sc->data[SC_DEVOTION]->val1);
 
-	if( d_tbl && check_distance_bl(target, d_tbl, sc->data[SC_DEVOTION]->val3) && damage > 0 && skill_id != PA_PRESSURE && skill_id != CR_REFLECTSHIELD )
+	if (d_tbl && sc && check_distance_bl(target, d_tbl, sc->data[SC_DEVOTION]->val3) && damage > 0 && skill_id != PA_PRESSURE && skill_id != CR_REFLECTSHIELD)
 		damage = 0;
 
 	if ( !battle_config.delay_battle_damage || amotion <= 1 ) {
@@ -488,11 +488,12 @@ int64 battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, u
  */
 /* 'battle_calc_base_damage' is used on renewal, 'battle_calc_base_damage2' otherwise. */
 int64 battle_calc_base_damage(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, int flag, int flag2) {
-	int64 damage, batk;
+	int64 damage;
 	struct status_data *st = status->get_status_data(src);
 	struct status_change *sc = status->get_sc(src);
 
-	if (src->type == BL_PC){
+	if (src->type == BL_PC) {
+		int64 batk;
 		// Property from mild wind bypasses it
 		if (sc && sc->data[SC_TK_SEVENWIND])
 			batk = battle->calc_elefix(src, bl, skill_id, skill_lv, status->calc_batk(bl, sc, st->batk, false), nk, n_ele, s_ele, s_ele_, false, flag);
@@ -2740,7 +2741,6 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		}
 		if ((sce=sc->data[SC_AUTOGUARD]) && flag&BF_WEAPON && !(skill->get_nk(skill_id)&NK_NO_CARDFIX_ATK) && rnd()%100 < sce->val2) {
 			int delay;
-			struct block_list *d_bl = NULL;
 			struct status_change_entry *sce_d = sc->data[SC_DEVOTION];
 
 			// different delay depending on skill level [celest]
@@ -2754,7 +2754,8 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			if (sce_d) {
 				// If the target is too far away from the devotion caster, autoguard has no effect
 				// Autoguard will be disabled later on
-				if ((d_bl = map->id2bl(sce_d->val1)) && check_distance_bl(bl, d_bl, sce_d->val3)
+				struct block_list *d_bl = map->id2bl(sce_d->val1);
+				if (d_bl && check_distance_bl(bl, d_bl, sce_d->val3)
 				  && ((d_bl->type == BL_MER && ((TBL_MER*)d_bl)->master && ((TBL_MER*)d_bl)->master->bl.id == bl->id)
 				    || (d_bl->type == BL_PC && ((TBL_PC*)d_bl)->devotion[sce_d->val2] == bl->id))
 				) {
@@ -3108,9 +3109,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 					}
 		}
 		if( tsc->data[SC_POISONINGWEAPON] ) {
-			short rate = 100;
 			struct status_data *tstatus = status->get_status_data(bl);
 			if ( !(flag&BF_SKILL) && (flag&BF_WEAPON) && damage > 0 && rnd()%100 < tsc->data[SC_POISONINGWEAPON]->val3 ) {
+				short rate = 100;
 				if ( tsc->data[SC_POISONINGWEAPON]->val1 == 9 ) // Oblivion Curse gives a 2nd success chance after the 1st one passes which is reducible. [Rytech]
 					rate = 100 - tstatus->int_ * 4 / 5;
 				sc_start(src,bl,tsc->data[SC_POISONINGWEAPON]->val2,rate,tsc->data[SC_POISONINGWEAPON]->val1,skill->get_time2(GC_POISONINGWEAPON,1) - (tstatus->vit + tstatus->luk) / 2 * 1000);
@@ -3348,7 +3349,7 @@ int battle_blewcount_bonus(struct map_session_data *sd, uint16 skill_id) {
  * battle_calc_magic_attack [DracoRPG]
  *------------------------------------------*/
 struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list *target,uint16 skill_id,uint16 skill_lv,int mflag) {
-	int i, nk;
+	int nk;
 	short s_ele = 0;
 	unsigned int skillratio = 100; //Skill dmg modifiers.
 
@@ -3371,13 +3372,13 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 	//Initial Values
 	ad.damage = 1;
 	ad.div_=skill->get_num(skill_id,skill_lv);
-	ad.amotion=skill->get_inf(skill_id)&INF_GROUND_SKILL?0:sstatus->amotion; //Amotion should be 0 for ground skills.
+	ad.amotion = (skill->get_inf(skill_id)&INF_GROUND_SKILL) ? 0 : sstatus->amotion; //Amotion should be 0 for ground skills.
 	ad.dmotion=tstatus->dmotion;
 	ad.blewcount = skill->get_blewcount(skill_id,skill_lv);
 	ad.flag=BF_MAGIC|BF_SKILL;
 	ad.dmg_lv=ATK_DEF;
 	nk = skill->get_nk(skill_id);
-	flag.imdef = nk&NK_IGNORE_DEF?1:0;
+	flag.imdef = (nk&NK_IGNORE_DEF)? 1 : 0;
 
 	sd = BL_CAST(BL_PC, src);
 
@@ -3389,6 +3390,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 	if (s_ele == -1){ // pl=-1 : the skill takes the weapon's element
 		s_ele = sstatus->rhw.ele;
 		if( sd ){ //Summoning 10 spiritcharm will endow your weapon
+			int i;
 			ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, i, sd->spiritcharm[i] >= MAX_SPIRITCHARM);
 			if( i < SPIRITS_TYPE_SPHERE ) s_ele = i;
 		}
@@ -3414,7 +3416,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 
 	//Skill Range Criteria
 	ad.flag |= battle->range_type(src, target, skill_id, skill_lv);
-	flag.infdef=(tstatus->mode&MD_PLANT?1:0);
+	flag.infdef = (tstatus->mode&MD_PLANT) ? 1 : 0;
 	if( !flag.infdef && target->type == BL_SKILL && ((TBL_SKILL*)target)->group->unit_id == UNT_REVERBERATION )
 		flag.infdef = 1; // Reverberation takes 1 damage
 
@@ -3432,7 +3434,8 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 				s_ele = ELE_DARK;
 			break;
 		case KO_KAIHOU:
-			if( sd ){
+			if (sd) {
+				int i;
 				ARR_FIND(SPIRITS_TYPE_CHARM_WATER, SPIRITS_TYPE_SPHERE, i, sd->spiritcharm[i] > 0);
 				if( i < SPIRITS_TYPE_SPHERE )
 					s_ele = i;
@@ -3449,6 +3452,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 
 	if (!flag.infdef) //No need to do the math for plants
 	{
+		int i;
 #ifdef RENEWAL
 		ad.damage = 0; //reinitialize..
 #endif
@@ -3703,7 +3707,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	nullpo_retr(md, target);
 
 	//Some initial values
-	md.amotion=skill->get_inf(skill_id)&INF_GROUND_SKILL?0:sstatus->amotion;
+	md.amotion = (skill->get_inf(skill_id)&INF_GROUND_SKILL) ? 0 : sstatus->amotion;
 	md.dmotion=tstatus->dmotion;
 	md.div_=skill->get_num( skill_id,skill_lv );
 	md.blewcount=skill->get_blewcount(skill_id,skill_lv);
@@ -4174,8 +4178,8 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 	nk = skill->get_nk(skill_id);
 	if( !skill_id && wflag ) //If flag, this is splash damage from Baphomet Card and it always hits.
 		nk |= NK_NO_CARDFIX_ATK|NK_IGNORE_FLEE;
-	flag.hit = nk&NK_IGNORE_FLEE?1:0;
-	flag.idef = flag.idef2 = nk&NK_IGNORE_DEF?1:0;
+	flag.hit = (nk&NK_IGNORE_FLEE) ? 1 : 0;
+	flag.idef = flag.idef2 = (nk&NK_IGNORE_DEF) ? 1 : 0;
 #ifdef RENEWAL
 	flag.tdef = 0;
 #endif
@@ -5427,7 +5431,6 @@ void battle_reflect_damage(struct block_list *target, struct block_list *src, st
 	int64 damage = wd->damage + wd->damage2, rdamage = 0, trdamage = 0;
 	struct map_session_data *sd, *tsd;
 	struct status_change *sc;
-	struct status_change *ssc;
 	int64 tick = timer->gettick();
 	int delay = 50, rdelay = 0;
 #ifdef RENEWAL
@@ -5515,6 +5518,7 @@ void battle_reflect_damage(struct block_list *target, struct block_list *src, st
 		}
 
 		if( wd->dmg_lv >= ATK_BLOCK ) {/* yes block still applies, somehow gravity thinks it makes sense. */
+			struct status_change *ssc;
 			if( sc ) {
 				struct status_change_entry *sce_d = sc->data[SC_DEVOTION];
 				struct block_list *d_bl = NULL;
@@ -5604,10 +5608,8 @@ void battle_reflect_damage(struct block_list *target, struct block_list *src, st
 		}
 	}
 
-#ifdef __clang_analyzer__
-	// Tell Clang's static analyzer that we want to += it even the value is currently unused (it'd be used if we added new checks)
+	// Tell analyzers/compilers that we want to += it even the value is currently unused (it'd be used if we added new checks)
 	(void)delay;
-#endif // __clang_analyzer
 
 	/* something caused reflect */
 	if( trdamage ) {
@@ -5737,10 +5739,10 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 		{
 			int index = sd->equip_index[EQI_AMMO];
 			if (index<0) {
-				if (sd->weapontype1 > W_KATAR || sd->weapontype1 < W_HUUMA)
-					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
-				else
+				if (sd->weapontype1 > W_KATAR && sd->weapontype1 < W_HUUMA)
 					clif->arrow_fail(sd, 0);
+				else
+					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
 				return ATK_NONE;
 			}
 			//Ammo check by Ishizu-chan

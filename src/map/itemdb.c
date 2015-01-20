@@ -1122,7 +1122,7 @@ void itemdb_read_packages(void) {
 
 void itemdb_read_chains(void) {
 	config_t item_chain_conf;
-	config_setting_t *itc = NULL, *entry = NULL;
+	config_setting_t *itc = NULL;
 #ifdef RENEWAL
 	const char *config_filename = "db/re/item_chain.conf"; // FIXME hardcoded name
 #else
@@ -1146,6 +1146,7 @@ void itemdb_read_chains(void) {
 		struct item_chain_entry *prev = NULL;
 		const char *name = config_setting_name(itc);
 		int c = 0;
+		config_setting_t *entry = NULL;
 		
 		script->set_constant2(name,i-1,0);
 		itemdb->chains[count].qty = (unsigned short)libconfig->setting_length(itc);
@@ -2094,7 +2095,6 @@ bool itemdb_is_item_usable(struct item_data *item)
 /// Destroys the item_data.
 void destroy_item_data(struct item_data* self, int free_self)
 {
-	int v;
 	if( self == NULL )
 		return;
 	// free scripts
@@ -2108,11 +2108,12 @@ void destroy_item_data(struct item_data* self, int free_self)
 		aFree(self->combos);
 	if (self->hdata)
 	{
-		for (v = 0; v < self->hdatac; v++ ) {
-			if (self->hdata[v]->flag.free ) {
-				aFree(self->hdata[v]->data);
+		int i;
+		for (i = 0; i < self->hdatac; i++ ) {
+			if (self->hdata[i]->flag.free ) {
+				aFree(self->hdata[i]->data);
 			}
-			aFree(self->hdata[v]);
+			aFree(self->hdata[i]);
 		}
 		aFree(self->hdata);
 	}
@@ -2157,10 +2158,9 @@ void itemdb_clear(bool total) {
 	itemdb->groups = NULL;
 	itemdb->group_count = 0;
 	
-	if( itemdb->chains )
-	{
-		for( i = 0; i < itemdb->chain_count; i++ ) {
-			if( itemdb->chains[i].items )
+	if (itemdb->chains) {
+		for (i = 0; i < itemdb->chain_count; i++) {
+			if (itemdb->chains[i].items)
 				aFree(itemdb->chains[i].items);
 		}
 		aFree(itemdb->chains);
@@ -2169,14 +2169,12 @@ void itemdb_clear(bool total) {
 	itemdb->chains = NULL;
 	itemdb->chain_count = 0;
 	
-	if( itemdb->packages )
-	{
-		for( i = 0; i < itemdb->package_count; i++ ) {
-			int c;
-			if (itemdb->packages[i].random_groups)
-			{
-				for( c = 0; c < itemdb->packages[i].random_qty; c++ )
-					aFree(itemdb->packages[i].random_groups[c].random_list);
+	if (itemdb->packages) {
+		for (i = 0; i < itemdb->package_count; i++) {
+			if (itemdb->packages[i].random_groups) {
+				int j;
+				for (j = 0; j < itemdb->packages[i].random_qty; j++)
+					aFree(itemdb->packages[i].random_groups[j].random_list);
 				aFree(itemdb->packages[i].random_groups);
 			}
 			if( itemdb->packages[i].must_items )
@@ -2187,10 +2185,9 @@ void itemdb_clear(bool total) {
 	}
 	itemdb->package_count = 0;
 	
-	if( itemdb->combos )
-	{
-		for(i = 0; i < itemdb->combo_count; i++) {
-			if( itemdb->combos[i]->script ) // Check if script was loaded
+	if (itemdb->combos) {
+		for (i = 0; i < itemdb->combo_count; i++) {
+			if (itemdb->combos[i]->script) // Check if script was loaded
 				script->free_code(itemdb->combos[i]->script);
 			aFree(itemdb->combos[i]);
 		}
@@ -2200,7 +2197,7 @@ void itemdb_clear(bool total) {
 	itemdb->combos = NULL;
 	itemdb->combo_count = 0;
 	
-	if( total )
+	if (total)
 		return;
 	
 	itemdb->other->clear(itemdb->other, itemdb->final_sub);

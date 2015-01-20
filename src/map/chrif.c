@@ -655,9 +655,9 @@ void chrif_authfail(int fd) {/* HELLO WORLD. ip in RFIFOL 15 is not being used (
  */
 int auth_db_cleanup_sub(DBKey key, DBData *data, va_list ap) {
 	struct auth_node *node = DB->data2ptr(data);
-	const char* states[] = { "Login", "Logout", "Map change" };
 
 	if(DIFF_TICK(timer->gettick(),node->node_created)>60000) {
+		const char* states[] = { "Login", "Logout", "Map change" };
 		switch (node->state) {
 			case ST_LOGOUT:
 				//Re-save attempt (->sd should never be null here).
@@ -1148,7 +1148,6 @@ bool chrif_load_scdata(int fd) {
 
 #ifdef ENABLE_SC_SAVING
 	struct map_session_data *sd;
-	struct status_change_data *data;
 	int aid, cid, i, count;
 
 	aid = RFIFOL(fd,4); //Player Account ID
@@ -1169,7 +1168,7 @@ bool chrif_load_scdata(int fd) {
 	count = RFIFOW(fd,12); //sc_count
 
 	for (i = 0; i < count; i++) {
-		data = (struct status_change_data*)RFIFOP(fd,14 + i*sizeof(struct status_change_data));
+		struct status_change_data *data = (struct status_change_data*)RFIFOP(fd,14 + i*sizeof(struct status_change_data));
 		status->change_start(NULL, &sd->bl, (sc_type)data->type, 10000, data->val1, data->val2, data->val3, data->val4,
 		                     data->tick, SCFLAG_NOAVOID|SCFLAG_FIXEDTICK|SCFLAG_LOADED|SCFLAG_FIXEDRATE);
 	}

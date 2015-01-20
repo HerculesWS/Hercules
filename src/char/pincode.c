@@ -126,10 +126,11 @@ void pincode_notifyLoginPinError(int account_id) {
 }
 
 void pincode_decrypt(unsigned int userSeed, char* pin) {
-	int i, pos;
+	int i;
 	char tab[10] = {0,1,2,3,4,5,6,7,8,9};
 
-	for( i = 1; i < 10; i++ ){
+	for (i = 1; i < 10; i++) {
+		int pos;
 		userSeed = pincode->baseSeed + userSeed * pincode->multiplier;
 		pos = userSeed % (i + 1);
 		if( i != pos ){

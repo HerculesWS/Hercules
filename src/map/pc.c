@@ -273,7 +273,7 @@ int pc_check_banding( struct block_list *bl, va_list ap ) {
 int pc_banding(struct map_session_data *sd, uint16 skill_lv) {
 	int c;
 	int b_sd[MAX_PARTY]; // In case of a full Royal Guard party.
-	int i, j, hp, extra_hp = 0, tmp_qty = 0, tmp_hp;
+	int i, j, hp, extra_hp = 0, tmp_qty = 0;
 	struct map_session_data *bsd;
 	struct status_change *sc;
 	int range = skill->get_splash(LG_BANDING,skill_lv);
@@ -309,10 +309,10 @@ int pc_banding(struct map_session_data *sd, uint16 skill_lv) {
 	hp = hp / i;
 
 	// If a Royal Guard have full HP, give more HP to others that haven't full HP.
-	for( j = 0; j < i; j++ ) {
+	for (j = 0; j < i; j++) {
+		int tmp_hp;
 		bsd = map->id2sd(b_sd[j]);
-		if( bsd != NULL && (tmp_hp = hp - status_get_max_hp(&bsd->bl)) > 0 )
-		{
+		if (bsd != NULL && (tmp_hp = hp - status_get_max_hp(&bsd->bl)) > 0) {
 			extra_hp += tmp_hp;
 			tmp_qty++;
 		}
@@ -664,12 +664,12 @@ int pc_equippoint(struct map_session_data *sd,int n)
 
 int pc_setinventorydata(struct map_session_data *sd)
 {
-	int i,id;
+	int i;
 
 	nullpo_ret(sd);
 
-	for(i=0;i<MAX_INVENTORY;i++) {
-		id = sd->status.inventory[i].nameid;
+	for (i = 0; i < MAX_INVENTORY; i++) {
+		int id = sd->status.inventory[i].nameid;
 		sd->inventory_data[i] = id?itemdb->search(id):NULL;
 	}
 	return 0;
@@ -760,11 +760,10 @@ int pc_setequipindex(struct map_session_data *sd)
 
 bool pc_isequipped(struct map_session_data *sd, int nameid)
 {
-	int i, j, index;
+	int i, j;
 
-	for( i = 0; i < EQI_MAX; i++ )
-	{
-		index = sd->equip_index[i];
+	for (i = 0; i < EQI_MAX; i++) {
+		int index = sd->equip_index[i];
 		if( index < 0 ) continue;
 
 		if( i == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == index ) continue;
@@ -1241,7 +1240,7 @@ int pc_set_hate_mob(struct map_session_data *sd, int pos, struct block_list *bl)
  *------------------------------------------*/
 int pc_reg_received(struct map_session_data *sd)
 {
-	int i,j, idx = 0;
+	int i, idx = 0;
 
 	sd->vars_ok = true;
 
@@ -1263,8 +1262,10 @@ int pc_reg_received(struct map_session_data *sd)
 	}
 
 	//SG map and mob read [Komurka]
-	for(i=0;i<MAX_PC_FEELHATE;i++) { //for now - someone need to make reading from txt/sql
-		if ((j = pc_readglobalreg(sd,script->add_str(pc->sg_info[i].feel_var)))!=0) {
+	for (i = 0; i < MAX_PC_FEELHATE; i++) {
+		//for now - someone need to make reading from txt/sql
+		int j = pc_readglobalreg(sd,script->add_str(pc->sg_info[i].feel_var));
+		if (j != 0) {
 			sd->feel_map[i].index = j;
 			sd->feel_map[i].m = map->mapindex2mapid(j);
 		} else {
@@ -1355,12 +1356,13 @@ int pc_reg_received(struct map_session_data *sd)
 }
 
 int pc_calc_skillpoint(struct map_session_data* sd) {
-	int  i,skill_lv,inf2,skill_point=0;
+	int  i,inf2,skill_point=0;
 
 	nullpo_ret(sd);
 
-	for(i=1;i<MAX_SKILL;i++){
-		if( (skill_lv = pc->checkskill2(sd,i)) > 0) {
+	for (i = 1; i < MAX_SKILL; i++) {
+		int skill_lv = pc->checkskill2(sd,i);
+		if (skill_lv > 0) {
 			inf2 = skill->db[i].inf2;
 			if((!(inf2&INF2_QUEST_SKILL) || battle_config.quest_skill_learn) &&
 				!(inf2&(INF2_WEDDING_SKILL|INF2_SPIRIT_SKILL|INF2_GUILD_SKILL)) //Do not count wedding/link skills. [Skotlex]
@@ -1570,22 +1572,23 @@ void pc_check_skilltree(struct map_session_data *sd, int skill_id)
 	c = pc->class2idx(c);
 	do {
 		flag = 0;
-		for( i = 0; i < MAX_SKILL_TREE && (id=pc->skill_tree[c][i].id)>0; i++ ) {
-			int j, f = 1, k, idx = pc->skill_tree[c][i].idx;
+		for (i = 0; i < MAX_SKILL_TREE && (id=pc->skill_tree[c][i].id)>0; i++) {
+			int j, f = 1, idx = pc->skill_tree[c][i].idx;
 
 			if( sd->status.skill[idx].id ) //Already learned
 				continue;
 
-			for( j = 0; j < MAX_PC_SKILL_REQUIRE; j++ ) {
-				if( (k = pc->skill_tree[c][i].need[j].id) ) {
+			for (j = 0; j < MAX_PC_SKILL_REQUIRE; j++) {
+				int k = pc->skill_tree[c][i].need[j].id;
+				if (k) {
 					int idx2 = pc->skill_tree[c][i].need[j].idx;
-					if( sd->status.skill[idx2].id == 0 || sd->status.skill[idx2].flag == SKILL_FLAG_TEMPORARY || sd->status.skill[idx2].flag == SKILL_FLAG_PLAGIARIZED )
+					if (sd->status.skill[idx2].id == 0 || sd->status.skill[idx2].flag == SKILL_FLAG_TEMPORARY || sd->status.skill[idx2].flag == SKILL_FLAG_PLAGIARIZED)
 						k = 0; //Not learned.
-					else if( sd->status.skill[idx2].flag >= SKILL_FLAG_REPLACED_LV_0) //Real lerned level
+					else if (sd->status.skill[idx2].flag >= SKILL_FLAG_REPLACED_LV_0) //Real lerned level
 						k = sd->status.skill[idx2].flag - SKILL_FLAG_REPLACED_LV_0;
 					else
 						k = pc->checkskill2(sd,idx2);
-					if( k < pc->skill_tree[c][i].need[j].lv ) {
+					if (k < pc->skill_tree[c][i].need[j].lv) {
 						f = 0;
 						break;
 					}
@@ -3475,12 +3478,12 @@ int pc_bonus4(struct map_session_data *sd,int type,int type2,int type3,int type4
 	switch(type) {
 	case SP_AUTOSPELL:
 		if(sd->state.lr_flag != 2)
-			pc->bonus_autospell(sd->autospell, ARRAYLENGTH(sd->autospell), (val&1?type2:-type2), (val&2?-type3:type3), type4, 0, status->current_equip_card_id);
+			pc->bonus_autospell(sd->autospell, ARRAYLENGTH(sd->autospell), (val&1) ? type2 : -type2, (val&2) ? -type3 : type3, type4, 0, status->current_equip_card_id);
 		break;
 
 	case SP_AUTOSPELL_WHENHIT:
 		if(sd->state.lr_flag != 2)
-			pc->bonus_autospell(sd->autospell2, ARRAYLENGTH(sd->autospell2), (val&1?type2:-type2), (val&2?-type3:type3), type4, BF_NORMAL|BF_SKILL, status->current_equip_card_id);
+			pc->bonus_autospell(sd->autospell2, ARRAYLENGTH(sd->autospell2), (val&1) ? type2 : -type2, (val&2) ? -type3 : type3, type4, BF_NORMAL|BF_SKILL, status->current_equip_card_id);
 		break;
 
 	case SP_AUTOSPELL_ONSKILL:
@@ -3539,17 +3542,17 @@ int pc_bonus5(struct map_session_data *sd,int type,int type2,int type3,int type4
 	switch(type){
 		case SP_AUTOSPELL:
 			if(sd->state.lr_flag != 2)
-				pc->bonus_autospell(sd->autospell, ARRAYLENGTH(sd->autospell), (val&1?type2:-type2), (val&2?-type3:type3), type4, type5, status->current_equip_card_id);
+				pc->bonus_autospell(sd->autospell, ARRAYLENGTH(sd->autospell), (val&1) ? type2 : -type2, (val&2) ? -type3 : type3, type4, type5, status->current_equip_card_id);
 			break;
 
 		case SP_AUTOSPELL_WHENHIT:
 			if(sd->state.lr_flag != 2)
-				pc->bonus_autospell(sd->autospell2, ARRAYLENGTH(sd->autospell2), (val&1?type2:-type2), (val&2?-type3:type3), type4, type5, status->current_equip_card_id);
+				pc->bonus_autospell(sd->autospell2, ARRAYLENGTH(sd->autospell2), (val&1) ? type2 : -type2, (val&2) ? -type3 : type3, type4, type5, status->current_equip_card_id);
 			break;
 
 		case SP_AUTOSPELL_ONSKILL:
 			if(sd->state.lr_flag != 2)
-				pc->bonus_autospell_onskill(sd->autospell3, ARRAYLENGTH(sd->autospell3), type2, (val&1?-type3:type3), (val&2?-type4:type4), type5, status->current_equip_card_id);
+				pc->bonus_autospell_onskill(sd->autospell3, ARRAYLENGTH(sd->autospell3), type2, (val&1) ? -type3 : type3, (val&2) ? -type4 : type4, type5, status->current_equip_card_id);
 			break;
 
 		default:
@@ -4165,7 +4168,6 @@ int pc_takeitem(struct map_session_data *sd,struct flooritem_data *fitem)
 {
 	int flag=0;
 	int64 tick = timer->gettick();
-	struct map_session_data *first_sd = NULL,*second_sd = NULL,*third_sd = NULL;
 	struct party_data *p=NULL;
 
 	nullpo_ret(sd);
@@ -4180,29 +4182,25 @@ int pc_takeitem(struct map_session_data *sd,struct flooritem_data *fitem)
 	if (sd->status.party_id)
 		p = party->search(sd->status.party_id);
 
-	if(fitem->first_get_charid > 0 && fitem->first_get_charid != sd->status.char_id) {
-		first_sd = map->charid2sd(fitem->first_get_charid);
-		if(DIFF_TICK(tick,fitem->first_get_tick) < 0) {
+	if (fitem->first_get_charid > 0 && fitem->first_get_charid != sd->status.char_id) {
+		struct map_session_data *first_sd = map->charid2sd(fitem->first_get_charid);
+		if (DIFF_TICK(tick,fitem->first_get_tick) < 0) {
 			if (!(p && p->party.item&1 &&
 				first_sd && first_sd->status.party_id == sd->status.party_id
 			))
 				return 0;
-		}
-		else
-		if(fitem->second_get_charid > 0 && fitem->second_get_charid != sd->status.char_id) {
-			second_sd = map->charid2sd(fitem->second_get_charid);
-			if(DIFF_TICK(tick, fitem->second_get_tick) < 0) {
-				if(!(p && p->party.item&1 &&
+		} else if (fitem->second_get_charid > 0 && fitem->second_get_charid != sd->status.char_id) {
+			struct map_session_data *second_sd = map->charid2sd(fitem->second_get_charid);
+			if (DIFF_TICK(tick, fitem->second_get_tick) < 0) {
+				if (!(p && p->party.item&1 &&
 					((first_sd && first_sd->status.party_id == sd->status.party_id) ||
 					(second_sd && second_sd->status.party_id == sd->status.party_id))
 				))
 					return 0;
-			}
-			else
-			if(fitem->third_get_charid > 0 && fitem->third_get_charid != sd->status.char_id) {
-				third_sd = map->charid2sd(fitem->third_get_charid);
-				if(DIFF_TICK(tick,fitem->third_get_tick) < 0) {
-					if(!(p && p->party.item&1 &&
+			} else if (fitem->third_get_charid > 0 && fitem->third_get_charid != sd->status.char_id) {
+				struct map_session_data *third_sd = map->charid2sd(fitem->third_get_charid);
+				if (DIFF_TICK(tick,fitem->third_get_tick) < 0) {
+					if (!(p && p->party.item&1 &&
 						((first_sd && first_sd->status.party_id == sd->status.party_id) ||
 						(second_sd && second_sd->status.party_id == sd->status.party_id) ||
 						(third_sd && third_sd->status.party_id == sd->status.party_id))
@@ -4383,7 +4381,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 	//Not equipable by class. [Skotlex]
 	if (!(
 		(1<<(sd->class_&MAPID_BASEMASK)) &
-		(item->class_base[sd->class_&JOBL_2_1?1:(sd->class_&JOBL_2_2?2:0)])
+		(item->class_base[(sd->class_&JOBL_2_1) ? 1 : ((sd->class_&JOBL_2_2) ? 2 : 0)])
 	))
 		return 0;
 	
@@ -6013,7 +6011,7 @@ void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned in
 
 	if (sd->expaddrace[st->race])
 		bonus += sd->expaddrace[st->race];
-	bonus += sd->expaddrace[st->mode&MD_BOSS?RC_BOSS:RC_NONBOSS];
+	bonus += sd->expaddrace[(st->mode&MD_BOSS) ? RC_BOSS : RC_NONBOSS];
 
 	if (battle_config.pk_mode
 	 && (int)(status->get_lv(src) - sd->status.base_level) >= 20)
@@ -6453,7 +6451,7 @@ int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
  *------------------------------------------*/
 int pc_allskillup(struct map_session_data *sd)
 {
-	int i,id;
+	int i;
 
 	nullpo_ret(sd);
 
@@ -6481,10 +6479,10 @@ int pc_allskillup(struct map_session_data *sd)
 			}
 		}
 	} else {
-		int inf2;
-		for(i=0;i < MAX_SKILL_TREE && (id=pc->skill_tree[pc->class2idx(sd->status.class_)][i].id)>0;i++){
+		int id;
+		for (i = 0; i < MAX_SKILL_TREE && (id=pc->skill_tree[pc->class2idx(sd->status.class_)][i].id) > 0; i++) {
 			int idx = pc->skill_tree[pc->class2idx(sd->status.class_)][i].idx;
-			inf2 = skill->db[idx].inf2;
+			int inf2 = skill->db[idx].inf2;
 			if (
 				(inf2&INF2_QUEST_SKILL && !battle_config.quest_skill_learn) ||
 				(inf2&(INF2_WEDDING_SKILL|INF2_SPIRIT_SKILL)) ||
@@ -6607,7 +6605,7 @@ int pc_resetstate(struct map_session_data* sd)
 			return 0;
 		}
 
-		sd->status.status_point = pc->statp[sd->status.base_level] + ( sd->class_&JOBL_UPPER ? 52 : 0 ); // extra 52+48=100 stat points
+		sd->status.status_point = pc->statp[sd->status.base_level] + ((sd->class_&JOBL_UPPER) ? 52 : 0); // extra 52+48=100 stat points
 	}
 	else
 	{
@@ -6664,7 +6662,7 @@ int pc_resetstate(struct map_session_data* sd)
  *------------------------------------------*/
 int pc_resetskill(struct map_session_data* sd, int flag)
 {
-	int i, lv, inf2, skill_point=0;
+	int i, inf2, skill_point=0;
 	nullpo_ret(sd);
 
 	if( flag&4 && (sd->class_&MAPID_UPPERMASK) != MAPID_BARDDANCER )
@@ -6708,8 +6706,10 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 	}
 
 	for( i = 1; i < MAX_SKILL; i++ ) {
+		// FIXME: We're looping on i = [1..MAX_SKILL-1] (which makes sense as index for sd->status.skill[]) but then we're using the
+		// same i to access skill->db[], and especially to check skill_ischangesex(). This is wrong.
 		uint16 skill_id = 0;
-		lv = sd->status.skill[i].lv;
+		int lv = sd->status.skill[i].lv;
 		if (lv < 1) continue;
 
 		inf2 = skill->db[i].inf2;
@@ -7311,7 +7311,7 @@ int pc_readparam(struct map_session_data* sd,int type)
 		case SP_JOBLEVEL:        val = sd->status.job_level; break;
 		case SP_CLASS:           val = sd->status.class_; break;
 		case SP_BASEJOB:         val = pc->mapid2jobid(sd->class_&MAPID_UPPERMASK, sd->status.sex); break; //Base job, extracting upper type.
-		case SP_UPPER:           val = sd->class_&JOBL_UPPER?1:(sd->class_&JOBL_BABY?2:0); break;
+		case SP_UPPER:           val = (sd->class_&JOBL_UPPER) ? 1 : ((sd->class_&JOBL_BABY) ? 2 : 0); break;
 		case SP_BASECLASS:       val = pc->mapid2jobid(sd->class_&MAPID_BASEMASK, sd->status.sex); break; //Extract base class tree. [Skotlex]
 		case SP_SEX:             val = sd->status.sex; break;
 		case SP_WEIGHT:          val = sd->weight; break;
@@ -7452,8 +7452,6 @@ int pc_readparam(struct map_session_data* sd,int type)
  *------------------------------------------*/
 int pc_setparam(struct map_session_data *sd,int type,int val)
 {
-	int i = 0;
-
 	nullpo_ret(sd);
 
 	switch(type){
@@ -7461,7 +7459,7 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 		if ((unsigned int)val > pc->maxbaselv(sd)) //Capping to max
 			val = pc->maxbaselv(sd);
 		if ((unsigned int)val > sd->status.base_level) {
-			int stat=0;
+			int stat = 0, i;
 			for (i = 0; i < (int)((unsigned int)val - sd->status.base_level); i++)
 				stat += pc->gets_status_point(sd->status.base_level + i);
 			sd->status.status_point += stat;
@@ -8464,7 +8462,6 @@ char* pc_readregistry_str(struct map_session_data *sd, int64 reg) {
  **/
 int pc_setregistry(struct map_session_data *sd, int64 reg, int val) {
 	struct script_reg_num *p = NULL;
-	int i;
 	const char *regname = script->get_str( script_getvarid(reg) );
 	unsigned int index = script_getvaridx(reg);
 
@@ -8472,7 +8469,7 @@ int pc_setregistry(struct map_session_data *sd, int64 reg, int val) {
 	switch( regname[0] ) {
 		default: //Char reg
 			if( !strcmp(regname,"PC_DIE_COUNTER") && sd->die_counter != val ) {
-				i = (!sd->die_counter && (sd->class_&MAPID_UPPERMASK) == MAPID_SUPER_NOVICE);
+				int i = (!sd->die_counter && (sd->class_&MAPID_UPPERMASK) == MAPID_SUPER_NOVICE);
 				sd->die_counter = val;
 				if( i )
 					status_calc_pc(sd,SCO_NONE); // Lost the bonus.
@@ -9267,27 +9264,28 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
  *------------------------------------------*/
 int pc_checkitem(struct map_session_data *sd)
 {
-	int i, id, calc_flag = 0;
+	int i, calc_flag = 0;
 
 	nullpo_ret(sd);
 
-	if( sd->state.vending ) //Avoid reorganizing items when we are vending, as that leads to exploits (pointed out by End of Exam)
+	if (sd->state.vending) //Avoid reorganizing items when we are vending, as that leads to exploits (pointed out by End of Exam)
 		return 0;
 
-	if( sd->state.itemcheck ) { // check for invalid(ated) items
-		for( i = 0; i < MAX_INVENTORY; i++ ) {
+	if (sd->state.itemcheck) { // check for invalid(ated) items
+		int id;
+		for (i = 0; i < MAX_INVENTORY; i++) {
 			id = sd->status.inventory[i].nameid;
 
 			if (!id)
 				continue;
 
-			if( !itemdb_available(id) ) {
+			if (!itemdb_available(id)) {
 				ShowWarning("Removed invalid/disabled item id %d from inventory (amount=%d, char_id=%d).\n", id, sd->status.inventory[i].amount, sd->status.char_id);
 				pc->delitem(sd, i, sd->status.inventory[i].amount, 0, 0, LOG_TYPE_OTHER);
 				continue;
 			}
 
-			if ( !sd->status.inventory[i].unique_id && !itemdb->isstackable(id) )
+			if (!sd->status.inventory[i].unique_id && !itemdb->isstackable(id))
 				sd->status.inventory[i].unique_id = itemdb->unique_id(sd);
 		}
 
@@ -9959,8 +9957,8 @@ int pc_split_atoui(char* str, unsigned int* val, char sep, int max)
 {
 	static int warning=0;
 	int i,j;
-	double f;
 	for (i=0; i<max; i++) {
+		double f;
 		if (!str) break;
 		f = atof(str);
 		if (f < 0)
@@ -10121,8 +10119,8 @@ void pc_read_skill_tree(void) {
 	
 	jnamelen = ARRAYLENGTH(jnames);
 	
-	while( (skt = libconfig->setting_get_elem(skill_tree_conf.root,i++)) ) {
-		int k, idx;
+	while ((skt = libconfig->setting_get_elem(skill_tree_conf.root,i++))) {
+		int k;
 		const char *name = config_setting_name(skt);
 		
 		ARR_FIND(0, jnamelen, k, strcmpi(jnames[k].name,name) == 0 );
@@ -10135,15 +10133,14 @@ void pc_read_skill_tree(void) {
 		
 		if( ( skills = libconfig->setting_get_member(skt,"skills") ) ) {
 			int c = 0;
+			int idx = pc->class2idx(jnames[k].id);
 			
-			idx = pc->class2idx(jnames[k].id);
-			
-			while( ( sk = libconfig->setting_get_elem(skills,c++) ) ) {
+			while ((sk = libconfig->setting_get_elem(skills,c++))) {
 				const char *sk_name = config_setting_name(sk);
 				int skill_id;
 				
 				if( ( skill_id = skill->name2id(sk_name) ) ) {
-					int skidx, offset = 0, h = 0, rlen = 0, rskid = 0;
+					int skidx, offset = 0, h = 0, rlen = 0;
 					
 					ARR_FIND( 0, MAX_SKILL_TREE, skidx, pc->skill_tree[idx][skidx].id == 0 || pc->skill_tree[idx][skidx].id == skill_id );
 					if (skidx == MAX_SKILL_TREE) {
@@ -10169,9 +10166,10 @@ void pc_read_skill_tree(void) {
 						pc->skill_tree[idx][skidx].joblv = 0;
 					}
 					
-					for( h = offset; h < rlen && h < MAX_PC_SKILL_REQUIRE; h++ ) {
+					for (h = offset; h < rlen && h < MAX_PC_SKILL_REQUIRE; h++) {
 						config_setting_t *rsk = libconfig->setting_get_elem(sk,h);
-						if( rsk && ( rskid = skill->name2id(config_setting_name(rsk)) ) ) {
+						int rskid;
+						if (rsk && ( rskid = skill->name2id(config_setting_name(rsk)))) {
 							pc->skill_tree[idx][skidx].need[h].id  = rskid;
 							pc->skill_tree[idx][skidx].need[h].idx = skill->get_index(rskid);
 							pc->skill_tree[idx][skidx].need[h].lv  = (unsigned char)libconfig->setting_get_int(rsk);
@@ -10191,9 +10189,8 @@ void pc_read_skill_tree(void) {
 	
 	i = 0;
 	while( (skt = libconfig->setting_get_elem(skill_tree_conf.root,i++)) ) {
-		int k, idx, v = 0;
+		int k, idx;
 		const char *name = config_setting_name(skt);
-		const char *iname;
 
 		
 		ARR_FIND(0, jnamelen, k, strcmpi(jnames[k].name,name) == 0 );
@@ -10205,7 +10202,9 @@ void pc_read_skill_tree(void) {
 		idx = pc->class2idx(jnames[k].id);
 
 		if( ( inherit = libconfig->setting_get_member(skt,"inherit") ) ) {
-			while( ( iname = libconfig->setting_get_string_elem(inherit, v++) ) ) {
+			const char *iname;
+			int v = 0;
+			while ((iname = libconfig->setting_get_string_elem(inherit, v++))) {
 				int b = 0, a, d, f, fidx;
 
 				ARR_FIND(0, jnamelen, b, strcmpi(jnames[b].name,iname) == 0 );
@@ -10638,14 +10637,15 @@ void pc_expire_check(struct map_session_data *sd) {
 /**
  * Loads autotraders
  ***/
-void pc_autotrade_load(void) {
-	struct map_session_data *sd;
+void pc_autotrade_load(void)
+{
 	char *data;
 	
 	if (SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT `account_id`,`char_id`,`sex`,`title` FROM `%s`",map->autotrade_merchants_db))
 		Sql_ShowDebug(map->mysql_handle);
 	
-	while( SQL_SUCCESS == SQL->NextRow(map->mysql_handle) ) {
+	while (SQL_SUCCESS == SQL->NextRow(map->mysql_handle)) {
+		struct map_session_data *sd;
 		int account_id, char_id;
 		char title[MESSAGE_SIZE];
 		unsigned char sex;

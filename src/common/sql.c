@@ -816,10 +816,8 @@ int SqlStmt_NextRow(SqlStmt* self)
 	int err;
 	size_t i;
 	size_t cols;
-	MYSQL_BIND* column;
-	unsigned long length;
 
-	if( self == NULL )
+	if (self == NULL)
 		return SQL_ERROR;
 
 	// bind columns
@@ -829,30 +827,27 @@ int SqlStmt_NextRow(SqlStmt* self)
 		err = mysql_stmt_fetch(self->stmt);// fetch row
 
 	// check for errors
-	if( err == MYSQL_NO_DATA )
+	if (err == MYSQL_NO_DATA)
 		return SQL_NO_DATA;
 #if defined(MYSQL_DATA_TRUNCATED)
 	// MySQL 5.0/5.1 defines and returns MYSQL_DATA_TRUNCATED [FlavioJS]
-	if( err == MYSQL_DATA_TRUNCATED )
-	{
+	if (err == MYSQL_DATA_TRUNCATED) {
 		my_bool truncated;
 
-		if( !self->bind_columns )
-		{
+		if (!self->bind_columns) {
 			ShowSQL("DB error - data truncated (unknown source, columns are not bound)\n");
 			return SQL_ERROR;
 		}
 
 		// find truncated column
 		cols = SQL->StmtNumColumns(self);
-		for( i = 0; i < cols; ++i )
-		{
-			column = &self->columns[i];
+		for (i = 0; i < cols; ++i) {
+			MYSQL_BIND *column = &self->columns[i];
 			column->error = &truncated;
 			mysql_stmt_fetch_column(self->stmt, column, (unsigned int)i, 0);
 			column->error = NULL;
-			if( truncated )
-			{// report truncated column
+			if (truncated) {
+				// report truncated column
 				SqlStmt_P_ShowDebugTruncatedColumn(self, i);
 				return SQL_ERROR;
 			}
@@ -861,8 +856,7 @@ int SqlStmt_NextRow(SqlStmt* self)
 		return SQL_ERROR;
 	}
 #endif
-	if( err )
-	{
+	if (err) {
 		ShowSQL("DB error - %s\n", mysql_stmt_error(self->stmt));
 		hercules_mysql_error_handler(mysql_stmt_errno(self->stmt));
 		return SQL_ERROR;
@@ -870,30 +864,28 @@ int SqlStmt_NextRow(SqlStmt* self)
 
 	// propagate column lengths and clear unused parts of string/enum/blob buffers
 	cols = SQL->StmtNumColumns(self);
-	for( i = 0; i < cols; ++i )
-	{
-		length = self->column_lengths[i].length;
-		column = &self->columns[i];
+	for (i = 0; i < cols; ++i) {
+		unsigned long length = self->column_lengths[i].length;
+		MYSQL_BIND *column = &self->columns[i];
 #if !defined(MYSQL_DATA_TRUNCATED)
 		// MySQL 4.1/(below?) returns success even if data is truncated, so we test truncation manually [FlavioJS]
-		if( column->buffer_length < length )
-		{// report truncated column
-			if( column->buffer_type == MYSQL_TYPE_STRING || column->buffer_type == MYSQL_TYPE_BLOB )
-			{// string/enum/blob column
+		if (column->buffer_length < length) {
+			// report truncated column
+			if (column->buffer_type == MYSQL_TYPE_STRING || column->buffer_type == MYSQL_TYPE_BLOB) {
+				// string/enum/blob column
 				SqlStmt_P_ShowDebugTruncatedColumn(self, i);
 				return SQL_ERROR;
 			}
 			// FIXME numeric types and null [FlavioJS]
 		}
 #endif
-		if( self->column_lengths[i].out_length )
+		if (self->column_lengths[i].out_length)
 			*self->column_lengths[i].out_length = (uint32)length;
-		if( column->buffer_type == MYSQL_TYPE_STRING )
-		{// clear unused part of the string/enum buffer (and null-terminate)
+		if (column->buffer_type == MYSQL_TYPE_STRING) {
+			// clear unused part of the string/enum buffer (and null-terminate)
 			memset((char*)column->buffer + length, 0, column->buffer_length - length + 1);
-		}
-		else if( column->buffer_type == MYSQL_TYPE_BLOB && length < column->buffer_length )
-		{// clear unused part of the blob buffer
+		} else if (column->buffer_type == MYSQL_TYPE_BLOB && length < column->buffer_length) {
+			// clear unused part of the blob buffer
 			memset((char*)column->buffer + length, 0, column->buffer_length - length);
 		}
 	}
@@ -958,7 +950,6 @@ void hercules_mysql_error_handler(unsigned int ecode) {
 	}
 }
 void Sql_inter_server_read(const char* cfgName, bool first) {
-	int i;
 	char line[1024], w1[1024], w2[1024];
 	FILE* fp;
 
@@ -973,7 +964,7 @@ void Sql_inter_server_read(const char* cfgName, bool first) {
 	}
 
 	while (fgets(line, sizeof(line), fp)) {
-		i = sscanf(line, "%1023[^:]: %1023[^\r\n]", w1, w2);
+		int i = sscanf(line, "%1023[^:]: %1023[^\r\n]", w1, w2);
 		if (i != 2)
 			continue;
 

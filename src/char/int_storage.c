@@ -36,7 +36,6 @@ int inter_storage_tosql(int account_id, struct storage_data* p)
 int inter_storage_fromsql(int account_id, struct storage_data* p)
 {
 	StringBuf buf;
-	struct item* item;
 	char* data;
 	int i;
 	int j;
@@ -56,9 +55,8 @@ int inter_storage_fromsql(int account_id, struct storage_data* p)
 
 	StrBuf->Destroy(&buf);
 
-	for( i = 0; i < MAX_STORAGE && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i )
-	{
-		item = &p->items[i];
+	for (i = 0; i < MAX_STORAGE && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i) {
+		struct item *item = &p->items[i];
 		SQL->GetData(inter->sql_handle, 0, &data, NULL); item->id = atoi(data);
 		SQL->GetData(inter->sql_handle, 1, &data, NULL); item->nameid = atoi(data);
 		SQL->GetData(inter->sql_handle, 2, &data, NULL); item->amount = atoi(data);
@@ -93,7 +91,6 @@ int inter_storage_guild_storage_tosql(int guild_id, struct guild_storage* p)
 int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storage* p)
 {
 	StringBuf buf;
-	struct item* item;
 	char* data;
 	int i;
 	int j;
@@ -114,8 +111,8 @@ int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storage* p)
 
 	StrBuf->Destroy(&buf);
 
-	for( i = 0; i < MAX_GUILD_STORAGE && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i ) {
-		item = &p->items[i];
+	for (i = 0; i < MAX_GUILD_STORAGE && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i) {
+		struct item *item = &p->items[i];
 		SQL->GetData(inter->sql_handle, 0, &data, NULL); item->id = atoi(data);
 		SQL->GetData(inter->sql_handle, 1, &data, NULL); item->nameid = atoi(data);
 		SQL->GetData(inter->sql_handle, 2, &data, NULL); item->amount = atoi(data);

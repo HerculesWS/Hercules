@@ -1211,7 +1211,6 @@ void homunculus_skill_db_read(void) {
 }
 
 void homunculus_exp_db_read(void) {
-	FILE *fp;
 	char line[1024];
 	int i, j=0;
 	char *filename[]={
@@ -1220,6 +1219,7 @@ void homunculus_exp_db_read(void) {
 
 	memset(homun->exptable,0,sizeof(homun->exptable));
 	for(i = 0; i < 2; i++) {
+		FILE *fp;
 		sprintf(line, "%s/%s", map->db_path, filename[i]);
 		if( (fp=fopen(line,"r")) == NULL) {
 			if(i != 0)
