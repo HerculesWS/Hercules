@@ -116,8 +116,9 @@ int unit_walktoxy_sub(struct block_list *bl)
 		//Trim the last part of the path to account for range,
 		//but always move at least one cell when requested to move.
 		for (i = (ud->chaserange*10)-10; i > 0 && ud->walkpath.path_len>1;) {
+			uint8 dir;
 			ud->walkpath.path_len--;
-			uint8 dir = ud->walkpath.path[ud->walkpath.path_len];
+			dir = ud->walkpath.path[ud->walkpath.path_len];
 			if (dir&1)
 				i -= MOVE_COST*20; //When chasing, units will target a diamond-shaped area in range [Playtester]
 			else

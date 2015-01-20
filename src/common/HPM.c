@@ -882,8 +882,9 @@ void hpm_final(void) {
 			aFree(HPM->confs[i]);
 	}
 	if (HPM->cmdline_plugins) {
-		for (i = 0; i < HPM->cmdline_plugins_count; i++)
-			aFree(HPM->cmdline_plugins[i]);
+		int j;
+		for (j = 0; j < HPM->cmdline_plugins_count; j++)
+			aFree(HPM->cmdline_plugins[j]);
 		aFree(HPM->cmdline_plugins);
 		HPM->cmdline_plugins = NULL;
 		HPM->cmdline_plugins_count = 0;
