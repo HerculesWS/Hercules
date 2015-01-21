@@ -251,7 +251,8 @@ int quest_update_objective_sub(struct block_list *bl, va_list ap) {
  * @param sd     Character's data
  * @param mob_id Monster ID
  */
-void quest_update_objective(TBL_PC *sd, int mob_id) {
+void quest_update_objective(TBL_PC *sd, int mob_id)
+{
 	int i,j;
 
 	for (i = 0; i < sd->avail_quests; i++) {
@@ -262,8 +263,8 @@ void quest_update_objective(TBL_PC *sd, int mob_id) {
 
 		qi = quest->db(sd->quest_log[i].quest_id);
 
-		for (j = 0; j < qi->num_objectives; j++) {
-			if (qi->mob[j] == mob_id && sd->quest_log[i].count[j] < qi->count[j]) {
+		for (j = 0; j < qi->objectives_count; j++) {
+			if (qi->objectives[j].mob == mob_id && sd->quest_log[i].count[j] < qi->objectives[j].count) {
 				sd->quest_log[i].count[j]++;
 				sd->save_quest = true;
 				clif->quest_update_objective(sd, &sd->quest_log[i]);
@@ -354,14 +355,15 @@ int quest_update_status(TBL_PC *sd, int quest_id, enum quest_state qs) {
  *                    1 if the quest's timeout has expired
  *                    0 otherwise
  */
-int quest_check(TBL_PC *sd, int quest_id, enum quest_check_type type) {
+int quest_check(TBL_PC *sd, int quest_id, enum quest_check_type type)
+{
 	int i;
 
 	ARR_FIND(0, sd->num_quests, i, sd->quest_log[i].quest_id == quest_id);
-	if( i == sd->num_quests )
+	if (i == sd->num_quests)
 		return -1;
 
-	switch( type ) {
+	switch (type) {
 		case HAVEQUEST:
 			return sd->quest_log[i].state;
 		case PLAYTIME:
@@ -370,10 +372,10 @@ int quest_check(TBL_PC *sd, int quest_id, enum quest_check_type type) {
 			if( sd->quest_log[i].state == Q_INACTIVE || sd->quest_log[i].state == Q_ACTIVE ) {
 				int j;
 				struct quest_db *qi = quest->db(sd->quest_log[i].quest_id);
-				ARR_FIND(0, MAX_QUEST_OBJECTIVES, j, sd->quest_log[i].count[j] < qi->count[j]);
-				if( j == MAX_QUEST_OBJECTIVES )
+				ARR_FIND(0, qi->objectives_count, j, sd->quest_log[i].count[j] < qi->objectives[j].count);
+				if (j == qi->objectives_count)
 					return 2;
-				if( sd->quest_log[i].time < (unsigned int)time(NULL) )
+				if (sd->quest_log[i].time < (unsigned int)time(NULL))
 					return 1;
 			}
 			return 0;
@@ -443,21 +445,22 @@ struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *sour
 
 	if ((t=libconfig->setting_get_member(cs, "Targets")) && config_setting_is_list(t)) {
 		int i, len = libconfig->setting_length(t);
-		for (i = 0; i < len && entry->num_objectives < MAX_QUEST_OBJECTIVES; i++) {
+		for (i = 0; i < len && entry->objectives_count < MAX_QUEST_OBJECTIVES; i++) {
+			// Note: We ensure that objectives_count < MAX_QUEST_OBJECTIVES because
+			//       quest_log (as well as the client) expect this maximum size.
 			config_setting_t *tt = libconfig->setting_get_elem(t, i);
+			int mob_id = 0, count = 0;
 			if (!tt)
 				break;
 			if (!config_setting_is_group(tt))
 				continue;
-			if (libconfig->setting_lookup_int(tt, "MobId", &i32) && i32 > 0)
-				entry->mob[entry->num_objectives] = i32;
-			if (libconfig->setting_lookup_int(tt, "Count", &i32) && i32 > 0) {
-				entry->count[entry->num_objectives] = i32;
-			} else {
-				entry->mob[entry->num_objectives] = 0;
+			if (!libconfig->setting_lookup_int(tt, "MobId", &mob_id) || mob_id <= 0)
 				continue;
-			}
-			entry->num_objectives++;
+			if (!libconfig->setting_lookup_int(tt, "Count", &count) || count <= 0)
+				continue;
+			RECREATE(entry->objectives, struct quest_objective, ++entry->objectives_count);
+			entry->objectives[entry->objectives_count-1].mob = mob_id;
+			entry->objectives[entry->objectives_count-1].count = count;
 		}
 	}
 
@@ -515,6 +518,8 @@ int quest_read_db(void)
 			ShowWarning("quest_read_db: Duplicate quest %d.\n", entry->id);
 			if (quest->db_data[entry->id]->dropitem)
 				aFree(quest->db_data[entry->id]->dropitem);
+			if (quest->db_data[entry->id]->objectives)
+				aFree(quest->db_data[entry->id]->objectives);
 			aFree(quest->db_data[entry->id]);
 		}
 		quest->db_data[entry->id] = entry;
@@ -567,6 +572,8 @@ void quest_clear_db(void) {
 
 	for (i = 0; i < MAX_QUEST_DB; i++) {
 		if (quest->db_data[i]) {
+			if (quest->db_data[i]->objectives)
+				aFree(quest->db_data[i]->objectives);
 			if (quest->db_data[i]->dropitem)
 				aFree(quest->db_data[i]->dropitem);
 			aFree(quest->db_data[i]);
