@@ -24,7 +24,7 @@ sub parse($$) {
 	$p =~ s/^.*?\)\((.*)\).*$/$1/; # Clean up extra parentheses )(around the arglist)
 
 	# Retrieve return type
-	unless ($d =~ /^(.+)\(\*\s*[a-zA-Z0-9_]+_interface::([^\)]+)\s*\)\(.*\)$/) {
+	unless ($d =~ /^(.+)\(\*\s*[a-zA-Z0-9_]+_interface::([^\)]+)\s*\)\s*\(.*\)$/) {
 		print "Error: unable to parse '$d'\n";
 		return {};
 	}
