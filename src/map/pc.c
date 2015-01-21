@@ -15,6 +15,7 @@
 #include "atcommand.h" // get_atcommand_level()
 #include "battle.h" // battle_config
 #include "battleground.h"
+#include "channel.h"
 #include "chat.h"
 #include "chrif.h"
 #include "clif.h"
@@ -5042,8 +5043,8 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 			vending->close(sd);
 		}
 		
-		if (clif->hChSys->local && map->list[sd->bl.m].channel && idb_exists(map->list[sd->bl.m].channel->users, sd->status.char_id)) {
-			clif->chsys_left(map->list[sd->bl.m].channel,sd);
+		if (channel->config->local && map->list[sd->bl.m].channel && idb_exists(map->list[sd->bl.m].channel->users, sd->status.char_id)) {
+			channel->leave(map->list[sd->bl.m].channel,sd);
 		}
 	}
 

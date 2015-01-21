@@ -1,0 +1,618 @@
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+
+#define HERCULES_CORE
+
+#include "channel.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "atcommand.h"
+#include "guild.h"
+#include "instance.h"
+#include "irc-bot.h"
+#include "map.h"
+#include "pc.h"
+#include "../common/cbasetypes.h"
+#include "../common/conf.h"
+#include "../common/db.h"
+#include "../common/malloc.h"
+#include "../common/random.h"
+#include "../common/showmsg.h"
+#include "../common/socket.h"
+#include "../common/strlib.h"
+#include "../common/timer.h"
+#include "../common/utils.h"
+
+struct channel_interface channel_s;
+
+static struct Channel_Config channel_config;
+
+void channel_create(struct channel_data *chan, char *name, char *pass, unsigned char color)
+{
+	chan->users = idb_alloc(DB_OPT_BASE);
+	if (name)
+		safestrncpy(chan->name, name, HCS_NAME_LENGTH);
+	chan->color = color;
+	if (!pass)
+		chan->pass[0] = '\0';
+	else
+		safestrncpy(chan->pass, pass, HCS_NAME_LENGTH);
+
+	chan->opt = HCS_OPT_BASE;
+	chan->banned = NULL;
+
+	chan->msg_delay = 0;
+
+	if (chan->type != HCS_TYPE_MAP && chan->type != HCS_TYPE_ALLY)
+		strdb_put(channel->db, chan->name, chan);
+}
+
+/**
+ * Sends a message to a channel.
+ *
+ * @param chan The destination channel.
+ * @param sd   The source character.
+ * @param msg  The message to send.
+ */
+void channel_send(struct channel_data *chan, struct map_session_data *sd, const char *msg)
+{
+	nullpo_retv(chan);
+	nullpo_retv(sd);
+
+	if (chan->msg_delay != 0 && DIFF_TICK(sd->hchsysch_tick + chan->msg_delay*1000, timer->gettick()) > 0
+	 && !pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN)) {
+		clif->colormes(sd->fd,COLOR_RED,msg_txt(1455));
+		return;
+	} else {
+		char message[150];
+		snprintf(message, 150, "[ #%s ] %s : %s",chan->name,sd->status.name, msg);
+		clif->channel_msg(chan,sd,message);
+		if (chan->type == HCS_TYPE_IRC)
+			ircbot->relay(sd->status.name,msg);
+		if (chan->msg_delay != 0)
+			sd->hchsysch_tick = timer->gettick();
+	}
+}
+
+void channel_join(struct channel_data *chan, struct map_session_data *sd)
+{
+	if (idb_put(chan->users, sd->status.char_id, sd))
+		return;
+
+	RECREATE(sd->channels, struct channel_data *, ++sd->channel_count);
+	sd->channels[ sd->channel_count - 1 ] = chan;
+
+	if (sd->stealth) {
+		sd->stealth = false;
+	} else if (chan->opt & HCS_OPT_ANNOUNCE_JOIN) {
+		char message[60];
+		sprintf(message, "#%s '%s' joined",chan->name,sd->status.name);
+		clif->channel_msg(chan,sd,message);
+	}
+
+	/* someone is cheating, we kindly disconnect the bastard */
+	if (sd->channel_count > 200) {
+		set_eof(sd->fd);
+	}
+
+}
+
+void channel_map_join(struct map_session_data *sd)
+{
+	if( sd->state.autotrade || sd->state.standalone )
+		return;
+	if( !map->list[sd->bl.m].channel ) {
+
+		if (map->list[sd->bl.m].flag.chsysnolocalaj || (map->list[sd->bl.m].instance_id >= 0 && instance->list[map->list[sd->bl.m].instance_id].owner_type != IOT_NONE) )
+			return;
+
+		CREATE(map->list[sd->bl.m].channel, struct channel_data , 1);
+		safestrncpy(map->list[sd->bl.m].channel->name, channel->config->local_name, HCS_NAME_LENGTH);
+		map->list[sd->bl.m].channel->type = HCS_TYPE_MAP;
+		map->list[sd->bl.m].channel->m = sd->bl.m;
+
+		channel->create(map->list[sd->bl.m].channel, NULL, NULL, channel->config->local_color);
+	}
+
+	if( map->list[sd->bl.m].channel->banned && idb_exists(map->list[sd->bl.m].channel->banned, sd->status.account_id) ) {
+		return;
+	}
+
+	channel->join(map->list[sd->bl.m].channel,sd);
+
+	if( !( map->list[sd->bl.m].channel->opt & HCS_OPT_ANNOUNCE_JOIN ) ) {
+		char mout[60];
+		sprintf(mout, msg_txt(1435), channel->config->local_name, map->list[sd->bl.m].name); // You're now in the '#%s' channel for '%s'
+		clif->colormes(sd->fd, COLOR_DEFAULT, mout);
+	}
+}
+
+void channel_leave(struct channel_data *chan, struct map_session_data *sd)
+{
+	unsigned char i;
+
+	if ( !idb_remove(chan->users,sd->status.char_id) )
+		return;
+
+	if( chan == sd->gcbind )
+		sd->gcbind = NULL;
+
+	if( !db_size(chan->users) && chan->type == HCS_TYPE_PRIVATE ) {
+		channel->delete(chan);
+	} else if( !channel->config->closing && (chan->opt & HCS_OPT_ANNOUNCE_JOIN) ) {
+		char message[60];
+		sprintf(message, "#%s '%s' left",chan->name,sd->status.name);
+		clif->channel_msg(chan,sd,message);
+	}
+
+	for( i = 0; i < sd->channel_count; i++ ) {
+		if( sd->channels[i] == chan ) {
+			sd->channels[i] = NULL;
+			break;
+		}
+	}
+
+	if( i < sd->channel_count ) {
+		unsigned char cursor = 0;
+		for( i = 0; i < sd->channel_count; i++ ) {
+			if( sd->channels[i] == NULL )
+				continue;
+			if( cursor != i ) {
+				sd->channels[cursor] = sd->channels[i];
+			}
+			cursor++;
+		}
+		if ( !(sd->channel_count = cursor) ) {
+			aFree(sd->channels);
+			sd->channels = NULL;
+		}
+	}
+
+}
+
+void channel_quit_guild(struct map_session_data *sd)
+{
+	unsigned char i;
+
+	for( i = 0; i < sd->channel_count; i++ ) {
+		struct channel_data *chan = sd->channels[i];
+		if (chan != NULL && chan->type == HCS_TYPE_ALLY) {
+			if (!idb_remove(chan->users,sd->status.char_id))
+				continue;
+
+			if( chan == sd->gcbind )
+				sd->gcbind = NULL;
+
+			if (!db_size(chan->users) && chan->type == HCS_TYPE_PRIVATE) {
+				channel->delete(chan);
+			} else if (!channel->config->closing && (chan->opt & HCS_OPT_ANNOUNCE_JOIN)) {
+				char message[60];
+				sprintf(message, "#%s '%s' left",chan->name,sd->status.name);
+				clif->channel_msg(chan,sd,message);
+			}
+			sd->channels[i] = NULL;
+		}
+	}
+
+	if( i < sd->channel_count ) {
+		unsigned char cursor = 0;
+		for( i = 0; i < sd->channel_count; i++ ) {
+			if( sd->channels[i] == NULL )
+				continue;
+			if( cursor != i ) {
+				sd->channels[cursor] = sd->channels[i];
+			}
+			cursor++;
+		}
+		if ( !(sd->channel_count = cursor) ) {
+			aFree(sd->channels);
+			sd->channels = NULL;
+		}
+	}
+
+}
+
+
+void channel_quit(struct map_session_data *sd)
+{
+	unsigned char i;
+
+	for (i = 0; i < sd->channel_count; i++) {
+		struct channel_data *chan = sd->channels[i];
+		if (chan != NULL) {
+			idb_remove(chan->users,sd->status.char_id);
+
+			if( chan == sd->gcbind )
+				sd->gcbind = NULL;
+
+			if (!db_size(chan->users) && chan->type == HCS_TYPE_PRIVATE) {
+				channel->delete(chan);
+			} else if (!channel->config->closing && (chan->opt & HCS_OPT_ANNOUNCE_JOIN)) {
+				char message[60];
+				sprintf(message, "#%s '%s' left",chan->name,sd->status.name);
+				clif->channel_msg(chan,sd,message);
+			}
+
+		}
+	}
+
+	sd->channel_count = 0;
+	aFree(sd->channels);
+	sd->channels = NULL;
+}
+
+void channel_delete(struct channel_data *chan)
+{
+	if (db_size(chan->users) && !channel->config->closing) {
+		DBIterator *iter;
+		struct map_session_data *sd;
+		unsigned char i;
+		iter = db_iterator(chan->users);
+		for( sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter) ) {
+			for( i = 0; i < sd->channel_count; i++ ) {
+				if( sd->channels[i] == chan ) {
+					sd->channels[i] = NULL;
+					break;
+				}
+			}
+			if( i < sd->channel_count ) {
+				unsigned char cursor = 0;
+				for( i = 0; i < sd->channel_count; i++ ) {
+					if( sd->channels[i] == NULL )
+						continue;
+					if( cursor != i ) {
+						sd->channels[cursor] = sd->channels[i];
+					}
+					cursor++;
+				}
+				if ( !(sd->channel_count = cursor) ) {
+					aFree(sd->channels);
+					sd->channels = NULL;
+				}
+			}
+		}
+		dbi_destroy(iter);
+	}
+	if( chan->banned ) {
+		db_destroy(chan->banned);
+		chan->banned = NULL;
+	}
+	db_destroy(chan->users);
+	if( chan->m ) {
+		map->list[chan->m].channel = NULL;
+		aFree(chan);
+	} else if ( chan->type == HCS_TYPE_ALLY )
+		aFree(chan);
+	else if (!channel->config->closing)
+		strdb_remove(channel->db, chan->name);
+}
+
+void channel_guild_join(struct guild *g1,struct guild *g2)
+{
+	struct map_session_data *sd;
+	struct channel_data *chan;
+	int j;
+
+	if( (chan = g1->channel) ) {
+		for(j = 0; j < g2->max_member; j++) {
+			if( (sd = g2->member[j].sd) != NULL ) {
+				if( !(g1->channel->banned && idb_exists(g1->channel->banned, sd->status.account_id)))
+					channel->join(chan,sd);
+			}
+		}
+	}
+
+	if( (chan = g2->channel) ) {
+		for(j = 0; j < g1->max_member; j++) {
+			if( (sd = g1->member[j].sd) != NULL ) {
+				if( !(g2->channel->banned && idb_exists(g2->channel->banned, sd->status.account_id)))
+				channel->join(chan,sd);
+			}
+		}
+	}
+}
+
+void channel_guild_leave(struct guild *g1,struct guild *g2)
+{
+	struct map_session_data *sd;
+	struct channel_data *chan;
+	int j;
+
+	if( (chan = g1->channel) ) {
+		for(j = 0; j < g2->max_member; j++) {
+			if( (sd = g2->member[j].sd) != NULL ) {
+				channel->leave(chan,sd);
+			}
+		}
+	}
+
+	if( (chan = g2->channel) ) {
+		for(j = 0; j < g1->max_member; j++) {
+			if( (sd = g1->member[j].sd) != NULL ) {
+				channel->leave(chan,sd);
+			}
+		}
+	}
+}
+
+void read_channels_config(void)
+{
+	config_t channels_conf;
+	config_setting_t *chsys = NULL;
+	const char *config_filename = "conf/channels.conf"; // FIXME hardcoded name
+
+	if (libconfig->read_file(&channels_conf, config_filename))
+		return;
+
+	chsys = libconfig->lookup(&channels_conf, "chsys");
+
+	if (chsys != NULL) {
+		config_setting_t *settings = libconfig->setting_get_elem(chsys, 0);
+		config_setting_t *channels;
+		config_setting_t *colors;
+		int i,k;
+		const char *local_name, *ally_name,
+					*local_color, *ally_color,
+					*irc_name, *irc_color;
+		int ally_enabled = 0, local_enabled = 0,
+			local_autojoin = 0, ally_autojoin = 0,
+			allow_user_channel_creation = 0,
+			irc_enabled = 0;
+
+		if( !libconfig->setting_lookup_string(settings, "map_local_channel_name", &local_name) )
+			local_name = "map";
+		safestrncpy(channel->config->local_name, local_name, HCS_NAME_LENGTH);
+
+		if( !libconfig->setting_lookup_string(settings, "ally_channel_name", &ally_name) )
+			ally_name = "ally";
+		safestrncpy(channel->config->ally_name, ally_name, HCS_NAME_LENGTH);
+
+		if( !libconfig->setting_lookup_string(settings, "irc_channel_name", &irc_name) )
+			irc_name = "irc";
+		safestrncpy(channel->config->irc_name, irc_name, HCS_NAME_LENGTH);
+
+		libconfig->setting_lookup_bool(settings, "map_local_channel", &local_enabled);
+		libconfig->setting_lookup_bool(settings, "ally_channel_enabled", &ally_enabled);
+		libconfig->setting_lookup_bool(settings, "irc_channel_enabled", &irc_enabled);
+
+		if (local_enabled)
+			channel->config->local = true;
+		if (ally_enabled)
+			channel->config->ally = true;
+		if (irc_enabled)
+			channel->config->irc = true;
+
+		channel->config->irc_server[0] = channel->config->irc_channel[0] = channel->config->irc_nick[0] = channel->config->irc_nick_pw[0] = '\0';
+
+		if (channel->config->irc) {
+			const char *irc_server, *irc_channel,
+				 *irc_nick, *irc_nick_pw;
+			int irc_use_ghost = 0;
+			if( libconfig->setting_lookup_string(settings, "irc_channel_network", &irc_server) ) {
+				if( !strstr(irc_server,":") ) {
+					channel->config->irc = false;
+					ShowWarning("channels.conf : network port wasn't found in 'irc_channel_network', disabling irc channel...\n");
+				} else {
+					unsigned char d = 0, dlen = strlen(irc_server);
+					char server[40];
+					if (dlen > 39)
+						dlen = 39;
+					memset(server, '\0', sizeof(server));
+
+					for(d = 0; d < dlen; d++) {
+						if(irc_server[d] == ':') {
+							memcpy(server, irc_server, d);
+							safestrncpy(channel->config->irc_server, server, 40);
+							memcpy(server, &irc_server[d+1], dlen - d - 1);
+							channel->config->irc_server_port = atoi(server);
+							break;
+						}
+					}
+				}
+			} else {
+				channel->config->irc = false;
+				ShowWarning("channels.conf : irc channel enabled but irc_channel_network wasn't found, disabling irc channel...\n");
+			}
+			if( libconfig->setting_lookup_string(settings, "irc_channel_channel", &irc_channel) )
+				safestrncpy(channel->config->irc_channel, irc_channel, 50);
+			else {
+				channel->config->irc = false;
+				ShowWarning("channels.conf : irc channel enabled but irc_channel_channel wasn't found, disabling irc channel...\n");
+			}
+			if( libconfig->setting_lookup_string(settings, "irc_channel_nick", &irc_nick) ) {
+				if( strcmpi(irc_nick,"Hercules_chSysBot") == 0 ) {
+					sprintf(channel->config->irc_nick, "Hercules_chSysBot%d",rnd()%777);
+				} else
+					safestrncpy(channel->config->irc_nick, irc_nick, 40);
+			} else {
+				channel->config->irc = false;
+				ShowWarning("channels.conf : irc channel enabled but irc_channel_nick wasn't found, disabling irc channel...\n");
+			}
+			if( libconfig->setting_lookup_string(settings, "irc_channel_nick_pw", &irc_nick_pw) ) {
+				safestrncpy(channel->config->irc_nick_pw, irc_nick_pw, 30);
+				config_setting_lookup_bool(settings, "irc_channel_use_ghost", &irc_use_ghost);
+				channel->config->irc_use_ghost = irc_use_ghost;
+			}
+
+		}
+
+		libconfig->setting_lookup_bool(settings, "map_local_channel_autojoin", &local_autojoin);
+		libconfig->setting_lookup_bool(settings, "ally_channel_autojoin", &ally_autojoin);
+
+		if (local_autojoin)
+			channel->config->local_autojoin = true;
+		if (ally_autojoin)
+			channel->config->ally_autojoin = true;
+
+		libconfig->setting_lookup_bool(settings, "allow_user_channel_creation", &allow_user_channel_creation);
+
+		if( allow_user_channel_creation )
+			channel->config->allow_user_channel_creation = true;
+
+		if( (colors = libconfig->setting_get_member(settings, "colors")) != NULL ) {
+			int color_count = libconfig->setting_length(colors);
+			CREATE(channel->config->colors, unsigned int, color_count);
+			CREATE(channel->config->colors_name, char *, color_count);
+			for(i = 0; i < color_count; i++) {
+				config_setting_t *color = libconfig->setting_get_elem(colors, i);
+
+				CREATE(channel->config->colors_name[i], char, HCS_NAME_LENGTH);
+
+				safestrncpy(channel->config->colors_name[i], config_setting_name(color), HCS_NAME_LENGTH);
+
+				channel->config->colors[i] = (unsigned int)strtoul(libconfig->setting_get_string_elem(colors,i),NULL,0);
+				channel->config->colors[i] = (channel->config->colors[i] & 0x0000FF) << 16 | (channel->config->colors[i] & 0x00FF00) | (channel->config->colors[i] & 0xFF0000) >> 16;//RGB to BGR
+			}
+			channel->config->colors_count = color_count;
+		}
+
+		libconfig->setting_lookup_string(settings, "map_local_channel_color", &local_color);
+
+		for (k = 0; k < channel->config->colors_count; k++) {
+			if (strcmpi(channel->config->colors_name[k], local_color) == 0)
+				break;
+		}
+
+		if (k < channel->config->colors_count) {
+			channel->config->local_color = k;
+		} else {
+			ShowError("channels.conf: unknown color '%s' for 'map_local_channel_color', disabling '#%s'...\n",local_color,local_name);
+			channel->config->local = false;
+		}
+
+		libconfig->setting_lookup_string(settings, "ally_channel_color", &ally_color);
+
+		for (k = 0; k < channel->config->colors_count; k++) {
+			if (strcmpi(channel->config->colors_name[k], ally_color) == 0)
+				break;
+		}
+
+		if( k < channel->config->colors_count ) {
+			channel->config->ally_color = k;
+		} else {
+			ShowError("channels.conf: unknown color '%s' for 'ally_channel_color', disabling '#%s'...\n",ally_color,ally_name);
+			channel->config->ally = false;
+		}
+
+		libconfig->setting_lookup_string(settings, "irc_channel_color", &irc_color);
+
+		for (k = 0; k < channel->config->colors_count; k++) {
+			if (strcmpi(channel->config->colors_name[k], irc_color) == 0)
+				break;
+		}
+
+		if (k < channel->config->colors_count) {
+			channel->config->irc_color = k;
+		} else {
+			ShowError("channels.conf: unknown color '%s' for 'irc_channel_color', disabling '#%s'...\n",irc_color,irc_name);
+			channel->config->irc = false;
+		}
+
+		if (channel->config->irc) {
+			struct channel_data *chd;
+			CREATE(chd, struct channel_data, 1);
+
+			safestrncpy(chd->name, channel->config->irc_name, HCS_NAME_LENGTH);
+			chd->type = HCS_TYPE_IRC;
+
+			channel->create(chd, NULL, NULL, channel->config->irc_color);
+			ircbot->channel = chd;
+		}
+
+		if( (channels = libconfig->setting_get_member(settings, "default_channels")) != NULL ) {
+			int channel_count = libconfig->setting_length(channels);
+
+			for(i = 0; i < channel_count; i++) {
+				config_setting_t *chan = libconfig->setting_get_elem(channels, i);
+				const char *name = config_setting_name(chan);
+				const char *color = libconfig->setting_get_string_elem(channels,i);
+				struct channel_data *chd;
+
+				for (k = 0; k < channel->config->colors_count; k++) {
+					if (strcmpi(channel->config->colors_name[k],color) == 0)
+						break;
+				}
+				if( k == channel->config->colors_count) {
+					ShowError("channels.conf: unknown color '%s' for channel '%s', skipping channel...\n",color,name);
+					continue;
+				}
+				if( strcmpi(name, channel->config->local_name) == 0 || strcmpi(name, channel->config->ally_name) == 0 || strcmpi(name, channel->config->irc_name) == 0 || strdb_exists(channel->db, name) ) {
+					ShowError("channels.conf: duplicate channel '%s', skipping channel...\n",name);
+					continue;
+
+				}
+				CREATE( chd, struct channel_data, 1 );
+
+				safestrncpy(chd->name, name, HCS_NAME_LENGTH);
+				chd->type = HCS_TYPE_PUBLIC;
+
+				channel->create(chd,NULL,NULL,k);
+			}
+		}
+
+		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' channels in '"CL_WHITE"%s"CL_RESET"'.\n", db_size(channel->db), config_filename);
+		libconfig->destroy(&channels_conf);
+	}
+}
+
+/*==========================================
+ *
+ *------------------------------------------*/
+int do_init_channel(bool minimal)
+{
+	if (minimal)
+		return 0;
+
+	channel->db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, HCS_NAME_LENGTH);
+	channel->config->ally = channel->config->local = channel->config->irc = channel->config->ally_autojoin = channel->config->local_autojoin = false;
+	channel->config_read();
+
+	return 0;
+}
+
+void do_final_channel(void)
+{
+	DBIterator *iter = db_iterator(channel->db);
+	struct channel_data *chan;
+	unsigned char i;
+
+	for( chan = dbi_first(iter); dbi_exists(iter); chan = dbi_next(iter) ) {
+		channel->delete(chan);
+	}
+
+	dbi_destroy(iter);
+
+	for(i = 0; i < channel->config->colors_count; i++) {
+		aFree(channel->config->colors_name[i]);
+	}
+
+	if (channel->config->colors_count) {
+		aFree(channel->config->colors_name);
+		aFree(channel->config->colors);
+	}
+
+	db_destroy(channel->db);
+}
+void channel_defaults(void)
+{
+	channel = &channel_s;
+	/* core */
+	channel->init = do_init_channel;
+	channel->final = do_final_channel;
+	channel->config = &channel_config;
+
+	channel->create = channel_create;
+	channel->send = channel_send;
+	channel->join = channel_join;
+	channel->leave = channel_leave;
+	channel->delete = channel_delete;
+	channel->map_join = channel_map_join;
+	channel->quit = channel_quit;
+	channel->quit_guild = channel_quit_guild;
+	channel->guild_join = channel_guild_join;
+	channel->guild_leave = channel_guild_leave;
+	channel->config_read = read_channels_config;
+}

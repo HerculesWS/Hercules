@@ -14,7 +14,7 @@
 #define IRC_FUNC_LENGTH 30
 #define IRC_MESSAGE_LENGTH 500
 
-struct hChSysCh;
+struct channel_data;
 
 struct irc_func {
 	char name[IRC_FUNC_LENGTH];
@@ -29,7 +29,7 @@ struct irc_bot_interface {
 	uint32 ip;
 	unsigned short port;
 	/* */
-	struct hChSysCh *channel;
+	struct channel_data *channel;
 	/* */
 	struct {
 		struct irc_func **list;

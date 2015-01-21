@@ -17,6 +17,7 @@
 #include "atcommand.h"
 #include "battle.h"
 #include "battleground.h"
+#include "channel.h"
 #include "chat.h"
 #include "chrif.h"
 #include "clif.h"
@@ -1799,7 +1800,7 @@ int map_quit(struct map_session_data *sd) {
 	if( sd->bg_id && !sd->bg_queue.arena ) /* TODO: dump this chunk after bg_queue is fully enabled */
 		bg->team_leave(sd,BGTL_QUIT);
 
-	if (sd->state.autotrade && runflag != MAPSERVER_ST_SHUTDOWN && !clif->hChSys->closing)
+	if (sd->state.autotrade && runflag != MAPSERVER_ST_SHUTDOWN && !channel->config->closing)
 		pc->autotrade_update(sd,PAUC_REMOVE);
 
 	skill->cooldown_save(sd);
@@ -1856,11 +1857,11 @@ int map_quit(struct map_session_data *sd) {
 		unit->remove_map(&sd->ed->bl,CLR_TELEPORT,ALC_MARK);
 	}
 
-	if (clif->hChSys->local && map->list[sd->bl.m].channel && idb_exists(map->list[sd->bl.m].channel->users, sd->status.char_id)) {
-		clif->chsys_left(map->list[sd->bl.m].channel,sd);
+	if (channel->config->local && map->list[sd->bl.m].channel && idb_exists(map->list[sd->bl.m].channel->users, sd->status.char_id)) {
+		channel->leave(map->list[sd->bl.m].channel,sd);
 	}
 
-	clif->chsys_quit(sd);
+	channel->quit(sd);
 
 	unit->remove_map_pc(sd,CLR_RESPAWN);
 
@@ -3189,7 +3190,7 @@ void map_clean(int i) {
 	}
 
 	if( map->list[i].channel )
-		clif->chsys_delete(map->list[i].channel);
+		channel->delete(map->list[i].channel);
 }
 void do_final_maps(void) {
 	int i, v = 0;
@@ -3248,7 +3249,7 @@ void do_final_maps(void) {
 			aFree(map->list[i].drop_list);
 
 		if( map->list[i].channel )
-			clif->chsys_delete(map->list[i].channel);
+			channel->delete(map->list[i].channel);
 		
 		if( map->list[i].qi_data )
 			aFree(map->list[i].qi_data);
@@ -5356,7 +5357,7 @@ int do_final(void) {
 
 	ShowStatus("Terminating...\n");
 	
-	clif->hChSys->closing = true;
+	channel->config->closing = true;
 	HPM->event(HPET_FINAL);
 	
 	if (map->cpsd) aFree(map->cpsd);
@@ -5392,8 +5393,9 @@ int do_final(void) {
 
 	atcommand->final();
 	battle->final();
+	ircbot->final();/* before channel. */
+	channel->final();
 	chrif->final();
-	ircbot->final();/* before clif. */
 	clif->final();
 	npc->final();
 	quest->final();
@@ -5579,6 +5581,7 @@ void map_hp_symbols(void) {
 	HPM->share(battle,"battle");
 	HPM->share(bg,"battlegrounds");
 	HPM->share(buyingstore,"buyingstore");
+	HPM->share(channel,"channel");
 	HPM->share(clif,"clif");
 	HPM->share(chrif,"chrif");
 	HPM->share(guild,"guild");
@@ -5634,6 +5637,7 @@ void map_load_defaults(void) {
 	battle_defaults();
 	battleground_defaults();
 	buyingstore_defaults();
+	channel_defaults();
 	clif_defaults();
 	chrif_defaults();
 	guild_defaults();
@@ -5940,6 +5944,7 @@ int do_init(int argc, char *argv[])
 	atcommand->init(minimal);
 	battle->init(minimal);
 	instance->init(minimal);
+	channel->init(minimal);
 	chrif->init(minimal);
 	clif->init(minimal);
 	ircbot->init(minimal);

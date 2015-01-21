@@ -159,6 +159,7 @@
 		A58A5A1A185800CD0099683E /* strlib.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6BF185643BB009EB79C /* strlib.c */; };
 		A58A5A1B185800E70099683E /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6C6185643BB009EB79C /* utils.c */; };
 		A58A5A281858025D0099683E /* HPMHooking.c in Sources */ = {isa = PBXBuildFile; fileRef = A58A5A271858025D0099683E /* HPMHooking.c */; };
+		A59EA4511A727D36005F2B6D /* channel.c in Sources */ = {isa = PBXBuildFile; fileRef = A59EA44F1A727D36005F2B6D /* channel.c */; };
 		A5AA94EE185796CB00C940C8 /* sample.c in Sources */ = {isa = PBXBuildFile; fileRef = A5AA94ED185796CB00C940C8 /* sample.c */; };
 		A5AA94FA185799E400C940C8 /* db2sql.c in Sources */ = {isa = PBXBuildFile; fileRef = A5AA94F8185799DF00C940C8 /* db2sql.c */; };
 		A5B894AA1A03CDD4005AD22E /* HPMlogin.c in Sources */ = {isa = PBXBuildFile; fileRef = A5B894A81A03CDD4005AD22E /* HPMlogin.c */; };
@@ -404,6 +405,8 @@
 		A56CC7B818565812009EB79C /* vending.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vending.h; path = src/map/vending.h; sourceTree = SOURCE_ROOT; };
 		A58A5A26185801FF0099683E /* HPMHooking_map.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = HPMHooking_map.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A58A5A271858025D0099683E /* HPMHooking.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = HPMHooking.c; path = src/plugins/HPMHooking.c; sourceTree = "<group>"; };
+		A59EA44F1A727D36005F2B6D /* channel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = channel.c; path = src/map/channel.c; sourceTree = SOURCE_ROOT; };
+		A59EA4501A727D36005F2B6D /* channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = channel.h; path = src/map/channel.h; sourceTree = SOURCE_ROOT; };
 		A5AA94E71857956100C940C8 /* sample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = sample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5AA94ED185796CB00C940C8 /* sample.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sample.c; path = src/plugins/sample.c; sourceTree = "<group>"; };
 		A5AA94F3185799B700C940C8 /* db2sql.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = db2sql.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -607,6 +610,8 @@
 				A56CC76F18565812009EB79C /* battleground.h */,
 				A56CC77018565812009EB79C /* buyingstore.c */,
 				A56CC77118565812009EB79C /* buyingstore.h */,
+				A59EA44F1A727D36005F2B6D /* channel.c */,
+				A59EA4501A727D36005F2B6D /* channel.h */,
 				A56CC77218565812009EB79C /* chat.c */,
 				A56CC77318565812009EB79C /* chat.h */,
 				A56CC77418565812009EB79C /* chrif.c */,
@@ -1263,6 +1268,7 @@
 				A56CC70A185643BB009EB79C /* sql.c in Sources */,
 				A56CC7D718565812009EB79C /* quest.c in Sources */,
 				A56CC7CC18565812009EB79C /* map.c in Sources */,
+				A59EA4511A727D36005F2B6D /* channel.c in Sources */,
 				A56CC7C318565812009EB79C /* guild.c in Sources */,
 				A56CC7C518565812009EB79C /* HPMmap.c in Sources */,
 				A56CC6DA185643BB009EB79C /* ers.c in Sources */,

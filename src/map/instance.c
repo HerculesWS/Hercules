@@ -13,6 +13,7 @@
 #include <time.h>
 
 #include "../config/core.h" // CELL_NOSTACK
+#include "channel.h"
 #include "clif.h"
 #include "map.h"
 #include "npc.h"
@@ -483,7 +484,7 @@ void instance_del_map(int16 m) {
 		ShowError("map_instance_del: failed to remove %s from instance list (%s): %d\n", map->list[m].name, instance->list[map->list[m].instance_id].name, m);
 	
 	if( map->list[m].channel )
-		clif->chsys_delete(map->list[m].channel);
+		channel->delete(map->list[m].channel);
 
 	map->removemapdb(&map->list[m]);
 	memset(&map->list[m], 0x00, sizeof(map->list[0]));

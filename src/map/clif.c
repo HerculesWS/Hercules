@@ -16,6 +16,7 @@
 #include "atcommand.h"
 #include "battle.h"
 #include "battleground.h"
+#include "channel.h"
 #include "chat.h"
 #include "chrif.h"
 #include "elemental.h"
@@ -71,8 +72,6 @@ static struct packet_npc_market_open npcmarket_open;
 #endif
 //#define DUMP_UNKNOWN_PACKET
 //#define DUMP_INVALID_PACKET
-
-static struct hChSysConfig clif_hChSys;
 
 //Converts item type in case of pet eggs.
 static inline int itemtype(int type) {
@@ -1833,24 +1832,6 @@ void clif_buylist(struct map_session_data *sd, struct npc_data *nd) {
 	WFIFOW(fd,2) = 4 + c*11;
 	WFIFOSET(fd,WFIFOW(fd,2));
 }
-void clif_hercules_chsys_create(struct hChSysCh *channel, char *name, char *pass, unsigned char color) {
-	channel->users = idb_alloc(DB_OPT_BASE);
-	if( name )
-		safestrncpy(channel->name, name, HCHSYS_NAME_LENGTH);
-	channel->color = color;
-	if( !pass )
-		channel->pass[0] = '\0';
-	else
-		safestrncpy(channel->pass, pass, HCHSYS_NAME_LENGTH);
-
-	channel->opt = hChSys_OPT_BASE;
-	channel->banned = NULL;
-
-	channel->msg_delay = 0;
-
-	if( channel->type != hChSys_MAP && channel->type != hChSys_ALLY )
-		strdb_put(clif->channel_db, channel->name, channel);
-}
 
 /// Presents list of items, that can be sold to an NPC shop (ZC_PC_SELL_ITEMLIST).
 /// 00c7 <packet len>.W { <index>.W <price>.L <overcharge price>.L }*
@@ -2116,27 +2097,7 @@ void clif_viewpoint(struct map_session_data *sd, int npc_id, int type, int x, in
 	WFIFOL(fd,19)=color;
 	WFIFOSET(fd,packet_len(0x144));
 }
-void clif_hercules_chsys_join(struct hChSysCh *channel, struct map_session_data *sd) {
-	if( idb_put(channel->users, sd->status.char_id, sd) )
-		return;
 
-	RECREATE(sd->channels, struct hChSysCh *, ++sd->channel_count);
-	sd->channels[ sd->channel_count - 1 ] = channel;
-
-	if( sd->stealth ) {
-		sd->stealth = false;
-	} else if( channel->opt & hChSys_OPT_ANNOUNCE_JOIN ) {
-		char message[60];
-		sprintf(message, "#%s '%s' joined",channel->name,sd->status.name);
-		clif->chsys_msg(channel,sd,message);
-	}
-
-	/* someone is cheating, we kindly disconnect the bastard */
-	if( sd->channel_count > 200 ) {
-		set_eof(sd->fd);
-	}
-
-}
 /// Displays an illustration image.
 /// 0145 <image name>.16B <type>.B (ZC_SHOW_IMAGE)
 /// 01b3 <image name>.64B <type>.B (ZC_SHOW_IMAGE2)
@@ -2669,225 +2630,6 @@ void clif_guild_xy_remove(struct map_session_data *sd)
 	WBUFW(buf,8)=-1;
 	clif->send(buf,packet_len(0x1eb),&sd->bl,GUILD_SAMEMAP_WOS);
 }
-void read_channels_config(void) {
-	config_t channels_conf;
-	config_setting_t *chsys = NULL;
-	const char *config_filename = "conf/channels.conf"; // FIXME hardcoded name
-
-	if (libconfig->read_file(&channels_conf, config_filename))
-		return;
-
-	chsys = libconfig->lookup(&channels_conf, "chsys");
-
-	if (chsys != NULL) {
-		config_setting_t *settings = libconfig->setting_get_elem(chsys, 0);
-		config_setting_t *channels;
-		config_setting_t *colors;
-		int i,k;
-		const char *local_name, *ally_name,
-					*local_color, *ally_color,
-					*irc_name, *irc_color;
-		int ally_enabled = 0, local_enabled = 0,
-			local_autojoin = 0, ally_autojoin = 0,
-			allow_user_channel_creation = 0,
-			irc_enabled = 0;
-
-		if( !libconfig->setting_lookup_string(settings, "map_local_channel_name", &local_name) )
-			local_name = "map";
-		safestrncpy(clif->hChSys->local_name, local_name, HCHSYS_NAME_LENGTH);
-
-		if( !libconfig->setting_lookup_string(settings, "ally_channel_name", &ally_name) )
-			ally_name = "ally";
-		safestrncpy(clif->hChSys->ally_name, ally_name, HCHSYS_NAME_LENGTH);
-
-		if( !libconfig->setting_lookup_string(settings, "irc_channel_name", &irc_name) )
-			irc_name = "irc";
-		safestrncpy(clif->hChSys->irc_name, irc_name, HCHSYS_NAME_LENGTH);
-
-		libconfig->setting_lookup_bool(settings, "map_local_channel", &local_enabled);
-		libconfig->setting_lookup_bool(settings, "ally_channel_enabled", &ally_enabled);
-		libconfig->setting_lookup_bool(settings, "irc_channel_enabled", &irc_enabled);
-
-		if (local_enabled)
-			clif->hChSys->local = true;
-		if (ally_enabled)
-			clif->hChSys->ally = true;
-		if (irc_enabled)
-			clif->hChSys->irc = true;
-
-		clif->hChSys->irc_server[0] = clif->hChSys->irc_channel[0] = clif->hChSys->irc_nick[0] = clif->hChSys->irc_nick_pw[0] = '\0';
-
-		if (clif->hChSys->irc) {
-			const char *irc_server, *irc_channel,
-				 *irc_nick, *irc_nick_pw;
-			int irc_use_ghost = 0;
-			if( libconfig->setting_lookup_string(settings, "irc_channel_network", &irc_server) ) {
-				if( !strstr(irc_server,":") ) {
-					clif->hChSys->irc = false;
-					ShowWarning("channels.conf : network port wasn't found in 'irc_channel_network', disabling irc channel...\n");
-				} else {
-					unsigned char d = 0, dlen = strlen(irc_server);
-					char server[40];
-					if (dlen > 39)
-						dlen = 39;
-					memset(server, '\0', sizeof(server));
-
-					for(d = 0; d < dlen; d++) {
-						if(irc_server[d] == ':') {
-							memcpy(server, irc_server, d);
-							safestrncpy(clif->hChSys->irc_server, server, 40);
-							memcpy(server, &irc_server[d+1], dlen - d - 1);
-							clif->hChSys->irc_server_port = atoi(server);
-							break;
-						}
-					}
-				}
-			} else {
-				clif->hChSys->irc = false;
-				ShowWarning("channels.conf : irc channel enabled but irc_channel_network wasn't found, disabling irc channel...\n");
-			}
-			if( libconfig->setting_lookup_string(settings, "irc_channel_channel", &irc_channel) )
-				safestrncpy(clif->hChSys->irc_channel, irc_channel, 50);
-			else {
-				clif->hChSys->irc = false;
-				ShowWarning("channels.conf : irc channel enabled but irc_channel_channel wasn't found, disabling irc channel...\n");
-			}
-			if( libconfig->setting_lookup_string(settings, "irc_channel_nick", &irc_nick) ) {
-				if( strcmpi(irc_nick,"Hercules_chSysBot") == 0 ) {
-					sprintf(clif->hChSys->irc_nick, "Hercules_chSysBot%d",rnd()%777);
-				} else
-					safestrncpy(clif->hChSys->irc_nick, irc_nick, 40);
-			} else {
-				clif->hChSys->irc = false;
-				ShowWarning("channels.conf : irc channel enabled but irc_channel_nick wasn't found, disabling irc channel...\n");
-			}
-			if( libconfig->setting_lookup_string(settings, "irc_channel_nick_pw", &irc_nick_pw) ) {
-				safestrncpy(clif->hChSys->irc_nick_pw, irc_nick_pw, 30);
-				config_setting_lookup_bool(settings, "irc_channel_use_ghost", &irc_use_ghost);
-				clif->hChSys->irc_use_ghost = irc_use_ghost;
-			}
-
-		}
-
-		libconfig->setting_lookup_bool(settings, "map_local_channel_autojoin", &local_autojoin);
-		libconfig->setting_lookup_bool(settings, "ally_channel_autojoin", &ally_autojoin);
-
-		if (local_autojoin)
-			clif->hChSys->local_autojoin = true;
-		if (ally_autojoin)
-			clif->hChSys->ally_autojoin = true;
-
-		libconfig->setting_lookup_bool(settings, "allow_user_channel_creation", &allow_user_channel_creation);
-
-		if( allow_user_channel_creation )
-			clif->hChSys->allow_user_channel_creation = true;
-
-		if( (colors = libconfig->setting_get_member(settings, "colors")) != NULL ) {
-			int color_count = libconfig->setting_length(colors);
-			CREATE(clif->hChSys->colors, unsigned int, color_count);
-			CREATE(clif->hChSys->colors_name, char *, color_count);
-			for(i = 0; i < color_count; i++) {
-				config_setting_t *color = libconfig->setting_get_elem(colors, i);
-
-				CREATE(clif->hChSys->colors_name[i], char, HCHSYS_NAME_LENGTH);
-
-				safestrncpy(clif->hChSys->colors_name[i], config_setting_name(color), HCHSYS_NAME_LENGTH);
-
-				clif->hChSys->colors[i] = (unsigned int)strtoul(libconfig->setting_get_string_elem(colors,i),NULL,0);
-				clif->hChSys->colors[i] = (clif->hChSys->colors[i] & 0x0000FF) << 16 | (clif->hChSys->colors[i] & 0x00FF00) | (clif->hChSys->colors[i] & 0xFF0000) >> 16;//RGB to BGR
-			}
-			clif->hChSys->colors_count = color_count;
-		}
-
-		libconfig->setting_lookup_string(settings, "map_local_channel_color", &local_color);
-
-		for (k = 0; k < clif->hChSys->colors_count; k++) {
-			if (strcmpi(clif->hChSys->colors_name[k], local_color) == 0)
-				break;
-		}
-
-		if (k < clif->hChSys->colors_count) {
-			clif->hChSys->local_color = k;
-		} else {
-			ShowError("channels.conf: unknown color '%s' for 'map_local_channel_color', disabling '#%s'...\n",local_color,local_name);
-			clif->hChSys->local = false;
-		}
-
-		libconfig->setting_lookup_string(settings, "ally_channel_color", &ally_color);
-
-		for (k = 0; k < clif->hChSys->colors_count; k++) {
-			if (strcmpi(clif->hChSys->colors_name[k], ally_color) == 0)
-				break;
-		}
-
-		if( k < clif->hChSys->colors_count ) {
-			clif->hChSys->ally_color = k;
-		} else {
-			ShowError("channels.conf: unknown color '%s' for 'ally_channel_color', disabling '#%s'...\n",ally_color,ally_name);
-			clif->hChSys->ally = false;
-		}
-
-		libconfig->setting_lookup_string(settings, "irc_channel_color", &irc_color);
-
-		for (k = 0; k < clif->hChSys->colors_count; k++) {
-			if (strcmpi(clif->hChSys->colors_name[k], irc_color) == 0)
-				break;
-		}
-
-		if (k < clif->hChSys->colors_count) {
-			clif->hChSys->irc_color = k;
-		} else {
-			ShowError("channels.conf: unknown color '%s' for 'irc_channel_color', disabling '#%s'...\n",irc_color,irc_name);
-			clif->hChSys->irc = false;
-		}
-
-		if (clif->hChSys->irc) {
-			struct hChSysCh *chd;
-			CREATE(chd, struct hChSysCh, 1);
-
-			safestrncpy(chd->name, clif->hChSys->irc_name, HCHSYS_NAME_LENGTH);
-			chd->type = hChSys_IRC;
-
-			clif->chsys_create(chd, NULL, NULL, clif->hChSys->irc_color);
-			ircbot->channel = chd;
-		}
-
-		if( (channels = libconfig->setting_get_member(settings, "default_channels")) != NULL ) {
-			int channel_count = libconfig->setting_length(channels);
-
-			for(i = 0; i < channel_count; i++) {
-				config_setting_t *channel = libconfig->setting_get_elem(channels, i);
-				const char *name = config_setting_name(channel);
-				const char *color = libconfig->setting_get_string_elem(channels,i);
-				struct hChSysCh *chd;
-
-				for (k = 0; k < clif->hChSys->colors_count; k++) {
-					if (strcmpi(clif->hChSys->colors_name[k],color) == 0)
-						break;
-				}
-				if( k == clif->hChSys->colors_count) {
-					ShowError("channels.conf: unknown color '%s' for channel '%s', skipping channel...\n",color,name);
-					continue;
-				}
-				if( strcmpi(name, clif->hChSys->local_name) == 0 || strcmpi(name, clif->hChSys->ally_name) == 0 || strcmpi(name, clif->hChSys->irc_name) == 0 || strdb_exists(clif->channel_db, name) ) {
-					ShowError("channels.conf: duplicate channel '%s', skipping channel...\n",name);
-					continue;
-
-				}
-				CREATE( chd, struct hChSysCh, 1 );
-
-				safestrncpy(chd->name, name, HCHSYS_NAME_LENGTH);
-				chd->type = hChSys_PUBLIC;
-
-				clif->chsys_create(chd,NULL,NULL,k);
-			}
-		}
-
-		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' channels in '"CL_WHITE"%s"CL_RESET"'.\n", db_size(clif->channel_db), config_filename);
-		libconfig->destroy(&channels_conf);
-	}
-}
-
 
 /*==========================================
  *
@@ -3708,21 +3450,6 @@ void clif_useitemack(struct map_session_data *sd,int index,int amount,bool ok)
 		WBUFB(buf,12)=ok;
 		clif->send(buf,packet_len(0x1c8),&sd->bl,AREA);
 #endif
-	}
-}
-
-void clif_hercules_chsys_send(struct hChSysCh *channel, struct map_session_data *sd, const char *msg) {
-	if( channel->msg_delay != 0 && DIFF_TICK(sd->hchsysch_tick + ( channel->msg_delay * 1000 ), timer->gettick()) > 0 && !pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
-		clif->colormes(sd->fd,COLOR_RED,msg_txt(1455));
-		return;
-	} else {
-		char message[150];
-		snprintf(message, 150, "[ #%s ] %s : %s",channel->name,sd->status.name, msg);
-		clif->chsys_msg(channel,sd,message);
-		if( channel->type == hChSys_IRC )
-			ircbot->relay(sd->status.name,msg);
-		if( channel->msg_delay != 0 )
-			sd->hchsysch_tick = timer->gettick();
 	}
 }
 
@@ -9125,8 +8852,9 @@ bool clif_process_message(struct map_session_data *sd, int format, char **name_,
 	return true;
 }
 
-void clif_hercules_chsys_msg(struct hChSysCh *channel, struct map_session_data *sd, char *msg) {
-	DBIterator *iter = db_iterator(channel->users);
+void clif_channel_msg(struct channel_data *chan, struct map_session_data *sd, char *msg)
+{
+	DBIterator *iter = db_iterator(chan->users);
 	struct map_session_data *user;
 	unsigned short msg_len = strlen(msg) + 1;
 
@@ -9134,10 +8862,10 @@ void clif_hercules_chsys_msg(struct hChSysCh *channel, struct map_session_data *
 	WFIFOW(sd->fd,0) = 0x2C1;
 	WFIFOW(sd->fd,2) = msg_len + 12;
 	WFIFOL(sd->fd,4) = 0;
-	WFIFOL(sd->fd,8) = clif->hChSys->colors[channel->color];
+	WFIFOL(sd->fd,8) = channel->config->colors[chan->color];
 	safestrncpy((char*)WFIFOP(sd->fd,12), msg, msg_len);
 
-	for( user = dbi_first(iter); dbi_exists(iter); user = dbi_next(iter) ) {
+	for (user = dbi_first(iter); dbi_exists(iter); user = dbi_next(iter)) {
 		if( user->fd == sd->fd )
 			continue;
 		WFIFOHEAD(user->fd,msg_len + 12);
@@ -9150,8 +8878,9 @@ void clif_hercules_chsys_msg(struct hChSysCh *channel, struct map_session_data *
 	dbi_destroy(iter);
 }
 
-void clif_hercules_chsys_msg2(struct hChSysCh *channel, char *msg) {
-	DBIterator *iter = db_iterator(channel->users);
+void clif_channel_msg2(struct channel_data *chan, char *msg)
+{
+	DBIterator *iter = db_iterator(chan->users);
 	struct map_session_data *user;
 	unsigned char buf[210];
 	unsigned short msg_len = strlen(msg) + 1;
@@ -9159,10 +8888,10 @@ void clif_hercules_chsys_msg2(struct hChSysCh *channel, char *msg) {
 	WBUFW(buf,0) = 0x2C1;
 	WBUFW(buf,2) = msg_len + 12;
 	WBUFL(buf,4) = 0;
-	WBUFL(buf,8) = clif->hChSys->colors[channel->color];
+	WBUFL(buf,8) = channel->config->colors[chan->color];
 	safestrncpy((char*)WBUFP(buf,12), msg, msg_len);
 
-	for( user = dbi_first(iter); dbi_exists(iter); user = dbi_next(iter) ) {
+	for (user = dbi_first(iter); dbi_exists(iter); user = dbi_next(iter)) {
 		WFIFOHEAD(user->fd,msg_len + 12);
 		memcpy(WFIFOP(user->fd,0), WBUFP(buf,0), msg_len + 12);
 		WFIFOSET(user->fd, msg_len + 12);
@@ -9250,34 +8979,6 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 #endif
 
 	chrif->authreq(sd,false);
-}
-void clif_hercules_chsys_mjoin(struct map_session_data *sd) {
-	if( sd->state.autotrade || sd->state.standalone )
-		return;
-	if( !map->list[sd->bl.m].channel ) {
-
-		if (map->list[sd->bl.m].flag.chsysnolocalaj || (map->list[sd->bl.m].instance_id >= 0 && instance->list[map->list[sd->bl.m].instance_id].owner_type != IOT_NONE) )
-			return;
-
-		CREATE(map->list[sd->bl.m].channel, struct hChSysCh , 1);
-		safestrncpy(map->list[sd->bl.m].channel->name, clif->hChSys->local_name, HCHSYS_NAME_LENGTH);
-		map->list[sd->bl.m].channel->type = hChSys_MAP;
-		map->list[sd->bl.m].channel->m = sd->bl.m;
-
-		clif->chsys_create(map->list[sd->bl.m].channel, NULL, NULL, clif->hChSys->local_color);
-	}
-
-	if( map->list[sd->bl.m].channel->banned && idb_exists(map->list[sd->bl.m].channel->banned, sd->status.account_id) ) {
-		return;
-	}
-
-	clif->chsys_join(map->list[sd->bl.m].channel,sd);
-
-	if( !( map->list[sd->bl.m].channel->opt & hChSys_OPT_ANNOUNCE_JOIN ) ) {
-		char mout[60];
-		sprintf(mout, msg_txt(1435), clif->hChSys->local_name, map->list[sd->bl.m].name); // You're now in the '#%s' channel for '%s'
-		clif->colormes(sd->fd, COLOR_DEFAULT, mout);
-	}
 }
 
 /// Notification from the client, that it has finished map loading and is about to display player's character (CZ_NOTIFY_ACTORINIT).
@@ -9550,8 +9251,8 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 		status_calc_pc(sd, SCO_NONE);/* some conditions are map-dependent so we must recalculate */
 		sd->state.changemap = false;
 
-		if (clif->hChSys->local && clif->hChSys->local_autojoin) {
-			clif->chsys_mjoin(sd);
+		if (channel->config->local && channel->config->local_autojoin) {
+			channel->map_join(sd);
 		}
 	}
 
@@ -9927,7 +9628,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 		sd->idletime = sockt->last_tick;
 
 	if( sd->gcbind ) {
-		clif->chsys_send(sd->gcbind,sd,message);
+		channel->send(sd->gcbind,sd,message);
 		return;
 	} else if ( sd->fontcolor && !sd->chatID ) {
 		char mout[200];
@@ -9953,7 +9654,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 		WFIFOW(fd,0) = 0x2C1;
 		WFIFOW(fd,2) = mylen + 12;
 		WFIFOL(fd,4) = sd->bl.id;
-		WFIFOL(fd,8) = clif->hChSys->colors[sd->fontcolor - 1];
+		WFIFOL(fd,8) = channel->config->colors[sd->fontcolor - 1];
 		safestrncpy((char*)WFIFOP(fd,12), mout, mylen);
 		clif->send(WFIFOP(fd,0), WFIFOW(fd,2), &sd->bl, AREA_WOS);
 		WFIFOL(fd,4) = -sd->bl.id;
@@ -10219,117 +9920,6 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 	}
 }
 
-void clif_hercules_chsys_left(struct hChSysCh *channel, struct map_session_data *sd) {
-	unsigned char i;
-
-	if ( !idb_remove(channel->users,sd->status.char_id) )
-		return;
-
-	if( channel == sd->gcbind )
-		sd->gcbind = NULL;
-
-	if( !db_size(channel->users) && channel->type == hChSys_PRIVATE ) {
-		clif->chsys_delete(channel);
-	} else if( !clif->hChSys->closing && (channel->opt & hChSys_OPT_ANNOUNCE_JOIN) ) {
-		char message[60];
-		sprintf(message, "#%s '%s' left",channel->name,sd->status.name);
-		clif->chsys_msg(channel,sd,message);
-	}
-
-	for( i = 0; i < sd->channel_count; i++ ) {
-		if( sd->channels[i] == channel ) {
-			sd->channels[i] = NULL;
-			break;
-		}
-	}
-
-	if( i < sd->channel_count ) {
-		unsigned char cursor = 0;
-		for( i = 0; i < sd->channel_count; i++ ) {
-			if( sd->channels[i] == NULL )
-				continue;
-			if( cursor != i ) {
-				sd->channels[cursor] = sd->channels[i];
-			}
-			cursor++;
-		}
-		if ( !(sd->channel_count = cursor) ) {
-			aFree(sd->channels);
-			sd->channels = NULL;
-		}
-	}
-
-}
-
-void clif_hercules_chsys_quitg(struct map_session_data *sd) {
-	unsigned char i;
-
-	for( i = 0; i < sd->channel_count; i++ ) {
-		struct hChSysCh *channel = sd->channels[i];
-		if (channel != NULL && channel->type == hChSys_ALLY) {
-			if (!idb_remove(channel->users,sd->status.char_id))
-				continue;
-
-			if( channel == sd->gcbind )
-				sd->gcbind = NULL;
-
-			if (!db_size(channel->users) && channel->type == hChSys_PRIVATE) {
-				clif->chsys_delete(channel);
-			} else if (!clif->hChSys->closing && (channel->opt & hChSys_OPT_ANNOUNCE_JOIN)) {
-				char message[60];
-				sprintf(message, "#%s '%s' left",channel->name,sd->status.name);
-				clif->chsys_msg(channel,sd,message);
-			}
-			sd->channels[i] = NULL;
-		}
-	}
-
-	if( i < sd->channel_count ) {
-		unsigned char cursor = 0;
-		for( i = 0; i < sd->channel_count; i++ ) {
-			if( sd->channels[i] == NULL )
-				continue;
-			if( cursor != i ) {
-				sd->channels[cursor] = sd->channels[i];
-			}
-			cursor++;
-		}
-		if ( !(sd->channel_count = cursor) ) {
-			aFree(sd->channels);
-			sd->channels = NULL;
-		}
-	}
-
-}
-
-
-void clif_hercules_chsys_quit(struct map_session_data *sd) {
-	unsigned char i;
-
-	for (i = 0; i < sd->channel_count; i++) {
-		struct hChSysCh *channel = sd->channels[i];
-		if (channel != NULL) {
-			idb_remove(channel->users,sd->status.char_id);
-
-			if( channel == sd->gcbind )
-				sd->gcbind = NULL;
-
-			if (!db_size(channel->users) && channel->type == hChSys_PRIVATE) {
-				clif->chsys_delete(channel);
-			} else if (!clif->hChSys->closing && (channel->opt & hChSys_OPT_ANNOUNCE_JOIN)) {
-				char message[60];
-				sprintf(message, "#%s '%s' left",channel->name,sd->status.name);
-				clif->chsys_msg(channel,sd,message);
-			}
-
-		}
-	}
-
-	sd->channel_count = 0;
-	aFree(sd->channels);
-	sd->channels = NULL;
-}
-
 /// Request for an action.
 /// 0089 <target id>.L <action>.B (CZ_REQUEST_ACT)
 /// 0437 <target id>.L <action>.B (CZ_REQUEST_ACT2)
@@ -10450,42 +10040,43 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 			return;
 		}
 	} else if( target[0] == '#' ) {
-		struct hChSysCh *channel = NULL;
+		// TODO: Split to channel.c
+		struct channel_data *chan = NULL;
 		char* chname = target;
 
 		chname++;
 
-		if (clif->hChSys->local && strcmpi(chname, clif->hChSys->local_name) == 0) {
+		if (channel->config->local && strcmpi(chname, channel->config->local_name) == 0) {
 			if( !map->list[sd->bl.m].channel ) {
-				clif->chsys_mjoin(sd);
+				channel->map_join(sd);
 			}
-			channel = map->list[sd->bl.m].channel;
-		} else if (clif->hChSys->ally && sd->status.guild_id && strcmpi(chname, clif->hChSys->ally_name) == 0) {
+			chan = map->list[sd->bl.m].channel;
+		} else if (channel->config->ally && sd->status.guild_id && strcmpi(chname, channel->config->ally_name) == 0) {
 			struct guild *g = sd->guild;
 			if( !g ) return;
-			channel = g->channel;
+			chan = g->channel;
 		}
-		if( channel || (channel = strdb_get(clif->channel_db,chname)) ) {
+		if( chan || (chan = strdb_get(channel->db,chname)) ) {
 			int k;
 			for( k = 0; k < sd->channel_count; k++ ) {
-				if( sd->channels[k] == channel )
+				if( sd->channels[k] == chan )
 					break;
 			}
 			if( k < sd->channel_count ) {
-				clif->chsys_send(channel,sd,message);
-			} else if( channel->pass[0] == '\0' && !(channel->banned && idb_exists(channel->banned, sd->status.account_id)) ) {
-				if( channel->type == hChSys_ALLY ) {
+				channel->send(chan,sd,message);
+			} else if( chan->pass[0] == '\0' && !(chan->banned && idb_exists(chan->banned, sd->status.account_id)) ) {
+				if( chan->type == HCS_TYPE_ALLY ) {
 					struct guild *g = sd->guild;
 					for (k = 0; k < MAX_GUILDALLIANCE; k++) {
 						struct guild *sg = NULL;
 						if( g->alliance[k].opposition == 0 && g->alliance[k].guild_id && (sg = guild->search(g->alliance[k].guild_id) ) ) {
 							if( !(sg->channel->banned && idb_exists(sg->channel->banned, sd->status.account_id)))
-								clif->chsys_join(sg->channel,sd);
+								channel->join(sg->channel,sd);
 						}
 					}
 				}
-				clif->chsys_join(channel,sd);
-				clif->chsys_send(channel,sd,message);
+				channel->join(chan,sd);
+				channel->send(chan,sd,message);
 			} else {
 				clif->message(fd, msg_txt(1402));
 			}
@@ -10709,95 +10300,6 @@ void clif_parse_EquipItem(int fd,struct map_session_data *sd) {
 		pc->equipitem(sd,p->index,EQP_AMMO);
 	else
 		pc->equipitem(sd,p->index,p->wearLocation);
-}
-
-void clif_hercules_chsys_delete(struct hChSysCh *channel) {
-	if (db_size(channel->users) && !clif->hChSys->closing) {
-		DBIterator *iter;
-		struct map_session_data *sd;
-		unsigned char i;
-		iter = db_iterator(channel->users);
-		for( sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter) ) {
-			for( i = 0; i < sd->channel_count; i++ ) {
-				if( sd->channels[i] == channel ) {
-					sd->channels[i] = NULL;
-					break;
-				}
-			}
-			if( i < sd->channel_count ) {
-				unsigned char cursor = 0;
-				for( i = 0; i < sd->channel_count; i++ ) {
-					if( sd->channels[i] == NULL )
-						continue;
-					if( cursor != i ) {
-						sd->channels[cursor] = sd->channels[i];
-					}
-					cursor++;
-				}
-				if ( !(sd->channel_count = cursor) ) {
-					aFree(sd->channels);
-					sd->channels = NULL;
-				}
-			}
-		}
-		dbi_destroy(iter);
-	}
-	if( channel->banned ) {
-		db_destroy(channel->banned);
-		channel->banned = NULL;
-	}
-	db_destroy(channel->users);
-	if( channel->m ) {
-		map->list[channel->m].channel = NULL;
-		aFree(channel);
-	} else if ( channel->type == hChSys_ALLY )
-		aFree(channel);
-	else if (!clif->hChSys->closing)
-		strdb_remove(clif->channel_db, channel->name);
-}
-void clif_hercules_chsys_gjoin(struct guild *g1,struct guild *g2) {
-	struct map_session_data *sd;
-	struct hChSysCh *channel;
-	int j;
-
-	if( (channel = g1->channel) ) {
-		for(j = 0; j < g2->max_member; j++) {
-			if( (sd = g2->member[j].sd) != NULL ) {
-				if( !(g1->channel->banned && idb_exists(g1->channel->banned, sd->status.account_id)))
-					clif->chsys_join(channel,sd);
-			}
-		}
-	}
-
-	if( (channel = g2->channel) ) {
-		for(j = 0; j < g1->max_member; j++) {
-			if( (sd = g1->member[j].sd) != NULL ) {
-				if( !(g2->channel->banned && idb_exists(g2->channel->banned, sd->status.account_id)))
-				clif->chsys_join(channel,sd);
-			}
-		}
-	}
-}
-void clif_hercules_chsys_gleave(struct guild *g1,struct guild *g2) {
-	struct map_session_data *sd;
-	struct hChSysCh *channel;
-	int j;
-
-	if( (channel = g1->channel) ) {
-		for(j = 0; j < g2->max_member; j++) {
-			if( (sd = g2->member[j].sd) != NULL ) {
-				clif->chsys_left(channel,sd);
-			}
-		}
-	}
-
-	if( (channel = g2->channel) ) {
-		for(j = 0; j < g1->max_member; j++) {
-			if( (sd = g1->member[j].sd) != NULL ) {
-				clif->chsys_left(channel,sd);
-			}
-		}
-	}
 }
 
 /// Request to take off an equip (CZ_REQ_TAKEOFF_EQUIP).
@@ -18899,34 +18401,13 @@ int do_init_clif(bool minimal) {
 	clif->delay_clearunit_ers = ers_new(sizeof(struct block_list),"clif.c::delay_clearunit_ers",ERS_OPT_CLEAR);
 	clif->delayed_damage_ers = ers_new(sizeof(struct cdelayed_damage),"clif.c::delayed_damage_ers",ERS_OPT_CLEAR);
 
-	clif->channel_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, HCHSYS_NAME_LENGTH);
-	clif->hChSys->ally = clif->hChSys->local = clif->hChSys->irc = clif->hChSys->ally_autojoin = clif->hChSys->local_autojoin = false;
-	clif->chann_config_read();
-
 	return 0;
 }
 
-void do_final_clif(void) {
-	DBIterator *iter = db_iterator(clif->channel_db);
-	struct hChSysCh *channel;
+void do_final_clif(void)
+{
 	unsigned char i;
 
-	for( channel = dbi_first(iter); dbi_exists(iter); channel = dbi_next(iter) ) {
-		clif->chsys_delete(channel);
-	}
-
-	dbi_destroy(iter);
-
-	for(i = 0; i < clif->hChSys->colors_count; i++) {
-		aFree(clif->hChSys->colors_name[i]);
-	}
-
-	if (clif->hChSys->colors_count) {
-		aFree(clif->hChSys->colors_name);
-		aFree(clif->hChSys->colors);
-	}
-
-	db_destroy(clif->channel_db);
 	ers_destroy(clif->delay_clearunit_ers);
 	ers_destroy(clif->delayed_damage_ers);
 
@@ -19420,21 +18901,11 @@ void clif_defaults(void) {
 	clif->user_count = clif_user_count;
 	clif->noask_sub = clif_noask_sub;
 	clif->bc_ready = clif_bc_ready;
-	clif->undisguise_timer = clif_undisguise_timer;
 	/* Hercules Channel System */
-	clif->hChSys = &clif_hChSys;
-	clif->chsys_create = clif_hercules_chsys_create;
-	clif->chsys_msg = clif_hercules_chsys_msg;
-	clif->chsys_msg2 = clif_hercules_chsys_msg2;
-	clif->chsys_send = clif_hercules_chsys_send;
-	clif->chsys_join = clif_hercules_chsys_join;
-	clif->chsys_left = clif_hercules_chsys_left;
-	clif->chsys_delete = clif_hercules_chsys_delete;
-	clif->chsys_mjoin = clif_hercules_chsys_mjoin;
-	clif->chsys_quit = clif_hercules_chsys_quit;
-	clif->chsys_quitg = clif_hercules_chsys_quitg;
-	clif->chsys_gjoin = clif_hercules_chsys_gjoin;
-	clif->chsys_gleave = clif_hercules_chsys_gleave;
+	clif->channel_msg = clif_channel_msg;
+	clif->channel_msg2 = clif_channel_msg2;
+	/* */
+	clif->undisguise_timer = clif_undisguise_timer;
 	/* Bank System [Yommy/Hercules] */
 	clif->bank_deposit = clif_bank_deposit;
 	clif->bank_withdraw = clif_bank_withdraw;
@@ -19488,7 +18959,6 @@ void clif_defaults(void) {
 	clif->pKickFromChat = clif_parse_KickFromChat;
 	clif->pChatLeave = clif_parse_ChatLeave;
 	clif->pTradeRequest = clif_parse_TradeRequest;
-	clif->chann_config_read = read_channels_config;
 	clif->pTradeAck = clif_parse_TradeAck;
 	clif->pTradeAddItem = clif_parse_TradeAddItem;
 	clif->pTradeOk = clif_parse_TradeOk;
