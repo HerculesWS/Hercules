@@ -83,11 +83,12 @@ enum HPluginDataTypes {
 	HPDT_MOBDB,
 	HPDT_MOBDATA,
 	HPDT_ITEMDATA,
+	HPDT_AUTOTRADE_VEND,
 };
 
 /* used in macros and conf storage */
 enum HPluginConfType {
-	HPCT_BATTLE,     /* battle-conf (map-server */
+	HPCT_BATTLE,     /* battle-conf (map-server) */
 	HPCT_LOGIN,      /* login-server.conf (login-server) */
 	HPCT_CHAR,       /* char-server.conf (char-server) */
 	HPCT_CHAR_INTER, /* inter-server.conf (char-server) */
@@ -146,6 +147,10 @@ enum HPluginConfType {
 #define addToITEMDATA(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_ITEMDATA,HPMi->pid,(ptr),(data),(index),(autofree)))
 #define getFromITEMDATA(ptr,index) (HPMi->getFromHPData(HPDT_ITEMDATA,HPMi->pid,(ptr),(index)))
 #define removeFromITEMDATA(ptr,index) (HPMi->removeFromHPData(HPDT_ITEMDATA,HPMi->pid,(ptr),(index)))
+/* autotrade_vending */
+#define addToATVEND(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_AUTOTRADE_VEND,HPMi->pid,(ptr),(data),(index),(autofree)))
+#define getFromATVEND(ptr,index) (HPMi->getFromHPData(HPDT_AUTOTRADE_VEND,HPMi->pid,(ptr),(index)))
+#define removeFromATVEND(ptr,index) (HPMi->removeFromHPData(HPDT_AUTOTRADE_VEND,HPMi->pid,(ptr),(index)))
 
 /* HPMi->addCommand */
 #define addAtcommand(cname,funcname) \
