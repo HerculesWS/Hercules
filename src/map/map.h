@@ -803,6 +803,16 @@ struct map_cache_map_info {
 	int32 len;
 };
 
+// Mapflag Functions
+#define CHECK_MAPFLAG( cmd ) do { if ( map->list[ sd->bl.m ].flag.cmd ) clif->message(sd->fd,#cmd); } while(0)
+#define SET_MAPFLAG( cmd ) do { \
+	if ( strcmp( flag_name , #cmd ) == 0 ) { \
+		map->list[ sd->bl.m ].flag.cmd = flag; \
+		sprintf(output,"[ @mapflag ] %s flag has been set to %s value = %hd",#cmd,flag?"On":"Off",flag); \
+		clif->message(sd->fd,output); \
+		return true; \
+	} \
+} while(0)
 
 /*=====================================
 * Interface : map.h
@@ -1079,6 +1089,11 @@ struct map_interface {
 	void (*add_questinfo) (int m, struct questinfo *qi);
 	bool (*remove_questinfo) (int m, struct npc_data *nd);
 	struct map_zone_data *(*merge_zone) (struct map_zone_data *main, struct map_zone_data *other);
+	void (*mapflag_check_command) (struct map_session_data* sd);
+	bool (*mapflag_set_command) (struct map_session_data* sd, char* flag_name, short flag);
+	void (*mapflag_get_script) (int16 m, int16 i);
+	void (*mapflag_set_script) (int16 m, int16 i, int val, const char* val2);
+	void (*mapflag_remove_script) (int16 m, int16 i);
 };
 
 struct map_interface *map;

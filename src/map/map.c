@@ -2474,6 +2474,61 @@ int16 map_mapindex2mapid(unsigned short map_index) {
 }
 
 /*==========================================
+ * MapFlag Functions
+ *------------------------------------------*/
+void map_mapflag_check_command(struct map_session_data* sd){
+	CHECK_MAPFLAG(autotrade);         CHECK_MAPFLAG(allowks);            CHECK_MAPFLAG(nomemo);       CHECK_MAPFLAG(noteleport);
+	CHECK_MAPFLAG(noreturn);          CHECK_MAPFLAG(monster_noteleport); CHECK_MAPFLAG(nosave);       CHECK_MAPFLAG(nobranch);
+	CHECK_MAPFLAG(noexppenalty);      CHECK_MAPFLAG(pvp);                CHECK_MAPFLAG(pvp_noparty);  CHECK_MAPFLAG(pvp_noguild);
+	CHECK_MAPFLAG(pvp_nightmaredrop); CHECK_MAPFLAG(pvp_nocalcrank);     CHECK_MAPFLAG(gvg_castle);   CHECK_MAPFLAG(gvg);
+	CHECK_MAPFLAG(gvg_dungeon);       CHECK_MAPFLAG(gvg_noparty);        CHECK_MAPFLAG(battleground); CHECK_MAPFLAG(nozenypenalty);
+	CHECK_MAPFLAG(notrade);           CHECK_MAPFLAG(noskill);            CHECK_MAPFLAG(nowarp);       CHECK_MAPFLAG(nowarpto);
+	CHECK_MAPFLAG(noicewall);         CHECK_MAPFLAG(snow);               CHECK_MAPFLAG(clouds);       CHECK_MAPFLAG(clouds2);
+	CHECK_MAPFLAG(fog);               CHECK_MAPFLAG(fireworks);          CHECK_MAPFLAG(sakura);       CHECK_MAPFLAG(leaves);
+	CHECK_MAPFLAG(nobaseexp);
+	CHECK_MAPFLAG(nojobexp);          CHECK_MAPFLAG(nomobloot);          CHECK_MAPFLAG(nomvploot);    CHECK_MAPFLAG(nightenabled);
+	CHECK_MAPFLAG(nodrop);            CHECK_MAPFLAG(novending);          CHECK_MAPFLAG(loadevent);
+	CHECK_MAPFLAG(nochat);            CHECK_MAPFLAG(partylock);          CHECK_MAPFLAG(guildlock);    CHECK_MAPFLAG(src4instance);
+	CHECK_MAPFLAG(notomb);            CHECK_MAPFLAG(nocashshop);
+	return;
+}
+
+bool map_mapflag_set_command(struct map_session_data* sd, char* flag_name, short flag){
+	char output[CHAT_SIZE_MAX];
+	SET_MAPFLAG(autotrade);         SET_MAPFLAG(allowks);            SET_MAPFLAG(nomemo);       SET_MAPFLAG(noteleport);
+	SET_MAPFLAG(noreturn);          SET_MAPFLAG(monster_noteleport); SET_MAPFLAG(nosave);       SET_MAPFLAG(nobranch);
+	SET_MAPFLAG(noexppenalty);      SET_MAPFLAG(pvp);                SET_MAPFLAG(pvp_noparty);  SET_MAPFLAG(pvp_noguild);
+	SET_MAPFLAG(pvp_nightmaredrop); SET_MAPFLAG(pvp_nocalcrank);     SET_MAPFLAG(gvg_castle);   SET_MAPFLAG(gvg);
+	SET_MAPFLAG(gvg_dungeon);       SET_MAPFLAG(gvg_noparty);        SET_MAPFLAG(battleground); SET_MAPFLAG(nozenypenalty);
+	SET_MAPFLAG(notrade);           SET_MAPFLAG(noskill);            SET_MAPFLAG(nowarp);       SET_MAPFLAG(nowarpto);
+	SET_MAPFLAG(noicewall);         SET_MAPFLAG(snow);               SET_MAPFLAG(clouds);       SET_MAPFLAG(clouds2);
+	SET_MAPFLAG(fog);               SET_MAPFLAG(fireworks);          SET_MAPFLAG(sakura);       SET_MAPFLAG(leaves);
+	SET_MAPFLAG(nobaseexp);
+	SET_MAPFLAG(nojobexp);          SET_MAPFLAG(nomobloot);          SET_MAPFLAG(nomvploot);    SET_MAPFLAG(nightenabled);
+	SET_MAPFLAG(nodrop);            SET_MAPFLAG(novending);          SET_MAPFLAG(loadevent);
+	SET_MAPFLAG(nochat);            SET_MAPFLAG(partylock);          SET_MAPFLAG(guildlock);    SET_MAPFLAG(src4instance);
+	SET_MAPFLAG(notomb);            SET_MAPFLAG(nocashshop);
+	return false;
+}
+
+void map_mapflag_get_script(int16 m, int16 i){
+	ShowError("buildin_getmapflag: Mapflag '%d' Doesn't exist",i);
+	return;
+}
+
+void map_mapflag_set_script(int16 m, int16 i, int val, const char* val2){
+	ShowError("buildin_setmapflag: Mapflag '%d' Doesn't exist",i);
+	return;
+}
+
+void map_mapflag_remove_script(int16 m, int16 i){
+	ShowError("buildin_removemapflag: Mapflag '%d' Doesn't exist",i);
+	return;
+}
+
+
+
+/*==========================================
  * Switching Ip, port ? (like changing map_server) get ip/port from map_name
  *------------------------------------------*/
 int map_mapname2ipport(unsigned short name, uint32* ip, uint16* port) {
@@ -6291,6 +6346,13 @@ void map_defaults(void) {
 	map->remove_questinfo = map_remove_questinfo;
 	
 	map->merge_zone = map_merge_zone;
+	
+	
+	map->mapflag_check_command = map_mapflag_check_command;
+	map->mapflag_set_command = map_mapflag_set_command;
+	map->mapflag_get_script = map_mapflag_get_script;
+	map->mapflag_set_script = map_mapflag_set_script;
+	map->mapflag_remove_script = map_mapflag_remove_script;
 		
 	/**
 	 * mapit interface

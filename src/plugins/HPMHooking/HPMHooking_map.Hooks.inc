@@ -38810,6 +38810,137 @@ struct map_zone_data* HP_map_merge_zone(struct map_zone_data *main, struct map_z
 	}
 	return retVal___;
 }
+void HP_map_mapflag_check_command(struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_map_mapflag_check_command_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_mapflag_check_command_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_map_mapflag_check_command_pre[hIndex].func;
+			preHookFunc(sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.map.mapflag_check_command(sd);
+	}
+	if( HPMHooks.count.HP_map_mapflag_check_command_post ) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_mapflag_check_command_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_map_mapflag_check_command_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
+bool HP_map_mapflag_set_command(struct map_session_data *sd, char *flag_name, short flag) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_map_mapflag_set_command_pre ) {
+		bool (*preHookFunc) (struct map_session_data *sd, char *flag_name, short *flag);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_mapflag_set_command_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_map_mapflag_set_command_pre[hIndex].func;
+			retVal___ = preHookFunc(sd, flag_name, &flag);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.map.mapflag_set_command(sd, flag_name, flag);
+	}
+	if( HPMHooks.count.HP_map_mapflag_set_command_post ) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, char *flag_name, short *flag);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_mapflag_set_command_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_map_mapflag_set_command_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, flag_name, &flag);
+		}
+	}
+	return retVal___;
+}
+void HP_map_mapflag_get_script(int16 m, int16 i) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_map_mapflag_get_script_pre ) {
+		void (*preHookFunc) (int16 *m, int16 *i);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_mapflag_get_script_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_map_mapflag_get_script_pre[hIndex].func;
+			preHookFunc(&m, &i);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.map.mapflag_get_script(m, i);
+	}
+	if( HPMHooks.count.HP_map_mapflag_get_script_post ) {
+		void (*postHookFunc) (int16 *m, int16 *i);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_mapflag_get_script_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_map_mapflag_get_script_post[hIndex].func;
+			postHookFunc(&m, &i);
+		}
+	}
+	return;
+}
+void HP_map_mapflag_set_script(int16 m, int16 i, int val, const char *val2) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_map_mapflag_set_script_pre ) {
+		void (*preHookFunc) (int16 *m, int16 *i, int *val, const char *val2);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_mapflag_set_script_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_map_mapflag_set_script_pre[hIndex].func;
+			preHookFunc(&m, &i, &val, val2);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.map.mapflag_set_script(m, i, val, val2);
+	}
+	if( HPMHooks.count.HP_map_mapflag_set_script_post ) {
+		void (*postHookFunc) (int16 *m, int16 *i, int *val, const char *val2);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_mapflag_set_script_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_map_mapflag_set_script_post[hIndex].func;
+			postHookFunc(&m, &i, &val, val2);
+		}
+	}
+	return;
+}
+void HP_map_mapflag_remove_script(int16 m, int16 i) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_map_mapflag_remove_script_pre ) {
+		void (*preHookFunc) (int16 *m, int16 *i);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_mapflag_remove_script_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_map_mapflag_remove_script_pre[hIndex].func;
+			preHookFunc(&m, &i);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.map.mapflag_remove_script(m, i);
+	}
+	if( HPMHooks.count.HP_map_mapflag_remove_script_post ) {
+		void (*postHookFunc) (int16 *m, int16 *i);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_mapflag_remove_script_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_map_mapflag_remove_script_post[hIndex].func;
+			postHookFunc(&m, &i);
+		}
+	}
+	return;
+}
 /* mapit */
 struct s_mapiterator* HP_mapit_alloc(enum e_mapitflags flags, enum bl_type types) {
 	int hIndex = 0;
