@@ -12731,51 +12731,26 @@ BUILDIN(petrecovery)
 }
 
 /*==========================================
- * pet attack skills [Valaris] //Rewritten by [Skotlex]
+ * pet attack skills [Valaris]
  *------------------------------------------*/
-/// petskillattack <skill id>,<level>,<rate>,<bonusrate>
-/// petskillattack "<skill name>",<level>,<rate>,<bonusrate>
+/// petskillattack <skill id>,<level>,<div>,<rate>,<bonusrate>
+/// petskillattack "<skill name>",<level>,<div>,<rate>,<bonusrate>
 BUILDIN(petskillattack) {
 	struct pet_data *pd;
 	TBL_PC *sd=script->rid2sd(st);
 
-	if(sd==NULL || sd->pd==NULL)
+	if (sd==NULL || sd->pd==NULL)
 		return true;
 
 	pd=sd->pd;
 	if (pd->a_skill == NULL)
 		pd->a_skill = (struct pet_skill_attack *)aMalloc(sizeof(struct pet_skill_attack));
 
-	pd->a_skill->id=( script_isstringtype(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
-	pd->a_skill->lv=script_getnum(st,3);
-	pd->a_skill->div_ = 0;
-	pd->a_skill->rate=script_getnum(st,4);
-	pd->a_skill->bonusrate=script_getnum(st,5);
-
-	return true;
-}
-
-/*==========================================
- * pet attack skills [Valaris]
- *------------------------------------------*/
-/// petskillattack2 <skill id>,<level>,<div>,<rate>,<bonusrate>
-/// petskillattack2 "<skill name>",<level>,<div>,<rate>,<bonusrate>
-BUILDIN(petskillattack2) {
-	struct pet_data *pd;
-	TBL_PC *sd=script->rid2sd(st);
-
-	if(sd==NULL || sd->pd==NULL)
-		return true;
-
-	pd=sd->pd;
-	if (pd->a_skill == NULL)
-		pd->a_skill = (struct pet_skill_attack *)aMalloc(sizeof(struct pet_skill_attack));
-
-	pd->a_skill->id=( script_isstringtype(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
-	pd->a_skill->lv=script_getnum(st,3);
+	pd->a_skill->id = script_isstringtype(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2);
+	pd->a_skill->lv = script_getnum(st,3);
 	pd->a_skill->div_ = script_getnum(st,4);
-	pd->a_skill->rate=script_getnum(st,5);
-	pd->a_skill->bonusrate=script_getnum(st,6);
+	pd->a_skill->rate = script_getnum(st,5);
+	pd->a_skill->bonusrate = script_getnum(st,6);
 
 	return true;
 }
@@ -19378,8 +19353,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(petskillbonus,"iiii"), // [Valaris]
 		BUILDIN_DEF(petrecovery,"ii"), // [Valaris]
 		BUILDIN_DEF(petloot,"i"), // [Valaris]
-		BUILDIN_DEF(petskillattack,"viii"), // [Skotlex]
-		BUILDIN_DEF(petskillattack2,"viiii"), // [Valaris]
+		BUILDIN_DEF(petskillattack,"viiii"), // [Skotlex]
 		BUILDIN_DEF(petskillsupport,"viiii"), // [Skotlex]
 		BUILDIN_DEF(skilleffect,"vi"), // skill effect [Celest]
 		BUILDIN_DEF(npcskilleffect,"viii"), // npc skill effect [Valaris]
