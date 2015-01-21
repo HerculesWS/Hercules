@@ -160,6 +160,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define MAP_BUYINGSTORE_H
 	#endif // MAP_BUYINGSTORE_H
+	#ifdef MAP_CHANNEL_H
+		{ "Channel_Config", sizeof(struct Channel_Config), SERVER_TYPE_MAP },
+	#else
+		#define MAP_CHANNEL_H
+	#endif // MAP_CHANNEL_H
 	#ifdef MAP_CHRIF_H
 		{ "auth_node", sizeof(struct auth_node), SERVER_TYPE_MAP },
 	#else
