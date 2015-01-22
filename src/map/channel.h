@@ -88,6 +88,8 @@ struct channel_interface {
 
 	struct channel_data *(*search) (const char *name, struct map_session_data *sd);
 	struct channel_data *(*create) (enum channel_types type, const char *name, unsigned char color);
+	void (*delete) (struct channel_data *chan);
+
 	void (*set_password) (struct channel_data *chan, const char *password);
 	enum channel_operation_status (*ban) (struct channel_data *chan, const struct map_session_data *ssd, struct map_session_data *tsd);
 	enum channel_operation_status (*unban) (struct channel_data *chan, const struct map_session_data *ssd, struct map_session_data *tsd);
@@ -96,14 +98,15 @@ struct channel_interface {
 	void (*send) (struct channel_data *chan, struct map_session_data *sd, const char *msg);
 	void (*join_sub) (struct channel_data *chan, struct map_session_data *sd, bool stealth);
 	enum channel_operation_status (*join) (struct channel_data *chan, struct map_session_data *sd, const char *password, bool silent);
-
 	void (*leave) (struct channel_data *chan, struct map_session_data *sd);
-	void (*delete) (struct channel_data *chan);
-	void (*map_join) (struct map_session_data *sd);
+	void (*leave_sub) (struct channel_data *chan, struct map_session_data *sd);
 	void (*quit) (struct map_session_data *sd);
-	void (*quit_guild) (struct map_session_data *sd);
+
+	void (*map_join) (struct map_session_data *sd);
 	void (*guild_join) (struct guild *g1,struct guild *g2);
 	void (*guild_leave) (struct guild *g1,struct guild *g2);
+	void (*quit_guild) (struct map_session_data *sd);
+
 	void (*config_read) (void);
 };
 

@@ -5043,7 +5043,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 			vending->close(sd);
 		}
 		
-		if (channel->config->local && map->list[sd->bl.m].channel && idb_exists(map->list[sd->bl.m].channel->users, sd->status.char_id)) {
+		if (map->list[sd->bl.m].channel) {
 			channel->leave(map->list[sd->bl.m].channel,sd);
 		}
 	}

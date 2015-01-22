@@ -80,10 +80,13 @@ struct channel_data *channel_search(const char *name, struct map_session_data *s
 struct channel_data *channel_create(enum channel_types type, const char *name, unsigned char color)
 {
 	struct channel_data *chan;
+
+	if (!name)
+		return NULL;
+
 	CREATE(chan, struct channel_data, 1);
 	chan->users = idb_alloc(DB_OPT_BASE);
-	if (name)
-		safestrncpy(chan->name, name, HCS_NAME_LENGTH);
+	safestrncpy(chan->name, name, HCS_NAME_LENGTH);
 	chan->color = color;
 
 	chan->options = HCS_OPT_BASE;
@@ -97,50 +100,37 @@ struct channel_data *channel_create(enum channel_types type, const char *name, u
 	return chan;
 }
 
+/**
+ * Deletes a chat channel.
+ *
+ * @param chan The channel to delete
+ */
 void channel_delete(struct channel_data *chan)
 {
+	nullpo_retv(chan);
+
 	if (db_size(chan->users) && !channel->config->closing) {
 		DBIterator *iter;
 		struct map_session_data *sd;
-		unsigned char i;
 		iter = db_iterator(chan->users);
-		for( sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter) ) {
-			for( i = 0; i < sd->channel_count; i++ ) {
-				if( sd->channels[i] == chan ) {
-					sd->channels[i] = NULL;
-					break;
-				}
-			}
-			if( i < sd->channel_count ) {
-				unsigned char cursor = 0;
-				for( i = 0; i < sd->channel_count; i++ ) {
-					if( sd->channels[i] == NULL )
-						continue;
-					if( cursor != i ) {
-						sd->channels[cursor] = sd->channels[i];
-					}
-					cursor++;
-				}
-				if ( !(sd->channel_count = cursor) ) {
-					aFree(sd->channels);
-					sd->channels = NULL;
-				}
-			}
+		for (sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter)) {
+			channel->leave_sub(chan, sd);
 		}
 		dbi_destroy(iter);
 	}
-	if( chan->banned ) {
+	if (chan->banned) {
 		db_destroy(chan->banned);
 		chan->banned = NULL;
 	}
 	db_destroy(chan->users);
-	if( chan->m ) {
+	if (chan->m) {
 		map->list[chan->m].channel = NULL;
 		aFree(chan);
-	} else if ( chan->type == HCS_TYPE_ALLY )
+	} else if (chan->type == HCS_TYPE_ALLY) {
 		aFree(chan);
-	else if (!channel->config->closing)
+	} else if (!channel->config->closing) {
 		strdb_remove(channel->db, chan->name);
+	}
 }
 
 /**
@@ -294,7 +284,7 @@ void channel_join_sub(struct channel_data *chan, struct map_session_data *sd, bo
 		return;
 
 	RECREATE(sd->channels, struct channel_data *, ++sd->channel_count);
-	sd->channels[ sd->channel_count - 1 ] = chan;
+	sd->channels[sd->channel_count - 1] = chan;
 
 	if (!stealth && (chan->options&HCS_OPT_ANNOUNCE_JOIN)) {
 		char message[60];
@@ -351,7 +341,7 @@ enum channel_operation_status channel_join(struct channel_data *chan, struct map
 	if (!silent && !(chan->options&HCS_OPT_ANNOUNCE_JOIN)) {
 		char output[CHAT_SIZE_MAX];
 		if (chan->type == HCS_TYPE_MAP) {
-			sprintf(output, msg_txt(1435), chan->name, map->list[sd->bl.m].name); // You're now in the '#%s' channel for '%s'
+			sprintf(output, msg_txt(1435), chan->name, map->list[chan->m].name); // You're now in the '#%s' channel for '%s'
 		} else {
 			sprintf(output, msg_txt(1403), chan->name); // You're now in the '%s' channel
 		}
@@ -376,75 +366,88 @@ enum channel_operation_status channel_join(struct channel_data *chan, struct map
 	return HCS_STATUS_OK;
 }
 
-void channel_leave(struct channel_data *chan, struct map_session_data *sd)
+/**
+ * Removes a channel from a character's join lists.
+ *
+ * @param chan The channel to leave
+ * @param sd   The character
+ */
+void channel_leave_sub(struct channel_data *chan, struct map_session_data *sd)
 {
 	unsigned char i;
 
-	if ( !idb_remove(chan->users,sd->status.char_id) )
+	nullpo_retv(chan);
+	nullpo_retv(sd);
+	for (i = 0; i < sd->channel_count; i++) {
+		if (sd->channels[i] == chan) {
+			sd->channels[i] = NULL;
+			break;
+		}
+	}
+	if (i < sd->channel_count) {
+		unsigned char cursor = 0;
+		for (i = 0; i < sd->channel_count; i++) {
+			if (sd->channels[i] == NULL)
+				continue;
+			if (cursor != i) {
+				sd->channels[cursor] = sd->channels[i];
+			}
+			cursor++;
+		}
+		if (!(sd->channel_count = cursor)) {
+			aFree(sd->channels);
+			sd->channels = NULL;
+		}
+	}
+}
+/**
+ * Leaves a channel.
+ *
+ * @param chan The channel to leave
+ * @param sd   The character
+ */
+void channel_leave(struct channel_data *chan, struct map_session_data *sd)
+{
+	nullpo_retv(chan);
+	nullpo_retv(sd);
+
+	if (!idb_remove(chan->users,sd->status.char_id))
 		return;
 
-	if( chan == sd->gcbind )
+	if (chan == sd->gcbind)
 		sd->gcbind = NULL;
 
-	if( !db_size(chan->users) && chan->type == HCS_TYPE_PRIVATE ) {
+	if (!db_size(chan->users) && chan->type == HCS_TYPE_PRIVATE) {
 		channel->delete(chan);
-	} else if( !channel->config->closing && (chan->options & HCS_OPT_ANNOUNCE_JOIN) ) {
+	} else if (!channel->config->closing && (chan->options & HCS_OPT_ANNOUNCE_JOIN)) {
 		char message[60];
 		sprintf(message, "#%s '%s' left",chan->name,sd->status.name);
 		clif->channel_msg(chan,sd,message);
 	}
 
-	for( i = 0; i < sd->channel_count; i++ ) {
-		if( sd->channels[i] == chan ) {
-			sd->channels[i] = NULL;
-			break;
-		}
-	}
-
-	if( i < sd->channel_count ) {
-		unsigned char cursor = 0;
-		for( i = 0; i < sd->channel_count; i++ ) {
-			if( sd->channels[i] == NULL )
-				continue;
-			if( cursor != i ) {
-				sd->channels[cursor] = sd->channels[i];
-			}
-			cursor++;
-		}
-		if ( !(sd->channel_count = cursor) ) {
-			aFree(sd->channels);
-			sd->channels = NULL;
-		}
-	}
-
+	channel->leave_sub(chan, sd);
 }
 
+/**
+ * Quits the channel system.
+ *
+ * Leaves all joined channels.
+ *
+ * @param sd The target character
+ */
 void channel_quit(struct map_session_data *sd)
 {
-	unsigned char i;
+	while (sd->channel_count > 0) {
+		// Loop downward to avoid unnecessary array compactions by channel_leave
+		struct channel_data *chan = sd->channels[sd->channel_count-1];
 
-	for (i = 0; i < sd->channel_count; i++) {
-		struct channel_data *chan = sd->channels[i];
-		if (chan != NULL) {
-			idb_remove(chan->users,sd->status.char_id);
-
-			if( chan == sd->gcbind )
-				sd->gcbind = NULL;
-
-			if (!db_size(chan->users) && chan->type == HCS_TYPE_PRIVATE) {
-				channel->delete(chan);
-			} else if (!channel->config->closing && (chan->options & HCS_OPT_ANNOUNCE_JOIN)) {
-				char message[60];
-				sprintf(message, "#%s '%s' left",chan->name,sd->status.name);
-				clif->channel_msg(chan,sd,message);
-			}
-
+		if (chan == NULL) {
+			sd->channel_count--;
+			continue;
 		}
-	}
 
-	sd->channel_count = 0;
-	aFree(sd->channels);
-	sd->channels = NULL;
+		channel->leave(chan, sd);
+	}
 }
 
 /**
@@ -807,9 +810,11 @@ void channel_defaults(void)
 {
 	channel = &channel_s;
 
+	channel->db = NULL;
+	channel->config = &channel_config;
+
 	channel->init = do_init_channel;
 	channel->final = do_final_channel;
-	channel->config = &channel_config;
 
 	channel->search = channel_search;
 	channel->create = channel_create;
@@ -824,6 +829,7 @@ void channel_defaults(void)
 	channel->join_sub = channel_join_sub;
 	channel->join = channel_join;
 	channel->leave = channel_leave;
+	channel->leave_sub = channel_leave_sub;
 	channel->quit = channel_quit;
 
 	channel->map_join = channel_map_join;

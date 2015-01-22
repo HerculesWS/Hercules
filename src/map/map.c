@@ -1857,10 +1857,6 @@ int map_quit(struct map_session_data *sd) {
 		unit->remove_map(&sd->ed->bl,CLR_TELEPORT,ALC_MARK);
 	}
 
-	if (channel->config->local && map->list[sd->bl.m].channel && idb_exists(map->list[sd->bl.m].channel->users, sd->status.char_id)) {
-		channel->leave(map->list[sd->bl.m].channel,sd);
-	}
-
 	channel->quit(sd);
 
 	unit->remove_map_pc(sd,CLR_RESPAWN);
