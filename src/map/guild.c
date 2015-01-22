@@ -1633,10 +1633,13 @@ int guild_allianceack(int guild_id1,int guild_id2,int account_id1,int account_id
 
 	if (g[0] && g[1] && channel->config->ally && ( flag & 1 ) == 0) {
 		if( !(flag & 0x08) ) {
-			if (channel->config->ally_autojoin)
-				channel->guild_join(g[0],g[1]);
+			if (channel->config->ally_autojoin) {
+				channel->guild_join_alliance(g[0],g[1]);
+				channel->guild_join_alliance(g[1],g[0]);
+			}
 		} else {
-			channel->guild_leave(g[0],g[1]);
+			channel->guild_leave_alliance(g[0],g[1]);
+			channel->guild_leave_alliance(g[1],g[0]);
 		}
 	}
 	

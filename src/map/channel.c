@@ -470,94 +470,79 @@ void channel_map_join(struct map_session_data *sd)
 	channel->join(map->list[sd->bl.m].channel, sd, NULL, false);
 }
 
-void channel_guild_join(struct guild *g1,struct guild *g2)
+/**
+ * Lets a guild's members join a newly allied guild's channel.
+ *
+ * Note: g_source members will join g_ally's channel.
+ * To have g_ally members join g_source's channel, call this function twice, with inverted arguments.
+ *
+ * @param g_source Source guild
+ * @param g_ally   Allied guild
+ */
+void channel_guild_join_alliance(const struct guild *g_source, const struct guild *g_ally)
 {
-	struct map_session_data *sd;
 	struct channel_data *chan;
-	int j;
 
-	if( (chan = g1->channel) ) {
-		for(j = 0; j < g2->max_member; j++) {
-			if( (sd = g2->member[j].sd) != NULL ) {
-				if( !(g1->channel->banned && idb_exists(g1->channel->banned, sd->status.account_id)))
-					channel->join_sub(chan,sd, false);
-			}
-		}
-	}
+	nullpo_retv(g_source);
+	nullpo_retv(g_ally);
 
-	if( (chan = g2->channel) ) {
-		for(j = 0; j < g1->max_member; j++) {
-			if( (sd = g1->member[j].sd) != NULL ) {
-				if( !(g2->channel->banned && idb_exists(g2->channel->banned, sd->status.account_id)))
+	if ((chan = g_ally->channel)) {
+		int i;
+		for (i = 0; i < g_source->max_member; i++) {
+			struct map_session_data *sd = g_source->member[i].sd;
+			if (sd == NULL)
+				continue;
+			if (!(g_ally->channel->banned && idb_exists(g_ally->channel->banned, sd->status.account_id)))
 				channel->join_sub(chan,sd, false);
-			}
 		}
 	}
 }
 
-void channel_guild_leave(struct guild *g1,struct guild *g2)
+/**
+ * Makes a guild's members leave a no former allied guild's channel.
+ *
+ * Note: g_source members will leave g_ally's channel.
+ * To have g_ally members leave g_source's channel, call this function twice, with inverted arguments.
+ *
+ * @param g_source Source guild
+ * @param g_ally   Former allied guild
+ */
+void channel_guild_leave_alliance(const struct guild *g_source, const struct guild *g_ally)
 {
-	struct map_session_data *sd;
 	struct channel_data *chan;
-	int j;
 
-	if( (chan = g1->channel) ) {
-		for(j = 0; j < g2->max_member; j++) {
-			if( (sd = g2->member[j].sd) != NULL ) {
-				channel->leave(chan,sd);
-			}
-		}
-	}
+	nullpo_retv(g_source);
+	nullpo_retv(g_ally);
 
-	if( (chan = g2->channel) ) {
-		for(j = 0; j < g1->max_member; j++) {
-			if( (sd = g1->member[j].sd) != NULL ) {
-				channel->leave(chan,sd);
-			}
+	if ((chan = g_ally->channel)) {
+		int i;
+		for (i = 0; i < g_source->max_member; i++) {
+			struct map_session_data *sd = g_source->member[i].sd;
+			if (sd == NULL)
+				continue;
+
+			channel->leave(chan,sd);
 		}
 	}
 }
 
+/**
+ * Makes a character quit all guild-related channels.
+ *
+ * @param sd The character
+ */
 void channel_quit_guild(struct map_session_data *sd)
 {
 	unsigned char i;
 
-	for( i = 0; i < sd->channel_count; i++ ) {
+	for (i = 0; i < sd->channel_count; i++) {
 		struct channel_data *chan = sd->channels[i];
-		if (chan != NULL && chan->type == HCS_TYPE_ALLY) {
-			if (!idb_remove(chan->users,sd->status.char_id))
-				continue;
 
-			if( chan == sd->gcbind )
-				sd->gcbind = NULL;
+		if (chan == NULL || chan->type != HCS_TYPE_ALLY)
+			continue;
 
-			if (!db_size(chan->users) && chan->type == HCS_TYPE_PRIVATE) {
-				channel->delete(chan);
-			} else if (!channel->config->closing && (chan->options & HCS_OPT_ANNOUNCE_JOIN)) {
-				char message[60];
-				sprintf(message, "#%s '%s' left",chan->name,sd->status.name);
-				clif->channel_msg(chan,sd,message);
-			}
-			sd->channels[i] = NULL;
-		}
+		channel->leave(chan, sd);
 	}
-
-	if( i < sd->channel_count ) {
-		unsigned char cursor = 0;
-		for( i = 0; i < sd->channel_count; i++ ) {
-			if( sd->channels[i] == NULL )
-				continue;
-			if( cursor != i ) {
-				sd->channels[cursor] = sd->channels[i];
-			}
-			cursor++;
-		}
-		if ( !(sd->channel_count = cursor) ) {
-			aFree(sd->channels);
-			sd->channels = NULL;
-		}
-	}
-
 }
 
 void read_channels_config(void)
@@ -833,8 +818,8 @@ void channel_defaults(void)
 	channel->quit = channel_quit;
 
 	channel->map_join = channel_map_join;
-	channel->guild_join = channel_guild_join;
-	channel->guild_leave = channel_guild_leave;
+	channel->guild_join_alliance = channel_guild_join_alliance;
+	channel->guild_leave_alliance = channel_guild_leave_alliance;
 	channel->quit_guild = channel_quit_guild;
 
 	channel->config_read = read_channels_config;

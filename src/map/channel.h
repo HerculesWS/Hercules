@@ -103,8 +103,8 @@ struct channel_interface {
 	void (*quit) (struct map_session_data *sd);
 
 	void (*map_join) (struct map_session_data *sd);
-	void (*guild_join) (struct guild *g1,struct guild *g2);
-	void (*guild_leave) (struct guild *g1,struct guild *g2);
+	void (*guild_join_alliance) (const struct guild *g_source, const struct guild *g_ally);
+	void (*guild_leave_alliance) (const struct guild *g_source, const struct guild *g_ally);
 	void (*quit_guild) (struct map_session_data *sd);
 
 	void (*config_read) (void);
