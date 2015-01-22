@@ -301,7 +301,7 @@ void do_db2sql(void) {
 		return;
 	}
 
-	tosql.db_name = map->item_db_re_db;
+	tosql.db_name = map->item_db_db;
 	totable();
 
 	memset(&tosql.buf, 0, sizeof(tosql.buf) );

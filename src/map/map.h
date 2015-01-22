@@ -852,12 +852,9 @@ struct map_interface {
 
 	char item_db_db[32];
 	char item_db2_db[32];
-	char item_db_re_db[32];
 	char mob_db_db[32];
-	char mob_db_re_db[32];
 	char mob_db2_db[32];
 	char mob_skill_db_db[32];
-	char mob_skill_db_re_db[32];
 	char mob_skill_db2_db[32];
 	char interreg_db[32];
 	char autotrade_merchants_db[32];

@@ -2033,11 +2033,7 @@ void itemdb_read(bool minimal) {
 	
 	if (map->db_use_sql_item_db) {
 		const char* item_db_name[] = {
-#ifdef RENEWAL
-			map->item_db_re_db,
-#else // not RENEWAL
 			map->item_db_db,
-#endif // RENEWAL
 			map->item_db2_db
 		};
 		for(i = 0; i < ARRAYLENGTH(item_db_name); i++)

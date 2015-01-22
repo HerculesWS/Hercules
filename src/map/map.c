@@ -3728,18 +3728,12 @@ int inter_config_read(char *cfgName) {
 			safestrncpy(map->item_db_db, w2, sizeof(map->item_db_db));
 		else if(strcmpi(w1,"mob_db_db")==0)
 			safestrncpy(map->mob_db_db, w2, sizeof(map->mob_db_db));
-		else if (strcmpi(w1, "mob_db_re_db") == 0)
-			safestrncpy(map->mob_db_re_db, w2, sizeof(map->mob_db_re_db));
 		else if(strcmpi(w1,"item_db2_db")==0)
 			safestrncpy(map->item_db2_db, w2, sizeof(map->item_db2_db));
-		else if(strcmpi(w1,"item_db_re_db")==0)
-			safestrncpy(map->item_db_re_db, w2, sizeof(map->item_db_re_db));
 		else if(strcmpi(w1,"mob_db2_db")==0)
 			safestrncpy(map->mob_db2_db, w2, sizeof(map->mob_db2_db));
 		else if(strcmpi(w1, "mob_skill_db_db") == 0)
 			safestrncpy(map->mob_skill_db_db, w2, sizeof(map->mob_skill_db_db));
-		else if(strcmpi(w1, "mob_skill_db_re_db") == 0)
-			safestrncpy(map->mob_skill_db_re_db, w2, sizeof(map->mob_skill_db_re_db));
 		else if(strcmpi(w1,"mob_skill_db2_db")==0)
 			safestrncpy(map->mob_skill_db2_db, w2, sizeof(map->mob_skill_db2_db));
 		else if(strcmpi(w1,"interreg_db")==0)
@@ -6051,12 +6045,9 @@ void map_defaults(void) {
 	
 	sprintf(map->item_db_db, "item_db");
 	sprintf(map->item_db2_db, "item_db2");
-	sprintf(map->item_db_re_db, "item_db_re");
 	sprintf(map->mob_db_db, "mob_db");
-	sprintf(map->mob_db_re_db, "mob_db_re");
 	sprintf(map->mob_db2_db, "mob_db2");
 	sprintf(map->mob_skill_db_db, "mob_skill_db");
-	sprintf(map->mob_skill_db_re_db, "mob_skill_db_re");
 	sprintf(map->mob_skill_db2_db, "mob_skill_db2");
 	sprintf(map->interreg_db, "interreg");
 	
