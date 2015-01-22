@@ -472,13 +472,7 @@ int guild_recv_info(struct guild *sg) {
 		g->instances = 0;
 		idb_put(guild->db,sg->guild_id,g);
 		if (channel->config->ally) {
-			struct channel_data *chan;
-
-			CREATE(chan, struct channel_data , 1);
-			safestrncpy(chan->name, channel->config->ally_name, HCS_NAME_LENGTH);
-			chan->type = HCS_TYPE_ALLY;
-			
-			channel->create(chan, NULL, NULL, channel->config->ally_color);
+			struct channel_data *chan = channel->create(HCS_TYPE_ALLY, channel->config->ally_name, channel->config->ally_color);
 			if (channel->config->ally_autojoin) {
 				struct s_mapiterator* iter = mapit_getallusers();
 				struct guild *tg[MAX_GUILDALLIANCE];

@@ -35,6 +35,13 @@ enum channel_types {
 	HCS_TYPE_IRC     = 4,
 };
 
+enum channel_operation_status {
+	HCS_STATUS_OK = 0,
+	HCS_STATUS_FAIL,
+	HCS_STATUS_ALREADY,
+	HCS_STATUS_NOPERM,
+};
+
 /**
  * Structures
  **/
@@ -59,11 +66,11 @@ struct channel_ban_entry {
 
 struct channel_data {
 	char name[HCS_NAME_LENGTH];
-	char pass[HCS_NAME_LENGTH];
+	char password[HCS_NAME_LENGTH];
 	unsigned char color;
 	DBMap *users;
 	DBMap *banned;
-	unsigned int opt;
+	unsigned int options;
 	unsigned int owner;
 	enum channel_types type;
 	uint16 m;
@@ -78,7 +85,12 @@ struct channel_interface {
 	int (*init) (bool minimal);
 	void (*final) (void);
 
-	void (*create) (struct channel_data *chan, char *name, char *pass, unsigned char color);
+	struct channel_data *(*create) (enum channel_types type, const char *name, unsigned char color);
+	void (*set_password) (struct channel_data *chan, const char *password);
+	enum channel_operation_status (*ban) (struct channel_data *chan, const struct map_session_data *ssd, struct map_session_data *tsd);
+	enum channel_operation_status (*unban) (struct channel_data *chan, const struct map_session_data *ssd, struct map_session_data *tsd);
+	void (*set_options) (struct channel_data *chan, unsigned int options);
+
 	void (*send) (struct channel_data *chan, struct map_session_data *sd, const char *msg);
 	void (*join) (struct channel_data *chan, struct map_session_data *sd);
 	void (*leave) (struct channel_data *chan, struct map_session_data *sd);

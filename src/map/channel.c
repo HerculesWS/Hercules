@@ -19,6 +19,7 @@
 #include "../common/conf.h"
 #include "../common/db.h"
 #include "../common/malloc.h"
+#include "../common/nullpo.h"
 #include "../common/random.h"
 #include "../common/showmsg.h"
 #include "../common/socket.h"
@@ -30,24 +31,142 @@ struct channel_interface channel_s;
 
 static struct Channel_Config channel_config;
 
-void channel_create(struct channel_data *chan, char *name, char *pass, unsigned char color)
+/**
+ * Creates a chat channel.
+ *
+ * If the channel type isn't HCS_TYPE_MAP or HCS_TYPE_ALLY, the channel is added to the channel->db.
+ *
+ * @param type The channel type.
+ * @param name The channel name.
+ * @param color The channel chat color.
+ * @return A pointer to the created channel.
+ */
+struct channel_data *channel_create(enum channel_types type, const char *name, unsigned char color)
 {
+	struct channel_data *chan;
+	CREATE(chan, struct channel_data, 1);
 	chan->users = idb_alloc(DB_OPT_BASE);
 	if (name)
 		safestrncpy(chan->name, name, HCS_NAME_LENGTH);
 	chan->color = color;
-	if (!pass)
-		chan->pass[0] = '\0';
-	else
-		safestrncpy(chan->pass, pass, HCS_NAME_LENGTH);
 
-	chan->opt = HCS_OPT_BASE;
+	chan->options = HCS_OPT_BASE;
 	chan->banned = NULL;
 
 	chan->msg_delay = 0;
 
+	chan->type = type;
 	if (chan->type != HCS_TYPE_MAP && chan->type != HCS_TYPE_ALLY)
 		strdb_put(channel->db, chan->name, chan);
+	return chan;
+}
+
+/**
+ * Sets a chat channel password.
+ *
+ * @param chan The channel to edit.
+ * @param pass The password to set. Pass NULL to remove existing passwords.
+ */
+void channel_set_password(struct channel_data *chan, const char *password)
+{
+	nullpo_retv(chan);
+	if (password)
+		safestrncpy(chan->password, password, HCS_NAME_LENGTH);
+	else
+		chan->password[0] = '\0';
+}
+
+/**
+ * Bans a character from the given channel.
+ *
+ * @param chan The channel.
+ * @param ssd  The source character, if any.
+ * @param tsd  The target character.
+ * @retval HCS_STATUS_OK if the operation succeeded.
+ * @retval HCS_STATUS_ALREADY if the target character is already banned.
+ * @retval HCS_STATUS_NOPERM if the source character doesn't have enough permissions.
+ * @retval HCS_STATUS_FAIL in case of generic failure.
+ */
+enum channel_operation_status channel_ban(struct channel_data *chan, const struct map_session_data *ssd, struct map_session_data *tsd)
+{
+	struct channel_ban_entry *entry = NULL;
+
+	nullpo_retr(HCS_STATUS_FAIL, chan);
+	nullpo_retr(HCS_STATUS_FAIL, tsd);
+
+	if (ssd && chan->owner != ssd->status.char_id && !pc_has_permission(ssd, PC_PERM_HCHSYS_ADMIN))
+		return HCS_STATUS_NOPERM;
+
+	if (pc_has_permission(tsd, PC_PERM_HCHSYS_ADMIN))
+		return HCS_STATUS_FAIL;
+
+	if (chan->banned && idb_exists(chan->banned, tsd->status.account_id))
+		return HCS_STATUS_ALREADY;
+
+	if (!chan->banned)
+		chan->banned = idb_alloc(DB_OPT_BASE|DB_OPT_ALLOW_NULL_DATA|DB_OPT_RELEASE_DATA);
+
+	CREATE(entry, struct channel_ban_entry, 1);
+	safestrncpy(entry->name, tsd->status.name, NAME_LENGTH);
+	idb_put(chan->banned, tsd->status.account_id, entry);
+
+	channel->leave(chan, tsd);
+
+	return HCS_STATUS_OK;
+}
+
+/**
+ * Unbans a character from the given channel.
+ *
+ * @param chan The channel.
+ * @param ssd  The source character, if any.
+ * @param tsd  The target character. If no target character is specified, all characters are unbanned.
+ * @retval HCS_STATUS_OK if the operation succeeded.
+ * @retval HCS_STATUS_ALREADY if the target character is not banned.
+ * @retval HCS_STATUS_NOPERM if the source character doesn't have enough permissions.
+ * @retval HCS_STATUS_FAIL in case of generic failure.
+ */
+enum channel_operation_status channel_unban(struct channel_data *chan, const struct map_session_data *ssd, struct map_session_data *tsd)
+{
+	nullpo_retr(HCS_STATUS_FAIL, chan);
+
+	if (ssd && chan->owner != ssd->status.char_id && !pc_has_permission(ssd, PC_PERM_HCHSYS_ADMIN))
+		return HCS_STATUS_NOPERM;
+
+	if (!chan->banned)
+		return HCS_STATUS_ALREADY;
+
+	if (!tsd) {
+		// Unban all
+		db_destroy(chan->banned);
+		chan->banned = NULL;
+		return HCS_STATUS_OK;
+	}
+
+	// Unban one
+	if (!idb_exists(chan->banned, tsd->status.account_id))
+		return HCS_STATUS_ALREADY;
+
+	idb_remove(chan->banned, tsd->status.account_id);
+	if (!db_size(chan->banned)) {
+		db_destroy(chan->banned);
+		chan->banned = NULL;
+	}
+
+	return HCS_STATUS_OK;
+}
+
+/**
+ * Sets or edits a channel's options.
+ *
+ * @param chan The channel.
+ * @param options The new options set to apply.
+ */
+void channel_set_options(struct channel_data *chan, unsigned int options)
+{
+	nullpo_retv(chan);
+
+	chan->options = options;
 }
 
 /**
@@ -87,7 +206,7 @@ void channel_join(struct channel_data *chan, struct map_session_data *sd)
 
 	if (sd->stealth) {
 		sd->stealth = false;
-	} else if (chan->opt & HCS_OPT_ANNOUNCE_JOIN) {
+	} else if (chan->options & HCS_OPT_ANNOUNCE_JOIN) {
 		char message[60];
 		sprintf(message, "#%s '%s' joined",chan->name,sd->status.name);
 		clif->channel_msg(chan,sd,message);
@@ -102,28 +221,23 @@ void channel_join(struct channel_data *chan, struct map_session_data *sd)
 
 void channel_map_join(struct map_session_data *sd)
 {
-	if( sd->state.autotrade || sd->state.standalone )
+	if (sd->state.autotrade || sd->state.standalone)
 		return;
-	if( !map->list[sd->bl.m].channel ) {
-
-		if (map->list[sd->bl.m].flag.chsysnolocalaj || (map->list[sd->bl.m].instance_id >= 0 && instance->list[map->list[sd->bl.m].instance_id].owner_type != IOT_NONE) )
+	if (!map->list[sd->bl.m].channel) {
+		if (map->list[sd->bl.m].flag.chsysnolocalaj || (map->list[sd->bl.m].instance_id >= 0 && instance->list[map->list[sd->bl.m].instance_id].owner_type != IOT_NONE))
 			return;
 
-		CREATE(map->list[sd->bl.m].channel, struct channel_data , 1);
-		safestrncpy(map->list[sd->bl.m].channel->name, channel->config->local_name, HCS_NAME_LENGTH);
-		map->list[sd->bl.m].channel->type = HCS_TYPE_MAP;
+		map->list[sd->bl.m].channel = channel->create(HCS_TYPE_MAP, channel->config->local_name, channel->config->local_color);
 		map->list[sd->bl.m].channel->m = sd->bl.m;
-
-		channel->create(map->list[sd->bl.m].channel, NULL, NULL, channel->config->local_color);
 	}
 
-	if( map->list[sd->bl.m].channel->banned && idb_exists(map->list[sd->bl.m].channel->banned, sd->status.account_id) ) {
+	if (map->list[sd->bl.m].channel->banned && idb_exists(map->list[sd->bl.m].channel->banned, sd->status.account_id)) {
 		return;
 	}
 
 	channel->join(map->list[sd->bl.m].channel,sd);
 
-	if( !( map->list[sd->bl.m].channel->opt & HCS_OPT_ANNOUNCE_JOIN ) ) {
+	if (!( map->list[sd->bl.m].channel->options & HCS_OPT_ANNOUNCE_JOIN )) {
 		char mout[60];
 		sprintf(mout, msg_txt(1435), channel->config->local_name, map->list[sd->bl.m].name); // You're now in the '#%s' channel for '%s'
 		clif->colormes(sd->fd, COLOR_DEFAULT, mout);
@@ -142,7 +256,7 @@ void channel_leave(struct channel_data *chan, struct map_session_data *sd)
 
 	if( !db_size(chan->users) && chan->type == HCS_TYPE_PRIVATE ) {
 		channel->delete(chan);
-	} else if( !channel->config->closing && (chan->opt & HCS_OPT_ANNOUNCE_JOIN) ) {
+	} else if( !channel->config->closing && (chan->options & HCS_OPT_ANNOUNCE_JOIN) ) {
 		char message[60];
 		sprintf(message, "#%s '%s' left",chan->name,sd->status.name);
 		clif->channel_msg(chan,sd,message);
@@ -188,7 +302,7 @@ void channel_quit_guild(struct map_session_data *sd)
 
 			if (!db_size(chan->users) && chan->type == HCS_TYPE_PRIVATE) {
 				channel->delete(chan);
-			} else if (!channel->config->closing && (chan->opt & HCS_OPT_ANNOUNCE_JOIN)) {
+			} else if (!channel->config->closing && (chan->options & HCS_OPT_ANNOUNCE_JOIN)) {
 				char message[60];
 				sprintf(message, "#%s '%s' left",chan->name,sd->status.name);
 				clif->channel_msg(chan,sd,message);
@@ -230,7 +344,7 @@ void channel_quit(struct map_session_data *sd)
 
 			if (!db_size(chan->users) && chan->type == HCS_TYPE_PRIVATE) {
 				channel->delete(chan);
-			} else if (!channel->config->closing && (chan->opt & HCS_OPT_ANNOUNCE_JOIN)) {
+			} else if (!channel->config->closing && (chan->options & HCS_OPT_ANNOUNCE_JOIN)) {
 				char message[60];
 				sprintf(message, "#%s '%s' left",chan->name,sd->status.name);
 				clif->channel_msg(chan,sd,message);
@@ -512,14 +626,7 @@ void read_channels_config(void)
 		}
 
 		if (channel->config->irc) {
-			struct channel_data *chd;
-			CREATE(chd, struct channel_data, 1);
-
-			safestrncpy(chd->name, channel->config->irc_name, HCS_NAME_LENGTH);
-			chd->type = HCS_TYPE_IRC;
-
-			channel->create(chd, NULL, NULL, channel->config->irc_color);
-			ircbot->channel = chd;
+			ircbot->channel = channel->create(HCS_TYPE_IRC, channel->config->irc_name, channel->config->irc_color);
 		}
 
 		if( (channels = libconfig->setting_get_member(settings, "default_channels")) != NULL ) {
@@ -529,27 +636,21 @@ void read_channels_config(void)
 				config_setting_t *chan = libconfig->setting_get_elem(channels, i);
 				const char *name = config_setting_name(chan);
 				const char *color = libconfig->setting_get_string_elem(channels,i);
-				struct channel_data *chd;
 
-				for (k = 0; k < channel->config->colors_count; k++) {
-					if (strcmpi(channel->config->colors_name[k],color) == 0)
-						break;
-				}
-				if( k == channel->config->colors_count) {
+				ARR_FIND(0, channel->config->colors_count, k, strcmpi(channel->config->colors_name[k],color) == 0);
+				if (k == channel->config->colors_count) {
 					ShowError("channels.conf: unknown color '%s' for channel '%s', skipping channel...\n",color,name);
 					continue;
 				}
-				if( strcmpi(name, channel->config->local_name) == 0 || strcmpi(name, channel->config->ally_name) == 0 || strcmpi(name, channel->config->irc_name) == 0 || strdb_exists(channel->db, name) ) {
+				if (strcmpi(name, channel->config->local_name) == 0
+				 || strcmpi(name, channel->config->ally_name) == 0
+				 || strcmpi(name, channel->config->irc_name) == 0
+				 || strdb_exists(channel->db, name)) {
 					ShowError("channels.conf: duplicate channel '%s', skipping channel...\n",name);
 					continue;
 
 				}
-				CREATE( chd, struct channel_data, 1 );
-
-				safestrncpy(chd->name, name, HCS_NAME_LENGTH);
-				chd->type = HCS_TYPE_PUBLIC;
-
-				channel->create(chd,NULL,NULL,k);
+				channel->create(HCS_TYPE_PUBLIC, name, k);
 			}
 		}
 
@@ -605,6 +706,11 @@ void channel_defaults(void)
 	channel->config = &channel_config;
 
 	channel->create = channel_create;
+	channel->set_password = channel_set_password;
+	channel->ban = channel_ban;
+	channel->unban = channel_unban;
+	channel->set_options = channel_set_options;
+
 	channel->send = channel_send;
 	channel->join = channel_join;
 	channel->leave = channel_leave;
