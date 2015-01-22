@@ -350,8 +350,12 @@ enum channel_operation_status channel_join(struct channel_data *chan, struct map
 
 	if (!silent && !(chan->options&HCS_OPT_ANNOUNCE_JOIN)) {
 		char output[CHAT_SIZE_MAX];
-		sprintf(output, msg_txt(1403), chan->name); // You're now in the '%s' channel
-		clif->message(sd->fd, output);
+		if (chan->type == HCS_TYPE_MAP) {
+			sprintf(output, msg_txt(1435), chan->name, map->list[sd->bl.m].name); // You're now in the '#%s' channel for '%s'
+		} else {
+			sprintf(output, msg_txt(1403), chan->name); // You're now in the '%s' channel
+		}
+		clif->colormes(sd->fd, COLOR_DEFAULT, output);
 	}
 
 	if (chan->type == HCS_TYPE_ALLY) {
@@ -443,6 +447,11 @@ void channel_quit(struct map_session_data *sd)
 	sd->channels = NULL;
 }
 
+/**
+ * Joins the local map channel.
+ *
+ * @param sd The target character
+ */
 void channel_map_join(struct map_session_data *sd)
 {
 	if (sd->state.autotrade || sd->state.standalone)
@@ -455,17 +464,7 @@ void channel_map_join(struct map_session_data *sd)
 		map->list[sd->bl.m].channel->m = sd->bl.m;
 	}
 
-	if (map->list[sd->bl.m].channel->banned && idb_exists(map->list[sd->bl.m].channel->banned, sd->status.account_id)) {
-		return;
-	}
-
-	channel->join_sub(map->list[sd->bl.m].channel,sd, false);
-
-	if (!( map->list[sd->bl.m].channel->options & HCS_OPT_ANNOUNCE_JOIN )) {
-		char mout[60];
-		sprintf(mout, msg_txt(1435), channel->config->local_name, map->list[sd->bl.m].name); // You're now in the '#%s' channel for '%s'
-		clif->colormes(sd->fd, COLOR_DEFAULT, mout);
-	}
+	channel->join(map->list[sd->bl.m].channel, sd, NULL, false);
 }
 
 void channel_guild_join(struct guild *g1,struct guild *g2)
