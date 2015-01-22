@@ -97,6 +97,52 @@ struct channel_data *channel_create(enum channel_types type, const char *name, u
 	return chan;
 }
 
+void channel_delete(struct channel_data *chan)
+{
+	if (db_size(chan->users) && !channel->config->closing) {
+		DBIterator *iter;
+		struct map_session_data *sd;
+		unsigned char i;
+		iter = db_iterator(chan->users);
+		for( sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter) ) {
+			for( i = 0; i < sd->channel_count; i++ ) {
+				if( sd->channels[i] == chan ) {
+					sd->channels[i] = NULL;
+					break;
+				}
+			}
+			if( i < sd->channel_count ) {
+				unsigned char cursor = 0;
+				for( i = 0; i < sd->channel_count; i++ ) {
+					if( sd->channels[i] == NULL )
+						continue;
+					if( cursor != i ) {
+						sd->channels[cursor] = sd->channels[i];
+					}
+					cursor++;
+				}
+				if ( !(sd->channel_count = cursor) ) {
+					aFree(sd->channels);
+					sd->channels = NULL;
+				}
+			}
+		}
+		dbi_destroy(iter);
+	}
+	if( chan->banned ) {
+		db_destroy(chan->banned);
+		chan->banned = NULL;
+	}
+	db_destroy(chan->users);
+	if( chan->m ) {
+		map->list[chan->m].channel = NULL;
+		aFree(chan);
+	} else if ( chan->type == HCS_TYPE_ALLY )
+		aFree(chan);
+	else if (!channel->config->closing)
+		strdb_remove(channel->db, chan->name);
+}
+
 /**
  * Sets a chat channel password.
  *
@@ -326,31 +372,6 @@ enum channel_operation_status channel_join(struct channel_data *chan, struct map
 	return HCS_STATUS_OK;
 }
 
-void channel_map_join(struct map_session_data *sd)
-{
-	if (sd->state.autotrade || sd->state.standalone)
-		return;
-	if (!map->list[sd->bl.m].channel) {
-		if (map->list[sd->bl.m].flag.chsysnolocalaj || (map->list[sd->bl.m].instance_id >= 0 && instance->list[map->list[sd->bl.m].instance_id].owner_type != IOT_NONE))
-			return;
-
-		map->list[sd->bl.m].channel = channel->create(HCS_TYPE_MAP, channel->config->local_name, channel->config->local_color);
-		map->list[sd->bl.m].channel->m = sd->bl.m;
-	}
-
-	if (map->list[sd->bl.m].channel->banned && idb_exists(map->list[sd->bl.m].channel->banned, sd->status.account_id)) {
-		return;
-	}
-
-	channel->join_sub(map->list[sd->bl.m].channel,sd, false);
-
-	if (!( map->list[sd->bl.m].channel->options & HCS_OPT_ANNOUNCE_JOIN )) {
-		char mout[60];
-		sprintf(mout, msg_txt(1435), channel->config->local_name, map->list[sd->bl.m].name); // You're now in the '#%s' channel for '%s'
-		clif->colormes(sd->fd, COLOR_DEFAULT, mout);
-	}
-}
-
 void channel_leave(struct channel_data *chan, struct map_session_data *sd)
 {
 	unsigned char i;
@@ -394,49 +415,6 @@ void channel_leave(struct channel_data *chan, struct map_session_data *sd)
 
 }
 
-void channel_quit_guild(struct map_session_data *sd)
-{
-	unsigned char i;
-
-	for( i = 0; i < sd->channel_count; i++ ) {
-		struct channel_data *chan = sd->channels[i];
-		if (chan != NULL && chan->type == HCS_TYPE_ALLY) {
-			if (!idb_remove(chan->users,sd->status.char_id))
-				continue;
-
-			if( chan == sd->gcbind )
-				sd->gcbind = NULL;
-
-			if (!db_size(chan->users) && chan->type == HCS_TYPE_PRIVATE) {
-				channel->delete(chan);
-			} else if (!channel->config->closing && (chan->options & HCS_OPT_ANNOUNCE_JOIN)) {
-				char message[60];
-				sprintf(message, "#%s '%s' left",chan->name,sd->status.name);
-				clif->channel_msg(chan,sd,message);
-			}
-			sd->channels[i] = NULL;
-		}
-	}
-
-	if( i < sd->channel_count ) {
-		unsigned char cursor = 0;
-		for( i = 0; i < sd->channel_count; i++ ) {
-			if( sd->channels[i] == NULL )
-				continue;
-			if( cursor != i ) {
-				sd->channels[cursor] = sd->channels[i];
-			}
-			cursor++;
-		}
-		if ( !(sd->channel_count = cursor) ) {
-			aFree(sd->channels);
-			sd->channels = NULL;
-		}
-	}
-
-}
-
-
 void channel_quit(struct map_session_data *sd)
 {
 	unsigned char i;
@@ -465,50 +443,29 @@ void channel_quit(struct map_session_data *sd)
 	sd->channels = NULL;
 }
 
-void channel_delete(struct channel_data *chan)
+void channel_map_join(struct map_session_data *sd)
 {
-	if (db_size(chan->users) && !channel->config->closing) {
-		DBIterator *iter;
-		struct map_session_data *sd;
-		unsigned char i;
-		iter = db_iterator(chan->users);
-		for( sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter) ) {
-			for( i = 0; i < sd->channel_count; i++ ) {
-				if( sd->channels[i] == chan ) {
-					sd->channels[i] = NULL;
-					break;
-				}
-			}
-			if( i < sd->channel_count ) {
-				unsigned char cursor = 0;
-				for( i = 0; i < sd->channel_count; i++ ) {
-					if( sd->channels[i] == NULL )
-						continue;
-					if( cursor != i ) {
-						sd->channels[cursor] = sd->channels[i];
-					}
-					cursor++;
-				}
-				if ( !(sd->channel_count = cursor) ) {
-					aFree(sd->channels);
-					sd->channels = NULL;
-				}
-			}
-		}
-		dbi_destroy(iter);
+	if (sd->state.autotrade || sd->state.standalone)
+		return;
+	if (!map->list[sd->bl.m].channel) {
+		if (map->list[sd->bl.m].flag.chsysnolocalaj || (map->list[sd->bl.m].instance_id >= 0 && instance->list[map->list[sd->bl.m].instance_id].owner_type != IOT_NONE))
+			return;
+
+		map->list[sd->bl.m].channel = channel->create(HCS_TYPE_MAP, channel->config->local_name, channel->config->local_color);
+		map->list[sd->bl.m].channel->m = sd->bl.m;
 	}
-	if( chan->banned ) {
-		db_destroy(chan->banned);
-		chan->banned = NULL;
+
+	if (map->list[sd->bl.m].channel->banned && idb_exists(map->list[sd->bl.m].channel->banned, sd->status.account_id)) {
+		return;
 	}
-	db_destroy(chan->users);
-	if( chan->m ) {
-		map->list[chan->m].channel = NULL;
-		aFree(chan);
-	} else if ( chan->type == HCS_TYPE_ALLY )
-		aFree(chan);
-	else if (!channel->config->closing)
-		strdb_remove(channel->db, chan->name);
+
+	channel->join_sub(map->list[sd->bl.m].channel,sd, false);
+
+	if (!( map->list[sd->bl.m].channel->options & HCS_OPT_ANNOUNCE_JOIN )) {
+		char mout[60];
+		sprintf(mout, msg_txt(1435), channel->config->local_name, map->list[sd->bl.m].name); // You're now in the '#%s' channel for '%s'
+		clif->colormes(sd->fd, COLOR_DEFAULT, mout);
+	}
 }
 
 void channel_guild_join(struct guild *g1,struct guild *g2)
@@ -557,6 +514,48 @@ void channel_guild_leave(struct guild *g1,struct guild *g2)
 			}
 		}
 	}
+}
+
+void channel_quit_guild(struct map_session_data *sd)
+{
+	unsigned char i;
+
+	for( i = 0; i < sd->channel_count; i++ ) {
+		struct channel_data *chan = sd->channels[i];
+		if (chan != NULL && chan->type == HCS_TYPE_ALLY) {
+			if (!idb_remove(chan->users,sd->status.char_id))
+				continue;
+
+			if( chan == sd->gcbind )
+				sd->gcbind = NULL;
+
+			if (!db_size(chan->users) && chan->type == HCS_TYPE_PRIVATE) {
+				channel->delete(chan);
+			} else if (!channel->config->closing && (chan->options & HCS_OPT_ANNOUNCE_JOIN)) {
+				char message[60];
+				sprintf(message, "#%s '%s' left",chan->name,sd->status.name);
+				clif->channel_msg(chan,sd,message);
+			}
+			sd->channels[i] = NULL;
+		}
+	}
+
+	if( i < sd->channel_count ) {
+		unsigned char cursor = 0;
+		for( i = 0; i < sd->channel_count; i++ ) {
+			if( sd->channels[i] == NULL )
+				continue;
+			if( cursor != i ) {
+				sd->channels[cursor] = sd->channels[i];
+			}
+			cursor++;
+		}
+		if ( !(sd->channel_count = cursor) ) {
+			aFree(sd->channels);
+			sd->channels = NULL;
+		}
+	}
+
 }
 
 void read_channels_config(void)
@@ -804,16 +803,19 @@ void do_final_channel(void)
 
 	db_destroy(channel->db);
 }
+
 void channel_defaults(void)
 {
 	channel = &channel_s;
-	/* core */
+
 	channel->init = do_init_channel;
 	channel->final = do_final_channel;
 	channel->config = &channel_config;
 
 	channel->search = channel_search;
 	channel->create = channel_create;
+	channel->delete = channel_delete;
+
 	channel->set_password = channel_set_password;
 	channel->ban = channel_ban;
 	channel->unban = channel_unban;
@@ -823,11 +825,12 @@ void channel_defaults(void)
 	channel->join_sub = channel_join_sub;
 	channel->join = channel_join;
 	channel->leave = channel_leave;
-	channel->delete = channel_delete;
-	channel->map_join = channel_map_join;
 	channel->quit = channel_quit;
-	channel->quit_guild = channel_quit_guild;
+
+	channel->map_join = channel_map_join;
 	channel->guild_join = channel_guild_join;
 	channel->guild_leave = channel_guild_leave;
+	channel->quit_guild = channel_quit_guild;
+
 	channel->config_read = read_channels_config;
 }
