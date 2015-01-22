@@ -196,17 +196,25 @@ void channel_send(struct channel_data *chan, struct map_session_data *sd, const 
 	}
 }
 
-void channel_join(struct channel_data *chan, struct map_session_data *sd)
+/**
+ * Joins a channel, without any permission checks.
+ *
+ * @param chan    The channel to join
+ * @param sd      The character
+ * @param stealth If true, hide join announcements.
+ */
+void channel_join_sub(struct channel_data *chan, struct map_session_data *sd, bool stealth)
 {
+	nullpo_retv(chan);
+	nullpo_retv(sd);
+
 	if (idb_put(chan->users, sd->status.char_id, sd))
 		return;
 
 	RECREATE(sd->channels, struct channel_data *, ++sd->channel_count);
 	sd->channels[ sd->channel_count - 1 ] = chan;
 
-	if (sd->stealth) {
-		sd->stealth = false;
-	} else if (chan->options & HCS_OPT_ANNOUNCE_JOIN) {
+	if (!stealth && (chan->options&HCS_OPT_ANNOUNCE_JOIN)) {
 		char message[60];
 		sprintf(message, "#%s '%s' joined",chan->name,sd->status.name);
 		clif->channel_msg(chan,sd,message);
@@ -217,6 +225,69 @@ void channel_join(struct channel_data *chan, struct map_session_data *sd)
 		set_eof(sd->fd);
 	}
 
+}
+
+/**
+ * Joins a channel.
+ *
+ * Ban and password checks are performed before joining the channel.
+ * If the channel is an HCS_TYPE_ALLY channel, alliance channels are automatically joined.
+ *
+ * @param chan     The channel to join
+ * @param sd       The character
+ * @param password The specified join password, if any
+ * @param silent   If true, suppress the "You're now in the <x> channel" greeting message
+ * @retval HCS_STATUS_OK      if the operation succeeded
+ * @retval HCS_STATUS_ALREADY if the character is already in the channel
+ * @retval HCS_STATUS_NOPERM  if the specified password doesn't match
+ * @retval HCS_STATUS_BANNED  if the character is in the channel's ban list
+ * @retval HCS_STATUS_FAIL    in case of generic error
+ */
+enum channel_operation_status channel_join(struct channel_data *chan, struct map_session_data *sd, const char *password, bool silent)
+{
+	bool stealth = false;
+
+	nullpo_retr(HCS_STATUS_FAIL, chan);
+	nullpo_retr(HCS_STATUS_FAIL, sd);
+
+	if (idb_exists(chan->users, sd->status.char_id)) {
+		return HCS_STATUS_ALREADY;
+	}
+
+	if (chan->password[0] != '\0' && strcmp(chan->password, password) != 0) {
+		if (pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN)) {
+			stealth = true;
+		} else {
+			return HCS_STATUS_NOPERM;
+		}
+	}
+
+	if (chan->banned && idb_exists(chan->banned, sd->status.account_id)) {
+		return HCS_STATUS_BANNED;
+	}
+
+	if (!silent && !(chan->options&HCS_OPT_ANNOUNCE_JOIN)) {
+		char output[CHAT_SIZE_MAX];
+		sprintf(output, msg_txt(1403), chan->name); // You're now in the '%s' channel
+		clif->message(sd->fd, output);
+	}
+
+	if (chan->type == HCS_TYPE_ALLY) {
+		struct guild *g = sd->guild;
+		int i;
+		for (i = 0; i < MAX_GUILDALLIANCE; i++) {
+			struct guild *sg = NULL;
+			if (g->alliance[i].opposition == 0 && g->alliance[i].guild_id && (sg = guild->search(g->alliance[i].guild_id))) {
+				if (!(sg->channel->banned && idb_exists(sg->channel->banned, sd->status.account_id))) {
+					channel->join_sub(sg->channel, sd, stealth);
+				}
+			}
+		}
+	}
+
+	channel->join_sub(chan, sd, stealth);
+
+	return HCS_STATUS_OK;
 }
 
 void channel_map_join(struct map_session_data *sd)
@@ -235,7 +306,7 @@ void channel_map_join(struct map_session_data *sd)
 		return;
 	}
 
-	channel->join(map->list[sd->bl.m].channel,sd);
+	channel->join_sub(map->list[sd->bl.m].channel,sd, false);
 
 	if (!( map->list[sd->bl.m].channel->options & HCS_OPT_ANNOUNCE_JOIN )) {
 		char mout[60];
@@ -414,7 +485,7 @@ void channel_guild_join(struct guild *g1,struct guild *g2)
 		for(j = 0; j < g2->max_member; j++) {
 			if( (sd = g2->member[j].sd) != NULL ) {
 				if( !(g1->channel->banned && idb_exists(g1->channel->banned, sd->status.account_id)))
-					channel->join(chan,sd);
+					channel->join_sub(chan,sd, false);
 			}
 		}
 	}
@@ -423,7 +494,7 @@ void channel_guild_join(struct guild *g1,struct guild *g2)
 		for(j = 0; j < g1->max_member; j++) {
 			if( (sd = g1->member[j].sd) != NULL ) {
 				if( !(g2->channel->banned && idb_exists(g2->channel->banned, sd->status.account_id)))
-				channel->join(chan,sd);
+				channel->join_sub(chan,sd, false);
 			}
 		}
 	}
@@ -712,6 +783,7 @@ void channel_defaults(void)
 	channel->set_options = channel_set_options;
 
 	channel->send = channel_send;
+	channel->join_sub = channel_join_sub;
 	channel->join = channel_join;
 	channel->leave = channel_leave;
 	channel->delete = channel_delete;

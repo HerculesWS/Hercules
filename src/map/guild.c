@@ -489,13 +489,13 @@ int guild_recv_info(struct guild *sg) {
 
 					if (sd->status.guild_id == sg->guild_id) {
 						// Guild member
-						channel->join(chan,sd);
+						channel->join_sub(chan,sd,false);
 						sd->guild = g;
 
 						for (i = 0; i < MAX_GUILDALLIANCE; i++) {
 							// Join channels from allied guilds
 							if (tg[i] && !(tg[i]->channel->banned && idb_exists(tg[i]->channel->banned, sd->status.account_id)))
-								channel->join(tg[i]->channel, sd);
+								channel->join_sub(tg[i]->channel, sd, false);
 						}
 						continue;
 					}
@@ -504,7 +504,7 @@ int guild_recv_info(struct guild *sg) {
 						if (tg[i] && sd->status.guild_id == tg[i]->guild_id) { // Shortcut to skip the alliance checks again
 							// Alliance member
 							if( !(chan->banned && idb_exists(chan->banned, sd->status.account_id)))
-								channel->join(chan, sd);
+								channel->join_sub(chan, sd, false);
 						}
 					}
 				}
@@ -741,17 +741,7 @@ void guild_member_joined(struct map_session_data *sd)
 		sd->guild = g;
 		
 		if (channel->config->ally && channel->config->ally_autojoin) {
-			struct channel_data *chan = g->channel;
-
-			if( !(chan->banned && idb_exists(chan->banned, sd->status.account_id) ) )
-				channel->join(chan,sd);
-			for (i = 0; i < MAX_GUILDALLIANCE; i++) {
-				struct guild* sg = NULL;
-				if( g->alliance[i].opposition == 0 && g->alliance[i].guild_id && (sg = guild->search(g->alliance[i].guild_id) ) ) {
-					if( !(sg->channel->banned && idb_exists(sg->channel->banned, sd->status.account_id)))
-						channel->join(sg->channel,sd);
-				}
-			}
+			channel->join(g->channel, sd, NULL, true);
 		}
 
 	}

@@ -10062,20 +10062,9 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 				if( sd->channels[k] == chan )
 					break;
 			}
-			if( k < sd->channel_count ) {
+			if (k < sd->channel_count) {
 				channel->send(chan,sd,message);
-			} else if( chan->password[0] == '\0' && !(chan->banned && idb_exists(chan->banned, sd->status.account_id)) ) {
-				if( chan->type == HCS_TYPE_ALLY ) {
-					struct guild *g = sd->guild;
-					for (k = 0; k < MAX_GUILDALLIANCE; k++) {
-						struct guild *sg = NULL;
-						if( g->alliance[k].opposition == 0 && g->alliance[k].guild_id && (sg = guild->search(g->alliance[k].guild_id) ) ) {
-							if( !(sg->channel->banned && idb_exists(sg->channel->banned, sd->status.account_id)))
-								channel->join(sg->channel,sd);
-						}
-					}
-				}
-				channel->join(chan,sd);
+			} else if (channel->join(chan, sd, NULL, true) == HCS_STATUS_OK) {
 				channel->send(chan,sd,message);
 			} else {
 				clif->message(fd, msg_txt(1402));

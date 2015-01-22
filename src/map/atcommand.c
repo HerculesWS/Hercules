@@ -8612,9 +8612,11 @@ ACMD(cart) {
 #undef MC_CART_MDFY
 }
 /* [Ind/Hercules] */
-ACMD(join) {
+ACMD(join)
+{
 	struct channel_data *chan = NULL;
 	char name[HCS_NAME_LENGTH], pass[HCS_NAME_LENGTH];
+	enum channel_operation_status ret = HCS_STATUS_OK;
 
 	if (!message || !*message || sscanf(message, "%19s %19s", name, pass) < 1) {
 		sprintf(atcmd_output, msg_txt(1399),command); // Unknown Channel (usage: %s <#channel_name>)
@@ -8632,56 +8634,35 @@ ACMD(join) {
 		struct guild *g = sd->guild;
 		if( !g ) return false;/* unlikely, but we wont let it crash anyway. */
 		chan = g->channel;
-	} else if( !( chan = strdb_get(channel->db, name + 1) ) ) {
+	} else {
+		chan = strdb_get(channel->db, name + 1);
+	}
+
+	if(!chan) {
 		sprintf(atcmd_output, msg_txt(1400),name,command); // Unknown Channel '%s' (usage: %s <#channel_name>)
 		clif->message(fd, atcmd_output);
 		return false;
 	}
 
-	if( !chan ) {
-		sprintf(atcmd_output, msg_txt(1400),name,command); // Unknown Channel '%s' (usage: %s <#channel_name>)
-		clif->message(fd, atcmd_output);
-		return false;
-	}
+	ret = channel->join(chan, sd, pass, false);
 
-	if( idb_exists(chan->users, sd->status.char_id) ) {
+	if (ret == HCS_STATUS_ALREADY) {
 		sprintf(atcmd_output, msg_txt(1436),name); // You're already in the '%s' channel
 		clif->message(fd, atcmd_output);
 		return false;
 	}
-	if( chan->password[0] != '\0'  && strcmp(chan->password,pass) != 0 ) {
-		if( pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
-			sd->stealth = true;
-		} else {
-			sprintf(atcmd_output, msg_txt(1401),name,command); // '%s' Channel is password protected (usage: %s <#channel_name> <password>)
-			clif->message(fd, atcmd_output);
-			return false;
-		}
-	}
 
-	if( chan->banned && idb_exists(chan->banned, sd->status.account_id) ) {
-		sprintf(atcmd_output, msg_txt(1438),name); // You cannot join the '%s' channel because you've been banned from it
+	if (ret == HCS_STATUS_NOPERM) {
+		sprintf(atcmd_output, msg_txt(1401),name,command); // '%s' Channel is password protected (usage: %s <#channel_name> <password>)
 		clif->message(fd, atcmd_output);
 		return false;
 	}
 
-	if (!(chan->options & HCS_OPT_ANNOUNCE_JOIN)) {
-		sprintf(atcmd_output, msg_txt(1403),name); // You're now in the '%s' channel
+	if (ret == HCS_STATUS_BANNED) {
+		sprintf(atcmd_output, msg_txt(1438),name); // You cannot join the '%s' channel because you've been banned from it
 		clif->message(fd, atcmd_output);
+		return false;
 	}
-	if( chan->type == HCS_TYPE_ALLY ) {
-		struct guild *g = sd->guild;
-		int i;
-		for (i = 0; i < MAX_GUILDALLIANCE; i++) {
-			struct guild *sg = NULL;
-			if( g->alliance[i].opposition == 0 && g->alliance[i].guild_id && (sg = guild->search(g->alliance[i].guild_id) ) ) {
-				if( !(sg->channel->banned && idb_exists(sg->channel->banned, sd->status.account_id))) {
-					channel->join(sg->channel,sd);
-				}
-			}
-		}
-	}
-	channel->join(chan,sd);
 
 	return true;
 }
@@ -8750,6 +8731,7 @@ ACMD(channel) {
 	if (strcmpi(subcmd,"create") == 0 && (channel->config->allow_user_channel_creation || pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN))) {
 		// sub1 = channel name; sub2 = password; sub3 = unused
 		size_t len = strlen(sub1);
+		const char *pass = *sub2 ? sub2 : NULL;
 		if (sub1[0] != '#') {
 			clif->message(fd, msg_txt(1405));// Channel name must start with a '#'
 			return false;
@@ -8768,15 +8750,10 @@ ACMD(channel) {
 		}
 
 		chan = channel->create(HCS_TYPE_PRIVATE, sub1 + 1, 0);
-		channel->set_password(chan, sub2);
+		channel->set_password(chan, pass);
 		chan->owner = sd->status.char_id;
 
-		if( !( chan->options & HCS_OPT_ANNOUNCE_JOIN ) ) {
-			sprintf(atcmd_output, msg_txt(1403),sub1); // You're now in the '%s' channel
-			clif->message(fd, atcmd_output);
-		}
-
-		channel->join(chan,sd);
+		channel->join(chan, sd, pass, false);
 	} else if (strcmpi(subcmd,"list") == 0) {
 		// sub1 = list type; sub2 = unused; sub3 = unused
 		if (sub1[0] != '\0' && strcmpi(sub1,"colors") == 0) {

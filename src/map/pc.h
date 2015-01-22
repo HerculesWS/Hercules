@@ -494,7 +494,6 @@ struct map_session_data {
 	struct channel_data **channels;
 	unsigned char channel_count;
 	struct channel_data *gcbind;
-	bool stealth;
 	unsigned char fontcolor;
 	unsigned int fontcolor_tid;
 	int64 hchsysch_tick;

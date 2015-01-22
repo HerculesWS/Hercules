@@ -40,6 +40,7 @@ enum channel_operation_status {
 	HCS_STATUS_FAIL,
 	HCS_STATUS_ALREADY,
 	HCS_STATUS_NOPERM,
+	HCS_STATUS_BANNED,
 };
 
 /**
@@ -85,6 +86,7 @@ struct channel_interface {
 	int (*init) (bool minimal);
 	void (*final) (void);
 
+	struct channel_data *(*search) (const char *name);
 	struct channel_data *(*create) (enum channel_types type, const char *name, unsigned char color);
 	void (*set_password) (struct channel_data *chan, const char *password);
 	enum channel_operation_status (*ban) (struct channel_data *chan, const struct map_session_data *ssd, struct map_session_data *tsd);
@@ -92,7 +94,9 @@ struct channel_interface {
 	void (*set_options) (struct channel_data *chan, unsigned int options);
 
 	void (*send) (struct channel_data *chan, struct map_session_data *sd, const char *msg);
-	void (*join) (struct channel_data *chan, struct map_session_data *sd);
+	void (*join_sub) (struct channel_data *chan, struct map_session_data *sd, bool stealth);
+	enum channel_operation_status (*join) (struct channel_data *chan, struct map_session_data *sd, const char *password, bool silent);
+
 	void (*leave) (struct channel_data *chan, struct map_session_data *sd);
 	void (*delete) (struct channel_data *chan);
 	void (*map_join) (struct map_session_data *sd);
