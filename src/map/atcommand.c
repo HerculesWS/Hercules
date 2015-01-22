@@ -9343,7 +9343,7 @@ ACMD(cddebug) {
 		}
 	}
 	
-	if( !cd || (message && *message && strcmpi(message,"reset")) ) {
+	if( !cd || (message && *message && !strcmpi(message,"reset")) ) {
 		for(i = 0; i < MAX_SKILL; i++) {
 			if( sd->blockskill[i] ) {
 				clif->messages(fd,"Found skill '%s', unblocking...",skill->db[i].name);
