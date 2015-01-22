@@ -10040,31 +10040,13 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 			return;
 		}
 	} else if( target[0] == '#' ) {
-		// TODO: Split to channel.c
-		struct channel_data *chan = NULL;
-		char* chname = target;
+		char *chname = target;
+		struct channel_data *chan = channel->search(chname, sd);
 
-		chname++;
-
-		if (channel->config->local && strcmpi(chname, channel->config->local_name) == 0) {
-			if( !map->list[sd->bl.m].channel ) {
-				channel->map_join(sd);
-			}
-			chan = map->list[sd->bl.m].channel;
-		} else if (channel->config->ally && sd->status.guild_id && strcmpi(chname, channel->config->ally_name) == 0) {
-			struct guild *g = sd->guild;
-			if( !g ) return;
-			chan = g->channel;
-		}
-		if( chan || (chan = strdb_get(channel->db,chname)) ) {
+		if (chan) {
 			int k;
-			for( k = 0; k < sd->channel_count; k++ ) {
-				if( sd->channels[k] == chan )
-					break;
-			}
-			if (k < sd->channel_count) {
-				channel->send(chan,sd,message);
-			} else if (channel->join(chan, sd, NULL, true) == HCS_STATUS_OK) {
+			ARR_FIND(0, sd->channel_count, k, sd->channels[k] == chan);
+			if (k < sd->channel_count || channel->join(chan, sd, NULL, true) == HCS_STATUS_OK) {
 				channel->send(chan,sd,message);
 			} else {
 				clif->message(fd, msg_txt(1402));

@@ -32,6 +32,42 @@ struct channel_interface channel_s;
 static struct Channel_Config channel_config;
 
 /**
+ * Returns the named channel.
+ *
+ * @param name The channel name
+ * @param sd   The issuer character, for character-specific channels (i.e. map, ally)
+ * @return a pointer to the channel, or NULL.
+ */
+struct channel_data *channel_search(const char *name, struct map_session_data *sd)
+{
+	const char *realname = name;
+	if (!realname || !*realname)
+		return NULL;
+	if (*realname == '#') {
+		realname++;
+		if (!*realname)
+			return NULL;
+	}
+
+	if (channel->config->local && strcmpi(realname, channel->config->local_name) == 0) {
+		if (!sd)
+			return NULL;
+		if (!map->list[sd->bl.m].channel) {
+			channel->map_join(sd);
+		}
+		return map->list[sd->bl.m].channel;
+	}
+
+	if (channel->config->ally && strcmpi(realname, channel->config->ally_name) == 0) {
+		if (!sd || !sd->status.guild_id || !sd->guild)
+			return NULL;
+		return sd->guild->channel;
+	}
+
+	return strdb_get(channel->db, realname);
+}
+
+/**
  * Creates a chat channel.
  *
  * If the channel type isn't HCS_TYPE_MAP or HCS_TYPE_ALLY, the channel is added to the channel->db.
@@ -776,6 +812,7 @@ void channel_defaults(void)
 	channel->final = do_final_channel;
 	channel->config = &channel_config;
 
+	channel->search = channel_search;
 	channel->create = channel_create;
 	channel->set_password = channel_set_password;
 	channel->ban = channel_ban;

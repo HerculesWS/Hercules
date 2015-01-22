@@ -86,7 +86,7 @@ struct channel_interface {
 	int (*init) (bool minimal);
 	void (*final) (void);
 
-	struct channel_data *(*search) (const char *name);
+	struct channel_data *(*search) (const char *name, struct map_session_data *sd);
 	struct channel_data *(*create) (enum channel_types type, const char *name, unsigned char color);
 	void (*set_password) (struct channel_data *chan, const char *password);
 	enum channel_operation_status (*ban) (struct channel_data *chan, const struct map_session_data *ssd, struct map_session_data *tsd);

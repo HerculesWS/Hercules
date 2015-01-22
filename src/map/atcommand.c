@@ -8623,20 +8623,8 @@ ACMD(join)
 		clif->message(fd, atcmd_output);
 		return false;
 	}
-	if (channel->config->local && strcmpi(name + 1, channel->config->local_name) == 0) {
-		if( !map->list[sd->bl.m].channel ) {
-			channel->map_join(sd);
-			if( map->list[sd->bl.m].channel ) /* join might have refused, map has chatting capabilities disabled */
-				return true;
-		} else
-			chan = map->list[sd->bl.m].channel;
-	} else if (channel->config->ally && sd->status.guild_id && strcmpi(name + 1, channel->config->ally_name) == 0) {
-		struct guild *g = sd->guild;
-		if( !g ) return false;/* unlikely, but we wont let it crash anyway. */
-		chan = g->channel;
-	} else {
-		chan = strdb_get(channel->db, name + 1);
-	}
+
+	chan = channel->search(name, sd);
 
 	if(!chan) {
 		sprintf(atcmd_output, msg_txt(1400),name,command); // Unknown Channel '%s' (usage: %s <#channel_name>)
@@ -8799,7 +8787,7 @@ ACMD(channel) {
 			return false;
 		}
 
-		if (!(chan = strdb_get(channel->db, sub1 + 1))) {
+		if (!(chan = channel->search(sub1, sd))) {
 			sprintf(atcmd_output, msg_txt(1407), sub1);// Channel '%s' is not available
 			clif->message(fd, atcmd_output);
 			return false;
@@ -8894,7 +8882,7 @@ ACMD(channel) {
 			return false;
 		}
 
-		if (!(chan = strdb_get(channel->db, sub1 + 1))) {
+		if (!(chan = channel->search(sub1, sd))) {
 			sprintf(atcmd_output, msg_txt(1407), sub1);// Channel '%s' is not available
 			clif->message(fd, atcmd_output);
 			return false;
@@ -8943,7 +8931,7 @@ ACMD(channel) {
 			clif->message(fd, msg_txt(1405));// Channel name must start with a '#'
 			return false;
 		}
-		if (!(chan = strdb_get(channel->db, sub1 + 1))) {
+		if (!(chan = channel->search(sub1, sd))) {
 			sprintf(atcmd_output, msg_txt(1407), sub1);// Channel '%s' is not available
 			clif->message(fd, atcmd_output);
 			return false;
@@ -8980,7 +8968,7 @@ ACMD(channel) {
 			clif->message(fd, msg_txt(1405));// Channel name must start with a '#'
 			return false;
 		}
-		if (!(chan = strdb_get(channel->db, sub1 + 1))) {
+		if (!(chan = channel->search(sub1, sd))) {
 			sprintf(atcmd_output, msg_txt(1407), sub1);// Channel '%s' is not available
 			clif->message(fd, atcmd_output);
 			return false;
@@ -9009,7 +8997,7 @@ ACMD(channel) {
 			clif->message(fd, msg_txt(1405));// Channel name must start with a '#'
 			return false;
 		}
-		if (!(chan = strdb_get(channel->db, sub1 + 1))) {
+		if (!(chan = channel->search(sub1, sd))) {
 			sprintf(atcmd_output, msg_txt(1407), sub1);// Channel '%s' is not available
 			clif->message(fd, atcmd_output);
 			return false;
@@ -9050,7 +9038,7 @@ ACMD(channel) {
 			clif->message(fd, msg_txt(1405));// Channel name must start with a '#'
 			return false;
 		}
-		if (!(chan = strdb_get(channel->db, sub1 + 1))) {
+		if (!(chan = channel->search(sub1, sd))) {
 			sprintf(atcmd_output, msg_txt(1407), sub1);// Channel '%s' is not available
 			clif->message(fd, atcmd_output);
 			return false;
