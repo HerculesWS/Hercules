@@ -7,16 +7,28 @@
 
 #include "map.h" // TBL_PC
 #include "../common/cbasetypes.h"
-#include "../common/mmo.h" // MAX_QUEST_OBJECTIVES
+#include "../common/conf.h"
 
 #define MAX_QUEST_DB (60355+1) // Highest quest ID + 1
+
+struct quest_dropitem {
+	int mob_id;
+	int nameid;
+	int rate;
+};
+
+struct quest_objective {
+	int mob;
+	int count;
+};
 
 struct quest_db {
 	int id;
 	unsigned int time;
-	int mob[MAX_QUEST_OBJECTIVES];
-	int count[MAX_QUEST_OBJECTIVES];
-	int num_objectives;
+	int objectives_count;
+	struct quest_objective *objectives;
+	int dropitem_count;
+	struct quest_dropitem *dropitem;
 	//char name[NAME_LENGTH];
 };
 
@@ -46,6 +58,7 @@ struct quest_interface {
 	int (*check) (TBL_PC *sd, int quest_id, enum quest_check_type type);
 	void (*clear) (void);
 	int (*read_db) (void);
+	struct quest_db *(*read_db_sub) (config_setting_t *cs, int n, const char *source);
 };
 
 struct quest_interface *quest;
