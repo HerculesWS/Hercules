@@ -380,10 +380,16 @@ void irc_usernick(int fd, char *cmd, char *source, char *target, char *msg) {
  * @param name Sender's name
  * @param msg  Message text
  */
-void irc_relay(char *name, const char *msg) {
-	if( !ircbot->isIn )
+void irc_relay(const char *name, const char *msg)
+{
+	if (!ircbot->isIn)
 		return;
-	sprintf(send_string,"PRIVMSG %s :[ %s ] : %s", channel->config->irc_channel, name, msg);
+
+	if (name)
+		sprintf(send_string,"PRIVMSG %s :[ %s ] : %s", channel->config->irc_channel, name, msg);
+	else
+		sprintf(send_string,"PRIVMSG %s :%s", channel->config->irc_channel, msg);
+
 	ircbot->send(send_string);
 }
 

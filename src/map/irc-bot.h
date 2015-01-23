@@ -50,7 +50,7 @@ struct irc_bot_interface {
 	int (*join_timer) (int tid, int64 tick, int id, intptr_t data);
 	/* */
 	void (*send)(char *str);
-	void (*relay) (char *name, const char *msg);
+	void (*relay) (const char *name, const char *msg);
 	/* */
 	void (*pong) (int fd, char *cmd, char *source, char *target, char *msg);
 	void (*privmsg) (int fd, char *cmd, char *source, char *target, char *msg);

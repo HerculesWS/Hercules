@@ -247,24 +247,31 @@ void channel_set_options(struct channel_data *chan, unsigned int options)
  * @param chan The destination channel.
  * @param sd   The source character.
  * @param msg  The message to send.
+ *
+ * If no source character is specified, it'll send an anonymous message.
  */
 void channel_send(struct channel_data *chan, struct map_session_data *sd, const char *msg)
 {
+	char message[150];
 	nullpo_retv(chan);
-	nullpo_retv(sd);
 
-	if (chan->msg_delay != 0 && DIFF_TICK(sd->hchsysch_tick + chan->msg_delay*1000, timer->gettick()) > 0
+	if (sd && chan->msg_delay != 0
+	 && DIFF_TICK(sd->hchsysch_tick + chan->msg_delay*1000, timer->gettick()) > 0
 	 && !pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN)) {
 		clif->colormes(sd->fd,COLOR_RED,msg_txt(1455));
 		return;
-	} else {
-		char message[150];
+	} else if (sd) {
 		snprintf(message, 150, "[ #%s ] %s : %s",chan->name,sd->status.name, msg);
 		clif->channel_msg(chan,sd,message);
 		if (chan->type == HCS_TYPE_IRC)
 			ircbot->relay(sd->status.name,msg);
 		if (chan->msg_delay != 0)
 			sd->hchsysch_tick = timer->gettick();
+	} else {
+		snprintf(message, 150, "[ #%s ] %s",chan->name, msg);
+		clif->channel_msg2(chan, message);
+		if (chan->type == HCS_TYPE_IRC)
+			ircbot->relay(NULL, msg);
 	}
 }
 

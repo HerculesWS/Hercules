@@ -16,6 +16,7 @@
 #include "atcommand.h"
 #include "battle.h"
 #include "battleground.h"
+#include "channel.h"
 #include "chat.h"
 #include "chrif.h"
 #include "clif.h"
@@ -19012,6 +19013,29 @@ BUILDIN(shopcount) {
 	return true;
 }
 
+/**
+ * @call channelmes("#channel", "message");
+ *
+ * Sends a message through the specified chat channel.
+ *
+ */
+BUILDIN(channelmes)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	const char *channelname = script_getstr(st, 2);
+	struct channel_data *chan = channel->search(channelname, sd);
+
+	if (!chan) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	channel->send(chan, NULL, script_getstr(st, 3));
+
+	script_pushint(st, 1);
+	return true;
+}
+
 // declarations that were supposed to be exported from npc_chat.c
 #ifdef PCRE_SUPPORT
 BUILDIN(defpattern);
@@ -19637,6 +19661,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(tradertype,"i"),
 		BUILDIN_DEF(purchaseok,""),
 		BUILDIN_DEF(shopcount, "i"),
+
+		BUILDIN_DEF(channelmes, "ss"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
