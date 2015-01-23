@@ -54374,6 +54374,33 @@ int HP_quest_read_db(void) {
 	}
 	return retVal___;
 }
+struct quest_db* HP_quest_read_db_sub(config_setting_t *cs, int n, const char *source) {
+	int hIndex = 0;
+	struct quest_db* retVal___ = NULL;
+	if( HPMHooks.count.HP_quest_read_db_sub_pre ) {
+		struct quest_db* (*preHookFunc) (config_setting_t *cs, int *n, const char *source);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_quest_read_db_sub_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_quest_read_db_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(cs, &n, source);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.quest.read_db_sub(cs, n, source);
+	}
+	if( HPMHooks.count.HP_quest_read_db_sub_post ) {
+		struct quest_db* (*postHookFunc) (struct quest_db* retVal___, config_setting_t *cs, int *n, const char *source);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_quest_read_db_sub_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_quest_read_db_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, cs, &n, source);
+		}
+	}
+	return retVal___;
+}
 /* script */
 void HP_script_init(bool minimal) {
 	int hIndex = 0;

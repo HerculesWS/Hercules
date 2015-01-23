@@ -2063,6 +2063,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(quest->check, HP_quest_check) },
 	{ HP_POP(quest->clear, HP_quest_clear) },
 	{ HP_POP(quest->read_db, HP_quest_read_db) },
+	{ HP_POP(quest->read_db_sub, HP_quest_read_db_sub) },
 /* script */
 	{ HP_POP(script->init, HP_script_init) },
 	{ HP_POP(script->final, HP_script_final) },

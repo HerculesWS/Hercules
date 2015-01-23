@@ -4061,6 +4061,8 @@ struct {
 	struct HPMHookPoint *HP_quest_clear_post;
 	struct HPMHookPoint *HP_quest_read_db_pre;
 	struct HPMHookPoint *HP_quest_read_db_post;
+	struct HPMHookPoint *HP_quest_read_db_sub_pre;
+	struct HPMHookPoint *HP_quest_read_db_sub_post;
 	struct HPMHookPoint *HP_script_init_pre;
 	struct HPMHookPoint *HP_script_init_post;
 	struct HPMHookPoint *HP_script_final_pre;
@@ -9216,6 +9218,8 @@ struct {
 	int HP_quest_clear_post;
 	int HP_quest_read_db_pre;
 	int HP_quest_read_db_post;
+	int HP_quest_read_db_sub_pre;
+	int HP_quest_read_db_sub_post;
 	int HP_script_init_pre;
 	int HP_script_init_post;
 	int HP_script_final_pre;
