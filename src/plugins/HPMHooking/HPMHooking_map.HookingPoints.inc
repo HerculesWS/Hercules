@@ -1480,6 +1480,11 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(map->add_questinfo, HP_map_add_questinfo) },
 	{ HP_POP(map->remove_questinfo, HP_map_remove_questinfo) },
 	{ HP_POP(map->merge_zone, HP_map_merge_zone) },
+	{ HP_POP(map->mapflag_check_command, HP_map_mapflag_check_command) },
+	{ HP_POP(map->mapflag_set_command, HP_map_mapflag_set_command) },
+	{ HP_POP(map->mapflag_get_script, HP_map_mapflag_get_script) },
+	{ HP_POP(map->mapflag_set_script, HP_map_mapflag_set_script) },
+	{ HP_POP(map->mapflag_remove_script, HP_map_mapflag_remove_script) },
 /* mapit */
 	{ HP_POP(mapit->alloc, HP_mapit_alloc) },
 	{ HP_POP(mapit->free, HP_mapit_free) },

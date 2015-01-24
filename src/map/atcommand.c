@@ -7451,15 +7451,6 @@ ACMD(fakename)
  * Ragnarok Resources
  *------------------------------------------*/
 ACMD(mapflag) {
-#define CHECKFLAG( cmd ) do { if ( map->list[ sd->bl.m ].flag.cmd ) clif->message(sd->fd,#cmd); } while(0)
-#define SETFLAG( cmd ) do { \
-	if ( strcmp( flag_name , #cmd ) == 0 ) { \
-		map->list[ sd->bl.m ].flag.cmd = flag; \
-		sprintf(atcmd_output,"[ @mapflag ] %s flag has been set to %s value = %hd",#cmd,flag?"On":"Off",flag); \
-		clif->message(sd->fd,atcmd_output); \
-		return true; \
-	} \
-} while(0)
 
 	char flag_name[100];
 	short flag=0,i;
@@ -7469,19 +7460,7 @@ ACMD(mapflag) {
 	if (!message || !*message || (sscanf(message, "%99s %hd", flag_name, &flag) < 1)) {
 		clif->message(sd->fd,msg_txt(1311)); // Enabled Mapflags in this map:
 		clif->message(sd->fd,"----------------------------------");
-		CHECKFLAG(autotrade);         CHECKFLAG(allowks);            CHECKFLAG(nomemo);       CHECKFLAG(noteleport);
-		CHECKFLAG(noreturn);          CHECKFLAG(monster_noteleport); CHECKFLAG(nosave);       CHECKFLAG(nobranch);
-		CHECKFLAG(noexppenalty);      CHECKFLAG(pvp);                CHECKFLAG(pvp_noparty);  CHECKFLAG(pvp_noguild);
-		CHECKFLAG(pvp_nightmaredrop); CHECKFLAG(pvp_nocalcrank);     CHECKFLAG(gvg_castle);   CHECKFLAG(gvg);
-		CHECKFLAG(gvg_dungeon);       CHECKFLAG(gvg_noparty);        CHECKFLAG(battleground); CHECKFLAG(nozenypenalty);
-		CHECKFLAG(notrade);           CHECKFLAG(noskill);            CHECKFLAG(nowarp);       CHECKFLAG(nowarpto);
-		CHECKFLAG(noicewall);         CHECKFLAG(snow);               CHECKFLAG(clouds);       CHECKFLAG(clouds2);
-		CHECKFLAG(fog);               CHECKFLAG(fireworks);          CHECKFLAG(sakura);       CHECKFLAG(leaves);
-		CHECKFLAG(nobaseexp);
-		CHECKFLAG(nojobexp);          CHECKFLAG(nomobloot);          CHECKFLAG(nomvploot);    CHECKFLAG(nightenabled);
-		CHECKFLAG(nodrop);            CHECKFLAG(novending);          CHECKFLAG(loadevent);
-		CHECKFLAG(nochat);            CHECKFLAG(partylock);          CHECKFLAG(guildlock);    CHECKFLAG(src4instance);
-		CHECKFLAG(notomb);            CHECKFLAG(nocashshop);
+		map->mapflag_check_command(sd);
 		clif->message(sd->fd," ");
 		clif->message(sd->fd,msg_txt(1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
 		clif->message(sd->fd,msg_txt(1313)); // Type "@mapflag available" to list the available mapflags.
@@ -7506,19 +7485,9 @@ ACMD(mapflag) {
 			map->zone_change2(sd->bl.m,map->list[sd->bl.m].prev_zone);
 	}
 
-	SETFLAG(autotrade);         SETFLAG(allowks);            SETFLAG(nomemo);       SETFLAG(noteleport);
-	SETFLAG(noreturn);          SETFLAG(monster_noteleport); SETFLAG(nosave);       SETFLAG(nobranch);
-	SETFLAG(noexppenalty);      SETFLAG(pvp);                SETFLAG(pvp_noparty);  SETFLAG(pvp_noguild);
-	SETFLAG(pvp_nightmaredrop); SETFLAG(pvp_nocalcrank);     SETFLAG(gvg_castle);   SETFLAG(gvg);
-	SETFLAG(gvg_dungeon);       SETFLAG(gvg_noparty);        SETFLAG(battleground); SETFLAG(nozenypenalty);
-	SETFLAG(notrade);           SETFLAG(noskill);            SETFLAG(nowarp);       SETFLAG(nowarpto);
-	SETFLAG(noicewall);         SETFLAG(snow);               SETFLAG(clouds);       SETFLAG(clouds2);
-	SETFLAG(fog);               SETFLAG(fireworks);          SETFLAG(sakura);       SETFLAG(leaves);
-	SETFLAG(nobaseexp);
-	SETFLAG(nojobexp);          SETFLAG(nomobloot);          SETFLAG(nomvploot);    SETFLAG(nightenabled);
-	SETFLAG(nodrop);            SETFLAG(novending);          SETFLAG(loadevent);
-	SETFLAG(nochat);            SETFLAG(partylock);          SETFLAG(guildlock);    SETFLAG(src4instance);
-	SETFLAG(notomb);            SETFLAG(nocashshop);
+	if (map->mapflag_set_command(sd, flag_name, flag) == true){
+		return true;
+	}
 
 	clif->message(sd->fd,msg_txt(1314)); // Invalid flag name or flag.
 	clif->message(sd->fd,msg_txt(1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
@@ -7531,8 +7500,6 @@ ACMD(mapflag) {
 	clif->message(sd->fd,"fog, fireworks, sakura, leaves, nobaseexp, nojobexp, nomobloot,");
 	clif->message(sd->fd,"nomvploot, nightenabled, nodrop, novending, loadevent, nochat, partylock,");
 	clif->message(sd->fd,"guildlock, src4instance, notomb, nocashshop");
-#undef CHECKFLAG
-#undef SETFLAG
 
 	return true;
 }
