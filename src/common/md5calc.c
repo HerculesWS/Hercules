@@ -222,12 +222,12 @@ void MD5_Binary(const char * string, unsigned char * output)
 }
 
 /** output is the coded character sequence in the character sequence which wants to code string. */
-void MD5_String(const char * string, char * output)
+void MD5_String(const char *string, char *output)
 {
 	unsigned char digest[16];
 
 	MD5_String2binary(string,digest);
-	sprintf(output, "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+	snprintf(output, 33, "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
 		digest[ 0], digest[ 1], digest[ 2], digest[ 3],
 		digest[ 4], digest[ 5], digest[ 6], digest[ 7],
 		digest[ 8], digest[ 9], digest[10], digest[11],

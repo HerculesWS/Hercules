@@ -105,7 +105,7 @@ unsigned int inter_auction_create(struct auction_data *auction)
 	else
 	{
 		struct auction_data *auction_;
-		int64 tick = auction->hours * 3600000;
+		int64 tick = (int64)auction->hours * 3600000;
 
 		auction->item.amount = 1;
 		auction->item.identify = 1;

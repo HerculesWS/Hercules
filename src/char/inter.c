@@ -690,9 +690,11 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 			if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `key`, `index`, `value` FROM `%s` WHERE `account_id`='%d'", acc_reg_num_db, account_id) )
 				Sql_ShowDebug(inter->sql_handle);
 			break;
+#if 0 // This is already checked above.
 		case 1: //account2 reg
 			ShowError("inter->accreg_fromsql: Char server shouldn't handle type 1 registry values (##). That is the login server's work!\n");
 			return 0;
+#endif // 0
 	}
 
 	WFIFOHEAD(fd, 60000 + 300);
