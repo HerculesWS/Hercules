@@ -560,6 +560,8 @@ struct map_zone_data {
 	int disabled_skills_count;
 	int *disabled_items;
 	int disabled_items_count;
+	int *cant_disable_items; /** when a zone wants to ensure such a item is never disabled (i.e. gvg zone enables a item that is restricted everywhere else) **/
+	int cant_disable_items_count;
 	char **mapflags;
 	int mapflags_count;
 	struct map_zone_disabled_command_entry **disabled_commands;
@@ -1079,6 +1081,7 @@ struct map_interface {
 	void (*add_questinfo) (int m, struct questinfo *qi);
 	bool (*remove_questinfo) (int m, struct npc_data *nd);
 	struct map_zone_data *(*merge_zone) (struct map_zone_data *main, struct map_zone_data *other);
+	void (*zone_clear_single) (struct map_zone_data *zone);
 };
 
 struct map_interface *map;
