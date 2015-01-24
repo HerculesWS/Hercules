@@ -491,10 +491,9 @@ struct map_session_data {
 	int shadowform_id;
 
 	/* [Ind/Hercules] */
-	struct hChSysCh **channels;
+	struct channel_data **channels;
 	unsigned char channel_count;
-	struct hChSysCh *gcbind;
-	bool stealth;
+	struct channel_data *gcbind;
 	unsigned char fontcolor;
 	unsigned int fontcolor_tid;
 	int64 hchsysch_tick;

@@ -7121,6 +7121,20 @@ be the NPC with the said name.
 
 ---------------------------------------
 
+*channelmes("<#channel>", "<message>");
+
+This command will send a message to the specified chat channel.
+
+The sent message will not include any character's names.
+
+For special channels, such as #map and #ally, the attached RID's map or guild
+will be used.
+
+If the channel doesn't exist (or, in the case of a character-specific channel,
+no RID is attached), false will be returned. In case of success, true is
+returned.
+
+---------------------------------------
 *rand(<number>{,<number>});
 
 This function returns a number ...

@@ -19,7 +19,7 @@
 
 struct mob_data;
 struct npc_data;
-struct hChSysCh;
+struct channel_data;
 
 enum E_MAPSERVER_ST {
 	MAPSERVER_ST_RUNNING = CORE_ST_LAST,
@@ -694,7 +694,7 @@ struct map_data {
 	struct map_zone_data *prev_zone;
 
 	/* Hercules Local Chat */
-	struct hChSysCh *channel;
+	struct channel_data *channel;
 
 	/* invincible_time_inc mapflag */
 	unsigned int invincible_time_inc;

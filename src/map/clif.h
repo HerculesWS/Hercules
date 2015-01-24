@@ -38,6 +38,7 @@ struct party_booking_ad_info;
 struct view_data;
 struct eri;
 struct skill_cd;
+struct channel_data;
 
 /**
  * Defines
@@ -47,7 +48,6 @@ struct skill_cd;
 #define clif_menuskill_clear(sd) ((sd)->menuskill_id = (sd)->menuskill_val = (sd)->menuskill_val2 = 0)
 #define clif_disp_onlyself(sd,mes,len) clif->disp_message( &(sd)->bl, (mes), (len), SELF )
 #define clif_viewequip_fail( sd ) clif->msg( (sd), 0x54d );
-#define HCHSYS_NAME_LENGTH 20
 #define MAX_ROULETTE_LEVEL 7 /** client-defined value **/
 #define MAX_ROULETTE_COLUMNS 9 /** client-defined value **/
 
@@ -375,20 +375,6 @@ enum clif_colors {
 	COLOR_MAX
 };
 
-enum hChSysChOpt {
-	hChSys_OPT_BASE          = 0x0,
-	hChSys_OPT_ANNOUNCE_JOIN = 0x1,
-	hChSys_OPT_MSG_DELAY     = 0x2,
-};
-
-enum hChSysChType {
-	hChSys_PUBLIC  = 0,
-	hChSys_PRIVATE = 1,
-	hChSys_MAP     = 2,
-	hChSys_ALLY    = 3,
-	hChSys_IRC     = 4,
-};
-
 enum CASH_SHOP_TABS {
 	CASHSHOP_TAB_NEW        = 0,
 	CASHSHOP_TAB_POPULAR    = 1,
@@ -518,38 +504,6 @@ struct s_packet_db {
 	short pos[MAX_PACKET_POS];
 };
 
-struct hChSysConfig {
-	unsigned int *colors;
-	char **colors_name;
-	unsigned char colors_count;
-	bool local, ally, irc;
-	bool local_autojoin, ally_autojoin;
-	char local_name[HCHSYS_NAME_LENGTH], ally_name[HCHSYS_NAME_LENGTH], irc_name[HCHSYS_NAME_LENGTH];
-	unsigned char local_color, ally_color, irc_color;
-	bool closing;
-	bool allow_user_channel_creation;
-	char irc_server[40], irc_channel[50], irc_nick[40], irc_nick_pw[30];
-	unsigned short irc_server_port;
-	bool irc_use_ghost;
-};
-
-struct hChSysBanEntry {
-	char name[NAME_LENGTH];
-};
-
-struct hChSysCh {
-	char name[HCHSYS_NAME_LENGTH];
-	char pass[HCHSYS_NAME_LENGTH];
-	unsigned char color;
-	DBMap *users;
-	DBMap *banned;
-	unsigned int opt;
-	unsigned int owner;
-	enum hChSysChType type;
-	uint16 m;
-	unsigned char msg_delay;
-};
-
 struct hCSData {
 	unsigned short id;
 	unsigned int price;
@@ -576,8 +530,6 @@ struct clif_interface {
 	uint16 map_port;
 	char map_ip_str[128];
 	int map_fd;
-	DBMap* channel_db;
-	struct hChSysConfig *hChSys;
 	/* for clif_clearunit_delayed */
 	struct eri *delay_clearunit_ers;
 	/* Cash Shop [Ind/Hercules] */
@@ -1065,20 +1017,10 @@ struct clif_interface {
 	void (*user_count) (struct map_session_data* sd, int count);
 	void (*noask_sub) (struct map_session_data *src, struct map_session_data *target, int type);
 	void (*bc_ready) (void);
-	int (*undisguise_timer) (int tid, int64 tick, int id, intptr_t data);
 	/* Hercules Channel System */
-	void (*chsys_create) (struct hChSysCh *channel, char *name, char *pass, unsigned char color);
-	void (*chsys_msg) (struct hChSysCh *channel, struct map_session_data *sd, char *msg);
-	void (*chsys_msg2) (struct hChSysCh *channel, char *msg);
-	void (*chsys_send) (struct hChSysCh *channel, struct map_session_data *sd, const char *msg);
-	void (*chsys_join) (struct hChSysCh *channel, struct map_session_data *sd);
-	void (*chsys_left) (struct hChSysCh *channel, struct map_session_data *sd);
-	void (*chsys_delete) (struct hChSysCh *channel);
-	void (*chsys_mjoin) (struct map_session_data *sd);
-	void (*chsys_quit) (struct map_session_data *sd);
-	void (*chsys_quitg) (struct map_session_data *sd);
-	void (*chsys_gjoin) (struct guild *g1,struct guild *g2);
-	void (*chsys_gleave) (struct guild *g1,struct guild *g2);
+	void (*channel_msg) (struct channel_data *chan, struct map_session_data *sd, char *msg);
+	void (*channel_msg2) (struct channel_data *chan, char *msg);
+	int (*undisguise_timer) (int tid, int64 tick, int id, intptr_t data);
 	/* Bank System [Yommy/Hercules] */
 	void (*bank_deposit) (struct map_session_data *sd, enum e_BANKING_DEPOSIT_ACK reason);
 	void (*bank_withdraw) (struct map_session_data *sd,enum e_BANKING_WITHDRAW_ACK reason);
@@ -1132,7 +1074,6 @@ struct clif_interface {
 	void (*pKickFromChat) (int fd,struct map_session_data *sd);
 	void (*pChatLeave) (int fd, struct map_session_data* sd);
 	void (*pTradeRequest) (int fd,struct map_session_data *sd);
-	void (*chann_config_read) (void);
 	void (*pTradeAck) (int fd,struct map_session_data *sd);
 	void (*pTradeAddItem) (int fd,struct map_session_data *sd);
 	void (*pTradeOk) (int fd,struct map_session_data *sd);

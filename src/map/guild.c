@@ -12,6 +12,7 @@
 #include <string.h>
 
 #include "battle.h"
+#include "channel.h"
 #include "clif.h"
 #include "instance.h"
 #include "intif.h"
@@ -458,7 +459,7 @@ int guild_recv_info(struct guild *sg) {
 	DBData data;
 	struct map_session_data *sd;
 	bool guild_new = false;
-	struct hChSysCh *aChSysSave = NULL;
+	struct channel_data *aChSysSave = NULL;
 	short *instance_save = NULL;
 	unsigned short instances_save = 0;
 
@@ -470,15 +471,9 @@ int guild_recv_info(struct guild *sg) {
 		g->instance = NULL;
 		g->instances = 0;
 		idb_put(guild->db,sg->guild_id,g);
-		if (clif->hChSys->ally) {
-			struct hChSysCh *channel;
-
-			CREATE(channel, struct hChSysCh , 1);
-			safestrncpy(channel->name, clif->hChSys->ally_name, HCHSYS_NAME_LENGTH);
-			channel->type = hChSys_ALLY;
-			
-			clif->chsys_create(channel, NULL, NULL, clif->hChSys->ally_color);
-			if (clif->hChSys->ally_autojoin) {
+		if (channel->config->ally) {
+			struct channel_data *chan = channel->create(HCS_TYPE_ALLY, channel->config->ally_name, channel->config->ally_color);
+			if (channel->config->ally_autojoin) {
 				struct s_mapiterator* iter = mapit_getallusers();
 				struct guild *tg[MAX_GUILDALLIANCE];
 				
@@ -494,13 +489,13 @@ int guild_recv_info(struct guild *sg) {
 
 					if (sd->status.guild_id == sg->guild_id) {
 						// Guild member
-						clif->chsys_join(channel,sd);
+						channel->join_sub(chan,sd,false);
 						sd->guild = g;
 
 						for (i = 0; i < MAX_GUILDALLIANCE; i++) {
 							// Join channels from allied guilds
 							if (tg[i] && !(tg[i]->channel->banned && idb_exists(tg[i]->channel->banned, sd->status.account_id)))
-								clif->chsys_join(tg[i]->channel, sd);
+								channel->join_sub(tg[i]->channel, sd, false);
 						}
 						continue;
 					}
@@ -508,8 +503,8 @@ int guild_recv_info(struct guild *sg) {
 					for (i = 0; i < MAX_GUILDALLIANCE; i++) {
 						if (tg[i] && sd->status.guild_id == tg[i]->guild_id) { // Shortcut to skip the alliance checks again
 							// Alliance member
-							if( !(channel->banned && idb_exists(channel->banned, sd->status.account_id)))
-								clif->chsys_join(channel, sd);
+							if( !(chan->banned && idb_exists(chan->banned, sd->status.account_id)))
+								channel->join_sub(chan, sd, false);
 						}
 					}
 				}
@@ -518,7 +513,7 @@ int guild_recv_info(struct guild *sg) {
 				
 			}
 			
-			aChSysSave = channel;
+			aChSysSave = chan;
 
 		}
 		before=*sg;
@@ -745,18 +740,8 @@ void guild_member_joined(struct map_session_data *sd)
 		g->member[i].sd = sd;
 		sd->guild = g;
 		
-		if (clif->hChSys->ally && clif->hChSys->ally_autojoin) {
-			struct hChSysCh *channel = g->channel;
-
-			if( !(channel->banned && idb_exists(channel->banned, sd->status.account_id) ) )
-				clif->chsys_join(channel,sd);
-			for (i = 0; i < MAX_GUILDALLIANCE; i++) {
-				struct guild* sg = NULL;
-				if( g->alliance[i].opposition == 0 && g->alliance[i].guild_id && (sg = guild->search(g->alliance[i].guild_id) ) ) {
-					if( !(sg->channel->banned && idb_exists(sg->channel->banned, sd->status.account_id)))
-						clif->chsys_join(sg->channel,sd);
-				}
-			}
+		if (channel->config->ally && channel->config->ally_autojoin) {
+			channel->join(g->channel, sd, NULL, true);
 		}
 
 	}
@@ -913,8 +898,8 @@ int guild_member_withdraw(int guild_id, int account_id, int char_id, int flag, c
 		if (sd->state.storage_flag == 2) //Close the guild storage.
 			gstorage->close(sd);
 		guild->send_dot_remove(sd);
-		if (clif->hChSys->ally) {
-			clif->chsys_quitg(sd);
+		if (channel->config->ally) {
+			channel->quit_guild(sd);
 		}
 		sd->status.guild_id = 0;
 		sd->guild = NULL;
@@ -1646,12 +1631,15 @@ int guild_allianceack(int guild_id1,int guild_id2,int account_id1,int account_id
 		return 0;
 	}
 
-	if (g[0] && g[1] && clif->hChSys->ally && ( flag & 1 ) == 0) {
+	if (g[0] && g[1] && channel->config->ally && ( flag & 1 ) == 0) {
 		if( !(flag & 0x08) ) {
-			if (clif->hChSys->ally_autojoin)
-				clif->chsys_gjoin(g[0],g[1]);
+			if (channel->config->ally_autojoin) {
+				channel->guild_join_alliance(g[0],g[1]);
+				channel->guild_join_alliance(g[1],g[0]);
+			}
 		} else {
-			clif->chsys_gleave(g[0],g[1]);
+			channel->guild_leave_alliance(g[0],g[1]);
+			channel->guild_leave_alliance(g[1],g[0]);
 		}
 	}
 	
@@ -1779,9 +1767,9 @@ int guild_broken(int guild_id,int flag)
 	guild->db->foreach(guild->db,guild->broken_sub,guild_id);
 	guild->castle_db->foreach(guild->castle_db,guild->castle_broken_sub,guild_id);
 	gstorage->delete(guild_id);
-	if (clif->hChSys->ally) {
+	if (channel->config->ally) {
 		if( g->channel != NULL ) {
-			clif->chsys_delete(g->channel);
+			channel->delete(g->channel);
 		}
 	}
 	if( g->instance )
@@ -2280,7 +2268,7 @@ void do_final_guild(void) {
 	
 	for( g = dbi_first(iter); dbi_exists(iter); g = dbi_next(iter) ) {
 		if( g->channel != NULL )
-			clif->chsys_delete(g->channel);
+			channel->delete(g->channel);
 		if( g->instance != NULL ) {
 			aFree(g->instance);
 			g->instance = NULL;

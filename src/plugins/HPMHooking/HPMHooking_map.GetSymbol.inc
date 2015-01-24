@@ -8,6 +8,7 @@ if( !(atcommand = GET_SYMBOL("atcommand") ) ) return false;
 if( !(battle = GET_SYMBOL("battle") ) ) return false;
 if( !(bg = GET_SYMBOL("battlegrounds") ) ) return false;
 if( !(buyingstore = GET_SYMBOL("buyingstore") ) ) return false;
+if( !(channel = GET_SYMBOL("channel") ) ) return false;
 if( !(chat = GET_SYMBOL("chat") ) ) return false;
 if( !(chrif = GET_SYMBOL("chrif") ) ) return false;
 if( !(clif = GET_SYMBOL("clif") ) ) return false;

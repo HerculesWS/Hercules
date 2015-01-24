@@ -500,6 +500,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\map\channel.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\map\channel.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\map\chat.c"
 				>
 			</File>

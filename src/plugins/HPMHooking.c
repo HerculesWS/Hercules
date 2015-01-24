@@ -53,6 +53,7 @@
 #include "../map/atcommand.h"
 #include "../map/battle.h"
 #include "../map/battleground.h"
+#include "../map/channel.h"
 #include "../map/chat.h"
 #include "../map/chrif.h"
 #include "../map/clif.h"
