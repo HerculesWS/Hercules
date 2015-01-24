@@ -39051,6 +39051,32 @@ struct map_zone_data* HP_map_merge_zone(struct map_zone_data *main, struct map_z
 	}
 	return retVal___;
 }
+void HP_map_zone_clear_single(struct map_zone_data *zone) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_map_zone_clear_single_pre ) {
+		void (*preHookFunc) (struct map_zone_data *zone);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_zone_clear_single_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_map_zone_clear_single_pre[hIndex].func;
+			preHookFunc(zone);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.map.zone_clear_single(zone);
+	}
+	if( HPMHooks.count.HP_map_zone_clear_single_post ) {
+		void (*postHookFunc) (struct map_zone_data *zone);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_zone_clear_single_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_map_zone_clear_single_post[hIndex].func;
+			postHookFunc(zone);
+		}
+	}
+	return;
+}
 /* mapit */
 struct s_mapiterator* HP_mapit_alloc(enum e_mapitflags flags, enum bl_type types) {
 	int hIndex = 0;

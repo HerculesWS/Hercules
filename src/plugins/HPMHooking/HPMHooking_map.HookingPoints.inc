@@ -1490,6 +1490,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(map->add_questinfo, HP_map_add_questinfo) },
 	{ HP_POP(map->remove_questinfo, HP_map_remove_questinfo) },
 	{ HP_POP(map->merge_zone, HP_map_merge_zone) },
+	{ HP_POP(map->zone_clear_single, HP_map_zone_clear_single) },
 /* mapit */
 	{ HP_POP(mapit->alloc, HP_mapit_alloc) },
 	{ HP_POP(mapit->free, HP_mapit_free) },

@@ -2935,6 +2935,8 @@ struct {
 	struct HPMHookPoint *HP_map_remove_questinfo_post;
 	struct HPMHookPoint *HP_map_merge_zone_pre;
 	struct HPMHookPoint *HP_map_merge_zone_post;
+	struct HPMHookPoint *HP_map_zone_clear_single_pre;
+	struct HPMHookPoint *HP_map_zone_clear_single_post;
 	struct HPMHookPoint *HP_mapit_alloc_pre;
 	struct HPMHookPoint *HP_mapit_alloc_post;
 	struct HPMHookPoint *HP_mapit_free_pre;
@@ -8110,6 +8112,8 @@ struct {
 	int HP_map_remove_questinfo_post;
 	int HP_map_merge_zone_pre;
 	int HP_map_merge_zone_post;
+	int HP_map_zone_clear_single_pre;
+	int HP_map_zone_clear_single_post;
 	int HP_mapit_alloc_pre;
 	int HP_mapit_alloc_post;
 	int HP_mapit_free_pre;
