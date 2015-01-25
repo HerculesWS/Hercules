@@ -1958,7 +1958,7 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 		if (.@shobu > 1) {
 			mes "[Kayron]";
 			mes "Let's see...";
-			mes "You won " + shobu + " times.";
+			mes "You won " + .@shobu + " times.";
 			mes "You must be really";
 			mes "Without a doubt, you've";
 			mes "got some pretty good luck~";
