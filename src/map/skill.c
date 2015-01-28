@@ -13730,7 +13730,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			break;
 		case KO_KAIHOU:
 		case KO_ZENKAI:
-			if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0) {
+			if (sd->charm_type == CHARM_TYPE_NONE || sd->charm_count <= 0) {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_SUMMON,0);
 				return 0;
 			}

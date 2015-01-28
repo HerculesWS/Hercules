@@ -3999,7 +3999,7 @@ void clif_getareachar_pc(struct map_session_data* sd,struct map_session_data* ds
 
 	if(dstsd->spiritball > 0)
 		clif->spiritball_single(sd->fd, dstsd);
-	if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
+	if (dstsd->charm_type != CHARM_TYPE_NONE && dstsd->charm_count > 0)
 		clif->charm_single(sd->fd, dstsd);
 
 	for( i = 0; i < dstsd->sc_display_count; i++ ) {

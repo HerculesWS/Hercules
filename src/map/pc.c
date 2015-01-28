@@ -9811,6 +9811,7 @@ int pc_charm_timer(int tid, int64 tick, int id, intptr_t data)
 	if (sd->charm_count <= 0) {
 		ShowError("pc_charm_timer: %d spiritcharm's available. (aid=%d cid=%d tid=%d)\n", sd->charm_count, sd->status.account_id, sd->status.char_id, tid);
 		sd->charm_count = 0;
+		sd->charm_type = CHARM_TYPE_NONE;
 		return 0;
 	}
 
@@ -9824,6 +9825,8 @@ int pc_charm_timer(int tid, int64 tick, int id, intptr_t data)
 	if(i != sd->charm_count)
 		memmove(sd->charm_timer+i, sd->charm_timer+i+1, (sd->charm_count-i)*sizeof(int));
 	sd->charm_timer[sd->charm_count] = INVALID_TIMER;
+	if (sd->charm_count <= 0)
+		sd->charm_type = CHARM_TYPE_NONE;
 
 	clif->spiritcharm(sd);
 
@@ -9868,6 +9871,7 @@ void pc_add_charm(struct map_session_data *sd, int interval, int max, int type)
 		memmove(sd->charm_timer+i+1, sd->charm_timer+i, (sd->charm_count-i)*sizeof(int));
 	sd->charm_timer[i] = tid;
 	sd->charm_count++;
+	sd->charm_type = type;
 
 	clif->spiritcharm(sd);
 }
@@ -9911,6 +9915,8 @@ void pc_del_charm(struct map_session_data *sd, int count, int type)
 		sd->charm_timer[i-count] = sd->charm_timer[i];
 		sd->charm_timer[i] = INVALID_TIMER;
 	}
+	if (sd->charm_count <= 0)
+		sd->charm_type = CHARM_TYPE_NONE;
 
 	clif->spiritcharm(sd);
 }
