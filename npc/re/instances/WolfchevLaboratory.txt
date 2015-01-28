@@ -962,8 +962,9 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 	} else if (.@equip_item== Giant_Shield || .@equip_item == Geffenia_Book_Water || .@equip_item == Bible_Of_Promise2 ||
 	.@equip_item == Salvage_Cape || .@equip_item == Assassin_Handcuffs || .@equip_item == Green_Operation_Coat ||
 	.@equip_item == Ancient_Gold_Deco) {
-	  if(.@equip_item == Salvage_Cape || .@equip_item == Ancient_Gold_Deco)
-		.@lhz_max_num = 4200;
+		.@type = 4;
+		if(.@equip_item == Salvage_Cape || .@equip_item == Ancient_Gold_Deco)
+			.@lhz_max_num = 4200;
 	} else {
 		mes "[Pudding]";
 		mes "Before! I need to check if this equipment can accept the power.";
