@@ -13053,26 +13053,26 @@ ecl_tdun01,98,47,5	duplicate(Euncheong#No.1)	Euncheong#No.3	4_M_HUBOY,1,1
 
 ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 	if (ep14_2_nines > 5) {
-		if ((questprogress(13062,PLAYTIME) == 1) || (questprogress(13064,PLAYTIME) == 1) || (questprogress(13066,PLAYTIME) == 1)) {
+		if ((questprogress(13062,PLAYTIME) == 2) || (questprogress(13064,PLAYTIME) == 2) || (questprogress(13066,PLAYTIME) == 2)) {
 			cutin "nines01",2;
 			mes "[New Oz]";
 			mes "Ah...What a relief...I'm so glad you're here. I was about to leave this tower alone! But I think I'm lost.";
 			emotion e_gasp;
-			if (questprogress(13062,PLAYTIME) == 1) {
+			if (questprogress(13062,PLAYTIME) == 2) {
 				next;
 				cutin "nines04",2;
 				mes "[New Oz]";
 				mes "I'm hungry again from walking around so much...I'm so hungry that I can't walk anymore.";
 				erasequest 13062;
 			}
-			if (questprogress(13064,PLAYTIME) == 1) {
+			if (questprogress(13064,PLAYTIME) == 2) {
 				next;
 				cutin "nines03",2;
 				mes "[New Oz]";
 				mes "Did I walk too much? I'm covered with dust again. It keeps covering my eyes.";
 				erasequest 13064;
 			}
-			if (questprogress(13066,PLAYTIME) == 1) {
+			if (questprogress(13066,PLAYTIME) == 2) {
 				next;
 				cutin "nines02",2;
 				mes "[New Oz]";
@@ -13088,7 +13088,9 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 			mes "[New Oz]";
 			mes "No need to worry about me! ^FF0000I'll definitely go home this time!^000000 Thanks for everything! I'll take you out for a nice meal next time!";
 			emotion e_thx;
-			erasequest 13058;
+			if (questprogress(13058)){
+				erasequest 13058;
+			}
 			close2;
 			cutin "",255;
 			end;
@@ -13104,7 +13106,7 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 				if (questprogress(13062,PLAYTIME) >= 1) {
 					next;
 					mes "[New Oz]";
-					if (questprogress(13064,PLAYTIME) == 1) {
+					if (questprogress(13064,PLAYTIME) >= 1) {
 						mes "I guess I'll have no problem finding my way out of this tower now. I'm full...and I just need to get a few more souvenirs...";
 					}
 					else {
@@ -13118,7 +13120,9 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 					mes "I'm starving to death though... Could you please help me, my friend?";
 					emotion e_wah;
 				}
-				erasequest 13058;
+				if (questprogress(13058)){
+					erasequest 13058;
+				}
 				close2;
 				cutin "",255;
 				end;

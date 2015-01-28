@@ -931,8 +931,8 @@ ecl_in01,64,97,5	script	Slot Expert Nattuer#ecl	4_F_FAIRYKID,{
 	progressbar "0xFFFF00",3;
 	mes "[Slot Expert]";
 	delitem Splendide_Coin,5; //Splendide_Coin
-	.@luckyday = rand(1,99);
-	if ( .@luckyday%20 ){
+	.@luckyday = rand(1,100);
+	if ( (.@luckyday%20) > 0){
 		emotion e_dots;
 		delitem .@choice,1;
 		mes "Shoot, I'm sorry. It failed.";
