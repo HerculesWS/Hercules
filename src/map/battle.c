@@ -2452,7 +2452,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case GN_CART_TORNADO:
 				{
 					int strbonus = bst->str;
-					skillratio = 50 * skill_lv + (sd ? sd->cart_weight : battle_config.max_cart_weight) / 10 / (150 - strbonus) + 50 * (sd ? pc->checkskill(sd, GN_REMODELING_CART) : 5);
+					skillratio = 50 * skill_lv + (sd ? sd->cart_weight : battle_config.max_cart_weight) / 10 / max(150 - strbonus, 1) + 50 * (sd ? pc->checkskill(sd, GN_REMODELING_CART) : 5);
 				}
 					break;
 				case GN_CARTCANNON:
