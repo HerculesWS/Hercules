@@ -456,7 +456,7 @@ einbroch,69,202,4	duplicate(Warper)	Warper#einbr	4_F_VALKYRIE
 gef_fild10,71,339,4	duplicate(Warper)	Warper#orc	4_F_VALKYRIE
 geffen,124,72,4	duplicate(Warper)	Warper#gef	4_F_VALKYRIE
 glast_01,372,308,4	duplicate(Warper)	Warper#glh	4_F_VALKYRIE
-gonryun,162,122,4	duplicate(Warper)	Warper#gon	4_F_VALKYRIE
+gonryun,165,126,4	duplicate(Warper)	Warper#gon	4_F_VALKYRIE
 hugel,101,151,4	duplicate(Warper)	Warper#hug	4_F_VALKYRIE
 izlu2dun,110,92,4	duplicate(Warper)	Warper#izd	4_F_VALKYRIE
 izlude,132,120,4	duplicate(Warper)	Warper#izl	4_F_VALKYRIE
