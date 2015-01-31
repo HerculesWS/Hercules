@@ -1896,9 +1896,19 @@ int mob_deleteslave_sub(struct block_list *bl,va_list ap)
 	nullpo_ret(bl);
 	nullpo_ret(md = (struct mob_data *)bl);
 
-	id=va_arg(ap,int);
-	if(md->master_id > 0 && md->master_id == id )
-		status_kill(bl);
+	id = va_arg(ap, int);
+	if (md->master_id > 0 && md->master_id == id)
+	{
+		if (md->db->status.mode & MD_LIVE_WITHOUT_MASTER)
+		{
+			md->master_id = 0;
+			md->master_dist = 0;
+		}
+		else
+		{
+			status_kill(bl);
+		}
+	}
 	return 0;
 }
 

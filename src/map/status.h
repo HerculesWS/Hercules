@@ -1585,22 +1585,23 @@ enum e_joint_break
 //Mode definitions to clear up code reading. [Skotlex]
 enum e_mode
 {
-	MD_CANMOVE            = 0x0001,
-	MD_LOOTER             = 0x0002,
-	MD_AGGRESSIVE         = 0x0004,
-	MD_ASSIST             = 0x0008,
-	MD_CASTSENSOR_IDLE    = 0x0010,
-	MD_BOSS               = 0x0020,
-	MD_PLANT              = 0x0040,
-	MD_CANATTACK          = 0x0080,
-	MD_DETECTOR           = 0x0100,
-	MD_CASTSENSOR_CHASE   = 0x0200,
-	MD_CHANGECHASE        = 0x0400,
-	MD_ANGRY              = 0x0800,
-	MD_CHANGETARGET_MELEE = 0x1000,
-	MD_CHANGETARGET_CHASE = 0x2000,
-	MD_TARGETWEAK         = 0x4000,
-	MD_MASK               = 0xFFFF,
+	MD_CANMOVE             = 0x00001,
+	MD_LOOTER              = 0x00002,
+	MD_AGGRESSIVE          = 0x00004,
+	MD_ASSIST              = 0x00008,
+	MD_CASTSENSOR_IDLE     = 0x00010,
+	MD_BOSS                = 0x00020,
+	MD_PLANT               = 0x00040,
+	MD_CANATTACK           = 0x00080,
+	MD_DETECTOR            = 0x00100,
+	MD_CASTSENSOR_CHASE    = 0x00200,
+	MD_CHANGECHASE         = 0x00400,
+	MD_ANGRY               = 0x00800,
+	MD_CHANGETARGET_MELEE  = 0x01000,
+	MD_CHANGETARGET_CHASE  = 0x02000,
+	MD_TARGETWEAK          = 0x04000,
+	MD_LIVE_WITHOUT_MASTER = 0x10000,
+	MD_MASK                = 0x1FFFF,
 };
 
 //Status change option definitions (options are what makes status changes visible to chars
@@ -1792,8 +1793,8 @@ struct status_data {
 		batk,
 		matk_min, matk_max,
 		speed,
-		amotion, adelay, dmotion,
-		mode;
+		amotion, adelay, dmotion;
+	unsigned int mode;
 	short
 		hit, flee, cri, flee2,
 		def2, mdef2,
