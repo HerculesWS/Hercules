@@ -1509,6 +1509,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					skillratio -= 30;
 					if (sd && sd->charm_type == CHARM_TYPE_WATER && sd->charm_count > 0)
 						skillratio += 5 * sd->charm_count;
+					break;
 #endif
 					/* Fall through */
 				case NJ_HYOUSYOURAKU:
