@@ -11268,6 +11268,7 @@ void clif_parse_NpcCloseClicked(int fd,struct map_session_data *sd)
 {
 	if (!sd->npc_id) //Avoid parsing anything when the script was done with. [Skotlex]
 		return;
+	sd->state.dialog = 0;
 	npc->scriptcont(sd, RFIFOL(fd,2), true);
 }
 

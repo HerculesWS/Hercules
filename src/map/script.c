@@ -3904,7 +3904,6 @@ void script_detach_state(struct script_state* st, bool dequeue_event) {
 	if(st->rid && (sd = map->id2sd(st->rid))!=NULL) {
 		sd->st = st->bk_st;
 		sd->npc_id = st->bk_npcid;
-		sd->state.dialog = 0;
 		if(st->bk_st) {
 			//Remove tag for removal.
 			st->bk_st = NULL;
