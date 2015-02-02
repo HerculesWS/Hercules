@@ -6431,7 +6431,7 @@ ACMD(changesex)
 	// to avoid any problem with equipment and invalid sex, equipment is unequipped.
 	for( i=0; i<EQI_MAX; i++ )
 		if( sd->equip_index[i] >= 0 ) pc->unequipitem(sd, sd->equip_index[i], 3);
-	chrif->changesex(sd);
+	chrif->changesex(sd, true);
 	return true;
 }
 

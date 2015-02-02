@@ -166,6 +166,7 @@ struct char_interface {
 	int (*mmo_char_tosql) (int char_id, struct mmo_charstatus* p);
 	int (*memitemdata_to_sql) (const struct item items[], int max, int id, int tableswitch);
 	int (*inventory_to_sql) (const struct item items[], int max, int id);
+	int (*mmo_gender) (const struct char_session_data *sd, const struct mmo_charstatus *p, char sex);
 	int (*mmo_chars_fromsql) (struct char_session_data* sd, uint8* buf);
 	int (*mmo_char_fromsql) (int char_id, struct mmo_charstatus* p, bool load_everything);
 	int (*mmo_char_sql_init) (void);
@@ -233,6 +234,7 @@ struct char_interface {
 	void (*ban) (int account_id, int char_id, time_t *unban_time, short year, short month, short day, short hour, short minute, short second);
 	void (*unban) (int char_id, int *result);
 	void (*ask_name_ack) (int fd, int acc, const char* name, int type, int result);
+	int (*changecharsex) (int char_id, int sex);
 	void (*parse_frommap_change_account) (int fd);
 	void (*parse_frommap_fame_list) (int fd);
 	void (*parse_frommap_divorce_char) (int fd);

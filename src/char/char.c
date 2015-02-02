@@ -457,30 +457,15 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 		(p->head_mid != cp->head_mid) || (p->head_bottom != cp->head_bottom) || (p->delete_date != cp->delete_date) ||
 		(p->rename != cp->rename) || (p->slotchange != cp->slotchange) || (p->robe != cp->robe) ||
 		(p->show_equip != cp->show_equip) || (p->allow_party != cp->allow_party) || (p->font != cp->font) ||
-		(p->uniqueitem_counter != cp->uniqueitem_counter ) || (p->sex != cp->sex)
+		(p->uniqueitem_counter != cp->uniqueitem_counter)
 	) {
 		//Save status
 		unsigned int opt = 0;
-		char sex;
 
 		if( p->allow_party )
 			opt |= OPT_ALLOW_PARTY;
 		if( p->show_equip )
 			opt |= OPT_SHOW_EQUIP;
-
-		switch (p->sex)
-		{
-			case 0:
-				sex = 'F';
-				break;
-			case 1:
-				sex = 'M';
-				break;
-			case 99:
-			default:
-				sex = 'U';
-				break;
-		}
 
 		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `base_level`='%d', `job_level`='%d',"
 			"`base_exp`='%u', `job_exp`='%u', `zeny`='%d',"
@@ -489,8 +474,7 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 			"`option`='%d',`party_id`='%d',`guild_id`='%d',`pet_id`='%d',`homun_id`='%d',`elemental_id`='%d',"
 			"`weapon`='%d',`shield`='%d',`head_top`='%d',`head_mid`='%d',`head_bottom`='%d',"
 			"`last_map`='%s',`last_x`='%d',`last_y`='%d',`save_map`='%s',`save_x`='%d',`save_y`='%d', `rename`='%d',"
-			"`delete_date`='%lu',`robe`='%d',`slotchange`='%d', `char_opt`='%u', `font`='%u', `uniqueitem_counter` ='%u',"
-			" sex = '%c'"
+			"`delete_date`='%lu',`robe`='%d',`slotchange`='%d', `char_opt`='%u', `font`='%u', `uniqueitem_counter` ='%u'"
 			" WHERE  `account_id`='%d' AND `char_id` = '%d'",
 			char_db, p->base_level, p->job_level,
 			p->base_exp, p->job_exp, p->zeny,
@@ -501,7 +485,7 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 			mapindex_id2name(p->last_point.map), p->last_point.x, p->last_point.y,
 			mapindex_id2name(p->save_point.map), p->save_point.x, p->save_point.y, p->rename,
 			(unsigned long)p->delete_date,  // FIXME: platform-dependent size
-			p->robe,p->slotchange,opt,p->font,p->uniqueitem_counter, sex,
+			p->robe,p->slotchange,opt,p->font,p->uniqueitem_counter,
 			p->account_id, p->char_id) )
 		{
 			Sql_ShowDebug(inter->sql_handle);
@@ -1001,6 +985,55 @@ int char_inventory_to_sql(const struct item items[], int max, int id) {
 	return errors;
 }
 
+/**
+ * Returns the correct gender ID for the given character and enum value.
+ *
+ * If the per-character sex is defined but not supported by the current packetver, the database entries are corrected.
+ *
+ * @param sd Character data, if available.
+ * @param p  Character status.
+ * @param sex Character sex (database enum)
+ *
+ * @retval SEX_MALE if the per-character sex is male
+ * @retval SEX_FEMALE if the per-character sex is female
+ * @retval 99 if the per-character sex is not defined or the current PACKETVER doesn't support it.
+ */
+int char_mmo_gender(const struct char_session_data *sd, const struct mmo_charstatus *p, char sex)
+{
+#if PACKETVER >= 20141016
+	(void)sd; (void)p; // Unused
+	switch (sex) {
+		case 'M':
+			return SEX_MALE;
+		case 'F':
+			return SEX_FEMALE;
+		case 'U':
+		default:
+			return 99;
+	}
+#else
+	if (sex == 'M' || sex == 'F') {
+		if (!sd) {
+			// sd is not available, there isn't much we can do. Just return and print a warning.
+			ShowWarning("Character '%s' (CID: %d, AID: %d) has sex '%c', but PACKETVER does not support per-character sex. Defaulting to 'U'.\n",
+					p->name, p->char_id, p->account_id, sex);
+			return 99;
+		}
+		if ((sex == 'M' && sd->sex == SEX_FEMALE)
+		 || (sex == 'F' && sd->sex == SEX_MALE)) {
+			ShowWarning("Changing sex of character '%s' (CID: %d, AID: %d) to 'U' due to incompatible PACKETVER.\n", p->name, p->char_id, p->account_id);
+			chr->changecharsex(p->char_id, sd->sex);
+		} else {
+			ShowInfo("Resetting sex of character '%s' (CID: %d, AID: %d) to 'U' due to incompatible PACKETVER.\n", p->name, p->char_id, p->account_id);
+		}
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `sex` = 'U' WHERE `char_id` = '%d'", char_db, p->char_id)) {
+			Sql_ShowDebug(inter->sql_handle);
+		}
+	}
+	return 99;
+#endif
+}
+
 //=====================================================================================================
 // Loads the basic character rooster for the given account. Returns total buffer used.
 int char_mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
@@ -1087,18 +1120,7 @@ int char_mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 		p.last_point.map = mapindex->name2id(last_map);
 		sd->found_char[p.slot] = p.char_id;
 		sd->unban_time[p.slot] = unban_time;
-		switch( sex[0] ) {
-			case 'M':
-				p.sex = 1;
-				break;
-			case 'F':
-				p.sex = 0;
-				break;
-			case 'U':
-			default:
-				p.sex = 99;
-				break;
-		}
+		p.sex = chr->mmo_gender(sd, &p, sex[0]);
 		j += chr->mmo_char_tobuf(WBUFP(buf, j), &p);
 	}
 
@@ -1211,7 +1233,7 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 53, SQLDT_UINT,   &opt, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 54, SQLDT_UCHAR,  &p->font, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 55, SQLDT_UINT,   &p->uniqueitem_counter, 0, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 56, SQLDT_ENUM,  &sex, sizeof(sex), NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 56, SQLDT_ENUM,   &sex, sizeof(sex), NULL, NULL)
 	) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
@@ -1224,18 +1246,7 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 		return 0;
 	}
 
-	switch( sex[0] ) {
-		case 'M':
-			p->sex = 1;
-			break;
-		case 'F':
-			p->sex = 0;
-			break;
-		case 'U':
-		default:
-			p->sex = 99;
-			break;
-	}
+	p->sex = chr->mmo_gender(NULL, p, sex[0]);
 
 	account_id = p->account_id;
 
@@ -2401,15 +2412,52 @@ void char_changesex(int account_id, int sex)
 	mapif->sendall(buf, 7);
 }
 
+/**
+ * Performs the necessary operations when changing a character's sex, such as
+ * correcting the job class and unequipping items, and propagating the
+ * information to the guild data.
+ * 
+ * @param sex      The new sex (SEX_MALE or SEX_FEMALE).
+ * @param acc      The character's account ID.
+ * @param char_id  The character ID.
+ * @param class_   The character's current job class.
+ * @param guild_id The character's guild ID.
+ */
+void char_change_sex_sub(int sex, int acc, int char_id, int class_, int guild_id)
+{
+	// job modification
+	if (class_ == JOB_BARD || class_ == JOB_DANCER)
+		class_ = (sex == SEX_MALE ? JOB_BARD : JOB_DANCER);
+	else if (class_ == JOB_CLOWN || class_ == JOB_GYPSY)
+		class_ = (sex == SEX_MALE ? JOB_CLOWN : JOB_GYPSY);
+	else if (class_ == JOB_BABY_BARD || class_ == JOB_BABY_DANCER)
+		class_ = (sex == SEX_MALE ? JOB_BABY_BARD : JOB_BABY_DANCER);
+	else if (class_ == JOB_MINSTREL || class_ == JOB_WANDERER)
+		class_ = (sex == SEX_MALE ? JOB_MINSTREL : JOB_WANDERER);
+	else if (class_ == JOB_MINSTREL_T || class_ == JOB_WANDERER_T)
+		class_ = (sex == SEX_MALE ? JOB_MINSTREL_T : JOB_WANDERER_T);
+	else if (class_ == JOB_BABY_MINSTREL || class_ == JOB_BABY_WANDERER)
+		class_ = (sex == SEX_MALE ? JOB_BABY_MINSTREL : JOB_BABY_WANDERER);
+	else if (class_ == JOB_KAGEROU || class_ == JOB_OBORO)
+		class_ = (sex == SEX_MALE ? JOB_KAGEROU : JOB_OBORO);
+
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `equip`='0' WHERE `char_id`='%d'", inventory_db, char_id))
+		Sql_ShowDebug(inter->sql_handle);
+
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `class`='%d', `weapon`='0', `shield`='0', "
+				"`head_top`='0', `head_mid`='0', `head_bottom`='0' WHERE `char_id`='%d'",
+				char_db, class_, char_id))
+		Sql_ShowDebug(inter->sql_handle);
+	if (guild_id) // If there is a guild, update the guild_member data [Skotlex]
+		inter_guild->sex_changed(guild_id, acc, char_id, sex);
+}
+
 int char_parse_fromlogin_changesex_reply(int fd)
 {
-	int char_id[MAX_CHARS];
-	int class_[MAX_CHARS];
-	int guild_id[MAX_CHARS];
-	int num;
+	int char_id = 0, class_ = 0, guild_id = 0;
 	int i;
-	char* data;
-	struct char_auth_node* node;
+	struct char_auth_node *node;
+	SqlStmt *stmt;
 
 	int acc = RFIFOL(fd,2);
 	int sex = RFIFOB(fd,6);
@@ -2417,65 +2465,31 @@ int char_parse_fromlogin_changesex_reply(int fd)
 	RFIFOSKIP(fd,7);
 
 	// This should _never_ happen
-	if( acc <= 0 ) {
+	if (acc <= 0) {
 		ShowError("Received invalid account id from login server! (aid: %d)\n", acc);
 		return 1;
 	}
 
 	node = (struct char_auth_node*)idb_get(auth_db, acc);
-	if( node != NULL )
+	if (node != NULL)
 		node->sex = sex;
 
 	// get characters
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `char_id`,`class`,`guild_id` FROM `%s` WHERE `account_id` = '%d'", char_db, acc) )
-		Sql_ShowDebug(inter->sql_handle);
-	for( i = 0; i < MAX_CHARS && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i )
-	{
-		SQL->GetData(inter->sql_handle, 0, &data, NULL); char_id[i] = atoi(data);
-		SQL->GetData(inter->sql_handle, 1, &data, NULL); class_[i] = atoi(data);
-		SQL->GetData(inter->sql_handle, 2, &data, NULL); guild_id[i] = atoi(data);
+	stmt = SQL->StmtMalloc(inter->sql_handle);
+	if (SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `char_id`,`class`,`guild_id` FROM `%s` WHERE `account_id` = '%d'", char_db, acc)
+	 || SQL_ERROR == SQL->StmtExecute(stmt)
+	) {
+		SqlStmt_ShowDebug(stmt);
+		SQL->StmtFree(stmt);
 	}
-	num = i;
-	for( i = 0; i < num; ++i )
-	{
-		if( class_[i] == JOB_BARD || class_[i] == JOB_DANCER ||
-			class_[i] == JOB_CLOWN || class_[i] == JOB_GYPSY ||
-			class_[i] == JOB_BABY_BARD || class_[i] == JOB_BABY_DANCER ||
-			class_[i] == JOB_MINSTREL || class_[i] == JOB_WANDERER ||
-			class_[i] == JOB_MINSTREL_T || class_[i] == JOB_WANDERER_T ||
-			class_[i] == JOB_BABY_MINSTREL || class_[i] == JOB_BABY_WANDERER ||
-			class_[i] == JOB_KAGEROU || class_[i] == JOB_OBORO )
-		{
-			// job modification
-			if( class_[i] == JOB_BARD || class_[i] == JOB_DANCER )
-				class_[i] = (sex ? JOB_BARD : JOB_DANCER);
-			else if( class_[i] == JOB_CLOWN || class_[i] == JOB_GYPSY )
-				class_[i] = (sex ? JOB_CLOWN : JOB_GYPSY);
-			else if( class_[i] == JOB_BABY_BARD || class_[i] == JOB_BABY_DANCER )
-				class_[i] = (sex ? JOB_BABY_BARD : JOB_BABY_DANCER);
-			else if( class_[i] == JOB_MINSTREL || class_[i] == JOB_WANDERER )
-				class_[i] = (sex ? JOB_MINSTREL : JOB_WANDERER);
-			else if( class_[i] == JOB_MINSTREL_T || class_[i] == JOB_WANDERER_T )
-				class_[i] = (sex ? JOB_MINSTREL_T : JOB_WANDERER_T);
-			else if( class_[i] == JOB_BABY_MINSTREL || class_[i] == JOB_BABY_WANDERER )
-				class_[i] = (sex ? JOB_BABY_MINSTREL : JOB_BABY_WANDERER);
-			else if( class_[i] == JOB_KAGEROU || class_[i] == JOB_OBORO )
-				class_[i] = (sex ? JOB_KAGEROU : JOB_OBORO);
-		}
-
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `equip`='0' WHERE `char_id`='%d'", inventory_db, char_id[i]) )
-			Sql_ShowDebug(inter->sql_handle);
-
-		if( SQL_ERROR == SQL->Query(inter->sql_handle,
-			"UPDATE `%s` SET `class`='%d', `weapon`='0', `shield`='0', `head_top`='0', `head_mid`='0', "
-			"`head_bottom`='0' WHERE `char_id`='%d'",
-			char_db, class_[i], char_id[i]) )
-			Sql_ShowDebug(inter->sql_handle);
-
-		if( guild_id[i] )// If there is a guild, update the guild_member data [Skotlex]
-			inter_guild->sex_changed(guild_id[i], acc, char_id[i], sex);
+	SQL->StmtBindColumn(stmt, 0, SQLDT_INT, &char_id,  0, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 1, SQLDT_INT, &class_,   0, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 2, SQLDT_INT, &guild_id, 0, NULL, NULL);
+	
+	for (i = 0; i < MAX_CHARS && SQL_SUCCESS == SQL->StmtNextRow(stmt); ++i) {
+		char_change_sex_sub(sex, acc, char_id, class_, guild_id);
 	}
-	SQL->FreeResult(inter->sql_handle);
+	SQL->StmtFree(stmt);
 
 	// disconnect player if online on char-server
 	chr->disconnect_player(acc);
@@ -3439,6 +3453,49 @@ void char_ask_name_ack(int fd, int acc, const char* name, int type, int result)
 	WFIFOSET(fd,34);
 }
 
+/**
+ * Changes a character's sex.
+ * The information is updated on database, and the character is kicked if it
+ * currently is online.
+ * 
+ * @param char_id The character's ID.
+ * @param sex     The new sex.
+ * @retval 0 in case of success.
+ * @retval 1 in case of failure.
+ */
+int char_changecharsex(int char_id, int sex)
+{
+	int class_ = 0, guild_id = 0, account_id = 0;
+	char *data;
+
+	// get character data
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id`,`class`,`guild_id` FROM `%s` WHERE `char_id` = '%d'", char_db, char_id)) {
+		Sql_ShowDebug(inter->sql_handle);
+		return 1;
+	}
+	if (SQL->NumRows(inter->sql_handle) != 1 || SQL_ERROR == SQL->NextRow(inter->sql_handle)) {
+		SQL->FreeResult(inter->sql_handle);
+		return 1;
+	}
+	SQL->GetData(inter->sql_handle, 0, &data, NULL); account_id = atoi(data);
+	SQL->GetData(inter->sql_handle, 1, &data, NULL); class_ = atoi(data);
+	SQL->GetData(inter->sql_handle, 2, &data, NULL); guild_id = atoi(data);
+	SQL->FreeResult(inter->sql_handle);
+	
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `sex` = '%c' WHERE `char_id` = '%d'", char_db, sex == SEX_MALE ? 'M' : 'F', char_id)) {
+		Sql_ShowDebug(inter->sql_handle);
+		return 1;
+	}
+	char_change_sex_sub(sex, account_id, char_id, class_, guild_id);
+
+	// disconnect player if online on char-server
+	chr->disconnect_player(account_id);
+
+	// notify all mapservers about this change
+	chr->changesex(account_id, sex);
+	return 0;
+}
+
 void char_parse_frommap_change_account(int fd)
 {
 	int result = 0; // 0-login-server request done, 1-player not found, 2-gm level too low, 3-login-server offline
@@ -3447,31 +3504,40 @@ void char_parse_frommap_change_account(int fd)
 	int acc = RFIFOL(fd,2); // account_id of who ask (-1 if server itself made this request)
 	const char* name = (char*)RFIFOP(fd,6); // name of the target character
 	int type = RFIFOW(fd,30); // type of operation: 1-block, 2-ban, 3-unblock, 4-unban, 5 changesex, 6 charban, 7 charunban
-	short year = RFIFOW(fd,32);
-	short month = RFIFOW(fd,34);
-	short day = RFIFOW(fd,36);
-	short hour = RFIFOW(fd,38);
-	short minute = RFIFOW(fd,40);
-	short second = RFIFOW(fd,42);
+	short year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
+	int sex = SEX_MALE;
+	if (type == 2 || type == 6) {
+		year = RFIFOW(fd,32);
+		month = RFIFOW(fd,34);
+		day = RFIFOW(fd,36);
+		hour = RFIFOW(fd,38);
+		minute = RFIFOW(fd,40);
+		second = RFIFOW(fd,42);
+	} else if (type == 8) {
+		sex = RFIFOB(fd, 32);
+	}
 	RFIFOSKIP(fd,44);
 
 	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
 
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id`,`char_id`,`unban_time` FROM `%s` WHERE `name` = '%s'", char_db, esc_name) )
+	if(SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id`,`char_id`,`unban_time` FROM `%s` WHERE `name` = '%s'", char_db, esc_name)) {
 		Sql_ShowDebug(inter->sql_handle);
-	else if( SQL->NumRows(inter->sql_handle) == 0 ) {
+	} else if (SQL->NumRows(inter->sql_handle) == 0) {
+		SQL->FreeResult(inter->sql_handle);
 		result = 1; // 1-player not found
-	} else if( SQL_SUCCESS != SQL->NextRow(inter->sql_handle) ) {
+	} else if (SQL_SUCCESS != SQL->NextRow(inter->sql_handle)) {
 		Sql_ShowDebug(inter->sql_handle);
+		SQL->FreeResult(inter->sql_handle);
 		result = 1; // 1-player not found
 	} else {
 		int account_id, char_id;
-		char* data;
+		char *data;
 		time_t unban_time;
 
 		SQL->GetData(inter->sql_handle, 0, &data, NULL); account_id = atoi(data);
 		SQL->GetData(inter->sql_handle, 1, &data, NULL); char_id = atoi(data);
 		SQL->GetData(inter->sql_handle, 2, &data, NULL); unban_time = atol(data);
+		SQL->FreeResult(inter->sql_handle);
 
 		if( chr->login_fd <= 0 ) {
 			result = 3; // 3-login-server offline
@@ -3480,40 +3546,37 @@ void char_parse_frommap_change_account(int fd)
 			result = 2; // 2-gm level too low
 #endif // 0
 		} else {
-			switch( type ) {
+			switch (type) {
 				case 1: // block
-						loginif->block_account(account_id, 5);
+					loginif->block_account(account_id, 5);
 				break;
 				case 2: // ban
-						loginif->ban_account(account_id, year, month, day, hour, minute, second);
+					loginif->ban_account(account_id, year, month, day, hour, minute, second);
 				break;
 				case 3: // unblock
-						loginif->block_account(account_id, 0);
+					loginif->block_account(account_id, 0);
 				break;
 				case 4: // unban
-						loginif->unban_account(account_id);
+					loginif->unban_account(account_id);
 				break;
 				case 5: // changesex
-						loginif->changesex(account_id);
+					loginif->changesex(account_id);
 				break;
-				case 6: //char ban
-				/* handled by char server, so no redirection */
-				{
+				case 6: // char ban - handled by char server, so no redirection
 					chr->ban(account_id, char_id, &unban_time, year, month, day, hour, minute, second);
-				}
 				break;
-			case 7: //char unban
-				chr->unban(char_id, &result);
+				case 7: // char unban - handled by char server, so no redirection
+					chr->unban(char_id, &result);
 				break;
-
+				case 8: // changecharsex - handled by char server, so no redirection
+					result = chr->changecharsex(char_id, sex);
+				break;
 			}
 		}
 	}
 
-	SQL->FreeResult(inter->sql_handle);
-
 	// send answer if a player ask, not if the server ask
-	if( acc != -1 && type != 5 ) { // Don't send answer for changesex
+	if (acc != -1 && type != 5 && type != 8) { // Don't send answer for changesex
 		chr->ask_name_ack(fd, acc, name, type, result);
 	}
 }
@@ -6028,6 +6091,7 @@ void char_defaults(void)
 	chr->mmo_char_tosql = char_mmo_char_tosql;
 	chr->memitemdata_to_sql = char_memitemdata_to_sql;
 	chr->inventory_to_sql = char_inventory_to_sql;
+	chr->mmo_gender = char_mmo_gender;
 	chr->mmo_chars_fromsql = char_mmo_chars_fromsql;
 	chr->mmo_char_fromsql = char_mmo_char_fromsql;
 	chr->mmo_char_sql_init = char_mmo_char_sql_init;
@@ -6095,6 +6159,7 @@ void char_defaults(void)
 	chr->ban = char_ban;
 	chr->unban = char_unban;
 	chr->ask_name_ack = char_ask_name_ack;
+	chr->changecharsex = char_changecharsex;
 	chr->parse_frommap_change_account = char_parse_frommap_change_account;
 	chr->parse_frommap_fame_list = char_parse_frommap_fame_list;
 	chr->parse_frommap_divorce_char = char_parse_frommap_divorce_char;

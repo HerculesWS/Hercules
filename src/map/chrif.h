@@ -103,7 +103,7 @@ struct chrif_interface {
 	bool (*char_reset_offline) (void);
 	bool (*send_users_tochar) (void);
 	bool (*char_online) (struct map_session_data *sd);
-	bool (*changesex) (struct map_session_data *sd);
+	bool (*changesex) (struct map_session_data *sd, bool change_account);
 	//int (*chardisconnect) (struct map_session_data *sd); // FIXME: Commented out in clif.c, function does not exist
 	bool (*divorce) (int partner_id1, int partner_id2);
 

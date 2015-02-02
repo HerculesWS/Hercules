@@ -62,7 +62,7 @@ struct chrif_interface chrif_s;
 //2b0a: Incoming/Outgoing, socket_datasync()
 //2b0b: Outgoing, update charserv skillid2idx
 //2b0c: Outgoing, chrif_changeemail -> 'change mail address ...'
-//2b0d: Incoming, chrif_changedsex -> 'Change sex of acc XY'
+//2b0d: Incoming, chrif_changedsex -> 'Change sex of acc XY' (or char)
 //2b0e: Outgoing, chrif_char_ask_name -> 'Do some operations (change sex, ban / unban etc)'
 //2b0f: Incoming, chrif_char_ask_name_answer -> 'answer of the 2b0e'
 //2b10: Outgoing, chrif_updatefamelist -> 'Update the fame ranking lists and send them'
@@ -744,10 +744,18 @@ bool chrif_changeemail(int id, const char *actual_email, const char *new_email) 
 }
 
 /*==========================================
- * S 2b0e <accid>.l <name>.24B <type>.w { <year>.w <month>.w <day>.w <hour>.w <minute>.w <second>.w }
+ * S 2b0e <accid>.l <name>.24B <type>.w { <additional fields>.12B }
+ * { <year>.w <month>.w <day>.w <hour>.w <minute>.w <second>.w }
  * Send an account modification request to the login server (via char server).
- * type of operation:
- *   1: block, 2: ban, 3: unblock, 4: unban, 5: changesex (use next function for 5), 6: charban
+ * type of operation {additional fields}:
+ *   1: block         { n/a }
+ *   2: ban           { <year>.w <month>.w <day>.w <hour>.w <minute>.w <second>.w }
+ *   3: unblock       { n/a }
+ *   4: unban         { n/a }
+ *   5: changesex     { n/a } -- use chrif_changesex
+ *   6: charban       { <year>.w <month>.w <day>.w <hour>.w <minute>.w <second>.w }
+ *   7: charunban     { n/a }
+ *   8: changecharsex { <sex>.b } -- use chrif_changesex
  *------------------------------------------*/
 bool chrif_char_ask_name(int acc, const char* character_name, unsigned short operation_type, int year, int month, int day, int hour, int minute, int second)
 {
@@ -772,14 +780,24 @@ bool chrif_char_ask_name(int acc, const char* character_name, unsigned short ope
 	return true;
 }
 
-bool chrif_changesex(struct map_session_data *sd) {
+/**
+ * Requests a sex change (either per character or per account).
+ * 
+ * @param sd             The character's data.
+ * @param change_account Whether to change the per-account sex.
+ * @retval true.
+ */
+bool chrif_changesex(struct map_session_data *sd, bool change_account)
+{
 	chrif_check(false);
 
 	WFIFOHEAD(chrif->fd,44);
 	WFIFOW(chrif->fd,0) = 0x2b0e;
 	WFIFOL(chrif->fd,2) = sd->status.account_id;
 	safestrncpy((char*)WFIFOP(chrif->fd,6), sd->status.name, NAME_LENGTH);
-	WFIFOW(chrif->fd,30) = 5;
+	WFIFOW(chrif->fd,30) = change_account ? 5 : 8;
+	if (!change_account)
+		WFIFOB(chrif->fd,32) = sd->status.sex == SEX_MALE ? SEX_FEMALE : SEX_MALE;
 	WFIFOSET(chrif->fd,44);
 
 	clif->message(sd->fd, msg_sd(sd,408)); //"Disconnecting to perform change-sex request..."
@@ -795,7 +813,7 @@ bool chrif_changesex(struct map_session_data *sd) {
  * R 2b0f <accid>.l <name>.24B <type>.w <answer>.w
  * Processing a reply to chrif->char_ask_name() (request to modify an account).
  * type of operation:
- *   1: block, 2: ban, 3: unblock, 4: unban, 5: changesex, 6: charban, 7: charunban
+ *   1: block, 2: ban, 3: unblock, 4: unban, 5: changesex, 6: charban, 7: charunban, 8: changecharsex
  * type of answer:
  *   0: login-server request done
  *   1: player not found
@@ -847,8 +865,11 @@ void chrif_changedsex(int fd) {
 		ShowNotice("chrif_changedsex %d.\n", acc);
 
 	// Path to activate this response:
-	// Map(start) (0x2b0e) -> Char(0x2727) -> Login
+	// Map(start) (0x2b0e type 5) -> Char(0x2727) -> Login
 	// Login(0x2723) [ALL] -> Char (0x2b0d)[ALL] -> Map (HERE)
+	// OR
+	// Map(start) (0x2b03 type 8) -> Char
+	// Char(0x2b0d)[ALL] -> Map (HERE)
 	// Char will usually be "logged in" despite being forced to log-out in the beginning
 	// of this process, but there's no need to perform map-server specific response
 	// as everything should been changed through char-server [Panikon]
