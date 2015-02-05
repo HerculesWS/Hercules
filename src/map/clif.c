@@ -15391,7 +15391,7 @@ void clif_quest_add(struct map_session_data *sd, struct quest *qd)
 		struct mob_db *monster;
 		WFIFOL(fd, i*30+17) = qi->objectives[i].mob;
 		WFIFOW(fd, i*30+21) = qd->count[i];
-		monster = mob->db(qi->objectives[i].count);
+		monster = mob->db(qi->objectives[i].mob);
 		memcpy(WFIFOP(fd, i*30+23), monster->jname, NAME_LENGTH);
 	}
 
