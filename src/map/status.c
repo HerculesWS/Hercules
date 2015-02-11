@@ -5064,7 +5064,7 @@ defType status_calc_def(struct block_list *bl, struct status_change *sc, int def
 	if (sc->data[SC_SHIELDSPELL_REF] && sc->data[SC_SHIELDSPELL_REF]->val1 == 2)
 		def += sc->data[SC_SHIELDSPELL_REF]->val2;
 	if (sc->data[SC_PRESTIGE])
-		def += def * sc->data[SC_PRESTIGE]->val1 / 100;
+		def += sc->data[SC_PRESTIGE]->val1;
 	if (sc->data[SC_VOLCANIC_ASH] && (bl->type==BL_MOB)) {
 		if (status_get_race(bl)==RC_PLANT)
 			def /= 2;
@@ -8836,7 +8836,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				val1 *= 15; // Defence added
 				if( sd )
 					val1 += 10 * pc->checkskill(sd,CR_DEFENDER);
-				val1 *= status->get_lv(bl) / 100;
+				val1 = val1 *  status->get_lv(bl) / 100;
 				break;
 			case SC_BANDING:
 				tick_time = 5000; // [GodLesZ] tick time
