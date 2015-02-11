@@ -83,6 +83,7 @@ enum HPluginDataTypes {
 	HPDT_MOBDB,
 	HPDT_MOBDATA,
 	HPDT_ITEMDATA,
+	HPDT_BGDATA,
 };
 
 /* used in macros and conf storage */
@@ -146,6 +147,10 @@ enum HPluginConfType {
 #define addToITEMDATA(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_ITEMDATA,HPMi->pid,(ptr),(data),(index),(autofree)))
 #define getFromITEMDATA(ptr,index) (HPMi->getFromHPData(HPDT_ITEMDATA,HPMi->pid,(ptr),(index)))
 #define removeFromITEMDATA(ptr,index) (HPMi->removeFromHPData(HPDT_ITEMDATA,HPMi->pid,(ptr),(index)))
+/* battleground_data */
+#define addToBGDATA(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_BGDATA,HPMi->pid,(ptr),(data),(index),(autofree)))
+#define getFromBGDATA(ptr,index) (HPMi->getFromHPData(HPDT_BGDATA,HPMi->pid,(ptr),(index)))
+#define removeFromBGDATA(ptr,index) (HPMi->removeFromHPData(HPDT_BGDATA,HPMi->pid,(ptr),(index)))
 
 /* HPMi->addCommand */
 #define addAtcommand(cname,funcname) \

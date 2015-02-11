@@ -48,6 +48,9 @@ struct battleground_data {
 	// Logout Event
 	char logout_event[EVENT_NAME_LENGTH];
 	char die_event[EVENT_NAME_LENGTH];
+	/* HPM Custom Struct */
+	struct HPluginData **hdata;
+	unsigned int hdatac;
 };
 
 struct bg_arena {
@@ -112,6 +115,7 @@ struct battleground_interface {
 	int (*send_xy_timer_sub) (DBKey key, DBData *data, va_list ap);
 	int (*send_xy_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*afk_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*team_db_final) (DBKey key, DBData *data, va_list ap);
 	/* */
 	enum bg_queue_types (*str2teamtype) (const char *str);
 	/* */
