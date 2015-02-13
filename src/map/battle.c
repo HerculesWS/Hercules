@@ -4356,7 +4356,6 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		else if(sc && sc->data[SC_FEARBREEZE] && sd->weapontype1==W_BOW
 			&& (i = sd->equip_index[EQI_AMMO]) >= 0 && sd->inventory_data[i] && sd->status.inventory[i].amount > 1){
 				int chance = rnd()%100;
-				wd.type = 0x08;
 				switch(sc->data[SC_FEARBREEZE]->val1){
 					case 5:
 						if( chance < 3){// 3 % chance to attack 5 times.
@@ -4380,8 +4379,11 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 							break;
 						}
 				}
-				wd.div_ = min(wd.div_,sd->status.inventory[i].amount);
-				sc->data[SC_FEARBREEZE]->val4 = wd.div_-1;
+				if ( wd.div_ > 1 ) {
+					wd.div_ = min(wd.div_, sd->status.inventory[i].amount);
+					sc->data[SC_FEARBREEZE]->val4 = wd.div_ - 1;
+					wd.type = 0x08;
+				}
 		}
 	}
 
