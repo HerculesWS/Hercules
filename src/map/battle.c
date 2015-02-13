@@ -4265,6 +4265,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					wd.div_ = tstatus->size + 2 + ( (rnd()%100 < 50-tstatus->size*10) ? 1 : 0 );
 				break;
 #ifdef RENEWAL
+			case PA_SHIELDCHAIN:
 			case NJ_KUNAI:
 			case HW_MAGICCRASHER:
 			case NJ_SYURIKEN:
@@ -4666,9 +4667,10 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 						break;
 				}
 				break;
+
+			case PA_SHIELDCHAIN:
 #endif
 			case CR_SHIELDBOOMERANG:
-			case PA_SHIELDCHAIN:
 				wd.damage = sstatus->batk;
 				if (sd) {
 					int damagevalue = 0;
@@ -4785,6 +4787,16 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				break;
 
 	#ifdef RENEWAL
+			case PA_SHIELDCHAIN:
+				if ( sd ) {
+					short index = sd->equip_index[EQI_HAND_L];
+					if ( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_ARMOR ) {
+						ATK_ADD(sd->inventory_data[index]->weight / 10 + 4 * sd->status.inventory[index].refine);
+					}
+				} else
+					ATK_ADD(sstatus->rhw.atk2); //Else use Atk2
+				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
+				break;
 			case NJ_TATAMIGAESHI:
 					ATK_RATE(200);
 				/* Fall through */
