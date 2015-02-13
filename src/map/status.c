@@ -3722,7 +3722,7 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
 #else
 			amotion = (1000 - 4 * st->agi - st->dex) * ((TBL_HOM*)bl)->homunculusDB->baseASPD / 1000;
 
-			amotion = status->calc_aspd_rate(bl, sc, bst->aspd_rate);
+			amotion = status->calc_aspd_rate(bl, sc, amotion);
 
 			if ( st->aspd_rate != 1000 )
 				amotion = amotion*st->aspd_rate / 1000;
