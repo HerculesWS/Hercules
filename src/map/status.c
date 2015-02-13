@@ -1258,11 +1258,11 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 	}
 
 	switch (target->type) {
-	case BL_PC:  pc->damage((TBL_PC*)target,src,hp,sp); break;
-	case BL_MOB: mob->damage((TBL_MOB*)target, src, hp); break;
-	case BL_HOM: homun->damaged((TBL_HOM*)target); break;
-	case BL_MER: mercenary->heal((TBL_MER*)target,hp,sp); break;
-	case BL_ELEM: elemental->heal((TBL_ELEM*)target,hp,sp); break;
+		case BL_PC:  pc->damage((TBL_PC*)target,src,hp,sp); break;
+		case BL_MOB: mob->damage((TBL_MOB*)target, src, hp); break;
+		case BL_HOM: homun->damaged((TBL_HOM*)target); break;
+		case BL_MER: mercenary->heal((TBL_MER*)target,hp,sp); break;
+		case BL_ELEM: elemental->heal((TBL_ELEM*)target,hp,sp); break;
 	}
 
 	if( src && target->type == BL_PC && (((TBL_PC*)target)->disguise) > 0 ) {// stop walking when attacked in disguise to prevent walk-delay bug
@@ -1283,14 +1283,14 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 	//&2: Also remove object from map.
 	//&4: Also delete object from memory.
 	switch (target->type) {
-	case BL_PC:  flag = pc->dead((TBL_PC*)target,src); break;
-	case BL_MOB: flag = mob->dead((TBL_MOB*)target, src, (flag&4) ? 3 : 0); break;
-	case BL_HOM: flag = homun->dead((TBL_HOM*)target); break;
-	case BL_MER: flag = mercenary->dead((TBL_MER*)target); break;
-	case BL_ELEM: flag = elemental->dead((TBL_ELEM*)target); break;
-	default: //Unhandled case, do nothing to object.
-		flag = 0;
-		break;
+		case BL_PC:  flag = pc->dead((TBL_PC*)target,src); break;
+		case BL_MOB: flag = mob->dead((TBL_MOB*)target, src, (flag&4) ? 3 : 0); break;
+		case BL_HOM: flag = homun->dead((TBL_HOM*)target); break;
+		case BL_MER: flag = mercenary->dead((TBL_MER*)target); break;
+		case BL_ELEM: flag = elemental->dead((TBL_ELEM*)target); break;
+		default: //Unhandled case, do nothing to object.
+			flag = 0;
+			break;
 	}
 
 	if(!flag) //Death canceled.

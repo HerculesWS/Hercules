@@ -263,7 +263,7 @@ int battle_delay_damage(int64 tick, int amotion, struct block_list *src, struct 
 
 	if (d_tbl && sc && check_distance_bl(target, d_tbl, sc->data[SC_DEVOTION]->val3) && damage > 0 && skill_id != PA_PRESSURE && skill_id != CR_REFLECTSHIELD)
 		damage = 0;
-
+	
 	if ( !battle_config.delay_battle_damage || amotion <= 1 ) {
 		map->freeblock_lock();
 		status_fix_damage(src, target, damage, ddelay); // We have to separate here between reflect damage and others [icescope]
@@ -3160,9 +3160,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 	}
 
 	if( bl->type == BL_MOB && !status->isdead(bl) && src != bl) {
-	  if (damage > 0 )
+		if ( damage > 0 )
 			mob->skill_event((TBL_MOB*)bl,src,timer->gettick(),flag);
-	  if (skill_id)
+		if (skill_id)
 			mob->skill_event((TBL_MOB*)bl,src,timer->gettick(),MSC_SKILLUSED|(skill_id<<16));
 	}
 	if( sd ) {
