@@ -1528,9 +1528,6 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case NPC_ENERGYDRAIN:
 					skillratio += 100 * skill_lv;
 					break;
-				case NPC_EARTHQUAKE:
-					skillratio += 100 + 100 * skill_lv + 100 * (skill_lv/2);
-					break;
 			#ifdef RENEWAL
 				case WZ_HEAVENDRIVE:
 				case WZ_METEOR:
@@ -1893,6 +1890,9 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case NPC_HELLJUDGEMENT:
 				case NPC_PULSESTRIKE:
 					skillratio += 100 * (skill_lv-1);
+					break;
+				case NPC_EARTHQUAKE:
+					skillratio += 100 + 100 * skill_lv + 100 * (skill_lv / 2);
 					break;
 				case RG_BACKSTAP:
 					if( sd && sd->status.weapon == W_BOW && battle_config.backstab_bow_penalty )
@@ -3601,15 +3601,6 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 
 		ad.damage = battle->calc_defense(BF_MAGIC, src, target, skill_id, skill_lv, ad.damage, flag.imdef, 0);
 
-		if (skill_id == NPC_EARTHQUAKE) {
-			//Adds atk2 to the damage, should be influenced by number of hits and skill-ratio, but not mdef reductions. [Skotlex]
-			//Also divide the extra bonuses from atk2 based on the number in range [Kevin]
-			if(mflag>0)
-				ad.damage+= (sstatus->rhw.atk2*skillratio/100)/mflag;
-			else
-				ShowError("Zero range by %d:%s, divide per 0 avoided!\n", skill_id, skill->get_name(skill_id));
-		}
-
 		if(ad.damage<1)
 			ad.damage=1;
 		else if(sc){//only applies when hit
@@ -4526,6 +4517,12 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			case NPC_UNDEADATTACK:
 			case NPC_TELEKINESISATTACK:
 			case NPC_BLEEDING:
+			case NPC_EARTHQUAKE:
+			case NPC_FIREBREATH:
+			case NPC_ICEBREATH:
+			case NPC_THUNDERBREATH:
+			case NPC_ACIDBREATH:
+			case NPC_DARKNESSBREATH:
 				hitrate += hitrate * 20 / 100;
 				break;
 			case KN_PIERCE:
@@ -5067,6 +5064,16 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 #ifdef RENEWAL
 		//Div fix.
 		damage_div_fix(wd.damage, wd.div_);
+#endif
+#if 0 // Can't find any source about this one even in eagis
+		if (skill_id == NPC_EARTHQUAKE) {
+			//Adds atk2 to the damage, should be influenced by number of hits and skill-ratio, but not mdef reductions. [Skotlex]
+			//Also divide the extra bonuses from atk2 based on the number in range [Kevin]
+			if ( wflag>0 )
+				ATK_ADD((sstatus->rhw.atk2*skillratio / 100) / wflag);
+			else
+				ShowError("Zero range by %d:%s, divide per 0 avoided!\n", skill_id, skill->get_name(skill_id));
+		}
 #endif
 		//Post skill/vit reduction damage increases
 		if (sc) {
