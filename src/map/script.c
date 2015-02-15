@@ -7995,11 +7995,14 @@ BUILDIN(delequip)
 		pc->unequipitem(sd,i,3); //recalculate bonus
 		pc->delitem(sd,i,1,0,2,LOG_TYPE_SCRIPT);
 		script_pushint(st,1);
-	} else {
-		script_pushint(st,0);
+		return true;
 	}
+	
+	ShowError("script:delequip: no item found in position '%d' for player '%s' (AID:%d/CID:%d).\n", num, sd->status.name,sd->status.account_id, sd->status.char_id);
+	st->state = END;
+	clif->scriptclose(sd, st->oid);
 
-	return true;
+	return false;
 }
 
 /*==========================================
