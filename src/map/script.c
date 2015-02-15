@@ -1322,8 +1322,15 @@ const char* parse_line(const char* p)
 	// attempt to process a variable assignment
 	p2 = script->parse_variable(p);
 
-	if( p2 != NULL )
-	{// variable assignment processed so leave the method
+	if (p2 != NULL) {
+		// variable assignment processed so leave the method
+		if (script->parse_syntax_for_flag) {
+			if (*p2 != ')')
+				disp_error_message("parse_line: need ')'", p2);
+		} else {
+			if (*p2 != ';')
+				disp_error_message("parse_line: need ';'", p2);
+		}
 		return script->parse_syntax_close(p2 + 1);
 	}
 
@@ -2382,34 +2389,33 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 	ShowMessage("\n");
 #endif
 #ifdef SCRIPT_DEBUG_DISASM
-	{
-		int i = 0,j;
-		while(i < script->pos) {
-			c_op op = script->get_com(script->buf,&i);
+	i = 0;
+	while(i < script->pos) {
+		int j = i;
+		c_op op = script->get_com(script->buf,&i);
 
-			ShowMessage("%06x %s", i, script->op2name(op));
-			j = i;
-			switch(op) {
-			case C_INT:
-				ShowMessage(" %d", script->get_num(script->buf,&i));
-				break;
-			case C_POS:
-				ShowMessage(" 0x%06x", *(int*)(script->buf+i)&0xffffff);
-				i += 3;
-				break;
-			case C_NAME:
-				j = (*(int*)(script->buf+i)&0xffffff);
-				ShowMessage(" %s", ( j == 0xffffff ) ? "?? unknown ??" : script->get_str(j));
-				i += 3;
-				break;
-			case C_STR:
-				j = strlen((char*)script->buf + i);
-				ShowMessage(" %s", script->buf + i);
-				i += j+1;
-				break;
-			}
-			ShowMessage(CL_CLL"\n");
+		ShowMessage("%06x %s", i, script->op2name(op));
+		j = i;
+		switch(op) {
+		case C_INT:
+			ShowMessage(" %d", script->get_num(script->buf,&i));
+			break;
+		case C_POS:
+			ShowMessage(" 0x%06x", *(int*)(script->buf+i)&0xffffff);
+			i += 3;
+			break;
+		case C_NAME:
+			j = (*(int*)(script->buf+i)&0xffffff);
+			ShowMessage(" %s", ( j == 0xffffff ) ? "?? unknown ??" : script->get_str(j));
+			i += 3;
+			break;
+		case C_STR:
+			j = (int)strlen((char*)script->buf + i);
+			ShowMessage(" %s", script->buf + i);
+			i += j+1;
+			break;
 		}
+		ShowMessage(CL_CLL"\n");
 	}
 #endif
 
