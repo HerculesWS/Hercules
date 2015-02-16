@@ -684,6 +684,7 @@ struct skill_tree_entry {
 	unsigned short idx;
 	unsigned char max;
 	unsigned char joblv;
+	short inherited;
 	struct {
 		short id;
 		unsigned short idx;

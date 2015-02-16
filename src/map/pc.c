@@ -1502,8 +1502,15 @@ int pc_calc_skilltree(struct map_session_data *sd)
 						}
 					}
 				}
-				if( sd->status.job_level < pc->skill_tree[c][i].joblv )
-					f = 0; // job level requirement wasn't satisfied
+				if ( sd->status.job_level < pc->skill_tree[c][i].joblv ) {
+					int x = pc->mapid2jobid(sd->class_, sd->status.sex); // need to get its own skilltree
+					if ( x > -1 ) {
+						x = pc->class2idx(x);
+						if ( !pc->skill_tree[x][i].inherited )
+							f = 0; // job level requirement wasn't satisfied
+					} else
+						f = 0;
+				}
 			}
 			if( f ) {
 				int inf2;
@@ -1597,8 +1604,16 @@ void pc_check_skilltree(struct map_session_data *sd, int skill_id)
 			}
 			if( !f )
 				continue;
-			if( sd->status.job_level < pc->skill_tree[c][i].joblv )
-				continue;
+
+			if ( sd->status.job_level < pc->skill_tree[c][i].joblv ) {
+				int x = pc->mapid2jobid(sd->class_, sd->status.sex); // need to get its own skilltree
+				if ( x > -1 ) {
+					x = pc->class2idx(x);
+					if ( !pc->skill_tree[x][i].inherited )
+						continue;
+				} else
+					continue;
+			}
 
 			j = skill->db[idx].inf2;
 			if( !sd->status.skill[idx].lv && (
@@ -10255,8 +10270,8 @@ void pc_read_skill_tree(void) {
 						break;
 					} else if ( pc->skill_tree[idx][a].id || ( pc->skill_tree[idx][a].id == NV_TRICKDEAD && ((pc->jobid2mapid(jnames[k].id)&(MAPID_BASEMASK|JOBL_2))!=MAPID_NOVICE) ) ) /* we skip trickdead for non-novices */
 						continue;/* skip */
-					
-					memcpy(&pc->skill_tree[idx][a],&pc->skill_tree[fidx][f],sizeof(pc->skill_tree[fidx][f]));
+					memcpy(&pc->skill_tree[idx][a], &pc->skill_tree[fidx][f], sizeof(pc->skill_tree[fidx][f]));
+					pc->skill_tree[idx][a].inherited = 1;
 				}
 				
 			}
