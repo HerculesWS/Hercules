@@ -904,7 +904,8 @@ int pc_isequip(struct map_session_data *sd,int n)
 		return 0;
 
 	if ( item->equip & EQP_AMMO ) {
-		if ( !pc_iscarton(sd) && (sd->status.class_ == JOB_GENETIC_T || sd->status.class_ == JOB_GENETIC) ) {
+		if ( (sd->state.active && !pc_iscarton(sd)) // check if sc data is already loaded.
+			&& (sd->status.class_ == JOB_GENETIC_T || sd->status.class_ == JOB_GENETIC) ) {
 			clif->msg(sd, 0x5EF);
 			return 0;
 		}
