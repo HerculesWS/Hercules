@@ -44,25 +44,24 @@ ecl_fild01,118,311,4	script	Teleport Cat No.1#1	4_M_BOSSCAT,{
 		mes "I'll see you later then";
 		close;
 	}
+	.@i = (.@menu/2)-1;
 	if (.@menu%2){
-		.@menu = (.@menu/2)-1;
-		if (Zeny < (.price[.@pindex[.@menu]]*1000)){
+		if (Zeny < (.price[.@pindex[.@i]]*1000)){
 			mes "[Teleport Cat]";
 			mes "I'm afraid it's not enough. Sorry, but it can't be done for free~";
 			close;
 		}
-		Zeny -= .price[.@pindex[.@menu]]*1000;
+		Zeny -= .price[.@pindex[.@i]]*1000;
 	}
 	else{
-		.@menu = (.@menu/2)-1;
-		if (countitem(Malang_Sp_Can) < .price[.@pindex[(.@menu/2)]] ){
+		if (countitem(Malang_Sp_Can) < .price[.@pindex[.@i]] ){
 			mes "[Teleport Cat]";
 			mes "I'm afraid it's not enough. Sorry, but it can't be done for free~";
 			close;
 		}
-		delitem Malang_Sp_Can,.price[.@pindex[(.@menu/2)]];
+		delitem Malang_Sp_Can,.price[.@pindex[.@i]];
 	}
-	warp .maps$[.@mindex],.x[.@mindex],.y[.@mindex];
+	warp .maps$[.@mindex[.@i]],.x[.@mindex[.@i]],.y[.@mindex[.@i]];
 	end;
 	
 OnInit:
