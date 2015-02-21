@@ -384,6 +384,7 @@ struct Battle_Config {
 	int skill_wall_check; // [Skotlex]
 	int official_cell_stack_limit; // [Playtester]
 	int custom_cell_stack_limit; // [Skotlex]
+	int check_occupied_cells; // [4144]
 	int skill_caster_check; // [Skotlex]
 	int sc_castcancel; // [Skotlex]
 	int pc_sc_def_rate; // [Skotlex]
