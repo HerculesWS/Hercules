@@ -782,7 +782,7 @@ bool chrif_changesex(struct map_session_data *sd) {
 	WFIFOW(chrif->fd,30) = 5;
 	WFIFOSET(chrif->fd,44);
 
-	clif->message(sd->fd, msg_txt(408)); //"Disconnecting to perform change-sex request..."
+	clif->message(sd->fd, msg_sd(sd,408)); //"Disconnecting to perform change-sex request..."
 
 	if (sd->fd)
 		clif->authfail_fd(sd->fd, 15);
@@ -815,20 +815,20 @@ bool chrif_char_ask_name_answer(int acc, const char* player_name, uint16 type, u
 		return false;
 	}
 
-	/* re-use previous msg_txt */
+	/* re-use previous msg_number */
 	if( type == 6 ) type = 2;
 	if( type == 7 ) type = 4;
 
 	if( type > 0 && type <= 5 )
-		snprintf(action,25,"%s",msg_txt(427+type)); //block|ban|unblock|unban|change the sex of
+		snprintf(action,25,"%s",msg_sd(sd,427+type)); //block|ban|unblock|unban|change the sex of
 	else
 		snprintf(action,25,"???");
 
 	switch( answer ) {
-		case 0 : sprintf(output, msg_txt(charsrv?434:424), action, NAME_LENGTH, player_name); break;
-		case 1 : sprintf(output, msg_txt(425), NAME_LENGTH, player_name); break;
-		case 2 : sprintf(output, msg_txt(426), action, NAME_LENGTH, player_name); break;
-		case 3 : sprintf(output, msg_txt(427), action, NAME_LENGTH, player_name); break;
+		case 0 : sprintf(output, msg_sd(sd,charsrv?434:424), action, NAME_LENGTH, player_name); break;
+		case 1 : sprintf(output, msg_sd(sd,425), NAME_LENGTH, player_name); break;
+		case 2 : sprintf(output, msg_sd(sd,426), action, NAME_LENGTH, player_name); break;
+		case 3 : sprintf(output, msg_sd(sd,427), action, NAME_LENGTH, player_name); break;
 		default: output[0] = '\0'; break;
 	}
 
@@ -943,23 +943,23 @@ void chrif_idbanned(int fd) {
 	if (RFIFOB(fd,6) == 0) { // 0: change of status
 		int ret_status = RFIFOL(fd,7); // status or final date of a banishment
 		if(0<ret_status && ret_status<=9)
-			clif->message(sd->fd, msg_txt(411+ret_status)); // Message IDs (for search convenience): 412, 413, 414, 415, 416, 417, 418, 419, 420
+			clif->message(sd->fd, msg_sd(sd,411+ret_status)); // Message IDs (for search convenience): 412, 413, 414, 415, 416, 417, 418, 419, 420
 		else if(ret_status==100)
-			clif->message(sd->fd, msg_txt(421));
+			clif->message(sd->fd, msg_sd(sd,421));
 		else
-			clif->message(sd->fd, msg_txt(420)); //"Your account has not more authorized."
+			clif->message(sd->fd, msg_sd(sd,420)); //"Your account has not more authorized."
 	} else if (RFIFOB(fd,6) == 1) { // 1: ban
 		time_t timestamp;
 		char tmpstr[2048];
 		timestamp = (time_t)RFIFOL(fd,7); // status or final date of a banishment
-		safestrncpy(tmpstr, msg_txt(423), sizeof(tmpstr)); //"Your account has been banished until "
+		safestrncpy(tmpstr, msg_sd(sd,423), sizeof(tmpstr)); //"Your account has been banished until "
 		strftime(tmpstr + strlen(tmpstr), 24, "%d-%m-%Y %H:%M:%S", localtime(&timestamp));
 		clif->message(sd->fd, tmpstr);
 	} else if (RFIFOB(fd,6) == 2) { // 2: change of status for character
 		time_t timestamp;
 		char tmpstr[2048];
 		timestamp = (time_t)RFIFOL(fd,7); // status or final date of a banishment
-		safestrncpy(tmpstr, msg_txt(433), sizeof(tmpstr)); //"This character has been banned until  "
+		safestrncpy(tmpstr, msg_sd(sd,433), sizeof(tmpstr)); //"This character has been banned until  "
 		strftime(tmpstr + strlen(tmpstr), 24, "%d-%m-%Y %H:%M:%S", localtime(&timestamp));
 		clif->message(sd->fd, tmpstr);
 	}

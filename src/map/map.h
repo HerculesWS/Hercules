@@ -867,6 +867,8 @@ struct map_interface {
 	char npc_market_data_db[32];
 
 	char default_codepage[32];
+	char default_lang_str[64];
+	uint8 default_lang_id;
 
 	int server_port;
 	char server_ip[32];
