@@ -845,6 +845,86 @@ const char* HP_atcommand_msg(int msg_number) {
 	}
 	return retVal___;
 }
+void HP_atcommand_expand_message_table(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_atcommand_expand_message_table_pre ) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_expand_message_table_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_atcommand_expand_message_table_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.atcommand.expand_message_table();
+	}
+	if( HPMHooks.count.HP_atcommand_expand_message_table_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_expand_message_table_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_atcommand_expand_message_table_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+const char* HP_atcommand_msgfd(int fd, int msg_number) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if( HPMHooks.count.HP_atcommand_msgfd_pre ) {
+		const char* (*preHookFunc) (int *fd, int *msg_number);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_msgfd_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_atcommand_msgfd_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd, &msg_number);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.atcommand.msgfd(fd, msg_number);
+	}
+	if( HPMHooks.count.HP_atcommand_msgfd_post ) {
+		const char* (*postHookFunc) (const char* retVal___, int *fd, int *msg_number);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_msgfd_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_atcommand_msgfd_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &fd, &msg_number);
+		}
+	}
+	return retVal___;
+}
+const char* HP_atcommand_msgsd(struct map_session_data *sd, int msg_number) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if( HPMHooks.count.HP_atcommand_msgsd_pre ) {
+		const char* (*preHookFunc) (struct map_session_data *sd, int *msg_number);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_msgsd_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_atcommand_msgsd_pre[hIndex].func;
+			retVal___ = preHookFunc(sd, &msg_number);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.atcommand.msgsd(sd, msg_number);
+	}
+	if( HPMHooks.count.HP_atcommand_msgsd_post ) {
+		const char* (*postHookFunc) (const char* retVal___, struct map_session_data *sd, int *msg_number);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_msgsd_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_atcommand_msgsd_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, &msg_number);
+		}
+	}
+	return retVal___;
+}
 /* battle */
 void HP_battle_init(bool minimal) {
 	int hIndex = 0;
@@ -58343,6 +58423,251 @@ unsigned short HP_script_mapindexname2id(struct script_state *st, const char *na
 		}
 	}
 	return retVal___;
+}
+int HP_script_string_dup(char *str) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_script_string_dup_pre ) {
+		int (*preHookFunc) (char *str);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_string_dup_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_string_dup_pre[hIndex].func;
+			retVal___ = preHookFunc(str);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.string_dup(str);
+	}
+	if( HPMHooks.count.HP_script_string_dup_post ) {
+		int (*postHookFunc) (int retVal___, char *str);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_string_dup_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_string_dup_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, str);
+		}
+	}
+	return retVal___;
+}
+void HP_script_load_translations(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_script_load_translations_pre ) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_load_translations_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_load_translations_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.load_translations();
+	}
+	if( HPMHooks.count.HP_script_load_translations_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_load_translations_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_load_translations_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+void HP_script_load_translation(const char *file, uint8 lang_id, uint32 *total) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_script_load_translation_pre ) {
+		void (*preHookFunc) (const char *file, uint8 *lang_id, uint32 *total);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_load_translation_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_load_translation_pre[hIndex].func;
+			preHookFunc(file, &lang_id, total);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.load_translation(file, lang_id, total);
+	}
+	if( HPMHooks.count.HP_script_load_translation_post ) {
+		void (*postHookFunc) (const char *file, uint8 *lang_id, uint32 *total);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_load_translation_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_load_translation_post[hIndex].func;
+			postHookFunc(file, &lang_id, total);
+		}
+	}
+	return;
+}
+int HP_script_translation_db_destroyer(DBKey key, DBData *data, va_list ap) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_script_translation_db_destroyer_pre ) {
+		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_translation_db_destroyer_pre; hIndex++ ) {
+			va_list ap___copy; va_copy(ap___copy, ap);
+			preHookFunc = HPMHooks.list.HP_script_translation_db_destroyer_pre[hIndex].func;
+			retVal___ = preHookFunc(&key, data, ap___copy);
+			va_end(ap___copy);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		va_list ap___copy; va_copy(ap___copy, ap);
+		retVal___ = HPMHooks.source.script.translation_db_destroyer(key, data, ap___copy);
+		va_end(ap___copy);
+	}
+	if( HPMHooks.count.HP_script_translation_db_destroyer_post ) {
+		int (*postHookFunc) (int retVal___, DBKey *key, DBData *data, va_list ap);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_translation_db_destroyer_post; hIndex++ ) {
+			va_list ap___copy; va_copy(ap___copy, ap);
+			postHookFunc = HPMHooks.list.HP_script_translation_db_destroyer_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &key, data, ap___copy);
+			va_end(ap___copy);
+		}
+	}
+	return retVal___;
+}
+void HP_script_clear_translations(bool reload) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_script_clear_translations_pre ) {
+		void (*preHookFunc) (bool *reload);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_clear_translations_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_clear_translations_pre[hIndex].func;
+			preHookFunc(&reload);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.clear_translations(reload);
+	}
+	if( HPMHooks.count.HP_script_clear_translations_post ) {
+		void (*postHookFunc) (bool *reload);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_clear_translations_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_clear_translations_post[hIndex].func;
+			postHookFunc(&reload);
+		}
+	}
+	return;
+}
+int HP_script_parse_cleanup_timer(int tid, int64 tick, int id, intptr_t data) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_script_parse_cleanup_timer_pre ) {
+		int (*preHookFunc) (int *tid, int64 *tick, int *id, intptr_t *data);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_parse_cleanup_timer_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_parse_cleanup_timer_pre[hIndex].func;
+			retVal___ = preHookFunc(&tid, &tick, &id, &data);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.parse_cleanup_timer(tid, tick, id, data);
+	}
+	if( HPMHooks.count.HP_script_parse_cleanup_timer_post ) {
+		int (*postHookFunc) (int retVal___, int *tid, int64 *tick, int *id, intptr_t *data);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_parse_cleanup_timer_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_parse_cleanup_timer_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &tid, &tick, &id, &data);
+		}
+	}
+	return retVal___;
+}
+uint8 HP_script_add_language(const char *name) {
+	int hIndex = 0;
+	uint8 retVal___ = 0;
+	if( HPMHooks.count.HP_script_add_language_pre ) {
+		uint8 (*preHookFunc) (const char *name);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_add_language_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_add_language_pre[hIndex].func;
+			retVal___ = preHookFunc(name);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.add_language(name);
+	}
+	if( HPMHooks.count.HP_script_add_language_post ) {
+		uint8 (*postHookFunc) (uint8 retVal___, const char *name);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_add_language_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_add_language_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, name);
+		}
+	}
+	return retVal___;
+}
+const char* HP_script_get_translation_file_name(const char *file) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if( HPMHooks.count.HP_script_get_translation_file_name_pre ) {
+		const char* (*preHookFunc) (const char *file);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_translation_file_name_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_get_translation_file_name_pre[hIndex].func;
+			retVal___ = preHookFunc(file);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.get_translation_file_name(file);
+	}
+	if( HPMHooks.count.HP_script_get_translation_file_name_post ) {
+		const char* (*postHookFunc) (const char* retVal___, const char *file);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_translation_file_name_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_get_translation_file_name_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, file);
+		}
+	}
+	return retVal___;
+}
+void HP_script_parser_clean_leftovers(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_script_parser_clean_leftovers_pre ) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_parser_clean_leftovers_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_parser_clean_leftovers_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.parser_clean_leftovers();
+	}
+	if( HPMHooks.count.HP_script_parser_clean_leftovers_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_parser_clean_leftovers_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_parser_clean_leftovers_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
 }
 /* searchstore */
 bool HP_searchstore_open(struct map_session_data *sd, unsigned int uses, unsigned short effect) {
