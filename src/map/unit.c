@@ -454,7 +454,7 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 		ud->to_x = bl->x;
 		ud->to_y = bl->y;
 
-		if(map->count_oncell(bl->m, x, y, BL_CHAR|BL_NPC, 1) > battle_config.official_cell_stack_limit) {
+		if(battle_config.official_cell_stack_limit && map->count_oncell(bl->m, x, y, BL_CHAR|BL_NPC, 1) > battle_config.official_cell_stack_limit) {
 			//Walked on occupied cell, call unit_walktoxy again
 			if(ud->steptimer != INVALID_TIMER) {
 				//Execute step timer on next step instead
@@ -493,7 +493,7 @@ int unit_walktoxy( struct block_list *bl, short x, short y, int flag)
 
 	if( ud == NULL) return 0;
 
-	if ((flag&8) && !map->closest_freecell(bl->m, &x, &y, BL_CHAR|BL_NPC, 1)) //This might change x and y
+	if (battle_config.check_occupied_cells && (flag&8) && !map->closest_freecell(bl->m, &x, &y, BL_CHAR|BL_NPC, 1)) //This might change x and y
 		return 0;
 
 	if (!path->search(&wpd, bl->m, bl->x, bl->y, x, y, flag&1, CELL_CHKNOPASS)) // Count walk path cells
