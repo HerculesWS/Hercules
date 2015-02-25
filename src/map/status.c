@@ -8813,8 +8813,8 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_LG_REFLECTDAMAGE:
 				val2 = 15 + 5 * val1;
 				val3 = 25 + 5 * val1; //Number of Reflects
-				val4 = tick/10000;
-				tick_time = 10000; // [GodLesZ] tick time
+				val4 = tick/1000;
+				tick_time = 1000; // [GodLesZ] tick time
 				break;
 			case SC_FORCEOFVANGUARD:
 				val2 = 8 + 12 * val1; // Chance
