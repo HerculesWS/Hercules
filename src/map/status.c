@@ -2149,6 +2149,11 @@ unsigned int status_base_pc_maxsp(struct map_session_data* sd, struct status_dat
 	return (unsigned int)cap_value(val,0,UINT_MAX);
 }
 
+void status_calc_pc_additional(struct map_session_data* sd, enum e_status_calc_opt opt) {
+	/* Just used for Plugin to give bonuses. */
+	return;
+}
+
 //Calculates player data from scratch without counting SC adjustments.
 //Should be invoked whenever players raise stats, learn passive skills or change equipment.
 int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
@@ -2530,6 +2535,8 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 		if( data && data->script )
 			script->run(data->script,0,sd->bl.id,0);
 	}
+	
+	status->calc_pc_additional(sd, opt);
 
 	if( sd->pd ) { // Pet Bonus
 		struct pet_data *pd = sd->pd;
@@ -12319,6 +12326,7 @@ void status_defaults(void) {
 	status->calc_mob_ = status_calc_mob_;
 	status->calc_pet_ = status_calc_pet_;
 	status->calc_pc_ = status_calc_pc_;
+	status->calc_pc_additional = status_calc_pc_additional;
 	status->calc_homunculus_ = status_calc_homunculus_;
 	status->calc_mercenary_ = status_calc_mercenary_;
 	status->calc_elemental_ = status_calc_elemental_;

@@ -2055,6 +2055,7 @@ struct status_interface {
 	int (*calc_mob_) (struct mob_data* md, enum e_status_calc_opt opt);
 	int (*calc_pet_) (struct pet_data* pd, enum e_status_calc_opt opt);
 	int (*calc_pc_) (struct map_session_data* sd, enum e_status_calc_opt opt);
+	void (*calc_pc_additional) (struct map_session_data* sd, enum e_status_calc_opt opt);
 	int (*calc_homunculus_) (struct homun_data *hd, enum e_status_calc_opt opt);
 	int (*calc_mercenary_) (struct mercenary_data *md, enum e_status_calc_opt opt);
 	int (*calc_elemental_) (struct elemental_data *ed, enum e_status_calc_opt opt);
