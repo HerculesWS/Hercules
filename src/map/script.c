@@ -4682,6 +4682,9 @@ void script_load_translations(void) {
 	int i, size;
 	uint32 total = 0;
 	uint8 lang_id = 0, k;
+
+	if (map->minimal) // No translations in minimal mode
+		return;
 	
 	script->translation_db = strdb_alloc(DB_OPT_DUP_KEY, NAME_LENGTH*2+1);
 	
