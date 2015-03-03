@@ -282,6 +282,14 @@ OnInit:
 	sellitem Ice_Stone;
 	sellitem Wind_Stone;
 	sellitem Shadow_Orb;
+	sellitem Charm_Fire;
+	sellitem Charm_Ice;
+	sellitem Charm_Wind;
+	sellitem Charm_Earth;
+	if (checkre(0)){
+		sellitem Fox_Armguard;
+		sellitem Special_Ninja_Suit;
+	}
 }
 
 
