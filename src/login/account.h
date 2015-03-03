@@ -18,11 +18,19 @@ typedef struct AccountDBIterator AccountDBIterator;
 AccountDB* account_db_sql(void);
 #endif // HERCULES_CORE
 
+#define AUTH_HASH_LEN 64 // Password hash of 64 bytes (NOT A STRING - no null terminator).
+#define AUTH_SALT_LEN AUTH_HASH_LEN // Password salt should be at least the hash size.
+#define AUTH_ITER_COUNT 10000 // Iteration count for the PBKDF2 hashing algorithm.
+
 struct mmo_account
 {
 	int account_id;
 	char userid[NAME_LENGTH];
-	char pass[32+1];            // 23+1 for plaintext, 32+1 for md5-ed passwords
+    char pass[32+1];            // Old legacy password storage, used only for conversion.
+                                // 23+1 for plaintext, 32+1 for md5-ed passwords (legacy)
+	unsigned char hash[AUTH_HASH_LEN];  // Password hash.
+    unsigned char salt[AUTH_SALT_LEN];  // Salt generated for the password hashes.
+    int iter_count;             // Iteration count for PBKDF2 password hashing.
 	char sex;                   // gender (M/F/S)
 	char email[40];             // e-mail (by default: a@a.com)
 	int group_id;               // player group id

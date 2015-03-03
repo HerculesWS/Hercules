@@ -16,6 +16,7 @@
 #include "loginlog.h"
 #include "../common/HPM.h"
 #include "../common/core.h"
+#include "../common/crypto.h"
 #include "../common/db.h"
 #include "../common/malloc.h"
 #include "../common/md5calc.h"
@@ -134,7 +135,8 @@ static int login_online_data_cleanup(int tid, int64 tick, int id, intptr_t data)
 //--------------------------------------------------------------------
 int charif_sendallwos(int sfd, uint8* buf, size_t len)
 {
-	int i, c;
+	size_t i;
+    int c;
 
 	for( i = 0, c = 0; i < ARRAYLENGTH(server); ++i )
 	{
@@ -187,7 +189,6 @@ void chrif_on_disconnect(int id)
 	chrif_server_reset(id);
 }
 
-
 //-----------------------------------------------------
 // periodic ip address synchronization
 //-----------------------------------------------------
@@ -199,9 +200,9 @@ static int login_sync_ip_addresses(int tid, int64 tick, int id, intptr_t data) {
 	return 0;
 }
 
-
 //-----------------------------------------------------
 // encrypted/unencrypted password check (from eApp)
+// This is the legacy passwordencrypt authentication.
 //-----------------------------------------------------
 bool login_check_encrypted(const char* str1, const char* str2, const char* passwd)
 {
@@ -213,20 +214,103 @@ bool login_check_encrypted(const char* str1, const char* str2, const char* passw
 	return (0==strcmp(passwd, md5str));
 }
 
-bool login_check_password(const char* md5key, int passwdenc, const char* passwd, const char* refpass)
+//-----------------------------------------------------
+// Legacy authentication. First authenticate the user
+// with the old pass account column (using md5 if
+// old_md5_passwds is true) and then convert the
+// account to the new PBKDF2 format.
+//-----------------------------------------------------
+bool login_check_password_legacy(const char *pass, struct mmo_account *acc)
 {
-	if(passwdenc == 0)
-	{
-		return (0==strcmp(passwd, refpass));
-	}
-	else
-	{
-		// password mode set to 1 -> md5(md5key, refpass) enable with <passwordencrypt></passwordencrypt>
-		// password mode set to 2 -> md5(refpass, md5key) enable with <passwordencrypt2></passwordencrypt2>
+    unsigned char salt[AUTH_SALT_LEN];
+    unsigned char hash[AUTH_SALT_LEN];
 
-		return ((passwdenc&0x01) && login->check_encrypted(md5key, refpass, passwd)) ||
-		       ((passwdenc&0x02) && login->check_encrypted(refpass, md5key, passwd));
-	}
+    if(login_config.old_md5_passwds)
+    {
+        char md5pass[PASSWD_LEN];
+        MD5_String(pass, md5pass);
+
+        if(strcmp(md5pass, acc->pass) != 0)
+            return false;
+    }
+    else
+    {
+        if(strcmp(pass, acc->pass) != 0)
+            return false;
+    }
+
+    // Authenticated successfully, now convert the account.
+    // Must convert in an atomic manner.
+
+    if(!crypto_random_bytes(salt, AUTH_SALT_LEN))
+        return false;
+
+    if(!crypto_pbkdf2_hmac_sha512(pass, strlen(pass), salt, AUTH_SALT_LEN,
+                AUTH_ITER_COUNT, AUTH_HASH_LEN, hash))
+        return false;
+
+    // Set up the struct to save.
+    memcpy(acc->hash, hash, AUTH_HASH_LEN);
+    memcpy(acc->salt, salt, AUTH_SALT_LEN);
+    acc->iter_count = AUTH_ITER_COUNT;
+    memset(acc->pass, 0, 32+1); // Purge the plaintext password from the memory.
+
+    if(!accounts->save(accounts, acc))
+        return false;
+
+    return true;
+}
+
+//-----------------------------------------------------
+// PBKDF2 authentication. Just calculate the hash with
+// the given info and compare the two hashes.
+//-----------------------------------------------------
+bool login_check_password_pbkdf2(const char *pass, const struct mmo_account *acc)
+{
+    unsigned char hash[AUTH_HASH_LEN];
+
+    if(!crypto_pbkdf2_hmac_sha512(pass, strlen(pass), acc->salt, AUTH_SALT_LEN,
+                acc->iter_count, AUTH_HASH_LEN, hash))
+        return false;
+
+    return memcmp(hash, acc->hash, AUTH_HASH_LEN) == 0;
+}
+
+//-----------------------------------------------------
+// Password authentication.
+// pass is the received password to authenticate.
+// If passwdenc is 0, the authentication is made with
+// the new PBKDF2 system, converting the account if it
+// wasn't converted yet.
+// If passwdenc is != 0, this means that the legacy
+// passwordencrypt authentication should be used.
+// md5key is used in the legacy passwordencrypt
+// authentication.
+// acc is the mmo_account of the user to be
+// authenticated.
+//-----------------------------------------------------
+bool login_check_password(const char *pass, int passwdenc, const char *md5key, struct mmo_account *acc)
+{
+    if(!passwdenc)
+    {
+        // If the old acc->pass column is empty, the account is assumed converted and
+        // the authentication is through the new method.
+        // If acc->pass is not empty, then the old authentication is made and the
+        // account is converted.
+        if(!acc->pass)
+            return login->check_password_pbkdf2(pass, acc);
+        else
+            return login->check_password_legacy(pass, acc);
+    }
+    else
+    {
+        // Legacy passwordencrypt authentication.
+        // password mode set to 1 -> md5(md5key, refpass) enable with <passwordencrypt></passwordencrypt>
+        // password mode set to 2 -> md5(refpass, md5key) enable with <passwordencrypt2></passwordencrypt2>
+
+        return ((passwdenc&0x01) && login->check_encrypted(md5key, acc->pass, pass)) ||
+               ((passwdenc&0x02) && login->check_encrypted(acc->pass, md5key, pass));
+    }
 }
 
 //--------------------------------------------
@@ -754,10 +838,7 @@ void login_fromchar_accinfo(int fd, int account_id, int u_fd, int u_aid, int u_g
 		WFIFOHEAD(fd,183);
 		WFIFOW(fd,0) = 0x2737;
 		safestrncpy((char*)WFIFOP(fd,2), acc->userid, NAME_LENGTH);
-		if (u_group >= acc->group_id)
-			safestrncpy((char*)WFIFOP(fd,26), acc->pass, 33);
-		else
-			memset(WFIFOP(fd,26), '\0', 33);
+		memset(WFIFOP(fd,26), '\0', 33);
 		safestrncpy((char*)WFIFOP(fd,59), acc->email, 40);
 		safestrncpy((char*)WFIFOP(fd,99), acc->last_ip, 16);
 		WFIFOL(fd,115) = acc->group_id;
@@ -804,7 +885,8 @@ void login_fromchar_parse_accinfo(int fd)
 //--------------------------------
 int login_parse_fromchar(int fd)
 {
-	int j, id;
+	int j;
+    size_t id;
 	uint32 ipl;
 	char ip[16];
 
@@ -1025,14 +1107,17 @@ int login_mmo_auth_new(const char* userid, const char* pass, const char sex, con
 
 	// check if the account doesn't exist already
 	if( accounts->load_str(accounts, &acc, userid) ) {
-		ShowNotice("Attempt of creation of an already existing account (account: %s_%c, pass: %s, received pass: %s)\n", userid, sex, acc.pass, pass);
+		ShowNotice("Attempt of creation of an already existing account (account: %s_%c)\n", userid, sex);
 		return 1; // 1 = Incorrect Password
 	}
 
 	memset(&acc, '\0', sizeof(acc));
 	acc.account_id = -1; // assigned by account db
 	safestrncpy(acc.userid, userid, sizeof(acc.userid));
-	safestrncpy(acc.pass, pass, sizeof(acc.pass));
+    crypto_random_bytes(acc.salt, AUTH_SALT_LEN);
+    acc.iter_count = AUTH_ITER_COUNT;
+    crypto_pbkdf2_hmac_sha512(pass, strlen(pass), acc.salt, AUTH_SALT_LEN,
+            acc.iter_count, AUTH_HASH_LEN, acc.hash);
 	acc.sex = sex;
 	safestrncpy(acc.email, "a@a.com", sizeof(acc.email));
 	acc.expiration_time = ( login_config.start_limited_time != -1 ) ? time(NULL) + login_config.start_limited_time : 0;
@@ -1046,7 +1131,7 @@ int login_mmo_auth_new(const char* userid, const char* pass, const char sex, con
 	if( !accounts->create(accounts, &acc) )
 		return 0;
 
-	ShowNotice("Account creation (account %s, id: %d, pass: %s, sex: %c)\n", acc.userid, acc.account_id, acc.pass, acc.sex);
+	ShowNotice("Account creation (account %s, id: %d, sex: %c)\n", acc.userid, acc.account_id, acc.sex);
 
 	if( DIFF_TICK(tick, new_reg_tick) > 0 ) {// Update the registration check.
 		num_regs = 0;
@@ -1060,7 +1145,7 @@ int login_mmo_auth_new(const char* userid, const char* pass, const char sex, con
 //-----------------------------------------------------
 // Check/authentication of a connection
 //-----------------------------------------------------
-int login_mmo_auth(struct login_session_data* sd, bool isServer) {
+int login_mmo_auth(struct login_session_data* sd, const char *pass, int passwdenc, bool isServer) {
 	struct mmo_account acc;
 	size_t len;
 
@@ -1094,8 +1179,8 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 
 	// Account creation with _M/_F
 	if( login_config.new_account_flag ) {
-		if (len > 2 && sd->passwd[0] != '\0' && // valid user and password lengths
-			sd->passwdenc == 0 && // unencoded password
+		if (len > 2 && pass[0] != '\0' && // valid user and password lengths
+			passwdenc == 0 && // unencoded password
 			sd->userid[len-2] == '_' && memchr("FfMm", sd->userid[len-1], 4)) // _M/_F suffix
 		{
 			int result;
@@ -1104,36 +1189,36 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 			len -= 2;
 			sd->userid[len] = '\0';
 
-			result = login->mmo_auth_new(sd->userid, sd->passwd, TOUPPER(sd->userid[len+1]), ip);
+			result = login->mmo_auth_new(sd->userid, pass, TOUPPER(sd->userid[len+1]), ip);
 			if( result != -1 )
 				return result;// Failed to make account. [Skotlex].
 		}
 	}
 
 	if( len <= 0 ) { /** a empty password is fine, a userid is not. **/
-		ShowNotice("Empty userid (received pass: '%s', ip: %s)\n", sd->passwd, ip);
+		ShowNotice("Empty userid (received pass, ip: %s)\n", ip);
 		return 0; // 0 = Unregistered ID
 	}
 
 	if( !accounts->load_str(accounts, &acc, sd->userid) ) {
-		ShowNotice("Unknown account (account: %s, received pass: %s, ip: %s)\n", sd->userid, sd->passwd, ip);
+		ShowNotice("Unknown account (account: %s, received pass, ip: %s)\n", sd->userid, ip);
 		return 0; // 0 = Unregistered ID
 	}
 
-	if( !login->check_password(sd->md5key, sd->passwdenc, sd->passwd, acc.pass) ) {
-		ShowNotice("Invalid password (account: '%s', pass: '%s', received pass: '%s', ip: %s)\n", sd->userid, acc.pass, sd->passwd, ip);
+	if( !login->check_password(sd->md5key, passwdenc, pass, &acc) ) {
+		ShowNotice("Invalid password (account: '%s', ip: %s)\n", sd->userid, ip);
 		return 1; // 1 = Incorrect Password
 	}
 
 	if( acc.unban_time != 0 && acc.unban_time > time(NULL) ) {
 		char tmpstr[24];
 		timestamp2string(tmpstr, sizeof(tmpstr), acc.unban_time, login_config.date_format);
-		ShowNotice("Connection refused (account: %s, pass: %s, banned until %s, ip: %s)\n", sd->userid, sd->passwd, tmpstr, ip);
+		ShowNotice("Connection refused (account: %s, banned until %s, ip: %s)\n", sd->userid, tmpstr, ip);
 		return 6; // 6 = Your are Prohibited to log in until %s
 	}
 
 	if( acc.state != 0 ) {
-		ShowNotice("Connection refused (account: %s, pass: %s, state: %d, ip: %s)\n", sd->userid, sd->passwd, acc.state, ip);
+		ShowNotice("Connection refused (account: %s, state: %d, ip: %s)\n", sd->userid, acc.state, ip);
 		return acc.state - 1;
 	}
 
@@ -1157,7 +1242,7 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 			int i;
 
 			if( !sd->has_client_hash ) {
-				ShowNotice("Client didn't send client hash (account: %s, pass: %s, ip: %s)\n", sd->userid, sd->passwd, ip);
+				ShowNotice("Client didn't send client hash (account: %s, ip: %s)\n", sd->userid, ip);
 				return 5;
 			}
 
@@ -1165,7 +1250,7 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 				sprintf(&smd5[i * 2], "%02x", sd->client_hash[i]);
 			smd5[32] = '\0';
 
-			ShowNotice("Invalid client hash (account: %s, pass: %s, sent md5: %s, ip: %s)\n", sd->userid, sd->passwd, smd5, ip);
+			ShowNotice("Invalid client hash (account: %s, sent md5: %s, ip: %s)\n", sd->userid, smd5, ip);
 			return 5;
 		}
 	}
@@ -1219,7 +1304,7 @@ void login_auth_ok(struct login_session_data* sd)
 	uint8 server_num, n;
 	uint32 subnet_char_ip;
 	struct login_auth_node* node;
-	int i;
+	size_t i;
 
 	if( runflag != LOGINSERVER_ST_RUNNING )
 	{
@@ -1424,16 +1509,14 @@ void login_parse_client_md5(int fd, struct login_session_data* sd)
 
 bool login_parse_client_login(int fd, struct login_session_data* sd, const char *const ip)
 {
-	uint32 version;
-	char username[NAME_LENGTH];
 	char password[PASSWD_LEN];
-	unsigned char passhash[16];
-	uint8 clienttype;
+    int passwdenc;
 	int result;
 	uint16 command = RFIFOW(fd,0);
 	bool israwpass = (command==0x0064 || command==0x0277 || command==0x02b0 || command == 0x0825);
 
 	// Shinryo: For the time being, just use token as password.
+    // Utsch: It seems 'for the time being' is forever.
 	if(command == 0x0825)
 	{
 		char *accname = (char *)RFIFOP(fd, 9);
@@ -1441,59 +1524,56 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 		size_t uAccLen = strlen(accname);
 		size_t uTokenLen = RFIFOREST(fd) - 0x5C;
 
-		version = RFIFOL(fd,4);
+		sd->version = RFIFOL(fd,4);
 
 		if(uAccLen <= 0 || uTokenLen <= 0) {
 			login->auth_failed(sd, 3);
 			return true;
 		}
 
-		safestrncpy(username, accname, NAME_LENGTH);
+		safestrncpy(sd->userid, accname, NAME_LENGTH);
 		safestrncpy(password, token, min(uTokenLen+1, PASSWD_LEN)); // Variable-length field, don't copy more than necessary
-		clienttype = RFIFOB(fd, 8);
+		sd->clienttype = RFIFOB(fd, 8);
 	}
 	else
 	{
-		version = RFIFOL(fd,2);
-		safestrncpy(username, (const char*)RFIFOP(fd,6), NAME_LENGTH);
+		sd->version = RFIFOL(fd,2);
+		safestrncpy(sd->userid, (const char*)RFIFOP(fd,6), NAME_LENGTH);
 		if( israwpass )
 		{
 			safestrncpy(password, (const char*)RFIFOP(fd,30), NAME_LENGTH);
-			clienttype = RFIFOB(fd,54);
+			sd->clienttype = RFIFOB(fd,54);
 		}
 		else
 		{
-			memcpy(passhash, RFIFOP(fd,30), 16);
-			clienttype = RFIFOB(fd,46);
+            // Get the MD5-encoded password and convert from binary to string.
+            bin2hex(password, RFIFOP(fd,30), 16);
+			sd->clienttype = RFIFOB(fd,46);
 		}
 	}
 	RFIFOSKIP(fd,RFIFOREST(fd)); // assume no other packet was sent
 
-	sd->clienttype = clienttype;
-	sd->version = version;
-	safestrncpy(sd->userid, username, NAME_LENGTH);
 	if( israwpass )
 	{
 		ShowStatus("Request for connection of %s (ip: %s).\n", sd->userid, ip);
-		safestrncpy(sd->passwd, password, PASSWD_LEN);
-		if( login_config.use_md5_passwds )
-			MD5_String(sd->passwd, sd->passwd);
-		sd->passwdenc = 0;
+		if( login_config.old_md5_passwds )
+			MD5_String(password, password);
+        passwdenc = 0;
 	}
-	else
+    else
 	{
 		ShowStatus("Request for connection (passwdenc mode) of %s (ip: %s).\n", sd->userid, ip);
-		bin2hex(sd->passwd, passhash, 16); // raw binary data here!
-		sd->passwdenc = PASSWORDENC;
+        passwdenc = PASSWORDENC;
+
+        if(login_config.old_md5_passwds)
+        {
+            // old_md5_passwds can only be active if israwpass is 0 (passwordenc of 0).
+            login->auth_failed(sd, 3); // send "rejected from server"
+            return true;
+        }
 	}
 
-	if( sd->passwdenc != 0 && login_config.use_md5_passwds )
-	{
-		login->auth_failed(sd, 3); // send "rejected from server"
-		return true;
-	}
-
-	result = login->mmo_auth(sd, false);
+	result = login->mmo_auth(sd, password, passwdenc, false);
 
 	if( result == -1 )
 		login->auth_ok(sd);
@@ -1532,17 +1612,17 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 {
 	char server_name[20];
 	char message[256];
+    char pass[PASSWD_LEN];
 	uint32 server_ip;
 	uint16 server_port;
 	uint16 type;
 	uint16 new_;
 	int result;
+    int passwdenc;
 
 	safestrncpy(sd->userid, (char*)RFIFOP(fd,2), NAME_LENGTH);
-	safestrncpy(sd->passwd, (char*)RFIFOP(fd,26), NAME_LENGTH);
-	if( login_config.use_md5_passwds )
-		MD5_String(sd->passwd, sd->passwd);
-	sd->passwdenc = 0;
+	safestrncpy(pass, (char*)RFIFOP(fd,26), NAME_LENGTH);
+	passwdenc = 0;
 	sd->version = login_config.client_version_to_connect; // hack to skip version check
 	server_ip = ntohl(RFIFOL(fd,54));
 	server_port = ntohs(RFIFOW(fd,58));
@@ -1551,11 +1631,11 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 	new_ = RFIFOW(fd,84);
 	RFIFOSKIP(fd,86);
 
-	ShowInfo("Connection request of the char-server '%s' @ %u.%u.%u.%u:%u (account: '%s', pass: '%s', ip: '%s')\n", server_name, CONVIP(server_ip), server_port, sd->userid, sd->passwd, ip);
+	ShowInfo("Connection request of the char-server '%s' @ %u.%u.%u.%u:%u (account: '%s', ip: '%s')\n", server_name, CONVIP(server_ip), server_port, sd->userid, ip);
 	sprintf(message, "charserver - %s@%u.%u.%u.%u:%u", server_name, CONVIP(server_ip), server_port);
 	login_log(session[fd]->client_addr, sd->userid, 100, message);
 
-	result = login->mmo_auth(sd, true);
+	result = login->mmo_auth(sd, pass, passwdenc, true);
 	if( runflag == LOGINSERVER_ST_RUNNING &&
 		result == -1 &&
 		sd->sex == 'S' &&
@@ -1711,7 +1791,7 @@ void login_set_defaults()
 	safestrncpy(login_config.date_format, "%Y-%m-%d %H:%M:%S", sizeof(login_config.date_format));
 	login_config.new_account_flag = true;
 	login_config.new_acc_length_limit = true;
-	login_config.use_md5_passwds = false;
+	login_config.old_md5_passwds = false;
 	login_config.group_id_to_connect = -1;
 	login_config.min_group_id_to_connect = -1;
 	login_config.check_client_version = false;
@@ -1782,8 +1862,8 @@ int login_config_read(const char* cfgName)
 			login_config.check_client_version = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "client_version_to_connect"))
 			login_config.client_version_to_connect = (unsigned int)strtoul(w2, NULL, 10);
-		else if(!strcmpi(w1, "use_MD5_passwords"))
-			login_config.use_md5_passwds = (bool)config_switch(w2);
+		else if(!strcmpi(w1, "old_MD5_passwords"))
+			login_config.old_md5_passwds = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "group_id_to_connect"))
 			login_config.group_id_to_connect = atoi(w2);
 		else if(!strcmpi(w1, "min_group_id_to_connect"))
@@ -1856,7 +1936,7 @@ int login_config_read(const char* cfgName)
 // Function called at exit of the server
 //--------------------------------------
 int do_final(void) {
-	int i;
+	size_t i;
 	struct client_hash_node *hn = login_config.client_hash_nodes;
 
 	ShowStatus("Terminating...\n");
@@ -1923,7 +2003,7 @@ void do_shutdown_login(void)
 {
 	if( runflag != LOGINSERVER_ST_SHUTDOWN )
 	{
-		int id;
+		size_t id;
 		runflag = LOGINSERVER_ST_SHUTDOWN;
 		ShowStatus("Shutting down...\n");
 		// TODO proper shutdown procedure; kick all characters, wait for acks, ...  [FlavioJS]
@@ -1977,7 +2057,7 @@ void cmdline_args_init_local(void)
 //------------------------------
 int do_init(int argc, char** argv)
 {
-	int i;
+	size_t i;
 
 	// initialize engine (to accept config settings)
 	account_engine[0].db = account_engine[0].constructor();
@@ -2078,8 +2158,10 @@ void login_defaults(void) {
 	login->online_data_cleanup_sub = login_online_data_cleanup_sub;
 	login->online_data_cleanup = login_online_data_cleanup;
 	login->sync_ip_addresses = login_sync_ip_addresses;
-	login->check_encrypted = login_check_encrypted;
-	login->check_password = login_check_password;
+    login->check_encrypted = login_check_encrypted;
+    login->check_password_legacy = login_check_password_legacy;
+    login->check_password_pbkdf2 = login_check_password_pbkdf2;
+    login->check_password = login_check_password;
 	login->lan_subnetcheck = login_lan_subnetcheck;
 	login->lan_config_read = login_lan_config_read;
 

@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `account_data` (
   `base_drop` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '100',
   `base_death` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '100',
   PRIMARY KEY (`account_id`)
-) ENGINE=MyISAM; 
+) ENGINE=MyISAM;
 
 --
 -- Table structure for table `acc_reg_num_db`
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `autotrade_data` (
   `amount` INT(11) NOT NULL DEFAULT '0',
   `price` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`char_id`,`itemkey`)
-) ENGINE=MyISAM; 
+) ENGINE=MyISAM;
 
 --
 -- Table structure for table `autotrade_merchants`
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `autotrade_merchants` (
   `sex` TINYINT(2) NOT NULL DEFAULT '0',
   `title` VARCHAR(80) NOT NULL DEFAULT 'Buy From Me!',
   PRIMARY KEY (`account_id`,`char_id`)
-) ENGINE=MyISAM; 
+) ENGINE=MyISAM;
 
 --
 -- Table structure for table `cart_inventory`
@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `char` (
   KEY `party_id` (`party_id`),
   KEY `guild_id` (`guild_id`),
   KEY `online` (`online`)
-) ENGINE=MyISAM AUTO_INCREMENT=150000; 
+) ENGINE=MyISAM AUTO_INCREMENT=150000;
 
 --
 -- Table structure for table `char_reg_num_db`
@@ -229,7 +229,7 @@ CREATE TABLE IF NOT EXISTS `charlog` (
   `luk` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `hair` TINYINT(4) NOT NULL DEFAULT '0',
   `hair_color` INT(11) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM; 
+) ENGINE=MyISAM;
 
 --
 -- Table structure for table `elemental`
@@ -485,14 +485,14 @@ CREATE TABLE IF NOT EXISTS `homunculus` (
   PRIMARY KEY (`homun_id`)
 ) ENGINE=MyISAM;
 
--- 
+--
 -- Table structure for table `interlog`
 --
 
 CREATE TABLE IF NOT EXISTS `interlog` (
   `time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   `log` VARCHAR(255) NOT NULL DEFAULT ''
-) ENGINE=MyISAM; 
+) ENGINE=MyISAM;
 
 --
 -- Table structure for table `interreg`
@@ -549,6 +549,9 @@ CREATE TABLE IF NOT EXISTS `login` (
   `account_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `userid` VARCHAR(23) NOT NULL DEFAULT '',
   `user_pass` VARCHAR(32) NOT NULL DEFAULT '',
+  `auth_hash` BINARY(64) NOT NULL DEFAULT '',
+  `auth_salt` BINARY(64) NOT NULL DEFAULT '',
+  `auth_iter_count` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `sex` ENUM('M','F','S') NOT NULL DEFAULT 'M',
   `email` VARCHAR(39) NOT NULL DEFAULT '',
   `group_id` TINYINT(3) NOT NULL DEFAULT '0',
@@ -564,7 +567,7 @@ CREATE TABLE IF NOT EXISTS `login` (
   `pincode_change` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`account_id`),
   KEY `name` (`userid`)
-) ENGINE=MyISAM AUTO_INCREMENT=2000000; 
+) ENGINE=MyISAM AUTO_INCREMENT=2000000;
 
 -- added standard accounts for servers, VERY INSECURE!!!
 -- inserted into the table called login which is above
