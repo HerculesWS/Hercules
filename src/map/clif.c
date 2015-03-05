@@ -6183,6 +6183,14 @@ void clif_openvending(struct map_session_data* sd, int id, struct s_vending* ven
 		clif->addcards(WFIFOP(fd,22+i*22), &sd->status.cart[index]);
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));
+	
+#if PACKETVER >= 20141022
+	/** should go elsewhere perhaps? it has to be bundled with this however. **/
+	WFIFOHEAD(fd, 3);
+	WFIFOW(fd, 0) = 0xa28;
+	WFIFOB(fd, 2) = 0;/** 1 is failure. our current responses to failure are working so not yet implemented **/
+	WFIFOSET(fd, 3);
+#endif
 }
 
 
