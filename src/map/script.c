@@ -2427,9 +2427,11 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			script->syntax.translation_db = strdb_get(script->translation_db, script->parser_current_npc_name);
 	}
 
-	script->buf=(unsigned char *)aMalloc(SCRIPT_BLOCK_SIZE*sizeof(unsigned char));
+	if( !script->buf ) {
+		script->buf = (unsigned char *)aMalloc(SCRIPT_BLOCK_SIZE*sizeof(unsigned char));
+		script->size = SCRIPT_BLOCK_SIZE;
+	}
 	script->pos=0;
-	script->size=SCRIPT_BLOCK_SIZE;
 	script->parse_nextline(true, NULL);
 
 	// who called parse_script is responsible for clearing the database after using it, but just in case... lets clear it here
@@ -2443,10 +2445,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 		if( script->error_report )
 			script->error(src,file,line,script->error_msg,script->error_pos);
 		aFree( script->error_msg );
-		aFree( script->buf );
 		script->pos  = 0;
-		script->size = 0;
-		script->buf  = NULL;
 		for(i=LABEL_START;i<script->str_num;i++)
 			if(script->str_data[i].type == C_NOP) script->str_data[i].type = C_NAME;
 		for(i=0; i<size; i++)
@@ -2468,10 +2467,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 	{// does not require brackets around the script
 		if( *p == '\0' && !(options&SCRIPT_RETURN_EMPTY_SCRIPT) )
 		{// empty script and can return NULL
-			aFree( script->buf );
 			script->pos = 0;
-			script->size = 0;
-			script->buf  = NULL;
 #ifdef ENABLE_CASE_CHECK
 			script->local_casecheck.clear();
 			script->parser_current_src = NULL;
@@ -2491,10 +2487,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 		p = script->skip_space(p+1);
 		if( *p == '}' && !(options&SCRIPT_RETURN_EMPTY_SCRIPT) )
 		{// empty script and can return NULL
-			aFree( script->buf );
 			script->pos  = 0;
-			script->size = 0;
-			script->buf  = NULL;
 #ifdef ENABLE_CASE_CHECK
 			script->local_casecheck.clear();
 			script->parser_current_src = NULL;
@@ -2542,10 +2535,6 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 	}
 
 	script->addc(C_NOP);
-
-	// trim code to size
-	script->size = script->pos;
-	RECREATE(script->buf,unsigned char,script->pos);
 
 	// default unknown references to variables
 	for (i = LABEL_START; i < script->str_num; i++) {
@@ -2611,8 +2600,9 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 #endif
 
 	CREATE(code,struct script_code,1);
-	code->script_buf  = script->buf;
-	code->script_size = script->size;
+	code->script_buf = (unsigned char *)aMalloc(script->pos*sizeof(unsigned char));
+	memcpy(code->script_buf, script->buf, script->pos);
+	code->script_size = script->pos;
 	code->local.vars = NULL;
 	code->local.arrays = NULL;
 #ifdef ENABLE_CASE_CHECK
@@ -4970,6 +4960,13 @@ int script_translation_db_destroyer(DBKey key, DBData *data, va_list ap) {
  *
  **/
 void script_parser_clean_leftovers(void) {
+	
+	if( script->buf )
+		aFree(script->buf);
+	
+	script->buf = NULL;
+	script->size = 0;
+
 	if( script->translation_db ) {
 		script->translation_db->destroy(script->translation_db,script->translation_db_destroyer);
 		script->translation_db = NULL;
