@@ -91,6 +91,9 @@
     <ClCompile Include="..\src\login\HPMlogin.c">
       <Filter>login_sql</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\common\crypto.c">
+      <Filter>common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\login\account.h">
@@ -200,6 +203,9 @@
     </ClInclude>
     <ClInclude Include="..\src\login\HPMlogin.h">
       <Filter>login_sql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\crypto.h">
+      <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

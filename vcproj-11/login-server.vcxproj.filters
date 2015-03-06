@@ -22,7 +22,7 @@
     <ClCompile Include="..\src\common\core.c">
       <Filter>common</Filter>
     </ClCompile>
-	<ClCompile Include="..\src\common\console.c">
+    <ClCompile Include="..\src\common\console.c">
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\db.c">
@@ -91,6 +91,9 @@
     <ClCompile Include="..\src\common\mutex.c">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\common\crypto.c">
+      <Filter>common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\login\account.h">
@@ -117,7 +120,7 @@
     <ClInclude Include="..\src\common\core.h">
       <Filter>common</Filter>
     </ClInclude>
-	<ClInclude Include="..\src\common\console.h">
+    <ClInclude Include="..\src\common\console.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\db.h">
@@ -199,6 +202,9 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\mutex.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\crypto.h">
       <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>
