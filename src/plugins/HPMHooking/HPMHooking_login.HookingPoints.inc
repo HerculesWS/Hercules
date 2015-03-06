@@ -17,6 +17,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(login->online_data_cleanup, HP_login_online_data_cleanup) },
 	{ HP_POP(login->sync_ip_addresses, HP_login_sync_ip_addresses) },
 	{ HP_POP(login->check_encrypted, HP_login_check_encrypted) },
+	{ HP_POP(login->check_password_legacy, HP_login_check_password_legacy) },
+	{ HP_POP(login->check_password_pbkdf2, HP_login_check_password_pbkdf2) },
 	{ HP_POP(login->check_password, HP_login_check_password) },
 	{ HP_POP(login->lan_subnetcheck, HP_login_lan_subnetcheck) },
 	{ HP_POP(login->lan_config_read, HP_login_lan_config_read) },

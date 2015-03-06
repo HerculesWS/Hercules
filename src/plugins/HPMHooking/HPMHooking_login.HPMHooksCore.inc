@@ -27,6 +27,10 @@ struct {
 	struct HPMHookPoint *HP_login_sync_ip_addresses_post;
 	struct HPMHookPoint *HP_login_check_encrypted_pre;
 	struct HPMHookPoint *HP_login_check_encrypted_post;
+	struct HPMHookPoint *HP_login_check_password_legacy_pre;
+	struct HPMHookPoint *HP_login_check_password_legacy_post;
+	struct HPMHookPoint *HP_login_check_password_pbkdf2_pre;
+	struct HPMHookPoint *HP_login_check_password_pbkdf2_post;
 	struct HPMHookPoint *HP_login_check_password_pre;
 	struct HPMHookPoint *HP_login_check_password_post;
 	struct HPMHookPoint *HP_login_lan_subnetcheck_pre;
@@ -140,6 +144,10 @@ struct {
 	int HP_login_sync_ip_addresses_post;
 	int HP_login_check_encrypted_pre;
 	int HP_login_check_encrypted_post;
+	int HP_login_check_password_legacy_pre;
+	int HP_login_check_password_legacy_post;
+	int HP_login_check_password_pbkdf2_pre;
+	int HP_login_check_password_pbkdf2_post;
 	int HP_login_check_password_pre;
 	int HP_login_check_password_post;
 	int HP_login_lan_subnetcheck_pre;

@@ -423,6 +423,24 @@ AC_ARG_WITH(
 
 
 #
+# Specify additional search path for OpenSSL's libcrypto (optional)
+#
+AC_ARG_WITH(
+    [crypto],
+    AC_HELP_STRING(
+        [--with-crypto=ARG],
+        [Specify additional search path for OpenSSLs libcrypto (will search for include and lib folders inside this folder)]
+    ),
+    [
+        if test ! -d "$withval" ; then
+            AC_MSG_ERROR([$withval is not a directory])
+        fi
+        CRYPTO_HOME="$withval"
+     ]
+)
+
+
+#
 # Enable/disable PCRE and optionally specify the path (optional library)
 #
 AC_ARG_WITH(
@@ -439,7 +457,7 @@ AC_ARG_WITH(
 			require_pcre="yes"
 			if test "$withval" != "yes" ; then
 				if test ! -d "$withval" ; then
-					AC_MSG_ERROR([$withval is not a directoy])
+					AC_MSG_ERROR([$withval is not a directory])
 				fi
 				PCRE_HOME="$withval"
 			fi
@@ -1277,6 +1295,42 @@ AC_SUBST([MYSQL_LIBS])
 
 
 #
+# OpenSSL's crypto library (required)
+#
+CRYPTO_LIBS=""
+CRYPTO_CFLAGS=""
+
+if test -z "$CRYPTO_HOME" ; then
+    AC_CHECK_LIB([crypto], [PKCS5_PBKDF2_HMAC], [
+        HAVE_CRYPTO="yes"
+        CRYPTO_LIBS="-lcrypto"
+    ],[
+        HAVE_CRYPTO="no"
+        AC_MSG_ERROR([OpenSSLs libcrypto not found or incompatible (required)])
+    ])
+else
+    CRYPTO_OLD_LDFLAGS="$LDFLAGS" ; LDFLAGS="-L$CRYPTO_HOME/lib $LDFLAGS"
+    CRYPTO_OLD_CPPFLAGS="$CPPFLAGS" ; CPPFLAGS="-I$CRYPTO_HOME/include $CPPFLAGS"
+    AC_CHECK_LIB([crypto], [PKCS5_PBKDF2_HMAC], [
+        HAVE_CRYPTO="yes"
+        CRYPTO_LIBS="-L$CRYPTO_HOME/lib -lcrypto"
+        test -d "$CRYPTO_HOME/include" && CRYPTO_CFLAGS="-I$CRYPTO_HOME/include"
+    ],[
+       HAVE_CRYPTO="no"
+       AC_MSG_ERROR([OpenSSLs libcrypto not found or incompatible (required)])
+    ])
+    LDFLAGS="$CRYPTO_OLD_LDFLAGS"
+    CPPFLAGS="$CRYPTO_OLD_CPPFLAGS"
+fi
+
+AC_MSG_CHECKING([for OpenSSLs crypto library (required)])
+AC_MSG_RESULT([yes])
+
+AC_SUBST([HAVE_CRYPTO])
+AC_SUBST([CRYPTO_LIBS])
+AC_SUBST([CRYPTO_CFLAGS])
+
+#
 # PCRE library (optional)
 #
 ##TODO PCRE version
@@ -1332,9 +1386,9 @@ if test "$enable_static" != "no" ; then
 	OLD_LDFLAGS="$LDFLAGS"
 	OLD_LIBS="$LIBS"
 
-	CFLAGS="$OLD_CFLAGS $MYSQL_CFLAGS $PCRE_CFLAGS -static"
+	CFLAGS="$OLD_CFLAGS $MYSQL_CFLAGS $PCRE_CFLAGS $CRYPTO_CFLAGS -static"
 	LDFLAGS="$OLD_LDFLAGS -static"
-	LIBS="$OLD_LIBS $MYSQL_LIBS $PCRE_LIBS"
+	LIBS="$OLD_LIBS $MYSQL_LIBS $PCRE_LIBS $CRYPTO_LIBS"
 
 	AC_MSG_CHECKING([whether $CC supports -static])
 	AC_RUN_IFELSE(

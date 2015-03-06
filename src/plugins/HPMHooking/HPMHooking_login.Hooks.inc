@@ -5,15 +5,15 @@
 //       as it will get overwritten.
 
 /* login */
-int HP_login_mmo_auth(struct login_session_data *sd, bool isServer) {
+int HP_login_mmo_auth(struct login_session_data *sd, const char *pass, int passwdenc, bool isServer) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_login_mmo_auth_pre ) {
-		int (*preHookFunc) (struct login_session_data *sd, bool *isServer);
+		int (*preHookFunc) (struct login_session_data *sd, const char *pass, int *passwdenc, bool *isServer);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_mmo_auth_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_login_mmo_auth_pre[hIndex].func;
-			retVal___ = preHookFunc(sd, &isServer);
+			retVal___ = preHookFunc(sd, pass, &passwdenc, &isServer);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -21,13 +21,13 @@ int HP_login_mmo_auth(struct login_session_data *sd, bool isServer) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.login.mmo_auth(sd, isServer);
+		retVal___ = HPMHooks.source.login.mmo_auth(sd, pass, passwdenc, isServer);
 	}
 	if( HPMHooks.count.HP_login_mmo_auth_post ) {
-		int (*postHookFunc) (int retVal___, struct login_session_data *sd, bool *isServer);
+		int (*postHookFunc) (int retVal___, struct login_session_data *sd, const char *pass, int *passwdenc, bool *isServer);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_mmo_auth_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_mmo_auth_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, &isServer);
+			retVal___ = postHookFunc(retVal___, sd, pass, &passwdenc, &isServer);
 		}
 	}
 	return retVal___;
@@ -320,15 +320,15 @@ bool HP_login_check_encrypted(const char *str1, const char *str2, const char *pa
 	}
 	return retVal___;
 }
-bool HP_login_check_password(const char *md5key, int passwdenc, const char *passwd, const char *refpass) {
+bool HP_login_check_password_legacy(const char *pass, struct mmo_account *acc) {
 	int hIndex = 0;
 	bool retVal___ = false;
-	if( HPMHooks.count.HP_login_check_password_pre ) {
-		bool (*preHookFunc) (const char *md5key, int *passwdenc, const char *passwd, const char *refpass);
+	if( HPMHooks.count.HP_login_check_password_legacy_pre ) {
+		bool (*preHookFunc) (const char *pass, struct mmo_account *acc);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_check_password_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_login_check_password_pre[hIndex].func;
-			retVal___ = preHookFunc(md5key, &passwdenc, passwd, refpass);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_check_password_legacy_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_login_check_password_legacy_pre[hIndex].func;
+			retVal___ = preHookFunc(pass, acc);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -336,13 +336,67 @@ bool HP_login_check_password(const char *md5key, int passwdenc, const char *pass
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.login.check_password(md5key, passwdenc, passwd, refpass);
+		retVal___ = HPMHooks.source.login.check_password_legacy(pass, acc);
+	}
+	if( HPMHooks.count.HP_login_check_password_legacy_post ) {
+		bool (*postHookFunc) (bool retVal___, const char *pass, struct mmo_account *acc);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_check_password_legacy_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_login_check_password_legacy_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, pass, acc);
+		}
+	}
+	return retVal___;
+}
+bool HP_login_check_password_pbkdf2(const char *pass, const struct mmo_account *acc) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_login_check_password_pbkdf2_pre ) {
+		bool (*preHookFunc) (const char *pass, const struct mmo_account *acc);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_check_password_pbkdf2_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_login_check_password_pbkdf2_pre[hIndex].func;
+			retVal___ = preHookFunc(pass, acc);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.login.check_password_pbkdf2(pass, acc);
+	}
+	if( HPMHooks.count.HP_login_check_password_pbkdf2_post ) {
+		bool (*postHookFunc) (bool retVal___, const char *pass, const struct mmo_account *acc);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_check_password_pbkdf2_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_login_check_password_pbkdf2_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, pass, acc);
+		}
+	}
+	return retVal___;
+}
+bool HP_login_check_password(const char *pass, int passwdenc, const char *md5key, struct mmo_account *acc) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_login_check_password_pre ) {
+		bool (*preHookFunc) (const char *pass, int *passwdenc, const char *md5key, struct mmo_account *acc);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_check_password_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_login_check_password_pre[hIndex].func;
+			retVal___ = preHookFunc(pass, &passwdenc, md5key, acc);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.login.check_password(pass, passwdenc, md5key, acc);
 	}
 	if( HPMHooks.count.HP_login_check_password_post ) {
-		bool (*postHookFunc) (bool retVal___, const char *md5key, int *passwdenc, const char *passwd, const char *refpass);
+		bool (*postHookFunc) (bool retVal___, const char *pass, int *passwdenc, const char *md5key, struct mmo_account *acc);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_check_password_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_check_password_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, md5key, &passwdenc, passwd, refpass);
+			retVal___ = postHookFunc(retVal___, pass, &passwdenc, md5key, acc);
 		}
 	}
 	return retVal___;

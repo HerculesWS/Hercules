@@ -885,8 +885,7 @@ void login_fromchar_parse_accinfo(int fd)
 //--------------------------------
 int login_parse_fromchar(int fd)
 {
-	int j;
-    size_t id;
+	int j, id;
 	uint32 ipl;
 	char ip[16];
 
@@ -1304,7 +1303,7 @@ void login_auth_ok(struct login_session_data* sd)
 	uint8 server_num, n;
 	uint32 subnet_char_ip;
 	struct login_auth_node* node;
-	size_t i;
+	int i;
 
 	if( runflag != LOGINSERVER_ST_RUNNING )
 	{
@@ -1936,7 +1935,7 @@ int login_config_read(const char* cfgName)
 // Function called at exit of the server
 //--------------------------------------
 int do_final(void) {
-	size_t i;
+	int i;
 	struct client_hash_node *hn = login_config.client_hash_nodes;
 
 	ShowStatus("Terminating...\n");
@@ -2003,7 +2002,7 @@ void do_shutdown_login(void)
 {
 	if( runflag != LOGINSERVER_ST_SHUTDOWN )
 	{
-		size_t id;
+		int id;
 		runflag = LOGINSERVER_ST_SHUTDOWN;
 		ShowStatus("Shutting down...\n");
 		// TODO proper shutdown procedure; kick all characters, wait for acks, ...  [FlavioJS]
@@ -2057,7 +2056,7 @@ void cmdline_args_init_local(void)
 //------------------------------
 int do_init(int argc, char** argv)
 {
-	size_t i;
+	int i;
 
 	// initialize engine (to accept config settings)
 	account_engine[0].db = account_engine[0].constructor();
