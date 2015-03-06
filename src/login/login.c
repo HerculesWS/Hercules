@@ -253,7 +253,7 @@ bool login_check_password_legacy(const char *pass, struct mmo_account *acc)
     memcpy(acc->hash, hash, AUTH_HASH_LEN);
     memcpy(acc->salt, salt, AUTH_SALT_LEN);
     acc->iter_count = AUTH_ITER_COUNT;
-    memset(acc->pass, 0, 32+1); // Purge the plaintext password from the memory.
+    memset(acc->pass, '\0', PASSWD_LEN); // Purge the plaintext password from the memory.
 
     if(!accounts->save(accounts, acc))
         return false;
@@ -297,7 +297,7 @@ bool login_check_password(const char *pass, int passwdenc, const char *md5key, s
         // the authentication is through the new method.
         // If acc->pass is not empty, then the old authentication is made and the
         // account is converted.
-        if(!acc->pass)
+        if(!acc->pass[0]) // Empty string.
             return login->check_password_pbkdf2(pass, acc);
         else
             return login->check_password_legacy(pass, acc);
@@ -1204,7 +1204,7 @@ int login_mmo_auth(struct login_session_data* sd, const char *pass, int passwden
 		return 0; // 0 = Unregistered ID
 	}
 
-	if( !login->check_password(sd->md5key, passwdenc, pass, &acc) ) {
+	if( !login->check_password(pass, passwdenc, sd->md5key, &acc) ) {
 		ShowNotice("Invalid password (account: '%s', ip: %s)\n", sd->userid, ip);
 		return 1; // 1 = Incorrect Password
 	}
@@ -1555,8 +1555,6 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 	if( israwpass )
 	{
 		ShowStatus("Request for connection of %s (ip: %s).\n", sd->userid, ip);
-		if( login_config.old_md5_passwds )
-			MD5_String(password, password);
         passwdenc = 0;
 	}
     else
