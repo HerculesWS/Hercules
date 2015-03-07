@@ -12,9 +12,9 @@ SYSINFO_INC = $(COMMON_D)/sysinfo.inc
 
 LIBCONFIG_D = ../../3rdparty/libconfig
 LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
-                scanner.o strbuf.o)
+				scanner.o strbuf.o)
 LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
-              scanctx.h scanner.h strbuf.h wincompat.h)
+			  scanctx.h scanner.h strbuf.h wincompat.h)
 LIBCONFIG_INCLUDE = -I$(LIBCONFIG_D)
 
 MT19937AR_D = ../../3rdparty/mt19937ar
@@ -87,9 +87,8 @@ login-server: ../../login-server@EXEEXT@
 
 ../../login-server@EXEEXT@: $(LOGIN_SERVER_SQL_DEPENDS) Makefile
 	@echo "	LD	$(notdir $@)"
-	@$(CC) @CRYPTO_LIBS@ @CRYPTO_CFLAGS@ @STATIC@ @LDFLAGS@ -o ../../login-server@EXEEXT@ $(LOGIN_OBJ) $(COMMON_D)/obj_sql/common_sql.a \
-		$(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
-
+	@$(CC) @CRYPTO_LIB_PATH@ @CRYPTO_CFLAGS@ @STATIC@ @LDFLAGS@ -o ../../login-server@EXEEXT@ $(LOGIN_OBJ) $(COMMON_D)/obj_sql/common_sql.a \
+		$(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @CRYPTO_LIBS@ @MYSQL_LIBS@
 # login object files
 
 obj_sql/%.o: %.c $(LOGIN_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj_sql

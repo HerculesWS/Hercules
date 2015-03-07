@@ -26,11 +26,11 @@ struct mmo_account
 {
 	int account_id;
 	char userid[NAME_LENGTH];
-    char pass[32+1];            // Old legacy password storage, used only for conversion.
-                                // 23+1 for plaintext, 32+1 for md5-ed passwords (legacy)
+	char pass[32+1];            // Old legacy password storage, used only for conversion.
+								// 23+1 for plaintext, 32+1 for md5-ed passwords (legacy)
 	unsigned char hash[AUTH_HASH_LEN];  // Password hash.
-    unsigned char salt[AUTH_SALT_LEN];  // Salt generated for the password hashes.
-    int iter_count;             // Iteration count for PBKDF2 password hashing.
+	unsigned char salt[AUTH_SALT_LEN];  // Salt generated for the password hashes.
+	int iter_count;             // Iteration count for PBKDF2 password hashing.
 	char sex;                   // gender (M/F/S)
 	char email[40];             // e-mail (by default: a@a.com)
 	int group_id;               // player group id

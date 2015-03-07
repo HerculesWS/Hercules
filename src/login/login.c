@@ -245,7 +245,7 @@ bool login_check_password_legacy(const char *pass, struct mmo_account *acc)
     if(!crypto_random_bytes(salt, AUTH_SALT_LEN))
         return false;
 
-    if(!crypto_pbkdf2_hmac_sha512(pass, strlen(pass), salt, AUTH_SALT_LEN,
+    if(!crypto_pbkdf2_hmac_sha512(pass, -1, salt, AUTH_SALT_LEN,
                 AUTH_ITER_COUNT, AUTH_HASH_LEN, hash))
         return false;
 
@@ -269,7 +269,7 @@ bool login_check_password_pbkdf2(const char *pass, const struct mmo_account *acc
 {
     unsigned char hash[AUTH_HASH_LEN];
 
-    if(!crypto_pbkdf2_hmac_sha512(pass, strlen(pass), acc->salt, AUTH_SALT_LEN,
+    if(!crypto_pbkdf2_hmac_sha512(pass, -1, acc->salt, AUTH_SALT_LEN,
                 acc->iter_count, AUTH_HASH_LEN, hash))
         return false;
 
@@ -838,7 +838,7 @@ void login_fromchar_accinfo(int fd, int account_id, int u_fd, int u_aid, int u_g
 		WFIFOHEAD(fd,183);
 		WFIFOW(fd,0) = 0x2737;
 		safestrncpy((char*)WFIFOP(fd,2), acc->userid, NAME_LENGTH);
-		memset(WFIFOP(fd,26), '\0', 33);
+		memset(WFIFOP(fd,26), '\0', 33); // TODO[RenatoUtsch] Field not used anymore (since pbkdf2), remove later.
 		safestrncpy((char*)WFIFOP(fd,59), acc->email, 40);
 		safestrncpy((char*)WFIFOP(fd,99), acc->last_ip, 16);
 		WFIFOL(fd,115) = acc->group_id;
@@ -1115,7 +1115,7 @@ int login_mmo_auth_new(const char* userid, const char* pass, const char sex, con
 	safestrncpy(acc.userid, userid, sizeof(acc.userid));
     crypto_random_bytes(acc.salt, AUTH_SALT_LEN);
     acc.iter_count = AUTH_ITER_COUNT;
-    crypto_pbkdf2_hmac_sha512(pass, strlen(pass), acc.salt, AUTH_SALT_LEN,
+    crypto_pbkdf2_hmac_sha512(pass, -1, acc.salt, AUTH_SALT_LEN,
             acc.iter_count, AUTH_HASH_LEN, acc.hash);
 	acc.sex = sex;
 	safestrncpy(acc.email, "a@a.com", sizeof(acc.email));

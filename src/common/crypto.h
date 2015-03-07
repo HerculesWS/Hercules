@@ -1,3 +1,7 @@
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Base Author: RenatoUtsch @ http://hercules.ws
+
 #ifndef COMMON_CRYPTO_H
 #define COMMON_CRYPTO_H
 
@@ -12,7 +16,7 @@
  * @param num The number of bytes to generate.
  * @return true if it succeeded and false if it failed to generate the random
  * bytes.
- **/
+ */
 bool crypto_random_bytes(unsigned char *buf, int num);
 
 /**
@@ -20,7 +24,8 @@ bool crypto_random_bytes(unsigned char *buf, int num);
  * @return true if the hash was successfully generated and false if an error
  * occurred.
  * @param pass The password to be hashed.
- * @param passlen The length of the pass. Use just strlen().
+ * @param passlen The length of the pass. If -1, this function will use
+ * strlen() to calculate the length of the pass.
  * @param salt The salt used in the hashing process.
  * @param saltlen The length of the salt. strlen() may not work because salt
  * may not be a character string, but just a byte array.
@@ -33,8 +38,8 @@ bool crypto_random_bytes(unsigned char *buf, int num);
  * @return true if the function succeeded and false if it failed to generate
  * the password hash.
  */
-bool crypto_pbkdf2_hmac_sha512(const char *pass, size_t passlen,
-        const unsigned char *salt, size_t saltlen, int iter, size_t outlen,
-        unsigned char *out);
+bool crypto_pbkdf2_hmac_sha512(const char *pass, int passlen,
+	const unsigned char *salt, int saltlen, int iter, int outlen,
+	unsigned char *out);
 
 #endif /* COMMON_CRYPTO_H */

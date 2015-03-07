@@ -41,9 +41,9 @@ struct login_session_data {
 
 	char userid[NAME_LENGTH];
 
-    // To support legacy passwordenc authentication method.
-    char md5key[20];
-    uint16 md5keylen;
+	// To support legacy passwordenc authentication method.
+	char md5key[20];
+	uint16 md5keylen;
 
 	char lastlogin[24];
 	uint8 group_id;
@@ -163,10 +163,10 @@ struct login_interface {
 	int (*online_data_cleanup_sub) (DBKey key, DBData *data, va_list ap);
 	int (*online_data_cleanup) (int tid, int64 tick, int id, intptr_t data);
 	int (*sync_ip_addresses) (int tid, int64 tick, int id, intptr_t data);
-    bool (*check_encrypted) (const char *str1, const char *str2, const char *passwd);
-    bool (*check_password_legacy) (const char *pass, struct mmo_account *acc);
-    bool (*check_password_pbkdf2) (const char *pass, const struct mmo_account *acc);
-    bool (*check_password) (const char *pass, int passwdenc, const char *md5key, struct mmo_account *acc);
+	bool (*check_encrypted) (const char *str1, const char *str2, const char *passwd);
+	bool (*check_password_legacy) (const char *pass, struct mmo_account *acc);
+	bool (*check_password_pbkdf2) (const char *pass, const struct mmo_account *acc);
+	bool (*check_password) (const char *pass, int passwdenc, const char *md5key, struct mmo_account *acc);
 	int (*lan_subnetcheck) (uint32 ip);
 	int (*lan_config_read) (const char *lancfgName);
 	void (*fromchar_accinfo) (int fd, int account_id, int u_fd, int u_aid, int u_group, int map_fd, struct mmo_account *acc);
