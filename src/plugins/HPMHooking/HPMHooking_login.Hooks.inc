@@ -320,6 +320,33 @@ bool HP_login_check_encrypted(const char *str1, const char *str2, const char *pa
 	}
 	return retVal___;
 }
+bool HP_login_convert_account_auth(const char *pass, struct mmo_account *acc) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_login_convert_account_auth_pre ) {
+		bool (*preHookFunc) (const char *pass, struct mmo_account *acc);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_convert_account_auth_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_login_convert_account_auth_pre[hIndex].func;
+			retVal___ = preHookFunc(pass, acc);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.login.convert_account_auth(pass, acc);
+	}
+	if( HPMHooks.count.HP_login_convert_account_auth_post ) {
+		bool (*postHookFunc) (bool retVal___, const char *pass, struct mmo_account *acc);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_convert_account_auth_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_login_convert_account_auth_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, pass, acc);
+		}
+	}
+	return retVal___;
+}
 bool HP_login_check_password_legacy(const char *pass, struct mmo_account *acc) {
 	int hIndex = 0;
 	bool retVal___ = false;
@@ -347,11 +374,11 @@ bool HP_login_check_password_legacy(const char *pass, struct mmo_account *acc) {
 	}
 	return retVal___;
 }
-bool HP_login_check_password_pbkdf2(const char *pass, const struct mmo_account *acc) {
+bool HP_login_check_password_pbkdf2(const char *pass, struct mmo_account *acc) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if( HPMHooks.count.HP_login_check_password_pbkdf2_pre ) {
-		bool (*preHookFunc) (const char *pass, const struct mmo_account *acc);
+		bool (*preHookFunc) (const char *pass, struct mmo_account *acc);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_check_password_pbkdf2_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_login_check_password_pbkdf2_pre[hIndex].func;
@@ -366,7 +393,7 @@ bool HP_login_check_password_pbkdf2(const char *pass, const struct mmo_account *
 		retVal___ = HPMHooks.source.login.check_password_pbkdf2(pass, acc);
 	}
 	if( HPMHooks.count.HP_login_check_password_pbkdf2_post ) {
-		bool (*postHookFunc) (bool retVal___, const char *pass, const struct mmo_account *acc);
+		bool (*postHookFunc) (bool retVal___, const char *pass, struct mmo_account *acc);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_check_password_pbkdf2_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_check_password_pbkdf2_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, pass, acc);

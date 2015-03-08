@@ -214,34 +214,18 @@ bool login_check_encrypted(const char* str1, const char* str2, const char* passw
 	return (0==strcmp(passwd, md5str));
 }
 
+
 //-----------------------------------------------------
-// Legacy authentication. First authenticate the user
-// with the old pass account column (using md5 if
-// old_md5_passwds is true) and then convert the
-// account to the new PBKDF2 format.
+// Converts the account, creating a new hash for the
+// given password and account.
+// This function must be called only after authenticating.
 //-----------------------------------------------------
-bool login_check_password_legacy(const char *pass, struct mmo_account *acc)
+bool login_convert_account_auth(const char *pass, struct mmo_account *acc)
 {
     unsigned char salt[AUTH_SALT_LEN];
     unsigned char hash[AUTH_SALT_LEN];
 
-    if(login_config.old_md5_passwds)
-    {
-        char md5pass[PASSWD_LEN];
-        MD5_String(pass, md5pass);
-
-        if(strcmp(md5pass, acc->pass) != 0)
-            return false;
-    }
-    else
-    {
-        if(strcmp(pass, acc->pass) != 0)
-            return false;
-    }
-
-    // Authenticated successfully, now convert the account.
     // Must convert in an atomic manner.
-
     if(!crypto_random_bytes(salt, AUTH_SALT_LEN))
         return false;
 
@@ -261,11 +245,38 @@ bool login_check_password_legacy(const char *pass, struct mmo_account *acc)
     return true;
 }
 
+
+//-----------------------------------------------------
+// Legacy authentication. First authenticate the user
+// with the old pass account column (using md5 if
+// use_md5_passwds is true) and then convert the
+// account to the new PBKDF2 format.
+//-----------------------------------------------------
+bool login_check_password_legacy(const char *pass, struct mmo_account *acc)
+{
+    if(login_config.use_md5_passwds)
+    {
+        char md5pass[PASSWD_LEN];
+        MD5_String(pass, md5pass);
+
+        if(strcmp(md5pass, acc->pass) != 0)
+            return false;
+    }
+    else
+    {
+        if(strcmp(pass, acc->pass) != 0)
+            return false;
+    }
+
+    // Authenticated successfully, now convert the account.
+	return login->convert_account_auth(pass, acc);
+}
+
 //-----------------------------------------------------
 // PBKDF2 authentication. Just calculate the hash with
 // the given info and compare the two hashes.
 //-----------------------------------------------------
-bool login_check_password_pbkdf2(const char *pass, const struct mmo_account *acc)
+bool login_check_password_pbkdf2(const char *pass, struct mmo_account *acc)
 {
     unsigned char hash[AUTH_HASH_LEN];
 
@@ -273,7 +284,17 @@ bool login_check_password_pbkdf2(const char *pass, const struct mmo_account *acc
                 acc->iter_count, AUTH_HASH_LEN, hash))
         return false;
 
-    return memcmp(hash, acc->hash, AUTH_HASH_LEN) == 0;
+    if(memcmp(hash, acc->hash, AUTH_HASH_LEN) != 0)
+		return false;
+
+	// Convert the account if the iter count differs.
+	if(acc->iter_count != AUTH_ITER_COUNT)
+	{
+		if(!login->convert_account_auth(pass, acc))
+			return false;
+	}
+
+	return true;
 }
 
 //-----------------------------------------------------
@@ -1562,9 +1583,9 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 		ShowStatus("Request for connection (passwdenc mode) of %s (ip: %s).\n", sd->userid, ip);
         passwdenc = PASSWORDENC;
 
-        if(login_config.old_md5_passwds)
+        if(login_config.use_md5_passwds)
         {
-            // old_md5_passwds can only be active if israwpass is 0 (passwordenc of 0).
+            // use_md5_passwds can only be active if israwpass is 0 (passwordenc of 0).
             login->auth_failed(sd, 3); // send "rejected from server"
             return true;
         }
@@ -1788,7 +1809,7 @@ void login_set_defaults()
 	safestrncpy(login_config.date_format, "%Y-%m-%d %H:%M:%S", sizeof(login_config.date_format));
 	login_config.new_account_flag = true;
 	login_config.new_acc_length_limit = true;
-	login_config.old_md5_passwds = false;
+	login_config.use_md5_passwds = false;
 	login_config.group_id_to_connect = -1;
 	login_config.min_group_id_to_connect = -1;
 	login_config.check_client_version = false;
@@ -1859,8 +1880,8 @@ int login_config_read(const char* cfgName)
 			login_config.check_client_version = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "client_version_to_connect"))
 			login_config.client_version_to_connect = (unsigned int)strtoul(w2, NULL, 10);
-		else if(!strcmpi(w1, "old_MD5_passwords"))
-			login_config.old_md5_passwds = (bool)config_switch(w2);
+		else if(!strcmpi(w1, "use_md5_passwords"))
+			login_config.use_md5_passwds = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "group_id_to_connect"))
 			login_config.group_id_to_connect = atoi(w2);
 		else if(!strcmpi(w1, "min_group_id_to_connect"))
@@ -2156,6 +2177,7 @@ void login_defaults(void) {
 	login->online_data_cleanup = login_online_data_cleanup;
 	login->sync_ip_addresses = login_sync_ip_addresses;
     login->check_encrypted = login_check_encrypted;
+	login->convert_account_auth = login_convert_account_auth;
     login->check_password_legacy = login_check_password_legacy;
     login->check_password_pbkdf2 = login_check_password_pbkdf2;
     login->check_password = login_check_password;

@@ -85,7 +85,7 @@ struct Login_Config {
 	char date_format[32];                           ///< date format used in messages
 	bool new_account_flag,new_acc_length_limit;     ///< auto-registration via _M/_F ? / if yes minimum length is 4?
 	int start_limited_time;                         ///< new account expiration time (-1: unlimited)
-	bool old_md5_passwds;                           ///< If DB worked with the old MD5 password hashes instead of plaintext.
+	bool use_md5_passwds;                           ///< If DB worked with the old MD5 password hashes instead of plaintext.
 	int group_id_to_connect;                        ///< required group id to connect
 	int min_group_id_to_connect;                    ///< minimum group id to connect
 	bool check_client_version;                      ///< check the clientversion set in the clientinfo ?
@@ -164,8 +164,9 @@ struct login_interface {
 	int (*online_data_cleanup) (int tid, int64 tick, int id, intptr_t data);
 	int (*sync_ip_addresses) (int tid, int64 tick, int id, intptr_t data);
 	bool (*check_encrypted) (const char *str1, const char *str2, const char *passwd);
+	bool (*convert_account_auth) (const char *pass, struct mmo_account *acc);
 	bool (*check_password_legacy) (const char *pass, struct mmo_account *acc);
-	bool (*check_password_pbkdf2) (const char *pass, const struct mmo_account *acc);
+	bool (*check_password_pbkdf2) (const char *pass, struct mmo_account *acc);
 	bool (*check_password) (const char *pass, int passwdenc, const char *md5key, struct mmo_account *acc);
 	int (*lan_subnetcheck) (uint32 ip);
 	int (*lan_config_read) (const char *lancfgName);
