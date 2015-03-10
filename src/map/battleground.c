@@ -22,6 +22,7 @@
 #include "pet.h"
 #include "../common/cbasetypes.h"
 #include "../common/conf.h"
+#include "../common/HPM.h"
 #include "../common/malloc.h"
 #include "../common/nullpo.h"
 #include "../common/showmsg.h"
@@ -856,9 +857,27 @@ void do_init_battleground(bool minimal) {
 	bg->config_read();
 }
 
+/**
+ * @see DBApply
+ */
+int bg_team_db_final(DBKey key, DBData *data, va_list ap) {
+	struct battleground_data* bgd = DB->data2ptr(data);
+	int i;
+	for(i = 0; i < bgd->hdatac; i++ ) {
+		if( bgd->hdata[i]->flag.free ) {
+			aFree(bgd->hdata[i]->data);
+		}
+		aFree(bgd->hdata[i]);
+	}
+	if( bgd->hdata )
+		aFree(bgd->hdata);
+		
+	return 0;
+}
+
 void do_final_battleground(void)
 {
-	db_destroy(bg->team_db);
+	bg->team_db->destroy(bg->team_db,bg->team_db_final);
 
 	if (bg->arena) {
 		int i;
@@ -868,6 +887,7 @@ void do_final_battleground(void)
 		}
 		aFree(bg->arena);
 	}
+	
 }
 void battleground_defaults(void) {
 	bg = &bg_s;
@@ -911,6 +931,7 @@ void battleground_defaults(void) {
 	bg->send_xy_timer_sub = bg_send_xy_timer_sub;
 	bg->send_xy_timer = bg_send_xy_timer;
 	bg->afk_timer = bg_afk_timer;
+	bg->team_db_final = bg_team_db_final;
 	/* */
 	bg->str2teamtype = bg_str2teamtype;
 	/* */
