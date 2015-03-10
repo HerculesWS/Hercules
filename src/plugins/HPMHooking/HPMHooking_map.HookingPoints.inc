@@ -123,6 +123,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(bg->send_xy_timer_sub, HP_bg_send_xy_timer_sub) },
 	{ HP_POP(bg->send_xy_timer, HP_bg_send_xy_timer) },
 	{ HP_POP(bg->afk_timer, HP_bg_afk_timer) },
+	{ HP_POP(bg->team_db_final, HP_bg_team_db_final) },
 	{ HP_POP(bg->str2teamtype, HP_bg_str2teamtype) },
 	{ HP_POP(bg->config_read, HP_bg_config_read) },
 /* buyingstore */

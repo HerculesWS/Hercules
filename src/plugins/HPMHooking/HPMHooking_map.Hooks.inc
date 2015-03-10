@@ -3154,6 +3154,39 @@ int HP_bg_afk_timer(int tid, int64 tick, int id, intptr_t data) {
 	}
 	return retVal___;
 }
+int HP_bg_team_db_final(DBKey key, DBData *data, va_list ap) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_bg_team_db_final_pre ) {
+		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_team_db_final_pre; hIndex++ ) {
+			va_list ap___copy; va_copy(ap___copy, ap);
+			preHookFunc = HPMHooks.list.HP_bg_team_db_final_pre[hIndex].func;
+			retVal___ = preHookFunc(&key, data, ap___copy);
+			va_end(ap___copy);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		va_list ap___copy; va_copy(ap___copy, ap);
+		retVal___ = HPMHooks.source.bg.team_db_final(key, data, ap___copy);
+		va_end(ap___copy);
+	}
+	if( HPMHooks.count.HP_bg_team_db_final_post ) {
+		int (*postHookFunc) (int retVal___, DBKey *key, DBData *data, va_list ap);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_team_db_final_post; hIndex++ ) {
+			va_list ap___copy; va_copy(ap___copy, ap);
+			postHookFunc = HPMHooks.list.HP_bg_team_db_final_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &key, data, ap___copy);
+			va_end(ap___copy);
+		}
+	}
+	return retVal___;
+}
 enum bg_queue_types HP_bg_str2teamtype(const char *str) {
 	int hIndex = 0;
 	enum bg_queue_types retVal___ = BGQT_INVALID;
