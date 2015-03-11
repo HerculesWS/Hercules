@@ -1049,11 +1049,6 @@ void initChangeTables(void) {
 	status->DisplayType[SC_STRANGELIGHTS]       = true;
 	status->DisplayType[SC_DECORATION_OF_MUSIC] = true;
 
-#ifdef RENEWAL_EDP
-	// renewal EDP increases your weapon atk
-	status->ChangeFlagTable[SC_EDP] |= SCB_WATK;
-#endif
-
 	if( !battle_config.display_hallucination ) //Disable Hallucination.
 		status->IconChangeTable[SC_ILLUSION] = SI_BLANK;
 #undef add_sc
@@ -2236,6 +2231,9 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 		+ sizeof(sd->sp_gain_race)
 		+ sizeof(sd->sp_gain_race_attack)
 		+ sizeof(sd->hp_gain_race_attack)
+#ifdef RENEWAL
+		+ sizeof(sd->race_tolerance)
+#endif
 		);
 
 	memset (&sd->right_weapon.overrefine, 0, sizeof(sd->right_weapon) - sizeof(sd->right_weapon.atkmods));
@@ -2930,7 +2928,11 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 		sd->right_weapon.addrace[RC_DRAGON]+=skill_lv;
 		sd->left_weapon.addrace[RC_DRAGON]+=skill_lv;
 		sd->magic_addrace[RC_DRAGON]+=skill_lv;
+#ifdef RENEWAL
+		sd->race_tolerance[RC_DRAGON] += skill_lv;
+#else
 		sd->subrace[RC_DRAGON]+=skill_lv;
+#endif
 	}
 
 	if( (skill_lv = pc->checkskill(sd, AB_EUCHARISTICA)) > 0 ) {
@@ -2940,7 +2942,11 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 		sd->left_weapon.addele[ELE_DARK] += skill_lv;
 		sd->magic_addrace[RC_DEMON] += skill_lv;
 		sd->magic_addele[ELE_DARK] += skill_lv;
+#ifdef RENEWAL
+		sd->race_tolerance[RC_DEMON] += skill_lv;
+#else
 		sd->subrace[RC_DEMON] += skill_lv;
+#endif
 		sd->subele[ELE_DARK] += skill_lv;
 	}
 
@@ -2963,7 +2969,11 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 		}
 		if(sc->data[SC_PROVIDENCE]){
 			sd->subele[ELE_HOLY] += sc->data[SC_PROVIDENCE]->val2;
+#ifdef RENEWAL
+			sd->race_tolerance[RC_DEMON] += sc->data[SC_PROVIDENCE]->val2;
+#else
 			sd->subrace[RC_DEMON] += sc->data[SC_PROVIDENCE]->val2;
+#endif
 		}
 		if(sc->data[SC_ARMORPROPERTY]) {
 			//This status change should grant card-type elemental resist.
@@ -7639,11 +7649,13 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				tick = -1; // duration sent to the client should be infinite
 				break;
 			case SC_EDP: // [Celest]
-				val2 = val1 + 2; //Chance to Poison enemies.
-				val3 = 50*(val1+1); //Damage increase (+50 +50*lv%)
-	#ifdef RENEWAL_EDP
-				val4 = 100 * ((val1 + 1)/2 + 2);
-	#endif
+				//Chance to Poison enemies.
+#ifdef RENEWAL_EDP
+				val2 = ((val1 + 1) / 2 + 2);
+#else
+				val2 = val1 + 2;
+#endif
+				val3 = 50 * (val1 + 1); //Damage increase (+50 +50*lv%)
 				if( sd )//[Ind] - iROwiki says each level increases its duration by 3 seconds
 					tick += pc->checkskill(sd,GC_RESEARCHNEWPOISON)*3000;
 				break;

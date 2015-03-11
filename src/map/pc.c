@@ -3354,6 +3354,12 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			if (sd->state.lr_flag != 2)
 				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), 0, val, 1<<type2, 10000);
 			break;
+#ifdef RENEWAL
+		case SP_RACE_TOLERANCE:
+			if ( sd->state.lr_flag != 2 )
+				sd->race_tolerance[type2] += val;
+			break;
+#endif
 		default:
 			ShowWarning("pc_bonus2: unknown type %d %d %d!\n",type,type2,val);
 			break;

@@ -285,6 +285,9 @@ struct map_session_data {
 	short sp_gain_race[RC_MAX];
 	short sp_gain_race_attack[RC_MAX];
 	short hp_gain_race_attack[RC_MAX];
+#ifdef RENEWAL
+	int race_tolerance[RC_MAX];
+#endif
 	// zeroed arrays end here.
 	// zeroed structures start here
 	struct s_autospell autospell[15], autospell2[15], autospell3[15];

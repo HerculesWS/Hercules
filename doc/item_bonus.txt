@@ -416,3 +416,7 @@ bonus2 bVariableCastrate,s,x;		Increases variable cast time of skill s by x%. (s
 bonus2 bFixedCastrate,s,x;		Increases fixed cast time of skill s by x%. (supports skill names.)
 bonus4 bSetDefRace,r,n,t,y; 	Set DEF to y of an enemy of race r at n% for t milliseconds with normal attack
 bonus4 bSetMDefRace,r,n,t,y;	Set MDEF to y of an enemy of race r at n% for t milliseconds with normal attack
+bonus2 bAddRaceTolerance,n,x;	Add x% tolerance against race n (Renewal Only)
+					n: 	0=Formless, 1=Undead, 2=Brute, 3=Plant, 4=Insect,
+						5=Fish, 6=Demon, 7=Demi-Human, 8=Angel, 9=Dragon, 
+						10=Boss monster, 11=Other than (normal monster) boss monster

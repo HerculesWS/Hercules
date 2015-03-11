@@ -558,6 +558,7 @@ struct battle_interface {
 	int64 (*attr_fix) (struct block_list *src, struct block_list *target, int64 damage, int atk_elem, int def_type, int def_lv);
 	/* applies card modifiers */
 	int64 (*calc_cardfix) (int attack_type, struct block_list *src, struct block_list *target, int nk, int s_ele, int s_ele_, int64 damage, int left, int flag);
+	int64 (*calc_cardfix2) (struct block_list *src, struct block_list *bl, int64 damage, int s_ele, int nk, int flag);
 	/* applies element modifiers */
 	int64 (*calc_elefix) (struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 damage, int nk, int n_ele, int s_ele, int s_ele_, bool left, int flag);
 	/* applies mastery modifiers */
