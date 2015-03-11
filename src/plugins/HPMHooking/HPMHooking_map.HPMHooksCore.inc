@@ -99,6 +99,8 @@ struct {
 	struct HPMHookPoint *HP_battle_attr_fix_post;
 	struct HPMHookPoint *HP_battle_calc_cardfix_pre;
 	struct HPMHookPoint *HP_battle_calc_cardfix_post;
+	struct HPMHookPoint *HP_battle_calc_cardfix2_pre;
+	struct HPMHookPoint *HP_battle_calc_cardfix2_post;
 	struct HPMHookPoint *HP_battle_calc_elefix_pre;
 	struct HPMHookPoint *HP_battle_calc_elefix_post;
 	struct HPMHookPoint *HP_battle_calc_masteryfix_pre;
@@ -5302,6 +5304,8 @@ struct {
 	int HP_battle_attr_fix_post;
 	int HP_battle_calc_cardfix_pre;
 	int HP_battle_calc_cardfix_post;
+	int HP_battle_calc_cardfix2_pre;
+	int HP_battle_calc_cardfix2_post;
 	int HP_battle_calc_elefix_pre;
 	int HP_battle_calc_elefix_post;
 	int HP_battle_calc_masteryfix_pre;

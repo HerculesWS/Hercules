@@ -54,6 +54,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(battle->attr_ratio, HP_battle_attr_ratio) },
 	{ HP_POP(battle->attr_fix, HP_battle_attr_fix) },
 	{ HP_POP(battle->calc_cardfix, HP_battle_calc_cardfix) },
+	{ HP_POP(battle->calc_cardfix2, HP_battle_calc_cardfix2) },
 	{ HP_POP(battle->calc_elefix, HP_battle_calc_elefix) },
 	{ HP_POP(battle->calc_masteryfix, HP_battle_calc_masteryfix) },
 	{ HP_POP(battle->calc_chorusbonus, HP_battle_calc_chorusbonus) },

@@ -1302,6 +1302,33 @@ int64 HP_battle_calc_cardfix(int attack_type, struct block_list *src, struct blo
 	}
 	return retVal___;
 }
+int64 HP_battle_calc_cardfix2(struct block_list *src, struct block_list *bl, int64 damage, int s_ele, int nk, int flag) {
+	int hIndex = 0;
+	int64 retVal___ = 0;
+	if( HPMHooks.count.HP_battle_calc_cardfix2_pre ) {
+		int64 (*preHookFunc) (struct block_list *src, struct block_list *bl, int64 *damage, int *s_ele, int *nk, int *flag);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_cardfix2_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_battle_calc_cardfix2_pre[hIndex].func;
+			retVal___ = preHookFunc(src, bl, &damage, &s_ele, &nk, &flag);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.battle.calc_cardfix2(src, bl, damage, s_ele, nk, flag);
+	}
+	if( HPMHooks.count.HP_battle_calc_cardfix2_post ) {
+		int64 (*postHookFunc) (int64 retVal___, struct block_list *src, struct block_list *bl, int64 *damage, int *s_ele, int *nk, int *flag);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_cardfix2_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_battle_calc_cardfix2_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, src, bl, &damage, &s_ele, &nk, &flag);
+		}
+	}
+	return retVal___;
+}
 int64 HP_battle_calc_elefix(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 damage, int nk, int n_ele, int s_ele, int s_ele_, bool left, int flag) {
 	int hIndex = 0;
 	int64 retVal___ = 0;
