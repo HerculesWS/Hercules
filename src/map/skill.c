@@ -2213,7 +2213,8 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		}
 	}
 
-	if( dmg.flag&BF_MAGIC && ( (battle_config.eq_single_target_reflectable && (flag&0xFFF) == 1) ) ) {
+	if( dmg.flag&BF_MAGIC 
+		&& (skill_id != NPC_EARTHQUAKE || (battle_config.eq_single_target_reflectable && (flag & 0xFFF) == 1)) ) { /* Need more info cause NPC_EARTHQUAKE is ground type */
 		// Earthquake on multiple targets is not counted as a target skill. [Inkfish]
 		if( (dmg.damage || dmg.damage2) && (type = skill->magic_reflect(src, bl, src==dsrc)) ) {
 			//Magic reflection, switch caster/target
