@@ -1826,7 +1826,7 @@ int map_quit(struct map_session_data *sd) {
 	if( sd->sc.count ) {
 		//Status that are not saved...
 		for(i=0; i < SC_MAX; i++){
-			if ( status->get_sc_type(i)&SC_NO_SAVE ) {
+			if ( status->SCConfiguration[i].config&SC_NO_SAVE ) {
 				if ( !sd->sc.data[i] )
 					continue;
 				switch( i ){

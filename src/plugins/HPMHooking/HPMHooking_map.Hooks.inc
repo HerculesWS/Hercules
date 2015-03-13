@@ -65157,33 +65157,6 @@ int HP_status_type2relevant_bl_types(int type) {
 	}
 	return retVal___;
 }
-int HP_status_get_sc_type(sc_type idx) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if( HPMHooks.count.HP_status_get_sc_type_pre ) {
-		int (*preHookFunc) (sc_type *idx);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_sc_type_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_status_get_sc_type_pre[hIndex].func;
-			retVal___ = preHookFunc(&idx);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.status.get_sc_type(idx);
-	}
-	if( HPMHooks.count.HP_status_get_sc_type_post ) {
-		int (*postHookFunc) (int retVal___, sc_type *idx);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_sc_type_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_status_get_sc_type_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &idx);
-		}
-	}
-	return retVal___;
-}
 int HP_status_damage(struct block_list *src, struct block_list *target, int64 hp, int64 sp, int walkdelay, int flag) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -67910,32 +67883,31 @@ bool HP_status_readdb_refine(char *fields[], int columns, int current) {
 	}
 	return retVal___;
 }
-bool HP_status_readdb_scconfig(char *fields[], int columns, int current) {
+void HP_status_read_scconfig(void) {
 	int hIndex = 0;
-	bool retVal___ = false;
-	if( HPMHooks.count.HP_status_readdb_scconfig_pre ) {
-		bool (*preHookFunc) (char *fields[], int *columns, int *current);
+	if( HPMHooks.count.HP_status_read_scconfig_pre ) {
+		void (*preHookFunc) (void);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_scconfig_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_status_readdb_scconfig_pre[hIndex].func;
-			retVal___ = preHookFunc(fields, &columns, &current);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_read_scconfig_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_status_read_scconfig_pre[hIndex].func;
+			preHookFunc();
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
-			return retVal___;
+			return;
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.status.readdb_scconfig(fields, columns, current);
+		HPMHooks.source.status.read_scconfig();
 	}
-	if( HPMHooks.count.HP_status_readdb_scconfig_post ) {
-		bool (*postHookFunc) (bool retVal___, char *fields[], int *columns, int *current);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_scconfig_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_status_readdb_scconfig_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, fields, &columns, &current);
+	if( HPMHooks.count.HP_status_read_scconfig_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_read_scconfig_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_status_read_scconfig_post[hIndex].func;
+			postHookFunc();
 		}
 	}
-	return retVal___;
+	return;
 }
 /* storage */
 void HP_storage_reconnect(void) {

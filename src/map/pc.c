@@ -8115,9 +8115,9 @@ int pc_setoption(struct map_session_data *sd,int type)
 
 		// End all SCs that can be reset when mado is taken off
 		for( i = 0; i < SC_MAX; i++ ) {
-			if ( !sd->sc.data[i] || !status->get_sc_type(i) )
+			if ( !sd->sc.data[i] || !status->SCConfiguration[i].config )
 				continue;
-			if ( status->get_sc_type(i)&SC_MADO_NO_RESET )
+			if ( status->SCConfiguration[i].config&SC_MADO_NO_RESET )
 				continue;
 			switch (i) {
 				case SC_BERSERK:

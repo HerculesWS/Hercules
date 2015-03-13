@@ -375,8 +375,7 @@ typedef enum sc_type {
 	//SC_DEFRATIOATK,
 	//SC_HPDRAIN,
 	//SC_SKILLATKBONUS,
-	SC_ITEMSCRIPT = 290,
-	SC_S_LIFEPOTION,
+	SC_S_LIFEPOTION = 291,
 	SC_L_LIFEPOTION,
 	SC_CASH_PLUSONLYJOBEXP,
 	//SC_IGNOREDEF,
@@ -743,6 +742,11 @@ typedef enum sc_type {
 	SC_MTF_MSP,
 	SC_MTF_PUMPKIN,
 	SC_MTF_HITFLEE,
+
+	SC_MVPCARD_TAOGUNKA,
+	SC_MVPCARD_MISTRESS,
+	SC_MVPCARD_ORCHERO, // 590
+	SC_MVPCARD_ORCLORD,
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
@@ -1870,6 +1874,11 @@ struct status_change_entry {
 	int val1,val2,val3,val4;
 };
 
+struct status_config {
+	unsigned short config;
+	struct script_code *script;
+};
+
 struct status_change {
 	unsigned int option;// effect state (bitfield)
 	unsigned int opt3;// skill state (bitfield)
@@ -1997,7 +2006,7 @@ struct status_interface {
 	/* */
 	int atkmods[3][MAX_WEAPON_TYPE];//ATK weapon modification for size (size_fix.txt)
 	char job_bonus[CLASS_COUNT][MAX_LEVEL];
-	sc_conf_type sc_conf[SC_MAX];
+	struct status_config SCConfiguration[SC_MAX]; /* status -> configuration [malufett/Hercules] */
 	struct eri *data_ers; //For sc_data entries
 	struct status_data dummy;
 	int64 natural_heal_prev_tick;
@@ -2012,7 +2021,6 @@ struct status_interface {
 	int (*sc2skill) (sc_type sc);
 	unsigned int (*sc2scb_flag) (sc_type sc);
 	int (*type2relevant_bl_types) (int type);
-	int (*get_sc_type) (sc_type idx);
 	int (*damage) (struct block_list *src,struct block_list *target,int64 hp,int64 sp, int walkdelay, int flag);
 	//Define for standard HP/SP skill-related cost triggers (mobs require no HP/SP to use skills)
 	int (*charge) (struct block_list* bl, int64 hp, int64 sp);
@@ -2117,7 +2125,7 @@ struct status_interface {
 	bool (*readdb_job2) (char *fields[], int columns, int current);
 	bool (*readdb_sizefix) (char *fields[], int columns, int current);
 	bool (*readdb_refine) (char *fields[], int columns, int current);
-	bool (*readdb_scconfig) (char *fields[], int columns, int current);
+	void (*read_scconfig) (void);
 };
 
 struct status_interface *status;

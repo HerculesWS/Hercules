@@ -7017,10 +7017,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				for(i = 0; i < SC_MAX; i++) {
 					if ( !tsc->data[i] )
 							continue;
-					if( SC_COMMON_MAX < i ) {
-						if ( status->get_sc_type(i)&SC_NO_DISPELL )
+					if( SC_COMMON_MAX < i && status->SCConfiguration[i].config&SC_NO_DISPELL )
 							continue;
-					}
 					switch (i) {
 						/**
 						 * bugreport:4888 these songs may only be dispelled if you're not in their song area anymore
@@ -8474,8 +8472,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				for(i = 0; i < SC_MAX; i++) {
 					if ( !tsc->data[i] )
 						continue;
-					if( SC_COMMON_MAX > i )
-						if ( status->get_sc_type(i)&SC_NO_CLEARANCE )
+					if( SC_COMMON_MAX > i && status->SCConfiguration[i].config&SC_NO_CLEARANCE )
 							continue;
 					switch (i) {
 						case SC_ASSUMPTIO:

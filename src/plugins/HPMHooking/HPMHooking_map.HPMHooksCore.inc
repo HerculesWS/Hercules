@@ -4845,8 +4845,6 @@ struct {
 	struct HPMHookPoint *HP_status_sc2scb_flag_post;
 	struct HPMHookPoint *HP_status_type2relevant_bl_types_pre;
 	struct HPMHookPoint *HP_status_type2relevant_bl_types_post;
-	struct HPMHookPoint *HP_status_get_sc_type_pre;
-	struct HPMHookPoint *HP_status_get_sc_type_post;
 	struct HPMHookPoint *HP_status_damage_pre;
 	struct HPMHookPoint *HP_status_damage_post;
 	struct HPMHookPoint *HP_status_charge_pre;
@@ -5049,8 +5047,8 @@ struct {
 	struct HPMHookPoint *HP_status_readdb_sizefix_post;
 	struct HPMHookPoint *HP_status_readdb_refine_pre;
 	struct HPMHookPoint *HP_status_readdb_refine_post;
-	struct HPMHookPoint *HP_status_readdb_scconfig_pre;
-	struct HPMHookPoint *HP_status_readdb_scconfig_post;
+	struct HPMHookPoint *HP_status_read_scconfig_pre;
+	struct HPMHookPoint *HP_status_read_scconfig_post;
 	struct HPMHookPoint *HP_storage_reconnect_pre;
 	struct HPMHookPoint *HP_storage_reconnect_post;
 	struct HPMHookPoint *HP_storage_delitem_pre;
@@ -10050,8 +10048,6 @@ struct {
 	int HP_status_sc2scb_flag_post;
 	int HP_status_type2relevant_bl_types_pre;
 	int HP_status_type2relevant_bl_types_post;
-	int HP_status_get_sc_type_pre;
-	int HP_status_get_sc_type_post;
 	int HP_status_damage_pre;
 	int HP_status_damage_post;
 	int HP_status_charge_pre;
@@ -10254,8 +10250,8 @@ struct {
 	int HP_status_readdb_sizefix_post;
 	int HP_status_readdb_refine_pre;
 	int HP_status_readdb_refine_post;
-	int HP_status_readdb_scconfig_pre;
-	int HP_status_readdb_scconfig_post;
+	int HP_status_read_scconfig_pre;
+	int HP_status_read_scconfig_post;
 	int HP_storage_reconnect_pre;
 	int HP_storage_reconnect_post;
 	int HP_storage_delitem_pre;

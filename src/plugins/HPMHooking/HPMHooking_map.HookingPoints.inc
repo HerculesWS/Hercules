@@ -2460,7 +2460,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(status->sc2skill, HP_status_sc2skill) },
 	{ HP_POP(status->sc2scb_flag, HP_status_sc2scb_flag) },
 	{ HP_POP(status->type2relevant_bl_types, HP_status_type2relevant_bl_types) },
-	{ HP_POP(status->get_sc_type, HP_status_get_sc_type) },
 	{ HP_POP(status->damage, HP_status_damage) },
 	{ HP_POP(status->charge, HP_status_charge) },
 	{ HP_POP(status->percent_change, HP_status_percent_change) },
@@ -2562,7 +2561,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(status->readdb_job2, HP_status_readdb_job2) },
 	{ HP_POP(status->readdb_sizefix, HP_status_readdb_sizefix) },
 	{ HP_POP(status->readdb_refine, HP_status_readdb_refine) },
-	{ HP_POP(status->readdb_scconfig, HP_status_readdb_scconfig) },
+	{ HP_POP(status->read_scconfig, HP_status_read_scconfig) },
 /* storage */
 	{ HP_POP(storage->reconnect, HP_storage_reconnect) },
 	{ HP_POP(storage->delitem, HP_storage_delitem) },
