@@ -6923,6 +6923,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv)));
 			else {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				map->freeblock_unlock();
 				return 0;
 			}
 			break;
@@ -6934,6 +6935,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 						sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv)));
 				else {
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+					map->freeblock_unlock();
 					return 0;
 				}
 			}
@@ -6944,6 +6946,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv)));
 			else {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				map->freeblock_unlock();
 				return 0;
 			}
 			break;
@@ -6953,6 +6956,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv)));
 			else {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				map->freeblock_unlock();
 				return 0;
 			}
 			break;
@@ -7657,6 +7661,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 			else {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				map->freeblock_unlock();
 				return 0;
 			}
 		}
