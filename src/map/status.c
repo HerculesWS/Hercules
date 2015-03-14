@@ -819,6 +819,11 @@ void initChangeTables(void) {
 	status->IconChangeTable[SC_L_LIFEPOTION] = SI_L_LIFEPOTION;
 	status->IconChangeTable[SC_ATKER_BLOOD] = SI_ATKER_BLOOD;
 	status->IconChangeTable[SC_TARGET_BLOOD] = SI_TARGET_BLOOD;
+	status->ChangeFlagTable[SC_INCFLEERATE] |= SCB_FLEE;
+	status->ChangeFlagTable[SC_INCHITRATE] |= SCB_HIT;
+	status->ChangeFlagTable[SC_INCATKRATE] |= SCB_BATK|SCB_WATK;
+	status->ChangeFlagTable[SC_INCMATKRATE] |= SCB_MATK;
+	status->ChangeFlagTable[SC_INCDEFRATE] |= SCB_DEF;
 	// Mercenary Bonus Effects
 	status->IconChangeTable[SC_MER_FLEE] = SI_MER_FLEE;
 	status->IconChangeTable[SC_MER_ATK] = SI_MER_ATK;
@@ -932,6 +937,13 @@ void initChangeTables(void) {
 	status->ChangeFlagTable[SC_ARMOR_RESIST] |= SCB_ALL;
 	status->ChangeFlagTable[SC_ATKER_BLOOD] |= SCB_ALL;
 	status->ChangeFlagTable[SC_WALKSPEED] |= SCB_SPEED;
+
+	// Mercenary Bonus Effects
+	status->ChangeFlagTable[SC_MER_FLEE] |= SCB_FLEE;
+	status->ChangeFlagTable[SC_MER_ATK] |= SCB_WATK;
+	status->ChangeFlagTable[SC_MER_HP] |= SCB_MAXHP;
+	status->ChangeFlagTable[SC_MER_SP] |= SCB_MAXSP;
+	status->ChangeFlagTable[SC_MER_HIT] |= SCB_HIT;
 
 	// Guillotine Cross Poison Effects
 	status->ChangeFlagTable[SC_PARALYSE] |= SCB_FLEE|SCB_SPEED|SCB_ASPD;
@@ -4502,7 +4514,8 @@ unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc,
 		batk += sc->data[SC_PYROCLASTIC]->val2;
 	if (sc->data[SC_ANGRIFFS_MODUS])
 		batk += sc->data[SC_ANGRIFFS_MODUS]->val2;
-
+	if ( sc->data[SC_INCATKRATE] )
+		batk += batk * sc->data[SC_INCATKRATE]->val1 / 100;
 	if(sc->data[SC_PROVOKE])
 		batk += batk * sc->data[SC_PROVOKE]->val3/100;
 #ifndef RENEWAL
@@ -4554,6 +4567,8 @@ unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc,
 #endif
 	if(sc->data[SC_VOLCANO])
 		watk += sc->data[SC_VOLCANO]->val2;
+	if ( sc->data[SC_MER_ATK] )
+		watk += sc->data[SC_MER_ATK]->val2;
 	if(sc->data[SC_FIGHTINGSPIRIT])
 		watk += sc->data[SC_FIGHTINGSPIRIT]->val1;
 	if(sc->data[SC_SHIELDSPELL_DEF] && sc->data[SC_SHIELDSPELL_DEF]->val1 == 3)
@@ -4583,6 +4598,8 @@ unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc,
 	if(sc->data[SC_LKCONCENTRATION])
 		watk += watk * sc->data[SC_LKCONCENTRATION]->val2/100;
 #endif
+	if ( sc->data[SC_INCATKRATE] )
+		watk += watk * sc->data[SC_INCATKRATE]->val1 / 100;
 	if(sc->data[SC_PROVOKE])
 		watk += watk * sc->data[SC_PROVOKE]->val3/100;
 	if(sc->data[SC_SKE])
@@ -4673,6 +4690,8 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 		matk += sc->data[SC_ZANGETSU]->val3;
 	if (sc->data[SC_MAGICPOWER] && sc->data[SC_MAGICPOWER]->val4)
 		matk += matk * sc->data[SC_MAGICPOWER]->val3/100;
+	if ( sc->data[SC_INCMATKRATE] )
+		matk += matk * sc->data[SC_INCMATKRATE]->val1 / 100;
 	if (sc->data[SC_MOONLIT_SERENADE])
 		matk += matk * sc->data[SC_MOONLIT_SERENADE]->val2/100;
 	if (sc->data[SC_MTF_MATK])
@@ -4740,7 +4759,11 @@ signed short status_calc_hit(struct block_list *bl, struct status_change *sc, in
 		hit -= 30;
 	if(sc->data[SC_GS_ACCURACY])
 		hit += 20; // RockmanEXE; changed based on updated [Reddozen]
+	if ( sc->data[SC_MER_HIT] )
+		hit += sc->data[SC_MER_HIT]->val2;
 
+	if ( sc->data[SC_INCHITRATE] )
+		hit += hit * sc->data[SC_INCHITRATE]->val1 / 100;
 	if(sc->data[SC_BLIND])
 		hit -= hit * 25/100;
 	if(sc->data[SC_FIRE_EXPANSION_TEAR_GAS])
@@ -4793,6 +4816,8 @@ signed short status_calc_flee(struct block_list *bl, struct status_change *sc, i
 		flee -= sc->data[SC_GS_GATLINGFEVER]->val4;
 	if(sc->data[SC_PARTYFLEE])
 		flee += sc->data[SC_PARTYFLEE]->val1 * 10;
+	if ( sc->data[SC_MER_FLEE] )
+		flee += sc->data[SC_MER_FLEE]->val2;
 	if( sc->data[SC_HALLUCINATIONWALK] )
 		flee += sc->data[SC_HALLUCINATIONWALK]->val2;
 	if( sc->data[SC_WATER_BARRIER] )
@@ -4801,6 +4826,8 @@ signed short status_calc_flee(struct block_list *bl, struct status_change *sc, i
 	if( sc->data[SC_SPEARQUICKEN] )
 		flee += 2 * sc->data[SC_SPEARQUICKEN]->val1;
 #endif
+	if ( sc->data[SC_INCFLEERATE] )
+		flee += flee * sc->data[SC_INCFLEERATE]->val1 / 100;
 	if(sc->data[SC_SPIDERWEB] && sc->data[SC_SPIDERWEB]->val1)
 		flee -= flee * 50/100;
 	if (sc->data[SC_BERSERK])
@@ -4910,6 +4937,8 @@ defType status_calc_def(struct block_list *bl, struct status_change *sc, int def
 	if (sc->data[SC_FREEZE])
 		def >>=1;
 #endif
+	if ( sc->data[SC_INCDEFRATE] )
+		def += def * sc->data[SC_INCDEFRATE]->val1 / 100;
 	if (sc->data[SC_ANGRIFFS_MODUS])
 		def -= 30 + 20 * sc->data[SC_ANGRIFFS_MODUS]->val1;
 	if (sc->data[SC_CRUCIS])
@@ -5624,7 +5653,8 @@ unsigned int status_calc_maxhp(struct block_list *bl, struct status_change *sc, 
 		maxhp += 3000;
 	if(sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 2)
 		maxhp += 500;
-
+	if ( sc->data[SC_MER_HP] )
+		maxhp += maxhp * sc->data[SC_MER_HP]->val2 / 100;
 	if(sc->data[SC_EPICLESIS])
 		maxhp += maxhp * 5 * sc->data[SC_EPICLESIS]->val1 / 100;
 	if(sc->data[SC_VENOMBLEED])
@@ -5672,6 +5702,8 @@ unsigned int status_calc_maxsp(struct block_list *bl, struct status_change *sc, 
 
 	if(sc->data[SC_SERVICEFORYOU])
 		maxsp += maxsp * sc->data[SC_SERVICEFORYOU]->val2/100;
+	if ( sc->data[SC_MER_SP] )
+		maxsp += maxsp * sc->data[SC_MER_SP]->val2 / 100;
 	if(sc->data[SC_RAISINGDRAGON])
 		maxsp += maxsp * (2 + sc->data[SC_RAISINGDRAGON]->val1) / 100;
 	if(sc->data[SC_LIFE_FORCE_F])
@@ -8318,6 +8350,16 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				//Place here SCs that have no SCB_* data, no skill associated, no ICON
 				//associated, and yet are not wrong/unknown. [Skotlex]
 				//break;
+
+			case SC_MER_FLEE:
+			case SC_MER_ATK:
+			case SC_MER_HIT:
+				val2 = 15 * val1;
+				break;
+			case SC_MER_HP:
+			case SC_MER_SP:
+				val2 = 5 * val1;
+				break;
 
 			case SC_REBIRTH:
 				val2 = 20*val1; //% of life to be revived with
@@ -12006,8 +12048,8 @@ void read_sc_config(void){
 		}
 
 		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
-		libconfig->destroy(&sc_conf);
 	}
+	libconfig->destroy(&sc_conf);
 }
 /**
  * Read status db
