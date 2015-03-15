@@ -9597,14 +9597,18 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		++(sc->count);
 		sce = sc->data[type] = ers_alloc(status->data_ers, struct status_change_entry);
 	}
+	
 	sce->val1 = val1;
 	sce->val2 = val2;
 	sce->val3 = val3;
 	sce->val4 = val4;
-	if (tick >= 0)
+	
+	if (tick >= 0) {
 		sce->timer = timer->add(timer->gettick() + tick, status->change_timer, bl->id, type);
-	else {
+		sce->infinite_duration = false;
+	} else {
 		sce->timer = INVALID_TIMER; //Infinite duration
+		sce->infinite_duration = true;
 		if( sd )
 			chrif->save_scdata_single(sd->status.account_id,sd->status.char_id,type,sce);
 	}
@@ -9790,7 +9794,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 
 	st = status->get_status_data(bl);
 	
-	if( sd && sce->timer == INVALID_TIMER && !sd->state.loggingout )
+	if( sd && sce->infinite_duration && !sd->state.loggingout )
 		chrif->del_scdata_single(sd->status.account_id,sd->status.char_id,type);
 
 	if (tid == INVALID_TIMER) {
