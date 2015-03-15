@@ -9785,7 +9785,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 
 	sd = BL_CAST(BL_PC,bl);
 
-	if (sce->timer != tid && tid != INVALID_TIMER)
+	if (sce->timer != tid && tid != INVALID_TIMER && sce->timer != INVALID_TIMER)
 		return 0;
 
 	st = status->get_status_data(bl);
