@@ -4624,6 +4624,7 @@ int do_init_npc(bool minimal) {
 	}
 	
 	if( script->lang_export_fp ) {
+		ShowInfo("Lang exported to '%s'\n",script->lang_export_file);
 		fclose(script->lang_export_fp);
 		script->lang_export_fp = NULL;
 	}

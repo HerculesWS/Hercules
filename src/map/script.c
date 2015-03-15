@@ -1295,7 +1295,8 @@ const char* parse_simpleexpr(const char *p)
 			const char *line_start = start_point;
 			const char *line_end = start_point;
 			struct script_string_buf *lbuf = &script->lang_export_line_buf;
-			size_t line_length;
+			struct script_string_buf *ubuf = &script->lang_export_unescaped_buf;
+			size_t line_length, cursor;
 
 			while( line_start > script->parser_current_src ) {
 				if( *line_start != '\n' )
@@ -1319,6 +1320,13 @@ const char* parse_simpleexpr(const char *p)
 				normalize_name(lbuf->ptr, "\r\n\t ");
 			}
 			
+			for(cursor = 0; cursor < sbuf->pos; cursor++) {
+				if( sbuf->ptr[cursor] == '"' )
+					script_string_buf_addb(ubuf, '\\');
+				script_string_buf_addb(ubuf, sbuf->ptr[cursor]);
+			}
+			script_string_buf_addb(ubuf, 0);
+			
 			fprintf(script->lang_export_fp, "#: %s\n"
 											"# %s\n"
 											"msgctxt \"%s\"\n"
@@ -1327,10 +1335,11 @@ const char* parse_simpleexpr(const char *p)
 					script->parser_current_file ? script->parser_current_file : "Unknown File",
 					lbuf->ptr,
 					script->parser_current_npc_name ? script->parser_current_npc_name : "Unknown NPC",
-					sbuf->ptr
+					ubuf->ptr
 			);
 			
 			lbuf->pos = 0;
+			ubuf->pos = 0;
 		}
 		
 		sbuf->pos = 0;
@@ -4806,6 +4815,7 @@ void script_load_translation(const char *file, uint8 lang_id, uint32 *total) {
 			continue;
 		
 		if( strncasecmp(line,"msgctxt \"", 9) == 0 ) {
+			msgctxt[0] = '\0';
 			for(i = 9; i < len - 2; i++) {
 				if( line[i] == '\\' && line[i+1] == '"' ) {
 					msgctxt[cursor] = '"';
@@ -4817,6 +4827,7 @@ void script_load_translation(const char *file, uint8 lang_id, uint32 *total) {
 			}
 			msgctxt[cursor] = '\0';
 		} else if ( strncasecmp(line, "msgid \"", 7) == 0 ) {
+			msgid.pos = 0;
 			for(i = 7; i < len - 2; i++) {
 				if( line[i] == '\\' && line[i+1] == '"' ) {
 					script_string_buf_addb(&msgid, '"');
@@ -4826,6 +4837,7 @@ void script_load_translation(const char *file, uint8 lang_id, uint32 *total) {
 			}
 			script_string_buf_addb(&msgid,0);
 		} else if ( len > 9 && line[9] != '"' && strncasecmp(line, "msgstr \"",8) == 0 ) {
+			msgstr.pos = 0;
 			for(i = 8; i < len - 2; i++) {
 				if( line[i] == '\\' && line[i+1] == '"' ) {
 					script_string_buf_addb(&msgstr, '"');
@@ -4877,7 +4889,6 @@ void script_load_translation(const char *file, uint8 lang_id, uint32 *total) {
 				st->translations++;
 				st->len += inner_len;
 			}
-			
 			msgctxt[0] = '\0';
 			msgid.pos = msgstr.pos = 0;
 			translations++;
@@ -4977,6 +4988,7 @@ void script_parser_clean_leftovers(void) {
 
 	script_string_buf_destroy(&script->parse_simpleexpr_str);
 	script_string_buf_destroy(&script->lang_export_line_buf);
+	script_string_buf_destroy(&script->lang_export_unescaped_buf);
 }
 
 /**
