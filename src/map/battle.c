@@ -915,9 +915,8 @@ int64 battle_calc_elefix(struct block_list *src, struct block_list *target, uint
 }
 int64 battle_calc_cardfix2(struct block_list *src, struct block_list *bl, int64 damage, int s_ele, int nk, int flag) {
 #ifdef RENEWAL
-	struct map_session_data *sd, *tsd;
+	struct map_session_data *tsd;
 	struct status_data *sstatus;
-	struct status_data *tstatus;
 
 	if ( !damage )
 		return 0;
@@ -925,10 +924,8 @@ int64 battle_calc_cardfix2(struct block_list *src, struct block_list *bl, int64 
 	nullpo_ret(bl);
 	nullpo_ret(src);
 
-	sd = BL_CAST(BL_PC, src);
 	tsd = BL_CAST(BL_PC, bl);
 	sstatus = status->get_status_data(src);
-	tstatus = status->get_status_data(bl);
 
 	if ( tsd ) {
 		if ( !(nk&NK_NO_CARDFIX_ATK) ) {
@@ -2035,8 +2032,6 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 						if (ratio > 60000) ratio = 60000; //We leave some room here in case skillratio gets further increased.
 						skillratio = (unsigned short)ratio;
 					}
-#else
-					skillratio += 150 * (skill_lv + 1);
 #endif
 					break;
 				case MO_TRIPLEATTACK:
@@ -4897,8 +4892,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				short totaldef = status->get_total_def(target);
 				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | 8, skill_id);
 				if ( wd.damage ) {
-					ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
-					ATK_ADD((10 * (status_get_sp(src) + 1) * wd.damage / 100) + (8 * wd.damage));
+					ATK_ADD(250 * (skill_lv + 1) + (10 * (status_get_sp(src) + 1) * wd.damage / 100) + (8 * wd.damage));
 					ATK_ADD(-totaldef);
 				}
 			}
