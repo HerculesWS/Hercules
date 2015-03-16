@@ -4,6 +4,8 @@
 //= Capuche
 //===== Current Version: =====================================
 //= 1.1
+//===== File Encoding ========================================
+//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //===== Compatible With: =====================================
 //= Hercules
 //===== Description: =========================================
