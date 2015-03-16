@@ -152,7 +152,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 		else if (para_100lv01 > 2) {
 			mes "The request list is ready. Do you want to start?";
 			next;
-			switch( select( "Hunting Quests", "Inquire regards", "Show kindness pass" ) ) {
+			switch( select( "Hunting Quests", "Inquire regards", "Show Courtesy Ticket" ) ) {
 			case 1:
 				mes "[Gelkah]";
 				mes "You don't need to take all requests at once. Choose a request area that suits your particular skills. One that enables you to perform the request and enjoy the trip at the same time.";
@@ -724,10 +724,10 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 			case 3:
 				mes "[Gelkah]";
 				cutin "gelca03",2;
-				mes "Did you bring the kindness pass?";
+				mes "Did you bring the Courtesy Ticket?";
 				next;
-				if (countitem(Courtesy_Ticket) > 0) {// Courtesy_Ticket
-					if (select( "The ^FF0000kindness pass^000000?", "Exchange pass for prizes." ) == 1) {
+				if (countitem(Courtesy_Ticket)) {// Courtesy_Ticket
+					if (select( "The ^FF0000Courtesy Ticket^000000?", "Exchange ticket for prizes." ) == 1) {
 						mes "[Gelkah]";
 						mes "I know it sounds childish. Right? The shape is just like the card we used to play when we were kids.";
 						next;
@@ -757,24 +757,24 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 						mes "It will be agood experience if you listen to the story of adventurer. There are so much adventure that we heard from a master.";
 						next;
 						mes "[Gelkah]";
-						mes "If you are matured enough not to need a request Make sure that you are not allowed to use a pass.";
+						mes "If you are matured enough not to need a request Make sure that you are not allowed to use a ticket.";
 					}
 					else {
 						mes "[Gelkah]";
-						mes "How do you want to use this pass?";
+						mes "How do you want to use this ticket?";
 						next;
 						if (select( "Exchange for prizes", "Listen to a story and get EXP" ) == 1) {
 							cutin "gelca03",2;
 							mes "[Gelkah]";
 							mes "You can pick a trophy in this bag. Please do not be disappointed even if you picked up something you do not want. How many do you want to exchange?";
 							next;
-							.@amount = select( "Exchange kindness ^FF00001^000000 pass", "Exchange kindness ^FF000010^000000 pass" ) == 1 ? 1 : 10;
+							.@amount = (select( "Exchange ^FF00001^000000 Courtesy Ticket", "Exchange ^FF000010^000000 Courtesy Tickets" ) == 1) ? 1 : 10;
 							mes "[Gelkah]";
-							mes "Please give me a pass and put your hand in a bag to pick.";
+							mes "Please give me a ticket and put your hand in a bag to pick.";
 							next;
 							if (countitem(Courtesy_Ticket) < .@amount) {// Courtesy_Ticket
 								mes "[Gelkah]";
-								mes "^FF0000Kindness pass^000000 is insufficient.";
+								mes "^FF0000Courtesy Ticket^000000 is insufficient.";
 							}
 							else {
 								mes "browsing";
@@ -818,13 +818,13 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 						}
 						else {
 							mes "[Gelkah]";
-							mes "Ok, I've got a story for you in exchange for the kindness pass.";
+							mes "Ok, I've got a story for you in exchange for the Courtesy Ticket.";
 							next;
-							switch( select( "Give ^FF000010^000000 kindness pass", "Give ^FF000020^000000 kindness pass", "Give ^FF000030^000000 kindness pass" ) ) {;
+							switch( select( "Give ^FF000010^000000 Courtesy Ticket", "Give ^FF000020^000000 Courtesy Ticket", "Give ^FF000030^000000 Courtesy Ticket" ) ) {;
 							case 1:
 								mes "[Gelkah]";
 								if (countitem(Courtesy_Ticket) < 10)// Courtesy_Ticket
-									mes "You don't have enough kindness passes.";
+									mes "You don't have enough Courtesy Tickets.";
 								else {
 									.@story = rand(1,3);
 									if (.@story == 1) {
@@ -862,7 +862,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 							case 2:
 								mes "[Gelkah]";
 								if (countitem(Courtesy_Ticket) < 20)// Courtesy_Ticket
-									mes "You don't have enough kindness passes.";
+									mes "You don't have enough Courtesy Tickets.";
 								else {
 									.@story = rand(1,3);
 									if (.@story == 1) {
@@ -899,7 +899,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 							case 3:
 								mes "[Gelkah]";
 								if (countitem(Courtesy_Ticket) < 30)// Courtesy_Ticket
-									mes "You don't have enough kindness passes.";
+									mes "You don't have enough Courtesy Tickets.";
 								else {
 									.@story = rand(1,2);
 									if (.@story == 1) {
@@ -932,7 +932,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 				}
 				else {
 					mes "[Gelkah]";
-					mes "Please come back to me if you are received more kindness passes!";
+					mes "Please come back to me if you are received more Courtesy Tickets!";
 				}
 			}
 		}
