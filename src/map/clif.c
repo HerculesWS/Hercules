@@ -17070,7 +17070,7 @@ void clif_favorite_item(struct map_session_data* sd, unsigned short index) {
 	WFIFOHEAD(fd,packet_len(0x908));
 	WFIFOW(fd,0) = 0x908;
 	WFIFOW(fd,2) = index+2;
-	WFIFOL(fd,4) = (sd->status.inventory[index].favorite == 1) ? 0 : 1;
+	WFIFOB(fd,4) = (sd->status.inventory[index].favorite == 1) ? 0 : 1;
 	WFIFOSET(fd,packet_len(0x908));
 }
 
