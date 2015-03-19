@@ -928,7 +928,7 @@ int64 battle_calc_cardfix2(struct block_list *src, struct block_list *bl, int64 
 	sstatus = status->get_status_data(src);
 
 	if ( tsd ) {
-		if ( !(nk&NK_NO_CARDFIX_ATK) ) {
+		if ( !(nk&NK_NO_CARDFIX_DEF) ) {
 			// RaceAddTolerance
 			damage -= damage * tsd->race_tolerance[sstatus->race] / 100;
 			damage -= damage * tsd->race_tolerance[is_boss(src) ? RC_BOSS : RC_NONBOSS] / 100;
@@ -4348,6 +4348,8 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			case GS_PIERCINGSHOT:
 			case AM_ACIDTERROR:
 			case AM_DEMONSTRATION:
+			case NJ_ISSEN:
+			case PA_SACRIFICE:
 				flag.distinct = 1;
 				break;
 			case PA_SHIELDCHAIN:
