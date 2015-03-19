@@ -12428,7 +12428,6 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 					hp = tstatus->max_hp * 3 * sg->skill_lv / 100;
 				else
 					hp = tstatus->max_hp * sg->skill_lv / 100;
-				status->heal(bl, hp, 0, 0);
 				if( tstatus->hp != tstatus->max_hp )
 					clif->skill_nodamage(&src->bl, bl, AL_HEAL, hp, 0);
 				if( tsc && tsc->data[SC_AKAITSUKI] && hp )
