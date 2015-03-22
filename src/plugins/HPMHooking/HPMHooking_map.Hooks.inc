@@ -3981,6 +3981,32 @@ void HP_channel_quit_guild(struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_channel_irc_join(struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_channel_irc_join_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_channel_irc_join_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_channel_irc_join_pre[hIndex].func;
+			preHookFunc(sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.channel.irc_join(sd);
+	}
+	if( HPMHooks.count.HP_channel_irc_join_post ) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_channel_irc_join_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_channel_irc_join_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
 void HP_channel_config_read(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_channel_config_read_pre ) {
