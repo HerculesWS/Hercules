@@ -2976,6 +2976,9 @@ void clif_changelook(struct block_list *bl,int type,int val)
 			case LOOK_BASE:
 				if( !sd ) break;
 
+				if ( val == INVISIBLE_CLASS ) /* nothing to change look */
+					return;
+
 				if( sd->sc.option&OPTION_COSTUME )
 					vd->weapon = vd->shield = 0;
 
