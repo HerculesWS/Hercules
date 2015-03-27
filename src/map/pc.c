@@ -5868,6 +5868,138 @@ const char* job_name(int class_)
 	}
 }
 
+int pc_check_job_name(const char *name) {
+	int i, len;
+	struct {
+		const char *name;
+		int id;
+	} names[] = {
+		{ "Novice", JOB_NOVICE },
+		{ "Swordsman", JOB_SWORDMAN },
+		{ "Magician", JOB_MAGE },
+		{ "Archer", JOB_ARCHER },
+		{ "Acolyte", JOB_ACOLYTE },
+		{ "Merchant", JOB_MERCHANT },
+		{ "Thief", JOB_THIEF },
+		{ "Knight", JOB_KNIGHT },
+		{ "Priest", JOB_PRIEST },
+		{ "Wizard", JOB_WIZARD },
+		{ "Blacksmith", JOB_BLACKSMITH },
+		{ "Hunter", JOB_HUNTER },
+		{ "Assassin", JOB_ASSASSIN },
+		{ "Crusader", JOB_CRUSADER },
+		{ "Monk", JOB_MONK },
+		{ "Sage", JOB_SAGE },
+		{ "Rogue", JOB_ROGUE },
+		{ "Alchemist", JOB_ALCHEMIST },
+		{ "Bard", JOB_BARD },
+		{ "Dancer", JOB_DANCER },
+		{ "Super_Novice", JOB_SUPER_NOVICE },
+		{ "Gunslinger", JOB_GUNSLINGER },
+		{ "Ninja", JOB_NINJA },
+		{ "Novice_High", JOB_NOVICE_HIGH },
+		{ "Swordsman_High", JOB_SWORDMAN_HIGH },
+		{ "Magician_High", JOB_MAGE_HIGH },
+		{ "Archer_High", JOB_ARCHER_HIGH },
+		{ "Acolyte_High", JOB_ACOLYTE_HIGH },
+		{ "Merchant_High", JOB_MERCHANT_HIGH },
+		{ "Thief_High", JOB_THIEF_HIGH },
+		{ "Lord_Knight", JOB_LORD_KNIGHT },
+		{ "High_Priest", JOB_HIGH_PRIEST },
+		{ "High_Wizard", JOB_HIGH_WIZARD },
+		{ "Whitesmith", JOB_WHITESMITH },
+		{ "Sniper", JOB_SNIPER },
+		{ "Assassin_Cross", JOB_ASSASSIN_CROSS },
+		{ "Paladin", JOB_PALADIN },
+		{ "Champion", JOB_CHAMPION },
+		{ "Professor", JOB_PROFESSOR },
+		{ "Stalker", JOB_STALKER },
+		{ "Creator", JOB_CREATOR },
+		{ "Clown", JOB_CLOWN },
+		{ "Gypsy", JOB_GYPSY },
+		{ "Baby_Novice", JOB_BABY },
+		{ "Baby_Swordsman", JOB_BABY_SWORDMAN },
+		{ "Baby_Magician", JOB_BABY_MAGE },
+		{ "Baby_Archer", JOB_BABY_ARCHER },
+		{ "Baby_Acolyte", JOB_BABY_ACOLYTE },
+		{ "Baby_Merchant", JOB_BABY_MERCHANT },
+		{ "Baby_Thief", JOB_BABY_THIEF },
+		{ "Baby_Knight", JOB_BABY_KNIGHT },
+		{ "Baby_Priest", JOB_BABY_PRIEST },
+		{ "Baby_Wizard", JOB_BABY_WIZARD },
+		{ "Baby_Blacksmith", JOB_BABY_BLACKSMITH },
+		{ "Baby_Hunter", JOB_BABY_HUNTER },
+		{ "Baby_Assassin", JOB_BABY_ASSASSIN },
+		{ "Baby_Crusader", JOB_BABY_CRUSADER },
+		{ "Baby_Monk", JOB_BABY_MONK },
+		{ "Baby_Sage", JOB_BABY_SAGE },
+		{ "Baby_Rogue", JOB_BABY_ROGUE },
+		{ "Baby_Alchemist", JOB_BABY_ALCHEMIST },
+		{ "Baby_Bard", JOB_BABY_BARD },
+		{ "Baby_Dancer", JOB_BABY_DANCER },
+		{ "Super_Baby", JOB_SUPER_BABY },
+		{ "Taekwon", JOB_TAEKWON },
+		{ "Star_Gladiator", JOB_STAR_GLADIATOR },
+		{ "Soul_Linker", JOB_SOUL_LINKER },
+		{ "Gangsi", JOB_GANGSI },
+		{ "Death_Knight", JOB_DEATH_KNIGHT },
+		{ "Dark_Collector", JOB_DARK_COLLECTOR },
+		{ "Rune_Knight", JOB_RUNE_KNIGHT },
+		{ "Warlock", JOB_WARLOCK },
+		{ "Ranger", JOB_RANGER },
+		{ "Arch_Bishop", JOB_ARCH_BISHOP },
+		{ "Mechanic", JOB_MECHANIC },
+		{ "Guillotine_Cross", JOB_GUILLOTINE_CROSS },
+		{ "Rune_Knight_Trans", JOB_RUNE_KNIGHT_T },
+		{ "Warlock_Trans", JOB_WARLOCK_T },
+		{ "Ranger_Trans", JOB_RANGER_T },
+		{ "Arch_Bishop_Trans", JOB_ARCH_BISHOP_T },
+		{ "Mechanic_Trans", JOB_MECHANIC_T },
+		{ "Guillotine_Cross_Trans", JOB_GUILLOTINE_CROSS_T },
+		{ "Royal_Guard", JOB_ROYAL_GUARD },
+		{ "Sorcerer", JOB_SORCERER },
+		{ "Minstrel", JOB_MINSTREL },
+		{ "Wanderer", JOB_WANDERER },
+		{ "Sura", JOB_SURA },
+		{ "Genetic", JOB_GENETIC },
+		{ "Shadow_Chaser", JOB_SHADOW_CHASER },
+		{ "Royal_Guard_Trans", JOB_ROYAL_GUARD_T },
+		{ "Sorcerer_Trans", JOB_SORCERER_T },
+		{ "Minstrel_Trans", JOB_MINSTREL_T },
+		{ "Wanderer_Trans", JOB_WANDERER_T },
+		{ "Sura_Trans", JOB_SURA_T },
+		{ "Genetic_Trans", JOB_GENETIC_T },
+		{ "Shadow_Chaser_Trans", JOB_SHADOW_CHASER_T },
+		{ "Baby_Rune_Knight", JOB_BABY_RUNE },
+		{ "Baby_Warlock", JOB_BABY_WARLOCK },
+		{ "Baby_Ranger", JOB_BABY_RANGER },
+		{ "Baby_Arch_Bishop", JOB_BABY_BISHOP },
+		{ "Baby_Mechanic", JOB_BABY_MECHANIC },
+		{ "Baby_Guillotine_Cross", JOB_BABY_CROSS },
+		{ "Baby_Royal_Guard", JOB_BABY_GUARD },
+		{ "Baby_Sorcerer", JOB_BABY_SORCERER },
+		{ "Baby_Minstrel", JOB_BABY_MINSTREL },
+		{ "Baby_Wanderer", JOB_BABY_WANDERER },
+		{ "Baby_Sura", JOB_BABY_SURA },
+		{ "Baby_Genetic", JOB_BABY_GENETIC },
+		{ "Baby_Shadow_Chaser", JOB_BABY_CHASER },
+		{ "Expanded_Super_Novice", JOB_SUPER_NOVICE_E },
+		{ "Expanded_Super_Baby", JOB_SUPER_BABY_E },
+		{ "Kagerou", JOB_KAGEROU },
+		{ "Oboro", JOB_OBORO },
+		{ "Rebellion", JOB_REBELLION },
+	};
+
+	len = ARRAYLENGTH(names);
+
+	ARR_FIND(0, len, i, strcmpi(names[i].name, name) == 0);
+
+	if ( i == len )
+		return -1;
+
+	return names[i].id;
+}
+
 int pc_follow_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct map_session_data *sd;
 	struct block_list *tbl;
@@ -10044,148 +10176,24 @@ void pc_read_skill_tree(void) {
 	int i = 0, jnamelen = 0;
 	struct s_mapiterator *iter;
 	struct map_session_data *sd;
-	struct {
-		const char *name;
-		int id;
-	} jnames[] = {
-		{ "Novice", JOB_NOVICE },
-		{ "Swordsman", JOB_SWORDMAN },
-		{ "Magician", JOB_MAGE },
-		{ "Archer", JOB_ARCHER },
-		{ "Acolyte", JOB_ACOLYTE },
-		{ "Merchant", JOB_MERCHANT },
-		{ "Thief", JOB_THIEF },
-		{ "Knight", JOB_KNIGHT },
-		{ "Priest", JOB_PRIEST },
-		{ "Wizard", JOB_WIZARD },
-		{ "Blacksmith", JOB_BLACKSMITH },
-		{ "Hunter", JOB_HUNTER },
-		{ "Assassin", JOB_ASSASSIN },
-		{ "Crusader", JOB_CRUSADER },
-		{ "Monk", JOB_MONK },
-		{ "Sage", JOB_SAGE },
-		{ "Rogue", JOB_ROGUE },
-		{ "Alchemist", JOB_ALCHEMIST },
-		{ "Bard", JOB_BARD },
-		{ "Dancer", JOB_DANCER },
-		{ "Super_Novice", JOB_SUPER_NOVICE },
-		{ "Gunslinger", JOB_GUNSLINGER },
-		{ "Ninja", JOB_NINJA },
-		{ "Novice_High", JOB_NOVICE_HIGH },
-		{ "Swordsman_High", JOB_SWORDMAN_HIGH },
-		{ "Magician_High", JOB_MAGE_HIGH },
-		{ "Archer_High", JOB_ARCHER_HIGH },
-		{ "Acolyte_High", JOB_ACOLYTE_HIGH },
-		{ "Merchant_High", JOB_MERCHANT_HIGH },
-		{ "Thief_High", JOB_THIEF_HIGH },
-		{ "Lord_Knight", JOB_LORD_KNIGHT },
-		{ "High_Priest", JOB_HIGH_PRIEST },
-		{ "High_Wizard", JOB_HIGH_WIZARD },
-		{ "Whitesmith", JOB_WHITESMITH },
-		{ "Sniper", JOB_SNIPER },
-		{ "Assassin_Cross", JOB_ASSASSIN_CROSS },
-		{ "Paladin", JOB_PALADIN },
-		{ "Champion", JOB_CHAMPION },
-		{ "Professor", JOB_PROFESSOR },
-		{ "Stalker", JOB_STALKER },
-		{ "Creator", JOB_CREATOR },
-		{ "Clown", JOB_CLOWN },
-		{ "Gypsy", JOB_GYPSY },
-		{ "Baby_Novice", JOB_BABY },
-		{ "Baby_Swordsman", JOB_BABY_SWORDMAN },
-		{ "Baby_Magician", JOB_BABY_MAGE },
-		{ "Baby_Archer", JOB_BABY_ARCHER },
-		{ "Baby_Acolyte", JOB_BABY_ACOLYTE },
-		{ "Baby_Merchant", JOB_BABY_MERCHANT },
-		{ "Baby_Thief", JOB_BABY_THIEF },
-		{ "Baby_Knight", JOB_BABY_KNIGHT },
-		{ "Baby_Priest", JOB_BABY_PRIEST },
-		{ "Baby_Wizard", JOB_BABY_WIZARD },
-		{ "Baby_Blacksmith", JOB_BABY_BLACKSMITH },
-		{ "Baby_Hunter", JOB_BABY_HUNTER },
-		{ "Baby_Assassin", JOB_BABY_ASSASSIN },
-		{ "Baby_Crusader", JOB_BABY_CRUSADER },
-		{ "Baby_Monk", JOB_BABY_MONK },
-		{ "Baby_Sage", JOB_BABY_SAGE },
-		{ "Baby_Rogue", JOB_BABY_ROGUE },
-		{ "Baby_Alchemist", JOB_BABY_ALCHEMIST },
-		{ "Baby_Bard", JOB_BABY_BARD },
-		{ "Baby_Dancer", JOB_BABY_DANCER },
-		{ "Super_Baby", JOB_SUPER_BABY },
-		{ "Taekwon", JOB_TAEKWON },
-		{ "Star_Gladiator", JOB_STAR_GLADIATOR },
-		{ "Soul_Linker", JOB_SOUL_LINKER },
-		{ "Gangsi", JOB_GANGSI },
-		{ "Death_Knight", JOB_DEATH_KNIGHT },
-		{ "Dark_Collector", JOB_DARK_COLLECTOR },
-		{ "Rune_Knight", JOB_RUNE_KNIGHT },
-		{ "Warlock", JOB_WARLOCK },
-		{ "Ranger", JOB_RANGER },
-		{ "Arch_Bishop", JOB_ARCH_BISHOP },
-		{ "Mechanic", JOB_MECHANIC },
-		{ "Guillotine_Cross", JOB_GUILLOTINE_CROSS },
-		{ "Rune_Knight_Trans", JOB_RUNE_KNIGHT_T },
-		{ "Warlock_Trans", JOB_WARLOCK_T },
-		{ "Ranger_Trans", JOB_RANGER_T },
-		{ "Arch_Bishop_Trans", JOB_ARCH_BISHOP_T },
-		{ "Mechanic_Trans", JOB_MECHANIC_T },
-		{ "Guillotine_Cross_Trans", JOB_GUILLOTINE_CROSS_T },
-		{ "Royal_Guard", JOB_ROYAL_GUARD },
-		{ "Sorcerer", JOB_SORCERER },
-		{ "Minstrel", JOB_MINSTREL },
-		{ "Wanderer", JOB_WANDERER },
-		{ "Sura", JOB_SURA },
-		{ "Genetic", JOB_GENETIC },
-		{ "Shadow_Chaser", JOB_SHADOW_CHASER },
-		{ "Royal_Guard_Trans", JOB_ROYAL_GUARD_T },
-		{ "Sorcerer_Trans", JOB_SORCERER_T },
-		{ "Minstrel_Trans", JOB_MINSTREL_T },
-		{ "Wanderer_Trans", JOB_WANDERER_T },
-		{ "Sura_Trans", JOB_SURA_T },
-		{ "Genetic_Trans", JOB_GENETIC_T },
-		{ "Shadow_Chaser_Trans", JOB_SHADOW_CHASER_T },
-		{ "Baby_Rune_Knight", JOB_BABY_RUNE },
-		{ "Baby_Warlock", JOB_BABY_WARLOCK },
-		{ "Baby_Ranger", JOB_BABY_RANGER },
-		{ "Baby_Arch_Bishop", JOB_BABY_BISHOP },
-		{ "Baby_Mechanic", JOB_BABY_MECHANIC },
-		{ "Baby_Guillotine_Cross", JOB_BABY_CROSS },
-		{ "Baby_Royal_Guard", JOB_BABY_GUARD },
-		{ "Baby_Sorcerer", JOB_BABY_SORCERER },
-		{ "Baby_Minstrel", JOB_BABY_MINSTREL },
-		{ "Baby_Wanderer", JOB_BABY_WANDERER },
-		{ "Baby_Sura", JOB_BABY_SURA },
-		{ "Baby_Genetic", JOB_BABY_GENETIC },
-		{ "Baby_Shadow_Chaser", JOB_BABY_CHASER },
-		{ "Expanded_Super_Novice", JOB_SUPER_NOVICE_E },
-		{ "Expanded_Super_Baby", JOB_SUPER_BABY_E },
-		{ "Kagerou", JOB_KAGEROU },
-		{ "Oboro", JOB_OBORO },
-		{ "Rebellion", JOB_REBELLION },
-	};
 	
 	if (libconfig->read_file(&skill_tree_conf, config_filename)) {
 		ShowError("can't read %s\n", config_filename);
 		return;
 	}
-	
-	jnamelen = ARRAYLENGTH(jnames);
-	
+		
 	while ((skt = libconfig->setting_get_elem(skill_tree_conf.root,i++))) {
 		int k;
 		const char *name = config_setting_name(skt);
 		
-		ARR_FIND(0, jnamelen, k, strcmpi(jnames[k].name,name) == 0 );
-		
-		if( k == jnamelen ) {
-			ShowWarning("pc_read_skill_tree: '%s' unknown job name!\n",name);
+		if ( (k = pc->check_job_name(name)) == -1 ) {
+			ShowWarning("pc_read_skill_tree: '%s' unknown job name!\n", name);
 			continue;
 		}
-		
-		
+				
 		if( ( skills = libconfig->setting_get_member(skt,"skills") ) ) {
 			int c = 0;
-			int idx = pc->class2idx(jnames[k].id);
+			int idx = pc->class2idx(k);
 			
 			while ((sk = libconfig->setting_get_elem(skills,c++))) {
 				const char *sk_name = config_setting_name(sk);
@@ -10199,7 +10207,7 @@ void pc_read_skill_tree(void) {
 						ShowWarning("pc_read_skill_tree: Unable to load skill %d (%s) into '%s's tree. Maximum number of skills per class has been reached.\n", skill_id, sk_name, name);
 						continue;
 					} else if (pc->skill_tree[idx][skidx].id) {
-						ShowNotice("pc_read_skill_tree: Overwriting %d for '%s' (%d)\n", skill_id, name, jnames[k].id);
+						ShowNotice("pc_read_skill_tree: Overwriting %d for '%s' (%d)\n", skill_id, name, k);
 					}
 					
 					pc->skill_tree[idx][skidx].id    = skill_id;
@@ -10243,46 +10251,42 @@ void pc_read_skill_tree(void) {
 	while( (skt = libconfig->setting_get_elem(skill_tree_conf.root,i++)) ) {
 		int k, idx;
 		const char *name = config_setting_name(skt);
-
 		
-		ARR_FIND(0, jnamelen, k, strcmpi(jnames[k].name,name) == 0 );
-		
-		if( k == jnamelen ) {
-			ShowWarning("pc_read_skill_tree: '%s' unknown job name!\n",name);
+		if ( (k = pc->check_job_name(name)) == -1 ) {
+			ShowWarning("pc_read_skill_tree: '%s' unknown job name!\n", name);
 			continue;
 		}
-		idx = pc->class2idx(jnames[k].id);
+
+		idx = pc->class2idx(k);
 
 		if( ( inherit = libconfig->setting_get_member(skt,"inherit") ) ) {
 			const char *iname;
 			int v = 0;
-			while ((iname = libconfig->setting_get_string_elem(inherit, v++))) {
+			while ( (iname = libconfig->setting_get_string_elem(inherit, v++)) ) {
 				int b = 0, a, d, f, fidx;
 
-				ARR_FIND(0, jnamelen, b, strcmpi(jnames[b].name,iname) == 0 );
-				
-				if( b == jnamelen ) {
-					ShowWarning("pc_read_skill_tree: '%s' trying to inherit unknown '%s'!\n",name,iname);
+				if ( (b = pc->check_job_name(iname)) == -1 ) {
+					ShowWarning("pc_read_skill_tree: '%s' trying to inherit unknown '%s'!\n", name, iname);
 					continue;
 				}
-				
-				fidx = pc->class2idx(jnames[b].id);
-							
-				ARR_FIND( 0, MAX_SKILL_TREE, d, pc->skill_tree[fidx][d].id == 0 );
 
-				for( f = 0; f < d; f++ ) {
-					
-					ARR_FIND( 0, MAX_SKILL_TREE, a, pc->skill_tree[idx][a].id == 0 || pc->skill_tree[idx][a].id == pc->skill_tree[fidx][f].id );
+				fidx = pc->class2idx(b);
 
-					if( a == MAX_SKILL_TREE ) {
-						ShowWarning("pc_read_skill_tree: '%s' can't inherit '%s', skill tree is full!\n", name,iname);
+				ARR_FIND(0, MAX_SKILL_TREE, d, pc->skill_tree[fidx][d].id == 0);
+
+				for ( f = 0; f < d; f++ ) {
+
+					ARR_FIND(0, MAX_SKILL_TREE, a, pc->skill_tree[idx][a].id == 0 || pc->skill_tree[idx][a].id == pc->skill_tree[fidx][f].id);
+
+					if ( a == MAX_SKILL_TREE ) {
+						ShowWarning("pc_read_skill_tree: '%s' can't inherit '%s', skill tree is full!\n", name, iname);
 						break;
-					} else if ( pc->skill_tree[idx][a].id || ( pc->skill_tree[idx][a].id == NV_TRICKDEAD && ((pc->jobid2mapid(jnames[k].id)&(MAPID_BASEMASK|JOBL_2))!=MAPID_NOVICE) ) ) /* we skip trickdead for non-novices */
+					} else if ( pc->skill_tree[idx][a].id || (pc->skill_tree[idx][a].id == NV_TRICKDEAD && ((pc->jobid2mapid(k)&(MAPID_BASEMASK | JOBL_2)) != MAPID_NOVICE)) ) /* we skip trickdead for non-novices */
 						continue;/* skip */
 					memcpy(&pc->skill_tree[idx][a], &pc->skill_tree[fidx][f], sizeof(pc->skill_tree[fidx][f]));
 					pc->skill_tree[idx][a].inherited = 1;
 				}
-				
+
 			}
 		}
 		
@@ -11287,4 +11291,6 @@ void pc_defaults(void) {
 	pc->autotrade_start = pc_autotrade_start;
 	pc->autotrade_prepare = pc_autotrade_prepare;
 	pc->autotrade_populate = pc_autotrade_populate;
+
+	pc->check_job_name = pc_check_job_name;
 }

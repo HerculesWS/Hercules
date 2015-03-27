@@ -1035,6 +1035,8 @@ struct pc_interface {
 	void (*autotrade_start) (struct map_session_data *sd);
 	void (*autotrade_prepare) (struct map_session_data *sd);
 	void (*autotrade_populate) (struct map_session_data *sd);
+
+	int (*check_job_name) (const char *name);
 };
 
 struct pc_interface *pc;
