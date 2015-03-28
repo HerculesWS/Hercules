@@ -2106,7 +2106,9 @@ unsigned int status_get_base_maxhp(struct map_session_data *sd, struct status_da
 
 	if ( (sd->class_&MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && sd->status.base_level >= 99 )
 		val += 2000; //Supernovice lvl99 hp bonus.
-	
+	if ( (sd->class_&MAPID_THIRDMASK) == MAPID_SUPER_NOVICE_E && sd->status.base_level >= 150 )
+		val += 2000; //Extented Supernovice lvl150 hp bonus.
+
 	if ( sd->class_&JOBL_UPPER )
 		val += val * 25 / 100; //Trans classes get a 25% hp bonus
 	else if ( sd->class_&JOBL_BABY )
@@ -12110,7 +12112,7 @@ void status_read_job_db(void) { /* [malufett/Hercules] */
 			int nidx = 0, iidx, w;
 			const char *iname;
 			while ( (iname = libconfig->setting_get_string_elem(temp, nidx++)) ) {
-				int iclass, ave, ave2, total = 0, total2 = 0;
+				int iclass, ave, total = 0;
 				if ( (iclass = pc->check_job_name(iname)) == -1 ) {
 					ShowWarning("status_read_job_db: '%s' trying to inherit unknown '%s'!\n", name, iname);
 					continue;
@@ -12118,23 +12120,21 @@ void status_read_job_db(void) { /* [malufett/Hercules] */
 				iidx = pc->class2idx(iclass);
 				status->max_weight_base[idx] = status->max_weight_base[iidx];
 				memcpy(&status->aspd_base[idx], &status->aspd_base[iidx], sizeof(status->aspd_base[iidx]));
-				for ( w = 1; w <= pc->max_level[iidx][0]; w++ ) {
+				for ( w = 1; w <= MAX_LEVEL && status->HP_table[iidx][w]; w++ ) {
 					status->HP_table[idx][w] = status->HP_table[iidx][w];
-					status->SP_table[idx][w] = status->SP_table[iidx][w];
-					if ( pc->max_level[iidx][0] < pc->max_level[idx][0] ) {
-						total += status->HP_table[iidx][w] - status->HP_table[iidx][w - 1];
-						total2 += status->SP_table[iidx][w] - status->SP_table[iidx][w - 1];
-					}
+					total += status->HP_table[idx][w];
 				}
-				if ( pc->max_level[iidx][0] < pc->max_level[idx][0] ) {
-					ave = total / pc->max_level[iidx][0];
-					ave2 = total2 / pc->max_level[iidx][0];
-					for ( w = pc->max_level[iidx][0] + 1; w <= pc->max_level[idx][0]; w++ ) {
-						if ( !status->HP_table[iidx][w] )
-							status->HP_table[idx][w] = min(ave * w, battle_config.max_hp);
-						if ( !status->SP_table[iidx][w] )
-							status->SP_table[idx][w] = min(ave2 * w, battle_config.max_sp);
-					}
+				ave = total / (w - 1);
+				for ( ; w <= pc->max_level[idx][0]; w++ ) {
+					status->HP_table[idx][w] = min(ave * w, battle_config.max_hp);
+				}
+				for ( w = 1; w <= MAX_LEVEL && status->SP_table[iidx][w]; w++ ) {
+					status->SP_table[idx][w] = status->SP_table[iidx][w];
+					total += status->SP_table[idx][w];
+				}
+				ave = total / (w - 1);
+				for ( ; w <= pc->max_level[idx][0]; w++ ) {
+					status->SP_table[idx][w] = min(ave * w, battle_config.max_sp);
 				}
 			}
 		}
@@ -12148,37 +12148,33 @@ void status_read_job_db(void) { /* [malufett/Hercules] */
 					continue;
 				}
 				iidx = pc->class2idx(iclass);
-				for ( w = 1; w <= pc->max_level[idx][0]; w++ ) {
-					if ( status->HP_table[iidx][w] > 0 ) {
-						status->HP_table[idx][w] = status->HP_table[iidx][w];
-						if ( w <= pc->max_level[iidx][0] )
-							total += status->HP_table[iidx][w] - status->HP_table[iidx][w - 1];
-					} else {
-						ave = total / pc->max_level[iidx][0];
-						status->HP_table[idx][w] = min(ave * w, battle_config.max_hp);
-					}
+				for ( w = 1; w <= MAX_LEVEL && status->HP_table[iidx][w]; w++ ) {
+					status->HP_table[idx][w] = status->HP_table[iidx][w];
+					total += status->HP_table[idx][w];
+				}
+				ave = total / (w - 1);
+				for ( ; w <= pc->max_level[idx][0]; w++ ) {
+					status->HP_table[idx][w] = min(ave * w, battle_config.max_hp);
 				}
 			}
 		}
 		if ( (temp = libconfig->setting_get_member(jdb, "InheritSP")) ) {
-			int nidx = 0, iidx;
+			int nidx = 0, iidx, ave, total = 0;
 			const char *iname;
 			while ( (iname = libconfig->setting_get_string_elem(temp, nidx++)) ) {
-				int iclass, w, ave, total = 0;
+				int iclass, w;
 				if ( (iclass = pc->check_job_name(iname)) == -1 ) {
 					ShowWarning("status_read_job_db: '%s' trying to inherit unknown '%s' SP!\n", name, iname);
 					continue;
 				}
 				iidx = pc->class2idx(iclass);
-				for ( w = 1; w <= pc->max_level[idx][0]; w++ ) {
-					if ( status->SP_table[iidx][w] > 0 ) {
-						status->SP_table[idx][w] = status->SP_table[iidx][w];
-						if ( w <= pc->max_level[iidx][0] )
-							total += status->SP_table[iidx][w] - status->SP_table[iidx][w - 1];
-					} else {
-						ave = total / pc->max_level[iidx][0];
-						status->SP_table[idx][w] = min(ave * w, battle_config.max_sp);
-					}
+				for ( w = 1; w <= MAX_LEVEL && status->SP_table[iidx][w]; w++ ) {
+					status->SP_table[idx][w] = status->SP_table[iidx][w];
+					total += status->SP_table[idx][w];
+				}
+				ave = total / (w - 1);
+				for ( ; w <= pc->max_level[idx][0]; w++ ) {
+					status->SP_table[idx][w] = min(ave * w, battle_config.max_sp);
 				}
 			}
 		}
