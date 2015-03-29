@@ -2196,7 +2196,12 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 	 //Trick Dead protects you from damage, but not from buffs and the like, hence it's placed here.
 	if (sc && sc->data[SC_TRICKDEAD])
 		return 0;
-
+	if ( skill_id != HW_GRAVITATION ) {
+		struct status_change *csc = status->get_sc(src);
+		if(csc && csc->data[SC_GRAVITATION] && csc->data[SC_GRAVITATION]->val3 == BCT_SELF )
+			return 0;
+	}
+	
 	dmg = battle->calc_attack(attack_type,src,bl,skill_id,skill_lv,flag&0xFFF);
 
 	//Skotlex: Adjusted to the new system
@@ -2529,6 +2534,9 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 				break;
 		case HT_LANDMINE:
 			dmg.dmotion = clif->skill_damage(dsrc,bl,tick, dmg.amotion, dmg.dmotion, damage, dmg.div_, skill_id, -1, type);
+			break;
+		case HW_GRAVITATION:
+			dmg.dmotion = clif->damage(bl, bl, 0, 0, damage, 1, 4, 0);
 			break;
 		case WZ_SIGHTBLASTER:
 			dmg.dmotion = clif->skill_damage(src,bl,tick, dmg.amotion, dmg.dmotion, damage, dmg.div_, skill_id, (flag&SD_LEVEL) ? -1 : skill_lv, 5);
