@@ -32,8 +32,8 @@ prontera,144,174,4	script	Bound Items	4_M_JP_MID,{
 		getinventorylist();
 		for(.@i = 0; .@i < @inventorylist_count; .@i++) {
 			//We only show the items that you allow to be bound
-			//Allows equipment (default)
-			if(@inventorylist_bound[.@i])
+			//Allows equipment (default) or non-rental item
+			if( @inventorylist_bound[.@i] || @inventorylist_expire[.@i] )
 				continue;
 			if(((.allowbind & 1) && (getiteminfo(@inventorylist_id[.@i],2) == (4|5))) ||
 				((.allowbind & 2) && (getiteminfo(@inventorylist_id[.@i],2) == (0|2|11|18))) ||
