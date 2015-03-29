@@ -51,7 +51,7 @@ struct Channel_Config {
 	char **colors_name;
 	unsigned char colors_count;
 	bool local, ally, irc;
-	bool local_autojoin, ally_autojoin;
+	bool local_autojoin, ally_autojoin, irc_autojoin;
 	char local_name[HCS_NAME_LENGTH], ally_name[HCS_NAME_LENGTH], irc_name[HCS_NAME_LENGTH];
 	unsigned char local_color, ally_color, irc_color;
 	bool closing;
@@ -106,6 +106,7 @@ struct channel_interface {
 	void (*guild_join_alliance) (const struct guild *g_source, const struct guild *g_ally);
 	void (*guild_leave_alliance) (const struct guild *g_source, const struct guild *g_ally);
 	void (*quit_guild) (struct map_session_data *sd);
+	void (*irc_join) (struct map_session_data *sd);
 
 	void (*config_read) (void);
 };

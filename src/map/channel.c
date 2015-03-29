@@ -477,6 +477,17 @@ void channel_map_join(struct map_session_data *sd)
 	channel->join(map->list[sd->bl.m].channel, sd, NULL, false);
 }
 
+void channel_irc_join(struct map_session_data *sd)
+{
+	if (sd->state.autotrade || sd->state.standalone)
+		return;
+	if (!channel->config->irc_name)
+		return;
+	struct channel_data *chan = ircbot->channel;
+	if (chan)
+		channel->join(chan, sd, NULL, false);
+}
+
 /**
  * Lets a guild's members join a newly allied guild's channel.
  *
@@ -574,7 +585,8 @@ void read_channels_config(void)
 		int ally_enabled = 0, local_enabled = 0,
 			local_autojoin = 0, ally_autojoin = 0,
 			allow_user_channel_creation = 0,
-			irc_enabled = 0;
+			irc_enabled = 0,
+			irc_autojoin = 0;
 
 		if( !libconfig->setting_lookup_string(settings, "map_local_channel_name", &local_name) )
 			local_name = "map";
@@ -655,11 +667,14 @@ void read_channels_config(void)
 
 		libconfig->setting_lookup_bool(settings, "map_local_channel_autojoin", &local_autojoin);
 		libconfig->setting_lookup_bool(settings, "ally_channel_autojoin", &ally_autojoin);
+		libconfig->setting_lookup_bool(settings, "irc_channel_autojoin", &irc_autojoin);
 
 		if (local_autojoin)
 			channel->config->local_autojoin = true;
 		if (ally_autojoin)
 			channel->config->ally_autojoin = true;
+		if (irc_autojoin)
+			channel->config->irc_autojoin = true;
 
 		libconfig->setting_lookup_bool(settings, "allow_user_channel_creation", &allow_user_channel_creation);
 
@@ -768,7 +783,7 @@ int do_init_channel(bool minimal)
 		return 0;
 
 	channel->db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, HCS_NAME_LENGTH);
-	channel->config->ally = channel->config->local = channel->config->irc = channel->config->ally_autojoin = channel->config->local_autojoin = false;
+	channel->config->ally = channel->config->local = channel->config->irc = channel->config->ally_autojoin = channel->config->local_autojoin = channel->config->irc_autojoin = false;
 	channel->config_read();
 
 	return 0;
@@ -828,6 +843,7 @@ void channel_defaults(void)
 	channel->guild_join_alliance = channel_guild_join_alliance;
 	channel->guild_leave_alliance = channel_guild_leave_alliance;
 	channel->quit_guild = channel_quit_guild;
+	channel->irc_join = channel_irc_join;
 
 	channel->config_read = read_channels_config;
 }
