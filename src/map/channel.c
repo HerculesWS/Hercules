@@ -479,11 +479,11 @@ void channel_map_join(struct map_session_data *sd)
 
 void channel_irc_join(struct map_session_data *sd)
 {
+	struct channel_data *chan = ircbot->channel;
 	if (sd->state.autotrade || sd->state.standalone)
 		return;
 	if (!channel->config->irc_name)
 		return;
-	struct channel_data *chan = ircbot->channel;
 	if (chan)
 		channel->join(chan, sd, NULL, false);
 }
