@@ -18,6 +18,7 @@
 #include "../common/malloc.h"
 #include "../common/mapindex.h"
 #include "../common/mmo.h"
+#include "../common/nullpo.h"
 #include "../common/showmsg.h"
 #include "../common/socket.h"
 #include "../common/sql.h"
@@ -29,6 +30,7 @@ struct inter_party_interface inter_party_s;
 static int inter_party_check_lv(struct party_data *p) {
 	int i;
 	unsigned int lv;
+	nullpo_ret(p);
 	p->min_lv = UINT_MAX;
 	p->max_lv = 0;
 	for(i=0;i<MAX_PARTY;i++){
@@ -54,6 +56,7 @@ static int inter_party_check_lv(struct party_data *p) {
 static void inter_party_calc_state(struct party_data *p)
 {
 	int i;
+	nullpo_retv(p);
 	p->min_lv = UINT_MAX;
 	p->max_lv = 0;
 	p->party.count =
@@ -109,6 +112,7 @@ int inter_party_tosql(struct party *p, int flag, int index)
 
 	if( p == NULL || p->party_id == 0 )
 		return 0;
+	Assert_ret(index >= 0 && index < MAX_PARTY);
 	party_id = p->party_id;
 
 #ifdef NOISY
@@ -295,6 +299,7 @@ struct party_data* inter_party_search_partyname(const char *const str)
 // Returns whether this party can keep having exp share or not.
 int inter_party_check_exp_share(struct party_data *const p)
 {
+	nullpo_ret(p);
 	return (p->party.count < 2 || p->max_lv - p->min_lv <= party_share_level);
 }
 
@@ -318,6 +323,7 @@ int inter_party_check_empty(struct party_data *p)
 // Create a party whether or not
 int mapif_party_created(int fd, int account_id, int char_id, struct party *p)
 {
+	nullpo_ret(p);
 	WFIFOHEAD(fd, 39);
 	WFIFOW(fd,0)=0x3820;
 	WFIFOL(fd,2)=account_id;
@@ -353,6 +359,7 @@ void mapif_party_noinfo(int fd, int party_id, int char_id)
 void mapif_party_info(int fd, struct party* p, int char_id)
 {
 	unsigned char buf[8 + sizeof(struct party)];
+	nullpo_retv(p);
 	WBUFW(buf,0) = 0x3821;
 	WBUFW(buf,2) = 8 + sizeof(struct party);
 	WBUFL(buf,4) = char_id;
@@ -381,6 +388,7 @@ int mapif_party_memberadded(int fd, int party_id, int account_id, int char_id, i
 int mapif_party_optionchanged(int fd, struct party *p, int account_id, int flag)
 {
 	unsigned char buf[16];
+	nullpo_ret(p);
 	WBUFW(buf,0)=0x3823;
 	WBUFL(buf,2)=p->party_id;
 	WBUFL(buf,6)=account_id;
@@ -411,6 +419,8 @@ int mapif_party_membermoved(struct party *p, int idx)
 {
 	unsigned char buf[20];
 
+	nullpo_ret(p);
+	Assert_ret(idx >= 0 && idx < MAX_PARTY);
 	WBUFW(buf,0) = 0x3825;
 	WBUFL(buf,2) = p->party_id;
 	WBUFL(buf,6) = p->member[idx].account_id;
@@ -438,6 +448,7 @@ int mapif_party_broken(int party_id, int flag)
 int mapif_party_message(int party_id, int account_id, char *mes, int len, int sfd)
 {
 	unsigned char buf[512];
+	nullpo_ret(mes);
 	WBUFW(buf,0)=0x3827;
 	WBUFW(buf,2)=len+12;
 	WBUFL(buf,4)=party_id;
@@ -456,6 +467,8 @@ int mapif_parse_CreateParty(int fd, char *name, int item, int item2, struct part
 {
 	struct party_data *p;
 	int i;
+	nullpo_ret(name);
+	nullpo_ret(leader);
 	if( (p=inter_party->search_partyname(name))!=NULL){
 		mapif->party_created(fd,leader->account_id,leader->char_id,NULL);
 		return 0;
@@ -523,6 +536,7 @@ int mapif_parse_PartyAddMember(int fd, int party_id, struct party_member *member
 	struct party_data *p;
 	int i;
 
+	nullpo_ret(member);
 	p = inter_party->fromsql(party_id);
 	if( p == NULL || p->size == MAX_PARTY ) {
 		mapif->party_memberadded(fd, party_id, member->account_id, member->char_id, 1);
