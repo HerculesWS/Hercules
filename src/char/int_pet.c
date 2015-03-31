@@ -15,6 +15,7 @@
 #include "mapif.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h"
+#include "../common/nullpo.h"
 #include "../common/showmsg.h"
 #include "../common/socket.h"
 #include "../common/sql.h"
@@ -29,6 +30,7 @@ int inter_pet_tosql(int pet_id, struct s_pet* p)
 	//`pet` (`pet_id`, `class`,`name`,`account_id`,`char_id`,`level`,`egg_id`,`equip`,`intimate`,`hungry`,`rename_flag`,`incubate`)
 	char esc_name[NAME_LENGTH*2+1];// escaped pet name
 
+	nullpo_ret(p);
 	SQL->EscapeStringLen(inter->sql_handle, esc_name, p->name, strnlen(p->name, NAME_LENGTH));
 	p->hungry = cap_value(p->hungry, 0, 100);
 	p->intimate = cap_value(p->intimate, 0, 1000);
@@ -70,6 +72,7 @@ int inter_pet_fromsql(int pet_id, struct s_pet* p)
 #ifdef NOISY
 	ShowInfo("Loading pet (%d)...\n",pet_id);
 #endif
+	nullpo_ret(p);
 	memset(p, 0, sizeof(struct s_pet));
 
 	//`pet` (`pet_id`, `class`,`name`,`account_id`,`char_id`,`level`,`egg_id`,`equip`,`intimate`,`hungry`,`rename_flag`,`incubate`)
@@ -145,6 +148,7 @@ int mapif_pet_created(int fd, int account_id, struct s_pet *p)
 
 int mapif_pet_info(int fd, int account_id, struct s_pet *p)
 {
+	nullpo_ret(p);
 	WFIFOHEAD(fd, sizeof(struct s_pet) + 9);
 	WFIFOW(fd, 0) =0x3881;
 	WFIFOW(fd, 2) =sizeof(struct s_pet) + 9;
@@ -193,6 +197,7 @@ int mapif_delete_pet_ack(int fd, int flag)
 int mapif_create_pet(int fd, int account_id, int char_id, short pet_class, short pet_lv, short pet_egg_id,
 	short pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name)
 {
+	nullpo_ret(pet_name);
 	memset(inter_pet->pt, 0, sizeof(struct s_pet));
 	safestrncpy(inter_pet->pt->name, pet_name, NAME_LENGTH);
 	if(incubate == 1)
@@ -254,6 +259,7 @@ int mapif_save_pet(int fd, int account_id, struct s_pet *data)
 {
 	//here process pet save request.
 	int len;
+	nullpo_ret(data);
 	RFIFOHEAD(fd);
 	len=RFIFOW(fd, 2);
 	if (sizeof(struct s_pet) != len-8) {
