@@ -300,10 +300,10 @@ int battle_delay_damage(int64 tick, int amotion, struct block_list *src, struct 
 int battle_attr_ratio(int atk_elem,int def_type, int def_lv)
 {
 
-	if (atk_elem < 0 || atk_elem >= ELE_MAX)
+	if ( atk_elem < ELE_NEUTRAL || atk_elem >= ELE_MAX )
 		return 100;
 
-	if (def_type < 0 || def_type >= ELE_MAX || def_lv < 1 || def_lv > 4)
+	if ( def_type < ELE_NEUTRAL || def_type >= ELE_MAX || def_lv < ELE_WATER || def_lv > ELE_WIND )
 		return 100;
 
 	return battle->attr_fix_table[def_lv-1][atk_elem][def_type];
@@ -322,10 +322,10 @@ int64 battle_attr_fix(struct block_list *src, struct block_list *target, int64 d
 	if (src) sc = status->get_sc(src);
 	if (target) tsc = status->get_sc(target);
 
-	if (atk_elem < 0 || atk_elem >= ELE_MAX)
+	if ( atk_elem < ELE_NEUTRAL || atk_elem >= ELE_MAX )
 		atk_elem = rnd()%ELE_MAX;
 
-	if (def_type < 0 || def_type >= ELE_MAX ||
+	if ( def_type < ELE_NEUTRAL || def_type >= ELE_MAX ||
 		def_lv < 1 || def_lv > 4) {
 		ShowError("battle_attr_fix: unknown attr type: atk=%d def_type=%d def_lv=%d\n",atk_elem,def_type,def_lv);
 		return damage;
@@ -1025,9 +1025,6 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 #endif
 
 				cardfix = cardfix * ( 100 - tsd->bonus.magic_def_rate ) / 100;
-
-				if( tsd->sc.data[SC_PROTECT_MDEF] )
-					cardfix = cardfix * ( 100 - tsd->sc.data[SC_PROTECT_MDEF]->val1 ) / 100;
 			}
 #ifdef RENEWAL
 			if ( cardfix != 100 )
@@ -1212,15 +1209,11 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 						cardfix = cardfix * (100 - tsd->bonus.near_attack_def_rate) / 100;
 					else // BF_LONG (there's no other choice)
 						cardfix = cardfix * (100 - tsd->bonus.long_attack_def_rate) / 100;
-#endif
-					if( tsd->sc.data[SC_PROTECT_DEF] )
-						cardfix = cardfix * (100 - tsd->sc.data[SC_PROTECT_DEF]->val1) / 100;
-#ifdef RENEWAL
+					if ( cardfix != 1000 )
+						damage = damage * cardfix / 1000;
+#else
 					if ( cardfix != 100 )
 						damage += damage * (cardfix - 100) / 100;
-#else
-					if( cardfix != 1000 )
-						damage = damage * cardfix / 1000;
 #endif
 				}
 			}
@@ -4569,6 +4562,10 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 #ifdef RENEWAL
 		if( sd ) //in Renewal hit bonus from Vultures Eye is not anymore shown in status window
 			hitrate += pc->checkskill(sd,AC_VULTURE);
+		if ( sd->hit_rate < 0 )
+			sd->hit_rate = 0;
+		if ( sd->hit_rate != 100 )
+			hitrate = hitrate * sd->hit_rate / 100;
 #endif
 		switch(skill_id) {
 			//Hit skill modifiers
@@ -4814,8 +4811,6 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 #endif
 					if(flag.cri && sd->bonus.crit_atk_rate)
 						ATK_ADDRATE(sd->bonus.crit_atk_rate);
-					if(flag.cri && sc && sc->data[SC_MTF_CRIDAMAGE])
-						ATK_ADDRATE(25);// temporary it should be 'bonus.crit_atk_rate'
 #ifndef RENEWAL
 
 					if(sd->status.party_id && (temp=pc->checkskill(sd,TK_POWER)) > 0){
@@ -5078,8 +5073,6 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 	#ifdef RENEWAL
 			if( wd.flag&BF_LONG )
 				ATK_ADDRATE(sd->bonus.long_attack_atk_rate);
-			if( sc && sc->data[SC_MTF_RANGEATK] )
-				ATK_ADDRATE(25);// temporary it should be 'bonus.long_attack_atk_rate'
 	#endif
 			if( (i=pc->checkskill(sd,AB_EUCHARISTICA)) > 0 &&
 				(tstatus->race == RC_DEMON || tstatus->def_ele == ELE_DARK) )
@@ -5952,9 +5945,6 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 								 tsc->data[SC_GENTLETOUCH_ENERGYGAIN]->val1);
 		}
 
-		if( tsc && tsc->data[SC_MTF_MLEATKED] && rnd()%100 < 20 )
-			clif->skill_nodamage(target, target, SM_ENDURE, 5,
-				sc_start(target,target, SC_ENDURE, 100, 5, skill->get_time(SM_ENDURE, 5)));
 	}
 
 	if(tsc && tsc->data[SC_KAAHI] && tsc->data[SC_KAAHI]->val4 == INVALID_TIMER && tstatus->hp < tstatus->max_hp)

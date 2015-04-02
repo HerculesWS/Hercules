@@ -266,10 +266,12 @@ enum {
 	RC_DEMIHUMAN,
 	RC_ANGEL,
 	RC_DRAGON,
+	RC_PLAYER,
 	RC_BOSS,
 	RC_NONBOSS,
 	RC_NONDEMIHUMAN,
-	RC_MAX
+	RC_MAX,
+	RC_ALL = 0xFF
 };
 
 enum {
@@ -294,7 +296,8 @@ enum elements {
 	ELE_DARK,
 	ELE_GHOST,
 	ELE_UNDEAD,
-	ELE_MAX
+	ELE_MAX,
+	ELE_ALL = 0xFF
 };
 
 /**

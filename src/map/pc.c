@@ -2769,24 +2769,46 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 
 	switch(type){
 		case SP_ADDELE:
-			if(type2 >= ELE_MAX) {
+			if ( type2 >= ELE_MAX && type2 != ELE_ALL ) {
 				ShowError("pc_bonus2: SP_ADDELE: Invalid element %d\n", type2);
 				break;
 			}
-			if(!sd->state.lr_flag)
-				sd->right_weapon.addele[type2]+=val;
-			else if(sd->state.lr_flag == 1)
-				sd->left_weapon.addele[type2]+=val;
-			else if(sd->state.lr_flag == 2)
-				sd->arrow_addele[type2]+=val;
+			if ( type2 == ELE_ALL ) {
+				for ( i = ELE_NEUTRAL; i < ELE_MAX; i++ ) {
+					if ( !sd->state.lr_flag )
+						sd->right_weapon.addele[i] += val;
+					else if ( sd->state.lr_flag == 1 )
+						sd->left_weapon.addele[i] += val;
+					else if ( sd->state.lr_flag == 2 )
+						sd->arrow_addele[i] += val;
+				}
+			} else {
+				if ( !sd->state.lr_flag )
+					sd->right_weapon.addele[type2] += val;
+				else if ( sd->state.lr_flag == 1 )
+					sd->left_weapon.addele[type2] += val;
+				else if ( sd->state.lr_flag == 2 )
+					sd->arrow_addele[type2] += val;
+			}
 			break;
 		case SP_ADDRACE:
-			if(!sd->state.lr_flag)
-				sd->right_weapon.addrace[type2]+=val;
-			else if(sd->state.lr_flag == 1)
-				sd->left_weapon.addrace[type2]+=val;
-			else if(sd->state.lr_flag == 2)
-				sd->arrow_addrace[type2]+=val;
+			if ( type2 == RC_ALL ) {
+				for ( i = RC_FORMLESS; i <= RC_PLAYER; i++ ) {
+					if ( !sd->state.lr_flag )
+						sd->right_weapon.addrace[i] += val;
+					else if ( sd->state.lr_flag == 1 )
+						sd->left_weapon.addrace[i] += val;
+					else if ( sd->state.lr_flag == 2 )
+						sd->arrow_addrace[i] += val;
+				}
+			} else {
+				if ( !sd->state.lr_flag )
+					sd->right_weapon.addrace[type2] += val;
+				else if ( sd->state.lr_flag == 1 )
+					sd->left_weapon.addrace[type2] += val;
+				else if ( sd->state.lr_flag == 2 )
+					sd->arrow_addrace[type2] += val;
+			}
 			break;
 		case SP_ADDSIZE:
 			if(!sd->state.lr_flag)
@@ -2797,12 +2819,18 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				sd->arrow_addsize[type2]+=val;
 			break;
 		case SP_SUBELE:
-			if(type2 >= ELE_MAX) {
+			if ( type2 >= ELE_MAX && type2 != ELE_ALL ) {
 				ShowError("pc_bonus2: SP_SUBELE: Invalid element %d\n", type2);
 				break;
 			}
-			if(sd->state.lr_flag != 2)
-				sd->subele[type2]+=val;
+			if ( sd->state.lr_flag != 2 ) {
+				if ( type2 == ELE_ALL ) {
+					for ( i = ELE_NEUTRAL; i < ELE_MAX; i++ )
+						sd->subele[i] += val;
+				} else {
+					sd->subele[type2] += val;
+				}
+			}
 			break;
 		case SP_SUBRACE:
 			if(sd->state.lr_flag != 2)
@@ -2839,8 +2867,14 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				ShowError("pc_bonus2: SP_MAGIC_ADDELE: Invalid element %d\n", type2);
 				break;
 			}
-			if(sd->state.lr_flag != 2)
-				sd->magic_addele[type2]+=val;
+			if ( sd->state.lr_flag != 2 ) {
+				if ( type2 == ELE_ALL ) {
+					for ( i = ELE_NEUTRAL; i < ELE_MAX; i++ )
+						sd->magic_addele[i] += val;
+				} else {
+					sd->magic_addele[type2] += val;
+				}
+			}
 			break;
 		case SP_MAGIC_ADDRACE:
 			if(sd->state.lr_flag != 2)
@@ -2851,8 +2885,14 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				sd->magic_addsize[type2]+=val;
 			break;
 		case SP_MAGIC_ATK_ELE:
-			if(sd->state.lr_flag != 2)
-				sd->magic_atk_ele[type2]+=val;
+			if ( sd->state.lr_flag != 2 ) {
+				if ( type2 == ELE_ALL ) {
+					for ( i = ELE_NEUTRAL; i < ELE_MAX; i++ )
+						sd->magic_atk_ele[i] += val;
+				} else {
+					sd->magic_atk_ele[type2] += val;
+				}
+			}
 			break;
 		case SP_ADD_DAMAGE_CLASS:
 			switch (sd->state.lr_flag) {
@@ -3001,13 +3041,18 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			break;
 		case SP_WEAPON_COMA_ELE:
-			if(type2 >= ELE_MAX) {
+			if(type2 >= ELE_MAX && type2 != ELE_ALL) {
 				ShowError("pc_bonus2: SP_WEAPON_COMA_ELE: Invalid element %d\n", type2);
 				break;
 			}
 			if(sd->state.lr_flag == 2)
 				break;
-			sd->weapon_coma_ele[type2] += val;
+			if ( type2 == ELE_ALL ) {
+				for ( i = ELE_NEUTRAL; i < ELE_MAX; i++ )
+					sd->weapon_coma_ele[i] += val;
+			} else {
+				sd->weapon_coma_ele[type2] += val;
+			}
 			sd->special_state.bonus_coma = 1;
 			break;
 		case SP_WEAPON_COMA_RACE:
@@ -3369,6 +3414,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 
 int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 {
+	int i;
 	nullpo_ret(sd);
 
 	switch(type){
@@ -3465,21 +3511,33 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 			break;
 
 		case SP_ADDELE:
-			if (type2 > ELE_MAX) {
+			if ( type2 >= ELE_MAX && type2 != ELE_ALL ) {
 				ShowWarning("pc_bonus3 (SP_ADDELE): element %d is out of range.\n", type2);
 				break;
 			}
-			if (sd->state.lr_flag != 2)
-				pc_bonus_addele(sd, (unsigned char)type2, type3, val);
+			if ( sd->state.lr_flag != 2 ) {
+				if ( type2 == ELE_ALL ) {
+					for ( i = ELE_NEUTRAL; i < ELE_MAX; i++ )
+						pc_bonus_addele(sd, (unsigned char)i, type3, val);
+				} else {
+					pc_bonus_addele(sd, (unsigned char)type2, type3, val);
+				}
+			}
 			break;
 
 		case SP_SUBELE:
-			if (type2 > ELE_MAX) {
+			if ( type2 >= ELE_MAX && type2 != ELE_ALL ) {
 				ShowWarning("pc_bonus3 (SP_SUBELE): element %d is out of range.\n", type2);
 				break;
 			}
-			if (sd->state.lr_flag != 2)
-				pc_bonus_subele(sd, (unsigned char)type2, type3, val);
+			if ( sd->state.lr_flag != 2 ) {
+				if ( type2 == ELE_ALL ) {
+					for ( i = ELE_NEUTRAL; i < ELE_MAX; i++ )
+						pc_bonus_subele(sd, (unsigned char)i, type3, val);
+				} else {
+					pc_bonus_subele(sd, (unsigned char)type2, type3, val);
+				}
+			}
 			break;
 		case SP_SP_VANISH_RATE:
 			if(sd->state.lr_flag != 2) {
@@ -7685,10 +7743,6 @@ int pc_itemheal(struct map_session_data *sd,int itemid, int hp,int sp)
 		if(bonus != 100 && tmp > hp)
 			hp = tmp;
 
-		// Recovery Potion
-		if( sd->sc.data[SC_HEALPLUS] )
-			hp += (int)(hp * sd->sc.data[SC_HEALPLUS]->val1/100.);
-
 		// 2014 Halloween Event : Pumpkin Bonus
 		if ( sd->sc.data[SC_MTF_PUMPKIN] && itemid == ITEMID_PUMPKIN )
 			hp += (int)(hp * sd->sc.data[SC_MTF_PUMPKIN]->val1/100);
@@ -10433,8 +10487,8 @@ int pc_readdb(void) {
 
 	// Reset then read attr_fix
 	for(i=0;i<4;i++)
-		for(j=0;j<ELE_MAX;j++)
-			for(k=0;k<ELE_MAX;k++)
+		for ( j = ELE_NEUTRAL; j<ELE_MAX; j++ )
+			for ( k = ELE_NEUTRAL; k<ELE_MAX; k++ )
 				battle->attr_fix_table[i][j][k]=100;
 
 	sprintf(line, "%s/"DBPATH"attr_fix.txt", map->db_path);
@@ -10461,13 +10515,13 @@ int pc_readdb(void) {
 		lv=atoi(split[0]);
 		n=atoi(split[1]);
 		count++;
-		for(i=0;i<n && i<ELE_MAX;){
+		for ( i = ELE_NEUTRAL; i<n && i<ELE_MAX; ) {
 			if( !fgets(line, sizeof(line), fp) )
 				break;
 			if(line[0]=='/' && line[1]=='/')
 				continue;
 
-			for(j=0,p=line;j<n && j<ELE_MAX && p;j++){
+			for ( j = ELE_NEUTRAL, p = line; j<n && j<ELE_MAX && p; j++ ) {
 				while(*p==32 && *p>0)
 					p++;
 				battle->attr_fix_table[lv-1][i][j]=atoi(p);

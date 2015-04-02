@@ -980,10 +980,6 @@ void initChangeTables(void) {
 	status->ChangeFlagTable[SC_ALL_RIDING] = SCB_SPEED;
 	status->ChangeFlagTable[SC_WEDDING] = SCB_SPEED;
 
-	status->ChangeFlagTable[SC_MTF_ASPD] = SCB_ASPD|SCB_HIT;
-	status->ChangeFlagTable[SC_MTF_MATK] = SCB_MATK;
-	status->ChangeFlagTable[SC_MTF_MLEATKED] |= SCB_ALL;
-
 	status->ChangeFlagTable[SC_MOONSTAR] |= SCB_NONE;
 	status->ChangeFlagTable[SC_SUPER_STAR] |= SCB_NONE;
 	status->ChangeFlagTable[SC_STRANGELIGHTS] |= SCB_NONE;
@@ -2237,7 +2233,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	}
 	bstatus->aspd_rate = 1000;
 	bstatus->ele_lv = 1;
-	bstatus->race = RC_DEMIHUMAN;
+	bstatus->race = RC_PLAYER;
 
 	//zero up structures...
 	memset(&sd->autospell,0,sizeof(sd->autospell)
@@ -2696,12 +2692,12 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 		bstatus->matk_max = bstatus->matk_max * sd->matk_rate/100;
 		bstatus->matk_min = bstatus->matk_min * sd->matk_rate/100;
 	}
-
+#ifndef RENEWAL
 	if(sd->hit_rate < 0)
 		sd->hit_rate = 0;
 	if(sd->hit_rate != 100)
 		bstatus->hit = bstatus->hit * sd->hit_rate/100;
-
+#endif
 	if(sd->flee_rate < 0)
 		sd->flee_rate = 0;
 	if(sd->flee_rate != 100)
@@ -2984,8 +2980,6 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 			sd->subele[ELE_EARTH] += i;
 			sd->subele[ELE_FIRE] -= i;
 		}
-		if( sc->data[SC_MTF_MLEATKED] )
-			sd->subele[ELE_NEUTRAL] += 2;
 		if( sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 3 )
 			sd->magic_addele[ELE_FIRE] += 25;
 		if( sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 3 )
@@ -3094,7 +3088,7 @@ int status_calc_npc_(struct npc_data *nd, enum e_status_calc_opt opt) {
 
 		nstatus->def_ele = ELE_NEUTRAL;
 		nstatus->ele_lv = 1;
-		nstatus->race = RC_DEMIHUMAN;
+		nstatus->race = RC_PLAYER;
 		nstatus->size = nd->size;
 		nstatus->rhw.range = 1 + nstatus->size;
 		nstatus->mode = (MD_CANMOVE|MD_CANATTACK);
@@ -4694,8 +4688,6 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 		matk += matk * sc->data[SC_INCMATKRATE]->val1 / 100;
 	if (sc->data[SC_MOONLIT_SERENADE])
 		matk += matk * sc->data[SC_MOONLIT_SERENADE]->val2/100;
-	if (sc->data[SC_MTF_MATK])
-		matk += matk * 25 / 100;
 
 	return (unsigned short)cap_value(matk,0,USHRT_MAX);
 }
@@ -4743,8 +4735,6 @@ signed short status_calc_hit(struct block_list *bl, struct status_change *sc, in
 
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
-		if(sc->data[SC_MTF_ASPD])
-			hit += 5;
 		return (short)cap_value(hit,1,SHRT_MAX);
 	}
 	if(sc->data[SC_TRUESIGHT])
@@ -5470,8 +5460,6 @@ short status_calc_fix_aspd(struct block_list *bl, struct status_change *sc, int 
 		aspd -= 50; // +5 ASPD
 	if (sc->data[SC_FIGHTINGSPIRIT] && sc->data[SC_FIGHTINGSPIRIT]->val2)
 		aspd -= (bl->type==BL_PC?pc->checkskill((TBL_PC *)bl, RK_RUNEMASTERY):10) / 10 * 40;
-	if (sc->data[SC_MTF_ASPD])
-		aspd -= 10;
 
 	if (sc->data[SC_OVERED_BOOST]) // should be final and unmodifiable by any means
 		aspd = (200 - sc->data[SC_OVERED_BOOST]->val3) * 10;

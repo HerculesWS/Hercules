@@ -389,8 +389,6 @@ int skill_calc_heal(struct block_list *src, struct block_list *target, uint16 sk
 			hp -= hp * sc->data[SC_CRITICALWOUND]->val2/100;
 		if(sc->data[SC_DEATHHURT] && heal)
 			hp -= hp * 20/100;
-		if(sc->data[SC_HEALPLUS] && skill_id != NPC_EVILLAND && skill_id != BA_APPLEIDUN)
-			hp += hp * sc->data[SC_HEALPLUS]->val1/100; // Only affects Heal, Sanctuary and PotionPitcher.(like bHealPower) [Inkfish]
 		if(sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 2)
 			hp += hp / 10;
 		if (sc->data[SC_VITALITYACTIVATION])
