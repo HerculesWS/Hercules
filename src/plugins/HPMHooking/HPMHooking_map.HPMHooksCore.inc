@@ -297,6 +297,8 @@ struct {
 	struct HPMHookPoint *HP_channel_guild_leave_alliance_post;
 	struct HPMHookPoint *HP_channel_quit_guild_pre;
 	struct HPMHookPoint *HP_channel_quit_guild_post;
+	struct HPMHookPoint *HP_channel_irc_join_pre;
+	struct HPMHookPoint *HP_channel_irc_join_post;
 	struct HPMHookPoint *HP_channel_config_read_pre;
 	struct HPMHookPoint *HP_channel_config_read_post;
 	struct HPMHookPoint *HP_chat_create_pc_chat_pre;
@@ -5502,6 +5504,8 @@ struct {
 	int HP_channel_guild_leave_alliance_post;
 	int HP_channel_quit_guild_pre;
 	int HP_channel_quit_guild_post;
+	int HP_channel_irc_join_pre;
+	int HP_channel_irc_join_post;
 	int HP_channel_config_read_pre;
 	int HP_channel_config_read_post;
 	int HP_chat_create_pc_chat_pre;

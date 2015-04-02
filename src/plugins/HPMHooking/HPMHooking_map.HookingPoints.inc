@@ -156,6 +156,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(channel->guild_join_alliance, HP_channel_guild_join_alliance) },
 	{ HP_POP(channel->guild_leave_alliance, HP_channel_guild_leave_alliance) },
 	{ HP_POP(channel->quit_guild, HP_channel_quit_guild) },
+	{ HP_POP(channel->irc_join, HP_channel_irc_join) },
 	{ HP_POP(channel->config_read, HP_channel_config_read) },
 /* chat */
 	{ HP_POP(chat->create_pc_chat, HP_chat_create_pc_chat) },

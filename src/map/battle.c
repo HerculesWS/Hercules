@@ -5902,10 +5902,10 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 		{
 			int index = sd->equip_index[EQI_AMMO];
 			if (index<0) {
-				if (sd->weapontype1 > W_KATAR && sd->weapontype1 < W_HUUMA)
-					clif->arrow_fail(sd, 0);
-				else
+				if ( sd->weapontype1 > W_KATAR && sd->weapontype1 < W_HUUMA )
 					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
+				else
+					clif->arrow_fail(sd, 0);
 				return ATK_NONE;
 			}
 			//Ammo check by Ishizu-chan
