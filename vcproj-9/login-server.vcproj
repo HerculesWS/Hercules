@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\3rdparty\libconfig;..\3rdparty\mysql\include;..\3rdparty\msinttypes\include;..\3rdparty\mt19937ar"
+				AdditionalIncludeDirectories="..\3rdparty\libconfig;..\3rdparty\libcrypto\include;..\3rdparty\mysql\include;..\3rdparty\msinttypes\include;..\3rdparty\mt19937ar"
 				PreprocessorDefinitions="WIN32;_WIN32;__WIN32;_DEBUG;FD_SETSIZE=4096;LIBCONFIG_STATIC;YY_USE_CONST;WITH_SQL"
 				GeneratePreprocessedFile="0"
 				ExceptionHandling="0"
@@ -68,10 +68,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libcmtd.lib oldnames.lib ws2_32.lib libmysql.lib"
+				AdditionalDependencies="libcmtd.lib oldnames.lib ws2_32.lib libmysql.lib libeay32.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\3rdparty\mysql\lib"
+				AdditionalLibraryDirectories="..\3rdparty\mysql\lib;..\3rdparty\libcrypto\lib"
 				IgnoreAllDefaultLibraries="true"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
@@ -215,11 +215,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\login\HPMlogin.h"
+				RelativePath="..\src\login\HPMlogin.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\login\HPMlogin.c"
+				RelativePath="..\src\login\HPMlogin.h"
 				>
 			</File>
 			<File
@@ -263,6 +263,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\common\console.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\common\console.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\common\core.c"
 				>
 			</File>
@@ -271,11 +279,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\common\console.c"
+				RelativePath="..\src\common\crypto.c"
 				>
 			</File>
 			<File
-				RelativePath="..\src\common\console.h"
+				RelativePath="..\src\common\crypto.h"
 				>
 			</File>
 			<File

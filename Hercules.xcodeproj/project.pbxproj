@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B6FEC071AAA9F9F001B7115 /* crypto.c in Sources */ = {isa = PBXBuildFile; fileRef = 5B6FEC051AAA9F9F001B7115 /* crypto.c */; };
 		A5380CD71856CE3C0090CBC4 /* mapcache.c in Sources */ = {isa = PBXBuildFile; fileRef = A5380CD61856CE3C0090CBC4 /* mapcache.c */; };
 		A5380CD81856CE8A0090CBC4 /* console.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC692185643BB009EB79C /* console.c */; };
 		A5380CD91856CF4A0090CBC4 /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC694185643BB009EB79C /* core.c */; };
@@ -212,6 +213,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5B6FEC051AAA9F9F001B7115 /* crypto.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = crypto.c; path = src/common/crypto.c; sourceTree = "<group>"; };
+		5B6FEC061AAA9F9F001B7115 /* crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crypto.h; path = src/common/crypto.h; sourceTree = "<group>"; };
 		A5380CCD1856CE180090CBC4 /* mapcache */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mapcache; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5380CD61856CE3C0090CBC4 /* mapcache.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mapcache.c; path = src/tool/mapcache.c; sourceTree = "<group>"; };
 		A5467AD11A16FCB4008AFAA6 /* loginif.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = loginif.c; path = src/char/loginif.c; sourceTree = SOURCE_ROOT; };
@@ -690,6 +693,8 @@
 		A56CC68D1856439A009EB79C /* common */ = {
 			isa = PBXGroup;
 			children = (
+				5B6FEC051AAA9F9F001B7115 /* crypto.c */,
+				5B6FEC061AAA9F9F001B7115 /* crypto.h */,
 				A5F79468191CA34E002293AB /* HPMDataCheck.h */,
 				A5F79469191CA34E002293AB /* sysinfo.c */,
 				A5F7946A191CA34E002293AB /* sysinfo.h */,
@@ -1179,6 +1184,7 @@
 				A5B894AA1A03CDD4005AD22E /* HPMlogin.c in Sources */,
 				A56CC6DE185643BB009EB79C /* grfio.c in Sources */,
 				A56CC68C18564387009EB79C /* loginlog_sql.c in Sources */,
+				5B6FEC071AAA9F9F001B7115 /* crypto.c in Sources */,
 				A56CC73118564C05009EB79C /* libconfig.c in Sources */,
 				A56CC717185643BB009EB79C /* utils.c in Sources */,
 				A56CC708185643BB009EB79C /* sql.c in Sources */,
@@ -1643,6 +1649,12 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				OTHER_LDFLAGS = (
+					"-lpthread",
+					"-lz",
+					"-lmysqlclient",
+					"-lcrypto",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1650,6 +1662,12 @@
 		A56CC66E18564315009EB79C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				OTHER_LDFLAGS = (
+					"-lpthread",
+					"-lz",
+					"-lmysqlclient",
+					"-lcrypto",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
