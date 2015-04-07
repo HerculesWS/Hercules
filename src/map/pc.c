@@ -8958,6 +8958,9 @@ void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int pos
 
 /*==========================================
  * Equip item on player sd at req_pos from inventory index n
+ * Return:
+ *   0 = fail
+ *   1 = success
  *------------------------------------------*/
 int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 {
@@ -9089,7 +9092,7 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 	}
 	sd->npc_item_flag = iflag;
 
-	return 0;
+	return 1;
 }
 
 void pc_unequipitem_pos(struct map_session_data *sd, int n, int pos)
@@ -9155,6 +9158,9 @@ void pc_unequipitem_pos(struct map_session_data *sd, int n, int pos)
  * 0 - only unequip
  * 1 - calculate status after unequipping
  * 2 - force unequip
+ * Return:
+ *   0 = fail
+ *   1 = success
  *------------------------------------------*/
 int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 	int i,iflag;
@@ -9280,7 +9286,7 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 	}
 	sd->npc_item_flag = iflag;
 
-	return 0;
+	return 1;
 }
 
 /*==========================================
