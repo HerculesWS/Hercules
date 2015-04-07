@@ -11,6 +11,7 @@
 
 #include "../common/cbasetypes.h"
 #include "../common/mmo.h"
+#include "../common/nullpo.h"
 #include "../common/socket.h"
 #include "../common/sql.h"
 #include "../common/strlib.h"
@@ -67,6 +68,8 @@ void login_log(uint32 ip, const char* username, int rcode, const char* message)
 	char esc_message[255*2+1];
 	int retcode;
 
+	nullpo_retv(username);
+	nullpo_retv(message);
 	if( !enabled )
 		return;
 
@@ -137,6 +140,8 @@ bool loginlog_config_read(const char* key, const char* value)
 {
 	const char* signature;
 
+	nullpo_ret(key);
+	nullpo_ret(value);
 	signature = "sql.";
 	if( strncmpi(key, signature, strlen(signature)) == 0 )
 	{
