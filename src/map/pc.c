@@ -4558,14 +4558,15 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	amount = sd->status.inventory[n].amount;
 	item_script = sd->inventory_data[n]->script;
 	//Check if the item is to be consumed immediately [Skotlex]
-	if( sd->inventory_data[n]->flag.delay_consume )
+	if (sd->inventory_data[n]->flag.delay_consume || sd->inventory_data[n]->flag.keepafteruse)
 		clif->useitemack(sd,n,amount,true);
 	else {
-		if (sd->status.inventory[n].expire_time == 0 && !(sd->inventory_data[n]->flag.keepafteruse)) {
-			clif->useitemack(sd,n,amount-1,true);
-			pc->delitem(sd,n,1,1,0,LOG_TYPE_CONSUME); // Rental Usable Items are not deleted until expiration
-		} else
-			clif->useitemack(sd,n,0,false);
+		if (sd->status.inventory[n].expire_time == 0) {
+			clif->useitemack(sd, n, amount - 1, true);
+			pc->delitem(sd, n, 1, 1, 0, LOG_TYPE_CONSUME); // Rental Usable Items are not deleted until expiration
+		} else {
+			clif->useitemack(sd, n, 0, false);
+		}
 	}
 	if(sd->status.inventory[n].card[0]==CARD0_CREATE &&
 		pc->famerank(MakeDWord(sd->status.inventory[n].card[2],sd->status.inventory[n].card[3]), MAPID_ALCHEMIST))
