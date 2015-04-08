@@ -1531,7 +1531,7 @@ ACMD(help) {
 	}
 
 	// Display help contents
-	clif->message(fd, tinfo->help);
+	clif->messageln(fd, tinfo->help);
 	return true;
 }
 
@@ -10092,8 +10092,8 @@ void atcommand_config_read(const char* config_filename) {
 				if( commandinfo->help == NULL ) {
 					const char *str = libconfig->setting_get_string(command);
 					size_t len = strlen(str);
-					commandinfo->help = aMalloc( len * sizeof(char) );
-					safestrncpy(commandinfo->help, str, len);
+					commandinfo->help = aMalloc(len + 1);
+					safestrncpy(commandinfo->help, str, len + 1);
 				}
 			}
 		}
