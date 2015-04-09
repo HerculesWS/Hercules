@@ -10039,6 +10039,7 @@ int pc_split_atoui(char* str, unsigned int* val, char sep, int max)
 		val[j] = 0;
 	return i;
 }
+
 /* [Ind/Hercules] */
 void pc_read_skill_tree(void) {
 	config_t skill_tree_conf;
@@ -10179,20 +10180,23 @@ void pc_read_skill_tree(void) {
 	jnamelen = ARRAYLENGTH(jnames);
 	
 	while ((skt = libconfig->setting_get_elem(skill_tree_conf.root,i++))) {
-		int k;
+		int k, id;
 		const char *name = config_setting_name(skt);
 		
 		ARR_FIND(0, jnamelen, k, strcmpi(jnames[k].name,name) == 0 );
 		
-		if( k == jnamelen ) {
-			ShowWarning("pc_read_skill_tree: '%s' unknown job name!\n",name);
-			continue;
+		if (k == jnamelen) {
+			id = pc->convert_custom_class_name_to_id(name);
+			if (id < 0) {
+				ShowWarning("pc_read_skill_tree: '%s' unknown job name!\n",name);
+				continue;
+			}
+		} else {
+			id = jnames[k].id;
 		}
-		
-		
 		if( ( skills = libconfig->setting_get_member(skt,"skills") ) ) {
 			int c = 0;
-			int idx = pc->class2idx(jnames[k].id);
+			int idx = pc->class2idx(id);
 			
 			while ((sk = libconfig->setting_get_elem(skills,c++))) {
 				const char *sk_name = config_setting_name(sk);
@@ -10206,7 +10210,7 @@ void pc_read_skill_tree(void) {
 						ShowWarning("pc_read_skill_tree: Unable to load skill %d (%s) into '%s's tree. Maximum number of skills per class has been reached.\n", skill_id, sk_name, name);
 						continue;
 					} else if (pc->skill_tree[idx][skidx].id) {
-						ShowNotice("pc_read_skill_tree: Overwriting %d for '%s' (%d)\n", skill_id, name, jnames[k].id);
+						ShowNotice("pc_read_skill_tree: Overwriting %d for '%s' (%d)\n", skill_id, name, id);
 					}
 					
 					pc->skill_tree[idx][skidx].id    = skill_id;
@@ -10248,32 +10252,40 @@ void pc_read_skill_tree(void) {
 	
 	i = 0;
 	while( (skt = libconfig->setting_get_elem(skill_tree_conf.root,i++)) ) {
-		int k, idx;
+		int k, idx, id;
 		const char *name = config_setting_name(skt);
 
-		
 		ARR_FIND(0, jnamelen, k, strcmpi(jnames[k].name,name) == 0 );
 		
-		if( k == jnamelen ) {
-			ShowWarning("pc_read_skill_tree: '%s' unknown job name!\n",name);
-			continue;
+		if (k == jnamelen) {
+			id = pc->convert_custom_class_name_to_id(name);
+			if (id < 0) {
+				ShowWarning("pc_read_skill_tree: '%s' unknown job name!\n",name);
+				continue;
+			}
+		} else {
+			id = jnames[k].id;
 		}
-		idx = pc->class2idx(jnames[k].id);
+		idx = pc->class2idx(id);
 
 		if( ( inherit = libconfig->setting_get_member(skt,"inherit") ) ) {
 			const char *iname;
 			int v = 0;
 			while ((iname = libconfig->setting_get_string_elem(inherit, v++))) {
-				int b = 0, a, d, f, fidx;
+				int b = 0, a, d, f, fidx, id2;
 
 				ARR_FIND(0, jnamelen, b, strcmpi(jnames[b].name,iname) == 0 );
 				
-				if( b == jnamelen ) {
-					ShowWarning("pc_read_skill_tree: '%s' trying to inherit unknown '%s'!\n",name,iname);
-					continue;
+				if (b == jnamelen) {
+					id2 = pc->convert_custom_class_name_to_id(iname);
+					if (id < 0) {
+						ShowWarning("pc_read_skill_tree: '%s' trying to inherit unknown '%s'!\n",name,iname);
+						continue;
+					}
+				} else {
+					id2 = jnames[b].id;
 				}
-				
-				fidx = pc->class2idx(jnames[b].id);
+				fidx = pc->class2idx(id2);
 							
 				ARR_FIND( 0, MAX_SKILL_TREE, d, pc->skill_tree[fidx][d].id == 0 );
 
@@ -10284,7 +10296,7 @@ void pc_read_skill_tree(void) {
 					if( a == MAX_SKILL_TREE ) {
 						ShowWarning("pc_read_skill_tree: '%s' can't inherit '%s', skill tree is full!\n", name,iname);
 						break;
-					} else if ( pc->skill_tree[idx][a].id || ( pc->skill_tree[idx][a].id == NV_TRICKDEAD && ((pc->jobid2mapid(jnames[k].id)&(MAPID_BASEMASK|JOBL_2))!=MAPID_NOVICE) ) ) /* we skip trickdead for non-novices */
+					} else if ( pc->skill_tree[idx][a].id || ( pc->skill_tree[idx][a].id == NV_TRICKDEAD && ((pc->jobid2mapid(id)&(MAPID_BASEMASK|JOBL_2))!=MAPID_NOVICE) ) ) /* we skip trickdead for non-novices */
 						continue;/* skip */
 					memcpy(&pc->skill_tree[idx][a], &pc->skill_tree[fidx][f], sizeof(pc->skill_tree[fidx][f]));
 					pc->skill_tree[idx][a].inherited = 1;
@@ -10303,6 +10315,15 @@ void pc_read_skill_tree(void) {
 		clif->skillinfoblock(sd);
 	mapit->free(iter);
 }
+
+int pc_convert_custom_class_name_to_id(const char* name)
+{
+	int val = -1;
+	if (script->get_constant(name, &val))
+		return val;
+	return -1;
+}
+
 bool pc_readdb_levelpenalty(char* fields[], int columns, int current) {
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	int type, race, diff;
@@ -11266,6 +11287,7 @@ void pc_defaults(void) {
 	pc->autosave = pc_autosave;
 	pc->follow_timer = pc_follow_timer;
 	pc->read_skill_tree = pc_read_skill_tree;
+	pc->convert_custom_class_name_to_id = pc_convert_custom_class_name_to_id;
 	pc->isUseitem = pc_isUseitem;
 	pc->show_steal = pc_show_steal;
 	pc->checkcombo = pc_checkcombo;

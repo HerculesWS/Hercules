@@ -52855,6 +52855,33 @@ void HP_pc_read_skill_tree(void) {
 	}
 	return;
 }
+int HP_pc_convert_custom_class_name_to_id(const char *name) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_pc_convert_custom_class_name_to_id_pre ) {
+		int (*preHookFunc) (const char *name);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_convert_custom_class_name_to_id_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_convert_custom_class_name_to_id_pre[hIndex].func;
+			retVal___ = preHookFunc(name);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.convert_custom_class_name_to_id(name);
+	}
+	if( HPMHooks.count.HP_pc_convert_custom_class_name_to_id_post ) {
+		int (*postHookFunc) (int retVal___, const char *name);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_convert_custom_class_name_to_id_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_convert_custom_class_name_to_id_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, name);
+		}
+	}
+	return retVal___;
+}
 int HP_pc_isUseitem(struct map_session_data *sd, int n) {
 	int hIndex = 0;
 	int retVal___ = 0;
