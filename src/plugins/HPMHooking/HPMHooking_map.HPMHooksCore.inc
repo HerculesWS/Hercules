@@ -3989,6 +3989,8 @@ struct {
 	struct HPMHookPoint *HP_pc_autotrade_prepare_post;
 	struct HPMHookPoint *HP_pc_autotrade_populate_pre;
 	struct HPMHookPoint *HP_pc_autotrade_populate_post;
+	struct HPMHookPoint *HP_pc_check_job_name_pre;
+	struct HPMHookPoint *HP_pc_check_job_name_post;
 	struct HPMHookPoint *HP_pet_init_pre;
 	struct HPMHookPoint *HP_pet_init_post;
 	struct HPMHookPoint *HP_pet_final_pre;
@@ -4979,12 +4981,10 @@ struct {
 	struct HPMHookPoint *HP_status_base_amotion_pc_post;
 	struct HPMHookPoint *HP_status_base_atk_pre;
 	struct HPMHookPoint *HP_status_base_atk_post;
-	struct HPMHookPoint *HP_status_calc_sigma_pre;
-	struct HPMHookPoint *HP_status_calc_sigma_post;
-	struct HPMHookPoint *HP_status_base_pc_maxhp_pre;
-	struct HPMHookPoint *HP_status_base_pc_maxhp_post;
-	struct HPMHookPoint *HP_status_base_pc_maxsp_pre;
-	struct HPMHookPoint *HP_status_base_pc_maxsp_post;
+	struct HPMHookPoint *HP_status_get_base_maxhp_pre;
+	struct HPMHookPoint *HP_status_get_base_maxhp_post;
+	struct HPMHookPoint *HP_status_get_base_maxsp_pre;
+	struct HPMHookPoint *HP_status_get_base_maxsp_post;
 	struct HPMHookPoint *HP_status_calc_npc__pre;
 	struct HPMHookPoint *HP_status_calc_npc__post;
 	struct HPMHookPoint *HP_status_calc_str_pre;
@@ -5043,8 +5043,6 @@ struct {
 	struct HPMHookPoint *HP_status_natural_heal_post;
 	struct HPMHookPoint *HP_status_natural_heal_timer_pre;
 	struct HPMHookPoint *HP_status_natural_heal_timer_post;
-	struct HPMHookPoint *HP_status_readdb_job1_pre;
-	struct HPMHookPoint *HP_status_readdb_job1_post;
 	struct HPMHookPoint *HP_status_readdb_job2_pre;
 	struct HPMHookPoint *HP_status_readdb_job2_post;
 	struct HPMHookPoint *HP_status_readdb_sizefix_pre;
@@ -5053,6 +5051,8 @@ struct {
 	struct HPMHookPoint *HP_status_readdb_refine_post;
 	struct HPMHookPoint *HP_status_readdb_scconfig_pre;
 	struct HPMHookPoint *HP_status_readdb_scconfig_post;
+	struct HPMHookPoint *HP_status_read_job_db_pre;
+	struct HPMHookPoint *HP_status_read_job_db_post;
 	struct HPMHookPoint *HP_storage_reconnect_pre;
 	struct HPMHookPoint *HP_storage_reconnect_post;
 	struct HPMHookPoint *HP_storage_delitem_pre;
@@ -9196,6 +9196,8 @@ struct {
 	int HP_pc_autotrade_prepare_post;
 	int HP_pc_autotrade_populate_pre;
 	int HP_pc_autotrade_populate_post;
+	int HP_pc_check_job_name_pre;
+	int HP_pc_check_job_name_post;
 	int HP_pet_init_pre;
 	int HP_pet_init_post;
 	int HP_pet_final_pre;
@@ -10186,12 +10188,10 @@ struct {
 	int HP_status_base_amotion_pc_post;
 	int HP_status_base_atk_pre;
 	int HP_status_base_atk_post;
-	int HP_status_calc_sigma_pre;
-	int HP_status_calc_sigma_post;
-	int HP_status_base_pc_maxhp_pre;
-	int HP_status_base_pc_maxhp_post;
-	int HP_status_base_pc_maxsp_pre;
-	int HP_status_base_pc_maxsp_post;
+	int HP_status_get_base_maxhp_pre;
+	int HP_status_get_base_maxhp_post;
+	int HP_status_get_base_maxsp_pre;
+	int HP_status_get_base_maxsp_post;
 	int HP_status_calc_npc__pre;
 	int HP_status_calc_npc__post;
 	int HP_status_calc_str_pre;
@@ -10250,8 +10250,6 @@ struct {
 	int HP_status_natural_heal_post;
 	int HP_status_natural_heal_timer_pre;
 	int HP_status_natural_heal_timer_post;
-	int HP_status_readdb_job1_pre;
-	int HP_status_readdb_job1_post;
 	int HP_status_readdb_job2_pre;
 	int HP_status_readdb_job2_post;
 	int HP_status_readdb_sizefix_pre;
@@ -10260,6 +10258,8 @@ struct {
 	int HP_status_readdb_refine_post;
 	int HP_status_readdb_scconfig_pre;
 	int HP_status_readdb_scconfig_post;
+	int HP_status_read_job_db_pre;
+	int HP_status_read_job_db_post;
 	int HP_storage_reconnect_pre;
 	int HP_storage_reconnect_post;
 	int HP_storage_delitem_pre;
