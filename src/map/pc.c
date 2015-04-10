@@ -10180,7 +10180,7 @@ void pc_read_skill_tree(void) {
 #else
 	const char *config_filename = "db/pre-re/skill_tree.conf"; // FIXME hardcoded name
 #endif
-	int i = 0, jnamelen = 0;
+	int i = 0;
 	struct s_mapiterator *iter;
 	struct map_session_data *sd;
 	
