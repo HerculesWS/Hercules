@@ -4558,14 +4558,15 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	amount = sd->status.inventory[n].amount;
 	item_script = sd->inventory_data[n]->script;
 	//Check if the item is to be consumed immediately [Skotlex]
-	if( sd->inventory_data[n]->flag.delay_consume )
+	if (sd->inventory_data[n]->flag.delay_consume || sd->inventory_data[n]->flag.keepafteruse)
 		clif->useitemack(sd,n,amount,true);
 	else {
-		if (sd->status.inventory[n].expire_time == 0 && !(sd->inventory_data[n]->flag.keepafteruse)) {
-			clif->useitemack(sd,n,amount-1,true);
-			pc->delitem(sd,n,1,1,0,LOG_TYPE_CONSUME); // Rental Usable Items are not deleted until expiration
-		} else
-			clif->useitemack(sd,n,0,false);
+		if (sd->status.inventory[n].expire_time == 0) {
+			clif->useitemack(sd, n, amount - 1, true);
+			pc->delitem(sd, n, 1, 1, 0, LOG_TYPE_CONSUME); // Rental Usable Items are not deleted until expiration
+		} else {
+			clif->useitemack(sd, n, 0, false);
+		}
 	}
 	if(sd->status.inventory[n].card[0]==CARD0_CREATE &&
 		pc->famerank(MakeDWord(sd->status.inventory[n].card[2],sd->status.inventory[n].card[3]), MAPID_ALCHEMIST))
@@ -9090,6 +9091,9 @@ void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int pos
 
 /*==========================================
  * Equip item on player sd at req_pos from inventory index n
+ * Return:
+ *   0 = fail
+ *   1 = success
  *------------------------------------------*/
 int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 {
@@ -9221,7 +9225,7 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 	}
 	sd->npc_item_flag = iflag;
 
-	return 0;
+	return 1;
 }
 
 void pc_unequipitem_pos(struct map_session_data *sd, int n, int pos)
@@ -9287,6 +9291,9 @@ void pc_unequipitem_pos(struct map_session_data *sd, int n, int pos)
  * 0 - only unequip
  * 1 - calculate status after unequipping
  * 2 - force unequip
+ * Return:
+ *   0 = fail
+ *   1 = success
  *------------------------------------------*/
 int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 	int i,iflag;
@@ -9412,7 +9419,7 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 	}
 	sd->npc_item_flag = iflag;
 
-	return 0;
+	return 1;
 }
 
 /*==========================================
