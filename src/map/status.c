@@ -12211,7 +12211,7 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 
 /*------------------------------------------
 * DB reading.
-* job_db1.txt    - weight, hp, sp, aspd
+* job_db.conf    - weight, hp, sp, aspd
 * job_db2.txt    - job level stat bonuses
 * size_fix.txt   - size adjustment table for weapons
 * refine_db.txt  - refining data table
