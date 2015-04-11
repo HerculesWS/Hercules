@@ -161,8 +161,10 @@ static int inter_auction_end_timer(int tid, int64 tick, int id, intptr_t data) {
 
 void inter_auction_delete(struct auction_data *auction)
 {
+	unsigned int auction_id;
 	nullpo_retv(auction);
-	unsigned int auction_id = auction->auction_id;
+
+	auction_id = auction->auction_id;
 
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `auction_id` = '%d'", auction_db, auction_id) )
 		Sql_ShowDebug(inter->sql_handle);
