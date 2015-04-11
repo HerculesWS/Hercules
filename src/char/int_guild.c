@@ -944,9 +944,11 @@ int mapif_guild_memberadded(int fd, int guild_id, int account_id, int char_id, i
 // ACK member leave
 int mapif_guild_withdraw(int guild_id,int account_id,int char_id,int flag, const char *name, const char *mes)
 {
+	unsigned char buf[55+NAME_LENGTH];
+
 	nullpo_ret(name);
 	nullpo_ret(mes);
-	unsigned char buf[55+NAME_LENGTH];
+
 	WBUFW(buf, 0)=0x3834;
 	WBUFL(buf, 2)=guild_id;
 	WBUFL(buf, 6)=account_id;
