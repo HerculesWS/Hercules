@@ -348,7 +348,9 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 				next;
 				mes "[Rust Blackhand]";
 				mes "You'll never know how great this hat is until you get one. If you understood, go and get the ingredients.";
-				changequest 3042,3043;
+				if (questprogress(3042)==1)
+					erasequest 3042;
+				setquest 3043;
 				close;
 			case 2:
 				mes "[Rust Blackhand]";
@@ -403,8 +405,9 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 				next;
 				mes "[Rust Blackhand]";
 				mes "You'll never know how great this hat is until you get one. If you understood, go and get the ingredients.";
-				//recall_completequest 3043
-				changequest 3042,3043;
+				if (questprogress(3042)==1)
+					erasequest 3042;
+				setquest 3043;
 				close;
 			case 2:
 				mes "[Rust Blackhand]";
