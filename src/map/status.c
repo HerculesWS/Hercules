@@ -4014,11 +4014,11 @@ int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st) 
 
 	// raw delay adjustment from bAspd bonus
 	amotion += sd->bonus.aspd_add;
-#endif
 
 	/* angra manyu disregards aspd_base and similar */
 	if ( sd->equip_index[EQI_HAND_R] >= 0 && sd->status.inventory[sd->equip_index[EQI_HAND_R]].nameid == ITEMID_ANGRA_MANYU )
 		return 0;
+#endif
 
 	return amotion;
 }
