@@ -437,7 +437,7 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 			for(.@i = 1; .@i < 8; .@i++) {
 				if(((.@i == 1 || .@i == 5) && (countitem(Will_Of_Warrior) >= 100) && (countitem(Blood_Thirst) >= 50) && (countitem(Goast_Chill) >= 35)) ||
 				((.@i == 2 || .@i == 3) && (countitem(Will_Of_Warrior) >= 100) && (countitem(Blood_Thirst) >= 50) && (countitem(Goast_Chill) >= 22)) ||
-				((.@i == 4 || .@i == 7) && (countitem(Will_Of_Warrior) >= 300) && (countitem(Blood_Thirst) >= 300) && (countitem(Goast_Chill) >= 400)) ||
+				((.@i == 4 || .@i == 7) && (countitem(Will_Of_Warrior) >= 100) && (countitem(Blood_Thirst) >= 50) && (countitem(Goast_Chill) >= 35)) ||
 				((.@i == 6) && (countitem(Will_Of_Warrior) >= 100) && (countitem(Blood_Thirst) >= 50) && (countitem(Goast_Chill) >= 30))) {
 					.@armor$[.@i] = "^0000FF";
 				} else {
@@ -490,7 +490,7 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					mes "<<Assassin's Handcuffs[1]>>";
 					mes "MSP + 20, CRI + 3. When equipping with Krishna, ATK + 50, ATK power from 'Sonic Blow' 50% increased, FLEE - 30. When equipping with Cakram CRI + 4, Critical ATK power 40% increased, MHP - 10%.";
 					mes "Accessory / Def 3 / Weight 40 / Required Lv 100 / Socket 1 / for Guillotine Cross";
-					callsub L_Reward, Assassin_Handcuffs, 300, 300, 400;
+					callsub L_Reward, Assassin_Handcuffs, 100, 50, 35;
 					break;
 				case 7:
 					mes "<<Green Operating Gown[1]>>";
@@ -499,9 +499,13 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					callsub L_Reward, Green_Operation_Coat, 100, 50, 30;
 					break;
 				case 8:
-					mes "<<Green Operating Gown[1]>>";
-					mes "DEX + 1, MSP + 30. Equipping with Scalpel will let to drop 'Immortal Heart', 'Alcohol' with a certain chance when hunting Human, Animal type monsters. Refine Lv affects the drop rate.";
-					mes "Armor / Def 66 / Weight 66 / Required Lv 100 / Socket 1 / for Generic";
+					mes "<<Ancient Gold Decoration[1]>>";
+					mes "A beautiful Golden accessory with ancient magic. It changes its power depending on the owner's class.";
+					mes "If base Lv. 150, All Stats +2.";
+					mes "If Swordman, Merchant, Thief Class, ATK +8%";
+					mes "If Mage or Acolyte, MATK +8%, increase 7% of heal amount,";
+					mes "If Archer, Dex +3, increase long distance physical attack power 10%.";
+					mes "Upper Headgear / Def 7 / Weight 40 /Required Lv. 100 /Socket 1 / For 3rd Job / Kagerou and Oboro";
 					callsub L_Reward, Ancient_Gold_Deco, 300, 300, 400;
 					break;
 				}
