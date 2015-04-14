@@ -1693,8 +1693,10 @@ lhz_dun04,151,276,3	script	Researcher#memo	4_LGTSCIENCE,{
 	}
 	.@killed_bosses = true;
 	for(.@quest_id = 5113; .@quest_id <= 5125; .@quest_id++) {
-		if(questprogress(.@quest_id, HUNTING) != 2)
+		if(questprogress(.@quest_id, HUNTING) != 2){
 			.@killed_bosses = false;
+			break;
+		}
 	}
 	if (lght_duk01 < 6) {
 		mes "[Researcher]";
@@ -1781,13 +1783,11 @@ lhz_dun04,151,276,3	script	Researcher#memo	4_LGTSCIENCE,{
 				close;
 			case 2:
 				.@quest_time = questprogress(5112, PLAYTIME);
-				if (!.@quest_time) {
+				if (.@quest_time==1) {
 					mes "[Wolfchev]";
 					mes "I'm sorry, but it seems you still cannot enter to the laboratory yet. Will you come back later? The system is kind of tricky you know.";
 					close;
 				} else {
-					//if (.@quest_time == 2)
-						//recall_completequest 5112;
 					if (.@quest_time)
 						erasequest 5112;
 					if (!.@killed_bosses) {
@@ -1950,8 +1950,6 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 	} else if (.@lhz_time == 2) {
 		mes "Di Rit- Di- Di- Dit-";
 		next;
-		//if (.@lhz_time == 2)
-			//recall_completequest 5112;
 		erasequest 5112;
 		mes ""+ strcharinfo(PC_NAME) +". . .";
 		mes "^FF0000Access denial has been deactivated.^000000";
