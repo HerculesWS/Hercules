@@ -4014,11 +4014,11 @@ int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st) 
 
 	// raw delay adjustment from bAspd bonus
 	amotion += sd->bonus.aspd_add;
-#endif
 
 	/* angra manyu disregards aspd_base and similar */
 	if ( sd->equip_index[EQI_HAND_R] >= 0 && sd->status.inventory[sd->equip_index[EQI_HAND_R]].nameid == ITEMID_ANGRA_MANYU )
 		return 0;
+#endif
 
 	return amotion;
 }
@@ -4563,6 +4563,9 @@ unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc,
 #ifndef RENEWAL
 	if(sc->data[SC_LKCONCENTRATION])
 		batk += batk * sc->data[SC_LKCONCENTRATION]->val2/100;
+#else
+	if ( sc->data[SC_NOEQUIPWEAPON] && bl->type != BL_PC )
+		batk -= batk * sc->data[SC_NOEQUIPWEAPON]->val2 / 100;
 #endif
 	if(sc->data[SC_SKE])
 		batk += batk * 3;
@@ -4642,7 +4645,7 @@ unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc,
 	if(sc->data[SC_LKCONCENTRATION])
 		watk += watk * sc->data[SC_LKCONCENTRATION]->val2/100;
 #endif
-	if(sc->data[SC_INCATKRATE])
+	if(sc->data[SC_INCATKRATE] && bl->type != BL_MOB)
 		watk += watk * sc->data[SC_INCATKRATE]->val1/100;
 	if(sc->data[SC_PROVOKE])
 		watk += watk * sc->data[SC_PROVOKE]->val3/100;
@@ -4652,8 +4655,10 @@ unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc,
 		watk += watk * sc->data[SC_HLIF_FLEET]->val3/100;
 	if(sc->data[SC_CURSE])
 		watk -= watk * 25/100;
+#ifndef RENEWAL
 	if(sc->data[SC_NOEQUIPWEAPON] && bl->type != BL_PC)
 		watk -= watk * sc->data[SC_NOEQUIPWEAPON]->val2/100;
+#endif
 	if(sc->data[SC__ENERVATION])
 		watk -= watk * sc->data[SC__ENERVATION]->val2 / 100;
 	if(sc->data[SC_RUSH_WINDMILL])

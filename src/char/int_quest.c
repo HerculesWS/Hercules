@@ -246,14 +246,15 @@ int mapif_parse_quest_save(int fd)
 
 void mapif_send_quests(int fd, int char_id, struct quest *tmp_questlog, int num_quests)
 {
-	nullpo_retv(tmp_questlog);
 	WFIFOHEAD(fd,num_quests*sizeof(struct quest)+8);
 	WFIFOW(fd,0) = 0x3860;
 	WFIFOW(fd,2) = num_quests*sizeof(struct quest)+8;
 	WFIFOL(fd,4) = char_id;
 
-	if (num_quests > 0)
+	if (num_quests > 0) {
+		nullpo_retv(tmp_questlog);
 		memcpy(WFIFOP(fd,8), tmp_questlog, sizeof(struct quest)*num_quests);
+	}
 
 	WFIFOSET(fd,num_quests*sizeof(struct quest)+8);
 }
