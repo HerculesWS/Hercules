@@ -5053,6 +5053,8 @@ struct {
 	struct HPMHookPoint *HP_status_readdb_scconfig_post;
 	struct HPMHookPoint *HP_status_read_job_db_pre;
 	struct HPMHookPoint *HP_status_read_job_db_post;
+	struct HPMHookPoint *HP_status_read_job_db_sub_pre;
+	struct HPMHookPoint *HP_status_read_job_db_sub_post;
 	struct HPMHookPoint *HP_storage_reconnect_pre;
 	struct HPMHookPoint *HP_storage_reconnect_post;
 	struct HPMHookPoint *HP_storage_delitem_pre;
@@ -10260,6 +10262,8 @@ struct {
 	int HP_status_readdb_scconfig_post;
 	int HP_status_read_job_db_pre;
 	int HP_status_read_job_db_post;
+	int HP_status_read_job_db_sub_pre;
+	int HP_status_read_job_db_sub_post;
 	int HP_storage_reconnect_pre;
 	int HP_storage_reconnect_post;
 	int HP_storage_delitem_pre;
