@@ -8552,7 +8552,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 	}
 	else if (ep13_1_edq == 2) {
 		mes "[Hibba Agip]";
-		mes "Oh yes, right... You're" + strcharinfo(0) + ", right? Abidal has told me good things about you.";
+		mes "Oh yes, right... You're " + strcharinfo(0) + ", right? Abidal has told me good things about you.";
 		next;
 		mes "[Hibba Agip]";
 		mes "We're lucky to have you, my friend... I hope you're as good as the stories play you up to be.";
