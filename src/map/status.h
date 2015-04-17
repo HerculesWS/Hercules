@@ -6,7 +6,7 @@
 #define MAP_STATUS_H
 
 #include "../config/core.h" // defType, RENEWAL, RENEWAL_ASPD
-
+#include "../common/conf.h"
 #include "../common/cbasetypes.h"
 #include "../common/mmo.h" // NEW_CARTS
 
@@ -2116,6 +2116,7 @@ struct status_interface {
 	bool (*readdb_refine) (char *fields[], int columns, int current);
 	bool (*readdb_scconfig) (char *fields[], int columns, int current);
 	void (*read_job_db) (void);
+	void (*read_job_db_sub) (int idx, const char *name, config_setting_t *jdb);
 };
 
 struct status_interface *status;
