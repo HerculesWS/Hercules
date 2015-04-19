@@ -12224,7 +12224,7 @@ void status_read_job_db(void) { /* [malufett/Hercules] */
 #ifdef RENEWAL_ASPD
 		"db/re/job_db.conf";
 #else
-		"db/pre/job_db.conf";
+		"db/pre-re/job_db.conf";
 #endif
 
 	if ( libconfig->read_file(&job_db_conf, config_filename) ) {
