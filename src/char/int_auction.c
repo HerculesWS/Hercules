@@ -17,6 +17,7 @@
 #include "../common/db.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h"
+#include "../common/nullpo.h"
 #include "../common/showmsg.h"
 #include "../common/socket.h"
 #include "../common/sql.h"
@@ -33,7 +34,7 @@ static int inter_auction_count(int char_id, bool buy)
 
 	for( auction = dbi_first(iter); dbi_exists(iter); auction = dbi_next(iter) )
 	{
-		if( (buy && auction->buyer_id == char_id) || (!buy && auction->seller_id == char_id) )
+		if ((buy && auction->buyer_id == char_id) || (!buy && auction->seller_id == char_id))
 			i++;
 	}
 	dbi_destroy(iter);
@@ -160,7 +161,10 @@ static int inter_auction_end_timer(int tid, int64 tick, int id, intptr_t data) {
 
 void inter_auction_delete(struct auction_data *auction)
 {
-	unsigned int auction_id = auction->auction_id;
+	unsigned int auction_id;
+	nullpo_retv(auction);
+
+	auction_id = auction->auction_id;
 
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `auction_id` = '%d'", auction_db, auction_id) )
 		Sql_ShowDebug(inter->sql_handle);
@@ -240,6 +244,8 @@ void mapif_auction_sendlist(int fd, int char_id, short count, short pages, unsig
 {
 	int len = (sizeof(struct auction_data) * count) + 12;
 
+	nullpo_retv(buf);
+
 	WFIFOHEAD(fd, len);
 	WFIFOW(fd,0) = 0x3850;
 	WFIFOW(fd,2) = len;
@@ -296,6 +302,8 @@ void mapif_parse_auction_requestlist(int fd)
 void mapif_auction_register(int fd, struct auction_data *auction)
 {
 	int len = sizeof(struct auction_data) + 4;
+
+	nullpo_retv(auction);
 
 	WFIFOHEAD(fd,len);
 	WFIFOW(fd,0) = 0x3851;

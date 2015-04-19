@@ -15,6 +15,7 @@
 #include "mapif.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h"
+#include "../common/nullpo.h"
 #include "../common/showmsg.h"
 #include "../common/socket.h"
 #include "../common/sql.h"
@@ -26,6 +27,7 @@ struct inter_elemental_interface inter_elemental_s;
 bool mapif_elemental_save(struct s_elemental* ele) {
 	bool flag = true;
 
+	nullpo_retr(false, ele);
 	if( ele->elemental_id == 0 ) { // Create new DB entry
 		if( SQL_ERROR == SQL->Query(inter->sql_handle,
 			"INSERT INTO `%s` (`char_id`,`class`,`mode`,`hp`,`sp`,`max_hp`,`max_sp`,`atk1`,`atk2`,`matk`,`aspd`,`def`,`mdef`,`flee`,`hit`,`life_time`)"
@@ -53,6 +55,7 @@ bool mapif_elemental_save(struct s_elemental* ele) {
 bool mapif_elemental_load(int ele_id, int char_id, struct s_elemental *ele) {
 	char* data;
 
+	nullpo_retr(false, ele);
 	memset(ele, 0, sizeof(struct s_elemental));
 	ele->elemental_id = ele_id;
 	ele->char_id = char_id;
@@ -105,6 +108,7 @@ bool mapif_elemental_delete(int ele_id) {
 void mapif_elemental_send(int fd, struct s_elemental *ele, unsigned char flag) {
 	int size = sizeof(struct s_elemental) + 5;
 
+	nullpo_retv(ele);
 	WFIFOHEAD(fd,size);
 	WFIFOW(fd,0) = 0x387c;
 	WFIFOW(fd,2) = size;

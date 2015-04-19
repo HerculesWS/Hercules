@@ -19,6 +19,7 @@
 #include "../common/db.h"
 #include "../common/malloc.h"
 #include "../common/md5calc.h"
+#include "../common/nullpo.h"
 #include "../common/random.h"
 #include "../common/showmsg.h"
 #include "../common/socket.h"
@@ -98,6 +99,7 @@ static int login_online_db_setoffline(DBKey key, DBData *data, va_list ap)
 {
 	struct online_login_data* p = DB->data2ptr(data);
 	int server_id = va_arg(ap, int);
+	nullpo_ret(p);
 	if( server_id == -1 )
 	{
 		p->char_server = -1;
@@ -118,6 +120,7 @@ static int login_online_db_setoffline(DBKey key, DBData *data, va_list ap)
 static int login_online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
 {
 	struct online_login_data *character= DB->data2ptr(data);
+	nullpo_ret(character);
 	if (character->char_server == -2) //Unknown server.. set them offline
 		login->remove_online_user(character->account_id);
 	return 0;
@@ -136,6 +139,7 @@ int charif_sendallwos(int sfd, uint8* buf, size_t len)
 {
 	int i, c;
 
+	nullpo_ret(buf);
 	for( i = 0, c = 0; i < ARRAYLENGTH(server); ++i )
 	{
 		int fd = server[i].fd;
@@ -155,6 +159,7 @@ int charif_sendallwos(int sfd, uint8* buf, size_t len)
 /// Initializes a server structure.
 void chrif_server_init(int id)
 {
+	Assert_retv(id >= 0 && id < MAX_SERVERS);
 	memset(&server[id], 0, sizeof(server[id]));
 	server[id].fd = -1;
 }
@@ -163,7 +168,8 @@ void chrif_server_init(int id)
 /// Destroys a server structure.
 void chrif_server_destroy(int id)
 {
-	if( server[id].fd != -1 )
+	Assert_retv(id >= 0 && id < MAX_SERVERS);
+	if (server[id].fd != -1)
 	{
 		do_close(server[id].fd);
 		server[id].fd = -1;
@@ -183,6 +189,7 @@ void chrif_server_reset(int id)
 /// Called when the connection to Char Server is disconnected.
 void chrif_on_disconnect(int id)
 {
+	Assert_retv(id >= 0 && id < MAX_SERVERS);
 	ShowStatus("Char-server '%s' has disconnected.\n", server[id].name);
 	chrif_server_reset(id);
 }
@@ -207,6 +214,9 @@ bool login_check_encrypted(const char* str1, const char* str2, const char* passw
 {
 	char tmpstr[64+1], md5str[32+1];
 
+	nullpo_ret(str1);
+	nullpo_ret(str2);
+	nullpo_ret(passwd);
 	safesnprintf(tmpstr, sizeof(tmpstr), "%s%s", str1, str2);
 	MD5_String(tmpstr, md5str);
 
@@ -215,6 +225,8 @@ bool login_check_encrypted(const char* str1, const char* str2, const char* passw
 
 bool login_check_password(const char* md5key, int passwdenc, const char* passwd, const char* refpass)
 {
+	nullpo_ret(passwd);
+	nullpo_ret(refpass);
 	if(passwdenc == 0)
 	{
 		return (0==strcmp(passwd, refpass));
@@ -248,6 +260,7 @@ int login_lan_config_read(const char *lancfgName)
 	int line_num = 0;
 	char line[1024], w1[64], w2[64], w3[64], w4[64];
 
+	nullpo_ret(lancfgName);
 	if((fp = fopen(lancfgName, "r")) == NULL) {
 		ShowWarning("LAN Support configuration file is not found: %s\n", lancfgName);
 		return 1;
@@ -348,6 +361,7 @@ void login_fromchar_parse_auth(int fd, int id, const char *const ip)
 	}
 	else
 	{// authentication not found
+		nullpo_retv(ip);
 		ShowStatus("Char-server '%s': authentication of the account %d REFUSED (ip: %s).\n", server[id].name, account_id, ip);
 		login->fromchar_auth_ack(fd, account_id, login_id1, login_id2, sex, request_id, NULL);
 	}
@@ -1008,6 +1022,9 @@ int login_mmo_auth_new(const char* userid, const char* pass, const char sex, con
 	int64 tick = timer->gettick();
 	struct mmo_account acc;
 
+	nullpo_retr(3, userid);
+	nullpo_retr(3, pass);
+	nullpo_retr(3, last_ip);
 	//Account Registration Flood Protection by [Kevin]
 	if( new_reg_tick == 0 )
 		new_reg_tick = timer->gettick();
@@ -1065,6 +1082,7 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 	size_t len;
 
 	char ip[16];
+	nullpo_ret(sd);
 	ip2str(session[sd->fd]->client_addr, ip);
 
 	// DNS Blacklist check
@@ -1206,6 +1224,7 @@ void login_connection_problem(int fd, uint8 status)
 void login_kick(struct login_session_data* sd)
 {
 	uint8 buf[6];
+	nullpo_retv(sd);
 	WBUFW(buf,0) = 0x2734;
 	WBUFL(buf,2) = sd->account_id;
 	charif_sendallwos(-1, buf, 6);
@@ -1214,13 +1233,15 @@ void login_kick(struct login_session_data* sd)
 void login_auth_ok(struct login_session_data* sd)
 {
 	int fd = sd->fd;
-	uint32 ip = session[fd]->client_addr;
+	uint32 ip;
 
 	uint8 server_num, n;
 	uint32 subnet_char_ip;
 	struct login_auth_node* node;
 	int i;
 
+	nullpo_retv(sd);
+	ip = session[fd]->client_addr;
 	if( runflag != LOGINSERVER_ST_RUNNING )
 	{
 		// players can only login while running
@@ -1336,9 +1357,12 @@ void login_auth_ok(struct login_session_data* sd)
 
 void login_auth_failed(struct login_session_data* sd, int result)
 {
-	int fd = sd->fd;
-	uint32 ip = session[fd]->client_addr;
+	int fd;
+	uint32 ip;
+	nullpo_retv(sd);
 
+	fd = sd->fd;
+	ip = session[fd]->client_addr;
 	if (login_config.log_login)
 	{
 		const char* error;
@@ -1738,7 +1762,9 @@ void login_set_defaults()
 int login_config_read(const char* cfgName)
 {
 	char line[1024], w1[1024], w2[1024];
-	FILE* fp = fopen(cfgName, "r");
+	FILE* fp;
+	nullpo_retr(1, cfgName);
+	fp = fopen(cfgName, "r");
 	if (fp == NULL) {
 		ShowError("Configuration file (%s) not found.\n", cfgName);
 		return 1;

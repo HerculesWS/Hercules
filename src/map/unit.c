@@ -1604,7 +1604,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 			unit->setdir(src, map->calc_dir(src, target->x, target->y));
 		ud->skilltimer = timer->add( tick+casttime, skill->castend_id, src->id, 0 );
 		if( sd && (pc->checkskill(sd,SA_FREECAST) > 0 || skill_id == LG_EXEEDBREAK) )
-			status_calc_bl(&sd->bl, SCB_SPEED);
+			status_calc_bl(&sd->bl, SCB_SPEED|SCB_ASPD);
 	} else
 		skill->castend_id(ud->skilltimer,tick,src->id,0);
 
@@ -1747,8 +1747,9 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 	if( casttime > 0 ) {
 		unit->setdir(src, map->calc_dir(src, skill_x, skill_y));
 		ud->skilltimer = timer->add( tick+casttime, skill->castend_pos, src->id, 0 );
-		if( (sd && pc->checkskill(sd,SA_FREECAST) > 0) || skill_id == LG_EXEEDBREAK)
-			status_calc_bl(&sd->bl, SCB_SPEED);
+		if ( (sd && pc->checkskill(sd, SA_FREECAST) > 0) || skill_id == LG_EXEEDBREAK ) {
+			status_calc_bl(&sd->bl, SCB_SPEED|SCB_ASPD);
+		}
 	} else {
 		ud->skilltimer = INVALID_TIMER;
 		skill->castend_pos(ud->skilltimer,tick,src->id,0);
@@ -2231,7 +2232,7 @@ int unit_skillcastcancel(struct block_list *bl,int type)
 	ud->skilltimer = INVALID_TIMER;
 
 	if( sd && pc->checkskill(sd,SA_FREECAST) > 0 )
-		status_calc_bl(&sd->bl, SCB_SPEED);
+		status_calc_bl(&sd->bl, SCB_SPEED|SCB_ASPD);
 
 	if( sd ) {
 		switch( skill_id ) {

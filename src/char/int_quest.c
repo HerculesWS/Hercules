@@ -16,6 +16,7 @@
 #include "../common/db.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h"
+#include "../common/nullpo.h"
 #include "../common/showmsg.h"
 #include "../common/socket.h"
 #include "../common/sql.h"
@@ -66,8 +67,9 @@ struct quest *mapif_quests_fromsql(int char_id, int *count)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT,  &tmp_quest.quest_id, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_INT,  &tmp_quest.state,    0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_UINT, &tmp_quest.time,     0, NULL, NULL)
-	)
+	) {
 		sqlerror = SQL_ERROR;
+	}
 
 	StrBuf->Destroy(&buf);
 
@@ -249,8 +251,10 @@ void mapif_send_quests(int fd, int char_id, struct quest *tmp_questlog, int num_
 	WFIFOW(fd,2) = num_quests*sizeof(struct quest)+8;
 	WFIFOL(fd,4) = char_id;
 
-	if (num_quests > 0)
+	if (num_quests > 0) {
+		nullpo_retv(tmp_questlog);
 		memcpy(WFIFOP(fd,8), tmp_questlog, sizeof(struct quest)*num_quests);
+	}
 
 	WFIFOSET(fd,num_quests*sizeof(struct quest)+8);
 }

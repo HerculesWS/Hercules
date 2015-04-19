@@ -193,7 +193,7 @@ L_Ingredients:
 	
 }
 
-que_ng,21,72,6	script	Master Craftsman Ki#weap	4_M_RASWORD,{
+que_ng,23,70,6	script	Master Craftsman Ki#weap	4_DST_SOLDIER,{
 	mes "[Ki]";
 	mes "To attack is the best means of defense.";
 	mes "A powerful weapon will make you truly complete.";

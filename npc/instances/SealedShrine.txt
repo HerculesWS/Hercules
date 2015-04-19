@@ -272,7 +272,7 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 		mes "[Rust Blackhand]";
 		mes "Did you bring all of the ingredients?";
 		next;
-		if ((countitem(6004) > 0) && (countitem(2256) > 0) && (countitem(7799) > 29) && (countitem(7798) > 49) && (Zeny > 990000)) {
+		if (countitem(6004) && countitem(2256) && (countitem(7799) > 29) && (countitem(7798) > 49) && (Zeny >= 990000)) {
 			mes "[Rust Blackhand]";
 			mes "kkk... You prepared the ingredients well. Why don't you leave it there and wait?";
 			next;
@@ -348,7 +348,9 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 				next;
 				mes "[Rust Blackhand]";
 				mes "You'll never know how great this hat is until you get one. If you understood, go and get the ingredients.";
-				changequest 3042,3043;
+				if (questprogress(3042)==1)
+					erasequest 3042;
+				setquest 3043;
 				close;
 			case 2:
 				mes "[Rust Blackhand]";
@@ -403,8 +405,9 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 				next;
 				mes "[Rust Blackhand]";
 				mes "You'll never know how great this hat is until you get one. If you understood, go and get the ingredients.";
-				//recall_completequest 3043
-				changequest 3042,3043;
+				if (questprogress(3042)==1)
+					erasequest 3042;
+				setquest 3043;
 				close;
 			case 2:
 				mes "[Rust Blackhand]";

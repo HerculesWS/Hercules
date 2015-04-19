@@ -39,6 +39,7 @@
 #include "../common/malloc.h"
 #include "../common/mapindex.h"
 #include "../common/mmo.h"
+#include "../common/nullpo.h"
 #include "../common/showmsg.h"
 #include "../common/socket.h"
 #include "../common/strlib.h"
@@ -317,6 +318,7 @@ static int char_db_setoffline(DBKey key, DBData *data, va_list ap)
 {
 	struct online_char_data* character = (struct online_char_data*)DB->data2ptr(data);
 	int server_id = va_arg(ap, int);
+	nullpo_ret(character);
 	if (server_id == -1) {
 		character->char_id = -1;
 		character->server = -1;
@@ -336,12 +338,13 @@ static int char_db_kickoffline(DBKey key, DBData *data, va_list ap)
 {
 	struct online_char_data* character = (struct online_char_data*)DB->data2ptr(data);
 	int server_id = va_arg(ap, int);
+	nullpo_ret(character);
 
 	if (server_id > -1 && character->server != server_id)
 		return 0;
 
 	//Kick out any connected characters, and set them offline as appropriate.
-	if (character->server > -1)
+	if (character->server > -1 && character->server < MAX_MAP_SERVERS)
 		mapif->disconnectplayer(chr->server[character->server].fd, character->account_id, character->char_id, 1);
 	else if (character->waiting_disconnect == INVALID_TIMER)
 		chr->set_char_offline(character->char_id, character->account_id);
@@ -404,7 +407,8 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 	int errors = 0; //If there are any errors while saving, "cp" will not be updated at the end.
 	StringBuf buf;
 
-	if (char_id!=p->char_id) return 0;
+	nullpo_ret(p);
+	if (char_id != p->char_id) return 0;
 
 	cp = idb_ensure(chr->char_db_, char_id, chr->create_charstatus);
 
@@ -1008,6 +1012,9 @@ int char_mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 	time_t unban_time = 0;
 	char sex[2];
 
+	nullpo_ret(sd);
+	nullpo_ret(buf);
+
 	stmt = SQL->StmtMalloc(inter->sql_handle);
 	if( stmt == NULL ) {
 		SqlStmt_ShowDebug(stmt);
@@ -1075,6 +1082,8 @@ int char_mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 	}
 
 	for( i = 0; i < MAX_CHARS && SQL_SUCCESS == SQL->StmtNextRow(stmt); i++ ) {
+		if (p.slot >= MAX_CHARS)
+			continue;
 		p.last_point.map = mapindex->name2id(last_map);
 		sd->found_char[p.slot] = p.char_id;
 		sd->unban_time[p.slot] = unban_time;
@@ -1121,6 +1130,8 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	unsigned int opt;
 	int account_id;
 	char sex[2];
+
+	nullpo_ret(p);
 
 	memset(p, 0, sizeof(struct mmo_charstatus));
 
@@ -1206,7 +1217,7 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 		SQL->StmtFree(stmt);
 		return 0;
 	}
-	if( SQL_ERROR == SQL->StmtNextRow(stmt) )
+	if (SQL_SUCCESS != SQL->StmtNextRow(stmt))
 	{
 		ShowError("Requested non-existant character id: %d!\n", char_id);
 		SQL->StmtFree(stmt);
@@ -1325,8 +1336,9 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,        &tmp_item.expire_time, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 8, SQLDT_UCHAR,       &tmp_item.bound, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 9, SQLDT_UINT64,      &tmp_item.unique_id, 0, NULL, NULL)
-	)
+	) {
 		SqlStmt_ShowDebug(stmt);
+	}
 	for( i = 0; i < MAX_SLOTS; ++i )
 		if( SQL_ERROR == SQL->StmtBindColumn(stmt, 10+i, SQLDT_SHORT, &tmp_item.card[i], 0, NULL, NULL) )
 			SqlStmt_ShowDebug(stmt);
@@ -1348,8 +1360,9 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_USHORT, &tmp_skill.id  , 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_UCHAR , &tmp_skill.lv  , 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_UCHAR , &tmp_skill.flag, 0, NULL, NULL)
-	)
+	) {
 		SqlStmt_ShowDebug(stmt);
+	}
 
 	if( tmp_skill.flag != SKILL_FLAG_PERM_GRANTED )
 		tmp_skill.flag = SKILL_FLAG_PERMANENT;
@@ -1370,8 +1383,10 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	 || SQL_ERROR == SQL->StmtExecute(stmt)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT,    &tmp_friend.account_id, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_INT,    &tmp_friend.char_id, 0, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_STRING, &tmp_friend.name, sizeof(tmp_friend.name), NULL, NULL) )
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_STRING, &tmp_friend.name, sizeof(tmp_friend.name), NULL, NULL)
+	) {
 		SqlStmt_ShowDebug(stmt);
+	}
 
 	for( i = 0; i < MAX_FRIENDS && SQL_SUCCESS == SQL->StmtNextRow(stmt); ++i )
 		memcpy(&p->friends[i], &tmp_friend, sizeof(tmp_friend));
@@ -1414,8 +1429,10 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT, &p->bank_vault, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_USHORT, &p->mod_exp, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_USHORT, &p->mod_drop, 0, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3, SQLDT_USHORT, &p->mod_death, 0, NULL, NULL) )
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3, SQLDT_USHORT, &p->mod_death, 0, NULL, NULL)
+	) {
 		SqlStmt_ShowDebug(stmt);
+	}
 
 	if( SQL_SUCCESS == SQL->StmtNextRow(stmt) )
 		strcat(t_msg, " accdata");
@@ -1473,7 +1490,8 @@ bool char_char_slotchange(struct char_session_data *sd, int fd, unsigned short f
 		/* update both at once */
 		if( SQL_SUCCESS != SQL->QueryStr(inter->sql_handle, "START TRANSACTION")
 		   ||  SQL_SUCCESS != SQL->Query(inter->sql_handle, "UPDATE `%s` SET `char_num`='%d' WHERE `char_id`='%d' LIMIT 1", char_db, from, sd->found_char[to])
-		   ||  SQL_SUCCESS != SQL->Query(inter->sql_handle, "UPDATE `%s` SET `char_num`='%d' WHERE `char_id`='%d' LIMIT 1", char_db, to, sd->found_char[from]) )
+		   ||  SQL_SUCCESS != SQL->Query(inter->sql_handle, "UPDATE `%s` SET `char_num`='%d' WHERE `char_id`='%d' LIMIT 1", char_db, to, sd->found_char[from])
+		)
 			Sql_ShowDebug(inter->sql_handle);
 		else
 			result = true;
@@ -1508,10 +1526,15 @@ int char_rename_char_sql(struct char_session_data *sd, int char_id)
 	struct mmo_charstatus char_dat;
 	char esc_name[NAME_LENGTH*2+1];
 
+	nullpo_retr(2, sd);
+
 	if( sd->new_name[0] == 0 ) // Not ready for rename
 		return 2;
 
 	if( !chr->mmo_char_fromsql(char_id, &char_dat, false) ) // Only the short data is needed.
+		return 2;
+
+	if (sd->account_id != char_dat.account_id) // Try rename not own char
 		return 2;
 
 	if( char_dat.rename == 0 )
@@ -1556,8 +1579,11 @@ int char_check_char_name(char * name, char * esc_name)
 {
 	int i;
 
+	nullpo_retr(-2, name);
+	nullpo_retr(-2, esc_name);
+
 	// check length of character name
-	if( name[0] == '\0' )
+	if (name[0] == '\0')
 		return -2; // empty character name
 	/**
 	 * The client does not allow you to create names with less than 4 characters, however,
@@ -2027,6 +2053,7 @@ void char_mmo_char_send_ban_list(int fd, struct char_session_data *sd) {
 	int i;
 	time_t now = time(NULL);
 
+	nullpo_retv(sd);
 	ARR_FIND(0, MAX_CHARS, i, sd->unban_time[i]);
 	if( i != MAX_CHARS ) {
 		int c;
@@ -2063,6 +2090,7 @@ void char_mmo_char_send_ban_list(int fd, struct char_session_data *sd) {
 // [Ind/Hercules] notify client about charselect window data
 //----------------------------------------
 void char_mmo_char_send_slots_info(int fd, struct char_session_data* sd) {
+	nullpo_retv(sd);
 	WFIFOHEAD(fd,29);
 	WFIFOW(fd,0) = 0x82d;
 	WFIFOW(fd,2) = 29;
@@ -2080,6 +2108,7 @@ void char_mmo_char_send_slots_info(int fd, struct char_session_data* sd) {
 int char_mmo_char_send_characters(int fd, struct char_session_data* sd)
 {
 	int j, offset = 0;
+	nullpo_ret(sd);
 #if PACKETVER >= 20100413
 	offset += 3;
 #endif
@@ -2200,6 +2229,8 @@ void char_request_account_data(int account_id)
 static void char_auth_ok(int fd, struct char_session_data *sd)
 {
 	struct online_char_data* character;
+
+	nullpo_retv(sd);
 
 	if( (character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id)) != NULL ) {
 		// check if character is not online already. [Skotlex]
@@ -2356,7 +2387,8 @@ void char_parse_fromlogin_account_data(int fd)
 void char_parse_fromlogin_login_pong(int fd)
 {
 	RFIFOSKIP(fd,2);
-	session[fd]->flag.ping = 0;
+	if (session[fd])
+		session[fd]->flag.ping = 0;
 }
 
 void char_changesex(int account_id, int sex)
@@ -2870,7 +2902,7 @@ void char_update_fame_list(int type, int index, int fame) {
 	mapif->sendall(buf, 8);
 }
 
-//Loads a character's name and stores it in the buffer given (must be NAME_LENGTH in size)
+//Loads a character's name and stores it in the buffer given (must be NAME_LENGTH in size) and not NULL
 //Returns 1 on found, 0 on not found (buffer is filled with Unknown char name)
 int char_loadName(int char_id, char* name)
 {
@@ -2943,6 +2975,7 @@ void mapif_on_disconnect(int id)
 }
 
 void mapif_on_parse_accinfo(int account_id, int u_fd, int u_aid, int u_group, int map_fd) {
+	Assert_retv(chr->login_fd > 0);
 	WFIFOHEAD(chr->login_fd,22);
 	WFIFOW(chr->login_fd,0) = 0x2740;
 	WFIFOL(chr->login_fd,2) = account_id;
@@ -2964,7 +2997,7 @@ void char_parse_frommap_skillid2idx(int fd)
 	int i;
 	int j = RFIFOW(fd, 2) - 4;
 
-	memset(&skillid2idx, 0, sizeof(skillid2idx));	
+	memset(&skillid2idx, 0, sizeof(skillid2idx));
 	if( j )
 		j /= 4;
 	for(i = 0; i < j; i++) {
@@ -3348,6 +3381,8 @@ void char_ban(int account_id, int char_id, time_t *unban_time, short year, short
 	struct tm *tmtime;
 	SqlStmt* stmt = SQL->StmtMalloc(inter->sql_handle);
 
+	nullpo_retv(unban_time);
+
 	if (*unban_time == 0 || *unban_time < time(NULL))
 		timestamp = time(NULL); // new ban
 	else
@@ -3363,13 +3398,12 @@ void char_ban(int account_id, int char_id, time_t *unban_time, short year, short
 	timestamp = mktime(tmtime);
 
 	if( SQL_SUCCESS != SQL->StmtPrepare(stmt,
-										"UPDATE `%s` SET `unban_time` = ? WHERE `char_id` = ? LIMIT 1",
-										char_db)
+		"UPDATE `%s` SET `unban_time` = ? WHERE `char_id` = ? LIMIT 1",
+		char_db)
 	   || SQL_SUCCESS != SQL->StmtBindParam(stmt,  0, SQLDT_LONG,   (void*)&timestamp,   sizeof(timestamp))
 	   || SQL_SUCCESS != SQL->StmtBindParam(stmt,  1, SQLDT_INT,    (void*)&char_id,     sizeof(char_id))
 	   || SQL_SUCCESS != SQL->StmtExecute(stmt)
-
-	   ) {
+	) {
 		SqlStmt_ShowDebug(stmt);
 	}
 
@@ -3388,12 +3422,14 @@ void char_unban(int char_id, int *result)
 	/* handled by char server, so no redirection */
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `unban_time` = '0' WHERE `char_id` = '%d' LIMIT 1", char_db, char_id) ) {
 		Sql_ShowDebug(inter->sql_handle);
-		*result = 1;
+		if (result)
+			*result = 1;
 	}
 }
 
 void char_ask_name_ack(int fd, int acc, const char* name, int type, int result)
 {
+	nullpo_retv(name);
 	WFIFOHEAD(fd,34);
 	WFIFOW(fd, 0) = 0x2b0f;
 	WFIFOL(fd, 2) = acc;
@@ -3499,6 +3535,10 @@ void char_parse_frommap_fame_list(int fd)
 		default:                  size = 0;                      list = NULL;              break;
 	}
 
+	if (!list) {
+		RFIFOSKIP(fd, 11);
+		return;
+	}
 	ARR_FIND(0, size, player_pos, list[player_pos].id == cid);// position of the player
 	ARR_FIND(0, size, fame_pos, list[fame_pos].fame <= fame);// where the player should be
 
@@ -3624,6 +3664,7 @@ void char_parse_frommap_ping(int fd)
 
 void char_map_auth_ok(int fd, int account_id, struct char_auth_node* node, struct mmo_charstatus* cd)
 {
+	nullpo_retv(cd);
 	WFIFOHEAD(fd,25 + sizeof(struct mmo_charstatus));
 	WFIFOW(fd,0) = 0x2afd;
 	WFIFOW(fd,2) = 25 + sizeof(struct mmo_charstatus);
@@ -4391,6 +4432,7 @@ void char_parse_char_connect(int fd, struct char_session_data* sd, uint32 ipl)
 
 void char_send_map_info(int fd, int i, uint32 subnet_map_ip, struct mmo_charstatus *cd)
 {
+	nullpo_retv(cd);
 	WFIFOHEAD(fd,28);
 	WFIFOW(fd,0) = 0x71;
 	WFIFOL(fd,2) = cd->char_id;
@@ -4413,6 +4455,7 @@ int char_search_default_maps_mapserver(struct mmo_charstatus *cd)
 {
 	int i;
 	int j;
+	nullpo_retr(-1, cd);
 	if ((i = chr->search_mapserver((j=mapindex->name2id(MAP_PRONTERA)),-1,-1)) >= 0) {
 		cd->last_point.x = 273;
 		cd->last_point.y = 354;
@@ -4505,6 +4548,7 @@ void char_parse_char_select(int fd, struct char_session_data* sd, uint32 ipl)
 
 	//Have to switch over to the DB instance otherwise data won't propagate [Kevin]
 	cd = (struct mmo_charstatus *)idb_get(chr->char_db_, char_id);
+	nullpo_retv(cd);
 	if( cd->sex == 99 )
 		cd->sex = sd->sex;
 
@@ -4658,7 +4702,7 @@ void char_parse_char_delete_char(int fd, struct char_session_data* sd, unsigned 
 	int i;
 
 #if PACKETVER >= 20110309
-	if( pincode->enabled ){ // hack check
+	if (pincode->enabled) { // hack check
 		struct online_char_data* character;
 		character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id);
 		if( character && character->pincode_enable == -1 ){
@@ -4874,33 +4918,33 @@ void char_parse_char_login_map_server(int fd)
 
 void char_parse_char_pincode_check(int fd, struct char_session_data* sd)
 {
-	if( RFIFOL(fd,2) == sd->account_id )
-		pincode->check( fd, sd );
+	if (RFIFOL(fd,2) == sd->account_id)
+		pincode->check(fd, sd);
 
-	RFIFOSKIP(fd,10);
+	RFIFOSKIP(fd, 10);
 }
 
 void char_parse_char_pincode_window(int fd, struct char_session_data* sd)
 {
-	if( RFIFOL(fd,2) == sd->account_id )
-		pincode->sendstate( fd, sd, PINCODE_NOTSET );
+	if (RFIFOL(fd,2) == sd->account_id)
+		pincode->sendstate(fd, sd, PINCODE_NOTSET);
 
-	RFIFOSKIP(fd,6);
+	RFIFOSKIP(fd, 6);
 }
 
 void char_parse_char_pincode_change(int fd, struct char_session_data* sd)
 {
-	if( RFIFOL(fd,2) == sd->account_id )
-		pincode->change( fd, sd );
+	if (RFIFOL(fd,2) == sd->account_id)
+		pincode->change(fd, sd);
 
-	RFIFOSKIP(fd,14);
+	RFIFOSKIP(fd, 14);
 }
 
 void char_parse_char_pincode_first_pin(int fd, struct char_session_data* sd)
 {
-	if( RFIFOL(fd,2) == sd->account_id )
-		pincode->setnew( fd, sd );
-	RFIFOSKIP(fd,10);
+	if (RFIFOL(fd,2) == sd->account_id)
+		pincode->setnew (fd, sd);
+	RFIFOSKIP(fd, 10);
 }
 
 void char_parse_char_request_chars(int fd, struct char_session_data* sd)
@@ -5155,6 +5199,7 @@ int mapif_sendall(unsigned char *buf, unsigned int len)
 {
 	int i, c;
 
+	nullpo_ret(buf);
 	c = 0;
 	for(i = 0; i < ARRAYLENGTH(chr->server); i++) {
 		int fd;
@@ -5173,6 +5218,7 @@ int mapif_sendallwos(int sfd, unsigned char *buf, unsigned int len)
 {
 	int i, c;
 
+	nullpo_ret(buf);
 	c = 0;
 	for(i = 0; i < ARRAYLENGTH(chr->server); i++) {
 		int fd;
@@ -5189,6 +5235,7 @@ int mapif_sendallwos(int sfd, unsigned char *buf, unsigned int len)
 
 int mapif_send(int fd, unsigned char *buf, unsigned int len)
 {
+	nullpo_ret(buf);
 	if (fd >= 0) {
 		int i;
 		ARR_FIND( 0, ARRAYLENGTH(chr->server), i, fd == chr->server[i].fd );
@@ -5241,6 +5288,7 @@ static int char_send_accounts_tologin_sub(DBKey key, DBData *data, va_list ap)
 	struct online_char_data* character = DB->data2ptr(data);
 	int* i = va_arg(ap, int*);
 
+	nullpo_ret(character);
 	if(character->server > -1)
 	{
 		WFIFOL(chr->login_fd,8+(*i)*4) = character->account_id;
@@ -5307,6 +5355,7 @@ static int char_waiting_disconnect(int tid, int64 tick, int id, intptr_t data) {
 static int char_online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
 {
 	struct online_char_data *character= DB->data2ptr(data);
+	nullpo_ret(character);
 	if (character->fd != -1)
 		return 0; //Character still connected
 	if (character->server == -2) //Unknown server.. set them offline
@@ -5955,6 +6004,7 @@ void char_defaults(void)
 
 	memset(chr->userid, 0, sizeof(chr->userid));
 	memset(chr->passwd, 0, sizeof(chr->passwd));
+	memset(chr->server_name, 0, sizeof(chr->server_name));
 
 	chr->ip = 0;
 	chr->port = 6121;

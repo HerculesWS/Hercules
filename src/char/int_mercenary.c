@@ -15,6 +15,7 @@
 #include "mapif.h"
 #include "../common/malloc.h"
 #include "../common/mmo.h"
+#include "../common/nullpo.h"
 #include "../common/showmsg.h"
 #include "../common/socket.h"
 #include "../common/sql.h"
@@ -27,6 +28,7 @@ bool inter_mercenary_owner_fromsql(int char_id, struct mmo_charstatus *status)
 {
 	char* data;
 
+	nullpo_ret(status);
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `merc_id`, `arch_calls`, `arch_faith`, `spear_calls`, `spear_faith`, `sword_calls`, `sword_faith` FROM `%s` WHERE `char_id` = '%d'", mercenary_owner_db, char_id) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
@@ -53,6 +55,7 @@ bool inter_mercenary_owner_fromsql(int char_id, struct mmo_charstatus *status)
 
 bool inter_mercenary_owner_tosql(int char_id, struct mmo_charstatus *status)
 {
+	nullpo_ret(status);
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`char_id`, `merc_id`, `arch_calls`, `arch_faith`, `spear_calls`, `spear_faith`, `sword_calls`, `sword_faith`) VALUES ('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
 		mercenary_owner_db, char_id, status->mer_id, status->arch_calls, status->arch_faith, status->spear_calls, status->spear_faith, status->sword_calls, status->sword_faith) )
 	{
@@ -78,6 +81,7 @@ bool mapif_mercenary_save(struct s_mercenary* merc)
 {
 	bool flag = true;
 
+	nullpo_ret(merc);
 	if( merc->mercenary_id == 0 )
 	{ // Create new DB entry
 		if( SQL_ERROR == SQL->Query(inter->sql_handle,
@@ -105,6 +109,7 @@ bool mapif_mercenary_load(int merc_id, int char_id, struct s_mercenary *merc)
 {
 	char* data;
 
+	nullpo_ret(merc);
 	memset(merc, 0, sizeof(struct s_mercenary));
 	merc->mercenary_id = merc_id;
 	merc->char_id = char_id;
@@ -148,6 +153,7 @@ void mapif_mercenary_send(int fd, struct s_mercenary *merc, unsigned char flag)
 {
 	int size = sizeof(struct s_mercenary) + 5;
 
+	nullpo_retv(merc);
 	WFIFOHEAD(fd,size);
 	WFIFOW(fd,0) = 0x3870;
 	WFIFOW(fd,2) = size;

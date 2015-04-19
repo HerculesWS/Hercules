@@ -88,6 +88,9 @@ List of GM Management NPCs (incomplete)
 - Bangungot Gate (RE)
 
 [ Job-related ]
+----- Extended (RE) ------
+- Battle Test Control#ko
+- Guide#ko_helper
 ----- 3rd Class (RE) -----
 - control#arch
 - #GMhelper01_gc
