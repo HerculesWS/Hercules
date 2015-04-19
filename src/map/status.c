@@ -12220,7 +12220,12 @@ void status_read_job_db(void) { /* [malufett/Hercules] */
 	int i = 0;
 	config_t job_db_conf;
 	config_setting_t *jdb = NULL;
-	const char *config_filename = "db/"DBPATH"job_db.conf";
+	const char *config_filename = 
+#ifdef RENEWAL_ASPD
+		"db/re/job_db.conf";
+#else
+		"db/pre/job_db.conf";
+#endif
 
 	if ( libconfig->read_file(&job_db_conf, config_filename) ) {
 		ShowError("can't read %s\n", config_filename);
