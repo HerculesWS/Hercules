@@ -12104,7 +12104,7 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 			memcpy(&status->aspd_base[idx], &status->aspd_base[iidx], sizeof(status->aspd_base[iidx]));
 			for (w = 1; w <= MAX_LEVEL && status->HP_table[iidx][w]; w++) {
 				status->HP_table[idx][w] = status->HP_table[iidx][w];
-				total += status->HP_table[idx][w];
+				total += status->HP_table[idx][w] - status->HP_table[idx][w - 1];
 			}
 			ave = total / (w - 1);
 			for ( ; w <= pc->max_level[idx][0]; w++) {
@@ -12112,7 +12112,7 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 			}
 			for (w = 1; w <= MAX_LEVEL && status->SP_table[iidx][w]; w++) {
 				status->SP_table[idx][w] = status->SP_table[iidx][w];
-				total += status->SP_table[idx][w];
+				total += status->SP_table[idx][w] - status->SP_table[idx][w - 1];
 			}
 			ave = total / (w - 1);
 			for ( ; w <= pc->max_level[idx][0]; w++) {
@@ -12132,7 +12132,7 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 			iidx = pc->class2idx(iclass);
 			for (w = 1; w <= MAX_LEVEL && status->HP_table[iidx][w]; w++) {
 				status->HP_table[idx][w] = status->HP_table[iidx][w];
-				total += status->HP_table[idx][w];
+				total += status->HP_table[idx][w] - status->HP_table[idx][w - 1]; 
 			}
 			ave = total / (w - 1);
 			for ( ; w <= pc->max_level[idx][0]; w++ ) {
@@ -12152,7 +12152,7 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 			iidx = pc->class2idx(iclass);
 			for (w = 1; w <= MAX_LEVEL && status->SP_table[iidx][w]; w++) {
 				status->SP_table[idx][w] = status->SP_table[iidx][w];
-				total += status->SP_table[idx][w];
+				total += status->SP_table[idx][w] - status->SP_table[idx][w-1];
 			}
 			ave = total / (w - 1);
 			for ( ; w <= pc->max_level[idx][0]; w++) {
@@ -12243,6 +12243,7 @@ void status_read_job_db(void) { /* [malufett/Hercules] */
 		idx = pc->class2idx(class_);
 		status->read_job_db_sub(idx, name, jdb);
 	}
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
 	libconfig->destroy(&job_db_conf);
 }
 
