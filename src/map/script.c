@@ -5703,7 +5703,7 @@ BUILDIN(return) {
 				if( !st->script->local.arrays )
 					st->script->local.arrays = idb_alloc(DB_OPT_BASE);
 				data->ref->arrays = st->script->local.arrays;
-			} else if ( name[0] == '.' /* && data->ref != NULL */ ) {
+			} else if ( name[0] == '.' && data->ref->vars == st->stack->stack_data[st->stack->defsp-1].u.ri->script->local.vars ) {
 				data->ref = NULL; // Reference to the parent scope's script, remove reference pointer.
 			}
 		}
