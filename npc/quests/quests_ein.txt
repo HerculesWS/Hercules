@@ -385,7 +385,7 @@ einbech,97,167,5	script	Cavitar	4_M_EINOLD,{
 								switch(select("Sure~!:No, thanks.")) {
 								case 1:
 									Zeny -= 1000;
-									++$einamanoama;
+									++$ein_amano;
 									ein_gear1 = 1;
 									mes "[Cavitar]";
 									mes "Great...!";
