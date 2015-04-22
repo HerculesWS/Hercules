@@ -5682,6 +5682,13 @@ BUILDIN(getarg)
 /// return;
 /// return <value>;
 BUILDIN(return) {
+	st->state = RETFUNC;
+
+	if( st->stack->defsp < 1 || st->stack->stack_data[st->stack->defsp-1].type != C_RETINFO ) {
+		// Incorrect usage of return outside the scope of a function or subroutine.
+		return true; // No need for further processing, running script is about to be aborted.
+	}
+
 	if( script_hasdata(st,2) )
 	{// return value
 		struct script_data* data;
@@ -5712,7 +5719,7 @@ BUILDIN(return) {
 	{// no return value
 		script_pushnil(st);
 	}
-	st->state = RETFUNC;
+
 	return true;
 }
 
