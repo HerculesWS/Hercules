@@ -427,7 +427,7 @@ int64 battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, u
 		else
 			damage = battle->calc_sizefix(sd, damage, EQI_HAND_L, size, flag & 8);
 
-		if ( flag & 2 && sd->bonus.arrow_atk )
+		if ( flag & 2 && sd->bonus.arrow_atk && skill_id != GN_CARTCANNON )
 			damage += sd->bonus.arrow_atk;
 
 		if ( sd->battle_status.equip_atk != 0 )
@@ -885,8 +885,6 @@ int64 battle_calc_elefix(struct block_list *src, struct block_list *target, uint
 			if( skill_id == MC_CARTREVOLUTION ) //Cart Revolution applies the element fix once more with neutral element
 				damage = battle->attr_fix(src,target,damage,ELE_NEUTRAL,tstatus->def_ele, tstatus->ele_lv);
 			if( skill_id == NC_ARMSCANNON )
-				damage = battle->attr_fix(src,target,damage,ELE_NEUTRAL,tstatus->def_ele, tstatus->ele_lv);
-			if( skill_id == GN_CARTCANNON )
 				damage = battle->attr_fix(src,target,damage,ELE_NEUTRAL,tstatus->def_ele, tstatus->ele_lv);
 			if( skill_id == GS_GROUNDDRIFT ) //Additional 50*lv Neutral damage.
 				damage += battle->attr_fix(src,target,50*skill_lv,ELE_NEUTRAL,tstatus->def_ele, tstatus->ele_lv);
@@ -2541,7 +2539,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				}
 					break;
 				case GN_CARTCANNON:
-					skillratio = 50 * (sd ? pc->checkskill(sd, GN_REMODELING_CART) : 5) * (st->int_ / 40) + 60 * skill_lv;
+					skillratio += -100 + (int)(50.0f * (sd ? pc->checkskill(sd, GN_REMODELING_CART) : 5) * (st->int_ / 40.0f) + 60.0f * skill_lv);
 					break;
 				case GN_SPORE_EXPLOSION:
 					skillratio = 100 * skill_lv + (200 + st->int_) * status->get_lv(src) / 100;
@@ -4352,6 +4350,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			case PA_SACRIFICE:
 				flag.distinct = 1;
 				break;
+			case GN_CARTCANNON:
 			case PA_SHIELDCHAIN:
 			case GS_MAGICALBULLET:
 			case NJ_SYURIKEN:
@@ -4928,6 +4927,14 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					wd.damage = max(wd.damage, 1);
 			}
 				break;
+			case GN_CARTCANNON:
+				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | (sc && sc->data[SC_WEAPONPERFECT] ? 8 : 0), skill_id);
+				ATK_ADD(sd ? sd->bonus.arrow_atk : 0);
+				wd.damage = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage, wd.div_, 0, flag.weapon);
+				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
+				if ( sd && s_ele != sd->bonus.arrow_ele )
+					s_ele = sd->bonus.arrow_ele;
+				break;
 			case NJ_TATAMIGAESHI:
 					ATK_RATE(200);
 				/* Fall through */
@@ -5208,7 +5215,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		//Div fix.
 		damage_div_fix(wd.damage, wd.div_);
 		if ( skill_id > 0 && (skill->get_ele(skill_id, skill_lv) == ELE_NEUTRAL || flag.distinct) ) { // re-evaluate forced neutral skills
-			wd.damage = battle->attr_fix(src, target, wd.damage, s_ele_, tstatus->def_ele, tstatus->ele_lv);
+			wd.damage = battle->attr_fix(src, target, wd.damage, s_ele, tstatus->def_ele, tstatus->ele_lv);
 			if ( flag.lh )
 				wd.damage2 = battle->attr_fix(src, target, wd.damage2, s_ele_, tstatus->def_ele, tstatus->ele_lv);
 		}
