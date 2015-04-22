@@ -7649,6 +7649,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				map->freeblock_unlock(); // Don't consume item requirements
 				return 0;
 			}
+			clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
 		}
 		break;
 
