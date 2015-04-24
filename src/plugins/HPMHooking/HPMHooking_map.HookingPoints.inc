@@ -2564,6 +2564,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(status->readdb_refine, HP_status_readdb_refine) },
 	{ HP_POP(status->readdb_scconfig, HP_status_readdb_scconfig) },
 	{ HP_POP(status->read_job_db, HP_status_read_job_db) },
+	{ HP_POP(status->read_job_db_sub, HP_status_read_job_db_sub) },
 /* storage */
 	{ HP_POP(storage->reconnect, HP_storage_reconnect) },
 	{ HP_POP(storage->delitem, HP_storage_delitem) },

@@ -67963,6 +67963,32 @@ void HP_status_read_job_db(void) {
 	}
 	return;
 }
+void HP_status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_status_read_job_db_sub_pre ) {
+		void (*preHookFunc) (int *idx, const char *name, config_setting_t *jdb);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_read_job_db_sub_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_status_read_job_db_sub_pre[hIndex].func;
+			preHookFunc(&idx, name, jdb);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.status.read_job_db_sub(idx, name, jdb);
+	}
+	if( HPMHooks.count.HP_status_read_job_db_sub_post ) {
+		void (*postHookFunc) (int *idx, const char *name, config_setting_t *jdb);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_read_job_db_sub_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_status_read_job_db_sub_post[hIndex].func;
+			postHookFunc(&idx, name, jdb);
+		}
+	}
+	return;
+}
 /* storage */
 void HP_storage_reconnect(void) {
 	int hIndex = 0;
