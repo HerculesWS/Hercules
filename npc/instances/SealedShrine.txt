@@ -121,7 +121,7 @@ monk_test,309,146,3	script	Friar Patrick#edq	4_M_OLDFRIAR,{
 					}
 					else {
 						for (.@i = 1; .@i <= 2; ++.@i) {
-							if( instance_attachmap("" + .@i + "@cata", .@instance) == "" )
+							if( instance_attachmap(.@i + "@cata", .@instance) == "" )
 								break;
 						}
 						if( .@i < 2 ) {
@@ -348,7 +348,7 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 				next;
 				mes "[Rust Blackhand]";
 				mes "You'll never know how great this hat is until you get one. If you understood, go and get the ingredients.";
-				if (questprogress(3042)==1)
+				if (questprogress(3042))
 					erasequest 3042;
 				setquest 3043;
 				close;
@@ -366,12 +366,12 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 			close;
 		}
 	}
-	else if (!.@new_maje && countitem(6004) == 0) {
+	else if (!.@new_maje && !countitem(6004)) {
 		mes "[Rust Blackhand]";
 		mes "If you don't have business with me, go away! As you see, I make equipment for the Brothers at the monastery, not for adventurers like you. Do you understand?";
 		close;
 	}
-	else if (.@new_maje == 2 && countitem(6004) > 0) {
+	else if (.@new_maje == 2 && countitem(6004)) {
 		switch(select("About the Cursed Baphomet Doll:Stop talking.")) {
 		case 1:
 			mes "[Rust Blackhand]";
@@ -405,8 +405,9 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 				next;
 				mes "[Rust Blackhand]";
 				mes "You'll never know how great this hat is until you get one. If you understood, go and get the ingredients.";
-				if (questprogress(3042)==1)
+				if (questprogress(3042))
 					erasequest 3042;
+				erasequest 3043;
 				setquest 3043;
 				close;
 			case 2:
@@ -423,7 +424,7 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 			close;
 		}
 	}
-	else if (.@new_maje == 2 && countitem(6004) == 0) {
+	else if (.@new_maje == 2 && !countitem(6004)) {
 		mes "[Rust Blackhand]";
 		mes "Why are you hanging around here? If you don't want a ^4d4dffGigantic Magestic Goat^000000, go away.";
 		close;
