@@ -603,6 +603,11 @@ function	script	HerculesSelfTestHelper	{
 	setd(".@x", getd(".@y"));
 	callsub(OnCheck, "setd getd", .@x, .@y);
 
+	// getvariableofnpc
+	.x = 2;
+	set getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1;
+	callsub(OnCheck, "Setting NPC variables of another NPC", getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1);
+	callsub(OnCheck, "Setting NPC variables of another NPC (local variable overwrite check)", .x, 2);
 
 	// Callsub (advanced)
 	callsub(OnCheck, "Callsub return value", callsub(OnTestReturnValue, 1));
@@ -634,6 +639,7 @@ function	script	HerculesSelfTestHelper	{
 	.x = 2;
 	set getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1;
 	callsub(OnCheck, "Callsub (return NPC variables from another NPC)", callsub(OnTestVarOfAnotherNPC, "TestVarOfAnotherNPC"), 1);
+	callsub(OnCheck, "Callsub (return NPC variables from another NPC - local variable overwrite check)", .x, 2);
 
 	// Callfunc
 	callsub(OnCheck, "Callfunc return value", callfunc("F_TestReturnValue", 1));
@@ -682,6 +688,7 @@ function	script	HerculesSelfTestHelper	{
 	.x = 2;
 	set getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1;
 	callsub(OnCheck, "Callfunc (return NPC variables from another NPC)", callfunc("F_TestVarOfAnotherNPC", "TestVarOfAnotherNPC"), 1);
+	callsub(OnCheck, "Callfunc (return NPC variables from another NPC - local variable overwrite check)", .x, 2);
 
 	if (.errors) {
 		debugmes "Script engine self-test   [ \033[0;31mFAILED\033[0m ]";
@@ -723,7 +730,7 @@ OnTestScopeArrays:
 	setarray .@x, 1, 2, 3, 4;
 	copyarray .@y, getarg(0), getarraysize(getarg(0));
 	return getarraysize(.@y);
-	
+
 OnTestVarOfAnotherNPC:
 	return getvariableofnpc(.x, getarg(0));
 
