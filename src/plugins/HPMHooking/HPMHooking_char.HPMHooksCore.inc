@@ -39,6 +39,8 @@ struct {
 	struct HPMHookPoint *HP_chr_memitemdata_to_sql_post;
 	struct HPMHookPoint *HP_chr_inventory_to_sql_pre;
 	struct HPMHookPoint *HP_chr_inventory_to_sql_post;
+	struct HPMHookPoint *HP_chr_mmo_gender_pre;
+	struct HPMHookPoint *HP_chr_mmo_gender_post;
 	struct HPMHookPoint *HP_chr_mmo_chars_fromsql_pre;
 	struct HPMHookPoint *HP_chr_mmo_chars_fromsql_post;
 	struct HPMHookPoint *HP_chr_mmo_char_fromsql_pre;
@@ -173,6 +175,8 @@ struct {
 	struct HPMHookPoint *HP_chr_unban_post;
 	struct HPMHookPoint *HP_chr_ask_name_ack_pre;
 	struct HPMHookPoint *HP_chr_ask_name_ack_post;
+	struct HPMHookPoint *HP_chr_changecharsex_pre;
+	struct HPMHookPoint *HP_chr_changecharsex_post;
 	struct HPMHookPoint *HP_chr_parse_frommap_change_account_pre;
 	struct HPMHookPoint *HP_chr_parse_frommap_change_account_post;
 	struct HPMHookPoint *HP_chr_parse_frommap_fame_list_pre;
@@ -934,6 +938,8 @@ struct {
 	int HP_chr_memitemdata_to_sql_post;
 	int HP_chr_inventory_to_sql_pre;
 	int HP_chr_inventory_to_sql_post;
+	int HP_chr_mmo_gender_pre;
+	int HP_chr_mmo_gender_post;
 	int HP_chr_mmo_chars_fromsql_pre;
 	int HP_chr_mmo_chars_fromsql_post;
 	int HP_chr_mmo_char_fromsql_pre;
@@ -1068,6 +1074,8 @@ struct {
 	int HP_chr_unban_post;
 	int HP_chr_ask_name_ack_pre;
 	int HP_chr_ask_name_ack_post;
+	int HP_chr_changecharsex_pre;
+	int HP_chr_changecharsex_post;
 	int HP_chr_parse_frommap_change_account_pre;
 	int HP_chr_parse_frommap_change_account_post;
 	int HP_chr_parse_frommap_fame_list_pre;

@@ -5187,15 +5187,15 @@ bool HP_chrif_char_online(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-bool HP_chrif_changesex(struct map_session_data *sd) {
+bool HP_chrif_changesex(struct map_session_data *sd, bool change_account) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if( HPMHooks.count.HP_chrif_changesex_pre ) {
-		bool (*preHookFunc) (struct map_session_data *sd);
+		bool (*preHookFunc) (struct map_session_data *sd, bool *change_account);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_changesex_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_chrif_changesex_pre[hIndex].func;
-			retVal___ = preHookFunc(sd);
+			retVal___ = preHookFunc(sd, &change_account);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -5203,13 +5203,13 @@ bool HP_chrif_changesex(struct map_session_data *sd) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.chrif.changesex(sd);
+		retVal___ = HPMHooks.source.chrif.changesex(sd, change_account);
 	}
 	if( HPMHooks.count.HP_chrif_changesex_post ) {
-		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd);
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, bool *change_account);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_changesex_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_chrif_changesex_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd);
+			retVal___ = postHookFunc(retVal___, sd, &change_account);
 		}
 	}
 	return retVal___;
