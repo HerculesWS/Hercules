@@ -86,6 +86,15 @@ function	script	F_TestNPCArrays	{
 	return getarraysize(.y);
 }
 
+function	script	F_TestVarOfAnotherNPC	{
+	return getvariableofnpc(.x, getarg(0));
+}
+
+-	script	TestVarOfAnotherNPC	-1,{
+	// Used to test getvariableofnpc()
+	end;
+}
+
 function	script	HerculesSelfTestHelper	{
 	if (.once > 0)
 		return .errors;
@@ -622,6 +631,9 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "Callsub (parent array vars isolation)", getarraysize(.@x), .@z);
 	deletearray .@x;
 	deletearray .@y;
+	.x = 2;
+	set getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1;
+	callsub(OnCheck, "Callsub (return NPC variables from another NPC)", callsub(OnTestVarOfAnotherNPC, "TestVarOfAnotherNPC"), 1);
 
 	// Callfunc
 	callsub(OnCheck, "Callfunc return value", callfunc("F_TestReturnValue", 1));
@@ -667,6 +679,9 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "Callfunc (parent array NPC vars isolation)", getarraysize(.@x), .@z);
 	deletearray .x;
 	deletearray .y;
+	.x = 2;
+	set getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1;
+	callsub(OnCheck, "Callfunc (return NPC variables from another NPC)", callfunc("F_TestVarOfAnotherNPC", "TestVarOfAnotherNPC"), 1);
 
 	if (.errors) {
 		debugmes "Script engine self-test   [ \033[0;31mFAILED\033[0m ]";
@@ -708,6 +723,9 @@ OnTestScopeArrays:
 	setarray .@x, 1, 2, 3, 4;
 	copyarray .@y, getarg(0), getarraysize(getarg(0));
 	return getarraysize(.@y);
+	
+OnTestVarOfAnotherNPC:
+	return getvariableofnpc(.x, getarg(0));
 
 OnReportError:
 	.@msg$ = getarg(0,"Unknown Error");
