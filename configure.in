@@ -300,9 +300,9 @@ AC_ARG_ENABLE(
 AC_ARG_ENABLE(
 	[sanitize],
 	AC_HELP_STRING(
-		[--enable-sanitize],
+		[--enable-sanitize@<:@=ARG@:>@],
 		[
-			Enables or Disables Sanitize Address Checking (SANITIZE is disabled by default)
+			Sanitize: yes, no, full)
 		]
 	),
 	[
@@ -310,6 +310,7 @@ AC_ARG_ENABLE(
 		case $enableval in
 			"no");;
 			"yes");;
+			"full");;
 			*) AC_MSG_ERROR([[invalid argument --enable-sanitize=$disableval... stopping]]);;
 		esac
 	],
@@ -625,14 +626,25 @@ fi
 # sanitize Support test
 #
 if test "$enable_sanitize" != "no" ; then
+	if test "$enable_sanitize" == "full" ; then
+	# skipped because server have multiply issues -fsanitize=alignment
+		SAN="-fsanitize=address \
+-fsanitize=shift -fsanitize=integer-divide-by-zero -fsanitize=unreachable \
+-fsanitize=vla-bound -fsanitize=null -fsanitize=return \
+-fsanitize=signed-integer-overflow -fsanitize=bounds \
+-fsanitize=object-size -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow \
+-fsanitize=nonnull-attribute -fsanitize=returns-nonnull-attribute -fsanitize=bool \
+-fsanitize=enum -fsanitize=vptr"
+	else
+		SAN="-fsanitize=address"
+	fi
 
 	OLD_CFLAGS="$CFLAGS"
-	CFLAGS="$CFLAGS -fsanitize=address"
-
+	CFLAGS="$CFLAGS $SAN"
 	OLD_LDFLAGS="$LDFLAGS"
-	LDFLAGS="$LDFLAGS -fsanitize=address"
+	LDFLAGS="$LDFLAGS $SAN"
 
-	AC_MSG_CHECKING([whether $CC supports -fsanitize=address])
+	AC_MSG_CHECKING([whether $CC supports $SAN])
 	AC_RUN_IFELSE(
 		[AC_LANG_SOURCE([
 			int main(int argc, char **argv){
@@ -651,6 +663,7 @@ if test "$enable_sanitize" != "no" ; then
 			AC_MSG_RESULT([guessing no])
 		]
 	)
+
 fi
 
 
