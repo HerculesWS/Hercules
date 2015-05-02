@@ -12110,6 +12110,7 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 			for ( ; w <= pc->max_level[idx][0]; w++) {
 				status->HP_table[idx][w] = min(ave * w, battle_config.max_hp);
 			}
+			total = 0;
 			for (w = 1; w <= MAX_LEVEL && status->SP_table[iidx][w]; w++) {
 				status->SP_table[idx][w] = status->SP_table[iidx][w];
 				total += status->SP_table[idx][w] - status->SP_table[idx][w - 1];
