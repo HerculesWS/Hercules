@@ -654,7 +654,7 @@ void initChangeTables(void) {
 	set_sc( MI_RUSH_WINDMILL          , SC_RUSH_WINDMILL          , SI_RUSHWINDMILL         , SCB_WATK  );
 	set_sc( MI_ECHOSONG               , SC_ECHOSONG               , SI_ECHOSONG             , SCB_DEF2  );
 	set_sc( MI_HARMONIZE              , SC_HARMONIZE              , SI_HARMONIZE            , SCB_STR|SCB_AGI|SCB_VIT|SCB_INT|SCB_DEX|SCB_LUK );
-	set_sc( WM_POEMOFNETHERWORLD      , SC_STOP                   , SI_NETHERWORLD          , SCB_NONE );
+	set_sc_with_vfx(WM_POEMOFNETHERWORLD, SC_NETHERWORLD          , SI_NETHERWORLD          , SCB_NONE);
 	set_sc_with_vfx( WM_VOICEOFSIREN        , SC_SIREN            , SI_SIREN                , SCB_NONE );
 	set_sc_with_vfx( WM_LULLABY_DEEPSLEEP   , SC_DEEP_SLEEP       , SI_DEEPSLEEP            , SCB_NONE );
 	set_sc( WM_SIRCLEOFNATURE         , SC_SIRCLEOFNATURE         , SI_SIRCLEOFNATURE       , SCB_NONE );
@@ -6591,6 +6591,9 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 	case SC_NEEDLE_OF_PARALYZE:
 		tick_def2 = (st->vit + st->luk) * 50;
 		break;
+	case SC_NETHERWORLD:
+		tick_def2 = 1000 * (((bl->type == BL_PC) ? ((TBL_PC*)bl)->status.job_level : 0) / 10 + status->get_lv(bl) / 50);
+		break;
 	default:
 		//Effect that cannot be reduced? Likely a buff.
 		if (!(rnd()%10000 < rate))
@@ -6691,6 +6694,9 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 		break;
 	case SC_FROSTMISTY:
 		tick = max(tick, 6000);
+		break;
+	case SC_NETHERWORLD:
+		tick = max(tick, 4000);
 		break;
 	default:
 		//Skills need to trigger even if the duration is reduced below 1ms
@@ -7223,6 +7229,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 
 			// Other Effects
 			case SC_VACUUM_EXTREME:
+			case SC_NETHERWORLD:
 
 				return 0;
 		}
@@ -9311,6 +9318,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_MEIKYOUSISUI:
 		case SC_NEEDLE_OF_PARALYZE:
 		case SC_DEATHBOUND:
+		case SC_NETHERWORLD:
 			unit->stop_walking(bl,1);
 			break;
 		case SC_ANKLESNARE:

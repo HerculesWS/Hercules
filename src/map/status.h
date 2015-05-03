@@ -527,7 +527,7 @@ typedef enum sc_type {
 	SC_BEYOND_OF_WARCRY,
 	SC_UNLIMITED_HUMMING_VOICE, // 410
 	SC_SITDOWN_FORCE,
-	//SC_NETHERWORLD,
+	SC_NETHERWORLD,
 	/**
 	 * Sura
 	 **/
