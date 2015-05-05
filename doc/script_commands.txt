@@ -5905,7 +5905,7 @@ controlling each of the spawned mobs with the unit* commands shown below.
 For example:
 
 	// We'll make a poring which will automatically attack invoking player:
-	.@mobGID = monster "Prontera",150,150,"Poring",PORING,1; // PORING is defined in the mob db and its value is 1002
+	.@mobGID = monster ("Prontera",150,150,"Poring",PORING,1); // PORING is defined in the mob db and its value is 1002
 	unitattack .@mobGID, getcharid(3); // Attacker GID, attacked GID
 
 The way you can get the GID of more than only one monster is looping 
