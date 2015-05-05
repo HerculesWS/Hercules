@@ -9153,7 +9153,7 @@ ACMD(channel) {
 						return false;
 					} else {
 						channel->set_options(chan, chan->options | k);
-						sprintf(atcmd_output, msg_fd(fd,1454), opt_str[k],chan->name);//option '%s' is now enabled for channel '%s'
+						sprintf(atcmd_output, msg_fd(fd,1450), opt_str[k],chan->name);//option '%s' is now enabled for channel '%s'
 						clif->message(fd, atcmd_output);
 					}
 				} else {
