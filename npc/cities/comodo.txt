@@ -355,7 +355,7 @@ cmd_fild07,299,83,4	script	Zain#cmd	4W_SAILOR,{
 	case 2:
 		if (Zeny < 800) break;
 		Zeny -= 800;
-		if(checkre(0))
+		if (RENEWAL)
 			warp "izlude",195,212;
 		else
 			warp "izlude",176,182;

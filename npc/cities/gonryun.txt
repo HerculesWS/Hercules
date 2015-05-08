@@ -142,7 +142,7 @@ gon_fild01,255,79,7	script	Kunlun Envoy#gon2	4_M_TWMIDMAN,{
 		mes "back. Now, let me guide you";
 		mes "back to Alberta.";
 		close2;
-		if (checkre(0))
+		if (RENEWAL)
 			warp "alberta",244,60;
 		else
 			warp "alberta",243,67;

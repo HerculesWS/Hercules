@@ -1252,15 +1252,14 @@ OnInit:
 
 OnEnable:
 	enablenpc "Knight1";
-	if (!checkre(0)) {
-		.MyMobs = 12;
+	.MyMobs = 8;
+	if (!RENEWAL) {
+		.MyMobs += 4;
 		monster "job_knt",39,150,"Dustiness",1114,1,"Knight1::OnMyMobDead";
 		monster "job_knt",47,150,"Dustiness",1114,1,"Knight1::OnMyMobDead";
 		monster "job_knt",39,142,"Dustiness",1114,1,"Knight1::OnMyMobDead";
 		monster "job_knt",47,142,"Dustiness",1114,1,"Knight1::OnMyMobDead";
 	}
-	else
-		.MyMobs = 8;
 	monster "job_knt",43,137,"Piere",1160,1,"Knight1::OnMyMobDead";
 	monster "job_knt",43,137,"Andre",1095,1,"Knight1::OnMyMobDead";
 	monster "job_knt",43,137,"Deniro",1105,1,"Knight1::OnMyMobDead";
@@ -1318,8 +1317,9 @@ OnInit:
 
 OnEnable:
 	enablenpc "Knight2";
-	if (!checkre(0)) {
-		.MyMobs = 12;
+	.MyMobs = 6;
+	if (!RENEWAL) {
+		.MyMobs += 6;
 		monster "job_knt",43,42,"Desert Wolf",1106,1,"Knight2::OnMyMobDead";
 		monster "job_knt",43,62,"Desert Wolf",1106,1,"Knight2::OnMyMobDead";
 		monster "job_knt",60,68,"Anacondaq",1030,1,"Knight2::OnMyMobDead";
@@ -1327,8 +1327,6 @@ OnEnable:
 		monster "job_knt",60,35,"Anacondaq",1030,1,"Knight2::OnMyMobDead";
 		monster "job_knt",27,35,"Anacondaq",1030,1,"Knight2::OnMyMobDead";
 	}
-	else
-		.MyMobs = 6;
 	monster "job_knt",53,52,"Frilldora",1119,1,"Knight2::OnMyMobDead";
 	monster "job_knt",34,52,"Frilldora",1119,1,"Knight2::OnMyMobDead";
 	monster "job_knt",58,52,"Drainliar",1111,1,"Knight2::OnMyMobDead";
@@ -1383,13 +1381,12 @@ OnInit:
 
 OnEnable:
 	enablenpc "Knight3";
-	if (!checkre(0)) {
-		.MyMobs = 7;
+	.MyMobs = 5;
+	if (!RENEWAL) {
+		.MyMobs += 2;
 		monster "job_knt",147,167,"Goblin Archer",1258,1,"Knight3::OnMyMobDead";
 		monster "job_knt",136,158,"Steam Goblin",1280,1,"Knight3::OnMyMobDead";
 	}
-	else
-		.MyMobs = 5;
 	monster "job_knt",136,152,"Goblin",1122,1,"Knight3::OnMyMobDead";
 	monster "job_knt",150,152,"Goblin",1123,1,"Knight3::OnMyMobDead";
 	monster "job_knt",143,145,"Goblin",1124,1,"Knight3::OnMyMobDead";

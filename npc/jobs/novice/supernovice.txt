@@ -334,7 +334,7 @@ aldeba_in,216,169,5	script	Esseray#sn	4_M_04,{
 		close;
 	}
 	if (BaseJob == Job_SuperNovice) {
-		if (checkre(0))
+		if (RENEWAL)
 			callfunc "Esseray_Ex";
 		mes "[Esseray]";
 		mes "Hm? Hey, you're a member";

@@ -74,7 +74,7 @@ function	script	F_CashReset	{
 function	script	F_CashDungeon	{
 	switch(getarg(0)) {
 	case 1:
-		switch(select("Nogg Road:Mjolnir Dead Pit:"+((checkre(0))?"":"Umbala Dungeon")+":Einbroch Mine Dungeon:Payon Dungeon:Toy Dungeon:Glast Heim Underprison:Louyang Dungeon:Hermit's Checkers:Izlude Dungeon:Turtle Island Dungeon:Clock Tower B3f:Clock Tower 3f:Glast Heim Culvert 2f:Sphinx Dungeon 4f:Inside Pyramid 4f:Prontera Culvert 3f:Amatsu Dungeon 1f (Tatami Maze):Somatology Laboratory 1st floor:Ayothya Ancient Shrine 2nd floor")) {
+		switch(select("Nogg Road:Mjolnir Dead Pit:"+(RENEWAL?"":"Umbala Dungeon")+":Einbroch Mine Dungeon:Payon Dungeon:Toy Dungeon:Glast Heim Underprison:Louyang Dungeon:Hermit's Checkers:Izlude Dungeon:Turtle Island Dungeon:Clock Tower B3f:Clock Tower 3f:Glast Heim Culvert 2f:Sphinx Dungeon 4f:Inside Pyramid 4f:Prontera Culvert 3f:Amatsu Dungeon 1f (Tatami Maze):Somatology Laboratory 1st floor:Ayothya Ancient Shrine 2nd floor")) {
 		case 1: warp "mag_dun01",125,71; end;	// Nogg Road
 		case 2: warp "mjo_dun02",80,297; end;	// Mjolnir Dead Pit
 		case 3: warp "um_dun02",125,122; end;	// Umbala Dungeon (Pre-Renewal only)
@@ -133,7 +133,7 @@ function	script	F_CashCity	{
 	case 1: // Yellow - Rune-Midgart
 		switch(select("Prontera:Izlude:Geffen:Payon:Morroc:Alberta:Al de Baran")) {
 			case 1: warp "prontera",122,87; end;
-			case 2: if (checkre(0)) warp "izlude",130,90; else warp "izlude",91,105; end;
+			case 2: if (RENEWAL) warp "izlude",130,90; else warp "izlude",91,105; end;
 			case 3: warp "geffen",128,48; end;
 			case 4: warp "payon",164,123; end;
 			case 5: warp "morocc",160,100; end;
@@ -185,7 +185,7 @@ function	script	F_CashTele	{
 		case 1: warp "prontera",119,77; end;
 		case 2: warp "geffen",119,39; end;
 		case 3: warp "aldebaran",165,107; end;
-		case 4: if (checkre(0)) warp "izlude",128,105; else warp "izlude",91,105; end;
+		case 4: if (RENEWAL) warp "izlude",128,105; else warp "izlude",91,105; end;
 		case 5: warp "SavePoint",0,0; end;
 		}
 	case 2:

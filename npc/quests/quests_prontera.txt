@@ -2686,7 +2686,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		else
 			prt_curse = 54;
 		changequest 18047,18049;
-		getexp (checkre(3))?90000:1600000,0;
+		getexp RENEWAL_EXP?90000:1600000,0;
 		close;
 	}
 	else if (prt_curse > 43 && prt_curse < 50 && !aru_monas) {
@@ -2894,7 +2894,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 					mes "to cover your Airship fee.";
 					mes "Thank you, and good luck.";
 					aru_monas = 6;
-					Zeny += (checkre(0)?5000:1500);
+					Zeny += (RENEWAL?5000:1500);
 					changequest 17002,17003;
 					close;
 				}
@@ -3012,7 +3012,7 @@ prt_church,184,110,3	script	Father Biscuss	1_M_PASTOR,{
 		mes "you for all of your help.";
 		prt_curse = 36;
 		completequest 18048;
-		getexp (checkre(3))?90000:1600000,0;
+		getexp RENEWAL_EXP?90000:1600000,0;
 		close;
 	}
 	else if (prt_curse == 36) {

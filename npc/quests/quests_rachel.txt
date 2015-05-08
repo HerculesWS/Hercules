@@ -2528,7 +2528,7 @@ OnTouch:
 		next;
 		rach_vice = 24;
 		completequest 8122;
-		if (checkre(3)) {
+		if (RENEWAL_EXP) {
 			if (BaseLevel > 90) getexp 130000,0;
 			else if (BaseLevel > 75) getexp 85000,0;
 			else getexp 45000,0;
@@ -2833,7 +2833,7 @@ rachel,157,183,3	script	Sincere Follower Urstia	4_F_MASK1,{
 			mes "token of my appreication for";
 			mes " what you have done for me.";
 			delitem 7573,1; //Magic_Necklace_
-			getexp (checkre(3))?90000:700000,0;
+			getexp RENEWAL_EXP?90000:700000,0;
 			ice_necklace_q = 6;
 			completequest 2113;
 			next;
@@ -4098,7 +4098,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 				if (countitem(12018) >= 20) {
 					cutin "ra_nemma04",2;
 					delitem 12018,20; //Fire_Cracker
-					getexp (checkre(3))?50000:200000,0;
+					getexp RENEWAL_EXP?50000:200000,0;
 					ra_tem_q = 14;
 					mes "[Priestess Nemma]";
 					mes "Yay!";
@@ -4841,7 +4841,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 		lost_boy = 13;
 		completequest 8099;
 		specialeffect2 EF_ABSORBSPIRITS;
-		getexp (checkre(3))?90000:900000,0;
+		getexp RENEWAL_EXP?90000:900000,0;
 		end;
 	}
 	else if ((lost_boy == 13) && (ra_tem_q < 14)) {
@@ -5266,7 +5266,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 		cutin "",255;
 		completequest 8105;
 		specialeffect2 EF_ABSORBSPIRITS;
-		if (checkre(3))
+		if (RENEWAL_EXP)
 			getexp 90000,60000;
 		else
 			getexp 900000,600000;
@@ -5826,7 +5826,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 				mes "peace between our nations.";
 				aru_vol = 27;
 				completequest 60213;
-				getexp (checkre(3))?20000:200000,0;
+				getexp RENEWAL_EXP?20000:200000,0;
 				close2;
 				cutin "",255;
 				end;
@@ -6266,7 +6266,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 					mes "Your place in Valhalla is";
 					mes "already assured, I'm sure.";
 					aru_em = 24;
-					getexp (checkre(3))?150000:1500000,0;
+					getexp RENEWAL_EXP?150000:1500000,0;
 				}
 				else {
 					mes "[High Priest Zhed]";

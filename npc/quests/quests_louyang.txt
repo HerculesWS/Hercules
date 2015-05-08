@@ -1286,7 +1286,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			ch_par = 10;
 			completequest 11056;
 			getitem 679,2; //Gold_Pill
-			getexp (checkre(3))?1000:10000,0;
+			getexp RENEWAL_EXP?1000:10000,0;
 			next;
 			mes "[Hua Tuo]";
 			mes "Well then,";
@@ -1405,7 +1405,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			ch_par = 10;
 			completequest 11056;
 			getitem 679,2; //Gold_Pill
-			getexp (checkre(3))?1000:10000,0;
+			getexp RENEWAL_EXP?1000:10000,0;
 			next;
 			mes "[Hua Tuo]";
 			mes "Well then, I will see you around. Once again, I'd like to thank you for your help.";
@@ -1460,7 +1460,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			ch_par = 18;
 			completequest 11057;
 			getitem 679,5; //Gold_Pill
-			getexp (checkre(3))?10000:30000,0;
+			getexp RENEWAL_EXP?10000:30000,0;
 			next;
 			mes "[Hua Tuo]";
 			mes "However, please remember not to take more than the recommended dosage for the pills I have given you. Even medicine, in the wrong doses, can become poison to the body.";
@@ -3359,7 +3359,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 		next;
 		ch_poison = 20;
 		changequest 11082,11083;
-		if (checkre(3)) {
+		if (RENEWAL_EXP) {
 			if (BaseLevel < 56) getexp 1050,0;
 			else if (BaseLevel > 55 && BaseLevel < 61) getexp 1230,0;
 			else if (BaseLevel > 60 && BaseLevel < 66) getexp 1570,0;
@@ -4011,7 +4011,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 		next;
 		mes "^3355FFThe nasty taste lingers in your mouth, but then you feel a great warmth flowing throughout your body. Eventually, you pass out.^000000";
 		next;
-		if (checkre(3)) {
+		if (RENEWAL_EXP) {
 			if (BaseLevel < 56) getexp 500,0;
 			else if (BaseLevel > 55 && BaseLevel < 61) getexp 700,0;
 			else if (BaseLevel > 60 && BaseLevel < 66) getexp 850,0;

@@ -3555,7 +3555,7 @@ ein_in01,67,242,3	script	Zelmeto	4_M_REPAIR,{
 			++$EinPolution;
 			completequest 8031;
 			EinFactory = 16;
-			if (checkre(3)) {
+			if (RENEWAL_EXP) {
 				if (BaseLevel < 41) getexp 61,0;
 				else if (BaseLevel < 51) getexp 307,0;
 				else if (BaseLevel < 61) getexp 660,0;
@@ -4665,7 +4665,7 @@ einbech,165,105,7	script	Buender Hikeman#ein	4_M_EINOLD,{
 			cutin "ein_hicman",255;
 			completequest 2078;
 			Shinokas_Quest = 11;
-			if (checkre(3)) {
+			if (RENEWAL_EXP) {
 				if (BaseLevel < 70) getexp 30000,30000;
 				else if ((BaseLevel > 69) && (BaseLevel < 80)) getexp 40000,40000;
 				else if ((BaseLevel > 79) && (BaseLevel < 90)) getexp 70000,70000;
@@ -5937,7 +5937,7 @@ ein_in01,31,138,3	script	Calla#ein	4_F_01,{
 		mes "feel goooood~";
 		percentheal 100,0;
 		EIN_LOVERQ = 17;
-		if (checkre(3)) {
+		if (RENEWAL_EXP) {
 			if (BaseLevel < 41) getexp 61,0;
 			else if (BaseLevel < 61) getexp 600,0;
 			else if (BaseLevel < 81) getexp 3000,0;
@@ -6413,7 +6413,7 @@ ein_in01,200,101,5	script	Klitzer#ein	4_M_EINMAN2,{
 		delitem 1901,1; //Violin
 		EIN_LOVERQ = 5;
 		changequest 8077,8079;
-		if (checkre(3)) {
+		if (RENEWAL_EXP) {
 			if (BaseLevel < 41) getexp 61,0;
 			else if (BaseLevel < 61) getexp 600,0;
 			else if (BaseLevel < 81) getexp 3000,0;

@@ -268,7 +268,7 @@ prt_castle,83,67,5	script	Recruiter for the Brave	4_M_MANAGER,{
 		next;
 		changequest 10064,10065;
 		ep13_ryu = 9;
-		if (checkre(3))
+		if (RENEWAL_EXP)
 			getexp 66000,21000;
 		else
 			getexp 660000,210000;
@@ -1783,7 +1783,7 @@ moc_fild22b,230,197,5	script	Munkenro#2	4_M_RUSMAN1,{
 		next;
 		completequest 10078;
 		ep13_ryu = 100;
-		if (checkre(3))
+		if (RENEWAL_EXP)
 			getexp 66000,21000;
 		else
 			getexp 660000,210000;
@@ -2675,7 +2675,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 			ep13_newbs = 100;
 			getitem 617,1; //Old_Violet_Box
 			getitem 12322,5; //Chocolate_Pie
-			if (checkre(3))
+			if (RENEWAL_EXP)
 				getexp 100000,10000;
 			else
 				getexp 1000000,100000;
@@ -4208,7 +4208,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 				mes "I hope you'll make yourself known in Ash Vacuum with your great accomplishments.";
 				ep13_animal = 15;
 				completequest 2157;
-				getexp (checkre(3))?100000:1500000,0;
+				getexp RENEWAL_EXP?100000:1500000,0;
 				close;
 			}
 			else {
@@ -4305,7 +4305,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 				mes "- You really hope that Rumis will be able to go back home. -";
 				ep13_animal = 100;
 				delitem 6033,1; //Horn_Of_Tendrilion
-				getexp (checkre(3))?50000:1000000,0;
+				getexp RENEWAL_EXP?50000:1000000,0;
 				close;
 			}
 			else {
@@ -4941,7 +4941,7 @@ mid_camp,212,237,5	script	Camp Guard Captain#man1	4_M_EIN_SOLDIER,{
 			mes "I'll discuss this more with the expedition management.";
 			mes "Thank you for your valuable information.";
 			completequest 2158;
-			getexp (checkre(3))?90000:900000,0;
+			getexp RENEWAL_EXP?90000:900000,0;
 			close;
 		}
 		else if (!questprogress(2158)) {
@@ -4962,7 +4962,7 @@ mid_camp,212,237,5	script	Camp Guard Captain#man1	4_M_EIN_SOLDIER,{
 				mes "I'll discuss this more with the expedition management.";
 				mes "Thank you for your valuable information.";
 				completequest 2159;
-				getexp (checkre(3))?90000:900000,0;
+				getexp RENEWAL_EXP?90000:900000,0;
 				close;
 			}
 			else {
@@ -5387,7 +5387,7 @@ OnTouch:
 			mes "- You feel so refreshed and light, as you drink the tea that the Official offered. -";
 			specialeffect2 EF_ABSORBSPIRITS;
 			ep13_1_rhea = 100;
-			if (checkre(3))
+			if (RENEWAL_EXP)
 				getexp 80000,3000;
 			else
 				getexp 300000,10000;
@@ -7210,7 +7210,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				next;
 				delitem 579,50; //Delicious_Fish
 				ep13_alba = 6;
-				if (checkre(3)) {
+				if (RENEWAL_EXP) {
 					getexp 8000,3000;
 					mes "^4d4dff You have received 8,000 EXP";
 					mes "and 3,000 JEXP.^000000.";
@@ -7249,7 +7249,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				delitem 7198,30; //Great_Leaf
 				delitem 7188,30; //Browny_Root
 				ep13_alba = 6;
-				if (checkre(3)) {
+				if (RENEWAL_EXP) {
 					getexp 9000,4000;
 					mes "^4d4dff You have received 9,000 EXP";
 					mes "and 4,000 JEXP.^000000.";
@@ -7293,7 +7293,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				delitem 528,20; //Monster's_Feed
 				delitem 537,30; //Pet_Food
 				ep13_alba = 6;
-				if (checkre(3)) {
+				if (RENEWAL_EXP) {
 					getexp 8000,3000;
 					mes "^4d4dff You have received 8,000 EXP";
 					mes "and 3,000 JEXP.^000000.";
@@ -7334,7 +7334,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				delitem 517,50; //Meat
 				delitem 537,30; //Pet_Food
 				ep13_alba = 6;
-				if (checkre(3)) {
+				if (RENEWAL_EXP) {
 					getexp 8000,3000;
 					mes "^4d4dff You have received 8,000 EXP";
 					mes "and 3,000 JEXP.^000000.";
@@ -7372,7 +7372,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				next;
 				delitem 6020,30; //Fur
 				ep13_alba = 6;
-				if (checkre(3)) {
+				if (RENEWAL_EXP) {
 					getexp 8000,3000;
 					mes "^4d4dff You have received 8,000 EXP";
 					mes "and 3,000 JEXP.^000000.";
@@ -7947,7 +7947,7 @@ function Catwarp {
 	switch(getarg(1)) {
 		case 1: warp "alberta",117,56; end;
 		case 2: warp "prontera",116,72; end;
-		case 3: if (checkre(0)) warp "izlude",128,98; else warp "izlude",91,105; end;
+		case 3: if (RENEWAL) warp "izlude",128,98; else warp "izlude",91,105; end;
 		case 4: warp "geffen",120,39; end;
 		case 5: warp "payon",161,58; end;
 		case 6: warp "morocc",156,46; end;
@@ -8129,11 +8129,11 @@ mid_camp,69,144,0	script	Ferocious Gorurug	4_M_BOSSCAT,{
 				mes "You've brough Pieces of Fish!";
 				mes "GOOD JOB!";
 				delitem 6039,10; //Piece_Of_Fish
-				getexp (checkre(3))?20000:30000,0;
+				getexp RENEWAL_EXP?20000:30000,0;
 				ep13_yong1 = 10;
 				setquest 12060;
 				next;
-				mes "^0000ffYou gain EXP "+(checkre(3)?"20,000":"30,000")+"^000000";
+				mes "^0000ffYou gain EXP "+(RENEWAL_EXP?"20,000":"30,000")+"^000000";
 				close;
 			}
 			else {
@@ -8375,7 +8375,7 @@ mid_camp,88,100,55	script	Cat Hand Mining Agent	4_CAT,{
 			mes "Thank you for collecting minerals for me.";
 			next;
 			delitem 6048,3; //Unidentified_Mineral
-			getexp (checkre(3))?20000:30000,0;
+			getexp RENEWAL_EXP?20000:30000,0;
 			setquest 12062;
 			++ep13_yong1;
 			select("I'm freezing! Take them quickly.");
@@ -8886,7 +8886,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 		mes "And please take this small reward.";
 		mes "Thank you for your help so far.";
 		next;
-		if (checkre(3))
+		if (RENEWAL_EXP)
 			getexp 300000,0;
 		else
 			getexp 2500000,0;
@@ -10671,7 +10671,7 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 		mes "[Echinacea]";
 		mes "Keep up the good work assisting the explorers in this camp.";
 		mao_morocc2 = 100;
-		if (checkre(3))
+		if (RENEWAL_EXP)
 			getexp 120000,20000;
 		else
 			getexp 1200000,200000;
@@ -11051,7 +11051,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 			delitem 6029,1; //Morocc_Tracing_Log
 			delitem 6027,1; //Crystal_Of_Feardoom
 			mao_morocc2 = 10;
-			if (checkre(3))
+			if (RENEWAL_EXP)
 				getexp 20000,1000;
 			else
 				getexp 200000,10000;

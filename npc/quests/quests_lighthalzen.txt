@@ -2695,7 +2695,7 @@ lighthalzen,337,232,3	script	Maku	4_M_LGTPOOR,{
 		next;
 		delitem 7351,1; //Friend's_Diary
 		friendship = 14;
-		if (checkre(3)) {
+		if (RENEWAL_EXP) {
 			if (BaseLevel > 90) getexp 70000,0;
 			else if (BaseLevel > 75) getexp 40000,0;
 			else getexp 20000,0;
@@ -3148,7 +3148,7 @@ yuno_in04,96,106,5	script	Passionate Student	4_M_SAGE_A,{
 		next;
 		friendship = 16;
 		completequest 12006;
-		if (checkre(3)) {
+		if (RENEWAL_EXP) {
 			if (BaseLevel > 90) getexp 70000,0;
 			else if (BaseLevel > 75) getexp 40000,0;
 			else getexp 20000,0;
@@ -5228,7 +5228,7 @@ OnTouch_:
 		mes "^FF0000Regenschirm Laboratory^000000.";
 		lhz_curse = 26;
 		changequest 2093,2094;
-		if (checkre(3)) {
+		if (RENEWAL_EXP) {
 			if (BaseLevel < 70) getexp 30000,30000;
 			else if ((BaseLevel > 69) && (BaseLevel < 80)) getexp 40000,70000;
 			else if ((BaseLevel > 79) && (BaseLevel < 90)) getexp 70000,90000;
@@ -7002,7 +7002,7 @@ lighthalzen,179,170,4	script	Ordinary Man	4W_M_02,{
 		mes "what we set out to do. Still...";
 		lhz_boss = 44;
 		getitem 617,1; //Old_Violet_Box
-		getexp (checkre(3))?180000:1800000,0;
+		getexp RENEWAL_EXP?180000:1800000,0;
 		completequest 12028;
 		next;
 		mes "[Ghalstein]";
@@ -8571,7 +8571,7 @@ L_Mission:
 		mes "You can count on me to right what was wrong.";
 		hg_tre = 57;
 		delitem 7342,1; //File01
-		getexp (checkre(3))?200000:2000000,0;
+		getexp RENEWAL_EXP?200000:2000000,0;
 		getitem 617,1;
 		close2;
 		cutin "",255;
@@ -10497,7 +10497,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "back. I can't work like this...";
 		next;
 		lhz_rekenber = 22;
-		getexp (checkre(3))?55000:550000,0;
+		getexp RENEWAL_EXP?55000:550000,0;
 		completequest 12013;
 		cutin "lhz_kaz01",2;
 		mes "[Kazien]";
@@ -10582,7 +10582,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "can handle those thugs, right?";
 		next;
 		lhz_rekenber = 17;
-		getexp (checkre(3))?45000:450000,0;
+		getexp RENEWAL_EXP?45000:450000,0;
 		cutin "lhz_kaz10",2;
 		mes "[Kazien]";
 		mes "Right. Now get back to";
@@ -10675,7 +10675,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		next;
 		lhz_rekenber = 12;
 		changequest 5005,5006;
-		getexp (checkre(3))?40000:400000,0;
+		getexp RENEWAL_EXP?40000:400000,0;
 		cutin "lhz_kaz03",2;
 		mes "[Kazien]";
 		mes "Alright, I'll see you";

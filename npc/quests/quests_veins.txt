@@ -291,7 +291,7 @@
 		mes "find these useful. Anyway,";
 		mes "I hope you like these rocks...";
 		veins_stone = 8;
-		getexp (checkre(3))?30000:300000,0;
+		getexp RENEWAL_EXP?30000:300000,0;
 		getitem 985,3; //Elunium
 		close;
 	}
@@ -975,7 +975,7 @@ prt_church,89,108,6	script	Bard#sch	2_M_BARD_ORIENT,{
 		mes "reward with our sincere thanks.";
 		que_sch = 26;
 		getitem 12106,1; //Accessory_Box
-		getexp (checkre(3))?60000:600000,0;
+		getexp RENEWAL_EXP?60000:600000,0;
 		close;
 	}
 	else {
@@ -3058,7 +3058,7 @@ veins,327,185,3	script	Kid#camelcamel	4_M_DST_CHILD,{
 			completequest 3083;
 			rachel_camel = 25;
 			specialeffect2 EF_ABSORBSPIRITS;
-			if (checkre(3))
+			if (RENEWAL_EXP)
 				getexp 100000,50000;
 			else
 				getexp 1000000,700000;
@@ -6100,7 +6100,7 @@ ve_in,281,214,3	script	Bookshelf#vol	HIDDEN_NPC,{
 		else {
 			getitem 12103,1; //Bloody_Dead_Branch
 		}
-		getexp (checkre(3))?100000:800000,0;
+		getexp RENEWAL_EXP?100000:800000,0;
 		mes "^3355FFWell, you've done all";
 		mes "that you could here.";
 		mes "Now would be a good time";

@@ -655,7 +655,7 @@ OnTouch:
 	switch ($@airplanelocation2) {
 	case 0: warp "ra_fild12",292,204; end;
 	case 1:
-		if(checkre(0))
+		if (RENEWAL)
 			warp "izlude",200,73;
 		else
 			warp "izlude",200,56;

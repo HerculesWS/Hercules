@@ -306,7 +306,7 @@ payon_in02,54,13,3	script	Master Kavaruk	1_M_JOBTESTER,{
 				mes "for bringing me the news. As Arthail has said, I shall wait until he has more news for me.";
 				mes "You should also train and prepare for the future as well.";
 				tu_archer02 = 10;
-				if (checkre(3))
+				if (RENEWAL_EXP)
 					getexp 1000,1000;
 				else
 					getexp 2000,1000;
@@ -547,7 +547,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 					tu_archer01 = 6;
 					mes "Now, your first assignment";
 					mes "is to learn ^3131FFLevel 3 Owl's Eye^000000!";
-					if (checkre(0))
+					if (RENEWAL)
 						mes "From Morroc, if you travel south, you can fight Condors for your training.";
 					else
 						mes "From Prontera, if you travel south, south and then west, you can fight Condors for your training.";
@@ -560,7 +560,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 					switch(select("I'll follow your advice, Chief!:I'll hunt somewhere else...")) {
 					case 1:
 						mes "[Reidin Corse]";
-						if (checkre(0)) {
+						if (RENEWAL) {
 							mes "I'll send you to";
 							mes "Morroc for now,";
 							mes "so don't forget the";
@@ -589,7 +589,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 							mes "[Reidin Corse]";
 							mes "Okay...!";
 							mes "Off you go!";
-							if (checkre(0)) {
+							if (RENEWAL) {
 								mes "To Morroc!";
 								close2;
 								warp "morocc",156,46;
@@ -731,7 +731,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 
 			.@eagle = getskilllv("AC_VULTURE");
 			if(.@eagle < 3){
-				if (checkre(0))
+				if (RENEWAL)
 					mes "Alright, Mandagora usually live around Geffen. I can send you to Geffen, so just travel north from there to find";
 				else
 					mes "Alright, Mandagora usually live around Mt. Mjolnir. I can send you to Prontera, so just travel north, then east from there to find";
@@ -763,7 +763,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 					mes "Alright...!";
 					mes "Get a move on!";
 					close2;
-					if (checkre(0))
+					if (RENEWAL)
 						warp "geffen",120,39;
 					else
 						warp "prontera",116,72;
@@ -791,7 +791,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 		} else if(tu_archer01 == 8){
 			.@eagle = getskilllv("AC_VULTURE");
 			if(.@eagle < 3){
-				if (checkre(0))
+				if (RENEWAL)
 					mes "Mandagora lives in the area north of Geffen. Learn up to Level 3 Vulture's Eye and get acquainted with your attack range.";
 				else
 					mes "Mandagora lives in the area north and east of Prontera. Learn up to Level 3 Vulture's Eye and get acquainted with your attack range.";
@@ -807,7 +807,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 					mes "Alright...!";
 					mes "Get a move on!";
 					close2;
-					if (checkre(0))
+					if (RENEWAL)
 						warp "geffen",120,39;
 					else
 						warp "prontera",116,72;
@@ -891,7 +891,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 				close;
 			}
 		} else if(tu_archer01 == 10){
-			if (checkre(0)) {
+			if (RENEWAL) {
 				mes "Now, I've taught you a lot of stuff and I wanna make sure you retain all of it. That's why I want you to take this midterm. Your mission: ^FF0000Attack the Rockers^000000!";
 				emotion e_no1;
 				next;
@@ -929,12 +929,12 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 			tu_archer01 = 11;
 			close;
 		} else if(tu_archer01 == 11){
-			if (checkre(0) && countitem(940) < 10) {
+			if (RENEWAL && countitem(940) < 10) {
 				mes "Hey...";
 				mes "You gotta bring";
 				mes "^3131FF10 Grasshopper's Leg^000000 to pass my midterm! Go back to the southwest area of Prontera and get them!";
 				close;
-			} else if (!checkre(0) && (countitem(962) < 10 || countitem(991) == 0)) {
+			} else if (!RENEWAL && (countitem(962) < 10 || countitem(991) == 0)) {
 				mes "Hey...";
 				mes "You gotta bring";
 				mes "^3131FF10 Tentacles^000000 and";
@@ -955,7 +955,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 				mes "Don't forget that you gotta keep training and improve your skills. Before you know it, you'll be an expert almost as good as me!";
 				specialeffect2 EF_WIND;
 				tu_archer01 = 12;
-				if (checkre(0))
+				if (RENEWAL)
 					delitem 940,10; //Grasshopper's_Leg
 				getexp 1000,1000;
 				getitem 1707,1; //Great_Bow
@@ -1001,7 +1001,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 			mes "no need for you to fret.";
 			next;
 			mes "[Reidin Corse]";
-			if (checkre(0)) {
+			if (RENEWAL) {
 				mes "Now, go into the forest east of Payon and hunt Spores and Wormtails. Your test will be to bring back ^3131FF10 Mushroom Spores^000000 and";
 				mes "^3131FF10 Pointed Scales^000000.";
 			} else {
@@ -1034,14 +1034,14 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 				close;
 			}
 		} else if((tu_archer01 == 14) || (tu_archer01 == 15)){
-			if (checkre(0) && (countitem(906) < 10 || countitem(921) < 10)) {
+			if (RENEWAL && (countitem(906) < 10 || countitem(921) < 10)) {
 				mes "Remember, you";
 				mes "need to head into";
 				mes "the forest east of Payon and get me";
 				mes "^3131FF10 Mushroom Spores^000000";
 				mes "and ^3131FF10 Pointed Scales^000000.";
 				close;
-			} else if (!checkre(0) && (countitem(1032) < 5 || countitem(905) < 20)) {
+			} else if (!RENEWAL && (countitem(1032) < 5 || countitem(905) < 20)) {
 				mes "Remember, you";
 				mes "need to head over to";
 				mes "Mt. Mjolnir and get me";
@@ -1088,7 +1088,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 			mes "this little reward!";
 			specialeffect2 EF_WIND;
 			tu_archer01 = 16;
-			if (checkre(3))
+			if (RENEWAL_EXP)
 				getexp 1000,1000;
 			else
 				getexp 3000,3000;

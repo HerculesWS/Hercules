@@ -635,7 +635,7 @@ OnTouch:
 		specialeffect EF_CONE;
 		hg_herb = 13;
 		getitem 603,1; //Old Blue Box
-		getexp (checkre(3))?5000:50000,0;
+		getexp RENEWAL_EXP?5000:50000,0;
 		completequest 8056;
 	} else {
 		if (.@rand > 3) {
@@ -1216,7 +1216,7 @@ ein_in01,16,36,3	script	Morriphen	4_M_04,{
 		mes "I won't have to worry";
 		mes "about you. Take care~";
 		hg_bio = 9;
-		getexp (checkre(3))?70000:700000,0;
+		getexp RENEWAL_EXP?70000:700000,0;
 		completequest 11016;
 		close;
 	} else if (hg_bio == 9) {
@@ -1411,7 +1411,7 @@ hu_in01,326,307,3	script	Siria	4_F_01,{
 		mes "I just... I just need to relax.";
 		mes "Thank you for everything...";
 		hg_bio = 8;
-		getexp (checkre(3))?30000:500000,0;
+		getexp RENEWAL_EXP?30000:500000,0;
 		changequest 11015,11016;
 		close;
 	} else if (hg_bio == 8) {
@@ -4855,7 +4855,7 @@ hugel,196,164,3	script	El Schatt	1_M_04,{
 		next;
 		specialeffect2 EF_CONE;
 		hg_memory = 12;
-		getexp (checkre(3))?8000:50000,0;
+		getexp RENEWAL_EXP?8000:50000,0;
 		completequest 8063;
 		getitem 603,1; //Old Blue Box
 		mes "[El Schatt]";
@@ -5153,7 +5153,7 @@ hu_fild06,190,367,3	script	Torpy's Mom	4_F_GODEMOM,{
 		hg_ubu01 = 8;
 		completequest 12048;
 		getitem 12065,3; //Green Salad
-		getexp (checkre(3))?5000:50000,0;
+		getexp RENEWAL_EXP?5000:50000,0;
 		close;
 	} else if (hg_ubu01 == 8) {
 		mes "[Torpy's Mom]";
@@ -5785,7 +5785,7 @@ hu_in01,15,372,3	script	Cellette Lavit	1_F_MERCHANT_02,{
 				erasequest .@i;
 		}
 		getitem 584,3; //Fish_Ball_Soup
-		getexp (checkre(3))?100:1000,0;
+		getexp RENEWAL_EXP?100:1000,0;
 		next;
 		mes "[Cellette]";
 		mes "It was really nice working";
@@ -6462,7 +6462,7 @@ yuno,111,156,3	script	Euslan	4_F_01,{
 		hg_ma1 = 13;
 		completequest 8052;
 		specialeffect EF_ABSORBSPIRITS;
-		if (checkre(3))
+		if (RENEWAL_EXP)
 			getexp 90000,60000;
 		else
 			getexp 900000,600000;
@@ -6982,7 +6982,7 @@ hugel,56,104,3	script	Kurupe	4_M_SEAMAN,3,3,{
 		}
 		hg_milk = 9;
 		specialeffect2 EF_CONE;
-		getexp (checkre(3))?10000:100000,0;
+		getexp RENEWAL_EXP?10000:100000,0;
 		getitem 12063,3;
 		erasequest 12043;
 		mes "[Kurupe]";
@@ -9457,7 +9457,7 @@ OnTouch:
 		mes "used... Like that one lady,";
 		mes "that archaeologist, Laura.";
 		next;
-		getexp (checkre(3))?100000:700000,0;
+		getexp RENEWAL_EXP?100000:700000,0;
 		hg_odin = 60;
 		completequest 11008;
 		mes "[???]";

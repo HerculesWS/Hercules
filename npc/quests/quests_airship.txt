@@ -1836,7 +1836,7 @@ airplane_01,238,154,3	script	Airship Captain#01	4_M_REINDEER,{
 			mes "letters.";
 			completequest 8035;
 			lght_air = 7;
-			if (checkre(3))
+			if (RENEWAL_EXP)
 				getexp 20000,1000;
 			else
 				getexp 200000,10000;
@@ -2155,7 +2155,7 @@ airplane,236,163,5	script	Airship Captain#03	4_M_REINDEER,{
 		specialeffect2 EF_ABSORBSPIRITS;
 		completequest 8043;
 		lhz_heart = 13;
-		if (checkre(3))
+		if (RENEWAL_EXP)
 			getexp 70000,40000;
 		else
 			getexp 700000,400000;

@@ -455,7 +455,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 		mes "building nearby.";
 		close;
 	case 9:
-		mes "You went to "+(checkre(0)?"Prontera":"Payon")+" on behalf of the convent for Priest Gardron? That must have been tough...";
+		mes "You went to "+(RENEWAL?"Prontera":"Payon")+" on behalf of the convent for Priest Gardron? That must have been tough...";
 		next;
 		mes "[Asthe]";
 		mes "Blessing!";
@@ -776,7 +776,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 		mes "[Asthe]";
 		mes "Well, please don't forget what I've taught you. I hope you look back with fondness at our time together amongst these beautiful flowers. May God bless you~";
 		tu_acolyte01 = 25;
-		if (checkre(3))
+		if (RENEWAL_EXP)
 			getexp 1000,1000;
 		else
 			getexp 5000,3000;
@@ -833,7 +833,7 @@ monk_in,18,38,6	script	Priest Gardron#tu	4_M_MINISTER,{
 			close;
 		}
 	} else if(tu_acolyte01 == 8){
-		if(countitem((checkre(0)?939:957)) > 4){
+		if(countitem(RENEWAL?939:957) > 4){
 			mes "Oh...!";
 			mes "You've returned!";
 			mes "Let's see... One...";
@@ -845,7 +845,7 @@ monk_in,18,38,6	script	Priest Gardron#tu	4_M_MINISTER,{
 			mes "on behalf of the convent,";
 			mes "not to mention the fact that";
 			mes "you've protected the citizens";
-			mes "of "+(checkre(0)?"Prontera":"Payon")+" from danger.";
+			mes "of "+(RENEWAL?"Prontera":"Payon")+" from danger.";
 			next;
 			mes "[Priest Gardron]";
 			mes "May you always";
@@ -855,7 +855,7 @@ monk_in,18,38,6	script	Priest Gardron#tu	4_M_MINISTER,{
 			mes "Acolyte training.";
 			tu_acolyte01 = 9;
 			percentheal 100,100;
-			if (checkre(3))
+			if (RENEWAL_EXP)
 				getexp 1000,1000;
 			else
 				getexp 2000,2000;
@@ -863,7 +863,7 @@ monk_in,18,38,6	script	Priest Gardron#tu	4_M_MINISTER,{
 			//getitem 505,1; //Blue_Potion
 			close;
 		} else {
-			if (checkre(0)) {
+			if (RENEWAL) {
 				mes "A few days ago, a sister in Prontera";
 				mes "sent me a telegram that citizens had been harmed";
 				mes "by Hornets in the western field,";
@@ -1130,7 +1130,7 @@ prt_monk,226,257,6	script	Ill Girl#tu	4_F_04,{
 					mes "It seemed that this good";
 					mes "deed has improved your skills.^000000";
 					tu_acolyte01 = 13;
-					if (checkre(3))
+					if (RENEWAL_EXP)
 						getexp 0,500;
 					else
 						getexp 0,1000;

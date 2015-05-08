@@ -412,7 +412,7 @@ cmd_fild07,136,134,4	script	Kafra Employee::kaf_cmd_fild07	4_F_KAFRA7,{
 	mes "are always on your side.";
 	mes "How may I assist you?";
 	callfunc "F_Kafra",5,0,1,40,820;
-	if (checkre(0))
+	if (RENEWAL)
 		savepoint strnpcinfo(4),129,97;
 	else
 		savepoint "izlude",94,103;
@@ -598,7 +598,7 @@ niflheim,202,180,3	script	Kafra Employee::kaf_niflheim	4_F_NFDEADKAFRA,{
 // - Byalan Island
 izlu2dun,106,58,8	script	Kafra Employee::kaf_izlu2dun	4_F_KAFRA3,{
 	cutin "kafra_03",2;
-	if (!checkre(0) && BaseJob == Job_Novice && job_merchant_q2 > 0) {
+	if (!RENEWAL && BaseJob == Job_Novice && job_merchant_q2 > 0) {
 		// Merchant Job Change Quest
 		// function F_MercKafra is found in /pre-re/jobs/1-1/merchant.txt
 		callfunc "F_MercKafra";

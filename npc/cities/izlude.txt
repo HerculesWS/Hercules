@@ -221,7 +221,7 @@
 }
 
 -	script	::Kylick_izlude	-1,{
-	if (!checkre(0) && rand(2)) {
+	if (!RENEWAL && rand(2)) {
 		mes "[Kylick]";
 		mes "I was thinking, even though the people of Izlude live so close to the ocean...";
 		next;
@@ -506,7 +506,7 @@ izlu2dun,108,27,0	script	Sailor#2izlude	4W_SAILOR,{
 	mes "head back?";
 	next;
 	if (select("Yeah, I'm tired to death.:Nope, I love this place!") == 1) {
-		if(checkre(0))
+		if (RENEWAL)
 			warp "izlude",197,210;
 		else
 			warp "izlude",176,182;

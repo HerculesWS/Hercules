@@ -124,7 +124,7 @@ geffen,132,38,3	script	Bard#2	1_M_BARD,{
 		specialeffect2 EF_RESURRECTION;
 		mes "^3355FFWhile listening to his song, you feel at ease, and your thoughts become clearer. You believe that you see the vision of an angel, and you gain some experience points.^000000";
 		gef_bard_q += 16; //30,31
-		if (checkre(3)) {
+		if (RENEWAL_EXP) {
 			if (BaseLevel < 56) getexp 450,0;
 			else if ((BaseLevel > 55) && (BaseLevel < 61)) getexp 550,0;
 			else if ((BaseLevel > 60) && (BaseLevel < 66)) getexp 968,0;

@@ -2395,7 +2395,7 @@ S_Reward:
 			mes "Now do you see the";
 			mes "power of hope?";
 			delitem 7515,1; //Marvelous_Medal
-			if (checkre(3)) {
+			if (RENEWAL_EXP) {
 				if (BaseLevel < 21) getexp 110,0;
 				else if ((BaseLevel > 20) && (BaseLevel < 31)) getexp 280,0;
 				else if ((BaseLevel > 30) && (BaseLevel < 41)) getexp 1000,0;
@@ -2457,7 +2457,7 @@ S_Reward:
 			mes "whatever you feed it.";
 			mes "Placebos and psychosomatic symptoms-- it all ties together.";
 			delitem 7515,1; //Marvelous_Medal
-			if (checkre(3)) {
+			if (RENEWAL_EXP) {
 				if (Class == Job_Novice) {
 					getexp 0,15;
 				} else if (Class == Job_Novice_High) {

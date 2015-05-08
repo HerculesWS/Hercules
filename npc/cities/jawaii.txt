@@ -57,7 +57,7 @@ jawaii,239,112,7	script	Mariner#toizu	4W_SAILOR,{
 		mes "guide you to";
 		mes "Izlude.";
 		close2;
-		if(checkre(0))
+		if (RENEWAL)
 			warp "izlude",195,212;
 		else
 			warp "izlude",176,182;

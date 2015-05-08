@@ -3077,7 +3077,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 
 // EXP Rewards
 function	script	F_PartyRelay_Exp	{
-	if (checkre(3)) { //unconfirmed
+	if (RENEWAL_EXP) { //unconfirmed
 		if (BaseLevel > 94) getexp 104760,0;
 		else if (BaseLevel > 89) getexp 85920,0;
 		else if (BaseLevel > 79) getexp 38520,0;

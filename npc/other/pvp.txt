@@ -254,7 +254,7 @@ geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe6	4_M_02
 
 L_Warp:
 	.@map$ = getarg(0);
-	if (checkre(0)) {
+	if (RENEWAL) {
 		switch(rand(1,10)) {
 			case 1: warp .@map$,34,38; break;
 			case 2: warp .@map$,46,38; break;

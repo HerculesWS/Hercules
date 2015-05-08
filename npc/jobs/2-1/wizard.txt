@@ -1093,12 +1093,11 @@ OnInit:
 
 OnEnable:
 	enablenpc "Room of Water";
-	if (!checkre(0)) {
-		.MyMobs = 8;
+	.MyMobs = 7;
+	if (!RENEWAL) {
+		.MyMobs += 1;
 		monster "job_wiz",129,170,"Obeaune",1044,1,"Room of Water::OnMyMobDead";
 	}
-	else
-		.MyMobs = 7;
 	monster "job_wiz",109,174,"Phen",1158,1,"Room of Water::OnMyMobDead";
 	monster "job_wiz",118,174,"Shellfish",1074,1,"Room of Water::OnMyMobDead";
 	monster "job_wiz",109,165,"Vadon",1066,1,"Room of Water::OnMyMobDead";
@@ -1266,14 +1265,13 @@ OnInit:
 
 OnEnable:
 	enablenpc "Room of Earth";
-	if (!checkre(0)) {
-		.MyMobs = 10;
+	.MyMobs = 7;
+	if (!RENEWAL) {
+		.MyMobs += 3;
 		monster "job_wiz",120,102,"Hode",1127,1,"Room of Earth::OnMyMobDead";
 		monster "job_wiz",111,93,"Savage",1166,1,"Room of Earth::OnMyMobDead";
 		monster "job_wiz",127,86,"Mantis",1139,1,"Room of Earth::OnMyMobDead";
 	}
-	else
-		.MyMobs = 7;
 	monster "job_wiz",111,102,"Yoyo",1057,1,"Room of Earth::OnMyMobDead";
 	monster "job_wiz",120,102,"Deniro",1105,1,"Room of Earth::OnMyMobDead";
 	monster "job_wiz",111,102,"Caramel",1103,1,"Room of Earth::OnMyMobDead";
@@ -1362,12 +1360,11 @@ OnInit:
 OnEnable:
 	enablenpc "Room of Earth#Door";
 	donpcevent "Room of Earth::OnDisable";
-	if (!checkre(0)) {
-		.MyMobs = 7;
+	.MyMobs = 6;
+	if (!RENEWAL) {
+		.MyMobs += 1;
 		monster "job_wiz",116,97,"Flora",1118,1,"Room of Earth#Door::OnMyMobDead";
 	}
-	else
-		.MyMobs = 6;
 	monster "job_wiz",114,95,"Mandragora",1020,1,"Room of Earth#Door::OnMyMobDead";
 	monster "job_wiz",118,95,"Mandragora",1020,1,"Room of Earth#Door::OnMyMobDead";
 	monster "job_wiz",114,99,"Mandragora",1020,1,"Room of Earth#Door::OnMyMobDead";
@@ -1446,13 +1443,12 @@ OnInit:
 
 OnEnable:
 	enablenpc "Room of Fire";
-	if (!checkre(0)) {
-		.MyMobs = 8;
+	.MyMobs = 6;
+	if (!RENEWAL) {
+		.MyMobs += 2;
 		monster "job_wiz",58,110,"Zerom",1178,1,"Room of Fire::OnMyMobDead";
 		monster "job_wiz",54,89,"Desert Wolf",1106,1,"Room of Fire::OnMyMobDead";
 	}
-	else
-		.MyMobs = 6;
 	monster "job_wiz",33,110,"Goblin",1123,1,"Room of Fire::OnMyMobDead";
 	monster "job_wiz",40,103,"Scorpion",1001,1,"Room of Fire::OnMyMobDead";
 	monster "job_wiz",51,103,"Frilldora",1119,1,"Room of Fire::OnMyMobDead";
@@ -1542,11 +1538,10 @@ OnEnable:
 	donpcevent "Room of Fire::OnDisable";
 	.MyMobs = 3;
 	monster "job_wiz",44,99,"Greatest General",1277,1,"Room of Fire#Door::OnMyMobDead";
-	if (checkre(0)) {
+	if (RENEWAL) {
 		monster "job_wiz",43,99,"Greatest General",1277,1,"Room of Fire#Door::OnMyMobDead";
 		monster "job_wiz",45,99,"Greatest General",1277,1,"Room of Fire#Door::OnMyMobDead";
-	}
-	else {
+	} else {
 		monster "job_wiz",43,99,"Horong",1129,1,"Room of Fire#Door::OnMyMobDead";
 		monster "job_wiz",45,99,"Horong",1129,1,"Room of Fire#Door::OnMyMobDead";
 	}

@@ -2190,7 +2190,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 				mes "[Prime Minister Dmitree]";
 				mes "Even though I regard as your effort for the time so, award you. Take it and go out.";
 				getitem 12702,1; //Old_Bleu_Box
-				getexp (checkre(3))?50000:500000,0;
+				getexp RENEWAL_EXP?50000:500000,0;
 				mos_whale_edq = 39;
 				close;
 			}
@@ -2218,7 +2218,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 			mes "[Prime Minister Dmitree]";
 			mes "Even though I regard as your effort for the time so, award you. Take it.";
 			getitem 12702,1; //Old_Bleu_Box
-			getexp (checkre(3))?70000:700000,0;
+			getexp RENEWAL_EXP?70000:700000,0;
 			mos_whale_edq = 40;
 			close;
 		}
@@ -2300,7 +2300,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 			mes "in his palace. I will reward your";
 			mes "efforts, in the name of the Csar.";
 			getitem 617,1; //Old_Violet_Box
-			getexp (checkre(3))?100000:1200000,0;
+			getexp RENEWAL_EXP?100000:1200000,0;
 			mos_whale_edq = 41;
 			close;
 		}
@@ -2756,7 +2756,7 @@ mosk_in,144,279,5	script	Gallina#mos	4_F_RUSWOMAN1,{
 		mes "Well, now I have to get to work!";
 		mes "I'll make you my hotcakes someday. Please visit me later";
 		mos_swan = 100;
-		getexp (checkre(3))?90000:1000000,0;
+		getexp RENEWAL_EXP?90000:1000000,0;
 		close;
 	}
 	mes "[Gallina]";
@@ -7309,7 +7309,7 @@ mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 			case 5: getitem 12083,1; break;
 			case 6: getitem 12098,1; break;
 		}
-		if (checkre(3)) {
+		if (RENEWAL_EXP) {
 			if (BaseLevel < 56) getexp 5700,500;
 			else if (BaseLevel < 61) getexp 6700,800;
 			else if (BaseLevel < 66) getexp 8000,1000;
@@ -7930,7 +7930,7 @@ moscovia,206,81,0	script	Vassili Grandpapa#rus07	4_M_05,{
 				delitem 7883,1; //Pointed_Wooden_Flute
 				rhea_rus_ring = 10;
 				getitem 7877,1; //Red_Ring
-				if (checkre(3)) {
+				if (RENEWAL_EXP) {
 					if (BaseLevel < 56) getexp 470,0;
 					else if (BaseLevel > 55 && BaseLevel < 61) getexp 615,0;
 					else if (BaseLevel > 60 && BaseLevel < 66) getexp 750,0;
@@ -8248,7 +8248,7 @@ moscovia,213,216,3	script	Ryubaba#rus08	4_F_RUSWOMAN2,{
 				delitem 7883,1; //Pointed_Wooden_Flute
 				rhea_rus_ring = 9;
 				getitem 7877,1; //Red_Ring
-				if (checkre(3)) {
+				if (RENEWAL_EXP) {
 					if (BaseLevel < 56) getexp 470,0;
 					else if (BaseLevel > 55 && BaseLevel < 61) getexp 615,0;
 					else if (BaseLevel > 60 && BaseLevel < 66) getexp 750,0;

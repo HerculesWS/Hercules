@@ -712,7 +712,7 @@ ayo_dun02,91,264,3	script	Haggard Man	4_M_THAIAYO,{
 				mes "realigned every bone in your skeleton, placing them in the right spots. Strangely, you feel intense relaxation and refreshment instead of excruciating pain.";
 				thai_find = 14;
 				completequest 12034;
-				if (checkre(3)) {
+				if (RENEWAL_EXP) {
 					if (BaseLevel < 56) getexp 900,0;
 					else if (BaseLevel > 55 && BaseLevel < 61) getexp 1050,0;
 					else if (BaseLevel > 60 && BaseLevel < 66) getexp 1868,0;

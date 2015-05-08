@@ -890,7 +890,7 @@ yuno_in04,47,113,1	script	Studying Scholar#1	4_M_ALCHE_B,{
 			mes "Take this.";
 			god_brising = 50;
 			getitem 616,1; // Old_Card_Album
-			getexp (checkre(3))?60000:600000,0;
+			getexp RENEWAL_EXP?60000:600000,0;
 			next;
 			mes "[Enrico Kaili]";
 			mes "Please accept this as my way of thanking you for assisting in my";
