@@ -3988,6 +3988,14 @@ by the type parameter.
  4 - RENEWAL_LVDMG (renewal level modifier on damage)
  5 - RENEWAL_EDP (renewal enchant deadly poison algorithm)
  6 - RENEWAL_ASPD (renewal ASPD)
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+This command is deprecated and it should not be used in new scripts, as it
+is likely to be removed at a later time. Please consider using the respective
+constants RENEWAL, RENEWAL_CAST, RENEWAL_DROP, RENEWAL_EXP, RENEWAL_LVDMG,
+RENEWAL_EDP, RENEWAL_ASPD instead.
 
 ---------------------------------------
 //=====================================

@@ -20184,7 +20184,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(makerune,"i"),
 		BUILDIN_DEF(hascashmount,""),//[Ind]
 		BUILDIN_DEF(setcashmount,""),//[Ind]
-		BUILDIN_DEF(checkre,"i"),
+		BUILDIN_DEF_DEPRECATED(checkre,"i"), // Deprecated 2015-05-08 [Haru]
 		/**
 		 * rAthena and beyond!
 		 **/
