@@ -20372,6 +20372,43 @@ void script_hardcoded_constants(void) {
 	script->set_constant("BG_AREA",BG_AREA,false);
 	script->set_constant("BG_AREA_WOS",BG_AREA_WOS,false);
 	script->set_constant("BG_QUEUE",BG_QUEUE,false);
+
+	/* Renewal */
+#ifdef RENEWAL
+	script->set_constant("RENEWAL", 1, false);
+#else
+	script->set_constant("RENEWAL", 0, false);
+#endif
+#ifdef RENEWAL_CAST
+	script->set_constant("RENEWAL_CAST", 1, false);
+#else
+	script->set_constant("RENEWAL_CAST", 0, false);
+#endif
+#ifdef RENEWAL_DROP
+	script->set_constant("RENEWAL_DROP", 1, false);
+#else
+	script->set_constant("RENEWAL_DROP", 0, false);
+#endif
+#ifdef RENEWAL_EXP
+	script->set_constant("RENEWAL_EXP", 1, false);
+#else
+	script->set_constant("RENEWAL_EXP", 0, false);
+#endif
+#ifdef RENEWAL_LVDMG
+	script->set_constant("RENEWAL_LVDMG", 1, false);
+#else
+	script->set_constant("RENEWAL_LVDMG", 0, false);
+#endif
+#ifdef RENEWAL_EDP
+	script->set_constant("RENEWAL_EDP", 1, false);
+#else
+	script->set_constant("RENEWAL_EDP", 0, false);
+#endif
+#ifdef RENEWAL_ASPD
+	script->set_constant("RENEWAL_ASPD", 1, false);
+#else
+	script->set_constant("RENEWAL_ASPD", 0, false);
+#endif
 }
 
 /**
