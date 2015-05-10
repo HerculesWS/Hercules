@@ -10263,7 +10263,7 @@ void atcommand_doload(void) {
 
 void atcommand_expand_message_table(void) {
 	RECREATE(atcommand->msg_table, char **, ++atcommand->max_message_table);
-	RECREATE(atcommand->msg_table[atcommand->max_message_table - 1], char *, MAX_MSG);
+	CREATE(atcommand->msg_table[atcommand->max_message_table - 1], char *, MAX_MSG);
 }
 
 void do_init_atcommand(bool minimal) {
