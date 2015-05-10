@@ -8014,7 +8014,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_BERSERK:
 				if( val3 == SC__BLOODYLUST )
 					sc_start(src,bl,(sc_type)val3,100,val1,tick);
-				if( !val3 && !(!sc->data[SC_ENDURE] || !sc->data[SC_ENDURE]->val4) )
+				if (!val3 && (!sc->data[SC_ENDURE] || !sc->data[SC_ENDURE]->val4))
 					sc_start4(src, bl, SC_ENDURE, 100,10,0,0,2, tick);
 				//HP healing is performing after the calc_status call.
 				//Val2 holds HP penalty
