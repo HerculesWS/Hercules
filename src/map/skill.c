@@ -5150,9 +5150,9 @@ int skill_castend_id(int tid, int64 tick, int id, intptr_t data) {
 		}
 	}
 
-	ud->skill_id = ud->skill_lv = ud->skilltarget = 0;
 	if( !sd || sd->skillitem != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) )
 		ud->canact_tick = tick;
+	ud->skill_id = ud->skill_lv = ud->skilltarget = 0;
 	//You can't place a skill failed packet here because it would be
 	//sent in ALL cases, even cases where skill_check_condition fails
 	//which would lead to double 'skill failed' messages u.u [Skotlex]
