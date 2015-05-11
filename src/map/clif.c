@@ -4579,15 +4579,23 @@ void clif_skillinfoblock(struct map_session_data *sd)
 	WFIFOW(fd,0) = 0x10f;
 	for ( i = 0, len = 4; i < MAX_SKILL; i++) {
 		if( (id = sd->status.skill[i].id) != 0 ) {
+			int level;
 			// workaround for bugreport:5348
 			if (len + 37 > 8192)
 				break;
 
-			WFIFOW(fd,len)   = id;
-			WFIFOL(fd,len+2) = skill->get_inf(id);
-			WFIFOW(fd,len+6) = sd->status.skill[i].lv;
-			WFIFOW(fd,len+8) = skill->get_sp(id,sd->status.skill[i].lv);
-			WFIFOW(fd,len+10)= skill->get_range2(&sd->bl, id,sd->status.skill[i].lv);
+			WFIFOW(fd, len)   = id;
+			WFIFOL(fd, len + 2) = skill->get_inf(id);
+			level = sd->status.skill[i].lv;
+			WFIFOW(fd, len + 6) = level;
+			if (level) {
+				WFIFOW(fd, len + 8) = skill->get_sp(id, level);
+				WFIFOW(fd, len + 10)= skill->get_range2(&sd->bl, id, level);
+			}
+			else {
+				WFIFOW(fd, len + 8) = 0;
+				WFIFOW(fd, len + 10)= 0;
+			}
 			safestrncpy((char*)WFIFOP(fd,len+12), skill->get_name(id), NAME_LENGTH);
 			if(sd->status.skill[i].flag == SKILL_FLAG_PERMANENT)
 				WFIFOB(fd,len+36) = (sd->status.skill[i].lv < skill->tree_get_max(id, sd->status.class_))? 1:0;
