@@ -12099,10 +12099,10 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 	};
 
 	if ((temp = libconfig->setting_get_member(jdb, "Inherit"))) {
-		int nidx = 0, iidx, w;
+		int nidx = 0;
 		const char *iname;
 		while ((iname = libconfig->setting_get_string_elem(temp, nidx++))) {
-			int iclass, ave, total = 0;
+			int i, iidx, iclass, avg_increment, base;
 			if ((iclass = pc->check_job_name(iname)) == -1) {
 				ShowWarning("status_read_job_db: '%s' trying to inherit unknown '%s'!\n", name, iname);
 				continue;
@@ -12110,62 +12110,63 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 			iidx = pc->class2idx(iclass);
 			status->max_weight_base[idx] = status->max_weight_base[iidx];
 			memcpy(&status->aspd_base[idx], &status->aspd_base[iidx], sizeof(status->aspd_base[iidx]));
-			for (w = 1; w <= MAX_LEVEL && status->HP_table[iidx][w]; w++) {
-				status->HP_table[idx][w] = status->HP_table[iidx][w];
-				total += status->HP_table[idx][w] - status->HP_table[idx][w - 1];
+
+			for (i = 1; i <= MAX_LEVEL && status->HP_table[iidx][i]; i++) {
+				status->HP_table[idx][i] = status->HP_table[iidx][i];
 			}
-			ave = total / (w - 1);
-			for ( ; w <= pc->max_level[idx][0]; w++) {
-				status->HP_table[idx][w] = min(ave * w, battle_config.max_hp);
+			base = (i > 1 ? status->HP_table[idx][1] : 35); // Safe value if none are specified
+			avg_increment = (i > 2 ? (status->HP_table[idx][i] - base) / (i-1) : 5); // Safe value if none are specified
+			for ( ; i <= pc->max_level[idx][0]; i++) {
+				status->HP_table[idx][i] = min(base + avg_increment * i, battle_config.max_hp);
 			}
-			total = 0;
-			for (w = 1; w <= MAX_LEVEL && status->SP_table[iidx][w]; w++) {
-				status->SP_table[idx][w] = status->SP_table[iidx][w];
-				total += status->SP_table[idx][w] - status->SP_table[idx][w - 1];
+
+			for (i = 1; i <= MAX_LEVEL && status->SP_table[iidx][i]; i++) {
+				status->SP_table[idx][i] = status->SP_table[iidx][i];
 			}
-			ave = total / (w - 1);
-			for ( ; w <= pc->max_level[idx][0]; w++) {
-				status->SP_table[idx][w] = min(ave * w, battle_config.max_sp);
+			base = (i > 1 ? status->SP_table[idx][1] : 10); // Safe value if none are specified
+			avg_increment = (i > 2 ? (status->SP_table[idx][i] - base) / (i-1) : 1); // Safe value if none are specified
+			for ( ; i <= pc->max_level[idx][0]; i++) {
+				status->SP_table[idx][i] = min(base + avg_increment * i, battle_config.max_sp);
 			}
 		}
 	}
 	if ((temp = libconfig->setting_get_member(jdb, "InheritHP"))) {
-		int nidx = 0, iidx;
+		int nidx = 0;
 		const char *iname;
 		while ((iname = libconfig->setting_get_string_elem(temp, nidx++))) {
-			int iclass, w, ave, total = 0;
+			int i, iidx, iclass, avg_increment, base;
 			if ((iclass = pc->check_job_name(iname)) == -1) {
 				ShowWarning("status_read_job_db: '%s' trying to inherit unknown '%s' HP!\n", name, iname);
 				continue;
 			}
 			iidx = pc->class2idx(iclass);
-			for (w = 1; w <= MAX_LEVEL && status->HP_table[iidx][w]; w++) {
-				status->HP_table[idx][w] = status->HP_table[iidx][w];
-				total += status->HP_table[idx][w] - status->HP_table[idx][w - 1]; 
+			for (i = 1; i <= MAX_LEVEL && status->HP_table[iidx][i]; i++) {
+				status->HP_table[idx][i] = status->HP_table[iidx][i];
 			}
-			ave = total / (w - 1);
-			for ( ; w <= pc->max_level[idx][0]; w++ ) {
-				status->HP_table[idx][w] = min(ave * w, battle_config.max_hp);
+			base = (i > 1 ? status->HP_table[idx][1] : 35); // Safe value if none are specified
+			avg_increment = (i > 2 ? (status->HP_table[idx][i] - base) / (i-1) : 5); // Safe value if none are specified
+			for ( ; i <= pc->max_level[idx][0]; i++) {
+				status->HP_table[idx][i] = min(base + avg_increment * i, battle_config.max_hp);
 			}
 		}
 	}
 	if ((temp = libconfig->setting_get_member(jdb, "InheritSP"))) {
-		int nidx = 0, iidx, ave, total = 0;
+		int nidx = 0;
 		const char *iname;
 		while ((iname = libconfig->setting_get_string_elem(temp, nidx++))) {
-			int iclass, w;
+			int i, iidx, iclass, avg_increment, base;
 			if ((iclass = pc->check_job_name(iname)) == -1) {
 				ShowWarning("status_read_job_db: '%s' trying to inherit unknown '%s' SP!\n", name, iname);
 				continue;
 			}
 			iidx = pc->class2idx(iclass);
-			for (w = 1; w <= MAX_LEVEL && status->SP_table[iidx][w]; w++) {
-				status->SP_table[idx][w] = status->SP_table[iidx][w];
-				total += status->SP_table[idx][w] - status->SP_table[idx][w-1];
+			for (i = 1; i <= MAX_LEVEL && status->SP_table[iidx][i]; i++) {
+				status->SP_table[idx][i] = status->SP_table[iidx][i];
 			}
-			ave = total / (w - 1);
-			for ( ; w <= pc->max_level[idx][0]; w++) {
-				status->SP_table[idx][w] = min(ave * w, battle_config.max_sp);
+			base = (i > 1 ? status->SP_table[idx][1] : 10); // Safe value if none are specified
+			avg_increment = (i > 2 ? (status->SP_table[idx][i] - base) / (i-1) : 1); // Safe value if none are specified
+			for ( ; i <= pc->max_level[idx][0]; i++) {
+				status->SP_table[idx][i] = min(avg_increment * i, battle_config.max_sp);
 			}
 		}
 	}
@@ -12192,28 +12193,30 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 	}
 
 	if ((temp = libconfig->setting_get_member(jdb, "HPTable"))) {
-		int level = 0, ave, total = 0;
+		int level = 0, avg_increment, base;
 		config_setting_t *hp = NULL;
-		while ((hp = libconfig->setting_get_elem(temp, level++))) {
-			status->HP_table[idx][level] = i32 = min(libconfig->setting_get_int(hp), battle_config.max_hp);
-			total += i32 - status->HP_table[idx][level - 1];
+		while (level <= MAX_LEVEL && (hp = libconfig->setting_get_elem(temp, level))) {
+			i32 = libconfig->setting_get_int(hp);
+			status->HP_table[idx][++level] = min(i32, battle_config.max_hp);
 		}
-		ave = total / (level - 1);
-		for ( ; level <= pc->max_level[idx][0]; level++ ) { /* limit only to possible maximum level of the given class */
-			status->HP_table[idx][level] = min(ave * level, battle_config.max_hp); /* some are still empty? then let's use the average increase */
+		base = (level > 0 ? status->HP_table[idx][1] : 35); // Safe value if none are specified
+		avg_increment = (level > 1 ? (status->HP_table[idx][level] - base) / level : 5); // Safe value if none are specified
+		for (++level; level <= pc->max_level[idx][0]; ++level) { /* limit only to possible maximum level of the given class */
+			status->HP_table[idx][level] = min(base + avg_increment * level, battle_config.max_hp); /* some are still empty? then let's use the average increase */
 		}
 	}
 
 	if ((temp = libconfig->setting_get_member(jdb, "SPTable"))) {
-		int level = 0, ave, total = 0;
+		int level = 0, avg_increment, base;
 		config_setting_t *sp = NULL;
-		while ((sp = libconfig->setting_get_elem(temp, level++))) {
-			status->SP_table[idx][level] = i32 = min(libconfig->setting_get_int(sp), battle_config.max_sp);
-			total += i32 - status->SP_table[idx][level - 1];
+		while (level <= MAX_LEVEL && (sp = libconfig->setting_get_elem(temp, level))) {
+			i32 = libconfig->setting_get_int(sp);
+			status->SP_table[idx][++level] = min(i32, battle_config.max_sp);
 		}
-		ave = total / (level - 1);
+		base = (level > 0 ? status->SP_table[idx][1] : 10); // Safe value if none are specified
+		avg_increment = (level > 1 ? (status->SP_table[idx][level] - base) / level : 1);
 		for ( ; level <= pc->max_level[idx][0]; level++ ) {
-			status->SP_table[idx][level] = min(ave * level, battle_config.max_sp);
+			status->SP_table[idx][level] = min(base + avg_increment * level, battle_config.max_sp);
 		}
 	}
 }
