@@ -671,7 +671,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 		if( skill_id != WS_CARTTERMINATION && skill_id != AM_DEMONSTRATION && skill_id != CR_REFLECTSHIELD && skill_id != MS_REFLECTSHIELD && skill_id != ASC_BREAKER ) {
 			// Trigger status effects
 			enum sc_type type;
-			int i;
+			int i, flag;
 			for( i = 0; i < ARRAYLENGTH(sd->addeff) && sd->addeff[i].flag; i++ ) {
 				rate = sd->addeff[i].rate;
 				if( attack_type&BF_LONG ) // Any ranged physical attack takes status arrows into account (Grimtooth...) [DracoRPG]
@@ -695,13 +695,22 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 				}
 
 				type =  sd->addeff[i].id;
-				temp = skill->get_time2(status->sc2skill(type),7);
+
+				if (sd->addeff[i].duration > 0) {
+					// Fixed duration
+					temp = sd->addeff[i].duration;
+					flag = SCFLAG_NOAVOID;
+				} else {
+					// Default duration
+					temp = skill->get_time2(status->sc2skill(type),7);
+					flag = SCFLAG_NONE;
+				}
 
 				if (sd->addeff[i].flag&ATF_TARGET)
-					status->change_start(src,bl,type,rate,7,0,(type == SC_BURNING)?src->id:0,0,temp,SCFLAG_NONE);
+					status->change_start(src,bl,type,rate,7,0,(type == SC_BURNING)?src->id:0,0,temp,flag);
 
 				if (sd->addeff[i].flag&ATF_SELF)
-					status->change_start(src,src,type,rate,7,0,(type == SC_BURNING)?src->id:0,0,temp,SCFLAG_NONE);
+					status->change_start(src,src,type,rate,7,0,(type == SC_BURNING)?src->id:0,0,temp,flag);
 			}
 		}
 

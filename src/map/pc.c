@@ -1877,7 +1877,20 @@ int pc_bonus_autospell_onskill(struct s_autospell *spell, int max, short src_ski
 	return 1;
 }
 
-int pc_bonus_addeff(struct s_addeffect* effect, int max, enum sc_type id, short rate, short arrow_rate, unsigned char flag)
+/**
+ * Adds an AddEff/AddEff2/AddEffWhenHit bonus to a character.
+ *
+ * @param effect     Effects array to append to.
+ * @param max        Size of the effect array.
+ * @param id         Effect ID (@see enum sc_type).
+ * @param rate       Trigger rate.
+ * @param arrow_rate Trigger rate modifier for ranged attacks (adds to the base rate).
+ * @param flag       Trigger flags (@see enum auto_trigger_flag).
+ * @param duration   Fixed (non-reducible) duration in ms. If 0, uses the default (reducible) duration of the given effect.
+ * @retval 1 on success.
+ * @retval 0 on failure.
+ */
+int pc_bonus_addeff(struct s_addeffect* effect, int max, enum sc_type id, int16 rate, int16 arrow_rate, uint8 flag, uint16 duration)
 {
 	int i;
 	if (!(flag&(ATF_SHORT|ATF_LONG)))
@@ -1888,8 +1901,8 @@ int pc_bonus_addeff(struct s_addeffect* effect, int max, enum sc_type id, short 
 		flag|=ATF_WEAPON; //Default type: weapon.
 
 	for (i = 0; i < max && effect[i].flag; i++) {
-		if (effect[i].id == id && effect[i].flag == flag)
-		{
+		// Update existing effect if any.
+		if (effect[i].id == id && effect[i].flag == flag && effect[i].duration == duration) {
 			effect[i].rate += rate;
 			effect[i].arrow_rate += arrow_rate;
 			return 1;
@@ -1903,6 +1916,7 @@ int pc_bonus_addeff(struct s_addeffect* effect, int max, enum sc_type id, short 
 	effect[i].rate = rate;
 	effect[i].arrow_rate = arrow_rate;
 	effect[i].flag = flag;
+	effect[i].duration = duration;
 	return 1;
 }
 
@@ -2814,7 +2828,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			}
 			pc->bonus_addeff(sd->addeff, ARRAYLENGTH(sd->addeff), (sc_type)type2,
-				sd->state.lr_flag!=2?val:0, sd->state.lr_flag==2?val:0, 0);
+			                 sd->state.lr_flag!=2?val:0, sd->state.lr_flag==2?val:0, 0, 0);
 			break;
 		case SP_ADDEFF2:
 			if (type2 > SC_MAX) {
@@ -2822,7 +2836,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			}
 			pc->bonus_addeff(sd->addeff, ARRAYLENGTH(sd->addeff), (sc_type)type2,
-				sd->state.lr_flag!=2?val:0, sd->state.lr_flag==2?val:0, ATF_SELF);
+			                 sd->state.lr_flag!=2?val:0, sd->state.lr_flag==2?val:0, ATF_SELF, 0);
 			break;
 		case SP_RESEFF:
 			if (type2 < SC_COMMON_MIN || type2 > SC_COMMON_MAX) {
@@ -3034,7 +3048,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			}
 			if(sd->state.lr_flag != 2)
-				pc->bonus_addeff(sd->addeff2, ARRAYLENGTH(sd->addeff2), (sc_type)type2, val, 0, 0);
+				pc->bonus_addeff(sd->addeff2, ARRAYLENGTH(sd->addeff2), (sc_type)type2, val, 0, 0, 0);
 			break;
 		case SP_SKILL_ATK:
 			if(sd->state.lr_flag == 2)
@@ -3443,7 +3457,7 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 				break;
 			}
 			pc->bonus_addeff(sd->addeff, ARRAYLENGTH(sd->addeff), (sc_type)type2,
-				sd->state.lr_flag!=2?type3:0, sd->state.lr_flag==2?type3:0, val);
+			                 sd->state.lr_flag!=2?type3:0, sd->state.lr_flag==2?type3:0, val, 0);
 			break;
 
 		case SP_ADDEFF_WHENHIT:
@@ -3452,7 +3466,7 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 				break;
 			}
 			if(sd->state.lr_flag != 2)
-				pc->bonus_addeff(sd->addeff2, ARRAYLENGTH(sd->addeff2), (sc_type)type2, type3, 0, val);
+				pc->bonus_addeff(sd->addeff2, ARRAYLENGTH(sd->addeff2), (sc_type)type2, type3, 0, val, 0);
 			break;
 
 		case SP_ADDEFF_ONSKILL:
@@ -3551,6 +3565,25 @@ int pc_bonus4(struct map_session_data *sd,int type,int type2,int type3,int type4
 		sd->mdef_set_race[type2].rate = type3;
 		sd->mdef_set_race[type2].tick = type4;
 		sd->mdef_set_race[type2].value = val;
+		break;
+
+	case SP_ADDEFF:
+	{
+		uint16 duration;
+		if (type2 > SC_MAX) {
+			ShowWarning("pc_bonus4 (Add Effect): %d is not supported.\n", type2);
+			break;
+		}
+		if (val < 0 || val > UINT16_MAX) {
+			ShowWarning("pc_bonus4 (Add Effect): invalid duration %d. Valid range: [0:%d].\n", val, UINT16_MAX);
+			duration = (val < 0 ? 0 : UINT16_MAX);
+		} else {
+			duration = (uint16)type4;
+		}
+
+		pc->bonus_addeff(sd->addeff, ARRAYLENGTH(sd->addeff), (sc_type)type2,
+		                 sd->state.lr_flag!=2?type3:0, sd->state.lr_flag==2?type3:0, val, duration);
+	}
 		break;
 
 	default:
