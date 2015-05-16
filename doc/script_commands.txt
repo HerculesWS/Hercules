@@ -7646,37 +7646,22 @@ Example:
 
 ---------------------------------------
 
-
-*floor(<number>)
-
-Returns the number rounded down.
-
-Example:
-	.@i = floor(2.5); // .@i will be 2
-
----------------------------------------
-
-*ceil(<number>)
-
-Returns the number rounded up.
-
-Example:
-	.@i = ceil(2.5); // .@i will be 3
-
----------------------------------------
-
-*log(<number>)
+*log10(<number>)
 
 Returns log base 10 of the number.
 
+Note: The value is truncated to integer.
+
 Example:
-	.@i = log(100); // .@i will be 2
+	.@i = log10(100); // .@i will be 2
 
 ---------------------------------------
 
 *sqrt(<number>)
 
 Returns square-root of number.
+
+Note: The value is truncated to integer.
 
 Example:
 	.@i = sqrt(25); // .@i will be 5
@@ -7686,6 +7671,10 @@ Example:
 *distance(<x0>,<y0>,<x1>,<y1>)
 
 Returns distance between 2 points.
+
+Note: When Hercules is configured to use circular areas, the Euclidean distance
+is returned, otherwise the Chebyshev distance. The value is truncated to
+integer.
 
 Example:
 	.@i = distance(100,200,101,202);
