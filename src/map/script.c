@@ -15477,25 +15477,8 @@ BUILDIN(compare)
 }
 
 // List of mathematics commands --->
-BUILDIN(floor)
-{
-	double i, a;
-	i = script_getnum(st,2);
-	a = floor(i);
-	script_pushint(st,(int)a);
-	return true;
-}
 
-BUILDIN(ceil)
-{
-	double i, a;
-	i = script_getnum(st,2);
-	a = ceil(i);
-	script_pushint(st,(int)a);
-	return true;
-}
-
-BUILDIN(log)
+BUILDIN(log10)
 {
 	double i, a;
 	i = script_getnum(st,2);
@@ -20080,9 +20063,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(setiteminfo,"iii"), //[Lupus] set Items Buy / sell Price, etc info
 		BUILDIN_DEF(getequipcardid,"ii"), //[Lupus] returns CARD ID or other info from CARD slot N of equipped item
 		// List of mathematics commands --->
-		BUILDIN_DEF(floor,"i"),
-		BUILDIN_DEF(ceil,"i"),
-		BUILDIN_DEF(log,"i"),
+		BUILDIN_DEF(log10,"i"),
 		BUILDIN_DEF(sqrt,"i"), //[zBuffer]
 		BUILDIN_DEF(pow,"ii"), //[zBuffer]
 		BUILDIN_DEF(distance,"iiii"), //[zBuffer]
