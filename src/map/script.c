@@ -8105,6 +8105,23 @@ BUILDIN(strnpcinfo) {
 	return true;
 }
 
+/**
+ * charid2rid: Returns the RID associated to the given character ID
+ */
+BUILDIN(charid2rid)
+{
+	int cid = script_getnum(st, 2);
+	TBL_PC *sd = map->charid2sd(cid);
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	script_pushint(st, sd->status.account_id);
+	return true;
+}
+
 /*==========================================
  * GetEquipID(Pos);     Pos: 1-SCRIPT_EQUIP_TABLE_SIZE
  *------------------------------------------*/
@@ -19827,6 +19844,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getguildmember,"i?"),
 		BUILDIN_DEF(strcharinfo,"i"),
 		BUILDIN_DEF(strnpcinfo,"i"),
+		BUILDIN_DEF(charid2rid,"i"),
 		BUILDIN_DEF(getequipid,"i"),
 		BUILDIN_DEF(getequipname,"i"),
 		BUILDIN_DEF(getbrokenid,"i"), // [Valaris]
