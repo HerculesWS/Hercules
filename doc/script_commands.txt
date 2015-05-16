@@ -7646,6 +7646,34 @@ Example:
 
 ---------------------------------------
 
+
+*floor(<number>)
+
+Returns the number rounded down.
+
+Example:
+	.@i = floor(2.5); // .@i will be 2
+
+---------------------------------------
+
+*ceil(<number>)
+
+Returns the number rounded up.
+
+Example:
+	.@i = ceil(2.5); // .@i will be 3
+
+---------------------------------------
+
+*log(<number>)
+
+Returns log base 10 of the number.
+
+Example:
+	.@i = log(100); // .@i will be 2
+
+---------------------------------------
+
 *sqrt(<number>)
 
 Returns square-root of number.
