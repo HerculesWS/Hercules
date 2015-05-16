@@ -15482,7 +15482,7 @@ BUILDIN(log10)
 {
 	double i, a;
 	i = script_getnum(st,2);
-	a = log(i);
+	a = log10(i);
 	script_pushint(st,(int)a);
 	return true;
 }
