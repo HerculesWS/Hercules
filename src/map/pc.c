@@ -3578,11 +3578,11 @@ int pc_bonus4(struct map_session_data *sd,int type,int type2,int type3,int type4
 			ShowWarning("pc_bonus4 (Add Effect): invalid duration %d. Valid range: [0:%d].\n", val, UINT16_MAX);
 			duration = (val < 0 ? 0 : UINT16_MAX);
 		} else {
-			duration = (uint16)type4;
+			duration = (uint16)val;
 		}
 
 		pc->bonus_addeff(sd->addeff, ARRAYLENGTH(sd->addeff), (sc_type)type2,
-		                 sd->state.lr_flag!=2?type3:0, sd->state.lr_flag==2?type3:0, val, duration);
+		                 sd->state.lr_flag!=2?type3:0, sd->state.lr_flag==2?type3:0, type4, duration);
 	}
 		break;
 
