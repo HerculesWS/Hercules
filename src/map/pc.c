@@ -892,12 +892,12 @@ int pc_isequip(struct map_session_data *sd,int n)
 	if(pc_has_permission(sd, PC_PERM_USE_ALL_EQUIPMENT))
 		return 1;
 	
-	if(item->elv && sd->status.base_level < (unsigned int)item->elv){
-		clif->msg(sd, 0x6ED);
+	if (item->elv && sd->status.base_level < (unsigned int)item->elv) {
+		clif->msgtable(sd, MSG_ITEM_CANT_EQUIP_LVL);
 		return 0;
 	}
-	if(item->elvmax && sd->status.base_level > (unsigned int)item->elvmax){
-		clif->msg(sd, 0x6ED);
+	if (item->elvmax && sd->status.base_level > (unsigned int)item->elvmax) {
+		clif->msgtable(sd, MSG_ITEM_CANT_EQUIP_LVL);
 		return 0;
 	}
 	if(item->sex != 2 && sd->status.sex != item->sex)
@@ -906,11 +906,11 @@ int pc_isequip(struct map_session_data *sd,int n)
 	if ( item->equip & EQP_AMMO ) {
 		if ( (sd->state.active && !pc_iscarton(sd)) // check if sc data is already loaded.
 			&& (sd->status.class_ == JOB_GENETIC_T || sd->status.class_ == JOB_GENETIC) ) {
-			clif->msg(sd, 0x5EF);
+			clif->msgtable(sd, MSG_ITEM_NEED_CART);
 			return 0;
 		}
 		if ( !pc_ismadogear(sd) && (sd->status.class_ == JOB_MECHANIC_T || sd->status.class_ == JOB_MECHANIC) ) {
-			clif->msg(sd, 0x59B);
+			clif->msgtable(sd, MSG_ITEM_NEED_MADO);
 			return 0;
 		}
 	}
@@ -4306,8 +4306,8 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 	if( !item->script ) //if it has no script, you can't really consume it!
 		return 0;
 
-	if( (item->item_usage.flag&INR_SITTING) && (pc_issit(sd) == 1) && (pc_get_group_level(sd) < item->item_usage.override) ) {
-		clif->msgtable(sd->fd,0x297);
+	if ((item->item_usage.flag&INR_SITTING) && (pc_issit(sd) == 1) && (pc_get_group_level(sd) < item->item_usage.override)) {
+		clif->msgtable(sd, MSG_ITEM_NEED_STANDING);
 		//clif->colormes(sd->fd,COLOR_WHITE,msg_txt(1474));
 		return 0; // You cannot use this item while sitting.
 	}
@@ -4412,8 +4412,8 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		return 0;
 
 	if( item->package || item->group ) {
-		if( pc_is90overweight(sd) ) {
-			clif->msgtable(sd->fd,ITEM_CANT_OBTAIN_WEIGHT);
+		if (pc_is90overweight(sd)) {
+			clif->msgtable(sd, MSG_ITEM_CANT_OBTAIN_WEIGHT);
 			return 0;
 		}
 		if( !pc->inventoryblank(sd) ) {
@@ -4426,13 +4426,13 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 	if(item->sex != 2 && sd->status.sex != item->sex)
 		return 0;
 	//Required level check
-	if(item->elv && sd->status.base_level < (unsigned int)item->elv){
-		clif->msg(sd, 0x6EE);
+	if (item->elv && sd->status.base_level < (unsigned int)item->elv) {
+		clif->msgtable(sd, MSG_ITEM_CANT_USE_LVL);
 		return 0;
 	}
 
-	if(item->elvmax && sd->status.base_level > (unsigned int)item->elvmax){
-		clif->msg(sd, 0x6EE);
+	if (item->elvmax && sd->status.base_level > (unsigned int)item->elvmax) {
+		clif->msgtable(sd, MSG_ITEM_CANT_USE_LVL);
 		return 0;
 	}
 
@@ -4484,7 +4484,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	if( sd->npc_id || sd->state.workinprogress&1 ){
 		/* TODO: add to clif->messages enum */
 #ifdef RENEWAL
-		clif->msg(sd, 0x783); // TODO look for the client date that has this message.
+		clif->msgtable(sd, MSG_NPC_WORK_IN_PROGRESS); // TODO look for the client date that has this message.
 #endif
 		return 0;
 	}
@@ -4547,7 +4547,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 			if( sd->item_delay[i].nameid ) {// found
 				if( DIFF_TICK(sd->item_delay[i].tick, tick) > 0 ) {
 					int e_tick = (int)(DIFF_TICK(sd->item_delay[i].tick, tick)/1000);
-					clif->msgtable_num(sd->fd, 0x746, e_tick + 1); // [%d] seconds left until you can use
+					clif->msgtable_num(sd, MSG_SECONDS_UNTIL_USE, e_tick + 1); // [%d] seconds left until you can use
 					return 0; // Delay has not expired yet
 				}
 			} else {// not yet used item (all slots are initially empty)
@@ -4570,7 +4570,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	/* on restricted maps the item is consumed but the effect is not used */
 	for(i = 0; i < map->list[sd->bl.m].zone->disabled_items_count; i++) {
 		if( map->list[sd->bl.m].zone->disabled_items[i] == nameid ) {
-			clif->msg(sd, ITEM_CANT_USE_AREA); // This item cannot be used within this area
+			clif->msgtable(sd, MSG_ITEM_CANT_USE_AREA); // This item cannot be used within this area
 			if( battle_config.item_restricted_consumption_type && sd->status.inventory[n].expire_time == 0 ) {
 				clif->useitemack(sd,n,sd->status.inventory[n].amount-1,true);
 				pc->delitem(sd,n,1,1,0,LOG_TYPE_CONSUME);
@@ -6626,9 +6626,9 @@ int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
 			clif->skillinfoblock(sd);
 	} else if( battle_config.skillup_limit ){
 		if( sd->sktree.second )
-			clif->msg_value(sd, 0x61E, sd->sktree.second);
+			clif->msgtable_num(sd, MSG_SKILL_POINTS_LEFT_JOB1, sd->sktree.second);
 		else if( sd->sktree.third )
-			clif->msg_value(sd, 0x61F, sd->sktree.third);
+			clif->msgtable_num(sd, MSG_SKILL_POINTS_LEFT_JOB2, sd->sktree.third);
 		else if( pc->calc_skillpoint(sd) < 9 ) {
 			/* TODO: official response? */
 			clif->colormes(sd->fd,COLOR_RED,"You need the basic skills");

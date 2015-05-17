@@ -1596,13 +1596,13 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 
 			for(i = 0; i < map->list[src->m].zone->disabled_skills_count; i++) {
 				if( skill_id == map->list[src->m].zone->disabled_skills[i]->nameid && (map->list[src->m].zone->disabled_skills[i]->type&src->type) ) {
-					if( src->type == BL_PC )
-						clif->msg((TBL_PC*)src, SKILL_CANT_USE_AREA); // This skill cannot be used within this area
-					else if( src->type == BL_MOB && map->list[src->m].zone->disabled_skills[i]->subtype != MZS_NONE ) {
-						if( st->mode&MD_BOSS ) { /** is boss **/
+					if (src->type == BL_PC) {
+						clif->msgtable((TBL_PC*)src, MSG_SKILL_CANT_USE_AREA); // This skill cannot be used within this area
+					} else if (src->type == BL_MOB && map->list[src->m].zone->disabled_skills[i]->subtype != MZS_NONE) {
+						if( st->mode&MD_BOSS ) { /* is boss */
 							if( !( map->list[src->m].zone->disabled_skills[i]->subtype&MZS_BOSS ) )
 								break;
-						} else { /** is not boss **/
+						} else { /* is not boss */
 							if( map->list[src->m].zone->disabled_skills[i]->subtype&MZS_BOSS )
 								break;
 						}

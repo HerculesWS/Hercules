@@ -18195,7 +18195,7 @@ BUILDIN(setcashmount)
 	if ((sd = script->rid2sd(st)) == NULL)
 		return true;
 	if (pc_hasmount(sd)) {
-		clif->msgtable(sd->fd, 0X78b);
+		clif->msgtable(sd, MSG_REINS_CANT_USE_MOUNTED);
 		script_pushint(st,0);//can't mount with one of these
 	} else {
 		if (sd->sc.data[SC_ALL_RIDING])
