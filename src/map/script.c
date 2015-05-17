@@ -406,7 +406,7 @@ unsigned int calc_hash_ci(const char* p) {
 /// Looks up string using the provided id.
 const char* script_get_str(int id)
 {
-	Assert( id >= LABEL_START && id < script->str_size );
+	Assert_retr(NULL, id >= LABEL_START && id < script->str_size);
 	return script->str_buf+script->str_data[id].str;
 }
 
@@ -462,7 +462,7 @@ const char *script_casecheck_add_str_sub(struct casecheck_data *ccd, const char 
 		int i;
 		for (i = ccd->str_hash[h]; ; i = ccd->str_data[i].next) {
 			const char *s = NULL;
-			Assert( i >= 0 && i < ccd->str_size );
+			Assert_retb(i >= 0 && i < ccd->str_size);
 			s = ccd->str_buf+ccd->str_data[i].str;
 			if (strcasecmp(s,p) == 0) {
 				return s; // string already in list

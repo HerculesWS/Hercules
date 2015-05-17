@@ -303,7 +303,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 		SQL->StmtBindColumn(stmt, 10+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
 
 	while( SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
-		Assert_retb(i >= MAX_INVENTORY);
+		Assert_retb(i < MAX_INVENTORY);
 		memcpy(&items[i],&item,sizeof(struct item));
 		i++;
 	}

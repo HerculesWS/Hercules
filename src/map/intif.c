@@ -130,7 +130,7 @@ int intif_rename(struct map_session_data *sd, int type, char *name)
 // GM Send a message
 int intif_broadcast(const char* mes, size_t len, int type)
 {
-	int lp = (type|BC_COLOR_MASK) ? 4 : 0;
+	int lp = (type&BC_COLOR_MASK) ? 4 : 0;
 
 	// Send to the local players
 	clif->broadcast(NULL, mes, len, type, ALL_CLIENT);
@@ -149,9 +149,9 @@ int intif_broadcast(const char* mes, size_t len, int type)
 	WFIFOW(inter_fd,10) = 0; // fontSize not used with standard broadcast
 	WFIFOW(inter_fd,12) = 0; // fontAlign not used with standard broadcast
 	WFIFOW(inter_fd,14) = 0; // fontY not used with standard broadcast
-	if( type|BC_BLUE )
+	if (type&BC_BLUE)
 		WFIFOL(inter_fd,16) = 0x65756c62; //If there's "blue" at the beginning of the message, game client will display it in blue instead of yellow.
-	else if( type|BC_WOE )
+	else if (type&BC_WOE)
 		WFIFOL(inter_fd,16) = 0x73737373; //If there's "ssss", game client will recognize message as 'WoE broadcast'.
 	memcpy(WFIFOP(inter_fd,16 + lp), mes, len);
 	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));

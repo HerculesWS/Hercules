@@ -62,24 +62,27 @@ static struct view_data npc_viewdb2[MAX_NPC_CLASS2_END-MAX_NPC_CLASS2_START];
 /* for speedup */
 unsigned int npc_market_qty[MAX_INVENTORY];
 
-static struct script_event_s
-{
+static struct script_event_s {
 	//Holds pointers to the commonly executed scripts for speedup. [Skotlex]
 	struct event_data *event[UCHAR_MAX];
 	const char *event_name[UCHAR_MAX];
 	uint8 event_count;
 } script_event[NPCE_MAX];
 
+/**
+ * Returns the viewdata for normal npc classes.
+ * @param class_ The NPC class ID.
+ * @return The viewdata, or NULL if the ID is invalid.
+ */
 struct view_data* npc_get_viewdata(int class_)
 {
-	//Returns the viewdata for normal npc classes.
-	if( class_ == INVISIBLE_CLASS )
+	if (class_ == INVISIBLE_CLASS)
 		return &npc_viewdb[0];
-	if (npc->db_checkid(class_) || class_ == WARP_CLASS){
-		if( class_ > MAX_NPC_CLASS2_START ){
-			return &npc_viewdb2[class_-MAX_NPC_CLASS2_START];
-		}else{
+	if (npc->db_checkid(class_) || class_ == WARP_CLASS) {
+		if (class_ < MAX_NPC_CLASS2_START) {
 			return &npc_viewdb[class_];
+		} else {
+			return &npc_viewdb2[class_-MAX_NPC_CLASS2_START];
 		}
 	}
 	return NULL;

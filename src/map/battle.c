@@ -3872,7 +3872,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 			short tdef = status->get_total_def(target);
 			short tmdef =  status->get_total_mdef(target);
 			int targetVit = min(120, status_get_vit(target));
-			short totaldef = (tmdef + tdef - ((uint64)(tmdef + tdef) >> 32)) >> 1;
+			short totaldef = (tmdef + tdef - ((uint64)(tmdef + tdef) >> 32)) >> 1; // FIXME: What's the >> 32 supposed to do here? tmdef and tdef are both 16-bit...
 
 			matk = battle->calc_magic_attack(src, target, skill_id, skill_lv, mflag).damage;
 			atk = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, false, s_ele, ELE_NEUTRAL, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), md.flag);
@@ -3979,7 +3979,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	case RA_CLUSTERBOMB:
 	case RA_FIRINGTRAP:
 	case RA_ICEBOUNDTRAP:
-		md.damage = skill_lv * sstatus->dex + sstatus->int_ * 5 ;
+		md.damage = (int64)skill_lv * sstatus->dex + sstatus->int_ * 5 ;
 		RE_LVL_TMDMOD();
 		if(sd)
 		{
@@ -3993,7 +3993,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 
 		break;
 	case WM_SOUND_OF_DESTRUCTION:
-		md.damage = 1000 * skill_lv + sstatus->int_ * (sd ? pc->checkskill(sd,WM_LESSON) : 10);
+		md.damage = 1000 * (int64)skill_lv + sstatus->int_ * (sd ? pc->checkskill(sd,WM_LESSON) : 10);
 		md.damage += md.damage * 10 * battle->calc_chorusbonus(sd) / 100;
 		break;
 	/**
@@ -4356,6 +4356,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			case NJ_SYURIKEN:
 			case KO_BAKURETSU:
 				flag.distinct = 1;
+				/* Fall through */
 			case NJ_KUNAI:
 			case HW_MAGICCRASHER:
 				flag.tdef = 1;
@@ -5035,7 +5036,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				}
 				break;
 			case SR_FALLENEMPIRE:// [(Target Size value + Skill Level - 1) x Caster STR] + [(Target current weight x Caster DEX / 120)]
-				ATK_ADD( ((tstatus->size+1)*2 + skill_lv - 1) * sstatus->str);
+				ATK_ADD( ((tstatus->size+1)*2 + (int64)skill_lv - 1) * sstatus->str);
 				if( tsd && tsd->weight ){
 					ATK_ADD( (tsd->weight/10) * sstatus->dex / 120 );
 				}else{

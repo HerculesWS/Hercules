@@ -482,7 +482,7 @@ void channel_irc_join(struct map_session_data *sd)
 	struct channel_data *chan = ircbot->channel;
 	if (sd->state.autotrade || sd->state.standalone)
 		return;
-	if (!channel->config->irc_name)
+	if (channel->config->irc_name[0] == '\0')
 		return;
 	if (chan)
 		channel->join(chan, sd, NULL, false);
