@@ -204,6 +204,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef MAP_PC_H
 		{ "autotrade_vending", sizeof(struct autotrade_vending), SERVER_TYPE_MAP },
 		{ "item_cd", sizeof(struct item_cd), SERVER_TYPE_MAP },
+		{ "s_addeffect", sizeof(struct s_addeffect), SERVER_TYPE_MAP },
 	#else
 		#define MAP_PC_H
 	#endif // MAP_PC_H
