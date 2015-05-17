@@ -17892,11 +17892,9 @@ int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick)
 		}
 
 		if( i != cd->cursor ) {/* duplicate, update necessary */
-			/* Switch if the stored tick is larger than the new one */
-			if (cd->entry[i]->duration > tick)
-				tick = cd->entry[i]->duration;
-			else
-				cd->entry[i]->duration = tick;
+			if(cd->entry[i]->duration > tick)
+				return;
+			cd->entry[i]->duration = tick;
 #if PACKETVER >= 20120604
 			cd->entry[i]->total = tick;
 #endif
