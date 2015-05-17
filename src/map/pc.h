@@ -90,10 +90,14 @@ struct s_autospell {
 	short id, lv, rate, card_id, flag;
 	bool lock;  // bAutoSpellOnSkill: blocks autospell from triggering again, while being executed
 };
+/// AddEff bonus data
 struct s_addeffect {
-	enum sc_type id;
-	short rate, arrow_rate;
-	unsigned char flag;
+	enum sc_type id;  ///< Effect ID
+	int16 rate;       ///< Base success rate
+	int16 arrow_rate; ///< Success rate modifier for ranged attacks (adds to the base rate)
+	uint8 flag;       ///< Trigger flag (@see enum auto_trigger_flag)
+	uint16 duration;  ///< Optional, non-reducible duration in ms. If 0, the default, reducible effect's duration is used.
+	// TODO[Haru]: Duration is only used in addeff (set through bonus4 bAddEff). The other addeffect types could also use it.
 };
 struct s_addeffectonskill {
 	enum sc_type id;
@@ -990,7 +994,7 @@ struct pc_interface {
 	void (*check_skilltree) (struct map_session_data *sd, int skill_id);
 	int (*bonus_autospell) (struct s_autospell *spell, int max, short id, short lv, short rate, short flag, short card_id);
 	int (*bonus_autospell_onskill) (struct s_autospell *spell, int max, short src_skill, short id, short lv, short rate, short card_id);
-	int (*bonus_addeff) (struct s_addeffect* effect, int max, enum sc_type id, short rate, short arrow_rate, unsigned char flag);
+	int (*bonus_addeff) (struct s_addeffect* effect, int max, enum sc_type id, int16 rate, int16 arrow_rate, uint8 flag, uint16 duration);
 	int (*bonus_addeff_onskill) (struct s_addeffectonskill* effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target);
 	int (*bonus_item_drop) (struct s_add_drop *drop, const short max, short id, short group, int race, int rate);
 	void (*calcexp) (struct map_session_data *sd, unsigned int *base_exp, unsigned int *job_exp, struct block_list *src);

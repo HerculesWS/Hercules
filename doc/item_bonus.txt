@@ -102,6 +102,15 @@ bonus bHealPower,n;             Increase heal amount of all heal skills by n%
 bonus bHealPower2,n;            Increase heal amount if you are healed by any skills by n%
 bonus2 bAddEff,e,x;             Adds a x/100 chance to cause effect e to the target when attacking (e.g. x=100 makes 1% chance, x=10000 makes 100% chance, etc)
 					e:	Eff_Blind, Eff_Sleep, Eff_Poison, Eff_Freeze, Eff_Silence, Eff_Stun, Eff_Curse, Eff_Confusion, Eff_Stone, Eff_Bleeding
+bonus3 bAddEff,n,x,y;           See bonus2 bAddEff.
+					y is the trigger criteria:
+						ATF_SELF: Trigger effect on self.
+						ATF_TARGET: Trigger effect on target (default)
+						ATF_SHORT: Trigger on melee attacks
+						ATF_LONG: Trigger in ranged attacks (default: trigger on all attacks)
+bonus4 bAddEff,n,x,y,t;         See bonus3 bAddEff.
+					d is the effect duration in milliseconds. Valid range is 0 ~ 65535. If set and greater than 0,
+						the effect can't be avoided nor its duration reduced.
 bonus2 bResEff,e,x;             Adds a x/100 tolerance to effect e (e.g. x=100 makes 1% tolerance, x=10000 makes 100% tolerance, etc)
 					e:	Eff_Blind, Eff_Sleep, Eff_Poison, Eff_Freeze, Eff_Silence, Eff_Stun, Eff_Curse, Eff_Confusion, Eff_Stone, Eff_Bleeding
 bonus2 bCastrate,n,x;           Adjust casting time of skill n by x% (supports skill names)
@@ -269,13 +278,6 @@ bonus2 bSPGainRace,n,x;         When killing a monster of race n by physical att
 bonus2 bSubRace2,n,x;           Damage x% reduction from enemies of race n (Check db/(Pre-Re)RE/mob_race2_db.txt)
 
 bonus bAddMonsterDropChainItem,n;     Able to get item of chain type n (only constant applicable) when you kill a monster (Check db/(pre-)re/item_group.conf)
-
-bonus3 bAddEff,n,x,y;     Adds a x/100 chance to cause effect n to the target when attacking (e.g. x=100 makes 1% chance, x=10000 makes 100% chance, etc).
-					y is the trigger criteria:
-						ATF_SELF: Trigger effect on self.
-						ATF_TARGET: Trigger effect on target (default)
-						ATF_SHORT: Trigger on melee attacks
-						ATF_LONG: Trigger in ranged attacks (default: trigger on all attacks)
 
 bonus3 bAddEffWhenHit,n,x,y;		x/100 chance to cause n state to the enemy when being hit by physical damage.
 					y is the trigger criteria:

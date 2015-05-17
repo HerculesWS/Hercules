@@ -132,7 +132,7 @@ int pet_target_check(struct map_session_data *sd,struct block_list *bl,int type)
 
 	pd = sd->pd;
 	
-	Assert((pd->msd == 0) || (pd->msd->pd == pd));
+	Assert_ret(pd->msd == 0 || pd->msd->pd == pd);
 
 	if( bl == NULL || bl->type != BL_MOB || bl->prev == NULL
 	 || pd->pet.intimate < battle_config.pet_support_min_friendly
@@ -318,8 +318,7 @@ int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 	int i=0,interval=0;
 
 	nullpo_retr(1, sd);
-
-	Assert((sd->status.pet_id == 0 || sd->pd == 0) || sd->pd->msd == sd);
+	Assert_retr(1, sd->status.pet_id == 0 || sd->pd == 0 || sd->pd->msd == sd);
 
 	if(sd->status.account_id != petinfo->account_id || sd->status.char_id != petinfo->char_id) {
 		sd->status.pet_id = 0;
@@ -389,8 +388,7 @@ int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 int pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo)
 {
 	nullpo_retr(1, sd);
-
-	Assert((sd->status.pet_id == 0 || sd->pd == 0) || sd->pd->msd == sd);
+	Assert_retr(1, sd->status.pet_id == 0 || sd->pd == 0 || sd->pd->msd == sd);
 
 	if(sd->status.pet_id && petinfo->incubate == 1) {
 		sd->status.pet_id = 0;
@@ -418,7 +416,7 @@ int pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo)
 		clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
 		clif->send_petstatus(sd);
 	}
-	Assert((sd->status.pet_id == 0 || sd->pd == 0) || sd->pd->msd == sd);
+	Assert_retr(1, sd->status.pet_id == 0 || sd->pd == 0 || sd->pd->msd == sd);
 
 	return 0;
 }
@@ -781,10 +779,10 @@ int pet_food(struct map_session_data *sd, struct pet_data *pd) {
 	return 0;
 }
 
-int pet_randomwalk(struct pet_data *pd, int64 tick) {
+int pet_randomwalk(struct pet_data *pd, int64 tick)
+{
 	nullpo_ret(pd);
-
-	Assert((pd->msd == 0) || (pd->msd->pd == pd));
+	Assert_ret(pd->msd == 0 || pd->msd->pd == pd);
 
 	if (DIFF_TICK(pd->next_walktime,tick) < 0 && unit->can_move(&pd->bl)) {
 		const int retrycount=20;

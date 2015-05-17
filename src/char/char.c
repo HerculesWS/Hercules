@@ -1147,7 +1147,7 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	struct s_friend tmp_friend;
 #ifdef HOTKEY_SAVING
 	struct hotkey tmp_hotkey;
-	int hotkey_num;
+	int hotkey_num = 0;
 #endif
 	unsigned int opt;
 	int account_id;

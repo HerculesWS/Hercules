@@ -8368,7 +8368,7 @@ mid_camp,66,122,55	script	Henry Clifford	4_M_05,{
 }
 
 mid_camp,88,100,55	script	Cat Hand Mining Agent	4_CAT,{
-	if (!questprogress(12062,PLAYTIME) == -1) {
+	if (!questprogress(12062,PLAYTIME)) {
 		if ((countitem(6048) > 2) && (ep13_yong1 > 9)) {
 			mes "[Cat Hand Mining Agent]";
 			mes "Oh, wow~";

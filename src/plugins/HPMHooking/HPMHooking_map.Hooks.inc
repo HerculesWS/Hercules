@@ -52440,15 +52440,15 @@ int HP_pc_bonus_autospell_onskill(struct s_autospell *spell, int max, short src_
 	}
 	return retVal___;
 }
-int HP_pc_bonus_addeff(struct s_addeffect *effect, int max, enum sc_type id, short rate, short arrow_rate, unsigned char flag) {
+int HP_pc_bonus_addeff(struct s_addeffect *effect, int max, enum sc_type id, int16 rate, int16 arrow_rate, uint8 flag, uint16 duration) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_bonus_addeff_pre ) {
-		int (*preHookFunc) (struct s_addeffect *effect, int *max, enum sc_type *id, short *rate, short *arrow_rate, unsigned char *flag);
+		int (*preHookFunc) (struct s_addeffect *effect, int *max, enum sc_type *id, int16 *rate, int16 *arrow_rate, uint8 *flag, uint16 *duration);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus_addeff_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_bonus_addeff_pre[hIndex].func;
-			retVal___ = preHookFunc(effect, &max, &id, &rate, &arrow_rate, &flag);
+			retVal___ = preHookFunc(effect, &max, &id, &rate, &arrow_rate, &flag, &duration);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -52456,13 +52456,13 @@ int HP_pc_bonus_addeff(struct s_addeffect *effect, int max, enum sc_type id, sho
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.bonus_addeff(effect, max, id, rate, arrow_rate, flag);
+		retVal___ = HPMHooks.source.pc.bonus_addeff(effect, max, id, rate, arrow_rate, flag, duration);
 	}
 	if( HPMHooks.count.HP_pc_bonus_addeff_post ) {
-		int (*postHookFunc) (int retVal___, struct s_addeffect *effect, int *max, enum sc_type *id, short *rate, short *arrow_rate, unsigned char *flag);
+		int (*postHookFunc) (int retVal___, struct s_addeffect *effect, int *max, enum sc_type *id, int16 *rate, int16 *arrow_rate, uint8 *flag, uint16 *duration);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus_addeff_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_bonus_addeff_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, effect, &max, &id, &rate, &arrow_rate, &flag);
+			retVal___ = postHookFunc(retVal___, effect, &max, &id, &rate, &arrow_rate, &flag, &duration);
 		}
 	}
 	return retVal___;

@@ -406,7 +406,7 @@ unsigned int calc_hash_ci(const char* p) {
 /// Looks up string using the provided id.
 const char* script_get_str(int id)
 {
-	Assert( id >= LABEL_START && id < script->str_size );
+	Assert_retr(NULL, id >= LABEL_START && id < script->str_size);
 	return script->str_buf+script->str_data[id].str;
 }
 
@@ -462,7 +462,7 @@ const char *script_casecheck_add_str_sub(struct casecheck_data *ccd, const char 
 		int i;
 		for (i = ccd->str_hash[h]; ; i = ccd->str_data[i].next) {
 			const char *s = NULL;
-			Assert( i >= 0 && i < ccd->str_size );
+			Assert_retb(i >= 0 && i < ccd->str_size);
 			s = ccd->str_buf+ccd->str_data[i].str;
 			if (strcasecmp(s,p) == 0) {
 				return s; // string already in list
@@ -8105,6 +8105,23 @@ BUILDIN(strnpcinfo) {
 	return true;
 }
 
+/**
+ * charid2rid: Returns the RID associated to the given character ID
+ */
+BUILDIN(charid2rid)
+{
+	int cid = script_getnum(st, 2);
+	TBL_PC *sd = map->charid2sd(cid);
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	script_pushint(st, sd->status.account_id);
+	return true;
+}
+
 /*==========================================
  * GetEquipID(Pos);     Pos: 1-SCRIPT_EQUIP_TABLE_SIZE
  *------------------------------------------*/
@@ -15476,8 +15493,18 @@ BUILDIN(compare)
 	return true;
 }
 
-// [zBuffer] List of mathematics commands --->
-BUILDIN(sqrt)
+// List of mathematics commands --->
+
+BUILDIN(log10)
+{
+	double i, a;
+	i = script_getnum(st,2);
+	a = log10(i);
+	script_pushint(st,(int)a);
+	return true;
+}
+
+BUILDIN(sqrt) //[zBuffer]
 {
 	double i, a;
 	i = script_getnum(st,2);
@@ -15486,7 +15513,7 @@ BUILDIN(sqrt)
 	return true;
 }
 
-BUILDIN(pow)
+BUILDIN(pow) //[zBuffer]
 {
 	double i, a, b;
 	a = script_getnum(st,2);
@@ -15496,7 +15523,7 @@ BUILDIN(pow)
 	return true;
 }
 
-BUILDIN(distance)
+BUILDIN(distance) //[zBuffer]
 {
 	int x0, y0, x1, y1;
 
@@ -15509,7 +15536,7 @@ BUILDIN(distance)
 	return true;
 }
 
-// <--- [zBuffer] List of mathematics commands
+// <--- List of mathematics commands
 
 BUILDIN(min)
 {
@@ -19817,6 +19844,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getguildmember,"i?"),
 		BUILDIN_DEF(strcharinfo,"i"),
 		BUILDIN_DEF(strnpcinfo,"i"),
+		BUILDIN_DEF(charid2rid,"i"),
 		BUILDIN_DEF(getequipid,"i"),
 		BUILDIN_DEF(getequipname,"i"),
 		BUILDIN_DEF(getbrokenid,"i"), // [Valaris]
@@ -20052,11 +20080,12 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getiteminfo,"ii"), //[Lupus] returns Items Buy / sell Price, etc info
 		BUILDIN_DEF(setiteminfo,"iii"), //[Lupus] set Items Buy / sell Price, etc info
 		BUILDIN_DEF(getequipcardid,"ii"), //[Lupus] returns CARD ID or other info from CARD slot N of equipped item
-		// [zBuffer] List of mathematics commands --->
-		BUILDIN_DEF(sqrt,"i"),
-		BUILDIN_DEF(pow,"ii"),
-		BUILDIN_DEF(distance,"iiii"),
-		// <--- [zBuffer] List of mathematics commands
+		// List of mathematics commands --->
+		BUILDIN_DEF(log10,"i"),
+		BUILDIN_DEF(sqrt,"i"), //[zBuffer]
+		BUILDIN_DEF(pow,"ii"), //[zBuffer]
+		BUILDIN_DEF(distance,"iiii"), //[zBuffer]
+		// <--- List of mathematics commands
 		BUILDIN_DEF(min, "i*"),
 		BUILDIN_DEF(max, "i*"),
 		BUILDIN_DEF(md5,"s"),

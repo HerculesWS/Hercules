@@ -645,6 +645,7 @@ static int grfio_entryread(const char *grfname, int gentry)
 		aFree(rBuf);
 
 		entrys = getlong(grf_header+0x26) - 7;
+		Assert_retr(4, entrys >= 0);
 
 		// Get an entry
 		for (entry = 0, ofs = 0; entry < entrys; ++entry) {
