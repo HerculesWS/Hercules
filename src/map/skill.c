@@ -18959,16 +18959,7 @@ void skill_readdb(bool minimal) {
 
 	/* when != it was called during init and this procedure was already performed by skill_defaults()  */
 	if( runflag == MAPSERVER_ST_RUNNING ) {
-		memset(skill->db,0,sizeof(skill->db)
-			   + sizeof(skill->produce_db)
-			   + sizeof(skill->arrow_db)
-			   + sizeof(skill->abra_db)
-			   + sizeof(skill->magicmushroom_db)
-			   + sizeof(skill->improvise_db)
-			   + sizeof(skill->changematerial_db)
-			   + sizeof(skill->spellbook_db)
-			   + sizeof(skill->reproduce_db)
-			   );
+		memset(ZEROED_BLOCK_POS(skill), 0, ZEROED_BLOCK_SIZE(skill));
 	}
 
 	// load skill databases
@@ -19107,18 +19098,10 @@ void skill_defaults(void) {
 	skill->timer_ers = NULL;
 	skill->cd_ers = NULL;
 	skill->cd_entry_ers = NULL;
-	/* one huge 0, follows skill.h order */
-	memset(skill->db,0,sizeof(skill->db)
-		   + sizeof(skill->produce_db)
-		   + sizeof(skill->arrow_db)
-		   + sizeof(skill->abra_db)
-		   + sizeof(skill->magicmushroom_db)
-		   + sizeof(skill->improvise_db)
-		   + sizeof(skill->changematerial_db)
-		   + sizeof(skill->spellbook_db)
-		   + sizeof(skill->reproduce_db)
-		   + sizeof(skill->unit_layout)
-		   );
+
+	memset(ZEROED_BLOCK_POS(skill), 0, ZEROED_BLOCK_SIZE(skill));
+	memset(skill->unit_layout, 0, sizeof(skill->unit_layout));
+
 	/* */
 	memcpy(skill->enchant_eff, skill_enchant_eff, sizeof(skill->enchant_eff));
 	memcpy(skill->deluge_eff, skill_deluge_eff, sizeof(skill->deluge_eff));

@@ -59,9 +59,7 @@ enum equip_index {
 };
 struct weapon_data {
 	int atkmods[3];
-	// all the variables except atkmods get zero'ed in each call of status_calc_pc
-	// NOTE: if you want to add a non-zeroed variable, you need to update the memset call
-	//  in status_calc_pc as well! All the following are automatically zero'ed. [Skotlex]
+BEGIN_ZEROED_BLOCK; // all the variables within this block get zero'ed in each call of status_calc_pc
 	int overrefine;
 	int star;
 	int ignore_def_ele;
@@ -85,6 +83,7 @@ struct weapon_data {
 		short flag, rate;
 		unsigned char ele;
 	} addele2[MAX_PC_BONUS];
+END_ZEROED_BLOCK;
 };
 struct s_autospell {
 	short id, lv, rate, card_id, flag;
@@ -264,7 +263,8 @@ struct map_session_data {
 	short weapontype1,weapontype2;
 	short disguise; // [Valaris]
 	struct weapon_data right_weapon, left_weapon;
-	// here start arrays to be globally zeroed at the beginning of status_calc_pc()
+
+BEGIN_ZEROED_BLOCK; // this block will be globally zeroed at the beginning of status_calc_pc()
 	int param_bonus[6],param_equip[6]; //Stores card/equipment bonuses.
 	int subele[ELE_MAX];
 	int subrace[RC_MAX];
@@ -292,8 +292,6 @@ struct map_session_data {
 #ifdef RENEWAL
 	int race_tolerance[RC_MAX];
 #endif
-	// zeroed arrays end here.
-	// zeroed structures start here
 	struct s_autospell autospell[15], autospell2[15], autospell3[15];
 	struct s_addeffect addeff[MAX_PC_BONUS], addeff2[MAX_PC_BONUS];
 	struct s_addeffectonskill addeff3[MAX_PC_BONUS];
@@ -322,11 +320,6 @@ struct map_session_data {
 		short value;
 		int rate, tick;
 	} def_set_race[RC_MAX], mdef_set_race[RC_MAX];
-	// zeroed structures end here
-	// manually zeroed structures start here.
-	struct s_autobonus autobonus[MAX_PC_BONUS], autobonus2[MAX_PC_BONUS], autobonus3[MAX_PC_BONUS]; //Auto script on attack, when attacked, on skill usage
-	// manually zeroed structures end here.
-	// zeroed vars start here.
 	struct {
 		int atk_rate;
 		int arrow_atk,arrow_ele,arrow_cri,arrow_hit;
@@ -363,7 +356,11 @@ struct map_session_data {
 		int add_fixcast,add_varcast;
 		int ematk; // matk bonus from equipment
 	} bonus;
-	// zeroed vars end here.
+END_ZEROED_BLOCK;
+
+	// The following structures are zeroed manually in status_calc_pc_
+	struct s_autobonus autobonus[MAX_PC_BONUS], autobonus2[MAX_PC_BONUS], autobonus3[MAX_PC_BONUS]; //Auto script on attack, when attacked, on skill usage
+
 	int castrate,delayrate,hprate,sprate,dsprate;
 	int hprecov_rate,sprecov_rate;
 	int matk_rate;
@@ -753,17 +750,20 @@ struct pc_interface {
 	int day_timer_tid;
 	int night_timer_tid;
 	/* */
+
+BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when status_defaults() is executed */
 	unsigned int exp_table[CLASS_COUNT][2][MAX_LEVEL];
 	unsigned int max_level[CLASS_COUNT][2];
 	unsigned int statp[MAX_LEVEL+1];
 	unsigned int level_penalty[3][RC_MAX][MAX_LEVEL*2+1];
-
-	unsigned int equip_pos[EQI_MAX];
 	/* */
 	struct skill_tree_entry skill_tree[CLASS_COUNT][MAX_SKILL_TREE];
 	struct fame_list smith_fame_list[MAX_FAME_LIST];
 	struct fame_list chemist_fame_list[MAX_FAME_LIST];
 	struct fame_list taekwon_fame_list[MAX_FAME_LIST];
+END_ZEROED_BLOCK; /* End */
+
+	unsigned int equip_pos[EQI_MAX];
 	struct sg_data sg_info[MAX_PC_FEELHATE];
 	/* */
 	struct eri *sc_display_ers;

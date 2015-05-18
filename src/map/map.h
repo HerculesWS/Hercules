@@ -896,15 +896,15 @@ struct map_interface {
 	DBMap* regen_db;  // int id -> struct block_list* (status_natural_heal processing)
 	DBMap* zone_db;   // string => struct map_zone_data
 	DBMap* iwall_db;
-	/* order respected by map_defaults() in order to zero */
-	/* from block_free until zone_pk */
 	struct block_list **block_free;
 	int block_free_count, block_free_lock, block_free_list_size;
 	struct block_list **bl_list;
 	int bl_list_count, bl_list_size;
+BEGIN_ZEROED_BLOCK; // This block is zeroed in map_defaults()
 	struct block_list bl_head;
 	struct map_zone_data zone_all;/* used as a base on all maps */
 	struct map_zone_data zone_pk;/* used for (pk_mode) */
+END_ZEROED_BLOCK;
 	/* */
 	struct map_session_data *cpsd;
 	struct map_data *list;

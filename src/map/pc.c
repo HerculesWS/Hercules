@@ -11047,16 +11047,10 @@ void pc_defaults(void) {
 	/* */
 	pc->day_timer_tid = INVALID_TIMER;
 	pc->night_timer_tid = INVALID_TIMER;
-	/* respecting order */
-	memset(pc->exp_table, 0, sizeof(pc->exp_table)
-		   + sizeof(pc->max_level)
-		   + sizeof(pc->statp)
-		   + sizeof(pc->level_penalty)
-		   + sizeof(pc->skill_tree)
-		   + sizeof(pc->smith_fame_list)
-		   + sizeof(pc->chemist_fame_list)
-		   + sizeof(pc->taekwon_fame_list)
-		   );
+
+	// These macros are used instead of a sum of sizeof(), to ensure that padding won't interfere with our size, and code won't rot when adding more fields
+	memset(ZEROED_BLOCK_POS(pc), 0, ZEROED_BLOCK_SIZE(pc));
+
 	/* */
 	memcpy(pc->equip_pos, &equip_pos, sizeof(pc->equip_pos));
 	/* */

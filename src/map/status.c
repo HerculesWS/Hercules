@@ -2181,40 +2181,11 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	sd->def_rate = sd->def2_rate = sd->mdef_rate = sd->mdef2_rate = 100;
 	sd->regen.state.block = 0;
 
-	// zeroed arrays, order follows the order in pc.h.
-	// add new arrays to the end of zeroed area in pc.h (see comments) and size here. [zzo]
-	memset (sd->param_bonus, 0, sizeof(sd->param_bonus)
-		+ sizeof(sd->param_equip)
-		+ sizeof(sd->subele)
-		+ sizeof(sd->subrace)
-		+ sizeof(sd->subrace2)
-		+ sizeof(sd->subsize)
-		+ sizeof(sd->reseff)
-		+ sizeof(sd->weapon_coma_ele)
-		+ sizeof(sd->weapon_coma_race)
-		+ sizeof(sd->weapon_atk)
-		+ sizeof(sd->weapon_atk_rate)
-		+ sizeof(sd->arrow_addele)
-		+ sizeof(sd->arrow_addrace)
-		+ sizeof(sd->arrow_addsize)
-		+ sizeof(sd->magic_addele)
-		+ sizeof(sd->magic_addrace)
-		+ sizeof(sd->magic_addsize)
-		+ sizeof(sd->magic_atk_ele)
-		+ sizeof(sd->critaddrace)
-		+ sizeof(sd->expaddrace)
-		+ sizeof(sd->ignore_mdef)
-		+ sizeof(sd->ignore_def)
-		+ sizeof(sd->sp_gain_race)
-		+ sizeof(sd->sp_gain_race_attack)
-		+ sizeof(sd->hp_gain_race_attack)
-#ifdef RENEWAL
-		+ sizeof(sd->race_tolerance)
-#endif
-		);
+	// zeroed arrays
+	memset(ZEROED_BLOCK_POS(sd), 0, ZEROED_BLOCK_SIZE(sd));
 
-	memset (&sd->right_weapon.overrefine, 0, sizeof(sd->right_weapon) - sizeof(sd->right_weapon.atkmods));
-	memset (&sd->left_weapon.overrefine, 0, sizeof(sd->left_weapon) - sizeof(sd->left_weapon.atkmods));
+	memset(ZEROED_BLOCK_POS(&(sd->right_weapon)), 0, ZEROED_BLOCK_SIZE(&(sd->right_weapon)));
+	memset(ZEROED_BLOCK_POS(&(sd->left_weapon)), 0, ZEROED_BLOCK_SIZE(&(sd->left_weapon)));
 
 	if (sd->special_state.intravision && !sd->sc.data[SC_CLAIRVOYANCE]) //Clear intravision as long as nothing else is using it
 		clif->sc_end(&sd->bl,sd->bl.id,SELF,SI_CLAIRVOYANCE);
@@ -2247,40 +2218,6 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	bstatus->aspd_rate = 1000;
 	bstatus->ele_lv = 1;
 	bstatus->race = RC_DEMIHUMAN;
-
-	//zero up structures...
-	memset(&sd->autospell,0,sizeof(sd->autospell)
-		+ sizeof(sd->autospell2)
-		+ sizeof(sd->autospell3)
-		+ sizeof(sd->addeff)
-		+ sizeof(sd->addeff2)
-		+ sizeof(sd->addeff3)
-		+ sizeof(sd->skillatk)
-		+ sizeof(sd->skillusesprate)
-		+ sizeof(sd->skillusesp)
-		+ sizeof(sd->skillheal)
-		+ sizeof(sd->skillheal2)
-		+ sizeof(sd->hp_loss)
-		+ sizeof(sd->sp_loss)
-		+ sizeof(sd->hp_regen)
-		+ sizeof(sd->sp_regen)
-		+ sizeof(sd->skillblown)
-		+ sizeof(sd->skillcast)
-		+ sizeof(sd->add_def)
-		+ sizeof(sd->add_mdef)
-		+ sizeof(sd->add_mdmg)
-		+ sizeof(sd->add_drop)
-		+ sizeof(sd->itemhealrate)
-		+ sizeof(sd->subele2)
-		+ sizeof(sd->skillcooldown)
-		+ sizeof(sd->skillfixcast)
-		+ sizeof(sd->skillvarcast)
-		+ sizeof(sd->skillfixcastrate)
-		+ sizeof(sd->def_set_race)
-		+ sizeof(sd->mdef_set_race)
-		);
-
-	memset (&sd->bonus, 0,sizeof(sd->bonus));
 
 	// Autobonus
 	pc->delautobonus(sd,sd->autobonus,ARRAYLENGTH(sd->autobonus),true);
@@ -12427,21 +12364,8 @@ void status_defaults(void) {
 	status->current_equip_item_index = 0; //Contains inventory index of an equipped item. To pass it into the EQUP_SCRIPT [Lupus]
 	status->current_equip_card_id = 0;    //To prevent card-stacking (from jA) [Skotlex]
 
-	memset(status->max_weight_base,0,sizeof(status->max_weight_base)
-		   + sizeof(status->HP_table)
-		   + sizeof(status->SP_table)
-		   + sizeof(status->aspd_base)
-		   + sizeof(status->Skill2SCTable)
-		   + sizeof(status->IconChangeTable)
-		   + sizeof(status->ChangeFlagTable)
-		   + sizeof(status->SkillChangeTable)
-		   + sizeof(status->RelevantBLTypes)
-		   + sizeof(status->DisplayType)
-		   + sizeof(status->refine_info)
-		   + sizeof(status->atkmods)
-		   + sizeof(status->job_bonus)
-		   + sizeof(status->sc_conf)
-		   );
+	// These macros are used instead of a sum of sizeof(), to ensure that padding won't interfere with our size, and code won't rot when adding more fields
+	memset(ZEROED_BLOCK_POS(status), 0, ZEROED_BLOCK_SIZE(status));
 
 	status->data_ers = NULL;
 	memset(&status->dummy, 0, sizeof(status->dummy));

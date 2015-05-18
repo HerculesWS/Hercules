@@ -1980,7 +1980,8 @@ struct status_interface {
 	/* vars */
 	int current_equip_item_index;
 	int current_equip_card_id;
-	/* */
+
+BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when status_defaults() is executed */
 	int max_weight_base[CLASS_COUNT];
 	int HP_table[CLASS_COUNT][MAX_LEVEL + 1];
 	int SP_table[CLASS_COUNT][MAX_LEVEL + 1];
@@ -1997,6 +1998,8 @@ struct status_interface {
 	int atkmods[3][MAX_WEAPON_TYPE];//ATK weapon modification for size (size_fix.txt)
 	char job_bonus[CLASS_COUNT][MAX_LEVEL];
 	sc_conf_type sc_conf[SC_MAX];
+END_ZEROED_BLOCK; /* End */
+
 	struct eri *data_ers; //For sc_data entries
 	struct status_data dummy;
 	int64 natural_heal_prev_tick;
