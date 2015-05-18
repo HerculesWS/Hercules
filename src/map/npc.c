@@ -74,25 +74,40 @@ static struct script_event_s {
  * @param class_ The NPC class ID.
  * @return The viewdata, or NULL if the ID is invalid.
  */
-struct view_data* npc_get_viewdata(int class_)
+struct view_data *npc_get_viewdata(int class_)
 {
 	if (class_ == INVISIBLE_CLASS)
 		return &npc_viewdb[0];
-	if (npc->db_checkid(class_) || class_ == WARP_CLASS) {
-		if (class_ < MAX_NPC_CLASS2_START) {
+	if (npc->db_checkid(class_)) {
+		if (class_ < MAX_NPC_CLASS) {
 			return &npc_viewdb[class_];
-		} else {
+		} else if (class_ >= MAX_NPC_CLASS2_START && class_ < MAX_NPC_CLASS2_END) {
 			return &npc_viewdb2[class_-MAX_NPC_CLASS2_START];
 		}
 	}
 	return NULL;
 }
 
-//Checks if a given id is a valid npc id. [Skotlex]
-//Since new npcs are added all the time, the max valid value is the one before the first mob (Scorpion = 1001)
+/**
+ * Checks if a given id is a valid npc id.
+ *
+ * Since new npcs are added all the time, the max valid value is the one before the first mob (Scorpion = 1001)
+ *
+ * @param id The NPC ID to validate.
+ * @return Whether the value is a valid ID.
+ */
 bool npc_db_checkid(int id)
 {
-    return ((id >= 46 && id <= 125) || id == HIDDEN_WARP_CLASS || (id > 400 && id < MAX_NPC_CLASS) || id == INVISIBLE_CLASS || (id > MAX_NPC_CLASS2_START && id < MAX_NPC_CLASS2_END));
+	if (id >= WARP_CLASS && id <= 125) // First subrange
+		return true;
+	if (id == HIDDEN_WARP_CLASS || id == INVISIBLE_CLASS) // Special IDs not included in the valid ranges
+		return true;
+	if (id > 400 && id < MAX_NPC_CLASS) // Second subrange
+		return true;
+	if (id >= MAX_NPC_CLASS2_START && id < MAX_NPC_CLASS2_END) // Second range
+		return true;
+	// Anything else is invalid
+	return false;
 }
 
 /// Returns a new npc id that isn't being used in id_db.
