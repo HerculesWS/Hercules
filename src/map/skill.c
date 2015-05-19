@@ -2320,9 +2320,8 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 	if( damage && sc && sc->data[SC_GENSOU] && dmg.flag&BF_MAGIC ){
 		struct block_list *nbl;
 		nbl = battle->get_enemy_area(bl,bl->x,bl->y,2,BL_CHAR,bl->id);
-		if( nbl ){ // Only one target is chosen.
-			int temp = (int)(damage / (float)(10 / skill_lv));
-			clif->skill_damage(bl, nbl, tick, status_get_amotion(src), 0, status_fix_damage(bl,nbl,temp,0), 1, OB_OBOROGENSOU_TRANSITION_ATK, -1, 6);
+		if (nbl) { // Only one target is chosen.
+			clif->skill_damage(bl, nbl, tick, status_get_amotion(src), 0, status_fix_damage(bl,nbl,damage * skill_lv / 10,0), 1, OB_OBOROGENSOU_TRANSITION_ATK, -1, 6);
 		}
 	}
 

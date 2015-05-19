@@ -17288,7 +17288,9 @@ BUILDIN(waitingroom2bg) {
 		return true;
 	}
 
+	Assert_retr(false, cd->users < MAX_CHAT_USERS);
 	n = cd->users; // This is always < MAX_CHAT_USERS
+
 	for (i = 0; i < n && i < MAX_BG_MEMBERS; i++) {
 		struct map_session_data *sd = cd->usersd[i];
 		if (sd != NULL && bg->team_join(bg_id, sd))

@@ -3815,13 +3815,14 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 	}
 	else if (!strcmpi(w3,"battleground")) {
 		struct map_zone_data *zone;
-		if( state ) {
-			if( sscanf(w4, "%d", &state) == 1 )
+		if (state) {
+			if (w4 && sscanf(w4, "%d", &state) == 1)
 				map->list[m].flag.battleground = state;
 			else
 				map->list[m].flag.battleground = 1; // Default value
-		} else
+		} else {
 			map->list[m].flag.battleground = 0;
+		}
 
 		if( map->list[m].flag.battleground && map->list[m].flag.pvp ) {
 			map->list[m].flag.pvp = 0;
