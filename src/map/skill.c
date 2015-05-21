@@ -699,7 +699,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 				if (sd->addeff[i].duration > 0) {
 					// Fixed duration
 					temp = sd->addeff[i].duration;
-					flag = SCFLAG_NOAVOID;
+					flag = SCFLAG_FIXEDRATE|SCFLAG_FIXEDTICK;
 				} else {
 					// Default duration
 					temp = skill->get_time2(status->sc2skill(type),7);
