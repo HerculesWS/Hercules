@@ -11,6 +11,7 @@
 1421:2133,{ bonus2 bAddRace,RC_NonBoss,4; bonus2 bAddRace,RC_Boss,4; bonus bDef,2; }
 1422:2133,{ bonus2 bAddRace,RC_NonBoss,4; bonus2 bAddRace,RC_Boss,4; bonus bDef,2; }
 1428:2115,{ bonus3 bAutoSpellWhenHit,"HP_ASSUMPTIO",2,5; }
+1433:2153:18823:28372,{ bonus2 bSkillUseSP,CR_GRANDCROSS,30; bonus2 bSkillUseSP,LG_SHIELDPRESS,5; bonus2 bSkillUseSP,LG_BANISHINGPOINT,15; bonus2 bSkillUseSP,LG_CANNONSPEAR,10; }
 1433:2153,{ bonus2 bSkillAtk,"CR_GRANDCROSS",10; bonus2 bSkillAtk,"LG_RAYOFGENESIS",10; }
 1472:2677,{ bonus bMatkRate,6; bonus bDex,2; bonus bVariableCastrate,-getequiprefinerycnt(EQI_HAND_R); }
 1472:2711,{ bonus bMatkRate,6; bonus bDex,2; bonus bVariableCastrate,-getequiprefinerycnt(EQI_HAND_R); }
@@ -71,6 +72,8 @@
 2124:2702,{ bonus bAspdRate,10; bonus bShortWeaponDamageReturn,5; }
 2135:2426,{ bonus2 bAddEff,Eff_Blind,500; autobonus "{ bonus bFlee,20; }",200,10000,BF_WEAPON,"{ specialeffect2 EF_INCAGILITY; }"; }
 2137:2353:5124,{ bonus bDef,2-getequiprefinerycnt(EQI_HAND_L)-getequiprefinerycnt(EQI_HEAD_TOP); bonus bMdef,5+getequiprefinerycnt(EQI_HAND_L)+getequiprefinerycnt(EQI_HEAD_TOP); }
+2153:28372,{ if(getequiprefinerycnt(EQI_HAND_L)>5) { bonus2 bSkillAtk,LG_SHIELDPRESS,(getequiprefinerycnt(EQI_HAND_L)*8)-40; } }
+1433:28372,{ bonus2 bSkillAtk,LG_CANNONSPEAR,7*(getrefine()/2); }
 2169:2491:2590:15051,{ bonus bMaxHPrate,20; bonus bMaxSPrate,10; }
 2171:15053,{ bonus bAgi,2; }
 2171:15056,{ bonus bAgi,2; }
@@ -207,6 +210,7 @@
 13034:13035,{ bonus bMaxSP,20; bonus bMaxHPrate,5; bonus bHit,10; bonus2 bAddSize,Size_Large,30; autobonus "{ bonus bAspdRate,100; }",1,7000,BF_WEAPON,"{ specialeffect2 EF_POTION_BERSERK; }"; }
 13035:28704,{ bonus bMaxSP,20; bonus bMaxHPrate,5; bonus bHit,10; bonus2 bAddSize,Size_Large,30; autobonus "{ bonus bAspdRate,100; }",1,7000,BF_WEAPON,"{ specialeffect2 EF_POTION_BERSERK; }"; }
 18507:18539,{ bonus bUseSPrate,-3; }
+18823:28372,{ bonus2 bSkillVariableCast,CR_GRANDCROSS,-2000; bonus2 bSkillUseSP,LG_RAYOFGENESIS,10; bonus2 bSkillAtk,CR_GRANDCROSS,BaseLevel; bonus2 bSkillAtk,LG_RAYOFGENESIS,BaseLevel/30; }
 18823:2153:1433,{ bonus2 bSkillAtk,LG_CANNONSPEAR,20; bonus2 bSkillAtk,LG_BANISHINGPOINT,20; bonus2 bSkillAtk,LG_SHIELDPRESS,20; }
 15090:18820:20721:22033,{ bonus2 bSubEle,Ele_Neutral,15; bonus3 bAutoSpellWhenHit,"WL_DRAINLIFE",3,100; }
 15091:18820:20721:22033,{ bonus2 bSubEle,Ele_Neutral,15; bonus bMaxHPrate,25; bonus bMaxSPrate,25; bonus bMatkRate,10; }
