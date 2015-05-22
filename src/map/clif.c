@@ -1524,15 +1524,17 @@ void clif_homskillinfoblock(struct map_session_data *sd) {
 		int id = hd->homunculus.hskill[i].id;
 		if (id != 0) {
 			j = id - HM_SKILLBASE;
-			WFIFOW(fd,len  ) = id;
-			WFIFOW(fd,len+2) = skill->get_inf(id);
-			WFIFOW(fd,len+4) = 0;
-			WFIFOW(fd,len+6) = hd->homunculus.hskill[j].lv;
-			WFIFOW(fd,len+8) = skill->get_sp(id,hd->homunculus.hskill[j].lv);
-			WFIFOW(fd,len+10)= skill->get_range2(&sd->hd->bl, id,hd->homunculus.hskill[j].lv);
-			safestrncpy((char*)WFIFOP(fd,len+12), skill->get_name(id), NAME_LENGTH);
-			WFIFOB(fd,len+36) = (hd->homunculus.hskill[j].lv < homun->skill_tree_get_max(id, hd->homunculus.class_))?1:0;
-			len+=37;
+			if ( hd->homunculus.hskill[j].lv ) {
+				WFIFOW(fd, len) = id;
+				WFIFOW(fd, len + 2) = skill->get_inf(id);
+				WFIFOW(fd, len + 4) = 0;
+				WFIFOW(fd, len + 6) = hd->homunculus.hskill[j].lv;
+				WFIFOW(fd, len + 8) = skill->get_sp(id, hd->homunculus.hskill[j].lv);
+				WFIFOW(fd, len + 10) = skill->get_range2(&sd->hd->bl, id, hd->homunculus.hskill[j].lv);
+				safestrncpy((char*)WFIFOP(fd, len + 12), skill->get_name(id), NAME_LENGTH);
+				WFIFOB(fd, len + 36) = (hd->homunculus.hskill[j].lv < homun->skill_tree_get_max(id, hd->homunculus.class_)) ? 1 : 0;
+				len += 37;
+			}
 		}
 	}
 	WFIFOW(fd,2)=len;
