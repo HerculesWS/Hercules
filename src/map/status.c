@@ -3081,6 +3081,8 @@ int status_calc_homunculus_(struct homun_data *hd, enum e_status_calc_opt opt) {
 	hstatus->aspd_rate = 1000;
 
 #ifdef RENEWAL
+	hstatus->def = 0;
+
 	amotion = hd->homunculusDB->baseASPD;
 	amotion = amotion - amotion * (hstatus->dex + hom->dex_value) / 1000 - (hstatus->agi + hom->agi_value) * amotion / 250;
 #else
@@ -3094,7 +3096,6 @@ int status_calc_homunculus_(struct homun_data *hd, enum e_status_calc_opt opt) {
 
 	hstatus->amotion = cap_value(amotion, battle_config.max_aspd, 2000);
 	hstatus->adelay = hstatus->amotion; //It seems adelay = amotion for Homunculus.
-
 
 	hstatus->max_hp = hom->max_hp;
 	hstatus->max_sp = hom->max_sp;
@@ -4048,7 +4049,7 @@ void status_calc_misc(struct block_list *bl, struct status_data *st, int level) 
 	if ( bl->type == BL_HOM ) {
 		st->def2 = status_get_homvit(bl) + status_get_homagi(bl) / 2;
 		st->mdef2 = (status_get_homvit(bl) + status_get_homint(bl)) / 2;
-		st->def += status_get_homvit(bl) + level / 2;
+		st->def += status_get_homvit(bl) + level / 2; // Increase. Already initialized in status_calc_homunculus_
 		st->mdef = (int)(((float)status_get_homvit(bl) + level) / 4 + (float)status_get_homint(bl) / 2);
 		st->hit = level + st->dex + 150;
 		st->flee = level + status_get_homagi(bl);
