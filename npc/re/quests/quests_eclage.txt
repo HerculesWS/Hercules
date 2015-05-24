@@ -65,7 +65,7 @@ ecl_fild01,118,311,4	script	Teleport Cat No.1#1	4_M_BOSSCAT,{
 	end;
 	
 OnInit:
-	setarray .maps$,"bif_fild02","ecl_fild01","spl_fild02","mid_camp","ma_fild02","dic_fild01";	//Map Names	//2,4,8,16,32,64
+	setarray .maps$,"bif_fild02","ecl_fild01","spl_fild02","mid_camp","man_fild02","dic_fild01";	//Map Names	//2,4,8,16,32,64
 	setarray .x,291,116,51,180,133,159;	//X-Co-ordinate of Maps
 	setarray .y,323,309,240,247,47,264;	//Y-Co-ordinates of Map
 	setarray .descript$,"Entrace to Mora","Near Eclage","Near Splendide","Midgard Allied Forces Post","Manuk Field","Near El Dicastes";

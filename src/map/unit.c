@@ -1354,18 +1354,21 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 		}
 	}
 
-	if (sd || src->type == BL_HOM){
-		if (!sd && (target = battle->get_master(src)))
-			sd = map->id2sd(target->id);
-		if (sd){
-			/* temporarily disabled, awaiting for kenpachi to detail this so we can make it work properly */
+	if (src->type == BL_HOM) {
+		// In case of homunuculus, set the sd to the homunculus' master, as needed below
+		struct block_list *master = battle->get_master(src);
+		if (master)
+			sd = map->id2sd(master->id);
+	}
+
+	if (sd) {
+		/* temporarily disabled, awaiting for kenpachi to detail this so we can make it work properly */
 #if 0
-			if (sd->skillitem != skill_id && !skill->check_condition_castbegin(sd, skill_id, skill_lv))
+		if (sd->skillitem != skill_id && !skill->check_condition_castbegin(sd, skill_id, skill_lv))
 #else
-			if (!skill->check_condition_castbegin(sd, skill_id, skill_lv))
+		if (!skill->check_condition_castbegin(sd, skill_id, skill_lv))
 #endif
-				return 0;
-		}
+			return 0;
 	}
 
 	if( src->type == BL_MOB )

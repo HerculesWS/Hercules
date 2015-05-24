@@ -6140,10 +6140,7 @@ void map_defaults(void) {
 	map->bl_list_size = 0;
 	
 	//all in a big chunk, respects order
-	memset(&map->bl_head,0,sizeof(map->bl_head)
-		   + sizeof(map->zone_all)
-		   + sizeof(map->zone_pk)
-		   );
+	memset(ZEROED_BLOCK_POS(map), 0, ZEROED_BLOCK_SIZE(map));
 	
 	map->cpsd = NULL;
 	map->list = NULL;

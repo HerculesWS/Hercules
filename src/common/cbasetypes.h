@@ -419,4 +419,10 @@ typedef char bool;
 	#define h64BPTRSIZE(y) (y)
 #endif
 
+/** Support macros for marking blocks to memset to 0 */
+#define BEGIN_ZEROED_BLOCK int8 HERC__zeroed_block_BEGIN
+#define END_ZEROED_BLOCK int8 HERC__zeroed_block_END
+#define ZEROED_BLOCK_POS(x) (&(x)->HERC__zeroed_block_BEGIN)
+#define ZEROED_BLOCK_SIZE(x) ((char*)&((x)->HERC__zeroed_block_END) - (char*)&((x)->HERC__zeroed_block_BEGIN) + sizeof((x)->HERC__zeroed_block_END))
+
 #endif /* COMMON_CBASETYPES_H */

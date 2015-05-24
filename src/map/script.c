@@ -17288,7 +17288,9 @@ BUILDIN(waitingroom2bg) {
 		return true;
 	}
 
+	Assert_retr(false, cd->users < MAX_CHAT_USERS);
 	n = cd->users; // This is always < MAX_CHAT_USERS
+
 	for (i = 0; i < n && i < MAX_BG_MEMBERS; i++) {
 		struct map_session_data *sd = cd->usersd[i];
 		if (sd != NULL && bg->team_join(bg_id, sd))
@@ -18195,7 +18197,7 @@ BUILDIN(setcashmount)
 	if ((sd = script->rid2sd(st)) == NULL)
 		return true;
 	if (pc_hasmount(sd)) {
-		clif->msgtable(sd->fd, 0X78b);
+		clif->msgtable(sd, MSG_REINS_CANT_USE_MOUNTED);
 		script_pushint(st,0);//can't mount with one of these
 	} else {
 		if (sd->sc.data[SC_ALL_RIDING])
