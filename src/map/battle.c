@@ -3368,7 +3368,7 @@ void battle_consume_ammo(TBL_PC*sd, int skill_id, int lv) {
 	if (!battle_config.arrow_decrement)
 		return;
 
-	if (skill_id) {
+	if (skill_id && lv) {
 		qty = skill->get_ammo_qty(skill_id, lv);
 		if (!qty) qty = 1;
 	}
