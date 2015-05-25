@@ -3833,9 +3833,16 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 				if( dir > 2 && dir < 6 ) y = -i;
 				else if( dir == 7 || dir < 2 ) y = i;
 				else y = 0;
-				if( (mbl == src || (!map_flag_gvg2(src->m) && !map->list[src->m].flag.battleground) ) // only NJ_ISSEN don't have slide effect in GVG
-				 && unit->movepos(src, mbl->x+x, mbl->y+y, 1, 1)
-				) {
+				if ((mbl == src || (!map_flag_gvg2(src->m) && !map->list[src->m].flag.battleground))) { // only NJ_ISSEN don't have slide effect in GVG
+					if (!(unit->movepos(src, mbl->x+x, mbl->y+y, 1, 1))) {
+						// The cell is not reachable (wall, object, ...), move next to the target
+						if (x > 0) x = -1;
+						else if (x < 0) x = 1;
+						if (y > 0) y = -1;
+						else if (y < 0) y = 1;
+
+						unit->movepos(src, bl->x+x, bl->y+y, 1, 1);
+					}
 					clif->slide(src, src->x, src->y);
 					clif->fixpos(src);
 					clif->spiritball(src);
