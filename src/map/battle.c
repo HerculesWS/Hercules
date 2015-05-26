@@ -2788,6 +2788,8 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 					group->val2 -= (int)cap_value(damage,INT_MIN,INT_MAX);
 				} else
 					skill->del_unitgroup(group,ALC_MARK);
+				if (--group->val3<=0)
+					skill->del_unitgroup(group,ALC_MARK);
 			#else
 				if (--group->val2<=0)
 					skill->del_unitgroup(group,ALC_MARK);

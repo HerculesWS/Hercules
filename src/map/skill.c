@@ -11078,6 +11078,7 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 			 * According to data provided in RE, SW life is equal to 3 times caster's health
 			 **/
 			val2 = status_get_max_hp(src) * 3;
+			val3 = skill_lv+1;
 		#else
 			val2 = skill_lv+1;
 		#endif
@@ -11789,7 +11790,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 	struct skill_unit_group *sg;
 	struct block_list *ss;
 	TBL_PC* tsd;
-	struct status_data *tstatus;
+	struct status_data *tstatus, *bst;
 	struct status_change *tsc, *ssc;
 	struct skill_unit_group_tickset *ts;
 	enum sc_type type;
@@ -11813,6 +11814,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 		return 0;
 
 	tstatus = status->get_status_data(bl);
+	bst = status->get_base_status(bl);
 	type = status->skill2sc(sg->skill_id);
 	skill_id = sg->skill_id;
 
@@ -12463,7 +12465,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			if (tsc && (tsc->data[SC_HALLUCINATIONWALK] || tsc->data[SC_VACUUM_EXTREME])) {
 				return 0;
 			} else {
-				sg->limit -= 100 * tstatus->str/20;
+				sg->limit -= 1000 * bst->str/20;
 				sc_start(ss, bl, SC_VACUUM_EXTREME, 100, sg->skill_lv, sg->limit);
 
 				if ( !map_flag_gvg(bl->m) && !map->list[bl->m].flag.battleground && !is_boss(bl) ) {
