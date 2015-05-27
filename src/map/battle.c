@@ -4343,6 +4343,10 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				if( tsc && (tsc->data[SC_WUGBITE] || tsc->data[SC_ANKLESNARE] || tsc->data[SC_ELECTRICSHOCKER]) )
 					wd.div_ = tstatus->size + 2 + ( (rnd()%100 < 50-tstatus->size*10) ? 1 : 0 );
 				break;
+
+			case NPC_EARTHQUAKE:
+				wd.flag = (wd.flag&~(BF_WEAPON)) | BF_MAGIC;
+				break;
 #ifdef RENEWAL
 			case MO_EXTREMITYFIST:
 			case GS_PIERCINGSHOT:
