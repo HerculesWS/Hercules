@@ -11979,8 +11979,6 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 				break;
 				default:
 					skill->attack(skill->get_type(sg->skill_id),ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick,0);
-					if ( sg->interval == skill->get_time(sg->skill_id, sg->skill_lv) )
-						sg->unit_id = UNT_USED_TRAPS; // remove unit once it does its job once.
 			}
 			break;
 
@@ -15956,7 +15954,8 @@ struct skill_unit *skill_initunit (struct skill_unit_group *group, int idx, int 
 	su->group=group;
 	su->alive=1;
 	su->val1=val1;
-	su->val2=val2;
+	su->val2 = val2;
+	su->prev = 0;
 
 	idb_put(skill->unit_db, su->bl.id, su);
 	map->addiddb(&su->bl);
@@ -16550,7 +16549,7 @@ int skill_unit_timer_sub(DBKey key, DBData *data, va_list ap) {
 
 	dissonance = skill->dance_switch(su, 0);
 
-	if( su->range >= 0 && group->interval != -1 ) {
+	if( su->range >= 0 && group->interval != -1 && su->bl.id != su->prev) {
 		if( battle_config.skill_wall_check )
 			map->foreachinshootrange(skill->unit_timer_sub_onplace, bl, su->range, group->bl_flag, bl,tick);
 		else
@@ -16566,6 +16565,8 @@ int skill_unit_timer_sub(DBKey key, DBData *data, va_list ap) {
 				group->bl_flag= BL_NUL;
 			}
 		}
+		if ( group->limit == group->interval )
+			su->prev = su->bl.id;
 	}
 
 	if( dissonance ) skill->dance_switch(su, 1);

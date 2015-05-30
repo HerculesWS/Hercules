@@ -1732,6 +1732,7 @@ struct skill_unit {
 	int limit;
 	int val1,val2;
 	short alive,range;
+	int prev;
 };
 
 struct skill_unit_group_tickset {
