@@ -51662,6 +51662,33 @@ int HP_pc_delspiritball(struct map_session_data *sd, int count, int type) {
 	}
 	return retVal___;
 }
+int HP_pc_getmaxspiritball(struct map_session_data *sd, int min) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_pc_getmaxspiritball_pre ) {
+		int (*preHookFunc) (struct map_session_data *sd, int *min);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_getmaxspiritball_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_getmaxspiritball_pre[hIndex].func;
+			retVal___ = preHookFunc(sd, &min);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.getmaxspiritball(sd, min);
+	}
+	if( HPMHooks.count.HP_pc_getmaxspiritball_post ) {
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int *min);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_getmaxspiritball_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_getmaxspiritball_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, &min);
+		}
+	}
+	return retVal___;
+}
 void HP_pc_addfame(struct map_session_data *sd, int count) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_pc_addfame_pre ) {

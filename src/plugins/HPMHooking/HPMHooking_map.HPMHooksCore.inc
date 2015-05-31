@@ -3861,6 +3861,8 @@ struct {
 	struct HPMHookPoint *HP_pc_addspiritball_post;
 	struct HPMHookPoint *HP_pc_delspiritball_pre;
 	struct HPMHookPoint *HP_pc_delspiritball_post;
+	struct HPMHookPoint *HP_pc_getmaxspiritball_pre;
+	struct HPMHookPoint *HP_pc_getmaxspiritball_post;
 	struct HPMHookPoint *HP_pc_addfame_pre;
 	struct HPMHookPoint *HP_pc_addfame_post;
 	struct HPMHookPoint *HP_pc_famerank_pre;
@@ -9066,6 +9068,8 @@ struct {
 	int HP_pc_addspiritball_post;
 	int HP_pc_delspiritball_pre;
 	int HP_pc_delspiritball_post;
+	int HP_pc_getmaxspiritball_pre;
+	int HP_pc_getmaxspiritball_post;
 	int HP_pc_addfame_pre;
 	int HP_pc_addfame_post;
 	int HP_pc_famerank_pre;

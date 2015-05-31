@@ -1962,6 +1962,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->delinvincibletimer, HP_pc_delinvincibletimer) },
 	{ HP_POP(pc->addspiritball, HP_pc_addspiritball) },
 	{ HP_POP(pc->delspiritball, HP_pc_delspiritball) },
+	{ HP_POP(pc->getmaxspiritball, HP_pc_getmaxspiritball) },
 	{ HP_POP(pc->addfame, HP_pc_addfame) },
 	{ HP_POP(pc->famerank, HP_pc_famerank) },
 	{ HP_POP(pc->set_hate_mob, HP_pc_set_hate_mob) },
