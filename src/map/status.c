@@ -8806,6 +8806,9 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				else
 					val2 = val2 / 4 * val1; // STAT DEF increase: [(Caster VIT / 4) x Skill Level]
 				break;
+			case SC_GENTLETOUCH_ENERGYGAIN:
+				val2 = 10 + 5 * val1;
+				break;
 			case SC_PYROTECHNIC_OPTION:
 				val2 = 60;
 				break;
@@ -10127,15 +10130,11 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 				map->foreachinrange(status->change_timer_sub, bl, battle_config.area_size,BL_CHAR, bl, sce, SC_CURSEDCIRCLE_TARGET, timer->gettick());
 			break;
 		case SC_RAISINGDRAGON:
-			if( sd && sce->val2 && !pc_isdead(sd) ) {
+			if ( sd && sce->val2 && !pc_isdead(sd) ) {
 				int i;
-				i = min(sd->spiritball,5);
-				pc->delspiritball(sd, sd->spiritball, 0);
+				if ( (i = (sd->spiritball - 5)) > 0 )
+					pc->delspiritball(sd, i, 0);
 				status_change_end(bl, SC_EXPLOSIONSPIRITS, INVALID_TIMER);
-				while( i > 0 ) {
-					pc->addspiritball(sd, skill->get_time(MO_CALLSPIRITS, pc->checkskill(sd,MO_CALLSPIRITS)), 5);
-					--i;
-				}
 			}
 			break;
 		case SC_CURSEDCIRCLE_TARGET:

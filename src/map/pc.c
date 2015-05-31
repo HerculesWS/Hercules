@@ -174,6 +174,24 @@ int pc_spiritball_timer(int tid, int64 tick, int id, intptr_t data) {
 	return 0;
 }
 
+/**
+* Get the possible number of spiritball that a player can call.
+* @param sd the affected player structure
+* @param min the minimum number of spiritball regardless the level of MO_CALLSPIRITS
+* @retval total number of spiritball
+**/
+int pc_getmaxspiritball(struct map_session_data *sd, int min) {
+	nullpo_ret(sd);
+	int result = pc->checkskill(sd, MO_CALLSPIRITS);
+	if ( min && result < min )
+		result = min;
+	else if ( sd->sc.data[SC_RAISINGDRAGON] )
+		result += sd->sc.data[SC_RAISINGDRAGON]->val1;
+	if ( result > MAX_SPIRITBALL )
+		result = MAX_SPIRITBALL;
+	return result;
+}
+
 int pc_addspiritball(struct map_session_data *sd,int interval,int max)
 {
 	int tid, i;
@@ -11247,6 +11265,7 @@ void pc_defaults(void) {
 	pc->addfame = pc_addfame;
 	pc->famerank = pc_famerank;
 	pc->set_hate_mob = pc_set_hate_mob;
+	pc->getmaxspiritball = pc_getmaxspiritball;
 	
 	pc->readdb = pc_readdb;
 	pc->map_day_timer = map_day_timer; // by [yor]

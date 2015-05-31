@@ -3161,28 +3161,31 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 
 		if( sc->data[SC__DEADLYINFECT] && flag&BF_SHORT && damage > 0 && rnd()%100 < 30 + 10 * sc->data[SC__DEADLYINFECT]->val1 && !is_boss(src) )
 			status->change_spread(bl, src); // Deadly infect attacked side
+
+		if ( sd && damage > 0 && (sce = sc->data[SC_GENTLETOUCH_ENERGYGAIN]) ) {
+			if ( rnd() % 100 < sce->val2 )
+				pc->addspiritball(sd, skill->get_time(MO_CALLSPIRITS, 1), pc->getmaxspiritball(sd, 0));
+		}
 	}
 
 	//SC effects from caster side.
-	sc = status->get_sc(src);
-
-	if (sc && sc->count) {
-		if( sc->data[SC_INVINCIBLE] && !sc->data[SC_INVINCIBLEOFF] )
+	if (tsc && tsc->count) {
+		if( tsc->data[SC_INVINCIBLE] && !tsc->data[SC_INVINCIBLEOFF] )
 			damage += damage * 75 / 100;
 		// [Epoque]
 		if (bl->type == BL_MOB) {
 			int i;
 
-			if ( ((sce=sc->data[SC_MANU_ATK]) && (flag&BF_WEAPON)) ||
-				 ((sce=sc->data[SC_MANU_MATK]) && (flag&BF_MAGIC))
+			if ( ((sce=tsc->data[SC_MANU_ATK]) && (flag&BF_WEAPON)) ||
+				 ((sce=tsc->data[SC_MANU_MATK]) && (flag&BF_MAGIC))
 				)
 				for (i=0;ARRAYLENGTH(mob->manuk)>i;i++)
 					if (((TBL_MOB*)bl)->class_==mob->manuk[i]) {
 						damage += damage * sce->val1 / 100;
 						break;
 					}
-			if ( ((sce=sc->data[SC_SPL_ATK]) && (flag&BF_WEAPON)) ||
-				 ((sce=sc->data[SC_SPL_MATK]) && (flag&BF_MAGIC))
+			if ( ((sce=tsc->data[SC_SPL_ATK]) && (flag&BF_WEAPON)) ||
+				 ((sce=tsc->data[SC_SPL_MATK]) && (flag&BF_MAGIC))
 				)
 				for (i=0;ARRAYLENGTH(mob->splendide)>i;i++)
 					if (((TBL_MOB*)bl)->class_==mob->splendide[i]) {
@@ -3199,13 +3202,18 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 				sc_start(src,bl,tsc->data[SC_POISONINGWEAPON]->val2,rate,tsc->data[SC_POISONINGWEAPON]->val1,skill->get_time2(GC_POISONINGWEAPON,1) - (tstatus->vit + tstatus->luk) / 2 * 1000);
 			}
 		}
-		if( sc->data[SC__DEADLYINFECT] && flag&BF_SHORT && damage > 0 && rnd()%100 < 30 + 10 * sc->data[SC__DEADLYINFECT]->val1 && !is_boss(src) )
+		if( tsc->data[SC__DEADLYINFECT] && flag&BF_SHORT && damage > 0 && rnd()%100 < 30 + 10 * tsc->data[SC__DEADLYINFECT]->val1 && !is_boss(src) )
 			status->change_spread(src, bl);
-		if (sc->data[SC_SHIELDSPELL_REF] && sc->data[SC_SHIELDSPELL_REF]->val1 == 1 && damage > 0)
+		if (tsc->data[SC_SHIELDSPELL_REF] && tsc->data[SC_SHIELDSPELL_REF]->val1 == 1 && damage > 0)
 			skill->break_equip(bl,EQP_ARMOR,10000,BCT_ENEMY );
-		if (sc->data[SC_STYLE_CHANGE] && rnd()%2) {
+		if (tsc->data[SC_STYLE_CHANGE] && rnd()%2) {
 			TBL_HOM *hd = BL_CAST(BL_HOM,bl);
 			if (hd) homun->addspiritball(hd, 10);
+		}
+		if ( src->type == BL_PC && damage > 0 && (sce = tsc->data[SC_GENTLETOUCH_ENERGYGAIN]) ) {
+			struct map_session_data *tsd = (struct map_session_data *)src;
+			if ( tsd && rnd() % 100 < sce->val2 )
+				pc->addspiritball(tsd, skill->get_time(MO_CALLSPIRITS, 1), pc->getmaxspiritball(tsd, 0));
 		}
 	}
 	/* no data claims these settings affect anything other than players */
@@ -6019,18 +6027,6 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 			if( skill->attack(BF_MAGIC,src,src,target,NPC_MAGICALATTACK,sc->data[SC_MAGICALATTACK]->val1,tick,0) )
 				return ATK_DEF;
 			return ATK_MISS;
-		}
-		if( sc->data[SC_GENTLETOUCH_ENERGYGAIN] ) {
-			if( sd && rnd()%100 < 10 + 5 * sc->data[SC_GENTLETOUCH_ENERGYGAIN]->val1)
-				pc->addspiritball(sd,
-								 skill->get_time(MO_CALLSPIRITS, sc->data[SC_GENTLETOUCH_ENERGYGAIN]->val1),
-								 sc->data[SC_GENTLETOUCH_ENERGYGAIN]->val1);
-		}
-		if( tsc && tsc->data[SC_GENTLETOUCH_ENERGYGAIN] ) {
-			if( tsd && rnd()%100 < 10 + 5 * tsc->data[SC_GENTLETOUCH_ENERGYGAIN]->val1)
-				pc->addspiritball(tsd,
-								 skill->get_time(MO_CALLSPIRITS, tsc->data[SC_GENTLETOUCH_ENERGYGAIN]->val1),
-								 tsc->data[SC_GENTLETOUCH_ENERGYGAIN]->val1);
 		}
 
 		if( tsc && tsc->data[SC_MTF_MLEATKED] && rnd()%100 < 20 )

@@ -6133,22 +6133,17 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 		case MO_CALLSPIRITS:
 			if(sd) {
-				int limit = skill_lv;
-				if( sd->sc.data[SC_RAISINGDRAGON] )
-					limit += sd->sc.data[SC_RAISINGDRAGON]->val1;
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-				pc->addspiritball(sd,skill->get_time(skill_id,skill_lv),limit);
+				pc->addspiritball(sd, skill->get_time(skill_id, skill_lv), pc->getmaxspiritball(sd, 0));
 			}
 			break;
 
 		case CH_SOULCOLLECT:
 			if(sd) {
-				int limit = 5, i;
-				if( sd->sc.data[SC_RAISINGDRAGON] )
-					limit += sd->sc.data[SC_RAISINGDRAGON]->val1;
+				int i, limit = pc->getmaxspiritball(sd, 5);
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-				for (i = 0; i < limit; i++)
-					pc->addspiritball(sd,skill->get_time(skill_id,skill_lv),limit);
+				for ( i = 0; i < limit; i++ )
+					pc->addspiritball(sd, skill->get_time(skill_id, skill_lv), limit);
 			}
 			break;
 
@@ -9010,13 +9005,14 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 
 		case SR_RAISINGDRAGON:
-			if( sd ) {
-				short max = 5 + skill_lv;
-				int i;
+			if ( sd ) {
+				int i, max;
 				sc_start(src, bl, SC_EXPLOSIONSPIRITS, 100, skill_lv, skill->get_time(skill_id, skill_lv));
-				for( i = 0; i < max; i++ ) // Don't call more than max available spheres.
-					pc->addspiritball(sd, skill->get_time(skill_id, skill_lv), max);
-				clif->skill_nodamage(src, bl, skill_id, skill_lv, sc_start(src, bl, type, 100, skill_lv,skill->get_time(skill_id, skill_lv)));
+				clif->skill_nodamage(src, bl, skill_id, skill_lv, 
+					sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv)));
+				max = pc->getmaxspiritball(sd, 0);
+				for ( i = 0; i < max; i++ )
+					pc->addspiritball(sd, skill->get_time(MO_CALLSPIRITS, skill_lv), max);
 			}
 			break;
 
@@ -9042,12 +9038,12 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case SR_POWERVELOCITY:
 			if( !dstsd )
 				break;
-			if( sd && dstsd->spiritball <= 5 ) {
-				int i;
-				for(i = 0; i <= 5; i++) {
-					pc->addspiritball(dstsd, skill->get_time(MO_CALLSPIRITS, pc->checkskill(sd,MO_CALLSPIRITS)), i);
-					pc->delspiritball(sd, sd->spiritball, 0);
+			if ( sd && (dstsd->class_&MAPID_BASEMASK) != MAPID_GUNSLINGER ) {
+				int i, max = pc->getmaxspiritball(dstsd, 5); 
+				for ( i = 0; i < max; i++ ) {
+					pc->addspiritball(dstsd, skill->get_time(MO_CALLSPIRITS, 1), max);
 				}
+				pc->delspiritball(sd, sd->spiritball, 0);
 			}
 			clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
 			break;
