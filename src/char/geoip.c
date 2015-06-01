@@ -6,13 +6,13 @@
 
 #include "geoip.h"
 
+#include "common/cbasetypes.h"
+#include "common/malloc.h"
+#include "common/showmsg.h"
+
 #include <errno.h>
 #include <stdio.h>
 #include <sys/stat.h> // for stat/lstat/fstat - [Dekamaster/Ultimate GM Tool]
-
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h"
-#include "../common/showmsg.h"
 
 struct s_geoip geoip_data;
 

@@ -3,27 +3,27 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // CONSOLE_INPUT
+#include "config/core.h" // CONSOLE_INPUT
 #include "HPM.h"
+
+#include "common/cbasetypes.h"
+#include "common/conf.h"
+#include "common/console.h"
+#include "common/core.h"
+#include "common/malloc.h"
+#include "common/mmo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/sql.h"
+#include "common/strlib.h"
+#include "common/sysinfo.h"
+#include "common/timer.h"
+#include "common/utils.h"
+#include "common/nullpo.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "../common/cbasetypes.h"
-#include "../common/conf.h"
-#include "../common/console.h"
-#include "../common/core.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/sql.h"
-#include "../common/strlib.h"
-#include "../common/sysinfo.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
-#include "../common/nullpo.h"
 
 #ifndef WIN32
 #	include <unistd.h>

@@ -4,7 +4,7 @@
 #ifndef CHAR_INT_MERCENARY_H
 #define CHAR_INT_MERCENARY_H
 
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
 
 struct mmo_charstatus;
 

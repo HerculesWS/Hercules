@@ -4,13 +4,13 @@
 #ifndef COMMON_CONSOLE_H
 #define COMMON_CONSOLE_H
 
-#include "../config/core.h" // MAX_CONSOLE_INPUT
+#include "config/core.h" // MAX_CONSOLE_INPUT
 
-#include "../common/cbasetypes.h"
-#include "../common/mutex.h"
-#include "../common/spinlock.h"
-#include "../common/sql.h"
-#include "../common/thread.h"
+#include "common/cbasetypes.h"
+#include "common/mutex.h"
+#include "common/spinlock.h"
+#include "common/sql.h"
+#include "common/thread.h"
 
 /**
  * Queue Max

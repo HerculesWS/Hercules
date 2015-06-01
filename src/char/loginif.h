@@ -5,7 +5,7 @@
 #ifndef CHAR_LOGINIF_H
 #define CHAR_LOGINIF_H
 
-#include "char.h"
+#include "char/char.h"
 
 /**
  * loginif interface

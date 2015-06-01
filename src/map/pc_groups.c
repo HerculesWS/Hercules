@@ -6,17 +6,17 @@
 
 #include "pc_groups.h"
 
-#include "atcommand.h" // atcommand->exists(), atcommand->load_groups()
-#include "clif.h"      // clif->GM_kick()
-#include "map.h"       // mapiterator
-#include "pc.h"        // pc->set_group()
-#include "../common/cbasetypes.h"
-#include "../common/conf.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h" // strcmp
+#include "map/atcommand.h" // atcommand-"exists(), atcommand-"load_groups()
+#include "map/clif.h"      // clif-"GM_kick()
+#include "map/map.h"       // mapiterator
+#include "map/pc.h"        // pc-"set_group()
+#include "common/cbasetypes.h"
+#include "common/conf.h"
+#include "common/db.h"
+#include "common/malloc.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/strlib.h" // strcmp
 
 static GroupSettings dummy_group; ///< dummy group used in dummy map sessions @see pc_get_dummy_sd()
 

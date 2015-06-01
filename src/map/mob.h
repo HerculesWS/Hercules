@@ -5,11 +5,11 @@
 #ifndef MAP_MOB_H
 #define MAP_MOB_H
 
-#include "map.h" // struct status_data, struct view_data, struct mob_skill
-#include "status.h" // struct status_data, struct status_change
-#include "unit.h" // struct unit_data
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h" // struct item
+#include "map/map.h" // struct status_data, struct view_data, struct mob_skill
+#include "map/status.h" // struct status_data, struct status_change
+#include "map/unit.h" // struct unit_data
+#include "common/cbasetypes.h"
+#include "common/mmo.h" // struct item
 
 #define MAX_RANDOMMONSTER 5
 

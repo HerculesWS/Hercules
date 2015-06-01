@@ -5,9 +5,9 @@
 #ifndef MAP_CHAT_H
 #define MAP_CHAT_H
 
-#include "map.h" // struct block_list, CHATROOM_TITLE_SIZE
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
+#include "map/map.h" // struct block_list, CHATROOM_TITLE_SIZE
+#include "common/cbasetypes.h"
+#include "common/db.h"
 
 struct chat_data;
 struct map_session_data;

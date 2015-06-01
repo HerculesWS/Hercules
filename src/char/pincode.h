@@ -5,7 +5,7 @@
 #ifndef CHAR_PINCODE_H
 #define CHAR_PINCODE_H
 
-#include "char.h"
+#include "char/char.h"
 
 enum PincodeResponseCode {
 	PINCODE_OK      = 0,

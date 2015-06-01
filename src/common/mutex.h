@@ -4,7 +4,7 @@
 #ifndef COMMON_MUTEX_H
 #define COMMON_MUTEX_H
 
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
 
 typedef struct ramutex ramutex; // Mutex
 typedef struct racond racond; // Condition Var

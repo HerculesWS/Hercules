@@ -6,21 +6,21 @@
 
 #include "log.h"
 
+#include "map/battle.h"
+#include "map/itemdb.h"
+#include "map/map.h"
+#include "map/mob.h"
+#include "map/pc.h"
+#include "common/cbasetypes.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/sql.h" // SQL_INNODB
+#include "common/strlib.h"
+#include "common/HPM.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "battle.h"
-#include "itemdb.h"
-#include "map.h"
-#include "mob.h"
-#include "pc.h"
-#include "../common/cbasetypes.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/sql.h" // SQL_INNODB
-#include "../common/strlib.h"
-#include "../common/HPM.h"
 
 struct log_interface log_s;
 

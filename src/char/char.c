@@ -4,8 +4,40 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // CONSOLE_INPUT
+#include "config/core.h" // CONSOLE_INPUT
 #include "char.h"
+
+#include "char/HPMchar.h"
+#include "char/geoip.h"
+#include "char/int_auction.h"
+#include "char/int_elemental.h"
+#include "char/int_guild.h"
+#include "char/int_homun.h"
+#include "char/int_mail.h"
+#include "char/int_mercenary.h"
+#include "char/int_party.h"
+#include "char/int_pet.h"
+#include "char/int_quest.h"
+#include "char/int_storage.h"
+#include "char/inter.h"
+#include "char/loginif.h"
+#include "char/mapif.h"
+#include "char/pincode.h"
+
+#include "common/HPM.h"
+#include "common/cbasetypes.h"
+#include "common/console.h"
+#include "common/core.h"
+#include "common/db.h"
+#include "common/malloc.h"
+#include "common/mapindex.h"
+#include "common/mmo.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+#include "common/utils.h"
 
 #include <signal.h>
 #include <stdarg.h>
@@ -14,40 +46,8 @@
 #include <string.h>
 #include <sys/types.h>
 #include <time.h>
-
-#include "HPMchar.h"
-#include "geoip.h"
-#include "int_auction.h"
-#include "int_elemental.h"
-#include "int_guild.h"
-#include "int_homun.h"
-#include "int_mail.h"
-#include "int_mercenary.h"
-#include "int_party.h"
-#include "int_pet.h"
-#include "int_quest.h"
-#include "int_storage.h"
-#include "inter.h"
-#include "loginif.h"
-#include "mapif.h"
-#include "pincode.h"
-#include "../common/HPM.h"
-#include "../common/cbasetypes.h"
-#include "../common/console.h"
-#include "../common/core.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/mapindex.h"
-#include "../common/mmo.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
-
 #ifndef WIN32
-	#include <unistd.h>
+#	include <unistd.h>
 #endif
 
 // private declarations

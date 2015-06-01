@@ -6,18 +6,18 @@
 
 #include "mapif.h"
 
-#include <stdlib.h>
+#include "char/char.h"
+#include "char/int_auction.h"
+#include "char/int_guild.h"
+#include "char/int_homun.h"
+#include "common/cbasetypes.h"
+#include "common/mmo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/strlib.h"
 
-#include "char.h"
-#include "int_auction.h"
-#include "int_homun.h"
-#include "int_guild.h"
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
+#include <stdlib.h>
 
 void mapif_ban(int id, unsigned int flag, int status);
 void mapif_server_init(int id);

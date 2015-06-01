@@ -5,15 +5,15 @@
 #ifndef MAP_SCRIPT_H
 #define MAP_SCRIPT_H
 
+#include "map/map.h" //EVENT_NAME_LENGTH
+#include "common/cbasetypes.h"
+#include "common/db.h"
+#include "common/mmo.h" // struct item
+#include "common/sql.h" // Sql
+#include "common/strlib.h" //StringBuf
+
 #include <errno.h>
 #include <setjmp.h>
-
-#include "map.h" //EVENT_NAME_LENGTH
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/mmo.h" // struct item
-#include "../common/sql.h" // Sql
-#include "../common/strlib.h" //StringBuf
 
 /**
  * Declarations

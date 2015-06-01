@@ -4,35 +4,35 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // GP_BOUND_ITEMS, RENEWAL_EXP
+#include "config/core.h" // GP_BOUND_ITEMS, RENEWAL_EXP
 #include "party.h"
+
+#include "map/atcommand.h" //msg_txt()
+#include "map/battle.h"
+#include "map/clif.h"
+#include "map/instance.h"
+#include "map/intif.h"
+#include "map/itemdb.h"
+#include "map/log.h"
+#include "map/map.h"
+#include "map/mob.h" // struct mob_data
+#include "map/pc.h"
+#include "map/skill.h"
+#include "map/status.h"
+#include "common/HPM.h"
+#include "common/cbasetypes.h"
+#include "common/malloc.h"
+#include "common/nullpo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+#include "common/socket.h" // last_tick
+#include "common/strlib.h"
+#include "common/timer.h"
+#include "common/utils.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "atcommand.h" //msg_txt()
-#include "battle.h"
-#include "clif.h"
-#include "instance.h"
-#include "intif.h"
-#include "itemdb.h"
-#include "log.h"
-#include "map.h"
-#include "mob.h" // struct mob_data
-#include "pc.h"
-#include "skill.h"
-#include "status.h"
-#include "../common/HPM.h"
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h" // last_tick
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
 
 struct party_interface party_s;
 

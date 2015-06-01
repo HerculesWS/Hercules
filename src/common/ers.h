@@ -40,7 +40,7 @@
 #ifndef COMMON_ERS_H
 #define COMMON_ERS_H
 
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
 
 /*****************************************************************************\
  *  (1) All public parts of the Entry Reusage System.                        *

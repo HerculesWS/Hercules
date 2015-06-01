@@ -5,13 +5,13 @@
 #ifndef MAP_CLIF_H
 #define MAP_CLIF_H
 
-#include <stdarg.h>
+#include "map/map.h"
+#include "map/packets_struct.h"
+#include "common/cbasetypes.h"
+#include "common/db.h"
+#include "common/mmo.h"
 
-#include "map.h"
-#include "packets_struct.h"
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/mmo.h"
+#include <stdarg.h>
 
 /**
  * Declarations

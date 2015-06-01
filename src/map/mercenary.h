@@ -4,9 +4,9 @@
 #ifndef MAP_MERCENARY_H
 #define MAP_MERCENARY_H
 
-#include "status.h" // struct status_data, struct status_change
-#include "unit.h" // struct unit_data
-#include "../common/cbasetypes.h"
+#include "map/status.h" // struct status_data, struct status_change
+#include "map/unit.h" // struct unit_data
+#include "common/cbasetypes.h"
 
 // number of cells that a mercenary can walk to from it's master before being warped
 #define MAX_MER_DISTANCE 15

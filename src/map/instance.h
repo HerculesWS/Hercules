@@ -5,9 +5,9 @@
 #ifndef MAP_INSTANCE_H
 #define MAP_INSTANCE_H
 
-#include "script.h" // struct reg_db
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h" // struct point
+#include "map/script.h" // struct reg_db
+#include "common/cbasetypes.h"
+#include "common/mmo.h" // struct point
 
 struct block_list;
 struct map_session_data;

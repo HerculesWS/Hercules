@@ -32,6 +32,9 @@ PLUGINS = sample db2sql HPMHooking_char HPMHooking_login HPMHooking_map $(MYPLUG
 
 COMMON_D = ../common
 COMMON_H = $(wildcard $(COMMON_D)/*.h)
+COMMON_INCLUDE = -I..
+
+THIRDPARTY_INCLUDE = -I../../3rdparty
 
 CONFIG_D = ../config
 CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
@@ -84,7 +87,7 @@ Makefile: Makefile.in
 
 ../../plugins/%@DLLEXT@: %.c $(ALL_H) $$(shell ls %/* 2>/dev/null)
 	@echo "	CC	$<"
-	@$(CC) @PLUGINSTATIC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o $@ $<
+	@$(CC) $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @PLUGINSTATIC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o $@ $<
 
 ../../plugins/HPMHooking_login@DLLEXT@: HPMHOOKINGTYPE = LOGIN
 ../../plugins/HPMHooking_char@DLLEXT@: HPMHOOKINGTYPE = CHAR
@@ -92,4 +95,4 @@ Makefile: Makefile.in
 
 ../../plugins/HPMHooking_%@DLLEXT@: HPMHooking.c $(ALL_H) $$(shell ls HPMHooking/*_%* HPMHooking/*_common* 2>/dev/null)
 	@echo "	CC	$< ($(HPMHOOKINGTYPE))"
-	@$(CC) -DHPMHOOKING_$(HPMHOOKINGTYPE) @PLUGINSTATIC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o $@ $<
+	@$(CC) -DHPMHOOKING_$(HPMHOOKINGTYPE) $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @PLUGINSTATIC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o $@ $<

@@ -5,11 +5,11 @@
 #ifndef MAP_CHRIF_H
 #define MAP_CHRIF_H
 
-#include <time.h>
+#include "map/map.h" //TBL_stuff
+#include "common/cbasetypes.h"
+#include "common/db.h"
 
-#include "map.h" //TBL_stuff
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
+#include <time.h>
 
 struct status_change_entry;
 

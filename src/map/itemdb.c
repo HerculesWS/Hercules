@@ -4,26 +4,26 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // DBPATH, RENEWAL
+#include "config/core.h" // DBPATH, RENEWAL
 #include "itemdb.h"
+
+#include "map/battle.h" // struct battle_config
+#include "map/map.h"
+#include "map/mob.h"    // MAX_MOB_DB
+#include "map/pc.h"     // W_MUSICAL, W_WHIP
+#include "map/script.h" // item script processing
+#include "common/HPM.h"
+#include "common/conf.h"
+#include "common/malloc.h"
+#include "common/nullpo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+#include "common/utils.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "battle.h" // struct battle_config
-#include "map.h"
-#include "mob.h"    // MAX_MOB_DB
-#include "pc.h"     // W_MUSICAL, W_WHIP
-#include "script.h" // item script processing
-#include "../common/HPM.h"
-#include "../common/conf.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../common/utils.h"
 
 struct itemdb_interface itemdb_s;
 

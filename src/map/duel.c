@@ -6,15 +6,15 @@
 
 #include "duel.h"
 
+#include "map/atcommand.h"  // msg_txt
+#include "map/clif.h"
+#include "map/pc.h"
+#include "common/cbasetypes.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
-#include "atcommand.h"  // msg_txt
-#include "clif.h"
-#include "pc.h"
-#include "../common/cbasetypes.h"
 
 struct duel_interface duel_s;
 

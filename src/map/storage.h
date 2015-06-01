@@ -5,8 +5,8 @@
 #ifndef MAP_STORAGE_H
 #define MAP_STORAGE_H
 
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
+#include "common/cbasetypes.h"
+#include "common/db.h"
 
 struct guild_storage;
 struct item;

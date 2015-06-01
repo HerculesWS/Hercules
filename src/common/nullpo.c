@@ -6,6 +6,8 @@
 
 #include "nullpo.h"
 
+#include "common/showmsg.h"
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -13,8 +15,6 @@
 #ifdef __GNUC__
 #include <execinfo.h>
 #endif
-
-#include "../common/showmsg.h"
 
 struct nullpo_interface nullpo_s;
 

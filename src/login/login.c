@@ -6,26 +6,26 @@
 
 #include "login.h"
 
+#include "login/HPMlogin.h"
+#include "login/account.h"
+#include "login/ipban.h"
+#include "login/loginlog.h"
+#include "common/HPM.h"
+#include "common/core.h"
+#include "common/db.h"
+#include "common/malloc.h"
+#include "common/md5calc.h"
+#include "common/nullpo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+#include "common/utils.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "HPMlogin.h"
-#include "account.h"
-#include "ipban.h"
-#include "loginlog.h"
-#include "../common/HPM.h"
-#include "../common/core.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/md5calc.h"
-#include "../common/nullpo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
 
 struct login_interface login_s;
 struct Login_Config login_config;

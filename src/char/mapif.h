@@ -5,7 +5,7 @@
 #ifndef CHAR_MAPIF_H
 #define CHAR_MAPIF_H
 
-#include "char.h"
+#include "char/char.h"
 
 struct s_elemental;
 struct s_homunculus;

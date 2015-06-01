@@ -6,15 +6,15 @@
 
 #include "mapindex.h"
 
+#include "common/db.h"
+#include "common/malloc.h"
+#include "common/mmo.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
 
 /* mapindex.c interface source */
 struct mapindex_interface mapindex_s;

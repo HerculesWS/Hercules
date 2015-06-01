@@ -5,12 +5,13 @@
 // Ported from eAthena Dev Team's version @ http://eathena-project.googlecode.com/svn/trunk/src/plugins/dbghelpplug.c
 // Currently supported dbghelp 5.1
 
+#include "common/sysinfo.h"
+#include "common/HPMi.h"
+
+#include "common/HPMDataCheck.h"
+
 #include <stdio.h>
 #include <string.h>
-#include "../common/sysinfo.h"
-#include "../common/HPMi.h"
-
-#include "../common/HPMDataCheck.h"
 
 /**
  * Plugin basic information

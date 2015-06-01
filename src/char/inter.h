@@ -6,8 +6,9 @@
 #define CHAR_INTER_H
 
 #include "char.h"
-#include "../common/cbasetypes.h"
-#include "../common/sql.h"
+
+#include "common/cbasetypes.h"
+#include "common/sql.h"
 
 struct accreg;
 

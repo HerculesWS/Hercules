@@ -5,17 +5,17 @@
 #ifndef MAP_MAP_H
 #define MAP_MAP_H
 
-#include "../config/core.h"
+#include "config/core.h"
+
+#include "map/atcommand.h"
+#include "common/cbasetypes.h"
+#include "common/core.h" // CORE_ST_LAST
+#include "common/db.h"
+#include "common/mapindex.h"
+#include "common/mmo.h"
+#include "common/sql.h"
 
 #include <stdarg.h>
-
-#include "atcommand.h"
-#include "../common/cbasetypes.h"
-#include "../common/core.h" // CORE_ST_LAST
-#include "../common/db.h"
-#include "../common/mapindex.h"
-#include "../common/mmo.h"
-#include "../common/sql.h"
 
 struct mob_data;
 struct npc_data;

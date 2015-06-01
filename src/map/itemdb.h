@@ -5,12 +5,12 @@
 #ifndef MAP_ITEMDB_H
 #define MAP_ITEMDB_H
 
-#include "map.h"
-#include "../common/cbasetypes.h"
-#include "../common/conf.h"
-#include "../common/db.h"
-#include "../common/mmo.h" // ITEM_NAME_LENGTH
-#include "../common/sql.h"
+#include "map/map.h"
+#include "common/cbasetypes.h"
+#include "common/conf.h"
+#include "common/db.h"
+#include "common/mmo.h" // ITEM_NAME_LENGTH
+#include "common/sql.h"
 
 /**
  * Declarations

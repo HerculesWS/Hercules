@@ -8,9 +8,9 @@
 #error You should never include HPMmap.h from a plugin.
 #endif
 
-#include "../common/cbasetypes.h"
-#include "../map/atcommand.h"
-#include "../common/HPM.h"
+#include "map/atcommand.h"
+#include "common/cbasetypes.h"
+#include "common/HPM.h"
 
 struct hplugin;
 struct map_session_data;

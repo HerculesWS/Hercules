@@ -14,12 +14,12 @@
 //
 //
 
-#include "../common/atomic.h"
-#include "../common/cbasetypes.h"
-#include "../common/thread.h"
+#include "common/atomic.h"
+#include "common/cbasetypes.h"
+#include "common/thread.h"
 
 #ifdef WIN32
-#include "../common/winapi.h"
+#include "common/winapi.h"
 #endif
 
 #ifdef WIN32
