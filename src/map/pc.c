@@ -181,8 +181,12 @@ int pc_spiritball_timer(int tid, int64 tick, int id, intptr_t data) {
 * @retval total number of spiritball
 **/
 int pc_getmaxspiritball(struct map_session_data *sd, int min) {
+	int result;
+
 	nullpo_ret(sd);
-	int result = pc->checkskill(sd, MO_CALLSPIRITS);
+
+	result = pc->checkskill(sd, MO_CALLSPIRITS);
+	
 	if ( min && result < min )
 		result = min;
 	else if ( sd->sc.data[SC_RAISINGDRAGON] )
