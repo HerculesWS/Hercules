@@ -693,7 +693,6 @@ void read_channels_config(void)
 				safestrncpy(channel->config->colors_name[i], config_setting_name(color), HCS_NAME_LENGTH);
 
 				channel->config->colors[i] = (unsigned int)strtoul(libconfig->setting_get_string_elem(colors,i),NULL,0);
-				channel->config->colors[i] = (channel->config->colors[i] & 0x0000FF) << 16 | (channel->config->colors[i] & 0x00FF00) | (channel->config->colors[i] & 0xFF0000) >> 16;//RGB to BGR
 			}
 			channel->config->colors_count = color_count;
 		}

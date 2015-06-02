@@ -8785,7 +8785,7 @@ ACMD(channel) {
 				unsigned short msg_len = 1;
 				msg_len += sprintf(mout, "[ %s list colors ] : %s", command, channel->config->colors_name[k]);
 
-				clif->colormes( fd, (enum clif_colors)channel->config->colors[k], mout );
+				clif->messagecolor_self(fd, channel->config->colors[k], mout);
 			}
 		} else {
 			DBIterator *iter = db_iterator(channel->db);
@@ -9171,7 +9171,7 @@ ACMD(fontcolor) {
 		for( k = 0; k < channel->config->colors_count; k++ ) {
 			msg_len += sprintf(mout, "[ %s ] : %s", command, channel->config->colors_name[k]);
 
-			clif->colormes( fd, (enum clif_colors)channel->config->colors[k], mout );
+			clif->messagecolor_self(fd, channel->config->colors[k], mout);
 		}
 		return false;
 	}
@@ -9194,7 +9194,7 @@ ACMD(fontcolor) {
 	sd->fontcolor = k + 1;
 	msg_len += sprintf(mout, "Color changed to '%s'", channel->config->colors_name[k]);
 
-	clif->colormes( fd, (enum clif_colors)channel->config->colors[k], mout );
+	clif->messagecolor_self(fd, channel->config->colors[k], mout);
 
 	return true;
 }

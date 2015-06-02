@@ -8892,12 +8892,13 @@ void clif_channel_msg(struct channel_data *chan, struct map_session_data *sd, ch
 	DBIterator *iter = db_iterator(chan->users);
 	struct map_session_data *user;
 	unsigned short msg_len = strlen(msg) + 1;
+	uint32 color = channel->config->colors[chan->color];
 
 	WFIFOHEAD(sd->fd,msg_len + 12);
 	WFIFOW(sd->fd,0) = 0x2C1;
 	WFIFOW(sd->fd,2) = msg_len + 12;
 	WFIFOL(sd->fd,4) = 0;
-	WFIFOL(sd->fd,8) = channel->config->colors[chan->color];
+	WFIFOL(sd->fd,8) = RGB2BGR(color);
 	safestrncpy((char*)WFIFOP(sd->fd,12), msg, msg_len);
 
 	for (user = dbi_first(iter); dbi_exists(iter); user = dbi_next(iter)) {
@@ -8919,11 +8920,12 @@ void clif_channel_msg2(struct channel_data *chan, char *msg)
 	struct map_session_data *user;
 	unsigned char buf[210];
 	unsigned short msg_len = strlen(msg) + 1;
+	uint32 color = channel->config->colors[chan->color];
 
 	WBUFW(buf,0) = 0x2C1;
 	WBUFW(buf,2) = msg_len + 12;
 	WBUFL(buf,4) = 0;
-	WBUFL(buf,8) = channel->config->colors[chan->color];
+	WBUFL(buf,8) = RGB2BGR(color);
 	safestrncpy((char*)WBUFP(buf,12), msg, msg_len);
 
 	for (user = dbi_first(iter); dbi_exists(iter); user = dbi_next(iter)) {
@@ -9674,6 +9676,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 	} else if ( sd->fontcolor && !sd->chatID ) {
 		char mout[200];
 		unsigned char mylen = 1;
+		uint32 color = 0;
 
 		if( sd->disguise == -1 ) {
 			sd->fontcolor_tid = timer->add(timer->gettick()+5000, clif->undisguise_timer, sd->bl.id, 0);
@@ -9691,11 +9694,12 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 
 		mylen += snprintf(mout, 200, "%s : %s",sd->fakename[0]?sd->fakename:sd->status.name,message);
 
+		color = channel->config->colors[sd->fontcolor - 1];
 		WFIFOHEAD(fd,mylen + 12);
 		WFIFOW(fd,0) = 0x2C1;
 		WFIFOW(fd,2) = mylen + 12;
 		WFIFOL(fd,4) = sd->bl.id;
-		WFIFOL(fd,8) = channel->config->colors[sd->fontcolor - 1];
+		WFIFOL(fd,8) = RGB2BGR(color);
 		safestrncpy((char*)WFIFOP(fd,12), mout, mylen);
 		clif->send(WFIFOP(fd,0), WFIFOW(fd,2), &sd->bl, AREA_WOS);
 		WFIFOL(fd,4) = -sd->bl.id;
