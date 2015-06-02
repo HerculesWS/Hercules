@@ -114,9 +114,8 @@ bool hplugin_populate(struct hplugin *plugin, const char *filename) {
 	for(i = 0; i < length; i++) {
 		void **Link;
 		if (!( Link = plugin_import(plugin->dll, ToLink[i].name,void **))) {
-			ShowWarning("HPM:plugin_load: failed to retrieve '%s' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", ToLink[i].name, filename);
-			HPM->unload(plugin);
-			return false;
+			ShowFatalError("HPM:plugin_load: failed to retrieve '%s' for '"CL_WHITE"%s"CL_RESET"'!\n", ToLink[i].name, filename);
+			exit(EXIT_FAILURE);
 		}
 		*Link = ToLink[i].Ref;
 	}
@@ -144,15 +143,13 @@ struct hplugin *hplugin_load(const char* filename) {
 
 	if (!(plugin->dll = plugin_open(filename))) {
 		char buf[1024];
-		ShowWarning("HPM:plugin_load: failed to load '"CL_WHITE"%s"CL_RESET"' (error: %s), skipping...\n", filename, plugin_geterror(buf));
-		HPM->unload(plugin);
-		return NULL;
+		ShowFatalError("HPM:plugin_load: failed to load '"CL_WHITE"%s"CL_RESET"' (error: %s)!\n", filename, plugin_geterror(buf));
+		exit(EXIT_FAILURE);
 	}
 
 	if( !( info = plugin_import(plugin->dll, "pinfo",struct hplugin_info*) ) ) {
-		ShowDebug("HPM:plugin_load: failed to retrieve 'plugin_info' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
-		HPM->unload(plugin);
-		return NULL;
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'plugin_info' for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
+		exit(EXIT_FAILURE);
 	}
 
 	if( !(info->type & SERVER_TYPE) ) {
@@ -161,40 +158,35 @@ struct hplugin *hplugin_load(const char* filename) {
 	}
 
 	if( !HPM->iscompatible(info->req_version) ) {
-		ShowWarning("HPM:plugin_load: '"CL_WHITE"%s"CL_RESET"' incompatible version '%s' -> '%s', skipping...\n", filename, info->req_version, HPM_VERSION);
-		HPM->unload(plugin);
-		return NULL;
+		ShowFatalError("HPM:plugin_load: '"CL_WHITE"%s"CL_RESET"' incompatible version '%s' -> '%s'!\n", filename, info->req_version, HPM_VERSION);
+		exit(EXIT_FAILURE);
 	}
 
 	plugin->info = info;
 	plugin->filename = aStrdup(filename);
 
 	if( !( import_symbol_ref = plugin_import(plugin->dll, "import_symbol",void **) ) ) {
-		ShowWarning("HPM:plugin_load: failed to retrieve 'import_symbol' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
-		HPM->unload(plugin);
-		return NULL;
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'import_symbol' for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
+		exit(EXIT_FAILURE);
 	}
 
 	*import_symbol_ref = HPM->import_symbol;
 
 	if( !( sql_handle = plugin_import(plugin->dll, "mysql_handle",Sql **) ) ) {
-		ShowWarning("HPM:plugin_load: failed to retrieve 'mysql_handle' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
-		HPM->unload(plugin);
-		return NULL;
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'mysql_handle' for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
+		exit(EXIT_FAILURE);
 	}
 
 	*sql_handle = HPM->import_symbol("sql_handle",plugin->idx);
 
 	if( !( HPMi = plugin_import(plugin->dll, "HPMi",struct HPMi_interface **) ) ) {
-		ShowWarning("HPM:plugin_load: failed to retrieve 'HPMi' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
-		HPM->unload(plugin);
-		return NULL;
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMi' for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
+		exit(EXIT_FAILURE);
 	}
 
 	if( !( *HPMi = plugin_import(plugin->dll, "HPMi_s",struct HPMi_interface *) ) ) {
-		ShowWarning("HPM:plugin_load: failed to retrieve 'HPMi_s' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
-		HPM->unload(plugin);
-		return NULL;
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMi_s' for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
+		exit(EXIT_FAILURE);
 	}
 	plugin->hpi = *HPMi;
 
@@ -214,37 +206,32 @@ struct hplugin *hplugin_load(const char* filename) {
 		anyEvent = true;
 
 	if( !anyEvent ) {
-		ShowWarning("HPM:plugin_load: no events found for '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
-		HPM->unload(plugin);
-		return NULL;
+		ShowWarning("HPM:plugin_load: no events found for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
+		exit(EXIT_FAILURE);
 	}
 
 	if( !HPM->populate(plugin,filename) )
 		return NULL;
 
 	if( !( HPMDataCheckLen = plugin_import(plugin->dll, "HPMDataCheckLen", unsigned int *) ) ) {
-		ShowWarning("HPM:plugin_load: failed to retrieve 'HPMDataCheckLen' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h, skipping...\n", filename);
-		HPM->unload(plugin);
-		return NULL;
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheckLen' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h!\n", filename);
+		exit(EXIT_FAILURE);
 	}
 
 	if( !( HPMDataCheckVer = plugin_import(plugin->dll, "HPMDataCheckVer", int *) ) ) {
-		ShowWarning("HPM:plugin_load: failed to retrieve 'HPMDataCheckVer' for '"CL_WHITE"%s"CL_RESET"', most likely an outdated plugin, skipping...\n", filename);
-		HPM->unload(plugin);
-		return NULL;
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheckVer' for '"CL_WHITE"%s"CL_RESET"', most likely an outdated plugin!\n", filename);
+		exit(EXIT_FAILURE);
 	}
 
 	if( !( HPMDataCheck = plugin_import(plugin->dll, "HPMDataCheck", struct s_HPMDataCheck *) ) ) {
-		ShowWarning("HPM:plugin_load: failed to retrieve 'HPMDataCheck' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h, skipping...\n", filename);
-		HPM->unload(plugin);
-		return NULL;
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheck' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h!\n", filename);
+		exit(EXIT_FAILURE);
 	}
 
 	// TODO: Remove the HPM->DataCheck != NULL check once login and char support is complete
 	if (HPM->DataCheck != NULL && !HPM->DataCheck(HPMDataCheck,*HPMDataCheckLen,*HPMDataCheckVer,plugin->info->name)) {
-		ShowWarning("HPM:plugin_load: '"CL_WHITE"%s"CL_RESET"' failed DataCheck, out of sync from the core (recompile plugin), skipping...\n", filename);
-		HPM->unload(plugin);
-		return NULL;
+		ShowFatalError("HPM:plugin_load: '"CL_WHITE"%s"CL_RESET"' failed DataCheck, out of sync from the core (recompile plugin)!\n", filename);
+		exit(EXIT_FAILURE);
 	}
 
 	/* id */
