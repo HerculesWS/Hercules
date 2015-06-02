@@ -538,11 +538,10 @@ void bg_match_over(struct bg_arena *arena, bool canceled) {
 				bg->team_leave(sd, 0);
 				bg->queue_pc_cleanup(sd);
 			}
-			if( canceled )
-				clif->colormes(sd->fd,COLOR_RED,"BG Match Canceled: not enough players");
-			else {
+			if (canceled)
+				clif->messagecolor_self(sd->fd, COLOR_RED, "BG Match Canceled: not enough players");
+			else
 				pc_setglobalreg(sd, script->add_str(arena->delay_var), (unsigned int)time(NULL));
-			}
 		}
 	}
 
@@ -766,7 +765,7 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 			sprintf(response, "You are a deserter! Wait %d minute(s) before you can apply again",(tick-tsec)/60);
 		else
 			sprintf(response, "You are a deserter! Wait %d seconds before you can apply again",(tick-tsec));
-		clif->colormes(sd->fd,COLOR_RED,response);
+		clif->messagecolor_self(sd->fd, COLOR_RED, response);
 		return BGQA_FAIL_DESERTER;
 	}
 
@@ -776,7 +775,7 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 			sprintf(response, "You can't reapply to this arena so fast. Apply to the different arena or wait %d minute(s)",(tick-tsec)/60);
 		else
 			sprintf(response, "You can't reapply to this arena so fast. Apply to the different arena or wait %d seconds",(tick-tsec));
-		clif->colormes(sd->fd,COLOR_RED,response);
+		clif->messagecolor_self(sd->fd, COLOR_RED, response);
 		return BGQA_FAIL_COOLDOWN;
 	}
 
@@ -800,7 +799,7 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 						sprintf(response, "Can't apply: not enough members in your team/guild that have not entered the queue in individual mode, minimum is %d",arena->min_team_players);
 					else
 						sprintf(response, "Can't apply: not enough members in your team/guild, minimum is %d",arena->min_team_players);
-					clif->colormes(sd->fd,COLOR_RED,response);
+					clif->messagecolor_self(sd->fd, COLOR_RED, response);
 					return BGQA_FAIL_TEAM_COUNT;
 				}
 			}
@@ -832,7 +831,7 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 							sprintf(response, "Can't apply: not enough members in your team/party that have not entered the queue in individual mode, minimum is %d",arena->min_team_players);
 						else
 							sprintf(response, "Can't apply: not enough members in your team/party, minimum is %d",arena->min_team_players);
-						clif->colormes(sd->fd,COLOR_RED,response);
+						clif->messagecolor_self(sd->fd, COLOR_RED, response);
 						return BGQA_FAIL_TEAM_COUNT;
 					}
 				} else

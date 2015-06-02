@@ -1583,8 +1583,8 @@ bool npc_trader_open(struct map_session_data *sd, struct npc_data *nd) {
 				}
 			
 				/* nothing to display, no items available */
-				if( i == nd->u.scr.shop->items ) {
-					clif->colormes(sd->fd,COLOR_RED, msg_sd(sd,881));
+				if (i == nd->u.scr.shop->items) {
+					clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd,881));
 					return false;
 				}
 

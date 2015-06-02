@@ -5349,7 +5349,7 @@ void clif_displaymessage(const int fd, const char* mes) {
 	#if PACKETVER == 20141022
 		/** for some reason game client crashes depending on message pattern (only for this packet) **/
 		/** so we redirect to ZC_NPC_CHAT **/
-		clif->colormes(fd,COLOR_DEFAULT,mes);
+		clif->messagecolor_self(fd, COLOR_DEFAULT, mes);
 	#else
 		size_t len;
 
@@ -8126,28 +8126,41 @@ void clif_specialeffect_value(struct block_list* bl, int effect_id, int num, sen
 		clif->send(buf, packet_len(0x284), bl, SELF);
 	}
 }
-// Modification of clif_messagecolor to send colored messages to players to chat log only (doesn't display overhead)
-/// 02c1 <packet len>.W <id>.L <color>.L <message>.?B
-int clif_colormes(int fd, enum clif_colors color, const char* msg) {
+/**
+ * Modification of clif_messagecolor to send colored messages to players to chat log only (doesn't display overhead).
+ *
+ * 02c1 <packet len>.W <id>.L <color>.L <message>.?B
+ *
+ * @param fd    Target fd to send the message to
+ * @param color Message color (RGB format: 0xRRGGBB)
+ * @param msg   Message text
+ */
+void clif_messagecolor_self(int fd, uint32 color, const char *msg)
+{
 	size_t msg_len = strlen(msg) + 1;
 
 	WFIFOHEAD(fd,msg_len + 12);
 	WFIFOW(fd,0) = 0x2C1;
 	WFIFOW(fd,2) = msg_len + 12;
 	WFIFOL(fd,4) = 0;
-	WFIFOL(fd,8) = color_table[color];
+	WFIFOL(fd,8) = RGB2BGR(color);
 	safestrncpy((char*)WFIFOP(fd,12), msg, msg_len);
 	WFIFOSET(fd, msg_len + 12);
-
-	return 0;
 }
 
-/// Monster/NPC color chat [SnakeDrak] (ZC_NPC_CHAT).
-/// 02c1 <packet len>.W <id>.L <color>.L <message>.?B
-void clif_messagecolor(struct block_list* bl, unsigned int color, const char* msg) {
+/**
+ * Monster/NPC color chat [SnakeDrak] (ZC_NPC_CHAT).
+ *
+ * 02c1 <packet len>.W <id>.L <color>.L <message>.?B
+ *
+ * @param bl    Source block list.
+ * @param color Message color (RGB format: 0xRRGGBB)
+ * @param msg   Message text
+ */
+void clif_messagecolor(struct block_list* bl, uint32 color, const char *msg)
+{
 	size_t msg_len = strlen(msg) + 1;
 	uint8 buf[256];
-	color = (color & 0x0000FF) << 16 | (color & 0x00FF00) | (color & 0xFF0000) >> 16; // RGB to BGR
 
 	nullpo_retv(bl);
 
@@ -8159,28 +8172,8 @@ void clif_messagecolor(struct block_list* bl, unsigned int color, const char* ms
 	WBUFW(buf,0) = 0x2C1;
 	WBUFW(buf,2) = msg_len + 12;
 	WBUFL(buf,4) = bl->id;
-	WBUFL(buf,8) = color;
+	WBUFL(buf,8) = RGB2BGR(color);
 	memcpy(WBUFP(buf,12), msg, msg_len);
-
-	clif->send(buf, WBUFW(buf,2), bl, AREA_CHAT_WOC);
-}
-
-/// Public chat message [Valaris] (ZC_NOTIFY_CHAT).
-/// 008d <packet len>.W <id>.L <message>.?B
-void clif_message(struct block_list* bl, const char* msg) {
-	unsigned short msg_len = strlen(msg) + 1;
-	uint8 buf[256];
-	nullpo_retv(bl);
-
-	if( msg_len > sizeof(buf)-8 ) {
-		ShowWarning("clif_message: Truncating too long message '%s' (len=%u).\n", msg, msg_len);
-		msg_len = sizeof(buf)-8;
-	}
-
-	WBUFW(buf,0) = 0x8d;
-	WBUFW(buf,2) = msg_len + 8;
-	WBUFL(buf,4) = bl->id;
-	safestrncpy((char*)WBUFP(buf,8), msg, msg_len);
 
 	clif->send(buf, WBUFW(buf,2), bl, AREA_CHAT_WOC);
 }
@@ -17126,8 +17119,8 @@ void __attribute__ ((unused)) clif_parse_dull(int fd,struct map_session_data *sd
 }
 void clif_parse_CashShopOpen(int fd, struct map_session_data *sd) {
 
-	if( map->list[sd->bl.m].flag.nocashshop ) {
-		clif->colormes(fd,COLOR_RED,msg_fd(fd,1489)); //Cash Shop is disabled in this map
+	if (map->list[sd->bl.m].flag.nocashshop) {
+		clif->messagecolor_self(fd, COLOR_RED, msg_fd(fd,1489)); //Cash Shop is disabled in this map
 		return;
 	}
 
@@ -17167,8 +17160,8 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 	unsigned short limit = RFIFOW(fd, 4), i, j;
 	unsigned int kafra_pay = RFIFOL(fd, 6);// [Ryuuzaki] - These are free cash points (strangely #CASH = main cash currently for us, confusing)
 
-	if( map->list[sd->bl.m].flag.nocashshop ) {
-		clif->colormes(fd,COLOR_RED,msg_fd(fd,1489)); //Cash Shop is disabled in this map
+	if (map->list[sd->bl.m].flag.nocashshop) {
+		clif->messagecolor_self(fd, COLOR_RED, msg_fd(fd,1489)); //Cash Shop is disabled in this map
 		return;
 	}
 
@@ -17569,8 +17562,8 @@ void clif_parse_BankDeposit(int fd, struct map_session_data* sd) {
 	struct packet_banking_deposit_req *p = P2PTR(fd);
 	int money;
 
-	if( !battle_config.feature_banking ) {
-		clif->colormes(fd,COLOR_RED,msg_fd(fd,1483));
+	if (!battle_config.feature_banking) {
+		clif->messagecolor_self(fd, COLOR_RED, msg_fd(fd,1483));
 		return;
 	}
 
@@ -17583,8 +17576,8 @@ void clif_parse_BankWithdraw(int fd, struct map_session_data* sd) {
 	struct packet_banking_withdraw_req *p = P2PTR(fd);
 	int money;
 
-	if( !battle_config.feature_banking ) {
-		clif->colormes(fd,COLOR_RED,msg_fd(fd,1483));
+	if (!battle_config.feature_banking) {
+		clif->messagecolor_self(fd, COLOR_RED, msg_fd(fd,1483));
 		return;
 	}
 
@@ -17596,8 +17589,8 @@ void clif_parse_BankWithdraw(int fd, struct map_session_data* sd) {
 void clif_parse_BankCheck(int fd, struct map_session_data* sd) {
 	struct packet_banking_check p;
 
-	if( !battle_config.feature_banking ) {
-		clif->colormes(fd,COLOR_RED,msg_fd(fd,1483));
+	if (!battle_config.feature_banking) {
+		clif->messagecolor_self(fd, COLOR_RED, msg_fd(fd,1483));
 		return;
 	}
 
@@ -18377,20 +18370,10 @@ void clif_bc_ready(void) {
 /*==========================================
  *
  *------------------------------------------*/
-int do_init_clif(bool minimal) {
-	const char* colors[COLOR_MAX] = { "0xFF0000", "0x00ff00", "0xffffff" };
-	int i;
-
+int do_init_clif(bool minimal)
+{
 	if (minimal)
 		return 0;
-
-	/**
-	 * Setup Color Table (saves unnecessary load of strtoul on every call)
-	 **/
-	for(i = 0; i < COLOR_MAX; i++) {
-		color_table[i] = (unsigned int)strtoul(colors[i],NULL,0);
-		color_table[i] = (color_table[i] & 0x0000FF) << 16 | (color_table[i] & 0x00FF00) | (color_table[i] & 0xFF0000) >> 16;//RGB to BGR
-	}
 
 	packetdb_loaddb();
 
@@ -18686,6 +18669,7 @@ void clif_defaults(void) {
 	clif->disp_message = clif_disp_message;
 	clif->broadcast = clif_broadcast;
 	clif->broadcast2 = clif_broadcast2;
+	clif->messagecolor_self = clif_messagecolor_self;
 	clif->messagecolor = clif_messagecolor;
 	clif->disp_overhead = clif_disp_overhead;
 	clif->msgtable_skill = clif_msgtable_skill;
@@ -18694,7 +18678,6 @@ void clif_defaults(void) {
 	clif->message = clif_displaymessage;
 	clif->messageln = clif_displaymessage2;
 	clif->messages = clif_displaymessage_sprintf;
-	clif->colormes = clif_colormes;
 	clif->process_message = clif_process_message;
 	clif->wisexin = clif_wisexin;
 	clif->wisall = clif_wisall;

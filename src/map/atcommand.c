@@ -664,7 +664,7 @@ ACMD(who) {
 					break;
 				}
 			}
-			clif->colormes(fd, COLOR_DEFAULT, StrBuf->Value(&buf));/** for whatever reason clif->message crashes with some patterns, see bugreport:8186 **/
+			clif->messagecolor_self(fd, COLOR_DEFAULT, StrBuf->Value(&buf));/** for whatever reason clif->message crashes with some patterns, see bugreport:8186 **/
 			StrBuf->Clear(&buf);
 			count++;
 		}
@@ -7941,10 +7941,10 @@ ACMD(feelreset)
 /*==========================================
  * AUCTION SYSTEM
  *------------------------------------------*/
-ACMD(auction) {
-
-	if( !battle_config.feature_auction ) {
-		clif->colormes(sd->fd,COLOR_RED,msg_fd(fd,1484));
+ACMD(auction)
+{
+	if (!battle_config.feature_auction) {
+		clif->messagecolor_self(sd->fd, COLOR_RED, msg_fd(fd,1484));
 		return false;
 	}
 
@@ -9953,11 +9953,12 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 		}
 		for(i = 0; i < map->list[sd->bl.m].zone->disabled_commands_count; i++) {
 			if( info->func == map->list[sd->bl.m].zone->disabled_commands[i]->cmd ) {
-				if( pc_get_group_level(sd) < map->list[sd->bl.m].zone->disabled_commands[i]->group_lv ) {
-					clif->colormes(sd->fd,COLOR_RED,"This command is disabled in this area");
+				if (pc_get_group_level(sd) < map->list[sd->bl.m].zone->disabled_commands[i]->group_lv) {
+					clif->messagecolor_self(sd->fd, COLOR_RED, "This command is disabled in this area");
 					return true;
-				} else
+				} else {
 					break;/* already found the matching command, no need to keep checking -- just go on */
+				}
 			}
 		}
 	}

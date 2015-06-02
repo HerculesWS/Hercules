@@ -258,7 +258,7 @@ void channel_send(struct channel_data *chan, struct map_session_data *sd, const 
 	if (sd && chan->msg_delay != 0
 	 && DIFF_TICK(sd->hchsysch_tick + chan->msg_delay*1000, timer->gettick()) > 0
 	 && !pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN)) {
-		clif->colormes(sd->fd,COLOR_RED,msg_sd(sd,1455));
+		clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd,1455));
 		return;
 	} else if (sd) {
 		snprintf(message, 150, "[ #%s ] %s : %s",chan->name,sd->status.name, msg);
@@ -352,7 +352,7 @@ enum channel_operation_status channel_join(struct channel_data *chan, struct map
 		} else {
 			sprintf(output, msg_sd(sd,1403), chan->name); // You're now in the '%s' channel
 		}
-		clif->colormes(sd->fd, COLOR_DEFAULT, output);
+		clif->messagecolor_self(sd->fd, COLOR_DEFAULT, output);
 	}
 
 	if (chan->type == HCS_TYPE_ALLY) {
