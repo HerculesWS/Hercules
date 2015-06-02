@@ -933,6 +933,8 @@ struct {
 	struct HPMHookPoint *HP_clif_broadcast_post;
 	struct HPMHookPoint *HP_clif_broadcast2_pre;
 	struct HPMHookPoint *HP_clif_broadcast2_post;
+	struct HPMHookPoint *HP_clif_messagecolor_self_pre;
+	struct HPMHookPoint *HP_clif_messagecolor_self_post;
 	struct HPMHookPoint *HP_clif_messagecolor_pre;
 	struct HPMHookPoint *HP_clif_messagecolor_post;
 	struct HPMHookPoint *HP_clif_disp_overhead_pre;
@@ -947,8 +949,6 @@ struct {
 	struct HPMHookPoint *HP_clif_message_post;
 	struct HPMHookPoint *HP_clif_messageln_pre;
 	struct HPMHookPoint *HP_clif_messageln_post;
-	struct HPMHookPoint *HP_clif_colormes_pre;
-	struct HPMHookPoint *HP_clif_colormes_post;
 	struct HPMHookPoint *HP_clif_process_message_pre;
 	struct HPMHookPoint *HP_clif_process_message_post;
 	struct HPMHookPoint *HP_clif_wisexin_pre;
@@ -6140,6 +6140,8 @@ struct {
 	int HP_clif_broadcast_post;
 	int HP_clif_broadcast2_pre;
 	int HP_clif_broadcast2_post;
+	int HP_clif_messagecolor_self_pre;
+	int HP_clif_messagecolor_self_post;
 	int HP_clif_messagecolor_pre;
 	int HP_clif_messagecolor_post;
 	int HP_clif_disp_overhead_pre;
@@ -6154,8 +6156,6 @@ struct {
 	int HP_clif_message_post;
 	int HP_clif_messageln_pre;
 	int HP_clif_messageln_post;
-	int HP_clif_colormes_pre;
-	int HP_clif_colormes_post;
 	int HP_clif_process_message_pre;
 	int HP_clif_process_message_post;
 	int HP_clif_wisexin_pre;

@@ -12381,10 +12381,36 @@ void HP_clif_broadcast2(struct block_list *bl, const char *mes, size_t len, unsi
 	}
 	return;
 }
-void HP_clif_messagecolor(struct block_list *bl, unsigned int color, const char *msg) {
+void HP_clif_messagecolor_self(int fd, uint32 color, const char *msg) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_messagecolor_self_pre ) {
+		void (*preHookFunc) (int *fd, uint32 *color, const char *msg);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_messagecolor_self_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_messagecolor_self_pre[hIndex].func;
+			preHookFunc(&fd, &color, msg);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.messagecolor_self(fd, color, msg);
+	}
+	if( HPMHooks.count.HP_clif_messagecolor_self_post ) {
+		void (*postHookFunc) (int *fd, uint32 *color, const char *msg);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_messagecolor_self_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_messagecolor_self_post[hIndex].func;
+			postHookFunc(&fd, &color, msg);
+		}
+	}
+	return;
+}
+void HP_clif_messagecolor(struct block_list *bl, uint32 color, const char *msg) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_messagecolor_pre ) {
-		void (*preHookFunc) (struct block_list *bl, unsigned int *color, const char *msg);
+		void (*preHookFunc) (struct block_list *bl, uint32 *color, const char *msg);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_messagecolor_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_clif_messagecolor_pre[hIndex].func;
@@ -12399,7 +12425,7 @@ void HP_clif_messagecolor(struct block_list *bl, unsigned int color, const char 
 		HPMHooks.source.clif.messagecolor(bl, color, msg);
 	}
 	if( HPMHooks.count.HP_clif_messagecolor_post ) {
-		void (*postHookFunc) (struct block_list *bl, unsigned int *color, const char *msg);
+		void (*postHookFunc) (struct block_list *bl, uint32 *color, const char *msg);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_messagecolor_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_clif_messagecolor_post[hIndex].func;
 			postHookFunc(bl, &color, msg);
@@ -12562,33 +12588,6 @@ void HP_clif_messageln(const int fd, const char *mes) {
 		}
 	}
 	return;
-}
-int HP_clif_colormes(int fd, enum clif_colors color, const char *msg) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if( HPMHooks.count.HP_clif_colormes_pre ) {
-		int (*preHookFunc) (int *fd, enum clif_colors *color, const char *msg);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_colormes_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_clif_colormes_pre[hIndex].func;
-			retVal___ = preHookFunc(&fd, &color, msg);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.clif.colormes(fd, color, msg);
-	}
-	if( HPMHooks.count.HP_clif_colormes_post ) {
-		int (*postHookFunc) (int retVal___, int *fd, enum clif_colors *color, const char *msg);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_colormes_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_clif_colormes_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, &color, msg);
-		}
-	}
-	return retVal___;
 }
 bool HP_clif_process_message(struct map_session_data *sd, int format, char **name_, size_t *namelen_, char **message_, size_t *messagelen_) {
 	int hIndex = 0;
