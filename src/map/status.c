@@ -1656,10 +1656,15 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 			return 0;
 
 		if (sc->data[SC_DC_WINKCHARM] && target && !flag) { //Prevents skill usage
-			if( unit->bl2ud(src) && (unit->bl2ud(src))->walktimer == INVALID_TIMER )
-				unit->walktobl(src, map->id2bl(sc->data[SC_DC_WINKCHARM]->val2), 3, 1);
-			clif->emotion(src, E_LV);
-			return 0;
+			struct block_list *winkcharm_target = map->id2bl(sc->data[SC_DC_WINKCHARM]->val2);
+			if (winkcharm_target != NULL) {
+				if (unit->bl2ud(src) && (unit->bl2ud(src))->walktimer == INVALID_TIMER)
+					unit->walktobl(src, map->id2bl(sc->data[SC_DC_WINKCHARM]->val2), 3, 1);
+				clif->emotion(src, E_LV);
+				return 0;
+			} else {
+				status_change_end(src, SC_DC_WINKCHARM, INVALID_TIMER);
+			}
 		}
 
 		if (sc->data[SC_BLADESTOP]) {
