@@ -2828,7 +2828,7 @@ ACMD(char_ban)
 	}
 
 	chrif->char_ask_name(sd->status.account_id, atcmd_player_name,
-	                     !strcmpi(info->command,"charban") ? CHAR_ASK_NAME_BAN : CHAR_ASK_NAME_BAN, year, month, day, hour, minute, second);
+	                     !strcmpi(info->command,"charban") ? CHAR_ASK_NAME_CHARBAN : CHAR_ASK_NAME_BAN, year, month, day, hour, minute, second);
 	clif->message(fd, msg_fd(fd,88)); // Character name sent to char-server to ask it.
 
 	return true;
