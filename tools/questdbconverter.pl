@@ -2,7 +2,7 @@
 #
 # Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 # See the LICENSE file
-# Base Author: Dastgir @ http://hercules.ws
+# Base Author: Dastgir @ http://herc.ws
 #
 # This Script converts quest_db.txt to quest_db.conf format.
 # usage example: perl tools/questdbconverter.pl < db/quest_db.txt > db/quest_db.conf

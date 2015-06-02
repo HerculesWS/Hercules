@@ -1,6 +1,6 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
-// Base Author: Haru @ http://hercules.ws
+// Base Author: Haru @ http://herc.ws
 
 /// See sysinfo.h for a description of this file
 
