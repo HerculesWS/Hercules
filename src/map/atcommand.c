@@ -8785,14 +8785,7 @@ ACMD(channel) {
 				unsigned short msg_len = 1;
 				msg_len += sprintf(mout, "[ %s list colors ] : %s", command, channel->config->colors_name[k]);
 
-				// FIXME: This is clif code.
-				WFIFOHEAD(fd,msg_len + 12);
-				WFIFOW(fd,0) = 0x2C1;
-				WFIFOW(fd,2) = msg_len + 12;
-				WFIFOL(fd,4) = 0;
-				WFIFOL(fd,8) = channel->config->colors[k];
-				safestrncpy((char*)WFIFOP(fd,12), mout, msg_len);
-				WFIFOSET(fd, msg_len + 12);
+				clif->colormes( fd, (enum clif_colors)channel->config->colors[k], mout );
 			}
 		} else {
 			DBIterator *iter = db_iterator(channel->db);
@@ -9177,14 +9170,8 @@ ACMD(fontcolor) {
 	if( !message || !*message ) {
 		for( k = 0; k < channel->config->colors_count; k++ ) {
 			msg_len += sprintf(mout, "[ %s ] : %s", command, channel->config->colors_name[k]);
-			// FIXME: This is clif code.
-			WFIFOHEAD(fd,msg_len + 12);
-			WFIFOW(fd,0) = 0x2C1;
-			WFIFOW(fd,2) = msg_len + 12;
-			WFIFOL(fd,4) = 0;
-			WFIFOL(fd,8) = channel->config->colors[k];
-			safestrncpy((char*)WFIFOP(fd,12), mout, msg_len);
-			WFIFOSET(fd, msg_len + 12);
+
+			clif->colormes( fd, (enum clif_colors)channel->config->colors[k], mout );
 		}
 		return false;
 	}
@@ -9207,14 +9194,8 @@ ACMD(fontcolor) {
 	sd->fontcolor = k + 1;
 	msg_len += sprintf(mout, "Color changed to '%s'", channel->config->colors_name[k]);
 
-	// FIXME: This is clif code.
-	WFIFOHEAD(fd,msg_len + 12);
-	WFIFOW(fd,0) = 0x2C1;
-	WFIFOW(fd,2) = msg_len + 12;
-	WFIFOL(fd,4) = 0;
-	WFIFOL(fd,8) = channel->config->colors[k];
-	safestrncpy((char*)WFIFOP(fd,12), mout, msg_len);
-	WFIFOSET(fd, msg_len + 12);
+	clif->colormes( fd, (enum clif_colors)channel->config->colors[k], mout );
+
 	return true;
 }
 ACMD(searchstore){
