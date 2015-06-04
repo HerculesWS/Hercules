@@ -541,6 +541,7 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 			}
 			break;
 		case GD_EMERGENCYCALL:
+		case GD_ITEMEMERGENCYCALL:
 			if( !(battle_config.emergency_call&((map->agit_flag || map->agit2_flag)?2:1))
 			 || !(battle_config.emergency_call&(map->list[m].flag.gvg || map->list[m].flag.gvg_castle?8:4))
 			 || (battle_config.emergency_call&16 && map->list[m].flag.nowarpto && !map->list[m].flag.gvg_castle)
@@ -7884,24 +7885,38 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			}
 			break;
 		case GD_EMERGENCYCALL:
+		case GD_ITEMEMERGENCYCALL:
 			{
-				int dx[9]={-1, 1, 0, 0,-1, 1,-1, 1, 0};
-				int dy[9]={ 0, 0, 1,-1, 1,-1,-1, 1, 0};
-				int i, j = 0;
+				int dx[9] = {-1, 1, 0, 0,-1, 1,-1, 1, 0};
+				int dy[9] = { 0, 0, 1,-1, 1,-1,-1, 1, 0};
+				int i, j = 0, recall = 1;
 				struct guild *g;
 				// i don't know if it actually summons in a circle, but oh well. ;P
 				g = sd ? sd->guild : guild->search(status->get_guild_id(src));
+				
 				if (!g)
 					break;
+				
+				if (skill_id == GD_ITEMEMERGENCYCALL) {
+					switch (skill_lv) {
+						case 1:	recall = 7; break;
+						case 2:	recall = 12; break;
+						case 3:	recall = 20; break;
+					}
+				}
+				
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-				for(i = 0; i < g->max_member; i++, j++) {
-					if (j>8) j=0;
+				for(i = 0; i < g->max_member && recall; i++, j++) {
+					if (j > 8)
+						j = 0;
 					if ((dstsd = g->member[i].sd) != NULL && sd != dstsd && !dstsd->state.autotrade && !pc_isdead(dstsd)) {
 						if (map->list[dstsd->bl.m].flag.nowarp && !map_flag_gvg2(dstsd->bl.m))
 							continue;
 						if(map->getcell(src->m,src->x+dx[j],src->y+dy[j],CELL_CHKNOREACH))
 							dx[j] = dy[j] = 0;
 						pc->setpos(dstsd, map_id2index(src->m), src->x+dx[j], src->y+dy[j], CLR_RESPAWN);
+						if (skill_id == GD_ITEMEMERGENCYCALL)
+							recall--;
 					}
 				}
 				if (sd)
@@ -13435,6 +13450,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 				return 0;
 			}
 		case GD_EMERGENCYCALL:
+		case GD_ITEMEMERGENCYCALL:
 			// other checks were already done in skillnotok()
 			if (!sd->status.guild_id || !sd->state.gmaster_flag)
 				return 0;
@@ -18491,6 +18507,7 @@ int skill_block_check(struct block_list *bl, sc_type type , uint16 skill_id) {
 				case RA_CAMOUFLAGE:
 				case ST_CHASEWALK:
 				case GD_EMERGENCYCALL:
+				case GD_ITEMEMERGENCYCALL:
 					return 1; // needs more info
 			}
 			break;

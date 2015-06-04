@@ -1258,4 +1258,4 @@
 10012,0,0,4,0,0x3,15,1,0,yes,0,0x10,0,none,0,	GD_RESTORE,Restoration
 10013,0,0,4,0,0x3,0,1,0,yes,0,0x10,0,none,0,	GD_EMERGENCYCALL,Urgent Call
 10014,0,0,0,0,0,0,1,0,no,0,0x10,0,none,0,	GD_DEVELOPMENT,Permanent Development
-//10015,0,0,0,0,0,0,1,0,no,0,0x10,0,none,0,	GD_ITEMEMERGENCYCALL,Unknown Skill
+10015,0,0,4,0,0x3,0,3,0,yes,0,0x10,0,none,0,	GD_ITEMEMERGENCYCALL,Item Emergency Call
