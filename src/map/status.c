@@ -2222,7 +2222,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	}
 	bstatus->aspd_rate = 1000;
 	bstatus->ele_lv = 1;
-	bstatus->race = RC_DEMIHUMAN;
+	bstatus->race = RC_PLAYER;
 
 	// Autobonus
 	pc->delautobonus(sd,sd->autobonus,ARRAYLENGTH(sd->autobonus),true);
@@ -3032,7 +3032,7 @@ int status_calc_npc_(struct npc_data *nd, enum e_status_calc_opt opt) {
 
 		nstatus->def_ele = ELE_NEUTRAL;
 		nstatus->ele_lv = 1;
-		nstatus->race = RC_DEMIHUMAN;
+		nstatus->race = RC_PLAYER;
 		nstatus->size = nd->size;
 		nstatus->rhw.range = 1 + nstatus->size;
 		nstatus->mode = (MD_CANMOVE|MD_CANATTACK);

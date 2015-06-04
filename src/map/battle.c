@@ -300,10 +300,10 @@ int battle_delay_damage(int64 tick, int amotion, struct block_list *src, struct 
 int battle_attr_ratio(int atk_elem,int def_type, int def_lv)
 {
 
-	if (atk_elem < 0 || atk_elem >= ELE_MAX)
+	if (atk_elem < ELE_NEUTRAL || atk_elem >= ELE_MAX)
 		return 100;
 
-	if (def_type < 0 || def_type >= ELE_MAX || def_lv < 1 || def_lv > 4)
+	if (def_type < ELE_NEUTRAL || def_type >= ELE_MAX || def_lv < 1 || def_lv > 4)
 		return 100;
 
 	return battle->attr_fix_table[def_lv-1][atk_elem][def_type];
@@ -322,10 +322,10 @@ int64 battle_attr_fix(struct block_list *src, struct block_list *target, int64 d
 	if (src) sc = status->get_sc(src);
 	if (target) tsc = status->get_sc(target);
 
-	if (atk_elem < 0 || atk_elem >= ELE_MAX)
+	if (atk_elem < ELE_NEUTRAL || atk_elem >= ELE_MAX)
 		atk_elem = rnd()%ELE_MAX;
 
-	if (def_type < 0 || def_type >= ELE_MAX ||
+	if (def_type < ELE_NEUTRAL || def_type >= ELE_MAX ||
 		def_lv < 1 || def_lv > 4) {
 		ShowError("battle_attr_fix: unknown attr type: atk=%d def_type=%d def_lv=%d\n",atk_elem,def_type,def_lv);
 		return damage;
@@ -935,8 +935,6 @@ int64 battle_calc_cardfix2(struct block_list *src, struct block_list *bl, int64 
 			// RaceAddTolerance
 			damage -= damage * tsd->race_tolerance[sstatus->race] / 100;
 			damage -= damage * tsd->race_tolerance[is_boss(src) ? RC_BOSS : RC_NONBOSS] / 100;
-			if ( sstatus->race != RC_DEMIHUMAN )
-				damage -= damage *tsd->race_tolerance[RC_NONDEMIHUMAN] / 100;
 			if ( flag&BF_SHORT )
 				damage -= damage * tsd->bonus.near_attack_def_rate / 100;
 			else // SubRangeAttackDamage or bLongAtkDef
@@ -1019,8 +1017,6 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 				cardfix = cardfix * (100 - tsd->subrace2[s_race2]) / 100;
 				cardfix = cardfix * (100 - tsd->subrace[sstatus->race]) / 100;
 				cardfix = cardfix * (100 - tsd->subrace[is_boss(src)?RC_BOSS:RC_NONBOSS]) / 100;
-				if( sstatus->race != RC_DEMIHUMAN )
-					cardfix = cardfix * (100-tsd->subrace[RC_NONDEMIHUMAN]) / 100;
 
 				for(i=0; i < ARRAYLENGTH(tsd->add_mdef) && tsd->add_mdef[i].rate;i++) {
 					if(tsd->add_mdef[i].class_ == s_class) {
@@ -1076,8 +1072,6 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 						cardfix = cardfix * (100 + sd->right_weapon.addsize[tstatus->size]+sd->arrow_addsize[tstatus->size]) / 100;
 						cardfix = cardfix * (100 + sd->right_weapon.addrace2[t_race2]) / 100;
 						cardfix = cardfix * (100 + sd->right_weapon.addrace[is_boss(target)?RC_BOSS:RC_NONBOSS] + sd->arrow_addrace[is_boss(target)?RC_BOSS:RC_NONBOSS]) / 100;
-						if( tstatus->race != RC_DEMIHUMAN )
-							cardfix = cardfix * (100 + sd->right_weapon.addrace[RC_NONDEMIHUMAN]+sd->arrow_addrace[RC_NONDEMIHUMAN]) / 100;
 					}else{ // Melee attack
 						if( !battle_config.left_cardfix_to_right ){
 							cardfix=cardfix*(100+sd->right_weapon.addrace[tstatus->race])/100;
@@ -1096,8 +1090,6 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 							cardfix = cardfix * (100+sd->right_weapon.addsize[tstatus->size]) / 100;
 							cardfix = cardfix * (100+sd->right_weapon.addrace2[t_race2]) / 100;
 							cardfix = cardfix * (100+sd->right_weapon.addrace[is_boss(target)?RC_BOSS:RC_NONBOSS]) / 100;
-							if( tstatus->race != RC_DEMIHUMAN )
-								cardfix = cardfix * (100 + sd->right_weapon.addrace[RC_NONDEMIHUMAN]) / 100;
 
 							if( cflag&1 ){
 								cardfix_ = cardfix_*(100+sd->left_weapon.addrace[tstatus->race])/100;
@@ -1116,8 +1108,6 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 								cardfix_ = cardfix_ * (100+sd->left_weapon.addsize[tstatus->size]) / 100;
 								cardfix_ = cardfix_ * (100+sd->left_weapon.addrace2[t_race2]) / 100;
 								cardfix_ = cardfix_ * (100+sd->left_weapon.addrace[is_boss(target)?RC_BOSS:RC_NONBOSS]) / 100;
-								if( tstatus->race != RC_DEMIHUMAN )
-									cardfix_ = cardfix_*(100+sd->left_weapon.addrace[RC_NONDEMIHUMAN])/100;
 							}
 						}else{
 							int ele_fix = sd->right_weapon.addele[tstatus->def_ele] + sd->left_weapon.addele[tstatus->def_ele];
@@ -1143,8 +1133,6 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 							cardfix = cardfix * (100 + sd->right_weapon.addsize[tstatus->size] + sd->left_weapon.addsize[tstatus->size])/100;
 							cardfix = cardfix * (100 + sd->right_weapon.addrace2[t_race2] + sd->left_weapon.addrace2[t_race2])/100;
 							cardfix = cardfix * (100 + sd->right_weapon.addrace[is_boss(target)?RC_BOSS:RC_NONBOSS] + sd->left_weapon.addrace[is_boss(target)?RC_BOSS:RC_NONBOSS]) / 100;
-							if( tstatus->race != RC_DEMIHUMAN )
-								cardfix = cardfix * (100+sd->right_weapon.addrace[RC_NONDEMIHUMAN] + sd->left_weapon.addrace[RC_NONDEMIHUMAN]) / 100;
 						}
 					}
 
@@ -1209,8 +1197,6 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 					cardfix = cardfix * (100-tsd->subrace2[s_race2]) / 100;
 					cardfix = cardfix * (100-tsd->subrace[sstatus->race]) / 100;
 					cardfix = cardfix * (100-tsd->subrace[is_boss(src)?RC_BOSS:RC_NONBOSS]) / 100;
-					if( sstatus->race != RC_DEMIHUMAN )
-						cardfix = cardfix * (100 - tsd->subrace[RC_NONDEMIHUMAN]) / 100;
 
 					for( i = 0; i < ARRAYLENGTH(tsd->add_def) && tsd->add_def[i].rate;i++ ){
 						if( tsd->add_def[i].class_ == s_class )
@@ -1257,8 +1243,6 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 				}
 				cardfix = cardfix*(100-tsd->subrace[sstatus->race]) / 100;
 				cardfix = cardfix*(100-tsd->subrace[is_boss(src)?RC_BOSS:RC_NONBOSS]) / 100;
-				if( sstatus->race != RC_DEMIHUMAN )
-					cardfix = cardfix * (100 - tsd->subrace[RC_NONDEMIHUMAN]) / 100;
 				if( wflag&BF_SHORT )
 					cardfix = cardfix * ( 100 - tsd->bonus.near_attack_def_rate ) / 100;
 				else // BF_LONG (there's no other choice)
