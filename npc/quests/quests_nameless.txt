@@ -4219,7 +4219,7 @@ cmd_fild01,55,160,0	script	Heap of Earth	CLEAR_NPC,{
 		mes "Ah, so you failed to";
 		mes "fix the Mystic Dryer de";
 		mes "Elegance? That's expected:";
-		mes "I didn't really design it for the^FFFFFF ^000000 common user in mind. Well,";
+		mes "I didn't really design it for the common user in mind. Well,";
 		mes "why don't you try it again?";
 		erasequest 3106;
 		diamond_edq = 10;
@@ -4417,7 +4417,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 							mes "and vibrated violently";
 							mes "before coming to a sudden";
 							mes "stop. That was the wrong";
-							mes "switch. You'd better ask Dorian... ^FFFFFF ^000000";
+							mes "switch. You'd better ask Dorian... ";
 							setquest 3106;
 							diamond_edq = 11;
 							close;
@@ -4443,7 +4443,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 								mes "and vibrated violently";
 								mes "before coming to a sudden";
 								mes "stop. That was the wrong";
-								mes "switch. You'd better ask Dorian... ^FFFFFF ^000000";
+								mes "switch. You'd better ask Dorian... ";
 								setquest 3106;
 								diamond_edq = 11;
 								close;
@@ -4469,7 +4469,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 							mes "and vibrated violently";
 							mes "before coming to a sudden";
 							mes "stop. That was the wrong";
-							mes "switch. You'd better ask Dorian... ^FFFFFF ^000000";
+							mes "switch. You'd better ask Dorian... ";
 							setquest 3106;
 							diamond_edq = 11;
 							close;
@@ -4495,7 +4495,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 								mes "and vibrated violently";
 								mes "before coming to a sudden";
 								mes "stop. That was the wrong";
-								mes "switch. You'd better ask Dorian... ^FFFFFF ^000000";
+								mes "switch. You'd better ask Dorian... ";
 								setquest 3106;
 								diamond_edq = 11;
 								close;
@@ -4520,7 +4520,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 							mes "and vibrated violently";
 							mes "before coming to a sudden";
 							mes "stop. That was the wrong";
-							mes "switch. You'd better ask Dorian... ^FFFFFF ^000000";
+							mes "switch. You'd better ask Dorian... ";
 							setquest 3106;
 							diamond_edq = 11;
 							close;
@@ -4546,7 +4546,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 								mes "and vibrated violently";
 								mes "before coming to a sudden";
 								mes "stop. That was the wrong";
-								mes "switch. You'd better ask Dorian... ^FFFFFF ^000000";
+								mes "switch. You'd better ask Dorian... ";
 								setquest 3106;
 								diamond_edq = 11;
 								close;
@@ -4572,7 +4572,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 							mes "and vibrated violently";
 							mes "before coming to a sudden";
 							mes "stop. That was the wrong";
-							mes "switch. You'd better ask Dorian... ^FFFFFF ^000000";
+							mes "switch. You'd better ask Dorian... ";
 							setquest 3106;
 							diamond_edq = 11;
 							close;
@@ -4598,7 +4598,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 								mes "and vibrated violently";
 								mes "before coming to a sudden";
 								mes "stop. That was the wrong";
-								mes "switch. You'd better ask Dorian... ^FFFFFF ^000000";
+								mes "switch. You'd better ask Dorian... ";
 								setquest 3106;
 								diamond_edq = 11;
 								close;
@@ -7200,7 +7200,7 @@ in_rogue,359,116,3	script	Marybell	4_F_ROGUE,{
 		mes "[Marybell]";
 		mes "Oh, Gooho decoded everything?";
 		mes "Let's see... Something about";
-		mes "the Book of Forbidden Mystery...^FFFFFF ^000000 Ah. There we go! The location";
+		mes "the Book of Forbidden Mystery... Ah. There we go! The location";
 		mes "of the Z Gang's hideout!";
 		mes "Heh heh! We got 'em!";
 		next;
@@ -8073,8 +8073,8 @@ moc_ruins,90,67,3	script	Suspicious Man#1	4W_M_03,2,2,{
 		mes "to get away from here.";
 		mes "Let's see what it says...";
 		next;
-		mes "^FFFFFF ^000000";
-		mes "^FFFFFF ^000000";
+		mes "";
+		mes "";
 		mes "^666666Kill " + strcharinfo(0) + ", meow.";
 		mes "That arrogant do-gooder";
 		mes "is looking into us too much.";
@@ -8270,8 +8270,8 @@ OnTouch:
 		mes "to get away from here.";
 		mes "Let's see what it says...";
 		next;
-		mes "^FFFFFF ^000000";
-		mes "^FFFFFF ^000000";
+		mes "";
+		mes "";
 		mes "^666666Kill " + strcharinfo(0) + ", meow.";
 		mes "That arrogant do-gooder";
 		mes "is looking into us too much.";
@@ -8320,8 +8320,8 @@ moc_ruins,78,167,3	script	Suspicious Man#2	4W_M_03,2,2,{
 		mes "to get away from here.";
 		mes "Let's see what it says...";
 		next;
-		mes "^FFFFFF ^000000";
-		mes "^FFFFFF ^000000";
+		mes "";
+		mes "";
 		mes "^666666Kill " + strcharinfo(0) + ", meow.";
 		mes "That arrogant do-gooder";
 		mes "is looking into us too much.";
@@ -8519,8 +8519,8 @@ OnTouch:
 		mes "to get away from here.";
 		mes "Let's see what it says...";
 		next;
-		mes "^FFFFFF ^000000";
-		mes "^FFFFFF ^000000";
+		mes "";
+		mes "";
 		mes "^666666Kill " + strcharinfo(0) + ", meow.";
 		mes "That arrogant do-gooder";
 		mes "is looking into us too much.";
@@ -9402,7 +9402,7 @@ morocc,143,63,3	script	Ragged Man#nd	4_M_MIDDLE,{
 						mes "the hands of someone like";
 						mes "you than a rival treasure";
 						mes "hunter. This hunter that";
-						mes "stays north in town apparently^FFFFFF ^000000 confirmed the treasure's location.";
+						mes "stays north in town apparently confirmed the treasure's location.";
 						next;
 						mes "[Ragged Man]";
 						mes "Now, I hear that this guy";
@@ -9473,7 +9473,7 @@ morocc,143,63,3	script	Ragged Man#nd	4_M_MIDDLE,{
 				mes "he hands of someone like";
 				mes "you than a rival treasure";
 				mes "hunter. This hunter that";
-				mes "stays north in town apparently^FFFFFF ^000000 confirmed the treasure's location.";
+				mes "stays north in town apparently confirmed the treasure's location.";
 				next;
 				mes "[Ragged Man]";
 				mes "Now, I hear that this guy";
@@ -9507,7 +9507,7 @@ morocc,143,63,3	script	Ragged Man#nd	4_M_MIDDLE,{
 		mes "Ah, you must be having";
 		mes "trouble finding that guy";
 		mes "I was talking about. He's";
-		mes "just in the northern part of^FFFFFF ^000000 this town. It can't be that hard.";
+		mes "just in the northern part of this town. It can't be that hard.";
 		close;
 	}
 	else if (treasure_nd > 10) {
@@ -9532,7 +9532,7 @@ morocc,143,63,3	script	Ragged Man#nd	4_M_MIDDLE,{
 		mes "So how's the treasure";
 		mes "hunt coming along? I hope";
 		mes "you have better luck than";
-		mes "I did. Still, I've got a pretty^FFFFFF ^000000 good feeling that you'll find it.";
+		mes "I did. Still, I've got a pretty good feeling that you'll find it.";
 		close;
 	}
 }
@@ -10335,7 +10335,7 @@ comodo,139,184,3	script	Scholar#zgang	2_M_SAGE_B,{
 		mes "jewel came into a rich man's";
 		mes "possession. However, he lost";
 		mes "his fortune and was completely";
-		mes "ruined after obtaining it. Hence ^FFFFFF ^000000 the moniker, ''Unlucky Emerald.''";
+		mes "ruined after obtaining it. Hence  the moniker, ''Unlucky Emerald.''";
 		next;
 		mes "[Scholar]";
 		mes "Then the emerald came into";

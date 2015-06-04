@@ -205,7 +205,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 							mes "but after transcending, he";
 							mes "somehow became a Stalker.";
 							mes "Retaining his knowledge of";
-							mes "the Monk's Root skill, he adapted^FFFFFF ^000000 it for the purposes of the Rogues.";
+							mes "the Monk's Root skill, he adapted it for the purposes of the Rogues.";
 							next;
 							mes "[Haijara Greg]";
 							mes "Chae Takbae recorded the";
@@ -384,7 +384,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 				mes "supposed to be in the";
 				mes "middle of training to learn";
 				mes "that skill? Please speak to";
-				mes "Thor and complete your training. ^FFFFFF ^000000";
+				mes "Thor and complete your training. ";
 				close;
 			}
 			else if (ROG_SK == 8) {
@@ -489,7 +489,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 					mes "you about Close Confine.";
 					mes "I hope that you can learn";
 					mes "more about this skill through";
-					mes "practice, and that you become^FFFFFF ^000000 as great a legend as Chae Takbae.";
+					mes "practice, and that you become as great a legend as Chae Takbae.";
 					ROG_SK = 12;
 					skill 1005,1,0;
 					specialeffect2 EF_LIGHTSPHERE;
@@ -748,7 +748,7 @@ in_rogue,268,125,2	script	Thor Greg#rogueguild	4_M_04,{
 			mes "out with Antonio Jr. here";
 			mes "inside the Rogue Guild. ";
 			mes "Please bring him the letter";
-			mes "I've written as soon as possible! ^FFFFFF ^000000";
+			mes "I've written as soon as possible! ";
 			close;
 		}
 		else if (ROG_SK == 5) {
@@ -790,7 +790,7 @@ in_rogue,268,125,2	script	Thor Greg#rogueguild	4_M_04,{
 				mes "training partner. Approach her";
 				mes "closely and make sure that you";
 				mes "predict and block her movements";
-				mes "to the left, right or backward.^FFFFFF ^000000 Get ready, I'm sending you now...";
+				mes "to the left, right or backward. Get ready, I'm sending you now...";
 				close2;
 				warp "in_rogue",89,114;
 				end;
@@ -821,7 +821,7 @@ in_rogue,268,125,2	script	Thor Greg#rogueguild	4_M_04,{
 				mes "training partner. Approach her";
 				mes "closely and make sure that you";
 				mes "predict and block her movements";
-				mes "to the left, right or backward.^FFFFFF ^000000 Get ready, I'm sending you now...";
+				mes "to the left, right or backward. Get ready, I'm sending you now...";
 				ROG_SK = 6;
 				close2;
 				warp "in_rogue",89,114;
@@ -841,7 +841,7 @@ in_rogue,268,125,2	script	Thor Greg#rogueguild	4_M_04,{
 			mes "that you've completed your";
 			mes "training. Congratulations!";
 			mes "Now, please speak to my";
-			mes "father so that he can explain^FFFFFF ^000000 the Close Confine skill in detail.";
+			mes "father so that he can explain the Close Confine skill in detail.";
 			ROG_SK = 9;
 			close;
 		}
@@ -850,7 +850,7 @@ in_rogue,268,125,2	script	Thor Greg#rogueguild	4_M_04,{
 			mes "Please talk to my father";
 			mes "so that he can explain the";
 			mes "nuances of the Close Confine";
-			mes "skill to you. He should still be^FFFFFF ^000000 in the Rogue Guild's panic room.";
+			mes "skill to you. He should still be in the Rogue Guild's panic room.";
 			close;
 		}
 		else if (ROG_SK == 11) {
