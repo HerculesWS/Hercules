@@ -7809,7 +7809,7 @@ mes axtoi("11");           // Displays 17 (1 = 1, 10 = 16)
 
 ---------------------------------------
 
-*compare(<string>,<substring>)
+*compare("<string>","<substring>")
 
 This command returns 1 or 0 when the substring is in the main string (1) 
 or not (0). This command is not case sensitive.
@@ -7822,7 +7822,26 @@ Examples:
 //dothat; will not be executed ('Blood butterfly' does not contain 'Bloody').
 	if (compare("Blood Butterfly","Bloody"))
 		dothat;
+		
+---------------------------------------
 
+*strcmp("<string>","<string>")
+
+This command compares two strings and is similar to strcmp in C.
+
+Return Values:
+	>0  : String 1 > String 2
+	0  : Strings are equal
+	<0 : String 1 < String 2
+
+Examples:
+	.@a = strcmp("abcdef","ABCDEF");
+	if (.@a > 0){
+		mes ".@a is greater than 0.";		//Output is this.
+	}else{
+		mes ".@a is less or equal to 0";
+	}
+	
 ---------------------------------------
 
 *getstrlen("<string>")
