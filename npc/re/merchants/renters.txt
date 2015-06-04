@@ -109,6 +109,12 @@ prontera,130,213,5	script	Riding Creature Master	8W_SOLDIER,{
 	close;
 }
 
+geffen,100,55,3	duplicate(Riding Creature Master)	Riding Creature Master#2	8W_SOLDIER
+payon,166,102,5	duplicate(Riding Creature Master)	Riding Creature Master#3	8W_SOLDIER
+aldebaran,133,109,5	duplicate(Riding Creature Master)	Riding Creature Master#4	8W_SOLDIER
+yuno,171,187,3	duplicate(Riding Creature Master)	Riding Creature Master#5	8W_SOLDIER
+rachel,106,130,5	duplicate(Riding Creature Master)	Riding Creature Master#6	8W_SOLDIER
+
 // Peco removing NPC
 //============================================================
 prontera,125,208,5	script	Peco Peco Remover	8W_SOLDIER,{
