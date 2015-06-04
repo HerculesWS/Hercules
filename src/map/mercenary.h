@@ -8,6 +8,8 @@
 #include "map/unit.h" // struct unit_data
 #include "common/cbasetypes.h"
 
+struct map_session_data;
+
 // number of cells that a mercenary can walk to from it's master before being warped
 #define MAX_MER_DISTANCE 15
 

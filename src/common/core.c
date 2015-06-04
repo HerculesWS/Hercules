@@ -9,6 +9,7 @@
 
 #include "common/cbasetypes.h"
 #include "common/console.h"
+#include "common/db.h"
 #include "common/malloc.h"
 #include "common/mmo.h"
 #include "common/random.h"
@@ -20,7 +21,6 @@
 #ifndef MINICORE
 #	include "common/HPM.h"
 #	include "common/conf.h"
-#	include "common/db.h"
 #	include "common/ers.h"
 #	include "common/socket.h"
 #	include "common/sql.h"
@@ -37,7 +37,6 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 /// Called when a terminate signal is received.
 void (*shutdown_callback)(void) = NULL;

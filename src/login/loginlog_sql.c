@@ -13,7 +13,6 @@
 #include "common/sql.h"
 #include "common/strlib.h"
 
-#include <string.h>
 #include <stdlib.h> // exit
 
 // global sql settings (in ipban_sql.c)

@@ -8,7 +8,6 @@
 #include "common/cbasetypes.h"
 
 #include <stdio.h> // FILE*
-#include <time.h>
 
 /* [HCache] 1-byte key to ensure our method is the latest, we can modify to ensure the method matches */
 #define HCACHE_KEY 'k'

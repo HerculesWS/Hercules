@@ -5,9 +5,9 @@
 #ifndef MAP_MOB_H
 #define MAP_MOB_H
 
-#include "map/map.h" // struct status_data, struct view_data, struct mob_skill
+#include "map/map.h" // struct block_list
 #include "map/status.h" // struct status_data, struct status_change
-#include "map/unit.h" // struct unit_data
+#include "map/unit.h" // struct unit_data, view_data
 #include "common/cbasetypes.h"
 #include "common/mmo.h" // struct item
 

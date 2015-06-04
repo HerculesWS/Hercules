@@ -8,7 +8,6 @@
 
 #include "common/cbasetypes.h"
 #include "common/core.h"
-#include "common/malloc.h"
 #include "common/mmo.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
@@ -21,15 +20,12 @@
 #	endif  /* F_OK */
 #else
 #	include <dirent.h>
-#	include <sys/stat.h>
 #	include <unistd.h>
 #endif
 
 #include <math.h> // floor()
-#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/stat.h> // cache purposes [Ind/Hercules]
 
 struct HCache_interface HCache_s;

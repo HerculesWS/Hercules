@@ -3,8 +3,6 @@
 
 #define HERCULES_CORE
 
-#include "config/core.h" // RENEWAL
-
 #include "common/cbasetypes.h"
 #include "common/core.h"
 #include "common/grfio.h"
@@ -16,7 +14,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #ifndef _WIN32
 #include <unistd.h>
 #endif

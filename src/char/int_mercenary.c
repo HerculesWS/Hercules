@@ -9,6 +9,7 @@
 #include "char/char.h"
 #include "char/inter.h"
 #include "char/mapif.h"
+#include "common/cbasetypes.h"
 #include "common/malloc.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
@@ -20,7 +21,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 struct inter_mercenary_interface inter_mercenary_s;
 

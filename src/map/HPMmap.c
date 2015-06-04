@@ -5,11 +5,6 @@
 
 #include "HPMmap.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-
 #include "map/atcommand.h"
 #include "map/battle.h"
 #include "map/battleground.h"
@@ -62,6 +57,9 @@
 #include "common/sysinfo.h"
 
 #include "common/HPMDataCheck.h"
+
+#include <stdio.h>
+#include <stdlib.h>
 
 struct HPM_atcommand_list {
 	//tracking currently not enabled

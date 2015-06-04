@@ -9,7 +9,7 @@
 #include "char/char.h"
 #include "char/inter.h"
 #include "char/mapif.h"
-#include "common/db.h"
+#include "common/cbasetypes.h"
 #include "common/malloc.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
@@ -17,11 +17,9 @@
 #include "common/socket.h"
 #include "common/sql.h"
 #include "common/strlib.h"
-#include "common/timer.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 struct inter_quest_interface inter_quest_s;
 

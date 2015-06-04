@@ -10,6 +10,7 @@
 #include "map/battle.h"
 #include "map/chat.h"
 #include "map/clif.h"
+#include "map/guild.h"
 #include "map/instance.h"
 #include "map/intif.h"
 #include "map/itemdb.h"

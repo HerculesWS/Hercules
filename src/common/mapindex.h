@@ -5,6 +5,7 @@
 #ifndef COMMON_MAPINDEX_H
 #define COMMON_MAPINDEX_H
 
+#include "common/cbasetypes.h"
 #include "common/db.h"
 #include "common/mmo.h"
 

@@ -7,8 +7,6 @@
 
 #include "common/cbasetypes.h"
 
-#include <time.h>
-
 #ifdef WIN32
 #	include "common/winapi.h"
 	typedef long in_addr_t;

@@ -9,6 +9,8 @@
 #include "common/cbasetypes.h"
 #include "common/db.h"
 
+struct eri;
+
 /** Container for a mapreg value */
 struct mapreg_save {
 	int64 uid;         ///< Unique ID

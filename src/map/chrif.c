@@ -7,20 +7,21 @@
 #include "config/core.h" // AUTOTRADE_PERSISTENCY, STATS_OPT_OUT
 #include "chrif.h"
 
-#include "map/map.h"
 #include "map/battle.h"
 #include "map/clif.h"
+#include "map/elemental.h"
+#include "map/guild.h"
+#include "map/homunculus.h"
+#include "map/instance.h"
 #include "map/intif.h"
+#include "map/map.h"
+#include "map/mercenary.h"
 #include "map/npc.h"
 #include "map/pc.h"
 #include "map/pet.h"
+#include "map/quest.h"
 #include "map/skill.h"
 #include "map/status.h"
-#include "map/homunculus.h"
-#include "map/instance.h"
-#include "map/mercenary.h"
-#include "map/elemental.h"
-#include "map/quest.h"
 #include "map/storage.h"
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
@@ -34,9 +35,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/types.h>
-#include <time.h>
 
 struct chrif_interface chrif_s;
 

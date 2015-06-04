@@ -36,6 +36,7 @@
 #include "common/showmsg.h"
 #include "common/socket.h"
 #include "common/strlib.h"
+#include "common/sql.h"
 #include "common/timer.h"
 #include "common/utils.h"
 
@@ -43,9 +44,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/types.h>
-#include <time.h>
 #ifndef WIN32
 #	include <unistd.h>
 #endif

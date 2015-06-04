@@ -1,7 +1,8 @@
 #define HERCULES_CORE
 
-#include "common/core.h"
 #include "common/atomic.h"
+#include "common/cbasetypes.h"
+#include "common/core.h"
 #include "common/thread.h"
 #include "common/spinlock.h"
 #include "common/showmsg.h"

@@ -7,7 +7,7 @@
 
 #include "common/cbasetypes.h"
 
-#include "libconfig/libconfig.h"
+#include <libconfig/libconfig.h>
 
 /**
  * The libconfig interface -- specially for plugins, but we enforce it throughout the core to be consistent

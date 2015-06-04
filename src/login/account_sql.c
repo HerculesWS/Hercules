@@ -7,6 +7,7 @@
 #include "config/core.h" // CONSOLE_INPUT
 #include "account.h"
 
+#include "common/cbasetypes.h"
 #include "common/console.h"
 #include "common/malloc.h"
 #include "common/mmo.h"
@@ -15,10 +16,8 @@
 #include "common/socket.h"
 #include "common/sql.h"
 #include "common/strlib.h"
-#include "common/timer.h"
 
 #include <stdlib.h>
-#include <string.h>
 
 /// global defines
 #define ACCOUNT_SQL_DB_VERSION 20110114

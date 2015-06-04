@@ -5,8 +5,6 @@
 
 #include "random.h"
 
-#include <time.h> // time
-
 #include "common/cbasetypes.h" // for WIN32
 #include "common/showmsg.h"
 #include "common/timer.h" // gettick

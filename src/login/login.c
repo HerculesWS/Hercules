@@ -11,6 +11,7 @@
 #include "login/ipban.h"
 #include "login/loginlog.h"
 #include "common/HPM.h"
+#include "common/cbasetypes.h"
 #include "common/core.h"
 #include "common/db.h"
 #include "common/malloc.h"
@@ -25,7 +26,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 struct login_interface login_s;
 struct Login_Config login_config;

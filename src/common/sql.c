@@ -17,7 +17,6 @@
 #endif
 #include <mysql.h>
 #include <stdlib.h> // strtoul
-#include <string.h> // strlen/strnlen/memcpy/memset
 
 void hercules_mysql_error_handler(unsigned int ecode);
 

@@ -8,6 +8,7 @@
 
 #include "map/battle.h"
 #include "map/clif.h"
+#include "map/guild.h"
 #include "map/homunculus.h"
 #include "map/map.h"
 #include "map/mapreg.h"

@@ -6,6 +6,7 @@
 
 #include "malloc.h"
 
+#include "common/cbasetypes.h"
 #include "common/core.h"
 #include "common/showmsg.h"
 #include "common/sysinfo.h"
@@ -13,7 +14,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 struct malloc_interface iMalloc_s;
 

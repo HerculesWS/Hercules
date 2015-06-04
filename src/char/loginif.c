@@ -10,6 +10,7 @@
 #include "char/mapif.h"
 #include "common/cbasetypes.h"
 #include "common/core.h"
+#include "common/db.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/socket.h"

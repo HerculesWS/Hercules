@@ -15,8 +15,6 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h> // atexit
-#include <string.h>
-#include <time.h>
 
 #ifdef WIN32
 #	include "common/winapi.h"

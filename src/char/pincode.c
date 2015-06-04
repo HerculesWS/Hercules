@@ -8,6 +8,7 @@
 
 #include "char/char.h"
 #include "common/cbasetypes.h"
+#include "common/db.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
 #include "common/random.h"

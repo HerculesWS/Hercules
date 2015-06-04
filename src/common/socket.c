@@ -11,6 +11,7 @@
 
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
+#include "common/db.h"
 #include "common/malloc.h"
 #include "common/mmo.h"
 #include "common/showmsg.h"
@@ -19,7 +20,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/types.h>
 
 #ifdef WIN32

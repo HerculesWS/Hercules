@@ -9,6 +9,7 @@
 #include "common/cbasetypes.h"
 #include "common/mmo.h" // struct point
 
+struct HPluginData;
 struct block_list;
 struct map_session_data;
 

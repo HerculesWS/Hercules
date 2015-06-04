@@ -10,6 +10,7 @@
 #include "char/int_mail.h"
 #include "char/inter.h"
 #include "char/mapif.h"
+#include "common/cbasetypes.h"
 #include "common/db.h"
 #include "common/malloc.h"
 #include "common/mmo.h"
@@ -22,7 +23,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 struct inter_auction_interface inter_auction_s;
 

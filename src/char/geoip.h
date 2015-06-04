@@ -15,6 +15,7 @@ struct s_geoip {
 	bool active;
 };
 
+
 /**
  * geoip interface
  **/

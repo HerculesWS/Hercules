@@ -9,6 +9,7 @@
 
 #include "map/channel.h"
 #include "map/clif.h"
+#include "map/guild.h"
 #include "map/map.h"
 #include "map/npc.h"
 #include "map/party.h"

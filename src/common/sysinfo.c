@@ -16,7 +16,6 @@
 #include <stdio.h> // fopen
 #include <stdlib.h> // atoi
 #ifdef WIN32
-#	include <string.h> // strlen
 #	include <windows.h>
 #else
 #	include <unistd.h>

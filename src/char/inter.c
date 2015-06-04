@@ -31,7 +31,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #define WISDATA_TTL (60*1000) // Wis data Time To Live (60 seconds)
 #define WISDELLIST_MAX 256    // Number of elements in the list Delete data Wis
