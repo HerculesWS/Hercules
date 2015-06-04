@@ -120,3 +120,24 @@ s_atelier,17,110,1	shop	Part-Timer#sc_prt	1_F_02,6123:-1,6120:-1
 ra_in01,263,281,4	shop	Trap Specialist#ra	1_F_01,7940:-1,12341:-1
 ra_in01,257,266,4	shop	Black Marketeer#ra	1_M_03,2139:-1,2800:-1,2801:-1,2802:-1,2803:-1,2804:-1,2805:-1,2806:-1,2807:-1,18000:-1,18001:-1,18002:-1,18003:-1,18004:-1,12392:-1,12393:-1,12394:-1,6145:-1,6146:-1,6147:-1,6186:-1,2808:-1
 s_atelier,137,60,3	shop	Part-Timer#sc_ra	1_F_GYPSY,6123:-1,6120:-1
+
+// Ninja Shops
+prontera,178,244,3	trader	Amatsu Trader#nin	4_M_01,{
+OnInit:
+	sellitem Shuriken;
+	sellitem Nimbus_Shuriken;
+	sellitem Flash_Shuriken;
+	sellitem Sharp_Leaf_Shuriken;
+	sellitem Thorn_Needle_Shuriken;
+	sellitem Makibishi;
+	sellitem Arm_Guard;
+	sellitem Fox_Armguard;
+	sellitem Special_Ninja_Suit;
+	sellitem Flame_Stone;
+	sellitem Ice_Stone;
+	sellitem Wind_Stone;
+	sellitem Charm_Fire;
+	sellitem Charm_Ice;
+	sellitem Charm_Wind;
+	sellitem Charm_Earth;
+}
