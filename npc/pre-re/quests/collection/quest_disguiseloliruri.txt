@@ -11,7 +11,7 @@
 //= 1.0 First version.
 //============================================================
 
-nif_fild02,332,327,4	script	Deadman	4_M_NFDEADMAN,{
+nif_fild01,332,327,4	script	Deadman	4_M_NFDEADMAN,{
 
 	if (questprogress(60173)) {
 		if (questprogress(60173,HUNTING) != 2) {
