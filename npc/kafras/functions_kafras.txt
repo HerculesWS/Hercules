@@ -315,7 +315,7 @@ function	script	F_KafTele	{
 	mes "your destination.";
 	next;
 	.@menu$ = "";
-	for (.@i = 0; .@i <= 6; ++.@i)
+	for (.@i = 0; .@i <= getarraysize(@wrpD$); ++.@i)
 		.@menu$ += @wrpC$[.@i] + ":";
 	.@j = select(.@menu$) - 1;
 	if (@wrpC$[.@j] == "Cancel")
