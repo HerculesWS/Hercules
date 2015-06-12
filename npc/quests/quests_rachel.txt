@@ -348,7 +348,7 @@ ra_in01,384,246,3	script	Vincent#ra_in01	1_M_01,{
 		mes "Jenny about Phobe?";
 		mes "Sure, sure, I'll do that.";
 		lost_boy = 10;
-		changequest 8097,8097;
+		changequest 8096,8097;
 		close;
 	}
 	else if (lost_boy == 10) {

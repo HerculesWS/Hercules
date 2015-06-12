@@ -4056,7 +4056,7 @@ cmd_fild01,55,160,0	script	Heap of Earth	CLEAR_NPC,{
 		diamond_edq = 6;
 		close;
 	}
-	if (diamond_edq) == 9 {
+	if (diamong_edq == 9) {
 		mes "[Dorian]";
 		mes "Ah, did you bring all";
 		mes "the materials I need to";
@@ -4150,7 +4150,7 @@ cmd_fild01,55,160,0	script	Heap of Earth	CLEAR_NPC,{
 			close;
 		}
 	}
-	if (diamond_edq) == 10 {
+	if (diamong_edq == 10) {
 		mes "[Dorian]";
 		mes "Did you already forget";
 		mes "my instructions for fixing my";
@@ -4214,18 +4214,18 @@ cmd_fild01,55,160,0	script	Heap of Earth	CLEAR_NPC,{
 			close;
 		}
 	}
-	if (diamond_edq) == 11 {
+	if (diamong_edq == 11) {
 		mes "[Dorian]";
 		mes "Ah, so you failed to";
 		mes "fix the Mystic Dryer de";
 		mes "Elegance? That's expected:";
 		mes "I didn't really design it for the common user in mind. Well,";
 		mes "why don't you try it again?";
-		erasequest 3106;
+		changequest 3106,3105;
 		diamond_edq = 10;
 		close;
 	}
-	if (diamond_edq) == 12 {
+	if (diamond_edq == 12) {
 		mes "[Dorian]";
 		mes "Ah, I underestimated you.";
 		mes "You really repaired the";
@@ -4239,8 +4239,7 @@ cmd_fild01,55,160,0	script	Heap of Earth	CLEAR_NPC,{
 		mes "is insert the damaged";
 		mes "document and press the";
 		mes "switch. Simple, yes?";
-		erasequest 3106;
-		changequest 3105,3108;
+		changequest 3107,3108;
 		diamond_edq = 13;
 		next;
 		mes "[Dorian]";
@@ -4252,7 +4251,7 @@ cmd_fild01,55,160,0	script	Heap of Earth	CLEAR_NPC,{
 		mes "your kind of help. Farewell~";
 		close;
 	}
-	if (diamond_edq) > 12 {
+	if (diamond_edq > 12) {
 		mes "[Dorian]";
 		mes "Ah, hello! How have";
 		mes "you been? Are you in need";
@@ -4263,7 +4262,7 @@ cmd_fild01,55,160,0	script	Heap of Earth	CLEAR_NPC,{
 
 //OnTouch2:
 OnTouch:
-	if (diamond_edq) < 9 {
+	if (diamond_edq < 9) {
 		mes "[Dorian]";
 		mes "Wh-what are you doing?";
 		mes "D-don't sully my wonderful";
@@ -4271,7 +4270,7 @@ OnTouch:
 		mes "uncultured hands!";
 		close;
 	}
-	if (diamond_edq) == 9 {
+	if (diamong_edq == 9) {
 		mes "[Dorian]";
 		mes "Can't you see that the";
 		mes "machine won't work without";
@@ -4293,7 +4292,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 		mes "goods to Kafra Storage, please.";
 		close;
 	}
-	if (diamond_edq) == 10 {
+	if (diamong_edq == 10) {
 		.@bolt_rand = rand(2,5);
 		mes "^3355FFThis must be Dorian's";
 		mes "Mystic Dryer de Elegance.";
@@ -4356,7 +4355,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 					mes "The joint is broken...";
 					mes "You should go back";
 					mes "to Dorian for help.^000000";
-					setquest 3106;
+					changequest 3105,3106;
 					diamond_edq = 11;
 					close;
 				}
@@ -4394,7 +4393,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 					mes "^3355FFYou should tell Dorian";
 					mes "first so that you can";
 					mes "use this machine.^000000";
-					setquest 3107;
+					changequest 3105,3107;
 					diamond_edq = 12;
 					close;
 				}
@@ -4418,7 +4417,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 							mes "before coming to a sudden";
 							mes "stop. That was the wrong";
 							mes "switch. You'd better ask Dorian... ";
-							setquest 3106;
+							changequest 3105,3106;
 							diamond_edq = 11;
 							close;
 						case 1:
@@ -4444,7 +4443,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 								mes "before coming to a sudden";
 								mes "stop. That was the wrong";
 								mes "switch. You'd better ask Dorian... ";
-								setquest 3106;
+								changequest 3105,3106;
 								diamond_edq = 11;
 								close;
 							}
@@ -4470,7 +4469,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 							mes "before coming to a sudden";
 							mes "stop. That was the wrong";
 							mes "switch. You'd better ask Dorian... ";
-							setquest 3106;
+							changequest 3105,3106;
 							diamond_edq = 11;
 							close;
 						case 2:
@@ -4496,7 +4495,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 								mes "before coming to a sudden";
 								mes "stop. That was the wrong";
 								mes "switch. You'd better ask Dorian... ";
-								setquest 3106;
+								changequest 3105,3106;
 								diamond_edq = 11;
 								close;
 							}
@@ -4521,7 +4520,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 							mes "before coming to a sudden";
 							mes "stop. That was the wrong";
 							mes "switch. You'd better ask Dorian... ";
-							setquest 3106;
+							changequest 3105,3106;
 							diamond_edq = 11;
 							close;
 						case 3:
@@ -4547,7 +4546,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 								mes "before coming to a sudden";
 								mes "stop. That was the wrong";
 								mes "switch. You'd better ask Dorian... ";
-								setquest 3106;
+								changequest 3105,3106;
 								diamond_edq = 11;
 								close;
 							}
@@ -4573,7 +4572,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 							mes "before coming to a sudden";
 							mes "stop. That was the wrong";
 							mes "switch. You'd better ask Dorian... ";
-							setquest 3106;
+							changequest 3105,3106;
 							diamond_edq = 11;
 							close;
 						case 4:
@@ -4599,7 +4598,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 								mes "before coming to a sudden";
 								mes "stop. That was the wrong";
 								mes "switch. You'd better ask Dorian... ";
-								setquest 3106;
+								changequest 3105,3106;
 								diamond_edq = 11;
 								close;
 							}
