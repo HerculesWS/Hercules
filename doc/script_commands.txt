@@ -4511,16 +4511,19 @@ the look value).
 
 Here are the possible look types:
 
-0                   - Base sprite
-1 - VAR_HEAD        - Hairstyle
-2 - VAR_WEAPON      - Weapon
-3 - VAR_HEAD_TOP    - Head top
-4 - VAR_HEAD_MID    - Head mid
-5 - VAR_HEAD_BOTTOM - Head bottom
-6 - VAR_HEADPALETTE - Hair color
-7 - VAR_BODYPALETTE - Clothes color
-8 - VAR_SHIELD      - Shield
-9 - VAR_SHOES       - Shoes
+  0 - LOOK_BASE           Base sprite
+  1 - LOOK_HAIR           Hairstyle
+  2 - LOOK_WEAPON         Weapon
+  3 - LOOK_HEAD_BOTTOM    Head bottom
+  4 - LOOK_HEAD_TOP       Head top
+  5 - LOOK_HEAD_MID       Head mid
+  6 - LOOK_HAIR_COLOR     Hair color
+  7 - LOOK_CLOTHES_COLOR  Clothes color
+  8 - LOOK_SHIELD         Shield
+  9 - LOOK_SHOES          Shoes
+ 10 - LOOK_BODY           Body(N/A)
+ 11 - LOOK_FLOOR          FLOOR(N/A)
+ 12 - LOOK_ROBE           Robe
 
 Whatever 'shoes' means is anyone's guess, ask Gravity - the client does 
 nothing with this value. It still wants it from the server though, so it 
