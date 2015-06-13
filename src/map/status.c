@@ -9932,11 +9932,11 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 				if (src && sc2 && sc2->data[SC_RG_CCONFINE_M]) {
 					//If status was already ended, do nothing.
 					//Decrease count
-					if (--(sc2->data[SC_RG_CCONFINE_M]->val1) <= 0) //No more holds, free him up.
+					if (--(sc2->data[SC_RG_CCONFINE_M]->val2) <= 0) //No more holds, free him up.
 						status_change_end(src, SC_RG_CCONFINE_M, INVALID_TIMER);
 				}
 			}
-			/* Fall through */
+			break;
 		case SC_RG_CCONFINE_M:
 			if (sce->val2 > 0) {
 				//Caster has been unlocked... nearby chars need to be unlocked.
