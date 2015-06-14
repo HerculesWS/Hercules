@@ -4217,10 +4217,10 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 				else if(md->special_state.size==SZ_MEDIUM)
 					clif->specialeffect_single(bl,421,sd->fd);
 #if PACKETVER >= 20120404
-				if( !(md->status.mode&MD_BOSS) ){
+				if (battle_config.show_monster_hp_bar && !(md->status.mode&MD_BOSS)) {
 					int i;
 					for(i = 0; i < DAMAGELOG_SIZE; i++) {// must show hp bar to all char who already hit the mob.
-						if( md->dmglog[i].id == sd->status.char_id ) {
+						if (md->dmglog[i].id == sd->status.char_id) {
 							clif->monster_hp_bar(md, sd);
 							break;
 						}
@@ -17719,7 +17719,7 @@ void clif_monster_hp_bar( struct mob_data* md, struct map_session_data *sd ) {
 	p.HP = md->status.hp;
 	p.MaxHP = md->status.max_hp;
 
-	clif->send(&p,sizeof(p),&sd->bl,SELF);
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
 }
 
 /* [Ind/Hercules] placeholder for unsupported incoming packets (avoids server disconnecting client) */

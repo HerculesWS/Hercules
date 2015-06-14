@@ -7133,6 +7133,7 @@ static const struct battle_data {
 	{ "mob_icewall_walk_block",             &battle_config.mob_icewall_walk_block,          75,     0,      255,            },
 	{ "boss_icewall_walk_block",            &battle_config.boss_icewall_walk_block,         0,      0,      255,            },
 	{ "feature.roulette",                   &battle_config.feature_roulette,                1,      0,      1,              },
+	{ "show_monster_hp_bar",                &battle_config.show_monster_hp_bar,             1,      0,      1,              },
 };
 #ifndef STATS_OPT_OUT
 /**
