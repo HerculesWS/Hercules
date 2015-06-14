@@ -5773,6 +5773,7 @@
 2082,Piranha@MG_COLDBOLT,chase,14,3,500,1000,5000,yes,target,always,0,,,,,,,
 2082,Piranha@WZ_WATERBALL,attack,86,3,500,1000,5000,yes,target,always,0,,,,,,6,
 2082,Piranha@NPC_BLOODDRAIN,attack,199,1,500,0,5000,yes,target,always,0,,,,,,,
+
 //****
 // NC Mechanic Summons
 2042,Silver Sniper@AL_HEAL,chase,28,10,10000,0,1000,no,self,myhpltmaxrate,99,,,,,,,

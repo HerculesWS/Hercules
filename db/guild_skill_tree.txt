@@ -11,7 +11,6 @@
 //
 // NOTE: MAX_GUILD_SKILL_REQUIRE (typically 5) ID/Lv pairs must be specified.
 
-
 10000,1,0,0,0,0,0,0,0,0,0,0	//GD_APPROVAL#Official Guild Approval#
 10001,1,10000,1,0,0,0,0,0,0,0,0	//GD_KAFRACONTRACT#Contract with Kafra#
 10002,1,10000,1,0,0,0,0,0,0,0,0	//GD_GUARDRESEARCH#Guardian Research#

@@ -11,8 +11,8 @@
 //         32 - SC considered as debuff and be removed by Gospel and etc.
 //         64 - SC cannot be reset when MADO Gear is taken off.
 //        128 - SC cannot be reset by 'sc_end SC_ALL' and status change clear.
-//Example:
-//SC_ENDURE, 21 //SC_ENDURE: cannot be removed by death and dispell and cosidered as buff. (16 + 4 + 1 = 21)
+// Example:
+// SC_ENDURE, 21 //SC_ENDURE: cannot be removed by death and dispell and cosidered as buff. (16 + 4 + 1 = 21)
 
 SC_PROVOKE, 32
 SC_ENDURE, 21
