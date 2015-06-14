@@ -46,6 +46,7 @@
 #include "../common/strlib.h"
 #include "../common/timer.h"
 #include "../common/utils.h"
+#include "../config/core.h"
 
 struct mob_interface mob_s;
 
@@ -2062,6 +2063,7 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage) {
 	if (!src)
 		return;
 
+#ifdef ENABLE_MONSTER_HP_BAR
 #if PACKETVER >= 20120404
 	if( !(md->status.mode&MD_BOSS) ){
 		int i;
@@ -2073,6 +2075,7 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage) {
 			}
 		}
 	}
+#endif
 #endif
 }
 
@@ -2801,7 +2804,8 @@ void mob_heal(struct mob_data *md,unsigned int heal)
 {
 	if (battle_config.show_mob_info&3)
 		clif->charnameack (0, &md->bl);
-	
+
+#ifdef ENABLE_MONSTER_HP_BAR
 #if PACKETVER >= 20120404
 	if( !(md->status.mode&MD_BOSS) ){
 		int i;
@@ -2813,6 +2817,7 @@ void mob_heal(struct mob_data *md,unsigned int heal)
 			}
 		}
 	}
+#endif
 #endif
 }
 

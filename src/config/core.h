@@ -68,6 +68,9 @@
 /// Comment to disable autotrade persistency (where autotrading merchants survive server restarts)
 #define AUTOTRADE_PERSISTENCY
 
+/// Comment to disable monster hp bar on new clients (2012-04-04aRagexeRE onwards). [Frost]
+#define ENABLE_MONSTER_HP_BAR
+
 /**
  * No settings past this point
  **/
