@@ -57,7 +57,6 @@
 #include "../common/strlib.h"
 #include "../common/timer.h"
 #include "../common/utils.h"
-#include "../config/core.h"
 
 struct clif_interface clif_s;
 
@@ -4083,18 +4082,16 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 					clif->specialeffect_single(bl,423,sd->fd);
 				else if(md->special_state.size==SZ_MEDIUM)
 					clif->specialeffect_single(bl,421,sd->fd);
-#ifdef ENABLE_MONSTER_HP_BAR
 #if PACKETVER >= 20120404
-				if( !(md->status.mode&MD_BOSS) ){
+				if(battle_config.show_monster_hp_bar) && (!(md->status.mode&MD_BOSS)){
 					int i;
 					for(i = 0; i < DAMAGELOG_SIZE; i++) {// must show hp bar to all char who already hit the mob.
-						if( md->dmglog[i].id == sd->status.char_id ) {
+						if (md->dmglog[i].id == sd->status.char_id){
 							clif->monster_hp_bar(md, sd);
 							break;
 						}
 					}
 				}
-#endif
 #endif
 			}
 			break;
@@ -17110,7 +17107,6 @@ void clif_snap( struct block_list *bl, short x, short y ) {
 	clif->send(buf,packet_len(0x8d2),bl,AREA);
 }
 
-#ifdef ENABLE_MONSTER_HP_BAR
 void clif_monster_hp_bar( struct mob_data* md, struct map_session_data *sd ) {
 	struct packet_monster_hp p;
 
@@ -17119,9 +17115,8 @@ void clif_monster_hp_bar( struct mob_data* md, struct map_session_data *sd ) {
 	p.HP = md->status.hp;
 	p.MaxHP = md->status.max_hp;
 
-	clif->send(&p,sizeof(p),&sd->bl,SELF);
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
 }
-#endif
 
 /* [Ind/Hercules] placeholder for unsupported incoming packets (avoids server disconnecting client) */
 void __attribute__ ((unused)) clif_parse_dull(int fd,struct map_session_data *sd) {
@@ -18578,9 +18573,7 @@ void clif_defaults(void) {
 	clif->mvp_noitem = clif_mvp_noitem;
 	clif->changed_dir = clif_changed_dir;
 	clif->charnameack = clif_charnameack;
-#ifdef ENABLE_MONSTER_HP_BAR
 	clif->monster_hp_bar = clif_monster_hp_bar;
-#endif
 	clif->hpmeter = clif_hpmeter;
 	clif->hpmeter_single = clif_hpmeter_single;
 	clif->hpmeter_sub = clif_hpmeter_sub;

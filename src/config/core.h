@@ -64,12 +64,8 @@
 /// Uncomment to enable real-time server stats (in and out data and ram usage). [Ai4rei]
 //#define SHOW_SERVER_STATS
 
-
 /// Comment to disable autotrade persistency (where autotrading merchants survive server restarts)
 #define AUTOTRADE_PERSISTENCY
-
-/// Comment to disable monster hp bar on new clients (2012-04-04aRagexeRE onwards). [Frost]
-#define ENABLE_MONSTER_HP_BAR
 
 /**
  * No settings past this point
