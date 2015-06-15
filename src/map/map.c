@@ -69,6 +69,9 @@
 struct map_interface map_s;
 struct mapit_interface mapit_s;
 
+struct map_interface *map;
+struct mapit_interface *mapit;
+
 /*==========================================
  * server player count (of all mapservers)
  *------------------------------------------*/

@@ -29,6 +29,7 @@
 #include <stdlib.h>
 
 struct login_interface login_s;
+struct login_interface *login;
 struct Login_Config login_config;
 struct mmo_char_server server[MAX_SERVERS]; // char server data
 

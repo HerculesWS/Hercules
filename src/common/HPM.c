@@ -34,6 +34,7 @@
 struct malloc_interface iMalloc_HPM;
 struct malloc_interface *HPMiMalloc;
 struct HPM_interface HPM_s;
+struct HPM_interface *HPM;
 
 /**
  * (char*) data name -> (unsigned int) HPMDataCheck[] index
@@ -95,28 +96,6 @@ struct hplugin *hplugin_create(void) {
 	HPM->plugins[HPM->plugin_count - 1]->filename = NULL;
 	return HPM->plugins[HPM->plugin_count - 1];
 }
-#define HPM_POP(x) { #x , x }
-bool hplugin_populate(struct hplugin *plugin, const char *filename) {
-	struct {
-		const char* name;
-		void *Ref;
-	} ToLink[] = {
-		HPM_POP(showmsg),
-	};
-	int i, length = ARRAYLENGTH(ToLink);
-
-	for(i = 0; i < length; i++) {
-		void **Link;
-		if (!( Link = plugin_import(plugin->dll, ToLink[i].name,void **))) {
-			ShowFatalError("HPM:plugin_load: failed to retrieve '%s' for '"CL_WHITE"%s"CL_RESET"'!\n", ToLink[i].name, filename);
-			exit(EXIT_FAILURE);
-		}
-		*Link = ToLink[i].Ref;
-	}
-
-	return true;
-}
-#undef HPM_POP
 struct hplugin *hplugin_load(const char* filename) {
 	struct hplugin *plugin;
 	struct hplugin_info *info;
@@ -127,6 +106,7 @@ struct hplugin *hplugin_load(const char* filename) {
 	int *HPMDataCheckVer;
 	unsigned int *HPMDataCheckLen;
 	struct s_HPMDataCheck *HPMDataCheck;
+	const char *(*HPMLoadEvent)(int server_type);
 
 	if( HPM->exists(filename) ) {
 		ShowWarning("HPM:plugin_load: attempting to load duplicate '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
@@ -204,8 +184,17 @@ struct hplugin *hplugin_load(const char* filename) {
 		exit(EXIT_FAILURE);
 	}
 
-	if( !HPM->populate(plugin,filename) )
-		return NULL;
+	if (!(HPMLoadEvent = plugin_import(plugin->dll, "HPM_shared_symbols", const char *(*)(int)))) {
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPM_shared_symbols' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h!\n", filename);
+		exit(EXIT_FAILURE);
+	}
+	{
+		const char *failure = HPMLoadEvent(SERVER_TYPE);
+		if (failure) {
+			ShowFatalError("HPM:plugin_load: failed to import symbol '%s' into '"CL_WHITE"%s"CL_RESET"'.\n", failure, filename);
+			exit(EXIT_FAILURE);
+		}
+	}
 
 	if( !( HPMDataCheckLen = plugin_import(plugin->dll, "HPMDataCheckLen", unsigned int *) ) ) {
 		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheckLen' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h!\n", filename);
@@ -925,7 +914,6 @@ void hpm_defaults(void) {
 	HPM->share = hplugin_export_symbol;
 	HPM->symbol_defaults = hplugins_share_defaults;
 	HPM->config_read = hplugins_config_read;
-	HPM->populate = hplugin_populate;
 	HPM->symbol_defaults_sub = NULL;
 	HPM->pid2name = hplugins_id2name;
 	HPM->parse_packets = hplugins_parse_packets;

@@ -361,6 +361,7 @@ void cmdline_final(void)
 }
 
 struct cmdline_interface cmdline_s;
+struct cmdline_interface *cmdline;
 
 void cmdline_defaults(void)
 {

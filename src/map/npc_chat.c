@@ -30,6 +30,8 @@
 struct npc_chat_interface npc_chat_s;
 struct pcre_interface libpcre_s;
 
+struct npc_chat_interface *npc_chat;
+struct pcre_interface *libpcre;
 
 /**
  *  Written by MouseJstr in a vision... (2/21/2005)

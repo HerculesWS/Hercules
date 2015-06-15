@@ -58,6 +58,7 @@
 #include <string.h>
 
 struct atcommand_interface atcommand_s;
+struct atcommand_interface *atcommand;
 
 static char atcmd_output[CHAT_SIZE_MAX];
 static char atcmd_player_name[NAME_LENGTH];

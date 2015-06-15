@@ -29,6 +29,7 @@
 #include <sys/stat.h> // cache purposes [Ind/Hercules]
 
 struct HCache_interface HCache_s;
+struct HCache_interface *HCache;
 
 /// Dumps given buffer into file pointed to by a handle.
 void WriteDump(FILE* fp, const void* buffer, size_t length)

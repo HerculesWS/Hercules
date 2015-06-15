@@ -5,7 +5,7 @@
 #ifndef COMMON_MAPINDEX_H
 #define COMMON_MAPINDEX_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/db.h"
 #include "common/mmo.h"
 
@@ -95,10 +95,10 @@ struct mapindex_interface {
 	bool (*check_default) (void);
 };
 
-struct mapindex_interface *mapindex;
-
 #ifdef HERCULES_CORE
 void mapindex_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct mapindex_interface *mapindex;
 
 #endif /* COMMON_MAPINDEX_H */

@@ -5,7 +5,7 @@
 #ifndef COMMON_SOCKET_H
 #define COMMON_SOCKET_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/conf.h"
 
 #ifdef WIN32
@@ -193,10 +193,10 @@ struct socket_interface {
 	void (*net_config_read) (const char *filename);
 };
 
-struct socket_interface *sockt;
-
 #ifdef HERCULES_CORE
 void socket_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct socket_interface *sockt;
 
 #endif /* COMMON_SOCKET_H */

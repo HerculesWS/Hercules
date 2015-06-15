@@ -4,9 +4,7 @@
 #ifndef COMMON_CONSOLE_H
 #define COMMON_CONSOLE_H
 
-#include "config/core.h" // MAX_CONSOLE_INPUT
-
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/mutex.h"
 #include "common/spinlock.h"
 #include "common/sql.h"
@@ -84,10 +82,10 @@ struct console_interface {
 	struct console_input_interface *input;
 };
 
-struct console_interface *console;
-
 #ifdef HERCULES_CORE
 void console_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct console_interface *console;
 
 #endif /* COMMON_CONSOLE_H */

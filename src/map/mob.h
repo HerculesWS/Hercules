@@ -8,7 +8,7 @@
 #include "map/map.h" // struct block_list
 #include "map/status.h" // struct status_data, struct status_change
 #include "map/unit.h" // struct unit_data, view_data
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/mmo.h" // struct item
 
 #define MAX_RANDOMMONSTER 5
@@ -272,8 +272,8 @@ struct item_drop_list {
 #define mob_stop_walking(md, type) (unit->stop_walking(&(md)->bl, (type)))
 #define mob_stop_attack(md)        (unit->stop_attack(&(md)->bl))
 
-#define mob_is_battleground(md) ( map->list[(md)->bl.m].flag.battleground && ((md)->class_ == MOBID_BARRICADE2 || ((md)->class_ >= MOBID_FOOD_STOR && (md)->class_ <= MOBID_PINK_CRYST)) )
-#define mob_is_gvg(md) (map->list[(md)->bl.m].flag.gvg_castle && ( (md)->class_ == MOBID_EMPERIUM || (md)->class_ == MOBID_BARRICADE1 || (md)->class_ == MOBID_GUARIDAN_STONE1 || (md)->class_ == MOBID_GUARIDAN_STONE2) )
+#define mob_is_battleground(md) (map->list[(md)->bl.m].flag.battleground && ((md)->class_ == MOBID_BARRICADE2 || ((md)->class_ >= MOBID_FOOD_STOR && (md)->class_ <= MOBID_PINK_CRYST)))
+#define mob_is_gvg(md) (map->list[(md)->bl.m].flag.gvg_castle && ( (md)->class_ == MOBID_EMPERIUM || (md)->class_ == MOBID_BARRICADE1 || (md)->class_ == MOBID_GUARIDAN_STONE1 || (md)->class_ == MOBID_GUARIDAN_STONE2))
 #define mob_is_treasure(md) (((md)->class_ >= MOBID_TREAS01 && (md)->class_ <= MOBID_TREAS40) || ((md)->class_ >= MOBID_TREAS41 && (md)->class_ <= MOBID_TREAS49))
 
 struct mob_interface {
@@ -387,10 +387,10 @@ struct mob_interface {
 	void (*destroy_mob_db) (int index);
 };
 
-struct mob_interface *mob;
-
 #ifdef HERCULES_CORE
 void mob_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct mob_interface *mob;
 
 #endif /* MAP_MOB_H */

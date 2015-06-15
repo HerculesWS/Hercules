@@ -62,6 +62,7 @@
 #endif
 
 struct script_interface script_s;
+struct script_interface *script;
 
 static inline int GETVALUE(const unsigned char* buf, int i) {
 	return (int)MakeDWord(MakeWord(buf[i], buf[i+1]), MakeWord(buf[i+2], 0));

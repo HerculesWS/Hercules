@@ -32,6 +32,7 @@
 #include <time.h>
 
 struct instance_interface instance_s;
+struct instance_interface *instance;
 
 /// Checks whether given instance id is valid or not.
 bool instance_is_valid(int instance_id) {

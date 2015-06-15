@@ -37,6 +37,7 @@
 #include <sys/types.h>
 
 struct intif_interface intif_s;
+struct intif_interface *intif;
 
 #define inter_fd (chrif->fd) // alias
 

@@ -40,6 +40,8 @@ struct sysinfo_private {
 struct sysinfo_interface sysinfo_s;
 struct sysinfo_private sysinfo_p;
 
+struct sysinfo_interface *sysinfo;
+
 #define VCSTYPE_UNKNOWN 0
 #define VCSTYPE_GIT 1
 #define VCSTYPE_SVN 2

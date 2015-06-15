@@ -4,7 +4,7 @@
 #ifndef MAP_CHANNEL_H
 #define MAP_CHANNEL_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/db.h"
 #include "common/mmo.h"
 
@@ -109,10 +109,10 @@ struct channel_interface {
 	void (*config_read) (void);
 };
 
-struct channel_interface *channel;
-
 #ifdef HERCULES_CORE
 void channel_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct channel_interface *channel;
 
 #endif /* MAP_CHANNEL_H */

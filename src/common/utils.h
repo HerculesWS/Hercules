@@ -5,7 +5,7 @@
 #ifndef COMMON_UTILS_H
 #define COMMON_UTILS_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 #include <stdio.h> // FILE*
 
@@ -68,10 +68,10 @@ struct HCache_interface {
 	bool enabled;
 };
 
-struct HCache_interface *HCache;
-
 #ifdef HERCULES_CORE
 void HCache_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct HCache_interface *HCache;
 
 #endif /* COMMON_UTILS_H */

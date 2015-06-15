@@ -39,6 +39,8 @@
 struct quest_interface quest_s;
 struct quest_db *db_data[MAX_QUEST_DB]; ///< Quest database
 
+struct quest_interface *quest;
+
 /**
  * Searches a quest by ID.
  *

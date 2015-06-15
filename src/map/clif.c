@@ -59,6 +59,9 @@
 #include <time.h>
 
 struct clif_interface clif_s;
+struct clif_interface *clif;
+
+struct s_packet_db packet_db[MAX_PACKET_DB + 1];
 
 /* re-usable */
 static struct packet_itemlist_normal itemlist_normal;

@@ -36,6 +36,7 @@
 #include <string.h>
 
 struct guild_interface guild_s;
+struct guild_interface *guild;
 
 /*==========================================
  * Retrieves and validates the sd pointer for this guild member [Skotlex]

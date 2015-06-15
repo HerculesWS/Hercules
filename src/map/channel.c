@@ -28,6 +28,7 @@
 #include <string.h>
 
 struct channel_interface channel_s;
+struct channel_interface *channel;
 
 static struct Channel_Config channel_config;
 

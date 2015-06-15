@@ -6,7 +6,7 @@
 #define MAP_PATH_H
 
 #include "map/map.h" // enum cell_chk
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 #define MOVE_COST 10
 #define MOVE_DIAGONAL_COST 14
@@ -53,10 +53,10 @@ struct path_interface {
 	int (*distance_client) (int dx, int dy);
 };
 
-struct path_interface *path;
-
 #ifdef HERCULES_CORE
 void path_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct path_interface *path;
 
 #endif /* MAP_PATH_H */

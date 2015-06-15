@@ -5,7 +5,7 @@
 #ifndef COMMON_CONF_H
 #define COMMON_CONF_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 #include <libconfig/libconfig.h>
 
@@ -91,10 +91,10 @@ struct libconfig_interface {
 	int (*setting_copy) (config_setting_t *parent, const config_setting_t *src);
 };
 
-struct libconfig_interface *libconfig;
-
 #ifdef HERCULES_CORE
 void libconfig_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct libconfig_interface *libconfig;
 
 #endif // COMMON_CONF_H

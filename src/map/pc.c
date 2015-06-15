@@ -57,6 +57,7 @@
 #include <time.h>
 
 struct pc_interface pc_s;
+struct pc_interface *pc;
 
 //Converts a class to its array index for CLASS_COUNT defined arrays.
 //Note that it does not do a validity check for speed purposes, where parsing

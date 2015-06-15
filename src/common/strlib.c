@@ -20,6 +20,10 @@ struct strlib_interface strlib_s;
 struct stringbuf_interface stringbuf_s;
 struct sv_interface sv_s;
 
+struct strlib_interface *strlib;
+struct stringbuf_interface *StrBuf;
+struct sv_interface *sv;
+
 // escapes a string in-place (' -> \' , \ -> \\ , % -> _)
 char* jstrescape (char* pt) {
 	//copy from here

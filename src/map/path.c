@@ -29,6 +29,7 @@
 #define DIR_EAST 8
 
 struct path_interface path_s;
+struct path_interface *path;
 
 /// @name Structures and defines for A* pathfinding
 /// @{

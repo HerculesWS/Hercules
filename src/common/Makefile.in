@@ -32,9 +32,9 @@ COMMON_MINI_OBJ = $(addprefix obj_all/, $(COMMON_SHARED_OBJ) \
                   miniconsole.o minicore.o minimalloc.o minisocket.o)
 COMMON_C += console.c core.c malloc.c socket.c
 COMMON_H = atomic.h cbasetypes.h conf.h console.h core.h db.h des.h ers.h \
-           grfio.h HPM.h HPMi.h malloc.h mapindex.h md5calc.h mmo.h mutex.h \
-           nullpo.h random.h showmsg.h socket.h spinlock.h sql.h strlib.h \
-           sysinfo.h thread.h timer.h utils.h winapi.h
+           grfio.h hercules.h HPM.h HPMi.h malloc.h mapindex.h md5calc.h \
+           mmo.h mutex.h nullpo.h random.h showmsg.h socket.h spinlock.h \
+           sql.h strlib.h sysinfo.h thread.h timer.h utils.h winapi.h
 
 COMMON_SQL_OBJ = obj_sql/sql.o
 COMMON_SQL_H = sql.h

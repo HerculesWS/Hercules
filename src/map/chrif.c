@@ -38,6 +38,7 @@
 #include <sys/types.h>
 
 struct chrif_interface chrif_s;
+struct chrif_interface *chrif;
 
 //Used Packets:
 //2af8: Outgoing, chrif_connect -> 'connect to charserver / auth @ charserver'

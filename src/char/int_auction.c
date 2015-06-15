@@ -25,6 +25,7 @@
 #include <stdlib.h>
 
 struct inter_auction_interface inter_auction_s;
+struct inter_auction_interface *inter_auction;
 
 static int inter_auction_count(int char_id, bool buy)
 {

@@ -42,6 +42,7 @@
 #include <string.h>
 
 struct elemental_interface elemental_s;
+struct elemental_interface *elemental;
 
 int elemental_search_index(int class_) {
 	int i;

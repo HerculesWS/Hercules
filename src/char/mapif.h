@@ -5,7 +5,7 @@
 #ifndef CHAR_MAPIF_H
 #define CHAR_MAPIF_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/mmo.h"
 
 struct WisData;
@@ -184,10 +184,10 @@ struct mapif_interface {
 	int (*parse_NameChangeRequest) (int fd);
 };
 
-struct mapif_interface *mapif;
-
 #ifdef HERCULES_CORE
 void mapif_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct mapif_interface *mapif;
 
 #endif /* CHAR_MAPIF_H */

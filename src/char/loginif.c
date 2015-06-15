@@ -20,6 +20,7 @@
 #include <string.h>
 
 struct loginif_interface loginif_s;
+struct loginif_interface *loginif;
 
 /// Resets all the data.
 void loginif_reset(void)

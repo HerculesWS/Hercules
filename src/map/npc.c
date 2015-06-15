@@ -43,6 +43,7 @@
 #include <time.h>
 
 struct npc_interface npc_s;
+struct npc_interface *npc;
 
 static int npc_id=START_NPC_NUM;
 static int npc_warp=0;

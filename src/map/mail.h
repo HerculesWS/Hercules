@@ -5,7 +5,7 @@
 #ifndef MAP_MAIL_H
 #define MAP_MAIL_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 struct item;
 struct mail_message;
@@ -23,10 +23,10 @@ struct mail_interface {
 	bool (*invalid_operation) (struct map_session_data *sd);
 };
 
-struct mail_interface *mail;
-
 #ifdef HERCULES_CORE
 void mail_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct mail_interface *mail;
 
 #endif /* MAP_MAIL_H */

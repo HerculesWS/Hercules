@@ -4,7 +4,7 @@
 #ifndef COMMON_HPMI_H
 #define COMMON_HPMI_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/console.h"
 #include "common/core.h"
 #include "common/showmsg.h"
@@ -15,13 +15,7 @@ struct AtCommandInfo;
 struct socket_data;
 struct map_session_data;
 
-#ifdef WIN32
-	#define HPExport __declspec(dllexport)
-#else
-	#define HPExport
-#endif
-
-#define HPM_VERSION "1.0"
+#define HPM_VERSION "1.1"
 #define HPM_ADDCONF_LENGTH 40
 
 struct hplugin_info {
@@ -36,11 +30,6 @@ struct s_HPMDataCheck {
 	unsigned int size;
 	int type;
 };
-
-HPExport void *(*import_symbol) (char *name, unsigned int pID);
-HPExport Sql *mysql_handle;
-
-#define GET_SYMBOL(n) import_symbol((n),HPMi->pid)
 
 #define SERVER_TYPE_ALL (SERVER_TYPE_LOGIN|SERVER_TYPE_CHAR|SERVER_TYPE_MAP)
 
@@ -226,6 +215,10 @@ struct HPMi_interface {
 #ifndef HERCULES_CORE
 HPExport struct HPMi_interface HPMi_s;
 HPExport struct HPMi_interface *HPMi;
-#endif
+HPExport void *(*import_symbol) (char *name, unsigned int pID);
+HPExport Sql *mysql_handle;
+#define HPM_SYMBOL(n, s) ((s) = import_symbol((n),HPMi->pid))
+#endif // !HERCULES_CORE
+
 
 #endif /* COMMON_HPMI_H */

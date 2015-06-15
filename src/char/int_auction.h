@@ -4,12 +4,9 @@
 #ifndef CHAR_INT_AUCTION_H
 #define CHAR_INT_AUCTION_H
 
+#include "common/hercules.h"
 #include "common/db.h"
 #include "common/mmo.h"
-
-#ifdef HERCULES_CORE
-void inter_auction_defaults(void);
-#endif // HERCULES_CORE
 
 /**
  * inter_auction_interface interface
@@ -27,6 +24,10 @@ struct inter_auction_interface {
 	void (*sql_final) (void);
 };
 
-struct inter_auction_interface *inter_auction;
+#ifdef HERCULES_CORE
+void inter_auction_defaults(void);
+#endif // HERCULES_CORE
+
+HPShared struct inter_auction_interface *inter_auction;
 
 #endif /* CHAR_INT_AUCTION_H */

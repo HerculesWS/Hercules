@@ -5,7 +5,7 @@
 #ifndef COMMON_SHOWMSG_H
 #define COMMON_SHOWMSG_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 #include <libconfig/libconfig.h>
 
@@ -105,10 +105,8 @@ struct showmsg_interface {
 	void (*showConfigWarning) (config_setting_t *config, const char *string, ...) __attribute__((format(printf, 2, 3)));
 };
 
-struct showmsg_interface *showmsg;
-
 /* the purpose of these macros is simply to not make calling them be an annoyance */
-#define ClearScreen() (showMsg->clearScreen())
+#define ClearScreen() (showmsg->clearScreen())
 #define vShowMessage(fmt, list) (showmsg->showMessageV((fmt), (list)))
 #define ShowMessage(fmt, ...) (showmsg->showMessage((fmt), ##__VA_ARGS__))
 #define ShowStatus(fmt, ...) (showmsg->showStatus((fmt), ##__VA_ARGS__))
@@ -123,6 +121,8 @@ struct showmsg_interface *showmsg;
 
 #ifdef HERCULES_CORE
 void showmsg_defaults(void);
-#endif
+#endif // HERCULES_CORE
+
+HPShared struct showmsg_interface *showmsg;
 
 #endif /* COMMON_SHOWMSG_H */

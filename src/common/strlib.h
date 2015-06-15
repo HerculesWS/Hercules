@@ -5,7 +5,7 @@
 #ifndef COMMON_STRLIB_H
 #define COMMON_STRLIB_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 #include <stdarg.h>
 #include <string.h>
@@ -112,8 +112,6 @@ struct strlib_interface {
 	bool (*bin2hex_) (char* output, unsigned char* input, size_t count);
 };
 
-struct strlib_interface *strlib;
-
 struct stringbuf_interface {
 	StringBuf* (*Malloc) (void);
 	void (*Init) (StringBuf* self);
@@ -127,8 +125,6 @@ struct stringbuf_interface {
 	void (*Destroy) (StringBuf* self);
 	void (*Free) (StringBuf* self);
 };
-
-struct stringbuf_interface *StrBuf;
 
 struct sv_interface {
 	/// Parses a single field in a delim-separated string.
@@ -172,10 +168,12 @@ struct sv_interface {
 	bool (*readdb) (const char* directory, const char* filename, char delim, int mincols, int maxcols, int maxrows, bool (*parseproc)(char* fields[], int columns, int current));
 };
 
-struct sv_interface *sv;
-
 #ifdef HERCULES_CORE
 void strlib_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct strlib_interface *strlib;
+HPShared struct stringbuf_interface *StrBuf;
+HPShared struct sv_interface *sv;
 
 #endif /* COMMON_STRLIB_H */

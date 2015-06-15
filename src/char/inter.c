@@ -36,6 +36,7 @@
 #define WISDELLIST_MAX 256    // Number of elements in the list Delete data Wis
 
 struct inter_interface inter_s;
+struct inter_interface *inter;
 
 int char_server_port = 3306;
 char char_server_ip[32] = "127.0.0.1";

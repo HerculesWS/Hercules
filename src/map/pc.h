@@ -5,8 +5,6 @@
 #ifndef MAP_PC_H
 #define MAP_PC_H
 
-#include "config/core.h" // AUTOLOOTITEM_SIZE, RENEWAL, SECURE_NPCTIMEOUT
-
 #include "map/battle.h" // battle
 #include "map/battleground.h" // enum bg_queue_types
 #include "map/buyingstore.h"  // struct s_buyingstore
@@ -19,7 +17,7 @@
 #include "map/status.h" // enum sc_type, OPTION_*
 #include "map/unit.h" // struct unit_data, struct view_data
 #include "map/vending.h" // struct s_vending
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/ers.h" // struct eri
 #include "common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus, NEW_CARTS
 
@@ -1072,10 +1070,10 @@ END_ZEROED_BLOCK; /* End */
 	int (*check_job_name) (const char *name);
 };
 
-struct pc_interface *pc;
-
 #ifdef HERCULES_CORE
 void pc_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct pc_interface *pc;
 
 #endif /* MAP_PC_H */

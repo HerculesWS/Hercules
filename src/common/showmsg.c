@@ -31,6 +31,7 @@
 #endif
 
 struct showmsg_interface showmsg_s;
+struct showmsg_interface *showmsg;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// static/dynamic buffer for the messages

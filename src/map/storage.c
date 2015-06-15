@@ -28,6 +28,9 @@
 struct storage_interface storage_s;
 struct guild_storage_interface gstorage_s;
 
+struct storage_interface *storage;
+struct guild_storage_interface *gstorage;
+
 /*==========================================
  * Sort items in the warehouse
  *------------------------------------------*/

@@ -5,19 +5,11 @@
 #ifndef CHAR_INTER_H
 #define CHAR_INTER_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/db.h"
 #include "common/sql.h"
 
 #include <stdarg.h>
-
-struct accreg;
-
-#ifdef HERCULES_CORE
-extern unsigned int party_share_level;
-
-void inter_defaults(void);
-#endif // HERCULES_CORE
 
 /**
  * inter interface
@@ -44,6 +36,12 @@ struct inter_interface {
 	void (*final) (void);
 };
 
-struct inter_interface *inter;
+#ifdef HERCULES_CORE
+extern unsigned int party_share_level;
+
+void inter_defaults(void);
+#endif // HERCULES_CORE
+
+HPShared struct inter_interface *inter;
 
 #endif /* CHAR_INTER_H */

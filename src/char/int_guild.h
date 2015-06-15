@@ -23,10 +23,6 @@ enum {
 	GS_REMOVE = 0x8000,
 };
 
-#ifdef HERCULES_CORE
-void inter_guild_defaults(void);
-#endif // HERCULES_CORE
-
 /**
  * inter_guild interface
  **/
@@ -59,6 +55,10 @@ struct inter_guild_interface {
 	int (*broken) (int guild_id);
 };
 
-struct inter_guild_interface *inter_guild;
+#ifdef HERCULES_CORE
+void inter_guild_defaults(void);
+#endif // HERCULES_CORE
+
+HPShared struct inter_guild_interface *inter_guild;
 
 #endif /* CHAR_INT_GUILD_H */

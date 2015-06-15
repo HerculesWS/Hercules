@@ -46,6 +46,8 @@
 struct status_interface status_s;
 struct s_status_dbs statusdbs;
 
+struct status_interface *status;
+
 /**
 * Returns the status change associated with a skill.
 * @param skill The skill to look up

@@ -37,6 +37,7 @@
 #endif
 
 struct console_interface console_s;
+struct console_interface *console;
 #ifdef CONSOLE_INPUT
 struct console_input_interface console_input_s;
 

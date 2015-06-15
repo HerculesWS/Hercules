@@ -2,7 +2,7 @@
 // See the LICENSE file
 // Sample Hercules Plugin
 
-#include "common/HPMi.h"
+#include "common/hercules.h" /* Should always be the first Hercules file included! (if you don't make it first, you won't be able to use interfaces) */
 #include "common/malloc.h"
 #include "common/mmo.h"
 #include "common/socket.h"
@@ -11,7 +11,7 @@
 #include "map/pc.h"
 #include "map/script.h"
 
-#include "common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
+#include "common/HPMDataCheck.h" /* should always be the last Hercules file included! (if you don't make it last, it'll intentionally break compile time) */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -121,17 +121,8 @@ HPExport void plugin_init (void) {
 	char *server_name;
 
 	/* core vars */
-	server_type = GET_SYMBOL("SERVER_TYPE");
-	server_name = GET_SYMBOL("SERVER_NAME");
-
-	/* core interfaces */
-	iMalloc = GET_SYMBOL("iMalloc");
-
-	/* map-server interfaces */
-	script = GET_SYMBOL("script");
-	clif = GET_SYMBOL("clif");
-	pc = GET_SYMBOL("pc");
-	strlib = GET_SYMBOL("strlib");
+	server_type = GET_SYMBOL("SERVER_TYPE"); // FIXME
+	server_name = GET_SYMBOL("SERVER_NAME"); // FIXME
 
 	ShowInfo ("Server type is ");
 

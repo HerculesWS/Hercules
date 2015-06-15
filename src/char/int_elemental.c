@@ -22,6 +22,7 @@
 #include <stdlib.h>
 
 struct inter_elemental_interface inter_elemental_s;
+struct inter_elemental_interface *inter_elemental;
 
 bool mapif_elemental_save(struct s_elemental* ele) {
 	bool flag = true;

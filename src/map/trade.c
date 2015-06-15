@@ -25,6 +25,7 @@
 #include <string.h>
 
 struct trade_interface trade_s;
+struct trade_interface *trade;
 
 /*==========================================
  * Initiates a trade request.

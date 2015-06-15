@@ -82,6 +82,7 @@
 #include <stdlib.h>
 
 struct db_interface DB_s;
+struct db_interface *DB;
 
 /*****************************************************************************\
  *  (1) Private typedefs, enums, structures, defines and global variables of *

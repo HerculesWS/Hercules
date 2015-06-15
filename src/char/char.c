@@ -87,6 +87,7 @@ char char_reg_str_db[32] = "char_reg_str_db";
 char char_reg_num_db[32] = "char_reg_num_db";
 
 struct char_interface char_s;
+struct char_interface *chr;
 
 // show loading/saving messages
 int save_log = 1;

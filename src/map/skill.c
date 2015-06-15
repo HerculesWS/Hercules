@@ -64,6 +64,8 @@
 struct skill_interface skill_s;
 struct s_skill_dbs skilldbs;
 
+struct skill_interface *skill;
+
 //Since only mob-casted splash skills can hit ice-walls
 static inline int splash_target(struct block_list* bl) {
 #ifndef RENEWAL

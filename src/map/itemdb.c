@@ -26,6 +26,7 @@
 #include <string.h>
 
 struct itemdb_interface itemdb_s;
+struct itemdb_interface *itemdb;
 
 /**
  * Search for item name
