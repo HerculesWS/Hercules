@@ -26,6 +26,7 @@ foreach my $file (@files) {
 	next if $data->{compounddef}->{$filekey}->{compoundname}->[0] =~ /::/; # its a duplicate with a :: name e.g. struct script_state {<...>} ay;
 	my @filepath = split(/[\/\\]/, $data->{compounddef}->{$filekey}->{location}->[0]->{file});
 	my $foldername = uc($filepath[-2]);
+	next if $filepath[-1] eq "HPM.h"; # Skip the HPM core, plugins don't need it
 	my $filename = uc($filepath[-1]); $filename =~ s/-/_/g; $filename =~ s/\.[^.]*$//;
 	my $plugintypes = 'SERVER_TYPE_UNKNOWN';
 	$plugintypes = 'SERVER_TYPE_ALL' if $foldername eq 'COMMON';
