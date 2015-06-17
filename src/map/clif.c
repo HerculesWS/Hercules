@@ -4083,7 +4083,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 				else if(md->special_state.size==SZ_MEDIUM)
 					clif->specialeffect_single(bl,421,sd->fd);
 #if PACKETVER >= 20120404
-				if(battle_config.show_monster_hp_bar) && (!(md->status.mode&MD_BOSS)){
+				if(battle_config.show_monster_hp_bar && !(md->status.mode&MD_BOSS)){
 					int i;
 					for(i = 0; i < DAMAGELOG_SIZE; i++) {// must show hp bar to all char who already hit the mob.
 						if (md->dmglog[i].id == sd->status.char_id){
