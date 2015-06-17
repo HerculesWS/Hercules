@@ -9014,7 +9014,7 @@ int pc_readregistry(struct map_session_data *sd, int64 reg) {
 		ShowError("pc_readregistry: Trying to read reg %s before it's been loaded!\n", script->get_str(script_getvarid(reg)));
 		//This really shouldn't happen, so it's possible the data was lost somewhere, we should request it again.
 		//intif->request_registry(sd,type==3?4:type);
-		set_eof(sd->fd);
+		sockt->eof(sd->fd);
 		return 0;
 	}
 	
@@ -9035,7 +9035,7 @@ char* pc_readregistry_str(struct map_session_data *sd, int64 reg) {
 		ShowError("pc_readregistry_str: Trying to read reg %s before it's been loaded!\n", script->get_str(script_getvarid(reg)));
 		//This really shouldn't happen, so it's possible the data was lost somewhere, we should request it again.
 		//intif->request_registry(sd,type==3?4:type);
-		set_eof(sd->fd);
+		sockt->eof(sd->fd);
 		return NULL;
 	}
 

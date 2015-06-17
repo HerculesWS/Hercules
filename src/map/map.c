@@ -5552,7 +5552,7 @@ void do_shutdown(void)
 			for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
 				clif->GM_kick(NULL, sd);
 			mapit->free(iter);
-			flush_fifos();
+			sockt->flush_fifos();
 		}
 		chrif->check_shutdown();
 	}
@@ -5923,7 +5923,7 @@ int do_init(int argc, char *argv[])
 
 		if (!map->ip_set || !map->char_ip_set) {
 			char ip_str[16];
-			ip2str(sockt->addr_[0], ip_str);
+			sockt->ip2str(sockt->addr_[0], ip_str);
 
 			ShowWarning("Not all IP addresses in /conf/map-server.conf configured, auto-detecting...\n");
 

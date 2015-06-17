@@ -492,7 +492,7 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
 	nullpo_retv(last_ip);
 	nullpo_retv(lastlogin);
 	nullpo_retv(birthdate);
-	if (map_fd <= 0 || !session_isActive(map_fd))
+	if (map_fd <= 0 || !sockt->session_is_active(map_fd))
 		return; // check if we have a valid fd
 
 	if (!success) {
@@ -511,7 +511,7 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
 	}
 
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "Account e-mail: %s | Birthdate: %s", email, birthdate);
-	inter->msg_to_fd(map_fd, u_fd, u_aid, "Last IP: %s (%s)", last_ip, geoip->getcountry(str2ip(last_ip)));
+	inter->msg_to_fd(map_fd, u_fd, u_aid, "Last IP: %s (%s)", last_ip, geoip->getcountry(sockt->str2ip(last_ip)));
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "This user has logged %d times, the last time were at %s", logincount, lastlogin);
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "-- Character Details --");
 
@@ -557,7 +557,7 @@ void inter_savereg(int account_id, int char_id, const char *key, unsigned int in
 	nullpo_retv(key);
 	/* to login server we go! */
 	if( key[0] == '#' && key[1] == '#' ) {/* global account reg */
-		if( session_isValid(chr->login_fd) )
+		if (sockt->session_is_valid(chr->login_fd))
 			chr->global_accreg_to_login_add(key,index,val,is_string);
 		else {
 			ShowError("Login server unavailable, cant perform update on '%s' variable for AID:%d CID:%d\n",key,account_id,char_id);
@@ -1170,7 +1170,7 @@ int mapif_parse_Registry(int fd)
 	if( count ) {
 		int cursor = 14, i;
 		char key[32], sval[254];
-		bool isLoginActive = session_isActive(chr->login_fd);
+		bool isLoginActive = sockt->session_is_active(chr->login_fd);
 
 		if( isLoginActive )
 			chr->global_accreg_to_login_start(account_id,char_id);

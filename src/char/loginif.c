@@ -28,7 +28,7 @@ void loginif_reset(void)
 	// TODO kick everyone out and reset everything or wait for connect and try to reacquire locks [FlavioJS]
 	for( id = 0; id < ARRAYLENGTH(chr->server); ++id )
 		mapif->server_reset(id);
-	flush_fifos();
+	sockt->flush_fifos();
 	exit(EXIT_FAILURE);
 }
 
@@ -80,9 +80,8 @@ void do_init_loginif(void)
 
 void do_final_loginif(void)
 {
-	if( chr->login_fd != -1 )
-	{
-		do_close(chr->login_fd);
+	if (chr->login_fd != -1) {
+		sockt->close(chr->login_fd);
 		chr->login_fd = -1;
 	}
 }

@@ -301,7 +301,7 @@ void channel_join_sub(struct channel_data *chan, struct map_session_data *sd, bo
 
 	/* someone is cheating, we kindly disconnect the bastard */
 	if (sd->channel_count > 200) {
-		set_eof(sd->fd);
+		sockt->eof(sd->fd);
 	}
 
 }

@@ -144,8 +144,7 @@ int charif_sendallwos(int sfd, uint8* buf, size_t len)
 	for( i = 0, c = 0; i < ARRAYLENGTH(server); ++i )
 	{
 		int fd = server[i].fd;
-		if( session_isValid(fd) && fd != sfd )
-		{
+		if (sockt->session_is_valid(fd) && fd != sfd) {
 			WFIFOHEAD(fd,len);
 			memcpy(WFIFOP(fd,0), buf, len);
 			WFIFOSET(fd,len);
@@ -172,7 +171,7 @@ void chrif_server_destroy(int id)
 	Assert_retv(id >= 0 && id < MAX_SERVERS);
 	if (server[id].fd != -1)
 	{
-		do_close(server[id].fd);
+		sockt->close(server[id].fd);
 		server[id].fd = -1;
 	}
 }
@@ -703,7 +702,7 @@ bool login_fromchar_parse_wrong_pincode(int fd)
 			return true;
 		}
 
-		login_log(host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed"); // FIXME: Do we really want to log this with the same code as successful logins?
+		login_log(sockt->host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed"); // FIXME: Do we really want to log this with the same code as successful logins?
 	}
 
 	login->remove_online_user(acc.account_id);
@@ -776,21 +775,21 @@ int login_parse_fromchar(int fd)
 	if( id == ARRAYLENGTH(server) )
 	{// not a char server
 		ShowDebug("login_parse_fromchar: Disconnecting invalid session #%d (is not a char-server)\n", fd);
-		set_eof(fd);
-		do_close(fd);
+		sockt->eof(fd);
+		sockt->close(fd);
 		return 0;
 	}
 
 	if( session[fd]->flag.eof )
 	{
-		do_close(fd);
+		sockt->close(fd);
 		server[id].fd = -1;
 		chrif_on_disconnect(id);
 		return 0;
 	}
 
 	ipl = server[id].ip;
-	ip2str(ipl, ip);
+	sockt->ip2str(ipl, ip);
 
 	while( RFIFOREST(fd) >= 2 ) {
 		uint16 command = RFIFOW(fd,0);
@@ -954,7 +953,7 @@ int login_parse_fromchar(int fd)
 		break;
 		default:
 			ShowError("login_parse_fromchar: Unknown packet 0x%x from a char-server! Disconnecting!\n", command);
-			set_eof(fd);
+			sockt->eof(fd);
 			return 0;
 		} // switch
 	} // while
@@ -1034,7 +1033,7 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 
 	char ip[16];
 	nullpo_ret(sd);
-	ip2str(session[sd->fd]->client_addr, ip);
+	sockt->ip2str(session[sd->fd]->client_addr, ip);
 
 	// DNS Blacklist check
 	if( login_config.use_dnsbl ) {
@@ -1047,7 +1046,7 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 
 		for( dnsbl_serv = strtok(login_config.dnsbl_servs,","); dnsbl_serv != NULL; dnsbl_serv = strtok(NULL,",") ) {
 			sprintf(ip_dnsbl, "%s.%s", r_ip, trim(dnsbl_serv));
-			if( host2ip(ip_dnsbl) ) {
+			if (sockt->host2ip(ip_dnsbl)) {
 				ShowInfo("DNSBL: (%s) Blacklisted. User Kicked.\n", r_ip);
 				return 3;
 			}
@@ -1211,7 +1210,7 @@ void login_auth_ok(struct login_session_data* sd)
 
 	server_num = 0;
 	for( i = 0; i < ARRAYLENGTH(server); ++i )
-		if( session_isActive(server[i].fd) )
+		if (sockt->session_is_active(server[i].fd))
 			server_num++;
 
 	if( server_num == 0 )
@@ -1263,12 +1262,12 @@ void login_auth_ok(struct login_session_data* sd)
 	for (i = 0, n = 0; i < ARRAYLENGTH(server); ++i) {
 		uint32 subnet_char_ip;
 
-		if( !session_isValid(server[i].fd) )
+		if (!sockt->session_is_valid(server[i].fd))
 			continue;
 
 		subnet_char_ip = login->lan_subnet_check(ip);
 		WFIFOL(fd,47+n*32) = htonl((subnet_char_ip) ? subnet_char_ip : server[i].ip);
-		WFIFOW(fd,47+n*32+4) = ntows(htons(server[i].port)); // [!] LE byte order here [!]
+		WFIFOW(fd,47+n*32+4) = sockt->ntows(htons(server[i].port)); // [!] LE byte order here [!]
 		memcpy(WFIFOP(fd,47+n*32+6), server[i].name, 20);
 		WFIFOW(fd,47+n*32+26) = server[i].users;
 
@@ -1542,7 +1541,7 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 		sd->sex == 'S' &&
 		sd->account_id >= 0 &&
 		sd->account_id < ARRAYLENGTH(server) &&
-		!session_isValid(server[sd->account_id].fd) &&
+		!sockt->session_is_valid(server[sd->account_id].fd) &&
 		sockt->allowed_ip_check(ipl))
 	{
 		ShowStatus("Connection of the char-server '%s' accepted.\n", server_name);
@@ -1556,7 +1555,7 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 
 		session[fd]->func_parse = login->parse_fromchar;
 		session[fd]->flag.server = 1;
-		realloc_fifo(fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
+		sockt->realloc_fifo(fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
 		// send connection success
 		login->char_server_connection_status(fd, sd, 0);
@@ -1578,12 +1577,12 @@ int login_parse_login(int fd)
 
 	char ip[16];
 	uint32 ipl = session[fd]->client_addr;
-	ip2str(ipl, ip);
+	sockt->ip2str(ipl, ip);
 
 	if( session[fd]->flag.eof )
 	{
 		ShowInfo("Closed connection from '"CL_WHITE"%s"CL_RESET"'.\n", ip);
-		do_close(fd);
+		sockt->close(fd);
 		return 0;
 	}
 
@@ -1595,7 +1594,7 @@ int login_parse_login(int fd)
 			ShowStatus("Connection refused: IP isn't authorized (deny/allow, ip: %s).\n", ip);
 			login_log(ipl, "unknown", -3, "ip banned");
 			login->login_error(fd, 3); // 3 = Rejected from Server
-			set_eof(fd);
+			sockt->eof(fd);
 			return 0;
 		}
 
@@ -1675,7 +1674,7 @@ int login_parse_login(int fd)
 
 		default:
 			ShowNotice("Abnormal end of connection (ip: %s): Unknown packet 0x%x\n", ip, command);
-			set_eof(fd);
+			sockt->eof(fd);
 			return 0;
 		}
 	}
@@ -1744,10 +1743,10 @@ int login_config_read(const char* cfgName)
 				ShowInfo("Console Silent Setting: %d\n", atoi(w2));
 		}
 		else if( !strcmpi(w1, "bind_ip") ) {
-			login_config.login_ip = host2ip(w2);
+			login_config.login_ip = sockt->host2ip(w2);
 			if( login_config.login_ip ) {
 				char ip_str[16];
-				ShowStatus("Login server binding IP address : %s -> %s\n", w2, ip2str(login_config.login_ip, ip_str));
+				ShowStatus("Login server binding IP address : %s -> %s\n", w2, sockt->ip2str(login_config.login_ip, ip_str));
 			}
 		}
 		else if( !strcmpi(w1, "login_port") ) {
@@ -1874,7 +1873,7 @@ int do_final(void) {
 
 	if( login->fd != -1 )
 	{
-		do_close(login->fd);
+		sockt->close(login->fd);
 		login->fd = -1;
 	}
 
@@ -1913,7 +1912,7 @@ void do_shutdown_login(void)
 		// TODO proper shutdown procedure; kick all characters, wait for acks, ...  [FlavioJS]
 		for( id = 0; id < ARRAYLENGTH(server); ++id )
 			chrif_server_reset(id);
-		flush_fifos();
+		sockt->flush_fifos();
 		runflag = CORE_ST_STOP;
 	}
 }
@@ -2007,7 +2006,7 @@ int do_init(int argc, char** argv)
 	login->auth_db = idb_alloc(DB_OPT_RELEASE_DATA);
 
 	// set default parser as login_parse_login function
-	set_defaultparse(login->parse_login);
+	sockt->set_defaultparse(login->parse_login);
 
 	// every 10 minutes cleanup online account db.
 	timer->add_func_list(login->online_data_cleanup, "login->online_data_cleanup");
@@ -2028,7 +2027,7 @@ int do_init(int argc, char** argv)
 	HPM->event(HPET_INIT);
 
 	// server port open & binding
-	if( (login->fd = make_listen_bind(login_config.login_ip,login_config.login_port)) == -1 ) {
+	if ((login->fd = sockt->make_listen_bind(login_config.login_ip,login_config.login_port)) == -1) {
 		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",login_config.login_port);
 		exit(EXIT_FAILURE);
 	}

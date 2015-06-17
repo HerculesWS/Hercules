@@ -18280,7 +18280,7 @@ BUILDIN(getcharip) {
 
 		/* set ip, ip_addr and convert to ip and push str */
 		ip = session[sd->fd]->client_addr;
-		ip_addr = ip2str(ip, NULL);
+		ip_addr = sockt->ip2str(ip, NULL);
 		script_pushstrcopy(st, ip_addr);
 	}
 
