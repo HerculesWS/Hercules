@@ -2535,6 +2535,8 @@ int npc_parseview(const char* w4, const char* start, const char* buffer, const c
 	} else {
 		// NPC has an ID specified for view id.
 		val = atoi(w4);
+		if (val != -1)
+			ShowWarning("npc_parseview: Use of numeric NPC view IDs is deprecated and may be removed in a future update. Please use NPC view constants instead. ID '%d' specified in file '%s', line '%d'.\n", val, filepath, strline(buffer, start-buffer));
 	}
 
 	return val;

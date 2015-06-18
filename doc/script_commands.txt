@@ -225,8 +225,8 @@ current scripts have a zero in there.
 
 ** Define an NPC object.
 
-<map name>,<x>,<y>,<facing>%TAB%script%TAB%<NPC Name>%TAB%<sprite id>,{<code>}
-<map name>,<x>,<y>,<facing>%TAB%script%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>,{<code>}
+<map name>,<x>,<y>,<facing>%TAB%script%TAB%<NPC Name>%TAB%<sprite>,{<code>}
+<map name>,<x>,<y>,<facing>%TAB%script%TAB%<NPC Name>%TAB%<sprite>,<triggerX>,<triggerY>,{<code>}
 
 This will place an NPC object on a specified map at the specified 
 location, and is a top-level command you will use the most in your custom 
@@ -240,16 +240,17 @@ increments of 45 degrees, where 0 means facing towards the top of the map.
 (So to turn the sprite towards the bottom of the map, you use facing 4, 
 and to make it look southeast it's facing 5.)
 
-Sprite id is the sprite number used to display this particular NPC. For a 
-full list of sprite id numbers see http://kalen.s79.xrea.com/npc/npce.shtml
-You may also use a monster's ID number instead to display a monster sprite 
+Sprite is the sprite identifier used to display this particular NPC. For a 
+full list of sprite numbers see http://kalen.s79.xrea.com/npc/npce.shtml as
+well as db/const.txt.
+You may also use a monster's ID constant instead to display a monster sprite 
 for this NPC, in npcs that have view ids of mobs it's encouraged to use
 OnTouch events with a 2,2 range and with an 'end' after the header to avoid
 bugs (for more info on why see npc_click@map/npc.c). It is possible to use a job
 sprite as well, but you must first define it as a monster sprite in 'mob_avail.txt',
 a full description on how to do this is not in the scope of this manual.
-A '-1' sprite id will make the NPC invisible (and unclickable). 
-A '111' sprite id will make an NPC which does not have a sprite, but is 
+A '-1' sprite will make the NPC invisible (and unclickable). 
+A 'HIDDEN_NPC' sprite will make an NPC which does not have a sprite, but is 
 still clickable, which is useful if you want to make a clickable object of 
 the 3D terrain.
 
@@ -279,8 +280,8 @@ what these floating NPC objects are for. More on that below.
 
 ** Define a shop/cashshop NPC.
 
--%TAB%shop%TAB%<NPC Name>%TAB%<sprite id>,<itemid>:<price>{,<itemid>:<price>...}
-<map name>,<x>,<y>,<facing>%TAB%shop%TAB%<NPC Name>%TAB%<sprite id>,<itemid>:<price>{,<itemid>:<price>...}
+-%TAB%shop%TAB%<NPC Name>%TAB%<sprite>,<itemid>:<price>{,<itemid>:<price>...}
+<map name>,<x>,<y>,<facing>%TAB%shop%TAB%<NPC Name>%TAB%<sprite>,<itemid>:<price>{,<itemid>:<price>...}
 
 This will define a shop NPC, which, when triggered (which can only be done 
 by clicking) will cause a shop window to come up. No code whatsoever runs 
@@ -301,7 +302,7 @@ items here. The layout used to define sale items still count, and
 "<price>" refers to how many points will be spent purchasing the them.
 
 ** Define a trader NPC
-<map name>,<x>,<y>,<facing>%TAB%trader%TAB%<NPC Name>%TAB%<sprite id>,{<code>}
+<map name>,<x>,<y>,<facing>%TAB%trader%TAB%<NPC Name>%TAB%<sprite>,{<code>}
 -%TAB%trader%TAB%<NPC Name>%TAB%-1,{<code>}
 
 All the standards that are valid to script objects are also valid for trader objects
@@ -326,16 +327,16 @@ more information regarding how to use this NPC type.
 ** Define an warp/shop/cashshop/NPC duplicate.
 
 warp: <map name>,<x>,<y>{,<facing>}%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<spanx>,<spany>
-shop/cashshop/npc: -%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite id>
-shop/cashshop/npc: <map name>,<x>,<y>,<facing>%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite id>
-npc: -%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>
-npc: <map name>,<x>,<y>,<facing>%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>
+shop/cashshop/npc: -%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite>
+shop/cashshop/npc: <map name>,<x>,<y>,<facing>%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite>
+npc: -%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite>,<triggerX>,<triggerY>
+npc: <map name>,<x>,<y>,<facing>%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite>,<triggerX>,<triggerY>
 
 This will duplicate an warp/shop/cashshop/NPC referred to by 'label'.
 Warp duplicates inherit the target location.
 Shop/cashshop duplicates inherit the item list.
 NPC duplicates inherit the script code.
-The rest (name, location, facing, sprite ID, span/trigger area) is 
+The rest (name, location, facing, sprite, span/trigger area) is 
 obtained from the definition of the duplicate (not inherited).
 
 ** Define a function object
