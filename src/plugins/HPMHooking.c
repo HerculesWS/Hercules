@@ -134,13 +134,13 @@ HPExport void server_post_final (void) {
 	HPM_HP_final();
 }
 
-HPExport bool Hooked (bool *fr) {
+HPExport const char *Hooked (bool *fr) {
 	HPMforce_return = fr;
-	DB = GET_SYMBOL("DB");
-	iMalloc = GET_SYMBOL("iMalloc");
+	if (!(DB = GET_SYMBOL("DB"))) return "DB";
+	if (!(iMalloc = GET_SYMBOL("iMalloc"))) return "iMalloc";
 #include HPM_SYMBOL_INCLUDE
 	HPM_HP_load();
-	return true;
+	return NULL;
 }
 
 
