@@ -5575,13 +5575,13 @@ int char_config_read(const char* cfgName)
 		remove_control_chars(w1);
 		remove_control_chars(w2);
 		if(strcmpi(w1,"timestamp_format") == 0) {
-			safestrncpy(timestamp_format, w2, sizeof(timestamp_format));
+			safestrncpy(showmsg->timestamp_format, w2, sizeof(showmsg->timestamp_format));
 		} else if(strcmpi(w1,"console_silent")==0){
-			msg_silent = atoi(w2);
-			if( msg_silent ) /* only bother if its actually enabled */
+			showmsg->silent = atoi(w2);
+			if (showmsg->silent) /* only bother if its actually enabled */
 				ShowInfo("Console Silent Setting: %d\n", atoi(w2));
 		} else if(strcmpi(w1,"stdout_with_ansisequence")==0){
-			stdout_with_ansisequence = config_switch(w2);
+			showmsg->stdout_with_ansisequence = config_switch(w2) ? true : false;
 		} else if (strcmpi(w1, "userid") == 0) {
 			safestrncpy(chr->userid, w2, sizeof(chr->userid));
 		} else if (strcmpi(w1, "passwd") == 0) {

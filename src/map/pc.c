@@ -3268,23 +3268,17 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				sd->skillblown[i].val = val;
 			}
 			break;
-	#ifndef RENEWAL_CAST
+#ifndef RENEWAL_CAST
 		case SP_VARCASTRATE:
-	#endif
+#endif
 		case SP_CASTRATE:
 			if(sd->state.lr_flag == 2)
 				break;
 			ARR_FIND(0, ARRAYLENGTH(sd->skillcast), i, sd->skillcast[i].id == 0 || sd->skillcast[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillcast)) {
 				//Better mention this so the array length can be updated. [Skotlex]
-				ShowDebug("script->run: bonus2 %s reached it's limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
-
-	#ifndef RENEWAL_CAST
-					"bCastRate",
-	#else
-					"bVariableCastrate",
-	#endif
-
+				ShowDebug("script->run: bonus2 %s reached its limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
+					type == SP_CASTRATE ? "bCastRate" : "bVariableCastrate",
 					ARRAYLENGTH(sd->skillcast), type2, val);
 				break;
 			}

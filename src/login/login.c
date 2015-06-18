@@ -1734,12 +1734,12 @@ int login_config_read(const char* cfgName)
 			continue;
 
 		if(!strcmpi(w1,"timestamp_format"))
-			safestrncpy(timestamp_format, w2, 20);
+			safestrncpy(showmsg->timestamp_format, w2, 20);
 		else if(!strcmpi(w1,"stdout_with_ansisequence"))
-			stdout_with_ansisequence = config_switch(w2);
+			showmsg->stdout_with_ansisequence = config_switch(w2) ? true : false;
 		else if(!strcmpi(w1,"console_silent")) {
-			msg_silent = atoi(w2);
-			if( msg_silent ) /* only bother if we actually have this enabled */
+			showmsg->silent = atoi(w2);
+			if (showmsg->silent) /* only bother if we actually have this enabled */
 				ShowInfo("Console Silent Setting: %d\n", atoi(w2));
 		}
 		else if( !strcmpi(w1, "bind_ip") ) {

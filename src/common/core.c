@@ -176,6 +176,7 @@ void core_defaults(void) {
 	console_defaults();
 	strlib_defaults();
 	malloc_defaults();
+	showmsg_defaults();
 	cmdline_defaults();
 #ifndef MINICORE
 	libconfig_defaults();
@@ -317,7 +318,7 @@ int cmdline_exec(int argc, char **argv, unsigned int options)
 		}
 		if (options&CMDLINE_OPT_SILENT) {
 			if (data->options&CMDLINE_OPT_SILENT) {
-				msg_silent = 0x7; // silence information and status messages
+				showmsg->silent = 0x7; // silence information and status messages
 				break;
 			}
 		} else if ((data->options&CMDLINE_OPT_PREINIT) == (options&CMDLINE_OPT_PREINIT)) {
@@ -393,6 +394,7 @@ int main (int argc, char **argv) {
 	core_defaults();
 
 	iMalloc->init();// needed for Show* in display_title() [FlavioJS]
+	showmsg->init();
 
 	cmdline->init();
 
@@ -402,7 +404,7 @@ int main (int argc, char **argv) {
 	
 	sysinfo->init();
 
-	if (!(msg_silent&0x1))
+	if (!(showmsg->silent&0x1))
 		console->display_title();
 
 	usercheck();
@@ -458,6 +460,7 @@ int main (int argc, char **argv) {
 	//sysinfo->final(); Called by iMalloc->final()
 
 	iMalloc->final();
+	showmsg->final(); // Should be after iMalloc->final()
 
 	return retval;
 }

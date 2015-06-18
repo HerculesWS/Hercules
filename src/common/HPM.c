@@ -100,15 +100,7 @@ bool hplugin_populate(struct hplugin *plugin, const char *filename) {
 		const char* name;
 		void *Ref;
 	} ToLink[] = {
-		HPM_POP(ShowMessage),
-		HPM_POP(ShowStatus),
-		HPM_POP(ShowSQL),
-		HPM_POP(ShowInfo),
-		HPM_POP(ShowNotice),
-		HPM_POP(ShowWarning),
-		HPM_POP(ShowDebug),
-		HPM_POP(ShowError),
-		HPM_POP(ShowFatalError),
+		HPM_POP(showmsg),
 	};
 	int i, length = ARRAYLENGTH(ToLink);
 
@@ -778,6 +770,8 @@ void hplugins_share_defaults(void) {
 	HPM->share(DB, "DB");
 	HPM->share(HPMiMalloc, "iMalloc");
 	HPM->share(nullpo,"nullpo");
+	/* showmsg */
+	HPM->share(showmsg,"showmsg");
 	/* socket */
 	HPM->share(sockt,"sockt");
 	/* strlib */

@@ -185,6 +185,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define COMMON_NULLPO_H
 	#endif // COMMON_NULLPO_H
+	#ifdef COMMON_SHOWMSG_H
+		{ "showmsg_interface", sizeof(struct showmsg_interface), SERVER_TYPE_ALL },
+	#else
+		#define COMMON_SHOWMSG_H
+	#endif // COMMON_SHOWMSG_H
 	#ifdef COMMON_SOCKET_H
 		{ "hSockOpt", sizeof(struct hSockOpt), SERVER_TYPE_ALL },
 		{ "s_subnet", sizeof(struct s_subnet), SERVER_TYPE_ALL },

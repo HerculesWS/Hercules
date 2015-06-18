@@ -7,6 +7,7 @@
 #include "common/cbasetypes.h"
 #include "common/console.h"
 #include "common/core.h"
+#include "common/showmsg.h"
 #include "common/sql.h"
 
 struct script_state;
@@ -19,9 +20,6 @@ struct map_session_data;
 #else
 	#define HPExport
 #endif
-
-/* after */
-#include "common/showmsg.h"
 
 #define HPM_VERSION "1.0"
 #define HPM_ADDCONF_LENGTH 40
