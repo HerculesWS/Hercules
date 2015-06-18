@@ -2707,6 +2707,12 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 			return strchr(start,'\n');// skip and continue
 		}
 
+		if (dir < 0 || dir > 7) {
+			ShowError("npc_parse_ship: Invalid NPC facing direction '%d' in file '%s', line '%d'.\n", dir, filepath, strline(buffer, start-buffer));
+			if (retval) *retval = EXIT_FAILURE;
+			return strchr(start,'\n');//continue
+		}
+
 		m = map->mapname2mapid(mapname);
 	}
 
@@ -2932,6 +2938,13 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 
 	script_start = strstr(start,",{");
 	end = strchr(start,'\n');
+
+	if (dir < 0 || dir > 7) {
+		ShowError("npc_parse_script: Invalid NPC facing direction '%d' in file '%s', line '%d'.\n", dir, filepath, strline(buffer, start-buffer));
+		if (retval) *retval = EXIT_FAILURE;
+		return npc->skip_script(script_start, buffer, filepath, retval); // continue
+	}
+
 	if( strstr(w4,",{") == NULL || script_start == NULL || (end != NULL && script_start > end) )
 	{
 		ShowError("npc_parse_script: Missing left curly ',{' in file '%s', line '%d'. Skipping the rest of the file.\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
@@ -3088,6 +3101,11 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 			ShowError("npc_parse_duplicate: Invalid placement format for duplicate in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 			if (retval) *retval = EXIT_FAILURE;
 			return end;// next line, try to continue
+		}
+		if (dir < 0 || dir > 7) {
+			ShowError("npc_parse_duplicate: Invalid NPC facing direction '%d' in file '%s', line '%d'.\n", dir, filepath, strline(buffer, start-buffer));
+			if (retval) *retval = EXIT_FAILURE;
+			return end; // try next
 		}
 		m = map->mapname2mapid(mapname);
 	}
