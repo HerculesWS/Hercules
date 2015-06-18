@@ -596,7 +596,7 @@ niflheim,202,180,3	script	Kafra Employee::kaf_niflheim	4_F_NFDEADKAFRA,{
 // Dungeons and Fields
 //============================================================
 // - Byalan Island
-izlu2dun,106,58,8	script	Kafra Employee::kaf_izlu2dun	4_F_KAFRA3,{
+izlu2dun,106,58,0	script	Kafra Employee::kaf_izlu2dun	4_F_KAFRA3,{
 	cutin "kafra_03",2;
 	if (!RENEWAL && BaseJob == Job_Novice && job_merchant_q2 > 0) {
 		// Merchant Job Change Quest

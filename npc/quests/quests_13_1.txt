@@ -8317,7 +8317,7 @@ spl_fild02,321,169,0	duplicate(Fishinghole)	School of Fish#2	CLEAR_NPC
 spl_fild02,326,171,0	duplicate(Fishinghole)	School of Fish#3	CLEAR_NPC
 mid_camp,75,135,0	duplicate(Fishinghole)	School of Fish#4	CLEAR_NPC
 
-mid_camp,66,122,55	script	Henry Clifford	4_M_05,{
+mid_camp,66,122,7	script	Henry Clifford	4_M_05,{
 	if (countitem(6049) > 0) {
 		mes "[Henry Clifford]";
 		mes "Congratulations, you've caught a precious Marlin.";
@@ -8367,7 +8367,7 @@ mid_camp,66,122,55	script	Henry Clifford	4_M_05,{
 	}
 }
 
-mid_camp,88,100,55	script	Cat Hand Mining Agent	4_CAT,{
+mid_camp,88,100,7	script	Cat Hand Mining Agent	4_CAT,{
 	if (!questprogress(12062,PLAYTIME)) {
 		if ((countitem(6048) > 2) && (ep13_yong1 > 9)) {
 			mes "[Cat Hand Mining Agent]";

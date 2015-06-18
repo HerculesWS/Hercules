@@ -464,7 +464,7 @@ ecl_fild01,88,315,5	script	Tourist#ep14_2f12	4_WHITE_COW,{
 
 // Oliver Wolf Hood(Dreaming Time)
 //============================================================
-eclage,101,29,0	script	#ep14_2Bridge	139,3,3,{
+eclage,101,29,0	script	#ep14_2Bridge	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	if (BaseLevel >= 120) {
@@ -8829,7 +8829,7 @@ OnTouch:
 	}
 }
 
-ecl_in01,79,84,0	script	#kusa	139,3,3,{
+ecl_in01,79,84,0	script	#kusa	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	if (questprogress(4262) == 1) {
@@ -8862,7 +8862,7 @@ OnTouch:
 	}
 }
 
-ecl_in01,1,1,0	script	#call_ne	139,{
+ecl_in01,1,1,0	script	#call_ne	HIDDEN_WARP_NPC,{
 	end;
 OnInit:
 	initnpctimer;
@@ -8876,7 +8876,7 @@ OnCall:
 	end;
 }
 
-ecl_in01,2,2,0	script	#call_kusa	139,{
+ecl_in01,2,2,0	script	#call_kusa	HIDDEN_WARP_NPC,{
 	end;
 OnInit:
 	initnpctimer;
@@ -9467,7 +9467,7 @@ ecl_in02,98,32,3	script	Eclage Guard#tl1b	4_M_FAIRYSOLDIER2,{
 	close;
 }
 
-ecl_in02,133,115,0	script	#pa0829Prison Guard	139,3,3,{
+ecl_in02,133,115,0	script	#pa0829Prison Guard	HIDDEN_WARP_NPC,3,3,{
 	end;
 	
 OnTouch:
@@ -11311,7 +11311,7 @@ ecl_tdun01,60,56,4	script	#pa0829EtranInterio	HIDDEN_NPC,{
 	close;
 }
 
-ecl_tdun01,60,56,0	script	#pa0829EtranInterioTouch	139,4,4,{
+ecl_tdun01,60,56,0	script	#pa0829EtranInterioTouch	HIDDEN_WARP_NPC,4,4,{
 	end;
 OnTouch:
 	disable_items;
@@ -11338,7 +11338,7 @@ OnTouch:
 	end;
 }
 
-ecl_fild01,183,94,0	script	#pa0829EtranExterioTouch	139,3,3,{
+ecl_fild01,183,94,0	script	#pa0829EtranExterioTouch	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11465,7 +11465,7 @@ OnTouch:
 	end;
 }
 
-eclage,291,301,0	script	#pa0829RobertExteriTouch	139,3,3,{
+eclage,291,301,0	script	#pa0829RobertExteriTouch	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11507,7 +11507,7 @@ OnTouch:
 	end;
 }
 
-ecl_fild01,110,240,0	script	#pa0829Reactor1	139,3,3,{
+ecl_fild01,110,240,0	script	#pa0829Reactor1	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11543,9 +11543,9 @@ OnTouch:
 	}
 	end;
 }
-ecl_fild01,234,266,0	duplicate(#pa0829Reactor1)	#pa0829Reactor6	139,3,3
+ecl_fild01,234,266,0	duplicate(#pa0829Reactor1)	#pa0829Reactor6	HIDDEN_WARP_NPC,3,3
 
-ecl_fild01,110,198,0	script	#pa0829Reactor2	139,3,3,{
+ecl_fild01,110,198,0	script	#pa0829Reactor2	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11594,9 +11594,9 @@ OnTouch:
 	}
 end;
 }
-ecl_fild01,179,125,0	duplicate(#pa0829Reactor2)	#pa0829Reactor7	139,3,3
+ecl_fild01,179,125,0	duplicate(#pa0829Reactor2)	#pa0829Reactor7	HIDDEN_WARP_NPC,3,3
 
-ecl_fild01,165,158,0	script	#pa0829Reactor3	139,3,3,{
+ecl_fild01,165,158,0	script	#pa0829Reactor3	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11643,9 +11643,9 @@ OnTouch:
 	}
 end;
 }
-ecl_fild01,179,179,0	duplicate(#pa0829Reactor3)	#pa0829Reactor8	139,3,3
+ecl_fild01,179,179,0	duplicate(#pa0829Reactor3)	#pa0829Reactor8	HIDDEN_WARP_NPC,3,3
 
-ecl_fild01,237,166,0	script	#pa0829Reactor4	139,3,3,{
+ecl_fild01,237,166,0	script	#pa0829Reactor4	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11687,9 +11687,9 @@ OnTouch:
 	}
 end;
 }
-ecl_fild01,187,243,0	duplicate(#pa0829Reactor4)	#pa0829Reactor9	139,3,3
+ecl_fild01,187,243,0	duplicate(#pa0829Reactor4)	#pa0829Reactor9	HIDDEN_WARP_NPC,3,3
 
-ecl_fild01,230,206,0	script	#pa0829Reactor5	139,3,3,{
+ecl_fild01,230,206,0	script	#pa0829Reactor5	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11734,7 +11734,7 @@ OnTouch:
 	}
 end;
 }
-ecl_fild01,159,278,0	duplicate(#pa0829Reactor5)	#pa0829Reactor10	139,3,3
+ecl_fild01,159,278,0	duplicate(#pa0829Reactor5)	#pa0829Reactor10	HIDDEN_WARP_NPC,3,3
 
 eclage,155,91,4	script	#pa0829Hiel's Door10	2_BOARD2,3,3,{
 	mes "[Notice]";
@@ -14124,7 +14124,7 @@ ecl_tdun04,26,39,1	script	Professor Worm#worm	4_M_PROFESSORWORM,{
 	}
 }
 
-ecl_tdun04,21,41,0	script	#pf	139,2,2,{
+ecl_tdun04,21,41,0	script	#pf	HIDDEN_WARP_NPC,2,2,{
 	end;
 	
 OnTouch:
@@ -14173,9 +14173,9 @@ if (ep14_2_profe == 1) {
 	}
 }
 
-ecl_tdun04,37,21,0	duplicate(#pf)	#pf3	139,2,2
+ecl_tdun04,37,21,0	duplicate(#pf)	#pf3	HIDDEN_WARP_NPC,2,2
 
-ecl_tdun04,39,27,0	script	#prf1	139,2,2,{
+ecl_tdun04,39,27,0	script	#prf1	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (questprogress(1218) == 0 && ep14_2_profe==4) {
@@ -14212,7 +14212,7 @@ OnTouch:
 	
 }
 
-ecl_tdun04,35,31,0	script	#prf2	139,2,2,{
+ecl_tdun04,35,31,0	script	#prf2	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (questprogress(1219) == 0 && ep14_2_profe==4) {
@@ -14254,7 +14254,7 @@ OnTouch:
 	
 }
 
-ecl_tdun04,28,43,0	script	#prf3	139,2,2,{
+ecl_tdun04,28,43,0	script	#prf3	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (questprogress(1220) == 0 && ep14_2_profe==4) {
@@ -14306,7 +14306,7 @@ OnTouch:
 	}
 }
 
-ecl_tdun04,39,31,0	script	#prf4	139,2,2,{
+ecl_tdun04,39,31,0	script	#prf4	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (questprogress(1221) == 0 && ep14_2_profe==4) {
@@ -14340,7 +14340,7 @@ OnTouch:
 	}
 }
 
-ecl_tdun04,24,31,0	script	#prf5	139,2,2,{
+ecl_tdun04,24,31,0	script	#prf5	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (questprogress(1222) == 0 && ep14_2_profe == 4 ) {
@@ -18931,7 +18931,7 @@ ecl_tdun04,32,35,3	script	Hisie#tlord	4_M_FARIY_HISIE,{
 	end;
 }
 
-eclage,280,290,0	script	#Hisie01	139,0,3,{
+eclage,280,290,0	script	#Hisie01	HIDDEN_WARP_NPC,0,3,{
 	end;
 OnTouch:
 	if (ep14_2_mylord == 19) {
@@ -19103,7 +19103,7 @@ OnTimer400000:
 	end;
 }
 
-que_avan01,26,26,0	script	#tltimer	139,0,1,{
+que_avan01,26,26,0	script	#tltimer	HIDDEN_WARP_NPC,0,1,{
 	end;
 OnTouch:
 	mes "It was definitely a small Yai when first entered, but upon regaining consciousness after being very dizzy, a huge space appeared.";

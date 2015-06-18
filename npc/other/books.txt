@@ -871,7 +871,7 @@ prt_in,159,56,4	script	Monster Encyclopedia#2pr	HIDDEN_NPC,{
 	}
 }
 
-prt_in,161,50,4	script	Monster Encyclopedia#3pr	 111,{
+prt_in,161,50,4	script	Monster Encyclopedia#3pr	HIDDEN_NPC,{
 	mes "^FF0000[Monster Encyclopedia]^000000";
 	mes "This is a Monster Encyclopedia";
 	mes "containing information on Dark,";
