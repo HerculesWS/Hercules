@@ -12589,11 +12589,11 @@ void HP_clif_messageln(const int fd, const char *mes) {
 	}
 	return;
 }
-bool HP_clif_process_message(struct map_session_data *sd, int format, char **name_, size_t *namelen_, char **message_, size_t *messagelen_) {
+void(*) bool HP_clif_process_message(struct map_session_data *sd, int format, char **name_, size_t *namelen_, char **message_, size_t *messagelen_) {
 	int hIndex = 0;
-	bool retVal___ = false;
+	void(*) bool retVal___ = NULL;
 	if( HPMHooks.count.HP_clif_process_message_pre ) {
-		bool (*preHookFunc) (struct map_session_data *sd, int *format, char **name_, size_t *namelen_, char **message_, size_t *messagelen_);
+		void(*) bool (*preHookFunc) (struct map_session_data *sd, int *format, char **name_, size_t *namelen_, char **message_, size_t *messagelen_);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_process_message_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_clif_process_message_pre[hIndex].func;
@@ -12608,7 +12608,7 @@ bool HP_clif_process_message(struct map_session_data *sd, int format, char **nam
 		retVal___ = HPMHooks.source.clif.process_message(sd, format, name_, namelen_, message_, messagelen_);
 	}
 	if( HPMHooks.count.HP_clif_process_message_post ) {
-		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, int *format, char **name_, size_t *namelen_, char **message_, size_t *messagelen_);
+		void(*) bool (*postHookFunc) (void(*) bool retVal___, struct map_session_data *sd, int *format, char **name_, size_t *namelen_, char **message_, size_t *messagelen_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_process_message_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_clif_process_message_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, &format, name_, namelen_, message_, messagelen_);
