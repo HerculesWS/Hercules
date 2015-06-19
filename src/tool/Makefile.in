@@ -9,13 +9,16 @@ CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
 COMMON_D = ../common
 COMMON_H = $(wildcard $(COMMON_D)/*.h)
 SYSINFO_INC = $(COMMON_D)/sysinfo.inc
+COMMON_INCLUDE = -I..
 
-LIBCONFIG_D = ../../3rdparty/libconfig
+THIRDPARTY_D = ../../3rdparty
+THIRDPARTY_INCLUDE = -I$(THIRDPARTY_D)
+
+LIBCONFIG_D = $(THIRDPARTY_D)/libconfig
 LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
                 scanner.o strbuf.o)
 LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
               scanctx.h scanner.h strbuf.h wincompat.h)
-LIBCONFIG_INCLUDE = -I$(LIBCONFIG_D)
 
 MAPCACHE_OBJ = obj_all/mapcache.o
 MAPCACHE_C = mapcache.c
@@ -70,7 +73,7 @@ obj_all:
 
 obj_all/%.o: %.c $(MAPCACHE_H) $(COMMON_H) $(CONFIG_H) $(LIBCONFIG_H) | obj_all
 	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ $(LIBCONFIG_INCLUDE) @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
+	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
 # missing common object files
 $(COMMON_D)/obj_all/common_mini.a:

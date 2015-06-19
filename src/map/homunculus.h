@@ -5,10 +5,11 @@
 #ifndef MAP_HOMUNCULUS_H
 #define MAP_HOMUNCULUS_H
 
-#include "pc.h"
-#include "status.h" // struct status_data, struct status_change
-#include "unit.h" // struct unit_data
-#include "../common/mmo.h"
+#include "map/status.h" // struct status_data, struct status_change
+#include "map/unit.h" // struct unit_data
+#include "common/mmo.h"
+
+struct map_session_data;
 
 #define MAX_HOM_SKILL_REQUIRE 5
 #define homdb_checkid(id) ((id) >=  HM_CLASS_BASE && (id) <= HM_CLASS_MAX)

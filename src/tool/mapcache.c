@@ -3,21 +3,17 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // RENEWAL
+#include "common/cbasetypes.h"
+#include "common/core.h"
+#include "common/grfio.h"
+#include "common/malloc.h"
+#include "common/mmo.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+#include "common/utils.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-#include "../common/cbasetypes.h"
-#include "../common/core.h"
-#include "../common/grfio.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/utils.h"
-#include "../common/strlib.h"
-
 #ifndef _WIN32
 #include <unistd.h>
 #endif

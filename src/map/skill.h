@@ -5,13 +5,13 @@
 #ifndef MAP_SKILL_H
 #define MAP_SKILL_H
 
-#include "../config/core.h" // RENEWAL_CAST
+#include "config/core.h" // RENEWAL_CAST
 
-#include "map.h" // struct block_list
-#include "status.h" // enum sc_type
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/mmo.h" // MAX_SKILL, struct square
+#include "map/map.h" // struct block_list
+#include "map/status.h" // enum sc_type
+#include "common/cbasetypes.h"
+#include "common/db.h"
+#include "common/mmo.h" // MAX_SKILL, struct square
 
 /**
  * Declarations

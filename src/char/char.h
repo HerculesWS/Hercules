@@ -5,9 +5,10 @@
 #ifndef COMMON_CHAR_H
 #define COMMON_CHAR_H
 
-#include "../common/cbasetypes.h"
-#include "../common/core.h" // CORE_ST_LAST
-#include "../common/db.h"
+#include "common/cbasetypes.h"
+#include "common/core.h" // CORE_ST_LAST
+#include "common/db.h"
+#include "common/mmo.h"
 
 enum E_CHARSERVER_ST {
 	CHARSERVER_ST_RUNNING = CORE_ST_LAST,

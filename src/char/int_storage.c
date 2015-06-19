@@ -4,23 +4,22 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // GP_BOUND_ITEMS
+#include "config/core.h" // GP_BOUND_ITEMS
 #include "int_storage.h"
+
+#include "char/char.h"
+#include "char/inter.h"
+#include "char/mapif.h"
+#include "common/malloc.h"
+#include "common/mmo.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/sql.h"
+#include "common/strlib.h" // StringBuf
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-#include "char.h"
-#include "inter.h"
-#include "mapif.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/sql.h"
-#include "../common/strlib.h" // StringBuf
 
 #define STORAGE_MEMINC 16
 

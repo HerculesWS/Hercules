@@ -5,7 +5,7 @@
 #ifndef COMMON_TIMER_H
 #define COMMON_TIMER_H
 
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
 
 #define DIFF_TICK(a,b) ((a)-(b))
 #define DIFF_TICK32(a,b) ((int32)((a)-(b)))

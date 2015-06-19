@@ -5,10 +5,10 @@
 #ifndef COMMON_STRLIB_H
 #define COMMON_STRLIB_H
 
+#include "common/cbasetypes.h"
+
 #include <stdarg.h>
 #include <string.h>
-
-#include "../common/cbasetypes.h"
 
 #ifdef WIN32
 	#define HAVE_STRTOK_R

@@ -5,8 +5,8 @@
 #ifndef MAP_VENDING_H
 #define MAP_VENDING_H
 
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
+#include "common/cbasetypes.h"
+#include "common/db.h"
 
 struct map_session_data;
 struct s_search_store_search;

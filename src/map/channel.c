@@ -5,27 +5,27 @@
 
 #include "channel.h"
 
+#include "map/atcommand.h"
+#include "map/guild.h"
+#include "map/instance.h"
+#include "map/irc-bot.h"
+#include "map/map.h"
+#include "map/pc.h"
+#include "common/cbasetypes.h"
+#include "common/conf.h"
+#include "common/db.h"
+#include "common/malloc.h"
+#include "common/nullpo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+#include "common/utils.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "atcommand.h"
-#include "guild.h"
-#include "instance.h"
-#include "irc-bot.h"
-#include "map.h"
-#include "pc.h"
-#include "../common/cbasetypes.h"
-#include "../common/conf.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
 
 struct channel_interface channel_s;
 

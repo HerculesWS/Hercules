@@ -5,10 +5,10 @@
 #ifndef MAP_GUILD_H
 #define MAP_GUILD_H
 
-#include "map.h" // EVENT_NAME_LENGTH, TBL_PC
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/mmo.h"
+#include "map/map.h" // EVENT_NAME_LENGTH, TBL_PC
+#include "common/cbasetypes.h"
+#include "common/db.h"
+#include "common/mmo.h"
 
 /**
  * Defines

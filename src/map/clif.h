@@ -5,40 +5,38 @@
 #ifndef MAP_CLIF_H
 #define MAP_CLIF_H
 
-#include <stdarg.h>
+#include "map/map.h"
+#include "map/packets_struct.h"
+#include "common/cbasetypes.h"
+#include "common/mmo.h"
 
-#include "map.h"
-#include "packets_struct.h"
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/mmo.h"
+#include <stdarg.h>
 
 /**
  * Declarations
  **/
+struct battleground_data;
+struct channel_data;
+struct chat_data;
+struct eri;
+struct flooritem_data;
+struct guild;
+struct homun_data;
 struct item;
 struct item_data;
-struct unit_data;
 struct map_session_data;
-struct homun_data;
 struct mercenary_data;
-struct pet_data;
 struct mob_data;
 struct npc_data;
-struct chat_data;
-struct flooritem_data;
-struct skill_unit;
-struct s_vending;
-struct party;
-struct party_data;
-struct guild;
-struct battleground_data;
-struct quest;
 struct party_booking_ad_info;
-struct view_data;
-struct eri;
+struct party_data;
+struct pet_data;
+struct quest;
+struct s_vending;
 struct skill_cd;
-struct channel_data;
+struct skill_unit;
+struct unit_data;
+struct view_data;
 
 /**
  * Defines

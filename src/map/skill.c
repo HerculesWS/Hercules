@@ -4,46 +4,46 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // DBPATH, MAGIC_REFLECTION_TYPE, OFFICIAL_WALKPATH, RENEWAL, RENEWAL_CAST, VARCAST_REDUCTION()
+#include "config/core.h" // DBPATH, MAGIC_REFLECTION_TYPE, OFFICIAL_WALKPATH, RENEWAL, RENEWAL_CAST, VARCAST_REDUCTION()
 #include "skill.h"
+
+#include "map/battle.h"
+#include "map/battleground.h"
+#include "map/chrif.h"
+#include "map/clif.h"
+#include "map/date.h"
+#include "map/elemental.h"
+#include "map/guild.h"
+#include "map/homunculus.h"
+#include "map/intif.h"
+#include "map/itemdb.h"
+#include "map/log.h"
+#include "map/map.h"
+#include "map/mercenary.h"
+#include "map/mob.h"
+#include "map/npc.h"
+#include "map/party.h"
+#include "map/path.h"
+#include "map/pc.h"
+#include "map/pet.h"
+#include "map/script.h"
+#include "map/status.h"
+#include "map/unit.h"
+#include "common/cbasetypes.h"
+#include "common/ers.h"
+#include "common/malloc.h"
+#include "common/nullpo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+#include "common/utils.h"
 
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
-#include "battle.h"
-#include "battleground.h"
-#include "chrif.h"
-#include "clif.h"
-#include "date.h"
-#include "elemental.h"
-#include "guild.h"
-#include "homunculus.h"
-#include "intif.h"
-#include "itemdb.h"
-#include "log.h"
-#include "map.h"
-#include "mercenary.h"
-#include "mob.h"
-#include "npc.h"
-#include "party.h"
-#include "path.h"
-#include "pc.h"
-#include "pet.h"
-#include "script.h"
-#include "status.h"
-#include "unit.h"
-#include "../common/cbasetypes.h"
-#include "../common/ers.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
 
 #define SKILLUNITTIMER_INTERVAL 100
 

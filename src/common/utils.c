@@ -6,31 +6,27 @@
 
 #include "utils.h"
 
-#include <math.h> // floor()
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h> // cache purposes [Ind/Hercules]
-
-#include "../common/cbasetypes.h"
-#include "../common/core.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
+#include "common/cbasetypes.h"
+#include "common/core.h"
+#include "common/mmo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/strlib.h"
 
 #ifdef WIN32
-#	include "../common/winapi.h"
+#	include "common/winapi.h"
 #	ifndef F_OK
 #		define F_OK   0x0
 #	endif  /* F_OK */
 #else
 #	include <dirent.h>
-#	include <sys/stat.h>
 #	include <unistd.h>
 #endif
+
+#include <math.h> // floor()
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h> // cache purposes [Ind/Hercules]
 
 struct HCache_interface HCache_s;
 

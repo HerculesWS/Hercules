@@ -6,19 +6,15 @@
 
 #include "ipban.h"
 
-#include <stdlib.h>
-#include <string.h>
+#include "login/login.h"
+#include "login/loginlog.h"
+#include "common/cbasetypes.h"
+#include "common/nullpo.h"
+#include "common/sql.h"
+#include "common/strlib.h"
+#include "common/timer.h"
 
-#include "login.h"
-#include "loginlog.h"
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/sql.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
+#include <stdlib.h>
 
 // global sql settings
 static char   global_db_hostname[32] = "127.0.0.1";

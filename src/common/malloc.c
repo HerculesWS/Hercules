@@ -6,14 +6,14 @@
 
 #include "malloc.h"
 
+#include "common/cbasetypes.h"
+#include "common/core.h"
+#include "common/showmsg.h"
+#include "common/sysinfo.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
-
-#include "../common/core.h"
-#include "../common/showmsg.h"
-#include "../common/sysinfo.h"
 
 struct malloc_interface iMalloc_s;
 
@@ -22,7 +22,7 @@ struct malloc_interface iMalloc_s;
 #if defined(MEMWATCH)
 
 #	include <string.h>
-#	include "memwatch.h"
+#	include <memwatch.h>
 #	define MALLOC(n,file,line,func)    mwMalloc((n),(file),(line))
 #	define CALLOC(m,n,file,line,func)  mwCalloc((m),(n),(file),(line))
 #	define REALLOC(p,n,file,line,func) mwRealloc((p),(n),(file),(line))
@@ -36,7 +36,7 @@ struct malloc_interface iMalloc_s;
 
 #	include <string.h>
 #	include <stdlib.h>
-#	include "dmalloc.h"
+#	include <dmalloc.h>
 #	define MALLOC(n,file,line,func)    dmalloc_malloc((file),(line),(n),DMALLOC_FUNC_MALLOC,0,0)
 #	define CALLOC(m,n,file,line,func)  dmalloc_malloc((file),(line),(m)*(n),DMALLOC_FUNC_CALLOC,0,0)
 #	define REALLOC(p,n,file,line,func) dmalloc_realloc((file),(line),(p),(n),DMALLOC_FUNC_REALLOC,0)
@@ -48,7 +48,7 @@ struct malloc_interface iMalloc_s;
 
 #elif defined(GCOLLECT)
 
-#	include "gc.h"
+#	include <gc.h>
 #	ifdef GC_ADD_CALLER
 #		define RETURN_ADDR 0,
 #	else

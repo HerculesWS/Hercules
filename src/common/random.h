@@ -4,7 +4,7 @@
 #ifndef COMMON_RANDOM_H
 #define COMMON_RANDOM_H
 
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
 
 #ifdef HERCULES_CORE
 void rnd_init(void);

@@ -4,7 +4,8 @@
 #ifndef CHAR_INT_GUILD_H
 #define CHAR_INT_GUILD_H
 
-#include "../common/mmo.h"
+#include "common/db.h"
+#include "common/mmo.h"
 
 enum {
 	GS_BASIC = 0x0001,

@@ -3,8 +3,31 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // GP_BOUND_ITEMS
+#include "config/core.h" // GP_BOUND_ITEMS
 #include "intif.h"
+
+#include "map/atcommand.h"
+#include "map/battle.h"
+#include "map/chrif.h"
+#include "map/clif.h"
+#include "map/elemental.h"
+#include "map/guild.h"
+#include "map/homunculus.h"
+#include "map/log.h"
+#include "map/mail.h"
+#include "map/map.h"
+#include "map/mercenary.h"
+#include "map/party.h"
+#include "map/pc.h"
+#include "map/pet.h"
+#include "map/quest.h"
+#include "map/storage.h"
+#include "common/malloc.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/strlib.h"
+#include "common/timer.h"
 
 #include <fcntl.h>
 #include <signal.h>
@@ -12,29 +35,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
-
-#include "atcommand.h"
-#include "battle.h"
-#include "chrif.h"
-#include "clif.h"
-#include "elemental.h"
-#include "guild.h"
-#include "homunculus.h"
-#include "log.h"
-#include "mail.h"
-#include "map.h"
-#include "mercenary.h"
-#include "party.h"
-#include "pc.h"
-#include "pet.h"
-#include "quest.h"
-#include "storage.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
 
 struct intif_interface intif_s;
 

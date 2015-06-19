@@ -1,9 +1,11 @@
+#define HERCULES_CORE
 
-#include "../common/core.h"
-#include "../common/atomic.h"
-#include "../common/thread.h"
-#include "../common/spinlock.h"
-#include "../common/showmsg.h"
+#include "common/atomic.h"
+#include "common/cbasetypes.h"
+#include "common/core.h"
+#include "common/thread.h"
+#include "common/spinlock.h"
+#include "common/showmsg.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,8 +13,6 @@
 //
 // Simple test for the spinlock implementation to see if it works properly..
 //
-
-
 
 #define THRC 32 //thread Count
 #define PERINC 100000

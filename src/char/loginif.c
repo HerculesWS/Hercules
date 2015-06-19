@@ -6,18 +6,18 @@
 
 #include "loginif.h"
 
+#include "char/char.h"
+#include "char/mapif.h"
+#include "common/cbasetypes.h"
+#include "common/core.h"
+#include "common/db.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/timer.h"
+
 #include <stdlib.h>
 #include <string.h>
-
-#include "char.h"
-#include "mapif.h"
-
-#include "../common/cbasetypes.h"
-#include "../common/core.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/timer.h"
 
 struct loginif_interface loginif_s;
 

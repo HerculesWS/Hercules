@@ -4,60 +4,59 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // RENEWAL, RENEWAL_ASPD, RENEWAL_CAST, RENEWAL_DROP, RENEWAL_EDP, RENEWAL_EXP, RENEWAL_LVDMG, SCRIPT_CALLFUNC_CHECK, SECURE_NPCTIMEOUT, SECURE_NPCTIMEOUT_INTERVAL
+#include "config/core.h" // RENEWAL, RENEWAL_ASPD, RENEWAL_CAST, RENEWAL_DROP, RENEWAL_EDP, RENEWAL_EXP, RENEWAL_LVDMG, SCRIPT_CALLFUNC_CHECK, SECURE_NPCTIMEOUT, SECURE_NPCTIMEOUT_INTERVAL
 #include "script.h"
+
+#include "map/atcommand.h"
+#include "map/battle.h"
+#include "map/battleground.h"
+#include "map/channel.h"
+#include "map/chat.h"
+#include "map/chrif.h"
+#include "map/clif.h"
+#include "map/elemental.h"
+#include "map/guild.h"
+#include "map/homunculus.h"
+#include "map/instance.h"
+#include "map/intif.h"
+#include "map/itemdb.h"
+#include "map/log.h"
+#include "map/mail.h"
+#include "map/map.h"
+#include "map/mapreg.h"
+#include "map/mercenary.h"
+#include "map/mob.h"
+#include "map/npc.h"
+#include "map/party.h"
+#include "map/path.h"
+#include "map/pc.h"
+#include "map/pet.h"
+#include "map/pet.h"
+#include "map/quest.h"
+#include "map/skill.h"
+#include "map/status.h"
+#include "map/status.h"
+#include "map/storage.h"
+#include "map/unit.h"
+#include "common/cbasetypes.h"
+#include "common/malloc.h"
+#include "common/md5calc.h"
+#include "common/mmo.h" // NEW_CARTS
+#include "common/nullpo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+#include "common/socket.h" // usage: getcharip
+#include "common/strlib.h"
+#include "common/sysinfo.h"
+#include "common/timer.h"
+#include "common/utils.h"
+#include "common/HPM.h"
 
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
-#include "atcommand.h"
-#include "battle.h"
-#include "battleground.h"
-#include "channel.h"
-#include "chat.h"
-#include "chrif.h"
-#include "clif.h"
-#include "elemental.h"
-#include "guild.h"
-#include "homunculus.h"
-#include "instance.h"
-#include "intif.h"
-#include "itemdb.h"
-#include "log.h"
-#include "mail.h"
-#include "map.h"
-#include "mapreg.h"
-#include "mercenary.h"
-#include "mob.h"
-#include "npc.h"
-#include "party.h"
-#include "path.h"
-#include "pc.h"
-#include "pet.h"
-#include "pet.h"
-#include "quest.h"
-#include "skill.h"
-#include "status.h"
-#include "status.h"
-#include "storage.h"
-#include "unit.h"
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h"
-#include "../common/md5calc.h"
-#include "../common/mmo.h" // NEW_CARTS
-#include "../common/nullpo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h" // usage: getcharip
-#include "../common/strlib.h"
-#include "../common/sysinfo.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
-#include "../common/HPM.h"
-
 #ifndef WIN32
 	#include <sys/time.h>
 #endif

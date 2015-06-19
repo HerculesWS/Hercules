@@ -6,22 +6,22 @@
 
 #include "chat.h"
 
+#include "map/atcommand.h" // msg_sd(sd,)
+#include "map/battle.h" // struct battle_config
+#include "map/clif.h"
+#include "map/map.h"
+#include "map/npc.h" // npc_event_do()
+#include "map/pc.h"
+#include "map/skill.h" // ext_skill_unit_onplace()
+#include "common/cbasetypes.h"
+#include "common/malloc.h"
+#include "common/mmo.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+
 #include <stdio.h>
 #include <string.h>
-
-#include "atcommand.h" // msg_sd(sd,)
-#include "battle.h" // struct battle_config
-#include "clif.h"
-#include "map.h"
-#include "npc.h" // npc_event_do()
-#include "pc.h"
-#include "skill.h" // ext_skill_unit_onplace()
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
 
 struct chat_interface chat_s;
 

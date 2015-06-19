@@ -6,16 +6,17 @@
 
 #include "pincode.h"
 
-#include <stdlib.h>
+#include "char/char.h"
+#include "common/cbasetypes.h"
+#include "common/db.h"
+#include "common/mmo.h"
+#include "common/nullpo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/strlib.h"
 
-#include "char.h"
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h"
-#include "../common/nullpo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
+#include <stdlib.h>
 
 struct pincode_interface pincode_s;
 

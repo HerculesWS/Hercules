@@ -4,34 +4,33 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // CONSOLE_INPUT, MAX_CONSOLE_INPUT
+#include "config/core.h" // CONSOLE_INPUT, MAX_CONSOLE_INPUT
 #include "console.h"
+
+#include "common/cbasetypes.h"
+#include "common/core.h"
+#include "common/showmsg.h"
+#include "common/sysinfo.h"
+
+#ifndef MINICORE
+#	include "common/atomic.h"
+#	include "common/ers.h"
+#	include "common/malloc.h"
+#	include "common/mutex.h"
+#	include "common/spinlock.h"
+#	include "common/sql.h"
+#	include "common/strlib.h"
+#	include "common/thread.h"
+#	include "common/timer.h"
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "../common/cbasetypes.h"
-#include "../common/core.h"
-#include "../common/showmsg.h"
-#include "../common/sysinfo.h"
-
-#ifndef MINICORE
-#	include "../common/atomic.h"
-#	include "../common/ers.h"
-#	include "../common/malloc.h"
-#	include "../common/mutex.h"
-#	include "../common/spinlock.h"
-#	include "../common/sql.h"
-#	include "../common/strlib.h"
-#	include "../common/thread.h"
-#	include "../common/timer.h"
-#endif
-
 #if !defined(WIN32)
 #	include <sys/time.h>
 #	include <unistd.h>
 #else
-#	include "../common/winapi.h" // Console close event handling
+#	include "common/winapi.h" // Console close event handling
 #	ifdef CONSOLE_INPUT
 #		include <conio.h> /* _kbhit() */
 #	endif

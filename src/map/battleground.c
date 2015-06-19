@@ -6,29 +6,30 @@
 
 #include "battleground.h"
 
+#include "map/battle.h"
+#include "map/clif.h"
+#include "map/guild.h"
+#include "map/homunculus.h"
+#include "map/map.h"
+#include "map/mapreg.h"
+#include "map/mercenary.h"
+#include "map/mob.h" // struct mob_data
+#include "map/npc.h"
+#include "map/party.h"
+#include "map/pc.h"
+#include "map/pet.h"
+#include "common/cbasetypes.h"
+#include "common/conf.h"
+#include "common/HPM.h"
+#include "common/malloc.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+
 #include <stdio.h>
 #include <string.h>
-
-#include "battle.h"
-#include "clif.h"
-#include "homunculus.h"
-#include "map.h"
-#include "mapreg.h"
-#include "mercenary.h"
-#include "mob.h" // struct mob_data
-#include "npc.h"
-#include "party.h"
-#include "pc.h"
-#include "pet.h"
-#include "../common/cbasetypes.h"
-#include "../common/conf.h"
-#include "../common/HPM.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
 
 struct battleground_interface bg_s;
 

@@ -5,12 +5,10 @@
 #ifndef COMMON_SOCKET_H
 #define COMMON_SOCKET_H
 
-#include <time.h>
-
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
 
 #ifdef WIN32
-#	include "../common/winapi.h"
+#	include "common/winapi.h"
 	typedef long in_addr_t;
 #else
 #	include <netinet/in.h>

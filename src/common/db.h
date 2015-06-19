@@ -42,9 +42,9 @@
 #ifndef COMMON_DB_H
 #define COMMON_DB_H
 
-#include <stdarg.h>
+#include "common/cbasetypes.h"
 
-#include "../common/cbasetypes.h"
+#include <stdarg.h>
 
 /*****************************************************************************\
  *  (1) Section with public typedefs, enums, unions, structures and defines. *

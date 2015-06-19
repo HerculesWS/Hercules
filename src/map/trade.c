@@ -6,23 +6,23 @@
 
 #include "trade.h"
 
+#include "map/atcommand.h"
+#include "map/battle.h"
+#include "map/chrif.h"
+#include "map/clif.h"
+#include "map/intif.h"
+#include "map/itemdb.h"
+#include "map/log.h"
+#include "map/map.h"
+#include "map/npc.h"
+#include "map/path.h"
+#include "map/pc.h"
+#include "map/storage.h"
+#include "common/nullpo.h"
+#include "common/socket.h"
+
 #include <stdio.h>
 #include <string.h>
-
-#include "atcommand.h"
-#include "battle.h"
-#include "chrif.h"
-#include "clif.h"
-#include "intif.h"
-#include "itemdb.h"
-#include "log.h"
-#include "map.h"
-#include "npc.h"
-#include "path.h"
-#include "pc.h"
-#include "storage.h"
-#include "../common/nullpo.h"
-#include "../common/socket.h"
 
 struct trade_interface trade_s;
 

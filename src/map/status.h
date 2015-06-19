@@ -5,10 +5,11 @@
 #ifndef MAP_STATUS_H
 #define MAP_STATUS_H
 
-#include "../config/core.h" // defType, RENEWAL, RENEWAL_ASPD
-#include "../common/conf.h"
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h" // NEW_CARTS
+#include "config/core.h" // defType, RENEWAL, RENEWAL_ASPD
+
+#include "common/conf.h"
+#include "common/cbasetypes.h"
+#include "common/mmo.h" // NEW_CARTS
 
 struct block_list;
 struct elemental_data;

@@ -5,9 +5,9 @@
 #ifndef LOGIN_ACCOUNT_H
 #define LOGIN_ACCOUNT_H
 
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h" // ACCOUNT_REG2_NUM
-#include "../common/sql.h" // Sql
+#include "common/cbasetypes.h"
+#include "common/mmo.h" // ACCOUNT_REG2_NUM
+#include "common/sql.h" // Sql
 
 typedef struct AccountDB AccountDB;
 typedef struct AccountDBIterator AccountDBIterator;

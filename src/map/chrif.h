@@ -5,12 +5,12 @@
 #ifndef MAP_CHRIF_H
 #define MAP_CHRIF_H
 
-#include <time.h>
+#include "map/map.h" //TBL_PC
+#include "common/cbasetypes.h"
+#include "common/db.h"
 
-#include "map.h" //TBL_stuff
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-
+struct eri;
+struct map_session_data;
 struct status_change_entry;
 
 /**

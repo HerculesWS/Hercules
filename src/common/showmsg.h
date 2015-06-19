@@ -5,15 +5,15 @@
 #ifndef COMMON_SHOWMSG_H
 #define COMMON_SHOWMSG_H
 
-#include <stdarg.h>
-
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
 
 #ifdef HERCULES_CORE
-#	include "../../3rdparty/libconfig/libconfig.h"
+#	include <libconfig/libconfig.h>
 #else
-#	include "../common/HPMi.h"
+#	include "common/HPMi.h"
 #endif
+
+#include <stdarg.h>
 
 // for help with the console colors look here:
 // http://www.edoceo.com/liberum/?doc=printf-with-color

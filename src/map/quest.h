@@ -5,9 +5,9 @@
 #ifndef MAP_QUEST_H
 #define MAP_QUEST_H
 
-#include "map.h" // TBL_PC
-#include "../common/cbasetypes.h"
-#include "../common/conf.h"
+#include "map/map.h" // TBL_PC
+#include "common/cbasetypes.h"
+#include "common/conf.h"
 
 #define MAX_QUEST_DB (60355+1) // Highest quest ID + 1
 

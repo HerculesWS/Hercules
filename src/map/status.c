@@ -4,8 +4,37 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // ANTI_MAYAP_CHEAT, DBPATH, DEFTYPE_MAX, DEFTYPE_MIN, DEVOTION_REFLECT_DAMAGE, RENEWAL, RENEWAL_ASPD, RENEWAL_EDP
+#include "config/core.h" // ANTI_MAYAP_CHEAT, DBPATH, DEFTYPE_MAX, DEFTYPE_MIN, DEVOTION_REFLECT_DAMAGE, RENEWAL, RENEWAL_ASPD, RENEWAL_EDP
 #include "status.h"
+
+#include "map/battle.h"
+#include "map/chrif.h"
+#include "map/clif.h"
+#include "map/elemental.h"
+#include "map/guild.h"
+#include "map/homunculus.h"
+#include "map/itemdb.h"
+#include "map/map.h"
+#include "map/mercenary.h"
+#include "map/mob.h"
+#include "map/npc.h"
+#include "map/path.h"
+#include "map/pc.h"
+#include "map/pet.h"
+#include "map/script.h"
+#include "map/skill.h"
+#include "map/skill.h"
+#include "map/unit.h"
+#include "map/vending.h"
+#include "common/cbasetypes.h"
+#include "common/ers.h"
+#include "common/malloc.h"
+#include "common/nullpo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+#include "common/utils.h"
 
 #include <math.h>
 #include <memory.h>
@@ -13,35 +42,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
-#include "battle.h"
-#include "chrif.h"
-#include "clif.h"
-#include "elemental.h"
-#include "guild.h"
-#include "homunculus.h"
-#include "itemdb.h"
-#include "map.h"
-#include "mercenary.h"
-#include "mob.h"
-#include "npc.h"
-#include "path.h"
-#include "pc.h"
-#include "pet.h"
-#include "script.h"
-#include "skill.h"
-#include "skill.h"
-#include "unit.h"
-#include "vending.h"
-#include "../common/cbasetypes.h"
-#include "../common/ers.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
 
 struct status_interface status_s;
 

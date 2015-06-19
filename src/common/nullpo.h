@@ -5,7 +5,7 @@
 #ifndef COMMON_NULLPO_H
 #define COMMON_NULLPO_H
 
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
 
 // enabled by default on debug builds
 #if defined(DEBUG) && !defined(NULLPO_CHECK)

@@ -4,26 +4,26 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // SHOW_SERVER_STATS
+#include "config/core.h" // SHOW_SERVER_STATS
 #define H_SOCKET_C
 #include "socket.h"
 #undef H_SOCKET_C
 
+#include "common/HPM.h"
+#include "common/cbasetypes.h"
+#include "common/db.h"
+#include "common/malloc.h"
+#include "common/mmo.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/types.h>
 
-#include "../common/HPM.h"
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-
 #ifdef WIN32
-#	include "../common/winapi.h"
+#	include "common/winapi.h"
 #else
 #	include <arpa/inet.h>
 #	include <errno.h>

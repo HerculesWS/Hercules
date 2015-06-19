@@ -6,20 +6,18 @@
 
 #include "showmsg.h"
 
+#include "common/cbasetypes.h"
+#include "common/core.h" //[Ind] - For SERVER_TYPE
+#include "common/strlib.h" // StringBuf
+
+#include <libconfig/libconfig.h>
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h> // atexit
-#include <string.h>
-#include <time.h>
-
-#include "../../3rdparty/libconfig/libconfig.h"
-
-#include "../common/cbasetypes.h"
-#include "../common/core.h" //[Ind] - For SERVER_TYPE
-#include "../common/strlib.h" // StringBuf
 
 #ifdef WIN32
-#	include "../common/winapi.h"
+#	include "common/winapi.h"
 #else // not WIN32
 #	include <unistd.h>
 #endif // WIN32

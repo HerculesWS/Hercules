@@ -4,10 +4,10 @@
 #ifndef COMMON_HPMI_H
 #define COMMON_HPMI_H
 
-#include "../common/cbasetypes.h"
-#include "../common/console.h"
-#include "../common/core.h"
-#include "../common/sql.h"
+#include "common/cbasetypes.h"
+#include "common/console.h"
+#include "common/core.h"
+#include "common/sql.h"
 
 struct script_state;
 struct AtCommandInfo;
@@ -21,7 +21,7 @@ struct map_session_data;
 #endif
 
 /* after */
-#include "../common/showmsg.h"
+#include "common/showmsg.h"
 
 #define HPM_VERSION "1.0"
 #define HPM_ADDCONF_LENGTH 40

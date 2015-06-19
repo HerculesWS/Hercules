@@ -8,16 +8,14 @@
 
 #include "sysinfo.h"
 
+#include "common/cbasetypes.h"
+#include "common/core.h"
+#include "common/malloc.h"
+#include "common/strlib.h"
+
 #include <stdio.h> // fopen
 #include <stdlib.h> // atoi
-
-#include "../common/cbasetypes.h"
-#include "../common/core.h"
-#include "../common/malloc.h"
-#include "../common/strlib.h"
-
 #ifdef WIN32
-#	include <string.h> // strlen
 #	include <windows.h>
 #else
 #	include <unistd.h>
