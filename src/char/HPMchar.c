@@ -25,15 +25,27 @@
 #include "char/loginif.h"
 #include "char/mapif.h"
 #include "char/pincode.h"
+#include "common/HPMi.h"
 #include "common/conf.h"
+#include "common/console.h"
+#include "common/core.h"
 #include "common/db.h"
 #include "common/des.h"
 #include "common/ers.h"
+#include "common/malloc.h"
 #include "common/mapindex.h"
 #include "common/mmo.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
 #include "common/socket.h"
+#include "common/spinlock.h"
+#include "common/sql.h"
 #include "common/strlib.h"
 #include "common/sysinfo.h"
+#include "common/timer.h"
+#include "common/utils.h"
+
+// HPMDataCheck comes after all the other includes
 #include "common/HPMDataCheck.h"
 #endif
 
