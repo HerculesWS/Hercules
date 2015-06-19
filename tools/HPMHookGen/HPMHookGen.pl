@@ -21,11 +21,7 @@ sub trim($) {
 
 sub parse($$) {
 	my ($p, $d) = @_;
-	
-	# Strip gcc attributes
-	$p =~ s/\s*__attribute__\s*\(\(.*$//;
-	$d =~ s/\s*__attribute__\s*\(\(.*$//;
-	
+
 	$p =~ s/^.*?\)\((.*)\).*$/$1/; # Clean up extra parentheses )(around the arglist)
 
 	# Retrieve return type
