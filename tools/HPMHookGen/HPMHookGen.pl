@@ -280,19 +280,20 @@ foreach my $file (@files) { # Loop through the xml files
 		$key = "inter_homunculus";
 	} elsif ($key =~ /homunculus/) {
 		$key = "homun";
-	} elsif ($key =~ /irc_bot/) {
+	} elsif ($key eq "irc_bot_interface") {
 		$key = "ircbot";
-	} elsif ($key =~ /log_interface/) {
+	} elsif ($key eq "log_interface") {
 		$key = "logs";
-	} elsif ($key =~ /pc_groups_interface/) {
+	} elsif ($key eq "pc_groups_interface") {
 		$key = "pcg";
-	} elsif ($key =~ /char_interface/) {
+	} elsif ($key eq "char_interface") {
 		$key = "chr";
 	} else {
 		$key =~ s/_interface//;
 	}
 
-	foreach my $v ($data->{compounddef}->{$filekey}->{sectiondef}->[0]) { # Loop through the sections
+	my $sectiondef = $data->{compounddef}->{$filekey}->{sectiondef};
+	foreach my $v (@$sectiondef) { # Loop through the sections
 		my $memberdef = $v->{memberdef};
 		foreach my $f (sort { # Sort the members in declaration order according to what the xml says
 					my $astart = $a->{location}->[0]->{bodystart} || $a->{location}->[0]->{line};
