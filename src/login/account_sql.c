@@ -363,12 +363,13 @@ static bool account_db_sql_set_property(AccountDB* self, const char* key, const 
 static bool account_db_sql_create(AccountDB* self, struct mmo_account* acc)
 {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
-	Sql* sql_handle = db->accounts;
+	Sql* sql_handle;
 
 	// decide on the account id to assign
 	int account_id;
 	nullpo_ret(db);
 	nullpo_ret(acc);
+	sql_handle = db->accounts;
 	if( acc->account_id != -1 )
 	{// caller specifies it manually
 		account_id = acc->account_id;
@@ -416,10 +417,11 @@ static bool account_db_sql_create(AccountDB* self, struct mmo_account* acc)
 static bool account_db_sql_remove(AccountDB* self, const int account_id)
 {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
-	Sql* sql_handle = db->accounts;
+	Sql* sql_handle;
 	bool result = false;
 
 	nullpo_ret(db);
+	sql_handle = db->accounts;
 	if( SQL_SUCCESS != SQL->QueryStr(sql_handle, "START TRANSACTION")
 	||  SQL_SUCCESS != SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = %d", db->account_db, account_id)
 	||  SQL_SUCCESS != SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = %d", db->global_acc_reg_num_db, account_id)
@@ -607,6 +609,7 @@ static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, boo
 	bool result = false;
 
 	nullpo_ret(db);
+	nullpo_ret(acc);
 	sql_handle = db->accounts;
 	stmt = SQL->StmtMalloc(sql_handle);
 
@@ -687,11 +690,12 @@ Sql* account_db_sql_up(AccountDB* self) {
 	return db ? db->accounts : NULL;
 }
 void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id) {
-	Sql* sql_handle = ((AccountDB_SQL*)self)->accounts;
+	Sql* sql_handle;
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
 	int count = RFIFOW(fd, 12);
 
 	nullpo_retv(db);
+	sql_handle = db->accounts;
 	if (count) {
 		int cursor = 14, i;
 		char key[32], sval[254];
@@ -742,7 +746,7 @@ void mmo_send_accreg2(AccountDB* self, int fd, int account_id, int char_id) {
 	size_t len;
 
 	nullpo_retv(db);
-	sql_handle = ((AccountDB_SQL*)self)->accounts;
+	sql_handle = db->accounts;
 	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `key`, `index`, `value` FROM `%s` WHERE `account_id`='%d'", db->global_acc_reg_str_db, account_id) )
 		Sql_ShowDebug(sql_handle);
 
