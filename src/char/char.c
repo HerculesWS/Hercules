@@ -850,6 +850,7 @@ int char_inventory_to_sql(const struct item items[], int max, int id) {
 	bool found;
 	int errors = 0;
 
+	nullpo_ret(items);
 
 	// The following code compares inventory with current database values
 	// and performs modification/deletion/insertion only on relevant rows.
@@ -1479,6 +1480,7 @@ bool char_char_slotchange(struct char_session_data *sd, int fd, unsigned short f
 	struct mmo_charstatus char_dat;
 	int from_id = 0;
 
+	nullpo_ret(sd);
 	if( from >= MAX_CHARS || to >= MAX_CHARS || ( sd->char_slots && to > sd->char_slots ) || sd->found_char[from] <= 0 )
 		return false;
 
@@ -1649,6 +1651,8 @@ int char_make_new_char_sql(struct char_session_data* sd, char* name_, int str, i
 	char esc_name[NAME_LENGTH*2+1];
 	int char_id, flag, k, l;
 
+	nullpo_retr(-2, sd);
+	nullpo_retr(-2, name_);
 	safestrncpy(name, name_, NAME_LENGTH);
 	normalize_name(name,TRIM_CHARS);
 	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
@@ -4256,6 +4260,7 @@ static void char_delete2_req(int fd, struct char_session_data* sd)
 	time_t delete_date;
 
 	char_id = RFIFOL(fd,2);
+	nullpo_retv(sd);
 
 	ARR_FIND( 0, MAX_CHARS, i, sd->found_char[i] == char_id );
 	if( i == MAX_CHARS )
@@ -4327,6 +4332,7 @@ static void char_delete2_accept(int fd, struct char_session_data* sd)
 	char* data;
 	time_t delete_date;
 
+	nullpo_retv(sd);
 	char_id = RFIFOL(fd,2);
 
 	ShowInfo(CL_RED"Request Char Deletion: "CL_GREEN"%d (%d)"CL_RESET"\n", sd->account_id, char_id);
@@ -4394,6 +4400,7 @@ static void char_delete2_cancel(int fd, struct char_session_data* sd)
 {// CH: <082b>.W <char id>.L
 	int char_id, i;
 
+	nullpo_retv(sd);
 	char_id = RFIFOL(fd,2);
 
 	ARR_FIND( 0, MAX_CHARS, i, sd->found_char[i] == char_id );
@@ -4542,6 +4549,7 @@ int char_search_default_maps_mapserver(struct mmo_charstatus *cd)
 	return i;
 }
 
+void char_parse_char_select(int fd, struct char_session_data* sd, uint32 ipl) __attribute__((nonnull (2)));
 void char_parse_char_select(int fd, struct char_session_data* sd, uint32 ipl)
 {
 	struct mmo_charstatus char_dat;
@@ -4706,6 +4714,7 @@ void char_creation_ok(int fd, struct mmo_charstatus *char_dat)
 	WFIFOSET(fd,len);
 }
 
+void char_parse_char_create_new_char(int fd, struct char_session_data* sd) __attribute__((nonnull (2)));
 void char_parse_char_create_new_char(int fd, struct char_session_data* sd)
 {
 	int result;
@@ -4756,6 +4765,7 @@ void char_delete_char_ok(int fd)
 	WFIFOSET(fd,2);
 }
 
+void char_parse_char_delete_char(int fd, struct char_session_data* sd, unsigned short cmd) __attribute__((nonnull (2)));
 void char_parse_char_delete_char(int fd, struct char_session_data* sd, unsigned short cmd)
 {
 	char email[40];
@@ -4823,6 +4833,7 @@ void char_allow_rename(int fd, int flag)
 	WFIFOSET(fd,4);
 }
 
+void char_parse_char_rename_char(int fd, struct char_session_data* sd) __attribute__((nonnull (2)));
 void char_parse_char_rename_char(int fd, struct char_session_data* sd)
 {
 	int i, cid =RFIFOL(fd,2);
@@ -4847,6 +4858,7 @@ void char_parse_char_rename_char(int fd, struct char_session_data* sd)
 	chr->allow_rename(fd, i);
 }
 
+void char_parse_char_rename_char2(int fd, struct char_session_data* sd) __attribute__((nonnull (2)));
 void char_parse_char_rename_char2(int fd, struct char_session_data* sd)
 {
 	int i, aid = RFIFOL(fd,2), cid =RFIFOL(fd,6);
@@ -4882,6 +4894,7 @@ void char_rename_char_ack(int fd, int flag)
 	WFIFOSET(fd,4);
 }
 
+void char_parse_char_rename_char_confirm(int fd, struct char_session_data* sd) __attribute__((nonnull (2)));
 void char_parse_char_rename_char_confirm(int fd, struct char_session_data* sd)
 {
 	int i;
@@ -4977,6 +4990,7 @@ void char_parse_char_login_map_server(int fd)
 	RFIFOSKIP(fd,60);
 }
 
+void char_parse_char_pincode_check(int fd, struct char_session_data* sd) __attribute__((nonnull (2)));
 void char_parse_char_pincode_check(int fd, struct char_session_data* sd)
 {
 	if (RFIFOL(fd,2) == sd->account_id)
@@ -4985,6 +4999,7 @@ void char_parse_char_pincode_check(int fd, struct char_session_data* sd)
 	RFIFOSKIP(fd, 10);
 }
 
+void char_parse_char_pincode_window(int fd, struct char_session_data* sd) __attribute__((nonnull (2)));
 void char_parse_char_pincode_window(int fd, struct char_session_data* sd)
 {
 	if (RFIFOL(fd,2) == sd->account_id)
@@ -4993,6 +5008,7 @@ void char_parse_char_pincode_window(int fd, struct char_session_data* sd)
 	RFIFOSKIP(fd, 6);
 }
 
+void char_parse_char_pincode_change(int fd, struct char_session_data* sd) __attribute__((nonnull (2)));
 void char_parse_char_pincode_change(int fd, struct char_session_data* sd)
 {
 	if (RFIFOL(fd,2) == sd->account_id)
@@ -5001,6 +5017,7 @@ void char_parse_char_pincode_change(int fd, struct char_session_data* sd)
 	RFIFOSKIP(fd, 14);
 }
 
+void char_parse_char_pincode_first_pin(int fd, struct char_session_data* sd) __attribute__((nonnull (2)));
 void char_parse_char_pincode_first_pin(int fd, struct char_session_data* sd)
 {
 	if (RFIFOL(fd,2) == sd->account_id)
