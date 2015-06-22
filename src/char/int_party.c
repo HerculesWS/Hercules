@@ -323,7 +323,6 @@ int inter_party_check_empty(struct party_data *p)
 // Create a party whether or not
 int mapif_party_created(int fd, int account_id, int char_id, struct party *p)
 {
-	nullpo_ret(p);
 	WFIFOHEAD(fd, 39);
 	WFIFOW(fd,0)=0x3820;
 	WFIFOL(fd,2)=account_id;
