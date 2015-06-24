@@ -2791,7 +2791,7 @@ ecl_in04,226,231,4	script	Du Lian#ep14_2in2	4_M_REDMAN,{
 		emotion e_dots,0,"Alp Ocart#ep14_2in2";
 		cutin "bu_alp2",2;
 		ep14_2_oliver = 30;
-		getitem Oliver_Wolf_Hood,1; //Oliver_Wolf_Hood
+		getitem C_Oliver_Wolf_Hood,1;
 		completequest 11337;
 		close2;
 		cutin "",255;
@@ -2933,7 +2933,7 @@ ecl_in04,224,234,4	script	Mark Esha#ep14_2in2	4_M_BLUEMAN,{
 		emotion e_dots,0,"Alp Ocart#ep14_2in2";
 		cutin "bu_alp2",2;
 		ep14_2_oliver = 30;
-		getitem Oliver_Wolf_Hood,1; //Oliver_Wolf_Hood
+		getitem C_Oliver_Wolf_Hood,1;
 		completequest 11337;
 		close2;
 		cutin "",255;
@@ -3078,7 +3078,7 @@ ecl_in04,223,234,4	script	Maggi Steen#ep14_2in2	4_F_PINKWOMAN,{
 		emotion e_dots,0,"Alp Ocart#ep14_2in2";
 		cutin "bu_alp2",2;
 		ep14_2_oliver = 30;
-		getitem Oliver_Wolf_Hood,1; //Oliver_Wolf_Hood
+		getitem C_Oliver_Wolf_Hood,1;
 		completequest 11337;
 		close2;
 		cutin "",255;
@@ -3214,7 +3214,7 @@ ecl_in04,223,230,4	script	Alp Ocart#ep14_2in2	4_M_BLACKMAN,{
 		emotion e_dots;
 		cutin "bu_alp2",2;
 		ep14_2_oliver = 30;
-		getitem Oliver_Wolf_Hood,1; //Oliver_Wolf_Hood
+		getitem C_Oliver_Wolf_Hood,1;
 		completequest 11337;
 		close2;
 		cutin "",255;
