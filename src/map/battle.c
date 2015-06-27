@@ -2812,7 +2812,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			d->dmg_lv = ATK_BLOCK;
 			return 0;
 		}
-		if( sc->data[SC__MAELSTROM] && (flag&BF_MAGIC) && skill_id && (skill->get_inf(skill_id)&INF_GROUND_SKILL) ) {
+		if( sd && sc->data[SC__MAELSTROM] && (flag&BF_MAGIC) && skill_id && (skill->get_inf(skill_id)&INF_GROUND_SKILL) ) {
 			// {(Maelstrom Skill LevelxAbsorbed Skill Level)+(Caster's Job/5)}/2
 			int sp = (sc->data[SC__MAELSTROM]->val1 * skill_lv + (sd ? sd->status.job_level / 5 : 0)) / 2;
 			status->heal(bl, 0, sp, 3);
