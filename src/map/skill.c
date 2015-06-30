@@ -11064,21 +11064,20 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 	sc = status->get_sc(src); // for traps, firewall and fogwall - celest
 
 	switch( skill_id ) {
-		case SO_ELEMENTAL_SHIELD:
-			val2 = 300 * skill_lv + 65 * (st->int_ + status->get_lv(src)) + st->max_sp;
+		case SO_ELEMENTAL_SHIELD: // [AD] Using base level as a workaround, this is a bit custom but should be pretty close (job level check can cause a crash)
+			val2 = 6 + skill_lv;  // Imitating level 10 SW?
+			val3 = ( 600 + ( 1280 * skill_lv ) ) * ( 1 + 1 / 10 * status->get_lv(src) / 175) + 300 * skill_lv + 65 * st->int_ + st->max_sp;
 			break;
-		case MH_STEINWAND:
-			val2 = 4 + skill_lv; //nb of attack blocked
+		case MH_STEINWAND:        // [AD] Base level as a workaround again, pretty obvious in this case
+			val2 = 6 + skill_lv;  // Imitating level 10 SW?
+			val3 = ( 600 + ( 1280 * skill_lv ) ) * ( 1 + 1 / 10 * status->get_lv(src) / 175) + 300 * skill_lv + 65 * st->int_ + st->max_sp; 
 			break;
-		case MG_SAFETYWALL:
+		case MG_SAFETYWALL:       // Latest formula provided by WarpPortal
 		#ifdef RENEWAL
-			/**
-			 * According to data provided in RE, SW life is equal to 3 times caster's health
-			 **/
-			val2 = status_get_max_hp(src) * 3;
-			val3 = skill_lv+1;
+			val2 = ( 300 + ( 670 * skill_lv ) ) * ( 1 + 1 / 10 * status->get_lv(src) / 175) + 300 * skill_lv + 65 * st->int_ + st->max_sp;
+			val3 = skill_lv + 1;
 		#else
-			val2 = skill_lv+1;
+			val2 = skill_lv + 1;
 		#endif
 			break;
 		case MG_FIREWALL:
