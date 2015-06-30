@@ -8999,16 +8999,18 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_PYROCLASTIC:
 				val2 += 10*val1; //atk bonus
 				break;
+			case SC_LIGHT_OF_REGENE: // [AD] Why wasn't this here already?
+				val2 = 20 * val1; // HP % recovered
+				break;
 			case SC_NEEDLE_OF_PARALYZE: //[Lighta] need real info
-				val2 = 2*val1; //def reduction
-				val3 = 500*val1; //varcast augmentation
+				val2 = 2 * val1; //def reduction
+				val3 = 500 * val1; //varcast augmentation
 				break;
-			case SC_PAIN_KILLER: //[Lighta] need real info
-				val2 = 2*val1; //aspd reduction %
-				val3 = 2*val1; //dmg reduction %
-				if(sc->data[SC_NEEDLE_OF_PARALYZE])
-					sc_start(src, bl, SC_ENDURE, 100, val1, tick); //start endure for same duration
-				break;
+			case SC_PAIN_KILLER: // [AD] This is supposed to be correct
+				 val2 = 10 * val1; // ASPD reduction %
+				 val3 = min((( 200 * val1 ) * status_get_lv(src)) / 150, 1000); // flat DMG reduction up to a maximum of 1000 [iRO Wiki]
+				 sc_start(src, bl, SC_ENDURE, 100, 7, tick); // Starts level 7 Endure
+				 break;
 			case SC_STYLE_CHANGE: //[Lighta] need real info
 				tick = -1;
 				if(val2 == MH_MD_FIGHTING) val2 = MH_MD_GRAPPLING;
