@@ -54,7 +54,6 @@ void mapif_homunculus_deleted(int fd, int flag)
 
 void mapif_homunculus_loaded(int fd, int account_id, struct s_homunculus *hd)
 {
-	nullpo_retv(hd);
 	WFIFOHEAD(fd, sizeof(struct s_homunculus)+9);
 	WFIFOW(fd,0) = 0x3891;
 	WFIFOW(fd,2) = sizeof(struct s_homunculus)+9;
