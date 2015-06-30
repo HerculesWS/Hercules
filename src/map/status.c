@@ -3124,6 +3124,8 @@ int status_calc_homunculus_(struct homun_data *hd, enum e_status_calc_opt opt) {
 	if ( opt&SCO_FIRST ) {
 		hd->battle_status.hp = hom->hp;
 		hd->battle_status.sp = hom->sp;
+		if(hom->class_ == 6052) // Eleanor
+			sc_start(&hd->bl,&hd->bl, SC_STYLE_CHANGE, 100, MH_MD_FIGHTING, -1); // [AD] Makes her assume Fighting stance when summoned
 	}
 
 #ifndef RENEWAL
