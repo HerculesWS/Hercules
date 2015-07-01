@@ -3171,9 +3171,17 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			&& rnd()%100 < sce->val2 && sc->fv_counter <= sce->val3 )
 				clif->millenniumshield(bl, sc->fv_counter++);
 
-		if (sc->data[SC_STYLE_CHANGE] && sc->data[SC_STYLE_CHANGE]->val1 == MH_MD_FIGHTING || sc->data[SC_STYLE_CHANGE]->val1 == MH_MD_GRAPPLING) {
-			TBL_HOM *hd = BL_CAST(BL_HOM,src);    // [AD] Add a sphere when attacked in either stance
-			if ( hd && rnd()%2 )
+		if (sc->data[SC_STYLE_CHANGE] && sc->data[SC_STYLE_CHANGE]->val1 == MH_MD_FIGHTING) {
+			TBL_HOM *hd = BL_CAST(BL_HOM,src); // [AD] Add a sphere when attacked
+
+			if ( hd && rnd()%2)
+				homun->addspiritball(hd, 10); // According to WarpPortal, this is a flat 50% chance
+		}
+
+		if (sc->data[SC_STYLE_CHANGE] && sc->data[SC_STYLE_CHANGE]->val1 == MH_MD_GRAPPLING) {
+			TBL_HOM *hd = BL_CAST(BL_HOM,src); // [AD] Add a sphere when attacked
+
+			if ( hd && rnd()%2)
 				homun->addspiritball(hd, 10); // According to WarpPortal, this is a flat 50% chance
 		}
 
@@ -3226,11 +3234,20 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if (tsc->data[SC_SHIELDSPELL_REF] && tsc->data[SC_SHIELDSPELL_REF]->val1 == 1 && damage > 0)
 			skill->break_equip(bl,EQP_ARMOR,10000,BCT_ENEMY );
 			
-		if (sc->data[SC_STYLE_CHANGE] && sc->data[SC_STYLE_CHANGE]->val1 == MH_MD_FIGHTING || sc->data[SC_STYLE_CHANGE]->val1 == MH_MD_GRAPPLING) {
-			TBL_HOM *hd = BL_CAST(BL_HOM,src);    // [AD] Add a sphere when attacking in either stance
+		if (sc->data[SC_STYLE_CHANGE] && sc->data[SC_STYLE_CHANGE]->val1 == MH_MD_FIGHTING) {
+			TBL_HOM *hd = BL_CAST(BL_HOM,src); // [AD] Add a sphere when attacking
+
 			if ( hd && rnd()%2 )
 				homun->addspiritball(hd, 10); // According to WarpPortal, this is a flat 50% chance
 		}
+
+		if (sc->data[SC_STYLE_CHANGE] && sc->data[SC_STYLE_CHANGE]->val1 == MH_MD_GRAPPLING) {
+			TBL_HOM *hd = BL_CAST(BL_HOM,src); // [AD] Add a sphere when attacking
+
+			if ( hd && rnd()%2 )
+				homun->addspiritball(hd, 10); // According to WarpPortal, this is a flat 50% chance
+		}
+		
 		if ( src->type == BL_PC && damage > 0 && (sce = tsc->data[SC_GENTLETOUCH_ENERGYGAIN]) ) {
 			struct map_session_data *tsd = (struct map_session_data *)src;
 			if ( tsd && rnd() % 100 < sce->val2 )
