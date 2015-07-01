@@ -1830,6 +1830,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case EL_TYPOON_MIS_ATK:
 					skillratio += 1100;
 					break;
+				// Eira
 				case MH_ERASER_CUTTER:
 					skillratio += 400 + 100 * skill_lv + (skill_lv%2 > 0 ? 0 : 300);
 					break;
@@ -1837,11 +1838,13 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					if(skill_lv%2) skillratio += 350 + 50 * skill_lv; //500:600:700
 					else skillratio += 400 + 100 * skill_lv; //700:900
 					break;
+				// Bayeri
 				case MH_HEILIGE_STANGE:
 					skillratio += 400 + 250 * skill_lv;
 					break;
+				// Sera
 				case MH_POISON_MIST:
-					skillratio += 100 * skill_lv;
+					skillratio += 100 + 40 * skill_lv;
 					break;
 				case KO_KAIHOU:
 					if (sd && sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0) {
@@ -2611,18 +2614,36 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					skillratio += -100 + 100 * skill_lv;
 					RE_LVL_DMOD(100);
 					break;
+				// Sera
 				case MH_NEEDLE_OF_PARALYZE:
 					skillratio += 600 + 100 * skill_lv;
 					break;
+				// Bayeri
 				case MH_STAHL_HORN:
 					skillratio += 400 + 100 * skill_lv;
 					break;
+				// Dieter
 				case MH_LAVA_SLIDE:
 					skillratio += -100 + 70 * skill_lv;
 					break;
-				case MH_TINDER_BREAKER:
 				case MH_MAGMA_FLOW:
-					skillratio += -100 + 100 * skill_lv;
+					skillratio += -100 + 100 * skill_lv + 3 * status->get_lv(src); // [AD] This should be accurate?
+					break;
+				// Eleanor
+				case MH_SONIC_CRAW:
+					skillratio = 40 * skill_lv;
+					break;
+				case MH_SILVERVEIN_RUSH:
+					skillratio = 150 * skill_lv;
+					break;
+				case MH_TINDER_BREAKER:
+					skillratio = 100 * skill_lv;
+					break;
+				case MH_MIDNIGHT_FRENZY:
+					skillratio = 300 * skill_lv;
+					break;
+				case MH_CBC:
+					skillratio = 400 * skill_lv; // [AD] Isn't this supposed to be flat damage?
 					break;
 				default:
 					battle->calc_skillratio_weapon_unknown(&attack_type, src, target, &skill_id, &skill_lv, &skillratio, &flag);
@@ -3063,7 +3084,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			damage -= damage * sc->data[SC_GRANITIC_ARMOR]->val2 / 100;
 		}
 		if(sc->data[SC_PAIN_KILLER]){
-			damage -= damage * sc->data[SC_PAIN_KILLER]->val3 / 100;
+			damage -= sc->data[SC_PAIN_KILLER]->val3;	// Flat damage reduction [WarpPortal]
+			if(damage <= 0) // [AD] Consistency check to prevent negative damage
+				damage = 1;
 		}
 		if((sce=sc->data[SC_MAGMA_FLOW]) && (rnd()%100 <= sce->val2) ){
 			skill->castend_damage_id(bl,src,MH_MAGMA_FLOW,sce->val1,timer->gettick(),0);
