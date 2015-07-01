@@ -4329,6 +4329,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 				}
 			}
 			break;
+			
 		case GC_WEAPONCRUSH:
 			if( sc && sc->data[SC_COMBOATTACK] && sc->data[SC_COMBOATTACK]->val1 == GC_WEAPONBLOCKING )
 				skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
