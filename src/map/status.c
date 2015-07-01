@@ -474,12 +474,12 @@ void initChangeTables(void) {
 
 	add_sc(MH_STAHL_HORN, SC_STUN);
 	set_sc(MH_ANGRIFFS_MODUS, SC_ANGRIFFS_MODUS, SI_ANGRIFFS_MODUS, SCB_BATK | SCB_DEF | SCB_FLEE | SCB_MAXHP);
-	set_sc(MH_GOLDENE_FERSE, SC_GOLDENE_FERSE, SI_GOLDENE_FERSE,  SCB_ASPD|SCB_MAXHP);
+	set_sc(MH_GOLDENE_FERSE, SC_GOLDENE_FERSE, SI_GOLDENE_FERSE,  SCB_ASPD|SCB_FLEE|SCB_MAXHP);
 	add_sc( MH_STEINWAND, SC_SAFETYWALL );
 	set_sc(MH_VOLCANIC_ASH, SC_VOLCANIC_ASH, SI_VOLCANIC_ASH, SCB_DEF|SCB_DEF2|SCB_HIT|SCB_BATK|SCB_FLEE);
 	set_sc(MH_GRANITIC_ARMOR, SC_GRANITIC_ARMOR, SI_GRANITIC_ARMOR, SCB_NONE);
 	set_sc(MH_MAGMA_FLOW, SC_MAGMA_FLOW, SI_MAGMA_FLOW, SCB_NONE);
-	set_sc(MH_PYROCLASTIC, SC_PYROCLASTIC, SI_PYROCLASTIC, SCB_BATK|SCB_ATK_ELE);
+	set_sc(MH_PYROCLASTIC, SC_PYROCLASTIC, SI_PYROCLASTIC, SCB_WATK|SCB_BATK|SCB_ATK_ELE);
 	add_sc(MH_LAVA_SLIDE, SC_BURNING);
 	set_sc(MH_NEEDLE_OF_PARALYZE, SC_NEEDLE_OF_PARALYZE, SI_NEEDLE_OF_PARALYZE, SCB_DEF2);
 	add_sc(MH_POISON_MIST, SC_BLIND);
@@ -1722,7 +1722,8 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 					(sc->data[SC_MARIONETTE_MASTER] && skill_id != CG_MARIONETTE) || //Only skill you can use is marionette again to cancel it
 					(sc->data[SC_MARIONETTE] && skill_id == CG_MARIONETTE) || //Cannot use marionette if you are being buffed by another
 					(sc->data[SC_STASIS] && skill->block_check(src, SC_STASIS, skill_id)) ||
-					(sc->data[SC_KG_KAGEHUMI] && skill->block_check(src, SC_KG_KAGEHUMI, skill_id))
+					(sc->data[SC_KG_KAGEHUMI] && skill->block_check(src, SC_KG_KAGEHUMI, skill_id)) ||
+					(sc->data[SC_VOLCANIC_ASH] && rnd()%2)) // [AD] Skills fail at a 50% chance, similar to Wall of Fog
 					))
 					return 0;
 
@@ -4620,6 +4621,8 @@ unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc,
 		watk += watk / 10;
 	if(sc->data[SC_TIDAL_WEAPON])
 		watk += watk * sc->data[SC_TIDAL_WEAPON]->val2 / 100;
+	if(bl->type == BL_PC && sc->data[SC_PYROCLASTIC])
+		watk += sc->data[SC_PYROCLASTIC]->val2;
 	if(sc->data[SC_ANGRIFFS_MODUS])
 		watk += watk * sc->data[SC_ANGRIFFS_MODUS]->val2/100;
 	if( sc->data[SC_FLASHCOMBO] )
@@ -7122,6 +7125,14 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			if (sc->data[SC_MAGNIFICAT])
 				return 0;
 			break;
+		case SC_GRANITIC_ARMOR: // [AD] This is needed so the penalty can't be skipped
+			if (sc->data[SC_GRANITIC_ARMOR])
+				return 0;
+			break;
+		case SC_PYROCLASTIC:
+			if (sc->data[SC_PYROCLASTIC])
+				return 0;
+			break;
 	}
 
 	//Check for BOSS resistances
@@ -7143,6 +7154,9 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_MARSHOFABYSS:
 			case SC_ADORAMUS:
 			case SC_NEEDLE_OF_PARALYZE:
+			case SC_VOLCANIC_ASH:
+			case SC_FIRE_EXPANSION_TEAR_GAS:
+			case SC_FIRE_EXPANSION_TEAR_GAS_SOB:
 			case SC_DEEP_SLEEP:
 			case SC_COLD:
 
@@ -8999,7 +9013,8 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				val2 = 3*val1; //activation chance
 				break;
 			case SC_PYROCLASTIC:
-				val2 += 10*val1; //atk bonus
+				val2 += 10 * val1; // ATK bonus
+				val3 = 2 * val1;   // [AD] Chance to autocast Hammerfall 
 				break;
 			case SC_LIGHT_OF_REGENE: // [AD] Why wasn't this here already?
 				val2 = 20 * val1; // HP % recovered
@@ -9769,15 +9784,17 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 	switch(type) {
 		case SC_GRANITIC_ARMOR:
 		{
-			int damage = st->max_hp*sce->val3/100;
-			if(st->hp < damage) //to not kill him
-				damage = st->hp-1;
-			status->damage(NULL, bl, damage,0,0,1);
+			int damage = st->max_hp * sce->val3 / 100;
+			if(st->hp < damage)    // Prevent overkill
+				damage = st->hp - 1;
+			status->damage(NULL, bl, damage, 0, 0, 1);
+			status_change_end(bl, SC_GRANITIC_ARMOR, INVALID_TIMER); // [AD] Just in case
 		}
 			break;
 		case SC_PYROCLASTIC:
 			if(bl->type == BL_PC)
-				skill->break_equip(bl,EQP_WEAPON,10000,BCT_SELF);
+				skill->break_equip(bl, EQP_WEAPON, 10000, BCT_SELF);
+			status_change_end(bl, SC_PYROCLASTIC, INVALID_TIMER); // [AD] Just in case
 			break;
 		case SC_RUN:
 			{
