@@ -1397,7 +1397,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			sc_start(src, bl, SC_STUN, (25 + 5 * (skill_lv-1)), skill_lv, skill->get_time(skill_id, skill_lv));
 			break;
 		case MH_NEEDLE_OF_PARALYZE:
-			sc_start(src, bl, SC_NEEDLE_OF_PARALYZE, 30 + (5 * skill_lv), skill_lv, skill->get_time(skill_id, skill_lv));
+			sc_start(src, bl, SC_NEEDLE_OF_PARALYZE, 10 + (2 * skill_lv), skill_lv, skill->get_time(skill_id, skill_lv));
 			break;
 		case MH_SILVERVEIN_RUSH:
 			sc_start4(src,bl,SC_STUN, 30 + (10 * skill_lv), skill_lv, src->id, 0, 0, skill_get_time(skill_id, skill_lv));
