@@ -2614,6 +2614,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					skillratio += -100 + 100 * skill_lv;
 					RE_LVL_DMOD(100);
 					break;
+				// Homunculus S block
 				// Sera
 				case MH_NEEDLE_OF_PARALYZE:
 					skillratio += 600 + 100 * skill_lv;
@@ -2645,6 +2646,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case MH_CBC:
 					skillratio = 400 * skill_lv; // [AD] Isn't this supposed to be flat damage?
 					break;
+				// End of Homunculus S block
 				default:
 					battle->calc_skillratio_weapon_unknown(&attack_type, src, target, &skill_id, &skill_lv, &skillratio, &flag);
 					break;
