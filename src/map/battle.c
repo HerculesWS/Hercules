@@ -3234,14 +3234,14 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if (tsc->data[SC_SHIELDSPELL_REF] && tsc->data[SC_SHIELDSPELL_REF]->val1 == 1 && damage > 0)
 			skill->break_equip(bl,EQP_ARMOR,10000,BCT_ENEMY );
 			
-		if (sc->data[SC_STYLE_CHANGE] && sc->data[SC_STYLE_CHANGE]->val1 == MH_MD_FIGHTING) {
+		if (tsc->data[SC_STYLE_CHANGE] && tsc->data[SC_STYLE_CHANGE]->val1 == MH_MD_FIGHTING) {
 			TBL_HOM *hd = BL_CAST(BL_HOM,src); // [AD] Add a sphere when attacking
 
 			if ( hd && rnd()%2 )
 				homun->addspiritball(hd, 10); // According to WarpPortal, this is a flat 50% chance
 		}
 
-		if (sc->data[SC_STYLE_CHANGE] && sc->data[SC_STYLE_CHANGE]->val1 == MH_MD_GRAPPLING) {
+		if (tsc->data[SC_STYLE_CHANGE] && tsc->data[SC_STYLE_CHANGE]->val1 == MH_MD_GRAPPLING) {
 			TBL_HOM *hd = BL_CAST(BL_HOM,src); // [AD] Add a sphere when attacking
 
 			if ( hd && rnd()%2 )
@@ -3793,7 +3793,6 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 				ad.damage += wd.damage;
 			break;
 		}
-		//case HM_ERASER_CUTTER:
 	}
 
 	return ad;
@@ -6042,12 +6041,14 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 	}
 
 	if(sd && (skillv = pc->checkskill(sd,MO_TRIPLEATTACK)) > 0) {
-		int triple_rate= 30 - skillv; //Base Rate
+		int triple_rate= 30 - skillv; // Base Rate
 		if (sc && sc->data[SC_SKILLRATE_UP] && sc->data[SC_SKILLRATE_UP]->val1 == MO_TRIPLEATTACK) {
 			triple_rate+= triple_rate*(sc->data[SC_SKILLRATE_UP]->val2)/100;
 			status_change_end(src, SC_SKILLRATE_UP, INVALID_TIMER);
 		}
 		if (rnd()%100 < triple_rate) {
+			// Need to apply canact_tick here because it doesn't go through skill_castend_id
+			sd->ud.canact_tick = tick + skill->delay_fix(src, MO_TRIPLEATTACK, skillv);
 			if( skill->attack(BF_WEAPON,src,src,target,MO_TRIPLEATTACK,skillv,tick,0) )
 				return ATK_DEF;
 			return ATK_MISS;
