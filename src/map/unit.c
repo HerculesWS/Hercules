@@ -132,6 +132,7 @@ int unit_walktoxy_sub(struct block_list *bl)
 
 	if (bl->type == BL_PC) {
 		((TBL_PC *)bl)->head_dir = 0;
+		clif->fixpos(bl);
 		clif->walkok((TBL_PC*)bl);
 	}
 	clif->move(ud);
@@ -1059,6 +1060,8 @@ int unit_can_move(struct block_list *bl) {
 			|| sc->data[SC_FALLENEMPIRE]
 		    ||  sc->data[SC_RG_CCONFINE_M]
 		    ||  sc->data[SC_RG_CCONFINE_S]
+		    ||  sc->data[SC_TINDER_BREAKER]
+		    ||  sc->data[SC_TINDER_BREAKER2]
 		    ||  sc->data[SC_GS_MADNESSCANCEL]
 		    || (sc->data[SC_GRAVITATION] && sc->data[SC_GRAVITATION]->val3 == BCT_SELF)
 		    ||  sc->data[SC_WHITEIMPRISON]
@@ -1264,7 +1267,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	}
 
 	if (src->type==BL_HOM)
-		switch(skill_id) { //Homun-auto-target skills.
+		switch(skill_id) { // Homunculus auto-target skills.
 			case HLIF_HEAL:
 			case HLIF_AVOID:
 			case HAMI_DEFENCE:
@@ -1272,6 +1275,18 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 				target = battle->get_master(src);
 				if (!target) return 0;
 				target_id = target->id;
+				break;
+			case MH_SONIC_CRAW:
+			case MH_TINDER_BREAKER:
+			{
+				int skill_id2 = ((skill_id==MH_SONIC_CRAW)?MH_MIDNIGHT_FRENZY:MH_EQC);
+				if(sc && sc->data[SC_COMBOATTACK] && sc->data[SC_COMBOATTACK]->val1 == skill_id2){ // It's a combo
+					target_id = sc->data[SC_COMBOATTACK]->val2;
+					temp = 1;
+					casttime = -1;
+				}
+				break;
+			}
 	}
 
 	if( !target ) // choose default target
@@ -2350,6 +2365,8 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 		status_change_end(bl, SC_MARIONETTE, INVALID_TIMER);
 		status_change_end(bl, SC_RG_CCONFINE_M, INVALID_TIMER);
 		status_change_end(bl, SC_RG_CCONFINE_S, INVALID_TIMER);
+		status_change_end(bl, SC_TINDER_BREAKER, INVALID_TIMER);
+		status_change_end(bl, SC_TINDER_BREAKER2, INVALID_TIMER);
 		status_change_end(bl, SC_HIDING, INVALID_TIMER);
 		// Ensure the bl is a PC; if so, we'll handle the removal of cloaking and cloaking exceed later
 		if ( bl->type != BL_PC ) {
@@ -2358,7 +2375,7 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 		}
 		status_change_end(bl, SC_CHASEWALK, INVALID_TIMER);
 		if (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_SELF)
-			status_change_end(bl, SC_GOSPEL, INVALID_TIMER);
+		status_change_end(bl, SC_GOSPEL, INVALID_TIMER);
 		status_change_end(bl, SC_HLIF_CHANGE, INVALID_TIMER);
 		status_change_end(bl, SC_STOP, INVALID_TIMER);
 		status_change_end(bl, SC_WUGDASH, INVALID_TIMER);
