@@ -2406,7 +2406,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		case TK_COUNTER:
 			{	//bonus from SG_FRIEND [Komurka]
 				int level;
-				if( sd->status.party_id>0 && (level = pc->checkskill(sd,SG_FRIEND)) )
+				if (sd->status.party_id>0 && (level = pc->checkskill(sd,SG_FRIEND)) )
 					party->skill_check(sd, sd->status.party_id, TK_COUNTER,level);
 			}
 			break;
