@@ -1727,7 +1727,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 					(sc->data[SC_STASIS] && skill->block_check(src, SC_STASIS, skill_id)) ||
 					(sc->data[SC_KG_KAGEHUMI] && skill->block_check(src, SC_KG_KAGEHUMI, skill_id)) ||
 					(sc->data[SC_VOLCANIC_ASH] && rnd()%2)) // [AD] Skills fail at a 50% chance, similar to Wall of Fog
-					))
+					)
 					return 0;
 
 				//Skill blocking.
