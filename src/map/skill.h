@@ -1905,7 +1905,8 @@ END_ZEROED_BLOCK;
 	/* whether its CAST_GROUND, CAST_DAMAGE or CAST_NODAMAGE */
 	int (*get_casttype) (uint16 skill_id);
 	int (*get_casttype2) (uint16 index);
-	bool (*is_combo) (int skill_id);
+	void (*combo_toogle_inf) (struct block_list* bl, uint16 skill_id, int inf);
+	void (*combo) (struct block_list* src,struct block_list *dsrc, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick);
 	int (*name2id) (const char* name);
 	int (*isammotype) (struct map_session_data *sd, int skill_id);
 	int (*castend_id) (int tid, int64 tick, int id, intptr_t data);
