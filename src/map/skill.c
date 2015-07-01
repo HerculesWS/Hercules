@@ -9737,11 +9737,22 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			}
 			break;
 
-		case MH_OVERED_BOOST:
-			if ( hd && battle->get_master(src) ) {
-				sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv));
-				sc_start(src, battle->get_master(src), type, 100, skill_lv, skill->get_time(skill_id, skill_lv));
-			}
+		case MH_OVERED_BOOST: // [AD] No more SP zap for this part
+			if (hd) {
+				 struct block_list *s_bl = battle->get_master(src);
+
+				 if(hd->homunculus.hunger > 50) // Reduces hunger
+					 hd->homunculus.hunger = hd->homunculus.hunger/2;
+				 else
+					 hd->homunculus.hunger = min(1,hd->homunculus.hunger);
+
+				 if(s_bl && s_bl->type==BL_PC) {
+					 clif->send_homdata(((TBL_PC *)s_bl), SP_HUNGRY, hd->homunculus.hunger); // Refreshes hunger info
+					 sc_start(src,s_bl, type, 100, skill_lv, skill_get_time(skill_id, skill_lv)); // Buffs Genetic
+				 }
+				 sc_start(src,bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv)); // Buffs homunculus
+				 skill->blockhomun_start(hd, skill_id, skill->get_cooldown(skill_id, skill_lv));
+			 }
 			break;
 
 		case MH_SILENT_BREEZE:
@@ -9772,11 +9783,30 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				struct block_list *s_bl = battle->get_master(src);
 
 				if(s_bl)
-					sc_start2(src, s_bl, type, 100, skill_lv, hd->homunculus.level, skill->get_time(skill_id, skill_lv)); //start on master
-
-				sc_start2(src, bl, type, 100, skill_lv, hd->homunculus.level, skill->get_time(skill_id, skill_lv));
-
+					sc_start2(src, s_bl, type, 100, skill_lv, hd->homunculus.level, skill->get_time(skill_id, skill_lv)); // Start on master
+					sc_start2(src, bl, type, 100, skill_lv, hd->homunculus.level, skill->get_time(skill_id, skill_lv)); // Start on homunculus
+					
+				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 				skill->blockhomun_start(hd, skill_id, skill->get_cooldown(skill_id, skill_lv));
+			}
+			break;
+			
+		case MH_STYLE_CHANGE:
+			if(hd) {
+				struct status_change_entry *sce;
+				if((sce=hd->sc.data[SC_STYLE_CHANGE])!=NULL) { // In preparation for other bl usage
+					if(sce->val1 == MH_MD_FIGHTING) sce->val1 = MH_MD_GRAPPLING;
+					else sce->val1 = MH_MD_FIGHTING;
+					if(hd->master && hd->sc.data[SC_STYLE_CHANGE]) {
+						char output[128];
+
+						safesnprintf(output,sizeof(output),msg_txt(378),(sce->val1==MH_MD_FIGHTING?"fighthing":"grappling"));
+						clif->colormes(hd->master->fd,COLOR_RED,output);
+					}
+				}
+				else sc_start(&hd->bl,&hd->bl, SC_STYLE_CHANGE, 100, MH_MD_FIGHTING, -1);
+
+				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 			}
 			break;
 
