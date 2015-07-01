@@ -4307,6 +4307,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 
 		case KO_JYUMONJIKIRI:
 		case GC_DARKILLUSION:
+		case MH_STAHL_HORN:
 			{
 				short x, y;
 				short dir = map->calc_dir(bl, src->x, src->y);
@@ -4323,7 +4324,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 					clif->slide(src, x, y);
 					clif->fixpos(src); // the official server send these two packets.
 					skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
-					if ( rnd() % 100 < 4 * skill_lv &&	skill_id == GC_DARKILLUSION )
+					if ( rnd() % 100 < 4 * skill_lv && skill_id == GC_DARKILLUSION )
 						skill->castend_damage_id(src, bl, GC_CROSSIMPACT, skill_lv, tick, flag);
 				}
 			}
@@ -4755,8 +4756,6 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 				map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), splash_target(src), src, skill_id, skill_lv, tick, flag | BCT_ENEMY | SD_SPLASH | 1, skill->castend_damage_id);
 			}
 			break;
-
-		case MH_STAHL_HORN:
 		case MH_NEEDLE_OF_PARALYZE:
 			skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
 			break;
