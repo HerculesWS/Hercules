@@ -9728,7 +9728,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), splash_target(src), src, skill_id, skill_lv, tick, flag|BCT_ENEMY|SD_SPLASH|1, skill->castend_nodamage_id);
 			}
 			break;
-
+		
+		// Homunculus S
 		case MH_LIGHT_OF_REGENE:
 			if( hd && battle->get_master(src) ) {
 				hd->homunculus.intimacy = (751 + rnd()%99) * 100; // random between 751 ~ 850
@@ -9736,7 +9737,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				sc_start(src, battle->get_master(src), type, 100, skill_lv, skill->get_time(skill_id, skill_lv));
 			}
 			break;
-
+		
 		case MH_OVERED_BOOST: // [AD] No more SP zap for this part
 			if (hd) {
 				 struct block_list *s_bl = battle->get_master(src);
@@ -9779,7 +9780,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 		case MH_GRANITIC_ARMOR:
 		case MH_PYROCLASTIC:
-			if( hd ){
+			if (hd) {
 				struct block_list *s_bl = battle->get_master(src);
 
 				if(s_bl)
@@ -9792,7 +9793,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 			
 		case MH_STYLE_CHANGE:
-			if(hd) {
+			if (hd) {
 				struct status_change_entry *sce;
 				if((sce=hd->sc.data[SC_STYLE_CHANGE])!=NULL) { // In preparation for other bl usage
 					if(sce->val1 == MH_MD_FIGHTING) sce->val1 = MH_MD_GRAPPLING;
@@ -9800,8 +9801,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					if(hd->master && hd->sc.data[SC_STYLE_CHANGE]) {
 						char output[128];
 
-						safesnprintf(output,sizeof(output),msg_txt(378),(sce->val1==MH_MD_FIGHTING?"fighthing":"grappling"));
-						clif->colormes(hd->master->fd,COLOR_RED,output);
+						safesnprintf(output,sizeof(output),msg_sd(sd,1500),(sce->val1==MH_MD_FIGHTING?"fighting":"grappling"));
+						clif->messagecolor_self(hd->master->fd, COLOR_RED, output); // [AD] Announces the assumed stance
 					}
 				}
 				else sc_start(&hd->bl,&hd->bl, SC_STYLE_CHANGE, 100, MH_MD_FIGHTING, -1);
