@@ -1391,20 +1391,31 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			sc_start(src, bl, SC_STUN, 10 * skill_lv, skill_lv, 1000 * (skill_lv / 2 + 2));
 			break;
 		case MH_LAVA_SLIDE:
-			if (tsc && !tsc->data[SC_BURNING]) sc_start4(src, bl, SC_BURNING, 10 * skill_lv, skill_lv, 0, src->id, 0, skill->get_time(skill_id, skill_lv));
+			if (tsc && !tsc->data[SC_BURNING]) sc_start4(src, bl, SC_BURNING, 10 * skill_lv, skill_lv, 1000, src->id, 0, skill->get_time(skill_id, skill_lv));
 			break;
 		case MH_STAHL_HORN:
-			sc_start(src, bl, SC_STUN, (20 + 4 * (skill_lv-1)), skill_lv, skill->get_time(skill_id, skill_lv));
+			sc_start(src, bl, SC_STUN, (25 + 5 * (skill_lv-1)), skill_lv, skill->get_time(skill_id, skill_lv));
 			break;
 		case MH_NEEDLE_OF_PARALYZE:
-			sc_start(src, bl, SC_NEEDLE_OF_PARALYZE, 40 + (5*skill_lv), skill_lv, skill->get_time(skill_id, skill_lv));
+			sc_start(src, bl, SC_NEEDLE_OF_PARALYZE, 30 + (5 * skill_lv), skill_lv, skill->get_time(skill_id, skill_lv));
+			break;
+		case MH_SILVERVEIN_RUSH:
+			sc_start4(src,bl,SC_STUN, 30 + (10 * skill_lv), skill_lv, src->id, 0, 0, skill_get_time(skill_id, skill_lv));
+			break;
+		case MH_MIDNIGHT_FRENZY:
+			{
+				TBL_HOM *hd = BL_CAST(BL_HOM,src);
+
+				int spiritball = (hd?hd->homunculus.spiritball:1);
+				sc_start4(src, bl, SC_FEAR, (spiritball * 5) + (10 * skill_lv), skill_lv, src->id, 0, 0, skill_get_time(skill_id, skill_lv));
+			}
+			break;
+		case MH_XENO_SLASHER:
+			sc_start2(src, bl, SC_BLOODING, 10 * (5 * skill_lv), skill_lv, src->id, skill->get_time(skill_id,skill_lv));
 			break;
 		case GN_ILLUSIONDOPING:
 			if( sc_start(src, bl, SC_ILLUSIONDOPING, 10 * skill_lv, skill_lv, skill->get_time(skill_id, skill_lv)) ) //custom rate.
 				sc_start(src, bl, SC_ILLUSION, 100, skill_lv, skill->get_time(skill_id, skill_lv));
-			break;
-		case MH_XENO_SLASHER:
-			sc_start2(src, bl, SC_BLOODING, 10 * skill_lv, skill_lv, src->id, skill->get_time(skill_id,skill_lv));
 			break;
 		default:
 			skill->additional_effect_unknown(src, bl, &skill_id, &skill_lv, &attack_type, &dmg_lv, &tick);
@@ -18247,7 +18258,6 @@ void skill_init_unit_layout (void)
 					memcpy(skill->unit_layout[pos].dy,dy,sizeof(dy));
 				}
 				break;
-			case MH_POISON_MIST:
 			case AS_VENOMDUST: {
 					static const int dx[] = {-1, 0, 0, 0, 1};
 					static const int dy[] = { 0,-1, 0, 1, 0};
