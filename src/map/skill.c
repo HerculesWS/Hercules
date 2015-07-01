@@ -11063,12 +11063,12 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 	st = status->get_status_data(src);
 	sc = status->get_sc(src); // for traps, firewall and fogwall - celest
 
-	switch( skill_id ) {
-		case SO_ELEMENTAL_SHIELD: // [AD] Using base level as a workaround, this is a bit custom but should be pretty close (job level check can cause a crash)
+	switch( skill_id ) {          // [AD] Using base level as a workaround for all those cases since checking for job level causes crashes
+		case SO_ELEMENTAL_SHIELD: // This is a bit custom but should be pretty close
 			val2 = 6 + skill_lv;  // Imitating level 10 SW?
 			val3 = ( 600 + ( 1280 * skill_lv ) ) * ( 1 + 1 / 10 * status->get_lv(src) / 175) + 300 * skill_lv + 65 * st->int_ + st->max_sp;
 			break;
-		case MH_STEINWAND:        // [AD] Base level as a workaround again, pretty obvious in this case
+		case MH_STEINWAND:        
 			val2 = 6 + skill_lv;  // Imitating level 10 SW?
 			val3 = ( 600 + ( 1280 * skill_lv ) ) * ( 1 + 1 / 10 * status->get_lv(src) / 175) + 300 * skill_lv + 65 * st->int_ + st->max_sp; 
 			break;
