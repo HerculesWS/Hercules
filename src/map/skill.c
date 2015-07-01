@@ -14912,8 +14912,10 @@ int skill_delay_fix (struct block_list *bl, uint16 skill_id, uint16 skill_lv) {
 		case CH_TIGERFIST:
 		case CH_CHAINCRUSH:
 		case SR_DRAGONCOMBO:
-		case SR_FALLENEMPIRE:
-			time -= 4*status_get_agi(bl) - 2*status_get_dex(bl);
+		case SR_FALLENEMPIRE: // [AD] If delay is not specified, it will be 1000 ms - (4*agi + 2*dex)
+			if (time == 0)  // Otherwise ASPD has no real impact on combo speed execution
+				time = 1000;
+			time -= (4*status_get_agi(bl) + 2*status_get_dex(bl));
 			break;
 		case HP_BASILICA:
 			if( sc && !sc->data[SC_BASILICA] )
