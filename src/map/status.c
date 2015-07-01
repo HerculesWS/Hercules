@@ -5497,6 +5497,9 @@ short status_calc_fix_aspd(struct block_list *bl, struct status_change *sc, int 
 	if (!sc || !sc->count)
 		return cap_value(aspd, 0, 2000);
 
+	if (sc->data[SC_OVERED_BOOST]) // ASPD should be fixed and unmodifiable by any means
+		return cap_value(2000 - sc->data[SC_OVERED_BOOST]->val3 * 10, 0, 2000);
+
 	if ((sc->data[SC_GUST_OPTION] || sc->data[SC_BLAST_OPTION]
 	|| sc->data[SC_WILD_STORM_OPTION]))
 		aspd -= 50; // +5 ASPD
@@ -5505,8 +5508,7 @@ short status_calc_fix_aspd(struct block_list *bl, struct status_change *sc, int 
 	if (sc->data[SC_MTF_ASPD])
 		aspd -= 10;
 
-	if (sc->data[SC_OVERED_BOOST]) // ASPD should be fixed and unmodifiable by any means
-		return cap_value(2000 - sc->data[SC_OVERED_BOOST]->val3 * 10, 0, 2000);
+	return cap_value(aspd, 0, 2000); // Will be recapped for proper bl anyway
 }
 
 /// Calculates an object's ASPD modifier (alters the base amotion value).
@@ -10274,17 +10276,6 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 					clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_MVPCARD_ORCLORD);
 					break;
 				}
-			}
-			break;
-		case SC_OVERED_BOOST:
-			switch( bl->type ){
-				case BL_HOM:
-				{
-					struct homun_data *hd = BL_CAST(BL_HOM, bl);
-						if( hd )
-							hd->homunculus.hunger = max(1, hd->homunculus.hunger - 50);
-				}
-					break;
 			}
 			break;
 	}
