@@ -9745,6 +9745,9 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 
 		case MH_SILENT_BREEZE:
+			if (dstmd && (dstmd->class_ == MOBID_EMPERIUM))
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+			break;
 		{
 			const enum sc_type scs[] = {
 				SC_MANDRAGORA, SC_HARMONIZE, SC_DEEP_SLEEP, SC_SIREN, SC_SLEEP, SC_CONFUSION, SC_ILLUSION
