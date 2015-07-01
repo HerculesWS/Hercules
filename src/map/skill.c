@@ -14905,7 +14905,7 @@ int skill_delay_fix (struct block_list *bl, uint16 skill_id, uint16 skill_lv) {
 
 	// Delay reductions
 	switch (skill_id) {
-		//Monk combo skills have their delay reduced by agi/dex.
+		// Monk combo skills have their delay reduced by AGI/DEX
 		case MO_TRIPLEATTACK:
 		case MO_CHAINCOMBO:
 		case MO_COMBOFINISH:
