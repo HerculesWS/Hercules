@@ -785,7 +785,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 							(2000 - 4*sstatus->agi - 2*sstatus->dex));
 					}
 				}
-				if(sc && sc->data[SC_PYROCLASTIC] && (rnd() % 1000 <= sstatus->luk * 10 / 3 + 1) )
+				if(sc && sc->data[SC_PYROCLASTIC] && ((rnd() % 100)<=sc->data[SC_PYROCLASTIC]->val3) ) // [AD] This should be more accurate
 					skill->castend_pos2(src, bl->x, bl->y, BS_HAMMERFALL,sc->data[SC_PYROCLASTIC]->val1, tick, 0);
 			}
 
