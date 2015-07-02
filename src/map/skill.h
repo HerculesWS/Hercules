@@ -31,12 +31,12 @@ struct status_change_entry;
 #define MAX_SKILL_DB              MAX_SKILL
 #define MAX_SKILL_PRODUCE_DB      270
 #define MAX_PRODUCE_RESOURCE      10
-#define MAX_SKILL_ARROW_DB        140
+#define MAX_SKILL_ARROW_DB        150
 #define MAX_ARROW_RESOURCE        5
 #define MAX_SKILL_ABRA_DB         210
 #define MAX_SKILL_IMPROVISE_DB    30
 #define MAX_SKILL_LEVEL           10
-#define MAX_SKILL_UNIT_LAYOUT     45
+#define MAX_SKILL_UNIT_LAYOUT     52
 #define MAX_SQUARE_LAYOUT         5 // 11*11 Placement of a maximum unit
 #define MAX_SKILL_UNIT_COUNT      ((MAX_SQUARE_LAYOUT*2+1)*(MAX_SQUARE_LAYOUT*2+1))
 #define MAX_SKILLTIMERSKILL       15
@@ -1942,6 +1942,7 @@ END_ZEROED_BLOCK;
 	int (*unit_move) (struct block_list *bl, int64 tick, int flag);
 	int (*unit_onleft) (uint16 skill_id, struct block_list *bl, int64 tick);
 	int (*unit_onout) (struct skill_unit *src, struct block_list *bl, int64 tick);
+	int (*unit_move_unit) (struct block_list *bl, int dx, int dy);
 	int (*unit_move_unit_group) ( struct skill_unit_group *group, int16 m,int16 dx,int16 dy);
 	int (*sit) (struct map_session_data *sd, int type);
 	void (*brandishspear) (struct block_list* src, struct block_list* bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
