@@ -14173,7 +14173,7 @@ void clif_parse_AutoRevive(int fd, struct map_session_data *sd) {
 
 	if (item_position == INDEX_NOT_FOUND) {
 		if (sd->sc.data[SC_LIGHT_OF_REGENE])
-			hpsp = 20 * sd->sc.data[SC_LIGHT_OF_REGENE]->val1;
+			hpsp = sd->sc.data[SC_LIGHT_OF_REGENE]->val2;
 		else
 			return;
 	}
