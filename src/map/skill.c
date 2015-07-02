@@ -1394,7 +1394,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			if (tsc && !tsc->data[SC_BURNING]) sc_start4(src, bl, SC_BURNING, 10 * skill_lv, skill_lv, 1000, src->id, 0, skill->get_time(skill_id, skill_lv));
 			break;
 		case MH_STAHL_HORN:
-			sc_start(src, bl, SC_STUN, (25 + 5 * (skill_lv-1)), skill_lv, skill->get_time(skill_id, skill_lv));
+			sc_start(src, bl, SC_STUN, 25 + (5 * skill_lv), skill_lv, skill->get_time(skill_id, skill_lv));
 			break;
 		case MH_NEEDLE_OF_PARALYZE:
 			sc_start(src, bl, SC_NEEDLE_OF_PARALYZE, 10 + (2 * skill_lv), skill_lv, skill->get_time(skill_id, skill_lv));
@@ -1411,7 +1411,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			}
 			break;
 		case MH_XENO_SLASHER:
-			sc_start2(src, bl, SC_BLOODING, 10 * (5 * skill_lv), skill_lv, src->id, skill->get_time(skill_id,skill_lv));
+				sc_start2(src, bl, SC_BLOODING, 10 * (5 * skill_lv), skill_lv, src->id, skill->get_time(skill_id,skill_lv));
 			break;
 		case GN_ILLUSIONDOPING:
 			if( sc_start(src, bl, SC_ILLUSIONDOPING, 10 * skill_lv, skill_lv, skill->get_time(skill_id, skill_lv)) ) //custom rate.
@@ -3315,13 +3315,16 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 				case SR_FALLENEMPIRE:
 				case SR_TIGERCANNON:
 				case SR_SKYNETBLOW:
-					if( src->type == BL_PC ) {
+				{
+					struct map_session_data *sd = NULL;
+
+					if( src->type == BL_PC && (sd = ((TBL_PC*)src)) ) {
 						if( distance_xy(src->x, src->y, target->x, target->y) >= 3 )
 							break;
-
-						skill->castend_damage_id(src, target, skl->skill_id, pc->checkskill(((TBL_PC*)src), skl->skill_id), tick, 0);
+						skill->castend_damage_id(src, target, skl->skill_id, pc->checkskill(sd, skl->skill_id), tick, 0);
 					}
 					break;
+				}
 				case SC_ESCAPE:
 					if( skl->type < 4+skl->skill_lv ){
 						clif->skill_damage(src,src,tick,0,0,-30000,1,skl->skill_id,skl->skill_lv,BDT_SPLASH);
@@ -3347,9 +3350,11 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 						skill->blown(src,target,skill->get_blewcount(skl->skill_id, skl->skill_lv), -1, 0x0 );
 						break;
 					}
+					skill->attack(skl->type,src,src,target,skl->skill_id,skl->skill_lv,tick,skl->flag);
+					break;
 				}
 				default:
-					skill->timerskill_target_unknown(tid, tick, src, target, ud, skl);
+					skill->attack(skl->type,src,src,target,skl->skill_id,skl->skill_lv,tick,skl->flag);
 					break;
 			}
 		} else {
@@ -3510,7 +3515,7 @@ int skill_reveal_trap (struct block_list *bl, va_list ap) {
 int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag) {
 	struct map_session_data *sd = NULL;
 	struct status_data *tstatus;
-	struct status_change *sc;
+	struct status_change *sc, *tsc;
 
 	if (skill_id > 0 && !skill_lv) return 0;
 
@@ -3538,8 +3543,12 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 	}
 
 	sc = status->get_sc(src);
+	tsc = status->get_sc(bl);
+
 	if (sc && !sc->count)
 		sc = NULL; //Unneeded
+	if (tsc && !tsc->count)
+		tsc = NULL;
 
 	tstatus = status->get_status_data(bl);
 
@@ -4753,9 +4762,8 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 		case MH_HEILIGE_STANGE:
 			if(flag & 1)
 				skill->attack(skill->get_type(skill_id), src, src, bl, skill_id, skill_lv, tick, flag);
-			else {
+			else 
 				map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), splash_target(src), src, skill_id, skill_lv, tick, flag | BCT_ENEMY | SD_SPLASH | 1, skill->castend_damage_id);
-			}
 			break;
 		case MH_NEEDLE_OF_PARALYZE:
 			skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
@@ -4770,7 +4778,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 
 				if( !(hd) )
 					break;
-					
+
 				skill->attack(skill->get_type(skill_id),src,src,bl,skill_id,skill_lv,tick,flag);
 				homun->delspiritball(hd,skill_id==MH_SILVERVEIN_RUSH?1:2,0);
 			}
@@ -5175,9 +5183,9 @@ int skill_castend_id(int tid, int64 tick, int id, intptr_t data) {
 		}
 	}
 
+	ud->skill_id = ud->skill_lv = ud->skilltarget = 0;
 	if( !sd || sd->skillitem != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) )
 		ud->canact_tick = tick;
-	ud->skill_id = ud->skill_lv = ud->skilltarget = 0;
 	//You can't place a skill failed packet here because it would be
 	//sent in ALL cases, even cases where skill_check_condition fails
 	//which would lead to double 'skill failed' messages u.u [Skotlex]
@@ -8031,7 +8039,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case HLIF_CHANGE:
 		case MH_ANGRIFFS_MODUS:
 		case MH_GOLDENE_FERSE:
-			clif->skill_nodamage(src,bl,skill_id,skill_lv,
+				clif->skill_nodamage(src,bl,skill_id,skill_lv,
 				sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv)));
 			if (hd)
 				skill->blockhomun_start(hd, skill_id, skill->get_time2(skill_id,skill_lv));
@@ -9813,11 +9821,12 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 		case MH_MAGMA_FLOW:
 		case MH_PAIN_KILLER:
-			sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv));
-			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+			if (sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv)))
+				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 			if (hd)
 				skill->blockhomun_start(hd, skill_id, skill->get_cooldown(skill_id, skill_lv));
 			break;
+
 		case MH_SUMMON_LEGION:
 		{
 			int summons[5] = {1004, 1303, 1303, 1994, 1994};
@@ -12995,6 +13004,35 @@ int skill_isammotype (struct map_session_data *sd, int skill_id)
 	);
 }
 
+/**
+ * Checks whether a skill can be used in combos or not
+ **/
+bool skill_is_combo( int skill_id )
+{
+	switch( skill_id )
+	{
+		case MO_CHAINCOMBO:
+		case MO_COMBOFINISH:
+		case CH_TIGERFIST:
+		case CH_CHAINCRUSH:
+		case MO_EXTREMITYFIST:
+		case TK_TURNKICK:
+		case TK_STORMKICK:
+		case TK_DOWNKICK:
+		case TK_COUNTER:
+		case TK_JUMPKICK:
+		case HT_POWER:
+		case GC_COUNTERSLASH:
+		case GC_WEAPONCRUSH:
+		case SR_FALLENEMPIRE:
+		case SR_DRAGONCOMBO:
+		case SR_TIGERCANNON:
+		case SR_GATEOFHELL:
+			return true;
+	}
+	return false;
+}
+
 /*
  * Combo handler begins
  */
@@ -13013,7 +13051,7 @@ void skill_combo_toogle_inf(struct block_list* bl, uint16 skill_id, int inf){
 				sd = hd->master;
 				hd->homunculus.hskill[idx].flag = flag;
 				if(sd)
-					clif->homskillinfoblock(sd); // refresh info //@FIXME we only want to refresh one skill
+					clif->homskillinfoblock(sd); // Refresh info //@FIXME we only want to refresh one skill
 			}
 			break;
 		case MO_COMBOFINISH:
@@ -13380,7 +13418,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 				return 0;
 			if(sc->data[SC_BLADESTOP])
 				break;
-			if (sc->data[SC_COMBOATTACK]) {
+			if( sc && sc->data[SC_COMBOATTACK] ) {
 				if( sc->data[SC_COMBOATTACK]->val1 == MO_TRIPLEATTACK )
 					break;
 				clif->skill_fail(sd, skill_id, USESKILL_FAIL_COMBOSKILL, MO_TRIPLEATTACK);
@@ -13408,7 +13446,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			if(!sc)
 				return 0;
 			if( sc && sc->data[SC_COMBOATTACK] ) {
-				if( sc->data[SC_COMBOATTACK]->val1 == CH_TIGERFIST )
+				if( (sc->data[SC_COMBOATTACK]->val1 == MO_COMBOFINISH) || (sc->data[SC_COMBOATTACK]->val1 == CH_TIGERFIST) )
 					break;
 				clif->skill_fail(sd, skill_id, USESKILL_FAIL_COMBOSKILL, CH_TIGERFIST);
 			}
@@ -13512,7 +13550,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			break;
 
 		case HT_POWER:
-			if(!(sc && sc->data[SC_COMBOATTACK] && sc->data[SC_COMBOATTACK]->val1 == skill_id))
+			if(!(sc && sc->data[SC_COMBOATTACK] && sc->data[SC_COMBOATTACK]->val1 == AC_DOUBLE))
 				return 0;
 			break;
 
@@ -13634,9 +13672,9 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			if (st->sp == st->max_sp)
 				return 0; //Unusable when at full SP.
 			break;
-		case AM_CALLHOMUN: //Can't summon if a hom is already out
-			if (sd->status.hom_id && sd->hd && !sd->hd->homunculus.vaporize) {
-				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+		case AM_CALLHOMUN: // [AD] Can't summon if a homunculus is already out or under SC__GROOMY effect
+			if( (sd->status.hom_id && sd->hd && !sd->hd->homunculus.vaporize) || sd->sc.data[SC__GROOMY] ) {
+				clif->skill_fail(sd,skill_id,sd->sc.data[SC__GROOMY]?USESKILL_FAIL_MANUAL_NOTIFY:USESKILL_FAIL_LEVEL,0);
 				return 0;
 			}
 			break;
@@ -14069,7 +14107,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 	}
 
 	if( require.spiritball > 0 && sd->spiritball < require.spiritball) {
-		clif->skill_fail(sd,skill_id,USESKILL_FAIL_SPIRITS,require.spiritball);
+		clif->skill_fail(sd,skill_id,USESKILL_FAIL_SPIRITS,(require.spiritball == -1)? 1: require.spiritball);
 		return 0;
 	}
 	
@@ -16858,6 +16896,39 @@ int skill_unit_move(struct block_list *bl, int64 tick, int flag) {
 }
 
 /*==========================================
+ * Moves skill unit to map m with coordinates x & y (example when knocked back)
+ * @param bl Skill unit
+ * @param m Map
+ * @param dx
+ * @param dy
+ *------------------------------------------*/
+int skill_unit_move_unit(struct block_list *bl, int dx, int dy) {
+	int64 tick = timer->gettick();
+	struct skill_unit *su;
+
+	if (bl->type != BL_SKILL)
+		return 0;
+	if (!(su = (struct skill_unit *)bl))
+		return 0;
+	if (!su->alive)
+		return 0;
+
+	if (su->group && skill->get_unit_flag(su->group->skill_id)&UF_ENSEMBLE)
+		return 0; // Ensembles may not be moved around.
+
+	if (!bl->prev) {
+		bl->x = dx;
+		bl->y = dy;
+		return 0;
+	}
+
+	map->moveblock(bl, dx, dy, tick);
+	map->foreachincell(skill->unit_effect,bl->m,bl->x,bl->y,su->group->bl_flag,bl,tick,1);
+	clif->getareachar_skillunit(bl, su, AREA);
+	return 0;
+}
+
+/*==========================================
  *
  *------------------------------------------*/
 int skill_unit_move_unit_group(struct skill_unit_group *group, int16 m, int16 dx, int16 dy) {
@@ -19325,6 +19396,7 @@ void skill_defaults(void) {
 	skill->chk = skill_chk;
 	skill->get_casttype = skill_get_casttype;
 	skill->get_casttype2 = skill_get_casttype2;
+	skill->is_combo = skill_is_combo;
 	skill->combo_toogle_inf = skill_combo_toogle_inf;
 	skill->combo = skill_combo;
 	skill->name2id = skill_name2id;
@@ -19361,6 +19433,7 @@ void skill_defaults(void) {
 	skill->unit_move = skill_unit_move;
 	skill->unit_onleft = skill_unit_onleft;
 	skill->unit_onout = skill_unit_onout;
+	skill->unit_move_unit = skill_unit_move_unit;
 	skill->unit_move_unit_group = skill_unit_move_unit_group;
 	skill->sit = skill_sit;
 	skill->brandishspear = skill_brandishspear;
