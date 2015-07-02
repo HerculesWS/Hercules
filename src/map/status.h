@@ -1777,14 +1777,14 @@ typedef struct weapon_atk {
 struct status_data {
 	unsigned int
 		hp, sp,  // see status_cpy before adding members before hp and sp
-		max_hp, max_sp;
+		max_hp, max_sp,
+		mode;
 	unsigned short
 		str, agi, vit, int_, dex, luk,
 		batk,
 		matk_min, matk_max,
 		speed,
-		amotion, adelay, dmotion,
-		mode;
+		amotion, adelay, dmotion;
 	short
 		hit, flee, cri, flee2,
 		def2, mdef2,
