@@ -466,31 +466,31 @@ void initChangeTables(void) {
 	set_sc( HLIF_CHANGE          , SC_HLIF_CHANGE          , SI_BLANK           , SCB_VIT|SCB_INT );
 	set_sc( HFLI_FLEET           , SC_HLIF_FLEET           , SI_BLANK           , SCB_ASPD|SCB_BATK|SCB_WATK );
 	set_sc( HFLI_SPEED           , SC_HLIF_SPEED           , SI_BLANK           , SCB_FLEE );
-	set_sc( HAMI_DEFENCE         , SC_HAMI_DEFENCE         , SI_BLANK           , SCB_DEF );
+	set_sc( HAMI_DEFENCE         , SC_HAMI_DEFENCE         , SI_BLANK           , SCB_VIT );
 	set_sc( HAMI_BLOODLUST       , SC_HAMI_BLOODLUST       , SI_BLANK           , SCB_BATK|SCB_WATK );
 
 	// Homunculus S
 	add_sc(MH_STAHL_HORN		, SC_STUN);
 	set_sc(MH_ANGRIFFS_MODUS	, SC_ANGRIFFS_MODUS		, SI_ANGRIFFS_MODUS		, SCB_BATK|SCB_DEF|SCB_FLEE|SCB_MAXHP);
 	set_sc(MH_GOLDENE_FERSE		, SC_GOLDENE_FERSE		, SI_GOLDENE_FERSE		, SCB_ASPD|SCB_FLEE|SCB_MAXHP);
-	add_sc(MH_STEINWAND		, SC_SAFETYWALL );
+	add_sc(MH_STEINWAND			, SC_SAFETYWALL );
 	set_sc(MH_OVERED_BOOST		, SC_OVERED_BOOST		, SI_OVERED_BOOST		, SCB_FLEE|SCB_ASPD|SCB_DEF );
-	set_sc(MH_LIGHT_OF_REGENE	, SC_LIGHT_OF_REGENE     	, SI_LIGHT_OF_REGENE    	, SCB_NONE );
+	set_sc(MH_LIGHT_OF_REGENE	, SC_LIGHT_OF_REGENE	, SI_LIGHT_OF_REGENE	, SCB_NONE );
 	set_sc(MH_VOLCANIC_ASH		, SC_VOLCANIC_ASH		, SI_VOLCANIC_ASH		, SCB_DEF|SCB_DEF2|SCB_HIT|SCB_BATK|SCB_FLEE);
 	set_sc(MH_GRANITIC_ARMOR	, SC_GRANITIC_ARMOR		, SI_GRANITIC_ARMOR		, SCB_NONE);
 	set_sc(MH_MAGMA_FLOW		, SC_MAGMA_FLOW			, SI_MAGMA_FLOW			, SCB_NONE);
 	set_sc(MH_PYROCLASTIC		, SC_PYROCLASTIC		, SI_PYROCLASTIC		, SCB_WATK|SCB_BATK|SCB_ATK_ELE);
-	set_sc(MH_LAVA_SLIDE		, SC_BURNING			, SI_BURNT			, SCB_MDEF );
-	set_sc(MH_NEEDLE_OF_PARALYZE    , SC_NEEDLE_OF_PARALYZE	        , SI_NEEDLE_OF_PARALYZE	        , SCB_DEF2);
+	set_sc(MH_LAVA_SLIDE		, SC_BURNING			, SI_BURNT				, SCB_MDEF );
+	set_sc(MH_NEEDLE_OF_PARALYZE, SC_NEEDLE_OF_PARALYZE	, SI_NEEDLE_OF_PARALYZE	, SCB_DEF2);
 	add_sc(MH_POISON_MIST		, SC_BLIND);
 	add_sc(MH_POISON_MIST		, SC_POISON);
 	set_sc(MH_PAIN_KILLER		, SC_PAIN_KILLER		, SI_PAIN_KILLER		, SCB_ASPD);
 	set_sc(MH_SILENT_BREEZE		, SC_SILENCE			, SI_SILENT_BREEZE		, SCB_NONE );
 	add_sc(MH_STYLE_CHANGE		, SC_STYLE_CHANGE);
-	set_sc(MH_TINDER_BREAKER	, SC_TINDER_BREAKER2     	, SI_TINDER_BREAKER		, SCB_FLEE );
+	set_sc(MH_TINDER_BREAKER	, SC_TINDER_BREAKER2	, SI_TINDER_BREAKER		, SCB_FLEE );
 	set_sc(MH_TINDER_BREAKER	, SC_TINDER_BREAKER		, SI_TINDER_BREAKER_POSTDELAY	, SCB_FLEE );
-	set_sc(MH_CBC			, SC_CBC			, SI_CBC			, SCB_FLEE );
-	set_sc(MH_EQC			, SC_EQC			, SI_EQC			, SCB_DEF2|SCB_BATK|SCB_MAXHP );
+	set_sc(MH_CBC				, SC_CBC				, SI_CBC				, SCB_FLEE );
+	set_sc(MH_EQC				, SC_EQC				, SI_EQC				, SCB_DEF2|SCB_BATK|SCB_MAXHP );
 	
 	// Mercenaries
 	add_sc( MER_CRASH            , SC_STUN            );
@@ -1205,7 +1205,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 			}
 #endif
 			if (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
-				status_change_end(target, SC_STONE, INVALID_TIMER);
+			status_change_end(target, SC_STONE, INVALID_TIMER);
 			status_change_end(target, SC_FREEZE, INVALID_TIMER);
 			status_change_end(target, SC_SLEEP, INVALID_TIMER);
 			status_change_end(target, SC_DC_WINKCHARM, INVALID_TIMER);
@@ -4286,9 +4286,10 @@ unsigned short status_calc_vit(struct block_list *bl, struct status_change *sc, 
 		vit -= sc->data[SC_STOMACHACHE]->val1;
 	if(sc->data[SC_KYOUGAKU])
 		vit -= sc->data[SC_KYOUGAKU]->val3;
-
 	if(sc->data[SC_NOEQUIPARMOR])
 		vit -= vit * sc->data[SC_NOEQUIPARMOR]->val2/100;
+	if(sc->data[SC_HAMI_DEFENCE])
+		vit += sc->data[SC_HAMI_DEFENCE]->val2;
 
 	return (unsigned short)cap_value(vit,0,USHRT_MAX);
 }
@@ -4810,6 +4811,11 @@ signed short status_calc_flee(struct block_list *bl, struct status_change *sc, i
 	if(!sc || !sc->count)
 		return cap_value(flee,1,SHRT_MAX);
 
+	if( sc->data[SC_OVERED_BOOST] ) // should be final and unmodifiable by any means
+		return sc->data[SC_OVERED_BOOST]->val2;
+	if(sc->data[SC_TINDER_BREAKER] || sc->data[SC_TINDER_BREAKER2])
+		return 1; // 1 = min flee
+
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
 		return (short)cap_value(flee,1,SHRT_MAX);
@@ -4884,11 +4890,8 @@ signed short status_calc_flee(struct block_list *bl, struct status_change *sc, i
 		if(status_get_element(bl) == ELE_WATER) //water type
 			flee /= 2;
 	}
-
-	if( sc->data[SC_OVERED_BOOST] ) // should be final and unmodifiable by any means
-		flee = sc->data[SC_OVERED_BOOST]->val2;
-	if(sc->data[SC_TINDER_BREAKER] || sc->data[SC_TINDER_BREAKER2])
-		return 1; // 1 = min flee
+	if (sc->data[SC_GOLDENE_FERSE])
+		flee += flee * sc->data[SC_GOLDENE_FERSE]->val2 / 100;
 
 	return (short)cap_value(flee,1,SHRT_MAX);
 }
@@ -5479,6 +5482,8 @@ short status_calc_aspd(struct block_list *bl, struct status_change *sc, short fl
 			bonus += sc->data[SC_BOOST500]->val1;
 		if (sc->data[SC_EXTRACT_SALAMINE_JUICE])
 			bonus += sc->data[SC_EXTRACT_SALAMINE_JUICE]->val1;
+		if( sc->data[SC_GOLDENE_FERSE] )
+			bonus += sc->data[SC_GOLDENE_FERSE]->val3;
 		if (sc->data[SC_INCASPDRATE])
 			bonus += sc->data[SC_INCASPDRATE]->val1;
 		if (sc->data[SC_GS_GATLINGFEVER])
@@ -5841,10 +5846,18 @@ unsigned char status_calc_attack_element(struct block_list *bl, struct status_ch
 	return (unsigned char)cap_value(element,0,UCHAR_MAX);
 }
 
+/**
+ * Changes the mode of an object
+ * @param bl: Object whose mode to change [PC|MOB|PET|HOM|NPC]
+ * @param sc: Object's status change data
+ * @param mode: Original mode
+ * @return mode with cap_value(mode,0,UINT_MAX)
+ */
 unsigned short status_calc_mode(struct block_list *bl, struct status_change *sc, int mode)
 {
 	if(!sc || !sc->count)
-		return mode;
+		return cap_value(mode, 0, UINT_MAX);
+
 	if(sc->data[SC_MODECHANGE]) {
 		if (sc->data[SC_MODECHANGE]->val2)
 			mode = sc->data[SC_MODECHANGE]->val2; //Set mode
@@ -5853,7 +5866,7 @@ unsigned short status_calc_mode(struct block_list *bl, struct status_change *sc,
 		if (sc->data[SC_MODECHANGE]->val4)
 			mode&=~sc->data[SC_MODECHANGE]->val4; //Del mode
 	}
-	return cap_value(mode,0,USHRT_MAX);
+	return cap_value(mode,0,UINT_MAX);
 }
 
 const char* status_get_name(struct block_list *bl) {
