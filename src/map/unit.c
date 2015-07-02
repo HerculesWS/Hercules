@@ -1060,7 +1060,7 @@ int unit_can_move(struct block_list *bl) {
 			|| sc->data[SC_FALLENEMPIRE]
 		    ||  sc->data[SC_RG_CCONFINE_M]
 		    ||  sc->data[SC_RG_CCONFINE_S]
-		    ||  sc->data[SC_TINDER_BREAKER]
+			||  sc->data[SC_TINDER_BREAKER]
 		    ||  sc->data[SC_TINDER_BREAKER2]
 		    ||  sc->data[SC_GS_MADNESSCANCEL]
 		    || (sc->data[SC_GRAVITATION] && sc->data[SC_GRAVITATION]->val3 == BCT_SELF)
@@ -1171,9 +1171,12 @@ int unit_set_walkdelay(struct block_list *bl, int64 tick, int delay, int type) {
 			unit->stop_walking(bl, STOPWALKING_FLAG_NEXTCELL);
 		} else {
 			//Resume running after can move again [Kevin]
-			if (ud->state.running) {
+			if (ud->state.running)
+			{
 				timer->add(ud->canmove_tick, unit->resume_running, bl->id, (intptr_t)ud);
-			} else {
+			}
+			else
+			{
 				unit->stop_walking(bl, STOPWALKING_FLAG_NEXTCELL);
 				if (ud->target)
 					timer->add(ud->canmove_tick+1, unit->walktobl_sub, bl->id, ud->target);
@@ -1221,7 +1224,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 		temp = 1;
 	} else if ( target_id == src->id &&
 		skill->get_inf(skill_id)&INF_SELF_SKILL &&
-		skill->get_inf2(skill_id)&INF2_NO_TARGET_SELF )
+		skill->get_inf2(skill_id)&INF2_NO_TARGET_SELF)
 	{
 		target_id = ud->target; //Auto-select target. [Skotlex]
 		temp = 1;
