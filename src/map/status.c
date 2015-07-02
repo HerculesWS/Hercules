@@ -7188,6 +7188,9 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_ADORAMUS:
 			case SC_NEEDLE_OF_PARALYZE:
 			case SC_VOLCANIC_ASH:
+			case SC_TINDER_BREAKER:
+			case SC_CBC:
+			case SC_EQC:
 			case SC_FIRE_EXPANSION_TEAR_GAS:
 			case SC_FIRE_EXPANSION_TEAR_GAS_SOB:
 			case SC_DEEP_SLEEP:
