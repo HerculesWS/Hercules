@@ -1783,7 +1783,8 @@ struct status_data {
 		batk,
 		matk_min, matk_max,
 		speed,
-		amotion, adelay, dmotion;
+		amotion, adelay, dmotion,
+		mode;
 	short
 		hit, flee, cri, flee2,
 		def2, mdef2,
@@ -1802,7 +1803,7 @@ struct status_data {
 
 	struct weapon_atk rhw, lhw; //Right Hand/Left Hand Weapon.
 #ifdef RENEWAL
-	int equip_atk, mode;
+	int equip_atk;
 #endif
 };
 
