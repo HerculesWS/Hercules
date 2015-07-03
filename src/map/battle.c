@@ -4485,13 +4485,19 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		skill_id == NJ_KIRIKAGE))
 	{
 		short cri = sstatus->cri;
-		if (sd)
-		{
+		if (sd)	{
+			// Check for katar here as katar crit bonus should not be displayed
+			if (sd->status.weapon == W_KATAR) {
+				cri <<= 1;
+			}
+
 			cri+= sd->critaddrace[tstatus->race];
-			if(flag.arrow)
+
+			if (flag.arrow) {
 				cri += sd->bonus.arrow_cri;
+			}
 		}
-		if( sc && sc->data[SC_CAMOUFLAGE] )
+		if (sc && sc->data[SC_CAMOUFLAGE])
 			cri += 10 * (10-sc->data[SC_CAMOUFLAGE]->val4);
 #ifndef RENEWAL
 		//The official equation is *2, but that only applies when sd's do critical.
