@@ -7322,7 +7322,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			status_change_end(bl, SC_FOOD_LUK, INVALID_TIMER);
 			break;
 		case SC_ENDURE:
-			if( val4 )
+			if( val4 == 1 )
 				status_change_end(bl, SC_LKCONCENTRATION, INVALID_TIMER);
 			break;
 		case SC_FIGHTINGSPIRIT:
@@ -10067,7 +10067,8 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 			}
 			break;
 		case SC_LKCONCENTRATION:
-			status_change_end(bl, SC_ENDURE, INVALID_TIMER);
+			if (sc->data[SC_ENDURE] && sc->data[SC_ENDURE]->val4 != 2)
+				status_change_end(bl, SC_ENDURE, INVALID_TIMER);
 			break;
 			/**
 			* 3rd Stuff
