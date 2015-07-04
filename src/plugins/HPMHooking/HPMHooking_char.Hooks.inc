@@ -3707,14 +3707,14 @@ void HP_chr_login_map_server_ack(int fd, uint8 flag) {
 	}
 	return;
 }
-void HP_chr_parse_char_login_map_server(int fd) {
+void HP_chr_parse_char_login_map_server(int fd, uint32 ipl) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_chr_parse_char_login_map_server_pre ) {
-		void (*preHookFunc) (int *fd);
+		void (*preHookFunc) (int *fd, uint32 *ipl);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_parse_char_login_map_server_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_chr_parse_char_login_map_server_pre[hIndex].func;
-			preHookFunc(&fd);
+			preHookFunc(&fd, &ipl);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -3722,13 +3722,13 @@ void HP_chr_parse_char_login_map_server(int fd) {
 		}
 	}
 	{
-		HPMHooks.source.chr.parse_char_login_map_server(fd);
+		HPMHooks.source.chr.parse_char_login_map_server(fd, ipl);
 	}
 	if( HPMHooks.count.HP_chr_parse_char_login_map_server_post ) {
-		void (*postHookFunc) (int *fd);
+		void (*postHookFunc) (int *fd, uint32 *ipl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_parse_char_login_map_server_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_chr_parse_char_login_map_server_post[hIndex].func;
-			postHookFunc(&fd);
+			postHookFunc(&fd, &ipl);
 		}
 	}
 	return;
