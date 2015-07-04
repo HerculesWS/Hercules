@@ -290,7 +290,7 @@ struct char_interface {
 	void (*parse_char_delete2_accept) (int fd, struct char_session_data* sd);
 	void (*parse_char_delete2_cancel) (int fd, struct char_session_data* sd);
 	void (*login_map_server_ack) (int fd, uint8 flag);
-	void (*parse_char_login_map_server) (int fd);
+	void (*parse_char_login_map_server) (int fd, uint32 ipl);
 	void (*parse_char_pincode_check) (int fd, struct char_session_data* sd);
 	void (*parse_char_pincode_window) (int fd, struct char_session_data* sd);
 	void (*parse_char_pincode_change) (int fd, struct char_session_data* sd);

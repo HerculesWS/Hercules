@@ -1555,8 +1555,8 @@ void login_char_server_connection_status(int fd, struct login_session_data* sd, 
 	WFIFOSET(fd,3);
 }
 
-void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip) __attribute__((nonnull (2, 3)));
-void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip)
+void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl) __attribute__((nonnull (2, 3)));
+void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl)
 {
 	char server_name[20];
 	char message[256];
@@ -1584,11 +1584,13 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 	login_log(session[fd]->client_addr, sd->userid, 100, message);
 
 	result = login->mmo_auth(sd, true);
-	if( runflag == LOGINSERVER_ST_RUNNING &&
+	if (runflag == LOGINSERVER_ST_RUNNING &&
 		result == -1 &&
 		sd->sex == 'S' &&
-		sd->account_id >= 0 && sd->account_id < ARRAYLENGTH(server) &&
-		!session_isValid(server[sd->account_id].fd) )
+		sd->account_id >= 0 &&
+		sd->account_id < ARRAYLENGTH(server) &&
+		!session_isValid(server[sd->account_id].fd) &&
+		login->lan_subnetcheck(ipl))
 	{
 		ShowStatus("Connection of the char-server '%s' accepted.\n", server_name);
 		safestrncpy(server[sd->account_id].name, server_name, sizeof(server[sd->account_id].name));
@@ -1714,7 +1716,7 @@ int login_parse_login(int fd)
 			if (RFIFOREST(fd) < 86)
 				return 0;
 		{
-			login->parse_request_connection(fd, sd, ip);
+			login->parse_request_connection(fd, sd, ip, ipl);
 		}
 		return 0; // processing will continue elsewhere
 

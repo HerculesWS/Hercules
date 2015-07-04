@@ -204,7 +204,7 @@ struct login_interface {
 	void (*send_coding_key) (int fd, struct login_session_data* sd);
 	void (*parse_request_coding_key) (int fd, struct login_session_data* sd);
 	void (*char_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
-	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip);
+	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip, uint32 ipl);
 	int (*parse_login) (int fd);
 	char *LOGIN_CONF_NAME;
 	char *LAN_CONF_NAME;

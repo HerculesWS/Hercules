@@ -4959,18 +4959,20 @@ void char_login_map_server_ack(int fd, uint8 flag)
 	WFIFOSET(fd,3);
 }
 
-void char_parse_char_login_map_server(int fd)
+void char_parse_char_login_map_server(int fd, uint32 ipl)
 {
 	char* l_user = (char*)RFIFOP(fd,2);
 	char* l_pass = (char*)RFIFOP(fd,26);
 	int i;
 	l_user[23] = '\0';
 	l_pass[23] = '\0';
+
 	ARR_FIND( 0, ARRAYLENGTH(chr->server), i, chr->server[i].fd <= 0 );
-	if( runflag != CHARSERVER_ST_RUNNING ||
+	if (runflag != CHARSERVER_ST_RUNNING ||
 		i == ARRAYLENGTH(chr->server) ||
 		strcmp(l_user, chr->userid) != 0 ||
-		strcmp(l_pass, chr->passwd) != 0 )
+		strcmp(l_pass, chr->passwd) != 0 ||
+		!chr->lan_subnetcheck(ipl))
 	{
 		chr->login_map_server_ack(fd, 3); // Failure
 	} else {
@@ -5220,7 +5222,7 @@ int char_parse_char(int fd)
 				if (RFIFOREST(fd) < 60)
 					return 0;
 			{
-				chr->parse_char_login_map_server(fd);
+				chr->parse_char_login_map_server(fd, ipl);
 			}
 			return 0; // avoid processing of follow-up packets here
 
