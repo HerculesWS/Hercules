@@ -7805,13 +7805,15 @@ ACMD(cash)
 				if( !battle_config.cashshop_show_points ){
 					sprintf(output, msg_fd(fd,505), ret, sd->cashPoints);
 					clif_disp_onlyself(sd, output, strlen(output));
+					clif->message(fd, output);
 				}
 			} else
 				clif->message(fd, msg_fd(fd,149)); // Unable to decrease the number/value.
 		} else {
 			if( (ret=pc->paycash(sd, -value, 0)) >= 0){
 			    sprintf(output, msg_fd(fd,410), ret, sd->cashPoints);
-			    clif_disp_onlyself(sd, output, strlen(output));
+				clif_disp_onlyself(sd, output, strlen(output));
+				clif->message(fd, output);
 			} else
 				clif->message(fd, msg_fd(fd,41)); // Unable to decrease the number/value.
 		}
@@ -7822,13 +7824,15 @@ ACMD(cash)
 				if( !battle_config.cashshop_show_points ){
 					sprintf(output, msg_fd(fd,506), ret, sd->kafraPoints);
 					clif_disp_onlyself(sd, output, strlen(output));
+					clif->message(fd, output);
 				}
 			} else
 				clif->message(fd, msg_fd(fd,149)); // Unable to decrease the number/value.
 		} else {
 			if( (ret=pc->paycash(sd, -value, -value)) >= 0){
 			    sprintf(output, msg_fd(fd,411), ret, sd->kafraPoints);
-			    clif_disp_onlyself(sd, output, strlen(output));
+				clif_disp_onlyself(sd, output, strlen(output));
+				clif->message(fd, output);
 			} else
 				clif->message(fd, msg_fd(fd,41)); // Unable to decrease the number/value.
 		}
