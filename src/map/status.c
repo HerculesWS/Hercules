@@ -1946,7 +1946,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 				  || (tsc->data[SC_CLOAKINGEXCEED] != NULL && is_detect)
 				))
 					return 0;
-				if (tsc->data[SC_CAMOUFLAGE] && !(is_boss || is_detect) && (!skill_id || (flag == 0 && src && src->type != BL_PC)))
+				if (tsc->data[SC_CAMOUFLAGE] && !(is_boss || is_detect) && flag == 0)
 					return 0;
 				if (tsc->data[SC_STEALTHFIELD] && !is_boss)
 					return 0;
