@@ -19679,7 +19679,7 @@ BUILDIN(showscript) {
 	}
 
 	if (!bl) {
-		ShowError("buildin_showscript: Script not attached. (id=%, rid=%d, oid=%d)\n", id, st->rid, st->oid);
+		ShowError("buildin_showscript: Script not attached. (id=%d, rid=%d, oid=%d)\n", id, st->rid, st->oid);
 		script_pushint(st, 0);
 		return false;
 	}
