@@ -398,6 +398,7 @@ struct item_package_rand_entry {
 	unsigned short hours;
 	unsigned int announce : 1;
 	unsigned int named : 1;
+	unsigned int force_serial: 1;
 	struct item_package_rand_entry *next;
 };
 
@@ -407,6 +408,7 @@ struct item_package_must_entry {
 	unsigned short hours;
 	unsigned int announce : 1;
 	unsigned int named : 1;
+	unsigned int force_serial : 1;
 };
 
 struct item_package_rand_group {
@@ -466,6 +468,7 @@ struct item_data {
 		unsigned buyingstore : 1;
 		unsigned bindonequip : 1;
 		unsigned keepafteruse : 1;
+		unsigned force_serial : 1;
 	} flag;
 	struct {// item stacking limitation
 		unsigned short amount;

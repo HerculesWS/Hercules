@@ -139,7 +139,10 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 
 		// bindonequip
 		StrBuf->Printf(&buf, "'%u',", it->flag.bindonequip?1:0);
-
+		
+		// forceserial
+        StrBuf->Printf(&buf, "'%u',", it->flag.force_serial?1:0);
+		
 		// buyingstore
 		StrBuf->Printf(&buf, "'%u',", it->flag.buyingstore?1:0);
 
@@ -269,6 +272,7 @@ void totable(void) {
 			"  `refineable` tinyint(1) UNSIGNED DEFAULT NULL,\n"
 			"  `view` smallint(3) UNSIGNED DEFAULT NULL,\n"
 			"  `bindonequip` tinyint(1) UNSIGNED DEFAULT NULL,\n"
+			"  `forceserial` tinyint(1) UNSIGNED DEFAULT NULL,\n"
 			"  `buyingstore` tinyint(1) UNSIGNED DEFAULT NULL,\n"
 			"  `delay` mediumint(9) UNSIGNED DEFAULT NULL,\n"
 			"  `trade_flag` smallint(4) UNSIGNED DEFAULT NULL,\n"
