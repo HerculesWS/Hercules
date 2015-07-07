@@ -15495,7 +15495,6 @@ int skill_graffitiremover (struct block_list *bl, va_list ap) {
 	struct skill_unit *su=NULL;
 
 	nullpo_ret(bl);
-	nullpo_ret(ap);
 
 	if(bl->type != BL_SKILL)
 		return 0;
@@ -15526,7 +15525,6 @@ int skill_detonator(struct block_list *bl, va_list ap) {
 	int unit_id;
 
 	nullpo_ret(bl);
-	nullpo_ret(ap);
 	src = va_arg(ap,struct block_list *);
 
 	if( bl->type != BL_SKILL )
