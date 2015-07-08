@@ -17751,6 +17751,111 @@ void HP_clif_roulette_generate_ack(struct map_session_data *sd, unsigned char re
 	}
 	return;
 }
+void HP_clif_openmergeitem(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_openmergeitem_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_openmergeitem_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_openmergeitem_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.openmergeitem(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_openmergeitem_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_openmergeitem_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_openmergeitem_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_cancelmergeitem(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_cancelmergeitem_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_cancelmergeitem_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_cancelmergeitem_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.cancelmergeitem(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_cancelmergeitem_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_cancelmergeitem_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_cancelmergeitem_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
+int HP_clif_comparemergeitem(const void *a, const void *b) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_clif_comparemergeitem_pre ) {
+		int (*preHookFunc) (const void *a, const void *b);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_comparemergeitem_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_comparemergeitem_pre[hIndex].func;
+			retVal___ = preHookFunc(a, b);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.clif.comparemergeitem(a, b);
+	}
+	if( HPMHooks.count.HP_clif_comparemergeitem_post ) {
+		int (*postHookFunc) (int retVal___, const void *a, const void *b);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_comparemergeitem_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_comparemergeitem_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, a, b);
+		}
+	}
+	return retVal___;
+}
+void HP_clif_ackmergeitems(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_ackmergeitems_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_ackmergeitems_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_ackmergeitems_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.ackmergeitems(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_ackmergeitems_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_ackmergeitems_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_ackmergeitems_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
 void HP_clif_pWantToConnection(int fd, struct map_session_data *sd) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_pWantToConnection_pre ) {
