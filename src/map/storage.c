@@ -109,7 +109,8 @@ int compare_item(struct item *a, struct item *b)
 		a->refine == b->refine &&
 		a->attribute == b->attribute &&
 		a->expire_time == b->expire_time &&
-		a->bound == b->bound )
+		a->bound == b->bound &&
+		a->unique_id == b->unique_id)
 	{
 		int i;
 		for (i = 0; i < MAX_SLOTS && (a->card[i] == b->card[i]); i++);
@@ -155,6 +156,7 @@ int storage_additem(struct map_session_data* sd, struct item* item_data, int amo
 			{// existing items found, stack them
 				if( amount > MAX_AMOUNT - stor->items[i].amount || ( data->stack.storage && amount > data->stack.amount - stor->items[i].amount ) )
 					return 1;
+
 				stor->items[i].amount += amount;
 				clif->storageitemadded(sd,&stor->items[i],i,amount);
 				return 0;

@@ -448,6 +448,8 @@ packet(0x020a,10);
 //packet(0x020b,-1);
 //packet(0x020c,-1);
 packet(0x020d,-1);
+packet(0x974,2,clif->cancelmergeitem);
+packet(0x96e,-1,clif->ackmergeitems);
 
 //2004-07-05aSakexe
 #if PACKETVER >= 20040705

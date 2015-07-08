@@ -522,6 +522,16 @@ enum delitem_reason {
 	DELITEM_ANALYSIS       = 7, /// Consumed by Four Spirit Analysis (SO_EL_ANALYSIS) skill
 };
 
+/*
+* Merge items reasons
+*/
+
+enum mergeitem_reason {
+	MERGEITEM_SUCCESS =  0x0,
+	MERGEITEM_FAILD =  0x1,
+	MERGEITEM_MAXCOUNTFAILD =  0x2,
+};
+
 /**
  * Structures
  **/
@@ -540,6 +550,11 @@ struct hCSData {
 struct cdelayed_damage {
 	struct packet_damage p;
 	struct block_list bl;
+};
+
+struct merge_item {
+    int16 position;
+    int16 nameid;
 };
 
 /**
@@ -1062,6 +1077,12 @@ struct clif_interface {
 	/* */
 	bool (*parse_roulette_db) (void);
 	void (*roulette_generate_ack) (struct map_session_data *sd, unsigned char result, short stage, short prizeIdx, short bonusItemID);
+	/* Merge Items */
+	void (*openmergeitem) (int fd, struct map_session_data *sd);
+	void (*cancelmergeitem) (int fd, struct map_session_data *sd);
+	int (*comparemergeitem) (const void *a, const void *b);
+	void (*ackmergeitems) (int fd, struct map_session_data *sd);
+
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/

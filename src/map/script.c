@@ -19691,6 +19691,17 @@ BUILDIN(showscript) {
 	return true;
 }
 
+BUILDIN(mergeitem)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return true;
+
+	clif->openmergeitem(sd->fd, sd);
+
+	return true;
+}
 /** place holder for the translation macro **/
 BUILDIN(_) {
 	return true;
@@ -20329,6 +20340,7 @@ void script_parse_builtin(void) {
 
 		BUILDIN_DEF(channelmes, "ss"),
 		BUILDIN_DEF(showscript, "s?"),
+		BUILDIN_DEF(mergeitem,""),
 		BUILDIN_DEF(_,"s"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
