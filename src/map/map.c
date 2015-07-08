@@ -3730,8 +3730,6 @@ int inter_config_read(char *cfgName) {
 			safestrncpy(map->mob_skill_db_db, w2, sizeof(map->mob_skill_db_db));
 		else if(strcmpi(w1,"mob_skill_db2_db")==0)
 			safestrncpy(map->mob_skill_db2_db, w2, sizeof(map->mob_skill_db2_db));
-		else if(strcmpi(w1,"interreg_db")==0)
-			safestrncpy(map->interreg_db, w2, sizeof(map->interreg_db));
 		/* map sql stuff */
 		else if(strcmpi(w1,"map_server_ip")==0)
 			safestrncpy(map->server_ip, w2, sizeof(map->server_ip));
@@ -6113,7 +6111,6 @@ void map_defaults(void) {
 	sprintf(map->mob_db2_db, "mob_db2");
 	sprintf(map->mob_skill_db_db, "mob_skill_db");
 	sprintf(map->mob_skill_db2_db, "mob_skill_db2");
-	sprintf(map->interreg_db, "interreg");
 	
 	map->INTER_CONF_NAME="conf/inter-server.conf";
 	map->LOG_CONF_NAME="conf/logs.conf";

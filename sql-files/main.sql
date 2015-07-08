@@ -495,16 +495,6 @@ CREATE TABLE IF NOT EXISTS `interlog` (
 ) ENGINE=MyISAM; 
 
 --
--- Table structure for table `interreg`
---
-
-CREATE TABLE IF NOT EXISTS `interreg` (
-  `varname` VARCHAR(11) NOT NULL,
-  `value` VARCHAR(20) NOT NULL,
-   PRIMARY KEY (`varname`)
-) ENGINE=InnoDB;
-
---
 -- Table structure for table `inventory`
 --
 
@@ -809,16 +799,6 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1400256139); -- 2014-05-17--00-0
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1409590380); -- 2014-09-01--16-53.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1414975503); -- 2014-11-03--00-45.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1435860840); -- 2015-07-02--18-14.sql
-
---
--- Table structure for table `sstatus`
---
-
-CREATE TABLE IF NOT EXISTS `sstatus` (
-  `index` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
-  `name` VARCHAR(255) NOT NULL DEFAULT '',
-  `user` INT(11) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM;
 
 --
 -- Table structure for table `storage`

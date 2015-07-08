@@ -99,7 +99,6 @@ extern char mercenary_db[256];
 extern char mercenary_owner_db[256];
 extern char ragsrvinfo_db[256];
 extern char elemental_db[256];
-extern char interreg_db[32];
 extern char acc_reg_num_db[32];
 extern char acc_reg_str_db[32];
 extern char char_reg_str_db[32];
