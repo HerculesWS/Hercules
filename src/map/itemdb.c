@@ -199,6 +199,9 @@ void itemdb_package_item(struct map_session_data *sd, struct item_package *packa
 		if( package->must_items[i].announce )
 			clif->package_announce(sd,package->must_items[i].id,package->id);
 		
+		if ( package->must_items[i].force_serial )
+			it.unique_id = itemdb->unique_id(sd);
+
 		get_count = itemdb->isstackable(package->must_items[i].id) ? package->must_items[i].qty : 1;
 		
 		it.amount = get_count == 1 ? 1 : get_count;
@@ -719,7 +722,7 @@ void itemdb_write_cached_packages(const char *config_filename) {
 		//now we loop into must
 		for(c = 0; c < must_qty; c++) {
 			struct item_package_must_entry *entry = &itemdb->packages[i].must_items[c];
-			unsigned char announce = entry->announce == 1 ? 1 : 0, named = entry->named == 1 ? 1 : 0;
+			unsigned char announce = entry->announce == 1 ? 1 : 0, named = entry->named == 1 ? 1 : 0, force_serial = entry->force_serial == 1 ? 1 : 0;
 			//first 2 byte = item id
 			hwrite(&entry->id,sizeof(entry->id),1,file);
 			//next 2 byte = qty
@@ -729,7 +732,9 @@ void itemdb_write_cached_packages(const char *config_filename) {
 			//next 1 byte = announce (1:0)
 			hwrite(&announce,sizeof(announce),1,file);
 			//next 1 byte = named (1:0)
-			hwrite(&named,sizeof(announce),1,file);
+			hwrite(&named,sizeof(named),1,file);
+			//next 1 byte = ForceSerial (1:0)
+			hwrite(&force_serial,sizeof(force_serial),1,file);
 		}
 		//now we loop into random groups
 		for(c = 0; c < random_qty; c++) {
@@ -741,7 +746,7 @@ void itemdb_write_cached_packages(const char *config_filename) {
 			//now we loop into the group's list
 			for(h = 0; h < group_qty; h++) {
 				struct item_package_rand_entry *entry = &itemdb->packages[i].random_groups[c].random_list[h];
-				unsigned char announce = entry->announce == 1 ? 1 : 0, named = entry->named == 1 ? 1 : 0;
+				unsigned char announce = entry->announce == 1 ? 1 : 0, named = entry->named == 1 ? 1 : 0, force_serial = entry->force_serial == 1 ? 1 : 0;
 				//first 2 byte = item id
 				hwrite(&entry->id,sizeof(entry->id),1,file);
 				//next 2 byte = qty
@@ -753,7 +758,9 @@ void itemdb_write_cached_packages(const char *config_filename) {
 				//next 1 byte = announce (1:0)
 				hwrite(&announce,sizeof(announce),1,file);
 				//next 1 byte = named (1:0)
-				hwrite(&named,sizeof(announce),1,file);
+				hwrite(&named,sizeof(named),1,file);
+				//next 1 byte = ForceSerial (1:0)
+				hwrite(&force_serial,sizeof(force_serial),1,file);
 			}
 		}
 	}
@@ -807,7 +814,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 			for(c = 0; c < package->must_qty; c++) {
 				struct item_package_must_entry *entry = &itemdb->packages[i].must_items[c];
 				unsigned short mid = 0, qty = 0, hours = 0;
-				unsigned char announce = 0, named = 0;
+				unsigned char announce = 0, named = 0, force_serial = 0;
 				struct item_data *data;
 				//first 2 byte = item id
 				hread(&mid,sizeof(mid),1,file);
@@ -818,8 +825,10 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 				//next 1 byte = announce (1:0)
 				hread(&announce,sizeof(announce),1,file);
 				//next 1 byte = named (1:0)
-				hread(&named,sizeof(announce),1,file);
-				
+				hread(&named,sizeof(named),1,file);
+				//next 1 byte = ForceSerial (1:0)
+				hread(&force_serial,sizeof(force_serial),1,file);
+
 				if( !(data = itemdb->exists(mid)) )
 					ShowWarning("itemdb_read_cached_packages: unknown item '%d' in package '%s'!\n",mid,itemdb_name(package->id));
 
@@ -828,6 +837,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 				entry->qty = qty;
 				entry->announce = announce ? 1 : 0;
 				entry->named = named ? 1 : 0;
+				entry->force_serial = force_serial ? 1 : 0;
 			}
 		}
 		if( package->random_qty ) {
@@ -847,7 +857,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 				for(h = 0; h < group_qty; h++) {
 					struct item_package_rand_entry *entry = &itemdb->packages[i].random_groups[c].random_list[h];
 					unsigned short mid = 0, qty = 0, hours = 0, rate = 0;
-					unsigned char announce = 0, named = 0;
+					unsigned char announce = 0, named = 0, force_serial = 0;
 					struct item_data *data;
 
 					if( prev ) prev->next = entry;
@@ -863,8 +873,10 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 					//next 1 byte = announce (1:0)
 					hread(&announce,sizeof(announce),1,file);
 					//next 1 byte = named (1:0)
-					hread(&named,sizeof(announce),1,file);
-					
+					hread(&named,sizeof(named),1,file);
+					//next 1 byte = ForceSerial (1:0)
+					hread(&force_serial,sizeof(force_serial),1,file);
+
 					if( !(data = itemdb->exists(mid)) )
 						ShowWarning("itemdb_read_cached_packages: unknown item '%d' in package '%s'!\n",mid,itemdb_name(package->id));
 					
@@ -874,7 +886,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 					entry->qty = qty;
 					entry->announce = announce ? 1 : 0;
 					entry->named = named ? 1 : 0;
-					
+					entry->force_serial = force_serial ? 1 : 0;
 					prev = entry;
 				}
 				if( prev )
@@ -1020,7 +1032,7 @@ void itemdb_read_packages(void) {
 		c = 0;
 		while( (it = libconfig->setting_get_elem(itg,c++)) ) {
 			int icount = 1, expire = 0, rate = 10000, gid = 0;
-			bool announce = false, named = false;
+			bool announce = false, named = false, force_serial = false;
 			
 			itname = config_setting_name(it);
 			
@@ -1049,6 +1061,9 @@ void itemdb_read_packages(void) {
 			if( ( t = libconfig->setting_get_member(it, "Named")) && libconfig->setting_get_bool(t) )
 				named = true;
 			
+			if( ( t = libconfig->setting_get_member(it, "ForceSerial")) && libconfig->setting_get_bool(t) )
+				force_serial = true;
+
 			if( !( t = libconfig->setting_get_member(it, "Random") ) ) {
 				ShowWarning("itemdb_read_packages: missing 'Random' field for item '%s' in package '%s', defaulting to must!\n",itname,config_setting_name(itg));
 				gid = 0;
@@ -1061,6 +1076,7 @@ void itemdb_read_packages(void) {
 				itemdb->packages[count].must_items[m].hours = expire;
 				itemdb->packages[count].must_items[m].announce = announce == true ? 1 : 0;
 				itemdb->packages[count].must_items[m].named = named == true ? 1 : 0;
+				itemdb->packages[count].must_items[m].force_serial = force_serial == true ? 1 : 0;
 				m++;
 			} else {
 				int gidx = gid - 1;
@@ -1078,6 +1094,7 @@ void itemdb_read_packages(void) {
 				itemdb->packages[count].random_groups[gidx].random_list[r].hours = expire;
 				itemdb->packages[count].random_groups[gidx].random_list[r].announce = announce == true ? 1 : 0;
 				itemdb->packages[count].random_groups[gidx].random_list[r].named = named == true ? 1 : 0;
+				itemdb->packages[count].random_groups[gidx].random_list[r].force_serial = force_serial == true ? 1 : 0;
 				itemdb->packages[count].random_groups[gidx].random_qty += 1;
 				
 				prev[gidx] = &itemdb->packages[count].random_groups[gidx].random_list[r];
@@ -1583,14 +1600,15 @@ int itemdb_readdb_sql_sub(Sql *handle, int n, const char *source) {
 	SQL->GetData(handle, 19, &data, NULL); id.flag.no_refine = data && atoi(data) ? 0 : 1;
 	SQL->GetData(handle, 20, &data, NULL); id.look = data ? atoi(data) : 0;
 	SQL->GetData(handle, 21, &data, NULL); id.flag.bindonequip = data && atoi(data) ? 1 : 0;
-	SQL->GetData(handle, 22, &data, NULL); id.flag.buyingstore = data && atoi(data) ? 1 : 0;
-	SQL->GetData(handle, 23, &data, NULL); id.delay = data ? atoi(data) : 0;
-	SQL->GetData(handle, 24, &data, NULL); id.flag.trade_restriction = data ? atoi(data) : ITR_NONE;
-	SQL->GetData(handle, 25, &data, NULL); id.gm_lv_trade_override = data ? atoi(data) : 0;
-	SQL->GetData(handle, 26, &data, NULL); id.item_usage.flag = data ? atoi(data) : INR_NONE;
-	SQL->GetData(handle, 27, &data, NULL); id.item_usage.override = data ? atoi(data) : 0;
-	SQL->GetData(handle, 28, &data, NULL); id.stack.amount = data ? atoi(data) : 0;
-	SQL->GetData(handle, 29, &data, NULL);
+	SQL->GetData(handle, 22, &data, NULL); id.flag.force_serial = data && atoi(data) ? 1 : 0;
+	SQL->GetData(handle, 23, &data, NULL); id.flag.buyingstore = data && atoi(data) ? 1 : 0;
+	SQL->GetData(handle, 24, &data, NULL); id.delay = data ? atoi(data) : 0;
+	SQL->GetData(handle, 25, &data, NULL); id.flag.trade_restriction = data ? atoi(data) : ITR_NONE;
+	SQL->GetData(handle, 26, &data, NULL); id.gm_lv_trade_override = data ? atoi(data) : 0;
+	SQL->GetData(handle, 27, &data, NULL); id.item_usage.flag = data ? atoi(data) : INR_NONE;
+	SQL->GetData(handle, 28, &data, NULL); id.item_usage.override = data ? atoi(data) : 0;
+	SQL->GetData(handle, 29, &data, NULL); id.stack.amount = data ? atoi(data) : 0;
+	SQL->GetData(handle, 30, &data, NULL);
 	if (data) {
 		int stack_flag = atoi(data);
 		id.stack.inventory = (stack_flag&1)!=0;
@@ -1657,6 +1675,7 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 	 * BindOnEquip: (true or false)
 	 * BuyingStore: (true or false)
 	 * Delay: Delay to use item
+	 * ForceSerial: (true or false)
 	 * Trade: {
 	 *   override: Group to override
 	 *   nodrop: (true or false)
@@ -1790,6 +1809,9 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 
 	if( (t = libconfig->setting_get_member(it, "BindOnEquip")) )
 		id.flag.bindonequip = libconfig->setting_get_bool(t) ? 1 : 0;
+
+	if( (t = libconfig->setting_get_member(it, "ForceSerial")) )
+		id.flag.force_serial = libconfig->setting_get_bool(t) ? 1 : 0;
 	
 	if ( (t = libconfig->setting_get_member(it, "BuyingStore")) )
 		id.flag.buyingstore = libconfig->setting_get_bool(t) ? 1 : 0;
@@ -1992,7 +2014,7 @@ int itemdb_readdb_sql(const char *tablename) {
 				" `matk`, `defence`, `range`, `slots`,"
 				" `equip_jobs`, `equip_upper`, `equip_genders`, `equip_locations`,"
 				" `weapon_level`, `equip_level_min`, `equip_level_max`, `refineable`,"
-				" `view`, `bindonequip`, `buyingstore`, `delay`,"
+				" `view`, `bindonequip`, `forceserial`, `buyingstore`, `delay`,"
 				" `trade_flag`, `trade_group`, `nouse_flag`, `nouse_group`,"
 				" `stack_amount`, `stack_flag`, `sprite`, `script`,"
 				" `equip_script`, `unequip_script`"

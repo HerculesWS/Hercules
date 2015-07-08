@@ -301,6 +301,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "cdelayed_damage", sizeof(struct cdelayed_damage), SERVER_TYPE_MAP },
 		{ "clif_interface", sizeof(struct clif_interface), SERVER_TYPE_MAP },
 		{ "hCSData", sizeof(struct hCSData), SERVER_TYPE_MAP },
+		{ "merge_item", sizeof(struct merge_item), SERVER_TYPE_MAP },
 		{ "s_packet_db", sizeof(struct s_packet_db), SERVER_TYPE_MAP },
 	#else
 		#define MAP_CLIF_H
