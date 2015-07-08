@@ -3748,14 +3748,38 @@ int inter_config_read(char *cfgName) {
 		else if(strcmpi(w1,"use_sql_item_db")==0) {
 			map->db_use_sql_item_db = config_switch(w2);
 			ShowStatus ("Using item database as SQL: '%s'\n", w2);
+			if (map->db_use_sql_item_db) {
+				// Deprecated 2015-08-09 [Haru]
+				ShowWarning("Support for the SQL item database is deprecated and it will removed in future versions. "
+						"Please upgrade to the non-sql version as soon as possible. "
+						"Bug reports or pull requests concerning the SQL item database are no longer accepted.\n");
+				ShowInfo("Resuming in 10 seconds...\n");
+				sleep(10);
+			}
 		}
 		else if(strcmpi(w1,"use_sql_mob_db")==0) {
 			map->db_use_sql_mob_db = config_switch(w2);
 			ShowStatus ("Using monster database as SQL: '%s'\n", w2);
+			if (map->db_use_sql_mob_db) {
+				// Deprecated 2015-08-09 [Haru]
+				ShowWarning("Support for the SQL monster database is deprecated and it will removed in future versions. "
+						"Please upgrade to the non-sql version as soon as possible. "
+						"Bug reports or pull requests concerning the SQL monster database are no longer accepted.\n");
+				ShowInfo("Resuming in 10 seconds...\n");
+				sleep(10);
+			}
 		}
 		else if(strcmpi(w1,"use_sql_mob_skill_db")==0) {
 			map->db_use_sql_mob_skill_db = config_switch(w2);
 			ShowStatus ("Using monster skill database as SQL: '%s'\n", w2);
+			if (map->db_use_sql_mob_db) {
+				// Deprecated 2015-08-09 [Haru]
+				ShowWarning("Support for the SQL monster skill database is deprecated and it will removed in future versions. "
+						"Please upgrade to the non-sql version as soon as possible. "
+						"Bug reports or pull requests concerning the SQL monster skill database are no longer accepted.\n");
+				ShowInfo("Resuming in 10 seconds...\n");
+				sleep(10);
+			}
 		}
 		else if(strcmpi(w1,"autotrade_merchants_db")==0)
 			safestrncpy(map->autotrade_merchants_db, w2, sizeof(map->autotrade_merchants_db));
