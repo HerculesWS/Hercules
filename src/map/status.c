@@ -6233,7 +6233,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 			if (vd)
 				nd->vd = vd;
 			else
-				ShowError("status_set_viewdata (NPC): No view data for class %d\n", class_);
+				ShowError("status_set_viewdata (NPC): No view data for class %d (name=%s)\n", class_, nd->name);
 		}
 		break;
 	case BL_HOM: //[blackhole89]
