@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= iRO/kRO 2013 Christmas Event
 //===== By: ==================================================
 //= Euphy
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= rAthena Project
 //===== Description: =========================================
 //= [Official Conversion]
 //= Join the Singles Union Army to break up couples and hunt
