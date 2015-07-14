@@ -177,8 +177,8 @@ bonus bMiscAtkDef,n;					Adds n% damage reduction against MISC attacks (traps, f
 bonus bCriticalDef,n;					Decreases Chance of being hit by critical by n%
 
 bonus2 bSkillAtk,sk,n;				Increase damage of skill sk by n%
-bonus2 bWeaponAtk,w,n;				Adds n ATK when weapon of type x is equipped
-bonus2 bWeaponAtkRate,w,n;			Adds n% damage to weapon attacks when weapon of type x is equipped
+bonus2 bWeaponAtk,w,n;				Adds n ATK when weapon of type w is equipped
+bonus2 bWeaponAtkRate,w,n;			Adds n% damage to weapon attacks when weapon of type w is equipped
 bonus bLongAtkRate,n;				Increases damage of ranged attacks by n%
 bonus bCritAtkRate,n;					Increase critical damage by +n%
 
@@ -258,8 +258,8 @@ bonus bDefEle,e;					Gives the player's defense element e
 bonus bDefRatioAtkEle,e;				Deals more damage to enemies of element e with higher defense
 bonus bDefRatioAtkRace,r;				Deals more damage to enemies of race r with higher defense
 
-bonus4 bSetDefRace,r,n,t,y;			Set DEF to y of an enemy of race r at n% for t milliseconds with normal attack
-bonus4 bSetMDefRace,r,n,t,y;			Set MDEF to y of an enemy of race r at n% for t milliseconds with normal attack
+bonus4 bSetDefRace,r,n,t,y;			Set DEF to y of an enemy of race r at n/100% for t milliseconds with normal attack
+bonus4 bSetMDefRace,r,n,t,y;			Set MDEF to y of an enemy of race r at n/100% for t milliseconds with normal attack
 
 Ignore Def
 ----------
@@ -281,17 +281,17 @@ bonus2 bExpAddRace,r,n;				+n% Experience from enemies of race r
 =============================
 | 4. Status-related Bonuses |
 =============================
-bonus2 bResEff,e,n;					Adds a n/100 tolerance to effect e
-bonus2 bAddEff,eff,n;				Adds a n/100 chance to cause effect eff to the target when attacking
+bonus2 bResEff,e,n;					Adds a n/100% tolerance to effect e
+bonus2 bAddEff,eff,n;				Adds a n/100% chance to cause effect eff to the target when attacking
 bonus2 bAddEff2,eff,n;				Adds a n/100% chance to cause effect eff on self when attacking.
-bonus3 bAddEff,eff,n,abf;			Adds a n/100 chance to cause effect eff to the target when attacking for target abf
-bonus4 bAddEff,eff,n,abf,t;			Adds a n/100 chance to cause effect eff to the target when attacking for target abf for t milliseconds
+bonus3 bAddEff,eff,n,abf;			Adds a n/100% chance to cause effect eff to the target when attacking for target abf
+bonus4 bAddEff,eff,n,abf,t;			Adds a n/100% chance to cause effect eff to the target when attacking for target abf for t milliseconds
 									(Note:The effect can't be avoided nor its duration reduced. Duration: 0-65535)
 bonus3 bAddEffOnSkill,sk,eff,n;		Adds a n/100% chance to cause effect eff on enemy when using skill sk
 bonus4 bAddEffOnSkill,sk,eff,n,abf;	Adds a n/100% chance to cause effect eff when using skill sk
 
 bonus2 bAddEffWhenHit,eff,n;			n/100% chance to cause effect eff to the enemy when being hit by physical damage
-bonus3 bAddEffWhenHit,eff,n,abf;		Adds a n/100 chance to cause effect eff to the enemy when being hit by physical damage
+bonus3 bAddEffWhenHit,eff,n,abf;		Adds a n/100% chance to cause effect eff to the enemy when being hit by physical damage
 
 bonus2 bWeaponComaRace,r,n;			Adds a n/100% chance to cause Coma when attacking a monster of race r with a weapon attack
 bonus2 bWeaponComaEle,e,n;			Adds a n/100% chance to cause Coma when attacking a monster of element e with weapon attack
