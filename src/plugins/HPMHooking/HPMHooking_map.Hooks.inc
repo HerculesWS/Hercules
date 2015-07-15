@@ -49461,6 +49461,60 @@ int HP_pc_insert_card(struct map_session_data *sd, int idx_card, int idx_equip) 
 	}
 	return retVal___;
 }
+bool HP_pc_can_insert_card(struct map_session_data *sd, int idx_card) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_pc_can_insert_card_pre ) {
+		bool (*preHookFunc) (struct map_session_data *sd, int *idx_card);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_can_insert_card_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_can_insert_card_pre[hIndex].func;
+			retVal___ = preHookFunc(sd, &idx_card);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.can_insert_card(sd, idx_card);
+	}
+	if( HPMHooks.count.HP_pc_can_insert_card_post ) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, int *idx_card);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_can_insert_card_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_can_insert_card_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, &idx_card);
+		}
+	}
+	return retVal___;
+}
+bool HP_pc_can_insert_card_into(struct map_session_data *sd, int idx_card, int idx_equip) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_pc_can_insert_card_into_pre ) {
+		bool (*preHookFunc) (struct map_session_data *sd, int *idx_card, int *idx_equip);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_can_insert_card_into_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_can_insert_card_into_pre[hIndex].func;
+			retVal___ = preHookFunc(sd, &idx_card, &idx_equip);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.can_insert_card_into(sd, idx_card, idx_equip);
+	}
+	if( HPMHooks.count.HP_pc_can_insert_card_into_post ) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, int *idx_card, int *idx_equip);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_can_insert_card_into_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_can_insert_card_into_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, &idx_card, &idx_equip);
+		}
+	}
+	return retVal___;
+}
 int HP_pc_steal_item(struct map_session_data *sd, struct block_list *bl, uint16 skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;

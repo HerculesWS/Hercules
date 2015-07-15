@@ -3697,6 +3697,10 @@ struct {
 	struct HPMHookPoint *HP_pc_skill_post;
 	struct HPMHookPoint *HP_pc_insert_card_pre;
 	struct HPMHookPoint *HP_pc_insert_card_post;
+	struct HPMHookPoint *HP_pc_can_insert_card_pre;
+	struct HPMHookPoint *HP_pc_can_insert_card_post;
+	struct HPMHookPoint *HP_pc_can_insert_card_into_pre;
+	struct HPMHookPoint *HP_pc_can_insert_card_into_post;
 	struct HPMHookPoint *HP_pc_steal_item_pre;
 	struct HPMHookPoint *HP_pc_steal_item_post;
 	struct HPMHookPoint *HP_pc_steal_coin_pre;
@@ -8912,6 +8916,10 @@ struct {
 	int HP_pc_skill_post;
 	int HP_pc_insert_card_pre;
 	int HP_pc_insert_card_post;
+	int HP_pc_can_insert_card_pre;
+	int HP_pc_can_insert_card_post;
+	int HP_pc_can_insert_card_into_pre;
+	int HP_pc_can_insert_card_into_post;
 	int HP_pc_steal_item_pre;
 	int HP_pc_steal_item_post;
 	int HP_pc_steal_coin_pre;
