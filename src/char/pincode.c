@@ -21,9 +21,10 @@
 struct pincode_interface pincode_s;
 
 void pincode_handle (int fd, struct char_session_data* sd) {
-	struct online_char_data* character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id);
+	struct online_char_data* character;
 
 	nullpo_retv(sd);
+	character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id);
 	if( character && character->pincode_enable > pincode->charselect ){
 		character->pincode_enable = pincode->charselect * 2;
 	}else{

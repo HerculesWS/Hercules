@@ -12746,7 +12746,7 @@ bool clif_sub_guild_invite(int fd, struct map_session_data *sd, struct map_sessi
 		return false;
 	}
 
-	if ( t_sd && t_sd->state.noask ) {// @noask [LuzZza]
+	if (t_sd->state.noask) {// @noask [LuzZza]
 		clif->noask_sub(sd, t_sd, 2);
 		return false;
 	}
