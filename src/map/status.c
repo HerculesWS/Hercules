@@ -10870,7 +10870,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 						unit->skillcastcancel(bl,0);
 						do {
 							int i = rnd() % MAX_SKILL_MAGICMUSHROOM_DB;
-							mushroom_skill_id = skill->magicmushroom_db[i].skill_id;
+							mushroom_skill_id = skill->dbs->magicmushroom_db[i].skill_id;
 						} while (mushroom_skill_id == 0);
 
 						switch( skill->get_casttype(mushroom_skill_id) ) { // Magic Mushroom skills are buffs or area damage

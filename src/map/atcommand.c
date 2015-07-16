@@ -5244,11 +5244,11 @@ ACMD(skillid) {
 
 	for (data = iter->first(iter,&key); iter->exists(iter); data = iter->next(iter,&key)) {
 		int idx = skill->get_index(DB->data2i(data));
-		if (strnicmp(key.str, message, skillen) == 0 || strnicmp(skill->db[idx].desc, message, skillen) == 0) {
-			sprintf(atcmd_output, msg_fd(fd,1164), DB->data2i(data), skill->db[idx].desc, key.str); // skill %d: %s (%s)
+		if (strnicmp(key.str, message, skillen) == 0 || strnicmp(skill->dbs->db[idx].desc, message, skillen) == 0) {
+			sprintf(atcmd_output, msg_fd(fd,1164), DB->data2i(data), skill->dbs->db[idx].desc, key.str); // skill %d: %s (%s)
 			clif->message(fd, atcmd_output);
-		} else if ( found < MAX_SKILLID_PARTIAL_RESULTS && ( stristr(key.str,message) || stristr(skill->db[idx].desc,message) ) ) {
-			snprintf(partials[found], MAX_SKILLID_PARTIAL_RESULTS_LEN, msg_fd(fd,1164), DB->data2i(data), skill->db[idx].desc, key.str);
+		} else if ( found < MAX_SKILLID_PARTIAL_RESULTS && ( stristr(key.str,message) || stristr(skill->dbs->db[idx].desc,message) ) ) {
+			snprintf(partials[found], MAX_SKILLID_PARTIAL_RESULTS_LEN, msg_fd(fd,1164), DB->data2i(data), skill->dbs->db[idx].desc, key.str);
 			found++;
 		}
 	}
@@ -5376,7 +5376,7 @@ ACMD(skilltree) {
 	{
 		if( ent->need[j].id && pc->checkskill(sd,ent->need[j].id) < ent->need[j].lv)
 		{
-			sprintf(atcmd_output, msg_fd(fd,1170), ent->need[j].lv, skill->db[ent->need[j].id].desc); // Player requires level %d of skill %s.
+			sprintf(atcmd_output, msg_fd(fd,1170), ent->need[j].lv, skill->dbs->db[ent->need[j].id].desc); // Player requires level %d of skill %s.
 			clif->message(fd, atcmd_output);
 			meets = 0;
 		}
@@ -9306,7 +9306,7 @@ ACMD(cddebug) {
 				const struct TimerData *td = timer->get(cd->entry[i]->timer);
 				
 				if( !td || td->func != skill->blockpc_end ) {
-					clif->messages(fd,"Found invalid entry in slot %d for skill %s",i,skill->db[cd->entry[i]->skidx].name);
+					clif->messages(fd,"Found invalid entry in slot %d for skill %s",i,skill->dbs->db[cd->entry[i]->skidx].name);
 					sd->blockskill[cd->entry[i]->skidx] = false;
 				}
 			}
@@ -9316,7 +9316,7 @@ ACMD(cddebug) {
 	if( !cd || (message && *message && !strcmpi(message,"reset")) ) {
 		for(i = 0; i < MAX_SKILL; i++) {
 			if( sd->blockskill[i] ) {
-				clif->messages(fd,"Found skill '%s', unblocking...",skill->db[i].name);
+				clif->messages(fd,"Found skill '%s', unblocking...",skill->dbs->db[i].name);
 				sd->blockskill[i] = false;
 			}
 		}

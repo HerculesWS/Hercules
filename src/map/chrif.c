@@ -1321,8 +1321,8 @@ void chrif_skillid2idx(int fd) {
 	WFIFOHEAD(fd,4 + (MAX_SKILL * 4));
 	WFIFOW(fd,0) = 0x2b0b;
 	for(i = 0; i < MAX_SKILL; i++) {
-		if( skill->db[i].nameid ) {
-			WFIFOW(fd, 4 + (count*4)) = skill->db[i].nameid;
+		if( skill->dbs->db[i].nameid ) {
+			WFIFOW(fd, 4 + (count*4)) = skill->dbs->db[i].nameid;
 			WFIFOW(fd, 6 + (count*4)) = i;
 			count++;
 		}
