@@ -58,7 +58,7 @@ struct mercenary_interface {
 
 	/* vars */
 
-	struct s_mercenary_db db[MAX_MERCENARY_CLASS];
+	struct s_mercenary_db *db;
 
 	/* funcs */
 
