@@ -17177,17 +17177,26 @@ BUILDIN(changequest) {
 
 BUILDIN(questactive) {
 	struct map_session_data *sd = script->rid2sd(st);
-	int quest_progress = 0;
+	int qid, i;
 
-	if (sd == NULL)
+	if (sd == NULL) {
+		ShowError("questactive: no player attached!");
 		return false;
+	}
 
-	if (quest->check(sd, script_getnum(st, 2), HAVEQUEST) == Q_ACTIVE)
+	qid = script_getnum(st, 2);
+
+	ARR_FIND(0, sd->avail_quests, i, sd->quest_log[i].quest_id == qid );
+
+	if( i >= sd->avail_quests ) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	if(sd->quest_log[i].state == Q_ACTIVE)
 		script_pushint(st, 1);
 	else
 		script_pushint(st, 0);
-
-	script_pushint(st, quest_progress);
 
 	return true;
 }
