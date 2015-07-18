@@ -1880,6 +1880,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->bonus5, HP_pc_bonus5) },
 	{ HP_POP(pc->skill, HP_pc_skill) },
 	{ HP_POP(pc->insert_card, HP_pc_insert_card) },
+	{ HP_POP(pc->can_insert_card, HP_pc_can_insert_card) },
+	{ HP_POP(pc->can_insert_card_into, HP_pc_can_insert_card_into) },
 	{ HP_POP(pc->steal_item, HP_pc_steal_item) },
 	{ HP_POP(pc->steal_coin, HP_pc_steal_coin) },
 	{ HP_POP(pc->modifybuyvalue, HP_pc_modifybuyvalue) },

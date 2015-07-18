@@ -880,6 +880,8 @@ END_ZEROED_BLOCK; /* End */
 	int (*skill) (struct map_session_data *sd, int id, int level, int flag);
 
 	int (*insert_card) (struct map_session_data *sd,int idx_card,int idx_equip);
+	bool (*can_insert_card) (struct map_session_data* sd, int idx_card);
+	bool (*can_insert_card_into) (struct map_session_data* sd, int idx_card, int idx_equip);
 
 	int (*steal_item) (struct map_session_data *sd,struct block_list *bl, uint16 skill_lv);
 	int (*steal_coin) (struct map_session_data *sd,struct block_list *bl);

@@ -4059,42 +4059,78 @@ int pc_skill(TBL_PC* sd, int id, int level, int flag)
 	}
 	return 1;
 }
+
+/**
+ * Checks if the given card can be inserted into the given equipment piece.
+ *
+ * @param sd        The current character.
+ * @param idx_card  The card's inventory index (note: it must be a valid index and can be checked by pc_can_insert_card)
+ * @param idx_equip The target equipment's inventory index.
+ * @retval true if the card can be inserted.
+ */
+bool pc_can_insert_card_into(struct map_session_data* sd, int idx_card, int idx_equip)
+{
+	int i;
+
+	nullpo_ret(sd);
+
+	if (idx_equip < 0 || idx_equip >= MAX_INVENTORY || sd->inventory_data[idx_equip] == NULL)
+		return false; //Invalid item index.
+	if (sd->status.inventory[idx_equip].nameid <= 0 || sd->status.inventory[idx_equip].amount < 1)
+		return false; // target item missing
+	if (sd->inventory_data[idx_equip]->type != IT_WEAPON && sd->inventory_data[idx_equip]->type != IT_ARMOR)
+		return false; // only weapons and armor are allowed
+	if (sd->status.inventory[idx_equip].identify == 0)
+		return false; // target must be identified
+	if (itemdb_isspecial(sd->status.inventory[idx_equip].card[0]))
+		return false; // card slots reserved for other purposes
+	if (sd->status.inventory[idx_equip].equip != 0)
+		return false; // item must be unequipped
+	if ((sd->inventory_data[idx_equip]->equip & sd->inventory_data[idx_card]->equip) == 0)
+		return false; // card cannot be compounded on this item type
+	if (sd->inventory_data[idx_equip]->type == IT_WEAPON && sd->inventory_data[idx_card]->equip == EQP_SHIELD)
+		return false; // attempted to place shield card on left-hand weapon.
+
+	ARR_FIND( 0, sd->inventory_data[idx_equip]->slot, i, sd->status.inventory[idx_equip].card[i] == 0);
+	if (i == sd->inventory_data[idx_equip]->slot)
+		return false; // no free slots
+        return true;
+}
+
+/**
+ * Checks if the given item is card and it can be inserted into some equipment.
+ *
+ * @param sd        The current character.
+ * @param idx_card  The card's inventory index.
+ * @retval true if the card can be inserted.
+ */
+bool pc_can_insert_card(struct map_session_data* sd, int idx_card)
+{
+	nullpo_ret(sd);
+
+	if (idx_card < 0 || idx_card >= MAX_INVENTORY || sd->inventory_data[idx_card] == NULL)
+		return false; //Invalid card index.
+	if (sd->status.inventory[idx_card].nameid <= 0 || sd->status.inventory[idx_card].amount < 1)
+		return false; // target card missing
+	if (sd->inventory_data[idx_card]->type != IT_CARD)
+		return false; // must be a card
+        return true;
+}
+
 /*==========================================
  * Append a card to an item ?
  *------------------------------------------*/
 int pc_insert_card(struct map_session_data* sd, int idx_card, int idx_equip)
 {
-	int i;
 	int nameid;
 
 	nullpo_ret(sd);
 
-	if( idx_equip < 0 || idx_equip >= MAX_INVENTORY || sd->inventory_data[idx_equip] == NULL )
-		return 0; //Invalid item index.
-	if( idx_card < 0 || idx_card >= MAX_INVENTORY || sd->inventory_data[idx_card] == NULL )
-		return 0; //Invalid card index.
-	if( sd->status.inventory[idx_equip].nameid <= 0 || sd->status.inventory[idx_equip].amount < 1 )
-		return 0; // target item missing
-	if( sd->status.inventory[idx_card].nameid <= 0 || sd->status.inventory[idx_card].amount < 1 )
-		return 0; // target card missing
-	if( sd->inventory_data[idx_equip]->type != IT_WEAPON && sd->inventory_data[idx_equip]->type != IT_ARMOR )
-		return 0; // only weapons and armor are allowed
-	if( sd->inventory_data[idx_card]->type != IT_CARD )
-		return 0; // must be a card
-	if( sd->status.inventory[idx_equip].identify == 0 )
-		return 0; // target must be identified
-	if( itemdb_isspecial(sd->status.inventory[idx_equip].card[0]) )
-		return 0; // card slots reserved for other purposes
-	if( (sd->inventory_data[idx_equip]->equip & sd->inventory_data[idx_card]->equip) == 0 )
-		return 0; // card cannot be compounded on this item type
-	if( sd->inventory_data[idx_equip]->type == IT_WEAPON && sd->inventory_data[idx_card]->equip == EQP_SHIELD )
-		return 0; // attempted to place shield card on left-hand weapon.
-	if( sd->status.inventory[idx_equip].equip != 0 )
-		return 0; // item must be unequipped
+	if (sd->state.trading != 0)
+		return 0;
 
-	ARR_FIND( 0, sd->inventory_data[idx_equip]->slot, i, sd->status.inventory[idx_equip].card[i] == 0 );
-	if( i == sd->inventory_data[idx_equip]->slot )
-		return 0; // no free slots
+	if (!pc->can_insert_card(sd, idx_card) || !pc->can_insert_card_into(sd, idx_card, idx_equip))
+		return 0;
 
 	// remember the card id to insert
 	nameid = sd->status.inventory[idx_card].nameid;
@@ -4105,6 +4141,10 @@ int pc_insert_card(struct map_session_data* sd, int idx_card, int idx_equip)
 	}
 	else
 	{// success
+		int i;
+		ARR_FIND( 0, sd->inventory_data[idx_equip]->slot, i, sd->status.inventory[idx_equip].card[i] == 0);
+		if (i == sd->inventory_data[idx_equip]->slot)
+			return 0; // no free slots
 		logs->pick_pc(sd, LOG_TYPE_OTHER, -1, &sd->status.inventory[idx_equip],sd->inventory_data[idx_equip]);
 		sd->status.inventory[idx_equip].card[i] = nameid;
 		logs->pick_pc(sd, LOG_TYPE_OTHER,  1, &sd->status.inventory[idx_equip],sd->inventory_data[idx_equip]);
@@ -11497,7 +11537,9 @@ void pc_defaults(void) {
 	pc->skill = pc_skill;
 	
 	pc->insert_card = pc_insert_card;
-	
+	pc->can_insert_card = pc_can_insert_card;
+	pc->can_insert_card_into = pc_can_insert_card_into;
+
 	pc->steal_item = pc_steal_item;
 	pc->steal_coin = pc_steal_coin;
 	
