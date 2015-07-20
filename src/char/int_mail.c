@@ -459,7 +459,6 @@ void inter_mail_sendmail(int send_id, const char* send_name, int dest_id, const 
 	nullpo_retv(dest_name);
 	nullpo_retv(title);
 	nullpo_retv(body);
-	nullpo_retv(item);
 	memset(&msg, 0, sizeof(struct mail_message));
 
 	msg.send_id = send_id;

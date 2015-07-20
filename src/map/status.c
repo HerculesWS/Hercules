@@ -5145,7 +5145,7 @@ signed short status_calc_mdef2(struct block_list *bl, struct status_change *sc, 
 		if(sc->data[SC_MINDBREAKER])
 			mdef2 -= mdef2 * sc->data[SC_MINDBREAKER]->val3/100;
 #ifdef RENEWAL
-		if(sc && sc->data[SC_ASSUMPTIO])
+		if (sc->data[SC_ASSUMPTIO])
 			mdef2 <<= 1;
 		return (short)cap_value(mdef2,SHRT_MIN,SHRT_MAX);
 #else

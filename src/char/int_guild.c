@@ -882,7 +882,6 @@ int inter_guild_calcinfo(struct guild *g)
 
 int mapif_guild_created(int fd, int account_id, struct guild *g)
 {
-	nullpo_ret(g);
 	WFIFOHEAD(fd, 10);
 	WFIFOW(fd,0)=0x3830;
 	WFIFOL(fd,2)=account_id;

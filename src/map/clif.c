@@ -5715,54 +5715,30 @@ void clif_solved_charname(int fd, int charid, const char* name)
 /// 017b <packet len>.W { <name id>.W }*
 void clif_use_card(struct map_session_data *sd,int idx)
 {
-	int i,c,ep;
-	int fd=sd->fd;
+	int i, c;
+	int fd;
 
 	nullpo_retv(sd);
-	if (idx < 0 || idx >= MAX_INVENTORY) //Crash-fix from bad packets.
+	fd = sd->fd;
+	if (sd->state.trading != 0)
+		return;
+	if (!pc->can_insert_card(sd, idx))
 		return;
 
-	if (!sd->inventory_data[idx] || sd->inventory_data[idx]->type != IT_CARD)
-		return; //Avoid parsing invalid item indexes (no card/no item)
+	WFIFOHEAD(fd, MAX_INVENTORY * 2 + 4);
+	WFIFOW(fd, 0) = 0x17b;
 
-	ep=sd->inventory_data[idx]->equip;
-	WFIFOHEAD(fd,MAX_INVENTORY * 2 + 4);
-	WFIFOW(fd,0)=0x17b;
-
-	for(i=c=0;i<MAX_INVENTORY;i++){
-		int j;
-
-		if(sd->inventory_data[i] == NULL)
+	for (i = c = 0; i < MAX_INVENTORY; i++) {
+		if (!pc->can_insert_card_into(sd, idx, i))
 			continue;
-		if(sd->inventory_data[i]->type!=IT_WEAPON && sd->inventory_data[i]->type!=IT_ARMOR)
-			continue;
-		if(itemdb_isspecial(sd->status.inventory[i].card[0])) //Can't slot it
-			continue;
-
-		if (sd->status.inventory[i].identify == 0) //Not identified
-			continue;
-
-		if ((sd->inventory_data[i]->equip&ep) == 0) //Not equippable on this part.
-			continue;
-
-		if(sd->inventory_data[i]->type==IT_WEAPON && ep==EQP_SHIELD) //Shield card won't go on left weapon.
-			continue;
-
-		ARR_FIND( 0, sd->inventory_data[i]->slot, j, sd->status.inventory[i].card[j] == 0 );
-		if (j == sd->inventory_data[i]->slot) // No room
-			continue;
-
-		if( sd->status.inventory[i].equip > 0 ) // Do not check items that are already equipped
-			continue;
-
-		WFIFOW(fd,4+c*2)=i+2;
+		WFIFOW(fd, 4 + c * 2) = i + 2;
 		c++;
 	}
 
-	if( !c ) return; // no item is available for card insertion
+	if (!c) return; // no item is available for card insertion
 
-	WFIFOW(fd,2)=4+c*2;
-	WFIFOSET(fd,WFIFOW(fd,2));
+	WFIFOW(fd, 2) = 4 + c * 2;
+	WFIFOSET(fd, WFIFOW(fd, 2));
 }
 
 
@@ -11394,8 +11370,6 @@ void clif_parse_AutoSpell(int fd,struct map_session_data *sd)
 /// 017a <card index>.W
 void clif_parse_UseCard(int fd,struct map_session_data *sd)
 {
-	if (sd->state.trading != 0)
-		return;
 	clif->use_card(sd,RFIFOW(fd,2)-2);
 }
 
@@ -11404,8 +11378,6 @@ void clif_parse_UseCard(int fd,struct map_session_data *sd)
 /// 017c <card index>.W <equip index>.W
 void clif_parse_InsertCard(int fd,struct map_session_data *sd)
 {
-	if (sd->state.trading != 0)
-		return;
 	pc->insert_card(sd,RFIFOW(fd,2)-2,RFIFOW(fd,4)-2);
 }
 
@@ -12746,7 +12718,7 @@ bool clif_sub_guild_invite(int fd, struct map_session_data *sd, struct map_sessi
 		return false;
 	}
 
-	if ( t_sd && t_sd->state.noask ) {// @noask [LuzZza]
+	if (t_sd->state.noask) {// @noask [LuzZza]
 		clif->noask_sub(sd, t_sd, 2);
 		return false;
 	}

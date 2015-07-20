@@ -2714,7 +2714,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		}
 
 		/* monsters with skill lv higher than MAX_SKILL_LEVEL may get this value beyond the max depending on conditions, we cap to the system's limit */
-		if( dsrc && dsrc->type == BL_MOB && skill_lv > MAX_SKILL_LEVEL && dmg.blewcount > 25 )
+		if (dsrc->type == BL_MOB && skill_lv > MAX_SKILL_LEVEL && dmg.blewcount > 25)
 			dmg.blewcount = 25;
 
 		//blown-specific handling

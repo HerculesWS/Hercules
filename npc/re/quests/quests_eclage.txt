@@ -18543,7 +18543,7 @@ ecl_tdun04,32,35,3	script	Hisie#tlord	4_M_FARIY_HISIE,{
 		mes "[Hisie]";
 		mes "If you climbed all the way here out of curiosity, you'd better start going down now.";
 		mes "Professor has been under the weather nowadays.";
-		close;
+		close2;
 	}
 	else if (ep14_2_mylord == 14) {
 		cutin "hisie01",0;
