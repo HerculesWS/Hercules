@@ -2322,7 +2322,7 @@ Whatever it returns is determined by type.
 
 ---------------------------------------
 
-*charid2sd(<char id>)
+*charid2rid(<char id>)
 
 This function returns the RID of the character with the given character ID.
 
