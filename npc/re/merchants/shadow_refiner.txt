@@ -21,8 +21,8 @@ itemmall,31,76,3	script	Shadow Blacksmith#nomal	4_F_JOB_BLACKSMITH,{
 		.@menu$ = .@menu$+((getequipisequiped(.@i))?getequipname(.@i):"^8C8C8C"+.@position$[.@i-EQI_SHADOW_ARMOR]+" [Not Equipped]^000000")+":";
 	}
 	.@menu$ = .@menu$+"Refine Info";
-	.@SelectedPart = select(.@menu$);
-	if (.@SelectedPart == 7){
+	.@SelectedPart = select(.@menu$)+EQI_SHADOW_ARMOR-1;
+	if (.@SelectedPart == EQI_SHADOW_ACC_L+1){	// Refine Info
 		mes "[Shadow Blacksmith]";
 		mes "Shadow item will gain extra bonus effect by the refine level, same as normal weapon/armour items.";
 		next;
@@ -38,7 +38,6 @@ itemmall,31,76,3	script	Shadow Blacksmith#nomal	4_F_JOB_BLACKSMITH,{
 		mes "When +5 or higher refining Shadow item can be destroyed, please use Enriched or HD ingredient for the refinement.";
 		close;
 	}
-	.@SelectedPart += EQI_SHADOW_ARMOR-1;
 	while(1){
 		mes "[Shadow Blacksmith]";
 		mes "20000 zeny will be spent as a refine fee.";
@@ -125,6 +124,16 @@ itemmall,31,76,3	script	Shadow Blacksmith#nomal	4_F_JOB_BLACKSMITH,{
 		mes "[Shadow Blacksmith]";
 		mes "Here we go--!!!";
 		next;
+		if (Zeny < 20000) {
+			mes "[Shadow Blacksmith]";
+			mes "You do not have enough refine fee.";
+			close;
+		}
+		if (!countitem(.@choose)) {
+			mes "[Shadow Blacksmith]";
+			mes "You do not have enough "+ getitemname(.@choose) +".";
+			close;
+		}
 		delitem .@choose,1;
 		Zeny -= 20000;
 		if (getequippercentrefinery(.@SelectedPart) > rand(100) || getequippercentrefinery(.@SelectedPart) > rand(100)) {
