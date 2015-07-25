@@ -4116,7 +4116,7 @@ will be seen to everyone around but not in chat window.
 
 ---------------------------------------
 
-*warp "<map name>",<x>,<y>;
+*warp "<map name>",<x>,<y>{,<flag>};
 
 This command will take the invoking character to the specified map, and if 
 wanted, specified coordinates too, but these can be random.
@@ -4138,6 +4138,10 @@ There are also three special 'map names' you can use:
 
 "Random" will warp the player randomly on the current map.
 "Save" and "SavePoint" will warp the player back to their save point.
+
+If flag parameter is set to 0, after player warped will be not stopped
+currend running npc script. Running script after warp can be issue for
+Gravity client if warp to other maps.
 
 ---------------------------------------
 

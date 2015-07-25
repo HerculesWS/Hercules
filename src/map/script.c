@@ -5763,6 +5763,7 @@ BUILDIN(warp)
 {
 	int ret;
 	int x,y;
+	int warp_clean = 1;
 	const char* str;
 	TBL_PC* sd;
 
@@ -5774,6 +5775,11 @@ BUILDIN(warp)
 	x = script_getnum(st,3);
 	y = script_getnum(st,4);
 
+	if (script_hasdata(st, 5)) {
+		warp_clean = script_getnum(st, 5);
+	}
+
+	sd->state.warp_clean = warp_clean;
 	if(strcmp(str,"Random")==0)
 		ret = pc->randomwarp(sd,CLR_TELEPORT);
 	else if(strcmp(str,"SavePoint")==0 || strcmp(str,"Save")==0)
@@ -19855,7 +19861,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(jobchange,"i?"),
 		BUILDIN_DEF(jobname,"i"),
 		BUILDIN_DEF(input,"r??"),
-		BUILDIN_DEF(warp,"sii"),
+		BUILDIN_DEF(warp,"sii?"),
 		BUILDIN_DEF(areawarp,"siiiisii??"),
 		BUILDIN_DEF(warpchar,"siii"), // [LuzZza]
 		BUILDIN_DEF(warpparty,"siii?"), // [Fredzilla] [Paradox924X]
