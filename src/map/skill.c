@@ -2788,9 +2788,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 	if(skill_id == CR_GRANDCROSS || skill_id == NPC_GRANDDARKNESS)
 		dmg.flag |= BF_WEAPON;
 
-	if( sd && src != bl && damage > 0 && ( dmg.flag&BF_WEAPON ||
-		(dmg.flag&BF_MISC && (skill_id == RA_CLUSTERBOMB || skill_id == RA_FIRINGTRAP || skill_id == RA_ICEBOUNDTRAP || skill_id == RK_DRAGONBREATH || skill_id == RK_DRAGONBREATH_WATER)) ) )
-	{
+if( sd && src != bl && damage > 0 && ( dmg.flag&BF_LONG && (skill_id == RK_DRAGONBREATH || skill_id == RK_DRAGONBREATH_WATER)) )	{
 		if (battle_config.left_cardfix_to_right)
 			battle->drain(sd, bl, dmg.damage, dmg.damage, tstatus->race, tstatus->mode&MD_BOSS);
 		else
