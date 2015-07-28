@@ -3002,7 +3002,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			(flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON))
 			damage -= damage * 20 / 100;
 #endif
-		if(sc->data[SC_FOGWALL]) {
+		if(sc->data[SC_FOGWALL] && skill_id != RK_DRAGONBREATH && skill_id != RK_DRAGONBREATH_WATER) {
 			if(flag&BF_SKILL) { //25% reduction
 				if ( !(skill->get_inf(skill_id)&INF_GROUND_SKILL) && !(skill->get_nk(skill_id)&NK_SPLASH) )
 					damage -= 25*damage/100;
@@ -3063,7 +3063,8 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			damage -= damage * sc->data[SC_GRANITIC_ARMOR]->val2 / 100;
 		}
 		if(sc->data[SC_PAIN_KILLER]){
-			damage -= damage * sc->data[SC_PAIN_KILLER]->val3 / 100;
+			damage -= sc->data[SC_PAIN_KILLER]->val3;
+			damage = max(1,damage);
 		}
 		if((sce=sc->data[SC_MAGMA_FLOW]) && (rnd()%100 <= sce->val2) ){
 			skill->castend_damage_id(bl,src,MH_MAGMA_FLOW,sce->val1,timer->gettick(),0);
@@ -3976,7 +3977,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	case RK_DRAGONBREATH_WATER:
 		md.damage = ((status_get_hp(src) / 50) + (status_get_max_sp(src) / 4)) * skill_lv;
 		RE_LVL_MDMOD(150);
-		if (sd) md.damage = md.damage * (95 + 5 * pc->checkskill(sd,RK_DRAGONTRAINING)) / 100;
+		if (sd) md.damage = md.damage * (95 + 5 * pc->checkskill(sd,RK_DRAGONTRAINING) + sd->bonus.long_attack_atk_rate) / 100;
 		md.flag |= BF_LONG|BF_WEAPON;
 		break;
 	/**
@@ -4299,6 +4300,8 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 #endif
 			case LG_SHIELDPRESS:
 			case LG_EARTHDRIVE:
+			case RK_DRAGONBREATH:
+			case RK_DRAGONBREATH_WATER:
 				flag.weapon = 0;
 				break;
 
@@ -4778,6 +4781,19 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				} else
 					ATK_ADD(sstatus->rhw.atk2); //Else use Atk2
 				break;
+			case RK_DRAGONBREATH:
+			case RK_DRAGONBREATH_WATER:
+            {
+				wd.damage = ((status_get_hp(src) / 50) + (status_get_max_sp(src) / 4)) * skill_lv;
+				wd.damage = battle->attr_fix(src, target,  battle->calc_cardfix2(src, target, wd.damage, s_ele, nk, wd.flag), s_ele, tstatus->def_ele, tstatus->ele_lv);
+    
+                RE_LVL_DMOD(150);
+                if(sd)
+                    wd.damage = wd.damage * (95 + 5 * pc->checkskill(sd,RK_DRAGONTRAINING)) / 100;
+
+                wd.flag |= BF_LONG|BF_WEAPON;
+            }
+            break;
 			case HFLI_SBR44: //[orn]
 				if(src->type == BL_HOM) {
 					wd.damage = ((TBL_HOM*)src)->homunculus.intimacy ;
