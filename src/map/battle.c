@@ -3003,13 +3003,13 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			damage -= damage * 20 / 100;
 #endif
 		if(sc->data[SC_FOGWALL] && skill_id != RK_DRAGONBREATH && skill_id != RK_DRAGONBREATH_WATER) {
-            if(flag&BF_SKILL) { //25% reduction
-                if ( !(skill->get_inf(skill_id)&INF_GROUND_SKILL) && !(skill->get_nk(skill_id)&NK_SPLASH) )
-                    damage -= 25*damage/100;
-            } else if ((flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON)) {
-                damage >>= 2; //75% reduction
-            }
-        }
+			if(flag&BF_SKILL) { //25% reduction
+				if ( !(skill->get_inf(skill_id)&INF_GROUND_SKILL) && !(skill->get_nk(skill_id)&NK_SPLASH) )
+					damage -= 25*damage/100;
+			} else if ((flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON)) {
+				damage >>= 2; //75% reduction
+			}
+		}
 
 		if ( sc->data[SC_WATER_BARRIER] )
 			damage = damage * ( 100 - 20 ) / 100;
@@ -4782,10 +4782,10 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					ATK_ADD(sstatus->rhw.atk2); //Else use Atk2
 				break;
 			case RK_DRAGONBREATH:
-            case RK_DRAGONBREATH_WATER:
+			case RK_DRAGONBREATH_WATER:
             {
-                wd.damage = ((status_get_hp(src) / 50) + (status_get_max_sp(src) / 4)) * skill_lv;
-                wd.damage = battle->attr_fix(src, target,  battle->calc_cardfix2(src, target, wd.damage, s_ele, nk, wd.flag), s_ele, tstatus->def_ele, tstatus->ele_lv);
+				wd.damage = ((status_get_hp(src) / 50) + (status_get_max_sp(src) / 4)) * skill_lv;
+				wd.damage = battle->attr_fix(src, target,  battle->calc_cardfix2(src, target, wd.damage, s_ele, nk, wd.flag), s_ele, tstatus->def_ele, tstatus->ele_lv);
     
                 RE_LVL_DMOD(150);
                 if(sd)

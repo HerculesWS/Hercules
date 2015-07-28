@@ -9006,7 +9006,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_PAIN_KILLER: //[Lighta] need real info
 				val2 = 10 * val1; // ASPD reduction %
 				val3 = min((( 200 * val1 ) * status_get_lv(src)) / 150, 1000); // flat DMG reduction up to a maximum of 1000 [iRO Wiki]
-				sc_start(src, bl, SC_ENDURE, 100, 7, tick); // Starts level 7 Endure
+					sc_start(src, bl, SC_ENDURE, 100, 7, tick); // Starts level 7 Endure
 				break;
 			case SC_STYLE_CHANGE: //[Lighta] need real info
 				tick = -1;
