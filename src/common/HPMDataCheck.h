@@ -332,6 +332,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef MAP_HOMUNCULUS_H
 		{ "h_stats", sizeof(struct h_stats), SERVER_TYPE_MAP },
 		{ "homun_data", sizeof(struct homun_data), SERVER_TYPE_MAP },
+		{ "homun_dbs", sizeof(struct homun_dbs), SERVER_TYPE_MAP },
 		{ "homun_skill_tree_entry", sizeof(struct homun_skill_tree_entry), SERVER_TYPE_MAP },
 		{ "homunculus_interface", sizeof(struct homunculus_interface), SERVER_TYPE_MAP },
 		{ "s_homunculus_db", sizeof(struct s_homunculus_db), SERVER_TYPE_MAP },
@@ -599,6 +600,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "s_skill_arrow_db", sizeof(struct s_skill_arrow_db), SERVER_TYPE_MAP },
 		{ "s_skill_changematerial_db", sizeof(struct s_skill_changematerial_db), SERVER_TYPE_MAP },
 		{ "s_skill_db", sizeof(struct s_skill_db), SERVER_TYPE_MAP },
+		{ "s_skill_dbs", sizeof(struct s_skill_dbs), SERVER_TYPE_MAP },
 		{ "s_skill_improvise_db", sizeof(struct s_skill_improvise_db), SERVER_TYPE_MAP },
 		{ "s_skill_magicmushroom_db", sizeof(struct s_skill_magicmushroom_db), SERVER_TYPE_MAP },
 		{ "s_skill_produce_db", sizeof(struct s_skill_produce_db), SERVER_TYPE_MAP },
@@ -620,6 +622,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "regen_data", sizeof(struct regen_data), SERVER_TYPE_MAP },
 		{ "regen_data_sub", sizeof(struct regen_data_sub), SERVER_TYPE_MAP },
 		{ "s_refine_info", sizeof(struct s_refine_info), SERVER_TYPE_MAP },
+		{ "s_status_dbs", sizeof(struct s_status_dbs), SERVER_TYPE_MAP },
 		{ "sc_display_entry", sizeof(struct sc_display_entry), SERVER_TYPE_MAP },
 		{ "status_change", sizeof(struct status_change), SERVER_TYPE_MAP },
 		{ "status_change_entry", sizeof(struct status_change_entry), SERVER_TYPE_MAP },
