@@ -99,12 +99,16 @@ enum homun_type {
 	HT_INVALID = -1, // Invalid Homunculus
 };
 
-/* homunculus.c interface */
-struct homunculus_interface {
+struct homun_dbs {
 	unsigned int exptable[MAX_LEVEL];
 	struct view_data viewdb[MAX_HOMUNCULUS_CLASS];
 	struct s_homunculus_db db[MAX_HOMUNCULUS_CLASS];
 	struct homun_skill_tree_entry skill_tree[MAX_HOMUNCULUS_CLASS][MAX_SKILL_TREE];
+};
+
+/* homunculus.c interface */
+struct homunculus_interface {
+	struct homun_dbs *dbs;
 	/* */
 	void (*init) (bool minimal);
 	void (*final) (void);

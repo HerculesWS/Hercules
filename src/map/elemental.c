@@ -586,8 +586,8 @@ struct skill_condition elemental_skill_get_requirements(uint16 skill_id, uint16 
 	if( skill_lv < 1 || skill_lv > MAX_SKILL_LEVEL )
 		return req;
 
-	req.hp = skill->db[idx].hp[skill_lv-1];
-	req.sp = skill->db[idx].sp[skill_lv-1];
+	req.hp = skill->dbs->db[idx].hp[skill_lv-1];
+	req.sp = skill->dbs->db[idx].sp[skill_lv-1];
 
 	return req;
 }

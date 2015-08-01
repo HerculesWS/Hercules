@@ -3402,7 +3402,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 		int idx = pc->skill_tree[pc->class2idx(sd->status.class_)][j].idx;
 		int skill_id = pc->skill_tree[pc->class2idx(sd->status.class_)][j].id;
 		if (!skill_id || sd->status.skill[idx].lv < 1 ||
-			(skill->db[idx].inf2&(INF2_WEDDING_SKILL|INF2_GUILD_SKILL))
+			(skill->dbs->db[idx].inf2&(INF2_WEDDING_SKILL|INF2_GUILD_SKILL))
 		)
 			continue;
 		for(h = 0; h < map->list[sd->bl.m].zone->disabled_skills_count; h++) {
@@ -3435,7 +3435,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 		ms[i].casttime = skill->cast_fix(&sd->bl,skill_id, ms[i].skill_lv);
 		ms[i].delay = 5000+skill->delay_fix(&sd->bl,skill_id, ms[i].skill_lv);
 
-		inf = skill->db[idx].inf;
+		inf = skill->dbs->db[idx].inf;
 		if (inf&INF_ATTACK_SKILL) {
 			ms[i].target = MST_TARGET;
 			ms[i].cond1 = MSC_ALWAYS;
@@ -4399,13 +4399,13 @@ bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 	if ( skill->get_casttype2(sidx) == CAST_GROUND) {//Ground skill.
 		if (ms->target > MST_AROUND) {
 			ShowWarning("mob_parse_row_mobskilldb: Wrong mob skill target for ground skill %d (%s) for %s.\n",
-				ms->skill_id, skill->db[sidx].name,
+				ms->skill_id, skill->dbs->db[sidx].name,
 				mob_id < 0?"all mobs":mob->db_data[mob_id]->sprite);
 			ms->target = MST_TARGET;
 		}
 	} else if (ms->target > MST_MASTER) {
 		ShowWarning("mob_parse_row_mobskilldb: Wrong mob skill target 'around' for non-ground skill %d (%s) for %s.\n",
-			ms->skill_id, skill->db[sidx].name,
+			ms->skill_id, skill->dbs->db[sidx].name,
 			mob_id < 0?"all mobs":mob->db_data[mob_id]->sprite);
 		ms->target = MST_TARGET;
 	}

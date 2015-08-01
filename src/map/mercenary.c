@@ -42,6 +42,7 @@
 #include <string.h>
 
 struct mercenary_interface mercenary_s;
+struct s_mercenary_db mercdb[MAX_MERCENARY_CLASS];
 
 int merc_search_index(int class_)
 {
@@ -449,7 +450,7 @@ bool read_mercenarydb_sub(char* str[], int columns, int current) {
 }
 
 int read_mercenarydb(void) {
-	memset(mercenary->db,0,sizeof(mercenary->db));
+	memset(mercenary->db, 0, sizeof(struct s_mercenary_db) * MAX_MERCENARY_CLASS);
 	sv->readdb(map->db_path, "mercenary_db.txt", ',', 26, 26, MAX_MERCENARY_CLASS, mercenary->read_db_sub);
 
 	return 0;
@@ -511,7 +512,8 @@ void mercenary_defaults(void) {
 	mercenary = &mercenary_s;
 
 	/* vars */
-	memset(mercenary->db,0,sizeof(mercenary->db));
+	mercenary->db = mercdb;
+	memset(mercenary->db, 0, sizeof(struct s_mercenary_db) * MAX_MERCENARY_CLASS);
 
 	/* funcs */
 	

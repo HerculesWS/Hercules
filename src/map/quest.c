@@ -37,6 +37,7 @@
 #include <time.h>
 
 struct quest_interface quest_s;
+struct quest_db *db_data[MAX_QUEST_DB]; ///< Quest database
 
 /**
  * Searches a quest by ID.
@@ -618,6 +619,7 @@ void do_reload_quest(void) {
  */
 void quest_defaults(void) {
 	quest = &quest_s;
+	quest->db_data = db_data;
 
 	memset(&quest->db, 0, sizeof(quest->db));
 	memset(&quest->dummy, 0, sizeof(quest->dummy));

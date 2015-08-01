@@ -1370,7 +1370,7 @@ bool clif_spawn(struct block_list *bl)
 				if( sd->bg_id && map->list[sd->bl.m].flag.battleground )
 					clif->sendbgemblem_area(sd);
 				for( i = 0; i < sd->sc_display_count; i++ ) {
-					clif->sc_load(&sd->bl, sd->bl.id,AREA,status->IconChangeTable[sd->sc_display[i]->type],sd->sc_display[i]->val1,sd->sc_display[i]->val2,sd->sc_display[i]->val3);
+					clif->sc_load(&sd->bl, sd->bl.id,AREA,status->dbs->IconChangeTable[sd->sc_display[i]->type],sd->sc_display[i]->val1,sd->sc_display[i]->val2,sd->sc_display[i]->val3);
 				}
 				if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
 					clif->spiritcharm(sd);
@@ -3227,14 +3227,14 @@ void clif_arrow_create_list(struct map_session_data *sd)
 
 	for (i = 0, c = 0; i < MAX_SKILL_ARROW_DB; i++) {
 		int j;
-		if (skill->arrow_db[i].nameid > 0
-		 && (j = pc->search_inventory(sd, skill->arrow_db[i].nameid)) != INDEX_NOT_FOUND
+		if (skill->dbs->arrow_db[i].nameid > 0
+		 && (j = pc->search_inventory(sd, skill->dbs->arrow_db[i].nameid)) != INDEX_NOT_FOUND
 		 && !sd->status.inventory[j].equip && sd->status.inventory[j].identify
 		) {
-			if ((j = itemdb_viewid(skill->arrow_db[i].nameid)) > 0)
+			if ((j = itemdb_viewid(skill->dbs->arrow_db[i].nameid)) > 0)
 				WFIFOW(fd,c*2+4) = j;
 			else
-				WFIFOW(fd,c*2+4) = skill->arrow_db[i].nameid;
+				WFIFOW(fd,c*2+4) = skill->dbs->arrow_db[i].nameid;
 			c++;
 		}
 	}
@@ -4005,7 +4005,7 @@ void clif_getareachar_pc(struct map_session_data* sd,struct map_session_data* ds
 		clif->charm_single(sd->fd, dstsd);
 
 	for( i = 0; i < dstsd->sc_display_count; i++ ) {
-		clif->sc_load(&sd->bl,dstsd->bl.id,SELF,status->IconChangeTable[dstsd->sc_display[i]->type],dstsd->sc_display[i]->val1,dstsd->sc_display[i]->val2,dstsd->sc_display[i]->val3);
+		clif->sc_load(&sd->bl,dstsd->bl.id,SELF,status->dbs->IconChangeTable[dstsd->sc_display[i]->type],dstsd->sc_display[i]->val1,dstsd->sc_display[i]->val2,dstsd->sc_display[i]->val3);
 	}
 	if( (sd->status.party_id && dstsd->status.party_id == sd->status.party_id) || //Party-mate, or hpdisp setting.
 		(sd->bg_id && sd->bg_id == dstsd->bg_id) || //BattleGround
@@ -5190,13 +5190,13 @@ void clif_skill_produce_mix_list(struct map_session_data *sd, int skill_id , int
 	WFIFOW(fd, 0)=0x18d;
 
 	for(i=0,c=0;i<MAX_SKILL_PRODUCE_DB;i++){
-		if( skill->can_produce_mix(sd,skill->produce_db[i].nameid, trigger, 1) &&
-			( ( skill_id > 0 && skill->produce_db[i].req_skill == skill_id ) || skill_id < 0 )
+		if( skill->can_produce_mix(sd,skill->dbs->produce_db[i].nameid, trigger, 1) &&
+			( ( skill_id > 0 && skill->dbs->produce_db[i].req_skill == skill_id ) || skill_id < 0 )
 			){
-			if((view = itemdb_viewid(skill->produce_db[i].nameid)) > 0)
+			if((view = itemdb_viewid(skill->dbs->produce_db[i].nameid)) > 0)
 				WFIFOW(fd,c*8+ 4)= view;
 			else
-				WFIFOW(fd,c*8+ 4)= skill->produce_db[i].nameid;
+				WFIFOW(fd,c*8+ 4)= skill->dbs->produce_db[i].nameid;
 			WFIFOW(fd,c*8+ 6)= 0;
 			WFIFOW(fd,c*8+ 8)= 0;
 			WFIFOW(fd,c*8+10)= 0;
@@ -5237,13 +5237,13 @@ void clif_cooking_list(struct map_session_data *sd, int trigger, uint16 skill_id
 
 	c = 0;
 	for( i = 0; i < MAX_SKILL_PRODUCE_DB; i++ ) {
-		if( !skill->can_produce_mix(sd,skill->produce_db[i].nameid,trigger, qty) )
+		if( !skill->can_produce_mix(sd,skill->dbs->produce_db[i].nameid,trigger, qty) )
 			continue;
 
-		if( (view = itemdb_viewid(skill->produce_db[i].nameid)) > 0 )
+		if( (view = itemdb_viewid(skill->dbs->produce_db[i].nameid)) > 0 )
 			WFIFOW(fd, 6 + 2 * c) = view;
 		else
-			WFIFOW(fd, 6 + 2 * c) = skill->produce_db[i].nameid;
+			WFIFOW(fd, 6 + 2 * c) = skill->dbs->produce_db[i].nameid;
 
 		c++;
 	}
@@ -16723,11 +16723,11 @@ int clif_elementalconverter_list(struct map_session_data *sd) {
 	WFIFOW(fd, 0)=0x1ad;
 
 	for(i=0,c=0;i<MAX_SKILL_PRODUCE_DB;i++){
-		if( skill->can_produce_mix(sd,skill->produce_db[i].nameid,23, 1) ){
-			if((view = itemdb_viewid(skill->produce_db[i].nameid)) > 0)
+		if( skill->can_produce_mix(sd,skill->dbs->produce_db[i].nameid,23, 1) ){
+			if((view = itemdb_viewid(skill->dbs->produce_db[i].nameid)) > 0)
 				WFIFOW(fd,c*2+ 4)= view;
 			else
-				WFIFOW(fd,c*2+ 4)= skill->produce_db[i].nameid;
+				WFIFOW(fd,c*2+ 4)= skill->dbs->produce_db[i].nameid;
 			c++;
 		}
 	}

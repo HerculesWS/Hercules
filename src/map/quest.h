@@ -40,7 +40,7 @@ enum quest_check_type {
 };
 
 struct quest_interface {
-	struct quest_db *db_data[MAX_QUEST_DB]; ///< Quest database
+	struct quest_db **db_data; ///< Quest database
 	struct quest_db dummy;                  ///< Dummy entry for invalid quest lookups
 	/* */
 	void (*init) (bool minimal);
