@@ -2870,7 +2870,7 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 		if (.@shobu > 1) {
 			mes "[Hein]";
 			mes "Let's see...";
-			mes "You won " + shobu + " times.";
+			mes "You won " + .@shobu + " times.";
 			mes "You're really good at game!";
 			mes "Yes, your luck is at its highest!";
 			next;
@@ -3333,7 +3333,7 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 		next;
 		if (.@shobu > 1) {
 			mes "[Waltboughst]";
-			mes "Excellent. You won " + shobu + " times,";
+			mes "Excellent. You won " + .@shobu + " times,";
 			mes "so your luck must be really high.";
 			mes "That means we can begin~!";
 			next;
