@@ -1418,14 +1418,14 @@ void HP_login_char_server_connection_status(int fd, struct login_session_data *s
 	}
 	return;
 }
-void HP_login_parse_request_connection(int fd, struct login_session_data *sd, const char *ip) {
+void HP_login_parse_request_connection(int fd, struct login_session_data *sd, const char *ip, uint32 ipl) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_login_parse_request_connection_pre ) {
-		void (*preHookFunc) (int *fd, struct login_session_data *sd, const char *ip);
+		void (*preHookFunc) (int *fd, struct login_session_data *sd, const char *ip, uint32 *ipl);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_parse_request_connection_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_login_parse_request_connection_pre[hIndex].func;
-			preHookFunc(&fd, sd, ip);
+			preHookFunc(&fd, sd, ip, &ipl);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -1433,13 +1433,13 @@ void HP_login_parse_request_connection(int fd, struct login_session_data *sd, co
 		}
 	}
 	{
-		HPMHooks.source.login.parse_request_connection(fd, sd, ip);
+		HPMHooks.source.login.parse_request_connection(fd, sd, ip, ipl);
 	}
 	if( HPMHooks.count.HP_login_parse_request_connection_post ) {
-		void (*postHookFunc) (int *fd, struct login_session_data *sd, const char *ip);
+		void (*postHookFunc) (int *fd, struct login_session_data *sd, const char *ip, uint32 *ipl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_parse_request_connection_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_parse_request_connection_post[hIndex].func;
-			postHookFunc(&fd, sd, ip);
+			postHookFunc(&fd, sd, ip, &ipl);
 		}
 	}
 	return;
