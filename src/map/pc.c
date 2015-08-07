@@ -9815,10 +9815,10 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag)
 			if ( battle_config.unequip_restricted_equipment & 1 ) {
 				ARR_FIND(0, map->list[sd->bl.m].zone->disabled_items_count, i,  map->list[sd->bl.m].zone->disabled_items[i] == sd->status.inventory[n].nameid);
 				if ( i == map->list[sd->bl.m].zone->disabled_items_count )
-					script->run(sd->inventory_data[n]->unequip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+					script->run_item_unequip_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
 			}
 			else
-				script->run(sd->inventory_data[n]->unequip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+				script->run_item_unequip_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
 		}
 		if(itemdb_isspecial(sd->status.inventory[n].card[0]))
 			; //No cards
@@ -9834,10 +9834,10 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag)
 							int j;
 							ARR_FIND(0, map->list[sd->bl.m].zone->disabled_items_count, j,  map->list[sd->bl.m].zone->disabled_items[j] == sd->status.inventory[n].card[i]);
 							if ( j == map->list[sd->bl.m].zone->disabled_items_count )
-								script->run(data->unequip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+								script->run_item_unequip_script(sd, data, npc->fake_nd->bl.id);
 						}
 						else
-							script->run(data->unequip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+							script->run_item_unequip_script(sd, data, npc->fake_nd->bl.id);
 					}
 				}
 
