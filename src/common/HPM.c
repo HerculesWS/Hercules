@@ -12,6 +12,7 @@
 #include "common/core.h"
 #include "common/db.h"
 #include "common/malloc.h"
+#include "common/mapindex.h"
 #include "common/mmo.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
@@ -767,8 +768,13 @@ void hplugins_share_defaults(void) {
 	HPM->share(&arg_c,"arg_c");
 	HPM->share(SERVER_NAME,"SERVER_NAME");
 	HPM->share(&SERVER_TYPE,"SERVER_TYPE");
-	HPM->share(DB, "DB");
 	HPM->share(HPMiMalloc, "iMalloc");
+	HPM->share(cmdline,"cmdline");
+	/* console */
+	HPM->share(console,"console");
+	/* db */
+	HPM->share(DB, "DB");
+	/* nullpo */
 	HPM->share(nullpo,"nullpo");
 	/* showmsg */
 	HPM->share(showmsg,"showmsg");
@@ -786,6 +792,8 @@ void hplugins_share_defaults(void) {
 	HPM->share(libconfig,"libconfig");
 	/* sysinfo */
 	HPM->share(sysinfo,"sysinfo");
+	/* utils */
+	HPM->share(HCache,"HCache");
 }
 
 void hpm_init(void) {

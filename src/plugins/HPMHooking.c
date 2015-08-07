@@ -39,6 +39,7 @@
 #include "char/loginif.h"
 #include "char/mapif.h"
 #include "char/pincode.h"
+#include "common/mapindex.h"
 #elif defined (HPMHOOKING_MAP)
 #define HPM_SERVER_TYPE SERVER_TYPE_MAP
 #define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_map.HPMHooksCore.inc"
@@ -80,6 +81,7 @@
 #include "map/storage.h"
 #include "map/trade.h"
 #include "map/unit.h"
+#include "common/mapindex.h"
 #else
 #define HPM_SERVER_TYPE SERVER_TYPE_UNKNOWN
 #define HPM_CORE_INCLUDE "HPMHooking/HPMHooking.HPMHooksCore.inc"
@@ -89,6 +91,18 @@
 #define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking.sources.inc"
 #error HPMHooking plugin needs to be compiled for a specific server type. Please make sure your Makefiles are up to date.
 #endif
+#include "common/conf.h"
+#include "common/console.h"
+#include "common/db.h"
+#include "common/malloc.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/sql.h"
+#include "common/strlib.h"
+#include "common/sysinfo.h"
+#include "common/timer.h"
+#include "common/utils.h"
 
 #include "common/HPMDataCheck.h"
 

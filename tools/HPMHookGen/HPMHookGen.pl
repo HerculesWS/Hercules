@@ -222,13 +222,20 @@ sub parse($$) {
 			$rtinit = ' = HCS_STATUS_FAIL';
 		} elsif ($x =~ /^enum\s+bg_queue_types$/) { # Known enum bg_queue_types
 			$rtinit = ' = BGQT_INVALID';
-		} elsif ($x =~ /^struct\s+.*$/ or $x eq 'DBData') { # Structs
+		} elsif ($x =~ /^(?:enum\s+)?DBOptions$/) { # Known enum DBOptions
+			$rtinit = ' = DB_OPT_BASE';
+		} elsif ($x eq 'DBComparator' or $x eq 'DBHasher' or $x eq 'DBReleaser') { # DB function pointers
+			$rtinit = ' = NULL';
+		} elsif ($x =~ /^struct\s+.*$/ or $x eq 'DBData' or $x eq 'DBKey') { # Structs and unions
 			$rtinit = '';
 			$rtmemset = 1;
+		} elsif ($x =~ /^float|double$/) { # Floating point variables
+			$rtinit = ' = 0.';
 		} elsif ($x =~ /^(?:(?:un)?signed\s+)?(?:char|int|long|short)$/
 		      or $x =~ /^(?:long|short)\s+(?:int|long)$/
 		      or $x =~ /^u?int(?:8|16|32|64)$/
 		      or $x eq 'defType'
+		      or $x eq 'size_t'
 		) { # Numeric variables
 			$rtinit = ' = 0';
 		} else { # Anything else
@@ -257,6 +264,7 @@ my %keys = (
 	login => [ ],
 	char => [ ],
 	map => [ ],
+	common => [ ],
 );
 foreach my $file (@files) { # Loop through the xml files
 
@@ -265,11 +273,19 @@ foreach my $file (@files) { # Loop through the xml files
 
 	my $filekey = (keys %{ $data->{compounddef} })[0];
 	my $loc = $data->{compounddef}->{$filekey}->{location}->[0];
-	next unless $loc->{file} =~ /src\/(map|char|login)\//;
+	next unless $loc->{file} =~ /src\/(map|char|login|common)\//;
+	next if $loc->{file} =~ /\/HPM.*\.h/; # Don't allow hooking into the HPM itself
 	my $servertype = $1;
-
 	my $key = $data->{compounddef}->{$filekey}->{compoundname}->[0];
 	my $original = $key;
+	my @servertypes = ();
+	if ($servertype ne "common") {
+		push @servertypes, $1;
+	} elsif ($key eq "mapindex_interface") {
+		push @servertypes, ("map", "char"); # Currently not used by the login server
+	} else {
+		push @servertypes, ("map", "char", "login");
+	}
 
 	# Some known interfaces with different names
 	if ($key =~ /battleground/) {
@@ -286,8 +302,23 @@ foreach my $file (@files) { # Loop through the xml files
 		$key = "logs";
 	} elsif ($key eq "pc_groups_interface") {
 		$key = "pcg";
+	} elsif ($key eq "pcre_interface") {
+		$key = "libpcre";
 	} elsif ($key eq "char_interface") {
 		$key = "chr";
+	} elsif ($key eq "db_interface") {
+		$key = "DB";
+	} elsif ($key eq "malloc_interface") {
+		$key = "iMalloc";
+	} elsif ($key eq "socket_interface") {
+		$key = "sockt";
+	} elsif ($key eq "sql_interface") {
+		$key = "SQL";
+	} elsif ($key eq "stringbuf_interface") {
+		$key = "StrBuf";
+	} elsif ($key eq "console_input_interface") {
+		# TODO
+		next;
 	} else {
 		$key =~ s/_interface//;
 	}
@@ -382,7 +413,9 @@ foreach my $file (@files) { # Loop through the xml files
 			push(@{ $ifs{$key} }, $if);
 		}
 	}
-	push(@{ $keys{$servertype} }, $key) if $key2original{$key};
+	foreach $servertype (@servertypes) {
+		push(@{ $keys{$servertype} }, $key) if $key2original{$key};
+	}
 }
 
 foreach my $servertype (keys %keys) {
