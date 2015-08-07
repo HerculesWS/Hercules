@@ -2152,7 +2152,7 @@ void intif_parse_MessageToFD(int fd) {
 		if( sd && sd->bl.id == aid ) {
 			char msg[512];
 			safestrncpy(msg, (char*)RFIFOP(fd,12), RFIFOW(fd,2) - 12);
-			clif->message(u_fd,msg);
+			clif->messagecolor_self(u_fd, COLOR_DEFAULT ,msg);
 		}
 
 	}
