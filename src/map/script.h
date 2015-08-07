@@ -765,6 +765,7 @@ struct script_interface {
 	uint8 (*add_language) (const char *name);
 	const char *(*get_translation_file_name) (const char *file);
 	void (*parser_clean_leftovers) (void);
+	void (*run_use_script) (struct map_session_data *sd, struct item_data *data, int oid);
 };
 
 struct script_interface *script;

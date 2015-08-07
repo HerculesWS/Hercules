@@ -4882,7 +4882,6 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 int pc_useitem(struct map_session_data *sd,int n) {
 	int64 tick = timer->gettick();
 	int amount, nameid, i;
-	struct script_code *item_script;
 
 	nullpo_ret(sd);
 
@@ -4994,7 +4993,6 @@ int pc_useitem(struct map_session_data *sd,int n) {
 		sd->catch_target_class = -1;
 
 	amount = sd->status.inventory[n].amount;
-	item_script = sd->inventory_data[n]->script;
 	//Check if the item is to be consumed immediately [Skotlex]
 	if (sd->inventory_data[n]->flag.delay_consume || sd->inventory_data[n]->flag.keepafteruse)
 		clif->useitemack(sd,n,amount,true);
@@ -5006,26 +5004,23 @@ int pc_useitem(struct map_session_data *sd,int n) {
 			clif->useitemack(sd, n, 0, false);
 		}
 	}
+
 	if(sd->status.inventory[n].card[0]==CARD0_CREATE &&
 		pc->famerank(MakeDWord(sd->status.inventory[n].card[2],sd->status.inventory[n].card[3]), MAPID_ALCHEMIST))
 	{
-	    script->potion_flag = 2; // Famous player's potions have 50% more efficiency
-		 if (sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_ROGUE)
-			 script->potion_flag = 3; //Even more effective potions.
+		script->potion_flag = 2; // Famous player's potions have 50% more efficiency
+		if (sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_ROGUE)
+			script->potion_flag = 3; //Even more effective potions.
 	}
 
 	//Update item use time.
 	sd->canuseitem_tick = tick + battle_config.item_use_interval;
 	if( itemdb_iscashfood(nameid) )
 		sd->canusecashfood_tick = tick + battle_config.cashfood_use_interval;
-	
-	script->current_item_id = nameid;
-	
-	script->run(item_script,0,sd->bl.id,npc->fake_nd->bl.id);
-	
-	script->current_item_id = 0;
+
+	script->run_use_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
+
 	script->potion_flag = 0;
-	
 	return 1;
 }
 

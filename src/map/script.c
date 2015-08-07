@@ -10453,7 +10453,7 @@ BUILDIN(itemeffect) {
 		}
 	}
 
-	script->run( item_data->script, 0, sd->bl.id, nd->bl.id );
+	script->run_use_script(sd, item_data, nd->bl.id);
 
 	return true;
 }
@@ -19834,6 +19834,22 @@ bool script_hp_add(char *name, char *args, bool (*func)(struct script_state *st)
 	return script->add_builtin(&buildin, true);
 }
 
+void script_run_use_script(struct map_session_data *sd, struct item_data *data, int oid) __attribute__((nonnull (1)));
+
+/**
+ * Run use script for item.
+ *
+ * @param sd    player session data. Must be correct and checked before.
+ * @param n     item index in inventory. Must be correct and checked before.
+ * @param oid   npc id. Can be also 0 or fake npc id.
+ */
+void script_run_use_script(struct map_session_data *sd, struct item_data *data, int oid)
+{
+	script->current_item_id = data->nameid;
+	script->run(data->script, 0, sd->bl.id, oid);
+	script->current_item_id = 0;
+}
+
 #define BUILDIN_DEF(x,args) { buildin_ ## x , #x , args, false }
 #define BUILDIN_DEF2(x,x2,args) { buildin_ ## x , x2 , args, false }
 #define BUILDIN_DEF_DEPRECATED(x,args) { buildin_ ## x , #x , args, true }
@@ -20778,5 +20794,6 @@ void script_defaults(void) {
 	script->add_language = script_add_language;
 	script->get_translation_file_name = script_get_translation_file_name;
 	script->parser_clean_leftovers = script_parser_clean_leftovers;
-	
+
+	script->run_use_script = script_run_use_script;
 }
