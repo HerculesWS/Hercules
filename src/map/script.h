@@ -19,6 +19,7 @@
  * Declarations
  **/
 struct eri;
+struct item_data;
 
 /**
  * Defines
@@ -766,6 +767,7 @@ struct script_interface {
 	const char *(*get_translation_file_name) (const char *file);
 	void (*parser_clean_leftovers) (void);
 	void (*run_use_script) (struct map_session_data *sd, struct item_data *data, int oid);
+	void (*run_item_equip_script) (struct map_session_data *sd, struct item_data *data, int oid);
 };
 
 struct script_interface *script;

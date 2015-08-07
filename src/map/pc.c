@@ -9637,7 +9637,8 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 	
 	//OnEquip script [Skotlex]
 	if (id->equip_script)
-		script->run(id->equip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+		script->run_item_equip_script(sd, id, npc->fake_nd->bl.id);
+
 	if(itemdb_isspecial(sd->status.inventory[n].card[0]))
 		; //No cards
 	else {
@@ -9646,8 +9647,8 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 			if (!sd->status.inventory[n].card[i])
 				continue;
 			if ( ( data = itemdb->exists(sd->status.inventory[n].card[i]) ) != NULL ) {
-				if( data->equip_script )
-					script->run(data->equip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+				if (data->equip_script)
+					script->run_item_equip_script(sd, data, npc->fake_nd->bl.id);
 			}
 		}
 	}

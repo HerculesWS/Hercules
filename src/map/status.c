@@ -2267,7 +2267,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 
 		if (opt&SCO_FIRST && sd->inventory_data[index]->equip_script) {
 			//Execute equip-script on login
-			script->run(sd->inventory_data[index]->equip_script,0,sd->bl.id,0);
+			script->run_item_equip_script(sd, sd->inventory_data[index], 0);
 			if (!calculating)
 				return 1;
 		}
@@ -2428,7 +2428,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 					continue;
 
 				if(opt&SCO_FIRST && data->equip_script) {//Execute equip-script on login
-					script->run(data->equip_script,0,sd->bl.id,0);
+					script->run_item_equip_script(sd, data, 0);
 					if (!calculating)
 						return 1;
 				}

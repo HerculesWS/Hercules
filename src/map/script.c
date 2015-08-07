@@ -19850,6 +19850,22 @@ void script_run_use_script(struct map_session_data *sd, struct item_data *data, 
 	script->current_item_id = 0;
 }
 
+void script_run_item_equip_script(struct map_session_data *sd, struct item_data *data, int oid) __attribute__((nonnull (1, 2)));
+
+/**
+ * Run item equip script for item.
+ *
+ * @param sd    player session data. Must be correct and checked before.
+ * @param data  equipped item data. Must be correct and checked before.
+ * @param oid   npc id. Can be also 0 or fake npc id.
+ */
+void script_run_item_equip_script(struct map_session_data *sd, struct item_data *data, int oid)
+{
+	script->current_item_id = data->nameid;
+	script->run(data->equip_script, 0, sd->bl.id, oid);
+	script->current_item_id = 0;
+}
+
 #define BUILDIN_DEF(x,args) { buildin_ ## x , #x , args, false }
 #define BUILDIN_DEF2(x,x2,args) { buildin_ ## x , x2 , args, false }
 #define BUILDIN_DEF_DEPRECATED(x,args) { buildin_ ## x , #x , args, true }
@@ -20796,4 +20812,5 @@ void script_defaults(void) {
 	script->parser_clean_leftovers = script_parser_clean_leftovers;
 
 	script->run_use_script = script_run_use_script;
+	script->run_item_equip_script = script_run_item_equip_script;
 }
