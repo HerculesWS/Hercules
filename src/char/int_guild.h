@@ -1,8 +1,11 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _INT_GUILD_SQL_H_
-#define _INT_GUILD_SQL_H_
+#ifndef CHAR_INT_GUILD_H
+#define CHAR_INT_GUILD_H
+
+#include "common/db.h"
+#include "common/mmo.h"
 
 enum {
 	GS_BASIC = 0x0001,
@@ -20,18 +23,42 @@ enum {
 	GS_REMOVE = 0x8000,
 };
 
-struct guild;
-struct guild_castle;
+#ifdef HERCULES_CORE
+void inter_guild_defaults(void);
+#endif // HERCULES_CORE
 
-int inter_guild_parse_frommap(int fd);
-int inter_guild_sql_init(void);
-void inter_guild_sql_final(void);
-int inter_guild_leave(int guild_id,int account_id,int char_id);
-int mapif_parse_BreakGuild(int fd,int guild_id);
-int inter_guild_broken(int guild_id);
-int inter_guild_sex_changed(int guild_id,int account_id,int char_id, short gender);
-int inter_guild_charname_changed(int guild_id,int account_id, int char_id, char *name);
-int inter_guild_CharOnline(int char_id, int guild_id);
-int inter_guild_CharOffline(int char_id, int guild_id);
+/**
+ * inter_guild interface
+ **/
+struct inter_guild_interface {
+	DBMap* guild_db; // int guild_id -> struct guild*
+	DBMap* castle_db;
+	unsigned int exp[MAX_GUILDLEVEL];
 
-#endif /* _INT_GUILD_SQL_H_ */
+	int (*save_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*removemember_tosql) (int account_id, int char_id);
+	int (*tosql) (struct guild *g, int flag);
+	struct guild* (*fromsql) (int guild_id);
+	int (*castle_tosql) (struct guild_castle *gc);
+	struct guild_castle* (*castle_fromsql) (int castle_id);
+	bool (*exp_parse_row) (char* split[], int column, int current);
+	int (*CharOnline) (int char_id, int guild_id);
+	int (*CharOffline) (int char_id, int guild_id);
+	int (*sql_init) (void);
+	int (*db_final) (DBKey key, DBData *data, va_list ap);
+	void (*sql_final) (void);
+	int (*search_guildname) (char *str);
+	bool (*check_empty) (struct guild *g);
+	unsigned int (*nextexp) (int level);
+	int (*checkskill) (struct guild *g, int id);
+	int (*calcinfo) (struct guild *g);
+	int (*sex_changed) (int guild_id, int account_id, int char_id, short gender);
+	int (*charname_changed) (int guild_id, int account_id, int char_id, char *name);
+	int (*parse_frommap) (int fd);
+	int (*leave) (int guild_id, int account_id, int char_id);
+	int (*broken) (int guild_id);
+};
+
+struct inter_guild_interface *inter_guild;
+
+#endif /* CHAR_INT_GUILD_H */

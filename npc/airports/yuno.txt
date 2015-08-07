@@ -1,14 +1,14 @@
 //===== Hercules Script ======================================
 //= Yuno Airport Staff
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf, Muad_Dib
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Yuno Airport Staff
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= Official NPCs.
-//============================================================ 
+//============================================================
 
-y_airport,143,43,5	script	Airport Staff#y_air1a::y_airport1	90,{
+y_airport,143,43,5	script	Airport Staff#y_air1a::y_airport1	4_F_01,{
 	mes "[Airport Staff]";
 	mes "Welcome to Juno Airport where we offer domestic flights to Einbroch, Lighthalzen and Hugel,";
 	mes "and international flights to Izlude and Rachel.";
@@ -28,7 +28,7 @@ y_airport,143,43,5	script	Airport Staff#y_air1a::y_airport1	90,{
 				end;
 			}
 			if (Zeny >= 1200) {
-				set Zeny, Zeny - 1200;
+				Zeny -= 1200;
 				warp "y_airport",148,51;
 				end;
 			}
@@ -45,10 +45,10 @@ y_airport,143,43,5	script	Airport Staff#y_air1a::y_airport1	90,{
 	close;
 }
 
-y_airport,158,43,5	duplicate(y_airport1)	Airport Staff#y_air1b	90
-y_airport,126,43,5	duplicate(y_airport1)	Airport Staff#y_air1c	90
+y_airport,158,43,5	duplicate(y_airport1)	Airport Staff#y_air1b	4_F_01
+y_airport,126,43,5	duplicate(y_airport1)	Airport Staff#y_air1c	4_F_01
 
-y_airport,143,49,3	script	Arrival Staff#y_air2a::y_airport2	90,{
+y_airport,143,49,3	script	Arrival Staff#y_air2a::y_airport2	4_F_01,{
 	mes "[Airport Staff]";
 	mes "Welcome to Juno Airport. If you've just arrived from your";
 	mes "flight, let me guide you to the main terminal. Otherwise, please";
@@ -74,10 +74,10 @@ y_airport,143,49,3	script	Arrival Staff#y_air2a::y_airport2	90,{
 	close;
 }
 
-y_airport,126,51,3	duplicate(y_airport2)	Arrival Staff#y_air2b	90
-y_airport,158,50,3	duplicate(y_airport2)	Arrival Staff#y_air2c	90
+y_airport,126,51,3	duplicate(y_airport2)	Arrival Staff#y_air2b	4_F_01
+y_airport,158,50,3	duplicate(y_airport2)	Arrival Staff#y_air2c	4_F_01
 
-y_airport,145,63,5	script	Domestic Boarding	91,{
+y_airport,145,63,5	script	Domestic Boarding	4_F_02,{
 	mes "[Boarding Staff]";
 	mes "Would you like to board the";
 	mes "Airship that flies to Einbroch,";
@@ -97,7 +97,7 @@ y_airport,145,63,5	script	Domestic Boarding	91,{
 	close;
 }
 
-y_airport,140,63,5	script	International Boarding	91,{
+y_airport,140,63,5	script	International Boarding	4_F_02,{
 	mes "[Boarding Staff]";
 	mes "Would you like to board";
 	mes "the Airship which flies to";
@@ -118,7 +118,7 @@ y_airport,140,63,5	script	International Boarding	91,{
 	close;
 }
 
-yuno,14,262,5	script	Airship Staff#yuno01	91,{
+yuno,14,262,5	script	Airship Staff#yuno01	4_F_02,{
 	mes "[Airship Staff]";
 	mes "Welcome to Juno Airport.";
 	mes "Please use this door to";
@@ -138,7 +138,7 @@ yuno,14,262,5	script	Airship Staff#yuno01	91,{
 	close;
 }
 
-yuno,88,263,3	script	Airship Staff#yuno02	91,{
+yuno,88,263,3	script	Airship Staff#yuno02	4_F_02,{
 	mes "[Airship Staff]";
 	mes "Welcome to Juno Airport.";
 	mes "Please use this door to";

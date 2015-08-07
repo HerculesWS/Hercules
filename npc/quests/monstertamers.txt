@@ -4,8 +4,6 @@
 //= kobra_k88, Darkchild, x[tsk]
 //===== Current Version: =====================================
 //= 1.5
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Cute pet quest items
 //===== Additional Comments: =================================
@@ -16,10 +14,10 @@
 //= 1.4 Updated Monster taming item quests. [L0ne_W0lf]
 //= 1.4a FIXED item requirement for stellar hairpin. [L0ne_W0lf]
 //= 1.4b Fixed the delitem assosiated with the last uptate. [L0ne_W0lf]
-//= 1.5 Renamed Izlude Monster Tamer to function with Renewal [Streusel]
+//= 1.5 Moved Izlude NPC to pre-re/re paths.
 //============================================================
 
-alberta_in,173,76,4	script	Monster Tamer#alb	125,{
+alberta_in,173,76,4	script	Monster Tamer#alb	4_M_TELEPORTER,{
 	mes "[Iwado]";
 	mes "This is the height of the era of Monster Taming! Don't you feel the need to gather monster items to be able to connect and to communicate with the Cute Monsters!?";
 	next;
@@ -187,7 +185,7 @@ alberta_in,173,76,4	script	Monster Tamer#alb	125,{
 }
 
 
-aldeba_in,168,175,4	script	Monster Tamer#alde	125,{
+aldeba_in,168,175,4	script	Monster Tamer#alde	4_M_TELEPORTER,{
 	mes "[YuU]";
 	mes "You must be looking for monster items! In making monster items, there is no monster tamer in Rune Midgard that's better than me.";
 	next;
@@ -438,7 +436,7 @@ aldeba_in,168,175,4	script	Monster Tamer#alde	125,{
 			mes "Rocker Glasses!";
 			delitem 912,2;  //Zargon
 			delitem 2208,1;  //Ribbon
-			set Zeny,Zeny-400;
+			Zeny -= 400;
 			getitem 10014,1; // Rocker_Glasses
 			close;
 		}
@@ -465,7 +463,7 @@ aldeba_in,168,175,4	script	Monster Tamer#alde	125,{
 	}
 }
 
--	script	::Monster_Tamer#izu	-1,{
+-	script	::MonsterTamer_izlude	-1,{
 	mes "[Shogo]";
 	mes "Are you pre-occupied with";
 	mes "gathering items for monsters";
@@ -621,7 +619,7 @@ aldeba_in,168,175,4	script	Monster Tamer#alde	125,{
 	}
 }
 
-comodo,112,182,0	script	Munak's Grandma	103,{
+comodo,112,182,0	script	Munak's Grandma	8_F_GRANDMOTHER,{
 	if (countitem(1558) > 0) {
 		mes "[Munak's grandma]";
 		mes "Oh my...";

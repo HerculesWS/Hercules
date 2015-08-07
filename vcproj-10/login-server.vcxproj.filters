@@ -52,6 +52,9 @@
     <ClCompile Include="..\src\common\strlib.c">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\common\sysinfo.c">
+      <Filter>common</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\common\timer.c">
       <Filter>common</Filter>
     </ClCompile>
@@ -82,14 +85,11 @@
     <ClCompile Include="..\src\common\mutex.c">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\common\mempool.c">
-      <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\common\raconf.c">
-      <Filter>common</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\common\conf.c">
       <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\login\HPMlogin.c">
+      <Filter>login_sql</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +153,9 @@
     <ClInclude Include="..\src\common\strlib.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\common\sysinfo.h">
+      <Filter>common</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\common\timer.h">
       <Filter>common</Filter>
     </ClInclude>
@@ -192,14 +195,11 @@
     <ClInclude Include="..\src\common\mutex.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\common\mempool.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\common\raconf.h">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\common\conf.h">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\login\HPMlogin.h">
+      <Filter>login_sql</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

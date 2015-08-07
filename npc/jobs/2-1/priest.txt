@@ -1,22 +1,24 @@
 //===== Hercules Script ======================================
 //= Priest Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Translated By: Pgro Team (OwNaGe)(Aegis)
 //= Converted by: kobra_k88.
 //= Further bugfixed and tested by Lupus
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.6
-//===== Description: ========================================= 
+//===== File Encoding ========================================
+//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job Change quest for Priest class.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= Fully working.  Changed the way Priests enter the test room to help Acos.
 //= Must use this with the included Acolyte quest to work properely.
 //= 1.3 Added Baby Class support, fixed 3 wrong constants bugs [Lupus]
 //= 1.5 Fixed possible EXP abuse [Lupus]
 //= 1.6 Added a func which prevent advanced classes passing
-//= 2nd Job Quests again. It also guides adv classes where
-//= to go. [Lupus]
+//=     2nd Job Quests again. It also guides adv classes where
+//=     to go. [Lupus]
 //= 2.0 Changed numbers to constants. [Vicious]
 //= 2.1 Merged JFunc [Lupus]
 //= 2.1a Fixed typo [KarLaeda]
@@ -30,10 +32,10 @@
 //= 2.6 Removed the need for use of 'goto.' [L0ne_W0lf]
 //==========================================================
 
-prt_church,16,41,4	script	High Bishop#prst	60,{
+prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 	// Uncomment the following 'if' statement to allow High Priests to assist Acolytes with the job change quest.
 	// Officially High Priests are blocked from helping by an indiscriminate check if you are a transcended character.
-	//if (Class == Job_High_Priest) set .@AllowHPAssist,1;
+	//if (Class == Job_High_Priest) .@AllowHPAssist = 1;
 	if (Upper == 1 && .@AllowHPAssist != 1) {
 			mes "[Bishop Paul]";
 			mes "Hm...?";
@@ -47,7 +49,7 @@ prt_church,16,41,4	script	High Bishop#prst	60,{
 		if (BaseJob == Job_Priest) {
 			mes "[Bishop Paul]";
 			mes "Ah...";
-			if (sex)
+			if (Sex)
 				mes "It is good to see you again, Brother " + strcharinfo(0) + ". Once again, God's grace has caused our paths to cross.";
 			else
 				mes "It is good to see you once again, Sister " + strcharinfo(0) + ". The grace of God has brought you once more before me.";
@@ -114,7 +116,7 @@ prt_church,16,41,4	script	High Bishop#prst	60,{
 		else if (BaseClass == Job_Novice) {
 			mes "[Bishop Paul]";
 			mes "May God be";
-			if (sex)
+			if (Sex)
 				mes "with you, brother.";
 			else
 				mes "with you, sister.";
@@ -147,7 +149,7 @@ prt_church,16,41,4	script	High Bishop#prst	60,{
 		else {
 			mes "[Bishop Paul]";
 			mes "May God be";
-			if (sex)
+			if (Sex)
 				mes "with you, brother.";
 			else
 				mes "with you, sister.";
@@ -202,7 +204,7 @@ prt_church,16,41,4	script	High Bishop#prst	60,{
 	if (PRIEST_Q == 0) {
 		mes "[Bishop Paul]";
 		mes "May God bless";
-		if (sex)
+		if (Sex)
 			mes "you, Brother.";
 		else
 			mes "you, Sister.";
@@ -239,10 +241,10 @@ prt_church,16,41,4	script	High Bishop#prst	60,{
 					mes "I strongly recommend that you use all of these skill points before you apply for the Priest job change test.";
 					close;
 				}
-				set PRIEST_Q,1;
+				PRIEST_Q = 1;
 				setquest 8009;
 					mes "[Bishop Paul]";
-				if (sex)
+				if (Sex)
 					mes "Now I will explain the Three Trials of Priesthood. These tribulations will bring you much suffering, but I hope you can complete them, Brother " + strcharinfo(0) + ".";
 				else
 					mes "Now I will explain the Three Trials of Priesthood. These tribulations will bring you much suffering, but I hope you can complete them, Sister " + strcharinfo(0) + ".";
@@ -269,7 +271,7 @@ prt_church,16,41,4	script	High Bishop#prst	60,{
 					mes "[Bishop Paul]";
 					mes "I have no doubt that you will do a good job by yourself. However, it will be easier with the aid of a Brother or Sister that has already become a Priest.";
 					next;
-					set PRIEST_Q,5;
+					PRIEST_Q = 5;
 					changequest 8009,8011;
 					mes "[Bishop Paul]";
 					mes "Well, are you ready for the Spiritual Training?";
@@ -327,7 +329,7 @@ prt_church,16,41,4	script	High Bishop#prst	60,{
 			mes "Thank you for asking.";
 			next;
 			mes "[Bishop Paul]";
-			if (sex)
+			if (Sex)
 				mes "I hope you will continue to go on your mission as God's servant, brother.";
 			else
 				mes "I hope you will continue to go on your mission as God's servant, sister.";
@@ -390,7 +392,7 @@ prt_church,16,41,4	script	High Bishop#prst	60,{
 		close;
 	}
 	else if (PRIEST_Q == 4) {
-		set PRIEST_Q,5;
+		PRIEST_Q = 5;
 		changequest 8010,8011;
 		mes "[Bishop Paul]";
 		mes "You've accomplished";
@@ -499,7 +501,7 @@ prt_church,16,41,4	script	High Bishop#prst	60,{
 		mes "[Bishop Paul]";
 		mes "God, grant your power to your servant standing before you.";
 		changequest 8015,8016;
-		if (sex)
+		if (Sex)
 			mes "Let him send your message throughout the ends of the earth.";
 		else
 			mes "Let her send your message throughout the ends of the earth.";
@@ -507,7 +509,7 @@ prt_church,16,41,4	script	High Bishop#prst	60,{
 		mes "[Bishop Paul]";
 		mes "Make this servant of yours an instrument of your miraculous works...";
 		next;
-		set .@joblvl,JobLevel;
+		.@joblvl = JobLevel;
 		completequest 8016;
 		callfunc "Job_Change",Job_Priest;
 		callfunc "F_ClearJobVar";		// clears all job variables for the current player
@@ -530,7 +532,7 @@ prt_church,16,41,4	script	High Bishop#prst	60,{
 	}
 }
 
-prt_church,27,24,1	script	Sister Cecilia	79,{
+prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 	mes "[Sister Cecilia]";
 	if (BaseJob != Job_Acolyte) {
 		if (BaseJob == Job_Priest) {
@@ -575,7 +577,7 @@ prt_church,27,24,1	script	Sister Cecilia	79,{
 		close;
 	}
 	if (PRIEST_Q == 0) {
-		if (sex)
+		if (Sex)
 			mes "May God bless you, brother.";
 		else
 			mes "May God bless you, sister.";
@@ -656,7 +658,7 @@ prt_church,27,24,1	script	Sister Cecilia	79,{
 		mes "Welcome. You demonstrated great effort to accomplish your first trial. Now, speak to Bishop Paul so that you can begin your next trial on your path to Priesthood.";
 		next;
 		mes "[Sister Cecilia]";
-		if (sex)
+		if (Sex)
 			mes "Brother "+ strcharinfo(0) +"...";
 		else
 			mes "Sister "+ strcharinfo(0) +"...";
@@ -688,7 +690,7 @@ prt_church,27,24,1	script	Sister Cecilia	79,{
 	}
 	else if (PRIEST_Q == 7 || PRIEST_Q == 8) {
 		if (PRIEST_Q == 7) {
-			if(checkquest(8014) == -1) {
+			if (!questprogress(8014)) {
 				changequest 8013,8014;
 			}
 			mes "Welcome! I'm so glad to see you've come back! Now, there is one last trial left for you to complete.";
@@ -702,14 +704,14 @@ prt_church,27,24,1	script	Sister Cecilia	79,{
 		}
 		next;
 		mes "[Sister Cecilia]";
-		if (sex)
+		if (Sex)
 			mes "Brother "+ strcharinfo(0) +"...";
 		else
 			mes "Sister "+ strcharinfo(0) +"...";
 		mes "We will now begin your formal oath for the Priesthood. Make yourself comfortable, and just answer with your heart.";
 		next;
 		mes "[Sister Cecilia]";
-		if (sex)
+		if (Sex)
 			mes "Brother "+ strcharinfo(0) +",";
 		else
 			mes "Sister "+ strcharinfo(0) +",";
@@ -720,7 +722,7 @@ prt_church,27,24,1	script	Sister Cecilia	79,{
 			mes "[Sister Cecilia]";
 			mes "Aw...? How could you give me that kind of answer? I assume you're not ready to be a Priest yet...";
 			next;
-			set PRIEST_Q,8;
+			PRIEST_Q = 8;
 			mes "[Sister Cecilia]";
 			mes "You should reflect a little more on the teachings of holiness and come back later. You can't be a Priest if your spirit is weak.";
 			close;
@@ -732,7 +734,7 @@ prt_church,27,24,1	script	Sister Cecilia	79,{
 			mes "[Sister Cecilia]";
 			mes "Aw...? God won't grant you the power of holiness if your goals aren't just and pure. Meditate on your motivations for a while, and then come back to me.";
 			next;
-			set PRIEST_Q,8;
+			PRIEST_Q = 8;
 			mes "[Sister Cecilia]";
 			mes "Think about the qualities that make Priests people of respect. You can't be a Priest if your spirit is not in accordance with God.";
 			close;
@@ -744,7 +746,7 @@ prt_church,27,24,1	script	Sister Cecilia	79,{
 			mes "[Sister Cecilia]";
 			mes "No, no. You've got the wrong idea. God authorizes us to use his power to support his children. You must help people in danger: it is your obligation.";
 			next;
-			set PRIEST_Q,8;
+			PRIEST_Q = 8;
 			mes "[Sister Cecilia]";
 			mes "Go and observe the adventurers that are fighting for peace in this world. They will teach you what you must do in order to help them.";
 			close;
@@ -756,7 +758,7 @@ prt_church,27,24,1	script	Sister Cecilia	79,{
 			mes "[Sister Cecilia]";
 			mes "How can you say no...? That's one of the basic principles of Priesthood. You must value the welfare of others over your own safety.";
 			next;
-			set PRIEST_Q,8;
+			PRIEST_Q = 8;
 			mes "[Sister Cecilia]";
 			mes "Go and think about the value of suffering and the meaning of sacrifice. When you think you understand more about helping those in need, come back to me.";
 			close;
@@ -768,7 +770,7 @@ prt_church,27,24,1	script	Sister Cecilia	79,{
 			mes "[Sister Cecilia]";
 			mes "No no no... You've got it wrong. Even though your purpose is to spread God's message, no one will eagerly accept what you say when you spam text.";
 			next;
-			set PRIEST_Q,8;
+			PRIEST_Q = 8;
 			mes "[Sister Cecilia]";
 			mes "Remember...";
 			mes "You must be a moral person, and display maturity and respect to other players. This kind of attitude applies for all classes,";
@@ -782,7 +784,7 @@ prt_church,27,24,1	script	Sister Cecilia	79,{
 			mes "[Sister Cecilia]";
 			mes "No, you won't. Luring many monsters does more harm than good. There is no exception. That behavior is totally unacceptable.";
 			next;
-			set PRIEST_Q,8;
+			PRIEST_Q = 8;
 			mes "[Sister Cecilia]";
 			mes "Even if it looks like you are aiding your party members, such action results in bad karma. Please reflect on that for a while.";
 			close;
@@ -794,20 +796,20 @@ prt_church,27,24,1	script	Sister Cecilia	79,{
 			mes "[Sister Cecilia]";
 			mes "With that spirit, you can't be a Priest. If it is God's will to sacrifice yourself for a good purpose, you must carry out God's will as his servant.";
 			next;
-			set PRIEST_Q,8;
+			PRIEST_Q = 8;
 			mes "[Sister Cecilia]";
 			mes "Besides, God has also given Priests the resurrection power. Think about the meaning of life and death again, and then come back to me.";
 			close;
 		}
 		mes "[Sister Cecilia]";
-		if (sex)
+		if (Sex)
 			mes "Brother "+ strcharinfo(0) +"...";
 		else
 			mes "Sister "+ strcharinfo(0) +"...";
 		mes "You have demonstrated your devotion to God. Will you swear to adhere to his teachings for the rest of your days?";
 		next;
 		if (select("I do.:No.") == 1) {
-			set PRIEST_Q,9;
+			PRIEST_Q = 9;
 			changequest 8014,8015;
 			mes "[Sister Cecilia]";
 			mes "Now, you have completed your oath of Priesthood and accomplished all three trials required to become a Priest.";
@@ -823,7 +825,7 @@ prt_church,27,24,1	script	Sister Cecilia	79,{
 		mes "...";
 		mes "......";
 		next;
-		set PRIEST_Q,8;
+		PRIEST_Q = 8;
 		mes "[Sister Cecilia]";
 		mes "You've come so far...";
 		mes "Why would you want";
@@ -842,11 +844,11 @@ prt_church,27,24,1	script	Sister Cecilia	79,{
 
 // 2nd Test
 //==========================================================
-job_prist,24,187,4	script	Peter S. Alberto	110,{
+job_prist,24,187,4	script	Peter S. Alberto	4_M_MINISTER,{
 	mes "[Father Peter]";
 	if (BaseJob == Job_Priest) {
 		mes "Welcome!";
-		if (sex)
+		if (Sex)
 			mes "Brother "+ strcharinfo(0) +"!";
 		else
 			mes "Sister "+ strcharinfo(0) +"!";
@@ -951,14 +953,14 @@ job_prist,24,187,4	script	Peter S. Alberto	110,{
 			donpcevent "Peter S. Alberto#2::OnEnable";
 			end;
 		case 2:
-			set PRIEST_Q,6;
+			PRIEST_Q = 6;
 			mes "[Father Peter]";
 			mes "Hm? What is it you need?";
 			mes "Well, no problem. You can";
 			mes "afford to take your time.";
 			close;
 		case 3:
-			set PRIEST_Q,6;
+			PRIEST_Q = 6;
 			mes "[Father Peter]";
 			mes "What...?";
 			mes "You wanna go back??";
@@ -988,7 +990,7 @@ job_prist,24,187,4	script	Peter S. Alberto	110,{
 			mes "Kill those";
 			mes "misbegotten creatures!";
 			close2;
-			if(checkquest(8012) == -1) {
+			if (!questprogress(8012)) {
 				changequest 8011,8012;
 			}
 			warp "job_prist",24,44;
@@ -1030,11 +1032,11 @@ OnDisable:
 	end;
 }
 
-job_prist,23,187,1	script	Peter S. Alberto#2	110,{
+job_prist,23,187,1	script	Peter S. Alberto#2	4_M_MINISTER,{
 	mes "[Father Peter]";
 	if (BaseJob == Job_Priest) {
 		mes "Welcome!";
-		if (sex)
+		if (Sex)
 			mes "Brother "+ strcharinfo(0) +"!";
 		else
 			mes "Sister "+ strcharinfo(0) +"!";
@@ -1085,7 +1087,7 @@ OnDisable:
 	end;
 }
 
--	script	Zombie_Generator#prst	110,{
+-	script	Zombie_Generator#prst	4_M_MINISTER,{
 OnInit:
 	disablenpc "Zombie_Generator#prst";
 	end;
@@ -1099,30 +1101,30 @@ OnEnable:
 	initnpctimer;
 	end;
 
-Onm1:
-	set .MyMobs,13;
+OnM1:
+	.MyMobs = 13;
 	monster "job_prist",24,52,"Theft",1015,1,"Z_C#prst::OnMyMobDead";
 	monster "job_prist",18,52,"Want of Virtue",1015,1,"Z_C#prst::OnMyMobDead";
 	monster "job_prist",30,52,"Jealousy",1015,1,"Z_C#prst::OnMyMobDead";
 	end;
 
-Onm2:
+OnM2:
 	monster "job_prist",21,62,"Fury",1015,1,"Z_C#prst::OnMyMobDead";
 	monster "job_prist",27,62,"Envy",1015,1,"Z_C#prst::OnMyMobDead";
 	end;
 
-Onm3:
+OnM3:
 	monster "job_prist",24,72,"Arrogance",1015,1,"Z_C#prst::OnMyMobDead";
 	monster "job_prist",18,72,"Lewdness",1015,1,"Z_C#prst::OnMyMobDead";
 	monster "job_prist",30,72,"Sloth",1015,1,"Z_C#prst::OnMyMobDead";
 	end;
 
-Onm4:
+OnM4:
 	monster "job_prist",21,82,"Gluttony",1015,1,"Z_C#prst::OnMyMobDead";
 	monster "job_prist",27,82,"Greed",1015,1,"Z_C#prst::OnMyMobDead";
 	end;
 
-Onm5:
+OnM5:
 	monster "job_prist",24,92,"Despair",1015,1,"Z_C#prst::OnMyMobDead";
 	monster "job_prist",18,92,"Distrust",1015,1,"Z_C#prst::OnMyMobDead";
 	monster "job_prist",30,92,"Fear",1015,1,"Z_C#prst::OnMyMobDead";
@@ -1194,7 +1196,7 @@ OnInit:
 
 OnTouch:
 	if (BaseJob == Job_Acolyte) {
-		donpcevent "Zombie_Generator#prst::Onm1";
+		donpcevent "Zombie_Generator#prst::OnM1";
 		donpcevent "Zombie1_1::OnDisable";
 	}
 	end;
@@ -1215,7 +1217,7 @@ OnInit:
 
 OnTouch:
 	if (BaseJob == Job_Acolyte) {
-		donpcevent "Zombie_Generator#prst::Onm2";
+		donpcevent "Zombie_Generator#prst::OnM2";
 		donpcevent "Zombie2_1::OnDisable";
 	}
 	end;
@@ -1236,7 +1238,7 @@ OnInit:
 
 OnTouch:
 	if (BaseJob == Job_Acolyte) {
-		donpcevent "Zombie_Generator#prst::Onm3";
+		donpcevent "Zombie_Generator#prst::OnM3";
 		donpcevent "Zombie3_1::OnDisable";
 	}
 	end;
@@ -1257,7 +1259,7 @@ OnInit:
 
 OnTouch:
 	if (BaseJob == Job_Acolyte) {
-		donpcevent "Zombie_Generator#prst::Onm4";
+		donpcevent "Zombie_Generator#prst::OnM4";
 		donpcevent "Zombie4_1::OnDisable";
 	}
 	end;
@@ -1277,7 +1279,7 @@ OnInit:
 
 OnTouch:
 	if (BaseJob == Job_Acolyte) {
-		donpcevent "Zombie_Generator#prst::Onm5";
+		donpcevent "Zombie_Generator#prst::OnM5";
 		donpcevent "Zombie5_1::OnDisable";
 	}
 	end;
@@ -1290,9 +1292,9 @@ OnDisable:
 	disablenpc "Zombie5_1";
 }
 
-job_prist,24,109,4	script	prst1_1	45,3,3,{
+job_prist,24,109,4	script	prst1_1	WARPNPC,3,3,{
 OnTouch:
-	set .@mobs,getvariableofnpc(.MyMobs,"Zombie_Generator#prst");
+	.@mobs = getvariableofnpc(.MyMobs,"Zombie_Generator#prst");
 	if (BaseJob == Job_Priest) warp "job_prist",168,17;
 	else if (BaseClass == Job_Acolyte && .@mobs < 1) {
 		warp "job_prist",168,17;
@@ -1306,7 +1308,7 @@ OnTouch:
 
 // 3rd Test
 //==========================================================
-job_prist,168,45,4	script	Deviruchi#prst	1109,8,1,{
+job_prist,168,45,4	script	Deviruchi#prst	DEVIRUCHI,8,1,{
 OnTouch:
 	if (BaseJob == Job_Priest) {
 		mes "[Deviruchi]";
@@ -1370,7 +1372,7 @@ OnTouch:
 		mes "[Deviruchi]";
 		mes "But how about this...? Now, isn't this an attractive sight? A nice, shiny new card. Mint condition. Not too many people have this you know. But I happen to have soooo many, my pockets hurt.";
 		next;
-		cutin "¹Ì½ºÆ®·¹½ºÄ«µå.bmp",4;
+		cutin "�̽�Ʈ����ī��.bmp",4; // Mistress Card
 		mes "[Deviruchi]";
 		mes "Isn't it everyone's dream to have one of these? Think about it, being a Priest can only bring you suffering...";
 		next;
@@ -1380,7 +1382,7 @@ OnTouch:
 			mes "This card can";
 			mes "can be yours...";
 			next;
-			cutin "¹Ì½ºÆ®·¹½ºÄ«µå.bmp",255;
+			cutin "�̽�Ʈ����ī��.bmp",255; // Mistress Card
 			mes "[Deviruchi]";
 			mes "Theoretically!";
 			mes "BWAHAHAHAHAHAHAHA!";
@@ -1389,7 +1391,7 @@ OnTouch:
 			warp "mjolnir_05",200,200;
 			end;
 		}
-		cutin "¹Ì½ºÆ®·¹½ºÄ«µå.bmp",255;
+		cutin "�̽�Ʈ����ī��.bmp",255; // Mistress Card
 		mes "[Deviruchi]";
 		mes "Did...";
 		mes "Did you just tell";
@@ -1407,7 +1409,7 @@ OnTouch:
 	end;
 }
 
-job_prist,168,80,4	script	Doppelganger#prst	1046,8,1,{
+job_prist,168,80,4	script	Doppelganger#prst	DOPPELGANGER,8,1,{
 OnTouch:
 	if (BaseJob == Job_Priest) {
 		mes "[Doppelganger]";
@@ -1476,7 +1478,7 @@ OnTouch:
 	}
 }
 
-job_prist,168,115,4	script	Dark Lord#prst	1272,8,1,{
+job_prist,168,115,4	script	Dark Lord#prst	DARK_LORD,8,1,{
 OnTouch:
 	if (BaseJob == Job_Priest) {
 		mes "[Dark Lord]";
@@ -1533,7 +1535,7 @@ OnTouch:
 	}
 }
 
-job_prist,168,150,4	script	Baphomet#prst	736,8,1,{
+job_prist,168,150,4	script	Baphomet#prst	4_BAPHOMET,8,1,{
 OnTouch:
 	if (BaseJob == Job_Priest) {
 		mes "[Baphomet]";
@@ -1595,7 +1597,7 @@ OnTouch:
 	}
 }
 
-job_prist,168,180,4	script	prst2_1	45,3,3,{
+job_prist,168,180,4	script	prst2_1	WARPNPC,3,3,{
 OnTouch:
 	if (BaseJob == Job_Priest) warp "job_prist",98,40;
 	else if (BaseClass == Job_Acolyte) {
@@ -1607,7 +1609,7 @@ OnTouch:
 
 // 4th Test
 //==========================================================
-job_prist,1,2,1	script	Mummy_Generator	110,1,1,{
+job_prist,1,2,1	script	Mummy_Generator	4_M_MINISTER,1,1,{
 OnInit:
 	disablenpc "Mummy_Generator";
 	end;
@@ -1618,17 +1620,17 @@ OnEnable:
 	donpcevent "Mummy3_1::OnEnable";
 	end;
 
-Onm1:
+OnM1:
 	monster "job_prist",90,55,"Khamoz",1041,1;
 	monster "job_prist",105,55,"Amocsis",1041,1;
 	end;
 
-Onm2:
+OnM2:
 	monster "job_prist",90,70,"Mentuhoteph",1041,1;
 	monster "job_prist",105,70,"Akenaten",1041,1;
 	end;
 
-Onm3:
+OnM3:
 	monster "job_prist",90,85,"Mehnes",1041,1;
 	monster "job_prist",105,85,"Snepheru",1041,1;
 	end;
@@ -1646,7 +1648,7 @@ OnInit:
 
 OnTouch:
 	if (BaseJob == Job_Acolyte) {
-		donpcevent "Mummy_Generator::Onm1";
+		donpcevent "Mummy_Generator::OnM1";
 		donpcevent "Mummy1_1::OnDisable";
 	}
 	end;
@@ -1667,7 +1669,7 @@ OnInit:
 
 OnTouch:
 	if (BaseJob == Job_Acolyte) {
-		donpcevent "Mummy_Generator::Onm2";
+		donpcevent "Mummy_Generator::OnM2";
 		donpcevent "Mummy2_1::OnDisable";
 	}
 	end;
@@ -1688,7 +1690,7 @@ OnInit:
 
 OnTouch:
 	if (BaseJob == Job_Acolyte) {
-		donpcevent "Mummy_Generator::Onm3";
+		donpcevent "Mummy_Generator::OnM3";
 		donpcevent "Mummy3_1::OnDisable";
 	}
 	end;
@@ -1702,15 +1704,15 @@ OnDisable:
 	end;
 }
 
-job_prist,98,105,4	script	prst3_1	45,3,3,{
+job_prist,98,105,4	script	prst3_1	WARPNPC,3,3,{
 OnTouch:
 	if (BaseJob == Job_Priest) {
 		warp "prt_church",15,36;
-		end; 
+		end;
 	}
 	else if (BaseClass == Job_Acolyte) {
-		set PRIEST_Q,7;
-		if(checkquest(8012) != -1) {
+		PRIEST_Q = 7;
+		if (questprogress(8012)) {
 			changequest 8012,8013;
 		}
 		warp "prt_church",16,37;
@@ -1736,7 +1738,7 @@ function	script	F_FatherRub	{
 			mes "Well then, please head to your next destination for your pilgrimage. Be safe in your travels.";
 			close2;
 			savepoint "prt_fild03",361,255;
-			set PRIEST_Q,2;
+			PRIEST_Q = 2;
 			end;
 		}
 		else if (PRIEST_Q == 2) {
@@ -1784,7 +1786,7 @@ function	script	F_MotherMart	{
 			mes "on your journey.";
 			close2;
 			savepoint "moc_fild07",35,355;
-			set PRIEST_Q,3;
+			PRIEST_Q = 3;
 			end;
 		}
 		else if (PRIEST_Q == 3) {
@@ -1844,7 +1846,7 @@ function	script	F_FatherYos	{
 			mes "completed.";
 			close2;
 			savepoint "prt_fild00",206,230;
-			set PRIEST_Q,4;
+			PRIEST_Q = 4;
 			end;
 		}
 		else if (PRIEST_Q == 4) {

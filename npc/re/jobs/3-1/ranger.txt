@@ -1,15 +1,13 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Ranger Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Muad_Dib
-//===== Current Version: ===================================== 
-//= 1.5
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== Current Version: =====================================
+//= 1.6
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job change Quest from Hunter / Sniper -> Ranger.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [Masao]
 //= 1.1 Updated SC_STONE duration from 2 Seconds to 2 Minutes
 //=     and fixed Mercenary check.
@@ -20,9 +18,10 @@
 //= 1.3a Little beauty fix, changed break; to next; . [Masao]
 //= 1.4 Some optimization. [Euphy]
 //= 1.5 Updated script, optimized. [Euphy]
+//= 1.6 Added GM management function. [Euphy]
 //============================================================
 
-tur_dun01,156,36,5	script	Survival Instructor#jr01	59,{
+tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 	mes "[Survival Instructor, Rescue]";
 	if (BaseJob == Job_Hunter) {
 		if (job_ranger01 < 1) {
@@ -111,7 +110,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	59,{
 			mes "[Survival Instructor, Rescue]";
 			mes "To do this you need to be cleansed of body and soul.";
 			mes "Make sure that your weight equals '0' to continue.";
-			set job_ranger01,1;
+			job_ranger01 = 1;
 			setquest 8254;
 			close2;
 			warp "alberta",117,57;
@@ -145,7 +144,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	59,{
 				mes "[Survival Instructor, Rescue]";
 				mes "Well, let's talk about the details when you get the qualification for taking the test.";
 				mes "When you want to take the survival power test, please talk to me again.";
-				set job_ranger01,2;
+				job_ranger01 = 2;
 				changequest 8254,8255;
 				close;
 			}
@@ -194,7 +193,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	59,{
 				mes "Well, then let's start.";
 				mes "There's no time to hesitate.";
 				mes "Do your best.";
-				set job_ranger01,3;
+				job_ranger01 = 3;
 				changequest 8255,8256;
 				getitem 1703,1; //Bow__
 				getitem 12323,10; //N_Fly_Wing
@@ -305,7 +304,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	59,{
 	close;
 }
 
-tur_dun01,91,169,3	script	Test Instructor#jr02	732,{
+tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 	mes "[Test Instructor, Teardrop]";
 	if (BaseJob == Job_Hunter) {
 		if (job_ranger01 < 3) {
@@ -381,11 +380,11 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	732,{
 			mes "[Test Instructor, Teardrop]";
 			mes "If you run out of the provided items, we cannot support you more so take care.";
 			mes "Consider this as an extension of the survival power test.";
-			set job_ranger01,4;
+			job_ranger01 = 4;
 			changequest 8256,8257;
 			close;
 		} else if (job_ranger01 == 4) {
-			if (checkquest(8257,HUNTING) == 2) {
+			if (questprogress(8257,HUNTING) == 2) {
 				if (countitem(7064) > 0) {
 					mes "Oh! Oh! Woooooow!";
 					mes "You've brought it! Let me see...";
@@ -401,7 +400,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	732,{
 					mes "Well, before I explain, could you please give me that Dragonfly wing?";
 					mes "You've heard the saying, 'in any situation, eating comes first'?";
 					delitem 7064,1; //Dragon_Fly_Wing
-					set job_ranger01,5;
+					job_ranger01 = 5;
 					changequest 8257,8258;
 					close;
 				}
@@ -550,9 +549,10 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	732,{
 						mes "Okay. I'll respect your opinion.";
 						mes "I'll cancel the job change request from "+strcharinfo(0)+".";
 						delitem 1703,1; //Bow__
-						set job_ranger01,0;
-						for(set .@i,8254; .@i<=8262; set .@i,.@i+1)
-							if (checkquest(.@i) > -1) erasequest .@i;
+						job_ranger01 = 0;
+						for(.@i = 8254; .@i <= 8262; ++.@i)
+							if (questprogress(.@i))
+								erasequest .@i;
 						close;
 					}
 					mes "[Test Instructor, Teardrop]";
@@ -654,13 +654,13 @@ L_Start:
 	if (countitem(1750) < 100) {
 		mes "[Test Instructor, Teardrop]";
 		mes "Okay, once again I'll provide you with arrows, then I'll let you in.";
-		set .@arrow,1;
+		.@arrow = 1;
 		next;
 	}
 	mes "[Test Instructor, Teardrop]";
 	mes "Good luck.";
 	mes "Become a Ranger and we shall meet again.";
-	set job_ranger01,6;
+	job_ranger01 = 6;
 	if (getarg(0) == 0)
 		changequest 8258,8259;
 	else {
@@ -673,7 +673,7 @@ L_Start:
 	end;
 }
 
-job3_rang01,30,44,3	script	Test Waiting Room#jr_03	88,{
+job3_rang01,30,44,3	script	Test Waiting Room#jr_03	4_M_ORIENT01,{
 	mes "[Staff DTS]";
 	mes "Please wait at the practical test waiting room to start the test process.";
 	next;
@@ -711,9 +711,10 @@ job3_rang01,30,44,3	script	Test Waiting Room#jr_03	88,{
 				mes "Okay. I'll respect your opinion.";
 				mes "I'll cancel the job change request from "+strcharinfo(0)+".";
 				delitem 1703,1; //Bow__
-				set job_ranger01,0;
-				for(set .@i,8254; .@i<=8262; set .@i,.@i+1)
-					if (checkquest(.@i) > -1) erasequest .@i;
+				job_ranger01 = 0;
+				for(.@i = 8254; .@i <= 8262; ++.@i)
+					if (questprogress(.@i))
+						erasequest .@i;
 				close;
 				close2;
 				warp "alberta",117,57;
@@ -799,14 +800,14 @@ OnDisable:
 	end;
 }
 
-job3_rang02,100,95,0	script	Test Supervisor#jr_04	139,{
+job3_rang02,100,95,0	script	Test Supervisor#jr_04	HIDDEN_WARP_NPC,{
 OnInit:
-	set $@job_rang_point01,0;
+	$@job_rang_point01 = 0;
 	disablenpc "Test Supervisor#jr_04";
 	end;
 OnEnable:
 	enablenpc "Test Supervisor#jr_04";
-	set $@job_rang_point01,0;
+	$@job_rang_point01 = 0;
 	initnpctimer;
 	end;
 OnDisable:
@@ -842,14 +843,14 @@ OnTimer18000:
 	end;
 }
 
-job3_rang02,102,95,0	script	First Test Timer#jr_05	139,{
+job3_rang02,102,95,0	script	First Test Timer#jr_05	HIDDEN_WARP_NPC,{
 OnInit:
 	disablenpc "First Test Timer#jr_05";
 	end;
 OnEnable:
 	enablenpc "First Test Timer#jr_05";
-	set $@job_rang_point01,0;
-	set $@job_rang_text01,0;
+	$@job_rang_point01 = 0;
+	$@job_rang_text01 = 0;
 	setarray .text$[1],
 		"First","Second","Third","Fourth","Fifth","Sixth","Seventh","Eighth","Ninth","Tenth","Eleventh",
 		"Twelfth","Thirteenth","Fourteenth","Fifteenth","Sixteenth","Seventeenth","Eighteenth","Nineteenth","Last";
@@ -902,7 +903,7 @@ OnTimer115000:
 OnTimer122000:
 OnTimer129000:
 OnTimer136000:
-	set $@job_rang_text01,$@job_rang_text01+1;
+	++$@job_rang_text01;
 	mapannounce "job3_rang02","Test Supervisor, Notice : "+.text$[$@job_rang_text01]+" Wave! Kill the Poring!",bc_map,"0x87ceeb"; //FW_NORMAL 12 0 0
 	donpcevent "CallCorrectAnswer#jr::OnStart";
 	end;
@@ -911,7 +912,7 @@ OnTimer143000:
 	end;
 OnTimer146000:
 	if ($@job_rang_point01 < 1)
-		set $@job_rang_point01,0;
+		$@job_rang_point01 = 0;
 	mapannounce "job3_rang02","Test Supervisor, Notice : I'll announce the test result. The number of Porings you killed out of 20 is ..." + $@job_rang_point01 + "!",bc_map,"0x87ceeb"; //FW_NORMAL 12 0 0
 	end;
 OnTimer149000:
@@ -935,15 +936,15 @@ OnTimer154000:
 OnTimer157000:
 	stopnpctimer;
 	mapwarp "job3_rang02","tur_dun01",93,165;
-	set $@job_rang_point01,0;
-	set $@job_rang_text01,0;
+	$@job_rang_point01 = 0;
+	$@job_rang_text01 = 0;
 	donpcevent "Test Supervisor#jr_04::OnDisable";
 	donpcevent "Test Waiting Room#jr_03::OnEnable";
 	donpcevent "First Test Timer#jr_05::OnDisable";
 	end;
 }
 
-job3_rang02,104,95,0	script	CallCorrectAnswer#jr	139,{
+job3_rang02,104,95,0	script	CallCorrectAnswer#jr	HIDDEN_WARP_NPC,{
 OnInit:
 OnDisable:
 	disablenpc "CallCorrectAnswer#jr";
@@ -956,7 +957,7 @@ OnStart:
 	setarray .@x[0],35,44,54,35,54,35,44,54;
 	setarray .@y[0],58,58,58,49,49,39,39,39;
 	setarray .@id[0],1002,1031,1242,1113;
-	set .@i, rand(8);
+	.@i = rand(8);
 	donpcevent "CallWrongAnswer#jr::"+.@label$[.@i];
 	monster "job3_rang02",.@x[.@i],.@y[.@i],"Poring",.@id[rand(4)],1,"CallCorrectAnswer#jr::OnMyMobDead";
 	end;
@@ -965,12 +966,12 @@ OnReset:
 	end;
 OnMyMobDead:
 	specialeffect2 EF_POTION_CON;
-	set $@job_rang_point01, $@job_rang_point01+1;
+	++$@job_rang_point01;
 	mapannounce "job3_rang02","Test Supervisor, Notice : Correct Target! You have very good eyesight!",bc_map,"0xffb6c1"; //FW_NORMAL 12 0 0
 	end;
 }
 
-job3_rang02,106,95,0	script	CallWrongAnswer#jr	139,{
+job3_rang02,106,95,0	script	CallWrongAnswer#jr	HIDDEN_WARP_NPC,{
 OnInit:
 OnDisable:
 	disablenpc "CallWrongAnswer#jr";
@@ -1055,12 +1056,12 @@ OnReset:
 	end;
 OnMyMobDead:
 	specialeffect2 EF_DEVIL;
-	set $@job_rang_point01, $@job_rang_point01-1;
+	--$@job_rang_point01;
 	mapannounce "job3_rang02","Test Supervisor, Notice : Wrong Target! Pull yourself together!",bc_map,"0xffb6c1"; //FW_NORMAL 12 0 0
 	end;
 }
 
-job3_rang02,100,93,0	script	Second Test Timer#jr_08	139,{
+job3_rang02,100,93,0	script	Second Test Timer#jr_08	HIDDEN_WARP_NPC,{
 OnInit:
 	disablenpc "Second Test Timer#jr_08";
 	end;
@@ -1167,7 +1168,7 @@ OnTimer223000:
 	end;
 }
 
-job3_rang02,111,56,3	script	Staff Rust#jr_09	89,{
+job3_rang02,111,56,3	script	Staff Rust#jr_09	4_M_ORIENT02,{
 	if (job_ranger01 == 6) {
 		if (countitem(12258) < 1) {
 			percentheal 100,0;
@@ -1212,7 +1213,7 @@ OnDisable:
 	end;
 }
 
-job3_rang02,136,21,0	script	Summon Monster#jr_10	139,5,5,{
+job3_rang02,136,21,0	script	Summon Monster#jr_10	HIDDEN_WARP_NPC,5,5,{
 OnInit:
 	disablenpc "Summon Monster#jr_10";
 	end;
@@ -1261,7 +1262,7 @@ OnMyMobDead:
 	end;
 }
 
-job3_rang02,180,78,3	script	Test Supervisor#jr_11	882,1,1,{
+job3_rang02,180,78,3	script	Test Supervisor#jr_11	4_F_SITDOWN,1,1,{
 	mes "[Test Supervisor, Caution]";
 	mes "Come, come near, nearer, nearer!!";
 	close;
@@ -1361,7 +1362,7 @@ OnTimer105000:
 	end;
 }
 
-job3_rang02,104,93,0	script	Third Test Timer#jr_12	139,{
+job3_rang02,104,93,0	script	Third Test Timer#jr_12	HIDDEN_WARP_NPC,{
 OnInit:
 	disablenpc "Third Test Timer#jr_12";
 	end;
@@ -1371,7 +1372,7 @@ OnEnable:
 	end;
 OnDisable:
 	stopnpctimer;
-	set $@job_rang_point03,0;
+	$@job_rang_point03 = 0;
 	disablenpc "Third Test Timer#jr_12";
 	end;
 OnTimer3000:
@@ -1385,7 +1386,7 @@ OnTimer9000:
 	end;
 OnTimer12000:
 	mapannounce "job3_rang02","Test Supervisor, Freeze : The 'Egg Bombs' will spawn 20 times! Each time you successfully dismantle one, you get 1 point! If you get 10 or more points, you pass the practical test, so go for it! Then I'll start!!!!!",bc_map,"0x87ceeb"; //FW_NORMAL 12 0 0
-	set .n,14;
+	.n = 14;
 	end;
 OnTimer15000:
 OnTimer20000:
@@ -1408,14 +1409,14 @@ OnTimer100000:
 OnTimer105000:
 OnTimer110000:
 	donpcevent "Egg Bomb#"+(.n+rand(3))+"::OnEnable";
-	if (.n == 26) set .n,14;
-	else set .n,.n+3;
+	if (.n == 26) .n = 14;
+	else .n += 3;
 	end;
 OnTimer113000:
 	mapannounce "job3_rang02","Test Supervisor, Freeze : The test is ooooooooooooooveeeeerrr!!!!!!!!!!!!!!!!!!!!!!!!!!",bc_map,"0x87ceeb"; //FW_NORMAL 12 0 0
-	for(set .@i,14; .@i<=28; set .@i,.@i+1)
+	for(.@i = 14; .@i<=28; ++.@i)
 		donpcevent "Egg Bomb#"+.@i+"::OnDisable";
-	set .n,0;
+	.n = 0;
 	end;
 OnTimer116000:
 	mapannounce "job3_rang02","Test Supervisor, Freeze : Well let's see the result?!",bc_map,"0x87ceeb"; //FW_NORMAL 12 0 0
@@ -1436,22 +1437,22 @@ OnTimer124000:
 	end;
 OnTimer127000:
 	mapannounce "job3_rang02","Test Supervisor, Freeze : It's too bad, but you'll need to retake the test from the beginning! Please go back!",bc_map,"0x87ceeb"; //FW_NORMAL 12 0 0
-	set $@job_rang_point03,0;
+	$@job_rang_point03 = 0;
 	mapwarp "job3_rang02","tur_dun01",93,165;
 	donpcevent "Test Supervisor#jr_13::OnDisable";
 	end;
 OnTimer130000:
 	stopnpctimer;
-	set $@job_rang_point03,0;
+	$@job_rang_point03 = 0;
 	donpcevent "Test Waiting Room#jr_03::OnEnable";
 	donpcevent "Third Test Timer#jr_12::OnDisable";
 	end;
 }
 
-job3_rang02,251,49,3	script	Test Supervisor#jr_13	732,{
+job3_rang02,251,49,3	script	Test Supervisor#jr_13	4_M_JOB_HUNTER,{
 	mes "[Test Supervisor, Freeze]";
 	if (job_ranger01 == 6) {
-		if (checkquest(8261) == -1) {
+		if (!questprogress(8261)) {
 			mes "Congrats for passing the 2nd practical test! I am the 3rd practical test supervisor Freeze!";
 			next;
 			mes "[Test Supervisor, Freeze]";
@@ -1551,7 +1552,7 @@ OnTimer123000:
 	mapannounce "job3_rang02","Test Supervisor, Freeze : You weren't on time for the test, so I am ending the 3rd practical test!",bc_map,"0x87ceeb"; //FW_NORMAL 12 0 0
 	end;
 OnTimer127000:
-	set $@job_rang_point03,0;
+	$@job_rang_point03 = 0;
 	mapannounce "job3_rang02","Test Supervisor, Freeze : It's too bad, but try again!",bc_map,"0x87ceeb"; //FW_NORMAL 12 0 0
 	mapwarp "job3_rang02","tur_dun01",93,165;
 	end;
@@ -1577,9 +1578,9 @@ OnEnable:
 	getmapxy(.@map$,.@x,.@y,1);
 	monster "job3_rang02",.@x,.@y,"Egg Bomb",1047,1,strnpcinfo(0)+"::OnMyMobDead";
 	switch(atoi(strnpcinfo(2))%3) {
-		case 0: set .@str$,"Hey, I am going to explode. What are you going to do?"; break;
-		case 1: set .@str$,"I... no, I can't stand anymore!!"; break;
-		case 2: set .@str$,"I am almost done now... Don't stop me."; break;
+		case 0: .@str$ = "Hey, I am going to explode. What are you going to do?"; break;
+		case 1: .@str$ = "I... no, I can't stand anymore!!"; break;
+		case 2: .@str$ = "I am almost done now... Don't stop me."; break;
 	}
 	mapannounce "job3_rang02","Egg Bomb : "+.@str$,bc_map,"0x87ceeb"; //FW_NORMAL 12 0 0
 	end;
@@ -1589,11 +1590,11 @@ OnDisable:
 	disablenpc strnpcinfo(0);
 	end;
 OnMyMobDead:
-	set $@job_rang_point03, $@job_rang_point03+1;
+	++$@job_rang_point03;
 	switch(atoi(strnpcinfo(2))%3) {
-		case 0: set .@str$,"The world is meaningless and my dream is so far away..."; break;
-		case 1: set .@str$,"Don't be relieved. Misery always comes from carelessness."; break;
-		case 2: set .@str$,"Alas, it was only a dream for a short time..."; break;
+		case 0: .@str$ = "The world is meaningless and my dream is so far away..."; break;
+		case 1: .@str$ = "Don't be relieved. Misery always comes from carelessness."; break;
+		case 2: .@str$ = "Alas, it was only a dream for a short time..."; break;
 	}
 	mapannounce "job3_rang02","Egg Bomb : "+.@str$,bc_map,"0x87ceeb"; //FW_NORMAL 12 0 0
 	donpcevent strnpcinfo(0)+"::OnDisable";
@@ -1603,23 +1604,23 @@ OnTimer10000:
 	donpcevent strnpcinfo(0)+"::OnDisable";
 	end;
 }
-job3_rang02,246,42,0	duplicate(Egg Bomb#0)	Egg Bomb#14	139
-job3_rang02,249,46,0	duplicate(Egg Bomb#0)	Egg Bomb#15	139
-job3_rang02,256,43,0	duplicate(Egg Bomb#0)	Egg Bomb#16	139
-job3_rang02,243,54,0	duplicate(Egg Bomb#0)	Egg Bomb#17	139
-job3_rang02,246,58,0	duplicate(Egg Bomb#0)	Egg Bomb#18	139
-job3_rang02,255,56,0	duplicate(Egg Bomb#0)	Egg Bomb#19	139
-job3_rang02,260,48,0	duplicate(Egg Bomb#0)	Egg Bomb#20	139
-job3_rang02,244,53,0	duplicate(Egg Bomb#0)	Egg Bomb#21	139
-job3_rang02,254,50,0	duplicate(Egg Bomb#0)	Egg Bomb#22	139
-job3_rang02,241,41,0	duplicate(Egg Bomb#0)	Egg Bomb#23	139
-job3_rang02,259,41,0	duplicate(Egg Bomb#0)	Egg Bomb#24	139
-job3_rang02,256,52,0	duplicate(Egg Bomb#0)	Egg Bomb#25	139
-job3_rang02,259,58,0	duplicate(Egg Bomb#0)	Egg Bomb#26	139
-job3_rang02,254,52,0	duplicate(Egg Bomb#0)	Egg Bomb#27	139
-job3_rang02,247,42,0	duplicate(Egg Bomb#0)	Egg Bomb#28	139
+job3_rang02,246,42,0	duplicate(Egg Bomb#0)	Egg Bomb#14	HIDDEN_WARP_NPC
+job3_rang02,249,46,0	duplicate(Egg Bomb#0)	Egg Bomb#15	HIDDEN_WARP_NPC
+job3_rang02,256,43,0	duplicate(Egg Bomb#0)	Egg Bomb#16	HIDDEN_WARP_NPC
+job3_rang02,243,54,0	duplicate(Egg Bomb#0)	Egg Bomb#17	HIDDEN_WARP_NPC
+job3_rang02,246,58,0	duplicate(Egg Bomb#0)	Egg Bomb#18	HIDDEN_WARP_NPC
+job3_rang02,255,56,0	duplicate(Egg Bomb#0)	Egg Bomb#19	HIDDEN_WARP_NPC
+job3_rang02,260,48,0	duplicate(Egg Bomb#0)	Egg Bomb#20	HIDDEN_WARP_NPC
+job3_rang02,244,53,0	duplicate(Egg Bomb#0)	Egg Bomb#21	HIDDEN_WARP_NPC
+job3_rang02,254,50,0	duplicate(Egg Bomb#0)	Egg Bomb#22	HIDDEN_WARP_NPC
+job3_rang02,241,41,0	duplicate(Egg Bomb#0)	Egg Bomb#23	HIDDEN_WARP_NPC
+job3_rang02,259,41,0	duplicate(Egg Bomb#0)	Egg Bomb#24	HIDDEN_WARP_NPC
+job3_rang02,256,52,0	duplicate(Egg Bomb#0)	Egg Bomb#25	HIDDEN_WARP_NPC
+job3_rang02,259,58,0	duplicate(Egg Bomb#0)	Egg Bomb#26	HIDDEN_WARP_NPC
+job3_rang02,254,52,0	duplicate(Egg Bomb#0)	Egg Bomb#27	HIDDEN_WARP_NPC
+job3_rang02,247,42,0	duplicate(Egg Bomb#0)	Egg Bomb#28	HIDDEN_WARP_NPC
 
-job3_rang01,90,43,3	script	Ranger Master#jr_29	832,{
+job3_rang01,90,43,3	script	Ranger Master#jr_29	4_M_REIDIN_KURS,{
 	mes "[Ranger Master, Neveragain]";
 	if (job_ranger01 < 6) {
 		mes "... ...Huh?";
@@ -1648,7 +1649,7 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	832,{
 		mes "Congratulations!";
 		mes "You've completed all the rough practical tests!";
 		if (job_ranger01 == 6) {
-			set job_ranger01,7;
+			job_ranger01 = 7;
 			changequest 8259,8262;
 		}
 		next;
@@ -1693,7 +1694,7 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	832,{
 			close;
 		}
 		mes "[Ranger Master, Neveragain]";
-		if (ismounting()) {
+		if (hascashmount()) {
 			mes "You are on a riding pet,";
 			mes "so you cannot change your job.";
 			mes "Please unequip your riding pet and try again!";
@@ -1706,9 +1707,10 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	832,{
 			mes "[Ranger Master, Neveragain]";
 			mes "What are you doing here?";
 			mes "You are not supposed to be here. Get out!";
-			set job_ranger01,0;
-			for(set .@i,8254; .@i<=8262; set .@i,.@i+1)
-				if (checkquest(.@i) > -1) erasequest .@i;
+			job_ranger01 = 0;
+			for(.@i = 8254; .@i <= 8262; ++.@i)
+				if (questprogress(.@i))
+					erasequest .@i;
 			close2;
 			warp "alberta",117,57;
 			end;
@@ -1727,7 +1729,7 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	832,{
 		mes "From now on be active as a splendid Ranger!";
 		mes "I wish you luck in your future!";
 		delitem 1703,1; //Bow__
-		set job_ranger01,8;
+		job_ranger01 = 8;
 		completequest 8262;
 		jobchange roclass(eaclass()|EAJL_THIRD);
 		getitem 5748,1; //Sniper_Goggle
@@ -1757,8 +1759,8 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	832,{
 	}
 }
 
-/*
-job3_rang01,58,1,0	script	Worker#job_ranger	88,{
+job3_rang01,58,1,0	script	Worker#job_ranger	4_M_ORIENT01,{
+	callfunc "F_GM_NPC";
 	switch(select("Enable Waiting Room:Disable Waiting Room:Enable 1st Test:Disable 1st Test:Enable 2nd Test:Disable 2nd Test:Enable 3rd Test:Disable 3rd Test:Cancel")) {
 	case 1:
 		mes "Enabled Waiting Room";
@@ -1796,11 +1798,10 @@ job3_rang01,58,1,0	script	Worker#job_ranger	88,{
 	case 8:
 		mes "3rd Test has been Disabled";
 		donpcevent "Third Test Timer#jr_12::OnDisable";
-		for(set .@i,14; .@i<=28; set .@i,.@i+1)
+		for(.@i = 14; .@i<=28; ++.@i)
 			donpcevent "Egg Bomb#"+.@i+"::OnDisable";
 		close;
 	case 9:
 		close;
 	}
 }
-*/

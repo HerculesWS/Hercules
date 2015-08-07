@@ -1,13 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Kunlun Dungeon Warp Script
 //===== By: ==================================================
 //= Nana (1.0)
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Any Athena Version; RO Episode 5+
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Warp Points for Kunlun dungeon
 //===== Additional Comments: =================================
 //= 1.1 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]

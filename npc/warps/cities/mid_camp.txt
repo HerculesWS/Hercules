@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Another World Warp Script
 //===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.5
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Description: =========================================
 //= [Official Conversion]
 //= Warp Points for Another World

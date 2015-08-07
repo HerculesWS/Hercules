@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= God Seal Quest Warps
 //===== By: ==================================================
 //= MasterOfMuppets && SinSloth
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//=
 //===== Description: =========================================
 //= Warp Points related to the God Seal Quest.
 //===== Additional Comments: =================================

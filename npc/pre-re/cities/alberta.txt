@@ -1,40 +1,41 @@
 //===== Hercules Script ======================================
 //= Alberta Town Pre-Renewal
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Euphy
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.0
-//===== Description: ========================================= 
+//===== Description: =========================================
+//= [Official Conversion]
 //= Alberta town NPCs.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version.
 //============================================================
 
 // cities/amatsu.txt
 //============================================================
-alberta,245,93,3	duplicate(Sea_Captain_amatsu)	Sea Captain#ama1	709
+alberta,245,93,3	duplicate(Sea_Captain_amatsu)	Sea Captain#ama1	4_M_SEAMAN
 
 // cities/ayothaya.txt
 //============================================================
-alberta,247,42,3	duplicate(Aibakthing_ayothaya)	Aibakthing#ayo	843
+alberta,247,42,3	duplicate(Aibakthing_ayothaya)	Aibakthing#ayo	4_M_THAIONGBAK
 
 // cities/gonryun.txt
 //============================================================
-alberta,245,69,3	duplicate(Kunlun_Envoy_gonryun)	Kunlun Envoy#gon	776
+alberta,245,69,3	duplicate(Kunlun_Envoy_gonryun)	Kunlun Envoy#gon	4_M_TWMIDMAN
 
 // cities/louyang.txt
 //============================================================
-alberta,245,45,3	duplicate(Girl_louyang)	Girl#0lou	815
+alberta,245,45,3	duplicate(Girl_louyang)	Girl#0lou	4_F_CHNDRESS1
 
 // cities/moscovia.txt
 //============================================================
-alberta,245,66,4	duplicate(PR_Officer_moscovia)	Moscovia P.R. Officer#1	960
+alberta,245,66,4	duplicate(PR_Officer_moscovia)	Moscovia P.R. Officer#1	4_F_RUSWOMAN2
 
 // quests/quests_alberta.txt
 //============================================================
-alberta,247,122,4	duplicate(Sailor_alberta)	Sailor#tur	709
-alberta,248,89,4	duplicate(Turtle_Scholar_alberta)	Turtle Island Scholar	121
+alberta,247,122,4	duplicate(Sailor_alberta)	Sailor#tur	4_M_SEAMAN
+alberta,248,89,4	duplicate(Turtle_Scholar_alberta)	Turtle Island Scholar	2_M_MOLGENSTEIN
 
 // quests/skills/merchant_skills.txt
 //============================================================
-alberta,232,106,6	duplicate(Gershaun_alberta)	Gershaun	57
+alberta,232,106,6	duplicate(Gershaun_alberta)	Gershaun	1_M_LIBRARYMASTER

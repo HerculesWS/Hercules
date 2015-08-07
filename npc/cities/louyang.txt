@@ -1,23 +1,23 @@
-//===== Hercules Script ====================================== 
-//= Louyang City NPC's 
-//===== By: ================================================== 
+//===== Hercules Script ======================================
+//= Louyang City NPCs
+//===== By: ==================================================
 //= Vidar (1.0)
 //= Mass Zero (1.1)
 //= Dino9021, roughly translated by Celest (1.2)
 //= Mass Zero (1.3)
 //= MasterOfMuppets (2.0)
 //= rAthena Dev Team
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 3.0
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Louyang Town Script
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 2.9 Rescripted to Aegis 10.3 Standards. [L0ne_W0lf]
 //= 3.0 Moved Alberta NPC to pre-re/re paths. [Euphy]
 //============================================================
 
-// Louyang Transportaion
+// Louyang Transportation
 //============================================================
 -	script	::Girl_louyang	-1,{
 	mes "[Girl]";
@@ -70,7 +70,7 @@
 				mes "Ready!";
 				mes "Have fun!";
 				close2;
-				set zeny,zeny-10000;
+				Zeny -= 10000;
 				warp "lou_fild01",190,101;
 				end;
 			}
@@ -95,7 +95,7 @@
 	}
 }
 
-lou_fild01,190,100,7	script	Girl#1lou	815,{
+lou_fild01,190,100,7	script	Girl#1lou	4_F_CHNDRESS1,{
 	mes "[Girl]";
 	mes "Would you";
 	mes "like to go back";
@@ -107,7 +107,7 @@ lou_fild01,190,100,7	script	Girl#1lou	815,{
 		mes "see you again!";
 		mes "Bye bye!";
 		close2;
-		if (checkre(0))
+		if (RENEWAL)
 			warp "alberta",236,40;
 		else
 			warp "alberta",235,45;
@@ -135,7 +135,7 @@ lou_fild01,190,100,7	script	Girl#1lou	815,{
 
 // Generic Louyang NPCs
 //============================================================
-louyang,297,167,2	script	Muscular Woman#lou	815,{
+louyang,297,167,2	script	Muscular Woman#lou	4_F_CHNDRESS1,{
 	if (!Sex) {
 		mes "[Zhi Ching Li]";
 		mes "All the members of the Maiden Palace, including myself and our master, are all female.";
@@ -158,7 +158,7 @@ louyang,297,167,2	script	Muscular Woman#lou	815,{
 	close;
 }
 
-louyang,274,136,4	script	Powerful-looking guy#lou	819,{
+louyang,274,136,4	script	Powerful-looking guy#lou	4_M_CHN8GUEK,{
 	mes "[Akiira]";
 	mes "I am practicing my 'Claw of Dragon.' I not only need to use the power of my fists, I must also condition myself spiritually.";
 	next;
@@ -180,7 +180,7 @@ louyang,274,136,4	script	Powerful-looking guy#lou	819,{
 	close;
 }
 
-louyang,276,136,4	script	Fist master#lou	819,{
+louyang,276,136,4	script	Fist master#lou	4_M_CHN8GUEK,{
 	mes "[Zhiang Xiau Ji]";
 	mes "Finally...";
 	mes "I have mastered";
@@ -205,7 +205,7 @@ louyang,276,136,4	script	Fist master#lou	819,{
 	close;
 }
 
-louyang,276,133,0	script	Trainee#1lou::LouTrainee	819,{
+louyang,276,133,0	script	Trainee#1lou::LouTrainee	4_M_CHN8GUEK,{
 	mes "[Trainee]";
 	mes "Yeeeyap~!";
 	mes "Taaaaaah~~!!";
@@ -213,7 +213,7 @@ louyang,276,133,0	script	Trainee#1lou::LouTrainee	819,{
 	close;
 }
 
-louyang,276,131,0	script	Trainee#2lou	819,{
+louyang,276,131,0	script	Trainee#2lou	4_M_CHN8GUEK,{
 	mes "[Trainee]";
 	mes "Tah Tah Tah!";
 	mes "Taaaaaah~~!!";
@@ -221,14 +221,14 @@ louyang,276,131,0	script	Trainee#2lou	819,{
 	close;
 }
 
-louyang,276,129,0	script	Trainee#3lou	819,{
+louyang,276,129,0	script	Trainee#3lou	4_M_CHN8GUEK,{
 	mes "[Trainee]";
 	mes "Si!";
 	mes "Ayah!!";
 	close;
 }
 
-louyang,274,133,0	script	Trainee#4lou	819,{
+louyang,274,133,0	script	Trainee#4lou	4_M_CHN8GUEK,{
 	mes "[Trainee]";
 	mes "Dergh!";
 	mes "Dergh!";
@@ -236,7 +236,7 @@ louyang,274,133,0	script	Trainee#4lou	819,{
 	close;
 }
 
-louyang,274,131,0	script	Trainee#5lou	819,{
+louyang,274,131,0	script	Trainee#5lou	4_M_CHN8GUEK,{
 	mes "[Trainee]";
 	mes "Yah Yah Yah!";
 	mes "Taaaaaah~~!!";
@@ -244,7 +244,7 @@ louyang,274,131,0	script	Trainee#5lou	819,{
 	close;
 }
 
-louyang,274,129,0	script	Trainee#6lou	819,{
+louyang,274,129,0	script	Trainee#6lou	4_M_CHN8GUEK,{
 	mes "[Trainee]";
 	mes "Yeeeyap~!";
 	mes "Taaaaaah~~!!";
@@ -252,16 +252,16 @@ louyang,274,129,0	script	Trainee#6lou	819,{
 	close;
 }
 
-louyang,278,133,0	duplicate(LouTrainee)	Trainee#7lou	819
-louyang,278,131,0	duplicate(LouTrainee)	Trainee#8lou	819
-louyang,278,129,0	duplicate(LouTrainee)	Trainee#9lou	819
-louyang,272,133,0	duplicate(LouTrainee)	Trainee#10lou	819
-louyang,272,131,0	duplicate(LouTrainee)	Trainee#11lou	819
-louyang,272,129,0	duplicate(LouTrainee)	Trainee#12lou	819
+louyang,278,133,0	duplicate(LouTrainee)	Trainee#7lou	4_M_CHN8GUEK
+louyang,278,131,0	duplicate(LouTrainee)	Trainee#8lou	4_M_CHN8GUEK
+louyang,278,129,0	duplicate(LouTrainee)	Trainee#9lou	4_M_CHN8GUEK
+louyang,272,133,0	duplicate(LouTrainee)	Trainee#10lou	4_M_CHN8GUEK
+louyang,272,131,0	duplicate(LouTrainee)	Trainee#11lou	4_M_CHN8GUEK
+louyang,272,129,0	duplicate(LouTrainee)	Trainee#12lou	4_M_CHN8GUEK
 
 // Louyang Viewing Tower
 //============================================================
-lou_in01,25,23,5	script	Friendly Looking Lady#lo	817,{
+lou_in01,25,23,5	script	Friendly Looking Lady#lo	4_F_CHNDRESS3,{
 	mes "[Hong Miao]";
 	mes "Welcome.";
 	next;
@@ -292,7 +292,7 @@ lou_in01,25,23,5	script	Friendly Looking Lady#lo	817,{
 		mes "We are trying to provide you with the best of service. Please";
 		mes "come again.";
 		next;
-		set zeny,zeny-500;
+		Zeny -= 500;
 		warp "lou_in01",17,19;
 		end;
 	case 3:
@@ -304,7 +304,7 @@ lou_in01,25,23,5	script	Friendly Looking Lady#lo	817,{
 	}
 }
 
-louyang,84,254,0	script	Exit#lou	111,{
+louyang,84,254,0	script	Exit#lou	HIDDEN_NPC,{
 	mes "^3355FFThere is some sort";
 	mes "of descent apparatus.";
 	mes "Would you like to use it?^000000";
@@ -323,22 +323,22 @@ louyang,84,254,0	script	Exit#lou	111,{
 	close;
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= Originally made for Vidar
-//= 1.2 - Added official warp NPC's
-//= 1.3 - Fixed gramatical errors. (Like wtf's with the weird
-//	  texts celest? xD)
-//= 2.0 - Completely rewrote the current scripts based on iRO.
-//        Added the 'Shouting Quest' and the 'Medicine Quest'
+//= 1.2 Added official warp NPC's
+//= 1.3 Fixed gramatical errors. (Like wtf's with the weird
+//=     texts celest? xD)
+//= 2.0 Completely rewrote the current scripts based on iRO.
+//=     Added the 'Shouting Quest' and the 'Medicine Quest'
 //= 2.1 Optimized, made quest vars unique [Lupus]
 //= 2.1a minor fix, 2.1b Fixed Typos [Nexon]
 //= 2.2 Fixed exploits [Lupus]
 //= 2.2a Updated the color codes a little and fixed the shouting quest
-//=	 to broadcast green text.
+//=     to broadcast green text.
 //= 2.2b A small fix to the shout quest npc in louyang field not warping you
-//=	 back up to the tower if you died or teleported out of there. [MasterOfMuppets]
+//=     back up to the tower if you died or teleported out of there. [MasterOfMuppets]
 //= 2.3 A small fix, the code is so messy I can't believe I scripted it >.< [MasterOfMuppets]
 //= 2.4 Implemented a few more npcs, thanks to Prometheus for them. [MasterOfMuppets]
 //= 2.5 Implemented the Poison King quest, beware of potential bugs. [MasterOfMuppets]

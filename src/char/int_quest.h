@@ -1,13 +1,21 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _QUEST_H_
-#define _QUEST_H_
+#ifndef CHAR_QUEST_H
+#define CHAR_QUEST_H
 
-/*questlog system*/
-struct quest;
+#ifdef HERCULES_CORE
+void inter_quest_defaults(void);
+#endif // HERCULES_CORE
 
-int inter_quest_parse_frommap(int fd);
+/**
+ * inter_quest interface
+ **/
+struct inter_quest_interface {
+	int (*parse_frommap) (int fd);
+};
 
-#endif
+struct inter_quest_interface *inter_quest;
+
+#endif /* CHAR_QUEST_H */
 

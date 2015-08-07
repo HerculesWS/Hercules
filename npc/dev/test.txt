@@ -1,0 +1,775 @@
+//===== Hercules Script ======================================
+//= Script engine self-tests
+//===== By: ==================================================
+//= Haru
+//===== Current Version: =====================================
+//= 2.0
+//===== Version History: =====================================
+//= 1.0 Initial version.
+//= 2.0 Moved tests to a function to allow them to be called
+//      externally.
+//===== Description: =========================================
+//= Script to test operators and possibly other elements of
+//= the script engine, useful for regression testing.
+
+function	script	F_TestReturnValue	{
+	return getarg(0);
+}
+
+function	script	F_TestScopeVars	{
+	.@x = 2;
+	return .@x+1;
+}
+
+function	script	F_TestNPCVars	{
+	.x = 2;
+	return .x+1;
+}
+
+function	script	F_TestDeepNestedScope	{
+	if (getarg(0) <= 0)
+		return getarg(1); // Stop recursion
+	if (getarg(1))
+		return callfunc("F_TestDeepNestedScope", getarg(0)-1, getarg(1)); // Recursion step
+	.@x = 1;
+	return callfunc("F_TestDeepNestedScope", getarg(0)-1, .@x); // First step
+}
+
+function	script	F_TestDeepNestedScopeNPC2	{
+	if (getarg(0) <= 0)
+		return getarg(1); // Stop recursion
+	if (getarg(1))
+		return callfunc("F_TestDeepNestedScopeNPC", getarg(0)-1, getarg(1)); // Recursion step
+	.x = 1;
+	return callfunc("F_TestDeepNestedScopeNPC", getarg(0)-1, .x); // First step
+}
+
+function	script	F_TestDeepNestedScopeNPC	{
+	if (getarg(0) <= 0)
+		return getarg(1); // Stop recursion
+	if (getarg(1))
+		return callfunc("F_TestDeepNestedScopeNPC2", getarg(0)-1, getarg(1)); // Recursion step
+	.x = 1;
+	return callfunc("F_TestDeepNestedScopeNPC2", getarg(0)-1, .x); // First step
+}
+
+function	script	F_TestNestedScope	{
+	.@x = 1;
+	.@y = callfunc("F_TestReturnValue", .@x);
+	return .@y;
+}
+
+function	script	F_TestNestedScopeNPC	{
+	.x = 1;
+	.y = callfunc("F_TestReturnValue", .x);
+	return .y;
+}
+
+function	script	F_TestArrayRefs	{
+	return getelementofarray(getarg(0), getarraysize(getarg(0)) - 1);
+}
+
+function	script	F_TestReturnArrayRef	{
+	setarray getarg(0), 5, 6, 7, 8;
+	return getarraysize(getarg(0));
+}
+
+function	script	F_TestScopeArrays	{
+	setarray .@x, 1, 2, 3, 4;
+	copyarray .@y, getarg(0), getarraysize(getarg(0));
+	return getarraysize(.@y);
+}
+
+function	script	F_TestNPCArrays	{
+	setarray .x, 1, 2, 3, 4;
+	copyarray .y, getarg(0), getarraysize(getarg(0));
+	return getarraysize(.y);
+}
+
+function	script	F_TestVarOfAnotherNPC	{
+	return getvariableofnpc(.x, getarg(0));
+}
+
+-	script	TestVarOfAnotherNPC	-1,{
+	// Used to test getvariableofnpc()
+	end;
+}
+
+function	script	HerculesSelfTestHelper	{
+	if (.once > 0)
+		return .errors;
+	.once = 1;
+	.errors = 0;
+
+	// Callsub (basic)
+	callsub(OnCheck, "Callsub", 1, 1);
+	callsub(OnCheck, "Callsub (getarg default values)", 1);
+
+
+	// Array subscript
+	setarray .@a, 3, 2, 1;
+	callsub(OnCheck, "Array subscript", .@a[2]);
+
+
+	// Increment and decrement operators ++, --
+	.@x = 1;
+	.@y = .@x++; // .@y = .@x; .@x = .@x + 1;
+	callsub(OnCheck, "Suffix increment ++", .@y);
+	callsub(OnCheck, "Suffix increment ++", .@x, 2);
+	.@x = 1;
+	.@y = .@x--; // .@y = .@x; .@x = .@x - 1;
+	callsub(OnCheck, "Suffix decrement --", .@y);
+	callsub(OnCheck, "Suffix decrement --", .@x, 0);
+	.@x = 0;
+	.@y = ++.@x; // .@x = .@x + 1; .@y = .@x;
+	callsub(OnCheck, "Prefix increment ++", .@y);
+	callsub(OnCheck, "Prefix increment ++", .@x);
+	.@x = 2;
+	.@y = --.@x; // .@x = .@x - 1; .@y = .@x;
+	callsub(OnCheck, "Prefix decrement --", .@y);
+	callsub(OnCheck, "Prefix decrement --", .@x);
+
+	// Order of [] and --/++
+	.@a[1] = 0;
+	.@a[1]++; // .@a[1] = .@a[1] + 1;
+	callsub(OnCheck, "Order of [] and ++", .@a[1]);
+	.@a[1] = 2;
+	.@a[1]--; // .@a[1] = .@a[1] - 1;
+	callsub(OnCheck, "Order of [] and --", .@a[1]);
+
+
+	// Unary operators -, !, ~
+	.@x = 1;
+	.@y = -.@x; // .@y = 0 - .@x;
+	callsub(OnCheck, "Unary operator -", .@y, -1);
+	.@x = 1;
+	.@y = !.@x; // if(.@x == 0) .@y = 1; else .@y = 0;
+	callsub(OnCheck, "Unary operator !", .@y, 0);
+	.@x = 0x00000001;
+	.@y = ~.@x; // One's complement of 0x00000001 is 0xfffffffe, which is -2
+	callsub(OnCheck, "Unary operator ~", .@y, -2);
+
+	// Associativity of unary operators -, !, ~
+	.@x = 1;
+	.@y = ~ ! .@x; // .@y = ~(!.@x);
+	callsub(OnCheck, "Associativity of unary ~ and !", .@y, -1);
+	.@x = 0;
+	.@y = - ! .@x; // .@y = -(!.@x);
+	callsub(OnCheck, "Associativity of unary - and !", .@y, -1);
+	.@x = 1;
+	.@y = ~ - .@x; // .@y = ~(-.@x);
+	callsub(OnCheck, "Associativity of unary ~ and -", .@y, 0);
+	.@x = 1;
+	.@y = - ~ .@x; // .@y = -(~.@x);
+	callsub(OnCheck, "Associativity of unary - and ~", .@y, 2);
+
+	// Order of unary -, !, ~ and prefix/suffix ++/--
+	.@x = 2;
+	.@y = - --.@x; // .@y = -(--.@x);
+	callsub(OnCheck, "Order of unary - and prefix --", .@y, -1);
+	callsub(OnCheck, "Order of unary - and prefix --", .@x);
+	.@x = 1;
+	.@y = - .@x--; // .@y = -(.@x--);
+	callsub(OnCheck, "Order of unary - and suffix --", .@y, -1);
+	callsub(OnCheck, "Order of unary - and suffix --", .@x, 0);
+	.@x = 0;
+	.@y = - ++.@x; // .@y = -(++.@x);
+	callsub(OnCheck, "Order of unary - and prefix ++", .@y, -1);
+	callsub(OnCheck, "Order of unary - and prefix ++", .@x);
+	.@x = 1;
+	.@y = - .@x++; // .@y = -(.@x++);
+	callsub(OnCheck, "Order of unary - and suffix ++", .@y, -1);
+	callsub(OnCheck, "Order of unary - and suffix ++", .@x, 2);
+	.@x = 1;
+	.@y = !--.@x; // .@y = !(--.@x);
+	callsub(OnCheck, "Order of unary ! and prefix --", .@y);
+	callsub(OnCheck, "Order of unary ! and prefix --", .@x, 0);
+	.@x = 1;
+	.@y = !.@x--; // .@y = !(.@x--);
+	callsub(OnCheck, "Order of unary ! and suffix --", .@y, 0);
+	callsub(OnCheck, "Order of unary ! and suffix --", .@x, 0);
+	.@x = 0;
+	.@y = !++.@x; // .@y = !(++.@x);
+	callsub(OnCheck, "Order of unary ! and prefix ++", .@y, 0);
+	callsub(OnCheck, "Order of unary ! and prefix ++", .@x);
+	.@x = 0;
+	.@y = !.@x++; // .@y = !(.@x++);
+	callsub(OnCheck, "Order of unary ! and suffix ++", .@y);
+	callsub(OnCheck, "Order of unary ! and suffix ++", .@x);
+	.@x = 2;
+	.@y = ~--.@x; // .@y = ~(--.@x);
+	callsub(OnCheck, "Order of unary ~ and prefix --", .@y, -2);
+	callsub(OnCheck, "Order of unary ~ and prefix --", .@x, 1);
+	.@x = 1;
+	.@y = ~.@x--; // .@y = ~(.@x--);
+	callsub(OnCheck, "Order of unary ~ and suffix --", .@y, -2);
+	callsub(OnCheck, "Order of unary ~ and suffix --", .@x, 0);
+	.@x = 0;
+	.@y = ~++.@x; // .@y = ~(++.@x);
+	callsub(OnCheck, "Order of unary ~ and prefix ++", .@y, -2);
+	callsub(OnCheck, "Order of unary ~ and prefix ++", .@x, 1);
+	.@x = 1;
+	.@y = ~.@x++; // .@y = ~(.@x++);
+	callsub(OnCheck, "Order of unary ~ and suffix ++", .@y, -2);
+	callsub(OnCheck, "Order of unary ~ and suffix ++", .@x, 2);
+
+	// Binary *, /, % operators
+	.@x = 2 * 3; // .@x = 6;
+	callsub(OnCheck, "Binary * operator", .@x, 6);
+	.@x = 7 / 2; // .@x = 3;
+	callsub(OnCheck, "Binary / operator", .@x, 3);
+	.@x = 7 % 2; // .@x = 1;
+	callsub(OnCheck, "Binary % operator", .@x, 1);
+
+	// Associativity of *, /, %
+	.@x = 8 * 3 / 2; // .@x = (8 * 3) / 2;
+	callsub(OnCheck, "Associativity of * and /", .@x, 12);
+
+	// Order of binary *%/ and unary !-~
+	.@x = 2 * ! 3; // .@x = 2 * (!3);
+	callsub(OnCheck, "Order of binary * and unary !", .@x, 0);
+	.@x = ~ 1 * 2; // .@x = (~1) * 2;
+	callsub(OnCheck, "Order of unary ~ and binary *", .@x, -4);
+
+
+	// Binary +, - operators
+	.@x = 1 + 3; // .@x = 4;
+	callsub(OnCheck, "Binary + operator", .@x, 4);
+	.@x = 1 - 3; // .@x = -2;
+	callsub(OnCheck, "Binary - operator", .@x, -2);
+
+	// Associativity of +,-
+	.@x = 0x7fffffff - 0x7ffffff0 + 1; // .@x = (0x7fffffff - 0x7ffffff0) + 1; (without overflow)
+	callsub(OnCheck, "Associativity of + and -", .@x, 16);
+
+	// Order of +, - and *, /, %
+	.@x = 1 + 3 * 2; // .@x = 1 + (3 * 2);
+	callsub(OnCheck, "Order of + and *", .@x, 7);
+
+
+	// << and >> operators
+	.@x = 1<<3; // .@x = 1*2*2*2;
+	callsub(OnCheck, "Left shift << operator", .@x, 8);
+	.@x = 12>>2; // .@x = 12/2/2;
+	callsub(OnCheck, "Right shift >> operator", .@x, 3);
+
+	// Associativity of << and >>
+	.@x = 0x40000000 >> 4 << 2; // .@x = (0x40000000 >> 4) << 2
+	callsub(OnCheck, "Associativity of >> and <<", .@x, 0x10000000);
+
+	// Order of <</>> and +/-
+	.@x = 4 << 2 + 1; // .@x = 4 << (2+1);
+	callsub(OnCheck, "Order of << and +", .@x, 32);
+
+
+	// <, <=, >, >= operators
+	.@x = (1 < 2); // true
+	.@y = (2 < 2); // false
+	callsub(OnCheck, "< operator", .@x);
+	callsub(OnCheck, "< operator", .@y, 0);
+	.@x = (1 <= 2); // true
+	.@y = (2 <= 2); // true
+	callsub(OnCheck, "<= operator", .@x);
+	callsub(OnCheck, "<= operator", .@y);
+	.@x = (2 > 1); // true
+	.@y = (2 > 2); // false
+	callsub(OnCheck, "> operator", .@x);
+	callsub(OnCheck, "> operator", .@y, 0);
+	.@x = (2 >= 1); // true
+	.@y = (2 >= 2); // true
+	callsub(OnCheck, ">= operator", .@x);
+	callsub(OnCheck, ">= operator", .@y);
+
+	// Associativity of <,<=,>,>=
+	.@x = 1 > 0 > 0; // (1 > 0) > 0  -->  1 > 0  -->  true
+	callsub(OnCheck, "Associativity of > operators", .@x);
+
+	// Order of >>/<< and </<=/>/>=
+	.@x = 1 < 1 << 2; // .@x = 1 < (1<<2);
+	callsub(OnCheck, "Order of < and <<", .@x);
+
+
+	// ==, !=, ~=, ~! operators
+	.@x = (0 == 0); // true
+	.@y = (1 == 0); // false
+	callsub(OnCheck, "== operator", .@x);
+	callsub(OnCheck, "== operator", .@y, 0);
+	.@x = (1 != 0); // true
+	.@y = (1 != 1); // false
+	callsub(OnCheck, "!= operator", .@x);
+	callsub(OnCheck, "!= operator", .@y, 0);
+	.@x$ = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+			"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. "
+			"Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
+			"Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+	.@y = (.@x$ ~= "^Lorem.*, ([a-z]*).*(Duis).* ([a-z.]*)$");
+	callsub(OnCheck, "~= operator", .@y, 4);
+	callsub(OnCheck, "~= operator", $@regexmatchcount, 4);
+	if( $@regexmatchcount == 4 ) {
+		callsub(OnCheck, "~= operator", $@regexmatch$[0], .@x$);
+		callsub(OnCheck, "~= operator", $@regexmatch$[1], "quis");
+		callsub(OnCheck, "~= operator", $@regexmatch$[2], "Duis");
+		callsub(OnCheck, "~= operator", $@regexmatch$[3], "laborum.");
+	}
+	.@y = (.@x$ ~! "^Not Lorem.*, ([a-z]*).*(Duis).* ([a-z.]*)$");
+	callsub(OnCheck, "~! operator", .@y);
+
+	// Associativity of ==, !=
+	.@x = (1 == 0 == 0); // (1 == 0) == 0  -->  0 == 0  --> 1
+	.@y = (1 != 0 == 0); // (1 != 0) == 0  -->  1 == 0  --> 0
+	callsub(OnCheck, "Associativity of != and == operators", .@x);
+	callsub(OnCheck, "Associativity of != and == operators", .@y, 0);
+
+	// Order of </<=/>/>= and ==/!=
+	.@x = (1 == 2 > 1); // true
+	.@y = (1 < 2 == 1); // true
+	callsub(OnCheck, "Order of <,>,==", .@x);
+	callsub(OnCheck, "Order of <,>,==", .@y);
+
+
+	.@x$ = "string "
+		"concatenation" /* test */ " succeeded";
+	callsub(OnCheckStr, "String concatenation", .@x$, "string concatenation succeeded");
+
+
+	// Bitwise & operator
+	.@x = (7&4); // 0111 & 0100 --> 0100
+	.@y = (4&1); // 0100 & 0001 --> 0000
+	callsub(OnCheck, "Bitwise & operator", .@x, 4);
+	callsub(OnCheck, "Bitwise & operator", .@y, 0);
+
+	// Order of & and ==/!=
+	.@x = (4 == 7 & 4); // (4 == 7)&4
+	.@y = (1 & 3 != 1); // 1 & (3 != 1)
+	callsub(OnCheck, "Order of ==/!= and &", .@x, 0);
+	callsub(OnCheck, "Order of ==/!= and &", .@y);
+
+
+	// Bitwise ^ operator
+	.@x = (3^1); // 0011 ^ 0001 --> 0010
+	callsub(OnCheck, "Bitwise ^ operator", .@x, 2);
+
+	// Order of ^ and &
+	.@x = (0 & 2 ^ 2); // (0 & 2) ^ 2 --> (0000 & 0010) | 0010 --> 0000 ^ 0010 --> 0010
+	.@y = (2 ^ 2 & 0); // 2 ^ (2 & 0) --> 0010 | (0010 & 0000) --> 0010 ^ 0000 --> 0010
+	callsub(OnCheck, "Order of ^ and &", .@x, 2);
+	callsub(OnCheck, "Order of ^ and &", .@y, 2);
+
+
+	// Bitwise | operator
+	.@x = (3|4); // 0011 | 0100 --> 0111
+	.@y = (4|1); // 0100 | 0001 --> 0101
+	callsub(OnCheck, "Bitwise | operator", .@x, 7);
+	callsub(OnCheck, "Bitwise | operator", .@y, 5);
+
+	// Order of ^ and |
+	.@x = (2 ^ 2 | 2); // (2 ^ 1) | 4 --> (0010 ^ 0010) | 0010 --> 0000 | 0010 --> 0010
+	.@y = (2 | 2 ^ 2); // 4 | (1 ^ 2) --> 0010 | (0010 ^ 0010) --> 0010 | 0000 --> 0010
+	callsub(OnCheck, "Order of | and ^", .@x, 2);
+	callsub(OnCheck, "Order of | and ^", .@y, 2);
+
+
+	// Logical && operator
+	.@x = (1 && 1); // true
+	.@y = (0 && 1); // false
+	callsub(OnCheck, "Logical && operator", .@x);
+	callsub(OnCheck, "Logical && operator", .@y, 0);
+
+	// Associativity of && and short-circuit
+	.@x = 0;
+	.@y = (1 && 0 && (.@x = 1)); // should short circuit as false before evaluating the assignment
+	//FIXME callsub(OnCheck, "Short-circuit of &&", .@x, 0);
+	callsub(OnCheck, "Associativity of &&", .@y, 0);
+
+	// Order of bitwise | and logical &&
+	.@x = (1 && 0 | 4); // 1 && (0|4)
+	.@y = (4 | 0 && 1); // (4|0) && 1
+	callsub(OnCheck, "Order of && and |", .@x);
+	callsub(OnCheck, "Order of && and |", .@y);
+
+
+	// Logical || operator
+	.@x = (1 || 1); // true
+	.@y = (0 || 1); // true
+	callsub(OnCheck, "Logical || operator", .@x);
+	callsub(OnCheck, "Logical || operator", .@y);
+
+	// Associativity of || and short-circuit
+	.@x = 0;
+	.@y = (1 || 0 || (.@x = 1)); // should short circuit as true before evaluating the assignment
+	//FIXME callsub(OnCheck, "Short-circuit of ||", .@x, 0);
+	callsub(OnCheck, "Associativity of ||", .@y);
+
+	// Order of logical && and ||
+	.@x = (0 && 1 || 1); // (0 && 1) || 1
+	.@y = (1 || 1 && 0); // 1 || (1 && 0)
+	callsub(OnCheck, "Order of && and ||", .@x);
+	callsub(OnCheck, "Order of && and ||", .@y);
+
+	// Ternary conditional operator ?:
+	.@x = (1 ? 2 : 3); // 2
+	.@y = (0 ? 2 : 3); // 3
+	callsub(OnCheck, "Ternary conditional operator", .@x, 2);
+	callsub(OnCheck, "Ternary conditional operator", .@y, 3);
+
+	// Associativity of ?:
+	.@x = (1 ? 2 : 0 ? 3 : 4);
+	.@y = (1 ? 1 ? 2 : 3 : 5);
+	callsub(OnCheck, "Associativity of ?:", .@x, 2);
+	callsub(OnCheck, "Associativity of ?:", .@y, 2);
+
+	// Order of logical || and ternary ?:
+	.@x = (1 ? 0 : 0 || 1); // 1 ? 0 : (0 || 1) --> false
+	callsub(OnCheck, "Order of || and ?:", .@x, 0);
+
+
+	// Assignment operators
+	.@x = 1;
+	callsub(OnCheck, "Direct assignment operator =", .@x);
+	.@x += 7; // 1 + 7
+	callsub(OnCheck, "Assignment by sum +=", .@x, 8);
+	.@x -= 1; // 8 - 1
+	callsub(OnCheck, "Assignment by difference -=", .@x, 7);
+	.@x *= 2; // 7 * 2
+	callsub(OnCheck, "Assignment by product *=", .@x, 14);
+	.@x /= 2; // 14 / 2
+	callsub(OnCheck, "Assignment by quotient /=", .@x, 7);
+	.@x %= 4; // 7 % 4
+	callsub(OnCheck, "Assignment by remainder %=", .@x, 3);
+	.@x <<= 2; // 3 << 2
+	callsub(OnCheck, "Assignment by bitwise left shift <<=", .@x, 12);
+	.@x >>= 1; // 12 >> 1
+	callsub(OnCheck, "Assignment by bitwise right shift >>=", .@x, 6);
+	.@x &= 5; // 6 & 5 (0110 & 0101 --> 0100)
+	callsub(OnCheck, "Assignment by bitwise and &=", .@x, 4);
+	.@x ^= 5; // 4 ^ 5 (0100 ^ 0101 --> 0001)
+	callsub(OnCheck, "Assignment by bitwise xor ^=", .@x, 1);
+	.@x |= 2; // 1 | 2 (0001 | 0010 --> 0011)
+	callsub(OnCheck, "Assignment by bitwise or |=", .@x, 3);
+
+	// Associativity of assignment operators
+	.@x = 0; .@y = 0;
+	.@x = .@y = 1;
+	callsub(OnCheck, "Associativity of =", .@x);
+	callsub(OnCheck, "Associativity of =", .@y);
+	.@x = 0; .@y = 1;
+	.@x = .@y += 4;
+	callsub(OnCheck, "Associativity of = and +=", .@x, 5);
+	callsub(OnCheck, "Associativity of = and +=", .@y, 5);
+	.@x = 5; .@y = 3;
+	.@z = 8;
+	.@x *= .@y += 1;
+	callsub(OnCheck, "Associativity of *= and +=", .@x, 20);
+	callsub(OnCheck, "Associativity of *= and +=", .@y, 4);
+
+	.@x = 1; .@y = 3;
+	.@x += .@y * 10;
+	callsub(OnCheck, "Order of += and *", .@x, 31);
+	.@x = 1; .@y = 3;
+	.@x = .@y != 3 ? .@y = 2 : 4;
+	callsub(OnCheck, "Order of = and ?:", .@x, 4);
+	// FIXME callsub(OnCheck, "Short-circuit of ?:", .@y, 3);
+
+	.@x = 0;
+	if (0)
+		if (1)
+			.@x = 2;
+		else
+			.@x = 3;
+	callsub(OnCheck, "Dangling else", .@x, 0);
+
+
+	// Array operations
+	.@x[0] = 1;
+	callsub(OnCheck, "Array size (single value)", getarraysize(.@x), 1);
+	.@x[0] = 0;
+	callsub(OnCheck, "Array size (single value removal)", getarraysize(.@x), 0);
+
+	.@x[0] = 1;
+	.@x[1] = 2;
+	.@x[2] = 3;
+	.@x[5] = 4;
+	.@x[8] = 5;
+	.@x[9] = 0;
+	setarray .@y[0], 1, 2, 3, 0, 0, 4, 0, 0, 5;
+	callsub(OnCheck, "Array size (assignment)", getarraysize(.@x), 9);
+	callsub(OnCheck, "Array size (setarray)", getarraysize(.@y), 9);
+	for (.@i = 0; .@i < 10; ++.@i) {
+		callsub(OnCheck, "Array subscript and setarray [" + .@i + "]", .@x[.@i], .@y[.@i]);
+	}
+
+	cleararray .@x[1], 8, 6;
+	callsub(OnCheck, "cleararray (value) [0]", .@x[0], 1);
+	for (.@i = 1; .@i < 7; ++.@i) {
+		callsub(OnCheck, "cleararray (value) [" + .@i + "]", .@x[.@i], 8);
+	}
+	callsub(OnCheck, "cleararray (value) [7]", .@x[7], 0);
+	callsub(OnCheck, "cleararray (value) [8]", .@x[8], 5);
+	callsub(OnCheck, "cleararray (value) [9]", .@x[9], 0);
+
+	cleararray .@x, 0, getarraysize(.@x);
+	cleararray .@y, 0, getarraysize(.@y);
+	callsub(OnCheck, "cleararray and getarraysize", getarraysize(.@x), 0);
+	for (.@i = 0; .@i < 10; ++.@i) {
+		callsub(OnCheck, "cleararray (zero) [" + .@i + "]", .@x[.@i], 0);
+	}
+
+	cleararray .@x, 0, getarraysize(.@x);
+	setarray .@x[1], 1, 2, 0, 0, 0, 6, 7, 8, 0, 0, 0, 13, 14, 15, 16;
+	deletearray .@x;
+	callsub(OnCheck, "deletearray (clear) and getarraysize", getarraysize(.@x), 0);
+	for (.@i = 0; .@i < 18; ++.@i) {
+		callsub(OnCheck, "deletearray (clear) [" + .@i + "]", .@x[.@i], 0);
+	}
+
+	deletearray .@x;
+	deletearray .@y;
+	setarray .@x[1], 1, 2, 0, 0, 0, 6, 7, 8, 0, 0, 0, 0, 13, 14, 15, 16;
+	setarray .@y, 0, 1, 2, 0, 0, 0, 6, 7, 8,    0, 0, 0, 13, 14, 15, 16;
+	deletearray .@x[9], 1;
+	callsub(OnCheck, "deletearray (single) and getarraysize", getarraysize(.@x), 16);
+	for (.@i = 0; .@i < 18; ++.@i) {
+		callsub(OnCheck, "deletearray (single) [" + .@i + "]", .@x[.@i], .@y[.@i]);
+	}
+
+	deletearray .@x;
+	deletearray .@y;
+	setarray .@x[1], 1, 2, 0, 0, 0, 6, 7, 8, 0, 0, 0, 13, 14, 15, 16;
+	setarray .@y, 0, 1,             6, 7, 8, 0, 0, 0, 13, 14, 15, 16;
+	deletearray .@x[2], 4;
+	callsub(OnCheck, "deletearray (multiple) and getarraysize", getarraysize(.@x), 12);
+	for (.@i = 0; .@i < 18; ++.@i) {
+		callsub(OnCheck, "deletearray (multiple) [" + .@i + "]", .@x[.@i], .@y[.@i]);
+	}
+
+	deletearray .@x;
+	deletearray .@y;
+	setarray .@x[1], 1, 2, 0, 0, 0, 6, 7, 8, 0, 0, 0, 13, 14, 15, 16;
+	setarray .@y, 0, 1;
+	deletearray .@x[2], 1000;
+	callsub(OnCheck, "deletearray (large count) and getarraysize", getarraysize(.@x), 2);
+	for (.@i = 0; .@i < 18; ++.@i) {
+		callsub(OnCheck, "deletearray (large count) [" + .@i + "]", .@x[.@i], .@y[.@i]);
+	}
+
+	deletearray .@x;
+	deletearray .@y;
+	setarray .@x[1], 1, 2, 0, 0, 0, 6, 7, 8, 0, 0, 0, 13, 14, 15, 16;
+	setarray .@y, 0, 1;
+	deletearray .@x[2];
+	callsub(OnCheck, "deletearray (truncate) and getarraysize", getarraysize(.@x), 2);
+	for (.@i = 0; .@i < 18; ++.@i) {
+		callsub(OnCheck, "deletearray (truncate) [" + .@i + "]", .@x[.@i], .@y[.@i]);
+	}
+
+	deletearray .@x;
+	.@x[1] = 2;
+	.@x[65536] = 1;
+	callsub(OnCheck, "large array index", .@x[65536], 1);
+	callsub(OnCheck, "large array index and getarraysize", getarraysize(.@x), 65537);
+	.@x[65536] = 0;
+	callsub(OnCheck, "large array index (shrink)", .@x[65536], 0);
+	callsub(OnCheck, "large array index and getarraysize (shrink)", getarraysize(.@x), 2);
+	.@x[1] = 0;
+	callsub(OnCheck, "array shrink", .@x[1], 0);
+	callsub(OnCheck, "array shrink and getarraysize", getarraysize(.@x), 0);
+
+	// min and max
+	callsub(OnCheck, "min()", min(5, -10, 8, 3, -2, 1000), -10);
+	callsub(OnCheck, "max()", max(5, -10, 8, 3, -2, 1000), 1000);
+
+
+	// Constants
+	callsub(OnCheck, "'true' constant", true, 1);
+	callsub(OnCheck, "'false' constant", false, 0);
+	callsub(OnCheck, "'PORING' mob ID", PORING, 1002);
+	callsub(OnCheck, "'NV_BASIC' skill ID", NV_BASIC, 1);
+	callsub(OnCheck, "'Red_Potion' item ID", Red_Potion, 501);
+	callsub(OnCheck, "'Monster's_Feed' item ID", Monster's_Feed, 528);
+
+
+	// setd/getd
+	.@x = 1; .@x$ = ".@x";
+	callsub(OnCheck, "getd", getd(".@x"), 1);
+	callsub(OnCheck, "getd arguments", getd(.@x$), 1);
+	.@y = 0; .@y$ = ".@y";
+	setd(".@y", .@x);
+	callsub(OnCheck, "setd", .@y, 1);
+	setd(.@y$, 2);
+	callsub(OnCheck, "setd arguments", .@y, 2);
+	set getd(".@x"), getd(".@y");
+	callsub(OnCheck, "set getd", .@x, .@y);
+	.@y = 1;
+	setd(".@x", getd(".@y"));
+	callsub(OnCheck, "setd getd", .@x, .@y);
+
+	// getvariableofnpc
+	.x = 2;
+	set getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1;
+	callsub(OnCheck, "Setting NPC variables of another NPC", getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1);
+	callsub(OnCheck, "Setting NPC variables of another NPC (local variable overwrite check)", .x, 2);
+
+	// Callsub (advanced)
+	callsub(OnCheck, "Callsub return value", callsub(OnTestReturnValue, 1));
+	.@x = 1;
+	callsub(OnCheck, "Callsub return with scope variables", callsub(OnTestScopeVars), 3);
+	callsub(OnCheck, "Callsub (parent scope vars isolation)", .@x, 1);
+	callsub(OnCheck, "Callsub (nested scopes)", callsub(OnTestNestedScope), 1);
+	callsub(OnCheck, "Callsub (deeply nested scopes)", callsub(OnTestDeepNestedScope, 30, 0), 1);
+	.@x = 1;
+	.@y = callsub(OnSetReference, .@x);
+	callsub(OnCheck, "Callsub (setting references)", .@y, 2);
+	callsub(OnCheck, "Callsub (setting references)", .@x, 2);
+	deletearray .@x;
+	setarray .@x, 1, 2, 3, 4;
+	callsub(OnCheck, "Callsub (array references)", callsub(OnTestArrayRefs, .@x), 4);
+	deletearray .@x;
+	.@y = callsub(OnTestReturnArrayRef, .@x);
+	callsub(OnCheck, "Callsub return array references (size check)", getarraysize(.@x), .@y);
+	callsub(OnCheck, "Callsub return array references", getelementofarray(.@x, 3), 8);
+	deletearray .@x;
+	deletearray .@y;
+	setarray .@x, 1, 2;
+	.@z = getarraysize(.@x);
+	setarray .@y, 5, 6, 7, 8, 9;
+	callsub(OnCheck, "Callsub (copyarray from reference with the same name)", getarraysize(.@y), callsub(OnTestScopeArrays, .@y));
+	callsub(OnCheck, "Callsub (parent array vars isolation)", getarraysize(.@x), .@z);
+	deletearray .@x;
+	deletearray .@y;
+	.x = 2;
+	set getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1;
+	callsub(OnCheck, "Callsub (return NPC variables from another NPC)", callsub(OnTestVarOfAnotherNPC, "TestVarOfAnotherNPC"), 1);
+	callsub(OnCheck, "Callsub (return NPC variables from another NPC - local variable overwrite check)", .x, 2);
+
+	// Callfunc
+	callsub(OnCheck, "Callfunc return value", callfunc("F_TestReturnValue", 1));
+	.@x = 1;
+	callsub(OnCheck, "Callfunc return with scope variables", callfunc("F_TestScopeVars"), 3);
+	callsub(OnCheck, "Callfunc (parent scope vars isolation)", .@x, 1);
+	callsub(OnCheck, "Callfunc (nested scopes)", callfunc("F_TestNestedScope"), 1);
+	callsub(OnCheck, "Callfunc (deeply nested scopes)", callfunc("F_TestDeepNestedScope", 30, 0), 1);
+	deletearray .@x;
+	setarray .@x, 1, 2, 3, 4;
+	callsub(OnCheck, "Callfunc (array references)", callfunc("F_TestArrayRefs", .@x), 4);
+	deletearray .@x;
+	.@y = callfunc("F_TestReturnArrayRef", .@x);
+	callsub(OnCheck, "Callfunc return array references (size check)", getarraysize(.@x), .@y);
+	callsub(OnCheck, "Callfunc return array references", getelementofarray(.@x, 3), 8);
+	deletearray .@x;
+	deletearray .@y;
+	setarray .@x, 1, 2;
+	.@z = getarraysize(.@x);
+	setarray .@y, 5, 6, 7, 8, 9;
+	callsub(OnCheck, "Callfunc (copyarray from reference with the same name)", getarraysize(.@y), callfunc("F_TestScopeArrays", .@y));
+	callsub(OnCheck, "Callfunc (parent array vars isolation)", getarraysize(.@x), .@z);
+	deletearray .@x;
+	deletearray .@y;
+	.x = 1;
+	callsub(OnCheck, "Callfunc return with NPC variables", callfunc("F_TestNPCVars"), 3);
+	callsub(OnCheck, "Callfunc (parent NPC vars isolation)", .x, 1);
+	callsub(OnCheck, "Callfunc (nested scopes and NPC variables)", callfunc("F_TestNestedScopeNPC"), 1);
+	callsub(OnCheck, "Callfunc (deeply nested scopes and NPC variables)", callfunc("F_TestDeepNestedScopeNPC", 30, 0), 1);
+	deletearray .x;
+	setarray .x, 1, 2, 3, 4;
+	callsub(OnCheck, "Callfunc (array references and NPC variables)", callfunc("F_TestArrayRefs", .x), 4);
+	deletearray .x;
+	.y = callfunc("F_TestReturnArrayRef", .x);
+	callsub(OnCheck, "Callfunc return array references with NPC variables (size check)", getarraysize(.x), .y);
+	callsub(OnCheck, "Callfunc return array references wuth NPC variables", getelementofarray(.x, 3), 8);
+	deletearray .x;
+	deletearray .y;
+	setarray .x, 1, 2;
+	.@z = getarraysize(.@x);
+	setarray .y, 5, 6, 7, 8, 9;
+	callsub(OnCheck, "Callfunc (copyarray from NPC variable reference with the same name)", getarraysize(.@y), callfunc("F_TestNPCArrays", .@y));
+	callsub(OnCheck, "Callfunc (parent array NPC vars isolation)", getarraysize(.@x), .@z);
+	deletearray .x;
+	deletearray .y;
+	.x = 2;
+	set getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1;
+	callsub(OnCheck, "Callfunc (return NPC variables from another NPC)", callfunc("F_TestVarOfAnotherNPC", "TestVarOfAnotherNPC"), 1);
+	callsub(OnCheck, "Callfunc (return NPC variables from another NPC - local variable overwrite check)", .x, 2);
+
+	if (.errors) {
+		debugmes "Script engine self-test   [ \033[0;31mFAILED\033[0m ]";
+		debugmes "**** The test was completed with " + .errors + " errors. ****";
+	} else {
+		debugmes "Script engine self-test   [ \033[0;32mPASSED\033[0m ]";
+	}
+	return .errors;
+	end;
+
+OnTestReturnValue:
+	return getarg(0);
+
+OnTestScopeVars:
+	.@x = 2;
+	return .@x+1;
+
+OnTestDeepNestedScope:
+	if (getarg(0) <= 0)
+		return getarg(1); // Stop recursion
+	if (getarg(1))
+		return callsub(OnTestDeepNestedScope, getarg(0)-1, getarg(1)); // Recursion step
+	.@x = 1;
+	return callsub(OnTestDeepNestedScope, getarg(0)-1, .@x); // First step
+
+OnTestNestedScope:
+	.@x = 1;
+	.@y = callsub(OnTestReturnValue, .@x);
+	return .@y;
+
+OnTestArrayRefs:
+	return getelementofarray(getarg(0), getarraysize(getarg(0)) - 1);
+
+OnTestReturnArrayRef:
+	setarray getarg(0), 5, 6, 7, 8;
+	return getarraysize(getarg(0));
+
+OnTestScopeArrays:
+	setarray .@x, 1, 2, 3, 4;
+	copyarray .@y, getarg(0), getarraysize(getarg(0));
+	return getarraysize(.@y);
+
+OnTestVarOfAnotherNPC:
+	return getvariableofnpc(.x, getarg(0));
+
+OnReportError:
+	.@msg$ = getarg(0,"Unknown Error");
+	.@val$ = getarg(1,"");
+	.@ref$ = getarg(2,"");
+	if (.errors == 1)
+		debugmes "**** WARNING: Any self-test results past this point are unreliable because of previous errors. ****";
+	debugmes "Error: "+.@msg$+": '"+.@val$+"' (found) != '"+.@ref$+"' (expected)";
+	++.errors;
+	//end;
+	return;
+
+OnCheck:
+	.@msg$ = getarg(0,"Unknown Error");
+	.@val = getarg(1,0);
+	.@ref = getarg(2,1);
+	if (.@val != .@ref) {
+		callsub(OnReportError, .@msg$, ""+.@val, ""+.@ref); // String coercion
+	}
+	return;
+OnCheckStr:
+	.@msg$ = getarg(0,"Unknown Error");
+	.@val$ = getarg(1,"");
+	.@ref$ = getarg(2,"");
+	if (.@val$ != .@ref$) {
+		callsub(OnReportError, .@msg$, .@val$, .@ref$);
+	}
+	return;
+OnSetReference:
+	set getarg(0), getarg(0) + 1;
+	return getarg(0);
+}
+
+-	script	HerculesSelfTest	-1,{
+	end;
+
+OnInit:
+	callfunc("HerculesSelfTestHelper");
+	end;
+}

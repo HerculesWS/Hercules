@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Lighthalzen Guides
 //===== By: ==================================================
 //= MasterOfMuppets; L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Official Conversion]
 //= Guides for the City of Lighthalzen
@@ -15,7 +13,7 @@
 //= 1.2 Rescripted to official 10.3 standards. [L0ne_W0lf]
 //============================================================
 
-lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	852,{
+lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	4_M_EIN_SOLDIER,{
 	cutin "ein_soldier",2;
 	mes "[Lighthalzen Guide]";
 	mes "Welcome to Lighthalzen,";
@@ -24,7 +22,7 @@ lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	852,{
 	mes "around the city, feel free";
 	mes "to ask me and I'll do my";
 	mes "very best to help you.";
-	set .@loop1,1;
+	.@loop1 = 1;
 	while (.@loop1) {
 		next;
 		switch(select("City Guide:Remove Marks from Mini-Map:Notice.:Cancel")) {
@@ -44,11 +42,11 @@ lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	852,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes.:No.") == 1) set .@compass_check,1;
+				if (select("Yes.:No.") == 1) .@compass_check = 1;
 			}
-			set .@loop2,1;
+			.@loop2 = 1;
 			while(.@loop2) {
-				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 				switch(select("^FF0000Rekenber Corporation^000000:Train Station:Police Station:Bank:Hotel:Airport:Merchant Guild:Jewelry Shop:Weapon Shop:Departement Store:Cancel")) {
 				case 1:
@@ -80,7 +78,7 @@ lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	852,{
 					mes "activity, or if you have any";
 					mes "problems whatsoever.";
 					if (.@compass_check)
-						viewpoint 1,236,276,4,0x99FFFFF;
+						viewpoint 1,236,276,4,0x99FFFF;
 					break;
 				case 4:
 					mes "[Lighthalzen Guide]";
@@ -156,7 +154,7 @@ lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	852,{
 					mes "no longer wish to have the";
 					mes "location marks displayed";
 					mes "on your Mini-Map.";
-					set .@loop2,0;
+					.@loop2 = 0;
 				}
 			}
 			break;
@@ -171,7 +169,7 @@ lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	852,{
 			viewpoint 2,93,110,9,0xFF9900;
 			viewpoint 2,196,46,10,0x330033;
 			viewpoint 2,199,163,11,0xFFFF00;
-			set .@compass_check,0;
+			.@compass_check = 0;
 			break;
 		case 3:
 			mes "[Lighthalzen Guide]";
@@ -213,15 +211,15 @@ lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	852,{
 			mes "We hope that you enjoy";
 			mes "our fair city, adventurer.";
 			close2;
-			set .@loop1,0;
+			.@loop1 = 0;
 		}
 	}
 	cutin "ein_soldier",255;
 	end;
 }
 
-lighthalzen,220,311,3	duplicate(LhzGuide)	Guide#2lhz	852
+lighthalzen,220,311,3	duplicate(LhzGuide)	Guide#2lhz	4_M_EIN_SOLDIER
 
-lighthalzen,154,100,5	duplicate(LhzGuide)	Guide#3lhz	852
+lighthalzen,154,100,5	duplicate(LhzGuide)	Guide#3lhz	4_M_EIN_SOLDIER
 
-lighthalzen,307,224,3	duplicate(LhzGuide)	Guide#4lhz	852
+lighthalzen,307,224,3	duplicate(LhzGuide)	Guide#4lhz	4_M_EIN_SOLDIER

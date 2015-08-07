@@ -1,20 +1,29 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _INT_MERCENARY_SQL_H_
-#define _INT_MERCENARY_SQL_H_
+#ifndef CHAR_INT_MERCENARY_H
+#define CHAR_INT_MERCENARY_H
 
-struct s_mercenary;
+#include "common/cbasetypes.h"
 
-int inter_mercenary_sql_init(void);
-void inter_mercenary_sql_final(void);
-int inter_mercenary_parse_frommap(int fd);
+struct mmo_charstatus;
 
-// Mercenary Owner Database
-bool mercenary_owner_fromsql(int char_id, struct mmo_charstatus *status);
-bool mercenary_owner_tosql(int char_id, struct mmo_charstatus *status);
-bool mercenary_owner_delete(int char_id);
+#ifdef HERCULES_CORE
+void inter_mercenary_defaults(void);
+#endif // HERCULES_CORE
 
-bool mapif_mercenary_delete(int merc_id);
+/**
+ * inter_mercenary interface
+ **/
+struct inter_mercenary_interface {
+	bool (*owner_fromsql) (int char_id, struct mmo_charstatus *status);
+	bool (*owner_tosql) (int char_id, struct mmo_charstatus *status);
+	bool (*owner_delete) (int char_id);
+	int (*sql_init) (void);
+	void (*sql_final) (void);
+	int (*parse_frommap) (int fd);
+};
 
-#endif /* _INT_MERCENARY_SQL_H_ */
+struct inter_mercenary_interface *inter_mercenary;
+
+#endif /* CHAR_INT_MERCENARY_H */

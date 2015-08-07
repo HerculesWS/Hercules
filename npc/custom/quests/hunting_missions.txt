@@ -1,17 +1,27 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Hunting Missions
 //===== By: ==================================================
 //= Euphy
 //===== Current Version: =====================================
-//= 1.3
-//===== Compatible With: ===================================== 
-//= rAthena SVN
+//= 1.4b
 //===== Description: =========================================
 //= Random hunting missions.
 //= Rewards are based on quest difficulty.
+//===== Additional Comments: =================================
+//= 1.0 Initial script.
+//= 1.1 Small improvements and fixes.
+//= 1.2 Added party support and replaced blacklists with an
+//=     SQL query, both thanks to AnnieRuru.
+//= 1.3 Re-added a blacklist adapted for the SQL query.
+//= 1.3a Added mission reset options.
+//= 1.4 Fix ranking table using new SQL database [ossi0110]
+//= 1.4a Fix a bug when a character has deleted, that account
+//=     can't do mission. [AnnieRuru]
+//= 1.4b Update to follow author's method on fixing
+//=     character deletion bug [AnnieRuru]
 //============================================================
 
-prontera,152,187,6	script	Hunting Missions	951,{
+prontera,152,187,6	script	Hunting Missions	4_F_EDEN_MASTER,{
 function Chk; function Cm;
 	mes "[Hunting Missions]";
 	mes "Hello, "+strcharinfo(0)+"!";
@@ -36,9 +46,21 @@ function Chk; function Cm;
 	switch(select(((!Mission0)?" ~ New Mission::":": ~ Mission Status: ~ Abandon Mission")+": ~ Information: ~ Mission Shop: ~ View Top Hunters: ~ ^777777Cancel^000000")) {
 	case 1:
 		mes "[Hunting Missions]";
-		if (#Mission_Count) {
+		if ( #Mission_Count ) {
 			mes "You've started a mission";
 			mes "on another character.";
+			if ( !@hm_char_del_check ) {
+				if ( !query_sql( "SELECT 1 FROM `char_reg_num_db` WHERE `key` = 'Mission0' AND `char_id` IN ( SELECT `char_id` FROM `char` WHERE `account_id` = "+ getcharid(3) +" )", .@dummy ) ) {
+					next;
+					mes "[Hunting Missions]";
+					mes "I can't seem to find any records";
+					mes "for that character, though...";
+					mes "One moment, please.";
+					emotion e_hmm;
+					set #Mission_Count, 0;
+				}
+				set @hm_char_del_check, 1;
+			}
 			close;
 		}
 		if (#Mission_Delay > gettimetick(2) && .Delay) {
@@ -72,10 +94,24 @@ function Chk; function Cm;
 		mes "[Hunting Missions]";
 		mes "Do you really want to";
 		mes "abandon your mission?";
-		if (.Delay) mes "Your delay time will not be reset.";
+		if (.Reset < 0 && .Delay)
+			mes "Your delay time will not be reset.";
+		else if (.Reset > 0)
+			mes "It will cost "+Cm(.Reset)+" Zeny.";
 		next;
 		switch(select(" ~ Abandon...: ~ ^777777Cancel^000000")) {
 		case 1:
+			if (.Reset > 0) {
+				if (Zeny < .Reset) {
+					mes "[Hunting Missions]";
+					mes "You don't have enough";
+					mes "Zeny to drop this mission.";
+					emotion e_sry;
+					close;
+				}
+				Zeny -= .Reset;
+				emotion e_cash;
+			}
 			mes "[Hunting Missions]";
 			mes "Alright, I've dropped";
 			mes "your current mission.";
@@ -85,7 +121,7 @@ function Chk; function Cm;
 				setd "Mission"+.@i+"_",0;
 			}
 			set #Mission_Count,0;
-			if (.Delay) set #Mission_Delay, gettimetick(2)+(.Delay*3600);
+			if (.Reset < 0 && .Delay) set #Mission_Delay, gettimetick(2)+(.Delay*3600);
 			close;
 		case 2:
 			mes "[Hunting Missions]";
@@ -107,7 +143,7 @@ function Chk; function Cm;
 	case 6:
 		mes "[Hunting Missions]";
 		mes "The top hunters are:";
-		query_sql("SELECT char_id AS id, (SELECT `name` FROM `char` WHERE char_id = id),`value` FROM `global_reg_value` WHERE str = 'Mission_Total' ORDER BY CAST(`value` AS SIGNED) DESC LIMIT 5",.@id,.@name$,.@val);
+		query_sql("SELECT char_id AS id, (SELECT `name` FROM `char` WHERE char_id = id),`value` FROM `char_reg_num_db` WHERE `key` = 'Mission_Total' ORDER BY `value` DESC LIMIT 5",.@id,.@name$,.@val);
 		for(set .@i,0; .@i<5; set .@i,.@i+1)
 			mes "  [Rank "+(.@i+1)+"]  "+((.@name$[.@i] == "")?"^777777none":"^0055FF"+.@name$[.@i]+"^000000 : ^FF0000"+.@val[.@i]+" pt.")+"^000000";
 		close;
@@ -133,7 +169,7 @@ Mission_Status:
 	set .@Mission_Points, 3+(.@j[.Quests]/.Quests/6);
 	set .@Base_Exp, #Mission_Count*.@j[.Quests+1]/5;
 	set .@Job_Exp, #Mission_Count*.@j[.Quests+2]/5;
-	set .@Zeny, #Mission_Count*.Quests*.@j[.@i]*.Modifier[2];
+	set .@zeny, #Mission_Count*.Quests*.@j[.@i]*.Modifier[2];
 
 	next;
 	mes "[Hunting Missions]";
@@ -141,7 +177,7 @@ Mission_Status:
 	mes " > Mission Points: ^0055FF"+.@Mission_Points+"^000000";
 	mes " > Base Experience: ^0055FF"+Cm(.@Base_Exp)+"^000000";
 	mes " > Job Experience: ^0055FF"+Cm(.@Job_Exp)+"^000000";
-	mes " > Zeny: ^0055FF"+Cm(.@Zeny)+"^000000";
+	mes " > Zeny: ^0055FF"+Cm(.@zeny)+"^000000";
 	if (@f) { set @f,0; return; }
 	next;
 	mes "[Hunting Missions]";
@@ -154,7 +190,7 @@ Mission_Status:
 	set #Mission_Points, #Mission_Points+.@Mission_Points;
 	set BaseExp, BaseExp+.@Base_Exp;
 	set JobExp, JobExp+.@Job_Exp;
-	set Zeny, Zeny+.@Zeny;
+	Zeny += .@zeny;
 	for(set .@i,0; .@i<.Quests; set .@i,.@i+1) {
 		setd "Mission"+.@i,0;
 		setd "Mission"+.@i+"_",0;
@@ -162,8 +198,8 @@ Mission_Status:
 	set #Mission_Count,0;
 	if (.Delay) set #Mission_Delay, gettimetick(2)+(.Delay*3600);
 	set Mission_Total, Mission_Total+1;
-	if (Mission_Total == 1) query_sql("INSERT INTO `global_reg_value` (`char_id`,`str`,`value`,`type`,`account_id`) VALUES ("+getcharid(0)+",'Mission_Total','1',3,0)");
-	else query_sql("UPDATE `global_reg_value` SET `value` = "+Mission_Total+" WHERE char_id = "+getcharid(0)+" AND `str` = 'Mission_Total'");
+	if (Mission_Total == 1) query_sql("INSERT INTO `char_reg_num_db` (`char_id`,`key`,`index`,`value`) VALUES ("+getcharid(0)+",'Mission_Total','0',1)");
+	else query_sql("UPDATE `char_reg_num_db` SET `value` = "+Mission_Total+" WHERE `char_id` = "+getcharid(0)+" AND `key` = 'Mission_Total'");
 	close;
 
 Mission_Info:
@@ -240,7 +276,7 @@ OnNPCKillEvent:
 		for(set .@i,0; .@i<$@partymembercount; set .@i,.@i+1) {
 			if (isloggedin($@partymemberaid[.@i], $@partymembercid[.@i])) {
 				attachrid $@partymemberaid[.@i];
-				if (#Mission_Count && Mission0 && HP > 0) {
+				if (#Mission_Count && Mission0 && Hp > 0) {
 					getmapxy(.@map2$,.@x2,.@y2,0);
 					if ((.@map1$ == .@map2$ || .Party == 1) && (distance(.@x1,.@y1,.@x2,.@y2) <= 30 || .Party < 3)) {
 						for(set .@j,0; .@j<.Quests; set .@j,.@j+1) {
@@ -262,6 +298,7 @@ OnInit:
 	set .Delay,12;		// Quest delay, in hours (0 to disable).
 	set .Quests,4;		// Number of subquests per mission (increases rewards).
 	set .Party,3;		// Party options: 0 (exclude party kills), 1 (include party kills), 2 (same map only), 3 (screen area only)
+	set .Reset,-1;		// Reset options: -1 (abandoning mission sets delay time), 0 (no delay time), [Zeny] (cost to abandon mission, no delay time)
 	setarray .Count[0],	// Min and max monsters per subquest (increases rewards).
 		40,70;
 	setarray .Modifier[0],	// Multipliers for Base Exp, Job Exp, and Zeny rewards.

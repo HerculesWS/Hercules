@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Moscovia Guides
 //===== By: ==================================================
 //= Kisuka
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Official Conversion]
 //= Guides for the town of Moscovia.
@@ -13,7 +11,7 @@
 //= 1.0 First Version. [Kisuka]
 //============================================================
 
-moscovia,161,76,4	script	Moscovia Guide#mosk	959,{
+moscovia,161,76,4	script	Moscovia Guide#mosk	4_F_RUSWOMAN1,{
 	mes "[Moscovia Guide]";
 	mes "Welcome to Moscovia";
 	mes "Here is the paradise spreading on";

@@ -1,0 +1,110 @@
+//===== Hercules==============================================
+//= Mapflag: Zone.
+//===== By: ==================================================
+//= Ind/Hercules
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= Flags maps as part of zones defined in map_zone_db.txt
+//===== Additional Comments: =================================
+//============================================================
+
+//Aldebaran Turbo Track
+alde_tt02	mapflag	zone	Aldebaran Turbo Track
+turbo_n_1	mapflag	zone	Aldebaran Turbo Track
+turbo_n_4	mapflag	zone	Aldebaran Turbo Track
+turbo_n_8	mapflag	zone	Aldebaran Turbo Track
+turbo_n_16	mapflag	zone	Aldebaran Turbo Track
+turbo_e_4	mapflag	zone	Aldebaran Turbo Track
+turbo_e_8	mapflag	zone	Aldebaran Turbo Track
+turbo_e_16	mapflag	zone	Aldebaran Turbo Track
+
+//Jail
+sec_pri	mapflag	zone	Jail
+
+//Izlude Battle Arena
+force_1-1	mapflag	zone	Izlude Battle Arena
+force_2-1	mapflag	zone	Izlude Battle Arena
+force_3-1	mapflag	zone	Izlude Battle Arena
+force_4-1	mapflag	zone	Izlude Battle Arena
+force_5-1	mapflag	zone	Izlude Battle Arena
+force_1-2	mapflag	zone	Izlude Battle Arena
+force_1-3	mapflag	zone	Izlude Battle Arena
+prt_are_in	mapflag	zone	Izlude Battle Arena
+
+//Sealed Shrine ==================
+1@cata	mapflag	zone	Sealed Shrine
+2@cata	mapflag	zone	Sealed Shrine
+
+//Endless Tower ==================
+1@tower	mapflag	zone	Memorial Dungeon
+2@tower	mapflag	zone	Memorial Dungeon
+3@tower	mapflag	zone	Memorial Dungeon
+4@tower	mapflag	zone	Memorial Dungeon
+5@tower	mapflag	zone	Memorial Dungeon
+6@tower	mapflag	zone	Memorial Dungeon
+
+//Orc's Memory ===================
+1@orcs	mapflag	zone	Memorial Dungeon
+2@orcs	mapflag	zone	Memorial Dungeon
+
+// Nidhoggr's Instance ===========
+1@nyd	mapflag	zone	Memorial Dungeon
+2@nyd	mapflag	zone	Memorial Dungeon
+
+// Misty Forest Labyrinth ===========
+1@mist	mapflag	zone	Memorial Dungeon
+
+// Octopus Cave ===========
+1@cash	mapflag	zone	Memorial Dungeon
+
+// Drain ===========
+1@pump	mapflag	zone	Memorial Dungeon
+2@pump	mapflag	zone	Memorial Dungeon
+
+// Somatology Laboratory ===========
+1@lhz	mapflag	zone	Memorial Dungeon
+
+// Bangungot Hospital F2 ===========
+1@ma_h	mapflag	zone	Memorial Dungeon
+
+// Buwaya Cave ===========
+1@ma_c	mapflag	zone	Memorial Dungeon
+
+// Bakonawa Hideout ===========
+1@ma_b	mapflag	zone	Memorial Dungeon
+
+// Inside Eclage ===========
+1@ecl	mapflag	zone	Memorial Dungeon
+
+//Towns
+alberta	mapflag	zone	Towns
+aldebaran	mapflag	zone	Towns
+amatsu	mapflag	zone	Towns
+ayothaya	mapflag	zone	Towns
+brasilis	mapflag	zone	Towns
+comodo	mapflag	zone	Towns
+einbroch	mapflag	zone	Towns
+einbech	mapflag	zone	Towns
+geffen	mapflag	zone	Towns
+gonryun	mapflag	zone	Towns
+izlude	mapflag	zone	Towns
+jawaii	mapflag	zone	Towns
+hugel	mapflag	zone	Towns
+lighthalzen	mapflag	zone	Towns
+louyang	mapflag	zone	Towns
+manuk	mapflag	zone	Towns
+mid_camp	mapflag	zone	Towns
+moc_ruins	mapflag	zone	Towns
+morocc	mapflag	zone	Towns
+moscovia	mapflag	zone	Towns
+niflheim	mapflag	zone	Towns
+prontera	mapflag	zone	Towns
+payon	mapflag	zone	Towns
+pay_arche	mapflag	zone	Towns
+rachel	mapflag	zone	Towns
+splendide	mapflag	zone	Towns
+umbala	mapflag	zone	Towns
+veins	mapflag	zone	Towns
+xmas	mapflag	zone	Towns
+yuno	mapflag	zone	Towns

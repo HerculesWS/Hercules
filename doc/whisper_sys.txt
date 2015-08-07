@@ -1,4 +1,4 @@
-//===== Hercules Documentation ================================
+//===== Hercules Documentation ===============================
 //= NPC Whisper System
 //===== By: ==================================================
 //= lordalfa

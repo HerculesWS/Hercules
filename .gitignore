@@ -1,5 +1,11 @@
 #Global
+.Apple*
 .DS_Store
+._*
+.clang_complete
+.local.vimrc
+.ycm_extra_conf.py*
+Thumbs.db
 
 # /
 /*.exe
@@ -13,6 +19,10 @@
 /*.sdf
 /*.stackdump
 /*.suo
+/*.exp
+/*.lib
+/autom4te.cache/
+/start-log.txt
 /char-server
 /config.log
 /config.status
@@ -24,8 +34,16 @@
 /map-server
 /mapcache
 
+# /plugins -- everything
+/plugins/
+
 #OSX Xcode project user-sensitive-stuff
+/DerivedData
 /Hercules
+/build
+/Hercules.xcodeproj/xcuserdata
+/Hercules.xcodeproj/project.xcworkspace/xcuserdata/
+/Hercules.xcodeproj/project.xcworkspace/xcshareddata/Hercules.xccheckout
 
 # /3rdparty/libconfig/
 /3rdparty/libconfig/Makefile
@@ -34,6 +52,9 @@
 # /3rdparty/mt19937ar/
 /3rdparty/mt19937ar/Makefile
 /3rdparty/mt19937ar/*.o
+
+# /cache/
+/cache/
 
 # /conf/
 /conf/import
@@ -50,17 +71,15 @@
 /src/common/Makefile
 /src/common/obj_all
 /src/common/obj_sql
-/src/common/svnversion.h
+/src/common/sysinfo.inc
 
 # /src/login/
 /src/login/Makefile
-/src/login/obj_txt
 /src/login/obj_sql
 
 # /src/map/
 /src/map/Makefile
 /src/map/obj_sql
-/src/map/obj_txt
 /src/map/pcre.h
 
 # /src/test/
@@ -71,42 +90,22 @@
 /src/tool/Makefile
 /src/tool/obj_all
 
+# /src/plugins/
+/src/plugins/Makefile
+
 # /tools/
 /tools/convert
 /tools/adduser
 /tools/*.exe
 /tools/*.ilk
 /tools/*.pdb
+/tools/HPMHookGen/Makefile
+/tools/HPMHookGen/doxyoutput
 
-# /vcproj-12/
-/vcproj-12/map-server
-/vcproj-12/char-server
-/vcproj-12/login-server
-/vcproj-12/char-server_sql
-/vcproj-12/login-server_sql
-/vcproj-12/mapcache
-/vcproj-12/map-server_sql
-/vcproj-12/*.user
-/vcproj-12/plugin-sample/
-
-# /vcproj-10/
-/vcproj-10/map-server
-/vcproj-10/char-server
-/vcproj-10/login-server
-/vcproj-10/char-server_sql
-/vcproj-10/login-server_sql
-/vcproj-10/mapcache
-/vcproj-10/map-server_sql
-/vcproj-10/*.user
-/vcproj-10/plugin-sample/
-
-# /vcproj-9/
-/vcproj-9/*.user
-/vcproj-9/char-server
-/vcproj-9/login-server
-/vcproj-9/map-server
-/vcproj-9/char-server_sql
-/vcproj-9/login-server_sql
-/vcproj-9/map-server_sql
-/vcproj-9/mapcache
-/vcproj-9/plugin-sample/
+# /vcproj-*
+/vcproj-*/*.user
+/vcproj-*/char-server
+/vcproj-*/login-server
+/vcproj-*/map-server
+/vcproj-*/mapcache
+/vcproj-*/plugin-*/

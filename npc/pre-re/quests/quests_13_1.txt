@@ -1,17 +1,13 @@
 //===== Hercules Script ======================================
 //= Quest NPCs related to Ash-Vacuum
 //===== By: ==================================================
-//= Streusel
+//= Euphy
 //===== Current Version: =====================================
 //= 1.0
 //===== Description: =========================================
-//= [Official Conversion]
-//= Contains:
-//= Promotional Staff Duplicate for pre-renewal
+//= Contains duplicate NPCs from main script.
 //===== Additional Comments: =================================
-//= 1.0 First Version. [Streusel]
+//= 1.0 Moved Izlude NPC to pre-re/re paths. [Euphy]
 //============================================================
 
-// Onward to the New World
-//============================================================
-izlude,101,173,6	duplicate(Promotional Staff#iz)	Promotional Staff#izlude	100
+izlude,101,173,6	duplicate(PromotionalStaff_izlude)	Promotional Staff#iz	4W_SAILOR

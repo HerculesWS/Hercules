@@ -4,8 +4,6 @@
 //= Nana (1.0)
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Description: =========================================
 //= Warp Points for Prontera Field
 //===== Additional Comments: =================================

@@ -1,31 +1,33 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/sql.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "login.h"
+#define HERCULES_CORE
+
 #include "ipban.h"
-#include "loginlog.h"
+
+#include "login/login.h"
+#include "login/loginlog.h"
+#include "common/cbasetypes.h"
+#include "common/nullpo.h"
+#include "common/sql.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+
 #include <stdlib.h>
-#include <string.h>
 
 // global sql settings
 static char   global_db_hostname[32] = "127.0.0.1";
 static uint16 global_db_port = 3306;
 static char   global_db_username[32] = "ragnarok";
-static char   global_db_password[32] = "ragnarok";
+static char   global_db_password[100] = "ragnarok";
 static char   global_db_database[32] = "ragnarok";
 static char   global_codepage[32] = "";
 // local sql settings
 static char   ipban_db_hostname[32] = "";
 static uint16 ipban_db_port = 0;
 static char   ipban_db_username[32] = "";
-static char   ipban_db_password[32] = "";
+static char   ipban_db_password[100] = "";
 static char   ipban_db_database[32] = "";
 static char   ipban_codepage[32] = "";
 static char   ipban_table[32] = "ipbanlist";
@@ -35,7 +37,7 @@ static Sql* sql_handle = NULL;
 static int cleanup_timer_id = INVALID_TIMER;
 static bool ipban_inited = false;
 
-int ipban_cleanup(int tid, unsigned int tick, int id, intptr_t data);
+int ipban_cleanup(int tid, int64 tick, int id, intptr_t data);
 
 
 // initialize
@@ -73,20 +75,20 @@ void ipban_init(void)
 	}
 
 	// establish connections
-	sql_handle = Sql_Malloc();
-	if( SQL_ERROR == Sql_Connect(sql_handle, username, password, hostname, port, database) )
+	sql_handle = SQL->Malloc();
+	if( SQL_ERROR == SQL->Connect(sql_handle, username, password, hostname, port, database) )
 	{
 		Sql_ShowDebug(sql_handle);
-		Sql_Free(sql_handle);
+		SQL->Free(sql_handle);
 		exit(EXIT_FAILURE);
 	}
-	if( codepage[0] != '\0' && SQL_ERROR == Sql_SetEncoding(sql_handle, codepage) )
+	if( codepage[0] != '\0' && SQL_ERROR == SQL->SetEncoding(sql_handle, codepage) )
 		Sql_ShowDebug(sql_handle);
 
 	if( login_config.ipban_cleanup_interval > 0 )
 	{ // set up periodic cleanup of connection history and active bans
-		add_timer_func_list(ipban_cleanup, "ipban_cleanup");
-		cleanup_timer_id = add_timer_interval(gettick()+10, ipban_cleanup, 0, 0, login_config.ipban_cleanup_interval*1000);
+		timer->add_func_list(ipban_cleanup, "ipban_cleanup");
+		cleanup_timer_id = timer->add_interval(timer->gettick()+10, ipban_cleanup, 0, 0, login_config.ipban_cleanup_interval*1000);
 	} else // make sure it gets cleaned up on login-server start regardless of interval-based cleanups
 		ipban_cleanup(0,0,0,0);
 }
@@ -99,12 +101,12 @@ void ipban_final(void)
 
 	if( login_config.ipban_cleanup_interval > 0 )
 		// release data
-		delete_timer(cleanup_timer_id, ipban_cleanup);
-	
+		timer->delete(cleanup_timer_id, ipban_cleanup);
+
 	ipban_cleanup(0,0,0,0); // always clean up on login-server stop
 
 	// close connections
-	Sql_Free(sql_handle);
+	SQL->Free(sql_handle);
 	sql_handle = NULL;
 }
 
@@ -113,6 +115,8 @@ bool ipban_config_read(const char* key, const char* value)
 {
 	const char* signature;
 
+	nullpo_ret(key);
+	nullpo_ret(value);
 	if( ipban_inited )
 		return false;// settings can only be changed before init
 
@@ -207,7 +211,7 @@ bool ipban_check(uint32 ip)
 	if( !login_config.ipban )
 		return false;// ipban disabled
 
-	if( SQL_ERROR == Sql_Query(sql_handle, "SELECT count(*) FROM `%s` WHERE `rtime` > NOW() AND (`list` = '%u.*.*.*' OR `list` = '%u.%u.*.*' OR `list` = '%u.%u.%u.*' OR `list` = '%u.%u.%u.%u')",
+	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT count(*) FROM `%s` WHERE `rtime` > NOW() AND (`list` = '%u.*.*.*' OR `list` = '%u.%u.*.*' OR `list` = '%u.%u.%u.*' OR `list` = '%u.%u.%u.%u')",
 		ipban_table, p[3], p[3], p[2], p[3], p[2], p[1], p[3], p[2], p[1], p[0]) )
 	{
 		Sql_ShowDebug(sql_handle);
@@ -215,12 +219,12 @@ bool ipban_check(uint32 ip)
 		return true;
 	}
 
-	if( SQL_ERROR == Sql_NextRow(sql_handle) )
-		return true;// Shouldn't happen, but just in case...
+	if( SQL_SUCCESS != SQL->NextRow(sql_handle) )
+		return false;
 
-	Sql_GetData(sql_handle, 0, &data, NULL);
+	SQL->GetData(sql_handle, 0, &data, NULL);
 	matches = atoi(data);
-	Sql_FreeResult(sql_handle);
+	SQL->FreeResult(sql_handle);
 
 	return( matches > 0 );
 }
@@ -239,19 +243,20 @@ void ipban_log(uint32 ip)
 	if( failures >= login_config.dynamic_pass_failure_ban_limit )
 	{
 		uint8* p = (uint8*)&ip;
-		if( SQL_ERROR == Sql_Query(sql_handle, "INSERT INTO `%s`(`list`,`btime`,`rtime`,`reason`) VALUES ('%u.%u.%u.*', NOW() , NOW() +  INTERVAL %d MINUTE ,'Password error ban')",
-			ipban_table, p[3], p[2], p[1], login_config.dynamic_pass_failure_ban_duration) )
+		if (SQL_ERROR == SQL->Query(sql_handle, "INSERT INTO `%s`(`list`,`btime`,`rtime`,`reason`) VALUES ('%u.%u.%u.*', NOW() , NOW() +  INTERVAL %d MINUTE ,'Password error ban')",
+			ipban_table, p[3], p[2], p[1], login_config.dynamic_pass_failure_ban_duration))
+		{
 			Sql_ShowDebug(sql_handle);
+		}
 	}
 }
 
 // remove expired bans
-int ipban_cleanup(int tid, unsigned int tick, int id, intptr_t data)
-{
+int ipban_cleanup(int tid, int64 tick, int id, intptr_t data) {
 	if( !login_config.ipban )
 		return 0;// ipban disabled
 
-	if( SQL_ERROR == Sql_Query(sql_handle, "DELETE FROM `ipbanlist` WHERE `rtime` <= NOW()") )
+	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `rtime` <= NOW()", ipban_table) )
 		Sql_ShowDebug(sql_handle);
 
 	return 0;

@@ -2,43 +2,19 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h"  // aMalloc, aRealloc, aFree
-#include "../common/showmsg.h"  // ShowError, ShowWarning
-#include "../common/strlib.h"  // safestrncpy
-#include "battle.h"  // battle_config.*
-#include "clif.h"  // clif->open_search_store_info, clif->search_store_info_*
-#include "pc.h"  // struct map_session_data
-#include "searchstore.h"  // struct s_search_store_info
+#define HERCULES_CORE
 
+#include "searchstore.h" // struct s_search_store_info
 
-/// failure constants for clif functions
-enum e_searchstore_failure {
-	SSI_FAILED_NOTHING_SEARCH_ITEM         = 0,  // "No matching stores were found."
-	SSI_FAILED_OVER_MAXCOUNT               = 1,  // "There are too many results. Please enter more detailed search term."
-	SSI_FAILED_SEARCH_CNT                  = 2,  // "You cannot search anymore."
-	SSI_FAILED_LIMIT_SEARCH_TIME           = 3,  // "You cannot search yet."
-	SSI_FAILED_SSILIST_CLICK_TO_OPEN_STORE = 4,  // "No sale (purchase) information available."
-};
+#include "map/battle.h" // battle_config.*
+#include "map/clif.h" // clif-"open_search_store_info, clif-"search_store_info_*
+#include "map/pc.h" // struct map_session_data
+#include "common/cbasetypes.h"
+#include "common/malloc.h" // aMalloc, aRealloc, aFree
+#include "common/showmsg.h" // ShowError, ShowWarning
+#include "common/strlib.h" // safestrncpy
 
-
-enum e_searchstore_searchtype {
-	SEARCHTYPE_VENDING      = 0,
-	SEARCHTYPE_BUYING_STORE = 1,
-};
-
-
-enum e_searchstore_effecttype {
-	EFFECTTYPE_NORMAL = 0,
-	EFFECTTYPE_CASH   = 1,
-	EFFECTTYPE_MAX
-};
-
-
-/// type for shop search function
-typedef bool (*searchstore_search_t)(struct map_session_data* sd, unsigned short nameid);
-typedef bool (*searchstore_searchall_t)(struct map_session_data* sd, const struct s_search_store_search* s);
-
+struct searchstore_interface searchstore_s;
 
 /// retrieves search function by type
 static inline searchstore_search_t searchstore_getsearchfunc(unsigned char type) {
@@ -135,14 +111,14 @@ void searchstore_query(struct map_session_data* sd, unsigned char type, unsigned
 
 	// validate lists
 	for( i = 0; i < item_count; i++ ) {
-		if( !itemdb_exists(itemlist[i]) ) {
+		if( !itemdb->exists(itemlist[i]) ) {
 			ShowWarning("searchstore_query: Client resolved item %hu is not known.\n", itemlist[i]);
 			clif->search_store_info_failed(sd, SSI_FAILED_NOTHING_SEARCH_ITEM);
 			return;
 		}
 	}
 	for( i = 0; i < card_count; i++ ) {
-		if( !itemdb_exists(cardlist[i]) ) {
+		if( !itemdb->exists(cardlist[i]) ) {
 			ShowWarning("searchstore_query: Client resolved card %hu is not known.\n", cardlist[i]);
 			clif->search_store_info_failed(sd, SSI_FAILED_NOTHING_SEARCH_ITEM);
 			return;
@@ -273,7 +249,7 @@ void searchstore_click(struct map_session_data* sd, int account_id, int store_id
 		return;
 	}
 
-	if( ( pl_sd = map_id2sd(account_id) ) == NULL ) {// no longer online
+	if( ( pl_sd = map->id2sd(account_id) ) == NULL ) {// no longer online
 		clif->search_store_info_failed(sd, SSI_FAILED_SSILIST_CLICK_TO_OPEN_STORE);
 		return;
 	}
@@ -357,7 +333,7 @@ bool searchstore_result(struct map_session_data* sd, unsigned int store_id, int 
 
 void searchstore_defaults (void) {
 	searchstore = &searchstore_s;
-	
+
 	searchstore->open = searchstore_open;
 	searchstore->query = searchstore_query;
 	searchstore->querynext = searchstore_querynext;
@@ -368,5 +344,5 @@ void searchstore_defaults (void) {
 	searchstore->queryremote = searchstore_queryremote;
 	searchstore->clearremote = searchstore_clearremote;
 	searchstore->result = searchstore_result;
-	
+
 }

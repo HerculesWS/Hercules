@@ -5,7 +5,7 @@
 //===== Current Version: =====================================
 //= 1.2
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Warp Points for Amatsu Dungeon
 //===== Additional Comments: =================================
 //= 1.2 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]

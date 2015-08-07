@@ -1,4 +1,4 @@
-//===== Hercules Documentation ================================
+//===== Hercules Documentation ===============================
 //= Packet Structure Notation
 //===== By: ==================================================
 //= Ai4rei

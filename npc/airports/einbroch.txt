@@ -1,14 +1,14 @@
 //===== Hercules Script ======================================
 //= Einbroch Airport Staff
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf, Muad_Dib
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Einbroch Airport Staff
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= Official NPCs.
-//============================================================ 
+//============================================================
 
-airport,143,43,5	script	Airport Staff#airport1a::airport1	90,{
+airport,143,43,5	script	Airport Staff#airport1a::airport1	4_F_01,{
 	mes "[Airport Staff]";
 	mes "Welcome to the";
 	mes "Einbroch Airport,";
@@ -31,7 +31,7 @@ airport,143,43,5	script	Airport Staff#airport1a::airport1	90,{
 				end;
 			}
 			if (Zeny >= 1200) {
-				set Zeny, Zeny - 1200;
+				Zeny -= 1200;
 				warp "airport",148,51;
 				end;
 			}
@@ -51,10 +51,10 @@ airport,143,43,5	script	Airport Staff#airport1a::airport1	90,{
 	close;
 }
 
-airport,158,43,5	duplicate(airport1)	Airport Staff#airport1b	90
-airport,126,43,5	duplicate(airport1)	Airport Staff#airport1c	90
+airport,158,43,5	duplicate(airport1)	Airport Staff#airport1b	4_F_01
+airport,126,43,5	duplicate(airport1)	Airport Staff#airport1c	4_F_01
 
-airport,143,49,3	script	Arrival Staff#airport2a::airport2	90,{
+airport,143,49,3	script	Arrival Staff#airport2a::airport2	4_F_01,{
 	mes "[Arrival Staff]";
 	mes "Welcome to Einbroch Airport.";
 	mes "If you are arriving from your";
@@ -83,10 +83,10 @@ airport,143,49,3	script	Arrival Staff#airport2a::airport2	90,{
 	close;
 }
 
-airport,126,51,3	duplicate(airport2)	Arrival Staff#airport2b	90
-airport,158,50,3	duplicate(airport2)	Arrival Staff#airport2c	90
+airport,126,51,3	duplicate(airport2)	Arrival Staff#airport2b	4_F_01
+airport,158,50,3	duplicate(airport2)	Arrival Staff#airport2c	4_F_01
 
-einbroch,94,267,3	script	Airship Staff#ein01	91,{
+einbroch,94,267,3	script	Airship Staff#ein01	4_F_02,{
 	mes "[Airship Staff]";
 	mes "Welcome to the";
 	mes "Einbroch Airport.";

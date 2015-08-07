@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Payon Guides
 //===== By: ==================================================
 //= kobra_k88; L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.6
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Official COnversion]
 //= Guides for the City of Payon
@@ -16,12 +14,12 @@
 //=     to Muad_Dib
 //= 1.3a Fixed some problems with duplicated text, thanks to muad_dib [MasterOfMuppets]
 //= 1.4 Fitted the many lines into 1 or 2, and corrected some typos [erKURITA]
-//= 1.4a Tixed Archer Village Guide [Lupus] 
+//= 1.4a Tixed Archer Village Guide [Lupus]
 //= 1.5 Removed Duplicates [Silent]
 //= 1.6 Rescripted to official 10.3 standards. [L0ne_W0lf]
 //============================================================
 
-payon,162,67,4	script	Guide#pay	708,{
+payon,162,67,4	script	Guide#pay	4_M_PAY_SOLDIER,{
 	cutin "pay_soldier",2;
 	mes "[Payon Guide]";
 	mes "Welcome to the";
@@ -29,7 +27,7 @@ payon,162,67,4	script	Guide#pay	708,{
 	mes "If you're unfamiliar with this";
 	mes "area, I can help you find what";
 	mes "you're looking for around here.";
-	set .@loop1,1;
+	.@loop1 = 1;
 	while (.@loop1) {
 		next;
 		switch(select("City Guide:Remove Marks from Mini-Map:Notice.:Cancel")) {
@@ -43,11 +41,11 @@ payon,162,67,4	script	Guide#pay	708,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes.:No.") == 1) set .@compass_check,1;
+				if (select("Yes.:No.") == 1) .@compass_check = 1;
 			}
-			set .@loop2,1;
+			.@loop2 = 1;
 			while(.@loop2) {
-				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 				switch(select("^FF0000Archer Guild^000000:Weapon Shop:Tool Shop:Pub:Central Palace:The Empress:Palace Annex:Royal Kitchen:Forge:Cancel")) {
 				case 1:
@@ -135,7 +133,7 @@ payon,162,67,4	script	Guide#pay	708,{
 					mes "no longer wish to have the";
 					mes "location marks displayed";
 					mes "on your Mini-Map.";
-					set .@loop2,0;
+					.@loop2 = 0;
 					break;
 				}
 			}
@@ -150,7 +148,7 @@ payon,162,67,4	script	Guide#pay	708,{
 			viewpoint 2,237,41,8,0x0000FF;
 			viewpoint 2,46,345,9,0x00FF00;
 			viewpoint 2,175,220,10,0xFF0000;
-			set .@compass_check,0;
+			.@compass_check = 0;
 			break;
 		case 3:
 			mes "[Payon Guide]";
@@ -182,15 +180,15 @@ payon,162,67,4	script	Guide#pay	708,{
 			mes "your travels,";
 			mes "brave adventurer.";
 			close2;
-			set .@loop1,0;
+			.@loop1 = 0;
 			break;
 		}
 	}
-	cutin "pay_soldier",255;
+	cutin "",255;
 	end;
 }
 
-pay_arche,85,30,2	script	Guide#2pay	708,{
+pay_arche,85,30,2	script	Guide#2pay	4_M_PAY_SOLDIER,{
 	cutin "pay_soldier",2;
 	mes "[Payon Guide]";
 	mes "Welcome to the";
@@ -198,7 +196,7 @@ pay_arche,85,30,2	script	Guide#2pay	708,{
 	mes "If you're unfamiliar with this";
 	mes "area, I can help you find what";
 	mes "you're looking for around here.";
-	set .@loop1,1;
+	.@loop1 = 1;
 	while (.@loop1) {
 		next;
 		switch(select("City Guide:Remove Marks from Mini-Map:Notice:Cancel")) {
@@ -208,11 +206,11 @@ pay_arche,85,30,2	script	Guide#2pay	708,{
 			if (.@compass_check == 0) {
 				mes "Would you like to leave indicators on the mini-map?";
 				next;
-				if (select("Yes.:No.") == 1) set .@compass_check,1;
+				if (select("Yes.:No.") == 1) .@compass_check = 1;
 			}
-			set .@loop2,1;
+			.@loop2 = 1;
 			while(.@loop2) {
-				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 				switch(select("^FF0000Archer Guild^000000:Tool Shop:Payon Dungeon:Cancel")) {
 				case 1:
@@ -246,7 +244,7 @@ pay_arche,85,30,2	script	Guide#2pay	708,{
 				case 4:
 					mes "[Payon Guide]";
 					mes "If you'd like to erase the marks on the mini-map, select menu, 'Wipe all indicators on the mini-map'.";
-					set @loop2,0;
+					.@loop2 = 0;
 					break;
 				}
 			}
@@ -255,7 +253,7 @@ pay_arche,85,30,2	script	Guide#2pay	708,{
 			viewpoint 2,237,41,0,0xFF00FF;
 			viewpoint 2,237,41,1,0xFF0000;
 			viewpoint 2,46,345,2,0xFF00FF;
-			set .@compass_check,0;
+			.@compass_check = 0;
 			break;
 		case 3:
 			mes "[Payon Guide]";
@@ -287,10 +285,10 @@ pay_arche,85,30,2	script	Guide#2pay	708,{
 			mes "your travels,";
 			mes "brave adventurer.";
 			close2;
-			set .@loop1,0;
+			.@loop1 = 0;
 			break;
 		}
 	}
-	cutin "pay_soldier",255;
+	cutin "",255;
 	end;
 }

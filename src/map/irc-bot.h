@@ -1,14 +1,20 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
-// Base Author: shennetsind @ http://hercules.ws
+// Base Author: shennetsind @ http://herc.ws
 
 
-#ifndef _IRC_BOT_H_
-#define _IRC_BOT_H_
+#ifndef MAP_IRC_BOT_H
+#define MAP_IRC_BOT_H
 
+#include "common/cbasetypes.h"
+
+#define IRC_NICK_LENGTH 40
+#define IRC_IDENT_LENGTH 40
+#define IRC_HOST_LENGTH 63
 #define IRC_FUNC_LENGTH 30
+#define IRC_MESSAGE_LENGTH 500
 
-struct hChSysCh;
+struct channel_data;
 
 struct irc_func {
 	char name[IRC_FUNC_LENGTH];
@@ -18,19 +24,19 @@ struct irc_func {
 struct irc_bot_interface {
 	int fd;
 	bool isIn, isOn;
-	unsigned int last_try;
+	int64 last_try;
 	unsigned char fails;
-	unsigned long ip;
+	uint32 ip;
 	unsigned short port;
 	/* */
-	struct hChSysCh *channel;
+	struct channel_data *channel;
 	/* */
 	struct {
 		struct irc_func **list;
 		unsigned int size;
 	} funcs;
 	/* */
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
 	int (*parse) (int fd);
@@ -39,20 +45,24 @@ struct irc_bot_interface {
 	/* */
 	struct irc_func* (*func_search) (char* function_name);
 	/* */
-	int (*connect_timer) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*identify_timer) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*join_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*connect_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*identify_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*join_timer) (int tid, int64 tick, int id, intptr_t data);
 	/* */
 	void (*send)(char *str);
-	void (*relay) (char *name, char *msg);
+	void (*relay) (const char *name, const char *msg);
 	/* */
 	void (*pong) (int fd, char *cmd, char *source, char *target, char *msg);
-	void (*join) (int fd, char *cmd, char *source, char *target, char *msg);
 	void (*privmsg) (int fd, char *cmd, char *source, char *target, char *msg);
-} irc_bot_s;
+	void (*userjoin) (int fd, char *cmd, char *source, char *target, char *msg);
+	void (*userleave) (int fd, char *cmd, char *source, char *target, char *msg);
+	void (*usernick) (int fd, char *cmd, char *source, char *target, char *msg);
+};
 
 struct irc_bot_interface *ircbot;
 
+#ifdef HERCULES_CORE
 void ircbot_defaults(void);
+#endif // HERCULES_CORE
 
-#endif /* _IRC_BOT_H_ */
+#endif /* MAP_IRC_BOT_H */

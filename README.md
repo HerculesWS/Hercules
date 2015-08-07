@@ -1,5 +1,8 @@
 Hercules
 ========
+
+Build Status: [![Build Status](https://travis-ci.org/HerculesWS/Hercules.png?branch=master)](https://travis-ci.org/HerculesWS/Hercules) 
+
 Table of Contents
 ---------
 * 1 What is Hercules?
@@ -59,7 +62,7 @@ relevant to your Operation System, please refer to the Wiki (links at the end of
 * Linux
 	* (For CentOS)
 		* Step 1: yum install gcc make mysql mysql-devel mysql-server pcre-devel zlib-devel
-			* Step 2: rpm -Uvhhttp://repo.webtatic.com/yum/centos/5/latest.rpm
+			* Step 2: rpm -Uvh http://repo.webtatic.com/yum/centos/5/latest.rpm
 			* Step 3: yum install --enablerepo=webtatic git-all
 			* Step 4: yum install --enablerepo=webtatic --disableexcludes=main git-all
 	* (For Debian/Others)
@@ -128,7 +131,10 @@ The following list of links point to various help files within the GIT, articles
 pages on the Wiki or topics within the Hercules forum.
 
 * Hercules Forums
-	http://hercules.ws/board/
+	http://herc.ws/board/
+
+* Hercules Wiki
+	http://herc.ws/wiki/Main_Page
 
 * GIT Repository URL:
 	https://github.com/HerculesWS/Hercules

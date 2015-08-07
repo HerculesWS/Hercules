@@ -1,8 +1,11 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
-#include "../common/cbasetypes.h"
-#include "../common/des.h"
 
+#define HERCULES_CORE
+
+#include "des.h"
+
+#include "common/cbasetypes.h"
 
 /// DES (Data Encryption Standard) algorithm, modified version.
 /// @see http://www.eathena.ws/board/index.php?autocom=bugtracker&showbug=5099.
@@ -78,8 +81,8 @@ static void E(BIT64* src)
 {
 	BIT64 tmp = {{0}};
 
-if( false )
-{// original
+#if 0
+	// original
 	static const uint8_t expand_table[48] = {
 		32,  1,  2,  3,  4,  5,
 		 4,  5,  6,  7,  8,  9,
@@ -98,18 +101,16 @@ if( false )
 		if( src->b[j / 8 + 4] &  mask[j % 8] )
 			tmp .b[i / 6 + 0] |= mask[i % 6];
 	}
-}
-else
-{// optimized
-	tmp.b[0] = ((src->b[7]<<5) | (src->b[4]>>3)) & 0x3f;	// ..0 vutsr
-	tmp.b[1] = ((src->b[4]<<1) | (src->b[5]>>7)) & 0x3f;	// ..srqpo n
-	tmp.b[2] = ((src->b[4]<<5) | (src->b[5]>>3)) & 0x3f;	// ..o nmlkj
-	tmp.b[3] = ((src->b[5]<<1) | (src->b[6]>>7)) & 0x3f;	// ..kjihg f
-	tmp.b[4] = ((src->b[5]<<5) | (src->b[6]>>3)) & 0x3f;	// ..g fedcb
-	tmp.b[5] = ((src->b[6]<<1) | (src->b[7]>>7)) & 0x3f;	// ..cba98 7
-	tmp.b[6] = ((src->b[6]<<5) | (src->b[7]>>3)) & 0x3f;	// ..8 76543
-	tmp.b[7] = ((src->b[7]<<1) | (src->b[4]>>7)) & 0x3f;	// ..43210 v
-}
+#endif
+	// optimized
+	tmp.b[0] = ((src->b[7]<<5) | (src->b[4]>>3)) & 0x3f; // ..0 vutsr
+	tmp.b[1] = ((src->b[4]<<1) | (src->b[5]>>7)) & 0x3f; // ..srqpo n
+	tmp.b[2] = ((src->b[4]<<5) | (src->b[5]>>3)) & 0x3f; // ..o nmlkj
+	tmp.b[3] = ((src->b[5]<<1) | (src->b[6]>>7)) & 0x3f; // ..kjihg f
+	tmp.b[4] = ((src->b[5]<<5) | (src->b[6]>>3)) & 0x3f; // ..g fedcb
+	tmp.b[5] = ((src->b[6]<<1) | (src->b[7]>>7)) & 0x3f; // ..cba98 7
+	tmp.b[6] = ((src->b[6]<<5) | (src->b[7]>>3)) & 0x3f; // ..8 76543
+	tmp.b[7] = ((src->b[7]<<1) | (src->b[4]>>7)) & 0x3f; // ..43210 v
 
 	*src = tmp;
 }

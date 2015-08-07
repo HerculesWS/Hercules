@@ -2,22 +2,31 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _ATCOMMAND_H_
-#define _ATCOMMAND_H_
+#ifndef MAP_ATCOMMAND_H
+#define MAP_ATCOMMAND_H
 
-#include "../common/db.h"
+#include "map/pc_groups.h"
+#include "common/cbasetypes.h"
+#include "common/conf.h"
+#include "common/db.h"
+
+#include <stdarg.h>
 
 /**
  * Declarations
  **/
 struct map_session_data;
 struct AtCommandInfo;
+struct block_list;
 
 /**
  * Defines
  **/
 #define ATCOMMAND_LENGTH 50
 #define MAX_MSG 1500
+#define msg_txt(idx) atcommand->msg(idx)
+#define msg_sd(sd,msg_number) atcommand->msgsd((sd),(msg_number))
+#define msg_fd(fd,msg_number) atcommand->msgfd((fd),(msg_number))
 
 /**
  * Enumerations
@@ -68,32 +77,63 @@ struct atcommand_interface {
 	/* atcommand binding */
 	struct atcmd_binding_data** binding;
 	int binding_count;
-	unsigned int *group_ids;
 	/* other vars */
 	DBMap* db; //name -> AtCommandInfo
 	DBMap* alias_db; //alias -> AtCommandInfo
+	/**
+	 * msg_table[lang_id][msg_id]
+	 * Server messages (0-499 reserved for GM commands, 500-999 reserved for others)
+	 **/
+	char*** msg_table;
+	uint8 max_message_table;
 	/* */
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
-	bool (*parse) (const int fd, struct map_session_data* sd, const char* message, int type);
+	bool (*exec) (const int fd, struct map_session_data *sd, const char *message, bool player_invoked);
 	bool (*create) (char *name, AtCommandFunc func);
 	bool (*can_use) (struct map_session_data *sd, const char *command);
 	bool (*can_use2) (struct map_session_data *sd, const char *command, AtCommandType type);
-	void (*load_groups) (void);
+	void (*load_groups) (GroupSettings **groups, config_setting_t **commands_, size_t sz);
 	AtCommandInfo* (*exists) (const char* name);
-	int (*msg_read) (const char* cfgName);
+	bool (*msg_read) (const char *cfg_name, bool allow_override);
 	void (*final_msg) (void);
 	/* atcommand binding */
 	struct atcmd_binding_data* (*get_bind_byname) (const char* name);
-} atcommand_s;
+	/* */
+	AtCommandInfo* (*get_info_byname) (const char *name); // @help
+	const char* (*check_alias) (const char *aliasname); // @help
+	void (*get_suggestions) (struct map_session_data* sd, const char *name, bool is_atcmd_cmd); // @help
+	void (*config_read) (const char* config_filename);
+	/* command-specific subs */
+	int (*stopattack) (struct block_list *bl,va_list ap);
+	int (*pvpoff_sub) (struct block_list *bl,va_list ap);
+	int (*pvpon_sub) (struct block_list *bl,va_list ap);
+	int (*atkillmonster_sub) (struct block_list *bl, va_list ap);
+	void (*raise_sub) (struct map_session_data* sd);
+	void (*get_jail_time) (int jailtime, int* year, int* month, int* day, int* hour, int* minute);
+	int (*cleanfloor_sub) (struct block_list *bl, va_list ap);
+	int (*mutearea_sub) (struct block_list *bl,va_list ap);
+	/* */
+	void (*commands_sub) (struct map_session_data* sd, const int fd, AtCommandType type);
+	void (*cmd_db_clear) (void);
+	int (*cmd_db_clear_sub) (DBKey key, DBData *data, va_list args);
+	void (*doload) (void);
+	void (*base_commands) (void);
+	bool (*add) (char *name, AtCommandFunc func, bool replace);
+	const char* (*msg) (int msg_number);
+	void (*expand_message_table) (void);
+	const char* (*msgfd) (int fd, int msg_number);
+	const char* (*msgsd) (struct map_session_data *sd, int msg_number);
+};
 
 struct atcommand_interface *atcommand;
 
-const char* msg_txt(int msg_number);
+#ifdef HERCULES_CORE
 void atcommand_defaults(void);
+#endif // HERCULES_CORE
+
 /* stay here */
 #define ACMD(x) static bool atcommand_ ## x (const int fd, struct map_session_data* sd, const char* command, const char* message, struct AtCommandInfo *info)
-#define ACMD_A(x) atcommand_ ## x
 
-#endif /* _ATCOMMAND_H_ */
+#endif /* MAP_ATCOMMAND_H */

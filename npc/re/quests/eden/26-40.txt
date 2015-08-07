@@ -12,7 +12,7 @@
 //= 1.2 Optimized. [Euphy]
 //============================================================
 
-moc_para01,38,38,3	script	Mission [26 - 40]	857,{
+moc_para01,38,38,3	script	Mission [26 - 40]	4_BOARD3,{
 	if (countitem(6219) < 1) {
 		mes "You are not a qualified member. You can not use the bulletin board.";
 		close;
@@ -84,7 +84,7 @@ L_Quest:
 		mes "You have declined the "+getarg(2)+" mission.";
 		close;
 	}
-	if (checkquest(getarg(0)) == 1) mes "You are already doing this mission.";
+	if (questprogress(getarg(0))) mes "You are already doing this mission.";
 	else {
 		setquest getarg(0);
 		mes "You have accepted the "+getarg(2)+" mission.";
@@ -95,7 +95,7 @@ L_Quest:
 	close;
 }
 
-geffen,103,42,5	script	Sponiac	99,{
+geffen,103,42,5	script	Sponiac	4W_M_03,{
 	if (checkweight(1201,1) == 0 || (MaxWeight - Weight) < 3500) {
 		mes "[Sponiac]";
 		mes "Why are you carrying so many items?";
@@ -134,8 +134,8 @@ geffen,103,42,5	script	Sponiac	99,{
 	end;
 L_Quest:
 	//QuestID,Quest,BExp,JExp,PotionAmt,Desc
-	if (checkquest(getarg(0)) == 1) {
-		if (checkquest(getarg(0),HUNTING) == 2) {
+	if (questprogress(getarg(0)) == 1) {
+		if (questprogress(getarg(0),HUNTING) == 2) {
 			mes "[Sponiac]";
 			mes getarg(1)+"!";
 			mes "Wow, I didn't expect you would do that mission. I was just about to give up. But you did good job. I appreciate it!";
@@ -175,7 +175,7 @@ L_Quest:
 	close;
 }
 
-moc_ruins,173,55,3	script	Dieshin Man	89,{
+moc_ruins,173,55,3	script	Dieshin Man	4_M_ORIENT02,{
 	if (checkweight(1201,1) == 0 || (MaxWeight - Weight) < 3500) {
 		mes "[Dieshin Man]";
 		mes "Why are you carrying so many items?";
@@ -209,7 +209,7 @@ moc_ruins,173,55,3	script	Dieshin Man	89,{
 	}
 	end;
 L_Quest:
-	if (checkquest(getarg(0)) != 1) {
+	if (questprogress(getarg(0)) != 1) {
 		mes "[Dieshin Man]";
 		mes "Huh? Are you sure? Something is wrong...";
 		next;
@@ -259,7 +259,7 @@ L_Quest:
 	close;
 }
 
-pay_fild07,83,89,7	script	Zoologist	89,{
+pay_fild07,83,89,7	script	Zoologist	4_M_ORIENT02,{
 	if (checkweight(1201,1) == 0 || (MaxWeight - Weight) < 3500) {
 		mes "[Zoologist]";
 		mes "Why are you carrying so many items?";
@@ -281,7 +281,7 @@ pay_fild07,83,89,7	script	Zoologist	89,{
 		mes "Oh, I need an Insecticide to continue the study.";
 		close;
 	}
-	if (checkquest(8271) != 1) {
+	if (questprogress(8271) != 1) {
 		mes "[Zoologist]";
 		mes "Huh?";
 		mes "You are not Dieshin's delivery man?";
@@ -324,7 +324,7 @@ pay_fild07,83,89,7	script	Zoologist	89,{
 	close;
 }
 
-prt_fild03,30,254,3	script	Entomologist	83,{
+prt_fild03,30,254,3	script	Entomologist	4_M_01,{
 	if (checkweight(1201,1) == 0 || (MaxWeight - Weight) < 3500) {
 		mes "[Entomologist]";
 		mes "Why are you carrying so many items?";
@@ -346,7 +346,7 @@ prt_fild03,30,254,3	script	Entomologist	83,{
 		mes "Oh, I need Honey to continue the study.";
 		close;
 	}
-	if (checkquest(8272) != 1) {
+	if (questprogress(8272) != 1) {
 		mes "[Entomologist]";
 		mes "Huh?";
 		mes "You are not Dieshin's delivery man?";
@@ -389,7 +389,7 @@ prt_fild03,30,254,3	script	Entomologist	83,{
 	close;
 }
 
-xmas_fild01,92,57,3	script	Biologist	97,{
+xmas_fild01,92,57,3	script	Biologist	4W_M_01,{
 	if (checkweight(1201,1) == 0 || (MaxWeight - Weight) < 3500) {
 		mes "[Biologist]";
 		mes "Why are you carrying so many items?";
@@ -411,7 +411,7 @@ xmas_fild01,92,57,3	script	Biologist	97,{
 		mes "Huh, whatever. But be careful! It's very slippery here.";
 		close;
 	}
-	if (checkquest(8273) != 1) {
+	if (questprogress(8273) != 1) {
 		mes "[Biologist]";
 		mes "Huh?";
 		mes "You are not Dieshin's delivery man?";
@@ -454,7 +454,7 @@ xmas_fild01,92,57,3	script	Biologist	97,{
 	close;
 }
 
-payon,179,66,3	script	Dashia	931,{
+payon,179,66,3	script	Dashia	4_M_RACHMAN1,{
 	if (checkweight(1201,1) == 0 || (MaxWeight - Weight) < 3500) {
 		mes "[Dashia]";
 		mes "Why are you carrying so many items?";
@@ -645,7 +645,7 @@ payon,179,66,3	script	Dashia	931,{
 	mes "Anyway, I will be here waiting for you. Please come back when you finish the mission!";
 	close;
 L_Quest:
-	if (checkquest(getarg(0)) != 1) {
+	if (questprogress(getarg(0)) != 1) {
 		mes "[Dashia]";
 		mes "Huh? Are you sure? Something is wrong...";
 		next;

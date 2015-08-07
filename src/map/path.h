@@ -1,10 +1,15 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
-#ifndef _PATH_H_
-#define _PATH_H_
+#ifndef MAP_PATH_H
+#define MAP_PATH_H
 
-#include "map.h" // enum cell_chk
+#include "map/map.h" // enum cell_chk
+#include "common/cbasetypes.h"
+
+#define MOVE_COST 10
+#define MOVE_DIAGONAL_COST 14
 
 #define MAX_WALKPATH 32
 
@@ -19,25 +24,39 @@ struct shootpath_data {
 	int y[MAX_WALKPATH];
 };
 
-// calculates destination cell for knockback
-int path_blownpos(int16 m,int16 x0,int16 y0,int16 dx,int16 dy,int count);
+#define check_distance_bl(bl1, bl2, distance)       (path->check_distance((bl1)->x - (bl2)->x, (bl1)->y - (bl2)->y, distance))
+#define check_distance_blxy(bl, x1, y1, distance)   (path->check_distance((bl)->x - (x1), (bl)->y - (y1), distance))
+#define check_distance_xy(x0, y0, x1, y1, distance) (path->check_distance((x0) - (x1), (y0) - (y1), distance))
 
-// tries to find a walkable path
-bool path_search(struct walkpath_data *wpd,int16 m,int16 x0,int16 y0,int16 x1,int16 y1,int flag,cell_chk cell);
+#define distance_bl(bl1, bl2)       (path->distance((bl1)->x - (bl2)->x, (bl1)->y - (bl2)->y))
+#define distance_blxy(bl, x1, y1)   (path->distance((bl)->x - (x1), (bl)->y - (y1)))
+#define distance_xy(x0, y0, x1, y1) (path->distance((x0) - (x1), (y0) - (y1)))
 
-// tries to find a shootable path
-bool path_search_long(struct shootpath_data *spd,int16 m,int16 x0,int16 y0,int16 x1,int16 y1,cell_chk cell);
+#define check_distance_client_bl(bl1, bl2, distance) (path->check_distance_client((bl1)->x - (bl2)->x, (bl1)->y - (bl2)->y, distance))
+#define check_distance_client_blxy(bl, x1, y1, distance) (path->check_distance_client((bl)->x-(x1), (bl)->y-(y1), distance))
+#define check_distance_client_xy(x0, y0, x1, y1, distance) (path->check_distance_client((x0)-(x1), (y0)-(y1), distance))
 
+#define distance_client_bl(bl1, bl2) (path->distance_client((bl1)->x - (bl2)->x, (bl1)->y - (bl2)->y))
+#define distance_client_blxy(bl, x1, y1) (path->distance_client((bl)->x-(x1), (bl)->y-(y1)))
+#define distance_client_xy(x0, y0, x1, y1) (path->distance_client((x0)-(x1), (y0)-(y1)))
 
-// distance related functions
-int check_distance(int dx, int dy, int distance);
-#define check_distance_bl(bl1, bl2, distance) check_distance((bl1)->x - (bl2)->x, (bl1)->y - (bl2)->y, distance)
-#define check_distance_blxy(bl, x1, y1, distance) check_distance((bl)->x-(x1), (bl)->y-(y1), distance)
-#define check_distance_xy(x0, y0, x1, y1, distance) check_distance((x0)-(x1), (y0)-(y1), distance)
+struct path_interface {
+	// calculates destination cell for knockback
+	int (*blownpos) (int16 m, int16 x0, int16 y0, int16 dx, int16 dy, int count);
+	// tries to find a walkable path
+	bool (*search) (struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell);
+	// tries to find a shootable path
+	bool (*search_long) (struct shootpath_data *spd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, cell_chk cell);
+	bool (*check_distance) (int dx, int dy, int distance);
+	unsigned int (*distance) (int dx, int dy);
+	bool (*check_distance_client) (int dx, int dy, int distance);
+	int (*distance_client) (int dx, int dy);
+};
 
-unsigned int distance(int dx, int dy);
-#define distance_bl(bl1, bl2) distance((bl1)->x - (bl2)->x, (bl1)->y - (bl2)->y)
-#define distance_blxy(bl, x1, y1) distance((bl)->x-(x1), (bl)->y-(y1))
-#define distance_xy(x0, y0, x1, y1) distance((x0)-(x1), (y0)-(y1))
+struct path_interface *path;
 
-#endif /* _PATH_H_ */
+#ifdef HERCULES_CORE
+void path_defaults(void);
+#endif // HERCULES_CORE
+
+#endif /* MAP_PATH_H */

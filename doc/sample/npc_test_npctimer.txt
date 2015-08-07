@@ -1,14 +1,14 @@
-//===== Hercules Script =======================================
+//===== Hercules Script ======================================
 //= Sample: NPC Timers
 //===== By: ==================================================
 //= Hercules Dev Team
 //===== Current Version: =====================================
-//= 20121003
-//===== Description: ========================================= 
+//= 20131225
+//===== Description: =========================================
 //= Demonstrates NPC timer commands.
 //============================================================
 
-prontera,156,183,0	script	NPCtimerTest::npctimerX0000	116,{
+prontera,156,183,0	script	NPCtimerTest::npctimerX0000	4_F_KAFRA2,{
 	mes "Timer value" + getnpctimer(0);
 	mes "State timer" + getnpctimer(1,"npctimerX0000");
 	mes "Number of events" + getnpctimer(2);

@@ -1,21 +1,19 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Mechanic Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Muad_Dib
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Jobchange Quest from Blacksmith / Whitesmith -> Mechanic.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [Masao]
 //= 1.1 Fixed the Door NPC [JayPee].
 //= 1.2 Updated script. [Euphy]
-//============================================================ 
+//============================================================
 
-yuno,129,156,3	script	Chainheart	923,{
+yuno,129,156,3	script	Chainheart	4_M_DOCTOR,{
 	mes "[Chainheart]";
 	if (BaseLevel > 99) {
 		mes "Living as a Mechanic is tough,";
@@ -32,7 +30,7 @@ yuno,129,156,3	script	Chainheart	923,{
 		close;
 	} else if (job__mechanic == 11) {
 		if (BaseJob == Job_Blacksmith && BaseLevel > 98 && JobLevel > 49 && SkillPoint == 0) {
-			if (ismounting()) {
+			if (hascashmount()) {
 				mes "You are on a riding pet,";
 				mes "so you cannot change your job.";
 				mes "Please unequip your riding pet and try again!";
@@ -73,7 +71,7 @@ yuno,129,156,3	script	Chainheart	923,{
 			mes "As I said before if the passion and the talent are real there would be no problem!";
 			mes "Congratulations for walking through a new path as a Mechanic!";
 			next;
-			set job__mechanic,12;
+			job__mechanic = 12;
 			completequest 10101;
 			if (Sex)
 				getitem 5749,1; //Driver_Band
@@ -156,7 +154,7 @@ yuno,129,156,3	script	Chainheart	923,{
 			mes "for yourself like we did.";
 			mes "Don't just wait around for someone to teach it to you. Show the passion that you claim to have.";
 			next;
-			set job__mechanic,3;
+			job__mechanic = 3;
 			changequest 10091,10092;
 			mes "[Chainheart]";
 			mes "Anyway, whatever your choice might be I expect you to do your best.";
@@ -209,7 +207,7 @@ yuno,129,156,3	script	Chainheart	923,{
 		mes "I want to explain more but it's too technical.";
 		mes "I don't want to bore you more.";
 		next;
-		set job__mechanic,2;
+		job__mechanic = 2;
 		changequest 10090,10091;
 		mes "[Chainheart]";
 		mes "Anyway if you become one of us you can form your own definition and explanation of Mechanics yourself.";
@@ -243,7 +241,7 @@ yuno,129,156,3	script	Chainheart	923,{
 			mes "That isn't as simple to explain but I'll give it a try.";
 			next;
 			setquest 10090;
-			set job__mechanic,1;
+			job__mechanic = 1;
 			mes "[Chainheart]";
 			mes "Sorry, I'm starting";
 			mes "to talk too much.";
@@ -295,7 +293,7 @@ yuno,129,156,3	script	Chainheart	923,{
 	close;
 }
 
-jupe_cave,37,55,5	script	Scholar#Mechanic	883,{
+jupe_cave,37,55,5	script	Scholar#Mechanic	4_M_ALCHE_D,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 300) {
 		mes "- Your pack is too heavy. -";
 		mes "- Lighten your body first -";
@@ -377,7 +375,7 @@ jupe_cave,37,55,5	script	Scholar#Mechanic	883,{
 	mes "has told me how to warp to";
 	mes "the midway point to Juperos.";
 	next;
-	set job__mechanic,4;
+	job__mechanic = 4;
 	mes "[Scholar]";
 	mes "It is true that it becomes easy";
 	mes "but you can't help the fear";
@@ -386,7 +384,7 @@ jupe_cave,37,55,5	script	Scholar#Mechanic	883,{
 	close;
 }
 
-jupe_core2,149,273,3	script	Ghostfire#1	802,{
+jupe_core2,149,273,3	script	Ghostfire#1	4_NFWISP,{
 	mes "[?]";
 	if (job__mechanic == 11) {
 		mes "I've lost my body and all that's left is my spirit in this place.";
@@ -419,7 +417,7 @@ jupe_core2,149,273,3	script	Ghostfire#1	802,{
 		mes "[?]";
 		mes "My name... name is... Fr...";
 		close2;
-		set job__mechanic,11;
+		job__mechanic = 11;
 		changequest 10100,10101;
 		warp "yuno",157,83;
 		end;
@@ -463,7 +461,7 @@ jupe_core2,149,273,3	script	Ghostfire#1	802,{
 		next;
 		if (job__mechanic == 3 || job__mechanic == 4)
 			changequest 10092,10094;
-		set job__mechanic,5;
+		job__mechanic = 5;
 		mes "[?]";
 		mes "Knowledge isn't obtained from others. It is found through one's own efforts.";
 		mes "Find your own knowledge path.";
@@ -472,7 +470,7 @@ jupe_core2,149,273,3	script	Ghostfire#1	802,{
 	end;
 }
 
-jupe_core2,53,75,3	script	Ghostfire#2	802,{
+jupe_core2,53,75,3	script	Ghostfire#2	4_NFWISP,{
 	mes "[?]";
 	if (job__mechanic > 5) {
 		mes "Juperos... I...";
@@ -525,7 +523,7 @@ jupe_core2,53,75,3	script	Ghostfire#2	802,{
 		mes "[?]";
 		mes "The recent events of the world have created a confusion so my research hasn't been shared with the rest of the world.";
 		next;
-		set job__mechanic,6;
+		job__mechanic = 6;
 		changequest 10094,10095;
 		mes "[?]";
 		mes "So... I came back to Juperos to continue my investigation of science and magic.";
@@ -534,7 +532,7 @@ jupe_core2,53,75,3	script	Ghostfire#2	802,{
 	end;
 }
 
-jupe_core2,242,62,3	script	Ghostfire#3	802,{
+jupe_core2,242,62,3	script	Ghostfire#3	4_NFWISP,{
 	mes "[?]";
 	if (job__mechanic > 6) {
 		mes "I want to know more about the knowledge...";
@@ -566,7 +564,7 @@ jupe_core2,242,62,3	script	Ghostfire#3	802,{
 		mes "[?]";
 		mes "I don't regret gaining the knowledge. All I wish is that I could have my body back.";
 		next;
-		set job__mechanic,7;
+		job__mechanic = 7;
 		changequest 10095,10096;
 		mes "[?]";
 		mes "After I had poured my energy into the statue, I figured that I could move my energy to different statues.";
@@ -575,7 +573,7 @@ jupe_core2,242,62,3	script	Ghostfire#3	802,{
 	end;
 }
 
-jupe_core2,29,150,0	script	#Foothold	139,1,1,{
+jupe_core2,29,150,0	script	#Foothold	HIDDEN_WARP_NPC,1,1,{
 OnTouch:
 	if (job__mechanic == 8) {
 		percentheal 0,-30;
@@ -598,7 +596,7 @@ OnTouch:
 		mes "-a sacrificial offering-";
 		mes "-the statue of a human.-";
 		next;
-		set job__mechanic,8;
+		job__mechanic = 8;
 		changequest 10096,10097;
 		mes "-Most certain of all is that-";
 		mes "-I started to feel the urge-";
@@ -614,7 +612,7 @@ OnTouch:
 	end;
 }
 
-jupe_core2,272,149,0	script	#Foothold2	139,1,1,{
+jupe_core2,272,149,0	script	#Foothold2	HIDDEN_WARP_NPC,1,1,{
 OnTouch:
 	if (job__mechanic == 9) {
 		mes "-I had a feeling that power-";
@@ -649,7 +647,7 @@ OnTouch:
 	end;
 }
 
-jupe_core2,288,142,3	script	#Door	844,1,1,{
+jupe_core2,288,142,3	script	#Door	CLEAR_NPC,1,1,{
 	end;
 OnInit:
 OnDisable:
@@ -697,13 +695,13 @@ OnTouch:
 	mes "-head instructed, let's go to-";
 	mes "-the southern foothold.-";
 	close2;
-	set job__mechanic,9;
+	job__mechanic = 9;
 	changequest 10098,10099;
 	donpcevent "#Door::OnDisable";
 	end;
 }
 
-jupe_core2,149,34,0	script	#Acquiring Knowledge	139,1,0,{
+jupe_core2,149,34,0	script	#Acquiring Knowledge	HIDDEN_WARP_NPC,1,0,{
 OnTouch:
 	if (job__mechanic == 9) {
 		mes "-The moment I stepped on-";
@@ -718,7 +716,7 @@ OnTouch:
 		mes "-to know about mechanics-";
 		mes "-and magic machinery.-";
 		next;
-		set job__mechanic,10;
+		job__mechanic = 10;
 		changequest 10099,10100;
 		specialeffect EF_POTION_CON;
 		mes "-This amount of knowledge-";
@@ -728,6 +726,6 @@ OnTouch:
 	}
 	end;
 }
-jupe_core2,150,33,0	duplicate(#Acquiring Knowledge)	#Acquiring Knowledge2	139,1,0
+jupe_core2,150,33,0	duplicate(#Acquiring Knowledge)	#Acquiring Knowledge2	HIDDEN_WARP_NPC,1,0
 
 jupe_core2,0,0,0,0	monster	Dimik	1669,100,0,0,0

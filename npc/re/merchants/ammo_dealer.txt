@@ -1,0 +1,19 @@
+//===== Hercules Script ======================================
+//= Bullet Dealers
+//===== By ===================================================
+//= Euphy
+//===== Version ==============================================
+//= 1.1
+//===== Description ==========================================
+//= Bullet trader.
+//===== Comments =============================================
+//= 1.0 First version, Renewal duplicates.
+//= 1.1 Added Izlude duplicates. [Euphy]
+//============================================================
+
+que_ng,187,156,3	duplicate(bdt)	Bullet Dealer Tony#ng	4_M_04
+izlude,77,104,3	duplicate(bdt)	Bullet Dealer Tony#iz	4_M_04	//Official: (74,106) -> in the water
+izlude_a,77,104,3	duplicate(bdt)	Bullet Dealer Tony#a	4_M_04
+izlude_b,77,104,3	duplicate(bdt)	Bullet Dealer Tony#b	4_M_04
+izlude_c,77,104,3	duplicate(bdt)	Bullet Dealer Tony#c	4_M_04
+izlude_d,77,104,3	duplicate(bdt)	Bullet Dealer Tony#d	4_M_04

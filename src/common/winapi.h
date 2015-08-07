@@ -2,12 +2,12 @@
 
 
 #define STRICT
-#define NTDDI_VERSION 	NTDDI_WIN2K
+#define NTDDI_VERSION NTDDI_WIN2K
 #define _WIN32_WINNT  0x0500
-#define WINVER 0x0500
-#define _WIN32_IE 	0x0600
+#define WINVER        0x0500
+#define _WIN32_IE     0x0600
 #define WIN32_LEAN_AND_MEAN
-#define NOCOMM 
+#define NOCOMM
 #define NOKANJI
 #define NOHELP
 #define NOMCX
@@ -24,6 +24,7 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 #define _CRT_NONSTDC_NO_WARNINGS
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #include <io.h>
 #include <Windows.h>
@@ -32,5 +33,3 @@
 #include <Ws2tcpip.h>
 #include <Mswsock.h>
 #include <MMSystem.h>
-
-

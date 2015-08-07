@@ -1,60 +1,85 @@
+# Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+# See the LICENSE file
 
-COMMON_OBJ = ../common/obj_all/minicore.o ../common/obj_all/malloc.o \
-	../common/obj_all/showmsg.o ../common/obj_all/strlib.o \
-	../common/obj_all/utils.o ../common/obj_all/des.o ../common/obj_all/grfio.o ../common/obj_all/miniconsole.o
-COMMON_H = ../common/core.h ../common/mmo.h \
-	../common/malloc.h ../common/showmsg.h ../common/strlib.h \
-	../common/utils.h ../common/cbasetypes.h ../common/des.h ../common/grfio.h ../common/console.h ../config/renewal.h
+# @configure_input@
 
-LIBCONFIG_OBJ = ../../3rdparty/libconfig/libconfig.o ../../3rdparty/libconfig/grammar.o \
-	../../3rdparty/libconfig/scanctx.o ../../3rdparty/libconfig/scanner.o ../../3rdparty/libconfig/strbuf.o
-LIBCONFIG_H = ../../3rdparty/libconfig/libconfig.h ../../3rdparty/libconfig/grammar.h \
-	../../3rdparty/libconfig/parsectx.h ../../3rdparty/libconfig/scanctx.h ../../3rdparty/libconfig/scanner.h \
-	../../3rdparty/libconfig/strbuf.h ../../3rdparty/libconfig/wincompat.h
-LIBCONFIG_INCLUDE = -I../../3rdparty/libconfig
+CONFIG_D = ../config
+CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
 
-OTHER_H = ../config/renewal.h
+COMMON_D = ../common
+COMMON_H = $(wildcard $(COMMON_D)/*.h)
+SYSINFO_INC = $(COMMON_D)/sysinfo.inc
+COMMON_INCLUDE = -I..
+
+THIRDPARTY_D = ../../3rdparty
+THIRDPARTY_INCLUDE = -I$(THIRDPARTY_D)
+
+LIBCONFIG_D = $(THIRDPARTY_D)/libconfig
+LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
+                scanner.o strbuf.o)
+LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
+              scanctx.h scanner.h strbuf.h wincompat.h)
 
 MAPCACHE_OBJ = obj_all/mapcache.o
+MAPCACHE_C = mapcache.c
+MAPCACHE_H =
+MAPCACHE_DEPENDS = $(MAPCACHE_OBJ) $(COMMON_D)/obj_all/common_mini.a $(LIBCONFIG_OBJ $(SYSINFO_INC))
 
 @SET_MAKE@
 
+CC = @CC@
+export CC
+
 #####################################################################
-.PHONY : all mapcache clean help
+.PHONY: all mapcache clean buildclean help
 
-all: mapcache
+all: mapcache Makefile
 
-mapcache: obj_all $(MAPCACHE_OBJ) $(COMMON_OBJ) $(LIBCONFIG_OBJ)
-	@echo "	LD	$@"
-	@@CC@ @LDFLAGS@ $(LIBCONFIG_INCLUDE) -o ../../mapcache@EXEEXT@ $(MAPCACHE_OBJ) $(COMMON_OBJ) $(LIBCONFIG_OBJ) @LIBS@
+mapcache: ../../mapcache@EXEEXT@
 
-clean:
+../../mapcache@EXEEXT@: $(MAPCACHE_DEPENDS) Makefile
+	@echo "	LD	$(notdir $@)"
+	@$(CC) @STATIC@ @LDFLAGS@ -o ../../mapcache@EXEEXT@ $(MAPCACHE_DEPENDS) @LIBS@
+
+buildclean:
+	@echo "	CLEAN	tool (build temp files)"
+	@rm -rf obj_all/*.o
+
+clean: buildclean
 	@echo "	CLEAN	tool"
-	@rm -rf obj_all/*.o ../../mapcache@EXEEXT@
+	@rm -rf ../../mapcache@EXEEXT@
 
 help:
 	@echo "possible targets are 'mapcache' 'all' 'clean' 'help'"
-	@echo "'mapcache'  - mapcache generator"
-	@echo "'all'       - builds all above targets"
-	@echo "'clean'     - cleans builds and objects"
-	@echo "'help'      - outputs this message"
+	@echo "'mapcache'   - mapcache generator"
+	@echo "'all'        - builds all above targets"
+	@echo "'clean'      - cleans builds and objects"
+	@echo "'buildclean' - cleans build temporary (object) files, without deleting the"
+	@echo "               executables"
+	@echo "'help'       - outputs this message"
 
 #####################################################################
+
+Makefile: Makefile.in
+	@$(MAKE) -C ../.. src/tool/Makefile
+
+$(SYSINFO_INC): $(MAPCACHE_C) $(MAPCACHE_H) $(COMMON_H) $(CONFIG_H) $(LIBCONFIG_H)
+	@echo "	MAKE	$@"
+	@$(MAKE) -C ../.. sysinfo
 
 obj_all:
 	@echo "	MKDIR	obj_all"
 	@-mkdir obj_all
 
-obj_all/%.o: %.c $(COMMON_H) $(OTHER_H) $(LIBCONFIG_H)
+obj_all/%.o: %.c $(MAPCACHE_H) $(COMMON_H) $(CONFIG_H) $(LIBCONFIG_H) | obj_all
 	@echo "	CC	$<"
-	@@CC@ @CFLAGS@ $(LIBCONFIG_INCLUDE) @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
+	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
 # missing common object files
-../common/obj_all/%.o:
-	@$(MAKE) -C ../common sql
+$(COMMON_D)/obj_all/common_mini.a:
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(COMMON_D) common_mini
 
-../common/obj_all/mini%.o:
-	@$(MAKE) -C ../common sql
-
-LIBCONFIG_OBJ:
-	@$(MAKE) -C ../../3rdparty/libconfig
+$(LIBCONFIG_OBJ):
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(LIBCONFIG_D)

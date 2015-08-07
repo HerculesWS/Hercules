@@ -1,24 +1,22 @@
-//===== rAthena Script ======================================= 
-//= Theif Mage Quest Story Mode
-//===== By: ================================================== 
+//===== Hercules Script ======================================
+//= Thief Mage Quest Story Mode
+//===== By: ==================================================
 //= Fix up by Jukka
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: ===================================== 
-//= rAthena SVN (Testet in Trunk 88xx)
-//===== Description: ========================================= 
-//=
-//===== Additional Comments: ================================= 
+//===== Description: =========================================
+//= [Official Conversion]
+//= Battle Traces from Thief and Magician training quests.
+//===== Additional Comments: =================================
 //= 1.0 Fully working
 //= 1.1 optimized [Lupus]
-//=	TODO: Test, Add correct misceffects numbers
 //= 1.2 Changed "battle_trace" to "Trace of Battle". [L0ne_W0lf]
 //= 1.3 Misc. updates. [L0ne_W0lf]
-//============================================================ 
+//============================================================
 
 // Battle Traces 1
 //============================================================
-moc_fild12,166,369,0	script	Trace of Battle#1	844,{
+moc_fild12,166,369,0	script	Trace of Battle#1	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 5){
 			mes "^3355FFYou find traces of poison";
@@ -31,8 +29,8 @@ moc_fild12,166,369,0	script	Trace of Battle#1	844,{
 			mes "used in a battle. A feeling";
 			mes "of acute dizziness overcomes";
 			mes "you after examining the scene.^000000";
-			set tu_thief01, 6;
-			sc_start SC_Poison,60000,0;
+			tu_thief01 = 6;
+			sc_start SC_POISON,60000,0;
 			specialeffect EF_VENOMDUST2;
 			close;
 		} else if(tu_thief01 == 6){
@@ -40,7 +38,7 @@ moc_fild12,166,369,0	script	Trace of Battle#1	844,{
 			mes "used in a battle. A feeling";
 			mes "of acute dizziness overcomes";
 			mes "you after examining the scene.^000000";
-			sc_start SC_Poison,60000,0;
+			sc_start SC_POISON,60000,0;
 			specialeffect EF_VENOMDUST2;
 			close;
 		} else if(tu_thief01 == 7){
@@ -61,7 +59,7 @@ moc_fild12,166,369,0	script	Trace of Battle#1	844,{
 			mes "The trail of this";
 			mes "battle decidedly";
 			mes "heads southward.^000000";
-			set tu_thief01, 9;
+			tu_thief01 = 9;
 			close;
 		} else {
 			mes "^3355FFYou find signs of";
@@ -90,7 +88,7 @@ moc_fild12,166,369,0	script	Trace of Battle#1	844,{
 			mes "The trail of this";
 			mes "battle decidedly";
 			mes "heads southward.^000000";
-			set tu_magician01, 9;
+			tu_magician01 = 9;
 			close;
 		} else {
 			mes "^3355FFYou find signs of";
@@ -109,7 +107,7 @@ moc_fild12,166,369,0	script	Trace of Battle#1	844,{
 
 // Battle Traces 2
 //============================================================
-moc_fild12,173,215,0	script	Trace of Battle#2	844,{
+moc_fild12,173,215,0	script	Trace of Battle#2	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 9){
 			mes "^3355FFThere are signs";
@@ -121,7 +119,7 @@ moc_fild12,173,215,0	script	Trace of Battle#2	844,{
 			mes "^3355FFYou've found traces";
 			mes "of the pursuit which";
 			mes "continue eastward.^000000";
-			set tu_thief01, 10;
+			tu_thief01 = 10;
 			close;
 		} else {
 			mes "^3355FFThese traces of";
@@ -140,7 +138,7 @@ moc_fild12,173,215,0	script	Trace of Battle#2	844,{
 			mes "^3355FFYou've found traces";
 			mes "of the pursuit which";
 			mes "continue eastward.^000000";
-			set tu_magician01, 10;
+			tu_magician01 = 10;
 			close;
 		} else {
 			mes "^3355FFThese traces of";
@@ -159,7 +157,7 @@ moc_fild12,173,215,0	script	Trace of Battle#2	844,{
 
 // Battle Traces 3
 //============================================================
-moc_fild12,276,165,0	script	Trace of Battle#3	844,{
+moc_fild12,276,165,0	script	Trace of Battle#3	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 10){
 			mes "^3355FFThere are signs";
@@ -173,7 +171,7 @@ moc_fild12,276,165,0	script	Trace of Battle#3	844,{
 			mes "footprints looks almost too";
 			mes "pronounced, as if it had been";
 			mes "made for somebody to find.^000000";
-			set tu_thief01, 11;
+			tu_thief01 = 11;
 			close;
 		} else {
 			mes "^3355FFIt's a very";
@@ -194,7 +192,7 @@ moc_fild12,276,165,0	script	Trace of Battle#3	844,{
 			mes "footprints looks almost too";
 			mes "pronounced, as if it had been";
 			mes "made for somebody to find.^000000";
-			set tu_magician01, 11;
+			tu_magician01 = 11;
 			close;
 		} else {
 			mes "^3355FFIt's a very";
@@ -212,7 +210,7 @@ moc_fild12,276,165,0	script	Trace of Battle#3	844,{
 
 // Battle Traces 4
 //============================================================
-moc_fild11,39,163,0	script	Trace of Battle#4	844,{
+moc_fild11,39,163,0	script	Trace of Battle#4	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 11){
 			mes "^3355FFThere are signs";
@@ -228,7 +226,7 @@ moc_fild11,39,163,0	script	Trace of Battle#4	844,{
 			mes "someone } else got involved.";
 			mes "These prints are distinctly";
 			mes "clearer and much smaller.^000000";
-			set tu_thief01, 12;
+			tu_thief01 = 12;
 			close;
 		} else {
 			mes "^3355FFFrom these traces,";
@@ -252,7 +250,7 @@ moc_fild11,39,163,0	script	Trace of Battle#4	844,{
 			mes "someone } else got involved.";
 			mes "These prints are distinctly";
 			mes "clearer and much smaller.^000000";
-			set tu_magician01, 12;
+			tu_magician01 = 12;
 			close;
 		} else {
 			mes "^3355FFFrom these traces,";
@@ -272,7 +270,7 @@ moc_fild11,39,163,0	script	Trace of Battle#4	844,{
 
 // Battle Traces 5
 //============================================================
-moc_fild11,205,52,0	script	Trace of Battle#5	844,{
+moc_fild11,205,52,0	script	Trace of Battle#5	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 12){
 			mes "^3355FFThere are signs";
@@ -317,7 +315,7 @@ moc_fild11,205,52,0	script	Trace of Battle#5	844,{
 						mes "it that I can't recognize.";
 						mes "Hopefully, this'll provide";
 						mes "some sort of clue to all this?";
-						set tu_thief01, 13;
+						tu_thief01 = 13;
 						next;
 						mes "^3355FFYou take the piece";
 						mes "of cloth from the puddle";
@@ -386,7 +384,7 @@ moc_fild11,205,52,0	script	Trace of Battle#5	844,{
 						mes "it that I can't recognize.";
 						mes "Hopefully, this'll provide";
 						mes "some sort of clue to all this?";
-						set tu_magician01,13;
+						tu_magician01 = 13;
 						next;
 						mes "^3355FFYou take the piece";
 						mes "of cloth from the puddle";
@@ -421,7 +419,7 @@ moc_fild11,205,52,0	script	Trace of Battle#5	844,{
 
 // Battle Traces 6
 //============================================================
-moc_fild11,226,235,0	script	Trace of Battle#6	844,{
+moc_fild11,226,235,0	script	Trace of Battle#6	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 13){
 			mes "^3355FFThere are signs";
@@ -464,7 +462,7 @@ moc_fild11,226,235,0	script	Trace of Battle#6	844,{
 
 // Battle Traces 7
 //============================================================
-moc_fild11,184,342,0	script	Trace of Battle#7	844,{
+moc_fild11,184,342,0	script	Trace of Battle#7	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 13){
 			mes "^3355FFThere are signs";
@@ -505,7 +503,7 @@ moc_fild11,184,342,0	script	Trace of Battle#7	844,{
 
 // Battle Traces 8
 //============================================================
-moc_fild17,213,358,0	script	Trace of Battle#8	844,{
+moc_fild17,213,358,0	script	Trace of Battle#8	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 13){
 			mes "^3355FFThere are two";
@@ -521,7 +519,7 @@ moc_fild17,213,358,0	script	Trace of Battle#8	844,{
 			mes "only two sets of footprints.";
 			mes "What happened to the other";
 			mes "set that you found earlier?^000000";
-			set tu_thief01, 14;
+			tu_thief01 = 14;
 			close;
 		} else {
 			mes "^3355FFFrom the evidence";
@@ -546,7 +544,7 @@ moc_fild17,213,358,0	script	Trace of Battle#8	844,{
 			mes "only two sets of footprints.";
 			mes "What happened to the other";
 			mes "set that you found earlier?^000000";
-			set tu_magician01, 14;
+			tu_magician01 = 14;
 			close;
 		} else {
 			mes "^3355FFFrom the evidence";
@@ -566,7 +564,7 @@ moc_fild17,213,358,0	script	Trace of Battle#8	844,{
 
 // Battle Traces 9
 //============================================================
-moc_fild17,228,274,0	script	Trace of Battle#9	844,{
+moc_fild17,228,274,0	script	Trace of Battle#9	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 14){
 			mes "^3355FFTraces of some";
@@ -581,10 +579,10 @@ moc_fild17,228,274,0	script	Trace of Battle#9	844,{
 			mes "together, it looks like the battle continues towards the east.";
 			mes "But you should check this";
 			mes "spot a little bit more...^000000";
-			set tu_thief01, 15;
+			tu_thief01 = 15;
 			close;
 		} else if(tu_thief01 == 15){
-			set .@seek_tm, rand(1,10);
+			.@seek_tm = rand(1,10);
 			if(.@seek_tm == 7){
 				mes "^3355FFAfter investigating this";
 				mes "area more thoroughly,";
@@ -593,7 +591,7 @@ moc_fild17,228,274,0	script	Trace of Battle#9	844,{
 				mes "You decide to keep it with";
 				mes "you, hoping that it will";
 				mes "provide more clues.^000000";
-				set tu_thief01, 16;
+				tu_thief01 = 16;
 				close;
 			} else {
 				mes "^3355FFYou don't find anything,";
@@ -623,10 +621,10 @@ moc_fild17,228,274,0	script	Trace of Battle#9	844,{
 			mes "together, it looks like the battle continues towards the east.";
 			mes "But you should check this";
 			mes "spot a little bit more...^000000";
-			set tu_magician01, 15;
+			tu_magician01 = 15;
 			close;
 		} else if(tu_magician01 == 15){
-			set .@seek_tm1, rand(1,10);
+			.@seek_tm1 = rand(1,10);
 			if(.@seek_tm1 == 7){
 				mes "^3355FFAfter investigating this";
 				mes "area more thoroughly,";
@@ -635,7 +633,7 @@ moc_fild17,228,274,0	script	Trace of Battle#9	844,{
 				mes "You decide to keep it with";
 				mes "you, hoping that it will";
 				mes "provide more clues.^000000";
-				set tu_magician01, 16;
+				tu_magician01 = 16;
 				close;
 			} else {
 				mes "^3355FFYou don't find anything,";
@@ -661,7 +659,7 @@ moc_fild17,228,274,0	script	Trace of Battle#9	844,{
 
 // Battle Traces 10
 //============================================================
-moc_fild17,34,292,0	script	Trace of Battle#10	844,{
+moc_fild17,34,292,0	script	Trace of Battle#10	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 16){
 			mes "^3355FFThere are signs";
@@ -675,7 +673,7 @@ moc_fild17,34,292,0	script	Trace of Battle#10	844,{
 			mes "who was being pursued, look";
 			mes "more erratic, as if exhaustion";
 			mes "and desperation were setting in. These traces lead to the west.^000000";
-			set tu_thief01, 17;
+			tu_thief01 = 17;
 			close;
 		} else {
 			mes "^3355FFThe trail from";
@@ -696,7 +694,7 @@ moc_fild17,34,292,0	script	Trace of Battle#10	844,{
 			mes "who was being pursued, look";
 			mes "more erratic, as if exhaustion";
 			mes "and desperation were setting in. These traces lead to the west.^000000";
-			set tu_magician01, 17;
+			tu_magician01 = 17;
 			close;
 		} else {
 			mes "^3355FFThe trail from";
@@ -714,7 +712,7 @@ moc_fild17,34,292,0	script	Trace of Battle#10	844,{
 
 // Battle Traces 11
 //============================================================
-moc_fild18,346,296,0	script	Trace of Battle#11	844,{
+moc_fild18,346,296,0	script	Trace of Battle#11	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 17){
 			mes "^3355FFThere are signs";
@@ -729,7 +727,7 @@ moc_fild18,346,296,0	script	Trace of Battle#11	844,{
 			mes "in this area. It looks like";
 			mes "someone was injured";
 			mes "pretty badly around here.^000000";
-			set tu_thief01, 18;
+			tu_thief01 = 18;
 			close;
 		} else {
 			mes "^3355FFSince someone involved";
@@ -752,7 +750,7 @@ moc_fild18,346,296,0	script	Trace of Battle#11	844,{
 			mes "in this area. It looks like";
 			mes "someone was injured";
 			mes "pretty badly around here.^000000";
-			set tu_magician01, 18;
+			tu_magician01 = 18;
 			close;
 		} else {
 			mes "^3355FFSince someone involved";
@@ -771,7 +769,7 @@ moc_fild18,346,296,0	script	Trace of Battle#11	844,{
 
 // Battle Traces 12
 //============================================================
-moc_fild18,309,257,0	script	Trace of Battle#12	844,{
+moc_fild18,309,257,0	script	Trace of Battle#12	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 18){
 			mes "^3355FFThere are signs";
@@ -785,7 +783,7 @@ moc_fild18,309,257,0	script	Trace of Battle#12	844,{
 			mes "like whoever is doing";
 			mes "the chasing is getting";
 			mes "much closer to his prey.^000000";
-			set tu_thief01, 19;
+			tu_thief01 = 19;
 			close;
 		} else {
 			mes "^3355FFThe trail of this";
@@ -806,7 +804,7 @@ moc_fild18,309,257,0	script	Trace of Battle#12	844,{
 			mes "like whoever is doing";
 			mes "the chasing is getting";
 			mes "much closer to his prey.^000000";
-			set tu_magician01, 19;
+			tu_magician01 = 19;
 			close;
 		} else {
 			mes "^3355FFThe trail of this";
@@ -824,7 +822,7 @@ moc_fild18,309,257,0	script	Trace of Battle#12	844,{
 
 // Battle Traces 13
 //============================================================
-moc_fild18,177,333,0	script	Trace of Battle#13	844,{
+moc_fild18,177,333,0	script	Trace of Battle#13	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 19){
 			mes "^3355FFThere are signs";
@@ -839,7 +837,7 @@ moc_fild18,177,333,0	script	Trace of Battle#13	844,{
 			mes "joined the battle which";
 			mes "now seems to be leading";
 			mes "in the southwest direction.^000000";
-			set tu_thief01, 20;
+			tu_thief01 = 20;
 			close;
 		} else {
 			mes "^3355FFIt looks like";
@@ -859,7 +857,7 @@ moc_fild18,177,333,0	script	Trace of Battle#13	844,{
 			mes "joined the battle which";
 			mes "now seems to be leading";
 			mes "in the southwest direction.^000000";
-			set tu_magician01, 20;
+			tu_magician01 = 20;
 			close;
 		} else {
 			mes "^3355FFIt looks like";
@@ -878,7 +876,7 @@ moc_fild18,177,333,0	script	Trace of Battle#13	844,{
 
 // Battle Traces 14
 //============================================================
-moc_fild18,111,303,0	script	Trace of Battle#14	844,{
+moc_fild18,111,303,0	script	Trace of Battle#14	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 20){
 			mes "^3355FFThere are signs";
@@ -892,7 +890,7 @@ moc_fild18,111,303,0	script	Trace of Battle#14	844,{
 			mes "joined in this battle and";
 			mes "the pursuit clearly heads";
 			mes "towards the south.^000000";
-			set tu_thief01, 21;
+			tu_thief01 = 21;
 			close;
 		} else {
 			mes "^3355FFThe trail of";
@@ -913,7 +911,7 @@ moc_fild18,111,303,0	script	Trace of Battle#14	844,{
 			mes "joined in this battle and";
 			mes "the pursuit clearly heads";
 			mes "towards the south.^000000";
-			set tu_magician01, 21;
+			tu_magician01 = 21;
 			close;
 		} else {
 			mes "^3355FFThe trail of";
@@ -931,7 +929,7 @@ moc_fild18,111,303,0	script	Trace of Battle#14	844,{
 
 // Battle Traces 15
 //============================================================
-moc_fild18,109,197,0	script	Trace of Battle#15	844,{
+moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 21){
 			mes "^3355FFThere are signs";
@@ -961,11 +959,11 @@ moc_fild18,109,197,0	script	Trace of Battle#15	844,{
 				mes "that have been set off are";
 				mes "mixed with the ones which";
 				mes "haven't been triggered.^000000";
-				set tu_thief01, 22;
+				tu_thief01 = 22;
 				close;
 			}
 		} else if(tu_thief01 == 22){
-			set .@trap_tm, rand(1,3);
+			.@trap_tm = rand(1,3);
 			if(.@trap_tm == 3){
 				mes "^3355FFOne trap in particular";
 				mes "stands out to you more";
@@ -989,7 +987,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	844,{
 						mes "happen. Perhaps you";
 						mes "should try something else.^000000";
 						delitem 506,1; //Green_Potion
-						set tu_thief01, 23;
+						tu_thief01 = 23;
 						close;
 					}
 				case 2:
@@ -1003,7 +1001,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	844,{
 				mes "^3355FFBy sheer accident,";
 				mes "you set off one of";
 				mes "the traps in the area.^000000";
-				sc_start SC_Poison,60000,0;
+				sc_start SC_POISON,60000,0;
 				specialeffect EF_VENOMDUST2;
 				percentheal -30,0;
 				close;
@@ -1028,7 +1026,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	844,{
 					mes "check what might be inside.^000000";
 					delitem 511,1; //Green_Herb
 					delitem 716,1; //Red_Gemstone
-					set tu_thief01, 24;
+					tu_thief01 = 24;
 					close;
 				} else if(countitem(511) > 0){
 					mes "^3355FFYou should try to";
@@ -1080,7 +1078,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	844,{
 			mes "You take it with you in";
 			mes "hopes that it provides";
 			mes "some kind of evidence.^000000";
-			set tu_thief01, 25;
+			tu_thief01 = 25;
 			close;
 		} else {
 			mes "^3355FFYou examine the area";
@@ -1115,11 +1113,11 @@ moc_fild18,109,197,0	script	Trace of Battle#15	844,{
 				mes "that have been set off are";
 				mes "mixed with the ones which";
 				mes "haven't been triggered.^000000";
-				set tu_magician01, 22;
+				tu_magician01 = 22;
 				close;
 			}
 		} else if(tu_magician01 == 22){
-			set .@trap_tm, rand(1,3);
+			.@trap_tm = rand(1,3);
 			if(.@trap_tm == 3){
 				mes "^3355FFOne trap in particular";
 				mes "stands out to you more";
@@ -1143,7 +1141,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	844,{
 						mes "happen. Perhaps you";
 						mes "should try something else.^000000";
 						delitem 506,1; //Green_Potion
-						set tu_magician01, 23;
+						tu_magician01 = 23;
 						close;
 					}
 				case 2:
@@ -1157,7 +1155,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	844,{
 				mes "^3355FFBy sheer accident,";
 				mes "you set off one of";
 				mes "the traps in the area.^000000";
-				sc_start SC_Poison,60000,0;
+				sc_start SC_POISON,60000,0;
 				specialeffect EF_VENOMDUST2;
 				percentheal -30,0;
 				close;
@@ -1182,7 +1180,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	844,{
 					mes "check what might be inside.^000000";
 					delitem 511,1; //Green_Herb
 					delitem 716,1; //Red_Gemstone
-					set tu_magician01, 24;
+					tu_magician01 = 24;
 					close;
 				} else if(countitem(511) > 0){
 					mes "^3355FFYou should try to";
@@ -1234,7 +1232,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	844,{
 			mes "You take it with you in";
 			mes "hopes that it provides";
 			mes "some kind of evidence.^000000";
-			set tu_magician01, 25;
+			tu_magician01 = 25;
 			close;
 		} else {
 			mes "^3355FFYou examine the area";
@@ -1254,7 +1252,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	844,{
 
 // Battle Traces 16
 //============================================================
-moc_fild18,156,96,0	script	Trace of Battle#16	844,{
+moc_fild18,156,96,0	script	Trace of Battle#16	CLEAR_NPC,{
 	if(BaseClass == Job_Thief){
 		if(tu_thief01 < 25){
 			mes "^3355FFThere are signs";
@@ -1282,7 +1280,7 @@ moc_fild18,156,96,0	script	Trace of Battle#16	844,{
 			mes "from this investigation. You";
 			mes "better return and report your";
 			mes "findings to Yierhan soon.^000000";
-			set tu_thief01, 26;
+			tu_thief01 = 26;
 			close;
 		} else {
 			mes "^3355FFThis is the end";
@@ -1318,7 +1316,7 @@ moc_fild18,156,96,0	script	Trace of Battle#16	844,{
 			mes "from this investigation. You";
 			mes "better return and report your";
 			mes "findings to Yierhan soon.^000000";
-			set tu_magician01, 26;
+			tu_magician01 = 26;
 			close;
 		} else {
 			mes "^3355FFThis is the end";

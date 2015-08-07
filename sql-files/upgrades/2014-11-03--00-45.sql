@@ -1,0 +1,3 @@
+#1414975503
+ALTER TABLE  `char` ADD COLUMN `sex` ENUM('M','F','U') NOT NULL DEFAULT 'U';
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1414975503);

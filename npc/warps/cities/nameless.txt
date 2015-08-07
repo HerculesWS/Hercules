@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Nameless Island Warp Script
 //===== By: ==================================================
 //= $ephiroth
 //===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Description: =========================================
 //= Warp Points for Nameless Island
 //===== Additional Comments: =================================

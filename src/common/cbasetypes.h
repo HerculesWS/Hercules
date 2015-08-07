@@ -1,5 +1,5 @@
-#ifndef _CBASETYPES_H_
-#define _CBASETYPES_H_
+#ifndef COMMON_CBASETYPES_H
+#define COMMON_CBASETYPES_H
 
 /*              +--------+-----------+--------+---------+
  *              | ILP32  |   LP64    |  ILP64 | (LL)P64 |
@@ -37,10 +37,27 @@
 #define CYGWIN
 #endif
 
-// __APPLE__ is the only predefined macro on MacOS X
+// __APPLE__ is the only predefined macro on MacOS
 #if defined(__APPLE__)
 #define __DARWIN__
 #endif
+
+// Standardize the ARM platform version, if available (the only values we're interested in right now are >= ARMv6)
+#if defined(__ARMV6__) || defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) || defined(__ARM_ARCH_6K__) \
+	|| defined(__ARM_ARCH_6Z__) || defined(__ARM_ARCH_6ZK__) || defined(__ARM_ARCH_6T2__) // gcc ARMv6
+#define __ARM_ARCH_VERSION__ 6
+#elif defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7S__) // gcc ARMv7
+#define __ARM_ARCH_VERSION__ 7
+#elif defined(_M_ARM) // MSVC
+#define __ARM_ARCH_VERSION__ _M_ARM
+#else
+#define __ARM_ARCH_VERSION__ 0
+#endif
+
+// Necessary for __NetBSD_Version__ (defined as VVRR00PP00) on NetBSD
+#ifdef __NETBSD__
+#include <sys/param.h>
+#endif // __NETBSD__
 
 // 64bit OS
 #if defined(_M_IA64) || defined(_M_X64) || defined(_WIN64) || defined(_LP64) || defined(_ILP64) || defined(__LP64__) || defined(__ppc64__)
@@ -77,24 +94,19 @@
 // portable printf/scanf format macros and integer definitions
 // NOTE: Visual C++ uses <inttypes.h> and <stdint.h> provided in /3rdparty
 //////////////////////////////////////////////////////////////////////////
-#ifdef __cplusplus
-#define __STDC_CONSTANT_MACROS
-#define __STDC_FORMAT_MACROS
-#define __STDC_LIMIT_MACROS
-#endif
-
 #include <inttypes.h>
 #include <stdint.h>
 #include <limits.h>
+#include <time.h>
 
 // temporary fix for bugreport:4961 (unintended conversion from signed to unsigned)
 // (-20 >= UCHAR_MAX) returns true
 // (-20 >= USHRT_MAX) returns true
 #if defined(__FreeBSD__) && defined(__x86_64)
 #undef UCHAR_MAX
-#define UCHAR_MAX (unsigned char)0xff
+#define UCHAR_MAX ((unsigned char)0xff)
 #undef USHRT_MAX
-#define USHRT_MAX (unsigned short)0xffff
+#define USHRT_MAX ((unsigned short)0xffff)
 #endif
 
 // ILP64 isn't supported, so always 32 bits?
@@ -106,56 +118,56 @@
 // Integers with guaranteed _exact_ size.
 //////////////////////////////////////////////////////////////////////////
 
-typedef int8_t		int8;
-typedef int16_t		int16;
-typedef int32_t		int32;
-typedef int64_t		int64;
+typedef int8_t   int8;
+typedef int16_t  int16;
+typedef int32_t  int32;
+typedef int64_t  int64;
 
-typedef int8_t		sint8;
-typedef int16_t		sint16;
-typedef int32_t		sint32;
-typedef int64_t		sint64;
+typedef int8_t   sint8;
+typedef int16_t  sint16;
+typedef int32_t  sint32;
+typedef int64_t  sint64;
 
-typedef uint8_t		uint8;
-typedef uint16_t	uint16;
-typedef uint32_t	uint32;
-typedef uint64_t	uint64;
+typedef uint8_t  uint8;
+typedef uint16_t uint16;
+typedef uint32_t uint32;
+typedef uint64_t uint64;
 
 #undef UINT8_MIN
 #undef UINT16_MIN
 #undef UINT32_MIN
 #undef UINT64_MIN
-#define UINT8_MIN	((uint8) UINT8_C(0x00))
-#define UINT16_MIN	((uint16)UINT16_C(0x0000))
-#define UINT32_MIN	((uint32)UINT32_C(0x00000000))
-#define UINT64_MIN	((uint64)UINT64_C(0x0000000000000000))
+#define UINT8_MIN  ((uint8) UINT8_C(0x00))
+#define UINT16_MIN ((uint16)UINT16_C(0x0000))
+#define UINT32_MIN ((uint32)UINT32_C(0x00000000))
+#define UINT64_MIN ((uint64)UINT64_C(0x0000000000000000))
 
 #undef UINT8_MAX
 #undef UINT16_MAX
 #undef UINT32_MAX
 #undef UINT64_MAX
-#define UINT8_MAX	((uint8) UINT8_C(0xFF))
-#define UINT16_MAX	((uint16)UINT16_C(0xFFFF))
-#define UINT32_MAX	((uint32)UINT32_C(0xFFFFFFFF))
-#define UINT64_MAX	((uint64)UINT64_C(0xFFFFFFFFFFFFFFFF))
+#define UINT8_MAX  ((uint8) UINT8_C(0xFF))
+#define UINT16_MAX ((uint16)UINT16_C(0xFFFF))
+#define UINT32_MAX ((uint32)UINT32_C(0xFFFFFFFF))
+#define UINT64_MAX ((uint64)UINT64_C(0xFFFFFFFFFFFFFFFF))
 
 #undef SINT8_MIN
 #undef SINT16_MIN
 #undef SINT32_MIN
 #undef SINT64_MIN
-#define SINT8_MIN	((sint8) INT8_C(0x80))
-#define SINT16_MIN	((sint16)INT16_C(0x8000))
-#define SINT32_MIN	((sint32)INT32_C(0x80000000))
-#define SINT64_MIN	((sint32)INT64_C(0x8000000000000000))
+#define SINT8_MIN  ((sint8) INT8_C(0x80))
+#define SINT16_MIN ((sint16)INT16_C(0x8000))
+#define SINT32_MIN ((sint32)INT32_C(0x80000000))
+#define SINT64_MIN ((sint32)INT64_C(0x8000000000000000))
 
 #undef SINT8_MAX
 #undef SINT16_MAX
 #undef SINT32_MAX
 #undef SINT64_MAX
-#define SINT8_MAX	((sint8) INT8_C(0x7F))
-#define SINT16_MAX	((sint16)INT16_C(0x7FFF))
-#define SINT32_MAX	((sint32)INT32_C(0x7FFFFFFF))
-#define SINT64_MAX	((sint64)INT64_C(0x7FFFFFFFFFFFFFFF))
+#define SINT8_MAX  ((sint8) INT8_C(0x7F))
+#define SINT16_MAX ((sint16)INT16_C(0x7FFF))
+#define SINT32_MAX ((sint32)INT32_C(0x7FFFFFFF))
+#define SINT64_MAX ((sint64)INT64_C(0x7FFFFFFFFFFFFFFF))
 
 //////////////////////////////////////////////////////////////////////////
 // Integers with guaranteed _minimum_ size.
@@ -180,10 +192,10 @@ typedef unsigned long int   ppuint32;
 
 #if defined(WIN32) && !defined(MINGW) // does not have a signed size_t
 //////////////////////////////
-#if defined(_WIN64)	// naive 64bit windows platform
-typedef __int64			ssize_t;
+#if defined(_WIN64) // native 64bit windows platform
+typedef __int64 ssize_t;
 #else
-typedef int				ssize_t;
+typedef int     ssize_t;
 #endif
 //////////////////////////////
 #endif
@@ -225,21 +237,22 @@ typedef uintptr_t uintptr;
 // some redefine of function redefines for some Compilers
 //////////////////////////////////////////////////////////////////////////
 #if defined(_MSC_VER) || defined(__BORLANDC__)
-#define strcasecmp			stricmp
-#define strncasecmp			strnicmp
-#define strncmpi			strnicmp
-#define snprintf			_snprintf
+#define strcasecmp  stricmp
+#define strncasecmp strnicmp
+#define strncmpi    strnicmp
+#define snprintf    _snprintf
 #if defined(_MSC_VER) && _MSC_VER < 1400
-#define vsnprintf			_vsnprintf
+#define vsnprintf   _vsnprintf
 #endif
 #else
-#define strcmpi				strcasecmp
-#define stricmp				strcasecmp
-#define strncmpi			strncasecmp
-#define strnicmp			strncasecmp
+#define strcmpi     strcasecmp
+#define stricmp     strcasecmp
+#define strncmpi    strncasecmp
+#define strnicmp    strncasecmp
 #endif
 #if defined(_MSC_VER) && _MSC_VER > 1200
-#define strtoull			_strtoui64
+#define strtoull    _strtoui64
+#define strtoll     _strtoi64
 #endif
 
 // keyword replacement
@@ -254,20 +267,30 @@ typedef uintptr_t uintptr;
 #define ra_align(n) __attribute__(( aligned(n) ))
 #endif
 
+// Directives for the (clang) static analyzer
+#ifdef __clang__
+#define analyzer_noreturn __attribute__((analyzer_noreturn))
+#else
+#define analyzer_noreturn
+#endif
 
-/////////////////////////////
-// for those still not building c++
-#ifndef __cplusplus
-//////////////////////////////
 
 // boolean types for C
-typedef char bool;
-#define false	(1==0)
-#define true	(1==1)
+#if !defined(_MSC_VER) || _MSC_VER >= 1800
+// MSVC doesn't have stdbool.h yet as of Visual Studio 2012 (MSVC version 17.00)
+// but it will support it in Visual Studio 2013 (MSVC version 18.00)
+// http://blogs.msdn.com/b/vcblog/archive/2013/07/19/c99-library-support-in-visual-studio-2013.aspx
+// GCC and Clang are assumed to be C99 compliant
+#include <stdbool.h> // bool, true, false, __bool_true_false_are_defined
+#endif // ! defined(_MSC_VER) || _MSC_VER >= 1800
 
-//////////////////////////////
-#endif // not __cplusplus
-//////////////////////////////
+#ifndef __bool_true_false_are_defined
+// If stdbool.h is not available or does not define this
+typedef char bool;
+#define false (1==0)
+#define true  (1==1)
+#define __bool_true_false_are_defined
+#endif // __bool_true_false_are_defined
 
 //////////////////////////////////////////////////////////////////////////
 // macro tools
@@ -276,11 +299,32 @@ typedef char bool;
 #undef swap
 #endif
 // hmm only ints?
-//#define swap(a,b) { int temp=a; a=b; b=temp;} 
+//#define swap(a,b) { int temp=a; a=b; b=temp;}
 // if using macros then something that is type independent
 //#define swap(a,b) ((a == b) || ((a ^= b), (b ^= a), (a ^= b)))
 // Avoid "value computed is not used" warning and generates the same assembly code
-#define swap(a,b) if (a != b) ((a ^= b), (b ^= a), (a ^= b))
+//#define swap(a,b) if (a != b) ((a ^= b), (b ^= a), (a ^= b))
+// but is vulnerable to 'if (foo) swap(bar, baz); else quux();', causing the else to nest incorrectly.
+#define swap(a,b) do { if ((a) != (b)) { (a) ^= (b); (b) ^= (a); (a) ^= (b); } } while(0)
+#if 0 //to be activated soon, more tests needed on how VS works with the macro above
+#ifdef WIN32
+#undef swap
+#define swap(a,b)__asm { \
+	__asm mov eax, dword ptr [a] \
+	__asm cmp eax, dword ptr [b] \
+	__asm je  _ret               \
+	__asm xor eax, dword ptr [b] \
+	__asm mov dword ptr [a], eax \
+	__asm xor eax, dword ptr [b] \
+	__asm mov dword ptr [b], eax \
+	__asm xor eax, dword ptr [a] \
+	__asm mov dword ptr [a], eax \
+	__asm _ret:                  \
+}
+#endif
+#endif
+
+#define swap_ptr(a,b) do { if ((a) != (b)) (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (b) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); } while(0)
 
 #ifndef max
 #define max(a,b) (((a) > (b)) ? (a) : (b))
@@ -297,10 +341,17 @@ typedef char bool;
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-// number of bits in a byte
-#ifndef NBBY
-#define	NBBY 8
+// Additional printf specifiers
+#if defined(_MSC_VER)
+#define PRIS_PREFIX "I"
+#else // gcc
+#define PRIS_PREFIX "z"
 #endif
+#define PRIdS PRIS_PREFIX "d"
+#define PRIxS PRIS_PREFIX "x"
+#define PRIuS PRIS_PREFIX "u"
+#define PRIXS PRIS_PREFIX "X"
+#define PRIoS PRIS_PREFIX "o"
 
 //////////////////////////////////////////////////////////////////////////
 // path separator
@@ -308,31 +359,14 @@ typedef char bool;
 #if defined(WIN32)
 #define PATHSEP '\\'
 #define PATHSEP_STR "\\"
-#elif defined(__APPLE__)
-// FIXME Mac OS X is unix based, is this still correct?
+#elif defined(__APPLE__) && !defined(__MACH__)
+// __MACH__ indicates OS X ( http://sourceforge.net/p/predef/wiki/OperatingSystems/ )
 #define PATHSEP ':'
 #define PATHSEP_STR ":"
 #else
 #define PATHSEP '/'
 #define PATHSEP_STR "/"
 #endif
-
-//////////////////////////////////////////////////////////////////////////
-// Assert
-
-#if ! defined(Assert)
-#if defined(RELEASE)
-#define Assert(EX)
-#else
-// extern "C" {
-#include <assert.h>
-// }
-#if !defined(DEFCPP) && defined(WIN32) && !defined(MINGW)
-#include <crtdbg.h>
-#endif
-#define Assert(EX) assert(EX)
-#endif
-#endif /* ! defined(Assert) */
 
 //////////////////////////////////////////////////////////////////////////
 // Has to be unsigned to avoid problems in some systems
@@ -370,7 +404,7 @@ typedef char bool;
 
 
 //////////////////////////////////////////////////////////////////////////
-// Use the preprocessor to 'stringify' stuff (concert to a string).
+// Use the preprocessor to 'stringify' stuff (convert to a string).
 // example:
 //   #define TESTE blabla
 //   QUOTE(TESTE) -> "TESTE"
@@ -379,26 +413,17 @@ typedef char bool;
 #define EXPAND_AND_QUOTE(x) QUOTE(x)
 
 
-//////////////////////////////////////////////////////////////////////////
-// Set a pointer variable to a pointer value.
-#ifdef __cplusplus
-template <typename T1, typename T2>
-void SET_POINTER(T1*&var, T2* p)
-{
-	var = static_cast<T1*>(p);
-}
-template <typename T1, typename T2>
-void SET_FUNCPOINTER(T1& var, T2 p)
-{
-	char ASSERT_POINTERSIZE[sizeof(T1) == sizeof(void*) && sizeof(T2) == sizeof(void*)?1:-1];// 1 if true, -1 if false
-	union{ T1 out; T2 in; } tmp;// /!\ WARNING casting a pointer to a function pointer is against the C++ standard
-	tmp.in = p;
-	var = tmp.out;
-}
+/* pointer size fix which fixes several gcc warnings */
+#ifdef __64BIT__
+	#define h64BPTRSIZE(y) ((intptr)(y))
 #else
-#define SET_POINTER(var,p) (var) = (p)
-#define SET_FUNCPOINTER(var,p) (var) = (p)
+	#define h64BPTRSIZE(y) (y)
 #endif
 
+/** Support macros for marking blocks to memset to 0 */
+#define BEGIN_ZEROED_BLOCK int8 HERC__zeroed_block_BEGIN
+#define END_ZEROED_BLOCK int8 HERC__zeroed_block_END
+#define ZEROED_BLOCK_POS(x) (&(x)->HERC__zeroed_block_BEGIN)
+#define ZEROED_BLOCK_SIZE(x) ((char*)&((x)->HERC__zeroed_block_END) - (char*)&((x)->HERC__zeroed_block_BEGIN) + sizeof((x)->HERC__zeroed_block_END))
 
-#endif /* _CBASETYPES_H_ */
+#endif /* COMMON_CBASETYPES_H */

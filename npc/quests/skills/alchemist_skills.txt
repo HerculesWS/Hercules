@@ -1,14 +1,14 @@
 //===== Hercules Script ======================================
 //= Alchemist Skills Quests
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Lupus, Reddozen, Samuray22
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.2
-//===== Description: ========================================= 
-//= [Aegis COnversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Quests for item: Elemental_Create_Book
 //= Quest for skill: Bioethics
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.9 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
 //= 2.0 Rescripted (and re-added) Bio Ethics quest. [L0ne_W0lf]
 //= 2.1 Fixed a Resurrection -> Homunculus Resurrection. [L0ne_W0lf]
@@ -16,7 +16,7 @@
 //= 2.2 Replaced effect numerics with constants. [L0ne_W0lf]
 //============================================================
 
-yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
+yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 	if (BaseJob == Job_Alchemist) {
 		if (JobLevel < 40) {
 			mes "[Pisruik]";
@@ -35,7 +35,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 			mes "worse than working when";
 			mes "you're supposed to be resting.";
 			mes "H-hey! Um, what are you doing?";
-			set ALCHE_SK,1;
+			ALCHE_SK = 1;
 			next;
 			mes "[Pisruik]";
 			mes "Q-quit looking at";
@@ -104,7 +104,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 				mes "["+ strcharinfo(0) +"]";
 				mes "I am called "+ strcharinfo(0) +".";
 				next;
-				set ALCHE_SK,2;
+				ALCHE_SK = 2;
 				mes "[Pisruik]";
 				mes "Ah, "+ strcharinfo(0) +".";
 				mes "Would you please bring";
@@ -139,7 +139,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 				mes "5 Yellow Gemstones.";
 				mes "That's what I needed.";
 				mes "I'm sure there was more,";
-				mes "but what I can't recall exactly... ^FFFFFF ^000000";
+				mes "but what I can't recall exactly... ";
 				next;
 				if (select("10 Hearts of Mermaid:10 Large Jellopies") == 1) {
 					mes "[Pisruik]";
@@ -195,7 +195,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 						delitem 1093,4; //Empty_Potion
 						delitem 950,10; //Heart_Of_Mermaid
 						delitem 1057,10; //Moth_Dust
-						set ALCHE_SK,3;
+						ALCHE_SK = 3;
 						mes "[Pisruik]";
 						mes "Great, it looks like";
 						mes "everything is here.";
@@ -206,14 +206,14 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 						next;
 						switch(select("Medicine?:Bomb?")) {
 						case 1:
-							set ALCHE_SK,4;
+							ALCHE_SK = 4;
 							mes "[Pisruik]";
 							mes "Hahahah, that's right!";
 							mes "I'm working on making";
 							mes "a new form of medicine.";
 							break;
 						case 2:
-							set ALCHE_SK,4;
+							ALCHE_SK = 4;
 							mes "[Pisruik]";
 							mes "A bomb? Do I look like";
 							mes "a nutcase to you? No, no...";
@@ -257,7 +257,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 						next;
 						switch(select("Nope, I'm too busy!:Sure, I'll help you.:What's in it for me?")) {
 						case 1:
-							set ALCHE_SK,5;
+							ALCHE_SK = 5;
 							mes "[Pisruik]";
 							mes "I guess I'll have to gather";
 							mes "those on my own. Alright, well,";
@@ -266,7 +266,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 							mes "your business with me is done.";
 							close;
 						case 2:
-							set ALCHE_SK,6;
+							ALCHE_SK = 6;
 							mes "[Pisruik]";
 							mes "Thanks, I really";
 							mes "appreciate it. While";
@@ -318,7 +318,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 							mes "the results of my research.";
 							next;
 							if (select("Nah, I'm too busy.:Alright, I'll help you.") == 1) {
-								set ALCHE_SK,5;
+								ALCHE_SK = 5;
 								mes "[Pisruik]";
 								mes "I guess I'll have to gather";
 								mes "those on my own. Alright, well,";
@@ -327,7 +327,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 								mes "your business with me is done.";
 								close;
 							}
-							set ALCHE_SK,6;
+							ALCHE_SK = 6;
 							mes "[Pisruik]";
 							mes "Thanks, I really";
 							mes "appreciate it. While";
@@ -435,7 +435,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 			mes "maybe it's not your fault.";
 			mes "Anyway, just so you know,";
 			mes "I'm developing a new medicine.";
-			set ALCHE_SK,4;
+			ALCHE_SK = 4;
 			close;
 		}
 		else if (ALCHE_SK == 4) {
@@ -497,7 +497,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 			next;
 			switch(select("Nope, I'm too busy!:Sure, I'll help you.:What's in it for me?")) {
 			case 1:
-				set ALCHE_SK,5;
+				ALCHE_SK = 5;
 				mes "[Pisruik]";
 				mes "I guess I'll have to gather";
 				mes "those on my own. Alright, well,";
@@ -506,7 +506,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 				mes "your business with me is done.";
 				close;
 			case 2:
-				set ALCHE_SK,6;
+				ALCHE_SK = 6;
 				mes "[Pisruik]";
 				mes "Thanks, I really";
 				mes "appreciate it. While";
@@ -558,7 +558,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 				mes "the results of my research.";
 				next;
 				if (select("Nah, I'm too busy.:Alright, I'll help you.") == 1) {
-					set ALCHE_SK,5;
+					ALCHE_SK = 5;
 					mes "[Pisruik]";
 					mes "I guess I'll have to gather";
 					mes "those on my own. Alright, well,";
@@ -567,7 +567,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 					mes "your business with me is done.";
 					close;
 				}
-				set ALCHE_SK,6;
+				ALCHE_SK = 6;
 				mes "[Pisruik]";
 				mes "Thanks, I really";
 				mes "appreciate it. While";
@@ -640,8 +640,8 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 			mes "20 Maneater Blossoms.";
 			mes "If I weren't so sickly, I'd get";
 			mes "them myself, but--*Cough* as";
-			mes "you can see, I don't feel so well. ^FFFFFF ^000000";
-			set ALCHE_SK,6;
+			mes "you can see, I don't feel so well. ";
+			ALCHE_SK = 6;
 			next;
 			mes "[Pisruik]";
 			if (Sex == 0) {
@@ -661,7 +661,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 		else if (ALCHE_SK == 6) {
 			if (countitem(1032) > 19) {
 				delitem 1032,20; //Blossom_Of_Maneater
-				set ALCHE_SK,7;
+				ALCHE_SK = 7;
 				mes "[Pisruik]";
 				mes "Thanks so much for";
 				mes "bringing me these";
@@ -676,7 +676,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 					mes "Clover extract I prepared.";
 				}
 				next;
-				set ALCHE_SK,9;
+				ALCHE_SK = 9;
 				specialeffect EF_SUI_EXPLOSION;
 				mes "[Pisruik]";
 				mes "Ah!";
@@ -753,19 +753,19 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 			}
 		}
 		else if (ALCHE_SK == 7) {
-			set ALCHE_SK,8;
+			ALCHE_SK = 8;
 			mes "[Pisruik]";
 			mes "Hmmm...";
 			mes "Actually, I miscalculated";
 			mes "the number of Maneater";
 			mes "Blossoms that I need. Would";
-			mes "you bring me one more? Sorry,^FFFFFF ^000000 I know it's kind of troublesome...";
+			mes "you bring me one more? Sorry, I know it's kind of troublesome...";
 			close;
 		}
 		else if (ALCHE_SK == 8) {
 			if (countitem(1032) > 0) {
 				delitem 1032,1; //Blossom_Of_Maneater
-				set ALCHE_SK,7;
+				ALCHE_SK = 7;
 				mes "[Pisruik]";
 				mes "Thanks so much!";
 				mes "Now I finally have the";
@@ -780,7 +780,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 					mes "exciting part of this project!";
 				}
 				next;
-				set ALCHE_SK,9;
+				ALCHE_SK = 9;
 				specialeffect EF_SUI_EXPLOSION;
 				mes "[Pisruik]";
 				mes "Ah!";
@@ -851,7 +851,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 				mes "Actually, I miscalculated";
 				mes "the number of Maneater";
 				mes "Blossoms that I need. Would";
-				mes "you bring me one more? Sorry,^FFFFFF ^000000 I know it's kind of troublesome...";
+				mes "you bring me one more? Sorry, I know it's kind of troublesome...";
 				close;
 			}
 		}
@@ -866,7 +866,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 			if (select("Let him try a pair of your glasses:Don't give him anything") == 1) {
 				if (countitem(2243) > 0) {
 					delitem 2243,1; //Spinning_Eyes
-					set ALCHE_SK,10;
+					ALCHE_SK = 10;
 					//changes the quest steps by deicision.
 					mes "["+ strcharinfo(0) +"]";
 					mes "Here, why don't you";
@@ -922,7 +922,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 						mes "well as a few warnings about";
 						mes "the medicine's side effects.^000000";
 						next;
-						set ALCHE_SK,11;
+						ALCHE_SK = 11;
 						getitem 7434,1; //Elemental_Create_Book
 						mes "[Pisruik]";
 						mes "Well, you should be";
@@ -1009,7 +1009,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 				mes "well as a few warnings about";
 				mes "the medicine's side effects.^000000";
 				next;
-				set ALCHE_SK,11;
+				ALCHE_SK = 11;
 				getitem 7434,1; //Elemental_Create_Book
 				mes "[Pisruik]";
 				mes "Well, you should be";
@@ -1101,7 +1101,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	883,{
 	}
 }
 
-yuno_in04,22,107,5	script	Irache#qsk_al	740,{
+yuno_in04,22,107,5	script	Irache#qsk_al	2_M_ALCHE,{
 	mes "[Irache]";
 	mes "Heh heh heh...!";
 	mes "It's done! With this";
@@ -1119,7 +1119,7 @@ yuno_in04,22,107,5	script	Irache#qsk_al	740,{
 	close;
 }
 
-yuno_in04,27,107,4	script	Degas#qsk_al	748,{
+yuno_in04,27,107,4	script	Degas#qsk_al	4_M_ALCHE_A,{
 	mes "[Degas]";
 	mes "It's such a pain working";
 	mes "so close to these other";
@@ -1133,11 +1133,11 @@ yuno_in04,27,107,4	script	Degas#qsk_al	748,{
 	mes "always coughing. Between";
 	mes "the two of them, it's far too";
 	mes "noisy to focus on my research!";
-	mes "If only I could work in my very^FFFFFF ^000000 own private, secret laboratory...";
+	mes "If only I could work in my very own private, secret laboratory...";
 	close;
 }
 
-yuno_in04,33,106,4	script	Pile of Books#qsk_al	111,{
+yuno_in04,33,106,4	script	Pile of Books#qsk_al	HIDDEN_NPC,{
 	mes "^3355FFIt's simply a pile";
 	mes "of scattered documents.";
 	mes "Although it seems unorganized,";
@@ -1147,7 +1147,7 @@ yuno_in04,33,106,4	script	Pile of Books#qsk_al	111,{
 }
 
 // Start Bioethics quest
-lhz_in01,224,140,3	script	Kellasus#qsk_al	57,{
+lhz_in01,224,140,3	script	Kellasus#qsk_al	1_M_LIBRARYMASTER,{
 	if (BaseJob == Job_Alchemist && bioeth == 13) {
 		mes "[Kellasus]";
 		mes "Keep up the";
@@ -1177,12 +1177,12 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	57,{
 		mes "to see if your Homunculus";
 		mes "is tired or hungry, or if it's";
 		mes "been hurt. You must also take";
-		mes "into account your Homunculus's^FFFFFF ^000000 feelings towards you, its owner.";
+		mes "into account your Homunculus's feelings towards you, its owner.";
 		next;
 		mes "[Kellasus]";
 		mes "When that nurturing attitude";
 		mes "becomes second nature to you,";
-		mes "you will have mastered Bioethics.^FFFFFF ^000000 It sounds simple, but you can only";
+		mes "you will have mastered Bioethics. It sounds simple, but you can only";
 		mes "understand a relationship with a Homunculus through experience.";
 		next;
 		mes "[Kellasus]";
@@ -1202,8 +1202,8 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	57,{
 		mes "My name is...";
 		mes "" + strcharinfo(0) + ".";
 		next;
-		set bioeth,13;
-		skill 238,1,0;
+		bioeth = 13;
+		skill "AM_BIOETHICS",1,0;
 		mes "[Kellasus]";
 		mes "Ah...";
 		mes "" + strcharinfo(0) + ".";
@@ -1249,7 +1249,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	57,{
 		mes "people. It's not like I can force you to forget once you know how";
 		mes "to make Homunculi, understand?";
 		next;
-		set bioeth,12;
+		bioeth = 12;
 		mes "[Kellasus]";
 		mes "Please give me a little";
 		mes "time to prepare my lesson";
@@ -1258,7 +1258,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	57,{
 		close;
 	}
 	if (BaseJob == Job_Alchemist && bioeth == 10) {
-		set bioeth,11;
+		bioeth = 11;
 		mes "[Kellasus]";
 		mes "^333333*Sigh*^000000";
 		mes "I'm so confused...";
@@ -1361,7 +1361,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	57,{
 		mes "hope to someone's";
 		mes "hopeless situation...";
 		next;
-		set bioeth,10;
+		bioeth = 10;
 		mes "[Kellasus]";
 		mes "I've never...";
 		mes "I never thought...";
@@ -1460,7 +1460,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	57,{
 					mes "of what I believe to be an";
 					mes "abuse of the gift of life.";
 					next;
-					set bioeth,8;
+					bioeth = 8;
 					mes "[Kellasus]";
 					mes "There's just so much";
 					mes "risk! I don't think I can";
@@ -1525,7 +1525,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	57,{
 		mes "brings you this way?";
 		mes "As your senior in the";
 		mes "field of Alchemy, I can";
-		mes "give you some advice if you're^FFFFFF ^000000 stumped by a particular problem...";
+		mes "give you some advice if you're stumped by a particular problem...";
 		next;
 		if (select("Teach me the Homunculus Skills.:No, nothing.") == 1) {
 			mes "[" + strcharinfo(0) + "]";
@@ -1555,11 +1555,11 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	57,{
 			mes "[Kellasus]";
 			mes "Perhaps I never should";
 			mes "have mentioned that subject.";
-			mes "But I still don't understand why^FFFFFF ^000000 you would suddenly want to ";
+			mes "But I still don't understand why you would suddenly want to ";
 			mes "learn those skills. Yes, it's";
 			mes "true that I could teach you...";
 			next;
-			set bioeth,4;
+			bioeth = 4;
 			mes "[Kellasus]";
 			mes "But I refuse to pass down";
 			mes "my knowledge of Homunculi";
@@ -1629,16 +1629,16 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	57,{
 		mes "[Kellasus]";
 		mes "I only fear that your quest";
 		mes "for knowledge, your insatiable";
-		mes "curiosity to reveal the unknown,^FFFFFF ^000000 may lead you on the path of the";
-		mes "Homunculus. For your own sake,^FFFFFF ^000000 don't bother considering the idea.";
+		mes "curiosity to reveal the unknown, may lead you on the path of the";
+		mes "Homunculus. For your own sake, don't bother considering the idea.";
 		next;
-		set bioeth,3;
+		bioeth = 3;
 		mes "[Kellasus]";
 		mes "Remember that all life is";
 		mes "precious. If your motives";
 		mes "are good, and untainted by";
 		mes "the desire for fame or fortune,";
-		mes "and if you work for the greater^FFFFFF ^000000 good of mankind, you'll be fine.";
+		mes "and if you work for the greater good of mankind, you'll be fine.";
 		close;
 	}
 	if (BaseJob == Job_Alchemist && bioeth == 1) {
@@ -1680,13 +1680,13 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	57,{
 		mes "Philosophy must all be learned";
 		mes "by the competent Alchemist.";
 		next;
-		set bioeth,2;
+		bioeth = 2;
 		mes "[Kellasus]";
 		mes "Once you've entered the";
 		mes "exciting vastness of Alchemy,";
 		mes "there is no turning back. Do";
 		mes "your best to learn all that you";
-		mes "can, and never forget that you^FFFFFF ^000000 have responsibilities to mankind.";
+		mes "can, and never forget that you have responsibilities to mankind.";
 		close;
 	}
 	if (BaseJob == Job_Alchemist) {
@@ -1714,7 +1714,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	57,{
 		mes "Do not be so proud as to";
 		mes "seek out forbidden truths.";
 		next;
-		set bioeth,1;
+		bioeth = 1;
 		mes "[Kellasus]";
 		mes "Good luck in your";
 		mes "studies, and I hope";
@@ -1740,13 +1740,13 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	57,{
 	close;
 }
 
-lhz_in01,225,122,5	script	Skrajjad#qsk_al	754,{
+lhz_in01,225,122,5	script	Skrajjad#qsk_al	4_M_SAGE_A,{
 	if (BaseJob == Job_Alchemist && bioeth > 4) {
 		mes "[Skrajjad]";
 		mes "I've taught you everything";
 		mes "I can about the Homunculi.";
 		mes "I hope that I've been of some";
-		mes "help in your quest for knowledge^FFFFFF ^000000 and understanding of our universe.";
+		mes "help in your quest for knowledge and understanding of our universe.";
 		next;
 		mes "[Skrajjad]";
 		mes "If you haven't already done";
@@ -1828,7 +1828,7 @@ lhz_in01,225,122,5	script	Skrajjad#qsk_al	754,{
 		mes "so that he can teach you";
 		mes "the Call Homunculus skill.";
 		next;
-		set bioeth,5;
+		bioeth = 5;
 		mes "[Skrajjad]";
 		mes "Good luck in";
 		mes "your studies";
@@ -1854,7 +1854,7 @@ lhz_in01,225,122,5	script	Skrajjad#qsk_al	754,{
 	close;
 }
 
-lhz_in01,204,138,5	script	Keshibien#qsk_al	750,{
+lhz_in01,204,138,5	script	Keshibien#qsk_al	4_M_ALCHE_C,{
 	if (BaseJob == Job_Alchemist && bioeth > 5) {
 		mes "[Keshibien]";
 		mes "I hope that you";
@@ -1940,7 +1940,7 @@ lhz_in01,204,138,5	script	Keshibien#qsk_al	750,{
 		mes "find him somewhere in town,";
 		mes "though I'm unsure where...";
 		next;
-		set bioeth,6;
+		bioeth = 6;
 		mes "[Keshibien]";
 		mes "Anyway, it was really";
 		mes "nice to meet you. Hopefully,";
@@ -1966,7 +1966,7 @@ lhz_in01,204,138,5	script	Keshibien#qsk_al	750,{
 	close;
 }
 
-lhz_in02,278,273,3	script	Broncher#qsk_al	709,{
+lhz_in02,278,273,3	script	Broncher#qsk_al	4_M_SEAMAN,{
 	if (BaseJob == Job_Alchemist && bioeth > 6) {
 		mes "[Broncher]";
 		mes "You again? Didn't I already";
@@ -2031,7 +2031,7 @@ lhz_in02,278,273,3	script	Broncher#qsk_al	709,{
 		mes "Homunculus Resurrection.";
 		mes "But you still need Kellasus";
 		mes "to teach you the fundamentals.";
-		set bioeth,7;
+		bioeth = 7;
 		next;
 		mes "[Broncher]";
 		mes "Without those basic";
@@ -2058,7 +2058,7 @@ lhz_in02,278,273,3	script	Broncher#qsk_al	709,{
 	close;
 }
 
-lhz_in03,106,34,3	script	Koring#qsk_al	706,{
+lhz_in03,106,34,3	script	Koring#qsk_al	4_M_KID1,{
 	if (BaseJob == Job_Alchemist && bioeth == 8 || bioeth == 9) {
 		mes "[Koring]";
 		mes "My daddy is the bestest";
@@ -2077,7 +2077,7 @@ lhz_in03,106,34,3	script	Koring#qsk_al	706,{
 		mes "He's always trying hard";
 		mes "to make me happy and to ";
 		mes "help me when I have problems.";
-		mes "Like the time I was really sick... ^FFFFFF ^000000";
+		mes "Like the time I was really sick... ";
 		next;
 		mes "[Koring]";
 		mes "Daddy did his best to make";
@@ -2087,7 +2087,7 @@ lhz_in03,106,34,3	script	Koring#qsk_al	706,{
 		mes "a while, I was really scared,";
 		mes "but my Daddy never gave up.";
 		next;
-		if (bioeth == 8) set bioeth,9;
+		if (bioeth == 8) bioeth = 9;
 		mes "[Koring]";
 		mes "He might be a little";
 		mes "grumpy now, but my ";
@@ -2104,7 +2104,7 @@ lhz_in03,106,34,3	script	Koring#qsk_al	706,{
 	close;
 }
 
-lhz_in03,109,31,5	script	Beninne#qsk_al	90,{
+lhz_in03,109,31,5	script	Beninne#qsk_al	4_F_01,{
 	if (BaseJob == Job_Alchemist && bioeth == 8 || bioeth == 9) {
 		mes "[Beninne]";
 		mes "You've met my husband,";
@@ -2148,17 +2148,17 @@ lhz_in03,109,31,5	script	Beninne#qsk_al	90,{
 	close;
 }
 
-lighthalzen,226,210,3	script	Nannan#qsk_al	86,{
+lighthalzen,226,210,3	script	Nannan#qsk_al	4_M_04,{
 	mes "[Nannan]";
-	mes "You know, I always thought^FFFFFF ^000000 that all Alchemists were bookish,";
+	mes "You know, I always thought that all Alchemists were bookish,";
 	mes "scholarly types, their faces always buried in books and studying. But";
 	mes "I managed to find one who doesn't fit that nerdy stereotype at all.";
 	next;
 	mes "[Nannan]";
 	mes "This guy, what's-his-face,";
 	mes "Broncher, is always wasting";
-	mes "his time drinking. I guess he^FFFFFF ^000000 discovered the secret of turning";
-	mes "water into Grade A booze. But^FFFFFF ^000000 at least he's not the stuffy type.";
+	mes "his time drinking. I guess he discovered the secret of turning";
+	mes "water into Grade A booze. But at least he's not the stuffy type.";
 	next;
 	mes "[Nannan]";
 	mes "I don't know how much";
@@ -2170,7 +2170,7 @@ lighthalzen,226,210,3	script	Nannan#qsk_al	86,{
 	close;
 }
 
-lhz_in01,218,141,7	script	Alchemist#qsk_al	98,{
+lhz_in01,218,141,7	script	Alchemist#qsk_al	4W_M_02,{
 	mes "[Alchemist]";
 	mes "Out of all humans,";
 	mes "I believe Kellasus is";
@@ -2197,15 +2197,15 @@ lhz_in01,218,141,7	script	Alchemist#qsk_al	98,{
 	close;
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= 1.0 for fully working skills only [Lupus]
 //= 1.1 Added more new skill quests for more classes [Lupus]
 //= Somehow eA engine doesn't let you keep learn't skill V_V'
 //= 1.2 Added to correct locations, correct NPC's, fixed
 //= some of the items required and made them into real
-//= quests. [Reddozen] 
+//= quests. [Reddozen]
 //= 1.3 Fixed bugs and minor typos. Optimized [Lupus]
 //= 1.3a fixed an item ID typo, thx 2Spiritual Kid
 //= 1.3b Splitted into different files [DracoRPG]

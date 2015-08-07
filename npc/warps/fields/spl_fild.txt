@@ -1,13 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Splendid Field Warp Script
 //===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Warp Points for Splendide
 //===== Additional Comments: =================================
 //= 1.0 First Version.

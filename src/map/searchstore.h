@@ -2,11 +2,45 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _SEARCHSTORE_H_
-#define _SEARCHSTORE_H_
+#ifndef MAP_SEARCHSTORE_H
+#define MAP_SEARCHSTORE_H
 
+#include "map/map.h" // MESSAGE_SIZE
+#include "common/cbasetypes.h"
+#include "common/mmo.h" // MAX_SLOTS
+
+#include <time.h>
+
+/**
+ * Defines
+ **/
 #define SEARCHSTORE_RESULTS_PER_PAGE 10
 
+/**
+ * Enumerations
+ **/
+enum e_searchstore_searchtype {
+	SEARCHTYPE_VENDING      = 0,
+	SEARCHTYPE_BUYING_STORE = 1,
+};
+
+enum e_searchstore_effecttype {
+	EFFECTTYPE_NORMAL = 0,
+	EFFECTTYPE_CASH   = 1,
+	EFFECTTYPE_MAX
+};
+/// failure constants for clif functions
+enum e_searchstore_failure {
+	SSI_FAILED_NOTHING_SEARCH_ITEM         = 0,  // "No matching stores were found."
+	SSI_FAILED_OVER_MAXCOUNT               = 1,  // "There are too many results. Please enter more detailed search term."
+	SSI_FAILED_SEARCH_CNT                  = 2,  // "You cannot search anymore."
+	SSI_FAILED_LIMIT_SEARCH_TIME           = 3,  // "You cannot search yet."
+	SSI_FAILED_SSILIST_CLICK_TO_OPEN_STORE = 4,  // "No sale (purchase) information available."
+};
+
+/**
+ * Structures
+ **/
 /// information about the search being performed
 struct s_search_store_search {
 	struct map_session_data* search_sd;  // sd of the searching player
@@ -41,6 +75,13 @@ struct s_search_store_info {
 	bool open;
 };
 
+/// type for shop search function
+typedef bool (*searchstore_search_t)(struct map_session_data* sd, unsigned short nameid);
+typedef bool (*searchstore_searchall_t)(struct map_session_data* sd, const struct s_search_store_search* s);
+
+/**
+ * Interface
+ **/
 struct searchstore_interface {
 	bool (*open) (struct map_session_data* sd, unsigned int uses, unsigned short effect);
 	void (*query) (struct map_session_data* sd, unsigned char type, unsigned int min_price, unsigned int max_price, const unsigned short* itemlist, unsigned int item_count, const unsigned short* cardlist, unsigned int card_count);
@@ -52,10 +93,12 @@ struct searchstore_interface {
 	bool (*queryremote) (struct map_session_data* sd, int account_id);
 	void (*clearremote) (struct map_session_data* sd);
 	bool (*result) (struct map_session_data* sd, unsigned int store_id, int account_id, const char* store_name, unsigned short nameid, unsigned short amount, unsigned int price, const short* card, unsigned char refine);
-} searchstore_s;
+};
 
 struct searchstore_interface *searchstore;
 
-void searchstore_defaults (void);
+#ifdef HERCULES_CORE
+void searchstore_defaults(void);
+#endif // HERCULES_CORE
 
-#endif  // _SEARCHSTORE_H_
+#endif /* MAP_SEARCHSTORE_H */

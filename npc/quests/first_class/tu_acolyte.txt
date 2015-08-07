@@ -1,30 +1,31 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Acolyte Class Tutorial and Job Specific Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Fix up by Jukka
-//===== Current Version: ===================================== 
-//= 1.6a
-//===== Compatible With: ===================================== 
-//= rAthena SVN (Testet in Trunk 88xx)
-//===== Description: ========================================= 
-//=
-//===== Additional Comments: ================================= 
+//===== Current Version: =====================================
+//= 1.9
+//===== Description: =========================================
+//= [Official Conversion]
+//= Acolyte training quest.
+//===== Additional Comments: =================================
 //= 1.0 Fully working
 //= 1.1 optimized [Lupus]
-//=	TODO: Test, Add correct misceffects numbers
 //= 1.2 Fixed experience gains to match upcoming rate adjustments. [SinSloth]
 //= 1.3 Fixed bad NPC header data to comply with rev. 11603. [L0ne_W0lf]
 //= 1.4 Misc. updates. [L0ne_W0lf]
 //= 1.5 Adjusted EXP gains to Renewal values.
 //= 1.6 Fixed a wrong placed curly bracket. [Joseph]
 //= 1.6a Added 'npcskill' command. [Euphy]
-//============================================================ 
+//= 1.7 Fixed exp, texts, and requirements in pre-renewal [Daegaladh]
+//= 1.8 Updated to match the official script. [Euphy]
+//= 1.9 Added GM management function. [Euphy]
+//============================================================
 
 // Priest Praupin
 //============================================================
-prt_church,179,15,1	script	Priest Praupin	110,{
+prt_church,179,15,1	script	Priest Praupin	4_M_MINISTER,{
 	mes "[Priest Praupin]";
-	if(BaseClass != Job_Acolyte){
+	if(BaseJob != Job_Acolyte){
 		if(tu_acolyte01 == 25){
 			mes "Oh...!";
 			mes "You're "+strcharinfo(0)+" !";
@@ -62,7 +63,7 @@ prt_church,179,15,1	script	Priest Praupin	110,{
 			mes "[Priest Praupin]";
 			mes "I look forward to seeing you";
 			mes "become a better Acolyte after learning from Sister Asthe's instructions. If you like, I can send you to the convent.";
-			set tu_acolyte01, 1;
+			tu_acolyte01 = 1;
 			next;
 			if(select("Go to the convent.:Do not go.")==1){
 				mes "[Priest Praupin]";
@@ -119,12 +120,12 @@ prt_church,179,15,1	script	Priest Praupin	110,{
 			switch(select("Wand:Flail")) {
 			case 1:
 				delitem 7181,1; //Receipt_01
-				set tu_acolyte01,23;
+				tu_acolyte01 = 23;
 				getitem 1604,1; //Wand
 				break;
 			case 2:
 				delitem 7181,1; //Receipt_01
-				set tu_acolyte01,23;
+				tu_acolyte01 = 23;
 				getitem 1510,1; //Flail
 				break;
 			}
@@ -173,7 +174,7 @@ prt_church,179,15,1	script	Priest Praupin	110,{
 
 // Asthe
 //============================================================
-prt_monk,230,106,3	script	Asthe#tu	79,{
+prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 	mes "[Asthe]";
 	switch(tu_acolyte01){
 	case 1:
@@ -200,7 +201,7 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 			mes "why don't you rest";
 			mes "for a little bit? You must be tired after traveling all the way here. When you're ready, just come";
 			mes "see me, okay?";
-			set tu_acolyte01, 2;
+			tu_acolyte01 = 2;
 			close;
 		}
 		break;
@@ -246,7 +247,7 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 		mes "is the most necessary";
 		mes "skill for an Acolyte?";
 		next;
-		switch(select("Heal:Aqua Benedicta:Teleport")){ 
+		switch(select("Heal:Aqua Benedicta:Teleport")){
 		case 1:
 			mes "[Asthe]";
 			mes "Ah, yes.";
@@ -290,10 +291,10 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 		next;
 		mes "[Asthe]";
 		mes "HEAL !!";
-		npcskill "AL_HEAL",10,99,60;
-		set tu_acolyte01, 3;
+		npcskill "AL_HEAL",11,99,60;
+		tu_acolyte01 = 3;
 		if(getskilllv("AL_HEAL") == 0){
-			getexp 0,10;
+			getexp 0,100;
 			specialeffect2 EF_CONE;
 		}
 		close;
@@ -329,7 +330,7 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 			mes "Well then,";
 			mes "I hope you";
 			mes "have a safe trip.";
-			set tu_acolyte01,4;
+			tu_acolyte01 = 4;
 			getitem 1504,1; //Mace
 			getitem 602,1; //Wing_Of_Butterfly
 			savepoint "prt_monk",30,250;
@@ -347,7 +348,7 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 			mes "ready for me to discuss";
 			mes "the next subject. Now,";
 			mes "let's see... Hmm...";
-			set tu_acolyte01, 5;
+			tu_acolyte01 = 5;
 			close;
 		}
 		break;
@@ -379,14 +380,17 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 				mes "Thank you so much.";
 				mes "You have returned the Mace.";
 				emotion e_heh;
-				set tu_acolyte01, 5;
+				tu_acolyte01 = 5;
 				delitem 1504, 1; //Mace
-				if(Class == Job_Acolyte_High)
-					getexp 200,100;
-				else
-					getexp 100,50;
-				specialeffect2 EF_CONE;
-				close;
+				if(Class == Job_Acolyte_High) {
+					getexp 2000,1000;
+					specialeffect2 EF_CONE;
+					close;
+				} else {
+					getexp 1000,500;
+					specialeffect2 EF_CONE;
+					close;
+				}
 			} else {
 				mes "Oh my!";
 				mes "Welcome back~";
@@ -395,7 +399,7 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 				next;
 				mes "[Asthe]";
 				mes "But you must have forgotten the Mace I've lent you. Would you bring it back so that I can return it to the church?";
-				close;  
+				close;
 			}
 		}
 		mes "Are you having";
@@ -429,7 +433,7 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 		mes "[Asthe]";
 		mes "Did you undertand all that?";
 		mes "Ho ho ho~ No need to try to remember everything right now. You'll get the hang of it.";
-		set tu_acolyte01, 6;
+		tu_acolyte01 = 6;
 		close;
 	case 6:
 		mes ""+strcharinfo(0)+",";
@@ -440,7 +444,7 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 		mes "[Asthe]";
 		mes "However, I'm a little busy with";
 		mes "my work right now, so would you deliver this to Priest Gardron in the next building for me?";
-		set tu_acolyte01,7;
+		tu_acolyte01 = 7;
 		getitem 7148,1; //Mother_Letter
 		close;
 	case 7:
@@ -451,7 +455,7 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 		mes "building nearby.";
 		close;
 	case 9:
-		mes "You went to Prontera on behalf of the convent for Priest Gardron? That must have been tough...";
+		mes "You went to "+(RENEWAL?"Prontera":"Payon")+" on behalf of the convent for Priest Gardron? That must have been tough...";
 		next;
 		mes "[Asthe]";
 		mes "Blessing!";
@@ -488,7 +492,7 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 		next;
 		mes "^3355FFSister Asthe gives";
 		mes "you some dog food.^000000";
-		set tu_acolyte01, 10;
+		tu_acolyte01 = 10;
 		close;
 	case 11:
 	case 12:
@@ -509,7 +513,7 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 		mes "know the answer.";
 		mes "Think carefully";
 		mes "and it will come.";
-		set tu_acolyte01, 12;
+		tu_acolyte01 = 12;
 		close;
 	case 13:
 		mes "You remember that";
@@ -538,7 +542,7 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 		mes "Let's take a break before";
 		mes "we proceed to the next lesson,";
 		mes "alright? I'll be right here.";
-		set tu_acolyte01, 14;
+		tu_acolyte01 = 14;
 		close;
 	case 14:
 		mes "Now it's time";
@@ -560,7 +564,7 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 		mes "[Asthe]";
 		mes "Try it for";
 		mes "yourself, okay?";
-		set tu_acolyte01, 15;
+		tu_acolyte01 = 15;
 		npcskill "AL_INCAGI",10,0,0;
 		close;
 	case 15:
@@ -571,7 +575,7 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 		next;
 		mes "[Asthe]";
 		mes "Like you'd expect, Decrease AGI slows down enemies, reducing their agility, Movement Speed, Dodge Rate and Attack Speed. Its effect is the exact reverse of Increase AGI.";
-		set tu_acolyte01, 15;
+		tu_acolyte01 = 15;
 		next;
 		mes "[Asthe]";
 		mes "The last skill in the Heal skill tree is ^3131FFCure^000000. You can learn Cure after learning Level 2 Heal.";
@@ -587,7 +591,7 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 		mes "For now, don't forget that the Increase AGI, Decrease AGI and";
 		mes "Cure skills can only be learned";
 		mes "by learning the Heal skill.";
-		set tu_acolyte01, 16;
+		tu_acolyte01 = 16;
 		close;
 	case 16:
 		mes "You've been learning";
@@ -654,7 +658,7 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 			mes "[Asthe]";
 			mes "Ho ho!";
 			mes "What a smart Acolyte~";
-			set tu_acolyte01, 17;
+			tu_acolyte01 = 17;
 		}
 		close;
 	case 17:
@@ -687,7 +691,7 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 			mes "to carry everything.";
 			mes "Why don't you put some of your things in Kafra Storage first?";
 		} else {
-			set tu_acolyte01, 18;
+			tu_acolyte01 = 18;
 			getitem 7183,1; //Sister_Letter
 			getitem 7181,1; //Receipt_01
 			getitem 1081,2; //Merchant_Box_1
@@ -737,7 +741,7 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 		mes "the next time we";
 		mes "meet, I will give";
 		mes "you my final lesson.";
-		set tu_acolyte01, 24;
+		tu_acolyte01 = 24;
 		close;
 	case 24:
 		mes "The last skill";
@@ -771,8 +775,11 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 		next;
 		mes "[Asthe]";
 		mes "Well, please don't forget what I've taught you. I hope you look back with fondness at our time together amongst these beautiful flowers. May God bless you~";
-		set tu_acolyte01, 25;
-		getexp 500,300;
+		tu_acolyte01 = 25;
+		if (RENEWAL_EXP)
+			getexp 1000,1000;
+		else
+			getexp 5000,3000;
 		specialeffect2 EF_CONE;
 		close;
 	}
@@ -793,7 +800,7 @@ prt_monk,230,106,3	script	Asthe#tu	79,{
 
 // Priest Gardron
 //============================================================
-monk_in,18,38,6	script	Priest Gardron#tu	110,{
+monk_in,18,38,6	script	Priest Gardron#tu	4_M_MINISTER,{
 	mes "[Priest Gardron]";
 	if(tu_acolyte01 == 7){
 		if(countitem(7148) >= 1){
@@ -811,7 +818,7 @@ monk_in,18,38,6	script	Priest Gardron#tu	110,{
 			mes "she is getting old now, but I'm relieved to hear that her health";
 			mes "is good. We are truly blessed...";
 			delitem 7148,1; //Mother_Letter
-			set tu_acolyte01,8;
+			tu_acolyte01 = 8;
 			close;
 		} else {
 			mes "Hmm...?";
@@ -826,8 +833,8 @@ monk_in,18,38,6	script	Priest Gardron#tu	110,{
 			close;
 		}
 	} else if(tu_acolyte01 == 8){
-		if(countitem(939) > 4){
-			mes "Oh..!";
+		if(countitem(RENEWAL?939:957) > 4){
+			mes "Oh...!";
 			mes "You've returned!";
 			mes "Let's see... One...";
 			mes "Two... Three...";
@@ -838,7 +845,7 @@ monk_in,18,38,6	script	Priest Gardron#tu	110,{
 			mes "on behalf of the convent,";
 			mes "not to mention the fact that";
 			mes "you've protected the citizens";
-			mes "of Prontera from danger.";
+			mes "of "+(RENEWAL?"Prontera":"Payon")+" from danger.";
 			next;
 			mes "[Priest Gardron]";
 			mes "May you always";
@@ -846,47 +853,90 @@ monk_in,18,38,6	script	Priest Gardron#tu	110,{
 			mes "should return to Sister";
 			mes "Asthe to continue your";
 			mes "Acolyte training.";
-			set tu_acolyte01, 9;
+			tu_acolyte01 = 9;
 			percentheal 100,100;
-			getexp 200,200;
+			if (RENEWAL_EXP)
+				getexp 1000,1000;
+			else
+				getexp 2000,2000;
 			specialeffect2 EF_CONE;
 			//getitem 505,1; //Blue_Potion
 			close;
 		} else {
-			mes "A little while ago, a Prontere Sister sent me a message. Apparently,";
-			mes "the residents of Prontera are being plagued by Hornets.";
-
-			next;
-			mes "[Priest Gardron]";
-			mes "She has requested the convent for help, but we've got a big problem. We're running out of people here that can deal with this situation...";
-			next;
-			mes "[Priest Gardron]";
-			mes "....!";
-			emotion e_gasp;
-			next;
-			mes "[Priest Gardron]";
-			mes ""+strcharinfo(0)+",";
-			mes "may I ask";
-			mes "you to take care";
-			mes "of this task? Exterminate the Hornets west of Prontera.";
-			next;
-			mes "[Priest Gardron]";
-			mes "Since you're still in basic training, I will give you some";
-			mes "help if you return with";
-			mes "^3131FF5 Bee Stings^000000.";
-			next;
-			mes "[Priest Gardron]";
-			mes "Now then...";
-			mes "Will you go to Prontera?";
-			next;
-			if(select("Let's go to Prontera!:Um, let me get ready first.")==1){
+			if (RENEWAL) {
+				mes "A few days ago, a sister in Prontera";
+				mes "sent me a telegram that citizens had been harmed";
+				mes "by Hornets in the western field,";
+				mes "so she asked the abbey to help with them.";
+				next;
 				mes "[Priest Gardron]";
-				mes "Good, good.";
-				mes "I shall send you";
-				mes "there to fight the monsters west of Prontera so that you can return with 5 Bee Stings. May God bless you...";
-				close2;
-				warp "prontera",116,72;
-				end;
+				mes "But at this time,";
+				mes "we are also short of hands...";
+				mes "so it's a big problem.";
+				next;
+				mes "[Priest Gardron]";
+				mes "....!";
+				emotion e_gasp;
+				next;
+				mes "[Priest Gardron]";
+				mes "May I entrust you, acolyte "+strcharinfo(0)+",";
+				mes "this urgent matter?";
+				mes "Please dispose of Hornets";
+				mes "which are causing trouble on ^FF0000the western field of Prontera^000000.";
+				next;
+				mes "[Priest Gardron]";
+				mes "I know that you are undergoing the discipline,";
+				mes "So I will give you something to help you";
+				mes "if you bring me ^3131FF 5^000000 ^3131FFBee Sting^000000.";
+				next;
+				mes "[Priest Gardron]";
+				mes "Will you go to Prontera?";
+				next;
+				if(select("Let's go to Prontera!:I'll be back after doing some preparation.") == 1) {
+					mes "[Priest Gardron]";
+					mes "Okay, I will send you to Prontera.";
+					mes "Please dispose of Hornets and bring me 5 Bee Stings for confirmation.";
+					mes "My Lord, please protect this acolyte from evil monsters.";
+					close2;
+					warp "prontera",116,72;
+					end;
+				}
+			} else {
+				mes "A little while ago, the Payon Elder sent me a message. Apparently,";
+				mes "the residents of Payon are being attacked by Zombies.";
+				next;
+				mes "[Priest Gardron]";
+				mes "He has requested the convent for help, but we've got a big problem. We're running out of people here that can deal with this situation...";
+				next;
+				mes "[Priest Gardron]";
+				mes "....!";
+				emotion e_gasp;
+				next;
+				mes "[Priest Gardron]";
+				mes ""+strcharinfo(0)+",";
+				mes "may I ask";
+				mes "you to take care";
+				mes "of this task? Exterminate the Skeletons and Zombies in the";
+				mes "First Floor of Payon Dungeon.";
+				next;
+				mes "[Priest Gardron]";
+				mes "Since you're still in basic training, I will give you some";
+				mes "help if you return with";
+				mes "^3131FF5 Decayed Nails^000000.";
+				next;
+				mes "[Priest Gardron]";
+				mes "Now then...";
+				mes "Will you go to Payon?";
+				next;
+				if(select("Let's go to Payon!:Um, let me get ready first.")==1) {
+					mes "[Priest Gardron]";
+					mes "Good, good.";
+					mes "I shall send you";
+					mes "there to fight the monsters in Payon Dungeon so that you can return with 5 Decayed Nails. May God bless you...";
+					close2;
+					warp "payon",161,58;
+					end;
+				}
 			}
 			close;
 		}
@@ -902,17 +952,16 @@ monk_in,18,38,6	script	Priest Gardron#tu	110,{
 
 // Dog
 //============================================================
-prt_monk,235,245,5	script	Dog#tu	81,{
+prt_monk,235,245,5	script	Dog#tu	4_DOG01,{
 	mes "[Dog]";
 	mes "^CDB79EBark bark!";
 	mes "Woof woof!^000000";
 	next;
 	if(tu_acolyte01 == 10){
-		set .@dog_food, 0;
-		while((1)){
+		while(1) {
 			switch(select("Give a treat.:Pet the dog.:End actions.")){
 			case 1:
-				set .@dog_food, .@dog_food + 1;
+				++.@dog_food;
 				if(.@dog_food > 4){
 					mes "[Dog]";
 					mes "^CDB79EGrrrrrr...!^000000";
@@ -950,7 +999,7 @@ prt_monk,235,245,5	script	Dog#tu	81,{
 
 // Boy
 //============================================================
-prt_monk,243,238,5	script	Boy#boy_voi	139,5,5,{
+prt_monk,243,238,5	script	Boy#boy_voi	HIDDEN_WARP_NPC,5,5,{
 OnTouch_:
 	if(tu_acolyte01 != 10)end;
 	mes "[??]";
@@ -961,7 +1010,7 @@ OnTouch_:
 
 // Ill Girl
 //============================================================
-prt_monk,226,257,6	script	Ill Girl#tu	93,{
+prt_monk,226,257,6	script	Ill Girl#tu	4_F_04,{
 	mes "[Angelic]";
 	if(tu_acolyte01 > 12){
 		mes "Thanks for helping me.";
@@ -995,7 +1044,6 @@ prt_monk,226,257,6	script	Ill Girl#tu	93,{
 		mes "H-hurts...";
 		next;
 		select("Are you alright?");
-
 		mes "[Angelic]";
 		mes "My sister...";
 		mes "She was so beautiful...";
@@ -1023,8 +1071,9 @@ prt_monk,226,257,6	script	Ill Girl#tu	93,{
 		next;
 		mes "["+strcharinfo(0)+"]";
 		mes "Are you alright?";
+		mes "................";
 		next;
-		specialeffect EF_CURSEATTACK ;
+		specialeffect EF_CURSEATTACK;
 		soundeffectall "_curse.wav",0;
 		emotion e_omg;
 		mes "["+strcharinfo(0)+"]";
@@ -1036,7 +1085,7 @@ prt_monk,226,257,6	script	Ill Girl#tu	93,{
 		mes "["+strcharinfo(0)+"]";
 		mes "I'll cure you...";
 		mes "For sure.";
-		set tu_acolyte01, 11;
+		tu_acolyte01 = 11;
 		close;
 	} else if(tu_acolyte01 == 11){
 		next;
@@ -1056,12 +1105,12 @@ prt_monk,226,257,6	script	Ill Girl#tu	93,{
 			mes "["+strcharinfo(0)+"]";
 			mes "H...";
 			mes "Heal !!";
-			specialeffect EF_HEAL ;
+			specialeffect EF_HEAL;
 			next;
 			mes "^3355FFNothing happened.";
 			mes "It doesn't look like";
 			mes "that skill will work.^000000";
-			close; 
+			close;
 			break;
 		case 2:
 			if(getskilllv("AL_BLESSING") > 0){
@@ -1080,8 +1129,11 @@ prt_monk,226,257,6	script	Ill Girl#tu	93,{
 					mes "practice your abilities!";
 					mes "It seemed that this good";
 					mes "deed has improved your skills.^000000";
-					set tu_acolyte01, 13;
-					getexp 0,100;
+					tu_acolyte01 = 13;
+					if (RENEWAL_EXP)
+						getexp 0,500;
+					else
+						getexp 0,1000;
 					specialeffect2 EF_CONE;
 					next;
 					break;
@@ -1160,7 +1212,7 @@ prt_monk,226,257,6	script	Ill Girl#tu	93,{
 
 // Veiner
 //============================================================
-prt_monk,197,228,3	script	Veiner	89,{
+prt_monk,197,228,3	script	Veiner	4_M_ORIENT02,{
 	mes "[Veiner]";
 	if(countitem(1081) && tu_acolyte01 == 18){
 		mes "So very exhausted...";
@@ -1184,7 +1236,7 @@ prt_monk,197,228,3	script	Veiner	89,{
 		mes "Oh right!";
 		mes "Thank you very much for delivering this to me. Sorry, but I'm always excited to hear from my cutie pie~";
 		emotion e_thx;
-		set tu_acolyte01,19;
+		tu_acolyte01 = 19;
 		delitem 1081,1; //Merchant_Box_1
 		close;
 	} else if(tu_acolyte01 > 18){
@@ -1204,7 +1256,7 @@ prt_monk,197,228,3	script	Veiner	89,{
 
 // Hedrick
 //============================================================
-prt_monk,28,260,5	script	Hedrick	50,{
+prt_monk,28,260,5	script	Hedrick	1_M_04,{
 	mes "[Hedrick]";
 	mes "^333333*Whew!*^000000";
 	mes "Man I worked hard today!";
@@ -1233,14 +1285,14 @@ prt_monk,28,260,5	script	Hedrick	50,{
 	mes "you have one of the";
 	mes "cookies she sent me?";
 	delitem 7148,1; //Mother_Letter
-	set tu_acolyte01,20;
+	tu_acolyte01 = 20;
 	getitem 538,1; //Well_Baked_Cookie
 	close;
 }
 
 // Weapon Merchant
 //============================================================
-prt_monk,136,261,0	script	Weapon Merchant#tu	139,9,9,{
+prt_monk,136,261,0	script	Weapon Merchant#tu	HIDDEN_WARP_NPC,9,9,{
 OnTouch:
 	if(tu_acolyte01 != 20 || countitem(1081)==0) end;
 	mes "[Weapon Merchant]";
@@ -1252,18 +1304,18 @@ OnTouch:
 	mes "Oh, and come here if";
 	mes "you need anything, okay?";
 	delitem 1081,1; //Merchant_Box_1
-	set tu_acolyte01,21;
+	tu_acolyte01 = 21;
 	close;
 }
 
 // Karven
 //============================================================
-monk_in,103,176,7	script	Karven	60,{
+monk_in,103,176,7	script	Karven	1_M_PASTOR,{
 	mes "[Karven]";
 	mes "May you rest";
 	if(tu_acolyte01 == 21 && countitem(7183)){
 		delitem 7183, 1;
-		set tu_acolyte01, 22;
+		tu_acolyte01 = 22;
 		mes "in peace forever...";
 		next;
 		mes "[Karven]";
@@ -1292,7 +1344,7 @@ monk_in,103,176,7	script	Karven	60,{
 
 // Gloria
 //============================================================
-prt_monk,219,164,3	script	Gloria#tu	95,{
+prt_monk,219,164,3	script	Gloria#tu	4_F_SISTER,{
 	mes "[Gloria]";
 	if(BaseJob != Job_Acolyte){
 		mes "Hi, hi~";
@@ -1365,12 +1417,12 @@ prt_monk,219,164,3	script	Gloria#tu	95,{
 
 // Cleope Verce
 //============================================================
-prt_monk,153,210,3	script	Cleope Verce	95,{
+prt_monk,153,210,3	script	Cleope Verce	4_F_SISTER,{
 	mes "[Cleope Verce]";
 	if(BaseJob != Job_Acolyte){
 		if (JobLevel < 40) {
 			if (BaseLevel < 26) {
-				mes "Oh my.. "; 
+				mes "Oh my.. ";
 				mes "A newbie Acolyte?";
 				mes "It doesn't even seem";
 				mes "like you've learned";
@@ -1412,7 +1464,7 @@ prt_monk,153,210,3	script	Cleope Verce	95,{
 				mes "Rookie.";
 				close;
 			} else if(BaseLevel < 36){
-				mes "Oh my.. "; 
+				mes "Oh my.. ";
 				mes "A young Acolyte?";
 				mes "You seem to have just";
 				mes "started learning your skills?";
@@ -1463,7 +1515,7 @@ prt_monk,153,210,3	script	Cleope Verce	95,{
 				mes "young friend.";
 				close;
 			} else if(BaseLevel < 46){
-				mes "Well, well, well~"; 
+				mes "Well, well, well~";
 				mes "Hello, young Acolyte.";
 				mes "You're still kind of";
 				mes "green, but I guess you're";
@@ -1539,7 +1591,7 @@ prt_monk,153,210,3	script	Cleope Verce	95,{
 }
 // Range NPC
 //============================================================
-prt_monk,217,123,0	script	#tu_monk	139,10,10,{
+prt_monk,217,123,0	script	#tu_monk	HIDDEN_WARP_NPC,10,10,{
 OnTouch_:
 	if(BaseJob == Job_Acolyte){
 		switch(tu_acolyte01){
@@ -1560,7 +1612,7 @@ OnTouch_:
 
 // Eavesdrop
 //============================================================
-prt_monk,223,123,3	script	Eavesdrop#tu	111,{
+prt_monk,223,123,3	script	Eavesdrop#tu	HIDDEN_NPC,{
 	if(BaseJob != Job_Acolyte){
 		mes "^3355FFThere's nothing here.^000000";
 		close;
@@ -1726,33 +1778,32 @@ prt_monk,223,123,3	script	Eavesdrop#tu	111,{
 	}
 }
 
-/*
-sec_in02,17,156,3	script	1st Job Quest Reset	726,{
+sec_in02,17,156,3	script	1st Job Quest Reset	4_F_JOB_BLACKSMITH,{
+	callfunc "F_GM_NPC";
 	mes "[1st Job Quest]";
 	mes "Which would you like to reset?";
 	next;
 	switch(select("Swordsman:Merchant:Archer:Acolyte:Thief:Mage")) {
 	case 1:
-		set tu_swordman,0;
+		tu_swordman = 0;
 		break;
 	case 2:
-		set tu_merchant,0;
+		tu_merchant = 0;
 		break;
 	case 3:
-		set tu_archer01,0;
-		set tu_archer02,0;
+		tu_archer01 = 0;
+		tu_archer02 = 0;
 		break;
 	case 4:
-		set tu_acolyte01,0;
+		tu_acolyte01 = 0;
 		break;
 	case 5:
-		set tu_thief01,0;
+		tu_thief01 = 0;
 		break;
 	case 6:
-		set tu_magician01,0;
+		tu_magician01 = 0;
 		break;
 	}
 	mes "Completed.";
 	close;
 }
-*/

@@ -1,0 +1,5 @@
+/config.log
+/config.status
+/gen/*.c
+/gen/*.h
+/autom4te.cache

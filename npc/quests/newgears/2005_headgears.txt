@@ -1,13 +1,11 @@
 //===== Hercules Script ======================================
 //= 2005 Headgear Quests
-//===== By: ================================================== 
+//===== By: ==================================================
 //= MasterOfMuppets
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.3a
-//===== Compatible With: ===================================== 
-//= Hercules Git
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= 2005 Headgears Official Quest.
 //===== Additional Comments: =================================
 //= 1.0 First version, converted from the official aegis script. [MasterOfMuppets]
@@ -16,9 +14,9 @@
 //= 1.3 Fixed item check bugs, added missing airport NPC,
 //      and took out unneeded breaks [Xantara] [Muad_Dib]
 //= 1.3a Added 'disable_items' command. [Euphy]
-//============================================================ 
+//============================================================
 
-yuno,222,116,3	script	Kasis#LhzHat	851,{
+yuno,222,116,3	script	Kasis#LhzHat	4_M_REPAIR,{
 	if(countitem(519) > 49 && countitem(7031) > 49 && countitem(548) > 49 && countitem(539) > 49)
 	{
 		mes "[Kasis]";
@@ -227,7 +225,7 @@ yuno,222,116,3	script	Kasis#LhzHat	851,{
 	}
 }
 
-lighthalzen,143,68,0	script	Strange Guy#LhzHat	47,{
+lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 	disable_items;
 	if(DTHATQ == 0)
 	{
@@ -461,7 +459,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	47,{
 			mes "Detective Caps left!";
 			mes "Once they're gone,";
 			mes "they'll be extinct!";
-			set DTHATQ,1;
+			DTHATQ = 1;
 			close;
 	}
 	else if(DTHATQ == 1)
@@ -497,7 +495,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	47,{
 				mes "Let's see now, I need to";
 				mes "look through your Inventory...";
 				next;
-				set @lhzhatfailed,0;
+				@lhzhatfailed = 0;
 				if(countitem(611) < 10)
 				{
 					mes "[Morris]";
@@ -506,7 +504,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	47,{
 					mes "do want to join this club,";
 					mes "don't you? Did you need to";
 					mes "hear the requirements again?";
-					set @lhzhatfailed,1;
+					@lhzhatfailed = 1;
 					next;
 				}
 				if(countitem(7301) < 1887 && @lhzhatfailed == 0)
@@ -514,7 +512,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	47,{
 					mes "[Morris]";
 					mes "Magnifiers. Check.";
 					mes "Not enough Tassels? Check.";
-					set @lhzhatfailed,1;
+					@lhzhatfailed = 1;
 					next;
 				}
 				if(countitem(5120) < 1 && @lhzhatfailed == 0)
@@ -525,7 +523,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	47,{
 					mes "Hm. You're missing";
 					mes "the slotted Bucket Hat.";
 					mes "You were so close...";
-					set @lhzhatfailed,1;
+					@lhzhatfailed = 1;
 					next;
 				}
 				if(Zeny < 1887 && @lhzhatfailed == 0)
@@ -537,7 +535,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	47,{
 					mes "Hey. Where's the zeny?!";
 					mes "That's the most important,";
 					mes "er, qualification of all!";
-					set @lhzhatfailed,1;
+					@lhzhatfailed = 1;
 					next;
 				}
 				if(@lhzhatfailed == 1)
@@ -574,8 +572,8 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	47,{
 				delitem 7301,1887;
 				delitem 5120,1;
 				delitem 611,10;
-				set Zeny, Zeny - 1887;
-				set DTHATQ,2;
+				Zeny -= 1887;
+				DTHATQ = 2;
 				getitem 5108,1;
 				next;
 				switch( select( "Wait, promotion?", "Hooray!" ) )
@@ -664,7 +662,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	47,{
 				mes "check to see if you";
 				mes "brought everything...";
 				next;
-				set @lhzhatfailed,0;
+				@lhzhatfailed = 0;
 				if(countitem(611) < 10)
 				{
 					mes "[Morris]";
@@ -673,7 +671,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	47,{
 					mes "those are essential tools";
 					mes "for sleuthing. Come now,";
 					mes "hurry back with them!";
-					set @lhzhatfailed,1;
+					@lhzhatfailed = 1;
 					next;
 				}
 				if(countitem(7301) < 1887 && @lhzhatfailed == 0)
@@ -681,7 +679,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	47,{
 					mes "[Morris]";
 					mes "Magnifiers. Check.";
 					mes "Not enough Tassels? Check.";
-					set @lhzhatfailed,1;
+					@lhzhatfailed = 1;
 					next;
 				}
 				if(countitem(5120) < 1 && @lhzhatfailed == 0)
@@ -692,7 +690,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	47,{
 					mes "Hm. You're missing";
 					mes "the slotted Bucket Hat.";
 					mes "You were so close...";
-					set @lhzhatfailed,1;
+					@lhzhatfailed = 1;
 					next;
 				}
 				if(Zeny < 1887 && @lhzhatfailed == 0)
@@ -704,7 +702,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	47,{
 					mes "Hey. Where's the zeny?!";
 					mes "That's the most important,";
 					mes "er, qualification of all!";
-					set @lhzhatfailed,1;
+					@lhzhatfailed = 1;
 					next;
 				}
 				if(@lhzhatfailed == 1)
@@ -732,8 +730,8 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	47,{
 				delitem 7301,1887;
 				delitem 5120,1;
 				delitem 611,10;
-				set Zeny, Zeny - 1887;
-				set DTHATQ,2;
+				Zeny -= 1887;
+				DTHATQ = 2;
 				getitem 5108,1;
 				next;
 				mes "[Morris]";
@@ -748,9 +746,9 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	47,{
 	}
 }
 
-lighthalzen,360,313,3	script	Kid#LhzHat	706,{
+lighthalzen,360,313,3	script	Kid#LhzHat	4_M_KID1,{
 	mes "[Kid]";
-	if(sex)
+	if(Sex)
 		mes "Hello, mister!";
 	else
 		mes "Hello, ma'am!";
@@ -873,7 +871,7 @@ lighthalzen,360,313,3	script	Kid#LhzHat	706,{
 	}
 }
 
-einbech,70,222,5	script	Metelle#LhzHat	91,{
+einbech,70,222,5	script	Metelle#LhzHat	4_F_02,{
 	if(countitem(983) && countitem(7267) > 998 && countitem(749) && Zeny > 49999)
 	{
 		mes "[Metelle]";
@@ -919,7 +917,7 @@ einbech,70,222,5	script	Metelle#LhzHat	91,{
 				delitem 983,1;
 				delitem 7267,999;
 				delitem 749,1;
-				set Zeny,Zeny - 50000;
+				Zeny -= 50000;
 				getitem 5115,1;
 				next;
 				mes "...";
@@ -983,7 +981,7 @@ einbech,70,222,5	script	Metelle#LhzHat	91,{
 
 }
 
-lhz_in02,91,38,5	script	Margaret Mary#LhzHat	90,{
+lhz_in02,91,38,5	script	Margaret Mary#LhzHat	4_F_01,{
 
 	mes "[Margaret Mary]";
 	mes "The white rose, in its";
@@ -1036,7 +1034,7 @@ lhz_in02,91,38,5	script	Margaret Mary#LhzHat	90,{
 						delitem 731,10;
 						delitem 748,3;
 						delitem 982,1;
-						set Zeny,Zeny - 50000;
+						Zeny -= 50000;
 						getitem 5117,1;
 						close;
 
@@ -1086,7 +1084,7 @@ lhz_in02,91,38,5	script	Margaret Mary#LhzHat	90,{
 
 }
 
-lighthalzen,182,89,0	script	Relaxed-Looking Lady	91,{
+lighthalzen,182,89,0	script	Relaxed-Looking Lady	4_F_02,{
 	disable_items;
 	if(LHZBTQ == 0)
 	{
@@ -1128,7 +1126,7 @@ lighthalzen,182,89,0	script	Relaxed-Looking Lady	91,{
 				mes "to meet you. I don't really";
 				mes "do much of anything.";
 				mes "Just sit. Relax.";
-				set LHZBTQ,1;
+				LHZBTQ = 1;
 				emotion e_heh;
 				next;
 				mes "[Achiha]";
@@ -1188,7 +1186,7 @@ lighthalzen,182,89,0	script	Relaxed-Looking Lady	91,{
 						mes "if you want me to make";
 						mes "a hat for you, come back";
 						mes "with those materials, okay?";
-						set LHZBTQ,2;
+						LHZBTQ = 2;
 						close;
 				}
 		}
@@ -1233,7 +1231,7 @@ lighthalzen,182,89,0	script	Relaxed-Looking Lady	91,{
 				mes "tired. Let me just sit,";
 				mes "relax, even if it's just";
 				mes "a little while longer...";
-				set LHZBTQ,2;
+				LHZBTQ = 2;
 				close;
 		}
 	}
@@ -1284,9 +1282,9 @@ lighthalzen,182,89,0	script	Relaxed-Looking Lady	91,{
 				delitem 10007,1;
 				delitem 975,1;
 				delitem 5032,1;
-				set Zeny,Zeny - 50000;
+				Zeny -= 50000;
 				getitem 5109,1;
-				set LHZBTQ,3;
+				LHZBTQ = 3;
 				next;
 				mes "[Achiha]";
 				mes "I hope you will enjoy the hat~";
@@ -1357,7 +1355,7 @@ lighthalzen,182,89,0	script	Relaxed-Looking Lady	91,{
 				delitem 10007,1;
 				delitem 975,1;
 				delitem 5032,1;
-				set Zeny,Zeny - 50000;
+				Zeny -= 50000;
 				getitem 5109,1;
 				next;
 				mes "[Achiha]";
@@ -1383,7 +1381,7 @@ lighthalzen,182,89,0	script	Relaxed-Looking Lady	91,{
 	}
 }
 
-gl_prison1,137,138,5	script	Zealotus#LhzHat	1200,{
+gl_prison1,137,138,5	script	Zealotus#LhzHat	ZHERLTHSH,{
 	if(ZLMASKQ == 0)
 	{
 		mes "[Zealotus]";
@@ -1432,7 +1430,7 @@ gl_prison1,137,138,5	script	Zealotus#LhzHat	1200,{
 						mes "of monster crying in the corner";
 						mes "of this prison and make him";
 						mes "realize his true nature.";
-						set ZLMASKQ,1;
+						ZLMASKQ = 1;
 						close;
 					case 2:
 						mes "[Zealotus]";
@@ -1490,7 +1488,7 @@ gl_prison1,137,138,5	script	Zealotus#LhzHat	1200,{
 		mes "^3131FF30 Worn-Out Magic Scrolls^000000.";
 		mes "Then, I can grant you a measure";
 		mes "of my power as I've promised.";
-		set ZLMASKQ,7;
+		ZLMASKQ = 7;
 		close;
 	}
 	else if(ZLMASKQ == 7)
@@ -1554,7 +1552,7 @@ gl_prison1,137,138,5	script	Zealotus#LhzHat	1200,{
 					delitem 660,1;
 					delitem 7099,30;
 					getnameditem 5121,strcharinfo(0);
-					set ZLMASKQ,8;
+					ZLMASKQ = 8;
 					close;
 			}
 		}
@@ -1590,7 +1588,7 @@ gl_prison1,137,138,5	script	Zealotus#LhzHat	1200,{
 
 }
 
-gl_prison1,97,104,1	script	Phendark#LhzHat	1202,{
+gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 	if(ZLMASKQ == 0)
 	{
 		mes "[Phendark]";
@@ -1626,13 +1624,13 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	1202,{
 		emotion e_sob;
 
 		if(!(
-			countitem(1950) || countitem(1951) || countitem(1952) || 
-			countitem(1953) || countitem(1954) || countitem(1955) || 
-			countitem(1956) || countitem(1957) || countitem(1958) || 
-			countitem(1959) || countitem(1960) || countitem(1961) || 
-			countitem(1962) || countitem(1963) || countitem(1964) || 
-			countitem(1965) || countitem(1966) || countitem(1967) || 
-			countitem(1968) || countitem(1969) || countitem(1970) || 
+			countitem(1950) || countitem(1951) || countitem(1952) ||
+			countitem(1953) || countitem(1954) || countitem(1955) ||
+			countitem(1956) || countitem(1957) || countitem(1958) ||
+			countitem(1959) || countitem(1960) || countitem(1961) ||
+			countitem(1962) || countitem(1963) || countitem(1964) ||
+			countitem(1965) || countitem(1966) || countitem(1967) ||
+			countitem(1968) || countitem(1969) || countitem(1970) ||
 			countitem(1971)
 		))
 			close; // no whip equipped or in inventory
@@ -1673,7 +1671,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	1202,{
 		mes "at me, but I just can't";
 		mes "stop being afraid of all";
 		mes "you humans! Damn it all!";
-		set ZLMASKQ,2;
+		ZLMASKQ = 2;
 		close;
 	}
 	else if(ZLMASKQ == 2 || ZLMASKQ == 3)
@@ -1729,7 +1727,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	1202,{
 					mes "^333333*Pant pant*^000000";
 					mes "What... just...";
 					mes "What happened?";
-					set ZLMASKQ,4;
+					ZLMASKQ = 4;
 					delitem 7315,369;
 					close;
 				case 2:
@@ -1786,18 +1784,18 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	1202,{
 				break;
 			case 3:
 				mes "Zealotus";
-				set .@phen_point,.@phen_point+1;
+				++.@phen_point;
 				break;
 		}
 		switch( select( "hates", "likes" ) )
 		{
 			case 1:
 				mes "hates";
-				set .@phen_point,.@phen_point+2;
+				.@phen_point += 2;
 				break;
 			case 2:
 				mes "likes";
-				set .@phen_point,.@phen_point+1;
+				++.@phen_point;
 				break;
 		}
 		switch( select( "Rybio.", "Injustice.", "Phendark.", "Zealotus." ) )
@@ -1810,7 +1808,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	1202,{
 				break;
 			case 3:
 				mes "Phendark.";
-				set .@phen_point,.@phen_point+1;
+				++.@phen_point;
 				break;
 			case 4:
 				mes "Zealotus.";
@@ -1934,7 +1932,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	1202,{
 								mes "to see Zealotus and give";
 								mes "that tramp a piece of my";
 								mes "mind! Grrrr! She'll be sorry!";
-								set ZLMASKQ,6;
+								ZLMASKQ = 6;
 								emotion e_an;
 								close;
 							case 2:
@@ -1999,7 +1997,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	1202,{
 	}
 }
 
-gl_prison1,100,48,5	script	Rybio#LhzHat	1201,{
+gl_prison1,100,48,5	script	Rybio#LhzHat	RYBIO,{
 	if(ZLMASKQ == 2)
 	{
 		mes "[Rybio]";
@@ -2047,7 +2045,7 @@ gl_prison1,100,48,5	script	Rybio#LhzHat	1201,{
 				mes "like you would want to";
 				mes "help one of us out, though.";
 				mes "What's in it for you, exactly?";
-				set ZLMASKQ,3;
+				ZLMASKQ = 3;
 				close;
 			case 2:
 				mes "[Rybio]";
@@ -2094,7 +2092,7 @@ gl_prison1,100,48,5	script	Rybio#LhzHat	1201,{
 		mes "him. Reverse psychology?";
 		mes "It's weird talking about this";
 		mes "with a human. Hahahaha~";
-		set ZLMASKQ,5;
+		ZLMASKQ = 5;
 		close;
 	}
 	else if(ZLMASKQ == 5)
@@ -2109,7 +2107,7 @@ gl_prison1,100,48,5	script	Rybio#LhzHat	1201,{
 	}
 }
 
-airport,148,41,3	script	Freight Manager#toast	852,{
+airport,148,41,3	script	Freight Manager#toast	4_M_EIN_SOLDIER,{
 	mes "[Kirishu]";
 	mes "Oh man...";
 	mes "It's almost lunchtime,";

@@ -5,7 +5,7 @@
 //===== Current Version: =====================================
 //= 1.1
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Veins Town Npcs
 //===== Additional Comments: =================================
 //= 1.0 First version [L0ne_W0lf]
@@ -13,8 +13,8 @@
 //============================================================
 
 // Veins
-//============================================================ 
-veins,162,34,5	script	Towner#ve1	943,{
+//============================================================
+veins,162,34,5	script	Towner#ve1	4_M_DESERT,{
 	mes "[Towner]";
 	mes "I love cacti. They're";
 	mes "the most beautiful plants";
@@ -38,7 +38,7 @@ veins,162,34,5	script	Towner#ve1	943,{
 	close;
 }
 
-veins,148,41,3	script	Towner#ve2	940,{
+veins,148,41,3	script	Towner#ve2	4_F_DESERT,{
 	mes "[Towner]";
 	mes "Welcome to Veins, the";
 	mes "town near the Temple of";
@@ -61,7 +61,7 @@ veins,148,41,3	script	Towner#ve2	940,{
 	close;
 }
 
-veins,137,179,5	script	Towner#ve3	943,{
+veins,137,179,5	script	Towner#ve3	4_M_DESERT,{
 	mes "[Towner]";
 	mes "Geez, why is our weapon";
 	mes "shop so boring? Nothing";
@@ -78,7 +78,7 @@ veins,137,179,5	script	Towner#ve3	943,{
 	close;
 }
 
-veins,166,91,5	script	Towner#ve4	946,{
+veins,166,91,5	script	Towner#ve4	4_M_DST_MASTER,{
 	mes "[Towner]";
 	mes "Though we're in the";
 	mes "middle of the desert,";
@@ -96,7 +96,7 @@ veins,166,91,5	script	Towner#ve4	946,{
 	close;
 }
 
-veins,138,71,5	script	Kid#ve1	941,{
+veins,138,71,5	script	Kid#ve1	4_F_DST_CHILD,{
 	mes "[Kid]";
 	mes "Whoa, get out of here!";
 	mes "Can't you see that I'm";
@@ -105,7 +105,7 @@ veins,138,71,5	script	Kid#ve1	941,{
 	close;
 }
 
-veins,253,133,3	script	Kid#ve2	944,{
+veins,253,133,3	script	Kid#ve2	4_M_DST_CHILD,{
 	mes "[Kid]";
 	mes "Gosh, where could she";
 	mes "be hiding? I hate being";
@@ -116,7 +116,7 @@ veins,253,133,3	script	Kid#ve2	944,{
 	close;
 }
 
-veins,270,164,5	script	Old Man#ve1	945,{
+veins,270,164,5	script	Old Man#ve1	4_M_DST_GRAND,{
 	mes "[Old Man]";
 	mes "Praise be to Freya";
 	mes "for blessing me with";
@@ -133,7 +133,7 @@ veins,270,164,5	script	Old Man#ve1	945,{
 	close;
 }
 
-veins,310,195,1	script	Towner#ve5	946,{
+veins,310,195,1	script	Towner#ve5	4_M_DST_MASTER,{
 	mes "[Towner]";
 	mes "Cacti are wonderful,";
 	mes "they're the most beautiful";
@@ -150,7 +150,7 @@ veins,310,195,1	script	Towner#ve5	946,{
 	close;
 }
 
-veins,320,254,5	script	Towner#ve6	943,{
+veins,320,254,5	script	Towner#ve6	4_M_DESERT,{
 	mes "[Towner]";
 	mes "What do you want?";
 	mes "Sorry, but I'm just";
@@ -165,7 +165,7 @@ veins,320,254,5	script	Towner#ve6	943,{
 	close;
 }
 
-veins,333,318,3	script	Towner#ve7	940,{
+veins,333,318,3	script	Towner#ve7	4_F_DESERT,{
 	mes "[Towner]";
 	mes "What's an adventurer";
 	mes "doing here in such an";
@@ -176,7 +176,7 @@ veins,333,318,3	script	Towner#ve7	940,{
 	close;
 }
 
-veins,218,323,1	script	Towner#ve8	945,{
+veins,218,323,1	script	Towner#ve8	4_M_DST_GRAND,{
 	mes "[Towner]";
 	mes "Whoa, it's been a while";
 	mes "seen I've seen tourists";
@@ -204,7 +204,7 @@ veins,218,323,1	script	Towner#ve8	945,{
 	close;
 }
 
-veins,206,275,3	script	Kid#ve3	941,{
+veins,206,275,3	script	Kid#ve3	4_F_DST_CHILD,{
 	mes "[Kid]";
 	mes "I really want to look";
 	mes "inside the temple, but";
@@ -214,7 +214,7 @@ veins,206,275,3	script	Kid#ve3	941,{
 	close;
 }
 
-veins,171,256,3	script	Towner#ve9	943,{
+veins,171,256,3	script	Towner#ve9	4_M_DESERT,{
 	mes "[Towner]";
 	mes "Don't get me wrong:";
 	mes "I'd give my life in Freya's";
@@ -225,7 +225,7 @@ veins,171,256,3	script	Towner#ve9	943,{
 	close;
 }
 
-veins,197,219,5	script	Towner#ve10	943,{
+veins,197,219,5	script	Towner#ve10	4_M_DESERT,{
 	mes "[Towner]";
 	mes "I guess you can tell";
 	mes "from this withered tree";
@@ -236,7 +236,7 @@ veins,197,219,5	script	Towner#ve10	943,{
 	close;
 }
 
-veins,232,169,5	script	Old lady#ve1	942,{
+veins,232,169,5	script	Old lady#ve1	4_F_DST_GRAND,{
 	mes "[Old Lady]";
 	mes "When I look down on";
 	mes "Veins from here, I've";
@@ -254,7 +254,7 @@ veins,232,169,5	script	Old lady#ve1	942,{
 	close;
 }
 
-veins,121,199,3	script	Old Man#ve2	945,{
+veins,121,199,3	script	Old Man#ve2	4_M_DST_GRAND,{
 	mes "[Old Man]";
 	mes "This isn't good.";
 	mes "The elderly outnumber";
@@ -273,7 +273,7 @@ veins,121,199,3	script	Old Man#ve2	945,{
 	close;
 }
 
-veins,111,50,3	script	Towner#ve11	943,{
+veins,111,50,3	script	Towner#ve11	4_M_DESERT,{
 	mes "[Towner]";
 	mes "People cherish water";
 	mes "around here, but I've";
@@ -291,7 +291,7 @@ veins,111,50,3	script	Towner#ve11	943,{
 	close;
 }
 
-veins,112,51,3	script	Towner#ve12	940,{
+veins,112,51,3	script	Towner#ve12	4_F_DESERT,{
 	mes "[Towner]";
 	mes "Well, I'm actually";
 	mes "a little tired of coming";
@@ -309,7 +309,7 @@ veins,112,51,3	script	Towner#ve12	940,{
 	close;
 }
 
-veins,191,134,3	script	Old Man#ve3	945,{
+veins,191,134,3	script	Old Man#ve3	4_M_DST_GRAND,{
 	mes "[Old Man]";
 	mes "Why don't you take";
 	mes "a look at my goods?";
@@ -326,7 +326,7 @@ veins,191,134,3	script	Old Man#ve3	945,{
 	close;
 }
 
-veins,177,147,3	script	Old Lady#ve2	942,{
+veins,177,147,3	script	Old Lady#ve2	4_F_DST_GRAND,{
 	mes "[Old Lady]";
 	mes "Owning a lot of stuff";
 	mes "might seem great, but";
@@ -350,7 +350,7 @@ veins,177,147,3	script	Old Lady#ve2	942,{
 	close;
 }
 
-veins,223,165,5	script	Kid#ve4	944,{
+veins,223,165,5	script	Kid#ve4	4_M_DST_CHILD,{
 	mes "[Kid]";
 	mes "Hey! Do you think";
 	mes "I can reach the bridge";
@@ -368,7 +368,7 @@ veins,223,165,5	script	Kid#ve4	944,{
 	close;
 }
 
-veins,263,153,5	script	Towner#ve13	943,{
+veins,263,153,5	script	Towner#ve13	4_M_DESERT,{
 	mes "[Towner]";
 	mes "The clothes we make here";
 	mes "are high, airy, and sewn";
@@ -387,7 +387,7 @@ veins,263,153,5	script	Towner#ve13	943,{
 	close;
 }
 
-veins,296,184,3	script	Towner#ve14	940,{
+veins,296,184,3	script	Towner#ve14	4_F_DESERT,{
 	mes "[Towner]";
 	mes "Let me tell you a secret.";
 	mes "But promise not to tell";
@@ -417,7 +417,7 @@ veins,296,184,3	script	Towner#ve14	940,{
 	close;
 }
 
-veins,291,205,3	script	Kid#ve5	944,{
+veins,291,205,3	script	Kid#ve5	4_M_DST_CHILD,{
 	mes "[Kid]";
 	mes "Argh! I'm a war god";
 	mes "protecting Goddess Freya";
@@ -438,7 +438,7 @@ veins,291,205,3	script	Kid#ve5	944,{
 	close;
 }
 
-veins,291,259,3	script	Old Man#ve4	945,{
+veins,291,259,3	script	Old Man#ve4	4_M_DST_GRAND,{
 	mes "[Old Man]";
 	mes "Fr... Fr...";
 	next;
@@ -463,7 +463,7 @@ veins,291,259,3	script	Old Man#ve4	945,{
 	close;
 }
 
-veins,291,284,3	script	Old Lady#ve3	942,{
+veins,291,284,3	script	Old Lady#ve3	4_F_DST_GRAND,{
 	mes "[Old Lady]";
 	mes "I wonder what my";
 	mes "standing with Freya";
@@ -474,7 +474,7 @@ veins,291,284,3	script	Old Lady#ve3	942,{
 	close;
 }
 
-veins,248,301,3	script	Kid#ve6	944,{
+veins,248,301,3	script	Kid#ve6	4_M_DST_CHILD,{
 	mes "[Kid]";
 	mes "Huh? You don't live here.";
 	mes "Are you... Are you a traveler?";
@@ -493,7 +493,7 @@ veins,248,301,3	script	Kid#ve6	944,{
 	close;
 }
 
-veins,161,63,3	script	Old Man#ve5	945,{
+veins,161,63,3	script	Old Man#ve5	4_M_DST_GRAND,{
 	mes "[Old Man]";
 	mes "Oh. You must be";
 	mes "sightseeing. Um,";
@@ -518,7 +518,7 @@ veins,161,63,3	script	Old Man#ve5	945,{
 	close;
 }
 
-veins,157,123,3	script	Towner#ve15	946,{
+veins,157,123,3	script	Towner#ve15	4_M_DST_MASTER,{
 	mes "[Towner]";
 	mes "You know what's good";
 	mes "about the desert? No?";
@@ -533,8 +533,8 @@ veins,157,123,3	script	Towner#ve15	946,{
 }
 
 // Inside Veins
-//============================================================ 
-ve_in,119,386,3	script	Prisoner#ve1	946,{
+//============================================================
+ve_in,119,386,3	script	Prisoner#ve1	4_M_DST_MASTER,{
 	mes "[Prisoner]";
 	mes "Unbelievable!";
 	mes "What kind of country";
@@ -551,7 +551,7 @@ ve_in,119,386,3	script	Prisoner#ve1	946,{
 	close;
 }
 
-ve_in,111,379,8	script	Ward#ve1	946,{
+ve_in,111,379,8	script	Ward#ve1	4_M_DST_MASTER,{
 	mes "[Ward]";
 	mes "This place ensures that";
 	mes "dangerous criminals aren't";
@@ -562,7 +562,7 @@ ve_in,111,379,8	script	Ward#ve1	946,{
 	close;
 }
 
-ve_in,126,378,3	script	Ward#ve2	946,{
+ve_in,126,378,3	script	Ward#ve2	4_M_DST_MASTER,{
 	mes "[Ward]";
 	mes "I'm grateful that our";
 	mes "town is relatively peaceful.";
@@ -577,7 +577,7 @@ ve_in,126,378,3	script	Ward#ve2	946,{
 	close;
 }
 
-ve_in,101,314,1	script	Towner#ve16	943,{
+ve_in,101,314,1	script	Towner#ve16	4_M_DESERT,{
 	mes "[Towner]";
 	mes "^333333*Pant Pant*^000000";
 	mes "I must study as hard as I can";
@@ -591,7 +591,7 @@ ve_in,101,314,1	script	Towner#ve16	943,{
 	close;
 }
 
-ve_in,90,298,3	script	Towner#ve17	849,{
+ve_in,90,298,3	script	Towner#ve17	4_M_DIEMAN,{
 	mes "[Towner]";
 	mes "It's too hot...";
 	next;
@@ -600,7 +600,7 @@ ve_in,90,298,3	script	Towner#ve17	849,{
 	close;
 }
 
-ve_in,361,243,5	script	Towner#ve18	849,{
+ve_in,361,243,5	script	Towner#ve18	4_M_DIEMAN,{
 	mes "[Towner]";
 	mes "...............";
 	mes "...............";
@@ -618,7 +618,7 @@ ve_in,361,243,5	script	Towner#ve18	849,{
 	close;
 }
 
-ve_in,242,124,3	script	Towner#ve19	849,{
+ve_in,242,124,3	script	Towner#ve19	4_M_DIEMAN,{
 	mes "[Towner]";
 	mes "The drinks in this";
 	mes "town are so... They're...";
@@ -636,7 +636,7 @@ ve_in,242,124,3	script	Towner#ve19	849,{
 	close;
 }
 
-ve_in,180,232,5	script	Towner#ve20	946,{
+ve_in,180,232,5	script	Towner#ve20	4_M_DST_MASTER,{
 	mes "[Towner]";
 	mes "It's nice when a town";
 	mes "is peaceful and quiet...";
@@ -653,7 +653,7 @@ ve_in,180,232,5	script	Towner#ve20	946,{
 	close;
 }
 
-ve_in,163,212,3	script	Towner#ve21	940,{
+ve_in,163,212,3	script	Towner#ve21	4_F_DESERT,{
 	mes "[Towner]";
 	mes "There's nothing but";
 	mes "old people and children";
@@ -670,7 +670,7 @@ ve_in,163,212,3	script	Towner#ve21	940,{
 	close;
 }
 
-ve_in,190,215,3	script	Towner#ve22	946,{
+ve_in,190,215,3	script	Towner#ve22	4_M_DST_MASTER,{
 	mes "[Towner]";
 	mes "Well, our town doesn't";
 	mes "have a choice but to";
@@ -694,7 +694,7 @@ ve_in,190,215,3	script	Towner#ve22	946,{
 	close;
 }
 
-ve_in,318,121,3	script	Towner#ve23	943,{
+ve_in,318,121,3	script	Towner#ve23	4_M_DESERT,{
 	mes "[Towner]";
 	mes "This storage solely";
 	mes "exists for serious drinkers.";
@@ -718,7 +718,7 @@ ve_in,318,121,3	script	Towner#ve23	943,{
 	close;
 }
 
-ve_in,222,125,5	script	Towner#ve24	943,{
+ve_in,222,125,5	script	Towner#ve24	4_M_DESERT,{
 	mes "[Towner]";
 	mes "I really want to";
 	mes "ask out the woman";
@@ -732,7 +732,7 @@ ve_in,222,125,5	script	Towner#ve24	943,{
 	close;
 }
 
-ve_in,222,122,1	script	Towner#ve25	940,{
+ve_in,222,122,1	script	Towner#ve25	4_F_DESERT,{
 	mes "[Towner]";
 	mes "I heard all that...";
 	mes "Gosh, he's so clueless.";
@@ -743,7 +743,7 @@ ve_in,222,122,1	script	Towner#ve25	940,{
 	close;
 }
 
-ve_in,232,135,5	script	Towner#ve26	946,{
+ve_in,232,135,5	script	Towner#ve26	4_M_DST_MASTER,{
 	mes "[Towner]";
 	mes "If you enjoy a good,";
 	mes "stiff drink, then you have";
@@ -758,7 +758,7 @@ ve_in,232,135,5	script	Towner#ve26	946,{
 	close;
 }
 
-ve_in,239,135,5	script	Towner#ve27	946,{
+ve_in,239,135,5	script	Towner#ve27	4_M_DST_MASTER,{
 	mes "[Towner]";
 	mes "Isn't the sun so hot?";
 	mes "Doesn't it make you feel";
@@ -776,7 +776,7 @@ ve_in,239,135,5	script	Towner#ve27	946,{
 	close;
 }
 
-ve_in,232,124,5	script	Towner#ve28	943,{
+ve_in,232,124,5	script	Towner#ve28	4_M_DESERT,{
 	mes "[Towner]";
 	mes "A lone wolf of the desert.";
 	mes "That's me. Well, that's why";
@@ -789,7 +789,7 @@ ve_in,232,124,5	script	Towner#ve28	943,{
 	close;
 }
 
-ve_in,234,105,3	script	Towner#ve29	946,{
+ve_in,234,105,3	script	Towner#ve29	4_M_DST_MASTER,{
 	mes "[Towner]";
 	mes "Man, the world is just...";
 	mes "It's just desires...!";

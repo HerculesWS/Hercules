@@ -1,26 +1,26 @@
 //===== Hercules Script ======================================
 //= Einbroch Town
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Everybody mentioned in the comments
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.7
-//===== Description: ========================================= 
+//===== Description: =========================================
 //=
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 0.2 Added some NPCs [MasterOfMuppets]
 //= 0.3 Added a few npcs by reddozen [MasterOfMuppets]
 //= 0.4 Added a crappy quest, have fun guys... [MasterOfMuppets]
 //= 0.4a Added exp bonus for the factory quest, borrowed from a Korean fansite.
 //= 0.4b Added missing close [Komurka]
 //= 0.5 Added Temporal Locations of Gunslinger Job Change map.
-//=	Info provided by RockmanEXE [erKURITA]
+//=     Info provided by RockmanEXE [erKURITA]
 //= 0.6 Implemented a crap quest [MasterOfMuppets]
 //= 0.7 Implemented an inn NPC [MasterOfMuppets]
 //= 0.8 Implemented the Shinokas quest, thanks to [MasterOfMuppets]
-//= 	Dj-Yhn for scripting it.
+//=      Dj-Yhn for scripting it.
 //= 0.9 Removed Duplicates [Silent]
 //= 1.0 Implemented the Lover's quest. [MasterOfMuppets]
-//= 1.1	Split quests into quests/cities_einbroch.txt [Evera]
+//= 1.1 Split quests into quests/cities_einbroch.txt [Evera]
 //= 1.2 Split more quests into above file [Evera]
 //= 1.3 Added (finally) the Garrison quest npc [erKURITA]
 //= 1.4 Implemented the polution script. [MasterOfMuppets]
@@ -30,12 +30,12 @@
 //= 1.8 Fixed Occurances of PcName. [L0ne_W0lf]
 //============================================================
 
-einbroch,218,198,5	script	Mark#ein	855,{
+einbroch,218,198,5	script	Mark#ein	4_M_EINMAN,{
 	callfunc "EinTower","Mark";
 	end;
 }
 
-einbroch,175,196,5	script	Morei#ein	854,{
+einbroch,175,196,5	script	Morei#ein	4_M_EINMAN2,{
 	mes "[Morei]";
 	mes "Greetings,";
 	mes "I am Morei,";
@@ -79,11 +79,11 @@ einbroch,175,196,5	script	Morei#ein	854,{
 	}
 }
 
-einbroch,173,229,5	script	Oberu#ein	855,{
+einbroch,173,229,5	script	Oberu#ein	4_M_EINMAN,{
 	callfunc "EinTower","Oberu";
 	end;
 }
-einbroch,176,172,5	script	Khemko#ein	855,{
+einbroch,176,172,5	script	Khemko#ein	4_M_EINMAN,{
 	callfunc "EinTower","Khemko";
 	end;
 }
@@ -128,7 +128,7 @@ function	script	EinTower	{
 			mes "using our services.";
 			mes "Let me guide you to";
 			mes "the tower right away.";
-			set zeny,zeny-10;
+			Zeny -= 10;
 			close2;
 			warp "einbroch",181,196;
 			end;
@@ -155,7 +155,7 @@ function	script	EinTower	{
 				mes "using our services.";
 				mes "Let me guide you to";
 				mes "the tower right away.";
-				set zeny,zeny-20;
+				Zeny -= 20;
 				getitem 512,1; //Apple
 				close2;
 				warp "einbroch",174,204;
@@ -179,7 +179,7 @@ function	script	EinTower	{
 	}
 }
 
-einbroch,232,272,3	script	Train Station Staff#ein1::EinbrochTrain	852,{
+einbroch,232,272,3	script	Train Station Staff#ein1::EinbrochTrain	4_M_EIN_SOLDIER,{
 	mes "[Staff]";
 	mes "Welcome to";
 	mes "the Train Station.";
@@ -203,7 +203,7 @@ einbroch,232,272,3	script	Train Station Staff#ein1::EinbrochTrain	852,{
 			mes "Have a safe trip.";
 			mes "^333333*Ahem*^000000 All aboard!";
 			close2;
-			set zeny,zeny-200;
+			Zeny -= 200;
 			warp "einbech",43,215;
 			end;
 		}
@@ -238,9 +238,9 @@ einbroch,232,272,3	script	Train Station Staff#ein1::EinbrochTrain	852,{
 	}
 }
 	
-einbroch,252,301,3	duplicate(EinbrochTrain)	Train Station Staff#ein2	852
+einbroch,252,301,3	duplicate(EinbrochTrain)	Train Station Staff#ein2	4_M_EIN_SOLDIER
 
-einbroch,259,326,3	script	Leslie#ein_1	846,{
+einbroch,259,326,3	script	Leslie#ein_1	4_F_EINOLD,{
 	mes "[Leslie]";
 	mes "^666666*Cough cough!*^000000";
 	mes "Laaaand sakes!";
@@ -262,7 +262,7 @@ einbroch,259,326,3	script	Leslie#ein_1	846,{
 	close;
 }
 
-einbroch,236,191,3	script	Tan#ein	855,{
+einbroch,236,191,3	script	Tan#ein	4_M_EINMAN,{
 	mes "[Tan]";
 	mes "All the factories";
 	mes "here in Einbroch are";
@@ -286,7 +286,7 @@ einbroch,236,191,3	script	Tan#ein	855,{
 	close;
 }
 	
-einbroch,228,121,5	script	Little Toby#ein-1	855,{
+einbroch,228,121,5	script	Little Toby#ein-1	4_M_EINMAN,{
 	mes "[Little Toby]";
 	mes "Excuse me...";
 	mes "But I'm lost!";
@@ -309,7 +309,7 @@ einbroch,228,121,5	script	Little Toby#ein-1	855,{
 	close;
 }
 
-einbroch,40,116,1	script	Airship Engineer#ein-1	855,{
+einbroch,40,116,1	script	Airship Engineer#ein-1	4_M_EINMAN,{
 	mes "[Airship Engineer]";
 	mes "H-hey! Don't";
 	mes "touch my precious";
@@ -373,7 +373,7 @@ einbroch,40,116,1	script	Airship Engineer#ein-1	855,{
 	}
 }
 
-einbroch,294,312,3	script	Centzu#ein	854,{
+einbroch,294,312,3	script	Centzu#ein	4_M_EINMAN2,{
 	mes "[Centzu]";
 	mes "I've lived here for";
 	mes "a long time and I see";
@@ -398,7 +398,7 @@ einbroch,294,312,3	script	Centzu#ein	854,{
 	close;
 }
 
-einbroch,232,255,5	script	Khowropher#ein	847,{
+einbroch,232,255,5	script	Khowropher#ein	4_M_EINOLD,{
 	mes "[Khowropher]";
 	mes "^666666*Cough cough*^000000";
 	mes "Jiminy! The air here";
@@ -423,7 +423,7 @@ einbroch,232,255,5	script	Khowropher#ein	847,{
 	close;
 }
 
-einbroch,143,109,5	script	Khetine#ein	855,{
+einbroch,143,109,5	script	Khetine#ein	4_M_EINMAN,{
 	mes "[Khetine]";
 	mes "Lately, there's been";
 	mes "talk about this empty";
@@ -441,7 +441,7 @@ einbroch,143,109,5	script	Khetine#ein	855,{
 	close;
 }
 
-einbroch,229,149,3	script	Sleik#ein	854,{
+einbroch,229,149,3	script	Sleik#ein	4_M_EINMAN2,{
 	mes "[Sleik]";
 	mes "Surprisingly, we have";
 	mes "a Train Station that everyone";
@@ -459,7 +459,7 @@ einbroch,229,149,3	script	Sleik#ein	854,{
 	close;
 }
 
-airport,174,41,6	script	Young Man#air	99,{
+airport,174,41,6	script	Young Man#air	4W_M_03,{
 	mes "[Runnan]";
 	mes "...And that's why";
 	mes "I travel around the";
@@ -478,7 +478,7 @@ airport,174,41,6	script	Young Man#air	99,{
 	close;
 }
 
-airport,176,41,4	script	Old Man#air	88,{
+airport,176,41,4	script	Old Man#air	4_M_ORIENT01,{
 	mes "[Zhen Lan]";
 	mes "Now, I hear that the";
 	mes "monsters around here";
@@ -508,7 +508,7 @@ airport,176,41,4	script	Old Man#air	88,{
 	close;
 }
 
-ein_in01,113,211,3	script	Teinz#ein	851,{
+ein_in01,113,211,3	script	Teinz#ein	4_M_REPAIR,{
 	mes "[Teinz]";
 	mes "If you just pay me money,";
 	mes "I'll be your slave! There's";
@@ -525,7 +525,7 @@ ein_in01,113,211,3	script	Teinz#ein	851,{
 	close;
 }
 
-ein_in01,48,220,5	script	Lowe#ein	851,{
+ein_in01,48,220,5	script	Lowe#ein	4_M_REPAIR,{
 	mes "[Lowe]";
 	mes "...";
 	mes "......";
@@ -552,7 +552,7 @@ ein_in01,48,220,5	script	Lowe#ein	851,{
 	close;
 }
 
-ein_in01,87,237,5	script	Dinje#ein	850,{
+ein_in01,87,237,5	script	Dinje#ein	4_F_EINWOMAN,{
 	mes "[Dinje]";
 	mes "Do you know why a woman";
 	mes "like me has to work in this";
@@ -580,7 +580,7 @@ ein_in01,87,237,5	script	Dinje#ein	850,{
 	close;
 }
 
-ein_in01,84,218,3	script	Tsuen#ein	851,{
+ein_in01,84,218,3	script	Tsuen#ein	4_M_REPAIR,{
 	mes "[Tsuen]";
 	mes "There was a time";
 	mes "when I dreamed of";
@@ -613,7 +613,7 @@ ein_in01,84,218,3	script	Tsuen#ein	851,{
 	close;
 }
 
-ein_in01,103,239,1	script	Gesin#ein	849,{
+ein_in01,103,239,1	script	Gesin#ein	4_M_DIEMAN,{
 	mes "[Gesin]";
 	mes "Arrrgh!";
 	mes "This is killing me!";
@@ -644,7 +644,7 @@ ein_in01,103,239,1	script	Gesin#ein	849,{
 	close;
 }
 
-ein_in01,33,275,1	script	Pevtatin#ein	848,{
+ein_in01,33,275,1	script	Pevtatin#ein	4_M_EINMINER,{
 	mes "[Pevtatin]";
 	mes "Good god!";
 	mes "I'm so stressed!";
@@ -666,7 +666,7 @@ ein_in01,33,275,1	script	Pevtatin#ein	848,{
 	close;
 }
 
-ein_in01,36,204,3	script	Rombell#ein	851,{
+ein_in01,36,204,3	script	Rombell#ein	4_M_REPAIR,{
 	mes "[Rombell]";
 	mes "It's great that the";
 	mes "factory is making good";
@@ -692,7 +692,7 @@ ein_in01,36,204,3	script	Rombell#ein	851,{
 	close;
 }
 
-ein_in01,64,271,3	script	Vonstein#ein	855,{
+ein_in01,64,271,3	script	Vonstein#ein	4_M_EINMAN,{
 	mes "[Vonstein]";
 	mes "Staring at this";
 	mes "bubbling hot liquid";
@@ -709,7 +709,7 @@ ein_in01,64,271,3	script	Vonstein#ein	855,{
 	close;
 }
 
-ein_in01,49,202,3	script	Dorf#ein	851,{
+ein_in01,49,202,3	script	Dorf#ein	4_M_REPAIR,{
 	mes "[Dorf]";
 	mes "Machines are sooo";
 	mes "convenient. Just look";
@@ -732,7 +732,7 @@ ein_in01,49,202,3	script	Dorf#ein	851,{
 	close;
 }
 
-ein_in01,68,209,5	script	Khashurantze#ein	852,{
+ein_in01,68,209,5	script	Khashurantze#ein	4_M_EIN_SOLDIER,{
 	mes "[Khashurantze]";
 	mes "I'm sorry, but you need";
 	mes "special authority in order";
@@ -743,7 +743,7 @@ ein_in01,68,209,5	script	Khashurantze#ein	852,{
 	end;
 }
 
-ein_in01,85,261,3	script	Zherin#ein	851,{
+ein_in01,85,261,3	script	Zherin#ein	4_M_REPAIR,{
 	mes "[Zherin]";
 	mes "I'm in charge of this";
 	mes "blast furnace which";
@@ -767,7 +767,7 @@ ein_in01,85,261,3	script	Zherin#ein	851,{
 	close;
 }
 
-ein_in01,43,252,3	script	Canphotii#ein	852,{
+ein_in01,43,252,3	script	Canphotii#ein	4_M_EIN_SOLDIER,{
 	mes "[Canphotii]";
 	mes "Hustle, hustle!";
 	mes "Pick up the pace!";
@@ -791,7 +791,7 @@ ein_in01,43,252,3	script	Canphotii#ein	852,{
 	close;
 }
 
-ein_in01,206,224,3	script	Hotel Employee#ein	855,{
+ein_in01,206,224,3	script	Hotel Employee#ein	4_M_EINMAN,{
 	mes "[Hotel Employee]";
 	mes "Good day, welcome to the";
 	mes "Einbroch Hotel. The staff is";
@@ -834,7 +834,7 @@ ein_in01,206,224,3	script	Hotel Employee#ein	855,{
 				mes "Please enjoy";
 				mes "your rest~";
 				close2;
-				set zeny,zeny-5000;
+				Zeny -= 5000;
 				percentheal 100,100;
 				warp "ein_in01",272,167;
 				end;
@@ -860,56 +860,56 @@ ein_in01,206,224,3	script	Hotel Employee#ein	855,{
 	close;
 }
 
-einbroch,244,255,5	script	Bulletin Board#ein1	858,{
+einbroch,244,255,5	script	Bulletin Board#ein1	4_BULLETIN_BOARD2,{
 	mes " ";
 	mes " Train Station ";
 	mes " ";
 	close;
 }
 
-einbroch,253,203,5	script	Bulletin Board#ein2	858,{
+einbroch,253,203,5	script	Bulletin Board#ein2	4_BULLETIN_BOARD2,{
 	mes " ";
 	mes " Hotel ";
 	mes " ";
 	close;
 }
 
-einbroch,68,206,5	script	Bulletin Board#ein3	858,{
+einbroch,68,206,5	script	Bulletin Board#ein3	4_BULLETIN_BOARD2,{
 	mes " ";
 	mes " Airship Airport ";
 	mes " ";
 	close;
 }
 
-einbroch,90,84,5	script	Bulletin Board#ein4	858,{
+einbroch,90,84,5	script	Bulletin Board#ein4	4_BULLETIN_BOARD2,{
 	mes " ";
 	mes " Laboratory ";
 	mes " ";
 	close;
 }
 
-einbroch,101,106,5	script	Bulletin Board#ein5	858,{
+einbroch,101,106,5	script	Bulletin Board#ein5	4_BULLETIN_BOARD2,{
 	mes " ";
 	mes " Airship Repair Shop ";
 	mes " ";
 	close;
 }
 
-einbroch,220,208,5	script	Bulletin Board#ein6	858,{
+einbroch,220,208,5	script	Bulletin Board#ein6	4_BULLETIN_BOARD2,{
 	mes " ";
 	mes " Weapon Shop ";
 	mes " ";
 	close;
 }
 
-einbroch,132,76,5	script	Bulletin Board#ein7	858,{
+einbroch,132,76,5	script	Bulletin Board#ein7	4_BULLETIN_BOARD2,{
 	mes " ";
 	mes " Factory ";
 	mes " ";
 	close;
 }
 
-einbroch,152,46,5	script	Bulletin Board#ein11	858,{
+einbroch,152,46,5	script	Bulletin Board#ein11	4_BULLETIN_BOARD2,{
 	mes "West - Laboratory, Airship Repair Shop";
 	mes "South - Einbroch Front Gate";
 	mes "North - Airport";
@@ -917,14 +917,14 @@ einbroch,152,46,5	script	Bulletin Board#ein11	858,{
 	close;
 }
 
-einbroch,235,141,5	script	Bulletin Board#ein22	858,{
+einbroch,235,141,5	script	Bulletin Board#ein22	4_BULLETIN_BOARD2,{
 	mes "Southwest - Airship Repair Shop, Laboratory";
 	mes "Northwest - Airport";
 	mes "North - Weapon Shop, Hotel, Train Station";
 	close;
 }
 
-einbroch,162,256,5	script	Bulletin Board#ein33	858,{
+einbroch,162,256,5	script	Bulletin Board#ein33	4_BULLETIN_BOARD2,{
 	mes "East - Train Station";
 	mes "Southeast - Hotel";
 	mes "South - Weapon Shop,Factory";
@@ -932,7 +932,7 @@ einbroch,162,256,5	script	Bulletin Board#ein33	858,{
 	close;
 }
 
-einbroch,183,174,5	script	Bulletin Board#ein44	858,{
+einbroch,183,174,5	script	Bulletin Board#ein44	4_BULLETIN_BOARD2,{
 	mes "East - Weapon Shop, Hotel";
 	mes "South - Factory";
 	mes "Southwest - Airship Repair Shop, Laboratory";
@@ -940,14 +940,14 @@ einbroch,183,174,5	script	Bulletin Board#ein44	858,{
 	close;
 }
 
-einbroch,104,202,5	script	Bulletin Board#ein55	858,{
+einbroch,104,202,5	script	Bulletin Board#ein55	4_BULLETIN_BOARD2,{
 	mes "Northeast - Train Station";
 	mes "East - Weapon Shop,Hotel";
 	mes "South - Airship Repair Shop, Laboratory";
 	close;
 }
 
-ein_in01,31,217,3	script	Cendadt#ein	851,{
+ein_in01,31,217,3	script	Cendadt#ein	4_M_REPAIR,{
 	mes "[Cendadt]";
 	mes "This factory has a lot";
 	mes "of things that need fixing,";

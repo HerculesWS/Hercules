@@ -1,28 +1,98 @@
+# Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+# See the LICENSE file
 
-COMMON_H = ../common/HPMi.h ../common/cbasetypes.h
+# @configure_input@
 
-PLUGINS = sample
+################  PLUGIN CONFIGURATION  ##############################
+#                                                                    #
+# When you add a plugin, add its name here:                          #
+# Example: if you have a plugin named my_cool_plugin.c and another   #
+# one named my_second_plugin.c, add them to the list like this:      #
+#                                                                    #
+# MYPLUGINS = my_cool_plugin my_second_plugin                        #
+#                                                                    #
+# This is only needed if you want to build your plugin through       #
+#   'make plugins' or 'make all'. If you don't add it to this list,  #
+#   you will still be able to build your plugin through              #
+#   'make plugin.my_plugin'                                          #
+#                                                                    #
+# Note: DO NOT include the .c extension!!!                           #
+
+MYPLUGINS = 
+
+#                                                                    #
+#########  DO NOT EDIT ANYTHING BELOW THIS LINE!!!  ##################
+
+# All plugins in the src/plugins directory
+HPMHOOKING = $(addprefix HPMHooking_, login char map)
+ALLPLUGINS = $(filter-out HPMHooking, $(basename $(wildcard *.c))) $(HPMHOOKING)
+
+# Plugins that will be built through 'make plugins' or 'make all'
+PLUGINS = sample db2sql HPMHooking_char HPMHooking_login HPMHooking_map $(MYPLUGINS)
+
+COMMON_D = ../common
+COMMON_H = $(wildcard $(COMMON_D)/*.h)
+COMMON_INCLUDE = -I..
+
+THIRDPARTY_INCLUDE = -I../../3rdparty
+
+CONFIG_D = ../config
+CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
+
+MAP_H = $(wildcard ../map/*.h)
+CHAR_H = $(wildcard ../char/*.h)
+LOGIN_H = $(wildcard ../login/*.h)
+ALL_H = $(COMMON_H) $(CONFIG_H) $(MAP_H) $(CHAR_H) $(LOGIN_H)
 
 @SET_MAKE@
 
+CC = @CC@
+export CC
+
 #####################################################################
-.PHONY : all $(PLUGINS) sample clean help
+.PHONY: all $(ALLPLUGINS) HPMHooking clean buildclean help
 
-all: $(PLUGINS)
+all: $(PLUGINS) Makefile
 
-sample: sample@DLLEXT@
+$(ALLPLUGINS): %: ../../plugins/%@DLLEXT@
+	@echo "	PLUGIN	$@"
 
-clean:
-	@echo "	CLEAN	plugins"
+HPMHooking: $(HPMHOOKING)
+
+buildclean:
+	@echo "	CLEAN	plugins (build temp files)"
 	@rm -rf *.o
+
+clean: buildclean
+	@echo "	CLEAN	plugins"
+	@rm -rf ../../plugins/*@DLLEXT@
 
 help:
 	@echo "possible targets are $(PLUGINS:%='%') 'all' 'clean' 'help'"
-	@echo "'sample'   - sample plugin"
-	@echo "'help'     - outputs this message"
+	@echo ""
+	@echo "$(PLUGINS:%='%')"
+	@echo "              - builds a specific plugin"
+	@echo "'all'         - builds all above targets"
+	@echo "'clean'       - cleans builds and objects"
+	@echo "'buildclean'  - cleans build temporary (object) files, without deleting the"
+	@echo "                compiled plugins"
+	@echo "'help'        - outputs this message"
 
 #####################################################################
 
-%@DLLEXT@: %.c $(COMMON_H)
+Makefile: Makefile.in
+	@$(MAKE) -C ../.. src/plugins/Makefile
+
+.SECONDEXPANSION:
+
+../../plugins/%@DLLEXT@: %.c $(ALL_H) $$(shell ls %/* 2>/dev/null)
 	@echo "	CC	$<"
-	@@CC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o ../../plugins/$@ $<
+	@$(CC) $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @PLUGINSTATIC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o $@ $<
+
+../../plugins/HPMHooking_login@DLLEXT@: HPMHOOKINGTYPE = LOGIN
+../../plugins/HPMHooking_char@DLLEXT@: HPMHOOKINGTYPE = CHAR
+../../plugins/HPMHooking_map@DLLEXT@: HPMHOOKINGTYPE = MAP
+
+../../plugins/HPMHooking_%@DLLEXT@: HPMHooking.c $(ALL_H) $$(shell ls HPMHooking/*_%* HPMHooking/*_common* 2>/dev/null)
+	@echo "	CC	$< ($(HPMHOOKINGTYPE))"
+	@$(CC) -DHPMHOOKING_$(HPMHOOKINGTYPE) $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @PLUGINSTATIC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o $@ $<

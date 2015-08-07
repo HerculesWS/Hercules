@@ -1,17 +1,30 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
-#ifndef _CONFIG_RENEWAL_H_
-#define _CONFIG_RENEWAL_H_
+#ifndef CONFIG_RENEWAL_H
+#define CONFIG_RENEWAL_H
 
 /**
- * Hercules configuration file (http://hercules.ws)
- * For detailed guidance on these check http://hercules.ws/wiki/SRC/config/
+ * Hercules configuration file (http://herc.ws)
+ * For detailed guidance on these check http://herc.ws/wiki/SRC/config/
  **/
 
 /**
  * @INFO: This file holds general-purpose renewal settings, for class-specific ones check /src/config/classes folder
  **/
+
+/**
+ * Renewal full toggle switch.
+ *
+ * Uncomment this line to disable all of the below settings at once.
+ * Note: in UNIX builds, this can be easily done without touching this
+ * line, by passing --disable-renewal to the configure script:
+ * ./configure --disable-renewal
+ */
+//#define DISABLE_RENEWAL
+
+
+#ifndef DISABLE_RENEWAL // Do not change this line
 
 /// game renewal server mode
 /// (disable by commenting the line)
@@ -57,10 +70,10 @@
 ///  - damage is NOT increased by 400%
 ///  - it does NOT affect grimtooth
 ///  - weapon and status ATK are increased
+///  - some skill's damage ratio has modified
 #define RENEWAL_EDP
 
 /// renewal ASPD [malufett]
-/// (disable by commenting the line)
 ///
 /// leave this line to enable renewal ASPD
 /// - shield penalty is applied
@@ -69,4 +82,7 @@
 /// - some skill/item ASPD bonuses won't stack
 #define RENEWAL_ASPD
 
-#endif // _CONFIG_RENEWAL_H_
+#endif // DISABLE_RENEWAL
+#undef DISABLE_RENEWAL
+
+#endif // CONFIG_RENEWAL_H

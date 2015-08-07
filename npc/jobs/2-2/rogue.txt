@@ -1,29 +1,27 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Rogue Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= kobra_k88
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.9
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job quest for Rogue classes
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 2.4 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//=	No longer uses function "F_BlockHigh"
+//=     No longer uses function "F_BlockHigh"
 //= 2.4a Deleted unused variables. [Samuray22]
-//= 2.4b Changed a Problem with JobLevel what made 
-//=	impossible get a Gladius [3]. (bugreport:481) [Samuray22]
+//= 2.4b Changed a Problem with JobLevel what made
+//=     impossible get a Gladius [3]. (bugreport:481) [Samuray22]
 //= 2.4c Corrected a Typo error ";;" and a typo error with "rouge". (bugreport:909) [Samuray22]
 //= 2.5 Added dummy "OnMyMobDead" labels. (bugreport:1100) [L0ne_W0lf]
 //= 2.6 Fixed a few bugs in the Rogue Guildsman. [L0ne_W0lf]
 //= 2.7 Fixed a bug on Markie question 5, bugreport:1600 [Brainstorm]
 //= 2.8 Moved "Thug" to Morroc Ruins. [L0ne_W0lf]
 //= 2.9 Added Quest Log commands. [Kisuka]
-//============================================================ 
+//============================================================
 
-moc_ruins,86,103,1	script	Thug#rg	118,{
+moc_ruins,86,103,1	script	Thug#rg	2_M_THIEFMASTER,{
 	mes "[Thug]";
 	mes "*Sigh...*";
 	mes "What is life?";
@@ -54,7 +52,7 @@ moc_ruins,86,103,1	script	Thug#rg	118,{
 	close;
 }
 
-in_rogue,363,122,4	script	Rogue Guildsman#rg	747,{
+in_rogue,363,122,4	script	Rogue Guildsman#rg	4_F_ROGUE,{
 	if (Upper == 1) {
 		mes "[Markie]";
 		mes "Eh? You...you...?!";
@@ -84,7 +82,7 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	747,{
 				mes "[Rogue Guildsman]";
 				mes "So what's a kid";
 				mes "like you doin' here?";
-				if (sex == 1) {
+				if (Sex) {
 					mes "Oh, I get it now...";
 					mes "The widdle boy wants";
 				}
@@ -170,7 +168,7 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	747,{
 					mes "You've been";
 					mes "doin' a great job~";
 				}
-				set .@jlevel,JobLevel;
+				.@jlevel = JobLevel;
 				callfunc "Job_Change",Job_Rogue;
 				callfunc "F_ClearJobVar";
 				completequest 2027;
@@ -214,110 +212,110 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	747,{
 				mes "1. Choose the skill necessary for learning ^880000Stalk^000000.";
 				next;
 				if (select("^880000Hiding^000000:^880000Steal^000000:^880000Improve Dodge^000000:^880000Bash^000000") == 1)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "2. In comparison to the Merchant's Level 10 ^880000Discount^000000 skill, how much more of a discount, in terms of percent, can a Rogue get with Level 10 ^880000Haggle^000000 skill?";
 				next;
 				if (select("3 %:2 %:1 %:0 %") == 3)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "3. What is the correct description for the skill, ^880000Mug^000000?";
 				next;
 				if (select("Steal items from players:Steal items from monsters:Steal Zeny from monsters:Steal Zeny from players") == 3)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "4. How many Rogues does it require to activate the skill, ^880000Slyness^000000?";
 				next;
 				if (select("1 Rogues + 2 Assassin:1 Thief + 2 Rogue:4 Thieves:2 Rogues") == 4)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "5. Choose the skill that you can learn at Level 5 ^880000Divest Helm^000000.";
 				next;
 				if (select("^880000Envenom^000000:^880000Strip Tease^000000:^880000Venom Splasher^000000:^880000Divest Shield^000000") == 4)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "6. Choose the skill which allows its user to move while hiding.";
 				next;
 				if (select("^880000Hiding^000000:^880000Back Slide^000000:^880000Stalk^000000:^880000Sand Attack^000000") == 3)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "7. Choose the card that increases the accuracy rate of its owner.";
 				next;
 				if (select("Andre Card.:Familiar Card.:Mummy Card.:Marina Card.") == 3)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "8. Choose the monster that receives more damage when it's attacked by a weapon with the Vadon card (20 % more damage on Fire property).";
 				next;
 				if (select("Vadon:Deviruchi:Elder Willow:Baphomet") == 3)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "9. How much SP does the skill ^880000Double Attack^000000 require when used with a Dagger?";
 				next;
 				if (select("15:Passive skill, no SP required.:Passive skill, 10 SP:54") == 2)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "10. Choose the most efficient dagger to use in the Byalan Dungeon.";
 				next;
 				if (select("Wind Main-Gauche:Ice Main-Gauche:Earth Main-Gauche:Fire Main-Gauche") == 1)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 				break;
 			case 2:
 				mes "[Markie]";
 				mes "1. Which monster drops a slotted Gladius?";
 				next;
 				if (select("Thief Bug:Peco Peco:Desert Wolf:Kobold") == 4)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "2. Which monster drops a slotted Main-Gauche?";
 				next;
 				if (select("Hornet:Desert Wolf:Marionette:Myst") == 1)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "3. Choose the class that is able to create unique potions.";
 				next;
 				if (select("Merchant:Alchemist:Blacksmith:Priest") == 2)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "4. Choose the weapon that Rogues aren't allowed to use.";
 				next;
 				if (select("Gakkung:Crossbow:Gladius:Katar") == 4)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "5. Choose the property that the monster Hode possesses.";
 				next;
 				if (select("Water:Fire:Wind:Earth") == 4)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "6. Choose the monster that is unable to be tamed for as a Cute Pet.";
 				next;
 				if (select("Poporing:Creamy:Orc:Poison Spore") == 2)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "7. Choose the monster that receives more damage from a Dagger with the Fire property.";
 				next;
 				if (select("Dagger Goblin:Mace Goblin:Morning Star Goblin:Hammer Goblin") == 4)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "8. Choose the town that doesn't have any guild castles.";
 				next;
 				if (select("Prontera:Al De Baran:Alberta:Payon") == 3)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "9. Choose the plant that drops Blue Herbs.";
@@ -326,54 +324,54 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	747,{
 				default:
 					break;
 				case 3:
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 					break;
 				case 4:
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 					break;
 				}
 				mes "[Markie]";
 				mes "10. Choose the monster that does not have the Undead property.";
 				next;
 				if (select("Zombie:Megalodon:Familiar:Khalitzburg") == 3)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 				break;
 			case 3:
 				mes "[Markie]";
 				mes "1. By what percentage is the flee rate increased when a Thief masters the ^880000Improve Dodge^000000?";
 				next;
 				if (select("30:40:160:20") == 1)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "2. Choose the monster that detects a characters using the Hiding or Cloaking skill.";
 				next;
 				if (select("Worm Tail:Argos:Mummy:Soldier Skeleton") == 2)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "3. Choose the location where Thieves can change their jobs to Rogues.";
 				next;
 				if (select("Comodo:Kokomo Beach:Paros Lighthouse:Morroc") == 3)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "4. In which town can Novices change their jobs to Thieves?";
 				next;
 				if (select("Comodo:Lutie:Alberta:Morroc") == 4)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "5. Choose the card that does not affect the DEX stat.";
 				next;
 				if (select("Rocker Card:Mummy Card:Zerom Card:Drops Card") == 2)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "6. So what's cool about being a Rogue?";
 				next;
 				select("Being totally badass.:The clothes, the style.:Getting to call other people, 'foo'':Excellent attack strength");
-				set .@assassin_t,.@assassin_t+10;
+				.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "7. When is it possible to change jobs from Thief to Rogue?";
@@ -382,17 +380,17 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	747,{
 				default:
 					break;
 				case 3:
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 					break;
 				case 4:
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 					break;
 				}
 				mes "[Markie]";
 				mes "8. You want to dye your hair blue. What town do you go to, and in which direction, with 12 o' clock being North.";
 				next;
 				if (select("Morroc, 7 o'clock:Prontera, 7 o'clock:Morroc, 5 o'clock:Prontera, 1 o'clock") == 2)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "9. Choose the mushroom that is required on the Thief job change quest.";
@@ -402,14 +400,14 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	747,{
 					break;
 				case 1:
 				case 3:
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 					break;
 				}
 				mes "[Markie]";
 				mes "10. Choose the card that least benefits the Rogue class.";
 				next;
 				if (select("Whisper Card:Elder Willow Card:Zerom Card:Matyr Card") == 2)
-					set .@assassin_t,.@assassin_t+10;
+					.@assassin_t += 10;
 			}
 			mes "[Markie]";
 			mes "*Whew~*";
@@ -421,7 +419,7 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	747,{
 			mes "You got...";
 			mes "" + .@assassin_t + " points.";
 			if (.@assassin_t > 80) {
-				set ROGUE_Q,2;
+				ROGUE_Q = 2;
 				setquest 2017;
 				mes "Good. You passed.";
 				mes "We don't gotta";
@@ -436,7 +434,7 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	747,{
 				close;
 			}
 			else {
-				set ROGUE_Q,1;
+				ROGUE_Q = 1;
 				mes "Aw crud... You failed!";
 				next;
 				mes "[Markie]";
@@ -489,7 +487,7 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	747,{
 	}
 }
 
-in_rogue,376,23,1	script	Mr. Smith#rg	57,{
+in_rogue,376,23,1	script	Mr. Smith#rg	1_M_LIBRARYMASTER,{
 	if (ROGUE_Q == 2) {
 		mes "[Mr. Smith]";
 		mes "Welcome to";
@@ -508,14 +506,14 @@ in_rogue,376,23,1	script	Mr. Smith#rg	57,{
 		mes "[Mr. Smith]";
 		mes "What you have to understand is that the Rogue Guild does a lot of business, ^666666sometimes illegally^000000, that needs financial backup.";
 		next;
-		set .@item_need,rand(1,15);
+		.@item_need = rand(1,15);
 		if (.@item_need > 0 && .@item_need < 6) callsub S_Req,"10 Skel-bone","6 Blue Herb","10 Decayed Nail","10 Horrendous Mouth",3;
 		else if (.@item_need > 5 && .@item_need < 11) callsub S_Req,"10 Green Herb","10 Crab Shell","10 Snake Scale","10 Garlet",4;
 		else if (.@item_need > 10 && .@item_need < 15) callsub S_Req,"10 Yellow Herb","10 Shell","10 Grasshopper's Leg","10 Bear's Footskin",5;
 		else if (.@item_need == 15) {
 			mes "[Mr. Smith]";
 			mes "I will let you know...";
-			set ROGUE_Q,6;
+			ROGUE_Q = 6;
 			changequest 2017,2021;
 			next;
 			mes "[Mr. Smith]";
@@ -656,14 +654,14 @@ in_rogue,376,23,1	script	Mr. Smith#rg	57,{
 		else if (ROGUE_Q == 4) callsub S_CheckItems,511,10,910,10,926,10,964,10;
 		else if (ROGUE_Q == 5) callsub S_CheckItems,508,10,948,10,935,10,940,10;
 		else if (ROGUE_Q == 6) {
-			if (zeny > 9999 && countitem(915) > 4 && countitem(713) > 4 && countitem(1002) > 4 &&
+			if (Zeny > 9999 && countitem(915) > 4 && countitem(713) > 4 && countitem(1002) > 4 &&
 			countitem(953) > 4 && countitem(507) > 4 && countitem(919) > 4 && countitem(715) > 4 &&
 			countitem(913) > 4 && countitem(904) > 4 && countitem(942) > 4 && countitem(528) > 4 &&
 			countitem(914) > 4 && countitem(705) > 4 && countitem(916) > 4 && countitem(917) > 4 &&
 			countitem(908) > 4 && countitem(945) > 4) {
 				mes "[Mr. Smith]";
 				mes "Ummm...let's see...";
-				set zeny,zeny-10000;
+				Zeny -= 10000;
 				delitem 915,5; //Chrysalis
 				delitem 713,5; //Empty_Bottle
 				delitem 1002,5; //Iron_Ore
@@ -681,14 +679,14 @@ in_rogue,376,23,1	script	Mr. Smith#rg	57,{
 				delitem 917,5; //Talon
 				delitem 908,5; //Spawn
 				delitem 945,5; //Raccoon_Leaf
-				set ROGUE_Q,8;
+				ROGUE_Q = 8;
 				next;
 				mes "[Mr. Smith]";
 				mes "Wow, you've brought each and every single thing I asked you to. Good work... I salute you.";
 				next;
 				mes "^CCCCCC- Middle Finger -^000000'";
 				mes "*Grins*";
-				set ROGUE_Q,8;
+				ROGUE_Q = 8;
 				changequest 2021,2025;
 				next;
 				mes "[Mr. Smith]";
@@ -758,11 +756,11 @@ in_rogue,376,23,1	script	Mr. Smith#rg	57,{
 			mes "I send you to...?";
 			switch(rand(1,3)) {
 			case 1:
-				set ROGUE_Q,9;
-				if(checkquest(2018) != -1) {
+				ROGUE_Q = 9;
+				if (questprogress(2018)) {
 					changequest 2018,2022;
 				}
-				else if(checkquest(2019) != -1) {
+				else if (questprogress(2019)) {
 					changequest 2019,2022;
 				}
 				else {
@@ -795,11 +793,11 @@ in_rogue,376,23,1	script	Mr. Smith#rg	57,{
 				mes "Well, I will wish you luck. His place isn't that far from here, so come back as soon as possible. Being swift... That is the spirit of the Rogue.";
 				close;
 			case 2:
-				set ROGUE_Q,10;
-				if(checkquest(2018) != -1) {
+				ROGUE_Q = 10;
+				if (questprogress(2018)) {
 					changequest 2018,2023;
 				}
-				else if(checkquest(2019) != -1) {
+				else if (questprogress(2019)) {
 					changequest 2019,2023;
 				}
 				else {
@@ -831,11 +829,11 @@ in_rogue,376,23,1	script	Mr. Smith#rg	57,{
 				mes "Ah, you might want to remember the password to meet him in person. The password is ^0000FFAntonio doesn't enjoy destroying upgrade items^000000.";
 				close;
 			case 3:
-				set ROGUE_Q,11;
-				if(checkquest(2018) != -1) {
+				ROGUE_Q = 11;
+				if (questprogress(2018)) {
 					changequest 2018,2024;
 				}
-				else if(checkquest(2019) != -1) {
+				else if (questprogress(2019)) {
 					changequest 2019,2024;
 				}
 				else {
@@ -946,7 +944,7 @@ S_Req:
 	mes "^FF0000"+getarg(1)+"^000000,";
 	mes "^FF0000"+getarg(2)+"^000000 and";
 	mes "^FF0000"+getarg(3)+"^000000.";
-	set ROGUE_Q,getarg(4);
+	ROGUE_Q = getarg(4);
 	if(getarg(4) == 3) {
 		changequest 2017,2018;
 	}
@@ -976,18 +974,18 @@ S_CheckItems:
 	if (Zeny > 9999 && countitem(getarg(0)) >= getarg(1) && countitem(getarg(2)) >= getarg(3) && countitem(getarg(4)) >= getarg(5) && countitem(getarg(6)) >= getarg(7)) {
 		mes "[Mr. Smith]";
 		mes "Okay, we've got the application fee, ^FF000010,000 zeny^000000, "+getarg(1)+" "+getitemname(getarg(0))+", "+getarg(3)+" "+getitemname(getarg(2))+", "+getarg(5)+" "+getitemname(getarg(4))+" and "+getarg(7)+" "+getitemname(getarg(6))+"...";
-		set zeny,zeny-10000;
+		Zeny -= 10000;
 		delitem getarg(0),getarg(1);
 		delitem getarg(2),getarg(3);
 		delitem getarg(4),getarg(5);
 		delitem getarg(6),getarg(7);
-		set ROGUE_Q,7;
+		ROGUE_Q = 7;
 		next;
 		mes "[Mr. Smith]";
 		mes "Great, great...";
 		mes "I think you";
 		mes "brought everything.";
-		set ROGUE_Q,7;
+		ROGUE_Q = 7;
 		next;
 		mes "[Mr. Smith]";
 		mes "Alright, wait just a moment while";
@@ -1011,7 +1009,7 @@ S_CheckItems:
 	close;
 }
 
-cmd_fild09,106,195,0	script	Warp#1	45,1,1,{
+cmd_fild09,106,195,0	script	Warp#1	WARPNPC,1,1,{
 OnTouch:
 	mes "[???]";
 	mes "Who's there?!";
@@ -1026,7 +1024,7 @@ OnTouch:
 	case 2:
 		mes "[" + strcharinfo(0) + "]";
 		mes "Aragham";
-		set .@rogue_t,.@rogue_t+10;
+		.@rogue_t += 10;
 		break;
 	case 3:
 		mes "[" + strcharinfo(0) + "]";
@@ -1042,7 +1040,7 @@ OnTouch:
 	case 2: mes "didn't"; break;
 	case 3:
 		mes "never";
-		set .@rogue_t,.@rogue_t+10;
+		.@rogue_t += 10;
 		break;
 	case 4: mes "ever"; break;
 	}
@@ -1050,7 +1048,7 @@ OnTouch:
 	case 1: mes "hoard"; break;
 	case 2:
 		mes "hoarded";
-		set .@rogue_t,.@rogue_t+10;
+		.@rogue_t += 10;
 		break;
 	case 3: mes "hide"; break;
 	case 4: mes "took"; break;
@@ -1059,7 +1057,7 @@ OnTouch:
 	switch(select("upgrade items.:forging items.:refining item.:upgrade item.")) {
 	case 1:
 		mes "upgrade items.";
-		set .@rogue_t,.@rogue_t+10;
+		.@rogue_t += 10;
 		break;
 	case 2: mes "forging items."; break;
 	case 3: mes "refining item."; break;
@@ -1081,7 +1079,7 @@ OnTouch:
 	}
 }
 
-cmd_fild09,335,143,0	script	Warp#2	45,1,1,{
+cmd_fild09,335,143,0	script	Warp#2	WARPNPC,1,1,{
 OnTouch:
 	mes "[???]";
 	mes "Who's there?!";
@@ -1092,7 +1090,7 @@ OnTouch:
 	case 1:
 		mes "[" + strcharinfo(0) + "]";
 		mes "My father";
-		set .@rogue_t,.@rogue_t+10;
+		.@rogue_t += 10;
 		break;
 	case 2:
 		mes "[" + strcharinfo(0) + "]";
@@ -1112,7 +1110,7 @@ OnTouch:
 	case 2: mes "didn't"; break;
 	case 3:
 		mes "never";
-		set .@rogue_t,.@rogue_t+10;
+		.@rogue_t += 10;
 		break;
 	case 4: mes "ever"; break;
 	}
@@ -1123,13 +1121,13 @@ OnTouch:
 	case 4: mes "took"; break;
 	case 5:
 		mes "hoarded";
-		set .@rogue_t,.@rogue_t+10;
+		.@rogue_t += 10;
 		break;
 	}
 	switch(select("upgrade items.:forging items.:refining item.:upgrade item.")) {
 	case 1:
 		mes "upgrade items.";
-		set .@rogue_t,.@rogue_t+10;
+		.@rogue_t += 10;
 		break;
 	case 2: mes "forging items."; break;
 	case 3: mes "refining item."; break;
@@ -1151,7 +1149,7 @@ OnTouch:
 	}
 }
 
-cmd_fild04,304,180,0	script	Warp#3	45,1,1,{
+cmd_fild04,304,180,0	script	Warp#3	WARPNPC,1,1,{
 OnTouch:
 	mes "[???]";
 	mes "Who's there?!";
@@ -1170,18 +1168,18 @@ OnTouch:
 	case 3:
 		mes "[" + strcharinfo(0) + "]";
 		mes "Antonio";
-		set .@rogue_t,.@rogue_t+10;
+		.@rogue_t += 10;
 		break;
 	case 4:
 		mes "[" + strcharinfo(0) + "]";
-		mes "Hollgrehenn"; 
+		mes "Hollgrehenn";
 		break;
 	}
 	switch(select("enjoys:doesn't enjoy:likes:doesn't like")) {
 	case 1: mes "enjoys"; break;
 	case 2:
 		mes "doesn't enjoy";
-		set .@rogue_t,.@rogue_t+10;
+		.@rogue_t += 10;
 		break;
 	case 3: mes "likes"; break;
 	case 4: mes "doesn't like"; break;
@@ -1190,7 +1188,7 @@ OnTouch:
 	case 1: mes "damaging"; break;
 	case 2:
 		mes "destroying";
-		set .@rogue_t,.@rogue_t+10;
+		.@rogue_t += 10;
 		break;
 	case 3: mes "fixing"; break;
 	case 4: mes "forging"; break;
@@ -1200,7 +1198,7 @@ OnTouch:
 	case 2: mes "refining items."; break;
 	case 3:
 		mes "upgrade items.";
-		set .@rogue_t,.@rogue_t+10;
+		.@rogue_t += 10;
 		break;
 	case 4: mes "refined items."; break;
 	case 5: mes "upgraded items."; break;
@@ -1221,7 +1219,7 @@ OnTouch:
 	}
 }
 
-in_rogue,272,135,1	script	Hermanthorn Jr#rg	85,{
+in_rogue,272,135,1	script	Hermanthorn Jr#rg	4_M_03,{
 	if (ROGUE_Q == 8) {
 		mes "[HermanthornJr.]";
 		mes "I see...";
@@ -1252,7 +1250,7 @@ in_rogue,272,135,1	script	Hermanthorn Jr#rg	85,{
 		mes "[HermanthornJr.]";
 		mes "Well...";
 		mes "Just make it back to the Rogue Guild alive. That's all you have to do!";
-		set ROGUE_Q,12;
+		ROGUE_Q = 12;
 		changequest 2025,2026;
 		close;
 	}
@@ -1271,7 +1269,7 @@ in_rogue,272,135,1	script	Hermanthorn Jr#rg	85,{
 	}
 }
 
-in_rogue,270,130,0	script	he_to_rogue#rg	45,1,1,{
+in_rogue,270,130,0	script	he_to_rogue#rg	WARPNPC,1,1,{
 OnTouch:
 	mes "^3355FFThe door is locked. You'll need to enter the four number combination to open it.^000000";
 	next;
@@ -1279,7 +1277,7 @@ OnTouch:
 	if (.@input < 1 || .@input > 10000) {
 		if (ROGUE_Q == 12)
 			mes "^3355FFIt didn't work. Please re-enter the four number combination.^000000";
-		else 
+		else
 			mes "^3355FFPlease enter a combination of four numbers.^000000";
 		close;
 	}
@@ -1289,7 +1287,7 @@ OnTouch:
 			mes "has opened.^000000";
 			close2;
 			warp "in_rogue",10,21;
-			set ROGUE_Q,12;
+			ROGUE_Q = 12;
 			end;
 		}
 		else {
@@ -1384,15 +1382,15 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,9,389,0	script	oneway_to_gu	45,1,1,{
+in_rogue,9,389,0	script	oneway_to_gu	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "gen_ro#4::OnDisable";
-	set ROGUE_Q,17;
+	ROGUE_Q = 17;
 	warp "in_rogue",367,10;
 	end;
 }
 
-in_rogue,244,39,1	script	Aragham Junior#rg	99,{
+in_rogue,244,39,1	script	Aragham Junior#rg	4W_M_03,{
 	if (ROGUE_Q == 9) {
 		mes "[Aragham Jr.]";
 		mes "Oh, you must be";
@@ -1425,7 +1423,7 @@ in_rogue,244,39,1	script	Aragham Junior#rg	99,{
 			mes "Good luck, then.";
 			close2;
 			warp "in_rogue",15,105;
-			set ROGUE_Q,13;
+			ROGUE_Q = 13;
 			changequest 2022,2026;
 			end;
 		}
@@ -1478,7 +1476,7 @@ in_rogue,244,39,1	script	Aragham Junior#rg	99,{
 	}
 }
 
-in_rogue,160,34,1	script	Hollgrehenn junior#rg	85,{
+in_rogue,160,34,1	script	Hollgrehenn junior#rg	4_M_03,{
 	if (ROGUE_Q == 11) {
 		mes "[Hollgrehenn Jr.]";
 		mes "Huh...";
@@ -1506,7 +1504,7 @@ in_rogue,160,34,1	script	Hollgrehenn junior#rg	85,{
 			mes "Good luck.";
 			close2;
 			warp "in_rogue",15,105;
-			set ROGUE_Q,15;
+			ROGUE_Q = 15;
 			changequest 2024,2026;
 			end;
 		}
@@ -1564,7 +1562,7 @@ in_rogue,160,34,1	script	Hollgrehenn junior#rg	85,{
 	}
 }
 
-in_rogue,177,109,1	script	Antonio junior#rg	88,{
+in_rogue,177,109,1	script	Antonio junior#rg	4_M_ORIENT01,{
 	if (ROGUE_Q == 10) {
 		mes "[Antonio Jr.]";
 		mes "You're from";
@@ -1593,7 +1591,7 @@ in_rogue,177,109,1	script	Antonio junior#rg	88,{
 			mes "a Rogue if you pass...";
 			close2;
 			warp "in_rogue",15,105;
-			set ROGUE_Q,14;
+			ROGUE_Q = 14;
 			changequest 2023,2026;
 			end;
 		}
@@ -1649,9 +1647,9 @@ in_rogue,177,109,1	script	Antonio junior#rg	88,{
 	}
 }
 
-in_rogue,370,320,0	script	quest_out	45,1,1,{
+in_rogue,370,320,0	script	quest_out	WARPNPC,1,1,{
 OnTouch:
-	set ROGUE_Q,16;
+	ROGUE_Q = 16;
 	warp "in_rogue",378,113;
 	end;
 }
@@ -1713,7 +1711,7 @@ OnTouch:
 	end;
 
 OnDisable:
-	killmonster "in_rogue","mob_rogue#3::OnMyMObDead";
+	killmonster "in_rogue","mob_rogue#3::OnMyMobDead";
 	end;
 
 OnMyMobDead:
@@ -1990,7 +1988,7 @@ OnInit:
 	end;
 }
 
-in_rogue,399,286,1	script	switch#rogreset	88,{
+in_rogue,399,286,1	script	switch#rogreset	4_M_ORIENT01,{
 	mes "^F08080Tah dah~";
 	mes "Monsters for the";
 	mes "Rogue Job Change";
@@ -2012,19 +2010,20 @@ in_rogue,399,286,1	script	switch#rogreset	88,{
 	close;
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= 1.1 fixed 3 wrong questions, added missing lines [Lupus]
 //= 1.3 Baby Class Support + 40/50 JobLevel Item fix [Lupus]
 //= 1.5 Fixed possible EXP abuse [Lupus]
 //= 1.6 Added a func which prevent advanced classes passing
-//= 2nd Job Quests again. It also guides adv classes where
-//= to go. [Lupus]
+//=     2nd Job Quests again. It also guides adv classes where
+//=     to go. [Lupus]
 //= 2.0 Changed numbers to constants. [Vicious]
 //= 2.1 Removed Duplicates [Silent]
 //= 2.2 Merged JFunc [Lupus]
 //= 2.3 Added a possibility for players doing Meginjyard quest
-//= to enter Rogue guild as there's a NPC inside [SinSloth]
+//=     to enter Rogue guild as there's a NPC inside [SinSloth]
 //= 2.3a fixed test4 person interaction, let BABY thieves pass
-//=	the test, too [Lupus]
+//=     the test, too [Lupus]
+//============================================================

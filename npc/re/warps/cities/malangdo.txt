@@ -4,8 +4,6 @@
 //= Chilly
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Warp Points for Malangdo Island
 //===== Additional Comments: =================================

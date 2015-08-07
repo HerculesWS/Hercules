@@ -1,42 +1,49 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
-#ifndef _INTER_SQL_H_
-#define _INTER_SQL_H_
+#ifndef CHAR_INTER_H
+#define CHAR_INTER_H
+
+#include "common/cbasetypes.h"
+#include "common/db.h"
+#include "common/sql.h"
+
+#include <stdarg.h>
 
 struct accreg;
-#include "../common/sql.h"
 
-int inter_init_sql(const char *file);
-void inter_final(void);
-int inter_parse_frommap(int fd);
-int inter_mapif_init(int fd);
-int mapif_send_gmaccounts(void);
-int mapif_disconnectplayer(int fd, int account_id, int char_id, int reason);
-
-int inter_log(char *fmt,...);
-
-#define inter_cfgName "conf/inter-server.conf"
-
+#ifdef HERCULES_CORE
 extern unsigned int party_share_level;
 
-extern Sql* sql_handle;
-extern Sql* lsql_handle;
+void inter_defaults(void);
+#endif // HERCULES_CORE
 
-int inter_accreg_tosql(int account_id, int char_id, struct accreg *reg, int type);
+/**
+ * inter interface
+ **/
+struct inter_interface {
+	Sql* sql_handle;
+	const char* (*msg_txt) (int msg_number);
+	bool (*msg_config_read) (const char *cfg_name, bool allow_override);
+	void (*do_final_msg) (void);
+	const char* (*job_name) (int class_);
+	void (*vmsg_to_fd) (int fd, int u_fd, int aid, char* msg, va_list ap);
+	void (*msg_to_fd) (int fd, int u_fd, int aid, char *msg, ...);
+	void (*savereg) (int account_id, int char_id, const char *key, unsigned int index, intptr_t val, bool is_string);
+	int (*accreg_fromsql) (int account_id,int char_id, int fd, int type);
+	int (*config_read) (const char* cfgName);
+	int (*vlog) (char* fmt, va_list ap);
+	int (*log) (char* fmt, ...);
+	int (*init_sql) (const char *file);
+	int (*mapif_init) (int fd);
+	int (*check_ttl_wisdata_sub) (DBKey key, DBData *data, va_list ap);
+	int (*check_ttl_wisdata) (void);
+	int (*check_length) (int fd, int length);
+	int (*parse_frommap) (int fd);
+	void (*final) (void);
+};
 
-uint64 inter_chk_lastuid(int8 flag, uint64 value);
-#ifdef NSI_UNIQUE_ID
-	#define updateLastUid(val_) inter_chk_lastuid(1, val_)
-	#define dbUpdateUid(handler_)\
-	{ \
-		uint64 unique_id_ = inter_chk_lastuid(0, 0); \
-		if (unique_id_ && SQL_ERROR == Sql_Query(handler_, "UPDATE `interreg` SET `value`='%"PRIu64"' WHERE `varname`='unique_id'", unique_id_)) \
-				Sql_ShowDebug(handler_);\
-	}
-#else
-	#define dbUpdateUid(handler_)
-	#define updateLastUid(val_)
-#endif
+struct inter_interface *inter;
 
-#endif /* _INTER_SQL_H_ */
+#endif /* CHAR_INTER_H */

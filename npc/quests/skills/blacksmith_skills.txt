@@ -1,17 +1,17 @@
 //===== Hercules Script ======================================
 //= Blacksmith Skills Quests
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Lupus, Reddozen, Samuray22
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.6
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Quests for skills: Dubious Salesmanship, Greed
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.6 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
 //============================================================
 
-geffen,178,72,3	script	Akkie#qsk_bs	726,{
+geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 	if (BaseJob == Job_Blacksmith) {
 		if (BLACK_SK == 7 && getskilllv("BS_UNFAIRLYTRICK") == 0) {
 			mes "[Akkie]";
@@ -25,10 +25,10 @@ geffen,178,72,3	script	Akkie#qsk_bs	726,{
 			mes "[Akkie]";
 			mes "Actually, let me jog your";
 			mes "memory with this counterfeit";
-			mes "zeny that we made the last time.^FFFFFF ^000000 Do you remember how to perform";
+			mes "zeny that we made the last time. Do you remember how to perform";
 			mes "Dubious Salesmanship? You";
 			mes "should be able to use it now...";
-			set BLACK_SK,8;
+			BLACK_SK = 8;
 			skill "BS_UNFAIRLYTRICK",1,0;
 			close;
 		}
@@ -151,7 +151,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	726,{
 					mes "I promise! This skill is sooo";
 					mes "useful! So just bring me those";
 					mes "materials soon, alright?";
-					set BLACK_SK,1;
+					BLACK_SK = 1;
 					close;
 				}
 				mes "[Akkie]";
@@ -184,8 +184,8 @@ geffen,178,72,3	script	Akkie#qsk_bs	726,{
 						delitem 999,1; //Steel
 						delitem 971,1; //Detrimindexta
 						delitem 613,1; //Iron_Hammer
-						set zeny,zeny-500;
-						set BLACK_SK,2;
+						Zeny -= 500;
+						BLACK_SK = 2;
 						close;
 					}
 					else {
@@ -264,7 +264,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	726,{
 				mes "you for being so generous!";
 				mes "Just bring me ^FF00001 Steel^000000 and";
 				mes "^FF00003 Coals^000000 and we'll try again!";
-				set BLACK_SK,3;
+				BLACK_SK = 3;
 				close;
 			}
 			else if (BLACK_SK == 3) {
@@ -278,7 +278,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	726,{
 					mes "a minute to prepare...";
 					delitem 999,1; //Steel
 					delitem 1003,3; //Coal
-					set BLACK_SK,4;
+					BLACK_SK = 4;
 					close;
 				}
 				else {
@@ -316,7 +316,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	726,{
 				mes "really bring her a new";
 				mes "^FF0000Iron Hammer^333333, or else";
 				mes "I'll never learn this skill!)^000000";
-				set BLACK_SK,5;
+				BLACK_SK = 5;
 				close;
 			}
 			else if (BLACK_SK == 5) {
@@ -334,7 +334,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	726,{
 					mes "I'm going to try";
 					mes "one more time.";
 					delitem 613,1; //Iron_Hammer
-					set BLACK_SK,6;
+					BLACK_SK = 6;
 					close;
 				}
 				else {
@@ -368,7 +368,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	726,{
 				mes "is making this fake zeny. Watch";
 				mes "this... Isn't it easy? Of course, you can only use this in battle to";
 				mes "reduce Mammonite's zeny cost...";
-				set BLACK_SK,7;
+				BLACK_SK = 7;
 				skill "BS_UNFAIRLYTRICK",1,0;
 				next;
 				mes "[Akkie]";
@@ -471,7 +471,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	726,{
 	}
 }
 
-geffen,172,52,1	script	Goodman#qsk_bs	826,{
+geffen,172,52,1	script	Goodman#qsk_bs	4_M_DWARF,{
 	if (BaseJob == Job_Blacksmith) {
 		if (BLACK_SK2 == 2 && Upper == 1 && getskilllv("BS_GREED") == 0) {
 			mes "[Goodman]";
@@ -489,7 +489,7 @@ geffen,172,52,1	script	Goodman#qsk_bs	826,{
 			mes "jog the memories you require";
 			mes "to use this skill once again~";
 			skill "BS_GREED",1,0;
-			set BLACK_SK2,3;
+			BLACK_SK2 = 3;
 			close;
 		}
 		else if (BLACK_SK2 == 3) {
@@ -535,7 +535,7 @@ geffen,172,52,1	script	Goodman#qsk_bs	826,{
 					mes "the Greed skill automatically";
 					mes "picks up all items in a 5*5";
 					mes "cell area around the caster.";
-					mes "It's handy for picking up clumps^FFFFFF ^000000 of goods from looting monsters.";
+					mes "It's handy for picking up clumps of goods from looting monsters.";
 					next;
 					mes "[Goodman]";
 					mes "First thing's first. I need to";
@@ -549,7 +549,7 @@ geffen,172,52,1	script	Goodman#qsk_bs	826,{
 					mes "task, come back and";
 					mes "talk to me. Alright";
 						mes "then, good luck~";
-					set BLACK_SK2,1;
+					BLACK_SK2 = 1;
 					close;
 				}
 				mes "[Goodman]";
@@ -562,13 +562,12 @@ geffen,172,52,1	script	Goodman#qsk_bs	826,{
 				close;
 			}
 			else if (BLACK_SK2 == 1) {
-				set .@now_weight,MaxWeight-Weight;
-				if (.@now_weight < 5000) {
+				if (MaxWeight - Weight < 5000) {
 					mes "[Goodman]";
 					mes "Back already, eh?";
 					mes "Alright, let me check";
 					mes "the things you're carrying.";
-					mes "Let's see, Inventory, Inventory... ^FFFFFF ^000000";
+					mes "Let's see, Inventory, Inventory... ";
 					next;
 					mes "[Goodman]";
 					mes "Good work: you pass.";
@@ -586,9 +585,9 @@ geffen,172,52,1	script	Goodman#qsk_bs	826,{
 					mes "artisans. Being rich and famous";
 					mes "is merely a side effect of that.";
 					if (Upper == 1)
-						mes "Honorable Master Smiths know^FFFFFF ^000000 value is in the craftsmanship...";
+						mes "Honorable Master Smiths know value is in the craftsmanship...";
 					else
-						mes "Honorable Blacksmiths know^FFFFFF ^000000 value is in the craftsmanship...";
+						mes "Honorable Blacksmiths know value is in the craftsmanship...";
 					next;
 					if (Upper == 1) {
 						mes "[Goodman]";
@@ -608,7 +607,7 @@ geffen,172,52,1	script	Goodman#qsk_bs	826,{
 					mes "Don't forget that, and I hope";
 					mes "you craft true masterpieces.";
 					skill "BS_GREED",1,0;
-					set BLACK_SK2,2;
+					BLACK_SK2 = 2;
 					close;
 				}
 				else {
@@ -616,7 +615,7 @@ geffen,172,52,1	script	Goodman#qsk_bs	826,{
 					mes "Hm. You've come back";
 					mes "too early. And you didn't";
 					mes "complete the objective that";
-					mes "I set for you. Listen carefully. ^FFFFFF ^000000";
+					mes "I set for you. Listen carefully. ";
 					next;
 					mes "[Goodman]";
 					mes "Go fill your Inventory";
@@ -650,20 +649,20 @@ geffen,172,52,1	script	Goodman#qsk_bs	826,{
 	close;
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= 1.0 for fully working skills only [Lupus]
 //= 1.1 Added more new skill quests for more classes [Lupus]
-//= Somehow eA engine doesn't let you keep learn't skill V_V'
+//=     Somehow eA engine doesn't let you keep learn't skill V_V'
 //= 1.2 Added to correct locations, correct NPC's, fixed
-//= some of the items required and made them into real
-//= quests. [Reddozen] 
+//=     some of the items required and made them into real
+//=     quests. [Reddozen]
 //= 1.3 Fixed bugs and minor typos. Optimized [Lupus]
 //= 1.3a fixed an item ID typo, thx 2Spiritual Kid
 //= 1.3b Splitted into different files [DracoRPG]
 //= 1.3c Inverted the weight check for Greed [DracoRPG]
 //= 1.4 Updated to the official One [Samuray22]
 //= 1.5 replaced item "names" with item id. Fixed a bug with
-//=		item deletion [Lupus]
+//=     item deletion [Lupus]
 //============================================================

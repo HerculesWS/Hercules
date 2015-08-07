@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Garden City Hugel Warp Script
 //===== By: ==================================================
 //= Sara-chan (1.1)
 //===== Current Version: =====================================
 //= 1.7
-//===== Compatible With: =====================================
-//= Any Athena Version; RO Episode 10+
 //===== Description: =========================================
 //= Warp Points for Hugel
 //===== Additional Comments: =================================

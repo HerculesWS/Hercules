@@ -1,4 +1,4 @@
-//===== Hercules Documentation ================================
+//===== Hercules Documentation ===============================
 //= eAthena Job System
 //===== By: ==================================================
 //= Skotlex

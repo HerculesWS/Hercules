@@ -1,23 +1,39 @@
-// Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
-#ifndef _CONFIG_GENERAL_H_
-#define _CONFIG_GENERAL_H_
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
+#ifndef CONFIG_GENERAL_H
+#define CONFIG_GENERAL_H
 
 /**
- * rAthena configuration file (http://rathena.org)
- * For detailed guidance on these check http://rathena.org/wiki/SRC/config/
+ * Hercules configuration file (http://herc.ws)
  **/
 
 /**
  * Default Magical Reflection Behavior
- * - When reflecting, reflected damage depends on gears caster is wearing, not target
- * - When disabled damage depends on gears target is wearing, not caster.
+ * - When reflecting, reflected damage depends on gears caster is wearing, not target (official)
+ * - When disabled damage depends on gears target is wearing, not caster. (old/eathena)
  * @values 1 (enabled) or 0 (disabled)
  **/
 #define MAGIC_REFLECTION_TYPE 1
 
 /**
+ * Spirit Sphere Limitation
+ **/
+#define MAX_SPIRITBALL 15
+
+/**
+* Spirit Charm Limitation
+**/
+#define MAX_SPIRITCHARM 10
+
+/**
+ * when enabled, reflect damage doesn't bypass devotion (and thus damage is passed to crusader)
+ * uncomment to enable
+ **/
+//#define DEVOTION_REFLECT_DAMAGE
+
+/**
  * No settings past this point
  **/
 
-#endif // _CONFIG_GENERAL_H_
+#endif // CONFIG_GENERAL_H

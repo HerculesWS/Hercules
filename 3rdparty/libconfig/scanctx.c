@@ -39,6 +39,7 @@ static const char *err_include_too_deep = "include file nesting too deep";
 static const char *__scanctx_add_filename(struct scan_context *ctx,
                                           const char *filename)
 {
+#ifndef __clang_analyzer__ // FIXME: Clang's static analyzer doesn't like this
   unsigned int count = ctx->num_filenames;
   const char **f;
 
@@ -60,6 +61,7 @@ static const char *__scanctx_add_filename(struct scan_context *ctx,
 
   ctx->filenames[ctx->num_filenames] = filename;
   ++ctx->num_filenames;
+#endif // __clang_analyzer__
   return(filename);
 }
 

@@ -1,7 +1,7 @@
 //===== Hercules Script ======================================
 //= Geffenia Dungeon Monster Spawn Script
 //===== By: ==================================================
-//= Muad_Dib, rAthena Dev Team
+//= Muad_Dib, Hercules Dev Team
 //===== Current Version: =====================================
 //= 1.1
 //===== Additional Comments: =================================

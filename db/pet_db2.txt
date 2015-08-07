@@ -30,22 +30,16 @@
 //In theory you can use any valid script, but it is run only once upon pet
 //loading, so it is recommended you use the specific pet scripts:
 
-//petskillattack skillid, skilllv, rate, bonusrate
+//petskillattack skillid, skilllv, hits, rate, bonusrate
 //Skill attack that triggers while the pet is attacking. Rate is the base
 //chance of execution per attack. Bonusrate is an additional success rate when
-//intimacy reaches max.
-
-//petskillattack2 skillid, damage, hits, rate, bonusrate
-//Same as petskillattack, but the damage and number of hits is fixed
-//the damage specified is total, not per hit.
+//intimacy reaches max. If hits is specified and different than 0, it will make
+//the pet cast the skill with a fixed amount of damage inflicted and the
+//specified number of hits. A value of zero uses the skill's defaults.
 
 //petskillsupport skillid, skilllv, delay, hp%, sp%
 //Casts a support skill when the health levels are below the specified hp% and
 //sp%. Delay is the minimum time in seconds before the skill can be cast again
-
-//petheal amount, delay, hp%, sp%
-//Similar to petskillsupport, but the skill is fixed to heal (28) and the
-//heal-amount is fixed to the value given.
 
 //petrecovery type, delay: Cures the "type" status effect after "delay" seconds
 
@@ -54,7 +48,6 @@
 //amount by which it is increased, duration signals how long the bonus lasts
 //delay is the time elapsed after the bonus ends and before it starts again.
 
-//A single pet can have petloot, petskillbonus, petskillattack (or
-//petskillattack2) and petskillsupport (or petheal) at the same time,
-//but only one of each.
+//A single pet can have petloot, petskillbonus, petskillattack and
+//petskillsupport at the same time, but only one of each.
 

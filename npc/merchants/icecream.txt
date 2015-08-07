@@ -69,16 +69,16 @@
 		mes "before making a purchase.";
 		close;
 	}
-	set Zeny,Zeny-100*.@input;
+	Zeny -= 100*.@input;
 	getitem 536,.@input;	// Ice_Cream
 	close;
 }
 
 // Alberta
-alberta,120,45,2	duplicate(IceCreamer)	Ice Cream Maker#1	85
+alberta,120,45,2	duplicate(IceCreamer)	Ice Cream Maker#1	4_M_03
 
 // Morroc Field
-moc_fild16,88,304,4	duplicate(IceCreamer)	Ice Cream Maker#2	85
+moc_fild16,88,304,4	duplicate(IceCreamer)	Ice Cream Maker#2	4_M_03
 
 // Morroc
-//morocc,160,144,4	duplicate(IceCreamer)	Ice Cream Maker#3	85
+//morocc,160,144,4	duplicate(IceCreamer)	Ice Cream Maker#3	4_M_03

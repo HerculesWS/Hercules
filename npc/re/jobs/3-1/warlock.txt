@@ -1,15 +1,13 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Warlock Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Muad_Dib, Gepard & L0ne_W0lf
-//===== Current Version: ===================================== 
-//= 1.3a
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== Current Version: =====================================
+//= 1.4
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job change Quest from Wizard / High Wizard -> Warlock.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First version. [Masao]
 //= 1.1 Fixed some conversion mistakes, replaced numbers with
 //=     constants, added item names in comments.
@@ -18,6 +16,8 @@
 //= 1.2a Fixed a typo. [Euphy]
 //= 1.3 Updated script, optimized. [Euphy]
 //= 1.3a Added temporary coordinate fix #distorted_space_1-1. [Euphy]
+//= 1.3b Added official coordinates. [Euphy]
+//= 1.4 Added GM management function. [Euphy]
 //============================================================
 
 -	script	#distorted_space_	-1,{
@@ -66,11 +66,9 @@ OnTouch:
 	}
 	end;
 }
-morocc,103,144,0	duplicate(#distorted_space_)	#distorted_space_1	139,1,1
-splendide,141,284,0	duplicate(#distorted_space_)	#distorted_space_2	139,1,1
-
-// This is a temporary fix until new official coordinates are found.
-morocc,98,144,0	duplicate(#distorted_space_)	#distorted_space_1-1	139,1,1
+//morocc,103,144,0	duplicate(#distorted_space_)	#distorted_space_1	HIDDEN_WARP_NPC,1,1
+morocc,95,132,0	duplicate(#distorted_space_)	#distorted_space_1	HIDDEN_WARP_NPC,1,1
+splendide,141,284,0	duplicate(#distorted_space_)	#distorted_space_2	HIDDEN_WARP_NPC,1,1
 
 function	script	F_Warlock	{
 	mes "[Assistant]";
@@ -184,14 +182,14 @@ function	script	F_Warlock	{
 				mes "[Master Egnoloria]";
 				mes "Talk to the guy with the weird hair.";
 				mes "He'll let you know what you should do.";
-				set job_wl,2;
+				job_wl = 2;
 				setquest 11106;
 				close;
 			case 2:
 				mes "[Master Egnoloria]";
 				mes "Good.";
 				mes "You are a human being so that's for you.";
-				set job_wl,1;
+				job_wl = 1;
 				close2;
 				warp "splendide",200,100;
 				end;
@@ -205,7 +203,7 @@ function	script	F_Warlock	{
 	end;
 }
 
-spl_in02,77,107,5	script	Assistant#Warlock1	446,{
+spl_in02,77,107,5	script	Assistant#Warlock1	4_M_FAIRYKID5,{
 	if (job_wl == 0) {
 		callfunc "F_Warlock";
 		end;
@@ -252,7 +250,7 @@ spl_in02,77,107,5	script	Assistant#Warlock1	446,{
 		}
 		if (SkillPoint != 0) {
 			mes "First, use all of your remaining job skill points before continuing.";
-			set job_wl,3;
+			job_wl = 3;
 			close;
 		}
 		mes "This is the Master's";
@@ -305,7 +303,7 @@ L_Quest:
 	if (getarg(0)) {
 		mes "[Yoop]";
 		mes "Show us how strong you are. And don't forget to wear this.";
-		set job_wl,4;
+		job_wl = 4;
 		getitem 2796,1; //Magical_Stone
 		getitem 2797,1; //Magical_Stone_
 		changequest 11106,11107;
@@ -323,7 +321,7 @@ L_Quest:
 	return;
 }
 
-spl_in02,60,231,5	script	Yoop#Warlock	446,{
+spl_in02,60,231,5	script	Yoop#Warlock	4_M_FAIRYKID5,{
 	mes "[Yoop]";
 	if (job_wl < 4) {
 		mes "Who are you?";
@@ -375,7 +373,7 @@ spl_in02,60,231,5	script	Yoop#Warlock	446,{
 				delitem 2797,countitem(2797); //Magical_Stone_
 				delitem 6152,countitem(6152); //Glittering_Crystal
 				delitem 6151,countitem(6151); //Peice_Of_Great_Bradium
-				set job_wl,5;
+				job_wl = 5;
 				changequest 11107,11108;
 				close;
 			}
@@ -452,7 +450,7 @@ spl_in02,60,231,5	script	Yoop#Warlock	446,{
 	}
 }
 
-spl_in02,84,103,3	script	Assistant#Warlock2	439,{
+spl_in02,84,103,3	script	Assistant#Warlock2	4_F_FAIRYKID4,{
 	if (job_wl == 0) {
 		callfunc "F_Warlock";
 		end;
@@ -481,7 +479,7 @@ spl_in02,84,103,3	script	Assistant#Warlock2	439,{
 		next;
 		mes "[Yoop]";
 		mes "I will guide you into the magic room.";
-		set job_wl,7;
+		job_wl = 7;
 		changequest 11109,11110;
 		getitem 12384,5; //Rainbow_Ruby_Water
 		getitem 12386,5; //Rainbow_Ruby_Wind
@@ -523,7 +521,7 @@ spl_in02,84,103,3	script	Assistant#Warlock2	439,{
 		mes "[Yoop]";
 		mes "All of the tests are done. Now talk to Master Engoloria.";
 		mes "I'm so happy that you have succeeded.";
-		set job_wl,9;
+		job_wl = 9;
 		changequest 11111,11112;
 		close;
 	} else if (job_wl == 9) {
@@ -543,7 +541,7 @@ spl_in02,84,103,3	script	Assistant#Warlock2	439,{
 	}
 }
 
-spl_in02,78,110,5	script	Assistant#Warlock3	437,{
+spl_in02,78,110,5	script	Assistant#Warlock3	4_F_FAIRYKID2,{
 	if (job_wl == 0) {
 		callfunc "F_Warlock";
 		end;
@@ -570,7 +568,7 @@ spl_in02,78,110,5	script	Assistant#Warlock3	437,{
 	}
 }
 
-spl_in02,80,108,5	script	Guild Master#Warlock	465,{
+spl_in02,80,108,5	script	Guild Master#Warlock	4_F_FAIRY1,{
 	if (job_wl == 0) {
 		callfunc "F_Warlock";
 		end;
@@ -602,7 +600,7 @@ spl_in02,80,108,5	script	Guild Master#Warlock	465,{
 			mes "[Master Egnoloria]";
 			mes "Talk to the guy with the weird hair.";
 			mes "He'll let you know what you should do.";
-			set job_wl,2;
+			job_wl = 2;
 			setquest 11106;
 			close;
 		case 2:
@@ -647,7 +645,7 @@ spl_in02,80,108,5	script	Guild Master#Warlock	465,{
 		mes "Yup, Master.";
 		mes "Please follow me.";
 		emotion e_ic,0,"Assistant#Warlock2";
-		set job_wl,6;
+		job_wl = 6;
 		changequest 11108,11109;
 		close;
 	} else if (job_wl < 9) {
@@ -674,7 +672,7 @@ spl_in02,80,108,5	script	Guild Master#Warlock	465,{
 			mes "Unless you like your current job, you should use all your skill points.";
 			close;
 		}
-		if (ismounting()) {
+		if (hascashmount()) {
 			mes "You are on a riding pet,";
 			mes "so you cannot change your job.";
 			mes "Please unequip your riding pet and try again!";
@@ -694,11 +692,11 @@ spl_in02,80,108,5	script	Guild Master#Warlock	465,{
 		mes "[Master Egnoloria]";
 		mes "This crystallized magical stone will keep you safe.";
 		if (Class == Job_High_Wizard) {
-			if (JobLevel > 69) set job_wl,13;
-			else if (JobLevel > 59) set job_wl,12;
-			else set job_wl,11;
+			if (JobLevel > 69) job_wl = 13;
+			else if (JobLevel > 59) job_wl = 12;
+			else job_wl = 11;
 		}
-		else set job_wl,10;
+		else job_wl = 10;
 		jobchange roclass(eaclass()|EAJL_THIRD);
 		completequest 11112;
 		getitem 5753,1; //Magic_Stone_Hat
@@ -712,14 +710,14 @@ spl_in02,80,108,5	script	Guild Master#Warlock	465,{
 	}
 }
 
-job3_war01,22,22,7	script	Yoop#WRR	439,{
+job3_war01,22,22,7	script	Yoop#WRR	4_F_FAIRYKID4,{
 	mes "[Yoop]";
 	mes "If you ask Ebein to be sent to the magical room, he would send you there.";
 	mes "Wait in the queue to enter the Chamber of Magic.";
 	close;
 }
 
-job3_war01,29,25,0	script	Ebein#WRR	437,{
+job3_war01,29,25,0	script	Ebein#WRR	4_F_FAIRYKID2,{
 	mes "[Ebein]";
 	mes "Would you like to take a test?";
 	mes "If you stand by in the waiting room, you'll be able to go into the Chamber of Magic.";
@@ -744,7 +742,7 @@ job3_war01,29,25,0	script	Ebein#WRR	437,{
 	}
 }
 
-job3_war01,29,25,5	script	The chamber of magic#1	437,{
+job3_war01,29,25,5	script	The chamber of magic#1	4_F_FAIRYKID2,{
 	end;
 OnInit:
 	disablenpc "The chamber of magic#1";
@@ -811,7 +809,7 @@ OnMyMobDead:
 	if (mobcount("job3_war02",strnpcinfo(0)+"::OnMyMobDead") < 1) {
 		stopnpctimer;
 		mapannounce "job3_war02","The Monster Invasion has been stopped.",bc_map;
-		set .@str$, "The chamber of magic#"+((strnpcinfo(0) == "The chamber of magic#2")?"3":"4");
+		.@str$ = "The chamber of magic#"+((strnpcinfo(0) == "The chamber of magic#2")?"3":"4");
 		donpcevent .@str$+"::OnEnable";
 	}
 	end;
@@ -954,7 +952,7 @@ OnDisable:
 OnMyMobDead:
 	if (mobcount("job3_war02","Hollow Stone#Warlock::OnMyMobDead") < 1) {
 		mapannounce "job3_war02","The Hollow Stone is crystallized with enough magic power.",bc_map;
-		set job_wl,8;
+		job_wl = 8;
 		changequest 11110,11111;
 		donpcevent "Hollow Stone#Warlock::OnReset";
 		donpcevent "Hollow Stone#Warlock::OnDisable";
@@ -1056,8 +1054,8 @@ OnTimer6000:
 	end;
 }
 
-/*
-job3_war01,1,2,0	script	Button Girl	66,{
+job3_war01,1,2,0	script	Button Girl#wl	1_F_01,{
+	callfunc "F_GM_NPC";
 	switch(select("Open Arena:Close Arena:Open the Chamber of Magic:Close the Chamber of Magic:Hollow Stone On:Hollow Stone Off:Cancel")) {
 	case 1:
 		mes "Opening the Arena.";
@@ -1093,7 +1091,6 @@ job3_war01,1,2,0	script	Button Girl	66,{
 		close;
 	}
 }
-*/
 
 spl_fild02,0,0,0,0	monster	Bradium Golem	2049,20,5000,0,0
 spl_fild02,0,0,0,0	monster	Naga	2047,20,5000,0,0

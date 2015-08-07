@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Umbala Guides
 //===== By: ==================================================
 //= Dizzy, Translated by Celest; L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.5
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Official Conversion]
 //= Guide for the City of Umbala
@@ -17,7 +15,7 @@
 //= 1.6 Corrected activating ontouch. [L0ne_W0lf]
 //============================================================
 
-umbala,128,94,4	script	Adventurer#um	702,{
+umbala,128,94,4	script	Adventurer#um	4_F_GON,{
 	mes "[Adventurer]";
 	mes "This is a very strange place...";
 	mes "It's underdeveloped, and there";

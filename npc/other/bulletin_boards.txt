@@ -1,12 +1,14 @@
 //===== Hercules Script ======================================
-//= Official scripts for beginners from iRO
+//= Bulletin Boards
 //===== By: ==================================================
 //= MasterOfMuppets
 //===== Current Version: =====================================
-//= 1.8
+//= 1.9
+//===== Description: =========================================
+//= Bulletin Boards for beginners.
 //===== Additional Comments: =================================
 //= 1.0 Added Alberta, Prontera, Izlude, Payon, Byalan Island,
-//= 	Archer Village, Payon Cave and Coal Mine
+//=     Archer Village, Payon Cave and Coal Mine
 //= 1.1 Geffen, Orc Dungeon
 //= 1.2 Added 5 more Boards [MasterOfMuppets]
 //= 1.3 Fixed spelling mistakes. [Nexon]
@@ -16,11 +18,12 @@
 //= 1.5a Fixed a small screw up with the color codes in the Glastheim BB [MasterOfMuppets]
 //= 1.5b Fixed another small screw up with the color codes in the Glastheim BB [Kayla]
 //= 1.6 Removed Duplicates [Silent]
-//= 1.7 Updated MOrroc NPCs to reflect episode 12.1 changes. [L0ne_W0lf]
+//= 1.7 Updated Morroc NPCs to reflect episode 12.1 changes. [L0ne_W0lf]
 //= 1.8 Updated Payon Cave Bulletion Board Locations. [Masao]
+//= 1.9 Moved Izlude NPC to Pre-RE path. [Euphy]
 //============================================================
 
-alberta,111,59,5	script	Bulletin Board#1	837,{
+alberta,111,59,5	script	Bulletin Board#1	2_BULLETIN_BOARD,{
 	mes "[Alberta: The Port City]";
 	mes "Welcome to Alberta, the Port City.";
 	next;
@@ -41,11 +44,11 @@ alberta,111,59,5	script	Bulletin Board#1	837,{
 	next;
 	mes "[Alberta: The Port City]";
 	mes "From Alberta, ^1F3A11Payon^000000 is located to the Northwest. You can board passenger ships at the dock to travel to ^5E5C69Izlude^000000.";
-	mes "Enjoy your travels."; 
+	mes "Enjoy your travels.";
 	close;
 }
 
-geffen,124,65,5	script	Bulletin Board#2	837,{
+geffen,124,65,5	script	Bulletin Board#2	2_BULLETIN_BOARD,{
 	mes "[Geffen: The City of Magic]";
 	mes "Welcome to Geffen, the City of Magic. Geffen is well known for its various legends related to magic.";
 	next;
@@ -63,7 +66,7 @@ geffen,124,65,5	script	Bulletin Board#2	837,{
 	close;
 }
 
-gef_fild10,69,340,5	script	Bulletin Board#3	837,{
+gef_fild10,69,340,5	script	Bulletin Board#3	2_BULLETIN_BOARD,{
 	mes "[Orc Dungeon]";
 	mes "^6B1312Caution!^000000";
 	mes "The Orc Dungeon is comprised of 2 levels. Although not very strong individually, the monsters here attack in groups. Be careful.";
@@ -79,7 +82,7 @@ gef_fild10,69,340,5	script	Bulletin Board#3	837,{
 	close;
 }
 
-izlu2dun,104,92,5	script	Bulletin Board#4	837,{
+izlu2dun,104,92,5	script	Bulletin Board#4	2_BULLETIN_BOARD,{
 	mes "[Byalan Island]";
 	mes "^6B1312Caution!^000000";
 	mes "The Izlude dungeon is comprised of 5 levels. The first few levels are suited for newer adventurers.";
@@ -91,24 +94,8 @@ izlu2dun,104,92,5	script	Bulletin Board#4	837,{
 	mes "With a few exceptions, most of the monsters in this dungeon are of the Water attribute. Therefore, a Wind attribute weapon will help you greatly";
 	close;
 }
-	
-izlude,131,116,4	script	Bulletin Board#5	837,{
-	mes "[Izlude: The Satellite City]";
-	mes "Welcome to Izlude, the satellite of Prontera. Izlude was built to support Prontera's defense and to accommodate its burgeoning population";
-	next;
-	mes "[Izlude: The Satellite City]";
-	mes "Points of interest include the Swordsman Association building which allows adventurers to change their job to Swordsman, and the Battle Area that is North of Izlude.";
-	next;
-	mes "[Izlude: The Satellite City]";
-	mes "At the docks, you may take a ship and travel to ^123972Alberta^000000 or ^2F0400Byalan Island^000000.";
-	next;
-	mes "[Izlude: The Satellite City]";
-	mes "From Izlude, ^6D6FE0Prontera^000000 is located to the Northwest, and ^1F3A11Payon^000000 is located to the South.";
-	mes "Enjoy your travels in the Rune-Midgarts Kingdom.";
-	close;
-}
-	
-payon,178,108,5	script	Bulletin Board#06	837,{
+
+payon,178,108,5	script	Bulletin Board#06	2_BULLETIN_BOARD,{
 	mes "[Payon: The Mountain City]";
 	mes "Welcome to Payon, the mountain city. Payon has recently been renovated, so we hope you enjoy the clean, nice streets and buildings.";
 	next;
@@ -126,12 +113,12 @@ payon,178,108,5	script	Bulletin Board#06	837,{
 	next;
 	mes "[Payon: The Mountain City]";
 	mes "From Payon, ^123972Alberta^000000 is located to the Southeast, and ^866C4BMorroc^000000 is to the West. ^5E5C69Izlude^000000 and ^6D6FE0Prontera^000000 are North of Payon.";
-	mes "Enjoy your travels."; 
+	mes "Enjoy your travels.";
 	close;
 }
-	
-pay_arche,79,31,5	script	Bulletin Board#07	837,{
-	mes "[Archer Village]"; 
+
+pay_arche,79,31,5	script	Bulletin Board#07	2_BULLETIN_BOARD,{
+	mes "[Archer Village]";
 	mes "Welcome to the Payon Archer Village where Novices can change their jobs to Archer.";
 	next;
 	mes "[Archer Village]";
@@ -142,7 +129,7 @@ pay_arche,79,31,5	script	Bulletin Board#07	837,{
 	close;
 }
 
-pay_arche,39,134,5	script	Bulletin Board#08	837,{
+pay_arche,39,134,5	script	Bulletin Board#08	2_BULLETIN_BOARD,{
 	mes "[Payon Cave]";
 	mes "^6B1312Caution!^000000";
 	mes "Payon Cave consists of 5 levels full of Undead and Demon monsters. Beware of swarms of Hydra in the third and fourth levels.";
@@ -151,8 +138,8 @@ pay_arche,39,134,5	script	Bulletin Board#08	837,{
 	mes "In the fifth level, there is a pretty, yet dreadful boss monster known as ^6B1312Moonlight^000000 that spawns at certain times. Approach with extreme caution.";
 	close;
 }
-	
-prontera,148,49,5	script	Bulletin Board#09	837,{
+
+prontera,148,49,5	script	Bulletin Board#09	2_BULLETIN_BOARD,{
 	mes "[Prontera: Capital of the]";
 	mes "[Rune-Midgards Kingdom]";
 	mes "Welcome to Prontera, the capital city of Rune-Midgard.";
@@ -180,11 +167,11 @@ prontera,148,49,5	script	Bulletin Board#09	837,{
 	mes "[Prontera: Capital of the]";
 	mes "[Rune-Midgards Kingdom]";
 	mes "From Prontera, ^5E5C69Izlude^000000 is located to the Southeast, ^1F3A11Payon^000000 to the far South, ^683C1FGeffen^000000 to the far West and ^2D3832Al De Baran^000000 to the far North.";
-	mes "Enjoy Your time in Prontera.";
+	mes "Enjoy your time in Prontera.";
 	close;
 }
 
-mjolnir_02,76,362,5	script	Bulletin Board#10	837,{
+mjolnir_02,76,362,5	script	Bulletin Board#10	2_BULLETIN_BOARD,{
 	mes "[Coal Mine]";
 	mes "^6B1312Caution!^000000";
 	mes "The Coal Mine consists of a total of 3 levels. This dungeon is suited to both new and experienced adventurers, depending on the dungeon level.";
@@ -194,7 +181,7 @@ mjolnir_02,76,362,5	script	Bulletin Board#10	837,{
 	close;
 }
 
-morocc,152,110,5	script	Bulletin Board#11	837,{
+morocc,152,110,5	script	Bulletin Board#11	2_BULLETIN_BOARD,{
 	mes "[Morroc: The Frontier Town]";
 	mes "Welcome to Morroc, the City of the Desert. Morroc was built on an oasis, so this town can accomodate its many visitors and travelers.";
 	next;
@@ -209,7 +196,7 @@ morocc,152,110,5	script	Bulletin Board#11	837,{
 	close;
 }
 
-comodo,210,148,5	script	Bulletin Board#12	837,{
+comodo,210,148,5	script	Bulletin Board#12	2_BULLETIN_BOARD,{
 	mes "[Comodo: The Beach City]";
 	mes "Welcome! This town of Comodo is";
 	mes "surrounded by many ancient relics";
@@ -253,7 +240,7 @@ comodo,210,148,5	script	Bulletin Board#12	837,{
 	close;
 }
 
-umbala,137,94,5	script	Bulletin Board#13	837,{
+umbala,137,94,5	script	Bulletin Board#13	2_BULLETIN_BOARD,{
 	mes "[Umbala: The Utan Village]";
 	mes "Welcome to Umbala,";
 	mes "the village of the Utan tribe.";
@@ -285,7 +272,7 @@ umbala,137,94,5	script	Bulletin Board#13	837,{
 	close;
 }
 
-gef_fild09,227,29,4	script	Bulletin Board::OrcsBoard	835,{
+gef_fild09,227,29,4	script	Bulletin Board::OrcsBoard	2_BOARD1,{
 	mes "[Orc Village]";
 	mes "^6B1312Caution!^000000";
 	mes "Beyond this point";
@@ -300,9 +287,9 @@ gef_fild09,227,29,4	script	Bulletin Board::OrcsBoard	835,{
 	close;
 }
 
-gef_fild13,202,31,5	duplicate(OrcsBoard)	Bulletin Board#orc1	835
+gef_fild13,202,31,5	duplicate(OrcsBoard)	Bulletin Board#orc1	2_BOARD1
 
-gef_fild13,29,206,5	script	Bulletin Board::KoboldsBoard	836,{
+gef_fild13,29,206,5	script	Bulletin Board::KoboldsBoard	2_BOARD2,{
 
 	mes "[Kobold Village]";
 	mes "^6B1312Caution!^000000";
@@ -311,9 +298,9 @@ gef_fild13,29,206,5	script	Bulletin Board::KoboldsBoard	836,{
 	close;
 }
 
-gef_fild08,211,24,5	duplicate(KoboldsBoard)	Bulletin Board#kb1	836
+gef_fild08,211,24,5	duplicate(KoboldsBoard)	Bulletin Board#kb1	2_BOARD2
 
-gef_fild10,109,23,5	script	Bulletin Board#15	836,{
+gef_fild10,109,23,5	script	Bulletin Board#15	2_BOARD2,{
 
 	mes "[Goblin Village]";
 	mes "^6B1312Caution!^000000";
@@ -322,7 +309,7 @@ gef_fild10,109,23,5	script	Bulletin Board#15	836,{
 	close;
 }
 
-prt_fild05,278,220,5	script	Bulletin Board#16	837,{
+prt_fild05,278,220,5	script	Bulletin Board#16	2_BULLETIN_BOARD,{
 	mes "[Culvert]";
 	mes "Culvert is comprised of a total of";
 	mes "4 levels, and is a good training";
@@ -345,7 +332,7 @@ prt_fild05,278,220,5	script	Bulletin Board#16	837,{
 	close;
 }
 
-yuno,154,112,5	script	Bulletin Board#17	837,{
+yuno,154,112,5	script	Bulletin Board#17	2_BULLETIN_BOARD,{
 	mes "[Juno: Capital of]";
 	mes "[The Schwarzwald Republic]";
 	mes "Welcome to Juno, the City of Sages.";
@@ -388,7 +375,7 @@ yuno,154,112,5	script	Bulletin Board#17	837,{
 	close;
 }
 
-aldebaran,145,105,5	script	Bulletin Board#18	837,{
+aldebaran,145,105,5	script	Bulletin Board#18	2_BULLETIN_BOARD,{
 	mes "[Al De Baran: The Border City]";
 	mes "Welcome to Al De Baran, the border";
 	mes "city of the Rune-Midgarts Kingdom.";
@@ -419,7 +406,7 @@ aldebaran,145,105,5	script	Bulletin Board#18	837,{
 	close;
 }
 
-aldebaran,136,133,5	script	Bulletin Board#19	837,{
+aldebaran,136,133,5	script	Bulletin Board#19	2_BULLETIN_BOARD,{
 	mes "[Clock Tower]";
 	mes "^6B1312Caution!^000000";
 	mes "Only well-experienced adventurers";
@@ -441,7 +428,7 @@ aldebaran,136,133,5	script	Bulletin Board#19	837,{
 	close;
 }
 
-moc_fild19,107,101,5	script	Bulletin Board#20	837,{
+moc_fild19,107,101,5	script	Bulletin Board#20	2_BULLETIN_BOARD,{
 	mes "[Sphinx]";
 	mes "^6B1312Caution!^000000";
 	mes "The Sphinx consists of 5 levels.";
@@ -462,10 +449,9 @@ moc_fild19,107,101,5	script	Bulletin Board#20	837,{
 	close;
 }
 
-gef_tower,55,142,5	script	Bulletin Board#21	837,{
-
+gef_tower,55,142,5	script	Bulletin Board#21	2_BULLETIN_BOARD,{
 	mes "[Geffen Dungeon]";
-	mes "^6B1312Caution!^000000"; 
+	mes "^6B1312Caution!^000000";
 	mes "Geffen dungeon is consisted of 3 levels";
 	mes "is too difficult for new adventurers to venture.";
 	mes "As main monsters constantly appear,";
@@ -480,8 +466,7 @@ gef_tower,55,142,5	script	Bulletin Board#21	837,{
 	close;
 }
 
-xmas_fild01,75,80,5	script	Bulletin Board#22	837,{
-
+xmas_fild01,75,80,5	script	Bulletin Board#22	2_BULLETIN_BOARD,{
 	mes "[Winter Town, Lutie]";
 	mes "Welcome to Lutie, the town of snowfall.";
 	mes "Manufacturing toys in the toy factory is the main";
@@ -496,8 +481,7 @@ xmas_fild01,75,80,5	script	Bulletin Board#22	837,{
 	close;
 }
 
-xmas,147,311,5	script	Bulletin Board#23	837,{
-
+xmas,147,311,5	script	Bulletin Board#23	2_BULLETIN_BOARD,{
 	mes "[Toy Factory]";
 	mes "^6B1312Caution!^000000";
 	mes "Toy Factory is consisting of 2 levels.";
@@ -512,8 +496,7 @@ xmas,147,311,5	script	Bulletin Board#23	837,{
 	close;
 }
 
-yuno_fild03,37,143,5	script	Bulletin Board#24	837,{
-
+yuno_fild03,37,143,5	script	Bulletin Board#24	2_BULLETIN_BOARD,{
 	mes "[The Magma Dungeon, Nogg Road]";
 	mes "^6B1312Caution!^000000";
 	mes "Nogg Road is filled with very dangerous creatures.";
@@ -526,8 +509,7 @@ yuno_fild03,37,143,5	script	Bulletin Board#24	837,{
 	close;
 }
 
-niflheim,200,191,5	script	Bulletin Board#25	837,{
-
+niflheim,200,191,5	script	Bulletin Board#25	2_BULLETIN_BOARD,{
 	mes "[City of the Dead, Nifflheim]";
 	mes "Welcome to Nifflheim, the City of the Dead.";
 	mes "Nifflheim was known as the other world where";
@@ -552,8 +534,7 @@ niflheim,200,191,5	script	Bulletin Board#25	837,{
 }
 
 /*
-moc_fild15,267,264,5	script	Bulletin Board#26	837,{
-
+moc_fild15,267,264,5	script	Bulletin Board#26	2_BULLETIN_BOARD,{
 	mes "[Ant Hell]";
 	mes "^6B1312Caution!^000000";
 	mes "Ant Hell is consisting of 2 levels.";
@@ -569,8 +550,7 @@ moc_fild15,267,264,5	script	Bulletin Board#26	837,{
 }
 */
 
-moc_ruins,61,164,5	script	Bulletin Board#27	837,{
-
+moc_ruins,61,164,5	script	Bulletin Board#27	2_BULLETIN_BOARD,{
 	mes "[Pyramids]";
 	mes "^6B1312Caution!^000000";
 	mes "Pyramids is consisting of total 7 levels as 4 levels on the earth and the rest under the ground.";
@@ -583,8 +563,7 @@ moc_ruins,61,164,5	script	Bulletin Board#27	837,{
 	close;
 }
 
-glast_01,369,308,5	script	Bulletin Board#28	837,{
-
+glast_01,369,308,5	script	Bulletin Board#28	2_BULLETIN_BOARD,{
 	mes "[Glast Heim]";
 	mes "Glast Heim is an enormous dungeon with countless levels.";
 	mes "This dungeon is definately not for new or experienced adventurers";

@@ -1,23 +1,22 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Party Relay Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
-//= 1.0
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Current Version: =====================================
+//= 1.2
+//===== Description: =========================================
+//= [Official Conversion]
 //= Party Relay Quest.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First version. [L0ne_W0lf]
 //= 1.1 Fixed a couple typos, npcs check area for PCs. [L0ne_W0lf]
+//= 1.2 Updated RE/Pre-RE EXP. [Euphy]
 //============================================================
 
-payon,103,113,3	script	Ledrion#payon::RelayLedrion	109,{
+payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 	getpartymember(getcharid(1));
-	set .@partymembercount,$@partymembercount;
-	set .@partyleader,getpartyleader(getcharid(1),2);
+	.@partymembercount = $@partymembercount;
+	.@partyleader = getpartyleader(getcharid(1),2);
 	if (checkweight(907,300) == 0) {
 		mes "^3355FFWait a minute! You're";
 		mes "carrying too many items";
@@ -58,9 +57,9 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	109,{
 		mes "accomplishment. Here...";
 		mes "You deserve a real reward!";
 		next;
-		set .@present,rand(1,7);
+		.@present = rand(1,7);
 		delitem 7741,1; //Mission_Certificate12
-		set party_relay,0;
+		party_relay = 0;
 		getitem 644,6; //Gift_Box
 		getitem 603,3; //Old_Blue_Box
 		if (.@present == 2) {
@@ -75,27 +74,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	109,{
 		else {
 			getitem 617,3; //Old_Violet_Box
 		}
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 19560,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Ledrion]";
 		mes "Well, I hope you like it!";
 		mes "If you can't use it, then";
@@ -147,31 +126,11 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	109,{
 		mes "effort thus far, and the";
 		mes "nineth ticket for your guild.";
 		delitem 7737,1; //Mission_Certificate8
-		set party_relay,23;
+		party_relay = 23;
 		getitem 603,3; //Old_Blue_Box
 		getitem 617,1; //Old_Violet_Box
 		getitem 7738,1; //Mission_Certificate9
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 19560,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		next;
 		mes "[Ledrion]";
 		mes "Please give that ticket";
@@ -216,31 +175,11 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	109,{
 		mes "Class character, and tell";
 		mes "him to bring it to Gatan.";
 		delitem 7733,1; //Mission_Certificate4
-		set party_relay,12;
+		party_relay = 12;
 		getitem 644,3; //Gift_Box
 		getitem 603,1; //Old_Blue_Box
 		getitem 7734,1; //Mission_Certificate5
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 19560,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		close;
 	}
 	if (countitem(7733) > 0) {
@@ -301,7 +240,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	109,{
 		mes "ask him to bring it to Gatan.";
 		mes "The relay has started~";
 		next;
-		set party_relay,2;
+		party_relay = 2;
 		getitem 7730,1; //Mission_Certificate1
 		mes "[Ledrion]";
 		mes "Now, since you're the";
@@ -344,7 +283,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	109,{
 	mes "a meaningful contribution";
 	mes "to all of Rune Midgard, which";
 	mes "brings me to why I am here.";
-	mes "There are many adventurers^FFFFFF ^000000 like you, but we have a problem.";
+	mes "There are many adventurers like you, but we have a problem.";
 	next;
 	mes "[Ledrion]";
 	mes "So many adventurers have";
@@ -413,7 +352,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	109,{
 			mes "me give you your first";
 			mes "set of instructions.";
 			next;
-			set party_relay,1;
+			party_relay = 1;
 			mes "[Ledrion]";
 			mes "Just--^666666*Cough!*^000000";
 			mes "Lemme clear my";
@@ -442,10 +381,10 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	109,{
 	}
 }
 
-payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
+payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 	getpartymember(getcharid(1));
-	set .@partymembercount,$@partymembercount;
-	set .@partyleader,getpartyleader(getcharid(1),2);
+	.@partymembercount = $@partymembercount;
+	.@partyleader = getpartyleader(getcharid(1),2);
 	if (checkweight(907,300) == 0) {
 		mes "^3355FFWait a minute! You're";
 		mes "carrying too many items";
@@ -462,7 +401,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "instructions, didn't you?";
 		close;
 	}
-	set .@relaytime,gettime(3);
+	.@relaytime = gettime(3);
 	if (party_relay == 28) {
 		mes "[Gatan]";
 		mes "Say, I don't think it's";
@@ -481,31 +420,11 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "of your group, and ask him";
 		mes "to bring it to Bafhail. Ah, and";
 		mes "here's a little reward for you~";
-		set party_relay,28;
+		party_relay = 28;
 		getitem 7739,1; //Mission_Certificate10
 		getitem 610,2; //Leaf_Of_Yggdrasil
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 19560,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		next;
 		mes "[Gatan]";
 		mes "Alright, get that done.";
@@ -520,7 +439,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "I left it around somewhere--";
 		mes "and I'll give you your next set";
 		mes "of instructions. Hang on...";
-		set party_relay,27;
+		party_relay = 27;
 		close;
 	}
 	else if ((party_relay == 26) && (BaseLevel > (party_relay_lv + 2)) && (.@relaytime >= 18) && (.@relaytime < 21)) {
@@ -531,7 +450,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "I left it around somewhere--";
 		mes "and I'll give you your next set";
 		mes "of instructions. Hang on...";
-		set party_relay,27;
+		party_relay = 27;
 		close;
 	}
 	if (party_relay == 26) {
@@ -559,7 +478,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "I left it around somewhere--";
 		mes "and I'll give you your next set";
 		mes "of instructions. Hang on...";
-		set party_relay,27;
+		party_relay = 27;
 		close;
 	}
 	else if ((party_relay == 25) && (BaseLevel > (party_relay_lv + 1)) && (.@relaytime >= 18) && (.@relaytime < 21)) {
@@ -570,7 +489,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "I left it around somewhere--";
 		mes "and I'll give you your next set";
 		mes "of instructions. Hang on...";
-		set party_relay,27;
+		party_relay = 27;
 		close;
 	}
 	if (party_relay == 25) {
@@ -598,7 +517,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "I left it around somewhere--";
 		mes "and I'll give you your next set";
 		mes "of instructions. Hang on...";
-		set party_relay,27;
+		party_relay = 27;
 		close;
 	}
 	else if ((party_relay == 24) && (BaseLevel > party_relay_lv) && (.@relaytime >= 18) && (.@relaytime < 21)) {
@@ -609,7 +528,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "I left it around somewhere--";
 		mes "and I'll give you your next set";
 		mes "of instructions. Hang on...";
-		set party_relay,27;
+		party_relay = 27;
 		close;
 	}
 	if (party_relay == 24) {
@@ -654,7 +573,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "Just don't tell anyone!";
 			next;
 			delitem 7738,1; //Mission_Certificate9
-			set party_relay,27;
+			party_relay = 27;
 			mes "[Gatan]";
 			mes "Hold on a second...";
 			mes "I'm supposed to tell";
@@ -671,8 +590,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7738,1; //Mission_Certificate9
-			set party_relay,24;
-			set party_relay_lv,BaseLevel;
+			party_relay = 24;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -690,8 +609,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7738,1; //Mission_Certificate9
-			set party_relay,24;
-			set party_relay_lv,BaseLevel;
+			party_relay = 24;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -709,8 +628,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7738,1; //Mission_Certificate9
-			set party_relay,25;
-			set party_relay_lv,BaseLevel;
+			party_relay = 25;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -728,8 +647,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7738,1; //Mission_Certificate9
-			set party_relay,25;
-			set party_relay_lv,BaseLevel;
+			party_relay = 25;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -747,8 +666,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "Levels for me, okay?";
 			next;
 			delitem 7738,1; //Mission_Certificate9
-			set party_relay,26;
-			set party_relay_lv,BaseLevel;
+			party_relay = 26;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -766,8 +685,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "Levels for me, okay?";
 			next;
 			delitem 7738,1; //Mission_Certificate9
-			set party_relay,26;
-			set party_relay_lv,BaseLevel;
+			party_relay = 26;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -802,7 +721,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "Just don't tell anyone!";
 			next;
 			delitem 7738,1; //Mission_Certificate9
-			set party_relay,27;
+			party_relay = 27;
 			mes "[Gatan]";
 			mes "Hold on a second...";
 			mes "I'm supposed to tell";
@@ -819,8 +738,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7738,1; //Mission_Certificate9
-			set party_relay,24;
-			set party_relay_lv,BaseLevel;
+			party_relay = 24;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -838,8 +757,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7738,1; //Mission_Certificate9
-			set party_relay,24;
-			set party_relay_lv,BaseLevel;
+			party_relay = 24;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -857,8 +776,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7738,1; //Mission_Certificate9
-			set party_relay,25;
-			set party_relay_lv,BaseLevel;
+			party_relay = 25;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -876,8 +795,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7738,1; //Mission_Certificate9
-			set party_relay,25;
-			set party_relay_lv,BaseLevel;
+			party_relay = 25;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -895,8 +814,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "Levels for me, okay?";
 			next;
 			delitem 7738,1; //Mission_Certificate9
-			set party_relay,26;
-			set party_relay_lv,BaseLevel;
+			party_relay = 26;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -914,8 +833,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "Levels for me, okay?";
 			next;
 			delitem 7738,1; //Mission_Certificate9
-			set party_relay,26;
-			set party_relay_lv,BaseLevel;
+			party_relay = 26;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -967,30 +886,10 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "of your group, and ask him";
 		mes "to bring it to Bafhail. Ah, and";
 		mes "here's a little reward for you~";
-		set party_relay,17;
+		party_relay = 17;
 		getitem 7735,1; //Mission_Certificate6
 		getitem 610,2; //Leaf_Of_Yggdrasil
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 19560,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		next;
 		mes "[Gatan]";
 		mes "Alright, get that done.";
@@ -1005,7 +904,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "I left it around somewhere--";
 		mes "and I'll give you your next set";
 		mes "of instructions. Hang on...";
-		set party_relay,16;
+		party_relay = 16;
 		close;
 	}
 	else if ((party_relay == 15) && (BaseLevel > (party_relay_lv + 2)) && (.@relaytime >= 21) && (.@relaytime < 1)) {
@@ -1016,7 +915,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "I left it around somewhere--";
 		mes "and I'll give you your next set";
 		mes "of instructions. Hang on...";
-		set party_relay,16;
+		party_relay = 16;
 		close;
 	}
 	if (party_relay == 15) {
@@ -1044,7 +943,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "I left it around somewhere--";
 		mes "and I'll give you your next set";
 		mes "of instructions. Hang on...";
-		set party_relay,16;
+		party_relay = 16;
 		close;
 	}
 	else if ((party_relay == 14) && (BaseLevel > (party_relay_lv + 1)) && (.@relaytime >= 21)) {
@@ -1055,7 +954,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "I left it around somewhere--";
 		mes "and I'll give you your next set";
 		mes "of instructions. Hang on...";
-		set party_relay,16;
+		party_relay = 16;
 		close;
 	}
 	if (party_relay == 14) {
@@ -1083,7 +982,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "I left it around somewhere--";
 		mes "and I'll give you your next set";
 		mes "of instructions. Hang on...";
-		set party_relay,16;
+		party_relay = 16;
 		close;
 	}
 	else if ((party_relay == 13) && (BaseLevel > party_relay_lv) && (.@relaytime >= 21)) {
@@ -1094,7 +993,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "I left it around somewhere--";
 		mes "and I'll give you your next set";
 		mes "of instructions. Hang on...";
-		set party_relay,16;
+		party_relay = 16;
 		close;
 	}
 	if (party_relay == 13) {
@@ -1139,7 +1038,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "Just don't tell anyone!";
 			next;
 			delitem 7734,1; //Mission_Certificate5
-			set party_relay,16;
+			party_relay = 16;
 			mes "[Gatan]";
 			mes "Hold on a second...";
 			mes "I'm supposed to tell";
@@ -1156,8 +1055,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7734,1; //Mission_Certificate5
-			set party_relay,13;
-			set party_relay_lv,BaseLevel;
+			party_relay = 13;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1175,8 +1074,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7734,1; //Mission_Certificate5
-			set party_relay,13;
-			set party_relay_lv,BaseLevel;
+			party_relay = 13;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1194,8 +1093,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7734,1; //Mission_Certificate5
-			set party_relay,14;
-			set party_relay_lv,BaseLevel;
+			party_relay = 14;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1213,8 +1112,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7734,1; //Mission_Certificate5
-			set party_relay,14;
-			set party_relay_lv,BaseLevel;
+			party_relay = 14;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1232,8 +1131,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "Levels for me, okay?";
 			next;
 			delitem 7734,1; //Mission_Certificate5
-			set party_relay,15;
-			set party_relay_lv,BaseLevel;
+			party_relay = 15;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1251,8 +1150,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "Levels for me, okay?";
 			next;
 			delitem 7734,1; //Mission_Certificate5
-			set party_relay,15;
-			set party_relay_lv,BaseLevel;
+			party_relay = 15;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1287,7 +1186,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "Just don't tell anyone!";
 			next;
 			delitem 7734,1; //Mission_Certificate5
-			set party_relay,16;
+			party_relay = 16;
 			mes "[Gatan]";
 			mes "Hold on a second...";
 			mes "I'm supposed to tell";
@@ -1304,8 +1203,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7734,1; //Mission_Certificate5
-			set party_relay,13;
-			set party_relay_lv,BaseLevel;
+			party_relay = 13;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1323,8 +1222,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7734,1; //Mission_Certificate5
-			set party_relay,13;
-			set party_relay_lv,BaseLevel;
+			party_relay = 13;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1342,8 +1241,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7734,1; //Mission_Certificate5
-			set party_relay,14;
-			set party_relay_lv,BaseLevel;
+			party_relay = 14;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1361,8 +1260,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7734,1; //Mission_Certificate5
-			set party_relay,14;
-			set party_relay_lv,BaseLevel;
+			party_relay = 14;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1380,8 +1279,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "Levels for me, okay?";
 			next;
 			delitem 7734,1; //Mission_Certificate5
-			set party_relay,15;
-			set party_relay_lv,BaseLevel;
+			party_relay = 15;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1399,8 +1298,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "Levels for me, okay?";
 			next;
 			delitem 7734,1; //Mission_Certificate5
-			set party_relay,15;
-			set party_relay_lv,BaseLevel;
+			party_relay = 15;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1458,30 +1357,10 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "Just a little";
 		mes "something for";
 		mes "your troubles~";
-		set party_relay,6;
+		party_relay = 6;
 		getitem 7731,1; //Mission_Certificate2
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		next;
 		mes "[Gatan]";
 		mes "Don't forget to make";
@@ -1499,7 +1378,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "sees them. Now, you mind";
 		mes "waiting a bit? Um, there's";
 		mes "something I have to give you...";
-		set party_relay,5;
+		party_relay = 5;
 		close;
 	}
 	else if ((party_relay == 4) && (BaseLevel > (party_relay_lv + 2)) && ((.@relaytime >= 0) && (.@relaytime < 3))) {
@@ -1510,7 +1389,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "sees them. Now, you mind";
 		mes "waiting a bit? Um, there's";
 		mes "something I have to give you...";
-		set party_relay,5;
+		party_relay = 5;
 		close;
 	}
 	if (party_relay == 4) {
@@ -1538,7 +1417,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "sees them. Now, you mind";
 		mes "waiting a bit? Um, there's";
 		mes "something I have to give you...";
-		set party_relay,5;
+		party_relay = 5;
 		close;
 	}
 	else if ((party_relay == 3) && (BaseLevel > (party_relay_lv + 1)) && ((.@relaytime >= 0) && (.@relaytime < 3))) {
@@ -1549,7 +1428,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "sees them. Now, you mind";
 		mes "waiting a bit? Um, there's";
 		mes "something I have to give you...";
-		set party_relay,5;
+		party_relay = 5;
 		close;
 	}
 	if (party_relay == 3) {
@@ -1577,7 +1456,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "sees them. Now, you mind";
 		mes "waiting a bit? Um, there's";
 		mes "something I have to give you...";
-		set party_relay,5;
+		party_relay = 5;
 		close;
 	}
 	else if ((party_relay == 99) && (BaseLevel > party_relay_lv) && ((.@relaytime >= 0) && (.@relaytime < 3))) {
@@ -1588,7 +1467,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 		mes "sees them. Now, you mind";
 		mes "waiting a bit? Um, there's";
 		mes "something I have to give you...";
-		set party_relay,5;
+		party_relay = 5;
 		close;
 	}
 	if (party_relay == 99) {
@@ -1634,7 +1513,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "Just don't tell anyone!";
 			next;
 			delitem 7730,1; //Mission_Certificate1
-			set party_relay,5;
+			party_relay = 5;
 			mes "[Gatan]";
 			mes "Hold on a second...";
 			mes "I'm supposed to tell";
@@ -1651,8 +1530,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7730,1; //Mission_Certificate1
-			set party_relay,99;
-			set party_relay_lv,BaseLevel;
+			party_relay = 99;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1670,8 +1549,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7730,1; //Mission_Certificate1
-			set party_relay,99;
-			set party_relay_lv,BaseLevel;
+			party_relay = 99;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1689,8 +1568,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7730,1; //Mission_Certificate1
-			set party_relay,3;
-			set party_relay_lv,BaseLevel;
+			party_relay = 3;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1708,8 +1587,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7730,1; //Mission_Certificate1
-			set party_relay,3;
-			set party_relay_lv,BaseLevel;
+			party_relay = 3;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1727,8 +1606,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "Levels for me, okay?";
 			next;
 			delitem 7730,1; //Mission_Certificate1
-			set party_relay,4;
-			set party_relay_lv,BaseLevel;
+			party_relay = 4;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1746,8 +1625,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "Levels for me, okay?";
 			next;
 			delitem 7730,1; //Mission_Certificate1
-			set party_relay,4;
-			set party_relay_lv,BaseLevel;
+			party_relay = 4;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1783,7 +1662,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "Just don't tell anyone!";
 			next;
 			delitem 7730,1; //Mission_Certificate1
-			set party_relay,5;
+			party_relay = 5;
 			mes "[Gatan]";
 			mes "Hold on a second...";
 			mes "I'm supposed to tell";
@@ -1800,8 +1679,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7730,1; //Mission_Certificate1
-			set party_relay,99;
-			set party_relay_lv,BaseLevel;
+			party_relay = 99;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1819,8 +1698,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7730,1; //Mission_Certificate1
-			set party_relay,99;
-			set party_relay_lv,BaseLevel;
+			party_relay = 99;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1838,8 +1717,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7730,1; //Mission_Certificate1
-			set party_relay,3;
-			set party_relay_lv,BaseLevel;
+			party_relay = 3;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1857,8 +1736,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "and do that, alright?";
 			next;
 			delitem 7730,1; //Mission_Certificate1
-			set party_relay,3;
-			set party_relay_lv,BaseLevel;
+			party_relay = 3;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1876,8 +1755,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "Levels for me, okay?";
 			next;
 			delitem 7730,1; //Mission_Certificate1
-			set party_relay,4;
-			set party_relay_lv,BaseLevel;
+			party_relay = 4;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll go ahead and take";
 			mes "your ticket now. Come";
@@ -1895,8 +1774,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 			mes "Levels for me, okay?";
 			next;
 			delitem 7730,1; //Mission_Certificate1
-			set party_relay,4;
-			set party_relay_lv,BaseLevel;
+			party_relay = 4;
+			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
 			mes "I'll keep your ticket.";
 			mes "When you're finished, please come back.";
@@ -1937,10 +1816,10 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 	close;
 }
 
-payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
+payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 	getpartymember(getcharid(1));
-	set .@partymembercount,$@partymembercount;
-	set .@partyleader,getpartyleader(getcharid(1),2);
+	.@partymembercount = $@partymembercount;
+	.@partyleader = getpartyleader(getcharid(1),2);
 	if (checkweight(907,300) == 0) {
 		mes "^3355FFWait a minute! You're";
 		mes "carrying too many items";
@@ -1958,7 +1837,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "with any of the other guys?";
 		close;
 	}
-	set .@relaytime,gettime(3);
+	.@relaytime = gettime(3);
 	if (party_relay == 30) {
 		mes "[Bafhail]";
 		mes "Did you give that ticket";
@@ -1979,31 +1858,11 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		delitem 1012,20; //Lizard_Scruff
 		delitem 1048,20; //Slender_Snake
 		delitem 7003,20; //Anolian_Skin
-		set party_relay,30;
+		party_relay = 30;
 		getitem 7740,1; //Mission_Certificate11
 		getitem 610,2; //Leaf_Of_Yggdrasil
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Make sure that you give";
 		mes "that ticket to an Archer";
@@ -2024,31 +1883,11 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		delitem 1012,20; //Lizard_Scruff
 		delitem 1048,20; //Slender_Snake
 		delitem 7003,20; //Anolian_Skin
-		set party_relay,30;
+		party_relay = 30;
 		getitem 7740,1; //Mission_Certificate11
 		getitem 610,2; //Leaf_Of_Yggdrasil
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Make sure that you give";
 		mes "that ticket to an Archer";
@@ -2075,7 +1914,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "Don't forget now, alright?";
 		close;
 	}
-	if ((countitem(7739) > 0) && (.@relaytime >= 11) && (.@relaytime < 14) && ((Baseclass == Job_Thief) || (BaseClass == Job_Acolyte))) {
+	if ((countitem(7739) > 0) && (.@relaytime >= 11) && (.@relaytime < 14) && ((BaseClass == Job_Thief) || (BaseClass == Job_Acolyte))) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -2092,7 +1931,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "^4D4DFF20 Horrendous Hairs^000000.";
 		next;
 		delitem 7739,1; //Mission_Certificate10
-		set party_relay,29;
+		party_relay = 29;
 		mes "[Bafhail]";
 		mes "Understood?";
 		mes "Alright then, if you'll";
@@ -2102,7 +1941,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "I'll see you later~";
 		close;
 	}
-	else if ((countitem(7739) > 0) && (.@relaytime >= 0) && (.@relaytime < 3) && ((Baseclass == Job_Thief) || (BaseClass == Job_Acolyte))) {
+	else if ((countitem(7739) > 0) && (.@relaytime >= 0) && (.@relaytime < 3) && ((BaseClass == Job_Thief) || (BaseClass == Job_Acolyte))) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -2119,7 +1958,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "^4D4DFF20 Horrendous Hairs^000000.";
 		next;
 		delitem 7739,1; //Mission_Certificate10
-		set party_relay,29;
+		party_relay = 29;
 		mes "[Bafhail]";
 		mes "Understood?";
 		mes "Understood?";
@@ -2130,7 +1969,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "I'll see you later~";
 		close;
 	}
-	if ((countitem(7739) > 0) && ((Baseclass == Job_Thief) || (BaseClass == Job_Acolyte))) {
+	if ((countitem(7739) > 0) && ((BaseClass == Job_Thief) || (BaseClass == Job_Acolyte))) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -2167,30 +2006,10 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		delitem 1015,10; //Thin_N'_Long_Tongue
 		delitem 7172,10; //Leopard_Talon
 		delitem 7155,10; //Poison_Toad's_Skin
-		set party_relay,20;
+		party_relay = 20;
 		getitem 7736,1; //Mission_Certificate7
 		getitem 610,2; //Leaf_Of_Yggdrasil
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Do me a favor and make";
 		mes "sure that the Merchant";
@@ -2211,30 +2030,10 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		delitem 1015,10; //Thin_N'_Long_Tongue
 		delitem 7172,10; //Leopard_Talon
 		delitem 7155,10; //Poison_Toad's_Skin
-		set party_relay,20;
+		party_relay = 20;
 		getitem 7736,1; //Mission_Certificate7
 		getitem 610,2; //Leaf_Of_Yggdrasil
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Do me a favor and make";
 		mes "sure that the Merchant";
@@ -2273,30 +2072,10 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		delitem 7157,10; //Black_Mask
 		delitem 1021,10; //Dokkaebi_Horn
 		delitem 7101,10; //Peco_Wing_Feather
-		set party_relay,20;
+		party_relay = 20;
 		getitem 7736,1; //Mission_Certificate7
 		getitem 610,2; //Leaf_Of_Yggdrasil
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Do me a favor and make";
 		mes "sure that the Merchant";
@@ -2317,30 +2096,10 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		delitem 7157,10; //Black_Mask
 		delitem 1021,10; //Dokkaebi_Horn
 		delitem 7101,10; //Peco_Wing_Feather
-		set party_relay,20;
+		party_relay = 20;
 		getitem 7736,1; //Mission_Certificate7
 		getitem 610,2; //Leaf_Of_Yggdrasil
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Do me a favor and make";
 		mes "sure that the Merchant";
@@ -2397,7 +2156,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "^4D4DFF10 PecoPeco Feathers^000000.";
 		next;
 		delitem 7735,1; //Mission_Certificate6
-		set party_relay,18;
+		party_relay = 18;
 		mes "[Bafhail]";
 		mes "Understood?";
 		mes "Alright then, if you'll";
@@ -2429,7 +2188,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "^4D4DFF10 Poisonous Toad Skins^000000.";
 		next;
 		delitem 7735,1; //Mission_Certificate6
-		set party_relay,19;
+		party_relay = 19;
 		mes "[Bafhail]";
 		mes "Understood?";
 		mes "Alright then, if you'll";
@@ -2477,30 +2236,10 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		delitem 7196,10; //Shoulder_Protection
 		delitem 7189,10; //Heart_Of_Tree
 		delitem 920,10; //Claw_Of_Wolves
-		set party_relay,9;
+		party_relay = 9;
 		getitem 7732,1; //Mission_Certificate3
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Please give that";
 		mes "ticket to the Archer";
@@ -2520,30 +2259,10 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		delitem 7196,10; //Shoulder_Protection
 		delitem 7189,10; //Heart_Of_Tree
 		delitem 920,10; //Claw_Of_Wolves
-		set party_relay,9;
+		party_relay = 9;
 		getitem 7732,1; //Mission_Certificate3
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		next;
 		mes "[Bafhail]";
 		mes "Please give that";
@@ -2582,7 +2301,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		delitem 1027,10; //Porcupine_Spike
 		delitem 1040,10; //Elder_Pixie's_Beard
 		delitem 1023,10; //Fish_Tail
-		set party_relay,9;
+		party_relay = 9;
 		getitem 7732,1; //Mission_Certificate3
 		mes "[Bafhail]";
 		mes "Please give that";
@@ -2604,7 +2323,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		delitem 1027,10; //Porcupine_Spike
 		delitem 1040,10; //Elder_Pixie's_Beard
 		delitem 1023,10; //Fish_Tail
-		set party_relay,9;
+		party_relay = 9;
 		getitem 7732,1; //Mission_Certificate3
 		mes "[Bafhail]";
 		mes "Please give that";
@@ -2632,7 +2351,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "Standard Time. Don't forget!";
 		close;
 	}
-	if ((countitem(7731) > 0) && (BaseLevel > 39) && ((.@relaytime >= 8) && (.@relaytime < 11)) && (Baseclass == Job_Thief)) {
+	if ((countitem(7731) > 0) && (BaseLevel > 39) && ((.@relaytime >= 8) && (.@relaytime < 11)) && (BaseClass == Job_Thief)) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -2654,7 +2373,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "^4D4DFF10 Shoulder Protectors^000000";
 		next;
 		delitem 7731,1; //Mission_Certificate2
-		set party_relay,8;
+		party_relay = 8;
 		mes "[Bafhail]";
 		mes "Remember that I won't";
 		mes "accept your items, even";
@@ -2664,7 +2383,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "items for missions, okay?";
 		close;
 	}
-	else if ((countitem(7731) > 0) && (BaseLevel > 39) && ((.@relaytime >= 21) && (Baseclass == Job_Thief))) {
+	else if ((countitem(7731) > 0) && (BaseLevel > 39) && ((.@relaytime >= 21) && (BaseClass == Job_Thief))) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -2686,7 +2405,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "^4D4DFF10 Elder Pixie's Moustaches^000000";
 		next;
 		delitem 7731,1; //Mission_Certificate2
-		set party_relay,7;
+		party_relay = 7;
 		mes "[Bafhail]";
 		mes "Remember that I won't";
 		mes "accept your items, even";
@@ -2696,7 +2415,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 		mes "items for missions, okay?";
 		close;
 	}
-	if ((countitem(7731) > 0) && (BaseLevel > 39) && (Baseclass == Job_Thief)) {
+	if ((countitem(7731) > 0) && (BaseLevel > 39) && (BaseClass == Job_Thief)) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -2730,10 +2449,10 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 	close;
 }
 
-payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
+payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 	getpartymember(getcharid(1));
-	set .@partymembercount,$@partymembercount;
-	set .@partyleader,getpartyleader(getcharid(1),2);
+	.@partymembercount = $@partymembercount;
+	.@partyleader = getpartyleader(getcharid(1),2);
 	if (checkweight(907,300) == 0) {
 		mes "^3355FFWait a minute! You're";
 		mes "carrying too many items";
@@ -2752,9 +2471,9 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "have to meet either, but...";
 		close;
 	}
-	set .@relaytime,gettime(3);
+	.@relaytime = gettime(3);
 	getmapxy(.@m$,.@x,.@y,1,strnpcinfo(3));
-	set .@juwi,getareausers(.@m$,.@x-8,.@y-8,.@x+8,.@y+8);
+	.@juwi = getareausers(.@m$,.@x-8,.@y-8,.@x+8,.@y+8);
 	if (party_relay == 32) {
 		mes "[Lospii]";
 		mes "Hey! Did you give";
@@ -2779,31 +2498,11 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "For that, you get this";
 		mes "gift from me. Cool, huh?";
 		next;
-		set party_relay,32;
+		party_relay = 32;
 		getitem 7741,1; //Mission_Certificate12
 		getitem 610,2; //Leaf_Of_Yggdrasil
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Lospii]";
 		mes "Okay, now take this";
 		mes "ticket, and give it to";
@@ -2836,31 +2535,11 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "For that, you get this";
 		mes "gift from me. Cool, huh?";
 		next;
-		set party_relay,32;
+		party_relay = 32;
 		getitem 7741,1; //Mission_Certificate12
 		getitem 610,2; //Leaf_Of_Yggdrasil
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Lospii]";
 		mes "Okay, now take this";
 		mes "ticket, and give it to";
@@ -2920,7 +2599,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "friends, not some other guys.";
 		next;
 		delitem 7740,1; //Mission_Certificate11
-		set party_relay,31;
+		party_relay = 31;
 		mes "[Lospii]";
 		mes "Okay, I'll be right";
 		mes "here! Oh! And you have";
@@ -2961,7 +2640,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "friends, not some other guys.";
 		next;
 		delitem 7740,1; //Mission_Certificate11
-		set party_relay,31;
+		party_relay = 31;
 		mes "[Lospii]";
 		mes "Okay, I'll be right";
 		mes "here! Oh! And you have";
@@ -2970,7 +2649,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "important to know!";
 		close;
 	}
-	if ((countitem(7740) > 0) && ((Baseclass == Job_Archer) || (BaseClass == Job_Merchant))) {
+	if ((countitem(7740) > 0) && ((BaseClass == Job_Archer) || (BaseClass == Job_Merchant))) {
 		mes "[Lospii]";
 		mes "Hi, I'm Lospii! Maybe";
 		mes "I'm younger than you, but";
@@ -3018,30 +2697,10 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "For that, you get this";
 		mes "gift from me. Cool, huh?";
 		next;
-		set party_relay,22;
+		party_relay = 22;
 		getitem 7737,1; //Mission_Certificate8
 		getitem 610,2; //Leaf_Of_Yggdrasil
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Lospii]";
 		mes "Okay, now take this";
 		mes "ticket, and give it to";
@@ -3074,30 +2733,10 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "For that, you get this";
 		mes "gift from me. Cool, huh?";
 		next;
-		set party_relay,22;
+		party_relay = 22;
 		getitem 7737,1; //Mission_Certificate8
 		getitem 610,2; //Leaf_Of_Yggdrasil
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Lospii]";
 		mes "Okay, now take this";
 		mes "ticket, and give it to";
@@ -3157,7 +2796,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "friends, not some other guys.";
 		next;
 		delitem 7736,1; //Mission_Certificate7
-		set party_relay,21;
+		party_relay = 21;
 		mes "[Lospii]";
 		mes "Okay, I'll be right";
 		mes "here! Oh! And you have";
@@ -3198,7 +2837,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "friends, not some other guys.";
 		next;
 		delitem 7736,1; //Mission_Certificate7
-		set party_relay,21;
+		party_relay = 21;
 		mes "[Lospii]";
 		mes "Okay, I'll be right";
 		mes "here! Oh! And you have";
@@ -3255,30 +2894,10 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "For that, you get this";
 		mes "gift from me. Cool, huh?";
 		next;
-		set party_relay,11;
+		party_relay = 11;
 		getitem 7733,1; //Mission_Certificate4
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Lospii]";
 		mes "Okay, now take this";
 		mes "ticket, and give it to";
@@ -3311,30 +2930,10 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "For that, you get this";
 		mes "gift from me. Cool, huh?";
 		next;
-		set party_relay,11;
+		party_relay = 11;
 		getitem 7733,1; //Mission_Certificate4
 		getitem 607,2; //Yggdrasilberry
-		if (BaseLevel > 94) {
-			getexp 104760,0;
-		}
-		else if (BaseLevel > 89) {
-			getexp 85920,0;
-		}
-		else if (BaseLevel > 79) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 69) {
-			getexp 38520,0;
-		}
-		else if (BaseLevel > 59) {
-			getexp 67200,0;
-		}
-		else if (BaseLevel > 49) {
-			getexp 28800,0;
-		}
-		else {
-			getexp 1080,0;
-		}
+		callfunc "F_PartyRelay_Exp";
 		mes "[Lospii]";
 		mes "Okay, now take this";
 		mes "ticket, and give it to";
@@ -3362,7 +2961,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "I... I can't read watches...";
 		close;
 	}
-	if ((countitem(7732) > 0) && (BaseLevel > 39) && ((.@relaytime >= 14) && (.@relaytime < 17)) && (Baseclass == Job_Archer)) {
+	if ((countitem(7732) > 0) && (BaseLevel > 39) && ((.@relaytime >= 14) && (.@relaytime < 17)) && (BaseClass == Job_Archer)) {
 		mes "[Lospii]";
 		mes "Hi, I'm Lospii! Maybe";
 		mes "I'm younger than you, but";
@@ -3394,7 +2993,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "friends, not some other guys.";
 		next;
 		delitem 7732,1; //Mission_Certificate3
-		set party_relay,10;
+		party_relay = 10;
 		mes "[Lospii]";
 		mes "Okay, I'll be right";
 		mes "here! Oh! And you have";
@@ -3403,7 +3002,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "important to know!";
 		close;
 	}
-	else if ((countitem(7732) > 0) && (BaseLevel > 39) && ((.@relaytime >= 18) && (.@relaytime < 21)) && (Baseclass == Job_Archer)) {
+	else if ((countitem(7732) > 0) && (BaseLevel > 39) && ((.@relaytime >= 18) && (.@relaytime < 21)) && (BaseClass == Job_Archer)) {
 		mes "[Lospii]";
 		mes "Hi, I'm Lospii! Maybe";
 		mes "I'm younger than you, but";
@@ -3435,7 +3034,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "friends, not some other guys.";
 		next;
 		delitem 7732,1; //Mission_Certificate3
-		set party_relay,10;
+		party_relay = 10;
 		mes "[Lospii]";
 		mes "Okay, I'll be right";
 		mes "here! Oh! And you have";
@@ -3444,7 +3043,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 		mes "important to know!";
 		close;
 	}
-	if ((countitem(7732) > 0) && (BaseLevel > 39) && (Baseclass == Job_Archer)) {
+	if ((countitem(7732) > 0) && (BaseLevel > 39) && (BaseClass == Job_Archer)) {
 		mes "[Lospii]";
 		mes "Hi, I'm Lospii! Maybe";
 		mes "I'm younger than you, but";
@@ -3476,32 +3075,54 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
 	close;
 }
 
+// EXP Rewards
+function	script	F_PartyRelay_Exp	{
+	if (RENEWAL_EXP) { //unconfirmed
+		if (BaseLevel > 94) getexp 104760,0;
+		else if (BaseLevel > 89) getexp 85920,0;
+		else if (BaseLevel > 79) getexp 38520,0;
+		else if (BaseLevel > 69) getexp 19560,0;
+		else if (BaseLevel > 59) getexp 6720,0;
+		else if (BaseLevel > 49) getexp 2880,0;
+		else getexp 1080,0;
+	} else {
+		if (BaseLevel > 94) getexp 1047600,0;
+		else if (BaseLevel > 89) getexp 859200,0;
+		else if (BaseLevel > 79) getexp 385200,0;
+		else if (BaseLevel > 69) getexp 195600,0;
+		else if (BaseLevel > 59) getexp 67200,0;
+		else if (BaseLevel > 49) getexp 28800,0;
+		else getexp 10800,0;
+	}
+	return;
+}
+
 // Comodo Relay
-comodo,71,137,3	duplicate(RelayLedrion)	Ledrion#comodo	109
-comodo,236,197,3	duplicate(RelayGatan)	Gatan#comodo	86
-comodo,152,184,3	duplicate(RelayBafhail)	Bafhail#comodo	731
-comodo,64,219,3	duplicate(RelayLospii)	Lospii#comodo	706
+comodo,71,137,3	duplicate(RelayLedrion)	Ledrion#comodo	4_M_MANAGER
+comodo,236,197,3	duplicate(RelayGatan)	Gatan#comodo	4_M_04
+comodo,152,184,3	duplicate(RelayBafhail)	Bafhail#comodo	4_M_JOB_BLACKSMITH
+comodo,64,219,3	duplicate(RelayLospii)	Lospii#comodo	4_M_KID1
 
 // Einbroch Relay
-einbroch,107,93,3	duplicate(RelayLedrion)	Ledrion#einbroch	109
-einbroch,260,128,3	duplicate(RelayGatan)	Gatan#einbroch	86
-einbroch,251,178,3	duplicate(RelayBafhail)	Bafhail#einbroch	731
-einbroch,173,72,3	duplicate(RelayLospii)	Lospii#einbroch	706
+einbroch,107,93,3	duplicate(RelayLedrion)	Ledrion#einbroch	4_M_MANAGER
+einbroch,260,128,3	duplicate(RelayGatan)	Gatan#einbroch	4_M_04
+einbroch,251,178,3	duplicate(RelayBafhail)	Bafhail#einbroch	4_M_JOB_BLACKSMITH
+einbroch,173,72,3	duplicate(RelayLospii)	Lospii#einbroch	4_M_KID1
 
 // Relay Hugel
-hugel,102,130,3	duplicate(RelayLedrion)	Ledrion#hugel	109
-hugel,169,139,3	duplicate(RelayGatan)	Gatan#hugel	86
-hugel,55,200,3	duplicate(RelayBafhail)	Bafhail#hugel	731
-hugel,144,201,3	duplicate(RelayLospii)	Lospii#hugel	706
+hugel,102,130,3	duplicate(RelayLedrion)	Ledrion#hugel	4_M_MANAGER
+hugel,169,139,3	duplicate(RelayGatan)	Gatan#hugel	4_M_04
+hugel,55,200,3	duplicate(RelayBafhail)	Bafhail#hugel	4_M_JOB_BLACKSMITH
+hugel,144,201,3	duplicate(RelayLospii)	Lospii#hugel	4_M_KID1
 
 // Relay Rachel
-rachel,215,71,3	duplicate(RelayLedrion)	Ledrion#rachel	109
-rachel,45,163,3	duplicate(RelayGatan)	Gatan#rachel	86
-rachel,245,132,3	duplicate(RelayBafhail)	Bafhail#rachel	731
-rachel,158,215,3	duplicate(RelayLospii)	Lospii#rachel	706
+rachel,215,71,3	duplicate(RelayLedrion)	Ledrion#rachel	4_M_MANAGER
+rachel,45,163,3	duplicate(RelayGatan)	Gatan#rachel	4_M_04
+rachel,245,132,3	duplicate(RelayBafhail)	Bafhail#rachel	4_M_JOB_BLACKSMITH
+rachel,158,215,3	duplicate(RelayLospii)	Lospii#rachel	4_M_KID1
 
 // Relay Veins
-veins,274,188,5	duplicate(RelayLedrion)	Ledrion#veins	109
-veins,138,207,3	duplicate(RelayGatan)	Gatan#veins	86
-veins,202,235,3	duplicate(RelayBafhail)	Bafhail#veins	731
-veins,97,245,5	duplicate(RelayLospii)	Lospii#veins	706
+veins,274,188,5	duplicate(RelayLedrion)	Ledrion#veins	4_M_MANAGER
+veins,138,207,3	duplicate(RelayGatan)	Gatan#veins	4_M_04
+veins,202,235,3	duplicate(RelayBafhail)	Bafhail#veins	4_M_JOB_BLACKSMITH
+veins,97,245,5	duplicate(RelayLospii)	Lospii#veins	4_M_KID1

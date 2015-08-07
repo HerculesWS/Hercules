@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Thief Job Quest
 //===== By: ==================================================
 //= rAthena Dev Team
 //===== Current Version: =====================================
 //= 1.8
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Official Conversion]
 //= Job quest for Thief classes
@@ -14,15 +12,15 @@
 //= 1.1 Added instant job change for High Novice [Lupus]
 //= 1.3 Added Baby Class support [Lupus]
 //= 1.4 Optimised and moved first checker to Jfunc1-1 [massdriller]
-//= Fixed possible EXP abuse [Lupus]
+//=     Fixed possible EXP abuse [Lupus]
 //= 1.5 Now saves/restores all quest skills [Lupus]
 //= 1.6 Merged back JFunc [Lupus] 1.6a typos
 //= 1.7 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//=	No longer uses function "F_ToHigh"
+//=     No longer uses function "F_ToHigh"
 //= 1.8 Added Quest Log commands. [L0ne_W0lf]
 //============================================================
 
-moc_prydb1,39,129,2	script	Thief Guide	69,{
+moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 	if (Upper == 1) {
 		if (ADVJOB == Job_Assassin_Cross || ADVJOB == Job_Stalker) {
 			if (Class == Job_Novice_High) {
@@ -52,7 +50,7 @@ moc_prydb1,39,129,2	script	Thief Guide	69,{
 			}
 			else {
 				mes "[Thief Guide]";
-				if (sex)
+				if (Sex)
 					mes "Hey, dude.";
 				else
 					mes "Hey, baby~";
@@ -61,7 +59,7 @@ moc_prydb1,39,129,2	script	Thief Guide	69,{
 		}
 		else {
 			mes "[Thief Guide]";
-			if (sex)
+			if (Sex)
 				mes "Hey, dude.";
 			else
 				mes "Hey, baby.";
@@ -253,7 +251,7 @@ moc_prydb1,39,129,2	script	Thief Guide	69,{
 				mes "[Thief Guide]";
 				mes "" + strcharinfo(0) + "?";
 				mes "What kind of name is " + strcharinfo(0) + "? Anyway, give me a second.";
-				set job_thief_q,1;
+				job_thief_q = 1;
 				next;
 				mes "[Thief Guide]";
 				mes "Alright, your registration has been processed. Okay, you can begin your test if you're ready.";
@@ -298,7 +296,7 @@ moc_prydb1,39,129,2	script	Thief Guide	69,{
 		next;
 		mes "[Thief Guide]";
 		mes "Because I feel like it, I now decree that you have passed this interview. Good work!";
-		set job_thief_q,2;
+		job_thief_q = 2;
 		setquest 1013;
 		next;
 		mes "[Thief Guide]";
@@ -348,7 +346,7 @@ moc_prydb1,39,129,2	script	Thief Guide	69,{
 	close;
 }
 
-moc_prydb1,42,133,2	script	Comrade	118,{
+moc_prydb1,42,133,2	script	Comrade	2_M_THIEFMASTER,{
 	if (BaseJob == Job_Thief) {
 		mes "[Brad]";
 		mes "We don't have any special events yet. Come some other time when there's news, alright?";
@@ -387,10 +385,10 @@ moc_prydb1,42,133,2	script	Comrade	118,{
 			close;
 		}
 		next;
-		set .@thief_item1,countitem(1069) * 3;
-		set .@thief_item2,countitem(1070);
-		set .@total_thief,.@thief_item1 + .@thief_item2;
-		set .@money_thief,((.@thief_item1 * 5) + (.@thief_item2 * 2)) + 200;
+		.@thief_item1 = countitem(1069) * 3;
+		.@thief_item2 = countitem(1070);
+		.@total_thief = .@thief_item1 + .@thief_item2;
+		.@money_thief = ((.@thief_item1 * 5) + (.@thief_item2 * 2)) + 200;
 		mes "[Comrade]";
 		if (countitem(1069) != 0) {
 			mes "First, let me check the Orange Net Mushrooms you got.";
@@ -445,12 +443,12 @@ moc_prydb1,42,133,2	script	Comrade	118,{
 		next;
 		mes "[Brad]";
 		mes "Here is a small subsidy for a Newbie like you. Spend it whereever you want. Alright then, I'll see you around~";
-		set zeny,zeny+.@money_thief;
+		Zeny += .@money_thief;
 		close;
 	}
 }
 
-moc_ruins,141,125,3	script	Mr. Irrelevant	83,{
+moc_ruins,141,125,3	script	Mr. Irrelevant	4_M_01,{
 	if (BaseJob == Job_Thief) {
 		mes "[Mr. Irrelevant]";
 		mes "Ah, I see that you are now a Thief. I always knew you'd join us.";
@@ -505,7 +503,7 @@ moc_ruins,141,125,3	script	Mr. Irrelevant	83,{
 		mes "[Mr. Irrelevant]";
 		mes "Your name is " + strcharinfo(0) + "? Ah, it's on the list. Alright, I'll let you into the Mushroom Farm , but I can't guarantee your safety...";
 		close2;
-		set job_thief_q,3;
+		job_thief_q = 3;
 		switch(rand(5)) {
 		case 1: warp "job_thief1",228,106; end;
 		case 2: warp "job_thief1",38,50; end;

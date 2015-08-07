@@ -5,7 +5,7 @@
 // Registration NPC's
 // *********************************************************************
 
-bat_room,114,227,4	script	Registration::TV2R_Guillaume	418,{
+bat_room,114,227,4	script	Registration::TV2R_Guillaume	4_M_KY_KNT,{
 	end;
 OnInit:
 	waitingroom "Battle Station 10 Players",10,"Tierra_BG2::OnGuillaumeJoin",1;
@@ -15,7 +15,7 @@ OnEnterBG:
 	end;
 }
 
-bat_room,114,204,0	script	Registration::TV2R_Croix	414,{
+bat_room,114,204,0	script	Registration::TV2R_Croix	4_M_CRU_KNT,{
 	end;
 OnInit:
 	waitingroom "Battle Station 10 Players",10,"Tierra_BG2::OnCroixJoin",1;
@@ -241,23 +241,23 @@ OnReset:
 // Other Flags
 // *********************************************************************
 
-bat_a02,148,85,1	duplicate(Croix camp#bat)	Croix camp#bat22	974
-bat_a02,155,85,1	duplicate(Croix camp#bat)	Croix camp#bat23	974
-bat_a02,357,75,1	duplicate(Croix camp#bat)	Croix camp#bat24	974
-bat_a02,348,74,1	duplicate(Croix camp#bat)	Croix camp#bat25	974
-bat_a02,199,49,1	duplicate(Croix camp#bat)	Croix camp#bat26	974
-bat_a02,168,16,1	duplicate(Croix camp#bat)	Croix camp#bat27	974
-bat_a02,138,12,1	duplicate(Croix camp#bat)	Croix camp#bat28	974
-bat_a02,108,35,1	duplicate(Croix camp#bat)	Croix camp#bat29	974
-bat_a02,164,308,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat23	973
-bat_a02,157,308,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat24	973
-bat_a02,359,327,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat25	973
-bat_a02,350,326,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat26	973
-bat_a02,209,344,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat27	973
-bat_a02,173,380,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat28	973
-bat_a02,150,380,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat29	973
-bat_a02,118,357,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat30	973
-bat_a02,119,336,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat31	973
+bat_a02,148,85,1	duplicate(Croix camp#bat)	Croix camp#bat22	1_FLAG_EAGLE
+bat_a02,155,85,1	duplicate(Croix camp#bat)	Croix camp#bat23	1_FLAG_EAGLE
+bat_a02,357,75,1	duplicate(Croix camp#bat)	Croix camp#bat24	1_FLAG_EAGLE
+bat_a02,348,74,1	duplicate(Croix camp#bat)	Croix camp#bat25	1_FLAG_EAGLE
+bat_a02,199,49,1	duplicate(Croix camp#bat)	Croix camp#bat26	1_FLAG_EAGLE
+bat_a02,168,16,1	duplicate(Croix camp#bat)	Croix camp#bat27	1_FLAG_EAGLE
+bat_a02,138,12,1	duplicate(Croix camp#bat)	Croix camp#bat28	1_FLAG_EAGLE
+bat_a02,108,35,1	duplicate(Croix camp#bat)	Croix camp#bat29	1_FLAG_EAGLE
+bat_a02,164,308,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat23	1_FLAG_LION
+bat_a02,157,308,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat24	1_FLAG_LION
+bat_a02,359,327,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat25	1_FLAG_LION
+bat_a02,350,326,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat26	1_FLAG_LION
+bat_a02,209,344,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat27	1_FLAG_LION
+bat_a02,173,380,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat28	1_FLAG_LION
+bat_a02,150,380,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat29	1_FLAG_LION
+bat_a02,118,357,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat30	1_FLAG_LION
+bat_a02,119,336,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat31	1_FLAG_LION
 
 // Barricades
 // *********************************************************************
@@ -317,21 +317,19 @@ OnWall:
 // Battleground rewards
 // *********************************************************************
 
-bat_a02,45,19,3	script	Croix Vintenar#tv2	415,{
+bat_a02,45,19,3	script	Croix Vintenar#tv2	4_M_CRU_HEAD,{
 	if( $@TierraBG2_Victory )
 	{
 		if( $@TierraBG2_Victory == Bat_Team )
 		{ // Victory
-			set .@Reward, 3;
+			set .@reward, 3;
 			mes "[Swandery]";
 			mes "Blessed Croax!!";
 			mes "Let's enjoy our glorious victory!";
 			mes "" + strcharinfo(0) + ", its a sign reflecting victory";
 			close2;
-		}
-		else
-		{ // 
-			set .@Reward, 1;
+		} else {
+			set .@reward, 1;
 			mes "[Swandery]";
 			mes "Oh, " + strcharinfo(0) + ". Don't be sad.";
 			mes "Even though we didn't win, we did our best.";
@@ -340,7 +338,7 @@ bat_a02,45,19,3	script	Croix Vintenar#tv2	415,{
 		}
 
 		setquest 2069;
-		getitem 7828, .@Reward;
+		getitem 7828, .@reward;
 		bg_leave;
 		warp "bat_room",155,150;
 		end;
@@ -348,21 +346,19 @@ bat_a02,45,19,3	script	Croix Vintenar#tv2	415,{
 	end;
 }
 
-bat_a02,53,377,3	script	Guillaume Vintenar#tv2	419,{
+bat_a02,53,377,3	script	Guillaume Vintenar#tv2	4_M_KY_HEAD,{
 	if( $@TierraBG2_Victory )
 	{
 		if( $@TierraBG2_Victory == Bat_Team )
 		{ // Victory
-			set .@Reward, 3;
+			set .@reward, 3;
 			mes "[Swandery]";
 			mes "Blessed Guillaume!!";
 			mes "Let's enjoy our glorious victory!";
 			mes "" + strcharinfo(0) + ", its a sign reflecting victory";
 			close2;
-		}
-		else
-		{ // 
-			set .@Reward, 1;
+		} else {
+			set .@reward, 1;
 			mes "[Swandery]";
 			mes "You lost, but you're dedicated to this battle.";
 			mes "This is a reward for your great dedication by Guillaume Marollo!";
@@ -371,7 +367,7 @@ bat_a02,53,377,3	script	Guillaume Vintenar#tv2	419,{
 		}
 
 		setquest 2069;
-		getitem 7828, .@Reward;
+		getitem 7828, .@reward;
 		bg_leave;
 		warp "bat_room",155,150;
 		end;
@@ -382,14 +378,14 @@ bat_a02,53,377,3	script	Guillaume Vintenar#tv2	419,{
 // Battleground Therapist
 // *********************************************************************
 
-bat_a02,60,216,3	script	Ghost#tv23	950,{
+bat_a02,60,216,3	script	Ghost#tv23	4_GHOSTRING,{
 	mes "[Ghost in valley]";
 	mes "Boo...Boo...";
 	specialeffect2 312;
 	close;
 }
 
-bat_a02,53,377,3	script	Therapist in battle#tv22	95,{
+bat_a02,53,377,3	script	Therapist in battle#tv22	4_F_SISTER,{
 	mes "[Therapist in battle]";
 	mes "Just close your eyes, and take a deep breathe.";
 	mes "You can be free from pain.";
@@ -397,7 +393,7 @@ bat_a02,53,377,3	script	Therapist in battle#tv22	95,{
 	close;
 }
 
-bat_a02,45,18,3	script	Therapist in battle#tv21	95,{
+bat_a02,45,18,3	script	Therapist in battle#tv21	4_F_SISTER,{
 	mes "[Therapist in battle]";
 	mes "Just close your eyes, and take a deep breathe.";
 	mes "You can be free from pain.";
@@ -408,7 +404,7 @@ bat_a02,45,18,3	script	Therapist in battle#tv21	95,{
 // Battleground Respawn
 // *********************************************************************
 
-bat_a02,57,213,0	script	#ntv2_respawn	139,{
+bat_a02,57,213,0	script	#ntv2_respawn	HIDDEN_WARP_NPC,{
 	end;
 
 OnBGStart:
@@ -430,7 +426,7 @@ OnTimer20000:
 	end;
 }
 
-bat_a02,50,374,0	script	#gtv2_respawn	139,{
+bat_a02,50,374,0	script	#gtv2_respawn	HIDDEN_WARP_NPC,{
 	end;
 
 OnBGStart:
@@ -452,7 +448,7 @@ OnTimer25000:
 	end;
 }
 
-bat_a02,42,16,0	script	#ctv2_respawn	139,{
+bat_a02,42,16,0	script	#ctv2_respawn	HIDDEN_WARP_NPC,{
 	end;
 
 OnBGStart:

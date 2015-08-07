@@ -8,7 +8,7 @@
 //= Demonstrates waitingroom commands.
 //============================================================
 
-prontera,158,182,0	script	Chat Test::test0001	116,{
+prontera,158,182,0	script	Chat Test::test0001	4_F_KAFRA2,{
 	mes "Trigger Number: " + getwaitingroomstate(2);
 	mes "Trigger State: " + getwaitingroomstate(3);
 	switch(select("Enable:Disable:Delete:Create")) {

@@ -1,11 +1,28 @@
 language: c
 compiler:
-  - gcc
   - clang
-# Change this to your needs
-script: ./configure --enable-debug && make
+  - gcc
 
-# Disallow 'rathena' branch to be compiled by Travis
+install:
+  - ./travis.sh getplugins || true
+  
+before_script:
+  - uname -a
+  - ./travis.sh createdb ragnarok root
+  - ./travis.sh importdb ragnarok travis
+  - mysql -u root -e "SET PASSWORD FOR 'travis'@'localhost' = PASSWORD('travis');"
+
+script:
+  - ./travis.sh build $CONFIGURE_FLAGS
+  - ./travis.sh test ragnarok travis travis
+
+env:
+  - CONFIGURE_FLAGS="--enable-debug"
+  - CONFIGURE_FLAGS="--disable-renewal --enable-debug"
+  
+notifications:
+  email: false
+  
 branches:
-  only:
-    - master
+  except:
+    - rathena

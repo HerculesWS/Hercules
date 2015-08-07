@@ -1,17 +1,57 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAPREG_H_
-#define _MAPREG_H_
+#ifndef MAP_MAPREG_H
+#define MAP_MAPREG_H
 
-void mapreg_reload(void);
-void mapreg_final(void);
-void mapreg_init(void);
-bool mapreg_config_read(const char* w1, const char* w2);
+#include "map/script.h" // struct reg_db
+#include "common/cbasetypes.h"
+#include "common/db.h"
 
-int mapreg_readreg(int uid);
-char* mapreg_readregstr(int uid);
-bool mapreg_setreg(int uid, int val);
-bool mapreg_setregstr(int uid, const char* str);
+struct eri;
 
-#endif /* _MAPREG_H_ */
+/** Container for a mapreg value */
+struct mapreg_save {
+	int64 uid;         ///< Unique ID
+	union {
+		int i;     ///< Numeric value
+		char *str; ///< String value
+	} u;
+	bool is_string;    ///< true if it's a string, false if it's a number
+	bool save;         ///< Whether a save operation is pending
+};
+
+struct mapreg_interface {
+	struct reg_db regs;
+	/* */
+	bool skip_insert;
+	/* */
+	struct eri *ers; //[Ind/Hercules]
+	/* */
+	char table[32];
+	/* */
+	bool dirty; ///< Whether there are modified regs to be saved
+	/* */
+	void (*init) (void);
+	void (*final) (void);
+	/* */
+	int (*readreg) (int64 uid);
+	char* (*readregstr) (int64 uid);
+	bool (*setreg) (int64 uid, int val);
+	bool (*setregstr) (int64 uid, const char *str);
+	void (*load) (void);
+	void (*save) (void);
+	int (*save_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*destroyreg) (DBKey key, DBData *data, va_list ap);
+	void (*reload) (void);
+	bool (*config_read) (const char *w1, const char *w2);
+};
+
+struct mapreg_interface *mapreg;
+
+#ifdef HERCULES_CORE
+void mapreg_defaults(void);
+#endif // HERCULES_CORE
+
+#endif /* MAP_MAPREG_H */

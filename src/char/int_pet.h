@@ -1,21 +1,28 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _INT_PET_SQL_H_
-#define _INT_PET_SQL_H_
+#ifndef CHAR_INT_PET_H
+#define CHAR_INT_PET_H
 
 struct s_pet;
 
-int inter_pet_init(void);
-void inter_pet_sql_final(void);
-int inter_pet_save(void);
-int inter_pet_delete(int pet_id);
+#ifdef HERCULES_CORE
+void inter_pet_defaults(void);
+#endif // HERCULES_CORE
 
-int inter_pet_parse_frommap(int fd);
-int inter_pet_sql_init(void);
-//extern char pet_txt[256];
+/**
+ * inter_pet interface
+ **/
+struct inter_pet_interface {
+	struct s_pet *pt;
+	int (*tosql) (int pet_id, struct s_pet* p);
+	int (*fromsql) (int pet_id, struct s_pet* p);
+	int (*sql_init) (void);
+	void (*sql_final) (void);
+	int (*delete_) (int pet_id);
+	int (*parse_frommap) (int fd);
+};
 
-//Exported for use in the TXT-SQL converter.
-int inter_pet_tosql(int pet_id, struct s_pet *p);
+struct inter_pet_interface *inter_pet;
 
-#endif /* _INT_PET_SQL_H_ */
+#endif /* CHAR_INT_PET_H */

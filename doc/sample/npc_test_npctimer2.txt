@@ -1,14 +1,14 @@
-//===== Hercules Script =======================================
+//===== Hercules Script ======================================
 //= Sample: Attached NPC Timers
 //===== By: ==================================================
 //= Hercules Dev Team
 //===== Current Version: =====================================
-//= 20121003
-//===== Description: ========================================= 
+//= 20131225
+//===== Description: =========================================
 //= Demonstrates attached NPC timer commands.
 //============================================================
 
-prontera,156,183,0	script	NPCtimerTest::npctimerX0000	116,{
+prontera,156,183,0	script	NPCtimerTest::npctimerX0000	4_F_KAFRA2,{
 	mes "What would you like to know?";
 	select("Tell me my level.");
 	mes "I need time to think...";

@@ -3,14 +3,14 @@
 //===== By: ==================================================
 //= Hercules Dev Team
 //===== Current Version: =====================================
-//= 20121003
-//===== Description: ========================================= 
+//= 20131225
+//===== Description: =========================================
 //= Demonstrates the 'getequipid' command.
 //============================================================
 
-prontera,161,181,6	script	GetEquipID Sample	105,{
+prontera,161,181,6	script	getequipid Sample	8W_SOLDIER,{
 	mes "[GetEquipID Sample]";
-	for(set .@i,1; .@i<11; set .@i,.@i+1)
-		mes "GetEquipID(" + .@i + ") : " + getequipid(1);
+	for (.@i = 1; .@i < 11; ++.@i)
+		mes "getequipid(" + .@i + ") : " + getequipid(1);
 	close;
 }

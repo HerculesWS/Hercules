@@ -1,26 +1,24 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Geffen Guides
 //===== By: ==================================================
 //= kobra_k88; L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.4a
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Official COnversion]
 //= Guides for the City of Geffen
 //===== Additional Comments: =================================
 //= Fully working.  Added a guide at every exit.
-//= v1.1 Now using duplicate command.
+//= 1.1 Now using duplicate command.
 //= 1.2 Optimized, updated common guide names [Lupus]
 //= 1.2a Small note that the BS guild moved to Einbroch [Poki#3]
 //= 1.3 Removed Duplicates [Silent]
 //= 1.4a Rescripted to official 10.3 standards. [L0ne_W0lf]
 //= 1.4 Fixed some errors with the loop[Samuray22]
-//	-Thanks to $ephiroth.
+//=     Thanks to $ephiroth.
 //============================================================
 
-geffen,203,116,0	script	Guide#gef::GefGuide	705,{
+geffen,203,116,0	script	Guide#gef::GefGuide	4_M_GEF_SOLDIER,{
 	cutin "gef_soldier",2;
 	mes "[Geffen Guide]";
 	mes "Welcome to Geffen,";
@@ -28,7 +26,7 @@ geffen,203,116,0	script	Guide#gef::GefGuide	705,{
 	mes "need any guidance around";
 	mes "the city, feel free to ask me";
 	mes "and I'll do my best to assist you. ^FFFFFFcobo^000000";
-	set .@loop1,1;
+	.@loop1 = 1;
 	while (.@loop1) {
 		next;
 		switch(select("City Guide:Remove Marks from Mini-Map:Notice.:Cancel")) {
@@ -42,11 +40,11 @@ geffen,203,116,0	script	Guide#gef::GefGuide	705,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes:No") == 1) set .@compass_check,1;
+				if (select("Yes:No") == 1) .@compass_check = 1;
 			}
-			set .@loop2,1;
+			.@loop2 = 1;
 			while (.@loop2) {
-				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 //				next;
 				switch(select("^FF0000Magic Acedemy^000000:Forge Shop:Weapon Shop:Tool Shop:Pub:Inn:Geffen Tower:Cancel")) {
@@ -118,7 +116,7 @@ geffen,203,116,0	script	Guide#gef::GefGuide	705,{
 					mes "no longer wish to have the";
 					mes "location marks displayed";
 					mes "on your Mini-Map.";
-					set .@loop2,0;
+					.@loop2 = 0;
 					break;
 				}
 			}
@@ -131,7 +129,7 @@ geffen,203,116,0	script	Guide#gef::GefGuide	705,{
 			viewpoint 2,134,221,6,0xFF00FF;
 			viewpoint 2,204,214,7,0xFF00FF;
 			viewpoint 2,204,214,8,0x00FF00;
-			set .@compass_check,0;
+			.@compass_check = 0;
 			break;
 		case 3:
 			mes "[Geffen Guide]";
@@ -164,11 +162,11 @@ geffen,203,116,0	script	Guide#gef::GefGuide	705,{
 			mes "your journeys through";
 			mes "the lands you may travel...";
 			close2;
-			set .@loop1,0;
+			.@loop1 = 0;
 		}
 	}
 	cutin "gef_soldier",255;
 	end;
 }
 
-geffen,118,62,0	duplicate(GefGuide)	Guide#2gef	705
+geffen,118,62,0	duplicate(GefGuide)	Guide#2gef	4_M_GEF_SOLDIER

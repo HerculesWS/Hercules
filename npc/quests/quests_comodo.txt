@@ -1,13 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Quest NPCs related to Comodo
-//===== By: ================================================== 
+//===== By: ==================================================
 //= kobra_k88; L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.5b
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
-//= Headgear Quests 1 [Aegis Conversion]:
+//===== Description: =========================================
+//= Headgear Quests 1 [Official Conversion]:
 //= - 'Cross Hat', 'Bulb Hairband'
 //= - 'Striped Hairband', 'Blue Hairband'
 //= Headgear Quests 2:
@@ -18,7 +16,7 @@
 //= - Part 2: Found in Quests_Yuno.txt
 //= - Part 3: Found in Doomed_Swords.txt
 //= - Variable in use: dmdswrd_Q (Max 45)
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.1 Fixed exploits [Lupus]
 //= 1.2 Added more quest from cities/comodo.txt [Evera]
 //= 1.2a missing label [Lupus]
@@ -28,12 +26,12 @@
 //= 1.5a Fixed a bad countitem. (bugreport:840) [Samuray22]
 //= 1.5b Fixed stripped hairband and blue hairband checking the wrong amount of items, bugreport:1674 [Brainstorm]
 //= 1.6 Updated headgear quest NPCs. [L0ne_W0lf]
-//============================================================ 
+//============================================================
 
 // Headgear Quests 1
 // Cross Hat, Bulb Hairband, Striped Hairband, Blue Hairband
-//============================================================ 
-comodo,228,159,3	script	Hair Ornament Girl	700,{
+//============================================================
+comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 	mes "[Hair Ornament Girl]";
 	if (Sex == 1) {
 		mes "Oh, hello!";
@@ -229,8 +227,8 @@ comodo,228,159,3	script	Hair Ornament Girl	700,{
 
 // Headgear Quests 2
 // 'Mine Helmet', 'Parcel Hat', 'Money Loser's Grief', 'Phantom of the Opera Mask'
-//============================================================ 
-comodo,273,137,4	script	Traveler#head	702,{
+//============================================================
+comodo,273,137,4	script	Traveler#head	4_F_GON,{
 	mes "[Isac Mari]";
 	mes "I travel around the world, and collect many interesting stories from people. Sometimes they teach me how to make special items.";
 	next;
@@ -472,8 +470,8 @@ comodo,273,137,4	script	Traveler#head	702,{
 }
 
 // Doomed Swords - Comodo Portion. (Continued in Juno)
-//============================================================ 
-comodo,206,310,4	script	Campground Boy#cmd	704,{
+//============================================================
+comodo,206,310,4	script	Campground Boy#cmd	4_M_BIBI,{
 	switch (dmdswrd_Q) {
 	case 0:
 		mes "[Rochito]";
@@ -521,7 +519,7 @@ comodo,206,310,4	script	Campground Boy#cmd	704,{
 			mes "Would you visit him and see";
 			mes "what's taking him so long";
 			mes "to get over here?";
-			set dmdswrd_Q,1;
+			dmdswrd_Q = 1;
 			close;
 		}
 		mes "[Rochito]";
@@ -534,8 +532,8 @@ comodo,206,310,4	script	Campground Boy#cmd	704,{
 		mes "[Rochito]";
 		mes "Long before Comodo was";
 		mes "built inside this huge cave,";
-		mes "this witch used to live in here.^FFFFFF ^000000 A lot of people died trying to";
-		mes "get rid of her, but there're^FFFFFF ^000000 rumors that she's still around...";
+		mes "this witch used to live in here. A lot of people died trying to";
+		mes "get rid of her, but there're rumors that she's still around...";
 		break;
 	case 1:
 		mes "[Rochito]";
@@ -586,7 +584,7 @@ comodo,206,310,4	script	Campground Boy#cmd	704,{
 		mes "^3355FFYou've received a bottle";
 		mes "of Mureuchieligu wine to";
 		mes "deliver to the Comodo Chief.^000000";
-		set dmdswrd_Q,3;
+		dmdswrd_Q = 3;
 		break;
 	case 3:
 		mes "[Rochito]";
@@ -633,7 +631,7 @@ comodo,206,310,4	script	Campground Boy#cmd	704,{
 	close;
 }
 
-comodo,204,310,4	script	Camping Youth#cmd	65,{
+comodo,204,310,4	script	Camping Youth#cmd	1_M_YOUNGKNIGHT,{
 	switch (dmdswrd_Q) {
 	case 0:
 	case 1:
@@ -690,7 +688,7 @@ comodo,204,310,4	script	Camping Youth#cmd	65,{
 		mes "that wine to Tausupa, the";
 		mes "Village Chief, would you let";
 		mes "him know that we miss the guy?";
-		mes "He may be busy, but he'll always^FFFFFF ^000000 be our irreplaceable buddy.";
+		mes "He may be busy, but he'll always be our irreplaceable buddy.";
 		break;
 	case 4:
 		mes "[Rockha]";
@@ -708,7 +706,7 @@ comodo,204,310,4	script	Camping Youth#cmd	65,{
 		mes "one of the best friends that";
 		mes "a guy can have! Cheers!";
 		mes "Hahahaha hahahaha~!";
-		set dmdswrd_Q,5;
+		dmdswrd_Q = 5;
 		next;
 		mes "[Rockha]";
 		mes "Ahh, you know what would";
@@ -732,13 +730,13 @@ comodo,204,310,4	script	Camping Youth#cmd	65,{
 		mes "would make our barbeque";
 		mes "absolutely perfect--having";
 		mes "the Village Chief here, and";
-		mes "some of that legendary Comodo^FFFFFF ^000000 Cheese that ^3355FFToruna^000000 told me about.";
+		mes "some of that legendary Comodo Cheese that ^3355FFToruna^000000 told me about.";
 		break;
 	}
 	close;
 }
 
-comodo,209,305,4	script	Camping Maiden#cmd	71,{
+comodo,209,305,4	script	Camping Maiden#cmd	1_F_LIBRARYGIRL,{
 	mes "[Emralhandas]";
 	mes "Rockha, let me pour";
 	mes "you another drink. We";
@@ -806,7 +804,7 @@ comodo,209,305,4	script	Camping Maiden#cmd	71,{
 	close;
 }
 
-comodo,209,314,4	script	Campground Lad#cmd	706,{
+comodo,209,314,4	script	Campground Lad#cmd	4_M_KID1,{
 	switch (dmdswrd_Q) {
 	case 0:
 	case 1:
@@ -855,7 +853,7 @@ comodo,209,314,4	script	Campground Lad#cmd	706,{
 	close;
 }
 
-comodo,221,310,4	script	BBQ Boy#cmd	86,{
+comodo,221,310,4	script	BBQ Boy#cmd	4_M_04,{
 	mes "[Rinta]";
 	mes "I didn't mean to,";
 	mes "but I accidentally";
@@ -873,7 +871,7 @@ comodo,221,310,4	script	BBQ Boy#cmd	86,{
 	close;
 }
 
-comodo,218,309,4	script	BBQ Visitor#cmd	90,{
+comodo,218,309,4	script	BBQ Visitor#cmd	4_F_01,{
 	mes "[Razy]";
 	mes "Those people over there";
 	mes "are friends of the Village";
@@ -892,7 +890,7 @@ comodo,218,309,4	script	BBQ Visitor#cmd	90,{
 	close;
 }
 
-comodo,216,310,4	script	BBQ Papa#cmd::CmdFamily	50,{
+comodo,216,310,4	script	BBQ Papa#cmd::CmdFamily	1_M_04,{
 	mes "[BBQ Boy]";
 	mes "D-daddy! Is what those";
 	mes "people talking about true?";
@@ -939,11 +937,11 @@ comodo,216,310,4	script	BBQ Papa#cmd::CmdFamily	50,{
 	close;
 }
 
-comodo,215,307,4	duplicate(CmdFamily)	BBQ Mama#cmd	74
+comodo,215,307,4	duplicate(CmdFamily)	BBQ Mama#cmd	1_F_MERCHANT_02
 
-comodo,213,310,4	duplicate(CmdFamily)	BBQ Boy#cmd2	706
+comodo,213,310,4	duplicate(CmdFamily)	BBQ Boy#cmd2	4_M_KID1
 
-cmd_in02,32,140,4	script	Chief#cmd	49,{
+cmd_in02,32,140,4	script	Chief#cmd	1_M_03,{
 	if (dmdswrd_Q > 4) {
 		mes "[Tausupa]";
 		mes "Maybe you can't tell because";
@@ -990,7 +988,7 @@ cmd_in02,32,140,4	script	Chief#cmd	49,{
 		mes "long since I've seen them, but";
 		mes "I hope that I get a chance to";
 		mes "visit them someday soon.";
-		set dmdswrd_Q,4;
+		dmdswrd_Q = 4;
 		break;
 	case 4:
 		mes "[Tausupa]";
@@ -1005,8 +1003,8 @@ cmd_in02,32,140,4	script	Chief#cmd	49,{
 		mes "[Tausupa]";
 		mes "Greetings, adventurer,";
 		mes "I am Tausupa, the Chief of";
-		mes "Comodo, a city famous for its^FFFFFF ^000000 beauty and nightlife. I hope you";
-		mes "enjoy your stay, whether you are^FFFFFF ^000000 seeking excitement or relaxation~";
+		mes "Comodo, a city famous for its beauty and nightlife. I hope you";
+		mes "enjoy your stay, whether you are seeking excitement or relaxation~";
 		next;
 		switch(select("About Casino:About Banished Witch:Cancel")) {
 		case 1:
@@ -1015,7 +1013,7 @@ cmd_in02,32,140,4	script	Chief#cmd	49,{
 			mes "famous for its Casino. There";
 			mes "are many games that you can";
 			mes "enjoy, but you'll need to use";
-			mes "the Casino's special Eulwo^FFFFFF ^000000 currency and conversion system...";
+			mes "the Casino's special Eulwo currency and conversion system...";
 			break;
 		case 2:
 			switch (dmdswrd_Q) {
@@ -1033,7 +1031,7 @@ cmd_in02,32,140,4	script	Chief#cmd	49,{
 				mes "of BBQ meat on your clothes,";
 				mes "I'm guessing that you ran into";
 				mes "Rochito in the campgrounds, ";
-				mes "right? He must have told you^FFFFFF ^000000 that old story about the witch...";
+				mes "right? He must have told you that old story about the witch...";
 				next;
 				mes "[Tausupa]";
 				mes "I'd like nothing better";
@@ -1059,7 +1057,7 @@ cmd_in02,32,140,4	script	Chief#cmd	49,{
 				mes "friends cannot begin the";
 				mes "barbeque without Comodo's";
 				mes "world famous seasoning...";
-				set dmdswrd_Q,2;
+				dmdswrd_Q = 2;
 				break;
 			case 2:
 				mes "[Tausupa]";
@@ -1067,7 +1065,7 @@ cmd_in02,32,140,4	script	Chief#cmd	49,{
 				mes "Koserserah seasoning to";
 				mes "my friend ^3355FFRochito^000000 at the";
 				mes "barbeque campground. Thanks";
-				mes "again for your help, adventurer. ^FFFFFF ^000000";
+				mes "again for your help, adventurer. ";
 				break;
 			}
 			break;
@@ -1094,7 +1092,7 @@ cmd_in02,32,140,4	script	Chief#cmd	49,{
 	close;
 }
 
-comodo,88,97,4	script	Toruna#cmd	109,{
+comodo,88,97,4	script	Toruna#cmd	4_M_MANAGER,{
 	mes "[Toruna]";
 	mes "When I think about it,";
 	mes "there are many fascinating";
@@ -1142,7 +1140,7 @@ comodo,88,97,4	script	Toruna#cmd	109,{
 			mes "Yes, that is rather";
 			mes "peculiar. What's also";
 			mes "strange is this rumor I've";
-			mes "been hearing about. Now, are^FFFFFF ^000000 you familiar with Comodo Cheese?";
+			mes "been hearing about. Now, are you familiar with Comodo Cheese?";
 			next;
 			mes "[Toruna]";
 			mes "It's this urban legend";
@@ -1158,7 +1156,7 @@ comodo,88,97,4	script	Toruna#cmd	109,{
 			mes "here chalk him up to be some";
 			mes "sort of common loon, but who";
 			mes "knows? Maybe it does exist...";
-			set dmdswrd_Q,6;
+			dmdswrd_Q = 6;
 			next;
 			mes "[Toruna]";
 			mes "Well, you can decide for";
@@ -1191,7 +1189,7 @@ comodo,88,97,4	script	Toruna#cmd	109,{
 			mes "before it was an exotic";
 			mes "village of excitement and";
 			mes "leisure, Comodo was once";
-			mes "a haven for evil creatures, ruled^FFFFFF ^000000 by a witch named Meropusum?";
+			mes "a haven for evil creatures, ruled by a witch named Meropusum?";
 			next;
 			mes "[Toruna]";
 			mes "This witch lay dormant for";
@@ -1229,7 +1227,7 @@ comodo,88,97,4	script	Toruna#cmd	109,{
 	close;
 }
 
-comodo,164,291,4	script	Rakusa#cmd	73,{
+comodo,164,291,4	script	Rakusa#cmd	1_F_MERCHANT_01,{
 	switch (dmdswrd_Q) {
 	case 6:
 		mes "[Rakusa]";
@@ -1247,7 +1245,7 @@ comodo,164,291,4	script	Rakusa#cmd	73,{
 		mes "around here? Nope, I thought";
 		mes "so! Still, I think he really";
 		mes "believes that it exists...";
-		set dmdswrd_Q,7;
+		dmdswrd_Q = 7;
 		break;
 	case 7:
 		mes "[Rakusa]";
@@ -1278,7 +1276,7 @@ comodo,164,291,4	script	Rakusa#cmd	73,{
 	close;
 }
 
-comodo,169,284,4	script	Kichiri#cmd	98,{
+comodo,169,284,4	script	Kichiri#cmd	4W_M_02,{
 	switch (dmdswrd_Q) {
 	case 7:
 		mes "[Kichiri]";
@@ -1295,7 +1293,7 @@ comodo,169,284,4	script	Kichiri#cmd	98,{
 		mes "Magatu to shut up?";
 		mes "I just want to drink";
 		mes "my alcohol in peace!";
-		set dmdswrd_Q,8;
+		dmdswrd_Q = 8;
 		break;
 	case 8:
 		mes "[Kichiri]";
@@ -1303,7 +1301,7 @@ comodo,169,284,4	script	Kichiri#cmd	98,{
 		mes "got me wondering! I mean,";
 		mes "just because I've never seen";
 		mes "Comodo Cheese doesn't mean";
-		mes "it doesn't exist, right? Curses!^FFFFFF ^000000 Now I'm thinking about it too!";
+		mes "it doesn't exist, right? Curses! Now I'm thinking about it too!";
 		break;
 	default:
 		mes "[Kichiri]";
@@ -1326,7 +1324,7 @@ comodo,169,284,4	script	Kichiri#cmd	98,{
 	close;
 }
 
-comodo,163,280,4	script	Magatu#cmd	55,{
+comodo,163,280,4	script	Magatu#cmd	1_M_JOBTESTER,{
 	switch (dmdswrd_Q) {
 	case 8:
 		mes "[Magatu]";
@@ -1363,7 +1361,7 @@ comodo,163,280,4	script	Magatu#cmd	55,{
 		mes "^3355FFYou have received";
 		mes "Magatu's lucky bottle";
 		mes "cap to present to Manzi.";
-		set dmdswrd_Q,9;
+		dmdswrd_Q = 9;
 		break;
 	case 9:
 		mes "[Magatu]";
@@ -1387,7 +1385,7 @@ comodo,163,280,4	script	Magatu#cmd	55,{
 	close;
 }
 
-cmd_in02,189,99,4	script	Manzi#cmd	85,{
+cmd_in02,189,99,4	script	Manzi#cmd	4_M_03,{
 	switch (dmdswrd_Q) {
 	case 9:
 		mes "["+strcharinfo(0)+"]";
@@ -1434,10 +1432,10 @@ cmd_in02,189,99,4	script	Manzi#cmd	85,{
 		mes "Ah, she won't take you";
 		mes "very seriously unless you";
 		mes "show her this. Magatsu gave";
-		mes "you his lucky bottle cap, so I'm^FFFFFF ^000000 gonna give you my lucky coin!";
+		mes "you his lucky bottle cap, so I'm gonna give you my lucky coin!";
 		mes "The old crone'll recognize it~";
 		next;
-		set dmdswrd_Q,10;
+		dmdswrd_Q = 10;
 		mes "^3355FFYou received Manzi's";
 		mes "''lucky coin.'' Strangely";
 		mes "enough, both sides";
@@ -1467,14 +1465,14 @@ cmd_in02,189,99,4	script	Manzi#cmd	85,{
 		mes "Hey, have a good time in";
 		mes "the Casino, but don't go buck";
 		mes "wild. You wanna walk out of";
-		mes "here with the shirt on your back,^FFFFFF ^000000 you know? Some people don't";
+		mes "here with the shirt on your back, you know? Some people don't";
 		mes "even leave here with that...";
 		break;
 	}
 	close;
 }
 
-comodo,187,153,4	script	Hullaris#cmd	701,{
+comodo,187,153,4	script	Hullaris#cmd	4_F_GODEMOM,{
 	switch (dmdswrd_Q) {
 	case 10:
 		mes "[Hullaris]";
@@ -1524,7 +1522,7 @@ comodo,187,153,4	script	Hullaris#cmd	701,{
 			mes "Comodo Cheese does exist,";
 			mes "and it's as precious as the";
 			mes "legends say. However, it's";
-			mes "not a true cheese, although^FFFFFF ^000000 you may think so from its taste.";
+			mes "not a true cheese, although you may think so from its taste.";
 			next;
 			mes "[Hullaris]";
 			mes "Yes, it's a very rare, natural";
@@ -1563,7 +1561,7 @@ comodo,187,153,4	script	Hullaris#cmd	701,{
 			mes "^3355FFNigirboran^000000. He will judge";
 			mes "whether you are worthy";
 			mes "of the Comodo Cheese...";
-			set dmdswrd_Q,11;
+			dmdswrd_Q = 11;
 			next;
 			mes "[Hullaris]";
 			mes "Now, you should be";
@@ -1579,7 +1577,7 @@ comodo,187,153,4	script	Hullaris#cmd	701,{
 		mes "Love together~";
 		mes "Love! Love!";
 		mes "Love togeth-hm?";
-		if (sex) {
+		if (Sex) {
 			mes "Boy, you're ruining";
 			mes "my groove! Now beat it!";
 		}
@@ -1662,7 +1660,7 @@ comodo,187,153,4	script	Hullaris#cmd	701,{
 		mes "body. You feel a powerful, yet";
 		mes "quiet confidence of being able";
 		mes "to accomplish anything.^000000";
-		set dmdswrd_Q,14;
+		dmdswrd_Q = 14;
 		next;
 		mes "[Hullaris]";
 		mes "Hahahah! So what";
@@ -1709,7 +1707,7 @@ comodo,187,153,4	script	Hullaris#cmd	701,{
 	close;
 }
 
-beach_dun3,30,220,4	script	Nigirboran#cmd	704,{
+beach_dun3,30,220,4	script	Nigirboran#cmd	4_M_BIBI,{
 	switch (dmdswrd_Q) {
 	case 11:
 		mes "[Nigirboran]";
@@ -1742,7 +1740,7 @@ beach_dun3,30,220,4	script	Nigirboran#cmd	704,{
 		mes "have a fighting chance, right?";
 		mes "So come back when you're";
 		mes "ready for the testing~";
-		set dmdswrd_Q,12;
+		dmdswrd_Q = 12;
 		break;
 	case 12:
 		mes "[Nigirboran]";
@@ -1750,7 +1748,7 @@ beach_dun3,30,220,4	script	Nigirboran#cmd	704,{
 		mes "I'd expect nothing less of";
 		mes "a brave and daring adventurer.";
 		mes "Now hold still as I gauge your";
-		mes "body's internal energies and see^FFFFFF ^000000 if it can handle Comodo Cheese...";
+		mes "body's internal energies and see if it can handle Comodo Cheese...";
 		next;
 		mes "[Nigirboran]";
 		mes "Alright.";
@@ -1832,7 +1830,7 @@ beach_dun3,30,220,4	script	Nigirboran#cmd	704,{
 				mes "a token button to";
 				mes "present to Hullaris";
 				mes "from Nigirboran.^000000";
-				set dmdswrd_Q,13;
+				dmdswrd_Q = 13;
 				next;
 				mes "[Nigirboran]";
 				mes "Ah, I almost forgot";
@@ -1847,7 +1845,7 @@ beach_dun3,30,220,4	script	Nigirboran#cmd	704,{
 				mes "but I do know that you'll need";
 				mes "the ^3355FFAwakening Stone^000000, the ^3355FFBook^000000";
 				mes "^3355FFof the Lamb^000000 and the ^3355FFSlate of^000000";
-				mes "^3355FFMurniel^000000 to even have a chance^FFFFFF ^000000 of obtaining one of those swords.";
+				mes "^3355FFMurniel^000000 to even have a chance of obtaining one of those swords.";
 				next;
 				mes "[Nigirboran]";
 				mes "Let's see... After you";
@@ -1941,7 +1939,7 @@ beach_dun3,30,220,4	script	Nigirboran#cmd	704,{
 	close;
 }
 
-aldebaran,44,53,4	script	Meteurengut#cmd	64,{
+aldebaran,44,53,4	script	Meteurengut#cmd	1_M_WIZARD,{
 	switch (dmdswrd_Q) {
 	case 14:
 		mes "[Meteurengut]";
@@ -2012,7 +2010,7 @@ aldebaran,44,53,4	script	Meteurengut#cmd	64,{
 		mes "^3355FF1 Rough Elunium^000000,";
 		mes "^3355FF1 Emerald^000000, and";
 		mes "^3355FF1 Blue Gemstone^000000.";
-		set dmdswrd_Q,15;
+		dmdswrd_Q = 15;
 		break;
 	case 15:
 		if (countitem(717) > 0 && countitem(726) > 0 && countitem(721) > 0 && countitem(640) > 0 && countitem(757) > 0) {
@@ -2028,7 +2026,7 @@ aldebaran,44,53,4	script	Meteurengut#cmd	64,{
 			delitem 721,1; //Azure_Jewel
 			delitem 640,1; //Shining_Stone
 			delitem 757,1; //Elunium_Stone
-			set dmdswrd_Q,16;
+			dmdswrd_Q = 16;
 			next;
 			mes "[Meteurengut]";
 			mes "Would you please bring me";
@@ -2042,7 +2040,7 @@ aldebaran,44,53,4	script	Meteurengut#cmd	64,{
 			mes "sooner, but I need to prepare";
 			mes "all of these stones, and I need";
 			mes "the freshest Cobwebs I can get.";
-			mes "I'll make sure that these stones^FFFFFF ^000000 are ready when you return.";
+			mes "I'll make sure that these stones are ready when you return.";
 			close;
 		}
 		mes "[Meteurengut]";
@@ -2075,7 +2073,7 @@ aldebaran,44,53,4	script	Meteurengut#cmd	64,{
 			mes "*^3355FFClang Clang Clang!*";
 			mes "*Zaaaaaaaaaaaaaap*";
 			mes "*Ching tink t-t-t-tap*^000000";
-			set dmdswrd_Q,17;
+			dmdswrd_Q = 17;
 			next;
 			mes "[Meteurengut]";
 			mes "*Whew* It's finished.";
@@ -2101,14 +2099,14 @@ aldebaran,44,53,4	script	Meteurengut#cmd	64,{
 			mes "that artifact, and its secrets";
 			mes "are as well guarded as that of";
 			mes "the Slate of Muriniel. However,";
-			mes "I do know that a man in Morroc^FFFFFF ^000000 can create the Book of the Lamb...";
+			mes "I do know that a man in Morroc can create the Book of the Lamb...";
 			next;
 			mes "[Meteurengut]";
 			mes "If that man is still in";
 			mes "Morroc, then he will probably";
 			mes "recognize the subtle emanation";
 			mes "of the Awakening Stone and the";
-			mes "Slate of Muriniel from you. Best^FFFFFF ^000000 of luck to you, adventurer...";
+			mes "Slate of Muriniel from you. Best of luck to you, adventurer...";
 			close;
 		}
 		mes "[Meteurengut]";
@@ -2147,7 +2145,7 @@ aldebaran,44,53,4	script	Meteurengut#cmd	64,{
 		next;
 		mes "[Meteurengut]";
 		mes "I'm responsible for guarding";
-		mes "the secrets of its creation, but^FFFFFF ^000000 I must also share the power";
+		mes "the secrets of its creation, but I must also share the power";
 		mes "of the slate with those that";
 		mes "prove themselves worthy of it.";
 		next;
@@ -2163,7 +2161,7 @@ aldebaran,44,53,4	script	Meteurengut#cmd	64,{
 	close;
 }
 
-morocc,201,30,4	script	Zaka#cmd	99,{
+morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 	switch (dmdswrd_Q) {
 	case 17:
 		mes "[Zaka]";
@@ -2179,7 +2177,7 @@ morocc,201,30,4	script	Zaka#cmd	99,{
 		mes "those that seek to own one";
 		mes "of the doomed swords would";
 		mes "trouble themselve to obtain";
-		mes "those items. All that is left for^FFFFFF ^000000 you is the Book of the Lamb...";
+		mes "those items. All that is left for you is the Book of the Lamb...";
 		next;
 		mes "[Zaka]";
 		mes "I've been waiting for so";
@@ -2203,12 +2201,12 @@ morocc,201,30,4	script	Zaka#cmd	99,{
 		mes "Ah, yes. The first thing";
 		mes "I need is ^3355FF2 Snake Scales^000000,";
 		mes "so please bring those soon.";
-		set dmdswrd_Q,18;
+		dmdswrd_Q = 18;
 		break;
 	case 18:
 		if (countitem(926) > 1) {
 			delitem 926,2; //Scale_Of_Snakes
-			set dmdswrd_Q,19;
+			dmdswrd_Q = 19;
 			mes "[Zaka]";
 			mes "Ah, you've brought";
 			mes "the Snake Scales? Good,";
@@ -2251,7 +2249,7 @@ morocc,201,30,4	script	Zaka#cmd	99,{
 			mes "I finish this part of the process, okay? Wait, actually, I think";
 			mes "you can take your time...";
 			delitem 936,1; //Scales_Shell
-			set dmdswrd_Q,20;
+			dmdswrd_Q = 20;
 			close;
 		}
 		mes "[Zaka]";
@@ -2272,7 +2270,7 @@ morocc,201,30,4	script	Zaka#cmd	99,{
 			mes "I want to ask you to bring me:";
 			mes "^3355FF1 Stinky Scale^000000. Easy, right?";
 			delitem 954,1; //Shining_Scales
-			set dmdswrd_Q,21;
+			dmdswrd_Q = 21;
 			next;
 			mes "[Zaka]";
 			mes "The energy of a Stinky";
@@ -2305,7 +2303,7 @@ morocc,201,30,4	script	Zaka#cmd	99,{
 			mes "the creation of the";
 			mes "Book of the Lamb.^000000";
 			delitem 959,1; //Rotten_Scale
-			set dmdswrd_Q,22;
+			dmdswrd_Q = 22;
 			next;
 			mes "[Zaka]";
 			mes "What...?!";
@@ -2371,13 +2369,13 @@ morocc,201,30,4	script	Zaka#cmd	99,{
 		mes "Ogretooth, and Executioner";
 		mes "have all been sealed away.";
 		mes "Only a truly great adventurer";
-		mes "can release these doomed^FFFFFF ^000000 swords and actually wield them...";
+		mes "can release these doomed swords and actually wield them...";
 		break;
 	}
 	close;
 }
 
-comodo,232,87,4	script	Won#cmd	106,{
+comodo,232,87,4	script	Won#cmd	1_M_MOC_LORD,{
 	switch (dmdswrd_Q) {
 	case 22:
 		mes "[Won]";
@@ -2392,7 +2390,7 @@ comodo,232,87,4	script	Won#cmd	106,{
 		mes "presenses of the Book of the";
 		mes "Lamb, the Slate of Muriniel,";
 		mes "and one that has eaten of the";
-		mes "Awakening Stone are unmistakable. ^FFFFFF ^000000";
+		mes "Awakening Stone are unmistakable. ";
 		next;
 		mes "[Won]";
 		mes "Now, listen. I personally";
@@ -2415,7 +2413,7 @@ comodo,232,87,4	script	Won#cmd	106,{
 		mes "a look into your eyes...";
 		mes "Yeah, alright. You seem to";
 		mes "understand the value of the";
-		mes "Awakening Stone, Book of the^FFFFFF ^000000 Lamb, and the Slate of Muriniel.";
+		mes "Awakening Stone, Book of the Lamb, and the Slate of Muriniel.";
 		next;
 		mes "[Won]";
 		mes "Yeah, I can't sense any";
@@ -2433,7 +2431,7 @@ comodo,232,87,4	script	Won#cmd	106,{
 		next;
 		mes "^3355FFYou receive the";
 		mes "Stamp of Muriniel.^000000";
-		set dmdswrd_Q,23;
+		dmdswrd_Q = 23;
 		next;
 		mes "[Won]";
 		mes "Mysteltainn, Executioner,";
@@ -2498,7 +2496,7 @@ comodo,232,87,4	script	Won#cmd	106,{
 		mes "Comodo can afford to relax";
 		mes "so easily. I, for one, have";
 		mes "the responsibility of seeking";
-		mes "out those that are worthy of,^FFFFFF ^000000 well, I don't know if I can say...";
+		mes "out those that are worthy of, well, I don't know if I can say...";
 		next;
 		mes "[Won]";
 		mes "You just have to";

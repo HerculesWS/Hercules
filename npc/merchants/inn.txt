@@ -1,5 +1,5 @@
 //===== Hercules Script ======================================
-//= Inn NPCs
+//= Inn Npcs
 //===== By: ==================================================
 //= Darkchild (1.1)
 //= Playtester (1.2)
@@ -17,19 +17,19 @@
 //===== Additional Comments: =================================
 //= 1.1 Blind Effect By Kobra_k88 (Taken from his old script)
 //= I added it to all of them though [Darkchild]
-//= 1.1a Minor bug fixes and optimizations. Switched from @variables 
+//= 1.1a Minor bug fixes and optimizations. Switched from @variables
 //= to arguments.[kobra_k88]
 //= 1.2 Rewrote inn script [Playtester]
 //= 1.3 Added (finally) Rachel Inn Maid. Official warp
-//=	  and save points[erKURITA]
+//=     and save points[erKURITA]
 //= 1.4 Added Hugel inn [erKurita]
 //= 1.5 Added "end;" after warping the player. [L0ne_W0lf]
 //=	- Small corrections to the prontera Inns.
 //=	- Removed the Cancel dialog.
 //= 1.6 More fixes, changed progression of "Rest"ing.
 //=	- Corrected Morroc NPCs. [L0ne_W0lf]
-//= 1.7 Corrected Payon NPC. [L0ne_W0lf] 
-//= 1.8 Corrected Geffen NPC. [L0ne_W0lf] 
+//= 1.7 Corrected Payon NPC. [L0ne_W0lf]
+//= 1.8 Corrected Geffen NPC. [L0ne_W0lf]
 //= 1.9 Added the Inn for Al De baran. [L0ne_W0lf]
 //= 2.0 Added Inn for the Town of Veins. [L0ne_W0lf]
 //= 2.1 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
@@ -46,73 +46,73 @@
 //============================================================
 
 
-//======================== Prontera ===================================
+//========================Prontera ===================================
 // West Side Inn -------------------
-prt_in,244,135,2	script	Inn Employee#Sammy	53,{
+prt_in,244,135,2	script	Inn Employee#Sammy	1_M_INNKEEPER,{
 
 	callfunc "F_InnMaid","[Employee Sammy]","Nenkaras","prt_in",238,130;
 	warp "prt_in",247,104; end;
 }
 // East Side Inn ------------------
-prt_in,61,141,2	script	Inn Employee#Ahlma	53,{
+prt_in,61,141,2	script	Inn Employee#Ahlma	1_M_INNKEEPER,{
 
 	callfunc "F_InnMaid","[Employee Ahlma]","Nenkaras","prt_in",64,136;
 	warp "prt_in",60,166; end;
 }
 
-//======================== Alberta ====================================
-alberta_in,32,142,3	script	Inn Employee#Jennie	53,{
+//========================Alberta ====================================
+alberta_in,32,142,3	script	Inn Employee#Jennie	1_M_INNKEEPER,{
 
 	callfunc "F_InnMaid","[Employee Jennie]","'Fisherman Inn'!","alberta_in",26,142;
 	warp "alberta_in",18,188; end;
 }
 
-//====================== Geffen ======================================
-geffen_in,70,64,5	script	Inn Employee#Cena	53,{
+//======================Geffen ======================================
+geffen_in,70,64,5	script	Inn Employee#Cena	1_M_INNKEEPER,{
 
 	callfunc "F_InnMaid","[Employee Cena]","'Ifrit,' the only Inn in the city of Geffen.","geffen_in",70,59;
 	warp "geffen_in",31,31; end;
 }
 
-//======================= Payon ======================================
-payon_in01,132,62,5	script	Inn Employee#Ahee	53,{
+//=======================Payon ======================================
+payon_in01,132,62,5	script	Inn Employee#Ahee	1_M_INNKEEPER,{
 
 	callfunc "F_InnMaid","[Employee Ahee]","Payon Inn","payon_in01",136,61;
 	warp "payon_in01",132,11; end;
 }
 
-//======================== Morocc ====================================
+//========================Morocc ====================================
 // North East --------------------------
 /*
-morocc_in,147,141,3	script	Inn Employee#Hasna	53,{
+morocc_in,147,141,3	script	Inn Employee#Hasna	1_M_INNKEEPER,{
 
 	callfunc "F_InnMaid","[Employee Hasna]","Morroc Inn","morocc_in",142,140;
 	warp "morocc_in",173,135; end;
 }
 // South --------------------------------
-morocc_in,80,100,5	script	Inn Employee#Manar	53,{
+morocc_in,80,100,5	script	Inn Employee#Manar	1_M_INNKEEPER,{
 
 	callfunc "F_InnMaid","[Employee Manar]","Morroc Inn","morocc_in",78,95;
 	warp "morocc_in",79,123; end;
 }
 */
 
-//====================== Aldebaran ===================================
-aldeba_in,92,58,5	script	Inn Maid#Rilim	53,{
+//======================Aldebaran ===================================
+aldeba_in,92,58,5	script	Inn Maid#Rilim	1_M_INNKEEPER,{
 
 	callfunc "F_InnMaid","[Rilim]","Al De Baran Inn","aldeba_in",92,50;
 	warp "aldeba_in",92,112; end;
 }
 
-//======================== Rachel ====================================
-ra_in01,376,69,4	script	Inn Keeper#Annie	931,{
+//========================Rachel ====================================
+ra_in01,376,69,4	script	Inn Keeper#Annie	4_M_RACHMAN1,{
 
 	callfunc "F_InnMaid","[Annie]","Rachel Inn","ra_in01",375,58;
 	warp "ra_in01",384,128; end;
 }
 
-//====================== Lighthalzen =================================
-lhz_in02,230,284,4	script	Hotel Employee#01	86,{
+//======================Lighthalzen =================================
+lhz_in02,230,284,4	script	Hotel Employee#01	4_M_04,{
 	mes "[Hotel Employee]";
 	mes "Welcome to";
 	mes "the Royal Dragon,";
@@ -137,7 +137,7 @@ lhz_in02,230,284,4	script	Hotel Employee#01	86,{
 			mes "in order to check in.";
 			close;
 		}
-		set Zeny,Zeny - 5000;
+		Zeny -= 5000;
 		mes "[Hotel Employee]";
 		mes "Thank you~";
 		mes "I hope you enjoy";
@@ -156,15 +156,15 @@ lhz_in02,230,284,4	script	Hotel Employee#01	86,{
 	}
 }
 
-//======================== Hugel ====================================
-hu_in01,246,107,3	script	Inn Maid#Receptionist	53,{
+//========================Hugel ====================================
+hu_in01,246,107,3	script	Inn Maid#Receptionist	1_M_INNKEEPER,{
 
 	callfunc "F_InnMaid","[Receptionist]","Hugel Inn","hu_in01",263,95;
 	warp "hu_in01",267,5; end;
 }
 
-//======================== Veins ====================================
-ve_in,157,219,5	script	Inn Master#Receptionist	709,{
+//========================Veins ====================================
+ve_in,157,219,5	script	Inn Master#Receptionist	4_M_SEAMAN,{
 	mes "[Inn Master]";
 	mes "Good day~";
 	mes "Welcome to the";
@@ -190,7 +190,7 @@ ve_in,157,219,5	script	Inn Master#Receptionist	709,{
 		}
 		mes "Enjoy your stay~";
 		close2;
-		set Zeny,Zeny - 5000;
+		Zeny -= 5000;
 		percentheal 100,100;
 		warp "ve_in",184,228;
 		end;
@@ -201,7 +201,7 @@ ve_in,157,219,5	script	Inn Master#Receptionist	709,{
 	}
 }
 
-//======================= Inn Function ==============================
+//=======================Inn Function ==============================
 function	script	F_InnMaid	{
 	mes getarg(0);
 	mes "Welcome to";
@@ -227,7 +227,7 @@ function	script	F_InnMaid	{
 		mes "I hope you";
 		mes "enjoy your rest~";
 		close2;
-		set Zeny,Zeny - 5000;
+		Zeny -= 5000;
 		percentheal 100,100;
 		return;
 	case 3:

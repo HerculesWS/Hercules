@@ -1,18 +1,32 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
-#ifndef	_TRADE_H_
-#define	_TRADE_H_
+#ifndef MAP_TRADE_H
+#define MAP_TRADE_H
 
-//#include "map.h"
+//Max distance from traders to enable a trade to take place.
+//TODO: battle_config candidate?
+#define TRADE_DISTANCE 2
+
 struct map_session_data;
 
-void trade_traderequest(struct map_session_data *sd, struct map_session_data *target_sd);
-void trade_tradeack(struct map_session_data *sd,int type);
-void trade_tradeadditem(struct map_session_data *sd,short index,short amount);
-void trade_tradeaddzeny(struct map_session_data *sd,int amount);
-void trade_tradeok(struct map_session_data *sd);
-void trade_tradecancel(struct map_session_data *sd);
-void trade_tradecommit(struct map_session_data *sd);
+struct trade_interface {
+	void (*request) (struct map_session_data *sd, struct map_session_data *target_sd);
+	void (*ack) (struct map_session_data *sd,int type);
+	int (*check_impossible) (struct map_session_data *sd);
+	int (*check) (struct map_session_data *sd, struct map_session_data *tsd);
+	void (*additem) (struct map_session_data *sd,short index,short amount);
+	void (*addzeny) (struct map_session_data *sd,int amount);
+	void (*ok) (struct map_session_data *sd);
+	void (*cancel) (struct map_session_data *sd);
+	void (*commit) (struct map_session_data *sd);
+};
 
-#endif /* _TRADE_H_ */
+struct trade_interface *trade;
+
+#ifdef HERCULES_CORE
+void trade_defaults(void);
+#endif // HERCULES_CORE
+
+#endif /* MAP_TRADE_H */

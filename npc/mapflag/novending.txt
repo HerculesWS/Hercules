@@ -1,0 +1,14 @@
+//===== Hercules Script ======================================
+//= Mapflag: Disable vending.
+//===== By: ==================================================
+//= Epoque
+//===== Current Version: =====================================
+//= 1.0a
+//===== Description: =========================================
+//= Disables skill MC_VENDING on a map.
+//===== Additional Comments: =================================
+//= 1.0 - Initial script.
+//============================================================
+
+//prontera	mapflag	novending
+//prt_in	mapflag	novending

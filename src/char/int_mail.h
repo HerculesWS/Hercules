@@ -1,16 +1,33 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _INT_MAIL_SQL_H_
-#define _INT_MAIL_SQL_H_
+#ifndef CHAR_INT_MAIL_H
+#define CHAR_INT_MAIL_H
 
-int inter_mail_parse_frommap(int fd);
-void mail_sendmail(int send_id, const char* send_name, int dest_id, const char* dest_name, const char* title, const char* body, int zeny, struct item *item);
+#include "common/cbasetypes.h"
 
-int inter_mail_sql_init(void);
-void inter_mail_sql_final(void);
+struct item;
+struct mail_data;
+struct mail_message;
 
-int mail_savemessage(struct mail_message* msg);
-void mapif_Mail_new(struct mail_message *msg);
+#ifdef HERCULES_CORE
+void inter_mail_defaults(void);
+#endif // HERCULES_CORE
 
-#endif /* _INT_MAIL_SQL_H_ */
+/**
+ * inter_mail interface
+ **/
+struct inter_mail_interface {
+	int (*sql_init) (void);
+	void (*sql_final) (void);
+	int (*parse_frommap) (int fd);
+	int (*fromsql) (int char_id, struct mail_data* md);
+	int (*savemessage) (struct mail_message* msg);
+	bool (*loadmessage) (int mail_id, struct mail_message* msg);
+	bool (*DeleteAttach) (int mail_id);
+	void (*sendmail) (int send_id, const char* send_name, int dest_id, const char* dest_name, const char* title, const char* body, int zeny, struct item *item);
+};
+
+struct inter_mail_interface *inter_mail;
+
+#endif /* CHAR_INT_MAIL_H */

@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Einbroch Guides
 //===== By: ==================================================
 //= Muad_dib; L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.5
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Official Conversion]
 //= Guides for the City of Einbroch
@@ -18,7 +16,7 @@
 //= 1.5 Rescripted to official 10.3 standards. [L0ne_W0lf]
 //============================================================
 
-einbroch,72,202,4	script	Guide#ein::EinGuide	852,{
+einbroch,72,202,4	script	Guide#ein::EinGuide	4_M_EIN_SOLDIER,{
 	cutin "ein_soldier",2;
 	mes "[Einbroch Guide]";
 	mes "Welcome";
@@ -26,7 +24,7 @@ einbroch,72,202,4	script	Guide#ein::EinGuide	852,{
 	mes "the City of Steel.";
 	mes "Please ask me if you";
 	mes "have any questions.";
-	set .@loop1,1;
+	.@loop1 = 1;
 	while (.@loop1) {
 		next;
 		switch(select("City Guide.:Remove Marks from Mini-Map.:Notice.:Cancel.")) {
@@ -40,11 +38,11 @@ einbroch,72,202,4	script	Guide#ein::EinGuide	852,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes.:No.") == 1) set .@compass_check,1;
+				if (select("Yes.:No.") == 1) .@compass_check = 1;
 			}
-			set .@loop2,1;
+			.@loop2 = 1;
 			while(.@loop2) {
-				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 				switch(select("^FF0000Airport^000000:Train Station:Factory:Plaza:Hotel:Weapon Shop:Laboratory:Blacksmith Guild:Einbroch Tower:Cancel")) {
 				case 1:
@@ -141,7 +139,7 @@ einbroch,72,202,4	script	Guide#ein::EinGuide	852,{
 					mes "no longer wish to have the";
 					mes "location marks displayed";
 					mes "on your Mini-Map.";
-					set .@loop2,0;
+					.@loop2 = 0;
 				}
 			}
 			break;
@@ -155,7 +153,7 @@ einbroch,72,202,4	script	Guide#ein::EinGuide	852,{
 			viewpoint 2,36,49,8,0x00FF00;
 			viewpoint 2,244,90,9,0x00FF00;
 			viewpoint 2,174,195,10,0xFFFF00;
-			set .@compass_check,0;
+			.@compass_check = 0;
 			mes "[Einbroch Guide]";
 			mes "Okay, the marks from";
 			mes "your Mini-Map have been";
@@ -196,17 +194,17 @@ einbroch,72,202,4	script	Guide#ein::EinGuide	852,{
 			mes "Oh, and please be";
 			mes "aware of the Smog Alerts.";
 			close2;
-			set .@loop1,0;
+			.@loop1 = 0;
 		}
 	}
 	cutin "ein_soldier",255;
 	end;
 }
 
-einbroch,155,43,4	duplicate(EinGuide)	Guide#2ein	852
-einbroch,162,317,4	duplicate(EinGuide)	Guide#3ein	852
+einbroch,155,43,4	duplicate(EinGuide)	Guide#2ein	4_M_EIN_SOLDIER
+einbroch,162,317,4	duplicate(EinGuide)	Guide#3ein	4_M_EIN_SOLDIER
 
-einbech,67,37,4	script	Guide#4ein::EinGuide2	852,{
+einbech,67,37,4	script	Guide#4ein::EinGuide2	4_M_EIN_SOLDIER,{
 	cutin "ein_soldier",2;
 	mes "[Einbech Guide]";
 	mes "Welcome to Einbech,";
@@ -214,7 +212,7 @@ einbech,67,37,4	script	Guide#4ein::EinGuide2	852,{
 	mes "here to assist tourists,";
 	mes "so if you have any questions,";
 	mes "please feel free to ask us.";
-	set .@loop1,1;
+	.@loop1 = 1;
 	while (.@loop1) {
 		next;
 		switch(select("City Guide.:Remove Marks from Mini-Map.:Notice.:Cancel.")) {
@@ -228,11 +226,11 @@ einbech,67,37,4	script	Guide#4ein::EinGuide2	852,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes.:No.") == 1) set .@compass_check,1;
+				if (select("Yes.:No.") == 1) .@compass_check = 1;
 			}
-			set .@loop2,1;
+			.@loop2 = 1;
 			while (.@loop2) {
-				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 				switch(select("Train Station:Tavern:Tool Shop:Swordman Guild:Mine:Cancel")) {
 				case 1:
@@ -292,7 +290,7 @@ einbech,67,37,4	script	Guide#4ein::EinGuide2	852,{
 					mes "no longer wish to have the";
 					mes "location marks displayed";
 					mes "on your Mini-Map.";
-					set .@loop2,0;
+					.@loop2 = 0;
 				}
 			}
 			break;
@@ -302,7 +300,7 @@ einbech,67,37,4	script	Guide#4ein::EinGuide2	852,{
 			viewpoint 2,176,136,4,0xFF00FF;
 			viewpoint 2,250,110,5,0xFF00FF;
 			viewpoint 2,138,251,6,0x00FF00;
-			set .@compass_check,0;
+			.@compass_check = 0;
 			mes "[Einbech Guide]";
 			mes "Okay, the marks from";
 			mes "your Mini-Map have been";
@@ -341,11 +339,11 @@ einbech,67,37,4	script	Guide#4ein::EinGuide2	852,{
 			mes "enjoy your travels";
 			mes "here in Einbech.";
 			close2;
-			set .@loop1,0;
+			.@loop1 = 0;
 		}
 	}
 	cutin "ein_soldier",255;
 	end;
 }
 
-einbech,48,214,4	duplicate(EinGuide2)	Guide#5ein	852
+einbech,48,214,4	duplicate(EinGuide2)	Guide#5ein	4_M_EIN_SOLDIER

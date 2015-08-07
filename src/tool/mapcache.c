@@ -1,27 +1,28 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#include "../common/cbasetypes.h"
-#include "../common/grfio.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
+#define HERCULES_CORE
 
-#include "../config/renewal.h"
+#include "common/cbasetypes.h"
+#include "common/core.h"
+#include "common/grfio.h"
+#include "common/malloc.h"
+#include "common/mmo.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+#include "common/utils.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
 #ifndef _WIN32
 #include <unistd.h>
 #endif
 
 #define NO_WATER 1000000
 
-char grf_list_file[256] = "conf/grf-files.txt";
-char map_list_file[256] = "db/map_index.txt";
-char map_cache_file[256];
+char *grf_list_file;
+char *map_list_file;
+char *map_cache_file;
 int rebuild = 0;
 
 FILE *map_cache_fp;
@@ -49,60 +50,10 @@ struct map_info {
 	int32 len;
 };
 
-
-/*************************************
-* Big-endian compatibility functions *
-*************************************/
-
-// Converts an int16 from current machine order to little-endian
-int16 MakeShortLE(int16 val)
-{
-	unsigned char buf[2];
-	buf[0] = (unsigned char)( (val & 0x00FF)         );
-	buf[1] = (unsigned char)( (val & 0xFF00) >> 0x08 );
-	return *((int16*)buf);
-}
-
-// Converts an int32 from current machine order to little-endian
-int32 MakeLongLE(int32 val)
-{
-	unsigned char buf[4];
-	buf[0] = (unsigned char)( (val & 0x000000FF)         );
-	buf[1] = (unsigned char)( (val & 0x0000FF00) >> 0x08 );
-	buf[2] = (unsigned char)( (val & 0x00FF0000) >> 0x10 );
-	buf[3] = (unsigned char)( (val & 0xFF000000) >> 0x18 );
-	return *((int32*)buf);
-}
-
-// Reads an uint16 in little-endian from the buffer
-uint16 GetUShort(const unsigned char* buf)
-{
-	return	 ( ((uint16)(buf[0]))         )
-			|( ((uint16)(buf[1])) << 0x08 );
-}
-
-// Reads an uint32 in little-endian from the buffer
-uint32 GetULong(const unsigned char* buf)
-{
-	return	 ( ((uint32)(buf[0]))         )
-			|( ((uint32)(buf[1])) << 0x08 )
-			|( ((uint32)(buf[2])) << 0x10 )
-			|( ((uint32)(buf[3])) << 0x18 );
-}
-
-// Reads an int32 in little-endian from the buffer
-int32 GetLong(const unsigned char* buf)
-{
-	return (int32)GetULong(buf);
-}
-
-// Reads a float (32 bits) from the buffer
-float GetFloat(const unsigned char* buf)
-{
-	uint32 val = GetULong(buf);
-	return *((float*)(void*)&val);
-}
-
+ /*************************************
+ * Big-endian compatibility functions *
+ * Moved to utils.h                   *
+ *************************************/
 
 // Reads a map from GRF's GAT and RSW files
 int read_map(char *name, struct map_data *m)
@@ -111,8 +62,6 @@ int read_map(char *name, struct map_data *m)
 	unsigned char *gat, *rsw;
 	int water_height;
 	size_t xy, off, num_cells;
-	float height;
-	uint32 type;
 
 	// Open map GAT
 	sprintf(filename,"data\\%s.gat", name);
@@ -143,12 +92,11 @@ int read_map(char *name, struct map_data *m)
 
 	// Set cell properties
 	off = 14;
-	for (xy = 0; xy < num_cells; xy++)
-	{
+	for (xy = 0; xy < num_cells; xy++) {
 		// Height of the bottom-left corner
-		height = GetFloat( gat + off      );
+		float height = GetFloat(gat + off);
 		// Type of cell
-		type   = GetULong( gat + off + 16 );
+		uint32 type = GetULong(gat + off + 16);
 		off += 20;
 
 		if (type == 0 && water_height != NO_WATER && height > water_height)
@@ -162,8 +110,14 @@ int read_map(char *name, struct map_data *m)
 	return 1;
 }
 
-// Adds a map to the cache
-void cache_map(char *name, struct map_data *m)
+/**
+ * Adds a map to the cache.
+ *
+ * @param name The map name.
+ * @param m    Map data to cache.
+ * @retval true if the map was successfully added to the cache.
+ */
+bool cache_map(char *name, struct map_data *m)
 {
 	struct map_info info;
 	unsigned long len;
@@ -176,15 +130,20 @@ void cache_map(char *name, struct map_data *m)
 	encode_zip(write_buf, &len, m->cells, m->xs*m->ys);
 
 	// Fill the map header
+	safestrncpy(info.name, name, MAP_NAME_LENGTH);
 	if (strlen(name) > MAP_NAME_LENGTH) // It does not hurt to warn that there are maps with name longer than allowed.
-		ShowWarning ("Map name '%s' size '%d' is too long. Truncating to '%d'.\n", name, strlen(name), MAP_NAME_LENGTH);
-	strncpy(info.name, name, MAP_NAME_LENGTH);
+		ShowWarning("Map name '%s' (length %"PRIuS") is too long. Truncating to '%s' (length %d).\n",
+		            name, strlen(name), info.name, MAP_NAME_LENGTH);
 	info.xs = MakeShortLE(m->xs);
 	info.ys = MakeShortLE(m->ys);
-	info.len = MakeLongLE(len);
+	info.len = MakeLongLE((uint32)len);
 
 	// Append map header then compressed cells at the end of the file
-	fseek(map_cache_fp, header.file_size, SEEK_SET);
+	if (fseek(map_cache_fp, header.file_size, SEEK_SET) != 0) {
+		aFree(write_buf);
+		aFree(m->cells);
+		return false;
+	}
 	fwrite(&info, sizeof(struct map_info), 1, map_cache_fp);
 	fwrite(write_buf, 1, len, map_cache_fp);
 	header.file_size += sizeof(struct map_info) + len;
@@ -193,26 +152,34 @@ void cache_map(char *name, struct map_data *m)
 	aFree(write_buf);
 	aFree(m->cells);
 
-	return;
+	return true;
 }
 
-// Checks whether a map is already is the cache
-int find_map(char *name)
+/**
+ * Checks whether a map is already is the cache.
+ *
+ * @param name The map name.
+ * @retval true if the map is already cached.
+ */
+bool find_map(char *name)
 {
 	int i;
 	struct map_info info;
 
-	fseek(map_cache_fp, sizeof(struct main_header), SEEK_SET);
+	if (fseek(map_cache_fp, sizeof(struct main_header), SEEK_SET) != 0)
+		return false;
 
-	for(i = 0; i < header.map_count; i++) {
-		if(fread(&info, sizeof(info), 1, map_cache_fp) != 1) printf("An error as occured in fread while reading map_cache\n");
-		if(strcmp(name, info.name) == 0) // Map found
-			return 1;
-		else // Map not found, jump to the beginning of the next map info header
-			fseek(map_cache_fp, GetLong((unsigned char *)&(info.len)), SEEK_CUR);
+	for (i = 0; i < header.map_count; i++) {
+		if (fread(&info, sizeof(info), 1, map_cache_fp) != 1)
+			printf("An error as occured in fread while reading map_cache\n");
+		if (strcmp(name, info.name) == 0) // Map found
+			return true;
+		// Map not found, jump to the beginning of the next map info header
+		if (fseek(map_cache_fp, GetLong((unsigned char *)&(info.len)), SEEK_CUR) != 0)
+			return false;
 	}
 
-	return 0;
+	return false;
 }
 
 // Cuts the extension from a map name
@@ -229,25 +196,67 @@ char *remove_extension(char *mapname)
 	return mapname;
 }
 
-// Processes command-line arguments
-void process_args(int argc, char *argv[])
+/**
+ * --grf-list handler
+ *
+ * Overrides the default grf list filename.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(grflist)
 {
-	int i;
+	aFree(grf_list_file);
+	grf_list_file = aStrdup(params);
+	return true;
+}
 
-	for(i = 0; i < argc; i++) {
-		if(strcmp(argv[i], "-grf") == 0) {
-			if(++i < argc)
-				strcpy(grf_list_file, argv[i]);
-		} else if(strcmp(argv[i], "-list") == 0) {
-			if(++i < argc)
-				strcpy(map_list_file, argv[i]);
-		} else if(strcmp(argv[i], "-cache") == 0) {
-			if(++i < argc)
-				strcpy(map_cache_file, argv[i]);
-		} else if(strcmp(argv[i], "-rebuild") == 0)
-			rebuild = 1;
-	}
+/**
+ * --map-list handler
+ *
+ * Overrides the default map list filename.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(maplist)
+{
+	aFree(map_list_file);
+	map_list_file = aStrdup(params);
+	return true;
+}
 
+/**
+ * --map-cache handler
+ *
+ * Overrides the default map cache filename.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(mapcache)
+{
+	aFree(map_cache_file);
+	map_cache_file = aStrdup(params);
+	return true;
+}
+
+/**
+ * --rebuild handler
+ *
+ * Forces a rebuild of the mapcache, rather than only adding missing maps.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(rebuild)
+{
+	rebuild = 1;
+	return true;
+}
+
+/**
+ * Defines the local command line arguments
+ */
+void cmdline_args_init_local(void)
+{
+	CMDLINEARG_DEF2(grf-list, grflist, "Alternative grf list file", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(map-list, maplist, "Alternative map list file", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(map-cache, mapcache, "Alternative map cache file", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(rebuild, rebuild, "Forces a rebuild of the map cache, rather than only adding missing maps", CMDLINE_OPT_NORMAL);
+	
 }
 
 int do_init(int argc, char** argv)
@@ -257,17 +266,13 @@ int do_init(int argc, char** argv)
 	struct map_data map;
 	char name[MAP_NAME_LENGTH_EXT];
 
+	grf_list_file = aStrdup("conf/grf-files.txt");
+	map_list_file = aStrdup("db/map_index.txt");
 	/* setup pre-defined, #define-dependant */
-	sprintf(map_cache_file,"db/%s/map_cache.dat",
-#ifdef RENEWAL
-			"re"
-#else
-			"pre-re"
-#endif
-			);
+	map_cache_file = aStrdup("db/"DBPATH"map_cache.dat");
 
-	// Process the command-line arguments
-	process_args(argc, argv);
+	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
+	cmdline->exec(argc, argv, CMDLINE_OPT_NORMAL);
 
 	ShowStatus("Initializing grfio with %s\n", grf_list_file);
 	grfio_init(grf_list_file);
@@ -323,14 +328,15 @@ int do_init(int argc, char** argv)
 
 		name[MAP_NAME_LENGTH_EXT-1] = '\0';
 		remove_extension(name);
-		if(find_map(name))
+		if (find_map(name)) {
 			ShowInfo("Map '"CL_WHITE"%s"CL_RESET"' already in cache.\n", name);
-		else if(read_map(name, &map)) {
-			cache_map(name, &map);
-			ShowInfo("Map '"CL_WHITE"%s"CL_RESET"' successfully cached.\n", name);
-		} else
+		} else if(!read_map(name, &map)) {
 			ShowError("Map '"CL_WHITE"%s"CL_RESET"' not found!\n", name);
-
+		} else if (!cache_map(name, &map)) {
+			ShowError("Map '"CL_WHITE"%s"CL_RESET"' failed to cache (write error).\n", name);
+		} else {
+			ShowInfo("Map '"CL_WHITE"%s"CL_RESET"' successfully cached.\n", name);
+		}
 	}
 
 	ShowStatus("Closing map list: %s\n", map_list_file);
@@ -347,9 +353,14 @@ int do_init(int argc, char** argv)
 
 	ShowInfo("%d maps now in cache\n", header.map_count);
 
+	aFree(grf_list_file);
+	aFree(map_list_file);
+	aFree(map_cache_file);
+
 	return 0;
 }
 
-void do_final(void)
+int do_final(void)
 {
+	return EXIT_SUCCESS;
 }

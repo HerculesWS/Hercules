@@ -2,28 +2,17 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _PC_GROUPS_H_
-#define _PC_GROUPS_H_
+#ifndef MAP_PC_GROUPS_H
+#define MAP_PC_GROUPS_H
 
-#include "atcommand.h" // AtCommandType
+#include "common/cbasetypes.h"
+#include "common/conf.h"
+#include "common/db.h"
 
-extern int pc_group_max;
-
-bool pc_group_exists(int group_id);
-bool pc_group_can_use_command(int group_id, const char *command, AtCommandType type);
-bool pc_group_has_permission(int group_id, int permission);
-bool pc_group_should_log_commands(int group_id);
-const char* pc_group_id2name(int group_id);
-int pc_group_id2level(int group_id);
-void pc_group_pc_load(struct map_session_data *);
-
-void do_init_pc_groups(void);
-void do_final_pc_groups(void);
-void pc_groups_reload(void);
-
+/// PC permissions
 enum e_pc_permission {
-	PC_PERM_NONE                = 0,
-	PC_PERM_TRADE               = 0x000001,
+	PC_PERM_NONE                = 0,        //  #0
+	PC_PERM_TRADE               = 0x000001, //  #1
 	PC_PERM_PARTY               = 0x000002,
 	PC_PERM_ALL_SKILL           = 0x000004,
 	PC_PERM_USE_ALL_EQUIPMENT   = 0x000008,
@@ -32,7 +21,7 @@ enum e_pc_permission {
 	PC_PERM_NO_CHAT_KICK        = 0x000040,
 	PC_PERM_HIDE_SESSION        = 0x000080,
 	PC_PERM_WHO_DISPLAY_AID     = 0x000100,
-	PC_PERM_RECEIVE_HACK_INFO   = 0x000200,
+	PC_PERM_RECEIVE_HACK_INFO   = 0x000200, // #10
 	PC_PERM_WARP_ANYWHERE       = 0x000400,
 	PC_PERM_VIEW_HPMETER        = 0x000800,
 	PC_PERM_VIEW_EQUIPMENT      = 0x001000,
@@ -40,39 +29,77 @@ enum e_pc_permission {
 	PC_PERM_USE_CHANGEMAPTYPE   = 0x004000,
 	PC_PERM_USE_ALL_COMMANDS    = 0x008000,
 	PC_PERM_RECEIVE_REQUESTS    = 0x010000,
-	PC_PERM_SHOW_BOSS			= 0x020000,
-	PC_PERM_DISABLE_PVM			= 0x040000,
-	PC_PERM_DISABLE_PVP			= 0x080000,
+	PC_PERM_SHOW_BOSS           = 0x020000,
+	PC_PERM_DISABLE_PVM         = 0x040000,
+	PC_PERM_DISABLE_PVP         = 0x080000, // #20
 	PC_PERM_DISABLE_CMD_DEAD    = 0x100000,
-	PC_PERM_HCHSYS_ADMIN		= 0x200000,
+	PC_PERM_HCHSYS_ADMIN        = 0x200000,
+	PC_PERM_TRADE_BOUND         = 0x400000,
+	PC_PERM_DISABLE_PICK_UP     = 0x800000,
+	PC_PERM_DISABLE_STORE       = 0x1000000,
+	PC_PERM_DISABLE_EXP         = 0x2000000,
+	PC_PERM_DISABLE_SKILL_USAGE = 0x4000000,
 };
 
-static const struct {
-	const char *name;
+// Cached config settings for quick lookup
+struct GroupSettings {
+	unsigned int id; // groups.[].id
+	int level; // groups.[].level
+	char *name; // copy of groups.[].name
+	unsigned int e_permissions; // packed groups.[].permissions
+	bool log_commands; // groups.[].log_commands
+	int index; // internal index of the group (contiguous range starting at 0) [Ind]
+	/// Following are used/available only during config reading
+	config_setting_t *commands; // groups.[].commands
+	config_setting_t *permissions; // groups.[].permissions
+	config_setting_t *inherit; // groups.[].inherit
+	bool inheritance_done; // have all inheritance rules been evaluated?
+	config_setting_t *root; // groups.[]
+};
+
+typedef struct GroupSettings GroupSettings;
+
+struct pc_groups_permission_table {
+	char *name;
 	unsigned int permission;
-} pc_g_permission_name[] = {
-	{ "can_trade", PC_PERM_TRADE },
-	{ "can_party", PC_PERM_PARTY },
-	{ "all_skill", PC_PERM_ALL_SKILL },
-	{ "all_equipment", PC_PERM_USE_ALL_EQUIPMENT },
-	{ "skill_unconditional", PC_PERM_SKILL_UNCONDITIONAL },
-	{ "join_chat", PC_PERM_JOIN_ALL_CHAT },
-	{ "kick_chat", PC_PERM_NO_CHAT_KICK },
-	{ "hide_session", PC_PERM_HIDE_SESSION },
-	{ "who_display_aid", PC_PERM_WHO_DISPLAY_AID },
-	{ "hack_info", PC_PERM_RECEIVE_HACK_INFO },
-	{ "any_warp", PC_PERM_WARP_ANYWHERE },
-	{ "view_hpmeter", PC_PERM_VIEW_HPMETER },
-	{ "view_equipment", PC_PERM_VIEW_EQUIPMENT },
-	{ "use_check", PC_PERM_USE_CHECK },
-	{ "use_changemaptype", PC_PERM_USE_CHANGEMAPTYPE },
-	{ "all_commands", PC_PERM_USE_ALL_COMMANDS },
-	{ "receive_requests", PC_PERM_RECEIVE_REQUESTS },
-	{ "show_bossmobs", PC_PERM_SHOW_BOSS },
-	{ "disable_pvm", PC_PERM_DISABLE_PVM },
-	{ "disable_pvp", PC_PERM_DISABLE_PVP },
-	{ "disable_commands_when_dead", PC_PERM_DISABLE_CMD_DEAD },
-	{ "hchsys_admin", PC_PERM_HCHSYS_ADMIN },
 };
 
-#endif // _PC_GROUPS_H_
+/* used by plugins to list permissions */
+struct pc_groups_new_permission {
+	unsigned int pID;/* plugin identity (for the future unload during runtime support) */
+	char *name;/* aStrdup' of the permission name */
+	unsigned int *mask;/* pointer to the plugin val that will store the value of the mask */
+};
+
+struct pc_groups_interface {
+	/* */
+	DBMap* db; // id -> GroupSettings
+	DBMap* name_db; // name -> GroupSettings
+	/* */
+	struct pc_groups_permission_table *permissions;
+	unsigned char permission_count;
+	/* */
+	struct pc_groups_new_permission *HPMpermissions;
+	unsigned char HPMpermissions_count;
+	/* */
+	void (*init) (void);
+	void (*final) (void);
+	void (*reload) (void);
+	/* */
+	GroupSettings* (*get_dummy_group) (void);
+	bool (*exists) (int group_id);
+	GroupSettings* (*id2group) (int group_id);
+	bool (*has_permission) (GroupSettings *group, unsigned int permission);
+	bool (*should_log_commands) (GroupSettings *group);
+	const char* (*get_name) (GroupSettings *group);
+	int (*get_level) (GroupSettings *group);
+	int (*get_idx) (GroupSettings *group);
+};
+
+struct pc_groups_interface *pcg;
+
+#ifdef HERCULES_CORE
+void pc_groups_defaults(void);
+#endif // HERCULES_CORE
+
+#endif /* MAP_PC_GROUPS_H */

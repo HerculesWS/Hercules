@@ -1,0 +1,18 @@
+//===== Hercules Script ======================================
+//= Eclage Field Monster Spawn Script
+//===== By: ==================================================
+//= refis
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= jRO monster spawns, taken from Auriga.
+//===== Additional Comments: =================================
+//= 1.0 First version. [Euphy]
+//= 1.1 Aegis Conversion [Michieru]
+//============================================================
+
+//==================================================
+// ecl_fild01 - Blooming Flower Land
+//==================================================
+ecl_fild01,0,0,0,0	monster	Menblatt	2363,50,5000,0,0
+ecl_fild01,0,0,0,0	monster	Petal	2364,50,5000,0,0

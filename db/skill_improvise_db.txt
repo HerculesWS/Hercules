@@ -1,34 +1,28 @@
-// Improvise Database
+// Improvise DB.
 // Database for skills that can be summoned trough Randomize Spell/Improvised Song (Minstrel/Wanderer Skill).
+// Format: SkillID,Rate
 //
-// Structure of Database:
-// SkillID,Rate
+// 01. SkillID                  Skill ID to be casted by Randomize Spell.
+// 02. Rate                     Chance at which the skill is selected (1 = 0.01%, 10000 = 100%).
+//
+// NOTE: The skill is picked at random from the entire database and then tested for rate. If it
+//       does not succeed at that rate, an another skill is picked and tested. This continues
+//       until a skill succeeds.
+//
 
-// Mage Skills
-10,5000	// Sight
-11,5000	// Napalm Beat
-12,5000	// Safety Wall
-13,5000	// Soul Strike
-14,5000	// Cold Bolt
-15,5000	// Frost Diver
-16,5000	// Stone Curse
-17,5000	// Fire Ball
-18,5000	// Fire Wall
-19,5000	// Fire Bolt
-20,5000	// Lightning Bolt
-21,5000	// Thunderstorm
-
-// Wizard Skills
-80,2500	// Fire Pillar
-81,2500	// Sightrasher
-83,2500	// Meteor Storm
-84,2500	// Jupitel Thunder
-85,2500	// Lord of Vermilion
-86,2500	// Water Ball
-87,2500	// Ice Wall
-88,2500	// Frost Nova
-89,2500	// Storm Gust
-90,2500	// Earth Spike
-91,2500	// Heaven's Drive
-92,2500	// Quagmire
-93,2500	// Sense
+11,6000		// Napalm Beat
+12,4000		// Safety Wall
+13,6000		// Soul Strike
+14,6000		// Cold Bolt
+15,6000		// Frost Diver
+17,6000		// Fire Ball
+18,4000		// Fire Wall
+19,6000		// Fire Bolt
+20,6000		// Lightning Bolt
+21,4000		// Thunderstorm
+80,4000		// Fire Pillar
+83,4000		// Meteor Storm
+84,6000		// Jupitel Thunder
+85,4000		// Lord of Vermilion
+86,6000		// Water Ball
+89,4000		// Storm Gust

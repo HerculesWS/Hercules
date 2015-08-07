@@ -1,19 +1,17 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Renewal Thief Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Kisuka
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Job Change to Thief Class
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [Kisuka]
 //= 1.1 Added Baby Job compatibility [Streusel]
 //= 1.2 Rewrote bits [Euphy]
-//============================================================ 
-moc_prydb1,39,129,2	script	Thief Guide#thief	69,{
+//============================================================
+moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 	if (Upper == 1) {
 		if (ADVJOB == Job_Assassin_Cross || ADVJOB == Job_Stalker) {
 			if (Class == Job_Novice_High) {
@@ -42,7 +40,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	69,{
 				close;
 			}else{
 				mes "[Thief Guide]";
-				if (sex)
+				if (Sex)
 					mes "Hey, dude.";
 				else
 					mes "Hey, baby~";
@@ -50,7 +48,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	69,{
 			}
 		}else{
 			mes "[Thief Guide]";
-			if (sex)
+			if (Sex)
 				mes "Hey, dude.";
 			else
 				mes "Hey, baby.";
@@ -153,11 +151,11 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	69,{
 	mes "[Thief Guildsman]";
 	mes "Well, I'm not in charge of making you a Thief. I just accept applications, get it?";
 	mes "If you want to become a Thief, ask the guy next to me.";
-	set q_job_thief,1;
+	q_job_thief = 1;
 	close;
 }
 
-moc_prydb1,42,133,2	script	Thief Guildsman#thief	118,{
+moc_prydb1,42,133,2	script	Thief Guildsman#thief	2_M_THIEFMASTER,{
 	if(q_job_thief == 1) {
 		mes "[Thief Guildsman]";
 		mes "Alright. You must have passed the job interview, huh?";
@@ -168,7 +166,7 @@ moc_prydb1,42,133,2	script	Thief Guildsman#thief	118,{
 		mes "'"+strcharinfo(0)+".'";
 		mes "'For those who are ready, the moonlight shall open the way. Now you are fully ready, I now officially allow you to become a member of the Thief Guild.'";
 		callfunc "Job_Change",Job_Thief;
-		set q_job_thief,0;
+		q_job_thief = 0;
 		getitem 13041,1; // N_Main_Gauche
 		next;
 		mes "[Commander of Thief Guild]";

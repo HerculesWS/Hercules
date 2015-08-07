@@ -1,26 +1,32 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h"
-#include "../common/socket.h"
-#include "../common/sql.h"
-#include "../common/strlib.h"
-#include <string.h>
+#define HERCULES_CORE
+
+#include "loginlog.h"
+
+#include "common/cbasetypes.h"
+#include "common/mmo.h"
+#include "common/nullpo.h"
+#include "common/socket.h"
+#include "common/sql.h"
+#include "common/strlib.h"
+
 #include <stdlib.h> // exit
 
 // global sql settings (in ipban_sql.c)
 static char   global_db_hostname[32] = "127.0.0.1";
 static uint16 global_db_port = 3306;
 static char   global_db_username[32] = "ragnarok";
-static char   global_db_password[32] = "ragnarok";
+static char   global_db_password[100] = "ragnarok";
 static char   global_db_database[32] = "ragnarok";
 static char   global_codepage[32] = "";
 // local sql settings
 static char   log_db_hostname[32] = "";
 static uint16 log_db_port = 0;
 static char   log_db_username[32] = "";
-static char   log_db_password[32] = "";
+static char   log_db_password[100] = "";
 static char   log_db_database[32] = "";
 static char   log_codepage[32] = "";
 static char   log_login_db[256] = "loginlog";
@@ -29,7 +35,7 @@ static Sql* sql_handle = NULL;
 static bool enabled = false;
 
 
-// Returns the number of failed login attemps by the ip in the last minutes.
+// Returns the number of failed login attempts by the ip in the last minutes.
 unsigned long loginlog_failedattempts(uint32 ip, unsigned int minutes)
 {
 	unsigned long failures = 0;
@@ -37,16 +43,16 @@ unsigned long loginlog_failedattempts(uint32 ip, unsigned int minutes)
 	if( !enabled )
 		return 0;
 
-	if( SQL_ERROR == Sql_Query(sql_handle, "SELECT count(*) FROM `%s` WHERE `ip` = '%s' AND `rcode` = '1' AND `time` > NOW() - INTERVAL %d MINUTE",
+	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT count(*) FROM `%s` WHERE `ip` = '%s' AND `rcode` = '1' AND `time` > NOW() - INTERVAL %d MINUTE",
 		log_login_db, ip2str(ip,NULL), minutes) )// how many times failed account? in one ip.
 		Sql_ShowDebug(sql_handle);
 
-	if( SQL_SUCCESS == Sql_NextRow(sql_handle) )
+	if( SQL_SUCCESS == SQL->NextRow(sql_handle) )
 	{
 		char* data;
-		Sql_GetData(sql_handle, 0, &data, NULL);
+		SQL->GetData(sql_handle, 0, &data, NULL);
 		failures = strtoul(data, NULL, 10);
-		Sql_FreeResult(sql_handle);
+		SQL->FreeResult(sql_handle);
 	}
 	return failures;
 }
@@ -55,19 +61,22 @@ unsigned long loginlog_failedattempts(uint32 ip, unsigned int minutes)
 /*=============================================
  * Records an event in the login log
  *---------------------------------------------*/
+// TODO: add an enum of rcode values
 void login_log(uint32 ip, const char* username, int rcode, const char* message)
 {
 	char esc_username[NAME_LENGTH*2+1];
 	char esc_message[255*2+1];
 	int retcode;
 
+	nullpo_retv(username);
+	nullpo_retv(message);
 	if( !enabled )
 		return;
 
-	Sql_EscapeStringLen(sql_handle, esc_username, username, strnlen(username, NAME_LENGTH));
-	Sql_EscapeStringLen(sql_handle, esc_message, message, strnlen(message, 255));
+	SQL->EscapeStringLen(sql_handle, esc_username, username, strnlen(username, NAME_LENGTH));
+	SQL->EscapeStringLen(sql_handle, esc_message, message, strnlen(message, 255));
 
-	retcode = Sql_Query(sql_handle,
+	retcode = SQL->Query(sql_handle,
 		"INSERT INTO `%s`(`time`,`ip`,`user`,`rcode`,`log`) VALUES (NOW(), '%s', '%s', '%d', '%s')",
 		log_login_db, ip2str(ip,NULL), esc_username, rcode, esc_message);
 
@@ -103,16 +112,16 @@ bool loginlog_init(void)
 		codepage = global_codepage;
 	}
 
-	sql_handle = Sql_Malloc();
+	sql_handle = SQL->Malloc();
 
-	if( SQL_ERROR == Sql_Connect(sql_handle, username, password, hostname, port, database) )
+	if( SQL_ERROR == SQL->Connect(sql_handle, username, password, hostname, port, database) )
 	{
 		Sql_ShowDebug(sql_handle);
-		Sql_Free(sql_handle);
+		SQL->Free(sql_handle);
 		exit(EXIT_FAILURE);
 	}
 
-	if( codepage[0] != '\0' && SQL_ERROR == Sql_SetEncoding(sql_handle, codepage) )
+	if( codepage[0] != '\0' && SQL_ERROR == SQL->SetEncoding(sql_handle, codepage) )
 		Sql_ShowDebug(sql_handle);
 
 	enabled = true;
@@ -122,7 +131,7 @@ bool loginlog_init(void)
 
 bool loginlog_final(void)
 {
-	Sql_Free(sql_handle);
+	SQL->Free(sql_handle);
 	sql_handle = NULL;
 	return true;
 }
@@ -131,6 +140,8 @@ bool loginlog_config_read(const char* key, const char* value)
 {
 	const char* signature;
 
+	nullpo_ret(key);
+	nullpo_ret(value);
 	signature = "sql.";
 	if( strncmpi(key, signature, strlen(signature)) == 0 )
 	{
