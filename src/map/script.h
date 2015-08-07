@@ -637,7 +637,8 @@ struct script_interface {
 	void (*set_constant2) (const char *name, int value, bool isparameter);
 	bool (*get_constant) (const char* name, int* value);
 	void (*label_add)(int key, int pos);
-	void (*run) (struct script_code *rootscript,int pos,int rid,int oid);
+	void (*run) (struct script_code *rootscript, int pos, int rid, int oid);
+	void (*run_npc) (struct script_code *rootscript, int pos, int rid, int oid);
 	void (*run_main) (struct script_state *st);
 	int (*run_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*set_var) (struct map_session_data *sd, char *name, void *val);

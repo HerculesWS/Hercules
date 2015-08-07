@@ -4035,7 +4035,7 @@ int run_func(struct script_state *st)
 /*==========================================
  * script execution
  *------------------------------------------*/
-void run_script(struct script_code *rootscript,int pos,int rid,int oid) {
+void run_script(struct script_code *rootscript, int pos, int rid, int oid) {
 	struct script_state *st;
 
 	if( rootscript == NULL || pos < 0 )
@@ -20661,6 +20661,7 @@ void script_defaults(void) {
 	script->get_constant = script_get_constant;
 	script->label_add = script_label_add;
 	script->run = run_script;
+	script->run_npc = run_script;
 	script->run_main = run_script_main;
 	script->run_timer = run_script_timer;
 	script->set_var = set_var;

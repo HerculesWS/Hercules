@@ -396,7 +396,7 @@ void npc_event_doall_sub(void *key, void *data, va_list ap)
 			npc->event_sub(map->id2sd(rid), ev, buf);
 		}
 		else {
-			script->run(ev->nd->u.scr.script, ev->pos, rid, ev->nd->bl.id);
+			script->run_npc(ev->nd->u.scr.script, ev->pos, rid, ev->nd->bl.id);
 		}
 		(*c)++;
 	}
@@ -411,7 +411,7 @@ int npc_event_do(const char* name)
 	else {
 		struct event_data *ev = strdb_get(npc->ev_db, name);
 		if (ev) {
-			script->run(ev->nd->u.scr.script, ev->pos, 0, ev->nd->bl.id);
+			script->run_npc(ev->nd->u.scr.script, ev->pos, 0, ev->nd->bl.id);
 			return 1;
 		}
 	}
@@ -596,7 +596,7 @@ int npc_timerevent(int tid, int64 tick, int id, intptr_t data) {
 	}
 
 	// Run the script
-	script->run(nd->u.scr.script,te->pos,nd->u.scr.rid,nd->bl.id);
+	script->run_npc(nd->u.scr.script,te->pos,nd->u.scr.rid,nd->bl.id);
 
 	nd->u.scr.rid = old_rid; // Attached-rid should be restored anyway.
 	if( sd )
@@ -745,7 +745,7 @@ void npc_timerevent_quit(struct map_session_data* sd)
 			nd->u.scr.timer = ted->time;
 
 			//Execute label
-			script->run(nd->u.scr.script,ev->pos,sd->bl.id,nd->bl.id);
+			script->run_npc(nd->u.scr.script,ev->pos,sd->bl.id,nd->bl.id);
 
 			//Restore previous data.
 			nd->u.scr.rid = old_rid;
@@ -822,7 +822,7 @@ int npc_event_sub(struct map_session_data* sd, struct event_data* ev, const char
 		npc->event_dequeue(sd);
 		return 2;
 	}
-	script->run(ev->nd->u.scr.script,ev->pos,sd->bl.id,ev->nd->bl.id);
+	script->run_npc(ev->nd->u.scr.script,ev->pos,sd->bl.id,ev->nd->bl.id);
 	return 0;
 }
 
@@ -1067,7 +1067,7 @@ int npc_touch_areanpc2(struct mob_data *md)
 						break; // No OnTouchNPC Event
 					md->areanpc_id = map->list[m].npc[i]->bl.id;
 					id = md->bl.id; // Stores Unique ID
-					script->run(ev->nd->u.scr.script, ev->pos, md->bl.id, ev->nd->bl.id);
+					script->run_npc(ev->nd->u.scr.script, ev->pos, md->bl.id, ev->nd->bl.id);
 					if( map->id2md(id) == NULL ) return 1; // Not Warped, but killed
 					break;
 			}
@@ -1255,7 +1255,7 @@ int npc_click(struct map_session_data* sd, struct npc_data* nd)
 				if( !npc->trader_open(sd,nd) )
 					return 1;
 			} else
-				script->run(nd->u.scr.script,0,sd->bl.id,nd->bl.id);
+				script->run_npc(nd->u.scr.script,0,sd->bl.id,nd->bl.id);
 			break;
 		case TOMB:
 			npc->run_tomb(sd,nd);
@@ -1654,7 +1654,7 @@ void npc_trader_count_funds(struct npc_data *nd, struct map_session_data *sd) {
 	snprintf(evname, EVENT_NAME_LENGTH, "%s::OnCountFunds",nd->exname);
 	
 	if ( (ev = strdb_get(npc->ev_db, evname)) )
-		script->run(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
+		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
 	else
 		ShowError("npc_trader_count_funds: '%s' event '%s' not found, operation failed\n",nd->exname,evname);
 	
@@ -1682,7 +1682,7 @@ bool npc_trader_pay(struct npc_data *nd, struct map_session_data *sd, int price,
 		pc->setreg(sd,script->add_str("@price"),price);
 		pc->setreg(sd,script->add_str("@points"),points);
 		
-		script->run(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
+		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
 	} else
 		ShowError("npc_trader_pay: '%s' event '%s' not found, operation failed\n",nd->exname,evname);
 	
@@ -3037,7 +3037,7 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 		if( ( ev = (struct event_data*)strdb_get(npc->ev_db, evname) ) ) {
 
 			//Execute OnInit
-			script->run(nd->u.scr.script,ev->pos,0,nd->bl.id);
+			script->run_npc(nd->u.scr.script,ev->pos,0,nd->bl.id);
 
 		}
 	}
@@ -3208,7 +3208,7 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 		if( ( ev = (struct event_data*)strdb_get(npc->ev_db, evname) ) ) {
 
 			//Execute OnInit
-			script->run(nd->u.scr.script,ev->pos,0,nd->bl.id);
+			script->run_npc(nd->u.scr.script,ev->pos,0,nd->bl.id);
 
 		}
 	}
