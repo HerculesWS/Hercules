@@ -367,7 +367,7 @@ int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 	pd->state.skillbonus = 0;
 	
 	if( battle_config.pet_status_support )
-		script->run(pet->db[i].pet_script,0,sd->bl.id,0);
+		script->run_pet(pet->db[i].pet_script,0,sd->bl.id,0);
 	
 	if( pd->petDB ) {
 		if( pd->petDB->equip_script )

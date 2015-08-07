@@ -20662,6 +20662,7 @@ void script_defaults(void) {
 	script->label_add = script_label_add;
 	script->run = run_script;
 	script->run_npc = run_script;
+	script->run_pet = run_script;
 	script->run_main = run_script_main;
 	script->run_timer = run_script_timer;
 	script->set_var = set_var;
