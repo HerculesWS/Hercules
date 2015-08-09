@@ -29,8 +29,15 @@ foreach my $file (@files) {
 	next if $filepath[-1] eq "HPM.h"; # Skip the HPM core, plugins don't need it
 	my $filename = uc($filepath[-1]); $filename =~ s/-/_/g; $filename =~ s/\.[^.]*$//;
 	my $plugintypes = 'SERVER_TYPE_UNKNOWN';
-	$plugintypes = 'SERVER_TYPE_ALL' if $foldername eq 'COMMON';
-	$plugintypes = "SERVER_TYPE_${foldername}" if $foldername =~ /^(LOGIN|CHAR|MAP)/;
+	if ($foldername eq 'COMMON') {
+		if ($filename eq 'MAPINDEX') {
+			$plugintypes = 'SERVER_TYPE_CHAR|SERVER_TYPE_MAP';
+		} else {
+			$plugintypes = 'SERVER_TYPE_ALL';
+		}
+	} elsif ($foldername =~ /^(LOGIN|CHAR|MAP)/) {
+		$plugintypes = "SERVER_TYPE_${foldername}";
+	}
 	my $symboldata = {
 		name => $data->{compounddef}->{$filekey}->{compoundname}->[0],
 		type => $plugintypes,

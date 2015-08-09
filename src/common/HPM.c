@@ -698,7 +698,7 @@ bool HPM_DataCheck(struct s_HPMDataCheck *src, unsigned int size, int version, c
 	}
 
 	for (i = 0; i < size; i++) {
-		if (!(src[i].type|SERVER_TYPE))
+		if (!(src[i].type&SERVER_TYPE))
 			continue;
 
 		if (!strdb_exists(datacheck_db, src[i].name)) {

@@ -8,7 +8,6 @@
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 
-#if 0 // TODO (HPMDataCheck is disabled for the time being)
 #include "char/char.h"
 #include "char/geoip.h"
 #include "char/inter.h"
@@ -47,7 +46,6 @@
 
 // HPMDataCheck comes after all the other includes
 #include "common/HPMDataCheck.h"
-#endif
 
 bool HPM_char_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr) {
 	/* record address */
@@ -62,15 +60,9 @@ void HPM_char_plugin_load_sub(struct hplugin *plugin) {
 }
 
 void HPM_char_do_init(void) {
-#if 0 // TODO (HPMDataCheck is disabled for the time being)
 	HPM->datacheck_init(HPMDataCheck, HPMDataCheckLen, HPMDataCheckVer);
-#else
-	HPM->DataCheck = NULL;
-#endif
 }
 
 void HPM_char_do_final(void) {
-#if 0 // TODO (HPMDataCheck is disabled for the time being)
 	HPM->datacheck_final();
-#endif
 }
