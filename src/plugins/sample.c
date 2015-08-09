@@ -44,15 +44,15 @@ struct sample_data_struct {
 /* cmd 0xf3 - it is a client-server existent id, for clif_parse_GlobalMessage */
 /* in this sample we do nothing and simply redirect */
 void sample_packet0f3(int fd) {
-	struct map_session_data *sd = session[fd]->session_data;
+	struct map_session_data *sd = sockt->session[fd]->session_data;
 	struct sample_data_struct *data;
 
 	if( !sd ) return;/* socket didn't fully log-in? this packet shouldn't do anything then! */
 
 	ShowInfo("sample_packet0f3: Hello World! received 0xf3 for '%s', redirecting!\n",sd->status.name);
 
-	/* sample usage of appending data to a socket_data (session[]) entry */
-	if( !(data = getFromSession(session[fd],0)) ) {
+	/* sample usage of appending data to a socket_data (sockt->session[]) entry */
+	if( !(data = getFromSession(sockt->session[fd],0)) ) {
 		CREATE(data,struct sample_data_struct,1);
 
 		data->lastMSGPosition.map = sd->status.last_point.map;
@@ -60,13 +60,13 @@ void sample_packet0f3(int fd) {
 		data->lastMSGPosition.y = sd->status.last_point.y;
 		data->someNumber = rand()%777;
 
-		ShowInfo("Created Appended session[] data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
-		addToSession(session[fd],data,0,true);
+		ShowInfo("Created Appended sockt->session[] data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
+		addToSession(sockt->session[fd],data,0,true);
 	} else {
-		ShowInfo("Existent Appended session[] data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
+		ShowInfo("Existent Appended sockt->session[] data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
 		if( rand()%4 == 2 ) {
-			ShowInfo("Removing Appended session[] data\n");
-			removeFromSession(session[fd],0);
+			ShowInfo("Removing Appended sockt->session[] data\n");
+			removeFromSession(sockt->session[fd],0);
 		}
 	}
 
@@ -132,9 +132,6 @@ HPExport void plugin_init (void) {
 	clif = GET_SYMBOL("clif");
 	pc = GET_SYMBOL("pc");
 	strlib = GET_SYMBOL("strlib");
-
-	/* session[] */
-	session = GET_SYMBOL("session");
 
 	ShowInfo ("Server type is ");
 

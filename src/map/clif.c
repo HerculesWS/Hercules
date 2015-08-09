@@ -291,7 +291,7 @@ int clif_send_sub(struct block_list *bl, va_list ap) {
 	nullpo_ret(sd = (struct map_session_data *)bl);
 
 	fd = sd->fd;
-	if (!fd || session[fd] == NULL) //Don't send to disconnected clients.
+	if (!fd || sockt->session[fd] == NULL) //Don't send to disconnected clients.
 		return 0;
 
 	buf = va_arg(ap,void*);
@@ -427,7 +427,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 				for(i = 0; i < cd->users; i++) {
 					if (type == CHAT_WOS && cd->usersd[i] == sd)
 						continue;
-					if ((fd=cd->usersd[i]->fd) >0 && session[fd]) { // Added check to see if session exists [PoW]
+					if ((fd=cd->usersd[i]->fd) >0 && sockt->session[fd]) { // Added check to see if session exists [PoW]
 						WFIFOHEAD(fd,len);
 						memcpy(WFIFOP(fd,0), buf, len);
 						WFIFOSET(fd,len);
@@ -690,7 +690,7 @@ void clif_authrefuse(int fd, uint8 error_code)
 // TODO: type enum
 void clif_authfail_fd(int fd, int type)
 {
-	if (!fd || !session[fd] || session[fd]->func_parse != clif->parse) //clif_authfail should only be invoked on players!
+	if (!fd || !sockt->session[fd] || sockt->session[fd]->func_parse != clif->parse) //clif_authfail should only be invoked on players!
 		return;
 
 	WFIFOHEAD(fd, packet_len(0x81));
@@ -1710,7 +1710,7 @@ void clif_quitsave(int fd,struct map_session_data *sd) {
 	else if (sd->fd) {
 		//Disassociate session from player (session is deleted after this function was called)
 		//And set a timer to make him quit later.
-		session[sd->fd]->session_data = NULL;
+		sockt->session[sd->fd]->session_data = NULL;
 		sd->fd = 0;
 		timer->add(timer->gettick() + 10000, clif->delayquit, sd->bl.id, 0);
 	}
@@ -5682,7 +5682,7 @@ void clif_wis_message(int fd, const char* nick, const char* mes, size_t mes_len)
 ///     2 = ignored by target
 ///     3 = everyone ignored by target
 void clif_wis_end(int fd, int flag) {
-	struct map_session_data *sd = sockt->session_is_valid(fd) ? session[fd]->session_data : NULL;
+	struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
 	struct packet_wis_end p;
 
 	if( !sd )
@@ -8975,7 +8975,7 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 						* clif->cryptKey[1] ) + clif->cryptKey[2]) & 0xFFFFFFFF;
 	sd->parse_cmd_func = clif->parse_cmd;
 
-	session[fd]->session_data = sd;
+	sockt->session[fd]->session_data = sd;
 
 	pc->setnewpc(sd, account_id, char_id, login_id1, client_tick, sex, fd);
 
@@ -9980,7 +9980,7 @@ void clif_parse_Restart(int fd, struct map_session_data *sd) {
 			 && (!battle_config.prevent_logout || DIFF_TICK(timer->gettick(), sd->canlog_tick) > battle_config.prevent_logout)
 			) {
 				//Send to char-server for character selection.
-				chrif->charselectreq(sd, session[fd]->client_addr);
+				chrif->charselectreq(sd, sockt->session[fd]->client_addr);
 			} else {
 				clif->disconnect_ack(sd, 1);
 			}
@@ -18296,13 +18296,13 @@ int clif_parse(int fd) {
 		unsigned short (*parse_cmd_func)(int fd, struct map_session_data *sd);
 		// begin main client packet processing loop
 
-		sd = (TBL_PC *)session[fd]->session_data;
+		sd = (TBL_PC *)sockt->session[fd]->session_data;
 
-		if (session[fd]->flag.eof) {
+		if (sockt->session[fd]->flag.eof) {
 			if (sd) {
 				if (sd->state.autotrade) {
 					//Disassociate character from the socket connection.
-					session[fd]->session_data = NULL;
+					sockt->session[fd]->session_data = NULL;
 					sd->fd = 0;
 					ShowInfo("Character '"CL_WHITE"%s"CL_RESET"' logged off (using @autotrade).\n", sd->status.name);
 				} else
@@ -18316,7 +18316,7 @@ int clif_parse(int fd) {
 						map->quit(sd);
 					}
 			} else {
-				ShowInfo("Closed connection from '"CL_WHITE"%s"CL_RESET"'.\n", sockt->ip2str(session[fd]->client_addr, NULL));
+				ShowInfo("Closed connection from '"CL_WHITE"%s"CL_RESET"'.\n", sockt->ip2str(sockt->session[fd]->client_addr, NULL));
 			}
 			sockt->close(fd);
 			return 0;

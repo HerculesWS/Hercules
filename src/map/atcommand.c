@@ -83,7 +83,7 @@ const char* atcommand_msgsd(struct map_session_data *sd, int msg_number) {
 }
 
 const char* atcommand_msgfd(int fd, int msg_number) {
-	struct map_session_data *sd = sockt->session_is_valid(fd) ? session[fd]->session_data : NULL;
+	struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
 	if( !(msg_number >= 0 && msg_number < MAX_MSG) )
 		return "??";
 	if( !sd || sd->lang_id >= atcommand->max_message_table || !atcommand->msg_table[sd->lang_id][msg_number] )

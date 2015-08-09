@@ -206,7 +206,7 @@ void char_set_char_charselect(int account_id)
 		character->waiting_disconnect = INVALID_TIMER;
 	}
 
-	if (chr->login_fd > 0 && !session[chr->login_fd]->flag.eof)
+	if (chr->login_fd > 0 && !sockt->session[chr->login_fd]->flag.eof)
 		chr->set_account_online(account_id);
 }
 
@@ -246,7 +246,7 @@ void char_set_char_online(int map_id, int char_id, int account_id)
 	inter_guild->CharOnline(char_id, cp?cp->guild_id:-1);
 
 	//Notify login server
-	if (chr->login_fd > 0 && !session[chr->login_fd]->flag.eof)
+	if (chr->login_fd > 0 && !sockt->session[chr->login_fd]->flag.eof)
 		chr->set_account_online(account_id);
 }
 
@@ -292,7 +292,7 @@ void char_set_char_offline(int char_id, int account_id)
 	}
 
 	//Remove char if 1- Set all offline, or 2- character is no longer connected to char-server.
-	if (chr->login_fd > 0 && !session[chr->login_fd]->flag.eof && (char_id == -1 || character == NULL || character->fd == -1))
+	if (chr->login_fd > 0 && !sockt->session[chr->login_fd]->flag.eof && (char_id == -1 || character == NULL || character->fd == -1))
 		chr->set_account_offline(account_id);
 }
 
@@ -355,7 +355,7 @@ void char_set_all_offline(int id)
 		ShowNotice("Sending users of map-server %d offline.\n",id);
 	chr->online_char_db->foreach(chr->online_char_db,chr->db_kickoffline,id);
 
-	if (id >= 0 || chr->login_fd <= 0 || session[chr->login_fd]->flag.eof)
+	if (id >= 0 || chr->login_fd <= 0 || sockt->session[chr->login_fd]->flag.eof)
 		return;
 	chr->set_login_all_offline();
 }
@@ -2206,7 +2206,7 @@ void char_disconnect_player(int account_id)
 	struct char_session_data* sd;
 
 	// disconnect player if online on char-server
-	ARR_FIND( 0, sockt->fd_max, i, session[i] && (sd = (struct char_session_data*)session[i]->session_data) && sd->account_id == account_id );
+	ARR_FIND( 0, sockt->fd_max, i, sockt->session[i] && (sd = (struct char_session_data*)sockt->session[i]->session_data) && sd->account_id == account_id );
 	if( i < sockt->fd_max )
 		sockt->eof(i);
 }
@@ -2315,7 +2315,7 @@ void char_parse_fromlogin_auth_state(int fd)
 	unsigned int expiration_time = RFIFOL(fd, 29);
 	RFIFOSKIP(fd,33);
 
-	if (sockt->session_is_active(request_id) && (sd=(struct char_session_data*)session[request_id]->session_data) &&
+	if (sockt->session_is_active(request_id) && (sd=(struct char_session_data*)sockt->session[request_id]->session_data) &&
 		!sd->auth && sd->account_id == account_id && sd->login_id1 == login_id1 && sd->login_id2 == login_id2 && sd->sex == sex )
 	{
 		int client_fd = request_id;
@@ -2344,10 +2344,10 @@ void char_parse_fromlogin_auth_state(int fd)
 
 void char_parse_fromlogin_account_data(int fd)
 {
-	struct char_session_data* sd = (struct char_session_data*)session[fd]->session_data;
+	struct char_session_data* sd = (struct char_session_data*)sockt->session[fd]->session_data;
 	int i;
 	// find the authenticated session with this account id
-	ARR_FIND( 0, sockt->fd_max, i, session[i] && (sd = (struct char_session_data*)session[i]->session_data) && sd->auth && sd->account_id == RFIFOL(fd,2) );
+	ARR_FIND( 0, sockt->fd_max, i, sockt->session[i] && (sd = (struct char_session_data*)sockt->session[i]->session_data) && sd->auth && sd->account_id == RFIFOL(fd,2) );
 	if( i < sockt->fd_max ) {
 		memcpy(sd->email, RFIFOP(fd,6), 40);
 		sd->expiration_time = (time_t)RFIFOL(fd,46);
@@ -2388,8 +2388,8 @@ void char_parse_fromlogin_account_data(int fd)
 void char_parse_fromlogin_login_pong(int fd)
 {
 	RFIFOSKIP(fd,2);
-	if (session[fd])
-		session[fd]->flag.ping = 0;
+	if (sockt->session[fd])
+		sockt->session[fd]->flag.ping = 0;
 }
 
 void char_changesex(int account_id, int sex)
@@ -2532,7 +2532,7 @@ void char_parse_fromlogin_kick(int fd)
 		{// Manual kick from char server.
 			struct char_session_data *tsd;
 			int i;
-			ARR_FIND( 0, sockt->fd_max, i, session[i] && (tsd = (struct char_session_data*)session[i]->session_data) && tsd->account_id == aid );
+			ARR_FIND( 0, sockt->fd_max, i, sockt->session[i] && (tsd = (struct char_session_data*)sockt->session[i]->session_data) && tsd->account_id == aid );
 			if( i < sockt->fd_max )
 			{
 				chr->authfail_fd(i, 2);
@@ -2600,18 +2600,18 @@ int char_parse_fromlogin(int fd) {
 		return 0;
 	}
 
-	if( session[fd]->flag.eof ) {
+	if( sockt->session[fd]->flag.eof ) {
 		sockt->close(fd);
 		chr->login_fd = -1;
 		loginif->on_disconnect();
 		return 0;
-	} else if ( session[fd]->flag.ping ) {/* we've reached stall time */
-		if( DIFF_TICK(sockt->last_tick, session[fd]->rdata_tick) > (sockt->stall_time * 2) ) {/* we can't wait any longer */
+	} else if ( sockt->session[fd]->flag.ping ) {/* we've reached stall time */
+		if( DIFF_TICK(sockt->last_tick, sockt->session[fd]->rdata_tick) > (sockt->stall_time * 2) ) {/* we can't wait any longer */
 			sockt->eof(fd);
 			return 0;
-		} else if( session[fd]->flag.ping != 2 ) { /* we haven't sent ping out yet */
+		} else if( sockt->session[fd]->flag.ping != 2 ) { /* we haven't sent ping out yet */
 			chr->ping_login_server(fd);
-			session[fd]->flag.ping = 2;
+			sockt->session[fd]->flag.ping = 2;
 		}
 	}
 
@@ -3830,7 +3830,7 @@ void char_parse_frommap_request_stats_report(int fd)
 		return;/* connection not possible, we drop the report */
 	}
 
-	session[sfd]->flag.server = 1;/* to ensure we won't drop our own packet */
+	sockt->session[sfd]->flag.server = 1;/* to ensure we won't drop our own packet */
 	sockt->realloc_fifo(sfd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
 	WFIFOHEAD(sfd, RFIFOW(fd,2) );
@@ -3846,7 +3846,7 @@ void char_parse_frommap_request_stats_report(int fd)
 #else
 		sleep(1);
 #endif
-	} while( !session[sfd]->flag.eof && session[sfd]->wdata_size );
+	} while( !sockt->session[sfd]->flag.eof && sockt->session[sfd]->wdata_size );
 
 	sockt->close(sfd);
 
@@ -3897,7 +3897,7 @@ int char_parse_frommap(int fd)
 		sockt->close(fd);
 		return 0;
 	}
-	if( session[fd]->flag.eof ) {
+	if( sockt->session[fd]->flag.eof ) {
 		sockt->close(fd);
 		chr->server[id].fd = -1;
 		mapif->on_disconnect(id);
@@ -4226,7 +4226,7 @@ void char_delete2_accept_ack(int fd, int char_id, uint32 result)
 {// HC: <082a>.W <char id>.L <Msg:0-5>.L
 #if PACKETVER >= 20130000 /* not sure the exact date -- must refresh or client gets stuck */
 	if( result == 1 ) {
-		struct char_session_data* sd = (struct char_session_data*)session[fd]->session_data;
+		struct char_session_data* sd = (struct char_session_data*)sockt->session[fd]->session_data;
 		chr->mmo_char_send099d(fd, sd);
 	}
 #endif
@@ -4442,8 +4442,8 @@ void char_parse_char_connect(int fd, struct char_session_data* sd, uint32 ipl)
 		return;
 	}
 
-	CREATE(session[fd]->session_data, struct char_session_data, 1);
-	sd = (struct char_session_data*)session[fd]->session_data;
+	CREATE(sockt->session[fd]->session_data, struct char_session_data, 1);
+	sd = (struct char_session_data*)sockt->session[fd]->session_data;
 	sd->account_id = account_id;
 	sd->login_id1 = login_id1;
 	sd->login_id2 = login_id2;
@@ -4647,7 +4647,7 @@ void char_parse_char_select(int fd, struct char_session_data* sd, uint32 ipl)
 
 	//Send NEW auth packet [Kevin]
 	//FIXME: is this case even possible? [ultramage]
-	if ((map_fd = chr->server[i].fd) < 1 || session[map_fd] == NULL)
+	if ((map_fd = chr->server[i].fd) < 1 || sockt->session[map_fd] == NULL)
 	{
 		ShowError("chr->parse_char: Attempting to write to invalid session %d! Map Server #%d disconnected.\n", map_fd, i);
 		chr->server[i].fd = -1;
@@ -4975,8 +4975,8 @@ void char_parse_char_login_map_server(int fd, uint32 ipl)
 		chr->server[i].ip = ntohl(RFIFOL(fd,54));
 		chr->server[i].port = ntohs(RFIFOW(fd,58));
 		chr->server[i].users = 0;
-		session[fd]->func_parse = chr->parse_frommap;
-		session[fd]->flag.server = 1;
+		sockt->session[fd]->func_parse = chr->parse_frommap;
+		sockt->session[fd]->flag.server = 1;
 		sockt->realloc_fifo(fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 		chr->mapif_init(fd);
 	}
@@ -5061,15 +5061,15 @@ int char_parse_char(int fd)
 {
 	unsigned short cmd;
 	struct char_session_data* sd;
-	uint32 ipl = session[fd]->client_addr;
+	uint32 ipl = sockt->session[fd]->client_addr;
 
-	sd = (struct char_session_data*)session[fd]->session_data;
+	sd = (struct char_session_data*)sockt->session[fd]->session_data;
 
 	// disconnect any player if no login-server.
 	if(chr->login_fd < 0)
 		sockt->eof(fd);
 
-	if(session[fd]->flag.eof)
+	if(sockt->session[fd]->flag.eof)
 	{
 		if( sd != NULL && sd->auth ) {
 			// already authed client
@@ -5340,7 +5340,7 @@ int char_broadcast_user_count(int tid, int64 tick, int id, intptr_t data) {
 		return 0;
 	prev_users = users;
 
-	if( chr->login_fd > 0 && session[chr->login_fd] )
+	if( chr->login_fd > 0 && sockt->session[chr->login_fd] )
 	{
 		// send number of user to login server
 		loginif->send_users_count(users);
@@ -5371,7 +5371,7 @@ static int char_send_accounts_tologin_sub(DBKey key, DBData *data, va_list ap)
 }
 
 int char_send_accounts_tologin(int tid, int64 tick, int id, intptr_t data) {
-	if (chr->login_fd > 0 && session[chr->login_fd])
+	if (chr->login_fd > 0 && sockt->session[chr->login_fd])
 	{
 		// send account list to login server
 		int users = chr->online_char_db->size(chr->online_char_db);
@@ -5388,7 +5388,7 @@ int char_send_accounts_tologin(int tid, int64 tick, int id, intptr_t data) {
 }
 
 int char_check_connect_login_server(int tid, int64 tick, int id, intptr_t data) {
-	if (chr->login_fd > 0 && session[chr->login_fd] != NULL)
+	if (chr->login_fd > 0 && sockt->session[chr->login_fd] != NULL)
 		return 0;
 
 	ShowInfo("Attempt to connect to login-server...\n");
@@ -5398,8 +5398,8 @@ int char_check_connect_login_server(int tid, int64 tick, int id, intptr_t data) 
 		return 0;
 	}
 
-	session[chr->login_fd]->func_parse = chr->parse_fromlogin;
-	session[chr->login_fd]->flag.server = 1;
+	sockt->session[chr->login_fd]->func_parse = chr->parse_fromlogin;
+	sockt->session[chr->login_fd]->flag.server = 1;
 	sockt->realloc_fifo(chr->login_fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
 	loginif->connect_to_server();

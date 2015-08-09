@@ -124,8 +124,8 @@ bool chrif_auth_delete(int account_id, int char_id, enum sd_state state) {
 	if ( (node = chrif->auth_check(account_id, char_id, state) ) ) {
 		int fd = node->sd ? node->sd->fd : node->fd;
 
-		if ( session[fd] && session[fd]->session_data == node->sd )
-			session[fd]->session_data = NULL;
+		if ( sockt->session[fd] && sockt->session[fd]->session_data == node->sd )
+			sockt->session[fd]->session_data = NULL;
 
 		if ( node->sd ) {
 			if( node->sd->regs.vars )
@@ -177,8 +177,8 @@ bool chrif_auth_logout(TBL_PC* sd, enum sd_state state)
 {
 	if(sd->fd && state == ST_LOGOUT) { //Disassociate player, and free it after saving ack returns. [Skotlex]
 		//fd info must not be lost for ST_MAPCHANGE as a final packet needs to be sent to the player.
-		if ( session[sd->fd] )
-			session[sd->fd]->session_data = NULL;
+		if ( sockt->session[sd->fd] )
+			sockt->session[sd->fd]->session_data = NULL;
 		sd->fd = 0;
 	}
 
@@ -238,7 +238,7 @@ void chrif_setport(uint16 port) {
 
 // says whether the char-server is connected or not
 int chrif_isconnected(void) {
-	return (chrif->fd > 0 && session[chrif->fd] != NULL && chrif->state == 2);
+	return (chrif->fd > 0 && sockt->session[chrif->fd] != NULL && chrif->state == 2);
 }
 
 /*==========================================
@@ -384,7 +384,7 @@ bool chrif_changemapserver(struct map_session_data* sd, uint32 ip, uint16 port) 
 	WFIFOL(chrif->fd,24) = htonl(ip);
 	WFIFOW(chrif->fd,28) = htons(port);
 	WFIFOB(chrif->fd,30) = sd->status.sex;
-	WFIFOL(chrif->fd,31) = htonl(session[sd->fd]->client_addr);
+	WFIFOL(chrif->fd,31) = htonl(sockt->session[sd->fd]->client_addr);
 	WFIFOL(chrif->fd,35) = sd->group_id;
 	WFIFOSET(chrif->fd,39);
 
@@ -552,7 +552,7 @@ void chrif_authreq(struct map_session_data *sd, bool hstandalone) {
 	WFIFOL(chrif->fd,6) = sd->status.char_id;
 	WFIFOL(chrif->fd,10) = sd->login_id1;
 	WFIFOB(chrif->fd,14) = sd->status.sex;
-	WFIFOL(chrif->fd,15) = htonl(session[sd->fd]->client_addr);
+	WFIFOL(chrif->fd,15) = htonl(sockt->session[sd->fd]->client_addr);
 	WFIFOB(chrif->fd,19) = hstandalone ? 1 : 0;
 	WFIFOSET(chrif->fd,20);
 	chrif->sd_to_auth(sd, ST_LOGIN);
@@ -1308,7 +1308,7 @@ void chrif_keepalive(int fd) {
 	WFIFOSET(fd,2);
 }
 void chrif_keepalive_ack(int fd) {
-	session[fd]->flag.ping = 0;/* reset ping state, we received a packet */
+	sockt->session[fd]->flag.ping = 0;/* reset ping state, we received a packet */
 }
 void chrif_skillid2idx(int fd) {
 	int i, count = 0;
@@ -1344,18 +1344,18 @@ int chrif_parse(int fd) {
 		return 0;
 	}
 
-	if ( session[fd]->flag.eof ) {
+	if ( sockt->session[fd]->flag.eof ) {
 		sockt->close(fd);
 		chrif->fd = -1;
 		chrif->on_disconnect();
 		return 0;
-	} else if ( session[fd]->flag.ping ) {/* we've reached stall time */
-		if( DIFF_TICK(sockt->last_tick, session[fd]->rdata_tick) > (sockt->stall_time * 2) ) {/* we can't wait any longer */
+	} else if ( sockt->session[fd]->flag.ping ) {/* we've reached stall time */
+		if( DIFF_TICK(sockt->last_tick, sockt->session[fd]->rdata_tick) > (sockt->stall_time * 2) ) {/* we can't wait any longer */
 			sockt->eof(fd);
 			return 0;
-		} else if( session[fd]->flag.ping != 2 ) { /* we haven't sent ping out yet */
+		} else if( sockt->session[fd]->flag.ping != 2 ) { /* we haven't sent ping out yet */
 			chrif->keepalive(fd);
-			session[fd]->flag.ping = 2;
+			sockt->session[fd]->flag.ping = 2;
 		}
 	}
 
@@ -1475,7 +1475,7 @@ bool send_users_tochar(void) {
  *------------------------------------------*/
 int check_connect_char_server(int tid, int64 tick, int id, intptr_t data) {
 	static int displayed = 0;
-	if ( chrif->fd <= 0 || session[chrif->fd] == NULL ) {
+	if ( chrif->fd <= 0 || sockt->session[chrif->fd] == NULL ) {
 		if ( !displayed ) {
 			ShowStatus("Attempting to connect to Char Server. Please wait.\n");
 			displayed = 1;
@@ -1486,8 +1486,8 @@ int check_connect_char_server(int tid, int64 tick, int id, intptr_t data) {
 		if ((chrif->fd = sockt->make_connection(chrif->ip, chrif->port,NULL)) == -1) //Attempt to connect later. [Skotlex]
 			return 0;
 
-		session[chrif->fd]->func_parse = chrif->parse;
-		session[chrif->fd]->flag.server = 1;
+		sockt->session[chrif->fd]->func_parse = chrif->parse;
+		sockt->session[chrif->fd]->flag.server = 1;
 		sockt->realloc_fifo(chrif->fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
 		chrif->connect(chrif->fd);

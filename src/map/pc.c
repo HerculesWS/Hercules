@@ -45,7 +45,7 @@
 #include "common/nullpo.h"
 #include "common/random.h"
 #include "common/showmsg.h"
-#include "common/socket.h" // session[]
+#include "common/socket.h"
 #include "common/strlib.h" // safestrncpy()
 #include "common/sysinfo.h"
 #include "common/timer.h"
@@ -1007,7 +1007,7 @@ int pc_isequip(struct map_session_data *sd,int n)
 bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_time, int group_id, struct mmo_charstatus *st, bool changing_mapservers) {
 	int i;
 	int64 tick = timer->gettick();
-	uint32 ip = session[sd->fd]->client_addr;
+	uint32 ip = sockt->session[sd->fd]->client_addr;
 
 	sd->login_id2 = login_id2;
 

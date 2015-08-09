@@ -780,7 +780,7 @@ int login_parse_fromchar(int fd)
 		return 0;
 	}
 
-	if( session[fd]->flag.eof )
+	if( sockt->session[fd]->flag.eof )
 	{
 		sockt->close(fd);
 		server[id].fd = -1;
@@ -1033,14 +1033,14 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 
 	char ip[16];
 	nullpo_ret(sd);
-	sockt->ip2str(session[sd->fd]->client_addr, ip);
+	sockt->ip2str(sockt->session[sd->fd]->client_addr, ip);
 
 	// DNS Blacklist check
 	if( login_config.use_dnsbl ) {
 		char r_ip[16];
 		char ip_dnsbl[256];
 		char* dnsbl_serv;
-		uint8* sin_addr = (uint8*)&session[sd->fd]->client_addr;
+		uint8* sin_addr = (uint8*)&sockt->session[sd->fd]->client_addr;
 
 		sprintf(r_ip, "%u.%u.%u.%u", sin_addr[0], sin_addr[1], sin_addr[2], sin_addr[3]);
 
@@ -1190,7 +1190,7 @@ void login_auth_ok(struct login_session_data* sd)
 
 	nullpo_retv(sd);
 	fd = sd->fd;
-	ip = session[fd]->client_addr;
+	ip = sockt->session[fd]->client_addr;
 	if( runflag != LOGINSERVER_ST_RUNNING )
 	{
 		// players can only login while running
@@ -1312,7 +1312,7 @@ void login_auth_failed(struct login_session_data* sd, int result)
 	nullpo_retv(sd);
 
 	fd = sd->fd;
-	ip = session[fd]->client_addr;
+	ip = sockt->session[fd]->client_addr;
 	if (login_config.log_login)
 	{
 		const char* error;
@@ -1533,7 +1533,7 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 
 	ShowInfo("Connection request of the char-server '%s' @ %u.%u.%u.%u:%u (account: '%s', pass: '%s', ip: '%s')\n", server_name, CONVIP(server_ip), server_port, sd->userid, sd->passwd, ip);
 	sprintf(message, "charserver - %s@%u.%u.%u.%u:%u", server_name, CONVIP(server_ip), server_port);
-	login_log(session[fd]->client_addr, sd->userid, 100, message);
+	login_log(sockt->session[fd]->client_addr, sd->userid, 100, message);
 
 	result = login->mmo_auth(sd, true);
 	if (runflag == LOGINSERVER_ST_RUNNING &&
@@ -1553,8 +1553,8 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 		server[sd->account_id].type = type;
 		server[sd->account_id].new_ = new_;
 
-		session[fd]->func_parse = login->parse_fromchar;
-		session[fd]->flag.server = 1;
+		sockt->session[fd]->func_parse = login->parse_fromchar;
+		sockt->session[fd]->flag.server = 1;
 		sockt->realloc_fifo(fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
 		// send connection success
@@ -1572,14 +1572,14 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 //----------------------------------------------------------------------------------------
 int login_parse_login(int fd)
 {
-	struct login_session_data* sd = (struct login_session_data*)session[fd]->session_data;
+	struct login_session_data* sd = (struct login_session_data*)sockt->session[fd]->session_data;
 	int result;
 
 	char ip[16];
-	uint32 ipl = session[fd]->client_addr;
+	uint32 ipl = sockt->session[fd]->client_addr;
 	sockt->ip2str(ipl, ip);
 
-	if( session[fd]->flag.eof )
+	if( sockt->session[fd]->flag.eof )
 	{
 		ShowInfo("Closed connection from '"CL_WHITE"%s"CL_RESET"'.\n", ip);
 		sockt->close(fd);
@@ -1599,8 +1599,8 @@ int login_parse_login(int fd)
 		}
 
 		// create a session for this new connection
-		CREATE(session[fd]->session_data, struct login_session_data, 1);
-		sd = (struct login_session_data*)session[fd]->session_data;
+		CREATE(sockt->session[fd]->session_data, struct login_session_data, 1);
+		sd = (struct login_session_data*)sockt->session[fd]->session_data;
 		sd->fd = fd;
 	}
 

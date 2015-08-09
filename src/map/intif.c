@@ -45,7 +45,7 @@ struct intif_interface intif_s;
 
 int CheckForCharServer(void)
 {
-	return ((chrif->fd <= 0) || session[chrif->fd] == NULL || session[chrif->fd]->wdata == NULL);
+	return ((chrif->fd <= 0) || sockt->session[chrif->fd] == NULL || sockt->session[chrif->fd]->wdata == NULL);
 }
 
 // pet
@@ -2145,9 +2145,9 @@ void intif_request_accinfo( int u_fd, int aid, int group_lv, char* query ) {
 void intif_parse_MessageToFD(int fd) {
 	int u_fd = RFIFOL(fd,4);
 
-	if( session[u_fd] && session[u_fd]->session_data ) {
+	if( sockt->session[u_fd] && sockt->session[u_fd]->session_data ) {
 		int aid = RFIFOL(fd,8);
-		struct map_session_data * sd = session[u_fd]->session_data;
+		struct map_session_data * sd = sockt->session[u_fd]->session_data;
 		/* matching e.g. previous fd owner didn't dc during request or is still the same */
 		if( sd && sd->bl.id == aid ) {
 			char msg[512];

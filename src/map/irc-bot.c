@@ -42,8 +42,8 @@ int irc_connect_timer(int tid, int64 tick, int id, intptr_t data) {
 	ircbot->last_try = timer->gettick();
 
 	if ((ircbot->fd = sockt->make_connection(ircbot->ip, channel->config->irc_server_port, &opt)) > 0) {
-		session[ircbot->fd]->func_parse = ircbot->parse;
-		session[ircbot->fd]->flag.server = 1;
+		sockt->session[ircbot->fd]->func_parse = ircbot->parse;
+		sockt->session[ircbot->fd]->flag.server = 1;
 		timer->add(timer->gettick() + 3000, ircbot->identify_timer, 0, 0);
 		ircbot->isOn = true;
 	}
@@ -114,7 +114,7 @@ struct irc_func* irc_func_search(char* function_name) {
 int irc_parse(int fd) {
 	char *parse_string = NULL, *str_safe = NULL;
 
-	if (session[fd]->flag.eof) {
+	if (sockt->session[fd]->flag.eof) {
 		sockt->close(fd);
 		ircbot->fd = 0;
 		ircbot->isOn = false;
