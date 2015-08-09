@@ -4941,6 +4941,8 @@ struct {
 	struct HPMHookPoint *HP_status_calc_pet__post;
 	struct HPMHookPoint *HP_status_calc_pc__pre;
 	struct HPMHookPoint *HP_status_calc_pc__post;
+	struct HPMHookPoint *HP_status_calc_pc_additional_pre;
+	struct HPMHookPoint *HP_status_calc_pc_additional_post;
 	struct HPMHookPoint *HP_status_calc_homunculus__pre;
 	struct HPMHookPoint *HP_status_calc_homunculus__post;
 	struct HPMHookPoint *HP_status_calc_mercenary__pre;
@@ -10160,6 +10162,8 @@ struct {
 	int HP_status_calc_pet__post;
 	int HP_status_calc_pc__pre;
 	int HP_status_calc_pc__post;
+	int HP_status_calc_pc_additional_pre;
+	int HP_status_calc_pc_additional_post;
 	int HP_status_calc_homunculus__pre;
 	int HP_status_calc_homunculus__post;
 	int HP_status_calc_mercenary__pre;

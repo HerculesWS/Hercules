@@ -2508,6 +2508,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(status->calc_mob_, HP_status_calc_mob_) },
 	{ HP_POP(status->calc_pet_, HP_status_calc_pet_) },
 	{ HP_POP(status->calc_pc_, HP_status_calc_pc_) },
+	{ HP_POP(status->calc_pc_additional, HP_status_calc_pc_additional) },
 	{ HP_POP(status->calc_homunculus_, HP_status_calc_homunculus_) },
 	{ HP_POP(status->calc_mercenary_, HP_status_calc_mercenary_) },
 	{ HP_POP(status->calc_elemental_, HP_status_calc_elemental_) },

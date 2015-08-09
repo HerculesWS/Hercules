@@ -66453,6 +66453,32 @@ int HP_status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt opt) 
 	}
 	return retVal___;
 }
+void HP_status_calc_pc_additional(struct map_session_data *sd, enum e_status_calc_opt opt) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_status_calc_pc_additional_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, enum e_status_calc_opt *opt);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_pc_additional_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_status_calc_pc_additional_pre[hIndex].func;
+			preHookFunc(sd, &opt);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.status.calc_pc_additional(sd, opt);
+	}
+	if( HPMHooks.count.HP_status_calc_pc_additional_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, enum e_status_calc_opt *opt);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_pc_additional_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_status_calc_pc_additional_post[hIndex].func;
+			postHookFunc(sd, &opt);
+		}
+	}
+	return;
+}
 int HP_status_calc_homunculus_(struct homun_data *hd, enum e_status_calc_opt opt) {
 	int hIndex = 0;
 	int retVal___ = 0;
