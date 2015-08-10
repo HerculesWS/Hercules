@@ -12,7 +12,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(CYGWIN)
 #include <execinfo.h>
 #endif
 
@@ -28,7 +28,7 @@ struct nullpo_interface nullpo_s;
  * @param title      Message title to display (i.e. failed assertion or nullpo info)
  */
 void assert_report(const char *file, int line, const char *func, const char *targetname, const char *title) {
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(CYGWIN)
 	void *array[10];
 	int size;
 	char **strings;
@@ -42,7 +42,7 @@ void assert_report(const char *file, int line, const char *func, const char *tar
 
 	ShowError("--- %s --------------------------------------------\n", title);
 	ShowError("%s:%d: '%s' in function `%s'\n", file, line, targetname, func);
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(CYGWIN)
 	size = (int)backtrace(array, 10);
 	strings = backtrace_symbols(array, size);
 	for (i = 0; i < size; i++)
