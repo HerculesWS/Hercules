@@ -3752,7 +3752,7 @@ int inter_config_read(char *cfgName) {
 						"Please upgrade to the non-sql version as soon as possible. "
 						"Bug reports or pull requests concerning the SQL item database are no longer accepted.\n");
 				ShowInfo("Resuming in 10 seconds...\n");
-				sleep(10);
+				HSleep(10);
 			}
 		}
 		else if(strcmpi(w1,"use_sql_mob_db")==0) {
@@ -3764,7 +3764,7 @@ int inter_config_read(char *cfgName) {
 						"Please upgrade to the non-sql version as soon as possible. "
 						"Bug reports or pull requests concerning the SQL monster database are no longer accepted.\n");
 				ShowInfo("Resuming in 10 seconds...\n");
-				sleep(10);
+				HSleep(10);
 			}
 		}
 		else if(strcmpi(w1,"use_sql_mob_skill_db")==0) {
@@ -3776,7 +3776,7 @@ int inter_config_read(char *cfgName) {
 						"Please upgrade to the non-sql version as soon as possible. "
 						"Bug reports or pull requests concerning the SQL monster skill database are no longer accepted.\n");
 				ShowInfo("Resuming in 10 seconds...\n");
-				sleep(10);
+				HSleep(10);
 			}
 		}
 		else if(strcmpi(w1,"autotrade_merchants_db")==0)

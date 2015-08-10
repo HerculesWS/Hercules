@@ -51,6 +51,12 @@ size_t hread(void * ptr, size_t size, size_t count, FILE * stream);
 size_t hwrite(const void * ptr, size_t size, size_t count, FILE * stream);
 #endif // HERCULES_CORE
 
+#ifdef WIN32
+#define HSleep(x) Sleep(1000 * (x))
+#else // ! WIN32
+#define HSleep(x) sleep(x)
+#endif
+
 /* [Ind/Hercules] Caching */
 struct HCache_interface {
 	void (*init) (void);
