@@ -211,12 +211,13 @@ struct HPMi_interface {
 	bool (*addConf) (unsigned int pluginID, enum HPluginConfType type, char *name, void (*func) (const char *val));
 	/* pc group permission */
 	void (*addPCGPermission) (unsigned int pluginID, char *name, unsigned int *mask);
+
+	Sql *sql_handle;
 };
 #ifndef HERCULES_CORE
 HPExport struct HPMi_interface HPMi_s;
 HPExport struct HPMi_interface *HPMi;
 HPExport void *(*import_symbol) (char *name, unsigned int pID);
-HPExport Sql *mysql_handle;
 #define HPM_SYMBOL(n, s) ((s) = import_symbol((n),HPMi->pid))
 #endif // !HERCULES_CORE
 

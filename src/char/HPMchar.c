@@ -57,6 +57,7 @@ bool HPM_char_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTyp
 }
 
 void HPM_char_plugin_load_sub(struct hplugin *plugin) {
+	plugin->hpi->sql_handle = inter->sql_handle;
 }
 
 void HPM_char_do_init(void) {

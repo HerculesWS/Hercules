@@ -42,6 +42,7 @@ bool HPM_login_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTy
 }
 
 void HPM_login_plugin_load_sub(struct hplugin *plugin) {
+	plugin->hpi->sql_handle = account_db_sql_up(login->accounts);
 }
 
 void HPM_login_do_init(void) {

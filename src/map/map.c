@@ -5662,8 +5662,6 @@ void map_hp_symbols(void) {
 #endif
 	HPM->share(mapit,"mapit");
 	HPM->share(mapindex,"mapindex");
-	/* sql link */
-	HPM->share(map->mysql_handle,"sql_handle");
 	/* specific */
 	HPM->share(atcommand->create,"addCommand");
 	HPM->share(script->addScript,"addScript");

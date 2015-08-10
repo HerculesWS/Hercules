@@ -102,7 +102,6 @@ struct hplugin *hplugin_load(const char* filename) {
 	struct HPMi_interface **HPMi;
 	bool anyEvent = false;
 	void **import_symbol_ref;
-	Sql **sql_handle;
 	int *HPMDataCheckVer;
 	unsigned int *HPMDataCheckLen;
 	struct s_HPMDataCheck *HPMDataCheck;
@@ -145,13 +144,6 @@ struct hplugin *hplugin_load(const char* filename) {
 	}
 
 	*import_symbol_ref = HPM->import_symbol;
-
-	if( !( sql_handle = plugin_import(plugin->dll, "mysql_handle",Sql **) ) ) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'mysql_handle' for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
-		exit(EXIT_FAILURE);
-	}
-
-	*sql_handle = HPM->import_symbol("sql_handle",plugin->idx);
 
 	if( !( HPMi = plugin_import(plugin->dll, "HPMi",struct HPMi_interface **) ) ) {
 		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMi' for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
