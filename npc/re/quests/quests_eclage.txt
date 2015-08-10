@@ -87,7 +87,7 @@ dic_fild01,161,266,4	duplicate(Teleport Cat No.1#1)	Teleport Cat No.6#6	4_M_BOSS
 
 // Eclage's Entrance
 //============================================================
-ecl_fild01,97,322,0	script	#ep14_2Entrance	45,3,3,{
+ecl_fild01,97,322,0	script	#ep14_2Entrance	WARPNPC,3,3,{
 	end;
 	
 OnTouch:
@@ -2310,7 +2310,7 @@ ecl_in01,70,88,4	script	Sack Merchant#ep14_2	4_M_MERCAT1,{
 	close;
 }
 
-eclage,292,265,0	script	#ep14_2Yube Entrance	45,2,2,{
+eclage,292,265,0	script	#ep14_2Yube Entrance	WARPNPC,2,2,{
 	end;
 	
 OnTouch:
@@ -4136,7 +4136,7 @@ end;
 }
 
 
-eclage,200,272,4	script	Masione#eclbig	437,{
+eclage,200,272,4	script	Masione#eclbig	4_F_FAIRYKID2,{
 	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight)<2000) {
 		mes "- Stop Here!! -";
 		mes "- You have too many items. -";

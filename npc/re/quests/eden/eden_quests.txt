@@ -2150,7 +2150,7 @@ S_Select:
 	close;
 }
 
-moc_para01,179,44,3	script	Chef	820,{
+moc_para01,179,44,3	script	Chef	4_M_CHNCOOK,{
 	mes "[Chef]";
 	mes "What's up?";
 	mes "Do you want a Meal? Or do you have other business?";
