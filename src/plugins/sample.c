@@ -117,22 +117,15 @@ void parse_my_setting(const char *val) {
 }
 /* run when server starts */
 HPExport void plugin_init (void) {
-	char *server_type;
-	char *server_name;
+	ShowInfo("Server type is ");
 
-	/* core vars */
-	server_type = GET_SYMBOL("SERVER_TYPE"); // FIXME
-	server_name = GET_SYMBOL("SERVER_NAME"); // FIXME
-
-	ShowInfo ("Server type is ");
-
-	switch (*server_type) {
-		case SERVER_TYPE_LOGIN: printf ("Login Server\n"); break;
-		case SERVER_TYPE_CHAR: printf ("Char Server\n"); break;
+	switch (SERVER_TYPE) {
+		case SERVER_TYPE_LOGIN: printf("Login Server\n"); break;
+		case SERVER_TYPE_CHAR: printf("Char Server\n"); break;
 		case SERVER_TYPE_MAP: printf ("Map Server\n"); break;
 	}
 
-	ShowInfo ("I'm being run from the '%s' filename\n", server_name);
+	ShowInfo("I'm being run from the '%s' filename\n", SERVER_NAME);
 
 	/* addAtcommand("command-key",command-function) tells map server to call ACMD(sample) when "sample" command is used */
 	/* - it will print a warning when used on a non-map-server plugin */

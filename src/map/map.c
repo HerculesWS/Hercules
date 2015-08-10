@@ -1802,7 +1802,7 @@ int map_quit(struct map_session_data *sd) {
 	if( sd->bg_id && !sd->bg_queue.arena ) /* TODO: dump this chunk after bg_queue is fully enabled */
 		bg->team_leave(sd,BGTL_QUIT);
 
-	if (sd->state.autotrade && runflag != MAPSERVER_ST_SHUTDOWN && !channel->config->closing)
+	if (sd->state.autotrade && core->runflag != MAPSERVER_ST_SHUTDOWN && !channel->config->closing)
 		pc->autotrade_update(sd,PAUC_REMOVE);
 
 	skill->cooldown_save(sd);
@@ -5545,9 +5545,9 @@ void set_server_type(void) {
 /// Called when a terminate signal is received.
 void do_shutdown(void)
 {
-	if( runflag != MAPSERVER_ST_SHUTDOWN )
+	if( core->runflag != MAPSERVER_ST_SHUTDOWN )
 	{
-		runflag = MAPSERVER_ST_SHUTDOWN;
+		core->runflag = MAPSERVER_ST_SHUTDOWN;
 		ShowStatus("Shutting down...\n");
 		{
 			struct map_session_data* sd;
@@ -5723,7 +5723,7 @@ void map_load_defaults(void) {
  */
 static CMDLINEARG(runonce)
 {
-	runflag = CORE_ST_STOP;
+	core->runflag = CORE_ST_STOP;
 	return true;
 }
 /**
@@ -5831,7 +5831,7 @@ static CMDLINEARG(logconfig)
 static CMDLINEARG(scriptcheck)
 {
 	map->minimal = true;
-	runflag = CORE_ST_STOP;
+	core->runflag = CORE_ST_STOP;
 	map->scriptcheck = true;
 	return true;
 }
@@ -5861,7 +5861,7 @@ static CMDLINEARG(generatetranslations) {
 		ShowError("export-dialog: failed to open '%s' for writing\n",script->lang_export_file);
 	}
 	
-	runflag = CORE_ST_STOP;
+	core->runflag = CORE_ST_STOP;
 	return true;
 }
 
@@ -6060,9 +6060,9 @@ int do_init(int argc, char *argv[])
 	
 	ShowStatus("Server is '"CL_GREEN"ready"CL_RESET"' and listening on port '"CL_WHITE"%d"CL_RESET"'.\n\n", map->port);
 
-	if( runflag != CORE_ST_STOP ) {
-		shutdown_callback = map->do_shutdown;
-		runflag = MAPSERVER_ST_RUNNING;
+	if( core->runflag != CORE_ST_STOP ) {
+		core->shutdown_callback = map->do_shutdown;
+		core->runflag = MAPSERVER_ST_RUNNING;
 	}
 
 	map_cp_defaults();

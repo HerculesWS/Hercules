@@ -41,11 +41,8 @@
 /// Called when a terminate signal is received.
 void (*shutdown_callback)(void) = NULL;
 
-int runflag = CORE_ST_RUN;
-int arg_c = 0;
-char **arg_v = NULL;
-
-char *SERVER_NAME = NULL;
+struct core_interface core_s;
+struct core_interface *core = &core_s;
 
 #ifndef MINICORE // minimalist Core
 // Added by Gabuzomeu
@@ -90,7 +87,7 @@ static BOOL WINAPI console_handler(DWORD c_event) {
 			if( shutdown_callback != NULL )
 				shutdown_callback();
 			else
-				runflag = CORE_ST_STOP;// auto-shutdown
+				core->runflag = CORE_ST_STOP;// auto-shutdown
 			break;
 		default:
 			return FALSE;
@@ -118,7 +115,7 @@ static void sig_proc(int sn) {
 			if( shutdown_callback != NULL )
 				shutdown_callback();
 			else
-				runflag = CORE_ST_STOP;// auto-shutdown
+				core->runflag = CORE_ST_STOP;// auto-shutdown
 			break;
 		case SIGSEGV:
 		case SIGFPE:
@@ -389,8 +386,9 @@ int main (int argc, char **argv) {
 			SERVER_NAME = ++p1;
 			p2 = p1;
 		}
-		arg_c = argc;
-		arg_v = argv;
+		core->arg_c = argc;
+		core->arg_v = argv;
+		core->runflag = CORE_ST_RUN;
 	}
 	core_defaults();
 
@@ -442,7 +440,7 @@ int main (int argc, char **argv) {
 	do_init(argc,argv);
 
 	// Main runtime cycle
-	while (runflag != CORE_ST_STOP) {
+	while (core->runflag != CORE_ST_STOP) {
 		int next = timer->perform(timer->gettick_nocache());
 		sockt->perform(next);
 	}

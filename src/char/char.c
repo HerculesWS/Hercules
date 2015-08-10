@@ -3242,7 +3242,7 @@ void char_parse_frommap_char_select_req(int fd)
 	int32 group_id = RFIFOL(fd, 18);
 	RFIFOSKIP(fd,22);
 
-	if( runflag != CHARSERVER_ST_RUNNING )
+	if( core->runflag != CHARSERVER_ST_RUNNING )
 	{
 		chr->select_ack(fd, account_id, 0);
 	}
@@ -3297,7 +3297,7 @@ void char_parse_frommap_change_map_server(int fd)
 		char_data = (struct mmo_charstatus*)uidb_get(chr->char_db_,RFIFOL(fd,14));
 	}
 
-	if (runflag == CHARSERVER_ST_RUNNING && sockt->session_is_active(map_fd) && char_data) {
+	if (core->runflag == CHARSERVER_ST_RUNNING && sockt->session_is_active(map_fd) && char_data) {
 		//Send the map server the auth of this player.
 		struct online_char_data* data;
 		struct char_auth_node* node;
@@ -3778,7 +3778,7 @@ void char_parse_frommap_auth_request(int fd, int id)
 		cd = (struct mmo_charstatus*)uidb_get(chr->char_db_,char_id);
 	}
 
-	if( runflag == CHARSERVER_ST_RUNNING && cd && standalone ) {
+	if( core->runflag == CHARSERVER_ST_RUNNING && cd && standalone ) {
 		cd->sex = sex;
 
 		chr->map_auth_ok(fd, account_id, NULL, cd);
@@ -3786,7 +3786,7 @@ void char_parse_frommap_auth_request(int fd, int id)
 		return;
 	}
 
-	if( runflag == CHARSERVER_ST_RUNNING &&
+	if( core->runflag == CHARSERVER_ST_RUNNING &&
 		cd != NULL &&
 		node != NULL &&
 		node->account_id == account_id &&
@@ -4454,7 +4454,7 @@ void char_parse_char_connect(int fd, struct char_session_data* sd, uint32 ipl)
 	// send back account_id
 	chr->send_account_id(fd, account_id);
 
-	if( runflag != CHARSERVER_ST_RUNNING ) {
+	if( core->runflag != CHARSERVER_ST_RUNNING ) {
 		chr->auth_error(fd, 0);
 		return;
 	}
@@ -4962,7 +4962,7 @@ void char_parse_char_login_map_server(int fd, uint32 ipl)
 	l_pass[23] = '\0';
 
 	ARR_FIND( 0, ARRAYLENGTH(chr->server), i, chr->server[i].fd <= 0 );
-	if (runflag != CHARSERVER_ST_RUNNING ||
+	if (core->runflag != CHARSERVER_ST_RUNNING ||
 		i == ARRAYLENGTH(chr->server) ||
 		strcmp(l_user, chr->userid) != 0 ||
 		strcmp(l_pass, chr->passwd) != 0 ||
@@ -5792,17 +5792,17 @@ void set_server_type(void) {
 /// Called when a terminate signal is received.
 void do_shutdown(void)
 {
-	if( runflag != CHARSERVER_ST_SHUTDOWN )
+	if( core->runflag != CHARSERVER_ST_SHUTDOWN )
 	{
 		int id;
-		runflag = CHARSERVER_ST_SHUTDOWN;
+		core->runflag = CHARSERVER_ST_SHUTDOWN;
 		ShowStatus("Shutting down...\n");
 		// TODO proper shutdown procedure; wait for acks?, kick all characters, ... [FlavoJS]
 		for( id = 0; id < ARRAYLENGTH(chr->server); ++id )
 			mapif->server_reset(id);
 		loginif->check_shutdown();
 		sockt->flush_fifos();
-		runflag = CORE_ST_STOP;
+		core->runflag = CORE_ST_STOP;
 	}
 }
 
@@ -5976,10 +5976,10 @@ int do_init(int argc, char **argv) {
 #endif
 	ShowStatus("The char-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %d).\n\n", chr->port);
 
-	if( runflag != CORE_ST_STOP )
+	if( core->runflag != CORE_ST_STOP )
 	{
-		shutdown_callback = do_shutdown;
-		runflag = CHARSERVER_ST_RUNNING;
+		core->shutdown_callback = do_shutdown;
+		core->runflag = CHARSERVER_ST_RUNNING;
 	}
 
 	HPM->event(HPET_READY);

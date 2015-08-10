@@ -102,7 +102,7 @@ int console_parse_key_pressed(void)
  * Stops server
  **/
 CPCMD_C(exit,server) {
-	runflag = 0;
+	core->runflag = 0;
 }
 
 /**

@@ -57,27 +57,29 @@ struct cmdline_interface {
 	const char *(*arg_source) (struct CmdlineArgData *arg);
 };
 
+struct core_interface {
+	int arg_c;
+	char **arg_v;
+	/// @see E_CORE_ST
+	int runflag;
+	char *server_name;
+	enum server_types server_type;
+
+	/// Called when a terminate signal is received. (Ctrl+C pressed)
+	/// If NULL, runflag is set to CORE_ST_STOP instead.
+	void (*shutdown_callback)(void);
+};
+
 #define CMDLINEARG(x) bool cmdline_arg_ ## x (const char *name, const char *params)
+#define SERVER_NAME (core->server_name)
+#define SERVER_TYPE (core->server_type)
 
 #ifdef HERCULES_CORE
-extern int arg_c;
-extern char **arg_v;
-
-/// @see E_CORE_ST
-extern int runflag;
-extern char *SERVER_NAME;
-
-enum server_types SERVER_TYPE;
-
 extern void cmdline_args_init_local(void);
 extern int do_init(int,char**);
 extern void set_server_type(void);
 extern void do_abort(void);
 extern int do_final(void);
-
-/// Called when a terminate signal is received. (Ctrl+C pressed)
-/// If NULL, runflag is set to CORE_ST_STOP instead.
-extern void (*shutdown_callback)(void);
 
 /// Special plugin ID assigned to the Hercules core
 #define HPM_PID_CORE ((unsigned int)-1)
@@ -88,6 +90,7 @@ extern void (*shutdown_callback)(void);
 void cmdline_defaults(void);
 #endif // HERCULES_CORE
 
+HPShared struct core_interface *core;
 HPShared struct cmdline_interface *cmdline;
 
 #endif /* COMMON_CORE_H */

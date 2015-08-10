@@ -8945,7 +8945,7 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 	client_tick = RFIFOL(fd, packet_db[cmd].pos[3]);
 	sex         = RFIFOB(fd, packet_db[cmd].pos[4]);
 
-	if( runflag != MAPSERVER_ST_RUNNING ) { // not allowed
+	if( core->runflag != MAPSERVER_ST_RUNNING ) { // not allowed
 		clif->authfail_fd(fd,1);// server closed
 		return;
 	}

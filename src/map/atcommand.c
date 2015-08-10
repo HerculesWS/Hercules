@@ -10200,7 +10200,7 @@ bool atcommand_can_use2(struct map_session_data *sd, const char *command, AtComm
 bool atcommand_hp_add(char *name, AtCommandFunc func) {
 	/* if commands are added after group permissions are thrown in, they end up with no permissions */
 	/* so we restrict commands to be linked in during boot */
-	if( runflag == MAPSERVER_ST_RUNNING ) {
+	if( core->runflag == MAPSERVER_ST_RUNNING ) {
 		ShowDebug("atcommand_hp_add: Commands can't be added after server is ready, skipping '%s'...\n",name);
 		return false;
 	}
@@ -10232,7 +10232,7 @@ void atcommand_db_clear(void) {
 }
 
 void atcommand_doload(void) {
-	if( runflag >= MAPSERVER_ST_RUNNING )
+	if( core->runflag >= MAPSERVER_ST_RUNNING )
 		atcommand->cmd_db_clear();
 	if( atcommand->db == NULL )
 		atcommand->db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);

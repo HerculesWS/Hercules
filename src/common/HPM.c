@@ -752,11 +752,7 @@ void hplugins_share_defaults(void) {
 	HPM->share(hpm_add_arg,"addArg");
 	HPM->share(hplugins_addconf,"addConf");
 	/* core */
-	HPM->share(&runflag,"runflag");
-	HPM->share(arg_v,"arg_v");
-	HPM->share(&arg_c,"arg_c");
-	HPM->share(SERVER_NAME,"SERVER_NAME");
-	HPM->share(&SERVER_TYPE,"SERVER_TYPE");
+	HPM->share(core,"core");
 	HPM->share(HPMiMalloc, "iMalloc");
 	HPM->share(cmdline,"cmdline");
 	/* console */

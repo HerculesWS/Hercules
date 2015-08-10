@@ -12302,7 +12302,7 @@ int status_readdb(void)
 
 	// initialize databases to default
 	//
-	if( runflag == MAPSERVER_ST_RUNNING ) {//not necessary during boot
+	if( core->runflag == MAPSERVER_ST_RUNNING ) {//not necessary during boot
 		// reset job_db.conf data
 		memset(status->dbs->max_weight_base, 0, sizeof(status->dbs->max_weight_base));
 		memset(status->dbs->HP_table, 0, sizeof(status->dbs->HP_table));

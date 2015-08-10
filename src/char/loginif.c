@@ -39,9 +39,9 @@ void loginif_reset(void)
 /// If all the conditions are met, it stops the core loop.
 void loginif_check_shutdown(void)
 {
-	if( runflag != CHARSERVER_ST_SHUTDOWN )
+	if( core->runflag != CHARSERVER_ST_SHUTDOWN )
 		return;
-	runflag = CORE_ST_STOP;
+	core->runflag = CORE_ST_STOP;
 }
 
 

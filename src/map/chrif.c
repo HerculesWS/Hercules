@@ -103,11 +103,11 @@ void chrif_reset(void) {
 /// Releases the cookie when all characters are saved.
 /// If all the conditions are met, it stops the core loop.
 void chrif_check_shutdown(void) {
-	if( runflag != MAPSERVER_ST_SHUTDOWN )
+	if( core->runflag != MAPSERVER_ST_SHUTDOWN )
 		return;
 	if( db_size(chrif->auth_db) > 0 )
 		return;
-	runflag = CORE_ST_STOP;
+	core->runflag = CORE_ST_STOP;
 }
 
 struct auth_node* chrif_search(int account_id) {
@@ -608,7 +608,7 @@ void chrif_authok(int fd) {
 
 	sd = node->sd;
 
-	if( runflag == MAPSERVER_ST_RUNNING &&
+	if( core->runflag == MAPSERVER_ST_RUNNING &&
 		node->account_id == account_id &&
 		node->char_id == char_id &&
 		node->login_id1 == login_id1 )

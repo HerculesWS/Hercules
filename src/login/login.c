@@ -294,7 +294,7 @@ void login_fromchar_parse_auth(int fd, int id, const char *const ip)
 	RFIFOSKIP(fd,23);
 
 	node = (struct login_auth_node*)idb_get(login->auth_db, account_id);
-	if( runflag == LOGINSERVER_ST_RUNNING &&
+	if( core->runflag == LOGINSERVER_ST_RUNNING &&
 		node != NULL &&
 		node->account_id == account_id &&
 		node->login_id1  == login_id1 &&
@@ -1192,7 +1192,7 @@ void login_auth_ok(struct login_session_data* sd)
 	nullpo_retv(sd);
 	fd = sd->fd;
 	ip = sockt->session[fd]->client_addr;
-	if( runflag != LOGINSERVER_ST_RUNNING )
+	if( core->runflag != LOGINSERVER_ST_RUNNING )
 	{
 		// players can only login while running
 		login->connection_problem(fd, 1); // 01 = server closed
@@ -1537,7 +1537,7 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 	login_log(sockt->session[fd]->client_addr, sd->userid, 100, message);
 
 	result = login->mmo_auth(sd, true);
-	if (runflag == LOGINSERVER_ST_RUNNING &&
+	if (core->runflag == LOGINSERVER_ST_RUNNING &&
 		result == -1 &&
 		sd->sex == 'S' &&
 		sd->account_id >= 0 &&
@@ -1905,16 +1905,16 @@ void set_server_type(void) {
 /// Called when a terminate signal is received.
 void do_shutdown_login(void)
 {
-	if( runflag != LOGINSERVER_ST_SHUTDOWN )
+	if( core->runflag != LOGINSERVER_ST_SHUTDOWN )
 	{
 		int id;
-		runflag = LOGINSERVER_ST_SHUTDOWN;
+		core->runflag = LOGINSERVER_ST_SHUTDOWN;
 		ShowStatus("Shutting down...\n");
 		// TODO proper shutdown procedure; kick all characters, wait for acks, ...  [FlavioJS]
 		for( id = 0; id < ARRAYLENGTH(server); ++id )
 			chrif_server_reset(id);
 		sockt->flush_fifos();
-		runflag = CORE_ST_STOP;
+		core->runflag = CORE_ST_STOP;
 	}
 }
 
@@ -2033,9 +2033,9 @@ int do_init(int argc, char** argv)
 		exit(EXIT_FAILURE);
 	}
 
-	if( runflag != CORE_ST_STOP ) {
-		shutdown_callback = do_shutdown_login;
-		runflag = LOGINSERVER_ST_RUNNING;
+	if( core->runflag != CORE_ST_STOP ) {
+		core->shutdown_callback = do_shutdown_login;
+		core->runflag = LOGINSERVER_ST_RUNNING;
 	}
 
 	ShowStatus("The login-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %u).\n\n", login_config.login_port);

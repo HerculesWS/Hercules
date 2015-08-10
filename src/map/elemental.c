@@ -786,7 +786,7 @@ int read_elementaldb(void) {
 
 	sprintf(line, "%s/%s", map->db_path, "elemental_db.txt");
 	
-	if( runflag == MAPSERVER_ST_RUNNING ) //only necessary after we're up
+	if( core->runflag == MAPSERVER_ST_RUNNING ) //only necessary after we're up
 		memset(elemental->db,0,sizeof(elemental->db));
 
 	fp = fopen(line, "r");
