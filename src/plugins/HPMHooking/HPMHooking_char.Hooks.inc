@@ -4543,6 +4543,33 @@ void HP_console_display_title(void) {
 	}
 	return;
 }
+/* core */
+void HP_core_shutdown_callback(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_core_shutdown_callback_pre ) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_core_shutdown_callback_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_core_shutdown_callback_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.core.shutdown_callback();
+	}
+	if( HPMHooks.count.HP_core_shutdown_callback_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_core_shutdown_callback_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_core_shutdown_callback_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
 /* DB */
 DBOptions HP_DB_fix_options(DBType type, DBOptions options) {
 	int hIndex = 0;

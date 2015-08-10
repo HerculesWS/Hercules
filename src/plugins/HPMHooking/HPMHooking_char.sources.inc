@@ -8,6 +8,7 @@ memcpy(&HPMHooks.source.HCache, HCache, sizeof(struct HCache_interface));
 memcpy(&HPMHooks.source.chr, chr, sizeof(struct char_interface));
 memcpy(&HPMHooks.source.cmdline, cmdline, sizeof(struct cmdline_interface));
 memcpy(&HPMHooks.source.console, console, sizeof(struct console_interface));
+memcpy(&HPMHooks.source.core, core, sizeof(struct core_interface));
 memcpy(&HPMHooks.source.DB, DB, sizeof(struct db_interface));
 memcpy(&HPMHooks.source.geoip, geoip, sizeof(struct geoip_interface));
 memcpy(&HPMHooks.source.inter_auction, inter_auction, sizeof(struct inter_auction_interface));

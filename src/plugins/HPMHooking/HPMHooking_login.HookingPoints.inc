@@ -20,6 +20,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(console->init, HP_console_init) },
 	{ HP_POP(console->final, HP_console_final) },
 	{ HP_POP(console->display_title, HP_console_display_title) },
+/* core */
+	{ HP_POP(core->shutdown_callback, HP_core_shutdown_callback) },
 /* DB */
 	{ HP_POP(DB->fix_options, HP_DB_fix_options) },
 	{ HP_POP(DB->default_cmp, HP_DB_default_cmp) },

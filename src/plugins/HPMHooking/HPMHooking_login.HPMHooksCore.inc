@@ -29,6 +29,8 @@ struct {
 	struct HPMHookPoint *HP_console_final_post;
 	struct HPMHookPoint *HP_console_display_title_pre;
 	struct HPMHookPoint *HP_console_display_title_post;
+	struct HPMHookPoint *HP_core_shutdown_callback_pre;
+	struct HPMHookPoint *HP_core_shutdown_callback_post;
 	struct HPMHookPoint *HP_DB_fix_options_pre;
 	struct HPMHookPoint *HP_DB_fix_options_post;
 	struct HPMHookPoint *HP_DB_default_cmp_pre;
@@ -598,6 +600,8 @@ struct {
 	int HP_console_final_post;
 	int HP_console_display_title_pre;
 	int HP_console_display_title_post;
+	int HP_core_shutdown_callback_pre;
+	int HP_core_shutdown_callback_post;
 	int HP_DB_fix_options_pre;
 	int HP_DB_fix_options_post;
 	int HP_DB_default_cmp_pre;
@@ -1146,6 +1150,7 @@ struct {
 	struct HCache_interface HCache;
 	struct cmdline_interface cmdline;
 	struct console_interface console;
+	struct core_interface core;
 	struct db_interface DB;
 	struct libconfig_interface libconfig;
 	struct login_interface login;

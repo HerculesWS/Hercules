@@ -110,6 +110,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef COMMON_CORE_H
 		{ "CmdlineArgData", sizeof(struct CmdlineArgData), SERVER_TYPE_ALL },
 		{ "cmdline_interface", sizeof(struct cmdline_interface), SERVER_TYPE_ALL },
+		{ "core_interface", sizeof(struct core_interface), SERVER_TYPE_ALL },
 	#else
 		#define COMMON_CORE_H
 	#endif // COMMON_CORE_H

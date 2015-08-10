@@ -15,6 +15,7 @@ memcpy(&HPMHooks.source.chrif, chrif, sizeof(struct chrif_interface));
 memcpy(&HPMHooks.source.clif, clif, sizeof(struct clif_interface));
 memcpy(&HPMHooks.source.cmdline, cmdline, sizeof(struct cmdline_interface));
 memcpy(&HPMHooks.source.console, console, sizeof(struct console_interface));
+memcpy(&HPMHooks.source.core, core, sizeof(struct core_interface));
 memcpy(&HPMHooks.source.DB, DB, sizeof(struct db_interface));
 memcpy(&HPMHooks.source.duel, duel, sizeof(struct duel_interface));
 memcpy(&HPMHooks.source.elemental, elemental, sizeof(struct elemental_interface));
