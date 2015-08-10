@@ -14,6 +14,7 @@
 #include "common/db.h"
 #include "common/malloc.h"
 #include "common/mmo.h"
+#include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/strlib.h"
 #include "common/timer.h"
@@ -1228,6 +1229,21 @@ void socket_final(void)
 	aFree(session[0]);
 
 	aFree(session);
+
+	if (sockt->lan_subnet)
+		aFree(sockt->lan_subnet);
+	sockt->lan_subnet = NULL;
+	sockt->lan_subnet_count = 0;
+
+	if (sockt->allowed_ip)
+		aFree(sockt->allowed_ip);
+	sockt->allowed_ip = NULL;
+	sockt->allowed_ip_count = 0;
+
+	if (sockt->trusted_ip)
+		aFree(sockt->trusted_ip);
+	sockt->trusted_ip = NULL;
+	sockt->trusted_ip_count = 0;
 }
 
 /// Closes a socket.
@@ -1589,6 +1605,164 @@ void send_shortlist_do_sends()
 }
 #endif
 
+/**
+ * Checks whether the given IP comes from LAN or WAN.
+ *
+ * @param[in]  ip   IP address to check.
+ * @param[out] info Verbose output, if requested. Filled with the matching entry. Ignored if NULL.
+ * @retval 0 if it is a WAN IP.
+ * @return the appropriate LAN server address to send, if it is a LAN IP.
+ */
+uint32 socket_lan_subnet_check(uint32 ip, struct s_subnet *info)
+{
+	int i;
+	ARR_FIND(0, sockt->lan_subnet_count, i, (sockt->lan_subnet[i].ip & sockt->lan_subnet[i].mask) == (ip & sockt->lan_subnet[i].mask));
+	if (i < sockt->lan_subnet_count) {
+		if (info) {
+			info->ip = sockt->lan_subnet[i].ip;
+			info->mask = sockt->lan_subnet[i].mask;
+		}
+		return sockt->lan_subnet[i].ip;
+	}
+	if (info) {
+		info->ip = info->mask = 0;
+	}
+	return 0;
+}
+
+/**
+ * Checks whether the given IP is allowed to connect as a server.
+ *
+ * @param ip IP address to check.
+ * @retval true if we allow server connections from the given IP.
+ * @retval false otherwise.
+ */
+bool socket_allowed_ip_check(uint32 ip)
+{
+	int i;
+	ARR_FIND(0, sockt->allowed_ip_count, i, (sockt->allowed_ip[i].ip & sockt->allowed_ip[i].mask) == (ip & sockt->allowed_ip[i].mask) );
+	if (i < sockt->allowed_ip_count)
+		return true;
+	return sockt->trusted_ip_check(ip); // If an address is trusted, it's automatically also allowed.
+}
+
+/**
+ * Checks whether the given IP is trusted and can skip ipban checks.
+ *
+ * @param ip IP address to check.
+ * @retval true if we trust the given IP.
+ * @retval false otherwise.
+ */
+bool socket_trusted_ip_check(uint32 ip)
+{
+	int i;
+	ARR_FIND(0, sockt->trusted_ip_count, i, (sockt->trusted_ip[i].ip & sockt->trusted_ip[i].mask) == (ip & sockt->trusted_ip[i].mask));
+	if (i < sockt->trusted_ip_count)
+		return true;
+	return false;
+}
+
+/**
+ * Helper function to read a list of network.conf values.
+ *
+ * Entries will be appended to the variable-size array pointed to by list/count.
+ *
+ * @param[in]     t         The list to parse.
+ * @param[in,out] list      Pointer to the head of the output array to append to. Must not be NULL (but the array may be empty).
+ * @param[in,out] count     Pointer to the counter of the output array to append to. Must not be NULL (but it may contain zero).
+ * @param[in]     filename  Current filename, for output/logging reasons.
+ * @param[in]     groupname Current group name, for output/logging reasons.
+ * @return The amount of entries read, zero in case of errors.
+ */
+int socket_net_config_read_sub(config_setting_t *t, struct s_subnet **list, int *count, const char *filename, const char *groupname)
+{
+	int i, len;
+	char ipbuf[64], maskbuf[64];
+
+	nullpo_retr(0, list);
+	nullpo_retr(0, count);
+
+	if (t == NULL)
+		return 0;
+
+	len = libconfig->setting_length(t);
+
+	for (i = 0; i < len; ++i) {
+		const char *subnet = libconfig->setting_get_string_elem(t, i);
+		struct s_subnet *l = NULL;
+
+		if (sscanf(subnet, "%63[^:]:%63[^:]", ipbuf, maskbuf) != 2) {
+			ShowWarning("Invalid IP:Subnet entry in configuration file %s: '%s' (%s)\n", filename, subnet, groupname);
+		}
+		RECREATE(*list, struct s_subnet, *count + 1);
+		l = *list;
+		l[*count].ip = str2ip(ipbuf);
+		l[*count].mask = str2ip(maskbuf);
+		++*count;
+	}
+	return *count;
+}
+
+/**
+ * Reads the network configuration file.
+ *
+ * @param filename The filename to read from.
+ */
+void socket_net_config_read(const char *filename)
+{
+	config_t network_config;
+	int i;
+	nullpo_retv(filename);
+
+	if (libconfig->read_file(&network_config, filename)) {
+		ShowError("LAN Support configuration file is not found: '%s'. This server won't be able to accept connections from any servers.\n", filename);
+		return;
+	}
+
+	if (sockt->lan_subnet) {
+		aFree(sockt->lan_subnet);
+		sockt->lan_subnet = NULL;
+	}
+	sockt->lan_subnet_count = 0;
+	if (sockt->net_config_read_sub(libconfig->lookup(&network_config, "lan_subnets"), &sockt->lan_subnet, &sockt->lan_subnet_count, filename, "lan_subnets") > 0)
+		ShowStatus("Read information about %d LAN subnets.\n", sockt->lan_subnet_count);
+
+	if (sockt->trusted_ip) {
+		aFree(sockt->trusted_ip);
+		sockt->trusted_ip = NULL;
+	}
+	sockt->trusted_ip_count = 0;
+	if (sockt->net_config_read_sub(libconfig->lookup(&network_config, "trusted"), &sockt->trusted_ip, &sockt->trusted_ip_count, filename, "trusted") > 0)
+		ShowStatus("Read information about %d trusted IP ranges.\n", sockt->trusted_ip_count);
+	for (i = 0; i < sockt->allowed_ip_count; ++i) {
+		if ((sockt->allowed_ip[i].ip & sockt->allowed_ip[i].mask) == 0) {
+			ShowError("Using a wildcard IP range in the trusted server IPs is NOT RECOMMENDED.\n");
+			ShowNotice("Please edit your '%s' trusted list to fit your network configuration.\n", filename);
+			break;
+		}
+	}
+
+	if (sockt->allowed_ip) {
+		aFree(sockt->allowed_ip);
+		sockt->allowed_ip = NULL;
+	}
+	sockt->allowed_ip_count = 0;
+	if (sockt->net_config_read_sub(libconfig->lookup(&network_config, "allowed"), &sockt->allowed_ip, &sockt->allowed_ip_count, filename, "allowed") > 0)
+		ShowStatus("Read information about %d allowed server IP ranges.\n", sockt->allowed_ip_count);
+	if (sockt->allowed_ip_count == 0) {
+		ShowError("No allowed server IP ranges configured. This server won't be able to accept connections from any char servers.\n");
+	}
+	for (i = 0; i < sockt->allowed_ip_count; ++i) {
+		if ((sockt->allowed_ip[i].ip & sockt->allowed_ip[i].mask) == 0) {
+			ShowWarning("Using a wildcard IP range in the allowed server IPs is NOT RECOMMENDED.\n");
+			ShowNotice("Please edit your '%s' allowed list to fit your network configuration.\n", filename);
+			break;
+		}
+	}
+	libconfig->destroy(&network_config);
+	return;
+}
+
 void socket_defaults(void) {
 	sockt = &sockt_s;
 
@@ -1600,6 +1774,13 @@ void socket_defaults(void) {
 	memset(&sockt->addr_, 0, sizeof(sockt->addr_));
 	sockt->naddr_ = 0;
 	/* */
+	sockt->lan_subnet_count = 0;
+	sockt->lan_subnet = NULL;
+	sockt->allowed_ip_count = 0;
+	sockt->allowed_ip = NULL;
+	sockt->trusted_ip_count = 0;
+	sockt->trusted_ip = NULL;
+
 	sockt->init = socket_init;
 	sockt->final = socket_final;
 	/* */
@@ -1628,4 +1809,10 @@ void socket_defaults(void) {
 	sockt->ntows = ntows;
 	sockt->getips = socket_getips;
 	sockt->set_eof = set_eof;
+
+	sockt->lan_subnet_check = socket_lan_subnet_check;
+	sockt->allowed_ip_check = socket_allowed_ip_check;
+	sockt->trusted_ip_check = socket_trusted_ip_check;
+	sockt->net_config_read_sub = socket_net_config_read_sub;
+	sockt->net_config_read = socket_net_config_read;
 }

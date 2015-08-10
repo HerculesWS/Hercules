@@ -101,14 +101,6 @@ struct Login_Config {
 
 	int client_hash_check;                          ///< flags for checking client md5
 	struct client_hash_node *client_hash_nodes;     ///< linked list containg md5 hash for each gm group
-
-	/// Advanced subnet check [LuzZza]
-	struct s_subnet {
-		uint32 mask;
-		uint32 char_ip;
-		uint32 map_ip;
-	} subnet[16];
-	int subnet_count;
 };
 
 struct login_auth_node {
@@ -163,8 +155,7 @@ struct login_interface {
 	int (*sync_ip_addresses) (int tid, int64 tick, int id, intptr_t data);
 	bool (*check_encrypted) (const char* str1, const char* str2, const char* passwd);
 	bool (*check_password) (const char* md5key, int passwdenc, const char* passwd, const char* refpass);
-	int (*lan_subnetcheck) (uint32 ip);
-	int (*lan_config_read) (const char *lancfgName);
+	uint32 (*lan_subnet_check) (uint32 ip);
 	void (*fromchar_accinfo) (int fd, int account_id, int u_fd, int u_aid, int u_group, int map_fd, struct mmo_account *acc);
 	void (*fromchar_account) (int fd, int account_id, struct mmo_account *acc);
 	void (*fromchar_account_update_other) (int account_id, unsigned int state);
@@ -207,7 +198,7 @@ struct login_interface {
 	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip, uint32 ipl);
 	int (*parse_login) (int fd);
 	char *LOGIN_CONF_NAME;
-	char *LAN_CONF_NAME;
+	char *NET_CONF_NAME; ///< Network configuration filename
 };
 
 struct login_interface *login;

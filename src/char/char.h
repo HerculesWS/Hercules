@@ -145,7 +145,7 @@ struct char_interface {
 	int new_display;
 
 	char *CHAR_CONF_NAME;
-	char *LAN_CONF_NAME;
+	char *NET_CONF_NAME; ///< Network config filename
 	char *SQL_CONF_NAME;
 	char *INTER_CONF_NAME;
 
@@ -256,7 +256,7 @@ struct char_interface {
 	int (*parse_frommap) (int fd);
 	int (*search_mapserver) (unsigned short map, uint32 ip, uint16 port);
 	int (*mapif_init) (int fd);
-	int (*lan_subnetcheck) (uint32 ip);
+	uint32 (*lan_subnet_check) (uint32 ip);
 	void (*delete2_ack) (int fd, int char_id, uint32 result, time_t delete_date);
 	void (*delete2_accept_actual_ack) (int fd, int char_id, uint32 result);
 	void (*delete2_accept_ack) (int fd, int char_id, uint32 result);
@@ -305,7 +305,6 @@ struct char_interface {
 	int (*check_connect_login_server) (int tid, int64 tick, int id, intptr_t data);
 	int (*online_data_cleanup_sub) (DBKey key, DBData *data, va_list ap);
 	int (*online_data_cleanup) (int tid, int64 tick, int id, intptr_t data);
-	int (*lan_config_read) (const char *lancfgName);
 	void (*sql_config_read) (const char* cfgName);
 	void (*config_dispatch) (char *w1, char *w2);
 	int (*config_read) (const char* cfgName);
