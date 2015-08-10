@@ -2834,7 +2834,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			}
 			if ( type2 >= RC_MAX ) {
-				for ( i = RC_FORMLESS; i < RC_MAX; i++ ) {
+				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 					if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 						 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 						 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -2887,7 +2887,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			if(sd->state.lr_flag != 2) {
 				if (type2 >= RC_MAX ) {
-					for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -2948,7 +2948,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			if(sd->state.lr_flag != 2){
 				if ( type2 >= RC_MAX ){
-					for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3149,7 +3149,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			if(sd->state.lr_flag == 2)
 				break;
 			if ( type2 >= RC_MAX ) {
-				for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 					if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 						 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 						 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3178,7 +3178,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			if(sd->state.lr_flag != 2){
 				if ( type2 >= RC_MAX ){
-					for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3367,7 +3367,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			if(sd->state.lr_flag != 2) {
 				if ( type2 >= RC_MAX ){
-					for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3388,7 +3388,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			if(sd->state.lr_flag != 2) {
 				if ( type2 >= RC_MAX ){
-					for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3424,7 +3424,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			}
 			if ( type2 >= RC_MAX ){
-				for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 					if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 						 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 						 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3453,7 +3453,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			}
 			if ( type2 >= RC_MAX ){
-				for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 					if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 						 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 						 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3491,7 +3491,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			if(sd->state.lr_flag != 2) {
 				if ( type2 >= RC_MAX ) {
-					for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3512,7 +3512,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			if(sd->state.lr_flag != 2) {
 				if ( type2 >= RC_MAX ) {
-					for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3636,7 +3636,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			if(sd->state.lr_flag != 2) {
 				if ( type2 >= RC_MAX ) {
-					for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3715,7 +3715,7 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 				break;
 			}
 			if ( type2 >= RC_MAX ) {
-				for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 					if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 						 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 						 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3748,7 +3748,7 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 				break;
 			}
 			if ( type2 >= RC_MAX ) {
-				for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 					if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 						 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 						 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3888,7 +3888,7 @@ int pc_bonus4(struct map_session_data *sd,int type,int type2,int type3,int type4
 		if(sd->state.lr_flag == 2)
 			break;
 		if ( type2 >= RC_MAX ) {
-			for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+			for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 				if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 	 				 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 	 				 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3914,7 +3914,7 @@ int pc_bonus4(struct map_session_data *sd,int type,int type2,int type3,int type4
 		if(sd->state.lr_flag == 2)
 			break;
 		if ( type2 >= RC_MAX ) {
-			for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+			for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 				if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 	 				 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 	 				 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
