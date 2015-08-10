@@ -5,21 +5,22 @@
 #ifndef MAP_MAP_H
 #define MAP_MAP_H
 
-#include "../config/core.h"
+#include "config/core.h"
 
+#include "map/atcommand.h"
+#include "common/cbasetypes.h"
+#include "common/core.h" // CORE_ST_LAST
+#include "common/db.h"
+#include "common/mapindex.h"
+#include "common/mmo.h"
+#include "common/sql.h"
+
+#include <stdio.h>
 #include <stdarg.h>
-
-#include "atcommand.h"
-#include "../common/cbasetypes.h"
-#include "../common/core.h" // CORE_ST_LAST
-#include "../common/db.h"
-#include "../common/mapindex.h"
-#include "../common/mmo.h"
-#include "../common/sql.h"
 
 struct mob_data;
 struct npc_data;
-struct hChSysCh;
+struct channel_data;
 
 enum E_MAPSERVER_ST {
 	MAPSERVER_ST_RUNNING = CORE_ST_LAST,
@@ -64,16 +65,6 @@ enum MOBID {
 	MOBID_SILVERSNIPER = 2042,
 	MOBID_MAGICDECOY_WIND = 2046,
 };
-
-// The following system marks a different job ID system used by the map server,
-// which makes a lot more sense than the normal one. [Skotlex]
-// These marks the "level" of the job.
-#define JOBL_2_1 0x100 //256
-#define JOBL_2_2 0x200 //512
-#define JOBL_2 0x300
-#define JOBL_UPPER 0x1000 //4096
-#define JOBL_BABY 0x2000  //8192
-#define JOBL_THIRD 0x4000 //16384
 
 // For filtering and quick checking.
 #define MAPID_BASEMASK 0x00ff
@@ -266,10 +257,15 @@ enum {
 	RC_DEMIHUMAN,
 	RC_ANGEL,
 	RC_DRAGON,
+	RC_PLAYER,
 	RC_BOSS,
 	RC_NONBOSS,
+	RC_MAX,
 	RC_NONDEMIHUMAN,
-	RC_MAX
+	RC_NONPLAYER,
+	RC_DEMIPLAYER,
+	RC_NONDEMIPLAYER,
+	RC_ALL = 0xFF
 };
 
 enum {
@@ -280,10 +276,12 @@ enum {
 	RC2_GOLEM,
 	RC2_GUARDIAN,
 	RC2_NINJA,
+	RC2_SCARABA,
+	RC2_TURTLE,
 	RC2_MAX
 };
 
-enum {
+enum elements {
 	ELE_NEUTRAL=0,
 	ELE_WATER,
 	ELE_EARTH,
@@ -294,17 +292,21 @@ enum {
 	ELE_DARK,
 	ELE_GHOST,
 	ELE_UNDEAD,
-	ELE_MAX
+	ELE_MAX,
+	ELE_ALL = 0xFF
 };
 
-enum {
-	SPIRITS_TYPE_NONE = 0,
-	SPIRITS_TYPE_CHARM_WATER,
-	SPIRITS_TYPE_CHARM_LAND,
-	SPIRITS_TYPE_CHARM_FIRE,
-	SPIRITS_TYPE_CHARM_WIND,
-	SPIRITS_TYPE_SPHERE,
-	SPIRITS_TYPE_END
+/**
+ * Types of spirit charms.
+ *
+ * Note: Code assumes that this matches the first entries in enum elements.
+ */
+enum spirit_charm_types {
+	CHARM_TYPE_NONE = 0,
+	CHARM_TYPE_WATER,
+	CHARM_TYPE_LAND,
+	CHARM_TYPE_FIRE,
+	CHARM_TYPE_WIND
 };
 
 enum auto_trigger_flag {
@@ -422,6 +424,7 @@ enum status_point_types {
 	SP_SKILL_COOLDOWN,SP_SKILL_FIXEDCAST, SP_SKILL_VARIABLECAST, SP_FIXCASTRATE, SP_VARCASTRATE, //2050-2054
 	SP_SKILL_USE_SP,SP_MAGIC_ATK_ELE, SP_ADD_FIXEDCAST, SP_ADD_VARIABLECAST,  //2055-2058
 	SP_SET_DEF_RACE,SP_SET_MDEF_RACE, //2059-2060
+	SP_RACE_TOLERANCE, //2061
 
 	/* must be the last, plugins add bonuses from this value onwards */
 	SP_LAST_KNOWN,
@@ -557,6 +560,8 @@ struct map_zone_data {
 	int disabled_skills_count;
 	int *disabled_items;
 	int disabled_items_count;
+	int *cant_disable_items; /** when a zone wants to ensure such a item is never disabled (i.e. gvg zone enables a item that is restricted everywhere else) **/
+	int cant_disable_items_count;
 	char **mapflags;
 	int mapflags_count;
 	struct map_zone_disabled_command_entry **disabled_commands;
@@ -691,7 +696,7 @@ struct map_data {
 	struct map_zone_data *prev_zone;
 
 	/* Hercules Local Chat */
-	struct hChSysCh *channel;
+	struct channel_data *channel;
 
 	/* invincible_time_inc mapflag */
 	unsigned int invincible_time_inc;
@@ -852,19 +857,17 @@ struct map_interface {
 
 	char item_db_db[32];
 	char item_db2_db[32];
-	char item_db_re_db[32];
 	char mob_db_db[32];
-	char mob_db_re_db[32];
 	char mob_db2_db[32];
 	char mob_skill_db_db[32];
-	char mob_skill_db_re_db[32];
 	char mob_skill_db2_db[32];
-	char interreg_db[32];
 	char autotrade_merchants_db[32];
 	char autotrade_data_db[32];
 	char npc_market_data_db[32];
 
 	char default_codepage[32];
+	char default_lang_str[64];
+	uint8 default_lang_id;
 
 	int server_port;
 	char server_ip[32];
@@ -891,15 +894,15 @@ struct map_interface {
 	DBMap* regen_db;  // int id -> struct block_list* (status_natural_heal processing)
 	DBMap* zone_db;   // string => struct map_zone_data
 	DBMap* iwall_db;
-	/* order respected by map_defaults() in order to zero */
-	/* from block_free until zone_pk */
 	struct block_list **block_free;
 	int block_free_count, block_free_lock, block_free_list_size;
 	struct block_list **bl_list;
 	int bl_list_count, bl_list_size;
+BEGIN_ZEROED_BLOCK; // This block is zeroed in map_defaults()
 	struct block_list bl_head;
 	struct map_zone_data zone_all;/* used as a base on all maps */
 	struct map_zone_data zone_pk;/* used for (pk_mode) */
+END_ZEROED_BLOCK;
 	/* */
 	struct map_session_data *cpsd;
 	struct map_data *list;
@@ -1079,6 +1082,7 @@ struct map_interface {
 	void (*add_questinfo) (int m, struct questinfo *qi);
 	bool (*remove_questinfo) (int m, struct npc_data *nd);
 	struct map_zone_data *(*merge_zone) (struct map_zone_data *main, struct map_zone_data *other);
+	void (*zone_clear_single) (struct map_zone_data *zone);
 };
 
 struct map_interface *map;

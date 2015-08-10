@@ -6,22 +6,22 @@
 
 #include "int_party.h"
 
+#include "char/char.h"
+#include "char/inter.h"
+#include "char/mapif.h"
+#include "common/cbasetypes.h"
+#include "common/db.h"
+#include "common/malloc.h"
+#include "common/mapindex.h"
+#include "common/mmo.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/sql.h"
+#include "common/strlib.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-#include "char.h"
-#include "inter.h"
-#include "mapif.h"
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/mapindex.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/sql.h"
-#include "../common/strlib.h"
 
 struct inter_party_interface inter_party_s;
 
@@ -29,6 +29,7 @@ struct inter_party_interface inter_party_s;
 static int inter_party_check_lv(struct party_data *p) {
 	int i;
 	unsigned int lv;
+	nullpo_ret(p);
 	p->min_lv = UINT_MAX;
 	p->max_lv = 0;
 	for(i=0;i<MAX_PARTY;i++){
@@ -54,6 +55,7 @@ static int inter_party_check_lv(struct party_data *p) {
 static void inter_party_calc_state(struct party_data *p)
 {
 	int i;
+	nullpo_retv(p);
 	p->min_lv = UINT_MAX;
 	p->max_lv = 0;
 	p->party.count =
@@ -67,9 +69,10 @@ static void inter_party_calc_state(struct party_data *p)
 		if(p->party.member[i].online)
 			p->party.count++;
 	}
+	// FIXME[Haru]: What if the occupied positions aren't the first three? It can happen if some party members leave. This is the reason why family sharing some times stops working until you recreate your party
 	if( p->size == 2 && ( chr->char_child(p->party.member[0].char_id,p->party.member[1].char_id) || chr->char_child(p->party.member[1].char_id,p->party.member[0].char_id) ) ) {
 		//Child should be able to share with either of their parents  [RoM]
-		if(p->party.member[0].class_&0x2000) //first slot is the child?
+		if(p->party.member[0].class_&JOBL_BABY) //first slot is the child?
 			p->family = p->party.member[0].char_id;
 		else
 			p->family = p->party.member[1].char_id;
@@ -109,6 +112,7 @@ int inter_party_tosql(struct party *p, int flag, int index)
 
 	if( p == NULL || p->party_id == 0 )
 		return 0;
+	Assert_ret(index >= 0 && index < MAX_PARTY);
 	party_id = p->party_id;
 
 #ifdef NOISY
@@ -257,12 +261,12 @@ int inter_party_sql_init(void)
 		exit(EXIT_FAILURE);
 	}
 
-	/* Uncomment the following if you want to do a party_db cleanup (remove parties with no members) on startup.[Skotlex]
+#if 0 // Enable if you want to do a party_db cleanup (remove parties with no members) on startup.[Skotlex]
 	ShowStatus("cleaning party table...\n");
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` USING `%s` LEFT JOIN `%s` ON `%s`.leader_id =`%s`.account_id AND `%s`.leader_char = `%s`.char_id WHERE `%s`.account_id IS NULL",
 		party_db, party_db, char_db, party_db, char_db, party_db, char_db, char_db) )
 		Sql_ShowDebug(inter->sql_handle);
-	*/
+#endif // 0
 	return 0;
 }
 
@@ -295,6 +299,7 @@ struct party_data* inter_party_search_partyname(const char *const str)
 // Returns whether this party can keep having exp share or not.
 int inter_party_check_exp_share(struct party_data *const p)
 {
+	nullpo_ret(p);
 	return (p->party.count < 2 || p->max_lv - p->min_lv <= party_share_level);
 }
 
@@ -353,6 +358,7 @@ void mapif_party_noinfo(int fd, int party_id, int char_id)
 void mapif_party_info(int fd, struct party* p, int char_id)
 {
 	unsigned char buf[8 + sizeof(struct party)];
+	nullpo_retv(p);
 	WBUFW(buf,0) = 0x3821;
 	WBUFW(buf,2) = 8 + sizeof(struct party);
 	WBUFL(buf,4) = char_id;
@@ -381,6 +387,7 @@ int mapif_party_memberadded(int fd, int party_id, int account_id, int char_id, i
 int mapif_party_optionchanged(int fd, struct party *p, int account_id, int flag)
 {
 	unsigned char buf[16];
+	nullpo_ret(p);
 	WBUFW(buf,0)=0x3823;
 	WBUFL(buf,2)=p->party_id;
 	WBUFL(buf,6)=account_id;
@@ -411,6 +418,8 @@ int mapif_party_membermoved(struct party *p, int idx)
 {
 	unsigned char buf[20];
 
+	nullpo_ret(p);
+	Assert_ret(idx >= 0 && idx < MAX_PARTY);
 	WBUFW(buf,0) = 0x3825;
 	WBUFL(buf,2) = p->party_id;
 	WBUFL(buf,6) = p->member[idx].account_id;
@@ -438,6 +447,7 @@ int mapif_party_broken(int party_id, int flag)
 int mapif_party_message(int party_id, int account_id, char *mes, int len, int sfd)
 {
 	unsigned char buf[512];
+	nullpo_ret(mes);
 	WBUFW(buf,0)=0x3827;
 	WBUFW(buf,2)=len+12;
 	WBUFL(buf,4)=party_id;
@@ -456,6 +466,8 @@ int mapif_parse_CreateParty(int fd, char *name, int item, int item2, struct part
 {
 	struct party_data *p;
 	int i;
+	nullpo_ret(name);
+	nullpo_ret(leader);
 	if( (p=inter_party->search_partyname(name))!=NULL){
 		mapif->party_created(fd,leader->account_id,leader->char_id,NULL);
 		return 0;
@@ -523,6 +535,7 @@ int mapif_parse_PartyAddMember(int fd, int party_id, struct party_member *member
 	struct party_data *p;
 	int i;
 
+	nullpo_ret(member);
 	p = inter_party->fromsql(party_id);
 	if( p == NULL || p->size == MAX_PARTY ) {
 		mapif->party_memberadded(fd, party_id, member->account_id, member->char_id, 1);
@@ -580,7 +593,7 @@ int mapif_parse_PartyChangeOption(int fd,int party_id,int account_id,int exp,int
 int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id)
 {
 	struct party_data *p;
-	int i,j=-1;
+	int i,j;
 
 	p = inter_party->fromsql(party_id);
 	if( p == NULL )
@@ -731,8 +744,8 @@ int mapif_parse_PartyLeaderChange(int fd, int party_id, int account_id, int char
 // Data packet length is set to inter.c that you
 // Do NOT go and check the packet length, RFIFOSKIP is done by the caller
 // Return :
-// 0 : error
-// 1 : ok
+//  0 : error
+//  1 : ok
 int inter_party_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);

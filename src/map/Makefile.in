@@ -9,28 +9,30 @@ CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
 COMMON_D = ../common
 COMMON_H = $(wildcard $(COMMON_D)/*.h)
 SYSINFO_INC = $(COMMON_D)/sysinfo.inc
+COMMON_INCLUDE = -I..
 
-LIBCONFIG_D = ../../3rdparty/libconfig
+THIRDPARTY_D = ../../3rdparty
+THIRDPARTY_INCLUDE = -I$(THIRDPARTY_D)
+
+LIBCONFIG_D = $(THIRDPARTY_D)/libconfig
 LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
                 scanner.o strbuf.o)
 LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
               scanctx.h scanner.h strbuf.h wincompat.h)
-LIBCONFIG_INCLUDE = -I$(LIBCONFIG_D)
 
-MT19937AR_D = ../../3rdparty/mt19937ar
+MT19937AR_D = $(THIRDPARTY_D)/mt19937ar
 MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
 MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
-MT19937AR_INCLUDE = -I$(MT19937AR_D)
 
-MAP_C = atcommand.c battle.c battleground.c buyingstore.c chat.c chrif.c \
-        clif.c date.c duel.c elemental.c guild.c homunculus.c HPMmap.c \
+MAP_C = atcommand.c battle.c battleground.c buyingstore.c channel.c chat.c \
+        chrif.c clif.c date.c duel.c elemental.c guild.c homunculus.c HPMmap.c \
         instance.c intif.c irc-bot.c itemdb.c log.c mail.c map.c mapreg_sql.c \
         mercenary.c mob.c npc.c npc_chat.c party.c path.c pc.c pc_groups.c \
         pet.c quest.c script.c searchstore.c skill.c status.c storage.c \
         trade.c unit.c vending.c
 MAP_OBJ = $(addprefix obj_sql/, $(patsubst %c,%o,$(MAP_C)))
-MAP_H = atcommand.h battle.h battleground.h buyingstore.h chat.h chrif.h \
-        clif.h date.h duel.h elemental.h guild.h homunculus.h HPMmap.h \
+MAP_H = atcommand.h battle.h battleground.h buyingstore.h channel.h chat.h \
+        chrif.h clif.h date.h duel.h elemental.h guild.h homunculus.h HPMmap.h \
         instance.h intif.h irc-bot.h itemdb.h log.h mail.h map.h mapreg.h \
         mercenary.h mob.h npc.h packets.h packets_struct.h party.h path.h \
         pc.h pc_groups.h pet.h quest.h script.h searchstore.h skill.h \
@@ -111,7 +113,7 @@ map-server: ../../map-server@EXEEXT@
 
 obj_sql/%.o: %.c $(MAP_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj_sql
 	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ $(MT19937AR_INCLUDE) $(LIBCONFIG_INCLUDE) $(PCRE_CFLAGS) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
+	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) $(PCRE_CFLAGS) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
 # missing object files
 $(COMMON_D)/obj_all/common.a:

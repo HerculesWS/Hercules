@@ -6,31 +6,31 @@
 
 #include "inter.h"
 
+#include "char/char.h"
+#include "char/geoip.h"
+#include "char/int_auction.h"
+#include "char/int_elemental.h"
+#include "char/int_guild.h"
+#include "char/int_homun.h"
+#include "char/int_mail.h"
+#include "char/int_mercenary.h"
+#include "char/int_party.h"
+#include "char/int_pet.h"
+#include "char/int_quest.h"
+#include "char/int_storage.h"
+#include "char/mapif.h"
+#include "common/cbasetypes.h"
+#include "common/db.h"
+#include "common/malloc.h"
+#include "common/mmo.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-#include "char.h"
-#include "geoip.h"
-#include "int_auction.h"
-#include "int_elemental.h"
-#include "int_guild.h"
-#include "int_homun.h"
-#include "int_mail.h"
-#include "int_mercenary.h"
-#include "int_party.h"
-#include "int_pet.h"
-#include "int_quest.h"
-#include "int_storage.h"
-#include "mapif.h"
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
 
 #define WISDATA_TTL (60*1000) // Wis data Time To Live (60 seconds)
 #define WISDELLIST_MAX 256    // Number of elements in the list Delete data Wis
@@ -97,6 +97,7 @@ bool inter_msg_config_read(const char *cfg_name, bool allow_override)
 	FILE *fp;
 	static int called = 1;
 
+	nullpo_ret(cfg_name);
 	if ((fp = fopen(cfg_name, "r")) == NULL) {
 		ShowError("Messages file not found: %s\n", cfg_name);
 		return 1;
@@ -384,6 +385,7 @@ void inter_vmsg_to_fd(int fd, int u_fd, int aid, char* msg, va_list ap)
 	va_list apcopy;
 	int len = 1;/* yes we start at 1 */
 
+	nullpo_retv(msg);
 	va_copy(apcopy, ap);
 	len += vsnprintf(msg_out, 512, msg, apcopy);
 	va_end(apcopy);
@@ -484,6 +486,12 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
 		const char *email, const char *last_ip, const char *lastlogin, const char *pin_code, const char *birthdate,
 		int group_id, int logincount, int state)
 {
+	nullpo_retv(userid);
+	nullpo_retv(user_pass);
+	nullpo_retv(email);
+	nullpo_retv(last_ip);
+	nullpo_retv(lastlogin);
+	nullpo_retv(birthdate);
 	if (map_fd <= 0 || !session_isActive(map_fd))
 		return; // check if we have a valid fd
 
@@ -495,7 +503,7 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "-- Account %d --", account_id);
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "User: %s | GM Group: %d | State: %d", userid, group_id, state);
 
-	if (user_pass && *user_pass != '\0') { /* password is only received if your gm level is greater than the one you're searching for */
+	if (*user_pass != '\0') { /* password is only received if your gm level is greater than the one you're searching for */
 		if (pin_code && *pin_code != '\0')
 			inter->msg_to_fd(map_fd, u_fd, u_aid, "Password: %s (PIN:%s)", user_pass, pin_code);
 		else
@@ -546,6 +554,7 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
  **/
 void inter_savereg(int account_id, int char_id, const char *key, unsigned int index, intptr_t val, bool is_string)
 {
+	nullpo_retv(key);
 	/* to login server we go! */
 	if( key[0] == '#' && key[1] == '#' ) {/* global account reg */
 		if( session_isValid(chr->login_fd) )
@@ -690,9 +699,11 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 			if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `key`, `index`, `value` FROM `%s` WHERE `account_id`='%d'", acc_reg_num_db, account_id) )
 				Sql_ShowDebug(inter->sql_handle);
 			break;
+#if 0 // This is already checked above.
 		case 1: //account2 reg
 			ShowError("inter->accreg_fromsql: Char server shouldn't handle type 1 registry values (##). That is the login server's work!\n");
 			return 0;
+#endif // 0
 	}
 
 	WFIFOHEAD(fd, 60000 + 300);
@@ -767,6 +778,7 @@ static int inter_config_read(const char* cfgName)
 	char line[1024], w1[1024], w2[1024];
 	FILE* fp;
 
+	nullpo_retr(1, cfgName);
 	fp = fopen(cfgName, "r");
 	if(fp == NULL) {
 		ShowError("File not found: %s\n", cfgName);
@@ -914,6 +926,8 @@ int mapif_broadcast(unsigned char *mes, int len, unsigned int fontColor, short f
 {
 	unsigned char *buf = (unsigned char*)aMalloc((len)*sizeof(unsigned char));
 
+	nullpo_ret(mes);
+	Assert_ret(len >= 16);
 	WBUFW(buf,0) = 0x3800;
 	WBUFW(buf,2) = len;
 	WBUFL(buf,4) = fontColor;
@@ -932,8 +946,12 @@ int mapif_broadcast(unsigned char *mes, int len, unsigned int fontColor, short f
 int mapif_wis_message(struct WisData *wd)
 {
 	unsigned char buf[2048];
+	nullpo_ret(wd);
 	//if (wd->len > 2047-56) wd->len = 2047-56; //Force it to fit to avoid crashes. [Skotlex]
-	if( wd->len >= sizeof(wd->msg) - 1 ) wd->len = sizeof(wd->msg) - 1;
+	if (wd->len < 0)
+		wd->len = 0;
+	if (wd->len >= sizeof(wd->msg) - 1)
+		wd->len = sizeof(wd->msg) - 1;
 	
 	WBUFW(buf, 0) = 0x3801;
 	WBUFW(buf, 2) = 56 +wd->len;
@@ -949,6 +967,7 @@ int mapif_wis_message(struct WisData *wd)
 void mapif_wis_response(int fd, unsigned char *src, int flag)
 {
 	unsigned char buf[27];
+	nullpo_retv(src);
 	WBUFW(buf, 0)=0x3802;
 	memcpy(WBUFP(buf, 2),src,24);
 	WBUFB(buf,26)=flag;
@@ -958,6 +977,7 @@ void mapif_wis_response(int fd, unsigned char *src, int flag)
 // Wis sending result
 int mapif_wis_end(struct WisData *wd, int flag)
 {
+	nullpo_ret(wd);
 	mapif->wis_response(wd->fd, wd->src, flag);
 	return 0;
 }
@@ -966,6 +986,7 @@ int mapif_wis_end(struct WisData *wd, int flag)
 // Account registry transfer to map-server
 static void mapif_account_reg(int fd, unsigned char *src)
 {
+	nullpo_retv(src);
 	WBUFW(src,0)=0x3804; //NOTE: writing to RFIFO
 	mapif->sendallwos(fd, src, WBUFW(src,2));
 }
@@ -1003,6 +1024,7 @@ int inter_check_ttl_wisdata_sub(DBKey key, DBData *data, va_list ap)
 {
 	int64 tick;
 	struct WisData *wd = DB->data2ptr(data);
+	nullpo_ret(wd);
 	tick = va_arg(ap, int64);
 
 	if (DIFF_TICK(tick, wd->tick) > WISDATA_TTL && wis_delnum < WISDELLIST_MAX)
@@ -1196,9 +1218,9 @@ int mapif_parse_Registry(int fd)
 int mapif_parse_RegistryRequest(int fd)
 {
 	//Load Char Registry
-	if (RFIFOB(fd,12)) mapif->account_reg_reply(fd,RFIFOL(fd,2),RFIFOL(fd,6),3);
+	if (RFIFOB(fd,12)) mapif->account_reg_reply(fd,RFIFOL(fd,2),RFIFOL(fd,6),3); // 3: char reg
 	//Load Account Registry
-	if (RFIFOB(fd,11)) mapif->account_reg_reply(fd,RFIFOL(fd,2),RFIFOL(fd,6),2);
+	if (RFIFOB(fd,11)) mapif->account_reg_reply(fd,RFIFOL(fd,2),RFIFOL(fd,6),2); // 2: account reg
 	//Ask Login Server for Account2 values.
 	if (RFIFOB(fd,10)) chr->request_accreg2(RFIFOL(fd,2),RFIFOL(fd,6));
 	return 1;
@@ -1206,6 +1228,7 @@ int mapif_parse_RegistryRequest(int fd)
 
 void mapif_namechange_ack(int fd, int account_id, int char_id, int type, int flag, const char *const name)
 {
+	nullpo_retv(name);
 	WFIFOHEAD(fd, NAME_LENGTH+13);
 	WFIFOW(fd, 0) = 0x3806;
 	WFIFOL(fd, 2) = account_id;

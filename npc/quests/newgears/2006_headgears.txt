@@ -24,7 +24,7 @@
 
 // Censor Bar
 //============================================================
-rachel,91,273,8	script	?	4_M_RACHMAN2,{
+rachel,91,273,0	script	?	4_M_RACHMAN2,{
 	if (countitem(983) > 0 && countitem(7111) > 99 && countitem(938) > 98 && Zeny > 99999) {
 		mes "[?]";
 		mes "Giggle giggle...isn't it my partner, eh?";

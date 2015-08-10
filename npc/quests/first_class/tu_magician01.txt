@@ -132,7 +132,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "time for a break. But we'll";
 		mes "continue this later, okay?";
 		tu_magician01 = 1;
-		if (checkre(3))
+		if (RENEWAL_EXP)
 			getexp BaseLevel*3,BaseLevel*2;
 		else
 			getexp BaseLevel*30,BaseLevel*15;

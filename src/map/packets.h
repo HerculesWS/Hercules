@@ -448,6 +448,8 @@ packet(0x020a,10);
 //packet(0x020b,-1);
 //packet(0x020c,-1);
 packet(0x020d,-1);
+packet(0x974,2,clif->cancelmergeitem);
+packet(0x96e,-1,clif->ackmergeitems);
 
 //2004-07-05aSakexe
 #if PACKETVER >= 20040705
@@ -2802,6 +2804,21 @@ packet(0x020d,-1);
 	packet(0x0a00,269);
 #endif
 
+/* Roulette System [Yommy/Hercules] */
+#if PACKETVER >= 20141016
+	packet(0x0A19,2,clif->pRouletteOpen,0);     // HEADER_CZ_REQ_OPEN_ROULETTE
+	packet(0x0A1A,23);                          // HEADER_ZC_ACK_OPEN_ROULETTE
+	packet(0x0A1B,2,clif->pRouletteInfo,0);     // HEADER_CZ_REQ_ROULETTE_INFO
+	packet(0x0A1C,-1);                          // HEADER_ZC_ACK_ROULEITTE_INFO
+	packet(0x0A1D,2,clif->pRouletteClose,0);    // HEADER_CZ_REQ_CLOSE_ROULETTE
+	packet(0x0A1E,3);                           // HEADER_ZC_ACK_CLOSE_ROULETTE
+	packet(0x0A1F,2,clif->pRouletteGenerate,0); // HEADER_CZ_REQ_GENERATE_ROULETTE
+	packet(0x0A20,21);                          // HEADER_ZC_ACK_GENERATE_ROULETTE
+	packet(0x0A21,3,clif->pRouletteRecvItem,2); // HEADER_CZ_RECV_ROULETTE_ITEM
+	packet(0x0A22,5);                           // HEADER_ZC_RECV_ROULETTE_ITEM
+#endif
+
+
 // 2014-10-22bRagexe - YomRawr
 #if PACKETVER >= 20141022
 	packet(0x0369,7,clif->pActionRequest,2,6);
@@ -2835,21 +2852,42 @@ packet(0x020d,-1);
 	packet(0x0438,36,clif->pStoragePassword,0);
 #endif
 
-/* Roulette System [Yommy/Hercules] */
-#if PACKETVER >= 20141016
-	packet(0x0A19,2,clif->pRouletteOpen,0);     // HEADER_CZ_REQ_OPEN_ROULETTE
-	packet(0x0A1A,23);                          // HEADER_ZC_ACK_OPEN_ROULETTE
-	packet(0x0A1B,2,clif->pRouletteInfo,0);     // HEADER_CZ_REQ_ROULETTE_INFO
-	packet(0x0A1C,-1);                          // HEADER_ZC_ACK_ROULEITTE_INFO
-	packet(0x0A1D,2,clif->pRouletteClose,0);    // HEADER_CZ_REQ_CLOSE_ROULETTE
-	packet(0x0A1E,3);                           // HEADER_ZC_ACK_CLOSE_ROULETTE
-	packet(0x0A1F,2,clif->pRouletteGenerate,0); // HEADER_CZ_REQ_GENERATE_ROULETTE
-	packet(0x0A20,21);                          // HEADER_ZC_ACK_GENERATE_ROULETTE
-	packet(0x0A21,3,clif->pRouletteRecvItem,2); // HEADER_CZ_RECV_ROULETTE_ITEM
-	packet(0x0A22,5);                           // HEADER_ZC_RECV_ROULETTE_ITEM
-#endif
+// 2015-05-13aRagexe
+#if PACKETVER >= 20150513
+	packet(0x0369,7,clif->pActionRequest,2,6);
+	packet(0x083C,10,clif->pUseSkillToId,2,4,6);
+	packet(0x0437,5,clif->pWalkToXY,2);
+	packet(0x035F,6,clif->pTickSend,2);
+	packet(0x0924,5,clif->pChangeDir,2,4);
+	packet(0x0958,6,clif->pTakeItem,2);
+	packet(0x0885,6,clif->pDropItem,2,4);
+	packet(0x0879,8,clif->pMoveToKafra,2,4);
+	packet(0x0864,8,clif->pMoveFromKafra,2,4);
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x096A,6,clif->pGetCharNameRequest,2);
+	packet(0x0368,6,clif->pSolveCharName,2);
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);
+	packet(0x022D,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x0883,18,clif->pPartyBookingRegisterReq,2,4);
+	packet(0x02C4,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x0960,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x0363,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x094A,26,clif->pPartyInvite2,2);
+	packet(0x0927,4); // CZ_GANGSI_RANK
+	packet(0x08A8,26,clif->pFriendsListAdd,2);
+	packet(0x0817,5,clif->pHomMenu,2,4);
+	packet(0x0923,36,clif->pStoragePassword,0);
+	packet(0x09e8,11,clif->pDull);	//CZ_OPEN_MAILBOX
+	packet(0x0a2e,6,clif->pDull);	//TITLE
+#endif         
 
-/* PacketKeys: http://hercules.ws/board/topic/1105-hercules-wpe-free-june-14th-patch/ */
+/* PacketKeys: http://herc.ws/board/topic/1105-hercules-wpe-free-june-14th-patch/ */
 #if PACKETVER >= 20110817
 	packetKeys(0x053D5CED,0x3DED6DED,0x6DED6DED); /* Thanks to Shakto */
 #endif
@@ -3086,6 +3124,12 @@ packet(0x020d,-1);
 
 #if PACKETVER >= 20141022
 	packetKeys(0x290551EA,0x2B952C75,0x2D67669B); /* YomRawr */
+#endif
+
+// 2015 Packet Keys
+
+#if PACKETVER >= 20150513
+	packetKeys(0x62C86D09,0x75944F17,0x112C133D); /* Dastgir */
 #endif
 
 #if defined(OBFUSCATIONKEY1) && defined(OBFUSCATIONKEY2) && defined(OBFUSCATIONKEY3)

@@ -4,35 +4,35 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // GP_BOUND_ITEMS, RENEWAL_EXP
+#include "config/core.h" // GP_BOUND_ITEMS, RENEWAL_EXP
 #include "party.h"
+
+#include "map/atcommand.h" //msg_txt()
+#include "map/battle.h"
+#include "map/clif.h"
+#include "map/instance.h"
+#include "map/intif.h"
+#include "map/itemdb.h"
+#include "map/log.h"
+#include "map/map.h"
+#include "map/mob.h" // struct mob_data
+#include "map/pc.h"
+#include "map/skill.h"
+#include "map/status.h"
+#include "common/HPM.h"
+#include "common/cbasetypes.h"
+#include "common/malloc.h"
+#include "common/nullpo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+#include "common/socket.h" // last_tick
+#include "common/strlib.h"
+#include "common/timer.h"
+#include "common/utils.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "atcommand.h" //msg_txt()
-#include "battle.h"
-#include "clif.h"
-#include "instance.h"
-#include "intif.h"
-#include "itemdb.h"
-#include "log.h"
-#include "map.h"
-#include "mob.h" // struct mob_data
-#include "pc.h"
-#include "skill.h"
-#include "status.h"
-#include "../common/HPM.h"
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h" // last_tick
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
 
 struct party_interface party_s;
 
@@ -338,7 +338,7 @@ int party_invite(struct map_session_data *sd,struct map_session_data *tsd)
 	ARR_FIND(0, MAX_PARTY, i, p->data[i].sd == sd);
 
 	if( i == MAX_PARTY || !p->party.member[i].leader ) {
-		clif->message(sd->fd, msg_txt(282));
+		clif->message(sd->fd, msg_sd(sd,282));
 		return 0;
 	}
 
@@ -352,7 +352,7 @@ int party_invite(struct map_session_data *sd,struct map_session_data *tsd)
 
 	// confirm whether the account has the ability to invite before checking the player
 	if( !pc_has_permission(sd, PC_PERM_PARTY) || (tsd && !pc_has_permission(tsd, PC_PERM_PARTY)) ) {
-		clif->message(sd->fd, msg_txt(81)); // "Your GM level doesn't authorize you to preform this action on the specified player."
+		clif->message(sd->fd, msg_sd(sd,81)); // "Your GM level doesn't authorize you to preform this action on the specified player."
 		return 0;
 	}
 
@@ -640,7 +640,7 @@ int party_optionchanged(int party_id,int account_id,int exp,int item,int flag) {
 	if( (p=party->search(party_id))==NULL)
 		return 0;
 
-	//Flag&1: Exp change denied. Flag&2: Item change denied.
+	//Flag&0x1: Exp change denied. Flag&0x10: Item change denied.
 	if(!(flag&0x01) && p->party.exp != exp)
 		p->party.exp=exp;
 	if(!(flag&0x10) && p->party.item != item) {
@@ -660,12 +660,12 @@ bool party_changeleader(struct map_session_data *sd, struct map_session_data *ts
 		return false;
 
 	if (!tsd || tsd->status.party_id != sd->status.party_id) {
-		clif->message(sd->fd, msg_txt(283));
+		clif->message(sd->fd, msg_sd(sd,283));
 		return false;
 	}
 
 	if( map->list[sd->bl.m].flag.partylock ) {
-		clif->message(sd->fd, msg_txt(287));
+		clif->message(sd->fd, msg_sd(sd,287));
 		return false;
 	}
 
@@ -678,7 +678,7 @@ bool party_changeleader(struct map_session_data *sd, struct map_session_data *ts
 
 	if (!p->party.member[mi].leader) {
 		//Need to be a party leader.
-		clif->message(sd->fd, msg_txt(282));
+		clif->message(sd->fd, msg_sd(sd,282));
 		return false;
 	}
 

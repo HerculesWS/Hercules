@@ -2,7 +2,7 @@
 
 REM Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 REM See the LICENSE file
-REM Base Author: Mumbles @ http://hercules.ws
+REM Base Author: Mumbles @ http://herc.ws
 
 COLOR 0F
 
@@ -16,7 +16,7 @@ ECHO                ^| ^| ^| ^|  __/ ^| ^| (__^| ^|_^| ^| ^|  __/\__ \
 ECHO                \_^| ^|_/\___^|_^|  \___^|\__,_^|_^|\___^|^|___/
 ECHO.
 ECHO                     Database to SQL Converter
-ECHO                     http://hercules.ws/board/
+ECHO                     http://herc.ws/board/
 ECHO.
 ECHO.
 

@@ -225,8 +225,8 @@ current scripts have a zero in there.
 
 ** Define an NPC object.
 
-<map name>,<x>,<y>,<facing>%TAB%script%TAB%<NPC Name>%TAB%<sprite id>,{<code>}
-<map name>,<x>,<y>,<facing>%TAB%script%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>,{<code>}
+<map name>,<x>,<y>,<facing>%TAB%script%TAB%<NPC Name>%TAB%<sprite>,{<code>}
+<map name>,<x>,<y>,<facing>%TAB%script%TAB%<NPC Name>%TAB%<sprite>,<triggerX>,<triggerY>,{<code>}
 
 This will place an NPC object on a specified map at the specified 
 location, and is a top-level command you will use the most in your custom 
@@ -240,16 +240,17 @@ increments of 45 degrees, where 0 means facing towards the top of the map.
 (So to turn the sprite towards the bottom of the map, you use facing 4, 
 and to make it look southeast it's facing 5.)
 
-Sprite id is the sprite number used to display this particular NPC. For a 
-full list of sprite id numbers see http://kalen.s79.xrea.com/npc/npce.shtml
-You may also use a monster's ID number instead to display a monster sprite 
+Sprite is the sprite identifier used to display this particular NPC. For a 
+full list of sprite numbers see http://kalen.s79.xrea.com/npc/npce.shtml as
+well as db/const.txt.
+You may also use a monster's ID constant instead to display a monster sprite 
 for this NPC, in npcs that have view ids of mobs it's encouraged to use
 OnTouch events with a 2,2 range and with an 'end' after the header to avoid
 bugs (for more info on why see npc_click@map/npc.c). It is possible to use a job
 sprite as well, but you must first define it as a monster sprite in 'mob_avail.txt',
 a full description on how to do this is not in the scope of this manual.
-A '-1' sprite id will make the NPC invisible (and unclickable). 
-A '111' sprite id will make an NPC which does not have a sprite, but is 
+A '-1' sprite will make the NPC invisible (and unclickable). 
+A 'HIDDEN_NPC' sprite will make an NPC which does not have a sprite, but is 
 still clickable, which is useful if you want to make a clickable object of 
 the 3D terrain.
 
@@ -279,8 +280,8 @@ what these floating NPC objects are for. More on that below.
 
 ** Define a shop/cashshop NPC.
 
--%TAB%shop%TAB%<NPC Name>%TAB%<sprite id>,<itemid>:<price>{,<itemid>:<price>...}
-<map name>,<x>,<y>,<facing>%TAB%shop%TAB%<NPC Name>%TAB%<sprite id>,<itemid>:<price>{,<itemid>:<price>...}
+-%TAB%shop%TAB%<NPC Name>%TAB%<sprite>,<itemid>:<price>{,<itemid>:<price>...}
+<map name>,<x>,<y>,<facing>%TAB%shop%TAB%<NPC Name>%TAB%<sprite>,<itemid>:<price>{,<itemid>:<price>...}
 
 This will define a shop NPC, which, when triggered (which can only be done 
 by clicking) will cause a shop window to come up. No code whatsoever runs 
@@ -301,7 +302,7 @@ items here. The layout used to define sale items still count, and
 "<price>" refers to how many points will be spent purchasing the them.
 
 ** Define a trader NPC
-<map name>,<x>,<y>,<facing>%TAB%trader%TAB%<NPC Name>%TAB%<sprite id>,{<code>}
+<map name>,<x>,<y>,<facing>%TAB%trader%TAB%<NPC Name>%TAB%<sprite>,{<code>}
 -%TAB%trader%TAB%<NPC Name>%TAB%-1,{<code>}
 
 All the standards that are valid to script objects are also valid for trader objects
@@ -326,16 +327,16 @@ more information regarding how to use this NPC type.
 ** Define an warp/shop/cashshop/NPC duplicate.
 
 warp: <map name>,<x>,<y>{,<facing>}%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<spanx>,<spany>
-shop/cashshop/npc: -%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite id>
-shop/cashshop/npc: <map name>,<x>,<y>,<facing>%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite id>
-npc: -%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>
-npc: <map name>,<x>,<y>,<facing>%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>
+shop/cashshop/npc: -%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite>
+shop/cashshop/npc: <map name>,<x>,<y>,<facing>%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite>
+npc: -%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite>,<triggerX>,<triggerY>
+npc: <map name>,<x>,<y>,<facing>%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite>,<triggerX>,<triggerY>
 
 This will duplicate an warp/shop/cashshop/NPC referred to by 'label'.
 Warp duplicates inherit the target location.
 Shop/cashshop duplicates inherit the item list.
 NPC duplicates inherit the script code.
-The rest (name, location, facing, sprite ID, span/trigger area) is 
+The rest (name, location, facing, sprite, span/trigger area) is 
 obtained from the definition of the duplicate (not inherited).
 
 ** Define a function object
@@ -1340,7 +1341,7 @@ Examples:
   setd ".@var$", "Poporing";
   mes .@var$; // Displays "Poporing".
 
-  setd ".@" + $var$ + "123$", "Poporing is cool";
+  setd ".@" + .@var$ + "123$", "Poporing is cool";
   mes .@Poporing123$; // Displays "Poporing is cool".
 
 ---------------------------------------
@@ -2319,6 +2320,14 @@ Whatever it returns is determined by type.
  2 - The hidden part of the NPC's display name
  3 - The NPC's unique name (::name)
  4 - The name of the map the NPC is in.
+
+---------------------------------------
+
+*charid2rid(<char id>)
+
+This function returns the RID of the character with the given character ID.
+
+If the character is offline or doesn't exist, 0 is returned.
 
 ---------------------------------------
 
@@ -3967,32 +3976,11 @@ if War of Emperium is on and 0 if it isn't.
 ---------------------------------------
 
 *isnight()
-*isday()
 
-These functions will return 1 or 0 depending on whether the server is in 
-night mode or day mode. 'isnight' returns 1 if it's night and 0 if it 
-isn't, 'isday' the other way around. They can be used interchangeably, 
-pick the one you like more:
+This functions will return true or false depending on whether the server is in 
+night mode or day mode:
 
-	// These two are equivalent:
-	if (isday()) mes "I only prowl in the night.";
-	if (isnight()!=1) mes "I only prowl in the night.";
-
----------------------------------------
-
-*checkre(<type>)
-
-Checks if a renewal feature is enabled or not in renewal.h, and returns 1 
-if enabled and 0 for disabled. The renewal feature to check is determined 
-by the type parameter.
-
- 0 - RENEWAL (game renewal server mode)
- 1 - RENEWAL_CAST (renewal cast time)
- 2 - RENEWAL_DROP (renewal drop rate algorithms)
- 3 - RENEWAL_EXP (renewal exp rate algorithms)
- 4 - RENEWAL_LVDMG (renewal level modifier on damage)
- 5 - RENEWAL_EDP (renewal enchant deadly poison algorithm)
- 6 - RENEWAL_ASPD (renewal ASPD)
+	if (!isnight()) mes "I only prowl in the night.";
 
 ---------------------------------------
 //=====================================
@@ -4098,7 +4086,14 @@ chat window.
 
 ---------------------------------------
 
-*warp "<map name>",<x>,<y>;
+*showscript "<message>"{,<GID>};
+
+Makes attached player or GID says a message like shouting a skill name, the message
+will be seen to everyone around but not in chat window.
+
+---------------------------------------
+
+*warp "<map name>",<x>,<y>{,<flag>};
 
 This command will take the invoking character to the specified map, and if 
 wanted, specified coordinates too, but these can be random.
@@ -4120,6 +4115,10 @@ There are also three special 'map names' you can use:
 
 "Random" will warp the player randomly on the current map.
 "Save" and "SavePoint" will warp the player back to their save point.
+
+If flag parameter is set to 0, after player warped will be not stopped
+currend running npc script. Running script after warp can be issue for
+Gravity client if warp to other maps.
 
 ---------------------------------------
 
@@ -4500,16 +4499,19 @@ the look value).
 
 Here are the possible look types:
 
-0                   - Base sprite
-1 - VAR_HEAD        - Hairstyle
-2 - VAR_WEAPON      - Weapon
-3 - VAR_HEAD_TOP    - Head top
-4 - VAR_HEAD_MID    - Head mid
-5 - VAR_HEAD_BOTTOM - Head bottom
-6 - VAR_HEADPALETTE - Hair color
-7 - VAR_BODYPALETTE - Clothes color
-8 - VAR_SHIELD      - Shield
-9 - VAR_SHOES       - Shoes
+  0 - LOOK_BASE           Base sprite
+  1 - LOOK_HAIR           Hairstyle
+  2 - LOOK_WEAPON         Weapon
+  3 - LOOK_HEAD_BOTTOM    Head bottom
+  4 - LOOK_HEAD_TOP       Head top
+  5 - LOOK_HEAD_MID       Head mid
+  6 - LOOK_HAIR_COLOR     Hair color
+  7 - LOOK_CLOTHES_COLOR  Clothes color
+  8 - LOOK_SHIELD         Shield
+  9 - LOOK_SHOES          Shoes
+ 10 - LOOK_BODY           Body(N/A)
+ 11 - LOOK_FLOOR          FLOOR(N/A)
+ 12 - LOOK_ROBE           Robe
 
 Whatever 'shoes' means is anyone's guess, ask Gravity - the client does 
 nothing with this value. It still wants it from the server though, so it 
@@ -4559,6 +4561,17 @@ client for getting Hercules).
 
 	if ( get_version() >= 15000 )
 		mes "Welcome to Hercules!";
+		
+---------------------------------------
+
+*montransform <monster id>,<duration>{,<sc_type>{,<val1>{,<val2>{,<val3>{,<val4>}}}}}; 
+*montransform "<monster name>",<duration>{,<sc_type>{,<val1>{,<val2>{,<val3>{,<val4>}}}}}; 
+
+This command can transform your character into monster and you can still
+use all your skills like a normal character.
+Can only be removed when your killed or if you die or if duration is over.
+
+for sc_type,val1,val2,val3,val4, see 'sc_start','sc_start2','sc_start4' commands.
 
 ---------------------------------------
 //=====================================
@@ -5282,7 +5295,9 @@ This command will destroy whatever is currently equipped in the invoking
 character's specified equipment slot. For a full list of possible equipment 
 slots see 'getequipid'.
 
-This command will return 1 if an item was deleted and 0 otherwise.
+It is always a good idea to check if the player actually has the item you want 
+before you use this command. If you try to delete in a position that the player 
+has no gear, script will be terminated with an error.
 
 ---------------------------------------
 //=====================================
@@ -5888,7 +5903,7 @@ controlling each of the spawned mobs with the unit* commands shown below.
 For example:
 
 	// We'll make a poring which will automatically attack invoking player:
-	.@mobGID = monster "Prontera",150,150,"Poring",PORING,1; // PORING is defined in the mob db and its value is 1002
+	.@mobGID = monster("prontera",150,150,"Poring",PORING,1); // PORING is defined in the mob db and its value is 1002
 	unitattack .@mobGID, getcharid(3); // Attacker GID, attacked GID
 
 The way you can get the GID of more than only one monster is looping 
@@ -7117,6 +7132,20 @@ be the NPC with the said name.
 
 ---------------------------------------
 
+*channelmes("<#channel>", "<message>");
+
+This command will send a message to the specified chat channel.
+
+The sent message will not include any character's names.
+
+For special channels, such as #map and #ally, the attached RID's map or guild
+will be used.
+
+If the channel doesn't exist (or, in the case of a character-specific channel,
+no RID is attached), false will be returned. In case of success, true is
+returned.
+
+---------------------------------------
 *rand(<number>{,<number>});
 
 This function returns a number ...
@@ -7180,7 +7209,7 @@ determines the placement of the illustration and takes following values:
 	3 - middle of screen in a movable window with an empty title bar 
 	4 - middle of screen without the window header, but still movable 
 
-The picture is read from data\texture\???????\illust, from both the 
+The picture is read from data\texture\유저인터페이스\illust, from both the 
 GRF archive and data folder, and is required to be a bitmap. The file 
 extension .bmp can be omitted. Magenta color (#ff00ff) is considered 
 transparent. There is no limit placed on the size of the illustrations 
@@ -7616,9 +7645,22 @@ Example:
 
 ---------------------------------------
 
+*log10(<number>)
+
+Returns log base 10 of the number.
+
+Note: The value is truncated to integer.
+
+Example:
+	.@i = log10(100); // .@i will be 2
+
+---------------------------------------
+
 *sqrt(<number>)
 
 Returns square-root of number.
+
+Note: The value is truncated to integer.
 
 Example:
 	.@i = sqrt(25); // .@i will be 5
@@ -7628,6 +7670,10 @@ Example:
 *distance(<x0>,<y0>,<x1>,<y1>)
 
 Returns distance between 2 points.
+
+Note: When Hercules is configured to use circular areas, the Euclidean distance
+is returned, otherwise the Chebyshev distance. The value is truncated to
+integer.
 
 Example:
 	.@i = distance(100,200,101,202);
@@ -7754,7 +7800,7 @@ mes axtoi("11");           // Displays 17 (1 = 1, 10 = 16)
 
 ---------------------------------------
 
-*compare(<string>,<substring>)
+*compare("<string>","<substring>")
 
 This command returns 1 or 0 when the substring is in the main string (1) 
 or not (0). This command is not case sensitive.
@@ -7767,7 +7813,26 @@ Examples:
 //dothat; will not be executed ('Blood butterfly' does not contain 'Bloody').
 	if (compare("Blood Butterfly","Bloody"))
 		dothat;
+		
+---------------------------------------
 
+*strcmp("<string>","<string>")
+
+This command compares two strings and is similar to strcmp in C.
+
+Return Values:
+	>0  : String 1 > String 2
+	0  : Strings are equal
+	<0 : String 1 < String 2
+
+Examples:
+	.@a = strcmp("abcdef","ABCDEF");
+	if (.@a > 0){
+		mes ".@a is greater than 0.";		//Output is this.
+	}else{
+		mes ".@a is less or equal to 0";
+	}
+	
 ---------------------------------------
 
 *getstrlen("<string>")
@@ -8024,8 +8089,8 @@ meant to be executed from pet scripts. They will modify the pet AI
 decision-making for the current pet of the invoking character, and will 
 NOT have any independent effect by themselves, which is why only one of 
 them each may be in effect at any time for a specific pet. A pet may 
-have 'petloot', 'petskillbonus', 'petskillattack' OR 'petpetskillattack2' 
-and 'petskillsupport' at the same time.
+have 'petloot', 'petskillbonus', 'petskillattack' and 'petskillsupport' at the
+same time.
 
 *petskillbonus <bonus type>,<value>,<duration>,<delay>;
 
@@ -8056,16 +8121,14 @@ time between activations. The skill numbers are as per
 It's not quite certain who's stats will be used for the skills cast, the 
 character's or the pets. Probably, Skotlex can answer that question.
 
-*petskillattack <skill id>,<skill level>,<rate>,<bonusrate>;
-*petskillattack "<skill name>",<skill level>,<rate>,<bonusrate>;
-*petskillattack2 <skill id>,<damage>,<number of attacks>,<rate>,<bonusrate>;
-*petskillattack2 "<skill name>",<damage>,<number of attacks>,<rate>,<bonusrate>;
+*petskillattack <skill id>,<damage>,<number of attacks>,<rate>,<bonusrate>;
+*petskillattack "<skill name>",<damage>,<number of attacks>,<rate>,<bonusrate>;
 
-These two commands will make the pet cast an attack skill on the enemy the 
-pet's owner is currently fighting. Skill IDs and levels are as per 
-'petskillsupport'. 
-'petskillattack2' will make the pet cast the skill with a fixed amount of 
-damage inflicted and the specified number of attacks.
+This command will make the pet cast an attack skill on the enemy the pet's
+owner is currently fighting. Skill IDs and levels are as per 'petskillsupport'.
+If <number of attacks> is specified different than 0, it will make the pet cast
+the skill with a fixed amount of damage inflicted and the specified number of
+attacks. A value of zero uses the skill's defaults.
 
 All commands with delays and durations will only make the behavior active 
 for the specified duration of seconds, with a delay of the specified 

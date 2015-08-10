@@ -482,6 +482,33 @@ int HP_chr_inventory_to_sql(const struct item items[], int max, int id) {
 	}
 	return retVal___;
 }
+int HP_chr_mmo_gender(const struct char_session_data *sd, const struct mmo_charstatus *p, char sex) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_chr_mmo_gender_pre ) {
+		int (*preHookFunc) (const struct char_session_data *sd, const struct mmo_charstatus *p, char *sex);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_mmo_gender_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_chr_mmo_gender_pre[hIndex].func;
+			retVal___ = preHookFunc(sd, p, &sex);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.chr.mmo_gender(sd, p, sex);
+	}
+	if( HPMHooks.count.HP_chr_mmo_gender_post ) {
+		int (*postHookFunc) (int retVal___, const struct char_session_data *sd, const struct mmo_charstatus *p, char *sex);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_mmo_gender_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_chr_mmo_gender_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, p, &sex);
+		}
+	}
+	return retVal___;
+}
 int HP_chr_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -2244,6 +2271,33 @@ void HP_chr_ask_name_ack(int fd, int acc, const char *name, int type, int result
 	}
 	return;
 }
+int HP_chr_changecharsex(int char_id, int sex) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_chr_changecharsex_pre ) {
+		int (*preHookFunc) (int *char_id, int *sex);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_changecharsex_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_chr_changecharsex_pre[hIndex].func;
+			retVal___ = preHookFunc(&char_id, &sex);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.chr.changecharsex(char_id, sex);
+	}
+	if( HPMHooks.count.HP_chr_changecharsex_post ) {
+		int (*postHookFunc) (int retVal___, int *char_id, int *sex);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_changecharsex_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_chr_changecharsex_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &char_id, &sex);
+		}
+	}
+	return retVal___;
+}
 void HP_chr_parse_frommap_change_account(int fd) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_chr_parse_frommap_change_account_pre ) {
@@ -3653,14 +3707,14 @@ void HP_chr_login_map_server_ack(int fd, uint8 flag) {
 	}
 	return;
 }
-void HP_chr_parse_char_login_map_server(int fd) {
+void HP_chr_parse_char_login_map_server(int fd, uint32 ipl) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_chr_parse_char_login_map_server_pre ) {
-		void (*preHookFunc) (int *fd);
+		void (*preHookFunc) (int *fd, uint32 *ipl);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_parse_char_login_map_server_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_chr_parse_char_login_map_server_pre[hIndex].func;
-			preHookFunc(&fd);
+			preHookFunc(&fd, &ipl);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -3668,13 +3722,13 @@ void HP_chr_parse_char_login_map_server(int fd) {
 		}
 	}
 	{
-		HPMHooks.source.chr.parse_char_login_map_server(fd);
+		HPMHooks.source.chr.parse_char_login_map_server(fd, ipl);
 	}
 	if( HPMHooks.count.HP_chr_parse_char_login_map_server_post ) {
-		void (*postHookFunc) (int *fd);
+		void (*postHookFunc) (int *fd, uint32 *ipl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_parse_char_login_map_server_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_chr_parse_char_login_map_server_post[hIndex].func;
-			postHookFunc(&fd);
+			postHookFunc(&fd, &ipl);
 		}
 	}
 	return;

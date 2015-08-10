@@ -636,10 +636,10 @@ OnTimer315000:
 	end;
 OnTimer320000:
 	mapannounce "sword_2-1","I guess you're not ready to meet the master yet...",bc_map;
+	mapwarp "sword_2-1","yuno_fild07",255,178;
 	donpcevent "#Sura_garajjom::OnDisable";
 	donpcevent "Drawing Room::OnEnable";
-	mapwarp "sword_2-1","yuno_fild07",255,178;
-	stopnpctimer;
+	donpcevent "Buddy#Sura_Salon::OnDisable";
 	end;
 }
 

@@ -5,13 +5,26 @@
 #ifndef MAP_UNIT_H
 #define MAP_UNIT_H
 
-#include "clif.h"  // clr_type
-#include "path.h" // struct walkpath_data
-#include "skill.h" // 'MAX_SKILLTIMERSKILL, struct skill_timerskill, struct skill_unit_group, struct skill_unit_group_tickset
-#include "../common/cbasetypes.h"
+#include "map/clif.h"  // clr_type
+#include "map/path.h" // struct walkpath_data
+#include "map/skill.h" // 'MAX_SKILLTIMERSKILL, struct skill_timerskill, struct skill_unit_group, struct skill_unit_group_tickset
+#include "common/cbasetypes.h"
 
 struct map_session_data;
 struct block_list;
+
+/**
+ * Bitmask values usable as a flag in unit_stopwalking
+ */
+enum unit_stopwalking_flag {
+	STOPWALKING_FLAG_NONE     = 0x00,
+	STOPWALKING_FLAG_FIXPOS   = 0x01, ///< Issue a fixpos packet afterwards
+	STOPWALKING_FLAG_ONESTEP  = 0x02, ///< Force the unit to move one cell if it hasn't yet
+	STOPWALKING_FLAG_NEXTCELL = 0x04, ///< Enable moving to the next cell when unit was already half-way there
+	                                  ///  (may cause on-touch/place side-effects, such as a scripted map change)
+	STOPWALKING_FLAG_MASK     = 0xff, ///< Mask all of the above
+	// Note: Upper bytes are reserved for duration.
+};
 
 struct unit_data {
 	struct block_list *bl;

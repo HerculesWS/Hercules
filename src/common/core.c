@@ -4,41 +4,39 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h"
+#include "config/core.h"
 #include "core.h"
 
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "../common/cbasetypes.h"
-#include "../common/console.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../common/sysinfo.h"
-#include "../common/nullpo.h"
+#include "common/cbasetypes.h"
+#include "common/console.h"
+#include "common/db.h"
+#include "common/malloc.h"
+#include "common/mmo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+#include "common/sysinfo.h"
+#include "common/nullpo.h"
 
 #ifndef MINICORE
-#	include "../common/HPM.h"
-#	include "../common/conf.h"
-#	include "../common/db.h"
-#	include "../common/ers.h"
-#	include "../common/socket.h"
-#	include "../common/sql.h"
-#	include "../common/thread.h"
-#	include "../common/timer.h"
-#	include "../common/utils.h"
+#	include "common/HPM.h"
+#	include "common/conf.h"
+#	include "common/ers.h"
+#	include "common/socket.h"
+#	include "common/sql.h"
+#	include "common/thread.h"
+#	include "common/timer.h"
+#	include "common/utils.h"
 #endif
 
 #ifndef _WIN32
 #	include <unistd.h>
 #else
-#	include "../common/winapi.h" // Console close event handling
+#	include "common/winapi.h" // Console close event handling
 #endif
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 /// Called when a terminate signal is received.
 void (*shutdown_callback)(void) = NULL;
@@ -250,7 +248,7 @@ static CMDLINEARG(help)
  */
 static CMDLINEARG(version)
 {
-	ShowInfo(CL_GREEN"Website/Forum:"CL_RESET"\thttp://hercules.ws/\n");
+	ShowInfo(CL_GREEN"Website/Forum:"CL_RESET"\thttp://herc.ws/\n");
 	ShowInfo(CL_GREEN"IRC Channel:"CL_RESET"\tirc://irc.rizon.net/#Hercules\n");
 	ShowInfo("Open "CL_WHITE"readme.txt"CL_RESET" for more information.\n");
 	return false;

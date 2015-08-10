@@ -92,7 +92,7 @@ gefg_cas03,34,208,1	duplicate(InsideFlagsG3)	Yesnelph#14	GUILD_FLAG
 
 // Guild Flag (Town)
 //============================================================
-geffen,120,132,8	duplicate(InsideFlagsG3)	Yesnelph#15	GUILD_FLAG
+geffen,120,132,0	duplicate(InsideFlagsG3)	Yesnelph#15	GUILD_FLAG
 
 // Kafra Employee
 //============================================================

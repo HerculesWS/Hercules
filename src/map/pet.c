@@ -6,35 +6,35 @@
 
 #include "pet.h"
 
+#include "map/atcommand.h" // msg_txt()
+#include "map/battle.h"
+#include "map/chrif.h"
+#include "map/clif.h"
+#include "map/intif.h"
+#include "map/itemdb.h"
+#include "map/log.h"
+#include "map/map.h"
+#include "map/mob.h"
+#include "map/npc.h"
+#include "map/path.h"
+#include "map/pc.h"
+#include "map/script.h"
+#include "map/skill.h"
+#include "map/status.h"
+#include "map/unit.h"
+#include "common/db.h"
+#include "common/ers.h"
+#include "common/malloc.h"
+#include "common/nullpo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+#include "common/utils.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "atcommand.h" // msg_txt()
-#include "battle.h"
-#include "chrif.h"
-#include "clif.h"
-#include "intif.h"
-#include "itemdb.h"
-#include "log.h"
-#include "map.h"
-#include "mob.h"
-#include "npc.h"
-#include "path.h"
-#include "pc.h"
-#include "script.h"
-#include "skill.h"
-#include "status.h"
-#include "unit.h"
-#include "../common/db.h"
-#include "../common/ers.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
 
 struct pet_interface pet_s;
 
@@ -91,7 +91,7 @@ int pet_unlocktarget(struct pet_data *pd)
 
 	pd->target_id=0;
 	pet_stop_attack(pd);
-	pet_stop_walking(pd,1);
+	pet_stop_walking(pd, STOPWALKING_FLAG_FIXPOS);
 	return 0;
 }
 
@@ -132,7 +132,7 @@ int pet_target_check(struct map_session_data *sd,struct block_list *bl,int type)
 
 	pd = sd->pd;
 	
-	Assert((pd->msd == 0) || (pd->msd->pd == pd));
+	Assert_ret(pd->msd == 0 || pd->msd->pd == pd);
 
 	if( bl == NULL || bl->type != BL_MOB || bl->prev == NULL
 	 || pd->pet.intimate < battle_config.pet_support_min_friendly
@@ -280,7 +280,7 @@ int pet_performance(struct map_session_data *sd, struct pet_data *pd)
 	else
 		val = 1;
 
-	pet_stop_walking(pd,2000<<8);
+	pet_stop_walking(pd,STOPWALKING_FLAG_NONE | (2000<<8)); // Stop walking for 2000ms
 	clif->send_petdata(NULL, pd, 4, rnd()%val + 1);
 	pet->lootitem_drop(pd,NULL);
 	return 1;
@@ -318,8 +318,7 @@ int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 	int i=0,interval=0;
 
 	nullpo_retr(1, sd);
-
-	Assert((sd->status.pet_id == 0 || sd->pd == 0) || sd->pd->msd == sd);
+	Assert_retr(1, sd->status.pet_id == 0 || sd->pd == 0 || sd->pd->msd == sd);
 
 	if(sd->status.account_id != petinfo->account_id || sd->status.char_id != petinfo->char_id) {
 		sd->status.pet_id = 0;
@@ -389,8 +388,7 @@ int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 int pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo)
 {
 	nullpo_retr(1, sd);
-
-	Assert((sd->status.pet_id == 0 || sd->pd == 0) || sd->pd->msd == sd);
+	Assert_retr(1, sd->status.pet_id == 0 || sd->pd == 0 || sd->pd->msd == sd);
 
 	if(sd->status.pet_id && petinfo->incubate == 1) {
 		sd->status.pet_id = 0;
@@ -418,7 +416,7 @@ int pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo)
 		clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
 		clif->send_petstatus(sd);
 	}
-	Assert((sd->status.pet_id == 0 || sd->pd == 0) || sd->pd->msd == sd);
+	Assert_retr(1, sd->status.pet_id == 0 || sd->pd == 0 || sd->pd->msd == sd);
 
 	return 0;
 }
@@ -447,7 +445,7 @@ int pet_recv_petdata(int account_id,struct s_pet *p,int flag) {
 			return 1;
 		}
 		if (!pet->birth_process(sd,p)) //Pet hatched. Delete egg.
-			pc->delitem(sd,i,1,0,0,LOG_TYPE_OTHER);
+			pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_OTHER);
 	} else {
 		pet->data_init(sd,p);
 		if(sd->pd && sd->bl.prev != NULL) {
@@ -602,7 +600,7 @@ int pet_menu(struct map_session_data *sd,int menunum)
 	egg_id = itemdb->exists(sd->pd->petDB->EggID);
 	if (egg_id) {
 		if ((egg_id->flag.trade_restriction&ITR_NODROP) && !pc->inventoryblank(sd)) {
-			clif->message(sd->fd, msg_txt(451)); // You can't return your pet because your inventory is full.
+			clif->message(sd->fd, msg_sd(sd,451)); // You can't return your pet because your inventory is full.
 			return 1;
 		}
 	}
@@ -653,7 +651,7 @@ int pet_change_name_ack(struct map_session_data *sd, char* name, int flag)
 	normalize_name(name," ");//bugreport:3032
 
 	if ( !flag || !strlen(name) ) {
-		clif->message(sd->fd, msg_txt(280)); // You cannot use this name for your pet.
+		clif->message(sd->fd, msg_sd(sd,280)); // You cannot use this name for your pet.
 		clif->send_petstatus(sd); //Send status so client knows oet name change got rejected.
 		return 0;
 	}
@@ -680,7 +678,7 @@ int pet_equipitem(struct map_session_data *sd,int index) {
 		return 1;
 	}
 
-	pc->delitem(sd,index,1,0,0,LOG_TYPE_OTHER);
+	pc->delitem(sd, index, 1, 0, DELITEM_NORMAL, LOG_TYPE_OTHER);
 	pd->pet.equip = nameid;
 	status->set_viewdata(&pd->bl, pd->pet.class_); //Updates view_data.
 	clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
@@ -745,7 +743,7 @@ int pet_food(struct map_session_data *sd, struct pet_data *pd) {
 		clif->pet_food(sd, food_id, 0);
 		return 1;
 	}
-	pc->delitem(sd,i,1,0,0,LOG_TYPE_CONSUME);
+	pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_CONSUME);
 
 	if (pd->pet.hungry > 90) {
 		pet->set_intimate(pd, pd->pet.intimate - pd->petDB->r_full);
@@ -781,10 +779,10 @@ int pet_food(struct map_session_data *sd, struct pet_data *pd) {
 	return 0;
 }
 
-int pet_randomwalk(struct pet_data *pd, int64 tick) {
+int pet_randomwalk(struct pet_data *pd, int64 tick)
+{
 	nullpo_ret(pd);
-
-	Assert((pd->msd == 0) || (pd->msd->pd == pd));
+	Assert_ret(pd->msd == 0 || pd->msd->pd == pd);
 
 	if (DIFF_TICK(pd->next_walktime,tick) < 0 && unit->can_move(&pd->bl)) {
 		const int retrycount=20;
@@ -1146,7 +1144,7 @@ int pet_skill_support_timer(int tid, int64 tick, int id, intptr_t data) {
 	}
 	
 	pet_stop_attack(pd);
-	pet_stop_walking(pd,1);
+	pet_stop_walking(pd, STOPWALKING_FLAG_FIXPOS);
 	pd->s_skill->timer=timer->add(tick+pd->s_skill->delay*1000,pet->skill_support_timer,sd->bl.id,0);
 	if (skill->get_inf(pd->s_skill->id) & INF_GROUND_SKILL)
 		unit->skilluse_pos(&pd->bl, sd->bl.x, sd->bl.y, pd->s_skill->id, pd->s_skill->lv);

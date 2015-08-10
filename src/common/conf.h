@@ -5,9 +5,9 @@
 #ifndef COMMON_CONF_H
 #define COMMON_CONF_H
 
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
 
-#include "../../3rdparty/libconfig/libconfig.h"
+#include <libconfig/libconfig.h>
 
 /**
  * The libconfig interface -- specially for plugins, but we enforce it throughout the core to be consistent

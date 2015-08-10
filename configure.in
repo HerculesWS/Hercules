@@ -300,9 +300,10 @@ AC_ARG_ENABLE(
 AC_ARG_ENABLE(
 	[sanitize],
 	AC_HELP_STRING(
-		[--enable-sanitize],
+		[--enable-sanitize@<:@=ARG@:>@],
 		[
-			Enables or Disables Sanitize Address Checking (SANITIZE is disabled by default)
+			Enables sanitizer. (disabled by default)
+			(available options: yes, no, full)
 		]
 	),
 	[
@@ -310,6 +311,7 @@ AC_ARG_ENABLE(
 		case $enableval in
 			"no");;
 			"yes");;
+			"full");;
 			*) AC_MSG_ERROR([[invalid argument --enable-sanitize=$disableval... stopping]]);;
 		esac
 	],
@@ -485,6 +487,7 @@ AC_LANG([C])
 
 CFLAGS="$CFLAGS -pipe -ffast-math -Wall -Wextra -Wno-sign-compare"
 CPPFLAGS="$CPPFLAGS -I../common"
+LDFLAGS="$LDFLAGS -rdynamic"
 
 
 AC_C_BIGENDIAN(
@@ -620,37 +623,68 @@ if test "$enable_lto" != "no" ; then
 	)
 fi
 
+AC_DEFUN(AC_CHECK_SANITIZER_FLAG,
+	[
+		AC_MSG_CHECKING([whether $CC supports -fsanitize=$1])
+		OLD_CFLAGS="$CFLAGS"
+		CFLAGS="$CFLAGS -fsanitize=$1"
+		OLD_LDFLAGS="$LDFLAGS"
+		LDFLAGS="$LDFLAGS -fsanitize=$1"
+		AC_COMPILE_IFELSE(
+			[AC_LANG_SOURCE([int foo;])],
+			[
+				AC_MSG_RESULT([yes])
+			],
+			[
+				AC_MSG_RESULT([no])
+
+				AC_MSG_CHECKING([whether $CC requires -fsanitize-undefined-trap-on-error for -fsanitize=$1])
+				CFLAGS="$CFLAGS -fsanitize-undefined-trap-on-error"
+				AC_COMPILE_IFELSE(
+					[AC_LANG_SOURCE([int foo;])],
+					[
+						AC_MSG_RESULT([yes])
+					],
+					[
+						AC_MSG_RESULT([no])
+						CFLAGS="$OLD_CFLAGS"
+						LDFLAGS="$OLD_LDFLAGS"
+					]
+				)
+			],
+			[
+				AC_MSG_RESULT([guessing no])
+				CFLAGS="$OLD_CFLAGS"
+				LDFLAGS="$OLD_LDFLAGS"
+			]
+		)
+	]
+)
 
 #
 # sanitize Support test
 #
 if test "$enable_sanitize" != "no" ; then
-
-	OLD_CFLAGS="$CFLAGS"
-	CFLAGS="$CFLAGS -fsanitize=address"
-
-	OLD_LDFLAGS="$LDFLAGS"
-	LDFLAGS="$LDFLAGS -fsanitize=address"
-
-	AC_MSG_CHECKING([whether $CC supports -fsanitize=address])
-	AC_RUN_IFELSE(
-		[AC_LANG_SOURCE([
-			int main(int argc, char **argv){
-				return 0;
-			}
-		])],
-		[
-			AC_MSG_RESULT([yes])
-		],
-		[
-			AC_MSG_RESULT([no])
-			CFLAGS="$OLD_CFLAGS"
-			LDFLAGS="$OLD_LDFLAGS"
-		],
-		[
-			AC_MSG_RESULT([guessing no])
-		]
-	)
+	AC_CHECK_SANITIZER_FLAG(address)
+	if test "$enable_sanitize" == "full" ; then
+		# skipped because server have multiple issues: -fsanitize=alignment
+		AC_CHECK_SANITIZER_FLAG(shift)
+		AC_CHECK_SANITIZER_FLAG(integer-divide-by-zero)
+		AC_CHECK_SANITIZER_FLAG(unreachable)
+		AC_CHECK_SANITIZER_FLAG(vla-bound)
+		AC_CHECK_SANITIZER_FLAG(null)
+		AC_CHECK_SANITIZER_FLAG(return)
+		AC_CHECK_SANITIZER_FLAG(signed-integer-overflow)
+		AC_CHECK_SANITIZER_FLAG(bounds)
+		AC_CHECK_SANITIZER_FLAG(object-size)
+		AC_CHECK_SANITIZER_FLAG(float-divide-by-zero)
+		AC_CHECK_SANITIZER_FLAG(float-cast-overflow)
+		AC_CHECK_SANITIZER_FLAG(nonnull-attribute)
+		AC_CHECK_SANITIZER_FLAG(returns-nonnull-attribute)
+		AC_CHECK_SANITIZER_FLAG(bool)
+		AC_CHECK_SANITIZER_FLAG(enum)
+		AC_CHECK_SANITIZER_FLAG(vptr)
+	fi
 fi
 
 

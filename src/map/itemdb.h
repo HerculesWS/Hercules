@@ -5,18 +5,14 @@
 #ifndef MAP_ITEMDB_H
 #define MAP_ITEMDB_H
 
-#include "map.h"
-#include "../common/cbasetypes.h"
-#include "../common/conf.h"
-#include "../common/db.h"
-#include "../common/mmo.h" // ITEM_NAME_LENGTH
-#include "../common/sql.h"
+/* #include "map/map.h" */
+#include "common/cbasetypes.h"
+#include "common/conf.h"
+#include "common/db.h"
+#include "common/mmo.h" // ITEM_NAME_LENGTH
+#include "common/sql.h"
 
-/**
- * Declarations
- **/
-struct item_group;
-struct item_package;
+struct script_code;
 
 /**
  * Defines
@@ -371,6 +367,63 @@ enum ItemNouseRestrictions {
 	INR_ALL     = 0x1 ///< Sum of all the above values
 };
 
+struct item_combo {
+	struct script_code *script;
+	unsigned short nameid[MAX_ITEMS_PER_COMBO];/* nameid array */
+	unsigned char count;
+	unsigned short id;/* id of this combo */
+};
+
+struct item_group {
+	unsigned short id;
+	unsigned short *nameid;
+	unsigned short qty;
+};
+
+struct item_chain_entry {
+	unsigned short id;
+	unsigned short rate;
+	struct item_chain_entry *next;
+};
+
+struct item_chain {
+	struct item_chain_entry *items;
+	unsigned short qty;
+};
+
+struct item_package_rand_entry {
+	unsigned short id;
+	unsigned short qty;
+	unsigned short rate;
+	unsigned short hours;
+	unsigned int announce : 1;
+	unsigned int named : 1;
+	unsigned int force_serial: 1;
+	struct item_package_rand_entry *next;
+};
+
+struct item_package_must_entry {
+	unsigned short id;
+	unsigned short qty;
+	unsigned short hours;
+	unsigned int announce : 1;
+	unsigned int named : 1;
+	unsigned int force_serial : 1;
+};
+
+struct item_package_rand_group {
+	struct item_package_rand_entry *random_list;
+	unsigned short random_qty;
+};
+
+struct item_package {
+	unsigned short id;
+	struct item_package_rand_group *random_groups;
+	struct item_package_must_entry *must_items;
+	unsigned short random_qty;
+	unsigned short must_qty;
+};
+
 struct item_data {
 	uint16 nameid;
 	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
@@ -415,6 +468,7 @@ struct item_data {
 		unsigned buyingstore : 1;
 		unsigned bindonequip : 1;
 		unsigned keepafteruse : 1;
+		unsigned force_serial : 1;
 	} flag;
 	struct {// item stacking limitation
 		unsigned short amount;
@@ -438,61 +492,6 @@ struct item_data {
 	/* HPM Custom Struct */
 	struct HPluginData **hdata;
 	unsigned int hdatac;
-};
-
-struct item_combo {
-	struct script_code *script;
-	unsigned short nameid[MAX_ITEMS_PER_COMBO];/* nameid array */
-	unsigned char count;
-	unsigned short id;/* id of this combo */
-};
-
-struct item_group {
-	unsigned short id;
-	unsigned short *nameid;
-	unsigned short qty;
-};
-
-struct item_chain_entry {
-	unsigned short id;
-	unsigned short rate;
-	struct item_chain_entry *next;
-};
-
-struct item_chain {
-	struct item_chain_entry *items;
-	unsigned short qty;
-};
-
-struct item_package_rand_entry {
-	unsigned short id;
-	unsigned short qty;
-	unsigned short rate;
-	unsigned short hours;
-	unsigned int announce : 1;
-	unsigned int named : 1;
-	struct item_package_rand_entry *next;
-};
-
-struct item_package_must_entry {
-	unsigned short id;
-	unsigned short qty;
-	unsigned short hours;
-	unsigned int announce : 1;
-	unsigned int named : 1;
-};
-
-struct item_package_rand_group {
-	struct item_package_rand_entry *random_list;
-	unsigned short random_qty;
-};
-
-struct item_package {
-	unsigned short id;
-	struct item_package_rand_group *random_groups;
-	struct item_package_must_entry *must_items;
-	unsigned short random_qty;
-	unsigned short must_qty;
 };
 
 #define itemdb_name(n)        (itemdb->search(n)->name)

@@ -5,10 +5,8 @@
 #ifndef COMMON_MMO_H
 #define COMMON_MMO_H
 
-#include <time.h>
-
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
+#include "config/core.h"
+#include "common/cbasetypes.h"
 
 // server->client protocol version
 //        0 - pre-?
@@ -118,15 +116,16 @@
 #define MAX_STORAGE 600
 #define MAX_GUILD_STORAGE 600
 #define MAX_PARTY 12
-#define MAX_GUILD (16+10*6)     // Increased max guild members +6 per 1 extension levels [Lupus]
-#define MAX_GUILDPOSITION 20    // Increased max guild positions to accommodate for all members [Valaris] (removed) [PoW]
+#define BASE_GUILD_SIZE 16               // Base guild members (without GD_EXTENSION)
+#define MAX_GUILD (BASE_GUILD_SIZE+10*6) // Increased max guild members +6 per 1 extension levels [Lupus]
+#define MAX_GUILDPOSITION 20             // Increased max guild positions to accomodate for all members [Valaris] (removed) [PoW]
 #define MAX_GUILDEXPULSION 32
 #define MAX_GUILDALLIANCE 16
-#define MAX_GUILDSKILL 15       // Increased max guild skills because of new skills [Sara-chan]
+#define MAX_GUILDSKILL 15                // Increased max guild skills because of new skills [Sara-chan]
 #define MAX_GUILDLEVEL 50
-#define MAX_GUARDIANS 8         // Local max per castle. [Skotlex]
-#define MAX_QUEST_OBJECTIVES 3  // Max quest objectives for a quest
-#define MAX_START_ITEMS 32      // Max number of items allowed to be given to a char whenever it's created. [mkbu95]
+#define MAX_GUARDIANS 8                  // Local max per castle. [Skotlex]
+#define MAX_QUEST_OBJECTIVES 3           // Max quest objectives for a quest
+#define MAX_START_ITEMS 32               // Max number of items allowed to be given to a char whenever it's created. [mkbu95]
 
 // for produce
 #define MIN_ATTRIBUTE 0
@@ -188,6 +187,16 @@
 #define MAX_ELEMENTAL_CLASS 12
 #define EL_CLASS_BASE 2114
 #define EL_CLASS_MAX (EL_CLASS_BASE+MAX_ELEMENTAL_CLASS-1)
+
+// The following system marks a different job ID system used by the map server,
+// which makes a lot more sense than the normal one. [Skotlex]
+// These marks the "level" of the job.
+#define JOBL_2_1 0x100 //256
+#define JOBL_2_2 0x200 //512
+#define JOBL_2 0x300
+#define JOBL_UPPER 0x1000 //4096
+#define JOBL_BABY 0x2000  //8192
+#define JOBL_THIRD 0x4000 //16384
 
 struct HPluginData;
 
@@ -296,6 +305,49 @@ enum e_item_bound_type {
 	IBT_PARTY     = 0x3,
 	IBT_CHARACTER = 0x4,
 	IBT_MAX       = 0x4,
+};
+
+enum {
+	OPTION_NOTHING      = 0x00000000,
+	OPTION_SIGHT        = 0x00000001,
+	OPTION_HIDE         = 0x00000002,
+	OPTION_CLOAK        = 0x00000004,
+	OPTION_FALCON       = 0x00000010,
+	OPTION_RIDING       = 0x00000020,
+	OPTION_INVISIBLE    = 0x00000040,
+	OPTION_ORCISH       = 0x00000800,
+	OPTION_WEDDING      = 0x00001000,
+	OPTION_RUWACH       = 0x00002000,
+	OPTION_CHASEWALK    = 0x00004000,
+	OPTION_FLYING       = 0x00008000, //Note that clientside Flying and Xmas are 0x8000 for clients prior to 2007.
+	OPTION_XMAS         = 0x00010000,
+	OPTION_TRANSFORM    = 0x00020000,
+	OPTION_SUMMER       = 0x00040000,
+	OPTION_DRAGON1      = 0x00080000,
+	OPTION_WUG          = 0x00100000,
+	OPTION_WUGRIDER     = 0x00200000,
+	OPTION_MADOGEAR     = 0x00400000,
+	OPTION_DRAGON2      = 0x00800000,
+	OPTION_DRAGON3      = 0x01000000,
+	OPTION_DRAGON4      = 0x02000000,
+	OPTION_DRAGON5      = 0x04000000,
+	OPTION_HANBOK       = 0x08000000,
+	OPTION_OKTOBERFEST  = 0x10000000,
+	
+#ifndef NEW_CARTS
+	OPTION_CART1     = 0x00000008,
+	OPTION_CART2     = 0x00000080,
+	OPTION_CART3     = 0x00000100,
+	OPTION_CART4     = 0x00000200,
+	OPTION_CART5     = 0x00000400,
+	
+	/*  compound constant for older carts */
+	OPTION_CART      = OPTION_CART1|OPTION_CART2|OPTION_CART3|OPTION_CART4|OPTION_CART5,
+#endif
+	
+	// compound constants
+	OPTION_DRAGON    = OPTION_DRAGON1|OPTION_DRAGON2|OPTION_DRAGON3|OPTION_DRAGON4|OPTION_DRAGON5,
+	OPTION_COSTUME   = OPTION_WEDDING|OPTION_XMAS|OPTION_SUMMER|OPTION_HANBOK|OPTION_OKTOBERFEST,
 };
 
 struct s_skill {
@@ -585,7 +637,7 @@ struct guild_skill {
 	int id,lv;
 };
 
-struct hChSysCh;
+struct channel_data;
 struct guild {
 	int guild_id;
 	short guild_lv, connect_member, max_member, average_lv;
@@ -608,7 +660,7 @@ struct guild {
 	short *instance;
 	unsigned short instances;
 
-	struct hChSysCh *channel;
+	struct channel_data *channel;
 
 	/* HPM Custom Struct */
 	struct HPluginData **hdata;
@@ -675,6 +727,12 @@ enum { //Change Member Infos
 	GMI_GENDER,
 	GMI_CLASS,
 	GMI_LEVEL,
+};
+
+enum guild_permission { // Guild permissions
+	GPERM_INVITE = 0x01,
+	GPERM_EXPEL = 0x10,
+	GPERM_BOTH = GPERM_INVITE|GPERM_EXPEL,
 };
 
 enum {
@@ -925,6 +983,30 @@ enum e_pc_reg_loading {
 	PRL_ACCL = 0x2,/* local */
 	PRL_ACCG = 0x4,/* global */
 	PRL_ALL  = 0xFF,
+};
+
+/**
+ * Values to be used as operation_type in chrif_char_ask_name
+ */
+enum zh_char_ask_name_type {
+	CHAR_ASK_NAME_BLOCK         = 1, // account block
+	CHAR_ASK_NAME_BAN           = 2, // account ban
+	CHAR_ASK_NAME_UNBLOCK       = 3, // account unblock
+	CHAR_ASK_NAME_UNBAN         = 4, // account unban
+	CHAR_ASK_NAME_CHANGESEX     = 5, // change sex
+	CHAR_ASK_NAME_CHARBAN       = 6, // character ban
+	CHAR_ASK_NAME_CHARUNBAN     = 7, // character unban
+	CHAR_ASK_NAME_CHANGECHARSEX = 8, // change character sex
+};
+
+/**
+ * Values to be used as answer in chrig_char_ask_name_answer
+ */
+enum hz_char_ask_name_answer {
+	CHAR_ASK_NAME_ANS_DONE     = 0, // login-server request done
+	CHAR_ASK_NAME_ANS_NOTFOUND = 1, // player not found
+	CHAR_ASK_NAME_ANS_GMLOW    = 2, // gm level too low
+	CHAR_ASK_NAME_ANS_OFFLINE  = 3, // login-server offline
 };
 
 /* packet size constant for itemlist */

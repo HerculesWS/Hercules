@@ -5,9 +5,11 @@
 #ifndef MAP_MAPREG_H
 #define MAP_MAPREG_H
 
-#include "script.h" // struct reg_db
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
+#include "map/script.h" // struct reg_db
+#include "common/cbasetypes.h"
+#include "common/db.h"
+
+struct eri;
 
 /** Container for a mapreg value */
 struct mapreg_save {

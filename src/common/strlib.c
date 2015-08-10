@@ -8,13 +8,13 @@
 #include "strlib.h"
 #undef H_STRLIB_C
 
+#include "common/cbasetypes.h"
+#include "common/malloc.h"
+#include "common/showmsg.h"
+
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h"
-#include "../common/showmsg.h"
 
 #define J_MAX_MALLOC_SIZE 65535
 

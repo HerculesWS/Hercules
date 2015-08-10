@@ -879,7 +879,7 @@ niflheim,192,182,7	script	Jack#14hal	4_JACK,{
 //= Richard
 //==============================================================================
 niflheim,190,185,5	script	Richard#14hal01	4_M_NFDEADSWDMAN,{
-	if (questprogress(14457) > -1) {
+	if (questprogress(14457)) {
 		mes "A doll which resembles Richard.";
 	} else {
 		mes "[Richard]";

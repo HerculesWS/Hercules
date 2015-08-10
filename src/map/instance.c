@@ -4,30 +4,32 @@
 
 #define HERCULES_CORE
 
+#include "config/core.h" // CELL_NOSTACK
 #include "instance.h"
+
+#include "map/channel.h"
+#include "map/clif.h"
+#include "map/guild.h"
+#include "map/map.h"
+#include "map/npc.h"
+#include "map/party.h"
+#include "map/pc.h"
+#include "common/HPM.h"
+#include "common/cbasetypes.h"
+#include "common/db.h"
+#include "common/malloc.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+#include "common/utils.h"
 
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
-#include "../config/core.h" // CELL_NOSTACK
-#include "clif.h"
-#include "map.h"
-#include "npc.h"
-#include "party.h"
-#include "pc.h"
-#include "../common/HPM.h"
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
 
 struct instance_interface instance_s;
 
@@ -483,7 +485,7 @@ void instance_del_map(int16 m) {
 		ShowError("map_instance_del: failed to remove %s from instance list (%s): %d\n", map->list[m].name, instance->list[map->list[m].instance_id].name, m);
 	
 	if( map->list[m].channel )
-		clif->chsys_delete(map->list[m].channel);
+		channel->delete(map->list[m].channel);
 
 	map->removemapdb(&map->list[m]);
 	memset(&map->list[m], 0x00, sizeof(map->list[0]));

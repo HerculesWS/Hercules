@@ -6,15 +6,14 @@
 
 #include "mapindex.h"
 
+#include "common/cbasetypes.h"
+#include "common/db.h"
+#include "common/mmo.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
 
 /* mapindex.c interface source */
 struct mapindex_interface mapindex_s;
@@ -193,7 +192,7 @@ void mapindex_defaults(void) {
 	mapindex = &mapindex_s;
 
 	/* TODO: place it in inter-server.conf? */
-	snprintf(mapindex->config_file, 80, "%s","db/map_index.txt");
+	snprintf(mapindex->config_file, sizeof(mapindex->config_file), "%s","db/map_index.txt");
 	/* */
 	mapindex->db = NULL;
 	mapindex->num = 0;

@@ -6,19 +6,17 @@
 
 #include "sql.h"
 
-#include <stdlib.h> // strtoul
-#include <string.h> // strlen/strnlen/memcpy/memset
-
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
+#include "common/cbasetypes.h"
+#include "common/malloc.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+#include "common/timer.h"
 
 #ifdef WIN32
-#	include "../common/winapi.h" // Needed before mysql.h
+#	include "common/winapi.h" // Needed before mysql.h
 #endif
 #include <mysql.h>
+#include <stdlib.h> // strtoul
 
 void hercules_mysql_error_handler(unsigned int ecode);
 
@@ -1027,9 +1025,8 @@ void Sql_HerculesUpdateCheck(Sql* self) {
 			continue;
 		}
 
-		fseek (ufp,1,SEEK_SET);/* woo. skip the # */
-
-		if( fgets(timestamp,sizeof(timestamp),ufp) ) {
+		if (fseek(ufp,1,SEEK_SET) == 0 /* woo. skip the # */
+		 && fgets(timestamp,sizeof(timestamp),ufp)) {
 			unsigned int timestampui = (unsigned int)atol(timestamp);
 			if( SQL_ERROR == SQL->Query(self, "SELECT 1 FROM `sql_updates` WHERE `timestamp` = '%u' LIMIT 1", timestampui) )
 				Sql_ShowDebug(self);
@@ -1070,9 +1067,8 @@ void Sql_HerculesUpdateSkip(Sql* self,const char *filename) {
 		return;
 	}
 
-	fseek (ifp,1,SEEK_SET);/* woo. skip the # */
-
-	if( fgets(timestamp,sizeof(timestamp),ifp) ) {
+	if (fseek (ifp,1,SEEK_SET) == 0 /* woo. skip the # */
+	 && fgets(timestamp,sizeof(timestamp),ifp)) {
 		unsigned int timestampui = (unsigned int)atol(timestamp);
 		if( SQL_ERROR == SQL->Query(self, "SELECT 1 FROM `sql_updates` WHERE `timestamp` = '%u' LIMIT 1", timestampui) )
 			Sql_ShowDebug(self);

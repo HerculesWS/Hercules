@@ -6,9 +6,9 @@
 
 #include "conf.h"
 
-#include "../../3rdparty/libconfig/libconfig.h"
+#include "common/showmsg.h" // ShowError
 
-#include "../common/showmsg.h" // ShowError
+#include <libconfig/libconfig.h>
 
 /* interface source */
 struct libconfig_interface libconfig_s;

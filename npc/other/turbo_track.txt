@@ -4670,7 +4670,7 @@ alde_gld,186,199,3	script	Turbo Track Guide#Entran	4_F_RACING,{
 	mes "Turbo Track~";
 	next;
 	mes "[Guide]";
-	if (checkre(0))
+	if (RENEWAL)
 		mes "Peco Pecos, Grand Pecos, Dragons, Gryphons, Wargs and Magic Gears are prohibited inside the Turbo Track Arena.";
 	else
 		mes "Peco Pecos are prohibited inside the Turbo Track Arena.";

@@ -4,64 +4,64 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // CELL_NOSTACK, CIRCULAR_AREA, CONSOLE_INPUT, DBPATH, RENEWAL
+#include "config/core.h" // CELL_NOSTACK, CIRCULAR_AREA, CONSOLE_INPUT, DBPATH, RENEWAL
 #include "map.h"
+
+#include "map/HPMmap.h"
+#include "map/atcommand.h"
+#include "map/battle.h"
+#include "map/battleground.h"
+#include "map/channel.h"
+#include "map/chat.h"
+#include "map/chrif.h"
+#include "map/clif.h"
+#include "map/duel.h"
+#include "map/elemental.h"
+#include "map/guild.h"
+#include "map/homunculus.h"
+#include "map/instance.h"
+#include "map/intif.h"
+#include "map/irc-bot.h"
+#include "map/itemdb.h"
+#include "map/log.h"
+#include "map/mail.h"
+#include "map/mapreg.h"
+#include "map/mercenary.h"
+#include "map/mob.h"
+#include "map/npc.h"
+#include "map/npc.h" // npc_setcells(), npc_unsetcells()
+#include "map/party.h"
+#include "map/path.h"
+#include "map/pc.h"
+#include "map/pet.h"
+#include "map/quest.h"
+#include "map/script.h"
+#include "map/skill.h"
+#include "map/status.h"
+#include "map/storage.h"
+#include "map/trade.h"
+#include "map/unit.h"
+#include "common/HPM.h"
+#include "common/cbasetypes.h"
+#include "common/conf.h"
+#include "common/console.h"
+#include "common/core.h"
+#include "common/ers.h"
+#include "common/grfio.h"
+#include "common/malloc.h"
+#include "common/nullpo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+#include "common/socket.h" // WFIFO*()
+#include "common/strlib.h"
+#include "common/timer.h"
+#include "common/utils.h"
 
 #include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "HPMmap.h"
-#include "atcommand.h"
-#include "battle.h"
-#include "battleground.h"
-#include "chat.h"
-#include "chrif.h"
-#include "clif.h"
-#include "duel.h"
-#include "elemental.h"
-#include "guild.h"
-#include "homunculus.h"
-#include "instance.h"
-#include "intif.h"
-#include "irc-bot.h"
-#include "itemdb.h"
-#include "log.h"
-#include "mail.h"
-#include "mapreg.h"
-#include "mercenary.h"
-#include "mob.h"
-#include "npc.h"
-#include "npc.h" // npc_setcells(), npc_unsetcells()
-#include "party.h"
-#include "path.h"
-#include "pc.h"
-#include "pet.h"
-#include "quest.h"
-#include "script.h"
-#include "skill.h"
-#include "status.h"
-#include "storage.h"
-#include "trade.h"
-#include "unit.h"
-#include "../common/HPM.h"
-#include "../common/cbasetypes.h"
-#include "../common/conf.h"
-#include "../common/console.h"
-#include "../common/core.h"
-#include "../common/ers.h"
-#include "../common/grfio.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h" // WFIFO*()
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
-
 #ifndef _WIN32
 #include <unistd.h>
 #endif
@@ -1799,7 +1799,7 @@ int map_quit(struct map_session_data *sd) {
 	if( sd->bg_id && !sd->bg_queue.arena ) /* TODO: dump this chunk after bg_queue is fully enabled */
 		bg->team_leave(sd,BGTL_QUIT);
 
-	if (sd->state.autotrade && runflag != MAPSERVER_ST_SHUTDOWN && !clif->hChSys->closing)
+	if (sd->state.autotrade && runflag != MAPSERVER_ST_SHUTDOWN && !channel->config->closing)
 		pc->autotrade_update(sd,PAUC_REMOVE);
 
 	skill->cooldown_save(sd);
@@ -1843,24 +1843,20 @@ int map_quit(struct map_session_data *sd) {
 	for( i = 0; i < EQI_MAX; i++ ) {
 		if( sd->equip_index[ i ] >= 0 )
 			if( !pc->isequip( sd , sd->equip_index[ i ] ) )
-				pc->unequipitem( sd , sd->equip_index[ i ] , 2 );
+				pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_FORCE);
 	}
 
 	// Return loot to owner
 	if( sd->pd ) pet->lootitem_drop(sd->pd, sd);
 
-	if( sd->state.storage_flag == 1 ) sd->state.storage_flag = 0; // No need to Double Save Storage on Quit.
+	if( sd->state.storage_flag == STORAGE_FLAG_NORMAL ) sd->state.storage_flag = STORAGE_FLAG_CLOSED; // No need to Double Save Storage on Quit.
 
 	if( sd->ed ) {
 		elemental->clean_effect(sd->ed);
 		unit->remove_map(&sd->ed->bl,CLR_TELEPORT,ALC_MARK);
 	}
 
-	if (clif->hChSys->local && map->list[sd->bl.m].channel && idb_exists(map->list[sd->bl.m].channel->users, sd->status.char_id)) {
-		clif->chsys_left(map->list[sd->bl.m].channel,sd);
-	}
-
-	clif->chsys_quit(sd);
+	channel->quit(sd);
 
 	unit->remove_map_pc(sd,CLR_RESPAWN);
 
@@ -3076,70 +3072,66 @@ int map_delmap(char* mapname) {
 	}
 	return 0;
 }
+
+/**
+ *
+ **/
+void map_zone_clear_single(struct map_zone_data *zone) {
+	int i;
+	
+	for(i = 0; i < zone->disabled_skills_count; i++) {
+		aFree(zone->disabled_skills[i]);
+	}
+	
+	if( zone->disabled_skills )
+		aFree(zone->disabled_skills);
+	
+	if( zone->disabled_items )
+		aFree(zone->disabled_items);
+	
+	if( zone->cant_disable_items )
+		aFree(zone->cant_disable_items);
+	
+	for(i = 0; i < zone->mapflags_count; i++) {
+		aFree(zone->mapflags[i]);
+	}
+	
+	if( zone->mapflags )
+		aFree(zone->mapflags);
+	
+	for(i = 0; i < zone->disabled_commands_count; i++) {
+		aFree(zone->disabled_commands[i]);
+	}
+	
+	if( zone->disabled_commands )
+		aFree(zone->disabled_commands);
+	
+	for(i = 0; i < zone->capped_skills_count; i++) {
+		aFree(zone->capped_skills[i]);
+	}
+	
+	if( zone->capped_skills )
+		aFree(zone->capped_skills);
+}
+/**
+ *
+ **/
 void map_zone_db_clear(void) {
 	struct map_zone_data *zone;
-	int i;
-
 	DBIterator *iter = db_iterator(map->zone_db);
+	
 	for(zone = dbi_first(iter); dbi_exists(iter); zone = dbi_next(iter)) {
-		for(i = 0; i < zone->disabled_skills_count; i++) {
-			aFree(zone->disabled_skills[i]);
-		}
-		aFree(zone->disabled_skills);
-		aFree(zone->disabled_items);
-		for(i = 0; i < zone->mapflags_count; i++) {
-			aFree(zone->mapflags[i]);
-		}
-		aFree(zone->mapflags);
-		for(i = 0; i < zone->disabled_commands_count; i++) {
-			aFree(zone->disabled_commands[i]);
-		}
-		aFree(zone->disabled_commands);
-		for(i = 0; i < zone->capped_skills_count; i++) {
-			aFree(zone->capped_skills[i]);
-		}
-		aFree(zone->capped_skills);
+		map->zone_clear_single(zone);
 	}
+	
 	dbi_destroy(iter);
 
 	db_destroy(map->zone_db);/* will aFree(zone) */
 
 	/* clear the pk zone stuff */
-	for(i = 0; i < map->zone_pk.disabled_skills_count; i++) {
-		aFree(map->zone_pk.disabled_skills[i]);
-	}
-	aFree(map->zone_pk.disabled_skills);
-	aFree(map->zone_pk.disabled_items);
-	for(i = 0; i < map->zone_pk.mapflags_count; i++) {
-		aFree(map->zone_pk.mapflags[i]);
-	}
-	aFree(map->zone_pk.mapflags);
-	for(i = 0; i < map->zone_pk.disabled_commands_count; i++) {
-		aFree(map->zone_pk.disabled_commands[i]);
-	}
-	aFree(map->zone_pk.disabled_commands);
-	for(i = 0; i < map->zone_pk.capped_skills_count; i++) {
-		aFree(map->zone_pk.capped_skills[i]);
-	}
-	aFree(map->zone_pk.capped_skills);
+	map->zone_clear_single(&map->zone_pk);
 	/* clear the main zone stuff */
-	for(i = 0; i < map->zone_all.disabled_skills_count; i++) {
-		aFree(map->zone_all.disabled_skills[i]);
-	}
-	aFree(map->zone_all.disabled_skills);
-	aFree(map->zone_all.disabled_items);
-	for(i = 0; i < map->zone_all.mapflags_count; i++) {
-		aFree(map->zone_all.mapflags[i]);
-	}
-	aFree(map->zone_all.mapflags);
-	for(i = 0; i < map->zone_all.disabled_commands_count; i++) {
-		aFree(map->zone_all.disabled_commands[i]);
-	}
-	aFree(map->zone_all.disabled_commands);
-	for(i = 0; i < map->zone_all.capped_skills_count; i++) {
-		aFree(map->zone_all.capped_skills[i]);
-	}
-	aFree(map->zone_all.capped_skills);
+	map->zone_clear_single(&map->zone_all);
 }
 void map_clean(int i) {
 	int v;
@@ -3189,7 +3181,7 @@ void map_clean(int i) {
 	}
 
 	if( map->list[i].channel )
-		clif->chsys_delete(map->list[i].channel);
+		channel->delete(map->list[i].channel);
 }
 void do_final_maps(void) {
 	int i, v = 0;
@@ -3248,7 +3240,7 @@ void do_final_maps(void) {
 			aFree(map->list[i].drop_list);
 
 		if( map->list[i].channel )
-			clif->chsys_delete(map->list[i].channel);
+			channel->delete(map->list[i].channel);
 		
 		if( map->list[i].qi_data )
 			aFree(map->list[i].qi_data);
@@ -3602,6 +3594,8 @@ int map_config_read(char *cfgName) {
 			map->enable_grf = config_switch(w2);
 		else if (strcmpi(w1, "console_msg_log") == 0)
 			console_msg_log = atoi(w2);//[Ind]
+		else if (strcmpi(w1, "default_language") == 0)
+			safestrncpy(map->default_lang_str, w2, sizeof(map->default_lang_str));
 		else if (strcmpi(w1, "import") == 0)
 			map->config_read(w2);
 		else
@@ -3728,22 +3722,14 @@ int inter_config_read(char *cfgName) {
 			safestrncpy(map->item_db_db, w2, sizeof(map->item_db_db));
 		else if(strcmpi(w1,"mob_db_db")==0)
 			safestrncpy(map->mob_db_db, w2, sizeof(map->mob_db_db));
-		else if (strcmpi(w1, "mob_db_re_db") == 0)
-			safestrncpy(map->mob_db_re_db, w2, sizeof(map->mob_db_re_db));
 		else if(strcmpi(w1,"item_db2_db")==0)
 			safestrncpy(map->item_db2_db, w2, sizeof(map->item_db2_db));
-		else if(strcmpi(w1,"item_db_re_db")==0)
-			safestrncpy(map->item_db_re_db, w2, sizeof(map->item_db_re_db));
 		else if(strcmpi(w1,"mob_db2_db")==0)
 			safestrncpy(map->mob_db2_db, w2, sizeof(map->mob_db2_db));
 		else if(strcmpi(w1, "mob_skill_db_db") == 0)
 			safestrncpy(map->mob_skill_db_db, w2, sizeof(map->mob_skill_db_db));
-		else if(strcmpi(w1, "mob_skill_db_re_db") == 0)
-			safestrncpy(map->mob_skill_db_re_db, w2, sizeof(map->mob_skill_db_re_db));
 		else if(strcmpi(w1,"mob_skill_db2_db")==0)
 			safestrncpy(map->mob_skill_db2_db, w2, sizeof(map->mob_skill_db2_db));
-		else if(strcmpi(w1,"interreg_db")==0)
-			safestrncpy(map->interreg_db, w2, sizeof(map->interreg_db));
 		/* map sql stuff */
 		else if(strcmpi(w1,"map_server_ip")==0)
 			safestrncpy(map->server_ip, w2, sizeof(map->server_ip));
@@ -3760,14 +3746,38 @@ int inter_config_read(char *cfgName) {
 		else if(strcmpi(w1,"use_sql_item_db")==0) {
 			map->db_use_sql_item_db = config_switch(w2);
 			ShowStatus ("Using item database as SQL: '%s'\n", w2);
+			if (map->db_use_sql_item_db) {
+				// Deprecated 2015-08-09 [Haru]
+				ShowWarning("Support for the SQL item database is deprecated and it will removed in future versions. "
+						"Please upgrade to the non-sql version as soon as possible. "
+						"Bug reports or pull requests concerning the SQL item database are no longer accepted.\n");
+				ShowInfo("Resuming in 10 seconds...\n");
+				HSleep(10);
+			}
 		}
 		else if(strcmpi(w1,"use_sql_mob_db")==0) {
 			map->db_use_sql_mob_db = config_switch(w2);
 			ShowStatus ("Using monster database as SQL: '%s'\n", w2);
+			if (map->db_use_sql_mob_db) {
+				// Deprecated 2015-08-09 [Haru]
+				ShowWarning("Support for the SQL monster database is deprecated and it will removed in future versions. "
+						"Please upgrade to the non-sql version as soon as possible. "
+						"Bug reports or pull requests concerning the SQL monster database are no longer accepted.\n");
+				ShowInfo("Resuming in 10 seconds...\n");
+				HSleep(10);
+			}
 		}
 		else if(strcmpi(w1,"use_sql_mob_skill_db")==0) {
 			map->db_use_sql_mob_skill_db = config_switch(w2);
 			ShowStatus ("Using monster skill database as SQL: '%s'\n", w2);
+			if (map->db_use_sql_mob_db) {
+				// Deprecated 2015-08-09 [Haru]
+				ShowWarning("Support for the SQL monster skill database is deprecated and it will removed in future versions. "
+						"Please upgrade to the non-sql version as soon as possible. "
+						"Bug reports or pull requests concerning the SQL monster skill database are no longer accepted.\n");
+				ShowInfo("Resuming in 10 seconds...\n");
+				HSleep(10);
+			}
 		}
 		else if(strcmpi(w1,"autotrade_merchants_db")==0)
 			safestrncpy(map->autotrade_merchants_db, w2, sizeof(map->autotrade_merchants_db));
@@ -3841,7 +3851,7 @@ int map_sql_close(void)
 struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct map_zone_data *other) {
 	char newzone[MAP_ZONE_NAME_LENGTH];
 	struct map_zone_data *zone = NULL;
-	int cursor, i;
+	int cursor, i, j;
 	
 	sprintf(newzone, "%s+%s",main->name,other->name);
 	
@@ -3870,14 +3880,31 @@ struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct map_zone
 		memcpy(zone->disabled_skills[cursor], other->disabled_skills[i], sizeof(struct map_zone_disabled_skill_entry));
 	}
 	
+	for(j = 0; j < main->cant_disable_items_count; j++) {
+		for(i = 0; i < other->disabled_items_count; i++) {
+			if( other->disabled_items[i] == main->cant_disable_items[j] ) {
+				zone->disabled_items_count--;
+				break;
+			}
+		}
+	}
+
 	CREATE(zone->disabled_items, int, zone->disabled_items_count );
 	
 	for(i = 0, cursor = 0; i < main->disabled_items_count; i++, cursor++ ) {
 		zone->disabled_items[cursor] = main->disabled_items[i];
 	}
 	
-	for(i = 0; i < other->disabled_items_count; i++, cursor++ ) {
+	for(i = 0; i < other->disabled_items_count; i++) {
+		for(j = 0; j < main->cant_disable_items_count; j++) {
+			if( other->disabled_items[i] == main->cant_disable_items[j] ) {
+				break;
+			}
+		}
+		if( j != main->cant_disable_items_count )
+			continue;
 		zone->disabled_items[cursor] = other->disabled_items[i];
+		cursor++;
 	}
 
 	CREATE(zone->mapflags, char *, zone->mapflags_count );
@@ -4856,7 +4883,7 @@ void read_map_zone_db(void) {
 		config_setting_t *caps;
 		const char *name;
 		const char *zonename;
-		int i,h,v;
+		int i,h,v,j;
 		int zone_count = 0, disabled_skills_count = 0, disabled_items_count = 0, mapflags_count = 0,
 			disabled_commands_count = 0, capped_skills_count = 0;
 		enum map_zone_skill_subtype subtype;
@@ -4954,12 +4981,19 @@ void read_map_zone_db(void) {
 				}
 				/* all ok, process */
 				CREATE( zone->disabled_items, int, disabled_items_count );
-				for(h = 0, v = 0; h < libconfig->setting_length(items); h++) {
+				if( (libconfig->setting_length(items) - disabled_items_count) > 0 ) { //Some are forcefully enabled
+					zone->cant_disable_items_count = libconfig->setting_length(items) - disabled_items_count;
+					CREATE(zone->cant_disable_items, int, zone->cant_disable_items_count);
+					
+				}
+				for(h = 0, v = 0, j = 0; h < libconfig->setting_length(items); h++) {
 					config_setting_t *item = libconfig->setting_get_elem(items, h);
 
+					name = config_setting_name(item);
 					if( libconfig->setting_get_bool(item) ) { /* only add if enabled */
-						name = config_setting_name(item);
 						zone->disabled_items[v++] = map->zone_str2itemid(name);
+					} else { /** forcefully enabled **/
+						zone->cant_disable_items[j++] = map->zone_str2itemid(name);
 					}
 
 				}
@@ -5090,7 +5124,6 @@ void read_map_zone_db(void) {
 				int mapflags_count_i = 0; /* mapflag count from inherit zone */
 				int disabled_commands_count_i = 0; /* commands count from inherit zone */
 				int capped_skills_count_i = 0; /* skill capped count from inherit zone */
-				int j;
 
 				name = libconfig->setting_get_string_elem(inherit_tree, h);
 				libconfig->setting_lookup_string(zone_e, "name", &zonename);/* will succeed for we validated it earlier */
@@ -5362,7 +5395,7 @@ int do_final(void) {
 
 	ShowStatus("Terminating...\n");
 	
-	clif->hChSys->closing = true;
+	channel->config->closing = true;
 	HPM->event(HPET_FINAL);
 	
 	if (map->cpsd) aFree(map->cpsd);
@@ -5398,8 +5431,9 @@ int do_final(void) {
 
 	atcommand->final();
 	battle->final();
+	ircbot->final();/* before channel. */
+	channel->final();
 	chrif->final();
-	ircbot->final();/* before clif. */
 	clif->final();
 	npc->final();
 	quest->final();
@@ -5585,6 +5619,7 @@ void map_hp_symbols(void) {
 	HPM->share(battle,"battle");
 	HPM->share(bg,"battlegrounds");
 	HPM->share(buyingstore,"buyingstore");
+	HPM->share(channel,"channel");
 	HPM->share(clif,"clif");
 	HPM->share(chrif,"chrif");
 	HPM->share(guild,"guild");
@@ -5640,6 +5675,7 @@ void map_load_defaults(void) {
 	battle_defaults();
 	battleground_defaults();
 	buyingstore_defaults();
+	channel_defaults();
 	clif_defaults();
 	chrif_defaults();
 	guild_defaults();
@@ -5808,6 +5844,24 @@ static CMDLINEARG(loadscript)
 	map->extra_scripts[map->extra_scripts_count-1] = aStrdup(params);
 	return true;
 }
+
+/**
+ * --generate-translations
+ *
+ * Creates "./generated_translations.pot"
+ * @see cmdline->exec
+ **/
+static CMDLINEARG(generatetranslations) {
+	script->lang_export_file = aStrdup("./generated_translations.pot");
+	
+	if( !(script->lang_export_fp = fopen(script->lang_export_file,"wb")) ) {
+		ShowError("export-dialog: failed to open '%s' for writing\n",script->lang_export_file);
+	}
+	
+	runflag = CORE_ST_STOP;
+	return true;
+}
+
 /**
  * Defines the local command line arguments
  */
@@ -5824,6 +5878,7 @@ void cmdline_args_init_local(void)
 	CMDLINEARG_DEF2(log-config, logconfig, "Alternative logging configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
 	CMDLINEARG_DEF2(script-check, scriptcheck, "Doesn't run the server, only tests the scripts passed through --load-script.", CMDLINE_OPT_SILENT);
 	CMDLINEARG_DEF2(load-script, loadscript, "Loads an additional script (can be repeated).", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(generate-translations, generatetranslations, "Creates './generated_translations.pot' file with all translateable strings from scripts, server terminates afterwards.", CMDLINE_OPT_NORMAL);
 }
 
 int do_init(int argc, char *argv[])
@@ -5946,6 +6001,7 @@ int do_init(int argc, char *argv[])
 	atcommand->init(minimal);
 	battle->init(minimal);
 	instance->init(minimal);
+	channel->init(minimal);
 	chrif->init(minimal);
 	clif->init(minimal);
 	ircbot->init(minimal);
@@ -6051,14 +6107,10 @@ void map_defaults(void) {
 	
 	sprintf(map->item_db_db, "item_db");
 	sprintf(map->item_db2_db, "item_db2");
-	sprintf(map->item_db_re_db, "item_db_re");
 	sprintf(map->mob_db_db, "mob_db");
-	sprintf(map->mob_db_re_db, "mob_db_re");
 	sprintf(map->mob_db2_db, "mob_db2");
 	sprintf(map->mob_skill_db_db, "mob_skill_db");
-	sprintf(map->mob_skill_db_re_db, "mob_skill_db_re");
 	sprintf(map->mob_skill_db2_db, "mob_skill_db2");
-	sprintf(map->interreg_db, "interreg");
 	
 	map->INTER_CONF_NAME="conf/inter-server.conf";
 	map->LOG_CONF_NAME="conf/logs.conf";
@@ -6076,6 +6128,7 @@ void map_defaults(void) {
 	sprintf(map->server_pw,"ragnarok");
 	sprintf(map->server_db,"ragnarok");
 	map->mysql_handle = NULL;
+	map->default_lang_str[0] = '\0';
 
 	map->cpsd_active = false;
 	
@@ -6107,10 +6160,7 @@ void map_defaults(void) {
 	map->bl_list_size = 0;
 	
 	//all in a big chunk, respects order
-	memset(&map->bl_head,0,sizeof(map->bl_head)
-		   + sizeof(map->zone_all)
-		   + sizeof(map->zone_pk)
-		   );
+	memset(ZEROED_BLOCK_POS(map), 0, ZEROED_BLOCK_SIZE(map));
 	
 	map->cpsd = NULL;
 	map->list = NULL;
@@ -6291,6 +6341,7 @@ void map_defaults(void) {
 	map->remove_questinfo = map_remove_questinfo;
 	
 	map->merge_zone = map_merge_zone;
+	map->zone_clear_single = map_zone_clear_single;
 		
 	/**
 	 * mapit interface

@@ -6,25 +6,26 @@
 
 #include "login.h"
 
+#include "login/HPMlogin.h"
+#include "login/account.h"
+#include "login/ipban.h"
+#include "login/loginlog.h"
+#include "common/HPM.h"
+#include "common/cbasetypes.h"
+#include "common/core.h"
+#include "common/db.h"
+#include "common/malloc.h"
+#include "common/md5calc.h"
+#include "common/nullpo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+#include "common/utils.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-#include "HPMlogin.h"
-#include "account.h"
-#include "ipban.h"
-#include "loginlog.h"
-#include "../common/HPM.h"
-#include "../common/core.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/md5calc.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
 
 struct login_interface login_s;
 struct Login_Config login_config;
@@ -98,6 +99,7 @@ static int login_online_db_setoffline(DBKey key, DBData *data, va_list ap)
 {
 	struct online_login_data* p = DB->data2ptr(data);
 	int server_id = va_arg(ap, int);
+	nullpo_ret(p);
 	if( server_id == -1 )
 	{
 		p->char_server = -1;
@@ -118,6 +120,7 @@ static int login_online_db_setoffline(DBKey key, DBData *data, va_list ap)
 static int login_online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
 {
 	struct online_login_data *character= DB->data2ptr(data);
+	nullpo_ret(character);
 	if (character->char_server == -2) //Unknown server.. set them offline
 		login->remove_online_user(character->account_id);
 	return 0;
@@ -136,6 +139,7 @@ int charif_sendallwos(int sfd, uint8* buf, size_t len)
 {
 	int i, c;
 
+	nullpo_ret(buf);
 	for( i = 0, c = 0; i < ARRAYLENGTH(server); ++i )
 	{
 		int fd = server[i].fd;
@@ -155,6 +159,7 @@ int charif_sendallwos(int sfd, uint8* buf, size_t len)
 /// Initializes a server structure.
 void chrif_server_init(int id)
 {
+	Assert_retv(id >= 0 && id < MAX_SERVERS);
 	memset(&server[id], 0, sizeof(server[id]));
 	server[id].fd = -1;
 }
@@ -163,7 +168,8 @@ void chrif_server_init(int id)
 /// Destroys a server structure.
 void chrif_server_destroy(int id)
 {
-	if( server[id].fd != -1 )
+	Assert_retv(id >= 0 && id < MAX_SERVERS);
+	if (server[id].fd != -1)
 	{
 		do_close(server[id].fd);
 		server[id].fd = -1;
@@ -183,6 +189,7 @@ void chrif_server_reset(int id)
 /// Called when the connection to Char Server is disconnected.
 void chrif_on_disconnect(int id)
 {
+	Assert_retv(id >= 0 && id < MAX_SERVERS);
 	ShowStatus("Char-server '%s' has disconnected.\n", server[id].name);
 	chrif_server_reset(id);
 }
@@ -207,6 +214,9 @@ bool login_check_encrypted(const char* str1, const char* str2, const char* passw
 {
 	char tmpstr[64+1], md5str[32+1];
 
+	nullpo_ret(str1);
+	nullpo_ret(str2);
+	nullpo_ret(passwd);
 	safesnprintf(tmpstr, sizeof(tmpstr), "%s%s", str1, str2);
 	MD5_String(tmpstr, md5str);
 
@@ -215,17 +225,16 @@ bool login_check_encrypted(const char* str1, const char* str2, const char* passw
 
 bool login_check_password(const char* md5key, int passwdenc, const char* passwd, const char* refpass)
 {
-	if(passwdenc == 0)
-	{
+	nullpo_ret(passwd);
+	nullpo_ret(refpass);
+	if(passwdenc == PWENC_NONE) {
 		return (0==strcmp(passwd, refpass));
-	}
-	else
-	{
-		// password mode set to 1 -> md5(md5key, refpass) enable with <passwordencrypt></passwordencrypt>
-		// password mode set to 2 -> md5(refpass, md5key) enable with <passwordencrypt2></passwordencrypt2>
+	} else {
+		// password mode set to PWENC_ENCRYPT  -> md5(md5key, refpass) enable with <passwordencrypt></passwordencrypt>
+		// password mode set to PWENC_ENCRYPT2 -> md5(refpass, md5key) enable with <passwordencrypt2></passwordencrypt2>
 
-		return ((passwdenc&0x01) && login->check_encrypted(md5key, refpass, passwd)) ||
-		       ((passwdenc&0x02) && login->check_encrypted(refpass, md5key, passwd));
+		return ((passwdenc&PWENC_ENCRYPT) && login->check_encrypted(md5key, refpass, passwd)) ||
+		       ((passwdenc&PWENC_ENCRYPT2) && login->check_encrypted(refpass, md5key, passwd));
 	}
 }
 
@@ -248,6 +257,7 @@ int login_lan_config_read(const char *lancfgName)
 	int line_num = 0;
 	char line[1024], w1[64], w2[64], w3[64], w4[64];
 
+	nullpo_ret(lancfgName);
 	if((fp = fopen(lancfgName, "r")) == NULL) {
 		ShowWarning("LAN Support configuration file is not found: %s\n", lancfgName);
 		return 1;
@@ -348,6 +358,7 @@ void login_fromchar_parse_auth(int fd, int id, const char *const ip)
 	}
 	else
 	{// authentication not found
+		nullpo_retv(ip);
 		ShowStatus("Char-server '%s': authentication of the account %d REFUSED (ip: %s).\n", server[id].name, account_id, ip);
 		login->fromchar_auth_ack(fd, account_id, login_id1, login_id2, sex, request_id, NULL);
 	}
@@ -382,7 +393,7 @@ void login_fromchar_parse_request_change_email(int fd, int id, const char *const
 	if( !accounts->load_num(accounts, &acc, account_id) || strcmp(acc.email, "a@a.com") == 0 || acc.email[0] == '\0' )
 		ShowNotice("Char-server '%s': Attempt to create an e-mail on an account with a default e-mail REFUSED - account doesn't exist or e-mail of account isn't default e-mail (account: %d, ip: %s).\n", server[id].name, account_id, ip);
 	else {
-		memcpy(acc.email, email, 40);
+		memcpy(acc.email, email, sizeof(acc.email));
 		ShowNotice("Char-server '%s': Create an e-mail on an account with a default e-mail (account: %d, new e-mail: %s, ip: %s).\n", server[id].name, account_id, email, ip);
 		// Save
 		accounts->save(accounts, &acc);
@@ -489,7 +500,7 @@ void login_fromchar_parse_change_email(int fd, int id, const char *const ip)
 	if( strcmpi(acc.email, actual_email) != 0 )
 		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command), but actual e-mail is incorrect (account: %d (%s), actual e-mail: %s, proposed e-mail: %s, ip: %s).\n", server[id].name, account_id, acc.userid, acc.email, actual_email, ip);
 	else {
-		safestrncpy(acc.email, new_email, 40);
+		safestrncpy(acc.email, new_email, sizeof(acc.email));
 		ShowNotice("Char-server '%s': Modify an e-mail on an account (@email GM command) (account: %d (%s), new e-mail: %s, ip: %s).\n", server[id].name, account_id, acc.userid, new_email, ip);
 		// Save
 		accounts->save(accounts, &acc);
@@ -719,9 +730,9 @@ void login_fromchar_parse_change_pincode(int fd)
 {
 	struct mmo_account acc;
 
-	if( accounts->load_num(accounts, &acc, RFIFOL(fd,2) ) ) {
-		safestrncpy( acc.pincode, (char*)RFIFOP(fd,6), sizeof(acc.pincode) );
-		acc.pincode_change = ((unsigned int)time( NULL ));
+	if (accounts->load_num(accounts, &acc, RFIFOL(fd,2))) {
+		safestrncpy(acc.pincode, (char*)RFIFOP(fd,6), sizeof(acc.pincode));
+		acc.pincode_change = ((unsigned int)time(NULL));
 		accounts->save(accounts, &acc);
 	}
 	RFIFOSKIP(fd,11);
@@ -739,7 +750,7 @@ bool login_fromchar_parse_wrong_pincode(int fd)
 			return true;
 		}
 
-		login_log(host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed");
+		login_log(host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed"); // FIXME: Do we really want to log this with the same code as successful logins?
 	}
 
 	login->remove_online_user(acc.account_id);
@@ -1008,6 +1019,9 @@ int login_mmo_auth_new(const char* userid, const char* pass, const char sex, con
 	int64 tick = timer->gettick();
 	struct mmo_account acc;
 
+	nullpo_retr(3, userid);
+	nullpo_retr(3, pass);
+	nullpo_retr(3, last_ip);
 	//Account Registration Flood Protection by [Kevin]
 	if( new_reg_tick == 0 )
 		new_reg_tick = timer->gettick();
@@ -1060,11 +1074,13 @@ int login_mmo_auth_new(const char* userid, const char* pass, const char sex, con
 //-----------------------------------------------------
 // Check/authentication of a connection
 //-----------------------------------------------------
+// TODO: Map result values to an enum (or at least document them)
 int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 	struct mmo_account acc;
 	size_t len;
 
 	char ip[16];
+	nullpo_ret(sd);
 	ip2str(session[sd->fd]->client_addr, ip);
 
 	// DNS Blacklist check
@@ -1095,7 +1111,7 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 	// Account creation with _M/_F
 	if( login_config.new_account_flag ) {
 		if (len > 2 && sd->passwd[0] != '\0' && // valid user and password lengths
-			sd->passwdenc == 0 && // unencoded password
+			sd->passwdenc == PWENC_NONE && // unencoded password
 			sd->userid[len-2] == '_' && memchr("FfMm", sd->userid[len-1], 4)) // _M/_F suffix
 		{
 			int result;
@@ -1206,6 +1222,7 @@ void login_connection_problem(int fd, uint8 status)
 void login_kick(struct login_session_data* sd)
 {
 	uint8 buf[6];
+	nullpo_retv(sd);
 	WBUFW(buf,0) = 0x2734;
 	WBUFL(buf,2) = sd->account_id;
 	charif_sendallwos(-1, buf, 6);
@@ -1213,14 +1230,16 @@ void login_kick(struct login_session_data* sd)
 
 void login_auth_ok(struct login_session_data* sd)
 {
-	int fd = sd->fd;
-	uint32 ip = session[fd]->client_addr;
-
+	int fd = 0;
+	uint32 ip;
 	uint8 server_num, n;
 	uint32 subnet_char_ip;
 	struct login_auth_node* node;
 	int i;
 
+	nullpo_retv(sd);
+	fd = sd->fd;
+	ip = session[fd]->client_addr;
 	if( runflag != LOGINSERVER_ST_RUNNING )
 	{
 		// players can only login while running
@@ -1336,9 +1355,12 @@ void login_auth_ok(struct login_session_data* sd)
 
 void login_auth_failed(struct login_session_data* sd, int result)
 {
-	int fd = sd->fd;
-	uint32 ip = session[fd]->client_addr;
+	int fd;
+	uint32 ip;
+	nullpo_retv(sd);
 
+	fd = sd->fd;
+	ip = session[fd]->client_addr;
 	if (login_config.log_login)
 	{
 		const char* error;
@@ -1368,7 +1390,7 @@ void login_auth_failed(struct login_session_data* sd, int result)
 		default : error = "Unknown Error."; break;
 		}
 
-		login_log(ip, sd->userid, result, error);
+		login_log(ip, sd->userid, result, error); // FIXME: result can be 100, conflicting with the value 100 we use for successful login...
 	}
 
 	if( result == 1 && login_config.dynamic_pass_failure_ban )
@@ -1409,11 +1431,13 @@ void login_login_error(int fd, uint8 status)
 	WFIFOSET(fd,23);
 }
 
+void login_parse_ping(int fd, struct login_session_data* sd) __attribute__((nonnull (2)));
 void login_parse_ping(int fd, struct login_session_data* sd)
 {
 	RFIFOSKIP(fd,26);
 }
 
+void login_parse_client_md5(int fd, struct login_session_data* sd) __attribute__((nonnull (2)));
 void login_parse_client_md5(int fd, struct login_session_data* sd)
 {
 	sd->has_client_hash = 1;
@@ -1422,6 +1446,7 @@ void login_parse_client_md5(int fd, struct login_session_data* sd)
 	RFIFOSKIP(fd,18);
 }
 
+bool login_parse_client_login(int fd, struct login_session_data* sd, const char *const ip) __attribute__((nonnull (2)));
 bool login_parse_client_login(int fd, struct login_session_data* sd, const char *const ip)
 {
 	uint32 version;
@@ -1478,7 +1503,7 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 		safestrncpy(sd->passwd, password, PASSWD_LEN);
 		if( login_config.use_md5_passwds )
 			MD5_String(sd->passwd, sd->passwd);
-		sd->passwdenc = 0;
+		sd->passwdenc = PWENC_NONE;
 	}
 	else
 	{
@@ -1487,8 +1512,7 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 		sd->passwdenc = PASSWORDENC;
 	}
 
-	if( sd->passwdenc != 0 && login_config.use_md5_passwds )
-	{
+	if (sd->passwdenc != PWENC_NONE && login_config.use_md5_passwds) {
 		login->auth_failed(sd, 3); // send "rejected from server"
 		return true;
 	}
@@ -1502,6 +1526,7 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 	return false;
 }
 
+void login_send_coding_key(int fd, struct login_session_data* sd) __attribute__((nonnull (2)));
 void login_send_coding_key(int fd, struct login_session_data* sd)
 {
 	WFIFOHEAD(fd,4 + sd->md5keylen);
@@ -1511,6 +1536,7 @@ void login_send_coding_key(int fd, struct login_session_data* sd)
 	WFIFOSET(fd,WFIFOW(fd,2));
 }
 
+void login_parse_request_coding_key(int fd, struct login_session_data* sd) __attribute__((nonnull (2)));
 void login_parse_request_coding_key(int fd, struct login_session_data* sd)
 {
 	memset(sd->md5key, '\0', sizeof(sd->md5key));
@@ -1520,6 +1546,7 @@ void login_parse_request_coding_key(int fd, struct login_session_data* sd)
 	login->send_coding_key(fd, sd);
 }
 
+void login_char_server_connection_status(int fd, struct login_session_data* sd, uint8 status) __attribute__((nonnull (2)));
 void login_char_server_connection_status(int fd, struct login_session_data* sd, uint8 status)
 {
 	WFIFOHEAD(fd,3);
@@ -1528,7 +1555,8 @@ void login_char_server_connection_status(int fd, struct login_session_data* sd, 
 	WFIFOSET(fd,3);
 }
 
-void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip)
+void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl) __attribute__((nonnull (2, 3)));
+void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl)
 {
 	char server_name[20];
 	char message[256];
@@ -1542,7 +1570,7 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 	safestrncpy(sd->passwd, (char*)RFIFOP(fd,26), NAME_LENGTH);
 	if( login_config.use_md5_passwds )
 		MD5_String(sd->passwd, sd->passwd);
-	sd->passwdenc = 0;
+	sd->passwdenc = PWENC_NONE;
 	sd->version = login_config.client_version_to_connect; // hack to skip version check
 	server_ip = ntohl(RFIFOL(fd,54));
 	server_port = ntohs(RFIFOW(fd,58));
@@ -1556,11 +1584,13 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 	login_log(session[fd]->client_addr, sd->userid, 100, message);
 
 	result = login->mmo_auth(sd, true);
-	if( runflag == LOGINSERVER_ST_RUNNING &&
+	if (runflag == LOGINSERVER_ST_RUNNING &&
 		result == -1 &&
 		sd->sex == 'S' &&
-		sd->account_id >= 0 && sd->account_id < ARRAYLENGTH(server) &&
-		!session_isValid(server[sd->account_id].fd) )
+		sd->account_id >= 0 &&
+		sd->account_id < ARRAYLENGTH(server) &&
+		!session_isValid(server[sd->account_id].fd) &&
+		login->lan_subnetcheck(ipl))
 	{
 		ShowStatus("Connection of the char-server '%s' accepted.\n", server_name);
 		safestrncpy(server[sd->account_id].name, server_name, sizeof(server[sd->account_id].name));
@@ -1686,7 +1716,7 @@ int login_parse_login(int fd)
 			if (RFIFOREST(fd) < 86)
 				return 0;
 		{
-			login->parse_request_connection(fd, sd, ip);
+			login->parse_request_connection(fd, sd, ip, ipl);
 		}
 		return 0; // processing will continue elsewhere
 
@@ -1738,7 +1768,9 @@ void login_set_defaults()
 int login_config_read(const char* cfgName)
 {
 	char line[1024], w1[1024], w2[1024];
-	FILE* fp = fopen(cfgName, "r");
+	FILE* fp;
+	nullpo_retr(1, cfgName);
+	fp = fopen(cfgName, "r");
 	if (fp == NULL) {
 		ShowError("Configuration file (%s) not found.\n", cfgName);
 		return 1;

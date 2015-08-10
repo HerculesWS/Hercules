@@ -2,20 +2,20 @@
 // See the LICENSE file
 // Sample Hercules Plugin
 
+#include "common/HPMi.h"
+#include "common/malloc.h"
+#include "common/mmo.h"
+#include "common/socket.h"
+#include "common/strlib.h"
+#include "map/clif.h"
+#include "map/pc.h"
+#include "map/script.h"
+
+#include "common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "../common/HPMi.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../map/clif.h"
-#include "../map/pc.h"
-#include "../map/script.h"
-
-#include "../common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
 
 HPExport struct hplugin_info pinfo = {
 	"Sample",    // Plugin name
@@ -107,7 +107,7 @@ int my_pc_dropitem_post(int retVal, struct map_session_data *sd,int *n,int *amou
 	if( my_pc_dropitem_storage ) {/* signs whether pre-hook did this */
 		char output[99];
 		safesnprintf(output,99,"[ Warning ] you can only drop 1 item at a time, capped from %d to 1",my_pc_dropitem_storage);
-		clif->colormes(sd->fd,COLOR_RED,output);
+		clif->messagecolor_self(sd->fd, COLOR_RED, output);
 	}
 	return 1;
 }

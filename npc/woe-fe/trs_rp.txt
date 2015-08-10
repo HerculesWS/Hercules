@@ -13,6 +13,7 @@
 //============================================================
 
 -	script	Gld_Trea_Protect::Gld_Trea_Protect	-1,{
+end;
 
 OnTouch:
 	// Store the Guild ID of castle occupant.

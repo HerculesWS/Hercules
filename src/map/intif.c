@@ -3,8 +3,31 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // GP_BOUND_ITEMS
+#include "config/core.h" // GP_BOUND_ITEMS
 #include "intif.h"
+
+#include "map/atcommand.h"
+#include "map/battle.h"
+#include "map/chrif.h"
+#include "map/clif.h"
+#include "map/elemental.h"
+#include "map/guild.h"
+#include "map/homunculus.h"
+#include "map/log.h"
+#include "map/mail.h"
+#include "map/map.h"
+#include "map/mercenary.h"
+#include "map/party.h"
+#include "map/pc.h"
+#include "map/pet.h"
+#include "map/quest.h"
+#include "map/storage.h"
+#include "common/malloc.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/strlib.h"
+#include "common/timer.h"
 
 #include <fcntl.h>
 #include <signal.h>
@@ -12,29 +35,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
-
-#include "atcommand.h"
-#include "battle.h"
-#include "chrif.h"
-#include "clif.h"
-#include "elemental.h"
-#include "guild.h"
-#include "homunculus.h"
-#include "log.h"
-#include "mail.h"
-#include "map.h"
-#include "mercenary.h"
-#include "party.h"
-#include "pc.h"
-#include "pet.h"
-#include "quest.h"
-#include "storage.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
 
 struct intif_interface intif_s;
 
@@ -130,7 +130,7 @@ int intif_rename(struct map_session_data *sd, int type, char *name)
 // GM Send a message
 int intif_broadcast(const char* mes, size_t len, int type)
 {
-	int lp = (type|BC_COLOR_MASK) ? 4 : 0;
+	int lp = (type&BC_COLOR_MASK) ? 4 : 0;
 
 	// Send to the local players
 	clif->broadcast(NULL, mes, len, type, ALL_CLIENT);
@@ -149,9 +149,9 @@ int intif_broadcast(const char* mes, size_t len, int type)
 	WFIFOW(inter_fd,10) = 0; // fontSize not used with standard broadcast
 	WFIFOW(inter_fd,12) = 0; // fontAlign not used with standard broadcast
 	WFIFOW(inter_fd,14) = 0; // fontY not used with standard broadcast
-	if( type|BC_BLUE )
+	if (type&BC_BLUE)
 		WFIFOL(inter_fd,16) = 0x65756c62; //If there's "blue" at the beginning of the message, game client will display it in blue instead of yellow.
-	else if( type|BC_WOE )
+	else if (type&BC_WOE)
 		WFIFOL(inter_fd,16) = 0x73737373; //If there's "ssss", game client will recognize message as 'WoE broadcast'.
 	memcpy(WFIFOP(inter_fd,16 + lp), mes, len);
 	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
@@ -1582,7 +1582,7 @@ void intif_parse_MailInboxReceived(int fd) {
 		clif->mail_refreshinbox(sd);
 	else if( battle_config.mail_show_status && ( battle_config.mail_show_status == 1 || sd->mail.inbox.unread ) ) {
 		char output[128];
-		sprintf(output, msg_txt(510), sd->mail.inbox.unchecked, sd->mail.inbox.unread + sd->mail.inbox.unchecked);
+		sprintf(output, msg_sd(sd,510), sd->mail.inbox.unchecked, sd->mail.inbox.unread + sd->mail.inbox.unchecked);
 		clif_disp_onlyself(sd, output, strlen(output));
 	}
 }
@@ -2152,7 +2152,7 @@ void intif_parse_MessageToFD(int fd) {
 		if( sd && sd->bl.id == aid ) {
 			char msg[512];
 			safestrncpy(msg, (char*)RFIFOP(fd,12), RFIFOW(fd,2) - 12);
-			clif->message(u_fd,msg);
+			clif->messagecolor_self(u_fd, COLOR_DEFAULT ,msg);
 		}
 
 	}

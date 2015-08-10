@@ -72,14 +72,14 @@
 
 #include "db.h"
 
+#include "common/ers.h"
+#include "common/malloc.h"
+#include "common/mmo.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "../common/ers.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
 
 struct db_interface DB_s;
 

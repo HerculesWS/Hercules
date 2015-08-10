@@ -11,8 +11,8 @@
 //= and "rewards" function originally by Goddameit.
 //===== Additional Comments: =================================
 //= Be sure to disable the default agit controllers!
-//== npc\guild\agit_controller.txt
-//== npc\guild2\agit_start_se.txt
+//== npc\woe-fe\agit_controller.txt
+//== npc\woe-se\agit_start_se.txt
 //============================================================
 
 // Information NPC

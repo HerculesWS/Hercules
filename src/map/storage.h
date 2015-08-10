@@ -5,12 +5,21 @@
 #ifndef MAP_STORAGE_H
 #define MAP_STORAGE_H
 
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
+#include "common/cbasetypes.h"
+#include "common/db.h"
 
 struct guild_storage;
 struct item;
 struct map_session_data;
+
+/**
+ * Acceptable values for map_session_data.state.storage_flag
+ */
+enum storage_flag {
+	STORAGE_FLAG_CLOSED = 0, // Closed
+	STORAGE_FLAG_NORMAL = 1, // Normal Storage open
+	STORAGE_FLAG_GUILD  = 2, // Guild Storage open
+};
 
 struct storage_interface {
 	/* */

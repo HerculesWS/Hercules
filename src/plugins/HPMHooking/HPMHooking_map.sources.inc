@@ -8,6 +8,7 @@ memcpy(&HPMHooks.source.atcommand, atcommand, sizeof(struct atcommand_interface)
 memcpy(&HPMHooks.source.battle, battle, sizeof(struct battle_interface));
 memcpy(&HPMHooks.source.bg, bg, sizeof(struct battleground_interface));
 memcpy(&HPMHooks.source.buyingstore, buyingstore, sizeof(struct buyingstore_interface));
+memcpy(&HPMHooks.source.channel, channel, sizeof(struct channel_interface));
 memcpy(&HPMHooks.source.chat, chat, sizeof(struct chat_interface));
 memcpy(&HPMHooks.source.chrif, chrif, sizeof(struct chrif_interface));
 memcpy(&HPMHooks.source.clif, clif, sizeof(struct clif_interface));

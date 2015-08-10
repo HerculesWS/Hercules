@@ -5,10 +5,9 @@
 #ifndef COMMON_UTILS_H
 #define COMMON_UTILS_H
 
-#include <stdio.h> // FILE*
-#include <time.h>
+#include "common/cbasetypes.h"
 
-#include "../common/cbasetypes.h"
+#include <stdio.h> // FILE*
 
 /* [HCache] 1-byte key to ensure our method is the latest, we can modify to ensure the method matches */
 #define HCACHE_KEY 'k'
@@ -51,6 +50,12 @@ extern float GetFloat(const unsigned char* buf);
 size_t hread(void * ptr, size_t size, size_t count, FILE * stream);
 size_t hwrite(const void * ptr, size_t size, size_t count, FILE * stream);
 #endif // HERCULES_CORE
+
+#ifdef WIN32
+#define HSleep(x) Sleep(1000 * (x))
+#else // ! WIN32
+#define HSleep(x) sleep(x)
+#endif
 
 /* [Ind/Hercules] Caching */
 struct HCache_interface {

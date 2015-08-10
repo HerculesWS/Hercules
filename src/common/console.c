@@ -4,34 +4,33 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // CONSOLE_INPUT, MAX_CONSOLE_INPUT
+#include "config/core.h" // CONSOLE_INPUT, MAX_CONSOLE_INPUT
 #include "console.h"
+
+#include "common/cbasetypes.h"
+#include "common/core.h"
+#include "common/showmsg.h"
+#include "common/sysinfo.h"
+
+#ifndef MINICORE
+#	include "common/atomic.h"
+#	include "common/ers.h"
+#	include "common/malloc.h"
+#	include "common/mutex.h"
+#	include "common/spinlock.h"
+#	include "common/sql.h"
+#	include "common/strlib.h"
+#	include "common/thread.h"
+#	include "common/timer.h"
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "../common/cbasetypes.h"
-#include "../common/core.h"
-#include "../common/showmsg.h"
-#include "../common/sysinfo.h"
-
-#ifndef MINICORE
-#	include "../common/atomic.h"
-#	include "../common/ers.h"
-#	include "../common/malloc.h"
-#	include "../common/mutex.h"
-#	include "../common/spinlock.h"
-#	include "../common/sql.h"
-#	include "../common/strlib.h"
-#	include "../common/thread.h"
-#	include "../common/timer.h"
-#endif
-
 #if !defined(WIN32)
 #	include <sys/time.h>
 #	include <unistd.h>
 #else
-#	include "../common/winapi.h" // Console close event handling
+#	include "common/winapi.h" // Console close event handling
 #	ifdef CONSOLE_INPUT
 #		include <conio.h> /* _kbhit() */
 #	endif
@@ -63,7 +62,7 @@ void display_title(void) {
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"               | | | |  __/ | | (__| |_| | |  __/\\__ \\                "CL_CLL""CL_NORMAL"\n");
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"               \\_| |_/\\___|_|  \\___|\\__,_|_|\\___||___/                "CL_CLL""CL_NORMAL"\n");
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                                                      "CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                    http://hercules.ws/board/                         "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                    http://herc.ws/board/                         "CL_CLL""CL_NORMAL"\n");
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                                                      "CL_CLL""CL_NORMAL"\n");
 
 	ShowInfo("Hercules %d-bit for %s\n", sysinfo->is64bit() ? 64 : 32, sysinfo->platform());

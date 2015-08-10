@@ -4,7 +4,7 @@
 #ifndef CHAR_INT_ELEMENTAL_H
 #define CHAR_INT_ELEMENTAL_H
 
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
 
 #ifdef HERCULES_CORE
 void inter_elemental_defaults(void);

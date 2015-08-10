@@ -6,13 +6,13 @@
 
 #include "geoip.h"
 
+#include "common/cbasetypes.h"
+#include "common/malloc.h"
+#include "common/showmsg.h"
+
 #include <errno.h>
 #include <stdio.h>
 #include <sys/stat.h> // for stat/lstat/fstat - [Dekamaster/Ultimate GM Tool]
-
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h"
-#include "../common/showmsg.h"
 
 struct s_geoip geoip_data;
 
@@ -136,7 +136,7 @@ void geoip_init(void)
 		geoip->final(false);
 		return;
 	}
-	geoip->data->cache = aMalloc( (sizeof(geoip->data->cache) * bufa.st_size) );
+	geoip->data->cache = aMalloc(sizeof(unsigned char) * bufa.st_size);
 	if (fread(geoip->data->cache, sizeof(unsigned char), bufa.st_size, db) != bufa.st_size) {
 		ShowError("geoip_cache: Couldn't read all elements!\n");
 		fclose(db);
@@ -145,19 +145,24 @@ void geoip_init(void)
 	}
 
 	// Search database type
-	fseek(db, -3l, SEEK_END);
-	for (i = 0; i < GEOIP_STRUCTURE_INFO_MAX_SIZE; i++) {
-		if (fread(delim, sizeof(delim[0]), 3, db) != 3) {
-			db_type = 0;
-			break;
-		}
-		if (delim[0] == 255 && delim[1] == 255 && delim[2] == 255) {
-			if (fread(&db_type, sizeof(db_type), 1, db) != 1) {
+	if (fseek(db, -3l, SEEK_END) != 0) {
+		db_type = 0;
+	} else {
+		for (i = 0; i < GEOIP_STRUCTURE_INFO_MAX_SIZE; i++) {
+			if (fread(delim, sizeof(delim[0]), 3, db) != 3) {
 				db_type = 0;
+				break;
 			}
-			break;
-		} else {
-			fseek(db, -4l, SEEK_CUR);
+			if (delim[0] == 255 && delim[1] == 255 && delim[2] == 255) {
+				if (fread(&db_type, sizeof(db_type), 1, db) != 1) {
+					db_type = 0;
+				}
+				break;
+			}
+			if (fseek(db, -4l, SEEK_CUR) != 0) {
+				db_type = 0;
+				break;
+			}
 		}
 	}
 

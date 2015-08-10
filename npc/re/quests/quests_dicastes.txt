@@ -693,7 +693,7 @@ dic_in01,51,270,7	script	Supply Dept. 1 Manager	4_MAN_BENKUNI,{
 	close;
 }
 
-dic_in01,48,273,8	script	Supply Dept. 2 Manager	4_MAN_BENKUNI,{
+dic_in01,48,273,1	script	Supply Dept. 2 Manager	4_MAN_BENKUNI,{
 	if (!checkweight(1201,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;

@@ -4,7 +4,8 @@
 #ifndef CHAR_INT_PARTY_H
 #define CHAR_INT_PARTY_H
 
-#include "../common/mmo.h"
+#include "common/db.h"
+#include "common/mmo.h"
 
 //Party Flags on what to save/delete.
 enum {

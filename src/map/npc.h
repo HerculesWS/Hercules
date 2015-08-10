@@ -5,11 +5,11 @@
 #ifndef MAP_NPC_H
 #define MAP_NPC_H
 
-#include "map.h" // struct block_list
-#include "status.h" // struct status_change
-#include "unit.h" // struct unit_data
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
+#include "map/map.h" // struct block_list
+#include "map/status.h" // struct status_change
+#include "map/unit.h" // struct unit_data
+#include "common/cbasetypes.h"
+#include "common/db.h"
 
 struct HPluginData;
 struct view_data;
@@ -121,7 +121,7 @@ enum actor_classes {
 // Old NPC range
 #define MAX_NPC_CLASS 1000
 // New NPC range
-#define MAX_NPC_CLASS2_START 10000
+#define MAX_NPC_CLASS2_START 10001
 #define MAX_NPC_CLASS2_END 10110
 
 //Script NPC events.
@@ -288,7 +288,7 @@ void npc_defaults(void);
 
 /* comes from npc_chat.c */
 #ifdef PCRE_SUPPORT
-#include "../../3rdparty/pcre/include/pcre.h"
+#include <pcre/include/pcre.h>
 /* Structure containing all info associated with a single pattern block */
 struct pcrematch_entry {
 	struct pcrematch_entry* next;

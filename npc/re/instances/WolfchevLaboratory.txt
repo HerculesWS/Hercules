@@ -448,7 +448,7 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 				switch(select(
 					"Show me other items.",
 					""+.@armor$[1]+"Giant Shield^000000",
-					""+.@armor$[2]+"Acient Book of Geffenia-Water^000000",
+					""+.@armor$[2]+"Ancient Book of Geffenia-Water^000000",
 					""+.@armor$[3]+"Bible of Promise(2nd Vol.)^000000",
 					""+.@armor$[4]+"Salvage Cape^000000",
 					""+.@armor$[5]+"Assassin's Handcuffs^000000",
@@ -468,7 +468,7 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					callsub L_Reward, Giant_Shield, 100, 50, 35;
 					break;
 				case 3:
-					mes "<<Acient Book of Geffenia-Water[1]>>";
+					mes "<<Ancient Book of Geffenia-Water[1]>>";
 					mes "INT + 1, MDEF + 2. If Original INT point is 120, MATK + 10, MHP + 800.";
 					mes "When equipping with Lacryma Stick, the casting % from Storm Gust, Frost Misty and Jack frost will discount equivalent to 4 times Refine Lv.";
 					mes "Shield / Def 30 / Weight 100 / Required Lv 100 / Socket 1 / for Warlock";
@@ -484,13 +484,13 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					mes "<<Salvage Cape[0]>>";
 					mes "Allow to use 'Cicada Skin Shed'(Lv 1). Cool time for this skill will be 30 seconds. When equiping it, SP consumption for using any skill will be doubled, When taking it off, SP - 1200.";
 					mes "Garment / Def 1 / Weight 40 / Required Lv 130 / Socket 0 / for Archbishop";
-					callsub L_Reward, Salvage_Cape, 100, 50, 35;
+					callsub L_Reward, Salvage_Cape, 300, 300, 400;
 					break;
 				case 6:
 					mes "<<Assassin's Handcuffs[1]>>";
 					mes "MSP + 20, CRI + 3. When equipping with Krishna, ATK + 50, ATK power from 'Sonic Blow' 50% increased, FLEE - 30. When equipping with Cakram CRI + 4, Critical ATK power 40% increased, MHP - 10%.";
 					mes "Accessory / Def 3 / Weight 40 / Required Lv 100 / Socket 1 / for Guillotine Cross";
-					callsub L_Reward, Assassin_Handcuffs, 300, 300, 400;
+					callsub L_Reward, Assassin_Handcuffs, 100, 50, 35;
 					break;
 				case 7:
 					mes "<<Green Operating Gown[1]>>";
@@ -499,9 +499,9 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					callsub L_Reward, Green_Operation_Coat, 100, 50, 30;
 					break;
 				case 8:
-					mes "<<Green Operating Gown[1]>>";
-					mes "DEX + 1, MSP + 30. Equipping with Scalpel will let to drop 'Immortal Heart', 'Alcohol' with a certain chance when hunting Human, Animal type monsters. Refine Lv affects the drop rate.";
-					mes "Armor / Def 66 / Weight 66 / Required Lv 100 / Socket 1 / for Generic";
+					mes "<<Ancient Gold Decoration>>";
+					mes "If the base Lv is 150, All State + 2. for Swordman, Merchant, Thief classes ATK + 8%, for Magician, Acolyte classes MATK + 8%, Heal Power + 7%, for Archer classes DEX + 3, Long Distance ATK power + 10%.";
+					mes "Helm / Def 7 / Location - Upper / Weight 40 / Required Lv 100 / Socket 1 / for 3rd Job Classes ";
 					callsub L_Reward, Ancient_Gold_Deco, 300, 300, 400;
 					break;
 				}
@@ -962,8 +962,9 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 	} else if (.@equip_item== Giant_Shield || .@equip_item == Geffenia_Book_Water || .@equip_item == Bible_Of_Promise2 ||
 	.@equip_item == Salvage_Cape || .@equip_item == Assassin_Handcuffs || .@equip_item == Green_Operation_Coat ||
 	.@equip_item == Ancient_Gold_Deco) {
-	  if(.@equip_item == Salvage_Cape || .@equip_item == Ancient_Gold_Deco)
-		.@lhz_max_num = 4200;
+		.@type = 4;
+		if(.@equip_item == Salvage_Cape || .@equip_item == Ancient_Gold_Deco)
+			.@lhz_max_num = 4200;
 	} else {
 		mes "[Pudding]";
 		mes "Before! I need to check if this equipment can accept the power.";
@@ -1692,8 +1693,10 @@ lhz_dun04,151,276,3	script	Researcher#memo	4_LGTSCIENCE,{
 	}
 	.@killed_bosses = true;
 	for(.@quest_id = 5113; .@quest_id <= 5125; .@quest_id++) {
-		if(questprogress(.@quest_id, HUNTING) != 2)
+		if(questprogress(.@quest_id, HUNTING) != 2){
 			.@killed_bosses = false;
+			break;
+		}
 	}
 	if (lght_duk01 < 6) {
 		mes "[Researcher]";
@@ -1780,13 +1783,11 @@ lhz_dun04,151,276,3	script	Researcher#memo	4_LGTSCIENCE,{
 				close;
 			case 2:
 				.@quest_time = questprogress(5112, PLAYTIME);
-				if (!.@quest_time) {
+				if (.@quest_time==1) {
 					mes "[Wolfchev]";
 					mes "I'm sorry, but it seems you still cannot enter to the laboratory yet. Will you come back later? The system is kind of tricky you know.";
 					close;
 				} else {
-					//if (.@quest_time == 2)
-						//recall_completequest 5112;
 					if (.@quest_time)
 						erasequest 5112;
 					if (!.@killed_bosses) {
@@ -1949,8 +1950,6 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 	} else if (.@lhz_time == 2) {
 		mes "Di Rit- Di- Di- Dit-";
 		next;
-		//if (.@lhz_time == 2)
-			//recall_completequest 5112;
 		erasequest 5112;
 		mes ""+ strcharinfo(PC_NAME) +". . .";
 		mes "^FF0000Access denial has been deactivated.^000000";

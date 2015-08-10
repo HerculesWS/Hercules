@@ -6,18 +6,15 @@
 
 #include "ipban.h"
 
-#include <stdlib.h>
-#include <string.h>
+#include "login/login.h"
+#include "login/loginlog.h"
+#include "common/cbasetypes.h"
+#include "common/nullpo.h"
+#include "common/sql.h"
+#include "common/strlib.h"
+#include "common/timer.h"
 
-#include "login.h"
-#include "loginlog.h"
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/sql.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
+#include <stdlib.h>
 
 // global sql settings
 static char   global_db_hostname[32] = "127.0.0.1";
@@ -118,6 +115,8 @@ bool ipban_config_read(const char* key, const char* value)
 {
 	const char* signature;
 
+	nullpo_ret(key);
+	nullpo_ret(value);
 	if( ipban_inited )
 		return false;// settings can only be changed before init
 
@@ -220,8 +219,8 @@ bool ipban_check(uint32 ip)
 		return true;
 	}
 
-	if( SQL_ERROR == SQL->NextRow(sql_handle) )
-		return true;// Shouldn't happen, but just in case...
+	if( SQL_SUCCESS != SQL->NextRow(sql_handle) )
+		return false;
 
 	SQL->GetData(sql_handle, 0, &data, NULL);
 	matches = atoi(data);
@@ -244,9 +243,11 @@ void ipban_log(uint32 ip)
 	if( failures >= login_config.dynamic_pass_failure_ban_limit )
 	{
 		uint8* p = (uint8*)&ip;
-		if( SQL_ERROR == SQL->Query(sql_handle, "INSERT INTO `%s`(`list`,`btime`,`rtime`,`reason`) VALUES ('%u.%u.%u.*', NOW() , NOW() +  INTERVAL %d MINUTE ,'Password error ban')",
-			ipban_table, p[3], p[2], p[1], login_config.dynamic_pass_failure_ban_duration) )
+		if (SQL_ERROR == SQL->Query(sql_handle, "INSERT INTO `%s`(`list`,`btime`,`rtime`,`reason`) VALUES ('%u.%u.%u.*', NOW() , NOW() +  INTERVAL %d MINUTE ,'Password error ban')",
+			ipban_table, p[3], p[2], p[1], login_config.dynamic_pass_failure_ban_duration))
+		{
 			Sql_ShowDebug(sql_handle);
+		}
 	}
 }
 

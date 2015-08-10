@@ -21,10 +21,11 @@ sub trim($) {
 
 sub parse($$) {
 	my ($p, $d) = @_;
+
 	$p =~ s/^.*?\)\((.*)\).*$/$1/; # Clean up extra parentheses )(around the arglist)
 
 	# Retrieve return type
-	unless ($d =~ /^(.+)\(\*\s*[a-zA-Z0-9_]+_interface::([^\)]+)\s*\)\(.*\)$/) {
+	unless ($d =~ /^(.+)\(\*\s*[a-zA-Z0-9_]+_interface::([^\)]+)\s*\)\s*\(.*\)$/) {
 		print "Error: unable to parse '$d'\n";
 		return {};
 	}
@@ -217,6 +218,8 @@ sub parse($$) {
 			$rtinit = ' = BL_NUL';
 		} elsif ($x =~ /^enum\s+homun_type$/) { # Known enum homun_type
 			$rtinit = ' = HT_INVALID';
+		} elsif ($x =~ /^enum\s+channel_operation_status$/) { # Known enum channel_operation_status
+			$rtinit = ' = HCS_STATUS_FAIL';
 		} elsif ($x =~ /^enum\s+bg_queue_types$/) { # Known enum bg_queue_types
 			$rtinit = ' = BGQT_INVALID';
 		} elsif ($x =~ /^struct\s+.*$/ or $x eq 'DBData') { # Structs
@@ -277,19 +280,20 @@ foreach my $file (@files) { # Loop through the xml files
 		$key = "inter_homunculus";
 	} elsif ($key =~ /homunculus/) {
 		$key = "homun";
-	} elsif ($key =~ /irc_bot/) {
+	} elsif ($key eq "irc_bot_interface") {
 		$key = "ircbot";
-	} elsif ($key =~ /log_interface/) {
+	} elsif ($key eq "log_interface") {
 		$key = "logs";
-	} elsif ($key =~ /pc_groups_interface/) {
+	} elsif ($key eq "pc_groups_interface") {
 		$key = "pcg";
-	} elsif ($key =~ /char_interface/) {
+	} elsif ($key eq "char_interface") {
 		$key = "chr";
 	} else {
 		$key =~ s/_interface//;
 	}
 
-	foreach my $v ($data->{compounddef}->{$filekey}->{sectiondef}->[0]) { # Loop through the sections
+	my $sectiondef = $data->{compounddef}->{$filekey}->{sectiondef};
+	foreach my $v (@$sectiondef) { # Loop through the sections
 		my $memberdef = $v->{memberdef};
 		foreach my $f (sort { # Sort the members in declaration order according to what the xml says
 					my $astart = $a->{location}->[0]->{bodystart} || $a->{location}->[0]->{line};
@@ -417,7 +421,7 @@ EOF
 EOF
 
 			$idx += 2;
-			$maxlen = length($key."->".$if->{name}) if( length($key."->".$if->{name}) > $maxlen )
+			$maxlen = length($key."->".$if->{name}) if( length($key."->".$if->{name}) > $maxlen );
 		}
 	}
 	print FH <<"EOF";
@@ -462,7 +466,7 @@ EOF
 	foreach my $key (@$keysref) {
 
 		print FH <<"EOF";
-if( !($key = GET_SYMBOL("$exportsymbols{$key}") ) ) return false;
+if( !($key = GET_SYMBOL("$exportsymbols{$key}") ) ) return "$exportsymbols{$key}";
 EOF
 	}
 	close FH;

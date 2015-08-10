@@ -6,23 +6,22 @@
 
 #include "timer.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/showmsg.h"
-#include "../common/utils.h"
+#include "common/cbasetypes.h"
+#include "common/db.h"
+#include "common/malloc.h"
+#include "common/showmsg.h"
+#include "common/utils.h"
 
 #ifdef WIN32
-#	include "../common/winapi.h" // GetTickCount()
+#	include "common/winapi.h" // GetTickCount()
 #else
 #	include <sys/time.h> // struct timeval, gettimeofday()
 #	include <unistd.h>
 #endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 struct timer_interface timer_s;
 

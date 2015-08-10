@@ -4,7 +4,7 @@
 #ifndef MAP_DATE_H
 #define MAP_DATE_H
 
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
 
 #ifdef HERCULES_CORE
 // TODO: Interface

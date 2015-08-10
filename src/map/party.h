@@ -5,12 +5,12 @@
 #ifndef MAP_PARTY_H
 #define MAP_PARTY_H
 
-#include <stdarg.h>
+#include "map/map.h" // TBL_PC
+#include "common/cbasetypes.h"
+#include "common/db.h"
+#include "common/mmo.h" // struct party
 
-#include "map.h" // TBL_PC
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/mmo.h" // struct party
+#include <stdarg.h>
 
 #define PARTY_BOOKING_JOBS 6
 #define PARTY_BOOKING_RESULTS 10

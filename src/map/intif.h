@@ -5,7 +5,7 @@
 #ifndef MAP_INTIF_H
 #define MAP_INTIF_H
 
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
 
 /**
  * Declarations

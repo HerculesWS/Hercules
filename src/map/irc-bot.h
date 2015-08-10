@@ -1,12 +1,12 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
-// Base Author: shennetsind @ http://hercules.ws
+// Base Author: shennetsind @ http://herc.ws
 
 
 #ifndef MAP_IRC_BOT_H
 #define MAP_IRC_BOT_H
 
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
 
 #define IRC_NICK_LENGTH 40
 #define IRC_IDENT_LENGTH 40
@@ -14,7 +14,7 @@
 #define IRC_FUNC_LENGTH 30
 #define IRC_MESSAGE_LENGTH 500
 
-struct hChSysCh;
+struct channel_data;
 
 struct irc_func {
 	char name[IRC_FUNC_LENGTH];
@@ -29,7 +29,7 @@ struct irc_bot_interface {
 	uint32 ip;
 	unsigned short port;
 	/* */
-	struct hChSysCh *channel;
+	struct channel_data *channel;
 	/* */
 	struct {
 		struct irc_func **list;
@@ -50,7 +50,7 @@ struct irc_bot_interface {
 	int (*join_timer) (int tid, int64 tick, int id, intptr_t data);
 	/* */
 	void (*send)(char *str);
-	void (*relay) (char *name, const char *msg);
+	void (*relay) (const char *name, const char *msg);
 	/* */
 	void (*pong) (int fd, char *cmd, char *source, char *target, char *msg);
 	void (*privmsg) (int fd, char *cmd, char *source, char *target, char *msg);

@@ -5,19 +5,17 @@
 
 #include "mutex.h"
 
-#include "../common/cbasetypes.h" // for WIN32
+#include "common/cbasetypes.h" // for WIN32
+#include "common/malloc.h"
+#include "common/showmsg.h"
+#include "common/timer.h"
 
 #ifdef WIN32
-#include "../common/winapi.h"
+#include "common/winapi.h"
 #else
 #include <pthread.h>
-#include <time.h>
 #include <sys/time.h>
 #endif
-
-#include "../common/malloc.h"
-#include "../common/showmsg.h"
-#include "../common/timer.h"
 
 struct ramutex{
 #ifdef WIN32

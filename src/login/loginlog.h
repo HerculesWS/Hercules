@@ -4,7 +4,7 @@
 #ifndef LOGIN_LOGINLOG_H
 #define LOGIN_LOGINLOG_H
 
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
 
 #ifdef HERCULES_CORE
 // TODO: Interface

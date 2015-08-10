@@ -5,8 +5,8 @@
 #define CONFIG_RENEWAL_H
 
 /**
- * Hercules configuration file (http://hercules.ws)
- * For detailed guidance on these check http://hercules.ws/wiki/SRC/config/
+ * Hercules configuration file (http://herc.ws)
+ * For detailed guidance on these check http://herc.ws/wiki/SRC/config/
  **/
 
 /**
@@ -74,7 +74,6 @@
 #define RENEWAL_EDP
 
 /// renewal ASPD [malufett]
-/// (disable by commenting the line)
 ///
 /// leave this line to enable renewal ASPD
 /// - shield penalty is applied

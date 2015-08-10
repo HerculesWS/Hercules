@@ -44,13 +44,13 @@
 
 #include "ers.h"
 
+#include "common/cbasetypes.h"
+#include "common/malloc.h" // CREATE, RECREATE, aMalloc, aFree
+#include "common/nullpo.h"
+#include "common/showmsg.h" // ShowMessage, ShowError, ShowFatalError, CL_BOLD, CL_NORMAL
+
 #include <stdlib.h>
 #include <string.h>
-
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h" // CREATE, RECREATE, aMalloc, aFree
-#include "../common/nullpo.h"
-#include "../common/showmsg.h" // ShowMessage, ShowError, ShowFatalError, CL_BOLD, CL_NORMAL
 
 #ifndef DISABLE_ERS
 
@@ -308,8 +308,11 @@ ERS *ers_new(uint32 size, char *name, enum ERSOptions options)
 	CREATE(instance,struct ers_instance_t, 1);
 
 	size += sizeof(struct ers_list);
+
+#if ERS_ALIGNED > 1 // If it's aligned to 1-byte boundaries, no need to bother.
 	if (size % ERS_ALIGNED)
 		size += ERS_ALIGNED - size % ERS_ALIGNED;
+#endif
 
 	instance->VTable.alloc = ers_obj_alloc_entry;
 	instance->VTable.free = ers_obj_free_entry;

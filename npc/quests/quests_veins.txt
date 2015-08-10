@@ -291,7 +291,7 @@
 		mes "find these useful. Anyway,";
 		mes "I hope you like these rocks...";
 		veins_stone = 8;
-		getexp (checkre(3))?30000:300000,0;
+		getexp RENEWAL_EXP?30000:300000,0;
 		getitem 985,3; //Elunium
 		close;
 	}
@@ -975,7 +975,7 @@ prt_church,89,108,6	script	Bard#sch	2_M_BARD_ORIENT,{
 		mes "reward with our sincere thanks.";
 		que_sch = 26;
 		getitem 12106,1; //Accessory_Box
-		getexp (checkre(3))?60000:600000,0;
+		getexp RENEWAL_EXP?60000:600000,0;
 		close;
 	}
 	else {
@@ -3058,7 +3058,7 @@ veins,327,185,3	script	Kid#camelcamel	4_M_DST_CHILD,{
 			completequest 3083;
 			rachel_camel = 25;
 			specialeffect2 EF_ABSORBSPIRITS;
-			if (checkre(3))
+			if (RENEWAL_EXP)
 				getexp 100000,50000;
 			else
 				getexp 1000000,700000;
@@ -4451,7 +4451,7 @@ veins,115,59,5	script	Saraman	4_M_EINOLD,{
 		mes "Sadly, Silk Sand Camels";
 		mes "are almost extinct, so I only";
 		mes "have one on this farm. That's";
-		mes "why we have a special contract^FFFFFF ^000000 with Ms. Ivory to make her soap.";
+		mes "why we have a special contract with Ms. Ivory to make her soap.";
 		next;
 		mes "[Camel Farm Owner Saraman]";
 		mes "Say... I wasn't expecting";
@@ -4773,7 +4773,7 @@ veins,78,226,5	script	Camel#camelcc1::VeinsCamel	4_DST_CAMEL,{
 veins,72,227,3	duplicate(VeinsCamel)	Camel#camelcc3	4_DST_CAMEL
 veins,81,222,1	duplicate(VeinsCamel)	Camel#camelcc4	4_DST_CAMEL
 veins,77,219,5	duplicate(VeinsCamel)	Camel#camelcc5	4_DST_CAMEL
-veins,73,215,8	duplicate(VeinsCamel)	Camel#camelcc6	4_DST_CAMEL
+veins,73,215,0	duplicate(VeinsCamel)	Camel#camelcc6	4_DST_CAMEL
 veins,68,215,5	duplicate(VeinsCamel)	Camel#camelcc7	4_DST_CAMEL
 
 ve_fild07,235,42,3	script	Silk Sand Camel	4_DST_CAMEL,{
@@ -6100,7 +6100,7 @@ ve_in,281,214,3	script	Bookshelf#vol	HIDDEN_NPC,{
 		else {
 			getitem 12103,1; //Bloody_Dead_Branch
 		}
-		getexp (checkre(3))?100000:800000,0;
+		getexp RENEWAL_EXP?100000:800000,0;
 		mes "^3355FFWell, you've done all";
 		mes "that you could here.";
 		mes "Now would be a good time";

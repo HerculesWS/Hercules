@@ -3,7 +3,7 @@
 #ifndef COMMON_DES_H
 #define COMMON_DES_H
 
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
 
 /// One 64-bit block.
 typedef struct BIT64 { uint8_t b[8]; } BIT64;

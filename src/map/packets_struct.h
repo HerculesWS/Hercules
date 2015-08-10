@@ -1,13 +1,13 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 
-/* Hercules Renewal: Phase Two http://hercules.ws/board/topic/383-hercules-renewal-phase-two/ */
+/* Hercules Renewal: Phase Two http://herc.ws/board/topic/383-hercules-renewal-phase-two/ */
 
 #ifndef MAP_PACKETS_STRUCT_H
 #define MAP_PACKETS_STRUCT_H
 
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h"
+#include "common/cbasetypes.h"
+#include "common/mmo.h"
 
 /**
  *
@@ -360,8 +360,8 @@ struct packet_dropflooritem {
 	unsigned char subY;
 	short count;
 } __attribute__((packed));
-#if PACKETVER < 20091103
 struct packet_idle_unit2 {
+#if PACKETVER < 20091103
 	short PacketType;
 #if PACKETVER >= 20071106
 	unsigned char objecttype;
@@ -392,8 +392,13 @@ struct packet_idle_unit2 {
 	unsigned char ySize;
 	unsigned char state;
 	short clevel;
+#else // ! PACKETVER < 20091103
+	char UNUSED;
+#endif // PACKETVER < 20091103
 } __attribute__((packed));
+
 struct packet_spawn_unit2 {
+#if PACKETVER < 20091103
 	short PacketType;
 #if PACKETVER >= 20071106
 	unsigned char objecttype;
@@ -418,8 +423,11 @@ struct packet_spawn_unit2 {
 	unsigned char PosDir[3];
 	unsigned char xSize;
 	unsigned char ySize;
+#else // ! PACKETVER < 20091103
+	char UNUSED;
+#endif // PACKETVER < 20091103
 } __attribute__((packed));
-#endif
+
 struct packet_spawn_unit {
 	short PacketType;
 #if PACKETVER >= 20091103

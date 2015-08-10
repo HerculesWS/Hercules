@@ -5,8 +5,9 @@
 #ifndef COMMON_MAPINDEX_H
 #define COMMON_MAPINDEX_H
 
-#include "../common/db.h"
-#include "../common/mmo.h"
+#include "common/cbasetypes.h"
+#include "common/db.h"
+#include "common/mmo.h"
 
 #define MAX_MAPINDEX 2000
 

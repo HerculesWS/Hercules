@@ -5,13 +5,13 @@
 #ifndef MAP_SKILL_H
 #define MAP_SKILL_H
 
-#include "../config/core.h" // RENEWAL_CAST
+#include "config/core.h" // RENEWAL_CAST
 
-#include "map.h" // struct block_list
-#include "status.h" // enum sc_type
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/mmo.h" // MAX_SKILL, struct square
+#include "map/map.h" // struct block_list
+#include "map/status.h" // enum sc_type
+#include "common/cbasetypes.h"
+#include "common/db.h"
+#include "common/mmo.h" // MAX_SKILL, struct square
 
 /**
  * Declarations
@@ -1568,7 +1568,7 @@ enum {
 	UNT_DEATHWAVE, //TODO
 	UNT_WATERATTACK, //TODO
 	UNT_WINDATTACK, //TODO
-	UNT_EARTHQUAKE, //TODO
+	UNT_EARTHQUAKE,
 	UNT_EVILLAND,
 	UNT_DARK_RUNNER, //TODO
 	UNT_DARK_TRANSFER, //TODO
@@ -1732,6 +1732,7 @@ struct skill_unit {
 	int limit;
 	int val1,val2;
 	short alive,range;
+	int prev;
 };
 
 struct skill_unit_group_tickset {
@@ -1813,6 +1814,21 @@ struct s_skill_spellbook_db {
 
 typedef int (*SkillFunc)(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 
+struct s_skill_dbs {
+BEGIN_ZEROED_BLOCK; // This block will be zeroed in skill_defaults() as well as skill_readdb()
+	struct s_skill_db db[MAX_SKILL_DB];
+	struct s_skill_produce_db produce_db[MAX_SKILL_PRODUCE_DB];
+	struct s_skill_arrow_db arrow_db[MAX_SKILL_ARROW_DB];
+	struct s_skill_abra_db abra_db[MAX_SKILL_ABRA_DB];
+	struct s_skill_magicmushroom_db magicmushroom_db[MAX_SKILL_MAGICMUSHROOM_DB];
+	struct s_skill_improvise_db improvise_db[MAX_SKILL_IMPROVISE_DB];
+	struct s_skill_changematerial_db changematerial_db[MAX_SKILL_PRODUCE_DB];
+	struct s_skill_spellbook_db spellbook_db[MAX_SKILL_SPELLBOOK_DB];
+	bool reproduce_db[MAX_SKILL_DB];
+END_ZEROED_BLOCK;
+	struct s_skill_unit_layout unit_layout[MAX_SKILL_UNIT_LAYOUT];
+};
+
 /**
  * Skill.c Interface
  **/
@@ -1834,16 +1850,7 @@ struct skill_interface {
 	struct eri *cd_ers; // ERS Storage for skill cool down managers [Ind/Hercules]
 	struct eri *cd_entry_ers; // ERS Storage for skill cool down entries [Ind/Hercules]
 	/* */
-	struct s_skill_db db[MAX_SKILL_DB];
-	struct s_skill_produce_db produce_db[MAX_SKILL_PRODUCE_DB];
-	struct s_skill_arrow_db arrow_db[MAX_SKILL_ARROW_DB];
-	struct s_skill_abra_db abra_db[MAX_SKILL_ABRA_DB];
-	struct s_skill_magicmushroom_db magicmushroom_db[MAX_SKILL_MAGICMUSHROOM_DB];
-	struct s_skill_improvise_db improvise_db[MAX_SKILL_IMPROVISE_DB];
-	struct s_skill_changematerial_db changematerial_db[MAX_SKILL_PRODUCE_DB];
-	struct s_skill_spellbook_db spellbook_db[MAX_SKILL_SPELLBOOK_DB];
-	bool reproduce_db[MAX_SKILL_DB];
-	struct s_skill_unit_layout unit_layout[MAX_SKILL_UNIT_LAYOUT];
+	struct s_skill_dbs *dbs;
 	/* */
 	int enchant_eff[5];
 	int deluge_eff[5];

@@ -4,10 +4,10 @@
 #ifndef COMMON_HPMI_H
 #define COMMON_HPMI_H
 
-#include "../common/cbasetypes.h"
-#include "../common/console.h"
-#include "../common/core.h"
-#include "../common/sql.h"
+#include "common/cbasetypes.h"
+#include "common/console.h"
+#include "common/core.h"
+#include "common/sql.h"
 
 struct script_state;
 struct AtCommandInfo;
@@ -21,7 +21,7 @@ struct map_session_data;
 #endif
 
 /* after */
-#include "../common/showmsg.h"
+#include "common/showmsg.h"
 
 #define HPM_VERSION "1.0"
 #define HPM_ADDCONF_LENGTH 40
@@ -83,6 +83,7 @@ enum HPluginDataTypes {
 	HPDT_MOBDB,
 	HPDT_MOBDATA,
 	HPDT_ITEMDATA,
+	HPDT_BGDATA,
 	HPDT_AUTOTRADE_VEND,
 };
 
@@ -151,6 +152,10 @@ enum HPluginConfType {
 #define addToATVEND(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_AUTOTRADE_VEND,HPMi->pid,(ptr),(data),(index),(autofree)))
 #define getFromATVEND(ptr,index) (HPMi->getFromHPData(HPDT_AUTOTRADE_VEND,HPMi->pid,(ptr),(index)))
 #define removeFromATVEND(ptr,index) (HPMi->removeFromHPData(HPDT_AUTOTRADE_VEND,HPMi->pid,(ptr),(index)))
+/* battleground_data */
+#define addToBGDATA(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_BGDATA,HPMi->pid,(ptr),(data),(index),(autofree)))
+#define getFromBGDATA(ptr,index) (HPMi->getFromHPData(HPDT_BGDATA,HPMi->pid,(ptr),(index)))
+#define removeFromBGDATA(ptr,index) (HPMi->removeFromHPData(HPDT_BGDATA,HPMi->pid,(ptr),(index)))
 
 /* HPMi->addCommand */
 #define addAtcommand(cname,funcname) \

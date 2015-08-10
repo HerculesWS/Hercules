@@ -5,7 +5,9 @@
 #ifndef CHAR_PINCODE_H
 #define CHAR_PINCODE_H
 
-#include "char.h"
+#include "common/cbasetypes.h"
+
+struct char_session_data;
 
 enum PincodeResponseCode {
 	PINCODE_OK      = 0,

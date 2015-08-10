@@ -6,22 +6,22 @@
 
 #include "chat.h"
 
+#include "map/atcommand.h" // msg_sd(sd,)
+#include "map/battle.h" // struct battle_config
+#include "map/clif.h"
+#include "map/map.h"
+#include "map/npc.h" // npc_event_do()
+#include "map/pc.h"
+#include "map/skill.h" // ext_skill_unit_onplace()
+#include "common/cbasetypes.h"
+#include "common/malloc.h"
+#include "common/mmo.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+
 #include <stdio.h>
 #include <string.h>
-
-#include "atcommand.h" // msg_txt()
-#include "battle.h" // struct battle_config
-#include "clif.h"
-#include "map.h"
-#include "npc.h" // npc_event_do()
-#include "pc.h"
-#include "skill.h" // ext_skill_unit_onplace()
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
 
 struct chat_interface chat_s;
 
@@ -84,16 +84,16 @@ bool chat_createpcchat(struct map_session_data* sd, const char* title, const cha
 	}
 
 	if( map->list[sd->bl.m].flag.nochat ) {
-		clif->message(sd->fd, msg_txt(281));
+		clif->message(sd->fd, msg_sd(sd,281));
 		return false; //Can't create chatrooms on this map.
 	}
 
 	if( map->getcell(sd->bl.m,sd->bl.x,sd->bl.y,CELL_CHKNOCHAT) ) {
-		clif->message (sd->fd, msg_txt(865)); // "Can't create chat rooms in this area."
+		clif->message (sd->fd, msg_sd(sd,865)); // "Can't create chat rooms in this area."
 		return false;
 	}
 
-	pc_stop_walking(sd,1);
+	pc_stop_walking(sd, STOPWALKING_FLAG_FIXPOS);
 
 	cd = chat->create(&sd->bl, title, pass, limit, pub, 0, "", 0, 1, MAX_LEVEL);
 	if( cd ) {
@@ -101,7 +101,7 @@ bool chat_createpcchat(struct map_session_data* sd, const char* title, const cha
 		cd->usersd[0] = sd;
 		pc_setchatid(sd,cd->bl.id);
 		pc_stop_attack(sd);
-		clif->createchat(sd,0);
+		clif->createchat(sd,0); // 0 = success
 		clif->dispchat(cd,0);
 		return true;
 	}
@@ -150,7 +150,7 @@ bool chat_joinchat(struct map_session_data* sd, int chatid, const char* pass) {
 		return false;
 	}
 
-	pc_stop_walking(sd,1);
+	pc_stop_walking(sd, STOPWALKING_FLAG_FIXPOS);
 	cd->usersd[cd->users] = sd;
 	cd->users++;
 
@@ -339,7 +339,7 @@ bool chat_kickchat(struct map_session_data* sd, const char* kickusername) {
 
 	idb_iput(cd->kick_list,cd->usersd[i]->status.char_id,1);
 
-	chat->leave(cd->usersd[i],1);
+	chat->leave(cd->usersd[i], true);
 	return true;
 }
 
@@ -440,7 +440,7 @@ bool chat_npckickall(struct chat_data* cd)
 	nullpo_ret(cd);
 
 	while( cd->users > 0 )
-		chat->leave(cd->usersd[cd->users-1],0);
+		chat->leave(cd->usersd[cd->users-1], false);
 
 	return true;
 }

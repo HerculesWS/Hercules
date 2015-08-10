@@ -5,10 +5,11 @@
 #ifndef MAP_HOMUNCULUS_H
 #define MAP_HOMUNCULUS_H
 
-#include "pc.h"
-#include "status.h" // struct status_data, struct status_change
-#include "unit.h" // struct unit_data
-#include "../common/mmo.h"
+#include "map/status.h" // struct status_data, struct status_change
+#include "map/unit.h" // struct unit_data
+#include "common/mmo.h"
+
+struct map_session_data;
 
 #define MAX_HOM_SKILL_REQUIRE 5
 #define homdb_checkid(id) ((id) >=  HM_CLASS_BASE && (id) <= HM_CLASS_MAX)
@@ -98,12 +99,16 @@ enum homun_type {
 	HT_INVALID = -1, // Invalid Homunculus
 };
 
-/* homunculus.c interface */
-struct homunculus_interface {
+struct homun_dbs {
 	unsigned int exptable[MAX_LEVEL];
 	struct view_data viewdb[MAX_HOMUNCULUS_CLASS];
 	struct s_homunculus_db db[MAX_HOMUNCULUS_CLASS];
 	struct homun_skill_tree_entry skill_tree[MAX_HOMUNCULUS_CLASS][MAX_SKILL_TREE];
+};
+
+/* homunculus.c interface */
+struct homunculus_interface {
+	struct homun_dbs *dbs;
 	/* */
 	void (*init) (bool minimal);
 	void (*final) (void);

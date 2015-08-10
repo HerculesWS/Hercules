@@ -269,7 +269,7 @@ OnInit:
 	sellitem Flash_Shuriken;
 	sellitem Sharp_Leaf_Shuriken;
 	sellitem Thorn_Needle_Shuriken;
-	if (checkre(0)){
+	if (RENEWAL) {
 		sellitem Explosive_Kunai;
 		sellitem Makibishi;
 	}
@@ -282,6 +282,14 @@ OnInit:
 	sellitem Ice_Stone;
 	sellitem Wind_Stone;
 	sellitem Shadow_Orb;
+	sellitem Charm_Fire;
+	sellitem Charm_Ice;
+	sellitem Charm_Wind;
+	sellitem Charm_Earth;
+	if (RENEWAL) {
+		sellitem Fox_Armguard;
+		sellitem Special_Ninja_Suit;
+	}
 }
 
 

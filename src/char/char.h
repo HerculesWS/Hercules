@@ -5,9 +5,10 @@
 #ifndef COMMON_CHAR_H
 #define COMMON_CHAR_H
 
-#include "../common/cbasetypes.h"
-#include "../common/core.h" // CORE_ST_LAST
-#include "../common/db.h"
+#include "common/cbasetypes.h"
+#include "common/core.h" // CORE_ST_LAST
+#include "common/db.h"
+#include "common/mmo.h"
 
 enum E_CHARSERVER_ST {
 	CHARSERVER_ST_RUNNING = CORE_ST_LAST,
@@ -98,7 +99,6 @@ extern char mercenary_db[256];
 extern char mercenary_owner_db[256];
 extern char ragsrvinfo_db[256];
 extern char elemental_db[256];
-extern char interreg_db[32];
 extern char acc_reg_num_db[32];
 extern char acc_reg_str_db[32];
 extern char char_reg_str_db[32];
@@ -166,6 +166,7 @@ struct char_interface {
 	int (*mmo_char_tosql) (int char_id, struct mmo_charstatus* p);
 	int (*memitemdata_to_sql) (const struct item items[], int max, int id, int tableswitch);
 	int (*inventory_to_sql) (const struct item items[], int max, int id);
+	int (*mmo_gender) (const struct char_session_data *sd, const struct mmo_charstatus *p, char sex);
 	int (*mmo_chars_fromsql) (struct char_session_data* sd, uint8* buf);
 	int (*mmo_char_fromsql) (int char_id, struct mmo_charstatus* p, bool load_everything);
 	int (*mmo_char_sql_init) (void);
@@ -233,6 +234,7 @@ struct char_interface {
 	void (*ban) (int account_id, int char_id, time_t *unban_time, short year, short month, short day, short hour, short minute, short second);
 	void (*unban) (int char_id, int *result);
 	void (*ask_name_ack) (int fd, int acc, const char* name, int type, int result);
+	int (*changecharsex) (int char_id, int sex);
 	void (*parse_frommap_change_account) (int fd);
 	void (*parse_frommap_fame_list) (int fd);
 	void (*parse_frommap_divorce_char) (int fd);
@@ -287,7 +289,7 @@ struct char_interface {
 	void (*parse_char_delete2_accept) (int fd, struct char_session_data* sd);
 	void (*parse_char_delete2_cancel) (int fd, struct char_session_data* sd);
 	void (*login_map_server_ack) (int fd, uint8 flag);
-	void (*parse_char_login_map_server) (int fd);
+	void (*parse_char_login_map_server) (int fd, uint32 ipl);
 	void (*parse_char_pincode_check) (int fd, struct char_session_data* sd);
 	void (*parse_char_pincode_window) (int fd, struct char_session_data* sd);
 	void (*parse_char_pincode_change) (int fd, struct char_session_data* sd);

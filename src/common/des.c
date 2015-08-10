@@ -5,7 +5,7 @@
 
 #include "des.h"
 
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
 
 /// DES (Data Encryption Standard) algorithm, modified version.
 /// @see http://www.eathena.ws/board/index.php?autocom=bugtracker&showbug=5099.

@@ -4,26 +4,26 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // SHOW_SERVER_STATS
+#include "config/core.h" // SHOW_SERVER_STATS
 #define H_SOCKET_C
 #include "socket.h"
 #undef H_SOCKET_C
 
+#include "common/HPM.h"
+#include "common/cbasetypes.h"
+#include "common/db.h"
+#include "common/malloc.h"
+#include "common/mmo.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/types.h>
 
-#include "../common/HPM.h"
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-
 #ifdef WIN32
-#	include "../common/winapi.h"
+#	include "common/winapi.h"
 #else
 #	include <arpa/inet.h>
 #	include <errno.h>
@@ -311,15 +311,18 @@ void setsocketopts(int fd, struct hSockOpt *opt) {
 	// set SO_REAUSEADDR to true, unix only. on windows this option causes
 	// the previous owner of the socket to give up, which is not desirable
 	// in most cases, neither compatible with unix.
-	sSetsockopt(fd,SOL_SOCKET,SO_REUSEADDR,(char *)&yes,sizeof(yes));
+	if (sSetsockopt(fd,SOL_SOCKET,SO_REUSEADDR,(char *)&yes,sizeof(yes)))
+		ShowWarning("setsocketopts: Unable to set SO_REUSEADDR mode for connection #%d!\n", fd);
 #ifdef SO_REUSEPORT
-	sSetsockopt(fd,SOL_SOCKET,SO_REUSEPORT,(char *)&yes,sizeof(yes));
-#endif
-#endif
+	if (sSetsockopt(fd,SOL_SOCKET,SO_REUSEPORT,(char *)&yes,sizeof(yes)))
+		ShowWarning("setsocketopts: Unable to set SO_REUSEPORT mode for connection #%d!\n", fd);
+#endif // SO_REUSEPORT
+#endif // WIN32
 
 	// Set the socket into no-delay mode; otherwise packets get delayed for up to 200ms, likely creating server-side lag.
 	// The RO protocol is mainly single-packet request/response, plus the FIFO model already does packet grouping anyway.
-	sSetsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (char *)&yes, sizeof(yes));
+	if (sSetsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (char *)&yes, sizeof(yes)))
+		ShowWarning("setsocketopts: Unable to set TCP_NODELAY mode for connection #%d!\n", fd);
 
 	if( opt && opt->setTimeo ) {
 		struct timeval timeout;
@@ -327,8 +330,10 @@ void setsocketopts(int fd, struct hSockOpt *opt) {
 		timeout.tv_sec = 5;
 		timeout.tv_usec = 0;
 
-		sSetsockopt(fd,SOL_SOCKET,SO_RCVTIMEO,(char *)&timeout,sizeof(timeout));
-		sSetsockopt(fd,SOL_SOCKET,SO_SNDTIMEO,(char *)&timeout,sizeof(timeout));
+		if (sSetsockopt(fd,SOL_SOCKET,SO_RCVTIMEO,(char *)&timeout,sizeof(timeout)))
+			ShowWarning("setsocketopts: Unable to set SO_RCVTIMEO for connection #%d!\n", fd);
+		if (sSetsockopt(fd,SOL_SOCKET,SO_SNDTIMEO,(char *)&timeout,sizeof(timeout)))
+			ShowWarning("setsocketopts: Unable to set SO_SNDTIMEO for connection #%d!\n", fd);
 	}
 
 	// force the socket into no-wait, graceful-close mode (should be the default, but better make sure)
@@ -339,10 +344,12 @@ void setsocketopts(int fd, struct hSockOpt *opt) {
 		ShowWarning("setsocketopts: Unable to set SO_LINGER mode for connection #%d!\n", fd);
 
 #ifdef TCP_THIN_LINEAR_TIMEOUTS
-    setsockopt(fd, IPPROTO_TCP, TCP_THIN_LINEAR_TIMEOUTS, &yes, sizeof yes);
+    if (sSetsockopt(fd, IPPROTO_TCP, TCP_THIN_LINEAR_TIMEOUTS, (char *)&yes, sizeof(yes)))
+	    ShowWarning("setsocketopts: Unable to set TCP_THIN_LINEAR_TIMEOUTS mode for connection #%d!\n", fd);
 #endif
 #ifdef TCP_THIN_DUPACK
-    setsockopt(fd, IPPROTO_TCP, TCP_THIN_DUPACK, &yes, sizeof yes);
+    if (sSetsockopt(fd, IPPROTO_TCP, TCP_THIN_DUPACK, (char *)&yes, sizeof(yes)))
+	    ShowWarning("setsocketopts: Unable to set TCP_THIN_DUPACK mode for connection #%d!\n", fd);
 #endif
 }
 
@@ -1276,6 +1283,10 @@ int socket_getips(uint32* ips, int max)
 		u_long ad;
 
 		fd = sSocket(AF_INET, SOCK_STREAM, 0);
+		if (fd == -1) {
+			ShowError("socket_getips: Unable to create a socket!\n");
+			return 0;
+		}
 
 		memset(buf, 0x00, sizeof(buf));
 

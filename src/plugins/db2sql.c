@@ -1,24 +1,24 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 
-#include "../config/core.h"
+#include "config/core.h"
+
+#include "common/HPMi.h"
+#include "common/cbasetypes.h"
+#include "common/conf.h"
+#include "common/malloc.h"
+#include "common/mmo.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+#include "map/clif.h"
+#include "map/itemdb.h"
+#include "map/map.h"
+#include "map/pc.h"
+
+#include "common/HPMDataCheck.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "../common/HPMi.h"
-#include "../common/cbasetypes.h"
-#include "../common/conf.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "../map/clif.h"
-#include "../map/itemdb.h"
-#include "../map/map.h"
-#include "../map/pc.h"
-
-#include "../common/HPMDataCheck.h"
 
 HPExport struct hplugin_info pinfo = {
 	"DB2SQL",        // Plugin name
@@ -139,7 +139,10 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 
 		// bindonequip
 		StrBuf->Printf(&buf, "'%u',", it->flag.bindonequip?1:0);
-
+		
+		// forceserial
+        StrBuf->Printf(&buf, "'%u',", it->flag.force_serial?1:0);
+		
 		// buyingstore
 		StrBuf->Printf(&buf, "'%u',", it->flag.buyingstore?1:0);
 
@@ -269,6 +272,7 @@ void totable(void) {
 			"  `refineable` tinyint(1) UNSIGNED DEFAULT NULL,\n"
 			"  `view` smallint(3) UNSIGNED DEFAULT NULL,\n"
 			"  `bindonequip` tinyint(1) UNSIGNED DEFAULT NULL,\n"
+			"  `forceserial` tinyint(1) UNSIGNED DEFAULT NULL,\n"
 			"  `buyingstore` tinyint(1) UNSIGNED DEFAULT NULL,\n"
 			"  `delay` mediumint(9) UNSIGNED DEFAULT NULL,\n"
 			"  `trade_flag` smallint(4) UNSIGNED DEFAULT NULL,\n"
@@ -301,7 +305,7 @@ void do_db2sql(void) {
 		return;
 	}
 
-	tosql.db_name = map->item_db_re_db;
+	tosql.db_name = map->item_db_db;
 	totable();
 
 	memset(&tosql.buf, 0, sizeof(tosql.buf) );

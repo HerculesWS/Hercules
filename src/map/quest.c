@@ -6,35 +6,38 @@
 
 #include "quest.h"
 
+#include "map/battle.h"
+#include "map/chrif.h"
+#include "map/clif.h"
+#include "map/intif.h"
+#include "map/itemdb.h"
+#include "map/log.h"
+#include "map/map.h"
+#include "map/mob.h"
+#include "map/npc.h"
+#include "map/party.h"
+#include "map/pc.h"
+#include "map/script.h"
+#include "map/unit.h"
+#include "common/cbasetypes.h"
+#include "common/conf.h"
+#include "common/malloc.h"
+#include "common/nullpo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+#include "common/utils.h"
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
-#include "battle.h"
-#include "chrif.h"
-#include "clif.h"
-#include "intif.h"
-#include "itemdb.h"
-#include "log.h"
-#include "map.h"
-#include "mob.h"
-#include "npc.h"
-#include "party.h"
-#include "pc.h"
-#include "script.h"
-#include "unit.h"
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
-
 struct quest_interface quest_s;
+struct quest_db *db_data[MAX_QUEST_DB]; ///< Quest database
 
 /**
  * Searches a quest by ID.
@@ -244,27 +247,51 @@ int quest_update_objective_sub(struct block_list *bl, va_list ap) {
 
 
 /**
- * Updates the quest objectives for a character after killing a monster.
+ * Updates the quest objectives for a character after killing a monster, including the handling of quest-granted drops.
  *
  * @param sd     Character's data
  * @param mob_id Monster ID
  */
-void quest_update_objective(TBL_PC *sd, int mob_id) {
+void quest_update_objective(TBL_PC *sd, int mob_id)
+{
 	int i,j;
 
-	for( i = 0; i < sd->avail_quests; i++ ) {
+	for (i = 0; i < sd->avail_quests; i++) {
 		struct quest_db *qi = NULL;
 
-		if( sd->quest_log[i].state != Q_ACTIVE ) // Skip inactive quests
+		if (sd->quest_log[i].state != Q_ACTIVE) // Skip inactive quests
 			continue;
 
 		qi = quest->db(sd->quest_log[i].quest_id);
 
-		for( j = 0; j < qi->num_objectives; j++ ) {
-			if( qi->mob[j] == mob_id && sd->quest_log[i].count[j] < qi->count[j] )  {
+		for (j = 0; j < qi->objectives_count; j++) {
+			if (qi->objectives[j].mob == mob_id && sd->quest_log[i].count[j] < qi->objectives[j].count) {
 				sd->quest_log[i].count[j]++;
 				sd->save_quest = true;
 				clif->quest_update_objective(sd, &sd->quest_log[i]);
+			}
+		}
+
+		// process quest-granted extra drop bonuses
+		for (j = 0; j < qi->dropitem_count; j++) {
+			struct quest_dropitem *dropitem = &qi->dropitem[j];
+			struct item item;
+			struct item_data *data = NULL;
+			int temp;
+			if (dropitem->mob_id != 0 && dropitem->mob_id != mob_id)
+				continue;
+			// TODO: Should this be affected by server rates?
+			if (rnd()%10000 >= dropitem->rate)
+				continue;
+			if (!(data = itemdb->exists(dropitem->nameid)))
+				continue;
+			memset(&item,0,sizeof(item));
+			item.nameid = dropitem->nameid;
+			item.identify = itemdb->isidentified2(data);
+			item.amount = 1;
+			if((temp = pc->additem(sd, &item, 1, LOG_TYPE_OTHER)) != 0) { // TODO: We might want a new log type here?
+				// Failed to obtain the item
+				clif->additem(sd, 0, 0, temp);
 			}
 		}
 	}
@@ -329,14 +356,15 @@ int quest_update_status(TBL_PC *sd, int quest_id, enum quest_state qs) {
  *                    1 if the quest's timeout has expired
  *                    0 otherwise
  */
-int quest_check(TBL_PC *sd, int quest_id, enum quest_check_type type) {
+int quest_check(TBL_PC *sd, int quest_id, enum quest_check_type type)
+{
 	int i;
 
 	ARR_FIND(0, sd->num_quests, i, sd->quest_log[i].quest_id == quest_id);
-	if( i == sd->num_quests )
+	if (i == sd->num_quests)
 		return -1;
 
-	switch( type ) {
+	switch (type) {
 		case HAVEQUEST:
 			return sd->quest_log[i].state;
 		case PLAYTIME:
@@ -345,10 +373,10 @@ int quest_check(TBL_PC *sd, int quest_id, enum quest_check_type type) {
 			if( sd->quest_log[i].state == Q_INACTIVE || sd->quest_log[i].state == Q_ACTIVE ) {
 				int j;
 				struct quest_db *qi = quest->db(sd->quest_log[i].quest_id);
-				ARR_FIND(0, MAX_QUEST_OBJECTIVES, j, sd->quest_log[i].count[j] < qi->count[j]);
-				if( j == MAX_QUEST_OBJECTIVES )
+				ARR_FIND(0, qi->objectives_count, j, sd->quest_log[i].count[j] < qi->objectives[j].count);
+				if (j == qi->objectives_count)
 					return 2;
-				if( sd->quest_log[i].time < (unsigned int)time(NULL) )
+				if (sd->quest_log[i].time < (unsigned int)time(NULL))
 					return 1;
 			}
 			return 0;
@@ -361,77 +389,146 @@ int quest_check(TBL_PC *sd, int quest_id, enum quest_check_type type) {
 }
 
 /**
+ * Reads and parses an entry from the quest_db.
+ *
+ * @param cs     The config setting containing the entry.
+ * @param n      The sequential index of the current config setting.
+ * @param source The source configuration file.
+ * @return The parsed quest entry.
+ * @retval NULL in case of errors.
+ */
+struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *source)
+{
+	struct quest_db *entry = NULL;
+	config_setting_t *t = NULL;
+	int i32 = 0, quest_id;
+	const char *str = NULL;
+	/*
+	 * Id: Quest ID                    [int]
+	 * Name: Quest Name                [string]
+	 * TimeLimit: Time Limit (seconds) [int, optional]
+	 * Targets: (                      [array, optional]
+	 *     {
+	 *         MobId: Mob ID           [int]
+	 *         Count:                  [int]
+	 *     },
+	 *     ... (can repeated up to MAX_QUEST_OBJECTIVES times)
+	 * )
+	 * Drops: (
+	 *     {
+	 *         ItemId: Item ID to drop [int]
+	 *         Rate: Drop rate         [int]
+	 *         MobId: Mob ID to match  [int, optional]
+	 *     },
+	 *     ... (can be repeated)
+	 * )
+	 */
+	if (!libconfig->setting_lookup_int(cs, "Id", &quest_id)) {
+		ShowWarning("quest_read_db: Missing id in \"%s\", entry #%d, skipping.\n", source, n);
+		return NULL;
+	}
+	if (quest_id < 0 || quest_id >= MAX_QUEST_DB) {
+		ShowWarning("quest_read_db: Invalid quest ID '%d' in \"%s\", entry #%d (min: 0, max: %d), skipping.\n", quest_id, source, n, MAX_QUEST_DB);
+		return NULL;
+	}
+
+	if (!libconfig->setting_lookup_string(cs, "Name", &str) || !*str) {
+		ShowWarning("quest_read_db_sub: Missing Name in quest %d of \"%s\", skipping.\n", quest_id, source);
+		return NULL;
+	}
+
+	CREATE(entry, struct quest_db, 1);
+	entry->id = quest_id;
+	//safestrncpy(entry->name, str, sizeof(entry->name));
+
+	if (libconfig->setting_lookup_int(cs, "TimeLimit", &i32)) // This is an unsigned value, do not check for >= 0
+		entry->time = (unsigned int)i32;
+
+	if ((t=libconfig->setting_get_member(cs, "Targets")) && config_setting_is_list(t)) {
+		int i, len = libconfig->setting_length(t);
+		for (i = 0; i < len && entry->objectives_count < MAX_QUEST_OBJECTIVES; i++) {
+			// Note: We ensure that objectives_count < MAX_QUEST_OBJECTIVES because
+			//       quest_log (as well as the client) expect this maximum size.
+			config_setting_t *tt = libconfig->setting_get_elem(t, i);
+			int mob_id = 0, count = 0;
+			if (!tt)
+				break;
+			if (!config_setting_is_group(tt))
+				continue;
+			if (!libconfig->setting_lookup_int(tt, "MobId", &mob_id) || mob_id <= 0)
+				continue;
+			if (!libconfig->setting_lookup_int(tt, "Count", &count) || count <= 0)
+				continue;
+			RECREATE(entry->objectives, struct quest_objective, ++entry->objectives_count);
+			entry->objectives[entry->objectives_count-1].mob = mob_id;
+			entry->objectives[entry->objectives_count-1].count = count;
+		}
+	}
+
+	if ((t=libconfig->setting_get_member(cs, "Drops")) && config_setting_is_list(t)) {
+		int i, len = libconfig->setting_length(t);
+		for (i = 0; i < len; i++) {
+			config_setting_t *tt = libconfig->setting_get_elem(t, i);
+			int mob_id = 0, nameid = 0, rate = 0;
+			if (!tt)
+				break;
+			if (!config_setting_is_group(tt))
+				continue;
+			if (!libconfig->setting_lookup_int(tt, "MobId", &mob_id))
+				mob_id = 0; // Zero = any monster
+			if (mob_id < 0)
+				continue;
+			if (!libconfig->setting_lookup_int(tt, "ItemId", &nameid) || !itemdb->exists(nameid))
+				continue;
+			if (!libconfig->setting_lookup_int(tt, "Rate", &rate) || rate <= 0)
+				continue;
+			RECREATE(entry->dropitem, struct quest_dropitem, ++entry->dropitem_count);
+			entry->dropitem[entry->dropitem_count-1].mob_id = mob_id;
+			entry->dropitem[entry->dropitem_count-1].nameid = nameid;
+			entry->dropitem[entry->dropitem_count-1].rate = rate;
+		}
+	}
+	return entry;
+}
+
+/**
  * Loads quests from the quest db.
  *
  * @return Number of loaded quests, or -1 if the file couldn't be read.
  */
-int quest_read_db(void) {
-	// TODO[Haru] This duplicates some sv_readdb functionalities, and it would be
-	// nice if it could be replaced by it. The reason why it wasn't is probably
-	// because we need to accept commas (which is also used as delimiter) in the
-	// last field (quest name), and sv_readdb isn't capable of doing so.
-	FILE *fp;
-	char line[1024];
-	int i, count = 0;
-	char *str[20], *p, *np;
-	struct quest_db entry;
+int quest_read_db(void)
+{
+	char filepath[256];
+	config_t quest_db_conf;
+	config_setting_t *qdb = NULL, *q = NULL;
+	int i = 0, count = 0;
+	const char *filename = "quest_db.conf";
 
-	sprintf(line, "%s/quest_db.txt", map->db_path);
-	if ((fp=fopen(line,"r"))==NULL) {
-		ShowError("can't read %s\n", line);
+	sprintf(filepath, "%s/%s", map->db_path, filename);
+	if (libconfig->read_file(&quest_db_conf, filepath) || !(qdb = libconfig->setting_get_member(quest_db_conf.root, filename))) {
+		ShowError("can't read %s\n", filepath);
 		return -1;
 	}
 
-	while (fgets(line, sizeof(line), fp)) {
-		if (line[0]=='/' && line[1]=='/')
-			continue;
-		memset(str,0,sizeof(str));
-
-		for (i = 0, p = line; i < 8; i++) {
-			if (( np = strchr(p,',') ) != NULL) {
-				str[i] = p;
-				*np = 0;
-				p = np + 1;
-			} else if (str[0] == NULL) {
-				break;
-			} else {
-				ShowError("quest_read_db: insufficient columns in line %s\n", line);
-				continue;
-			}
-		}
-		if (str[0] == NULL)
+	while ((q = libconfig->setting_get_elem(qdb, i++))) {
+		struct quest_db *entry = quest->read_db_sub(q, i-1, filepath);
+		if (!entry)
 			continue;
 
-		memset(&entry, 0, sizeof(entry));
-
-		entry.id = atoi(str[0]);
-
-		if (entry.id < 0 || entry.id >= MAX_QUEST_DB) {
-			ShowError("quest_read_db: Invalid quest ID '%d' in line '%s' (min: 0, max: %d.)\n", entry.id, line, MAX_QUEST_DB);
-			continue;
+		if (quest->db_data[entry->id] != NULL) {
+			ShowWarning("quest_read_db: Duplicate quest %d.\n", entry->id);
+			if (quest->db_data[entry->id]->dropitem)
+				aFree(quest->db_data[entry->id]->dropitem);
+			if (quest->db_data[entry->id]->objectives)
+				aFree(quest->db_data[entry->id]->objectives);
+			aFree(quest->db_data[entry->id]);
 		}
+		quest->db_data[entry->id] = entry;
 
-		entry.time = atoi(str[1]);
-
-		for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
-			entry.mob[i] = atoi(str[2*i+2]);
-			entry.count[i] = atoi(str[2*i+3]);
-
-			if (!entry.mob[i] || !entry.count[i])
-				break;
-		}
-
-		entry.num_objectives = i;
-
-		if (quest->db_data[entry.id] == NULL)
-			quest->db_data[entry.id] = aMalloc(sizeof(struct quest_db));
-
-		memcpy(quest->db_data[entry.id], &entry, sizeof(struct quest_db));
 		count++;
 	}
-	fclose(fp);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, "quest_db.txt");
-	return 0;
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
+	return count;
 }
 
 /**
@@ -476,6 +573,10 @@ void quest_clear_db(void) {
 
 	for (i = 0; i < MAX_QUEST_DB; i++) {
 		if (quest->db_data[i]) {
+			if (quest->db_data[i]->objectives)
+				aFree(quest->db_data[i]->objectives);
+			if (quest->db_data[i]->dropitem)
+				aFree(quest->db_data[i]->dropitem);
 			aFree(quest->db_data[i]);
 			quest->db_data[i] = NULL;
 		}
@@ -518,6 +619,7 @@ void do_reload_quest(void) {
  */
 void quest_defaults(void) {
 	quest = &quest_s;
+	quest->db_data = db_data;
 
 	memset(&quest->db, 0, sizeof(quest->db));
 	memset(&quest->dummy, 0, sizeof(quest->dummy));
@@ -537,4 +639,5 @@ void quest_defaults(void) {
 	quest->check = quest_check;
 	quest->clear = quest_clear_db;
 	quest->read_db = quest_read_db;
+	quest->read_db_sub = quest_read_db_sub;
 }

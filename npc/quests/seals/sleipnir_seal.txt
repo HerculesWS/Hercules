@@ -208,7 +208,7 @@ que_god01,98,98,4	script	Manager#G	1_F_04,{
 			god_sl_1 = 51;
 			.@god_treasure = rand(1,900);
 			.@god_treasure1 = rand(1,1000);
-			if (checkre(0)) {
+			if (RENEWAL) {
 				if (.@god_treasure < 101) {
 					     if (.@god_treasure1 < 210) getitem 2102,1; //Guard_
 					else if (.@god_treasure1 < 420) getitem 2104,1; //Buckler_
