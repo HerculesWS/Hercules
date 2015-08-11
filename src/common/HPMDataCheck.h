@@ -145,7 +145,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define COMMON_MALLOC_H
 	#endif // COMMON_MALLOC_H
 	#ifdef COMMON_MAPINDEX_H
-		{ "mapindex_interface", sizeof(struct mapindex_interface), SERVER_TYPE_ALL },
+		{ "mapindex_interface", sizeof(struct mapindex_interface), SERVER_TYPE_CHAR|SERVER_TYPE_MAP },
 	#else
 		#define COMMON_MAPINDEX_H
 	#endif // COMMON_MAPINDEX_H
