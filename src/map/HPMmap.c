@@ -136,9 +136,9 @@ bool HPM_map_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataType
 
 void HPM_map_plugin_load_sub(struct hplugin *plugin) {
 	plugin->hpi->sql_handle = map->mysql_handle;
-	plugin->hpi->addCommand       = HPM->import_symbol("addCommand",plugin->idx);
-	plugin->hpi->addScript        = HPM->import_symbol("addScript",plugin->idx);
-	plugin->hpi->addPCGPermission = HPM->import_symbol("addGroupPermission",plugin->idx);
+	plugin->hpi->addCommand = atcommand->create;
+	plugin->hpi->addScript  = script->addScript;
+	plugin->hpi->addPCGPermission = HPM_map_add_group_permission;
 }
 
 bool HPM_map_add_atcommand(char *name, AtCommandFunc func) {

@@ -139,33 +139,37 @@ enum HPluginConfType {
 #define getFromBGDATA(ptr,index) (HPMi->getFromHPData(HPDT_BGDATA,HPMi->pid,(ptr),(index)))
 #define removeFromBGDATA(ptr,index) (HPMi->removeFromHPData(HPDT_BGDATA,HPMi->pid,(ptr),(index)))
 
-/* HPMi->addCommand */
-#define addAtcommand(cname,funcname) \
-	if ( HPMi->addCommand != NULL ) { \
+/// HPMi->addCommand
+#define addAtcommand(cname,funcname) do { \
+	if (HPMi->addCommand != NULL) { \
 		HPMi->addCommand(cname,atcommand_ ## funcname); \
 	} else { \
 		ShowWarning("HPM (%s):addAtcommand(\"%s\",%s) failed, addCommand sub is NULL!\n",pinfo.name,cname,# funcname);\
-	}
-/* HPMi->addScript */
-#define addScriptCommand(cname,scinfo,funcname) \
-	if ( HPMi->addScript != NULL ) { \
+	} \
+} while(0)
+/// HPMi->addScript
+#define addScriptCommand(cname,scinfo,funcname) do { \
+	if (HPMi->addScript != NULL) { \
 		HPMi->addScript(cname,scinfo,buildin_ ## funcname, false); \
 	} else { \
 		ShowWarning("HPM (%s):addScriptCommand(\"%s\",\"%s\",%s) failed, addScript sub is NULL!\n",pinfo.name,cname,scinfo,# funcname);\
-	}
-#define addScriptCommandDeprecated(cname,scinfo,funcname) \
-	if ( HPMi->addScript != NULL ) { \
+	} \
+} while(0)
+#define addScriptCommandDeprecated(cname,scinfo,funcname) do { \
+	if (HPMi->addScript != NULL) { \
 		HPMi->addScript(cname,scinfo,buildin_ ## funcname, true); \
 	} else { \
 		ShowWarning("HPM (%s):addScriptCommandDeprecated(\"%s\",\"%s\",%s) failed, addScript sub is NULL!\n",pinfo.name,cname,scinfo,# funcname);\
-	}
-/* HPMi->addCPCommand */
-#define addCPCommand(cname,funcname) \
-	if ( HPMi->addCPCommand != NULL ) { \
+	} \
+} while(0)
+/// HPMi->addCPCommand
+#define addCPCommand(cname,funcname) do { \
+	if (HPMi->addCPCommand != NULL) { \
 		HPMi->addCPCommand(cname,console_parse_ ## funcname); \
 	} else { \
 		ShowWarning("HPM (%s):addCPCommand(\"%s\",%s) failed, addCPCommand sub is NULL!\n",pinfo.name,cname,# funcname);\
-	}
+	} \
+} while(0)
 /* HPMi->addPacket */
 #define addPacket(cmd,len,receive,point) HPMi->addPacket(cmd,len,receive,point,HPMi->pid)
 /* HPMi->addBattleConf */
