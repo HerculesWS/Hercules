@@ -129,9 +129,7 @@ struct HPM_interface {
 	void (*event) (enum hp_event_types type);
 	void *(*import_symbol) (char *name, unsigned int pID);
 	void (*share) (void *, char *);
-	void (*symbol_defaults) (void);
 	void (*config_read) (void);
-	void (*symbol_defaults_sub) (void);//TODO drop
 	char *(*pid2name) (unsigned int pid);
 	unsigned char (*parse_packets) (int fd, enum HPluginPacketHookingPoints point);
 	void (*load_sub) (struct hplugin *plugin);

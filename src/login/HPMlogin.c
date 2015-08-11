@@ -47,6 +47,7 @@ void HPM_login_plugin_load_sub(struct hplugin *plugin) {
 
 void HPM_login_do_init(void) {
 	HPM->datacheck_init(HPMDataCheck, HPMDataCheckLen, HPMDataCheckVer);
+	HPM_shared_symbols(SERVER_TYPE_LOGIN);
 }
 
 void HPM_login_do_final(void) {

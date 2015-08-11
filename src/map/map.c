@@ -5615,54 +5615,6 @@ void map_cp_defaults(void) {
 	console->input->addCommand("gm:use",CPCMD_A(gm_use));
 #endif
 }
-/* Hercules Plugin Mananger */
-void map_hp_symbols(void) {
-	/* full interfaces */
-	HPM->share(atcommand,"atcommand");
-	HPM->share(battle,"battle");
-	HPM->share(bg,"battlegrounds");
-	HPM->share(buyingstore,"buyingstore");
-	HPM->share(channel,"channel");
-	HPM->share(clif,"clif");
-	HPM->share(chrif,"chrif");
-	HPM->share(guild,"guild");
-	HPM->share(gstorage,"gstorage");
-	HPM->share(homun,"homun");
-	HPM->share(map,"map");
-	HPM->share(ircbot,"ircbot");
-	HPM->share(itemdb,"itemdb");
-	HPM->share(logs,"logs");
-	HPM->share(mail,"mail");
-	HPM->share(instance,"instance");
-	HPM->share(script,"script");
-	HPM->share(searchstore,"searchstore");
-	HPM->share(skill,"skill");
-	HPM->share(vending,"vending");
-	HPM->share(pc,"pc");
-	HPM->share(pcg,"pc_groups");
-	HPM->share(party,"party");
-	HPM->share(storage,"storage");
-	HPM->share(trade,"trade");
-	HPM->share(status,"status");
-	HPM->share(chat, "chat");
-	HPM->share(duel,"duel");
-	HPM->share(elemental,"elemental");
-	HPM->share(intif,"intif");
-	HPM->share(mercenary,"mercenary");
-	HPM->share(mob,"mob");
-	HPM->share(unit,"unit");
-	HPM->share(npc,"npc");
-	HPM->share(mapreg,"mapreg");
-	HPM->share(pet,"pet");
-	HPM->share(path,"path");
-	HPM->share(quest,"quest");
-#ifdef PCRE_SUPPORT
-	HPM->share(npc_chat,"npc_chat");
-	HPM->share(libpcre,"libpcre");
-#endif
-	HPM->share(mapit,"mapit");
-	HPM->share(mapindex,"mapindex");
-}
 
 void map_load_defaults(void) {
 	mapindex_defaults();
@@ -5899,7 +5851,6 @@ int do_init(int argc, char *argv[])
 	map->GRF_PATH_FILENAME       = aStrdup("conf/grf-files.txt");
 
 	HPM_map_do_init();
-	HPM->symbol_defaults_sub = map_hp_symbols;
 	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
 	HPM->config_read();
 	

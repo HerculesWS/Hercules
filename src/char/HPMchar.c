@@ -62,6 +62,7 @@ void HPM_char_plugin_load_sub(struct hplugin *plugin) {
 
 void HPM_char_do_init(void) {
 	HPM->datacheck_init(HPMDataCheck, HPMDataCheckLen, HPMDataCheckVer);
+	HPM_shared_symbols(SERVER_TYPE_CHAR);
 }
 
 void HPM_char_do_final(void) {

@@ -186,6 +186,7 @@ void HPM_map_do_init(void) {
 	HPM->load_sub = HPM_map_plugin_load_sub;
 	HPM->grabHPDataSub = HPM_map_grabHPData;
 	HPM->datacheck_init(HPMDataCheck, HPMDataCheckLen, HPMDataCheckVer);
+	HPM_shared_symbols(SERVER_TYPE_MAP);
 }
 
 void HPM_map_do_final(void) {

@@ -5806,26 +5806,6 @@ void do_shutdown(void)
 	}
 }
 
-void char_hp_symbols(void) {
-	HPM->share(mapindex,"mapindex");
-	HPM->share(chr, "chr");
-	HPM->share(geoip, "geoip");
-	HPM->share(inter_auction, "inter_auction");
-	HPM->share(inter_elemental, "inter_elemental");
-	HPM->share(inter_guild, "inter_guild");
-	HPM->share(inter_homunculus, "inter_homunculus");
-	HPM->share(inter_mail, "inter_mail");
-	HPM->share(inter_mercenary, "inter_mercenary");
-	HPM->share(inter_party, "inter_party");
-	HPM->share(inter_pet, "inter_pet");
-	HPM->share(inter_quest, "inter_quest");
-	HPM->share(inter_storage, "inter_storage");
-	HPM->share(inter, "inter");
-	HPM->share(loginif, "loginif");
-	HPM->share(mapif, "mapif");
-	HPM->share(pincode, "pincode");
-}
-
 /**
  * --char-config handler
  *
@@ -5887,7 +5867,6 @@ int do_init(int argc, char **argv) {
 		chr->server[i].map = NULL;
 
 	HPM_char_do_init();
-	HPM->symbol_defaults_sub = char_hp_symbols;
 	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
 	HPM->config_read();
 	HPM->event(HPET_PRE_INIT);

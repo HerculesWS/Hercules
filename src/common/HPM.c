@@ -533,9 +533,6 @@ void hplugins_config_read(void) {
 	if (libconfig->read_file(&plugins_conf, config_filename))
 		return;
 
-	if( HPM->symbol_defaults_sub )
-		HPM->symbol_defaults_sub();
-
 	plist = libconfig->lookup(&plugins_conf, "plugins_list");
 	for (i = 0; i < HPM->cmdline_plugins_count; i++) {
 		config_setting_t *entry = libconfig->setting_add(plist, NULL, CONFIG_TYPE_STRING);
@@ -748,37 +745,6 @@ void HPM_datacheck_final(void) {
 	db_destroy(datacheck_db);
 }
 
-void hplugins_share_defaults(void) {
-	/* core */
-	HPM->share(core,"core");
-	HPM->share(HPMiMalloc, "iMalloc");
-	HPM->share(cmdline,"cmdline");
-	/* console */
-	HPM->share(console,"console");
-	/* db */
-	HPM->share(DB, "DB");
-	/* nullpo */
-	HPM->share(nullpo,"nullpo");
-	/* showmsg */
-	HPM->share(showmsg,"showmsg");
-	/* socket */
-	HPM->share(sockt,"sockt");
-	/* strlib */
-	HPM->share(strlib,"strlib");
-	HPM->share(sv,"sv");
-	HPM->share(StrBuf,"StrBuf");
-	/* sql */
-	HPM->share(SQL,"SQL");
-	/* timer */
-	HPM->share(timer,"timer");
-	/* libconfig */
-	HPM->share(libconfig,"libconfig");
-	/* sysinfo */
-	HPM->share(sysinfo,"sysinfo");
-	/* utils */
-	HPM->share(HCache,"HCache");
-}
-
 void hpm_init(void) {
 	unsigned int i;
 	datacheck_db = NULL;
@@ -809,8 +775,6 @@ void hpm_init(void) {
 		HPM->packets[i] = NULL;
 		HPM->packetsc[i] = 0;
 	}
-
-	HPM->symbol_defaults();
 
 #ifdef CONSOLE_INPUT
 	console->input->addCommand("plugins",CPCMD_A(plugins));
@@ -906,9 +870,7 @@ void hpm_defaults(void) {
 	HPM->iscompatible = hplugin_iscompatible;
 	HPM->import_symbol = hplugin_import_symbol;
 	HPM->share = hplugin_export_symbol;
-	HPM->symbol_defaults = hplugins_share_defaults;
 	HPM->config_read = hplugins_config_read;
-	HPM->symbol_defaults_sub = NULL;
 	HPM->pid2name = hplugins_id2name;
 	HPM->parse_packets = hplugins_parse_packets;
 	HPM->load_sub = NULL;
