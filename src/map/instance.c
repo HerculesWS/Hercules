@@ -357,7 +357,7 @@ int instance_init_npc(struct block_list* bl, va_list args) {
 	snprintf(evname, EVENT_NAME_LENGTH, "%s::OnInstanceInit", nd->exname);
 
 	if( ( ev = strdb_get(npc->ev_db, evname) ) )
-		script->run(ev->nd->u.scr.script, ev->pos, 0, ev->nd->bl.id);
+		script->run_npc(ev->nd->u.scr.script, ev->pos, 0, ev->nd->bl.id);
 
 	return 1;
 }
