@@ -2847,14 +2847,14 @@ int HP_chr_mapif_init(int fd) {
 	}
 	return retVal___;
 }
-int HP_chr_lan_subnetcheck(uint32 ip) {
+uint32 HP_chr_lan_subnet_check(uint32 ip) {
 	int hIndex = 0;
-	int retVal___ = 0;
-	if( HPMHooks.count.HP_chr_lan_subnetcheck_pre ) {
-		int (*preHookFunc) (uint32 *ip);
+	uint32 retVal___ = 0;
+	if( HPMHooks.count.HP_chr_lan_subnet_check_pre ) {
+		uint32 (*preHookFunc) (uint32 *ip);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_lan_subnetcheck_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_chr_lan_subnetcheck_pre[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_lan_subnet_check_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_chr_lan_subnet_check_pre[hIndex].func;
 			retVal___ = preHookFunc(&ip);
 		}
 		if( *HPMforce_return ) {
@@ -2863,12 +2863,12 @@ int HP_chr_lan_subnetcheck(uint32 ip) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.chr.lan_subnetcheck(ip);
+		retVal___ = HPMHooks.source.chr.lan_subnet_check(ip);
 	}
-	if( HPMHooks.count.HP_chr_lan_subnetcheck_post ) {
-		int (*postHookFunc) (int retVal___, uint32 *ip);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_lan_subnetcheck_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_chr_lan_subnetcheck_post[hIndex].func;
+	if( HPMHooks.count.HP_chr_lan_subnet_check_post ) {
+		uint32 (*postHookFunc) (uint32 retVal___, uint32 *ip);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_lan_subnet_check_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_chr_lan_subnet_check_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, &ip);
 		}
 	}
@@ -4139,33 +4139,6 @@ int HP_chr_online_data_cleanup(int tid, int64 tick, int id, intptr_t data) {
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_online_data_cleanup_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_chr_online_data_cleanup_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, &tid, &tick, &id, &data);
-		}
-	}
-	return retVal___;
-}
-int HP_chr_lan_config_read(const char *lancfgName) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if( HPMHooks.count.HP_chr_lan_config_read_pre ) {
-		int (*preHookFunc) (const char *lancfgName);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_lan_config_read_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_chr_lan_config_read_pre[hIndex].func;
-			retVal___ = preHookFunc(lancfgName);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.chr.lan_config_read(lancfgName);
-	}
-	if( HPMHooks.count.HP_chr_lan_config_read_post ) {
-		int (*postHookFunc) (int retVal___, const char *lancfgName);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_lan_config_read_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_chr_lan_config_read_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, lancfgName);
 		}
 	}
 	return retVal___;

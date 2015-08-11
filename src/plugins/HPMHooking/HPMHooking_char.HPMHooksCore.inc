@@ -219,8 +219,8 @@ struct {
 	struct HPMHookPoint *HP_chr_search_mapserver_post;
 	struct HPMHookPoint *HP_chr_mapif_init_pre;
 	struct HPMHookPoint *HP_chr_mapif_init_post;
-	struct HPMHookPoint *HP_chr_lan_subnetcheck_pre;
-	struct HPMHookPoint *HP_chr_lan_subnetcheck_post;
+	struct HPMHookPoint *HP_chr_lan_subnet_check_pre;
+	struct HPMHookPoint *HP_chr_lan_subnet_check_post;
 	struct HPMHookPoint *HP_chr_delete2_ack_pre;
 	struct HPMHookPoint *HP_chr_delete2_ack_post;
 	struct HPMHookPoint *HP_chr_delete2_accept_actual_ack_pre;
@@ -317,8 +317,6 @@ struct {
 	struct HPMHookPoint *HP_chr_online_data_cleanup_sub_post;
 	struct HPMHookPoint *HP_chr_online_data_cleanup_pre;
 	struct HPMHookPoint *HP_chr_online_data_cleanup_post;
-	struct HPMHookPoint *HP_chr_lan_config_read_pre;
-	struct HPMHookPoint *HP_chr_lan_config_read_post;
 	struct HPMHookPoint *HP_chr_sql_config_read_pre;
 	struct HPMHookPoint *HP_chr_sql_config_read_post;
 	struct HPMHookPoint *HP_chr_config_dispatch_pre;
@@ -1118,8 +1116,8 @@ struct {
 	int HP_chr_search_mapserver_post;
 	int HP_chr_mapif_init_pre;
 	int HP_chr_mapif_init_post;
-	int HP_chr_lan_subnetcheck_pre;
-	int HP_chr_lan_subnetcheck_post;
+	int HP_chr_lan_subnet_check_pre;
+	int HP_chr_lan_subnet_check_post;
 	int HP_chr_delete2_ack_pre;
 	int HP_chr_delete2_ack_post;
 	int HP_chr_delete2_accept_actual_ack_pre;
@@ -1216,8 +1214,6 @@ struct {
 	int HP_chr_online_data_cleanup_sub_post;
 	int HP_chr_online_data_cleanup_pre;
 	int HP_chr_online_data_cleanup_post;
-	int HP_chr_lan_config_read_pre;
-	int HP_chr_lan_config_read_post;
 	int HP_chr_sql_config_read_pre;
 	int HP_chr_sql_config_read_post;
 	int HP_chr_config_dispatch_pre;
