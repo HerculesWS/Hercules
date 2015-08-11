@@ -121,14 +121,6 @@ int log_inter = 1; // logging inter or not [devil]
 
 int char_aegis_delete = 0; // Verify if char is in guild/party or char and reacts as Aegis does (doesn't allow deletion), see chr->delete2_req for more information
 
-// Advanced subnet check [LuzZza]
-struct s_subnet {
-	uint32 mask;
-	uint32 char_ip;
-	uint32 map_ip;
-} subnet[16];
-int subnet_count = 0;
-
 int max_connect_user = -1;
 int gm_allow_group = -1;
 int autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
@@ -4171,20 +4163,22 @@ static int char_mapif_init(int fd)
 	return inter->mapif_init(fd);
 }
 
-//--------------------------------------------
-// Test to know if an IP come from LAN or WAN.
-//--------------------------------------------
-int char_lan_subnetcheck(uint32 ip)
+/**
+ * Checks whether the given IP comes from LAN or WAN.
+ *
+ * @param ip IP address to check.
+ * @retval 0 if it is a WAN IP.
+ * @return the appropriate LAN server address to send, if it is a LAN IP.
+ */
+uint32 char_lan_subnet_check(uint32 ip)
 {
-	int i;
-	ARR_FIND( 0, subnet_count, i, (subnet[i].char_ip & subnet[i].mask) == (ip & subnet[i].mask) );
-	if( i < subnet_count ) {
-		ShowInfo("Subnet check [%u.%u.%u.%u]: Matches "CL_CYAN"%u.%u.%u.%u/%u.%u.%u.%u"CL_RESET"\n", CONVIP(ip), CONVIP(subnet[i].char_ip & subnet[i].mask), CONVIP(subnet[i].mask));
-		return subnet[i].map_ip;
-	} else {
-		ShowInfo("Subnet check [%u.%u.%u.%u]: "CL_CYAN"WAN"CL_RESET"\n", CONVIP(ip));
-		return 0;
+	struct s_subnet lan = {0};
+	if (sockt->lan_subnet_check(ip, &lan)) {
+		ShowInfo("Subnet check [%u.%u.%u.%u]: Matches "CL_CYAN"%u.%u.%u.%u/%u.%u.%u.%u"CL_RESET"\n", CONVIP(ip), CONVIP(lan.ip & lan.mask), CONVIP(lan.mask));
+		return lan.ip;
 	}
+	ShowInfo("Subnet check [%u.%u.%u.%u]: "CL_CYAN"WAN"CL_RESET"\n", CONVIP(ip));
+	return 0;
 }
 
 
@@ -4662,7 +4656,7 @@ void char_parse_char_select(int fd, struct char_session_data* sd, uint32 ipl)
 		return;
 	}
 
-	subnet_map_ip = chr->lan_subnetcheck(ipl); // Advanced subnet check [LuzZza]
+	subnet_map_ip = chr->lan_subnet_check(ipl);
 	//Send player to map
 	chr->send_map_info(fd, i, subnet_map_ip, cd);
 
@@ -4971,7 +4965,7 @@ void char_parse_char_login_map_server(int fd, uint32 ipl)
 		i == ARRAYLENGTH(chr->server) ||
 		strcmp(l_user, chr->userid) != 0 ||
 		strcmp(l_pass, chr->passwd) != 0 ||
-		!chr->lan_subnetcheck(ipl))
+		!sockt->allowed_ip_check(ipl))
 	{
 		chr->login_map_server_ack(fd, 3); // Failure
 	} else {
@@ -5449,60 +5443,6 @@ static int char_online_data_cleanup(int tid, int64 tick, int id, intptr_t data) 
 	return 0;
 }
 
-//----------------------------------
-// Reading LAN Support configuration
-// Rewrote: Advanced subnet check [LuzZza]
-//----------------------------------
-int char_lan_config_read(const char *lancfgName)
-{
-	FILE *fp;
-	int line_num = 0;
-	char line[1024], w1[64], w2[64], w3[64], w4[64];
-
-	if((fp = fopen(lancfgName, "r")) == NULL) {
-		ShowWarning("LAN Support configuration file is not found: %s\n", lancfgName);
-		return 1;
-	}
-
-	while(fgets(line, sizeof(line), fp)) {
-		line_num++;
-		if ((line[0] == '/' && line[1] == '/') || line[0] == '\n' || line[1] == '\n')
-			continue;
-
-		if (sscanf(line,"%63[^:]: %63[^:]:%63[^:]:%63[^\r\n]", w1, w2, w3, w4) != 4) {
-
-			ShowWarning("Error syntax of configuration file %s in line %d.\n", lancfgName, line_num);
-			continue;
-		}
-
-		remove_control_chars(w1);
-		remove_control_chars(w2);
-		remove_control_chars(w3);
-		remove_control_chars(w4);
-
-		if( strcmpi(w1, "subnet") == 0 )
-		{
-			subnet[subnet_count].mask = str2ip(w2);
-			subnet[subnet_count].char_ip = str2ip(w3);
-			subnet[subnet_count].map_ip = str2ip(w4);
-
-			if( (subnet[subnet_count].char_ip & subnet[subnet_count].mask) != (subnet[subnet_count].map_ip & subnet[subnet_count].mask) )
-			{
-				ShowError("%s: Configuration Error: The char server (%s) and map server (%s) belong to different subnetworks!\n", lancfgName, w3, w4);
-				continue;
-			}
-
-			subnet_count++;
-		}
-	}
-
-	if( subnet_count > 1 ) /* only useful if there is more than 1 */
-		ShowStatus("Read information about %d subnetworks.\n", subnet_count);
-
-	fclose(fp);
-	return 0;
-}
-
 void char_sql_config_read(const char* cfgName)
 {
 	char line[1024], w1[1024], w2[1024];
@@ -5826,7 +5766,7 @@ int do_final(void) {
 			aFree(chr->server[i].map);
 
 	aFree(chr->CHAR_CONF_NAME);
-	aFree(chr->LAN_CONF_NAME);
+	aFree(chr->NET_CONF_NAME);
 	aFree(chr->SQL_CONF_NAME);
 	aFree(chr->INTER_CONF_NAME);
 
@@ -5911,15 +5851,15 @@ static CMDLINEARG(interconfig)
 	return true;
 }
 /**
- * --lan-config handler
+ * --net-config handler
  *
- * Overrides the default subnet configuration file.
+ * Overrides the default network configuration file.
  * @see cmdline->exec
  */
-static CMDLINEARG(lanconfig)
+static CMDLINEARG(netconfig)
 {
-	aFree(chr->LAN_CONF_NAME);
-	chr->LAN_CONF_NAME = aStrdup(params);
+	aFree(chr->NET_CONF_NAME);
+	chr->NET_CONF_NAME = aStrdup(params);
 	return true;
 }
 /**
@@ -5929,7 +5869,7 @@ void cmdline_args_init_local(void)
 {
 	CMDLINEARG_DEF2(char-config, charconfig, "Alternative char-server configuration.", CMDLINE_OPT_PARAM);
 	CMDLINEARG_DEF2(inter-config, interconfig, "Alternative inter-server configuration.", CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(lan-config, lanconfig, "Alternative subnet configuration.", CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(net-config, netconfig, "Alternative network configuration.", CMDLINE_OPT_PARAM);
 }
 
 int do_init(int argc, char **argv) {
@@ -5939,7 +5879,7 @@ int do_init(int argc, char **argv) {
 	char_load_defaults();
 
 	chr->CHAR_CONF_NAME = aStrdup("conf/char-server.conf");
-	chr->LAN_CONF_NAME = aStrdup("conf/subnet.conf");
+	chr->NET_CONF_NAME = aStrdup("conf/network.conf");
 	chr->SQL_CONF_NAME = aStrdup("conf/inter-server.conf");
 	chr->INTER_CONF_NAME = aStrdup("conf/inter-server.conf");
 
@@ -5958,7 +5898,7 @@ int do_init(int argc, char **argv) {
 
 	cmdline->exec(argc, argv, CMDLINE_OPT_NORMAL);
 	chr->config_read(chr->CHAR_CONF_NAME);
-	chr->lan_config_read(chr->LAN_CONF_NAME);
+	sockt->net_config_read(chr->NET_CONF_NAME);
 	chr->sql_config_read(chr->SQL_CONF_NAME);
 
 	if (strcmp(chr->userid, "s1")==0 && strcmp(chr->passwd, "p1")==0) {
@@ -6194,7 +6134,7 @@ void char_defaults(void)
 	chr->parse_frommap = char_parse_frommap;
 	chr->search_mapserver = char_search_mapserver;
 	chr->mapif_init = char_mapif_init;
-	chr->lan_subnetcheck = char_lan_subnetcheck;
+	chr->lan_subnet_check = char_lan_subnet_check;
 	chr->delete2_ack = char_delete2_ack;
 	chr->delete2_accept_actual_ack = char_delete2_accept_actual_ack;
 	chr->delete2_accept_ack = char_delete2_accept_ack;
@@ -6243,7 +6183,6 @@ void char_defaults(void)
 	chr->check_connect_login_server = char_check_connect_login_server;
 	chr->online_data_cleanup_sub = char_online_data_cleanup_sub;
 	chr->online_data_cleanup = char_online_data_cleanup;
-	chr->lan_config_read = char_lan_config_read;
 	chr->sql_config_read = char_sql_config_read;
 	chr->config_dispatch = char_config_dispatch;
 	chr->config_read = char_config_read;
