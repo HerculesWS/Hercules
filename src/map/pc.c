@@ -4882,6 +4882,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 int pc_useitem(struct map_session_data *sd,int n) {
 	int64 tick = timer->gettick();
 	int amount, nameid, i;
+	bool removeItem = false;
 
 	nullpo_ret(sd);
 
@@ -4999,7 +5000,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	else {
 		if (sd->status.inventory[n].expire_time == 0) {
 			clif->useitemack(sd, n, amount - 1, true);
-			pc->delitem(sd, n, 1, 1, DELITEM_NORMAL, LOG_TYPE_CONSUME); // Rental Usable Items are not deleted until expiration
+			removeItem = true;
 		} else {
 			clif->useitemack(sd, n, 0, false);
 		}
@@ -5019,8 +5020,10 @@ int pc_useitem(struct map_session_data *sd,int n) {
 		sd->canusecashfood_tick = tick + battle_config.cashfood_use_interval;
 
 	script->run_use_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
-
 	script->potion_flag = 0;
+
+	if (removeItem)
+		pc->delitem(sd, n, 1, 1, DELITEM_NORMAL, LOG_TYPE_CONSUME);
 	return 1;
 }
 
