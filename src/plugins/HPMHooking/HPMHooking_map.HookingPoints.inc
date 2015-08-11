@@ -2114,6 +2114,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->get_constant, HP_script_get_constant) },
 	{ HP_POP(script->label_add, HP_script_label_add) },
 	{ HP_POP(script->run, HP_script_run) },
+	{ HP_POP(script->run_npc, HP_script_run_npc) },
+	{ HP_POP(script->run_pet, HP_script_run_pet) },
 	{ HP_POP(script->run_main, HP_script_run_main) },
 	{ HP_POP(script->run_timer, HP_script_run_timer) },
 	{ HP_POP(script->set_var, HP_script_set_var) },
@@ -2230,6 +2232,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->add_language, HP_script_add_language) },
 	{ HP_POP(script->get_translation_file_name, HP_script_get_translation_file_name) },
 	{ HP_POP(script->parser_clean_leftovers, HP_script_parser_clean_leftovers) },
+	{ HP_POP(script->run_use_script, HP_script_run_use_script) },
+	{ HP_POP(script->run_item_equip_script, HP_script_run_item_equip_script) },
+	{ HP_POP(script->run_item_unequip_script, HP_script_run_item_unequip_script) },
 /* searchstore */
 	{ HP_POP(searchstore->open, HP_searchstore_open) },
 	{ HP_POP(searchstore->query, HP_searchstore_query) },
