@@ -50271,14 +50271,14 @@ int HP_pc_equipitem(struct map_session_data *sd, int n, int req_pos) {
 	}
 	return retVal___;
 }
-void HP_pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int pos) {
+void HP_pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int n, int pos) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_pc_equipitem_pos_pre ) {
-		void (*preHookFunc) (struct map_session_data *sd, struct item_data *id, int *pos);
+		void (*preHookFunc) (struct map_session_data *sd, struct item_data *id, int *n, int *pos);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_equipitem_pos_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_equipitem_pos_pre[hIndex].func;
-			preHookFunc(sd, id, &pos);
+			preHookFunc(sd, id, &n, &pos);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -50286,13 +50286,13 @@ void HP_pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int 
 		}
 	}
 	{
-		HPMHooks.source.pc.equipitem_pos(sd, id, pos);
+		HPMHooks.source.pc.equipitem_pos(sd, id, n, pos);
 	}
 	if( HPMHooks.count.HP_pc_equipitem_pos_post ) {
-		void (*postHookFunc) (struct map_session_data *sd, struct item_data *id, int *pos);
+		void (*postHookFunc) (struct map_session_data *sd, struct item_data *id, int *n, int *pos);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_equipitem_pos_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_equipitem_pos_post[hIndex].func;
-			postHookFunc(sd, id, &pos);
+			postHookFunc(sd, id, &n, &pos);
 		}
 	}
 	return;
