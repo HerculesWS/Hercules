@@ -18225,7 +18225,7 @@ ecl_fild01,205,86,3	script	Eclage Messenger Roy#tl	4_M_FAIRYSOLDIER2,{
 		mes "This is a little something for you.";
 		mes "I'll be looking forward to seeing you!";
 		delitem Mail_Package,1; //Mail_Package
-		changequest 7430,4731;
+		changequest 7430,7431;
 		getexp 200000,200000;
 		getitem Splendide_Coin,1; //Splendide_Coin
 		close;
