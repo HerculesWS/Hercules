@@ -1,6 +1,10 @@
---
+CREATE SCHEMA IF NOT EXISTS `ragnarok`;
+
+USE `ragnarok`;
+
 --
 -- Table structure for table `account_data`
+--
 
 CREATE TABLE IF NOT EXISTS `account_data` (
   `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
@@ -553,13 +557,14 @@ CREATE TABLE IF NOT EXISTS `login` (
   `pincode` VARCHAR(4) NOT NULL DEFAULT '',
   `pincode_change` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`account_id`),
-  KEY `name` (`userid`)
+  KEY `name` (`userid`),
+  CONSTRAINT UNIQUE (`account_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2000000; 
 
 -- added standard accounts for servers, VERY INSECURE!!!
 -- inserted into the table called login which is above
 
-INSERT INTO `login` (`account_id`, `userid`, `user_pass`, `sex`, `email`) VALUES ('1', 's1', 'p1', 'S','athena@athena.com');
+INSERT IGNORE INTO `login` (`account_id`, `userid`, `user_pass`, `sex`, `email`) VALUES ('1', 's1', 'p1', 'S','athena@athena.com');
 
 --
 -- Table structure for table `mapreg`
@@ -766,40 +771,41 @@ CREATE TABLE IF NOT EXISTS `sql_updates` (
   `timestamp` INT(11) UNSIGNED NOT NULL,
   `ignored` ENUM('Yes','No') NOT NULL DEFAULT 'No',
   PRIMARY KEY (`timestamp`)
+  CONSTRAINT UNIQUE (`timestamp`)
 ) ENGINE=MyISAM;
 
 -- Existent updates to enter
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1360858500); -- 2013-02-14--16-15.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1360951560); -- 2013-02-15--18-06.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1362445531); -- 2013-03-05--01-05.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1362528000); -- 2013-03-06--00-00.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1362794218); -- 2013-03-09--01-56.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1364409316); -- 2013-03-27--18-35.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1366075474); -- 2013-04-16--01-24.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1366078541); -- 2013-04-16--02-15.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1381354728); -- 2013-10-09--21-38.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1381423003); -- 2013-10-10--16-36.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1382892428); -- 2013-10-27--16-47.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1383162785); -- 2013-10-30--19-53.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1383167577); -- 2013-10-30--21-12.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1383205740); -- 2013-10-31--07-49.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1383955424); -- 2013-11-09--00-03.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1384473995); -- 2013-11-15--00-06.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1384545461); -- 2013-11-15--19-57.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1384588175); -- 2013-11-16--07-49.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1384763034); -- 2013-11-18--08-23.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1387844126); -- 2013-12-24--00-15.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1388854043); -- 2014-01-04--16-47.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1389028967); -- 2014-01-06--17-22.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1392832626); -- 2014-02-19--17-57.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1395789302); -- 2014-03-25--23-57.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1396893866); -- 2014-04-07--22-04.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1398477600); -- 2014-04-26--10-00.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1400256139); -- 2014-05-17--00-06.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1409590380); -- 2014-09-01--16-53.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1414975503); -- 2014-11-03--00-45.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1435860840); -- 2015-07-02--18-14.sql
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1436360978); -- 2015-07-08--13-08.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1360858500); -- 2013-02-14--16-15.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1360951560); -- 2013-02-15--18-06.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1362445531); -- 2013-03-05--01-05.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1362528000); -- 2013-03-06--00-00.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1362794218); -- 2013-03-09--01-56.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1364409316); -- 2013-03-27--18-35.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1366075474); -- 2013-04-16--01-24.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1366078541); -- 2013-04-16--02-15.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1381354728); -- 2013-10-09--21-38.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1381423003); -- 2013-10-10--16-36.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1382892428); -- 2013-10-27--16-47.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1383162785); -- 2013-10-30--19-53.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1383167577); -- 2013-10-30--21-12.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1383205740); -- 2013-10-31--07-49.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1383955424); -- 2013-11-09--00-03.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1384473995); -- 2013-11-15--00-06.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1384545461); -- 2013-11-15--19-57.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1384588175); -- 2013-11-16--07-49.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1384763034); -- 2013-11-18--08-23.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1387844126); -- 2013-12-24--00-15.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1388854043); -- 2014-01-04--16-47.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1389028967); -- 2014-01-06--17-22.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1392832626); -- 2014-02-19--17-57.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1395789302); -- 2014-03-25--23-57.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1396893866); -- 2014-04-07--22-04.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1398477600); -- 2014-04-26--10-00.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1400256139); -- 2014-05-17--00-06.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1409590380); -- 2014-09-01--16-53.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1414975503); -- 2014-11-03--00-45.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1435860840); -- 2015-07-02--18-14.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1436360978); -- 2015-07-08--13-08.sql
 
 --
 -- Table structure for table `storage`
@@ -824,4 +830,165 @@ CREATE TABLE IF NOT EXISTS `storage` (
   PRIMARY KEY (`id`),
   KEY `account_id` (`account_id`)
 ) ENGINE=MyISAM;
+
+CREATE SCHEMA IF NOT EXISTS `log`;
+
+USE `log`;
+
+-- PickLog Types
+-- (M)onsters Drop
+-- (P)layers Drop/Take
+-- Mobs Drop (L)oot Drop/Take
+-- Players (T)rade Give/Take
+-- Players (V)ending Sell/Take
+-- (S)hop Sell/Take
+-- (N)PC Give/Take
+-- (C)onsumable Items
+-- (A)dministrators Create/Delete
+-- Sto(R)age
+-- (G)uild Storage
+-- (E)mail attachment
+-- (B)uying Store
+-- Pr(O)duced Items/Ingredients
+-- Auct(I)oned Items
+-- (X) Other
+-- (D) Stolen from mobs
+-- (U) MVP Prizes
+
+--
+-- Table structure for table `atcommandlog`
+--
+
+CREATE TABLE IF NOT EXISTS `atcommandlog` (
+  `atcommand_id` MEDIUMINT(9) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `atcommand_date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `char_name` VARCHAR(25) NOT NULL DEFAULT '',
+  `map` VARCHAR(11) NOT NULL DEFAULT '',
+  `command` VARCHAR(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`atcommand_id`),
+  INDEX (`account_id`),
+  INDEX (`char_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 ;
+
+--
+-- Table structure for table `branchlog`
+--
+
+CREATE TABLE IF NOT EXISTS `branchlog` (
+  `branch_id` MEDIUMINT(9) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `branch_date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `account_id` INT(11) NOT NULL DEFAULT '0',
+  `char_id` INT(11) NOT NULL DEFAULT '0',
+  `char_name` VARCHAR(25) NOT NULL DEFAULT '',
+  `map` VARCHAR(11) NOT NULL DEFAULT '',
+  PRIMARY KEY(`branch_id`),
+  INDEX (`account_id`),
+  INDEX (`char_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1;
+
+--
+-- Table structure for table `chatlog`
+--
+
+CREATE TABLE IF NOT EXISTS `chatlog` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `type` ENUM('O','W','P','G','M') NOT NULL DEFAULT 'O',
+  `type_id` INT(11) NOT NULL DEFAULT '0',
+  `src_charid` INT(11) NOT NULL DEFAULT '0',
+  `src_accountid` INT(11) NOT NULL DEFAULT '0',
+  `src_map` VARCHAR(11) NOT NULL DEFAULT '',
+  `src_map_x` SMALLINT(4) NOT NULL DEFAULT '0',
+  `src_map_y` SMALLINT(4) NOT NULL DEFAULT '0',
+  `dst_charname` VARCHAR(25) NOT NULL DEFAULT '',
+  `message` VARCHAR(150) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  INDEX (`src_accountid`),
+  INDEX (`src_charid`)
+) ENGINE=MyISAM AUTO_INCREMENT=1;
+
+--
+-- Table structure for table `loginlog`
+--
+
+CREATE TABLE IF NOT EXISTS `loginlog` (
+  `time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `ip` VARCHAR(15) NOT NULL DEFAULT '',
+  `user` VARCHAR(23) NOT NULL DEFAULT '',
+  `rcode` TINYINT(4) NOT NULL DEFAULT '0',
+  `log` VARCHAR(255) NOT NULL DEFAULT '',
+  INDEX (`ip`)
+) ENGINE=MyISAM;
+
+--
+-- Table structure for table `mvplog`
+--
+
+CREATE TABLE IF NOT EXISTS `mvplog` (
+  `mvp_id` MEDIUMINT(9) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `mvp_date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `kill_char_id` INT(11) NOT NULL DEFAULT '0',
+  `monster_id` SMALLINT(6) NOT NULL DEFAULT '0',
+  `prize` INT(11) NOT NULL DEFAULT '0',
+  `mvpexp` MEDIUMINT(9) NOT NULL DEFAULT '0',
+  `map` VARCHAR(11) NOT NULL DEFAULT '',
+  PRIMARY KEY (`mvp_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1;
+
+--
+-- Table structure for table `npclog`
+--
+
+CREATE TABLE IF NOT EXISTS `npclog` (
+  `npc_id` MEDIUMINT(9) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `npc_date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `char_name` VARCHAR(25) NOT NULL DEFAULT '',
+  `map` VARCHAR(11) NOT NULL DEFAULT '',
+  `mes` VARCHAR(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`npc_id`),
+  INDEX (`account_id`),
+  INDEX (`char_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1;
+
+--
+-- Table structure for table `picklog`
+--
+
+CREATE TABLE IF NOT EXISTS `picklog` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `char_id` INT(11) NOT NULL DEFAULT '0',
+  `type` ENUM('M','P','L','T','V','S','N','C','A','R','G','E','B','O','I','X','D','U') NOT NULL DEFAULT 'P',
+  `nameid` INT(11) NOT NULL DEFAULT '0',
+  `amount` INT(11) NOT NULL DEFAULT '1',
+  `refine` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
+  `card0` INT(11) NOT NULL DEFAULT '0',
+  `card1` INT(11) NOT NULL DEFAULT '0',
+  `card2` INT(11) NOT NULL DEFAULT '0',
+  `card3` INT(11) NOT NULL DEFAULT '0',
+  `unique_id` BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
+  `map` VARCHAR(11) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  INDEX (`type`)
+) ENGINE=MyISAM AUTO_INCREMENT=1;
+
+--
+-- Table structure for table `zenylog`
+--
+
+CREATE TABLE IF NOT EXISTS `zenylog` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `char_id` INT(11) NOT NULL DEFAULT '0',
+  `src_id` INT(11) NOT NULL DEFAULT '0',
+  `type` ENUM('T','V','P','M','S','N','D','C','A','E','I','B') NOT NULL DEFAULT 'S',
+  `amount` INT(11) NOT NULL DEFAULT '0',
+  `map` VARCHAR(11) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  INDEX (`type`)
+) ENGINE=MyISAM AUTO_INCREMENT=1;
 
