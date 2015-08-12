@@ -915,7 +915,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*resetfeel) (struct map_session_data *sd);
 	int (*resethate) (struct map_session_data *sd);
 	int (*equipitem) (struct map_session_data *sd,int n,int req_pos);
-	void (*equipitem_pos) (struct map_session_data *sd, struct item_data *id, int pos);
+	void (*equipitem_pos) (struct map_session_data *sd, struct item_data *id, int n, int pos);
 	int (*unequipitem) (struct map_session_data *sd,int n,int flag);
 	void (*unequipitem_pos) (struct map_session_data *sd, int n, int pos);
 	int (*checkitem) (struct map_session_data *sd);
