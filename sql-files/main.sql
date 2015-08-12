@@ -766,7 +766,7 @@ CREATE TABLE IF NOT EXISTS `skill_homunculus` (
 CREATE TABLE IF NOT EXISTS `sql_updates` (
   `timestamp` INT(11) UNSIGNED NOT NULL,
   `ignored` ENUM('Yes','No') NOT NULL DEFAULT 'No',
-  PRIMARY KEY (`timestamp`)
+  PRIMARY KEY (`timestamp`),
   CONSTRAINT UNIQUE (`timestamp`)
 ) ENGINE=MyISAM;
 
