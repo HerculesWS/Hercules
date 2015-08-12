@@ -298,10 +298,6 @@ extern char acc_reg_str_db[32];
 extern char char_reg_str_db[32];
 extern char char_reg_num_db[32];
 
-extern int db_use_sql_item_db;
-extern int db_use_sql_mob_db;
-extern int db_use_sql_mob_skill_db;
-
 extern int guild_exp_rate;
 extern int log_inter;
 

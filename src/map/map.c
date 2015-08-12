@@ -3702,21 +3702,8 @@ int inter_config_read(char *cfgName) {
 
 		if (sscanf(line,"%1023[^:]: %1023[^\r\n]", w1, w2) < 2)
 			continue;
-		/* table names */
-		if(strcmpi(w1,"item_db_db")==0)
-			safestrncpy(map->item_db_db, w2, sizeof(map->item_db_db));
-		else if(strcmpi(w1,"mob_db_db")==0)
-			safestrncpy(map->mob_db_db, w2, sizeof(map->mob_db_db));
-		else if(strcmpi(w1,"item_db2_db")==0)
-			safestrncpy(map->item_db2_db, w2, sizeof(map->item_db2_db));
-		else if(strcmpi(w1,"mob_db2_db")==0)
-			safestrncpy(map->mob_db2_db, w2, sizeof(map->mob_db2_db));
-		else if(strcmpi(w1, "mob_skill_db_db") == 0)
-			safestrncpy(map->mob_skill_db_db, w2, sizeof(map->mob_skill_db_db));
-		else if(strcmpi(w1,"mob_skill_db2_db")==0)
-			safestrncpy(map->mob_skill_db2_db, w2, sizeof(map->mob_skill_db2_db));
 		/* map sql stuff */
-		else if(strcmpi(w1,"map_server_ip")==0)
+		if(strcmpi(w1,"map_server_ip")==0)
 			safestrncpy(map->server_ip, w2, sizeof(map->server_ip));
 		else if(strcmpi(w1,"map_server_port")==0)
 			map->server_port=atoi(w2);
@@ -3728,42 +3715,6 @@ int inter_config_read(char *cfgName) {
 			safestrncpy(map->server_db, w2, sizeof(map->server_db));
 		else if(strcmpi(w1,"default_codepage")==0)
 			safestrncpy(map->default_codepage, w2, sizeof(map->default_codepage));
-		else if(strcmpi(w1,"use_sql_item_db")==0) {
-			map->db_use_sql_item_db = config_switch(w2);
-			ShowStatus ("Using item database as SQL: '%s'\n", w2);
-			if (map->db_use_sql_item_db) {
-				// Deprecated 2015-08-09 [Haru]
-				ShowWarning("Support for the SQL item database is deprecated and it will removed in future versions. "
-						"Please upgrade to the non-sql version as soon as possible. "
-						"Bug reports or pull requests concerning the SQL item database are no longer accepted.\n");
-				ShowInfo("Resuming in 10 seconds...\n");
-				HSleep(10);
-			}
-		}
-		else if(strcmpi(w1,"use_sql_mob_db")==0) {
-			map->db_use_sql_mob_db = config_switch(w2);
-			ShowStatus ("Using monster database as SQL: '%s'\n", w2);
-			if (map->db_use_sql_mob_db) {
-				// Deprecated 2015-08-09 [Haru]
-				ShowWarning("Support for the SQL monster database is deprecated and it will removed in future versions. "
-						"Please upgrade to the non-sql version as soon as possible. "
-						"Bug reports or pull requests concerning the SQL monster database are no longer accepted.\n");
-				ShowInfo("Resuming in 10 seconds...\n");
-				HSleep(10);
-			}
-		}
-		else if(strcmpi(w1,"use_sql_mob_skill_db")==0) {
-			map->db_use_sql_mob_skill_db = config_switch(w2);
-			ShowStatus ("Using monster skill database as SQL: '%s'\n", w2);
-			if (map->db_use_sql_mob_skill_db) {
-				// Deprecated 2015-08-09 [Haru]
-				ShowWarning("Support for the SQL monster skill database is deprecated and it will removed in future versions. "
-						"Please upgrade to the non-sql version as soon as possible. "
-						"Bug reports or pull requests concerning the SQL monster skill database are no longer accepted.\n");
-				ShowInfo("Resuming in 10 seconds...\n");
-				HSleep(10);
-			}
-		}
 		else if(strcmpi(w1,"autotrade_merchants_db")==0)
 			safestrncpy(map->autotrade_merchants_db, w2, sizeof(map->autotrade_merchants_db));
 		else if(strcmpi(w1,"autotrade_data_db")==0)
@@ -6018,17 +5969,6 @@ void map_defaults(void) {
 	map->agit2_flag = 0;
 	map->night_flag = 0; // 0=day, 1=night [Yor]
 	map->enable_spy = 0; //To enable/disable @spy commands, which consume too much cpu time when sending packets. [Skotlex]
-
-	map->db_use_sql_item_db = 0;
-	map->db_use_sql_mob_db = 0;
-	map->db_use_sql_mob_skill_db = 0;
-
-	sprintf(map->item_db_db, "item_db");
-	sprintf(map->item_db2_db, "item_db2");
-	sprintf(map->mob_db_db, "mob_db");
-	sprintf(map->mob_db2_db, "mob_db2");
-	sprintf(map->mob_skill_db_db, "mob_skill_db");
-	sprintf(map->mob_skill_db2_db, "mob_skill_db2");
 
 	map->INTER_CONF_NAME="conf/inter-server.conf";
 	map->LOG_CONF_NAME="conf/logs.conf";

@@ -94,10 +94,6 @@ int save_log = 1;
 
 char db_path[1024] = "db";
 
-int db_use_sql_item_db;
-int db_use_sql_mob_db;
-int db_use_sql_mob_skill_db;
-
 char wisp_server_name[NAME_LENGTH] = "Server";
 char login_ip_str[128];
 uint32 login_ip = 0;

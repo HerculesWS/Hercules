@@ -7157,14 +7157,14 @@ void Hercules_report(char* date, char *time_c) {
 		C_RENEWAL_EDP           = 0x0400,
 		C_RENEWAL_ASPD          = 0x0800,
 		C_SECURE_NPCTIMEOUT     = 0x1000,
-		C_SQL_DB_ITEM           = 0x2000,
+		//C_SQL_DB_ITEM           = 0x2000,
 		C_SQL_LOGS              = 0x4000,
 		C_MEMWATCH              = 0x8000,
 		C_DMALLOC               = 0x10000,
 		C_GCOLLECT              = 0x20000,
 		C_SEND_SHORTLIST        = 0x40000,
-		C_SQL_DB_MOB            = 0x80000,
-		C_SQL_DB_MOBSKILL       = 0x100000,
+		//C_SQL_DB_MOB            = 0x80000,
+		//C_SQL_DB_MOBSKILL       = 0x100000,
 		C_PACKETVER_RE          = 0x200000,
 	};
 
@@ -7229,13 +7229,6 @@ void Hercules_report(char* date, char *time_c) {
 #endif
 
 	/* non-define part */
-	if( map->db_use_sql_item_db )
-		config |= C_SQL_DB_ITEM;
-	if( map->db_use_sql_mob_db )
-		config |= C_SQL_DB_MOB;
-	if( map->db_use_sql_mob_skill_db )
-		config |= C_SQL_DB_MOBSKILL;
-
 	if( logs->config.sql_logs )
 		config |= C_SQL_LOGS;
 

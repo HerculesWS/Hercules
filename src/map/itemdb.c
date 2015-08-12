@@ -1502,112 +1502,8 @@ void itemdb_readdb_additional_fields(int itemid, config_setting_t *it, int n, co
 }
 
 /**
- * Processes one itemdb entry from the sql backend, loading and inserting it
- * into the item database.
- *
- * @param *handle MySQL connection handle. It is expected to have data
- *                available (i.e. already queried) and it won't be freed (it
- *                is care of the caller to do so)
- * @param n       Ordinal number of the entry, to be displayed in case of
- *                validation errors.
- * @param *source Source of the entry (table name), to be displayed in case of
- *                validation errors.
- * @return Nameid of the validated entry, or 0 in case of failure.
- */
-int itemdb_readdb_sql_sub(Sql *handle, int n, const char *source) {
-	struct item_data id = { 0 };
-	char *data = NULL;
-
-	/*
-	 * `id`              smallint(5)   unsigned NOT NULL DEFAULT '0'
-	 * `name_english`    varchar(50)            NOT NULL DEFAULT ''
-	 * `name_japanese`   varchar(50)            NOT NULL DEFAULT ''
-	 * `type`            tinyint(2)    unsigned NOT NULL DEFAULT '0'
-	 * `price_buy`       mediumint(10)                   DEFAULT NULL
-	 * `price_sell`      mediumint(10)                   DEFAULT NULL
-	 * `weight`          smallint(5)   unsigned          DEFAULT NULL
-	 * `atk`             smallint(5)   unsigned          DEFAULT NULL
-	 * `matk`            smallint(5)   unsigned          DEFAULT NULL
-	 * `defence`         smallint(5)   unsigned          DEFAULT NULL
-	 * `range`           tinyint(2)    unsigned          DEFAULT NULL
-	 * `slots`           tinyint(2)    unsigned          DEFAULT NULL
-	 * `equip_jobs`      int(12)       unsigned          DEFAULT NULL
-	 * `equip_upper`     tinyint(8)    unsigned          DEFAULT NULL
-	 * `equip_genders`   tinyint(2)    unsigned          DEFAULT NULL
-	 * `equip_locations` smallint(4)   unsigned          DEFAULT NULL
-	 * `weapon_level`    tinyint(2)    unsigned          DEFAULT NULL
-	 * `equip_level_min` smallint(5)   unsigned          DEFAULT NULL
-	 * `equip_level_max` smallint(5)   unsigned          DEFAULT NULL
-	 * `refineable`      tinyint(1)    unsigned          DEFAULT NULL
-	 * `view`            smallint(3)   unsigned          DEFAULT NULL
-	 * `bindonequip`     tinyint(1)    unsigned          DEFAULT NULL
-	 * `buyingstore`     tinyint(1)             NOT NULL DEFAULT NULL
-	 * `delay`           mediumint(9)           NOT NULL DEFAULT NULL
-	 * `trade_flag`      smallint(4)            NOT NULL DEFAULT NULL
-	 * `trade_group`     smallint(4)            NOT NULL DEFAULT NULL
-	 * `nouse_flag`      smallint(4)            NOT NULL DEFAULT NULL
-	 * `nouse_group`     smallint(4)            NOT NULL DEFAULT NULL
-	 * `stack_amount`    mediumint(6)           NOT NULL DEFAULT NULL
-	 * `stack_flag`      smallint(2)            NOT NULL DEFAULT NULL
-	 * `sprite`          mediumint(6)           NOT NULL DEFAULT NULL
-	 * `script`          text
-	 * `equip_script`    text
-	 * `unequip_script`  text
-	 */
-	SQL->GetData(handle,  0, &data, NULL); id.nameid = (uint16)atoi(data);
-	SQL->GetData(handle,  1, &data, NULL); safestrncpy(id.name, data, sizeof(id.name));
-	SQL->GetData(handle,  2, &data, NULL); safestrncpy(id.jname, data, sizeof(id.jname));
-	SQL->GetData(handle,  3, &data, NULL); id.type = atoi(data);
-	SQL->GetData(handle,  4, &data, NULL); id.value_buy = data ? atoi(data) : -1; // Using invalid price -1 when missing, it'll be validated later
-	SQL->GetData(handle,  5, &data, NULL); id.value_sell = data ? atoi(data) : -1;
-	SQL->GetData(handle,  6, &data, NULL); id.weight = data ? atoi(data) : 0;
-	SQL->GetData(handle,  7, &data, NULL); id.atk = data ? atoi(data) : 0;
-	SQL->GetData(handle,  8, &data, NULL); id.matk = data ? atoi(data) : 0;
-	SQL->GetData(handle,  9, &data, NULL); id.def = data ? atoi(data) : 0;
-	SQL->GetData(handle, 10, &data, NULL); id.range = data ? atoi(data) : 0;
-	SQL->GetData(handle, 11, &data, NULL); id.slot = data ? atoi(data) : 0;
-	SQL->GetData(handle, 12, &data, NULL); itemdb->jobid2mapid(id.class_base, data ? (unsigned int)strtoul(data,NULL,0) : UINT_MAX);
-	SQL->GetData(handle, 13, &data, NULL); id.class_upper = data ? (unsigned int)atoi(data) : ITEMUPPER_ALL;
-	SQL->GetData(handle, 14, &data, NULL); id.sex = data ? atoi(data) : 2;
-	SQL->GetData(handle, 15, &data, NULL); id.equip = data ? atoi(data) : 0;
-	SQL->GetData(handle, 16, &data, NULL); id.wlv = data ? atoi(data) : 0;
-	SQL->GetData(handle, 17, &data, NULL); id.elv = data ? atoi(data) : 0;
-	SQL->GetData(handle, 18, &data, NULL); id.elvmax = data ? atoi(data) : 0;
-	SQL->GetData(handle, 19, &data, NULL); id.flag.no_refine = data && atoi(data) ? 0 : 1;
-	SQL->GetData(handle, 20, &data, NULL); id.look = data ? atoi(data) : 0;
-	SQL->GetData(handle, 21, &data, NULL); id.flag.bindonequip = data && atoi(data) ? 1 : 0;
-	SQL->GetData(handle, 22, &data, NULL); id.flag.force_serial = data && atoi(data) ? 1 : 0;
-	SQL->GetData(handle, 23, &data, NULL); id.flag.buyingstore = data && atoi(data) ? 1 : 0;
-	SQL->GetData(handle, 24, &data, NULL); id.delay = data ? atoi(data) : 0;
-	SQL->GetData(handle, 25, &data, NULL); id.flag.trade_restriction = data ? atoi(data) : ITR_NONE;
-	SQL->GetData(handle, 26, &data, NULL); id.gm_lv_trade_override = data ? atoi(data) : 0;
-	SQL->GetData(handle, 27, &data, NULL); id.item_usage.flag = data ? atoi(data) : INR_NONE;
-	SQL->GetData(handle, 28, &data, NULL); id.item_usage.override = data ? atoi(data) : 0;
-	SQL->GetData(handle, 29, &data, NULL); id.stack.amount = data ? atoi(data) : 0;
-	SQL->GetData(handle, 30, &data, NULL);
-	if (data) {
-		int stack_flag = atoi(data);
-		id.stack.inventory = (stack_flag&1)!=0;
-		id.stack.cart = (stack_flag&2)!=0;
-		id.stack.storage = (stack_flag&4)!=0;
-		id.stack.guildstorage = (stack_flag&8)!=0;
-	}
-	SQL->GetData(handle, 31, &data, NULL);
-	if (data) {
-		id.view_id = atoi(data);
-		if (id.view_id)
-			id.flag.available = 1;
-	}
-	SQL->GetData(handle, 32, &data, NULL); id.script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
-	SQL->GetData(handle, 33, &data, NULL); id.equip_script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
-	SQL->GetData(handle, 34, &data, NULL); id.unequip_script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
-
-	return itemdb->validate_entry(&id, n, source);
-}
-
-/**
- * Processes one itemdb entry from the sql backend, loading and inserting it
- * into the item database.
+ * Processes one itemdb entry from the libconfig backend, loading and inserting
+ * it into the item database.
  *
  * @param *it     Libconfig setting entry. It is expected to be valid and it
  *                won't be freed (it is care of the caller to do so if
@@ -1974,45 +1870,6 @@ int itemdb_readdb_libconfig(const char *filename) {
 	return count;
 }
 
-/**
- * Reads from a sql itemdb table and inserts the found entries into the item
- * database, overwriting duplicate ones (i.e. item_db2 overriding item_db.)
- *
- * @param *tablename Table name to query.
- * @return The number of found entries.
- */
-int itemdb_readdb_sql(const char *tablename) {
-	int i = 0, count = 0;
-
-	// retrieve all rows from the item database
-	if( SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT `id`, `name_english`, `name_japanese`, `type`,"
-				" `price_buy`, `price_sell`, `weight`, `atk`,"
-				" `matk`, `defence`, `range`, `slots`,"
-				" `equip_jobs`, `equip_upper`, `equip_genders`, `equip_locations`,"
-				" `weapon_level`, `equip_level_min`, `equip_level_max`, `refineable`,"
-				" `view`, `bindonequip`, `forceserial`, `buyingstore`, `delay`,"
-				" `trade_flag`, `trade_group`, `nouse_flag`, `nouse_group`,"
-				" `stack_amount`, `stack_flag`, `sprite`, `script`,"
-				" `equip_script`, `unequip_script`"
-				"FROM `%s`", tablename) ) {
-		Sql_ShowDebug(map->mysql_handle);
-		return 0;
-	}
-
-	// process rows one by one
-	while( SQL_SUCCESS == SQL->NextRow(map->mysql_handle) ) {
-		if( itemdb->readdb_sql_sub(map->mysql_handle, i++, tablename) )
-			count++;
-	}
-
-	// free the query result
-	SQL->FreeResult(map->mysql_handle);
-
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, tablename);
-
-	return count;
-}
-
 /*==========================================
 * Unique item ID function
 * Only one operation by once
@@ -2029,22 +1886,12 @@ void itemdb_read(bool minimal) {
 	int i;
 	DBData prev;
 
-	if (map->db_use_sql_item_db) {
-		const char* item_db_name[] = {
-			map->item_db_db,
-			map->item_db2_db
-		};
-		for(i = 0; i < ARRAYLENGTH(item_db_name); i++)
-			itemdb->readdb_sql(item_db_name[i]);
-	} else {
-		const char* filename[] = {
-			DBPATH"item_db.conf",
-			"item_db2.conf",
-		};
-
-		for(i = 0; i < ARRAYLENGTH(filename); i++)
-			itemdb->readdb_libconfig(filename[i]);
-	}
+	const char *filename[] = {
+		DBPATH"item_db.conf",
+		"item_db2.conf",
+	};
+	for (i = 0; i < ARRAYLENGTH(filename); i++)
+		itemdb->readdb_libconfig(filename[i]);
 
 	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i ) {
 		if( itemdb->array[i] ) {
@@ -2359,10 +2206,8 @@ void itemdb_defaults(void) {
 	itemdb->gendercheck = itemdb_gendercheck;
 	itemdb->validate_entry = itemdb_validate_entry;
 	itemdb->readdb_additional_fields = itemdb_readdb_additional_fields;
-	itemdb->readdb_sql_sub = itemdb_readdb_sql_sub;
 	itemdb->readdb_libconfig_sub = itemdb_readdb_libconfig_sub;
 	itemdb->readdb_libconfig = itemdb_readdb_libconfig;
-	itemdb->readdb_sql = itemdb_readdb_sql;
 	itemdb->unique_id = itemdb_unique_id;
 	itemdb->read = itemdb_read;
 	itemdb->destroy_item_data = destroy_item_data;
