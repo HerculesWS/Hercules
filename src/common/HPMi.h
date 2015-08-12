@@ -200,7 +200,7 @@ enum HPluginConfType {
 #define addGroupPermission(pcgname,maskptr) HPMi->addPCGPermission(HPMi->pid,pcgname,&maskptr)
 
 /* Hercules Plugin Mananger Include Interface */
-HPExport struct HPMi_interface {
+struct HPMi_interface {
 	/* */
 	unsigned int pid;
 	/* */

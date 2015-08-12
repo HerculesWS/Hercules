@@ -6,6 +6,7 @@
 #define COMMON_SOCKET_H
 
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 
 #ifdef WIN32
 #	include "common/winapi.h"
@@ -105,6 +106,12 @@ struct hSockOpt {
 	unsigned int setTimeo : 1;
 };
 
+/// Subnet/IP range in the IP/Mask format.
+struct s_subnet {
+	uint32 ip;
+	uint32 mask;
+};
+
 /// Use a shortlist of sockets instead of iterating all sessions for sockets
 /// that have data to send or need eof handling.
 /// Adapted to use a static array instead of a linked list.
@@ -132,6 +139,14 @@ struct socket_interface {
 	/* */
 	uint32 addr_[16];   // ip addresses of local host (host byte order)
 	int naddr_;   // # of ip addresses
+
+	struct s_subnet *lan_subnet; ///< LAN subnets array
+	int lan_subnet_count;        ///< LAN subnets count
+	struct s_subnet *trusted_ip; ///< Trusted IP ranges array
+	int trusted_ip_count;        ///< Trusted IP ranges count
+	struct s_subnet *allowed_ip; ///< Allowed server IP ranges array
+	int allowed_ip_count;        ///< Allowed server IP ranges count
+
 	/* */
 	void (*init) (void);
 	void (*final) (void);
@@ -165,6 +180,12 @@ struct socket_interface {
 	int (*getips) (uint32* ips, int max);
 	/* */
 	void (*set_eof) (int fd);
+
+	uint32 (*lan_subnet_check) (uint32 ip, struct s_subnet *info);
+	bool (*allowed_ip_check) (uint32 ip);
+	bool (*trusted_ip_check) (uint32 ip);
+	int (*net_config_read_sub) (config_setting_t *t, struct s_subnet **list, int *count, const char *filename, const char *groupname);
+	void (*net_config_read) (const char *filename);
 };
 
 struct socket_interface *sockt;

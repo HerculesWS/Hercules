@@ -4882,7 +4882,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 int pc_useitem(struct map_session_data *sd,int n) {
 	int64 tick = timer->gettick();
 	int amount, nameid, i;
-	struct script_code *item_script;
+	bool removeItem = false;
 
 	nullpo_ret(sd);
 
@@ -4994,38 +4994,36 @@ int pc_useitem(struct map_session_data *sd,int n) {
 		sd->catch_target_class = -1;
 
 	amount = sd->status.inventory[n].amount;
-	item_script = sd->inventory_data[n]->script;
 	//Check if the item is to be consumed immediately [Skotlex]
 	if (sd->inventory_data[n]->flag.delay_consume || sd->inventory_data[n]->flag.keepafteruse)
 		clif->useitemack(sd,n,amount,true);
 	else {
 		if (sd->status.inventory[n].expire_time == 0) {
 			clif->useitemack(sd, n, amount - 1, true);
-			pc->delitem(sd, n, 1, 1, DELITEM_NORMAL, LOG_TYPE_CONSUME); // Rental Usable Items are not deleted until expiration
+			removeItem = true;
 		} else {
 			clif->useitemack(sd, n, 0, false);
 		}
 	}
+
 	if(sd->status.inventory[n].card[0]==CARD0_CREATE &&
 		pc->famerank(MakeDWord(sd->status.inventory[n].card[2],sd->status.inventory[n].card[3]), MAPID_ALCHEMIST))
 	{
-	    script->potion_flag = 2; // Famous player's potions have 50% more efficiency
-		 if (sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_ROGUE)
-			 script->potion_flag = 3; //Even more effective potions.
+		script->potion_flag = 2; // Famous player's potions have 50% more efficiency
+		if (sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_ROGUE)
+			script->potion_flag = 3; //Even more effective potions.
 	}
 
 	//Update item use time.
 	sd->canuseitem_tick = tick + battle_config.item_use_interval;
 	if( itemdb_iscashfood(nameid) )
 		sd->canusecashfood_tick = tick + battle_config.cashfood_use_interval;
-	
-	script->current_item_id = nameid;
-	
-	script->run(item_script,0,sd->bl.id,npc->fake_nd->bl.id);
-	
-	script->current_item_id = 0;
+
+	script->run_use_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
 	script->potion_flag = 0;
-	
+
+	if (removeItem)
+		pc->delitem(sd, n, 1, 1, DELITEM_NORMAL, LOG_TYPE_CONSUME);
 	return 1;
 }
 
@@ -9642,7 +9640,8 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 	
 	//OnEquip script [Skotlex]
 	if (id->equip_script)
-		script->run(id->equip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+		script->run_item_equip_script(sd, id, npc->fake_nd->bl.id);
+
 	if(itemdb_isspecial(sd->status.inventory[n].card[0]))
 		; //No cards
 	else {
@@ -9651,8 +9650,8 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 			if (!sd->status.inventory[n].card[i])
 				continue;
 			if ( ( data = itemdb->exists(sd->status.inventory[n].card[i]) ) != NULL ) {
-				if( data->equip_script )
-					script->run(data->equip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+				if (data->equip_script)
+					script->run_item_equip_script(sd, data, npc->fake_nd->bl.id);
 			}
 		}
 	}
@@ -9819,10 +9818,10 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag)
 			if ( battle_config.unequip_restricted_equipment & 1 ) {
 				ARR_FIND(0, map->list[sd->bl.m].zone->disabled_items_count, i,  map->list[sd->bl.m].zone->disabled_items[i] == sd->status.inventory[n].nameid);
 				if ( i == map->list[sd->bl.m].zone->disabled_items_count )
-					script->run(sd->inventory_data[n]->unequip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+					script->run_item_unequip_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
 			}
 			else
-				script->run(sd->inventory_data[n]->unequip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+				script->run_item_unequip_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
 		}
 		if(itemdb_isspecial(sd->status.inventory[n].card[0]))
 			; //No cards
@@ -9838,10 +9837,10 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag)
 							int j;
 							ARR_FIND(0, map->list[sd->bl.m].zone->disabled_items_count, j,  map->list[sd->bl.m].zone->disabled_items[j] == sd->status.inventory[n].card[i]);
 							if ( j == map->list[sd->bl.m].zone->disabled_items_count )
-								script->run(data->unequip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+								script->run_item_unequip_script(sd, data, npc->fake_nd->bl.id);
 						}
 						else
-							script->run(data->unequip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+							script->run_item_unequip_script(sd, data, npc->fake_nd->bl.id);
 					}
 				}
 

@@ -4159,6 +4159,10 @@ struct {
 	struct HPMHookPoint *HP_script_label_add_post;
 	struct HPMHookPoint *HP_script_run_pre;
 	struct HPMHookPoint *HP_script_run_post;
+	struct HPMHookPoint *HP_script_run_npc_pre;
+	struct HPMHookPoint *HP_script_run_npc_post;
+	struct HPMHookPoint *HP_script_run_pet_pre;
+	struct HPMHookPoint *HP_script_run_pet_post;
 	struct HPMHookPoint *HP_script_run_main_pre;
 	struct HPMHookPoint *HP_script_run_main_post;
 	struct HPMHookPoint *HP_script_run_timer_pre;
@@ -4391,6 +4395,12 @@ struct {
 	struct HPMHookPoint *HP_script_get_translation_file_name_post;
 	struct HPMHookPoint *HP_script_parser_clean_leftovers_pre;
 	struct HPMHookPoint *HP_script_parser_clean_leftovers_post;
+	struct HPMHookPoint *HP_script_run_use_script_pre;
+	struct HPMHookPoint *HP_script_run_use_script_post;
+	struct HPMHookPoint *HP_script_run_item_equip_script_pre;
+	struct HPMHookPoint *HP_script_run_item_equip_script_post;
+	struct HPMHookPoint *HP_script_run_item_unequip_script_pre;
+	struct HPMHookPoint *HP_script_run_item_unequip_script_post;
 	struct HPMHookPoint *HP_searchstore_open_pre;
 	struct HPMHookPoint *HP_searchstore_open_post;
 	struct HPMHookPoint *HP_searchstore_query_pre;
@@ -9380,6 +9390,10 @@ struct {
 	int HP_script_label_add_post;
 	int HP_script_run_pre;
 	int HP_script_run_post;
+	int HP_script_run_npc_pre;
+	int HP_script_run_npc_post;
+	int HP_script_run_pet_pre;
+	int HP_script_run_pet_post;
 	int HP_script_run_main_pre;
 	int HP_script_run_main_post;
 	int HP_script_run_timer_pre;
@@ -9612,6 +9626,12 @@ struct {
 	int HP_script_get_translation_file_name_post;
 	int HP_script_parser_clean_leftovers_pre;
 	int HP_script_parser_clean_leftovers_post;
+	int HP_script_run_use_script_pre;
+	int HP_script_run_use_script_post;
+	int HP_script_run_item_equip_script_pre;
+	int HP_script_run_item_equip_script_post;
+	int HP_script_run_item_unequip_script_pre;
+	int HP_script_run_item_unequip_script_post;
 	int HP_searchstore_open_pre;
 	int HP_searchstore_open_post;
 	int HP_searchstore_query_pre;

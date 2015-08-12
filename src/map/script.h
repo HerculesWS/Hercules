@@ -19,6 +19,7 @@
  * Declarations
  **/
 struct eri;
+struct item_data;
 
 /**
  * Defines
@@ -636,7 +637,9 @@ struct script_interface {
 	void (*set_constant2) (const char *name, int value, bool isparameter);
 	bool (*get_constant) (const char* name, int* value);
 	void (*label_add)(int key, int pos);
-	void (*run) (struct script_code *rootscript,int pos,int rid,int oid);
+	void (*run) (struct script_code *rootscript, int pos, int rid, int oid);
+	void (*run_npc) (struct script_code *rootscript, int pos, int rid, int oid);
+	void (*run_pet) (struct script_code *rootscript, int pos, int rid, int oid);
 	void (*run_main) (struct script_state *st);
 	int (*run_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*set_var) (struct map_session_data *sd, char *name, void *val);
@@ -765,6 +768,9 @@ struct script_interface {
 	uint8 (*add_language) (const char *name);
 	const char *(*get_translation_file_name) (const char *file);
 	void (*parser_clean_leftovers) (void);
+	void (*run_use_script) (struct map_session_data *sd, struct item_data *data, int oid);
+	void (*run_item_equip_script) (struct map_session_data *sd, struct item_data *data, int oid);
+	void (*run_item_unequip_script) (struct map_session_data *sd, struct item_data *data, int oid);
 };
 
 struct script_interface *script;
