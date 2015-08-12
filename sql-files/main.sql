@@ -553,8 +553,7 @@ CREATE TABLE IF NOT EXISTS `login` (
   `pincode` VARCHAR(4) NOT NULL DEFAULT '',
   `pincode_change` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`account_id`),
-  KEY `name` (`userid`),
-  CONSTRAINT UNIQUE (`account_id`)
+  KEY `name` (`userid`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2000000; 
 
 -- added standard accounts for servers, VERY INSECURE!!!
@@ -766,8 +765,7 @@ CREATE TABLE IF NOT EXISTS `skill_homunculus` (
 CREATE TABLE IF NOT EXISTS `sql_updates` (
   `timestamp` INT(11) UNSIGNED NOT NULL,
   `ignored` ENUM('Yes','No') NOT NULL DEFAULT 'No',
-  PRIMARY KEY (`timestamp`),
-  CONSTRAINT UNIQUE (`timestamp`)
+  PRIMARY KEY (`timestamp`)
 ) ENGINE=MyISAM;
 
 -- Existent updates to enter
