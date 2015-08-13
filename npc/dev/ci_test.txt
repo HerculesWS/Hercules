@@ -1,0 +1,22 @@
+//===== Hercules Script ======================================
+//= Script engine self-tests, CI integration
+//===== By: ==================================================
+//= Haru
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= This script depends on npc/dev/test.txt, and extends it so
+//  that it can be called in a CI environment and returns an
+//  appropriate value upon termination.
+//= This script is part of the script_mapquit plugin
+//  distribution, and requires said plugin to be loaded.
+//= Usage: ./map-server --load-plugin script_mapquit --load-script npc/dev/test.txt --load-script npc/dev/ci_test.txt
+
+-	script	HerculesSelfTestCI	-1,{
+	end;
+
+OnInit:
+	.@val = callfunc("HerculesSelfTestHelper");
+	mapquit(.@val);
+	end;
+}
