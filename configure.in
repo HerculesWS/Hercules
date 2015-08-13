@@ -1268,6 +1268,21 @@ AC_SEARCH_LIBS([pthread_attr_destroy], [pthread], [], [AC_MSG_ERROR([pthread lib
 AC_SEARCH_LIBS([pthread_cancel], [pthread], [], [AC_MSG_ERROR([pthread library not found or incompatible])])
 AC_SEARCH_LIBS([pthread_join], [pthread], [], [AC_MSG_ERROR([pthread library not found or incompatible])])
 
+# execinfo (backtrace)
+AC_CHECK_HEADERS([execinfo.h],
+	[
+		AC_SEARCH_LIBS([backtrace],
+			[execinfo],
+			[
+				CFLAGS="$CFLAGS -DHAVE_EXECINFO"
+			],
+			[
+			]
+		)
+	],
+	[
+	]
+)
 
 #
 # MySQL library
