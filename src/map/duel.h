@@ -5,7 +5,7 @@
 #ifndef MAP_DUEL_H
 #define MAP_DUEL_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 struct map_session_data;
 
@@ -42,10 +42,10 @@ struct duel_interface {
 	void (*final) (void);
 };
 
-struct duel_interface *duel;
-
 #ifdef HERCULES_CORE
 void duel_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct duel_interface *duel;
 
 #endif /* MAP_DUEL_H */

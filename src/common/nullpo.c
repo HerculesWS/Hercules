@@ -17,6 +17,7 @@
 #endif // HAVE_EXECINFO
 
 struct nullpo_interface nullpo_s;
+struct nullpo_interface *nullpo;
 
 /**
  * Reports failed assertions or NULL pointers

@@ -19,6 +19,7 @@
 #include <stdlib.h>
 
 struct pincode_interface pincode_s;
+struct pincode_interface *pincode;
 
 void pincode_handle (int fd, struct char_session_data* sd) {
 	struct online_char_data* character;

@@ -11,7 +11,7 @@
  * cached at compile time)
  */
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 struct sysinfo_private;
 
@@ -44,10 +44,10 @@ struct sysinfo_interface {
 	void (*final) (void);
 };
 
-struct sysinfo_interface *sysinfo;
-
 #ifdef HERCULES_CORE
 void sysinfo_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct sysinfo_interface *sysinfo;
 
 #endif /* COMMON_SYSINFO_H */

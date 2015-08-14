@@ -69,6 +69,9 @@
 struct map_interface map_s;
 struct mapit_interface mapit_s;
 
+struct map_interface *map;
+struct mapit_interface *mapit;
+
 /*==========================================
  * server player count (of all mapservers)
  *------------------------------------------*/
@@ -1799,7 +1802,7 @@ int map_quit(struct map_session_data *sd) {
 	if( sd->bg_id && !sd->bg_queue.arena ) /* TODO: dump this chunk after bg_queue is fully enabled */
 		bg->team_leave(sd,BGTL_QUIT);
 
-	if (sd->state.autotrade && runflag != MAPSERVER_ST_SHUTDOWN && !channel->config->closing)
+	if (sd->state.autotrade && core->runflag != MAPSERVER_ST_SHUTDOWN && !channel->config->closing)
 		pc->autotrade_update(sd,PAUC_REMOVE);
 
 	skill->cooldown_save(sd);
@@ -3538,12 +3541,12 @@ int map_config_read(char *cfgName) {
 		*ptr = '\0';
 
 		if(strcmpi(w1,"timestamp_format")==0)
-			safestrncpy(timestamp_format, w2, 20);
+			safestrncpy(showmsg->timestamp_format, w2, 20);
 		else if(strcmpi(w1,"stdout_with_ansisequence")==0)
-			stdout_with_ansisequence = config_switch(w2);
+			showmsg->stdout_with_ansisequence = config_switch(w2) ? true : false;
 		else if(strcmpi(w1,"console_silent")==0) {
-			msg_silent = atoi(w2);
-			if( msg_silent ) // only bother if its actually enabled
+			showmsg->silent = atoi(w2);
+			if (showmsg->silent) // only bother if its actually enabled
 				ShowInfo("Console Silent Setting: %d\n", atoi(w2));
 		} else if (strcmpi(w1, "userid")==0)
 			chrif->setuserid(w2);
@@ -3593,7 +3596,7 @@ int map_config_read(char *cfgName) {
 		else if (strcmpi(w1, "use_grf") == 0)
 			map->enable_grf = config_switch(w2);
 		else if (strcmpi(w1, "console_msg_log") == 0)
-			console_msg_log = atoi(w2);//[Ind]
+			showmsg->console_log = atoi(w2);//[Ind]
 		else if (strcmpi(w1, "default_language") == 0)
 			safestrncpy(map->default_lang_str, w2, sizeof(map->default_lang_str));
 		else if (strcmpi(w1, "import") == 0)
@@ -5542,9 +5545,9 @@ void set_server_type(void) {
 /// Called when a terminate signal is received.
 void do_shutdown(void)
 {
-	if( runflag != MAPSERVER_ST_SHUTDOWN )
+	if( core->runflag != MAPSERVER_ST_SHUTDOWN )
 	{
-		runflag = MAPSERVER_ST_SHUTDOWN;
+		core->runflag = MAPSERVER_ST_SHUTDOWN;
 		ShowStatus("Shutting down...\n");
 		{
 			struct map_session_data* sd;
@@ -5552,7 +5555,7 @@ void do_shutdown(void)
 			for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
 				clif->GM_kick(NULL, sd);
 			mapit->free(iter);
-			flush_fifos();
+			sockt->flush_fifos();
 		}
 		chrif->check_shutdown();
 	}
@@ -5612,60 +5615,6 @@ void map_cp_defaults(void) {
 	console->input->addCommand("gm:use",CPCMD_A(gm_use));
 #endif
 }
-/* Hercules Plugin Mananger */
-void map_hp_symbols(void) {
-	/* full interfaces */
-	HPM->share(atcommand,"atcommand");
-	HPM->share(battle,"battle");
-	HPM->share(bg,"battlegrounds");
-	HPM->share(buyingstore,"buyingstore");
-	HPM->share(channel,"channel");
-	HPM->share(clif,"clif");
-	HPM->share(chrif,"chrif");
-	HPM->share(guild,"guild");
-	HPM->share(gstorage,"gstorage");
-	HPM->share(homun,"homun");
-	HPM->share(map,"map");
-	HPM->share(ircbot,"ircbot");
-	HPM->share(itemdb,"itemdb");
-	HPM->share(logs,"logs");
-	HPM->share(mail,"mail");
-	HPM->share(instance,"instance");
-	HPM->share(script,"script");
-	HPM->share(searchstore,"searchstore");
-	HPM->share(skill,"skill");
-	HPM->share(vending,"vending");
-	HPM->share(pc,"pc");
-	HPM->share(pcg,"pc_groups");
-	HPM->share(party,"party");
-	HPM->share(storage,"storage");
-	HPM->share(trade,"trade");
-	HPM->share(status,"status");
-	HPM->share(chat, "chat");
-	HPM->share(duel,"duel");
-	HPM->share(elemental,"elemental");
-	HPM->share(intif,"intif");
-	HPM->share(mercenary,"mercenary");
-	HPM->share(mob,"mob");
-	HPM->share(unit,"unit");
-	HPM->share(npc,"npc");
-	HPM->share(mapreg,"mapreg");
-	HPM->share(pet,"pet");
-	HPM->share(path,"path");
-	HPM->share(quest,"quest");
-#ifdef PCRE_SUPPORT
-	HPM->share(npc_chat,"npc_chat");
-	HPM->share(libpcre,"libpcre");
-#endif
-	HPM->share(mapit,"mapit");
-	HPM->share(mapindex,"mapindex");
-	/* sql link */
-	HPM->share(map->mysql_handle,"sql_handle");
-	/* specific */
-	HPM->share(atcommand->create,"addCommand");
-	HPM->share(script->addScript,"addScript");
-	HPM->share(HPM_map_add_group_permission,"addGroupPermission");
-}
 
 void map_load_defaults(void) {
 	mapindex_defaults();
@@ -5720,7 +5669,7 @@ void map_load_defaults(void) {
  */
 static CMDLINEARG(runonce)
 {
-	runflag = CORE_ST_STOP;
+	core->runflag = CORE_ST_STOP;
 	return true;
 }
 /**
@@ -5828,7 +5777,7 @@ static CMDLINEARG(logconfig)
 static CMDLINEARG(scriptcheck)
 {
 	map->minimal = true;
-	runflag = CORE_ST_STOP;
+	core->runflag = CORE_ST_STOP;
 	map->scriptcheck = true;
 	return true;
 }
@@ -5858,7 +5807,7 @@ static CMDLINEARG(generatetranslations) {
 		ShowError("export-dialog: failed to open '%s' for writing\n",script->lang_export_file);
 	}
 	
-	runflag = CORE_ST_STOP;
+	core->runflag = CORE_ST_STOP;
 	return true;
 }
 
@@ -5902,7 +5851,6 @@ int do_init(int argc, char *argv[])
 	map->GRF_PATH_FILENAME       = aStrdup("conf/grf-files.txt");
 
 	HPM_map_do_init();
-	HPM->symbol_defaults_sub = map_hp_symbols;
 	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
 	HPM->config_read();
 	
@@ -5923,7 +5871,7 @@ int do_init(int argc, char *argv[])
 
 		if (!map->ip_set || !map->char_ip_set) {
 			char ip_str[16];
-			ip2str(sockt->addr_[0], ip_str);
+			sockt->ip2str(sockt->addr_[0], ip_str);
 
 			ShowWarning("Not all IP addresses in /conf/map-server.conf configured, auto-detecting...\n");
 
@@ -6057,9 +6005,9 @@ int do_init(int argc, char *argv[])
 	
 	ShowStatus("Server is '"CL_GREEN"ready"CL_RESET"' and listening on port '"CL_WHITE"%d"CL_RESET"'.\n\n", map->port);
 
-	if( runflag != CORE_ST_STOP ) {
-		shutdown_callback = map->do_shutdown;
-		runflag = MAPSERVER_ST_RUNNING;
+	if( core->runflag != CORE_ST_STOP ) {
+		core->shutdown_callback = map->do_shutdown;
+		core->runflag = MAPSERVER_ST_RUNNING;
 	}
 
 	map_cp_defaults();

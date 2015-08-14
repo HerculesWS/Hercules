@@ -23,6 +23,7 @@
 #include <string.h>
 
 struct log_interface log_s;
+struct log_interface *logs;
 
 /// obtain log type character for item/zeny logs
 char log_picktype2char(e_log_pick_type type) {

@@ -64,6 +64,8 @@
 struct skill_interface skill_s;
 struct s_skill_dbs skilldbs;
 
+struct skill_interface *skill;
+
 //Since only mob-casted splash skills can hit ice-walls
 static inline int splash_target(struct block_list* bl) {
 #ifndef RENEWAL
@@ -18089,7 +18091,7 @@ void skill_init_unit_layout (void)
 	int i,j,pos = 0;
 
 	//when != it was already cleared during skill_defaults() no need to repeat
-	if( runflag == MAPSERVER_ST_RUNNING )
+	if( core->runflag == MAPSERVER_ST_RUNNING )
 		memset(skill->dbs->unit_layout, 0, sizeof(skill->dbs->unit_layout));
 
 	// standard square layouts go first
@@ -18974,7 +18976,7 @@ void skill_readdb(bool minimal) {
 	db_clear(skill->name2id_db);
 
 	/* when != it was called during init and this procedure was already performed by skill_defaults()  */
-	if( runflag == MAPSERVER_ST_RUNNING ) {
+	if( core->runflag == MAPSERVER_ST_RUNNING ) {
 		memset(ZEROED_BLOCK_POS(skill->dbs), 0, ZEROED_BLOCK_SIZE(skill->dbs));
 	}
 

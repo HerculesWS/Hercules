@@ -42,7 +42,7 @@
 #ifndef COMMON_DB_H
 #define COMMON_DB_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 #include <stdarg.h>
 
@@ -916,9 +916,6 @@ void (*init) (void);
 void (*final) (void);
 };
 
-struct db_interface *DB;
-
-void db_defaults(void);
 // Link DB System - From jAthena
 struct linkdb_node {
 	struct linkdb_node *next;
@@ -937,8 +934,11 @@ void* linkdb_erase   (struct linkdb_node** head, void *key);
 void  linkdb_final   (struct linkdb_node** head);
 void  linkdb_vforeach(struct linkdb_node** head, LinkDBFunc func, va_list ap);
 void  linkdb_foreach (struct linkdb_node** head, LinkDBFunc func, ...);
+
+void db_defaults(void);
 #endif // HERCULES_CORE
 
+HPShared struct db_interface *DB;
 
 
 /// Finds an entry in an array.

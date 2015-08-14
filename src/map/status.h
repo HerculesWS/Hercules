@@ -5,10 +5,8 @@
 #ifndef MAP_STATUS_H
 #define MAP_STATUS_H
 
-#include "config/core.h" // defType, RENEWAL, RENEWAL_ASPD
-
 #include "common/conf.h"
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/mmo.h" // NEW_CARTS
 
 struct block_list;
@@ -2085,10 +2083,10 @@ struct status_interface {
 	void (*read_job_db_sub) (int idx, const char *name, config_setting_t *jdb);
 };
 
-struct status_interface *status;
-
 #ifdef HERCULES_CORE
 void status_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct status_interface *status;
 
 #endif /* MAP_STATUS_H */

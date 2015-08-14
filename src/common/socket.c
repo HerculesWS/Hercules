@@ -5,9 +5,7 @@
 #define HERCULES_CORE
 
 #include "config/core.h" // SHOW_SERVER_STATS
-#define H_SOCKET_C
 #include "socket.h"
-#undef H_SOCKET_C
 
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
@@ -57,6 +55,9 @@
  * Socket Interface Source
  **/
 struct socket_interface sockt_s;
+struct socket_interface *sockt;
+
+struct socket_data **session;
 
 #ifdef SEND_SHORTLIST
 	// Add a fd to the shortlist so that it'll be recognized as a fd that needs
@@ -359,13 +360,12 @@ void setsocketopts(int fd, struct hSockOpt *opt) {
  *--------------------------------------*/
 void set_eof(int fd)
 {
-	if( sockt->session_isActive(fd) )
-	{
+	if (sockt->session_is_active(fd)) {
 #ifdef SEND_SHORTLIST
 		// Add this socket to the shortlist for eof handling.
 		send_shortlist_add_fd(fd);
 #endif
-		session[fd]->flag.eof = 1;
+		sockt->session[fd]->flag.eof = 1;
 	}
 }
 
@@ -373,32 +373,32 @@ int recv_to_fifo(int fd)
 {
 	ssize_t len;
 
-	if( !sockt->session_isActive(fd) )
+	if (!sockt->session_is_active(fd))
 		return -1;
 
-	len = sRecv(fd, (char *) session[fd]->rdata + session[fd]->rdata_size, (int)RFIFOSPACE(fd), 0);
+	len = sRecv(fd, (char *) sockt->session[fd]->rdata + sockt->session[fd]->rdata_size, (int)RFIFOSPACE(fd), 0);
 
 	if( len == SOCKET_ERROR )
 	{//An exception has occurred
 		if( sErrno != S_EWOULDBLOCK ) {
 			//ShowDebug("recv_to_fifo: %s, closing connection #%d\n", error_msg(), fd);
-			set_eof(fd);
+			sockt->eof(fd);
 		}
 		return 0;
 	}
 
 	if( len == 0 )
 	{//Normal connection end.
-		set_eof(fd);
+		sockt->eof(fd);
 		return 0;
 	}
 
-	session[fd]->rdata_size += len;
-	session[fd]->rdata_tick = sockt->last_tick;
+	sockt->session[fd]->rdata_size += len;
+	sockt->session[fd]->rdata_tick = sockt->last_tick;
 #ifdef SHOW_SERVER_STATS
 	socket_data_i += len;
 	socket_data_qi += len;
-	if (!session[fd]->flag.server)
+	if (!sockt->session[fd]->flag.server)
 	{
 		socket_data_ci += len;
 	}
@@ -410,23 +410,23 @@ int send_from_fifo(int fd)
 {
 	ssize_t len;
 
-	if( !sockt->session_isValid(fd) )
+	if (!sockt->session_is_valid(fd))
 		return -1;
 
-	if( session[fd]->wdata_size == 0 )
+	if( sockt->session[fd]->wdata_size == 0 )
 		return 0; // nothing to send
 
-	len = sSend(fd, (const char *) session[fd]->wdata, (int)session[fd]->wdata_size, MSG_NOSIGNAL);
+	len = sSend(fd, (const char *) sockt->session[fd]->wdata, (int)sockt->session[fd]->wdata_size, MSG_NOSIGNAL);
 
 	if( len == SOCKET_ERROR )
 	{//An exception has occurred
 		if( sErrno != S_EWOULDBLOCK ) {
 			//ShowDebug("send_from_fifo: %s, ending connection #%d\n", error_msg(), fd);
 #ifdef SHOW_SERVER_STATS
-			socket_data_qo -= session[fd]->wdata_size;
+			socket_data_qo -= sockt->session[fd]->wdata_size;
 #endif
-			session[fd]->wdata_size = 0; //Clear the send queue as we can't send anymore. [Skotlex]
-			set_eof(fd);
+			sockt->session[fd]->wdata_size = 0; //Clear the send queue as we can't send anymore. [Skotlex]
+			sockt->eof(fd);
 		}
 		return 0;
 	}
@@ -435,14 +435,14 @@ int send_from_fifo(int fd)
 	{
 		// some data could not be transferred?
 		// shift unsent data to the beginning of the queue
-		if( (size_t)len < session[fd]->wdata_size )
-			memmove(session[fd]->wdata, session[fd]->wdata + len, session[fd]->wdata_size - len);
+		if( (size_t)len < sockt->session[fd]->wdata_size )
+			memmove(sockt->session[fd]->wdata, sockt->session[fd]->wdata + len, sockt->session[fd]->wdata_size - len);
 
-		session[fd]->wdata_size -= len;
+		sockt->session[fd]->wdata_size -= len;
 #ifdef SHOW_SERVER_STATS
 		socket_data_o += len;
 		socket_data_qo -= len;
-		if (!session[fd]->flag.server)
+		if (!sockt->session[fd]->flag.server)
 		{
 			socket_data_co += len;
 		}
@@ -455,15 +455,15 @@ int send_from_fifo(int fd)
 /// Best effort - there's no warranty that the data will be sent.
 void flush_fifo(int fd)
 {
-	if(session[fd] != NULL)
-		session[fd]->func_send(fd);
+	if(sockt->session[fd] != NULL)
+		sockt->session[fd]->func_send(fd);
 }
 
 void flush_fifos(void)
 {
 	int i;
 	for(i = 1; i < sockt->fd_max; i++)
-		sockt->flush_fifo(i);
+		sockt->flush(i);
 }
 
 /*======================================
@@ -493,7 +493,7 @@ int connect_client(int listen_fd) {
 	}
 
 	setsocketopts(fd,NULL);
-	set_nonblocking(fd, 1);
+	sockt->set_nonblocking(fd, 1);
 
 #ifndef MINICORE
 	if( ip_rules && !connect_check(ntohl(client_address.sin_addr.s_addr)) ) {
@@ -506,7 +506,7 @@ int connect_client(int listen_fd) {
 	sFD_SET(fd,&readfds);
 
 	create_session(fd, recv_to_fifo, send_from_fifo, default_func_parse);
-	session[fd]->client_addr = ntohl(client_address.sin_addr.s_addr);
+	sockt->session[fd]->client_addr = ntohl(client_address.sin_addr.s_addr);
 
 	return fd;
 }
@@ -535,7 +535,7 @@ int make_listen_bind(uint32 ip, uint16 port)
 	}
 
 	setsocketopts(fd,NULL);
-	set_nonblocking(fd, 1);
+	sockt->set_nonblocking(fd, 1);
 
 	server_address.sin_family      = AF_INET;
 	server_address.sin_addr.s_addr = htonl(ip);
@@ -556,8 +556,8 @@ int make_listen_bind(uint32 ip, uint16 port)
 	sFD_SET(fd, &readfds);
 
 	create_session(fd, connect_client, null_send, null_parse);
-	session[fd]->client_addr = 0; // just listens
-	session[fd]->rdata_tick = 0; // disable timeouts on this socket
+	sockt->session[fd]->client_addr = 0; // just listens
+	sockt->session[fd]->rdata_tick = 0; // disable timeouts on this socket
 
 	return fd;
 }
@@ -601,73 +601,73 @@ int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt) {
 		return -1;
 	}
 	//Now the socket can be made non-blocking. [Skotlex]
-	set_nonblocking(fd, 1);
+	sockt->set_nonblocking(fd, 1);
 
 	if (sockt->fd_max <= fd) sockt->fd_max = fd + 1;
 	sFD_SET(fd,&readfds);
 
 	create_session(fd, recv_to_fifo, send_from_fifo, default_func_parse);
-	session[fd]->client_addr = ntohl(remote_address.sin_addr.s_addr);
+	sockt->session[fd]->client_addr = ntohl(remote_address.sin_addr.s_addr);
 
 	return fd;
 }
 
 static int create_session(int fd, RecvFunc func_recv, SendFunc func_send, ParseFunc func_parse)
 {
-	CREATE(session[fd], struct socket_data, 1);
-	CREATE(session[fd]->rdata, unsigned char, RFIFO_SIZE);
-	CREATE(session[fd]->wdata, unsigned char, WFIFO_SIZE);
-	session[fd]->max_rdata  = RFIFO_SIZE;
-	session[fd]->max_wdata  = WFIFO_SIZE;
-	session[fd]->func_recv  = func_recv;
-	session[fd]->func_send  = func_send;
-	session[fd]->func_parse = func_parse;
-	session[fd]->rdata_tick = sockt->last_tick;
-	session[fd]->session_data = NULL;
-	session[fd]->hdata = NULL;
-	session[fd]->hdatac = 0;
+	CREATE(sockt->session[fd], struct socket_data, 1);
+	CREATE(sockt->session[fd]->rdata, unsigned char, RFIFO_SIZE);
+	CREATE(sockt->session[fd]->wdata, unsigned char, WFIFO_SIZE);
+	sockt->session[fd]->max_rdata  = RFIFO_SIZE;
+	sockt->session[fd]->max_wdata  = WFIFO_SIZE;
+	sockt->session[fd]->func_recv  = func_recv;
+	sockt->session[fd]->func_send  = func_send;
+	sockt->session[fd]->func_parse = func_parse;
+	sockt->session[fd]->rdata_tick = sockt->last_tick;
+	sockt->session[fd]->session_data = NULL;
+	sockt->session[fd]->hdata = NULL;
+	sockt->session[fd]->hdatac = 0;
 	return 0;
 }
 
 static void delete_session(int fd)
 {
-	if( sockt->session_isValid(fd) ) {
+	if (sockt->session_is_valid(fd)) {
 #ifdef SHOW_SERVER_STATS
-		socket_data_qi -= session[fd]->rdata_size - session[fd]->rdata_pos;
-		socket_data_qo -= session[fd]->wdata_size;
+		socket_data_qi -= sockt->session[fd]->rdata_size - sockt->session[fd]->rdata_pos;
+		socket_data_qo -= sockt->session[fd]->wdata_size;
 #endif
-		aFree(session[fd]->rdata);
-		aFree(session[fd]->wdata);
-		if( session[fd]->session_data )
-			aFree(session[fd]->session_data);
-		if (session[fd]->hdata) {
+		aFree(sockt->session[fd]->rdata);
+		aFree(sockt->session[fd]->wdata);
+		if( sockt->session[fd]->session_data )
+			aFree(sockt->session[fd]->session_data);
+		if (sockt->session[fd]->hdata) {
 			unsigned int i;
-			for(i = 0; i < session[fd]->hdatac; i++) {
-				if( session[fd]->hdata[i]->flag.free ) {
-					aFree(session[fd]->hdata[i]->data);
+			for(i = 0; i < sockt->session[fd]->hdatac; i++) {
+				if( sockt->session[fd]->hdata[i]->flag.free ) {
+					aFree(sockt->session[fd]->hdata[i]->data);
 				}
-				aFree(session[fd]->hdata[i]);
+				aFree(sockt->session[fd]->hdata[i]);
 			}
-			aFree(session[fd]->hdata);
+			aFree(sockt->session[fd]->hdata);
 		}
-		aFree(session[fd]);
-		session[fd] = NULL;
+		aFree(sockt->session[fd]);
+		sockt->session[fd] = NULL;
 	}
 }
 
 int realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_size)
 {
-	if( !sockt->session_isValid(fd) )
+	if (!sockt->session_is_valid(fd))
 		return 0;
 
-	if( session[fd]->max_rdata != rfifo_size && session[fd]->rdata_size < rfifo_size) {
-		RECREATE(session[fd]->rdata, unsigned char, rfifo_size);
-		session[fd]->max_rdata  = rfifo_size;
+	if( sockt->session[fd]->max_rdata != rfifo_size && sockt->session[fd]->rdata_size < rfifo_size) {
+		RECREATE(sockt->session[fd]->rdata, unsigned char, rfifo_size);
+		sockt->session[fd]->max_rdata  = rfifo_size;
 	}
 
-	if( session[fd]->max_wdata != wfifo_size && session[fd]->wdata_size < wfifo_size) {
-		RECREATE(session[fd]->wdata, unsigned char, wfifo_size);
-		session[fd]->max_wdata  = wfifo_size;
+	if( sockt->session[fd]->max_wdata != wfifo_size && sockt->session[fd]->wdata_size < wfifo_size) {
+		RECREATE(sockt->session[fd]->wdata, unsigned char, wfifo_size);
+		sockt->session[fd]->max_wdata  = wfifo_size;
 	}
 	return 0;
 }
@@ -676,38 +676,38 @@ int realloc_writefifo(int fd, size_t addition)
 {
 	size_t newsize;
 
-	if( !sockt->session_isValid(fd) ) // might not happen
+	if (!sockt->session_is_valid(fd)) // might not happen
 		return 0;
 
-	if (session[fd]->wdata_size + addition  > session[fd]->max_wdata) {
+	if (sockt->session[fd]->wdata_size + addition  > sockt->session[fd]->max_wdata) {
 		// grow rule; grow in multiples of WFIFO_SIZE
 		newsize = WFIFO_SIZE;
-		while( session[fd]->wdata_size + addition > newsize ) newsize += WFIFO_SIZE;
-	} else if (session[fd]->max_wdata >= (size_t)2*(session[fd]->flag.server?FIFOSIZE_SERVERLINK:WFIFO_SIZE)
-	       && (session[fd]->wdata_size+addition)*4 < session[fd]->max_wdata
+		while( sockt->session[fd]->wdata_size + addition > newsize ) newsize += WFIFO_SIZE;
+	} else if (sockt->session[fd]->max_wdata >= (size_t)2*(sockt->session[fd]->flag.server?FIFOSIZE_SERVERLINK:WFIFO_SIZE)
+	       && (sockt->session[fd]->wdata_size+addition)*4 < sockt->session[fd]->max_wdata
 	) {
 		// shrink rule, shrink by 2 when only a quarter of the fifo is used, don't shrink below nominal size.
-		newsize = session[fd]->max_wdata / 2;
+		newsize = sockt->session[fd]->max_wdata / 2;
 	} else {
 		// no change
 		return 0;
 	}
 
-	RECREATE(session[fd]->wdata, unsigned char, newsize);
-	session[fd]->max_wdata  = newsize;
+	RECREATE(sockt->session[fd]->wdata, unsigned char, newsize);
+	sockt->session[fd]->max_wdata  = newsize;
 
 	return 0;
 }
 
 /// advance the RFIFO cursor (marking 'len' bytes as processed)
-int RFIFOSKIP(int fd, size_t len)
+int rfifoskip(int fd, size_t len)
 {
 	struct socket_data *s;
 
-	if ( !sockt->session_isActive(fd) )
+	if (!sockt->session_is_active(fd))
 		return 0;
 
-	s = session[fd];
+	s = sockt->session[fd];
 
 	if (s->rdata_size < s->rdata_pos + len) {
 		ShowError("RFIFOSKIP: skipped past end of read buffer! Adjusting from %"PRIuS" to %"PRIuS" (session #%d)\n", len, RFIFOREST(fd), fd);
@@ -722,12 +722,12 @@ int RFIFOSKIP(int fd, size_t len)
 }
 
 /// advance the WFIFO cursor (marking 'len' bytes for sending)
-int WFIFOSET(int fd, size_t len)
+int wfifoset(int fd, size_t len)
 {
 	size_t newreserve;
-	struct socket_data* s = session[fd];
+	struct socket_data* s = sockt->session[fd];
 
-	if( !sockt->session_isValid(fd) || s->wdata == NULL )
+	if (!sockt->session_is_valid(fd) || s->wdata == NULL)
 		return 0;
 
 	// we have written len bytes to the buffer already before calling WFIFOSET
@@ -771,14 +771,14 @@ int WFIFOSET(int fd, size_t len)
 #endif
 	//If the interserver has 200% of its normal size full, flush the data.
 	if( s->flag.server && s->wdata_size >= 2*FIFOSIZE_SERVERLINK )
-		flush_fifo(fd);
+		sockt->flush(fd);
 
 	// always keep a WFIFO_SIZE reserve in the buffer
 	// For inter-server connections, let the reserve be 1/4th of the link size.
 	newreserve = s->flag.server ? FIFOSIZE_SERVERLINK / 4 : WFIFO_SIZE;
 
 	// readjust the buffer to include the chosen reserve
-	realloc_writefifo(fd, newreserve);
+	sockt->realloc_writefifo(fd, newreserve);
 
 #ifdef SEND_SHORTLIST
 	send_shortlist_add_fd(fd);
@@ -800,11 +800,11 @@ int do_sockets(int next)
 #else
 	for (i = 1; i < sockt->fd_max; i++)
 	{
-		if(!session[i])
+		if(!sockt->session[fd]
 			continue;
 
-		if(session[i]->wdata_size)
-			session[i]->func_send(i);
+		if(sockt->session[fd]>wdata_size)
+			sockt->session[fd]>func_send(i);
 	}
 #endif
 
@@ -832,16 +832,16 @@ int do_sockets(int next)
 	for( i = 0; i < (int)rfd.fd_count; ++i )
 	{
 		int fd = sock2fd(rfd.fd_array[i]);
-		if( session[fd] )
-			session[fd]->func_recv(fd);
+		if( sockt->session[fd] )
+			sockt->session[fd]->func_recv(fd);
 	}
 #else
 	// otherwise assume that the fd_set is a bit-array and enumerate it in a standard way
 	for( i = 1; ret && i < sockt->fd_max; ++i )
 	{
-		if(sFD_ISSET(i,&rfd) && session[i])
+		if(sFD_ISSET(i,&rfd) && sockt->session[i])
 		{
-			session[i]->func_recv(i);
+			sockt->session[i]->func_recv(i);
 			--ret;
 		}
 	}
@@ -853,15 +853,15 @@ int do_sockets(int next)
 #else
 	for (i = 1; i < sockt->fd_max; i++)
 	{
-		if(!session[i])
+		if(!sockt->session[i])
 			continue;
 
-		if(session[i]->wdata_size)
-			session[i]->func_send(i);
+		if(sockt->session[i]->wdata_size)
+			sockt->session[i]->func_send(i);
 
-		if (session[i]->flag.eof) { //func_send can't free a session, this is safe.
+		if (sockt->session[i]->flag.eof) { //func_send can't free a session, this is safe.
 			//Finally, even if there is no data to parse, connections signaled eof should be closed, so we call parse_func [Skotlex]
-			session[i]->func_parse(i); //This should close the session immediately.
+			sockt->session[i]->func_parse(i); //This should close the session immediately.
 		}
 	}
 #endif
@@ -869,32 +869,32 @@ int do_sockets(int next)
 	// parse input data on each socket
 	for(i = 1; i < sockt->fd_max; i++)
 	{
-		if(!session[i])
+		if(!sockt->session[i])
 			continue;
 
-		if (session[i]->rdata_tick && DIFF_TICK(sockt->last_tick, session[i]->rdata_tick) > sockt->stall_time) {
-			if( session[i]->flag.server ) {/* server is special */
-				if( session[i]->flag.ping != 2 )/* only update if necessary otherwise it'd resend the ping unnecessarily */
-					session[i]->flag.ping = 1;
+		if (sockt->session[i]->rdata_tick && DIFF_TICK(sockt->last_tick, sockt->session[i]->rdata_tick) > sockt->stall_time) {
+			if( sockt->session[i]->flag.server ) {/* server is special */
+				if( sockt->session[i]->flag.ping != 2 )/* only update if necessary otherwise it'd resend the ping unnecessarily */
+					sockt->session[i]->flag.ping = 1;
 			} else {
 				ShowInfo("Session #%d timed out\n", i);
-				set_eof(i);
+				sockt->eof(i);
 			}
 		}
 
 #ifdef __clang_analyzer__
-		// Let Clang's static analyzer know this never happens (it thinks it might because of a NULL check in session_isValid)
-		if (!session[i]) continue;
+		// Let Clang's static analyzer know this never happens (it thinks it might because of a NULL check in session_is_valid)
+		if (!sockt->session[i]) continue;
 #endif // __clang_analyzer__
-		session[i]->func_parse(i);
+		sockt->session[i]->func_parse(i);
 
-		if(!session[i])
+		if(!sockt->session[i])
 			continue;
 
 		RFIFOFLUSH(i);
 		// after parse, check client's RFIFO size to know if there is an invalid packet (too big and not parsed)
-		if (session[i]->rdata_size == session[i]->max_rdata) {
-			set_eof(i);
+		if (sockt->session[i]->rdata_size == sockt->session[i]->max_rdata) {
+			sockt->eof(i);
 			continue;
 		}
 	}
@@ -1220,15 +1220,15 @@ void socket_final(void)
 #endif
 
 	for( i = 1; i < sockt->fd_max; i++ )
-		if(session[i])
+		if(sockt->session[i])
 			sockt->close(i);
 
-	// session[0]
-	aFree(session[0]->rdata);
-	aFree(session[0]->wdata);
-	aFree(session[0]);
+	// sockt->session[0]
+	aFree(sockt->session[0]->rdata);
+	aFree(sockt->session[0]->wdata);
+	aFree(sockt->session[0]);
 
-	aFree(session);
+	aFree(sockt->session);
 
 	if (sockt->lan_subnet)
 		aFree(sockt->lan_subnet);
@@ -1247,16 +1247,16 @@ void socket_final(void)
 }
 
 /// Closes a socket.
-void do_close(int fd)
+void socket_close(int fd)
 {
 	if( fd <= 0 ||fd >= FD_SETSIZE )
 		return;// invalid
 
-	flush_fifo(fd); // Try to send what's left (although it might not succeed since it's a nonblocking socket)
+	sockt->flush(fd); // Try to send what's left (although it might not succeed since it's a nonblocking socket)
 	sFD_CLR(fd, &readfds);// this needs to be done before closing the socket
 	sShutdown(fd, SHUT_RDWR); // Disallow further reads/writes
 	sClose(fd); // We don't really care if these closing functions return an error, we are just shutting down and not reusing this socket.
-	if (session[fd]) delete_session(fd);
+	if (sockt->session[fd]) delete_session(fd);
 }
 
 /// Retrieve local ips in host byte order.
@@ -1393,21 +1393,21 @@ void socket_init(void)
 #endif
 
 	// Get initial local ips
-	sockt->naddr_ = socket_getips(sockt->addr_,16);
+	sockt->naddr_ = sockt->getips(sockt->addr_,16);
 
 	sFD_ZERO(&readfds);
 #if defined(SEND_SHORTLIST)
 	memset(send_shortlist_set, 0, sizeof(send_shortlist_set));
 #endif
 
-	CREATE(session, struct socket_data *, FD_SETSIZE);
+	CREATE(sockt->session, struct socket_data *, FD_SETSIZE);
 
 	socket_config_read(SOCKET_CONF_FILENAME);
 
 	// initialize last send-receive tick
 	sockt->last_tick = time(NULL);
 
-	// session[0] is now currently used for disconnected sessions of the map server, and as such,
+	// sockt->session[0] is now currently used for disconnected sessions of the map server, and as such,
 	// should hold enough buffer (it is a vacuum so to speak) as it is never flushed. [Skotlex]
 	create_session(0, null_recv, null_send, null_parse);
 
@@ -1419,19 +1419,16 @@ void socket_init(void)
 #endif
 
 	ShowInfo("Server supports up to '"CL_WHITE"%"PRId64""CL_RESET"' concurrent connections.\n", rlim_cur);
-
-	/* Hercules Plugin Manager */
-	HPM->share(session,"session");
 }
 
-bool session_isValid(int fd)
+bool session_is_valid(int fd)
 {
-	return ( fd > 0 && fd < FD_SETSIZE && session[fd] != NULL );
+	return ( fd > 0 && fd < FD_SETSIZE && sockt->session[fd] != NULL );
 }
 
-bool session_isActive(int fd)
+bool session_is_active(int fd)
 {
-	return ( sockt->session_isValid(fd) && !session[fd]->flag.eof );
+	return ( sockt->session_is_valid(fd) && !sockt->session[fd]->flag.eof );
 }
 
 // Resolves hostname into a numeric ip.
@@ -1441,9 +1438,15 @@ uint32 host2ip(const char* hostname)
 	return (h != NULL) ? ntohl(*(uint32*)h->h_addr) : 0;
 }
 
-// Converts a numeric ip into a dot-formatted string.
-// Result is placed either into a user-provided buffer or a static system buffer.
-const char* ip2str(uint32 ip, char ip_str[16])
+/**
+ * Converts a numeric ip into a dot-formatted string.
+ *
+ * @param ip     Numeric IP to convert.
+ * @param ip_str Output buffer, optional (if provided, must have size greater or equal to 16).
+ *
+ * @return A pointer to the output string.
+ */
+const char *ip2str(uint32 ip, char *ip_str)
 {
 	struct in_addr addr;
 	addr.s_addr = htonl(ip);
@@ -1518,7 +1521,7 @@ void socket_datasync(int fd, bool send) {
 				WFIFOW(fd, 2) = 8;
 				WFIFOL(fd, 4) = 0;
 				WFIFOSET(fd, 8);
-				flush_fifo(fd);
+				sockt->flush(fd);
 				/* shut down */
 				ShowFatalError("Servers are out of sync! recompile from scratch (%d)\n",i);
 				exit(EXIT_FAILURE);
@@ -1535,7 +1538,7 @@ void send_shortlist_add_fd(int fd)
 	int i;
 	int bit;
 
-	if( !sockt->session_isValid(fd) )
+	if (!sockt->session_is_valid(fd))
 		return;// out of range
 
 	i = fd/32;
@@ -1585,20 +1588,20 @@ void send_shortlist_do_sends()
 		send_shortlist_set[idx]&=~(1<<bit);// unset fd
 		// If this session still exists, perform send operations on it and
 		// check for the eof state.
-		if( session[fd] )
+		if( sockt->session[fd] )
 		{
 			// Send data
-			if( session[fd]->wdata_size )
-				session[fd]->func_send(fd);
+			if( sockt->session[fd]->wdata_size )
+				sockt->session[fd]->func_send(fd);
 
 			// If it's been marked as eof, call the parse func on it so that
 			// the socket will be immediately closed.
-			if( session[fd]->flag.eof )
-				session[fd]->func_parse(fd);
+			if( sockt->session[fd]->flag.eof )
+				sockt->session[fd]->func_parse(fd);
 
 			// If the session still exists, is not eof and has things left to
 			// be sent from it we'll re-add it to the shortlist.
-			if( session[fd] && !session[fd]->flag.eof && session[fd]->wdata_size )
+			if( sockt->session[fd] && !sockt->session[fd]->flag.eof && sockt->session[fd]->wdata_size )
 				send_shortlist_add_fd(fd);
 		}
 	}
@@ -1696,8 +1699,8 @@ int socket_net_config_read_sub(config_setting_t *t, struct s_subnet **list, int 
 		}
 		RECREATE(*list, struct s_subnet, *count + 1);
 		l = *list;
-		l[*count].ip = str2ip(ipbuf);
-		l[*count].mask = str2ip(maskbuf);
+		l[*count].ip = sockt->str2ip(ipbuf);
+		l[*count].mask = sockt->str2ip(maskbuf);
 		++*count;
 	}
 	return *count;
@@ -1792,14 +1795,14 @@ void socket_defaults(void) {
 	sockt->make_connection = make_connection;
 	sockt->realloc_fifo = realloc_fifo;
 	sockt->realloc_writefifo = realloc_writefifo;
-	sockt->WFIFOSET = WFIFOSET;
-	sockt->RFIFOSKIP = RFIFOSKIP;
-	sockt->close = do_close;
+	sockt->wfifoset = wfifoset;
+	sockt->rfifoskip = rfifoskip;
+	sockt->close = socket_close;
 	/* */
-	sockt->session_isValid = session_isValid;
-	sockt->session_isActive = session_isActive;
+	sockt->session_is_valid = session_is_valid;
+	sockt->session_is_active = session_is_active;
 	/* */
-	sockt->flush_fifo = flush_fifo;
+	sockt->flush = flush_fifo;
 	sockt->flush_fifos = flush_fifos;
 	sockt->set_nonblocking = set_nonblocking;
 	sockt->set_defaultparse = set_defaultparse;
@@ -1808,7 +1811,7 @@ void socket_defaults(void) {
 	sockt->str2ip = str2ip;
 	sockt->ntows = ntows;
 	sockt->getips = socket_getips;
-	sockt->set_eof = set_eof;
+	sockt->eof = set_eof;
 
 	sockt->lan_subnet_check = socket_lan_subnet_check;
 	sockt->allowed_ip_check = socket_allowed_ip_check;

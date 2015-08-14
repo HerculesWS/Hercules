@@ -8,7 +8,6 @@
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 
-#if 0 // TODO (HPMDataCheck is disabled for the time being)
 #include "login/account.h"
 #include "login/login.h"
 #include "common/HPMi.h"
@@ -32,7 +31,6 @@
 
 // HPMDataCheck comes after all the other includes
 #include "common/HPMDataCheck.h"
-#endif
 
 bool HPM_login_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr) {
 	/* record address */
@@ -44,18 +42,14 @@ bool HPM_login_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTy
 }
 
 void HPM_login_plugin_load_sub(struct hplugin *plugin) {
+	plugin->hpi->sql_handle = account_db_sql_up(login->accounts);
 }
 
 void HPM_login_do_init(void) {
-#if 0 // TODO (HPMDataCheck is disabled for the time being)
 	HPM->datacheck_init(HPMDataCheck, HPMDataCheckLen, HPMDataCheckVer);
-#else
-	HPM->DataCheck = NULL;
-#endif
+	HPM_shared_symbols(SERVER_TYPE_LOGIN);
 }
 
 void HPM_login_do_final(void) {
-#if 0 // TODO (HPMDataCheck is disabled for the time being)
 	HPM->datacheck_final();
-#endif
 }

@@ -21,6 +21,7 @@
 #include <string.h>
 
 struct mapreg_interface mapreg_s;
+struct mapreg_interface *mapreg;
 
 #define MAPREG_AUTOSAVE_INTERVAL (300*1000)
 

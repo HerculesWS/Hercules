@@ -62,6 +62,7 @@
 #endif
 
 struct script_interface script_s;
+struct script_interface *script;
 
 static inline int GETVALUE(const unsigned char* buf, int i) {
 	return (int)MakeDWord(MakeWord(buf[i], buf[i+1]), MakeWord(buf[i+2], 0));
@@ -18265,22 +18266,22 @@ BUILDIN(getcharip) {
 	}
 
 	/* check for sd and IP */
-	if (!sd || !session[sd->fd]->client_addr)
+	if (!sd || !sockt->session[sd->fd]->client_addr)
 	{
 		script_pushconststr(st, "");
 		return true;
 	}
 
 	/* return the client ip_addr converted for output */
-	if (sd && sd->fd && session[sd->fd])
+	if (sd && sd->fd && sockt->session[sd->fd])
 	{
 		/* initiliaze */
 		const char *ip_addr = NULL;
 		uint32 ip;
 
 		/* set ip, ip_addr and convert to ip and push str */
-		ip = session[sd->fd]->client_addr;
-		ip_addr = ip2str(ip, NULL);
+		ip = sockt->session[sd->fd]->client_addr;
+		ip_addr = sockt->ip2str(ip, NULL);
 		script_pushstrcopy(st, ip_addr);
 	}
 

@@ -58,6 +58,7 @@
 #include <string.h>
 
 struct atcommand_interface atcommand_s;
+struct atcommand_interface *atcommand;
 
 static char atcmd_output[CHAT_SIZE_MAX];
 static char atcmd_player_name[NAME_LENGTH];
@@ -83,7 +84,7 @@ const char* atcommand_msgsd(struct map_session_data *sd, int msg_number) {
 }
 
 const char* atcommand_msgfd(int fd, int msg_number) {
-	struct map_session_data *sd = session_isValid(fd) ? session[fd]->session_data : NULL;
+	struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
 	if( !(msg_number >= 0 && msg_number < MAX_MSG) )
 		return "??";
 	if( !sd || sd->lang_id >= atcommand->max_message_table || !atcommand->msg_table[sd->lang_id][msg_number] )
@@ -3676,7 +3677,7 @@ ACMD(reloadscript) {
 	}
 	mapit->free(iter);
 
-	flush_fifos();
+	sockt->flush_fifos();
 	map->reloadnpc(true); // reload config files seeking for npcs
 	script->reload();
 	npc->reload();
@@ -10199,7 +10200,7 @@ bool atcommand_can_use2(struct map_session_data *sd, const char *command, AtComm
 bool atcommand_hp_add(char *name, AtCommandFunc func) {
 	/* if commands are added after group permissions are thrown in, they end up with no permissions */
 	/* so we restrict commands to be linked in during boot */
-	if( runflag == MAPSERVER_ST_RUNNING ) {
+	if( core->runflag == MAPSERVER_ST_RUNNING ) {
 		ShowDebug("atcommand_hp_add: Commands can't be added after server is ready, skipping '%s'...\n",name);
 		return false;
 	}
@@ -10231,7 +10232,7 @@ void atcommand_db_clear(void) {
 }
 
 void atcommand_doload(void) {
-	if( runflag >= MAPSERVER_ST_RUNNING )
+	if( core->runflag >= MAPSERVER_ST_RUNNING )
 		atcommand->cmd_db_clear();
 	if( atcommand->db == NULL )
 		atcommand->db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);

@@ -4,9 +4,10 @@
 #ifndef COMMON_HPMI_H
 #define COMMON_HPMI_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/console.h"
 #include "common/core.h"
+#include "common/showmsg.h"
 #include "common/sql.h"
 
 struct script_state;
@@ -14,16 +15,7 @@ struct AtCommandInfo;
 struct socket_data;
 struct map_session_data;
 
-#ifdef WIN32
-	#define HPExport __declspec(dllexport)
-#else
-	#define HPExport
-#endif
-
-/* after */
-#include "common/showmsg.h"
-
-#define HPM_VERSION "1.0"
+#define HPM_VERSION "1.1"
 #define HPM_ADDCONF_LENGTH 40
 
 struct hplugin_info {
@@ -38,11 +30,6 @@ struct s_HPMDataCheck {
 	unsigned int size;
 	int type;
 };
-
-HPExport void *(*import_symbol) (char *name, unsigned int pID);
-HPExport Sql *mysql_handle;
-
-#define GET_SYMBOL(n) import_symbol((n),HPMi->pid)
 
 #define SERVER_TYPE_ALL (SERVER_TYPE_LOGIN|SERVER_TYPE_CHAR|SERVER_TYPE_MAP)
 
@@ -152,33 +139,37 @@ enum HPluginConfType {
 #define getFromBGDATA(ptr,index) (HPMi->getFromHPData(HPDT_BGDATA,HPMi->pid,(ptr),(index)))
 #define removeFromBGDATA(ptr,index) (HPMi->removeFromHPData(HPDT_BGDATA,HPMi->pid,(ptr),(index)))
 
-/* HPMi->addCommand */
-#define addAtcommand(cname,funcname) \
-	if ( HPMi->addCommand != NULL ) { \
+/// HPMi->addCommand
+#define addAtcommand(cname,funcname) do { \
+	if (HPMi->addCommand != NULL) { \
 		HPMi->addCommand(cname,atcommand_ ## funcname); \
 	} else { \
 		ShowWarning("HPM (%s):addAtcommand(\"%s\",%s) failed, addCommand sub is NULL!\n",pinfo.name,cname,# funcname);\
-	}
-/* HPMi->addScript */
-#define addScriptCommand(cname,scinfo,funcname) \
-	if ( HPMi->addScript != NULL ) { \
+	} \
+} while(0)
+/// HPMi->addScript
+#define addScriptCommand(cname,scinfo,funcname) do { \
+	if (HPMi->addScript != NULL) { \
 		HPMi->addScript(cname,scinfo,buildin_ ## funcname, false); \
 	} else { \
 		ShowWarning("HPM (%s):addScriptCommand(\"%s\",\"%s\",%s) failed, addScript sub is NULL!\n",pinfo.name,cname,scinfo,# funcname);\
-	}
-#define addScriptCommandDeprecated(cname,scinfo,funcname) \
-	if ( HPMi->addScript != NULL ) { \
+	} \
+} while(0)
+#define addScriptCommandDeprecated(cname,scinfo,funcname) do { \
+	if (HPMi->addScript != NULL) { \
 		HPMi->addScript(cname,scinfo,buildin_ ## funcname, true); \
 	} else { \
 		ShowWarning("HPM (%s):addScriptCommandDeprecated(\"%s\",\"%s\",%s) failed, addScript sub is NULL!\n",pinfo.name,cname,scinfo,# funcname);\
-	}
-/* HPMi->addCPCommand */
-#define addCPCommand(cname,funcname) \
-	if ( HPMi->addCPCommand != NULL ) { \
+	} \
+} while(0)
+/// HPMi->addCPCommand
+#define addCPCommand(cname,funcname) do { \
+	if (HPMi->addCPCommand != NULL) { \
 		HPMi->addCPCommand(cname,console_parse_ ## funcname); \
 	} else { \
 		ShowWarning("HPM (%s):addCPCommand(\"%s\",%s) failed, addCPCommand sub is NULL!\n",pinfo.name,cname,# funcname);\
-	}
+	} \
+} while(0)
 /* HPMi->addPacket */
 #define addPacket(cmd,len,receive,point) HPMi->addPacket(cmd,len,receive,point,HPMi->pid)
 /* HPMi->addBattleConf */
@@ -224,10 +215,17 @@ struct HPMi_interface {
 	bool (*addConf) (unsigned int pluginID, enum HPluginConfType type, char *name, void (*func) (const char *val));
 	/* pc group permission */
 	void (*addPCGPermission) (unsigned int pluginID, char *name, unsigned int *mask);
+
+	Sql *sql_handle;
 };
-#ifndef HERCULES_CORE
+#ifdef HERCULES_CORE
+#define HPM_SYMBOL(n, s) (HPM->share((s), (n)), true)
+#else // ! HERCULES_CORE
 HPExport struct HPMi_interface HPMi_s;
 HPExport struct HPMi_interface *HPMi;
-#endif
+HPExport void *(*import_symbol) (char *name, unsigned int pID);
+#define HPM_SYMBOL(n, s) ((s) = import_symbol((n),HPMi->pid))
+#endif // !HERCULES_CORE
+
 
 #endif /* COMMON_HPMI_H */

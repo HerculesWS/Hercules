@@ -22,6 +22,7 @@
 #include <stdlib.h>
 
 struct inter_mail_interface inter_mail_s;
+struct inter_mail_interface *inter_mail;
 
 static int inter_mail_fromsql(int char_id, struct mail_data* md)
 {

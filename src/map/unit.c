@@ -49,6 +49,7 @@ const short dirx[8]={0,-1,-1,-1,0,1,1,1};
 const short diry[8]={1,1,0,-1,-1,-1,0,1};
 
 struct unit_interface unit_s;
+struct unit_interface *unit;
 
 /**
  * Returns the unit_data for the given block_list. If the object is using

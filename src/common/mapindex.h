@@ -5,7 +5,7 @@
 #ifndef COMMON_MAPINDEX_H
 #define COMMON_MAPINDEX_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/db.h"
 #include "common/mmo.h"
 
@@ -91,14 +91,14 @@ struct mapindex_interface {
 	const char* (*getmapname_ext) (const char* string, char* output);
 	/* TODO: Hello World! make up your mind, this thing is int on some places and unsigned short on others */
 	unsigned short (*name2id) (const char*);
-	const char* (*id2name) (unsigned short,const char *file, int line, const char *func);
+	const char * (*id2name) (uint16 id, const char *file, int line, const char *func);
 	bool (*check_default) (void);
 };
-
-struct mapindex_interface *mapindex;
 
 #ifdef HERCULES_CORE
 void mapindex_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct mapindex_interface *mapindex;
 
 #endif /* COMMON_MAPINDEX_H */

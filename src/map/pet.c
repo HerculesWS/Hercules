@@ -37,6 +37,7 @@
 #include <string.h>
 
 struct pet_interface pet_s;
+struct pet_interface *pet;
 
 #define MIN_PETTHINKTIME 100
 

@@ -22,6 +22,7 @@
 #include <stdlib.h>
 
 struct inter_pet_interface inter_pet_s;
+struct inter_pet_interface *inter_pet;
 
 //---------------------------------------------------------
 int inter_pet_tosql(int pet_id, struct s_pet* p)

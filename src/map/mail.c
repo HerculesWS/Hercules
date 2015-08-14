@@ -19,6 +19,7 @@
 #include <string.h>
 
 struct mail_interface mail_s;
+struct mail_interface *mail;
 
 void mail_clear(struct map_session_data *sd)
 {

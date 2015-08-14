@@ -43,6 +43,7 @@
 
 struct Battle_Config battle_config;
 struct battle_interface battle_s;
+struct battle_interface *battle;
 
 int battle_getcurrentskill(struct block_list *bl) { //Returns the current/last skill in use by this bl.
 	struct unit_data *ud;

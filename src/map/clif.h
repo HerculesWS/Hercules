@@ -7,7 +7,7 @@
 
 #include "map/map.h"
 #include "map/packets_struct.h"
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/mmo.h"
 
 #include <stdarg.h>
@@ -556,11 +556,6 @@ struct merge_item {
     int16 position;
     int16 nameid;
 };
-
-/**
- * Vars
- **/
-struct s_packet_db packet_db[MAX_PACKET_DB + 1];
 
 /**
  * Clif.c Interface
@@ -1322,10 +1317,15 @@ struct clif_interface {
 	void (*pNPCMarketPurchase) (int fd, struct map_session_data *sd);
 };
 
-struct clif_interface *clif;
-
 #ifdef HERCULES_CORE
+/**
+ * Vars
+ **/
+extern struct s_packet_db packet_db[MAX_PACKET_DB + 1];
+
 void clif_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct clif_interface *clif;
 
 #endif /* MAP_CLIF_H */

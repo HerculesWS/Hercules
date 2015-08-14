@@ -45,7 +45,7 @@
 #include "common/nullpo.h"
 #include "common/random.h"
 #include "common/showmsg.h"
-#include "common/socket.h" // session[]
+#include "common/socket.h"
 #include "common/strlib.h" // safestrncpy()
 #include "common/sysinfo.h"
 #include "common/timer.h"
@@ -57,6 +57,7 @@
 #include <time.h>
 
 struct pc_interface pc_s;
+struct pc_interface *pc;
 
 //Converts a class to its array index for CLASS_COUNT defined arrays.
 //Note that it does not do a validity check for speed purposes, where parsing
@@ -1007,7 +1008,7 @@ int pc_isequip(struct map_session_data *sd,int n)
 bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_time, int group_id, struct mmo_charstatus *st, bool changing_mapservers) {
 	int i;
 	int64 tick = timer->gettick();
-	uint32 ip = session[sd->fd]->client_addr;
+	uint32 ip = sockt->session[sd->fd]->client_addr;
 
 	sd->login_id2 = login_id2;
 
@@ -3268,23 +3269,17 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				sd->skillblown[i].val = val;
 			}
 			break;
-	#ifndef RENEWAL_CAST
+#ifndef RENEWAL_CAST
 		case SP_VARCASTRATE:
-	#endif
+#endif
 		case SP_CASTRATE:
 			if(sd->state.lr_flag == 2)
 				break;
 			ARR_FIND(0, ARRAYLENGTH(sd->skillcast), i, sd->skillcast[i].id == 0 || sd->skillcast[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillcast)) {
 				//Better mention this so the array length can be updated. [Skotlex]
-				ShowDebug("script->run: bonus2 %s reached it's limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
-
-	#ifndef RENEWAL_CAST
-					"bCastRate",
-	#else
-					"bVariableCastrate",
-	#endif
-
+				ShowDebug("script->run: bonus2 %s reached its limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
+					type == SP_CASTRATE ? "bCastRate" : "bVariableCastrate",
 					ARRAYLENGTH(sd->skillcast), type2, val);
 				break;
 			}
@@ -9014,7 +9009,7 @@ int pc_readregistry(struct map_session_data *sd, int64 reg) {
 		ShowError("pc_readregistry: Trying to read reg %s before it's been loaded!\n", script->get_str(script_getvarid(reg)));
 		//This really shouldn't happen, so it's possible the data was lost somewhere, we should request it again.
 		//intif->request_registry(sd,type==3?4:type);
-		set_eof(sd->fd);
+		sockt->eof(sd->fd);
 		return 0;
 	}
 	
@@ -9035,7 +9030,7 @@ char* pc_readregistry_str(struct map_session_data *sd, int64 reg) {
 		ShowError("pc_readregistry_str: Trying to read reg %s before it's been loaded!\n", script->get_str(script_getvarid(reg)));
 		//This really shouldn't happen, so it's possible the data was lost somewhere, we should request it again.
 		//intif->request_registry(sd,type==3?4:type);
-		set_eof(sd->fd);
+		sockt->eof(sd->fd);
 		return NULL;
 	}
 

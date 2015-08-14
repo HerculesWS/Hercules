@@ -6,7 +6,7 @@
 #define MAP_CHRIF_H
 
 #include "map/map.h" //TBL_PC
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/db.h"
 
 struct eri;
@@ -150,10 +150,10 @@ struct chrif_interface {
 	void (*del_scdata_single) (int account_id, int char_id, short type);
 };
 
-struct chrif_interface *chrif;
-
 #ifdef HERCULES_CORE
 void chrif_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct chrif_interface *chrif;
 
 #endif /* MAP_CHRIF_H */

@@ -6,7 +6,7 @@
 #define MAP_SCRIPT_H
 
 #include "map/map.h" //EVENT_NAME_LENGTH
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/db.h"
 #include "common/mmo.h" // struct item
 #include "common/sql.h" // Sql
@@ -773,10 +773,10 @@ struct script_interface {
 	void (*run_item_unequip_script) (struct map_session_data *sd, struct item_data *data, int oid);
 };
 
-struct script_interface *script;
-
 #ifdef HERCULES_CORE
 void script_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct script_interface *script;
 
 #endif /* MAP_SCRIPT_H */

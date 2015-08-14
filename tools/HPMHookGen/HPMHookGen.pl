@@ -222,13 +222,20 @@ sub parse($$) {
 			$rtinit = ' = HCS_STATUS_FAIL';
 		} elsif ($x =~ /^enum\s+bg_queue_types$/) { # Known enum bg_queue_types
 			$rtinit = ' = BGQT_INVALID';
-		} elsif ($x =~ /^struct\s+.*$/ or $x eq 'DBData') { # Structs
+		} elsif ($x =~ /^(?:enum\s+)?DBOptions$/) { # Known enum DBOptions
+			$rtinit = ' = DB_OPT_BASE';
+		} elsif ($x eq 'DBComparator' or $x eq 'DBHasher' or $x eq 'DBReleaser') { # DB function pointers
+			$rtinit = ' = NULL';
+		} elsif ($x =~ /^struct\s+.*$/ or $x eq 'DBData' or $x eq 'DBKey') { # Structs and unions
 			$rtinit = '';
 			$rtmemset = 1;
+		} elsif ($x =~ /^float|double$/) { # Floating point variables
+			$rtinit = ' = 0.';
 		} elsif ($x =~ /^(?:(?:un)?signed\s+)?(?:char|int|long|short)$/
 		      or $x =~ /^(?:long|short)\s+(?:int|long)$/
 		      or $x =~ /^u?int(?:8|16|32|64)$/
 		      or $x eq 'defType'
+		      or $x eq 'size_t'
 		) { # Numeric variables
 			$rtinit = ' = 0';
 		} else { # Anything else
@@ -257,7 +264,9 @@ my %keys = (
 	login => [ ],
 	char => [ ],
 	map => [ ],
+	all => [ ],
 );
+my %fileguards = ( );
 foreach my $file (@files) { # Loop through the xml files
 
 	my $xml = new XML::Simple;
@@ -265,20 +274,34 @@ foreach my $file (@files) { # Loop through the xml files
 
 	my $filekey = (keys %{ $data->{compounddef} })[0];
 	my $loc = $data->{compounddef}->{$filekey}->{location}->[0];
-	next unless $loc->{file} =~ /src\/(map|char|login)\//;
+	next unless $loc->{file} =~ /src\/(map|char|login|common)\//;
+	next if $loc->{file} =~ /\/HPM.*\.h/; # Don't allow hooking into the HPM itself
 	my $servertype = $1;
-
 	my $key = $data->{compounddef}->{$filekey}->{compoundname}->[0];
 	my $original = $key;
+	my @servertypes = ();
+	my $servermask = 'SERVER_TYPE_NONE';
+	if ($servertype ne "common") {
+		push @servertypes, $1;
+		$servermask = 'SERVER_TYPE_' . uc($1);
+	} elsif ($key eq "mapindex_interface") {
+		push @servertypes, ("map", "char"); # Currently not used by the login server
+		$servermask = 'SERVER_TYPE_MAP|SERVER_TYPE_CHAR';
+	} else {
+		push @servertypes, ("map", "char", "login");
+		$servermask = 'SERVER_TYPE_ALL';
+	}
+	my @filepath = split(/[\/\\]/, $loc->{file});
+	my $foldername = uc($filepath[-2]);
+	my $filename = uc($filepath[-1]); $filename =~ s/-/_/g; $filename =~ s/\.[^.]*$//;
+	my $guardname = "${foldername}_${filename}_H";
 
 	# Some known interfaces with different names
 	if ($key =~ /battleground/) {
 		$key = "bg";
 	} elsif ($key =~ /guild_storage/) {
 		$key = "gstorage";
-	} elsif ($key =~ /inter_homunculus/) { # to avoid replace to homun
-		$key = "inter_homunculus";
-	} elsif ($key =~ /homunculus/) {
+	} elsif ($key eq "homunculus_interface") {
 		$key = "homun";
 	} elsif ($key eq "irc_bot_interface") {
 		$key = "ircbot";
@@ -286,8 +309,23 @@ foreach my $file (@files) { # Loop through the xml files
 		$key = "logs";
 	} elsif ($key eq "pc_groups_interface") {
 		$key = "pcg";
+	} elsif ($key eq "pcre_interface") {
+		$key = "libpcre";
 	} elsif ($key eq "char_interface") {
 		$key = "chr";
+	} elsif ($key eq "db_interface") {
+		$key = "DB";
+	} elsif ($key eq "malloc_interface") {
+		$key = "iMalloc";
+	} elsif ($key eq "socket_interface") {
+		$key = "sockt";
+	} elsif ($key eq "sql_interface") {
+		$key = "SQL";
+	} elsif ($key eq "stringbuf_interface") {
+		$key = "StrBuf";
+	} elsif ($key eq "console_input_interface") {
+		# TODO
+		next;
 	} else {
 		$key =~ s/_interface//;
 	}
@@ -382,7 +420,14 @@ foreach my $file (@files) { # Loop through the xml files
 			push(@{ $ifs{$key} }, $if);
 		}
 	}
-	push(@{ $keys{$servertype} }, $key) if $key2original{$key};
+	foreach $servertype (@servertypes) {
+		push(@{ $keys{$servertype} }, $key) if $key2original{$key};
+	}
+	push(@{ $keys{all} }, $key) if $key2original{$key};
+	$fileguards{$key} = {
+		guard => $guardname,
+		type => $servermask,
+	};
 }
 
 foreach my $servertype (keys %keys) {
@@ -390,14 +435,61 @@ foreach my $servertype (keys %keys) {
 	# Some interfaces use different names
 	my %exportsymbols = map {
 		$_ => &{ sub ($) {
-			return 'battlegrounds' if $servertype eq 'map' and $_ =~ /^bg$/;
-			return 'pc_groups' if $servertype eq 'map' and $_ =~ /^pcg$/;
+			return 'battlegrounds' if $_ =~ /^bg$/;
+			return 'pc_groups' if $_ =~ /^pcg$/;
 			return $_;
 		}}($_);
 	} @$keysref;
 
 	my ($maxlen, $idx) = (0, 0);
 	my $fname;
+
+	if ($servertype eq 'all') {
+		$fname = "../../src/common/HPMSymbols.inc.h";
+		open(FH, ">", $fname)
+			or die "cannot open > $fname: $!";
+
+		print FH <<"EOF";
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+//
+// NOTE: This file was auto-generated and should never be manually edited,
+//       as it will get overwritten.
+
+#if !defined(HERCULES_CORE)
+EOF
+
+		foreach my $key (@$keysref) {
+			print FH <<"EOF";
+#ifdef $fileguards{$key}->{guard} /* $key */
+struct $key2original{$key} *$key;
+#endif // $fileguards{$key}->{guard}
+EOF
+		}
+
+		print FH <<"EOF";
+#endif // ! HERCULES_CORE
+
+HPExport const char *HPM_shared_symbols(int server_type)
+{
+EOF
+
+		foreach my $key (@$keysref) {
+			print FH <<"EOF";
+#ifdef $fileguards{$key}->{guard} /* $key */
+if ((server_type&($fileguards{$key}->{type})) && !HPM_SYMBOL("$exportsymbols{$key}", $key)) return "$exportsymbols{$key}";
+#endif // $fileguards{$key}->{guard}
+EOF
+		}
+
+		print FH <<"EOF";
+	return NULL;
+}
+EOF
+		close FH;
+		next;
+	}
+
 	$fname = "../../src/plugins/HPMHooking/HPMHooking_${servertype}.HookingPoints.inc";
 	open(FH, ">", $fname)
 		or die "cannot open > $fname: $!";
@@ -447,26 +539,6 @@ EOF
 
 		print FH <<"EOF";
 memcpy(&HPMHooks.source.$key, $key, sizeof(struct $key2original{$key}));
-EOF
-	}
-	close FH;
-
-	$fname = "../../src/plugins/HPMHooking/HPMHooking_${servertype}.GetSymbol.inc";
-	open(FH, ">", $fname)
-		or die "cannot open > $fname: $!";
-
-	print FH <<"EOF";
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-//
-// NOTE: This file was auto-generated and should never be manually edited,
-//       as it will get overwritten.
-
-EOF
-	foreach my $key (@$keysref) {
-
-		print FH <<"EOF";
-if( !($key = GET_SYMBOL("$exportsymbols{$key}") ) ) return "$exportsymbols{$key}";
 EOF
 	}
 	close FH;

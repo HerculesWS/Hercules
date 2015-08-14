@@ -4,7 +4,7 @@
 #ifndef COMMON_MALLOC_H
 #define COMMON_MALLOC_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 #define ALC_MARK __FILE__, __LINE__, __func__
 
@@ -59,12 +59,6 @@
 
 ////////////////////////////////////////////////
 
-#ifdef HERCULES_CORE
-void malloc_defaults(void);
-
-void memmgr_report(int extra);
-#endif // HERCULES_CORE
-
 struct malloc_interface {
 	void (*init) (void);
 	void (*final) (void);
@@ -84,5 +78,12 @@ struct malloc_interface {
 	void (*init_messages) (void);
 };
 
-struct malloc_interface *iMalloc;
+#ifdef HERCULES_CORE
+void malloc_defaults(void);
+
+void memmgr_report(int extra);
+#endif // HERCULES_CORE
+
+HPShared struct malloc_interface *iMalloc;
+
 #endif /* COMMON_MALLOC_H */

@@ -44,6 +44,8 @@
 struct mercenary_interface mercenary_s;
 struct s_mercenary_db mercdb[MAX_MERCENARY_CLASS];
 
+struct mercenary_interface *mercenary;
+
 int merc_search_index(int class_)
 {
 	int i;

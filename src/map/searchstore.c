@@ -15,6 +15,7 @@
 #include "common/strlib.h" // safestrncpy
 
 struct searchstore_interface searchstore_s;
+struct searchstore_interface *searchstore;
 
 /// retrieves search function by type
 static inline searchstore_search_t searchstore_getsearchfunc(unsigned char type) {

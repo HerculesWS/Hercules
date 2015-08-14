@@ -6,7 +6,7 @@
 #define MAP_ATCOMMAND_H
 
 #include "map/pc_groups.h"
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/conf.h"
 #include "common/db.h"
 
@@ -127,11 +127,11 @@ struct atcommand_interface {
 	const char* (*msgsd) (struct map_session_data *sd, int msg_number);
 };
 
-struct atcommand_interface *atcommand;
-
 #ifdef HERCULES_CORE
 void atcommand_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct atcommand_interface *atcommand;
 
 /* stay here */
 #define ACMD(x) static bool atcommand_ ## x (const int fd, struct map_session_data* sd, const char* command, const char* message, struct AtCommandInfo *info)

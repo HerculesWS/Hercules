@@ -24,6 +24,7 @@
 //#define IRCBOT_DEBUG
 
 struct irc_bot_interface irc_bot_s;
+struct irc_bot_interface *ircbot;
 
 char send_string[IRC_MESSAGE_LENGTH];
 
@@ -41,9 +42,9 @@ int irc_connect_timer(int tid, int64 tick, int id, intptr_t data) {
 	
 	ircbot->last_try = timer->gettick();
 
-	if ((ircbot->fd = make_connection(ircbot->ip, channel->config->irc_server_port, &opt)) > 0) {
-		session[ircbot->fd]->func_parse = ircbot->parse;
-		session[ircbot->fd]->flag.server = 1;
+	if ((ircbot->fd = sockt->make_connection(ircbot->ip, channel->config->irc_server_port, &opt)) > 0) {
+		sockt->session[ircbot->fd]->func_parse = ircbot->parse;
+		sockt->session[ircbot->fd]->flag.server = 1;
 		timer->add(timer->gettick() + 3000, ircbot->identify_timer, 0, 0);
 		ircbot->isOn = true;
 	}
@@ -114,13 +115,13 @@ struct irc_func* irc_func_search(char* function_name) {
 int irc_parse(int fd) {
 	char *parse_string = NULL, *str_safe = NULL;
 
-	if (session[fd]->flag.eof) {
-		do_close(fd);
+	if (sockt->session[fd]->flag.eof) {
+		sockt->close(fd);
 		ircbot->fd = 0;
 		ircbot->isOn = false;
 		ircbot->isIn = false;
 		ircbot->fails = 0;
-		ircbot->ip = host2ip(channel->config->irc_server);
+		ircbot->ip = sockt->host2ip(channel->config->irc_server);
 		timer->add(timer->gettick() + 120000, ircbot->connect_timer, 0, 0);
 		return 0;
 	}
@@ -415,7 +416,7 @@ void irc_bot_init(bool minimal) {
 	if (!channel->config->irc)
 		return;
 
-	if (!(ircbot->ip = host2ip(channel->config->irc_server))) {
+	if (!(ircbot->ip = sockt->host2ip(channel->config->irc_server))) {
 		ShowError("Unable to resolve '%s' (irc server), disabling irc channel...\n", channel->config->irc_server);
 		channel->config->irc = false;
 		return;
@@ -454,7 +455,7 @@ void irc_bot_final(void) {
 		return;
 	if( ircbot->isOn ) {
 		ircbot->send("QUIT :Hercules is shutting down");
-		do_close(ircbot->fd);
+		sockt->close(ircbot->fd);
 	}
 	
 	for( i = 0; i < ircbot->funcs.size; i++ ) {

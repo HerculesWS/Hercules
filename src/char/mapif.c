@@ -189,6 +189,7 @@ void mapif_namechange_ack(int fd, int account_id, int char_id, int type, int fla
 int mapif_parse_NameChangeRequest(int fd);
 
 struct mapif_interface mapif_s;
+struct mapif_interface *mapif;
 
 void mapif_defaults(void) {
 	mapif = &mapif_s;

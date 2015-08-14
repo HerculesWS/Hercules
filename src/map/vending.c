@@ -25,6 +25,7 @@
 #include <string.h>
 
 struct vending_interface vending_s;
+struct vending_interface *vending;
 
 /// Returns an unique vending shop id.
 static inline unsigned int getid(void) {

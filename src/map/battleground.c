@@ -32,6 +32,7 @@
 #include <string.h>
 
 struct battleground_interface bg_s;
+struct battleground_interface *bg;
 
 /// Search a BG Team using bg_id
 struct battleground_data* bg_team_search(int bg_id) {

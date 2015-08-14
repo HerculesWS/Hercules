@@ -5,7 +5,7 @@
 #ifndef COMMON_NULLPO_H
 #define COMMON_NULLPO_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 // enabled by default on debug builds
 #if defined(DEBUG) && !defined(NULLPO_CHECK)
@@ -127,10 +127,10 @@ struct nullpo_interface {
 	void (*assert_report) (const char *file, int line, const char *func, const char *targetname, const char *title);
 };
 
-struct nullpo_interface *nullpo;
-
 #ifdef HERCULES_CORE
 void nullpo_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct nullpo_interface *nullpo;
 
 #endif /* COMMON_NULLPO_H */

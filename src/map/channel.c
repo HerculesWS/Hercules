@@ -28,6 +28,7 @@
 #include <string.h>
 
 struct channel_interface channel_s;
+struct channel_interface *channel;
 
 static struct Channel_Config channel_config;
 
@@ -301,7 +302,7 @@ void channel_join_sub(struct channel_data *chan, struct map_session_data *sd, bo
 
 	/* someone is cheating, we kindly disconnect the bastard */
 	if (sd->channel_count > 200) {
-		set_eof(sd->fd);
+		sockt->eof(sd->fd);
 	}
 
 }

@@ -6,7 +6,7 @@
 #define MAP_QUEST_H
 
 #include "map/map.h" // TBL_PC
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/conf.h"
 
 #define MAX_QUEST_DB (60355+1) // Highest quest ID + 1
@@ -61,10 +61,10 @@ struct quest_interface {
 	struct quest_db *(*read_db_sub) (config_setting_t *cs, int n, const char *source);
 };
 
-struct quest_interface *quest;
-
 #ifdef HERCULES_CORE
 void quest_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct quest_interface *quest;
 
 #endif /* MAP_QUEST_H */

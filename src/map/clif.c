@@ -59,6 +59,9 @@
 #include <time.h>
 
 struct clif_interface clif_s;
+struct clif_interface *clif;
+
+struct s_packet_db packet_db[MAX_PACKET_DB + 1];
 
 /* re-usable */
 static struct packet_itemlist_normal itemlist_normal;
@@ -193,22 +196,22 @@ static inline unsigned int mes_len_check(char* mes, unsigned int len, unsigned i
  *------------------------------------------*/
 bool clif_setip(const char* ip) {
 	char ip_str[16];
-	clif->map_ip = host2ip(ip);
+	clif->map_ip = sockt->host2ip(ip);
 	if ( !clif->map_ip ) {
 		ShowWarning("Failed to Resolve Map Server Address! (%s)\n", ip);
 		return false;
 	}
 
 	safestrncpy(clif->map_ip_str, ip, sizeof(clif->map_ip_str));
-	ShowInfo("Map Server IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, ip2str(clif->map_ip, ip_str));
+	ShowInfo("Map Server IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, sockt->ip2str(clif->map_ip, ip_str));
 	return true;
 }
 
 bool clif_setbindip(const char* ip) {
-	clif->bind_ip = host2ip(ip);
+	clif->bind_ip = sockt->host2ip(ip);
 	if ( clif->bind_ip ) {
 		char ip_str[16];
-		ShowInfo("Map Server Bind IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, ip2str(clif->bind_ip, ip_str));
+		ShowInfo("Map Server Bind IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, sockt->ip2str(clif->bind_ip, ip_str));
 		return true;
 	}
 	ShowWarning("Failed to Resolve Map Server Address! (%s)\n", ip);
@@ -242,10 +245,9 @@ uint16 clif_getport(void)
 /*==========================================
  * Updates server ip resolution and returns it
  *------------------------------------------*/
-uint32 clif_refresh_ip(void) {
-	uint32 new_ip;
-
-	new_ip = host2ip(clif->map_ip_str);
+uint32 clif_refresh_ip(void)
+{
+	uint32 new_ip = sockt->host2ip(clif->map_ip_str);
 	if ( new_ip && new_ip != clif->map_ip ) {
 		clif->map_ip = new_ip;
 		ShowInfo("Updating IP resolution of [%s].\n", clif->map_ip_str);
@@ -292,7 +294,7 @@ int clif_send_sub(struct block_list *bl, va_list ap) {
 	nullpo_ret(sd = (struct map_session_data *)bl);
 
 	fd = sd->fd;
-	if (!fd || session[fd] == NULL) //Don't send to disconnected clients.
+	if (!fd || sockt->session[fd] == NULL) //Don't send to disconnected clients.
 		return 0;
 
 	buf = va_arg(ap,void*);
@@ -428,7 +430,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 				for(i = 0; i < cd->users; i++) {
 					if (type == CHAT_WOS && cd->usersd[i] == sd)
 						continue;
-					if ((fd=cd->usersd[i]->fd) >0 && session[fd]) { // Added check to see if session exists [PoW]
+					if ((fd=cd->usersd[i]->fd) >0 && sockt->session[fd]) { // Added check to see if session exists [PoW]
 						WFIFOHEAD(fd,len);
 						memcpy(WFIFOP(fd,0), buf, len);
 						WFIFOSET(fd,len);
@@ -691,14 +693,14 @@ void clif_authrefuse(int fd, uint8 error_code)
 // TODO: type enum
 void clif_authfail_fd(int fd, int type)
 {
-	if (!fd || !session[fd] || session[fd]->func_parse != clif->parse) //clif_authfail should only be invoked on players!
+	if (!fd || !sockt->session[fd] || sockt->session[fd]->func_parse != clif->parse) //clif_authfail should only be invoked on players!
 		return;
 
 	WFIFOHEAD(fd, packet_len(0x81));
 	WFIFOW(fd,0) = 0x81;
 	WFIFOB(fd,2) = type;
 	WFIFOSET(fd,packet_len(0x81));
-	set_eof(fd);
+	sockt->eof(fd);
 
 }
 
@@ -1711,7 +1713,7 @@ void clif_quitsave(int fd,struct map_session_data *sd) {
 	else if (sd->fd) {
 		//Disassociate session from player (session is deleted after this function was called)
 		//And set a timer to make him quit later.
-		session[sd->fd]->session_data = NULL;
+		sockt->session[sd->fd]->session_data = NULL;
 		sd->fd = 0;
 		timer->add(timer->gettick() + 10000, clif->delayquit, sd->bl.id, 0);
 	}
@@ -1746,7 +1748,7 @@ void clif_changemapserver(struct map_session_data* sd, unsigned short map_index,
 	WFIFOW(fd,18) = x;
 	WFIFOW(fd,20) = y;
 	WFIFOL(fd,22) = htonl(ip);
-	WFIFOW(fd,26) = ntows(htons(port)); // [!] LE byte order here [!]
+	WFIFOW(fd,26) = sockt->ntows(htons(port)); // [!] LE byte order here [!]
 	WFIFOSET(fd,packet_len(0x92));
 }
 
@@ -2238,7 +2240,7 @@ void clif_additem(struct map_session_data *sd, int n, int amount, int fail) {
 	struct packet_additem p;
 	nullpo_retv(sd);
 
-	if( !session_isActive(sd->fd) )  //Sasuke-
+	if (!sockt->session_is_active(sd->fd))  //Sasuke-
 		return;
 
 	if( fail )
@@ -2697,7 +2699,7 @@ void clif_updatestatus(struct map_session_data *sd,int type)
 
 	fd=sd->fd;
 
-	if ( !session_isActive(fd) ) // Invalid pointer fix, by sasuke [Kevin]
+	if (!sockt->session_is_active(fd)) // Invalid pointer fix, by sasuke [Kevin]
 		return;
 
 	WFIFOHEAD(fd, 14);
@@ -3605,7 +3607,7 @@ void clif_joinchatok(struct map_session_data *sd,struct chat_data* cd)
 	nullpo_retv(cd);
 
 	fd = sd->fd;
-	if (!session_isActive(fd))
+	if (!sockt->session_is_active(fd))
 		return;
 	t = (int)(cd->owner->type == BL_NPC);
 	WFIFOHEAD(fd, 8 + (28*(cd->users+t)));
@@ -5404,7 +5406,7 @@ void clif_displaymessage_sprintf(const int fd, const char *mes, ...) {
 	if (map->cpsd_active && fd == 0) {
 		ShowInfo("HCP: ");
 		va_start(ap,mes);
-		vShowMessage_(MSG_NONE,mes,ap);
+		vShowMessage(mes,ap);
 		va_end(ap);
 		ShowMessage("\n");
 	} else if (fd > 0) {
@@ -5683,7 +5685,7 @@ void clif_wis_message(int fd, const char* nick, const char* mes, size_t mes_len)
 ///     2 = ignored by target
 ///     3 = everyone ignored by target
 void clif_wis_end(int fd, int flag) {
-	struct map_session_data *sd = session_isValid(fd) ? session[fd]->session_data : NULL;
+	struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
 	struct packet_wis_end p;
 
 	if( !sd )
@@ -7450,7 +7452,7 @@ void clif_guild_notice(struct map_session_data* sd, struct guild* g)
 
 	fd = sd->fd;
 
-	if ( !session_isActive(fd) )
+	if (!sockt->session_is_active(fd))
 		return;
 
 	if(g->mes1[0] == '\0' && g->mes2[0] == '\0')
@@ -8806,7 +8808,7 @@ bool clif_process_message(struct map_session_data *sd, int format, char **name_,
 		{
 			//Hacked message, or infamous "client desynchronize" issue where they pick one char while loading another.
 			ShowWarning("clif_process_message: Player '%s' sent a message using an incorrect name! Forcing a relog...\n", sd->status.name);
-			set_eof(fd); // Just kick them out to correct it.
+			sockt->eof(fd); // Just kick them out to correct it.
 			return false;
 		}
 
@@ -8943,7 +8945,7 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 	client_tick = RFIFOL(fd, packet_db[cmd].pos[3]);
 	sex         = RFIFOB(fd, packet_db[cmd].pos[4]);
 
-	if( runflag != MAPSERVER_ST_RUNNING ) { // not allowed
+	if( core->runflag != MAPSERVER_ST_RUNNING ) { // not allowed
 		clif->authfail_fd(fd,1);// server closed
 		return;
 	}
@@ -8956,7 +8958,7 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 		WFIFOW(fd,0) = 0x6a;
 		WFIFOB(fd,2) = 3; // Rejected by server
 		WFIFOSET(fd,packet_len(0x6a));
-		set_eof(fd);
+		sockt->eof(fd);
 
 		return;
 	}
@@ -8976,7 +8978,7 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 						* clif->cryptKey[1] ) + clif->cryptKey[2]) & 0xFFFFFFFF;
 	sd->parse_cmd_func = clif->parse_cmd;
 
-	session[fd]->session_data = sd;
+	sockt->session[fd]->session_data = sd;
 
 	pc->setnewpc(sd, account_id, char_id, login_id1, client_tick, sex, fd);
 
@@ -9528,7 +9530,7 @@ void clif_parse_QuitGame(int fd, struct map_session_data *sd)
 	if( !sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK] && !sd->sc.data[SC_CLOAKINGEXCEED] && !sd->sc.data[SC__INVISIBILITY] &&
 		(!battle_config.prevent_logout || DIFF_TICK(timer->gettick(), sd->canlog_tick) > battle_config.prevent_logout) )
 	{
-		set_eof(fd);
+		sockt->eof(fd);
 
 		clif->disconnect_ack(sd, 0);
 	} else {
@@ -9981,7 +9983,7 @@ void clif_parse_Restart(int fd, struct map_session_data *sd) {
 			 && (!battle_config.prevent_logout || DIFF_TICK(timer->gettick(), sd->canlog_tick) > battle_config.prevent_logout)
 			) {
 				//Send to char-server for character selection.
-				chrif->charselectreq(sd, session[fd]->client_addr);
+				chrif->charselectreq(sd, sockt->session[fd]->client_addr);
 			} else {
 				clif->disconnect_ack(sd, 1);
 			}
@@ -18297,13 +18299,13 @@ int clif_parse(int fd) {
 		unsigned short (*parse_cmd_func)(int fd, struct map_session_data *sd);
 		// begin main client packet processing loop
 
-		sd = (TBL_PC *)session[fd]->session_data;
+		sd = (TBL_PC *)sockt->session[fd]->session_data;
 
-		if (session[fd]->flag.eof) {
+		if (sockt->session[fd]->flag.eof) {
 			if (sd) {
 				if (sd->state.autotrade) {
 					//Disassociate character from the socket connection.
-					session[fd]->session_data = NULL;
+					sockt->session[fd]->session_data = NULL;
 					sd->fd = 0;
 					ShowInfo("Character '"CL_WHITE"%s"CL_RESET"' logged off (using @autotrade).\n", sd->status.name);
 				} else
@@ -18317,9 +18319,9 @@ int clif_parse(int fd) {
 						map->quit(sd);
 					}
 			} else {
-				ShowInfo("Closed connection from '"CL_WHITE"%s"CL_RESET"'.\n", ip2str(session[fd]->client_addr, NULL));
+				ShowInfo("Closed connection from '"CL_WHITE"%s"CL_RESET"'.\n", sockt->ip2str(sockt->session[fd]->client_addr, NULL));
 			}
-			do_close(fd);
+			sockt->close(fd);
 			return 0;
 		}
 
@@ -18348,7 +18350,7 @@ int clif_parse(int fd) {
 #ifdef DUMP_INVALID_PACKET
 			ShowDump(RFIFOP(fd,0), RFIFOREST(fd));
 #endif
-			set_eof(fd);
+			sockt->eof(fd);
 			return 0;
 		}
 
@@ -18364,7 +18366,7 @@ int clif_parse(int fd) {
 #ifdef DUMP_INVALID_PACKET
 				ShowDump(RFIFOP(fd,0), RFIFOREST(fd));
 #endif
-				set_eof(fd);
+				sockt->eof(fd);
 
 				return 0;
 			}
@@ -18506,8 +18508,8 @@ int do_init_clif(bool minimal)
 
 	packetdb_loaddb();
 
-	set_defaultparse(clif->parse);
-	if( make_listen_bind(clif->bind_ip,clif->map_port) == -1 ) {
+	sockt->set_defaultparse(clif->parse);
+	if (sockt->make_listen_bind(clif->bind_ip,clif->map_port) == -1) {
 		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",clif->map_port);
 		exit(EXIT_FAILURE);
 	}

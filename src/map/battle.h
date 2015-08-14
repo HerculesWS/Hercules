@@ -6,7 +6,7 @@
 #define MAP_BATTLE_H
 
 #include "map/map.h" //ELE_MAX
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 /**
  * Declarations
@@ -509,10 +509,6 @@ struct Battle_Config {
 	int feature_roulette;
 };
 
-#ifdef HERCULES_CORE
-extern struct Battle_Config battle_config;
-#endif // HERCULES_CORE
-
 /* criteria for battle_config.idletime_critera */
 enum e_battle_config_idletime {
 	BCIDLE_WALK          = 0x001,
@@ -643,10 +639,12 @@ struct battle_interface {
 	void (*calc_misc_attack_unknown) (struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int *mflag, struct Damage *md);
 };
 
-struct battle_interface *battle;
-
 #ifdef HERCULES_CORE
+extern struct Battle_Config battle_config;
+
 void battle_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct battle_interface *battle;
 
 #endif /* MAP_BATTLE_H */

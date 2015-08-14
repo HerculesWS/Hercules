@@ -5,8 +5,9 @@
 // Ported from eAthena Dev Team's version @ http://eathena-project.googlecode.com/svn/trunk/src/plugins/dbghelpplug.c
 // Currently supported dbghelp 5.1
 
+#include "common/hercules.h"
+
 #include "common/sysinfo.h"
-#include "common/HPMi.h"
 
 #include "common/HPMDataCheck.h"
 
@@ -107,8 +108,6 @@ typedef enum _SymTag {
 } SymTag;
 */
 #endif /* _NO_CVCONST_H */
-
-struct sysinfo_interface *sysinfo;
 
 /////////////////////////////////////////////////////////////////////
 // dbghelp function prototypes
@@ -1800,7 +1799,6 @@ static LPTOP_LEVEL_EXCEPTION_FILTER previousFilter;
  **/
 HPExport void plugin_init (void) {
 	previousFilter = SetUnhandledExceptionFilter(Dhp__UnhandledExceptionFilter);
-	sysinfo = GET_SYMBOL("sysinfo");
 }
 
 /**

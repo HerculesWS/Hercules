@@ -7,6 +7,7 @@
 
 #include "map/status.h" // struct status_data, struct status_change
 #include "map/unit.h" // struct unit_data
+#include "common/hercules.h"
 #include "common/mmo.h"
 
 struct map_session_data;
@@ -160,10 +161,10 @@ struct homunculus_interface {
 	int8 (*get_intimacy_grade) (struct homun_data *hd);
 };
 
-struct homunculus_interface *homun;
-
 #ifdef HERCULES_CORE
 void homunculus_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct homunculus_interface *homun;
 
 #endif /* MAP_HOMUNCULUS_H */

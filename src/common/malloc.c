@@ -16,6 +16,7 @@
 #include <string.h>
 
 struct malloc_interface iMalloc_s;
+struct malloc_interface *iMalloc;
 
 ////////////// Memory Libraries //////////////////
 

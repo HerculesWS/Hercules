@@ -19,6 +19,7 @@
 #include "common/strlib.h" // safestrncpy
 
 struct buyingstore_interface buyingstore_s;
+struct buyingstore_interface *buyingstore;
 
 /// Returns unique buying store id
 unsigned int buyingstore_getuid(void) {

@@ -24,6 +24,7 @@
 #include <stdlib.h>
 
 struct inter_party_interface inter_party_s;
+struct inter_party_interface *inter_party;
 
 //Updates party's level range and unsets even share if broken.
 static int inter_party_check_lv(struct party_data *p) {
