@@ -1354,7 +1354,7 @@ Optional Features:
   --enable-profiler=ARG   Profilers: no, gprof (disabled by default)
   --disable-64bit         Enforce 32bit output on x86_64 systems.
   --enable-lto            Enables or Disables Linktime Code Optimization (LTO
-                          is enabled by default)
+                          is disabled by default)
   --enable-static         Enables or Disables Statick Linking (STATIC is
                           disabled by default)
   --enable-sanitize[=ARG] Enables sanitizer. (disabled by default) (available
@@ -3658,7 +3658,7 @@ if test "${enable_lto+set}" = set; then :
 		esac
 
 else
-  enable_lto="yes"
+  enable_lto="no"
 
 fi
 
