@@ -1315,6 +1315,8 @@ struct clif_interface {
 	/* NPC Market (by Ind after an extensive debugging of the packet, only possible thanks to Yommy <3) */
 	void (*pNPCMarketClosed) (int fd, struct map_session_data *sd);
 	void (*pNPCMarketPurchase) (int fd, struct map_session_data *sd);
+	/* */
+	void (*add_random_options) (unsigned char* buf, struct item* item);
 };
 
 #ifdef HERCULES_CORE
