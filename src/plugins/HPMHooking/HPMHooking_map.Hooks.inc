@@ -23839,6 +23839,32 @@ void HP_clif_pNPCMarketPurchase(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_clif_add_random_options(unsigned char *buf, struct item *item) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_add_random_options_pre ) {
+		void (*preHookFunc) (unsigned char *buf, struct item *item);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_add_random_options_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_add_random_options_pre[hIndex].func;
+			preHookFunc(buf, item);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.add_random_options(buf, item);
+	}
+	if( HPMHooks.count.HP_clif_add_random_options_post ) {
+		void (*postHookFunc) (unsigned char *buf, struct item *item);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_add_random_options_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_add_random_options_post[hIndex].func;
+			postHookFunc(buf, item);
+		}
+	}
+	return;
+}
 /* cmdline */
 void HP_cmdline_init(void) {
 	int hIndex = 0;

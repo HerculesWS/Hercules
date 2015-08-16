@@ -459,6 +459,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "EQUIPITEM_INFO", sizeof(struct EQUIPITEM_INFO), SERVER_TYPE_MAP },
 		{ "EQUIPSLOTINFO", sizeof(struct EQUIPSLOTINFO), SERVER_TYPE_MAP },
 		{ "NORMALITEM_INFO", sizeof(struct NORMALITEM_INFO), SERVER_TYPE_MAP },
+		{ "RndOptions", sizeof(struct RndOptions), SERVER_TYPE_MAP },
 		{ "packet_additem", sizeof(struct packet_additem), SERVER_TYPE_MAP },
 		{ "packet_authok", sizeof(struct packet_authok), SERVER_TYPE_MAP },
 		{ "packet_banking_check", sizeof(struct packet_banking_check), SERVER_TYPE_MAP },

@@ -1813,6 +1813,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pNPCMarketClosed_post;
 	struct HPMHookPoint *HP_clif_pNPCMarketPurchase_pre;
 	struct HPMHookPoint *HP_clif_pNPCMarketPurchase_post;
+	struct HPMHookPoint *HP_clif_add_random_options_pre;
+	struct HPMHookPoint *HP_clif_add_random_options_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -7522,6 +7524,8 @@ struct {
 	int HP_clif_pNPCMarketClosed_post;
 	int HP_clif_pNPCMarketPurchase_pre;
 	int HP_clif_pNPCMarketPurchase_post;
+	int HP_clif_add_random_options_pre;
+	int HP_clif_add_random_options_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;
