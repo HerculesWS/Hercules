@@ -8785,12 +8785,10 @@ ACMD(channel) {
 	} else if (strcmpi(subcmd,"list") == 0) {
 		// sub1 = list type; sub2 = unused; sub3 = unused
 		if (sub1[0] != '\0' && strcmpi(sub1,"colors") == 0) {
-			char mout[40];
 			for (k = 0; k < channel->config->colors_count; k++) {
-				unsigned short msg_len = 1;
-				msg_len += sprintf(mout, "[ %s list colors ] : %s", command, channel->config->colors_name[k]);
+				sprintf(atcmd_output, "[ %s list colors ] : %s", command, channel->config->colors_name[k]);
 
-				clif->messagecolor_self(fd, channel->config->colors[k], mout);
+				clif->messagecolor_self(fd, channel->config->colors[k], atcmd_output);
 			}
 		} else {
 			DBIterator *iter = db_iterator(channel->db);
@@ -9169,14 +9167,11 @@ ACMD(channel) {
 /* debug only, delete after */
 ACMD(fontcolor) {
 	unsigned char k;
-	unsigned short msg_len = 1;
-	char mout[40];
 
-	if( !message || !*message ) {
-		for( k = 0; k < channel->config->colors_count; k++ ) {
-			msg_len += sprintf(mout, "[ %s ] : %s", command, channel->config->colors_name[k]);
-
-			clif->messagecolor_self(fd, channel->config->colors[k], mout);
+	if (!message || !*message) {
+		for (k = 0; k < channel->config->colors_count; k++) {
+			sprintf(atcmd_output, "[ %s ] : %s", command, channel->config->colors_name[k]);
+			clif->messagecolor_self(fd, channel->config->colors[k], atcmd_output);
 		}
 		return false;
 	}
@@ -9197,9 +9192,8 @@ ACMD(fontcolor) {
 	}
 
 	sd->fontcolor = k + 1;
-	msg_len += sprintf(mout, "Color changed to '%s'", channel->config->colors_name[k]);
-
-	clif->messagecolor_self(fd, channel->config->colors[k], mout);
+	sprintf(atcmd_output, "Color changed to '%s'", channel->config->colors_name[k]);
+	clif->messagecolor_self(fd, channel->config->colors[k], atcmd_output);
 
 	return true;
 }
