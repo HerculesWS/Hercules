@@ -92,7 +92,15 @@ EOF
 		ARGS="--load-script npc/dev/test.txt "
 		ARGS="--load-plugin script_mapquit $ARGS --load-script npc/dev/ci_test.txt"
 		echo "Running Hercules with command line: ./map-server --run-once $ARGS"
-		./map-server --run-once $ARGS || aborterror "Test failed."
+		ASAN_OPTIONS=detect_leaks=0 ./map-server --run-once $ARGS 2>runlog.txt || aborterror "Test failed."
+		export teststr=$(cat runlog.txt)
+		if [[ -n "${teststr}" ]]; then
+			echo "Sanitizer errors found."
+			cat runlog.txt
+			aborterror "Sanitize errors found."
+		else
+			echo "No sanitizer errors found."
+		fi
 		;;
 	getplugins)
 		echo "Cloning plugins repository..."
