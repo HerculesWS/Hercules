@@ -12067,7 +12067,13 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 				status->dbs->HP_table[idx][i] = status->dbs->HP_table[iidx][i];
 			}
 			base = (i > 1 ? status->dbs->HP_table[idx][1] : 35); // Safe value if none are specified
-			avg_increment = (i > 2 ? (status->dbs->HP_table[idx][i] - base) / (i-1) : 5); // Safe value if none are specified
+			if (i > 2) {
+				if (i >= MAX_LEVEL + 1)
+					i = MAX_LEVEL;
+				avg_increment = (status->dbs->HP_table[idx][i] - base) / (i - 1);
+			} else {
+				avg_increment = 5;
+			}
 			for ( ; i <= pc->max_level[idx][0]; i++) {
 				status->dbs->HP_table[idx][i] = min(base + avg_increment * i, battle_config.max_hp);
 			}
@@ -12076,7 +12082,13 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 				status->dbs->SP_table[idx][i] = status->dbs->SP_table[iidx][i];
 			}
 			base = (i > 1 ? status->dbs->SP_table[idx][1] : 10); // Safe value if none are specified
-			avg_increment = (i > 2 ? (status->dbs->SP_table[idx][i] - base) / (i-1) : 1); // Safe value if none are specified
+			if (i > 2) {
+				if (i >= MAX_LEVEL + 1)
+					i = MAX_LEVEL;
+				avg_increment = (status->dbs->SP_table[idx][i] - base) / (i - 1);
+			} else {
+				avg_increment = 1;
+			}
 			for ( ; i <= pc->max_level[idx][0]; i++) {
 				status->dbs->SP_table[idx][i] = min(base + avg_increment * i, battle_config.max_sp);
 			}
@@ -12096,7 +12108,13 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 				status->dbs->HP_table[idx][i] = status->dbs->HP_table[iidx][i];
 			}
 			base = (i > 1 ? status->dbs->HP_table[idx][1] : 35); // Safe value if none are specified
-			avg_increment = (i > 2 ? (status->dbs->HP_table[idx][i] - base) / (i-1) : 5); // Safe value if none are specified
+			if (i > 2) {
+				if (i >= MAX_LEVEL + 1)
+					i = MAX_LEVEL;
+				avg_increment = (status->dbs->HP_table[idx][i] - base) / (i - 1);
+			} else {
+				avg_increment = 5;
+			}
 			for ( ; i <= pc->max_level[idx][0]; i++) {
 				status->dbs->HP_table[idx][i] = min(base + avg_increment * i, battle_config.max_hp);
 			}
@@ -12116,7 +12134,13 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 				status->dbs->SP_table[idx][i] = status->dbs->SP_table[iidx][i];
 			}
 			base = (i > 1 ? status->dbs->SP_table[idx][1] : 10); // Safe value if none are specified
-			avg_increment = (i > 2 ? (status->dbs->SP_table[idx][i] - base) / (i-1) : 1); // Safe value if none are specified
+			if (i > 2) {
+				if (i >= MAX_LEVEL + 1)
+					i = MAX_LEVEL;
+				avg_increment = (status->dbs->SP_table[idx][i] - base) / (i - 1);
+			} else {
+				avg_increment = 1;
+			}
 			for ( ; i <= pc->max_level[idx][0]; i++) {
 				status->dbs->SP_table[idx][i] = min(avg_increment * i, battle_config.max_sp);
 			}
@@ -12152,7 +12176,13 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 			status->dbs->HP_table[idx][++level] = min(i32, battle_config.max_hp);
 		}
 		base = (level > 0 ? status->dbs->HP_table[idx][1] : 35); // Safe value if none are specified
-		avg_increment = (level > 1 ? (status->dbs->HP_table[idx][level] - base) / level : 5); // Safe value if none are specified
+		if (level > 2) {
+			if (level >= MAX_LEVEL + 1)
+				level = MAX_LEVEL;
+			avg_increment = (status->dbs->HP_table[idx][level] - base) / level;
+		} else {
+			avg_increment = 5;
+		}
 		for (++level; level <= pc->max_level[idx][0]; ++level) { /* limit only to possible maximum level of the given class */
 			status->dbs->HP_table[idx][level] = min(base + avg_increment * level, battle_config.max_hp); /* some are still empty? then let's use the average increase */
 		}
@@ -12166,7 +12196,13 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 			status->dbs->SP_table[idx][++level] = min(i32, battle_config.max_sp);
 		}
 		base = (level > 0 ? status->dbs->SP_table[idx][1] : 10); // Safe value if none are specified
-		avg_increment = (level > 1 ? (status->dbs->SP_table[idx][level] - base) / level : 1);
+		if (level > 2) {
+			if (level >= MAX_LEVEL + 1)
+				level = MAX_LEVEL;
+			avg_increment = (status->dbs->SP_table[idx][level] - base) / level;
+		} else {
+			avg_increment = 1;
+		}
 		for ( ; level <= pc->max_level[idx][0]; level++ ) {
 			status->dbs->SP_table[idx][level] = min(base + avg_increment * level, battle_config.max_sp);
 		}
