@@ -43,6 +43,7 @@ MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
 TEST_C = test_libconfig.c test_spinlock.c
 TEST_OBJ = $(addprefix obj/, $(patsubst %c,%o,%(TEST_C)))
 TEST_H =
+TEST_PH =
 TEST_DEPENDS = $(COMMON_D)/obj_sql/common_sql.a $(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(SYSINFO_INC)
 
 TESTS_ALL = test_libconfig test_spinlock
@@ -90,12 +91,6 @@ $(TESTS_ALL): test_%: ../../test_%@EXEEXT@
 	@$(CC) @STATIC@ @LDFLAGS@ -o $@ $< $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a \
 		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
 
-# object files
-
-obj/%.o: %.c $(TEST_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj
-	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
-
 # missing object files
 $(COMMON_D)/obj_all/common.a:
 	@echo "	MAKE	$@"
@@ -112,3 +107,10 @@ $(MT19937AR_OBJ):
 $(LIBCONFIG_OBJ):
 	@echo "	MAKE	$@"
 	@$(MAKE) -C $(LIBCONFIG_D)
+
+.SECONDEXPANSION:
+
+# object files
+obj/%.o: %.c $$(filter %.p.h, $(TEST_PH)) $(TEST_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj
+	@echo "	CC	$<"
+	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<

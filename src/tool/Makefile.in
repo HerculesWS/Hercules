@@ -39,6 +39,7 @@ LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
 MAPCACHE_OBJ = obj_all/mapcache.o
 MAPCACHE_C = mapcache.c
 MAPCACHE_H =
+MAPCACHE_PH =
 MAPCACHE_DEPENDS = $(MAPCACHE_OBJ) $(COMMON_D)/obj_all/common_mini.a $(LIBCONFIG_OBJ) $(SYSINFO_INC)
 
 @SET_MAKE@
@@ -87,10 +88,6 @@ obj_all:
 	@echo "	MKDIR	obj_all"
 	@-mkdir obj_all
 
-obj_all/%.o: %.c $(MAPCACHE_H) $(COMMON_H) $(CONFIG_H) $(LIBCONFIG_H) | obj_all
-	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
-
 # missing common object files
 $(COMMON_D)/obj_all/common_mini.a:
 	@echo "	MAKE	$@"
@@ -99,3 +96,9 @@ $(COMMON_D)/obj_all/common_mini.a:
 $(LIBCONFIG_OBJ):
 	@echo "	MAKE	$@"
 	@$(MAKE) -C $(LIBCONFIG_D)
+
+.SECONDEXPANSION:
+
+obj_all/%.o: %.c $$(filter %.p.h, $(MAPCACHE_PH)) $(MAPCACHE_H) $(COMMON_H) $(CONFIG_H) $(LIBCONFIG_H) | obj_all
+	@echo "	CC	$<"
+	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
