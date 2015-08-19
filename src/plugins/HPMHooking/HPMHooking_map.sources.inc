@@ -88,3 +88,4 @@ memcpy(&HPMHooks.source.timer, timer, sizeof(struct timer_interface));
 memcpy(&HPMHooks.source.trade, trade, sizeof(struct trade_interface));
 memcpy(&HPMHooks.source.unit, unit, sizeof(struct unit_interface));
 memcpy(&HPMHooks.source.vending, vending, sizeof(struct vending_interface));
+memcpy(&HPMHooks.source.PRIV__vending, vending->p, sizeof(struct vending_interface_private));

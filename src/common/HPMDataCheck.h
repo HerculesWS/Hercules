@@ -544,6 +544,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "EQUIPSLOTINFO", sizeof(struct EQUIPSLOTINFO), SERVER_TYPE_MAP },
 		{ "NORMALITEM_INFO", sizeof(struct NORMALITEM_INFO), SERVER_TYPE_MAP },
 		{ "RndOptions", sizeof(struct RndOptions), SERVER_TYPE_MAP },
+		{ "STORE_ITEM", sizeof(struct STORE_ITEM), SERVER_TYPE_MAP },
 		{ "packet_additem", sizeof(struct packet_additem), SERVER_TYPE_MAP },
 		{ "packet_authok", sizeof(struct packet_authok), SERVER_TYPE_MAP },
 		{ "packet_banking_check", sizeof(struct packet_banking_check), SERVER_TYPE_MAP },
@@ -758,11 +759,15 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define MAP_UNIT_H
 	#endif // MAP_UNIT_H
 	#ifdef MAP_VENDING_H
-		{ "s_vending", sizeof(struct s_vending), SERVER_TYPE_MAP },
 		{ "vending_interface", sizeof(struct vending_interface), SERVER_TYPE_MAP },
 	#else
 		#define MAP_VENDING_H
 	#endif // MAP_VENDING_H
+	#ifdef MAP_VENDING_P_H
+		{ "vending_interface_private", sizeof(struct vending_interface_private), SERVER_TYPE_MAP },
+	#else
+		#define MAP_VENDING_P_H
+	#endif // MAP_VENDING_P_H
 };
 HPExport unsigned int HPMDataCheckLen = ARRAYLENGTH(HPMDataCheck);
 HPExport int HPMDataCheckVer = 1;

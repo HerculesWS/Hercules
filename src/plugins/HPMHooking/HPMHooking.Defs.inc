@@ -1390,12 +1390,12 @@ typedef void (*HPMHOOK_pre_clif_showvendingboard) (struct block_list **bl, const
 typedef void (*HPMHOOK_post_clif_showvendingboard) (struct block_list *bl, const char *message, int fd);
 typedef void (*HPMHOOK_pre_clif_closevendingboard) (struct block_list **bl, int *fd);
 typedef void (*HPMHOOK_post_clif_closevendingboard) (struct block_list *bl, int fd);
-typedef void (*HPMHOOK_pre_clif_vendinglist) (struct map_session_data **sd, unsigned int *id, struct s_vending **vending_list);
-typedef void (*HPMHOOK_post_clif_vendinglist) (struct map_session_data *sd, unsigned int id, struct s_vending *vending_list);
+typedef void (*HPMHOOK_pre_clif_vendinglist) (struct map_session_data **sd, unsigned int *id, struct STORE_ITEM **vending_list);
+typedef void (*HPMHOOK_post_clif_vendinglist) (struct map_session_data *sd, unsigned int id, struct STORE_ITEM *vending_list);
 typedef void (*HPMHOOK_pre_clif_buyvending) (struct map_session_data **sd, int *index, int *amount, int *fail);
 typedef void (*HPMHOOK_post_clif_buyvending) (struct map_session_data *sd, int index, int amount, int fail);
-typedef void (*HPMHOOK_pre_clif_openvending) (struct map_session_data **sd, int *id, struct s_vending **vending_list);
-typedef void (*HPMHOOK_post_clif_openvending) (struct map_session_data *sd, int id, struct s_vending *vending_list);
+typedef void (*HPMHOOK_pre_clif_openvending) (struct map_session_data **sd, int *id, struct STORE_ITEM **vending_list);
+typedef void (*HPMHOOK_post_clif_openvending) (struct map_session_data *sd, int id, struct STORE_ITEM *vending_list);
 typedef void (*HPMHOOK_pre_clif_vendingreport) (struct map_session_data **sd, int *index, int *amount, uint32 *char_id, int *zeny);
 typedef void (*HPMHOOK_post_clif_vendingreport) (struct map_session_data *sd, int index, int amount, uint32 char_id, int zeny);
 typedef void (*HPMHOOK_pre_clif_storagelist) (struct map_session_data **sd, struct item **items, int *items_length);
@@ -7284,10 +7284,10 @@ typedef void (*HPMHOOK_pre_vending_init) (bool *minimal);
 typedef void (*HPMHOOK_post_vending_init) (bool minimal);
 typedef void (*HPMHOOK_pre_vending_final) (void);
 typedef void (*HPMHOOK_post_vending_final) (void);
-typedef void (*HPMHOOK_pre_vending_close) (struct map_session_data **sd);
-typedef void (*HPMHOOK_post_vending_close) (struct map_session_data *sd);
-typedef void (*HPMHOOK_pre_vending_open) (struct map_session_data **sd, const char **message, const uint8 **data, int *count);
-typedef void (*HPMHOOK_post_vending_open) (struct map_session_data *sd, const char *message, const uint8 *data, int count);
+typedef void (*HPMHOOK_pre_vending_close) (struct map_session_data **sd, bool *quitting);
+typedef void (*HPMHOOK_post_vending_close) (struct map_session_data *sd, bool quitting);
+typedef bool (*HPMHOOK_pre_vending_open) (struct map_session_data **sd, const char **message, const struct STORE_ITEM **data, int *count);
+typedef bool (*HPMHOOK_post_vending_open) (bool retVal___, struct map_session_data *sd, const char *message, const struct STORE_ITEM *data, int count);
 typedef void (*HPMHOOK_pre_vending_list) (struct map_session_data **sd, unsigned int *id);
 typedef void (*HPMHOOK_post_vending_list) (struct map_session_data *sd, unsigned int id);
 typedef void (*HPMHOOK_pre_vending_purchase) (struct map_session_data **sd, int *aid, unsigned int *uid, const uint8 **data, int *count);
@@ -7296,4 +7296,10 @@ typedef bool (*HPMHOOK_pre_vending_search) (struct map_session_data **sd, unsign
 typedef bool (*HPMHOOK_post_vending_search) (bool retVal___, struct map_session_data *sd, unsigned short nameid);
 typedef bool (*HPMHOOK_pre_vending_searchall) (struct map_session_data **sd, const struct s_search_store_search **s);
 typedef bool (*HPMHOOK_post_vending_searchall) (bool retVal___, struct map_session_data *sd, const struct s_search_store_search *s);
+typedef struct DBIterator* (*HPMHOOK_pre_vending_iterator) (void);
+typedef struct DBIterator* (*HPMHOOK_post_vending_iterator) (struct DBIterator* retVal___);
 #endif // MAP_VENDING_H
+#ifdef MAP_VENDING_P_H /* PRIV__vending */
+typedef uint32 (*HPMHOOK_pre_PRIV__vending_getid) (void);
+typedef uint32 (*HPMHOOK_post_PRIV__vending_getid) (uint32 retVal___);
+#endif // MAP_VENDING_P_H
