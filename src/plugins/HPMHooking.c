@@ -97,6 +97,8 @@
 #include "map/storage.h"
 #include "map/trade.h"
 #include "map/unit.h"
+#include "map/vending.h"
+#include "map/vending.p.h"
 #include "common/grfio.h"
 #include "common/mapindex.h"
 #else

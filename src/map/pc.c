@@ -53,6 +53,7 @@
 #include "map/skill.h"
 #include "map/status.h" // struct status_data
 #include "map/storage.h"
+#include "map/vending.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/core.h" // get_svn_revision()
@@ -5559,7 +5560,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 		// make sure vending is allowed here
 		if (sd->state.vending && map->list[m].flag.novending) {
 			clif->message (sd->fd, msg_sd(sd,276)); // "You can't open a shop on this map"
-			vending->close(sd);
+			vending->close(sd, false);
 		}
 
 		if (map->list[sd->bl.m].channel) {
@@ -5608,7 +5609,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 
 	if (sd->state.vending && map->getcell(m, &sd->bl, x, y, CELL_CHKNOVENDING)) {
 		clif->message (sd->fd, msg_sd(sd,204)); // "You can't open a shop on this cell."
-		vending->close(sd);
+		vending->close(sd, false);
 	}
 
 	if (battle_config.player_warp_keep_direction == 0)
@@ -8602,7 +8603,7 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 	if (sd->ed)
 		elemental->delete(sd->ed, 0);
 	if (sd->state.vending)
-		vending->close(sd);
+		vending->close(sd, false);
 
 	map->foreachinmap(pc->jobchange_killclone, sd->bl.m, BL_MOB, sd->bl.id);
 
@@ -11447,48 +11448,45 @@ void pc_autotrade_load(void)
  * Loads vending data and sets it up, is triggered when char server data that pc_autotrade_load requested arrives
  **/
 void pc_autotrade_start(struct map_session_data *sd) {
-	unsigned int count = 0;
-	int i;
-	char *data;
+	int i, total, count = 0;
+	struct STORE_ITEM *items = NULL;
+	char *title = NULL;
 
 	nullpo_retv(sd);
 	if (SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT `itemkey`,`amount`,`price` FROM `%s` WHERE `char_id` = '%d'",map->autotrade_data_db,sd->status.char_id))
 		Sql_ShowDebug(map->mysql_handle);
 
-	while( SQL_SUCCESS == SQL->NextRow(map->mysql_handle) ) {
-		int itemkey, amount, price;
+	total = (int)SQL->NumRows(map->mysql_handle);
+	if (total > 0) {
+		CREATE(items, struct STORE_ITEM, total);
+		title = aStrdup(sd->message);
+	}
+
+	while (SQL_SUCCESS == SQL->NextRow(map->mysql_handle)) {
+		int itemkey;
+		char *data;
 
 		SQL->GetData(map->mysql_handle, 0, &data, NULL); itemkey = atoi(data);
-		SQL->GetData(map->mysql_handle, 1, &data, NULL); amount = atoi(data);
-		SQL->GetData(map->mysql_handle, 2, &data, NULL); price = atoi(data);
+		SQL->GetData(map->mysql_handle, 1, &data, NULL); items[count].amount = atoi(data);
+		SQL->GetData(map->mysql_handle, 2, &data, NULL); items[count].value = atoi(data);
 
 		ARR_FIND(0, MAX_CART, i, sd->status.cart[i].id == itemkey);
-		if( i != MAX_CART && itemdb_cantrade(&sd->status.cart[i], 0, 0) ) {
-			if( amount > sd->status.cart[i].amount )
-				amount = sd->status.cart[i].amount;
-
-			if( amount ) {
-				sd->vending[count].index = i;
-				sd->vending[count].amount = amount;
-				sd->vending[count].value = cap_value(price, 0, (unsigned int)battle_config.vending_max_value);
-
-				count++;
-			}
+		if (i != MAX_CART) {
+			items[count].index = i;
+			count++;
 		}
 	}
 
-	if( !count ) {
+	if (count > 0 && vending->open(sd, title, items, count)) {
+		sd->state.autotrade = 1;
+	} else {
 		pc->autotrade_update(sd,PAUC_REMOVE);
 		map->quit(sd);
-	} else {
-		sd->state.autotrade = 1;
-		sd->vender_id = ++vending->next_id;
-		sd->vend_num = count;
-		sd->state.vending = true;
-		idb_put(vending->db, sd->status.char_id, sd);
-		if( map->list[sd->bl.m].users )
-			clif->showvendingboard(&sd->bl,sd->message,0);
 	}
+	if (title != NULL)
+		aFree(title);
+	if (items != NULL)
+		aFree(items);
 }
 /**
  * Perform a autotrade action

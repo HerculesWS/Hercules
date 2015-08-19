@@ -49,7 +49,6 @@ struct party_booking_ad_info;
 struct party_data;
 struct pet_data;
 struct quest;
-struct s_vending;
 struct skill_cd;
 struct skill_unit;
 struct unit_data;
@@ -893,9 +892,9 @@ struct clif_interface {
 	void (*openvendingreq) (struct map_session_data* sd, int num);
 	void (*showvendingboard) (struct block_list* bl, const char* message, int fd);
 	void (*closevendingboard) (struct block_list* bl, int fd);
-	void (*vendinglist) (struct map_session_data* sd, unsigned int id, struct s_vending* vending_list);
+	void (*vendinglist) (struct map_session_data* sd, unsigned int id, struct STORE_ITEM *vending_list);
 	void (*buyvending) (struct map_session_data* sd, int index, int amount, int fail);
-	void (*openvending) (struct map_session_data* sd, int id, struct s_vending* vending_list);
+	void (*openvending) (struct map_session_data *sd, int id, struct STORE_ITEM *vending_list);
 	void (*vendingreport) (struct map_session_data* sd, int index, int amount, uint32 char_id, int zeny);
 	/* storage handling */
 	void (*storagelist) (struct map_session_data* sd, struct item* items, int items_length);

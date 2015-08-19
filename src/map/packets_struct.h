@@ -311,6 +311,12 @@ enum packet_headers {
 /**
  * structs for data
  */
+struct STORE_ITEM {
+	int16 index;  ///< cart index (return item data)
+	int16 amount; ///< amount of the item for vending
+	uint32 value; ///< at which price
+} __attribute__((packed));
+
 struct EQUIPSLOTINFO {
 	uint16 card[4];
 } __attribute__((packed));

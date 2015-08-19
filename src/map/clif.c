@@ -6301,7 +6301,8 @@ void clif_closevendingboard(struct block_list* bl, int fd)
 /// Sends a list of items in a shop.
 /// R 0133 <packet len>.W <owner id>.L { <price>.L <amount>.W <index>.W <type>.B <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W }* (ZC_PC_PURCHASE_ITEMLIST_FROMMC)
 /// R 0800 <packet len>.W <owner id>.L <unique id>.L { <price>.L <amount>.W <index>.W <type>.B <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W }* (ZC_PC_PURCHASE_ITEMLIST_FROMMC2)
-void clif_vendinglist(struct map_session_data* sd, unsigned int id, struct s_vending* vending_items) {
+void clif_vendinglist(struct map_session_data* sd, unsigned int id, struct STORE_ITEM *vending_items)
+{
 	int i,fd;
 	int count;
 	struct map_session_data* vsd;
@@ -6380,7 +6381,8 @@ void clif_buyvending(struct map_session_data* sd, int index, int amount, int fai
 
 /// Shop creation success (ZC_PC_PURCHASE_MYITEMLIST).
 /// 0136 <packet len>.W <owner id>.L { <price>.L <index>.W <amount>.W <type>.B <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W }*
-void clif_openvending(struct map_session_data* sd, int id, struct s_vending* vending_items) {
+void clif_openvending(struct map_session_data* sd, int id, struct STORE_ITEM *vending_items)
+{
 	int i,fd;
 	int count;
 
@@ -12730,7 +12732,7 @@ void clif_parse_CloseVending(int fd, struct map_session_data* sd) __attribute__(
 /// 012e
 void clif_parse_CloseVending(int fd, struct map_session_data* sd)
 {
-	vending->close(sd);
+	vending->close(sd, false);
 }
 
 void clif_parse_VendingListReq(int fd, struct map_session_data* sd) __attribute__((nonnull (2)));
@@ -12786,7 +12788,7 @@ void clif_parse_OpenVending(int fd, struct map_session_data* sd) {
 	short len = (short)RFIFOW(fd,2) - 85;
 	const char *message = RFIFOP(fd,4);
 	bool flag = (RFIFOB(fd,84) != 0) ? true : false;
-	const uint8 *data = RFIFOP(fd,85);
+	const struct STORE_ITEM *data = RFIFOP(fd,85);
 
 	if( !flag )
 		sd->state.prevend = sd->state.workinprogress = 0;

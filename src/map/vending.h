@@ -27,26 +27,23 @@
 struct DBMap; // common/db.h
 struct map_session_data;
 struct s_search_store_search;
+struct STORE_ITEM;
 
-struct s_vending {
-	short index; //cart index (return item data)
-	short amount; //amount of the item for vending
-	unsigned int value; //at which price
-};
+struct vending_interface_private;
 
 struct vending_interface {
-	unsigned int next_id;/* next vender id */
-	struct DBMap *db;
-	/* */
+	struct vending_interface_private *p;
+
 	void (*init) (bool minimal);
 	void (*final) (void);
-	/* */
-	void (*close) (struct map_session_data* sd);
-	void (*open) (struct map_session_data* sd, const char* message, const uint8* data, int count);
+
+	void (*close) (struct map_session_data *sd, bool quitting);
+	bool (*open) (struct map_session_data *sd, const char *message, const struct STORE_ITEM *data, int count);
 	void (*list) (struct map_session_data* sd, unsigned int id);
 	void (*purchase) (struct map_session_data* sd, int aid, unsigned int uid, const uint8* data, int count);
 	bool (*search) (struct map_session_data* sd, unsigned short nameid);
 	bool (*searchall) (struct map_session_data* sd, const struct s_search_store_search* s);
+	struct DBIterator *(*iterator) (void);
 };
 
 #ifdef HERCULES_CORE

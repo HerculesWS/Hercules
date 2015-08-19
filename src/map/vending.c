@@ -21,6 +21,7 @@
 #define HERCULES_CORE
 
 #include "vending.h"
+#include "vending.p.h"
 
 #include "map/atcommand.h"
 #include "map/battle.h"
@@ -40,26 +41,32 @@
 #include <stdio.h>
 #include <string.h>
 
+struct vending_interface_private vending_p;
 struct vending_interface vending_s;
 struct vending_interface *vending;
 
 /// Returns an unique vending shop id.
-static inline unsigned int getid(void)
+unsigned int vending_getid(void)
 {
-	return vending->next_id++;
+	return vending->p->next_id++;
 }
 
-/*==========================================
- * Close shop
- *------------------------------------------*/
-void vending_closevending(struct map_session_data* sd)
+/**
+ * Closes a vending shop.
+ *
+ * @param sd       The shop owner character.
+ * @param quitting Whether the character is quitting (to skip sending packets to it).
+ */
+void vending_closevending(struct map_session_data *sd, bool quitting)
 {
 	nullpo_retv(sd);
 
-	if( sd->state.vending ) {
-		sd->state.vending = 0;
-		clif->closevendingboard(&sd->bl, 0);
-		idb_remove(vending->db, sd->status.char_id);
+	if (sd->state.vending) {
+		if (!quitting) {
+			sd->state.vending = 0;
+			clif->closevendingboard(&sd->bl, 0);
+		}
+		idb_remove(vending->p->db, sd->status.char_id);
 	}
 }
 
@@ -89,11 +96,11 @@ void vending_vendinglistreq(struct map_session_data* sd, unsigned int id)
 /*==========================================
  * Purchase item(s) from a shop
  *------------------------------------------*/
-void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid, const uint8* data, int count)
+void vending_purchasereq(struct map_session_data *sd, int aid, unsigned int uid, const uint8 *data, int count)
 {
 	int i, j, cursor, w, new_ = 0, blank, vend_list[MAX_VENDING];
 	int64 z;
-	struct s_vending vend[MAX_VENDING]; // against duplicate packets
+	struct STORE_ITEM vend[MAX_VENDING]; // against duplicate packets
 	struct map_session_data* vsd = map->id2sd(aid);
 
 	nullpo_retv(sd);
@@ -234,7 +241,7 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 		ARR_FIND( 0, vsd->vend_num, i, vsd->vending[i].amount > 0 );
 		if( i == vsd->vend_num ) {
 			//Close Vending (this was automatically done by the client, we have to do it manually for autovenders) [Skotlex]
-			vending->close(vsd);
+			vending->close(vsd, false);
 			map->quit(vsd); //They have no reason to stay around anymore, do they?
 		} else
 			pc->autotrade_update(vsd,PAUC_REFRESH);
@@ -245,72 +252,74 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
  * Open shop
  * data := {<index>.w <amount>.w <value>.l}[count]
  *------------------------------------------*/
-void vending_openvending(struct map_session_data* sd, const char* message, const uint8* data, int count)
+bool vending_openvending(struct map_session_data *sd, const char *message, const struct STORE_ITEM *data, int count)
 {
 	int i, j;
 	int vending_skill_lvl;
-	nullpo_retv(sd);
+	nullpo_retr(false, sd);
 
-	if ( pc_isdead(sd) || !sd->state.prevend || pc_istrading(sd))
-		return; // can't open vendings lying dead || didn't use via the skill (wpe/hack) || can't have 2 shops at once
+	if (pc_isdead(sd) || !sd->state.prevend || pc_istrading(sd))
+		return false; // can't open vendings lying dead || didn't use via the skill (wpe/hack) || can't have 2 shops at once
 
 	vending_skill_lvl = pc->checkskill(sd, MC_VENDING);
 	// skill level and cart check
-	if( !vending_skill_lvl || !pc_iscarton(sd) ) {
-		clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0);
-		return;
+	if (!vending_skill_lvl || !pc_iscarton(sd)) {
+		if (!sd->state.standalone)
+			clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0);
+		return false;
 	}
 
 	// check number of items in shop
-	if( count < 1 || count > MAX_VENDING || count > 2 + vending_skill_lvl ) {
+	if (count < 1 || count > MAX_VENDING || count > 2 + vending_skill_lvl) {
 		// invalid item count
-		clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0);
-		return;
+		if (!sd->state.standalone)
+			clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0);
+		return false;
 	}
 
 	// filter out invalid items
 	i = 0;
 	for (j = 0; j < count; j++) {
-		short index        = *(const uint16*)(data + 8*j + 0);
-		short amount       = *(const uint16*)(data + 8*j + 2);
-		unsigned int value = *(const uint32*)(data + 8*j + 4);
+		int16 index  = data[j].index - 2; // offset adjustment (client says that the first cart position is 2)
+		int16 amount = data[j].amount;
+		uint32 value = cap_value(data[j].value, 0, (uint32)battle_config.vending_max_value);
 
-		index -= 2; // offset adjustment (client says that the first cart position is 2)
-
-		if( index < 0 || index >= MAX_CART // invalid position
+		if (index < 0 || index >= MAX_CART // invalid position
 		 || pc->cartitem_amount(sd, index, amount) < 0 // invalid item or insufficient quantity
 		//NOTE: official server does not do any of the following checks!
 		 || !sd->status.cart[index].identify // unidentified item
 		 || (sd->status.cart[index].attribute & ATTR_BROKEN) != 0 // broken item
 		 || sd->status.cart[index].expire_time // It should not be in the cart but just in case
 		 || (sd->status.cart[index].bound && !pc_can_give_bound_items(sd)) // can't trade bound items w/o permission
-		 || !itemdb_cantrade(&sd->status.cart[index], pc_get_group_level(sd), pc_get_group_level(sd)) ) // untradeable item
+		 || !itemdb_cantrade(&sd->status.cart[index], pc_get_group_level(sd), pc_get_group_level(sd))) // untradeable item
 			continue;
 
 		sd->vending[i].index = index;
 		sd->vending[i].amount = amount;
-		sd->vending[i].value = cap_value(value, 0, (unsigned int)battle_config.vending_max_value);
+		sd->vending[i].value = value;
 
 		i++; // item successfully added
 	}
 
-	if( i != j )
-		clif->message (sd->fd, msg_sd(sd,266)); //"Some of your items cannot be vended and were removed from the shop."
+	if (i != j && !sd->state.standalone)
+		clif->message(sd->fd, msg_sd(sd,266)); //"Some of your items cannot be vended and were removed from the shop."
 
-	if( i == 0 ) { // no valid item found
-		clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0); // custom reply packet
-		return;
+	if (i == 0) { // no valid item found
+		if (!sd->state.standalone)
+			clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0); // custom reply packet
+		return false;
 	}
 	sd->state.prevend = sd->state.workinprogress = 0;
 	sd->state.vending = true;
-	sd->vender_id = getid();
+	sd->vender_id = vending->p->getid();
 	sd->vend_num = i;
 	safestrncpy(sd->message, message, MESSAGE_SIZE);
 
 	clif->openvending(sd,sd->bl.id,sd->vending);
 	clif->showvendingboard(&sd->bl,message,0);
 
-	idb_put(vending->db, sd->status.char_id, sd);
+	idb_put(vending->p->db, sd->status.char_id, sd);
+	return true;
 }
 
 
@@ -389,20 +398,28 @@ bool vending_searchall(struct map_session_data* sd, const struct s_search_store_
 	return true;
 }
 
+struct DBIterator *vending_iterator(void)
+{
+	return db_iterator(vending->p->db);
+}
+
 void final(void)
 {
-	db_destroy(vending->db);
+	db_destroy(vending->p->db);
 }
 
 void init(bool minimal)
 {
-	vending->db = idb_alloc(DB_OPT_BASE);
-	vending->next_id = 0;
+	vending->p->db = idb_alloc(DB_OPT_BASE);
+	vending->p->next_id = 0;
 }
 
 void vending_defaults(void)
 {
 	vending = &vending_s;
+	vending->p = &vending_p;
+
+	vending->p->getid = vending_getid;
 
 	vending->init = init;
 	vending->final = final;
@@ -413,4 +430,5 @@ void vending_defaults(void)
 	vending->purchase = vending_purchasereq;
 	vending->search = vending_search;
 	vending->searchall = vending_searchall;
+	vending->iterator = vending_iterator;
 }

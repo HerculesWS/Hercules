@@ -24,6 +24,7 @@
 #include "map/battle.h" // battle
 #include "map/battleground.h" // enum bg_queue_types
 #include "map/buyingstore.h"  // struct s_buyingstore
+#include "map/clif.h" // struct STORE_ITEM
 #include "map/itemdb.h" // MAX_ITEMDELAYS
 #include "map/log.h" // struct e_log_pick_type
 #include "map/map.h" // RC_MAX, ELE_MAX
@@ -32,7 +33,6 @@
 #include "map/searchstore.h"  // struct s_search_store_info
 #include "map/status.h" // enum sc_type, OPTION_*
 #include "map/unit.h" // struct unit_data, struct view_data
-#include "map/vending.h" // struct s_vending
 #include "common/db.h"
 #include "common/ers.h" // struct eri
 #include "common/hercules.h"
@@ -431,7 +431,7 @@ END_ZEROED_BLOCK;
 	unsigned int vender_id;
 	int vend_num;
 	char message[MESSAGE_SIZE];
-	struct s_vending vending[MAX_VENDING];
+	struct STORE_ITEM vending[MAX_VENDING];
 	unsigned int buyer_id;  // uid of open buying store
 	struct s_buyingstore buyingstore;
 	struct s_search_store_info searchstore;
@@ -773,7 +773,7 @@ enum pc_skill_flag {
  **/
 struct autotrade_vending {
 	struct item list[MAX_VENDING];
-	struct s_vending vending[MAX_VENDING];
+	struct STORE_ITEM vending[MAX_VENDING];
 	unsigned char vend_num;
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };

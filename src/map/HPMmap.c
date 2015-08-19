@@ -86,6 +86,7 @@
 #include "map/trade.h"
 #include "map/unit.h"
 #include "map/vending.h"
+#include "map/vending.p.h"
 
 // HPMDataCheck comes after all the other includes
 #include "common/HPMDataCheck.h"
