@@ -10714,7 +10714,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		 **/
 		case AB_EPICLESIS:
 			if( (sg = skill->unitsetting(src, skill_id, skill_lv, x, y, 0)) ) {
-				r = sg->unit->range;
+				r = skill->get_unit_range(skill_id, skill_lv);
 				map->foreachinarea(skill->area_sub, src->m, x - r, y - r, x + r, y + r, BL_CHAR, src, ALL_RESURRECTION, 1, tick, flag|BCT_NOENEMY|1,skill->castend_nodamage_id);
 			}
 			break;
@@ -10843,30 +10843,36 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 
 			if( !ud ) break;
 
-			for( i = 0; i < MAX_SKILLUNITGROUP && ud->skillunit[i]; i ++ ) {
-				if( ud->skillunit[i]->skill_id == GN_DEMONIC_FIRE &&
-				   distance_xy(x, y, ud->skillunit[i]->unit->bl.x, ud->skillunit[i]->unit->bl.y) < 3 ) {
-					switch( skill_lv ) {
+			r = skill->get_unit_range(GN_DEMONIC_FIRE, skill_lv);
+
+			for (i = 0; i < MAX_SKILLUNITGROUP && ud->skillunit[i]; i++) {
+				if (ud->skillunit[i]->skill_id != GN_DEMONIC_FIRE)
+					continue;
+				// FIXME: Code after this point assumes that the group has one and only one unit, regardless of what the skill_unit_db says.
+				if (ud->skillunit[i]->unit.count != 1)
+					continue;
+				if (distance_xy(x, y, ud->skillunit[i]->unit.data[0].bl.x, ud->skillunit[i]->unit.data[0].bl.y) < r) {
+					switch (skill_lv) {
 						case 3:
 							ud->skillunit[i]->unit_id = UNT_FIRE_EXPANSION_SMOKE_POWDER;
-							clif->changetraplook(&ud->skillunit[i]->unit->bl, UNT_FIRE_EXPANSION_SMOKE_POWDER);
+							clif->changetraplook(&ud->skillunit[i]->unit.data[0].bl, UNT_FIRE_EXPANSION_SMOKE_POWDER);
 							break;
 						case 4:
 							ud->skillunit[i]->unit_id = UNT_FIRE_EXPANSION_TEAR_GAS;
-							clif->changetraplook(&ud->skillunit[i]->unit->bl, UNT_FIRE_EXPANSION_TEAR_GAS);
+							clif->changetraplook(&ud->skillunit[i]->unit.data[0].bl, UNT_FIRE_EXPANSION_TEAR_GAS);
 							break;
 						case 5:// If player knows a level of Acid Demonstration greater then 5, that level will be casted.
 							if ( pc->checkskill(sd, CR_ACIDDEMONSTRATION) > 5 )
 								aciddemocast = pc->checkskill(sd, CR_ACIDDEMONSTRATION);
 							map->foreachinarea(skill->area_sub, src->m,
-							                   ud->skillunit[i]->unit->bl.x - 2, ud->skillunit[i]->unit->bl.y - 2,
-							                   ud->skillunit[i]->unit->bl.x + 2, ud->skillunit[i]->unit->bl.y + 2, BL_CHAR,
+							                   ud->skillunit[i]->unit.data[0].bl.x - 2, ud->skillunit[i]->unit.data[0].bl.y - 2,
+							                   ud->skillunit[i]->unit.data[0].bl.x + 2, ud->skillunit[i]->unit.data[0].bl.y + 2, BL_CHAR,
 							                   src, CR_ACIDDEMONSTRATION, aciddemocast, tick, flag|BCT_ENEMY|1|SD_LEVEL, skill->castend_damage_id);
-							skill->delunit(ud->skillunit[i]->unit);
+							skill->delunit(&ud->skillunit[i]->unit.data[0]);
 							break;
 						default:
-							ud->skillunit[i]->unit->val2 = skill_lv;
-							ud->skillunit[i]->unit->group->val2 = skill_lv;
+							ud->skillunit[i]->unit.data[0].val2 = skill_lv;
+							ud->skillunit[i]->val2 = skill_lv;
 							break;
 						}
 					}
@@ -11591,7 +11597,7 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 				// If you are fiberlocked and can't move, it will only increase your fireweakness level. [Inkfish]
 				sc->data[SC_SPIDERWEB]->val2++;
 				break;
-			} else if( sc && battle->check_target(&sg->unit->bl,bl,sg->target_flag) > 0 ) {
+			} else if (sc && battle->check_target(&src->bl,bl,sg->target_flag) > 0) {
 				int sec = skill->get_time2(sg->skill_id,sg->skill_lv);
 				if( status->change_start(ss, bl,type,10000,sg->skill_lv,1,sg->group_id,0,sec,SCFLAG_FIXEDRATE) ) {
 					const struct TimerData* td = sce?timer->get(sce->timer):NULL;
@@ -11600,9 +11606,9 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 					map->moveblock(bl, src->bl.x, src->bl.y, tick);
 					clif->fixpos(bl);
 					sg->val2 = bl->id;
-				}
-				else
+				} else {
 					sec = 3000; //Couldn't trap it?
+				}
 				sg->limit = DIFF_TICK32(tick,sg->tick)+sec;
 			}
 			break;
@@ -11657,7 +11663,7 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 			break;
 
 		case UNT_QUAGMIRE:
-			if( !sce && battle->check_target(&sg->unit->bl,bl,sg->target_flag) > 0 )
+			if (!sce && battle->check_target(&src->bl,bl,sg->target_flag) > 0)
 				sc_start4(ss,bl,type,100,sg->skill_lv,sg->group_id,0,0,sg->limit);
 			break;
 
@@ -11770,7 +11776,7 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 		case UNT_GD_GLORYWOUNDS:
 		case UNT_GD_SOULCOLD:
 		case UNT_GD_HAWKEYES:
-			if ( !sce && battle->check_target(&sg->unit->bl,bl,sg->target_flag) > 0 )
+			if (!sce && battle->check_target(&src->bl,bl,sg->target_flag) > 0)
 				sc_start4(ss,bl,type,100,sg->skill_lv,0,0,0,1000);
 			break;
 		default:
@@ -15939,8 +15945,8 @@ struct skill_unit *skill_initunit (struct skill_unit_group *group, int idx, int 
 	struct skill_unit *su;
 
 	nullpo_retr(NULL, group);
-	nullpo_retr(NULL, group->unit); // crash-protection against poor coding
-	nullpo_retr(NULL, su=&group->unit[idx]);
+	nullpo_retr(NULL, group->unit.data); // crash-protection against poor coding
+	nullpo_retr(NULL, su=&group->unit.data[idx]);
 
 	if(!su->alive)
 		group->alive_count++;
@@ -16123,8 +16129,8 @@ struct skill_unit_group* skill_initunitgroup (struct block_list* src, int count,
 	group->guild_id    = status->get_guild_id(src);
 	group->bg_id       = bg->team_get_id(src);
 	group->group_id    = skill->get_new_group_id();
-	group->unit        = (struct skill_unit *)aCalloc(count,sizeof(struct skill_unit));
-	group->unit_count  = count;
+	group->unit.data   = (struct skill_unit *)aCalloc(count,sizeof(struct skill_unit));
+	group->unit.count  = count;
 	group->alive_count = 0;
 	group->val1        = 0;
 	group->val2        = 0;
@@ -16250,9 +16256,10 @@ int skill_delunitgroup(struct skill_unit_group *group, const char* file, int lin
 	group->alive_count=0;
 
 	// remove all unit cells
-	if(group->unit != NULL)
-		for( i = 0; i < group->unit_count; i++ )
-			skill->delunit(&group->unit[i]);
+	if (group->unit.data != NULL) {
+		for (i = 0; i < group->unit.count; i++)
+			skill->delunit(&group->unit.data[i]);
+	}
 
 	// clear Talkie-box string
 	if( group->valstr != NULL ) {
@@ -16261,10 +16268,10 @@ int skill_delunitgroup(struct skill_unit_group *group, const char* file, int lin
 	}
 
 	idb_remove(skill->group_db, group->group_id);
-	map->freeblock(&group->unit->bl); // schedules deallocation of whole array (HACK)
-	group->unit=NULL;
+	map->freeblock(&group->unit.data[0].bl); // schedules deallocation of whole array (HACK)
+	group->unit.data=NULL;
 	group->group_id=0;
-	group->unit_count=0;
+	group->unit.count=0;
 
 	// locate this group, swap with the last entry and delete it
 	ARR_FIND( 0, MAX_SKILLUNITGROUP, i, ud->skillunit[i] == group );
@@ -16477,7 +16484,7 @@ int skill_unit_timer_sub(DBKey key, DBData *data, va_list ap) {
 			case UNT_FEINTBOMB: {
 				struct block_list *src = map->id2bl(group->src_id);
 				if( src ) {
-					map->foreachinrange(skill->area_sub, &group->unit->bl, su->range, splash_target(src), src, SC_FEINTBOMB, group->skill_lv, tick, BCT_ENEMY|SD_ANIMATION|1, skill->castend_damage_id);
+					map->foreachinrange(skill->area_sub, &su->bl, su->range, splash_target(src), src, SC_FEINTBOMB, group->skill_lv, tick, BCT_ENEMY|SD_ANIMATION|1, skill->castend_damage_id);
 					status_change_end(src, SC__FEINTBOMB_MASTER, INVALID_TIMER);
 				}
 				skill->delunit(su);
@@ -16716,9 +16723,9 @@ int skill_unit_move_unit_group(struct skill_unit_group *group, int16 m, int16 dx
 
 	if (group == NULL)
 		return 0;
-	if (group->unit_count<=0)
+	if (group->unit.count<=0)
 		return 0;
-	if (group->unit==NULL)
+	if (group->unit.data==NULL)
 		return 0;
 
 	if (skill->get_unit_flag(group->skill_id)&UF_ENSEMBLE)
@@ -16727,18 +16734,18 @@ int skill_unit_move_unit_group(struct skill_unit_group *group, int16 m, int16 dx
 	if( group->unit_id == UNT_ICEWALL || group->unit_id == UNT_WALLOFTHORN )
 		return 0; //Icewalls and Wall of Thorns don't get knocked back
 
-	m_flag = (int *) aCalloc(group->unit_count, sizeof(int));
+	m_flag = (int *) aCalloc(group->unit.count, sizeof(int));
 	// m_flag:
 	//  0: Neither of the following (skill_unit_onplace & skill_unit_onout are needed)
 	//  1: Unit will move to a slot that had another unit of the same group (skill_unit_onplace not needed)
 	//  2: Another unit from same group will end up positioned on this unit (skill_unit_onout not needed)
 	//  3: Both 1+2.
-	for(i=0;i<group->unit_count;i++) {
-		su1=&group->unit[i];
+	for (i = 0; i < group->unit.count; i++) {
+		su1=&group->unit.data[i];
 		if (!su1->alive || su1->bl.m!=m)
 			continue;
-		for(j=0;j<group->unit_count;j++) {
-			su2=&group->unit[j];
+		for (j = 0; j < group->unit.count; j++) {
+			su2=&group->unit.data[j];
 			if (!su2->alive)
 				continue;
 			if (su1->bl.x+dx==su2->bl.x && su1->bl.y+dy==su2->bl.y) {
@@ -16750,8 +16757,8 @@ int skill_unit_move_unit_group(struct skill_unit_group *group, int16 m, int16 dx
 		}
 	}
 	j = 0;
-	for (i=0;i<group->unit_count;i++) {
-		su1=&group->unit[i];
+	for (i = 0; i < group->unit.count; i++) {
+		su1=&group->unit.data[i];
 		if (!su1->alive)
 			continue;
 		if (!(m_flag[i]&0x2)) {
@@ -16768,11 +16775,11 @@ int skill_unit_move_unit_group(struct skill_unit_group *group, int16 m, int16 dx
 			case 1:
 			//Cell moves unto another cell, look for a replacement cell that won't collide
 			//and has no cell moving into it (flag == 2)
-				for(;j<group->unit_count;j++) {
-					if(m_flag[j]!=2 || !group->unit[j].alive)
+				for (; j < group->unit.count; j++) {
+					if (m_flag[j]!=2 || !group->unit.data[j].alive)
 						continue;
 					//Move to where this cell would had moved.
-					su2 = &group->unit[j];
+					su2 = &group->unit.data[j];
 					map->moveblock(&su1->bl, su2->bl.x+dx, su2->bl.y+dy, tick);
 					j++; //Skip this cell as we have used it.
 					break;
