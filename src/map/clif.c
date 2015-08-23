@@ -4378,6 +4378,7 @@ void clif_getareachar_skillunit(struct block_list *bl, struct skill_unit *su, en
 	struct packet_skill_entry p;
 	nullpo_retv(bl);
 	nullpo_retv(su);
+	nullpo_retv(su->group);
 
 	if( su->group->state.guildaura )
 		return;
