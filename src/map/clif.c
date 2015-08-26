@@ -19332,5 +19332,5 @@ void clif_defaults(void) {
 	clif->pNPCMarketClosed = clif_parse_NPCMarketClosed;
 	clif->pNPCMarketPurchase = clif_parse_NPCMarketPurchase;
 	/* */
-	clif->add_random_options = clif->add_random_options;
+	clif->add_random_options = clif_add_random_options;
 }
