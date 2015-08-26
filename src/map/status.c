@@ -12308,23 +12308,6 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *s
 	config_setting_t *t = NULL;
 	int i, type, bonus_per_level, random_bonus, random_bonus_start_level;
 	
-	/*
-	 * // Mandatory fields
-	 * {
-	 *		wLvl: <Weapon Level>
-	 *		Stats_per_level: <int>
-	 *		Random_bonus_start_level: <int>
-	 *		Random_bonus_value: <int>
-	 *		Rate: (
-	 *		{
-	 *			Level: n,
-	 *			Chance: n,
-	 *			Bonus: n,
-	 *		}
-	 *		)
-	 * }
-	 *
-	 */
 	if( !status->refinedb_lookup_const(r, "wLvl", &type) ) {
 		ShowWarning("status_readdb_refine_libconfig_sub: Invalid or missing wLvl in \"%s\", entry #%d, skipping.\n", source, n);
 		return 0;
@@ -12394,16 +12377,15 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *s
 	return 1;
 }
 
-bool status_refinedb_lookup_const(const config_setting_t *it, const char *name, int *value)
-{
-	if (libconfig->setting_lookup_int(it, name, value))
+bool status_refinedb_lookup_const(const config_setting_t *r, const char *name, int *value) {
+	if (libconfig->setting_lookup_int(r, name, value))
 	{
 		return true;
 	}
 	else
 	{
 		const char *str = NULL;
-		if (libconfig->setting_lookup_string(it, name, &str))
+		if (libconfig->setting_lookup_string(r, name, &str))
 		{
 			if (*str && script->get_constant(str, value))
 				return true;
@@ -12436,6 +12418,7 @@ int status_readdb_refine_libconfig(const char *filename) {
 			continue;
 		count++;
 	}
+	
 	libconfig->destroy(&refine_db_conf);
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
 	
