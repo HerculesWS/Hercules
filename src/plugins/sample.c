@@ -2,7 +2,7 @@
 // See the LICENSE file
 // Sample Hercules Plugin
 
-#include "common/HPMi.h"
+#include "common/hercules.h" /* Should always be the first Hercules file included! (if you don't make it first, you won't be able to use interfaces) */
 #include "common/malloc.h"
 #include "common/mmo.h"
 #include "common/socket.h"
@@ -11,7 +11,7 @@
 #include "map/pc.h"
 #include "map/script.h"
 
-#include "common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
+#include "common/HPMDataCheck.h" /* should always be the last Hercules file included! (if you don't make it last, it'll intentionally break compile time) */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,15 +44,15 @@ struct sample_data_struct {
 /* cmd 0xf3 - it is a client-server existent id, for clif_parse_GlobalMessage */
 /* in this sample we do nothing and simply redirect */
 void sample_packet0f3(int fd) {
-	struct map_session_data *sd = session[fd]->session_data;
+	struct map_session_data *sd = sockt->session[fd]->session_data;
 	struct sample_data_struct *data;
 
 	if( !sd ) return;/* socket didn't fully log-in? this packet shouldn't do anything then! */
 
 	ShowInfo("sample_packet0f3: Hello World! received 0xf3 for '%s', redirecting!\n",sd->status.name);
 
-	/* sample usage of appending data to a socket_data (session[]) entry */
-	if( !(data = getFromSession(session[fd],0)) ) {
+	/* sample usage of appending data to a socket_data (sockt->session[]) entry */
+	if( !(data = getFromSession(sockt->session[fd],0)) ) {
 		CREATE(data,struct sample_data_struct,1);
 
 		data->lastMSGPosition.map = sd->status.last_point.map;
@@ -60,13 +60,13 @@ void sample_packet0f3(int fd) {
 		data->lastMSGPosition.y = sd->status.last_point.y;
 		data->someNumber = rand()%777;
 
-		ShowInfo("Created Appended session[] data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
-		addToSession(session[fd],data,0,true);
+		ShowInfo("Created Appended sockt->session[] data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
+		addToSession(sockt->session[fd],data,0,true);
 	} else {
-		ShowInfo("Existent Appended session[] data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
+		ShowInfo("Existent Appended sockt->session[] data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
 		if( rand()%4 == 2 ) {
-			ShowInfo("Removing Appended session[] data\n");
-			removeFromSession(session[fd],0);
+			ShowInfo("Removing Appended sockt->session[] data\n");
+			removeFromSession(sockt->session[fd],0);
 		}
 	}
 
@@ -117,34 +117,15 @@ void parse_my_setting(const char *val) {
 }
 /* run when server starts */
 HPExport void plugin_init (void) {
-	char *server_type;
-	char *server_name;
+	ShowInfo("Server type is ");
 
-	/* core vars */
-	server_type = GET_SYMBOL("SERVER_TYPE");
-	server_name = GET_SYMBOL("SERVER_NAME");
-
-	/* core interfaces */
-	iMalloc = GET_SYMBOL("iMalloc");
-
-	/* map-server interfaces */
-	script = GET_SYMBOL("script");
-	clif = GET_SYMBOL("clif");
-	pc = GET_SYMBOL("pc");
-	strlib = GET_SYMBOL("strlib");
-
-	/* session[] */
-	session = GET_SYMBOL("session");
-
-	ShowInfo ("Server type is ");
-
-	switch (*server_type) {
-		case SERVER_TYPE_LOGIN: printf ("Login Server\n"); break;
-		case SERVER_TYPE_CHAR: printf ("Char Server\n"); break;
+	switch (SERVER_TYPE) {
+		case SERVER_TYPE_LOGIN: printf("Login Server\n"); break;
+		case SERVER_TYPE_CHAR: printf("Char Server\n"); break;
 		case SERVER_TYPE_MAP: printf ("Map Server\n"); break;
 	}
 
-	ShowInfo ("I'm being run from the '%s' filename\n", server_name);
+	ShowInfo("I'm being run from the '%s' filename\n", SERVER_NAME);
 
 	/* addAtcommand("command-key",command-function) tells map server to call ACMD(sample) when "sample" command is used */
 	/* - it will print a warning when used on a non-map-server plugin */

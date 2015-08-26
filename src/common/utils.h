@@ -5,7 +5,7 @@
 #ifndef COMMON_UTILS_H
 #define COMMON_UTILS_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 #include <stdio.h> // FILE*
 
@@ -51,6 +51,12 @@ size_t hread(void * ptr, size_t size, size_t count, FILE * stream);
 size_t hwrite(const void * ptr, size_t size, size_t count, FILE * stream);
 #endif // HERCULES_CORE
 
+#ifdef WIN32
+#define HSleep(x) Sleep(1000 * (x))
+#else // ! WIN32
+#define HSleep(x) sleep(x)
+#endif
+
 /* [Ind/Hercules] Caching */
 struct HCache_interface {
 	void (*init) (void);
@@ -62,10 +68,10 @@ struct HCache_interface {
 	bool enabled;
 };
 
-struct HCache_interface *HCache;
-
 #ifdef HERCULES_CORE
 void HCache_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct HCache_interface *HCache;
 
 #endif /* COMMON_UTILS_H */

@@ -8808,7 +8808,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 				getexp RENEWAL_EXP?20000:200000,0;
 				$@sign_w1 = 0;
 				close2;
-				warp "umbala,",132,203;
+				warp "umbala",132,203;
 				end;
 			}
 		}

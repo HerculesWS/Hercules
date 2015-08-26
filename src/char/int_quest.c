@@ -22,6 +22,7 @@
 #include <stdlib.h>
 
 struct inter_quest_interface inter_quest_s;
+struct inter_quest_interface *inter_quest;
 
 /**
  * Loads the entire questlog for a character.

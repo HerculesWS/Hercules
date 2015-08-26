@@ -8,8 +8,8 @@
 #error You should never include HPM.h from a plugin.
 #endif
 
+#include "common/hercules.h"
 #include "common/HPMi.h"
-#include "common/cbasetypes.h"
 
 #ifdef WIN32
 	#ifndef WIN32_LEAN_AND_MEAN
@@ -129,10 +129,7 @@ struct HPM_interface {
 	void (*event) (enum hp_event_types type);
 	void *(*import_symbol) (char *name, unsigned int pID);
 	void (*share) (void *, char *);
-	void (*symbol_defaults) (void);
 	void (*config_read) (void);
-	bool (*populate) (struct hplugin *plugin,const char *filename);
-	void (*symbol_defaults_sub) (void);//TODO drop
 	char *(*pid2name) (unsigned int pid);
 	unsigned char (*parse_packets) (int fd, enum HPluginPacketHookingPoints point);
 	void (*load_sub) (struct hplugin *plugin);
@@ -150,7 +147,7 @@ struct HPM_interface {
 
 CMDLINEARG(loadplugin);
 
-struct HPM_interface *HPM;
+extern struct HPM_interface *HPM;
 
 void hpm_defaults(void);
 

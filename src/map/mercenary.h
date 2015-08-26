@@ -6,7 +6,7 @@
 
 #include "map/status.h" // struct status_data, struct status_change
 #include "map/unit.h" // struct unit_data
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 struct map_session_data;
 
@@ -97,10 +97,10 @@ struct mercenary_interface {
 	bool (*read_skill_db_sub) (char* str[], int columns, int current);
 };
 
-struct mercenary_interface *mercenary;
-
 #ifdef HERCULES_CORE
 void mercenary_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct mercenary_interface *mercenary;
 
 #endif /* MAP_MERCENARY_H */

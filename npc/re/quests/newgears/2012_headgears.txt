@@ -14,7 +14,7 @@
 
 // Main NPC :: 2012_hat_quest
 //============================================================
-moc_para01,41,169,3	script	Reno#2012hat	64,{
+moc_para01,41,169,3	script	Reno#2012hat	1_M_WIZARD,{
 	// iRO has (very) minor differences in dialogue from the original script.
 	// To use iRO's version, uncomment the line below.
 	//.@features_iRO = 1;

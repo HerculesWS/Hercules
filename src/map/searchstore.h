@@ -6,7 +6,7 @@
 #define MAP_SEARCHSTORE_H
 
 #include "map/map.h" // MESSAGE_SIZE
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/mmo.h" // MAX_SLOTS
 
 #include <time.h>
@@ -95,10 +95,10 @@ struct searchstore_interface {
 	bool (*result) (struct map_session_data* sd, unsigned int store_id, int account_id, const char* store_name, unsigned short nameid, unsigned short amount, unsigned int price, const short* card, unsigned char refine);
 };
 
-struct searchstore_interface *searchstore;
-
 #ifdef HERCULES_CORE
 void searchstore_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct searchstore_interface *searchstore;
 
 #endif /* MAP_SEARCHSTORE_H */

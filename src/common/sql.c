@@ -24,6 +24,7 @@ int mysql_reconnect_type;
 unsigned int mysql_reconnect_count;
 
 struct sql_interface sql_s;
+struct sql_interface *SQL;
 
 /// Sql handle
 struct Sql {

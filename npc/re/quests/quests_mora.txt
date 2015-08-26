@@ -4466,7 +4466,7 @@ mora,133,80,6	script	Elephantine#pa0829	4_ELEPHANT,{
 	close;
 }
 
-mora,115,98,8	script	Hotcha#pa0829	4_ELEPHANT,{
+mora,115,98,0	script	Hotcha#pa0829	4_ELEPHANT,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;

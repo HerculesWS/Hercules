@@ -5,7 +5,7 @@
 #ifndef MAP_STORAGE_H
 #define MAP_STORAGE_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/db.h"
 
 struct guild_storage;
@@ -38,7 +38,6 @@ struct storage_interface {
 	void (*sortitem) (struct item* items, unsigned int size);
 	int (*reconnect_sub) (DBKey key, DBData *data, va_list ap);
 };
-struct storage_interface *storage;
 
 struct guild_storage_interface {
 	struct DBMap* db; // int guild_id -> struct guild_storage*
@@ -63,11 +62,12 @@ struct guild_storage_interface {
 	DBData (*create) (DBKey key, va_list args);
 };
 
-struct guild_storage_interface *gstorage;
-
 #ifdef HERCULES_CORE
 void storage_defaults(void);
 void gstorage_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct storage_interface *storage;
+HPShared struct guild_storage_interface *gstorage;
 
 #endif /* MAP_STORAGE_H */

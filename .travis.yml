@@ -1,7 +1,11 @@
 language: c
-compiler:
-  - clang
-  - gcc
+sudo: false
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-5
 
 install:
   - ./travis.sh getplugins || true
@@ -16,9 +20,28 @@ script:
   - ./travis.sh build $CONFIGURE_FLAGS
   - ./travis.sh test ragnarok travis travis
 
-env:
-  - CONFIGURE_FLAGS="--enable-debug"
-  - CONFIGURE_FLAGS="--disable-renewal --enable-debug"
+# We can't use this, unfortunately
+# http://github.com/travis-ci/travis-ci/issues/979
+#compiler:
+#  - clang
+#  - gcc
+
+matrix:
+  exclude:
+  - env: ignore=this
+  include:
+  - compiler: clang
+    env: CONFIGURE_FLAGS="--enable-debug"
+  - compiler: clang
+    env: CONFIGURE_FLAGS="--enable-debug --disable-renewal"
+  - compiler: gcc
+    env: CONFIGURE_FLAGS="--enable-debug"
+  - compiler: gcc
+    env: CONFIGURE_FLAGS="--enable-debug --disable-renewal"
+  - compiler: gcc
+    env: CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-5 --disable-manager"
+  - compiler: gcc
+    env: CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-5 --disable-manager --disable-renewal"
   
 notifications:
   email: false

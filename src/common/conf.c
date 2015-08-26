@@ -12,7 +12,7 @@
 
 /* interface source */
 struct libconfig_interface libconfig_s;
-
+struct libconfig_interface *libconfig;
 
 int conf_read_file(config_t *config, const char *config_filename) {
 	libconfig->init(config);

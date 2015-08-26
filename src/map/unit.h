@@ -8,7 +8,7 @@
 #include "map/clif.h"  // clr_type
 #include "map/path.h" // struct walkpath_data
 #include "map/skill.h" // 'MAX_SKILLTIMERSKILL, struct skill_timerskill, struct skill_unit_group, struct skill_unit_group_tickset
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 struct map_session_data;
 struct block_list;
@@ -84,9 +84,6 @@ struct view_data {
 	unsigned dead_sit : 2;
 };
 
-extern const short dirx[8];
-extern const short diry[8];
-
 struct unit_interface {
 	int (*init) (bool minimal);
 	int (*final) (void);
@@ -139,8 +136,13 @@ struct unit_interface {
 	int (*free) (struct block_list *bl, clr_type clrtype);
 };
 
-struct unit_interface *unit;
+#ifdef HERCULES_CORE
+extern const short dirx[8];
+extern const short diry[8];
 
 void unit_defaults(void);
+#endif // HERCULES_CORE
+
+HPShared struct unit_interface *unit;
 
 #endif /* MAP_UNIT_H */

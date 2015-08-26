@@ -38,6 +38,7 @@
 #include <sys/types.h>
 
 struct chrif_interface chrif_s;
+struct chrif_interface *chrif;
 
 //Used Packets:
 //2af8: Outgoing, chrif_connect -> 'connect to charserver / auth @ charserver'
@@ -102,11 +103,11 @@ void chrif_reset(void) {
 /// Releases the cookie when all characters are saved.
 /// If all the conditions are met, it stops the core loop.
 void chrif_check_shutdown(void) {
-	if( runflag != MAPSERVER_ST_SHUTDOWN )
+	if( core->runflag != MAPSERVER_ST_SHUTDOWN )
 		return;
 	if( db_size(chrif->auth_db) > 0 )
 		return;
-	runflag = CORE_ST_STOP;
+	core->runflag = CORE_ST_STOP;
 }
 
 struct auth_node* chrif_search(int account_id) {
@@ -124,8 +125,8 @@ bool chrif_auth_delete(int account_id, int char_id, enum sd_state state) {
 	if ( (node = chrif->auth_check(account_id, char_id, state) ) ) {
 		int fd = node->sd ? node->sd->fd : node->fd;
 
-		if ( session[fd] && session[fd]->session_data == node->sd )
-			session[fd]->session_data = NULL;
+		if ( sockt->session[fd] && sockt->session[fd]->session_data == node->sd )
+			sockt->session[fd]->session_data = NULL;
 
 		if ( node->sd ) {
 			if( node->sd->regs.vars )
@@ -177,8 +178,8 @@ bool chrif_auth_logout(TBL_PC* sd, enum sd_state state)
 {
 	if(sd->fd && state == ST_LOGOUT) { //Disassociate player, and free it after saving ack returns. [Skotlex]
 		//fd info must not be lost for ST_MAPCHANGE as a final packet needs to be sent to the player.
-		if ( session[sd->fd] )
-			session[sd->fd]->session_data = NULL;
+		if ( sockt->session[sd->fd] )
+			sockt->session[sd->fd]->session_data = NULL;
 		sd->fd = 0;
 	}
 
@@ -219,14 +220,14 @@ void chrif_checkdefaultlogin(void) {
 bool chrif_setip(const char* ip) {
 	char ip_str[16];
 
-	if ( !( chrif->ip = host2ip(ip) ) ) {
+	if (!(chrif->ip = sockt->host2ip(ip))) {
 		ShowWarning("Failed to Resolve Char Server Address! (%s)\n", ip);
 		return false;
 	}
 
 	safestrncpy(chrif->ip_str, ip, sizeof(chrif->ip_str));
 
-	ShowInfo("Char Server IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, ip2str(chrif->ip, ip_str));
+	ShowInfo("Char Server IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, sockt->ip2str(chrif->ip, ip_str));
 
 	return true;
 }
@@ -238,7 +239,7 @@ void chrif_setport(uint16 port) {
 
 // says whether the char-server is connected or not
 int chrif_isconnected(void) {
-	return (chrif->fd > 0 && session[chrif->fd] != NULL && chrif->state == 2);
+	return (chrif->fd > 0 && sockt->session[chrif->fd] != NULL && chrif->state == 2);
 }
 
 /*==========================================
@@ -384,7 +385,7 @@ bool chrif_changemapserver(struct map_session_data* sd, uint32 ip, uint16 port) 
 	WFIFOL(chrif->fd,24) = htonl(ip);
 	WFIFOW(chrif->fd,28) = htons(port);
 	WFIFOB(chrif->fd,30) = sd->status.sex;
-	WFIFOL(chrif->fd,31) = htonl(session[sd->fd]->client_addr);
+	WFIFOL(chrif->fd,31) = htonl(sockt->session[sd->fd]->client_addr);
 	WFIFOL(chrif->fd,35) = sd->group_id;
 	WFIFOSET(chrif->fd,39);
 
@@ -542,7 +543,7 @@ void chrif_authreq(struct map_session_data *sd, bool hstandalone) {
 	struct auth_node *node= chrif->search(sd->bl.id);
 
 	if( node != NULL || !chrif->isconnected() ) {
-		set_eof(sd->fd);
+		sockt->eof(sd->fd);
 		return;
 	}
 
@@ -552,7 +553,7 @@ void chrif_authreq(struct map_session_data *sd, bool hstandalone) {
 	WFIFOL(chrif->fd,6) = sd->status.char_id;
 	WFIFOL(chrif->fd,10) = sd->login_id1;
 	WFIFOB(chrif->fd,14) = sd->status.sex;
-	WFIFOL(chrif->fd,15) = htonl(session[sd->fd]->client_addr);
+	WFIFOL(chrif->fd,15) = htonl(sockt->session[sd->fd]->client_addr);
 	WFIFOB(chrif->fd,19) = hstandalone ? 1 : 0;
 	WFIFOSET(chrif->fd,20);
 	chrif->sd_to_auth(sd, ST_LOGIN);
@@ -607,7 +608,7 @@ void chrif_authok(int fd) {
 
 	sd = node->sd;
 
-	if( runflag == MAPSERVER_ST_RUNNING &&
+	if( core->runflag == MAPSERVER_ST_RUNNING &&
 		node->account_id == account_id &&
 		node->char_id == char_id &&
 		node->login_id1 == login_id1 )
@@ -980,7 +981,7 @@ void chrif_idbanned(int fd) {
 		clif->message(sd->fd, tmpstr);
 	}
 
-	set_eof(sd->fd); // forced to disconnect for the change
+	sockt->eof(sd->fd); // forced to disconnect for the change
 	map->quit(sd); // Remove leftovers (e.g. autotrading) [Paradox924X]
 }
 
@@ -1232,9 +1233,9 @@ bool chrif_char_offline_nsd(int account_id, int char_id) {
 bool chrif_flush(void) {
 	chrif_check(false);
 
-	set_nonblocking(chrif->fd, 0);
-	flush_fifos();
-	set_nonblocking(chrif->fd, 1);
+	sockt->set_nonblocking(chrif->fd, 0);
+	sockt->flush_fifos();
+	sockt->set_nonblocking(chrif->fd, 1);
 
 	return true;
 }
@@ -1286,7 +1287,7 @@ void chrif_update_ip(int fd) {
 
 	WFIFOHEAD(fd,6);
 
-	new_ip = host2ip(chrif->ip_str);
+	new_ip = sockt->host2ip(chrif->ip_str);
 
 	if (new_ip && new_ip != chrif->ip)
 		chrif->ip = new_ip; //Update chrif->ip
@@ -1308,14 +1309,14 @@ void chrif_keepalive(int fd) {
 	WFIFOSET(fd,2);
 }
 void chrif_keepalive_ack(int fd) {
-	session[fd]->flag.ping = 0;/* reset ping state, we received a packet */
+	sockt->session[fd]->flag.ping = 0;/* reset ping state, we received a packet */
 }
 void chrif_skillid2idx(int fd) {
 	int i, count = 0;
 
 	if( fd == 0 ) fd = chrif->fd;
 
-	if( !session_isValid(fd) )
+	if (!sockt->session_is_valid(fd))
 		return;
 
 	WFIFOHEAD(fd,4 + (MAX_SKILL * 4));
@@ -1340,22 +1341,22 @@ int chrif_parse(int fd) {
 	// only process data from the char-server
 	if ( fd != chrif->fd ) {
 		ShowDebug("chrif_parse: Disconnecting invalid session #%d (is not the char-server)\n", fd);
-		do_close(fd);
+		sockt->close(fd);
 		return 0;
 	}
 
-	if ( session[fd]->flag.eof ) {
-		do_close(fd);
+	if ( sockt->session[fd]->flag.eof ) {
+		sockt->close(fd);
 		chrif->fd = -1;
 		chrif->on_disconnect();
 		return 0;
-	} else if ( session[fd]->flag.ping ) {/* we've reached stall time */
-		if( DIFF_TICK(sockt->last_tick, session[fd]->rdata_tick) > (sockt->stall_time * 2) ) {/* we can't wait any longer */
-			set_eof(fd);
+	} else if ( sockt->session[fd]->flag.ping ) {/* we've reached stall time */
+		if( DIFF_TICK(sockt->last_tick, sockt->session[fd]->rdata_tick) > (sockt->stall_time * 2) ) {/* we can't wait any longer */
+			sockt->eof(fd);
 			return 0;
-		} else if( session[fd]->flag.ping != 2 ) { /* we haven't sent ping out yet */
+		} else if( sockt->session[fd]->flag.ping != 2 ) { /* we haven't sent ping out yet */
 			chrif->keepalive(fd);
-			session[fd]->flag.ping = 2;
+			sockt->session[fd]->flag.ping = 2;
 		}
 	}
 
@@ -1377,7 +1378,7 @@ int chrif_parse(int fd) {
 			if (r == 2) return 0; // Didn't have enough data (len==-1)
 
 			ShowWarning("chrif_parse: session #%d, intif->parse failed (unrecognized command 0x%.4x).\n", fd, cmd);
-			set_eof(fd);
+			sockt->eof(fd);
 			return 0;
 		}
 
@@ -1418,7 +1419,7 @@ int chrif_parse(int fd) {
 			case 0x2b27: chrif->authfail(fd); break;
 			default:
 				ShowError("chrif_parse : unknown packet (session #%d): 0x%x. Disconnecting.\n", fd, cmd);
-				set_eof(fd);
+				sockt->eof(fd);
 				return 0;
 		}
 		if ( fd == chrif->fd ) //There's the slight chance we lost the connection during parse, in which case this would segfault if not checked [Skotlex]
@@ -1475,7 +1476,7 @@ bool send_users_tochar(void) {
  *------------------------------------------*/
 int check_connect_char_server(int tid, int64 tick, int id, intptr_t data) {
 	static int displayed = 0;
-	if ( chrif->fd <= 0 || session[chrif->fd] == NULL ) {
+	if ( chrif->fd <= 0 || sockt->session[chrif->fd] == NULL ) {
 		if ( !displayed ) {
 			ShowStatus("Attempting to connect to Char Server. Please wait.\n");
 			displayed = 1;
@@ -1483,12 +1484,12 @@ int check_connect_char_server(int tid, int64 tick, int id, intptr_t data) {
 
 		chrif->state = 0;
 
-		if ( ( chrif->fd = make_connection(chrif->ip, chrif->port,NULL) ) == -1) //Attempt to connect later. [Skotlex]
+		if ((chrif->fd = sockt->make_connection(chrif->ip, chrif->port,NULL)) == -1) //Attempt to connect later. [Skotlex]
 			return 0;
 
-		session[chrif->fd]->func_parse = chrif->parse;
-		session[chrif->fd]->flag.server = 1;
-		realloc_fifo(chrif->fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
+		sockt->session[chrif->fd]->func_parse = chrif->parse;
+		sockt->session[chrif->fd]->flag.server = 1;
+		sockt->realloc_fifo(chrif->fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
 		chrif->connect(chrif->fd);
 		chrif->connected = (chrif->state == 2);
@@ -1529,7 +1530,7 @@ void chrif_send_report(char* buf, int len) {
 
 		WFIFOSET(chrif->fd,len + 2);
 
-		flush_fifo(chrif->fd); /* ensure it's sent now. */
+		sockt->flush(chrif->fd); /* ensure it's sent now. */
 	}
 #endif
 }
@@ -1601,7 +1602,7 @@ int auth_db_final(DBKey key, DBData *data, va_list ap) {
 void do_final_chrif(void)
 {
 	if( chrif->fd != -1 ) {
-		do_close(chrif->fd);
+		sockt->close(chrif->fd);
 		chrif->fd = -1;
 	}
 

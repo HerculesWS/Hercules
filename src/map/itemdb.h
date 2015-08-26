@@ -6,7 +6,7 @@
 #define MAP_ITEMDB_H
 
 /* #include "map/map.h" */
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/conf.h"
 #include "common/db.h"
 #include "common/mmo.h" // ITEM_NAME_LENGTH
@@ -618,10 +618,10 @@ struct itemdb_interface {
 	bool (*lookup_const) (const config_setting_t *it, const char *name, int *value);
 };
 
-struct itemdb_interface *itemdb;
-
 #ifdef HERCULES_CORE
 void itemdb_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct itemdb_interface *itemdb;
 
 #endif /* MAP_ITEMDB_H */

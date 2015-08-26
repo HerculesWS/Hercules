@@ -35,6 +35,7 @@
 #define GUILD_ALLIANCE_REMOVE 0x08
 
 struct inter_guild_interface inter_guild_s;
+struct inter_guild_interface *inter_guild;
 
 static const char dataToHex[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 

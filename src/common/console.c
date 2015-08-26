@@ -37,6 +37,7 @@
 #endif
 
 struct console_interface console_s;
+struct console_interface *console;
 #ifdef CONSOLE_INPUT
 struct console_input_interface console_input_s;
 
@@ -62,7 +63,7 @@ void display_title(void) {
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"               | | | |  __/ | | (__| |_| | |  __/\\__ \\                "CL_CLL""CL_NORMAL"\n");
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"               \\_| |_/\\___|_|  \\___|\\__,_|_|\\___||___/                "CL_CLL""CL_NORMAL"\n");
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                                                      "CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                    http://herc.ws/board/                         "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                      http://herc.ws/board/                           "CL_CLL""CL_NORMAL"\n");
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                                                      "CL_CLL""CL_NORMAL"\n");
 
 	ShowInfo("Hercules %d-bit for %s\n", sysinfo->is64bit() ? 64 : 32, sysinfo->platform());
@@ -74,12 +75,11 @@ void display_title(void) {
 	ShowInfo("Compile Flags: %s\n", sysinfo->cflags());
 }
 #ifdef CONSOLE_INPUT
-#if defined(WIN32)
-int console_parse_key_pressed(void) {
+int console_parse_key_pressed(void)
+{
+#ifdef WIN32
 	return _kbhit();
-}
-#else /* WIN32 */
-int console_parse_key_pressed(void) {
+#else // ! WIN32
 	struct timeval tv;
 	fd_set fds;
 	tv.tv_sec = 0;
@@ -91,8 +91,8 @@ int console_parse_key_pressed(void) {
 	select(STDIN_FILENO+1, &fds, NULL, NULL, &tv);
 
 	return FD_ISSET(STDIN_FILENO, &fds);
+#endif // WIN32
 }
-#endif /* _WIN32 */
 
 /*======================================
  * CORE: Console commands
@@ -102,7 +102,7 @@ int console_parse_key_pressed(void) {
  * Stops server
  **/
 CPCMD_C(exit,server) {
-	runflag = 0;
+	core->runflag = 0;
 }
 
 /**
@@ -158,41 +158,41 @@ CPCMD_C(skip,update) {
 }
 
 /**
- * Defines a main category.
- *
- * Categories can't be used as commands!
- * E.G.
- * - sql update skip
- *   'sql' is the main category
- * CP_DEF_C(category)
+ * Loads console commands list
  **/
+void console_load_defaults(void)
+{
+	/**
+	 * Defines a main category.
+	 *
+	 * Categories can't be used as commands!
+	 * E.G.
+	 * - sql update skip
+	 *   'sql' is the main category
+	 * CP_DEF_C(category)
+	 **/
 #define CP_DEF_C(x) { #x , NULL , NULL, NULL }
-/**
- * Defines a sub-category.
- *
- * Sub-categories can't be used as commands!
- * E.G.
- * - sql update skip
- *   'update' is a sub-category
- * CP_DEF_C2(command, category)
- **/
+	/**
+	 * Defines a sub-category.
+	 *
+	 * Sub-categories can't be used as commands!
+	 * E.G.
+	 * - sql update skip
+	 *   'update' is a sub-category
+	 * CP_DEF_C2(command, category)
+	 **/
 #define CP_DEF_C2(x,y) { #x , NULL , #y, NULL }
-/**
- * Defines a command that is inside a category or sub-category
- * CP_DEF_S(command, category/sub-category)
- **/
+	/**
+	 * Defines a command that is inside a category or sub-category
+	 * CP_DEF_S(command, category/sub-category)
+	 **/
 #define CP_DEF_S(x,y) { #x, CPCMD_C_A(x,y), #y, NULL }
-/**
- * Defines a command that is _not_ inside any category
- * CP_DEF_S(command)
- **/
+	/**
+	 * Defines a command that is _not_ inside any category
+	 * CP_DEF_S(command)
+	 **/
 #define CP_DEF(x) { #x , CPCMD_A(x), NULL, NULL }
 
-/**
- * Loads console commands list
- * See CP_DEF_C, CP_DEF_C2, CP_DEF_S, CP_DEF
- **/
-void console_load_defaults(void) {
 	struct {
 		char *name;
 		CParseFunc func;
@@ -254,11 +254,12 @@ void console_load_defaults(void) {
 			}
 		}
 	}
-}
 #undef CP_DEF_C
 #undef CP_DEF_C2
 #undef CP_DEF_S
 #undef CP_DEF
+}
+
 void console_parse_create(char *name, CParseFunc func) {
 	unsigned int i;
 	char *tok;

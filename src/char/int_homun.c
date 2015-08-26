@@ -22,6 +22,7 @@
 #include <stdlib.h>
 
 struct inter_homunculus_interface inter_homunculus_s;
+struct inter_homunculus_interface *inter_homunculus;
 
 int inter_homunculus_sql_init(void)
 {

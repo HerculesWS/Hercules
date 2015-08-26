@@ -256,7 +256,7 @@ AC_ARG_ENABLE(
 	AC_HELP_STRING(
 		[--enable-lto],
 		[
-			Enables or Disables Linktime Code Optimization (LTO is enabled by default)
+			Enables or Disables Linktime Code Optimization (LTO is disabled by default)
 		]
 	),
 	[
@@ -267,7 +267,7 @@ AC_ARG_ENABLE(
 			*) AC_MSG_ERROR([[invalid argument --enable-lto=$disableval... stopping]]);;
 		esac
 	],
-	[enable_lto="yes"]
+	[enable_lto="no"]
 )
 
 
@@ -485,7 +485,7 @@ AC_PATH_PROG(AR, ar)
 AC_LANG([C])
 
 
-CFLAGS="$CFLAGS -pipe -ffast-math -Wall -Wextra -Wno-sign-compare"
+CFLAGS="$CFLAGS -pipe -ffast-math -fvisibility=hidden -Wall -Wextra -Wno-sign-compare"
 CPPFLAGS="$CPPFLAGS -I../common"
 LDFLAGS="$LDFLAGS -rdynamic"
 
@@ -832,11 +832,10 @@ AC_COMPILE_IFELSE(
 	[AC_LANG_SOURCE([int foo;])],
 	[
 		AC_MSG_RESULT([yes])
-		compiler_supports_pic="yes"
+		SOFLAGS="$SOFLAGS -fPIC"
 	],
 	[
 		AC_MSG_RESULT([no])
-		compiler_supports_pic="no"
 	]
 )
 CFLAGS="$OLD_CFLAGS"
@@ -848,9 +847,7 @@ AC_MSG_CHECKING([how to make shared objects])
 OLD_CFLAGS="$CFLAGS"
 compiler_shared_objects=""
 compiler_supports_shared_objects="no"
-if test "$compiler_supports_pic" = "yes" ; then
-	my_shared_test_flags="$CFLAGS -fPIC"
-fi
+my_shared_test_flags="$CFLAGS $SOFLAGS"
 # default
 CFLAGS="$my_shared_test_flags -shared"
 AC_LINK_IFELSE(
@@ -891,7 +888,7 @@ if test "$compiler_supports_shared_objects" = "no" ; then
 else
 	AC_MSG_RESULT([$compiler_shared_objects $compiler_supports_shared_objects])
 	SOFLAGS="$SOFLAGS $compiler_shared_objects"
-	AC_SUBST([SOFLAGS])
+	WITH_PLUGINS="yes"
 
 	#
 	# On certain platforms, undefined references on shared libraries won't be checked
@@ -930,62 +927,10 @@ else
 		]
 	)
 	CFLAGS="$OLD_CFLAGS"
-
-	#
-	# shared objects need position independent code; some platforms emit
-	# it always, others need -fPIC
-	#
-	AC_MSG_CHECKING([whether $CC needs -fPIC for shared objects])
-	OLD_CFLAGS="$CFLAGS"
-	CFLAGS="$CFLAGS $SOFLAGS"
-	WITH_PLUGINS="yes"
-	AC_LINK_IFELSE(
-		[AC_LANG_SOURCE([
-			int bar = 0;
-
-			int foo(void)
-			{
-				return bar;
-			}
-		])],
-		[
-			AC_MSG_RESULT([no])
-			CFLAGS="$OLD_CFLAGS"
-		],
-		[
-			if test "$compiler_supports_pic" = "yes" ; then
-				# Verify if -shared really fails due to lack of -fPIC or something else
-				CFLAGS="$CFLAGS -fPIC"
-				AC_LINK_IFELSE(
-					[AC_LANG_SOURCE([
-						int bar = 0;
-
-						int foo(void)
-						{
-							return bar;
-						}
-					])],
-					[
-						AC_MSG_RESULT([yes])
-						CFLAGS="$OLD_CFLAGS -fPIC"
-					],
-					[
-						AC_MSG_RESULT([no, but fails for another reason])
-						AC_MSG_ERROR([compiler is unable to compile shared objects for an unhandled reason, please report this with attached config.log... stopping])
-					]
-				)
-			else
-				# Disable compilation of plugins (optional), so 'make all' does not fail
-				AC_MSG_RESULT([yes, but unsupported])
-				AC_MSG_NOTICE([compiler is unable to generate position independent code, disabled plugins (optional)])
-				WITH_PLUGINS="no"
-			fi
-		]
-	)
-
 fi
 my_shared_test_flags=""
 AC_SUBST([WITH_PLUGINS])
+AC_SUBST([SOFLAGS])
 
 
 #
@@ -1268,6 +1213,21 @@ AC_SEARCH_LIBS([pthread_attr_destroy], [pthread], [], [AC_MSG_ERROR([pthread lib
 AC_SEARCH_LIBS([pthread_cancel], [pthread], [], [AC_MSG_ERROR([pthread library not found or incompatible])])
 AC_SEARCH_LIBS([pthread_join], [pthread], [], [AC_MSG_ERROR([pthread library not found or incompatible])])
 
+# execinfo (backtrace)
+AC_CHECK_HEADERS([execinfo.h],
+	[
+		AC_SEARCH_LIBS([backtrace],
+			[execinfo],
+			[
+				CFLAGS="$CFLAGS -DHAVE_EXECINFO"
+			],
+			[
+			]
+		)
+	],
+	[
+	]
+)
 
 #
 # MySQL library

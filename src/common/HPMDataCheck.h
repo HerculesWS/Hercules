@@ -6,6 +6,12 @@
 #ifndef HPM_DATA_CHECK_H
 #define HPM_DATA_CHECK_H
 
+#if !defined(HPMHOOKGEN)
+#include "common/HPMSymbols.inc.h"
+#endif // ! HPMHOOKGEN
+#ifdef HPM_SYMBOL
+#undef HPM_SYMBOL
+#endif // HPM_SYMBOL
 
 HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef CHAR_CHAR_H
@@ -107,6 +113,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef COMMON_CORE_H
 		{ "CmdlineArgData", sizeof(struct CmdlineArgData), SERVER_TYPE_ALL },
 		{ "cmdline_interface", sizeof(struct cmdline_interface), SERVER_TYPE_ALL },
+		{ "core_interface", sizeof(struct core_interface), SERVER_TYPE_ALL },
 	#else
 		#define COMMON_CORE_H
 	#endif // COMMON_CORE_H
@@ -142,7 +149,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define COMMON_MALLOC_H
 	#endif // COMMON_MALLOC_H
 	#ifdef COMMON_MAPINDEX_H
-		{ "mapindex_interface", sizeof(struct mapindex_interface), SERVER_TYPE_ALL },
+		{ "mapindex_interface", sizeof(struct mapindex_interface), SERVER_TYPE_CHAR|SERVER_TYPE_MAP },
 	#else
 		#define COMMON_MAPINDEX_H
 	#endif // COMMON_MAPINDEX_H
@@ -185,8 +192,14 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define COMMON_NULLPO_H
 	#endif // COMMON_NULLPO_H
+	#ifdef COMMON_SHOWMSG_H
+		{ "showmsg_interface", sizeof(struct showmsg_interface), SERVER_TYPE_ALL },
+	#else
+		#define COMMON_SHOWMSG_H
+	#endif // COMMON_SHOWMSG_H
 	#ifdef COMMON_SOCKET_H
 		{ "hSockOpt", sizeof(struct hSockOpt), SERVER_TYPE_ALL },
+		{ "s_subnet", sizeof(struct s_subnet), SERVER_TYPE_ALL },
 		{ "socket_data", sizeof(struct socket_data), SERVER_TYPE_ALL },
 		{ "socket_interface", sizeof(struct socket_interface), SERVER_TYPE_ALL },
 	#else
@@ -446,6 +459,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "EQUIPITEM_INFO", sizeof(struct EQUIPITEM_INFO), SERVER_TYPE_MAP },
 		{ "EQUIPSLOTINFO", sizeof(struct EQUIPSLOTINFO), SERVER_TYPE_MAP },
 		{ "NORMALITEM_INFO", sizeof(struct NORMALITEM_INFO), SERVER_TYPE_MAP },
+		{ "RndOptions", sizeof(struct RndOptions), SERVER_TYPE_MAP },
 		{ "packet_additem", sizeof(struct packet_additem), SERVER_TYPE_MAP },
 		{ "packet_authok", sizeof(struct packet_authok), SERVER_TYPE_MAP },
 		{ "packet_banking_check", sizeof(struct packet_banking_check), SERVER_TYPE_MAP },

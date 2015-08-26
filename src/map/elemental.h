@@ -7,7 +7,7 @@
 
 #include "map/status.h" // struct status_data, struct status_change
 #include "map/unit.h" // struct unit_data
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/mmo.h" // NAME_LENGTH
 
 #include <stdarg.h>
@@ -120,10 +120,10 @@ struct elemental_interface {
 	int (*read_db) (void);
 };
 
-struct elemental_interface *elemental;
-
 #ifdef HERCULES_CORE
 void elemental_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct elemental_interface *elemental;
 
 #endif /* MAP_ELEMENTAL_H */

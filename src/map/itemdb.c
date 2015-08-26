@@ -26,6 +26,7 @@
 #include <string.h>
 
 struct itemdb_interface itemdb_s;
+struct itemdb_interface *itemdb;
 
 /**
  * Search for item name
@@ -75,7 +76,7 @@ struct item_data* itemdb_searchname(const char *str) {
 			return item;
 
 		//Second priority to Client displayed name.
-		if( strcasecmp(item->jname,str) == 0 )
+		if (!item2 && strcasecmp(item->jname,str) == 0)
 			item2 = item;
 	}
 
@@ -1616,15 +1617,15 @@ int itemdb_readdb_sql_sub(Sql *handle, int n, const char *source) {
 		id.stack.storage = (stack_flag&4)!=0;
 		id.stack.guildstorage = (stack_flag&8)!=0;
 	}
-	SQL->GetData(handle, 30, &data, NULL);
+	SQL->GetData(handle, 31, &data, NULL);
 	if (data) {
 		id.view_id = atoi(data);
 		if (id.view_id)
 			id.flag.available = 1;
 	}
-	SQL->GetData(handle, 31, &data, NULL); id.script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
-	SQL->GetData(handle, 32, &data, NULL); id.equip_script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
-	SQL->GetData(handle, 33, &data, NULL); id.unequip_script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	SQL->GetData(handle, 32, &data, NULL); id.script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	SQL->GetData(handle, 33, &data, NULL); id.equip_script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	SQL->GetData(handle, 34, &data, NULL); id.unequip_script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
 
 	return itemdb->validate_entry(&id, n, source);
 }

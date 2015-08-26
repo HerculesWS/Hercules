@@ -8932,7 +8932,7 @@ ma_fild01,173,223,0	duplicate(Ancient Grudge#01)	Ancient Grudge#03	HIDDEN_WARP_N
 ma_fild01,172,222,0	duplicate(Ancient Grudge#01)	Ancient Grudge#04	HIDDEN_WARP_NPC
 ma_fild01,171,223,0	duplicate(Ancient Grudge#01)	Ancient Grudge#05	HIDDEN_WARP_NPC
 
-ma_fild01,192,200,8	script	Tourist#pin01	1_M_MERCHANT,{
+ma_fild01,192,200,0	script	Tourist#pin01	1_M_MERCHANT,{
 	mes "[Tourist]";
 	mes "I came from afar and dropped everything to come and enjoy the 'Pintados Festival'.";
 	next;

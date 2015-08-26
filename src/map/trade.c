@@ -25,6 +25,7 @@
 #include <string.h>
 
 struct trade_interface trade_s;
+struct trade_interface *trade;
 
 /*==========================================
  * Initiates a trade request.
@@ -209,13 +210,13 @@ int impossible_trade_check(struct map_session_data *sd)
 			// if we block people
 			if (battle_config.ban_hack_trade < 0) {
 				chrif->char_ask_name(-1, sd->status.name, CHAR_ASK_NAME_BLOCK, 0, 0, 0, 0, 0, 0);
-				set_eof(sd->fd); // forced to disconnect because of the hack
+				sockt->eof(sd->fd); // forced to disconnect because of the hack
 				// message about the ban
 				safestrncpy(message_to_gm, msg_txt(540), sizeof(message_to_gm)); //  This player has been definitively blocked.
 			// if we ban people
 			} else if (battle_config.ban_hack_trade > 0) {
 				chrif->char_ask_name(-1, sd->status.name, CHAR_ASK_NAME_BAN, 0, 0, 0, 0, battle_config.ban_hack_trade, 0); // type: 2 - ban (year, month, day, hour, minute, second)
-				set_eof(sd->fd); // forced to disconnect because of the hack
+				sockt->eof(sd->fd); // forced to disconnect because of the hack
 				// message about the ban
 				sprintf(message_to_gm, msg_txt(507), battle_config.ban_hack_trade); //  This player has been banned for %d minute(s).
 			} else

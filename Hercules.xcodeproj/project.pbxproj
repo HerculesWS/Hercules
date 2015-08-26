@@ -15,6 +15,12 @@
 		A5467AD31A16FCB4008AFAA6 /* loginif.c in Sources */ = {isa = PBXBuildFile; fileRef = A5467AD11A16FCB4008AFAA6 /* loginif.c */; };
 		A5467AD61A16FCDC008AFAA6 /* mapif.c in Sources */ = {isa = PBXBuildFile; fileRef = A5467AD41A16FCDC008AFAA6 /* mapif.c */; };
 		A5467AD91A16FD08008AFAA6 /* geoip.c in Sources */ = {isa = PBXBuildFile; fileRef = A5467AD71A16FD08008AFAA6 /* geoip.c */; };
+		A55AED781B8153D800149CF8 /* conf.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC690185643BB009EB79C /* conf.c */; };
+		A55AED791B8153EA00149CF8 /* grammar.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC72218564C05009EB79C /* grammar.c */; };
+		A55AED7A1B8153EC00149CF8 /* libconfig.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC72418564C05009EB79C /* libconfig.c */; };
+		A55AED7B1B8153EF00149CF8 /* scanctx.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC72718564C05009EB79C /* scanctx.c */; };
+		A55AED7C1B8153F100149CF8 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC72918564C05009EB79C /* scanner.c */; };
+		A55AED7D1B8153F300149CF8 /* strbuf.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC72B18564C05009EB79C /* strbuf.c */; };
 		A567612D185D11D700997C0D /* nullpo.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6B2185643BB009EB79C /* nullpo.c */; };
 		A56CC68918564387009EB79C /* account_sql.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68118564387009EB79C /* account_sql.c */; };
 		A56CC68A18564387009EB79C /* ipban_sql.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68318564387009EB79C /* ipban_sql.c */; };
@@ -1063,7 +1069,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0610;
-				ORGANIZATIONNAME = hercules.ws;
+				ORGANIZATIONNAME = herc.ws;
 			};
 			buildConfigurationList = A56CC655185642B4009EB79C /* Build configuration list for PBXProject "Hercules" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1150,6 +1156,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A55AED781B8153D800149CF8 /* conf.c in Sources */,
 				A58A5A1A185800CD0099683E /* strlib.c in Sources */,
 				A5F7946F191CA34E002293AB /* sysinfo.c in Sources */,
 				A5380CD91856CF4A0090CBC4 /* core.c in Sources */,
@@ -1158,10 +1165,15 @@
 				A58A5A19185800C20099683E /* des.c in Sources */,
 				A5380CD71856CE3C0090CBC4 /* mapcache.c in Sources */,
 				A58A5A1B185800E70099683E /* utils.c in Sources */,
+				A55AED7A1B8153EC00149CF8 /* libconfig.c in Sources */,
 				A58A5A18185800B80099683E /* grfio.c in Sources */,
 				A5380CDA1856D0650090CBC4 /* socket.c in Sources */,
+				A55AED7C1B8153F100149CF8 /* scanner.c in Sources */,
 				A58A5A17185800A40099683E /* showmsg.c in Sources */,
 				A5380CDB1856D0690090CBC4 /* malloc.c in Sources */,
+				A55AED7B1B8153EF00149CF8 /* scanctx.c in Sources */,
+				A55AED791B8153EA00149CF8 /* grammar.c in Sources */,
+				A55AED7D1B8153F300149CF8 /* strbuf.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1516,6 +1528,7 @@
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
+					"-DHAVE_EXECINFO",
 					"-DMAXCONN=16384",
 					"-DHAS_TLS",
 					"-DHAVE_SETRLIMIT",
@@ -1547,7 +1560,6 @@
 					"-DHAVE_XLOCALE_H=1",
 					"-DHAVE_LIBZ=1",
 					"-DHAVE_LIBPTHREAD=1",
-					"-DHPMHOOKING_LOGIN",
 				);
 				OTHER_LDFLAGS = (
 					"-lpthread",
@@ -1594,6 +1606,7 @@
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LLVM_LTO = YES;
 				OTHER_CFLAGS = (
+					"-DHAVE_EXECINFO",
 					"-DMAXCONN=16384",
 					"-DHAS_TLS",
 					"-DHAVE_SETRLIMIT",
@@ -1625,7 +1638,6 @@
 					"-DHAVE_XLOCALE_H=1",
 					"-DHAVE_LIBZ=1",
 					"-DHAVE_LIBPTHREAD=1",
-					"-DHPMHOOKING_LOGIN",
 				);
 				OTHER_LDFLAGS = (
 					"-lpthread",
@@ -1700,6 +1712,41 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				OTHER_CFLAGS = (
+					"-DHAVE_EXECINFO",
+					"-DMAXCONN=16384",
+					"-DHAS_TLS",
+					"-DHAVE_SETRLIMIT",
+					"-DHAVE_STRNLEN",
+					"-DPACKAGE_NAME=\\\"\\\"",
+					"-DPACKAGE_TARNAME=\\\"\\\"",
+					"-DPACKAGE_VERSION=\\\"\\\"",
+					"-DPACKAGE_STRING=\\\"\\\"",
+					"-DPACKAGE_BUGREPORT=\\\"\\\"",
+					"-DPACKAGE_URL=\\\"\\\"",
+					"-DSTDC_HEADERS=1",
+					"-DHAVE_SYS_TYPES_H=1",
+					"-DHAVE_SYS_STAT_H=1",
+					"-DHAVE_STDLIB_H=1",
+					"-DHAVE_STRING_H=1",
+					"-DHAVE_MEMORY_H=1",
+					"-DHAVE_STRINGS_H=1",
+					"-DHAVE_INTTYPES_H=1",
+					"-DHAVE_STDINT_H=1",
+					"-DHAVE_UNISTD_H=1",
+					"-D__EXTENSIONS__=1",
+					"-D_ALL_SOURCE=1",
+					"-D_GNU_SOURCE=1",
+					"-D_POSIX_PTHREAD_SEMANTICS=1",
+					"-D_TANDEM_SOURCE=1",
+					"-DHAVE_USELOCALE=1",
+					"-DHAVE_NEWLOCALE=1",
+					"-DHAVE_FREELOCALE=1",
+					"-DHAVE_XLOCALE_H=1",
+					"-DHAVE_LIBZ=1",
+					"-DHAVE_LIBPTHREAD=1",
+					"-DHPMHOOKING_MAP",
+				);
 				PRODUCT_NAME = HPMHooking_map;
 			};
 			name = Debug;
@@ -1710,6 +1757,41 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
 				EXECUTABLE_PREFIX = "";
+				OTHER_CFLAGS = (
+					"-DHAVE_EXECINFO",
+					"-DMAXCONN=16384",
+					"-DHAS_TLS",
+					"-DHAVE_SETRLIMIT",
+					"-DHAVE_STRNLEN",
+					"-DPACKAGE_NAME=\\\"\\\"",
+					"-DPACKAGE_TARNAME=\\\"\\\"",
+					"-DPACKAGE_VERSION=\\\"\\\"",
+					"-DPACKAGE_STRING=\\\"\\\"",
+					"-DPACKAGE_BUGREPORT=\\\"\\\"",
+					"-DPACKAGE_URL=\\\"\\\"",
+					"-DSTDC_HEADERS=1",
+					"-DHAVE_SYS_TYPES_H=1",
+					"-DHAVE_SYS_STAT_H=1",
+					"-DHAVE_STDLIB_H=1",
+					"-DHAVE_STRING_H=1",
+					"-DHAVE_MEMORY_H=1",
+					"-DHAVE_STRINGS_H=1",
+					"-DHAVE_INTTYPES_H=1",
+					"-DHAVE_STDINT_H=1",
+					"-DHAVE_UNISTD_H=1",
+					"-D__EXTENSIONS__=1",
+					"-D_ALL_SOURCE=1",
+					"-D_GNU_SOURCE=1",
+					"-D_POSIX_PTHREAD_SEMANTICS=1",
+					"-D_TANDEM_SOURCE=1",
+					"-DHAVE_USELOCALE=1",
+					"-DHAVE_NEWLOCALE=1",
+					"-DHAVE_FREELOCALE=1",
+					"-DHAVE_XLOCALE_H=1",
+					"-DHAVE_LIBZ=1",
+					"-DHAVE_LIBPTHREAD=1",
+					"-DHPMHOOKING_MAP",
+				);
 				PRODUCT_NAME = HPMHooking_map;
 			};
 			name = Release;
@@ -1772,6 +1854,41 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				OTHER_CFLAGS = (
+					"-DHAVE_EXECINFO",
+					"-DMAXCONN=16384",
+					"-DHAS_TLS",
+					"-DHAVE_SETRLIMIT",
+					"-DHAVE_STRNLEN",
+					"-DPACKAGE_NAME=\\\"\\\"",
+					"-DPACKAGE_TARNAME=\\\"\\\"",
+					"-DPACKAGE_VERSION=\\\"\\\"",
+					"-DPACKAGE_STRING=\\\"\\\"",
+					"-DPACKAGE_BUGREPORT=\\\"\\\"",
+					"-DPACKAGE_URL=\\\"\\\"",
+					"-DSTDC_HEADERS=1",
+					"-DHAVE_SYS_TYPES_H=1",
+					"-DHAVE_SYS_STAT_H=1",
+					"-DHAVE_STDLIB_H=1",
+					"-DHAVE_STRING_H=1",
+					"-DHAVE_MEMORY_H=1",
+					"-DHAVE_STRINGS_H=1",
+					"-DHAVE_INTTYPES_H=1",
+					"-DHAVE_STDINT_H=1",
+					"-DHAVE_UNISTD_H=1",
+					"-D__EXTENSIONS__=1",
+					"-D_ALL_SOURCE=1",
+					"-D_GNU_SOURCE=1",
+					"-D_POSIX_PTHREAD_SEMANTICS=1",
+					"-D_TANDEM_SOURCE=1",
+					"-DHAVE_USELOCALE=1",
+					"-DHAVE_NEWLOCALE=1",
+					"-DHAVE_FREELOCALE=1",
+					"-DHAVE_XLOCALE_H=1",
+					"-DHAVE_LIBZ=1",
+					"-DHAVE_LIBPTHREAD=1",
+					"-DHPMHOOKING_CHAR",
+				);
 				PRODUCT_NAME = HPMHooking_char;
 			};
 			name = Debug;
@@ -1782,6 +1899,41 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
 				EXECUTABLE_PREFIX = "";
+				OTHER_CFLAGS = (
+					"-DHAVE_EXECINFO",
+					"-DMAXCONN=16384",
+					"-DHAS_TLS",
+					"-DHAVE_SETRLIMIT",
+					"-DHAVE_STRNLEN",
+					"-DPACKAGE_NAME=\\\"\\\"",
+					"-DPACKAGE_TARNAME=\\\"\\\"",
+					"-DPACKAGE_VERSION=\\\"\\\"",
+					"-DPACKAGE_STRING=\\\"\\\"",
+					"-DPACKAGE_BUGREPORT=\\\"\\\"",
+					"-DPACKAGE_URL=\\\"\\\"",
+					"-DSTDC_HEADERS=1",
+					"-DHAVE_SYS_TYPES_H=1",
+					"-DHAVE_SYS_STAT_H=1",
+					"-DHAVE_STDLIB_H=1",
+					"-DHAVE_STRING_H=1",
+					"-DHAVE_MEMORY_H=1",
+					"-DHAVE_STRINGS_H=1",
+					"-DHAVE_INTTYPES_H=1",
+					"-DHAVE_STDINT_H=1",
+					"-DHAVE_UNISTD_H=1",
+					"-D__EXTENSIONS__=1",
+					"-D_ALL_SOURCE=1",
+					"-D_GNU_SOURCE=1",
+					"-D_POSIX_PTHREAD_SEMANTICS=1",
+					"-D_TANDEM_SOURCE=1",
+					"-DHAVE_USELOCALE=1",
+					"-DHAVE_NEWLOCALE=1",
+					"-DHAVE_FREELOCALE=1",
+					"-DHAVE_XLOCALE_H=1",
+					"-DHAVE_LIBZ=1",
+					"-DHAVE_LIBPTHREAD=1",
+					"-DHPMHOOKING_CHAR",
+				);
 				PRODUCT_NAME = HPMHooking_char;
 			};
 			name = Release;
@@ -1796,6 +1948,41 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				OTHER_CFLAGS = (
+					"-DHAVE_EXECINFO",
+					"-DMAXCONN=16384",
+					"-DHAS_TLS",
+					"-DHAVE_SETRLIMIT",
+					"-DHAVE_STRNLEN",
+					"-DPACKAGE_NAME=\\\"\\\"",
+					"-DPACKAGE_TARNAME=\\\"\\\"",
+					"-DPACKAGE_VERSION=\\\"\\\"",
+					"-DPACKAGE_STRING=\\\"\\\"",
+					"-DPACKAGE_BUGREPORT=\\\"\\\"",
+					"-DPACKAGE_URL=\\\"\\\"",
+					"-DSTDC_HEADERS=1",
+					"-DHAVE_SYS_TYPES_H=1",
+					"-DHAVE_SYS_STAT_H=1",
+					"-DHAVE_STDLIB_H=1",
+					"-DHAVE_STRING_H=1",
+					"-DHAVE_MEMORY_H=1",
+					"-DHAVE_STRINGS_H=1",
+					"-DHAVE_INTTYPES_H=1",
+					"-DHAVE_STDINT_H=1",
+					"-DHAVE_UNISTD_H=1",
+					"-D__EXTENSIONS__=1",
+					"-D_ALL_SOURCE=1",
+					"-D_GNU_SOURCE=1",
+					"-D_POSIX_PTHREAD_SEMANTICS=1",
+					"-D_TANDEM_SOURCE=1",
+					"-DHAVE_USELOCALE=1",
+					"-DHAVE_NEWLOCALE=1",
+					"-DHAVE_FREELOCALE=1",
+					"-DHAVE_XLOCALE_H=1",
+					"-DHAVE_LIBZ=1",
+					"-DHAVE_LIBPTHREAD=1",
+					"-DHPMHOOKING_LOGIN",
+				);
 				PRODUCT_NAME = HPMHooking_login;
 			};
 			name = Debug;
@@ -1806,6 +1993,41 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/plugins";
 				EXECUTABLE_PREFIX = "";
+				OTHER_CFLAGS = (
+					"-DHAVE_EXECINFO",
+					"-DMAXCONN=16384",
+					"-DHAS_TLS",
+					"-DHAVE_SETRLIMIT",
+					"-DHAVE_STRNLEN",
+					"-DPACKAGE_NAME=\\\"\\\"",
+					"-DPACKAGE_TARNAME=\\\"\\\"",
+					"-DPACKAGE_VERSION=\\\"\\\"",
+					"-DPACKAGE_STRING=\\\"\\\"",
+					"-DPACKAGE_BUGREPORT=\\\"\\\"",
+					"-DPACKAGE_URL=\\\"\\\"",
+					"-DSTDC_HEADERS=1",
+					"-DHAVE_SYS_TYPES_H=1",
+					"-DHAVE_SYS_STAT_H=1",
+					"-DHAVE_STDLIB_H=1",
+					"-DHAVE_STRING_H=1",
+					"-DHAVE_MEMORY_H=1",
+					"-DHAVE_STRINGS_H=1",
+					"-DHAVE_INTTYPES_H=1",
+					"-DHAVE_STDINT_H=1",
+					"-DHAVE_UNISTD_H=1",
+					"-D__EXTENSIONS__=1",
+					"-D_ALL_SOURCE=1",
+					"-D_GNU_SOURCE=1",
+					"-D_POSIX_PTHREAD_SEMANTICS=1",
+					"-D_TANDEM_SOURCE=1",
+					"-DHAVE_USELOCALE=1",
+					"-DHAVE_NEWLOCALE=1",
+					"-DHAVE_FREELOCALE=1",
+					"-DHAVE_XLOCALE_H=1",
+					"-DHAVE_LIBZ=1",
+					"-DHAVE_LIBPTHREAD=1",
+					"-DHPMHOOKING_LOGIN",
+				);
 				PRODUCT_NAME = HPMHooking_login;
 			};
 			name = Release;

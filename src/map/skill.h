@@ -5,11 +5,9 @@
 #ifndef MAP_SKILL_H
 #define MAP_SKILL_H
 
-#include "config/core.h" // RENEWAL_CAST
-
 #include "map/map.h" // struct block_list
 #include "map/status.h" // enum sc_type
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/db.h"
 #include "common/mmo.h" // MAX_SKILL, struct square
 
@@ -2084,10 +2082,10 @@ struct skill_interface {
 	void (*get_requirement_unknown) (struct status_change *sc, struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv, struct skill_condition *req);
 };
 
-struct skill_interface *skill;
-
 #ifdef HERCULES_CORE
 void skill_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct skill_interface *skill;
 
 #endif /* MAP_SKILL_H */

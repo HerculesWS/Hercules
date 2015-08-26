@@ -2,7 +2,7 @@
 // See the LICENSE file
 // Sample Hercules Plugin
 
-#include "common/HPMi.h"
+#include "common/hercules.h"
 #include "common/db.h"
 #include "common/malloc.h"
 #include "common/mmo.h"
@@ -11,7 +11,6 @@
 #if defined (HPMHOOKING_LOGIN)
 #define HPM_SERVER_TYPE SERVER_TYPE_LOGIN
 #define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_login.HPMHooksCore.inc"
-#define HPM_SYMBOL_INCLUDE "HPMHooking/HPMHooking_login.GetSymbol.inc"
 #define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_login.Hooks.inc"
 #define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_login.HookingPoints.inc"
 #define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_login.sources.inc"
@@ -19,7 +18,6 @@
 #elif defined (HPMHOOKING_CHAR)
 #define HPM_SERVER_TYPE SERVER_TYPE_CHAR
 #define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_char.HPMHooksCore.inc"
-#define HPM_SYMBOL_INCLUDE "HPMHooking/HPMHooking_char.GetSymbol.inc"
 #define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_char.Hooks.inc"
 #define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_char.HookingPoints.inc"
 #define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_char.sources.inc"
@@ -39,10 +37,10 @@
 #include "char/loginif.h"
 #include "char/mapif.h"
 #include "char/pincode.h"
+#include "common/mapindex.h"
 #elif defined (HPMHOOKING_MAP)
 #define HPM_SERVER_TYPE SERVER_TYPE_MAP
 #define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_map.HPMHooksCore.inc"
-#define HPM_SYMBOL_INCLUDE "HPMHooking/HPMHooking_map.GetSymbol.inc"
 #define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_map.Hooks.inc"
 #define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_map.HookingPoints.inc"
 #define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_map.sources.inc"
@@ -68,7 +66,6 @@
 #include "map/mercenary.h"
 #include "map/mob.h"
 #include "map/npc.h"
-#include "map/npc.h"
 #include "map/party.h"
 #include "map/path.h"
 #include "map/pc.h"
@@ -80,15 +77,27 @@
 #include "map/storage.h"
 #include "map/trade.h"
 #include "map/unit.h"
+#include "common/mapindex.h"
 #else
 #define HPM_SERVER_TYPE SERVER_TYPE_UNKNOWN
 #define HPM_CORE_INCLUDE "HPMHooking/HPMHooking.HPMHooksCore.inc"
-#define HPM_SYMBOL_INCLUDE "HPMHooking/HPMHooking.GetSymbol.inc"
 #define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking.Hooks.inc"
 #define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking.HookingPoints.inc"
 #define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking.sources.inc"
 #error HPMHooking plugin needs to be compiled for a specific server type. Please make sure your Makefiles are up to date.
 #endif
+#include "common/conf.h"
+#include "common/console.h"
+#include "common/db.h"
+#include "common/malloc.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/sql.h"
+#include "common/strlib.h"
+#include "common/sysinfo.h"
+#include "common/timer.h"
+#include "common/utils.h"
 
 #include "common/HPMDataCheck.h"
 
@@ -135,10 +144,10 @@ HPExport void server_post_final (void) {
 }
 
 HPExport const char *Hooked (bool *fr) {
+	const char *ret = HPM_shared_symbols(HPM_SERVER_TYPE);
+	if (ret)
+		return ret;
 	HPMforce_return = fr;
-	if (!(DB = GET_SYMBOL("DB"))) return "DB";
-	if (!(iMalloc = GET_SYMBOL("iMalloc"))) return "iMalloc";
-#include HPM_SYMBOL_INCLUDE
 	HPM_HP_load();
 	return NULL;
 }

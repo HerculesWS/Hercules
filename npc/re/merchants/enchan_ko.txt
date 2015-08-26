@@ -13,7 +13,7 @@
 
 // Main NPC :: job_ko
 //============================================================
-que_ng,75,20,3	script	Artisan Tene#ko	762,{
+que_ng,75,20,3	script	Artisan Tene#ko	4_M_JPN2,{
 	disable_items;
 	mes "[Artisan Tene]";
 	mes "Hello? I'm Artisan Tene, the most respectful blacksmith of them all.";

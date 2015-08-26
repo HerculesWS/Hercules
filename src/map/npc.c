@@ -43,6 +43,7 @@
 #include <time.h>
 
 struct npc_interface npc_s;
+struct npc_interface *npc;
 
 static int npc_id=START_NPC_NUM;
 static int npc_warp=0;
@@ -396,7 +397,7 @@ void npc_event_doall_sub(void *key, void *data, va_list ap)
 			npc->event_sub(map->id2sd(rid), ev, buf);
 		}
 		else {
-			script->run(ev->nd->u.scr.script, ev->pos, rid, ev->nd->bl.id);
+			script->run_npc(ev->nd->u.scr.script, ev->pos, rid, ev->nd->bl.id);
 		}
 		(*c)++;
 	}
@@ -411,7 +412,7 @@ int npc_event_do(const char* name)
 	else {
 		struct event_data *ev = strdb_get(npc->ev_db, name);
 		if (ev) {
-			script->run(ev->nd->u.scr.script, ev->pos, 0, ev->nd->bl.id);
+			script->run_npc(ev->nd->u.scr.script, ev->pos, 0, ev->nd->bl.id);
 			return 1;
 		}
 	}
@@ -596,7 +597,7 @@ int npc_timerevent(int tid, int64 tick, int id, intptr_t data) {
 	}
 
 	// Run the script
-	script->run(nd->u.scr.script,te->pos,nd->u.scr.rid,nd->bl.id);
+	script->run_npc(nd->u.scr.script,te->pos,nd->u.scr.rid,nd->bl.id);
 
 	nd->u.scr.rid = old_rid; // Attached-rid should be restored anyway.
 	if( sd )
@@ -745,7 +746,7 @@ void npc_timerevent_quit(struct map_session_data* sd)
 			nd->u.scr.timer = ted->time;
 
 			//Execute label
-			script->run(nd->u.scr.script,ev->pos,sd->bl.id,nd->bl.id);
+			script->run_npc(nd->u.scr.script,ev->pos,sd->bl.id,nd->bl.id);
 
 			//Restore previous data.
 			nd->u.scr.rid = old_rid;
@@ -822,7 +823,7 @@ int npc_event_sub(struct map_session_data* sd, struct event_data* ev, const char
 		npc->event_dequeue(sd);
 		return 2;
 	}
-	script->run(ev->nd->u.scr.script,ev->pos,sd->bl.id,ev->nd->bl.id);
+	script->run_npc(ev->nd->u.scr.script,ev->pos,sd->bl.id,ev->nd->bl.id);
 	return 0;
 }
 
@@ -1067,7 +1068,7 @@ int npc_touch_areanpc2(struct mob_data *md)
 						break; // No OnTouchNPC Event
 					md->areanpc_id = map->list[m].npc[i]->bl.id;
 					id = md->bl.id; // Stores Unique ID
-					script->run(ev->nd->u.scr.script, ev->pos, md->bl.id, ev->nd->bl.id);
+					script->run_npc(ev->nd->u.scr.script, ev->pos, md->bl.id, ev->nd->bl.id);
 					if( map->id2md(id) == NULL ) return 1; // Not Warped, but killed
 					break;
 			}
@@ -1255,7 +1256,7 @@ int npc_click(struct map_session_data* sd, struct npc_data* nd)
 				if( !npc->trader_open(sd,nd) )
 					return 1;
 			} else
-				script->run(nd->u.scr.script,0,sd->bl.id,nd->bl.id);
+				script->run_npc(nd->u.scr.script,0,sd->bl.id,nd->bl.id);
 			break;
 		case TOMB:
 			npc->run_tomb(sd,nd);
@@ -1654,7 +1655,7 @@ void npc_trader_count_funds(struct npc_data *nd, struct map_session_data *sd) {
 	snprintf(evname, EVENT_NAME_LENGTH, "%s::OnCountFunds",nd->exname);
 	
 	if ( (ev = strdb_get(npc->ev_db, evname)) )
-		script->run(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
+		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
 	else
 		ShowError("npc_trader_count_funds: '%s' event '%s' not found, operation failed\n",nd->exname,evname);
 	
@@ -1682,7 +1683,7 @@ bool npc_trader_pay(struct npc_data *nd, struct map_session_data *sd, int price,
 		pc->setreg(sd,script->add_str("@price"),price);
 		pc->setreg(sd,script->add_str("@points"),points);
 		
-		script->run(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
+		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
 	} else
 		ShowError("npc_trader_pay: '%s' event '%s' not found, operation failed\n",nd->exname,evname);
 	
@@ -2535,6 +2536,8 @@ int npc_parseview(const char* w4, const char* start, const char* buffer, const c
 	} else {
 		// NPC has an ID specified for view id.
 		val = atoi(w4);
+		if (val != -1)
+			ShowWarning("npc_parseview: Use of numeric NPC view IDs is deprecated and may be removed in a future update. Please use NPC view constants instead. ID '%d' specified in file '%s', line '%d'.\n", val, filepath, strline(buffer, start-buffer));
 	}
 
 	return val;
@@ -2703,6 +2706,12 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 			ShowError("npc_parse_shop: Invalid shop definition in file '%s', line '%d'.\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 			if (retval) *retval = EXIT_FAILURE;
 			return strchr(start,'\n');// skip and continue
+		}
+
+		if (dir < 0 || dir > 7) {
+			ShowError("npc_parse_ship: Invalid NPC facing direction '%d' in file '%s', line '%d'.\n", dir, filepath, strline(buffer, start-buffer));
+			if (retval) *retval = EXIT_FAILURE;
+			return strchr(start,'\n');//continue
 		}
 
 		m = map->mapname2mapid(mapname);
@@ -2930,6 +2939,13 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 
 	script_start = strstr(start,",{");
 	end = strchr(start,'\n');
+
+	if (dir < 0 || dir > 7) {
+		ShowError("npc_parse_script: Invalid NPC facing direction '%d' in file '%s', line '%d'.\n", dir, filepath, strline(buffer, start-buffer));
+		if (retval) *retval = EXIT_FAILURE;
+		return npc->skip_script(script_start, buffer, filepath, retval); // continue
+	}
+
 	if( strstr(w4,",{") == NULL || script_start == NULL || (end != NULL && script_start > end) )
 	{
 		ShowError("npc_parse_script: Missing left curly ',{' in file '%s', line '%d'. Skipping the rest of the file.\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
@@ -3022,7 +3038,7 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 		if( ( ev = (struct event_data*)strdb_get(npc->ev_db, evname) ) ) {
 
 			//Execute OnInit
-			script->run(nd->u.scr.script,ev->pos,0,nd->bl.id);
+			script->run_npc(nd->u.scr.script,ev->pos,0,nd->bl.id);
 
 		}
 	}
@@ -3086,6 +3102,11 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 			ShowError("npc_parse_duplicate: Invalid placement format for duplicate in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 			if (retval) *retval = EXIT_FAILURE;
 			return end;// next line, try to continue
+		}
+		if (dir < 0 || dir > 7) {
+			ShowError("npc_parse_duplicate: Invalid NPC facing direction '%d' in file '%s', line '%d'.\n", dir, filepath, strline(buffer, start-buffer));
+			if (retval) *retval = EXIT_FAILURE;
+			return end; // try next
 		}
 		m = map->mapname2mapid(mapname);
 	}
@@ -3188,7 +3209,7 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 		if( ( ev = (struct event_data*)strdb_get(npc->ev_db, evname) ) ) {
 
 			//Execute OnInit
-			script->run(nd->u.scr.script,ev->pos,0,nd->bl.id);
+			script->run_npc(nd->u.scr.script,ev->pos,0,nd->bl.id);
 
 		}
 	}
@@ -3511,10 +3532,10 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 
 	// w1=<map name>,<x>,<y>,<xs>,<ys>
 	// w3=<mob name>{,<mob level>}
-	// w4=<mob id>,<amount>,<delay1>,<delay2>,<event>{,<mob size>,<mob ai>}
-	if( sscanf(w1, "%31[^,],%d,%d,%d,%d", mapname, &x, &y, &xs, &ys) < 3
+	// w4=<mob id>,<amount>,<delay1>,<delay2>{,<event>,<mob size>,<mob ai>}
+	if( sscanf(w1, "%31[^,],%d,%d,%d,%d", mapname, &x, &y, &xs, &ys) < 5
 	 || sscanf(w3, "%23[^,],%d", mobname, &mob_lv) < 1
-	 || sscanf(w4, "%d,%d,%u,%u,%50[^,],%d,%d[^\t\r\n]", &class_, &num, &mobspawn.delay1, &mobspawn.delay2, mobspawn.eventname, &size, &ai) < 2
+	 || sscanf(w4, "%d,%d,%u,%u,%50[^,],%d,%d[^\t\r\n]", &class_, &num, &mobspawn.delay1, &mobspawn.delay2, mobspawn.eventname, &size, &ai) < 4
 	 ) {
 		ShowError("npc_parse_mob: Invalid mob definition in file '%s', line '%d'.\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 		if (retval) *retval = EXIT_FAILURE;

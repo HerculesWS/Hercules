@@ -35,6 +35,7 @@
 #include <string.h>
 
 struct party_interface party_s;
+struct party_interface *party;
 
 /*==========================================
  * Fills the given party_member structure according to the sd provided.

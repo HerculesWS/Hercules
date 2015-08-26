@@ -45,7 +45,7 @@
 #include "common/nullpo.h"
 #include "common/random.h"
 #include "common/showmsg.h"
-#include "common/socket.h" // session[]
+#include "common/socket.h"
 #include "common/strlib.h" // safestrncpy()
 #include "common/sysinfo.h"
 #include "common/timer.h"
@@ -57,6 +57,7 @@
 #include <time.h>
 
 struct pc_interface pc_s;
+struct pc_interface *pc;
 
 //Converts a class to its array index for CLASS_COUNT defined arrays.
 //Note that it does not do a validity check for speed purposes, where parsing
@@ -1007,7 +1008,7 @@ int pc_isequip(struct map_session_data *sd,int n)
 bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_time, int group_id, struct mmo_charstatus *st, bool changing_mapservers) {
 	int i;
 	int64 tick = timer->gettick();
-	uint32 ip = session[sd->fd]->client_addr;
+	uint32 ip = sockt->session[sd->fd]->client_addr;
 
 	sd->login_id2 = login_id2;
 
@@ -2834,7 +2835,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			}
 			if ( type2 >= RC_MAX ) {
-				for ( i = RC_FORMLESS; i < RC_MAX; i++ ) {
+				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 					if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 						 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 						 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -2887,7 +2888,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			if(sd->state.lr_flag != 2) {
 				if (type2 >= RC_MAX ) {
-					for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -2948,7 +2949,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			if(sd->state.lr_flag != 2){
 				if ( type2 >= RC_MAX ){
-					for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3149,7 +3150,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			if(sd->state.lr_flag == 2)
 				break;
 			if ( type2 >= RC_MAX ) {
-				for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 					if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 						 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 						 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3178,7 +3179,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			if(sd->state.lr_flag != 2){
 				if ( type2 >= RC_MAX ){
-					for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3268,23 +3269,17 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				sd->skillblown[i].val = val;
 			}
 			break;
-	#ifndef RENEWAL_CAST
+#ifndef RENEWAL_CAST
 		case SP_VARCASTRATE:
-	#endif
+#endif
 		case SP_CASTRATE:
 			if(sd->state.lr_flag == 2)
 				break;
 			ARR_FIND(0, ARRAYLENGTH(sd->skillcast), i, sd->skillcast[i].id == 0 || sd->skillcast[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillcast)) {
 				//Better mention this so the array length can be updated. [Skotlex]
-				ShowDebug("script->run: bonus2 %s reached it's limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
-
-	#ifndef RENEWAL_CAST
-					"bCastRate",
-	#else
-					"bVariableCastrate",
-	#endif
-
+				ShowDebug("script->run: bonus2 %s reached its limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
+					type == SP_CASTRATE ? "bCastRate" : "bVariableCastrate",
 					ARRAYLENGTH(sd->skillcast), type2, val);
 				break;
 			}
@@ -3367,7 +3362,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			if(sd->state.lr_flag != 2) {
 				if ( type2 >= RC_MAX ){
-					for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3388,7 +3383,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			if(sd->state.lr_flag != 2) {
 				if ( type2 >= RC_MAX ){
-					for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3424,7 +3419,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			}
 			if ( type2 >= RC_MAX ){
-				for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 					if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 						 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 						 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3453,7 +3448,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			}
 			if ( type2 >= RC_MAX ){
-				for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 					if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 						 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 						 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3491,7 +3486,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			if(sd->state.lr_flag != 2) {
 				if ( type2 >= RC_MAX ) {
-					for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3512,7 +3507,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			if(sd->state.lr_flag != 2) {
 				if ( type2 >= RC_MAX ) {
-					for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3636,7 +3631,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			if(sd->state.lr_flag != 2) {
 				if ( type2 >= RC_MAX ) {
-					for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3715,7 +3710,7 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 				break;
 			}
 			if ( type2 >= RC_MAX ) {
-				for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 					if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 						 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 						 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3748,7 +3743,7 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 				break;
 			}
 			if ( type2 >= RC_MAX ) {
-				for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 					if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 						 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 						 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3888,7 +3883,7 @@ int pc_bonus4(struct map_session_data *sd,int type,int type2,int type3,int type4
 		if(sd->state.lr_flag == 2)
 			break;
 		if ( type2 >= RC_MAX ) {
-			for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+			for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 				if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 	 				 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 	 				 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -3914,7 +3909,7 @@ int pc_bonus4(struct map_session_data *sd,int type,int type2,int type3,int type4
 		if(sd->state.lr_flag == 2)
 			break;
 		if ( type2 >= RC_MAX ) {
-			for ( i = RC_FORMLESS; i < RC_MAX; i++ ){
+			for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
 				if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
 	 				 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
 	 				 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
@@ -4882,7 +4877,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 int pc_useitem(struct map_session_data *sd,int n) {
 	int64 tick = timer->gettick();
 	int amount, nameid, i;
-	struct script_code *item_script;
+	bool removeItem = false;
 
 	nullpo_ret(sd);
 
@@ -4994,38 +4989,36 @@ int pc_useitem(struct map_session_data *sd,int n) {
 		sd->catch_target_class = -1;
 
 	amount = sd->status.inventory[n].amount;
-	item_script = sd->inventory_data[n]->script;
 	//Check if the item is to be consumed immediately [Skotlex]
 	if (sd->inventory_data[n]->flag.delay_consume || sd->inventory_data[n]->flag.keepafteruse)
 		clif->useitemack(sd,n,amount,true);
 	else {
 		if (sd->status.inventory[n].expire_time == 0) {
 			clif->useitemack(sd, n, amount - 1, true);
-			pc->delitem(sd, n, 1, 1, DELITEM_NORMAL, LOG_TYPE_CONSUME); // Rental Usable Items are not deleted until expiration
+			removeItem = true;
 		} else {
 			clif->useitemack(sd, n, 0, false);
 		}
 	}
+
 	if(sd->status.inventory[n].card[0]==CARD0_CREATE &&
 		pc->famerank(MakeDWord(sd->status.inventory[n].card[2],sd->status.inventory[n].card[3]), MAPID_ALCHEMIST))
 	{
-	    script->potion_flag = 2; // Famous player's potions have 50% more efficiency
-		 if (sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_ROGUE)
-			 script->potion_flag = 3; //Even more effective potions.
+		script->potion_flag = 2; // Famous player's potions have 50% more efficiency
+		if (sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_ROGUE)
+			script->potion_flag = 3; //Even more effective potions.
 	}
 
 	//Update item use time.
 	sd->canuseitem_tick = tick + battle_config.item_use_interval;
 	if( itemdb_iscashfood(nameid) )
 		sd->canusecashfood_tick = tick + battle_config.cashfood_use_interval;
-	
-	script->current_item_id = nameid;
-	
-	script->run(item_script,0,sd->bl.id,npc->fake_nd->bl.id);
-	
-	script->current_item_id = 0;
+
+	script->run_use_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
 	script->potion_flag = 0;
-	
+
+	if (removeItem)
+		pc->delitem(sd, n, 1, 1, DELITEM_NORMAL, LOG_TYPE_CONSUME);
 	return 1;
 }
 
@@ -9016,7 +9009,7 @@ int pc_readregistry(struct map_session_data *sd, int64 reg) {
 		ShowError("pc_readregistry: Trying to read reg %s before it's been loaded!\n", script->get_str(script_getvarid(reg)));
 		//This really shouldn't happen, so it's possible the data was lost somewhere, we should request it again.
 		//intif->request_registry(sd,type==3?4:type);
-		set_eof(sd->fd);
+		sockt->eof(sd->fd);
 		return 0;
 	}
 	
@@ -9037,7 +9030,7 @@ char* pc_readregistry_str(struct map_session_data *sd, int64 reg) {
 		ShowError("pc_readregistry_str: Trying to read reg %s before it's been loaded!\n", script->get_str(script_getvarid(reg)));
 		//This really shouldn't happen, so it's possible the data was lost somewhere, we should request it again.
 		//intif->request_registry(sd,type==3?4:type);
-		set_eof(sd->fd);
+		sockt->eof(sd->fd);
 		return NULL;
 	}
 
@@ -9440,7 +9433,14 @@ int pc_load_combo(struct map_session_data *sd) {
 	return ret;
 }
 
-void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int pos)
+/**
+* Equip item ad given position.
+* @param sd the affected player structure. Must be checked before.
+* @param id item structure for equip. Must be checked before.
+* @param n inventory item position. Must be checked before.
+* @param pos slot position. Must be checked before.
+**/
+void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int n, int pos)
 {
 	if (pos & (EQP_HAND_R|EQP_SHADOW_WEAPON)) {
 		if(id)
@@ -9614,7 +9614,7 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 
 	sd->status.inventory[n].equip=pos;
 
-	pc->equipitem_pos(sd, id, pos);
+	pc->equipitem_pos(sd, id, n, pos);
 
 	pc->checkallowskill(sd); //Check if status changes should be halted.
 	iflag = sd->npc_item_flag;
@@ -9642,7 +9642,8 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 	
 	//OnEquip script [Skotlex]
 	if (id->equip_script)
-		script->run(id->equip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+		script->run_item_equip_script(sd, id, npc->fake_nd->bl.id);
+
 	if(itemdb_isspecial(sd->status.inventory[n].card[0]))
 		; //No cards
 	else {
@@ -9651,8 +9652,8 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 			if (!sd->status.inventory[n].card[i])
 				continue;
 			if ( ( data = itemdb->exists(sd->status.inventory[n].card[i]) ) != NULL ) {
-				if( data->equip_script )
-					script->run(data->equip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+				if (data->equip_script)
+					script->run_item_equip_script(sd, data, npc->fake_nd->bl.id);
 			}
 		}
 	}
@@ -9661,6 +9662,12 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 	return 1;
 }
 
+/**
+* Unrquip item ad given position.
+* @param sd the affected player structure. Must be checked before.
+* @param n inventory item position. Must be checked before.
+* @param pos slot position. Must be checked before.
+**/
 void pc_unequipitem_pos(struct map_session_data *sd, int n, int pos)
 {
 	if (pos & EQP_HAND_R) {
@@ -9819,10 +9826,10 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag)
 			if ( battle_config.unequip_restricted_equipment & 1 ) {
 				ARR_FIND(0, map->list[sd->bl.m].zone->disabled_items_count, i,  map->list[sd->bl.m].zone->disabled_items[i] == sd->status.inventory[n].nameid);
 				if ( i == map->list[sd->bl.m].zone->disabled_items_count )
-					script->run(sd->inventory_data[n]->unequip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+					script->run_item_unequip_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
 			}
 			else
-				script->run(sd->inventory_data[n]->unequip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+				script->run_item_unequip_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
 		}
 		if(itemdb_isspecial(sd->status.inventory[n].card[0]))
 			; //No cards
@@ -9838,10 +9845,10 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag)
 							int j;
 							ARR_FIND(0, map->list[sd->bl.m].zone->disabled_items_count, j,  map->list[sd->bl.m].zone->disabled_items[j] == sd->status.inventory[n].card[i]);
 							if ( j == map->list[sd->bl.m].zone->disabled_items_count )
-								script->run(data->unequip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+								script->run_item_unequip_script(sd, data, npc->fake_nd->bl.id);
 						}
 						else
-							script->run(data->unequip_script,0,sd->bl.id,npc->fake_nd->bl.id);
+							script->run_item_unequip_script(sd, data, npc->fake_nd->bl.id);
 					}
 				}
 

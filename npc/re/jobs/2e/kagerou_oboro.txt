@@ -1348,7 +1348,7 @@ OnTouch:
 
 job_ko,41,16,4	duplicate(Sight#ko_trap)	Sight#ko_02	4_BULLETIN_BOARD2,1,1
 
-job_ko,33,16,4	script	Sight#ko_03	858,1,1,{
+job_ko,33,16,4	script	Sight#ko_03	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",3;
 	end;
 OnTouch:

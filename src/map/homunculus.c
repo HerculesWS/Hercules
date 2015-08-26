@@ -45,6 +45,8 @@
 struct homunculus_interface homunculus_s;
 struct homun_dbs homundbs;
 
+struct homunculus_interface *homun;
+
 //Returns the viewdata for homunculus
 struct view_data* homunculus_get_viewdata(int class_) {
 	if (homdb_checkid(class_))

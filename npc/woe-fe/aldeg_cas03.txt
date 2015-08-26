@@ -64,8 +64,8 @@ OnRecvCastleA03:
 	end;
 }
 
-alde_gld,146,82,8	duplicate(OutsideFlagsA3)	Nuernberg#1-2	GUILD_FLAG
-alde_gld,138,82,8	duplicate(OutsideFlagsA3)	Nuernberg#2	GUILD_FLAG
+alde_gld,146,82,0	duplicate(OutsideFlagsA3)	Nuernberg#1-2	GUILD_FLAG
+alde_gld,138,82,0	duplicate(OutsideFlagsA3)	Nuernberg#2	GUILD_FLAG
 
 // Guild Flag (Inside Castle)
 //============================================================

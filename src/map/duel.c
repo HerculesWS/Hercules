@@ -17,6 +17,7 @@
 #include <time.h>
 
 struct duel_interface duel_s;
+struct duel_interface *duel;
 
 /*==========================================
  * Duel organizing functions [LuzZza]

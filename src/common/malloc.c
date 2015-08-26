@@ -16,6 +16,7 @@
 #include <string.h>
 
 struct malloc_interface iMalloc_s;
+struct malloc_interface *iMalloc;
 
 ////////////// Memory Libraries //////////////////
 
@@ -342,7 +343,8 @@ void *mmalloc_(size_t size, const char *file, int line, const char *func) {
 
 void *mcalloc_(size_t num, size_t size, const char *file, int line, const char *func) {
 	void *p = iMalloc->malloc(num * size,file,line,func);
-	memset(p,0,num * size);
+	if (p)
+		memset(p, 0, num * size);
 	return p;
 }
 

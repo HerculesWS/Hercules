@@ -2852,6 +2852,16 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0438,36,clif->pStoragePassword,0);
 #endif
 
+#if PACKETVER >= 20150226
+	packet(0x0A09,45);
+	packet(0x0A0A,47);
+	packet(0x0A0B,47);
+	packet(0x0A0C,56);
+	packet(0x0A0D,-1);
+	packet(0x0A0F,-1);
+	packet(0x0A10,-1);
+#endif
+
 // 2015-05-13aRagexe
 #if PACKETVER >= 20150513
 	packet(0x0369,7,clif->pActionRequest,2,6);

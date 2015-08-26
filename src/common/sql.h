@@ -5,7 +5,7 @@
 #ifndef COMMON_SQL_H
 #define COMMON_SQL_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 #include <stdarg.h>// va_list
 
@@ -269,8 +269,6 @@ struct sql_interface {
 
 };
 
-struct sql_interface *SQL;
-
 #ifdef HERCULES_CORE
 void sql_defaults(void);
 
@@ -279,6 +277,8 @@ void Sql_Init(void);
 void Sql_HerculesUpdateCheck(Sql* self);
 void Sql_HerculesUpdateSkip(Sql* self,const char *filename);
 #endif // HERCULES_CORE
+
+HPShared struct sql_interface *SQL;
 
 #if defined(SQL_REMOVE_SHOWDEBUG)
 #define Sql_ShowDebug(self) (void)0

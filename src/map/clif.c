@@ -59,6 +59,9 @@
 #include <time.h>
 
 struct clif_interface clif_s;
+struct clif_interface *clif;
+
+struct s_packet_db packet_db[MAX_PACKET_DB + 1];
 
 /* re-usable */
 static struct packet_itemlist_normal itemlist_normal;
@@ -193,22 +196,22 @@ static inline unsigned int mes_len_check(char* mes, unsigned int len, unsigned i
  *------------------------------------------*/
 bool clif_setip(const char* ip) {
 	char ip_str[16];
-	clif->map_ip = host2ip(ip);
+	clif->map_ip = sockt->host2ip(ip);
 	if ( !clif->map_ip ) {
 		ShowWarning("Failed to Resolve Map Server Address! (%s)\n", ip);
 		return false;
 	}
 
 	safestrncpy(clif->map_ip_str, ip, sizeof(clif->map_ip_str));
-	ShowInfo("Map Server IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, ip2str(clif->map_ip, ip_str));
+	ShowInfo("Map Server IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, sockt->ip2str(clif->map_ip, ip_str));
 	return true;
 }
 
 bool clif_setbindip(const char* ip) {
-	clif->bind_ip = host2ip(ip);
+	clif->bind_ip = sockt->host2ip(ip);
 	if ( clif->bind_ip ) {
 		char ip_str[16];
-		ShowInfo("Map Server Bind IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, ip2str(clif->bind_ip, ip_str));
+		ShowInfo("Map Server Bind IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, sockt->ip2str(clif->bind_ip, ip_str));
 		return true;
 	}
 	ShowWarning("Failed to Resolve Map Server Address! (%s)\n", ip);
@@ -242,10 +245,9 @@ uint16 clif_getport(void)
 /*==========================================
  * Updates server ip resolution and returns it
  *------------------------------------------*/
-uint32 clif_refresh_ip(void) {
-	uint32 new_ip;
-
-	new_ip = host2ip(clif->map_ip_str);
+uint32 clif_refresh_ip(void)
+{
+	uint32 new_ip = sockt->host2ip(clif->map_ip_str);
 	if ( new_ip && new_ip != clif->map_ip ) {
 		clif->map_ip = new_ip;
 		ShowInfo("Updating IP resolution of [%s].\n", clif->map_ip_str);
@@ -292,7 +294,7 @@ int clif_send_sub(struct block_list *bl, va_list ap) {
 	nullpo_ret(sd = (struct map_session_data *)bl);
 
 	fd = sd->fd;
-	if (!fd || session[fd] == NULL) //Don't send to disconnected clients.
+	if (!fd || sockt->session[fd] == NULL) //Don't send to disconnected clients.
 		return 0;
 
 	buf = va_arg(ap,void*);
@@ -428,7 +430,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 				for(i = 0; i < cd->users; i++) {
 					if (type == CHAT_WOS && cd->usersd[i] == sd)
 						continue;
-					if ((fd=cd->usersd[i]->fd) >0 && session[fd]) { // Added check to see if session exists [PoW]
+					if ((fd=cd->usersd[i]->fd) >0 && sockt->session[fd]) { // Added check to see if session exists [PoW]
 						WFIFOHEAD(fd,len);
 						memcpy(WFIFOP(fd,0), buf, len);
 						WFIFOSET(fd,len);
@@ -691,14 +693,14 @@ void clif_authrefuse(int fd, uint8 error_code)
 // TODO: type enum
 void clif_authfail_fd(int fd, int type)
 {
-	if (!fd || !session[fd] || session[fd]->func_parse != clif->parse) //clif_authfail should only be invoked on players!
+	if (!fd || !sockt->session[fd] || sockt->session[fd]->func_parse != clif->parse) //clif_authfail should only be invoked on players!
 		return;
 
 	WFIFOHEAD(fd, packet_len(0x81));
 	WFIFOW(fd,0) = 0x81;
 	WFIFOB(fd,2) = type;
 	WFIFOSET(fd,packet_len(0x81));
-	set_eof(fd);
+	sockt->eof(fd);
 
 }
 
@@ -1711,7 +1713,7 @@ void clif_quitsave(int fd,struct map_session_data *sd) {
 	else if (sd->fd) {
 		//Disassociate session from player (session is deleted after this function was called)
 		//And set a timer to make him quit later.
-		session[sd->fd]->session_data = NULL;
+		sockt->session[sd->fd]->session_data = NULL;
 		sd->fd = 0;
 		timer->add(timer->gettick() + 10000, clif->delayquit, sd->bl.id, 0);
 	}
@@ -1746,7 +1748,7 @@ void clif_changemapserver(struct map_session_data* sd, unsigned short map_index,
 	WFIFOW(fd,18) = x;
 	WFIFOW(fd,20) = y;
 	WFIFOL(fd,22) = htonl(ip);
-	WFIFOW(fd,26) = ntows(htons(port)); // [!] LE byte order here [!]
+	WFIFOW(fd,26) = sockt->ntows(htons(port)); // [!] LE byte order here [!]
 	WFIFOSET(fd,packet_len(0x92));
 }
 
@@ -2229,16 +2231,37 @@ void clif_addcards2(unsigned short *cards, struct item* item) {
 		cards[3] = item->card[i];
 }
 
+/**
+ * Fills in RandomOptions(Bonuses) of items into the buffer
+ *
+ * Dummy datais used since this feature isn't supported yet (ITEM_RDM_OPT).
+ * A maximum of 5 random options can be supported.
+ *
+ * @param buf[in,out] The buffer to write to. The pointer must be valid and initialized.
+ * @param item[in]    The source item.
+ */
+void clif_add_random_options(unsigned char* buf, struct item* item)
+{
+	int i;
+	for (i = 0; i < 5; i++){
+		WBUFW(buf,i*5+0) = 0;	// OptIndex
+		WBUFW(buf,i*5+2) = 0;	// Value
+		WBUFB(buf,i*5+4) = 0;	// Param1
+	}
+}
+
 
 /// Notifies the client, about a received inventory item or the result of a pick-up request.
 /// 00a0 <index>.W <amount>.W <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W <equip location>.W <item type>.B <result>.B (ZC_ITEM_PICKUP_ACK)
 /// 029a <index>.W <amount>.W <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W <equip location>.W <item type>.B <result>.B <expire time>.L (ZC_ITEM_PICKUP_ACK2)
 /// 02d4 <index>.W <amount>.W <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W <equip location>.W <item type>.B <result>.B <expire time>.L <bindOnEquipType>.W (ZC_ITEM_PICKUP_ACK3)
+/// 0990 <index>.W <amount>.W <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W <equip location>.L <item type>.B <result>.B <expire time>.L <bindOnEquipType>.W (ZC_ITEM_PICKUP_ACK_V5)
+/// 0a0c <index>.W <amount>.W <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W <equip location>.L <item type>.B <result>.B <expire time>.L <bindOnEquipType>.W (ZC_ITEM_PICKUP_ACK_V6)
 void clif_additem(struct map_session_data *sd, int n, int amount, int fail) {
 	struct packet_additem p;
 	nullpo_retv(sd);
 
-	if( !session_isActive(sd->fd) )  //Sasuke-
+	if (!sockt->session_is_active(sd->fd))  //Sasuke-
 		return;
 
 	if( fail )
@@ -2249,6 +2272,9 @@ void clif_additem(struct map_session_data *sd, int n, int amount, int fail) {
 	p.count = amount;
 
 	if( !fail ) {
+#if PACKETVER >= 20150226
+		int i;
+#endif
 		if( n < 0 || n >= MAX_INVENTORY || sd->status.inventory[n].nameid <=0 || sd->inventory_data[n] == NULL )
 			return;
 
@@ -2271,6 +2297,13 @@ void clif_additem(struct map_session_data *sd, int n, int amount, int fail) {
 		 * show the color, and therefore it'd be inconsistent with the rest (aka it'd show yellow, you relog/refresh and boom its gone)
 		 */
 		p.bindOnEquipType = sd->status.inventory[n].bound && !itemdb->isstackable2(sd->inventory_data[n]) ? 2 : sd->inventory_data[n]->flag.bindonequip ? 1 : 0;
+#endif
+#if PACKETVER >= 20150226
+		for (i=0; i<5; i++){
+			p.option_data[i].index = 0;
+			p.option_data[i].value = 0;
+			p.option_data[i].param = 0;
+		}
 #endif
 	}
 	p.result = (unsigned char)fail;
@@ -2345,7 +2378,9 @@ void clif_item_sub(unsigned char *buf, int n, struct item *i, struct item_data *
 
 }
 void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *i, struct item_data *id, int eqp_pos) {
-
+#if PACKETVER >= 20150226
+	int j;
+#endif
 	p->index = idx;
 
 	if (id->view_id > 0)
@@ -2386,6 +2421,15 @@ void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *i, struct
 	p->Flag.IsDamaged    = i->attribute ? 1 : 0;
 	p->Flag.PlaceETCTab  = i->favorite ? 1 : 0;
 	p->Flag.SpareBits    = 0;
+#endif
+
+#if PACKETVER >= 20150226
+	p->option_count = 0;
+	for (j=0; j<5; j++){
+		p->option_data[j].index = 0;
+		p->option_data[j].value = 0;
+		p->option_data[j].param = 0;
+	}
 #endif
 }
 void clif_item_normal(short idx, struct NORMALITEM_INFO *p, struct item *i, struct item_data *id) {
@@ -2697,7 +2741,7 @@ void clif_updatestatus(struct map_session_data *sd,int type)
 
 	fd=sd->fd;
 
-	if ( !session_isActive(fd) ) // Invalid pointer fix, by sasuke [Kevin]
+	if (!sockt->session_is_active(fd)) // Invalid pointer fix, by sasuke [Kevin]
 		return;
 
 	WFIFOHEAD(fd, 14);
@@ -3605,7 +3649,7 @@ void clif_joinchatok(struct map_session_data *sd,struct chat_data* cd)
 	nullpo_retv(cd);
 
 	fd = sd->fd;
-	if (!session_isActive(fd))
+	if (!sockt->session_is_active(fd))
 		return;
 	t = (int)(cd->owner->type == BL_NPC);
 	WFIFOHEAD(fd, 8 + (28*(cd->users+t)));
@@ -3754,18 +3798,13 @@ void clif_tradeadditem(struct map_session_data* sd, struct map_session_data* tsd
 {
 	int fd;
 	unsigned char *buf;
-#if PACKETVER < 20100223
-	const int cmd = 0xe9;
-#else
-	const int cmd = 0x80f;
-#endif
 	nullpo_retv(sd);
 	nullpo_retv(tsd);
 
 	fd = tsd->fd;
 	buf = WFIFOP(fd,0);
-	WFIFOHEAD(fd,packet_len(cmd));
-	WBUFW(buf,0) = cmd;
+	WFIFOHEAD(fd,packet_len(tradeaddType));
+	WBUFW(buf,0) = tradeaddType;
 	if( index == 0 )
 	{
 #if PACKETVER < 20100223
@@ -3784,6 +3823,9 @@ void clif_tradeadditem(struct map_session_data* sd, struct map_session_data* tsd
 		WBUFW(buf,13)= 0; //card (4w)
 		WBUFW(buf,15)= 0; //card (4w)
 		WBUFW(buf,17)= 0; //card (4w)
+#if PACKETVER >= 20150226
+		clif->add_random_options(WBUFP(buf, 19), &sd->status.inventory[index]);
+#endif
 	}
 	else
 	{
@@ -3807,8 +3849,11 @@ void clif_tradeadditem(struct map_session_data* sd, struct map_session_data* tsd
 		WBUFB(buf,9) = sd->status.inventory[index].attribute; // attribute
 		WBUFB(buf,10)= sd->status.inventory[index].refine; //refine
 		clif->addcards(WBUFP(buf, 11), &sd->status.inventory[index]);
+#if PACKETVER >= 20150226
+		clif->add_random_options(WBUFP(buf, 19), &sd->status.inventory[index]);
+#endif
 	}
-	WFIFOSET(fd,packet_len(cmd));
+	WFIFOSET(fd,packet_len(tradeaddType));
 }
 
 
@@ -3919,36 +3964,31 @@ void clif_updatestorageamount(struct map_session_data* sd, int amount, int max_a
 void clif_storageitemadded(struct map_session_data* sd, struct item* i, int index, int amount)
 {
 	int view,fd;
+	short j = 0;
 
 	nullpo_retv(sd);
 	nullpo_retv(i);
 	fd=sd->fd;
 	view = itemdb_viewid(i->nameid);
 
-#if PACKETVER < 5
-	WFIFOHEAD(fd,packet_len(0xf4));
-	WFIFOW(fd, 0) = 0xf4; // Storage item added
+	
+	WFIFOHEAD(fd,packet_len(storageaddType));
+	WFIFOW(fd, 0) = storageaddType; // Storage item added
 	WFIFOW(fd, 2) = index+1; // index
 	WFIFOL(fd, 4) = amount; // amount
 	WFIFOW(fd, 8) = ( view > 0 ) ? view : i->nameid; // id
-	WFIFOB(fd,10) = i->identify; //identify flag
-	WFIFOB(fd,11) = i->attribute; // attribute
-	WFIFOB(fd,12) = i->refine; //refine
-	clif->addcards(WFIFOP(fd,13), i);
-	WFIFOSET(fd,packet_len(0xf4));
-#else
-	WFIFOHEAD(fd,packet_len(0x1c4));
-	WFIFOW(fd, 0) = 0x1c4; // Storage item added
-	WFIFOW(fd, 2) = index+1; // index
-	WFIFOL(fd, 4) = amount; // amount
-	WFIFOW(fd, 8) = ( view > 0 ) ? view : i->nameid; // id
+#if PACKETVER >= 5
 	WFIFOB(fd,10) = itemtype(itemdb_type(i->nameid)); //type
-	WFIFOB(fd,11) = i->identify; //identify flag
-	WFIFOB(fd,12) = i->attribute; // attribute
-	WFIFOB(fd,13) = i->refine; //refine
-	clif->addcards(WFIFOP(fd,14), i);
-	WFIFOSET(fd,packet_len(0x1c4));
+	j += 1;
 #endif
+	WFIFOB(fd,10+j) = i->identify; //identify flag
+	WFIFOB(fd,11+j) = i->attribute; // attribute
+	WFIFOB(fd,12+j) = i->refine; //refine
+	clif->addcards(WFIFOP(fd,13+j), i);
+#if PACKETVER >= 20150226
+	clif->add_random_options(WFIFOP(fd,22), i);
+#endif
+	WFIFOSET(fd,packet_len(storageaddType));
 }
 
 
@@ -4338,6 +4378,7 @@ void clif_getareachar_skillunit(struct block_list *bl, struct skill_unit *su, en
 	struct packet_skill_entry p;
 	nullpo_retv(bl);
 	nullpo_retv(su);
+	nullpo_retv(su->group);
 
 	if( su->group->state.guildaura )
 		return;
@@ -5404,7 +5445,7 @@ void clif_displaymessage_sprintf(const int fd, const char *mes, ...) {
 	if (map->cpsd_active && fd == 0) {
 		ShowInfo("HCP: ");
 		va_start(ap,mes);
-		vShowMessage_(MSG_NONE,mes,ap);
+		vShowMessage(mes,ap);
 		va_end(ap);
 		ShowMessage("\n");
 	} else if (fd > 0) {
@@ -5683,7 +5724,7 @@ void clif_wis_message(int fd, const char* nick, const char* mes, size_t mes_len)
 ///     2 = ignored by target
 ///     3 = everyone ignored by target
 void clif_wis_end(int fd, int flag) {
-	struct map_session_data *sd = session_isValid(fd) ? session[fd]->session_data : NULL;
+	struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
 	struct packet_wis_end p;
 
 	if( !sd )
@@ -5949,6 +5990,7 @@ void clif_cart_additem(struct map_session_data *sd,int n,int amount,int fail)
 {
 	int view,fd;
 	unsigned char *buf;
+	int offset = 0;
 
 	nullpo_retv(sd);
 
@@ -5956,38 +5998,27 @@ void clif_cart_additem(struct map_session_data *sd,int n,int amount,int fail)
 	if(n<0 || n>=MAX_CART || sd->status.cart[n].nameid<=0)
 		return;
 
-#if PACKETVER < 5
-	WFIFOHEAD(fd,packet_len(0x124));
+	WFIFOHEAD(fd,packet_len(cartaddType));
 	buf=WFIFOP(fd,0);
-	WBUFW(buf,0)=0x124;
+	WBUFW(buf,0)=cartaddType;
 	WBUFW(buf,2)=n+2;
 	WBUFL(buf,4)=amount;
 	if((view = itemdb_viewid(sd->status.cart[n].nameid)) > 0)
 		WBUFW(buf,8)=view;
 	else
 		WBUFW(buf,8)=sd->status.cart[n].nameid;
-	WBUFB(buf,10)=sd->status.cart[n].identify;
-	WBUFB(buf,11)=sd->status.cart[n].attribute;
-	WBUFB(buf,12)=sd->status.cart[n].refine;
-	clif->addcards(WBUFP(buf,13), &sd->status.cart[n]);
-	WFIFOSET(fd,packet_len(0x124));
-#else
-	WFIFOHEAD(fd,packet_len(0x1c5));
-	buf=WFIFOP(fd,0);
-	WBUFW(buf,0)=0x1c5;
-	WBUFW(buf,2)=n+2;
-	WBUFL(buf,4)=amount;
-	if((view = itemdb_viewid(sd->status.cart[n].nameid)) > 0)
-		WBUFW(buf,8)=view;
-	else
-		WBUFW(buf,8)=sd->status.cart[n].nameid;
+#if PACKETVER > 5
 	WBUFB(buf,10)=itemdb_type(sd->status.cart[n].nameid);
-	WBUFB(buf,11)=sd->status.cart[n].identify;
-	WBUFB(buf,12)=sd->status.cart[n].attribute;
-	WBUFB(buf,13)=sd->status.cart[n].refine;
-	clif->addcards(WBUFP(buf,14), &sd->status.cart[n]);
-	WFIFOSET(fd,packet_len(0x1c5));
+	offset = 1;
 #endif
+	WBUFB(buf,10+offset)=sd->status.cart[n].identify;
+	WBUFB(buf,11+offset)=sd->status.cart[n].attribute;
+	WBUFB(buf,12+offset)=sd->status.cart[n].refine;
+	clif->addcards(WBUFP(buf,13+offset), &sd->status.cart[n]);
+#if PACKETVER >= 20150226
+	clif->add_random_options(WBUFP(buf,21+offset), &sd->status.cart[n]);
+#endif
+	WFIFOSET(fd,packet_len(cartaddType));
 }
 
 
@@ -6084,6 +6115,12 @@ void clif_vendinglist(struct map_session_data* sd, unsigned int id, struct s_ven
 	const int offset = 12;
 #endif
 
+#if PACKETVER >= 20150226
+	const int item_length = 47;
+#else
+	const int item_length = 22;
+#endif
+
 	nullpo_retv(sd);
 	nullpo_retv(vending_items);
 	nullpo_retv(vsd=map->id2sd(id));
@@ -6091,9 +6128,9 @@ void clif_vendinglist(struct map_session_data* sd, unsigned int id, struct s_ven
 	fd = sd->fd;
 	count = vsd->vend_num;
 
-	WFIFOHEAD(fd, offset+count*22);
+	WFIFOHEAD(fd, offset+count*item_length);
 	WFIFOW(fd,0) = cmd;
-	WFIFOW(fd,2) = offset+count*22;
+	WFIFOW(fd,2) = offset+count*item_length;
 	WFIFOL(fd,4) = id;
 #if PACKETVER >= 20100105
 	WFIFOL(fd,8) = vsd->vender_id;
@@ -6102,15 +6139,18 @@ void clif_vendinglist(struct map_session_data* sd, unsigned int id, struct s_ven
 	for( i = 0; i < count; i++ ) {
 		int index = vending_items[i].index;
 		struct item_data* data = itemdb->search(vsd->status.cart[index].nameid);
-		WFIFOL(fd,offset+ 0+i*22) = vending_items[i].value;
-		WFIFOW(fd,offset+ 4+i*22) = vending_items[i].amount;
-		WFIFOW(fd,offset+ 6+i*22) = vending_items[i].index + 2;
-		WFIFOB(fd,offset+ 8+i*22) = itemtype(data->type);
-		WFIFOW(fd,offset+ 9+i*22) = ( data->view_id > 0 ) ? data->view_id : vsd->status.cart[index].nameid;
-		WFIFOB(fd,offset+11+i*22) = vsd->status.cart[index].identify;
-		WFIFOB(fd,offset+12+i*22) = vsd->status.cart[index].attribute;
-		WFIFOB(fd,offset+13+i*22) = vsd->status.cart[index].refine;
-		clif->addcards(WFIFOP(fd,offset+14+i*22), &vsd->status.cart[index]);
+		WFIFOL(fd,offset+ 0+i*item_length) = vending_items[i].value;
+		WFIFOW(fd,offset+ 4+i*item_length) = vending_items[i].amount;
+		WFIFOW(fd,offset+ 6+i*item_length) = vending_items[i].index + 2;
+		WFIFOB(fd,offset+ 8+i*item_length) = itemtype(data->type);
+		WFIFOW(fd,offset+ 9+i*item_length) = ( data->view_id > 0 ) ? data->view_id : vsd->status.cart[index].nameid;
+		WFIFOB(fd,offset+11+i*item_length) = vsd->status.cart[index].identify;
+		WFIFOB(fd,offset+12+i*item_length) = vsd->status.cart[index].attribute;
+		WFIFOB(fd,offset+13+i*item_length) = vsd->status.cart[index].refine;
+		clif->addcards(WFIFOP(fd,offset+14+i*item_length), &vsd->status.cart[index]);
+#if PACKETVER >= 20150226
+		clif->add_random_options(WFIFOP(fd,offset+22+i*item_length), &vsd->status.cart[index]);
+#endif
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));
 }
@@ -6147,28 +6187,37 @@ void clif_buyvending(struct map_session_data* sd, int index, int amount, int fai
 void clif_openvending(struct map_session_data* sd, int id, struct s_vending* vending_items) {
 	int i,fd;
 	int count;
+	
+#if PACKETVER >= 20150226
+	const int item_length = 47;
+#else
+	const int item_length = 22;
+#endif
 
 	nullpo_retv(sd);
 
 	fd = sd->fd;
 	count = sd->vend_num;
 
-	WFIFOHEAD(fd, 8+count*22);
+	WFIFOHEAD(fd, 8+count*item_length);
 	WFIFOW(fd,0) = 0x136;
-	WFIFOW(fd,2) = 8+count*22;
+	WFIFOW(fd,2) = 8+count*item_length;
 	WFIFOL(fd,4) = id;
 	for( i = 0; i < count; i++ ) {
 		int index = vending_items[i].index;
 		struct item_data* data = itemdb->search(sd->status.cart[index].nameid);
-		WFIFOL(fd, 8+i*22) = vending_items[i].value;
-		WFIFOW(fd,12+i*22) = vending_items[i].index + 2;
-		WFIFOW(fd,14+i*22) = vending_items[i].amount;
-		WFIFOB(fd,16+i*22) = itemtype(data->type);
-		WFIFOW(fd,17+i*22) = ( data->view_id > 0 ) ? data->view_id : sd->status.cart[index].nameid;
-		WFIFOB(fd,19+i*22) = sd->status.cart[index].identify;
-		WFIFOB(fd,20+i*22) = sd->status.cart[index].attribute;
-		WFIFOB(fd,21+i*22) = sd->status.cart[index].refine;
-		clif->addcards(WFIFOP(fd,22+i*22), &sd->status.cart[index]);
+		WFIFOL(fd, 8+i*item_length) = vending_items[i].value;
+		WFIFOW(fd,12+i*item_length) = vending_items[i].index + 2;
+		WFIFOW(fd,14+i*item_length) = vending_items[i].amount;
+		WFIFOB(fd,16+i*item_length) = itemtype(data->type);
+		WFIFOW(fd,17+i*item_length) = ( data->view_id > 0 ) ? data->view_id : sd->status.cart[index].nameid;
+		WFIFOB(fd,19+i*item_length) = sd->status.cart[index].identify;
+		WFIFOB(fd,20+i*item_length) = sd->status.cart[index].attribute;
+		WFIFOB(fd,21+i*item_length) = sd->status.cart[index].refine;
+		clif->addcards(WFIFOP(fd,22+i*item_length), &sd->status.cart[index]);
+#if PACKETVER >= 20150226
+		clif->add_random_options(WFIFOP(fd,30+22+i*item_length), &sd->status.cart[index]);
+#endif
 	}
 	WFIFOSET(fd,WFIFOW(fd,2));
 	
@@ -7450,7 +7499,7 @@ void clif_guild_notice(struct map_session_data* sd, struct guild* g)
 
 	fd = sd->fd;
 
-	if ( !session_isActive(fd) )
+	if (!sockt->session_is_active(fd))
 		return;
 
 	if(g->mes1[0] == '\0' && g->mes2[0] == '\0')
@@ -8806,7 +8855,7 @@ bool clif_process_message(struct map_session_data *sd, int format, char **name_,
 		{
 			//Hacked message, or infamous "client desynchronize" issue where they pick one char while loading another.
 			ShowWarning("clif_process_message: Player '%s' sent a message using an incorrect name! Forcing a relog...\n", sd->status.name);
-			set_eof(fd); // Just kick them out to correct it.
+			sockt->eof(fd); // Just kick them out to correct it.
 			return false;
 		}
 
@@ -8943,7 +8992,7 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 	client_tick = RFIFOL(fd, packet_db[cmd].pos[3]);
 	sex         = RFIFOB(fd, packet_db[cmd].pos[4]);
 
-	if( runflag != MAPSERVER_ST_RUNNING ) { // not allowed
+	if( core->runflag != MAPSERVER_ST_RUNNING ) { // not allowed
 		clif->authfail_fd(fd,1);// server closed
 		return;
 	}
@@ -8956,7 +9005,7 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 		WFIFOW(fd,0) = 0x6a;
 		WFIFOB(fd,2) = 3; // Rejected by server
 		WFIFOSET(fd,packet_len(0x6a));
-		set_eof(fd);
+		sockt->eof(fd);
 
 		return;
 	}
@@ -8976,7 +9025,7 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 						* clif->cryptKey[1] ) + clif->cryptKey[2]) & 0xFFFFFFFF;
 	sd->parse_cmd_func = clif->parse_cmd;
 
-	session[fd]->session_data = sd;
+	sockt->session[fd]->session_data = sd;
 
 	pc->setnewpc(sd, account_id, char_id, login_id1, client_tick, sex, fd);
 
@@ -9528,7 +9577,7 @@ void clif_parse_QuitGame(int fd, struct map_session_data *sd)
 	if( !sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK] && !sd->sc.data[SC_CLOAKINGEXCEED] && !sd->sc.data[SC__INVISIBILITY] &&
 		(!battle_config.prevent_logout || DIFF_TICK(timer->gettick(), sd->canlog_tick) > battle_config.prevent_logout) )
 	{
-		set_eof(fd);
+		sockt->eof(fd);
 
 		clif->disconnect_ack(sd, 0);
 	} else {
@@ -9981,7 +10030,7 @@ void clif_parse_Restart(int fd, struct map_session_data *sd) {
 			 && (!battle_config.prevent_logout || DIFF_TICK(timer->gettick(), sd->canlog_tick) > battle_config.prevent_logout)
 			) {
 				//Send to char-server for character selection.
-				chrif->charselectreq(sd, session[fd]->client_addr);
+				chrif->charselectreq(sd, sockt->session[fd]->client_addr);
 			} else {
 				clif->disconnect_ack(sd, 1);
 			}
@@ -18297,13 +18346,13 @@ int clif_parse(int fd) {
 		unsigned short (*parse_cmd_func)(int fd, struct map_session_data *sd);
 		// begin main client packet processing loop
 
-		sd = (TBL_PC *)session[fd]->session_data;
+		sd = (TBL_PC *)sockt->session[fd]->session_data;
 
-		if (session[fd]->flag.eof) {
+		if (sockt->session[fd]->flag.eof) {
 			if (sd) {
 				if (sd->state.autotrade) {
 					//Disassociate character from the socket connection.
-					session[fd]->session_data = NULL;
+					sockt->session[fd]->session_data = NULL;
 					sd->fd = 0;
 					ShowInfo("Character '"CL_WHITE"%s"CL_RESET"' logged off (using @autotrade).\n", sd->status.name);
 				} else
@@ -18317,9 +18366,9 @@ int clif_parse(int fd) {
 						map->quit(sd);
 					}
 			} else {
-				ShowInfo("Closed connection from '"CL_WHITE"%s"CL_RESET"'.\n", ip2str(session[fd]->client_addr, NULL));
+				ShowInfo("Closed connection from '"CL_WHITE"%s"CL_RESET"'.\n", sockt->ip2str(sockt->session[fd]->client_addr, NULL));
 			}
-			do_close(fd);
+			sockt->close(fd);
 			return 0;
 		}
 
@@ -18348,7 +18397,7 @@ int clif_parse(int fd) {
 #ifdef DUMP_INVALID_PACKET
 			ShowDump(RFIFOP(fd,0), RFIFOREST(fd));
 #endif
-			set_eof(fd);
+			sockt->eof(fd);
 			return 0;
 		}
 
@@ -18364,7 +18413,7 @@ int clif_parse(int fd) {
 #ifdef DUMP_INVALID_PACKET
 				ShowDump(RFIFOP(fd,0), RFIFOREST(fd));
 #endif
-				set_eof(fd);
+				sockt->eof(fd);
 
 				return 0;
 			}
@@ -18506,8 +18555,8 @@ int do_init_clif(bool minimal)
 
 	packetdb_loaddb();
 
-	set_defaultparse(clif->parse);
-	if( make_listen_bind(clif->bind_ip,clif->map_port) == -1 ) {
+	sockt->set_defaultparse(clif->parse);
+	if (sockt->make_listen_bind(clif->bind_ip,clif->map_port) == -1) {
 		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",clif->map_port);
 		exit(EXIT_FAILURE);
 	}
@@ -19282,4 +19331,6 @@ void clif_defaults(void) {
 	/* NPC Market */
 	clif->pNPCMarketClosed = clif_parse_NPCMarketClosed;
 	clif->pNPCMarketPurchase = clif_parse_NPCMarketPurchase;
+	/* */
+	clif->add_random_options = clif_add_random_options;
 }

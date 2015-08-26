@@ -46,6 +46,8 @@
 struct status_interface status_s;
 struct s_status_dbs statusdbs;
 
+struct status_interface *status;
+
 /**
 * Returns the status change associated with a skill.
 * @param skill The skill to look up
@@ -2127,6 +2129,11 @@ unsigned int status_get_base_maxhp(struct map_session_data *sd, struct status_da
 	return (unsigned int)cap_value(val,0,UINT_MAX);
 }
 
+void status_calc_pc_additional(struct map_session_data* sd, enum e_status_calc_opt opt) {
+	/* Just used for Plugin to give bonuses. */
+	return;
+}
+
 //Calculates player data from scratch without counting SC adjustments.
 //Should be invoked whenever players raise stats, learn passive skills or change equipment.
 int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
@@ -2262,7 +2269,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 
 		if (opt&SCO_FIRST && sd->inventory_data[index]->equip_script) {
 			//Execute equip-script on login
-			script->run(sd->inventory_data[index]->equip_script,0,sd->bl.id,0);
+			script->run_item_equip_script(sd, sd->inventory_data[index], 0);
 			if (!calculating)
 				return 1;
 		}
@@ -2303,10 +2310,10 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 			if(sd->inventory_data[index]->script) {
 				if (wd == &sd->left_weapon) {
 					sd->state.lr_flag = 1;
-					script->run(sd->inventory_data[index]->script,0,sd->bl.id,0);
+					script->run_use_script(sd, sd->inventory_data[index], 0);
 					sd->state.lr_flag = 0;
 				} else
-					script->run(sd->inventory_data[index]->script,0,sd->bl.id,0);
+					script->run_use_script(sd, sd->inventory_data[index], 0);
 				if (!calculating) //Abort, script->run retriggered this. [Skotlex]
 					return 1;
 			}
@@ -2329,7 +2336,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 			if(sd->inventory_data[index]->script) {
 				if( i == EQI_HAND_L ) //Shield
 					sd->state.lr_flag = 3;
-				script->run(sd->inventory_data[index]->script,0,sd->bl.id,0);
+				script->run_use_script(sd, sd->inventory_data[index], 0);
 				if( i == EQI_HAND_L ) //Shield
 					sd->state.lr_flag = 0;
 				if (!calculating) //Abort, script->run retriggered this. [Skotlex]
@@ -2345,7 +2352,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 			sd->bonus.arrow_atk += sd->inventory_data[index]->atk;
 			sd->state.lr_flag = 2;
 			if( !itemdb_is_GNthrowable(sd->inventory_data[index]->nameid) ) //don't run scripts on throwable items
-				script->run(sd->inventory_data[index]->script,0,sd->bl.id,0);
+				script->run_use_script(sd, sd->inventory_data[index], 0);
 			sd->state.lr_flag = 0;
 			if (!calculating) //Abort, script->run retriggered status_calc_pc. [Skotlex]
 				return 1;
@@ -2423,7 +2430,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 					continue;
 
 				if(opt&SCO_FIRST && data->equip_script) {//Execute equip-script on login
-					script->run(data->equip_script,0,sd->bl.id,0);
+					script->run_item_equip_script(sd, data, 0);
 					if (!calculating)
 						return 1;
 				}
@@ -2433,10 +2440,10 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 
 				if(i == EQI_HAND_L && sd->status.inventory[index].equip == EQP_HAND_L) { //Left hand status.
 					sd->state.lr_flag = 1;
-					script->run(data->script,0,sd->bl.id,0);
+					script->run_use_script(sd, data, 0);
 					sd->state.lr_flag = 0;
 				} else
-					script->run(data->script,0,sd->bl.id,0);
+					script->run_use_script(sd, data, 0);
 				if (!calculating) //Abort, script->run his function. [Skotlex]
 					return 1;
 			}
@@ -2446,8 +2453,10 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	if( sc->count && sc->data[SC_ITEMSCRIPT] ) {
 		struct item_data *data = itemdb->exists(sc->data[SC_ITEMSCRIPT]->val1);
 		if( data && data->script )
-			script->run(data->script,0,sd->bl.id,0);
+			script->run_use_script(sd, data, 0);
 	}
+	
+	status->calc_pc_additional(sd, opt);
 
 	if( sd->pd ) { // Pet Bonus
 		struct pet_data *pd = sd->pd;
@@ -12058,7 +12067,13 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 				status->dbs->HP_table[idx][i] = status->dbs->HP_table[iidx][i];
 			}
 			base = (i > 1 ? status->dbs->HP_table[idx][1] : 35); // Safe value if none are specified
-			avg_increment = (i > 2 ? (status->dbs->HP_table[idx][i] - base) / (i-1) : 5); // Safe value if none are specified
+			if (i > 2) {
+				if (i >= MAX_LEVEL + 1)
+					i = MAX_LEVEL;
+				avg_increment = (status->dbs->HP_table[idx][i] - base) / (i - 1);
+			} else {
+				avg_increment = 5;
+			}
 			for ( ; i <= pc->max_level[idx][0]; i++) {
 				status->dbs->HP_table[idx][i] = min(base + avg_increment * i, battle_config.max_hp);
 			}
@@ -12067,7 +12082,13 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 				status->dbs->SP_table[idx][i] = status->dbs->SP_table[iidx][i];
 			}
 			base = (i > 1 ? status->dbs->SP_table[idx][1] : 10); // Safe value if none are specified
-			avg_increment = (i > 2 ? (status->dbs->SP_table[idx][i] - base) / (i-1) : 1); // Safe value if none are specified
+			if (i > 2) {
+				if (i >= MAX_LEVEL + 1)
+					i = MAX_LEVEL;
+				avg_increment = (status->dbs->SP_table[idx][i] - base) / (i - 1);
+			} else {
+				avg_increment = 1;
+			}
 			for ( ; i <= pc->max_level[idx][0]; i++) {
 				status->dbs->SP_table[idx][i] = min(base + avg_increment * i, battle_config.max_sp);
 			}
@@ -12087,7 +12108,13 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 				status->dbs->HP_table[idx][i] = status->dbs->HP_table[iidx][i];
 			}
 			base = (i > 1 ? status->dbs->HP_table[idx][1] : 35); // Safe value if none are specified
-			avg_increment = (i > 2 ? (status->dbs->HP_table[idx][i] - base) / (i-1) : 5); // Safe value if none are specified
+			if (i > 2) {
+				if (i >= MAX_LEVEL + 1)
+					i = MAX_LEVEL;
+				avg_increment = (status->dbs->HP_table[idx][i] - base) / (i - 1);
+			} else {
+				avg_increment = 5;
+			}
 			for ( ; i <= pc->max_level[idx][0]; i++) {
 				status->dbs->HP_table[idx][i] = min(base + avg_increment * i, battle_config.max_hp);
 			}
@@ -12107,7 +12134,13 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 				status->dbs->SP_table[idx][i] = status->dbs->SP_table[iidx][i];
 			}
 			base = (i > 1 ? status->dbs->SP_table[idx][1] : 10); // Safe value if none are specified
-			avg_increment = (i > 2 ? (status->dbs->SP_table[idx][i] - base) / (i-1) : 1); // Safe value if none are specified
+			if (i > 2) {
+				if (i >= MAX_LEVEL + 1)
+					i = MAX_LEVEL;
+				avg_increment = (status->dbs->SP_table[idx][i] - base) / (i - 1);
+			} else {
+				avg_increment = 1;
+			}
 			for ( ; i <= pc->max_level[idx][0]; i++) {
 				status->dbs->SP_table[idx][i] = min(avg_increment * i, battle_config.max_sp);
 			}
@@ -12143,7 +12176,13 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 			status->dbs->HP_table[idx][++level] = min(i32, battle_config.max_hp);
 		}
 		base = (level > 0 ? status->dbs->HP_table[idx][1] : 35); // Safe value if none are specified
-		avg_increment = (level > 1 ? (status->dbs->HP_table[idx][level] - base) / level : 5); // Safe value if none are specified
+		if (level > 2) {
+			if (level >= MAX_LEVEL + 1)
+				level = MAX_LEVEL;
+			avg_increment = (status->dbs->HP_table[idx][level] - base) / level;
+		} else {
+			avg_increment = 5;
+		}
 		for (++level; level <= pc->max_level[idx][0]; ++level) { /* limit only to possible maximum level of the given class */
 			status->dbs->HP_table[idx][level] = min(base + avg_increment * level, battle_config.max_hp); /* some are still empty? then let's use the average increase */
 		}
@@ -12157,7 +12196,13 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 			status->dbs->SP_table[idx][++level] = min(i32, battle_config.max_sp);
 		}
 		base = (level > 0 ? status->dbs->SP_table[idx][1] : 10); // Safe value if none are specified
-		avg_increment = (level > 1 ? (status->dbs->SP_table[idx][level] - base) / level : 1);
+		if (level > 2) {
+			if (level >= MAX_LEVEL + 1)
+				level = MAX_LEVEL;
+			avg_increment = (status->dbs->SP_table[idx][level] - base) / level;
+		} else {
+			avg_increment = 1;
+		}
 		for ( ; level <= pc->max_level[idx][0]; level++ ) {
 			status->dbs->SP_table[idx][level] = min(base + avg_increment * level, battle_config.max_sp);
 		}
@@ -12293,7 +12338,7 @@ int status_readdb(void)
 
 	// initialize databases to default
 	//
-	if( runflag == MAPSERVER_ST_RUNNING ) {//not necessary during boot
+	if( core->runflag == MAPSERVER_ST_RUNNING ) {//not necessary during boot
 		// reset job_db.conf data
 		memset(status->dbs->max_weight_base, 0, sizeof(status->dbs->max_weight_base));
 		memset(status->dbs->HP_table, 0, sizeof(status->dbs->HP_table));
@@ -12434,6 +12479,7 @@ void status_defaults(void) {
 	status->calc_mob_ = status_calc_mob_;
 	status->calc_pet_ = status_calc_pet_;
 	status->calc_pc_ = status_calc_pc_;
+	status->calc_pc_additional = status_calc_pc_additional;
 	status->calc_homunculus_ = status_calc_homunculus_;
 	status->calc_mercenary_ = status_calc_mercenary_;
 	status->calc_elemental_ = status_calc_elemental_;

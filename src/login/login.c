@@ -12,6 +12,7 @@
 #include "login/loginlog.h"
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/core.h"
 #include "common/db.h"
 #include "common/malloc.h"
@@ -28,6 +29,7 @@
 #include <stdlib.h>
 
 struct login_interface login_s;
+struct login_interface *login;
 struct Login_Config login_config;
 struct mmo_char_server server[MAX_SERVERS]; // char server data
 
@@ -143,8 +145,7 @@ int charif_sendallwos(int sfd, uint8* buf, size_t len)
 	for( i = 0, c = 0; i < ARRAYLENGTH(server); ++i )
 	{
 		int fd = server[i].fd;
-		if( session_isValid(fd) && fd != sfd )
-		{
+		if (sockt->session_is_valid(fd) && fd != sfd) {
 			WFIFOHEAD(fd,len);
 			memcpy(WFIFOP(fd,0), buf, len);
 			WFIFOSET(fd,len);
@@ -171,7 +172,7 @@ void chrif_server_destroy(int id)
 	Assert_retv(id >= 0 && id < MAX_SERVERS);
 	if (server[id].fd != -1)
 	{
-		do_close(server[id].fd);
+		sockt->close(server[id].fd);
 		server[id].fd = -1;
 	}
 }
@@ -238,65 +239,17 @@ bool login_check_password(const char* md5key, int passwdenc, const char* passwd,
 	}
 }
 
-//--------------------------------------------
-// Test to know if an IP come from LAN or WAN.
-//--------------------------------------------
-int login_lan_subnetcheck(uint32 ip)
+
+/**
+ * Checks whether the given IP comes from LAN or WAN.
+ *
+ * @param ip IP address to check.
+ * @retval 0 if it is a WAN IP.
+ * @return the appropriate LAN server address to send, if it is a LAN IP.
+ */
+uint32 login_lan_subnet_check(uint32 ip)
 {
-	int i;
-	ARR_FIND( 0, login_config.subnet_count, i, (login_config.subnet[i].char_ip & login_config.subnet[i].mask) == (ip & login_config.subnet[i].mask) );
-	return ( i < login_config.subnet_count ) ? login_config.subnet[i].char_ip : 0;
-}
-
-//----------------------------------
-// Reading LAN Support configuration
-//----------------------------------
-int login_lan_config_read(const char *lancfgName)
-{
-	FILE *fp;
-	int line_num = 0;
-	char line[1024], w1[64], w2[64], w3[64], w4[64];
-
-	nullpo_ret(lancfgName);
-	if((fp = fopen(lancfgName, "r")) == NULL) {
-		ShowWarning("LAN Support configuration file is not found: %s\n", lancfgName);
-		return 1;
-	}
-
-	while(fgets(line, sizeof(line), fp))
-	{
-		line_num++;
-		if ((line[0] == '/' && line[1] == '/') || line[0] == '\n' || line[1] == '\n')
-			continue;
-
-		if (sscanf(line, "%63[^:]: %63[^:]:%63[^:]:%63[^\r\n]", w1, w2, w3, w4) != 4) {
-			ShowWarning("Error syntax of configuration file %s in line %d.\n", lancfgName, line_num);
-			continue;
-		}
-
-		if( strcmpi(w1, "subnet") == 0 )
-		{
-			login_config.subnet[login_config.subnet_count].mask = str2ip(w2);
-			login_config.subnet[login_config.subnet_count].char_ip = str2ip(w3);
-			login_config.subnet[login_config.subnet_count].map_ip = str2ip(w4);
-
-			if( (login_config.subnet[login_config.subnet_count].char_ip
-			     & login_config.subnet[login_config.subnet_count].mask) != (login_config.subnet[login_config.subnet_count].map_ip
-			     & login_config.subnet[login_config.subnet_count].mask) )
-			{
-				ShowError("%s: Configuration Error: The char server (%s) and map server (%s) belong to different subnetworks!\n", lancfgName, w3, w4);
-				continue;
-			}
-
-			login_config.subnet_count++;
-		}
-	}
-
-	if( login_config.subnet_count > 1 ) /* only useful if there is more than 1 available */
-		ShowStatus("Read information about %d subnetworks.\n", login_config.subnet_count);
-
-	fclose(fp);
-	return 0;
+	return sockt->lan_subnet_check(ip, NULL);
 }
 
 void login_fromchar_auth_ack(int fd, int account_id, uint32 login_id1, uint32 login_id2, uint8 sex, int request_id, struct login_auth_node* node)
@@ -341,7 +294,7 @@ void login_fromchar_parse_auth(int fd, int id, const char *const ip)
 	RFIFOSKIP(fd,23);
 
 	node = (struct login_auth_node*)idb_get(login->auth_db, account_id);
-	if( runflag == LOGINSERVER_ST_RUNNING &&
+	if( core->runflag == LOGINSERVER_ST_RUNNING &&
 		node != NULL &&
 		node->account_id == account_id &&
 		node->login_id1  == login_id1 &&
@@ -750,7 +703,7 @@ bool login_fromchar_parse_wrong_pincode(int fd)
 			return true;
 		}
 
-		login_log(host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed"); // FIXME: Do we really want to log this with the same code as successful logins?
+		login_log(sockt->host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed"); // FIXME: Do we really want to log this with the same code as successful logins?
 	}
 
 	login->remove_online_user(acc.account_id);
@@ -823,21 +776,21 @@ int login_parse_fromchar(int fd)
 	if( id == ARRAYLENGTH(server) )
 	{// not a char server
 		ShowDebug("login_parse_fromchar: Disconnecting invalid session #%d (is not a char-server)\n", fd);
-		set_eof(fd);
-		do_close(fd);
+		sockt->eof(fd);
+		sockt->close(fd);
 		return 0;
 	}
 
-	if( session[fd]->flag.eof )
+	if( sockt->session[fd]->flag.eof )
 	{
-		do_close(fd);
+		sockt->close(fd);
 		server[id].fd = -1;
 		chrif_on_disconnect(id);
 		return 0;
 	}
 
 	ipl = server[id].ip;
-	ip2str(ipl, ip);
+	sockt->ip2str(ipl, ip);
 
 	while( RFIFOREST(fd) >= 2 ) {
 		uint16 command = RFIFOW(fd,0);
@@ -1001,7 +954,7 @@ int login_parse_fromchar(int fd)
 		break;
 		default:
 			ShowError("login_parse_fromchar: Unknown packet 0x%x from a char-server! Disconnecting!\n", command);
-			set_eof(fd);
+			sockt->eof(fd);
 			return 0;
 		} // switch
 	} // while
@@ -1081,20 +1034,20 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 
 	char ip[16];
 	nullpo_ret(sd);
-	ip2str(session[sd->fd]->client_addr, ip);
+	sockt->ip2str(sockt->session[sd->fd]->client_addr, ip);
 
 	// DNS Blacklist check
 	if( login_config.use_dnsbl ) {
 		char r_ip[16];
 		char ip_dnsbl[256];
 		char* dnsbl_serv;
-		uint8* sin_addr = (uint8*)&session[sd->fd]->client_addr;
+		uint8* sin_addr = (uint8*)&sockt->session[sd->fd]->client_addr;
 
 		sprintf(r_ip, "%u.%u.%u.%u", sin_addr[0], sin_addr[1], sin_addr[2], sin_addr[3]);
 
 		for( dnsbl_serv = strtok(login_config.dnsbl_servs,","); dnsbl_serv != NULL; dnsbl_serv = strtok(NULL,",") ) {
 			sprintf(ip_dnsbl, "%s.%s", r_ip, trim(dnsbl_serv));
-			if( host2ip(ip_dnsbl) ) {
+			if (sockt->host2ip(ip_dnsbl)) {
 				ShowInfo("DNSBL: (%s) Blacklisted. User Kicked.\n", r_ip);
 				return 3;
 			}
@@ -1233,14 +1186,13 @@ void login_auth_ok(struct login_session_data* sd)
 	int fd = 0;
 	uint32 ip;
 	uint8 server_num, n;
-	uint32 subnet_char_ip;
 	struct login_auth_node* node;
 	int i;
 
 	nullpo_retv(sd);
 	fd = sd->fd;
-	ip = session[fd]->client_addr;
-	if( runflag != LOGINSERVER_ST_RUNNING )
+	ip = sockt->session[fd]->client_addr;
+	if( core->runflag != LOGINSERVER_ST_RUNNING )
 	{
 		// players can only login while running
 		login->connection_problem(fd, 1); // 01 = server closed
@@ -1259,7 +1211,7 @@ void login_auth_ok(struct login_session_data* sd)
 
 	server_num = 0;
 	for( i = 0; i < ARRAYLENGTH(server); ++i )
-		if( session_isActive(server[i].fd) )
+		if (sockt->session_is_active(server[i].fd))
 			server_num++;
 
 	if( server_num == 0 )
@@ -1308,14 +1260,15 @@ void login_auth_ok(struct login_session_data* sd)
 	memset(WFIFOP(fd,20), 0, 24);
 	WFIFOW(fd,44) = 0; // unknown
 	WFIFOB(fd,46) = sex_str2num(sd->sex);
-	for( i = 0, n = 0; i < ARRAYLENGTH(server); ++i )
-	{
-		if( !session_isValid(server[i].fd) )
+	for (i = 0, n = 0; i < ARRAYLENGTH(server); ++i) {
+		uint32 subnet_char_ip;
+
+		if (!sockt->session_is_valid(server[i].fd))
 			continue;
 
-		subnet_char_ip = login->lan_subnetcheck(ip); // Advanced subnet check [LuzZza]
+		subnet_char_ip = login->lan_subnet_check(ip);
 		WFIFOL(fd,47+n*32) = htonl((subnet_char_ip) ? subnet_char_ip : server[i].ip);
-		WFIFOW(fd,47+n*32+4) = ntows(htons(server[i].port)); // [!] LE byte order here [!]
+		WFIFOW(fd,47+n*32+4) = sockt->ntows(htons(server[i].port)); // [!] LE byte order here [!]
 		memcpy(WFIFOP(fd,47+n*32+6), server[i].name, 20);
 		WFIFOW(fd,47+n*32+26) = server[i].users;
 
@@ -1360,7 +1313,7 @@ void login_auth_failed(struct login_session_data* sd, int result)
 	nullpo_retv(sd);
 
 	fd = sd->fd;
-	ip = session[fd]->client_addr;
+	ip = sockt->session[fd]->client_addr;
 	if (login_config.log_login)
 	{
 		const char* error;
@@ -1393,7 +1346,7 @@ void login_auth_failed(struct login_session_data* sd, int result)
 		login_log(ip, sd->userid, result, error); // FIXME: result can be 100, conflicting with the value 100 we use for successful login...
 	}
 
-	if( result == 1 && login_config.dynamic_pass_failure_ban )
+	if (result == 1 && login_config.dynamic_pass_failure_ban && !sockt->trusted_ip_check(ip))
 		ipban_log(ip); // log failed password attempt
 
 #if PACKETVER >= 20120000 /* not sure when this started */
@@ -1581,16 +1534,16 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 
 	ShowInfo("Connection request of the char-server '%s' @ %u.%u.%u.%u:%u (account: '%s', pass: '%s', ip: '%s')\n", server_name, CONVIP(server_ip), server_port, sd->userid, sd->passwd, ip);
 	sprintf(message, "charserver - %s@%u.%u.%u.%u:%u", server_name, CONVIP(server_ip), server_port);
-	login_log(session[fd]->client_addr, sd->userid, 100, message);
+	login_log(sockt->session[fd]->client_addr, sd->userid, 100, message);
 
 	result = login->mmo_auth(sd, true);
-	if (runflag == LOGINSERVER_ST_RUNNING &&
+	if (core->runflag == LOGINSERVER_ST_RUNNING &&
 		result == -1 &&
 		sd->sex == 'S' &&
 		sd->account_id >= 0 &&
 		sd->account_id < ARRAYLENGTH(server) &&
-		!session_isValid(server[sd->account_id].fd) &&
-		login->lan_subnetcheck(ipl))
+		!sockt->session_is_valid(server[sd->account_id].fd) &&
+		sockt->allowed_ip_check(ipl))
 	{
 		ShowStatus("Connection of the char-server '%s' accepted.\n", server_name);
 		safestrncpy(server[sd->account_id].name, server_name, sizeof(server[sd->account_id].name));
@@ -1601,9 +1554,9 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 		server[sd->account_id].type = type;
 		server[sd->account_id].new_ = new_;
 
-		session[fd]->func_parse = login->parse_fromchar;
-		session[fd]->flag.server = 1;
-		realloc_fifo(fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
+		sockt->session[fd]->func_parse = login->parse_fromchar;
+		sockt->session[fd]->flag.server = 1;
+		sockt->realloc_fifo(fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
 		// send connection success
 		login->char_server_connection_status(fd, sd, 0);
@@ -1620,35 +1573,35 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 //----------------------------------------------------------------------------------------
 int login_parse_login(int fd)
 {
-	struct login_session_data* sd = (struct login_session_data*)session[fd]->session_data;
+	struct login_session_data* sd = (struct login_session_data*)sockt->session[fd]->session_data;
 	int result;
 
 	char ip[16];
-	uint32 ipl = session[fd]->client_addr;
-	ip2str(ipl, ip);
+	uint32 ipl = sockt->session[fd]->client_addr;
+	sockt->ip2str(ipl, ip);
 
-	if( session[fd]->flag.eof )
+	if( sockt->session[fd]->flag.eof )
 	{
 		ShowInfo("Closed connection from '"CL_WHITE"%s"CL_RESET"'.\n", ip);
-		do_close(fd);
+		sockt->close(fd);
 		return 0;
 	}
 
 	if( sd == NULL )
 	{
 		// Perform ip-ban check
-		if( login_config.ipban && ipban_check(ipl) )
+		if (login_config.ipban && !sockt->trusted_ip_check(ipl) && ipban_check(ipl))
 		{
 			ShowStatus("Connection refused: IP isn't authorized (deny/allow, ip: %s).\n", ip);
 			login_log(ipl, "unknown", -3, "ip banned");
 			login->login_error(fd, 3); // 3 = Rejected from Server
-			set_eof(fd);
+			sockt->eof(fd);
 			return 0;
 		}
 
 		// create a session for this new connection
-		CREATE(session[fd]->session_data, struct login_session_data, 1);
-		sd = (struct login_session_data*)session[fd]->session_data;
+		CREATE(sockt->session[fd]->session_data, struct login_session_data, 1);
+		sd = (struct login_session_data*)sockt->session[fd]->session_data;
 		sd->fd = fd;
 	}
 
@@ -1722,7 +1675,7 @@ int login_parse_login(int fd)
 
 		default:
 			ShowNotice("Abnormal end of connection (ip: %s): Unknown packet 0x%x\n", ip, command);
-			set_eof(fd);
+			sockt->eof(fd);
 			return 0;
 		}
 	}
@@ -1759,7 +1712,6 @@ void login_set_defaults()
 
 	login_config.client_hash_check = 0;
 	login_config.client_hash_nodes = NULL;
-	login_config.subnet_count = 0;
 }
 
 //-----------------------------------
@@ -1783,19 +1735,19 @@ int login_config_read(const char* cfgName)
 			continue;
 
 		if(!strcmpi(w1,"timestamp_format"))
-			safestrncpy(timestamp_format, w2, 20);
+			safestrncpy(showmsg->timestamp_format, w2, 20);
 		else if(!strcmpi(w1,"stdout_with_ansisequence"))
-			stdout_with_ansisequence = config_switch(w2);
+			showmsg->stdout_with_ansisequence = config_switch(w2) ? true : false;
 		else if(!strcmpi(w1,"console_silent")) {
-			msg_silent = atoi(w2);
-			if( msg_silent ) /* only bother if we actually have this enabled */
+			showmsg->silent = atoi(w2);
+			if (showmsg->silent) /* only bother if we actually have this enabled */
 				ShowInfo("Console Silent Setting: %d\n", atoi(w2));
 		}
 		else if( !strcmpi(w1, "bind_ip") ) {
-			login_config.login_ip = host2ip(w2);
+			login_config.login_ip = sockt->host2ip(w2);
 			if( login_config.login_ip ) {
 				char ip_str[16];
-				ShowStatus("Login server binding IP address : %s -> %s\n", w2, ip2str(login_config.login_ip, ip_str));
+				ShowStatus("Login server binding IP address : %s -> %s\n", w2, sockt->ip2str(login_config.login_ip, ip_str));
 			}
 		}
 		else if( !strcmpi(w1, "login_port") ) {
@@ -1922,14 +1874,14 @@ int do_final(void) {
 
 	if( login->fd != -1 )
 	{
-		do_close(login->fd);
+		sockt->close(login->fd);
 		login->fd = -1;
 	}
 
 	HPM_login_do_final();
 
 	aFree(login->LOGIN_CONF_NAME);
-	aFree(login->LAN_CONF_NAME);
+	aFree(login->NET_CONF_NAME);
 
 	HPM->event(HPET_POST_FINAL);
 
@@ -1953,22 +1905,17 @@ void set_server_type(void) {
 /// Called when a terminate signal is received.
 void do_shutdown_login(void)
 {
-	if( runflag != LOGINSERVER_ST_SHUTDOWN )
+	if( core->runflag != LOGINSERVER_ST_SHUTDOWN )
 	{
 		int id;
-		runflag = LOGINSERVER_ST_SHUTDOWN;
+		core->runflag = LOGINSERVER_ST_SHUTDOWN;
 		ShowStatus("Shutting down...\n");
 		// TODO proper shutdown procedure; kick all characters, wait for acks, ...  [FlavioJS]
 		for( id = 0; id < ARRAYLENGTH(server); ++id )
 			chrif_server_reset(id);
-		flush_fifos();
-		runflag = CORE_ST_STOP;
+		sockt->flush_fifos();
+		core->runflag = CORE_ST_STOP;
 	}
-}
-
-void login_hp_symbols(void) {
-	HPM->share(account_db_sql_up(accounts),"sql_handle");
-	HPM->share(login,"login");
 }
 
 /**
@@ -1984,15 +1931,15 @@ static CMDLINEARG(loginconfig)
 	return true;
 }
 /**
- * --lan-config handler
+ * --net-config handler
  *
  * Overrides the default subnet configuration file.
  * @see cmdline->exec
  */
-static CMDLINEARG(lanconfig)
+static CMDLINEARG(netconfig)
 {
-	aFree(login->LAN_CONF_NAME);
-	login->LAN_CONF_NAME = aStrdup(params);
+	aFree(login->NET_CONF_NAME);
+	login->NET_CONF_NAME = aStrdup(params);
 	return true;
 }
 /**
@@ -2001,7 +1948,7 @@ static CMDLINEARG(lanconfig)
 void cmdline_args_init_local(void)
 {
 	CMDLINEARG_DEF2(login-config, loginconfig, "Alternative login-server configuration.", CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(lan-config, lanconfig, "Alternative subnet configuration.", CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(net-config, netconfig, "Alternative subnet configuration.", CMDLINE_OPT_PARAM);
 }
 
 //------------------------------
@@ -2025,17 +1972,16 @@ int do_init(int argc, char** argv)
 	login_set_defaults();
 
 	login->LOGIN_CONF_NAME = aStrdup("conf/login-server.conf");
-	login->LAN_CONF_NAME   = aStrdup("conf/subnet.conf");
+	login->NET_CONF_NAME   = aStrdup("conf/network.conf");
 
 	HPM_login_do_init();
-	HPM->symbol_defaults_sub = login_hp_symbols;
 	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
 	HPM->config_read();
 	HPM->event(HPET_PRE_INIT);
 
 	cmdline->exec(argc, argv, CMDLINE_OPT_NORMAL);
 	login_config_read(login->LOGIN_CONF_NAME);
-	login->lan_config_read(login->LAN_CONF_NAME);
+	sockt->net_config_read(login->NET_CONF_NAME);
 
 	for( i = 0; i < ARRAYLENGTH(server); ++i )
 		chrif_server_init(i);
@@ -2055,7 +2001,7 @@ int do_init(int argc, char** argv)
 	login->auth_db = idb_alloc(DB_OPT_RELEASE_DATA);
 
 	// set default parser as login_parse_login function
-	set_defaultparse(login->parse_login);
+	sockt->set_defaultparse(login->parse_login);
 
 	// every 10 minutes cleanup online account db.
 	timer->add_func_list(login->online_data_cleanup, "login->online_data_cleanup");
@@ -2076,14 +2022,14 @@ int do_init(int argc, char** argv)
 	HPM->event(HPET_INIT);
 
 	// server port open & binding
-	if( (login->fd = make_listen_bind(login_config.login_ip,login_config.login_port)) == -1 ) {
+	if ((login->fd = sockt->make_listen_bind(login_config.login_ip,login_config.login_port)) == -1) {
 		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",login_config.login_port);
 		exit(EXIT_FAILURE);
 	}
 
-	if( runflag != CORE_ST_STOP ) {
-		shutdown_callback = do_shutdown_login;
-		runflag = LOGINSERVER_ST_RUNNING;
+	if( core->runflag != CORE_ST_STOP ) {
+		core->shutdown_callback = do_shutdown_login;
+		core->runflag = LOGINSERVER_ST_RUNNING;
 	}
 
 	ShowStatus("The login-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %u).\n\n", login_config.login_port);
@@ -2112,8 +2058,7 @@ void login_defaults(void) {
 	login->sync_ip_addresses = login_sync_ip_addresses;
 	login->check_encrypted = login_check_encrypted;
 	login->check_password = login_check_password;
-	login->lan_subnetcheck = login_lan_subnetcheck;
-	login->lan_config_read = login_lan_config_read;
+	login->lan_subnet_check = login_lan_subnet_check;
 
 	login->fromchar_auth_ack = login_fromchar_auth_ack;
 	login->fromchar_accinfo = login_fromchar_accinfo;
@@ -2159,5 +2104,5 @@ void login_defaults(void) {
 	login->send_coding_key = login_send_coding_key;
 
 	login->LOGIN_CONF_NAME = NULL;
-	login->LAN_CONF_NAME = NULL;
+	login->NET_CONF_NAME = NULL;
 }

@@ -20,6 +20,7 @@
 #include <string.h>
 
 struct loginif_interface loginif_s;
+struct loginif_interface *loginif;
 
 /// Resets all the data.
 void loginif_reset(void)
@@ -28,7 +29,7 @@ void loginif_reset(void)
 	// TODO kick everyone out and reset everything or wait for connect and try to reacquire locks [FlavioJS]
 	for( id = 0; id < ARRAYLENGTH(chr->server); ++id )
 		mapif->server_reset(id);
-	flush_fifos();
+	sockt->flush_fifos();
 	exit(EXIT_FAILURE);
 }
 
@@ -38,9 +39,9 @@ void loginif_reset(void)
 /// If all the conditions are met, it stops the core loop.
 void loginif_check_shutdown(void)
 {
-	if( runflag != CHARSERVER_ST_SHUTDOWN )
+	if( core->runflag != CHARSERVER_ST_SHUTDOWN )
 		return;
-	runflag = CORE_ST_STOP;
+	core->runflag = CORE_ST_STOP;
 }
 
 
@@ -80,9 +81,8 @@ void do_init_loginif(void)
 
 void do_final_loginif(void)
 {
-	if( chr->login_fd != -1 )
-	{
-		do_close(chr->login_fd);
+	if (chr->login_fd != -1) {
+		sockt->close(chr->login_fd);
 		chr->login_fd = -1;
 	}
 }

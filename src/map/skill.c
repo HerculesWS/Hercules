@@ -64,6 +64,8 @@
 struct skill_interface skill_s;
 struct s_skill_dbs skilldbs;
 
+struct skill_interface *skill;
+
 //Since only mob-casted splash skills can hit ice-walls
 static inline int splash_target(struct block_list* bl) {
 #ifndef RENEWAL
@@ -6858,7 +6860,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					script->potion_flag = 1;
 					script->potion_hp = script->potion_sp = script->potion_per_hp = script->potion_per_sp = 0;
 					script->potion_target = bl->id;
-					script->run(sd->inventory_data[i]->script,0,sd->bl.id,0);
+					script->run_use_script(sd, sd->inventory_data[i], 0);
 					script->potion_flag = script->potion_target = 0;
 					if( sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_ALCHEMIST )
 						bonus += sd->status.base_level;
@@ -10539,7 +10541,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 				script->potion_flag = 1;
 				script->potion_hp = 0;
 				script->potion_sp = 0;
-				script->run(sd->inventory_data[j]->script,0,sd->bl.id,0);
+				script->run_use_script(sd, sd->inventory_data[j], 0);
 				script->potion_flag = 0;
 				//Apply skill bonuses
 				i = pc->checkskill(sd,CR_SLIMPITCHER)*10
@@ -18089,7 +18091,7 @@ void skill_init_unit_layout (void)
 	int i,j,pos = 0;
 
 	//when != it was already cleared during skill_defaults() no need to repeat
-	if( runflag == MAPSERVER_ST_RUNNING )
+	if( core->runflag == MAPSERVER_ST_RUNNING )
 		memset(skill->dbs->unit_layout, 0, sizeof(skill->dbs->unit_layout));
 
 	// standard square layouts go first
@@ -18974,7 +18976,7 @@ void skill_readdb(bool minimal) {
 	db_clear(skill->name2id_db);
 
 	/* when != it was called during init and this procedure was already performed by skill_defaults()  */
-	if( runflag == MAPSERVER_ST_RUNNING ) {
+	if( core->runflag == MAPSERVER_ST_RUNNING ) {
 		memset(ZEROED_BLOCK_POS(skill->dbs), 0, ZEROED_BLOCK_SIZE(skill->dbs));
 	}
 

@@ -12,6 +12,7 @@
 #include "common/core.h"
 #include "common/db.h"
 #include "common/malloc.h"
+#include "common/mapindex.h"
 #include "common/mmo.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
@@ -33,6 +34,7 @@
 struct malloc_interface iMalloc_HPM;
 struct malloc_interface *HPMiMalloc;
 struct HPM_interface HPM_s;
+struct HPM_interface *HPM;
 
 /**
  * (char*) data name -> (unsigned int) HPMDataCheck[] index
@@ -94,46 +96,260 @@ struct hplugin *hplugin_create(void) {
 	HPM->plugins[HPM->plugin_count - 1]->filename = NULL;
 	return HPM->plugins[HPM->plugin_count - 1];
 }
-#define HPM_POP(x) { #x , x }
-bool hplugin_populate(struct hplugin *plugin, const char *filename) {
-	struct {
-		const char* name;
-		void *Ref;
-	} ToLink[] = {
-		HPM_POP(ShowMessage),
-		HPM_POP(ShowStatus),
-		HPM_POP(ShowSQL),
-		HPM_POP(ShowInfo),
-		HPM_POP(ShowNotice),
-		HPM_POP(ShowWarning),
-		HPM_POP(ShowDebug),
-		HPM_POP(ShowError),
-		HPM_POP(ShowFatalError),
-	};
-	int i, length = ARRAYLENGTH(ToLink);
 
-	for(i = 0; i < length; i++) {
-		void **Link;
-		if (!( Link = plugin_import(plugin->dll, ToLink[i].name,void **))) {
-			ShowFatalError("HPM:plugin_load: failed to retrieve '%s' for '"CL_WHITE"%s"CL_RESET"'!\n", ToLink[i].name, filename);
-			exit(EXIT_FAILURE);
-		}
-		*Link = ToLink[i].Ref;
+bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (*receive) (int fd), unsigned int point,unsigned int pluginID) {
+	struct HPluginPacket *packet;
+	unsigned int i;
+
+	if( point >= hpPHP_MAX ) {
+		ShowError("HPM->addPacket:%s: unknown point '%u' specified for packet 0x%04x (len %d)\n",HPM->pid2name(pluginID),point,cmd,length);
+		return false;
 	}
+
+	for(i = 0; i < HPM->packetsc[point]; i++) {
+		if( HPM->packets[point][i].cmd == cmd ) {
+			ShowError("HPM->addPacket:%s: can't add packet 0x%04x, already in use by '%s'!",HPM->pid2name(pluginID),cmd,HPM->pid2name(HPM->packets[point][i].pluginID));
+			return false;
+		}
+	}
+
+	RECREATE(HPM->packets[point], struct HPluginPacket, ++HPM->packetsc[point]);
+	packet = &HPM->packets[point][HPM->packetsc[point] - 1];
+
+	packet->pluginID = pluginID;
+	packet->cmd = cmd;
+	packet->len = length;
+	packet->receive = receive;
 
 	return true;
 }
-#undef HPM_POP
+
+void hplugins_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr)
+{
+	/* record address */
+	switch (type) {
+		/* core-handled */
+		case HPDT_SESSION:
+			ret->HPDataSRCPtr = (void**)(&((struct socket_data *)ptr)->hdata);
+			ret->hdatac = &((struct socket_data *)ptr)->hdatac;
+			break;
+		/* goes to sub */
+		default:
+			if (HPM->grabHPDataSub) {
+				if (HPM->grabHPDataSub(ret,type,ptr))
+					return;
+				ShowError("HPM:HPM:grabHPData failed, unknown type %d!\n",type);
+			} else {
+				ShowError("HPM:grabHPData failed, type %d needs sub-handler!\n",type);
+			}
+			ret->HPDataSRCPtr = NULL;
+			ret->hdatac = NULL;
+			return;
+	}
+}
+
+void hplugins_addToHPData(enum HPluginDataTypes type, unsigned int pluginID, void *ptr, void *data, unsigned int index, bool autofree)
+{
+	struct HPluginData *HPData, **HPDataSRC;
+	struct HPDataOperationStorage action;
+	unsigned int i, max;
+
+	HPM->grabHPData(&action,type,ptr);
+
+	if (action.hdatac == NULL) { /* woo it failed! */
+		ShowError("HPM:addToHPData:%s: failed, type %d (%u|%u)\n",HPM->pid2name(pluginID),type,pluginID,index);
+		return;
+	}
+
+	/* flag */
+	HPDataSRC = *(action.HPDataSRCPtr);
+	max = *(action.hdatac);
+
+	/* duplicate check */
+	for (i = 0; i < max; i++) {
+		if (HPDataSRC[i]->pluginID == pluginID && HPDataSRC[i]->type == index) {
+			ShowError("HPM:addToHPData:%s: error! attempting to insert duplicate struct of id %u and index %u\n",HPM->pid2name(pluginID),pluginID,index);
+			return;
+		}
+	}
+
+	/* HPluginData is always same size, probably better to use the ERS (with reasonable chunk size e.g. 10/25/50) */
+	CREATE(HPData, struct HPluginData, 1);
+
+	/* input */
+	HPData->pluginID = pluginID;
+	HPData->type = index;
+	HPData->flag.free = autofree ? 1 : 0;
+	HPData->data = data;
+
+	/* resize */
+	*(action.hdatac) += 1;
+	RECREATE(*(action.HPDataSRCPtr),struct HPluginData *,*(action.hdatac));
+
+	/* RECREATE modified the address */
+	HPDataSRC = *(action.HPDataSRCPtr);
+	HPDataSRC[*(action.hdatac) - 1] = HPData;
+}
+
+void *hplugins_getFromHPData(enum HPluginDataTypes type, unsigned int pluginID, void *ptr, unsigned int index)
+{
+	struct HPDataOperationStorage action;
+	struct HPluginData **HPDataSRC;
+	unsigned int i, max;
+
+	HPM->grabHPData(&action,type,ptr);
+
+	if (action.hdatac == NULL) { /* woo it failed! */
+		ShowError("HPM:getFromHPData:%s: failed, type %d (%u|%u)\n",HPM->pid2name(pluginID),type,pluginID,index);
+		return NULL;
+	}
+
+	/* flag */
+	HPDataSRC = *(action.HPDataSRCPtr);
+	max = *(action.hdatac);
+
+	for (i = 0; i < max; i++) {
+		if (HPDataSRC[i]->pluginID == pluginID && HPDataSRC[i]->type == index)
+			return HPDataSRC[i]->data;
+	}
+
+	return NULL;
+}
+
+void hplugins_removeFromHPData(enum HPluginDataTypes type, unsigned int pluginID, void *ptr, unsigned int index)
+{
+	struct HPDataOperationStorage action;
+	struct HPluginData **HPDataSRC;
+	unsigned int i, max;
+
+	HPM->grabHPData(&action,type,ptr);
+
+	if (action.hdatac == NULL) { /* woo it failed! */
+		ShowError("HPM:removeFromHPData:%s: failed, type %d (%u|%u)\n",HPM->pid2name(pluginID),type,pluginID,index);
+		return;
+	}
+
+	/* flag */
+	HPDataSRC = *(action.HPDataSRCPtr);
+	max = *(action.hdatac);
+
+	for (i = 0; i < max; i++) {
+		if (HPDataSRC[i]->pluginID == pluginID && HPDataSRC[i]->type == index)
+			break;
+	}
+
+	if (i != max) {
+		unsigned int cursor;
+
+		aFree(HPDataSRC[i]->data);/* when its removed we delete it regardless of autofree */
+		aFree(HPDataSRC[i]);
+		HPDataSRC[i] = NULL;
+
+		for (i = 0, cursor = 0; i < max; i++) {
+			if (HPDataSRC[i] == NULL)
+				continue;
+			if (i != cursor)
+				HPDataSRC[cursor] = HPDataSRC[i];
+			cursor++;
+		}
+		*(action.hdatac) = cursor;
+	}
+}
+
+/* TODO: add ability for tracking using pID for the upcoming runtime load/unload support. */
+bool HPM_AddHook(enum HPluginHookType type, const char *target, void *hook, unsigned int pID)
+{
+	if (!HPM->hooking) {
+		ShowError("HPM:AddHook Fail! '%s' tried to hook to '%s' but HPMHooking is disabled!\n",HPM->pid2name(pID),target);
+		return false;
+	}
+	/* search if target is a known hook point within 'common' */
+	/* if not check if a sub-hooking list is available (from the server) and run it by */
+	if (HPM->addhook_sub && HPM->addhook_sub(type,target,hook,pID))
+		return true;
+
+	ShowError("HPM:AddHook: unknown Hooking Point '%s'!\n",target);
+
+	return false;
+}
+
+void HPM_HookStop(const char *func, unsigned int pID)
+{
+	/* track? */
+	HPM->force_return = true;
+}
+
+bool HPM_HookStopped (void)
+{
+	return HPM->force_return;
+}
+
+/**
+ * Adds a plugin-defined command-line argument.
+ *
+ * @param pluginID  the current plugin's ID.
+ * @param name      the command line argument's name, including the leading '--'.
+ * @param has_param whether the command line argument expects to be followed by a value.
+ * @param func      the triggered function.
+ * @param help      the help string to be displayed by '--help', if any.
+ * @return the success status.
+ */
+bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, CmdlineExecFunc func, const char *help)
+{
+	int i;
+
+	if (!name || strlen(name) < 3 || name[0] != '-' || name[1] != '-') {
+		ShowError("HPM:add_arg:%s invalid argument name: arguments must begin with '--' (from %s)\n", name, HPM->pid2name(pluginID));
+		return false;
+	}
+
+	ARR_FIND(0, cmdline->args_data_count, i, strcmp(cmdline->args_data[i].name, name) == 0);
+
+       if (i < cmdline->args_data_count) {
+               ShowError("HPM:add_arg:%s duplicate! (from %s)\n",name,HPM->pid2name(pluginID));
+               return false;
+       }
+
+       return cmdline->arg_add(pluginID, name, '\0', func, help, has_param ? CMDLINE_OPT_PARAM : CMDLINE_OPT_NORMAL);
+}
+
+bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, char *name, void (*func) (const char *val))
+{
+	struct HPConfListenStorage *conf;
+	unsigned int i;
+
+	if (type >= HPCT_MAX) {
+		ShowError("HPM->addConf:%s: unknown point '%u' specified for config '%s'\n",HPM->pid2name(pluginID),type,name);
+		return false;
+	}
+
+	for (i = 0; i < HPM->confsc[type]; i++) {
+		if (!strcmpi(name,HPM->confs[type][i].key)) {
+			ShowError("HPM->addConf:%s: duplicate '%s', already in use by '%s'!",HPM->pid2name(pluginID),name,HPM->pid2name(HPM->confs[type][i].pluginID));
+			return false;
+		}
+	}
+
+	RECREATE(HPM->confs[type], struct HPConfListenStorage, ++HPM->confsc[type]);
+	conf = &HPM->confs[type][HPM->confsc[type] - 1];
+
+	conf->pluginID = pluginID;
+	safestrncpy(conf->key, name, HPM_ADDCONF_LENGTH);
+	conf->func = func;
+
+	return true;
+}
+
 struct hplugin *hplugin_load(const char* filename) {
 	struct hplugin *plugin;
 	struct hplugin_info *info;
 	struct HPMi_interface **HPMi;
 	bool anyEvent = false;
 	void **import_symbol_ref;
-	Sql **sql_handle;
 	int *HPMDataCheckVer;
 	unsigned int *HPMDataCheckLen;
 	struct s_HPMDataCheck *HPMDataCheck;
+	const char *(*HPMLoadEvent)(int server_type);
 
 	if( HPM->exists(filename) ) {
 		ShowWarning("HPM:plugin_load: attempting to load duplicate '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
@@ -173,13 +389,6 @@ struct hplugin *hplugin_load(const char* filename) {
 
 	*import_symbol_ref = HPM->import_symbol;
 
-	if( !( sql_handle = plugin_import(plugin->dll, "mysql_handle",Sql **) ) ) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'mysql_handle' for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
-		exit(EXIT_FAILURE);
-	}
-
-	*sql_handle = HPM->import_symbol("sql_handle",plugin->idx);
-
 	if( !( HPMi = plugin_import(plugin->dll, "HPMi",struct HPMi_interface **) ) ) {
 		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMi' for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
 		exit(EXIT_FAILURE);
@@ -211,8 +420,17 @@ struct hplugin *hplugin_load(const char* filename) {
 		exit(EXIT_FAILURE);
 	}
 
-	if( !HPM->populate(plugin,filename) )
-		return NULL;
+	if (!(HPMLoadEvent = plugin_import(plugin->dll, "HPM_shared_symbols", const char *(*)(int)))) {
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPM_shared_symbols' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h!\n", filename);
+		exit(EXIT_FAILURE);
+	}
+	{
+		const char *failure = HPMLoadEvent(SERVER_TYPE);
+		if (failure) {
+			ShowFatalError("HPM:plugin_load: failed to import symbol '%s' into '"CL_WHITE"%s"CL_RESET"'.\n", failure, filename);
+			exit(EXIT_FAILURE);
+		}
+	}
 
 	if( !( HPMDataCheckLen = plugin_import(plugin->dll, "HPMDataCheckLen", unsigned int *) ) ) {
 		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheckLen' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h!\n", filename);
@@ -238,16 +456,18 @@ struct hplugin *hplugin_load(const char* filename) {
 	/* id */
 	plugin->hpi->pid                = plugin->idx;
 	/* core */
-	plugin->hpi->addCPCommand       = HPM->import_symbol("addCPCommand",plugin->idx);
-	plugin->hpi->addPacket          = HPM->import_symbol("addPacket",plugin->idx);
-	plugin->hpi->addToHPData        = HPM->import_symbol("addToHPData",plugin->idx);
-	plugin->hpi->getFromHPData      = HPM->import_symbol("getFromHPData",plugin->idx);
-	plugin->hpi->removeFromHPData   = HPM->import_symbol("removeFromHPData",plugin->idx);
-	plugin->hpi->AddHook            = HPM->import_symbol("AddHook",plugin->idx);
-	plugin->hpi->HookStop           = HPM->import_symbol("HookStop",plugin->idx);
-	plugin->hpi->HookStopped        = HPM->import_symbol("HookStopped",plugin->idx);
-	plugin->hpi->addArg             = HPM->import_symbol("addArg",plugin->idx);
-	plugin->hpi->addConf            = HPM->import_symbol("addConf",plugin->idx);
+#ifdef CONSOLE_INPUT
+	plugin->hpi->addCPCommand       = console->input->addCommand;
+#endif // CONSOLE_INPUT
+	plugin->hpi->addPacket          = hplugins_addpacket;
+	plugin->hpi->addToHPData        = hplugins_addToHPData;
+	plugin->hpi->getFromHPData      = hplugins_getFromHPData;
+	plugin->hpi->removeFromHPData   = hplugins_removeFromHPData;
+	plugin->hpi->AddHook            = HPM_AddHook;
+	plugin->hpi->HookStop           = HPM_HookStop;
+	plugin->hpi->HookStopped        = HPM_HookStopped;
+	plugin->hpi->addArg             = hpm_add_arg;
+	plugin->hpi->addConf            = hplugins_addconf;
 	/* server specific */
 	if( HPM->load_sub )
 		HPM->load_sub(plugin);
@@ -312,9 +532,6 @@ void hplugins_config_read(void) {
 
 	if (libconfig->read_file(&plugins_conf, config_filename))
 		return;
-
-	if( HPM->symbol_defaults_sub )
-		HPM->symbol_defaults_sub();
 
 	plist = libconfig->lookup(&plugins_conf, "plugins_list");
 	for (i = 0; i < HPM->cmdline_plugins_count; i++) {
@@ -382,160 +599,7 @@ CPCMD(plugins) {
 		}
 	}
 }
-void hplugins_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr) {
-	/* record address */
-	switch( type ) {
-		/* core-handled */
-		case HPDT_SESSION:
-			ret->HPDataSRCPtr = (void**)(&((struct socket_data *)ptr)->hdata);
-			ret->hdatac = &((struct socket_data *)ptr)->hdatac;
-			break;
-		/* goes to sub */
-		default:
-			if( HPM->grabHPDataSub ) {
-				if( HPM->grabHPDataSub(ret,type,ptr) )
-					return;
-				else {
-					ShowError("HPM:HPM:grabHPData failed, unknown type %d!\n",type);
-				}
-			} else
-				ShowError("HPM:grabHPData failed, type %d needs sub-handler!\n",type);
-			ret->HPDataSRCPtr = NULL;
-			ret->hdatac = NULL;
-			return;
-	}
-}
-void hplugins_addToHPData(enum HPluginDataTypes type, unsigned int pluginID, void *ptr, void *data, unsigned int index, bool autofree) {
-	struct HPluginData *HPData, **HPDataSRC;
-	struct HPDataOperationStorage action;
-	unsigned int i, max;
 
-	HPM->grabHPData(&action,type,ptr);
-
-	if( action.hdatac == NULL ) { /* woo it failed! */
-		ShowError("HPM:addToHPData:%s: failed, type %d (%u|%u)\n",HPM->pid2name(pluginID),type,pluginID,index);
-		return;
-	}
-
-	/* flag */
-	HPDataSRC = *(action.HPDataSRCPtr);
-	max = *(action.hdatac);
-
-	/* duplicate check */
-	for(i = 0; i < max; i++) {
-		if( HPDataSRC[i]->pluginID == pluginID && HPDataSRC[i]->type == index ) {
-			ShowError("HPM:addToHPData:%s: error! attempting to insert duplicate struct of id %u and index %u\n",HPM->pid2name(pluginID),pluginID,index);
-			return;
-		}
-	}
-
-	/* HPluginData is always same size, probably better to use the ERS (with reasonable chunk size e.g. 10/25/50) */
-	CREATE(HPData, struct HPluginData, 1);
-
-	/* input */
-	HPData->pluginID = pluginID;
-	HPData->type = index;
-	HPData->flag.free = autofree ? 1 : 0;
-	HPData->data = data;
-
-	/* resize */
-	*(action.hdatac) += 1;
-	RECREATE(*(action.HPDataSRCPtr),struct HPluginData *,*(action.hdatac));
-
-	/* RECREATE modified the address */
-	HPDataSRC = *(action.HPDataSRCPtr);
-	HPDataSRC[*(action.hdatac) - 1] = HPData;
-}
-
-void *hplugins_getFromHPData(enum HPluginDataTypes type, unsigned int pluginID, void *ptr, unsigned int index) {
-	struct HPDataOperationStorage action;
-	struct HPluginData **HPDataSRC;
-	unsigned int i, max;
-
-	HPM->grabHPData(&action,type,ptr);
-
-	if( action.hdatac == NULL ) { /* woo it failed! */
-		ShowError("HPM:getFromHPData:%s: failed, type %d (%u|%u)\n",HPM->pid2name(pluginID),type,pluginID,index);
-		return NULL;
-	}
-
-	/* flag */
-	HPDataSRC = *(action.HPDataSRCPtr);
-	max = *(action.hdatac);
-
-	for(i = 0; i < max; i++) {
-		if( HPDataSRC[i]->pluginID == pluginID && HPDataSRC[i]->type == index )
-			return HPDataSRC[i]->data;
-	}
-
-	return NULL;
-}
-
-void hplugins_removeFromHPData(enum HPluginDataTypes type, unsigned int pluginID, void *ptr, unsigned int index) {
-	struct HPDataOperationStorage action;
-	struct HPluginData **HPDataSRC;
-	unsigned int i, max;
-
-	HPM->grabHPData(&action,type,ptr);
-
-	if( action.hdatac == NULL ) { /* woo it failed! */
-		ShowError("HPM:removeFromHPData:%s: failed, type %d (%u|%u)\n",HPM->pid2name(pluginID),type,pluginID,index);
-		return;
-	}
-
-	/* flag */
-	HPDataSRC = *(action.HPDataSRCPtr);
-	max = *(action.hdatac);
-
-	for(i = 0; i < max; i++) {
-		if( HPDataSRC[i]->pluginID == pluginID && HPDataSRC[i]->type == index )
-			break;
-	}
-
-	if( i != max ) {
-		unsigned int cursor;
-
-		aFree(HPDataSRC[i]->data);/* when its removed we delete it regardless of autofree */
-		aFree(HPDataSRC[i]);
-		HPDataSRC[i] = NULL;
-
-		for(i = 0, cursor = 0; i < max; i++) {
-			if( HPDataSRC[i] == NULL )
-				continue;
-			if( i != cursor )
-				HPDataSRC[cursor] = HPDataSRC[i];
-			cursor++;
-		}
-		*(action.hdatac) = cursor;
-	}
-}
-
-bool hplugins_addpacket(unsigned short cmd, short length,void (*receive) (int fd),unsigned int point,unsigned int pluginID) {
-	struct HPluginPacket *packet;
-	unsigned int i;
-
-	if( point >= hpPHP_MAX ) {
-		ShowError("HPM->addPacket:%s: unknown point '%u' specified for packet 0x%04x (len %d)\n",HPM->pid2name(pluginID),point,cmd,length);
-		return false;
-	}
-
-	for(i = 0; i < HPM->packetsc[point]; i++) {
-		if( HPM->packets[point][i].cmd == cmd ) {
-			ShowError("HPM->addPacket:%s: can't add packet 0x%04x, already in use by '%s'!",HPM->pid2name(pluginID),cmd,HPM->pid2name(HPM->packets[point][i].pluginID));
-			return false;
-		}
-	}
-
-	RECREATE(HPM->packets[point], struct HPluginPacket, ++HPM->packetsc[point]);
-	packet = &HPM->packets[point][HPM->packetsc[point] - 1];
-
-	packet->pluginID = pluginID;
-	packet->cmd = cmd;
-	packet->len = length;
-	packet->receive = receive;
-
-	return true;
-}
 /*
  0 = unknown
  1 = OK
@@ -612,80 +676,7 @@ void* HPM_reallocz(void *p, size_t size, const char *file, int line, const char 
 char* HPM_astrdup(const char *p, const char *file, int line, const char *func) {
 	return iMalloc->astrdup(p,HPM_file2ptr(file),line,func);
 }
-/* TODO: add ability for tracking using pID for the upcoming runtime load/unload support. */
-bool HPM_AddHook(enum HPluginHookType type, const char *target, void *hook, unsigned int pID) {
-	if( !HPM->hooking ) {
-		ShowError("HPM:AddHook Fail! '%s' tried to hook to '%s' but HPMHooking is disabled!\n",HPM->pid2name(pID),target);
-		return false;
-	}
-	/* search if target is a known hook point within 'common' */
-	/* if not check if a sub-hooking list is available (from the server) and run it by */
-	if( HPM->addhook_sub && HPM->addhook_sub(type,target,hook,pID) )
-		return true;
 
-	ShowError("HPM:AddHook: unknown Hooking Point '%s'!\n",target);
-
-	return false;
-}
-void HPM_HookStop (const char *func, unsigned int pID) {
-	/* track? */
-	HPM->force_return = true;
-}
-bool HPM_HookStopped (void) {
-	return HPM->force_return;
-}
-/**
- * Adds a plugin-defined command-line argument.
- *
- * @param pluginID  the current plugin's ID.
- * @param name      the command line argument's name, including the leading '--'.
- * @param has_param whether the command line argument expects to be followed by a value.
- * @param func      the triggered function.
- * @param help      the help string to be displayed by '--help', if any.
- * @return the success status.
- */
-bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, CmdlineExecFunc func, const char *help) {
-	int i;
-
-	if (!name || strlen(name) < 3 || name[0] != '-' || name[1] != '-') {
-		ShowError("HPM:add_arg:%s invalid argument name: arguments must begin with '--' (from %s)\n", name, HPM->pid2name(pluginID));
-		return false;
-	}
-
-	ARR_FIND(0, cmdline->args_data_count, i, strcmp(cmdline->args_data[i].name, name) == 0);
-
-       if (i < cmdline->args_data_count) {
-               ShowError("HPM:add_arg:%s duplicate! (from %s)\n",name,HPM->pid2name(pluginID));
-               return false;
-       }
-
-       return cmdline->arg_add(pluginID, name, '\0', func, help, has_param ? CMDLINE_OPT_PARAM : CMDLINE_OPT_NORMAL);
-}
-bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, char *name, void (*func) (const char *val)) {
-	struct HPConfListenStorage *conf;
-	unsigned int i;
-
-	if( type >= HPCT_MAX ) {
-		ShowError("HPM->addConf:%s: unknown point '%u' specified for config '%s'\n",HPM->pid2name(pluginID),type,name);
-		return false;
-	}
-
-	for(i = 0; i < HPM->confsc[type]; i++) {
-		if( !strcmpi(name,HPM->confs[type][i].key) ) {
-			ShowError("HPM->addConf:%s: duplicate '%s', already in use by '%s'!",HPM->pid2name(pluginID),name,HPM->pid2name(HPM->confs[type][i].pluginID));
-			return false;
-		}
-	}
-
-	RECREATE(HPM->confs[type], struct HPConfListenStorage, ++HPM->confsc[type]);
-	conf = &HPM->confs[type][HPM->confsc[type] - 1];
-
-	conf->pluginID = pluginID;
-	safestrncpy(conf->key, name, HPM_ADDCONF_LENGTH);
-	conf->func = func;
-
-	return true;
-}
 bool hplugins_parse_conf(const char *w1, const char *w2, enum HPluginConfType point) {
 	unsigned int i;
 
@@ -716,7 +707,7 @@ bool HPM_DataCheck(struct s_HPMDataCheck *src, unsigned int size, int version, c
 	}
 
 	for (i = 0; i < size; i++) {
-		if (!(src[i].type|SERVER_TYPE))
+		if (!(src[i].type&SERVER_TYPE))
 			continue;
 
 		if (!strdb_exists(datacheck_db, src[i].name)) {
@@ -754,46 +745,6 @@ void HPM_datacheck_final(void) {
 	db_destroy(datacheck_db);
 }
 
-void hplugins_share_defaults(void) {
-	/* console */
-#ifdef CONSOLE_INPUT
-	HPM->share(console->input->addCommand,"addCPCommand");
-#endif
-	/* our own */
-	HPM->share(hplugins_addpacket,"addPacket");
-	HPM->share(hplugins_addToHPData,"addToHPData");
-	HPM->share(hplugins_getFromHPData,"getFromHPData");
-	HPM->share(hplugins_removeFromHPData,"removeFromHPData");
-	HPM->share(HPM_AddHook,"AddHook");
-	HPM->share(HPM_HookStop,"HookStop");
-	HPM->share(HPM_HookStopped,"HookStopped");
-	HPM->share(hpm_add_arg,"addArg");
-	HPM->share(hplugins_addconf,"addConf");
-	/* core */
-	HPM->share(&runflag,"runflag");
-	HPM->share(arg_v,"arg_v");
-	HPM->share(&arg_c,"arg_c");
-	HPM->share(SERVER_NAME,"SERVER_NAME");
-	HPM->share(&SERVER_TYPE,"SERVER_TYPE");
-	HPM->share(DB, "DB");
-	HPM->share(HPMiMalloc, "iMalloc");
-	HPM->share(nullpo,"nullpo");
-	/* socket */
-	HPM->share(sockt,"sockt");
-	/* strlib */
-	HPM->share(strlib,"strlib");
-	HPM->share(sv,"sv");
-	HPM->share(StrBuf,"StrBuf");
-	/* sql */
-	HPM->share(SQL,"SQL");
-	/* timer */
-	HPM->share(timer,"timer");
-	/* libconfig */
-	HPM->share(libconfig,"libconfig");
-	/* sysinfo */
-	HPM->share(sysinfo,"sysinfo");
-}
-
 void hpm_init(void) {
 	unsigned int i;
 	datacheck_db = NULL;
@@ -824,8 +775,6 @@ void hpm_init(void) {
 		HPM->packets[i] = NULL;
 		HPM->packetsc[i] = 0;
 	}
-
-	HPM->symbol_defaults();
 
 #ifdef CONSOLE_INPUT
 	console->input->addCommand("plugins",CPCMD_A(plugins));
@@ -921,10 +870,7 @@ void hpm_defaults(void) {
 	HPM->iscompatible = hplugin_iscompatible;
 	HPM->import_symbol = hplugin_import_symbol;
 	HPM->share = hplugin_export_symbol;
-	HPM->symbol_defaults = hplugins_share_defaults;
 	HPM->config_read = hplugins_config_read;
-	HPM->populate = hplugin_populate;
-	HPM->symbol_defaults_sub = NULL;
 	HPM->pid2name = hplugins_id2name;
 	HPM->parse_packets = hplugins_parse_packets;
 	HPM->load_sub = NULL;

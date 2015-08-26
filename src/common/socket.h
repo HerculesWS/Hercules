@@ -5,7 +5,8 @@
 #ifndef COMMON_SOCKET_H
 #define COMMON_SOCKET_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
+#include "common/conf.h"
 
 #ifdef WIN32
 #	include "common/winapi.h"
@@ -22,9 +23,14 @@ struct HPluginData;
 
 // socket I/O macros
 #define RFIFOHEAD(fd)
-#define WFIFOHEAD(fd, size) do{ if((fd) && session[fd]->wdata_size + (size) > session[fd]->max_wdata ) realloc_writefifo((fd), (size)); }while(0)
-#define RFIFOP(fd,pos) (session[fd]->rdata + session[fd]->rdata_pos + (pos))
-#define WFIFOP(fd,pos) (session[fd]->wdata + session[fd]->wdata_size + (pos))
+#define WFIFOHEAD(fd, size) \
+	do{ \
+		if ((fd) && sockt->session[fd]->wdata_size + (size) > sockt->session[fd]->max_wdata) \
+			sockt->realloc_writefifo((fd), (size)); \
+	} while(0)
+
+#define RFIFOP(fd,pos) (sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos + (pos))
+#define WFIFOP(fd,pos) (sockt->session[fd]->wdata + sockt->session[fd]->wdata_size + (pos))
 
 #define RFIFOB(fd,pos) (*(uint8*)RFIFOP((fd),(pos)))
 #define WFIFOB(fd,pos) (*(uint8*)WFIFOP((fd),(pos)))
@@ -34,23 +40,26 @@ struct HPluginData;
 #define WFIFOL(fd,pos) (*(uint32*)WFIFOP((fd),(pos)))
 #define RFIFOQ(fd,pos) (*(uint64*)RFIFOP((fd),(pos)))
 #define WFIFOQ(fd,pos) (*(uint64*)WFIFOP((fd),(pos)))
-#define RFIFOSPACE(fd) (session[fd]->max_rdata - session[fd]->rdata_size)
-#define WFIFOSPACE(fd) (session[fd]->max_wdata - session[fd]->wdata_size)
+#define RFIFOSPACE(fd) (sockt->session[fd]->max_rdata - sockt->session[fd]->rdata_size)
+#define WFIFOSPACE(fd) (sockt->session[fd]->max_wdata - sockt->session[fd]->wdata_size)
 
-#define RFIFOREST(fd)  (session[fd]->flag.eof ? 0 : session[fd]->rdata_size - session[fd]->rdata_pos)
+#define RFIFOREST(fd)  (sockt->session[fd]->flag.eof ? 0 : sockt->session[fd]->rdata_size - sockt->session[fd]->rdata_pos)
 #define RFIFOFLUSH(fd) \
 	do { \
-		if(session[fd]->rdata_size == session[fd]->rdata_pos){ \
-			session[fd]->rdata_size = session[fd]->rdata_pos = 0; \
+		if(sockt->session[fd]->rdata_size == sockt->session[fd]->rdata_pos){ \
+			sockt->session[fd]->rdata_size = sockt->session[fd]->rdata_pos = 0; \
 		} else { \
-			session[fd]->rdata_size -= session[fd]->rdata_pos; \
-			memmove(session[fd]->rdata, session[fd]->rdata+session[fd]->rdata_pos, session[fd]->rdata_size); \
-			session[fd]->rdata_pos = 0; \
+			sockt->session[fd]->rdata_size -= sockt->session[fd]->rdata_pos; \
+			memmove(sockt->session[fd]->rdata, sockt->session[fd]->rdata+sockt->session[fd]->rdata_pos, sockt->session[fd]->rdata_size); \
+			sockt->session[fd]->rdata_pos = 0; \
 		} \
 	} while(0)
 
+#define WFIFOSET(fd, len)  (sockt->wfifoset(fd, len))
+#define RFIFOSKIP(fd, len) (sockt->rfifoskip(fd, len))
+
 /* [Ind/Hercules] */
-#define RFIFO2PTR(fd) (void*)(session[fd]->rdata + session[fd]->rdata_pos)
+#define RFIFO2PTR(fd) (void*)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos)
 
 // buffer I/O macros
 #define RBUFP(p,pos) (((uint8*)(p)) + (pos))
@@ -105,6 +114,12 @@ struct hSockOpt {
 	unsigned int setTimeo : 1;
 };
 
+/// Subnet/IP range in the IP/Mask format.
+struct s_subnet {
+	uint32 ip;
+	uint32 mask;
+};
+
 /// Use a shortlist of sockets instead of iterating all sessions for sockets
 /// that have data to send or need eof handling.
 /// Adapted to use a static array instead of a linked list.
@@ -117,11 +132,6 @@ struct hSockOpt {
 #define MAKEIP(a,b,c,d) ((uint32)( ( ( (a)&0xFF ) << 24 ) | ( ( (b)&0xFF ) << 16 ) | ( ( (c)&0xFF ) << 8 ) | ( ( (d)&0xFF ) << 0 ) ))
 
 /**
- * This stays out of the interface.
- **/
-struct socket_data **session;
-
-/**
  * Socket.c interface, mostly for reading however.
  **/
 struct socket_interface {
@@ -132,6 +142,16 @@ struct socket_interface {
 	/* */
 	uint32 addr_[16];   // ip addresses of local host (host byte order)
 	int naddr_;   // # of ip addresses
+
+	struct socket_data **session;
+
+	struct s_subnet *lan_subnet; ///< LAN subnets array
+	int lan_subnet_count;        ///< LAN subnets count
+	struct s_subnet *trusted_ip; ///< Trusted IP ranges array
+	int trusted_ip_count;        ///< Trusted IP ranges count
+	struct s_subnet *allowed_ip; ///< Allowed server IP ranges array
+	int allowed_ip_count;        ///< Allowed server IP ranges count
+
 	/* */
 	void (*init) (void);
 	void (*final) (void);
@@ -144,56 +164,39 @@ struct socket_interface {
 	int (*make_connection) (uint32 ip, uint16 port, struct hSockOpt *opt);
 	int (*realloc_fifo) (int fd, unsigned int rfifo_size, unsigned int wfifo_size);
 	int (*realloc_writefifo) (int fd, size_t addition);
-	int (*WFIFOSET) (int fd, size_t len);
-	int (*RFIFOSKIP) (int fd, size_t len);
+	int (*wfifoset) (int fd, size_t len);
+	int (*rfifoskip) (int fd, size_t len);
 	void (*close) (int fd);
 	/* */
-	bool (*session_isValid) (int fd);
-	bool (*session_isActive) (int fd);
+	bool (*session_is_valid) (int fd);
+	bool (*session_is_active) (int fd);
 	/* */
-	void (*flush_fifo) (int fd);
+	void (*flush) (int fd);
 	void (*flush_fifos) (void);
 	void (*set_nonblocking) (int fd, unsigned long yes);
 	void (*set_defaultparse) (ParseFunc defaultparse);
 	/* hostname/ip conversion functions */
 	uint32 (*host2ip) (const char* hostname);
-	const char * (*ip2str) (uint32 ip, char ip_str[16]);
+	const char * (*ip2str) (uint32 ip, char *ip_str);
 	uint32 (*str2ip) (const char* ip_str);
 	/* */
 	uint16 (*ntows) (uint16 netshort);
 	/* */
 	int (*getips) (uint32* ips, int max);
 	/* */
-	void (*set_eof) (int fd);
-};
+	void (*eof) (int fd);
 
-struct socket_interface *sockt;
+	uint32 (*lan_subnet_check) (uint32 ip, struct s_subnet *info);
+	bool (*allowed_ip_check) (uint32 ip);
+	bool (*trusted_ip_check) (uint32 ip);
+	int (*net_config_read_sub) (config_setting_t *t, struct s_subnet **list, int *count, const char *filename, const char *groupname);
+	void (*net_config_read) (const char *filename);
+};
 
 #ifdef HERCULES_CORE
 void socket_defaults(void);
 #endif // HERCULES_CORE
 
-/* the purpose of these macros is simply to not make calling them be an annoyance */
-#ifndef H_SOCKET_C
-	#define make_listen_bind(ip, port) ( sockt->make_listen_bind(ip, port) )
-	#define make_connection(ip, port, opt) ( sockt->make_connection(ip, port, opt) )
-	#define realloc_fifo(fd, rfifo_size, wfifo_size) ( sockt->realloc_fifo(fd, rfifo_size, wfifo_size) )
-	#define realloc_writefifo(fd, addition) ( sockt->realloc_writefifo(fd, addition) )
-	#define WFIFOSET(fd, len) ( sockt->WFIFOSET(fd, len) )
-	#define RFIFOSKIP(fd, len) ( sockt->RFIFOSKIP(fd, len) )
-	#define do_close(fd) ( sockt->close(fd) )
-	#define session_isValid(fd) ( sockt->session_isValid(fd) )
-	#define session_isActive(fd) ( sockt->session_isActive(fd) )
-	#define flush_fifo(fd) ( sockt->flush_fifo(fd) )
-	#define flush_fifos() ( sockt->flush_fifos() )
-	#define set_nonblocking(fd, yes) ( sockt->set_nonblocking(fd, yes) )
-	#define set_defaultparse(defaultparse) ( sockt->set_defaultparse(defaultparse) )
-	#define host2ip(hostname) ( sockt->host2ip(hostname) )
-	#define ip2str(ip, ip_str) ( sockt->ip2str(ip, ip_str) )
-	#define str2ip(ip_str) ( sockt->str2ip(ip_str) )
-	#define ntows(netshort) ( sockt->ntows(netshort) )
-	#define getips(ips, max) ( sockt->getips(ips, max) )
-	#define set_eof(fd) ( sockt->set_eof(fd) )
-#endif /* H_SOCKET_C */
+HPShared struct socket_interface *sockt;
 
 #endif /* COMMON_SOCKET_H */
