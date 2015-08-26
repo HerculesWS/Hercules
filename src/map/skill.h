@@ -1712,9 +1712,12 @@ struct skill_unit_group {
 	char *valstr;
 	int unit_id;
 	int group_id;
-	int unit_count,alive_count;
+	int alive_count;
 	int item_id; //store item used.
-	struct skill_unit *unit;
+	struct {
+		int count;
+		struct skill_unit *data;
+	} unit;
 	struct {
 		unsigned ammo_consume : 1;
 		unsigned song_dance : 2; //0x1 Song/Dance, 0x2 Ensemble

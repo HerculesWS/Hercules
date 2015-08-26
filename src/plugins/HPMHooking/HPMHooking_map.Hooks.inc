@@ -23865,6 +23865,32 @@ void HP_clif_add_random_options(unsigned char *buf, struct item *item) {
 	}
 	return;
 }
+void HP_clif_pHotkeyRowShift(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pHotkeyRowShift_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pHotkeyRowShift_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pHotkeyRowShift_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pHotkeyRowShift(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pHotkeyRowShift_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pHotkeyRowShift_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pHotkeyRowShift_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
 /* cmdline */
 void HP_cmdline_init(void) {
 	int hIndex = 0;
@@ -72968,15 +72994,69 @@ bool HP_status_readdb_sizefix(char *fields[], int columns, int current) {
 	}
 	return retVal___;
 }
-bool HP_status_readdb_refine(char *fields[], int columns, int current) {
+int HP_status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *source) {
+    int hIndex = 0;
+    int retVal___ = 0;
+    if( HPMHooks.count.HP_status_readdb_refine_libconfig_sub_pre ) {
+        int (*preHookFunc) (config_setting_t *r, int *n, const char *source);
+        *HPMforce_return = false;
+        for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_refine_libconfig_sub_pre; hIndex++ ) {
+            preHookFunc = HPMHooks.list.HP_status_readdb_refine_libconfig_sub_pre[hIndex].func;
+            retVal___ = preHookFunc(r, &n, source);
+        }
+        if( *HPMforce_return ) {
+            *HPMforce_return = false;
+            return retVal___;
+        }
+    }
+    {
+        retVal___ = HPMHooks.source.status.readdb_refine_libconfig_sub(r, n, source);
+    }
+    if( HPMHooks.count.HP_status_readdb_refine_libconfig_sub_post ) {
+        int (*postHookFunc) (int retVal___, config_setting_t *r, int *n, const char *source);
+        for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_refine_libconfig_sub_post; hIndex++ ) {
+            postHookFunc = HPMHooks.list.HP_status_readdb_refine_libconfig_sub_post[hIndex].func;
+            retVal___ = postHookFunc(retVal___, r, &n, source);
+        }
+    }
+    return retVal___;
+}
+int HP_status_readdb_refine_libconfig(const char *filename) {
+    int hIndex = 0;
+    int retVal___ = 0;
+    if( HPMHooks.count.HP_status_readdb_refine_libconfig_pre ) {
+        int (*preHookFunc) (const char *filename);
+        *HPMforce_return = false;
+        for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_refine_libconfig_pre; hIndex++ ) {
+            preHookFunc = HPMHooks.list.HP_status_readdb_refine_libconfig_pre[hIndex].func;
+            retVal___ = preHookFunc(filename);
+        }
+        if( *HPMforce_return ) {
+            *HPMforce_return = false;
+            return retVal___;
+        }
+    }
+    {
+        retVal___ = HPMHooks.source.status.readdb_refine_libconfig(filename);
+    }
+    if( HPMHooks.count.HP_status_readdb_refine_libconfig_post ) {
+        int (*postHookFunc) (int retVal___, const char *filename);
+        for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_refine_libconfig_post; hIndex++ ) {
+            postHookFunc = HPMHooks.list.HP_status_readdb_refine_libconfig_post[hIndex].func;
+            retVal___ = postHookFunc(retVal___, filename);
+        }
+    }
+    return retVal___;
+}
+bool HP_status_refinedb_lookup_int(const config_setting_t *r, const char *name, int *value) {
 	int hIndex = 0;
 	bool retVal___ = false;
-	if( HPMHooks.count.HP_status_readdb_refine_pre ) {
-		bool (*preHookFunc) (char *fields[], int *columns, int *current);
+	if( HPMHooks.count.HP_status_refinedb_lookup_int_pre ) {
+		bool (*preHookFunc) (const config_setting_t *r, const char *name, int *value);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_refine_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_status_readdb_refine_pre[hIndex].func;
-			retVal___ = preHookFunc(fields, &columns, &current);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_refinedb_lookup_int_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_status_refinedb_lookup_int_pre[hIndex].func;
+			retVal___ = preHookFunc(r, name, value);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -72984,13 +73064,13 @@ bool HP_status_readdb_refine(char *fields[], int columns, int current) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.status.readdb_refine(fields, columns, current);
+		retVal___ = HPMHooks.source.status.refinedb_lookup_int(r, name, value);
 	}
-	if( HPMHooks.count.HP_status_readdb_refine_post ) {
-		bool (*postHookFunc) (bool retVal___, char *fields[], int *columns, int *current);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_refine_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_status_readdb_refine_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, fields, &columns, &current);
+	if( HPMHooks.count.HP_status_refinedb_lookup_int_post ) {
+		bool (*postHookFunc) (bool retVal___, const config_setting_t *r, const char *name, int *value);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_refinedb_lookup_int_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_status_refinedb_lookup_int_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, r, name, value);
 		}
 	}
 	return retVal___;

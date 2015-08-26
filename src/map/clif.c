@@ -3964,7 +3964,7 @@ void clif_updatestorageamount(struct map_session_data* sd, int amount, int max_a
 void clif_storageitemadded(struct map_session_data* sd, struct item* i, int index, int amount)
 {
 	int view,fd;
-	short j = 0;
+	int offset = 0;
 
 	nullpo_retv(sd);
 	nullpo_retv(i);
@@ -3979,14 +3979,14 @@ void clif_storageitemadded(struct map_session_data* sd, struct item* i, int inde
 	WFIFOW(fd, 8) = ( view > 0 ) ? view : i->nameid; // id
 #if PACKETVER >= 5
 	WFIFOB(fd,10) = itemtype(itemdb_type(i->nameid)); //type
-	j += 1;
+	offset += 1;
 #endif
-	WFIFOB(fd,10+j) = i->identify; //identify flag
-	WFIFOB(fd,11+j) = i->attribute; // attribute
-	WFIFOB(fd,12+j) = i->refine; //refine
-	clif->addcards(WFIFOP(fd,13+j), i);
+	WFIFOB(fd,10+offset) = i->identify; //identify flag
+	WFIFOB(fd,11+offset) = i->attribute; // attribute
+	WFIFOB(fd,12+offset) = i->refine; //refine
+	clif->addcards(WFIFOP(fd,13+offset), i);
 #if PACKETVER >= 20150226
-	clif->add_random_options(WFIFOP(fd,22), i);
+	clif->add_random_options(WFIFOP(fd,21+offset), i);
 #endif
 	WFIFOSET(fd,packet_len(storageaddType));
 }
@@ -6007,7 +6007,7 @@ void clif_cart_additem(struct map_session_data *sd,int n,int amount,int fail)
 		WBUFW(buf,8)=view;
 	else
 		WBUFW(buf,8)=sd->status.cart[n].nameid;
-#if PACKETVER > 5
+#if PACKETVER >= 5
 	WBUFB(buf,10)=itemdb_type(sd->status.cart[n].nameid);
 	offset = 1;
 #endif
@@ -9430,31 +9430,29 @@ void clif_parse_TickSend(int fd, struct map_session_data *sd)
 /// 02b9 { <is skill>.B <id>.L <count>.W }*27 (ZC_SHORTCUT_KEY_LIST)
 /// 07d9 { <is skill>.B <id>.L <count>.W }*36 (ZC_SHORTCUT_KEY_LIST_V2, PACKETVER >= 20090603)
 /// 07d9 { <is skill>.B <id>.L <count>.W }*38 (ZC_SHORTCUT_KEY_LIST_V2, PACKETVER >= 20090617)
+/// 0a00 <rotate>.B { <is skill>.B <id>.L <count>.W }*38 (ZC_SHORTCUT_KEY_LIST_V3, PACKETVER >= 20141022)
 void clif_hotkeys_send(struct map_session_data *sd) {
 #ifdef HOTKEY_SAVING
-	const int fd = sd->fd;
+	struct packet_hotkey p;
 	int i;
-	int offset = 2;
-#if PACKETVER < 20090603
-	const int cmd = 0x2b9;
-#elif PACKETVER < 20141022
-	const int cmd = 0x7d9;
-#else
-	const int cmd = 0xa00;
-	offset = 3;
+	p.PacketType = hotkeyType;
+#if PACKETVER >= 20141022
+	p.Rotate = sd->status.hotkey_rowshift;
 #endif
-	if (!fd) return;
-	WFIFOHEAD(fd, offset+MAX_HOTKEYS*7);
-	WFIFOW(fd, 0) = cmd;
-	for(i = 0; i < MAX_HOTKEYS; i++) {
-		WFIFOB(fd, offset + 0 + i * 7) = sd->status.hotkeys[i].type; // type: 0: item, 1: skill
-		WFIFOL(fd, offset + 1 + i * 7) = sd->status.hotkeys[i].id; // item or skill ID
-		WFIFOW(fd, offset + 5 + i * 7) = sd->status.hotkeys[i].lv; // item qty or skill level
+	for(i = 0; i < ARRAYLENGTH(p.hotkey); i++) {
+		p.hotkey[i].isSkill = sd->status.hotkeys[i].type;
+		p.hotkey[i].ID = sd->status.hotkeys[i].id;
+		p.hotkey[i].count = sd->status.hotkeys[i].lv;
 	}
-	WFIFOSET(fd, packet_len(cmd));
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
 #endif
 }
 
+void clif_parse_HotkeyRowShift(int fd, struct map_session_data *sd)
+{
+	int cmd = RFIFOW(fd, 0);
+	sd->status.hotkey_rowshift = RFIFOB(fd, packet_db[cmd].pos[0]);
+}
 
 /// Request to update a position on the hotkey bar (CZ_SHORTCUT_KEY_CHANGE).
 /// 02ba <index>.W <is skill>.B <id>.L <count>.W
@@ -19333,4 +19331,5 @@ void clif_defaults(void) {
 	clif->pNPCMarketPurchase = clif_parse_NPCMarketPurchase;
 	/* */
 	clif->add_random_options = clif_add_random_options;
+	clif->pHotkeyRowShift = clif_parse_HotkeyRowShift;
 }

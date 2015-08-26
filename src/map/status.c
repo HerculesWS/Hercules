@@ -35,6 +35,8 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "common/utils.h"
+#include "common/conf.h"
+
 
 #include <math.h>
 #include <memory.h>
@@ -12278,40 +12280,6 @@ bool status_readdb_sizefix(char* fields[], int columns, int current)
 	return true;
 }
 
-bool status_readdb_refine(char* fields[], int columns, int current)
-{
-	int i, bonus_per_level, random_bonus, random_bonus_start_level;
-
-	current = atoi(fields[0]);
-
-	if (current < 0 || current >= REFINE_TYPE_MAX)
-		return false;
-
-	bonus_per_level = atoi(fields[1]);
-	random_bonus_start_level = atoi(fields[2]);
-	random_bonus = atoi(fields[3]);
-
-	for(i = 0; i < MAX_REFINE; i++)
-	{
-		char* delim;
-
-		if (!(delim = strchr(fields[4+i], ':')))
-			return false;
-
-		*delim = '\0';
-
-		status->dbs->refine_info[current].chance[i] = atoi(fields[4+i]);
-
-		if (i >= random_bonus_start_level - 1)
-			status->dbs->refine_info[current].randombonus_max[i] = random_bonus * (i - random_bonus_start_level + 2);
-
-		status->dbs->refine_info[current].bonus[i] = bonus_per_level + atoi(delim+1);
-		if (i > 0)
-			status->dbs->refine_info[current].bonus[i] += status->dbs->refine_info[current].bonus[i-1];
-	}
-	return true;
-}
-
 bool status_readdb_scconfig(char* fields[], int columns, int current) {
 	int val = 0;
 	char* type = fields[0];
@@ -12325,6 +12293,135 @@ bool status_readdb_scconfig(char* fields[], int columns, int current) {
 
 	return true;
 }
+
+/**
+ * Processes a refine_db.conf entry.
+ *
+ * @param *r	  Libconfig setting entry. It is expected to be valid and it
+ *                won't be freed (it is care of the caller to do so if
+ *                necessary)
+ * @param n       Ordinal number of the entry, to be displayed in case of
+ *                validation errors.
+ * @param *source Source of the entry (file name), to be displayed in case of
+ *                validation errors.
+ * @return # of the validated entry, or 0 in case of failure.
+ */
+int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *source) {
+	config_setting_t *t = NULL;
+	int i, type, bonus_per_level, random_bonus, random_bonus_start_level;
+	
+	if( !status->refinedb_lookup_int(r, "WeaponLevel", &type) ) {
+		ShowWarning("status_readdb_refine_libconfig_sub: Invalid or missing wLvl in \"%s\", entry #%d, skipping.\n", source, n);
+		return 0;
+	} else if ( type < REFINE_TYPE_ARMOR || type >= REFINE_TYPE_MAX ) {
+		ShowWarning("status_readdb_refine_libconfig_sub: Invalid Type for entry #%d of \"%s\", skipping.\n", n, source);
+		return 0;
+	} else if( !status->refinedb_lookup_int(r, "StatsPerLevel", &bonus_per_level) ) {
+		ShowWarning("status_readdb_refine_libconfig_sub: Missing StatsPerLevel in entry #%d of \"%s\", skipping.\n", n, source);
+		return 0;
+	} else if( !status->refinedb_lookup_int(r, "RandomBonusStartLevel", &random_bonus_start_level) ) {
+		ShowWarning("status_readdb_refine_libconfig_sub: Missing RandomBonusStartLevel in entry #%d of \"%s\", skipping.\n", n, source);
+		return 0;
+	} else if ( !status->refinedb_lookup_int(r, "RandomBonusValue", &random_bonus) ) {
+		ShowWarning("status_readdb_refine_libconfig_sub: Missing RandomBonusValue in entry #%d of \"%s\", skipping.\n", n, source);
+		return 0;
+	}
+	
+	if ((t=libconfig->setting_get_member(r, "Rate")) && config_setting_is_list(t)) {
+		config_setting_t *tt = NULL;
+		bool duplicate[MAX_REFINE];
+		int bonus_[MAX_REFINE], rnd_bonus[MAX_REFINE];
+		
+		memset(&duplicate,0,sizeof(duplicate));
+		memset(&bonus_,0,sizeof(bonus_));
+		memset(&rnd_bonus,0,sizeof(rnd_bonus));
+		
+		for(i=0; i < MAX_REFINE; i++) {
+			int level=0, chance=0, bonus=0;
+			tt = libconfig->setting_get_elem(t, i);
+			
+			if (!tt || !config_setting_is_group(tt)) {
+				ShowWarning("status_readdb_refine_libconfig_sub: Invalid refine entry #%d of type #%d in \"%s\"... skipping\n", level, n, source);
+				continue;
+			} else if (!libconfig->setting_lookup_int(tt, "Level", &level) || level <= 0 || level > MAX_REFINE) {
+				ShowError("status_readdb_refine_libconfig_sub: Invalid 'Level' configuration %d in entry #%d of \"%s\".\n", level, n, source);
+				return 0;
+			} else if (!libconfig->setting_lookup_int(tt, "Chance", &chance)) {
+				ShowWarning("status_readdb_refine_libconfig_sub: Missing 'Chance' configuration in entry #%d of \"%s\", defaulting to 0.\n", n, source);
+				status->dbs->refine_info[type].chance[i] = 0;
+			}
+			
+			level--;
+			
+			if( duplicate[level] ) {
+				ShowWarning("status_readdb_refine_libconfig_sub: duplicate entry of Level %d in Type #%d of \"%s\".\n", level+1, type, source);
+			} else duplicate[level] = true;
+			
+			status->dbs->refine_info[type].chance[level] = chance;
+			if ( level >= random_bonus_start_level - 1 ) rnd_bonus[level] = random_bonus * (level - random_bonus_start_level + 2);
+			bonus_[level] = bonus_per_level + libconfig->setting_lookup_int(tt, "Bonus", &bonus)?bonus:0;
+		}
+		for(i=0; i < MAX_REFINE; i++) {
+			status->dbs->refine_info[type].randombonus_max[i] = rnd_bonus[i];
+			bonus_[i] += i?bonus_[i-1]:0;
+			status->dbs->refine_info[type].bonus[i] = bonus_[i];
+		}
+	} else {
+		ShowWarning("status_readdb_refine_libconfig_sub: Missing Rate configuration in entry #%d of \"%s\", skipping.\n", n, source);
+		return 0;
+	}
+	
+	return type+1;
+}
+
+bool status_refinedb_lookup_int(const config_setting_t *r, const char *name, int *value) {
+	if (libconfig->setting_lookup_int(r, name, value)) {
+		return true;
+	}
+	return false;
+}
+
+/**
+ * Reads from a libconfig-formatted refine_db.conf file.
+ *
+ * @param *filename File name, relative to the database path.
+ * @return The number of found entries.
+ */
+int status_readdb_refine_libconfig(const char *filename) {
+	bool duplicate[REFINE_TYPE_MAX];
+	config_t refine_db_conf;
+	config_setting_t *rdb, *r;
+	char filepath[256];
+	int i = 0, count = 0;
+	
+	sprintf(filepath, "%s/%s", map->db_path, filename);
+	memset(&duplicate,0,sizeof(duplicate));
+	if( libconfig->read_file(&refine_db_conf, filepath) || !(rdb = libconfig->setting_get_member(refine_db_conf.root, "refine_db")) ) {
+		ShowError("can't read %s\n", filepath);
+		return 0;
+	}
+	
+	while( (r = libconfig->setting_get_elem(rdb,i++)) ) {
+		int type = status->readdb_refine_libconfig_sub(r, i-1, filename);
+		if( !type )
+			continue;
+		
+		type -= 1;
+		
+		if( duplicate[type] ) {
+			ShowError("status_readdb_refine_libconfig: duplicate entry of Type #%d in \"%s\", skipping... \n", type,filename);
+			continue;
+		} else
+			duplicate[type] = true;
+		count++;
+	}
+	
+	libconfig->destroy(&refine_db_conf);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
+	
+	return count;
+}
+
 /**
  * Read status db
  * job1.txt
@@ -12372,8 +12469,8 @@ int status_readdb(void)
 	//
 	sv->readdb(map->db_path, "job_db2.txt",         ',', 1,                 1+MAX_LEVEL,       -1,                       status->readdb_job2);
 	sv->readdb(map->db_path, DBPATH"size_fix.txt", ',', MAX_WEAPON_TYPE, MAX_WEAPON_TYPE, ARRAYLENGTH(status->dbs->atkmods), status->readdb_sizefix);
-	sv->readdb(map->db_path, DBPATH"refine_db.txt", ',', 4+MAX_REFINE,      4+MAX_REFINE,      ARRAYLENGTH(status->dbs->refine_info), status->readdb_refine);
 	sv->readdb(map->db_path, "sc_config.txt",       ',', 2,                 2,                 SC_MAX,                   status->readdb_scconfig);
+	status->readdb_refine_libconfig(DBPATH"refine_db.conf");
 	status->read_job_db();
 
 	return 0;
@@ -12547,7 +12644,9 @@ void status_defaults(void) {
 	status->natural_heal_timer = status_natural_heal_timer;
 	status->readdb_job2 = status_readdb_job2;
 	status->readdb_sizefix = status_readdb_sizefix;
-	status->readdb_refine = status_readdb_refine;
+	status->readdb_refine_libconfig = status_readdb_refine_libconfig;
+	status->readdb_refine_libconfig_sub = status_readdb_refine_libconfig_sub;
+	status->refinedb_lookup_int = status_refinedb_lookup_int;
 	status->readdb_scconfig = status_readdb_scconfig;
 	status->read_job_db = status_read_job_db;
 	status->read_job_db_sub = status_read_job_db_sub;
