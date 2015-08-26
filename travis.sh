@@ -102,7 +102,7 @@ EOF
 		else
 			echo "No sanitizer errors found."
 		fi
-		if [ ${errcode} -ne 0 ]
+		if [ ${errcode} -ne 0 ]; then
 			echo "server terminated with exit code ${errcode}"
 			aborterror "Test failed"
 		fi
