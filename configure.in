@@ -487,8 +487,7 @@ AC_LANG([C])
 
 CFLAGS="$CFLAGS -pipe -ffast-math -fvisibility=hidden -Wall -Wextra -Wno-sign-compare"
 CPPFLAGS="$CPPFLAGS -I../common"
-LDFLAGS="$LDFLAGS -rdynamic"
-
+LDFLAGS="$LDFLAGS"
 
 AC_C_BIGENDIAN(
 	[AC_MSG_ERROR([[bigendian is not supported... stopping]])],
@@ -590,6 +589,32 @@ AC_RUN_IFELSE(
 	]
 )
 
+#
+# Check if the linker supports/accepts -rdynamic
+# Generally only needed by the ELF linker, in order to produce backtraces.
+# On non-ELF platforms, some compilers (i.e. gcc < 5 and clang on OSX) are able to ignore it, others will error out.
+#
+OLD_LDFLAGS="$LDFLAGS"
+LDFLAGS="$LDFLAGS -rdynamic"
+AC_MSG_CHECKING([whether $CC accepts -rdynamic])
+AC_LINK_IFELSE(
+	[AC_LANG_SOURCE([
+		int main(int argc, char **argv)
+		{
+			return 0;
+		}
+	])],
+	[
+		AC_MSG_RESULT([yes])
+	],
+	[
+		AC_MSG_RESULT([no])
+		LDFLAGS="$OLD_LDFLAGS"
+	],
+	[
+		AC_MSG_RESULT([guessing no])
+	]
+)
 
 #
 # LTO Support test
