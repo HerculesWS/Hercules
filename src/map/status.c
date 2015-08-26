@@ -12339,25 +12339,33 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *s
 			else if (!config_setting_is_group(tt))
 				continue;
 			
-			int level=0, chance=0, bonus=0;
+			int level=0, chance=0;
 			
 			if (!libconfig->setting_lookup_int(tt, "Level", &level) || level <= 0 || level > MAX_REFINE) {
 				ShowError("status_readdb_refine_libconfig_sub: Invalid 'Level' configuration %d in entry #%d of \"%s\".\n", level, n, source);
 				return 0;
-			} else if (level-1 != i) {
-				ShowWarning("status_readdb_refine_libconfig_sub: Invalid sequence of refine Levels detected. Level %d expected in place of %d of \"%s\", skipping entry...\n", i+1, level, source);
-				return 0;
-			} else if (!libconfig->setting_lookup_int(tt, "Chance", &chance)) {
+			}  else if (!libconfig->setting_lookup_int(tt, "Chance", &chance)) {
 				ShowWarning("status_readdb_refine_libconfig_sub: Missing 'Chance' configuration in entry #%d of \"%s\", defaulting to 0.\n", n, source);
 				status->dbs->refine_info[type].chance[i] = 0;
 			}
 			
-			if( duplicate[i] ) {
-				ShowWarning("status_readdb_refine_libconfig_sub: duplicate entry of Level %d in Type #%d of \"%s\".\n", i, type, source);
-			} else duplicate[i] = true;
+			level -= 1;
 			
-			if ( chance ) status->dbs->refine_info[type].chance[i] = chance;
-			else status->dbs->refine_info[type].chance[i] = 0;
+			if( duplicate[level] ) {
+				ShowWarning("status_readdb_refine_libconfig_sub: duplicate entry of Level %d in Type #%d of \"%s\".\n", level, type, source);
+			} else duplicate[level] = true;
+			
+			if ( chance ) status->dbs->refine_info[type].chance[level] = chance;
+			else status->dbs->refine_info[type].chance[level] = 0;
+		}
+		for(i=0; i < MAX_REFINE; i++) {
+			int bonus=0;
+			tt = libconfig->setting_get_elem(t, i);
+			
+			if (!tt)
+				break;
+			else if (!config_setting_is_group(tt))
+				continue;
 			
 			if ( i >= random_bonus_start_level - 1 )
 				status->dbs->refine_info[type].randombonus_max[i] = random_bonus * (i - random_bonus_start_level + 2);
@@ -12415,7 +12423,7 @@ int status_readdb_refine_libconfig(const char *filename) {
 			continue;
 		
 		if( duplicate[type] ) {
-			ShowError("status_readdb_refine_libconfig:%s: duplicate entry of Type #%d, skipping... \n",filename, type-1);
+			ShowError("status_readdb_refine_libconfig: duplicate entry of Type #%d in \"%s\", skipping... \n", type-1,filename);
 			continue;
 		} else
 			duplicate[type] = true;
