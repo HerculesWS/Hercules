@@ -8431,7 +8431,7 @@ ACMD(set) {
 	bool is_str = false;
 	size_t len;
 
-	if( !message || !*message || (toset = sscanf(message, "%31s %128[^\n]s", reg, val)) < 1  ) {
+	if( !message || !*message || (toset = sscanf(message, "%31s %127[^\n]s", reg, val)) < 1  ) {
 		clif->message(fd, msg_fd(fd,1367)); // Usage: @set <variable name> <value>
 		clif->message(fd, msg_fd(fd,1368)); // Usage: ex. "@set PoringCharVar 50"
 		clif->message(fd, msg_fd(fd,1369)); // Usage: ex. "@set PoringCharVarSTR$ Super Duper String"
