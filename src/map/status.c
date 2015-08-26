@@ -12339,14 +12339,15 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *s
 			int level=0, chance=0, bonus=0;
 			
 			if (!libconfig->setting_lookup_int(tt, "Level", &level) || level <= 0 || level > MAX_REFINE) {
-				ShowError("status_readdb_refine_libconfig_sub: Invalid 'Level' configuration in entry #d of \"%s\".", n, source);
-				break;
+				ShowError("status_readdb_refine_libconfig_sub: Invalid 'Level' configuration %d in entry #d of \"%s\".", level, n, source);
+				return 0;
 			} else if (!libconfig->setting_lookup_int(tt, "Chance", &chance)) {
 				ShowWarning("status_readdb_refine_libconfig_sub: Missing 'Chance' configuration in entry #d of \"%s\", defaulting to 0.", n, source);
 				status->dbs->refine_info[type].chance[i] = 0;
-			} else if (!libconfig->setting_lookup_int(tt, "Bonus", &bonus)) {
-				status->dbs->refine_info[type].bonus[i] = 0;
 			}
+			
+			if (!libconfig->setting_lookup_int(tt, "Bonus", &bonus))
+				status->dbs->refine_info[type].bonus[i] = 0;
 			
 			if ( chance ) status->dbs->refine_info[type].chance[i] = chance;
 			else status->dbs->refine_info[type].chance[i] = 0;
