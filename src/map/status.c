@@ -12311,20 +12311,16 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *s
 	if( !status->refinedb_lookup_const(r, "wLvl", &type) ) {
 		ShowWarning("status_readdb_refine_libconfig_sub: Invalid or missing wLvl in \"%s\", entry #%d, skipping.\n", source, n);
 		return 0;
-	}
-	else if ( type < REFINE_TYPE_ARMOR || type >= REFINE_TYPE_MAX ) {
+	} else if ( type < REFINE_TYPE_ARMOR || type >= REFINE_TYPE_MAX ) {
 		ShowWarning("status_readdb_refine_libconfig_sub: Invalid Type for entry #%d of \"%s\", skipping.\n", n, source);
 		return 0;
-	}
-	else if( !status->refinedb_lookup_const(r, "StatsPerLevel", &bonus_per_level) ) {
+	} else if( !status->refinedb_lookup_const(r, "StatsPerLevel", &bonus_per_level) ) {
 		ShowWarning("status_readdb_refine_libconfig_sub: Missing StatsPerLevel in entry #%d of \"%s\", skipping.\n", n, source);
 		return 0;
-	}
-	else if( !status->refinedb_lookup_const(r, "RandomBonusStartLevel", &random_bonus_start_level) ) {
+	} else if( !status->refinedb_lookup_const(r, "RandomBonusStartLevel", &random_bonus_start_level) ) {
 		ShowWarning("status_readdb_refine_libconfig_sub: Missing RandomBonusStartLevel in entry #%d of \"%s\", skipping.\n", n, source);
 		return 0;
-	}
-	else if ( !status->refinedb_lookup_const(r, "RandomBonusValue", &random_bonus) ) {
+	} else if ( !status->refinedb_lookup_const(r, "RandomBonusValue", &random_bonus) ) {
 		ShowWarning("status_readdb_refine_libconfig_sub: Missing RandomBonusValue in entry #%d of \"%s\", skipping.\n", n, source);
 		return 0;
 	}
@@ -12361,8 +12357,7 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *s
 			if ( bonus ) {
 				status->dbs->refine_info[type].bonus[i] = bonus_per_level + bonus;
 				if ( i > 0 ) status->dbs->refine_info[type].bonus[i] += status->dbs->refine_info[type].bonus[i-1];
-			}
-			else status->dbs->refine_info[type].bonus[i] = 0;
+			} else status->dbs->refine_info[type].bonus[i] = 0;
 		}
 	} else {
 		ShowWarning("status_readdb_refine_libconfig_sub: Missing Rate configuration in entry #d of \"%s\", skipping.\n", n, source);
@@ -12375,8 +12370,7 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *s
 bool status_refinedb_lookup_const(const config_setting_t *r, const char *name, int *value) {
 	if (libconfig->setting_lookup_int(r, name, value)) {
 		return true;
-	}
-	else {
+	} else {
 		const char *str = NULL;
 		if (libconfig->setting_lookup_string(r, name, &str)) {
 			if (*str && script->get_constant(str, value))
@@ -12410,6 +12404,7 @@ int status_readdb_refine_libconfig(const char *filename) {
 			continue;
 		count++;
 	}
+	
 	libconfig->destroy(&refine_db_conf);
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
 	
