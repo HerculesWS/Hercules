@@ -12329,12 +12329,10 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *s
 		return 0;
 	}
 	
-	if ((t=libconfig->setting_get_member(r, "Rate")) && config_setting_is_list(t))
-	{
+	if ((t=libconfig->setting_get_member(r, "Rate")) && config_setting_is_list(t)) {
 		config_setting_t *tt = NULL;
 		
-		for(i=0; i < MAX_REFINE; i++)
-		{
+		for(i=0; i < MAX_REFINE; i++) {
 			tt = libconfig->setting_get_elem(t, i);
 			
 			if (!tt)
@@ -12347,12 +12345,10 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *s
 			if (!libconfig->setting_lookup_int(tt, "Level", &level) || level <= 0 || level > MAX_REFINE) {
 				ShowError("status_readdb_refine_libconfig_sub: Invalid 'Level' configuration in entry #d of \"%s\".", n, source);
 				break;
-			}
-			else if (!libconfig->setting_lookup_int(tt, "Chance", &chance)) {
+			} else if (!libconfig->setting_lookup_int(tt, "Chance", &chance)) {
 				ShowWarning("status_readdb_refine_libconfig_sub: Missing 'Chance' configuration in entry #d of \"%s\", defaulting to 0.", n, source);
 				status->dbs->refine_info[type].chance[i] = 0;
-			}
-			else if (!libconfig->setting_lookup_int(tt, "Bonus", &bonus)) {
+			} else if (!libconfig->setting_lookup_int(tt, "Bonus", &bonus)) {
 				status->dbs->refine_info[type].bonus[i] = 0;
 			}
 			
@@ -12368,8 +12364,7 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *s
 			}
 			else status->dbs->refine_info[type].bonus[i] = 0;
 		}
-	}
-	else {
+	} else {
 		ShowWarning("status_readdb_refine_libconfig_sub: Missing Rate configuration in entry #d of \"%s\", skipping.\n", n, source);
 		return 0;
 	}
@@ -12378,15 +12373,12 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *s
 }
 
 bool status_refinedb_lookup_const(const config_setting_t *r, const char *name, int *value) {
-	if (libconfig->setting_lookup_int(r, name, value))
-	{
+	if (libconfig->setting_lookup_int(r, name, value)) {
 		return true;
 	}
-	else
-	{
+	else {
 		const char *str = NULL;
-		if (libconfig->setting_lookup_string(r, name, &str))
-		{
+		if (libconfig->setting_lookup_string(r, name, &str)) {
 			if (*str && script->get_constant(str, value))
 				return true;
 		}
@@ -12418,7 +12410,6 @@ int status_readdb_refine_libconfig(const char *filename) {
 			continue;
 		count++;
 	}
-	
 	libconfig->destroy(&refine_db_conf);
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
 	
