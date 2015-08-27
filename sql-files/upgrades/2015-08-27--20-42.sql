@@ -1,0 +1,3 @@
+#1440688342
+ALTER TABLE  `char` ADD COLUMN `hotkey_rowshift` TINYINT(3) UNSIGNED NOT NULL DEFAULT  '0';
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1440688342);

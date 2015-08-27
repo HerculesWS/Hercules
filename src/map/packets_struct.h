@@ -18,6 +18,13 @@ enum packet_headers {
 	banking_checkType = 0x9a6,
 	cart_additem_ackType = 0x12c,
 	sc_notickType = 0x196,
+#if PACKETVER >= 20141022
+	hotkeyType = 0xa00,
+#elif PACKETVER >= 20090603
+	hotkeyType = 0x7d9,
+#else
+	hotkeyType = 0x2b9,
+#endif
 #if PACKETVER >= 20150226
 	cartaddType = 0xa0b,
 #elif PACKETVER >= 5
@@ -325,6 +332,10 @@ struct EQUIPITEM_INFO {
 #if PACKETVER >= 20100629
 	unsigned short wItemSpriteNumber;
 #endif
+#if PACKETVER >= 20150226
+	unsigned char option_count;
+	struct RndOptions option_data[5];
+#endif
 #if PACKETVER >= 20120925
 	struct {
 		unsigned char IsIdentified : 1;
@@ -332,10 +343,6 @@ struct EQUIPITEM_INFO {
 		unsigned char PlaceETCTab : 1;
 		unsigned char SpareBits : 5;
 	} Flag;
-#endif
-#if PACKETVER >= 20150226
-	unsigned char option_count;
-	struct RndOptions option_data[5];
 #endif
 } __attribute__((packed));
 
@@ -1080,6 +1087,18 @@ struct packet_party_leader_changed {
 	short PacketType;
 	unsigned int prev_leader_aid;
 	unsigned int new_leader_aid;
+} __attribute__((packed));
+
+struct packet_hotkey {
+	short PacketType;
+#if PACKETVER >= 20141022
+	char Rotate;
+#endif
+	struct {
+		char isSkill;		// 0: Item, 1:Skill
+		unsigned int ID;	// Item/Skill ID
+		short count;		// Item Quantity/Skill Level
+	} hotkey[MAX_HOTKEYS];
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
