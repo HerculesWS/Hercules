@@ -325,6 +325,10 @@ struct EQUIPITEM_INFO {
 #if PACKETVER >= 20100629
 	unsigned short wItemSpriteNumber;
 #endif
+#if PACKETVER >= 20150226
+	unsigned char option_count;
+	struct RndOptions option_data[5];
+#endif
 #if PACKETVER >= 20120925
 	struct {
 		unsigned char IsIdentified : 1;
@@ -332,10 +336,6 @@ struct EQUIPITEM_INFO {
 		unsigned char PlaceETCTab : 1;
 		unsigned char SpareBits : 5;
 	} Flag;
-#endif
-#if PACKETVER >= 20150226
-	unsigned char option_count;
-	struct RndOptions option_data[5];
 #endif
 } __attribute__((packed));
 
