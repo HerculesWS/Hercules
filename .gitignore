@@ -58,6 +58,7 @@ Thumbs.db
 
 # /conf/
 /conf/import
+/conf/inter-server.conf
 
 # /log/
 /log/*.log
@@ -109,3 +110,4 @@ Thumbs.db
 /vcproj-*/map-server
 /vcproj-*/mapcache
 /vcproj-*/plugin-*/
+
