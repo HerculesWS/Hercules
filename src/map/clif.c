@@ -3964,7 +3964,7 @@ void clif_updatestorageamount(struct map_session_data* sd, int amount, int max_a
 void clif_storageitemadded(struct map_session_data* sd, struct item* i, int index, int amount)
 {
 	int view,fd;
-	short j = 0;
+	int offset = 0;
 
 	nullpo_retv(sd);
 	nullpo_retv(i);
@@ -3979,14 +3979,14 @@ void clif_storageitemadded(struct map_session_data* sd, struct item* i, int inde
 	WFIFOW(fd, 8) = ( view > 0 ) ? view : i->nameid; // id
 #if PACKETVER >= 5
 	WFIFOB(fd,10) = itemtype(itemdb_type(i->nameid)); //type
-	j += 1;
+	offset += 1;
 #endif
-	WFIFOB(fd,10+j) = i->identify; //identify flag
-	WFIFOB(fd,11+j) = i->attribute; // attribute
-	WFIFOB(fd,12+j) = i->refine; //refine
-	clif->addcards(WFIFOP(fd,13+j), i);
+	WFIFOB(fd,10+offset) = i->identify; //identify flag
+	WFIFOB(fd,11+offset) = i->attribute; // attribute
+	WFIFOB(fd,12+offset) = i->refine; //refine
+	clif->addcards(WFIFOP(fd,13+offset), i);
 #if PACKETVER >= 20150226
-	clif->add_random_options(WFIFOP(fd,22), i);
+	clif->add_random_options(WFIFOP(fd,21+offset), i);
 #endif
 	WFIFOSET(fd,packet_len(storageaddType));
 }
@@ -6007,7 +6007,7 @@ void clif_cart_additem(struct map_session_data *sd,int n,int amount,int fail)
 		WBUFW(buf,8)=view;
 	else
 		WBUFW(buf,8)=sd->status.cart[n].nameid;
-#if PACKETVER > 5
+#if PACKETVER >= 5
 	WBUFB(buf,10)=itemdb_type(sd->status.cart[n].nameid);
 	offset = 1;
 #endif
