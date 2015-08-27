@@ -533,6 +533,8 @@ struct mmo_charstatus {
 	unsigned char font;
 
 	uint32 uniqueitem_counter;
+
+	unsigned char hotkey_rowshift;
 };
 
 typedef enum mail_status {

@@ -2850,6 +2850,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x091A,26,clif->pFriendsListAdd,2);
 	packet(0x0899,5,clif->pHomMenu,2,4);
 	packet(0x0438,36,clif->pStoragePassword,0);
+	packet(0x0A01,3,clif->pHotkeyRowShift,2);
 #endif
 
 #if PACKETVER >= 20150226
