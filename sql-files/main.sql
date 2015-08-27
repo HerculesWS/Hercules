@@ -176,6 +176,7 @@ CREATE TABLE IF NOT EXISTS `char` (
   `unban_time` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `uniqueitem_counter` BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
   `sex` ENUM('M','F','U') NOT NULL DEFAULT 'U',
+  `hotkey_rowshift` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`char_id`),
   UNIQUE KEY `name_key` (`name`),
   KEY `account_id` (`account_id`),
@@ -800,6 +801,7 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1409590380); -- 2014-09-01--16-5
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1414975503); -- 2014-11-03--00-45.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1435860840); -- 2015-07-02--18-14.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1436360978); -- 2015-07-08--13-08.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1440688342); -- 2015-08-27--20-42.sql
 
 --
 -- Table structure for table `storage`

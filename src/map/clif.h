@@ -1317,6 +1317,7 @@ struct clif_interface {
 	void (*pNPCMarketPurchase) (int fd, struct map_session_data *sd);
 	/* */
 	void (*add_random_options) (unsigned char* buf, struct item* item);
+	void (*pHotkeyRowShift) (int fd, struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE
