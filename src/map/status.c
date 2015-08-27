@@ -12311,7 +12311,7 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *s
 	int i, type, bonus_per_level, random_bonus, random_bonus_start_level;
 	
 	if( !status->refinedb_lookup_int(r, "WeaponLevel", &type) ) {
-		ShowWarning("status_readdb_refine_libconfig_sub: Invalid or missing wLvl in \"%s\", entry #%d, skipping.\n", source, n);
+		ShowWarning("status_readdb_refine_libconfig_sub: Invalid or missing WeaponLevel in \"%s\", entry #%d, skipping.\n", source, n);
 		return 0;
 	} else if ( type < REFINE_TYPE_ARMOR || type >= REFINE_TYPE_MAX ) {
 		ShowWarning("status_readdb_refine_libconfig_sub: Invalid Type for entry #%d of \"%s\", skipping.\n", n, source);
@@ -12341,7 +12341,7 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *s
 			tt = libconfig->setting_get_elem(t, i);
 			
 			if (!tt || !config_setting_is_group(tt)) {
-				ShowWarning("status_readdb_refine_libconfig_sub: Invalid refine level %d in entry #%d of \"%s\"... skipping\n", i, n, source);
+				ShowWarning("status_readdb_refine_libconfig_sub: Invalid refine level %d in entry #%d of \"%s\", skipping.\n", i, n, source);
 				continue;
 			} else if (!libconfig->setting_lookup_int(tt, "Level", &level) || level <= 0 || level > MAX_REFINE) {
 				ShowError("status_readdb_refine_libconfig_sub: Invalid 'Level' configuration %d in entry #%d of \"%s\".\n", level, n, source);
@@ -12354,7 +12354,8 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *s
 			level--;
 			
 			if( duplicate[level] ) {
-				ShowWarning("status_readdb_refine_libconfig_sub: duplicate entry of Level %d in Type #%d of \"%s\".\n", level+1, type, source);
+				ShowWarning("status_readdb_refine_libconfig_sub: duplicate entry of Level %d in Type #%d of \"%s\", skipping.\n", level+1, type, source);
+				continue;
 			} else duplicate[level] = true;
 			
 			status->dbs->refine_info[type].chance[level] = chance;
