@@ -12341,7 +12341,7 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *s
 			tt = libconfig->setting_get_elem(t, i);
 			
 			if (!tt || !config_setting_is_group(tt)) {
-				ShowWarning("status_readdb_refine_libconfig_sub: Invalid refine entry #%d of type #%d in \"%s\"... skipping\n", level, n, source);
+				ShowWarning("status_readdb_refine_libconfig_sub: Invalid refine level %d in entry #%d of \"%s\"... skipping\n", i, n, source);
 				continue;
 			} else if (!libconfig->setting_lookup_int(tt, "Level", &level) || level <= 0 || level > MAX_REFINE) {
 				ShowError("status_readdb_refine_libconfig_sub: Invalid 'Level' configuration %d in entry #%d of \"%s\".\n", level, n, source);
