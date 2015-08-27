@@ -35,6 +35,8 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "common/utils.h"
+#include "common/conf.h"
+
 
 #include <math.h>
 #include <memory.h>
@@ -12308,19 +12310,19 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *s
 	config_setting_t *t = NULL;
 	int i, type, bonus_per_level, random_bonus, random_bonus_start_level;
 	
-	if( !status->refinedb_lookup_const(r, "wLvl", &type) ) {
+	if( !status->refinedb_lookup_int(r, "WeaponLevel", &type) ) {
 		ShowWarning("status_readdb_refine_libconfig_sub: Invalid or missing wLvl in \"%s\", entry #%d, skipping.\n", source, n);
 		return 0;
 	} else if ( type < REFINE_TYPE_ARMOR || type >= REFINE_TYPE_MAX ) {
 		ShowWarning("status_readdb_refine_libconfig_sub: Invalid Type for entry #%d of \"%s\", skipping.\n", n, source);
 		return 0;
-	} else if( !status->refinedb_lookup_const(r, "StatsPerLevel", &bonus_per_level) ) {
+	} else if( !status->refinedb_lookup_int(r, "StatsPerLevel", &bonus_per_level) ) {
 		ShowWarning("status_readdb_refine_libconfig_sub: Missing StatsPerLevel in entry #%d of \"%s\", skipping.\n", n, source);
 		return 0;
-	} else if( !status->refinedb_lookup_const(r, "RandomBonusStartLevel", &random_bonus_start_level) ) {
+	} else if( !status->refinedb_lookup_int(r, "RandomBonusStartLevel", &random_bonus_start_level) ) {
 		ShowWarning("status_readdb_refine_libconfig_sub: Missing RandomBonusStartLevel in entry #%d of \"%s\", skipping.\n", n, source);
 		return 0;
-	} else if ( !status->refinedb_lookup_const(r, "RandomBonusValue", &random_bonus) ) {
+	} else if ( !status->refinedb_lookup_int(r, "RandomBonusValue", &random_bonus) ) {
 		ShowWarning("status_readdb_refine_libconfig_sub: Missing RandomBonusValue in entry #%d of \"%s\", skipping.\n", n, source);
 		return 0;
 	}
@@ -12328,53 +12330,41 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *s
 	if ((t=libconfig->setting_get_member(r, "Rate")) && config_setting_is_list(t)) {
 		config_setting_t *tt = NULL;
 		bool duplicate[MAX_REFINE];
+		int bonus_[MAX_REFINE], rnd_bonus[MAX_REFINE];
 		
 		memset(&duplicate,0,sizeof(duplicate));
+		memset(&bonus_,0,sizeof(bonus_));
+		memset(&rnd_bonus,0,sizeof(rnd_bonus));
 		
 		for(i=0; i < MAX_REFINE; i++) {
+			int level=0, chance=0, bonus=0;
 			tt = libconfig->setting_get_elem(t, i);
 			
-			if (!tt)
-				break;
-			else if (!config_setting_is_group(tt))
+			if (!tt || !config_setting_is_group(tt)) {
+				ShowWarning("status_readdb_refine_libconfig_sub: Invalid refine entry #%d of type #%d in \"%s\"... skipping\n", level, n, source);
 				continue;
-			
-			int level=0, chance=0;
-			
-			if (!libconfig->setting_lookup_int(tt, "Level", &level) || level <= 0 || level > MAX_REFINE) {
+			} else if (!libconfig->setting_lookup_int(tt, "Level", &level) || level <= 0 || level > MAX_REFINE) {
 				ShowError("status_readdb_refine_libconfig_sub: Invalid 'Level' configuration %d in entry #%d of \"%s\".\n", level, n, source);
 				return 0;
-			}  else if (!libconfig->setting_lookup_int(tt, "Chance", &chance)) {
+			} else if (!libconfig->setting_lookup_int(tt, "Chance", &chance)) {
 				ShowWarning("status_readdb_refine_libconfig_sub: Missing 'Chance' configuration in entry #%d of \"%s\", defaulting to 0.\n", n, source);
 				status->dbs->refine_info[type].chance[i] = 0;
 			}
 			
-			level -= 1;
+			level--;
 			
 			if( duplicate[level] ) {
-				ShowWarning("status_readdb_refine_libconfig_sub: duplicate entry of Level %d in Type #%d of \"%s\".\n", level, type, source);
+				ShowWarning("status_readdb_refine_libconfig_sub: duplicate entry of Level %d in Type #%d of \"%s\".\n", level+1, type, source);
 			} else duplicate[level] = true;
 			
-			if ( chance ) status->dbs->refine_info[type].chance[level] = chance;
-			else status->dbs->refine_info[type].chance[level] = 0;
+			status->dbs->refine_info[type].chance[level] = chance;
+			if ( level >= random_bonus_start_level - 1 ) rnd_bonus[level] = random_bonus * (level - random_bonus_start_level + 2);
+			bonus_[level] = bonus_per_level + libconfig->setting_lookup_int(tt, "Bonus", &bonus)?bonus:0;
 		}
 		for(i=0; i < MAX_REFINE; i++) {
-			int bonus=0;
-			tt = libconfig->setting_get_elem(t, i);
-			
-			if (!tt)
-				break;
-			else if (!config_setting_is_group(tt))
-				continue;
-			
-			if ( i >= random_bonus_start_level - 1 )
-				status->dbs->refine_info[type].randombonus_max[i] = random_bonus * (i - random_bonus_start_level + 2);
-			if (!libconfig->setting_lookup_int(tt, "Bonus", &bonus) || !bonus )
-				status->dbs->refine_info[type].bonus[i] = 0;
-			else {
-				status->dbs->refine_info[type].bonus[i] = bonus_per_level + bonus;
-				if ( i > 0 ) status->dbs->refine_info[type].bonus[i] += status->dbs->refine_info[type].bonus[i-1];
-			}
+			status->dbs->refine_info[type].randombonus_max[i] = rnd_bonus[i];
+			bonus_[i] += i?bonus_[i-1]:0;
+			status->dbs->refine_info[type].bonus[i] = bonus_[i];
 		}
 	} else {
 		ShowWarning("status_readdb_refine_libconfig_sub: Missing Rate configuration in entry #%d of \"%s\", skipping.\n", n, source);
@@ -12384,15 +12374,9 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, int n, const char *s
 	return type+1;
 }
 
-bool status_refinedb_lookup_const(const config_setting_t *r, const char *name, int *value) {
+bool status_refinedb_lookup_int(const config_setting_t *r, const char *name, int *value) {
 	if (libconfig->setting_lookup_int(r, name, value)) {
 		return true;
-	} else {
-		const char *str = NULL;
-		if (libconfig->setting_lookup_string(r, name, &str)) {
-			if (*str && script->get_constant(str, value))
-				return true;
-		}
 	}
 	return false;
 }
@@ -12422,8 +12406,10 @@ int status_readdb_refine_libconfig(const char *filename) {
 		if( !type )
 			continue;
 		
+		type -= 1;
+		
 		if( duplicate[type] ) {
-			ShowError("status_readdb_refine_libconfig: duplicate entry of Type #%d in \"%s\", skipping... \n", type-1,filename);
+			ShowError("status_readdb_refine_libconfig: duplicate entry of Type #%d in \"%s\", skipping... \n", type,filename);
 			continue;
 		} else
 			duplicate[type] = true;
@@ -12660,7 +12646,7 @@ void status_defaults(void) {
 	status->readdb_sizefix = status_readdb_sizefix;
 	status->readdb_refine_libconfig = status_readdb_refine_libconfig;
 	status->readdb_refine_libconfig_sub = status_readdb_refine_libconfig_sub;
-	status->refinedb_lookup_const = status_refinedb_lookup_const;
+	status->refinedb_lookup_int = status_refinedb_lookup_int;
 	status->readdb_scconfig = status_readdb_scconfig;
 	status->read_job_db = status_read_job_db;
 	status->read_job_db_sub = status_read_job_db_sub;

@@ -2079,7 +2079,7 @@ struct status_interface {
 	bool (*readdb_sizefix) (char *fields[], int columns, int current);
 	int (*readdb_refine_libconfig) (const char *filename);
 	int (*readdb_refine_libconfig_sub) (config_setting_t *r, int n, const char *source);
-	bool (*refinedb_lookup_const) (const config_setting_t *r, const char *name, int *value);
+	bool (*refinedb_lookup_int) (const config_setting_t *r, const char *name, int *value);
 	bool (*readdb_scconfig) (char *fields[], int columns, int current);
 	void (*read_job_db) (void);
 	void (*read_job_db_sub) (int idx, const char *name, config_setting_t *jdb);
