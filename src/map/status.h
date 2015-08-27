@@ -2077,7 +2077,9 @@ struct status_interface {
 	int (*natural_heal_timer) (int tid, int64 tick, int id, intptr_t data);
 	bool (*readdb_job2) (char *fields[], int columns, int current);
 	bool (*readdb_sizefix) (char *fields[], int columns, int current);
-	bool (*readdb_refine) (char *fields[], int columns, int current);
+	int (*readdb_refine_libconfig) (const char *filename);
+	int (*readdb_refine_libconfig_sub) (config_setting_t *r, int n, const char *source);
+	bool (*refinedb_lookup_int) (const config_setting_t *r, const char *name, int *value);
 	bool (*readdb_scconfig) (char *fields[], int columns, int current);
 	void (*read_job_db) (void);
 	void (*read_job_db_sub) (int idx, const char *name, config_setting_t *jdb);
