@@ -457,8 +457,8 @@ void bg_config_read(void) {
 			}
 			bg->arenas = arena_count;
 		}
-		libconfig->destroy(&bg_conf);
 	}
+	libconfig->destroy(&bg_conf);
 }
 struct bg_arena *bg_name2arena (char *name) {
 	int i;

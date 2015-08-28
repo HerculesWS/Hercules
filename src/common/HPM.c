@@ -580,8 +580,8 @@ void hplugins_config_read(void) {
 			snprintf(filename, 60, "plugins/%s%s", libconfig->setting_get_string_elem(plist,i), DLL_EXT);
 			HPM->load(filename);
 		}
-		libconfig->destroy(&plugins_conf);
 	}
+	libconfig->destroy(&plugins_conf);
 
 	if( HPM->plugin_count )
 		ShowStatus("HPM: There are '"CL_WHITE"%d"CL_RESET"' plugins loaded, type '"CL_WHITE"plugins"CL_RESET"' to list them\n", HPM->plugin_count);

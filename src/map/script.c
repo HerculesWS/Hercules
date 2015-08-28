@@ -4719,6 +4719,7 @@ void script_load_translations(void) {
 		
 		script->load_translation(translation_file, ++lang_id, &total);
 	}
+	libconfig->destroy(&translations_conf);
 
 	if( total ) {
 		DBIterator *main_iter;

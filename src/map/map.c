@@ -5273,8 +5273,6 @@ void read_map_zone_db(void) {
 		}
 
 		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' zones in '"CL_WHITE"%s"CL_RESET"'.\n", zone_count, config_filename);
-		/* not supposed to go in here but in skill_final whatever */
-		libconfig->destroy(&map_zone_db);
 		
 		/* post-load processing */
 		if( (zone = strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) )
@@ -5284,6 +5282,8 @@ void read_map_zone_db(void) {
 		if( (zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)) )
 			zone->info.special = 1;
 	}
+	/* not supposed to go in here but in skill_final whatever */
+	libconfig->destroy(&map_zone_db);
 }
 
 int map_get_new_bonus_id (void) {

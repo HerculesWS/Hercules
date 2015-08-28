@@ -770,8 +770,8 @@ void read_channels_config(void)
 		}
 
 		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' channels in '"CL_WHITE"%s"CL_RESET"'.\n", db_size(channel->db), config_filename);
-		libconfig->destroy(&channels_conf);
 	}
+	libconfig->destroy(&channels_conf);
 }
 
 /*==========================================
