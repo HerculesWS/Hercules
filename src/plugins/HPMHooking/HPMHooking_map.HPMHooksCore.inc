@@ -5427,8 +5427,10 @@ struct {
 	struct HPMHookPoint *HP_status_readdb_job2_post;
 	struct HPMHookPoint *HP_status_readdb_sizefix_pre;
 	struct HPMHookPoint *HP_status_readdb_sizefix_post;
-	struct HPMHookPoint *HP_status_readdb_refine_pre;
-	struct HPMHookPoint *HP_status_readdb_refine_post;
+	struct HPMHookPoint *HP_status_readdb_refine_libconfig_pre;
+	struct HPMHookPoint *HP_status_readdb_refine_libconfig_post;
+	struct HPMHookPoint *HP_status_readdb_refine_libconfig_sub_pre;
+	struct HPMHookPoint *HP_status_readdb_refine_libconfig_sub_post;
 	struct HPMHookPoint *HP_status_readdb_scconfig_pre;
 	struct HPMHookPoint *HP_status_readdb_scconfig_post;
 	struct HPMHookPoint *HP_status_read_job_db_pre;
@@ -11140,8 +11142,10 @@ struct {
 	int HP_status_readdb_job2_post;
 	int HP_status_readdb_sizefix_pre;
 	int HP_status_readdb_sizefix_post;
-	int HP_status_readdb_refine_pre;
-	int HP_status_readdb_refine_post;
+	int HP_status_readdb_refine_libconfig_pre;
+	int HP_status_readdb_refine_libconfig_post;
+	int HP_status_readdb_refine_libconfig_sub_pre;
+	int HP_status_readdb_refine_libconfig_sub_post;
 	int HP_status_readdb_scconfig_pre;
 	int HP_status_readdb_scconfig_post;
 	int HP_status_read_job_db_pre;
