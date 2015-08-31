@@ -3988,7 +3988,7 @@ night mode or day mode:
 //=====================================
 ---------------------------------------
 
-*isequipped(<id>{,<id>{,<id>{,<id>}}})
+*isequipped(<item id>{,<item id>{,<item id>{,<item id>}}})
 
 This function will return 1 if the invoking character has all of the item 
 IDs given equipped (if card IDs are passed, then it checks if the cards 
@@ -4001,19 +4001,22 @@ If even one of the items given is not equipped, 0 will be returned.
 	if (isequipped(4001,4005,4033,4196)) mes "Wow! You're wearing a full complement of possible poring cards!";
 	// (Poring)
 	if (isequipped(4001)) mes "A poring card is useful, don't you think?";
+	// (Earring)
+	if (isequipped(2622)) mes "You got a pair of nice Earring.";
 
 The function was meant for item scripts to support the cards released by 
 Gravity in February 2005, but it will work just fine in normal NPC scripts.
 
 ---------------------------------------
 
-*isequippedcnt(<card id>{,<card id>{,<card id>{,<card id>}}})
+*isequippedcnt(<item id>{,<item id>{,<item id>{,<item id>}}})
 
 This function is similar to 'isequipped', but instead of 1 or 0, it will 
-return the number of cards in the list given that were found on the 
+return the number of equipped items/cards in the list given that were found on the 
 invoking character.
 
 	if (isequippedcnt(4001,4005,4033,4196) == 4) mes "Finally got all four poring cards?";
+	if (isequippedcnt(5353,2622) == 2) mes "You equipped both Helm of Sun and Earring.";
 
 ---------------------------------------
 
@@ -5831,7 +5834,7 @@ Examples:
 ---------------------------------------
 
 *pcblockmove <id>,<option>;
-
+	
 Prevents the given ID from moving when the option != 0, and 0 enables the 
 ID to move again. The ID can either be the GID of a monster/NPC or account 
 ID of a character, and will run for the attached player if zero is 
