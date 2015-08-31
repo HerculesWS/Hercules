@@ -13806,11 +13806,19 @@ BUILDIN(message) {
 
 /*==========================================
  * npctalk (sends message to surrounding area)
+ * usage: npctalk "<message>"{,"<npc name>"};
  *------------------------------------------*/
 BUILDIN(npctalk)
 {
-	struct npc_data* nd = (struct npc_data *)map->id2bl(st->oid);
+	struct npc_data* nd;
 	const char *str = script_getstr(st,2);
+
+	if (script_hasdata(st, 3)) {
+		nd = npc->name2id(script_getstr(st, 3));
+	}
+	else {
+		nd = (struct npc_data *)map->id2bl(st->oid);
+	}
 
 	if (nd) {
 		char name[NAME_LENGTH], message[256];
@@ -20128,7 +20136,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF2(atcommand,"charcommand","s"), // [MouseJstr]
 		BUILDIN_DEF(movenpc,"sii?"), // [MouseJstr]
 		BUILDIN_DEF(message,"ss"), // [MouseJstr]
-		BUILDIN_DEF(npctalk,"s"), // [Valaris]
+		BUILDIN_DEF(npctalk,"s?"), // [Valaris]
 		BUILDIN_DEF(mobcount,"ss"),
 		BUILDIN_DEF(getlook,"i"),
 		BUILDIN_DEF(getsavepoint,"i"),

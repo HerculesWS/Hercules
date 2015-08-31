@@ -6304,7 +6304,7 @@ A debug message also shows on the console when no events are triggered.
 
 ---------------------------------------
 
-*npctalk "<message>";
+*npctalk "<message>"{,"<npc name>"};
 
 This command will display a message to the surrounding area as if the NPC 
 object running it was a player talking - that is, above their head and in 
@@ -6314,6 +6314,7 @@ the message to complete the effect.
 	// This will make everyone in the area see the NPC greet the character
 	// who just invoked it.
 	npctalk "Hello "+strcharinfo(0)+", how are you?";
+	npctalk "Hello "+strcharinfo(0)+", how are you?","Another_NPC_Name";
 
 ---------------------------------------
 
