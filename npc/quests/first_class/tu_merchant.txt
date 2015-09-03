@@ -142,8 +142,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "[Guarnien]";
 			mes "For your final assignment, I will ask you to learn the Vending skill up to Skill Level 4. Of course, once you do, I'll give you a little reward. I'll be waiting, so do your best~";
 			tu_merchant = 16;
-			erasequest 8239;
-			setquest 8240;
+			changequest 8239, 8240;
 			close;
 		}
 
@@ -176,8 +175,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "You deserve a little";
 			mes "reward for your effort~";
 			tu_merchant = 15;
-			erasequest 8238;
-			setquest 8239;
+			changequest 8238, 8239;
 			getexp 162,52;
 			next;
 			mes "[Guarnien]";
@@ -188,8 +186,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "Excellent!";
 			mes "You've actually went above and beyond mastered the Push Cart skill. Great work!";
 			tu_merchant = 15;
-			erasequest 8238;
-			setquest 8239;
+			changequest 8238, 8239;
 			getexp 186,60;
 			next;
 			mes "[Guarnien]";
@@ -230,8 +227,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "speed, it shouldn't be a big deal.";
 			mes "Well done~";
 			tu_merchant = 15;
-			erasequest 8237;
-			setquest 8238;
+			changequest 8237, 8239;
 			getexp 162,52;
 			next;
 			mes "[Guarnien]";
@@ -243,8 +239,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "mastered the Push Cart skill.";
 			mes "You truly deserve a little bit of a reward~";
 			tu_merchant = 15;
-			erasequest 8237;
-			setquest 8238;
+			changequest 8237, 8239;
 			getexp 186,60;
 			next;
 			mes "[Guarnien]";
@@ -258,6 +253,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "you do that, I can go on to";
 			mes "my next lecture.";
 			tu_merchant = 14;
+			changequest 8237, 8238;
 			close;
 		}
 	case 12:
@@ -275,8 +271,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "as I asked. Please,";
 			mes "take this little reward~";
 			tu_merchant = 13;
-			erasequest 8236;
-			setquest 8237;
+			changequest 8236, 8237;
 			getexp 126,27;
 			next;
 			mes "[Guarnien]";
@@ -289,8 +284,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "mastered Over Charge?";
 			mes "Most impressive! You deserve a small reward for your work!";
 			tu_merchant = 13;
-			erasequest 8236;
-			setquest 8237;
+			changequest 8236, 8237;
 			getexp 142,33;
 			next;
 			mes "[Guarnien]";
@@ -322,8 +316,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "[Guarnien]";
 			mes "Ah, you've already learned Level 4 Over Charge. Perfect! Let me give you a little reward~";
 			tu_merchant = 13;
-			erasequest 8235;
-			setquest 8236;
+			changequest 8235, 8237;
 			getexp 126,27;
 			next;
 			mes "[Guarnien]";
@@ -334,8 +327,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "[Guarnien]";
 			mes "Amazing! You've already mastered the Over Charge skill! You must have wanted this reward badly~";
 			tu_merchant = 13;
-			erasequest 8235;
-			setquest 8236;
+			changequest 8235, 8237;
 			getexp 142,33;
 			next;
 			mes "[Guarnien]";
@@ -346,8 +338,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "[Guarnien]";
 			mes "Personally, I think you should learn this skill for sure! For your next assignment, learn Over Charge up to Level 4. It shouldn't be too difficult to do.";
 			tu_merchant = 12;
-			erasequest 8235;
-			setquest 8236;
+			changequest 8235, 8236;
 			next;
 			mes "[Guarnien]";
 			mes "Once you do that,";
@@ -418,6 +409,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 		mes "some reason --to send you there right now. Get ready...!";
 		next;
 		tu_merchant = rand(6,8);
+		changequest 8233, 8234;
 		warp "prontera",155,46;
 		end;
 	case 4:
@@ -430,8 +422,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "how to use the Discount skill";
 			mes "well enough. Good, here's a little reward for your hard work~";
 			tu_merchant = 5;
-			erasequest 8232;
-			setquest 8233;
+			changequest 8232, 8233;
 			getexp 83,11;
 			next;
 			mes "[Guarnien]";
@@ -441,8 +432,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "Incredible!";
 			mes "You've actually mastered the Discount skill! You're such a great student. You deserve a bit of a reward!";
 			tu_merchant = 5;
-			erasequest 8232;
-			setquest 8233;
+			changequest 8232, 8233;
 			getexp 97,18;
 			next;
 			mes "[Guarnien]";
@@ -476,8 +466,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "Here, take this";
 			mes "small reward~";
 			tu_merchant = 5;
-			erasequest 8231;
-			setquest 8232;
+			changequest 8231, 8233;
 			getexp 83,11;
 			next;
 			mes "[Guarnien]";
@@ -488,8 +477,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "Incredible!";
 			mes "You've actually mastered the Discount skill! You're such a great student. You deserve a bit of a reward!";
 			tu_merchant = 5;
-			erasequest 8231;
-			setquest 8232;
+			changequest 8231, 8233;
 			getexp 97,18;
 			next;
 			mes "[Guarnien]";
@@ -506,8 +494,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "[Guarnien]";
 			mes "Still, you can't ignore the fact that bargaining is an essential skill for a Merchant! Come back to me when you're ready~";
 			tu_merchant = 4;
-			erasequest 8231;
-			setquest 8232;
+			changequest 8231, 8232;
 			close;
 		}
 	case 2:
@@ -530,8 +517,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "[Guarnien]";
 			mes "Well, since you're still green, I feel awfully sorry if you've wasted Zeny. Why don't you take this as compensation?";
 			tu_merchant = 3;
-			erasequest 8230;
-			setquest 8231;
+			changequest 8230, 8231;
 			getexp 70,12;
 			next;
 			mes "[Guarnien]";
@@ -540,8 +526,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 		} else {
 			mes "Okay. Now I think we're ready for me to discuss the ^871F78Discount^000000 skill. Come back when you'd like me to tell you more about it, okay?";
 			tu_merchant = 3;
-			erasequest 8230;
-			setquest 8231;
+			changequest 8230,8231;
 			close;
 		}
 	case 1:
@@ -553,7 +538,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 		next;
 		mes "[Guarnien]";
 		.@chk_soji = getskilllv(MC_INCCARRY);
-		if(.@chk_soji > 3 && .@chk_soji < 10){
+		if(.@chk_soji > 3 && .@chk_soji <= 10){
 			mes "Ah. I can tell that you have. Not bad! By now you should be able to learn the ^871F78Discount^000000 skill, but I'll teach you about that later.";
 			next;
 			mes "[Guarnien]";
@@ -569,8 +554,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 				mes "[Guarnien]";
 				mes "I see in your eyes that you've already learned to appraise items. Haha, although having that knowledge is reward in itself, let me give you something extra!";
 				tu_merchant = 2;
-				erasequest 8229;
-				setquest 8230;
+				changequest 8229, 8230;
 				getexp 58,11;
 				getitem 1351,1; //Battle_Axe
 				next;
@@ -588,8 +572,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 		mes "Alright, next time";
 		mes "I'll talk about the Mammonite skill. For now, let me take a little bit of a break from all of this arduous lecture. ^666666*Whew!*^000000";
 		tu_merchant = 2;
-		erasequest 8229;
-		setquest 8230;
+		changequest 8229, 8230;
 		close;
 	}
 
@@ -638,7 +621,6 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			if(getskilllv(MC_IDENTIFY)){
 				mes "I see in your eyes that you've already learned to appraise items. Haha, although having that knowledge is reward in itself, let me give you something extra!";
 				tu_merchant = 2;
-				erasequest 8229;
 				setquest 8230;
 				getexp 58,11;
 				getitem 1351,1; //Battle_Axe
@@ -658,7 +640,6 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "skill later. I always manage";
 			mes "to forget about that!";
 			tu_merchant = 2;
-			erasequest 8229;
 			setquest 8230;
 			close;
 		}
