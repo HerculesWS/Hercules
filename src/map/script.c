@@ -1801,6 +1801,38 @@ const char* parse_syntax(const char* p)
 			return p;
 		}
 		break;
+	case 'E':
+	case 'e':
+		if( p2 - p == 9 && strncmp(p, "exitwhile", 9) == 0 ) {
+			char label[256];
+			int pos = script->syntax.curly_count - 1;
+
+			while(pos >= 0) {
+				if(script->syntax.curly[pos].type == TYPE_WHILE) {
+					sprintf(label, "goto __WL%x_FIN;", script->syntax.curly[pos].index);
+					break;
+				}
+				pos--;
+			}
+
+			if(pos < 0) {
+				disp_error_message("parse_syntax: unexpected 'exitwhile'", p);
+			} else {
+				script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
+				script->parse_line(label);
+				script->syntax.curly_count--;
+			}
+
+			p = script->skip_space(p2);
+
+			if(*p != ';')
+				disp_error_message("parse_syntax: need ';'", p);
+
+			p = script->parse_syntax_close(p + 1);
+
+			return p;
+		}
+		break;
 	case 'f':
 	case 'F':
 		if( p2 - p == 3 && strncmp(p, "for", 3) == 0 ) {
