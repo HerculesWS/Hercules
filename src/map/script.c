@@ -11420,10 +11420,6 @@ BUILDIN(disablewaitingroomevent) {
 /// <type>=16 : the name of the waiting room event
 /// <type>=32 : if the waiting room is full
 /// <type>=33 : if there are enough users to trigger the event
-/// -- Custom Added
-/// <type>=34 : minimum player of waiting room
-/// <type>=35 : maximum player of waiting room
-/// <type>=36 : minimum zeny required
 ///
 /// getwaitingroomstate(<type>,"<npc_name>") -> <info>
 /// getwaitingroomstate(<type>) -> <info>
@@ -11444,13 +11440,7 @@ BUILDIN(getwaitingroomstate) {
 	}
 
 	switch(type) {
-		case 0:  
-			for (int i = 0; i < cd->users; i++) {
-				struct map_session_data *sd = cd->usersd[i];
-				mapreg->setreg(reference_uid(script->add_str("$@chatmembers"), i), sd->bl.id);
-			}
-			script_pushint(st, cd->users);
-			break;
+		case 0:  script_pushint(st, cd->users); break;
 		case 1:  script_pushint(st, cd->limit); break;
 		case 2:  script_pushint(st, cd->trigger&0x7f); break;
 		case 3:  script_pushint(st, ((cd->trigger&0x80)!=0)); break;
@@ -11459,10 +11449,6 @@ BUILDIN(getwaitingroomstate) {
 		case 16: script_pushstrcopy(st, cd->npc_event);break;
 		case 32: script_pushint(st, (cd->users >= cd->limit)); break;
 		case 33: script_pushint(st, (cd->users >= cd->trigger)); break;
-
-		case 34: script_pushint(st, cd->minLvl); break;
-		case 35: script_pushint(st, cd->maxLvl); break;
-		case 36: script_pushint(st, cd->zeny); break;
 		default: script_pushint(st, -1); break;
 	}
 	return true;

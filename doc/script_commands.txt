@@ -6798,8 +6798,7 @@ if any.
 
 The valid information types are:
 
- 0  - Number of users currently in the waiting room
-	  $@chatmembers[] - list of user account_id
+ 0  - Number of users currently chatting.
  1  - Maximum number of users allowed.
  2  - Will return 1 if the waiting room has a trigger set.
       0 otherwise.
@@ -6812,10 +6811,6 @@ The valid information types are:
  32 - Whether or not the waiting room is full.
  33 - Whether the amount of users in the waiting room is higher than the 
       trigger number.
- 34 - Minimum Base Level to enter waiting room. 
- 35 - Maximum Base Level to enter waiting room.
- 36 - Minimum Zeny to enter waiting room. 
- 
 
 ---------------------------------------
 
