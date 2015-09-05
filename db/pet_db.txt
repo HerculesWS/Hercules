@@ -116,3 +116,6 @@
 // Brasilis Quest - Suspicious Beach [UNHATCHABLE]
 2057,E_CRAMP,Strange Cramp,12408,6221,0,0,0,0,0,0,0,0,50,0,0,0,350,400,800,{},{} // kRO version
 2081,E_HYDRA,Strange Hydra,12408,6221,0,0,0,0,0,0,0,0,50,0,0,0,350,400,800,{},{} // iRO/cRO version
+
+// 14.2 Academy
+2398,LITTLE_PORING,Little Poring,12846,9062,10013,531,80,60,50,100,250,20,2000,150,1,0,350,400,800,{ petloot 10; },{ bonus bLuk,2; bonus bCritical,1; }
