@@ -11431,6 +11431,7 @@ BUILDIN(getwaitingroomstate) {
 	struct npc_data *nd;
 	struct chat_data *cd;
 	int type;
+	int i;
 
 	type = script_getnum(st,2);
 	if( script_hasdata(st,3) )
@@ -11445,7 +11446,7 @@ BUILDIN(getwaitingroomstate) {
 
 	switch(type) {
 		case 0:  
-			for (int i = 0; i < cd->users; i++) {
+			for (i = 0; i < cd->users; i++) {
 				struct map_session_data *sd = cd->usersd[i];
 				mapreg->setreg(reference_uid(script->add_str("$@chatmembers"), i), sd->bl.id);
 			}
