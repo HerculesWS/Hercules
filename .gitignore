@@ -61,7 +61,6 @@ Thumbs.db
 # /conf/
 /conf/import/*.conf
 /conf/import/battle_conf.txt
-/conf/import/inter_conf.txt
 /conf/import/log_conf.txt
 /conf/import/login_conf.txt
 /conf/import/map_conf.txt
