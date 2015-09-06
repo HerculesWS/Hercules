@@ -1082,6 +1082,13 @@ Only the special labels which are not associated with any script command
 are listed here. There are other kinds of labels which may be triggered in 
 a similar manner, but they are described with their associated commands.
 
+OnPCStatCalcEvent:
+
+This special label triggers when a player's stats are recalculated, such as when
+changing stats, equipment, or maps, as well as when logging in, leveling up, and
+mounting a job mount. This can be used to grant additional item bonuses to certain
+player groups, for instance.
+
 OnCountFunds:
 
 This special label is triggered when a player opens a trader NPC object that

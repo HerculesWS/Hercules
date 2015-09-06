@@ -2237,6 +2237,9 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	pc->delautobonus(sd,sd->autobonus2,ARRAYLENGTH(sd->autobonus2),true);
 	pc->delautobonus(sd,sd->autobonus3,ARRAYLENGTH(sd->autobonus3),true);
 
+	// Trigger OnPCStatCalcEvent
+	npc->script_event(sd, NPCE_STATCALC);
+
 	// Parse equipment.
 	for(i=0;i<EQI_MAX;i++) {
 		status->current_equip_item_index = index = sd->equip_index[i]; //We pass INDEX to status->current_equip_item_index - for EQUIP_SCRIPT (new cards solution) [Lupus]
