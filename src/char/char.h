@@ -26,6 +26,10 @@
 #include "common/db.h"
 #include "common/mmo.h"
 
+/* Forward Declarations */
+struct config_setting_t; // common/conf.h
+struct config_t; // common/conf.h
+
 enum E_CHARSERVER_ST {
 	CHARSERVER_ST_RUNNING = CORE_ST_LAST,
 	CHARSERVER_ST_SHUTDOWN,
@@ -276,8 +280,20 @@ struct char_interface {
 	int (*online_data_cleanup_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*online_data_cleanup) (int tid, int64 tick, int id, intptr_t data);
 	void (*sql_config_read) (const char* cfgName);
-	void (*config_dispatch) (char *w1, char *w2);
-	int (*config_read) (const char* cfgName);
+
+	bool (*config_read) (const char *filename, bool imported);
+	bool (*config_read_database) (const char *filename, const struct config_t *config, bool imported);
+	bool (*config_read_console) (const char *filename, const struct config_t *config, bool imported);
+	bool (*config_read_player_fame) (const char *filename, const struct config_t *config, bool imported);
+	bool (*config_read_player_deletion) (const char *filename, const struct config_t *config, bool imported);
+	bool (*config_read_player_name) (const char *filename, const struct config_t *config, bool imported);
+	void (*config_set_start_item) (const struct config_setting_t *setting);
+	bool (*config_read_player_new) (const char *filename, const struct config_t *config, bool imported);
+	bool (*config_read_player) (const char *filename, const struct config_t *config, bool imported);
+	bool (*config_read_permission) (const char *filename, const struct config_t *config, bool imported);
+	bool (*config_set_ip) (const char *type, const char *value, uint32 *out_ip, char *out_ip_str);
+	bool (*config_read_inter) (const char *filename, const struct config_t *config, bool imported);
+	bool (*config_read_top) (const char *filename, const struct config_t *config, bool imported);
 };
 
 #ifdef HERCULES_CORE
