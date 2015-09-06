@@ -660,10 +660,32 @@ typedef int (*HPMHOOK_pre_chr_online_data_cleanup) (int *tid, int64 *tick, int *
 typedef int (*HPMHOOK_post_chr_online_data_cleanup) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef void (*HPMHOOK_pre_chr_sql_config_read) (const char **cfgName);
 typedef void (*HPMHOOK_post_chr_sql_config_read) (const char *cfgName);
-typedef void (*HPMHOOK_pre_chr_config_dispatch) (char **w1, char **w2);
-typedef void (*HPMHOOK_post_chr_config_dispatch) (char *w1, char *w2);
-typedef int (*HPMHOOK_pre_chr_config_read) (const char **cfgName);
-typedef int (*HPMHOOK_post_chr_config_read) (int retVal___, const char *cfgName);
+typedef bool (*HPMHOOK_pre_chr_config_read) (const char **filename, bool *imported);
+typedef bool (*HPMHOOK_post_chr_config_read) (bool retVal___, const char *filename, bool imported);
+typedef bool (*HPMHOOK_pre_chr_config_read_database) (const char **filename, const struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_chr_config_read_database) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+typedef bool (*HPMHOOK_pre_chr_config_read_console) (const char **filename, const struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_chr_config_read_console) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+typedef bool (*HPMHOOK_pre_chr_config_read_player_fame) (const char **filename, const struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_chr_config_read_player_fame) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+typedef bool (*HPMHOOK_pre_chr_config_read_player_deletion) (const char **filename, const struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_chr_config_read_player_deletion) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+typedef bool (*HPMHOOK_pre_chr_config_read_player_name) (const char **filename, const struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_chr_config_read_player_name) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+typedef void (*HPMHOOK_pre_chr_config_set_start_item) (const struct config_setting_t **setting);
+typedef void (*HPMHOOK_post_chr_config_set_start_item) (const struct config_setting_t *setting);
+typedef bool (*HPMHOOK_pre_chr_config_read_player_new) (const char **filename, const struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_chr_config_read_player_new) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+typedef bool (*HPMHOOK_pre_chr_config_read_player) (const char **filename, const struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_chr_config_read_player) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+typedef bool (*HPMHOOK_pre_chr_config_read_permission) (const char **filename, const struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_chr_config_read_permission) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+typedef bool (*HPMHOOK_pre_chr_config_set_ip) (const char **type, const char **value, uint32 **out_ip, char **out_ip_str);
+typedef bool (*HPMHOOK_post_chr_config_set_ip) (bool retVal___, const char *type, const char *value, uint32 *out_ip, char *out_ip_str);
+typedef bool (*HPMHOOK_pre_chr_config_read_inter) (const char **filename, const struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_chr_config_read_inter) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+typedef bool (*HPMHOOK_pre_chr_config_read_top) (const char **filename, const struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_chr_config_read_top) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
 #endif // CHAR_CHAR_H
 #ifdef MAP_CHAT_H /* chat */
 typedef bool (*HPMHOOK_pre_chat_create_pc_chat) (struct map_session_data **sd, const char **title, const char **pass, int *limit, bool *pub);
@@ -5682,8 +5704,8 @@ typedef int (*HPMHOOK_pre_pincode_compare) (int *fd, struct char_session_data **
 typedef int (*HPMHOOK_post_pincode_compare) (int retVal___, int fd, struct char_session_data *sd, char *pin);
 typedef void (*HPMHOOK_pre_pincode_check) (int *fd, struct char_session_data **sd);
 typedef void (*HPMHOOK_post_pincode_check) (int fd, struct char_session_data *sd);
-typedef bool (*HPMHOOK_pre_pincode_config_read) (char **w1, char **w2);
-typedef bool (*HPMHOOK_post_pincode_config_read) (bool retVal___, char *w1, char *w2);
+typedef bool (*HPMHOOK_pre_pincode_config_read) (const char **filename, const struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_pincode_config_read) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
 #endif // CHAR_PINCODE_H
 #ifdef MAP_QUEST_H /* quest */
 typedef void (*HPMHOOK_pre_quest_init) (bool *minimal);

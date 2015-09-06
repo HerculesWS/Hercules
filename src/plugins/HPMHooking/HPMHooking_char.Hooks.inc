@@ -4242,41 +4242,15 @@ void HP_chr_sql_config_read(const char *cfgName) {
 	}
 	return;
 }
-void HP_chr_config_dispatch(char *w1, char *w2) {
+bool HP_chr_config_read(const char *filename, bool imported) {
 	int hIndex = 0;
-	if( HPMHooks.count.HP_chr_config_dispatch_pre ) {
-		void (*preHookFunc) (char **w1, char **w2);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_dispatch_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_chr_config_dispatch_pre[hIndex].func;
-			preHookFunc(&w1, &w2);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return;
-		}
-	}
-	{
-		HPMHooks.source.chr.config_dispatch(w1, w2);
-	}
-	if( HPMHooks.count.HP_chr_config_dispatch_post ) {
-		void (*postHookFunc) (char *w1, char *w2);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_dispatch_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_chr_config_dispatch_post[hIndex].func;
-			postHookFunc(w1, w2);
-		}
-	}
-	return;
-}
-int HP_chr_config_read(const char *cfgName) {
-	int hIndex = 0;
-	int retVal___ = 0;
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_chr_config_read_pre ) {
-		int (*preHookFunc) (const char **cfgName);
+		bool (*preHookFunc) (const char **filename, bool *imported);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_chr_config_read_pre[hIndex].func;
-			retVal___ = preHookFunc(&cfgName);
+			retVal___ = preHookFunc(&filename, &imported);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -4284,13 +4258,336 @@ int HP_chr_config_read(const char *cfgName) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.chr.config_read(cfgName);
+		retVal___ = HPMHooks.source.chr.config_read(filename, imported);
 	}
 	if( HPMHooks.count.HP_chr_config_read_post ) {
-		int (*postHookFunc) (int retVal___, const char *cfgName);
+		bool (*postHookFunc) (bool retVal___, const char *filename, bool imported);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_chr_config_read_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, cfgName);
+			retVal___ = postHookFunc(retVal___, filename, imported);
+		}
+	}
+	return retVal___;
+}
+bool HP_chr_config_read_database(const char *filename, const struct config_t *config, bool imported) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_chr_config_read_database_pre ) {
+		bool (*preHookFunc) (const char **filename, const struct config_t **config, bool *imported);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_database_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_chr_config_read_database_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &config, &imported);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.chr.config_read_database(filename, config, imported);
+	}
+	if( HPMHooks.count.HP_chr_config_read_database_post ) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_database_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_chr_config_read_database_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, config, imported);
+		}
+	}
+	return retVal___;
+}
+bool HP_chr_config_read_console(const char *filename, const struct config_t *config, bool imported) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_chr_config_read_console_pre ) {
+		bool (*preHookFunc) (const char **filename, const struct config_t **config, bool *imported);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_console_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_chr_config_read_console_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &config, &imported);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.chr.config_read_console(filename, config, imported);
+	}
+	if( HPMHooks.count.HP_chr_config_read_console_post ) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_console_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_chr_config_read_console_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, config, imported);
+		}
+	}
+	return retVal___;
+}
+bool HP_chr_config_read_player_fame(const char *filename, const struct config_t *config, bool imported) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_chr_config_read_player_fame_pre ) {
+		bool (*preHookFunc) (const char **filename, const struct config_t **config, bool *imported);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_player_fame_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_chr_config_read_player_fame_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &config, &imported);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.chr.config_read_player_fame(filename, config, imported);
+	}
+	if( HPMHooks.count.HP_chr_config_read_player_fame_post ) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_player_fame_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_chr_config_read_player_fame_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, config, imported);
+		}
+	}
+	return retVal___;
+}
+bool HP_chr_config_read_player_deletion(const char *filename, const struct config_t *config, bool imported) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_chr_config_read_player_deletion_pre ) {
+		bool (*preHookFunc) (const char **filename, const struct config_t **config, bool *imported);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_player_deletion_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_chr_config_read_player_deletion_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &config, &imported);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.chr.config_read_player_deletion(filename, config, imported);
+	}
+	if( HPMHooks.count.HP_chr_config_read_player_deletion_post ) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_player_deletion_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_chr_config_read_player_deletion_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, config, imported);
+		}
+	}
+	return retVal___;
+}
+bool HP_chr_config_read_player_name(const char *filename, const struct config_t *config, bool imported) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_chr_config_read_player_name_pre ) {
+		bool (*preHookFunc) (const char **filename, const struct config_t **config, bool *imported);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_player_name_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_chr_config_read_player_name_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &config, &imported);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.chr.config_read_player_name(filename, config, imported);
+	}
+	if( HPMHooks.count.HP_chr_config_read_player_name_post ) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_player_name_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_chr_config_read_player_name_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, config, imported);
+		}
+	}
+	return retVal___;
+}
+void HP_chr_config_set_start_item(const struct config_setting_t *setting) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_chr_config_set_start_item_pre ) {
+		void (*preHookFunc) (const struct config_setting_t **setting);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_set_start_item_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_chr_config_set_start_item_pre[hIndex].func;
+			preHookFunc(&setting);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.chr.config_set_start_item(setting);
+	}
+	if( HPMHooks.count.HP_chr_config_set_start_item_post ) {
+		void (*postHookFunc) (const struct config_setting_t *setting);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_set_start_item_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_chr_config_set_start_item_post[hIndex].func;
+			postHookFunc(setting);
+		}
+	}
+	return;
+}
+bool HP_chr_config_read_player_new(const char *filename, const struct config_t *config, bool imported) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_chr_config_read_player_new_pre ) {
+		bool (*preHookFunc) (const char **filename, const struct config_t **config, bool *imported);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_player_new_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_chr_config_read_player_new_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &config, &imported);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.chr.config_read_player_new(filename, config, imported);
+	}
+	if( HPMHooks.count.HP_chr_config_read_player_new_post ) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_player_new_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_chr_config_read_player_new_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, config, imported);
+		}
+	}
+	return retVal___;
+}
+bool HP_chr_config_read_player(const char *filename, const struct config_t *config, bool imported) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_chr_config_read_player_pre ) {
+		bool (*preHookFunc) (const char **filename, const struct config_t **config, bool *imported);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_player_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_chr_config_read_player_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &config, &imported);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.chr.config_read_player(filename, config, imported);
+	}
+	if( HPMHooks.count.HP_chr_config_read_player_post ) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_player_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_chr_config_read_player_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, config, imported);
+		}
+	}
+	return retVal___;
+}
+bool HP_chr_config_read_permission(const char *filename, const struct config_t *config, bool imported) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_chr_config_read_permission_pre ) {
+		bool (*preHookFunc) (const char **filename, const struct config_t **config, bool *imported);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_permission_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_chr_config_read_permission_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &config, &imported);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.chr.config_read_permission(filename, config, imported);
+	}
+	if( HPMHooks.count.HP_chr_config_read_permission_post ) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_permission_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_chr_config_read_permission_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, config, imported);
+		}
+	}
+	return retVal___;
+}
+bool HP_chr_config_set_ip(const char *type, const char *value, uint32 *out_ip, char *out_ip_str) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_chr_config_set_ip_pre ) {
+		bool (*preHookFunc) (const char **type, const char **value, uint32 **out_ip, char **out_ip_str);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_set_ip_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_chr_config_set_ip_pre[hIndex].func;
+			retVal___ = preHookFunc(&type, &value, &out_ip, &out_ip_str);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.chr.config_set_ip(type, value, out_ip, out_ip_str);
+	}
+	if( HPMHooks.count.HP_chr_config_set_ip_post ) {
+		bool (*postHookFunc) (bool retVal___, const char *type, const char *value, uint32 *out_ip, char *out_ip_str);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_set_ip_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_chr_config_set_ip_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, type, value, out_ip, out_ip_str);
+		}
+	}
+	return retVal___;
+}
+bool HP_chr_config_read_inter(const char *filename, const struct config_t *config, bool imported) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_chr_config_read_inter_pre ) {
+		bool (*preHookFunc) (const char **filename, const struct config_t **config, bool *imported);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_inter_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_chr_config_read_inter_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &config, &imported);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.chr.config_read_inter(filename, config, imported);
+	}
+	if( HPMHooks.count.HP_chr_config_read_inter_post ) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_inter_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_chr_config_read_inter_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, config, imported);
+		}
+	}
+	return retVal___;
+}
+bool HP_chr_config_read_top(const char *filename, const struct config_t *config, bool imported) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_chr_config_read_top_pre ) {
+		bool (*preHookFunc) (const char **filename, const struct config_t **config, bool *imported);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_top_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_chr_config_read_top_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &config, &imported);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.chr.config_read_top(filename, config, imported);
+	}
+	if( HPMHooks.count.HP_chr_config_read_top_post ) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_read_top_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_chr_config_read_top_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, config, imported);
 		}
 	}
 	return retVal___;
@@ -15726,15 +16023,15 @@ void HP_pincode_check(int fd, struct char_session_data *sd) {
 	}
 	return;
 }
-bool HP_pincode_config_read(char *w1, char *w2) {
+bool HP_pincode_config_read(const char *filename, const struct config_t *config, bool imported) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if( HPMHooks.count.HP_pincode_config_read_pre ) {
-		bool (*preHookFunc) (char **w1, char **w2);
+		bool (*preHookFunc) (const char **filename, const struct config_t **config, bool *imported);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pincode_config_read_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pincode_config_read_pre[hIndex].func;
-			retVal___ = preHookFunc(&w1, &w2);
+			retVal___ = preHookFunc(&filename, &config, &imported);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -15742,13 +16039,13 @@ bool HP_pincode_config_read(char *w1, char *w2) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pincode.config_read(w1, w2);
+		retVal___ = HPMHooks.source.pincode.config_read(filename, config, imported);
 	}
 	if( HPMHooks.count.HP_pincode_config_read_post ) {
-		bool (*postHookFunc) (bool retVal___, char *w1, char *w2);
+		bool (*postHookFunc) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pincode_config_read_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pincode_config_read_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, w1, w2);
+			retVal___ = postHookFunc(retVal___, filename, config, imported);
 		}
 	}
 	return retVal___;
