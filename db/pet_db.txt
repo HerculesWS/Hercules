@@ -25,31 +25,31 @@
 // 20. change_target_rate	Rate of which the pet will change its attack target.
 // 21. pet_script		Script to execute when the pet is hatched.
 // 22. loyal_script		Script to execute when the pet is hatched (requires at least pet_equip_min_friendly intimacy, independent of pet_script).
-//NOTE: The max value (100%) of attack_rate, defense_rate & change_target_rate is 10000.
+// NOTE: The max value (100%) of attack_rate, defense_rate & change_target_rate is 10000.
 
-//In theory you can use any valid script, but it is run only once upon pet
-//loading, so it is recommended you use the specific pet scripts:
+// In theory you can use any valid script, but it is run only once upon pet
+// loading, so it is recommended you use the specific pet scripts:
 
-//petskillattack skillid, skilllv, hits, rate, bonusrate
-//Skill attack that triggers while the pet is attacking. Rate is the base
-//chance of execution per attack. Bonusrate is an additional success rate when
-//intimacy reaches max. If hits is specified and different than 0, it will make
-//the pet cast the skill with a fixed amount of damage inflicted and the
-//specified number of hits. A value of zero uses the skill's defaults.
+// petskillattack skillid, skilllv, hits, rate, bonusrate
+// Skill attack that triggers while the pet is attacking. Rate is the base
+// chance of execution per attack. Bonusrate is an additional success rate when
+// intimacy reaches max. If hits is specified and different than 0, it will make
+// the pet cast the skill with a fixed amount of damage inflicted and the
+// specified number of hits. A value of zero uses the skill's defaults.
 
-//petskillsupport skillid, skilllv, delay, hp%, sp%
-//Casts a support skill when the health levels are below the specified hp% and
-//sp%. Delay is the minimum time in seconds before the skill can be cast again
+// petskillsupport skillid, skilllv, delay, hp%, sp%
+// Casts a support skill when the health levels are below the specified hp% and
+// sp%. Delay is the minimum time in seconds before the skill can be cast again
 
-//petrecovery type, delay: Cures the "type" status effect after "delay" seconds
+// petrecovery type, delay: Cures the "type" status effect after "delay" seconds
 
-//petskillbonus type, value, duration, delay
-//Gives bonus stats. Type is the stat to increase (bStr, bLuk), value is the
-//amount by which it is increased, duration signals how long the bonus lasts
-//delay is the time elapsed after the bonus ends and before it starts again.
+// petskillbonus type, value, duration, delay
+// Gives bonus stats. Type is the stat to increase (bStr, bLuk), value is the
+// amount by which it is increased, duration signals how long the bonus lasts
+// delay is the time elapsed after the bonus ends and before it starts again.
 
-//A single pet can have petloot, petskillbonus, petskillattack and
-//petskillsupport at the same time, but only one of each.
+// A single pet can have petloot, petskillbonus, petskillattack and
+// petskillsupport at the same time, but only one of each.
 
 1002,PORING,Poring,619,9001,10013,531,80,60,50,100,250,20,2000,150,1,0,350,400,800,{ petloot 10; },{ bonus bLuk,2; bonus bCritical,1; }
 1113,DROPS,Drops,620,9002,10013,508,80,60,40,100,250,20,1500,150,1,0,300,400,500,{ petloot 10; },{ bonus bHit,3; bonus bAtk,3; }
