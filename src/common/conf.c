@@ -23,6 +23,7 @@
 #include "conf.h"
 
 #include "common/showmsg.h" // ShowError
+#include "common/strlib.h" // safestrncpy
 
 #include <libconfig/libconfig.h>
 
@@ -30,6 +31,17 @@
 struct libconfig_interface libconfig_s;
 struct libconfig_interface *libconfig;
 
+/**
+ * Initializes 'config' and reads a configuration file.
+ *
+ * Shows error and destroys 'config' in case of failure.
+ * It is the caller's care to destroy 'config' in case of success.
+ *
+ * @param config          The config file to initialize.
+ * @param config_filename The file to read.
+ *
+ * @retval 1 in case of failure.
+ */
 int conf_read_file(config_t *config, const char *config_filename) {
 	libconfig->init(config);
 	if (!libconfig->read_file_src(config, config_filename)) {
@@ -128,6 +140,229 @@ int config_setting_copy(config_setting_t *parent, const config_setting_t *src) {
 	return CONFIG_TRUE;
 }
 
+/**
+ * Converts the value of a setting that is type CONFIG_TYPE_BOOL to bool.
+ *
+ * @param setting The setting to read.
+ *
+ * @return The converted value.
+ * @retval false in case of failure.
+ */
+bool config_setting_get_bool_real(const config_setting_t *setting)
+{
+	if (setting == NULL || setting->type != CONFIG_TYPE_BOOL)
+		return false;
+
+	return setting->value.ival ? true : false;
+}
+
+/**
+ * Same as config_setting_lookup_bool, but uses bool instead of int.
+ *
+ * @param[in]  setting The setting to read.
+ * @param[in]  name    The setting name to lookup.
+ * @param[out] value   The output value.
+ *
+ * @retval CONFIG_TRUE  in case of success.
+ * @retval CONFIG_FALSE in case of failure.
+ */
+int config_setting_lookup_bool_real(const config_setting_t *setting, const char *name, bool *value)
+{
+	config_setting_t *member = config_setting_get_member(setting, name);
+
+	if (!member)
+		return CONFIG_FALSE;
+
+	if (config_setting_type(member) != CONFIG_TYPE_BOOL)
+		return CONFIG_FALSE;
+
+	*value = config_setting_get_bool_real(member);
+
+	return CONFIG_TRUE;
+}
+
+/**
+ * Converts and returns a configuration that is CONFIG_TYPE_INT to unsigned int (uint32).
+ *
+ * @param setting The setting to read.
+ *
+ * @return The converted value.
+ * @retval 0 in case of failure.
+ */
+uint32 config_setting_get_uint32(const config_setting_t *setting)
+{
+	if (setting == NULL || setting->type != CONFIG_TYPE_INT)
+		return 0;
+
+	if (setting->value.ival < 0)
+		return 0;
+
+	return (uint32)setting->value.ival;
+}
+
+/**
+ * Looks up a configuration entry of type CONFIG_TYPE_INT and reads it as uint32.
+ *
+ * @param[in]  setting The setting to read.
+ * @param[in]  name    The setting name to lookup.
+ * @param[out] value   The output value.
+ *
+ * @retval CONFIG_TRUE  in case of success.
+ * @retval CONFIG_FALSE in case of failure.
+ */
+int config_setting_lookup_uint32(const config_setting_t *setting, const char *name, uint32 *value)
+{
+	config_setting_t *member = config_setting_get_member(setting, name);
+
+	if (!member)
+		return CONFIG_FALSE;
+
+	if (config_setting_type(member) != CONFIG_TYPE_INT)
+		return CONFIG_FALSE;
+
+	*value = config_setting_get_uint32(member);
+
+	return CONFIG_TRUE;
+}
+
+/**
+ * Converts and returns a configuration that is CONFIG_TYPE_INT to uint16
+ *
+ * @param setting The setting to read.
+ *
+ * @return The converted value.
+ * @retval 0 in case of failure.
+ */
+uint16 config_setting_get_uint16(const config_setting_t *setting)
+{
+	if (setting == NULL || setting->type != CONFIG_TYPE_INT)
+		return 0;
+
+	if (setting->value.ival > UINT16_MAX)
+		return UINT16_MAX;
+	if (setting->value.ival < UINT16_MIN)
+		return UINT16_MIN;
+
+	return (uint16)setting->value.ival;
+}
+
+/**
+ * Looks up a configuration entry of type CONFIG_TYPE_INT and reads it as uint16.
+ *
+ * @param[in]  setting The setting to read.
+ * @param[in]  name    The setting name to lookup.
+ * @param[out] value   The output value.
+ *
+ * @retval CONFIG_TRUE  in case of success.
+ * @retval CONFIG_FALSE in case of failure.
+ */
+int config_setting_lookup_uint16(const config_setting_t *setting, const char *name, uint16 *value)
+{
+	config_setting_t *member = config_setting_get_member(setting, name);
+
+	if (!member)
+		return CONFIG_FALSE;
+
+	if (config_setting_type(member) != CONFIG_TYPE_INT)
+		return CONFIG_FALSE;
+
+	*value = config_setting_get_uint16(member);
+
+	return CONFIG_TRUE;
+}
+
+/**
+ * Converts and returns a configuration that is CONFIG_TYPE_INT to int16
+ *
+ * @param setting The setting to read.
+ *
+ * @return The converted value.
+ * @retval 0 in case of failure.
+ */
+int16 config_setting_get_int16(const config_setting_t *setting)
+{
+	if (setting == NULL || setting->type != CONFIG_TYPE_INT)
+		return 0;
+
+	if (setting->value.ival > INT16_MAX)
+		return INT16_MAX;
+	if (setting->value.ival < INT16_MIN)
+		return INT16_MIN;
+
+	return (int16)setting->value.ival;
+}
+
+/**
+ * Looks up a configuration entry of type CONFIG_TYPE_INT and reads it as int16.
+ *
+ * @param[in]  setting The setting to read.
+ * @param[in]  name    The setting name to lookup.
+ * @param[out] value   The output value.
+ *
+ * @retval CONFIG_TRUE  in case of success.
+ * @retval CONFIG_FALSE in case of failure.
+ */
+int config_setting_lookup_int16(const config_setting_t *setting, const char *name, int16 *value)
+{
+	config_setting_t *member = config_setting_get_member(setting, name);
+
+	if (!member)
+		return CONFIG_FALSE;
+
+	if (config_setting_type(member) != CONFIG_TYPE_INT)
+		return CONFIG_FALSE;
+
+	*value = config_setting_get_int16(member);
+
+	return CONFIG_TRUE;
+}
+
+/**
+ * Looks up a configuration entry of type CONFIG_TYPE_STRING inside a config_setting_t and copies it into a (non-const) char buffer.
+ *
+ * @param[in]  setting  The setting to read.
+ * @param[in]  name     The setting name to lookup.
+ * @param[out] out      The output buffer.
+ * @param[in]  out_size The size of the output buffer.
+ *
+ * @retval CONFIG_TRUE  in case of success.
+ * @retval CONFIG_FALSE in case of failure.
+ */
+int config_setting_lookup_mutable_string(const config_setting_t *setting, const char *name, char *out, size_t out_size)
+{
+	const char *str = NULL;
+
+	if (libconfig->setting_lookup_string(setting, name, &str) == CONFIG_TRUE) {
+		safestrncpy(out, str, out_size);
+		return CONFIG_TRUE;
+	}
+
+	return CONFIG_FALSE;
+}
+
+/**
+ * Looks up a configuration entry of type CONFIG_TYPE_STRING inside a config_t and copies it into a (non-const) char buffer.
+ *
+ * @param[in]  config   The configuration to read.
+ * @param[in]  name     The setting name to lookup.
+ * @param[out] out      The output buffer.
+ * @param[in]  out_size The size of the output buffer.
+ *
+ * @retval CONFIG_TRUE  in case of success.
+ * @retval CONFIG_FALSE in case of failure.
+ */
+int config_lookup_mutable_string(const config_t *config, const char *name, char *out, size_t out_size)
+{
+	const char *str = NULL;
+
+	if (libconfig->lookup_string(config, name, &str) == CONFIG_TRUE) {
+		safestrncpy(out, str, out_size);
+		return CONFIG_TRUE;
+	}
+
+	return CONFIG_FALSE;
+}
+
 void libconfig_defaults(void) {
 	libconfig = &libconfig_s;
 
@@ -206,4 +441,18 @@ void libconfig_defaults(void) {
 	libconfig->setting_copy_elem = config_setting_copy_elem;
 	libconfig->setting_copy_aggregate = config_setting_copy_aggregate;
 	libconfig->setting_copy = config_setting_copy;
+
+	/* Functions to get different types */
+	libconfig->setting_get_bool_real = config_setting_get_bool_real;
+	libconfig->setting_get_uint32 = config_setting_get_uint32;
+	libconfig->setting_get_uint16 = config_setting_get_uint16;
+	libconfig->setting_get_int16 = config_setting_get_int16;
+
+	/* Functions to lookup different types */
+	libconfig->setting_lookup_int16 = config_setting_lookup_int16;
+	libconfig->setting_lookup_bool_real = config_setting_lookup_bool_real;
+	libconfig->setting_lookup_uint32 = config_setting_lookup_uint32;
+	libconfig->setting_lookup_uint16 = config_setting_lookup_uint16;
+	libconfig->setting_lookup_mutable_string = config_setting_lookup_mutable_string;
+	libconfig->lookup_mutable_string = config_lookup_mutable_string;
 }
