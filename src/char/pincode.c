@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 
 #include "char/char.h"
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/db.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
@@ -178,33 +179,52 @@ void pincode_decrypt(unsigned int userSeed, char* pin) {
 	sprintf(pin, "%d%d%d%d", pin[0], pin[1], pin[2], pin[3]);
 }
 
-bool pincode_config_read(char *w1, char *w2) {
+/**
+ * Reads the 'char_configuration/pincode' config entry and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool pincode_config_read(const char *filename, const struct config_t *config, bool imported)
+{
+	const struct config_setting_t *setting = NULL;
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
 
-	nullpo_ret(w1);
-	nullpo_ret(w2);
-	while ( true ) {
-		if ( strcmpi(w1, "pincode_enabled") == 0 ) {
-			pincode->enabled = atoi(w2);
+	if ((setting = libconfig->lookup(config, "char_configuration/pincode")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("char_config_read: char_configuration/pincode was not found in %s!\n", filename);
+		return false;
+	}
+
+	if (libconfig->setting_lookup_bool(setting, "enabled", &pincode->enabled) == CONFIG_TRUE) {
 #if PACKETVER < 20110309
-			if( pincode->enabled ) {
-				ShowWarning("pincode_enabled requires PACKETVER 20110309 or higher. disabling...\n");
-				pincode->enabled = 0;
-			}
-#endif
-		} else if ( strcmpi(w1, "pincode_changetime") == 0 ) {
-			pincode->changetime = atoi(w2)*60;
-		} else if ( strcmpi(w1, "pincode_maxtry") == 0 ) {
-			pincode->maxtry = atoi(w2);
-			if( pincode->maxtry > 3 ) {
-				ShowWarning("pincode_maxtry is too high (%d); maximum allowed: 3! capping to 3...\n", pincode->maxtry);
-				pincode->maxtry = 3;
-			}
-		} else if ( strcmpi(w1, "pincode_charselect") == 0 ) {
-			pincode->charselect = atoi(w2);
-		} else {
-			return false;
+		if (pincode->enabled) {
+			ShowWarning("pincode_enabled requires PACKETVER 20110309 or higher. disabling...\n");
+			pincode->enabled = 0;
 		}
-		break;
+#endif
+	}
+
+	if (libconfig->setting_lookup_int(setting, "change_time", &pincode->changetime) == CONFIG_TRUE)
+		pincode->changetime *= 60;
+
+	if (libconfig->setting_lookup_int(setting, "max_tries", &pincode->maxtry) == CONFIG_TRUE) {
+		if (pincode->maxtry > 3) {
+			ShowWarning("pincode_maxtry is too high (%d); Maximum allowed: 3! Capping to 3...\n",pincode->maxtry);
+			pincode->maxtry = 3;
+		}
+	}
+
+	if (libconfig->setting_lookup_int(setting, "request", &pincode->charselect) == CONFIG_TRUE) {
+		if (pincode->charselect != 1 && pincode->charselect != 0) {
+			ShowWarning("Invalid pincode/request! Defaulting to 0\n");
+			pincode->charselect = 0;
+		}
 	}
 
 	return true;

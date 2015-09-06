@@ -42,6 +42,7 @@
 
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/console.h"
 #include "common/core.h"
 #include "common/db.h"
@@ -61,6 +62,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <sys/stat.h> // stat()
 
 #if MAX_MAP_SERVERS > 1
 #	ifdef _MSC_VER
@@ -136,7 +138,16 @@ int max_connect_user = -1;
 int gm_allow_group = -1;
 int autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
 int start_zeny = 0;
-int start_items[MAX_START_ITEMS*3];
+
+/// Start items for new characters
+struct start_item_s {
+	int id;
+	int amount;
+	int loc;
+	bool stackable;
+};
+VECTOR_DECL(struct start_item_s) start_items;
+
 int guild_exp_rate = 100;
 
 //Custom limits for the fame lists. [Skotlex]
@@ -1537,7 +1548,7 @@ int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int 
 {
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];
-	int char_id, flag, k, l;
+	int char_id, flag, i;
 
 	nullpo_retr(-2, sd);
 	nullpo_retr(-2, name_);
@@ -1609,24 +1620,20 @@ int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int 
 	}
 
 	//Give the char the default items
-	for (k = 0; k < ARRAYLENGTH(start_items) && start_items[k] != 0; k += 3) {
-		// FIXME: How to define if an item is stackable without having to lookup itemdb? [panikon]
-		if( start_items[k+2] == 1 )
-		{
-			if( SQL_ERROR == SQL->Query(inter->sql_handle,
-				"INSERT INTO `%s` (`char_id`,`nameid`, `amount`, `identify`) VALUES ('%d', '%d', '%d', '%d')",
-				inventory_db, char_id, start_items[k], start_items[k + 1], 1) )
-					Sql_ShowDebug(inter->sql_handle);
-		}
-		else if( start_items[k+2] == 0 )
-		{
+	for (i = 0; i < VECTOR_LENGTH(start_items); i++) {
+		struct start_item_s *item = &VECTOR_INDEX(start_items, i);
+		if (item->stackable) {
+			if (SQL_ERROR == SQL->Query(inter->sql_handle,
+			                            "INSERT INTO `%s` (`char_id`,`nameid`, `amount`, `identify`) VALUES ('%d', '%d', '%d', '%d')",
+			                            inventory_db, char_id, item->id, item->amount, 1))
+				Sql_ShowDebug(inter->sql_handle);
+		} else {
 			// Non-stackable items should have their own entries (issue: 7279)
-			for( l = 0; l < start_items[k+1]; l++ )
-			{
-				if( SQL_ERROR == SQL->Query(inter->sql_handle,
-					"INSERT INTO `%s` (`char_id`,`nameid`, `amount`, `identify`) VALUES ('%d', '%d', '%d', '%d')",
-					inventory_db, char_id, start_items[k], 1, 1)
-					)
+			int l, loc = item->loc;
+			for (l = 0; l < item->amount; l++) {
+				if (SQL_ERROR == SQL->Query(inter->sql_handle,
+				                            "INSERT INTO `%s` (`char_id`,`nameid`, `amount`, `equip`, `identify`) VALUES ('%d', '%d', '%d', '%d', '%d')",
+				                            inventory_db, char_id, item->id, 1, loc, 1))
 					Sql_ShowDebug(inter->sql_handle);
 			}
 		}
@@ -2176,7 +2183,7 @@ int char_parse_fromlogin_connection_state(int fd)
 		ShowError("Can not connect to login-server.\n");
 		ShowError("The server communication passwords (default s1/p1) are probably invalid.\n");
 		ShowError("Also, please make sure your login db has the correct communication username/passwords and the gender of the account is S.\n");
-		ShowError("The communication passwords are set in /conf/map-server.conf and /conf/char-server.conf\n");
+		ShowError("The communication passwords are set in /conf/map-server.conf and /conf/char/char-server.conf\n");
 		sockt->eof(fd);
 		return 1;
 	} else {
@@ -5441,206 +5448,504 @@ void char_sql_config_read(const char* cfgName)
 	ShowInfo("Done reading %s.\n", cfgName);
 }
 
-void char_config_dispatch(char *w1, char *w2) {
-	bool (*dispatch_to[]) (char *w1, char *w2) = {
-		/* as many as it needs */
-		pincode->config_read
-	};
-	int i, len = ARRAYLENGTH(dispatch_to);
-	for(i = 0; i < len; i++) {
-		if( (*dispatch_to[i])(w1,w2) )
-			break;/* we found who this belongs to, can stop */
+/**
+ * Reads the 'char_configuration' config file and initializes required variables.
+ *
+ * @param filename Path to configuration file.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool char_config_read(const char *filename, bool imported)
+{
+	struct config_t config;
+	const char *import = NULL;
+	bool retval = true;
+
+	nullpo_retr(false, filename);
+
+	if (!libconfig->load_file(&config, filename))
+		return false; // Error message is already shown by libconfig->load_file
+
+	if (!chr->config_read_top(filename, &config, imported))
+		retval = false;
+	if (!chr->config_read_inter(filename, &config, imported))
+		retval = false;
+	if (!chr->config_read_permission(filename, &config, imported))
+		retval = false;
+	if (!chr->config_read_player(filename, &config, imported))
+		retval = false;
+	if (!chr->config_read_console(filename, &config, imported))
+		retval = false;
+	if (!chr->config_read_database(filename, &config, imported))
+		retval = false;
+	if (!pincode->config_read(filename, &config, imported))
+		retval = false;
+
+	// TODO HPM->parseConf(w1, w2, HPCT_CHAR);
+
+	ShowInfo("Done reading %s.\n", filename);
+
+	// import should overwrite any previous configuration, so it should be called last
+	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
+		if (strcmp(import, filename) == 0 || strcmp(import, chr->CHAR_CONF_NAME) == 0) {
+			ShowWarning("char_config_read: Loop detected in %s! Skipping 'import'...\n", filename);
+		} else {
+			if (!chr->config_read(import, true))
+				retval = false;
+		}
 	}
-	if (i == len)
-		HPM->parseConf(w1, w2, HPCT_CHAR);
+
+	libconfig->destroy(&config);
+	return retval;
 }
 
-int char_config_read(const char* cfgName)
+/**
+ * Reads the 'char_configuration' top level config entry and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool char_config_read_top(const char *filename, const struct config_t *config, bool imported)
 {
-	char line[1024], w1[1024], w2[1024];
-	FILE* fp = fopen(cfgName, "r");
+	const struct config_setting_t *setting = NULL;
 
-	if (fp == NULL) {
-		ShowError("Configuration file not found: %s.\n", cfgName);
-		return 1;
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "char_configuration")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("char_config_read: char_configuration was not found in %s!\n", filename);
+		return false;
 	}
 
-	while(fgets(line, sizeof(line), fp)) {
-		if (line[0] == '/' && line[1] == '/')
-			continue;
-
-		if (sscanf(line, "%1023[^:]: %1023[^\r\n]", w1, w2) != 2)
-			continue;
-
-		remove_control_chars(w1);
-		remove_control_chars(w2);
-		if(strcmpi(w1,"timestamp_format") == 0) {
-			safestrncpy(showmsg->timestamp_format, w2, sizeof(showmsg->timestamp_format));
-		} else if(strcmpi(w1,"console_silent")==0){
-			showmsg->silent = atoi(w2);
-			if (showmsg->silent) /* only bother if its actually enabled */
-				ShowInfo("Console Silent Setting: %d\n", atoi(w2));
-		} else if(strcmpi(w1,"stdout_with_ansisequence")==0){
-			showmsg->stdout_with_ansisequence = config_switch(w2) ? true : false;
-		} else if (strcmpi(w1, "userid") == 0) {
-			safestrncpy(chr->userid, w2, sizeof(chr->userid));
-		} else if (strcmpi(w1, "passwd") == 0) {
-			safestrncpy(chr->passwd, w2, sizeof(chr->passwd));
-		} else if (strcmpi(w1, "server_name") == 0) {
-			safestrncpy(chr->server_name, w2, sizeof(chr->server_name));
-		} else if (strcmpi(w1, "wisp_server_name") == 0) {
-			if (strlen(w2) >= 4) {
-				safestrncpy(wisp_server_name, w2, sizeof(wisp_server_name));
-			}
-		} else if (strcmpi(w1, "login_ip") == 0) {
-			login_ip = sockt->host2ip(w2);
-			if (login_ip) {
-				char ip_str[16];
-				safestrncpy(login_ip_str, w2, sizeof(login_ip_str));
-				ShowStatus("Login server IP address : %s -> %s\n", w2, sockt->ip2str(login_ip, ip_str));
-			}
-		} else if (strcmpi(w1, "login_port") == 0) {
-			login_port = atoi(w2);
-		} else if (strcmpi(w1, "char_ip") == 0) {
-			chr->ip = sockt->host2ip(w2);
-			if (chr->ip) {
-				char ip_str[16];
-				safestrncpy(char_ip_str, w2, sizeof(char_ip_str));
-				ShowStatus("Character server IP address : %s -> %s\n", w2, sockt->ip2str(chr->ip, ip_str));
-			}
-		} else if (strcmpi(w1, "bind_ip") == 0) {
-			bind_ip = sockt->host2ip(w2);
-			if (bind_ip) {
-				char ip_str[16];
-				safestrncpy(bind_ip_str, w2, sizeof(bind_ip_str));
-				ShowStatus("Character server binding IP address : %s -> %s\n", w2, sockt->ip2str(bind_ip, ip_str));
-			}
-		} else if (strcmpi(w1, "char_port") == 0) {
-			chr->port = atoi(w2);
-		} else if (strcmpi(w1, "char_server_type") == 0) {
-			chr->server_type = atoi(w2);
-		} else if (strcmpi(w1, "char_new") == 0) {
-			enable_char_creation = atoi(w2) ? true : false;
-		} else if (strcmpi(w1, "char_new_display") == 0) {
-			chr->new_display = atoi(w2);
-		} else if (strcmpi(w1, "max_connect_user") == 0) {
-			max_connect_user = atoi(w2);
-			if (max_connect_user < -1)
-				max_connect_user = -1; // unlimited online players
-		} else if(strcmpi(w1, "gm_allow_group") == 0) {
-			gm_allow_group = atoi(w2);
-		} else if (strcmpi(w1, "autosave_time") == 0) {
-			autosave_interval = atoi(w2) * 1000;
-			if (autosave_interval <= 0)
-				autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
-		} else if (strcmpi(w1, "save_log") == 0) {
-			chr->show_save_log = config_switch(w2) ? true : false;
+	// char_configuration/server_name
+	if (libconfig->setting_lookup_mutable_string(setting, "server_name", chr->server_name, sizeof(chr->server_name)) == CONFIG_TRUE) {
+		ShowInfo("server name %s\n", chr->server_name);
+	} else if (!imported) {
+		ShowWarning("char_config_read: server_name was not set! Defaulting to 'Hercules'.\n");
+		safestrncpy(chr->server_name, "Hercules", sizeof(chr->server_name));
+	}
+	// char_configuration/wisp_server_name
+	if (libconfig->setting_lookup_mutable_string(setting, "wisp_server_name", wisp_server_name, sizeof(wisp_server_name)) == CONFIG_TRUE) {
+		// wisp_server_name should _always_ be equal or bigger than 4 characters!
+		if (strlen(wisp_server_name) < 4) { // TODO: This length should be a #define (i.e. MIN_NAME_LENGTH)
+			ShowWarning("char_config_read: char_configuration/wisp_server_name is too small! Defaulting to: Server.\n");
+			safestrncpy(chr->server_name, "Server", sizeof(chr->server_name));
 		}
-		#ifdef RENEWAL
-			else if (strcmpi(w1, "start_point_re") == 0) {
-				char map[MAP_NAME_LENGTH_EXT];
-				int x, y;
-				if (sscanf(w2, "%15[^,],%d,%d", map, &x, &y) < 3)
-					continue;
-				start_point.map = mapindex->name2id(map);
-				if (!start_point.map)
-					ShowError("Specified start_point_re '%s' not found in map-index cache.\n", map);
-				start_point.x = x;
-				start_point.y = y;
-			}
-		#else
-			else if (strcmpi(w1, "start_point_pre") == 0) {
-				char map[MAP_NAME_LENGTH_EXT];
-				int x, y;
-				if (sscanf(w2, "%15[^,],%d,%d", map, &x, &y) < 3)
-					continue;
-				start_point.map = mapindex->name2id(map);
-				if (!start_point.map)
-					ShowError("Specified start_point_pre '%s' not found in map-index cache.\n", map);
-				start_point.x = x;
-				start_point.y = y;
-			}
-		#endif
-		else if (strcmpi(w1, "start_items") == 0) {
-			int i;
-			char *split;
-
-			i = 0;
-			split = strtok(w2, ",");
-			while (split != NULL && i < MAX_START_ITEMS * 3) {
-				char *split2 = split;
-				split = strtok(NULL, ",");
-				start_items[i] = atoi(split2);
-
-				if (start_items[i] < 0)
-					start_items[i] = 0;
-
-				++i;
-			}
-
-			// Format is: id1,quantity1,stackable1,idN,quantityN,stackableN
-			if( i%3 )
-			{
-				ShowWarning("chr->config_read: There are not enough parameters in start_items, ignoring last item...\n");
-				if( i%3 == 1 )
-					start_items[i-1] = 0;
-				else
-					start_items[i-2] = 0;
-			}
-		} else if (strcmpi(w1, "start_zeny") == 0) {
-			start_zeny = atoi(w2);
-			if (start_zeny < 0)
-				start_zeny = 0;
-		} else if(strcmpi(w1,"log_char") == 0) {
-			chr->enable_logs = atoi(w2) ? true : false;
-		} else if (strcmpi(w1, "unknown_char_name") == 0) {
-			safestrncpy(unknown_char_name, w2, sizeof(unknown_char_name));
-			unknown_char_name[NAME_LENGTH-1] = '\0';
-		} else if (strcmpi(w1, "name_ignoring_case") == 0) {
-			name_ignoring_case = (bool)config_switch(w2);
-		} else if (strcmpi(w1, "char_name_option") == 0) {
-			char_name_option = atoi(w2);
-		} else if (strcmpi(w1, "char_name_letters") == 0) {
-			safestrncpy(char_name_letters, w2, sizeof(char_name_letters));
-		} else if (strcmpi(w1, "char_del_level") == 0) { //disable/enable char deletion by its level condition [Lupus]
-			char_del_level = atoi(w2);
-		} else if (strcmpi(w1, "char_del_delay") == 0) {
-			char_del_delay = atoi(w2);
-		} else if (strcmpi(w1, "char_aegis_delete") == 0) {
-			char_aegis_delete = atoi(w2) ? true : false;
-		} else if(strcmpi(w1,"db_path")==0) {
-			safestrncpy(db_path, w2, sizeof(db_path));
-		} else if (strcmpi(w1, "fame_list_alchemist") == 0) {
-			fame_list_size_chemist = atoi(w2);
-			if (fame_list_size_chemist > MAX_FAME_LIST) {
-				ShowWarning("Max fame list size is %d (fame_list_alchemist)\n", MAX_FAME_LIST);
-				fame_list_size_chemist = MAX_FAME_LIST;
-			}
-		} else if (strcmpi(w1, "fame_list_blacksmith") == 0) {
-			fame_list_size_smith = atoi(w2);
-			if (fame_list_size_smith > MAX_FAME_LIST) {
-				ShowWarning("Max fame list size is %d (fame_list_blacksmith)\n", MAX_FAME_LIST);
-				fame_list_size_smith = MAX_FAME_LIST;
-			}
-		} else if (strcmpi(w1, "fame_list_taekwon") == 0) {
-			fame_list_size_taekwon = atoi(w2);
-			if (fame_list_size_taekwon > MAX_FAME_LIST) {
-				ShowWarning("Max fame list size is %d (fame_list_taekwon)\n", MAX_FAME_LIST);
-				fame_list_size_taekwon = MAX_FAME_LIST;
-			}
-		} else if (strcmpi(w1, "guild_exp_rate") == 0) {
-			guild_exp_rate = atoi(w2);
-		} else if (strcmpi(w1, "char_maintenance_min_group_id") == 0) {
-			char_maintenance_min_group_id = atoi(w2);
-		} else if (strcmpi(w1, "import") == 0) {
-			chr->config_read(w2);
-		} else
-			chr->config_dispatch(w1,w2);
 	}
-	fclose(fp);
+	// char_configuration/guild_exp_rate
+	libconfig->setting_lookup_int(setting, "guild_exp_rate", &guild_exp_rate);
 
-	ShowInfo("Done reading %s.\n", cfgName);
-	return 0;
+	return true;
+}
+
+/**
+ * Reads the 'char_configuration/inter' config entry and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool char_config_read_inter(const char *filename, const struct config_t *config, bool imported)
+{
+	const struct config_setting_t *setting = NULL;
+	const char *str = NULL;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "char_configuration/inter")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("char_config_read: char_configuration/inter was not found in %s!\n", filename);
+		return false;
+	}
+
+	// Login information
+	libconfig->setting_lookup_mutable_string(setting, "userid", chr->userid, sizeof(chr->userid));
+	libconfig->setting_lookup_mutable_string(setting, "passwd", chr->passwd, sizeof(chr->passwd));
+
+	// Login-server and character-server information
+	if (libconfig->setting_lookup_string(setting, "login_ip", &str) == CONFIG_TRUE)
+		chr->config_set_ip("Login server", str, &login_ip, login_ip_str);
+
+	if (libconfig->setting_lookup_string(setting, "char_ip", &str) == CONFIG_TRUE)
+		chr->config_set_ip("Character server", str, &chr->ip, char_ip_str);
+
+	if (libconfig->setting_lookup_string(setting, "bind_ip", &str) == CONFIG_TRUE)
+		chr->config_set_ip("Character server binding", str, &bind_ip, bind_ip_str);
+
+	libconfig->setting_lookup_uint16(setting, "login_port", &login_port);
+	libconfig->setting_lookup_uint16(setting, "char_port", &chr->port);
+
+	return true;
+}
+
+/**
+ * Reads the 'char_configuration/database' config entry and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool char_config_read_database(const char *filename, const struct config_t *config, bool imported)
+{
+	const struct config_setting_t *setting = NULL;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "char_configuration/database")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("char_config_read: char_configuration/database was not found in %s!\n", filename);
+		return false;
+	}
+	if (libconfig->setting_lookup_int(setting, "autosave_time", &autosave_interval) == CONFIG_TRUE) {
+		autosave_interval *= 1000;
+		if (autosave_interval <= 0)
+			autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
+	}
+	libconfig->setting_lookup_mutable_string(setting, "db_path", db_path, sizeof(db_path));
+	libconfig->setting_lookup_bool_real(setting, "log_char", &chr->enable_logs);
+	return true;
+}
+
+/**
+ * Reads the 'char_configuration/console' config entry and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool char_config_read_console(const char *filename, const struct config_t *config, bool imported)
+{
+	const struct config_setting_t *setting;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "char_configuration/console")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("char_config_read: char_configuration/console was not found in %s!\n", filename);
+		return false;
+	}
+	libconfig->setting_lookup_bool_real(setting, "stdout_with_ansisequence", &showmsg->stdout_with_ansisequence);
+	libconfig->setting_lookup_bool_real(setting, "save_log", &chr->show_save_log);
+	if (libconfig->setting_lookup_int(setting, "console_silent", &showmsg->silent) == CONFIG_TRUE) {
+		if (showmsg->silent) // only bother if its actually enabled
+			ShowInfo("Console Silent Setting: %d\n", showmsg->silent);
+	}
+	libconfig->setting_lookup_mutable_string(setting, "timestamp_format", showmsg->timestamp_format, sizeof(showmsg->timestamp_format));
+
+	return true;
+}
+
+/**
+ * Reads the 'char_configuration/player' config entry and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool char_config_read_player(const char *filename, const struct config_t *config, bool imported)
+{
+	bool retval = true;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if (!chr->config_read_player_new(filename, config, imported))
+		retval = false;
+	if (!chr->config_read_player_name(filename, config, imported))
+		retval = false;
+	if (!chr->config_read_player_deletion(filename, config, imported))
+		retval = false;
+	if (!chr->config_read_player_fame(filename, config, imported))
+		retval = false;
+
+	return retval;
+}
+
+/**
+ * Reads the 'char_configuration/player/fame' config entry and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool char_config_read_player_fame(const char *filename, const struct config_t *config, bool imported)
+{
+	const struct config_setting_t *setting = NULL;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "char_configuration/player/fame")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("char_config_read: char_configuration/player/fame was not found in %s!\n", filename);
+		return false;
+	}
+
+	libconfig->setting_lookup_int(setting, "alchemist", &fame_list_size_chemist);
+	if (fame_list_size_chemist > MAX_FAME_LIST) {
+		ShowWarning("Max fame list size is %d (fame_list_alchemist)\n", MAX_FAME_LIST);
+		fame_list_size_chemist = MAX_FAME_LIST;
+	}
+
+	libconfig->setting_lookup_int(setting, "blacksmith", &fame_list_size_smith);
+	if (fame_list_size_smith > MAX_FAME_LIST) {
+		ShowWarning("Max fame list size is %d (fame_list_blacksmith)\n", MAX_FAME_LIST);
+		fame_list_size_smith = MAX_FAME_LIST;
+	}
+
+	libconfig->setting_lookup_int(setting, "taekwon", &fame_list_size_taekwon);
+	if (fame_list_size_taekwon > MAX_FAME_LIST) {
+		ShowWarning("Max fame list size is %d (fame_list_taekwon)\n", MAX_FAME_LIST);
+		fame_list_size_taekwon = MAX_FAME_LIST;
+	}
+
+	return true;
+}
+
+/**
+ * Reads the 'char_configuration/player/deletion' config entry and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool char_config_read_player_deletion(const char *filename, const struct config_t *config, bool imported)
+{
+	const struct config_setting_t *setting = NULL;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "char_configuration/player/deletion")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("char_config_read: char_configuration/player/deletion was not found in %s!\n", filename);
+		return false;
+	}
+	libconfig->setting_lookup_int(setting, "level", &char_del_level);
+	libconfig->setting_lookup_int(setting, "delay", &char_del_delay);
+	libconfig->setting_lookup_bool_real(setting, "use_aegis_delete", &char_aegis_delete);
+
+	return true;
+}
+
+/**
+ * Reads the 'char_configuration/player/name' config entry and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool char_config_read_player_name(const char *filename, const struct config_t *config, bool imported)
+{
+	const struct config_setting_t *setting = NULL;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "char_configuration/player/name")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("char_config_read: char_configuration/player/name was not found in %s!\n", filename);
+		return false;
+	}
+	libconfig->setting_lookup_mutable_string(setting, "unknown_char_name", unknown_char_name, sizeof(unknown_char_name));
+	libconfig->setting_lookup_mutable_string(setting, "name_letters", char_name_letters, sizeof(char_name_letters));
+	libconfig->setting_lookup_int(setting, "name_option", &char_name_option);
+	libconfig->setting_lookup_bool_real(setting, "name_ignoring_case", &name_ignoring_case);
+
+	return true;
+}
+
+/**
+ * Defines start_items based on '(...)/player/new/start_item'.
+ *
+ * @param setting The already retrieved start_item setting.
+ */
+void char_config_set_start_item(const struct config_setting_t *setting)
+{
+	int i, count;
+
+	nullpo_retv(setting);
+
+	VECTOR_CLEAR(start_items);
+
+	count = libconfig->setting_length(setting);
+	if (!count)
+		return;
+
+	VECTOR_ENSURE(start_items, count, 1);
+
+	for (i = 0; i < count; i++) {
+		const struct config_setting_t *t = libconfig->setting_get_elem(setting, i);
+		struct start_item_s start_item = { 0 };
+
+		if (t == NULL)
+			continue;
+
+		if (libconfig->setting_lookup_int(t, "id", &start_item.id) != CONFIG_TRUE) {
+			ShowWarning("char_config_read: entry (%d) is missing id! Ignoring...\n", i);
+			continue;
+		}
+		if (libconfig->setting_lookup_int(t, "amount", &start_item.amount) != CONFIG_TRUE) {
+			ShowWarning("char_config_read: entry (%d) is missing amount! Defaulting to 1...\n", i);
+			start_item.amount = 1;
+		}
+		if (libconfig->setting_lookup_bool_real(t, "stackable", &start_item.stackable) != CONFIG_TRUE) {
+			// Without knowing if the item is stackable or not we can't add it!
+			ShowWarning("char_config_read: entry (%d) is missing stackable! Ignoring...\n", i);
+			continue;
+		}
+		if (libconfig->setting_lookup_int(t, "loc", &start_item.loc) != CONFIG_TRUE)
+			start_item.loc = 0;
+		VECTOR_PUSH(start_items, start_item);
+	}
+}
+
+/**
+ * Reads the 'char_configuration/player/new' config entry and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool char_config_read_player_new(const char *filename, const struct config_t *config, bool imported)
+{
+	const struct config_setting_t *setting = NULL, *setting2 = NULL;
+#ifdef RENEWAL
+	const char *start_point_setting = "start_point_re";
+#else
+	const char *start_point_setting = "start_point_pre";
+#endif
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "char_configuration/player/new")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("char_config_read: char_configuration/player/new was not found in %s!\n", filename);
+		return false;
+	}
+
+	if (libconfig->setting_lookup_int(setting, "zeny", &start_zeny) == CONFIG_TRUE) {
+		if (start_zeny > MAX_ZENY) {
+			ShowWarning("char_config_read: player/new/zeny is too big! Capping to MAX_ZENY.\n");
+			start_zeny = MAX_ZENY;
+		}
+	}
+
+	if ((setting2 = libconfig->setting_get_member(setting, "start_items")))
+		chr->config_set_start_item(setting2);
+
+	// start_point / start_point_pre
+	if ((setting2 = libconfig->setting_get_member(setting, start_point_setting))) {
+		const char *str = NULL;
+		if (libconfig->setting_lookup_string(setting2, "map", &str) == CONFIG_TRUE) {
+			start_point.map = mapindex->name2id(str);
+			if (start_point.map == 0)
+				ShowError("char_config_read_player_new: Specified start_point %s not found in map-index cache.\n", str);
+			libconfig->setting_lookup_int16(setting2, "x", &start_point.x);
+			libconfig->setting_lookup_int16(setting2, "y", &start_point.y);
+		}
+	}
+
+	return true;
+}
+
+/**
+ * Reads the 'char_configuration/permission' config entry and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool char_config_read_permission(const char *filename, const struct config_t *config, bool imported)
+{
+	const struct config_setting_t *setting = NULL;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "char_configuration/permission")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("char_config_read: char_configuration/permission was not found in %s!\n", filename);
+		return false;
+	}
+
+	libconfig->setting_lookup_bool_real(setting, "enable_char_creation", &enable_char_creation);
+	libconfig->setting_lookup_int16(setting, "display_new", &chr->new_display);
+	libconfig->setting_lookup_int(setting, "max_connect_user", &max_connect_user);
+	libconfig->setting_lookup_int(setting, "gm_allow_group", &gm_allow_group);
+	libconfig->setting_lookup_int(setting, "maintenance_min_group_id", &char_maintenance_min_group_id);
+	if (libconfig->setting_lookup_int(setting, "server_type", &chr->server_type) == CONFIG_TRUE) {
+		if (chr->server_type < CST_NORMAL || chr->server_type >= CST_MAX) {
+			ShowWarning("char_config_read: Invalid permission/server_type %d, defaulting to CST_NORMAL.\n", chr->server_type);
+			chr->server_type = CST_NORMAL;
+		}
+	}
+
+	return true;
+}
+
+/**
+ * Loads an IP into 'out_ip' and shows status.
+ *
+ * @param type[in]           String containing the type of IP being set (for logging purposes).
+ * @param value[in]          New ip value to parse.
+ * @param out_ip[in]         Pointer to numeric value that will be changed.
+ * @param out_ip_str[in,out] Pointer to str value that will be changed (expected to be already initialized, to display previous value, if any).
+ *
+ * @retval false in case of error.
+ */
+bool char_config_set_ip(const char *type, const char *value, uint32 *out_ip, char *out_ip_str)
+{
+	uint32 ip = 0;
+
+	nullpo_retr(false, type);
+	nullpo_retr(false, value);
+	nullpo_retr(false, out_ip);
+	nullpo_retr(false, out_ip_str);
+
+	if ((ip = sockt->host2ip(value)) == 0)
+		return false;
+	*out_ip = ip;
+
+	ShowStatus("%s IP address : %s -> %s\n", type, out_ip_str[0] ? out_ip_str : "0.0.0.0", sockt->ip2str(ip, NULL));
+	safestrncpy(out_ip_str, value, sizeof(out_ip_str));
+	return true;
 }
 
 int do_final(void) {
@@ -5679,6 +5984,8 @@ int do_final(void) {
 
 	for (i = 0; i < MAX_MAP_SERVERS; i++)
 		VECTOR_CLEAR(chr->server[i].maps);
+
+	VECTOR_CLEAR(start_items);
 
 	aFree(chr->CHAR_CONF_NAME);
 	aFree(chr->NET_CONF_NAME);
@@ -5786,10 +6093,12 @@ int do_init(int argc, char **argv) {
 
 	char_load_defaults();
 
-	chr->CHAR_CONF_NAME = aStrdup("conf/char-server.conf");
+	chr->CHAR_CONF_NAME = aStrdup("conf/char/char-server.conf");
 	chr->NET_CONF_NAME = aStrdup("conf/network.conf");
 	chr->SQL_CONF_NAME = aStrdup("conf/inter-server.conf");
 	chr->INTER_CONF_NAME = aStrdup("conf/inter-server.conf");
+
+	VECTOR_INIT(start_items);
 
 	for (i = 0; i < MAX_MAP_SERVERS; i++)
 		VECTOR_INIT(chr->server[i].maps);
@@ -5808,16 +6117,31 @@ int do_init(int argc, char **argv) {
 		start_point.map = mapindex->name2id("new_1-1");
 	#endif
 
+	safestrncpy(chr->userid, "s1", sizeof(chr->userid));
+	safestrncpy(chr->passwd, "p1", sizeof(chr->passwd));
+
 	cmdline->exec(argc, argv, CMDLINE_OPT_NORMAL);
-	chr->config_read(chr->CHAR_CONF_NAME);
+	chr->config_read(chr->CHAR_CONF_NAME, false);
 	sockt->net_config_read(chr->NET_CONF_NAME);
 	chr->sql_config_read(chr->SQL_CONF_NAME);
+
+	{
+		// TODO: Remove this when no longer needed.
+		struct stat fileinfo;
+		if (stat("conf/import/char_conf.txt", &fileinfo) == 0 && fileinfo.st_size > 0) {
+			ShowWarning("An old configuration file \"conf/import/char_conf.txt\" was found.\n");
+			ShowWarning("If it contains settings you wish to keep, please merge them into \"conf/import/char-server_local.conf\".\n");
+			ShowWarning("Otherwise, just delete it.\n");
+			ShowInfo("Resuming in 10 seconds...\n");
+			HSleep(10);
+		}
+	}
 
 #ifndef BUILDBOT
 	if (strcmp(chr->userid, "s1")==0 && strcmp(chr->passwd, "p1")==0) {
 		ShowWarning("Using the default user/password s1/p1 is NOT RECOMMENDED.\n");
 		ShowNotice("Please edit your 'login' table to create a proper inter-server user/password (gender 'S')\n");
-		ShowNotice("And then change the user/password to use in conf/char-server.conf (or conf/import/char_conf.txt)\n");
+		ShowNotice("And then change the user/password to use in conf/char/char-server.conf (or conf/import/char-server.conf)\n");
 	}
 #endif
 
@@ -6101,6 +6425,17 @@ void char_defaults(void)
 	chr->online_data_cleanup_sub = char_online_data_cleanup_sub;
 	chr->online_data_cleanup = char_online_data_cleanup;
 	chr->sql_config_read = char_sql_config_read;
-	chr->config_dispatch = char_config_dispatch;
 	chr->config_read = char_config_read;
+	chr->config_read_database = char_config_read_database;
+	chr->config_read_console = char_config_read_console;
+	chr->config_read_player_fame = char_config_read_player_fame;
+	chr->config_read_player_deletion = char_config_read_player_deletion;
+	chr->config_read_player_name = char_config_read_player_name;
+	chr->config_set_start_item = char_config_set_start_item;
+	chr->config_read_player_new = char_config_read_player_new;
+	chr->config_read_player = char_config_read_player;
+	chr->config_read_permission = char_config_read_permission;
+	chr->config_set_ip = char_config_set_ip;
+	chr->config_read_inter = char_config_read_inter;
+	chr->config_read_top = char_config_read_top;
 }

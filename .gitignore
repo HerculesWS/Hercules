@@ -59,7 +59,15 @@ Thumbs.db
 /cache/
 
 # /conf/
-/conf/import
+/conf/import/*.conf
+/conf/import/battle_conf.txt
+/conf/import/inter_conf.txt
+/conf/import/log_conf.txt
+/conf/import/login_conf.txt
+/conf/import/map_conf.txt
+/conf/import/msg_conf.txt
+/conf/import/packet_conf.txt
+/conf/import/script_conf.txt
 
 # /log/
 /log/*.log
