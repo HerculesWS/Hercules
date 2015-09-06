@@ -4332,15 +4332,14 @@ void npc_read_event_script(void)
 		char *name;
 		const char *event_name;
 	} config[] = {
-		{ "Login Event",script->config.login_event_name },
-		{ "Logout Event",script->config.logout_event_name },
-		{ "Load Map Event",script->config.loadmap_event_name },
-		{ "Base LV Up Event",script->config.baselvup_event_name },
-		{ "Job LV Up Event",script->config.joblvup_event_name },
-		{ "Die Event",script->config.die_event_name },
-		{ "Kill PC Event",script->config.kill_pc_event_name },
-		{ "Kill NPC Event", script->config.kill_mob_event_name },
-		{ "Stat Calc Event", script->config.stat_calc_event_name },
+		{"Login Event",script->config.login_event_name},
+		{"Logout Event",script->config.logout_event_name},
+		{"Load Map Event",script->config.loadmap_event_name},
+		{"Base LV Up Event",script->config.baselvup_event_name},
+		{"Job LV Up Event",script->config.joblvup_event_name},
+		{"Die Event",script->config.die_event_name},
+		{"Kill PC Event",script->config.kill_pc_event_name},
+		{"Kill NPC Event",script->config.kill_mob_event_name},
 	};
 
 	for (i = 0; i < NPCE_MAX; i++)

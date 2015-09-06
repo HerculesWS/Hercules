@@ -342,7 +342,6 @@ struct Script_Config {
 	const char *loadmap_event_name;
 	const char *baselvup_event_name;
 	const char *joblvup_event_name;
-	const char *stat_calc_event_name;
 
 	const char* ontouch_name;
 	const char* ontouch2_name;
