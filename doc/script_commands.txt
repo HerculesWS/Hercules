@@ -8007,17 +8007,19 @@ Breaks a string up into substrings based on the specified delimiter.
 Substrings will be stored within the specified string array. Only the 1st 
 char of the delimiter parameter will be used. If an empty string is passed 
 as a delimiter, the string will be placed in the array in its original 
-form, without any changes.
+form, without any changes. Return the number of elements written to
+<dest_array>.
 
 Example:
 
-	explode(.@my_array$, "Explode:Test:1965:red:PIE", ":");
+	.@num_elements = explode(.@my_array$, "Explode:Test:1965:red:PIE", ":");
 	//.@my_array$ contents will be...
 	//.@my_array$[0]: "Explode"
 	//.@my_array$[1]: "Test"
 	//.@my_array$[2]: "1965"
 	//.@my_array$[3]: "red"
 	//.@my_array$[4]: "PIE"
+	//.@num_elements: 5
 
 ---------------------------------------
 
