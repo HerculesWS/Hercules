@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -25,6 +25,8 @@
 #include "common/hercules.h"
 #include "common/db.h"
 
+/* Forward Declarations */
+struct config_setting_t; // common/conf.h
 struct eri;
 
 /** Container for a mapreg value */
@@ -61,7 +63,7 @@ struct mapreg_interface {
 	int (*save_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*destroyreg) (union DBKey key, struct DBData *data, va_list ap);
 	void (*reload) (void);
-	bool (*config_read) (const char *w1, const char *w2);
+	bool (*config_read) (const char *filename, const struct config_setting_t *config, bool imported);
 };
 
 #ifdef HERCULES_CORE

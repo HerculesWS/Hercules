@@ -3997,63 +3997,125 @@ void map_reloadnpc(bool clear) {
 	}
 }
 
-int inter_config_read(char *cfgName) {
-	char line[1024],w1[1024],w2[1024];
-	FILE *fp;
+/**
+ * Reads inter-server.conf and initializes required variables.
+ *
+ * @param filename Path to configuration file
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool inter_config_read(const char *filename, bool imported)
+{
+	struct config_t config;
+	const struct config_setting_t *setting = NULL;
+	const char *import = NULL;
+	bool retval = true;
 
-	nullpo_retr(1, cfgName);
-	if (!(fp = fopen(cfgName,"r"))) {
-		ShowError("File not found: %s\n",cfgName);
-		return 1;
+	nullpo_retr(false, filename);
+
+	if (!libconfig->load_file(&config, filename))
+		return false;
+
+	if ((setting = libconfig->lookup(&config, "inter_configuration")) == NULL) {
+		libconfig->destroy(&config);
+		if (imported)
+			return true;
+		ShowError("inter_config_read: inter_configuration was not found in %s!\n", filename);
+		return false;
 	}
-	while (fgets(line, sizeof(line), fp)) {
-		if (line[0] == '/' && line[1] == '/')
-			continue;
 
-		if (sscanf(line,"%1023[^:]: %1023[^\r\n]", w1, w2) < 2)
-			continue;
-		/* map sql stuff */
-		if(strcmpi(w1,"map_server_ip")==0)
-			safestrncpy(map->server_ip, w2, sizeof(map->server_ip));
-		else if(strcmpi(w1,"map_server_port")==0)
-			map->server_port=atoi(w2);
-		else if(strcmpi(w1,"map_server_id")==0)
-			safestrncpy(map->server_id, w2, sizeof(map->server_id));
-		else if(strcmpi(w1,"map_server_pw")==0)
-			safestrncpy(map->server_pw, w2, sizeof(map->server_pw));
-		else if(strcmpi(w1,"map_server_db")==0)
-			safestrncpy(map->server_db, w2, sizeof(map->server_db));
-		else if(strcmpi(w1,"default_codepage")==0)
-			safestrncpy(map->default_codepage, w2, sizeof(map->default_codepage));
-		else if(strcmpi(w1,"autotrade_merchants_db")==0)
-			safestrncpy(map->autotrade_merchants_db, w2, sizeof(map->autotrade_merchants_db));
-		else if(strcmpi(w1,"autotrade_data_db")==0)
-			safestrncpy(map->autotrade_data_db, w2, sizeof(map->autotrade_data_db));
-		else if(strcmpi(w1,"npc_market_data_db")==0)
-			safestrncpy(map->npc_market_data_db, w2, sizeof(map->npc_market_data_db));
-		/* sql log db */
-		else if(strcmpi(w1,"log_db_ip")==0)
-			safestrncpy(logs->db_ip, w2, sizeof(logs->db_ip));
-		else if(strcmpi(w1,"log_db_id")==0)
-			safestrncpy(logs->db_id, w2, sizeof(logs->db_id));
-		else if(strcmpi(w1,"log_db_pw")==0)
-			safestrncpy(logs->db_pw, w2, sizeof(logs->db_pw));
-		else if(strcmpi(w1,"log_db_port")==0)
-			logs->db_port = atoi(w2);
-		else if(strcmpi(w1,"log_db_db")==0)
-			safestrncpy(logs->db_name, w2, sizeof(logs->db_name));
-		/* mapreg */
-		else if( mapreg->config_read(w1,w2) )
-			continue;
-		/* import */
-		else if(strcmpi(w1,"import")==0)
-			map->inter_config_read(w2);
-		else
-			HPM->parseConf(w1, w2, HPCT_MAP_INTER);
+	if (!map->inter_config_read_database_names(filename, &config, imported))
+		retval = false;
+	if (!map->inter_config_read_connection(filename, &config, imported))
+		retval = false;
+
+	// TODO HPM->parseConf(w1, w2, HPCT_MAP_INTER);
+
+	// import should overwrite any previous configuration, so it should be called last
+	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
+		if (strcmp(import, filename) == 0 || strcmp(import, map->INTER_CONF_NAME) == 0) {
+			ShowWarning("inter_config_read: Loop detected in %s! Skipping 'import'...\n", filename);
+		} else {
+			if (!map->inter_config_read(import, true))
+				retval = false;
+		}
 	}
-	fclose(fp);
 
-	return 0;
+	libconfig->destroy(&config);
+	return retval;
+}
+
+/**
+ * Reads the 'inter_configuration/log/sql_connection' config entry and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool inter_config_read_connection(const char *filename, const struct config_t *config, bool imported)
+{
+	const struct config_setting_t *setting = NULL;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "inter_configuration/log/sql_connection")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("inter_config_read: inter_configuration/log/sql_connection was not found in %s!\n", filename);
+		return false;
+	}
+
+	libconfig->setting_lookup_int(setting, "port", &logs->db_port);
+	libconfig->setting_lookup_mutable_string(setting, "db_hostname", logs->db_ip, sizeof(logs->db_ip));
+	libconfig->setting_lookup_mutable_string(setting, "db_username", logs->db_id, sizeof(logs->db_id));
+	libconfig->setting_lookup_mutable_string(setting, "db_password", logs->db_pw, sizeof(logs->db_pw));
+	libconfig->setting_lookup_mutable_string(setting, "db_database", logs->db_name, sizeof(logs->db_name));
+
+	return true;
+}
+
+/**
+ * Reads the 'inter_configuration/database_names' config entry and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool inter_config_read_database_names(const char *filename, const struct config_t *config, bool imported)
+{
+	const struct config_setting_t *setting = NULL;
+	bool retval = true;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "inter_configuration/database_names")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("inter_config_read: inter_configuration/database_names was not found in %s!\n", filename);
+		return false;
+	}
+
+	libconfig->setting_lookup_mutable_string(setting, "autotrade_merchants_db", map->autotrade_merchants_db, sizeof(map->autotrade_merchants_db));
+	libconfig->setting_lookup_mutable_string(setting, "autotrade_data_db", map->autotrade_data_db, sizeof(map->autotrade_data_db));
+	libconfig->setting_lookup_mutable_string(setting, "npc_market_data_db", map->npc_market_data_db, sizeof(map->npc_market_data_db));
+
+	if (!mapreg->config_read(filename, setting, imported))
+		retval = false;
+
+	if ((setting = libconfig->lookup(config, "inter_configuration/database_names/registry")) == NULL) {
+		if (imported)
+			return retval;
+		ShowError("inter_config_read: inter_configuration/database_names/registry was not found in %s!\n", filename);
+		return false;
+	}
+	return retval;
 }
 
 /*=======================================
@@ -6077,7 +6139,7 @@ int do_init(int argc, char *argv[])
 
 	map_load_defaults();
 
-	map->INTER_CONF_NAME         = aStrdup("conf/inter-server.conf");
+	map->INTER_CONF_NAME         = aStrdup("conf/common/inter-server.conf");
 	map->LOG_CONF_NAME           = aStrdup("conf/logs.conf");
 	map->MAP_CONF_NAME           = aStrdup("conf/map-server.conf");
 	map->BATTLE_CONF_FILENAME    = aStrdup("conf/battle.conf");
@@ -6128,7 +6190,7 @@ int do_init(int argc, char *argv[])
 
 		battle->config_read(map->BATTLE_CONF_FILENAME);
 		atcommand->msg_read(map->MSG_CONF_NAME, false);
-		map->inter_config_read(map->INTER_CONF_NAME);
+		map->inter_config_read(map->INTER_CONF_NAME, false);
 		logs->config_read(map->LOG_CONF_NAME);
 	}
 	script->config_read(map->SCRIPT_CONF_NAME);
@@ -6288,7 +6350,7 @@ void map_defaults(void) {
 	map->night_flag = 0; // 0=day, 1=night [Yor]
 	map->enable_spy = 0; //To enable/disable @spy commands, which consume too much cpu time when sending packets. [Skotlex]
 
-	map->INTER_CONF_NAME="conf/inter-server.conf";
+	map->INTER_CONF_NAME="conf/common/inter-server.conf";
 	map->LOG_CONF_NAME="conf/logs.conf";
 	map->MAP_CONF_NAME = "conf/map-server.conf";
 	map->BATTLE_CONF_FILENAME = "conf/battle.conf";
@@ -6502,6 +6564,8 @@ void map_defaults(void) {
 	map->config_read_sub = map_config_read_sub;
 	map->reloadnpc_sub = map_reloadnpc_sub;
 	map->inter_config_read = inter_config_read;
+	map->inter_config_read_database_names = inter_config_read_database_names;
+	map->inter_config_read_connection = inter_config_read_connection;
 	map->sql_init = map_sql_init;
 	map->sql_close = map_sql_close;
 	map->zone_mf_cache = map_zone_mf_cache;
