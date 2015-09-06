@@ -1662,6 +1662,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(map->config_read_sub, HP_map_config_read_sub) },
 	{ HP_POP(map->reloadnpc_sub, HP_map_reloadnpc_sub) },
 	{ HP_POP(map->inter_config_read, HP_map_inter_config_read) },
+	{ HP_POP(map->inter_config_read_database_names, HP_map_inter_config_read_database_names) },
+	{ HP_POP(map->inter_config_read_connection, HP_map_inter_config_read_connection) },
 	{ HP_POP(map->sql_init, HP_map_sql_init) },
 	{ HP_POP(map->sql_close, HP_map_sql_close) },
 	{ HP_POP(map->zone_mf_cache, HP_map_zone_mf_cache) },
