@@ -2474,6 +2474,276 @@ int HP_libconfig_setting_copy(config_setting_t *parent, const config_setting_t *
 	}
 	return retVal___;
 }
+bool HP_libconfig_setting_get_bool_real(const config_setting_t *setting) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_libconfig_setting_get_bool_real_pre ) {
+		bool (*preHookFunc) (const config_setting_t *setting);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_bool_real_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_bool_real_pre[hIndex].func;
+			retVal___ = preHookFunc(setting);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.libconfig.setting_get_bool_real(setting);
+	}
+	if( HPMHooks.count.HP_libconfig_setting_get_bool_real_post ) {
+		bool (*postHookFunc) (bool retVal___, const config_setting_t *setting);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_bool_real_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_bool_real_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, setting);
+		}
+	}
+	return retVal___;
+}
+uint32 HP_libconfig_setting_get_uint32(const config_setting_t *setting) {
+	int hIndex = 0;
+	uint32 retVal___ = 0;
+	if( HPMHooks.count.HP_libconfig_setting_get_uint32_pre ) {
+		uint32 (*preHookFunc) (const config_setting_t *setting);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_uint32_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_uint32_pre[hIndex].func;
+			retVal___ = preHookFunc(setting);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.libconfig.setting_get_uint32(setting);
+	}
+	if( HPMHooks.count.HP_libconfig_setting_get_uint32_post ) {
+		uint32 (*postHookFunc) (uint32 retVal___, const config_setting_t *setting);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_uint32_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_uint32_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, setting);
+		}
+	}
+	return retVal___;
+}
+uint16 HP_libconfig_setting_get_uint16(const config_setting_t *setting) {
+	int hIndex = 0;
+	uint16 retVal___ = 0;
+	if( HPMHooks.count.HP_libconfig_setting_get_uint16_pre ) {
+		uint16 (*preHookFunc) (const config_setting_t *setting);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_uint16_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_uint16_pre[hIndex].func;
+			retVal___ = preHookFunc(setting);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.libconfig.setting_get_uint16(setting);
+	}
+	if( HPMHooks.count.HP_libconfig_setting_get_uint16_post ) {
+		uint16 (*postHookFunc) (uint16 retVal___, const config_setting_t *setting);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_uint16_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_uint16_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, setting);
+		}
+	}
+	return retVal___;
+}
+int16 HP_libconfig_setting_get_int16(const config_setting_t *setting) {
+	int hIndex = 0;
+	int16 retVal___ = 0;
+	if( HPMHooks.count.HP_libconfig_setting_get_int16_pre ) {
+		int16 (*preHookFunc) (const config_setting_t *setting);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_int16_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_int16_pre[hIndex].func;
+			retVal___ = preHookFunc(setting);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.libconfig.setting_get_int16(setting);
+	}
+	if( HPMHooks.count.HP_libconfig_setting_get_int16_post ) {
+		int16 (*postHookFunc) (int16 retVal___, const config_setting_t *setting);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_int16_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_int16_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, setting);
+		}
+	}
+	return retVal___;
+}
+int HP_libconfig_setting_lookup_bool_real(const config_setting_t *setting, const char *name, bool *value) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_libconfig_setting_lookup_bool_real_pre ) {
+		int (*preHookFunc) (const config_setting_t *setting, const char *name, bool *value);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_bool_real_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_bool_real_pre[hIndex].func;
+			retVal___ = preHookFunc(setting, name, value);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.libconfig.setting_lookup_bool_real(setting, name, value);
+	}
+	if( HPMHooks.count.HP_libconfig_setting_lookup_bool_real_post ) {
+		int (*postHookFunc) (int retVal___, const config_setting_t *setting, const char *name, bool *value);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_bool_real_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_bool_real_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, setting, name, value);
+		}
+	}
+	return retVal___;
+}
+int HP_libconfig_setting_lookup_uint32(const config_setting_t *setting, const char *name, uint32 *value) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_libconfig_setting_lookup_uint32_pre ) {
+		int (*preHookFunc) (const config_setting_t *setting, const char *name, uint32 *value);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_uint32_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_uint32_pre[hIndex].func;
+			retVal___ = preHookFunc(setting, name, value);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.libconfig.setting_lookup_uint32(setting, name, value);
+	}
+	if( HPMHooks.count.HP_libconfig_setting_lookup_uint32_post ) {
+		int (*postHookFunc) (int retVal___, const config_setting_t *setting, const char *name, uint32 *value);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_uint32_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_uint32_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, setting, name, value);
+		}
+	}
+	return retVal___;
+}
+int HP_libconfig_setting_lookup_uint16(const config_setting_t *setting, const char *name, uint16 *value) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_libconfig_setting_lookup_uint16_pre ) {
+		int (*preHookFunc) (const config_setting_t *setting, const char *name, uint16 *value);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_uint16_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_uint16_pre[hIndex].func;
+			retVal___ = preHookFunc(setting, name, value);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.libconfig.setting_lookup_uint16(setting, name, value);
+	}
+	if( HPMHooks.count.HP_libconfig_setting_lookup_uint16_post ) {
+		int (*postHookFunc) (int retVal___, const config_setting_t *setting, const char *name, uint16 *value);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_uint16_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_uint16_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, setting, name, value);
+		}
+	}
+	return retVal___;
+}
+int HP_libconfig_setting_lookup_int16(const config_setting_t *setting, const char *name, int16 *value) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_libconfig_setting_lookup_int16_pre ) {
+		int (*preHookFunc) (const config_setting_t *setting, const char *name, int16 *value);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_int16_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_int16_pre[hIndex].func;
+			retVal___ = preHookFunc(setting, name, value);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.libconfig.setting_lookup_int16(setting, name, value);
+	}
+	if( HPMHooks.count.HP_libconfig_setting_lookup_int16_post ) {
+		int (*postHookFunc) (int retVal___, const config_setting_t *setting, const char *name, int16 *value);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_int16_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_int16_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, setting, name, value);
+		}
+	}
+	return retVal___;
+}
+int HP_libconfig_setting_lookup_mutable_string(const config_setting_t *setting, const char *name, char *out, size_t out_size) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_libconfig_setting_lookup_mutable_string_pre ) {
+		int (*preHookFunc) (const config_setting_t *setting, const char *name, char *out, size_t *out_size);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_mutable_string_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_mutable_string_pre[hIndex].func;
+			retVal___ = preHookFunc(setting, name, out, &out_size);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.libconfig.setting_lookup_mutable_string(setting, name, out, out_size);
+	}
+	if( HPMHooks.count.HP_libconfig_setting_lookup_mutable_string_post ) {
+		int (*postHookFunc) (int retVal___, const config_setting_t *setting, const char *name, char *out, size_t *out_size);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_mutable_string_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_mutable_string_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, setting, name, out, &out_size);
+		}
+	}
+	return retVal___;
+}
+int HP_libconfig_lookup_mutable_string(const config_t *config, const char *name, char *out, size_t out_size) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_libconfig_lookup_mutable_string_pre ) {
+		int (*preHookFunc) (const config_t *config, const char *name, char *out, size_t *out_size);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_mutable_string_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_libconfig_lookup_mutable_string_pre[hIndex].func;
+			retVal___ = preHookFunc(config, name, out, &out_size);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.libconfig.lookup_mutable_string(config, name, out, out_size);
+	}
+	if( HPMHooks.count.HP_libconfig_lookup_mutable_string_post ) {
+		int (*postHookFunc) (int retVal___, const config_t *config, const char *name, char *out, size_t *out_size);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_mutable_string_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_libconfig_lookup_mutable_string_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, config, name, out, &out_size);
+		}
+	}
+	return retVal___;
+}
 /* login */
 int HP_login_mmo_auth(struct login_session_data *sd, bool isServer) {
 	int hIndex = 0;
