@@ -3,7 +3,7 @@
 //===== By: ====================================================================
 //= Kisuka (1.0)
 //===== Current Version: =======================================================
-//= 1.0.0
+//= 1.0.1
 //===== File Encoding ==========================================================
 //= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //===== Description: ===========================================================
@@ -11,6 +11,7 @@
 //= Also contains Novice skill quests for First Aid and Trick Dead.
 //===== Additional Comments: ===================================================
 //= 1.0.0 Initial Release. [Kisuka]
+//= 1.0.1 Converted item constants to IDs and added hair coupon. [Kisuka]
 //==============================================================================
 
 // - Captain Carocc (Ship)
@@ -140,7 +141,7 @@ iz_int,91,81,3	script	Lumin#iz_int	4_M_NOV_RUMIN,{
 		mes "[Lumin]";
 		mes ".....";
 		next;
-		select("Should I introduce myself?:My name is ~!");
+		select("Should I introduce myself?", "My name is ~!");
 		mes "["+strcharinfo(0)+"]";
 		mes "I am "+strcharinfo(0)+"!";
 		next;
@@ -602,7 +603,7 @@ izlude_d,198,213,3	duplicate(Captain Carocc#iz)	Captain Carocc#iz_d	4_M_REINDEER
 // - Teaches the player about the Inventory.
 // -----------------------------------------------------------------------------
 izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
-	if (!checkweight("Orcish_Axe", 3)) {
+	if (!checkweight(1304, 3)) {
 		mes "Quest cannot be continued due to the overfilled inventory.";
 		mes "Continue the quest after organizing the inventory.";
 		close;
@@ -620,7 +621,7 @@ izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
 			completequest 7472;
 			getexp 200, 0;
 			setquest 7473;
-			getitem Apple_Juice, 1;
+			getitem 531, 1; // Apple_Juice
 			next;
 			mes "[Hun]";
 			mes "You can open the Item window by clicking on the 'item' icon on top left portion of the screen.";
@@ -668,7 +669,7 @@ izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
 				mes "It's joyous to see new adventurers starting out.";
 				mes "You want something to drink while you are resting?";
 				setquest 7473;
-				getitem Apple_Juice, 1;
+				getitem 531, 1; // Apple_Juice
 				next;
 				mes "[Hun]";
 				mes "Right clicking on the item icon ^4d4dffon the basic item window at the upper left corner brings up the detailed info on the item";
@@ -697,7 +698,7 @@ izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
 				mes "Ok now ^4d4dffdrink the apple juice that I gave you^000000.";
 				close;
 			} else if (questprogress(7473) == 1) {
-				if (countitem("Apple_Juice") > 0) {
+				if (countitem(531) > 0) {
 					mes "[Hun]";
 					mes "Consume the apple juice that I gave you in your inventory.";
 					mes "Then we'll talk.";
@@ -712,7 +713,7 @@ izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
 						mes "I want to give you more but that was the last of it";
 						mes "Anyways here's some potions. They'll come in handy when you start fighting.";
 						completequest 7473;
-						getitem Novice_Potion, 30;
+						getitem 569, 30; // Novice_Potion
 						getexp 200, 0;
 						next;
 						mes "[Hun]";
@@ -731,14 +732,14 @@ izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
 						mes "I want to give you more but that was the last of it";
 						mes "Anyways here's some potions. They'll come in handy when you start fighting.";
 						completequest 7473;
-						getitem Novice_Potion, 30;
+						getitem 569, 30; // Novice_Potion
 						getexp 200, 0;
 						next;
 						mes "[Hun]";
 						mes "What do you plan to do from now on?";
 						mes "Have you found a place to stay?";
 						next;
-						switch(select("I need help with that:Anything will do really.:Don't worry.")) {
+						switch(select("I need help with that", "Anything will do really.", "Don't worry.")) {
 						case 1:
 							mes "[Hun]";
 							mes "But still, though.";
@@ -923,7 +924,7 @@ izlude_d,122,207,3	duplicate(Criatura Academy Staff#0)	Criatura Academy Staff#d	
 // - Teaches the player about the Mini-Map through a quick quest.
 // -----------------------------------------------------------------------------
 izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
-	if (!checkweight("Orcish_Axe", 3)) {
+	if (!checkweight(1304, 3)) {
 		mes "Quest cannot be continued due to the invenory being full.";
 		mes "Please try it again after re-organizing your items.";
 		close;
@@ -1222,9 +1223,9 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 			erasequest 7476;
 			erasequest 7477;
 			getexp 300, 20;
-			getitem N_Fly_Wing, 20;
-			getitem N_Butterfly_Wing, 10;
-			getitem Novice_Potion, 20;
+			getitem 12323, 20; // N_Fly_Wing
+			getitem 12324, 10; // N_Butterfly_Wing
+			getitem 569, 20; // Novice_Potion
 			next;
 			mes "[Information Staff]";
 			mes "Have a wonderful journey.";
@@ -1248,7 +1249,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 		mes "If you click on the ^B9062F[area name]^000000, I can ^B9062Fnavigate^000000 a path for you to follow.";
 		next;
 		while(1) {
-			switch(select("[ Main facilities ]:[ Guide & Helper ]:Mini map marking removal:End Conversation")) {
+			switch(select("[ Main facilities ]", "[ Guide & Helper ]", "Mini map marking removal", "End Conversation")) {
 			case 1:
 				while (1) {
 					switch(select("[ Criatura Academy ]:[ Wharf ]:[ Airship (International) ]:[ Arena ]:[ Shop ]:[ Swordman Guild ]:[ Enchant Association ]:[ Blacksmith's Workshop ]:Go back to the previous menu")) {
@@ -1880,7 +1881,7 @@ izlude_d,45,94,3	duplicate(Bulletin Board#iz)	Bulletin Board#iz_d	4_BULLETIN_BOA
 // - Gives the player a basic quest and teaches them First Aid.
 // -----------------------------------------------------------------------------
 iz_ac01,59,43,3	script	Therapist#ac	4_M_6THPRIN1,{
-	if (!checkweight("Orcish_Axe", 3)) {
+	if (!checkweight(1304, 3)) {
 		mes "Quest cannot be continued due to the overfilled inventory.";
 		mes "Please try it again after organizing the items.";
 		close;
@@ -1996,7 +1997,7 @@ iz_ac01,59,43,3	script	Therapist#ac	4_M_6THPRIN1,{
 			setquest 7478;
 			close;
 		} else if (questprogress(7478) == 1) {
-			if (countitem("Red_Herb") > 0) {
+			if (countitem(507) > 0) {
 				mes "[Therapist]";
 				mes "You got it.";
 				mes "^4d4dffYou could eat this herb and get the benefit of it immediately but it will be more efficient if you make it into a potion.^000000.";
@@ -2021,11 +2022,11 @@ iz_ac01,59,43,3	script	Therapist#ac	4_M_6THPRIN1,{
 				mes "You can make it easily by ^4d4dffusing the combination kit or cooking tool^000000.";
 				completequest 7478;
 				getexp 2000, 50;
-				getitem Novice_Potion, 30;
-				getitem Novice_Combi_Book, 1;
-				getitem Combination_Kit, 10;
-				getitem Red_Herb, 1;
-				getitem Apple, 1;
+				getitem 569, 30; // Novice_Potion
+				getitem 11058, 1; // Novice_Combi_Book
+				getitem 12849, 10; // Combination_Kit
+				getitem 507, 1; // Red_Herb
+				getitem 512, 1; // Apple
 				next;
 				mes "[Therapist]";
 				mes "Not only potions but also other easily attainable things can be turned to various tools. Please make use of them.";
@@ -2117,7 +2118,7 @@ izlude_d,141,251,0	duplicate(Cultivated Red Plant#0)	Cultivated Red Plant#d	RED_
 // - Academy Student (Red Herb Quest)
 // -----------------------------------------------------------------------------
 izlude,140,249,7	script	Academy Student#0	4_M_NOV_RUMIN,{
-	if (!checkweight("Orcish_Axe", 3)) {
+	if (!checkweight(1304, 3)) {
 		mes "Your inventory is too full so you can't continue this quest.";
 		mes "Please try it again after organizing the items.";
 		close;
@@ -2181,7 +2182,7 @@ izlude,140,249,7	script	Academy Student#0	4_M_NOV_RUMIN,{
 		cutin "nov_lumin01.bmp", 2;
 		setquest 7479;
 		completequest 7479;
-		getitem Red_Herb, 1;
+		getitem 507, 1; // Red_Herb
 		next;
 		mes "[Lumin]";
 		mes "Ah... see it's growing back.";
@@ -2433,7 +2434,7 @@ iz_ac01,100,39,5	script	Academy Receptionist#1	4_F_01,{
 		switch(select(.@menu$)) {
 		case 1:
 			if (Class == Job_Novice) {
-				if (!checkweight("Axe", 10)) {
+				if (!checkweight(1301, 10)) {
 					mes "- As you are overloaded with too many items, quest can't be continued.-";
 					close;
 				}
@@ -2448,14 +2449,15 @@ iz_ac01,100,39,5	script	Academy Receptionist#1	4_F_01,{
 				mes "Be careful with it as it won't be provided again.";
 				setquest 4269;
 				completequest 4269;
-				getitem Novice_Plate, 1;
-				getitem Novice_Hood, 1;
-				getitem Novice_Boots, 1;
-				getitem Novice_Egg_Cap, 1;
-				getitem Novice_Knife, 1;
-				getitem Novice_Guard, 1;
-				getitem Criatura_Academy_Hat, 1;
-				getitem Novice_Potion, 300;
+				getitem 2352, 1; // Novice_Plate
+				getitem 2510, 1; // Novice_Hood
+				getitem 2414, 1; // Novice_Boots
+				getitem 5055, 1; // Novice_Egg_Cap
+				getitem 1243, 1; // Novice_Knife
+				getitem 2112, 1; // Novice_Guard
+				getitem 18730, 1; // Criatura_Academy_Hat
+				getitem 6593, 1; // Criatura_Hair_Coupon
+				getitem 569, 300; // Novice_Potion
 				next;
 				mes "[Receptionist]";
 				mes "It is your first step to be an adventurer that you have made a visit to us.";
@@ -2619,7 +2621,7 @@ iz_ac01,134,47,5	script	Trainer Mainz#ac	4_M_KY_KNT,4,4,{
 		close;
 	}
 	if (questprogress(15000) == 1) {
-		if (!checkweight("Knife", 1) || (MaxWeight - Weight) < 40) {
+		if (!checkweight(1201, 1) || (MaxWeight - Weight) < 40) {
 			mes "- Here, just moment!! -";
 			mes "- As you are overloaded with too many items in your inventory -";
 			mes "- You can't receive the items anymore -";
@@ -2771,7 +2773,7 @@ iz_ac01,134,47,5	script	Trainer Mainz#ac	4_M_KY_KNT,4,4,{
 		mes "[Mainz]";
 		mes "Wish you have good luck in your adventures!";
 		completequest 15000;
-		getitem Apple, 10;
+		getitem 512, 10; // Apple
 		getexp 180, 100;
 		close;
 	} else if (questprogress(4269) && !questprogress(15000)) {
@@ -3276,7 +3278,7 @@ iz_ac01_d,36,52,3	duplicate(Odd Novice#ac)	Odd Novice#ac_d	4_M_SIT_NOVICE
 // - Teaches the player about Shops and Currency.
 // -----------------------------------------------------------------------------
 izlude,115,181,5	script	Shop Helper#iz	4_F_KHELLISIA,{
-	if (!checkweight("Axe", 3)) {
+	if (!checkweight(1301, 3)) {
 		mes "- Quest cannot be continued due to your overfilled inventory. -";
 		close;
 	}
@@ -3703,7 +3705,7 @@ iz_ac01_d,56,68,0,0	monster	Lv 10	2408,1,5000,0,0
 // - Teaches the player about Cooking.
 // -----------------------------------------------------------------------------
 iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
-	if (!checkweight("Orcish_Axe", 3)) {
+	if (!checkweight(1304, 3)) {
 		mes "Why are you carrying so much stuff?";
 		mes "Put them down and come back.";
 		close;
@@ -3934,7 +3936,7 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 				mes "[Dacquoise]";
 				mes "Can I have a look?";
 				next;
-				if(questprogress(14154) == 1 && countitem("Clover") > 0 && countitem("Green_Herb") > 0 && countitem("Red_Herb") > 0) {
+				if(questprogress(14154) == 1 && countitem(705) > 0 && countitem(511) > 0 && countitem(507) > 0) {
 					mes "[Dacquoise]";
 					mes "You brough what I need! Okay, then I will cook for you as I promised.";
 					mes "Time to move like greased lightning!!!!";
@@ -3949,14 +3951,14 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 					mes "Kya... Sir Orleans!!";
 					emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(2);
 					close2;
-					delitem Clover, 1;
-					delitem Green_Herb, 1;
-					delitem Red_Herb, 1;
-					getitem Savory_Herb_Salad, 1;
+					delitem 705, 1; // Clover
+					delitem 511, 1; // Green_Herb
+					delitem 507, 1; // Red_Herb
+					getitem 11551, 1; // Savory_Herb_Salad
 					erasequest 14154;
 					end;
 				}
-				if(questprogress(14155) == 1 && countitem("Apple") > 0 && countitem("Carrot") > 1) {
+				if(questprogress(14155) == 1 && countitem(512) > 0 && countitem(515) > 1) {
 					mes "[Dacquoise]";
 					mes "You brough what I need! Okay, then I will cook for you as I promised.";
 					mes "Time to move like greased lightning!!!!";
@@ -3970,13 +3972,13 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 					mes "If you really want to cook, go and see ^0000ffSir. Charles Orleans at the basement of Prontera castle^000000!! You must be attracted by him!!";
 					emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(2);
 					close2;
-					delitem Apple, 1;
-					delitem Carrot, 2;
-					getitem Apple_Carrot_Salad, 1;
+					delitem 512, 1; // Apple
+					delitem 515, 2; // Carrot
+					getitem 11552, 1; // Apple_Carrot_Salad
 					erasequest 14155;
 					end;
 				}
-				if(questprogress(14156) == 1 && countitem("Jellopy") > 0 && countitem("Fluff") > 0 && countitem("Feather") > 0) {
+				if(questprogress(14156) == 1 && countitem(909) > 0 && countitem(914) > 0 && countitem(949) > 0) {
 					mes "[Dacquoise]";
 					mes "You brough what I need! Okay, then I will cook for you as I promised.";
 					mes "Time to move like greased lightning!!!!";
@@ -3990,10 +3992,10 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 					mes "If you are really curious about the cooking, go seek Sir. Charles Orleans at the basement of Prontera Castle.";
 					emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(2);
 					close2;
-					delitem Jellopy, 1;
-					delitem Fluff, 1;
-					delitem Feather, 1;
-					getitem Casual_Stew, 1;
+					delitem 909, 1; // Jellopy
+					delitem 914, 1; // Fluff
+					delitem 949, 1; // Feather
+					getitem 11553, 1; // Casual_Stew
 					erasequest 14156;
 					end;
 				}
@@ -4013,9 +4015,9 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 					mes "You can learn real cooking from him!";
 					emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(2);
 					close2;
-					delitem Apple, 1;
-					delitem Clover, 1;
-					getitem Golden_Roasted_Apple, 1;
+					delitem 512, 1; // Apple
+					delitem 705, 1; // Clover
+					getitem 11554, 1; // Golden_Roasted_Apple
 					erasequest 14157;
 					end;
 				}
@@ -4234,7 +4236,7 @@ iz_ac01_d,147,50,3	duplicate(Dacquoise#ac)	Dacquoise#ac_d	4_COOK
 // - Sells the player the Novice Combination Book and Kit.
 // -----------------------------------------------------------------------------
 iz_ac01,68,49,3	script	General Store Owner#ac	4_F_03,{
-	if (!checkweight("Orcish_Axe", 3)) {
+	if (!checkweight(1304, 3)) {
 		mes "Quest cannot be continued due to the overfilled inventory.";
 		mes "Please try it again after organizing the items.";
 		close;
@@ -4276,7 +4278,7 @@ iz_ac01,68,49,3	script	General Store Owner#ac	4_F_03,{
 				mes "Here you are.";
 				mes "This book is for the beginners. But it will allow you combine the useful tools together, if you use it correctly.";
 				Zeny -= 1000;
-				getitem Novice_Combi_Book, 1;
+				getitem 11058, 1; // Novice_Combi_Book
 			} else {
 				mes "[Querrie]";
 				mes "The book price is 1000 zeny.";
@@ -4319,7 +4321,7 @@ iz_ac01,68,49,3	script	General Store Owner#ac	4_F_03,{
 		}
 		mes "Thank you. Come back again.";
 		Zeny -= .@cost;
-		getitem Combination_Kit, .@input;
+		getitem 12849, .@input; // Combination_Kit
 		close;
 	case 3:
 		close;
@@ -4335,7 +4337,7 @@ iz_ac01_d,68,49,3	duplicate(General Store Owner#ac)	General Store Owner#ac_d	4_F
 // - Gives the player monster hunting quests.
 // -----------------------------------------------------------------------------
 iz_ac01,59,83,3	script	Battle Instructor#08	4_M_NOV_HUNT,{
-	if(!checkweight(1201,1) || (MaxWeight - Weight) < 2000) {
+	if(!checkweight(1201, 1) || (MaxWeight - Weight) < 2000) {
 		mes "- You have too many items.";
 		mes "- Clear inventory and try again.";
 		close;
@@ -4365,7 +4367,7 @@ iz_ac01,59,83,3	script	Battle Instructor#08	4_M_NOV_HUNT,{
 						if(countitem(.@material[.@i]) >= .@count[i]) {
 							delitem .@material[.@i],.@count[.@i];
 							getexp .@bexp[.@i],.@jexp[.@i];
-							getitem Cargo_Free_Ticket, 1;
+							getitem 7059, 1; // Cargo_Free_Ticket
 						}
 					}
 				}
@@ -4554,7 +4556,7 @@ iz_ac01,59,83,3	script	Battle Instructor#08	4_M_NOV_HUNT,{
 			erasequest getarg(0);
 			delitem getarg(3), getarg(4);
 			getexp getarg(1), getarg(2);
-			getitem Cargo_Free_Ticket, 1;
+			getitem 7059, 1; // Cargo_Free_Ticket
 			close;
 		}
 
@@ -4915,7 +4917,7 @@ new_1-3,92,169,5	script	Adept Adventurer#new_1-3	4_M_JOB_BLACKSMITH,{
 // - Friendly Poring
 // -----------------------------------------------------------------------------
 new_1-3,99,169,3	script	Friendly Poring#ac	4_PORING,{
-	if (!checkweight("Axe", 3)) {
+	if (!checkweight(1301, 3)) {
 		mes "[Poring]";
 		mes "You have too many items to continue the quest.";
 		next;
@@ -5028,10 +5030,10 @@ new_1-3,99,169,3	script	Friendly Poring#ac	4_PORING,{
 		cutin "", 255;
 		completequest 2295;
 		setquest 2296;
-		getitem Little_Unripe_Apple, 5;
+		getitem 12846, 5; // Little_Unripe_Apple
 		close;
 	} else if (questprogress(2296) == 1) {
-		if (countitem("Novice_Poring_Egg") > 0) {
+		if (countitem(9062) > 0) {
 			mes "[Poring]";
 			mes "Ello' mate. Were you successful? Where are the lil' bleeders?";
 			next;
@@ -5112,8 +5114,8 @@ new_1-3,99,169,3	script	Friendly Poring#ac	4_PORING,{
 		completequest 2298;
 		if (Class == Job_Novice)
 			getexp 500, 50;
-		getitem Apple_Juice, 3;
-		getitem Pet_Incubator, 1;
+		getitem 531, 3; // Apple_Juice
+		getitem 643, 1; // Pet_Incubator
 		close;
 	} else {
 		mes "[Poring]";
@@ -5204,9 +5206,9 @@ iz_ac01,95,46,5	script	Kafra Guide Trainer#ac	4_F_KAFRA1,{
 					if (getskilllv("NV_BASIC") < 6) {
 						mes "[Kafra Guide Trainer]";
 						mes "To use the storage, you need to be raised the beginner level 6 and higher.";
-					} else if (countitem("Cargo_Free_Ticket") || Zeny >= 500) {
-						if (countitem("Cargo_Free_Ticket")) {
-							delitem Cargo_Free_Ticket, 1;
+					} else if (countitem(7059) || Zeny >= 500) {
+						if (countitem(7059) {
+							delitem 7059, 1; // Cargo_Free_Ticket
 						} else {
 							Zeny -= 500;
 							RESRVPTS += 5;
@@ -5946,7 +5948,7 @@ iz_ac01,69,36,3	script	Otter Samssoon#ac	4W_SAILOR,{
 			}
 			close;
 		case 2:
-			if(!countitem("Criatura_Hair_Coupon")) {
+			if(!countitem(6593)) {
 				mes "[Otter Samssoon]";
 				mes "Come on.. Honey~";
 				mes "You should bring ^ff0000'Criatura Hair Coupon'^000000 for changing hair...";
@@ -6027,7 +6029,7 @@ iz_ac01,69,36,3	script	Otter Samssoon#ac	4W_SAILOR,{
 				mes "- Chikak, crack, crack.. -";
 				mes "- Snap, snap, snap.. Crack -";
 				next;
-				delitem Criatura_Hair_Coupon, 1;
+				delitem 6593, 1; // Criatura_Hair_Coupon
 				setlook 1, .@style;
 				setlook 6, .@pallete;
 				cutin "", 255;
@@ -7139,7 +7141,7 @@ iz_ac02_d,143,55,3	duplicate(Cream Puff#ac)	Cream Puff#ac_d	4_M_KID1
 // - Teaches the player about Gunslinger class.
 // -----------------------------------------------------------------------------
 iz_ac02,142,85,6	script	Lusa#ac	4_F_GUNSLINGER,{
-	if (!checkweight("Axe", 1)) {
+	if (!checkweight(1301, 1)) {
 		mes "- Quest can't be continued as your overloaded items. -";
 		close;
 	}	
@@ -7257,7 +7259,7 @@ iz_ac02,142,85,6	script	Lusa#ac	4_F_GUNSLINGER,{
 			if (.@has_manual == 1) {
 				mes "Hey! What kind of con is this?! You already had a manual!";
 			} else {
-				getitem Gunslinger_Manual, 1;
+				getitem 2941, 1; // Gunslinger_Manual
 				mes "Here take this manual, I ain't too good at that there book learnin' but I can answer your questions.";
 			}
 			next;
@@ -7525,7 +7527,7 @@ iz_ac02,142,85,6	script	Lusa#ac	4_F_GUNSLINGER,{
 					next;
 					erasequest 5149;
 					getexp 700, 450;
-					getitem Cargo_Free_Ticket, 1;
+					getitem 7059, 1; // Cargo_Free_Ticket
 					mes "After looking over the report, you receive experience and a Kafra Storage Coupon.";
 					next;
 					.@gun_tok = 1;
@@ -7542,7 +7544,7 @@ iz_ac02,142,85,6	script	Lusa#ac	4_F_GUNSLINGER,{
 					next;
 					erasequest 5150;
 					getexp 950, 590;
-					getitem Cargo_Free_Ticket, 1;
+					getitem 7059, 1; // Cargo_Free_Ticket
 					mes "After looking over the report, you receive experience and a Kafra Storage Coupon.";
 					next;
 					.@gun_tok = 1;
@@ -7559,7 +7561,7 @@ iz_ac02,142,85,6	script	Lusa#ac	4_F_GUNSLINGER,{
 					next;
 					erasequest 5151;
 					getexp 850, 540;
-					getitem Cargo_Free_Ticket, 1;
+					getitem 7059, 1; // Cargo_Free_Ticket
 					mes "After looking over the report, you receive experience and a Kafra Storage Coupon.";
 					next;
 					.@gun_tok = 1;
@@ -7576,7 +7578,7 @@ iz_ac02,142,85,6	script	Lusa#ac	4_F_GUNSLINGER,{
 					next;
 					erasequest 5152;
 					getexp 690, 470;
-					getitem Cargo_Free_Ticket, 1;
+					getitem 7059, 1; // Cargo_Free_Ticket
 					mes "After looking over the report, you receive experience and a Kafra Storage Coupon.";
 					next;
 				}
@@ -7755,7 +7757,7 @@ iz_ac02,142,85,6	script	Lusa#ac	4_F_GUNSLINGER,{
 				if (questprogress(5152))
 					erasequest 5152;
 				if (.@gun_quest_01 == 2 || .@gun_quest_02 == 2 || .@gun_quest_03 == 2 || .@gun_quest_04 == 2) {
-					getitem Cargo_Free_Ticket, 1;
+					getitem 7059, 1; // Cargo_Free_Ticket
 					mes "After looking over the report, you receive experience and a Kafra Storage Coupon.";
 				}
 				next;
@@ -8041,7 +8043,7 @@ iz_ac02_d,131,82,4	duplicate(Lusa's Desk#ac)	Lusa's Desk#ac_d	CLEAR_NPC
 // - Staff sent by guild
 // -----------------------------------------------------------------------------
 iz_ac02,162,86,4	script	Guild Staff#ac	4W_M_02,{
-	if (!checkweight("Axe", 1)) {
+	if (!checkweight(1301, 1)) {
 		mes "- You are carrying too many items. -";
 		close;
 	}
@@ -8121,7 +8123,7 @@ iz_ac02,162,86,4	script	Guild Staff#ac	4W_M_02,{
 	next;
 	switch(select("Exchange for Revolver", "Exchange for Rifle" "Exchange for Shotgun", "Exchange for Gatling Gun", "Exchange for Grenade Launcher", "Cancel")) {
 	case 1:
-		if (.@gun == Novice_Revolver) {
+		if (.@gun == 13116) {
 			mes "[Sharp Snake's Fang]";
 			mes "You already have that gun, just use it!";
 			close2;
@@ -8129,11 +8131,11 @@ iz_ac02,162,86,4	script	Guild Staff#ac	4W_M_02,{
 			end;
 		} else {
 			delequip EQI_HAND_R;
-			getitem Novice_Revolver, 1;
+			getitem 13116, 1; // Novice_Revolver
 		}
 		break;
 	case 2:
-		if (.@gun == Novice_Rifle) {
+		if (.@gun == 13180) {
 			mes "[Sharp Snake's Fang]";
 			mes "You already have that gun, just use it!";
 			close2;
@@ -8141,11 +8143,11 @@ iz_ac02,162,86,4	script	Guild Staff#ac	4W_M_02,{
 			end;
 		} else {
 			delequip EQI_HAND_R;
-			getitem Novice_Rifle, 1;
+			getitem 13180, 1; // Novice_Rifle
 		}
 		break;
 	case 3:
-		if (.@gun == Novice_Shotgun) {
+		if (.@gun == 13181) {
 			mes "[Sharp Snake's Fang]";
 			mes "You already have that gun, just use it!";
 			close2;
@@ -8153,11 +8155,11 @@ iz_ac02,162,86,4	script	Guild Staff#ac	4W_M_02,{
 			end;
 		} else {
 			delequip EQI_HAND_R;
-			getitem Novice_Shotgun, 1;
+			getitem 13181, 1; // Novice_Shotgun
 		}
 		break;
 	case 4:
-		if (.@gun == Novice_Gatling) {
+		if (.@gun == 13182) {
 			mes "[Sharp Snake's Fang]";
 			mes "You already have that gun, just use it!";
 			close2;
@@ -8165,11 +8167,11 @@ iz_ac02,162,86,4	script	Guild Staff#ac	4W_M_02,{
 			end;
 		} else {
 			delequip EQI_HAND_R;
-			getitem Novice_Gatling, 1;
+			getitem 13182, 1; // Novice_Gatling
 		}
 		break;
 	case 5:
-		if (.@gun == Novice_Grenade_Launcher) {
+		if (.@gun == 13183) {
 			mes "[Sharp Snake's Fang]";
 			mes "You already have that gun, just use it!";
 			close2;
@@ -8177,7 +8179,7 @@ iz_ac02,162,86,4	script	Guild Staff#ac	4W_M_02,{
 			end;
 		} else {
 			delequip EQI_HAND_R;
-			getitem Novice_Grenade_Launcher, 1;
+			getitem 13183, 1; // Novice_Grenade_Launcher
 		}
 		break;
 	case 6:
@@ -8238,7 +8240,7 @@ iz_ac02,70,85,5	script	Arang#ac	4_F_TAEKWON,{
 						mes "[Arang]";
 						mes "It is not an easy way. So I don't like to recommend it to you if you aren't fully prepared. But it is definitely a nice and great way to follow!!";
 						next;
-						if (isequipped("Taekwon_Manual") > 0 || countitem("Taekwon_Manual") > 0) {
+						if (isequipped(2942) > 0 || countitem(2942) > 0) {
 							mes "[Arang]";
 							mes "Introduction to the class may let you know about what Taekwon in more detail.";
 							next;
@@ -8251,7 +8253,7 @@ iz_ac02,70,85,5	script	Arang#ac	4_F_TAEKWON,{
 								mes "Every adventurer may have their own job! Hope you can find what you want!";
 								next;
 							} else {
-								getitem Taekwon_Manual, 1;
+								getitem 2942, 1; // Taekwon_Manual
 								mes "[Arang]";
 								mes "Go to the [Misc] tab on Skill Window after equipping the Manual and there you will see some skills.";
 								next;
@@ -8418,7 +8420,7 @@ iz_ac01_d,53,49,0	duplicate(#acKick)	#acKick_d	HIDDEN_NPC,5,5
 // - Archer Teacher (Marlbron)
 // -----------------------------------------------------------------------------
 iz_ac02,65,109,5	script	Archer Teacher#ac	4_M_ARCHER,{
-	if (!checkweight("Orcish_Axe", 3)) {
+	if (!checkweight(1304, 3)) {
 		mes "Why are you carrying so much with you? Unload it somewhere and come back.";
 		close;
 	}
@@ -8576,7 +8578,7 @@ iz_ac02,65,109,5	script	Archer Teacher#ac	4_M_ARCHER,{
 						if (questprogress(14158) != 2) {
 							setquest 14158;
 							completequest 14158;
-							getitem Archer_Manual, 1;
+							getitem 2822, 1; // Archer_Manual
 						}
 						cutin "", 255;
 						end;
@@ -8735,7 +8737,7 @@ iz_ac02_d,65,109,5	duplicate(Archer Teacher#ac)	Archer Teacher#ac_d	4_M_ARCHER
 // - Teaches the player about the Swordman class.
 // -----------------------------------------------------------------------------
 iz_ac02,60,51,5	script	Swordman Trainer#ac	4_M_SWORDMAN,{
-	if (!checkweight("Axe", 3)) {
+	if (!checkweight(1301, 3)) {
 		mes "- Quest cannot be continued due to your overfilled inventory. -";
 		close;
 	}
@@ -8780,7 +8782,7 @@ iz_ac02,60,51,5	script	Swordman Trainer#ac	4_M_SWORDMAN,{
 				mes "Calm down, lets's start over.";
 				mes "First, I'll give you a ^FF0000Swordman Manual^000000";
 				mes "Read it carefuly before asking any questions.";
-				getitem Swordman_Manual, 1;
+				getitem 2819, 1; // Swordman_Manual
 				nov_3_swordman = 1;
 				setquest 1229;
 				cutin "", 255;
@@ -9259,7 +9261,7 @@ iz_ac02,148,110,3	script	Mage Chuck#ac	4_M_JOB_WIZARD,{
 						mes "Anything else you want to know about Mages?";
 						break;
 					case 4:
-						if (isequippedcnt("Mage_Manual") > 0 || countitem("Mage_Manual") > 0) {
+						if (isequippedcnt(2824) > 0 || countitem(2824) > 0) {
 							mes "[Mage Chuck]";
 							mes "I think you already received a ^FF0000Mage Manual^000000~!";
 							mes "I can't offer you two of them.";
@@ -9288,7 +9290,7 @@ iz_ac02,148,110,3	script	Mage Chuck#ac	4_M_JOB_WIZARD,{
 								mes "[Mage Chuck]";
 								mes "It's a valuable item so don't lose it.";
 								mes "If you want to become a genius ^0000FFMage^000000 like me, follow in my path.";
-								getitem Mage_Manual, 1;
+								getitem 2824, 1; // Mage_Manual
 								break;
 							} else {
 								mes "[Mage Chuck]";
@@ -9507,7 +9509,7 @@ geffen,43,123,6	script	Magician's Guild Guide#2	2_F_MAGICMASTER,{
 // -----------------------------------------------------------------------------
 iz_ac02,50,169,3	script	Salim Hamid#ac	1_M_MERCHANT,{
 	disable_items;
-	if (!checkweight("Emperium", 3) || (MaxWeight - Weight) < 10000) {
+	if (!checkweight(714, 3) || (MaxWeight - Weight) < 10000) {
 		mes "- As you are overloaded with so many items, quest can't be proceeded. -";
 		close;
 	}
@@ -9682,7 +9684,7 @@ iz_ac02,50,169,3	script	Salim Hamid#ac	1_M_MERCHANT,{
 			next;
 			mes "[Salim Hamid]";
 			mes "Now~ as we should go to the next course, equip the guide and see the skill, then speak to me again.";
-			getitem Merchant_Manual, 1;
+			getitem 2823, 1; // Merchant_Manual
 			completequest 12303;
 			close2;
 			cutin "", 255;
@@ -9854,7 +9856,7 @@ iz_ac02,50,169,3	script	Salim Hamid#ac	1_M_MERCHANT,{
 		mes "[Salim Hamid]";
 		mes "Don't buy them. Just come back with the checked prices only. Can you do it?";
 		next;
-		if(select("I will do it next time.:I will do it.") == 1) {
+		if(select("I will do it next time.", "I will do it.") == 1) {
 			mes "[Salim Hamid]";
 			mes "OK. Then you challenge it next time.";
 			close2;
@@ -9920,7 +9922,7 @@ iz_ac02_d,50,169,3	duplicate(Salim Hamid#ac)	Salim Hamid#ac_d	1_M_MERCHANT
 // -----------------------------------------------------------------------------
 iz_ac02,53,171,3	script	Steward Aydin#ac	4_M_MANAGER,{
 	disable_items;
-	if (!checkweight("Emperium", 3) || (MaxWeight - Weight) < 10000) {
+	if (!checkweight(714, 3) || (MaxWeight - Weight) < 10000) {
 		mes "- As you are overloaded with so many items, quest can't be proceeded.";
 		close;
 	}
@@ -9950,7 +9952,7 @@ iz_ac02,53,171,3	script	Steward Aydin#ac	4_M_MANAGER,{
 					mes "[Steward Aydin]";
 					mes "Really are you OK with it?";
 					next;
-					if(select("Wait I know it all.:No, please explain them again.") == 1) {
+					if(select("Wait I know it all.", "No, please explain them again.") == 1) {
 						mes "[Steward Aydin]";
 						mes "Ho O~ You don't have any questions?";
 						mes "OK. You are a person of practice rather than of theory.";
@@ -9965,7 +9967,7 @@ iz_ac02,53,171,3	script	Steward Aydin#ac	4_M_MANAGER,{
 						mes "[Steward Aydin]";
 						mes "I anticipate to see you next time in a good shape.";
 						completequest 12304;
-						getitem Old_Equipment_Box, 1;
+						getitem 12847, 1; // Old_Equipment_Box
 						close;
 					}
 					mes "[Steward Aydin]";
@@ -10046,7 +10048,7 @@ iz_ac02_d,53,171,3	duplicate(Steward Aydin#ac)	Steward Aydin#ac_d	4_M_MANAGER
 // - Teaches the player about the Thief class.
 // -----------------------------------------------------------------------------
 iz_ac02,52,136,3	script	Guest Lecturer Mayssel#0	4_F_MAYSEL,{
-	if (!checkweight("Axe", 3)) {
+	if (!checkweight(1301, 3)) {
 		mes "Quest cannot be continued due to the overfilled inventory.";
 		mes "Please try it again after organizing the items.";
 		close;
@@ -10176,8 +10178,8 @@ iz_ac02,52,136,3	script	Guest Lecturer Mayssel#0	4_F_MAYSEL,{
 					setquest 7483;
 					completequest 7483;
 					getexp 800, 50;
-					getitem Novice_Potion, 30;
-					getitem N_Magnifier, 20;
+					getitem 569, 30; // Novice_Potion
+					getitem 12325, 20; // N_Magnifier
 				} else {
 					mes "[Mayssel]";
 					mes "I only play the role to inform you of there is this one that one...";
@@ -10193,7 +10195,7 @@ iz_ac02,52,136,3	script	Guest Lecturer Mayssel#0	4_F_MAYSEL,{
 					erasequest 7481;
 					erasequest 7482;
 					setquest 7483;
-					getitem Thief_Manual, 1;
+					getitem 2820, 1; // Thief_Manual
 				}
 				close2;
 				cutin "", 255;
@@ -10250,8 +10252,8 @@ iz_ac02,52,136,3	script	Guest Lecturer Mayssel#0	4_F_MAYSEL,{
 					setquest 7483;
 					completequest 7483;
 					getexp 800, 50;
-					getitem Novice_Potion, 30;
-					getitem N_Magnifier, 20;
+					getitem 569, 30; // Novice_Potion
+					getitem 12325, 20; // N_Magnifier
 				} else {
 					mes "[Mayssel]";
 					mes "I only play the role to inform you of there is this one that one...";
@@ -10267,7 +10269,7 @@ iz_ac02,52,136,3	script	Guest Lecturer Mayssel#0	4_F_MAYSEL,{
 					erasequest 7481;
 					erasequest 7482;
 					setquest 7483;
-					getitem Thief_Manual, 1;
+					getitem 2820, 1; // Thief_Manual
 				}
 				close2;
 				cutin "", 255;
@@ -10298,8 +10300,8 @@ iz_ac02,52,136,3	script	Guest Lecturer Mayssel#0	4_F_MAYSEL,{
 					mes "Thank you for you hard work.";
 					completequest 7483;
 					getexp 800, 50;
-					getitem Novice_Potion, 30;
-					getitem N_Magnifier, 20;
+					getitem 569, 30; // Novice_Potion
+					getitem 12325, 20; // N_Magnifier
 					close2;
 					cutin "", 255;
 					end;
@@ -10337,8 +10339,8 @@ iz_ac02,52,136,3	script	Guest Lecturer Mayssel#0	4_F_MAYSEL,{
 						mes "All the ongoing courses are cancelled.";
 						mes "These are not your aptitude.";
 						nude;
-						if (countitem("Thief_Manual") > 0)
-							delitem Thief_Manual, countitem("Thief_Manual");
+						if (countitem(2820) > 0)
+							delitem 2820, countitem(2820); // Thief_Manual
 						erasequest 7483;
 						erasequest 7484;
 						erasequest 7485;						
@@ -10816,7 +10818,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 					mes "Important thing is not theory but actual fighting.";
 					mes "Do you agree?";
 					setquest 7481;
-					getitem Novice_Potion, 30;
+					getitem 569, 30; // Novice_Potion
 					close2;		
 					cutin "", 255;
 					end;
@@ -10957,7 +10959,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 						cutin "", 255;
 						end;
 					} else if (questprogress(7484) == 1) {
-						if (countitem("Stone") > 0) {
+						if (countitem(7049) > 0) {
 							cutin "sc_vicente01.bmp", 2;
 							mes "[Vicente]";
 							mes "Oh, excellent!";
@@ -11057,7 +11059,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 					cutin "", 255;
 					end;
 				} else if (questprogress(7484) == 1) {
-					if (countitem("Stone") > 0) {
+					if (countitem(7049) > 0) {
 						cutin "sc_vicente01.bmp", 2;
 						mes "[Vicente]";
 						mes "Oh, excellent!";
@@ -11672,7 +11674,7 @@ iz_ac02_d,55,134,3	duplicate(Verkhasel#ac)	Verkhasel#ac_d	4_M_GUILLOTINE
 // - Lumin
 // -----------------------------------------------------------------------------
 iz_ac02,62,139,3	script	Lumin#ac	4_M_NOV_RUMIN,{
-	if (!checkweight("Axe", 3)) {
+	if (!checkweight(1301, 3)) {
 		mes "Quest cannot be continued due to the overfilled inventory.";
 		mes "Please try it again after organizing the items.";
 		close;
@@ -11756,10 +11758,10 @@ iz_ac02,62,139,3	script	Lumin#ac	4_M_NOV_RUMIN,{
 			cutin "nov_lumin05.bmp", 2;
 			completequest 7487;
 			getexp 800, 50;
-			getitem Apple, 3;
-			getitem Green_Herb, 2;
-			getitem Novice_Potion, 22;
-			getitem Rainbow_Carrot, 1;
+			getitem 512, 3; // Apple
+			getitem 511, 2; // Green_Herb
+			getitem 569, 22; // Novice_Potion
+			getitem 622, 1; // Rainbow_Carrot
 			close2;
 			cutin "", 255;
 			end;
@@ -11775,7 +11777,7 @@ iz_ac02,62,139,3	script	Lumin#ac	4_M_NOV_RUMIN,{
 			cutin "nov_lumin03.bmp", 2;
 			completequest 7487;
 			getexp 800, 50;
-			getitem Apple, 22;
+			getitem 512, 22; // Apple
 			next;
 			select("Why are you treating me like this?", "Didn't I loose?");
 			mes "[Lumin]";
@@ -12144,7 +12146,7 @@ iz_ac02,152,165,5	script	A Nun#2	4_F_SISTER,{
 		mes "It was not like this when I used to train in the past.";
 		close;
 	} else {
-		if (!checkweight("Tsurugi", 3)) {
+		if (!checkweight(1119, 3)) {
 			mes "- You have too many items. Clear inventory and try again. -";
 			close;
 		}
@@ -12172,7 +12174,7 @@ iz_ac02,152,165,5	script	A Nun#2	4_F_SISTER,{
 				mes "murmuring";
 				close;
 			}
-			if (isequippedcnt("Acolyte_Manual") > 0 || countitem("Acolyte_Manual") > 0) {
+			if (isequippedcnt(2821) > 0 || countitem(2821) > 0) {
 				mes "[A nun]";
 				mes "You already have one.";
 				mes "We do not give two.";
@@ -12181,7 +12183,7 @@ iz_ac02,152,165,5	script	A Nun#2	4_F_SISTER,{
 				mes "[A nun]";
 				mes "Then, use it for good.";
 				mes "^ff0000Equip (double click or drag to equipment window)^000000 and open the ^ff0000skill window(Alt+S)^000000 to see the skills in manual.";
-				getitem Acolyte_Manual, 1;
+				getitem 2821, 1; // Acolyte_Manual
 				close;
 			}
 		}
@@ -12313,7 +12315,7 @@ iz_ac02,140,139,5	script	Ninja Guide#ac	4_M_NINJA_BLUE,{
 					next;
 					break;
 				case 3:
-					if (countitem("Ninja_Manual") > 0) {
+					if (countitem(2940) > 0) {
 						mes "[Ninja Guide]";
 						mes "You can equip this manual to experience some skills.";
 						mes "Open up your skill window by pressing <Alt+S> and find the skills in the Misc TAB.";
@@ -12323,16 +12325,16 @@ iz_ac02,140,139,5	script	Ninja Guide#ac	4_M_NINJA_BLUE,{
 						next;
 						mes "[Ninja Guide]";
 						mes "He will give you some quests to complete. Use the Manual to help you in battle.";
-						if (countitem("Light_Shuriken") < 10)
-							getitem Light_Shuriken, 10;
+						if (countitem(13295) < 10)
+							getitem 13295, 10; // Light_Shuriken
 						next;
 					} else {
 						mes "[Ninja Guide]";
 						mes "Make every useful moment count.";
 						mes "You can equip this manual to experience some skills.";
 						mes "Open up your skill window by pressing <Alt+S> and find the skills in the Misc TAB.";
-						getitem Ninja_Manual, 1;
-						getitem Light_Shuriken, 10;
+						getitem 2940, 1; // Ninja_Manual
+						getitem 13295, 10; // Light_Shuriken
 						next;
 						mes "[Ninja Guide]";
 						mes "The Academy has a trainer downstairs who will give you battle field training. Meet him and train your skills.";
@@ -12434,7 +12436,7 @@ iz_ac02_d,140,139,5	duplicate(Ninja Guide#ac)	Ninja Guide#ac_d	4_M_NINJA_BLUE
 // - Refinery Owner Han
 // -----------------------------------------------------------------------------
 izlude,153,126,1	script	Refinery Owner Han#iz	4_M_02,{
-	if (!checkweight("Axe", 1)) {
+	if (!checkweight(1301, 1)) {
 		mes "- Cannot progress with the dialogue because you have too many items. -";
 		close;
 	}
@@ -12628,7 +12630,7 @@ izlude,153,126,1	script	Refinery Owner Han#iz	4_M_02,{
 		if (Class == Job_Novice)
 			getexp 1200, 500;
 		mes "Got a lesson about the refining and Kafra storage free coupon.";
-		getitem Cargo_Free_Ticket, 1;
+		getitem 7059, 1; // Cargo_Free_Ticket
 		close;
 	} else if (.@jerun_tutorial == 8) {
 		mes "[Refinery Owner Han]";
@@ -12877,7 +12879,7 @@ izlude_d,153,121,3	duplicate(izludeWagjak)	Refining Machine Wagjak::iz_d	2_MONEM
 // - Tadde
 // -----------------------------------------------------------------------------
 izlude,145,122,7	script	Tadde#iz	4_M_04,{
-	if (!checkweight("Axe", 1)) {
+	if (!checkweight(1301, 1)) {
 		mes "- As you have too many items in your inventory, Quest can't be continued -";
 		close;
 	}
@@ -13003,7 +13005,7 @@ izlude,145,122,7	script	Tadde#iz	4_M_04,{
 			close;
 		}
 		Zeny -= .@sell;
-		getitem Phracon, .@amount;
+		getitem 1010, .@amount; // Phracon
 		mes "[Tadde]";
 		mes "This is what you wanted. Thank you very much!";
 		close;
@@ -13038,7 +13040,7 @@ izlude,145,122,7	script	Tadde#iz	4_M_04,{
 			mes "Er...please sorts your inventory before you take these...";
 			close;
 		}
-		getitem Emveretarcon, .@amount;
+		getitem 1011, .@amount; // Emveretarcon
 		Zeny -= .@sell;
 		mes "[Tadde]";
 		mes "This is what you wanted. Thank you very much!";
@@ -13135,7 +13137,7 @@ izlude_d,145,122,7	duplicate(Tadde#iz)	Tadde#iz_d	4_M_04
 // - Locas
 // -----------------------------------------------------------------------------
 izlude,155,132,3	script	Locas#iz	4_M_02,{
-	if (!checkweight("Axe", 1)) {
+	if (!checkweight(1301, 1)) {
 		mes "- As you have too many items in your inventory, Quest can't be continued. -";
 		close;
 	}
@@ -13296,9 +13298,9 @@ izlude,155,132,3	script	Locas#iz	4_M_02,{
 		mes "Will you refine 5 Rough Oridecon to one Oridecon?";
 		next;
 		if(select("Exchange 5 for 1", "Exchange all.") == 1) {
-			if (countitem("Oridecon_Stone") > 4) {
-				delitem Oridecon_Stone, 5;
-				getitem Oridecon, 1;
+			if (countitem(756) > 4) {
+				delitem 756, 5; // Oridecon_Stone
+				getitem 984, 1; // Oridecon
 				mes "[Locas]";
 				mes "Refined Rough Oridecon to Oridecon.";
 				close;
@@ -13309,11 +13311,11 @@ izlude,155,132,3	script	Locas#iz	4_M_02,{
 				close;
 			}
 		} else {
-			if (countitem("Oridecon_Stone") > 4) {
-				.@ston_max = countitem("Oridecon_Stone") / 5;
+			if (countitem(756) > 4) {
+				.@ston_max = countitem(756) / 5;
 				.@ston_full = .@ston_max * 5;
-				delitem Oridecon_Stone, .@ston_full;
-				getitem Oridecon, .@ston_max;
+				delitem 756, .@ston_full; // Oridecon_Stone
+				getitem 984, .@ston_max; // Oridecon
 				mes "[Locas]";
 				mes "Refined "+ston_full+" Rough Oridecon into "+ston_max+" Oridecon. Thank you for your business.";
 				close;
@@ -13329,9 +13331,9 @@ izlude,155,132,3	script	Locas#iz	4_M_02,{
 		mes "Will you refine 5 Rough Elunium to one Elunium?";
 		next;
 		if(select("Exchange 5 for 1", "Exchange all.") == 1) {
-			if (countitem("Elunium_Stone") > 4) {
-				delitem Elunium_Stone, 5;
-				getitem Elunium, 1;
+			if (countitem(757) > 4) {
+				delitem 757, 5; // Elunium_Stone
+				getitem 985, 1; // Elunium
 				mes "[Locas]";
 				mes "Refined Rough Elunium to Elunium.";
 				close;
@@ -13342,11 +13344,11 @@ izlude,155,132,3	script	Locas#iz	4_M_02,{
 				close;
 			}
 		} else {
-			if (countitem("Elunium_Stone") > 4) {
-				.@ston_max = countitem("Elunium_Stone") / 5;
+			if (countitem(757) > 4) {
+				.@ston_max = countitem(757) / 5;
 				.@ston_full = .@ston_max * 5;
-				delitem Elunium_Stone, .@ston_full;
-				getitem Elunium, .@ston_max;
+				delitem 757, .@ston_full; // Elunium_Stone
+				getitem 985, .@ston_max; // Elunium
 				mes "[Locas]";
 				mes "Refined "+.@ston_full+" Rough Elunium into "+.@ston_max+" Elunium. Thank you for your business.";
 				close;
@@ -13495,7 +13497,7 @@ izlude_d,155,132,3	duplicate(Locas#iz)	Locas#iz_d	4_M_02
 // - Teaches the player about enchanting.
 // -----------------------------------------------------------------------------
 izlude,96,125,7	script	Enchanter Mounds#iz	4_CAT_SAILOR2,{
-	if (!checkweight("Axe", 1)) {
+	if (!checkweight(1301, 1)) {
 		mes "- As you have too many items in your inventory, Quest can't be continued -";
 		close;
 	}
@@ -13640,13 +13642,13 @@ izlude,96,125,7	script	Enchanter Mounds#iz	4_CAT_SAILOR2,{
 		close;
 	} else if (.@in_tutorial == 2) {
 		mes "[Mounds]";
-		if (countitem("Cotton_Shirt_") > 0) {			
+		if (countitem(2302) > 0) {			
 			mes "Oh this is a socketed shirt already!";
 			next;
 			mes "[Mounds]";
 			mes "Bring us the normal shirt without holes.";
 			close;
-		} else if (countitem("Cotton_Shirt") > 0) {
+		} else if (countitem(2301) > 0) {
 			mes "It must be a plain cotton shirt.";
 			next;
 		} else {
@@ -13670,8 +13672,8 @@ izlude,96,125,7	script	Enchanter Mounds#iz	4_CAT_SAILOR2,{
 		next;
 		specialeffect2 EF_SANCTUARY;
 		completequest 5158;
-		delitem Cotton_Shirt, 1;
-		getitem Cotton_Shirt_, 1;
+		delitem 2301, 1; // Cotton_Shirt
+		getitem 2302, 1; // Cotton_Shirt_
 		mes "[Mounds]";
 		mes "You have suceeded in socket enchant.";
 		close;
@@ -13773,7 +13775,7 @@ izlude,96,125,7	script	Enchanter Mounds#iz	4_CAT_SAILOR2,{
 		} else {
 			mes "Received the explanation and Kafra free storage coupon.";
 		}
-		getitem Cargo_Free_Ticket, 1;
+		getitem 7059, 1; // Cargo_Free_Ticket
 		next;
 		mes "[Mounds]";
 		mes "Then, I will see you later.";
@@ -13862,7 +13864,7 @@ izlude_d,96,125,7	duplicate(Enchanter Mounds#iz)	Enchanter Mounds#iz_d	4_CAT_SAI
 // - Teaches the player about enchanting.
 // -----------------------------------------------------------------------------
 izlude,108,139,7	script	Enchanter Almond J#iz	4_CAT_SAILOR3,{
-	if (!checkweight("Axe", 1)) {
+	if (!checkweight(1301, 1)) {
 		mes "- As you have too many items in your inventory, Quest can't be continued -";
 		close;
 	}
@@ -13935,7 +13937,7 @@ izlude,108,139,7	script	Enchanter Almond J#iz	4_CAT_SAILOR3,{
 		completequest 5159;
 		delequip .@part;
 		setarray .@equip_card[0], getequipcardid(.@part,0), getequipcardid(.@part,1), getequipcardid(.@part,2), getequipcardid(.@part,3);
-		getitem2 Cotton_Shirt_,1,1,.@refineCount,0,.@equip_card[0],.@equip_card[1],SP50,HP100;
+		getitem2 2302,1,1,.@refineCount,0,.@equip_card[0],.@equip_card[1],SP50,HP100; // Cotton_Shirt_
 		mes "[Almond J]";
 		mes "Zzazanzn!! Completed!!";
 		next;
@@ -14017,7 +14019,7 @@ izlude,108,139,7	script	Enchanter Almond J#iz	4_CAT_SAILOR3,{
 	}
 	mes "[Almond J]";
 	switch(.@equip) {
-	case Novice_Knife:
+	case 1243: // Novice_Knife
 		mes "It is!! ^142ceb the Novice Knife^000000.";
 		next;
 		mes "[Almond J]";
@@ -14025,18 +14027,18 @@ izlude,108,139,7	script	Enchanter Almond J#iz	4_CAT_SAILOR3,{
 		close2;
 		enable_items;
 		end;
-	case N_Battle_Axe:
-	case N_Mace:
-	case N_Rod:
-	case N_Composite_Bow:
-	case N_Cutter:
-	case N_Main_Gauche:
-	case Novice_Revolver:
-	case Novice_Rifle:
-	case Novice_Shotgun:
-	case Novice_Gatling:
-	case Novice_Grenade_Launcher:
-	case N_Falchion:
+	case 1381: // N_Battle_Axe
+	case 1545: // N_Mace
+	case 1639: // N_Rod
+	case 1742: // N_Composite_Bow
+	case 13040: // N_Cutter
+	case 13041: // N_Main_Gauche
+	case 13116: // Novice_Revolver
+	case 13180: // Novice_Rifle
+	case 13181: // Novice_Shotgun
+	case 13182: // Novice_Gatling
+	case 13183: // Novice_Grenade_Launcher
+	case 13415: // N_Falchion
 		mes "It is!! The ^142ceb"+ getequipname(EQI_HAND_R) +"^000000.";
 		next;
 		break;
@@ -14046,7 +14048,7 @@ izlude,108,139,7	script	Enchanter Almond J#iz	4_CAT_SAILOR3,{
 		enable_items;
 		end;
 	}
-	setarray .@enchantments[1],Strength1,Strength2,Strength3,Agility1,Agility2,Agility3,Vitality1,Vitality2,Vitality3,Inteligence1,Inteligence2,Inteligence3,Dexterity1,Dexterity2,Dexterity3,Luck1,Luck2,Luck3,Matk1,Atk2,Critical5,Mdef2,Def3,HP100,SP50,Fighting_Spirit1,Expert_Archer1,Sharp1,Spell1;
+	setarray .@enchantments[1],4700,4701,4702,4730,4731,4732,4740,4741,4742,4710,4711,4712,4720,4721,4722,4750,4751,4752,4760,4766,4764,4786,4791,4795,4800,4811,4832,4818,4815;
 	.@enchant1 = rand(1, 35);
 	.@enchant2 = rand(1, 35);
 
