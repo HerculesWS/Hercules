@@ -2454,7 +2454,7 @@ iz_ac01,100,39,5	script	Academy Receptionist#1	4_F_01,{
 				getitem Novice_Egg_Cap, 1;
 				getitem Novice_Knife, 1;
 				getitem Novice_Guard, 1;
-				getitem Cryptura_Academy_Hat, 1;
+				getitem Criatura_Academy_Hat, 1;
 				getitem Novice_Potion, 300;
 				next;
 				mes "[Receptionist]";
