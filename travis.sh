@@ -92,7 +92,7 @@ EOF
 		ARGS="--load-script npc/dev/test.txt "
 		ARGS="--load-plugin script_mapquit $ARGS --load-script npc/dev/ci_test.txt"
 		echo "Running Hercules with command line: ./map-server --run-once $ARGS"
-		ASAN_OPTIONS=detect_leaks=0 ./map-server --run-once $ARGS 2>runlog.txt
+		./map-server --run-once $ARGS 2>runlog.txt
 		export errcode=$?
 		export teststr=$(cat runlog.txt)
 		if [[ -n "${teststr}" ]]; then
