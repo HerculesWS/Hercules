@@ -1129,7 +1129,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					}
 					break;
 				}
-				break;			
+				break;
 			case 3:
 				mes "[Information Staff]";
 				mes "I will erase the marks.";
@@ -1396,7 +1396,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					}
 					break;
 				}
-				break;		
+				break;
 			case 3:
 				mes "[Information Staff]";
 				mes "I will erase the marks.";
@@ -2201,7 +2201,7 @@ izlude,140,249,7	script	Academy Student#0	4_M_NOV_RUMIN,{
 				mes "Disregard it.";
 				close;
 			}
-		 } else {
+		} else {
 			if (questprogress(7479) == 2) {
 				mes "[Criatura Student]";
 				mes ".......";
@@ -2231,7 +2231,7 @@ izlude_d,140,249,7	duplicate(Academy Student#0)	Academy Student#d	4_M_NOV_RUMIN
 
 // - Instructor Argos (Trick Dead Quest)
 // -----------------------------------------------------------------------------
-izlude,140,260,3	script	Instructor Argos#iz	4_M_LIEMAN,{	
+izlude,140,260,3	script	Instructor Argos#iz	4_M_LIEMAN,{
 	if (Class != Job_Novice && getskilllv("NV_TRICKDEAD") != 0) {
 		mes "[Instructor Argos]";
 		mes "snoring... snoring...";
@@ -4102,7 +4102,7 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 				next;
 				cutin "", 255;
 				mes "[Mille Feuille]";
-				mes "We can cook once you bring all the ingredients.";			
+				mes "We can cook once you bring all the ingredients.";
 				close2;
 				new_cook = 2;
 				setquest 14154;
@@ -4878,7 +4878,7 @@ new_1-3,92,169,5	script	Adept Adventurer#new_1-3	4_M_JOB_BLACKSMITH,{
 				mes "[Adept Adventurer]";
 				mes "One of the staff there should have a ^3131FFItem compounding book^000000 for novices, ^3131FFHow to make Unripe Apples^000000 is one of the subjects.";
 				close;
-			}			
+			}
 		}
 		if (questprogress(2297) == 1) {
 			mes "[Adept Adventurer]";
@@ -5207,7 +5207,7 @@ iz_ac01,95,46,5	script	Kafra Guide Trainer#ac	4_F_KAFRA1,{
 						mes "[Kafra Guide Trainer]";
 						mes "To use the storage, you need to be raised the beginner level 6 and higher.";
 					} else if (countitem(7059) || Zeny >= 500) {
-						if (countitem(7059) {
+						if (countitem(7059)) {
 							delitem 7059, 1; // Cargo_Free_Ticket
 						} else {
 							Zeny -= 500;
@@ -5560,7 +5560,7 @@ izlude,97,144,1	script	Etinifni#iz	4_M_DEWBOY,{
 
 	OnInit:
 		disablenpc "Etinifni#"+strnpcinfo(2);
-		end;	
+		end;
 }
 
 izlude_a,97,144,1	duplicate(Etinifni#iz)	Etinifni#iz_a	4_M_DEWBOY
@@ -6477,83 +6477,83 @@ iz_ac01_b,106,44,3	duplicate(ac_board)	[Cafeteria]#ac_b	2_BULLETIN_BOARD
 iz_ac01_c,106,44,3	duplicate(ac_board)	[Cafeteria]#ac_c	2_BULLETIN_BOARD
 iz_ac01_d,106,44,3	duplicate(ac_board)	[Cafeteria]#ac_d	2_BULLETIN_BOARD
 
-iz_ac01,93,44,5	duplicate(ac_board)	[Dispensary]#ac	2_BULLETIN_BOARD	
-iz_ac01_a,93,44,5	duplicate(ac_board)	[Dispensary]#ac_a	2_BULLETIN_BOARD	
-iz_ac01_b,93,44,5	duplicate(ac_board)	[Dispensary]#ac_b	2_BULLETIN_BOARD	
-iz_ac01_c,93,44,5	duplicate(ac_board)	[Dispensary]#ac_c	2_BULLETIN_BOARD	
-iz_ac01_d,93,44,5	duplicate(ac_board)	[Dispensary]#ac_d	2_BULLETIN_BOARD	
+iz_ac01,93,44,5	duplicate(ac_board)	[Dispensary]#ac	2_BULLETIN_BOARD
+iz_ac01_a,93,44,5	duplicate(ac_board)	[Dispensary]#ac_a	2_BULLETIN_BOARD
+iz_ac01_b,93,44,5	duplicate(ac_board)	[Dispensary]#ac_b	2_BULLETIN_BOARD
+iz_ac01_c,93,44,5	duplicate(ac_board)	[Dispensary]#ac_c	2_BULLETIN_BOARD
+iz_ac01_d,93,44,5	duplicate(ac_board)	[Dispensary]#ac_d	2_BULLETIN_BOARD
 
-iz_ac01,103,89,3	duplicate(ac_board)	[Great Hall]#ac	2_BULLETIN_BOARD	
-iz_ac01_a,103,89,3	duplicate(ac_board)	[Great Hall]#ac_a	2_BULLETIN_BOARD	
-iz_ac01_b,103,89,3	duplicate(ac_board)	[Great Hall]#ac_b	2_BULLETIN_BOARD	
-iz_ac01_c,103,89,3	duplicate(ac_board)	[Great Hall]#ac_c	2_BULLETIN_BOARD	
-iz_ac01_d,103,89,3	duplicate(ac_board)	[Great Hall]#ac_d	2_BULLETIN_BOARD	
+iz_ac01,103,89,3	duplicate(ac_board)	[Great Hall]#ac	2_BULLETIN_BOARD
+iz_ac01_a,103,89,3	duplicate(ac_board)	[Great Hall]#ac_a	2_BULLETIN_BOARD
+iz_ac01_b,103,89,3	duplicate(ac_board)	[Great Hall]#ac_b	2_BULLETIN_BOARD
+iz_ac01_c,103,89,3	duplicate(ac_board)	[Great Hall]#ac_c	2_BULLETIN_BOARD
+iz_ac01_d,103,89,3	duplicate(ac_board)	[Great Hall]#ac_d	2_BULLETIN_BOARD
 
-iz_ac02,98,170,5	duplicate(ac_board)	[Merchant Classroom]#2	2_BULLETIN_BOARD	
-iz_ac02_a,98,170,5	duplicate(ac_board)	[Merchant Classroom]#2_a	2_BULLETIN_BOARD	
-iz_ac02_b,98,170,5	duplicate(ac_board)	[Merchant Classroom]#2_b	2_BULLETIN_BOARD	
-iz_ac02_c,98,170,5	duplicate(ac_board)	[Merchant Classroom]#2_c	2_BULLETIN_BOARD	
-iz_ac02_d,98,170,5	duplicate(ac_board)	[Merchant Classroom]#2_d	2_BULLETIN_BOARD	
+iz_ac02,98,170,5	duplicate(ac_board)	[Merchant Classroom]#2	2_BULLETIN_BOARD
+iz_ac02_a,98,170,5	duplicate(ac_board)	[Merchant Classroom]#2_a	2_BULLETIN_BOARD
+iz_ac02_b,98,170,5	duplicate(ac_board)	[Merchant Classroom]#2_b	2_BULLETIN_BOARD
+iz_ac02_c,98,170,5	duplicate(ac_board)	[Merchant Classroom]#2_c	2_BULLETIN_BOARD
+iz_ac02_d,98,170,5	duplicate(ac_board)	[Merchant Classroom]#2_d	2_BULLETIN_BOARD
 
-iz_ac02,109,170,3	duplicate(ac_board)	[Acolyte Classroom]#2	2_BULLETIN_BOARD	
-iz_ac02_a,109,170,3	duplicate(ac_board)	[Acolyte Classroom]#2_a	2_BULLETIN_BOARD	
-iz_ac02_b,109,170,3	duplicate(ac_board)	[Acolyte Classroom]#2_b	2_BULLETIN_BOARD	
-iz_ac02_c,109,170,3	duplicate(ac_board)	[Acolyte Classroom]#2_c	2_BULLETIN_BOARD	
-iz_ac02_d,109,170,3	duplicate(ac_board)	[Acolyte Classroom]#2_d	2_BULLETIN_BOARD	
+iz_ac02,109,170,3	duplicate(ac_board)	[Acolyte Classroom]#2	2_BULLETIN_BOARD
+iz_ac02_a,109,170,3	duplicate(ac_board)	[Acolyte Classroom]#2_a	2_BULLETIN_BOARD
+iz_ac02_b,109,170,3	duplicate(ac_board)	[Acolyte Classroom]#2_b	2_BULLETIN_BOARD
+iz_ac02_c,109,170,3	duplicate(ac_board)	[Acolyte Classroom]#2_c	2_BULLETIN_BOARD
+iz_ac02_d,109,170,3	duplicate(ac_board)	[Acolyte Classroom]#2_d	2_BULLETIN_BOARD
 
-iz_ac02,98,140,5	duplicate(ac_board)	[Thief Classroom]#ac	2_BULLETIN_BOARD	
-iz_ac02_a,98,140,5	duplicate(ac_board)	[Thief Classroom]#ac_a	2_BULLETIN_BOARD	
-iz_ac02_b,98,140,5	duplicate(ac_board)	[Thief Classroom]#ac_b	2_BULLETIN_BOARD	
-iz_ac02_c,98,140,5	duplicate(ac_board)	[Thief Classroom]#ac_c	2_BULLETIN_BOARD	
-iz_ac02_d,98,140,5	duplicate(ac_board)	[Thief Classroom]#ac_d	2_BULLETIN_BOARD	
+iz_ac02,98,140,5	duplicate(ac_board)	[Thief Classroom]#ac	2_BULLETIN_BOARD
+iz_ac02_a,98,140,5	duplicate(ac_board)	[Thief Classroom]#ac_a	2_BULLETIN_BOARD
+iz_ac02_b,98,140,5	duplicate(ac_board)	[Thief Classroom]#ac_b	2_BULLETIN_BOARD
+iz_ac02_c,98,140,5	duplicate(ac_board)	[Thief Classroom]#ac_c	2_BULLETIN_BOARD
+iz_ac02_d,98,140,5	duplicate(ac_board)	[Thief Classroom]#ac_d	2_BULLETIN_BOARD
 
-iz_ac02,109,140,3	duplicate(ac_board)	[Ninja Classroom]#ac	2_BULLETIN_BOARD	
-iz_ac02_a,109,140,3	duplicate(ac_board)	[Ninja Classroom]#ac_a	2_BULLETIN_BOARD	
-iz_ac02_b,109,140,3	duplicate(ac_board)	[Ninja Classroom]#ac_b	2_BULLETIN_BOARD	
-iz_ac02_c,109,140,3	duplicate(ac_board)	[Ninja Classroom]#ac_c	2_BULLETIN_BOARD	
-iz_ac02_d,109,140,3	duplicate(ac_board)	[Ninja Classroom]#ac_d	2_BULLETIN_BOARD	
+iz_ac02,109,140,3	duplicate(ac_board)	[Ninja Classroom]#ac	2_BULLETIN_BOARD
+iz_ac02_a,109,140,3	duplicate(ac_board)	[Ninja Classroom]#ac_a	2_BULLETIN_BOARD
+iz_ac02_b,109,140,3	duplicate(ac_board)	[Ninja Classroom]#ac_b	2_BULLETIN_BOARD
+iz_ac02_c,109,140,3	duplicate(ac_board)	[Ninja Classroom]#ac_c	2_BULLETIN_BOARD
+iz_ac02_d,109,140,3	duplicate(ac_board)	[Ninja Classroom]#ac_d	2_BULLETIN_BOARD
 
-iz_ac02,98,110,5	duplicate(ac_board)	[Archer Classroom]#ac	2_BULLETIN_BOARD	
-iz_ac02_a,98,110,5	duplicate(ac_board)	[Archer Classroom]#ac_a	2_BULLETIN_BOARD	
-iz_ac02_b,98,110,5	duplicate(ac_board)	[Archer Classroom]#ac_b	2_BULLETIN_BOARD	
-iz_ac02_c,98,110,5	duplicate(ac_board)	[Archer Classroom]#ac_c	2_BULLETIN_BOARD	
-iz_ac02_d,98,110,5	duplicate(ac_board)	[Archer Classroom]#ac_d	2_BULLETIN_BOARD	
+iz_ac02,98,110,5	duplicate(ac_board)	[Archer Classroom]#ac	2_BULLETIN_BOARD
+iz_ac02_a,98,110,5	duplicate(ac_board)	[Archer Classroom]#ac_a	2_BULLETIN_BOARD
+iz_ac02_b,98,110,5	duplicate(ac_board)	[Archer Classroom]#ac_b	2_BULLETIN_BOARD
+iz_ac02_c,98,110,5	duplicate(ac_board)	[Archer Classroom]#ac_c	2_BULLETIN_BOARD
+iz_ac02_d,98,110,5	duplicate(ac_board)	[Archer Classroom]#ac_d	2_BULLETIN_BOARD
 
-iz_ac02,109,110,3	duplicate(ac_board)	[Mage Classroom]#ac	2_BULLETIN_BOARD	
-iz_ac02_a,109,110,3	duplicate(ac_board)	[Mage Classroom]#ac_a	2_BULLETIN_BOARD	
-iz_ac02_b,109,110,3	duplicate(ac_board)	[Mage Classroom]#ac_b	2_BULLETIN_BOARD	
-iz_ac02_c,109,110,3	duplicate(ac_board)	[Mage Classroom]#ac_c	2_BULLETIN_BOARD	
-iz_ac02_d,109,110,3	duplicate(ac_board)	[Mage Classroom]#ac_d	2_BULLETIN_BOARD	
+iz_ac02,109,110,3	duplicate(ac_board)	[Mage Classroom]#ac	2_BULLETIN_BOARD
+iz_ac02_a,109,110,3	duplicate(ac_board)	[Mage Classroom]#ac_a	2_BULLETIN_BOARD
+iz_ac02_b,109,110,3	duplicate(ac_board)	[Mage Classroom]#ac_b	2_BULLETIN_BOARD
+iz_ac02_c,109,110,3	duplicate(ac_board)	[Mage Classroom]#ac_c	2_BULLETIN_BOARD
+iz_ac02_d,109,110,3	duplicate(ac_board)	[Mage Classroom]#ac_d	2_BULLETIN_BOARD
 
-iz_ac02,98,80,5	duplicate(ac_board)	[Taekwon Classroom]#2	2_BULLETIN_BOARD	
-iz_ac02_a,98,80,5	duplicate(ac_board)	[Taekwon Classroom]#2_a	2_BULLETIN_BOARD	
-iz_ac02_b,98,80,5	duplicate(ac_board)	[Taekwon Classroom]#2_b	2_BULLETIN_BOARD	
-iz_ac02_c,98,80,5	duplicate(ac_board)	[Taekwon Classroom]#2_c	2_BULLETIN_BOARD	
-iz_ac02_d,98,80,5	duplicate(ac_board)	[Taekwon Classroom]#2_d	2_BULLETIN_BOARD	
+iz_ac02,98,80,5	duplicate(ac_board)	[Taekwon Classroom]#2	2_BULLETIN_BOARD
+iz_ac02_a,98,80,5	duplicate(ac_board)	[Taekwon Classroom]#2_a	2_BULLETIN_BOARD
+iz_ac02_b,98,80,5	duplicate(ac_board)	[Taekwon Classroom]#2_b	2_BULLETIN_BOARD
+iz_ac02_c,98,80,5	duplicate(ac_board)	[Taekwon Classroom]#2_c	2_BULLETIN_BOARD
+iz_ac02_d,98,80,5	duplicate(ac_board)	[Taekwon Classroom]#2_d	2_BULLETIN_BOARD
 
-iz_ac02,109,80,3	duplicate(ac_board)	[Gunslinger Classroom]#0	2_BULLETIN_BOARD	
-iz_ac02_a,109,80,3	duplicate(ac_board)	[Gunslinger Classroom]#a	2_BULLETIN_BOARD	
-iz_ac02_b,109,80,3	duplicate(ac_board)	[Gunslinger Classroom]#b	2_BULLETIN_BOARD	
-iz_ac02_c,109,80,3	duplicate(ac_board)	[Gunslinger Classroom]#c	2_BULLETIN_BOARD	
-iz_ac02_d,109,80,3	duplicate(ac_board)	[Gunslinger Classroom]#d	2_BULLETIN_BOARD	
+iz_ac02,109,80,3	duplicate(ac_board)	[Gunslinger Classroom]#0	2_BULLETIN_BOARD
+iz_ac02_a,109,80,3	duplicate(ac_board)	[Gunslinger Classroom]#a	2_BULLETIN_BOARD
+iz_ac02_b,109,80,3	duplicate(ac_board)	[Gunslinger Classroom]#b	2_BULLETIN_BOARD
+iz_ac02_c,109,80,3	duplicate(ac_board)	[Gunslinger Classroom]#c	2_BULLETIN_BOARD
+iz_ac02_d,109,80,3	duplicate(ac_board)	[Gunslinger Classroom]#d	2_BULLETIN_BOARD
 
-iz_ac02,98,50,5	duplicate(ac_board)	[Swordman Classroom]#2	2_BULLETIN_BOARD	
-iz_ac02_a,98,50,5	duplicate(ac_board)	[Swordman Classroom]#2_a	2_BULLETIN_BOARD	
-iz_ac02_b,98,50,5	duplicate(ac_board)	[Swordman Classroom]#2_b	2_BULLETIN_BOARD	
-iz_ac02_c,98,50,5	duplicate(ac_board)	[Swordman Classroom]#2_c	2_BULLETIN_BOARD	
-iz_ac02_d,98,50,5	duplicate(ac_board)	[Swordman Classroom]#2_d	2_BULLETIN_BOARD	
+iz_ac02,98,50,5	duplicate(ac_board)	[Swordman Classroom]#2	2_BULLETIN_BOARD
+iz_ac02_a,98,50,5	duplicate(ac_board)	[Swordman Classroom]#2_a	2_BULLETIN_BOARD
+iz_ac02_b,98,50,5	duplicate(ac_board)	[Swordman Classroom]#2_b	2_BULLETIN_BOARD
+iz_ac02_c,98,50,5	duplicate(ac_board)	[Swordman Classroom]#2_c	2_BULLETIN_BOARD
+iz_ac02_d,98,50,5	duplicate(ac_board)	[Swordman Classroom]#2_d	2_BULLETIN_BOARD
 
-iz_ac02,109,50,3	duplicate(ac_board)	[Lounge]#ac	2_BULLETIN_BOARD	
-iz_ac02_a,109,50,3	duplicate(ac_board)	[Lounge]#ac_a	2_BULLETIN_BOARD	
-iz_ac02_b,109,50,3	duplicate(ac_board)	[Lounge]#ac_b	2_BULLETIN_BOARD	
-iz_ac02_c,109,50,3	duplicate(ac_board)	[Lounge]#ac_c	2_BULLETIN_BOARD	
-iz_ac02_d,109,50,3	duplicate(ac_board)	[Lounge]#ac_d	2_BULLETIN_BOARD	
+iz_ac02,109,50,3	duplicate(ac_board)	[Lounge]#ac	2_BULLETIN_BOARD
+iz_ac02_a,109,50,3	duplicate(ac_board)	[Lounge]#ac_a	2_BULLETIN_BOARD
+iz_ac02_b,109,50,3	duplicate(ac_board)	[Lounge]#ac_b	2_BULLETIN_BOARD
+iz_ac02_c,109,50,3	duplicate(ac_board)	[Lounge]#ac_c	2_BULLETIN_BOARD
+iz_ac02_d,109,50,3	duplicate(ac_board)	[Lounge]#ac_d	2_BULLETIN_BOARD
 
-iz_ac02,107,180,3	duplicate(ac_board)	[Principal's Office]#a	2_BULLETIN_BOARD	
-iz_ac02_a,107,180,3	duplicate(ac_board)	[Principal's Office]#aa	2_BULLETIN_BOARD	
-iz_ac02_b,107,180,3	duplicate(ac_board)	[Principal's Office]#ab	2_BULLETIN_BOARD	
-iz_ac02_c,107,180,3	duplicate(ac_board)	[Principal's Office]#ac	2_BULLETIN_BOARD	
-iz_ac02_d,107,180,3	duplicate(ac_board)	[Principal's Office]#ad	2_BULLETIN_BOARD	
+iz_ac02,107,180,3	duplicate(ac_board)	[Principal's Office]#a	2_BULLETIN_BOARD
+iz_ac02_a,107,180,3	duplicate(ac_board)	[Principal's Office]#aa	2_BULLETIN_BOARD
+iz_ac02_b,107,180,3	duplicate(ac_board)	[Principal's Office]#ab	2_BULLETIN_BOARD
+iz_ac02_c,107,180,3	duplicate(ac_board)	[Principal's Office]#ac	2_BULLETIN_BOARD
+iz_ac02_d,107,180,3	duplicate(ac_board)	[Principal's Office]#ad	2_BULLETIN_BOARD
 
 
 // =============================================================================
@@ -7144,7 +7144,7 @@ iz_ac02,142,85,6	script	Lusa#ac	4_F_GUNSLINGER,{
 	if (!checkweight(1301, 1)) {
 		mes "- Quest can't be continued as your overloaded items. -";
 		close;
-	}	
+	}
 	cutin "aca_gung_01.bmp", 2;
 	if (Class == Job_Novice) {
 		if (questprogress(4269) != 2) {
@@ -7534,7 +7534,7 @@ iz_ac02,142,85,6	script	Lusa#ac	4_F_GUNSLINGER,{
 				}
 				if (.@gun_quest_02 == 2) {
 					mes "[Lusa]";
-					if (.@gun_tok == 0)						
+					if (.@gun_tok == 0)
 						mes "You finished <Assignment B>?";
 					else
 						mes "You finished <Assignment B> too?";
@@ -7551,7 +7551,7 @@ iz_ac02,142,85,6	script	Lusa#ac	4_F_GUNSLINGER,{
 				}
 				if (.@gun_quest_03 == 2) {
 					mes "[Lusa]";
-					if (.@gun_tok == 0)						
+					if (.@gun_tok == 0)
 						mes "You finished <Assignment C>?";
 					else
 						mes "You finished <Assignment C> too?";
@@ -7568,7 +7568,7 @@ iz_ac02,142,85,6	script	Lusa#ac	4_F_GUNSLINGER,{
 				}
 				if (.@gun_quest_04 == 2) {
 					mes "[Lusa]";
-					if (.@gun_tok == 0)						
+					if (.@gun_tok == 0)
 						mes "You finished <Assignment D>?";
 					else
 						mes "You finished <Assignment D> too?";
@@ -8290,7 +8290,7 @@ iz_ac02,70,85,5	script	Arang#ac	4_F_TAEKWON,{
 								next;
 								setquest 13101;
 								cutin "", 255;
-								warp "pay_fild08", 148, 76;								
+								warp "pay_fild08", 148, 76;
 								end;
 							}
 						} else {
@@ -9110,7 +9110,7 @@ iz_ac02,53,48,5	script	Swordman Assistant#ac	4_M_KY_KNT,{
 					mes "Let's repeat the prequisite of swordsmanhood,";
 					mes "this is a review study!";
 					next;
-				}				
+				}
 			} else {
 				mes "[Assitant Trainer Neals]";
 				mes "Feeble people like you can become a gallant Swordsman soon.";
@@ -9378,7 +9378,7 @@ iz_ac02,148,110,3	script	Mage Chuck#ac	4_M_JOB_WIZARD,{
 					}
 					break;
 				}
-			}				
+			}
 		} else {
 			mes "[Mage Chuck]";
 			mes "First you'll have to complete your ^8B4513registration^000000 at the Academy front desk.";
@@ -9807,7 +9807,7 @@ iz_ac02,50,169,3	script	Salim Hamid#ac	1_M_MERCHANT,{
 				next;
 				break;
 			case 3:
-				 mes "[Salim Hamid]";
+				mes "[Salim Hamid]";
 				mes "The stats concerning crafting is simpler than that concerning battle. Only difficulty is how to cultivate it.";
 				next;
 				mes "[Salim Hamid]";
@@ -10343,7 +10343,7 @@ iz_ac02,52,136,3	script	Guest Lecturer Mayssel#0	4_F_MAYSEL,{
 							delitem 2820, countitem(2820); // Thief_Manual
 						erasequest 7483;
 						erasequest 7484;
-						erasequest 7485;						
+						erasequest 7485;
 						close2;
 						cutin "", 255;
 						end;
@@ -10794,7 +10794,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 					mes "Important thing is not theory like what we are talking about.";
 					mes "Actual fighting!! Actual fighting is key!!";
 					setquest 7481;
-					close2;		
+					close2;
 					cutin "", 255;
 					end;
 				} else {
@@ -10819,7 +10819,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 					mes "Do you agree?";
 					setquest 7481;
 					getitem 569, 30; // Novice_Potion
-					close2;		
+					close2;
 					cutin "", 255;
 					end;
 				}
@@ -10866,7 +10866,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 						mes ".. Hng..";
 						setquest 7486;
 						completequest 7486;
-						close2;		
+						close2;
 						cutin "", 255;
 						end;
 					} else {
@@ -10882,7 +10882,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 						mes "Haha.. To me, Master is good enough, doing the same thing to me.";
 						setquest 7486;
 						completequest 7486;
-						close2;		
+						close2;
 						cutin "", 255;
 						end;
 					}
@@ -10891,7 +10891,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 					mes "Keung....";
 					mes "I am losing my excitement.";
 					cutin "sc_vicente04.bmp", 2;
-					close2;		
+					close2;
 					cutin "", 255;
 					end;
 				}
@@ -10902,7 +10902,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 				mes "If you wish to continue along the path of the Thief, speak to Mayssel.";
 				mes "Her information should be helpful.";
 				cutin "sc_vicente01.bmp", 2;
-				close2;		
+				close2;
 				cutin "", 255;
 				end;
 			} else if (questprogress(7483) == 1) {
@@ -11055,7 +11055,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 					setquest 7484;
 					npcskill "AL_BLESSING", 10, 60, 60;
 					percentheal 0, 100;
-					close2;		
+					close2;
 					cutin "", 255;
 					end;
 				} else if (questprogress(7484) == 1) {
@@ -11070,7 +11070,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 						mes "[Vicente]";
 						mes "Anyway, it is good enough for your skill experience purpose, let's finish the class here.";
 						mes "If you haven't finished Mr. Verkhasel's assignment, keep going with it.";
-						close2;		
+						close2;
 						cutin "", 255;
 						end;
 					} else {
@@ -11088,7 +11088,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 							donpcevent "#nbacStone03::OnReset";
 							npcskill "AL_BLESSING", 10, 60, 60;
 							percentheal 0, 100;
-							close2;		
+							close2;
 							cutin "", 255;
 							end;
 						} else {
@@ -11097,7 +11097,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 							mes "This is not your aptitude.";
 							mes "I see. This mission is now cancelled.";
 							erasequest 7484;
-							close2;		
+							close2;
 							cutin "", 255;
 							end;
 						}
@@ -11152,7 +11152,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 				mes "[Vicente]";
 				mes "Perhaps, I won't forget you...";
 				mes "Haha...";
-				close2;		
+				close2;
 				cutin "", 255;
 				end;
 			}
@@ -11166,7 +11166,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 			next;
 			mes "[Vicente]";
 			mes "Though only novices can register...";
-			close2;		
+			close2;
 			cutin "", 255;
 			end;
 		} else {
@@ -11199,7 +11199,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 				next;
 				cutin "", 255;
 				mes "The atmosphere became very tense.";
-				close2;		
+				close2;
 				cutin "", 255;
 				end;
 			} else {
@@ -11211,7 +11211,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 				mes "[Vicente]";
 				mes "So, in other words, I am handling the Novices wanting to be thieves.";
 				mes "Haha...";
-				close2;		
+				close2;
 				cutin "", 255;
 				end;
 			}
@@ -11515,7 +11515,7 @@ iz_ac02,55,134,3	script	Verkhasel#ac	4_M_GUILLOTINE,{
 						mes "Check it with Mayssel.";
 						completequest 7485;
 						getexp 800, 0;
-						close2;		
+						close2;
 						cutin "", 255;
 						end;
 					} else {
@@ -11528,7 +11528,7 @@ iz_ac02,55,134,3	script	Verkhasel#ac	4_M_GUILLOTINE,{
 							mes "[Verkhasel]";
 							mes "OK. Until you kill all the porings in the cage, attack them with venom.";
 							percentheal 0, 100;
-							close2;		
+							close2;
 							cutin "", 255;
 							end;
 						}
@@ -11540,7 +11540,7 @@ iz_ac02,55,134,3	script	Verkhasel#ac	4_M_GUILLOTINE,{
 							mes "[Verkhasel]";
 							mes "Cancel the mission to hunt poring with envenom.";
 							erasequest 7485;
-							close2;		
+							close2;
 							cutin "", 255;
 							end;
 						}
@@ -11548,7 +11548,7 @@ iz_ac02,55,134,3	script	Verkhasel#ac	4_M_GUILLOTINE,{
 						mes "Have you changed your mind?";
 						mes "Then, until you kill all the poring in the cage, keep attacking them with envenom.";
 						percentheal 0, 100;
-						close2;		
+						close2;
 						cutin "", 255;
 						end;
 					}
@@ -11557,7 +11557,7 @@ iz_ac02,55,134,3	script	Verkhasel#ac	4_M_GUILLOTINE,{
 					mes "Now you fully understand what skill venom is..";
 					mes "As you completed my assignment, go and check it with Mayssel.";
 					cutin "gc_verkhasel01.bmp", 0;
-					close2;		
+					close2;
 					cutin "", 255;
 					end;
 				}
@@ -11571,7 +11571,7 @@ iz_ac02,55,134,3	script	Verkhasel#ac	4_M_GUILLOTINE,{
 				mes "[Verkhasel]";
 				mes "If you become a thief, we may meet together in far future..";
 				mes "If you become an assassin.";
-				close2;		
+				close2;
 				cutin "", 255;
 				end;
 			}
@@ -11827,7 +11827,7 @@ iz_ac02,62,139,3	script	Lumin#ac	4_M_NOV_RUMIN,{
 			cutin "", 255;
 			end;
 		}
-	}	
+	}
 
 	OnInit:
 		//AddQuestInfo 7487 0 0
@@ -12051,7 +12051,7 @@ iz_ac02,156,169,5	script	Acolyte Leader Alice#2	4_F_ACOLYTE,{
 					mes "Ask me anything if you have more questions.";
 					close2;
 					cutin "", 255;
-					end;				
+					end;
 				}
 			case 3:
 				mes "[Alice Yisha]";
@@ -13642,7 +13642,7 @@ izlude,96,125,7	script	Enchanter Mounds#iz	4_CAT_SAILOR2,{
 		close;
 	} else if (.@in_tutorial == 2) {
 		mes "[Mounds]";
-		if (countitem(2302) > 0) {			
+		if (countitem(2302) > 0) {
 			mes "Oh this is a socketed shirt already!";
 			next;
 			mes "[Mounds]";
@@ -13842,7 +13842,7 @@ izlude,96,125,7	script	Enchanter Mounds#iz	4_CAT_SAILOR2,{
 			mes "[Mounds]";
 			mes "Any other questions?";
 			next;
-		}		
+		}
 	} else {
 		mes "[Mounds]";
 		mes "Something strange must've happened. If this continues, please contact customer service.";
@@ -14004,7 +14004,7 @@ izlude,108,139,7	script	Enchanter Almond J#iz	4_CAT_SAILOR3,{
 		enable_items;
 		end;
 	}
-	
+
 	.@part = EQI_HAND_R;
 	.@equip = getequipid(.@part);
 	.@equip_refine = getequiprefinerycnt(.@part);
@@ -14168,7 +14168,7 @@ new_1-1,53,114,3	script	Training Instructor#1a	4_F_03,{
 		.@warp$ = "iz_int03";
 	} else if (strnpcinfo(4) == "new_5-1" || strnpcinfo(4) == "new_5-2" || strnpcinfo(4) == "new_5-3" || strnpcinfo(4) == "new_5-4") {
 		.@warp$ = "iz_int04";
-	}	
+	}
 	savepoint .@warp$, 98, 88;
 	warp .@warp$, 98, 88;
 	end;
