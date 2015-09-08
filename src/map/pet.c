@@ -4,6 +4,7 @@
 
 #define HERCULES_CORE
 
+#include "config/core.h" // DBPATH
 #include "pet.h"
 
 #include "map/atcommand.h" // msg_txt()
@@ -1154,26 +1155,24 @@ int pet_skill_support_timer(int tid, int64 tick, int id, intptr_t data) {
 	return 0;
 }
 
-/*==========================================
- * Pet read db data
- * pet->db.txt
- * pet->db2.txt
- *------------------------------------------*/
+/**
+ * Loads (or reloads) the pet database.
+ */
 int read_petdb()
 {
-	char* filename[] = {"pet_db.txt","pet_db2.txt"};
-	int nameid,i,j,k;
+	const char *filename[] = {
+		DBPATH"pet_db.txt",
+		"pet_db2.txt",
+	};
+	int i,j;
 
 	// Remove any previous scripts in case reloaddb was invoked.
-	for( j = 0; j < MAX_PET_DB; j++ )
-	{
-		if( pet->db[j].pet_script )
-		{
+	for (j = 0; j < MAX_PET_DB; j++) {
+		if (pet->db[j].pet_script) {
 			script->free_code(pet->db[j].pet_script);
 			pet->db[j].pet_script = NULL;
 		}
-		if( pet->db[j].equip_script )
-		{
+		if (pet->db[j].equip_script) {
 			script->free_code(pet->db[j].equip_script);
 			pet->db[j].equip_script = NULL;
 		}
@@ -1183,59 +1182,56 @@ int read_petdb()
 	memset(pet->db,0,sizeof(pet->db));
 
 	j = 0; // entry counter
-	for( i = 0; i < ARRAYLENGTH(filename); i++ ) {
+	for (i = 0; i < ARRAYLENGTH(filename); i++) {
 		char line[1024];
 		int lines, entries;
 		FILE *fp;
 
 		sprintf(line, "%s/%s", map->db_path, filename[i]);
 		fp=fopen(line,"r");
-		if( fp == NULL ) {
-			if( i == 0 )
+		if (fp == NULL) {
+			if (i == 0)
 				ShowError("can't read %s\n",line);
 			continue;
 		}
 
 		lines = entries = 0;
-		while( fgets(line, sizeof(line), fp) && j < MAX_PET_DB ) {
+		while (fgets(line, sizeof(line), fp) && j < MAX_PET_DB) {
 			char *str[22], *p;
+			int nameid, k;
 			lines++;
 
-			if(line[0] == '/' && line[1] == '/')
+			if (line[0] == '/' && line[1] == '/')
 				continue;
 			memset(str, 0, sizeof(str));
 			p = line;
-			while( ISSPACE(*p) )
+			while (ISSPACE(*p))
 				++p;
-			if( *p == '\0' )
+			if (*p == '\0')
 				continue; // empty line
-			for( k = 0; k < 20; ++k )
-			{
+			for (k = 0; k < 20; ++k) {
 				str[k] = p;
 				p = strchr(p,',');
-				if( p == NULL )
+				if (p == NULL)
 					break; // comma not found
 				*p = '\0';
 				++p;
 			}
 
-			if( p == NULL )
-			{
+			if (p == NULL) {
 				ShowError("read_petdb: Insufficient columns in line %d, skipping.\n", lines);
 				continue;
 			}
 
 			// Pet Script
-			if( *p != '{' )
-			{
+			if (*p != '{') {
 				ShowError("read_petdb: Invalid format (Pet Script column) in line %d, skipping.\n", lines);
 				continue;
 			}
 
 			str[20] = p;
 			p = strstr(p+1,"},");
-			if( p == NULL )
-			{
+			if (p == NULL) {
 				ShowError("read_petdb: Invalid format (Pet Script column) in line %d, skipping.\n", lines);
 				continue;
 			}
@@ -1243,18 +1239,17 @@ int read_petdb()
 			p += 2;
 
 			// Equip Script
-			if( *p != '{' )
-			{
+			if (*p != '{') {
 				ShowError("read_petdb: Invalid format (Equip Script column) in line %d, skipping.\n", lines);
 				continue;
 			}
 			str[21] = p;
 
-			if( (nameid = atoi(str[0])) <= 0 )
+			nameid = atoi(str[0]);
+			if (nameid <= 0)
 				continue;
 
-			if( !mob->db_checkid(nameid) )
-			{
+			if (!mob->db_checkid(nameid)) {
 				ShowWarning("pet_db reading: Invalid mob-class %d, pet not read.\n", nameid);
 				continue;
 			}
@@ -1269,7 +1264,7 @@ int read_petdb()
 			pet->db[j].fullness=atoi(str[7]);
 			pet->db[j].hungry_delay=atoi(str[8])*1000;
 			pet->db[j].r_hungry=atoi(str[9]);
-			if( pet->db[j].r_hungry <= 0 )
+			if (pet->db[j].r_hungry <= 0)
 				pet->db[j].r_hungry=1;
 			pet->db[j].r_full=atoi(str[10]);
 			pet->db[j].intimate=atoi(str[11]);
@@ -1284,16 +1279,16 @@ int read_petdb()
 			pet->db[j].pet_script = NULL;
 			pet->db[j].equip_script = NULL;
 
-			if( *str[20] )
+			if (*str[20])
 				pet->db[j].pet_script = script->parse(str[20], filename[i], lines, 0, NULL);
-			if( *str[21] )
+			if (*str[21])
 				pet->db[j].equip_script = script->parse(str[21], filename[i], lines, 0, NULL);
 
 			j++;
 			entries++;
 		}
 
-		if( j >= MAX_PET_DB )
+		if (j >= MAX_PET_DB)
 			ShowWarning("read_petdb: Reached max number of pets [%d]. Remaining pets were not read.\n ", MAX_PET_DB);
 		fclose(fp);
 		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' pets in '"CL_WHITE"%s"CL_RESET"'.\n", entries, filename[i]);
