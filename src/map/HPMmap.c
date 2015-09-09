@@ -127,6 +127,7 @@ bool HPM_map_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataType
 		case HPDT_AUTOTRADE_VEND:
 			ret->HPDataSRCPtr = (void**)(&((struct autotrade_vending *)ptr)->hdata);
 			ret->hdatac = &((struct autotrade_vending *)ptr)->hdatac;
+			break;
 		case HPDT_BGDATA:
 			ret->HPDataSRCPtr = (void**)(&((struct battleground_data *)ptr)->hdata);
 			ret->hdatac = &((struct battleground_data *)ptr)->hdatac;
