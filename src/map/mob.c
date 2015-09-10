@@ -1079,7 +1079,7 @@ int mob_ai_sub_hard_activesearch(struct block_list *bl,va_list ap)
 			) { //Pick closest target?
 #ifdef ACTIVEPATHSEARCH
 			struct walkpath_data wpd;
-			if (!path->search(&wpd, md->bl.m, md->bl.x, md->bl.y, bl->x, bl->y, 0, CELL_CHKNOPASS)) // Count walk path cells
+			if (!path->search(&wpd, &md->bl, md->bl.m, md->bl.x, md->bl.y, bl->x, bl->y, 0, CELL_CHKNOPASS)) // Count walk path cells
 				return 0;
 			//Standing monsters use range2, walking monsters use range3
 			if ((md->ud.walktimer == INVALID_TIMER && wpd.path_len > md->db->range2)

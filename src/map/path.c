@@ -69,7 +69,7 @@ static const unsigned char walk_choices [3][3] =
  * Find the closest reachable cell, 'count' cells away from (x0,y0) in direction (dx,dy).
  * Income after the coordinates of the blow
  *------------------------------------------*/
-int path_blownpos(int16 m,int16 x0,int16 y0,int16 dx,int16 dy,int count)
+int path_blownpos(struct block_list *bl, int16 m,int16 x0,int16 y0,int16 dx,int16 dy,int count)
 {
 	struct map_data *md;
 
@@ -102,7 +102,7 @@ int path_blownpos(int16 m,int16 x0,int16 y0,int16 dx,int16 dy,int count)
 /*==========================================
  * is ranged attack from (x0,y0) to (x1,y1) possible?
  *------------------------------------------*/
-bool path_search_long(struct shootpath_data *spd,int16 m,int16 x0,int16 y0,int16 x1,int16 y1,cell_chk cell)
+bool path_search_long(struct shootpath_data *spd,struct block_list *bl,int16 m,int16 x0,int16 y0,int16 x1,int16 y1,cell_chk cell)
 {
 	int dx, dy;
 	int wx = 0, wy = 0;
@@ -236,7 +236,7 @@ static int add_path(struct node_heap *heap, struct path_node *tp, int16 x, int16
  * flag: &1 = easy path search only
  * cell: type of obstruction to check for
  *------------------------------------------*/
-bool path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell)
+bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell)
 {
 	register int i, j, x, y, dx, dy;
 	struct map_data *md;
