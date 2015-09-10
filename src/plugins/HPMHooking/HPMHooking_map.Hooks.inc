@@ -50425,15 +50425,15 @@ int HP_party_db_final(DBKey key, DBData *data, va_list ap) {
 	return retVal___;
 }
 /* path */
-int HP_path_blownpos(int16 m, int16 x0, int16 y0, int16 dx, int16 dy, int count) {
+int HP_path_blownpos(struct block_list *bl, int16 m, int16 x0, int16 y0, int16 dx, int16 dy, int count) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_path_blownpos_pre ) {
-		int (*preHookFunc) (int16 *m, int16 *x0, int16 *y0, int16 *dx, int16 *dy, int *count);
+		int (*preHookFunc) (struct block_list *bl, int16 *m, int16 *x0, int16 *y0, int16 *dx, int16 *dy, int *count);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_path_blownpos_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_path_blownpos_pre[hIndex].func;
-			retVal___ = preHookFunc(&m, &x0, &y0, &dx, &dy, &count);
+			retVal___ = preHookFunc(bl, &m, &x0, &y0, &dx, &dy, &count);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -50441,26 +50441,26 @@ int HP_path_blownpos(int16 m, int16 x0, int16 y0, int16 dx, int16 dy, int count)
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.path.blownpos(m, x0, y0, dx, dy, count);
+		retVal___ = HPMHooks.source.path.blownpos(bl, m, x0, y0, dx, dy, count);
 	}
 	if( HPMHooks.count.HP_path_blownpos_post ) {
-		int (*postHookFunc) (int retVal___, int16 *m, int16 *x0, int16 *y0, int16 *dx, int16 *dy, int *count);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, int16 *m, int16 *x0, int16 *y0, int16 *dx, int16 *dy, int *count);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_path_blownpos_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_path_blownpos_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &m, &x0, &y0, &dx, &dy, &count);
+			retVal___ = postHookFunc(retVal___, bl, &m, &x0, &y0, &dx, &dy, &count);
 		}
 	}
 	return retVal___;
 }
-bool HP_path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell) {
+bool HP_path_search(struct walkpath_data *wpd, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if( HPMHooks.count.HP_path_search_pre ) {
-		bool (*preHookFunc) (struct walkpath_data *wpd, int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, int *flag, cell_chk *cell);
+		bool (*preHookFunc) (struct walkpath_data *wpd, struct block_list *bl, int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, int *flag, cell_chk *cell);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_path_search_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_path_search_pre[hIndex].func;
-			retVal___ = preHookFunc(wpd, &m, &x0, &y0, &x1, &y1, &flag, &cell);
+			retVal___ = preHookFunc(wpd, bl, &m, &x0, &y0, &x1, &y1, &flag, &cell);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -50468,26 +50468,26 @@ bool HP_path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int1
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.path.search(wpd, m, x0, y0, x1, y1, flag, cell);
+		retVal___ = HPMHooks.source.path.search(wpd, bl, m, x0, y0, x1, y1, flag, cell);
 	}
 	if( HPMHooks.count.HP_path_search_post ) {
-		bool (*postHookFunc) (bool retVal___, struct walkpath_data *wpd, int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, int *flag, cell_chk *cell);
+		bool (*postHookFunc) (bool retVal___, struct walkpath_data *wpd, struct block_list *bl, int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, int *flag, cell_chk *cell);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_path_search_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_path_search_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, wpd, &m, &x0, &y0, &x1, &y1, &flag, &cell);
+			retVal___ = postHookFunc(retVal___, wpd, bl, &m, &x0, &y0, &x1, &y1, &flag, &cell);
 		}
 	}
 	return retVal___;
 }
-bool HP_path_search_long(struct shootpath_data *spd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, cell_chk cell) {
+bool HP_path_search_long(struct shootpath_data *spd, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, cell_chk cell) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if( HPMHooks.count.HP_path_search_long_pre ) {
-		bool (*preHookFunc) (struct shootpath_data *spd, int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, cell_chk *cell);
+		bool (*preHookFunc) (struct shootpath_data *spd, struct block_list *bl, int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, cell_chk *cell);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_path_search_long_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_path_search_long_pre[hIndex].func;
-			retVal___ = preHookFunc(spd, &m, &x0, &y0, &x1, &y1, &cell);
+			retVal___ = preHookFunc(spd, bl, &m, &x0, &y0, &x1, &y1, &cell);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -50495,13 +50495,13 @@ bool HP_path_search_long(struct shootpath_data *spd, int16 m, int16 x0, int16 y0
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.path.search_long(spd, m, x0, y0, x1, y1, cell);
+		retVal___ = HPMHooks.source.path.search_long(spd, bl, m, x0, y0, x1, y1, cell);
 	}
 	if( HPMHooks.count.HP_path_search_long_post ) {
-		bool (*postHookFunc) (bool retVal___, struct shootpath_data *spd, int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, cell_chk *cell);
+		bool (*postHookFunc) (bool retVal___, struct shootpath_data *spd, struct block_list *bl, int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, cell_chk *cell);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_path_search_long_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_path_search_long_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, spd, &m, &x0, &y0, &x1, &y1, &cell);
+			retVal___ = postHookFunc(retVal___, spd, bl, &m, &x0, &y0, &x1, &y1, &cell);
 		}
 	}
 	return retVal___;
