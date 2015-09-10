@@ -83,7 +83,7 @@ unsigned char mail_setitem(struct map_session_data *sd, int idx, int amount) {
 
 		if( idx < 0 || idx >= MAX_INVENTORY )
 			return 1;
-		if( amount < 0 || amount > sd->status.inventory[idx].amount )
+		if( amount <= 0 || amount > sd->status.inventory[idx].amount )
 			return 1;
 		if( !pc_can_give_items(sd) || sd->status.inventory[idx].expire_time ||
 			!itemdb_canmail(&sd->status.inventory[idx],pc_get_group_level(sd)) ||
@@ -122,6 +122,8 @@ bool mail_setattachment(struct map_session_data *sd, struct mail_message *msg)
 
 		memcpy(&msg->item, &sd->status.inventory[n], sizeof(struct item));
 		msg->item.amount = sd->mail.amount;
+		if (msg->item.amount != sd->mail.amount)  // check for amount overflow
+			return false;
 	}
 	else
 		memset(&msg->item, 0x00, sizeof(struct item));

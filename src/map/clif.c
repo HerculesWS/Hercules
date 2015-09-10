@@ -14576,8 +14576,9 @@ void clif_parse_Mail_getattach(int fd, struct map_session_data *sd)
 
 	sd->mail.inbox.msg[i].zeny = 0;
 	memset(&sd->mail.inbox.msg[i].item, 0, sizeof(struct item));
-	clif->mail_read(sd, mail_id);
+	mail->clear(sd);
 
+	clif->mail_read(sd, mail_id);
 	intif->Mail_getattach(sd->status.char_id, mail_id);
 }
 
@@ -14605,6 +14606,9 @@ void clif_parse_Mail_delete(int fd, struct map_session_data *sd)
 			return;
 		}
 
+		sd->mail.inbox.msg[i].zeny = 0;
+		memset(&sd->mail.inbox.msg[i].item, 0, sizeof(struct item));
+		mail->clear(sd);
 		intif->Mail_delete(sd->status.char_id, mail_id);
 	}
 }
@@ -14623,10 +14627,14 @@ void clif_parse_Mail_return(int fd, struct map_session_data *sd)
 		return;
 
 	ARR_FIND(0, MAIL_MAX_INBOX, i, sd->mail.inbox.msg[i].id == mail_id);
-	if( i < MAIL_MAX_INBOX && sd->mail.inbox.msg[i].send_id != 0 )
+	if (i < MAIL_MAX_INBOX && sd->mail.inbox.msg[i].send_id != 0) {
+		sd->mail.inbox.msg[i].zeny = 0;
+		memset(&sd->mail.inbox.msg[i].item, 0, sizeof(struct item));
+		mail->clear(sd);
 		intif->Mail_return(sd->status.char_id, mail_id);
-	else
+	} else {
 		clif->mail_return(sd->fd, mail_id, 1);
+	}
 }
 
 
