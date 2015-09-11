@@ -19090,28 +19090,40 @@ BUILDIN(queueiterator) {
 /* returns next/first member in the iterator, 0 if none */
 BUILDIN(qiget) {
 	int idx = script_getnum(st, 2);
+	struct hQueueIterator *it = NULL;
 
-	if( idx < 0 || idx >= script->hqis ) {
+	if (idx < 0 || idx >= script->hqis) {
 		ShowWarning("buildin_qiget: unknown queue iterator id %d\n",idx);
 		script_pushint(st, 0);
-	} else if (script->hqi[idx].pos >= script->hqi[idx].items) {
-		script_pushint(st, 0);
-	} else {
-		struct hQueueIterator *it = &script->hqi[idx];
-		script_pushint(st, it->item[it->pos++]);
+		return true;
 	}
 
+	it = &script->hqi[idx];
+
+	if (it->pos >= it->items) {
+		if (it->pos == it->items)
+			++it->pos; // Move beyond the last position to invalidate qicheck
+		script_pushint(st, 0);
+		return true;
+	}
+	script_pushint(st, it->item[it->pos++]);
 	return true;
 }
 /* Queue Iterator Check */
-/* returns 1:0 if there is a next member in the iterator */
+/* returns 1:0 if there is the current member in the iterator exists */
 BUILDIN(qicheck) {
 	int idx = script_getnum(st, 2);
+	struct hQueueIterator *it = NULL;
 
-	if( idx < 0 || idx >= script->hqis ) {
+	if (idx < 0 || idx >= script->hqis) {
 		ShowWarning("buildin_qicheck: unknown queue iterator id %d\n",idx);
 		script_pushint(st, 0);
-	} else if (script->hqi[idx].pos >= script->hqi[idx].items) {
+		return true;
+	}
+
+	it = &script->hqi[idx];
+
+	if (it->pos <= 0 || it->pos > it->items) {
 		script_pushint(st, 0);
 	} else {
 		script_pushint(st, 1);

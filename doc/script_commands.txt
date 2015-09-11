@@ -9011,8 +9011,10 @@ even if you remove them from the queue.
 ---------------------------------------
 
 *qicheck(<queue_iterator_id>);
-checks whether there is a next member in the iterator's queue, 1 when
-it does, 0 otherwise.
+
+Checks whether the current member in the iterator's queue exists.
+
+Returns 1 when it does, 0 otherwise.
 
 ---------------------------------------
 
