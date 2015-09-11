@@ -595,6 +595,7 @@ struct script_interface {
 	/* */
 	int buildin_mes_offset;
 	int buildin_select_offset;
+	int buildin_setarray_offset;
 	int buildin_lang_macro_offset;
 	/* */
 	DBMap *translation_db;/* npc_name => DBMap (strings) */
