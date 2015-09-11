@@ -1289,7 +1289,7 @@ const char* parse_simpleexpr(const char *p)
 		}
 		
 		if( script->lang_export_fp && !duplicate &&
-			( ( ( script->syntax.last_func == script->buildin_mes_offset ||
+			( ( ( script->syntax.last_func == script->buildin_mes_offset || script->syntax.last_func == script->buildin_setarray_offset ||
 				 script->syntax.last_func == script->buildin_select_offset ) && !script->syntax.nested_call
 				) || script->syntax.lang_macro_active ) ) {
 			const char *line_start = start_point;
@@ -19824,6 +19824,7 @@ bool script_add_builtin(const struct script_function *buildin, bool override) {
 		else if( strcmp(buildin->name, "getelementofarray") == 0 ) script->buildin_getelementofarray_ref = n;
 		else if( strcmp(buildin->name, "mes") == 0 ) script->buildin_mes_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "select") == 0 ) script->buildin_select_offset = script->buildin_count;
+		else if( strcmp(buildin->name, "setarray") == 0 ) script->buildin_select_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "_") == 0 ) script->buildin_lang_macro_offset = script->buildin_count;
 
 		offset = script->buildin_count;
