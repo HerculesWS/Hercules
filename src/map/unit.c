@@ -98,11 +98,11 @@ int unit_walktoxy_sub(struct block_list *bl)
 
 	memset(&wpd, 0, sizeof(wpd));
 
-	if( !path->search(&wpd,bl->m,bl->x,bl->y,ud->to_x,ud->to_y,ud->state.walk_easy,CELL_CHKNOPASS) )
+	if( !path->search(&wpd,bl,bl->m,bl->x,bl->y,ud->to_x,ud->to_y,ud->state.walk_easy,CELL_CHKNOPASS) )
 		return 0;
 
 #ifdef OFFICIAL_WALKPATH
-	if( !path->search_long(NULL, bl->m, bl->x, bl->y, ud->to_x, ud->to_y, CELL_CHKNOPASS) // Check if there is an obstacle between
+	if( !path->search_long(NULL, bl, bl->m, bl->x, bl->y, ud->to_x, ud->to_y, CELL_CHKNOPASS) // Check if there is an obstacle between
 		&& wpd.path_len > 14	// Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett]
 		&& (bl->type != BL_NPC) ) // If type is a NPC, please disregard.
 			return 0;
@@ -497,11 +497,11 @@ int unit_walktoxy( struct block_list *bl, short x, short y, int flag)
 	if (battle_config.check_occupied_cells && (flag&8) && !map->closest_freecell(bl->m, &x, &y, BL_CHAR|BL_NPC, 1)) //This might change x and y
 		return 0;
 
-	if (!path->search(&wpd, bl->m, bl->x, bl->y, x, y, flag&1, CELL_CHKNOPASS)) // Count walk path cells
+	if (!path->search(&wpd, bl, bl->m, bl->x, bl->y, x, y, flag&1, CELL_CHKNOPASS)) // Count walk path cells
 		return 0;
 
 #ifdef OFFICIAL_WALKPATH
-	if( !path->search_long(NULL, bl->m, bl->x, bl->y, x, y, CELL_CHKNOPASS) // Check if there is an obstacle between
+	if( !path->search_long(NULL, bl, bl->m, bl->x, bl->y, x, y, CELL_CHKNOPASS) // Check if there is an obstacle between
 		&& (wpd.path_len > (battle_config.max_walk_path/17)*14) // Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett]
 		&& (bl->type != BL_NPC) ) // If type is a NPC, please disregard.
 		return 0;
@@ -741,7 +741,7 @@ int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int easy, bool
 	unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 	unit->stop_attack(bl);
 
-	if( checkpath && (map->getcell(bl->m,dst_x,dst_y,CELL_CHKNOPASS) || !path->search(NULL,bl->m,bl->x,bl->y,dst_x,dst_y,easy,CELL_CHKNOREACH)) )
+	if( checkpath && (map->getcell(bl->m,dst_x,dst_y,CELL_CHKNOPASS) || !path->search(NULL,bl,bl->m,bl->x,bl->y,dst_x,dst_y,easy,CELL_CHKNOREACH)) )
 		return 0; // unreachable
 
 	ud->to_x = dst_x;
@@ -775,7 +775,7 @@ int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int easy, bool
 		{ // Check if pet needs to be teleported. [Skotlex]
 			int flag = 0;
 			struct block_list* pbl = &sd->pd->bl;
-			if( !checkpath && !path->search(NULL,pbl->m,pbl->x,pbl->y,dst_x,dst_y,0,CELL_CHKNOPASS) )
+			if( !checkpath && !path->search(NULL,pbl,pbl->m,pbl->x,pbl->y,dst_x,dst_y,0,CELL_CHKNOPASS) )
 				flag = 1;
 			else if (!check_distance_bl(&sd->bl, pbl, AREA_SIZE)) //Too far, teleport.
 				flag = 2;
@@ -829,7 +829,7 @@ int unit_blown(struct block_list* bl, int dx, int dy, int count, int flag)
 		sd = BL_CAST(BL_PC, bl);
 		su = BL_CAST(BL_SKILL, bl);
 
-		result = path->blownpos(bl->m, bl->x, bl->y, dx, dy, count);
+		result = path->blownpos(bl, bl->m, bl->x, bl->y, dx, dy, count);
 
 		nx = result>>16;
 		ny = result&0xffff;
@@ -1940,7 +1940,7 @@ bool unit_can_reach_pos(struct block_list *bl,int x,int y, int easy)
 	if (bl->x == x && bl->y == y) //Same place
 		return true;
 
-	return path->search(NULL,bl->m,bl->x,bl->y,x,y,easy,CELL_CHKNOREACH);
+	return path->search(NULL,bl,bl->m,bl->x,bl->y,x,y,easy,CELL_CHKNOREACH);
 }
 
 /*==========================================
@@ -1978,7 +1978,7 @@ bool unit_can_reach_bl(struct block_list *bl,struct block_list *tbl, int range, 
 
 	if (x) *x = tbl->x-dx;
 	if (y) *y = tbl->y-dy;
-	return path->search(NULL,bl->m,bl->x,bl->y,tbl->x-dx,tbl->y-dy,easy,CELL_CHKNOREACH);
+	return path->search(NULL,bl,bl->m,bl->x,bl->y,tbl->x-dx,tbl->y-dy,easy,CELL_CHKNOREACH);
 }
 /*==========================================
  * Calculates position of Pet/Mercenary/Homunculus/Elemental
@@ -2064,7 +2064,7 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick) {
 	if( status->isdead(src) || status->isdead(target)
 	 || battle->check_target(src,target,BCT_ENEMY) <= 0 || !status->check_skilluse(src, target, 0, 0)
 #ifdef OFFICIAL_WALKPATH
-	 || !path->search_long(NULL, src->m, src->x, src->y, target->x, target->y, CELL_CHKWALL)
+	 || !path->search_long(NULL, src, src->m, src->x, src->y, target->x, target->y, CELL_CHKWALL)
 #endif
 	 || (sd && !pc->can_attack(sd, ud->target) )
 	)

@@ -6689,7 +6689,7 @@ bool battle_check_range(struct block_list *src, struct block_list *bl, int range
 	if( d > AREA_SIZE )
 		return false; // Avoid targeting objects beyond your range of sight.
 
-	return path->search_long(NULL,src->m,src->x,src->y,bl->x,bl->y,CELL_CHKWALL);
+	return path->search_long(NULL,src,src->m,src->x,src->y,bl->x,bl->y,CELL_CHKWALL);
 }
 
 static const struct battle_data {
