@@ -9557,12 +9557,12 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 		return 0;
 	}
 
-	if (sd->sc.data[SC_BERSERK] || sd->sc.data[SC_NO_SWITCH_EQUIP])
+	if( sd->sc.count && (sd->sc.data[SC_BERSERK] || sd->sc.data[SC_SATURDAY_NIGHT_FEVER] ||
+		sd->sc.data[SC_KYOUGAKU] || sd->sc.data[SC_NO_SWITCH_EQUIP] || (sd->sc.data[SC_PYROCLASTIC] && sd->inventory_data[n]->type == IT_WEAPON)) ) 
 	{
 		clif->equipitemack(sd,n,0,EIA_FAIL); // fail
 		return 0;
 	}
-
 	/* won't fail from this point onwards */
 	if( id->flag.bindonequip && !sd->status.inventory[n].bound ) {
 		sd->status.inventory[n].bound = (unsigned char)IBT_CHARACTER;
@@ -9743,15 +9743,15 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag)
 		clif->unequipitemack(sd,0,0,UIA_FAIL);
 		return 0;
 	}
-
-	// if player is berserk then cannot unequip
-	if (!(flag&PCUNEQUIPITEM_FORCE) && sd->sc.count && (sd->sc.data[SC_BERSERK] || sd->sc.data[SC_NO_SWITCH_EQUIP]) )
-	{
-		clif->unequipitemack(sd,n,0,UIA_FAIL);
-		return 0;
-	}
-
-	if( !(flag&PCUNEQUIPITEM_FORCE) && sd->sc.count && sd->sc.data[SC_KYOUGAKU] )
+	
+	// Status changes that block equipment swapping
+	if( !(flag&PCUNEQUIPITEM_FORCE) && sd->sc.count && (
+		sd->sc.data[SC_BERSERK] ||
+		sd->sc.data[SC_SATURDAY_NIGHT_FEVER] ||
+		sd->sc.data[SC__BLOODYLUST] ||
+		sd->sc.data[SC_KYOUGAKU] ||
+		sd->sc.data[SC_NO_SWITCH_EQUIP] ||
+		(sd->sc.data[SC_PYROCLASTIC] && sd->inventory_data[n]->type == IT_WEAPON)) )	// Can't switch weapon
 	{
 		clif->unequipitemack(sd,n,0,UIA_FAIL);
 		return 0;

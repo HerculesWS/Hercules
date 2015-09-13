@@ -312,6 +312,8 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 		skill->unit_move(bl,tick,2);
 		status_change_end(bl, SC_RG_CCONFINE_M, INVALID_TIMER);
 		status_change_end(bl, SC_RG_CCONFINE_S, INVALID_TIMER);
+		status_change_end(bl, SC_TINDER_BREAKER, INVALID_TIMER);
+		status_change_end(bl, SC_TINDER_BREAKER2, INVALID_TIMER);
 		//status_change_end(bl, SC_BLADESTOP, INVALID_TIMER); //Won't stop when you are knocked away, go figure...
 		status_change_end(bl, SC_NJ_TATAMIGAESHI, INVALID_TIMER);
 		status_change_end(bl, SC_MAGICROD, INVALID_TIMER);

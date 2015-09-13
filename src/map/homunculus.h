@@ -5,6 +5,7 @@
 #ifndef MAP_HOMUNCULUS_H
 #define MAP_HOMUNCULUS_H
 
+#include "map/pc.h"
 #include "map/status.h" // struct status_data, struct status_change
 #include "map/unit.h" // struct unit_data
 #include "common/hercules.h"

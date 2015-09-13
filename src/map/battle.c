@@ -1831,6 +1831,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case EL_TYPOON_MIS_ATK:
 					skillratio += 1100;
 					break;
+				// Eira
 				case MH_ERASER_CUTTER:
 					skillratio += 400 + 100 * skill_lv + (skill_lv%2 > 0 ? 0 : 300);
 					break;
@@ -1838,11 +1839,13 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					if(skill_lv%2) skillratio += 350 + 50 * skill_lv; //500:600:700
 					else skillratio += 400 + 100 * skill_lv; //700:900
 					break;
+				// Bayeri
 				case MH_HEILIGE_STANGE:
 					skillratio += 400 + 250 * skill_lv;
 					break;
+				// Sera
 				case MH_POISON_MIST:
-					skillratio += 100 * skill_lv;
+					skillratio += 100 + 40 * skill_lv;
 					break;
 				case KO_KAIHOU:
 					if (sd && sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0) {
@@ -2612,19 +2615,39 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					skillratio += -100 + 100 * skill_lv;
 					RE_LVL_DMOD(100);
 					break;
+				// Homunculus S block
+				// Sera
 				case MH_NEEDLE_OF_PARALYZE:
 					skillratio += 600 + 100 * skill_lv;
 					break;
+				// Bayeri
 				case MH_STAHL_HORN:
 					skillratio += 400 + 100 * skill_lv;
 					break;
+				// Dieter
 				case MH_LAVA_SLIDE:
 					skillratio += -100 + 70 * skill_lv;
 					break;
-				case MH_TINDER_BREAKER:
 				case MH_MAGMA_FLOW:
-					skillratio += -100 + 100 * skill_lv;
+					skillratio += -100 + 100 * skill_lv + 3 * status->get_lv(src); // [AD] This should be accurate?
 					break;
+				// Eleanor
+				case MH_SONIC_CRAW:
+					skillratio = 40 * skill_lv;
+					break;
+				case MH_SILVERVEIN_RUSH:
+					skillratio = 150 * skill_lv;
+					break;
+				case MH_TINDER_BREAKER:
+					skillratio = 100 * skill_lv;
+					break;
+				case MH_MIDNIGHT_FRENZY:
+					skillratio = 300 * skill_lv;
+					break;
+				case MH_CBC:
+					skillratio = 400 * skill_lv; // [AD] Isn't this supposed to be flat damage?
+					break;
+				// End of Homunculus S block
 				default:
 					battle->calc_skillratio_weapon_unknown(&attack_type, src, target, &skill_id, &skill_lv, &skillratio, &flag);
 					break;
@@ -3064,7 +3087,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			damage -= damage * sc->data[SC_GRANITIC_ARMOR]->val2 / 100;
 		}
 		if(sc->data[SC_PAIN_KILLER]){
-			damage -= damage * sc->data[SC_PAIN_KILLER]->val3 / 100;
+			damage -= sc->data[SC_PAIN_KILLER]->val3;	// Flat damage reduction [WarpPortal]
+			if(damage <= 0) // [AD] Consistency check to prevent negative damage
+				damage = 1;
 		}
 		if((sce=sc->data[SC_MAGMA_FLOW]) && (rnd()%100 <= sce->val2) ){
 			skill->castend_damage_id(bl,src,MH_MAGMA_FLOW,sce->val1,timer->gettick(),0);
@@ -3147,9 +3172,18 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			&& rnd()%100 < sce->val2 && sc->fv_counter <= sce->val3 )
 				clif->millenniumshield(bl, sc->fv_counter++);
 
-		if (sc->data[SC_STYLE_CHANGE] && rnd()%2) {
-			TBL_HOM *hd = BL_CAST(BL_HOM,bl);
-			if (hd) homun->addspiritball(hd, 10); //add a sphere
+		if (sc->data[SC_STYLE_CHANGE] && sc->data[SC_STYLE_CHANGE]->val1 == MH_MD_FIGHTING) {
+			TBL_HOM *hd = BL_CAST(BL_HOM,src); // [AD] Add a sphere when attacked
+
+			if ( hd && rnd()%2)
+				homun->addspiritball(hd, 10); // According to WarpPortal, this is a flat 50% chance
+		}
+
+		if (sc->data[SC_STYLE_CHANGE] && sc->data[SC_STYLE_CHANGE]->val1 == MH_MD_GRAPPLING) {
+			TBL_HOM *hd = BL_CAST(BL_HOM,src); // [AD] Add a sphere when attacked
+
+			if ( hd && rnd()%2)
+				homun->addspiritball(hd, 10); // According to WarpPortal, this is a flat 50% chance
 		}
 
 		if( sc->data[SC__DEADLYINFECT] && flag&BF_SHORT && damage > 0 && rnd()%100 < 30 + 10 * sc->data[SC__DEADLYINFECT]->val1 && !is_boss(src) )
@@ -3197,12 +3231,24 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		}
 		if( tsc->data[SC__DEADLYINFECT] && flag&BF_SHORT && damage > 0 && rnd()%100 < 30 + 10 * tsc->data[SC__DEADLYINFECT]->val1 && !is_boss(src) )
 			status->change_spread(src, bl);
+			
 		if (tsc->data[SC_SHIELDSPELL_REF] && tsc->data[SC_SHIELDSPELL_REF]->val1 == 1 && damage > 0)
 			skill->break_equip(bl,EQP_ARMOR,10000,BCT_ENEMY );
-		if (tsc->data[SC_STYLE_CHANGE] && rnd()%2) {
-			TBL_HOM *hd = BL_CAST(BL_HOM,bl);
-			if (hd) homun->addspiritball(hd, 10);
+			
+		if (tsc->data[SC_STYLE_CHANGE] && tsc->data[SC_STYLE_CHANGE]->val1 == MH_MD_FIGHTING) {
+			TBL_HOM *hd = BL_CAST(BL_HOM,src); // [AD] Add a sphere when attacking
+
+			if ( hd && rnd()%2 )
+				homun->addspiritball(hd, 10); // According to WarpPortal, this is a flat 50% chance
 		}
+
+		if (tsc->data[SC_STYLE_CHANGE] && tsc->data[SC_STYLE_CHANGE]->val1 == MH_MD_GRAPPLING) {
+			TBL_HOM *hd = BL_CAST(BL_HOM,src); // [AD] Add a sphere when attacking
+
+			if ( hd && rnd()%2 )
+				homun->addspiritball(hd, 10); // According to WarpPortal, this is a flat 50% chance
+		}
+		
 		if ( src->type == BL_PC && damage > 0 && (sce = tsc->data[SC_GENTLETOUCH_ENERGYGAIN]) ) {
 			struct map_session_data *tsd = (struct map_session_data *)src;
 			if ( tsd && rnd() % 100 < sce->val2 )
@@ -3751,7 +3797,6 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 				ad.damage += wd.damage;
 			break;
 		}
-		//case HM_ERASER_CUTTER:
 	}
 
 	return ad;
@@ -4285,6 +4330,12 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 	if(skill_id) {
 		wd.flag |= battle->range_type(src, target, skill_id, skill_lv);
 		switch(skill_id) {
+			case MH_SONIC_CRAW:
+				{
+					TBL_HOM *hd = BL_CAST(BL_HOM,src);
+					wd.div_ = hd->homunculus.spiritball;
+				}
+				break;
 			case MO_FINGEROFFENSIVE:
 				if(sd) {
 					if (battle_config.finger_offensive_type)
@@ -5994,12 +6045,14 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 	}
 
 	if(sd && (skillv = pc->checkskill(sd,MO_TRIPLEATTACK)) > 0) {
-		int triple_rate= 30 - skillv; //Base Rate
+		int triple_rate= 30 - skillv; // Base Rate
 		if (sc && sc->data[SC_SKILLRATE_UP] && sc->data[SC_SKILLRATE_UP]->val1 == MO_TRIPLEATTACK) {
 			triple_rate+= triple_rate*(sc->data[SC_SKILLRATE_UP]->val2)/100;
 			status_change_end(src, SC_SKILLRATE_UP, INVALID_TIMER);
 		}
 		if (rnd()%100 < triple_rate) {
+			// Need to apply canact_tick here because it doesn't go through skill_castend_id
+			sd->ud.canact_tick = tick + skill->delay_fix(src, MO_TRIPLEATTACK, skillv);
 			if( skill->attack(BF_WEAPON,src,src,target,MO_TRIPLEATTACK,skillv,tick,0) )
 				return ATK_DEF;
 			return ATK_MISS;

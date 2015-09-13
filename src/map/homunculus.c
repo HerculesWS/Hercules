@@ -946,6 +946,8 @@ void homunculus_revive(struct homun_data *hd, unsigned int hp, unsigned int sp) 
 	clif->hominfo(sd,hd,1);
 	clif->hominfo(sd,hd,0);
 	clif->homskillinfoblock(sd);
+	if(hd->homunculus.class_ == 6052) // Eleanor is revived in Fighting stance
+		sc_start(&hd->bl,&hd->bl, SC_STYLE_CHANGE, 100, MH_MD_FIGHTING, -1);
 }
 //Resets a homunc stats back to zero (but doesn't touches hunger or intimacy)
 void homunculus_stat_reset(struct homun_data *hd) {
