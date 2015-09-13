@@ -8765,7 +8765,7 @@ ACMD(channel) {
 	if (strcmpi(subcmd,"create") == 0 && (channel->config->allow_user_channel_creation || pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN))) {
 		// sub1 = channel name; sub2 = password; sub3 = unused
 		size_t len = strlen(sub1);
-		const char *pass = *sub2 ? sub2 : NULL;
+		const char *pass = *sub2 ? sub2 : "";
 		if (sub1[0] != '#') {
 			clif->message(fd, msg_fd(fd,1405));// Channel name must start with a '#'
 			return false;
