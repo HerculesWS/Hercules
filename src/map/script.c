@@ -4628,9 +4628,7 @@ void do_final_script(void) {
 	aFree(script->buildin);
 
 	for (i = 0; i < VECTOR_LENGTH(script->hq); i++) {
-		if (VECTOR_INDEX(script->hq, i).item != NULL) {
-			aFree(VECTOR_INDEX(script->hq, i).item);
-		}
+		VECTOR_CLEAR(VECTOR_INDEX(script->hq, i).entries);
 	}
 	VECTOR_CLEAR(script->hq);
 
@@ -18799,7 +18797,7 @@ BUILDIN(montransform) {
  */
 struct script_queue *script_hqueue_get(int idx)
 {
-	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || VECTOR_INDEX(script->hq, idx).size == -1)
+	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || !VECTOR_INDEX(script->hq, idx).valid)
 		return NULL;
 	return &VECTOR_INDEX(script->hq, idx);
 }
@@ -18814,21 +18812,18 @@ int script_hqueue_create(void)
 	struct script_queue *queue = NULL;
 	int i;
 
-	ARR_FIND(0, VECTOR_LENGTH(script->hq), i, VECTOR_INDEX(script->hq, i).size == -1);
+	ARR_FIND(0, VECTOR_LENGTH(script->hq), i, !VECTOR_INDEX(script->hq, i).valid);
 
 	if (i == VECTOR_LENGTH(script->hq)) {
 		VECTOR_ENSURE(script->hq, 1, 1);
 		VECTOR_PUSHZEROED(script->hq);
 	}
-
 	queue = &VECTOR_INDEX(script->hq, i);
 
+	memset(&VECTOR_INDEX(script->hq, i), 0, sizeof(VECTOR_INDEX(script->hq, i)));
+
 	queue->id = i;
-	queue->size = 0;
-	queue->items = 0;
-	queue->event_death[0] = '\0';
-	queue->event_logout[0] = '\0';
-	queue->event_mapchange[0] = '\0';
+	queue->valid = true;
 	return i;
 }
 
@@ -18858,13 +18853,13 @@ BUILDIN(queuesize)
 {
 	int idx = script_getnum(st, 2);
 
-	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || VECTOR_INDEX(script->hq, idx).size == -1) {
+	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || !VECTOR_INDEX(script->hq, idx).valid) {
 		ShowWarning("buildin_queuesize: unknown queue id %d\n",idx);
 		script_pushint(st, 0);
 		return true;
 	}
 
-	script_pushint(st, VECTOR_INDEX(script->hq, idx).items);
+	script_pushint(st, VECTOR_LENGTH(VECTOR_INDEX(script->hq, idx).entries));
 	return true;
 }
 
@@ -18878,31 +18873,24 @@ BUILDIN(queuesize)
  */
 bool script_hqueue_add(int idx, int var)
 {
-	int i, pos;
+	int i;
 	struct map_session_data *sd = NULL;
 	struct script_queue *queue = NULL;
 
-	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || VECTOR_INDEX(script->hq, idx).size == -1) {
+	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || !VECTOR_INDEX(script->hq, idx).valid) {
 		ShowWarning("script_hqueue_add: unknown queue id %d\n",idx);
 		return false;
 	}
 
 	queue = &VECTOR_INDEX(script->hq, idx);
-	pos = queue->size;
-	for (i = queue->size-1; i >= 0; i--) {
-		/* Looping backwards in order to scan the entire array for matches
-		 * and at the same time, grab the first empty position. */
-		if (queue->item[i] == var)
-			return false;
-		if (queue->item[i] == 0)
-			pos = i;
+
+	ARR_FIND(0, VECTOR_LENGTH(queue->entries), i, VECTOR_INDEX(queue->entries, i) == var);
+	if (i != VECTOR_LENGTH(queue->entries)) {
+		return false; // Entry already exists
 	}
 
-	if (pos == queue->size)
-		RECREATE(queue->item, int, ++queue->size);
-
-	queue->item[i] = var;
-	queue->items++;
+	VECTOR_ENSURE(queue->entries, 1, 1);
+	VECTOR_PUSH(queue->entries, var);
 
 	if (var >= START_ACCOUNT_NUM && (sd = map->id2sd(var)) != NULL) {
 		ARR_FIND(0, sd->queues_count, i, sd->queues[i] == -1);
@@ -18952,20 +18940,18 @@ bool script_hqueue_remove(int idx, int var)
 	struct map_session_data *sd = NULL;
 	struct script_queue *queue = NULL;
 
-	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || VECTOR_INDEX(script->hq, idx).size == -1) {
+	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || !VECTOR_INDEX(script->hq, idx).valid) {
 		ShowWarning("script_hqueue_remove: unknown queue id %d (used with var %d)\n",idx,var);
 		return false;
 	}
 
 	queue = &VECTOR_INDEX(script->hq, idx);
 
-	ARR_FIND(0, queue->size, i, queue->item[i] == var);
-
-	if (i == queue->size)
+	ARR_FIND(0, VECTOR_LENGTH(queue->entries), i, VECTOR_INDEX(queue->entries, i) == var);
+	if (i == VECTOR_LENGTH(queue->entries))
 		return false;
 
-	queue->item[i] = -1;
-	queue->items--;
+	VECTOR_ERASE(queue->entries, i);
 
 	if (var >= START_ACCOUNT_NUM && (sd = map->id2sd(var)) != NULL) {
 		ARR_FIND(0, sd->queues_count, i, sd->queues[i] == -1);
@@ -19023,7 +19009,7 @@ BUILDIN(queueopt)
 	int var = script_getnum(st, 3);
 	struct script_queue *queue = NULL;
 
-	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || VECTOR_INDEX(script->hq, idx).size == -1) {
+	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || !VECTOR_INDEX(script->hq, idx).valid) {
 		ShowWarning("buildin_queueopt: unknown queue id %d\n",idx);
 		script_pushint(st, 0);
 		return true;
@@ -19069,29 +19055,10 @@ BUILDIN(queueopt)
  */
 bool script_hqueue_del(int idx)
 {
-	int i;
-	struct script_queue *queue = NULL;
-
-	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || VECTOR_INDEX(script->hq, idx).size == -1) {
-		ShowWarning("script_queue_del: unknown queue id %d\n",idx);
+	if (!script->queue_clear(idx))
 		return false;
-	}
 
-	queue = &VECTOR_INDEX(script->hq, idx);
-
-	for (i = 0; i < queue->size; i++) {
-		struct map_session_data *sd = NULL;
-		if (queue->item[i] >= START_ACCOUNT_NUM && (sd = map->id2sd(queue->item[i])) != NULL) {
-			int j;
-			ARR_FIND(0, sd->queues_count, j, sd->queues[j] == queue->item[i]);
-
-			if (j != sd->queues_count)
-				sd->queues[j] = -1;
-		}
-		queue->item[i] = 0;
-	}
-	queue->size = -1;
-	queue->items = 0;
+	VECTOR_INDEX(script->hq, idx).valid = false;
 
 	return true;
 }
@@ -19121,36 +19088,36 @@ BUILDIN(queuedel)
  * Clears a queue.
  *
  * @param idx The queue index.
+ *
+ * @retval true if the queue was correctly cleared.
+ * @retval false if the queue didn't exist.
  */
-void script_hqueue_clear(int idx)
+bool script_hqueue_clear(int idx)
 {
-	int i;
 	struct script_queue *queue = NULL;
 
-	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || VECTOR_INDEX(script->hq, idx).size == -1) {
+	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || !VECTOR_INDEX(script->hq, idx).valid) {
 		ShowWarning("script_hqueue_clear: unknown queue id %d\n",idx);
-		return;
+		return false;
 	}
 
 	queue = &VECTOR_INDEX(script->hq, idx);
 
-	for(i = 0; i < queue->size; i++) {
-		if (queue->item[i] > 0) {
-			struct map_session_data *sd = NULL;
+	while (VECTOR_LENGTH(queue->entries) > 0) {
+		int entry = VECTOR_POP(queue->entries);
+		struct map_session_data *sd = NULL;
 
-			if (queue->item[i] >= START_ACCOUNT_NUM && (sd = map->id2sd(queue->item[i])) != NULL) {
-				int j;
-				ARR_FIND(0, sd->queues_count, j, sd->queues[j] == idx);
+		if (entry >= START_ACCOUNT_NUM && (sd = map->id2sd(entry)) != NULL) {
+			int i;
+			ARR_FIND(0, sd->queues_count, i, sd->queues[i] == idx);
 
-				if (j != sd->queues_count)
-					sd->queues[j] = -1;
-			}
-			queue->item[i] = 0;
+			if (i != sd->queues_count)
+				sd->queues[i] = -1;
 		}
 	}
-	queue->items = 0;
+	VECTOR_CLEAR(queue->entries);
 
-	return;
+	return true;
 }
 
 /**
@@ -19169,15 +19136,8 @@ BUILDIN(queueiterator)
 	struct script_queue_iterator *iter = NULL;
 	int i;
 
-	if( qid < 0 || qid >= VECTOR_LENGTH(script->hq) || VECTOR_INDEX(script->hq, qid).size == -1 || !(queue = script->queue(qid)) ) {
+	if (qid < 0 || qid >= VECTOR_LENGTH(script->hq) || !VECTOR_INDEX(script->hq, qid).valid || !(queue = script->queue(qid))) {
 		ShowWarning("queueiterator: invalid queue id %d\n",qid);
-		script_pushint(st, -1);
-		return true;
-	}
-
-	/* what if queue->size is 0? (iterating a empty queue?) */
-	if (queue->size <= 0) {
-		ShowWarning("queueiterator: attempting to iterate on on empty queue id %d!\n",qid);
 		script_pushint(st, -1);
 		return true;
 	}
@@ -19191,10 +19151,10 @@ BUILDIN(queueiterator)
 
 	iter = &VECTOR_INDEX(script->hqi, i);
 
-	RECREATE(iter->item, int, queue->size);
-	memcpy(iter->item, queue->item, sizeof(int)*queue->size);
+	RECREATE(iter->item, int, VECTOR_LENGTH(queue->entries));
+	memcpy(iter->item, VECTOR_DATA(queue->entries), sizeof(VECTOR_FIRST(queue->entries))*VECTOR_LENGTH(queue->entries));
 
-	iter->items = queue->size;
+	iter->items = VECTOR_LENGTH(queue->entries);
 	iter->pos = 0;
 
 	script_pushint(st, i);

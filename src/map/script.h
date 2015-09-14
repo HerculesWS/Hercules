@@ -397,10 +397,9 @@ struct script_stack {
  * @author Ind/Hercules
  */
 struct script_queue {
-	int id;    ///< Queue identifier
-	int *item; ///< Items in the queue (variable-size array)
-	int items; ///< Amount of elements in \c item
-	int size;  ///< Capacity of the \c item array (not the current amount of items in it since it can have empty slots
+	int id;                              ///< Queue identifier
+	VECTOR_DECL(int) entries;            ///< Items in the queue.
+	bool valid;                          ///< Whether the queue is valid.
 	/// Events
 	char event_logout[EVENT_NAME_LENGTH];    ///< Logout event
 	char event_death[EVENT_NAME_LENGTH];     ///< Death event
@@ -678,7 +677,7 @@ struct script_interface {
 	bool (*queue_del) (int idx);
 	bool (*queue_remove) (int idx, int var);
 	int (*queue_create) (void);
-	void (*queue_clear) (int idx);
+	bool (*queue_clear) (int idx);
 	/* */
 	const char * (*parse_curly_close) (const char *p);
 	const char * (*parse_syntax_close) (const char *p);
