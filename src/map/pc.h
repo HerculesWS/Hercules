@@ -531,8 +531,7 @@ END_ZEROED_BLOCK;
 		enum bg_queue_types type;
 	} bg_queue;
 
-	int *queues;
-	unsigned int queues_count;
+	VECTOR_DECL(int) script_queues;
 
 	/* Made Possible Thanks to Yommy~! */
 	unsigned int cryptKey;                                                 ///< Packet obfuscation key to be used for the next received packet

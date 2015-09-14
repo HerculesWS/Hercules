@@ -2645,10 +2645,7 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 				aFree(sd->instance);
 				sd->instance = NULL;
 			}
-			if( sd->queues != NULL ) {
-				aFree(sd->queues);
-				sd->queues = NULL;
-			}
+			VECTOR_CLEAR(sd->script_queues);
 			if( sd->quest_log != NULL ) {
 				aFree(sd->quest_log);
 				sd->quest_log = NULL;

@@ -18891,12 +18891,8 @@ bool script_hqueue_add(int idx, int var)
 	VECTOR_PUSH(queue->entries, var);
 
 	if (var >= START_ACCOUNT_NUM && (sd = map->id2sd(var)) != NULL) {
-		ARR_FIND(0, sd->queues_count, i, sd->queues[i] == -1);
-
-		if (i == sd->queues_count)
-			RECREATE(sd->queues, int, ++sd->queues_count);
-
-		sd->queues[i] = idx;
+		VECTOR_ENSURE(sd->script_queues, 1, 1);
+		VECTOR_PUSH(sd->script_queues, idx);
 	}
 	return true;
 }
@@ -18952,10 +18948,10 @@ bool script_hqueue_remove(int idx, int var)
 	VECTOR_ERASE(queue->entries, i);
 
 	if (var >= START_ACCOUNT_NUM && (sd = map->id2sd(var)) != NULL) {
-		ARR_FIND(0, sd->queues_count, i, sd->queues[i] == -1);
+		ARR_FIND(0, VECTOR_LENGTH(sd->script_queues), i, VECTOR_INDEX(sd->script_queues, i) == queue->id);
 
-		if (i != sd->queues_count)
-			sd->queues[i] = -1;
+		if (i != VECTOR_LENGTH(sd->script_queues))
+			VECTOR_ERASE(sd->script_queues, i);
 	}
 	return true;
 }
@@ -19107,10 +19103,10 @@ bool script_hqueue_clear(int idx)
 
 		if (entry >= START_ACCOUNT_NUM && (sd = map->id2sd(entry)) != NULL) {
 			int i;
-			ARR_FIND(0, sd->queues_count, i, sd->queues[i] == idx);
+			ARR_FIND(0, VECTOR_LENGTH(sd->script_queues), i, VECTOR_INDEX(sd->script_queues, i) == queue->id);
 
-			if (i != sd->queues_count)
-				sd->queues[i] = -1;
+			if (i != VECTOR_LENGTH(sd->script_queues))
+				VECTOR_ERASE(sd->script_queues, i);
 		}
 	}
 	VECTOR_CLEAR(queue->entries);
