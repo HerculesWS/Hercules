@@ -1803,9 +1803,9 @@ int map_quit(struct map_session_data *sd) {
 	pc->itemcd_do(sd,false);
 
 	for( i = 0; i < sd->queues_count; i++ ) {
-		struct hQueue *queue;
-		if( (queue = script->queue(sd->queues[i])) && queue->onLogOut[0] != '\0' ) {
-			npc->event(sd, queue->onLogOut, 0);
+		struct script_queue *queue = script->queue(sd->queues[i]);
+		if (queue && queue->event_logout[0] != '\0') {
+			npc->event(sd, queue->event_logout, 0);
 		}
 	}
 	/* two times, the npc event above may assign a new one or delete others */

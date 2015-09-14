@@ -223,12 +223,13 @@ typedef enum c_op {
 #endif // PCRE_SUPPORT
 } c_op;
 
-enum hQueueOpt {
-	HQO_NONE,
-	HQO_onLogOut,
-	HQO_OnDeath,
-	HQO_OnMapChange,
-	HQO_MAX,
+/// Script queue options
+enum ScriptQueueOptions {
+	SQO_NONE,        ///< No options set
+	SQO_ONLOGOUT,    ///< Execute event on logout
+	SQO_ONDEATH,     ///< Execute event on death
+	SQO_ONMAPCHANGE, ///< Execute event on map change
+	SQO_MAX,
 };
 
 enum e_script_state { RUN,STOP,END,RERUNLINE,GOTO,RETFUNC,CLOSE };
@@ -391,22 +392,28 @@ struct script_stack {
 	struct reg_db scope;            ///< scope variables
 };
 
-/* [Ind/Hercules] */
-struct hQueue {
-	int id;
-	int *item;
-	int items;/* how many actual items are in the array */
-	int size;/* size of the *item array, not the current amount of items in it since it can have empty slots */
-	/* events */
-	char onLogOut[EVENT_NAME_LENGTH];
-	char onDeath[EVENT_NAME_LENGTH];
-	char onMapChange[EVENT_NAME_LENGTH];
+/**
+ * Data structure to represent a script queue.
+ * @author Ind/Hercules
+ */
+struct script_queue {
+	int id;    ///< Queue identifier
+	int *item; ///< Items in the queue (variable-size array)
+	int items; ///< Amount of elements in \c item
+	int size;  ///< Capacity of the \c item array (not the current amount of items in it since it can have empty slots
+	/// Events
+	char event_logout[EVENT_NAME_LENGTH];    ///< Logout event
+	char event_death[EVENT_NAME_LENGTH];     ///< Death event
+	char event_mapchange[EVENT_NAME_LENGTH]; ///< Map change event
 };
 
-struct hQueueIterator {
-	int *item;
-	int items;
-	int pos;
+/**
+ * Iterator for a struct script_queue.
+ */
+struct script_queue_iterator {
+	int *item; ///< Items in the queue (iterator's cached copy)
+	int items; ///< Amount of elements in \c item
+	int pos;   ///< Iterator's cursor
 };
 
 struct script_state {
@@ -515,8 +522,8 @@ struct script_interface {
 	struct eri *st_ers;
 	struct eri *stack_ers;
 	/* */
-	VECTOR_DECL(struct hQueue) hq;
-	VECTOR_DECL(struct hQueueIterator) hqi;
+	VECTOR_DECL(struct script_queue) hq;
+	VECTOR_DECL(struct script_queue_iterator) hqi;
 	/*  */
 	char **buildin;
 	unsigned int buildin_count;
@@ -666,7 +673,7 @@ struct script_interface {
 	void (*setd_sub) (struct script_state *st, struct map_session_data *sd, const char *varname, int elem, void *value, struct reg_db *ref);
 	void (*attach_state) (struct script_state* st);
 	/* */
-	struct hQueue *(*queue) (int idx);
+	struct script_queue *(*queue) (int idx);
 	bool (*queue_add) (int idx, int var);
 	bool (*queue_del) (int idx);
 	bool (*queue_remove) (int idx, int var);
