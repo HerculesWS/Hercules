@@ -18790,15 +18790,28 @@ BUILDIN(montransform) {
 	return true;
 }
 
+/**
+ * Returns the queue with he given index, if it exists.
+ *
+ * @param idx The queue index.
+ *
+ * @return The queue, or NULL if it doesn't exist.
+ */
 struct script_queue *script_hqueue_get(int idx)
 {
 	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || VECTOR_INDEX(script->hq, idx).size == -1)
 		return NULL;
 	return &VECTOR_INDEX(script->hq, idx);
 }
+
+/**
+ * Creates a new queue.
+ *
+ * @return The index of the created queue.
+ */
 int script_hqueue_create(void)
 {
-	int idx = VECTOR_LENGTH(script->hq);
+	struct script_queue *queue = NULL;
 	int i;
 
 	ARR_FIND(0, VECTOR_LENGTH(script->hq), i, VECTOR_INDEX(script->hq, i).size == -1);
@@ -18806,287 +18819,400 @@ int script_hqueue_create(void)
 	if (i == VECTOR_LENGTH(script->hq)) {
 		VECTOR_ENSURE(script->hq, 1, 1);
 		VECTOR_PUSHZEROED(script->hq);
-	} else
-		idx = i;
+	}
 
-	VECTOR_INDEX(script->hq, idx).id = i;
-	VECTOR_INDEX(script->hq, idx).size = 0;
-	VECTOR_INDEX(script->hq, idx).items = 0;
-	VECTOR_INDEX(script->hq, idx).event_death[0] = '\0';
-	VECTOR_INDEX(script->hq, idx).event_logout[0] = '\0';
-	VECTOR_INDEX(script->hq, idx).event_mapchange[0] = '\0';
-	return idx;
+	queue = &VECTOR_INDEX(script->hq, i);
+
+	queue->id = i;
+	queue->size = 0;
+	queue->items = 0;
+	queue->event_death[0] = '\0';
+	queue->event_logout[0] = '\0';
+	queue->event_mapchange[0] = '\0';
+	return i;
 }
-/* set .@id,queue(); */
-/* creates queue, returns created queue id */
-BUILDIN(queue) {
+
+/**
+ * Script command queue: Creates a queue and returns its id.
+ *
+ * @code{.herc}
+ *    .@queue_id = queue();
+ * @endcode
+ */
+BUILDIN(queue)
+{
 	script_pushint(st,script->queue_create());
 	return true;
 }
-/* set .@length,queuesize(.@queue_id); */
-/* returns queue length */
-BUILDIN(queuesize) {
+
+/**
+ * Script command queuesize: Returns the length of the given queue.
+ *
+ * Returns 0 on error.
+ *
+ * \code{.herc}
+ *    .@size = queuesize(<queue id>);
+ * \endcode
+ */
+BUILDIN(queuesize)
+{
 	int idx = script_getnum(st, 2);
 
 	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || VECTOR_INDEX(script->hq, idx).size == -1) {
 		ShowWarning("buildin_queuesize: unknown queue id %d\n",idx);
 		script_pushint(st, 0);
-	} else {
-		script_pushint(st, VECTOR_INDEX(script->hq, idx).items);
+		return true;
 	}
 
+	script_pushint(st, VECTOR_INDEX(script->hq, idx).items);
 	return true;
 }
+
+/**
+ * Adds an entry to the given queue.
+ *
+ * @param idx The queue index.
+ * @param var The entry to add.
+ * @retval false if the queue is invalid or the entry is already in the queue.
+ * @retval true in case of success.
+ */
 bool script_hqueue_add(int idx, int var)
 {
+	int i, pos;
+	struct map_session_data *sd = NULL;
+	struct script_queue *queue = NULL;
+
 	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || VECTOR_INDEX(script->hq, idx).size == -1) {
 		ShowWarning("script_hqueue_add: unknown queue id %d\n",idx);
-		return true;
-	} else {
-		int i;
-		for (i = 0; i < VECTOR_INDEX(script->hq, idx).size; i++) {
-			if (VECTOR_INDEX(script->hq, idx).item[i] == var) {
-				return true;
-			}
-		}
-
-		if (i == VECTOR_INDEX(script->hq, idx).size) {
-			struct map_session_data *sd;
-
-			for (i = 0; i < VECTOR_INDEX(script->hq, idx).size; i++) {
-				if (VECTOR_INDEX(script->hq, idx).item[i] == 0) {
-					break;
-				}
-			}
-
-                       if (i == VECTOR_INDEX(script->hq, idx).size)
-                               RECREATE(VECTOR_INDEX(script->hq, idx).item, int, ++VECTOR_INDEX(script->hq, idx).size);
-
-                       VECTOR_INDEX(script->hq, idx).item[i] = var;
-                       VECTOR_INDEX(script->hq, idx).items++;
-			if (var >= START_ACCOUNT_NUM && (sd = map->id2sd(var)) != NULL) {
-				for (i = 0; i < sd->queues_count; i++) {
-					if (sd->queues[i] == -1) {
-						break;
-					}
-				}
-
-				if (i == sd->queues_count)
-					RECREATE(sd->queues, int, ++sd->queues_count);
-
-				sd->queues[i] = idx;
-			}
-
-		}
+		return false;
 	}
-	return false;
+
+	queue = &VECTOR_INDEX(script->hq, idx);
+	pos = queue->size;
+	for (i = queue->size-1; i >= 0; i--) {
+		/* Looping backwards in order to scan the entire array for matches
+		 * and at the same time, grab the first empty position. */
+		if (queue->item[i] == var)
+			return false;
+		if (queue->item[i] == 0)
+			pos = i;
+	}
+
+	if (pos == queue->size)
+		RECREATE(queue->item, int, ++queue->size);
+
+	queue->item[i] = var;
+	queue->items++;
+
+	if (var >= START_ACCOUNT_NUM && (sd = map->id2sd(var)) != NULL) {
+		ARR_FIND(0, sd->queues_count, i, sd->queues[i] == -1);
+
+		if (i == sd->queues_count)
+			RECREATE(sd->queues, int, ++sd->queues_count);
+
+		sd->queues[i] = idx;
+	}
+	return true;
 }
-/* queueadd(.@queue_id,.@var_id); */
-/* adds a new entry to the queue, returns 1 if already in queue, 0 otherwise */
-BUILDIN(queueadd) {
+
+/**
+ * Script command queueadd: Adds a new entry to the given queue.
+ *
+ * Returns 1 if already in queue or in case of error, 0 otherwise.
+ *
+ * @code{.herc}
+ *    .@size = queuesize(.@queue_id);
+ * @endcode
+ */
+BUILDIN(queueadd)
+{
 	int idx = script_getnum(st, 2);
 	int var = script_getnum(st, 3);
 
-	script_pushint(st,script->queue_add(idx,var)?1:0);
+	if (script->queue_add(idx, var))
+		script_pushint(st, 0);
+	else
+		script_pushint(st, 1);
 
 	return true;
 }
-bool script_hqueue_remove(int idx, int var) {
+
+/**
+ * Removes an entry from the given queue.
+ *
+ * @param idx The queue index.
+ * @param var The entry to remove.
+ * @retval true if the entry was removed.
+ * @retval false if the entry wasn't in queue.
+ */
+bool script_hqueue_remove(int idx, int var)
+{
+	int i;
+	struct map_session_data *sd = NULL;
+	struct script_queue *queue = NULL;
+
 	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || VECTOR_INDEX(script->hq, idx).size == -1) {
 		ShowWarning("script_hqueue_remove: unknown queue id %d (used with var %d)\n",idx,var);
-		return true;
-	} else {
-		int i;
-
-		for (i = 0; i < VECTOR_INDEX(script->hq, idx).size; i++) {
-			if (VECTOR_INDEX(script->hq, idx).item[i] == var) {
-				break;
-			}
-		}
-
-		if (i != VECTOR_INDEX(script->hq, idx).size) {
-			struct map_session_data *sd;
-
-			VECTOR_INDEX(script->hq, idx).item[i] = -1;
-			VECTOR_INDEX(script->hq, idx).items--;
-
-			if (var >= START_ACCOUNT_NUM && (sd = map->id2sd(var)) != NULL) {
-				for(i = 0; i < sd->queues_count; i++) {
-					if( sd->queues[i] == idx ) {
-						break;
-					}
-				}
-
-				if( i != sd->queues_count )
-					sd->queues[i] = -1;
-			}
-
-		}
+		return false;
 	}
-	return false;
+
+	queue = &VECTOR_INDEX(script->hq, idx);
+
+	ARR_FIND(0, queue->size, i, queue->item[i] == var);
+
+	if (i == queue->size)
+		return false;
+
+	queue->item[i] = -1;
+	queue->items--;
+
+	if (var >= START_ACCOUNT_NUM && (sd = map->id2sd(var)) != NULL) {
+		ARR_FIND(0, sd->queues_count, i, sd->queues[i] == -1);
+
+		if (i != sd->queues_count)
+			sd->queues[i] = -1;
+	}
+	return true;
 }
-/* queueremove(.@queue_id,.@var_id); */
-/* removes a entry from the queue, returns 1 if not in queue, 0 otherwise */
-BUILDIN(queueremove) {
+
+/**
+ * Script command queueremove: Removes an entry from a queue.
+ *
+ * Returns 0 on success, 1 if the item wasn't in queue.
+ *
+ * @code{.herc}
+ *    queueremove(.@queue_id, .@value);
+ * @endcode
+ */
+BUILDIN(queueremove)
+{
 	int idx = script_getnum(st, 2);
 	int var = script_getnum(st, 3);
 
-	script_pushint(st, script->queue_remove(idx,var)?1:0);
+	if (script->queue_remove(idx,var))
+		script_pushint(st, 0);
+	else
+		script_pushint(st, 1);
 
 	return true;
 }
 
-/* queueopt(.@queue_id,optionType,<optional val>); */
-/* modifies the queue's options, when val is not provided the option is removed */
-/* when OnMapChange event is triggered, it sets a temp char var @QMapChangeTo$ with the destination map name */
-/* returns 1 when fails, 0 on success */
-BUILDIN(queueopt) {
+/**
+ * Script command queueopt: Modifies the options of a queue.
+ *
+ * When the option value isn't provided, the option is removed.
+ *
+ * Returns 0 on success, 1 on failure.
+ *
+ * The optionType is one of:
+ * - HQO_OnDeath
+ * - HQO_OnLogOut
+ * - HQO_OnMapChange
+ *
+ * When the OnMapChange event is triggered, it sets a temporary character
+ * variable \c @QMapChangeTo with the destination map name.
+ *
+ * @code{.herc}
+ *    queueopt(.@queue_id, optionType, <optional val>);
+ * @endcode
+ */
+BUILDIN(queueopt)
+{
 	int idx = script_getnum(st, 2);
 	int var = script_getnum(st, 3);
+	struct script_queue *queue = NULL;
 
 	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || VECTOR_INDEX(script->hq, idx).size == -1) {
 		ShowWarning("buildin_queueopt: unknown queue id %d\n",idx);
 		script_pushint(st, 1);
-	} else if( var <= SQO_NONE || var >= SQO_MAX ) {
-		ShowWarning("buildin_queueopt: unknown optionType %d\n",var);
-		script_pushint(st, 1);
-	} else {
-		switch ((enum ScriptQueueOptions)var) {
-			case SQO_ONDEATH:
-				if( script_hasdata(st, 4) )
-					safestrncpy(VECTOR_INDEX(script->hq, idx).event_death, script_getstr(st, 4), EVENT_NAME_LENGTH);
-				else
-					VECTOR_INDEX(script->hq, idx).event_death[0] = '\0';
-				break;
-			case SQO_ONLOGOUT:
-				if( script_hasdata(st, 4) )
-					safestrncpy(VECTOR_INDEX(script->hq, idx).event_logout, script_getstr(st, 4), EVENT_NAME_LENGTH);
-				else
-					VECTOR_INDEX(script->hq, idx).event_logout[0] = '\0';
-				break;
-			case SQO_ONMAPCHANGE:
-				if( script_hasdata(st, 4) )
-					safestrncpy(VECTOR_INDEX(script->hq, idx).event_mapchange, script_getstr(st, 4), EVENT_NAME_LENGTH);
-				else
-					VECTOR_INDEX(script->hq, idx).event_mapchange[0] = '\0';
-				break;
-			default:
-				ShowWarning("buildin_queueopt: unsupported optionType %d\n",var);
-				script_pushint(st, 1);
-				break;
-		}
+		return true;
 	}
 
+	queue = &VECTOR_INDEX(script->hq, idx);
+
+	switch (var) {
+		case SQO_ONDEATH:
+			if (script_hasdata(st, 4))
+				safestrncpy(queue->event_death, script_getstr(st, 4), EVENT_NAME_LENGTH);
+			else
+				queue->event_death[0] = '\0';
+			break;
+		case SQO_ONLOGOUT:
+			if (script_hasdata(st, 4))
+				safestrncpy(queue->event_logout, script_getstr(st, 4), EVENT_NAME_LENGTH);
+			else
+				queue->event_logout[0] = '\0';
+			break;
+		case SQO_ONMAPCHANGE:
+			if (script_hasdata(st, 4))
+				safestrncpy(queue->event_mapchange, script_getstr(st, 4), EVENT_NAME_LENGTH);
+			else
+				queue->event_mapchange[0] = '\0';
+			break;
+		default:
+			ShowWarning("buildin_queueopt: unsupported optionType %d\n",var);
+			script_pushint(st, 1);
+			return true;
+	}
+	script_pushint(st, 1);
 	return true;
 }
+
+/**
+ * Deletes a queue.
+ *
+ * @param idx The queue index.
+ *
+ * @retval true if the queue was correctly deleted.
+ * @retval false if the queue didn't exist.
+ */
 bool script_hqueue_del(int idx)
 {
+	int i;
+	struct script_queue *queue = NULL;
+
 	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || VECTOR_INDEX(script->hq, idx).size == -1) {
 		ShowWarning("script_queue_del: unknown queue id %d\n",idx);
-		return true;
-	} else {
-		int i;
-		for (i = 0; i < VECTOR_INDEX(script->hq, idx).size; i++) {
-			struct map_session_data *sd;
-			if (VECTOR_INDEX(script->hq, idx).item[i] >= START_ACCOUNT_NUM && (sd = map->id2sd(VECTOR_INDEX(script->hq, idx).item[i])) != NULL) {
-				int j;
-				for(j = 0; j < sd->queues_count; j++) {
-					if (sd->queues[j] == VECTOR_INDEX(script->hq, idx).item[i]) {
-						break;
-					}
-				}
-
-				if( j != sd->queues_count )
-					sd->queues[j] = -1;
-			}
-			VECTOR_INDEX(script->hq, idx).item[i] = 0;
-		}
-		VECTOR_INDEX(script->hq, idx).size = -1;
-		VECTOR_INDEX(script->hq, idx).items = 0;
+		return false;
 	}
-	return false;
-}
-/* queuedel(.@queue_id); */
-/* deletes queue of id .@queue_id, returns 1 if id not found, 0 otherwise */
-BUILDIN(queuedel) {
-	int idx = script_getnum(st, 2);
 
-	script_pushint(st,script->queue_del(idx)?1:0);
+	queue = &VECTOR_INDEX(script->hq, idx);
+
+	for (i = 0; i < queue->size; i++) {
+		struct map_session_data *sd = NULL;
+		if (queue->item[i] >= START_ACCOUNT_NUM && (sd = map->id2sd(queue->item[i])) != NULL) {
+			int j;
+			ARR_FIND(0, sd->queues_count, j, sd->queues[j] == queue->item[i]);
+
+			if (j != sd->queues_count)
+				sd->queues[j] = -1;
+		}
+		queue->item[i] = 0;
+	}
+	queue->size = -1;
+	queue->items = 0;
 
 	return true;
 }
-void script_hqueue_clear(int idx) {
+
+/**
+ * Script command queuedel: Deletes a queue.
+ *
+ * Returns 0 on success, 1 if the queue doesn't exist.
+ *
+ * @code{.herc}
+ *    queuedel(.@queue_id);
+ * @endcode
+ */
+BUILDIN(queuedel)
+{
+	int idx = script_getnum(st, 2);
+
+	if (script->queue_del(idx))
+		script_pushint(st, 0);
+	else
+		script_pushint(st, 1);
+
+	return true;
+}
+
+/**
+ * Clears a queue.
+ *
+ * @param idx The queue index.
+ */
+void script_hqueue_clear(int idx)
+{
+	int i;
+	struct script_queue *queue = NULL;
+
 	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || VECTOR_INDEX(script->hq, idx).size == -1) {
 		ShowWarning("script_hqueue_clear: unknown queue id %d\n",idx);
 		return;
-	} else {
-		struct map_session_data *sd;
-		int i, j;
-
-		for(i = 0; i < VECTOR_INDEX(script->hq, idx).size; i++) {
-			if (VECTOR_INDEX(script->hq, idx).item[i] > 0) {
-
-				if (VECTOR_INDEX(script->hq, idx).item[i] >= START_ACCOUNT_NUM && (sd = map->id2sd(VECTOR_INDEX(script->hq, idx).item[i])) != NULL) {
-					for(j = 0; j < sd->queues_count; j++) {
-						if( sd->queues[j] == idx ) {
-							break;
-						}
-					}
-
-					if( j != sd->queues_count )
-						sd->queues[j] = -1;
-				}
-				VECTOR_INDEX(script->hq, idx).item[i] = 0;
-			}
-		}
-		VECTOR_INDEX(script->hq, idx).items = 0;
 	}
+
+	queue = &VECTOR_INDEX(script->hq, idx);
+
+	for(i = 0; i < queue->size; i++) {
+		if (queue->item[i] > 0) {
+			struct map_session_data *sd = NULL;
+
+			if (queue->item[i] >= START_ACCOUNT_NUM && (sd = map->id2sd(queue->item[i])) != NULL) {
+				int j;
+				ARR_FIND(0, sd->queues_count, j, sd->queues[j] == idx);
+
+				if (j != sd->queues_count)
+					sd->queues[j] = -1;
+			}
+			queue->item[i] = 0;
+		}
+	}
+	queue->items = 0;
+
 	return;
 }
-/* set .@id, queueiterator(.@queue_id); */
-/* creates a new queue iterator, returns its id */
-BUILDIN(queueiterator) {
+
+/**
+ * Script command queueiterator: Creates a new queue iterator.
+ *
+ * Returns the iterator's id or -1 in case of failure.
+ *
+ * @code{.herc}
+ *    .@id = queueiterator(.@queue_id);
+ * @endcode
+ */
+BUILDIN(queueiterator)
+{
 	int qid = script_getnum(st, 2);
 	struct script_queue *queue = NULL;
-	int idx = VECTOR_LENGTH(script->hqi);
+	struct script_queue_iterator *iter = NULL;
 	int i;
 
 	if( qid < 0 || qid >= VECTOR_LENGTH(script->hq) || VECTOR_INDEX(script->hq, qid).size == -1 || !(queue = script->queue(qid)) ) {
 		ShowWarning("queueiterator: invalid queue id %d\n",qid);
+		script_pushint(st, -1);
 		return true;
 	}
 
 	/* what if queue->size is 0? (iterating a empty queue?) */
-	if( queue->size <= 0 ) {
+	if (queue->size <= 0) {
 		ShowWarning("queueiterator: attempting to iterate on on empty queue id %d!\n",qid);
+		script_pushint(st, -1);
 		return true;
 	}
 
-	for (i = 0; i < VECTOR_LENGTH(script->hqi); i++) {
-		if (VECTOR_INDEX(script->hqi, idx).items == -1) {
-			break;
-		}
-	}
+	ARR_FIND(0, VECTOR_LENGTH(script->hqi), i, VECTOR_INDEX(script->hqi, i).items == -1);
 
 	if (i == VECTOR_LENGTH(script->hqi)) {
 		VECTOR_ENSURE(script->hqi, 1, 1);
 		VECTOR_PUSHZEROED(script->hqi);
-	} else
-		idx = i;
+	}
 
-	RECREATE(VECTOR_INDEX(script->hqi, idx).item, int, queue->size);
+	iter = &VECTOR_INDEX(script->hqi, i);
 
-	memcpy(VECTOR_INDEX(script->hqi, idx).item, queue->item, sizeof(int)*queue->size);
+	RECREATE(iter->item, int, queue->size);
+	memcpy(iter->item, queue->item, sizeof(int)*queue->size);
 
-	VECTOR_INDEX(script->hqi, idx).items = queue->size;
-	VECTOR_INDEX(script->hqi, idx).pos = 0;
+	iter->items = queue->size;
+	iter->pos = 0;
 
-	script_pushint(st,idx);
+	script_pushint(st, i);
 	return true;
 }
-/* Queue Iterator Get Next */
-/* returns next/first member in the iterator, 0 if none */
-BUILDIN(qiget) {
+
+/**
+ * Script command qiget: returns the next/first member in the iterator.
+ *
+ * Returns 0 if there's no next item.
+ *
+ * @code{.herc}
+ *    for (.@i = qiget(.@iter); qicheck(.@iter); .@i = qiget(.@iter)) {
+ *        // ...
+ *    }
+ * @endcode
+ */
+BUILDIN(qiget)
+{
 	int idx = script_getnum(st, 2);
 	struct script_queue_iterator *it = NULL;
 
@@ -19107,9 +19233,20 @@ BUILDIN(qiget) {
 	script_pushint(st, it->item[it->pos++]);
 	return true;
 }
-/* Queue Iterator Check */
-/* returns 1:0 if there is the current member in the iterator exists */
-BUILDIN(qicheck) {
+
+/**
+ * Script command qicheck: Checks if the current member in the given iterator exists.
+ *
+ * Returns 1 if it exists, 0 otherwise.
+ *
+ * @code{.herc}
+ *    for (.@i = qiget(.@iter); qicheck(.@iter); .@i = qiget(.@iter)) {
+ *        // ...
+ *    }
+ * @endcode
+ */
+BUILDIN(qicheck)
+{
 	int idx = script_getnum(st, 2);
 	struct script_queue_iterator *it = NULL;
 
@@ -19129,20 +19266,31 @@ BUILDIN(qicheck) {
 
 	return true;
 }
-/* Queue Iterator Check */
-BUILDIN(qiclear) {
+
+/**
+ * Script command qiclear: Destroys a queue iterator.
+ *
+ * Returns 0 on success, 1 on failure.
+ *
+ * @code{.herc}
+ *    qiclear(.@iter);
+ * @endcode
+ */
+BUILDIN(qiclear)
+{
 	int idx = script_getnum(st, 2);
 
 	if (idx < 0 || idx >= VECTOR_LENGTH(script->hqi)) {
 		ShowWarning("buildin_qiclear: unknown queue iterator id %d\n",idx);
 		script_pushint(st, 1);
-	} else {
-		VECTOR_INDEX(script->hqi, idx).items = -1;
-		script_pushint(st, 0);
+		return true;
 	}
 
+	VECTOR_INDEX(script->hqi, idx).items = -1;
+	script_pushint(st, 0);
 	return true;
 }
+
 /**
  * packageitem({<optional container_item_id>})
  * when no item id is provided it tries to assume it comes from the current item id being processed (if any)
