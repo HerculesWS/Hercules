@@ -60084,31 +60084,32 @@ int HP_script_queue_create(void) {
 	}
 	return retVal___;
 }
-void HP_script_queue_clear(int idx) {
+bool HP_script_queue_clear(int idx) {
 	int hIndex = 0;
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_script_queue_clear_pre ) {
-		void (*preHookFunc) (int *idx);
+		bool (*preHookFunc) (int *idx);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_queue_clear_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_script_queue_clear_pre[hIndex].func;
-			preHookFunc(&idx);
+			retVal___ = preHookFunc(&idx);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
-			return;
+			return retVal___;
 		}
 	}
 	{
-		HPMHooks.source.script.queue_clear(idx);
+		retVal___ = HPMHooks.source.script.queue_clear(idx);
 	}
 	if( HPMHooks.count.HP_script_queue_clear_post ) {
-		void (*postHookFunc) (int *idx);
+		bool (*postHookFunc) (bool retVal___, int *idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_queue_clear_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_script_queue_clear_post[hIndex].func;
-			postHookFunc(&idx);
+			retVal___ = postHookFunc(retVal___, &idx);
 		}
 	}
-	return;
+	return retVal___;
 }
 const char* HP_script_parse_curly_close(const char *p) {
 	int hIndex = 0;
