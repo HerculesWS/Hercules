@@ -410,9 +410,9 @@ struct script_queue {
  * Iterator for a struct script_queue.
  */
 struct script_queue_iterator {
-	int *item; ///< Items in the queue (iterator's cached copy)
-	int items; ///< Amount of elements in \c item
-	int pos;   ///< Iterator's cursor
+	VECTOR_DECL(int) entries; ///< Entries in the queue (iterator's cached copy)
+	bool valid;               ///< Whether the queue is valid (initialized - not necessarily having entries available)
+	int pos;                  ///< Iterator's cursor
 };
 
 struct script_state {
