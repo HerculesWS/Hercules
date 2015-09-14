@@ -515,9 +515,8 @@ struct script_interface {
 	struct eri *st_ers;
 	struct eri *stack_ers;
 	/* */
-	struct hQueue *hq;
-	struct hQueueIterator *hqi;
-	int hqs, hqis;
+	VECTOR_DECL(struct hQueue) hq;
+	VECTOR_DECL(struct hQueueIterator) hqi;
 	/*  */
 	char **buildin;
 	unsigned int buildin_count;
