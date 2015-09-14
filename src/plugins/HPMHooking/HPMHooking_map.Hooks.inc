@@ -59949,11 +59949,11 @@ void HP_script_attach_state(struct script_state *st) {
 	}
 	return;
 }
-struct hQueue* HP_script_queue(int idx) {
+struct script_queue* HP_script_queue(int idx) {
 	int hIndex = 0;
-	struct hQueue* retVal___ = NULL;
+	struct script_queue* retVal___ = NULL;
 	if( HPMHooks.count.HP_script_queue_pre ) {
-		struct hQueue* (*preHookFunc) (int *idx);
+		struct script_queue* (*preHookFunc) (int *idx);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_queue_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_script_queue_pre[hIndex].func;
@@ -59968,7 +59968,7 @@ struct hQueue* HP_script_queue(int idx) {
 		retVal___ = HPMHooks.source.script.queue(idx);
 	}
 	if( HPMHooks.count.HP_script_queue_post ) {
-		struct hQueue* (*postHookFunc) (struct hQueue* retVal___, int *idx);
+		struct script_queue* (*postHookFunc) (struct script_queue* retVal___, int *idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_queue_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_script_queue_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, &idx);
