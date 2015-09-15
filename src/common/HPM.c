@@ -58,20 +58,37 @@ void hplugin_trigger_event(enum hp_event_types type)
 	}
 }
 
-void hplugin_export_symbol(void *var, char *name) {
-	RECREATE(HPM->symbols, struct hpm_symbol *, ++HPM->symbol_count);
-	CREATE(HPM->symbols[HPM->symbol_count - 1] ,struct hpm_symbol, 1);
-	HPM->symbols[HPM->symbol_count - 1]->name = name;
-	HPM->symbols[HPM->symbol_count - 1]->ptr = var;
+/**
+ * Exports a symbol to the shared symbols list.
+ *
+ * @param value The symbol value.
+ * @param name  The symbol name.
+ */
+void hplugin_export_symbol(void *value, const char *name)
+{
+	struct hpm_symbol *symbol = NULL;
+	CREATE(symbol ,struct hpm_symbol, 1);
+	symbol->name = name;
+	symbol->ptr = value;
+	VECTOR_ENSURE(HPM->symbols, 1, 1);
+	VECTOR_PUSH(HPM->symbols, symbol);
 }
 
-void *hplugin_import_symbol(char *name, unsigned int pID) {
-	unsigned int i;
+/**
+ * Imports a shared symbol.
+ *
+ * @param name The symbol name.
+ * @param pID  The requesting plugin ID.
+ * @return The symbol value.
+ * @retval NULL if the symbol wasn't found.
+ */
+void *hplugin_import_symbol(char *name, unsigned int pID)
+{
+	int i;
+	ARR_FIND(0, VECTOR_LENGTH(HPM->symbols), i, strcmp(VECTOR_INDEX(HPM->symbols, i)->name, name) == 0);
 
-	for( i = 0; i < HPM->symbol_count; i++ ) {
-		if( strcmp(HPM->symbols[i]->name,name) == 0 )
-			return HPM->symbols[i]->ptr;
-	}
+	if (i != VECTOR_LENGTH(HPM->symbols))
+		return VECTOR_INDEX(HPM->symbols, i)->ptr;
 
 	ShowError("HPM:get_symbol:%s: '"CL_WHITE"%s"CL_RESET"' not found!\n",HPM->pid2name(pID),name);
 	return NULL;
@@ -790,9 +807,9 @@ void hpm_init(void) {
 	datacheck_data = NULL;
 	datacheck_version = 0;
 
-	HPM->symbols = NULL;
 	VECTOR_INIT(HPM->plugins);
-	HPM->symbol_count = 0;
+	VECTOR_INIT(HPM->symbols);
+
 	HPM->off = false;
 
 	memcpy(&iMalloc_HPM, iMalloc, sizeof(struct malloc_interface));
@@ -843,13 +860,10 @@ void hpm_final(void)
 	}
 	VECTOR_CLEAR(HPM->plugins);
 
-	if( HPM->symbols )
-	{
-		for( i = 0; i < HPM->symbol_count; i++ ) {
-			aFree(HPM->symbols[i]);
-		}
-		aFree(HPM->symbols);
+	while (VECTOR_LENGTH(HPM->symbols)) {
+		aFree(VECTOR_POP(HPM->symbols));
 	}
+	VECTOR_CLEAR(HPM->symbols);
 
 	for( i = 0; i < hpPHP_MAX; i++ ) {
 		if( HPM->packets[i] )

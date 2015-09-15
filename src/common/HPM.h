@@ -57,9 +57,12 @@ struct hplugin {
 	struct HPMi_interface *hpi;
 };
 
+/**
+ * Symbols shared between core and plugins.
+ */
 struct hpm_symbol {
-	char *name;
-	void *ptr;
+	const char *name; ///< The symbol name
+	void *ptr;        ///< The symbol value
 };
 
 struct HPluginData {
@@ -104,8 +107,7 @@ struct HPM_interface {
 	bool force_return;
 	/* data */
 	VECTOR_DECL(struct hplugin *) plugins;
-	struct hpm_symbol **symbols;
-	unsigned int symbol_count;
+	VECTOR_DECL(struct hpm_symbol *) symbols;
 	/* packet hooking points */
 	struct HPluginPacket *packets[hpPHP_MAX];
 	unsigned int packetsc[hpPHP_MAX];
@@ -128,7 +130,7 @@ struct HPM_interface {
 	bool (*iscompatible) (char* version);
 	void (*event) (enum hp_event_types type);
 	void *(*import_symbol) (char *name, unsigned int pID);
-	void (*share) (void *, char *);
+	void (*share) (void *value, const char *name);
 	void (*config_read) (void);
 	char *(*pid2name) (unsigned int pid);
 	unsigned char (*parse_packets) (int fd, enum HPluginPacketHookingPoints point);
