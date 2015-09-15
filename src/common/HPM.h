@@ -109,8 +109,7 @@ struct HPM_interface {
 	VECTOR_DECL(struct hplugin *) plugins;
 	VECTOR_DECL(struct hpm_symbol *) symbols;
 	/* packet hooking points */
-	struct HPluginPacket *packets[hpPHP_MAX];
-	unsigned int packetsc[hpPHP_MAX];
+	VECTOR_DECL(struct HPluginPacket) packets[hpPHP_MAX];
 	/* plugin file ptr caching */
 	struct HPMFileNameCache *fnames;
 	unsigned int fnamec;

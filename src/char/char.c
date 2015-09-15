@@ -2626,10 +2626,12 @@ int char_parse_fromlogin(int fd) {
 	while(RFIFOREST(fd) >= 2) {
 		uint16 command = RFIFOW(fd,0);
 
-		if( HPM->packetsc[hpParse_FromLogin] ) {
-			int success = HPM->parse_packets(fd,hpParse_FromLogin);
-			if( success == 1 ) continue;
-			else if( success == 2 ) return 0;
+		if (VECTOR_LENGTH(HPM->packets[hpParse_FromLogin]) > 0) {
+			int result = HPM->parse_packets(fd,hpParse_FromLogin);
+			if (result == 1)
+				continue;
+			if (result == 2)
+				return 0;
 		}
 
 		switch (command) {
@@ -3896,7 +3898,6 @@ void char_parse_frommap_scdata_delete(int fd)
 
 int char_parse_frommap(int fd)
 {
-	int i;
 	int id;
 
 	ARR_FIND( 0, ARRAYLENGTH(chr->server), id, chr->server[id].fd == fd );
@@ -3913,11 +3914,12 @@ int char_parse_frommap(int fd)
 	}
 
 	while(RFIFOREST(fd) >= 2) {
-		if( HPM->packetsc[hpParse_FromMap] ) {
-			if( (i = HPM->parse_packets(fd,hpParse_FromMap)) ) {
-				if( i == 1 ) continue;
-				if( i == 2 ) return 0;
-			}
+		if (VECTOR_LENGTH(HPM->packets[hpParse_FromMap]) > 0) {
+			int result = HPM->parse_packets(fd,hpParse_FromMap);
+			if (result == 1)
+				continue;
+			if (result == 2)
+				return 0;
 		}
 
 		switch(RFIFOW(fd,0)) {
@@ -5095,10 +5097,12 @@ int char_parse_char(int fd)
 		//For use in packets that depend on an sd being present [Skotlex]
 		#define FIFOSD_CHECK(rest) do { if(RFIFOREST(fd) < (rest)) return 0; if (sd==NULL || !sd->auth) { RFIFOSKIP(fd,(rest)); return 0; } } while (0)
 
-		if( HPM->packetsc[hpParse_Char] ) {
-			int success = HPM->parse_packets(fd,hpParse_Char);
-			if( success == 1 ) continue;
-			else if( success == 2 ) return 0;
+		if (VECTOR_LENGTH(HPM->packets[hpParse_Char]) > 0) {
+			int result = HPM->parse_packets(fd,hpParse_Char);
+			if (result == 1)
+				continue;
+			if (result == 2)
+				return 0;
 		}
 
 		cmd = RFIFOW(fd,0);

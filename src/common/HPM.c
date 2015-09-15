@@ -138,24 +138,27 @@ struct hplugin *hplugin_create(void)
 	return plugin;
 }
 
-bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (*receive) (int fd), unsigned int point,unsigned int pluginID) {
+bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (*receive) (int fd), unsigned int point, unsigned int pluginID)
+{
 	struct HPluginPacket *packet;
-	unsigned int i;
+	int i;
 
-	if( point >= hpPHP_MAX ) {
+	if (point >= hpPHP_MAX) {
 		ShowError("HPM->addPacket:%s: unknown point '%u' specified for packet 0x%04x (len %d)\n",HPM->pid2name(pluginID),point,cmd,length);
 		return false;
 	}
 
-	for(i = 0; i < HPM->packetsc[point]; i++) {
-		if( HPM->packets[point][i].cmd == cmd ) {
-			ShowError("HPM->addPacket:%s: can't add packet 0x%04x, already in use by '%s'!",HPM->pid2name(pluginID),cmd,HPM->pid2name(HPM->packets[point][i].pluginID));
+	for (i = 0; i < VECTOR_LENGTH(HPM->packets[point]); i++) {
+		if (VECTOR_INDEX(HPM->packets[point], i).cmd == cmd ) {
+			ShowError("HPM->addPacket:%s: can't add packet 0x%04x, already in use by '%s'!",
+					HPM->pid2name(pluginID), cmd, HPM->pid2name(VECTOR_INDEX(HPM->packets[point], i).pluginID));
 			return false;
 		}
 	}
 
-	RECREATE(HPM->packets[point], struct HPluginPacket, ++HPM->packetsc[point]);
-	packet = &HPM->packets[point][HPM->packetsc[point] - 1];
+	VECTOR_ENSURE(HPM->packets[point], 1, 1);
+	VECTOR_PUSHZEROED(HPM->packets[point]);
+	packet = &VECTOR_LAST(HPM->packets[point]);
 
 	packet->pluginID = pluginID;
 	packet->cmd = cmd;
@@ -646,34 +649,37 @@ CPCMD(plugins)
 	}
 }
 
-/*
- 0 = unknown
- 1 = OK
- 2 = incomplete
+/**
+ * Parses a packet through the registered plugin.
+ *
+ * @param fd The connection fd.
+ * @param point The packet hooking point.
+ * @retval 0 unknown packet
+ * @retval 1 OK
+ * @retval 2 incomplete packet
  */
-unsigned char hplugins_parse_packets(int fd, enum HPluginPacketHookingPoints point) {
-	unsigned int i;
+unsigned char hplugins_parse_packets(int fd, enum HPluginPacketHookingPoints point)
+{
+	struct HPluginPacket *packet = NULL;
+	int i;
+	int16 length;
 
-	for(i = 0; i < HPM->packetsc[point]; i++) {
-		if( HPM->packets[point][i].cmd == RFIFOW(fd,0) )
-			break;
-	}
+	ARR_FIND(0, VECTOR_LENGTH(HPM->packets[point]), i, VECTOR_INDEX(HPM->packets[point], i).cmd == RFIFOW(fd,0));
 
-	if( i != HPM->packetsc[point] ) {
-		struct HPluginPacket *packet = &HPM->packets[point][i];
-		short length;
+	if (i == VECTOR_LENGTH(HPM->packets[point]))
+		return 0;
 
-		if( (length = packet->len) == -1 ) {
-			if( (length = RFIFOW(fd, 2)) > (int)RFIFOREST(fd) )
-				return 2;
-		}
+	packet = &VECTOR_INDEX(HPM->packets[point], i);
+	length = packet->len;
+	if (length == -1)
+		length = RFIFOW(fd, 2);
 
-		packet->receive(fd);
-		RFIFOSKIP(fd, length);
-		return 1;
-	}
+	if (length > (int)RFIFOREST(fd))
+		return 2;
 
-	return 0;
+	packet->receive(fd);
+	RFIFOSKIP(fd, length);
+	return 1;
 }
 
 /**
@@ -802,7 +808,7 @@ void HPM_datacheck_final(void) {
 }
 
 void hpm_init(void) {
-	unsigned int i;
+	int i;
 	datacheck_db = NULL;
 	datacheck_data = NULL;
 	datacheck_version = 0;
@@ -827,9 +833,8 @@ void hpm_init(void) {
 		return;
 	}
 
-	for(i = 0; i < hpPHP_MAX; i++) {
-		HPM->packets[i] = NULL;
-		HPM->packetsc[i] = 0;
+	for (i = 0; i < hpPHP_MAX; i++) {
+		VECTOR_INIT(HPM->packets[i]);
 	}
 
 #ifdef CONSOLE_INPUT
@@ -851,7 +856,7 @@ void hpm_memdown(void)
 }
 void hpm_final(void)
 {
-	unsigned int i;
+	int i;
 
 	HPM->off = true;
 
@@ -865,9 +870,8 @@ void hpm_final(void)
 	}
 	VECTOR_CLEAR(HPM->symbols);
 
-	for( i = 0; i < hpPHP_MAX; i++ ) {
-		if( HPM->packets[i] )
-			aFree(HPM->packets[i]);
+	for (i = 0; i < hpPHP_MAX; i++) {
+		VECTOR_CLEAR(HPM->packets[i]);
 	}
 
 	for( i = 0; i < HPCT_MAX; i++ ) {
@@ -899,10 +903,6 @@ void hpm_defaults(void) {
 	/* */
 	HPM->fnames = NULL;
 	HPM->fnamec = 0;
-	for(i = 0; i < hpPHP_MAX; i++) {
-		HPM->packets[i] = NULL;
-		HPM->packetsc[i] = 0;
-	}
 	for(i = 0; i < HPCT_MAX; i++) {
 		HPM->confs[i] = NULL;
 		HPM->confsc[i] = 0;

@@ -1351,7 +1351,7 @@ void chrif_skillid2idx(int fd) {
  *
  *------------------------------------------*/
 int chrif_parse(int fd) {
-	int packet_len, cmd, r;
+	int packet_len, cmd;
 
 	// only process data from the char-server
 	if ( fd != chrif->fd ) {
@@ -1375,22 +1375,22 @@ int chrif_parse(int fd) {
 		}
 	}
 
-	while ( RFIFOREST(fd) >= 2 ) {
-
-		if( HPM->packetsc[hpChrif_Parse] ) {
-			if( (r = HPM->parse_packets(fd,hpChrif_Parse)) ) {
-				if( r == 1 ) continue;
-				if( r == 2 ) return 0;
-			}
+	while (RFIFOREST(fd) >= 2) {
+		if (VECTOR_LENGTH(HPM->packets[hpChrif_Parse]) > 0) {
+			int result = HPM->parse_packets(fd,hpChrif_Parse);
+			if (result == 1)
+				continue;
+			if (result == 2)
+				return 0;
 		}
 
 		cmd = RFIFOW(fd,0);
 
 		if (cmd < 0x2af8 || cmd >= 0x2af8 + ARRAYLENGTH(chrif->packet_len_table) || chrif->packet_len_table[cmd-0x2af8] == 0) {
-			r = intif->parse(fd); // Passed on to the intif
+			int result = intif->parse(fd); // Passed on to the intif
 
-			if (r == 1) continue; // Treated in intif
-			if (r == 2) return 0; // Didn't have enough data (len==-1)
+			if (result == 1) continue; // Treated in intif
+			if (result == 2) return 0; // Didn't have enough data (len==-1)
 
 			ShowWarning("chrif_parse: session #%d, intif->parse failed (unrecognized command 0x%.4x).\n", fd, cmd);
 			sockt->eof(fd);
