@@ -9,6 +9,7 @@
 #endif
 
 #include "common/hercules.h"
+#include "common/db.h"
 #include "common/HPMi.h"
 
 #ifdef WIN32
@@ -102,8 +103,7 @@ struct HPM_interface {
 	/* hooking */
 	bool force_return;
 	/* data */
-	struct hplugin **plugins;
-	unsigned int plugin_count;
+	VECTOR_DECL(struct hplugin *) plugins;
 	struct hpm_symbol **symbols;
 	unsigned int symbol_count;
 	/* packet hooking points */

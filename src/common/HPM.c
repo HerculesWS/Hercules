@@ -43,11 +43,18 @@ DBMap *datacheck_db;
 int datacheck_version;
 const struct s_HPMDataCheck *datacheck_data;
 
-void hplugin_trigger_event(enum hp_event_types type) {
-	unsigned int i;
-	for( i = 0; i < HPM->plugin_count; i++ ) {
-		if( HPM->plugins[i]->hpi->event[type] != NULL )
-			(HPM->plugins[i]->hpi->event[type])();
+/**
+ * Executes an event on all loaded plugins.
+ *
+ * @param type The event type to trigger.
+ */
+void hplugin_trigger_event(enum hp_event_types type)
+{
+	int i;
+	for (i = 0; i < VECTOR_LENGTH(HPM->plugins); i++) {
+		struct hplugin *plugin = VECTOR_INDEX(HPM->plugins, i);
+		if (plugin->hpi->event[type] != NULL)
+			plugin->hpi->event[type]();
 	}
 }
 
@@ -81,20 +88,37 @@ bool hplugin_iscompatible(char* version) {
 	return ( req_major == HPM->version[0] && req_minor <= HPM->version[1] ) ? true : false;
 }
 
-bool hplugin_exists(const char *filename) {
-	unsigned int i;
-	for(i = 0; i < HPM->plugin_count; i++) {
-		if( strcmpi(HPM->plugins[i]->filename,filename) == 0 )
+/**
+ * Checks whether a plugin is currently loaded
+ *
+ * @param filename The plugin filename.
+ * @retval true  if the plugin exists and is currently loaded.
+ * @retval false otherwise.
+ */
+bool hplugin_exists(const char *filename)
+{
+	int i;
+	for (i = 0; i < VECTOR_LENGTH(HPM->plugins); i++) {
+		if (strcmpi(VECTOR_INDEX(HPM->plugins, i)->filename,filename) == 0)
 			return true;
 	}
 	return false;
 }
-struct hplugin *hplugin_create(void) {
-	RECREATE(HPM->plugins, struct hplugin *, ++HPM->plugin_count);
-	CREATE(HPM->plugins[HPM->plugin_count - 1], struct hplugin, 1);
-	HPM->plugins[HPM->plugin_count - 1]->idx = HPM->plugin_count - 1;
-	HPM->plugins[HPM->plugin_count - 1]->filename = NULL;
-	return HPM->plugins[HPM->plugin_count - 1];
+
+/**
+ * Initializes the data structure for a new plugin and registers it.
+ *
+ * @return A (retained) pointer to the initialized data.
+ */
+struct hplugin *hplugin_create(void)
+{
+	struct hplugin *plugin = NULL;
+	CREATE(plugin, struct hplugin, 1);
+	plugin->idx = (int)VECTOR_LENGTH(HPM->plugins);
+	plugin->filename = NULL;
+	VECTOR_ENSURE(HPM->plugins, 1, 1);
+	VECTOR_PUSH(HPM->plugins, plugin);
+	return plugin;
 }
 
 bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (*receive) (int fd), unsigned int point,unsigned int pluginID) {
@@ -477,30 +501,23 @@ struct hplugin *hplugin_load(const char* filename) {
 	return plugin;
 }
 
+/**
+ * Unloads and unregisters a plugin.
+ *
+ * @param plugin The plugin data.
+ */
 void hplugin_unload(struct hplugin* plugin)
 {
+	int i;
 	if (plugin->filename)
 		aFree(plugin->filename);
 	if (plugin->dll)
 		plugin_close(plugin->dll);
 	/* TODO: for manual packet unload */
 	/* - Go through known packets and unlink any belonging to the plugin being removed */
-	if (!HPM->off) {
-		unsigned int i, cursor;
-		for (cursor = 0; cursor < HPM->plugin_count; cursor++) {
-			if (HPM->plugins[cursor]->idx != plugin->idx)
-				continue;
-			HPM->plugins[cursor] = NULL;
-			break;
-		}
-		for(i = cursor + 1; i < HPM->plugin_count; i++) {
-			HPM->plugins[cursor] = HPM->plugins[i];
-			cursor++;
-		}
-		if (!(HPM->plugin_count = cursor)) {
-			aFree(HPM->plugins);
-			HPM->plugins = NULL;
-		}
+	ARR_FIND(0, VECTOR_LENGTH(HPM->plugins), i, VECTOR_INDEX(HPM->plugins, i)->idx == plugin->idx);
+	if (i != VECTOR_LENGTH(HPM->plugins)) {
+		VECTOR_ERASE(HPM->plugins, i);
 	}
 	aFree(plugin);
 }
@@ -584,20 +601,31 @@ void hplugins_config_read(void) {
 	}
 	libconfig->destroy(&plugins_conf);
 
-	if( HPM->plugin_count )
-		ShowStatus("HPM: There are '"CL_WHITE"%d"CL_RESET"' plugins loaded, type '"CL_WHITE"plugins"CL_RESET"' to list them\n", HPM->plugin_count);
+	if (VECTOR_LENGTH(HPM->plugins))
+		ShowStatus("HPM: There are '"CL_WHITE"%"PRIuS""CL_RESET"' plugins loaded, type '"CL_WHITE"plugins"CL_RESET"' to list them\n", VECTOR_LENGTH(HPM->plugins));
 }
-CPCMD(plugins) {
-	if( HPM->plugin_count == 0 ) {
+
+/**
+ * Console command: plugins
+ *
+ * Shows a list of loaded plugins.
+ *
+ * @see CPCMD()
+ */
+CPCMD(plugins)
+{
+	int i;
+
+	if (VECTOR_LENGTH(HPM->plugins) == 0) {
 		ShowInfo("HPC: there are no plugins loaded\n");
-	} else {
-		unsigned int i;
+		return;
+	}
 
-		ShowInfo("HPC: There are '"CL_WHITE"%d"CL_RESET"' plugins loaded\n",HPM->plugin_count);
+	ShowInfo("HPC: There are '"CL_WHITE"%"PRIuS""CL_RESET"' plugins loaded\n", VECTOR_LENGTH(HPM->plugins));
 
-		for(i = 0; i < HPM->plugin_count; i++) {
-			ShowInfo("HPC: - '"CL_WHITE"%s"CL_RESET"' (%s)\n",HPM->plugins[i]->info->name,HPM->plugins[i]->filename);
-		}
+	for(i = 0; i < VECTOR_LENGTH(HPM->plugins); i++) {
+		struct hplugin *plugin = VECTOR_INDEX(HPM->plugins, i);
+		ShowInfo("HPC: - '"CL_WHITE"%s"CL_RESET"' (%s)\n", plugin->info->name, plugin->filename);
 	}
 }
 
@@ -631,15 +659,25 @@ unsigned char hplugins_parse_packets(int fd, enum HPluginPacketHookingPoints poi
 	return 0;
 }
 
-char *hplugins_id2name (unsigned int pid) {
-	unsigned int i;
+/**
+ * Retrieves a plugin name by ID.
+ *
+ * @param pid The plugin identifier.
+ * @return The plugin name.
+ * @retval "core" if the plugin ID belongs to the Hercules core.
+ * @retval "UnknownPlugin" if the plugin wasn't found.
+ */
+char *hplugins_id2name(unsigned int pid)
+{
+	int i;
 
 	if (pid == HPM_PID_CORE)
 		return "core";
 
-	for( i = 0; i < HPM->plugin_count; i++ ) {
-		if( HPM->plugins[i]->idx == pid )
-			return HPM->plugins[i]->info->name;
+	for (i = 0; i < VECTOR_LENGTH(HPM->plugins); i++) {
+		struct hplugin *plugin = VECTOR_INDEX(HPM->plugins, i);
+		if (plugin->idx == pid)
+			return plugin->info->name;
 	}
 
 	return "UnknownPlugin";
@@ -753,8 +791,8 @@ void hpm_init(void) {
 	datacheck_version = 0;
 
 	HPM->symbols = NULL;
-	HPM->plugins = NULL;
-	HPM->plugin_count = HPM->symbol_count = 0;
+	VECTOR_INIT(HPM->plugins);
+	HPM->symbol_count = 0;
 	HPM->off = false;
 
 	memcpy(&iMalloc_HPM, iMalloc, sizeof(struct malloc_interface));
@@ -794,18 +832,16 @@ void hpm_memdown(void)
 		free(HPM->fnames);
 	}
 }
-void hpm_final(void) {
+void hpm_final(void)
+{
 	unsigned int i;
 
 	HPM->off = true;
 
-	if( HPM->plugins )
-	{
-		for( i = 0; i < HPM->plugin_count; i++ ) {
-			HPM->unload(HPM->plugins[i]);
-		}
-		aFree(HPM->plugins);
+	while (VECTOR_LENGTH(HPM->plugins)) {
+		HPM->unload(VECTOR_LAST(HPM->plugins));
 	}
+	VECTOR_CLEAR(HPM->plugins);
 
 	if( HPM->symbols )
 	{
