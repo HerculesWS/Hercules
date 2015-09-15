@@ -477,31 +477,32 @@ struct hplugin *hplugin_load(const char* filename) {
 	return plugin;
 }
 
-void hplugin_unload(struct hplugin* plugin) {
-	unsigned int i = plugin->idx;
-
-	if( plugin->filename )
+void hplugin_unload(struct hplugin* plugin)
+{
+	if (plugin->filename)
 		aFree(plugin->filename);
-	if( plugin->dll )
+	if (plugin->dll)
 		plugin_close(plugin->dll);
 	/* TODO: for manual packet unload */
 	/* - Go through known packets and unlink any belonging to the plugin being removed */
-	aFree(plugin);
 	if (!HPM->off) {
-		int cursor = 0;
-		HPM->plugins[i] = NULL;
-		for(i = 0; i < HPM->plugin_count; i++) {
-			if( HPM->plugins[i] == NULL )
+		int i, cursor;
+		for (cursor = 0; cursor < HPM->plugin_count; cursor++) {
+			if (HPM->plugins[cursor]->idx != plugin->idx)
 				continue;
-			if( cursor != i )
-				HPM->plugins[cursor] = HPM->plugins[i];
+			HPM->plugins[cursor] = NULL;
+			break;
+		}
+		for(i = cursor + 1; i < HPM->plugin_count; i++) {
+			HPM->plugins[cursor] = HPM->plugins[i];
 			cursor++;
 		}
-		if( !(HPM->plugin_count = cursor) ) {
+		if (!(HPM->plugin_count = cursor)) {
 			aFree(HPM->plugins);
 			HPM->plugins = NULL;
 		}
 	}
+	aFree(plugin);
 }
 
 /**
