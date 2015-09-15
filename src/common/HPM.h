@@ -119,8 +119,7 @@ struct HPM_interface {
 	/* config listen */
 	VECTOR_DECL(struct HPConfListenStorage) config_listeners[HPCT_MAX];
 	/** Plugins requested through the command line */
-	char **cmdline_plugins;
-	int cmdline_plugins_count;
+	VECTOR_DECL(char *) cmdline_load_plugins;
 	/* funcs */
 	void (*init) (void);
 	void (*final) (void);

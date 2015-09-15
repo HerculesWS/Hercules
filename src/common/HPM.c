@@ -558,8 +558,8 @@ void hplugin_unload(struct hplugin* plugin)
  */
 CMDLINEARG(loadplugin)
 {
-	RECREATE(HPM->cmdline_plugins, char *, ++HPM->cmdline_plugins_count);
-	HPM->cmdline_plugins[HPM->cmdline_plugins_count-1] = aStrdup(params);
+	VECTOR_ENSURE(HPM->cmdline_load_plugins, 1, 1);
+	VECTOR_PUSH(HPM->cmdline_load_plugins, aStrdup(params));
 	return true;
 }
 
@@ -583,9 +583,9 @@ void hplugins_config_read(void) {
 		return;
 
 	plist = libconfig->lookup(&plugins_conf, "plugins_list");
-	for (i = 0; i < HPM->cmdline_plugins_count; i++) {
+	for (i = 0; i < VECTOR_LENGTH(HPM->cmdline_load_plugins); i++) {
 		config_setting_t *entry = libconfig->setting_add(plist, NULL, CONFIG_TYPE_STRING);
-		config_setting_set_string(entry, HPM->cmdline_plugins[i]);
+		config_setting_set_string(entry, VECTOR_INDEX(HPM->cmdline_load_plugins, i));
 	}
 
 	if (plist != NULL) {
@@ -912,14 +912,10 @@ void hpm_final(void)
 		VECTOR_CLEAR(HPM->config_listeners[i]);
 	}
 
-	if (HPM->cmdline_plugins) {
-		int j;
-		for (j = 0; j < HPM->cmdline_plugins_count; j++)
-			aFree(HPM->cmdline_plugins[j]);
-		aFree(HPM->cmdline_plugins);
-		HPM->cmdline_plugins = NULL;
-		HPM->cmdline_plugins_count = 0;
+	while (VECTOR_LENGTH(HPM->cmdline_load_plugins)) {
+		aFree(VECTOR_POP(HPM->cmdline_load_plugins));
 	}
+	VECTOR_CLEAR(HPM->cmdline_load_plugins);
 
 	/* HPM->fnames is cleared after the memory manager goes down */
 	iMalloc->post_shutdown = hpm_memdown;
@@ -931,10 +927,9 @@ void hpm_defaults(void)
 	HPM = &HPM_s;
 
 	memset(&HPM->filenames, 0, sizeof(HPM->filenames));
+	VECTOR_INIT(HPM->cmdline_load_plugins);
 	HPM->force_return = false;
 	HPM->hooking = false;
-	HPM->cmdline_plugins = NULL;
-	HPM->cmdline_plugins_count = 0;
 	/* */
 	HPM->init = hpm_init;
 	HPM->final = hpm_final;
