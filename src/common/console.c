@@ -217,10 +217,11 @@ void console_load_defaults(void)
 		CP_DEF_C2(update,sql),
 		CP_DEF_S(skip,update),
 	};
-	unsigned int i, len = ARRAYLENGTH(default_list);
+	int len = ARRAYLENGTH(default_list);
 	struct CParseEntry *cmd;
+	int i;
 
-	RECREATE(console->input->cmds,struct CParseEntry *, len);
+	VECTOR_ENSURE(console->input->commands, len, 1);
 
 	for(i = 0; i < len; i++) {
 		CREATE(cmd, struct CParseEntry, 1);
@@ -234,8 +235,7 @@ void console_load_defaults(void)
 
 		cmd->next_count = 0;
 
-		console->input->cmd_count++;
-		console->input->cmds[i] = cmd;
+		VECTOR_PUSH(console->input->commands, cmd);
 		default_list[i].self = cmd;
 		if (!default_list[i].connect) {
 			VECTOR_ENSURE(console->input->command_list, 1, 1);
@@ -243,17 +243,16 @@ void console_load_defaults(void)
 		}
 	}
 
-	for(i = 0; i < len; i++) {
-		unsigned int k;
-		if( !default_list[i].connect )
+	for (i = 0; i < len; i++) {
+		int k;
+		if (!default_list[i].connect)
 			continue;
-		for(k = 0; k < console->input->cmd_count; k++) {
-			if( strcmpi(default_list[i].connect,console->input->cmds[k]->cmd) == 0 ) {
-				cmd = default_list[i].self;
-				RECREATE(console->input->cmds[k]->u.next, struct CParseEntry *, ++console->input->cmds[k]->next_count);
-				console->input->cmds[k]->u.next[console->input->cmds[k]->next_count - 1] = cmd;
-				break;
-			}
+		ARR_FIND(0, VECTOR_LENGTH(console->input->commands), k, strcmpi(default_list[i].connect, VECTOR_INDEX(console->input->commands, k)->cmd) == 0);
+		if (k != VECTOR_LENGTH(console->input->commands)) {
+			struct CParseEntry *parent = VECTOR_INDEX(console->input->commands, k);
+			cmd = default_list[i].self;
+			RECREATE(parent->u.next, struct CParseEntry *, ++parent->next_count);
+			parent->u.next[parent->next_count - 1] = cmd;
 		}
 	}
 #undef CP_DEF_C
@@ -281,30 +280,32 @@ void console_parse_create(char *name, CParseFunc func)
 	ARR_FIND(0, VECTOR_LENGTH(console->input->command_list), i, strcmpi(tok, VECTOR_INDEX(console->input->command_list, i)->cmd) == 0);
 
 	if (i == VECTOR_LENGTH(console->input->command_list)) {
-		RECREATE(console->input->cmds,struct CParseEntry *, ++console->input->cmd_count);
 		CREATE(cmd, struct CParseEntry, 1);
 		safestrncpy(cmd->cmd, tok, CP_CMD_LENGTH);
 		cmd->next_count = 0;
-		console->input->cmds[console->input->cmd_count - 1] = cmd;
+		VECTOR_ENSURE(console->input->commands, 1, 1);
+		VECTOR_PUSH(console->input->commands, cmd);
 		VECTOR_ENSURE(console->input->command_list, 1, 1);
 		VECTOR_PUSH(console->input->command_list, cmd);
 	}
 
 	cmd = VECTOR_INDEX(console->input->command_list, i);
-	while( ( tok = strtok(NULL, ":") ) != NULL ) {
-		for(i = 0; i < cmd->next_count; i++) {
-			if( strcmpi(cmd->u.next[i]->cmd,tok) == 0 )
+	while (( tok = strtok(NULL, ":") ) != NULL) {
+		for (i = 0; i < cmd->next_count; i++) {
+			if (strcmpi(cmd->u.next[i]->cmd,tok) == 0)
 				break;
 		}
 
-		if ( i == cmd->next_count ) {
-			RECREATE(console->input->cmds,struct CParseEntry *, ++console->input->cmd_count);
-			CREATE(console->input->cmds[console->input->cmd_count-1], struct CParseEntry, 1);
-			safestrncpy(console->input->cmds[console->input->cmd_count-1]->cmd, tok, CP_CMD_LENGTH);
-			console->input->cmds[console->input->cmd_count-1]->next_count = 0;
+		if (i == cmd->next_count) {
+			struct CParseEntry *entry;
+			CREATE(entry, struct CParseEntry, 1);
+			safestrncpy(entry->cmd, tok, CP_CMD_LENGTH);
+			entry->next_count = 0;
+			VECTOR_ENSURE(console->input->commands, 1, 1);
+			VECTOR_PUSH(console->input->commands, entry);
 			RECREATE(cmd->u.next, struct CParseEntry *, ++cmd->next_count);
-			cmd->u.next[cmd->next_count - 1] = console->input->cmds[console->input->cmd_count-1];
-			cmd = console->input->cmds[console->input->cmd_count-1];
+			cmd->u.next[cmd->next_count - 1] = entry;
+			cmd = entry;
 			continue;
 		}
 	}
@@ -484,22 +485,22 @@ void console_setSQL(Sql *SQL_handle) {
 void console_init (void) {
 #ifdef CONSOLE_INPUT
 	VECTOR_INIT(console->input->command_list);
-	console->input->cmd_count = 0;
+	VECTOR_INIT(console->input->commands);
 	console->input->load_defaults();
 	console->input->parse_init();
 #endif
 }
 void console_final(void) {
 #ifdef CONSOLE_INPUT
-	unsigned int i;
 	console->input->parse_final();
-	for( i = 0; i < console->input->cmd_count; i++ ) {
-		if( console->input->cmds[i]->next_count )
-			aFree(console->input->cmds[i]->u.next);
-		aFree(console->input->cmds[i]);
+	while (VECTOR_LENGTH(console->input->commands)) {
+		struct CParseEntry *entry = VECTOR_POP(console->input->commands);
+		if (entry->next_count)
+			aFree(entry->u.next);
+		aFree(entry);
 	}
+	VECTOR_CLEAR(console->input->commands);
 	VECTOR_CLEAR(console->input->command_list);
-	aFree(console->input->cmds);
 #endif
 }
 void console_defaults(void) {

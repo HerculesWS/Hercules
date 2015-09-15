@@ -53,8 +53,7 @@ struct console_input_interface {
 	racond *ptcond;/* parse thread cond */
 	/* */
 	VECTOR_DECL(struct CParseEntry *) command_list;
-	struct CParseEntry **cmds;
-	unsigned int cmd_count;
+	VECTOR_DECL(struct CParseEntry *) commands;
 	/* */
 	Sql *SQL;
 	/* */
