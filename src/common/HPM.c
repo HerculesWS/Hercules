@@ -705,23 +705,33 @@ char *hplugins_id2name(unsigned int pid)
 
 	return "UnknownPlugin";
 }
-char* HPM_file2ptr(const char *file) {
-	unsigned int i;
 
-	for(i = 0; i < HPM->fnamec; i++) {
-		if( HPM->fnames[i].addr == file )
-			return HPM->fnames[i].name;
+/**
+ * Returns a retained permanent pointer to a source filename, for memory-manager reporting use.
+ *
+ * The returned pointer is safe to be used as filename in the memory manager
+ * functions, and it will be available during and after the memory manager
+ * shutdown (for memory leak reporting purposes).
+ *
+ * @param file The string/filename to retain
+ * @return A retained copy of the source string.
+ */
+const char *HPM_file2ptr(const char *file)
+{
+	int i;
+
+	ARR_FIND(0, HPM->filenames.count, i, HPM->filenames.data[i].addr == file);
+	if (i != HPM->filenames.count) {
+		return HPM->filenames.data[i].name;
 	}
 
-	i = HPM->fnamec;
-
 	/* we handle this memory outside of the server's memory manager because we need it to exist after the memory manager goes down */
-	HPM->fnames = realloc(HPM->fnames,(++HPM->fnamec)*sizeof(struct HPMFileNameCache));
+	HPM->filenames.data = realloc(HPM->filenames.data, (++HPM->filenames.count)*sizeof(struct HPMFileNameCache));
 
-	HPM->fnames[i].addr = file;
-	HPM->fnames[i].name = strdup(file);
+	HPM->filenames.data[i].addr = file;
+	HPM->filenames.data[i].name = strdup(file);
 
-	return HPM->fnames[i].name;
+	return HPM->filenames.data[i].name;
 }
 void* HPM_mmalloc(size_t size, const char *file, int line, const char *func) {
 	return iMalloc->malloc(size,HPM_file2ptr(file),line,func);
@@ -842,18 +852,25 @@ void hpm_init(void) {
 #endif
 	return;
 }
+
+/**
+ * Releases the retained filenames cache.
+ */
 void hpm_memdown(void)
 {
-	/* this memory is handled outside of the server's memory manager and thus cleared after memory manager goes down */
-
-	if (HPM->fnames) {
-		unsigned int i;
-		for (i = 0; i < HPM->fnamec; i++) {
-			free(HPM->fnames[i].name);
+	/* this memory is handled outside of the server's memory manager and
+	 * thus cleared after memory manager goes down */
+	if (HPM->filenames.count) {
+		int i;
+		for (i = 0; i < HPM->filenames.count; i++) {
+			free(HPM->filenames.data[i].name);
 		}
-		free(HPM->fnames);
+		free(HPM->filenames.data);
+		HPM->filenames.data = NULL;
+		HPM->filenames.count = 0;
 	}
 }
+
 void hpm_final(void)
 {
 	int i;
@@ -896,13 +913,10 @@ void hpm_defaults(void) {
 	unsigned int i;
 	HPM = &HPM_s;
 
-	HPM->fnames = NULL;
-	HPM->fnamec = 0;
+	memset(&HPM->filenames, 0, sizeof(HPM->filenames));
 	HPM->force_return = false;
 	HPM->hooking = false;
 	/* */
-	HPM->fnames = NULL;
-	HPM->fnamec = 0;
 	for(i = 0; i < HPCT_MAX; i++) {
 		HPM->confs[i] = NULL;
 		HPM->confsc[i] = 0;

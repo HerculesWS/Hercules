@@ -111,8 +111,11 @@ struct HPM_interface {
 	/* packet hooking points */
 	VECTOR_DECL(struct HPluginPacket) packets[hpPHP_MAX];
 	/* plugin file ptr caching */
-	struct HPMFileNameCache *fnames;
-	unsigned int fnamec;
+	struct {
+		// This doesn't use a VECTOR because it needs to exist after the memory manager goes down.
+		int count;
+		struct HPMFileNameCache *data;
+	} filenames;
 	/* config listen */
 	struct HPConfListenStorage *confs[HPCT_MAX];
 	unsigned int confsc[HPCT_MAX];
