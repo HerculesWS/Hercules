@@ -5,6 +5,7 @@
 #define COMMON_CONSOLE_H
 
 #include "common/hercules.h"
+#include "common/db.h"
 #include "common/mutex.h"
 #include "common/spinlock.h"
 #include "common/sql.h"
@@ -51,10 +52,9 @@ struct console_input_interface {
 	ramutex *ptmutex;/* parse thread mutex */
 	racond *ptcond;/* parse thread cond */
 	/* */
-	struct CParseEntry **cmd_list;
+	VECTOR_DECL(struct CParseEntry *) command_list;
 	struct CParseEntry **cmds;
 	unsigned int cmd_count;
-	unsigned int cmd_list_count;
 	/* */
 	Sql *SQL;
 	/* */

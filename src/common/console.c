@@ -124,14 +124,16 @@ CPCMD_C(mem_report,server) {
 /**
  * Displays command list
  **/
-CPCMD(help) {
-	unsigned int i = 0;
-	for ( i = 0; i < console->input->cmd_list_count; i++ ) {
-		if( console->input->cmd_list[i]->next_count ) {
-			ShowInfo("- '"CL_WHITE"%s"CL_RESET"' subs\n",console->input->cmd_list[i]->cmd);
-			console->input->parse_list_subs(console->input->cmd_list[i],2);
+CPCMD(help)
+{
+	int i;
+	for (i = 0; i < VECTOR_LENGTH(console->input->command_list); i++) {
+		struct CParseEntry *entry = VECTOR_INDEX(console->input->command_list, i);
+		if (entry->next_count > 0) {
+			ShowInfo("- '"CL_WHITE"%s"CL_RESET"' subs\n", entry->cmd);
+			console->input->parse_list_subs(entry, 2);
 		} else {
-			ShowInfo("- '"CL_WHITE"%s"CL_RESET"'\n",console->input->cmd_list[i]->cmd);
+			ShowInfo("- '"CL_WHITE"%s"CL_RESET"'\n", entry->cmd);
 		}
 	}
 }
@@ -235,9 +237,9 @@ void console_load_defaults(void)
 		console->input->cmd_count++;
 		console->input->cmds[i] = cmd;
 		default_list[i].self = cmd;
-		if( !default_list[i].connect ) {
-			RECREATE(console->input->cmd_list,struct CParseEntry *, ++console->input->cmd_list_count);
-			console->input->cmd_list[console->input->cmd_list_count - 1] = cmd;
+		if (!default_list[i].connect) {
+			VECTOR_ENSURE(console->input->command_list, 1, 1);
+			VECTOR_PUSH(console->input->command_list, cmd);
 		}
 	}
 
@@ -260,8 +262,15 @@ void console_load_defaults(void)
 #undef CP_DEF
 }
 
-void console_parse_create(char *name, CParseFunc func) {
-	unsigned int i;
+/**
+ * Creates a new console command entry.
+ *
+ * @param name The command name.
+ * @param func The command callback.
+ */
+void console_parse_create(char *name, CParseFunc func)
+{
+	int i;
 	char *tok;
 	char sublist[CP_CMD_LENGTH * 5];
 	struct CParseEntry *cmd;
@@ -269,23 +278,19 @@ void console_parse_create(char *name, CParseFunc func) {
 	safestrncpy(sublist, name, CP_CMD_LENGTH * 5);
 	tok = strtok(sublist,":");
 
-	for ( i = 0; i < console->input->cmd_list_count; i++ ) {
-		if( strcmpi(tok,console->input->cmd_list[i]->cmd) == 0 )
-			break;
-	}
+	ARR_FIND(0, VECTOR_LENGTH(console->input->command_list), i, strcmpi(tok, VECTOR_INDEX(console->input->command_list, i)->cmd) == 0);
 
-	if( i == console->input->cmd_list_count ) {
+	if (i == VECTOR_LENGTH(console->input->command_list)) {
 		RECREATE(console->input->cmds,struct CParseEntry *, ++console->input->cmd_count);
 		CREATE(cmd, struct CParseEntry, 1);
 		safestrncpy(cmd->cmd, tok, CP_CMD_LENGTH);
 		cmd->next_count = 0;
 		console->input->cmds[console->input->cmd_count - 1] = cmd;
-		RECREATE(console->input->cmd_list,struct CParseEntry *, ++console->input->cmd_list_count);
-		console->input->cmd_list[console->input->cmd_list_count - 1] = cmd;
-		i = console->input->cmd_list_count - 1;
+		VECTOR_ENSURE(console->input->command_list, 1, 1);
+		VECTOR_PUSH(console->input->command_list, cmd);
 	}
 
-	cmd = console->input->cmd_list[i];
+	cmd = VECTOR_INDEX(console->input->command_list, i);
 	while( ( tok = strtok(NULL, ":") ) != NULL ) {
 		for(i = 0; i < cmd->next_count; i++) {
 			if( strcmpi(cmd->u.next[i]->cmd,tok) == 0 )
@@ -321,71 +326,75 @@ void console_parse_list_subs(struct CParseEntry *cmd, unsigned char depth) {
 		}
 	}
 }
+
+/**
+ * Parses a console command.
+ *
+ * @param line The input line.
+ */
 void console_parse_sub(char *line) {
 	struct CParseEntry *cmd;
 	char bline[200];
 	char *tok;
 	char sublist[CP_CMD_LENGTH * 5];
-	unsigned int i, len = 0;
+	int i;
+	unsigned int len = 0;
 
 	memcpy(bline, line, 200);
 	tok = strtok(line, " ");
 
-	for ( i = 0; i < console->input->cmd_list_count; i++ ) {
-		if( strcmpi(tok,console->input->cmd_list[i]->cmd) == 0 )
-			break;
-	}
-
-	if( i == console->input->cmd_list_count ) {
+	ARR_FIND(0, VECTOR_LENGTH(console->input->command_list), i, strcmpi(tok, VECTOR_INDEX(console->input->command_list, i)->cmd) == 0);
+	if (i == VECTOR_LENGTH(console->input->command_list)) {
 		ShowError("'"CL_WHITE"%s"CL_RESET"' is not a known command, type '"CL_WHITE"help"CL_RESET"' to list all commands\n",line);
 		return;
 	}
 
-	cmd = console->input->cmd_list[i];
+	cmd = VECTOR_INDEX(console->input->command_list, i);
 
-	len += snprintf(sublist,CP_CMD_LENGTH * 5,"%s", cmd->cmd) + 1;
+	len += snprintf(sublist,CP_CMD_LENGTH * 5,"%s", cmd->cmd);
 
-	if( cmd->next_count == 0 && console->input->cmd_list[i]->u.func ) {
+	if (cmd->next_count == 0 && cmd->u.func) {
 		char *r = NULL;
 		if( (tok = strtok(NULL, " ")) ) {
 			r = bline;
 			r += len + 1;
 		}
 		cmd->u.func(r);
-	} else {
-		while( ( tok = strtok(NULL, " ") ) != NULL ) {
-			for( i = 0; i < cmd->next_count; i++ ) {
-				if( strcmpi(cmd->u.next[i]->cmd,tok) == 0 )
-					break;
-			}
-			if( i == cmd->next_count ) {
-				if( strcmpi("help",tok) == 0 ) {
-					if( cmd->next_count ) {
-						ShowInfo("- '"CL_WHITE"%s"CL_RESET"' subs\n",sublist);
-						console->input->parse_list_subs(cmd,2);
-					} else {
-						ShowError("'"CL_WHITE"%s"CL_RESET"' doesn't possess any subcommands\n",sublist);
-					}
-					return;
-				}
-				ShowError("'"CL_WHITE"%s"CL_RESET"' is not a known subcommand of '"CL_WHITE"%s"CL_RESET"'\n",tok,cmd->cmd);
-				ShowError("type '"CL_WHITE"%s help"CL_RESET"' to list its subcommands\n",sublist);
-				return;
-			}
-			if( cmd->u.next[i]->next_count == 0 && cmd->u.next[i]->u.func ) {
-				char *r = NULL;
-				if( (tok = strtok(NULL, " ")) ) {
-					r = bline;
-					r += len + strlen(cmd->u.next[i]->cmd) + 1;
-				}
-				cmd->u.next[i]->u.func(r);
-				return;
-			} else
-				cmd = cmd->u.next[i];
-			len += snprintf(sublist + len,(CP_CMD_LENGTH * 5) - len,":%s", cmd->cmd);
-		}
-		ShowError("Is only a category, type '"CL_WHITE"%s help"CL_RESET"' to list its subcommands\n",sublist);
+		return;
 	}
+
+	while( ( tok = strtok(NULL, " ") ) != NULL ) {
+		for( i = 0; i < cmd->next_count; i++ ) {
+			if( strcmpi(cmd->u.next[i]->cmd,tok) == 0 )
+				break;
+		}
+		if( i == cmd->next_count ) {
+			if( strcmpi("help",tok) == 0 ) {
+				if( cmd->next_count ) {
+					ShowInfo("- '"CL_WHITE"%s"CL_RESET"' subs\n",sublist);
+					console->input->parse_list_subs(cmd,2);
+				} else {
+					ShowError("'"CL_WHITE"%s"CL_RESET"' doesn't possess any subcommands\n",sublist);
+				}
+				return;
+			}
+			ShowError("'"CL_WHITE"%s"CL_RESET"' is not a known subcommand of '"CL_WHITE"%s"CL_RESET"'\n",tok,cmd->cmd);
+			ShowError("type '"CL_WHITE"%s help"CL_RESET"' to list its subcommands\n",sublist);
+			return;
+		}
+		if( cmd->u.next[i]->next_count == 0 && cmd->u.next[i]->u.func ) {
+			char *r = NULL;
+			if( (tok = strtok(NULL, " ")) ) {
+				r = bline;
+				r += len + strlen(cmd->u.next[i]->cmd) + 1;
+			}
+			cmd->u.next[i]->u.func(r);
+			return;
+		} else
+			cmd = cmd->u.next[i];
+		len += snprintf(sublist + len,(CP_CMD_LENGTH * 5) - len," %s", cmd->cmd);
+	}
+	ShowError("Is only a category, type '"CL_WHITE"%s help"CL_RESET"' to list its subcommands\n",sublist);
 }
 void console_parse(char* line) {
 	int c, i = 0, len = MAX_CONSOLE_INPUT - 1;/* we leave room for the \0 :P */
@@ -474,7 +483,8 @@ void console_setSQL(Sql *SQL_handle) {
 
 void console_init (void) {
 #ifdef CONSOLE_INPUT
-	console->input->cmd_count = console->input->cmd_list_count = 0;
+	VECTOR_INIT(console->input->command_list);
+	console->input->cmd_count = 0;
 	console->input->load_defaults();
 	console->input->parse_init();
 #endif
@@ -488,8 +498,8 @@ void console_final(void) {
 			aFree(console->input->cmds[i]->u.next);
 		aFree(console->input->cmds[i]);
 	}
+	VECTOR_CLEAR(console->input->command_list);
 	aFree(console->input->cmds);
-	aFree(console->input->cmd_list);
 #endif
 }
 void console_defaults(void) {
