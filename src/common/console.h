@@ -34,13 +34,20 @@ typedef void (*CParseFunc)(char *line);
 #define CPCMD_C_A(x,y) console_parse_ ##y ##x
 
 #define CP_CMD_LENGTH 20
+
+enum CONSOLE_PARSE_ENTRY_TYPE {
+	CPET_UNKNOWN,
+	CPET_FUNCTION,
+	CPET_CATEGORY,
+};
+
 struct CParseEntry {
 	char cmd[CP_CMD_LENGTH];
+	int type; ///< Entry type (@see enum CONSOLE_PARSE_ENTRY_TYPE)
 	union {
 		CParseFunc func;
-		struct CParseEntry **next;
+		VECTOR_DECL(struct CParseEntry *) children;
 	} u;
-	unsigned short next_count;
 };
 
 #ifdef CONSOLE_INPUT
