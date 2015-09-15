@@ -117,8 +117,7 @@ struct HPM_interface {
 		struct HPMFileNameCache *data;
 	} filenames;
 	/* config listen */
-	struct HPConfListenStorage *confs[HPCT_MAX];
-	unsigned int confsc[HPCT_MAX];
+	VECTOR_DECL(struct HPConfListenStorage) config_listeners[HPCT_MAX];
 	/** Plugins requested through the command line */
 	char **cmdline_plugins;
 	int cmdline_plugins_count;

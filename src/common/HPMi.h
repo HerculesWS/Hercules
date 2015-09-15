@@ -76,13 +76,13 @@ enum HPluginDataTypes {
 
 /* used in macros and conf storage */
 enum HPluginConfType {
-	HPCT_BATTLE,     /* battle-conf (map-server) */
-	HPCT_LOGIN,      /* login-server.conf (login-server) */
-	HPCT_CHAR,       /* char-server.conf (char-server) */
-	HPCT_CHAR_INTER, /* inter-server.conf (char-server) */
-	HPCT_MAP_INTER,  /* inter-server.conf (map-server) */
-	HPCT_LOG,        /* logs.conf (map-server) */
-	HPCT_SCRIPT,     /* script.conf (map-server) */
+	HPCT_BATTLE,     ///< battle-conf (map-server)
+	HPCT_LOGIN,      ///< login-server.conf (login-server)
+	HPCT_CHAR,       ///< char-server.conf (char-server)
+	HPCT_CHAR_INTER, ///< inter-server.conf (char-server)
+	HPCT_MAP_INTER,  ///< inter-server.conf (map-server)
+	HPCT_LOG,        ///< logs.conf (map-server)
+	HPCT_SCRIPT,     ///< script.conf (map-server)
 	HPCT_MAX,
 };
 

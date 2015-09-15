@@ -357,25 +357,36 @@ bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, CmdlineExecF
        return cmdline->arg_add(pluginID, name, '\0', func, help, has_param ? CMDLINE_OPT_PARAM : CMDLINE_OPT_NORMAL);
 }
 
+/**
+ * Adds a configuration listener for a plugin.
+ *
+ * @param pluginID The plugin identifier.
+ * @param type     The configuration type to listen for.
+ * @param name     The configuration entry name.
+ * @param func     The callback function.
+ * @retval true if the listener was added successfully.
+ * @retval false in case of error.
+ */
 bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, char *name, void (*func) (const char *val))
 {
 	struct HPConfListenStorage *conf;
-	unsigned int i;
+	int i;
 
 	if (type >= HPCT_MAX) {
 		ShowError("HPM->addConf:%s: unknown point '%u' specified for config '%s'\n",HPM->pid2name(pluginID),type,name);
 		return false;
 	}
 
-	for (i = 0; i < HPM->confsc[type]; i++) {
-		if (!strcmpi(name,HPM->confs[type][i].key)) {
-			ShowError("HPM->addConf:%s: duplicate '%s', already in use by '%s'!",HPM->pid2name(pluginID),name,HPM->pid2name(HPM->confs[type][i].pluginID));
-			return false;
-		}
+	ARR_FIND(0, VECTOR_LENGTH(HPM->config_listeners[type]), i, strcmpi(name, VECTOR_INDEX(HPM->config_listeners[type], i).key) == 0);
+	if (i != VECTOR_LENGTH(HPM->config_listeners[type])) {
+		ShowError("HPM->addConf:%s: duplicate '%s', already in use by '%s'!",
+				HPM->pid2name(pluginID), name, HPM->pid2name(VECTOR_INDEX(HPM->config_listeners[type], i).pluginID));
+		return false;
 	}
 
-	RECREATE(HPM->confs[type], struct HPConfListenStorage, ++HPM->confsc[type]);
-	conf = &HPM->confs[type][HPM->confsc[type] - 1];
+	VECTOR_ENSURE(HPM->config_listeners[type], 1, 1);
+	VECTOR_PUSHZEROED(HPM->config_listeners[type]);
+	conf = &VECTOR_LAST(HPM->config_listeners[type]);
 
 	conf->pluginID = pluginID;
 	safestrncpy(conf->key, name, HPM_ADDCONF_LENGTH);
@@ -749,22 +760,24 @@ char* HPM_astrdup(const char *p, const char *file, int line, const char *func) {
 	return iMalloc->astrdup(p,HPM_file2ptr(file),line,func);
 }
 
-bool hplugins_parse_conf(const char *w1, const char *w2, enum HPluginConfType point) {
-	unsigned int i;
+/**
+ * Parses a configuration entry through the registered plugins.
+ *
+ * @param w1    The configuration entry name.
+ * @param w2    The configuration entry value.
+ * @param point The type of configuration file.
+ * @retval true if a registered plugin was found to handle the entry.
+ * @retval false if no registered plugins could be found.
+ */
+bool hplugins_parse_conf(const char *w1, const char *w2, enum HPluginConfType point)
+{
+	int i;
+	ARR_FIND(0, VECTOR_LENGTH(HPM->config_listeners[point]), i, strcmpi(w1, VECTOR_INDEX(HPM->config_listeners[point], i).key) == 0);
+	if (i == VECTOR_LENGTH(HPM->config_listeners[point]))
+		return false;
 
-	/* exists? */
-	for(i = 0; i < HPM->confsc[point]; i++) {
-		if( !strcmpi(w1,HPM->confs[point][i].key) )
-			break;
-	}
-
-	/* trigger and we're set! */
-	if( i != HPM->confsc[point] ) {
-		HPM->confs[point][i].func(w2);
-		return true;
-	}
-
-	return false;
+	VECTOR_INDEX(HPM->config_listeners[point], i).func(w2);
+	return true;
 }
 
 /**
@@ -847,6 +860,10 @@ void hpm_init(void) {
 		VECTOR_INIT(HPM->packets[i]);
 	}
 
+	for (i = 0; i < HPCT_MAX; i++) {
+		VECTOR_INIT(HPM->config_listeners[i]);
+	}
+
 #ifdef CONSOLE_INPUT
 	console->input->addCommand("plugins",CPCMD_A(plugins));
 #endif
@@ -891,10 +908,10 @@ void hpm_final(void)
 		VECTOR_CLEAR(HPM->packets[i]);
 	}
 
-	for( i = 0; i < HPCT_MAX; i++ ) {
-		if( HPM->confsc[i] )
-			aFree(HPM->confs[i]);
+	for (i = 0; i < HPCT_MAX; i++) {
+		VECTOR_CLEAR(HPM->config_listeners[i]);
 	}
+
 	if (HPM->cmdline_plugins) {
 		int j;
 		for (j = 0; j < HPM->cmdline_plugins_count; j++)
@@ -909,18 +926,13 @@ void hpm_final(void)
 
 	return;
 }
-void hpm_defaults(void) {
-	unsigned int i;
+void hpm_defaults(void)
+{
 	HPM = &HPM_s;
 
 	memset(&HPM->filenames, 0, sizeof(HPM->filenames));
 	HPM->force_return = false;
 	HPM->hooking = false;
-	/* */
-	for(i = 0; i < HPCT_MAX; i++) {
-		HPM->confs[i] = NULL;
-		HPM->confsc[i] = 0;
-	}
 	HPM->cmdline_plugins = NULL;
 	HPM->cmdline_plugins_count = 0;
 	/* */
