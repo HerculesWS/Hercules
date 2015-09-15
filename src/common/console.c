@@ -319,7 +319,7 @@ void console_parse_create(char *name, CParseFunc func)
 			cmd = entry;
 			continue;
 		}
-		// FIXME: This should advance cmd to VECTOR_INDEX(cmd->u.children, i)
+		cmd = VECTOR_INDEX(cmd->u.children, i);
 	}
 	Assert_retv(cmd->type != CPET_CATEGORY);
 	cmd->type = CPET_FUNCTION;
