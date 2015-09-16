@@ -880,17 +880,10 @@ void do_init_battleground(bool minimal) {
  */
 int bg_team_db_final(DBKey key, DBData *data, va_list ap) {
 	struct battleground_data* bgd = DB->data2ptr(data);
-	int i;
-	nullpo_ret(bgd);
-	for(i = 0; i < bgd->hdatac; i++ ) {
-		if( bgd->hdata[i]->flag.free ) {
-			aFree(bgd->hdata[i]->data);
-		}
-		aFree(bgd->hdata[i]);
-	}
-	if( bgd->hdata )
-		aFree(bgd->hdata);
-		
+
+	HPM->data_store_destroy(bgd->hdata);
+	bgd->hdata = NULL;
+
 	return 0;
 }
 

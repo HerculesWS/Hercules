@@ -10,7 +10,7 @@
 #include "common/db.h"
 #include "common/mmo.h" // struct party
 
-struct HPluginData;
+struct hplugin_data_store;
 struct block_list;
 struct map_session_data;
 
@@ -54,8 +54,7 @@ struct battleground_data {
 	char logout_event[EVENT_NAME_LENGTH];
 	char die_event[EVENT_NAME_LENGTH];
 	/* HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata;
 };
 
 struct bg_arena {

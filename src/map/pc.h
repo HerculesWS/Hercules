@@ -541,8 +541,7 @@ END_ZEROED_BLOCK;
 	unsigned char delayed_damage;//ref. counter bugreport:7307 [Ind/Hercules]
 
 	/* HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata;
 
 	/* expiration_time timer id */
 	int expiration_tid;
@@ -758,8 +757,7 @@ struct autotrade_vending {
 	struct s_vending vending[MAX_VENDING];
 	unsigned char vend_num;
 	/* HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata;
 };
 
 /*=====================================

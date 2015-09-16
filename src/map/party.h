@@ -15,7 +15,7 @@
 #define PARTY_BOOKING_JOBS 6
 #define PARTY_BOOKING_RESULTS 10
 
-struct HPluginData;
+struct hplugin_data_store;
 
 struct party_member_data {
 	struct map_session_data *sd;
@@ -37,8 +37,7 @@ struct party_data {
 	} state;
 
 	/* HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata;
 };
 
 #define PB_NOTICE_LENGTH (36 + 1)

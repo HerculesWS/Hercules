@@ -168,57 +168,54 @@ bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (*receiv
 	return true;
 }
 
-void hplugins_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr)
+bool hplugin_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **store)
 {
-	/* record address */
+	nullpo_retr(false, store);
+
 	switch (type) {
 		/* core-handled */
 		case HPDT_SESSION:
-			ret->HPDataSRCPtr = (void**)(&((struct socket_data *)ptr)->hdata);
-			ret->hdatac = &((struct socket_data *)ptr)->hdatac;
-			break;
+			if (!*store) {
+				*store = HPM->data_store_create();
+			}
+			return true;
 		/* goes to sub */
 		default:
-			if (HPM->grabHPDataSub) {
-				if (HPM->grabHPDataSub(ret,type,ptr))
-					return;
-				ShowError("HPM:HPM:grabHPData failed, unknown type %d!\n",type);
-			} else {
-				ShowError("HPM:grabHPData failed, type %d needs sub-handler!\n",type);
-			}
-			ret->HPDataSRCPtr = NULL;
-			ret->hdatac = NULL;
-			return;
+			break;
 	}
+	if (HPM->data_store_validate_sub) {
+		if (HPM->data_store_validate_sub(type, store))
+			return true;
+		ShowError("HPM:HPM:validateHPData failed, unknown type %d!\n",type);
+	} else {
+		ShowError("HPM:validateHPData failed, type %d needs sub-handler!\n",type);
+	}
+	return false;
 }
 
-void hplugins_addToHPData(enum HPluginDataTypes type, unsigned int pluginID, void *ptr, void *data, unsigned int index, bool autofree)
+void hplugins_addToHPData(enum HPluginDataTypes type, unsigned int pluginID, struct hplugin_data_store **storeptr, void *data, unsigned int index, bool autofree)
 {
-	struct HPluginData *HPData, **HPDataSRC;
-	struct HPDataOperationStorage action;
-	unsigned int i, max;
+	struct hplugin_data_entry *HPData;
+	unsigned int i;
+	struct hplugin_data_store *store;
 
-	HPM->grabHPData(&action,type,ptr);
-
-	if (action.hdatac == NULL) { /* woo it failed! */
+	if (!HPM->data_store_validate(type, storeptr)) {
+		/* woo it failed! */
 		ShowError("HPM:addToHPData:%s: failed, type %d (%u|%u)\n",HPM->pid2name(pluginID),type,pluginID,index);
 		return;
 	}
-
-	/* flag */
-	HPDataSRC = *(action.HPDataSRCPtr);
-	max = *(action.hdatac);
+	store = *storeptr;
 
 	/* duplicate check */
-	for (i = 0; i < max; i++) {
-		if (HPDataSRC[i]->pluginID == pluginID && HPDataSRC[i]->type == index) {
+	for (i = 0; i < store->count; i++) {
+		if (store->array[i]->pluginID == pluginID && store->array[i]->type == index) {
 			ShowError("HPM:addToHPData:%s: error! attempting to insert duplicate struct of id %u and index %u\n",HPM->pid2name(pluginID),pluginID,index);
 			return;
 		}
 	}
 
-	/* HPluginData is always same size, probably better to use the ERS (with reasonable chunk size e.g. 10/25/50) */
-	CREATE(HPData, struct HPluginData, 1);
+	/* hplugin_data_entry is always same size, probably better to use the ERS (with reasonable chunk size e.g. 10/25/50) */
+	CREATE(HPData, struct hplugin_data_entry, 1);
 
 	/* input */
 	HPData->pluginID = pluginID;
@@ -227,76 +224,63 @@ void hplugins_addToHPData(enum HPluginDataTypes type, unsigned int pluginID, voi
 	HPData->data = data;
 
 	/* resize */
-	*(action.hdatac) += 1;
-	RECREATE(*(action.HPDataSRCPtr),struct HPluginData *,*(action.hdatac));
+	RECREATE(store->array, struct hplugin_data_entry *, ++store->count);
 
-	/* RECREATE modified the address */
-	HPDataSRC = *(action.HPDataSRCPtr);
-	HPDataSRC[*(action.hdatac) - 1] = HPData;
+	store->array[store->count - 1] = HPData;
 }
 
-void *hplugins_getFromHPData(enum HPluginDataTypes type, unsigned int pluginID, void *ptr, unsigned int index)
+void *hplugins_getFromHPData(enum HPluginDataTypes type, unsigned int pluginID, struct hplugin_data_store **storeptr, unsigned int index)
 {
-	struct HPDataOperationStorage action;
-	struct HPluginData **HPDataSRC;
-	unsigned int i, max;
+	unsigned int i;
+	struct hplugin_data_store *store;
 
-	HPM->grabHPData(&action,type,ptr);
-
-	if (action.hdatac == NULL) { /* woo it failed! */
+	if (!HPM->data_store_validate(type, storeptr)) {
+		/* woo it failed! */
 		ShowError("HPM:getFromHPData:%s: failed, type %d (%u|%u)\n",HPM->pid2name(pluginID),type,pluginID,index);
 		return NULL;
 	}
+	store = *storeptr;
 
-	/* flag */
-	HPDataSRC = *(action.HPDataSRCPtr);
-	max = *(action.hdatac);
-
-	for (i = 0; i < max; i++) {
-		if (HPDataSRC[i]->pluginID == pluginID && HPDataSRC[i]->type == index)
-			return HPDataSRC[i]->data;
+	for (i = 0; i < store->count; i++) {
+		if (store->array[i]->pluginID == pluginID && store->array[i]->type == index)
+			return store->array[i]->data;
 	}
 
 	return NULL;
 }
 
-void hplugins_removeFromHPData(enum HPluginDataTypes type, unsigned int pluginID, void *ptr, unsigned int index)
+void hplugins_removeFromHPData(enum HPluginDataTypes type, unsigned int pluginID, struct hplugin_data_store **storeptr, unsigned int index)
 {
-	struct HPDataOperationStorage action;
-	struct HPluginData **HPDataSRC;
-	unsigned int i, max;
+	unsigned int i;
+	struct hplugin_data_store *store;
 
-	HPM->grabHPData(&action,type,ptr);
-
-	if (action.hdatac == NULL) { /* woo it failed! */
+	if (!HPM->data_store_validate(type, storeptr)) {
+		/* woo it failed! */
 		ShowError("HPM:removeFromHPData:%s: failed, type %d (%u|%u)\n",HPM->pid2name(pluginID),type,pluginID,index);
 		return;
 	}
+	store = *storeptr;
 
-	/* flag */
-	HPDataSRC = *(action.HPDataSRCPtr);
-	max = *(action.hdatac);
-
-	for (i = 0; i < max; i++) {
-		if (HPDataSRC[i]->pluginID == pluginID && HPDataSRC[i]->type == index)
+	for (i = 0; i < store->count; i++) {
+		if (store->array[i]->pluginID == pluginID && store->array[i]->type == index)
 			break;
 	}
 
-	if (i != max) {
+	if (i != store->count) {
 		unsigned int cursor;
 
-		aFree(HPDataSRC[i]->data);/* when its removed we delete it regardless of autofree */
-		aFree(HPDataSRC[i]);
-		HPDataSRC[i] = NULL;
+		aFree(store->array[i]->data);/* when its removed we delete it regardless of autofree */
+		aFree(store->array[i]);
+		store->array[i] = NULL;
 
-		for (i = 0, cursor = 0; i < max; i++) {
-			if (HPDataSRC[i] == NULL)
+		for (i = 0, cursor = 0; i < store->count; i++) {
+			if (store->array[i] == NULL)
 				continue;
 			if (i != cursor)
-				HPDataSRC[cursor] = HPDataSRC[i];
+				store->array[cursor] = store->array[i];
 			cursor++;
 		}
-		*(action.hdatac) = cursor;
+		store->count = cursor;
 	}
 }
 
@@ -781,6 +765,43 @@ bool hplugins_parse_conf(const char *w1, const char *w2, enum HPluginConfType po
 }
 
 /**
+ * Helper to destroy and release an interface's hplugin_data store.
+ *
+ * @param hdata The hplugin_data store. The pointer will be freed.
+ */
+void hplugin_data_store_destroy(struct hplugin_data_store *store)
+{
+	unsigned int i;
+
+	if (!store)
+		return;
+
+	for (i = 0; i < store->count; i++) {
+		if (store->array[i]->flag.free) {
+			aFree(store->array[i]->data);
+		}
+		aFree(store->array[i]);
+	}
+	aFree(store->array);
+	aFree(store);
+}
+
+/**
+ * Helper to create and initialize an interface's hplugin_data store.
+ *
+ * The store is owned by the caller, and it should be eventually destroyed by
+ * \c hdata_destroy.
+ *
+ * @return An initialized hplugin_data store.
+ */
+struct hplugin_data_store *hplugin_data_store_create(void)
+{
+	struct hplugin_data_store *store;
+	CREATE(store, struct hplugin_data_store, 1);
+	return store;
+}
+
+/**
  * Called by HPM->DataCheck on a plugins incoming data, ensures data structs in use are matching!
  **/
 bool HPM_DataCheck(struct s_HPMDataCheck *src, unsigned int size, int version, char *name) {
@@ -947,10 +968,13 @@ void hpm_defaults(void)
 	HPM->parse_packets = hplugins_parse_packets;
 	HPM->load_sub = NULL;
 	HPM->addhook_sub = NULL;
-	HPM->grabHPData = hplugins_grabHPData;
-	HPM->grabHPDataSub = NULL;
 	HPM->parseConf = hplugins_parse_conf;
 	HPM->DataCheck = HPM_DataCheck;
 	HPM->datacheck_init = HPM_datacheck_init;
 	HPM->datacheck_final = HPM_datacheck_final;
+
+	HPM->data_store_destroy = hplugin_data_store_destroy;
+	HPM->data_store_create = hplugin_data_store_create;
+	HPM->data_store_validate = hplugin_data_store_validate;
+	HPM->data_store_validate_sub = NULL;
 }

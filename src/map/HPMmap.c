@@ -85,57 +85,33 @@ struct HPM_atcommand_list {
 struct HPM_atcommand_list *atcommand_list = NULL;
 unsigned int atcommand_list_items = 0;
 
-bool HPM_map_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr) {
-	/* record address */
-	switch( type ) {
+/**
+ * HPM plugin data store validator sub-handler (map-server)
+ *
+ * @see HPM_interface::data_store_validate
+ */
+bool HPM_map_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **store)
+{
+	switch (type) {
 		case HPDT_MSD:
-			ret->HPDataSRCPtr = (void**)(&((struct map_session_data *)ptr)->hdata);
-			ret->hdatac = &((struct map_session_data *)ptr)->hdatac;
-			break;
 		case HPDT_NPCD:
-			ret->HPDataSRCPtr = (void**)(&((struct npc_data *)ptr)->hdata);
-			ret->hdatac = &((struct npc_data *)ptr)->hdatac;
-			break;
 		case HPDT_MAP:
-			ret->HPDataSRCPtr = (void**)(&((struct map_data *)ptr)->hdata);
-			ret->hdatac = &((struct map_data *)ptr)->hdatac;
-			break;
 		case HPDT_PARTY:
-			ret->HPDataSRCPtr = (void**)(&((struct party_data *)ptr)->hdata);
-			ret->hdatac = &((struct party_data *)ptr)->hdatac;
-			break;
 		case HPDT_GUILD:
-			ret->HPDataSRCPtr = (void**)(&((struct guild *)ptr)->hdata);
-			ret->hdatac = &((struct guild *)ptr)->hdatac;
-			break;
 		case HPDT_INSTANCE:
-			ret->HPDataSRCPtr = (void**)(&((struct instance_data *)ptr)->hdata);
-			ret->hdatac = &((struct instance_data *)ptr)->hdatac;
-			break;
 		case HPDT_MOBDB:
-			ret->HPDataSRCPtr = (void**)(&((struct mob_db *)ptr)->hdata);
-			ret->hdatac = &((struct mob_db *)ptr)->hdatac;
-			break;
 		case HPDT_MOBDATA:
-			ret->HPDataSRCPtr = (void**)(&((struct mob_data *)ptr)->hdata);
-			ret->hdatac = &((struct mob_data *)ptr)->hdatac;
-			break;
 		case HPDT_ITEMDATA:
-			ret->HPDataSRCPtr = (void**)(&((struct item_data *)ptr)->hdata);
-			ret->hdatac = &((struct item_data *)ptr)->hdatac;
-			break;
 		case HPDT_BGDATA:
-			ret->HPDataSRCPtr = (void**)(&((struct battleground_data *)ptr)->hdata);
-			ret->hdatac = &((struct battleground_data *)ptr)->hdatac;
-			break;
 		case HPDT_AUTOTRADE_VEND:
-			ret->HPDataSRCPtr = (void**)(&((struct autotrade_vending *)ptr)->hdata);
-			ret->hdatac = &((struct autotrade_vending *)ptr)->hdatac;
-			break;
+			if (!*store) {
+				*store = HPM->data_store_create();
+			}
+			return true;
 		default:
-			return false;
+			break;
 	}
-	return true;
+	return false;
 }
 
 void HPM_map_plugin_load_sub(struct hplugin *plugin) {
@@ -188,7 +164,7 @@ void HPM_map_add_group_permission(unsigned int pluginID, char *name, unsigned in
 
 void HPM_map_do_init(void) {
 	HPM->load_sub = HPM_map_plugin_load_sub;
-	HPM->grabHPDataSub = HPM_map_grabHPData;
+	HPM->data_store_validate_sub = HPM_map_data_store_validate;
 	HPM->datacheck_init(HPMDataCheck, HPMDataCheckLen, HPMDataCheckVer);
 	HPM_shared_symbols(SERVER_TYPE_MAP);
 }

@@ -623,7 +623,6 @@ static int create_session(int fd, RecvFunc func_recv, SendFunc func_send, ParseF
 	sockt->session[fd]->rdata_tick = sockt->last_tick;
 	sockt->session[fd]->session_data = NULL;
 	sockt->session[fd]->hdata = NULL;
-	sockt->session[fd]->hdatac = 0;
 	return 0;
 }
 
@@ -638,16 +637,8 @@ static void delete_session(int fd)
 		aFree(sockt->session[fd]->wdata);
 		if( sockt->session[fd]->session_data )
 			aFree(sockt->session[fd]->session_data);
-		if (sockt->session[fd]->hdata) {
-			unsigned int i;
-			for(i = 0; i < sockt->session[fd]->hdatac; i++) {
-				if( sockt->session[fd]->hdata[i]->flag.free ) {
-					aFree(sockt->session[fd]->hdata[i]->data);
-				}
-				aFree(sockt->session[fd]->hdata[i]);
-			}
-			aFree(sockt->session[fd]->hdata);
-		}
+		HPM->data_store_destroy(sockt->session[fd]->hdata);
+		sockt->session[fd]->hdata = NULL;
 		aFree(sockt->session[fd]);
 		sockt->session[fd] = NULL;
 	}

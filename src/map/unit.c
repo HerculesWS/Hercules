@@ -2655,16 +2655,9 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 				sd->num_quests = sd->avail_quests = 0;
 			}
 
-			if (sd->hdata) {
-				unsigned int k;
-				for( k = 0; k < sd->hdatac; k++ ) {
-					if( sd->hdata[k]->flag.free ) {
-						aFree(sd->hdata[k]->data);
-					}
-					aFree(sd->hdata[k]);
-				}
-				aFree(sd->hdata);
-			}
+			HPM->data_store_destroy(sd->hdata);
+			sd->hdata = NULL;
+
 			break;
 		}
 		case BL_PET:
@@ -2775,17 +2768,9 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 			if( md->tomb_nid )
 				mob->mvptomb_destroy(md);
 
-			if (md->hdata)
-			{
-				unsigned int k;
-				for (k = 0; k < md->hdatac; k++) {
-					if( md->hdata[k]->flag.free ) {
-						aFree(md->hdata[k]->data);
-					}
-					aFree(md->hdata[k]);
-				}
-				aFree(md->hdata);
-			}
+			HPM->data_store_destroy(md->hdata);
+			md->hdata = NULL;
+
 			break;
 		}
 		case BL_HOM:

@@ -1763,16 +1763,8 @@ int guild_broken(int guild_id,int flag)
 	if( g->instance )
 		aFree(g->instance);
 
-	if( g->hdata )
-	{
-		for( i = 0; i < g->hdatac; i++ ) {
-			if( g->hdata[i]->flag.free ) {
-				aFree(g->hdata[i]->data);
-			}
-			aFree(g->hdata[i]);
-		}
-		aFree(g->hdata);
-	}
+	HPM->data_store_destroy(g->hdata);
+	g->hdata = NULL;
 
 	idb_remove(guild->db,guild_id);
 	return 0;
@@ -2250,7 +2242,6 @@ void do_init_guild(bool minimal) {
 void do_final_guild(void) {
 	DBIterator *iter = db_iterator(guild->db);
 	struct guild *g;
-	int i;
 
 	for( g = dbi_first(iter); dbi_exists(iter); g = dbi_next(iter) ) {
 		if( g->channel != NULL )
@@ -2259,16 +2250,8 @@ void do_final_guild(void) {
 			aFree(g->instance);
 			g->instance = NULL;
 		}
-		if( g->hdata )
-		{
-			for( i = 0; i < g->hdatac; i++ ) {
-				if( g->hdata[i]->flag.free ) {
-					aFree(g->hdata[i]->data);
-				}
-				aFree(g->hdata[i]);
-			}
-			aFree(g->hdata);
-		}
+		HPM->data_store_destroy(g->hdata);
+		g->hdata = NULL;
 	}
 
 	dbi_destroy(iter);

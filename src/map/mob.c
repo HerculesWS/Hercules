@@ -4708,16 +4708,8 @@ int do_init_mob(bool minimal) {
 void mob_destroy_mob_db(int index)
 {
 	struct mob_db *data = mob->db_data[index];
-	if (data->hdata) {
-		int i;
-		for (i = 0; i < data->hdatac; i++) {
-			if (data->hdata[i]->flag.free ) {
-				aFree(data->hdata[i]->data);
-			}
-			aFree(data->hdata[i]);
-		}
-		aFree(data->hdata);
-	}
+	HPM->data_store_destroy(data->hdata);
+	data->hdata = NULL;
 	aFree(data);
 	mob->db_data[index] = NULL;
 }

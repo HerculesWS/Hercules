@@ -65,13 +65,18 @@ struct hpm_symbol {
 	void *ptr;        ///< The symbol value
 };
 
-struct HPluginData {
+struct hplugin_data_entry {
 	unsigned int pluginID;
 	unsigned int type;
 	struct {
 		unsigned int free : 1;
 	} flag;
 	void *data;
+};
+
+struct hplugin_data_store {
+	struct hplugin_data_entry **array;
+	unsigned int count;
 };
 
 struct HPluginPacket {
@@ -86,10 +91,6 @@ struct HPMFileNameCache {
 	char *name;
 };
 
-struct HPDataOperationStorage {
-	void **HPDataSRCPtr;
-	unsigned int *hdatac;
-};
 /*  */
 struct HPConfListenStorage {
 	unsigned int pluginID;
@@ -136,15 +137,18 @@ struct HPM_interface {
 	unsigned char (*parse_packets) (int fd, enum HPluginPacketHookingPoints point);
 	void (*load_sub) (struct hplugin *plugin);
 	bool (*addhook_sub) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
-	void (*grabHPData) (struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
-	/* for server-specific HPData e.g. map_session_data */
-	bool (*grabHPDataSub) (struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
 	/* for custom config parsing */
 	bool (*parseConf) (const char *w1, const char *w2, enum HPluginConfType point);
 	/* validates plugin data */
 	bool (*DataCheck) (struct s_HPMDataCheck *src, unsigned int size, int version, char *name);
 	void (*datacheck_init) (const struct s_HPMDataCheck *src, unsigned int length, int version);
 	void (*datacheck_final) (void);
+
+	struct hplugin_data_store *(*data_store_create) (void);
+	void (*data_store_destroy) (struct hplugin_data_store *store);
+	bool (*data_store_validate) (enum HPluginDataTypes type, struct hplugin_data_store **store);
+	/* for server-specific HPData e.g. map_session_data */
+	bool (*data_store_validate_sub) (enum HPluginDataTypes type, struct hplugin_data_store **store);
 };
 
 CMDLINEARG(loadplugin);

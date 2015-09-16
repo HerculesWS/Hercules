@@ -198,7 +198,7 @@
 #define JOBL_BABY 0x2000  //8192
 #define JOBL_THIRD 0x4000 //16384
 
-struct HPluginData;
+struct hplugin_data_store;
 
 enum item_types {
 	IT_HEALING = 0,
@@ -663,8 +663,7 @@ struct guild {
 	struct channel_data *channel;
 
 	/* HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata;
 };
 
 struct guild_castle {

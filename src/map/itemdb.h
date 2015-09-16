@@ -13,6 +13,7 @@
 #include "common/sql.h"
 
 struct script_code;
+struct hplugin_data_store;
 
 /**
  * Defines
@@ -490,8 +491,7 @@ struct item_data {
 	struct item_package *package;
 
 	/* HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata;
 };
 
 #define itemdb_name(n)        (itemdb->search(n)->name)

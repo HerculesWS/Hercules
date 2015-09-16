@@ -14,6 +14,7 @@ struct script_state;
 struct AtCommandInfo;
 struct socket_data;
 struct map_session_data;
+struct hplugin_data_store;
 
 #define HPM_VERSION "1.1"
 #define HPM_ADDCONF_LENGTH 40
@@ -96,53 +97,53 @@ enum HPluginConfType {
 #define addArg(name, param,func,help) (HPMi->addArg(HPMi->pid,(name),(param),(cmdline_arg_ ## func),(help)))
 /* HPData handy redirects */
 /* session[] */
-#define addToSession(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_SESSION,HPMi->pid,(ptr),(data),(index),(autofree)))
-#define getFromSession(ptr,index) (HPMi->getFromHPData(HPDT_SESSION,HPMi->pid,(ptr),(index)))
-#define removeFromSession(ptr,index) (HPMi->removeFromHPData(HPDT_SESSION,HPMi->pid,(ptr),(index)))
+#define addToSession(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_SESSION,HPMi->pid,&(ptr)->hdata,(data),(index),(autofree)))
+#define getFromSession(ptr,index) (HPMi->getFromHPData(HPDT_SESSION,HPMi->pid,&(ptr)->hdata,(index)))
+#define removeFromSession(ptr,index) (HPMi->removeFromHPData(HPDT_SESSION,HPMi->pid,&(ptr)->hdata,(index)))
 /* map_session_data */
-#define addToMSD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_MSD,HPMi->pid,(ptr),(data),(index),(autofree)))
-#define getFromMSD(ptr,index) (HPMi->getFromHPData(HPDT_MSD,HPMi->pid,(ptr),(index)))
-#define removeFromMSD(ptr,index) (HPMi->removeFromHPData(HPDT_MSD,HPMi->pid,(ptr),(index)))
+#define addToMSD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_MSD,HPMi->pid,&(ptr)->hdata,(data),(index),(autofree)))
+#define getFromMSD(ptr,index) (HPMi->getFromHPData(HPDT_MSD,HPMi->pid,&(ptr)->hdata,(index)))
+#define removeFromMSD(ptr,index) (HPMi->removeFromHPData(HPDT_MSD,HPMi->pid,&(ptr)->hdata,(index)))
 /* npc_data */
-#define addToNPCD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_NPCD,HPMi->pid,(ptr),(data),(index),(autofree)))
-#define getFromNPCD(ptr,index) (HPMi->getFromHPData(HPDT_NPCD,HPMi->pid,(ptr),(index)))
-#define removeFromNPCD(ptr,index) (HPMi->removeFromHPData(HPDT_NPCD,HPMi->pid,(ptr),(index)))
+#define addToNPCD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_NPCD,HPMi->pid,&(ptr)->hdata,(data),(index),(autofree)))
+#define getFromNPCD(ptr,index) (HPMi->getFromHPData(HPDT_NPCD,HPMi->pid,&(ptr)->hdata,(index)))
+#define removeFromNPCD(ptr,index) (HPMi->removeFromHPData(HPDT_NPCD,HPMi->pid,&(ptr)->hdata,(index)))
 /* map_data */
-#define addToMAPD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_MAP,HPMi->pid,(ptr),(data),(index),(autofree)))
-#define getFromMAPD(ptr,index) (HPMi->getFromHPData(HPDT_MAP,HPMi->pid,(ptr),(index)))
-#define removeFromMAPD(ptr,index) (HPMi->removeFromHPData(HPDT_MAP,HPMi->pid,(ptr),(index)))
+#define addToMAPD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_MAP,HPMi->pid,&(ptr)->hdata,(data),(index),(autofree)))
+#define getFromMAPD(ptr,index) (HPMi->getFromHPData(HPDT_MAP,HPMi->pid,&(ptr)->hdata,(index)))
+#define removeFromMAPD(ptr,index) (HPMi->removeFromHPData(HPDT_MAP,HPMi->pid,&(ptr)->hdata,(index)))
 /* party_data */
-#define addToPAD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_PARTY,HPMi->pid,(ptr),(data),(index),(autofree)))
-#define getFromPAD(ptr,index) (HPMi->getFromHPData(HPDT_PARTY,HPMi->pid,(ptr),(index)))
-#define removeFromPAD(ptr,index) (HPMi->removeFromHPData(HPDT_PARTY,HPMi->pid,(ptr),(index)))
+#define addToPAD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_PARTY,HPMi->pid,&(ptr)->hdata,(data),(index),(autofree)))
+#define getFromPAD(ptr,index) (HPMi->getFromHPData(HPDT_PARTY,HPMi->pid,&(ptr)->hdata,(index)))
+#define removeFromPAD(ptr,index) (HPMi->removeFromHPData(HPDT_PARTY,HPMi->pid,&(ptr)->hdata,(index)))
 /* guild */
-#define addToGLD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_GUILD,HPMi->pid,(ptr),(data),(index),(autofree)))
-#define getFromGLD(ptr,index) (HPMi->getFromHPData(HPDT_GUILD,HPMi->pid,(ptr),(index)))
-#define removeFromGLD(ptr,index) (HPMi->removeFromHPData(HPDT_GUILD,HPMi->pid,(ptr),(index)))
+#define addToGLD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_GUILD,HPMi->pid,&(ptr)->hdata,(data),(index),(autofree)))
+#define getFromGLD(ptr,index) (HPMi->getFromHPData(HPDT_GUILD,HPMi->pid,&(ptr)->hdata,(index)))
+#define removeFromGLD(ptr,index) (HPMi->removeFromHPData(HPDT_GUILD,HPMi->pid,&(ptr)->hdata,(index)))
 /* instance_data */
-#define addToINSTD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_INSTANCE,HPMi->pid,(ptr),(data),(index),(autofree)))
-#define getFromINSTD(ptr,index) (HPMi->getFromHPData(HPDT_INSTANCE,HPMi->pid,(ptr),(index)))
-#define removeFromINSTD(ptr,index) (HPMi->removeFromHPData(HPDT_INSTANCE,HPMi->pid,(ptr),(index)))
+#define addToINSTD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_INSTANCE,HPMi->pid,&(ptr)->hdata,(data),(index),(autofree)))
+#define getFromINSTD(ptr,index) (HPMi->getFromHPData(HPDT_INSTANCE,HPMi->pid,&(ptr)->hdata,(index)))
+#define removeFromINSTD(ptr,index) (HPMi->removeFromHPData(HPDT_INSTANCE,HPMi->pid,&(ptr)->hdata,(index)))
 /* mob_db */
-#define addToMOBDB(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_MOBDB,HPMi->pid,(ptr),(data),(index),(autofree)))
-#define getFromMOBDB(ptr,index) (HPMi->getFromHPData(HPDT_MOBDB,HPMi->pid,(ptr),(index)))
-#define removeFromMOBDB(ptr,index) (HPMi->removeFromHPData(HPDT_MOBDB,HPMi->pid,(ptr),(index)))
+#define addToMOBDB(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_MOBDB,HPMi->pid,&(ptr)->hdata,(data),(index),(autofree)))
+#define getFromMOBDB(ptr,index) (HPMi->getFromHPData(HPDT_MOBDB,HPMi->pid,&(ptr)->hdata,(index)))
+#define removeFromMOBDB(ptr,index) (HPMi->removeFromHPData(HPDT_MOBDB,HPMi->pid,&(ptr)->hdata,(index)))
 /* mob_data */
-#define addToMOBDATA(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_MOBDATA,HPMi->pid,(ptr),(data),(index),(autofree)))
-#define getFromMOBDATA(ptr,index) (HPMi->getFromHPData(HPDT_MOBDATA,HPMi->pid,(ptr),(index)))
-#define removeFromMOBDATA(ptr,index) (HPMi->removeFromHPData(HPDT_MOBDATA,HPMi->pid,(ptr),(index)))
+#define addToMOBDATA(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_MOBDATA,HPMi->pid,&(ptr)->hdata,(data),(index),(autofree)))
+#define getFromMOBDATA(ptr,index) (HPMi->getFromHPData(HPDT_MOBDATA,HPMi->pid,&(ptr)->hdata,(index)))
+#define removeFromMOBDATA(ptr,index) (HPMi->removeFromHPData(HPDT_MOBDATA,HPMi->pid,&(ptr)->hdata,(index)))
 /* item_data */
-#define addToITEMDATA(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_ITEMDATA,HPMi->pid,(ptr),(data),(index),(autofree)))
-#define getFromITEMDATA(ptr,index) (HPMi->getFromHPData(HPDT_ITEMDATA,HPMi->pid,(ptr),(index)))
-#define removeFromITEMDATA(ptr,index) (HPMi->removeFromHPData(HPDT_ITEMDATA,HPMi->pid,(ptr),(index)))
+#define addToITEMDATA(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_ITEMDATA,HPMi->pid,&(ptr)->hdata,(data),(index),(autofree)))
+#define getFromITEMDATA(ptr,index) (HPMi->getFromHPData(HPDT_ITEMDATA,HPMi->pid,&(ptr)->hdata,(index)))
+#define removeFromITEMDATA(ptr,index) (HPMi->removeFromHPData(HPDT_ITEMDATA,HPMi->pid,&(ptr)->hdata,(index)))
 /* battleground_data */
-#define addToBGDATA(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_BGDATA,HPMi->pid,(ptr),(data),(index),(autofree)))
-#define getFromBGDATA(ptr,index) (HPMi->getFromHPData(HPDT_BGDATA,HPMi->pid,(ptr),(index)))
-#define removeFromBGDATA(ptr,index) (HPMi->removeFromHPData(HPDT_BGDATA,HPMi->pid,(ptr),(index)))
+#define addToBGDATA(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_BGDATA,HPMi->pid,&(ptr)->hdata,(data),(index),(autofree)))
+#define getFromBGDATA(ptr,index) (HPMi->getFromHPData(HPDT_BGDATA,HPMi->pid,&(ptr)->hdata,(index)))
+#define removeFromBGDATA(ptr,index) (HPMi->removeFromHPData(HPDT_BGDATA,HPMi->pid,&(ptr)->hdata,(index)))
 /* autotrade_vending */
-#define addToATVEND(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_AUTOTRADE_VEND,HPMi->pid,(ptr),(data),(index),(autofree)))
-#define getFromATVEND(ptr,index) (HPMi->getFromHPData(HPDT_AUTOTRADE_VEND,HPMi->pid,(ptr),(index)))
-#define removeFromATVEND(ptr,index) (HPMi->removeFromHPData(HPDT_AUTOTRADE_VEND,HPMi->pid,(ptr),(index)))
+#define addToATVEND(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_AUTOTRADE_VEND,HPMi->pid,&(ptr)->hdata,(data),(index),(autofree)))
+#define getFromATVEND(ptr,index) (HPMi->getFromHPData(HPDT_AUTOTRADE_VEND,HPMi->pid,&(ptr)->hdata,(index)))
+#define removeFromATVEND(ptr,index) (HPMi->removeFromHPData(HPDT_AUTOTRADE_VEND,HPMi->pid,&(ptr)->hdata,(index)))
 
 /// HPMi->addCommand
 #define addAtcommand(cname,funcname) do { \
@@ -205,9 +206,9 @@ struct HPMi_interface {
 	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st), bool isDeprecated);
 	void (*addCPCommand) (char *name, CParseFunc func);
 	/* HPM Custom Data */
-	void (*addToHPData) (enum HPluginDataTypes type, unsigned int pluginID, void *ptr, void *data, unsigned int index, bool autofree);
-	void *(*getFromHPData) (enum HPluginDataTypes type, unsigned int pluginID, void *ptr, unsigned int index);
-	void (*removeFromHPData) (enum HPluginDataTypes type, unsigned int pluginID, void *ptr, unsigned int index);
+	void (*addToHPData) (enum HPluginDataTypes type, unsigned int pluginID, struct hplugin_data_store **storeptr, void *data, unsigned int index, bool autofree);
+	void *(*getFromHPData) (enum HPluginDataTypes type, unsigned int pluginID, struct hplugin_data_store **storeptr, unsigned int index);
+	void (*removeFromHPData) (enum HPluginDataTypes type, unsigned int pluginID, struct hplugin_data_store **storeptr, unsigned int index);
 	/* packet */
 	bool (*addPacket) (unsigned short cmd, unsigned short length, void (*receive)(int fd), unsigned int point, unsigned int pluginID);
 	/* Hooking */

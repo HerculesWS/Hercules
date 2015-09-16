@@ -9,7 +9,7 @@
 #include "common/hercules.h"
 #include "common/mmo.h" // struct point
 
-struct HPluginData;
+struct hplugin_data_store;
 struct block_list;
 struct map_session_data;
 
@@ -54,8 +54,7 @@ struct instance_data {
 	struct point respawn; ///< reload spawn
 
 	/** HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata;
 };
 
 struct instance_interface {

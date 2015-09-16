@@ -13,7 +13,7 @@
 
 struct hplugin;
 
-bool HPM_char_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
+bool HPM_char_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **store);
 
 void HPM_char_plugin_load_sub(struct hplugin *plugin);
 

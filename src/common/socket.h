@@ -17,7 +17,7 @@
 #	include <sys/types.h>
 #endif
 
-struct HPluginData;
+struct hplugin_data_store;
 
 #define FIFOSIZE_SERVERLINK 256*1024
 
@@ -105,8 +105,7 @@ struct socket_data {
 
 	void* session_data; // stores application-specific data related to the session
 
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata;
 };
 
 struct hSockOpt {

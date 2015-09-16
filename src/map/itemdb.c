@@ -2100,17 +2100,8 @@ void destroy_item_data(struct item_data* self, int free_self)
 		script->free_code(self->unequip_script);
 	if( self->combos )
 		aFree(self->combos);
-	if (self->hdata)
-	{
-		int i;
-		for (i = 0; i < self->hdatac; i++ ) {
-			if (self->hdata[i]->flag.free ) {
-				aFree(self->hdata[i]->data);
-			}
-			aFree(self->hdata[i]);
-		}
-		aFree(self->hdata);
-	}
+	HPM->data_store_destroy(self->hdata);
+	self->hdata = NULL;
 #if defined(DEBUG)
 	// trash item
 	memset(self, 0xDD, sizeof(struct item_data));
