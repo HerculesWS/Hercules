@@ -347,9 +347,9 @@ bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, CmdlineExecF
 		return false;
 	}
 
-	ARR_FIND(0, cmdline->args_data_count, i, strcmp(cmdline->args_data[i].name, name) == 0);
+	ARR_FIND(0, VECTOR_LENGTH(cmdline->args_data), i, strcmp(VECTOR_INDEX(cmdline->args_data, i).name, name) == 0);
 
-       if (i < cmdline->args_data_count) {
+       if (i != VECTOR_LENGTH(cmdline->args_data)) {
                ShowError("HPM:add_arg:%s duplicate! (from %s)\n",name,HPM->pid2name(pluginID));
                return false;
        }

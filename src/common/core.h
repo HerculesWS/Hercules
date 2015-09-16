@@ -6,6 +6,7 @@
 #define COMMON_CORE_H
 
 #include "common/hercules.h"
+#include "common/db.h"
 
 /* so that developers with --enable-debug can raise signals from any section of the code they'd like */
 #ifdef DEBUG
@@ -46,8 +47,7 @@ struct CmdlineArgData {
 };
 
 struct cmdline_interface {
-	struct CmdlineArgData *args_data;
-	int args_data_count;
+	VECTOR_DECL(struct CmdlineArgData) args_data;
 
 	void (*init) (void);
 	void (*final) (void);
