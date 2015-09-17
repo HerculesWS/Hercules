@@ -57,6 +57,10 @@ struct {
 	struct HPMHookPoint *HP_atcommand_cleanfloor_sub_post;
 	struct HPMHookPoint *HP_atcommand_mutearea_sub_pre;
 	struct HPMHookPoint *HP_atcommand_mutearea_sub_post;
+	struct HPMHookPoint *HP_atcommand_getring_pre;
+	struct HPMHookPoint *HP_atcommand_getring_post;
+	struct HPMHookPoint *HP_atcommand_channel_help_pre;
+	struct HPMHookPoint *HP_atcommand_channel_help_post;
 	struct HPMHookPoint *HP_atcommand_commands_sub_pre;
 	struct HPMHookPoint *HP_atcommand_commands_sub_post;
 	struct HPMHookPoint *HP_atcommand_cmd_db_clear_pre;
@@ -517,6 +521,10 @@ struct {
 	struct HPMHookPoint *HP_clif_delitem_post;
 	struct HPMHookPoint *HP_clif_takeitem_pre;
 	struct HPMHookPoint *HP_clif_takeitem_post;
+	struct HPMHookPoint *HP_clif_item_equip_pre;
+	struct HPMHookPoint *HP_clif_item_equip_post;
+	struct HPMHookPoint *HP_clif_item_normal_pre;
+	struct HPMHookPoint *HP_clif_item_normal_post;
 	struct HPMHookPoint *HP_clif_arrowequip_pre;
 	struct HPMHookPoint *HP_clif_arrowequip_post;
 	struct HPMHookPoint *HP_clif_arrow_fail_pre;
@@ -5770,6 +5778,10 @@ struct {
 	int HP_atcommand_cleanfloor_sub_post;
 	int HP_atcommand_mutearea_sub_pre;
 	int HP_atcommand_mutearea_sub_post;
+	int HP_atcommand_getring_pre;
+	int HP_atcommand_getring_post;
+	int HP_atcommand_channel_help_pre;
+	int HP_atcommand_channel_help_post;
 	int HP_atcommand_commands_sub_pre;
 	int HP_atcommand_commands_sub_post;
 	int HP_atcommand_cmd_db_clear_pre;
@@ -6230,6 +6242,10 @@ struct {
 	int HP_clif_delitem_post;
 	int HP_clif_takeitem_pre;
 	int HP_clif_takeitem_post;
+	int HP_clif_item_equip_pre;
+	int HP_clif_item_equip_post;
+	int HP_clif_item_normal_pre;
+	int HP_clif_item_normal_post;
 	int HP_clif_arrowequip_pre;
 	int HP_clif_arrowequip_post;
 	int HP_clif_arrow_fail_pre;

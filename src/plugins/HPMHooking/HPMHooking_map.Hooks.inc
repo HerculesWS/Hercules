@@ -735,6 +735,58 @@ int HP_atcommand_mutearea_sub(struct block_list *bl, va_list ap) {
 	}
 	return retVal___;
 }
+void HP_atcommand_getring(struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_atcommand_getring_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_getring_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_atcommand_getring_pre[hIndex].func;
+			preHookFunc(sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.atcommand.getring(sd);
+	}
+	if( HPMHooks.count.HP_atcommand_getring_post ) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_getring_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_atcommand_getring_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
+void HP_atcommand_channel_help(int fd, const char *command, bool can_create) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_atcommand_channel_help_pre ) {
+		void (*preHookFunc) (int *fd, const char *command, bool *can_create);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_channel_help_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_atcommand_channel_help_pre[hIndex].func;
+			preHookFunc(&fd, command, &can_create);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.atcommand.channel_help(fd, command, can_create);
+	}
+	if( HPMHooks.count.HP_atcommand_channel_help_post ) {
+		void (*postHookFunc) (int *fd, const char *command, bool *can_create);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_channel_help_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_atcommand_channel_help_post[hIndex].func;
+			postHookFunc(&fd, command, &can_create);
+		}
+	}
+	return;
+}
 void HP_atcommand_commands_sub(struct map_session_data *sd, const int fd, AtCommandType type) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_atcommand_commands_sub_pre ) {
@@ -6930,6 +6982,58 @@ void HP_clif_takeitem(struct block_list *src, struct block_list *dst) {
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_takeitem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_clif_takeitem_post[hIndex].func;
 			postHookFunc(src, dst);
+		}
+	}
+	return;
+}
+void HP_clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *i, struct item_data *id, int eqp_pos) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_item_equip_pre ) {
+		void (*preHookFunc) (short *idx, struct EQUIPITEM_INFO *p, struct item *i, struct item_data *id, int *eqp_pos);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_item_equip_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_item_equip_pre[hIndex].func;
+			preHookFunc(&idx, p, i, id, &eqp_pos);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.item_equip(idx, p, i, id, eqp_pos);
+	}
+	if( HPMHooks.count.HP_clif_item_equip_post ) {
+		void (*postHookFunc) (short *idx, struct EQUIPITEM_INFO *p, struct item *i, struct item_data *id, int *eqp_pos);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_item_equip_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_item_equip_post[hIndex].func;
+			postHookFunc(&idx, p, i, id, &eqp_pos);
+		}
+	}
+	return;
+}
+void HP_clif_item_normal(short idx, struct NORMALITEM_INFO *p, struct item *i, struct item_data *id) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_item_normal_pre ) {
+		void (*preHookFunc) (short *idx, struct NORMALITEM_INFO *p, struct item *i, struct item_data *id);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_item_normal_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_item_normal_pre[hIndex].func;
+			preHookFunc(&idx, p, i, id);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.item_normal(idx, p, i, id);
+	}
+	if( HPMHooks.count.HP_clif_item_normal_post ) {
+		void (*postHookFunc) (short *idx, struct NORMALITEM_INFO *p, struct item *i, struct item_data *id);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_item_normal_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_item_normal_post[hIndex].func;
+			postHookFunc(&idx, p, i, id);
 		}
 	}
 	return;
