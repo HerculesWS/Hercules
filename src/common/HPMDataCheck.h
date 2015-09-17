@@ -106,6 +106,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#endif // COMMON_CONF_H
 	#ifdef COMMON_CONSOLE_H
 		{ "CParseEntry", sizeof(struct CParseEntry), SERVER_TYPE_ALL },
+		{ "console_input_interface", sizeof(struct console_input_interface), SERVER_TYPE_ALL },
 		{ "console_interface", sizeof(struct console_interface), SERVER_TYPE_ALL },
 	#else
 		#define COMMON_CONSOLE_H
