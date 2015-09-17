@@ -740,7 +740,7 @@ void guild_member_joined(struct map_session_data *sd)
 		sd->guild = g;
 		
 		if (channel->config->ally && channel->config->ally_autojoin) {
-			channel->join(g->channel, sd, NULL, true);
+			channel->join(g->channel, sd, "", true);
 		}
 
 	}
