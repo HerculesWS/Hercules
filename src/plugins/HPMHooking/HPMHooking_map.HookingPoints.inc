@@ -2159,6 +2159,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->autotrade_start, HP_pc_autotrade_start) },
 	{ HP_POP(pc->autotrade_prepare, HP_pc_autotrade_prepare) },
 	{ HP_POP(pc->autotrade_populate, HP_pc_autotrade_populate) },
+	{ HP_POP(pc->autotrade_final, HP_pc_autotrade_final) },
 	{ HP_POP(pc->check_job_name, HP_pc_check_job_name) },
 /* pet */
 	{ HP_POP(pet->init, HP_pet_init) },

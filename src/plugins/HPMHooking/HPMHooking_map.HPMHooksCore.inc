@@ -4237,6 +4237,8 @@ struct {
 	struct HPMHookPoint *HP_pc_autotrade_prepare_post;
 	struct HPMHookPoint *HP_pc_autotrade_populate_pre;
 	struct HPMHookPoint *HP_pc_autotrade_populate_post;
+	struct HPMHookPoint *HP_pc_autotrade_final_pre;
+	struct HPMHookPoint *HP_pc_autotrade_final_post;
 	struct HPMHookPoint *HP_pc_check_job_name_pre;
 	struct HPMHookPoint *HP_pc_check_job_name_post;
 	struct HPMHookPoint *HP_pet_init_pre;
@@ -9958,6 +9960,8 @@ struct {
 	int HP_pc_autotrade_prepare_post;
 	int HP_pc_autotrade_populate_pre;
 	int HP_pc_autotrade_populate_post;
+	int HP_pc_autotrade_final_pre;
+	int HP_pc_autotrade_final_post;
 	int HP_pc_check_job_name_pre;
 	int HP_pc_check_job_name_post;
 	int HP_pet_init_pre;
