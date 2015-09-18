@@ -978,7 +978,7 @@ ACMD(jobchange) {
 	if (!*message || sscanf(message, "%12d %12d", &job, &upper) < 1) {
 		upper = 0;
 
-		if( message ) {
+		if (*message) {
 			int i;
 			bool found = false;
 
@@ -4211,7 +4211,7 @@ ACMD(hidenpc)
 
 	memset(NPCname, '\0', sizeof(NPCname));
 
-	if (!message || !*message || sscanf(message, "%23[^\n]", NPCname) < 1) {
+	if (!*message || sscanf(message, "%23[^\n]", NPCname) < 1) {
 		clif->message(fd, msg_fd(fd,1131)); // Please enter a NPC name (usage: @hidenpc <NPC_name>).
 		return false;
 	}
@@ -4723,7 +4723,7 @@ ACMD(disguiseguild)
 	memset(monster, '\0', sizeof(monster));
 	memset(guild_name, '\0', sizeof(guild_name));
 
-	if( !message || !*message || sscanf(message, "%23[^,], %23[^\r\n]", monster, guild_name) < 2 ) {
+	if (!*message || sscanf(message, "%23[^,], %23[^\r\n]", monster, guild_name) < 2) {
 		clif->message(fd, msg_fd(fd,1146)); // Please enter a mob name/ID and guild name/ID (usage: @disguiseguild <mob name/ID>, <guild name/ID>).
 		return false;
 	}
@@ -6088,7 +6088,7 @@ ACMD(cleanmap) {
 ACMD(cleanarea) {
 	int x0 = 0, y0 = 0, x1 = 0, y1 = 0, n = 0;
 
-	if (!message || !*message || (n=sscanf(message, "%d %d %d %d", &x0, &y0, &x1, &y1)) < 1) {
+	if (!*message || (n=sscanf(message, "%d %d %d %d", &x0, &y0, &x1, &y1)) < 1) {
 		map->foreachinrange(atcommand->cleanfloor_sub, &sd->bl, AREA_SIZE * 2, BL_ITEM);
 	} else if (n == 4) {
 		map->foreachinarea(atcommand->cleanfloor_sub, sd->bl.m, x0, y0, x1, y1, BL_ITEM);
@@ -6165,7 +6165,7 @@ ACMD(pettalk)
 		 (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT)))
 		return false;
 
-	if (!message || !*message || sscanf(message, "%99[^\n]", mes) < 1) {
+	if (!*message || sscanf(message, "%99[^\n]", mes) < 1) {
 		clif->message(fd, msg_fd(fd,1224)); // Please enter a message (usage: @pettalk <message>).
 		return false;
 	}
@@ -6917,7 +6917,7 @@ ACMD(homfriendly)
 		return false;
 	}
 
-	if (!message || !*message) {
+	if (!*message) {
 		clif->message(fd, msg_fd(fd,1258)); // Please enter a friendly value (usage: @homfriendly <friendly value [0-1000]>).
 		return false;
 	}
@@ -7341,7 +7341,7 @@ ACMD(me)
 		 (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT)))
 		return false;
 
-	if (!message || !*message || sscanf(message, "%199[^\n]", tempmes) < 0) {
+	if (!*message || sscanf(message, "%199[^\n]", tempmes) < 0) {
 		clif->message(fd, msg_fd(fd,1302)); // Please enter a message (usage: @me <message>).
 		return false;
 	}
@@ -7972,7 +7972,7 @@ ACMD(ksprotection) {
 	if( sd->state.noks ) {
 		sd->state.noks = KSPROTECT_NONE;
 		clif->message(fd, msg_fd(fd,1325)); // [ K.S Protection Inactive ]
-	} else if( !message || !*message || strcmpi(message, "party") == 0 ) {
+	} else if (!*message || strcmpi(message, "party") == 0) {
 		// Default is Party
 		sd->state.noks = KSPROTECT_PARTY;
 		clif->message(fd, msg_fd(fd,1326)); // [ K.S Protection Active - Option: Party ]
@@ -8926,7 +8926,7 @@ ACMD(channel) {
 			return false;
 		}
 
-		if (!message || !*message || sscanf(message, "%19s %19s %23[^\n]", subcmd, sub1, sub4) < 3) {
+		if (!*message || sscanf(message, "%19s %19s %23[^\n]", subcmd, sub1, sub4) < 3) {
 			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1434), sub4);// Player '%s' was not found
 			clif->message(fd, atcmd_output);
 			return false;
@@ -8974,7 +8974,7 @@ ACMD(channel) {
 			clif->message(fd, atcmd_output);
 			return false;
 		}
-		if (!message || !*message || sscanf(message, "%19s %19s %23[^\n]", subcmd, sub1, sub4) < 3) {
+		if (!*message || sscanf(message, "%19s %19s %23[^\n]", subcmd, sub1, sub4) < 3) {
 			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1434), sub4);// Player '%s' was not found
 			clif->message(fd, atcmd_output);
 			return false;
