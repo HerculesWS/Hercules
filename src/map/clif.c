@@ -520,7 +520,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 			break;
 
 		case SELF:
-			if (sd && (fd=sd->fd) ) {
+			if (sd && (fd=sd->fd) != 0) {
 				WFIFOHEAD(fd,len);
 				memcpy(WFIFOP(fd,0), buf, len);
 				WFIFOSET(fd,len);
@@ -617,7 +617,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 				for( i = 0; i < queue->size; i++ ) {
 					struct map_session_data *qsd = NULL;
 
-					if( queue->item[i] > 0 && ( qsd = map->id2sd(queue->item[i]) ) ) {
+					if (queue->item[i] > 0 && (qsd = map->id2sd(queue->item[i])) != NULL) {
 						WFIFOHEAD(qsd->fd,len);
 						memcpy(WFIFOP(qsd->fd,0), buf, len);
 						WFIFOSET(qsd->fd,len);
@@ -2065,7 +2065,7 @@ void clif_scriptmenu(struct map_session_data* sd, int npcid, const char* mes) {
 	nullpo_retv(mes);
 	fd = sd->fd;
 	slen = strlen(mes) + 9;
-	if (!sd->state.using_fake_npc && (npcid == npc->fake_nd->bl.id || ((bl = map->id2bl(npcid)) && (bl->m!=sd->bl.m ||
+	if (!sd->state.using_fake_npc && (npcid == npc->fake_nd->bl.id || ((bl = map->id2bl(npcid)) != NULL && (bl->m!=sd->bl.m ||
 						bl->x<sd->bl.x-AREA_SIZE-1 || bl->x>sd->bl.x+AREA_SIZE+1 ||
 						bl->y<sd->bl.y-AREA_SIZE-1 || bl->y>sd->bl.y+AREA_SIZE+1))))
 		clif->sendfakenpc(sd, npcid);
@@ -2096,7 +2096,7 @@ void clif_scriptinput(struct map_session_data *sd, int npcid) {
 
 	nullpo_retv(sd);
 
-	if (!sd->state.using_fake_npc && (npcid == npc->fake_nd->bl.id || ((bl = map->id2bl(npcid)) && (bl->m!=sd->bl.m ||
+	if (!sd->state.using_fake_npc && (npcid == npc->fake_nd->bl.id || ((bl = map->id2bl(npcid)) != NULL && (bl->m!=sd->bl.m ||
 						bl->x<sd->bl.x-AREA_SIZE-1 || bl->x>sd->bl.x+AREA_SIZE+1 ||
 						bl->y<sd->bl.y-AREA_SIZE-1 || bl->y>sd->bl.y+AREA_SIZE+1))))
 		clif->sendfakenpc(sd, npcid);
@@ -2126,7 +2126,7 @@ void clif_scriptinputstr(struct map_session_data *sd, int npcid) {
 
 	nullpo_retv(sd);
 
-	if (!sd->state.using_fake_npc && (npcid == npc->fake_nd->bl.id || ((bl = map->id2bl(npcid)) && (bl->m!=sd->bl.m ||
+	if (!sd->state.using_fake_npc && (npcid == npc->fake_nd->bl.id || ((bl = map->id2bl(npcid)) != NULL && (bl->m!=sd->bl.m ||
 						bl->x<sd->bl.x-AREA_SIZE-1 || bl->x>sd->bl.x+AREA_SIZE+1 ||
 						bl->y<sd->bl.y-AREA_SIZE-1 || bl->y>sd->bl.y+AREA_SIZE+1))))
 		clif->sendfakenpc(sd, npcid);
@@ -18430,7 +18430,7 @@ void clif_npc_market_open(struct map_session_data *sd, struct npc_data *nd) {
 
 	for(i = 0, c = 0; i < shop_size; i++) {
 		struct item_data *id = NULL;
-		if( shop[i].nameid && (id = itemdb->exists(shop[i].nameid)) ) {
+		if (shop[i].nameid && (id = itemdb->exists(shop[i].nameid)) != NULL) {
 			npcmarket_open.list[c].nameid = shop[i].nameid;
 			npcmarket_open.list[c].price  = shop[i].value;
 			npcmarket_open.list[c].qty    = shop[i].qty;

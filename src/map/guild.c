@@ -1361,7 +1361,7 @@ void guild_guildaura_refresh(struct map_session_data *sd, uint16 skill_id, uint1
 		return;
 	if( !skill_lv )
 		return;
-	if( sd->sc.data[type] && (group = skill->id2group(sd->sc.data[type]->val4)) ) {
+	if (sd->sc.data[type] && (group = skill->id2group(sd->sc.data[type]->val4)) != NULL) {
 		skill->del_unitgroup(group,ALC_MARK);
 		status_change_end(&sd->bl,type,INVALID_TIMER);
 	}

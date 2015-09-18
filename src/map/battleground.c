@@ -501,7 +501,7 @@ void bg_queue_ready_ack (struct bg_arena *arena, struct map_session_data *sd, bo
 		sd->bg_queue.ready = 1;
 
 		for( i = 0; i < queue->size; i++ ) {
-			if( queue->item[i] > 0 && ( sd = map->id2sd(queue->item[i]) ) ) {
+			if (queue->item[i] > 0 && (sd = map->id2sd(queue->item[i])) != NULL) {
 				if( sd->bg_queue.ready == 1 )
 					count++;
 			}
@@ -542,7 +542,7 @@ void bg_match_over(struct bg_arena *arena, bool canceled) {
 	for( i = 0; i < queue->size; i++ ) {
 		struct map_session_data * sd = NULL;
 
-		if( queue->item[i] > 0 && ( sd = map->id2sd(queue->item[i]) ) ) {
+		if (queue->item[i] > 0 && (sd = map->id2sd(queue->item[i])) != NULL) {
 			if( sd->bg_queue.arena ) {
 				bg->team_leave(sd, 0);
 				bg->queue_pc_cleanup(sd);
@@ -567,7 +567,7 @@ void bg_begin(struct bg_arena *arena) {
 	for( i = 0; i < queue->size; i++ ) {
 		struct map_session_data * sd = NULL;
 
-		if( queue->item[i] > 0 && ( sd = map->id2sd(queue->item[i]) ) ) {
+		if (queue->item[i] > 0 && (sd = map->id2sd(queue->item[i])) != NULL) {
 			if( sd->bg_queue.ready == 1 )
 				count++;
 			else
@@ -594,7 +594,7 @@ void bg_begin(struct bg_arena *arena) {
 		for( i = 0; i < queue->size; i++ ) {
 			struct map_session_data * sd = NULL;
 
-			if( queue->item[i] > 0 && ( sd = map->id2sd(queue->item[i]) ) ) {
+			if (queue->item[i] > 0 && (sd = map->id2sd(queue->item[i])) != NULL) {
 				if( sd->bg_queue.ready == 1 ) {
 					mapreg->setreg(reference_uid(script->add_str("$@bg_member"), count), sd->status.account_id);
 					mapreg->setreg(reference_uid(script->add_str("$@bg_member_group"), count),
@@ -653,7 +653,7 @@ void bg_queue_pregame(struct bg_arena *arena) {
 	for( i = 0; i < queue->size; i++ ) {
 		struct map_session_data * sd = NULL;
 
-		if( queue->item[i] > 0 && ( sd = map->id2sd(queue->item[i]) ) ) {
+		if (queue->item[i] > 0 && (sd = map->id2sd(queue->item[i])) != NULL) {
 			clif->bgqueue_battlebegins(sd,arena->id,SELF);
 		}
 	}

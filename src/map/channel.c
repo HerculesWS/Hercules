@@ -363,7 +363,7 @@ enum channel_operation_status channel_join(struct channel_data *chan, struct map
 		int i;
 		for (i = 0; i < MAX_GUILDALLIANCE; i++) {
 			struct guild *sg = NULL;
-			if (g->alliance[i].opposition == 0 && g->alliance[i].guild_id && (sg = guild->search(g->alliance[i].guild_id))) {
+			if (g->alliance[i].opposition == 0 && g->alliance[i].guild_id && (sg = guild->search(g->alliance[i].guild_id)) != NULL) {
 				if (!(sg->channel->banned && idb_exists(sg->channel->banned, sd->status.account_id))) {
 					channel->join_sub(sg->channel, sd, stealth);
 				}

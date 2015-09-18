@@ -990,7 +990,7 @@ void itemdb_read_packages(void) {
 	   c = 0;
 	   while( (it = libconfig->setting_get_elem(itg,c++)) ) {
 		   int rval = 0;
-		   if( ( t = libconfig->setting_get_member(it, "Random")) && ( rval = libconfig->setting_get_int(t) ) > 0 ) {
+		   if ((t = libconfig->setting_get_member(it, "Random")) != NULL && (rval = libconfig->setting_get_int(t)) > 0) {
 			   rgroups[i - 1][rval - 1] += 1;
 		   }
 		}
