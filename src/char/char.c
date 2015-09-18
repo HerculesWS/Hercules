@@ -2414,7 +2414,7 @@ void char_changesex(int account_id, int sex)
  * Performs the necessary operations when changing a character's sex, such as
  * correcting the job class and unequipping items, and propagating the
  * information to the guild data.
- * 
+ *
  * @param sex      The new sex (SEX_MALE or SEX_FEMALE).
  * @param acc      The character's account ID.
  * @param char_id  The character ID.
@@ -2483,7 +2483,7 @@ int char_parse_fromlogin_changesex_reply(int fd)
 	SQL->StmtBindColumn(stmt, 0, SQLDT_INT, &char_id,  0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 1, SQLDT_INT, &class_,   0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 2, SQLDT_INT, &guild_id, 0, NULL, NULL);
-	
+
 	for (i = 0; i < MAX_CHARS && SQL_SUCCESS == SQL->StmtNextRow(stmt); ++i) {
 		char_change_sex_sub(sex, acc, char_id, class_, guild_id);
 	}
@@ -3455,7 +3455,7 @@ void char_ask_name_ack(int fd, int acc, const char* name, int type, int result)
  * Changes a character's sex.
  * The information is updated on database, and the character is kicked if it
  * currently is online.
- * 
+ *
  * @param char_id The character's ID.
  * @param sex     The new sex.
  * @retval 0 in case of success.
@@ -3479,7 +3479,7 @@ int char_changecharsex(int char_id, int sex)
 	SQL->GetData(inter->sql_handle, 1, &data, NULL); class_ = atoi(data);
 	SQL->GetData(inter->sql_handle, 2, &data, NULL); guild_id = atoi(data);
 	SQL->FreeResult(inter->sql_handle);
-	
+
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `sex` = '%c' WHERE `char_id` = '%d'", char_db, sex == SEX_MALE ? 'M' : 'F', char_id)) {
 		Sql_ShowDebug(inter->sql_handle);
 		return 1;

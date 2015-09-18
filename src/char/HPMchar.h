@@ -22,4 +22,3 @@ void HPM_char_do_final(void);
 void HPM_char_do_init(void);
 
 #endif /* CHAR_HPMCHAR_H */
-

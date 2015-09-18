@@ -471,7 +471,7 @@ bool read_mercenary_skilldb_sub(char* str[], int columns, int current)
 		ShowError("read_mercenary_skilldb : Class %d not found in mercenary_db for skill entry.\n", class_);
 		return false;
 	}
-	
+
 	skill_id = atoi(str[1]);
 	if( skill_id < MC_SKILLBASE || skill_id >= MC_SKILLBASE + MAX_MERCSKILL )
 	{
@@ -501,7 +501,7 @@ void do_init_mercenary(bool minimal) {
 
 	mercenary->read_db();
 	mercenary->read_skilldb();
-	
+
 	timer->add_func_list(mercenary->contract_end_timer, "merc_contract_end_timer");
 }
 
@@ -518,22 +518,21 @@ void mercenary_defaults(void) {
 	memset(mercenary->db, 0, sizeof(struct s_mercenary_db) * MAX_MERCENARY_CLASS);
 
 	/* funcs */
-	
 	mercenary->init = do_init_mercenary;
-	
+
 	mercenary->class = merc_class;
 	mercenary->get_viewdata = merc_get_viewdata;
-	
+
 	mercenary->create = merc_create;
 	mercenary->data_received = merc_data_received;
 	mercenary->save = mercenary_save;
-	
+
 	mercenary->heal = mercenary_heal;
 	mercenary->dead = mercenary_dead;
-	
+
 	mercenary->delete = merc_delete;
 	mercenary->contract_stop = merc_contract_stop;
-	
+
 	mercenary->get_lifetime = mercenary_get_lifetime;
 	mercenary->get_guild = mercenary_get_guild;
 	mercenary->get_faith = mercenary_get_faith;
@@ -541,14 +540,14 @@ void mercenary_defaults(void) {
 	mercenary->get_calls = mercenary_get_calls;
 	mercenary->set_calls = mercenary_set_calls;
 	mercenary->kills = mercenary_kills;
-	
+
 	mercenary->checkskill = mercenary_checkskill;
 	mercenary->read_db = read_mercenarydb;
 	mercenary->read_skilldb = read_mercenary_skilldb;
-	
+
 	mercenary->killbonus = mercenary_killbonus;
 	mercenary->search_index = merc_search_index;
-	
+
 	mercenary->contract_end_timer = merc_contract_end_timer;
 	mercenary->read_db_sub = read_mercenarydb_sub;
 	mercenary->read_skill_db_sub = read_mercenary_skilldb_sub;

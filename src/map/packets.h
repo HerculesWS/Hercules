@@ -2818,7 +2818,6 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0A22,5);                           // HEADER_ZC_RECV_ROULETTE_ITEM
 #endif
 
-
 // 2014-10-22bRagexe - YomRawr
 #if PACKETVER >= 20141022
 	packet(0x0369,7,clif->pActionRequest,2,6);
@@ -2896,7 +2895,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0923,36,clif->pStoragePassword,0);
 	packet(0x09e8,11,clif->pDull);	//CZ_OPEN_MAILBOX
 	packet(0x0a2e,6,clif->pDull);	//TITLE
-#endif         
+#endif
 
 /* PacketKeys: http://herc.ws/board/topic/1105-hercules-wpe-free-june-14th-patch/ */
 #if PACKETVER >= 20110817

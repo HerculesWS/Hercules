@@ -314,7 +314,7 @@ prontera,154,185,5	script	Event Ring Maker#Val09	4_F_KAFRA7,{
 		mes "Come back when you're experienced enough to handle the quests.";
 		close;
 	}
-	
+
 	if (iROval09ring >= 1) {
 		mes "[Event Ring Maker]";
 		mes "The box with the ring, carved with your name, is for the one you love.";
@@ -328,7 +328,7 @@ prontera,154,185,5	script	Event Ring Maker#Val09	4_F_KAFRA7,{
 		mes "Be aware, and always try to stay popular!";
 		close;
 	}
-	
+
 	mes "[Event Ring Maker]";
 	mes "Hi, there, how are ya?";
 	mes "Come to me if you're interested in the event, 'Who's Valentine's Hottest?'";
@@ -435,7 +435,7 @@ prontera,157,185,4	script	Valentine Vote Manager#v	4_F_KAFRA5,{
 					next;
 					break;
 				}
-				
+
 				if (Sex) {
 					if (countitem(7947) > .@input) {
 						mes "[Valentine Vote Manager]";
@@ -444,7 +444,7 @@ prontera,157,185,4	script	Valentine Vote Manager#v	4_F_KAFRA5,{
 						next;
 						break;
 					}
-					
+
 					if (countitem(7947) < .@input) {
 						mes "[Valentine Vote Manager]";
 						mes "Seems like the value you entered is too large.";
@@ -452,7 +452,7 @@ prontera,157,185,4	script	Valentine Vote Manager#v	4_F_KAFRA5,{
 						next;
 						break;
 					}
-					
+
 					mes "[Valentine Vote Manager]";
 					mes "I'll take those silver rings, and count the votes for you.";
 					mes "Thank you for participating.";
@@ -472,7 +472,7 @@ prontera,157,185,4	script	Valentine Vote Manager#v	4_F_KAFRA5,{
 						next;
 						break;
 					}
-					
+
 					if (countitem(7946) < .@input) {
 						mes "[Valentine Vote Manager]";
 						mes "Seems like the value you entered is too large.";
@@ -480,7 +480,7 @@ prontera,157,185,4	script	Valentine Vote Manager#v	4_F_KAFRA5,{
 						next;
 						break;
 					}
-					
+
 					mes "[Valentine Vote Manager]";
 					mes "I'll take those gold rings, and count the votes for you.";
 					mes "Thank you for participating.";
@@ -533,7 +533,7 @@ prt_castle,42,35,3	script	Dessert Manager#Val09	1_M_01,{
 		mes "Annoying, annoying, annoying~~!";
 		close;
 	}
-	
+
 	mes "[Charles Orleans]";
 	mes "Oh, Mademoiselle!";
 	mes "This little trifling space felt like heaven the minute you walked in!";
@@ -629,5 +629,4 @@ prt_castle,42,35,3	script	Dessert Manager#Val09	1_M_01,{
 		mes "I hope this is just what you wanted, for it bears your beautiful heart inside.";
 		close;
 	}
-	
 }

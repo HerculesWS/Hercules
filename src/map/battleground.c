@@ -906,7 +906,6 @@ void do_final_battleground(void)
 		}
 		aFree(bg->arena);
 	}
-	
 }
 void battleground_defaults(void) {
 	bg = &bg_s;

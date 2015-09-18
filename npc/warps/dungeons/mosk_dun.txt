@@ -121,7 +121,7 @@ mosk_dun02,53,215,3	script	Soldier1#mos	4_M_RUSKNIGHT,{
 	mes "We're called out for emergencies,";
 	mes "don't disturb us anymore.";
 	close;
-	
+
 OnInit:
 	hideonnpc "Soldier1#mos";
 	end;
@@ -137,7 +137,7 @@ mosk_dun02,50,217,3	script	Soldier2#mos	4_M_RUSKNIGHT,{
 	mes "We're called out for emergencies,";
 	mes "don't disturb us anymore.";
 	close;
-	
+
 OnInit:
 	hideonnpc "Soldier2#mos";
 	end;
@@ -147,14 +147,13 @@ OnEnable:
 	end;
 }
 
-
 mosk_dun02,56,217,5	script	Soldier3#mos	4_M_RUSKNIGHT,{
 	mes "[Soldier]";
 	mes "We're the Csar's soldiers.";
 	mes "We're called out for emergencies,";
 	mes "don't disturb us anymore.";
 	close;
-	
+
 OnInit:
 	hideonnpc "Soldier3#mos";
 	end;

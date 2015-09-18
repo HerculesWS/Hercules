@@ -4037,7 +4037,7 @@ S_Enchant:
 			delitem getarg(0),1;
 			para_2nd04 = 4;
 			changequest 7240,7241;
-			getitem2 getarg(0),1,1,0,0,0,0,.@1st,.@2nd;						
+			getitem2 getarg(0),1,1,0,0,0,0,.@1st,.@2nd;
 			mes "[Thorn]";
 			mes "Ok, seems that the enhancement went well.";
 			mes "If you don't like the result then you can come back again tomorrow.";

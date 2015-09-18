@@ -152,7 +152,6 @@ HPExport const char *Hooked (bool *fr) {
 	return NULL;
 }
 
-
 HPExport bool HPM_Plugin_AddHook(enum HPluginHookType type, const char *target, void *hook, unsigned int pID) {
 	struct HookingPointData *hpd;
 
@@ -230,4 +229,3 @@ void HPM_HP_load(void) {
 
 	#include HPM_SOURCES_INCLUDE
 }
-

@@ -115,7 +115,7 @@ int skill_get_index( uint16 skill_id ) {
 		else
 			ShowWarning("skill_get_index: skill id '%d' is not being handled!\n",skill_id);
 	}
-	
+
 	// validate result
 	if( !skill_id || skill_id >= MAX_SKILL_DB )
 		return 0;
@@ -481,14 +481,14 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 		clif->skill_fail(sd, skill_id, USESKILL_FAIL_SKILLINTERVAL, 0);
 		return 1;
 	}
-	
+
 	/**
 	 * It has been confirmed on a official server (thanks to Yommy) that item-cast skills bypass all the restrictions below
 	 * Also, without this check, an exploit where an item casting + healing (or any other kind buff) isn't deleted after used on a restricted map
 	 **/
 	if( sd->skillitem == skill_id )
 		return 0;
-	
+
 	if( sd->sc.data[SC_ALL_RIDING] )
 		return 1;//You can't use skills while in the new mounts (The client doesn't let you, this is to make cheat-safe)
 
@@ -2105,7 +2105,6 @@ int skill_blown(struct block_list* src, struct block_list* target, int count, in
 	return unit->blown(target, dx, dy, count, flag); // send over the proper flag
 }
 
-
 /*
 	Checks if 'bl' should reflect back a spell cast by 'src'.
 	type is the type of magic attack: 0: indirect (aoe), 1: direct (targeted)
@@ -2213,7 +2212,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		if(csc && csc->data[SC_GRAVITATION] && csc->data[SC_GRAVITATION]->val3 == BCT_SELF )
 			return 0;
 	}
-	
+
 	dmg = battle->calc_attack(attack_type,src,bl,skill_id,skill_lv,flag&0xFFF);
 
 	//Skotlex: Adjusted to the new system
@@ -2232,7 +2231,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		}
 	}
 
-	if( dmg.flag&BF_MAGIC 
+	if( dmg.flag&BF_MAGIC
 		&& (skill_id != NPC_EARTHQUAKE || (battle_config.eq_single_target_reflectable && (flag & 0xFFF) == 1)) ) { /* Need more info cause NPC_EARTHQUAKE is ground type */
 		// Earthquake on multiple targets is not counted as a target skill. [Inkfish]
 		int reflecttype;
@@ -2799,7 +2798,6 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		else
 			battle->drain(sd, bl, dmg.damage, dmg.damage2, tstatus->race, tstatus->mode&MD_BOSS);
 	}
-
 
 	if( damage > 0 ) {
 		/**
@@ -9013,8 +9011,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			if ( sd ) {
 				int i, max;
 				sc_start(src, bl, SC_EXPLOSIONSPIRITS, 100, skill_lv, skill->get_time(skill_id, skill_lv));
-				clif->skill_nodamage(src, bl, skill_id, skill_lv, 
-					sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv)));
+				clif->skill_nodamage(src, bl, skill_id, skill_lv,
+						sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv)));
 				max = pc->getmaxspiritball(sd, 0);
 				for ( i = 0; i < max; i++ )
 					pc->addspiritball(sd, skill->get_time(MO_CALLSPIRITS, skill_lv), max);
@@ -9044,7 +9042,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			if( !dstsd )
 				break;
 			if ( sd && (dstsd->class_&MAPID_BASEMASK) != MAPID_GUNSLINGER ) {
-				int i, max = pc->getmaxspiritball(dstsd, 5); 
+				int i, max = pc->getmaxspiritball(dstsd, 5);
 				for ( i = 0; i < max; i++ ) {
 					pc->addspiritball(dstsd, skill->get_time(MO_CALLSPIRITS, 1), max);
 				}
@@ -12057,7 +12055,6 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 				status->change_start(ss,bl,type,10000,sg->skill_lv,sg->group_id,0,0,skill->get_time2(sg->skill_id,sg->skill_lv),SCFLAG_NONE);
 			break;
 
-
 		case UNT_MAGENTATRAP:
 		case UNT_COBALTTRAP:
 		case UNT_MAIZETRAP:
@@ -13953,7 +13950,6 @@ int skill_check_condition_castbegin_unknown(struct status_change *sc, uint16 *sk
     return -1;
 }
 
-
 int skill_check_condition_castend(struct map_session_data* sd, uint16 skill_id, uint16 skill_lv) {
 	struct skill_condition require;
 	struct status_data *st;
@@ -15313,7 +15309,6 @@ int skill_sit (struct map_session_data *sd, int type)
 	int range = 0, lv;
 	nullpo_ret(sd);
 
-
 	if((lv = pc->checkskill(sd,RG_GANGSTER)) > 0) {
 		flag|=1;
 		range = skill->get_splash(RG_GANGSTER, lv);
@@ -15409,14 +15404,12 @@ int skill_attack_area(struct block_list *bl, va_list ap) {
 	flag = va_arg(ap,int);
 	type = va_arg(ap,int);
 
-
 	if (skill->area_temp[1] == bl->id) //This is the target of the skill, do a full attack and skip target checks.
 		return skill->attack(atk_type,src,dsrc,bl,skill_id,skill_lv,tick,flag);
 
 	if( battle->check_target(dsrc,bl,type) <= 0
 	 || !status->check_skilluse(NULL, bl, skill_id, 2))
 		return 0;
-
 
 	switch (skill_id) {
 		case WZ_FROSTNOVA: //Skills that don't require the animation to be removed
@@ -17232,7 +17225,6 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 
 	if(make_per < 1) make_per = 1;
 
-
 	if(rnd()%10000 < make_per || qty > 1){ //Success, or crafting multiple items.
 		struct item tmp_item;
 		memset(&tmp_item,0,sizeof(tmp_item));
@@ -17566,7 +17558,6 @@ void skill_toggle_magicpower(struct block_list *bl, uint16 skill_id) {
 	}
 }
 
-
 int skill_magicdecoy(struct map_session_data *sd, int nameid) {
 	int x, y, i, class_, skill_id;
 	struct mob_data *md;
@@ -17589,7 +17580,6 @@ int skill_magicdecoy(struct map_session_data *sd, int nameid) {
 	sd->menuskill_val = 0;
 
 	class_ = (nameid == ITEMID_BOODY_RED || nameid == ITEMID_CRYSTAL_BLUE) ? 2043 + nameid - ITEMID_BOODY_RED : (nameid == ITEMID_WIND_OF_VERDURE) ? 2046 : 2045;
-
 
 	md =  mob->once_spawn_sub(&sd->bl, sd->bl.m, x, y, sd->status.name, class_, "", SZ_SMALL, AI_NONE);
 	if( md ) {
@@ -17728,7 +17718,6 @@ int skill_elementalanalysis(struct map_session_data* sd, int n, uint16 skill_lv,
 			clif->skill_fail(sd,SO_EL_ANALYSIS,USESKILL_FAIL_LEVEL,0);
 			return 1;
 		}
-
 
 		memset(&tmp_item,0,sizeof(tmp_item));
 		tmp_item.nameid = product;
@@ -17977,7 +17966,6 @@ int skill_blockhomun_end(int tid, int64 tick, int id, intptr_t data) { // [orn]
 int skill_blockhomun_start(struct homun_data *hd, uint16 skill_id, int tick) { // [orn]
 	uint16 idx = skill->get_index(skill_id);
 	nullpo_retr (-1, hd);
-
 
 	if (idx == 0)
 		return -1;
@@ -18912,7 +18900,6 @@ bool skill_parse_row_reproducedb(char* split[], int column, int current) {
 
 	return true;
 }
-
 
 bool skill_parse_row_abradb(char* split[], int columns, int current) {
 // skill_id,DummyName,RequiredHocusPocusLevel,Rate

@@ -1482,7 +1482,7 @@ OnTimer187000:
 OnDisable:
 	stopnpctimer;
 	end;
-	
+
 OnMyMobDead:
 	mapannounce "in_moc_16","Hey, what the hell was that?! I told you: No killing monsters!",bc_map;
 	mapannounce "in_moc_16","I'm bringing you back... *Sigh...*",bc_map;

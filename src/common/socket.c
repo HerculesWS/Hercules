@@ -113,7 +113,6 @@ int sock2fd(SOCKET s)
 	return fd;
 }
 
-
 /// Inserts the socket into the global array of sockets.
 /// Returns a new fd associated with the socket.
 /// If there are too many sockets it closes the socket, sets an error and
@@ -292,7 +291,6 @@ void set_defaultparse(ParseFunc defaultparse)
 {
 	default_func_parse = defaultparse;
 }
-
 
 /*======================================
  * CORE : Socket options
@@ -1066,12 +1064,12 @@ static int connect_check_clear(int tid, int64 tick, int id, intptr_t data) {
 	int list  = 0;
 	ConnectHistory *hist = NULL;
 	DBIterator *iter;
-	
+
 	if( !db_size(connect_history) )
 		return 0;
-	
+
 	iter = db_iterator(connect_history);
-	
+
 	for( hist = dbi_first(iter); dbi_exists(iter); hist = dbi_next(iter) ){
 		if( (!hist->ddos && DIFF_TICK(tick,hist->tick) > ddos_interval*3) ||
 			(hist->ddos && DIFF_TICK(tick,hist->tick) > ddos_autoreset) )
@@ -1081,13 +1079,12 @@ static int connect_check_clear(int tid, int64 tick, int id, intptr_t data) {
 			}
 		list++;
  	}
-	
 	dbi_destroy(iter);
-	
+
 	if( access_debug ){
 		ShowInfo("connect_check_clear: Cleared %d of %d from IP list.\n", clear, list);
 	}
-	
+
 	return list;
 }
 
@@ -1205,7 +1202,6 @@ int socket_config_read(const char* cfgName)
 	fclose(fp);
 	return 0;
 }
-
 
 void socket_final(void)
 {

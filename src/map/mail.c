@@ -195,7 +195,7 @@ bool mail_invalid_operation(struct map_session_data *sd) {
 void mail_defaults(void)
 {
 	mail = &mail_s;
-	
+
 	mail->clear = mail_clear;
 	mail->removeitem = mail_removeitem;
 	mail->removezeny = mail_removezeny;

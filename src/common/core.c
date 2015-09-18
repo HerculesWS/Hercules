@@ -206,7 +206,7 @@ const char *cmdline_arg_source(struct CmdlineArgData *arg) {
  */
 bool cmdline_arg_add(unsigned int pluginID, const char *name, char shortname, CmdlineExecFunc func, const char *help, unsigned int options) {
 	struct CmdlineArgData *data = NULL;
-	
+
 	RECREATE(cmdline->args_data, struct CmdlineArgData, ++cmdline->args_data_count);
 	data = &cmdline->args_data[cmdline->args_data_count-1];
 	data->pluginID = pluginID;
@@ -227,7 +227,7 @@ static CMDLINEARG(help)
 	ShowInfo("Usage: %s [options]\n", SERVER_NAME);
 	ShowInfo("\n");
 	ShowInfo("Options:\n");
-	
+
 	for (i = 0; i < cmdline->args_data_count; i++) {
 		struct CmdlineArgData *data = &cmdline->args_data[i];
 		char altname[16], paramnames[256];
@@ -400,7 +400,7 @@ int main (int argc, char **argv) {
 	cmdline->exec(argc, argv, CMDLINE_OPT_SILENT);
 
 	iMalloc->init_messages(); // Initialization messages (after buying us some time to suppress them if needed)
-	
+
 	sysinfo->init();
 
 	if (!(showmsg->silent&0x1))

@@ -418,7 +418,7 @@ mal_in01,160,34,4	script	Missing, the Cleaner	4_CAT_SAILOR2,{
 				}
 				instance_set_timeout 3600,300,.@instance;
 				instance_init(.@instance);
-				
+
 				mes "^3333FF"+.@md_name$+"^000000 - Reserving";
 				mes "After making the reservation, you";
 				mes "have to select Enter the Culvert.";

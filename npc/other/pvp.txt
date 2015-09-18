@@ -314,8 +314,6 @@ function	script	F_PVP_FSRS	{
 	end;
 }
 
-
-
 // Event Contestant Entrance
 //============================================================
 pvp_room,54,85,4	script	Registration Staff#1	8W_SOLDIER,{

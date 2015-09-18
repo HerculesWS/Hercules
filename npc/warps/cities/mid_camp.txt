@@ -42,4 +42,3 @@ mid_camp,266,260,0	warp	mid_house1-1	1,1,mid_campin,284,124
 mid_campin,282,124,0	warp	mid_house1-2	1,1,mid_camp,263,260
 mid_camp,163,231,0	warp	mid_house2-1	1,1,mid_campin,376,133
 mid_campin,376,136,0	warp	mid_house2-2	1,1,mid_camp,163,234
-

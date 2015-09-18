@@ -1130,9 +1130,9 @@ OnGuardianDied:
 OnClock0001:
 	// Do nothing if this script is the template.
 	if (strnpcinfo(1) == "Gld_Trea_Spawn") end;
-	
+
 	.@GID = getcastledata(strnpcinfo(2),1);
-	
+
 	// If there is no owner, do nothing.
 	if (!.@GID) end;
 

@@ -352,7 +352,7 @@ OnTouch:
 	mes "You're blocking my sun!";
 	close;
 }
-	
+
 comodo,172,230,3	script	Wandering Master#job_sta	4_M_JOB_ASSASSIN,{
 	if (Class == Job_Taekwon) {
 		if (STGL_Q == 1) {

@@ -101,7 +101,7 @@ mal_dun01,151,235,5	script	Starfish	4_ASTER,{
 				}
 				instance_set_timeout 3600,300,.@instance;
 				instance_init(.@instance);
-				
+
 				mes "[Starfish]";
 				mes "I will open the gate for a while to ^0000ff"+.@md_name$+"^000000.";
 				mes "Please catch that pervert octopus,";

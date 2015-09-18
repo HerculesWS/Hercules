@@ -431,7 +431,7 @@ S_Buy:
 	mes $S10N$;
 	next;
 	menu "Continue",-,"Cancel",S_Start;
-	
+
 	mes "Enter the name of the share company";
 	mes "Transaction fee of ^FF0000" + $S_Trans + "z^000000 will apply.";
 	set @buyname$,"0";
@@ -644,7 +644,6 @@ ACCS11:
 	mes "Total value: "+@total+"z";
 	next;
 	goto S_Start;
-
 
 	// GM MENU //
 GM_Menu:

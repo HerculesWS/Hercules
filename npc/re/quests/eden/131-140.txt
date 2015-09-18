@@ -573,7 +573,7 @@ S_Erasequest:
 				mes "I'll ask someone else to take care of the rest of the Satan Morroc Incarnations, then!";
 				break;
 			case 3:
-				mes "I'll need to ask another adventurer to help with the Scaraba!"; 
+				mes "I'll need to ask another adventurer to help with the Scaraba!";
 			}
 			break;
 		case 2:
@@ -584,7 +584,7 @@ S_Erasequest:
 				getexp 1100000,300000;
 				break;
 			case 2:
-				mes "Was the story of Satan Morroc worth putting to song? Great work!"; 
+				mes "Was the story of Satan Morroc worth putting to song? Great work!";
 				getexp 1100000,200000;
 				break;
 			case 3:

@@ -7,7 +7,7 @@
 //   1=experience, 2=item drop
 // RACE:
 //   0=Formless, 1=Undead, 2=Brute, 3=Plant, 4=Insect,
-//   5=Fish, 6=Demon, 7=Demi-Human, 8=Angel, 9=Dragon, 
+//   5=Fish, 6=Demon, 7=Demi-Human, 8=Angel, 9=Dragon,
 //   10=Boss monsters, 11=Normal monsters
 //
 // Note: RENEWAL_DROP and/or RENEWAL_EXP must be enabled.

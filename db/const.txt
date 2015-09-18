@@ -642,7 +642,7 @@ Eff_Confusion	7
 Eff_Blind	8
 Eff_Bleeding	9
 Eff_DPoison	10
-Eff_Fear	11	
+Eff_Fear	11
 Eff_Cold	12
 Eff_Burning	13
 Eff_Deepsleep	14

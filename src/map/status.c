@@ -1079,7 +1079,6 @@ void initDummyData(void)
 	status->dummy.mode = MD_CANMOVE;
 }
 
-
 //For copying a status_data structure from b to a, without overwriting current Hp and Sp
 static inline void status_cpy(struct status_data* a, const struct status_data* b)
 {
@@ -1952,7 +1951,6 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 		mstatus->speed -= cap_value(diff, 0, mstatus->speed - 10);
 	}
 
-
 	if (flag&2 && battle_config.mob_size_influence) {
 		// change for sized monsters [Valaris]
 		if (md->special_state.size==SZ_MEDIUM) {
@@ -2455,7 +2453,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 		if( data && data->script )
 			script->run_use_script(sd, data, 0);
 	}
-	
+
 	status->calc_pc_additional(sd, opt);
 
 	if( sd->pd ) { // Pet Bonus
@@ -2601,7 +2599,6 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 		bstatus->max_sp += 200 + 20 * skill_lv;
 	if( (skill_lv = pc->checkskill(sd,WM_LESSON)) > 0 )
 		bstatus->max_sp += 30 * skill_lv;
-
 
 	// Apply relative modifiers from equipment
 	if(sd->sprate < 0)
@@ -2780,7 +2777,6 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 		bstatus->aspd_rate -= 250 - 50 * pc->checkskill(sd, RK_DRAGONTRAINING);
 #endif
 	bstatus->adelay = 2*bstatus->amotion;
-
 
 	// ----- DMOTION -----
 	//
@@ -5086,7 +5082,6 @@ signed short status_calc_def2(struct block_list *bl, struct status_change *sc, i
 #endif
 }
 
-
 defType status_calc_mdef(struct block_list *bl, struct status_change *sc, int mdef, bool viewable) {
 
 	if(!sc || !sc->count)
@@ -5799,7 +5794,6 @@ unsigned char status_calc_element_lv(struct block_list *bl, struct status_change
 
 	return (unsigned char)cap_value(lv,1,4);
 }
-
 
 unsigned char status_calc_attack_element(struct block_list *bl, struct status_change *sc, int element)
 {
@@ -9533,12 +9527,12 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		++(sc->count);
 		sce = sc->data[type] = ers_alloc(status->data_ers, struct status_change_entry);
 	}
-	
+
 	sce->val1 = val1;
 	sce->val2 = val2;
 	sce->val3 = val3;
 	sce->val4 = val4;
-	
+
 	if (tick >= 0) {
 		sce->timer = timer->add(timer->gettick() + tick, status->change_timer, bl->id, type);
 		sce->infinite_duration = false;
@@ -9729,7 +9723,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		return 0;
 
 	st = status->get_status_data(bl);
-	
+
 	if( sd && sce->infinite_duration && !sd->state.loggingout )
 		chrif->del_scdata_single(sd->status.account_id,sd->status.char_id,type);
 
@@ -9911,7 +9905,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 					}
 
 					sce->val2 = 0;
-					
+
 					if( group )
 						skill->del_unitgroup(group,ALC_MARK);
 				}
@@ -10510,7 +10504,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 		ShowError("status_change_timer: Mismatch for type %d: %d != %d (bl id %d)\n",type,tid,sce->timer, bl->id);
 		return 0;
 	}
-	
+
 	sce->timer = INVALID_TIMER;
 
 	sd = BL_CAST(BL_PC, bl);
@@ -10948,15 +10942,14 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 				int heal = st->max_hp * 3 / 100;
 				if (sc->count && sc->data[SC_AKAITSUKI] && heal)
 					heal = ~heal + 1;
-				
+
 				map->freeblock_lock();
-				
 				status->heal(bl, heal, 0, 2);
 				if( sc->data[type] ) {
 					sc_timer_next(5000 + tick, status->change_timer, bl->id, data);
 				}
 				map->freeblock_unlock();
-				
+
 				return 0;
 			}
 			break;
@@ -11114,7 +11107,6 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 				return 0;
 			}
 			break;
-
 
 		case SC_SATURDAY_NIGHT_FEVER:
 			if( --(sce->val3) >= 0 ) {
@@ -11656,7 +11648,7 @@ int status_change_clear_buffs (struct block_list* bl, int type) {
 		return 0;
 
 	map->freeblock_lock();
-	
+
 	if (type&6) //Debuffs
 		for (i = SC_COMMON_MIN; i <= SC_COMMON_MAX; i++)
 			status_change_end(bl, (sc_type)i, INVALID_TIMER);
@@ -11703,9 +11695,9 @@ int status_change_clear_buffs (struct block_list* bl, int type) {
 		}
 		status_change_end(bl, (sc_type)i, INVALID_TIMER);
 	}
-	
+
 	map->freeblock_unlock();
-	
+
 	return 0;
 }
 
@@ -12220,11 +12212,10 @@ void status_read_job_db(void) { /* [malufett/Hercules] */
 	int i = 0;
 	config_t job_db_conf;
 	config_setting_t *jdb = NULL;
-	const char *config_filename = 
 #ifdef RENEWAL_ASPD
-		"db/re/job_db.conf";
+	const char *config_filename = "db/re/job_db.conf";
 #else
-		"db/pre-re/job_db.conf";
+	const char *config_filename = "db/pre-re/job_db.conf";
 #endif
 
 	if ( libconfig->read_file(&job_db_conf, config_filename) ) {

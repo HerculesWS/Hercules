@@ -139,10 +139,10 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 
 		// bindonequip
 		StrBuf->Printf(&buf, "'%u',", it->flag.bindonequip?1:0);
-		
+
 		// forceserial
 		StrBuf->Printf(&buf, "'%u',", it->flag.force_serial?1:0);
-		
+
 		// buyingstore
 		StrBuf->Printf(&buf, "'%u',", it->flag.buyingstore?1:0);
 

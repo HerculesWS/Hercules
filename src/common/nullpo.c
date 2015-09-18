@@ -58,6 +58,5 @@ void assert_report(const char *file, int line, const char *func, const char *tar
  **/
 void nullpo_defaults(void) {
 	nullpo = &nullpo_s;
-	
 	nullpo->assert_report = assert_report;
 }

@@ -969,8 +969,6 @@ prt_castle,35,151,5	script	Patron Knight	4_M_CRU,{
 	close;
 }
 
-
-
 // Actual tests
 //============================================================
 
@@ -1200,7 +1198,6 @@ OnDead:
 	warp "prt_fild05",353,251;
 	end;
 }
-
 
 job_cru,98,105,4	script	 Summoner#cr5	WARPNPC,3,3,{
 OnTouch:

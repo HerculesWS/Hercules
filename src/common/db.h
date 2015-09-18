@@ -269,12 +269,8 @@ typedef uint64 (*DBHasher)(DBKey key, unsigned short maxlen);
  */
 typedef void (*DBReleaser)(DBKey key, DBData data, DBRelease which);
 
-
-
 typedef struct DBIterator DBIterator;
 typedef struct DBMap DBMap;
-
-
 
 /**
  * Database iterator.
@@ -621,7 +617,6 @@ struct DBMap {
 #define i64db_get(db,k)  ( DB->data2ptr((db)->get((db),DB->i642key(k))) )
 #define ui64db_get(db,k) ( DB->data2ptr((db)->get((db),DB->ui642key(k))) )
 
-
 // Get int-type data from DBMaps of various key types
 #define db_iget(db,k)     ( DB->data2i((db)->get((db),(k))) )
 #define idb_iget(db,k)    ( DB->data2i((db)->get((db),DB->i2key(k))) )
@@ -940,7 +935,6 @@ void db_defaults(void);
 
 HPShared struct db_interface *DB;
 
-
 /// Finds an entry in an array.
 /// ex: ARR_FIND(0, size, i, list[i] == target);
 ///
@@ -954,8 +948,6 @@ HPShared struct db_interface *DB;
 			if( __cmp ) \
 				break; \
 	}while(0)
-
-
 
 /// Moves an entry of the array.
 /// Use ARR_MOVERIGHT/ARR_MOVELEFT if __from and __to are direct numbers.
@@ -980,8 +972,6 @@ HPShared struct db_interface *DB;
 		} \
 	}while(0)
 
-
-
 /// Moves an entry of the array to the right.
 /// ex: ARR_MOVERIGHT(1, 4, list, int);// move index 1 to index 4
 ///
@@ -996,8 +986,6 @@ HPShared struct db_interface *DB;
 		memmove((__arr)+(__from), (__arr)+(__from)+1, ((__to)-(__from))*sizeof(__type)); \
 		memmove((__arr)+(__to), &__backup__, sizeof(__type)); \
 	}while(0)
-
-
 
 /// Moves an entry of the array to the left.
 /// ex: ARR_MOVELEFT(3, 0, list, int);// move index 3 to index 0
@@ -1014,13 +1002,9 @@ HPShared struct db_interface *DB;
 		memmove((__arr)+(__to), &__backup__, sizeof(__type)); \
 	}while(0)
 
-
-
 /////////////////////////////////////////////////////////////////////
 // Vector library based on defines. (dynamic array)
 // uses aMalloc, aRealloc, aFree
-
-
 
 /// Declares an anonymous vector struct.
 ///
@@ -1031,8 +1015,6 @@ HPShared struct db_interface *DB;
 		size_t _len_; \
 		__type* _data_; \
 	}
-
-
 
 /// Declares a named vector struct.
 ///
@@ -1045,16 +1027,12 @@ HPShared struct db_interface *DB;
 		__type* _data_; \
 	}
 
-
-
 /// Declares and initializes an anonymous vector variable.
 ///
 /// @param __type Type of data
 /// @param __var Variable name
 #define VECTOR_VAR(__type,__var) \
 	VECTOR_DECL(__type) __var = {0,0,NULL}
-
-
 
 /// Declares and initializes a named vector variable.
 ///
@@ -1063,15 +1041,11 @@ HPShared struct db_interface *DB;
 #define VECTOR_STRUCT_VAR(__name,__var) \
 	struct __name __var = {0,0,NULL}
 
-
-
 /// Initializes a vector.
 ///
 /// @param __vec Vector
 #define VECTOR_INIT(__vec) \
 	memset(&(__vec), 0, sizeof(__vec))
-
-
 
 /// Returns the internal array of values.
 ///
@@ -1080,8 +1054,6 @@ HPShared struct db_interface *DB;
 #define VECTOR_DATA(__vec) \
 	( (__vec)._data_ )
 
-
-
 /// Returns the length of the vector.
 ///
 /// @param __vec Vector
@@ -1089,16 +1061,12 @@ HPShared struct db_interface *DB;
 #define VECTOR_LENGTH(__vec) \
 	( (__vec)._len_ )
 
-
-
 /// Returns the capacity of the vector.
 ///
 /// @param __vec Vector
 /// @return Capacity
 #define VECTOR_CAPACITY(__vec) \
 	( (__vec)._max_ )
-
-
 
 /// Returns the value at the target index.
 /// Assumes the index exists.
@@ -1109,8 +1077,6 @@ HPShared struct db_interface *DB;
 #define VECTOR_INDEX(__vec,__idx) \
 	( VECTOR_DATA(__vec)[__idx] )
 
-
-
 /// Returns the first value of the vector.
 /// Assumes the array is not empty.
 ///
@@ -1119,8 +1085,6 @@ HPShared struct db_interface *DB;
 #define VECTOR_FIRST(__vec) \
 	( VECTOR_INDEX(__vec,0) )
 
-
-
 /// Returns the last value of the vector.
 /// Assumes the array is not empty.
 ///
@@ -1128,8 +1092,6 @@ HPShared struct db_interface *DB;
 /// @return Last value
 #define VECTOR_LAST(__vec) \
 	( VECTOR_INDEX(__vec,VECTOR_LENGTH(__vec)-1) )
-
-
 
 /// Resizes the vector.
 /// Excess values are discarded, new positions are zeroed.
@@ -1159,8 +1121,6 @@ HPShared struct db_interface *DB;
 		} \
 	}while(0)
 
-
-
 /// Ensures that the array has the target number of empty positions.
 /// Increases the capacity in multiples of __step.
 ///
@@ -1176,8 +1136,6 @@ HPShared struct db_interface *DB;
 		} \
 	}while(0)
 
-
-
 /// Inserts a zeroed value in the target index.
 /// Assumes the index is valid and there is enough capacity.
 ///
@@ -1190,8 +1148,6 @@ HPShared struct db_interface *DB;
 		memset(&VECTOR_INDEX(__vec,__idx), 0, sizeof(VECTOR_INDEX(__vec,__idx))); /* set zeroed value */ \
 		++VECTOR_LENGTH(__vec); /* increase length */ \
 	}while(0)
-
-
 
 /// Inserts a value in the target index. (using the '=' operator)
 /// Assumes the index is valid and there is enough capacity.
@@ -1207,8 +1163,6 @@ HPShared struct db_interface *DB;
 		++VECTOR_LENGTH(__vec); /* increase length */ \
 	}while(0)
 
-
-
 /// Inserts a value in the target index. (using memcpy)
 /// Assumes the index is valid and there is enough capacity.
 ///
@@ -1217,8 +1171,6 @@ HPShared struct db_interface *DB;
 /// @param __val Value
 #define VECTOR_INSERTCOPY(__vec,__idx,__val) \
 	VECTOR_INSERTARRAY(__vec,__idx,&(__val),1)
-
-
 
 /// Inserts the values of the array in the target index. (using memcpy)
 /// Assumes the index is valid and there is enough capacity.
@@ -1235,8 +1187,6 @@ HPShared struct db_interface *DB;
 		VECTOR_LENGTH(__vec) += (__n); /* increase length */ \
 	}while(0)
 
-
-
 /// Inserts a zeroed value in the end of the vector.
 /// Assumes there is enough capacity.
 ///
@@ -1246,7 +1196,6 @@ HPShared struct db_interface *DB;
 		memset(&VECTOR_INDEX(__vec,VECTOR_LENGTH(__vec)), 0, sizeof(VECTOR_INDEX(__vec,VECTOR_LENGTH(__vec)))); /* set zeroed value */ \
 		++VECTOR_LENGTH(__vec); /* increase length */ \
 	}while(0)
-
 
 /// Inserts a value in the end of the vector. (using the '=' operator)
 /// Assumes there is enough capacity.
@@ -1259,8 +1208,6 @@ HPShared struct db_interface *DB;
 		++VECTOR_LENGTH(__vec); /* increase length */ \
 	}while(0)
 
-
-
 /// Inserts a value in the end of the vector. (using memcpy)
 /// Assumes there is enough capacity.
 ///
@@ -1268,8 +1215,6 @@ HPShared struct db_interface *DB;
 /// @param __val Value
 #define VECTOR_PUSHCOPY(__vec,__val) \
 	VECTOR_PUSHARRAY(__vec,&(__val),1)
-
-
 
 /// Inserts the values of the array in the end of the vector. (using memcpy)
 /// Assumes there is enough capacity.
@@ -1283,8 +1228,6 @@ HPShared struct db_interface *DB;
 		VECTOR_LENGTH(__vec) += (__n); /* increase length */ \
 	}while(0)
 
-
-
 /// Removes and returns the last value of the vector.
 /// Assumes the array is not empty.
 ///
@@ -1292,8 +1235,6 @@ HPShared struct db_interface *DB;
 /// @return Removed value
 #define VECTOR_POP(__vec) \
 	( VECTOR_INDEX(__vec,--VECTOR_LENGTH(__vec)) )
-
-
 
 /// Removes the last N values of the vector and returns the value of the last pop.
 /// Assumes there are enough values.
@@ -1304,8 +1245,6 @@ HPShared struct db_interface *DB;
 #define VECTOR_POPN(__vec,__n) \
 	( VECTOR_INDEX(__vec,(VECTOR_LENGTH(__vec)-=(__n))) )
 
-
-
 /// Removes the target index from the vector.
 /// Assumes the index is valid and there are enough values.
 ///
@@ -1313,8 +1252,6 @@ HPShared struct db_interface *DB;
 /// @param __idx Index
 #define VECTOR_ERASE(__vec,__idx) \
 	VECTOR_ERASEN(__vec,__idx,1)
-
-
 
 /// Removes N values from the target index of the vector.
 /// Assumes the index is valid and there are enough values.
@@ -1329,8 +1266,6 @@ HPShared struct db_interface *DB;
 		VECTOR_LENGTH(__vec) -= (__n); /* decrease length */ \
 	}while(0)
 
-
-
 /// Clears the vector, freeing allocated data.
 ///
 /// @param __vec Vector
@@ -1344,21 +1279,15 @@ HPShared struct db_interface *DB;
 		} \
 	}while(0)
 
-
-
 /////////////////////////////////////////////////////////////////////
 // Binary heap library based on defines. (uses the vector defines above)
 // uses aMalloc, aRealloc, aFree
 // WARNING: BHEAP implementation details affect behaviour of A* pathfinding
 
-
-
 /// Declares an anonymous binary heap struct.
 ///
 /// @param __type Type of data
 #define BHEAP_DECL(__type) VECTOR_DECL(__type)
-
-
 
 /// Declares a named binary heap struct.
 ///
@@ -1366,15 +1295,11 @@ HPShared struct db_interface *DB;
 /// @param __type Type of data
 #define BHEAP_STRUCT_DECL(__name,__type) VECTOR_STRUCT_DECL(__name,__type)
 
-
-
 /// Declares and initializes an anonymous binary heap variable.
 ///
 /// @param __type Type of data
 /// @param __var Variable name
 #define BHEAP_VAR(__type,__var) VECTOR_VAR(__type,__var)
-
-
 
 /// Declares and initializes a named binary heap variable.
 ///
@@ -1382,14 +1307,10 @@ HPShared struct db_interface *DB;
 /// @param __var Variable name
 #define BHEAP_STRUCT_VAR(__name,__var) VECTOR_STRUCT_VAR(__name,__var)
 
-
-
 /// Initializes a heap.
 ///
 /// @param __heap Binary heap
 #define BHEAP_INIT(__heap) VECTOR_INIT(__heap)
-
-
 
 /// Returns the internal array of values.
 ///
@@ -1397,23 +1318,17 @@ HPShared struct db_interface *DB;
 /// @return Array of values
 #define BHEAP_DATA(__heap) VECTOR_DATA(__heap)
 
-
-
 /// Returns the length of the heap.
 ///
 /// @param __heap Binary heap
 /// @return Length
 #define BHEAP_LENGTH(__heap) VECTOR_LENGTH(__heap)
 
-
-
 /// Returns the capacity of the heap.
 ///
 /// @param __heap Binary heap
 /// @return Capacity
 #define BHEAP_CAPACITY(__heap) VECTOR_CAPACITY(__heap)
-
-
 
 /// Ensures that the heap has the target number of empty positions.
 /// Increases the capacity in multiples of __step.
@@ -1423,16 +1338,12 @@ HPShared struct db_interface *DB;
 /// @param __step Increase
 #define BHEAP_ENSURE(__heap,__n,__step) VECTOR_ENSURE(__heap,__n,__step)
 
-
-
 /// Returns the top value of the heap.
 /// Assumes the heap is not empty.
 ///
 /// @param __heap Binary heap
 /// @return Value at the top
 #define BHEAP_PEEK(__heap) VECTOR_INDEX(__heap,0)
-
-
 
 /// Inserts a value in the heap. (using the '=' operator)
 /// Assumes there is enough capacity.
@@ -1460,8 +1371,6 @@ HPShared struct db_interface *DB;
 		} \
 	}while(0)
 
-
-
 /// See BHEAP_PUSH. Version used by A* implementation, matching client bheap.
 ///
 /// @param __heap Binary heap
@@ -1474,8 +1383,6 @@ HPShared struct db_interface *DB;
 		VECTOR_PUSH(__heap,__val); /* insert at end */ \
 		BHEAP_SIFTDOWN(__heap,0,_i_,__topcmp,__swp); \
 	}while(0)
-
-
 
 /// Removes the top value of the heap. (using the '=' operator)
 /// Assumes the heap is not empty.
@@ -1490,8 +1397,6 @@ HPShared struct db_interface *DB;
 /// @param __swp Swapper
 #define BHEAP_POP(__heap,__topcmp,__swp) BHEAP_POPINDEX(__heap,0,__topcmp,__swp)
 
-
-
 /// See BHEAP_POP. Version used by A* implementation, matching client bheap.
 ///
 /// @param __heap Binary heap
@@ -1504,8 +1409,6 @@ HPShared struct db_interface *DB;
 			break; \
 		BHEAP_SIFTUP(__heap,0,__topcmp,__swp); \
 	}while(0)
-
-
 
 /// Removes the target value of the heap. (using the '=' operator)
 /// Assumes the index exists.
@@ -1553,8 +1456,6 @@ HPShared struct db_interface *DB;
 		} \
 	}while(0)
 
-
-
 /// Follow path up towards (but not all the way to) the root, swapping nodes until finding
 /// a place where the new item that was placed at __idx fits.
 /// Only goes as high as __startidx (usually 0).
@@ -1576,8 +1477,6 @@ HPShared struct db_interface *DB;
 			_i2_ = _parent_; \
 		} \
 	}while(0)
-
-
 
 /// Repeatedly swap the smaller child with parent, after placing a new item at __idx.
 ///
@@ -1607,8 +1506,6 @@ HPShared struct db_interface *DB;
 		BHEAP_SIFTDOWN(__heap,__idx,_i_,__topcmp,__swp); \
 	}while(0)
 
-
-
 /// Call this after modifying the item at __idx__ to restore the heap
 ///
 /// @param __heap Binary heap
@@ -1621,14 +1518,10 @@ HPShared struct db_interface *DB;
 		BHEAP_SIFTUP(__heap,__idx,__topcmp,__swp); \
 	}while(0)
 
-
-
 /// Clears the binary heap, freeing allocated data.
 ///
 /// @param __heap Binary heap
 #define BHEAP_CLEAR(__heap) VECTOR_CLEAR(__heap)
-
-
 
 /// Generic comparator for a min-heap. (minimum value at top)
 /// Returns -1 if v1 is smaller, 1 if v2 is smaller, 0 if equal.
@@ -1638,8 +1531,6 @@ HPShared struct db_interface *DB;
 /// @return negative if v1 is top, positive if v2 is top, 0 if equal
 #define BHEAP_MINTOPCMP(v1,v2) ( v1 == v2 ? 0 : v1 < v2 ? -1 : 1 )
 
-
-
 /// Generic comparator for a max-heap. (maximum value at top)
 /// Returns -1 if v1 is bigger, 1 if v2 is bigger, 0 if equal.
 ///
@@ -1647,7 +1538,5 @@ HPShared struct db_interface *DB;
 /// @param v2 Second value
 /// @return negative if v1 is top, positive if v2 is top, 0 if equal
 #define BHEAP_MAXTOPCMP(v1,v2) ( v1 == v2 ? 0 : v1 > v2 ? -1 : 1 )
-
-
 
 #endif /* COMMON_DB_H */

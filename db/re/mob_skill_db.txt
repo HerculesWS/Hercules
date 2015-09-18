@@ -1,4 +1,4 @@
-// Mob Skill Database 
+// Mob Skill Database
 // Based on Aegis Episode 14.2
 //
 // Structure of Database:
@@ -4202,7 +4202,7 @@
 1794,Roween@NPC_COMBOATTACK,attack,171,4,500,500,5000,no,target,always,,,,,,,6,
 1794,Roween@NPC_EMOTION,idle,197,1,2000,0,5000,yes,self,always,,22,0x308D,,,,,
 1794,Roween@NPC_WINDATTACK,attack,187,2,500,500,5000,no,target,always,,,,,,,,
-// Guild Dungeon SE (13.1) 
+// Guild Dungeon SE (13.1)
 1796,Aunoe@AL_HEAL,attack,28,5,3000,0,5000,yes,friend,friendhpltmaxrate,50,,,,,,3,
 1796,Aunoe@AL_HEAL,idle,28,5,3000,0,5000,yes,friend,friendhpltmaxrate,50,,,,,,3,
 1796,Aunoe@AL_HEAL,chase,28,5,3000,0,5000,yes,friend,friendhpltmaxrate,50,,,,,,3,

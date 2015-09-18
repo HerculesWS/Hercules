@@ -147,27 +147,27 @@ void HPM_map_plugin_load_sub(struct hplugin *plugin) {
 
 bool HPM_map_add_atcommand(char *name, AtCommandFunc func) {
 	unsigned int i = 0;
-	
+
 	for(i = 0; i < atcommand_list_items; i++) {
 		if( !strcmpi(atcommand_list[i].name,name) ) {
 			ShowDebug("HPM_map_add_atcommand: duplicate command '%s', skipping...\n", name);
 			return false;
 		}
 	}
-	
+
 	i = atcommand_list_items;
-	
+
 	RECREATE(atcommand_list, struct HPM_atcommand_list , ++atcommand_list_items);
-	
+
 	safestrncpy(atcommand_list[i].name, name, sizeof(atcommand_list[i].name));
 	atcommand_list[i].func = func;
-	
+
 	return true;
 }
 
 void HPM_map_atcommands(void) {
 	unsigned int i;
-	
+
 	for(i = 0; i < atcommand_list_items; i++) {
 		atcommand->add(atcommand_list[i].name,atcommand_list[i].func,true);
 	}
@@ -178,9 +178,9 @@ void HPM_map_atcommands(void) {
  **/
 void HPM_map_add_group_permission(unsigned int pluginID, char *name, unsigned int *mask) {
 	unsigned char index = pcg->HPMpermissions_count;
-	
+
 	RECREATE(pcg->HPMpermissions, struct pc_groups_new_permission, ++pcg->HPMpermissions_count);
-	
+
 	pcg->HPMpermissions[index].pID = pluginID;
 	pcg->HPMpermissions[index].name = aStrdup(name);
 	pcg->HPMpermissions[index].mask = mask;
@@ -207,6 +207,5 @@ void HPM_map_do_final(void) {
 		}
 		aFree(pcg->HPMpermissions);
 	}
-	
 	HPM->datacheck_final();
 }

@@ -65,7 +65,7 @@ prt_church,100,123,4	script	Vomars	1_M_PASTOR,{
 	function SF_RetrieveRingF;
 	function SF_RingsAccepted;
 	function SF_StartCeremony;
-	
+
 	if (getpartnerid() > 0) {
 		mes "["+@name$+"]";
 		mes "You have my blessings, have a wonderful married life.";
@@ -81,7 +81,7 @@ prt_church,100,123,4	script	Vomars	1_M_PASTOR,{
 		mes "to prepare for marriage";
 		close;
 	} // End official iRO dialog
-	
+
 	if (strcharinfo(0) == $wed_groom$) {
 		SF_Groom();
 		end;
@@ -278,7 +278,7 @@ function SF_RetrieveRingM {
 	mes "Here's the wedding ring for your bride.";
 	if ($@wed_ring) delitem $@wed_ring,1;
 	set $wed_groom_progress,4;
-	
+
 	if ($wed_bride_progress == 4)
 		SF_StartCeremony();
 	else {
@@ -336,7 +336,7 @@ function SF_StartCeremony {
 OnTimer1000:
 	npctalk "Ladies and Gentlemen, We will now join in holy matrimony these two lovers.";
 	end;
-	
+
 OnTimer5000:
 	npctalk "Now more than ever, will both of your lives be entwined together as so will be your souls.";
 	end;
@@ -344,31 +344,31 @@ OnTimer5000:
 OnTimer10000:
 	npctalk "You will both honor and cherish each other through the best and worst of times.";
 	end;
-	
+
 OnTimer15000:
 	npctalk "The safety and well being of your other will now also be your responsibility.";
 	end;
-	
+
 OnTimer20000:
 	npctalk "May in sickness or good health, your love burn bright like no force can extinguish it.";
 	end;
-	
+
 OnTimer25000:
 	npctalk "Those here stand witness to these vows bestowed upon you, you must act accordingly to them.";
 	end;
-	
+
 OnTimer30000:
 	npctalk "Understanding that, we are nothing more but mortals on this earth, but this is our triumph.";
 	end;
-	
+
 OnTimer35000:
 	npctalk "We here will now join these two mortal entities, and create an immortal love.";
 	end;
-	
+
 OnTimer40000:
 	npctalk $wed_groom$+", you have accepted to take "+$wed_bride$+" as your lawfully wedded wife,";
 	end;
-	
+
 OnTimer45000:
 	npctalk "and you, "+$wed_bride$+", have accepted take "+$wed_groom$+" as your lawfully wedded husband.";
 	end;
@@ -440,7 +440,7 @@ prt_church,106,99,3	script	Happy Marry	1_F_02,{
 		mes "Isn't marriage beautiful?";
 		close;
 	}
-	
+
 	function SF_WedProgress;
 	function SF_Principles;
 	function SF_Procedure;
@@ -451,7 +451,7 @@ prt_church,106,99,3	script	Happy Marry	1_F_02,{
 		SF_WedProgress();
 		end;
 	}
-	
+
 	do {
 		mes "["+@name$+"]";
 		mes "Marriage... is such a beautiful thing.";
@@ -529,7 +529,7 @@ function SF_Register {
 		close;
 	}
 }
-	
+
 function SF_WedProgress {
 	if (strcharinfo(0) == $wed_groom$) {
 		mes "["+@name$+"]";
@@ -658,7 +658,7 @@ OnTimer60000:
 
 	npctalk "Registration timed out. Is it that noone wants to marry "+$@msg$+"..?";
 	emotion e_hmm;
-	
+
 	set $wed_groom$,"";
 	set $wed_groom_sex, 0;
 	set $wed_bride$,"";
@@ -675,7 +675,7 @@ function SF_TryRegister {
 	set @type$, "groom";
 	if (@bride)
 		set @type$, "bride";
-		
+
 	mes "["+@name$+"]";
 	mes "Before registering as "+@type$+", let me check if you meet all the requirements...";
 	next;
@@ -689,7 +689,7 @@ function SF_TryRegister {
 		set @item, 7170;
 	else
 		set @item, 2338;
-	
+
 	if (getequipid(2) != @item) {
 		mes "["+@name$+"]";
 		mes "You should be wearing a "+getitemname(@item)+" if you want to get married.";
@@ -814,12 +814,12 @@ prt_church,94,99,4	script	Sister Lisa	1_F_PRIEST,{
 
 	function SF_DivorceEnd;
 	function SF_InProgress;
-	
+
 	if ($@divorce_progress==1) {
 		goto SF_InProgress;
 		end;
 	}
-	
+
 	do {
 		mes "["+@name$+"]";
 		mes "Divorcing can be such a sad event...";

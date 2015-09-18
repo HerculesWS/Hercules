@@ -1,14 +1,14 @@
-//===== Hercules Script ====================================== 
+//===== Hercules Script ======================================
 //= Shadow Refiner
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Dastgir
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.0
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Aegis Conversion]
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version [Dastgir]
-//============================================================ 
+//============================================================
 
 itemmall,31,76,3	script	Shadow Blacksmith#nomal	4_F_JOB_BLACKSMITH,{
 	disable_items;
@@ -61,7 +61,7 @@ itemmall,31,76,3	script	Shadow Blacksmith#nomal	4_F_JOB_BLACKSMITH,{
 			.@mate$[1] = "^8C8C8C"+ getitemname(.@s_weapon2[.@index]) +"^000000";
 			.@miss[1] = 1;
 		}
-		if (getequiprefinerycnt(.@SelectedPart) > 6 && countitem(.@s_weapon3[.@index])) 
+		if (getequiprefinerycnt(.@SelectedPart) > 6 && countitem(.@s_weapon3[.@index]))
 			.@mate$[2] = getitemname(.@s_weapon3[.@index]);
 		else {
 			.@mate$[2] = "^8C8C8C"+ getitemname(.@s_weapon3[.@index]) +"^000000";

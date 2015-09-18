@@ -429,7 +429,7 @@ ein_in01,279,92,3	script	Tavern Lady#ein	4_M_EINMAN2,{
 	mes "freshly knit doilies?";
 	close;
 }
-	
+
 ein_in01,277,95,7	script	Ryan Danger#air#einbech	4_M_EINMAN,{
 	mes "[R.D. Kim]";
 	mes "Oooh...";
@@ -481,7 +481,7 @@ ein_in01,277,95,7	script	Ryan Danger#air#einbech	4_M_EINMAN,{
 	mes "of his freakin' mind!)";
 	close;
 }
-	
+
 ein_in01,281,85,3	script	Drunken Man#einbech	4_M_DIEMAN,{
 	mes "[Drunken Man]";
 	mes "...^333333*Hiccup*^000000...";
@@ -740,7 +740,7 @@ einbech,46,107,6	script	Shena#ein::EinMonsters	4_F_EINOLD,{
 		close;
 	}
 }
-	
+
 einbech,48,107,4	duplicate(EinMonsters)	Luda#ein	4_F_EINWOMAN,{
 
 einbech,148,242,5	script	Jung#ein	4_M_EINMAN,{

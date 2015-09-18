@@ -71,7 +71,7 @@ comodo,219,158,6	script	Kachua	4_F_02,{
 	mes "you something from one of my";
 	mes "collections~";
 	next;
-	
+
 	if (MaxWeight - Weight < 5500) {
 		cutin "katsua01.bmp",255;
 		cutin "katsua03.bmp",2;
@@ -379,7 +379,7 @@ comodo,219,158,6	script	Kachua	4_F_02,{
 			close;
 	break;
 	}
-	
+
 	getitem .@item,1;
 
 	cutin "katsua01.bmp",255;

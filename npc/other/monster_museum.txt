@@ -59,7 +59,7 @@ yuno_in03,32,15,3	script	Museum Guide	1_F_02,{
 	mes "Feel free to talk to me anytime.";
 	close;
 }
-	
+
 yuno_in03,36,21,3	script	Deviace#yuno	DEVIACE,{
 	end;
 }
@@ -85,7 +85,7 @@ yuno_in03,33,21,1	script	#DEVIACE	HIDDEN_NPC,{
 	mes "it's better to be careful with this monster.";
 	close;
 }
-	
+
 yuno_in03,36,27,3	script	Seal#yuno	FUR_SEAL,{
 	end;
 }
@@ -111,7 +111,7 @@ yuno_in03,33,27,1	script	#FUR_SEAL	HIDDEN_NPC,{
 	mes "for people to produce winter coats.";
 	close;
 }
-	
+
 yuno_in03,36,33,3	script	Sage Worm#yuno	SAGEWORM,{
 	end;
 }
@@ -133,7 +133,7 @@ yuno_in03,33,33,1	script	#SAGEWORM	HIDDEN_NPC,{
 	mes "indicates, it's usually seen near books or book shelves.";
 	close;
 }
-	
+
 yuno_in03,39,39,3	script	Penomena#yuno	PENOMENA,{
 	end;
 }
@@ -159,7 +159,7 @@ yuno_in03,38,39,1	script	#PENOMANA	HIDDEN_NPC,{
 	mes "enough to kill its enemy at once.";
 	close;
 }
-	
+
 yuno_in03,39,44,3	script	Galapago#yuno	GALAPAGO,{
 	end;
 }
@@ -180,7 +180,7 @@ yuno_in03,37,44,3	script	#GALAPAGO	HIDDEN_NPC,{
 	mes "generally laid back monster.";
 	close;
 }
-	
+
 yuno_in03,15,21,5	script	Raydric#yuno	RAYDRIC,{
 	end;
 }
@@ -201,7 +201,7 @@ yuno_in03,19,21,1	script	#RAYDRIC	HIDDEN_NPC,{
 	mes "and powerful attack strength.";
 	close;
 }
-	
+
 yuno_in03,15,27,5	script	Chepet#yuno	CHEPET,{
 	end;
 }
@@ -220,7 +220,7 @@ yuno_in03,19,27,1	script	#CHEPET	HIDDEN_NPC,{
 	mes "only a few places.";
 	close;
 }
-	
+
 yuno_in03,15,33,5	script	Violy#yuno	VIOLY,{
 	end;
 }
@@ -237,7 +237,7 @@ yuno_in03,19,33,1	script	#VIOLY	HIDDEN_NPC,{
 	mes "Exercise extreme caution upon encountering a Violy. Otherwise, it will snatch your soul in no time with its charming song.";
 	close;
 }
-	
+
 yuno_in03,10,39,5	script	Alice#yuno	ALICE,{
 	end;
 }
@@ -259,7 +259,7 @@ yuno_in03,12,39,1	script	#ALICE	HIDDEN_NPC,{
 	mes "is still a scientific mystery.";
 	close;
 }
-	
+
 yuno_in03,10,45,5	script	Assulter#yuno	ASSULTER,{
 	end;
 }
@@ -284,7 +284,7 @@ yuno_in03,12,45,1	script	#ASSULTER	HIDDEN_NPC,{
 	mes "is more threatening.";
 	close;
 }
-	
+
 yuno_in03,38,50,3	script	PecoPeco Egg#yuno	PECOPECO_EGG,{
 	end;
 }
@@ -316,7 +316,7 @@ yuno_in03,20,96,1	script	#WANDER_MAN	HIDDEN_NPC,{
 	mes "stroke of its sword.";
 	close;
 }
-	
+
 yuno_in03,16,100,5	script	Caterpillar#yuno	CATERPILLAR,{
 	end;
 }
@@ -338,7 +338,7 @@ yuno_in03,18,100,1	script	#CATERPILLAR	HIDDEN_NPC,{
 	mes "Creamy.";
 	close;
 }
-	
+
 yuno_in03,16,104,5	script	Male Thiefbug#yuno	THIEF_BUG__,{
 	end;
 }
@@ -356,7 +356,7 @@ yuno_in03,18,104,1	script	#THIEF_BUG__	HIDDEN_NPC,{
 	mes "However, it is stronger than other Thief Bugs because it's designated to protect the females and babies from danger.";
 	close;
 }
-	
+
 yuno_in03,16,108,5	script	Tri Joint#yuno	TRI_JOINT,{
 	end;
 }
@@ -376,7 +376,7 @@ yuno_in03,18,108,1	script	#TRI_JOINT	HIDDEN_NPC,{
 	mes "Recently, since many Tri Joints have been discovered inside many caves, Sages are very excited to study them to learn more about the evolution of monsters in Rune-Midgard.";
 	close;
 }
-	
+
 yuno_in03,16,111,5	script	Arclouz#yuno	ARCLOUSE,{
 	end;
 }
@@ -399,7 +399,7 @@ yuno_in03,18,111,1	script	#ARCLOUSE	HIDDEN_NPC,{
 	mes "compared to PecoPecos.";
 	close;
 }
-	
+
 yuno_in03,16,117,5	script	Dragon Tail#yuno	DRAGON_TAIL,{
 	end;
 }
@@ -418,7 +418,7 @@ yuno_in03,18,116,1	script	#DRAGON_TAIL	HIDDEN_NPC,{
 	mes "a sleeping poison.";
 	close;
 }
-	
+
 yuno_in03,46,96,3	script	Owl Duke#yuno	OWL_DUKE,{
 	end;
 }
@@ -443,7 +443,7 @@ yuno_in03,44,96,1	script	#OWL_DUKE	HIDDEN_NPC,{
 	mes "aristocratic pompousness.";
 	close;
 }
-	
+
 yuno_in03,48,100,3	script	Marine Sphere#yuno	MARINE_SPHERE,{
 	end;
 }
@@ -467,7 +467,7 @@ yuno_in03,46,101,1	script	#MARINE_SPHERE	HIDDEN_NPC,{
 	mes "a dangerous chain reaction.";
 	close;
 }
-	
+
 yuno_in03,48,104,3	script	Mandragora#yuno	MANDRAGORA,{
 	end;
 }
@@ -498,7 +498,7 @@ yuno_in03,46,105,1	script	#MANDRAGORA	HIDDEN_NPC,{
 	mes "from useful in attracting prey.";
 	close;
 }
-	
+
 yuno_in03,48,108,3	script	Geographer#yuno	GEOGRAPHER,{
 	end;
 }
@@ -532,7 +532,7 @@ yuno_in03,46,108,1	script	#GEOGRAPHER	HIDDEN_NPC,{
 	mes "never be forgotten...";
 	close;
 }
-	
+
 yuno_in03,48,112,3	script	Rafflesia#yuno	RAFFLESIA,{
 	end;
 }
@@ -557,7 +557,7 @@ yuno_in03,46,112,1	script	#RAFFLESIA	HIDDEN_NPC,{
 	mes "cultivate and save the Rafflesias.";
 	close;
 }
-	
+
 yuno_in03,48,116,3	script	Stem Worm#yuno	STEM_WORM,{
 	end;
 }
@@ -601,7 +601,7 @@ yuno_in03,24,122,1	script	#BLAZZER	HIDDEN_NPC,{
 	mes "form of communication.";
 	close;
 }
-	
+
 yuno_in03,28,124,5	script	Ride Word#yuno	RIDEWORD,{
 	end;
 }
@@ -616,7 +616,7 @@ yuno_in03,28,122,1	script	#RIDEWORD	HIDDEN_NPC,{
 	mes "sharp teeth. It exists to attack any living thing nearby.";
 	close;
 }
-	
+
 yuno_in03,31,124,3	script	Megalodon#yuno	MEGALODON,{
 	end;
 }
@@ -634,7 +634,7 @@ yuno_in03,31,122,1	script	#MEGALODON	HIDDEN_NPC,{
 	mes "undersea travellers outright.";
 	close;
 }
-	
+
 yuno_in03,35,124,3	script	Sleeper#yuno	SLEEPER,{
 	end;
 }
@@ -655,7 +655,7 @@ yuno_in03,35,122,1	script	#SLEEPER	HIDDEN_NPC,{
 	mes "cause indirect attacks by causing a sand storm.";
 	close;
 }
-	
+
 yuno_in03,39,124,3	script	Ancient Mummy#yuno	ANCIENT_MUMMY,{
 	end;
 }
@@ -684,7 +684,7 @@ yuno_in03,39,122,1	script	#ANCIENT_MUMMY	HIDDEN_NPC,{
 	mes "attack any living thing nearby.";
 	close;
 }
-	
+
 yuno_in03,18,122,5	script	Incubus#yuno	INCUBUS,{
 	end;
 }
@@ -706,7 +706,7 @@ yuno_in03,19,120,1	script	#INCUBUS	HIDDEN_NPC,{
 	mes "it can eventually take them to hell.";
 	close;
 }
-	
+
 yuno_in03,44,120,3	script	Succubus#yuno	SUCCUBUS,{
 	end;
 }

@@ -20,4 +20,3 @@ void inter_quest_defaults(void);
 HPShared struct inter_quest_interface *inter_quest;
 
 #endif /* CHAR_INT_QUEST_H */
-

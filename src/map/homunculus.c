@@ -297,10 +297,10 @@ bool homunculus_levelup(struct homun_data *hd) {
 		ShowError("homunculus_levelup: Invalid class %d. \n", hd->homunculus.class_);
 		return false;
 	}
-	
+
 	if( !hd->exp_next || hd->homunculus.exp < hd->exp_next )
 		return false;
-	
+
 	switch( htype ) {
 		case HT_REG:
 		case HT_EVO:
@@ -312,7 +312,7 @@ bool homunculus_levelup(struct homun_data *hd) {
 				return false;
 			break;
 	}
-		
+
 	hom = &hd->homunculus;
 	hom->level++ ;
 	if (!(hom->level % 3))
@@ -385,7 +385,7 @@ bool homunculus_evolve(struct homun_data *hd) {
 	sd = hd->master;
 	if (!sd)
 		return false;
-	
+
 	if(!hd->homunculusDB->evo_class || hd->homunculus.class_ == hd->homunculusDB->evo_class) {
 		clif->emotion(&hd->bl, E_SWT);
 		return false;
@@ -438,7 +438,7 @@ bool homunculus_mutate(struct homun_data *hd, int homun_id) {
 	sd = hd->master;
 	if (!sd)
 		return false;
-	
+
 	m_class = homun->class2type(hd->homunculus.class_);
 	m_id    = homun->class2type(homun_id);
 
@@ -461,7 +461,6 @@ bool homunculus_mutate(struct homun_data *hd, int homun_id) {
 	clif->emotion(&sd->bl, E_NO1);
 	clif->specialeffect(&hd->bl,568,AREA);
 
-
 	//status_Calc flag&1 will make current HP/SP be reloaded from hom structure
 	hom = &hd->homunculus;
 	hom->hp = hd->battle_status.hp;
@@ -480,12 +479,12 @@ int homunculus_gainexp(struct homun_data *hd,unsigned int exp) {
 
 	if(hd->homunculus.vaporize != HOM_ST_ACTIVE)
 		return 1;
-	
+
 	if( (htype = homun->class2type(hd->homunculus.class_)) == HT_INVALID ) {
 		ShowError("homunculus_gainexp: Invalid class %d. \n", hd->homunculus.class_);
 		return 0;
 	}
-	
+
 	switch( htype ) {
 		case HT_REG:
 		case HT_EVO:
@@ -763,7 +762,7 @@ bool homunculus_create(struct map_session_data *sd, struct s_homunculus *hom) {
 	hd->bl.x = hd->ud.to_x;
 	hd->bl.y = hd->ud.to_y;
 	hd->masterteleport_timer = 0;
-	
+
 	map->addiddb(&hd->bl);
 	status_calc_homunculus(hd,SCO_FIRST);
 	status_percent_heal(&hd->bl, 100, 100);
@@ -835,7 +834,7 @@ bool homunculus_recv_data(int account_id, struct s_homunculus *sh, int flag) {
 
 	if (!sd->status.hom_id) //Hom just created.
 		sd->status.hom_id = sh->hom_id;
-	
+
 	if (sd->hd) //uh? Overwrite the data.
 		memcpy(&sd->hd->homunculus, sh, sizeof(struct s_homunculus));
 	else
@@ -985,10 +984,10 @@ bool homunculus_shuffle(struct homun_data *hd) {
 	exp = hd->homunculus.exp;
 	memcpy(&b_skill, &hd->homunculus.hskill, sizeof(b_skill));
 	skillpts = hd->homunculus.skillpts;
-	
+
 	//Reset values to level 1.
 	homun->stat_reset(hd);
-	
+
 	//Level it back up
 	do {
 		hd->homunculus.exp += hd->exp_next;
@@ -1159,7 +1158,7 @@ bool homunculus_read_skill_db_sub(char* split[], int columns, int current) {
 
 	// check for bounds [celest]
 	classid = atoi(split[0]) - HM_CLASS_BASE;
-	
+
 	if ( classid >= MAX_HOMUNCULUS_CLASS ) {
 		ShowWarning("homunculus_read_skill_db_sub: Invalid homunculus class %d.\n", atoi(split[0]));
 		return false;
@@ -1273,7 +1272,7 @@ void do_init_homunculus(bool minimal) {
 }
 
 void do_final_homunculus(void) {
-	
+
 }
 
 void homunculus_defaults(void) {

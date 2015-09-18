@@ -777,4 +777,3 @@ moc_fild16,200,231,4	duplicate(SinGuard)	Assassin Guardian#5	4_M_MOC_SOLDIER
 moc_fild16,211,231,4	duplicate(SinGuard)	Assassin Guardian#6	4_M_MOC_SOLDIER
 moc_fild16,200,257,4	duplicate(SinGuard)	Assassin Guardian#7	4_M_MOC_SOLDIER
 moc_fild16,211,257,4	duplicate(SinGuard)	Assassin Guardian#8	4_M_MOC_SOLDIER
-

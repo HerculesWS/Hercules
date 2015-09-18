@@ -1135,7 +1135,6 @@ S_Hunting:
 			mes "You finished researching about "+ getarg(.@i+2) +". Thank you.";
 			getexp 700000,getarg(.@i+1);
 			break;
-			
 		}
 		erasequest .@quest_id;
 		next;

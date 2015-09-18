@@ -88,4 +88,3 @@ valkyrie,53,47,3	script	Scholar#Valkyrie	2_M_SAGE_OLD,{
 	mes "Honor to the warriors!";
 	close;
 }
-

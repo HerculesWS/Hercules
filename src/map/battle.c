@@ -104,7 +104,6 @@ struct block_list* battle_gettargeted(struct block_list *target) {
 	return bl_list[rnd()%c];
 }
 
-
 //Returns the id of the current targeted character of the passed bl. [Skotlex]
 int battle_gettarget(struct block_list* bl) {
 
@@ -273,7 +272,7 @@ int battle_delay_damage(int64 tick, int amotion, struct block_list *src, struct 
 
 	if (d_tbl && sc && check_distance_bl(target, d_tbl, sc->data[SC_DEVOTION]->val3) && damage > 0 && skill_id != PA_PRESSURE && skill_id != CR_REFLECTSHIELD)
 		damage = 0;
-	
+
 	if ( !battle_config.delay_battle_damage || amotion <= 1 ) {
 		map->freeblock_lock();
 		status_fix_damage(src, target, damage, ddelay); // We have to separate here between reflect damage and others [icescope]
@@ -460,7 +459,7 @@ int64 battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, u
 		if( sc->data[SC_ZENKAI] && watk->ele == sc->data[SC_ZENKAI]->val2 )
 			eatk += 200;
 	}
-	
+
 #ifdef RENEWAL_EDP
 	if ( sc && sc->data[SC_EDP] && skill_id != AS_GRIMTOOTH && skill_id != AS_VENOMKNIFE && skill_id != ASC_BREAKER ) {
 		struct status_data *tstatus;
@@ -470,9 +469,8 @@ int64 battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, u
 	} else /* fall through */
 #endif
 	damage += eatk;
-	
 	damage = battle->calc_elefix(src, bl, skill_id, skill_lv, damage, nk, n_ele, s_ele, s_ele_, type == EQI_HAND_L, flag);
-	
+
 	/**
 	 * In RE Shield Boomerang takes weapon element only for damage calculation,
 	 * - resist calculation is always against neutral
@@ -969,11 +967,10 @@ int64 battle_calc_cardfix2(struct block_list *src, struct block_list *bl, int64 
 // FIXME: wflag is undocumented
 int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_list *target, int nk, int s_ele, int s_ele_, int64 damage, int cflag, int wflag){
 	struct map_session_data *sd, *tsd;
-	short cardfix = 
 #ifdef RENEWAL
-		100;
+	short cardfix = 100;
 #else
-		1000;
+	short cardfix = 1000;
 #endif
 	short t_class, s_class, s_race2, t_race2;
 	struct status_data *sstatus, *tstatus;
@@ -2884,7 +2881,6 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			return 0;
 		}
 
-
 		if( (sce=sc->data[SC_PARRYING]) && flag&BF_WEAPON && skill_id != WS_CARTTERMINATION && rnd()%100 < sce->val2 )
 		{ // attack blocked by Parrying
 			clif->skill_nodamage(bl, bl, LK_PARRYING, sce->val1,1);
@@ -3135,7 +3131,6 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 
 		if( sc->data[SC_MEIKYOUSISUI] && rnd()%100 < 40 ) // custom value
 			damage = 0;
-
 
 		if (!damage) return 0;
 
@@ -4904,7 +4899,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				else
 					wd.dmg_lv = ATK_DEF;
 				break;
-				
+
 			case KO_BAKURETSU:
 			{
 #ifdef RENEWAL
@@ -5541,7 +5536,6 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			wd.damage-=wd.damage2;
 #endif
 		}
-
 
 		if( src != target ) { // Don't reflect your own damage (Grand Cross)
 			if( wd.dmg_lv == ATK_MISS || wd.dmg_lv == ATK_BLOCK ) {
@@ -6394,7 +6388,6 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 	switch( target->type ) { // Checks on actual target
 		case BL_PC: {
 				struct status_change* sc = status->get_sc(src);
-			
 				if( ((TBL_PC*)target)->invincible_timer != INVALID_TIMER ) {
 					switch( battle->get_current_skill(src) ) {
 						/* TODO a proper distinction should be established bugreport:8397 */
@@ -6433,7 +6426,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 			TBL_SKILL *su = (TBL_SKILL*)target;
 			if( !su->group )
 				return 0;
-			if( skill->get_inf2(su->group->skill_id)&INF2_TRAP && 
+			if( skill->get_inf2(su->group->skill_id)&INF2_TRAP &&
 				su->group->unit_id != UNT_USED_TRAPS &&
 				su->group->unit_id != UNT_NETHERWORLD ) { //Only a few skills can target traps...
 				switch( battle->get_current_skill(src) ) {
@@ -7400,7 +7393,6 @@ void battle_adjust_conf(void) {
 		battle_config.feature_auction = 0;
 	}
 #endif
-
 
 #ifndef CELL_NOSTACK
 	if (battle_config.custom_cell_stack_limit != 1)

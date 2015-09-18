@@ -1,14 +1,14 @@
-//===== Hercules Script ====================================== 
+//===== Hercules Script ======================================
 //= Ninja Weapon and Armor
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Dastgir
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.0
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Ninja Armor and Weapon Craftsman
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 Official Conversion. [Dastgir]
-//============================================================ 
+//============================================================
 que_ng,21,72,6	script	Master Craftsman Gyo#arm	4_M_RASWORD,{
 	mes "[Gyo]";
 	mes "How would you define victory?";
@@ -55,7 +55,7 @@ que_ng,21,72,6	script	Master Craftsman Gyo#arm	4_M_RASWORD,{
 			mes "Looks like you need more time to decide.";
 			close;
 	}
-		
+
 L_Menu:
 	.@item_make = getarg(0);
 	while(1){
@@ -177,7 +177,7 @@ L_Menu:
 		}
 		next;
 	}
-	
+
 L_Ingredients:
 	switch(getarg(0)){
 		case 2172:	//Wolf_Armguard
@@ -190,7 +190,6 @@ L_Ingredients:
 			return "you'll need a Special Ninja Suit with a slot and 10 Dark Pieces";
 	}
 	end;
-	
 }
 
 que_ng,23,70,6	script	Master Craftsman Ki#weap	4_DST_SOLDIER,{
@@ -231,7 +230,7 @@ que_ng,23,70,6	script	Master Craftsman Ki#weap	4_DST_SOLDIER,{
 			mes "Think carefully~~";
 			close;
 	}
-		
+
 L_Menu:
 	.@item_make = getarg(0);
 	while(1){
@@ -336,7 +335,7 @@ L_Menu:
 		}
 		next;
 	}
-	
+
 L_Ingredients:
 	switch(getarg(0)){
 		case 13076:	//Raksasa_Dagger
@@ -347,5 +346,4 @@ L_Ingredients:
 			return "you need one Huuma Calm Mind Shuriken and 100 Broken Shurikens";
 	}
 	end;
-	
 }

@@ -3165,7 +3165,7 @@ ma_fild01,251,93,3	script	Lost Child#malaya01	4_F_BARYO_GIRL,{
 		}
 	}
 	end;
-	
+
 OnInit:
 	if (strnpcinfo(0) != "Lost Child#malaya01")
 		disablenpc strnpcinfo(0);
@@ -3770,7 +3770,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 		.@newItem = 2492;
 		break;
 	}
-	
+
 	if (!(.@item)) {
 		mes "[Bayani]";
 		mes "You should wear the equipment to upgrade and not come without it on you.";
@@ -3817,11 +3817,11 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	mes "[Bayani]";
 	mes "BAM!!";
 	next;
-	
+
 	delitem 6499,20; //Ancient_Grudge
 	delequip .@part;
 	getitem .@newItem, 1;
-	
+
 	mes "[Bayani]";
 	mes "Ha ha. Perfect.";
 	mes "Congratulations. Your armor is better than ever.";

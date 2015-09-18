@@ -482,7 +482,6 @@ int chrif_reconnect(DBKey key, DBData *data, va_list ap) {
 	return 0;
 }
 
-
 /// Called when all the connection steps are completed.
 void chrif_on_ready(void) {
 	static bool once = false;
@@ -511,7 +510,6 @@ void chrif_on_ready(void) {
 		once = true;
 	}
 }
-
 
 /*==========================================
  *
@@ -659,7 +657,6 @@ void chrif_authfail(int fd) {/* HELLO WORLD. ip in RFIFOL 15 is not being used (
 	}
 }
 
-
 /**
  * This can still happen (client times out while waiting for char to confirm auth data)
  * @see DBApply
@@ -797,7 +794,7 @@ bool chrif_char_ask_name(int acc, const char* character_name, unsigned short ope
 
 /**
  * Requests a sex change (either per character or per account).
- * 
+ *
  * @param sd             The character's data.
  * @param change_account Whether to change the per-account sex.
  * @retval true.
@@ -1230,7 +1227,6 @@ bool chrif_ragsrvinfo(int base_rate, int job_rate, int drop_rate) {
 	return true;
 }
 
-
 /*=========================================
  * Tell char-server character disconnected [Wizputer]
  *-----------------------------------------*/
@@ -1300,7 +1296,6 @@ void chrif_on_disconnect(void) {
 	//Attempt to reconnect in a second. [Skotlex]
 	timer->add(timer->gettick() + 1000, chrif->check_connect_char_server, 0, 0);
 }
-
 
 void chrif_update_ip(int fd) {
 	uint32 new_ip;
@@ -1657,7 +1652,6 @@ void do_init_chrif(bool minimal) {
 	// send the user count every 10 seconds, to hide the charserver's online counting problem
 	timer->add_interval(timer->gettick() + 1000, chrif->send_usercount_tochar, 0, 0, UPDATE_INTERVAL);
 }
-
 
 /*=====================================
 * Default Functions : chrif.h

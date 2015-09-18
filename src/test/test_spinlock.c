@@ -18,7 +18,6 @@
 #define PERINC 100000
 #define LOOPS 47
 
-
 static SPIN_LOCK lock;
 static unsigned int val = 0;
 static volatile int32 done_threads = 0;
@@ -40,7 +39,6 @@ static  void *worker(void *p){
 
 	return NULL;
 }//end: worker()
-
 
 int do_init(int argc, char **argv){
 	rAthread *t[THRC];
@@ -88,27 +86,20 @@ int do_init(int argc, char **argv){
 		ShowStatus("Test passed.\n");
 		exit(0);
 	}
-
-
-return 0;
+	return 0;
 }//end: do_init()
-
 
 void do_abort(void) {
 }//end: do_abort()
-
 
 void set_server_type(void) {
 	SERVER_TYPE = SERVER_TYPE_UNKNOWN;
 }//end: set_server_type()
 
-
 int do_final(void) {
 	return EXIT_SUCCESS;
 }//end: do_final()
 
-
 int parse_console(const char* command){
 	return 0;
 }//end: parse_console
-

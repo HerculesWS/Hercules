@@ -10,7 +10,7 @@
 //= Ver 1.0- Duplicate of MRO's Dumpling Event
 //= 1.01 fixed bugs [Lupus]
 //============================================================
-  
+
 payon,93,81,4	script	Exorcist Master Fahae	4_M_BUDDHIST,{
 
 	mes "[Exorcist Master Fahae]";
@@ -64,7 +64,7 @@ payon,93,81,4	script	Exorcist Master Fahae	4_M_BUDDHIST,{
 	mes "Here you go, I hope you may succeed in my quest.";
 	close;
 }
-  
+
 // Monsters
 //============================================================
 gef_fild00,0,0,0,0	monster	Dumpling	1520,20,60000,66000

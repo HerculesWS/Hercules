@@ -356,7 +356,7 @@ OnInit:
 //============================================================
 poring_w01,91,97,3	script	Poring#wop_door_all	PORING,{
 	end;
-	
+
 OnInit:
 	waitingroom "[Recruiting 10 Battle Participants]",11,"Poring#wop_door_all::OnStartArena",10,500,9;
 	enablewaitingroomevent;

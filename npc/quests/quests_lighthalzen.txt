@@ -3082,7 +3082,6 @@ lighthalzen,337,232,3	script	Maku	4_M_LGTPOOR,{
 	end;
 }
 
-
 yuno_in04,107,14,5	script	Student	4_M_SAGE_A,{
 	if (friendship == 7 || friendship == 8) {
 		mes "[Joey Choryee]";
@@ -9786,8 +9785,6 @@ OnTimer190000:
 	disablenpc "Timer_Sneak";
 	end;
 }
-
-
 
 lhz_in01,182,35,0	script	File Search Engine	HIDDEN_NPC,{
 

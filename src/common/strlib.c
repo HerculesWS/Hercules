@@ -423,8 +423,6 @@ bool strlib_bin2hex(char *output, unsigned char *input, size_t count)
 	return true;
 }
 
-
-
 /////////////////////////////////////////////////////////////////////
 /// Parses a single field in a delim-separated string.
 /// The delimiter after the field is skipped.
@@ -581,7 +579,6 @@ int sv_parse_next(struct s_svstate* svstate)
 
 	return 1;
 }
-
 
 /// Parses a delim-separated string.
 /// Starts parsing at startoff and fills the pos array with position pairs.
@@ -892,7 +889,6 @@ const char* skip_escaped_c(const char* p) {
 	return p;
 }
 
-
 /// Opens and parses a file containing delim-separated columns, feeding them to the specified callback function row by row.
 /// Tracks the progress of the operation (current line number, number of successfully processed rows).
 /// Returns 'true' if it was able to process the specified file, or 'false' if it could not be read.
@@ -969,7 +965,6 @@ bool sv_readdb(const char* directory, const char* filename, char delim, int minc
 
 	return true;
 }
-
 
 /////////////////////////////////////////////////////////////////////
 // StringBuf - dynamic string

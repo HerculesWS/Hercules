@@ -953,7 +953,7 @@ int mapif_wis_message(struct WisData *wd)
 		wd->len = 0;
 	if (wd->len >= sizeof(wd->msg) - 1)
 		wd->len = sizeof(wd->msg) - 1;
-	
+
 	WBUFW(buf, 0) = 0x3801;
 	WBUFW(buf, 2) = 56 +wd->len;
 	WBUFL(buf, 4) = wd->id;

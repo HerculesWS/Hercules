@@ -19,7 +19,6 @@
 //= 1.5b Adjustments to the team-splitting algorithm [Haruna]
 //============================================================
 
-
 //Tacham, while the script is under testings the original will remain, meaning if you wanna test this you need to disable the other, or they'll conflict.
 bat_b01,15,15,3	script	start#bat_b01	CLEAR_NPC,{
 OnInit:
@@ -28,22 +27,21 @@ OnInit:
 
 //$@bg_queue_id is cleared after this event ends
 OnPlayerListReady:
-	
- 	set $@FlaviusBG1_id1, bg_create_team("bat_b01",10,290);
+	set $@FlaviusBG1_id1, bg_create_team("bat_b01",10,290);
 	set $@FlaviusBG1_id2, bg_create_team("bat_b01",390,10);
 
 	set $@Croix_QueueBG1, queue();
 	set $@Guill_QueueBG1, queue();
-	
+
 	queueopt($@Guill_QueueBG1,HQO_OnLogout,"start#bat_b01::OnGuillaumeQuit");
 	queueopt($@Croix_QueueBG1,HQO_OnLogout,"start#bat_b01::OnCroixQuit");
-	
+
 	set .@i, 0;
-	
+
 	copyarray .@bg_member[0],$@bg_member[0],$@bg_member_size;
 	copyarray .@bg_member_group[0],$@bg_member_group[0],$@bg_member_size;
 	copyarray .@bg_member_type[0],$@bg_member_type[0],$@bg_member_size;
-	
+
 	freeloop(1);
 	// Counting all participants and determining sizes, condensing .@bg_member_group
 	set .@nogroupcount, 0;
@@ -66,7 +64,7 @@ OnPlayerListReady:
 			set .@bg_count[.@j], 1;
 		}
 	}
-	
+
 	// Now, sorting the group arrays from amount of population descending! Bubble sort powers, I call upon thee!
 	// Type doesn't matter here for precedence checks, but also needs to be sorted the same way along with groups
 	for (set .@i, 0; .@i < getarraysize(.@bg_groups); set .@i, .@i + 1) {
@@ -84,7 +82,7 @@ OnPlayerListReady:
 			}
 		}
 	}
-	
+
 	// Add the groups to the queues! :D
 	for (set .@i, 0; .@i < getarraysize(.@bg_groups); set .@i, .@i + 1){
 		if (queuesize($@Croix_QueueBG1) <= queuesize($@Guill_QueueBG1)){ // Catch'em all and add to the queue!
@@ -123,7 +121,7 @@ OnPlayerListReady:
 	set $@FlaviusBG1_Victory, 0;
 	set $@Croix_ScoreBG1, 0;
 	set $@Guill_ScoreBG1, 0;
-	
+
 	bg_updatescore "bat_b01",$@Guill_ScoreBG1,$@Croix_ScoreBG1;
 
 	donpcevent "OBJ#bat_b01_a::OnKill";
@@ -143,11 +141,11 @@ OnPlayerListReady:
 	disablenpc "Vintenar#bat_b01_bover";
 	bg_warp $@FlaviusBG1_id1,"bat_b01",87,75;
 	bg_warp $@FlaviusBG1_id2,"bat_b01",311,224;
-	
+
 	/* after warp */
 	queueopt($@Guill_QueueBG1,HQO_OnMapChange,"start#bat_b01::OnGuillaumeQuit");
 	queueopt($@Croix_QueueBG1,HQO_OnMapChange,"start#bat_b01::OnCroixQuit");
-	
+
 	donpcevent "countdown#bat_b01::OnEnable";
 	end;
 
@@ -180,14 +178,14 @@ OnGuillaumeQuit:
 	queueremove($@Guill_QueueBG1,getcharid(3));
 	callsub L_OnPlayerQuit;
 	end;
-	
+
 L_OnPlayerQuit:
 	bg_leave;
 	setd $@bg_delay_var$,gettimetick(2);
 	if( queuesize($@Guill_QueueBG1) == 0 || queuesize($@Croix_QueueBG1) == 0 ) /* todo check score and decide a winner if anyone left */
 		callsub OnMatchOver;
 	end;
-	
+
 OnMatchOver:
 	if( $@FlaviusBG1_id1 || $@FlaviusBG1_id2 ) {
 		queuedel($@Croix_QueueBG1);

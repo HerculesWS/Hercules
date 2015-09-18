@@ -417,4 +417,3 @@ payon,157,141,5	script	Phoenix#TKJobChange	4_M_MONK,{
 		close;
 	}
 }
-

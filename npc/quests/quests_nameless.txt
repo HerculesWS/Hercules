@@ -1147,8 +1147,6 @@ OnInit:
 	end;
 }
 
-
-
 nameless_i,168,257,0	script	outtoin_01#mo	WARPNPC,1,1,{
 	end;
 

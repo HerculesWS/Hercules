@@ -241,4 +241,3 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 		close;
 	}
 }
-

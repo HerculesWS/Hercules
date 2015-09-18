@@ -130,7 +130,7 @@ monk_test,309,146,3	script	Friar Patrick#edq	4_M_OLDFRIAR,{
 
 						instance_set_timeout 7200,300,.@instance;
 						instance_init(.@instance);
-						
+
 						mes "Okay... I'll adjust the shrine's seal so that you and your group can enter.";
 						next;
 						mes "[Friar Patrick]";
@@ -1454,7 +1454,6 @@ OnTimer70000:
 	donpcevent instance_npcname("ins_2f_hero_pattern_c")+"::OnGo";
 	end;
 }
-
 
 1@cata,1,1,0	script	ins_1f_spawn_mobs	-1,{
 OnInstanceInit:

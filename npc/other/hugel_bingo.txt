@@ -406,7 +406,7 @@ OnInit:
 	disablenpc "24e#bingo";
 	disablenpc "25e#bingo";
 	end;
-	
+
 OnTouch:
 	if(@bingoplate[1] == $bingo[$@bingoresult -1]){ @bingo_a1$ = "^ff0000-  -^000000"; setarray @bingoplate[1],99; }
 	else if(@bingoplate[2] == $bingo[$@bingoresult -1]){ @bingo_a2$ = "^ff0000-  -^000000"; setarray @bingoplate[2],99; }

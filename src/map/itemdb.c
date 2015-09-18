@@ -160,14 +160,14 @@ int itemdb_searchname_array(struct item_data** data, int size, const char *str, 
 /* [Ind/Hercules] */
 int itemdb_chain_item(unsigned short chain_id, int *rate) {
 	struct item_chain_entry *entry;
-	
+
 	if( chain_id >= itemdb->chain_count ) {
 		ShowError("itemdb_chain_item: unknown chain id %d\n", chain_id);
 		return UNKNOWN_ITEM_ID;
 	}
-	
+
 	entry = &itemdb->chains[chain_id].items[ rnd()%itemdb->chains[chain_id].qty ];
-	
+
 	if( rnd()%10000 >= entry->rate )
 		return 0;
 
@@ -178,47 +178,47 @@ int itemdb_chain_item(unsigned short chain_id, int *rate) {
 /* [Ind/Hercules] */
 void itemdb_package_item(struct map_session_data *sd, struct item_package *package) {
 	int i = 0, get_count, j, flag;
-	
+
 	for( i = 0; i < package->must_qty; i++ ) {
 		struct item it;
 		memset(&it, 0, sizeof(it));
 
 		it.nameid = package->must_items[i].id;
 		it.identify = 1;
-		
+
 		if( package->must_items[i].hours ) {
 			it.expire_time = (unsigned int)(time(NULL) + ((package->must_items[i].hours*60)*60));
 		}
-		
+
 		if( package->must_items[i].named ) {
 			it.card[0] = CARD0_FORGE;
 			it.card[1] = 0;
 			it.card[2] = GetWord(sd->status.char_id, 0);
 			it.card[3] = GetWord(sd->status.char_id, 1);
 		}
-		
+
 		if( package->must_items[i].announce )
 			clif->package_announce(sd,package->must_items[i].id,package->id);
-		
+
 		if ( package->must_items[i].force_serial )
 			it.unique_id = itemdb->unique_id(sd);
 
 		get_count = itemdb->isstackable(package->must_items[i].id) ? package->must_items[i].qty : 1;
-		
+
 		it.amount = get_count == 1 ? 1 : get_count;
-		
+
 		for( j = 0; j < package->must_items[i].qty; j += get_count ) {
 			if ( ( flag = pc->additem(sd, &it, get_count, LOG_TYPE_SCRIPT) ) )
 				clif->additem(sd, 0, 0, flag);
 		}
 	}
-	
+
 	if( package->random_qty ) {
 		for( i = 0; i < package->random_qty; i++ ) {
 			struct item_package_rand_entry *entry;
-			
+
 			entry = &package->random_groups[i].random_list[rnd()%package->random_groups[i].random_qty];
-			
+
 			while( 1 ) {
 				if( rnd()%10000 >= entry->rate ) {
 					entry = entry->next;
@@ -226,28 +226,28 @@ void itemdb_package_item(struct map_session_data *sd, struct item_package *packa
 				} else {
 					struct item it;
 					memset(&it, 0, sizeof(it));
-					
+
 					it.nameid = entry->id;
 					it.identify = 1;
-					
+
 					if( entry->hours ) {
 						it.expire_time = (unsigned int)(time(NULL) + ((entry->hours*60)*60));
 					}
-					
+
 					if( entry->named ) {
 						it.card[0] = CARD0_FORGE;
 						it.card[1] = 0;
 						it.card[2] = GetWord(sd->status.char_id, 0);
 						it.card[3] = GetWord(sd->status.char_id, 1);
 					}
-					
+
 					if( entry->announce )
 						clif->package_announce(sd,entry->id,package->id);
-					
+
 					get_count = itemdb->isstackable(entry->id) ? entry->qty : 1;
-					
+
 					it.amount = get_count == 1 ? 1 : get_count;
-					
+
 					for( j = 0; j < entry->qty; j += get_count ) {
 						if ( ( flag = pc->additem(sd, &it, get_count, LOG_TYPE_SCRIPT) ) )
 							clif->additem(sd, 0, 0, flag);
@@ -257,9 +257,8 @@ void itemdb_package_item(struct map_session_data *sd, struct item_package *packa
 			}
 		}
 	}
-	
-	return;
 }
+
 /*==========================================
  * Return a random item id from group. (takes into account % chance giving/tot group)
  *------------------------------------------*/
@@ -267,17 +266,17 @@ int itemdb_searchrandomid(struct item_group *group) {
 
 	if (group->qty)
 		return group->nameid[rnd()%group->qty];
-	
+
 	ShowError("itemdb_searchrandomid: No item entries for group id %d\n", group->id);
 	return UNKNOWN_ITEM_ID;
 }
 bool itemdb_in_group(struct item_group *group, int nameid) {
 	int i;
-	
+
 	for( i = 0; i < group->qty; i++ )
 		if( group->nameid[i] == nameid )
 			return true;
-	
+
 	return false;
 }
 
@@ -522,7 +521,6 @@ int itemdb_isstackable2(struct item_data *data)
 	}
 }
 
-
 /*==========================================
  * Trade Restriction functions [Skotlex]
  *------------------------------------------*/
@@ -569,10 +567,10 @@ int itemdb_isrestricted(struct item* item, int gmlv, int gmlv2, int (*func)(stru
 
 	if (!func(item_data, gmlv, gmlv2))
 		return 0;
-	
+
 	if(item_data->slot == 0 || itemdb_isspecial(item->card[0]))
 		return 1;
-	
+
 	for(i = 0; i < item_data->slot; i++) {
 		if (!item->card[i]) continue;
 		if (!func(itemdb->search(item->card[i]), gmlv, gmlv2))
@@ -623,12 +621,12 @@ void itemdb_read_groups(void) {
 		ShowError("can't read %s\n", config_filename);
 		return;
 	}
-		
+
 	gsize = aMalloc( libconfig->setting_length(item_group_conf.root) * sizeof(unsigned int) );
-	
+
 	for(i = 0; i < libconfig->setting_length(item_group_conf.root); i++)
 		gsize[i] = 0;
-	
+
 	i = 0;
 	while( (itg = libconfig->setting_get_elem(item_group_conf.root,i++)) ) {
 		const char *name = config_setting_name(itg);
@@ -639,7 +637,7 @@ void itemdb_read_groups(void) {
 			--i;
 			continue;
 		}
-		
+
 		c = 0;
 		while( (it = libconfig->setting_get_elem(itg,c++)) ) {
 			if( config_setting_is_list(it) )
@@ -647,19 +645,18 @@ void itemdb_read_groups(void) {
 			else
 				gsize[ i - 1 ] += 1;
 		}
-		
 	}
-		
+
 	i = 0;
 	CREATE(itemdb->groups, struct item_group, libconfig->setting_length(item_group_conf.root));
 	itemdb->group_count = (unsigned short)libconfig->setting_length(item_group_conf.root);
-	
+
 	while( (itg = libconfig->setting_get_elem(item_group_conf.root,i++)) ) {
 		struct item_data *data = itemdb->name2id(config_setting_name(itg));
 		int ecount = 0;
-		
+
 		data->group = &itemdb->groups[count];
-		
+
 		itemdb->groups[count].id = data->nameid;
 		itemdb->groups[count].qty = gsize[ count ];
 
@@ -672,13 +669,13 @@ void itemdb_read_groups(void) {
 				repeat = libconfig->setting_get_int_elem(it,1);
 			} else
 				itname = libconfig->setting_get_string_elem(itg,c - 1);
-			
+
 			if( itname[0] == 'I' && itname[1] == 'D' && strlen(itname) < 8 ) {
 				if( !( data = itemdb->exists(atoi(itname+2)) ) )
 					ShowWarning("itemdb_read_groups: unknown item ID '%d' in group '%s'!\n",atoi(itname+2),config_setting_name(itg));
 			} else if( !( data = itemdb->name2id(itname) ) )
 				ShowWarning("itemdb_read_groups: unknown item '%s' in group '%s'!\n",itname,config_setting_name(itg));
-			
+
 			itemdb->groups[count].nameid[ecount] = data ? data->nameid : 0;
 			if( repeat > 1 ) {
 				//memset would be better? I failed to get the following to work though hu
@@ -689,25 +686,24 @@ void itemdb_read_groups(void) {
 			}
 			ecount += repeat;
 		}
-		
 		count++;
 	}
-		
+
 	libconfig->destroy(&item_group_conf);
 	aFree(gsize);
-	
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
 }
+
 /* [Ind/Hercules] - HCache for Packages */
 void itemdb_write_cached_packages(const char *config_filename) {
 	FILE *file;
 	unsigned short pcount = itemdb->package_count;
 	unsigned short i;
-	
+
 	if( !(file = HCache->open(config_filename,"wb")) ) {
 		return;
 	}
-	
+
 	// first 2 bytes = package count
 	hwrite(&pcount,sizeof(pcount),1,file);
 
@@ -741,7 +737,7 @@ void itemdb_write_cached_packages(const char *config_filename) {
 		for(c = 0; c < random_qty; c++) {
 			struct item_package_rand_group *group = &itemdb->packages[i].random_groups[c];
 			unsigned short group_qty = group->random_qty, h;
-			
+
 			//next 2 bytes = how many entries in this group
 			hwrite(&group_qty,sizeof(group_qty),1,file);
 			//now we loop into the group's list
@@ -765,9 +761,8 @@ void itemdb_write_cached_packages(const char *config_filename) {
 			}
 		}
 	}
-	
 	fclose(file);
-	
+
 	return;
 }
 bool itemdb_read_cached_packages(const char *config_filename) {
@@ -778,7 +773,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 	if( !(file = HCache->open(config_filename,"rb")) ) {
 		return false;
 	}
-	
+
 	// first 2 bytes = package count
 	hread(&pcount,sizeof(pcount),1,file);
 
@@ -790,25 +785,25 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 		struct item_data *pdata;
 		struct item_package *package = &itemdb->packages[i];
 		unsigned short c;
-		
+
 		//into a package, first 2 bytes = id.
 		hread(&id,sizeof(id),1,file);
 		//next 2 bytes = must count
 		hread(&must_qty,sizeof(must_qty),1,file);
 		//next 2 bytes = random count
 		hread(&random_qty,sizeof(random_qty),1,file);
-		
+
 		if( !(pdata = itemdb->exists(id)) )
 			ShowWarning("itemdb_read_cached_packages: unknown package item '%d', skipping..\n",id);
 		else
 			pdata->package = &itemdb->packages[i];
-		
+
 		package->id = id;
 		package->random_qty = random_qty;
 		package->must_qty = must_qty;
 		package->must_items = NULL;
 		package->random_groups = NULL;
-		
+
 		if( package->must_qty ) {
 			CREATE(package->must_items, struct item_package_must_entry, package->must_qty);
 			//now we loop into must
@@ -847,13 +842,13 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 			for(c = 0; c < package->random_qty; c++) {
 				unsigned short group_qty = 0, h;
 				struct item_package_rand_entry *prev = NULL;
-				
+
 				//next 2 bytes = how many entries in this group
 				hread(&group_qty,sizeof(group_qty),1,file);
-				
+
 				package->random_groups[c].random_qty = group_qty;
 				CREATE(package->random_groups[c].random_list, struct item_package_rand_entry, package->random_groups[c].random_qty);
-				
+
 				//now we loop into the group's list
 				for(h = 0; h < group_qty; h++) {
 					struct item_package_rand_entry *entry = &itemdb->packages[i].random_groups[c].random_list[h];
@@ -862,7 +857,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 					struct item_data *data;
 
 					if( prev ) prev->next = entry;
-					
+
 					//first 2 byte = item id
 					hread(&mid,sizeof(mid),1,file);
 					//next 2 byte = qty
@@ -880,7 +875,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 
 					if( !(data = itemdb->exists(mid)) )
 						ShowWarning("itemdb_read_cached_packages: unknown item '%d' in package '%s'!\n",mid,itemdb_name(package->id));
-					
+
 					entry->id = data ? data->nameid : 0;
 					entry->rate = rate;
 					entry->hours = hours;
@@ -895,9 +890,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 			}
 		}
 	}
-	
 	fclose(file);
-	
 	ShowStatus("Done reading '"CL_WHITE"%hu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"' ("CL_GREEN"C"CL_RESET").\n", pcount, config_filename);
 
 	return true;
@@ -914,42 +907,41 @@ void itemdb_read_packages(void) {
 	int i = 0, count = 0, c = 0, highest_gcount = 0;
 	unsigned int *must = NULL, *random = NULL, *rgroup = NULL, **rgroups = NULL;
 	struct item_package_rand_entry **prev = NULL;
-	
+
 	if( HCache->check(config_filename) ) {
 		if( itemdb->read_cached_packages(config_filename) )
 			return;
 	}
-	
+
 	if (libconfig->read_file(&item_packages_conf, config_filename)) {
 		ShowError("can't read %s\n", config_filename);
 		return;
 	}
-	
+
 	must = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int) );
 	random = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int) );
 	rgroup = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int) );
 	rgroups = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int *) );
 
-	
 	for(i = 0; i < libconfig->setting_length(item_packages_conf.root); i++) {
 		must[i] = 0;
 		random[i] = 0;
 		rgroup[i] = 0;
 		rgroups[i] = NULL;
 	}
-	
+
 	/* validate tree, drop poisonous fruits! */
 	i = 0;
 	while( (itg = libconfig->setting_get_elem(item_packages_conf.root,i++)) ) {
 		const char *name = config_setting_name(itg);
-		
+
 		if( !itemdb->name2id(name) ) {
 			ShowWarning("itemdb_read_packages: unknown package item '%s', skipping..\n",name);
 			libconfig->setting_remove(item_packages_conf.root, name);
 			--i;
 			continue;
 		}
-		
+
 		c = 0;
 		while( (it = libconfig->setting_get_elem(itg,c++)) ) {
 			int rval = 0;
@@ -959,7 +951,7 @@ void itemdb_read_packages(void) {
 				--c;
 				continue;
 			}
-			
+
 			if( rval == 0 )
 				must[ i - 1 ] += 1;
 			else {
@@ -976,7 +968,7 @@ void itemdb_read_packages(void) {
 	for(i = 0; i < highest_gcount; i++) {
 		prev[i] = NULL;
 	}
-	
+
 	for(i = 0; i < libconfig->setting_length(item_packages_conf.root); i++ ) {
 		rgroups[i] = aMalloc( rgroup[i] * sizeof(unsigned int) );
 		for( c = 0; c < rgroup[i]; c++ ) {
@@ -995,28 +987,28 @@ void itemdb_read_packages(void) {
 		   }
 		}
 	}
-			   
+
 	CREATE(itemdb->packages, struct item_package, libconfig->setting_length(item_packages_conf.root));
 	itemdb->package_count = (unsigned short)libconfig->setting_length(item_packages_conf.root);
-	
+
 	/* write */
 	i = 0;
 	while( (itg = libconfig->setting_get_elem(item_packages_conf.root,i++)) ) {
 		struct item_data *data = itemdb->name2id(config_setting_name(itg));
 		int r = 0, m = 0;
-		
+
 		for(r = 0; r < highest_gcount; r++) {
 			prev[r] = NULL;
 		}
-		
+
 		data->package = &itemdb->packages[count];
-		
+
 		itemdb->packages[count].id  = data->nameid;
 		itemdb->packages[count].random_groups = NULL;
 		itemdb->packages[count].must_items = NULL;
 		itemdb->packages[count].random_qty = rgroup[ i - 1 ];
 		itemdb->packages[count].must_qty = must[ i - 1 ];
-				
+
 		if( itemdb->packages[count].random_qty ) {
 			CREATE(itemdb->packages[count].random_groups, struct item_package_rand_group, itemdb->packages[count].random_qty);
 			for( c = 0; c < itemdb->packages[count].random_qty; c++ ) {
@@ -1029,14 +1021,14 @@ void itemdb_read_packages(void) {
 		}
 		if( itemdb->packages[count].must_qty )
 			CREATE(itemdb->packages[count].must_items, struct item_package_must_entry, itemdb->packages[count].must_qty);
-		
+
 		c = 0;
 		while( (it = libconfig->setting_get_elem(itg,c++)) ) {
 			int icount = 1, expire = 0, rate = 10000, gid = 0;
 			bool announce = false, named = false, force_serial = false;
-			
+
 			itname = config_setting_name(it);
-			
+
 			if( itname[0] == 'I' && itname[1] == 'D' && strlen(itname) < 8 ) {
 				if( !( data = itemdb->exists(atoi(itname+2)) ) )
 					ShowWarning("itemdb_read_packages: unknown item ID '%d' in package '%s'!\n",atoi(itname+2),config_setting_name(itg));
@@ -1045,10 +1037,10 @@ void itemdb_read_packages(void) {
 
 			if( ( t = libconfig->setting_get_member(it, "Count")) )
 				icount = libconfig->setting_get_int(t);
-			
+
 			if( ( t = libconfig->setting_get_member(it, "Expire")) )
 				expire = libconfig->setting_get_int(t);
-			
+
 			if( ( t = libconfig->setting_get_member(it, "Rate")) ) {
 				if( (rate = (unsigned short)libconfig->setting_get_int(t)) > 10000 ) {
 					ShowWarning("itemdb_read_packages: invalid rate (%d) for item '%s' in package '%s'!\n",rate,itname,config_setting_name(itg));
@@ -1061,7 +1053,7 @@ void itemdb_read_packages(void) {
 
 			if( ( t = libconfig->setting_get_member(it, "Named")) && libconfig->setting_get_bool(t) )
 				named = true;
-			
+
 			if( ( t = libconfig->setting_get_member(it, "ForceSerial")) && libconfig->setting_get_bool(t) )
 				force_serial = true;
 
@@ -1081,12 +1073,12 @@ void itemdb_read_packages(void) {
 				m++;
 			} else {
 				int gidx = gid - 1;
-				
+
 				r = itemdb->packages[count].random_groups[gidx].random_qty;
-				
+
 				if( prev[gidx] )
 					prev[gidx]->next = &itemdb->packages[count].random_groups[gidx].random_list[r];
-				
+
 				itemdb->packages[count].random_groups[gidx].random_list[r].id = data ? data->nameid : 0;
 				itemdb->packages[count].random_groups[gidx].random_list[r].qty = icount;
 				if( (itemdb->packages[count].random_groups[gidx].random_list[r].rate = rate) == 10000 ) {
@@ -1097,17 +1089,16 @@ void itemdb_read_packages(void) {
 				itemdb->packages[count].random_groups[gidx].random_list[r].named = named == true ? 1 : 0;
 				itemdb->packages[count].random_groups[gidx].random_list[r].force_serial = force_serial == true ? 1 : 0;
 				itemdb->packages[count].random_groups[gidx].random_qty += 1;
-				
+
 				prev[gidx] = &itemdb->packages[count].random_groups[gidx].random_list[r];
 			}
-			
 		}
-		
+
 		for(r = 0; r < highest_gcount; r++) {
 			if( prev[r] )
 				prev[r]->next = &itemdb->packages[count].random_groups[r].random_list[0];
 		}
-		
+
 		for( r = 0; r < itemdb->packages[count].random_qty; r++  ) {
 			if( itemdb->packages[count].random_groups[r].random_qty == 1 ) {
 				//item packages don't stop looping until something comes out of them, so if you have only one item in it the drop is guaranteed.
@@ -1116,11 +1107,9 @@ void itemdb_read_packages(void) {
 				itemdb->packages[count].random_groups[r].random_list[0].rate = 10000;
 			}
 		}
-				
 		count++;
 	}
-	
-	
+
 	aFree(must);
 	aFree(random);
 	for(i = 0; i < libconfig->setting_length(item_packages_conf.root); i++ ) {
@@ -1129,12 +1118,12 @@ void itemdb_read_packages(void) {
 	aFree(rgroups);
 	aFree(rgroup);
 	aFree(prev);
-	
+
 	libconfig->destroy(&item_packages_conf);
 
 	if( HCache->enabled )
 		itemdb->write_cached_packages(config_filename);
-	
+
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
 }
 
@@ -1147,7 +1136,7 @@ void itemdb_read_chains(void) {
 	const char *config_filename = "db/pre-re/item_chain.conf"; // FIXME hardcoded name
 #endif
 	int i = 0, count = 0;
-	
+
 	if (libconfig->read_file(&item_chain_conf, config_filename)) {
 		ShowError("can't read %s\n", config_filename);
 		return;
@@ -1155,7 +1144,7 @@ void itemdb_read_chains(void) {
 
 	CREATE(itemdb->chains, struct item_chain, libconfig->setting_length(item_chain_conf.root));
 	itemdb->chain_count = (unsigned short)libconfig->setting_length(item_chain_conf.root);
-	
+
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = config_filename;
 #endif // ENABLE_CASE_CHECK
@@ -1165,12 +1154,12 @@ void itemdb_read_chains(void) {
 		const char *name = config_setting_name(itc);
 		int c = 0;
 		config_setting_t *entry = NULL;
-		
+
 		script->set_constant2(name,i-1,0);
 		itemdb->chains[count].qty = (unsigned short)libconfig->setting_length(itc);
-		
+
 		CREATE(itemdb->chains[count].items, struct item_chain_entry, libconfig->setting_length(itc));
-		
+
 		while( (entry = libconfig->setting_get_elem(itc,c++)) ) {
 			const char *itname = config_setting_name(entry);
 			if( itname[0] == 'I' && itname[1] == 'D' && strlen(itname) < 8 ) {
@@ -1178,32 +1167,32 @@ void itemdb_read_chains(void) {
 					ShowWarning("itemdb_read_chains: unknown item ID '%d' in chain '%s'!\n",atoi(itname+2),name);
 			} else if( !( data = itemdb->name2id(itname) ) )
 				ShowWarning("itemdb_read_chains: unknown item '%s' in chain '%s'!\n",itname,name);
-			
+
 			if( prev )
 				prev->next = &itemdb->chains[count].items[c - 1];
-			
+
 			itemdb->chains[count].items[c - 1].id = data ? data->nameid : 0;
 			itemdb->chains[count].items[c - 1].rate = data ? libconfig->setting_get_int(entry) : 0;
-			
+
 			prev = &itemdb->chains[count].items[c - 1];
 		}
-		
+
 		if( prev )
 			prev->next = &itemdb->chains[count].items[0];
-		
+
 		count++;
 	}
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = NULL;
 #endif // ENABLE_CASE_CHECK
-	
+
 	libconfig->destroy(&item_chain_conf);
-	
+
 	if( !script->get_constant("ITMCHAIN_ORE",&i) )
 		ShowWarning("itemdb_read_chains: failed to find 'ITMCHAIN_ORE' chain to link to cache!\n");
 	else
 		itemdb->chain_cache[ECC_ORE] = i;
-	
+
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
 }
 
@@ -1212,21 +1201,19 @@ void itemdb_read_chains(void) {
  **/
 int itemdb_combo_split_atoi (char *str, int *val) {
 	int i;
-	
+
 	for (i=0; i<MAX_ITEMS_PER_COMBO; i++) {
 		if (!str) break;
-		
+
 		val[i] = atoi(str);
-		
 		str = strchr(str,':');
-		
 		if (str)
 			*str++=0;
 	}
-	
+
 	if( i == 0 ) //No data found.
 		return 0;
-	
+
 	return i;
 }
 /**
@@ -1235,41 +1222,38 @@ int itemdb_combo_split_atoi (char *str, int *val) {
 void itemdb_read_combos() {
 	uint32 lines = 0, count = 0;
 	char line[1024];
-	
 	char filepath[256];
 	FILE* fp;
-	
+
 	sprintf(filepath, "%s/%s", map->db_path, DBPATH"item_combo_db.txt");
-	
+
 	if ((fp = fopen(filepath, "r")) == NULL) {
 		ShowError("itemdb_read_combos: File not found \"%s\".\n", filepath);
 		return;
 	}
-	
+
 	// process rows one by one
 	while(fgets(line, sizeof(line), fp)) {
 		char *str[2], *p;
-		
+
 		lines++;
 
 		if (line[0] == '/' && line[1] == '/')
 			continue;
-		
-		memset(str, 0, sizeof(str));
-		
-		p = line;
-		
-		p = trim(p);
 
+		memset(str, 0, sizeof(str));
+
+		p = line;
+		p = trim(p);
 		if (*p == '\0')
 			continue;// empty line
-		
+
 		if (!strchr(p,',')) {
 			/* is there even a single column? */
 			ShowError("itemdb_read_combos: Insufficient columns in line %d of \"%s\", skipping.\n", lines, filepath);
 			continue;
 		}
-		
+
 		str[0] = p;
 		p = strchr(p,',');
 		*p = '\0';
@@ -1278,12 +1262,12 @@ void itemdb_read_combos() {
 		str[1] = p;
 		p = strchr(p,',');
 		p++;
-		
+
 		if (str[1][0] != '{') {
 			ShowError("itemdb_read_combos(#1): Invalid format (Script column) in line %d of \"%s\", skipping.\n", lines, filepath);
 			continue;
 		}
-		
+
 		/* no ending key anywhere (missing \}\) */
 		if ( str[1][strlen(str[1])-1] != '}' ) {
 			ShowError("itemdb_read_combos(#2): Invalid format (Script column) in line %d of \"%s\", skipping.\n", lines, filepath);
@@ -1292,12 +1276,12 @@ void itemdb_read_combos() {
 			int items[MAX_ITEMS_PER_COMBO];
 			int v = 0, retcount = 0;
 			struct item_combo *combo = NULL;
-			
+
 			if((retcount = itemdb->combo_split_atoi(str[0], items)) < 2) {
 				ShowError("itemdb_read_combos: line %d of \"%s\" doesn't have enough items to make for a combo (min:2), skipping.\n", lines, filepath);
 				continue;
 			}
-			
+
 			/* validate */
 			for(v = 0; v < retcount; v++) {
 				if( !itemdb->exists(items[v]) ) {
@@ -1308,11 +1292,11 @@ void itemdb_read_combos() {
 			/* failed at some item */
 			if( v < retcount )
 				continue;
-			
+
 			RECREATE(itemdb->combos, struct item_combo*, ++itemdb->combo_count);
-			
+
 			CREATE(combo, struct item_combo, 1);
-			
+
 			combo->count = retcount;
 			combo->script = script->parse(str[1], filepath, lines, 0, NULL);
 			combo->id = itemdb->combo_count - 1;
@@ -1320,36 +1304,27 @@ void itemdb_read_combos() {
 			for( v = 0; v < retcount; v++ ) {
 				combo->nameid[v] = items[v];
 			}
-			
+
 			itemdb->combos[itemdb->combo_count - 1] = combo;
-			
+
 			/* populate the items to refer to this combo */
 			for( v = 0; v < retcount; v++ ) {
 				struct item_data * it;
 				int index;
-				
+
 				it = itemdb->exists(items[v]);
-				
 				index = it->combos_count;
-				
 				RECREATE(it->combos, struct item_combo*, ++it->combos_count);
-				
 				it->combos[index] = combo;
 			}
-			
 		}
-		
 		count++;
 	}
-	
 	fclose(fp);
-	
 	ShowStatus("Done reading '"CL_WHITE"%"PRIu32""CL_RESET"' entries in '"CL_WHITE"item_combo_db"CL_RESET"'.\n", count);
-		
+
 	return;
 }
-
-
 
 /*======================================
  * Applies gender restrictions according to settings. [Skotlex]
@@ -1498,7 +1473,7 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 		entry->flag.available = 1;
 		entry->view_id = 0;
 	}
-	
+
 	entry->sex = itemdb->gendercheck(entry); //Apply gender filtering.
 
 	// Validated. Finally insert it
@@ -1813,7 +1788,7 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 
 	if( (t = libconfig->setting_get_member(it, "ForceSerial")) )
 		id.flag.force_serial = libconfig->setting_get_bool(t) ? 1 : 0;
-	
+
 	if ( (t = libconfig->setting_get_member(it, "BuyingStore")) )
 		id.flag.buyingstore = libconfig->setting_get_bool(t) ? 1 : 0;
 
@@ -1926,7 +1901,7 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 		id.flag.available = 1;
 		id.view_id = i32;
 	}
-	
+
 	if( libconfig->setting_lookup_string(it, "Script", &str) )
 		id.script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
 
@@ -1970,7 +1945,7 @@ int itemdb_readdb_libconfig(const char *filename) {
 	config_setting_t *itdb, *it;
 	char filepath[256];
 	int i = 0, count = 0;
-	
+
 	sprintf(filepath, "%s/%s", map->db_path, filename);
 	memset(&duplicate,0,sizeof(duplicate));
 	if( libconfig->read_file(&item_db_conf, filepath) || !(itdb = libconfig->setting_get_member(item_db_conf.root, "item_db")) ) {
@@ -1995,7 +1970,7 @@ int itemdb_readdb_libconfig(const char *filename) {
 	}
 	libconfig->destroy(&item_db_conf);
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
-		
+
 	return count;
 }
 
@@ -2008,7 +1983,7 @@ int itemdb_readdb_libconfig(const char *filename) {
  */
 int itemdb_readdb_sql(const char *tablename) {
 	int i = 0, count = 0;
-				
+
 	// retrieve all rows from the item database
 	if( SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT `id`, `name_english`, `name_japanese`, `type`,"
 				" `price_buy`, `price_sell`, `weight`, `atk`,"
@@ -2053,7 +2028,7 @@ uint64 itemdb_unique_id(struct map_session_data *sd) {
 void itemdb_read(bool minimal) {
 	int i;
 	DBData prev;
-	
+
 	if (map->db_use_sql_item_db) {
 		const char* item_db_name[] = {
 			map->item_db_db,
@@ -2070,7 +2045,7 @@ void itemdb_read(bool minimal) {
 		for(i = 0; i < ARRAYLENGTH(filename); i++)
 			itemdb->readdb_libconfig(filename[i]);
 	}
-	
+
 	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i ) {
 		if( itemdb->array[i] ) {
 			if( itemdb->names->put(itemdb->names,DB->str2key(itemdb->array[i]->name),DB->ptr2data(itemdb->array[i]),&prev) ) {
@@ -2079,7 +2054,7 @@ void itemdb_read(bool minimal) {
 			}
 		}
 	}
-	
+
 	if (minimal)
 		return;
 
@@ -2164,7 +2139,7 @@ void itemdb_clear(bool total) {
 		if( itemdb->array[i] )
 			itemdb->destroy_item_data(itemdb->array[i], 1);
 	}
-	
+
 	if( itemdb->groups )
 	{
 		for( i = 0; i < itemdb->group_count; i++ ) {
@@ -2176,7 +2151,7 @@ void itemdb_clear(bool total) {
 
 	itemdb->groups = NULL;
 	itemdb->group_count = 0;
-	
+
 	if (itemdb->chains) {
 		for (i = 0; i < itemdb->chain_count; i++) {
 			if (itemdb->chains[i].items)
@@ -2187,7 +2162,7 @@ void itemdb_clear(bool total) {
 
 	itemdb->chains = NULL;
 	itemdb->chain_count = 0;
-	
+
 	if (itemdb->packages) {
 		for (i = 0; i < itemdb->package_count; i++) {
 			if (itemdb->packages[i].random_groups) {
@@ -2203,7 +2178,7 @@ void itemdb_clear(bool total) {
 		itemdb->packages = NULL;
 	}
 	itemdb->package_count = 0;
-	
+
 	if (itemdb->combos) {
 		for (i = 0; i < itemdb->combo_count; i++) {
 			if (itemdb->combos[i]->script) // Check if script was loaded
@@ -2215,28 +2190,28 @@ void itemdb_clear(bool total) {
 
 	itemdb->combos = NULL;
 	itemdb->combo_count = 0;
-	
+
 	if (total)
 		return;
-	
-	itemdb->other->clear(itemdb->other, itemdb->final_sub);
-	
-	memset(itemdb->array, 0, sizeof(itemdb->array));
-	
-	db_clear(itemdb->names);
 
+	itemdb->other->clear(itemdb->other, itemdb->final_sub);
+
+	memset(itemdb->array, 0, sizeof(itemdb->array));
+
+	db_clear(itemdb->names);
 }
+
 void itemdb_reload(void) {
 	struct s_mapiterator* iter;
 	struct map_session_data* sd;
 
 	int i,d,k;
-	
+
 	itemdb->clear(false);
 
 	// read new data
 	itemdb->read(false);
-	
+
 	//Epoque's awesome @reloaditemdb fix - thanks! [Ind]
 	//- Fixes the need of a @reloadmobdb after a @reloaditemdb to re-link monster drop data
 	for( i = 0; i < MAX_MOB_DB; i++ ) {
@@ -2257,7 +2232,7 @@ void itemdb_reload(void) {
 
 			if (k == MAX_SEARCH)
 				continue;
-			
+
 			if (id->mob[k].id != i && k != MAX_SEARCH - 1)
 				memmove(&id->mob[k+1], &id->mob[k], (MAX_SEARCH-k-1)*sizeof(id->mob[0]));
 			id->mob[k].chance = entry->dropitem[d].p;
@@ -2287,7 +2262,7 @@ void itemdb_reload(void) {
 void itemdb_name_constants(void) {
 	DBIterator *iter = db_iterator(itemdb->names);
 	struct item_data *data;
-	
+
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = "Item Database (Likely an invalid or conflicting AegisName)";
 #endif // ENABLE_CASE_CHECK
@@ -2301,7 +2276,7 @@ void itemdb_name_constants(void) {
 }
 void do_final_itemdb(void) {
 	itemdb->clear(true);
-	
+
 	itemdb->other->destroy(itemdb->other, itemdb->final_sub);
 	itemdb->destroy_item_data(&itemdb->dummy, 0);
 	db_destroy(itemdb->names);
@@ -2318,14 +2293,14 @@ void do_init_itemdb(bool minimal) {
 		return;
 
 	clif->cashshop_load();
-	
+
 	/** it failed? we disable it **/
 	if( !clif->parse_roulette_db() )
 		battle_config.feature_roulette = 0;
 }
 void itemdb_defaults(void) {
 	itemdb = &itemdb_s;
-	
+
 	itemdb->init = do_init_itemdb;
 	itemdb->final = do_final_itemdb;
 	itemdb->reload = itemdb_reload;

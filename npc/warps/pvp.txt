@@ -171,4 +171,3 @@ pvp_n_8-4,150,71,0	warp	Link#pt_link_1-41	1,1,pvp_n_8-4,0,0
 pvp_n_8-4,144,166,0	warp	Link#pt_link_1-42	1,1,pvp_n_8-4,0,0
 // Invalid Warp
 //pvp_n_8-5,30,30,0	warp	 a	3,3,pvp_n_8-5,100,100
-

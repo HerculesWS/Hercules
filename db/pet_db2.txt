@@ -50,4 +50,3 @@
 
 //A single pet can have petloot, petskillbonus, petskillattack and
 //petskillsupport at the same time, but only one of each.
-

@@ -496,7 +496,7 @@ dewata,89,191,6	script	Small Shrine#dew1	CLEAR_NPC,{
 			"Lover","Girl friend","Boy friend"; //128
 		setarray .@index[0],
 			1,1,2,2,2,2,4,4,8,8,8,16,16,16,16,16,32,32,32,32,32,32,64,64,64,128,128,128;
-			
+
 		if (.@good_luck == 7 || .@good_luck == 77 || .@good_luck == 777 || .@good_luck == 7777)
 			.@bonus = 1;
 		for(.@i = 0; .@i<getarraysize(.@wishes$); ++.@i) {

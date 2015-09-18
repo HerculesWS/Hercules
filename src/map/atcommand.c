@@ -123,7 +123,7 @@ bool msg_config_read(const char *cfg_name, bool allow_override) {
 		ShowError("Messages file not found: %s\n", cfg_name);
 		return false;
 	}
-	
+
 	if( !atcommand->max_message_table )
 		atcommand->expand_message_table();
 
@@ -152,9 +152,8 @@ bool msg_config_read(const char *cfg_name, bool allow_override) {
 			}
 		}
 	}
-
 	fclose(fp);
-	
+
 	if( ++called == 1 ) { //Original
 		if( script->lang_export_fp ) {
 			int i;
@@ -178,7 +177,7 @@ bool msg_config_read(const char *cfg_name, bool allow_override) {
  *------------------------------------------*/
 void do_final_msg(void) {
 	int i, j;
-	
+
 	for(i = 0; i < atcommand->max_message_table; i++) {
 		for (j = 0; j < MAX_MSG; j++) {
 			if( atcommand->msg_table[i][j] )
@@ -186,7 +185,7 @@ void do_final_msg(void) {
 		}
 		aFree(atcommand->msg_table[i]);
 	}
-	
+
 	if( atcommand->msg_table )
 		aFree(atcommand->msg_table);
 }
@@ -197,8 +196,6 @@ void do_final_msg(void) {
 static inline const char* atcommand_help_string(AtCommandInfo *info) {
 	return info->help;
 }
-
-
 
 /*==========================================
  * @send (used for testing packet sends from the client)
@@ -862,7 +859,6 @@ ACMD(storage)
 	return true;
 }
 
-
 /*==========================================
  *
  *------------------------------------------*/
@@ -1106,7 +1102,7 @@ ACMD(heal)
 	// some overflow checks
 	if( hp == INT_MIN ) hp++;
 	if( sp == INT_MIN ) sp++;
-	
+
 	if ( hp == 0 && sp == 0 ) {
 		if (!status_percent_heal(&sd->bl, 100, 100))
 			clif->message(fd, msg_fd(fd,157)); // HP and SP have already been recovered.
@@ -4610,7 +4606,6 @@ ACMD(jailfor) {
 	return true;
 }
 
-
 //By Coltaro
 ACMD(jailtime)
 {
@@ -4768,7 +4763,6 @@ ACMD(disguiseguild)
 	return true;
 }
 
-
 /*==========================================
  * @undisguise by [Yor]
  *------------------------------------------*/
@@ -4857,7 +4851,6 @@ ACMD(exp)
 	clif->message(fd, output);
 	return true;
 }
-
 
 /*==========================================
  * @broadcast by [Valaris]
@@ -5102,7 +5095,6 @@ ACMD(follow) {
 
 	return true;
 }
-
 
 /*==========================================
  * @dropall by [MouseJstr]
@@ -6627,7 +6619,6 @@ ACMD(mobinfo)
 				monster->status.vit, monster->status.int_, monster->status.dex, monster->status.luk);
 		clif->message(fd, atcmd_output);
 
-		
 #ifdef RENEWAL
 		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1291), //  ATK : %d~%d MATK : %d~%d Range : %d~%d~%d  Size : %s  Race : %s  Element : %s(Lv : %d)
 				MOB_ATK1(monster), MOB_ATK2(monster), MOB_MATK1(monster), MOB_MATK2(monster), monster->status.rhw.range,
@@ -7311,7 +7302,6 @@ ACMD(mutearea) {
 	return true;
 }
 
-
 ACMD(rates)
 {
 	char buf[CHAT_SIZE_MAX];
@@ -7747,7 +7737,6 @@ ACMD(duel) {
 
 	return true;
 }
-
 
 ACMD(leave) {
 	if (sd->duel_group <= 0) {
@@ -9306,7 +9295,7 @@ ACMD(skdebug) {
 ACMD(cddebug) {
 	int i;
 	struct skill_cd* cd = NULL;
-	
+
 	if (!(cd = idb_get(skill->cd_db,sd->status.char_id))) {
 		clif->message(fd,"No cool down list found");
 	} else {
@@ -9314,7 +9303,7 @@ ACMD(cddebug) {
 		for(i = 0; i < cd->cursor; i++) {
 			if( cd->entry[i] ) {
 				const struct TimerData *td = timer->get(cd->entry[i]->timer);
-				
+
 				if( !td || td->func != skill->blockpc_end ) {
 					clif->messages(fd,"Found invalid entry in slot %d for skill %s",i,skill->dbs->db[cd->entry[i]->skidx].name);
 					sd->blockskill[cd->entry[i]->skidx] = false;
@@ -9322,7 +9311,7 @@ ACMD(cddebug) {
 			}
 		}
 	}
-	
+
 	if (!cd || (*message && !strcmpi(message,"reset"))) {
 		for(i = 0; i < MAX_SKILL; i++) {
 			if( sd->blockskill[i] ) {
@@ -9336,12 +9325,12 @@ ACMD(cddebug) {
 				timer->delete(cd->entry[i]->timer,skill->blockpc_end);
 				ers_free(skill->cd_entry_ers, cd->entry[i]);
 			}
-			
+
 			idb_remove(skill->cd_db,sd->status.char_id);
 			ers_free(skill->cd_ers, cd);
 		}
 	}
-	
+
 	return true;
 }
 
@@ -9350,7 +9339,7 @@ ACMD(cddebug) {
  **/
 ACMD(lang) {
 	uint8 i;
-	
+
 	if (!*message) {
 		clif->messages(fd,"Usage: @%s <Language>",info->command);
 		clif->messages(fd,"There are %d languages available:",script->max_lang_id);
@@ -9358,7 +9347,7 @@ ACMD(lang) {
 			clif->messages(fd,"- %s",script->languages[i]);
 		return false;
 	}
-	
+
 	for(i = 0; i < script->max_lang_id; i++) {
 		if( strcmpi(message,script->languages[i]) == 0 ) {
 			if( i == sd->lang_id ) {
@@ -9370,14 +9359,14 @@ ACMD(lang) {
 			break;
 		}
 	}
-	
+
 	if( i == script->max_lang_id ) {
 		clif->messages(fd,"'%s' did not match any language available",message);
 		clif->messages(fd,"There are %d languages available:",script->max_lang_id);
 		for(i = 0; i < script->max_lang_id; i++)
 			clif->messages(fd,"- %s",script->languages[i]);
 	}
-	
+
 	return true;
 }
 /**

@@ -237,7 +237,7 @@ einbroch,232,272,3	script	Train Station Staff#ein1::EinbrochTrain	4_M_EIN_SOLDIE
 		close;
 	}
 }
-	
+
 einbroch,252,301,3	duplicate(EinbrochTrain)	Train Station Staff#ein2	4_M_EIN_SOLDIER
 
 einbroch,259,326,3	script	Leslie#ein_1	4_F_EINOLD,{
@@ -285,7 +285,7 @@ einbroch,236,191,3	script	Tan#ein	4_M_EINMAN,{
 	mes "you should carry one with you.";
 	close;
 }
-	
+
 einbroch,228,121,5	script	Little Toby#ein-1	4_M_EINMAN,{
 	mes "[Little Toby]";
 	mes "Excuse me...";

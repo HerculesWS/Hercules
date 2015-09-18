@@ -134,7 +134,7 @@ sec_in02,137,57,1	script	Overseer	4_M_PAY_SOLDIER,{
 	delitem 4009,countitem(4009);//Items: Chonchon_Card,
 	delitem 4022,countitem(4022);//Items: Spore_Card,
 	delitem 4048,countitem(4048);//Items: Poison_Spore_Card,
-	
+
 	if (PRISON_Q <= 0 ) goto L_GET_Q;
 
 	mes "I want you to gather ^FF0000"+PRISON_Q+" Orange Net Mushroom^000000.";
@@ -169,7 +169,6 @@ L_GET_Q:
 	if (rand(10)<4) mes "And you may eat the deadly ones for breakfast.";
 	close;
 }
-
 
 sec_in02	mapflag	nomemo
 sec_in02	mapflag	nosave	SavePoint

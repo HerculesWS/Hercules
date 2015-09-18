@@ -256,7 +256,7 @@ bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 m, int1
 	// Check destination cell
 	if (x1 < 0 || x1 >= md->xs || y1 < 0 || y1 >= md->ys || md->getcellp(md, bl, x1, y1, cell))
 		return false;
-	
+
 	if( x0 == x1 && y0 == y1 ) {
 		wpd->path_len = 0;
 		wpd->path_pos = 0;
@@ -409,7 +409,6 @@ bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 m, int1
 	return false;
 }
 
-
 //Distance functions, taken from http://www.flipcode.com/articles/article_fastdistance.shtml
 bool check_distance(int dx, int dy, int distance)
 {
@@ -489,7 +488,7 @@ int distance_client(int dx, int dy)
 
 void path_defaults(void) {
 	path = &path_s;
-	
+
 	path->blownpos = path_blownpos;
 	path->search_long = path_search_long;
 	path->search = path_search;

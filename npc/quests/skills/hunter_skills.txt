@@ -373,4 +373,3 @@ pay_arche,109,169,3	script	Arpesto	4_M_05,{
 		close;
 	}
 }
-
