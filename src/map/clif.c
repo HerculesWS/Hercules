@@ -6615,19 +6615,18 @@ void clif_party_withdraw(struct party_data* p, struct map_session_data* sd, int 
 	unsigned char buf[64];
 
 	nullpo_retv(p);
-	nullpo_retv(sd);
 	nullpo_retv(name);
 
-	if(!sd && (flag&0xf0)==0)
-	{
+	if(!sd && (flag&0xf0)==0) { // TODO: Document this flag
 		int i;
-		for(i=0;i<MAX_PARTY && !p->data[i].sd;i++)
-			;
-			if (i < MAX_PARTY)
-				sd = p->data[i].sd;
+		// Search for any online party member
+		ARR_FIND(0, MAX_PARTY, i, p->data[i].sd != NULL);
+		if (i != MAX_PARTY)
+			sd = p->data[i].sd;
 	}
 
-	if(!sd) return;
+	if (!sd)
+		return;
 
 	WBUFW(buf,0)=0x105;
 	WBUFL(buf,2)=account_id;
