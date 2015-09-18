@@ -978,8 +978,8 @@ const char* parse_variable(const char* p)
 	const char *p2 = NULL;
 	const char *var = p;
 
-	if( ( p[0] == '+' && p[1] == '+' && (type = C_ADD_PRE) ) // pre ++
-	 || ( p[0] == '-' && p[1] == '-' && (type = C_SUB_PRE) ) // pre --
+	if( ( p[0] == '+' && p[1] == '+' && (type = C_ADD_PRE, true) ) // pre ++
+	 || ( p[0] == '-' && p[1] == '-' && (type = C_SUB_PRE, true) ) // pre --
 	) {
 		var = p = script->skip_space(&p[2]);
 	}
@@ -1008,19 +1008,19 @@ const char* parse_variable(const char* p)
 	}
 
 	if( type == C_NOP &&
-	!( ( p[0] == '=' && p[1] != '=' && (type = C_EQ) ) // =
-	|| ( p[0] == '+' && p[1] == '=' && (type = C_ADD) ) // +=
-	|| ( p[0] == '-' && p[1] == '=' && (type = C_SUB) ) // -=
-	|| ( p[0] == '^' && p[1] == '=' && (type = C_XOR) ) // ^=
-	|| ( p[0] == '|' && p[1] == '=' && (type = C_OR ) ) // |=
-	|| ( p[0] == '&' && p[1] == '=' && (type = C_AND) ) // &=
-	|| ( p[0] == '*' && p[1] == '=' && (type = C_MUL) ) // *=
-	|| ( p[0] == '/' && p[1] == '=' && (type = C_DIV) ) // /=
-	|| ( p[0] == '%' && p[1] == '=' && (type = C_MOD) ) // %=
-	|| ( p[0] == '+' && p[1] == '+' && (type = C_ADD_POST) ) // post ++
-	|| ( p[0] == '-' && p[1] == '-' && (type = C_SUB_POST) ) // post --
-	|| ( p[0] == '<' && p[1] == '<' && p[2] == '=' && (type = C_L_SHIFT) ) // <<=
-	|| ( p[0] == '>' && p[1] == '>' && p[2] == '=' && (type = C_R_SHIFT) ) // >>=
+	!( ( p[0] == '=' && p[1] != '=' && (type = C_EQ, true) ) // =
+	|| ( p[0] == '+' && p[1] == '=' && (type = C_ADD, true) ) // +=
+	|| ( p[0] == '-' && p[1] == '=' && (type = C_SUB, true) ) // -=
+	|| ( p[0] == '^' && p[1] == '=' && (type = C_XOR, true) ) // ^=
+	|| ( p[0] == '|' && p[1] == '=' && (type = C_OR, true) ) // |=
+	|| ( p[0] == '&' && p[1] == '=' && (type = C_AND, true) ) // &=
+	|| ( p[0] == '*' && p[1] == '=' && (type = C_MUL, true) ) // *=
+	|| ( p[0] == '/' && p[1] == '=' && (type = C_DIV, true) ) // /=
+	|| ( p[0] == '%' && p[1] == '=' && (type = C_MOD, true) ) // %=
+	|| ( p[0] == '+' && p[1] == '+' && (type = C_ADD_POST, true) ) // post ++
+	|| ( p[0] == '-' && p[1] == '-' && (type = C_SUB_POST, true) ) // post --
+	|| ( p[0] == '<' && p[1] == '<' && p[2] == '=' && (type = C_L_SHIFT, true) ) // <<=
+	|| ( p[0] == '>' && p[1] == '>' && p[2] == '=' && (type = C_R_SHIFT, true) ) // >>=
 	) )
 	{// failed to find a matching operator combination so invalid
 		return NULL;

@@ -210,7 +210,7 @@ ACMD(send)
 
 	// read message type as hex number (without the 0x)
 	if (!*message
-	 || !((sscanf(message, "len %x", &type)==1 && (len=1))
+	 || !((sscanf(message, "len %x", &type)==1 && (len=1, true))
 	 || sscanf(message, "%x", &type)==1)
 	) {
 		clif->message(fd, msg_fd(fd,900)); // Usage:
