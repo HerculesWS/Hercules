@@ -188,7 +188,7 @@ char *remove_extension(char *mapname)
 	char *ptr, *ptr2;
 	ptr = strchr(mapname, '.');
 	if (ptr) { //Check and remove extension.
-		while (ptr[1] && (ptr2 = strchr(ptr+1, '.')))
+		while (ptr[1] && (ptr2 = strchr(ptr+1, '.')) != NULL)
 			ptr = ptr2; //Skip to the last dot.
 		if (strcmp(ptr,".gat") == 0)
 			*ptr = '\0'; //Remove extension.

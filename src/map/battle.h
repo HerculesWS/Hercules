@@ -507,6 +507,8 @@ struct Battle_Config {
 	int stormgust_knockback;
 
 	int feature_roulette;
+
+	int show_monster_hp_bar; // [Frost]
 };
 
 /* criteria for battle_config.idletime_critera */

@@ -42,11 +42,11 @@ struct shootpath_data {
 
 struct path_interface {
 	// calculates destination cell for knockback
-	int (*blownpos) (int16 m, int16 x0, int16 y0, int16 dx, int16 dy, int count);
+	int (*blownpos) (struct block_list *bl, int16 m, int16 x0, int16 y0, int16 dx, int16 dy, int count);
 	// tries to find a walkable path
-	bool (*search) (struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell);
+	bool (*search) (struct walkpath_data *wpd, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell);
 	// tries to find a shootable path
-	bool (*search_long) (struct shootpath_data *spd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, cell_chk cell);
+	bool (*search_long) (struct shootpath_data *spd, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, cell_chk cell);
 	bool (*check_distance) (int dx, int dy, int distance);
 	unsigned int (*distance) (int dx, int dy);
 	bool (*check_distance_client) (int dx, int dy, int distance);

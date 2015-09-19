@@ -53,7 +53,7 @@
 //	-2: added for all normal types.
 //	-4: added for all mobs.
 
-// rAthena Dev Team
+// Athena Dev Team
 //1900,Valaris@AL_TELEPORT,idle,26,1,10000,0,0,yes,self,rudeattacked,,,,,,,,
 //1900,Valaris@AL_TELEPORT,walk,26,1,500,0,5000,yes,self,rudeattacked,,,,,,,,
 //1900,Valaris@KN_BRANDISHSPEAR,attack,57,10,2000,500,5000,no,target,always,0,,,,,,29,
@@ -114,7 +114,7 @@
 //1921,Easter Bunny@NPC_SUMMONSLAVE,attack,196,5,10000,3000,10000,no,self,slavele,2,1063,,,,,,
 //1921,Easter Bunny@NPC_SUMMONSLAVE,idle,196,5,5000,2000,40000,no,self,always,2,1920,,,,,,
 
-//Custom Fire Poring. Warning, Colides with META_DENIRO
+// Custom Fire Poring. Warning, Colides with META_DENIRO
 //1239,Fire Poring@AL_HEAL,idle,28,10,10000,0,2000,yes,self,always,0,,,,,,4,
 //1239,Fire Poring@AL_HEAL,walk,28,10,10000,0,2000,yes,self,always,0,,,,,,4,
 //1239,Fire Poring@AL_TELEPORT,attack,26,1,1000,5000,60000,no,self,myhpltmaxrate,30,,,,,,,
@@ -128,7 +128,7 @@
 //1239,Fire Poring@RG_STRIPSHIELD,attack,216,5,2000,0,3000,yes,target,always,0,,,,,,,
 //1239,Fire Poring@RG_STRIPWEAPON,attack,215,5,2000,0,3000,yes,target,always,0,,,,,,,
 
-//iRO Halloween Event 2009
+// iRO Halloween Event 2009
 //3014,Halloween Whisper@AS_CLOAKING,idle,135,1,2000,200,5000,yes,self,always,0,,,,,,,
 //3014,Halloween Whisper@AS_CLOAKING,chase,135,1,2000,200,5000,yes,self,always,0,,,,,,,
 //3014,Halloween Whisper@NPC_EMOTION,idle,197,1,2000,0,5000,yes,self,always,0,,,,,,,

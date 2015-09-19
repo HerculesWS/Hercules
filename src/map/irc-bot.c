@@ -197,7 +197,7 @@ void irc_parse_sub(int fd, char *str) {
 	if( command[0] == '\0' )
 		return;
 		
-	if( !(func = ircbot->func_search(command)) && !(func = ircbot->func_search(source)) ) {
+	if ((func = ircbot->func_search(command)) == NULL && (func = ircbot->func_search(source)) == NULL) {
 #ifdef IRCBOT_DEBUG
 		ShowWarning("Unknown command received %s from %s\n",command,source);
 #endif // IRCBOT_DEBUG

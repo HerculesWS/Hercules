@@ -840,7 +840,7 @@ static int bl_vgetall_inshootrange(struct block_list *bl, va_list args)
 	if (!check_distance_bl(center, bl, range))
 		return 0;
 #endif
-	if (!path->search_long(NULL, center->m, center->x, center->y, bl->x, bl->y, CELL_CHKWALL))
+	if (!path->search_long(NULL, center, center->m, center->x, center->y, bl->x, bl->y, CELL_CHKWALL))
 		return 0;
 	return 1;
 }
@@ -1195,7 +1195,7 @@ static int bl_vgetall_inpath(struct block_list *bl, va_list args)
 	if ( k < 0 || k > len_limit ) //Since more skills use this, check for ending point as well.
 		return 0;
 
-	if ( k > magnitude2 && !path->search_long(NULL, m, x0, y0, xi, yi, CELL_CHKWALL) )
+	if ( k > magnitude2 && !path->search_long(NULL, NULL, m, x0, y0, xi, yi, CELL_CHKWALL) )
 		return 0; //Targets beyond the initial ending point need the wall check.
 
 	//All these shifts are to increase the precision of the intersection point and distance considering how it's
@@ -2567,7 +2567,7 @@ int map_random_dir(struct block_list *bl, int16 *x, int16 *y)
 		xi = bl->x + segment*dirx[j];
 		segment = (short)sqrt((float)(dist2 - segment*segment)); //The complement of the previously picked segment
 		yi = bl->y + segment*diry[j];
-	} while ( (map->getcell(bl->m,xi,yi,CELL_CHKNOPASS) || !path->search(NULL,bl->m,bl->x,bl->y,xi,yi,1,CELL_CHKNOREACH))
+	} while ( (map->getcell(bl->m,xi,yi,CELL_CHKNOPASS) || !path->search(NULL,bl,bl->m,bl->x,bl->y,xi,yi,1,CELL_CHKNOREACH))
 	       && (++i)<100 );
 
 	if (i < 100) {
@@ -5273,8 +5273,6 @@ void read_map_zone_db(void) {
 		}
 
 		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' zones in '"CL_WHITE"%s"CL_RESET"'.\n", zone_count, config_filename);
-		/* not supposed to go in here but in skill_final whatever */
-		libconfig->destroy(&map_zone_db);
 		
 		/* post-load processing */
 		if( (zone = strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) )
@@ -5284,6 +5282,8 @@ void read_map_zone_db(void) {
 		if( (zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)) )
 			zone->info.special = 1;
 	}
+	/* not supposed to go in here but in skill_final whatever */
+	libconfig->destroy(&map_zone_db);
 }
 
 int map_get_new_bonus_id (void) {

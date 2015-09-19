@@ -978,8 +978,8 @@ const char* parse_variable(const char* p)
 	const char *p2 = NULL;
 	const char *var = p;
 
-	if( ( p[0] == '+' && p[1] == '+' && (type = C_ADD_PRE) ) // pre ++
-	 || ( p[0] == '-' && p[1] == '-' && (type = C_SUB_PRE) ) // pre --
+	if( ( p[0] == '+' && p[1] == '+' && (type = C_ADD_PRE, true) ) // pre ++
+	 || ( p[0] == '-' && p[1] == '-' && (type = C_SUB_PRE, true) ) // pre --
 	) {
 		var = p = script->skip_space(&p[2]);
 	}
@@ -1008,19 +1008,19 @@ const char* parse_variable(const char* p)
 	}
 
 	if( type == C_NOP &&
-	!( ( p[0] == '=' && p[1] != '=' && (type = C_EQ) ) // =
-	|| ( p[0] == '+' && p[1] == '=' && (type = C_ADD) ) // +=
-	|| ( p[0] == '-' && p[1] == '=' && (type = C_SUB) ) // -=
-	|| ( p[0] == '^' && p[1] == '=' && (type = C_XOR) ) // ^=
-	|| ( p[0] == '|' && p[1] == '=' && (type = C_OR ) ) // |=
-	|| ( p[0] == '&' && p[1] == '=' && (type = C_AND) ) // &=
-	|| ( p[0] == '*' && p[1] == '=' && (type = C_MUL) ) // *=
-	|| ( p[0] == '/' && p[1] == '=' && (type = C_DIV) ) // /=
-	|| ( p[0] == '%' && p[1] == '=' && (type = C_MOD) ) // %=
-	|| ( p[0] == '+' && p[1] == '+' && (type = C_ADD_POST) ) // post ++
-	|| ( p[0] == '-' && p[1] == '-' && (type = C_SUB_POST) ) // post --
-	|| ( p[0] == '<' && p[1] == '<' && p[2] == '=' && (type = C_L_SHIFT) ) // <<=
-	|| ( p[0] == '>' && p[1] == '>' && p[2] == '=' && (type = C_R_SHIFT) ) // >>=
+	!( ( p[0] == '=' && p[1] != '=' && (type = C_EQ, true) ) // =
+	|| ( p[0] == '+' && p[1] == '=' && (type = C_ADD, true) ) // +=
+	|| ( p[0] == '-' && p[1] == '=' && (type = C_SUB, true) ) // -=
+	|| ( p[0] == '^' && p[1] == '=' && (type = C_XOR, true) ) // ^=
+	|| ( p[0] == '|' && p[1] == '=' && (type = C_OR, true) ) // |=
+	|| ( p[0] == '&' && p[1] == '=' && (type = C_AND, true) ) // &=
+	|| ( p[0] == '*' && p[1] == '=' && (type = C_MUL, true) ) // *=
+	|| ( p[0] == '/' && p[1] == '=' && (type = C_DIV, true) ) // /=
+	|| ( p[0] == '%' && p[1] == '=' && (type = C_MOD, true) ) // %=
+	|| ( p[0] == '+' && p[1] == '+' && (type = C_ADD_POST, true) ) // post ++
+	|| ( p[0] == '-' && p[1] == '-' && (type = C_SUB_POST, true) ) // post --
+	|| ( p[0] == '<' && p[1] == '<' && p[2] == '=' && (type = C_L_SHIFT, true) ) // <<=
+	|| ( p[0] == '>' && p[1] == '>' && p[2] == '=' && (type = C_R_SHIFT, true) ) // >>=
 	) )
 	{// failed to find a matching operator combination so invalid
 		return NULL;
@@ -1234,7 +1234,7 @@ const char* parse_simpleexpr(const char *p)
 		
 		script_string_buf_addb(sbuf, 0);
 		
-		if( !(script->syntax.translation_db && (st = strdb_get(script->syntax.translation_db, sbuf->ptr))) ) {
+		if (!(script->syntax.translation_db && (st = strdb_get(script->syntax.translation_db, sbuf->ptr)) != NULL)) {
 			script->addc(C_STR);
 			
 			if( script->pos+sbuf->pos >= script->size ) {
@@ -4719,6 +4719,7 @@ void script_load_translations(void) {
 		
 		script->load_translation(translation_file, ++lang_id, &total);
 	}
+	libconfig->destroy(&translations_conf);
 
 	if( total ) {
 		DBIterator *main_iter;
@@ -6290,7 +6291,7 @@ BUILDIN(__setr) {
 
 		if (!not_array_variable(*namevalue)) {
 			// array variable being copied into another array variable
-			if (sd == NULL && not_server_variable(*namevalue) && !(sd = script->rid2sd(st))) {
+			if (sd == NULL && not_server_variable(*namevalue) && (sd = script->rid2sd(st)) == NULL) {
 				// player must be attached in order to copy a player variable
 				ShowError("script:set: no player attached for player variable '%s'\n", namevalue);
 				return true;
@@ -11135,7 +11136,7 @@ BUILDIN(roclass)
 		sex = script_getnum(st,3);
 	else {
 		TBL_PC *sd;
-		if (st->rid && (sd=script->rid2sd(st)))
+		if (st->rid && (sd=script->rid2sd(st)) != NULL)
 			sex = sd->status.sex;
 		else
 			sex = 1; //Just use male when not found.
@@ -17778,7 +17779,7 @@ BUILDIN(has_instance) {
 			if( i != sd->instances )
 				instance_id = sd->instance[i];
 		}
-		if( instance_id == -1 && sd->status.party_id && (p = party->search(sd->status.party_id)) && p->instances ) {
+		if (instance_id == -1 && sd->status.party_id && (p = party->search(sd->status.party_id)) != NULL && p->instances) {
 			for( i = 0; i < p->instances; i++ ) {
 				if( p->instance[i] >= 0 ) {
 					ARR_FIND(0, instance->list[p->instance[i]].num_map, j, map->list[instance->list[p->instance[i]].map[j]].instance_src_map == m);
@@ -18885,7 +18886,7 @@ bool script_hqueue_add(int idx, int var)
 
 			script->hq[idx].item[i] = var;
 			script->hq[idx].items++;
-			if (var >= START_ACCOUNT_NUM && (sd = map->id2sd(var))) {
+			if (var >= START_ACCOUNT_NUM && (sd = map->id2sd(var)) != NULL) {
 				for (i = 0; i < sd->queues_count; i++) {
 					if (sd->queues[i] == -1) {
 						break;
@@ -18931,7 +18932,7 @@ bool script_hqueue_remove(int idx, int var) {
 			script->hq[idx].item[i] = -1;
 			script->hq[idx].items--;
 
-			if( var >= START_ACCOUNT_NUM && (sd = map->id2sd(var)) ) {
+			if (var >= START_ACCOUNT_NUM && (sd = map->id2sd(var)) != NULL) {
 				for(i = 0; i < sd->queues_count; i++) {
 					if( sd->queues[i] == idx ) {
 						break;
@@ -19009,7 +19010,7 @@ bool script_hqueue_del(int idx)
 		int i;
 		for (i = 0; i < script->hq[idx].size; i++) {
 			struct map_session_data *sd;
-			if( script->hq[idx].item[i] >= START_ACCOUNT_NUM && (sd = map->id2sd(script->hq[idx].item[i])) ) {
+			if (script->hq[idx].item[i] >= START_ACCOUNT_NUM && (sd = map->id2sd(script->hq[idx].item[i])) != NULL) {
 				int j;
 				for(j = 0; j < sd->queues_count; j++) {
 					if( sd->queues[j] == script->hq[idx].item[i] ) {
@@ -19048,7 +19049,7 @@ void script_hqueue_clear(int idx) {
 		for(i = 0; i < script->hq[idx].size; i++) {
 			if( script->hq[idx].item[i] > 0 ) {
 
-				if( script->hq[idx].item[i] >= START_ACCOUNT_NUM && (sd = map->id2sd(script->hq[idx].item[i])) ) {
+				if (script->hq[idx].item[i] >= START_ACCOUNT_NUM && (sd = map->id2sd(script->hq[idx].item[i])) != NULL) {
 					for(j = 0; j < sd->queues_count; j++) {
 						if( sd->queues[j] == idx ) {
 							break;

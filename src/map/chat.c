@@ -32,6 +32,9 @@ struct chat_data* chat_createchat(struct block_list* bl, const char* title, cons
 {
 	struct chat_data* cd;
 	nullpo_retr(NULL, bl);
+	nullpo_retr(NULL, title);
+	nullpo_retr(NULL, pass);
+	nullpo_retr(NULL, ev);
 
 	/* Given the overhead and the numerous instances (npc allocated or otherwise) wouldn't it be beneficial to have it use ERS? [Ind] */
 	cd = (struct chat_data *) aMalloc(sizeof(struct chat_data));
@@ -75,6 +78,8 @@ struct chat_data* chat_createchat(struct block_list* bl, const char* title, cons
 bool chat_createpcchat(struct map_session_data* sd, const char* title, const char* pass, int limit, bool pub) {
 	struct chat_data* cd;
 	nullpo_ret(sd);
+	nullpo_ret(title);
+	nullpo_ret(pass);
 
 	if( sd->chatID )
 		return false; //Prevent people abusing the chat system by creating multiple chats, as pointed out by End of Exam. [Skotlex]
@@ -118,6 +123,7 @@ bool chat_joinchat(struct map_session_data* sd, int chatid, const char* pass) {
 	struct chat_data* cd;
 
 	nullpo_ret(sd);
+	nullpo_ret(pass);
 	cd = (struct chat_data*)map->id2bl(chatid);
 
 	if( cd == NULL || cd->bl.type != BL_CHAT || cd->bl.m != sd->bl.m || sd->state.vending || sd->state.buyingstore || sd->chatID || ((cd->owner->type == BL_NPC) ? cd->users+1 : cd->users) >= cd->limit )
@@ -255,6 +261,7 @@ bool chat_changechatowner(struct map_session_data* sd, const char* nextownername
 	int i;
 
 	nullpo_ret(sd);
+	nullpo_ret(nextownername);
 
 	cd = (struct chat_data*)map->id2bl(sd->chatID);
 	if( cd == NULL || (struct block_list*) sd != cd->owner )
@@ -298,6 +305,8 @@ bool chat_changechatstatus(struct map_session_data* sd, const char* title, const
 	struct chat_data* cd;
 
 	nullpo_ret(sd);
+	nullpo_ret(title);
+	nullpo_ret(pass);
 
 	cd = (struct chat_data*)map->id2bl(sd->chatID);
 	if( cd==NULL || (struct block_list *)sd != cd->owner )
@@ -325,6 +334,7 @@ bool chat_kickchat(struct map_session_data* sd, const char* kickusername) {
 	int i;
 
 	nullpo_ret(sd);
+	nullpo_ret(kickusername);
 
 	cd = (struct chat_data *)map->id2bl(sd->chatID);
 
