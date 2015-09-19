@@ -121,12 +121,11 @@ monk_test,309,146,3	script	Friar Patrick#edq	4_M_OLDFRIAR,{
 					}
 					else {
 						for (.@i = 1; .@i <= 2; ++.@i) {
-							if( instance_attachmap(.@i + "@cata", .@instance) == "" )
-								break;
-						}
-						if( .@i < 2 ) {
-							instance_destroy(.@instance);
-							close;
+							if( instance_attachmap(.@i + "@cata", .@instance) == "" ) {
+								mes "Failed to attach "+.@i+"@tower as a map!";
+								instance_destroy(.@instance);
+								close;
+							}
 						}
 
 						instance_set_timeout 7200,300,.@instance;
