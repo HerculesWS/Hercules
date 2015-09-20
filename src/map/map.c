@@ -3854,6 +3854,7 @@ struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct map_zone
 
 	CREATE(zone, struct map_zone_data, 1);
 	safestrncpy(zone->name, newzone, MAP_ZONE_NAME_LENGTH);
+	zone->merge_type = MZMT_NEVERMERGE;
 	zone->disabled_skills_count = main->disabled_skills_count + other->disabled_skills_count;
 	zone->disabled_items_count = main->disabled_items_count + other->disabled_items_count;
 	zone->mapflags_count = main->mapflags_count + other->mapflags_count;
@@ -3930,7 +3931,7 @@ struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct map_zone
 		memcpy(zone->capped_skills[cursor], other->capped_skills[i], sizeof(struct map_zone_skill_damage_cap_entry));
 	}
 
-	zone->info.special = 2;
+	zone->info.merged = 1;
 	strdb_put(map->zone_db, newzone, zone);
 	return zone;
 }
@@ -3941,13 +3942,13 @@ void map_zone_change2(int m, struct map_zone_data *zone) {
 	if( map->list[m].zone == zone )
 		return;
 
-	if( map->list[m].zone->info.special != 2 ) /* we don't update it for merged zones! */
+	if( !map->list[m].zone->info.merged ) /* we don't update it for merged zones! */
 		map->list[m].prev_zone = map->list[m].zone;
 
 	if( map->list[m].zone_mf_count )
 		map->zone_remove(m);
 
-	if( zone->info.special ) {
+	if( zone->merge_type == MZMT_MERGEABLE && map->list[m].prev_zone->merge_type != MZMT_NEVERMERGE ) {
 		zone = map->merge_zone(zone,map->list[m].prev_zone);
 	}
 
@@ -4899,12 +4900,15 @@ void read_map_zone_db(void) {
 			/* is this the global template? */
 			if( strncmpi(zonename,MAP_ZONE_NORMAL_NAME,MAP_ZONE_NAME_LENGTH) == 0 ) {
 				zone = &map->zone_all;
+				zone->merge_type = MZMT_NEVERMERGE;
 				is_all = true;
 			} else if( strncmpi(zonename,MAP_ZONE_PK_NAME,MAP_ZONE_NAME_LENGTH) == 0 ) {
 				zone = &map->zone_pk;
+				zone->merge_type = MZMT_NEVERMERGE;
 				is_all = true;
 			} else {
 				CREATE( zone, struct map_zone_data, 1 );
+				zone->merge_type = MZMT_NORMAL;
 				zone->disabled_skills_count = 0;
 				zone->disabled_items_count  = 0;
 			}
@@ -5257,11 +5261,11 @@ void read_map_zone_db(void) {
 
 		/* post-load processing */
 		if( (zone = strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) )
-			zone->info.special = 1;
+			zone->merge_type = MZMT_MERGEABLE;
 		if( (zone = strdb_get(map->zone_db, MAP_ZONE_GVG_NAME)) )
-			zone->info.special = 1;
+			zone->merge_type = MZMT_MERGEABLE;
 		if( (zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)) )
-			zone->info.special = 1;
+			zone->merge_type = MZMT_MERGEABLE;
 	}
 	/* not supposed to go in here but in skill_final whatever */
 	libconfig->destroy(&map_zone_db);
