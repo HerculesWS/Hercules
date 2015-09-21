@@ -1524,15 +1524,24 @@ ACMD(help) {
 	return true;
 }
 
-// helper function, used in foreach calls to stop auto-attack timers
-// parameter: '0' - everyone, 'id' - only those attacking someone with that id
+/**
+ * Helper function, used in foreach calls to stop auto-attack timers.
+ *
+ * @see map_foreachinmap
+ *
+ * Arglist parameters:
+ * - (int) id: If 0, stop any attacks. Otherwise, the target block list id to stop attacking.
+ */
 int atcommand_stopattack(struct block_list *bl,va_list ap)
 {
-	struct unit_data *ud = unit->bl2ud(bl);
+	struct unit_data *ud = NULL;
+	int id = 0;
 	nullpo_ret(bl);
-	int id = va_arg(ap, int);
-	if (ud && ud->attacktimer != INVALID_TIMER && (!id || id == ud->target))
-	{
+
+	ud = unit->bl2ud(bl);
+	id = va_arg(ap, int);
+
+	if (ud && ud->attacktimer != INVALID_TIMER && (!id || id == ud->target)) {
 		unit->stop_attack(bl);
 		return 1;
 	}
