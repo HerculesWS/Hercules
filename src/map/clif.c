@@ -3819,19 +3819,25 @@ void clif_leavechat(struct chat_data* cd, struct map_session_data* sd, bool flag
 /// Opens a trade request window from char 'name'.
 /// 00e5 <nick>.24B (ZC_REQ_EXCHANGE_ITEM)
 /// 01f4 <nick>.24B <charid>.L <baselvl>.W (ZC_REQ_EXCHANGE_ITEM2)
-void clif_traderequest(struct map_session_data* sd, const char* name) {
-	int fd = sd->fd;
-
+void clif_traderequest(struct map_session_data *sd, const char *name)
+{
+	int fd;
+#if PACKETVER >= 6
+	struct map_session_data* tsd = NULL;
+#endif // PACKETVER >= 6
 	nullpo_retv(sd);
 	nullpo_retv(name);
+
+	fd = sd->fd;
 #if PACKETVER < 6
 	WFIFOHEAD(fd,packet_len(0xe5));
 	WFIFOW(fd,0) = 0xe5;
 	safestrncpy((char*)WFIFOP(fd,2), name, NAME_LENGTH);
 	WFIFOSET(fd,packet_len(0xe5));
 #else // PACKETVER >= 6
-	struct map_session_data* tsd = map->id2sd(sd->trade_partner);
-	if( !tsd ) return;
+	tsd = map->id2sd(sd->trade_partner);
+	if (!tsd)
+		return;
 
 	WFIFOHEAD(fd,packet_len(0x1f4));
 	WFIFOW(fd,0) = 0x1f4;
@@ -3853,14 +3859,18 @@ void clif_traderequest(struct map_session_data* sd, const char* name) {
 ///     3 = Accept
 ///     4 = Cancel
 ///     5 = Busy
-void clif_tradestart(struct map_session_data* sd, uint8 type) {
+void clif_tradestart(struct map_session_data *sd, uint8 type)
+{
 	int fd;
-
+#if PACKETVER >= 6
+	struct map_session_data *tsd = NULL;
+#endif // PACKETVER >= 6
 	nullpo_retv(sd);
+
 	fd = sd->fd;
 #if PACKETVER >= 6
-	struct map_session_data* tsd = map->id2sd(sd->trade_partner);
-	if( tsd ) {
+	tsd = map->id2sd(sd->trade_partner);
+	if (tsd) {
 		WFIFOHEAD(fd,packet_len(0x1f5));
 		WFIFOW(fd,0) = 0x1f5;
 		WFIFOB(fd,2) = type;
@@ -5580,11 +5590,13 @@ void clif_displaymessage_sprintf(const int fd, const char *mes, ...) {
 }
 /// Send broadcast message in yellow or blue without font formatting (ZC_BROADCAST).
 /// 009a <packet len>.W <message>.?B
-void clif_broadcast(struct block_list* bl, const char* mes, size_t len, int type, enum send_target target)
+void clif_broadcast(struct block_list *bl, const char *mes, size_t len, int type, enum send_target target)
 {
-	nullpo_retv(mes);
 	int lp = (type&BC_COLOR_MASK) ? 4 : 0;
-	unsigned char *buf = (unsigned char*)aMalloc((4 + lp + len)*sizeof(unsigned char));
+	unsigned char *buf = NULL;
+	nullpo_retv(mes);
+
+	buf = aMalloc((4 + lp + len)*sizeof(unsigned char));
 
 	WBUFW(buf,0) = 0x9a;
 	WBUFW(buf,2) = 4 + lp + len;
@@ -5808,9 +5820,14 @@ void clif_upgrademessage(int fd, int result, int item_id)
 /// Whisper is transmitted to the destination player (ZC_WHISPER).
 /// 0097 <packet len>.W <nick>.24B <message>.?B
 /// 0097 <packet len>.W <nick>.24B <isAdmin>.L <message>.?B (PACKETVER >= 20091104)
-void clif_wis_message(int fd, const char* nick, const char* mes, size_t mes_len) {
+void clif_wis_message(int fd, const char *nick, const char *mes, size_t mes_len)
+{
+#if PACKETVER >= 20091104
+	struct map_session_data *ssd = NULL;
+#endif // PACKETVER >= 20091104
 	nullpo_retv(nick);
 	nullpo_retv(mes);
+
 #if PACKETVER < 20091104
 	WFIFOHEAD(fd, mes_len + NAME_LENGTH + 4);
 	WFIFOW(fd,0) = 0x97;
@@ -5819,7 +5836,7 @@ void clif_wis_message(int fd, const char* nick, const char* mes, size_t mes_len)
 	safestrncpy((char*)WFIFOP(fd,28), mes, mes_len);
 	WFIFOSET(fd,WFIFOW(fd,2));
 #else
-	struct map_session_data *ssd = map->nick2sd(nick);
+	ssd = map->nick2sd(nick);
 
 	WFIFOHEAD(fd, mes_len + NAME_LENGTH + 8);
 	WFIFOW(fd,0) = 0x97;
@@ -13146,9 +13163,9 @@ void clif_parse_GuildInvite2(int fd, struct map_session_data *sd) __attribute__(
 /// 0916 <char name>.24B
 void clif_parse_GuildInvite2(int fd, struct map_session_data *sd) {
 	char *nick = (char*)RFIFOP(fd, 2);
+	struct map_session_data *t_sd = map->nick2sd(nick);
 
 	nick[NAME_LENGTH - 1] = '\0';
-	struct map_session_data *t_sd = map->nick2sd(nick);
 
 	if (!clif_sub_guild_invite(fd, sd, t_sd))
 		return;
