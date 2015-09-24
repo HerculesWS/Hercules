@@ -16841,14 +16841,13 @@ BUILDIN(checkcell) {
 	int16 x = script_getnum(st,3);
 	int16 y = script_getnum(st,4);
 	cell_chk type = (cell_chk)script_getnum(st,5);
-	TBL_PC* sd = script->rid2sd(st);
 
 	if ( m == -1 ) {
 		ShowWarning("checkcell: Attempted to run on unexsitent map '%s', type %d, x/y %d,%d\n",script_getstr(st,2),type,x,y);
 		return true;
 	}
 
-	script_pushint(st, map->getcell(m, &sd->bl, x, y, type));
+	script_pushint(st, map->getcell(m, NULL, x, y, type));
 
 	return true;
 }
