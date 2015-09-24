@@ -7127,7 +7127,7 @@ BUILDIN(getitem) {
 			if ((flag = pc->additem(sd, &it, get_count, LOG_TYPE_SCRIPT))) {
 				clif->additem(sd, 0, 0, flag);
 				if( pc->candrop(sd,&it) )
-					map->addflooritem(&it,get_count,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
+					map->addflooritem(&sd->bl, &it, get_count, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
 			}
 		}
 	}
@@ -7235,7 +7235,7 @@ BUILDIN(getitem2)
 				if ((flag = pc->additem(sd, &item_tmp, get_count, LOG_TYPE_SCRIPT))) {
 					clif->additem(sd, 0, 0, flag);
 					if( pc->candrop(sd,&item_tmp) )
-						map->addflooritem(&item_tmp,get_count,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
+						map->addflooritem(&sd->bl, &item_tmp, get_count, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
 				}
 			}
 		}
@@ -7429,7 +7429,7 @@ BUILDIN(makeitem)
 	item_tmp.nameid = nameid;
 	item_tmp.identify=1;
 	
-	map->addflooritem(&item_tmp,amount,m,x,y,0,0,0,0);
+	map->addflooritem(NULL, &item_tmp, amount, m, x, y, 0, 0, 0, 0);
 
 	return true;
 }
@@ -12310,7 +12310,7 @@ BUILDIN(successremovecards)
 			if((flag=pc->additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT))) {
 				// get back the cart in inventory
 				clif->additem(sd,0,0,flag);
-				map->addflooritem(&item_tmp,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
+				map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
 			}
 		}
 	}
@@ -12335,7 +12335,7 @@ BUILDIN(successremovecards)
 		if ((flag=pc->additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT))) {
 			//chk if can be spawn in inventory otherwise put on floor
 			clif->additem(sd,0,0,flag);
-			map->addflooritem(&item_tmp,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
+			map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
 		}
 
 		clif->misceffect(&sd->bl,3);
@@ -12384,7 +12384,7 @@ BUILDIN(failedremovecards)
 
 				if((flag=pc->additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT))) {
 					clif->additem(sd,0,0,flag);
-					map->addflooritem(&item_tmp,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
+					map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
 				}
 			}
 		}
@@ -12415,7 +12415,7 @@ BUILDIN(failedremovecards)
 
 			if((flag=pc->additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT))) {
 				clif->additem(sd,0,0,flag);
-				map->addflooritem(&item_tmp,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
+				map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
 			}
 		}
 		clif->misceffect(&sd->bl,2);
@@ -18633,7 +18633,7 @@ BUILDIN(getrandgroupitem) {
 				if ((flag = pc->additem(sd, &it, get_count, LOG_TYPE_SCRIPT))) {
 					clif->additem(sd, 0, 0, flag);
 					if( pc->candrop(sd,&it) )
-						map->addflooritem(&it,get_count,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
+						map->addflooritem(&sd->bl, &it, get_count, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
 				}
 			}
 		}

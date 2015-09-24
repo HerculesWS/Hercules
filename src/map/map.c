@@ -1397,7 +1397,7 @@ void map_clearflooritem(struct block_list *bl) {
  * to place an BL_ITEM object. Scan area is 9x9, returns 1 on success.
  * x and y are modified with the target cell when successful.
  *------------------------------------------*/
-int map_searchrandfreecell(int16 m,int16 *x,int16 *y,int stack) {
+int map_searchrandfreecell(int16 m, const struct block_list *bl, int16 *x, int16 *y, int stack) {
 	int free_cell,i,j;
 	int free_cells[9][2];
 
@@ -1407,7 +1407,7 @@ int map_searchrandfreecell(int16 m,int16 *x,int16 *y,int stack) {
 		for(j=-1;j<=1;j++){
 			if(j+*x<0 || j+*x>=map->list[m].xs)
 				continue;
-			if (map->getcell(m, NULL, j + *x, i + *y, CELL_CHKNOPASS) && !map->getcell(m, NULL, j + *x, i + *y, CELL_CHKICEWALL))
+			if (map->getcell(m, bl, j + *x, i + *y, CELL_CHKNOPASS) && !map->getcell(m, bl, j + *x, i + *y, CELL_CHKICEWALL))
 				continue;
 			//Avoid item stacking to prevent against exploits. [Skotlex]
 			if(stack && map->count_oncell(m,j+*x,i+*y, BL_ITEM, 0) > stack)
@@ -1591,14 +1591,14 @@ bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x, int16 
  * @first_charid, @second_charid, @third_charid, looting priority
  * @flag: &1 MVP item. &2 do stacking check.
  *------------------------------------------*/
-int map_addflooritem(struct item *item_data,int amount,int16 m,int16 x,int16 y,int first_charid,int second_charid,int third_charid,int flags)
+int map_addflooritem(const struct block_list *bl, struct item *item_data, int amount, int16 m, int16 x, int16 y, int first_charid, int second_charid, int third_charid, int flags)
 {
 	int r;
 	struct flooritem_data *fitem=NULL;
 
 	nullpo_ret(item_data);
 
-	if (!map->searchrandfreecell(m, &x, &y, (flags&2)?1:0))
+	if (!map->searchrandfreecell(m, bl, &x, &y, (flags&2)?1:0))
 		return 0;
 	r=rnd();
 
