@@ -5539,10 +5539,10 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 		do {
 			x=rnd()%(map->list[m].xs-2)+1;
 			y=rnd()%(map->list[m].ys-2)+1;
-		} while(map->getcell(m,x,y,CELL_CHKNOPASS));
+		} while(map->getcell(m, &sd->bl, x, y, CELL_CHKNOPASS));
 	}
 
-	if (sd->state.vending && map->getcell(m,x,y,CELL_CHKNOVENDING)) {
+	if (sd->state.vending && map->getcell(m, &sd->bl, x, y, CELL_CHKNOVENDING)) {
 		clif->message (sd->fd, msg_sd(sd,204)); // "You can't open a shop on this cell."
 		vending->close(sd);
 	}
@@ -5614,7 +5614,7 @@ int pc_randomwarp(struct map_session_data *sd, clr_type type) {
 	do {
 		x=rnd()%(map->list[m].xs-2)+1;
 		y=rnd()%(map->list[m].ys-2)+1;
-	} while( map->getcell(m,x,y,CELL_CHKNOPASS) && (i++) < 1000 );
+	} while (map->getcell(m, &sd->bl, x, y, CELL_CHKNOPASS) && (i++) < 1000 );
 
 	if (i < 1000)
 		return pc->setpos(sd,map_id2index(sd->bl.m),x,y,type);

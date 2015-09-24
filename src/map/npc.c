@@ -1099,7 +1099,7 @@ int npc_check_areanpc(int flag, int16 m, int16 x, int16 y, int16 range) {
 	i = 0;
 	for (ys = y0; ys <= y1 && !i; ys++) {
 		for(xs = x0; xs <= x1 && !i; xs++) {
-			if (map->getcell(m,xs,ys,CELL_CHKNPC))
+			if (map->getcell(m, NULL, xs, ys, CELL_CHKNPC))
 				i = 1;
 		}
 	}
@@ -3300,7 +3300,7 @@ void npc_setcells(struct npc_data* nd) {
 
 	for (i = y-ys; i <= y+ys; i++) {
 		for (j = x-xs; j <= x+xs; j++) {
-			if (map->getcell(m, j, i, CELL_CHKNOPASS))
+			if (map->getcell(m, &nd->bl, j, i, CELL_CHKNOPASS))
 				continue;
 			map->list[m].setcell(m, j, i, CELL_NPC, true);
 		}
@@ -3337,10 +3337,10 @@ void npc_unsetcells(struct npc_data* nd) {
 
 	//Locate max range on which we can locate npc cells
 	//FIXME: does this really do what it's supposed to do? [ultramage]
-	for(x0 = x-xs; x0 > 0 && map->getcell(m, x0, y, CELL_CHKNPC); x0--);
-	for(x1 = x+xs; x1 < map->list[m].xs-1 && map->getcell(m, x1, y, CELL_CHKNPC); x1++);
-	for(y0 = y-ys; y0 > 0 && map->getcell(m, x, y0, CELL_CHKNPC); y0--);
-	for(y1 = y+ys; y1 < map->list[m].ys-1 && map->getcell(m, x, y1, CELL_CHKNPC); y1++);
+	for(x0 = x-xs; x0 > 0 && map->getcell(m, &nd->bl, x0, y, CELL_CHKNPC); x0--);
+	for(x1 = x+xs; x1 < map->list[m].xs-1 && map->getcell(m, &nd->bl, x1, y, CELL_CHKNPC); x1++);
+	for(y0 = y-ys; y0 > 0 && map->getcell(m, &nd->bl, x, y0, CELL_CHKNPC); y0--);
+	for(y1 = y+ys; y1 < map->list[m].ys-1 && map->getcell(m, &nd->bl, x, y1, CELL_CHKNPC); y1++);
 
 	//Erase this npc's cells
 	for (i = y-ys; i <= y+ys; i++)
@@ -4580,14 +4580,14 @@ void npc_debug_warps_sub(struct npc_data* nd) {
 	if (m < 0) return; //Warps to another map, nothing to do about it.
 	if (nd->u.warp.x == 0 && nd->u.warp.y == 0) return; // random warp
 
-	if (map->getcell(m, nd->u.warp.x, nd->u.warp.y, CELL_CHKNPC)) {
+	if (map->getcell(m, &nd->bl, nd->u.warp.x, nd->u.warp.y, CELL_CHKNPC)) {
 		ShowWarning("Warp %s at %s(%d,%d) warps directly on top of an area npc at %s(%d,%d)\n",
 			nd->name,
 			map->list[nd->bl.m].name, nd->bl.x, nd->bl.y,
 			map->list[m].name, nd->u.warp.x, nd->u.warp.y
 			);
 	}
-	if (map->getcell(m, nd->u.warp.x, nd->u.warp.y, CELL_CHKNOPASS)) {
+	if (map->getcell(m, &nd->bl, nd->u.warp.x, nd->u.warp.y, CELL_CHKNOPASS)) {
 		ShowWarning("Warp %s at %s(%d,%d) warps to a non-walkable tile at %s(%d,%d)\n",
 			nd->name,
 			map->list[nd->bl.m].name, nd->bl.x, nd->bl.y,

@@ -5824,7 +5824,7 @@ int buildin_areawarp_sub(struct block_list *bl,va_list ap)
 			tx = rnd()%(x3-x2+1)+x2;
 			ty = rnd()%(y3-y2+1)+y2;
 			j++;
-		} while( map->getcell(index,tx,ty,CELL_CHKNOPASS) && j < max );
+		} while (map->getcell(index, bl, tx, ty, CELL_CHKNOPASS) && j < max);
 
 		pc->setpos((TBL_PC *)bl,index,tx,ty,CLR_OUTSIGHT);
 	}
@@ -16841,13 +16841,14 @@ BUILDIN(checkcell) {
 	int16 x = script_getnum(st,3);
 	int16 y = script_getnum(st,4);
 	cell_chk type = (cell_chk)script_getnum(st,5);
+	TBL_PC* sd = script->rid2sd(st);
 
 	if ( m == -1 ) {
 		ShowWarning("checkcell: Attempted to run on unexsitent map '%s', type %d, x/y %d,%d\n",script_getstr(st,2),type,x,y);
 		return true;
 	}
 
-	script_pushint(st, map->getcell(m, x, y, type));
+	script_pushint(st, map->getcell(m, &sd->bl, x, y, type));
 
 	return true;
 }

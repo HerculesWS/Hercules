@@ -2731,7 +2731,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 					short dir_x, dir_y;
 					dir_x = dirx[(dir+4)%8];
 					dir_y = diry[(dir+4)%8];
-					if( map->getcell(bl->m, bl->x+dir_x, bl->y+dir_y, CELL_CHKNOPASS) != 0 )
+					if (map->getcell(bl->m, bl, bl->x + dir_x, bl->y + dir_y, CELL_CHKNOPASS) != 0)
 						skill->addtimerskill(src, tick + 300 * ((flag&2) ? 1 : 2), bl->id, 0, 0, skill_id, skill_lv, BF_WEAPON, flag|4);
 				}
 				break;
@@ -3377,7 +3377,7 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 						if( path->search_long(NULL, src, src->m, src->x, src->y, x, y, CELL_CHKWALL) )
 							skill->unitsetting(src,skl->skill_id,skl->skill_lv,x,y,skl->flag);
 						if( path->search_long(NULL, src, src->m, src->x, src->y, skl->x, skl->y, CELL_CHKWALL)
-							&& !map->getcell(src->m, skl->x, skl->y, CELL_CHKLANDPROTECTOR) )
+							&& !map->getcell(src->m, src, skl->x, skl->y, CELL_CHKLANDPROTECTOR) )
 							clif->skill_poseffect(src,skl->skill_id,skl->skill_lv,skl->x,skl->y,tick);
 					}
 					else if( path->search_long(NULL, src, src->m, src->x, src->y, skl->x, skl->y, CELL_CHKWALL) )
@@ -4044,7 +4044,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 					tx -= dirx[dir];
 					ty -= diry[dir];
 					// If target cell is a wall then break
-					if(map->getcell(bl->m,tx,ty,CELL_CHKWALL))
+					if(map->getcell(bl->m, bl, tx, ty, CELL_CHKWALL))
 						break;
 					skill->blown(src,bl,1,dir,0);
 					// Splash around target cell, but only cells inside area; we first have to check the area is not negative
@@ -4175,7 +4175,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 				for( y = src->y - range; y <= src->y + range; ++y )
 					for( x = src->x - range; x <= src->x + range; ++x ) {
 						if( !map->find_skill_unit_oncell(src,x,y,SA_LANDPROTECTOR,NULL,1) ) {
-							if( src->type != BL_PC || map->getcell(src->m,x,y,CELL_CHKWATER) ) // non-players bypass the water requirement
+							if (src->type != BL_PC || map->getcell(src->m, src, x, y, CELL_CHKWATER)) // non-players bypass the water requirement
 								count++; // natural water cell
 							else if( (su = map->find_skill_unit_oncell(src,x,y,SA_DELUGE,NULL,1)) != NULL
 							      || (su = map->find_skill_unit_oncell(src,x,y,NJ_SUITON,NULL,1)) != NULL ) {
@@ -7083,7 +7083,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				}
 
 				clif->skill_nodamage(src,bl,TK_HIGHJUMP,skill_lv,1);
-				if(!map->count_oncell(src->m,x,y,BL_PC|BL_NPC|BL_MOB,0) && map->getcell(src->m,x,y,CELL_CHKREACH)) {
+				if (!map->count_oncell(src->m, x, y, BL_PC | BL_NPC | BL_MOB, 0) && map->getcell(src->m, src, x, y, CELL_CHKREACH)) {
 					clif->slide(src,x,y);
 					unit->movepos(src, x, y, 1, 0);
 				}
@@ -7902,7 +7902,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					if ((dstsd = g->member[i].sd) != NULL && sd != dstsd && !dstsd->state.autotrade && !pc_isdead(dstsd)) {
 						if (map->list[dstsd->bl.m].flag.nowarp && !map_flag_gvg2(dstsd->bl.m))
 							continue;
-						if(map->getcell(src->m,src->x+dx[j],src->y+dy[j],CELL_CHKNOREACH))
+						if (map->getcell(src->m, src, src->x + dx[j], src->y + dy[j], CELL_CHKNOREACH))
 							dx[j] = dy[j] = 0;
 						pc->setpos(dstsd, map_id2index(src->m), src->x+dx[j], src->y+dy[j], CLR_RESPAWN);
 					}
@@ -10460,8 +10460,8 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 					tmpx = x - area + rnd()%(area * 2 + 1);
 					tmpy = y - area + rnd()%(area * 2 + 1);
 
-					if( i == 0 && path->search_long(NULL, src, src->m, src->x, src->y, tmpx, tmpy, CELL_CHKWALL)
-						&& !map->getcell(src->m, tmpx, tmpy, CELL_CHKLANDPROTECTOR))
+					if (i == 0 && path->search_long(NULL, src, src->m, src->x, src->y, tmpx, tmpy, CELL_CHKWALL)
+						&& !map->getcell(src->m, src, tmpx, tmpy, CELL_CHKLANDPROTECTOR))
 						clif->skill_poseffect(src,skill_id,skill_lv,tmpx,tmpy,tick);
 
 					if( i > 0 )
@@ -11119,7 +11119,7 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 			break;
 
 		case WZ_FIREPILLAR:
-			if( map->getcell(src->m, x, y, CELL_CHKLANDPROTECTOR) )
+			if (map->getcell(src->m, src, x, y, CELL_CHKLANDPROTECTOR))
 				return NULL;
 			if((flag&1)!=0)
 				limit=1000;
@@ -11128,7 +11128,7 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 		case WZ_QUAGMIRE: //The target changes to "all" if used in a gvg map. [Skotlex]
 		case AM_DEMONSTRATION:
 		case GN_HELLS_PLANT:
-			if( skill_id == GN_HELLS_PLANT && map->getcell(src->m, x, y, CELL_CHKLANDPROTECTOR) )
+			if (skill_id == GN_HELLS_PLANT && map->getcell(src->m, src, x, y, CELL_CHKLANDPROTECTOR))
 				return NULL;
 			if (map_flag_vs(src->m) && battle_config.vs_traps_bctall
 				&& (src->type&battle_config.vs_traps_bctall))
@@ -11370,7 +11370,7 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 		case SO_FIRE_INSIGNIA:
 		case SO_WIND_INSIGNIA:
 		case SO_EARTH_INSIGNIA:
-			if( map->getcell(src->m, x, y, CELL_CHKLANDPROTECTOR) )
+			if (map->getcell(src->m, src, x, y, CELL_CHKLANDPROTECTOR))
 				return NULL;
 			break;
 		case SO_CLOUD_KILL:
@@ -11451,7 +11451,7 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 		val1 = skill_lv;
 		val2 = 0;
 
-		if( !group->state.song_dance && !map->getcell(src->m,ux,uy,CELL_CHKREACH) )
+		if (!group->state.song_dance && !map->getcell(src->m, src, ux, uy, CELL_CHKREACH))
 			continue; // don't place skill units on walls (except for songs/dances/encores)
 		if( battle_config.skill_wall_check && skill->get_unit_flag(skill_id)&UF_PATHCHECK && !path->search_long(NULL,src,src->m,ux,uy,x,y,CELL_CHKWALL) )
 			continue; // no path between cell and center of casting.
@@ -11463,7 +11463,7 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 				break;
 			case WZ_ICEWALL:
 				val1 = (skill_lv <= 1) ? 500 : 200 + 200*skill_lv;
-				val2 = map->getcell(src->m, ux, uy, CELL_GETTYPE);
+				val2 = map->getcell(src->m, src, ux, uy, CELL_GETTYPE);
 				break;
 			case HT_LANDMINE:
 			case MA_LANDMINE:
@@ -11575,14 +11575,14 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 	nullpo_ret(sg=src->group);
 	nullpo_ret(ss=map->id2bl(sg->src_id));
 
-	if( skill->get_type(sg->skill_id) == BF_MAGIC && map->getcell(src->bl.m, src->bl.x, src->bl.y, CELL_CHKLANDPROTECTOR) && sg->skill_id != SA_LANDPROTECTOR )
+	if (skill->get_type(sg->skill_id) == BF_MAGIC && map->getcell(src->bl.m, &src->bl, src->bl.x, src->bl.y, CELL_CHKLANDPROTECTOR) && sg->skill_id != SA_LANDPROTECTOR)
 		return 0; //AoE skills are ineffective. [Skotlex]
 	sc = status->get_sc(bl);
 
 	if (sc && sc->option&OPTION_HIDE && sg->skill_id != WZ_HEAVENDRIVE && sg->skill_id != WL_EARTHSTRAIN )
 		return 0; //Hidden characters are immune to AoE skills except to these. [Skotlex]
 
-	if (sc && sc->data[SC_VACUUM_EXTREME] && map->getcell(bl->m, bl->x, bl->y, CELL_CHKLANDPROTECTOR))
+	if (sc && sc->data[SC_VACUUM_EXTREME] && map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKLANDPROTECTOR))
 		status_change_end(bl, SC_VACUUM_EXTREME, INVALID_TIMER);
 
 	if ( sc && sc->data[SC_HOVERING] && ( sg->skill_id == SO_VACUUM_EXTREME || sg->skill_id == SO_ELECTRICWALK || sg->skill_id == SO_FIREWALK || sg->skill_id == WZ_QUAGMIRE ) )
@@ -13379,7 +13379,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 				for (i=0;i<size*size;i++) {
 					int x = sd->bl.x+(i%size-range);
 					int y = sd->bl.y+(i/size-range);
-					if (map->getcell(sd->bl.m,x,y,CELL_CHKWALL)) {
+					if (map->getcell(sd->bl.m, &sd->bl, x, y, CELL_CHKWALL)) {
 						clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 						return 0;
 					}
@@ -13831,7 +13831,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 		case ST_WATER:
 			if (sc && (sc->data[SC_DELUGE] || sc->data[SC_NJ_SUITON]))
 				break;
-			if (map->getcell(sd->bl.m,sd->bl.x,sd->bl.y,CELL_CHKWATER))
+			if (map->getcell(sd->bl.m, &sd->bl, sd->bl.x, sd->bl.y, CELL_CHKWATER))
 				break;
 			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 			return 0;
@@ -15823,7 +15823,7 @@ bool skill_check_cloaking(struct block_list *bl, struct status_change_entry *sce
 	) {
 		//Check for walls.
 		int i;
-		ARR_FIND( 0, 8, i, map->getcell(bl->m, bl->x+dx[i], bl->y+dy[i], CELL_CHKNOPASS) != 0 );
+		ARR_FIND( 0, 8, i, map->getcell(bl->m, bl, bl->x+dx[i], bl->y+dy[i], CELL_CHKNOPASS) != 0 );
 		if( i == 8 )
 			wall = false;
 	}
@@ -15884,7 +15884,7 @@ bool skill_check_camouflage(struct block_list *bl, struct status_change_entry *s
 
 	if( bl->type == BL_PC ) { //Check for walls.
 		int i;
-		ARR_FIND( 0, 8, i, map->getcell(bl->m, bl->x+dx[i], bl->y+dy[i], CELL_CHKNOPASS) != 0 );
+		ARR_FIND( 0, 8, i, map->getcell(bl->m, bl, bl->x+dx[i], bl->y+dy[i], CELL_CHKNOPASS) != 0 );
 		if( i == 8 )
 			wall = false;
 	}
@@ -16355,7 +16355,7 @@ int skill_unit_timer_sub_onplace(struct block_list* bl, va_list ap) {
 
 	nullpo_ret(group);
 
-	if( !(skill->get_inf2(group->skill_id)&(INF2_SONG_DANCE|INF2_TRAP|INF2_NOLP)) && map->getcell(su->bl.m, su->bl.x, su->bl.y, CELL_CHKLANDPROTECTOR) )
+	if (!(skill->get_inf2(group->skill_id)&(INF2_SONG_DANCE|INF2_TRAP|INF2_NOLP)) && map->getcell(su->bl.m, &su->bl, su->bl.x, su->bl.y, CELL_CHKLANDPROTECTOR))
 		return 0; //AoE skills are ineffective. [Skotlex]
 
 	if( battle->check_target(&su->bl,bl,group->target_flag) <= 0 )

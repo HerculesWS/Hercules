@@ -1407,7 +1407,7 @@ int map_searchrandfreecell(int16 m,int16 *x,int16 *y,int stack) {
 		for(j=-1;j<=1;j++){
 			if(j+*x<0 || j+*x>=map->list[m].xs)
 				continue;
-			if(map->getcell(m,j+*x,i+*y,CELL_CHKNOPASS) && !map->getcell(m,j+*x,i+*y,CELL_CHKICEWALL))
+			if (map->getcell(m, NULL, j + *x, i + *y, CELL_CHKNOPASS) && !map->getcell(m, NULL, j + *x, i + *y, CELL_CHKICEWALL))
 				continue;
 			//Avoid item stacking to prevent against exploits. [Skotlex]
 			if(stack && map->count_oncell(m,j+*x,i+*y, BL_ITEM, 0) > stack)
@@ -1466,7 +1466,7 @@ int map_search_freecell(struct block_list *src, int16 m, int16 *x,int16 *y, int1
 		//No range? Return the target cell then....
 		*x = bx;
 		*y = by;
-		return map->getcell(m,*x,*y,CELL_CHKREACH);
+		return map->getcell(m, src, *x, *y, CELL_CHKREACH);
 	}
 
 	if (rx >= 0 && ry >= 0) {
@@ -1484,7 +1484,7 @@ int map_search_freecell(struct block_list *src, int16 m, int16 *x,int16 *y, int1
 		if (*x == bx && *y == by)
 			continue; //Avoid picking the same target tile.
 
-		if (map->getcell(m,*x,*y,CELL_CHKREACH)) {
+		if (map->getcell(m, src, *x, *y, CELL_CHKREACH)) {
 			if(flag&2 && !unit->can_reach_pos(src, *x, *y, 1))
 				continue;
 			if(flag&4) {
@@ -1530,7 +1530,7 @@ bool map_closest_freecell(int16 m, int16 *x, int16 *y, int type, int flag)
 		if(dir%2 == 0 && costrange%MOVE_COST == 0) {
 			tx = *x+dx*(costrange/MOVE_COST);
 			ty = *y+dy*(costrange/MOVE_COST);
-			if(!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m,tx,ty,CELL_CHKPASS)) {
+			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, NULL, tx, ty, CELL_CHKPASS)) {
 				*x = tx;
 				*y = ty;
 				return true;
@@ -1540,7 +1540,7 @@ bool map_closest_freecell(int16 m, int16 *x, int16 *y, int type, int flag)
 		else if(dir%2 == 1 && costrange%MOVE_DIAGONAL_COST == 0) {
 			tx = *x+dx*(costrange/MOVE_DIAGONAL_COST);
 			ty = *y+dy*(costrange/MOVE_DIAGONAL_COST);
-			if(!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m,tx,ty,CELL_CHKPASS)) {
+			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, NULL, tx, ty, CELL_CHKPASS)) {
 				*x = tx;
 				*y = ty;
 				return true;
@@ -1550,14 +1550,14 @@ bool map_closest_freecell(int16 m, int16 *x, int16 *y, int type, int flag)
 		else if(dir%2 == 1 && costrange%MOVE_COST == 4) {
 			tx = *x+dx*((dir%4==3)?(costrange/MOVE_COST):1);
 			ty = *y+dy*((dir%4==1)?(costrange/MOVE_COST):1);
-			if(!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m,tx,ty,CELL_CHKPASS)) {
+			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, NULL, tx, ty, CELL_CHKPASS)) {
 				*x = tx;
 				*y = ty;
 				return true;
 			}
 			tx = *x+dx*((dir%4==1)?(costrange/MOVE_COST):1);
 			ty = *y+dy*((dir%4==3)?(costrange/MOVE_COST):1);
-			if(!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m,tx,ty,CELL_CHKPASS)) {
+			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, NULL, tx, ty, CELL_CHKPASS)) {
 				*x = tx;
 				*y = ty;
 				return true;
@@ -2567,8 +2567,8 @@ int map_random_dir(struct block_list *bl, int16 *x, int16 *y)
 		xi = bl->x + segment*dirx[j];
 		segment = (short)sqrt((float)(dist2 - segment*segment)); //The complement of the previously picked segment
 		yi = bl->y + segment*diry[j];
-	} while ( (map->getcell(bl->m,xi,yi,CELL_CHKNOPASS) || !path->search(NULL,bl,bl->m,bl->x,bl->y,xi,yi,1,CELL_CHKNOREACH))
-	       && (++i)<100 );
+	} while ((map->getcell(bl->m, bl, xi, yi, CELL_CHKNOPASS) || !path->search(NULL, bl, bl->m, bl->x, bl->y, xi, yi, 1, CELL_CHKNOREACH))
+	       && (++i)<100);
 
 	if (i < 100) {
 		*x = xi;
@@ -2640,11 +2640,11 @@ void map_cellfromcache(struct map_data *m) {
 /*==========================================
  * Confirm if celltype in (m,x,y) match the one given in cellchk
  *------------------------------------------*/
-int map_getcell(int16 m,int16 x,int16 y,cell_chk cellchk) {
-	return (m < 0 || m >= map->count) ? 0 : map->list[m].getcellp(&map->list[m],x,y,cellchk);
+int map_getcell(int16 m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk) {
+	return (m < 0 || m >= map->count) ? 0 : map->list[m].getcellp(&map->list[m], bl, x, y, cellchk);
 }
 
-int map_getcellp(struct map_data* m,int16 x,int16 y,cell_chk cellchk) {
+int map_getcellp(struct map_data* m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk) {
 	struct mapcell cell;
 
 	nullpo_ret(m);
@@ -2715,12 +2715,13 @@ int map_getcellp(struct map_data* m,int16 x,int16 y,cell_chk cellchk) {
 }
 
 /* [Ind/Hercules] */
-int map_sub_getcellp(struct map_data* m,int16 x,int16 y,cell_chk cellchk) {
+int map_sub_getcellp(struct map_data* m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk) {
 	map->cellfromcache(m);
 	m->getcellp = map->getcellp;
 	m->setcell  = map->setcell;
-	return m->getcellp(m,x,y,cellchk);
+	return m->getcellp(m, bl, x, y, cellchk);
 }
+
 /*==========================================
  * Change the type/flags of a map cell
  * 'cell' - which flag to modify
@@ -2808,7 +2809,7 @@ bool map_iwall_set(int16 m, int16 x, int16 y, int size, int8 dir, bool shootable
 	if( (iwall = (struct iwall_data *)strdb_get(map->iwall_db, wall_name)) != NULL )
 		return false; // Already Exists
 
-	if( map->getcell(m, x, y, CELL_CHKNOREACH) )
+	if (map->getcell(m, NULL, x, y, CELL_CHKNOREACH))
 		return false; // Starting cell problem
 
 	CREATE(iwall, struct iwall_data, 1);
@@ -2823,13 +2824,13 @@ bool map_iwall_set(int16 m, int16 x, int16 y, int size, int8 dir, bool shootable
 	for( i = 0; i < size; i++ ) {
 		map->iwall_nextxy(x, y, dir, i, &x1, &y1);
 
-		if( map->getcell(m, x1, y1, CELL_CHKNOREACH) )
+		if (map->getcell(m, NULL, x1, y1, CELL_CHKNOREACH))
 			break; // Collision
 
 		map->list[m].setcell(m, x1, y1, CELL_WALKABLE, false);
 		map->list[m].setcell(m, x1, y1, CELL_SHOOTABLE, shootable);
 
-		clif->changemapcell(0, m, x1, y1, map->getcell(m, x1, y1, CELL_GETTYPE), ALL_SAMEMAP);
+		clif->changemapcell(0, m, x1, y1, map->getcell(m, NULL, x1, y1, CELL_GETTYPE), ALL_SAMEMAP);
 	}
 
 	iwall->size = i;
@@ -2856,7 +2857,7 @@ void map_iwall_get(struct map_session_data *sd) {
 
 		for( i = 0; i < iwall->size; i++ ) {
 			map->iwall_nextxy(iwall->x, iwall->y, iwall->dir, i, &x1, &y1);
-			clif->changemapcell(sd->fd, iwall->m, x1, y1, map->getcell(iwall->m, x1, y1, CELL_GETTYPE), SELF);
+			clif->changemapcell(sd->fd, iwall->m, x1, y1, map->getcell(iwall->m, &sd->bl, x1, y1, CELL_GETTYPE), SELF);
 		}
 	}
 	dbi_destroy(iter);
@@ -2876,7 +2877,7 @@ void map_iwall_remove(const char *wall_name)
 		map->list[iwall->m].setcell(iwall->m, x1, y1, CELL_SHOOTABLE, true);
 		map->list[iwall->m].setcell(iwall->m, x1, y1, CELL_WALKABLE, true);
 
-		clif->changemapcell(0, iwall->m, x1, y1, map->getcell(iwall->m, x1, y1, CELL_GETTYPE), ALL_SAMEMAP);
+		clif->changemapcell(0, iwall->m, x1, y1, map->getcell(iwall->m, NULL, x1, y1, CELL_GETTYPE), ALL_SAMEMAP);
 	}
 
 	map->list[iwall->m].iwall_num--;

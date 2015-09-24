@@ -719,7 +719,7 @@ struct map_data {
 	bool custom_name; ///< Whether the instanced map is using a custom name
 
 	/* */
-	int (*getcellp)(struct map_data* m,int16 x,int16 y,cell_chk cellchk);
+	int (*getcellp)(struct map_data* m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk);
 	void (*setcell) (int16 m, int16 x, int16 y, cell_t cell, bool flag);
 	char *cellPos;
 
@@ -924,7 +924,7 @@ END_ZEROED_BLOCK;
 	void (*zone_change) (int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath);
 	void (*zone_change2) (int m, struct map_zone_data *zone);
 
-	int (*getcell) (int16 m,int16 x,int16 y,cell_chk cellchk);
+	int (*getcell) (int16 m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk);
 	void (*setgatcell) (int16 m, int16 x, int16 y, int gat);
 
 	void (*cellfromcache) (struct map_data *m);
@@ -1048,9 +1048,9 @@ END_ZEROED_BLOCK;
 	int (*removemobs_sub) (struct block_list *bl, va_list ap);
 	struct mapcell (*gat2cell) (int gat);
 	int (*cell2gat) (struct mapcell cell);
-	int (*getcellp) (struct map_data *m, int16 x, int16 y, cell_chk cellchk);
+	int (*getcellp) (struct map_data *m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk);
 	void (*setcell) (int16 m, int16 x, int16 y, cell_t cell, bool flag);
-	int (*sub_getcellp) (struct map_data *m, int16 x, int16 y, cell_chk cellchk);
+	int (*sub_getcellp) (struct map_data *m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk);
 	void (*sub_setcell) (int16 m, int16 x, int16 y, cell_t cell, bool flag);
 	void (*iwall_nextxy) (int16 x, int16 y, int8 dir, int pos, int16 *x1, int16 *y1);
 	DBData (*create_map_data_other_server) (DBKey key, va_list args);

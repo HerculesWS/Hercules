@@ -6364,7 +6364,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 
 	m = target->m;
 
-	if (flag&BCT_ENEMY && ( map->getcell(m,src->x,src->y,CELL_CHKBASILICA) || map->getcell(m,target->x,target->y,CELL_CHKBASILICA) ) ) {
+	if (flag & BCT_ENEMY && (map->getcell(m, src, src->x, src->y, CELL_CHKBASILICA) || map->getcell(m, src, target->x, target->y, CELL_CHKBASILICA))) {
 		return -1;
 	}
 

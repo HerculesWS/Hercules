@@ -9560,7 +9560,7 @@ void clif_parse_LoadEndAck(int fd, struct map_session_data *sd) {
 		clif->guild_notice(sd, sd->guild);
 
 	// For automatic triggering of NPCs after map loading (so you don't need to walk 1 step first)
-	if (map->getcell(sd->bl.m,sd->bl.x,sd->bl.y,CELL_CHKNPC))
+	if (map->getcell(sd->bl.m, &sd->bl, sd->bl.x, sd->bl.y, CELL_CHKNPC))
 		npc->touch_areanpc(sd,sd->bl.m,sd->bl.x,sd->bl.y);
 	else
 		npc->untouch_areanpc(sd, sd->bl.m, sd->bl.x, sd->bl.y);
@@ -12836,7 +12836,7 @@ void clif_parse_OpenVending(int fd, struct map_session_data* sd) {
 		clif->message (sd->fd, msg_sd(sd,276)); // "You can't open a shop on this map"
 		return;
 	}
-	if( map->getcell(sd->bl.m,sd->bl.x,sd->bl.y,CELL_CHKNOVENDING) ) {
+	if (map->getcell(sd->bl.m, &sd->bl, sd->bl.x, sd->bl.y, CELL_CHKNOVENDING)) {
 		clif->message (sd->fd, msg_sd(sd,204)); // "You can't open a shop on this cell."
 		return;
 	}

@@ -795,7 +795,7 @@ int pet_randomwalk(struct pet_data *pd, int64 tick)
 			int r=rnd();
 			int x=pd->bl.x+r%(d*2+1)-d;
 			int y=pd->bl.y+r/(d*2+1)%(d*2+1)-d;
-			if(map->getcell(pd->bl.m,x,y,CELL_CHKPASS) && unit->walktoxy(&pd->bl,x,y,0)) {
+			if(map->getcell (pd->bl.m, &pd->bl, x, y, CELL_CHKPASS) && unit->walktoxy(&pd->bl, x, y, 0)) {
 				pd->move_fail_count=0;
 				break;
 			}
