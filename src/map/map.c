@@ -1511,7 +1511,7 @@ int map_search_freecell(struct block_list *src, int16 m, int16 *x,int16 *y, int1
  * flag:
  *   0x1 - only count standing units
  *------------------------------------------*/
-bool map_closest_freecell(int16 m, int16 *x, int16 *y, int type, int flag)
+bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x, int16 *y, int type, int flag)
 {
 	uint8 dir = 6;
 	int16 tx = *x;
@@ -1530,7 +1530,7 @@ bool map_closest_freecell(int16 m, int16 *x, int16 *y, int type, int flag)
 		if(dir%2 == 0 && costrange%MOVE_COST == 0) {
 			tx = *x+dx*(costrange/MOVE_COST);
 			ty = *y+dy*(costrange/MOVE_COST);
-			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, NULL, tx, ty, CELL_CHKPASS)) {
+			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, bl, tx, ty, CELL_CHKPASS)) {
 				*x = tx;
 				*y = ty;
 				return true;
@@ -1540,7 +1540,7 @@ bool map_closest_freecell(int16 m, int16 *x, int16 *y, int type, int flag)
 		else if(dir%2 == 1 && costrange%MOVE_DIAGONAL_COST == 0) {
 			tx = *x+dx*(costrange/MOVE_DIAGONAL_COST);
 			ty = *y+dy*(costrange/MOVE_DIAGONAL_COST);
-			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, NULL, tx, ty, CELL_CHKPASS)) {
+			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, bl, tx, ty, CELL_CHKPASS)) {
 				*x = tx;
 				*y = ty;
 				return true;
@@ -1550,14 +1550,14 @@ bool map_closest_freecell(int16 m, int16 *x, int16 *y, int type, int flag)
 		else if(dir%2 == 1 && costrange%MOVE_COST == 4) {
 			tx = *x+dx*((dir%4==3)?(costrange/MOVE_COST):1);
 			ty = *y+dy*((dir%4==1)?(costrange/MOVE_COST):1);
-			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, NULL, tx, ty, CELL_CHKPASS)) {
+			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, bl, tx, ty, CELL_CHKPASS)) {
 				*x = tx;
 				*y = ty;
 				return true;
 			}
 			tx = *x+dx*((dir%4==1)?(costrange/MOVE_COST):1);
 			ty = *y+dy*((dir%4==3)?(costrange/MOVE_COST):1);
-			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, NULL, tx, ty, CELL_CHKPASS)) {
+			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, bl, tx, ty, CELL_CHKPASS)) {
 				*x = tx;
 				*y = ty;
 				return true;

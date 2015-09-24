@@ -946,7 +946,7 @@ END_ZEROED_BLOCK;
 	// search and creation
 	int (*get_new_object_id) (void);
 	int (*search_freecell) (struct block_list *src, int16 m, int16 *x, int16 *y, int16 rx, int16 ry, int flag);
-	bool (*closest_freecell) (int16 m, int16 *x, int16 *y, int type, int flag);
+	bool (*closest_freecell) (int16 m, const struct block_list *bl, int16 *x, int16 *y, int type, int flag);
 	//
 	int (*quit) (struct map_session_data *sd);
 	// npc

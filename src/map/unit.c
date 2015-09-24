@@ -494,7 +494,7 @@ int unit_walktoxy( struct block_list *bl, short x, short y, int flag)
 
 	if( ud == NULL) return 0;
 
-	if (battle_config.check_occupied_cells && (flag&8) && !map->closest_freecell(bl->m, &x, &y, BL_CHAR|BL_NPC, 1)) //This might change x and y
+	if (battle_config.check_occupied_cells && (flag&8) && !map->closest_freecell(bl->m, bl, &x, &y, BL_CHAR|BL_NPC, 1)) //This might change x and y
 		return 0;
 
 	if (!path->search(&wpd, bl, bl->m, bl->x, bl->y, x, y, flag&1, CELL_CHKNOPASS)) // Count walk path cells
