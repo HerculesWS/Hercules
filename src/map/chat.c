@@ -94,7 +94,7 @@ bool chat_createpcchat(struct map_session_data* sd, const char* title, const cha
 		return false; //Can't create chatrooms on this map.
 	}
 
-	if( map->getcell(sd->bl.m,sd->bl.x,sd->bl.y,CELL_CHKNOCHAT) ) {
+	if (map->getcell(sd->bl.m, &sd->bl, sd->bl.x, sd->bl.y, CELL_CHKNOCHAT) ) {
 		clif->message (sd->fd, msg_sd(sd,865)); // "Can't create chat rooms in this area."
 		return false;
 	}

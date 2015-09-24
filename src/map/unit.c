@@ -268,13 +268,13 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 		icewall_walk_block = 0;
 
 	//Monsters will walk into an icewall from the west and south if they already started walking
-	if(map->getcell(bl->m,x+dx,y+dy,CELL_CHKNOPASS)
-	&& (icewall_walk_block == 0 || !map->getcell(bl->m,x+dx,y+dy,CELL_CHKICEWALL) || dx < 0 || dy < 0))
+	if (map->getcell(bl->m, bl, x + dx, y + dy, CELL_CHKNOPASS)
+	    && (icewall_walk_block == 0 || !map->getcell(bl->m, bl, x + dx, y + dy, CELL_CHKICEWALL) || dx < 0 || dy < 0))
 		return unit->walktoxy_sub(bl);
 
 	//Monsters can only leave icewalls to the west and south
 	//But if movement fails more than icewall_walk_block times, they can ignore this rule
-	if(md && md->walktoxy_fail_count < icewall_walk_block && map->getcell(bl->m,x,y,CELL_CHKICEWALL) && (dx > 0 || dy > 0)) {
+	if (md && md->walktoxy_fail_count < icewall_walk_block && map->getcell(bl->m, bl, x, y, CELL_CHKICEWALL) && (dx > 0 || dy > 0)) {
 		//Needs to be done here so that rudeattack skills are invoked
 		md->walktoxy_fail_count++;
 		clif->fixpos(bl);
@@ -306,7 +306,7 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 	if(sd) {
 		if( sd->touching_id )
 			npc->touchnext_areanpc(sd,false);
-		if(map->getcell(bl->m,x,y,CELL_CHKNPC)) {
+		if (map->getcell(bl->m, bl, x, y, CELL_CHKNPC)) {
 			npc->touch_areanpc(sd,bl->m,x,y);
 			if (bl->prev == NULL) //Script could have warped char, abort remaining of the function.
 				return 0;
@@ -338,7 +338,7 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 	} else if (md) {
 		//Movement was successful, reset walktoxy_fail_count
 		md->walktoxy_fail_count = 0;
-		if( map->getcell(bl->m,x,y,CELL_CHKNPC) ) {
+		if (map->getcell(bl->m, bl, x, y, CELL_CHKNPC)) {
 			if( npc->touch_areanpc2(md) ) return 0; // Warped
 		} else
 			md->areanpc_id = 0;
@@ -494,7 +494,7 @@ int unit_walktoxy( struct block_list *bl, short x, short y, int flag)
 
 	if( ud == NULL) return 0;
 
-	if (battle_config.check_occupied_cells && (flag&8) && !map->closest_freecell(bl->m, &x, &y, BL_CHAR|BL_NPC, 1)) //This might change x and y
+	if (battle_config.check_occupied_cells && (flag&8) && !map->closest_freecell(bl->m, bl, &x, &y, BL_CHAR|BL_NPC, 1)) //This might change x and y
 		return 0;
 
 	if (!path->search(&wpd, bl, bl->m, bl->x, bl->y, x, y, flag&1, CELL_CHKNOPASS)) // Count walk path cells
@@ -683,7 +683,7 @@ bool unit_run( struct block_list *bl, struct map_session_data *sd, enum sc_type 
 
 	// Search for available path
 	for(i = 0; i < AREA_SIZE; i++) {
-		if(!map->getcell(bl->m,to_x+dir_x,to_y+dir_y,CELL_CHKPASS))
+		if (!map->getcell(bl->m, bl, to_x + dir_x, to_y + dir_y, CELL_CHKPASS))
 			break;
 
 		//if sprinting and there's a PC/Mob/NPC, block the path [Kevin]
@@ -720,7 +720,7 @@ bool unit_run( struct block_list *bl, struct map_session_data *sd, enum sc_type 
 //Makes bl attempt to run dist cells away from target. Uses hard-paths.
 int unit_escape(struct block_list *bl, struct block_list *target, short dist) {
 	uint8 dir = map->calc_dir(target, bl->x, bl->y);
-	while( dist > 0 && map->getcell(bl->m, bl->x + dist*dirx[dir], bl->y + dist*diry[dir], CELL_CHKNOREACH) )
+	while (dist > 0 && map->getcell(bl->m, bl, bl->x + dist * dirx[dir], bl->y + dist * diry[dir], CELL_CHKNOREACH))
 		dist--;
 	return ( dist > 0 && unit->walktoxy(bl, bl->x + dist*dirx[dir], bl->y + dist*diry[dir], 0) );
 }
@@ -741,7 +741,7 @@ int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int easy, bool
 	unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 	unit->stop_attack(bl);
 
-	if( checkpath && (map->getcell(bl->m,dst_x,dst_y,CELL_CHKNOPASS) || !path->search(NULL,bl,bl->m,bl->x,bl->y,dst_x,dst_y,easy,CELL_CHKNOREACH)) )
+	if (checkpath && (map->getcell(bl->m, bl, dst_x, dst_y, CELL_CHKNOPASS) || !path->search(NULL, bl, bl->m, bl->x, bl->y, dst_x, dst_y, easy, CELL_CHKNOREACH)) )
 		return 0; // unreachable
 
 	ud->to_x = dst_x;
@@ -764,7 +764,7 @@ int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int easy, bool
 	if(sd) {
 		if( sd->touching_id )
 			npc->touchnext_areanpc(sd,false);
-		if(map->getcell(bl->m,bl->x,bl->y,CELL_CHKNPC)) {
+		if (map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKNPC)) {
 			npc->touch_areanpc(sd,bl->m,bl->x,bl->y);
 			if (bl->prev == NULL) //Script could have warped char, abort remaining of the function.
 				return 0;
@@ -866,7 +866,7 @@ int unit_blown(struct block_list* bl, int dx, int dy, int count, int flag)
 				if(sd->touching_id) {
 					npc->touchnext_areanpc(sd, false);
 				}
-				if(map->getcell(bl->m, bl->x, bl->y, CELL_CHKNPC)) {
+				if (map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKNPC)) {
 					npc->touch_areanpc(sd, bl->m, bl->x, bl->y);
 				} else {
 					npc->untouch_areanpc(sd, bl->m, bl->x, bl->y);;
@@ -919,7 +919,7 @@ int unit_warp(struct block_list *bl,short m,short x,short y,clr_type type)
 			return 2;
 
 		}
-	} else if (map->getcell(m,x,y,CELL_CHKNOREACH)) {
+	} else if (map->getcell(m, bl, x, y, CELL_CHKNOREACH)) {
 		//Invalid target cell
 		ShowWarning("unit_warp: Specified non-walkable target cell: %d (%s) at [%d,%d]\n", m, map->list[m].name, x,y);
 
@@ -1104,8 +1104,8 @@ int unit_can_move(struct block_list *bl) {
 	// Icewall walk block special trapped monster mode
 	if(bl->type == BL_MOB) {
 		struct mob_data *md = BL_CAST(BL_MOB, bl);
-		if(md && ((md->status.mode&MD_BOSS && battle_config.boss_icewall_walk_block == 1 && map->getcell(bl->m,bl->x,bl->y,CELL_CHKICEWALL))
-			|| (!(md->status.mode&MD_BOSS) && battle_config.mob_icewall_walk_block == 1 && map->getcell(bl->m,bl->x,bl->y,CELL_CHKICEWALL)))) {
+		if (md && ((md->status.mode&MD_BOSS && battle_config.boss_icewall_walk_block == 1 && map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKICEWALL))
+			|| (!(md->status.mode&MD_BOSS) && battle_config.mob_icewall_walk_block == 1 && map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKICEWALL)))) {
 			md->walktoxy_fail_count = 1; //Make sure rudeattacked skills are invoked
 			return 0;
 		}
@@ -1651,14 +1651,14 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 		 * "WHY IS IT HEREE": ice wall cannot be canceled past this point, the client displays the animation even,
 		 * if we cancel it from castend_pos, so it has to be here for it to not display the animation.
 		 **/
-		if ( skill_id == WZ_ICEWALL && map->getcell(src->m, skill_x, skill_y, CELL_CHKNOICEWALL) )
+		if (skill_id == WZ_ICEWALL && map->getcell(src->m, src, skill_x, skill_y, CELL_CHKNOICEWALL))
 			return 0;
 	}
 
 	if (!status->check_skilluse(src, NULL, skill_id, 0))
 		return 0;
 
-	if( map->getcell(src->m, skill_x, skill_y, CELL_CHKWALL) ) {
+	if (map->getcell(src->m, src, skill_x, skill_y, CELL_CHKWALL)) {
 		// can't cast ground targeted spells on wall cells
 		if (sd) clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 		return 0;
@@ -1967,10 +1967,10 @@ bool unit_can_reach_bl(struct block_list *bl,struct block_list *tbl, int range, 
 	dx=(dx>0)?1:((dx<0)?-1:0);
 	dy=(dy>0)?1:((dy<0)?-1:0);
 
-	if (map->getcell(tbl->m,tbl->x-dx,tbl->y-dy,CELL_CHKNOPASS)) {
+	if (map->getcell(tbl->m, bl, tbl->x - dx, tbl->y - dy, CELL_CHKNOPASS)) {
 		int i;
 		//Look for a suitable cell to place in.
-		for(i=0;i<8 && map->getcell(tbl->m,tbl->x-dirx[i],tbl->y-diry[i],CELL_CHKNOPASS);i++);
+		for (i=0;i<8 && map->getcell(tbl->m, bl, tbl->x - dirx[i], tbl->y - diry[i], CELL_CHKNOPASS); i++);
 		if (i==8) return false; //No valid cells.
 		dx = dirx[i];
 		dy = diry[i];
@@ -2099,7 +2099,7 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick) {
 	range = sstatus->rhw.range;
 
 	if( (unit->is_walking(target) || ud->state.step_attack)
-		&& (target->type == BL_PC || !map->getcell(target->m,target->x,target->y,CELL_CHKICEWALL)) )
+		&& (target->type == BL_PC || !map->getcell(target->m, src, target->x, target->y, CELL_CHKICEWALL)))
 		range++; // Extra range when chasing (does not apply to mobs locked in an icewall)
 
 	if(sd && !check_distance_client_bl(src,target,range)) {

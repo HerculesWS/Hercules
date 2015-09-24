@@ -1630,7 +1630,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 				break;
 			case AL_TELEPORT:
 				//Should fail when used on top of Land Protector [Skotlex]
-				if (src && map->getcell(src->m, src->x, src->y, CELL_CHKLANDPROTECTOR)
+				if (src && map->getcell(src->m, src, src->x, src->y, CELL_CHKLANDPROTECTOR)
 					&& !(st->mode&MD_BOSS)
 					&& (src->type != BL_PC || ((TBL_PC*)src)->skillitem != skill_id))
 					return 0;
@@ -10440,7 +10440,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		skill->unit_move(bl,timer->gettick(),1);
 
 	if (opt_flag & 2 && sd) {
-		if (map->getcell(bl->m,bl->x,bl->y,CELL_CHKNPC))
+		if (map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKNPC))
 			npc->touch_areanpc(sd,bl->m,bl->x,bl->y); //Trigger on-touch event.
 		else
 			npc->untouch_areanpc(sd, bl->m, bl->x, bl->y);

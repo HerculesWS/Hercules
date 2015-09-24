@@ -303,7 +303,7 @@ int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 	tmp_item.card[3] = pd->pet.rename_flag;
 	if((flag = pc->additem(sd,&tmp_item,1,LOG_TYPE_OTHER))) {
 		clif->additem(sd,0,0,flag);
-		map->addflooritem(&tmp_item,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
+		map->addflooritem(&sd->bl, &tmp_item, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
 	}
 	pd->pet.incubate = 1;
 	unit->free(&pd->bl,CLR_OUTSIGHT);
@@ -582,7 +582,7 @@ bool pet_get_egg(int account_id, short pet_class, int pet_id ) {
 	tmp_item.card[3] = 0; //New pets are not named.
 	if((ret = pc->additem(sd,&tmp_item,1,LOG_TYPE_PICKDROP_PLAYER))) {
 		clif->additem(sd,0,0,ret);
-		map->addflooritem(&tmp_item,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
+		map->addflooritem(&sd->bl, &tmp_item, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
 	}
 
 	return true;
@@ -713,7 +713,7 @@ int pet_unequipitem(struct map_session_data *sd, struct pet_data *pd) {
 	tmp_item.identify = 1;
 	if((flag = pc->additem(sd,&tmp_item,1,LOG_TYPE_OTHER))) {
 		clif->additem(sd,0,0,flag);
-		map->addflooritem(&tmp_item,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
+		map->addflooritem(&sd->bl, &tmp_item, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
 	}
 	if( battle_config.pet_equip_required )
 	{ // Skotlex: halt support timers if needed
@@ -795,7 +795,7 @@ int pet_randomwalk(struct pet_data *pd, int64 tick)
 			int r=rnd();
 			int x=pd->bl.x+r%(d*2+1)-d;
 			int y=pd->bl.y+r/(d*2+1)%(d*2+1)-d;
-			if(map->getcell(pd->bl.m,x,y,CELL_CHKPASS) && unit->walktoxy(&pd->bl,x,y,0)) {
+			if(map->getcell (pd->bl.m, &pd->bl, x, y, CELL_CHKPASS) && unit->walktoxy(&pd->bl, x, y, 0)) {
 				pd->move_fail_count=0;
 				break;
 			}
@@ -982,9 +982,9 @@ int pet_delay_item_drop(int tid, int64 tick, int id, intptr_t data) {
 	ditem = list->item;
 	while (ditem) {
 		struct item_drop *ditem_prev;
-		map->addflooritem(&ditem->item_data,ditem->item_data.amount,
-			list->m,list->x,list->y,
-			list->first_charid,list->second_charid,list->third_charid,0);
+		map->addflooritem(NULL, &ditem->item_data, ditem->item_data.amount,
+			list->m, list->x, list->y,
+			list->first_charid, list->second_charid, list->third_charid, 0);
 		ditem_prev = ditem;
 		ditem = ditem->next;
 		ers_free(pet->item_drop_ers, ditem_prev);
