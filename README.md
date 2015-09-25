@@ -2,18 +2,24 @@ Hercules
 ========
 
 Build Status:  
-[![Build Status](https://img.shields.io/travis/HerculesWS/Hercules.svg)](https://travis-ci.org/HerculesWS/Hercules)
-[![Coverity Scan Build Status](https://img.shields.io/coverity/scan/3892.svg)](https://scan.coverity.com/projects/herculesws-hercules)
+[![Build Status](https://travis-ci.org/HerculesWS/Hercules.svg)](https://travis-ci.org/HerculesWS/Hercules)
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/3892/badge.svg)](https://scan.coverity.com/projects/herculesws-hercules)
 
 Issues and pull requests:  
 [![Open Issues](https://img.shields.io/github/issues-raw/HerculesWS/Hercules.svg?label=Open%20Issues)](https://github.com/HerculesWS/Hercules/issues)
 [![Issues in progress](https://badge.waffle.io/HerculesWS/Hercules.svg?label=status%3Aconfirmed&title=In%20Progress)](https://waffle.io/HerculesWS/Hercules)
 [![Ready PRs](https://badge.waffle.io/HerculesWS/Hercules.svg?label=status%3Aready&title=Ready%20PRs)](https://waffle.io/HerculesWS/Hercules)
 
-License:  
-[![License](https://img.shields.io/github/license/HerculesWS/Hercules.svg)](https://github.com/HerculesWS/Hercules/blob/master/LICENSE)
+Development and Community:  
+[![GitHub Repository](https://img.shields.io/badge/github-HerculesWS/Hercules-green.svg)](https://github.com/HerculesWS/Hercules)
+[![Waffle Board](https://img.shields.io/badge/waffle-HerculesWS/Hercules-6699dd.svg)](https://waffle.io/HerculesWS/Hercules)  
+[![IRC](https://img.shields.io/badge/IRC-Rizon/Hercules-yellow.svg)](irc://rizon.net/Hercules)
+[![Community Forum](https://img.shields.io/badge/forum-herc.ws-orange.svg)](http://herc.ws)
+[![Twitter](https://img.shields.io/badge/twitter-@HerculesWS-blue.svg)](https://twitter.com/HerculesWS)
 
-
+Project Info:  
+![Language](https://img.shields.io/badge/language-C-yellow.svg)
+[![License](https://img.shields.io/badge/license-GPLv3-663399.svg)](https://github.com/HerculesWS/Hercules/blob/master/LICENSE)
 
 Table of Contents
 ---------
