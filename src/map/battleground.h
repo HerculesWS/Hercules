@@ -53,8 +53,7 @@ struct battleground_data {
 	// Logout Event
 	char logout_event[EVENT_NAME_LENGTH];
 	char die_event[EVENT_NAME_LENGTH];
-	/* HPM Custom Struct */
-	struct hplugin_data_store *hdata;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 struct bg_arena {

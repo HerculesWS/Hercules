@@ -637,8 +637,7 @@ static void delete_session(int fd)
 		aFree(sockt->session[fd]->wdata);
 		if( sockt->session[fd]->session_data )
 			aFree(sockt->session[fd]->session_data);
-		HPM->data_store_destroy(sockt->session[fd]->hdata);
-		sockt->session[fd]->hdata = NULL;
+		HPM->data_store_destroy(&sockt->session[fd]->hdata);
 		aFree(sockt->session[fd]);
 		sockt->session[fd] = NULL;
 	}

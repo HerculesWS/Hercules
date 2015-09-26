@@ -37,9 +37,10 @@
  *
  * @see HPM_interface::data_store_validate
  */
-bool HPM_login_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **store)
+bool HPM_login_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize)
 {
 	switch (type) {
+		// No supported types at the moment
 		default:
 			break;
 	}

@@ -539,9 +539,7 @@ END_ZEROED_BLOCK;
 	unsigned short (*parse_cmd_func)(int fd, struct map_session_data *sd); ///< parse_cmd_func used by this player
 
 	unsigned char delayed_damage;//ref. counter bugreport:7307 [Ind/Hercules]
-
-	/* HPM Custom Struct */
-	struct hplugin_data_store *hdata;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 
 	/* expiration_time timer id */
 	int expiration_tid;
@@ -756,8 +754,7 @@ struct autotrade_vending {
 	struct item list[MAX_VENDING];
 	struct s_vending vending[MAX_VENDING];
 	unsigned char vend_num;
-	/* HPM Custom Struct */
-	struct hplugin_data_store *hdata;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 /*=====================================

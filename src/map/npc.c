@@ -2321,8 +2321,7 @@ int npc_unload(struct npc_data* nd, bool single)
 		nd->ud = NULL;
 	}
 
-	HPM->data_store_destroy(nd->hdata);
-	nd->hdata = NULL;
+	HPM->data_store_destroy(&nd->hdata);
 
 	aFree(nd);
 

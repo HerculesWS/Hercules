@@ -3239,8 +3239,7 @@ void do_final_maps(void) {
 		if( map->list[i].qi_data )
 			aFree(map->list[i].qi_data);
 
-		HPM->data_store_destroy(map->list[i].hdata);
-		map->list[i].hdata = NULL;
+		HPM->data_store_destroy(&map->list[i].hdata);
 	}
 
 	map->zone_db_clear();

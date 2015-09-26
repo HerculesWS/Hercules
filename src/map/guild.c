@@ -1763,8 +1763,7 @@ int guild_broken(int guild_id,int flag)
 	if( g->instance )
 		aFree(g->instance);
 
-	HPM->data_store_destroy(g->hdata);
-	g->hdata = NULL;
+	HPM->data_store_destroy(&g->hdata);
 
 	idb_remove(guild->db,guild_id);
 	return 0;
@@ -2250,8 +2249,7 @@ void do_final_guild(void) {
 			aFree(g->instance);
 			g->instance = NULL;
 		}
-		HPM->data_store_destroy(g->hdata);
-		g->hdata = NULL;
+		HPM->data_store_destroy(&g->hdata);
 	}
 
 	dbi_destroy(iter);

@@ -881,8 +881,7 @@ void do_init_battleground(bool minimal) {
 int bg_team_db_final(DBKey key, DBData *data, va_list ap) {
 	struct battleground_data* bgd = DB->data2ptr(data);
 
-	HPM->data_store_destroy(bgd->hdata);
-	bgd->hdata = NULL;
+	HPM->data_store_destroy(&bgd->hdata);
 
 	return 0;
 }

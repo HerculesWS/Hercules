@@ -102,8 +102,7 @@ struct npc_data {
 			char killer_name[NAME_LENGTH];
 		} tomb;
 	} u;
-	/* HPData Support for npc_data */
-	struct hplugin_data_store *hdata;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 

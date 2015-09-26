@@ -52,9 +52,7 @@ struct instance_data {
 	unsigned int original_progress_timeout;
 
 	struct point respawn; ///< reload spawn
-
-	/** HPM Custom Struct */
-	struct hplugin_data_store *hdata;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 struct instance_interface {

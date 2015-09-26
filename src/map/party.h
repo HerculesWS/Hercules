@@ -35,9 +35,7 @@ struct party_data {
 		unsigned snovice :1; ///< There's a Super Novice
 		unsigned tk : 1;     ///< There's a taekwon
 	} state;
-
-	/* HPM Custom Struct */
-	struct hplugin_data_store *hdata;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 #define PB_NOTICE_LENGTH (36 + 1)

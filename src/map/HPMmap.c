@@ -90,7 +90,7 @@ unsigned int atcommand_list_items = 0;
  *
  * @see HPM_interface::data_store_validate
  */
-bool HPM_map_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **store)
+bool HPM_map_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize)
 {
 	switch (type) {
 		case HPDT_MSD:
@@ -104,9 +104,7 @@ bool HPM_map_data_store_validate(enum HPluginDataTypes type, struct hplugin_data
 		case HPDT_ITEMDATA:
 		case HPDT_BGDATA:
 		case HPDT_AUTOTRADE_VEND:
-			if (!*store) {
-				*store = HPM->data_store_create();
-			}
+			// Initialized by the caller.
 			return true;
 		default:
 			break;

@@ -168,120 +168,158 @@ bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (*receiv
 	return true;
 }
 
-bool hplugin_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **store)
+/**
+ * Validates and if necessary initializes a plugin data store.
+ *
+ * @param type[in]         The data store type.
+ * @param storeptr[in,out] A pointer to the store.
+ * @param initialize       Whether the store should be initialized in case it isn't.
+ * @retval false if the store is an invalid or mismatching type.
+ * @retval true  if the store is a valid type.
+ *
+ * @remark
+ *     If \c storeptr is a pointer to a NULL pointer (\c storeptr itself can't
+ *     be NULL), two things may happen, depending on the \c initialize value:
+ *     if false, then \c storeptr isn't changed; if true, then \c storeptr is
+ *     initialized through \c HPM->data_store_create() and ownership is passed
+ *     to the caller.
+ */
+bool hplugin_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize)
 {
-	nullpo_retr(false, store);
+	struct hplugin_data_store *store;
+	nullpo_retr(false, storeptr);
+	store = *storeptr;
+	if (!initialize && store == NULL)
+		return true;
 
 	switch (type) {
 		/* core-handled */
 		case HPDT_SESSION:
-			if (!*store) {
-				*store = HPM->data_store_create();
-			}
-			return true;
-		/* goes to sub */
+			break;
 		default:
+			if (HPM->data_store_validate_sub == NULL) {
+				ShowError("HPM:validateHPData failed, type %d needs sub-handler!\n",type);
+				return false;
+			}
+			if (!HPM->data_store_validate_sub(type, storeptr, initialize)) {
+				ShowError("HPM:HPM:validateHPData failed, unknown type %d!\n",type);
+				return false;
+			}
 			break;
 	}
-	if (HPM->data_store_validate_sub) {
-		if (HPM->data_store_validate_sub(type, store))
-			return true;
-		ShowError("HPM:HPM:validateHPData failed, unknown type %d!\n",type);
-	} else {
-		ShowError("HPM:validateHPData failed, type %d needs sub-handler!\n",type);
+	if (initialize && (!store || store->type == HPDT_UNKNOWN)) {
+		HPM->data_store_create(storeptr, type);
+		store = *storeptr;
 	}
-	return false;
+	if (store->type != type) {
+		ShowError("HPM:HPM:validateHPData failed, store type mismatch %d != %d.\n",store->type, type);
+		return false;
+	}
+	return true;
 }
 
-void hplugins_addToHPData(enum HPluginDataTypes type, unsigned int pluginID, struct hplugin_data_store **storeptr, void *data, unsigned int index, bool autofree)
+/**
+ * Adds an entry to a plugin data store.
+ *
+ * @param type[in]         The store type.
+ * @param pluginID[in]     The plugin identifier.
+ * @param storeptr[in,out] A pointer to the store. The store will be initialized if necessary.
+ * @param data[in]         The data entry to add.
+ * @param classid[in]      The entry class identifier.
+ * @param autofree[in]     Whether the entry should be automatically freed when removed.
+ */
+void hplugins_addToHPData(enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store **storeptr, void *data, uint32 classid, bool autofree)
 {
-	struct hplugin_data_entry *HPData;
-	unsigned int i;
 	struct hplugin_data_store *store;
+	struct hplugin_data_entry *entry;
+	int i;
+	nullpo_retv(storeptr);
 
-	if (!HPM->data_store_validate(type, storeptr)) {
+	if (!HPM->data_store_validate(type, storeptr, true)) {
 		/* woo it failed! */
-		ShowError("HPM:addToHPData:%s: failed, type %d (%u|%u)\n",HPM->pid2name(pluginID),type,pluginID,index);
+		ShowError("HPM:addToHPData:%s: failed, type %d (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
 		return;
 	}
 	store = *storeptr;
 
 	/* duplicate check */
-	for (i = 0; i < store->count; i++) {
-		if (store->array[i]->pluginID == pluginID && store->array[i]->type == index) {
-			ShowError("HPM:addToHPData:%s: error! attempting to insert duplicate struct of id %u and index %u\n",HPM->pid2name(pluginID),pluginID,index);
-			return;
-		}
+	ARR_FIND(0, VECTOR_LENGTH(store->entries), i, VECTOR_INDEX(store->entries, i)->pluginID == pluginID && VECTOR_INDEX(store->entries, i)->classid == classid);
+	if (i != VECTOR_LENGTH(store->entries)) {
+		ShowError("HPM:addToHPData:%s: error! attempting to insert duplicate struct of id %u and classid %u\n", HPM->pid2name(pluginID), pluginID, classid);
+		return;
 	}
 
 	/* hplugin_data_entry is always same size, probably better to use the ERS (with reasonable chunk size e.g. 10/25/50) */
-	CREATE(HPData, struct hplugin_data_entry, 1);
+	CREATE(entry, struct hplugin_data_entry, 1);
 
 	/* input */
-	HPData->pluginID = pluginID;
-	HPData->type = index;
-	HPData->flag.free = autofree ? 1 : 0;
-	HPData->data = data;
+	entry->pluginID = pluginID;
+	entry->classid = classid;
+	entry->flag.free = autofree ? 1 : 0;
+	entry->data = data;
 
-	/* resize */
-	RECREATE(store->array, struct hplugin_data_entry *, ++store->count);
-
-	store->array[store->count - 1] = HPData;
+	VECTOR_ENSURE(store->entries, 1, 1);
+	VECTOR_PUSH(store->entries, entry);
 }
 
-void *hplugins_getFromHPData(enum HPluginDataTypes type, unsigned int pluginID, struct hplugin_data_store **storeptr, unsigned int index)
+/**
+ * Retrieves an entry from a plugin data store.
+ *
+ * @param type[in]     The store type.
+ * @param pluginID[in] The plugin identifier.
+ * @param store[in]    The store.
+ * @param classid[in]  The entry class identifier.
+ *
+ * @return The retrieved entry, or NULL.
+ */
+void *hplugins_getFromHPData(enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store *store, uint32 classid)
 {
-	unsigned int i;
-	struct hplugin_data_store *store;
+	int i;
 
-	if (!HPM->data_store_validate(type, storeptr)) {
+	if (!HPM->data_store_validate(type, &store, false)) {
 		/* woo it failed! */
-		ShowError("HPM:getFromHPData:%s: failed, type %d (%u|%u)\n",HPM->pid2name(pluginID),type,pluginID,index);
+		ShowError("HPM:getFromHPData:%s: failed, type %d (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
 		return NULL;
 	}
-	store = *storeptr;
+	if (!store)
+		return NULL;
 
-	for (i = 0; i < store->count; i++) {
-		if (store->array[i]->pluginID == pluginID && store->array[i]->type == index)
-			return store->array[i]->data;
-	}
+	ARR_FIND(0, VECTOR_LENGTH(store->entries), i, VECTOR_INDEX(store->entries, i)->pluginID == pluginID && VECTOR_INDEX(store->entries, i)->classid == classid);
+	if (i != VECTOR_LENGTH(store->entries))
+		return VECTOR_INDEX(store->entries, i)->data;
 
 	return NULL;
 }
 
-void hplugins_removeFromHPData(enum HPluginDataTypes type, unsigned int pluginID, struct hplugin_data_store **storeptr, unsigned int index)
+/**
+ * Removes an entry from a plugin data store.
+ *
+ * @param type[in]     The store type.
+ * @param pluginID[in] The plugin identifier.
+ * @param store[in]    The store.
+ * @param classid[in]  The entry class identifier.
+ */
+void hplugins_removeFromHPData(enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store *store, uint32 classid)
 {
-	unsigned int i;
-	struct hplugin_data_store *store;
+	struct hplugin_data_entry *entry;
+	int i;
 
-	if (!HPM->data_store_validate(type, storeptr)) {
+	if (!HPM->data_store_validate(type, &store, false)) {
 		/* woo it failed! */
-		ShowError("HPM:removeFromHPData:%s: failed, type %d (%u|%u)\n",HPM->pid2name(pluginID),type,pluginID,index);
+		ShowError("HPM:removeFromHPData:%s: failed, type %d (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
 		return;
 	}
-	store = *storeptr;
+	if (!store)
+		return;
 
-	for (i = 0; i < store->count; i++) {
-		if (store->array[i]->pluginID == pluginID && store->array[i]->type == index)
-			break;
-	}
+	ARR_FIND(0, VECTOR_LENGTH(store->entries), i, VECTOR_INDEX(store->entries, i)->pluginID == pluginID && VECTOR_INDEX(store->entries, i)->classid == classid);
+	if (i == VECTOR_LENGTH(store->entries))
+		return;
 
-	if (i != store->count) {
-		unsigned int cursor;
-
-		aFree(store->array[i]->data);/* when its removed we delete it regardless of autofree */
-		aFree(store->array[i]);
-		store->array[i] = NULL;
-
-		for (i = 0, cursor = 0; i < store->count; i++) {
-			if (store->array[i] == NULL)
-				continue;
-			if (i != cursor)
-				store->array[cursor] = store->array[i];
-			cursor++;
-		}
-		store->count = cursor;
-	}
+	entry = VECTOR_INDEX(store->entries, i);
+	VECTOR_ERASE(store->entries, i); // Erase and compact
+	aFree(entry->data); // when it's removed we delete it regardless of autofree
+	aFree(entry);
 }
 
 /* TODO: add ability for tracking using pID for the upcoming runtime load/unload support. */
@@ -765,25 +803,30 @@ bool hplugins_parse_conf(const char *w1, const char *w2, enum HPluginConfType po
 }
 
 /**
- * Helper to destroy and release an interface's hplugin_data store.
+ * Helper to destroy an interface's hplugin_data store and release any owned memory.
  *
- * @param hdata The hplugin_data store. The pointer will be freed.
+ * The pointer will be cleared.
+ *
+ * @param storeptr[in,out] A pointer to the plugin data store.
  */
-void hplugin_data_store_destroy(struct hplugin_data_store *store)
+void hplugin_data_store_destroy(struct hplugin_data_store **storeptr)
 {
-	unsigned int i;
-
-	if (!store)
+	struct hplugin_data_store *store;
+	nullpo_retv(storeptr);
+	store = *storeptr;
+	if (store == NULL)
 		return;
 
-	for (i = 0; i < store->count; i++) {
-		if (store->array[i]->flag.free) {
-			aFree(store->array[i]->data);
+	while (VECTOR_LENGTH(store->entries) > 0) {
+		struct hplugin_data_entry *entry = VECTOR_POP(store->entries);
+		if (entry->flag.free) {
+			aFree(entry->data);
 		}
-		aFree(store->array[i]);
+		aFree(entry);
 	}
-	aFree(store->array);
+	VECTOR_CLEAR(store->entries);
 	aFree(store);
+	*storeptr = NULL;
 }
 
 /**
@@ -792,13 +835,21 @@ void hplugin_data_store_destroy(struct hplugin_data_store *store)
  * The store is owned by the caller, and it should be eventually destroyed by
  * \c hdata_destroy.
  *
- * @return An initialized hplugin_data store.
+ * @param storeptr[in,out] A pointer to the data store to initialize.
+ * @param type[in]         The store type.
  */
-struct hplugin_data_store *hplugin_data_store_create(void)
+void hplugin_data_store_create(struct hplugin_data_store **storeptr, enum HPluginDataTypes type)
 {
 	struct hplugin_data_store *store;
-	CREATE(store, struct hplugin_data_store, 1);
-	return store;
+	nullpo_retv(storeptr);
+
+	if (*storeptr == NULL) {
+		CREATE(*storeptr, struct hplugin_data_store, 1);
+	}
+	store = *storeptr;
+
+	store->type = type;
+	VECTOR_INIT(store->entries);
 }
 
 /**

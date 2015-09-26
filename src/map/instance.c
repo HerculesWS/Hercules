@@ -588,8 +588,7 @@ void instance_destroy(int instance_id) {
 	instance->list[instance_id].state = INSTANCE_FREE;
 	instance->list[instance_id].num_map = 0;
 
-	HPM->data_store_destroy(instance->list[instance_id].hdata);
-	instance->list[instance_id].hdata = NULL;
+	HPM->data_store_destroy(&instance->list[instance_id].hdata);
 }
 
 /*--------------------------------------

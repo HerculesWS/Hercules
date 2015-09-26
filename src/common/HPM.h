@@ -65,18 +65,24 @@ struct hpm_symbol {
 	void *ptr;        ///< The symbol value
 };
 
+/**
+ * A plugin custom data, to be injected in various interfaces and objects.
+ */
 struct hplugin_data_entry {
-	unsigned int pluginID;
-	unsigned int type;
+	uint32 pluginID; ///< The owner plugin identifier.
+	uint32 classid;  ///< The entry's object type, managed by the plugin (for plugins that need more than one entry).
 	struct {
-		unsigned int free : 1;
+		unsigned int free : 1; ///< Whether the entry data should be automatically cleared by the HPM.
 	} flag;
-	void *data;
+	void *data;      ///< The entry data.
 };
 
+/**
+ * A store for plugin custom data entries.
+ */
 struct hplugin_data_store {
-	struct hplugin_data_entry **array;
-	unsigned int count;
+	enum HPluginDataTypes type;                       ///< The store type.
+	VECTOR_DECL(struct hplugin_data_entry *) entries; ///< The store entries.
 };
 
 struct HPluginPacket {
@@ -144,11 +150,11 @@ struct HPM_interface {
 	void (*datacheck_init) (const struct s_HPMDataCheck *src, unsigned int length, int version);
 	void (*datacheck_final) (void);
 
-	struct hplugin_data_store *(*data_store_create) (void);
-	void (*data_store_destroy) (struct hplugin_data_store *store);
-	bool (*data_store_validate) (enum HPluginDataTypes type, struct hplugin_data_store **store);
+	void (*data_store_create) (struct hplugin_data_store **storeptr, enum HPluginDataTypes type);
+	void (*data_store_destroy) (struct hplugin_data_store **storeptr);
+	bool (*data_store_validate) (enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize);
 	/* for server-specific HPData e.g. map_session_data */
-	bool (*data_store_validate_sub) (enum HPluginDataTypes type, struct hplugin_data_store **store);
+	bool (*data_store_validate_sub) (enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize);
 };
 
 CMDLINEARG(loadplugin);

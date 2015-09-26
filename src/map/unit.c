@@ -2654,10 +2654,7 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 				sd->quest_log = NULL;
 				sd->num_quests = sd->avail_quests = 0;
 			}
-
-			HPM->data_store_destroy(sd->hdata);
-			sd->hdata = NULL;
-
+			HPM->data_store_destroy(&sd->hdata);
 			break;
 		}
 		case BL_PET:
@@ -2768,9 +2765,7 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 			if( md->tomb_nid )
 				mob->mvptomb_destroy(md);
 
-			HPM->data_store_destroy(md->hdata);
-			md->hdata = NULL;
-
+			HPM->data_store_destroy(&md->hdata);
 			break;
 		}
 		case BL_HOM:

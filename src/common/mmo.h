@@ -661,9 +661,7 @@ struct guild {
 	unsigned short instances;
 
 	struct channel_data *channel;
-
-	/* HPM Custom Struct */
-	struct hplugin_data_store *hdata;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 struct guild_castle {

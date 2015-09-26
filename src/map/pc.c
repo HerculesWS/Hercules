@@ -11332,8 +11332,7 @@ void pc_autotrade_populate(struct map_session_data *sd) {
 
 	pc->autotrade_update(sd,PAUC_START);
 
-	HPM->data_store_destroy(data->hdata);
-	data->hdata = NULL;
+	HPM->data_store_destroy(&data->hdata);
 
 	idb_remove(pc->at_db, sd->status.char_id);
 }
@@ -11343,8 +11342,7 @@ void pc_autotrade_populate(struct map_session_data *sd) {
  */
 int pc_autotrade_final(DBKey key, DBData *data, va_list ap) {
 	struct autotrade_vending* at_v = DB->data2ptr(data);
-	HPM->data_store_destroy(at_v->hdata);
-	at_v->hdata = NULL;
+	HPM->data_store_destroy(&at_v->hdata);
 	return 0;
 }
 

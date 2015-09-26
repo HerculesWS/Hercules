@@ -103,8 +103,7 @@ int party_db_final(DBKey key, DBData *data, va_list ap) {
 		if (p->instance)
 			aFree(p->instance);
 
-		HPM->data_store_destroy(p->hdata);
-		p->hdata = NULL;
+		HPM->data_store_destroy(&p->hdata);
 	}
 	return 0;
 }
@@ -600,8 +599,7 @@ int party_broken(int party_id)
 	if( p->instance )
 		aFree(p->instance);
 
-	HPM->data_store_destroy(p->hdata);
-	p->hdata = NULL;
+	HPM->data_store_destroy(&p->hdata);
 
 	idb_remove(party->db,party_id);
 	return 0;
