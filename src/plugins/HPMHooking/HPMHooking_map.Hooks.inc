@@ -58677,6 +58677,222 @@ struct script_data* HP_script_get_val(struct script_state *st, struct script_dat
 	}
 	return retVal___;
 }
+char* HP_script_get_val_ref_str(struct script_state *st, struct reg_db *n, struct script_data *data) {
+	int hIndex = 0;
+	char* retVal___ = NULL;
+	if( HPMHooks.count.HP_script_get_val_ref_str_pre ) {
+		char* (*preHookFunc) (struct script_state *st, struct reg_db *n, struct script_data *data);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_ref_str_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_get_val_ref_str_pre[hIndex].func;
+			retVal___ = preHookFunc(st, n, data);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.get_val_ref_str(st, n, data);
+	}
+	if( HPMHooks.count.HP_script_get_val_ref_str_post ) {
+		char* (*postHookFunc) (char* retVal___, struct script_state *st, struct reg_db *n, struct script_data *data);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_ref_str_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_get_val_ref_str_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, st, n, data);
+		}
+	}
+	return retVal___;
+}
+char* HP_script_get_val_scope_str(struct script_state *st, struct reg_db *n, struct script_data *data) {
+	int hIndex = 0;
+	char* retVal___ = NULL;
+	if( HPMHooks.count.HP_script_get_val_scope_str_pre ) {
+		char* (*preHookFunc) (struct script_state *st, struct reg_db *n, struct script_data *data);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_scope_str_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_get_val_scope_str_pre[hIndex].func;
+			retVal___ = preHookFunc(st, n, data);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.get_val_scope_str(st, n, data);
+	}
+	if( HPMHooks.count.HP_script_get_val_scope_str_post ) {
+		char* (*postHookFunc) (char* retVal___, struct script_state *st, struct reg_db *n, struct script_data *data);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_scope_str_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_get_val_scope_str_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, st, n, data);
+		}
+	}
+	return retVal___;
+}
+char* HP_script_get_val_npc_str(struct script_state *st, struct reg_db *n, struct script_data *data) {
+	int hIndex = 0;
+	char* retVal___ = NULL;
+	if( HPMHooks.count.HP_script_get_val_npc_str_pre ) {
+		char* (*preHookFunc) (struct script_state *st, struct reg_db *n, struct script_data *data);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_npc_str_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_get_val_npc_str_pre[hIndex].func;
+			retVal___ = preHookFunc(st, n, data);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.get_val_npc_str(st, n, data);
+	}
+	if( HPMHooks.count.HP_script_get_val_npc_str_post ) {
+		char* (*postHookFunc) (char* retVal___, struct script_state *st, struct reg_db *n, struct script_data *data);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_npc_str_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_get_val_npc_str_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, st, n, data);
+		}
+	}
+	return retVal___;
+}
+char* HP_script_get_val_instance_str(struct script_state *st, const char *name, struct script_data *data) {
+	int hIndex = 0;
+	char* retVal___ = NULL;
+	if( HPMHooks.count.HP_script_get_val_instance_str_pre ) {
+		char* (*preHookFunc) (struct script_state *st, const char *name, struct script_data *data);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_instance_str_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_get_val_instance_str_pre[hIndex].func;
+			retVal___ = preHookFunc(st, name, data);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.get_val_instance_str(st, name, data);
+	}
+	if( HPMHooks.count.HP_script_get_val_instance_str_post ) {
+		char* (*postHookFunc) (char* retVal___, struct script_state *st, const char *name, struct script_data *data);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_instance_str_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_get_val_instance_str_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, st, name, data);
+		}
+	}
+	return retVal___;
+}
+int HP_script_get_val_ref_num(struct script_state *st, struct reg_db *n, struct script_data *data) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_script_get_val_ref_num_pre ) {
+		int (*preHookFunc) (struct script_state *st, struct reg_db *n, struct script_data *data);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_ref_num_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_get_val_ref_num_pre[hIndex].func;
+			retVal___ = preHookFunc(st, n, data);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.get_val_ref_num(st, n, data);
+	}
+	if( HPMHooks.count.HP_script_get_val_ref_num_post ) {
+		int (*postHookFunc) (int retVal___, struct script_state *st, struct reg_db *n, struct script_data *data);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_ref_num_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_get_val_ref_num_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, st, n, data);
+		}
+	}
+	return retVal___;
+}
+int HP_script_get_val_scope_num(struct script_state *st, struct reg_db *n, struct script_data *data) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_script_get_val_scope_num_pre ) {
+		int (*preHookFunc) (struct script_state *st, struct reg_db *n, struct script_data *data);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_scope_num_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_get_val_scope_num_pre[hIndex].func;
+			retVal___ = preHookFunc(st, n, data);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.get_val_scope_num(st, n, data);
+	}
+	if( HPMHooks.count.HP_script_get_val_scope_num_post ) {
+		int (*postHookFunc) (int retVal___, struct script_state *st, struct reg_db *n, struct script_data *data);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_scope_num_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_get_val_scope_num_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, st, n, data);
+		}
+	}
+	return retVal___;
+}
+int HP_script_get_val_npc_num(struct script_state *st, struct reg_db *n, struct script_data *data) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_script_get_val_npc_num_pre ) {
+		int (*preHookFunc) (struct script_state *st, struct reg_db *n, struct script_data *data);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_npc_num_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_get_val_npc_num_pre[hIndex].func;
+			retVal___ = preHookFunc(st, n, data);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.get_val_npc_num(st, n, data);
+	}
+	if( HPMHooks.count.HP_script_get_val_npc_num_post ) {
+		int (*postHookFunc) (int retVal___, struct script_state *st, struct reg_db *n, struct script_data *data);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_npc_num_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_get_val_npc_num_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, st, n, data);
+		}
+	}
+	return retVal___;
+}
+int HP_script_get_val_instance_num(struct script_state *st, const char *name, struct script_data *data) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_script_get_val_instance_num_pre ) {
+		int (*preHookFunc) (struct script_state *st, const char *name, struct script_data *data);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_instance_num_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_get_val_instance_num_pre[hIndex].func;
+			retVal___ = preHookFunc(st, name, data);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.get_val_instance_num(st, name, data);
+	}
+	if( HPMHooks.count.HP_script_get_val_instance_num_post ) {
+		int (*postHookFunc) (int retVal___, struct script_state *st, const char *name, struct script_data *data);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_instance_num_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_get_val_instance_num_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, st, name, data);
+		}
+	}
+	return retVal___;
+}
 void* HP_script_get_val2(struct script_state *st, int64 uid, struct reg_db *ref) {
 	int hIndex = 0;
 	void* retVal___ = NULL;
@@ -60399,6 +60615,214 @@ int HP_script_set_reg(struct script_state *st, TBL_PC *sd, int64 num, const char
 		}
 	}
 	return retVal___;
+}
+void HP_script_set_reg_ref_str(struct script_state *st, struct reg_db *n, int64 num, const char *name, const char *str) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_script_set_reg_ref_str_pre ) {
+		void (*preHookFunc) (struct script_state *st, struct reg_db *n, int64 *num, const char *name, const char *str);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_reg_ref_str_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_set_reg_ref_str_pre[hIndex].func;
+			preHookFunc(st, n, &num, name, str);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.set_reg_ref_str(st, n, num, name, str);
+	}
+	if( HPMHooks.count.HP_script_set_reg_ref_str_post ) {
+		void (*postHookFunc) (struct script_state *st, struct reg_db *n, int64 *num, const char *name, const char *str);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_reg_ref_str_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_set_reg_ref_str_post[hIndex].func;
+			postHookFunc(st, n, &num, name, str);
+		}
+	}
+	return;
+}
+void HP_script_set_reg_scope_str(struct script_state *st, struct reg_db *n, int64 num, const char *name, const char *str) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_script_set_reg_scope_str_pre ) {
+		void (*preHookFunc) (struct script_state *st, struct reg_db *n, int64 *num, const char *name, const char *str);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_reg_scope_str_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_set_reg_scope_str_pre[hIndex].func;
+			preHookFunc(st, n, &num, name, str);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.set_reg_scope_str(st, n, num, name, str);
+	}
+	if( HPMHooks.count.HP_script_set_reg_scope_str_post ) {
+		void (*postHookFunc) (struct script_state *st, struct reg_db *n, int64 *num, const char *name, const char *str);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_reg_scope_str_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_set_reg_scope_str_post[hIndex].func;
+			postHookFunc(st, n, &num, name, str);
+		}
+	}
+	return;
+}
+void HP_script_set_reg_npc_str(struct script_state *st, struct reg_db *n, int64 num, const char *name, const char *str) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_script_set_reg_npc_str_pre ) {
+		void (*preHookFunc) (struct script_state *st, struct reg_db *n, int64 *num, const char *name, const char *str);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_reg_npc_str_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_set_reg_npc_str_pre[hIndex].func;
+			preHookFunc(st, n, &num, name, str);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.set_reg_npc_str(st, n, num, name, str);
+	}
+	if( HPMHooks.count.HP_script_set_reg_npc_str_post ) {
+		void (*postHookFunc) (struct script_state *st, struct reg_db *n, int64 *num, const char *name, const char *str);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_reg_npc_str_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_set_reg_npc_str_post[hIndex].func;
+			postHookFunc(st, n, &num, name, str);
+		}
+	}
+	return;
+}
+void HP_script_set_reg_instance_str(struct script_state *st, int64 num, const char *name, const char *str) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_script_set_reg_instance_str_pre ) {
+		void (*preHookFunc) (struct script_state *st, int64 *num, const char *name, const char *str);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_reg_instance_str_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_set_reg_instance_str_pre[hIndex].func;
+			preHookFunc(st, &num, name, str);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.set_reg_instance_str(st, num, name, str);
+	}
+	if( HPMHooks.count.HP_script_set_reg_instance_str_post ) {
+		void (*postHookFunc) (struct script_state *st, int64 *num, const char *name, const char *str);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_reg_instance_str_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_set_reg_instance_str_post[hIndex].func;
+			postHookFunc(st, &num, name, str);
+		}
+	}
+	return;
+}
+void HP_script_set_reg_ref_num(struct script_state *st, struct reg_db *n, int64 num, const char *name, int val) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_script_set_reg_ref_num_pre ) {
+		void (*preHookFunc) (struct script_state *st, struct reg_db *n, int64 *num, const char *name, int *val);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_reg_ref_num_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_set_reg_ref_num_pre[hIndex].func;
+			preHookFunc(st, n, &num, name, &val);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.set_reg_ref_num(st, n, num, name, val);
+	}
+	if( HPMHooks.count.HP_script_set_reg_ref_num_post ) {
+		void (*postHookFunc) (struct script_state *st, struct reg_db *n, int64 *num, const char *name, int *val);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_reg_ref_num_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_set_reg_ref_num_post[hIndex].func;
+			postHookFunc(st, n, &num, name, &val);
+		}
+	}
+	return;
+}
+void HP_script_set_reg_scope_num(struct script_state *st, struct reg_db *n, int64 num, const char *name, int val) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_script_set_reg_scope_num_pre ) {
+		void (*preHookFunc) (struct script_state *st, struct reg_db *n, int64 *num, const char *name, int *val);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_reg_scope_num_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_set_reg_scope_num_pre[hIndex].func;
+			preHookFunc(st, n, &num, name, &val);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.set_reg_scope_num(st, n, num, name, val);
+	}
+	if( HPMHooks.count.HP_script_set_reg_scope_num_post ) {
+		void (*postHookFunc) (struct script_state *st, struct reg_db *n, int64 *num, const char *name, int *val);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_reg_scope_num_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_set_reg_scope_num_post[hIndex].func;
+			postHookFunc(st, n, &num, name, &val);
+		}
+	}
+	return;
+}
+void HP_script_set_reg_npc_num(struct script_state *st, struct reg_db *n, int64 num, const char *name, int val) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_script_set_reg_npc_num_pre ) {
+		void (*preHookFunc) (struct script_state *st, struct reg_db *n, int64 *num, const char *name, int *val);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_reg_npc_num_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_set_reg_npc_num_pre[hIndex].func;
+			preHookFunc(st, n, &num, name, &val);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.set_reg_npc_num(st, n, num, name, val);
+	}
+	if( HPMHooks.count.HP_script_set_reg_npc_num_post ) {
+		void (*postHookFunc) (struct script_state *st, struct reg_db *n, int64 *num, const char *name, int *val);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_reg_npc_num_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_set_reg_npc_num_post[hIndex].func;
+			postHookFunc(st, n, &num, name, &val);
+		}
+	}
+	return;
+}
+void HP_script_set_reg_instance_num(struct script_state *st, int64 num, const char *name, int val) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_script_set_reg_instance_num_pre ) {
+		void (*preHookFunc) (struct script_state *st, int64 *num, const char *name, int *val);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_reg_instance_num_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_set_reg_instance_num_pre[hIndex].func;
+			preHookFunc(st, &num, name, &val);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.set_reg_instance_num(st, num, name, val);
+	}
+	if( HPMHooks.count.HP_script_set_reg_instance_num_post ) {
+		void (*postHookFunc) (struct script_state *st, int64 *num, const char *name, int *val);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_reg_instance_num_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_set_reg_instance_num_post[hIndex].func;
+			postHookFunc(st, &num, name, &val);
+		}
+	}
+	return;
 }
 void HP_script_stack_expand(struct script_stack *stack) {
 	int hIndex = 0;
