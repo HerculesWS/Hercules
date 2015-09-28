@@ -18362,7 +18362,7 @@ void clif_openmergeitem(int fd, struct map_session_data *sd)
 	for (i = 0; i < MAX_INVENTORY; i++) {
 		struct item *item_data = &sd->status.inventory[i];
 
-		if (item_data->nameid == 0 || !itemdb->isstackable(item_data->nameid))
+		if (item_data->nameid == 0 || !itemdb->isstackable(item_data->nameid) || (item_data->bound >= IBT_MIN && item_data->bound <= IBT_MAX))
 			continue;
 
 		merge_items[n].nameid = item_data->nameid;
