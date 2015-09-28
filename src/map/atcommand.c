@@ -1388,7 +1388,7 @@ ACMD(baselevelup)
 		for (i = 0; i > -level; i--)
 			status_point += pc->gets_status_point(sd->status.base_level + i - 1);
 		if (sd->status.status_point < status_point)
-			pc->resetstate(sd);
+			pc->resetstate(sd,0);
 		if (sd->status.status_point < status_point)
 			sd->status.status_point = 0;
 		else
@@ -6257,7 +6257,7 @@ ACMD(users)
  *
  *------------------------------------------*/
 ACMD(reset) {
-	pc->resetstate(sd);
+	pc->resetstate(sd,0);
 	pc->resetskill(sd, PCRESETSKILL_RESYNC);
 	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,208), sd->status.name); // '%s' skill and stats points reseted!
 	clif->message(fd, atcmd_output);
@@ -8002,7 +8002,7 @@ ACMD(allowks)
 
 ACMD(resetstat)
 {
-	pc->resetstate(sd);
+	pc->resetstate(sd,0);
 	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,207), sd->status.name);
 	clif->message(fd, atcmd_output);
 	return true;

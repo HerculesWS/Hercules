@@ -911,7 +911,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*skillup) (struct map_session_data *sd,uint16 skill_id);
 	int (*allskillup) (struct map_session_data *sd);
 	int (*resetlvl) (struct map_session_data *sd,int type);
-	int (*resetstate) (struct map_session_data *sd);
+	int (*resetstate) (struct map_session_data *sd, int type);
 	int (*resetskill) (struct map_session_data *sd, int flag);
 	int (*resetfeel) (struct map_session_data *sd);
 	int (*resethate) (struct map_session_data *sd);

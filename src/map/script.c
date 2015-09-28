@@ -11139,15 +11139,25 @@ BUILDIN(resetlvl)
 	return true;
 }
 /*==========================================
- * Reset a player status point
- *------------------------------------------*/
+* Reset a player status point
+* @type:
+*	0 = All
+*	bStr,bAgi,bInt,bVit,bDex,bLuk
+* Return total status point gained.
+*------------------------------------------*/
 BUILDIN(resetstatus)
 {
 	TBL_PC *sd;
-	sd=script->rid2sd(st);
-	if( sd == NULL )
+	int type = 0;
+
+	sd = script->rid2sd(st);
+	if (sd == NULL)
 		return false;
-	pc->resetstate(sd);
+
+	if (script_hasdata(st, 2))
+		type = script_getnum(st, 2);
+
+	script_pushint(st, pc->resetstate(sd, type));
 	return true;
 }
 
@@ -20011,7 +20021,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF2(catchpet,"pet","i"),
 		BUILDIN_DEF2(birthpet,"bpet",""),
 		BUILDIN_DEF(resetlvl,"i"),
-		BUILDIN_DEF(resetstatus,""),
+		BUILDIN_DEF(resetstatus,"?"),
 		BUILDIN_DEF(resetskill,""),
 		BUILDIN_DEF(skillpointcount,""),
 		BUILDIN_DEF(changebase,"i?"),
