@@ -1192,7 +1192,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 			struct status_change_entry *sce;
 
 #ifdef DEVOTION_REFLECT_DAMAGE
-			if(src && (sce = sc->data[SC_DEVOTION])) {
+			if (src && (sce = sc->data[SC_DEVOTION]) != NULL) {
 				struct block_list *d_bl = map->id2bl(sce->val1);
 
 				if(d_bl &&((d_bl->type == BL_MER && ((TBL_MER *)d_bl)->master && ((TBL_MER *)d_bl)->master->bl.id == target->id)
@@ -1588,7 +1588,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 		//on dead characters, said checks are left to skill.c [Skotlex]
 		if (target && status->isdead(target))
 			return 0;
-		if( src && (sc = status->get_sc(src)) && sc->data[SC_COLD] && src->type != BL_MOB)
+		if( src && (sc = status->get_sc(src)) != NULL && sc->data[SC_COLD] && src->type != BL_MOB)
 			return 0;
 	}
 
@@ -1875,8 +1875,8 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 	if (md->special_state.size)
 		flag|=2;
 
-	if( md->guardian_data && md->guardian_data->g
-		&& (guardup_lv = guild->checkskill(md->guardian_data->g,GD_GUARDUP)) )
+	if (md->guardian_data && md->guardian_data->g
+	 && (guardup_lv = guild->checkskill(md->guardian_data->g,GD_GUARDUP)) > 0)
 		flag|=4;
 
 	if (battle_config.slaves_inherit_speed && md->master_id)
@@ -2704,7 +2704,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	}
 	if( (sd->status.weapon == W_1HAXE || sd->status.weapon == W_2HAXE) && (skill_lv = pc->checkskill(sd,NC_TRAININGAXE)) > 0 )
 		bstatus->hit += 3*skill_lv;
-	if((sd->status.weapon == W_MACE || sd->status.weapon == W_2HMACE) && ((skill_lv = pc->checkskill(sd,NC_TRAININGAXE)) > 0))
+	if((sd->status.weapon == W_MACE || sd->status.weapon == W_2HMACE) && (skill_lv = pc->checkskill(sd,NC_TRAININGAXE)) > 0)
 		bstatus->hit += 2*skill_lv;
 
 	// ----- FLEE CALCULATION -----
@@ -7552,11 +7552,12 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 					if( sd ) {
 						int i;
 						for( i = 0; i < MAX_PC_DEVOTION; i++ ) {
-							if( sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) )
+							if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL)
 								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, val3, val4, tick, SCFLAG_ALL);
 						}
-					} else if( bl->type == BL_MER && ((TBL_MER*)bl)->devotion_flag && (tsd = ((TBL_MER*)bl)->master) )
+					} else if (bl->type == BL_MER && ((TBL_MER*)bl)->devotion_flag && (tsd = ((TBL_MER*)bl)->master) != NULL) {
 						status->change_start(bl, &tsd->bl, type, 10000, val1, val2, val3, val4, tick, SCFLAG_ALL);
+					}
 				}
 				//val4 signals infinite endure (if val4 == 2 it is infinite endure from Berserk)
 				if( val4 )
@@ -7651,11 +7652,12 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 					if( sd ) {
 						int i;
 						for( i = 0; i < MAX_PC_DEVOTION; i++ ) {
-							if( sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) )
+							if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL)
 								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_ALL);
 						}
-					} else if( bl->type == BL_MER && ((TBL_MER*)bl)->devotion_flag && (tsd = ((TBL_MER*)bl)->master) )
+					} else if (bl->type == BL_MER && ((TBL_MER*)bl)->devotion_flag && (tsd = ((TBL_MER*)bl)->master) != NULL) {
 						status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_ALL);
+					}
 				}
 				break;
 			case SC_NOEQUIPWEAPON:
@@ -7909,12 +7911,13 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 					if( bl->type&(BL_PC|BL_MER) ) {
 						if( sd ) {
 							for( i = 0; i < MAX_PC_DEVOTION; i++ ) {
-								if( sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) )
+								if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL)
 									status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_ALL);
 							}
 						}
-						else if( bl->type == BL_MER && ((TBL_MER*)bl)->devotion_flag && (tsd = ((TBL_MER*)bl)->master) )
+						else if (bl->type == BL_MER && ((TBL_MER*)bl)->devotion_flag && (tsd = ((TBL_MER*)bl)->master) != NULL) {
 							status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_ALL);
+						}
 					}
 				}
 				break;
@@ -7930,7 +7933,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 						int i;
 						for (i = 0; i < MAX_PC_DEVOTION; i++) {
 							//See if there are devoted characters, and pass the status to them. [Skotlex]
-							if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])))
+							if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL)
 								status->change_start(bl, &tsd->bl,type,10000,val1,5+val1*5,val3,val4,tick,SCFLAG_NOAVOID);
 						}
 					}
@@ -8067,7 +8070,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				struct block_list *d_bl;
 				struct status_change *d_sc;
 
-				if ((d_bl = map->id2bl(val1)) && (d_sc = status->get_sc(d_bl)) && d_sc->count) {
+				if ((d_bl = map->id2bl(val1)) && (d_sc = status->get_sc(d_bl)) != NULL && d_sc->count) {
 					// Inherits Status From Source
 					const enum sc_type types[] = { SC_AUTOGUARD, SC_DEFENDER, SC_REFLECTSHIELD, SC_ENDURE };
 					int i = (map_flag_gvg(bl->m) || map->list[bl->m].flag.battleground)?2:3;
@@ -9822,7 +9825,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 					// Clear Status from others
 					int i;
 					for( i = 0; i < MAX_PC_DEVOTION; i++ ) {
-						if( sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) && tsd->sc.data[type] )
+						if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL && tsd->sc.data[type])
 							status_change_end(&tsd->bl, type, INVALID_TIMER);
 					}
 				} else if( bl->type == BL_MER && ((TBL_MER*)bl)->devotion_flag ) {
@@ -9883,7 +9886,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 					sd->delunit_prevline = line;
 				}
 
-				if (sce->val4 && sce->val4 != BCT_SELF && (dsd=map->id2sd(sce->val4))) {
+				if (sce->val4 && sce->val4 != BCT_SELF && (dsd=map->id2sd(sce->val4)) != NULL) {
 					// end status on partner as well
 					dsc = dsd->sc.data[SC_DANCING];
 					if (dsc) {
@@ -10072,7 +10075,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 				struct block_list *tbl = map->id2bl(sce->val2);
 				struct status_change *tsc = NULL;
 				sce->val2 = 0;
-				if( tbl && (tsc = status->get_sc(tbl)) && tsc->data[SC_STOP] && tsc->data[SC_STOP]->val2 == bl->id )
+				if (tbl && (tsc = status->get_sc(tbl)) != NULL && tsc->data[SC_STOP] && tsc->data[SC_STOP]->val2 == bl->id)
 					status_change_end(tbl, SC_STOP, INVALID_TIMER);
 			}
 			break;
@@ -10454,10 +10457,7 @@ int kaahi_heal_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct status_data *st;
 	int hp;
 
-	if(!( (bl=map->id2bl(id))
-	   && (sc=status->get_sc(bl))
-	   && (sce=sc->data[SC_KAAHI])
-	))
+	if ((bl=map->id2bl(id)) == NULL || (sc=status->get_sc(bl)) == NULL || (sce=sc->data[SC_KAAHI]) == NULL)
 		return 0;
 
 	if(sce->val4 != tid) {
@@ -10501,7 +10501,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 	sc = status->get_sc(bl);
 	st = status->get_status_data(bl);
 
-	if (!(sc && (sce = sc->data[type]))) {
+	if (!sc || (sce = sc->data[type]) == NULL) {
 		ShowDebug("status_change_timer: Null pointer id: %d data: %"PRIdPTR" bl-type: %d\n", id, data, bl->type);
 		return 0;
 	}
@@ -11838,7 +11838,7 @@ int status_natural_heal(struct block_list* bl, va_list args) {
 
 	if (flag&(RGN_SHP|RGN_SSP)
 	 && regen->ssregen
-	 && (vd = status->get_viewdata(bl))
+	 && (vd = status->get_viewdata(bl)) != NULL
 	 && vd->dead_sit == 2
 	) {
 		//Apply sitting regen bonus.
@@ -12171,7 +12171,7 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 	if ((temp = libconfig->setting_get_member(jdb, "HPTable"))) {
 		int level = 0, avg_increment, base;
 		config_setting_t *hp = NULL;
-		while (level <= MAX_LEVEL && (hp = libconfig->setting_get_elem(temp, level))) {
+		while (level <= MAX_LEVEL && (hp = libconfig->setting_get_elem(temp, level)) != NULL) {
 			i32 = libconfig->setting_get_int(hp);
 			status->dbs->HP_table[idx][++level] = min(i32, battle_config.max_hp);
 		}
@@ -12191,7 +12191,7 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 	if ((temp = libconfig->setting_get_member(jdb, "SPTable"))) {
 		int level = 0, avg_increment, base;
 		config_setting_t *sp = NULL;
-		while (level <= MAX_LEVEL && (sp = libconfig->setting_get_elem(temp, level))) {
+		while (level <= MAX_LEVEL && (sp = libconfig->setting_get_elem(temp, level)) != NULL) {
 			i32 = libconfig->setting_get_int(sp);
 			status->dbs->SP_table[idx][++level] = min(i32, battle_config.max_sp);
 		}

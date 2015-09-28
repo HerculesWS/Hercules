@@ -556,7 +556,7 @@ int npc_timerevent(int tid, int64 tick, int id, intptr_t data) {
 		return 0;
 	}
 
-	if( ted->rid && !(sd = map->id2sd(ted->rid)) ) {
+	if (ted->rid && (sd = map->id2sd(ted->rid)) == NULL) {
 		ShowError("npc_timerevent: Attached player not found.\n");
 		ers_free(npc->timer_event_ers, ted);
 		return 0;
@@ -621,7 +621,7 @@ int npc_timerevent_start(struct npc_data* nd, int rid) {
 	// Check if there is an OnTimer Event
 	ARR_FIND( 0, nd->u.scr.timeramount, j, nd->u.scr.timer_event[j].timer > nd->u.scr.timer );
 
-	if( nd->u.scr.rid > 0 && !(sd = map->id2sd(nd->u.scr.rid)) ) {
+	if (nd->u.scr.rid > 0 && (sd = map->id2sd(nd->u.scr.rid)) == NULL) {
 		// Failed to attach timer to this player.
 		ShowError("npc_timerevent_start: Attached player not found!\n");
 		return 1;
@@ -670,7 +670,7 @@ int npc_timerevent_stop(struct npc_data* nd)
 
 	nullpo_ret(nd);
 
-	if (nd->u.scr.rid && !(sd = map->id2sd(nd->u.scr.rid))) {
+	if (nd->u.scr.rid && (sd = map->id2sd(nd->u.scr.rid)) == NULL) {
 		ShowError("npc_timerevent_stop: Attached player not found!\n");
 		return 1;
 	}
@@ -3783,7 +3783,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			ShowWarning("npc_parse_mapflag: You can't set PvP and BattleGround flags for the same map! Removing BattleGround flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
 		}
-		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) && map->list[m].zone != zone ) {
+		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) != NULL && map->list[m].zone != zone ) {
 			map->zone_change(m,zone,start,buffer,filepath);
 		} else if ( !state ) {
 			map->list[m].zone = &map->zone_all;
@@ -3835,7 +3835,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing BattleGround flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
 		}
-		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_GVG_NAME)) && map->list[m].zone != zone ) {
+		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_GVG_NAME)) != NULL && map->list[m].zone != zone ) {
 			map->zone_change(m,zone,start,buffer,filepath);
 		}
 	}
@@ -3873,7 +3873,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			if (retval) *retval = EXIT_FAILURE;
 		}
 		
-		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)) && map->list[m].zone != zone ) {
+		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)) != NULL && map->list[m].zone != zone ) {
 			map->zone_change(m,zone,start,buffer,filepath);
 		}
 	}

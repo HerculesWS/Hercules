@@ -560,8 +560,8 @@ void hplugins_config_read(void) {
 				if ((plugin = HPM->load(filename))) {
 					const char * (*func)(bool *fr);
 					bool (*addhook_sub) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
-					if ((func = plugin_import(plugin->dll, "Hooked",const char * (*)(bool *)))
-					 && (addhook_sub = plugin_import(plugin->dll, "HPM_Plugin_AddHook",bool (*)(enum HPluginHookType, const char *, void *, unsigned int)))) {
+					if ((func = plugin_import(plugin->dll, "Hooked",const char * (*)(bool *))) != NULL
+					 && (addhook_sub = plugin_import(plugin->dll, "HPM_Plugin_AddHook",bool (*)(enum HPluginHookType, const char *, void *, unsigned int))) != NULL) {
 						const char *failed = func(&HPM->force_return);
 						if (failed) {
 							ShowError("HPM: failed to retrieve '%s' for '"CL_WHITE"%s"CL_RESET"'!\n", failed, plugin_name);
@@ -580,8 +580,8 @@ void hplugins_config_read(void) {
 			snprintf(filename, 60, "plugins/%s%s", libconfig->setting_get_string_elem(plist,i), DLL_EXT);
 			HPM->load(filename);
 		}
-		libconfig->destroy(&plugins_conf);
 	}
+	libconfig->destroy(&plugins_conf);
 
 	if( HPM->plugin_count )
 		ShowStatus("HPM: There are '"CL_WHITE"%d"CL_RESET"' plugins loaded, type '"CL_WHITE"plugins"CL_RESET"' to list them\n", HPM->plugin_count);

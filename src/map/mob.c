@@ -1079,7 +1079,7 @@ int mob_ai_sub_hard_activesearch(struct block_list *bl,va_list ap)
 			) { //Pick closest target?
 #ifdef ACTIVEPATHSEARCH
 			struct walkpath_data wpd;
-			if (!path->search(&wpd, md->bl.m, md->bl.x, md->bl.y, bl->x, bl->y, 0, CELL_CHKNOPASS)) // Count walk path cells
+			if (!path->search(&wpd, &md->bl, md->bl.m, md->bl.x, md->bl.y, bl->x, bl->y, 0, CELL_CHKNOPASS)) // Count walk path cells
 				return 0;
 			//Standing monsters use range2, walking monsters use range3
 			if ((md->ud.walktimer == INVALID_TIMER && wpd.path_len > md->db->range2)
@@ -2064,13 +2064,13 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage) {
 		return;
 
 #if PACKETVER >= 20120404
-	if( !(md->status.mode&MD_BOSS) ){
+	if (battle_config.show_monster_hp_bar && !(md->status.mode&MD_BOSS)) {
 		int i;
 		for(i = 0; i < DAMAGELOG_SIZE; i++){ // must show hp bar to all char who already hit the mob.
-			if( md->dmglog[i].id ) {
+			if (md->dmglog[i].id) {
 				struct map_session_data *sd = map->charid2sd(md->dmglog[i].id);
-				if( sd && check_distance_bl(&md->bl, &sd->bl, AREA_SIZE) ) // check if in range
-					clif->monster_hp_bar(md,sd);
+				if (sd && check_distance_bl(&md->bl, &sd->bl, AREA_SIZE)) // check if in range
+					clif->monster_hp_bar(md, sd);
 			}
 		}
 	}
@@ -2184,7 +2184,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 			else
 			ARR_FIND(0, MAX_PC_FEELHATE, i, temp == sd->hate_mob[i] &&
 				(battle_config.allow_skill_without_day || pc->sg_info[i].day_func()));
-			if(i<MAX_PC_FEELHATE && (temp=pc->checkskill(sd,pc->sg_info[i].bless_id)))
+			if(i<MAX_PC_FEELHATE && (temp=pc->checkskill(sd,pc->sg_info[i].bless_id)) > 0)
 				bonus += (i==2?20:10)*temp;
 		}
 		if(battle_config.mobs_level_up && md->level > md->db->lv) // [Valaris]
@@ -2574,7 +2574,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 
 		if( sd ) {
 			if( sd->mission_mobid == md->class_) { //TK_MISSION [Skotlex]
-				if( ++sd->mission_count >= 100 && (temp = mob->get_random_id(0, 0xE, sd->status.base_level)) ) {
+				if (++sd->mission_count >= 100 && (temp = mob->get_random_id(0, 0xE, sd->status.base_level)) != 0) {
 					pc->addfame(sd, 1);
 					sd->mission_mobid = temp;
 					pc_setglobalreg(sd,script->add_str("TK_MISSION_ID"), temp);
@@ -2798,19 +2798,19 @@ int mob_class_change (struct mob_data *md, int class_)
 /*==========================================
  * mob heal, update display hp info of mob for players
  *------------------------------------------*/
-void mob_heal(struct mob_data *md,unsigned int heal)
+void mob_heal(struct mob_data *md, unsigned int heal)
 {
 	if (battle_config.show_mob_info&3)
 		clif->charnameack (0, &md->bl);
-	
+
 #if PACKETVER >= 20120404
-	if( !(md->status.mode&MD_BOSS) ){
+	if (battle_config.show_monster_hp_bar && !(md->status.mode&MD_BOSS)) {
 		int i;
 		for(i = 0; i < DAMAGELOG_SIZE; i++){ // must show hp bar to all char who already hit the mob.
-			if( md->dmglog[i].id ) {
+			if (md->dmglog[i].id) {
 				struct map_session_data *sd = map->charid2sd(md->dmglog[i].id);
-				if( sd && check_distance_bl(&md->bl, &sd->bl, AREA_SIZE) ) // check if in range
-					clif->monster_hp_bar(md,sd);
+				if (sd && check_distance_bl(&md->bl, &sd->bl, AREA_SIZE)) // check if in range
+					clif->monster_hp_bar(md, sd);
 			}
 		}
 	}
@@ -3175,7 +3175,8 @@ int mobskill_use(struct mob_data *md, int64 tick, int event) {
 				case MSC_MASTERHPLTMAXRATE:
 					flag = ((fbl = mob->getmasterhpltmaxrate(md, ms[i].cond2)) != NULL); break;
 				case MSC_MASTERATTACKED:
-					flag = (md->master_id > 0 && (fbl=map->id2bl(md->master_id)) && unit->counttargeted(fbl) > 0); break;
+					flag = (md->master_id > 0 && (fbl=map->id2bl(md->master_id)) != NULL && unit->counttargeted(fbl) > 0);
+					break;
 				case MSC_ALCHEMIST:
 					flag = (md->state.alchemist);
 					break;
