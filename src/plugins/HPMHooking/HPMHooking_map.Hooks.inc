@@ -53332,15 +53332,15 @@ int HP_pc_resetlvl(struct map_session_data *sd, int type) {
 	}
 	return retVal___;
 }
-int HP_pc_resetstate(struct map_session_data *sd) {
+int HP_pc_resetstate(struct map_session_data *sd,int type) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_resetstate_pre ) {
-		int (*preHookFunc) (struct map_session_data *sd);
+		int (*preHookFunc) (struct map_session_data *sd,int *type);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_resetstate_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_resetstate_pre[hIndex].func;
-			retVal___ = preHookFunc(sd);
+			retVal___ = preHookFunc(sd, &type);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -53348,13 +53348,13 @@ int HP_pc_resetstate(struct map_session_data *sd) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.resetstate(sd);
+		retVal___ = HPMHooks.source.pc.resetstate(sd, type);
 	}
 	if( HPMHooks.count.HP_pc_resetstate_post ) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_resetstate_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_resetstate_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd);
+			retVal___ = postHookFunc(retVal___, sd, &type);
 		}
 	}
 	return retVal___;

@@ -7178,68 +7178,88 @@ int pc_resetlvl(struct map_session_data* sd,int type)
 	return 0;
 }
 /*==========================================
- * /resetstate
- *------------------------------------------*/
-int pc_resetstate(struct map_session_data* sd)
+* /resetstate
+*------------------------------------------*/
+int pc_resetstate(struct map_session_data* sd, int type)
 {
 	nullpo_ret(sd);
+	int add = 0;
 
-	if (battle_config.use_statpoint_table) {
-		// New statpoint table used here - Dexity
-		if (sd->status.base_level > MAX_LEVEL) {
-			//pc->statp[] goes out of bounds, can't reset!
-			ShowError("pc_resetstate: Can't reset stats of %d:%d, the base level (%d) is greater than the max level supported (%d)\n",
-				sd->status.account_id, sd->status.char_id, sd->status.base_level, MAX_LEVEL);
-			return 0;
+	if (type == 0) {
+		if (battle_config.use_statpoint_table) {
+			// New statpoint table used here - Dexity
+			if (sd->status.base_level > MAX_LEVEL) {
+				//pc->statp[] goes out of bounds, can't reset!
+				ShowError("pc_resetstate: Can't reset stats of %d:%d, the base level (%d) is greater than the max level supported (%d)\n",
+					sd->status.account_id, sd->status.char_id, sd->status.base_level, MAX_LEVEL);
+				return 0;
+			}
+
+			add = pc->statp[sd->status.base_level] + ((sd->class_&JOBL_UPPER) ? 52 : 0); // extra 52+48=100 stat points
+			sd->status.status_point = add;
+		}
+		else
+		{
+			add += pc->need_status_point(sd, SP_STR, 1 - pc->getstat(sd, SP_STR));
+			add += pc->need_status_point(sd, SP_AGI, 1 - pc->getstat(sd, SP_AGI));
+			add += pc->need_status_point(sd, SP_VIT, 1 - pc->getstat(sd, SP_VIT));
+			add += pc->need_status_point(sd, SP_INT, 1 - pc->getstat(sd, SP_INT));
+			add += pc->need_status_point(sd, SP_DEX, 1 - pc->getstat(sd, SP_DEX));
+			add += pc->need_status_point(sd, SP_LUK, 1 - pc->getstat(sd, SP_LUK));
+
+			sd->status.status_point += add;
 		}
 
-		sd->status.status_point = pc->statp[sd->status.base_level] + ((sd->class_&JOBL_UPPER) ? 52 : 0); // extra 52+48=100 stat points
+		pc->setstat(sd, SP_STR, 1);
+		pc->setstat(sd, SP_AGI, 1);
+		pc->setstat(sd, SP_VIT, 1);
+		pc->setstat(sd, SP_INT, 1);
+		pc->setstat(sd, SP_DEX, 1);
+		pc->setstat(sd, SP_LUK, 1);
+
+		clif->updatestatus(sd, SP_STR);
+		clif->updatestatus(sd, SP_AGI);
+		clif->updatestatus(sd, SP_VIT);
+		clif->updatestatus(sd, SP_INT);
+		clif->updatestatus(sd, SP_DEX);
+		clif->updatestatus(sd, SP_LUK);
+
+		clif->updatestatus(sd, SP_USTR); // Updates needed stat points - Valaris
+		clif->updatestatus(sd, SP_UAGI);
+		clif->updatestatus(sd, SP_UVIT);
+		clif->updatestatus(sd, SP_UINT);
+		clif->updatestatus(sd, SP_UDEX);
+		clif->updatestatus(sd, SP_ULUK); // End Addition
 	}
-	else
-	{
-		int add=0;
-		add += pc->need_status_point(sd, SP_STR, 1-pc->getstat(sd, SP_STR));
-		add += pc->need_status_point(sd, SP_AGI, 1-pc->getstat(sd, SP_AGI));
-		add += pc->need_status_point(sd, SP_VIT, 1-pc->getstat(sd, SP_VIT));
-		add += pc->need_status_point(sd, SP_INT, 1-pc->getstat(sd, SP_INT));
-		add += pc->need_status_point(sd, SP_DEX, 1-pc->getstat(sd, SP_DEX));
-		add += pc->need_status_point(sd, SP_LUK, 1-pc->getstat(sd, SP_LUK));
+	else if (battle_config.use_statpoint_table) {
+		ShowError("pc_resetstate: 'type' reset failed if battle_config.use_statpoint_table is enabled.\n");
+		return 0;
+	}
+	else if (type < SP_STR || type > SP_LUK) {
+		ShowError("pc_resetstate: Invalid type (%d).\n", type);
+		return 0;
+	}
+	else {
+		add = pc->need_status_point(sd, type, 1 - pc->getstat(sd, type));
+		sd->status.status_point += add;
 
-		sd->status.status_point+=add;
+		pc->setstat(sd, type, 1);
+
+		clif->updatestatus(sd, type);
+		clif->updatestatus(sd, type + 19); // 19 adjust enum value.
 	}
 
-	pc->setstat(sd, SP_STR, 1);
-	pc->setstat(sd, SP_AGI, 1);
-	pc->setstat(sd, SP_VIT, 1);
-	pc->setstat(sd, SP_INT, 1);
-	pc->setstat(sd, SP_DEX, 1);
-	pc->setstat(sd, SP_LUK, 1);
+	clif->updatestatus(sd, SP_STATUSPOINT);
 
-	clif->updatestatus(sd,SP_STR);
-	clif->updatestatus(sd,SP_AGI);
-	clif->updatestatus(sd,SP_VIT);
-	clif->updatestatus(sd,SP_INT);
-	clif->updatestatus(sd,SP_DEX);
-	clif->updatestatus(sd,SP_LUK);
-
-	clif->updatestatus(sd,SP_USTR); // Updates needed stat points - Valaris
-	clif->updatestatus(sd,SP_UAGI);
-	clif->updatestatus(sd,SP_UVIT);
-	clif->updatestatus(sd,SP_UINT);
-	clif->updatestatus(sd,SP_UDEX);
-	clif->updatestatus(sd,SP_ULUK); // End Addition
-
-	clif->updatestatus(sd,SP_STATUSPOINT);
-
-	if( sd->mission_mobid ) { //bugreport:2200
+	if (sd->mission_mobid) { //bugreport:2200
 		sd->mission_mobid = 0;
 		sd->mission_count = 0;
-		pc_setglobalreg(sd,script->add_str("TK_MISSION_ID"), 0);
+		pc_setglobalreg(sd, script->add_str("TK_MISSION_ID"), 0);
 	}
 
-	status_calc_pc(sd,SCO_NONE);
+	status_calc_pc(sd, SCO_NONE);
 
-	return 1;
+	return add;
 }
 
 /*==========================================
@@ -8442,7 +8462,7 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 	if (sd->status.base_level > pc->maxbaselv(sd)) {
 		sd->status.base_level = pc->maxbaselv(sd);
 		sd->status.base_exp=0;
-		pc->resetstate(sd);
+		pc->resetstate(sd,0);
 		clif->updatestatus(sd,SP_STATUSPOINT);
 		clif->updatestatus(sd,SP_BASELEVEL);
 		clif->updatestatus(sd,SP_BASEEXP);
