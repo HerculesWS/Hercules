@@ -13182,7 +13182,7 @@ izlude,155,132,3	script	Locas#iz	4_M_02,{
 						continue;
 					case 2:
 						mes "[Locas]";
-						mes "Refining level 2 weapons requires ^3E86C3Emveretarcon and 20,000 zeny^000000.";
+						mes "Refining level 2 weapons requires ^3E86C3Emveretarcon and 2,000 zeny^000000.";
 						next;
 						mes "[Locas]";
 						mes "Emveretarcon is also a relatively popular metal. You can get it either from monsters or from Tadde at 1000 zeny.";
