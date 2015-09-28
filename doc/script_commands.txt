@@ -5438,11 +5438,22 @@ official rebirth scripts.
 
 ---------------------------------------
 
-*resetstatus;
+*resetstatus {<type>};
 
 This is a character reset command, which will reset the stats on the 
 invoking character and give back all the stat points used to raise them 
 previously. Nothing will happen to any other numbers about the character.
+Return the amount of statuspoint gained from reset.
+
+Valid type parameter are:
+	 0 - All (default)
+	// must disable battle_config.use_statpoint_table
+	13 - bSTR
+	14 - bAGI
+	15 - bVIT
+	16 - bINT
+	17 - bDEX
+	18 - bLUK
 
 Used in reset NPC's (duh!).
 
