@@ -549,6 +549,12 @@ struct map_zone_skill_damage_cap_entry {
 	enum map_zone_skill_subtype subtype;
 };
 
+enum map_zone_merge_type {
+	MZMT_NORMAL = 0, ///< MZMT_MERGEABLE zones can merge *into* MZMT_NORMAL zones (but not the converse).
+	MZMT_MERGEABLE,  ///< Can merge with other MZMT_MERGEABLE zones and *into* MZMT_NORMAL zones.
+	MZMT_NEVERMERGE, ///< Cannot merge with any zones.
+};
+
 #define MAP_ZONE_NAME_LENGTH 60
 #define MAP_ZONE_ALL_NAME "All"
 #define MAP_ZONE_NORMAL_NAME "Normal"
@@ -560,6 +566,7 @@ struct map_zone_skill_damage_cap_entry {
 
 struct map_zone_data {
 	char name[MAP_ZONE_NAME_LENGTH];/* 20'd */
+	enum map_zone_merge_type merge_type;
 	struct map_zone_disabled_skill_entry **disabled_skills;
 	int disabled_skills_count;
 	int *disabled_items;
@@ -573,7 +580,7 @@ struct map_zone_data {
 	struct map_zone_skill_damage_cap_entry **capped_skills;
 	int capped_skills_count;
 	struct {
-		unsigned int special : 2;/* 1: whether this is a mergeable zone; 2: whether it is a merged zone */
+		unsigned int merged : 1;
 	} info;
 };
 
