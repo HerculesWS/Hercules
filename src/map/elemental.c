@@ -159,6 +159,7 @@ int elemental_get_lifetime(struct elemental_data *ed) {
 }
 
 int elemental_save(struct elemental_data *ed) {
+	nullpo_retr(1, ed);
 	ed->elemental.mode = ed->battle_status.mode;
 	ed->elemental.hp = ed->battle_status.hp;
 	ed->elemental.sp = ed->battle_status.sp;
@@ -226,7 +227,8 @@ int elemental_delete(struct elemental_data *ed, int reply) {
 }
 
 void elemental_summon_init(struct elemental_data *ed) {
-	if( ed->summon_timer == INVALID_TIMER )
+	nullpo_retv(ed);
+	if (ed->summon_timer == INVALID_TIMER)
 		ed->summon_timer = timer->add(timer->gettick() + ed->elemental.life_time, elemental->summon_end_timer, ed->master->bl.id, 0);
 
 	ed->regen.state.block = 0;
@@ -236,8 +238,10 @@ int elemental_data_received(struct s_elemental *ele, bool flag) {
 	struct map_session_data *sd;
 	struct elemental_data *ed;
 	struct s_elemental_db *db;
-	int i = elemental->search_index(ele->class_);
+	int i;
 
+	nullpo_ret(ele);
+	i = elemental->search_index(ele->class_);
 	if( (sd = map->charid2sd(ele->char_id)) == NULL )
 		return 0;
 
@@ -545,6 +549,7 @@ int elemental_change_mode(struct elemental_data *ed, int mode) {
 }
 
 void elemental_heal(struct elemental_data *ed, int hp, int sp) {
+	nullpo_retv(ed);
 	if( hp )
 		clif->elemental_updatestatus(ed->master, SP_HP);
 	if( sp )
@@ -594,8 +599,10 @@ struct skill_condition elemental_skill_get_requirements(uint16 skill_id, uint16 
 }
 
 int elemental_set_target( struct map_session_data *sd, struct block_list *bl ) {
-	struct elemental_data *ed = sd->ed;
+	struct elemental_data *ed;
 
+	nullpo_ret(sd);
+	ed = sd->ed;
 	nullpo_ret(ed);
 	nullpo_ret(bl);
 
@@ -619,7 +626,9 @@ int elemental_ai_sub_timer_activesearch(struct block_list *bl, va_list ap) {
 	nullpo_ret(bl);
 
 	ed = va_arg(ap,struct elemental_data *);
+	nullpo_ret(ed);
 	target = va_arg(ap,struct block_list**);
+	nullpo_ret(target);
 
 	//If can't seek yet, not an enemy, or you can't attack it, skip.
 	if( (*target) == bl || !status->check_skilluse(&ed->bl, bl, 0, 0) )
@@ -765,6 +774,7 @@ int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_data *s
 
 int elemental_ai_sub_foreachclient(struct map_session_data *sd, va_list ap) {
 	int64 tick = va_arg(ap,int64);
+	nullpo_ret(sd);
 	if(sd->status.ele_id && sd->ed)
 		elemental->ai_sub_timer(sd->ed,sd,tick);
 
