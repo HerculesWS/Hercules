@@ -61,6 +61,7 @@ int instance_create(int owner_id, const char *name, enum instance_owner_type typ
 	short *iptr = NULL;
 	int i;
 
+	nullpo_retr(-1, name);
 	switch ( type ) {
 		case IOT_NONE:
 			break;
@@ -157,6 +158,9 @@ int instance_add_map(const char *name, int instance_id, bool usebasename, const 
 	int16 m = map->mapname2mapid(name);
 	int i, im = -1;
 	size_t num_cell, size, j;
+
+	nullpo_retr(-1, name);
+	nullpo_retr(-1, map_name);
 
 	if( m < 0 )
 		return -1; // source map not found
@@ -305,6 +309,7 @@ int instance_map2imap(int16 m, int instance_id) {
 int instance_mapname2imap(const char *map_name, int instance_id) {
 	int i;
 
+	nullpo_retr(-1, map_name);
 	if( !instance->valid(instance_id) ) {
 		return -1;
 	}
@@ -322,6 +327,7 @@ int instance_mapname2imap(const char *map_name, int instance_id) {
  * result : mapid of map "m" in this instance
  *--------------------------------------*/
 int instance_mapid2imapid(int16 m, int instance_id) {
+	Assert_retr(-1, m >= 0 && m < map->count);
 	if( map->list[m].flag.src4instance == 0 )
 		return m; // not instances found for this map
 	else if( map->list[m].instance_id >= 0 ) { // This map is a instance, not a src map instance
@@ -661,6 +667,7 @@ void instance_set_timeout(int instance_id, unsigned int progress_timeout, unsign
 void instance_check_kick(struct map_session_data *sd) {
 	int16 m = sd->bl.m;
 
+	nullpo_retv(sd);
 	clif->instance_leave(sd->fd);
 	if( map->list[m].instance_id >= 0 ) { // User was on the instance map
 		if( map->list[m].save.map )
