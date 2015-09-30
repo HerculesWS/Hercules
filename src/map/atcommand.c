@@ -967,65 +967,64 @@ ACMD(hide) {
 /*==========================================
  * Changes a character's class
  *------------------------------------------*/
-ACMD(jobchange) {
+ACMD(jobchange)
+{
 	int job = 0, upper = 0;
-	const char* text;
+	bool found = false;
 
-	if (!*message || sscanf(message, "%12d %12d", &job, &upper) < 1) {
-		upper = 0;
+	if (*message == '\0') { // No message, just show the list
+		found = false;
+	} else if (sscanf(message, "%12d %12d", &job, &upper) >= 1) { // Numeric job ID
+		found = true;
+	} else { // Job name
+		int i;
 
-		if (*message) {
-			int i;
-			bool found = false;
-
-			// Normal Jobs
-			for( i = JOB_NOVICE; i < JOB_MAX_BASIC && !found; i++ ) {
-				if (strncmpi(message, pc->job_name(i), 16) == 0) {
-					job = i;
-					found = true;
-				}
+		// Normal Jobs
+		for (i = JOB_NOVICE; !found && i < JOB_MAX_BASIC; i++) {
+			if (strncmpi(message, pc->job_name(i), 16) == 0) {
+				job = i;
+				found = true;
+				break;
 			}
+		}
 
-			// High Jobs, Babies and Third
-			for( i = JOB_NOVICE_HIGH; i < JOB_MAX && !found; i++ ){
-				if (strncmpi(message, pc->job_name(i), 16) == 0) {
-					job = i;
-					found = true;
-				}
-			}
-
-			if (!found) {
-				text = atcommand_help_string(info);
-				if (text)
-					clif->messageln(fd, text);
-				return false;
+		// High Jobs, Babies and Third
+		for (i = JOB_NOVICE_HIGH; !found && i < JOB_MAX; i++) {
+			if (strncmpi(message, pc->job_name(i), 16) == 0) {
+				job = i;
+				found = true;
+				break;
 			}
 		}
 	}
-	/* WHY DO WE LIST THEM THEN? */
-	// Deny direct transformation into dummy jobs
-	if (job == JOB_KNIGHT2 || job == JOB_CRUSADER2 || job == JOB_WEDDING || job == JOB_XMAS || job == JOB_SUMMER
-	 || job == JOB_LORD_KNIGHT2 || job == JOB_PALADIN2 || job == JOB_BABY_KNIGHT2 || job == JOB_BABY_CRUSADER2 || job == JOB_STAR_GLADIATOR2
-	 || (job >= JOB_RUNE_KNIGHT2 && job <= JOB_MECHANIC_T2) || (job >= JOB_BABY_RUNE2 && job <= JOB_BABY_MECHANIC2)
-	) {
-		clif->message(fd, msg_fd(fd,923)); //"You can not change to this job by command."
-		return true;
-	}
 
-	if (pc->db_checkid(job)) {
-		if (pc->jobchange(sd, job, upper) == 0)
-			clif->message(fd, msg_fd(fd,12)); // Your job has been changed.
-		else {
-			clif->message(fd, msg_fd(fd,155)); // You are unable to change your job.
-			return false;
-		}
-	} else {
-		text = atcommand_help_string(info);
+	if (!found || !pc->db_checkid(job)) {
+		const char *text = atcommand_help_string(info);
 		if (text)
 			clif->messageln(fd, text);
 		return false;
 	}
 
+	// Deny direct transformation into dummy jobs
+	if (job == JOB_KNIGHT2 || job == JOB_CRUSADER2
+	 || job == JOB_WEDDING || job == JOB_XMAS || job == JOB_SUMMER
+	 || job == JOB_LORD_KNIGHT2 || job == JOB_PALADIN2
+	 || job == JOB_BABY_KNIGHT2 || job == JOB_BABY_CRUSADER2
+	 || job == JOB_STAR_GLADIATOR2
+	 || (job >= JOB_RUNE_KNIGHT2 && job <= JOB_MECHANIC_T2)
+	 || (job >= JOB_BABY_RUNE2 && job <= JOB_BABY_MECHANIC2)
+	) {
+		/* WHY DO WE LIST THEM THEN? */
+		clif->message(fd, msg_fd(fd,923)); //"You can not change to this job by command."
+		return true;
+	}
+
+	if (pc->jobchange(sd, job, upper) != 0) {
+		clif->message(fd, msg_fd(fd,155)); // You are unable to change your job.
+		return false;
+	}
+
+	clif->message(fd, msg_fd(fd,12)); // Your job has been changed.
 	return true;
 }
 
