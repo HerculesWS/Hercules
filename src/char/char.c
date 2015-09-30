@@ -2967,9 +2967,11 @@ void mapif_server_reset(int id)
 	WBUFL(buf,4) = htonl(chr->server[id].ip);
 	WBUFW(buf,8) = htons(chr->server[id].port);
 	j = 0;
-	for(i = 0; i < chr->server[id].maps; i++)
-		if (chr->server[id].map[i])
-			WBUFW(buf,10+(j++)*4) = chr->server[id].map[i];
+	for (i = 0; i < VECTOR_LENGTH(chr->server[id].maps); i++) {
+		uint16 m = VECTOR_INDEX(chr->server[id].maps, i);
+		if (m != 0)
+			WBUFW(buf,10+(j++)*4) = m;
+	}
 	if (j > 0) {
 		WBUFW(buf,2) = j * 4 + 10;
 		mapif->sendallwos(fd, buf, WBUFW(buf,2));
@@ -3052,14 +3054,16 @@ void char_send_maps(int fd, int id, int j)
 	// Transmitting the maps of the other map-servers to the new map-server
 	for(k = 0; k < ARRAYLENGTH(chr->server); k++) {
 		if (chr->server[k].fd > 0 && k != id) {
-			WFIFOHEAD(fd,10 +4*chr->server[k].maps);
+			WFIFOHEAD(fd,10 + 4 * VECTOR_LENGTH(chr->server[k].maps));
 			WFIFOW(fd,0) = 0x2b04;
 			WFIFOL(fd,4) = htonl(chr->server[k].ip);
 			WFIFOW(fd,8) = htons(chr->server[k].port);
 			j = 0;
-			for(i = 0; i < chr->server[k].maps; i++)
-				if (chr->server[k].map[i])
-					WFIFOW(fd,10+(j++)*4) = chr->server[k].map[i];
+			for(i = 0; i < VECTOR_LENGTH(chr->server[k].maps); i++) {
+				uint16 m = VECTOR_INDEX(chr->server[k].maps, i);
+				if (m != 0)
+					WFIFOW(fd,10+(j++)*4) = m;
+			}
 			if (j > 0) {
 				WFIFOW(fd,2) = j * 4 + 10;
 				WFIFOSET(fd,WFIFOW(fd,2));
@@ -3070,27 +3074,22 @@ void char_send_maps(int fd, int id, int j)
 
 void char_parse_frommap_map_names(int fd, int id)
 {
-	int i,j = 0;
+	int i;
 
-	if( chr->server[id].map != NULL ) { aFree(chr->server[id].map); chr->server[id].map = NULL; }
-
-	chr->server[id].maps = ( RFIFOW(fd, 2) - 4 ) / 4;
-	CREATE(chr->server[id].map, unsigned short, chr->server[id].maps);
-
-
-	for(i = 4; i < RFIFOW(fd,2); i += 4) {
-		chr->server[id].map[j] = RFIFOW(fd,i);
-		j++;
+	VECTOR_CLEAR(chr->server[id].maps);
+	VECTOR_ENSURE(chr->server[id].maps, (RFIFOW(fd, 2) - 4) / 4, 1);
+	for (i = 4; i < RFIFOW(fd,2); i += 4) {
+		VECTOR_PUSH(chr->server[id].maps, RFIFOW(fd,i));
 	}
 
 	ShowStatus("Map-Server %d connected: %d maps, from IP %d.%d.%d.%d port %d.\n",
-				id, j, CONVIP(chr->server[id].ip), chr->server[id].port);
+			id, (int)VECTOR_LENGTH(chr->server[id].maps), CONVIP(chr->server[id].ip), chr->server[id].port);
 	ShowStatus("Map-server %d loading complete.\n", id);
 
 	// send name for wisp to player
 	chr->map_received_ok(fd);
 	chr->send_fame_list(fd); //Send fame list.
-	chr->send_maps(fd, id, j);
+	chr->send_maps(fd, id, (int)VECTOR_LENGTH(chr->server[id].maps));
 	RFIFOSKIP(fd,RFIFOW(fd,2));
 }
 
@@ -4156,11 +4155,11 @@ int char_search_mapserver(unsigned short map, uint32 ip, uint16 port)
 	{
 		if (chr->server[i].fd > 0
 		&& (ip == (uint32)-1 || chr->server[i].ip == ip)
-		&& (port == (uint16)-1 || chr->server[i].port == port))
-		{
-			for (j = 0; chr->server[i].map[j]; j++)
-				if (chr->server[i].map[j] == map)
-					return i;
+		&& (port == (uint16)-1 || chr->server[i].port == port)
+		) {
+			ARR_FIND(0, VECTOR_LENGTH(chr->server[i].maps), j, VECTOR_INDEX(chr->server[i].maps, j) == map);
+			if (j != VECTOR_LENGTH(chr->server[i].maps))
+				return i;
 		}
 	}
 
@@ -4579,7 +4578,7 @@ void char_parse_char_select(int fd, struct char_session_data* sd, uint32 ipl)
 	}
 #endif
 
-	ARR_FIND( 0, ARRAYLENGTH(chr->server), server_id, chr->server[server_id].fd > 0 && chr->server[server_id].map );
+	ARR_FIND(0, ARRAYLENGTH(chr->server), server_id, chr->server[server_id].fd > 0 && VECTOR_LENGTH(chr->server[server_id].maps) > 0);
 	/* not available, tell it to wait (client wont close; char select will respawn).
 	 * magic response found by Ind thanks to Yommy <3 */
 	if( server_id == ARRAYLENGTH(chr->server) ) {
@@ -4640,7 +4639,7 @@ void char_parse_char_select(int fd, struct char_session_data* sd, uint32 ipl)
 	if (i < 0 || !cd->last_point.map) {
 		unsigned short j;
 		//First check that there's actually a map server online.
-		ARR_FIND( 0, ARRAYLENGTH(chr->server), j, chr->server[j].fd >= 0 && chr->server[j].map );
+		ARR_FIND(0, ARRAYLENGTH(chr->server), j, chr->server[j].fd >= 0 && VECTOR_LENGTH(chr->server[j].maps) > 0);
 		if (j == ARRAYLENGTH(chr->server)) {
 			ShowInfo("Connection Closed. No map servers available.\n");
 			chr->authfail_fd(fd, 1); // 1 = Server closed
@@ -5789,9 +5788,8 @@ int do_final(void) {
 	SQL->Free(inter->sql_handle);
 	mapindex->final();
 
-	for(i = 0; i < MAX_MAP_SERVERS; i++ )
-		if( chr->server[i].map )
-			aFree(chr->server[i].map);
+	for (i = 0; i < MAX_MAP_SERVERS; i++)
+		VECTOR_CLEAR(chr->server[i].maps);
 
 	aFree(chr->CHAR_CONF_NAME);
 	aFree(chr->NET_CONF_NAME);
@@ -5890,8 +5888,8 @@ int do_init(int argc, char **argv) {
 	chr->SQL_CONF_NAME = aStrdup("conf/inter-server.conf");
 	chr->INTER_CONF_NAME = aStrdup("conf/inter-server.conf");
 
-	for(i = 0; i < MAX_MAP_SERVERS; i++ )
-		chr->server[i].map = NULL;
+	for (i = 0; i < MAX_MAP_SERVERS; i++)
+		VECTOR_INIT(chr->server[i].maps);
 
 	HPM_char_do_init();
 	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);

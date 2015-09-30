@@ -63,8 +63,8 @@ void loginif_on_ready(void)
 	chr->send_accounts_tologin(INVALID_TIMER, timer->gettick(), 0, 0);
 
 	// if no map-server already connected, display a message...
-	ARR_FIND( 0, ARRAYLENGTH(chr->server), i, chr->server[i].fd > 0 && chr->server[i].map );
-	if( i == ARRAYLENGTH(chr->server) )
+	ARR_FIND(0, ARRAYLENGTH(chr->server), i, chr->server[i].fd > 0 && VECTOR_LENGTH(chr->server[i].maps));
+	if (i == ARRAYLENGTH(chr->server))
 		ShowStatus("Awaiting maps from map-server.\n");
 }
 

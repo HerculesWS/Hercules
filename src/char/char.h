@@ -49,8 +49,7 @@ struct mmo_map_server {
 	uint32 ip;
 	uint16 port;
 	int users;
-	unsigned short *map;
-	unsigned short maps;
+	VECTOR_DECL(uint16) maps;
 };
 
 #define MAX_MAP_SERVERS 2
