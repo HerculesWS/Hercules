@@ -55,6 +55,7 @@ int intif_create_pet(int account_id,int char_id,short pet_class,short pet_lv,sho
 {
 	if (intif->CheckForCharServer())
 		return 0;
+	nullpo_ret(pet_name);
 	WFIFOHEAD(inter_fd, 24 + NAME_LENGTH);
 	WFIFOW(inter_fd,0) = 0x3080;
 	WFIFOL(inter_fd,2) = account_id;
@@ -91,6 +92,7 @@ int intif_save_petdata(int account_id,struct s_pet *p)
 {
 	if (intif->CheckForCharServer())
 		return 0;
+	nullpo_ret(p);
 	WFIFOHEAD(inter_fd, sizeof(struct s_pet) + 8);
 	WFIFOW(inter_fd,0) = 0x3082;
 	WFIFOW(inter_fd,2) = sizeof(struct s_pet) + 8;
@@ -118,6 +120,8 @@ int intif_rename(struct map_session_data *sd, int type, char *name)
 	if (intif->CheckForCharServer())
 		return 1;
 
+	nullpo_ret(sd);
+	nullpo_ret(name);
 	WFIFOHEAD(inter_fd,NAME_LENGTH+12);
 	WFIFOW(inter_fd,0) = 0x3006;
 	WFIFOL(inter_fd,2) = sd->status.account_id;
@@ -133,6 +137,8 @@ int intif_broadcast(const char* mes, size_t len, int type)
 {
 	int lp = (type&BC_COLOR_MASK) ? 4 : 0;
 
+	nullpo_ret(mes);
+	Assert_ret(len < 32000);
 	// Send to the local players
 	clif->broadcast(NULL, mes, len, type, ALL_CLIENT);
 
@@ -161,6 +167,8 @@ int intif_broadcast(const char* mes, size_t len, int type)
 
 int intif_broadcast2(const char* mes, size_t len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY)
 {
+	nullpo_ret(mes);
+	Assert_ret(len < 32000);
 	// Send to the local players
 	clif->broadcast2(NULL, mes, len, fontColor, fontType, fontSize, fontAlign, fontY, ALL_CLIENT);
 
@@ -191,6 +199,7 @@ int intif_main_message(struct map_session_data* sd, const char* message)
 	char output[256];
 
 	nullpo_ret(sd);
+	nullpo_ret(message);
 
 	// format the message for main broadcasting
 	snprintf( output, sizeof(output), msg_txt(386), sd->status.name, message );
@@ -207,9 +216,11 @@ int intif_main_message(struct map_session_data* sd, const char* message)
 // The transmission of Wisp/Page to inter-server (player not found on this server)
 int intif_wis_message(struct map_session_data *sd, char *nick, char *mes, size_t mes_len)
 {
-	nullpo_ret(sd);
 	if (intif->CheckForCharServer())
 		return 0;
+	nullpo_ret(sd);
+	nullpo_ret(nick);
+	nullpo_ret(mes);
 
 	if (chrif->other_mapserver_count < 1) {
 		//Character not found.
@@ -254,6 +265,8 @@ int intif_wis_message_to_gm(char *wisp_name, int permission, char *mes)
 	size_t mes_len;
 	if (intif->CheckForCharServer())
 		return 0;
+	nullpo_ret(wisp_name);
+	nullpo_ret(mes);
 	mes_len = strlen(mes) + 1; // + null
 	WFIFOHEAD(inter_fd, mes_len + 32);
 	WFIFOW(inter_fd,0) = 0x3003;
@@ -277,6 +290,7 @@ int intif_saveregistry(struct map_session_data *sd) {
 	int plen = 0;
 	size_t len;
 
+	nullpo_ret(sd);
 	if (intif->CheckForCharServer() || !sd->regs.vars)
 		return -1;
 
@@ -416,6 +430,7 @@ int intif_send_guild_storage(int account_id,struct guild_storage *gstor)
 {
 	if (intif->CheckForCharServer())
 		return 0;
+	nullpo_ret(gstor);
 	WFIFOHEAD(inter_fd,sizeof(struct guild_storage)+12);
 	WFIFOW(inter_fd,0) = 0x3019;
 	WFIFOW(inter_fd,2) = (unsigned short)sizeof(struct guild_storage)+12;
@@ -432,6 +447,7 @@ int intif_create_party(struct party_member *member,char *name,int item,int item2
 	if (intif->CheckForCharServer())
 		return 0;
 	nullpo_ret(member);
+	nullpo_ret(name);
 
 	WFIFOHEAD(inter_fd,64);
 	WFIFOW(inter_fd,0) = 0x3020;
@@ -462,6 +478,7 @@ int intif_party_addmember(int party_id,struct party_member *member)
 {
 	if (intif->CheckForCharServer())
 		return 0;
+	nullpo_ret(member);
 	WFIFOHEAD(inter_fd,42);
 	WFIFOW(inter_fd,0)=0x3022;
 	WFIFOW(inter_fd,2)=8+sizeof(struct party_member);
@@ -547,6 +564,8 @@ int intif_party_message(int party_id,int account_id,const char *mes,int len)
 	if (chrif->other_mapserver_count < 1)
 		return 0; //No need to send.
 
+	nullpo_ret(mes);
+	Assert_ret(len > 0 && len < 32000);
 	WFIFOHEAD(inter_fd,len + 12);
 	WFIFOW(inter_fd,0)=0x3027;
 	WFIFOW(inter_fd,2)=len+12;
@@ -577,6 +596,7 @@ int intif_guild_create(const char *name,const struct guild_member *master)
 	if (intif->CheckForCharServer())
 		return 0;
 	nullpo_ret(master);
+	nullpo_ret(name);
 
 	WFIFOHEAD(inter_fd,sizeof(struct guild_member)+(8+NAME_LENGTH));
 	WFIFOW(inter_fd,0)=0x3030;
@@ -605,6 +625,7 @@ int intif_guild_addmember(int guild_id,struct guild_member *m)
 {
 	if (intif->CheckForCharServer())
 		return 0;
+	nullpo_ret(m);
 	WFIFOHEAD(inter_fd,sizeof(struct guild_member)+8);
 	WFIFOW(inter_fd,0) = 0x3032;
 	WFIFOW(inter_fd,2) = sizeof(struct guild_member)+8;
@@ -619,6 +640,8 @@ int intif_guild_change_gm(int guild_id, const char* name, size_t len)
 {
 	if (intif->CheckForCharServer())
 		return 0;
+	nullpo_ret(name);
+	Assert_ret(len > 0 && len < 32000);
 	WFIFOHEAD(inter_fd, len + 8);
 	WFIFOW(inter_fd, 0)=0x3033;
 	WFIFOW(inter_fd, 2)=len+8;
@@ -633,6 +656,7 @@ int intif_guild_leave(int guild_id,int account_id,int char_id,int flag,const cha
 {
 	if (intif->CheckForCharServer())
 		return 0;
+	nullpo_ret(mes);
 	WFIFOHEAD(inter_fd, 55);
 	WFIFOW(inter_fd, 0) = 0x3034;
 	WFIFOL(inter_fd, 2) = guild_id;
@@ -682,6 +706,8 @@ int intif_guild_message(int guild_id,int account_id,const char *mes,int len)
 	if (chrif->other_mapserver_count < 1)
 		return 0; //No need to send.
 
+	nullpo_ret(mes);
+	Assert_ret(len > 0 && len < 32000);
 	WFIFOHEAD(inter_fd, len + 12);
 	WFIFOW(inter_fd,0)=0x3037;
 	WFIFOW(inter_fd,2)=len+12;
@@ -701,6 +727,8 @@ int intif_guild_change_basicinfo(int guild_id,int type,const void *data,int len)
 {
 	if (intif->CheckForCharServer())
 		return 0;
+	nullpo_ret(data);
+	Assert_ret(len >= 0 && len < 32000);
 	WFIFOHEAD(inter_fd, len + 10);
 	WFIFOW(inter_fd,0)=0x3039;
 	WFIFOW(inter_fd,2)=len+10;
@@ -717,6 +745,8 @@ int intif_guild_change_memberinfo(int guild_id,int account_id,int char_id,
 {
 	if (intif->CheckForCharServer())
 		return 0;
+	nullpo_ret(data);
+	Assert_ret(len >= 0 && len < 32000);
 	WFIFOHEAD(inter_fd, len + 18);
 	WFIFOW(inter_fd, 0)=0x303a;
 	WFIFOW(inter_fd, 2)=len+18;
@@ -734,6 +764,7 @@ int intif_guild_position(int guild_id,int idx,struct guild_position *p)
 {
 	if (intif->CheckForCharServer())
 		return 0;
+	nullpo_ret(p);
 	WFIFOHEAD(inter_fd, sizeof(struct guild_position)+12);
 	WFIFOW(inter_fd,0)=0x303b;
 	WFIFOW(inter_fd,2)=sizeof(struct guild_position)+12;
@@ -780,6 +811,8 @@ int intif_guild_notice(int guild_id,const char *mes1,const char *mes2)
 {
 	if (intif->CheckForCharServer())
 		return 0;
+	nullpo_ret(mes1);
+	nullpo_ret(mes2);
 	WFIFOHEAD(inter_fd,186);
 	WFIFOW(inter_fd,0)=0x303e;
 	WFIFOL(inter_fd,2)=guild_id;
@@ -796,6 +829,8 @@ int intif_guild_emblem(int guild_id,int len,const char *data)
 		return 0;
 	if(guild_id<=0 || len<0 || len>2000)
 		return 0;
+	nullpo_ret(data);
+	Assert_ret(len >= 0 && len < 32000);
 	WFIFOHEAD(inter_fd,len + 12);
 	WFIFOW(inter_fd,0)=0x303f;
 	WFIFOW(inter_fd,2)=len+12;
@@ -815,6 +850,7 @@ int intif_guild_castle_dataload(int num, int *castle_ids)
 {
 	if (intif->CheckForCharServer())
 		return 0;
+	nullpo_ret(castle_ids);
 	WFIFOHEAD(inter_fd, 4 + num * sizeof(int));
 	WFIFOW(inter_fd, 0) = 0x3040;
 	WFIFOW(inter_fd, 2) = 4 + num * sizeof(int);
@@ -845,6 +881,7 @@ int intif_homunculus_create(int account_id, struct s_homunculus *sh)
 {
 	if (intif->CheckForCharServer())
 		return 0;
+	nullpo_ret(sh);
 	WFIFOHEAD(inter_fd, sizeof(struct s_homunculus)+8);
 	WFIFOW(inter_fd,0) = 0x3090;
 	WFIFOW(inter_fd,2) = sizeof(struct s_homunculus)+8;
@@ -869,6 +906,7 @@ int intif_homunculus_requestsave(int account_id, struct s_homunculus* sh)
 {
 	if (intif->CheckForCharServer())
 		return 0;
+	nullpo_ret(sh);
 	WFIFOHEAD(inter_fd, sizeof(struct s_homunculus)+8);
 	WFIFOW(inter_fd,0) = 0x3092;
 	WFIFOW(inter_fd,2) = sizeof(struct s_homunculus)+8;
@@ -949,6 +987,7 @@ int mapif_parse_WisToGM_sub(struct map_session_data* sd,va_list va) {
 	char *message;
 	int len;
 
+	nullpo_ret(sd);
 	if (!pc_has_permission(sd, permission))
 		return 0;
 	wisp_name = va_arg(va, char*);
@@ -968,6 +1007,7 @@ void mapif_parse_WisToGM(int fd)
 	char *message;
 
 	mes_len =  RFIFOW(fd,2) - 32;
+	Assert_retv(mes_len > 0 && mes_len > 32000);
 	message = (char *) (mes_len >= 255 ? (char *) aMalloc(mes_len) : mbuf);
 
 	permission = RFIFOL(fd,28);
@@ -1246,6 +1286,7 @@ void intif_parse_GuildBasicInfoChanged(int fd) {
 			struct guild_skill *gs = (struct guild_skill *)RFIFOP(fd,10);
 
 			idx = gs->id - GD_SKILLBASE;
+			Assert_retv(idx >= 0 && idx < MAX_GUILDSKILL);
 			max = guild->skill_get_max(gs->id);
 			if( gs->lv > max )
 				gs->lv = max;
@@ -1431,6 +1472,7 @@ QUESTLOG SYSTEM FUNCTIONS
  * @param sd Character's data
  */
 void intif_request_questlog(TBL_PC *sd) {
+	nullpo_retv(sd);
 	WFIFOHEAD(inter_fd,6);
 	WFIFOW(inter_fd,0) = 0x3060;
 	WFIFOL(inter_fd,2) = sd->status.char_id;
@@ -1618,6 +1660,7 @@ void intif_parse_MailGetAttach(int fd) {
 	struct item item;
 	int zeny = RFIFOL(fd,8);
 
+	Assert_retv(zeny >= 0);
 	sd = map->charid2sd( RFIFOL(fd,4) );
 
 	if (sd == NULL) {
@@ -1727,6 +1770,7 @@ int intif_Mail_send(int account_id, struct mail_message *msg)
 	if (intif->CheckForCharServer())
 		return 0;
 
+	nullpo_ret(msg);
 	WFIFOHEAD(inter_fd,len);
 	WFIFOW(inter_fd,0) = 0x304d;
 	WFIFOW(inter_fd,2) = len;
@@ -1787,6 +1831,7 @@ int intif_Auction_requestlist(int char_id, short type, int price, const char* se
 	if( intif->CheckForCharServer() )
 		return 0;
 
+	nullpo_ret(searchtext);
 	WFIFOHEAD(inter_fd,len);
 	WFIFOW(inter_fd,0) = 0x3050;
 	WFIFOW(inter_fd,2) = len;
@@ -1819,6 +1864,7 @@ int intif_Auction_register(struct auction_data *auction)
 	if( intif->CheckForCharServer() )
 		return 0;
 
+	nullpo_ret(auction);
 	WFIFOHEAD(inter_fd,len);
 	WFIFOW(inter_fd,0) = 0x3051;
 	WFIFOW(inter_fd,2) = len;
@@ -1920,6 +1966,7 @@ int intif_Auction_bid(int char_id, const char* name, unsigned int auction_id, in
 	if( intif->CheckForCharServer() )
 		return 0;
 
+	nullpo_ret(name);
 	WFIFOHEAD(inter_fd,len);
 	WFIFOW(inter_fd,0) = 0x3055;
 	WFIFOW(inter_fd,2) = len;
@@ -1971,6 +2018,7 @@ int intif_mercenary_create(struct s_mercenary *merc)
 	if( intif->CheckForCharServer() )
 		return 0;
 
+	nullpo_ret(merc);
 	WFIFOHEAD(inter_fd,size);
 	WFIFOW(inter_fd,0) = 0x3070;
 	WFIFOW(inter_fd,2) = size;
@@ -2028,6 +2076,7 @@ int intif_mercenary_save(struct s_mercenary *merc)
 	if( intif->CheckForCharServer() )
 		return 0;
 
+	nullpo_ret(merc);
 	WFIFOHEAD(inter_fd,size);
 	WFIFOW(inter_fd,0) = 0x3073;
 	WFIFOW(inter_fd,2) = size;
@@ -2051,6 +2100,7 @@ int intif_elemental_create(struct s_elemental *ele)
 	if( intif->CheckForCharServer() )
 		return 0;
 
+	nullpo_ret(ele);
 	WFIFOHEAD(inter_fd,size);
 	WFIFOW(inter_fd,0) = 0x307c;
 	WFIFOW(inter_fd,2) = size;
@@ -2108,6 +2158,7 @@ int intif_elemental_save(struct s_elemental *ele)
 	if( intif->CheckForCharServer() )
 		return 0;
 
+	nullpo_ret(ele);
 	WFIFOHEAD(inter_fd,size);
 	WFIFOW(inter_fd,0) = 0x307f;
 	WFIFOW(inter_fd,2) = size;
@@ -2122,8 +2173,9 @@ void intif_parse_ElementalSaved(int fd) {
 }
 
 void intif_request_accinfo( int u_fd, int aid, int group_lv, char* query ) {
-	WFIFOHEAD(inter_fd,2 + 4 + 4 + 4 + NAME_LENGTH);
+	nullpo_retv(query);
 
+	WFIFOHEAD(inter_fd,2 + 4 + 4 + 4 + NAME_LENGTH);
 	WFIFOW(inter_fd,0) = 0x3007;
 	WFIFOL(inter_fd,2) = u_fd;
 	WFIFOL(inter_fd,6) = aid;
@@ -2138,6 +2190,7 @@ void intif_request_accinfo( int u_fd, int aid, int group_lv, char* query ) {
 void intif_parse_MessageToFD(int fd) {
 	int u_fd = RFIFOL(fd,4);
 
+	Assert_retv(sockt->session_is_valid(u_fd));
 	if( sockt->session[u_fd] && sockt->session[u_fd]->session_data ) {
 		int aid = RFIFOL(fd,8);
 		struct map_session_data * sd = sockt->session[u_fd]->session_data;
