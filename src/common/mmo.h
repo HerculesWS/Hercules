@@ -299,6 +299,7 @@ enum e_mmo_charstatus_opt {
 };
 
 enum e_item_bound_type {
+	IBT_NONE      = 0x0,
 	IBT_MIN       = 0x1,
 	IBT_ACCOUNT   = 0x1,
 	IBT_GUILD     = 0x2,
