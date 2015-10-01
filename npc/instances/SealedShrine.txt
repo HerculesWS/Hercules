@@ -441,8 +441,8 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 OnInstanceInit:
 	// Pick one "true" Gravestone and 12 "false" Gravestones.
 	.@true = rand(1,13);
-	for (.@i = 1; .@i<13; ++.@i) {
-		disablenpc instance_npcname("Gravestone#1F_1"+((.@i == .@true)?"F":"T"));
+	for (.@i = 1; .@i <= 13; ++.@i) {
+		disablenpc instance_npcname("Gravestone#1F_"+.@i+((.@i == .@true)?"T":"F"));
 	}
 	disablenpc instance_npcname("ins_baphomet_lotto");
 	end;
@@ -450,7 +450,7 @@ OnInstanceInit:
 
 1@cata,3,2,0	script	ins_baphomet_lotto2	-1,{
 OnEnable:
-	for (.@i = 1; .@i < 12; ++.@i)
+	for (.@i = 1; .@i <= 12; ++.@i)
 		enablenpc instance_npcname("Bobbing Torch#"+.@i);
 	end;
 }
