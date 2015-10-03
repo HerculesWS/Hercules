@@ -2901,7 +2901,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 #ifndef PACKETVER_RE
 #if PACKETVER >= 20150916
 	packet(0x0869,7,clif->pActionRequest,2,6);
-    packet(0x093E,10,clif->pUseSkillToId,2,4,6);
+	packet(0x093E,10,clif->pUseSkillToId,2,4,6);
 	packet(0x0877,5,clif->pWalkToXY,2);
 	packet(0x08AC,6,clif->pTickSend,2);
 	packet(0x0936,5,clif->pChangeDir,2,4);
