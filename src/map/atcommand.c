@@ -242,16 +242,16 @@ ACMD(send)
 	}\
 } while(0) //define GET_VALUE
 
-	if (type > 0 && type < MAX_PACKET_DB) {
+	if (type >= MIN_PACKET_DB && type <= MAX_PACKET_DB) {
 		int off = 2;
 		if (len) {
 			// show packet length
-			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,904), type, packet_db[type].len); // Packet 0x%x length: %d
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,904), type, clif->packet(type)->len); // Packet 0x%x length: %d
 			clif->message(fd, atcmd_output);
 			return true;
 		}
 
-		len=packet_db[type].len;
+		len = clif->packet(type)->len;
 		if (len == 0) {
 			// unknown packet - ERROR
 			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,905), type); // Unknown packet: 0x%x
@@ -402,7 +402,7 @@ ACMD(send)
 			SKIP_VALUE(message);
 		}
 
-		if(packet_db[type].len == -1) {// send dynamic packet
+		if (clif->packet(type)->len == -1) { // send dynamic packet
 			WFIFOW(sd->fd,2)=TOW(off);
 			WFIFOSET(sd->fd,off);
 		} else {// send static packet

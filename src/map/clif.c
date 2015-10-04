@@ -18680,6 +18680,19 @@ int clif_parse(int fd) {
 	return 0;
 }
 
+/**
+ * Returns information about the given packet ID.
+ *
+ * @param packet_id The packet ID.
+ * @return The corresponding packet_db entry, if any.
+ */
+const struct s_packet_db *clif_packet(int packet_id)
+{
+	if (packet_id < MIN_PACKET_DB || packet_id > MAX_PACKET_DB || packet_db[packet_id].len == 0)
+		return NULL;
+	return &packet_db[packet_id];
+}
+
 static void __attribute__ ((unused)) packetdb_addpacket(short cmd, int len, ...) {
 	va_list va;
 	int i;
@@ -18815,6 +18828,7 @@ void clif_defaults(void) {
 	clif->parse = clif_parse;
 	clif->parse_cmd = clif_parse_cmd_optional;
 	clif->decrypt_cmd = clif_decrypt_cmd;
+	clif->packet = clif_packet;
 	/* auth */
 	clif->authok = clif_authok;
 	clif->authrefuse = clif_authrefuse;

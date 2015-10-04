@@ -597,6 +597,7 @@ struct clif_interface {
 	int (*send_sub) (struct block_list *bl, va_list ap);
 	int (*send_actual) (int fd, void *buf, int len);
 	int (*parse) (int fd);
+	const struct s_packet_db *(*packet) (int packet_id);
 	unsigned short (*parse_cmd) ( int fd, struct map_session_data *sd );
 	unsigned short (*decrypt_cmd) ( int cmd, struct map_session_data *sd );
 	/* auth */
@@ -1323,11 +1324,6 @@ struct clif_interface {
 };
 
 #ifdef HERCULES_CORE
-/**
- * Vars
- **/
-extern struct s_packet_db packet_db[MAX_PACKET_DB + 1];
-
 void clif_defaults(void);
 #endif // HERCULES_CORE
 
