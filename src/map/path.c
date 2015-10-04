@@ -45,7 +45,7 @@ struct path_node {
 };
 
 /// Binary heap of path nodes
-BHEAP_STRUCT_DECL(node_heap, struct path_node*);
+BHEAP_STRUCT_DECL(node_heap, struct path_node *);
 
 /// Comparator for binary heap of path nodes (minimum cost at top)
 #define NODE_MINTOPCMP(i,j) ((i)->f_cost - (j)->f_cost)

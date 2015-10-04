@@ -1043,8 +1043,8 @@ HPShared struct db_interface *DB;
  */
 #define VECTOR_DECL(_type) \
 	struct { \
-		size_t _max_; \
-		size_t _len_; \
+		int _max_; \
+		int _len_; \
 		_type *_data_; \
 	}
 
@@ -1056,8 +1056,8 @@ HPShared struct db_interface *DB;
  */
 #define VECTOR_STRUCT_DECL(_name, _type) \
 	struct _name { \
-		size_t _max_; \
-		size_t _len_; \
+		int _max_; \
+		int _len_; \
 		_type *_data_; \
 	}
 
@@ -1191,7 +1191,7 @@ HPShared struct db_interface *DB;
  */
 #define VECTOR_ENSURE(_vec, _n, _step) \
 	do { \
-		size_t _empty_ = VECTOR_CAPACITY(_vec)-VECTOR_LENGTH(_vec); \
+		int _empty_ = VECTOR_CAPACITY(_vec)-VECTOR_LENGTH(_vec); \
 		if ((_n) > _empty_) { \
 			while ((_n) > _empty_) \
 				_empty_ += (_step); \
@@ -1499,11 +1499,11 @@ HPShared struct db_interface *DB;
  */
 #define BHEAP_PUSH(_heap, _val, _topcmp, _swp) \
 	do { \
-		size_t _i_ = VECTOR_LENGTH(_heap); \
+		int _i_ = VECTOR_LENGTH(_heap); \
 		VECTOR_PUSH(_heap, _val); /* insert at end */ \
 		while (_i_ > 0) { \
 			/* restore heap property in parents */ \
-			size_t _parent_ = (_i_-1)/2; \
+			int _parent_ = (_i_-1)/2; \
 			if (_topcmp(VECTOR_INDEX(_heap, _parent_), VECTOR_INDEX(_heap, _i_)) < 0) \
 				break; /* done */ \
 			_swp(VECTOR_INDEX(_heap, _parent_), VECTOR_INDEX(_heap, _i_)); \
@@ -1523,7 +1523,7 @@ HPShared struct db_interface *DB;
  */
 #define BHEAP_PUSH2(_heap, _val, _topcmp, _swp) \
 	do { \
-		size_t _i_ = VECTOR_LENGTH(_heap); \
+		int _i_ = VECTOR_LENGTH(_heap); \
 		VECTOR_PUSH(_heap, _val); /* insert at end */ \
 		BHEAP_SIFTDOWN(_heap, 0, _i_, _topcmp, _swp); \
 	} while(false)
@@ -1579,13 +1579,13 @@ HPShared struct db_interface *DB;
  */
 #define BHEAP_POPINDEX(_heap, _idx, _topcmp, _swp) \
 	do { \
-		size_t _i_ = _idx; \
+		int _i_ = _idx; \
 		VECTOR_INDEX(_heap, _idx) = VECTOR_POP(_heap); /* put last at index */ \
 		if (_i_ >= VECTOR_LENGTH(_heap)) /* removed last, nothing to do */ \
 			break; \
 		while (_i_ > 0) { \
 			/* restore heap property in parents */ \
-			size_t _parent_ = (_i_-1)/2; \
+			int _parent_ = (_i_-1)/2; \
 			if (_topcmp(VECTOR_INDEX(_heap, _parent_), VECTOR_INDEX(_heap, _i_)) < 0) \
 				break; /* done */ \
 			_swp(VECTOR_INDEX(_heap, _parent_), VECTOR_INDEX(_heap, _i_)); \
@@ -1593,8 +1593,8 @@ HPShared struct db_interface *DB;
 		} \
 		while (_i_ < VECTOR_LENGTH(_heap)) { \
 			/* restore heap property in children */ \
-			size_t _lchild_ = _i_*2 + 1; \
-			size_t _rchild_ = _i_*2 + 2; \
+			int _lchild_ = _i_*2 + 1; \
+			int _rchild_ = _i_*2 + 2; \
 			if ((_lchild_ >= VECTOR_LENGTH(_heap) || _topcmp(VECTOR_INDEX(_heap, _i_), VECTOR_INDEX(_heap, _lchild_)) <= 0) \
 			 && (_rchild_ >= VECTOR_LENGTH(_heap) || _topcmp(VECTOR_INDEX(_heap, _i_), VECTOR_INDEX(_heap, _rchild_)) <= 0)) { \
 				break; /* done */ \
@@ -1624,10 +1624,10 @@ HPShared struct db_interface *DB;
  */
 #define BHEAP_SIFTDOWN(_heap, _startidx, _idx, _topcmp, _swp) \
 	do { \
-		size_t _i2_ = _idx; \
+		int _i2_ = _idx; \
 		while (_i2_ > _startidx) { \
 			/* restore heap property in parents */ \
-			size_t _parent_ = (_i2_-1)/2; \
+			int _parent_ = (_i2_-1)/2; \
 			if (_topcmp(VECTOR_INDEX(_heap, _parent_), VECTOR_INDEX(_heap, _i2_)) <= 0) \
 				break; /* done */ \
 			_swp(VECTOR_INDEX(_heap, _parent_), VECTOR_INDEX(_heap, _i2_)); \
@@ -1645,11 +1645,11 @@ HPShared struct db_interface *DB;
  */
 #define BHEAP_SIFTUP(_heap, _idx, _topcmp, _swp) \
 	do { \
-		size_t _i_ = _idx; \
-		size_t _lchild_ = _i_*2 + 1; \
+		int _i_ = _idx; \
+		int _lchild_ = _i_*2 + 1; \
 		while (_lchild_ < VECTOR_LENGTH(_heap)) { \
 			/* restore heap property in children */ \
-			size_t _rchild_ = _i_*2 + 2; \
+			int _rchild_ = _i_*2 + 2; \
 			if (_rchild_ >= VECTOR_LENGTH(_heap) || _topcmp(VECTOR_INDEX(_heap, _lchild_), VECTOR_INDEX(_heap, _rchild_)) < 0) { \
 				/* left child */ \
 				_swp(VECTOR_INDEX(_heap, _i_), VECTOR_INDEX(_heap, _lchild_)); \
