@@ -497,6 +497,8 @@ struct {
 	struct HPMHookPoint *HP_clif_send_actual_post;
 	struct HPMHookPoint *HP_clif_parse_pre;
 	struct HPMHookPoint *HP_clif_parse_post;
+	struct HPMHookPoint *HP_clif_packet_pre;
+	struct HPMHookPoint *HP_clif_packet_post;
 	struct HPMHookPoint *HP_clif_parse_cmd_pre;
 	struct HPMHookPoint *HP_clif_parse_cmd_post;
 	struct HPMHookPoint *HP_clif_decrypt_cmd_pre;
@@ -6220,6 +6222,8 @@ struct {
 	int HP_clif_send_actual_post;
 	int HP_clif_parse_pre;
 	int HP_clif_parse_post;
+	int HP_clif_packet_pre;
+	int HP_clif_packet_post;
 	int HP_clif_parse_cmd_pre;
 	int HP_clif_parse_cmd_post;
 	int HP_clif_decrypt_cmd_pre;

@@ -6672,6 +6672,33 @@ int HP_clif_parse(int fd) {
 	}
 	return retVal___;
 }
+const struct s_packet_db* HP_clif_packet(int packet_id) {
+	int hIndex = 0;
+	const struct s_packet_db* retVal___ = NULL;
+	if( HPMHooks.count.HP_clif_packet_pre ) {
+		const struct s_packet_db* (*preHookFunc) (int *packet_id);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_packet_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_packet_pre[hIndex].func;
+			retVal___ = preHookFunc(&packet_id);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.clif.packet(packet_id);
+	}
+	if( HPMHooks.count.HP_clif_packet_post ) {
+		const struct s_packet_db* (*postHookFunc) (const struct s_packet_db* retVal___, int *packet_id);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_packet_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_packet_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &packet_id);
+		}
+	}
+	return retVal___;
+}
 unsigned short HP_clif_parse_cmd(int fd, struct map_session_data *sd) {
 	int hIndex = 0;
 	unsigned short retVal___ = 0;
