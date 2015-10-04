@@ -2898,7 +2898,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 #endif
 
 // 2015-09-16aRagexeRE - ossi0110
-#ifndef PACKETVER_RE
+#ifdef PACKETVER_RE
 #if PACKETVER >= 20150916
 	packet(0x0869,7,clif->pActionRequest,2,6);
 	packet(0x093E,10,clif->pUseSkillToId,2,4,6);
@@ -3178,7 +3178,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packetKeys(0x62C86D09,0x75944F17,0x112C133D); /* Dastgir */
 #endif
 
-#ifndef PACKETVER_RE
+#ifdef PACKETVER_RE
 #if PACKETVER >= 20150916
 	packetKeys(0x19AB2BF0,0x04754299,0x48770736); /* ossi0110 */
 #endif
