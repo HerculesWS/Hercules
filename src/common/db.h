@@ -935,608 +935,785 @@ void db_defaults(void);
 
 HPShared struct db_interface *DB;
 
-/// Finds an entry in an array.
-/// ex: ARR_FIND(0, size, i, list[i] == target);
-///
-/// @param __start   Starting index (ex: 0)
-/// @param __end     End index (ex: size of the array)
-/// @param __var     Index variable
-/// @param __cmp     Expression that returns true when the target entry is found
-#define ARR_FIND(__start, __end, __var, __cmp) \
-	do{ \
-		for( (__var) = (__start); (__var) < (__end); ++(__var) ) \
-			if( __cmp ) \
+/**
+ * Array Helper macros
+ */
+
+/**
+ * Finds an entry in an array.
+ *
+ * @code
+ *    ARR_FIND(0, size, i, list[i] == target);
+ * @endcode
+ *
+ * To differentiate between the found and not found cases, the caller code can
+ * compare _end and _var after this macro returns.
+ *
+ * @param _start Starting index (ex: 0).
+ * @param _end   End index (ex: size of the array).
+ * @param _var   Index variable.
+ * @param _cmp   Search expression (should return true when the target entry is found).
+ */
+#define ARR_FIND(_start, _end, _var, _cmp) \
+	do { \
+		for ((_var) = (_start); (_var) < (_end); ++(_var)) \
+			if (_cmp) \
 				break; \
-	}while(0)
+	} while(false)
 
-/// Moves an entry of the array.
-/// Use ARR_MOVERIGHT/ARR_MOVELEFT if __from and __to are direct numbers.
-/// ex: ARR_MOVE(i, 0, list, int);// move index i to index 0
-///
-///
-/// @param __from   Initial index of the entry
-/// @param __to     Target index of the entry
-/// @param __arr    Array
-/// @param __type   Type of entry
-#define ARR_MOVE(__from, __to, __arr, __type) \
-	do{ \
-		if( (__from) != (__to) ) \
-		{ \
-			__type __backup__; \
-			memmove(&__backup__, (__arr)+(__from), sizeof(__type)); \
-			if( (__from) < (__to) ) \
-				memmove((__arr)+(__from), (__arr)+(__from)+1, ((__to)-(__from))*sizeof(__type)); \
-			else if( (__from) > (__to) ) \
-				memmove((__arr)+(__to)+1, (__arr)+(__to), ((__from)-(__to))*sizeof(__type)); \
-			memmove((__arr)+(__to), &__backup__, sizeof(__type)); \
+/**
+ * Moves an entry of the array.
+ *
+ * @code
+ *    ARR_MOVE(i, 0, list, int); // move index i to index 0
+ * @endcode
+ *
+ * @remark
+ *    Use ARR_MOVERIGHT/ARR_MOVELEFT if _from and _to are direct numbers.
+ *
+ * @param _from Initial index of the entry.
+ * @param _to   Target index of the entry.
+ * @param _arr  Array.
+ * @param _type Type of entry.
+ */
+#define ARR_MOVE(_from, _to, _arr, _type) \
+	do { \
+		if ((_from) != (_to)) { \
+			_type _backup_; \
+			memmove(&_backup_, (_arr)+(_from), sizeof(_type)); \
+			if ((_from) < (_to)) \
+				memmove((_arr)+(_from), (_arr)+(_from)+1, ((_to)-(_from))*sizeof(_type)); \
+			else if ((_from) > (_to)) \
+				memmove((_arr)+(_to)+1, (_arr)+(_to), ((_from)-(_to))*sizeof(_type)); \
+			memmove((_arr)+(_to), &_backup_, sizeof(_type)); \
 		} \
-	}while(0)
+	} while(false)
 
-/// Moves an entry of the array to the right.
-/// ex: ARR_MOVERIGHT(1, 4, list, int);// move index 1 to index 4
-///
-/// @param __from   Initial index of the entry
-/// @param __to     Target index of the entry
-/// @param __arr    Array
-/// @param __type   Type of entry
-#define ARR_MOVERIGHT(__from, __to, __arr, __type) \
-	do{ \
-		__type __backup__; \
-		memmove(&__backup__, (__arr)+(__from), sizeof(__type)); \
-		memmove((__arr)+(__from), (__arr)+(__from)+1, ((__to)-(__from))*sizeof(__type)); \
-		memmove((__arr)+(__to), &__backup__, sizeof(__type)); \
-	}while(0)
+/**
+ * Moves an entry of the array to the right.
+ *
+ * @code
+ *    ARR_MOVERIGHT(1, 4, list, int); // move index 1 to index 4
+ * @endcode
+ *
+ * @param _from Initial index of the entry.
+ * @param _to   Target index of the entry.
+ * @param _arr  Array.
+ * @param _type Type of entry.
+ */
+#define ARR_MOVERIGHT(_from, _to, _arr, _type) \
+	do { \
+		_type _backup_; \
+		memmove(&_backup_, (_arr)+(_from), sizeof(_type)); \
+		memmove((_arr)+(_from), (_arr)+(_from)+1, ((_to)-(_from))*sizeof(_type)); \
+		memmove((_arr)+(_to), &_backup_, sizeof(_type)); \
+	} while(false)
 
-/// Moves an entry of the array to the left.
-/// ex: ARR_MOVELEFT(3, 0, list, int);// move index 3 to index 0
-///
-/// @param __from   Initial index of the entry
-/// @param __end    Target index of the entry
-/// @param __arr    Array
-/// @param __type   Type of entry
-#define ARR_MOVELEFT(__from, __to, __arr, __type) \
-	do{ \
-		__type __backup__; \
-		memmove(&__backup__, (__arr)+(__from), sizeof(__type)); \
-		memmove((__arr)+(__to)+1, (__arr)+(__to), ((__from)-(__to))*sizeof(__type)); \
-		memmove((__arr)+(__to), &__backup__, sizeof(__type)); \
-	}while(0)
+/**
+ * Moves an entry of the array to the left.
+ *
+ * @code
+ *    ARR_MOVELEFT(3, 0, list, int); // move index 3 to index 0
+ * @endcode
+ *
+ * @param _from Initial index of the entry.
+ * @param _end  Target index of the entry.
+ * @param _arr  Array.
+ * @param _type Type of entry.
+ */
+#define ARR_MOVELEFT(_from, _to, _arr, _type) \
+	do { \
+		_type _backup_; \
+		memmove(&_backup_, (_arr)+(_from), sizeof(_type)); \
+		memmove((_arr)+(_to)+1, (_arr)+(_to), ((_from)-(_to))*sizeof(_type)); \
+		memmove((_arr)+(_to), &_backup_, sizeof(_type)); \
+	} while(false)
 
-/////////////////////////////////////////////////////////////////////
-// Vector library based on defines. (dynamic array)
-// uses aMalloc, aRealloc, aFree
+/**
+ * Vector library based on defines (dynamic array).
+ *
+ * @remark
+ *    This library uses aMalloc, aRealloc, aFree.
+ */
 
-/// Declares an anonymous vector struct.
-///
-/// @param __type Type of data
-#define VECTOR_DECL(__type) \
+/**
+ * Declares an anonymous vector struct.
+ *
+ * @param _type Type of data to be contained.
+ */
+#define VECTOR_DECL(_type) \
 	struct { \
 		size_t _max_; \
 		size_t _len_; \
-		__type* _data_; \
+		_type *_data_; \
 	}
 
-/// Declares a named vector struct.
-///
-/// @param __name Structure name
-/// @param __type Type of data
-#define VECTOR_STRUCT_DECL(__name,__type) \
-	struct __name { \
+/**
+ * Declares a named vector struct.
+ *
+ * @param _name Structure name.
+ * @param _type Type of data to be contained.
+ */
+#define VECTOR_STRUCT_DECL(_name, _type) \
+	struct _name { \
 		size_t _max_; \
 		size_t _len_; \
-		__type* _data_; \
+		_type *_data_; \
 	}
 
-/// Declares and initializes an anonymous vector variable.
-///
-/// @param __type Type of data
-/// @param __var Variable name
-#define VECTOR_VAR(__type,__var) \
-	VECTOR_DECL(__type) __var = {0,0,NULL}
+/**
+ * Declares and initializes an anonymous vector variable.
+ *
+ * @param _type Type of data to be contained.
+ * @param _var  Variable name.
+ */
+#define VECTOR_VAR(_type, _var) \
+	VECTOR_DECL(_type) _var = {0, 0, NULL}
 
-/// Declares and initializes a named vector variable.
-///
-/// @param __name Structure name
-/// @param __var Variable name
-#define VECTOR_STRUCT_VAR(__name,__var) \
-	struct __name __var = {0,0,NULL}
+/**
+ * Declares and initializes a named vector variable.
+ *
+ * @param _name Structure name.
+ * @param _var  Variable name.
+ */
+#define VECTOR_STRUCT_VAR(_name, _var) \
+	struct _name _var = {0, 0, NULL}
 
-/// Initializes a vector.
-///
-/// @param __vec Vector
-#define VECTOR_INIT(__vec) \
-	memset(&(__vec), 0, sizeof(__vec))
+/**
+ * Initializes a vector.
+ *
+ * @param _vec Vector.
+ */
+#define VECTOR_INIT(_vec) \
+	memset(&(_vec), 0, sizeof(_vec))
 
-/// Returns the internal array of values.
-///
-/// @param __vec Vector
-/// @return Array of values
-#define VECTOR_DATA(__vec) \
-	( (__vec)._data_ )
+/**
+ * Returns the internal array of values.
+ *
+ * @param _vec Vector.
+ * @return Internal array of values.
+ */
+#define VECTOR_DATA(_vec) \
+	( (_vec)._data_ )
 
-/// Returns the length of the vector.
-///
-/// @param __vec Vector
-/// @return Length
-#define VECTOR_LENGTH(__vec) \
-	( (__vec)._len_ )
+/**
+ * Returns the length of the vector (number of elements in use).
+ *
+ * @param _vec Vector
+ * @return Length
+ */
+#define VECTOR_LENGTH(_vec) \
+	( (_vec)._len_ )
 
-/// Returns the capacity of the vector.
-///
-/// @param __vec Vector
-/// @return Capacity
-#define VECTOR_CAPACITY(__vec) \
-	( (__vec)._max_ )
+/**
+ * Returns the capacity of the vector (number of elements allocated).
+ *
+ * @param _vec Vector.
+ * @return Capacity.
+ */
+#define VECTOR_CAPACITY(_vec) \
+	( (_vec)._max_ )
 
-/// Returns the value at the target index.
-/// Assumes the index exists.
-///
-/// @param __vec Vector
-/// @param __idx Index
-/// @return Value
-#define VECTOR_INDEX(__vec,__idx) \
-	( VECTOR_DATA(__vec)[__idx] )
+/**
+ * Returns the value at the target index.
+ *
+ * Assumes the index exists.
+ *
+ * @param _vec Vector.
+ * @param _idx Index.
+ * @return Value.
+ */
+#define VECTOR_INDEX(_vec, _idx) \
+	( VECTOR_DATA(_vec)[_idx] )
 
-/// Returns the first value of the vector.
-/// Assumes the array is not empty.
-///
-/// @param __vec Vector
-/// @return First value
-#define VECTOR_FIRST(__vec) \
-	( VECTOR_INDEX(__vec,0) )
+/**
+ * Returns the first value of the vector.
+ *
+ * Assumes the array is not empty.
+ *
+ * @param _vec Vector.
+ * @return First value.
+ */
+#define VECTOR_FIRST(_vec) \
+	( VECTOR_INDEX(_vec, 0) )
 
-/// Returns the last value of the vector.
-/// Assumes the array is not empty.
-///
-/// @param __vec Vector
-/// @return Last value
-#define VECTOR_LAST(__vec) \
-	( VECTOR_INDEX(__vec,VECTOR_LENGTH(__vec)-1) )
+/**
+ * Returns the last value of the vector.
+ *
+ * Assumes the array is not empty.
+ *
+ * @param _vec Vector.
+ * @return Last value.
+ */
+#define VECTOR_LAST(_vec) \
+	( VECTOR_INDEX(_vec, VECTOR_LENGTH(_vec)-1) )
 
-/// Resizes the vector.
-/// Excess values are discarded, new positions are zeroed.
-///
-/// @param __vec Vector
-/// @param __n Size
-#define VECTOR_RESIZE(__vec,__n) \
-	do{ \
-		if( (__n) > VECTOR_CAPACITY(__vec) ) \
-		{ /* increase size */ \
-			if( VECTOR_CAPACITY(__vec) == 0 ) VECTOR_DATA(__vec) = aMalloc((__n)*sizeof(VECTOR_FIRST(__vec))); /* allocate new */ \
-			else VECTOR_DATA(__vec) = aRealloc(VECTOR_DATA(__vec),(__n)*sizeof(VECTOR_FIRST(__vec))); /* reallocate */ \
-			memset(VECTOR_DATA(__vec)+VECTOR_LENGTH(__vec), 0, (VECTOR_CAPACITY(__vec)-VECTOR_LENGTH(__vec))*sizeof(VECTOR_FIRST(__vec))); /* clear new data */ \
-			VECTOR_CAPACITY(__vec) = (__n); /* update capacity */ \
+/**
+ * Resizes the vector.
+ *
+ * Excess values are discarded, new positions are zeroed.
+ *
+ * @param _vec Vector.
+ * @param _n   New size.
+ */
+#define VECTOR_RESIZE(_vec, _n) \
+	do { \
+		if ((_n) > VECTOR_CAPACITY(_vec)) { \
+			/* increase size */ \
+			if (VECTOR_CAPACITY(_vec) == 0) \
+				VECTOR_DATA(_vec) = aMalloc((_n)*sizeof(VECTOR_FIRST(_vec))); /* allocate new */ \
+			else \
+				VECTOR_DATA(_vec) = aRealloc(VECTOR_DATA(_vec), (_n)*sizeof(VECTOR_FIRST(_vec))); /* reallocate */ \
+			memset(VECTOR_DATA(_vec)+VECTOR_LENGTH(_vec), 0, (VECTOR_CAPACITY(_vec)-VECTOR_LENGTH(_vec))*sizeof(VECTOR_FIRST(_vec))); /* clear new data */ \
+			VECTOR_CAPACITY(_vec) = (_n); /* update capacity */ \
+		} else if ((_n) == 0 && VECTOR_CAPACITY(_vec) > 0) { \
+			/* clear vector */ \
+			aFree(VECTOR_DATA(_vec)); VECTOR_DATA(_vec) = NULL; /* free data */ \
+			VECTOR_CAPACITY(_vec) = 0; /* clear capacity */ \
+			VECTOR_LENGTH(_vec) = 0; /* clear length */ \
+		} else if ((_n) < VECTOR_CAPACITY(_vec)) { \
+			/* reduce size */ \
+			VECTOR_DATA(_vec) = aRealloc(VECTOR_DATA(_vec), (_n)*sizeof(VECTOR_FIRST(_vec))); /* reallocate */ \
+			VECTOR_CAPACITY(_vec) = (_n); /* update capacity */ \
+			if (VECTOR_LENGTH(_vec) > (_n)) \
+				VECTOR_LENGTH(_vec) = (_n); /* update length */ \
 		} \
-		else if( (__n) == 0 && VECTOR_CAPACITY(__vec) ) \
-		{ /* clear vector */ \
-			aFree(VECTOR_DATA(__vec)); VECTOR_DATA(__vec) = NULL; /* free data */ \
-			VECTOR_CAPACITY(__vec) = 0; /* clear capacity */ \
-			VECTOR_LENGTH(__vec) = 0; /* clear length */ \
+	} while(false)
+
+/**
+ * Ensures that the array has the target number of empty positions.
+ *
+ * Increases the capacity in multiples of _step.
+ *
+ * @param _vec  Vector.
+ * @param _n    Desired empty positions.
+ * @param _step Increase.
+ */
+#define VECTOR_ENSURE(_vec, _n, _step) \
+	do { \
+		size_t _empty_ = VECTOR_CAPACITY(_vec)-VECTOR_LENGTH(_vec); \
+		if ((_n) > _empty_) { \
+			while ((_n) > _empty_) \
+				_empty_ += (_step); \
+			VECTOR_RESIZE(_vec, _empty_+VECTOR_LENGTH(_vec)); \
 		} \
-		else if( (__n) < VECTOR_CAPACITY(__vec) ) \
-		{ /* reduce size */ \
-			VECTOR_DATA(__vec) = aRealloc(VECTOR_DATA(__vec),(__n)*sizeof(VECTOR_FIRST(__vec))); /* reallocate */ \
-			VECTOR_CAPACITY(__vec) = (__n); /* update capacity */ \
-			if( VECTOR_LENGTH(__vec) > (__n) ) VECTOR_LENGTH(__vec) = (__n); /* update length */ \
+	} while(false)
+
+/**
+ * Inserts a zeroed value in the target index.
+ *
+ * Assumes the index is valid and there is enough capacity.
+ *
+ * @param _vec Vector.
+ * @param _idx Index.
+ */
+#define VECTOR_INSERTZEROED(_vec, _idx) \
+	do { \
+		if ((_idx) < VECTOR_LENGTH(_vec)) /* move data */ \
+			memmove(&VECTOR_INDEX(_vec, (_idx)+1), &VECTOR_INDEX(_vec, _idx), (VECTOR_LENGTH(_vec)-(_idx))*sizeof(VECTOR_FIRST(_vec))); \
+		memset(&VECTOR_INDEX(_vec, _idx), 0, sizeof(VECTOR_INDEX(_vec, _idx))); /* set zeroed value */ \
+		++VECTOR_LENGTH(_vec); /* increase length */ \
+	} while(false)
+
+/**
+ * Inserts a value in the target index (using the '=' operator).
+ *
+ * Assumes the index is valid and there is enough capacity.
+ *
+ * @param _vec Vector.
+ * @param _idx Index.
+ * @param _val Value.
+ */
+#define VECTOR_INSERT(_vec, _idx, _val) \
+	do { \
+		if ((_idx) < VECTOR_LENGTH(_vec)) /* move data */ \
+			memmove(&VECTOR_INDEX(_vec, (_idx)+1), &VECTOR_INDEX(_vec, _idx), (VECTOR_LENGTH(_vec)-(_idx))*sizeof(VECTOR_FIRST(_vec))); \
+		VECTOR_INDEX(_vec, _idx) = (_val); /* set value */ \
+		++VECTOR_LENGTH(_vec); /* increase length */ \
+	} while(false)
+
+/**
+ * Inserts a value in the target index (using memcpy).
+ *
+ * Assumes the index is valid and there is enough capacity.
+ *
+ * @param _vec Vector.
+ * @param _idx Index.
+ * @param _val Value.
+ */
+#define VECTOR_INSERTCOPY(_vec, _idx, _val) \
+	VECTOR_INSERTARRAY(_vec, _idx, &(_val), 1)
+
+/**
+ * Inserts the values of the array in the target index (using memcpy).
+ *
+ * Assumes the index is valid and there is enough capacity.
+ *
+ * @param _vec  Vector.
+ * @param _idx  Index.
+ * @param _pval Array of values.
+ * @param _n    Number of values.
+ */
+#define VECTOR_INSERTARRAY(_vec, _idx, _pval, _n) \
+	do { \
+		if ((_idx) < VECTOR_LENGTH(_vec)) /* move data */ \
+			memmove(&VECTOR_INDEX(_vec, (_idx)+(_n)), &VECTOR_INDEX(_vec, _idx), (VECTOR_LENGTH(_vec)-(_idx))*sizeof(VECTOR_FIRST(_vec))); \
+		memcpy(&VECTOR_INDEX(_vec, _idx), (_pval), (_n)*sizeof(VECTOR_FIRST(_vec))); /* set values */ \
+		VECTOR_LENGTH(_vec) += (_n); /* increase length */ \
+	} while(false)
+
+/**
+ * Inserts a zeroed value in the end of the vector.
+ *
+ * Assumes there is enough capacity.
+ *
+ * @param _vec Vector.
+ */
+#define VECTOR_PUSHZEROED(_vec) \
+	do { \
+		memset(&VECTOR_INDEX(_vec, VECTOR_LENGTH(_vec)), 0, sizeof(VECTOR_INDEX(_vec, VECTOR_LENGTH(_vec)))); /* set zeroed value */ \
+		++VECTOR_LENGTH(_vec); /* increase length */ \
+	} while(false)
+
+/**
+ * Appends a value at the end of the vector (using the '=' operator).
+ *
+ * Assumes there is enough capacity.
+ *
+ * @param _vec Vector.
+ * @param _val Value.
+ */
+#define VECTOR_PUSH(_vec, _val) \
+	do { \
+		VECTOR_INDEX(_vec, VECTOR_LENGTH(_vec)) = (_val); /* set value */ \
+		++VECTOR_LENGTH(_vec); /* increase length */ \
+	}while(false)
+
+/**
+ * Appends a value at the end of the vector (using memcpy).
+ *
+ * Assumes there is enough capacity.
+ *
+ * @param _vec Vector.
+ * @param _val Value.
+ */
+#define VECTOR_PUSHCOPY(_vec, _val) \
+	VECTOR_PUSHARRAY(_vec, &(_val), 1)
+
+/**
+ * Appends the values of the array at the end of the vector (using memcpy).
+ *
+ * Assumes there is enough capacity.
+ *
+ * @param _vec  Vector.
+ * @param _pval Array of values.
+ * @param _n    Number of values.
+ */
+#define VECTOR_PUSHARRAY(_vec, _pval, _n) \
+	do { \
+		memcpy(&VECTOR_INDEX(_vec, VECTOR_LENGTH(_vec)), (_pval), (_n)*sizeof(VECTOR_FIRST(_vec))); /* set values */ \
+		VECTOR_LENGTH(_vec) += (_n); /* increase length */ \
+	} while(false)
+
+/**
+ * Removes and returns the last value of the vector.
+ *
+ * Assumes the array is not empty.
+ *
+ * @param _vec Vector.
+ * @return Removed value.
+ */
+#define VECTOR_POP(_vec) \
+	( VECTOR_INDEX(_vec, --VECTOR_LENGTH(_vec)) )
+
+/**
+ * Removes the last N values of the vector and returns the value of the last pop.
+ *
+ * Assumes there are enough values.
+ *
+ * @param _vec Vector.
+ * @param _n   Number of pops.
+ * @return Last removed value.
+ */
+#define VECTOR_POPN(_vec, _n) \
+	( VECTOR_INDEX(_vec, (VECTOR_LENGTH(_vec) -= (_n))) )
+
+/**
+ * Removes the target index from the vector.
+ *
+ * Assumes the index is valid and there are enough values.
+ *
+ * @param _vec Vector.
+ * @param _idx Index.
+ */
+#define VECTOR_ERASE(_vec, _idx) \
+	VECTOR_ERASEN(_vec, _idx, 1)
+
+/**
+ * Removes N values from the target index of the vector.
+ *
+ * Assumes the index is valid and there are enough values.
+ *
+ * @param _vec Vector.
+ * @param _idx Index.
+ * @param _n   Number of values to remove.
+ */
+#define VECTOR_ERASEN(_vec, _idx, _n) \
+	do { \
+		if ((_idx) < VECTOR_LENGTH(_vec)-(_n) ) /* move data */ \
+			memmove(&VECTOR_INDEX(_vec, _idx), &VECTOR_INDEX(_vec, (_idx)+(_n)), (VECTOR_LENGTH(_vec)-((_idx)+(_n)))*sizeof(VECTOR_FIRST(_vec))); \
+		VECTOR_LENGTH(_vec) -= (_n); /* decrease length */ \
+	} while(false)
+
+/**
+ * Clears the vector, freeing allocated data.
+ *
+ * @param _vec Vector.
+ */
+#define VECTOR_CLEAR(_vec) \
+	do { \
+		if (VECTOR_CAPACITY(_vec) > 0) { \
+			aFree(VECTOR_DATA(_vec)); VECTOR_DATA(_vec) = NULL; /* clear allocated array */ \
+			VECTOR_CAPACITY(_vec) = 0; /* clear capacity */ \
+			VECTOR_LENGTH(_vec) = 0; /* clear length */ \
 		} \
-	}while(0)
+	} while(false)
 
-/// Ensures that the array has the target number of empty positions.
-/// Increases the capacity in multiples of __step.
-///
-/// @param __vec Vector
-/// @param __n Empty positions
-/// @param __step Increase
-#define VECTOR_ENSURE(__vec,__n,__step) \
-	do{ \
-		size_t _empty_ = VECTOR_CAPACITY(__vec)-VECTOR_LENGTH(__vec); \
-		if( (__n) > _empty_ ) { \
-			while( (__n) > _empty_ ) _empty_ += (__step); \
-			VECTOR_RESIZE(__vec,_empty_+VECTOR_LENGTH(__vec)); \
-		} \
-	}while(0)
+/**
+ * Binary heap library based on defines.
+ *
+ * Uses the VECTOR defines above.
+ * Uses aMalloc, aRealloc, aFree.
+ *
+ * @warning
+ *    BHEAP implementation details affect behaviour of A* pathfinding.
+ */
 
-/// Inserts a zeroed value in the target index.
-/// Assumes the index is valid and there is enough capacity.
-///
-/// @param __vec Vector
-/// @param __idx Index
-#define VECTOR_INSERTZEROED(__vec,__idx) \
-	do{ \
-		if( (__idx) < VECTOR_LENGTH(__vec) ) /* move data */ \
-			memmove(&VECTOR_INDEX(__vec,(__idx)+1),&VECTOR_INDEX(__vec,__idx),(VECTOR_LENGTH(__vec)-(__idx))*sizeof(VECTOR_FIRST(__vec))); \
-		memset(&VECTOR_INDEX(__vec,__idx), 0, sizeof(VECTOR_INDEX(__vec,__idx))); /* set zeroed value */ \
-		++VECTOR_LENGTH(__vec); /* increase length */ \
-	}while(0)
+/**
+ * Declares an anonymous binary heap struct.
+ *
+ * @param _type Type of data.
+ */
+#define BHEAP_DECL(_type) \
+	VECTOR_DECL(_type)
 
-/// Inserts a value in the target index. (using the '=' operator)
-/// Assumes the index is valid and there is enough capacity.
-///
-/// @param __vec Vector
-/// @param __idx Index
-/// @param __val Value
-#define VECTOR_INSERT(__vec,__idx,__val) \
-	do{ \
-		if( (__idx) < VECTOR_LENGTH(__vec) ) /* move data */ \
-			memmove(&VECTOR_INDEX(__vec,(__idx)+1),&VECTOR_INDEX(__vec,__idx),(VECTOR_LENGTH(__vec)-(__idx))*sizeof(VECTOR_FIRST(__vec))); \
-		VECTOR_INDEX(__vec,__idx) = (__val); /* set value */ \
-		++VECTOR_LENGTH(__vec); /* increase length */ \
-	}while(0)
+/**
+ * Declares a named binary heap struct.
+ *
+ * @param _name Structure name.
+ * @param _type Type of data.
+ */
+#define BHEAP_STRUCT_DECL(_name, _type) \
+	VECTOR_STRUCT_DECL(_name, _type)
 
-/// Inserts a value in the target index. (using memcpy)
-/// Assumes the index is valid and there is enough capacity.
-///
-/// @param __vec Vector
-/// @param __idx Index
-/// @param __val Value
-#define VECTOR_INSERTCOPY(__vec,__idx,__val) \
-	VECTOR_INSERTARRAY(__vec,__idx,&(__val),1)
+/**
+ * Declares and initializes an anonymous binary heap variable.
+ *
+ * @param _type Type of data.
+ * @param _var  Variable name.
+ */
+#define BHEAP_VAR(_type, _var) \
+	VECTOR_VAR(_type, _var)
 
-/// Inserts the values of the array in the target index. (using memcpy)
-/// Assumes the index is valid and there is enough capacity.
-///
-/// @param __vec Vector
-/// @param __idx Index
-/// @param __pval Array of values
-/// @param __n Number of values
-#define VECTOR_INSERTARRAY(__vec,__idx,__pval,__n) \
-	do{ \
-		if( (__idx) < VECTOR_LENGTH(__vec) ) /* move data */ \
-			memmove(&VECTOR_INDEX(__vec,(__idx)+(__n)),&VECTOR_INDEX(__vec,__idx),(VECTOR_LENGTH(__vec)-(__idx))*sizeof(VECTOR_FIRST(__vec))); \
-		memcpy(&VECTOR_INDEX(__vec,__idx), (__pval), (__n)*sizeof(VECTOR_FIRST(__vec))); /* set values */ \
-		VECTOR_LENGTH(__vec) += (__n); /* increase length */ \
-	}while(0)
+/**
+ * Declares and initializes a named binary heap variable.
+ *
+ * @param _name Structure name.
+ * @param _var  Variable name.
+ */
+#define BHEAP_STRUCT_VAR(_name, _var) \
+	VECTOR_STRUCT_VAR(_name, _var)
 
-/// Inserts a zeroed value in the end of the vector.
-/// Assumes there is enough capacity.
-///
-/// @param __vec Vector
-#define VECTOR_PUSHZEROED(__vec) \
-	do{ \
-		memset(&VECTOR_INDEX(__vec,VECTOR_LENGTH(__vec)), 0, sizeof(VECTOR_INDEX(__vec,VECTOR_LENGTH(__vec)))); /* set zeroed value */ \
-		++VECTOR_LENGTH(__vec); /* increase length */ \
-	}while(0)
+/**
+ * Initializes a heap.
+ *
+ * @param _heap Binary heap.
+ */
+#define BHEAP_INIT(_heap) \
+	VECTOR_INIT(_heap)
 
-/// Inserts a value in the end of the vector. (using the '=' operator)
-/// Assumes there is enough capacity.
-///
-/// @param __vec Vector
-/// @param __val Value
-#define VECTOR_PUSH(__vec,__val) \
-	do{ \
-		VECTOR_INDEX(__vec,VECTOR_LENGTH(__vec)) = (__val); /* set value */ \
-		++VECTOR_LENGTH(__vec); /* increase length */ \
-	}while(0)
+/**
+ * Returns the internal array of values.
+ *
+ * @param _heap Binary heap.
+ * @return Internal array of values.
+ */
+#define BHEAP_DATA(_heap) \
+	VECTOR_DATA(_heap)
 
-/// Inserts a value in the end of the vector. (using memcpy)
-/// Assumes there is enough capacity.
-///
-/// @param __vec Vector
-/// @param __val Value
-#define VECTOR_PUSHCOPY(__vec,__val) \
-	VECTOR_PUSHARRAY(__vec,&(__val),1)
+/**
+ * Returns the length of the heap.
+ *
+ * @param _heap Binary heap.
+ * @return Length.
+ */
+#define BHEAP_LENGTH(_heap) \
+	VECTOR_LENGTH(_heap)
 
-/// Inserts the values of the array in the end of the vector. (using memcpy)
-/// Assumes there is enough capacity.
-///
-/// @param __vec Vector
-/// @param __pval Array of values
-/// @param __n Number of values
-#define VECTOR_PUSHARRAY(__vec,__pval,__n) \
-	do{ \
-		memcpy(&VECTOR_INDEX(__vec,VECTOR_LENGTH(__vec)), (__pval), (__n)*sizeof(VECTOR_FIRST(__vec))); /* set values */ \
-		VECTOR_LENGTH(__vec) += (__n); /* increase length */ \
-	}while(0)
+/**
+ * Returns the capacity of the heap.
+ *
+ * @param _heap Binary heap.
+ * @return Capacity.
+ */
+#define BHEAP_CAPACITY(_heap) \
+	VECTOR_CAPACITY(_heap)
 
-/// Removes and returns the last value of the vector.
-/// Assumes the array is not empty.
-///
-/// @param __vec Vector
-/// @return Removed value
-#define VECTOR_POP(__vec) \
-	( VECTOR_INDEX(__vec,--VECTOR_LENGTH(__vec)) )
+/**
+ * Ensures that the heap has the target number of empty positions.
+ *
+ * Increases the capacity in multiples of _step.
+ *
+ * @param _heap Binary heap.
+ * @param _n    Required empty positions.
+ * @param _step Increase.
+ */
+#define BHEAP_ENSURE(_heap, _n, _step) \
+	VECTOR_ENSURE(_heap, _n, _step)
 
-/// Removes the last N values of the vector and returns the value of the last pop.
-/// Assumes there are enough values.
-///
-/// @param __vec Vector
-/// @param __n Number of pops
-/// @return Last removed value
-#define VECTOR_POPN(__vec,__n) \
-	( VECTOR_INDEX(__vec,(VECTOR_LENGTH(__vec)-=(__n))) )
+/**
+ * Returns the top value of the heap.
+ *
+ * Assumes the heap is not empty.
+ *
+ * @param _heap Binary heap.
+ * @return Value at the top.
+ */
+#define BHEAP_PEEK(_heap) \
+	VECTOR_INDEX(_heap, 0)
 
-/// Removes the target index from the vector.
-/// Assumes the index is valid and there are enough values.
-///
-/// @param __vec Vector
-/// @param __idx Index
-#define VECTOR_ERASE(__vec,__idx) \
-	VECTOR_ERASEN(__vec,__idx,1)
-
-/// Removes N values from the target index of the vector.
-/// Assumes the index is valid and there are enough values.
-///
-/// @param __vec Vector
-/// @param __idx Index
-/// @param __n Number of values
-#define VECTOR_ERASEN(__vec,__idx,__n) \
-	do{ \
-		if( (__idx) < VECTOR_LENGTH(__vec)-(__n) ) /* move data */ \
-			memmove(&VECTOR_INDEX(__vec,__idx),&VECTOR_INDEX(__vec,(__idx)+(__n)),(VECTOR_LENGTH(__vec)-((__idx)+(__n)))*sizeof(VECTOR_FIRST(__vec))); \
-		VECTOR_LENGTH(__vec) -= (__n); /* decrease length */ \
-	}while(0)
-
-/// Clears the vector, freeing allocated data.
-///
-/// @param __vec Vector
-#define VECTOR_CLEAR(__vec) \
-	do{ \
-		if( VECTOR_CAPACITY(__vec) ) \
-		{ \
-			aFree(VECTOR_DATA(__vec)); VECTOR_DATA(__vec) = NULL; /* clear allocated array */ \
-			VECTOR_CAPACITY(__vec) = 0; /* clear capacity */ \
-			VECTOR_LENGTH(__vec) = 0; /* clear length */ \
-		} \
-	}while(0)
-
-/////////////////////////////////////////////////////////////////////
-// Binary heap library based on defines. (uses the vector defines above)
-// uses aMalloc, aRealloc, aFree
-// WARNING: BHEAP implementation details affect behaviour of A* pathfinding
-
-/// Declares an anonymous binary heap struct.
-///
-/// @param __type Type of data
-#define BHEAP_DECL(__type) VECTOR_DECL(__type)
-
-/// Declares a named binary heap struct.
-///
-/// @param __name Structure name
-/// @param __type Type of data
-#define BHEAP_STRUCT_DECL(__name,__type) VECTOR_STRUCT_DECL(__name,__type)
-
-/// Declares and initializes an anonymous binary heap variable.
-///
-/// @param __type Type of data
-/// @param __var Variable name
-#define BHEAP_VAR(__type,__var) VECTOR_VAR(__type,__var)
-
-/// Declares and initializes a named binary heap variable.
-///
-/// @param __name Structure name
-/// @param __var Variable name
-#define BHEAP_STRUCT_VAR(__name,__var) VECTOR_STRUCT_VAR(__name,__var)
-
-/// Initializes a heap.
-///
-/// @param __heap Binary heap
-#define BHEAP_INIT(__heap) VECTOR_INIT(__heap)
-
-/// Returns the internal array of values.
-///
-/// @param __heap Binary heap
-/// @return Array of values
-#define BHEAP_DATA(__heap) VECTOR_DATA(__heap)
-
-/// Returns the length of the heap.
-///
-/// @param __heap Binary heap
-/// @return Length
-#define BHEAP_LENGTH(__heap) VECTOR_LENGTH(__heap)
-
-/// Returns the capacity of the heap.
-///
-/// @param __heap Binary heap
-/// @return Capacity
-#define BHEAP_CAPACITY(__heap) VECTOR_CAPACITY(__heap)
-
-/// Ensures that the heap has the target number of empty positions.
-/// Increases the capacity in multiples of __step.
-///
-/// @param __heap Binary heap
-/// @param __n Empty positions
-/// @param __step Increase
-#define BHEAP_ENSURE(__heap,__n,__step) VECTOR_ENSURE(__heap,__n,__step)
-
-/// Returns the top value of the heap.
-/// Assumes the heap is not empty.
-///
-/// @param __heap Binary heap
-/// @return Value at the top
-#define BHEAP_PEEK(__heap) VECTOR_INDEX(__heap,0)
-
-/// Inserts a value in the heap. (using the '=' operator)
-/// Assumes there is enough capacity.
-///
-/// The comparator takes two values as arguments, returns:
-/// - negative if the first value is on the top
-/// - positive if the second value is on the top
-/// - 0 if they are equal
-///
-/// @param __heap Binary heap
-/// @param __val Value
-/// @param __topcmp Comparator
-/// @param __swp Swapper
-#define BHEAP_PUSH(__heap,__val,__topcmp,__swp) \
-	do{ \
-		size_t _i_ = VECTOR_LENGTH(__heap); \
-		VECTOR_PUSH(__heap,__val); /* insert at end */ \
-		while( _i_ ) \
-		{ /* restore heap property in parents */ \
+/**
+ * Inserts a value in the heap (using the '=' operator).
+ *
+ * Assumes there is enough capacity.
+ *
+ * The comparator takes two values as arguments, returns:
+ *   - negative if the first value is on the top
+ *   - positive if the second value is on the top
+ *   - 0 if they are equal
+ *
+ * @param _heap   Binary heap.
+ * @param _val    Value.
+ * @param _topcmp Comparator.
+ * @param _swp    Swapper.
+ */
+#define BHEAP_PUSH(_heap, _val, _topcmp, _swp) \
+	do { \
+		size_t _i_ = VECTOR_LENGTH(_heap); \
+		VECTOR_PUSH(_heap, _val); /* insert at end */ \
+		while (_i_ > 0) { \
+			/* restore heap property in parents */ \
 			size_t _parent_ = (_i_-1)/2; \
-			if( __topcmp(VECTOR_INDEX(__heap,_parent_),VECTOR_INDEX(__heap,_i_)) < 0 ) \
+			if (_topcmp(VECTOR_INDEX(_heap, _parent_), VECTOR_INDEX(_heap, _i_)) < 0) \
 				break; /* done */ \
-			__swp(VECTOR_INDEX(__heap,_parent_),VECTOR_INDEX(__heap,_i_)); \
+			_swp(VECTOR_INDEX(_heap, _parent_), VECTOR_INDEX(_heap, _i_)); \
 			_i_ = _parent_; \
 		} \
-	}while(0)
+	} while(false)
 
-/// See BHEAP_PUSH. Version used by A* implementation, matching client bheap.
-///
-/// @param __heap Binary heap
-/// @param __val Value
-/// @param __topcmp Comparator
-/// @param __swp Swapper
-#define BHEAP_PUSH2(__heap,__val,__topcmp,__swp) \
-	do{ \
-		size_t _i_ = VECTOR_LENGTH(__heap); \
-		VECTOR_PUSH(__heap,__val); /* insert at end */ \
-		BHEAP_SIFTDOWN(__heap,0,_i_,__topcmp,__swp); \
-	}while(0)
+/**
+ * Variant of BHEAP_PUSH used by A* implementation, matching client bheap.
+ *
+ * @see BHEAP_PUSH.
+ *
+ * @param _heap   Binary heap.
+ * @param _val    Value.
+ * @param _topcmp Comparator.
+ * @param _swp    Swapper.
+ */
+#define BHEAP_PUSH2(_heap, _val, _topcmp, _swp) \
+	do { \
+		size_t _i_ = VECTOR_LENGTH(_heap); \
+		VECTOR_PUSH(_heap, _val); /* insert at end */ \
+		BHEAP_SIFTDOWN(_heap, 0, _i_, _topcmp, _swp); \
+	} while(false)
 
-/// Removes the top value of the heap. (using the '=' operator)
-/// Assumes the heap is not empty.
-///
-/// The comparator takes two values as arguments, returns:
-/// - negative if the first value is on the top
-/// - positive if the second value is on the top
-/// - 0 if they are equal
-///
-/// @param __heap Binary heap
-/// @param __topcmp Comparator
-/// @param __swp Swapper
-#define BHEAP_POP(__heap,__topcmp,__swp) BHEAP_POPINDEX(__heap,0,__topcmp,__swp)
+/**
+ * Removes the top value of the heap (using the '=' operator).
+ *
+ * Assumes the heap is not empty.
+ *
+ * The comparator takes two values as arguments, returns:
+ *   - negative if the first value is on the top
+ *   - positive if the second value is on the top
+ *   - 0 if they are equal
+ *
+ * @param _heap   Binary heap.
+ * @param _topcmp Comparator.
+ * @param _swp Swapper.
+ */
+#define BHEAP_POP(_heap, _topcmp, _swp) \
+	BHEAP_POPINDEX(_heap, 0, _topcmp, _swp)
 
-/// See BHEAP_POP. Version used by A* implementation, matching client bheap.
-///
-/// @param __heap Binary heap
-/// @param __topcmp Comparator
-/// @param __swp Swapper
-#define BHEAP_POP2(__heap,__topcmp,__swp) \
-	do{ \
-		VECTOR_INDEX(__heap,0) = VECTOR_POP(__heap); /* put last at index */ \
-		if( !VECTOR_LENGTH(__heap) ) /* removed last, nothing to do */ \
+/**
+ * Variant of BHEAP_POP used by A* implementation, matching client bheap.
+ *
+ * @see BHEAP_POP.
+ *
+ * @param _heap   Binary heap.
+ * @param _topcmp Comparator.
+ * @param _swp    Swapper.
+ */
+#define BHEAP_POP2(_heap, _topcmp, _swp) \
+	do { \
+		VECTOR_INDEX(_heap, 0) = VECTOR_POP(_heap); /* put last at index */ \
+		if (VECTOR_LENGTH(_heap) == 0) /* removed last, nothing to do */ \
 			break; \
-		BHEAP_SIFTUP(__heap,0,__topcmp,__swp); \
-	}while(0)
+		BHEAP_SIFTUP(_heap, 0, _topcmp, _swp); \
+	} while(false)
 
-/// Removes the target value of the heap. (using the '=' operator)
-/// Assumes the index exists.
-///
-/// The comparator takes two values as arguments, returns:
-/// - negative if the first value is on the top
-/// - positive if the second value is on the top
-/// - 0 if they are equal
-///
-/// @param __heap Binary heap
-/// @param __idx Index
-/// @param __topcmp Comparator
-/// @param __swp Swapper
-#define BHEAP_POPINDEX(__heap,__idx,__topcmp,__swp) \
-	do{ \
-		size_t _i_ = __idx; \
-		VECTOR_INDEX(__heap,__idx) = VECTOR_POP(__heap); /* put last at index */ \
-		if( _i_ >= VECTOR_LENGTH(__heap)) /* removed last, nothing to do */ \
+/**
+ * Removes the target value of the heap (using the '=' operator).
+ *
+ * Assumes the index exists.
+ *
+ * The comparator takes two values as arguments, returns:
+ *   - negative if the first value is on the top
+ *   - positive if the second value is on the top
+ *   - 0 if they are equal
+ *
+ * @param _heap   Binary heap.
+ * @param _idx    Index.
+ * @param _topcmp Comparator.
+ * @param _swp    Swapper.
+ */
+#define BHEAP_POPINDEX(_heap, _idx, _topcmp, _swp) \
+	do { \
+		size_t _i_ = _idx; \
+		VECTOR_INDEX(_heap, _idx) = VECTOR_POP(_heap); /* put last at index */ \
+		if (_i_ >= VECTOR_LENGTH(_heap)) /* removed last, nothing to do */ \
 			break; \
-		while( _i_ ) \
-		{ /* restore heap property in parents */ \
+		while (_i_ > 0) { \
+			/* restore heap property in parents */ \
 			size_t _parent_ = (_i_-1)/2; \
-			if( __topcmp(VECTOR_INDEX(__heap,_parent_),VECTOR_INDEX(__heap,_i_)) < 0 ) \
+			if (_topcmp(VECTOR_INDEX(_heap, _parent_), VECTOR_INDEX(_heap, _i_)) < 0) \
 				break; /* done */ \
-			__swp(VECTOR_INDEX(__heap,_parent_),VECTOR_INDEX(__heap,_i_)); \
+			_swp(VECTOR_INDEX(_heap, _parent_), VECTOR_INDEX(_heap, _i_)); \
 			_i_ = _parent_; \
 		} \
-		while( _i_ < VECTOR_LENGTH(__heap) ) \
-		{ /* restore heap property in childs */ \
+		while (_i_ < VECTOR_LENGTH(_heap)) { \
+			/* restore heap property in children */ \
 			size_t _lchild_ = _i_*2 + 1; \
 			size_t _rchild_ = _i_*2 + 2; \
-			if( (_lchild_ >= VECTOR_LENGTH(__heap) || __topcmp(VECTOR_INDEX(__heap,_i_),VECTOR_INDEX(__heap,_lchild_)) <= 0) && \
-				(_rchild_ >= VECTOR_LENGTH(__heap) || __topcmp(VECTOR_INDEX(__heap,_i_),VECTOR_INDEX(__heap,_rchild_)) <= 0) ) \
+			if ((_lchild_ >= VECTOR_LENGTH(_heap) || _topcmp(VECTOR_INDEX(_heap, _i_), VECTOR_INDEX(_heap, _lchild_)) <= 0) \
+			 && (_rchild_ >= VECTOR_LENGTH(_heap) || _topcmp(VECTOR_INDEX(_heap, _i_), VECTOR_INDEX(_heap, _rchild_)) <= 0)) { \
 				break; /* done */ \
-			else if( _rchild_ >= VECTOR_LENGTH(__heap) || __topcmp(VECTOR_INDEX(__heap,_lchild_),VECTOR_INDEX(__heap,_rchild_)) <= 0 ) \
-			{ /* left child */ \
-				__swp(VECTOR_INDEX(__heap,_i_),VECTOR_INDEX(__heap,_lchild_)); \
+			} else if (_rchild_ >= VECTOR_LENGTH(_heap) || _topcmp(VECTOR_INDEX(_heap, _lchild_), VECTOR_INDEX(_heap, _rchild_)) <= 0) { \
+				/* left child */ \
+				_swp(VECTOR_INDEX(_heap, _i_), VECTOR_INDEX(_heap, _lchild_)); \
 				_i_ = _lchild_; \
-			} \
-			else \
-			{ /* right child */ \
-				__swp(VECTOR_INDEX(__heap,_i_),VECTOR_INDEX(__heap,_rchild_)); \
+			} else { \
+				/* right child */ \
+				_swp(VECTOR_INDEX(_heap, _i_), VECTOR_INDEX(_heap, _rchild_)); \
 				_i_ = _rchild_; \
 			} \
 		} \
-	}while(0)
+	} while(false)
 
-/// Follow path up towards (but not all the way to) the root, swapping nodes until finding
-/// a place where the new item that was placed at __idx fits.
-/// Only goes as high as __startidx (usually 0).
-///
-/// @param __heap Binary heap
-/// @param __startidx Index of an ancestor of __idx
-/// @param __idx Index of an inserted element
-/// @param __topcmp Comparator
-/// @param __swp Swapper
-#define BHEAP_SIFTDOWN(__heap,__startidx,__idx,__topcmp,__swp) \
-	do{ \
-		size_t _i2_ = __idx; \
-		while( _i2_ > __startidx ) \
-		{ /* restore heap property in parents */ \
+/**
+ * Follow path up towards (but not all the way to) the root, swapping nodes
+ * until finding a place where the new item that was placed at _idx fits.
+ *
+ * Only goes as high as _startidx (usually 0).
+ *
+ * @param _heap     Binary heap.
+ * @param _startidx Index of an ancestor of _idx.
+ * @param _idx      Index of an inserted element.
+ * @param _topcmp   Comparator.
+ * @param _swp      Swapper.
+ */
+#define BHEAP_SIFTDOWN(_heap, _startidx, _idx, _topcmp, _swp) \
+	do { \
+		size_t _i2_ = _idx; \
+		while (_i2_ > _startidx) { \
+			/* restore heap property in parents */ \
 			size_t _parent_ = (_i2_-1)/2; \
-			if( __topcmp(VECTOR_INDEX(__heap,_parent_),VECTOR_INDEX(__heap,_i2_)) <= 0 ) \
+			if (_topcmp(VECTOR_INDEX(_heap, _parent_), VECTOR_INDEX(_heap, _i2_)) <= 0) \
 				break; /* done */ \
-			__swp(VECTOR_INDEX(__heap,_parent_),VECTOR_INDEX(__heap,_i2_)); \
+			_swp(VECTOR_INDEX(_heap, _parent_), VECTOR_INDEX(_heap, _i2_)); \
 			_i2_ = _parent_; \
 		} \
-	}while(0)
+	} while(false)
 
-/// Repeatedly swap the smaller child with parent, after placing a new item at __idx.
-///
-/// @param __heap Binary heap
-/// @param __idx Index of an inserted element
-/// @param __topcmp Comparator
-/// @param __swp Swapper
-#define BHEAP_SIFTUP(__heap,__idx,__topcmp,__swp) \
-	do{ \
-		size_t _i_ = __idx; \
+/**
+ * Repeatedly swap the smaller child with parent, after placing a new item at _idx.
+ *
+ * @param _heap   Binary heap.
+ * @param _idx    Index of an inserted element.
+ * @param _topcmp Comparator.
+ * @param _swp    Swapper.
+ */
+#define BHEAP_SIFTUP(_heap, _idx, _topcmp, _swp) \
+	do { \
+		size_t _i_ = _idx; \
 		size_t _lchild_ = _i_*2 + 1; \
-		while( _lchild_ < VECTOR_LENGTH(__heap) ) \
-		{ /* restore heap property in childs */ \
+		while (_lchild_ < VECTOR_LENGTH(_heap)) { \
+			/* restore heap property in children */ \
 			size_t _rchild_ = _i_*2 + 2; \
-			if( _rchild_ >= VECTOR_LENGTH(__heap) || __topcmp(VECTOR_INDEX(__heap,_lchild_),VECTOR_INDEX(__heap,_rchild_)) < 0 ) \
-			{ /* left child */ \
-				__swp(VECTOR_INDEX(__heap,_i_),VECTOR_INDEX(__heap,_lchild_)); \
+			if (_rchild_ >= VECTOR_LENGTH(_heap) || _topcmp(VECTOR_INDEX(_heap, _lchild_), VECTOR_INDEX(_heap, _rchild_)) < 0) { \
+				/* left child */ \
+				_swp(VECTOR_INDEX(_heap, _i_), VECTOR_INDEX(_heap, _lchild_)); \
 				_i_ = _lchild_; \
-			} \
-			else \
-			{ /* right child */ \
-				__swp(VECTOR_INDEX(__heap,_i_),VECTOR_INDEX(__heap,_rchild_)); \
+			} else { \
+				/* right child */ \
+				_swp(VECTOR_INDEX(_heap, _i_), VECTOR_INDEX(_heap, _rchild_)); \
 				_i_ = _rchild_; \
 			} \
 			_lchild_ = _i_*2 + 1; \
 		} \
-		BHEAP_SIFTDOWN(__heap,__idx,_i_,__topcmp,__swp); \
-	}while(0)
+		BHEAP_SIFTDOWN(_heap, _idx, _i_, _topcmp, _swp); \
+	} while(false)
 
-/// Call this after modifying the item at __idx__ to restore the heap
-///
-/// @param __heap Binary heap
-/// @param __idx Index
-/// @param __topcmp Comparator
-/// @param __swp Swapper
-#define BHEAP_UPDATE(__heap,__idx,__topcmp,__swp) \
-	do{ \
-		BHEAP_SIFTDOWN(__heap,0,__idx,__topcmp,__swp); \
-		BHEAP_SIFTUP(__heap,__idx,__topcmp,__swp); \
-	}while(0)
+/**
+ * Restores a heap (after modifying the item at _idx).
+ *
+ * @param _heap   Binary heap.
+ * @param _idx    Index.
+ * @param _topcmp Comparator.
+ * @param _swp    Swapper.
+ */
+#define BHEAP_UPDATE(_heap, _idx, _topcmp, _swp) \
+	do { \
+		BHEAP_SIFTDOWN(_heap, 0, _idx, _topcmp, _swp); \
+		BHEAP_SIFTUP(_heap, _idx, _topcmp, _swp); \
+	} while(false)
 
-/// Clears the binary heap, freeing allocated data.
-///
-/// @param __heap Binary heap
-#define BHEAP_CLEAR(__heap) VECTOR_CLEAR(__heap)
+/**
+ * Clears the binary heap, freeing allocated data.
+ *
+ * @param _heap Binary heap.
+ */
+#define BHEAP_CLEAR(_heap) \
+	VECTOR_CLEAR(_heap)
 
-/// Generic comparator for a min-heap. (minimum value at top)
-/// Returns -1 if v1 is smaller, 1 if v2 is smaller, 0 if equal.
-///
-/// @param v1 First value
-/// @param v2 Second value
-/// @return negative if v1 is top, positive if v2 is top, 0 if equal
-#define BHEAP_MINTOPCMP(v1,v2) ( v1 == v2 ? 0 : v1 < v2 ? -1 : 1 )
+/**
+ * Generic comparator for a min-heap (minimum value at top).
+ *
+ * Returns -1 if v1 is smaller, 1 if v2 is smaller, 0 if equal.
+ *
+ * @warning
+ *    Arguments may be evaluted more than once.
+ *
+ * @param v1 First value.
+ * @param v2 Second value.
+ * @return negative if v1 is top, positive if v2 is top, 0 if equal.
+ */
+#define BHEAP_MINTOPCMP(v1, v2) \
+	( v1 == v2 ? 0 : v1 < v2 ? -1 : 1 )
 
-/// Generic comparator for a max-heap. (maximum value at top)
-/// Returns -1 if v1 is bigger, 1 if v2 is bigger, 0 if equal.
-///
-/// @param v1 First value
-/// @param v2 Second value
-/// @return negative if v1 is top, positive if v2 is top, 0 if equal
-#define BHEAP_MAXTOPCMP(v1,v2) ( v1 == v2 ? 0 : v1 > v2 ? -1 : 1 )
+/**
+ * Generic comparator for a max-heap (maximum value at top).
+ *
+ * Returns -1 if v1 is bigger, 1 if v2 is bigger, 0 if equal.
+ *
+ * @warning
+ *    Arguments may be evaluted more than once.
+ *
+ * @param v1 First value.
+ * @param v2 Second value.
+ * @return negative if v1 is top, positive if v2 is top, 0 if equal.
+ */
+#define BHEAP_MAXTOPCMP(v1, v2) \
+	( v1 == v2 ? 0 : v1 > v2 ? -1 : 1 )
 
 #endif /* COMMON_DB_H */
