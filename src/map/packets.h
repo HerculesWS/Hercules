@@ -2897,6 +2897,42 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0a2e,6,clif->pDull);	//TITLE
 #endif
 
+// 2015-09-16aRagexeRE - ossi0110
+#ifdef PACKETVER_RE
+#if PACKETVER >= 20150916
+	packet(0x0869,7,clif->pActionRequest,2,6);
+	packet(0x093E,10,clif->pUseSkillToId,2,4,6);
+	packet(0x0877,5,clif->pWalkToXY,2);
+	packet(0x08AC,6,clif->pTickSend,2);
+	packet(0x0936,5,clif->pChangeDir,2,4);
+	packet(0x089C,6,clif->pTakeItem,2);
+	packet(0x092F,6,clif->pDropItem,2,4);
+	packet(0x0934,8,clif->pMoveToKafra,2,4);
+	packet(0x085E,8,clif->pMoveFromKafra,2,4);
+	packet(0x022D,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x0873,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x095A,6,clif->pGetCharNameRequest,2);
+	packet(0x0942,6,clif->pSolveCharName,2);
+	packet(0x087F,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0817,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x0920,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0881,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0835,6,clif->pReqClickBuyingStore,2);
+	packet(0x092E,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0948,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x089B,18,clif->pPartyBookingRegisterReq,2,4);
+	packet(0x094F,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x0961,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x0969,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x0924,26,clif->pPartyInvite2,2);
+	packet(0x0938,4); // CZ_GANGSI_RANK
+	packet(0x089E,26,clif->pFriendsListAdd,2);
+	packet(0x0960,5,clif->pHomMenu,2,4);
+	packet(0x0941,36,clif->pStoragePassword,0);
+	packet(0x00F3,-1,clif->pGlobalMessage,2,4);
+#endif  
+#endif
+
 /* PacketKeys: http://herc.ws/board/topic/1105-hercules-wpe-free-june-14th-patch/ */
 #if PACKETVER >= 20110817
 	packetKeys(0x053D5CED,0x3DED6DED,0x6DED6DED); /* Thanks to Shakto */
@@ -3140,6 +3176,12 @@ packet(0x96e,-1,clif->ackmergeitems);
 
 #if PACKETVER >= 20150513
 	packetKeys(0x62C86D09,0x75944F17,0x112C133D); /* Dastgir */
+#endif
+
+#ifdef PACKETVER_RE
+#if PACKETVER >= 20150916
+	packetKeys(0x19AB2BF0,0x04754299,0x48770736); /* ossi0110 */
+#endif
 #endif
 
 #if defined(OBFUSCATIONKEY1) && defined(OBFUSCATIONKEY2) && defined(OBFUSCATIONKEY3)
