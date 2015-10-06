@@ -73582,15 +73582,15 @@ bool HP_status_readdb_sizefix(char *fields[], int columns, int current) {
 	}
 	return retVal___;
 }
-bool HP_status_readdb_refine(char *fields[], int columns, int current) {
+int HP_status_readdb_refine_libconfig_sub(config_setting_t *r, const char *name, const char *source) {
 	int hIndex = 0;
-	bool retVal___ = false;
-	if( HPMHooks.count.HP_status_readdb_refine_pre ) {
-		bool (*preHookFunc) (char *fields[], int *columns, int *current);
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_status_readdb_refine_libconfig_sub_pre ) {
+		int (*preHookFunc) (config_setting_t *r, const char *name, const char *source);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_refine_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_status_readdb_refine_pre[hIndex].func;
-			retVal___ = preHookFunc(fields, &columns, &current);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_refine_libconfig_sub_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_status_readdb_refine_libconfig_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(r, name, source);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -73598,13 +73598,40 @@ bool HP_status_readdb_refine(char *fields[], int columns, int current) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.status.readdb_refine(fields, columns, current);
+		retVal___ = HPMHooks.source.status.readdb_refine_libconfig_sub(r, name, source);
 	}
-	if( HPMHooks.count.HP_status_readdb_refine_post ) {
-		bool (*postHookFunc) (bool retVal___, char *fields[], int *columns, int *current);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_refine_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_status_readdb_refine_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, fields, &columns, &current);
+	if( HPMHooks.count.HP_status_readdb_refine_libconfig_sub_post ) {
+		int (*postHookFunc) (int retVal___, config_setting_t *r, const char *name, const char *source);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_refine_libconfig_sub_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_status_readdb_refine_libconfig_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, r, name, source);
+		}
+	}
+	return retVal___;
+}
+int HP_status_readdb_refine_libconfig(const char *filename) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_status_readdb_refine_libconfig_pre ) {
+		int (*preHookFunc) (const char *filename);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_refine_libconfig_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_status_readdb_refine_libconfig_pre[hIndex].func;
+			retVal___ = preHookFunc(filename);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.readdb_refine_libconfig(filename);
+	}
+	if( HPMHooks.count.HP_status_readdb_refine_libconfig_post ) {
+		int (*postHookFunc) (int retVal___, const char *filename);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_refine_libconfig_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_status_readdb_refine_libconfig_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename);
 		}
 	}
 	return retVal___;
