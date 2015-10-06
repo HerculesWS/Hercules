@@ -3075,7 +3075,8 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			damage -= damage * sc->data[SC_GRANITIC_ARMOR]->val2 / 100;
 		}
 		if(sc->data[SC_PAIN_KILLER]){
-			damage -= damage * sc->data[SC_PAIN_KILLER]->val3 / 100;
+			damage -= sc->data[SC_PAIN_KILLER]->val3;
+			damage = max(1,damage);
 		}
 		if((sce=sc->data[SC_MAGMA_FLOW]) && (rnd()%100 <= sce->val2) ){
 			skill->castend_damage_id(bl,src,MH_MAGMA_FLOW,sce->val1,timer->gettick(),0);
