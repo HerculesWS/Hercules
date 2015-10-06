@@ -38,8 +38,11 @@ int itemdb_searchname_sub(DBKey key, DBData *data, va_list ap)
 	struct item_data *item = DB->data2ptr(data), **dst, **dst2;
 	char *str;
 	str=va_arg(ap,char *);
+	nullpo_ret(str);
 	dst=va_arg(ap,struct item_data **);
+	nullpo_ret(dst);
 	dst2=va_arg(ap,struct item_data **);
+	nullpo_ret(dst2);
 	if (item == &itemdb->dummy) return 0;
 
 	//Absolute priority to Aegis code name.
@@ -64,6 +67,7 @@ struct item_data* itemdb_searchname(const char *str) {
 	struct item_data* item2=NULL;
 	int i;
 
+	nullpo_retr(NULL, str);
 	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i ) {
 		item = itemdb->array[i];
 		if( item == NULL )
@@ -97,6 +101,7 @@ int itemdb_searchname_array_sub(DBKey key, DBData data, va_list ap)
 	struct item_data *item = DB->data2ptr(&data);
 	char *str;
 	str=va_arg(ap,char *);
+	nullpo_ret(str);
 	if (item == &itemdb->dummy)
 		return 1; //Invalid item.
 	if(stristr(item->jname,str))
@@ -119,6 +124,8 @@ int itemdb_searchname_array(struct item_data** data, int size, const char *str, 
 	int i;
 	int count=0;
 
+	nullpo_ret(data);
+	nullpo_ret(str);
 	// Search in the array
 	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i )
 	{
@@ -179,6 +186,8 @@ int itemdb_chain_item(unsigned short chain_id, int *rate) {
 void itemdb_package_item(struct map_session_data *sd, struct item_package *package) {
 	int i = 0, get_count, j, flag;
 
+	nullpo_retv(sd);
+	nullpo_retv(package);
 	for( i = 0; i < package->must_qty; i++ ) {
 		struct item it;
 		memset(&it, 0, sizeof(it));
@@ -264,6 +273,7 @@ void itemdb_package_item(struct map_session_data *sd, struct item_package *packa
  *------------------------------------------*/
 int itemdb_searchrandomid(struct item_group *group) {
 
+	nullpo_retr(UNKNOWN_ITEM_ID, group);
 	if (group->qty)
 		return group->nameid[rnd()%group->qty];
 
@@ -273,6 +283,7 @@ int itemdb_searchrandomid(struct item_group *group) {
 bool itemdb_in_group(struct item_group *group, int nameid) {
 	int i;
 
+	nullpo_retr(false, group);
 	for( i = 0; i < group->qty; i++ )
 		if( group->nameid[i] == nameid )
 			return true;
@@ -322,6 +333,7 @@ const char* itemdb_typename(int type)
 void itemdb_jobid2mapid(unsigned int *bclass, unsigned int jobmask)
 {
 	int i;
+	nullpo_retv(bclass);
 	bclass[0]= bclass[1]= bclass[2]= 0;
 	//Base classes
 	if (jobmask & 1<<JOB_NOVICE) {
@@ -562,9 +574,11 @@ int itemdb_canauction_sub(struct item_data* item, int gmlv, int unused) {
 
 int itemdb_isrestricted(struct item* item, int gmlv, int gmlv2, int (*func)(struct item_data*, int, int))
 {
-	struct item_data* item_data = itemdb->search(item->nameid);
+	struct item_data* item_data;
 	int i;
 
+	nullpo_ret(item);
+	item_data = itemdb->search(item->nameid);
 	if (!func(item_data, gmlv, gmlv2))
 		return 0;
 
@@ -595,6 +609,7 @@ int itemdb_isidentified(int nameid) {
 }
 /* same as itemdb_isidentified but without a lookup */
 int itemdb_isidentified2(struct item_data *data) {
+	nullpo_ret(data);
 	switch (data->type) {
 		case IT_WEAPON:
 		case IT_ARMOR:
@@ -700,6 +715,7 @@ void itemdb_write_cached_packages(const char *config_filename) {
 	unsigned short pcount = itemdb->package_count;
 	unsigned short i;
 
+	nullpo_retv(config_filename);
 	if( !(file = HCache->open(config_filename,"wb")) ) {
 		return;
 	}
@@ -770,6 +786,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 	unsigned short pcount = 0;
 	unsigned short i;
 
+	nullpo_retr(false, config_filename);
 	if( !(file = HCache->open(config_filename,"rb")) ) {
 		return false;
 	}
@@ -1202,6 +1219,8 @@ void itemdb_read_chains(void) {
 int itemdb_combo_split_atoi (char *str, int *val) {
 	int i;
 
+	nullpo_ret(val);
+
 	for (i=0; i<MAX_ITEMS_PER_COMBO; i++) {
 		if (!str) break;
 
@@ -1331,6 +1350,7 @@ void itemdb_read_combos() {
  *======================================*/
 int itemdb_gendercheck(struct item_data *id)
 {
+	nullpo_ret(id);
 	if (id->nameid == WEDDING_RING_M) //Grom Ring
 		return 1;
 	if (id->nameid == WEDDING_RING_F) //Bride Ring
@@ -1363,6 +1383,8 @@ int itemdb_gendercheck(struct item_data *id)
 int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 	struct item_data *item;
 
+	nullpo_ret(entry);
+	nullpo_ret(source);
 	if( entry->nameid <= 0 || entry->nameid >= MAX_ITEMDB ) {
 		ShowWarning("itemdb_validate_entry: Invalid item ID %d in entry %d of '%s', allowed values 0 < ID < %d (MAX_ITEMDB), skipping.\n",
 				entry->nameid, n, source, MAX_ITEMDB);
@@ -1521,6 +1543,7 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 	int i32 = 0;
 	bool inherit = false;
 
+	nullpo_ret(it);
 	/*
 	 * // Mandatory fields
 	 * Id: ID
@@ -1812,6 +1835,8 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 
 bool itemdb_lookup_const(const config_setting_t *it, const char *name, int *value)
 {
+	nullpo_retr(false, name);
+	nullpo_retr(false, value);
 	if (libconfig->setting_lookup_int(it, name, value))
 	{
 		return true;
@@ -1842,6 +1867,7 @@ int itemdb_readdb_libconfig(const char *filename) {
 	char filepath[256];
 	int i = 0, count = 0;
 
+	nullpo_ret(filename);
 	sprintf(filepath, "%s/%s", map->db_path, filename);
 	memset(&duplicate,0,sizeof(duplicate));
 	if( libconfig->read_file(&item_db_conf, filepath) || !(itdb = libconfig->setting_get_member(item_db_conf.root, "item_db")) ) {
@@ -1852,7 +1878,7 @@ int itemdb_readdb_libconfig(const char *filename) {
 	while( (it = libconfig->setting_get_elem(itdb,i++)) ) {
 		int nameid = itemdb->readdb_libconfig_sub(it, i-1, filename);
 
-		if( !nameid )
+		if (nameid <= 0 || nameid >= MAX_ITEMDB)
 			continue;
 
 		itemdb->readdb_additional_fields(nameid, it, i - 1, filename);
@@ -1876,6 +1902,7 @@ int itemdb_readdb_libconfig(const char *filename) {
 *------------------------------------------*/
 uint64 itemdb_unique_id(struct map_session_data *sd) {
 
+	nullpo_ret(sd);
 	return ((uint64)sd->status.char_id << 32) | sd->status.uniqueitem_counter++;
 }
 
@@ -1926,6 +1953,7 @@ struct item_combo * itemdb_id2combo( unsigned short id ) {
  **/
 bool itemdb_is_item_usable(struct item_data *item)
 {
+	nullpo_retr(false, item);
 	return item->type == IT_HEALING || item->type == IT_USABLE || item->type == IT_CASH;
 }
 
