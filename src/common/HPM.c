@@ -486,7 +486,7 @@ void hplugin_unload(struct hplugin* plugin)
 	/* TODO: for manual packet unload */
 	/* - Go through known packets and unlink any belonging to the plugin being removed */
 	if (!HPM->off) {
-		int i, cursor;
+		unsigned int i, cursor;
 		for (cursor = 0; cursor < HPM->plugin_count; cursor++) {
 			if (HPM->plugins[cursor]->idx != plugin->idx)
 				continue;
