@@ -15594,12 +15594,13 @@ void clif_quest_delete(struct map_session_data *sd, int quest_id) {
 
 /// Notification of an update to the hunting mission counter (ZC_UPDATE_MISSION_HUNT).
 /// 02b5 <packet len>.W <mobs>.W { <quest id>.L <mob id>.L <total count>.W <current count>.W }*3
-void clif_quest_update_objective(struct map_session_data *sd, struct quest *qd)
+void clif_quest_update_objective(struct map_session_data *sd, struct quest *qd, int mob_id)
 {
 	int fd;
 	int i;
 	struct quest_db *qi;
-	int len;
+	int len, searched_indice;
+	
 
 	nullpo_retv(sd);
 	nullpo_retv(qd);
@@ -15612,15 +15613,48 @@ void clif_quest_update_objective(struct map_session_data *sd, struct quest *qd)
 	WFIFOW(fd, 2) = len;
 	WFIFOW(fd, 4) = qi->objectives_count;
 
-	for (i = 0; i < qi->objectives_count; i++) {
-		WFIFOL(fd, i*12+6) = qd->quest_id;
-		WFIFOL(fd, i*12+10) = qi->objectives[i].mob;
-		WFIFOW(fd, i*12+14) = qi->objectives[i].count;
-		WFIFOW(fd, i*12+16) = qd->count[i];
+	if(qi->objectives_count > 1 && mob_id) {
+		
+		int *temp_array;
+		
+		temp_array = malloc (qi->objectives_count * sizeof(int));
+		
+		
+		for (i = 0; i < qi->objectives_count; i++) {
+			
+			// Fill the temporary array with normal index
+			temp_array[i] = i;
+			
+			// search for the position of the last killed monster
+			if(mob_id == qi->objectives[i].mob)
+				searched_indice = i;
+		}
+		
+		// Put the searched index into the end of the temp array
+		for (i = searched_indice; i < qi->objectives_count-1; i++)
+			temp_array[i]=temp_array[i+1];
+		temp_array[qi->objectives_count-1]=searched_indice;
+		
+		// Write the paquet
+		for (i = 0; i < qi->objectives_count; i++) {
+			WFIFOL(fd, i*12+6) = qd->quest_id;
+			WFIFOL(fd, i*12+10) = qi->objectives[temp_array[i]].mob;
+			WFIFOW(fd, i*12+14) = qi->objectives[temp_array[i]].count;
+			WFIFOW(fd, i*12+16) = qd->count[temp_array[i]];
+		}
+		
+		free(temp_array);
 	}
-
+	else 
+		for (i = 0; i < qi->objectives_count; i++) {
+			WFIFOL(fd, i*12+6) = qd->quest_id;
+			WFIFOL(fd, i*12+10) = qi->objectives[i].mob;
+			WFIFOW(fd, i*12+14) = qi->objectives[i].count;
+			WFIFOW(fd, i*12+16) = qd->count[i];
+		}
 	WFIFOSET(fd, len);
 }
+
 
 void clif_parse_questStateAck(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 /// Request to change the state of a quest (CZ_ACTIVE_QUEST).
