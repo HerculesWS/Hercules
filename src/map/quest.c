@@ -69,7 +69,7 @@ int quest_pc_login(TBL_PC *sd) {
 	clif->quest_send_mission(sd);
 	for( i = 0; i < sd->avail_quests; i++ ) {
 		// TODO[Haru]: is this necessary? Does quest_send_mission not take care of this?
-		clif->quest_update_objective(sd, &sd->quest_log[i]);
+		clif->quest_update_objective(sd, &sd->quest_log[i],0);
 	}
 
 	return 0;
@@ -119,7 +119,7 @@ int quest_add(TBL_PC *sd, int quest_id) {
 	sd->save_quest = true;
 
 	clif->quest_add(sd, &sd->quest_log[n]);
-	clif->quest_update_objective(sd, &sd->quest_log[n]);
+	clif->quest_update_objective(sd, &sd->quest_log[n],0);
 
 	if( map->save_settings&64 )
 		chrif->save(sd,0);
@@ -170,7 +170,7 @@ int quest_change(TBL_PC *sd, int qid1, int qid2) {
 
 	clif->quest_delete(sd, qid1);
 	clif->quest_add(sd, &sd->quest_log[i]);
-	clif->quest_update_objective(sd, &sd->quest_log[i]);
+	clif->quest_update_objective(sd, &sd->quest_log[i],0);
 
 	if( map->save_settings&64 )
 		chrif->save(sd,0);
@@ -270,7 +270,7 @@ void quest_update_objective(TBL_PC *sd, int mob_id)
 			if (qi->objectives[j].mob == mob_id && sd->quest_log[i].count[j] < qi->objectives[j].count) {
 				sd->quest_log[i].count[j]++;
 				sd->save_quest = true;
-				clif->quest_update_objective(sd, &sd->quest_log[i]);
+				clif->quest_update_objective(sd, &sd->quest_log[i],mob_id);
 			}
 		}
 
