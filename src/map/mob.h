@@ -11,6 +11,8 @@
 #include "common/hercules.h"
 #include "common/mmo.h" // struct item
 
+struct hplugin_data_store;
+
 #define MAX_RANDOMMONSTER 5
 
 // Change this to increase the table size in your mob_db to accommodate a larger mob database.
@@ -138,10 +140,7 @@ struct mob_db {
 	int maxskill;
 	struct mob_skill skill[MAX_MOBSKILL];
 	struct spawn_info spawn[10];
-
-	/* HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 struct mob_data {
@@ -208,12 +207,8 @@ struct mob_data {
 	 * MvP Tombstone NPC ID
 	 **/
 	int tomb_nid;
-
-	/* HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
-
 
 
 enum {

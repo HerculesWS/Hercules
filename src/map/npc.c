@@ -2321,16 +2321,7 @@ int npc_unload(struct npc_data* nd, bool single)
 		nd->ud = NULL;
 	}
 
-	if (nd->hdata) {
-		unsigned int i;
-		for (i = 0; i < nd->hdatac; i++) {
-			if (nd->hdata[i]->flag.free) {
-				aFree(nd->hdata[i]->data);
-			}
-			aFree(nd->hdata[i]);
-		}
-		aFree(nd->hdata);
-	}
+	HPM->data_store_destroy(&nd->hdata);
 
 	aFree(nd);
 

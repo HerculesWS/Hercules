@@ -43,28 +43,52 @@ DBMap *datacheck_db;
 int datacheck_version;
 const struct s_HPMDataCheck *datacheck_data;
 
-void hplugin_trigger_event(enum hp_event_types type) {
-	unsigned int i;
-	for( i = 0; i < HPM->plugin_count; i++ ) {
-		if( HPM->plugins[i]->hpi->event[type] != NULL )
-			(HPM->plugins[i]->hpi->event[type])();
+/**
+ * Executes an event on all loaded plugins.
+ *
+ * @param type The event type to trigger.
+ */
+void hplugin_trigger_event(enum hp_event_types type)
+{
+	int i;
+	for (i = 0; i < VECTOR_LENGTH(HPM->plugins); i++) {
+		struct hplugin *plugin = VECTOR_INDEX(HPM->plugins, i);
+		if (plugin->hpi->event[type] != NULL)
+			plugin->hpi->event[type]();
 	}
 }
 
-void hplugin_export_symbol(void *var, char *name) {
-	RECREATE(HPM->symbols, struct hpm_symbol *, ++HPM->symbol_count);
-	CREATE(HPM->symbols[HPM->symbol_count - 1] ,struct hpm_symbol, 1);
-	HPM->symbols[HPM->symbol_count - 1]->name = name;
-	HPM->symbols[HPM->symbol_count - 1]->ptr = var;
+/**
+ * Exports a symbol to the shared symbols list.
+ *
+ * @param value The symbol value.
+ * @param name  The symbol name.
+ */
+void hplugin_export_symbol(void *value, const char *name)
+{
+	struct hpm_symbol *symbol = NULL;
+	CREATE(symbol ,struct hpm_symbol, 1);
+	symbol->name = name;
+	symbol->ptr = value;
+	VECTOR_ENSURE(HPM->symbols, 1, 1);
+	VECTOR_PUSH(HPM->symbols, symbol);
 }
 
-void *hplugin_import_symbol(char *name, unsigned int pID) {
-	unsigned int i;
+/**
+ * Imports a shared symbol.
+ *
+ * @param name The symbol name.
+ * @param pID  The requesting plugin ID.
+ * @return The symbol value.
+ * @retval NULL if the symbol wasn't found.
+ */
+void *hplugin_import_symbol(char *name, unsigned int pID)
+{
+	int i;
+	ARR_FIND(0, VECTOR_LENGTH(HPM->symbols), i, strcmp(VECTOR_INDEX(HPM->symbols, i)->name, name) == 0);
 
-	for( i = 0; i < HPM->symbol_count; i++ ) {
-		if( strcmp(HPM->symbols[i]->name,name) == 0 )
-			return HPM->symbols[i]->ptr;
-	}
+	if (i != VECTOR_LENGTH(HPM->symbols))
+		return VECTOR_INDEX(HPM->symbols, i)->ptr;
 
 	ShowError("HPM:get_symbol:%s: '"CL_WHITE"%s"CL_RESET"' not found!\n",HPM->pid2name(pID),name);
 	return NULL;
@@ -81,40 +105,60 @@ bool hplugin_iscompatible(char* version) {
 	return ( req_major == HPM->version[0] && req_minor <= HPM->version[1] ) ? true : false;
 }
 
-bool hplugin_exists(const char *filename) {
-	unsigned int i;
-	for(i = 0; i < HPM->plugin_count; i++) {
-		if( strcmpi(HPM->plugins[i]->filename,filename) == 0 )
+/**
+ * Checks whether a plugin is currently loaded
+ *
+ * @param filename The plugin filename.
+ * @retval true  if the plugin exists and is currently loaded.
+ * @retval false otherwise.
+ */
+bool hplugin_exists(const char *filename)
+{
+	int i;
+	for (i = 0; i < VECTOR_LENGTH(HPM->plugins); i++) {
+		if (strcmpi(VECTOR_INDEX(HPM->plugins, i)->filename,filename) == 0)
 			return true;
 	}
 	return false;
 }
-struct hplugin *hplugin_create(void) {
-	RECREATE(HPM->plugins, struct hplugin *, ++HPM->plugin_count);
-	CREATE(HPM->plugins[HPM->plugin_count - 1], struct hplugin, 1);
-	HPM->plugins[HPM->plugin_count - 1]->idx = HPM->plugin_count - 1;
-	HPM->plugins[HPM->plugin_count - 1]->filename = NULL;
-	return HPM->plugins[HPM->plugin_count - 1];
+
+/**
+ * Initializes the data structure for a new plugin and registers it.
+ *
+ * @return A (retained) pointer to the initialized data.
+ */
+struct hplugin *hplugin_create(void)
+{
+	struct hplugin *plugin = NULL;
+	CREATE(plugin, struct hplugin, 1);
+	plugin->idx = (int)VECTOR_LENGTH(HPM->plugins);
+	plugin->filename = NULL;
+	VECTOR_ENSURE(HPM->plugins, 1, 1);
+	VECTOR_PUSH(HPM->plugins, plugin);
+	return plugin;
 }
 
-bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (*receive) (int fd), unsigned int point,unsigned int pluginID) {
+bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (*receive) (int fd), unsigned int point, unsigned int pluginID)
+{
 	struct HPluginPacket *packet;
-	unsigned int i;
+	int i;
 
-	if( point >= hpPHP_MAX ) {
+	if (point >= hpPHP_MAX) {
 		ShowError("HPM->addPacket:%s: unknown point '%u' specified for packet 0x%04x (len %d)\n",HPM->pid2name(pluginID),point,cmd,length);
 		return false;
 	}
 
-	for(i = 0; i < HPM->packetsc[point]; i++) {
-		if( HPM->packets[point][i].cmd == cmd ) {
-			ShowError("HPM->addPacket:%s: can't add packet 0x%04x, already in use by '%s'!",HPM->pid2name(pluginID),cmd,HPM->pid2name(HPM->packets[point][i].pluginID));
+	for (i = 0; i < VECTOR_LENGTH(HPM->packets[point]); i++) {
+		if (VECTOR_INDEX(HPM->packets[point], i).cmd == cmd ) {
+			ShowError("HPM->addPacket:%s: can't add packet 0x%04x, already in use by '%s'!",
+					HPM->pid2name(pluginID), cmd, HPM->pid2name(VECTOR_INDEX(HPM->packets[point], i).pluginID));
 			return false;
 		}
 	}
 
-	RECREATE(HPM->packets[point], struct HPluginPacket, ++HPM->packetsc[point]);
-	packet = &HPM->packets[point][HPM->packetsc[point] - 1];
+	VECTOR_ENSURE(HPM->packets[point], 1, 1);
+	VECTOR_PUSHZEROED(HPM->packets[point]);
+	packet = &VECTOR_LAST(HPM->packets[point]);
 
 	packet->pluginID = pluginID;
 	packet->cmd = cmd;
@@ -124,136 +168,158 @@ bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (*receiv
 	return true;
 }
 
-void hplugins_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr)
+/**
+ * Validates and if necessary initializes a plugin data store.
+ *
+ * @param type[in]         The data store type.
+ * @param storeptr[in,out] A pointer to the store.
+ * @param initialize       Whether the store should be initialized in case it isn't.
+ * @retval false if the store is an invalid or mismatching type.
+ * @retval true  if the store is a valid type.
+ *
+ * @remark
+ *     If \c storeptr is a pointer to a NULL pointer (\c storeptr itself can't
+ *     be NULL), two things may happen, depending on the \c initialize value:
+ *     if false, then \c storeptr isn't changed; if true, then \c storeptr is
+ *     initialized through \c HPM->data_store_create() and ownership is passed
+ *     to the caller.
+ */
+bool hplugin_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize)
 {
-	/* record address */
+	struct hplugin_data_store *store;
+	nullpo_retr(false, storeptr);
+	store = *storeptr;
+	if (!initialize && store == NULL)
+		return true;
+
 	switch (type) {
 		/* core-handled */
 		case HPDT_SESSION:
-			ret->HPDataSRCPtr = (void**)(&((struct socket_data *)ptr)->hdata);
-			ret->hdatac = &((struct socket_data *)ptr)->hdatac;
 			break;
-		/* goes to sub */
 		default:
-			if (HPM->grabHPDataSub) {
-				if (HPM->grabHPDataSub(ret,type,ptr))
-					return;
-				ShowError("HPM:HPM:grabHPData failed, unknown type %d!\n",type);
-			} else {
-				ShowError("HPM:grabHPData failed, type %d needs sub-handler!\n",type);
+			if (HPM->data_store_validate_sub == NULL) {
+				ShowError("HPM:validateHPData failed, type %d needs sub-handler!\n",type);
+				return false;
 			}
-			ret->HPDataSRCPtr = NULL;
-			ret->hdatac = NULL;
-			return;
+			if (!HPM->data_store_validate_sub(type, storeptr, initialize)) {
+				ShowError("HPM:HPM:validateHPData failed, unknown type %d!\n",type);
+				return false;
+			}
+			break;
 	}
+	if (initialize && (!store || store->type == HPDT_UNKNOWN)) {
+		HPM->data_store_create(storeptr, type);
+		store = *storeptr;
+	}
+	if (store->type != type) {
+		ShowError("HPM:HPM:validateHPData failed, store type mismatch %d != %d.\n",store->type, type);
+		return false;
+	}
+	return true;
 }
 
-void hplugins_addToHPData(enum HPluginDataTypes type, unsigned int pluginID, void *ptr, void *data, unsigned int index, bool autofree)
+/**
+ * Adds an entry to a plugin data store.
+ *
+ * @param type[in]         The store type.
+ * @param pluginID[in]     The plugin identifier.
+ * @param storeptr[in,out] A pointer to the store. The store will be initialized if necessary.
+ * @param data[in]         The data entry to add.
+ * @param classid[in]      The entry class identifier.
+ * @param autofree[in]     Whether the entry should be automatically freed when removed.
+ */
+void hplugins_addToHPData(enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store **storeptr, void *data, uint32 classid, bool autofree)
 {
-	struct HPluginData *HPData, **HPDataSRC;
-	struct HPDataOperationStorage action;
-	unsigned int i, max;
+	struct hplugin_data_store *store;
+	struct hplugin_data_entry *entry;
+	int i;
+	nullpo_retv(storeptr);
 
-	HPM->grabHPData(&action,type,ptr);
+	if (!HPM->data_store_validate(type, storeptr, true)) {
+		/* woo it failed! */
+		ShowError("HPM:addToHPData:%s: failed, type %d (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
+		return;
+	}
+	store = *storeptr;
 
-	if (action.hdatac == NULL) { /* woo it failed! */
-		ShowError("HPM:addToHPData:%s: failed, type %d (%u|%u)\n",HPM->pid2name(pluginID),type,pluginID,index);
+	/* duplicate check */
+	ARR_FIND(0, VECTOR_LENGTH(store->entries), i, VECTOR_INDEX(store->entries, i)->pluginID == pluginID && VECTOR_INDEX(store->entries, i)->classid == classid);
+	if (i != VECTOR_LENGTH(store->entries)) {
+		ShowError("HPM:addToHPData:%s: error! attempting to insert duplicate struct of id %u and classid %u\n", HPM->pid2name(pluginID), pluginID, classid);
 		return;
 	}
 
-	/* flag */
-	HPDataSRC = *(action.HPDataSRCPtr);
-	max = *(action.hdatac);
-
-	/* duplicate check */
-	for (i = 0; i < max; i++) {
-		if (HPDataSRC[i]->pluginID == pluginID && HPDataSRC[i]->type == index) {
-			ShowError("HPM:addToHPData:%s: error! attempting to insert duplicate struct of id %u and index %u\n",HPM->pid2name(pluginID),pluginID,index);
-			return;
-		}
-	}
-
-	/* HPluginData is always same size, probably better to use the ERS (with reasonable chunk size e.g. 10/25/50) */
-	CREATE(HPData, struct HPluginData, 1);
+	/* hplugin_data_entry is always same size, probably better to use the ERS (with reasonable chunk size e.g. 10/25/50) */
+	CREATE(entry, struct hplugin_data_entry, 1);
 
 	/* input */
-	HPData->pluginID = pluginID;
-	HPData->type = index;
-	HPData->flag.free = autofree ? 1 : 0;
-	HPData->data = data;
+	entry->pluginID = pluginID;
+	entry->classid = classid;
+	entry->flag.free = autofree ? 1 : 0;
+	entry->data = data;
 
-	/* resize */
-	*(action.hdatac) += 1;
-	RECREATE(*(action.HPDataSRCPtr),struct HPluginData *,*(action.hdatac));
-
-	/* RECREATE modified the address */
-	HPDataSRC = *(action.HPDataSRCPtr);
-	HPDataSRC[*(action.hdatac) - 1] = HPData;
+	VECTOR_ENSURE(store->entries, 1, 1);
+	VECTOR_PUSH(store->entries, entry);
 }
 
-void *hplugins_getFromHPData(enum HPluginDataTypes type, unsigned int pluginID, void *ptr, unsigned int index)
+/**
+ * Retrieves an entry from a plugin data store.
+ *
+ * @param type[in]     The store type.
+ * @param pluginID[in] The plugin identifier.
+ * @param store[in]    The store.
+ * @param classid[in]  The entry class identifier.
+ *
+ * @return The retrieved entry, or NULL.
+ */
+void *hplugins_getFromHPData(enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store *store, uint32 classid)
 {
-	struct HPDataOperationStorage action;
-	struct HPluginData **HPDataSRC;
-	unsigned int i, max;
+	int i;
 
-	HPM->grabHPData(&action,type,ptr);
-
-	if (action.hdatac == NULL) { /* woo it failed! */
-		ShowError("HPM:getFromHPData:%s: failed, type %d (%u|%u)\n",HPM->pid2name(pluginID),type,pluginID,index);
+	if (!HPM->data_store_validate(type, &store, false)) {
+		/* woo it failed! */
+		ShowError("HPM:getFromHPData:%s: failed, type %d (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
 		return NULL;
 	}
+	if (!store)
+		return NULL;
 
-	/* flag */
-	HPDataSRC = *(action.HPDataSRCPtr);
-	max = *(action.hdatac);
-
-	for (i = 0; i < max; i++) {
-		if (HPDataSRC[i]->pluginID == pluginID && HPDataSRC[i]->type == index)
-			return HPDataSRC[i]->data;
-	}
+	ARR_FIND(0, VECTOR_LENGTH(store->entries), i, VECTOR_INDEX(store->entries, i)->pluginID == pluginID && VECTOR_INDEX(store->entries, i)->classid == classid);
+	if (i != VECTOR_LENGTH(store->entries))
+		return VECTOR_INDEX(store->entries, i)->data;
 
 	return NULL;
 }
 
-void hplugins_removeFromHPData(enum HPluginDataTypes type, unsigned int pluginID, void *ptr, unsigned int index)
+/**
+ * Removes an entry from a plugin data store.
+ *
+ * @param type[in]     The store type.
+ * @param pluginID[in] The plugin identifier.
+ * @param store[in]    The store.
+ * @param classid[in]  The entry class identifier.
+ */
+void hplugins_removeFromHPData(enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store *store, uint32 classid)
 {
-	struct HPDataOperationStorage action;
-	struct HPluginData **HPDataSRC;
-	unsigned int i, max;
+	struct hplugin_data_entry *entry;
+	int i;
 
-	HPM->grabHPData(&action,type,ptr);
-
-	if (action.hdatac == NULL) { /* woo it failed! */
-		ShowError("HPM:removeFromHPData:%s: failed, type %d (%u|%u)\n",HPM->pid2name(pluginID),type,pluginID,index);
+	if (!HPM->data_store_validate(type, &store, false)) {
+		/* woo it failed! */
+		ShowError("HPM:removeFromHPData:%s: failed, type %d (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
 		return;
 	}
+	if (!store)
+		return;
 
-	/* flag */
-	HPDataSRC = *(action.HPDataSRCPtr);
-	max = *(action.hdatac);
+	ARR_FIND(0, VECTOR_LENGTH(store->entries), i, VECTOR_INDEX(store->entries, i)->pluginID == pluginID && VECTOR_INDEX(store->entries, i)->classid == classid);
+	if (i == VECTOR_LENGTH(store->entries))
+		return;
 
-	for (i = 0; i < max; i++) {
-		if (HPDataSRC[i]->pluginID == pluginID && HPDataSRC[i]->type == index)
-			break;
-	}
-
-	if (i != max) {
-		unsigned int cursor;
-
-		aFree(HPDataSRC[i]->data);/* when its removed we delete it regardless of autofree */
-		aFree(HPDataSRC[i]);
-		HPDataSRC[i] = NULL;
-
-		for (i = 0, cursor = 0; i < max; i++) {
-			if (HPDataSRC[i] == NULL)
-				continue;
-			if (i != cursor)
-				HPDataSRC[cursor] = HPDataSRC[i];
-			cursor++;
-		}
-		*(action.hdatac) = cursor;
-	}
+	entry = VECTOR_INDEX(store->entries, i);
+	VECTOR_ERASE(store->entries, i); // Erase and compact
+	aFree(entry->data); // when it's removed we delete it regardless of autofree
+	aFree(entry);
 }
 
 /* TODO: add ability for tracking using pID for the upcoming runtime load/unload support. */
@@ -303,9 +369,9 @@ bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, CmdlineExecF
 		return false;
 	}
 
-	ARR_FIND(0, cmdline->args_data_count, i, strcmp(cmdline->args_data[i].name, name) == 0);
+	ARR_FIND(0, VECTOR_LENGTH(cmdline->args_data), i, strcmp(VECTOR_INDEX(cmdline->args_data, i).name, name) == 0);
 
-       if (i < cmdline->args_data_count) {
+       if (i != VECTOR_LENGTH(cmdline->args_data)) {
                ShowError("HPM:add_arg:%s duplicate! (from %s)\n",name,HPM->pid2name(pluginID));
                return false;
        }
@@ -313,25 +379,36 @@ bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, CmdlineExecF
        return cmdline->arg_add(pluginID, name, '\0', func, help, has_param ? CMDLINE_OPT_PARAM : CMDLINE_OPT_NORMAL);
 }
 
+/**
+ * Adds a configuration listener for a plugin.
+ *
+ * @param pluginID The plugin identifier.
+ * @param type     The configuration type to listen for.
+ * @param name     The configuration entry name.
+ * @param func     The callback function.
+ * @retval true if the listener was added successfully.
+ * @retval false in case of error.
+ */
 bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, char *name, void (*func) (const char *val))
 {
 	struct HPConfListenStorage *conf;
-	unsigned int i;
+	int i;
 
 	if (type >= HPCT_MAX) {
 		ShowError("HPM->addConf:%s: unknown point '%u' specified for config '%s'\n",HPM->pid2name(pluginID),type,name);
 		return false;
 	}
 
-	for (i = 0; i < HPM->confsc[type]; i++) {
-		if (!strcmpi(name,HPM->confs[type][i].key)) {
-			ShowError("HPM->addConf:%s: duplicate '%s', already in use by '%s'!",HPM->pid2name(pluginID),name,HPM->pid2name(HPM->confs[type][i].pluginID));
-			return false;
-		}
+	ARR_FIND(0, VECTOR_LENGTH(HPM->config_listeners[type]), i, strcmpi(name, VECTOR_INDEX(HPM->config_listeners[type], i).key) == 0);
+	if (i != VECTOR_LENGTH(HPM->config_listeners[type])) {
+		ShowError("HPM->addConf:%s: duplicate '%s', already in use by '%s'!",
+				HPM->pid2name(pluginID), name, HPM->pid2name(VECTOR_INDEX(HPM->config_listeners[type], i).pluginID));
+		return false;
 	}
 
-	RECREATE(HPM->confs[type], struct HPConfListenStorage, ++HPM->confsc[type]);
-	conf = &HPM->confs[type][HPM->confsc[type] - 1];
+	VECTOR_ENSURE(HPM->config_listeners[type], 1, 1);
+	VECTOR_PUSHZEROED(HPM->config_listeners[type]);
+	conf = &VECTOR_LAST(HPM->config_listeners[type]);
 
 	conf->pluginID = pluginID;
 	safestrncpy(conf->key, name, HPM_ADDCONF_LENGTH);
@@ -477,30 +554,23 @@ struct hplugin *hplugin_load(const char* filename) {
 	return plugin;
 }
 
+/**
+ * Unloads and unregisters a plugin.
+ *
+ * @param plugin The plugin data.
+ */
 void hplugin_unload(struct hplugin* plugin)
 {
+	int i;
 	if (plugin->filename)
 		aFree(plugin->filename);
 	if (plugin->dll)
 		plugin_close(plugin->dll);
 	/* TODO: for manual packet unload */
 	/* - Go through known packets and unlink any belonging to the plugin being removed */
-	if (!HPM->off) {
-		unsigned int i, cursor;
-		for (cursor = 0; cursor < HPM->plugin_count; cursor++) {
-			if (HPM->plugins[cursor]->idx != plugin->idx)
-				continue;
-			HPM->plugins[cursor] = NULL;
-			break;
-		}
-		for(i = cursor + 1; i < HPM->plugin_count; i++) {
-			HPM->plugins[cursor] = HPM->plugins[i];
-			cursor++;
-		}
-		if (!(HPM->plugin_count = cursor)) {
-			aFree(HPM->plugins);
-			HPM->plugins = NULL;
-		}
+	ARR_FIND(0, VECTOR_LENGTH(HPM->plugins), i, VECTOR_INDEX(HPM->plugins, i)->idx == plugin->idx);
+	if (i != VECTOR_LENGTH(HPM->plugins)) {
+		VECTOR_ERASE(HPM->plugins, i);
 	}
 	aFree(plugin);
 }
@@ -510,8 +580,8 @@ void hplugin_unload(struct hplugin* plugin)
  */
 CMDLINEARG(loadplugin)
 {
-	RECREATE(HPM->cmdline_plugins, char *, ++HPM->cmdline_plugins_count);
-	HPM->cmdline_plugins[HPM->cmdline_plugins_count-1] = aStrdup(params);
+	VECTOR_ENSURE(HPM->cmdline_load_plugins, 1, 1);
+	VECTOR_PUSH(HPM->cmdline_load_plugins, aStrdup(params));
 	return true;
 }
 
@@ -535,9 +605,9 @@ void hplugins_config_read(void) {
 		return;
 
 	plist = libconfig->lookup(&plugins_conf, "plugins_list");
-	for (i = 0; i < HPM->cmdline_plugins_count; i++) {
+	for (i = 0; i < VECTOR_LENGTH(HPM->cmdline_load_plugins); i++) {
 		config_setting_t *entry = libconfig->setting_add(plist, NULL, CONFIG_TYPE_STRING);
-		config_setting_set_string(entry, HPM->cmdline_plugins[i]);
+		config_setting_set_string(entry, VECTOR_INDEX(HPM->cmdline_load_plugins, i));
 	}
 
 	if (plist != NULL) {
@@ -584,83 +654,117 @@ void hplugins_config_read(void) {
 	}
 	libconfig->destroy(&plugins_conf);
 
-	if( HPM->plugin_count )
-		ShowStatus("HPM: There are '"CL_WHITE"%d"CL_RESET"' plugins loaded, type '"CL_WHITE"plugins"CL_RESET"' to list them\n", HPM->plugin_count);
-}
-CPCMD(plugins) {
-	if( HPM->plugin_count == 0 ) {
-		ShowInfo("HPC: there are no plugins loaded\n");
-	} else {
-		unsigned int i;
-
-		ShowInfo("HPC: There are '"CL_WHITE"%d"CL_RESET"' plugins loaded\n",HPM->plugin_count);
-
-		for(i = 0; i < HPM->plugin_count; i++) {
-			ShowInfo("HPC: - '"CL_WHITE"%s"CL_RESET"' (%s)\n",HPM->plugins[i]->info->name,HPM->plugins[i]->filename);
-		}
-	}
+	if (VECTOR_LENGTH(HPM->plugins))
+		ShowStatus("HPM: There are '"CL_WHITE"%"PRIuS""CL_RESET"' plugins loaded, type '"CL_WHITE"plugins"CL_RESET"' to list them\n", VECTOR_LENGTH(HPM->plugins));
 }
 
-/*
- 0 = unknown
- 1 = OK
- 2 = incomplete
+/**
+ * Console command: plugins
+ *
+ * Shows a list of loaded plugins.
+ *
+ * @see CPCMD()
  */
-unsigned char hplugins_parse_packets(int fd, enum HPluginPacketHookingPoints point) {
-	unsigned int i;
+CPCMD(plugins)
+{
+	int i;
 
-	for(i = 0; i < HPM->packetsc[point]; i++) {
-		if( HPM->packets[point][i].cmd == RFIFOW(fd,0) )
-			break;
+	if (VECTOR_LENGTH(HPM->plugins) == 0) {
+		ShowInfo("HPC: there are no plugins loaded\n");
+		return;
 	}
 
-	if( i != HPM->packetsc[point] ) {
-		struct HPluginPacket *packet = &HPM->packets[point][i];
-		short length;
+	ShowInfo("HPC: There are '"CL_WHITE"%"PRIuS""CL_RESET"' plugins loaded\n", VECTOR_LENGTH(HPM->plugins));
 
-		if( (length = packet->len) == -1 ) {
-			if( (length = RFIFOW(fd, 2)) > (int)RFIFOREST(fd) )
-				return 2;
-		}
-
-		packet->receive(fd);
-		RFIFOSKIP(fd, length);
-		return 1;
+	for(i = 0; i < VECTOR_LENGTH(HPM->plugins); i++) {
+		struct hplugin *plugin = VECTOR_INDEX(HPM->plugins, i);
+		ShowInfo("HPC: - '"CL_WHITE"%s"CL_RESET"' (%s)\n", plugin->info->name, plugin->filename);
 	}
-
-	return 0;
 }
 
-char *hplugins_id2name (unsigned int pid) {
-	unsigned int i;
+/**
+ * Parses a packet through the registered plugin.
+ *
+ * @param fd The connection fd.
+ * @param point The packet hooking point.
+ * @retval 0 unknown packet
+ * @retval 1 OK
+ * @retval 2 incomplete packet
+ */
+unsigned char hplugins_parse_packets(int fd, enum HPluginPacketHookingPoints point)
+{
+	struct HPluginPacket *packet = NULL;
+	int i;
+	int16 length;
+
+	ARR_FIND(0, VECTOR_LENGTH(HPM->packets[point]), i, VECTOR_INDEX(HPM->packets[point], i).cmd == RFIFOW(fd,0));
+
+	if (i == VECTOR_LENGTH(HPM->packets[point]))
+		return 0;
+
+	packet = &VECTOR_INDEX(HPM->packets[point], i);
+	length = packet->len;
+	if (length == -1)
+		length = RFIFOW(fd, 2);
+
+	if (length > (int)RFIFOREST(fd))
+		return 2;
+
+	packet->receive(fd);
+	RFIFOSKIP(fd, length);
+	return 1;
+}
+
+/**
+ * Retrieves a plugin name by ID.
+ *
+ * @param pid The plugin identifier.
+ * @return The plugin name.
+ * @retval "core" if the plugin ID belongs to the Hercules core.
+ * @retval "UnknownPlugin" if the plugin wasn't found.
+ */
+char *hplugins_id2name(unsigned int pid)
+{
+	int i;
 
 	if (pid == HPM_PID_CORE)
 		return "core";
 
-	for( i = 0; i < HPM->plugin_count; i++ ) {
-		if( HPM->plugins[i]->idx == pid )
-			return HPM->plugins[i]->info->name;
+	for (i = 0; i < VECTOR_LENGTH(HPM->plugins); i++) {
+		struct hplugin *plugin = VECTOR_INDEX(HPM->plugins, i);
+		if (plugin->idx == pid)
+			return plugin->info->name;
 	}
 
 	return "UnknownPlugin";
 }
-char* HPM_file2ptr(const char *file) {
-	unsigned int i;
 
-	for(i = 0; i < HPM->fnamec; i++) {
-		if( HPM->fnames[i].addr == file )
-			return HPM->fnames[i].name;
+/**
+ * Returns a retained permanent pointer to a source filename, for memory-manager reporting use.
+ *
+ * The returned pointer is safe to be used as filename in the memory manager
+ * functions, and it will be available during and after the memory manager
+ * shutdown (for memory leak reporting purposes).
+ *
+ * @param file The string/filename to retain
+ * @return A retained copy of the source string.
+ */
+const char *HPM_file2ptr(const char *file)
+{
+	int i;
+
+	ARR_FIND(0, HPM->filenames.count, i, HPM->filenames.data[i].addr == file);
+	if (i != HPM->filenames.count) {
+		return HPM->filenames.data[i].name;
 	}
 
-	i = HPM->fnamec;
-
 	/* we handle this memory outside of the server's memory manager because we need it to exist after the memory manager goes down */
-	HPM->fnames = realloc(HPM->fnames,(++HPM->fnamec)*sizeof(struct HPMFileNameCache));
+	HPM->filenames.data = realloc(HPM->filenames.data, (++HPM->filenames.count)*sizeof(struct HPMFileNameCache));
 
-	HPM->fnames[i].addr = file;
-	HPM->fnames[i].name = strdup(file);
+	HPM->filenames.data[i].addr = file;
+	HPM->filenames.data[i].name = strdup(file);
 
-	return HPM->fnames[i].name;
+	return HPM->filenames.data[i].name;
 }
 void* HPM_mmalloc(size_t size, const char *file, int line, const char *func) {
 	return iMalloc->malloc(size,HPM_file2ptr(file),line,func);
@@ -678,22 +782,74 @@ char* HPM_astrdup(const char *p, const char *file, int line, const char *func) {
 	return iMalloc->astrdup(p,HPM_file2ptr(file),line,func);
 }
 
-bool hplugins_parse_conf(const char *w1, const char *w2, enum HPluginConfType point) {
-	unsigned int i;
+/**
+ * Parses a configuration entry through the registered plugins.
+ *
+ * @param w1    The configuration entry name.
+ * @param w2    The configuration entry value.
+ * @param point The type of configuration file.
+ * @retval true if a registered plugin was found to handle the entry.
+ * @retval false if no registered plugins could be found.
+ */
+bool hplugins_parse_conf(const char *w1, const char *w2, enum HPluginConfType point)
+{
+	int i;
+	ARR_FIND(0, VECTOR_LENGTH(HPM->config_listeners[point]), i, strcmpi(w1, VECTOR_INDEX(HPM->config_listeners[point], i).key) == 0);
+	if (i == VECTOR_LENGTH(HPM->config_listeners[point]))
+		return false;
 
-	/* exists? */
-	for(i = 0; i < HPM->confsc[point]; i++) {
-		if( !strcmpi(w1,HPM->confs[point][i].key) )
-			break;
+	VECTOR_INDEX(HPM->config_listeners[point], i).func(w2);
+	return true;
+}
+
+/**
+ * Helper to destroy an interface's hplugin_data store and release any owned memory.
+ *
+ * The pointer will be cleared.
+ *
+ * @param storeptr[in,out] A pointer to the plugin data store.
+ */
+void hplugin_data_store_destroy(struct hplugin_data_store **storeptr)
+{
+	struct hplugin_data_store *store;
+	nullpo_retv(storeptr);
+	store = *storeptr;
+	if (store == NULL)
+		return;
+
+	while (VECTOR_LENGTH(store->entries) > 0) {
+		struct hplugin_data_entry *entry = VECTOR_POP(store->entries);
+		if (entry->flag.free) {
+			aFree(entry->data);
+		}
+		aFree(entry);
 	}
+	VECTOR_CLEAR(store->entries);
+	aFree(store);
+	*storeptr = NULL;
+}
 
-	/* trigger and we're set! */
-	if( i != HPM->confsc[point] ) {
-		HPM->confs[point][i].func(w2);
-		return true;
+/**
+ * Helper to create and initialize an interface's hplugin_data store.
+ *
+ * The store is owned by the caller, and it should be eventually destroyed by
+ * \c hdata_destroy.
+ *
+ * @param storeptr[in,out] A pointer to the data store to initialize.
+ * @param type[in]         The store type.
+ */
+void hplugin_data_store_create(struct hplugin_data_store **storeptr, enum HPluginDataTypes type)
+{
+	struct hplugin_data_store *store;
+	nullpo_retv(storeptr);
+
+	if (*storeptr == NULL) {
+		CREATE(*storeptr, struct hplugin_data_store, 1);
 	}
+	store = *storeptr;
 
-	return false;
+	store->type = type;
+	VECTOR_INIT(store->entries);
 }
 
 /**
@@ -747,14 +903,14 @@ void HPM_datacheck_final(void) {
 }
 
 void hpm_init(void) {
-	unsigned int i;
+	int i;
 	datacheck_db = NULL;
 	datacheck_data = NULL;
 	datacheck_version = 0;
 
-	HPM->symbols = NULL;
-	HPM->plugins = NULL;
-	HPM->plugin_count = HPM->symbol_count = 0;
+	VECTOR_INIT(HPM->plugins);
+	VECTOR_INIT(HPM->symbols);
+
 	HPM->off = false;
 
 	memcpy(&iMalloc_HPM, iMalloc, sizeof(struct malloc_interface));
@@ -772,9 +928,12 @@ void hpm_init(void) {
 		return;
 	}
 
-	for(i = 0; i < hpPHP_MAX; i++) {
-		HPM->packets[i] = NULL;
-		HPM->packetsc[i] = 0;
+	for (i = 0; i < hpPHP_MAX; i++) {
+		VECTOR_INIT(HPM->packets[i]);
+	}
+
+	for (i = 0; i < HPCT_MAX; i++) {
+		VECTOR_INIT(HPM->config_listeners[i]);
 	}
 
 #ifdef CONSOLE_INPUT
@@ -782,83 +941,67 @@ void hpm_init(void) {
 #endif
 	return;
 }
+
+/**
+ * Releases the retained filenames cache.
+ */
 void hpm_memdown(void)
 {
-	/* this memory is handled outside of the server's memory manager and thus cleared after memory manager goes down */
-
-	if (HPM->fnames) {
-		unsigned int i;
-		for (i = 0; i < HPM->fnamec; i++) {
-			free(HPM->fnames[i].name);
+	/* this memory is handled outside of the server's memory manager and
+	 * thus cleared after memory manager goes down */
+	if (HPM->filenames.count) {
+		int i;
+		for (i = 0; i < HPM->filenames.count; i++) {
+			free(HPM->filenames.data[i].name);
 		}
-		free(HPM->fnames);
+		free(HPM->filenames.data);
+		HPM->filenames.data = NULL;
+		HPM->filenames.count = 0;
 	}
 }
-void hpm_final(void) {
-	unsigned int i;
+
+void hpm_final(void)
+{
+	int i;
 
 	HPM->off = true;
 
-	if( HPM->plugins )
-	{
-		for( i = 0; i < HPM->plugin_count; i++ ) {
-			HPM->unload(HPM->plugins[i]);
-		}
-		aFree(HPM->plugins);
+	while (VECTOR_LENGTH(HPM->plugins)) {
+		HPM->unload(VECTOR_LAST(HPM->plugins));
+	}
+	VECTOR_CLEAR(HPM->plugins);
+
+	while (VECTOR_LENGTH(HPM->symbols)) {
+		aFree(VECTOR_POP(HPM->symbols));
+	}
+	VECTOR_CLEAR(HPM->symbols);
+
+	for (i = 0; i < hpPHP_MAX; i++) {
+		VECTOR_CLEAR(HPM->packets[i]);
 	}
 
-	if( HPM->symbols )
-	{
-		for( i = 0; i < HPM->symbol_count; i++ ) {
-			aFree(HPM->symbols[i]);
-		}
-		aFree(HPM->symbols);
+	for (i = 0; i < HPCT_MAX; i++) {
+		VECTOR_CLEAR(HPM->config_listeners[i]);
 	}
 
-	for( i = 0; i < hpPHP_MAX; i++ ) {
-		if( HPM->packets[i] )
-			aFree(HPM->packets[i]);
+	while (VECTOR_LENGTH(HPM->cmdline_load_plugins)) {
+		aFree(VECTOR_POP(HPM->cmdline_load_plugins));
 	}
-
-	for( i = 0; i < HPCT_MAX; i++ ) {
-		if( HPM->confsc[i] )
-			aFree(HPM->confs[i]);
-	}
-	if (HPM->cmdline_plugins) {
-		int j;
-		for (j = 0; j < HPM->cmdline_plugins_count; j++)
-			aFree(HPM->cmdline_plugins[j]);
-		aFree(HPM->cmdline_plugins);
-		HPM->cmdline_plugins = NULL;
-		HPM->cmdline_plugins_count = 0;
-	}
+	VECTOR_CLEAR(HPM->cmdline_load_plugins);
 
 	/* HPM->fnames is cleared after the memory manager goes down */
 	iMalloc->post_shutdown = hpm_memdown;
 
 	return;
 }
-void hpm_defaults(void) {
-	unsigned int i;
+void hpm_defaults(void)
+{
 	HPM = &HPM_s;
 
-	HPM->fnames = NULL;
-	HPM->fnamec = 0;
+	memset(&HPM->filenames, 0, sizeof(HPM->filenames));
+	VECTOR_INIT(HPM->cmdline_load_plugins);
 	HPM->force_return = false;
 	HPM->hooking = false;
-	/* */
-	HPM->fnames = NULL;
-	HPM->fnamec = 0;
-	for(i = 0; i < hpPHP_MAX; i++) {
-		HPM->packets[i] = NULL;
-		HPM->packetsc[i] = 0;
-	}
-	for(i = 0; i < HPCT_MAX; i++) {
-		HPM->confs[i] = NULL;
-		HPM->confsc[i] = 0;
-	}
-	HPM->cmdline_plugins = NULL;
-	HPM->cmdline_plugins_count = 0;
 	/* */
 	HPM->init = hpm_init;
 	HPM->final = hpm_final;
@@ -876,10 +1019,13 @@ void hpm_defaults(void) {
 	HPM->parse_packets = hplugins_parse_packets;
 	HPM->load_sub = NULL;
 	HPM->addhook_sub = NULL;
-	HPM->grabHPData = hplugins_grabHPData;
-	HPM->grabHPDataSub = NULL;
 	HPM->parseConf = hplugins_parse_conf;
 	HPM->DataCheck = HPM_DataCheck;
 	HPM->datacheck_init = HPM_datacheck_init;
 	HPM->datacheck_final = HPM_datacheck_final;
+
+	HPM->data_store_destroy = hplugin_data_store_destroy;
+	HPM->data_store_create = hplugin_data_store_create;
+	HPM->data_store_validate = hplugin_data_store_validate;
+	HPM->data_store_validate_sub = NULL;
 }

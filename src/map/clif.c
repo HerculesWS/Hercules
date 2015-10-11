@@ -18578,12 +18578,12 @@ int clif_parse(int fd) {
 		if (RFIFOREST(fd) < 2)
 			return 0;
 
-		if( HPM->packetsc[hpClif_Parse] ) {
-			int r;
-			if( (r = HPM->parse_packets(fd,hpClif_Parse)) ) {
-				if( r == 1 ) continue;
-				if( r == 2 ) return 0;
-			}
+		if (VECTOR_LENGTH(HPM->packets[hpClif_Parse]) > 0) {
+			int result = HPM->parse_packets(fd,hpClif_Parse);
+			if (result == 1)
+				continue;
+			if (result == 2)
+				return 0;
 		}
 
 		if( sd )

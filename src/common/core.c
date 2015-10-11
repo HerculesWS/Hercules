@@ -207,8 +207,9 @@ const char *cmdline_arg_source(struct CmdlineArgData *arg) {
 bool cmdline_arg_add(unsigned int pluginID, const char *name, char shortname, CmdlineExecFunc func, const char *help, unsigned int options) {
 	struct CmdlineArgData *data = NULL;
 
-	RECREATE(cmdline->args_data, struct CmdlineArgData, ++cmdline->args_data_count);
-	data = &cmdline->args_data[cmdline->args_data_count-1];
+	VECTOR_ENSURE(cmdline->args_data, 1, 1);
+	VECTOR_PUSHZEROED(cmdline->args_data);
+	data = &VECTOR_LAST(cmdline->args_data);
 	data->pluginID = pluginID;
 	data->name = aStrdup(name);
 	data->shortname = shortname;
@@ -228,8 +229,8 @@ static CMDLINEARG(help)
 	ShowInfo("\n");
 	ShowInfo("Options:\n");
 
-	for (i = 0; i < cmdline->args_data_count; i++) {
-		struct CmdlineArgData *data = &cmdline->args_data[i];
+	for (i = 0; i < VECTOR_LENGTH(cmdline->args_data); i++) {
+		struct CmdlineArgData *data = &VECTOR_INDEX(cmdline->args_data, i);
 		char altname[16], paramnames[256];
 		if (data->shortname) {
 			snprintf(altname, sizeof(altname), " [-%c]", data->shortname);
@@ -288,8 +289,9 @@ bool cmdline_arg_next_value(const char *name, int current_arg, int argc)
  */
 int cmdline_exec(int argc, char **argv, unsigned int options)
 {
-	int count = 0, i, j;
+	int count = 0, i;
 	for (i = 1; i < argc; i++) {
+		int j;
 		struct CmdlineArgData *data = NULL;
 		const char *arg = argv[i];
 		if (arg[0] != '-') { // All arguments must begin with '-'
@@ -297,17 +299,17 @@ int cmdline_exec(int argc, char **argv, unsigned int options)
 			exit(EXIT_FAILURE);
 		}
 		if (arg[1] != '-' && strlen(arg) == 2) {
-			ARR_FIND(0, cmdline->args_data_count, j, cmdline->args_data[j].shortname == arg[1]);
+			ARR_FIND(0, VECTOR_LENGTH(cmdline->args_data), j, VECTOR_INDEX(cmdline->args_data, j).shortname == arg[1]);
 		} else {
-			ARR_FIND(0, cmdline->args_data_count, j, strcmpi(cmdline->args_data[j].name, arg) == 0);
+			ARR_FIND(0, VECTOR_LENGTH(cmdline->args_data), j, strcmpi(VECTOR_INDEX(cmdline->args_data, j).name, arg) == 0);
 		}
-		if (j == cmdline->args_data_count) {
+		if (j == VECTOR_LENGTH(cmdline->args_data)) {
 			if (options&(CMDLINE_OPT_SILENT|CMDLINE_OPT_PREINIT))
 				continue;
 			ShowError("Unknown option '%s'.\n", arg);
 			exit(EXIT_FAILURE);
 		}
-		data = &cmdline->args_data[j];
+		data = &VECTOR_INDEX(cmdline->args_data, j);
 		if (data->options&CMDLINE_OPT_PARAM) {
 			if (!cmdline->arg_next_value(arg, i, argc))
 				exit(EXIT_FAILURE);
@@ -346,15 +348,15 @@ void cmdline_init(void)
 #endif // !MINICORE
 	cmdline_args_init_local();
 }
+
 void cmdline_final(void)
 {
-	int i;
-	for (i = 0; i < cmdline->args_data_count; i++) {
-		aFree(cmdline->args_data[i].name);
-		aFree(cmdline->args_data[i].help);
+	while (VECTOR_LENGTH(cmdline->args_data) > 0) {
+		struct CmdlineArgData *data = &VECTOR_POP(cmdline->args_data);
+		aFree(data->name);
+		aFree(data->help);
 	}
-	if (cmdline->args_data)
-		aFree(cmdline->args_data);
+	VECTOR_CLEAR(cmdline->args_data);
 }
 
 struct cmdline_interface cmdline_s;
@@ -364,8 +366,7 @@ void cmdline_defaults(void)
 {
 	cmdline = &cmdline_s;
 
-	cmdline->args_data = NULL;
-	cmdline->args_data_count = 0;
+	VECTOR_INIT(cmdline->args_data);
 
 	cmdline->init = cmdline_init;
 	cmdline->final = cmdline_final;

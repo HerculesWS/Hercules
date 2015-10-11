@@ -7,6 +7,7 @@
 
 #include "common/hercules.h"
 #include "common/conf.h"
+#include "common/db.h"
 
 #ifdef WIN32
 #	include "common/winapi.h"
@@ -17,7 +18,7 @@
 #	include <sys/types.h>
 #endif
 
-struct HPluginData;
+struct hplugin_data_store;
 
 #define FIFOSIZE_SERVERLINK 256*1024
 
@@ -104,9 +105,7 @@ struct socket_data {
 	ParseFunc func_parse;
 
 	void* session_data; // stores application-specific data related to the session
-
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store.
 };
 
 struct hSockOpt {
@@ -120,6 +119,9 @@ struct s_subnet {
 	uint32 mask;
 };
 
+/// A vector of subnets/IP ranges.
+VECTOR_STRUCT_DECL(s_subnet_vector, struct s_subnet);
+
 /// Use a shortlist of sockets instead of iterating all sessions for sockets
 /// that have data to send or need eof handling.
 /// Adapted to use a static array instead of a linked list.
@@ -130,6 +132,11 @@ struct s_subnet {
 // Note: purposely returns four comma-separated arguments
 #define CONVIP(ip) ((ip)>>24)&0xFF,((ip)>>16)&0xFF,((ip)>>8)&0xFF,((ip)>>0)&0xFF
 #define MAKEIP(a,b,c,d) ((uint32)( ( ( (a)&0xFF ) << 24 ) | ( ( (b)&0xFF ) << 16 ) | ( ( (c)&0xFF ) << 8 ) | ( ( (d)&0xFF ) << 0 ) ))
+
+/// Applies a subnet mask to an IP
+#define APPLY_MASK(ip, mask) ((ip)&(mask))
+/// Verifies the match between two IPs, with a subnet mask applied
+#define SUBNET_MATCH(ip1, ip2, mask) (APPLY_MASK((ip1), (mask)) == APPLY_MASK((ip2), (mask)))
 
 /**
  * Socket.c interface, mostly for reading however.
@@ -145,12 +152,9 @@ struct socket_interface {
 
 	struct socket_data **session;
 
-	struct s_subnet *lan_subnet; ///< LAN subnets array
-	int lan_subnet_count;        ///< LAN subnets count
-	struct s_subnet *trusted_ip; ///< Trusted IP ranges array
-	int trusted_ip_count;        ///< Trusted IP ranges count
-	struct s_subnet *allowed_ip; ///< Allowed server IP ranges array
-	int allowed_ip_count;        ///< Allowed server IP ranges count
+	struct s_subnet_vector lan_subnets; ///< LAN subnets.
+	struct s_subnet_vector trusted_ips; ///< Trusted IP ranges
+	struct s_subnet_vector allowed_ips; ///< Allowed server IP ranges
 
 	/* */
 	void (*init) (void);
@@ -189,7 +193,7 @@ struct socket_interface {
 	uint32 (*lan_subnet_check) (uint32 ip, struct s_subnet *info);
 	bool (*allowed_ip_check) (uint32 ip);
 	bool (*trusted_ip_check) (uint32 ip);
-	int (*net_config_read_sub) (config_setting_t *t, struct s_subnet **list, int *count, const char *filename, const char *groupname);
+	int (*net_config_read_sub) (config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname);
 	void (*net_config_read) (const char *filename);
 };
 

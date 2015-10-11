@@ -9,6 +9,7 @@
 #endif
 
 #include "common/hercules.h"
+#include "common/db.h"
 #include "common/HPMi.h"
 
 #ifdef WIN32
@@ -56,18 +57,32 @@ struct hplugin {
 	struct HPMi_interface *hpi;
 };
 
+/**
+ * Symbols shared between core and plugins.
+ */
 struct hpm_symbol {
-	char *name;
-	void *ptr;
+	const char *name; ///< The symbol name
+	void *ptr;        ///< The symbol value
 };
 
-struct HPluginData {
-	unsigned int pluginID;
-	unsigned int type;
+/**
+ * A plugin custom data, to be injected in various interfaces and objects.
+ */
+struct hplugin_data_entry {
+	uint32 pluginID; ///< The owner plugin identifier.
+	uint32 classid;  ///< The entry's object type, managed by the plugin (for plugins that need more than one entry).
 	struct {
-		unsigned int free : 1;
+		unsigned int free : 1; ///< Whether the entry data should be automatically cleared by the HPM.
 	} flag;
-	void *data;
+	void *data;      ///< The entry data.
+};
+
+/**
+ * A store for plugin custom data entries.
+ */
+struct hplugin_data_store {
+	enum HPluginDataTypes type;                       ///< The store type.
+	VECTOR_DECL(struct hplugin_data_entry *) entries; ///< The store entries.
 };
 
 struct HPluginPacket {
@@ -82,10 +97,6 @@ struct HPMFileNameCache {
 	char *name;
 };
 
-struct HPDataOperationStorage {
-	void **HPDataSRCPtr;
-	unsigned int *hdatac;
-};
 /*  */
 struct HPConfListenStorage {
 	unsigned int pluginID;
@@ -102,22 +113,20 @@ struct HPM_interface {
 	/* hooking */
 	bool force_return;
 	/* data */
-	struct hplugin **plugins;
-	unsigned int plugin_count;
-	struct hpm_symbol **symbols;
-	unsigned int symbol_count;
+	VECTOR_DECL(struct hplugin *) plugins;
+	VECTOR_DECL(struct hpm_symbol *) symbols;
 	/* packet hooking points */
-	struct HPluginPacket *packets[hpPHP_MAX];
-	unsigned int packetsc[hpPHP_MAX];
+	VECTOR_DECL(struct HPluginPacket) packets[hpPHP_MAX];
 	/* plugin file ptr caching */
-	struct HPMFileNameCache *fnames;
-	unsigned int fnamec;
+	struct {
+		// This doesn't use a VECTOR because it needs to exist after the memory manager goes down.
+		int count;
+		struct HPMFileNameCache *data;
+	} filenames;
 	/* config listen */
-	struct HPConfListenStorage *confs[HPCT_MAX];
-	unsigned int confsc[HPCT_MAX];
+	VECTOR_DECL(struct HPConfListenStorage) config_listeners[HPCT_MAX];
 	/** Plugins requested through the command line */
-	char **cmdline_plugins;
-	int cmdline_plugins_count;
+	VECTOR_DECL(char *) cmdline_load_plugins;
 	/* funcs */
 	void (*init) (void);
 	void (*final) (void);
@@ -128,21 +137,24 @@ struct HPM_interface {
 	bool (*iscompatible) (char* version);
 	void (*event) (enum hp_event_types type);
 	void *(*import_symbol) (char *name, unsigned int pID);
-	void (*share) (void *, char *);
+	void (*share) (void *value, const char *name);
 	void (*config_read) (void);
 	char *(*pid2name) (unsigned int pid);
 	unsigned char (*parse_packets) (int fd, enum HPluginPacketHookingPoints point);
 	void (*load_sub) (struct hplugin *plugin);
 	bool (*addhook_sub) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
-	void (*grabHPData) (struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
-	/* for server-specific HPData e.g. map_session_data */
-	bool (*grabHPDataSub) (struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
 	/* for custom config parsing */
 	bool (*parseConf) (const char *w1, const char *w2, enum HPluginConfType point);
 	/* validates plugin data */
 	bool (*DataCheck) (struct s_HPMDataCheck *src, unsigned int size, int version, char *name);
 	void (*datacheck_init) (const struct s_HPMDataCheck *src, unsigned int length, int version);
 	void (*datacheck_final) (void);
+
+	void (*data_store_create) (struct hplugin_data_store **storeptr, enum HPluginDataTypes type);
+	void (*data_store_destroy) (struct hplugin_data_store **storeptr);
+	bool (*data_store_validate) (enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize);
+	/* for server-specific HPData e.g. map_session_data */
+	bool (*data_store_validate_sub) (enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize);
 };
 
 CMDLINEARG(loadplugin);

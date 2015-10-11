@@ -768,7 +768,7 @@ void login_fromchar_parse_accinfo(int fd)
 //--------------------------------
 int login_parse_fromchar(int fd)
 {
-	int j, id;
+	int id;
 	uint32 ipl;
 	char ip[16];
 
@@ -795,11 +795,12 @@ int login_parse_fromchar(int fd)
 	while( RFIFOREST(fd) >= 2 ) {
 		uint16 command = RFIFOW(fd,0);
 
-		if( HPM->packetsc[hpParse_FromChar] ) {
-			if( (j = HPM->parse_packets(fd,hpParse_FromChar)) ) {
-				if( j == 1 ) continue;
-				if( j == 2 ) return 0;
-			}
+		if (VECTOR_LENGTH(HPM->packets[hpParse_FromChar]) > 0) {
+			int result = HPM->parse_packets(fd,hpParse_FromChar);
+			if (result == 1)
+				continue;
+			if (result == 2)
+				return 0;
 		}
 
 		switch( command ) {
@@ -1574,7 +1575,6 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 int login_parse_login(int fd)
 {
 	struct login_session_data* sd = (struct login_session_data*)sockt->session[fd]->session_data;
-	int result;
 
 	char ip[16];
 	uint32 ipl = sockt->session[fd]->client_addr;
@@ -1608,11 +1608,12 @@ int login_parse_login(int fd)
 	while( RFIFOREST(fd) >= 2 ) {
 		uint16 command = RFIFOW(fd,0);
 
-		if( HPM->packetsc[hpParse_Login] ) {
-			if( (result = HPM->parse_packets(fd,hpParse_Login)) ) {
-				if( result == 1 ) continue;
-				if( result == 2 ) return 0;
-			}
+		if (VECTOR_LENGTH(HPM->packets[hpParse_Login]) > 0) {
+			int result = HPM->parse_packets(fd,hpParse_Login);
+			if (result == 1)
+				continue;
+			if (result == 2)
+				return 0;
 		}
 
 		switch( command ) {
