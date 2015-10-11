@@ -655,7 +655,7 @@ void hplugins_config_read(void) {
 	libconfig->destroy(&plugins_conf);
 
 	if (VECTOR_LENGTH(HPM->plugins))
-		ShowStatus("HPM: There are '"CL_WHITE"%"PRIuS""CL_RESET"' plugins loaded, type '"CL_WHITE"plugins"CL_RESET"' to list them\n", VECTOR_LENGTH(HPM->plugins));
+		ShowStatus("HPM: There are '"CL_WHITE"%d"CL_RESET"' plugins loaded, type '"CL_WHITE"plugins"CL_RESET"' to list them\n", VECTOR_LENGTH(HPM->plugins));
 }
 
 /**
@@ -674,7 +674,7 @@ CPCMD(plugins)
 		return;
 	}
 
-	ShowInfo("HPC: There are '"CL_WHITE"%"PRIuS""CL_RESET"' plugins loaded\n", VECTOR_LENGTH(HPM->plugins));
+	ShowInfo("HPC: There are '"CL_WHITE"%d"CL_RESET"' plugins loaded\n", VECTOR_LENGTH(HPM->plugins));
 
 	for(i = 0; i < VECTOR_LENGTH(HPM->plugins); i++) {
 		struct hplugin *plugin = VECTOR_INDEX(HPM->plugins, i);

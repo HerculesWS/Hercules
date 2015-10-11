@@ -1523,7 +1523,7 @@ void send_shortlist_add_fd(int fd)
 		return;// already in the list
 
 	if (send_shortlist_count >= ARRAYLENGTH(send_shortlist_array)) {
-		ShowDebug("send_shortlist_add_fd: shortlist is full, ignoring... (fd=%d shortlist.count=%d shortlist.length=%"PRIuS")\n",
+		ShowDebug("send_shortlist_add_fd: shortlist is full, ignoring... (fd=%d shortlist.count=%d shortlist.length=%d)\n",
 		          fd, send_shortlist_count, ARRAYLENGTH(send_shortlist_array));
 		return;
 	}
