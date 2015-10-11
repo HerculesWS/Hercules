@@ -3589,7 +3589,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			ARR_FIND(0, ARRAYLENGTH(sd->skillcast), i, sd->skillcast[i].id == 0 || sd->skillcast[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillcast)) {
-				ShowDebug("script->run: bonus2 bVariableCastrate reached it's limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
+				ShowDebug("script->run: bonus2 bVariableCastrate reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillcast), type2, val);
 				break;
 			}
