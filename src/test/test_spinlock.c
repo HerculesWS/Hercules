@@ -103,3 +103,5 @@ int do_final(void) {
 int parse_console(const char* command){
 	return 0;
 }//end: parse_console
+
+void cmdline_args_init_local(void) { }

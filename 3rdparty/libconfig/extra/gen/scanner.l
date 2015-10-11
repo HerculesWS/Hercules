@@ -97,7 +97,7 @@ static int fromihex(const char *s) {
 
 true              [Tt][Rr][Uu][Ee]
 false             [Ff][Aa][Ll][Ss][Ee]
-name              [A-Za-z\*][-A-Za-z0-9_\*']*
+name              [A-Za-z0-9\*][-A-Za-z0-9_\*'.]*
 integer           [-+]?[0-9]+
 integer64         [-+]?[0-9]+L(L)?
 hex               0[Xx][0-9A-Fa-f]+
@@ -181,12 +181,12 @@ include_open      ^[ \t]*@include[ \t]+\"
 \}                { return(TOK_GROUP_END); }
 {true}            { yylval->ival = 1; return(TOK_BOOLEAN); }
 {false}           { yylval->ival = 0; return(TOK_BOOLEAN); }
-{name}            { yylval->sval = yytext; return(TOK_NAME); }
 {float}           { yylval->fval = atof(yytext); return(TOK_FLOAT); }
 {integer}         { yylval->ival = atoi(yytext); return(TOK_INTEGER); }
 {integer64}       { yylval->llval = atoll(yytext); return(TOK_INTEGER64); }
 {hex}             { yylval->ival = fromihex(yytext); return(TOK_HEX); }
 {hex64}           { yylval->llval = fromhex(yytext); return(TOK_HEX64); }
+{name}            { yylval->sval = yytext; return(TOK_NAME); }
 \[                { return(TOK_ARRAY_START); }
 \]                { return(TOK_ARRAY_END); }
 \(                { return(TOK_LIST_START); }
