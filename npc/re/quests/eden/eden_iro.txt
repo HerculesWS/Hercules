@@ -429,7 +429,7 @@ L_Exchange:
 
 // Merry Badger
 //============================================================
-moc_para01,13,22,4	script	Merry Badger#xch	882,{
+moc_para01,13,22,4	script	Merry Badger#xch	4_F_SITDOWN,{
 	mes "[Merry Badger]";
 	mes "Hello there!  I'm Merry Badger and I was hired to exchange the ^00CC00Eden Merit Badges^000000!";
 	next;
