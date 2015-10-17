@@ -6,7 +6,7 @@
 #include "mutex.h"
 
 #include "common/cbasetypes.h" // for WIN32
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/showmsg.h"
 #include "common/timer.h"
 

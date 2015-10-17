@@ -14,7 +14,7 @@
 #include "map/pc.h"
 #include "map/skill.h" // ext_skill_unit_onplace()
 #include "common/cbasetypes.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"

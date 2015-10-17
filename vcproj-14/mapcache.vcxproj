@@ -129,7 +129,7 @@
     <ClCompile Include="..\src\common\console.c" />
     <ClCompile Include="..\src\common\des.c" />
     <ClCompile Include="..\src\common\grfio.c" />
-    <ClCompile Include="..\src\common\malloc.c" />
+    <ClCompile Include="..\src\common\memmgr.c" />
     <ClCompile Include="..\src\common\showmsg.c" />
     <ClCompile Include="..\src\common\strlib.c" />
     <ClCompile Include="..\src\common\sysinfo.c" />
@@ -143,7 +143,7 @@
     <ClInclude Include="..\src\common\console.h" />
     <ClInclude Include="..\src\common\des.h" />
     <ClInclude Include="..\src\common\grfio.h" />
-    <ClInclude Include="..\src\common\malloc.h" />
+    <ClInclude Include="..\src\common\memmgr.h" />
     <ClInclude Include="..\src\common\mmo.h" />
     <ClInclude Include="..\src\common\showmsg.h" />
     <ClInclude Include="..\src\common\strlib.h" />

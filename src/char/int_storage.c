@@ -10,7 +10,7 @@
 #include "char/char.h"
 #include "char/inter.h"
 #include "char/mapif.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"

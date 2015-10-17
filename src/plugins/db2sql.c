@@ -6,7 +6,7 @@
 #include "common/hercules.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/strlib.h"
 #include "common/timer.h"

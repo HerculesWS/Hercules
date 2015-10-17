@@ -4,7 +4,7 @@
 
 #define HERCULES_CORE
 
-#include "malloc.h"
+#include "memmgr.h"
 
 #include "common/cbasetypes.h"
 #include "common/core.h"

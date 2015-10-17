@@ -15,7 +15,7 @@
 #include "common/conf.h"
 #include "common/core.h"
 #include "common/db.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/md5calc.h"
 #include "common/nullpo.h"
 #include "common/random.h"

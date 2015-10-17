@@ -13,7 +13,7 @@
     <ClCompile Include="..\src\common\grfio.c">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\common\malloc.c">
+    <ClCompile Include="..\src\common\memmgr.c">
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\showmsg.c">
@@ -51,7 +51,7 @@
     <ClInclude Include="..\src\common\grfio.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\common\malloc.h">
+    <ClInclude Include="..\src\common\memmgr.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\mmo.h">

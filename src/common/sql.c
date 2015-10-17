@@ -7,7 +7,7 @@
 #include "sql.h"
 
 #include "common/cbasetypes.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/showmsg.h"
 #include "common/strlib.h"
 #include "common/timer.h"

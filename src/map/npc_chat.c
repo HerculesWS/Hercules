@@ -11,7 +11,7 @@
 #include "map/mob.h" // struct mob_data
 #include "map/pc.h" // struct map_session_data
 #include "map/script.h" // set_var()
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/strlib.h"

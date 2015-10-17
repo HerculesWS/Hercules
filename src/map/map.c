@@ -48,7 +48,7 @@
 #include "common/core.h"
 #include "common/ers.h"
 #include "common/grfio.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/random.h"
 #include "common/showmsg.h"
