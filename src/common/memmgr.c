@@ -79,6 +79,26 @@ struct malloc_interface *iMalloc;
 
 #endif
 
+#ifndef USE_MEMMGR
+
+#ifdef __APPLE__
+#include <malloc/malloc.h>
+#define BUFFER_SIZE(ptr) malloc_size(ptr)
+#elif __FreeBSD__
+#include <malloc_np.h>
+#define BUFFER_SIZE(ptr) malloc_usable_size(ptr)
+#elif defined __linux__ || defined __linux || defined CYGWIN
+#include <malloc.h>
+#define BUFFER_SIZE(ptr) malloc_usable_size(ptr)
+#elif defined WIN32
+#include <malloc.h>
+#define BUFFER_SIZE(ptr) _msize(ptr)
+#else
+#error Unsupported OS
+#endif
+
+#endif
+
 void* aMalloc_(size_t size, const char *file, int line, const char *func)
 {
 	void *ret = MALLOC(size, file, line, func);
@@ -110,6 +130,34 @@ void* aRealloc_(void *p, size_t size, const char *file, int line, const char *fu
 	}
 	return ret;
 }
+
+void* aReallocz_(void *p, size_t size, const char *file, int line, const char *func)
+{
+	void *ret;
+	// ShowMessage("%s:%d: in func %s: aReallocz %p %ld\n",file,line,func,p,size);
+#ifdef USE_MEMMGR
+	ret = REALLOC(p, size, file, line, func);
+#else
+	size_t newSize;
+	if (p) {
+		size_t oldSize = malloc_usable_size(p);
+		ret = REALLOC(p, size, file, line, func);
+		newSize = BUFFER_SIZE(ret);
+		if (ret && newSize > oldSize)
+			memset(ret + oldSize, 0, newSize - oldSize);
+	} else {
+		ret = REALLOC(p, size, file, line, func);
+		if (ret)
+			memset(ret, 0, BUFFER_SIZE(ret));
+	}
+#endif
+	if (ret == NULL){
+		ShowFatalError("%s:%d: in func %s: aRealloc error out of memory!\n",file,line,func);
+		exit(EXIT_FAILURE);
+	}
+	return ret;
+}
+
 char* aStrdup_(const char *p, const char *file, int line, const char *func)
 {
 	char *ret = STRDUP(p, file, line, func);
@@ -888,7 +936,7 @@ void malloc_defaults(void) {
 	iMalloc->malloc   = aMalloc_;
 	iMalloc->calloc   = aCalloc_;
 	iMalloc->realloc  = aRealloc_;
-	iMalloc->reallocz = aRealloc_;/* not using memory manager huhum o.o perhaps we could still do something about */
+	iMalloc->reallocz = aReallocz_;/* not using memory manager huhum o.o perhaps we could still do something about */
 	iMalloc->astrdup  = aStrdup_;
 	iMalloc->free     = aFree_;
 #endif
