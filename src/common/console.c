@@ -16,7 +16,7 @@
 #ifndef MINICORE
 #	include "common/atomic.h"
 #	include "common/ers.h"
-#	include "common/malloc.h"
+#	include "common/memmgr.h"
 #	include "common/mutex.h"
 #	include "common/spinlock.h"
 #	include "common/sql.h"

@@ -73,7 +73,7 @@
 #include "db.h"
 
 #include "common/ers.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/showmsg.h"
 #include "common/strlib.h"

@@ -11,7 +11,7 @@
 #include "common/console.h"
 #include "common/core.h"
 #include "common/db.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/mapindex.h"
 #include "common/mmo.h"
 #include "common/showmsg.h"

@@ -42,7 +42,7 @@
 #include "common/conf.h"
 #include "common/ers.h"
 #include "common/grfio.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/mmo.h" // NEW_CARTS
 #include "common/nullpo.h"
 #include "common/random.h"

@@ -41,7 +41,7 @@
 #include "common/conf.h"
 #include "common/core.h" // get_svn_revision()
 #include "common/HPM.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/mmo.h" // NAME_LENGTH, MAX_CARTS, NEW_CARTS
 #include "common/nullpo.h"
 #include "common/random.h"

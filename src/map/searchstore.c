@@ -10,7 +10,7 @@
 #include "map/clif.h" // clif-"open_search_store_info, clif-"search_store_info_*
 #include "map/pc.h" // struct map_session_data
 #include "common/cbasetypes.h"
-#include "common/malloc.h" // aMalloc, aRealloc, aFree
+#include "common/memmgr.h" // aMalloc, aRealloc, aFree
 #include "common/showmsg.h" // ShowError, ShowWarning
 #include "common/strlib.h" // safestrncpy
 
