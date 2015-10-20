@@ -23,6 +23,7 @@ struct mail_interface *mail;
 
 void mail_clear(struct map_session_data *sd)
 {
+	nullpo_retv(sd);
 	sd->mail.nameid = 0;
 	sd->mail.index = 0;
 	sd->mail.amount = 0;
@@ -64,6 +65,7 @@ int mail_removezeny(struct map_session_data *sd, short flag)
 
 unsigned char mail_setitem(struct map_session_data *sd, int idx, int amount) {
 
+	nullpo_retr(1, sd);
 	if( pc_istrading(sd) )
 		return 1;
 
@@ -109,6 +111,7 @@ bool mail_setattachment(struct map_session_data *sd, struct mail_message *msg)
 		return false;
 
 	n = sd->mail.index;
+	Assert_retr(false, n >= 0 && n < MAX_INVENTORY);
 	if( sd->mail.amount )
 	{
 		if( sd->status.inventory[n].nameid != sd->mail.nameid )
@@ -139,6 +142,8 @@ bool mail_setattachment(struct map_session_data *sd, struct mail_message *msg)
 
 void mail_getattachment(struct map_session_data* sd, int zeny, struct item* item)
 {
+	nullpo_retv(sd);
+	nullpo_retv(item);
 	if( item->nameid > 0 && item->amount > 0 )
 	{
 		pc->additem(sd, item, item->amount, LOG_TYPE_MAIL);
@@ -184,6 +189,7 @@ void mail_deliveryfail(struct map_session_data *sd, struct mail_message *msg)
 
 // This function only check if the mail operations are valid
 bool mail_invalid_operation(struct map_session_data *sd) {
+	nullpo_retr(false, sd);
 	if( !map->list[sd->bl.m].flag.town && !pc->can_use_command(sd, "@mail") ) {
 		ShowWarning("clif->parse_Mail: char '%s' trying to do invalid mail operations.\n", sd->status.name);
 		return true;
