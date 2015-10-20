@@ -46001,15 +46001,15 @@ bool HP_mob_get_const(const config_setting_t *it, int *value) {
 	}
 	return retVal___;
 }
-int HP_mob_read_libconfig(const char *filename) {
+int HP_mob_read_libconfig(const char *filename, bool ignore_missing) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_read_libconfig_pre ) {
-		int (*preHookFunc) (const char *filename);
+		int (*preHookFunc) (const char *filename, bool *ignore_missing);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_libconfig_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_mob_read_libconfig_pre[hIndex].func;
-			retVal___ = preHookFunc(filename);
+			retVal___ = preHookFunc(filename, &ignore_missing);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -46017,13 +46017,13 @@ int HP_mob_read_libconfig(const char *filename) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.mob.read_libconfig(filename);
+		retVal___ = HPMHooks.source.mob.read_libconfig(filename, ignore_missing);
 	}
 	if( HPMHooks.count.HP_mob_read_libconfig_post ) {
-		int (*postHookFunc) (int retVal___, const char *filename);
+		int (*postHookFunc) (int retVal___, const char *filename, bool *ignore_missing);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_libconfig_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_mob_read_libconfig_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, filename);
+			retVal___ = postHookFunc(retVal___, filename, &ignore_missing);
 		}
 	}
 	return retVal___;
