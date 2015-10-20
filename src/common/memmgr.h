@@ -1,8 +1,8 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef COMMON_MALLOC_H
-#define COMMON_MALLOC_H
+#ifndef COMMON_MEMMGR_H
+#define COMMON_MEMMGR_H
 
 #include "common/hercules.h"
 
@@ -86,4 +86,4 @@ void memmgr_report(int extra);
 
 HPShared struct malloc_interface *iMalloc;
 
-#endif /* COMMON_MALLOC_H */
+#endif /* COMMON_MEMMGR_H */
