@@ -4256,19 +4256,13 @@ void mob_readdb(void) {
 	int i;
 
 	for (i = 0; i < ARRAYLENGTH(filename); ++i) {
-		if (i > 0) {
-			if (!exists(filename[i])) {
-				continue;
-			}
-		}
-
-		mob->read_libconfig(filename[i]);
+		mob->read_libconfig(filename[i], i > 0 ? true : false);
 	}
 	mob->name_constants();
 }
 
 
-int mob_read_libconfig(const char *filename)
+int mob_read_libconfig(const char *filename, bool ignore_missing)
 {
 	config_t mob_db_conf;
 	char filepath[256];
@@ -4278,6 +4272,9 @@ int mob_read_libconfig(const char *filename)
 
 	nullpo_ret(filename);
 	sprintf(filepath, "%s/%s", map->db_path, filename);
+
+	if (ignore_missing && !exists(filepath))
+		return 0;
 
 	if (libconfig->read_file(&mob_db_conf, filepath) || !(mdb = libconfig->setting_get_member(mob_db_conf.root, "mob_db"))) {
 		ShowError("can't read %s\n", filepath);
