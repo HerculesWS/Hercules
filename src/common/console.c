@@ -362,7 +362,6 @@ void console_parse_sub(char *line)
 	char *tok;
 	char sublist[CP_CMD_LENGTH * 5];
 	int i;
-	unsigned int len = 0;
 
 	memcpy(bline, line, 200);
 	tok = strtok(line, " ");
@@ -375,19 +374,15 @@ void console_parse_sub(char *line)
 
 	cmd = VECTOR_INDEX(console->input->command_list, i);
 
-	len += snprintf(sublist,CP_CMD_LENGTH * 5,"%s", cmd->cmd);
+	snprintf(sublist, sizeof(sublist), "%s", cmd->cmd);
 
 	if (cmd->type == CPET_FUNCTION) {
-		char *r = NULL;
-		if( (tok = strtok(NULL, " ")) ) {
-			r = bline;
-			r += len + 1;
-		}
-		cmd->u.func(r);
+		tok = strtok(NULL, "");
+		cmd->u.func(tok);
 		return;
 	}
 
-	while (( tok = strtok(NULL, " ") ) != NULL) {
+	while ((tok = strtok(NULL, " ")) != NULL) {
 		struct CParseEntry *entry = NULL;
 
 		Assert_retv(cmd->type == CPET_CATEGORY);
@@ -409,17 +404,15 @@ void console_parse_sub(char *line)
 		}
 		entry = VECTOR_INDEX(cmd->u.children, i);
 		if (entry->type == CPET_FUNCTION) {
-			char *r = NULL;
-			if ((tok = strtok(NULL, " "))) {
-				r = bline;
-				r += len + strlen(entry->cmd) + 1;
-			}
-			entry->u.func(r);
+			tok = strtok(NULL, "");
+			entry->u.func(tok);
 			return;
 		}
 
 		cmd = entry;
-		len += snprintf(sublist + len,(CP_CMD_LENGTH * 5) - len," %s", cmd->cmd);
+
+		if (strlen(sublist) < sizeof(sublist)-1)
+			snprintf(sublist+strlen(sublist), sizeof(sublist), " %s", cmd->cmd);
 	}
 	ShowError("Is only a category, type '"CL_WHITE"%s help"CL_RESET"' to list its subcommands\n",sublist);
 }
