@@ -10130,6 +10130,9 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 				clif->message(fd, msg_fd(fd,1402));
 			}
 			return;
+		} else if (strcmpi(&chname[1], channel->config->ally_name) == 0) {
+			clif->message(fd, msg_fd(fd,1294)); // You're not allowed to talk on this channel
+			return;
 		}
 	}
 
