@@ -15477,41 +15477,55 @@ void clif_parse_PartyTick(int fd, struct map_session_data* sd)
 
 /// Sends list of all quest states (ZC_ALL_QUEST_LIST).
 /// 02b1 <packet len>.W <num>.L { <quest id>.L <active>.B }*num
+/// 097a <packet len>.W <num>.L { <quest id>.L <active>.B <remaining time>.L <time>.L <count>.W { <mob_id>.L <killed>.W <total>.W <mob name>.24B }*count }*num
 void clif_quest_send_list(struct map_session_data *sd)
 {
-	int fd = sd->fd;
-	int i;
-#if PACKETVER >= 20141022
-	int info_len = 15;
-	int len;
+	int i, len, real_len;
+	uint8 *buf = NULL;
+	struct packet_quest_list_header *packet = NULL;
 	nullpo_retv(sd);
-	len = sd->avail_quests*info_len+8;
-	WFIFOHEAD(fd,len);
-	WFIFOW(fd, 0) = 0x97a;
-#else
-	int info_len = 5;
-	int len;
-	nullpo_retv(sd);
-	len = sd->avail_quests*info_len+8;
-	WFIFOHEAD(fd,len);
-	WFIFOW(fd, 0) = 0x2b1;
-#endif
-	WFIFOW(fd, 2) = len;
-	WFIFOL(fd, 4) = sd->avail_quests;
+
+	len = sizeof(struct packet_quest_list_header)
+	    + sd->avail_quests * (sizeof(struct packet_quest_list_info)
+	                         + MAX_QUEST_OBJECTIVES * sizeof(struct packet_mission_info_sub)); // >= than the actual length
+	buf = aMalloc(len);
+	packet = (struct packet_quest_list_header *)WBUFP(buf, 0);
+	real_len = sizeof(*packet);
+
+	packet->PacketType = questListType;
+	packet->questCount = sd->avail_quests;
 
 	for (i = 0; i < sd->avail_quests; i++) {
-	#if PACKETVER >= 20141022
+		struct packet_quest_list_info *info = (struct packet_quest_list_info *)(buf+real_len);
+#if PACKETVER >= 20141022
 		struct quest_db *qi = quest->db(sd->quest_log[i].quest_id);
-	#endif
-		WFIFOL(fd, i*info_len+8) = sd->quest_log[i].quest_id;
-		WFIFOB(fd, i*info_len+12) = sd->quest_log[i].state;
-	#if PACKETVER >= 20141022
-		WFIFOL(fd, i*info_len+13) = sd->quest_log[i].time - qi->time;
-		WFIFOL(fd, i*info_len+17) = sd->quest_log[i].time;
-		WFIFOW(fd, i*info_len+21) = qi->objectives_count;
-	#endif
+		int j;
+#endif // PACKETVER >= 20141022
+		real_len += sizeof(*info);
+
+		info->questID = sd->quest_log[i].quest_id;
+		info->active = sd->quest_log[i].state;
+#if PACKETVER >= 20141022
+		info->quest_svrTime = sd->quest_log[i].time - qi->time;
+		info->quest_endTime = sd->quest_log[i].time;
+		info->hunting_count = qi->objectives_count;
+
+		for (j = 0; j < qi->objectives_count; j++) {
+			struct mob_db *mob_data;
+			Assert_retb(j < MAX_QUEST_OBJECTIVES);
+			real_len += sizeof(info->objectives[j]);
+
+			mob_data = mob->db(qi->objectives[j].mob);
+
+			info->objectives[j].mob_id = qi->objectives[j].mob;
+			info->objectives[j].huntCount = sd->quest_log[i].count[j];
+			info->objectives[j].maxCount = qi->objectives[j].count;
+			safestrncpy(info->objectives[j].mobName, mob_data->jname, sizeof(info->objectives[j].mobName));
+		}
+#endif // PACKETVER >= 20141022
 	}
-	WFIFOSET(fd, len);
+	packet->PacketLength = real_len;
+	clif->send(buf, real_len, &sd->bl, SELF);
 }
 
 /// Sends list of all quest missions (ZC_ALL_QUEST_MISSION).
