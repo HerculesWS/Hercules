@@ -28,7 +28,7 @@
 #include "map/vending.h"
 #include "common/cbasetypes.h"
 #include "common/ers.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/random.h"
 #include "common/showmsg.h"
@@ -12279,64 +12279,83 @@ bool status_readdb_sizefix(char* fields[], int columns, int current)
  *                validation errors.
  * @return # of the validated entry, or 0 in case of failure.
  */
-int status_readdb_refine_libconfig_sub(config_setting_t *r, const char *name, const char *source) {
+int status_readdb_refine_libconfig_sub(config_setting_t *r, const char *name, const char *source)
+{
 	config_setting_t *rate = NULL;
-	int i=0, type=0, bonus_per_level=0, rnd_bonus_v=0, rnd_bonus_lv=0;
+	int type = REFINE_TYPE_ARMOR, bonus_per_level = 0, rnd_bonus_v = 0, rnd_bonus_lv = 0;
 	char lv[4];
+	nullpo_ret(r);
+	nullpo_ret(name);
+	nullpo_ret(source);
 	
-	if(!strncmp(name, "Armors", 6)) {
-		type = 0;
-	} else if(strncmp(name, "WeaponLevel", 11) || !strspn(&name[strlen(name)-1], "0123456789") || !(type = atoi(strncpy(lv, name+11, 2)))) {
+	if (strncmp(name, "Armors", 6) == 0) {
+		type = REFINE_TYPE_ARMOR;
+	} else if (strncmp(name, "WeaponLevel", 11) != 0 || !strspn(&name[strlen(name)-1], "0123456789") || (type = atoi(strncpy(lv, name+11, 2))) == REFINE_TYPE_ARMOR) {
 		ShowError("status_readdb_refine_libconfig_sub: Invalid key name for entry '%s' in \"%s\", skipping.\n", name, source);
 		return 0;
 	}
-	if(type < REFINE_TYPE_ARMOR || type >= REFINE_TYPE_MAX) {
+	if (type < REFINE_TYPE_ARMOR || type >= REFINE_TYPE_MAX) {
 		ShowError("status_readdb_refine_libconfig_sub: Out of range level for entry '%s' in \"%s\", skipping.\n", name, source);
 		return 0;
-	} else if(!libconfig->setting_lookup_int(r, "StatsPerLevel", &bonus_per_level)) {
+	}
+	if (!libconfig->setting_lookup_int(r, "StatsPerLevel", &bonus_per_level)) {
 		ShowWarning("status_readdb_refine_libconfig_sub: Missing StatsPerLevel for entry '%s' in \"%s\", skipping.\n", name, source);
 		return 0;
-	} else if(!libconfig->setting_lookup_int(r, "RandomBonusStartLevel", &rnd_bonus_lv)) {
+	}
+	if (!libconfig->setting_lookup_int(r, "RandomBonusStartLevel", &rnd_bonus_lv)) {
 		ShowWarning("status_readdb_refine_libconfig_sub: Missing RandomBonusStartLevel for entry '%s' in \"%s\", skipping.\n", name, source);
 		return 0;
-	} else if(!libconfig->setting_lookup_int(r, "RandomBonusValue", &rnd_bonus_v)) {
+	}
+	if (!libconfig->setting_lookup_int(r, "RandomBonusValue", &rnd_bonus_v)) {
 		ShowWarning("status_readdb_refine_libconfig_sub: Missing RandomBonusValue for entry '%s' in \"%s\", skipping.\n", name, source);
 		return 0;
 	}
 
-	if((rate=libconfig->setting_get_member(r, "Rates")) && config_setting_is_group(rate)) {
+	if ((rate=libconfig->setting_get_member(r, "Rates")) != NULL && config_setting_is_group(rate)) {
 		config_setting_t *t = NULL;
 		bool duplicate[MAX_REFINE];
-		int bonus_[MAX_REFINE], rnd_bonus[MAX_REFINE], chance_[MAX_REFINE];
+		int bonus[MAX_REFINE], rnd_bonus[MAX_REFINE], chance[MAX_REFINE];
+		int i;
+		memset(&duplicate, 0, sizeof(duplicate));
+		memset(&bonus, 0, sizeof(bonus));
+		memset(&rnd_bonus, 0, sizeof(rnd_bonus));
 
-		memset(&duplicate,0,sizeof(duplicate));
-		memset(&bonus_,0,sizeof(bonus_));
-		memset(&rnd_bonus,0,sizeof(rnd_bonus));
-		memset(&chance_,0,sizeof(chance_));
-		i=0;
-		while( (t = libconfig->setting_get_elem(rate,i++)) && config_setting_is_group(t) ) {
-			int level=0, chance=0, bonus=0;
+		for (i = 0; i < MAX_REFINE; i++) {
+			chance[i] = 100;
+		}
+		i = 0;
+		while ((t = libconfig->setting_get_elem(rate,i++)) != NULL && config_setting_is_group(t)) {
+			int level = 0, i32;
 			char *rlvl = config_setting_name(t);
-			memset(&lv,0, sizeof(lv));
-			if(!strspn(&rlvl[strlen(rlvl)-1], "0123456789") || (level = atoi(strncpy(lv, rlvl+2, 3))) <= 0) {
+			memset(&lv, 0, sizeof(lv));
+			if (!strspn(&rlvl[strlen(rlvl)-1], "0123456789") || (level = atoi(strncpy(lv, rlvl+2, 3))) <= 0) {
 				ShowError("status_readdb_refine_libconfig_sub: Invalid refine level format '%s' for entry %s in \"%s\"... skipping.\n", rlvl, name, source);
 				continue;
-			} else if(level <= 0 || level > MAX_REFINE) {
+			}
+			if (level <= 0 || level > MAX_REFINE) {
 				ShowError("status_readdb_refine_libconfig_sub: Out of range refine level '%s' for entry %s in \"%s\"... skipping.\n", rlvl, name, source);
 				continue;
-			} else if(duplicate[level-1]) {
-				ShowWarning("status_readdb_refine_libconfig_sub: duplicate rate '%s' for entry %s in \"%s\", overwriting previous entry...\n", rlvl, name, source);
-			} else duplicate[level-1] = true;
+			}
 			level--;
-			chance_[level] = libconfig->setting_lookup_int(t, "Chance", &chance)?chance:100;
-			bonus_[level] = bonus_per_level + libconfig->setting_lookup_int(t, "Bonus", &bonus)?bonus:0;
-			if ( level >= rnd_bonus_lv - 1 ) rnd_bonus[level] = rnd_bonus_v * (level - rnd_bonus_lv + 2);
+			if (duplicate[level]) {
+				ShowWarning("status_readdb_refine_libconfig_sub: duplicate rate '%s' for entry %s in \"%s\", overwriting previous entry...\n", rlvl, name, source);
+			} else {
+				duplicate[level] = true;
+			}
+			if (libconfig->setting_lookup_int(t, "Chance", &i32))
+				chance[level] = i32;
+			else
+				chance[level] = 100;
+			if (libconfig->setting_lookup_int(t, "Bonus", &i32))
+				bonus[level] += i32;
+			if (level >= rnd_bonus_lv - 1)
+				rnd_bonus[level] = rnd_bonus_v * (level - rnd_bonus_lv + 2);
 		}
-		for(i=0; i < MAX_REFINE; i++) {
-			status->dbs->refine_info[type].chance[i] = chance_[i]?chance_[i]:100;
+		for (i = 0; i < MAX_REFINE; i++) {
+			status->dbs->refine_info[type].chance[i] = chance[i];
 			status->dbs->refine_info[type].randombonus_max[i] = rnd_bonus[i];
-			bonus_[i] += i?bonus_[i-1]:0;
-			status->dbs->refine_info[type].bonus[i] = bonus_[i]?bonus_[i]:0;
+			bonus[i] += bonus_per_level + (i > 0 ? bonus[i-1] : 0);
+			status->dbs->refine_info[type].bonus[i] = bonus[i];
 		}
 	} else {
 		ShowWarning("status_readdb_refine_libconfig_sub: Missing refine rates for entry '%s' in \"%s\", skipping.\n", name, source);

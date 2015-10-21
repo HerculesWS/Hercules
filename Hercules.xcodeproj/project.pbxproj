@@ -11,7 +11,7 @@
 		A5380CD81856CE8A0090CBC4 /* console.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC692185643BB009EB79C /* console.c */; };
 		A5380CD91856CF4A0090CBC4 /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC694185643BB009EB79C /* core.c */; };
 		A5380CDA1856D0650090CBC4 /* socket.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6BA185643BB009EB79C /* socket.c */; };
-		A5380CDB1856D0690090CBC4 /* malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* malloc.c */; };
+		A5380CDB1856D0690090CBC4 /* memmgr.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* memmgr.c */; };
 		A5467AD31A16FCB4008AFAA6 /* loginif.c in Sources */ = {isa = PBXBuildFile; fileRef = A5467AD11A16FCB4008AFAA6 /* loginif.c */; };
 		A5467AD61A16FCDC008AFAA6 /* mapif.c in Sources */ = {isa = PBXBuildFile; fileRef = A5467AD41A16FCDC008AFAA6 /* mapif.c */; };
 		A5467AD91A16FD08008AFAA6 /* geoip.c in Sources */ = {isa = PBXBuildFile; fileRef = A5467AD71A16FD08008AFAA6 /* geoip.c */; };
@@ -50,9 +50,9 @@
 		A56CC6E1185643BB009EB79C /* HPM.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A0185643BB009EB79C /* HPM.c */; };
 		A56CC6E2185643BB009EB79C /* HPM.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A0185643BB009EB79C /* HPM.c */; };
 		A56CC6E3185643BB009EB79C /* HPM.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A0185643BB009EB79C /* HPM.c */; };
-		A56CC6E4185643BB009EB79C /* malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* malloc.c */; };
-		A56CC6E5185643BB009EB79C /* malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* malloc.c */; };
-		A56CC6E6185643BB009EB79C /* malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* malloc.c */; };
+		A56CC6E4185643BB009EB79C /* memmgr.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* memmgr.c */; };
+		A56CC6E5185643BB009EB79C /* memmgr.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* memmgr.c */; };
+		A56CC6E6185643BB009EB79C /* memmgr.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* memmgr.c */; };
 		A56CC6E7185643BB009EB79C /* mapindex.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A5185643BB009EB79C /* mapindex.c */; };
 		A56CC6E8185643BB009EB79C /* mapindex.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A5185643BB009EB79C /* mapindex.c */; };
 		A56CC6E9185643BB009EB79C /* mapindex.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A5185643BB009EB79C /* mapindex.c */; };
@@ -256,8 +256,8 @@
 		A56CC6A0185643BB009EB79C /* HPM.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = HPM.c; path = src/common/HPM.c; sourceTree = "<group>"; };
 		A56CC6A1185643BB009EB79C /* HPM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HPM.h; path = src/common/HPM.h; sourceTree = "<group>"; };
 		A56CC6A2185643BB009EB79C /* HPMi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HPMi.h; path = src/common/HPMi.h; sourceTree = "<group>"; };
-		A56CC6A3185643BB009EB79C /* malloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = malloc.c; path = src/common/malloc.c; sourceTree = "<group>"; };
-		A56CC6A4185643BB009EB79C /* malloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = malloc.h; path = src/common/malloc.h; sourceTree = "<group>"; };
+		A56CC6A3185643BB009EB79C /* memmgr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = memmgr.c; path = src/common/memmgr.c; sourceTree = "<group>"; };
+		A56CC6A4185643BB009EB79C /* memmgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = memmgr.h; path = src/common/memmgr.h; sourceTree = "<group>"; };
 		A56CC6A5185643BB009EB79C /* mapindex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mapindex.c; path = src/common/mapindex.c; sourceTree = "<group>"; };
 		A56CC6A6185643BB009EB79C /* mapindex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mapindex.h; path = src/common/mapindex.h; sourceTree = "<group>"; };
 		A56CC6A7185643BB009EB79C /* md5calc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = md5calc.c; path = src/common/md5calc.c; sourceTree = "<group>"; };
@@ -719,8 +719,8 @@
 				A56CC6A0185643BB009EB79C /* HPM.c */,
 				A56CC6A1185643BB009EB79C /* HPM.h */,
 				A56CC6A2185643BB009EB79C /* HPMi.h */,
-				A56CC6A3185643BB009EB79C /* malloc.c */,
-				A56CC6A4185643BB009EB79C /* malloc.h */,
+				A56CC6A3185643BB009EB79C /* memmgr.c */,
+				A56CC6A4185643BB009EB79C /* memmgr.h */,
 				A56CC6A5185643BB009EB79C /* mapindex.c */,
 				A56CC6A6185643BB009EB79C /* mapindex.h */,
 				A56CC6A7185643BB009EB79C /* md5calc.c */,
@@ -1170,7 +1170,7 @@
 				A5380CDA1856D0650090CBC4 /* socket.c in Sources */,
 				A55AED7C1B8153F100149CF8 /* scanner.c in Sources */,
 				A58A5A17185800A40099683E /* showmsg.c in Sources */,
-				A5380CDB1856D0690090CBC4 /* malloc.c in Sources */,
+				A5380CDB1856D0690090CBC4 /* memmgr.c in Sources */,
 				A55AED7B1B8153EF00149CF8 /* scanctx.c in Sources */,
 				A55AED791B8153EA00149CF8 /* grammar.c in Sources */,
 				A55AED7D1B8153F300149CF8 /* strbuf.c in Sources */,
@@ -1208,7 +1208,7 @@
 				A56CC72E18564C05009EB79C /* grammar.c in Sources */,
 				A56CC705185643BB009EB79C /* socket.c in Sources */,
 				A56CC68918564387009EB79C /* account_sql.c in Sources */,
-				A56CC6E4185643BB009EB79C /* malloc.c in Sources */,
+				A56CC6E4185643BB009EB79C /* memmgr.c in Sources */,
 				A56CC6E1185643BB009EB79C /* HPM.c in Sources */,
 				A56CC6FF185643BB009EB79C /* random.c in Sources */,
 				A56CC73418564C05009EB79C /* scanctx.c in Sources */,
@@ -1241,7 +1241,7 @@
 				A5B894AD1A03CDFA005AD22E /* HPMchar.c in Sources */,
 				A56CC761185657D9009EB79C /* int_homun.c in Sources */,
 				A56CC6FA185643BB009EB79C /* nullpo.c in Sources */,
-				A56CC6E5185643BB009EB79C /* malloc.c in Sources */,
+				A56CC6E5185643BB009EB79C /* memmgr.c in Sources */,
 				A56CC6E2185643BB009EB79C /* HPM.c in Sources */,
 				A56CC765185657D9009EB79C /* int_pet.c in Sources */,
 				A56CC769185657D9009EB79C /* pincode.c in Sources */,
@@ -1314,7 +1314,7 @@
 				A56CC7D318565812009EB79C /* path.c in Sources */,
 				A56CC7C218565812009EB79C /* elemental.c in Sources */,
 				A56CC6FB185643BB009EB79C /* nullpo.c in Sources */,
-				A56CC6E6185643BB009EB79C /* malloc.c in Sources */,
+				A56CC6E6185643BB009EB79C /* memmgr.c in Sources */,
 				A56CC7D418565812009EB79C /* pc_groups.c in Sources */,
 				A56CC6E3185643BB009EB79C /* HPM.c in Sources */,
 				A56CC7DD18565812009EB79C /* trade.c in Sources */,

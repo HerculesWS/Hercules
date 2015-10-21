@@ -10,7 +10,7 @@
 #include "map/map.h"
 #include "map/pc.h"
 #include "common/cbasetypes.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/random.h"
 #include "common/showmsg.h"
 #include "common/socket.h"

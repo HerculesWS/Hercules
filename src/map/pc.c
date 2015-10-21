@@ -41,7 +41,7 @@
 #include "common/conf.h"
 #include "common/core.h" // get_svn_revision()
 #include "common/HPM.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/mmo.h" // NAME_LENGTH, MAX_CARTS, NEW_CARTS
 #include "common/nullpo.h"
 #include "common/random.h"
@@ -4112,7 +4112,10 @@ bool pc_can_insert_card(struct map_session_data* sd, int idx_card)
 }
 
 /*==========================================
- * Append a card to an item ?
+ * Attempt to insert card into item.
+ * Return:
+ *   0 = fail
+ *   1 = success
  *------------------------------------------*/
 int pc_insert_card(struct map_session_data* sd, int idx_card, int idx_equip)
 {
@@ -4143,6 +4146,7 @@ int pc_insert_card(struct map_session_data* sd, int idx_card, int idx_equip)
 		sd->status.inventory[idx_equip].card[i] = nameid;
 		logs->pick_pc(sd, LOG_TYPE_OTHER,  1, &sd->status.inventory[idx_equip],sd->inventory_data[idx_equip]);
 		clif->insert_card(sd,idx_equip,idx_card,0);
+		return 1;
 	}
 
 	return 0;

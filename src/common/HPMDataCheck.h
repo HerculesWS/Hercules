@@ -144,16 +144,16 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define COMMON_HPMI_H
 	#endif // COMMON_HPMI_H
-	#ifdef COMMON_MALLOC_H
-		{ "malloc_interface", sizeof(struct malloc_interface), SERVER_TYPE_ALL },
-	#else
-		#define COMMON_MALLOC_H
-	#endif // COMMON_MALLOC_H
 	#ifdef COMMON_MAPINDEX_H
 		{ "mapindex_interface", sizeof(struct mapindex_interface), SERVER_TYPE_CHAR|SERVER_TYPE_MAP },
 	#else
 		#define COMMON_MAPINDEX_H
 	#endif // COMMON_MAPINDEX_H
+	#ifdef COMMON_MEMMGR_H
+		{ "malloc_interface", sizeof(struct malloc_interface), SERVER_TYPE_ALL },
+	#else
+		#define COMMON_MEMMGR_H
+	#endif // COMMON_MEMMGR_H
 	#ifdef COMMON_MMO_H
 		{ "auction_data", sizeof(struct auction_data), SERVER_TYPE_ALL },
 		{ "fame_list", sizeof(struct fame_list), SERVER_TYPE_ALL },

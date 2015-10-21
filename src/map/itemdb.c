@@ -14,7 +14,7 @@
 #include "map/script.h" // item script processing
 #include "common/HPM.h"
 #include "common/conf.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/random.h"
 #include "common/showmsg.h"

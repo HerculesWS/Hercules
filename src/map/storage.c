@@ -18,7 +18,7 @@
 #include "map/pc.h"
 #include "common/cbasetypes.h"
 #include "common/db.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/nullpo.h"
 
 #include <stdio.h>
