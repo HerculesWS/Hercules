@@ -35631,33 +35631,6 @@ void HP_itemdb_readdb_additional_fields(int itemid, config_setting_t *it, int n,
 	}
 	return;
 }
-int HP_itemdb_readdb_sql_sub(Sql *handle, int n, const char *source) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if( HPMHooks.count.HP_itemdb_readdb_sql_sub_pre ) {
-		int (*preHookFunc) (Sql *handle, int *n, const char *source);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_sql_sub_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_itemdb_readdb_sql_sub_pre[hIndex].func;
-			retVal___ = preHookFunc(handle, &n, source);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.itemdb.readdb_sql_sub(handle, n, source);
-	}
-	if( HPMHooks.count.HP_itemdb_readdb_sql_sub_post ) {
-		int (*postHookFunc) (int retVal___, Sql *handle, int *n, const char *source);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_sql_sub_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_itemdb_readdb_sql_sub_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, handle, &n, source);
-		}
-	}
-	return retVal___;
-}
 int HP_itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -35708,33 +35681,6 @@ int HP_itemdb_readdb_libconfig(const char *filename) {
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_libconfig_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_itemdb_readdb_libconfig_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, filename);
-		}
-	}
-	return retVal___;
-}
-int HP_itemdb_readdb_sql(const char *tablename) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if( HPMHooks.count.HP_itemdb_readdb_sql_pre ) {
-		int (*preHookFunc) (const char *tablename);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_sql_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_itemdb_readdb_sql_pre[hIndex].func;
-			retVal___ = preHookFunc(tablename);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.itemdb.readdb_sql(tablename);
-	}
-	if( HPMHooks.count.HP_itemdb_readdb_sql_post ) {
-		int (*postHookFunc) (int retVal___, const char *tablename);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_sql_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_itemdb_readdb_sql_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, tablename);
 		}
 	}
 	return retVal___;
@@ -46371,33 +46317,6 @@ void HP_mob_readskilldb(void) {
 		}
 	}
 	return;
-}
-int HP_mob_read_sqlskilldb(void) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if( HPMHooks.count.HP_mob_read_sqlskilldb_pre ) {
-		int (*preHookFunc) (void);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_sqlskilldb_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_mob_read_sqlskilldb_pre[hIndex].func;
-			retVal___ = preHookFunc();
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.mob.read_sqlskilldb();
-	}
-	if( HPMHooks.count.HP_mob_read_sqlskilldb_post ) {
-		int (*postHookFunc) (int retVal___);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_sqlskilldb_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_mob_read_sqlskilldb_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___);
-		}
-	}
-	return retVal___;
 }
 bool HP_mob_readdb_race2(char *fields[], int columns, int current) {
 	int hIndex = 0;

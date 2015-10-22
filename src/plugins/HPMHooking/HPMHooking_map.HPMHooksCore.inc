@@ -2689,14 +2689,10 @@ struct {
 	struct HPMHookPoint *HP_itemdb_validate_entry_post;
 	struct HPMHookPoint *HP_itemdb_readdb_additional_fields_pre;
 	struct HPMHookPoint *HP_itemdb_readdb_additional_fields_post;
-	struct HPMHookPoint *HP_itemdb_readdb_sql_sub_pre;
-	struct HPMHookPoint *HP_itemdb_readdb_sql_sub_post;
 	struct HPMHookPoint *HP_itemdb_readdb_libconfig_sub_pre;
 	struct HPMHookPoint *HP_itemdb_readdb_libconfig_sub_post;
 	struct HPMHookPoint *HP_itemdb_readdb_libconfig_pre;
 	struct HPMHookPoint *HP_itemdb_readdb_libconfig_post;
-	struct HPMHookPoint *HP_itemdb_readdb_sql_pre;
-	struct HPMHookPoint *HP_itemdb_readdb_sql_post;
 	struct HPMHookPoint *HP_itemdb_unique_id_pre;
 	struct HPMHookPoint *HP_itemdb_unique_id_post;
 	struct HPMHookPoint *HP_itemdb_read_pre;
@@ -3473,8 +3469,6 @@ struct {
 	struct HPMHookPoint *HP_mob_parse_row_mobskilldb_post;
 	struct HPMHookPoint *HP_mob_readskilldb_pre;
 	struct HPMHookPoint *HP_mob_readskilldb_post;
-	struct HPMHookPoint *HP_mob_read_sqlskilldb_pre;
-	struct HPMHookPoint *HP_mob_read_sqlskilldb_post;
 	struct HPMHookPoint *HP_mob_readdb_race2_pre;
 	struct HPMHookPoint *HP_mob_readdb_race2_post;
 	struct HPMHookPoint *HP_mob_readdb_itemratio_pre;
@@ -8460,14 +8454,10 @@ struct {
 	int HP_itemdb_validate_entry_post;
 	int HP_itemdb_readdb_additional_fields_pre;
 	int HP_itemdb_readdb_additional_fields_post;
-	int HP_itemdb_readdb_sql_sub_pre;
-	int HP_itemdb_readdb_sql_sub_post;
 	int HP_itemdb_readdb_libconfig_sub_pre;
 	int HP_itemdb_readdb_libconfig_sub_post;
 	int HP_itemdb_readdb_libconfig_pre;
 	int HP_itemdb_readdb_libconfig_post;
-	int HP_itemdb_readdb_sql_pre;
-	int HP_itemdb_readdb_sql_post;
 	int HP_itemdb_unique_id_pre;
 	int HP_itemdb_unique_id_post;
 	int HP_itemdb_read_pre;
@@ -9244,8 +9234,6 @@ struct {
 	int HP_mob_parse_row_mobskilldb_post;
 	int HP_mob_readskilldb_pre;
 	int HP_mob_readskilldb_post;
-	int HP_mob_read_sqlskilldb_pre;
-	int HP_mob_read_sqlskilldb_post;
 	int HP_mob_readdb_race2_pre;
 	int HP_mob_readdb_race2_post;
 	int HP_mob_readdb_itemratio_pre;
