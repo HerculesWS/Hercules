@@ -257,6 +257,13 @@ enum packet_headers {
 	rouletteinfoackType = 0xa1c,
 	roulettgenerateackType = 0xa20,
 	roulettercvitemackType = 0xa22,
+#if 0 // Unknown
+	questListType = 0x9f8, ///< ZC_ALL_QUEST_LIST3
+#elif PACKETVER >= 20141022
+	questListType = 0x97a, ///< ZC_ALL_QUEST_LIST2
+#else // PACKETVER < 20141022
+	questListType = 0x2b1, ///< ZC_ALL_QUEST_LIST
+#endif // PACKETVER >= 20141022
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -1099,6 +1106,47 @@ struct packet_hotkey {
 		unsigned int ID;	// Item/Skill ID
 		short count;		// Item Quantity/Skill Level
 	} hotkey[MAX_HOTKEYS];
+} __attribute__((packed));
+
+/**
+ * MISSION_HUNT_INFO
+ */
+struct packet_mission_info_sub {
+	int32 mob_id;
+	int16 huntCount;
+	int16 maxCount;
+	char mobName[NAME_LENGTH];
+} __attribute__((packed));
+
+/**
+ * PACKET_ZC_ALL_QUEST_LIST2_INFO (PACKETVER >= 20141022)
+ * PACKET_ZC_ALL_QUEST_LIST3_INFO (PACKETVER Unknown) / unused
+ */
+struct packet_quest_list_info {
+	int32 questID;
+	int8 active;
+#if PACKETVER >= 20141022
+	int32 quest_svrTime;
+	int32 quest_endTime;
+	int16 hunting_count;
+	struct packet_mission_info_sub objectives[]; // Note: This will be < MAX_QUEST_OBJECTIVES
+#endif // PACKETVER >= 20141022
+} __attribute__((packed));
+
+/**
+ * Header for:
+ * PACKET_ZC_ALL_QUEST_LIST (PACKETVER < 20141022)
+ * PACKET_ZC_ALL_QUEST_LIST2 (PACKETVER >= 20141022)
+ * PACKET_ZC_ALL_QUEST_LIST3 (PACKETVER Unknown) / unused
+ *
+ * @remark
+ *     Contains (is followed by) a variable-length array of packet_quest_list_info
+ */
+struct packet_quest_list_header {
+	uint16 PacketType;
+	uint16 PacketLength;
+	int32 questCount;
+	//struct packet_quest_list_info list[]; // Variable-length
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
