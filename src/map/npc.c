@@ -53,8 +53,8 @@ static int npc_mob=0;
 static int npc_delay_mob=0;
 static int npc_cache_mob=0;
 
-static char *npc_last_path;
-static char *npc_last_ref;
+static const char *npc_last_path;
+static const char *npc_last_ref;
 struct npc_path_data *npc_last_npd;
 
 //For holding the view data of npc classes. [Skotlex]
@@ -2244,16 +2244,9 @@ int npc_unload(struct npc_data* nd, bool single)
 	npc_chat->finalize(nd); // deallocate npc PCRE data structures
 #endif
 
-	if( single && nd->path ) {
-		struct npc_path_data* npd = NULL;
-		if( nd->path && nd->path != npc_last_ref ) {
-			npd = strdb_get(npc->path_db, nd->path);
-		}
-
-		if( npd && --npd->references == 0 ) {
-			strdb_remove(npc->path_db, nd->path);/* remove from db */
-			aFree(nd->path);/* remove now that no other instances exist */
-		}
+	if (single && nd->path != NULL) {
+		npc->releasepathreference(nd->path);
+		nd->path = NULL;
 	}
 
 	if( single && nd->bl.m != -1 )
@@ -2404,6 +2397,64 @@ void npc_delsrcfile(const char* name)
 	}
 }
 
+/**
+ * Retains a reference to filepath, for use in nd->path
+ *
+ * @param filepath The file path to retain.
+ * @return A retained reference to filepath.
+ */
+const char *npc_retainpathreference(const char *filepath)
+{
+	struct npc_path_data * npd = NULL;
+	nullpo_ret(filepath);
+
+	if (npc_last_path == filepath) {
+		if (npc_last_npd != NULL)
+			npc_last_npd->references++;
+		return npc_last_ref;
+	}
+
+	if ((npd = strdb_get(npc->path_db,filepath)) == NULL) {
+		CREATE(npd, struct npc_path_data, 1);
+		strdb_put(npc->path_db, filepath, npd);
+
+		CREATE(npd->path, char, strlen(filepath)+1);
+		safestrncpy(npd->path, filepath, strlen(filepath)+1);
+
+		npd->references = 0;
+	}
+
+	npd->references++;
+
+	npc_last_npd = npd;
+	npc_last_ref = npd->path;
+	npc_last_path = filepath;
+
+	return npd->path;
+}
+
+/**
+ * Releases a previously retained filepath.
+ *
+ * @param filepath The file path to release.
+ */
+void npc_releasepathreference(const char *filepath)
+{
+	struct npc_path_data* npd = NULL;
+
+	nullpo_retv(filepath);
+
+	if (filepath != npc_last_ref) {
+		npd = strdb_get(npc->path_db, filepath);
+	}
+
+	if (npd != NULL && --npd->references == 0) {
+		char *npcpath = npd->path;
+		strdb_remove(npc->path_db, filepath);/* remove from db */
+		aFree(npcpath);
+	}
+}
+
 /// Parses and sets the name and exname of a npc.
 /// Assumes that m, x and y are already set in nd.
 void npc_parsename(struct npc_data* nd, const char* name, const char* start, const char* buffer, const char* filepath) {
@@ -2457,31 +2508,6 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 		ShowDebug("this npc:\n   display name '%s'\n   unique name '%s'\n   map=%s, x=%d, y=%d\n", nd->name, nd->exname, this_mapname, nd->bl.x, nd->bl.y);
 		ShowDebug("other npc in '%s' :\n   display name '%s'\n   unique name '%s'\n   map=%s, x=%d, y=%d\n",dnd->path, dnd->name, dnd->exname, other_mapname, dnd->bl.x, dnd->bl.y);
 		safestrncpy(nd->exname, newname, sizeof(nd->exname));
-	}
-
-	if( npc_last_path != filepath ) {
-		struct npc_path_data * npd = NULL;
-
-		if( !(npd = strdb_get(npc->path_db,filepath) ) ) {
-			CREATE(npd, struct npc_path_data, 1);
-			strdb_put(npc->path_db, filepath, npd);
-
-			CREATE(npd->path, char, strlen(filepath)+1);
-			safestrncpy(npd->path, filepath, strlen(filepath)+1);
-
-			npd->references = 0;
-		}
-
-		nd->path = npd->path;
-		npd->references++;
-
-		npc_last_npd = npd;
-		npc_last_ref = npd->path;
-		npc_last_path = (char*) filepath;
-	} else {
-		nd->path = npc_last_ref;
-		if( npc_last_npd )
-			npc_last_npd->references++;
 	}
 }
 
@@ -2626,6 +2652,7 @@ const char* npc_parse_warp(char* w1, char* w2, char* w3, char* w4, const char* s
 	nd = npc->create_npc(m, x, y);
 	map->addnpc(m, nd);
 	npc->parsename(nd, w3, start, buffer, filepath);
+	nd->path = npc->retainpathreference(filepath);
 
 	if (!battle_config.warp_point_debug)
 		nd->class_ = WARP_CLASS;
@@ -2772,6 +2799,7 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 
 	nd->u.shop.count = i;
 	npc->parsename(nd, w3, start, buffer, filepath);
+	nd->path = npc->retainpathreference(filepath);
 	nd->class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
 	nd->speed = 200;
 
@@ -2959,6 +2987,7 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 	}
 
 	npc->parsename(nd, w3, start, buffer, filepath);
+	nd->path = npc->retainpathreference(filepath);
 	nd->class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
 	nd->speed = 200;
 	nd->u.scr.script = scriptroot;
@@ -3100,6 +3129,7 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 
 	nd = npc->create_npc(m, x, y);
 	npc->parsename(nd, w3, start, buffer, filepath);
+	nd->path = npc->retainpathreference(filepath);
 	nd->class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
 	nd->speed = 200;
 	nd->src_id = src_id;
@@ -4732,6 +4762,8 @@ void npc_defaults(void) {
 	npc->clearsrcfile = npc_clearsrcfile;
 	npc->addsrcfile = npc_addsrcfile;
 	npc->delsrcfile = npc_delsrcfile;
+	npc->retainpathreference = npc_retainpathreference;
+	npc->releasepathreference = npc_releasepathreference;
 	npc->parsename = npc_parsename;
 	npc->parseview = npc_parseview;
 	npc->viewisid = npc_viewisid;

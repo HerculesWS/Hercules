@@ -70,7 +70,7 @@ struct npc_data {
 	unsigned short stat_point;
 
 	struct npc_parse *chatdb;
-	char* path;/* path dir */
+	const char *path; ///< Source path reference
 	enum npc_subtype subtype;
 	int src_id;
 	union {
@@ -225,6 +225,8 @@ struct npc_interface {
 	void (*clearsrcfile) (void);
 	void (*addsrcfile) (const char *name);
 	void (*delsrcfile) (const char *name);
+	const char *(*retainpathreference) (const char *filepath);
+	void (*releasepathreference) (const char *filepath);
 	void (*parsename) (struct npc_data *nd, const char *name, const char *start, const char *buffer, const char *filepath);
 	int (*parseview) (const char *w4, const char *start, const char *buffer, const char *filepath);
 	bool (*viewisid) (const char *viewid);
