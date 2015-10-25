@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -98,10 +98,9 @@ struct battleground_interface {
 	/* */
 	int mafksec, afk_timer_id;
 	char gdelay_var[BG_DELAY_VAR_LENGTH];
-	/* */
-	struct bg_arena **arena;
-	unsigned char arenas;
-	/* */
+
+	VECTOR_DECL(struct bg_arena *) arenas;
+
 	struct DBMap *team_db; // int bg_id -> struct battleground_data*
 	unsigned int team_counter; // Next bg_id
 	/* */

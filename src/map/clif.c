@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -58,6 +58,7 @@
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
+#include "common/db.h"
 #include "common/ers.h"
 #include "common/grfio.h"
 #include "common/memmgr.h"
@@ -18460,7 +18461,8 @@ void clif_status_change_end(struct block_list *bl, int tid, enum send_target tar
 	clif->send(&p,sizeof(p), bl, target);
 }
 
-void clif_bgqueue_ack(struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK response, unsigned char arena_id) {
+void clif_bgqueue_ack(struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK response, int arena_id)
+{
 	switch (response) {
 		case BGQA_FAIL_COOLDOWN:
 		case BGQA_FAIL_DESERTER:
@@ -18472,7 +18474,7 @@ void clif_bgqueue_ack(struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK 
 			nullpo_retv(sd);
 			p.PacketType = bgqueue_ackType;
 			p.type = response;
-			safestrncpy(p.bg_name, bg->arena[arena_id]->name, sizeof(p.bg_name));
+			safestrncpy(p.bg_name, VECTOR_INDEX(bg->arenas, arena_id)->name, sizeof(p.bg_name));
 
 			clif->send(&p,sizeof(p), &sd->bl, SELF);
 		}
@@ -18517,13 +18519,14 @@ void clif_parse_bgqueue_register(int fd, struct map_session_data *sd)
 	bg->queue_add(sd, arena, (enum bg_queue_types)p->type);
 }
 
-void clif_bgqueue_update_info(struct map_session_data *sd, unsigned char arena_id, int position) {
+void clif_bgqueue_update_info(struct map_session_data *sd, int arena_id, int position)
+{
 	struct packet_bgqueue_update_info p;
 
 	nullpo_retv(sd);
-	Assert_retv(arena_id < bg->arenas);
+	Assert_retv(arena_id < VECTOR_LENGTH(bg->arenas));
 	p.PacketType = bgqueue_updateinfoType;
-	safestrncpy(p.bg_name, bg->arena[arena_id]->name, sizeof(p.bg_name));
+	safestrncpy(p.bg_name, VECTOR_INDEX(bg->arenas, arena_id)->name, sizeof(p.bg_name));
 	p.position = position;
 
 	sd->bg_queue.client_has_bg_data = true; // Client creates bg data when this packet arrives
@@ -18586,14 +18589,15 @@ void clif_bgqueue_pcleft(struct map_session_data *sd) {
 }
 
 // Sends BG ready req to all with same bg arena/type as sd
-void clif_bgqueue_battlebegins(struct map_session_data *sd, unsigned char arena_id, enum send_target target) {
+void clif_bgqueue_battlebegins(struct map_session_data *sd, int arena_id, enum send_target target)
+{
 	struct packet_bgqueue_battlebegins p;
 
 	nullpo_retv(sd);
-	Assert_retv(arena_id < bg->arenas);
+	Assert_retv(arena_id < VECTOR_LENGTH(bg->arenas));
 	p.PacketType = bgqueue_battlebeginsType;
-	safestrncpy(p.bg_name, bg->arena[arena_id]->name, sizeof(p.bg_name));
-	safestrncpy(p.game_name, bg->arena[arena_id]->name, sizeof(p.game_name));
+	safestrncpy(p.bg_name, VECTOR_INDEX(bg->arenas, arena_id)->name, sizeof(p.bg_name));
+	safestrncpy(p.game_name, VECTOR_INDEX(bg->arenas, arena_id)->name, sizeof(p.game_name));
 
 	clif->send(&p,sizeof(p), &sd->bl, target);
 }
