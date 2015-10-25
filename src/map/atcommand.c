@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -58,6 +58,7 @@
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/core.h"
+#include "common/db.h"
 #include "common/memmgr.h"
 #include "common/mmo.h" // MAX_CARTS
 #include "common/nullpo.h"
@@ -88,9 +89,12 @@ struct atcmd_binding_data* get_atcommandbind_byname(const char* name) {
 	if( *name == atcommand->at_symbol || *name == atcommand->char_symbol )
 		name++; // for backwards compatibility
 
-	ARR_FIND( 0, atcommand->binding_count, i, strcmpi(atcommand->binding[i]->command, name) == 0 );
+	ARR_FIND(0, VECTOR_LENGTH(atcommand->bindings), i, strcmpi(VECTOR_INDEX(atcommand->bindings, i)->command, name) == 0);
 
-	return ( i < atcommand->binding_count ) ? atcommand->binding[i] : NULL;
+	if (i == VECTOR_LENGTH(atcommand->bindings))
+		return NULL;
+
+	return VECTOR_INDEX(atcommand->bindings, i);
 }
 
 const char* atcommand_msgsd(struct map_session_data *sd, int msg_number) {
@@ -8444,15 +8448,16 @@ void atcommand_commands_sub(struct map_session_data* sd, const int fd, AtCommand
 	dbi_destroy(iter);
 	clif->message(fd,line_buff);
 
-	if (atcommand->binding_count > 0) {
+	if (VECTOR_LENGTH(atcommand->bindings) > 0) {
 		int i, count_bind = 0;
 		int gm_lvl = pc_get_group_level(sd);
 
-		for (i = 0; i < atcommand->binding_count; i++) {
-			if (gm_lvl >= ((type == COMMAND_ATCOMMAND) ? atcommand->binding[i]->group_lv : atcommand->binding[i]->group_lv_char)
-				|| (type == COMMAND_ATCOMMAND && atcommand->binding[i]->at_groups[pcg->get_idx(sd->group)] > 0)
-				|| (type == COMMAND_CHARCOMMAND && atcommand->binding[i]->char_groups[pcg->get_idx(sd->group)] > 0)) {
-				size_t slen = strlen(atcommand->binding[i]->command);
+		for (i = 0; i < VECTOR_LENGTH(atcommand->bindings); i++) {
+			const struct atcmd_binding_data *entry = VECTOR_INDEX(atcommand->bindings, i);
+			if (gm_lvl >= ((type == COMMAND_ATCOMMAND) ? entry->group_lv : entry->group_lv_char)
+				|| (type == COMMAND_ATCOMMAND && entry->at_groups[pcg->get_idx(sd->group)] > 0)
+				|| (type == COMMAND_CHARCOMMAND && entry->char_groups[pcg->get_idx(sd->group)] > 0)) {
+				size_t slen = strlen(entry->command);
 				if (count_bind == 0) {
 					cur = line_buff;
 					memset(line_buff, ' ', CHATBOX_SIZE);
@@ -8466,7 +8471,7 @@ void atcommand_commands_sub(struct map_session_data* sd, const int fd, AtCommand
 					memset(line_buff, ' ', CHATBOX_SIZE);
 					line_buff[CHATBOX_SIZE - 1] = 0;
 				}
-				memcpy(cur, atcommand->binding[i]->command, slen);
+				memcpy(cur, entry->command, slen);
 				cur += slen + (10 - slen % 10);
 				count_bind++;
 			}
@@ -10145,7 +10150,7 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 		params[0] = '\0';
 
 	// @commands (script based)
-	if (player_invoked && atcommand->binding_count > 0) {
+	if (player_invoked) {
 		// Get atcommand binding
 		struct atcmd_binding_data *binding = atcommand->get_bind_byname(command);
 
@@ -10510,12 +10515,18 @@ void do_init_atcommand(bool minimal) {
 
 	atcommand->at_symbol = '@';
 	atcommand->char_symbol = '#';
-	atcommand->binding_count = 0;
+	VECTOR_INIT(atcommand->bindings);
 
 	atcommand->doload();
 }
 
-void do_final_atcommand(void) {
+void do_final_atcommand(void)
+{
+	while (VECTOR_LENGTH(atcommand->bindings) > 0) {
+		aFree(VECTOR_POP(atcommand->bindings));
+	}
+	VECTOR_CLEAR(atcommand->bindings);
+
 	atcommand->cmd_db_clear();
 }
 

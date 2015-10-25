@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -92,9 +92,7 @@ struct atcmd_binding_data {
 struct atcommand_interface {
 	unsigned char at_symbol;
 	unsigned char char_symbol;
-	/* atcommand binding */
-	struct atcmd_binding_data** binding;
-	int binding_count;
+	VECTOR_DECL(struct atcmd_binding_data *) bindings; ///< Atcommand bindings
 	/* other vars */
 	struct DBMap *db; //name -> AtCommandInfo
 	struct DBMap *alias_db; //alias -> AtCommandInfo

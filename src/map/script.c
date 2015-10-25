@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -5034,14 +5034,13 @@ void do_final_script(void)
 	if (script->str_buf)
 		aFree(script->str_buf);
 
-	for( i = 0; i < atcommand->binding_count; i++ ) {
-		aFree(atcommand->binding[i]->at_groups);
-		aFree(atcommand->binding[i]->char_groups);
-		aFree(atcommand->binding[i]);
+	while (VECTOR_LENGTH(atcommand->bindings) > 0) {
+		struct atcmd_binding_data *entry = VECTOR_POP(atcommand->bindings);
+		aFree(entry->at_groups);
+		aFree(entry->char_groups);
+		aFree(entry);
 	}
-
-	if( atcommand->binding_count != 0 )
-		aFree(atcommand->binding);
+	VECTOR_CLEAR(atcommand->bindings);
 
 	for( i = 0; i < script->buildin_count; i++) {
 		if( script->buildin[i] ) {
@@ -5551,7 +5550,6 @@ void do_init_script(bool minimal) {
 
 int script_reload(void)
 {
-	int i;
 	struct DBIterator *iter;
 	struct script_state *st;
 
@@ -5570,16 +5568,13 @@ int script_reload(void)
 	script->userfunc_db->clear(script->userfunc_db, script->db_free_code_sub);
 	script->label_count = 0;
 
-	for( i = 0; i < atcommand->binding_count; i++ ) {
-		aFree(atcommand->binding[i]->at_groups);
-		aFree(atcommand->binding[i]->char_groups);
-		aFree(atcommand->binding[i]);
+	while (VECTOR_LENGTH(atcommand->bindings) > 0) {
+		struct atcmd_binding_data *entry = VECTOR_POP(atcommand->bindings);
+		aFree(entry->at_groups);
+		aFree(entry->char_groups);
+		aFree(entry);
 	}
-
-	if( atcommand->binding_count != 0 )
-		aFree(atcommand->binding);
-
-	atcommand->binding_count = 0;
+	VECTOR_CLEAR(atcommand->bindings);
 
 	db_clear(script->st_db);
 
@@ -21988,97 +21983,64 @@ BUILDIN(add_group_command)
  **/
 BUILDIN(bindatcmd)
 {
-	const char* atcmd;
-	const char* eventName;
+	const char *atcmd;
+	const char *eventName;
 	int i, group_lv = 0, group_lv_char = 99;
 	bool log = false;
-	bool create = false;
+	struct atcmd_binding_data *entry = NULL;
 
 	atcmd = script_getstr(st,2);
 	eventName = script_getstr(st,3);
 
-	if( *atcmd == atcommand->at_symbol || *atcmd == atcommand->char_symbol )
+	if (*atcmd == atcommand->at_symbol || *atcmd == atcommand->char_symbol)
 		atcmd++;
 
-	if( script_hasdata(st,4) ) group_lv = script_getnum(st,4);
-	if( script_hasdata(st,5) ) group_lv_char = script_getnum(st,5);
-	if( script_hasdata(st,6) ) log = script_getnum(st,6) ? true : false;
+	if (script_hasdata(st,4)) group_lv = script_getnum(st,4);
+	if (script_hasdata(st,5)) group_lv_char = script_getnum(st,5);
+	if (script_hasdata(st,6)) log = script_getnum(st,6) ? true : false;
 
-	if( atcommand->binding_count == 0 ) {
-		CREATE(atcommand->binding,struct atcmd_binding_data*,1);
-
-		create = true;
+	ARR_FIND(0, VECTOR_LENGTH(atcommand->bindings), i, strcmp(VECTOR_INDEX(atcommand->bindings, i)->command, atcmd) == 0);
+	if (i == VECTOR_LENGTH(atcommand->bindings)) {
+		VECTOR_ENSURE(atcommand->bindings, 1, 1);
+		CREATE(entry, struct atcmd_binding_data, 1);
+		safestrncpy(entry->command, atcmd, sizeof entry->command);
+		VECTOR_PUSH(atcommand->bindings, entry);
 	} else {
-		ARR_FIND(0, atcommand->binding_count, i, strcmp(atcommand->binding[i]->command,atcmd) == 0);
-		if( i < atcommand->binding_count ) {/* update existent entry */
-			safestrncpy(atcommand->binding[i]->npc_event, eventName, ATCOMMAND_LENGTH);
-			atcommand->binding[i]->group_lv = group_lv;
-			atcommand->binding[i]->group_lv_char = group_lv_char;
-			atcommand->binding[i]->log = log;
-		} else
-			create = true;
+		entry = VECTOR_INDEX(atcommand->bindings, i);
 	}
 
-	if( create ) {
-		i = atcommand->binding_count;
-
-		if( atcommand->binding_count++ != 0 )
-			RECREATE(atcommand->binding,struct atcmd_binding_data*,atcommand->binding_count);
-
-		CREATE(atcommand->binding[i],struct atcmd_binding_data,1);
-
-		safestrncpy(atcommand->binding[i]->command, atcmd, 50);
-		safestrncpy(atcommand->binding[i]->npc_event, eventName, 50);
-		atcommand->binding[i]->group_lv = group_lv;
-		atcommand->binding[i]->group_lv_char = group_lv_char;
-		atcommand->binding[i]->log = log;
-		CREATE(atcommand->binding[i]->at_groups, char, db_size(pcg->db));
-		CREATE(atcommand->binding[i]->char_groups, char, db_size(pcg->db));
-	}
+	safestrncpy(entry->npc_event, eventName, ATCOMMAND_LENGTH);
+	entry->group_lv = group_lv;
+	entry->group_lv_char = group_lv_char;
+	entry->log = log;
+	CREATE(entry->at_groups, char, db_size(pcg->db));
+	CREATE(entry->char_groups, char, db_size(pcg->db));
 
 	return true;
 }
 
 BUILDIN(unbindatcmd)
 {
-	const char* atcmd;
+	const char *atcmd;
 	int i =  0;
 
 	atcmd = script_getstr(st, 2);
 
-	if( *atcmd == atcommand->at_symbol || *atcmd == atcommand->char_symbol )
+	if (*atcmd == atcommand->at_symbol || *atcmd == atcommand->char_symbol)
 		atcmd++;
 
-	if( atcommand->binding_count == 0 ) {
-		script_pushint(st, 0);
-		return true;
-	}
-
-	ARR_FIND(0, atcommand->binding_count, i, strcmp(atcommand->binding[i]->command, atcmd) == 0);
-	if( i < atcommand->binding_count ) {
-		int cursor = 0;
-		aFree(atcommand->binding[i]->at_groups);
-		aFree(atcommand->binding[i]->char_groups);
-		aFree(atcommand->binding[i]);
-		atcommand->binding[i] = NULL;
-		/* compact the list now that we freed a slot somewhere */
-		for( i = 0, cursor = 0; i < atcommand->binding_count; i++ ) {
-			if( atcommand->binding[i] == NULL )
-				continue;
-
-			if( cursor != i ) {
-				memmove(&atcommand->binding[cursor], &atcommand->binding[i], sizeof(struct atcmd_binding_data*));
-			}
-
-			cursor++;
-		}
-
-		if( (atcommand->binding_count = cursor) == 0 )
-			aFree(atcommand->binding);
+	ARR_FIND(0, VECTOR_LENGTH(atcommand->bindings), i, strcmp(VECTOR_INDEX(atcommand->bindings, i)->command, atcmd) == 0);
+	if (i != VECTOR_LENGTH(atcommand->bindings)) {
+		struct atcmd_binding_data *entry = VECTOR_INDEX(atcommand->bindings, i);
+		aFree(entry->at_groups);
+		aFree(entry->char_groups);
+		aFree(entry);
+		VECTOR_ERASE(atcommand->bindings, i);
 
 		script_pushint(st, 1);
-	} else
-		script_pushint(st, 0);/* not found */
+	} else {
+		script_pushint(st, 0); // not found
+	}
 
 	return true;
 }
