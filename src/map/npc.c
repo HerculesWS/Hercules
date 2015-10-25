@@ -3048,6 +3048,110 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 	return end;
 }
 
+/**
+ * Duplicates a warp, shop, cashshop or script.
+ *
+ * @param nd      An already initialized NPC data. Expects bl->m, bl->x, bl->y, name, exname, path to be already filled.
+ * @param snd     The source NPC to duplicate.
+ * @param class_  The npc view class.
+ * @param dir     The facing direction.
+ * @param xs      The x-span, if any.
+ * @param ys      The y-span, if any.
+ * @param options The NPC options.
+ * @retval false if there were any issues while creating and validating the NPC.
+ */
+bool npc_duplicate_sub(struct npc_data *nd, const struct npc_data *snd, int class_, int dir, int xs, int ys, int options)
+{
+	int i;
+	bool retval = true;
+
+	nd->class_ = class_;
+	nd->speed = 200;
+	nd->src_id = snd->bl.id;
+	nd->bl.type = BL_NPC;
+	nd->subtype = snd->subtype;
+	switch (nd->subtype) {
+		case SCRIPT:
+			++npc_script;
+			nd->u.scr.xs = xs;
+			nd->u.scr.ys = ys;
+			nd->u.scr.script = snd->u.scr.script;
+			nd->u.scr.label_list = snd->u.scr.label_list;
+			nd->u.scr.label_list_num = snd->u.scr.label_list_num;
+			nd->u.scr.shop = snd->u.scr.shop;
+			nd->u.scr.trader = snd->u.scr.trader;
+			break;
+
+		case SHOP:
+		case CASHSHOP:
+			++npc_shop;
+			nd->u.shop.shop_item = snd->u.shop.shop_item;
+			nd->u.shop.count = snd->u.shop.count;
+			break;
+
+		case WARP:
+			++npc_warp;
+			if( !battle_config.warp_point_debug )
+				nd->class_ = WARP_CLASS;
+			else
+				nd->class_ = WARP_DEBUG_CLASS;
+			nd->u.warp.xs = xs;
+			nd->u.warp.ys = ys;
+			nd->u.warp.mapindex = snd->u.warp.mapindex;
+			nd->u.warp.x = snd->u.warp.x;
+			nd->u.warp.y = snd->u.warp.y;
+			break;
+	}
+
+	//Add the npc to its location
+	if (nd->bl.m >= 0) {
+		map->addnpc(nd->bl.m, nd);
+		nd->ud = &npc->base_ud;
+		nd->dir = dir;
+		npc->setcells(nd);
+		map->addblock(&nd->bl);
+		if (nd->class_ >= 0) {
+			status->set_viewdata(&nd->bl, nd->class_);
+			if (map->list[nd->bl.m].users)
+				clif->spawn(&nd->bl);
+		}
+	} else {
+		// we skip map->addnpc, but still add it to the list of ID's
+		map->addiddb(&nd->bl);
+	}
+	strdb_put(npc->name_db, nd->exname, nd);
+
+	if (nd->subtype != SCRIPT)
+		return true;
+
+	//-----------------------------------------
+	// Loop through labels to export them as necessary
+	for (i = 0; i < nd->u.scr.label_list_num; i++) {
+		if (npc->event_export(nd, i)) {
+			ShowWarning("npc_parse_duplicate: duplicate event %s::%s in file '%s'.\n",
+			             nd->exname, nd->u.scr.label_list[i].name, nd->path);
+			retval = false;
+		}
+		npc->timerevent_export(nd, i);
+	}
+
+	nd->u.scr.timerid = INVALID_TIMER;
+
+	if (options&NPO_ONINIT) {
+		// From npc_parse_script
+		char evname[EVENT_NAME_LENGTH];
+		struct event_data *ev;
+
+		snprintf(evname, ARRAYLENGTH(evname), "%s::OnInit", nd->exname);
+
+		if ((ev = (struct event_data*)strdb_get(npc->ev_db, evname)) != NULL) {
+			//Execute OnInit
+			script->run_npc(nd->u.scr.script,ev->pos,0,nd->bl.id);
+		}
+	}
+	return retval;
+}
+
 /// Duplicate a warp, shop, cashshop or script. [Orcao]
 /// warp: <map name>,<x>,<y>,<facing>%TAB%duplicate(<name of target>)%TAB%<NPC Name>%TAB%<spanx>,<spany>
 /// shop/cashshop/npc: -%TAB%duplicate(<name of target>)%TAB%<NPC Name>%TAB%<sprite id>
@@ -3058,12 +3162,10 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int options, int *retval) {
 	int x, y, dir, m, xs = -1, ys = -1;
 	char srcname[128];
-	int i;
-	const char* end;
+	const char *end;
 	size_t length;
 
-	int src_id;
-	int type;
+	int class_;
 	struct npc_data* nd;
 	struct npc_data* dnd;
 
@@ -3085,18 +3187,16 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 		if (retval) *retval = EXIT_FAILURE;
 		return end;// next line, try to continue
 	}
-	src_id = dnd->bl.id;
-	type = dnd->subtype;
 
 	// get placement
-	if ((type==SHOP || type==CASHSHOP || type==SCRIPT) && strcmp(w1, "-") == 0) {
+	if ((dnd->subtype==SHOP || dnd->subtype==CASHSHOP || dnd->subtype==SCRIPT) && strcmp(w1, "-") == 0) {
 		// floating shop/chashshop/script
 		x = y = dir = 0;
 		m = -1;
 	} else {
 		char mapname[32];
 		int fields = sscanf(w1, "%31[^,],%d,%d,%d", mapname, &x, &y, &dir);
-		if (type == WARP && fields == 3) {
+		if (dnd->subtype == WARP && fields == 3) {
 			// <map name>,<x>,<y>
 			dir = 0;
 		} else if (fields != 4) {
@@ -3119,9 +3219,11 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 		return end;//try next
 	}
 
-	if( type == WARP && sscanf(w4, "%d,%d", &xs, &ys) == 2 );// <spanx>,<spany>
-	else if( type == SCRIPT && sscanf(w4, "%*[^,],%d,%d", &xs, &ys) == 2);// <sprite id>,<triggerX>,<triggerY>
-	else if( type == WARP ) {
+	if (dnd->subtype == WARP && sscanf(w4, "%d,%d", &xs, &ys) == 2) { // <spanx>,<spany>
+		;
+	} else if (dnd->subtype == SCRIPT && sscanf(w4, "%*[^,],%d,%d", &xs, &ys) == 2) { // <sprite id>,<triggerX>,<triggerY>
+		;
+	} else if (dnd->subtype == WARP) {
 		ShowError("npc_parse_duplicate: Invalid span format for duplicate warp in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 		if (retval) *retval = EXIT_FAILURE;
 		return end;// next line, try to continue
@@ -3130,97 +3232,27 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 	nd = npc->create_npc(m, x, y);
 	npc->parsename(nd, w3, start, buffer, filepath);
 	nd->path = npc->retainpathreference(filepath);
-	nd->class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
-	nd->speed = 200;
-	nd->src_id = src_id;
-	nd->bl.type = BL_NPC;
-	nd->subtype = (enum npc_subtype)type;
-	switch( type ) {
-		case SCRIPT:
-			++npc_script;
-			nd->u.scr.xs = xs;
-			nd->u.scr.ys = ys;
-			nd->u.scr.script = dnd->u.scr.script;
-			nd->u.scr.label_list = dnd->u.scr.label_list;
-			nd->u.scr.label_list_num = dnd->u.scr.label_list_num;
-			nd->u.scr.shop = dnd->u.scr.shop;
-			nd->u.scr.trader = dnd->u.scr.trader;
-			break;
-
-		case SHOP:
-		case CASHSHOP:
-			++npc_shop;
-			nd->u.shop.shop_item = dnd->u.shop.shop_item;
-			nd->u.shop.count = dnd->u.shop.count;
-			break;
-
-		case WARP:
-			++npc_warp;
-			if( !battle_config.warp_point_debug )
-				nd->class_ = WARP_CLASS;
-			else
-				nd->class_ = WARP_DEBUG_CLASS;
-			nd->u.warp.xs = xs;
-			nd->u.warp.ys = ys;
-			nd->u.warp.mapindex = dnd->u.warp.mapindex;
-			nd->u.warp.x = dnd->u.warp.x;
-			nd->u.warp.y = dnd->u.warp.y;
-			break;
+	class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
+	if (!npc->duplicate_sub(nd, dnd, class_, dir, xs, ys, options)) {
+		if (retval) *retval = EXIT_FAILURE;
 	}
 
-	//Add the npc to its location
-	if( m >= 0 ) {
-		map->addnpc(m, nd);
-		nd->ud = &npc->base_ud;
-		nd->dir = dir;
-		npc->setcells(nd);
-		map->addblock(&nd->bl);
-		if( nd->class_ >= 0 ) {
-			status->set_viewdata(&nd->bl, nd->class_);
-			if( map->list[nd->bl.m].users )
-				clif->spawn(&nd->bl);
-		}
-	} else {
-		// we skip map->addnpc, but still add it to the list of ID's
-		map->addiddb(&nd->bl);
-	}
-	strdb_put(npc->name_db, nd->exname, nd);
-
-	if( type != SCRIPT )
-		return end;
-
-	//-----------------------------------------
-	// Loop through labels to export them as necessary
-	for (i = 0; i < nd->u.scr.label_list_num; i++) {
-		if (npc->event_export(nd, i)) {
-			ShowWarning("npc_parse_duplicate: duplicate event %s::%s in file '%s'.\n",
-			             nd->exname, nd->u.scr.label_list[i].name, filepath);
-			if (retval) *retval = EXIT_FAILURE;
-		}
-		npc->timerevent_export(nd, i);
-	}
-
-	nd->u.scr.timerid = INVALID_TIMER;
-
-	if (options&NPO_ONINIT) {
-		// From npc_parse_script
-		char evname[EVENT_NAME_LENGTH];
-		struct event_data *ev;
-
-		snprintf(evname, ARRAYLENGTH(evname), "%s::OnInit", nd->exname);
-
-		if( ( ev = (struct event_data*)strdb_get(npc->ev_db, evname) ) ) {
-
-			//Execute OnInit
-			script->run_npc(nd->u.scr.script,ev->pos,0,nd->bl.id);
-
-		}
-	}
 	return end;
 }
 
-int npc_duplicate4instance(struct npc_data *snd, int16 m) {
+/**
+ * Duplicates an NPC for instancing purposes.
+ *
+ * @param snd The NPC to duplicate.
+ * @param m   The instanced map ID.
+ * @return success state.
+ * @retval 0 in case of successful creation.
+ */
+int npc_duplicate4instance(struct npc_data *snd, int16 m)
+{
 	char newname[NAME_LENGTH];
+	int dm = -1, im = -1, xs = -1, ys = -1;
+	struct npc_data *nd = NULL;
 
 	if( m == -1 || map->list[m].instance_id == -1 )
 		return 1;
@@ -3231,50 +3263,35 @@ int npc_duplicate4instance(struct npc_data *snd, int16 m) {
 		return 1;
 	}
 
-	if( snd->subtype == WARP ) { // Adjust destination, if instanced
-		struct npc_data *wnd = NULL; // New NPC
-		int dm = map->mapindex2mapid(snd->u.warp.mapindex), im;
-		if( dm < 0 ) return 1;
-
-		if( ( im = instance->mapid2imapid(dm, map->list[m].instance_id) ) == -1 ) {
+	switch (snd->subtype) {
+	case SCRIPT:
+		xs = snd->u.scr.xs;
+		ys = snd->u.scr.ys;
+		break;
+	case WARP:
+		xs = snd->u.warp.xs;
+		ys = snd->u.warp.ys;
+		// Adjust destination, if instanced
+		if ((dm = map->mapindex2mapid(snd->u.warp.mapindex)) < 0) {
+			return 1;
+		}
+		if ((im = instance->mapid2imapid(dm, map->list[m].instance_id)) == -1) {
 			ShowError("npc_duplicate4instance: warp (%s) leading to instanced map (%s), but instance map is not attached to current instance.\n", map->list[dm].name, snd->exname);
 			return 1;
 		}
+		break;
+	default: // Other types have no xs/ys
+		break;
+	}
 
-		wnd = npc->create_npc(m, snd->bl.x, snd->bl.y);
-		map->addnpc(m, wnd);
-		safestrncpy(wnd->name, "", ARRAYLENGTH(wnd->name));
-		safestrncpy(wnd->exname, newname, ARRAYLENGTH(wnd->exname));
-		wnd->class_ = WARP_CLASS;
-		wnd->speed = 200;
-		wnd->u.warp.mapindex = map_id2index(im);
-		wnd->u.warp.x = snd->u.warp.x;
-		wnd->u.warp.y = snd->u.warp.y;
-		wnd->u.warp.xs = snd->u.warp.xs;
-		wnd->u.warp.ys = snd->u.warp.ys;
-		wnd->bl.type = BL_NPC;
-		wnd->subtype = WARP;
-		npc->setcells(wnd);
-		map->addblock(&wnd->bl);
-		status->set_viewdata(&wnd->bl, wnd->class_);
-		wnd->ud = &npc->base_ud;
-		if( map->list[wnd->bl.m].users )
-			clif->spawn(&wnd->bl);
-		strdb_put(npc->name_db, wnd->exname, wnd);
-	} else {
-		static char w1[50], w2[50], w3[50], w4[50];
-		const char* stat_buf = "- call from instancing subsystem -\n";
-
-		snprintf(w1, sizeof(w1), "%s,%d,%d,%d", map->list[m].name, snd->bl.x, snd->bl.y, snd->dir);
-		snprintf(w2, sizeof(w2), "duplicate(%s)", snd->exname);
-		snprintf(w3, sizeof(w3), "%s::%s", snd->name, newname);
-
-		if( snd->u.scr.xs >= 0 && snd->u.scr.ys >= 0 )
-			snprintf(w4, sizeof(w4), "%d,%d,%d", snd->class_, snd->u.scr.xs, snd->u.scr.ys); // Touch Area
-		else
-			snprintf(w4, sizeof(w4), "%d", snd->class_);
-
-		npc->parse_duplicate(w1, w2, w3, w4, stat_buf, stat_buf, "INSTANCING", NPO_NONE, NULL);
+	nd = npc->create_npc(m, snd->bl.x, snd->bl.y);
+	safestrncpy(nd->name, snd->name, sizeof(nd->name));
+	safestrncpy(nd->exname, newname, sizeof(nd->exname));
+	nd->path = npc->retainpathreference("INSTANCING");
+	npc->duplicate_sub(nd, snd, snd->class_, snd->dir, xs, ys, NPO_NONE);
+	if (nd->subtype == WARP) {
+		// Adjust destination, if instanced
+		nd->u.warp.mapindex = map_id2index(im);
 	}
 
 	return 0;
@@ -4774,6 +4791,7 @@ void npc_defaults(void) {
 	npc->convertlabel_db = npc_convertlabel_db;
 	npc->skip_script = npc_skip_script;
 	npc->parse_script = npc_parse_script;
+	npc->duplicate_sub = npc_duplicate_sub;
 	npc->parse_duplicate = npc_parse_duplicate;
 	npc->duplicate4instance = npc_duplicate4instance;
 	npc->setcells = npc_setcells;
