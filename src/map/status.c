@@ -918,6 +918,8 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_SUPER_STAR] = SI_SUPER_STAR;
 	status->dbs->IconChangeTable[SC_STRANGELIGHTS] = SI_STRANGELIGHTS;
 	status->dbs->IconChangeTable[SC_DECORATION_OF_MUSIC] = SI_DECORATION_OF_MUSIC;
+	status->dbs->IconChangeTable[SC_LJOSALFAR] = SI_LJOSALFAR;
+	status->dbs->IconChangeTable[SC_MERMAID_LONGING] = SI_MERMAID_LONGING;
 
 	//Other SC which are not necessarily associated to skills.
 	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION1] = SCB_ASPD;
@@ -1024,6 +1026,8 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_SUPER_STAR] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_STRANGELIGHTS] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_DECORATION_OF_MUSIC] |= SCB_NONE;
+	status->dbs->ChangeFlagTable[SC_LJOSALFAR] |= SCB_NONE;
+	status->dbs->ChangeFlagTable[SC_MERMAID_LONGING] |= SCB_NONE;
 
 	/* status->dbs->DisplayType Table [Ind/Hercules] */
 	status->dbs->DisplayType[SC_ALL_RIDING]          = true;
@@ -1052,6 +1056,8 @@ void initChangeTables(void) {
 	status->dbs->DisplayType[SC_SUPER_STAR]          = true;
 	status->dbs->DisplayType[SC_STRANGELIGHTS]       = true;
 	status->dbs->DisplayType[SC_DECORATION_OF_MUSIC] = true;
+	status->dbs->DisplayType[SC_LJOSALFAR]           = true;
+	status->dbs->DisplayType[SC_MERMAID_LONGING]     = true;
 
 	if( !battle_config.display_hallucination ) //Disable Hallucination.
 		status->dbs->IconChangeTable[SC_ILLUSION] = SI_BLANK;
