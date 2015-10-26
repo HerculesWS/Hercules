@@ -29,8 +29,7 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 		.@p_name$ = getpartyname(.@party_id);
 		.@md_name$ = "Old Glast Heim";
 
-		if (!instance_check_party(.@party_id,2)) {
-			//custom
+		if (!instance_check_party(.@party_id,2)) {	// Custom
 			mes "[Hugin]";
 			mes "Where are your party members?";
 			close;
@@ -145,6 +144,8 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 		end;
 	}
 OnInstanceInit:
+	donpcevent instance_npcname("Varmunt#ghinstance1")+"::OnEnable";
+	end;
 OnDisable:
 	hideonnpc instance_npcname("Varmunt#ghinstance1");
 	end;
@@ -515,7 +516,7 @@ OnTimer85000:
 	monster .@map$,145,99,"Abyss Knight",2470,1,.@label$;
 	monster .@map$,154,99,"Abyss Knight",2470,1,.@label$;
 
-	for(.@i = 1; .@i<=22; ++.@i)
+	for(.@i = 1; .@i<=22; .@i++)
 		hideoffnpc instance_npcname(".#ghinstance"+.@i);
 
 	donpcevent instance_npcname(".#ghinstance22")+"::OnTalkK";
@@ -1479,7 +1480,7 @@ OnEnable:
 	end;
 OnMyMobDead:
 	.@map$ = instance_mapname("2@gl_k");
-	--.MyMobs;
+	.MyMobs--;
 	if (.MyMobs == 0) {
 		mapannounce .@map$, "A being with an evil aura seems to be appearing in this region.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("#ghmemorialmob06")+"::OnDisable2";
@@ -1588,7 +1589,7 @@ OnEnable:
 	end;
 OnMyMobDead:
 	.@map$ = instance_mapname("2@gl_k");
-	--.MyMobs;
+	.MyMobs--;
 	if (.MyMobs == 0) {
 		mapannounce .@map$, "A being with an evil aura seems to be appearing in this region.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("#ghmemorialmob09")+"::OnEnable";
