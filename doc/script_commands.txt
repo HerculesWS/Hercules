@@ -1030,6 +1030,12 @@ The above also applies to, the last three labels, the only difference is
 that these labels are used exclusively for WoE SE, and are called 
 independently.
 
+OnInstanceInit:
+
+This label will be executed when an instance is created and initialized through
+the 'instance_init' command. It will run again if @reloadscript is used while
+an instance is in progress.
+
 OnTouch:
 
 This label will be executed if a trigger area is defined for the NPC 
@@ -5289,6 +5295,15 @@ Example:
 
 	// Item Universal_Catalog_Gold (10 uses, effect: open shop)
 	searchstores 10,1;
+
+---------------------------------------
+
+*mergeitem;
+
+mergeitem opens the item merge window,
+The Item merge window shows all stackable item(same ItemID) with different
+serial, that can be merged into one stack.
+Check sample: npc/other/item_merge.txt
 
 ---------------------------------------
 
