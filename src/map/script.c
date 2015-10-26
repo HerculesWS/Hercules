@@ -19208,7 +19208,7 @@ BUILDIN(bg_join_team) {
 		sd = script->rid2sd(st);
 
 	if( !sd )
-		script_pushint(st, 1);
+		script_pushint(st, -1);
 	else
 		script_pushint(st,bg->team_join(team_id, sd)?0:1);
 

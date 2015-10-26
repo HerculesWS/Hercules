@@ -2,7 +2,7 @@ diff --git a/grammar.c b/grammar.c
 index 3595578..26444f8 100644
 --- a/grammar.c
 +++ b/grammar.c
-@@ -1187,9 +1187,7 @@ void libconfig_yyerror(void *scanner, struct parse_context *ctx,
+@@ -1211,9 +1211,7 @@ void libconfig_yyerror(void *scanner, struct parse_context *ctx,
    YYUSE (ctx);
    YYUSE (scan_ctx);
  

@@ -4463,6 +4463,14 @@ they will also have their skills reset upon 'changesex'.
 
 ---------------------------------------
 
+*changecharsex;
+
+This command is exactly same as changesex, with an exception that,
+character sex will be changed instead of account sex.
+Requires client 2014-10-22 or greater.
+
+---------------------------------------
+
 *getexp <base xp>,<job xp>;
 
 This command will give the invoking character a specified number of base 
@@ -4991,8 +4999,8 @@ Returns the item_id of a random item picked from the item container specified. T
 are different item containers and they are specified in 'db/(pre-)re/item_group.conf'.
 
 Example:
-   getitem groupranditem 603,1;
-   getitem groupranditem Old_Blue_Box,1;
+   getitem groupranditem(603),1;
+   getitem groupranditem(Old_Blue_Box),1;
 
 ---------------------------------------
 
@@ -6514,8 +6522,8 @@ Example 4:
  
 ---------------------------------------
  
-*sleep {<milliseconds>};
-*sleep2 {<milliseconds>};
+*sleep <milliseconds>;
+*sleep2 <milliseconds>;
 *awake "<NPC name>";
 
 These commands are used to control the pause of a NPC.
@@ -8808,18 +8816,48 @@ following:
 
 ----------------------------------------
 
-*bg_getareausers(<battle group>,<map name>,<x0>,<y0>,<x1>,<y1>);
+*bg_getareausers(<battle group>,"<map_name>",<x0>,<y0>,<x1>,<y1>);
 
 Retrieves amount of players belonging to given battle group on given map 
 within an specified rectangular area.
 
 ----------------------------------------
 
-*bg_updatescore "<mapname>",<Guillaume Score>,<Croix Score>;
+*bg_updatescore "<map_name>",<Guillaume Score>,<Croix Score>;
 
 This command will force the update of the displayed scoreboard.
 It is only usable when the map is defined as a Type 2 Battleground:
-mapflag%TAB%<mapname>%TAB%battleground%TAB%2
+mapflag%TAB%<map_name>%TAB%battleground%TAB%2
+
+----------------------------------------
+
+*bg_create_team "<map_name>",<Respawn X>,<Respawn Y>;
+
+This command will create a new BG Team.
+When player dies, they will be respawned map_name,X,Y as mentioned.
+
+Command will return -1 if BG Creation is failed,
+else it will return the BG ID(Also known as TeamID).
+
+----------------------------------------
+
+*bg_join_team <Team_ID>{,<account_id>};
+
+This command will make the attached player join to Team with ID as mentioned.
+If account_id is provided, command will look for that player, instead of the attached player.
+
+Command will return -1 if Player is not found, 0 if join is failed, 1 upon successful.
+
+----------------------------------------
+
+*bg_match_over "<Arena Name>"{,<Cancelled>};
+
+This command will end the battleground Arena
+(Arena Name as referred to, in conf/battlegrounds.conf)
+If Cancelled is not provided, it will set the join delay, as mentioned in conf/battlegrounds.conf
+else, it will just destroy the Teams and queue's.
+
+Command will return 0 when successful, else it will return 1.
 
 ---------------------------------------
 //=====================================

@@ -59,18 +59,24 @@ struct quest_db *quest_db(int quest_id) {
  * @param sd Player's data
  * @return 0 in case of success, nonzero otherwise (i.e. the player has no quests)
  */
-int quest_pc_login(TBL_PC *sd) {
+int quest_pc_login(TBL_PC *sd)
+{
+#if PACKETVER < 20141022
 	int i;
+#endif
 
 	if(sd->avail_quests == 0)
 		return 1;
 
 	clif->quest_send_list(sd);
+
+#if PACKETVER < 20141022
 	clif->quest_send_mission(sd);
 	for( i = 0; i < sd->avail_quests; i++ ) {
 		// TODO[Haru]: is this necessary? Does quest_send_mission not take care of this?
 		clif->quest_update_objective(sd, &sd->quest_log[i]);
 	}
+#endif
 
 	return 0;
 }

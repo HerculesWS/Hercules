@@ -94,9 +94,9 @@ int instance_create(int owner_id, const char *name, enum instance_owner_type typ
 	}
 
 	if( type != IOT_NONE && *icptr ) {
-		ARR_FIND(0, *icptr, i, strcmp(instance->list[iptr[i]].name,name) == 0 );
+		ARR_FIND(0, *icptr, i, iptr[i] != -1 && strcmp(instance->list[iptr[i]].name, name) == 0 );
 		if( i != *icptr )
-			return -4;/* already got this instance */
+			return -4; /* already got this instance */
 	}
 
 	ARR_FIND(0, instance->instances, i, instance->list[i].state == INSTANCE_FREE);
