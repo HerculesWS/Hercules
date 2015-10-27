@@ -1135,18 +1135,18 @@ airplane_01,32,61,4	script	Nils#ein	1_M_03,1,1,{
 		mes .@line1_1$[.@wordtest];
 		mes .@line1_2$[.@wordtest];
 		mes .@line1_3$[.@wordtest];
-		.@start_time = gettime(3)*60*60 + gettime(2)*60 + gettime(1);
+		.@start_time = gettime(HOUR)*60*60 + gettime(MINUTE)*60 + gettime(SECOND);
 		next;
 		input .@save1$;
-		.@end_time = gettime(3)*60*60 + gettime(2)*60 + gettime(1);
+		.@end_time = gettime(HOUR)*60*60 + gettime(MINUTE)*60 + gettime(SECOND);
 		.@total_time = .@end_time - .@start_time;
 		mes "[Nils]";
 		mes .@line2_1$[.@wordtest];
 		mes .@line2_2$[.@wordtest];
-		.@start_time = gettime(3)*60*60 + gettime(2)*60 + gettime(1);
+		.@start_time = gettime(HOUR)*60*60 + gettime(MINUTE)*60 + gettime(SECOND);
 		next;
 		input .@save2$;
-		.@end_time = gettime(3)*60*60 + gettime(2)*60 + gettime(1);
+		.@end_time = gettime(HOUR)*60*60 + gettime(MINUTE)*60 + gettime(SECOND);
 		.@total_time = .@total_time + (.@start_time - .@end_time);
 		.@tasoo = (.@letters[.@wordtest] / .@total_time) * 6;
 		if ((.@save1$ == .@word1$[.@wordtest]) && (.@save2$ == .@word2$[.@wordtest])) {

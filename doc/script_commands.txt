@@ -3168,20 +3168,12 @@ invoking player belongs.
 
 ---------------------------------------
 
-*gettimetick(<tick type>)
+*gettimetick(<type>)
 
-This function will return the system time in UNIX epoch time (if tick type 
-is 2) or the time since the start of the current day in seconds if tick 
-type is 1.
-Passing 0 will make it return the server's tick, which is a measurement in
-milliseconds used by the server's timer system. The server's tick is an
-unsigned int which loops every ~50 days.
-
-Just in case you don't know, UNIX epoch time is the number of seconds 
-elapsed since 1st of January 1970, and is useful to see, for example, 
-for how long the character has been online with OnPCLoginEvent and 
-OnPCLogoutEvent, which could allow you to make an 'online time counted for 
-conviction only' jail script.
+Valid types are :
+	0 - server's tick (milleseconds), unsigned int, loops every ~50 days
+	1 - time since the start of the current day in seconds
+	2 - UNIX epoch time (number of seconds elapsed since 1st of January 1970)
 
 ---------------------------------------
 
@@ -3189,19 +3181,30 @@ conviction only' jail script.
 
 This function returns specified information about the current system time.
 
-1 - Seconds (of a minute)
-2 - Minutes (of an hour)
-3 - Hour (of a day)
-4 - Week day (0 for Sunday, 6 is Saturday)
-5 - Day of the month.
-6 - Number of the month.
-7 - Year.
-8 - Day of the year.
+Valid types are listed in const.txt:
+	1 - SECOND		- Seconds (of a minute)
+	2 - MINUTE		- Minutes (of an hour)
+	3 - HOUR		- Hour (of a day)
+	4 - WEEKDAY		- Week day (0 for Sunday, 6 is Saturday)
+					- Additional: (SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY)
+	5 - DAYOFMONTH	- Day of the month.
+	6 - MONTH		- Number of the month.
+					- Additional: ( JANUARY,FEBRUARY,MARCH,APRIL,MAY,JUNE,JULY,AUGUST,SEPTEMBER,OCTOBER,NOVEMBER,DECEMBER)
+	7 - YEAR		- Year.
+	8 - DAYOFYEAR	- Day of the year.
 
-It will only return numbers.
-
-	if (gettime(4)==6) mes "It's a Saturday. I don't work on Saturdays.";
-
+It will only return numbers based on types.
+Example :
+	if ( gettime(WEEKDAY) == SATURDAY ) {
+		mes "It's a Saturday. I don't work on Saturdays.";
+	}
+	else if ( gettime(MONTH) == JANUARY ) {
+		mes "It's a January. I don't work on January.";
+	}
+	else if ( gettime(MONTH) == OCTOBER && gettime(DAYOFMONTH) == 31 ) {
+		mes "It's a Halloween.";
+	}
+	
 ---------------------------------------
 
 *gettimestr(<format string>,<max length>)
@@ -3544,29 +3547,29 @@ It will return -1 if there is no such monster (or the type value is
 invalid), or "null" if you requested the monster's name.
 
 Valid types are listed in const.txt:
-	MOB_NAME	0
-	MOB_LV	1
-	MOB_MAXHP	2
-	MOB_BASEEXP	3
-	MOB_JOBEXP	4
-	MOB_ATK1	5
-	MOB_ATK2	6
-	MOB_DEF	7
-	MOB_MDEF	8
-	MOB_STR	9
-	MOB_AGI	10
-	MOB_VIT	11
-	MOB_INT	12
-	MOB_DEX	13
-	MOB_LUK	14
-	MOB_RANGE	15
-	MOB_RANGE2	16
-	MOB_RANGE3	17
-	MOB_SIZE	18
-	MOB_RACE	19
-	MOB_ELEMENT	20
-	MOB_MODE	21
-	MOB_MVPEXP	22
+	MOB_NAME		0
+	MOB_LV			1
+	MOB_MAXHP		2
+	MOB_BASEEXP		3
+	MOB_JOBEXP		4
+	MOB_ATK1		5
+	MOB_ATK2		6
+	MOB_DEF			7
+	MOB_MDEF		8
+	MOB_STR			9
+	MOB_AGI			10
+	MOB_VIT			11
+	MOB_INT			12
+	MOB_DEX			13
+	MOB_LUK			14
+	MOB_RANGE		15
+	MOB_RANGE2		16
+	MOB_RANGE3		17
+	MOB_SIZE		18
+	MOB_RACE		19
+	MOB_ELEMENT		20
+	MOB_MODE		21
+	MOB_MVPEXP		22
 
 Check sample in doc/sample/getmonsterinfo.txt
 

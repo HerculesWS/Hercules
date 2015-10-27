@@ -37,8 +37,8 @@ force_3-1,99,20,4	script	Cadillac#arena	4_F_TELEPORTER,{
 
 OnStart:
 	initnpctimer;
-	$arena_min70st = gettime(2);
-	$arena_sec70st = gettime(1);
+	$arena_min70st = gettime(MINUTE);
+	$arena_sec70st = gettime(SECOND);
 	end;
 
 OnTimer3000:
@@ -749,8 +749,8 @@ OnMyMobDead:
 		donpcevent "Cadillac#arena::On09_End";
 		donpcevent "arena#70::OnReset_09";
 		donpcevent "arena#70::OnReset_All";
-		$arena_min70end = gettime(2);
-		$arena_sec70end = gettime(1);
+		$arena_min70end = gettime(MINUTE);
+		$arena_sec70end = gettime(SECOND);
 	}
 	end;
 }

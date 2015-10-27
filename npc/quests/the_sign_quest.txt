@@ -553,7 +553,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		mes "this and come back later~";
 		delitem 7314,1; //The_Sign
 		sign_q = 138;
-		.@stime_s = gettime(3);
+		.@stime_s = gettime(HOUR);
 		if (.@stime_s < 1) sign_sq = 1;
 		else if (.@stime_s < 3) sign_sq = 2;
 		else if (.@stime_s < 5) sign_sq = 3;
@@ -568,7 +568,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		else sign_sq = 12;
 	}
 	else if (sign_q == 138) {
-		.@stime_s1 = gettime(3);
+		.@stime_s1 = gettime(HOUR);
 		if (.@stime_s1 < 1) {
 			if (sign_sq == 11) {
 				.@pass_s = 1;
@@ -2567,7 +2567,7 @@ aldeba_in,139,103,5	script	Monograph#sign	HIDDEN_NPC,{
 
 aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 	callfunc "F_UpdateSignVars";
-	if ((gettime(3) > 16) && (gettime(3) < 22)) {
+	if ((gettime(HOUR) > 16) && (gettime(HOUR) < 22)) {
 		if (sign_q == 15) {
 			mes "["+ strcharinfo(0) +"]";
 			mes "Excuse me...";
@@ -2858,7 +2858,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 			close;
 		}
 	}
-	else if ((gettime(3) > 6) && (gettime(3) < 17)) {
+	else if ((gettime(HOUR) > 6) && (gettime(HOUR) < 17)) {
 		mes "^3355FFYou find a tense man";
 		mes "holding test tubes between";
 		mes "his fingers, standing in a pile";
@@ -2938,7 +2938,7 @@ OnTouch:
 aldeba_in,156,118,4	script	Piru Piru#sign	8_F,{
 	callfunc "F_UpdateSignVars";
 	mes "[Piru Piru]";
-	if ((gettime(3) >= 12) && (gettime(3) <= 24)) { //235959
+	if ((gettime(HOUR) >= 12) && (gettime(HOUR) <= 24)) { //235959
 		if (sign_q == 17) {
 			emotion e_sob;
 			mes "Oh, I'm sooo tired~";
@@ -3018,7 +3018,7 @@ aldeba_in,156,118,4	script	Piru Piru#sign	8_F,{
 			close;
 		}
 	}
-	else if ((gettime(3) >= 6) && (gettime(3) < 12)) {
+	else if ((gettime(HOUR) >= 6) && (gettime(HOUR) < 12)) {
 		mes "Everyday we study and";
 		mes "take notes and test and";
 		mes "experiment and record";
@@ -4533,7 +4533,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 		}
 	}
 	else if (sign_q == 27) {
-		if ((gettime(3) > 18) && (gettime(3) < 23)) {
+		if ((gettime(HOUR) > 18) && (gettime(HOUR) < 23)) {
 			mes "Nice, you're here";
 			mes "just in time. Well,";
 			mes "all that matters is that";
@@ -7550,7 +7550,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 		mes "But I'll do my best for you.";
 		delitem 7314,1; //The_Sign
 		sign_q = 140;
-		.@stime_e = gettime(3);
+		.@stime_e = gettime(HOUR);
 		if (.@stime_e < 2) sign_sq = 1;
 		else if (.@stime_e < 4) sign_sq = 2;
 		else if (.@stime_e < 6) sign_sq = 3;
@@ -7566,7 +7566,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 		close;
 	}
 	else if (sign_q == 140) {
-		.@stime_e1 = gettime(3);
+		.@stime_e1 = gettime(HOUR);
 		if (.@stime_e1 < 2) {
 			if (sign_sq == 11) {
 				.@pass_s1 = 1;

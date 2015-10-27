@@ -752,7 +752,7 @@ moscovia,135,49,5	script	Mr. Ibanoff#npc	4_M_RUSBALD,{
 		mos_whale_edq = 19;
 		close;
 	}
-	if ((gettime(3) >= 0 && gettime(3) < 3) || (gettime(3) >= 6 && gettime(3) < 9) || (gettime(3) >= 12 && gettime(3) < 15) || (gettime(3) >= 18 && gettime(3) < 21))  {
+	if ((gettime(HOUR) >= 0 && gettime(HOUR) < 3) || (gettime(HOUR) >= 6 && gettime(HOUR) < 9) || (gettime(HOUR) >= 12 && gettime(HOUR) < 15) || (gettime(HOUR) >= 18 && gettime(HOUR) < 21))  {
 		mes "[Mr. Ibanoff]";
 		mes "Hmm. It's not a bad time.";
 		mes "We should hurry up";
@@ -8676,7 +8676,7 @@ OnTouch:
 		end;
 	}
 	if (rhea_rus_hair == 2) {
-		if (gettime(3)>=23 || gettime(3)<=5) {
+		if (gettime(HOUR)>=23 || gettime(HOUR)<=5) {
 			mes "- Splash !! -";
 			next;
 			if (countitem(523) > 0) {
@@ -8701,7 +8701,7 @@ OnTouch:
 		mes "And please, tell him to stop suffering and to be happy. This is my request.";
 		close;
 	} else if (rhea_rus_hair == 7) {
-		if (gettime(3)>=23 || gettime(3)<=5) {
+		if (gettime(HOUR)>=23 || gettime(HOUR)<=5) {
 			mes "- Splash !! -";
 			next;
 			if (countitem(523) > 0) {
@@ -9520,11 +9520,11 @@ mosk_fild02,243,270,0	script	Marozka#rus31	4_M_LGTGRAND,{
 			mes "[Marozka]";
 			mes "I will begin making it now... let me see... Could you please come back to me in an hour?";
 			rhea_rus_quiz = 4;
-			rus_time01 = gettime(3);
-			rus_time02 = gettime(4);
+			rus_time01 = gettime(HOUR);
+			rus_time02 = gettime(WEEKDAY);
 			close;
 		} else if (rhea_rus_quiz == 4) {
-			if (rus_time01 < gettime(3) || rus_time02 < gettime(4) || (rus_time02 == 6 && gettime(4) == 0)) {
+			if (rus_time01 < gettime(HOUR) || rus_time02 < gettime(WEEKDAY) || (rus_time02 == 6 && gettime(WEEKDAY) == SUNDAY)) {
 				mes "[Marozka]";
 				mes "Ah, just in time.";
 				mes "I have finally finished making the 'Golden Thread'. Just wait one more second and it'll be ready.";
