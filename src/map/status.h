@@ -743,8 +743,10 @@ typedef enum sc_type {
 	SC_MTF_PUMPKIN,
 	SC_MTF_HITFLEE,
 	
+	SC_HAT_EFFECT,
 	SC_LJOSALFAR,
 	SC_MERMAID_LONGING,
+	SC_TIME_ACCESSORY,
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
@@ -1607,7 +1609,7 @@ enum si_type {
 	SI_MERMAID_LONGING                       = 863,
 	//SI_DRACULA_CARD                          = 865,
 	//SI_LIMIT_POWER_BOOSTER                   = 867,
-	//SI_TIME_ACCESSORY                        = 872,
+	SI_TIME_ACCESSORY                        = 872,
 	//SI_EP16_DEF                              = 873,
 	//SI_NORMAL_ATKED_SP                       = 874,
 	//SI_BODYSTATE_STONECURSE                  = 875,
