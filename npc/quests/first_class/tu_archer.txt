@@ -1400,7 +1400,7 @@ pay_arche,76,135,3	script	#Target	HIDDEN_NPC,{ end; }
 -	script	::Acolyte_Tu	-1,{
 	mes "[Acolyte]";
 	if(tu_archer01 == 14){
-		if(gettime(3) >= 18 && gettime(3) < 22){
+		if(gettime(HOUR) >= 18 && gettime(HOUR) < 22){
 			mes "H-hello!";
 			mes "Umm, umm...";
 			mes "Are you R-Reidin Corse's";
@@ -1500,7 +1500,7 @@ pay_arche,76,135,3	script	#Target	HIDDEN_NPC,{ end; }
 			close;
 		}
 	} else if(tu_archer01 == 15){
-		if((gettime(3) >= 18) && (gettime(3) < 22)){
+		if((gettime(HOUR) >= 18) && (gettime(HOUR) < 22)){
 			mes "^666666Zzzzz...^000000";
 			mes "Wh-wha...?";
 			mes "Who are you?";

@@ -1036,7 +1036,7 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 			mes "My affection-lacked student!";
 			mes "This is the end of your training!";
 			next;
-			if (gettime(3) < 12) {
+			if (gettime(HOUR) < 12) {
 				if (checkweight(Solo_Play_Box1,1) == 0) {
 					 mes "[Alonie]";
 					 mes "Playing outside with this heavy bag?";

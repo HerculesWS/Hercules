@@ -8,7 +8,7 @@
 
 #include "common/cbasetypes.h"
 #include "common/db.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/showmsg.h"
 #include "common/utils.h"
 
@@ -239,6 +239,10 @@ int64 timer_gettick(void) {
 /// Adds a timer to the timer_heap
 static void push_timer_heap(int tid) {
 	BHEAP_ENSURE(timer_heap, 1, 256);
+#ifdef __clang_analyzer__ // Clang's static analyzer warns that BHEAP_ENSURE might set BHEAP_DATA(timer_heap) to NULL.
+#include "assert.h"
+	assert(BHEAP_DATA(timer_heap) != NULL);
+#endif // __clang_analyzer__
 	BHEAP_PUSH(timer_heap, tid, DIFFTICK_MINTOPCMP, swap);
 }
 
@@ -348,14 +352,21 @@ int64 timer_addtick(int tid, int64 tick) {
 	return timer->settick(tid, timer_data[tid].tick+tick);
 }
 
-/// Modifies a timer's expiration time (an alternative to deleting a timer and starting a new one).
-/// Returns the new tick value, or -1 if it fails.
-int64 timer_settick(int tid, int64 tick) {
-	size_t i;
+/**
+ * Modifies a timer's expiration time (an alternative to deleting a timer and starting a new one).
+ *
+ * @param tid  The timer ID.
+ * @param tick New expiration time.
+ * @return The new tick value.
+ * @retval -1 in case of failure.
+ */
+int64 timer_settick(int tid, int64 tick)
+{
+	int i;
 
 	// search timer position
 	ARR_FIND(0, BHEAP_LENGTH(timer_heap), i, BHEAP_DATA(timer_heap)[i] == tid);
-	if( i == BHEAP_LENGTH(timer_heap) ) {
+	if (i == BHEAP_LENGTH(timer_heap)) {
 		ShowError("timer_settick: no such timer %d (%p(%s))\n", tid, timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
 		return -1;
 	}
@@ -373,13 +384,18 @@ int64 timer_settick(int tid, int64 tick) {
 	return tick;
 }
 
-/// Executes all expired timers.
-/// Returns the value of the smallest non-expired timer (or 1 second if there aren't any).
-int do_timer(int64 tick) {
+/**
+ * Executes all expired timers.
+ *
+ * @param tick The current tick.
+ * @return The value of the smallest non-expired timer (or 1 second if there aren't any).
+ */
+int do_timer(int64 tick)
+{
 	int64 diff = TIMER_MAX_INTERVAL; // return value
 
 	// process all timers one by one
-	while( BHEAP_LENGTH(timer_heap) ) {
+	while (BHEAP_LENGTH(timer_heap) > 0) {
 		int tid = BHEAP_PEEK(timer_heap);// top element in heap (smallest tick)
 
 		diff = DIFF_TICK(timer_data[tid].tick, tick);

@@ -17,7 +17,7 @@
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 #include "common/db.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
@@ -94,9 +94,9 @@ int instance_create(int owner_id, const char *name, enum instance_owner_type typ
 	}
 
 	if( type != IOT_NONE && *icptr ) {
-		ARR_FIND(0, *icptr, i, strcmp(instance->list[iptr[i]].name,name) == 0 );
+		ARR_FIND(0, *icptr, i, iptr[i] != -1 && strcmp(instance->list[iptr[i]].name, name) == 0 );
 		if( i != *icptr )
-			return -4;/* already got this instance */
+			return -4; /* already got this instance */
 	}
 
 	ARR_FIND(0, instance->instances, i, instance->list[i].state == INSTANCE_FREE);
@@ -588,19 +588,7 @@ void instance_destroy(int instance_id) {
 	instance->list[instance_id].state = INSTANCE_FREE;
 	instance->list[instance_id].num_map = 0;
 
-	if (instance->list[instance_id].hdata)
-	{
-		for( j = 0; j < instance->list[instance_id].hdatac; j++ ) {
-			if( instance->list[instance_id].hdata[j]->flag.free ) {
-				aFree(instance->list[instance_id].hdata[j]->data);
-			}
-			aFree(instance->list[instance_id].hdata[j]);
-		}
-		aFree(instance->list[instance_id].hdata);
-	}
-
-	instance->list[instance_id].hdata = NULL;
-	instance->list[instance_id].hdatac = 0;
+	HPM->data_store_destroy(&instance->list[instance_id].hdata);
 }
 
 /*--------------------------------------

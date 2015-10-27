@@ -62,31 +62,31 @@ $@vfund_*_extra
 
 -	script	#invest_timer	-1,{
 OnClock0000:	// Open investments on Wed (1 hour after WoE)
-	if (gettime(4) == 3 && !agitcheck()) {
+	if (gettime(WEEKDAY) == WEDNESDAY && !agitcheck()) {
 		$2011_agit_invest = 1;
 		donpcevent "#fund_master::OnInvest_start";
 	}
 	end;
 OnClock1200:	// Close investments on Fri (60 hours after investments open)
-	if (gettime(4) == 5 && !agitcheck()) {
+	if (gettime(WEEKDAY) == FRIDAY && !agitcheck()) {
 		$2011_agit_invest = 2;
 		donpcevent "#fund_master::OnInvest_stop";
 	}
 	end;
 OnClock1235:	// Open dungeons on Fri (at least 31 minutes after investments close)
-	if (gettime(4) == 5 && !agitcheck())
+	if (gettime(WEEKDAY) == FRIDAY && !agitcheck())
 		donpcevent "#fund_master::OnResult";
 	end;
 OnClock2000:	// Close dungeons on Tues (1 hour before WoE)
-	if (gettime(4) == 2)
+	if (gettime(WEEKDAY) == TUESDAY)
 		donpcevent "#fund_master::OnReset";
 	end;
 }
 
 function	script	F_Invest_Status	{
-	.@day = gettime(4);
-	.@hour = gettime(3);
-	.@minute = gettime(2);
+	.@day = gettime(WEEKDAY);
+	.@hour = gettime(HOUR);
+	.@minute = gettime(MINUTE);
 
 	// Inactive.
 	if (agitcheck())

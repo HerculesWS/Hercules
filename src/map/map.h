@@ -19,6 +19,7 @@
 struct mob_data;
 struct npc_data;
 struct channel_data;
+struct hplugin_data_store;
 
 enum E_MAPSERVER_ST {
 	MAPSERVER_ST_RUNNING = CORE_ST_LAST,
@@ -736,10 +737,7 @@ struct map_data {
 
 	/* speeds up clif_updatestatus processing by causing hpmeter to run only when someone with the permission can view it */
 	unsigned short hpmeter_visible;
-
-	/* HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 /// Stores information about a remote map (for multi-mapserver setups).
@@ -860,16 +858,6 @@ struct map_interface {
 	char *MSG_CONF_NAME;
 	char *GRF_PATH_FILENAME;
 
-	int db_use_sql_item_db;
-	int db_use_sql_mob_db;
-	int db_use_sql_mob_skill_db;
-
-	char item_db_db[32];
-	char item_db2_db[32];
-	char mob_db_db[32];
-	char mob_db2_db[32];
-	char mob_skill_db_db[32];
-	char mob_skill_db2_db[32];
 	char autotrade_merchants_db[32];
 	char autotrade_data_db[32];
 	char npc_market_data_db[32];

@@ -21,7 +21,7 @@
 #include "map/unit.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/random.h"
 #include "common/showmsg.h"
@@ -59,18 +59,24 @@ struct quest_db *quest_db(int quest_id) {
  * @param sd Player's data
  * @return 0 in case of success, nonzero otherwise (i.e. the player has no quests)
  */
-int quest_pc_login(TBL_PC *sd) {
+int quest_pc_login(TBL_PC *sd)
+{
+#if PACKETVER < 20141022
 	int i;
+#endif
 
 	if(sd->avail_quests == 0)
 		return 1;
 
 	clif->quest_send_list(sd);
+
+#if PACKETVER < 20141022
 	clif->quest_send_mission(sd);
 	for( i = 0; i < sd->avail_quests; i++ ) {
 		// TODO[Haru]: is this necessary? Does quest_send_mission not take care of this?
 		clif->quest_update_objective(sd, &sd->quest_log[i]);
 	}
+#endif
 
 	return 0;
 }
@@ -507,7 +513,7 @@ int quest_read_db(void)
 	const char *filename = "quest_db.conf";
 
 	sprintf(filepath, "%s/%s", map->db_path, filename);
-	if (libconfig->read_file(&quest_db_conf, filepath) || !(qdb = libconfig->setting_get_member(quest_db_conf.root, filename))) {
+	if (libconfig->read_file(&quest_db_conf, filepath) || !(qdb = libconfig->setting_get_member(quest_db_conf.root, "quest_db"))) {
 		ShowError("can't read %s\n", filepath);
 		return -1;
 	}

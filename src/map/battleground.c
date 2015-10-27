@@ -21,7 +21,7 @@
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/HPM.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
@@ -880,17 +880,9 @@ void do_init_battleground(bool minimal) {
  */
 int bg_team_db_final(DBKey key, DBData *data, va_list ap) {
 	struct battleground_data* bgd = DB->data2ptr(data);
-	int i;
-	nullpo_ret(bgd);
-	for(i = 0; i < bgd->hdatac; i++ ) {
-		if( bgd->hdata[i]->flag.free ) {
-			aFree(bgd->hdata[i]->data);
-		}
-		aFree(bgd->hdata[i]);
-	}
-	if( bgd->hdata )
-		aFree(bgd->hdata);
-		
+
+	HPM->data_store_destroy(&bgd->hdata);
+
 	return 0;
 }
 

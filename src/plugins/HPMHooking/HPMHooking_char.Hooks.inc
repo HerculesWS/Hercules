@@ -15775,15 +15775,15 @@ bool HP_sockt_trusted_ip_check(uint32 ip) {
 	}
 	return retVal___;
 }
-int HP_sockt_net_config_read_sub(config_setting_t *t, struct s_subnet **list, int *count, const char *filename, const char *groupname) {
+int HP_sockt_net_config_read_sub(config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_sockt_net_config_read_sub_pre ) {
-		int (*preHookFunc) (config_setting_t *t, struct s_subnet **list, int *count, const char *filename, const char *groupname);
+		int (*preHookFunc) (config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_net_config_read_sub_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_sockt_net_config_read_sub_pre[hIndex].func;
-			retVal___ = preHookFunc(t, list, count, filename, groupname);
+			retVal___ = preHookFunc(t, list, filename, groupname);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -15791,13 +15791,13 @@ int HP_sockt_net_config_read_sub(config_setting_t *t, struct s_subnet **list, in
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.sockt.net_config_read_sub(t, list, count, filename, groupname);
+		retVal___ = HPMHooks.source.sockt.net_config_read_sub(t, list, filename, groupname);
 	}
 	if( HPMHooks.count.HP_sockt_net_config_read_sub_post ) {
-		int (*postHookFunc) (int retVal___, config_setting_t *t, struct s_subnet **list, int *count, const char *filename, const char *groupname);
+		int (*postHookFunc) (int retVal___, config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_net_config_read_sub_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_net_config_read_sub_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, t, list, count, filename, groupname);
+			retVal___ = postHookFunc(retVal___, t, list, filename, groupname);
 		}
 	}
 	return retVal___;

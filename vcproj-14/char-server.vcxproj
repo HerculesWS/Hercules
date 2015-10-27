@@ -146,7 +146,7 @@
     <ClInclude Include="..\src\common\ers.h" />
     <ClInclude Include="..\src\common\HPM.h" />
     <ClInclude Include="..\src\common\HPMi.h" />
-    <ClInclude Include="..\src\common\malloc.h" />
+    <ClInclude Include="..\src\common\memmgr.h" />
     <ClInclude Include="..\src\common\mapindex.h" />
     <ClInclude Include="..\src\common\mmo.h" />
     <ClInclude Include="..\src\common\mutex.h" />
@@ -192,7 +192,7 @@
     <ClCompile Include="..\src\common\db.c" />
     <ClCompile Include="..\src\common\ers.c" />
     <ClCompile Include="..\src\common\HPM.c" />
-    <ClCompile Include="..\src\common\malloc.c" />
+    <ClCompile Include="..\src\common\memmgr.c" />
     <ClCompile Include="..\src\common\mapindex.c" />
     <ClCompile Include="..\src\common\mutex.c" />
     <ClCompile Include="..\src\common\nullpo.c" />

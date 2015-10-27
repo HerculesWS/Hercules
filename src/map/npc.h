@@ -11,7 +11,7 @@
 #include "common/hercules.h"
 #include "common/db.h"
 
-struct HPluginData;
+struct hplugin_data_store;
 struct view_data;
 
 enum npc_parse_options {
@@ -102,9 +102,7 @@ struct npc_data {
 			char killer_name[NAME_LENGTH];
 		} tomb;
 	} u;
-	/* HPData Support for npc_data */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 

@@ -37,8 +37,8 @@ force_1-1,99,20,4	script	Heel and Toe#arena	4_F_TELEPORTER,{
 
 OnStart:
 	initnpctimer;
-	$arena_min50st = gettime(2);
-	$arena_sec50st = gettime(1);
+	$arena_min50st = gettime(MINUTE);
+	$arena_sec50st = gettime(SECOND);
 	end;
 
 OnTimer3000:
@@ -774,8 +774,8 @@ OnMyMobDead:
 		donpcevent "Heel and Toe#arena::On09_End";
 		donpcevent "arena#50::OnReset_09";
 		donpcevent "arena#50::OnReset_All";
-		$arena_min50end = gettime(2);
-		$arena_sec50end = gettime(1);
+		$arena_min50end = gettime(MINUTE);
+		$arena_sec50end = gettime(SECOND);
 	}
 	end;
 }

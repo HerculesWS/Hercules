@@ -6030,8 +6030,6 @@ iz_ac01,69,36,3	script	Otter Samssoon#ac	4W_SAILOR,{
 				mes "- Snap, snap, snap.. Crack -";
 				next;
 				delitem 6593, 1; // Criatura_Hair_Coupon
-				setlook 1, .@style;
-				setlook 6, .@pallete;
 				cutin "", 255;
 				mes "[Otter Samssoon]";
 				mes "Oh my! Oh my! Oh my!";
@@ -7512,6 +7510,7 @@ iz_ac02,142,85,6	script	Lusa#ac	4_F_GUNSLINGER,{
 					cutin "", 255;
 					end;
 				case 4:
+					close2;
 					cutin "", 255;
 					end;
 				}
@@ -7906,42 +7905,42 @@ iz_ac02,131,82,4	script	Lusa's Desk#ac	CLEAR_NPC,{
 		.@gun_quest_04 = questprogress(5152, HUNTING);
 
 		if (!.@gun_quest_01)
-			.@gque_01 = "^000000Available^000000";
+			.@gque_01$ = "^000000Available^000000";
 		else if (.@gun_quest_01 == 1)
-			.@gque_01 = "^0000FFIn Progress^000000";
+			.@gque_01$ = "^0000FFIn Progress^000000";
 		else if (.@gun_quest_01 == 2)
-			.@gque_01 = "^FF0000Not Available^000000";
+			.@gque_01$ = "^FF0000Not Available^000000";
 		else
-			.@gque_01 = "^FF0000Error^000000";
+			.@gque_01$ = "^FF0000Error^000000";
 
 		if (!.@gun_quest_02)
-			.@gque_02 = "^000000Available^000000";
+			.@gque_02$ = "^000000Available^000000";
 		else if (.@gun_quest_02 == 1)
-			.@gque_02 = "^0000FFIn Progress^000000";
+			.@gque_02$ = "^0000FFIn Progress^000000";
 		else if (.@gun_quest_02 == 2)
-			.@gque_02 = "^FF0000Not Available^000000";
+			.@gque_02$ = "^FF0000Not Available^000000";
 		else
-			.@gque_02 = "^FF0000Error^000000";
+			.@gque_02$ = "^FF0000Error^000000";
 
 		if (!.@gun_quest_03)
-			.@gque_03 = "^000000Available^000000";
+			.@gque_03$ = "^000000Available^000000";
 		else if (.@gun_quest_03 == 1)
-			.@gque_03 = "^0000FFIn Progress^000000";
+			.@gque_03$ = "^0000FFIn Progress^000000";
 		else if (.@gun_quest_03 == 2)
-			.@gque_03 = "^FF0000Not Available^000000";
+			.@gque_03$ = "^FF0000Not Available^000000";
 		else
-			.@gque_03 = "^FF0000Error^000000";
+			.@gque_03$ = "^FF0000Error^000000";
 
 		if (!.@gun_quest_04)
-			.@gque_04 = "^000000Available^000000";
+			.@gque_04$ = "^000000Available^000000";
 		else if (.@gun_quest_04 == 1)
-			.@gque_04 = "^0000FFIn Progress^000000";
+			.@gque_04$ = "^0000FFIn Progress^000000";
 		else if (.@gun_quest_04 == 2)
-			.@gque_04 = "^FF0000Not Available^000000";
+			.@gque_04$ = "^FF0000Not Available^000000";
 		else
-			.@gque_04 = "^FF0000Error^000000";
+			.@gque_04$ = "^FF0000Error^000000";
 
-		switch(select("Assignment A ("+.@gque_01+")", "Assignment B ("+.@gque_02+")", "Assignment C ("+.@gque_03+")", "Assignment D ("+.@gque_04+")", "Cancel")) {
+		switch(select("Assignment A ("+.@gque_01$+")", "Assignment B ("+.@gque_02$+")", "Assignment C ("+.@gque_03$+")", "Assignment D ("+.@gque_04$+")", "Cancel")) {
 		case 1:
 			if (!.@gun_quest_01) {
 				mes "This is the <Assignment A> information.";
@@ -8073,7 +8072,7 @@ iz_ac02,162,86,4	script	Guild Staff#ac	4W_M_02,{
 	mes "[Sharp Snake's Fang]";
 	mes "Let's first check your gun's condition.";
 	next;
-	if (!getequipname(EQI_HAND_R)) {
+	if (getequipname(EQI_HAND_R) == "") {
 		mes "[Sharp Snake's Fang]";
 		mes "If you want to proceed, you need to have your weapon equipped.";
 		close2;
@@ -8086,27 +8085,32 @@ iz_ac02,162,86,4	script	Guild Staff#ac	4W_M_02,{
 	mes "Let's see...";
 	next;
 	if (.@gun == Novice_Revolver) {
-		.@gun_code = "RV";
+		.@gun_code$ = "RV";
+		.@now_gun$ = "Revolver";
 		mes "[Sharp Snake's Fang]";
 		mes "You want to exchange your Guild issued Revolver?";
 		next;
 	} else if (.@gun == Novice_Rifle) {
-		.@gun_code = "RF";
+		.@gun_code$ = "RF";
+		.@now_gun$ = "Rifle";
 		mes "[Sharp Snake's Fang]";
 		mes "You want to exchange your Guild issued Rifle?";
 		next;
 	} else if (.@gun == Novice_Shotgun) {
-		.@gun_code = "SG";
+		.@gun_code$ = "SG";
+		.@now_gun$ = "Shotgun";
 		mes "[Sharp Snake's Fang]";
 		mes "You want to exchange your Guild issued Shotgun?";
 		next;
 	} else if (.@gun == Novice_Gatling) {
-		.@gun_code = "GT";
+		.@gun_code$ = "GT";
+		.@now_gun$ = "Gatling";
 		mes "[Sharp Snake's Fang]";
 		mes "You want to exchange your Guild issued Gatling Gun?";
 		next;
 	} else if (.@gun == Novice_Grenade_Launcher) {
-		.@gun_code = "GL";
+		.@gun_code$ = "GL";
+		.@now_gun$ = "Grenade Launcher";
 		mes "[Sharp Snake's Fang]";
 		mes "You want to exchange your Guild issued Grenade Launcher?";
 		next;
@@ -8119,9 +8123,9 @@ iz_ac02,162,86,4	script	Guild Staff#ac	4W_M_02,{
 	mes "The gun looks to be in good condition.";
 	next;
 	mes "[Sharp Snake's Fang]";
-	mes "Please select the novice weapon you wish to exchange for your "+now_gun+"!";
+	mes "Please select the novice weapon you wish to exchange for your "+.@now_gun$+"!";
 	next;
-	switch(select("Exchange for Revolver", "Exchange for Rifle" "Exchange for Shotgun", "Exchange for Gatling Gun", "Exchange for Grenade Launcher", "Cancel")) {
+	switch(select("Exchange for Revolver", "Exchange for Rifle", "Exchange for Shotgun", "Exchange for Gatling Gun", "Exchange for Grenade Launcher", "Cancel")) {
 	case 1:
 		if (.@gun == 13116) {
 			mes "[Sharp Snake's Fang]";
@@ -8186,7 +8190,7 @@ iz_ac02,162,86,4	script	Guild Staff#ac	4W_M_02,{
 		break;
 	}
 	mes "[Sharp Snake's Fang]";
-	mes "Gun control management number ^FF0000"+.@guncode+""+rand(0,9)+""+rand(0,9)+""+rand(0,9)+""+rand(0,9)+""+rand(0,9)+""+rand(0,9)+"^000000.";
+	mes "Gun control management number ^FF0000"+.@gun_code$+""+rand(0,9)+""+rand(0,9)+""+rand(0,9)+""+rand(0,9)+""+rand(0,9)+""+rand(0,9)+"^000000.";
 	next;
 	mes "[Sharp Snake's Fang]";
 	mes "Are there any issues?";
@@ -11724,7 +11728,7 @@ iz_ac02,62,139,3	script	Lumin#ac	4_M_NOV_RUMIN,{
 			end;
 		}
 	} else if (questprogress(7487, HUNTING) == 1) {
-		if (questprogress(7487, PLAYTIME) == 2 && questprogress(7487, HUNTING) == 1) {
+		if (questprogress(7487, PLAYTIME) == 2) {
 			mes "[Lumin]";
 			mes "... 30 seconds have passed and you have not yet hunted 4 porings.";
 			mes "Then, it is not interesting.";
@@ -11747,7 +11751,7 @@ iz_ac02,62,139,3	script	Lumin#ac	4_M_NOV_RUMIN,{
 			end;
 		}
 	} else if (questprogress(7487, HUNTING) == 2) {
-		if (questprogress(7487, PLAYTIME) == 1 && questprogress(7487, HUNTING) == 2) {
+		if (questprogress(7487, PLAYTIME) == 1) {
 			mes "[Lumin]";
 			mes "Oh... You are very powerful!";
 			mes "Now then, as agreed I will give you everything I have.";
@@ -12818,7 +12822,7 @@ izlude_d,153,126,1	duplicate(Refinery Owner Han#iz)	Refinery Owner Han#iz_d	4_M_
 		break;
 	}
 	mes "[Refining Machine Wagjak]";
-	mes "Type : "+ .@type +"";
+	mes "Type : "+ .@type$ +"";
 	mes "Charge : "+ getitemname(.@material) +", "+ .@price +" zeny";
 	mes "Above money will be charged. Will you refine?";
 	next;
@@ -13317,7 +13321,7 @@ izlude,155,132,3	script	Locas#iz	4_M_02,{
 				delitem 756, .@ston_full; // Oridecon_Stone
 				getitem 984, .@ston_max; // Oridecon
 				mes "[Locas]";
-				mes "Refined "+ston_full+" Rough Oridecon into "+ston_max+" Oridecon. Thank you for your business.";
+				mes "Refined "+.@ston_full+" Rough Oridecon into "+.@ston_max+" Oridecon. Thank you for your business.";
 				close;
 			} else {
 				mes "[Locas]";

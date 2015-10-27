@@ -136,7 +136,7 @@
     <ClCompile Include="..\src\common\HPM.c">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\common\malloc.c">
+    <ClCompile Include="..\src\common\memmgr.c">
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\mapindex.c">
@@ -349,7 +349,7 @@
     <ClInclude Include="..\src\common\HPMi.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\common\malloc.h">
+    <ClInclude Include="..\src\common\memmgr.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\mapindex.h">

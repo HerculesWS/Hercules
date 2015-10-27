@@ -39,7 +39,7 @@
 #include "map/storage.h"
 #include "map/unit.h"
 #include "common/cbasetypes.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/md5calc.h"
 #include "common/mmo.h" // NEW_CARTS
 #include "common/nullpo.h"
@@ -2628,6 +2628,38 @@ TBL_PC *script_rid2sd(struct script_state *st) {
 	return sd;
 }
 
+char *get_val_npcscope_str(struct script_state* st, struct reg_db *n, struct script_data* data) {
+	if (n)
+		return (char*)i64db_get(n->vars, reference_getuid(data));
+	else
+		return NULL;
+}
+
+char *get_val_instance_str(struct script_state* st, const char* name, struct script_data* data) {
+	if (st->instance_id >= 0) {
+		return (char*)i64db_get(instance->list[st->instance_id].regs.vars, reference_getuid(data));
+	} else {
+		ShowWarning("script_get_val: cannot access instance variable '%s', defaulting to \"\"\n", name);
+		return NULL;
+	}
+}
+
+int get_val_npcscope_num(struct script_state* st, struct reg_db *n, struct script_data* data) {
+	if (n)
+		return (int)i64db_iget(n->vars, reference_getuid(data));
+	else
+		return 0;
+}
+
+int get_val_instance_num(struct script_state* st, const char* name, struct script_data* data) {
+	if (st->instance_id >= 0)
+		return (int)i64db_iget(instance->list[st->instance_id].regs.vars, reference_getuid(data));
+	else {
+		ShowWarning("script_get_val: cannot access instance variable '%s', defaulting to 0\n", name);
+		return 0;
+	}
+}
+
 /**
  * Dereferences a variable/constant, replacing it with a copy of the value.
  *
@@ -2681,24 +2713,15 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 					data->u.str = pc_readaccountregstr(sd, data->u.num);// local
 				break;
 			case '.':
-				{
-					struct DBMap* n = data->ref ?
-							data->ref->vars : name[1] == '@' ?
-							st->stack->scope.vars : // instance/scope variable
-							st->script->local.vars; // npc variable
-					if( n )
-						data->u.str = (char*)i64db_get(n,reference_getuid(data));
-					else
-						data->u.str = NULL;
-				}
+				if (data->ref)
+					data->u.str = script->get_val_ref_str(st, data->ref, data);
+				else if (name[1] == '@')
+					data->u.str = script->get_val_scope_str(st, &st->stack->scope, data);
+				else
+					data->u.str = script->get_val_npc_str(st, &st->script->local, data);
 				break;
 			case '\'':
-					if ( st->instance_id >= 0 ) {
-						data->u.str = (char*)i64db_get(instance->list[st->instance_id].regs.vars, reference_getuid(data));
-					} else {
-						ShowWarning("script_get_val: cannot access instance variable '%s', defaulting to \"\"\n", name);
-						data->u.str = NULL;
-					}
+				data->u.str = script->get_val_instance_str(st, name, data);
 				break;
 			default:
 				data->u.str = pc_readglobalreg_str(sd, data->u.num);
@@ -2736,24 +2759,15 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 						data->u.num = pc_readaccountreg(sd, data->u.num);// local
 					break;
 				case '.':
-					{
-						struct DBMap* n = data->ref ?
-								data->ref->vars : name[1] == '@' ?
-								st->stack->scope.vars : // instance/scope variable
-								st->script->local.vars; // npc variable
-						if( n )
-							data->u.num = (int)i64db_iget(n,reference_getuid(data));
-						else
-							data->u.num = 0;
-					}
+					if (data->ref)
+						data->u.num = script->get_val_ref_num(st, data->ref, data);
+					else if (name[1] == '@')
+						data->u.num = script->get_val_scope_num(st, &st->stack->scope, data);
+					else
+						data->u.num = script->get_val_npc_num(st, &st->script->local, data);
 					break;
 				case '\'':
-						if( st->instance_id >= 0 )
-							data->u.num = (int)i64db_iget(instance->list[st->instance_id].regs.vars, reference_getuid(data));
-						else {
-							ShowWarning("script_get_val: cannot access instance variable '%s', defaulting to 0\n", name);
-							data->u.num = 0;
-						}
+					data->u.num = script->get_val_instance_num(st, name, data);
 					break;
 				default:
 					data->u.num = pc_readglobalreg(sd, data->u.num);
@@ -2998,6 +3012,73 @@ void script_array_update(struct reg_db *src, int64 num, bool empty) {
 	}
 }
 
+void set_reg_npcscope_str(struct script_state* st, struct reg_db *n, int64 num, const char* name, const char *str)
+{
+	if (n)
+	{
+		if (str[0]) {
+			i64db_put(n->vars, num, aStrdup(str));
+			if (script_getvaridx(num))
+				script->array_update(n, num, false);
+		} else {
+			i64db_remove(n->vars, num);
+			if (script_getvaridx(num))
+				script->array_update(n, num, true);
+		}
+	}
+}
+
+void set_reg_npcscope_num(struct script_state* st, struct reg_db *n, int64 num, const char* name, int val)
+{
+	if (n) {
+		if (val != 0) {
+			i64db_iput(n->vars, num, val);
+			if (script_getvaridx(num))
+				script->array_update(n, num, false);
+		} else {
+			i64db_remove(n->vars, num);
+			if (script_getvaridx(num))
+				script->array_update(n, num, true);
+		}
+	}
+}
+
+void set_reg_instance_str(struct script_state* st, int64 num, const char* name, const char *str)
+{
+	if (st->instance_id >= 0) {
+		if (str[0]) {
+			i64db_put(instance->list[st->instance_id].regs.vars, num, aStrdup(str));
+			if (script_getvaridx(num))
+				script->array_update(&instance->list[st->instance_id].regs, num, false);
+		} else {
+			i64db_remove(instance->list[st->instance_id].regs.vars, num);
+			if (script_getvaridx(num))
+				script->array_update(&instance->list[st->instance_id].regs, num, true);
+		}
+	} else {
+		ShowError("script_set_reg: cannot write instance variable '%s', NPC not in a instance!\n", name);
+		script->reportsrc(st);
+	}
+}
+
+void set_reg_instance_num(struct script_state* st, int64 num, const char* name, int val)
+{
+	if (st->instance_id >= 0) {
+		if (val != 0) {
+			i64db_iput(instance->list[st->instance_id].regs.vars, num, val);
+			if (script_getvaridx(num))
+				script->array_update(&instance->list[st->instance_id].regs, num, false);
+		} else {
+			i64db_remove(instance->list[st->instance_id].regs.vars, num);
+			if (script_getvaridx(num))
+				script->array_update(&instance->list[st->instance_id].regs, num, true);
+		}
+	} else {
+		ShowError("script_set_reg: cannot write instance variable '%s', NPC not in a instance!\n", name);
+		script->reportsrc(st);
+	}
+}
+
 /**
  * Stores the value of a script variable
  *
@@ -3029,36 +3110,15 @@ int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, co
 					pc_setaccountreg2str(sd, num, str) :
 					pc_setaccountregstr(sd, num, str);
 			case '.':
-				{
-					struct reg_db *n = (ref) ? ref : (name[1] == '@') ? &st->stack->scope : &st->script->local;
-					if( n ) {
-						if (str[0])  {
-							i64db_put(n->vars, num, aStrdup(str));
-							if( script_getvaridx(num) )
-								script->array_update(n, num, false);
-						} else {
-							i64db_remove(n->vars, num);
-							if( script_getvaridx(num) )
-								script->array_update(n, num, true);
-						}
-					}
-				}
+				if (ref)
+					script->set_reg_ref_str(st, ref, num, name, str);
+				else if (name[1] == '@')
+					script->set_reg_scope_str(st, &st->stack->scope, num, name, str);
+				else
+					script->set_reg_npc_str(st, &st->script->local, num, name, str);
 				return 1;
 			case '\'':
-				if( st->instance_id >= 0 ) {
-					if( str[0] ) {
-						i64db_put(instance->list[st->instance_id].regs.vars, num, aStrdup(str));
-						if( script_getvaridx(num) )
-							script->array_update(&instance->list[st->instance_id].regs, num, false);
-					} else {
-						i64db_remove(instance->list[st->instance_id].regs.vars, num);
-						if( script_getvaridx(num) )
-							script->array_update(&instance->list[st->instance_id].regs, num, true);
-					}
-				} else {
-					ShowError("script_set_reg: cannot write instance variable '%s', NPC not in a instance!\n", name);
-					script->reportsrc(st);
-				}
+				set_reg_instance_str(st, num, name, str);
 				return 1;
 			default:
 				return pc_setglobalreg_str(sd, num, str);
@@ -3095,36 +3155,15 @@ int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, co
 					pc_setaccountreg2(sd, num, val) :
 					pc_setaccountreg(sd, num, val);
 			case '.':
-				{
-					struct reg_db *n = (ref) ? ref : (name[1] == '@') ? &st->stack->scope : &st->script->local;
-					if( n ) {
-						if( val != 0 ) {
-							i64db_iput(n->vars, num, val);
-							if( script_getvaridx(num) )
-								script->array_update(n, num, false);
-						} else {
-							i64db_remove(n->vars, num);
-							if( script_getvaridx(num) )
-								script->array_update(n, num, true);
-						}
-					}
-				}
+				if (ref)
+					script->set_reg_ref_num(st, ref, num, name, val);
+				else if (name[1] == '@')
+					script->set_reg_scope_num(st, &st->stack->scope, num, name, val);
+				else
+					script->set_reg_npc_num(st, &st->script->local, num, name, val);
 				return 1;
 			case '\'':
-				if( st->instance_id >= 0 ) {
-					if( val != 0 ) {
-						i64db_iput(instance->list[st->instance_id].regs.vars, num, val);
-						if( script_getvaridx(num) )
-							script->array_update(&instance->list[st->instance_id].regs, num, false);
-					} else {
-						i64db_remove(instance->list[st->instance_id].regs.vars, num);
-						if( script_getvaridx(num) )
-							script->array_update(&instance->list[st->instance_id].regs, num, true);
-					}
-				} else {
-					ShowError("script_set_reg: cannot write instance variable '%s', NPC not in a instance!\n", name);
-					script->reportsrc(st);
-				}
+				set_reg_instance_num(st, num, name, val);
 				return 1;
 			default:
 				return pc_setglobalreg(sd, num, val);
@@ -19169,7 +19208,7 @@ BUILDIN(bg_join_team) {
 		sd = script->rid2sd(st);
 
 	if( !sd )
-		script_pushint(st, 1);
+		script_pushint(st, -1);
 	else
 		script_pushint(st,bg->team_join(team_id, sd)?0:1);
 
@@ -20613,6 +20652,14 @@ void script_defaults(void) {
 	script->push_val = push_val;
 	script->get_val = get_val;
 	script->get_val2 = get_val2;
+	script->get_val_ref_str = get_val_npcscope_str;
+	script->get_val_scope_str = get_val_npcscope_str;
+	script->get_val_npc_str = get_val_npcscope_str;
+	script->get_val_instance_str = get_val_instance_str;
+	script->get_val_ref_num = get_val_npcscope_num;
+	script->get_val_scope_num = get_val_npcscope_num;
+	script->get_val_npc_num = get_val_npcscope_num;
+	script->get_val_instance_num = get_val_instance_num;
 	script->push_str = push_str;
 	script->push_copy = push_copy;
 	script->pop_stack = pop_stack;
@@ -20679,6 +20726,15 @@ void script_defaults(void) {
 	script->print_line = script_print_line;
 	script->errorwarning_sub = script_errorwarning_sub;
 	script->set_reg = set_reg;
+	script->set_reg_ref_str = set_reg_npcscope_str;
+	script->set_reg_scope_str = set_reg_npcscope_str;
+	script->set_reg_npc_str = set_reg_npcscope_str;
+	script->set_reg_instance_str = set_reg_instance_str;
+	script->set_reg_ref_num = set_reg_npcscope_num;
+	script->set_reg_scope_num = set_reg_npcscope_num;
+	script->set_reg_npc_num = set_reg_npcscope_num;
+	script->set_reg_instance_num = set_reg_instance_num;
+
 	script->stack_expand = stack_expand;
 	script->push_retinfo = push_retinfo;
 	script->op_3 = op_3;

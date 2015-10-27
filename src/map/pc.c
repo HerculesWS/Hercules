@@ -41,7 +41,7 @@
 #include "common/conf.h"
 #include "common/core.h" // get_svn_revision()
 #include "common/HPM.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/mmo.h" // NAME_LENGTH, MAX_CARTS, NEW_CARTS
 #include "common/nullpo.h"
 #include "common/random.h"
@@ -2984,7 +2984,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				case 0: //Right hand
 					ARR_FIND(0, ARRAYLENGTH(sd->right_weapon.add_dmg), i, sd->right_weapon.add_dmg[i].rate == 0 || sd->right_weapon.add_dmg[i].class_ == type2);
 					if (i == ARRAYLENGTH(sd->right_weapon.add_dmg)) {
-						ShowWarning("pc_bonus2: Reached max (%"PRIuS") number of add Class dmg bonuses per character!\n",
+						ShowWarning("pc_bonus2: Reached max (%d) number of add Class dmg bonuses per character!\n",
 									ARRAYLENGTH(sd->right_weapon.add_dmg));
 						break;
 					}
@@ -2998,7 +2998,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				case 1: //Left hand
 					ARR_FIND(0, ARRAYLENGTH(sd->left_weapon.add_dmg), i, sd->left_weapon.add_dmg[i].rate == 0 || sd->left_weapon.add_dmg[i].class_ == type2);
 					if (i == ARRAYLENGTH(sd->left_weapon.add_dmg)) {
-						ShowWarning("pc_bonus2: Reached max (%"PRIuS") number of add Class dmg bonuses per character!\n",
+						ShowWarning("pc_bonus2: Reached max (%d) number of add Class dmg bonuses per character!\n",
 									ARRAYLENGTH(sd->left_weapon.add_dmg));
 						break;
 					}
@@ -3016,7 +3016,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			ARR_FIND(0, ARRAYLENGTH(sd->add_mdmg), i, sd->add_mdmg[i].rate == 0 || sd->add_mdmg[i].class_ == type2);
 			if (i == ARRAYLENGTH(sd->add_mdmg)) {
-				ShowWarning("pc_bonus2: Reached max (%"PRIuS") number of add Class magic dmg bonuses per character!\n", ARRAYLENGTH(sd->add_mdmg));
+				ShowWarning("pc_bonus2: Reached max (%d) number of add Class magic dmg bonuses per character!\n", ARRAYLENGTH(sd->add_mdmg));
 				break;
 			}
 			sd->add_mdmg[i].class_ = type2;
@@ -3029,7 +3029,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			ARR_FIND(0, ARRAYLENGTH(sd->add_def), i, sd->add_def[i].rate == 0 || sd->add_def[i].class_ == type2);
 			if (i == ARRAYLENGTH(sd->add_def)) {
-				ShowWarning("pc_bonus2: Reached max (%"PRIuS") number of add Class def bonuses per character!\n", ARRAYLENGTH(sd->add_def));
+				ShowWarning("pc_bonus2: Reached max (%d) number of add Class def bonuses per character!\n", ARRAYLENGTH(sd->add_def));
 				break;
 			}
 			sd->add_def[i].class_ = type2;
@@ -3042,7 +3042,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			ARR_FIND(0, ARRAYLENGTH(sd->add_mdef), i, sd->add_mdef[i].rate == 0 || sd->add_mdef[i].class_ == type2);
 			if (i == ARRAYLENGTH(sd->add_mdef)) {
-				ShowWarning("pc_bonus2: Reached max (%"PRIuS") number of add Class mdef bonuses per character!\n", ARRAYLENGTH(sd->add_mdef));
+				ShowWarning("pc_bonus2: Reached max (%d) number of add Class mdef bonuses per character!\n", ARRAYLENGTH(sd->add_mdef));
 				break;
 			}
 			sd->add_mdef[i].class_ = type2;
@@ -3205,7 +3205,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			ARR_FIND(0, ARRAYLENGTH(sd->skillatk), i, sd->skillatk[i].id == 0 || sd->skillatk[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillatk)) {
 				//Better mention this so the array length can be updated. [Skotlex]
-				ShowDebug("script->run: bonus2 bSkillAtk reached it's limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
+				ShowDebug("script->run: bonus2 bSkillAtk reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillatk), type2, val);
 				break;
 			}
@@ -3222,7 +3222,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			ARR_FIND(0, ARRAYLENGTH(sd->skillheal), i, sd->skillheal[i].id == 0 || sd->skillheal[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillheal)) {
 				// Better mention this so the array length can be updated. [Skotlex]
-				ShowDebug("script->run: bonus2 bSkillHeal reached it's limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
+				ShowDebug("script->run: bonus2 bSkillHeal reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillheal), type2, val);
 				break;
 			}
@@ -3239,7 +3239,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			ARR_FIND(0, ARRAYLENGTH(sd->skillheal2), i, sd->skillheal2[i].id == 0 || sd->skillheal2[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillheal2)) {
 				// Better mention this so the array length can be updated. [Skotlex]
-				ShowDebug("script->run: bonus2 bSkillHeal2 reached it's limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
+				ShowDebug("script->run: bonus2 bSkillHeal2 reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillheal2), type2, val);
 				break;
 			}
@@ -3256,7 +3256,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			ARR_FIND(0, ARRAYLENGTH(sd->skillblown), i, sd->skillblown[i].id == 0 || sd->skillblown[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillblown)) {
 				//Better mention this so the array length can be updated. [Skotlex]
-				ShowDebug("script->run: bonus2 bSkillBlown reached it's limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
+				ShowDebug("script->run: bonus2 bSkillBlown reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillblown), type2, val);
 				break;
 			}
@@ -3276,7 +3276,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			ARR_FIND(0, ARRAYLENGTH(sd->skillcast), i, sd->skillcast[i].id == 0 || sd->skillcast[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillcast)) {
 				//Better mention this so the array length can be updated. [Skotlex]
-				ShowDebug("script->run: bonus2 %s reached its limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
+				ShowDebug("script->run: bonus2 %s reached its limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 					type == SP_CASTRATE ? "bCastRate" : "bVariableCastrate",
 					ARRAYLENGTH(sd->skillcast), type2, val);
 				break;
@@ -3296,7 +3296,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			ARR_FIND(0, ARRAYLENGTH(sd->skillfixcastrate), i, sd->skillfixcastrate[i].id == 0 || sd->skillfixcastrate[i].id == type2);
 
 			if (i == ARRAYLENGTH(sd->skillfixcastrate)) {
-				ShowDebug("script->run: bonus2 bFixedCastrate reached it's limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
+				ShowDebug("script->run: bonus2 bFixedCastrate reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillfixcastrate), type2, val);
 				break;
 			}
@@ -3347,7 +3347,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			//Standard item bonus.
 			for(i=0; i < ARRAYLENGTH(sd->itemhealrate) && sd->itemhealrate[i].nameid && sd->itemhealrate[i].nameid != type2; i++);
 			if (i == ARRAYLENGTH(sd->itemhealrate)) {
-				ShowWarning("pc_bonus2: Reached max (%"PRIuS") number of item heal bonuses per character!\n", ARRAYLENGTH(sd->itemhealrate));
+				ShowWarning("pc_bonus2: Reached max (%d) number of item heal bonuses per character!\n", ARRAYLENGTH(sd->itemhealrate));
 				break;
 			}
 			sd->itemhealrate[i].nameid = type2;
@@ -3524,7 +3524,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			ARR_FIND(0, ARRAYLENGTH(sd->skillusesprate), i, sd->skillusesprate[i].id == 0 || sd->skillusesprate[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillusesprate)) {
-				ShowDebug("script->run: bonus2 bSkillUseSPrate reached it's limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
+				ShowDebug("script->run: bonus2 bSkillUseSPrate reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillusesprate), type2, val);
 				break;
 			}
@@ -3540,7 +3540,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			ARR_FIND(0, ARRAYLENGTH(sd->skillcooldown), i, sd->skillcooldown[i].id == 0 || sd->skillcooldown[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillcooldown)) {
-				ShowDebug("script->run: bonus2 bSkillCoolDown reached it's limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
+				ShowDebug("script->run: bonus2 bSkillCoolDown reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillcooldown), type2, val);
 				break;
 			}
@@ -3556,7 +3556,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			ARR_FIND(0, ARRAYLENGTH(sd->skillfixcast), i, sd->skillfixcast[i].id == 0 || sd->skillfixcast[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillfixcast)) {
-				ShowDebug("script->run: bonus2 bSkillFixedCast reached it's limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
+				ShowDebug("script->run: bonus2 bSkillFixedCast reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillfixcast), type2, val);
 				break;
 			}
@@ -3572,7 +3572,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			ARR_FIND(0, ARRAYLENGTH(sd->skillvarcast), i, sd->skillvarcast[i].id == 0 || sd->skillvarcast[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillvarcast)) {
-				ShowDebug("script->run: bonus2 bSkillVariableCast reached it's limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
+				ShowDebug("script->run: bonus2 bSkillVariableCast reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillvarcast), type2, val);
 				break;
 			}
@@ -3589,7 +3589,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			ARR_FIND(0, ARRAYLENGTH(sd->skillcast), i, sd->skillcast[i].id == 0 || sd->skillcast[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillcast)) {
-				ShowDebug("script->run: bonus2 bVariableCastrate reached it's limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
+				ShowDebug("script->run: bonus2 bVariableCastrate reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillcast), type2, val);
 				break;
 			}
@@ -3606,7 +3606,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			ARR_FIND(0, ARRAYLENGTH(sd->skillusesp), i, sd->skillusesp[i].id == 0 || sd->skillusesp[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillusesp)) {
-				ShowDebug("script->run: bonus2 bSkillUseSP reached it's limit (%"PRIuS" skills per character), bonus skill %d (+%d%%) lost.\n",
+				ShowDebug("script->run: bonus2 bSkillUseSP reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillusesp), type2, val);
 				break;
 			}
@@ -4112,7 +4112,10 @@ bool pc_can_insert_card(struct map_session_data* sd, int idx_card)
 }
 
 /*==========================================
- * Append a card to an item ?
+ * Attempt to insert card into item.
+ * Return:
+ *   0 = fail
+ *   1 = success
  *------------------------------------------*/
 int pc_insert_card(struct map_session_data* sd, int idx_card, int idx_equip)
 {
@@ -4143,6 +4146,7 @@ int pc_insert_card(struct map_session_data* sd, int idx_card, int idx_equip)
 		sd->status.inventory[idx_equip].card[i] = nameid;
 		logs->pick_pc(sd, LOG_TYPE_OTHER,  1, &sd->status.inventory[idx_equip],sd->inventory_data[idx_equip]);
 		clif->insert_card(sd,idx_equip,idx_card,0);
+		return 1;
 	}
 
 	return 0;
@@ -11332,14 +11336,7 @@ void pc_autotrade_populate(struct map_session_data *sd) {
 
 	pc->autotrade_update(sd,PAUC_START);
 
-	for(i = 0; i < data->hdatac; i++ ) {
-		if( data->hdata[i]->flag.free ) {
-			aFree(data->hdata[i]->data);
-		}
-		aFree(data->hdata[i]);
-	}
-	if( data->hdata )
-		aFree(data->hdata);
+	HPM->data_store_destroy(&data->hdata);
 
 	idb_remove(pc->at_db, sd->status.char_id);
 }
@@ -11349,16 +11346,7 @@ void pc_autotrade_populate(struct map_session_data *sd) {
  */
 int pc_autotrade_final(DBKey key, DBData *data, va_list ap) {
 	struct autotrade_vending* at_v = DB->data2ptr(data);
-	int i;
-	for(i = 0; i < at_v->hdatac; i++ ) {
-		if( at_v->hdata[i]->flag.free ) {
-			aFree(at_v->hdata[i]->data);
-		}
-		aFree(at_v->hdata[i]);
-	}
-	if( at_v->hdata )
-		aFree(at_v->hdata);
-		
+	HPM->data_store_destroy(&at_v->hdata);
 	return 0;
 }
 

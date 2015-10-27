@@ -38,8 +38,8 @@ force_2-1,99,20,4	script	Minilover#arena	4_F_TELEPORTER,{
 
 OnStart:
 	initnpctimer;
-	$arena_min60st = gettime(2);
-	$arena_sec60st = gettime(1);
+	$arena_min60st = gettime(MINUTE);
+	$arena_sec60st = gettime(SECOND);
 	end;
 
 OnTimer3000:
@@ -784,8 +784,8 @@ OnMyMobDead:
 		donpcevent "Minilover#arena::On09_End";
 		donpcevent "arena#60::OnReset_09";
 		donpcevent "arena#60::OnReset_All";
-		$arena_min60end = gettime(2);
-		$arena_sec60end = gettime(1);
+		$arena_min60end = gettime(MINUTE);
+		$arena_sec60end = gettime(SECOND);
 	}
 	end;
 }

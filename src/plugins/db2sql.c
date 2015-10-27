@@ -6,7 +6,7 @@
 #include "common/hercules.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/strlib.h"
 #include "common/timer.h"
@@ -290,11 +290,6 @@ void totable(void) {
 			"\n",tosql.db_name,tosql.db_name,tosql.db_name);
 }
 void do_db2sql(void) {
-	if( map->db_use_sql_item_db ) {
-		ShowInfo("db2sql: this should not be used with 'db_use_sql_item_db' enabled, skipping...\n");
-		return;
-	}
-
 	/* link */
 	itemdb_readdb_libconfig_sub = itemdb->readdb_libconfig_sub;
 	itemdb->readdb_libconfig_sub = db2sql;
@@ -305,7 +300,7 @@ void do_db2sql(void) {
 		return;
 	}
 
-	tosql.db_name = map->item_db_db;
+	tosql.db_name = "item_db";
 	totable();
 
 	memset(&tosql.buf, 0, sizeof(tosql.buf) );
@@ -320,7 +315,7 @@ void do_db2sql(void) {
 		return;
 	}
 
-	tosql.db_name = map->item_db_db;
+	tosql.db_name = "item_db";
 	totable();
 
 	itemdb->clear(false);
@@ -333,7 +328,7 @@ void do_db2sql(void) {
 		return;
 	}
 
-	tosql.db_name = map->item_db2_db;
+	tosql.db_name = "item_db2";
 	totable();
 
 	itemdb->clear(false);

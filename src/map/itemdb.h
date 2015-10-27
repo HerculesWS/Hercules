@@ -10,9 +10,9 @@
 #include "common/conf.h"
 #include "common/db.h"
 #include "common/mmo.h" // ITEM_NAME_LENGTH
-#include "common/sql.h"
 
 struct script_code;
+struct hplugin_data_store;
 
 /**
  * Defines
@@ -488,10 +488,7 @@ struct item_data {
 	/* TODO add a pointer to some sort of (struct extra) and gather all the not-common vals into it to save memory */
 	struct item_group *group;
 	struct item_package *package;
-
-	/* HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 #define itemdb_name(n)        (itemdb->search(n)->name)
@@ -604,10 +601,8 @@ struct itemdb_interface {
 	int (*gendercheck) (struct item_data *id);
 	int (*validate_entry) (struct item_data *entry, int n, const char *source);
 	void (*readdb_additional_fields) (int itemid, config_setting_t *it, int n, const char *source);
-	int (*readdb_sql_sub) (Sql *handle, int n, const char *source);
 	int (*readdb_libconfig_sub) (config_setting_t *it, int n, const char *source);
 	int (*readdb_libconfig) (const char *filename);
-	int (*readdb_sql) (const char *tablename);
 	uint64 (*unique_id) (struct map_session_data *sd);
 	void (*read) (bool minimal);
 	void (*destroy_item_data) (struct item_data *self, int free_self);

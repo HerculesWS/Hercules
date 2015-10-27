@@ -144,16 +144,16 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define COMMON_HPMI_H
 	#endif // COMMON_HPMI_H
-	#ifdef COMMON_MALLOC_H
-		{ "malloc_interface", sizeof(struct malloc_interface), SERVER_TYPE_ALL },
-	#else
-		#define COMMON_MALLOC_H
-	#endif // COMMON_MALLOC_H
 	#ifdef COMMON_MAPINDEX_H
 		{ "mapindex_interface", sizeof(struct mapindex_interface), SERVER_TYPE_CHAR|SERVER_TYPE_MAP },
 	#else
 		#define COMMON_MAPINDEX_H
 	#endif // COMMON_MAPINDEX_H
+	#ifdef COMMON_MEMMGR_H
+		{ "malloc_interface", sizeof(struct malloc_interface), SERVER_TYPE_ALL },
+	#else
+		#define COMMON_MEMMGR_H
+	#endif // COMMON_MEMMGR_H
 	#ifdef COMMON_MMO_H
 		{ "auction_data", sizeof(struct auction_data), SERVER_TYPE_ALL },
 		{ "fame_list", sizeof(struct fame_list), SERVER_TYPE_ALL },
@@ -201,6 +201,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef COMMON_SOCKET_H
 		{ "hSockOpt", sizeof(struct hSockOpt), SERVER_TYPE_ALL },
 		{ "s_subnet", sizeof(struct s_subnet), SERVER_TYPE_ALL },
+		{ "s_subnet_vector", sizeof(struct s_subnet_vector), SERVER_TYPE_ALL },
 		{ "socket_data", sizeof(struct socket_data), SERVER_TYPE_ALL },
 		{ "socket_interface", sizeof(struct socket_interface), SERVER_TYPE_ALL },
 	#else
@@ -491,6 +492,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "packet_itemlist_equip", sizeof(struct packet_itemlist_equip), SERVER_TYPE_MAP },
 		{ "packet_itemlist_normal", sizeof(struct packet_itemlist_normal), SERVER_TYPE_MAP },
 		{ "packet_maptypeproperty2", sizeof(struct packet_maptypeproperty2), SERVER_TYPE_MAP },
+		{ "packet_mission_info_sub", sizeof(struct packet_mission_info_sub), SERVER_TYPE_MAP },
 		{ "packet_monster_hp", sizeof(struct packet_monster_hp), SERVER_TYPE_MAP },
 		{ "packet_notify_bounditem", sizeof(struct packet_notify_bounditem), SERVER_TYPE_MAP },
 		{ "packet_npc_market_open", sizeof(struct packet_npc_market_open), SERVER_TYPE_MAP },
@@ -498,6 +500,8 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "packet_npc_market_result_ack", sizeof(struct packet_npc_market_result_ack), SERVER_TYPE_MAP },
 		{ "packet_package_item_announce", sizeof(struct packet_package_item_announce), SERVER_TYPE_MAP },
 		{ "packet_party_leader_changed", sizeof(struct packet_party_leader_changed), SERVER_TYPE_MAP },
+		{ "packet_quest_list_header", sizeof(struct packet_quest_list_header), SERVER_TYPE_MAP },
+		{ "packet_quest_list_info", sizeof(struct packet_quest_list_info), SERVER_TYPE_MAP },
 		{ "packet_roulette_close_ack", sizeof(struct packet_roulette_close_ack), SERVER_TYPE_MAP },
 		{ "packet_roulette_generate_ack", sizeof(struct packet_roulette_generate_ack), SERVER_TYPE_MAP },
 		{ "packet_roulette_info_ack", sizeof(struct packet_roulette_info_ack), SERVER_TYPE_MAP },

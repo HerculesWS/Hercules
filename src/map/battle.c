@@ -26,7 +26,7 @@
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 #include "common/ers.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/random.h"
 #include "common/showmsg.h"
@@ -2814,7 +2814,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		}
 		if( sc->data[SC__MAELSTROM] && (flag&BF_MAGIC) && skill_id && (skill->get_inf(skill_id)&INF_GROUND_SKILL) ) {
 			// {(Maelstrom Skill LevelxAbsorbed Skill Level)+(Caster's Job/5)}/2
-			int sp = (sc->data[SC__MAELSTROM]->val1 * skill_lv + sd->status.job_level / 5) / 2;
+			int sp = (sc->data[SC__MAELSTROM]->val1 * skill_lv + (sd ? sd->status.job_level / 5 : 0)) / 2;
 			status->heal(bl, 0, sp, 3);
 			d->dmg_lv = ATK_BLOCK;
 			return 0;
@@ -3007,8 +3007,13 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 #endif
 
 		if(sc->data[SC_DEFENDER] &&
+#ifdef RENEWAL
 			((flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON) || skill_id == CR_ACIDDEMONSTRATION))
+#else
+			(flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON)) // In pre-re Defender doesn't reduce damage from Acid Demonstration
+#endif
 			damage = damage * ( 100 - sc->data[SC_DEFENDER]->val2 ) / 100;
+
 #ifndef RENEWAL
 		if(sc->data[SC_GS_ADJUSTMENT] &&
 			(flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON))
@@ -7157,14 +7162,14 @@ void Hercules_report(char* date, char *time_c) {
 		C_RENEWAL_EDP           = 0x0400,
 		C_RENEWAL_ASPD          = 0x0800,
 		C_SECURE_NPCTIMEOUT     = 0x1000,
-		C_SQL_DB_ITEM           = 0x2000,
+		//C_SQL_DB_ITEM           = 0x2000,
 		C_SQL_LOGS              = 0x4000,
 		C_MEMWATCH              = 0x8000,
 		C_DMALLOC               = 0x10000,
 		C_GCOLLECT              = 0x20000,
 		C_SEND_SHORTLIST        = 0x40000,
-		C_SQL_DB_MOB            = 0x80000,
-		C_SQL_DB_MOBSKILL       = 0x100000,
+		//C_SQL_DB_MOB            = 0x80000,
+		//C_SQL_DB_MOBSKILL       = 0x100000,
 		C_PACKETVER_RE          = 0x200000,
 	};
 
@@ -7229,13 +7234,6 @@ void Hercules_report(char* date, char *time_c) {
 #endif
 
 	/* non-define part */
-	if( map->db_use_sql_item_db )
-		config |= C_SQL_DB_ITEM;
-	if( map->db_use_sql_mob_db )
-		config |= C_SQL_DB_MOB;
-	if( map->db_use_sql_mob_skill_db )
-		config |= C_SQL_DB_MOBSKILL;
-
 	if( logs->config.sql_logs )
 		config |= C_SQL_LOGS;
 

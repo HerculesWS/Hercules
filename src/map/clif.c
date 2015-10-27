@@ -42,7 +42,7 @@
 #include "common/conf.h"
 #include "common/ers.h"
 #include "common/grfio.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/mmo.h" // NEW_CARTS
 #include "common/nullpo.h"
 #include "common/random.h"
@@ -10130,6 +10130,9 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 				clif->message(fd, msg_fd(fd,1402));
 			}
 			return;
+		} else if (strcmpi(&chname[1], channel->config->ally_name) == 0) {
+			clif->message(fd, msg_fd(fd,1294)); // You're not allowed to talk on this channel
+			return;
 		}
 	}
 
@@ -15477,41 +15480,55 @@ void clif_parse_PartyTick(int fd, struct map_session_data* sd)
 
 /// Sends list of all quest states (ZC_ALL_QUEST_LIST).
 /// 02b1 <packet len>.W <num>.L { <quest id>.L <active>.B }*num
+/// 097a <packet len>.W <num>.L { <quest id>.L <active>.B <remaining time>.L <time>.L <count>.W { <mob_id>.L <killed>.W <total>.W <mob name>.24B }*count }*num
 void clif_quest_send_list(struct map_session_data *sd)
 {
-	int fd = sd->fd;
-	int i;
-#if PACKETVER >= 20141022
-	int info_len = 15;
-	int len;
+	int i, len, real_len;
+	uint8 *buf = NULL;
+	struct packet_quest_list_header *packet = NULL;
 	nullpo_retv(sd);
-	len = sd->avail_quests*info_len+8;
-	WFIFOHEAD(fd,len);
-	WFIFOW(fd, 0) = 0x97a;
-#else
-	int info_len = 5;
-	int len;
-	nullpo_retv(sd);
-	len = sd->avail_quests*info_len+8;
-	WFIFOHEAD(fd,len);
-	WFIFOW(fd, 0) = 0x2b1;
-#endif
-	WFIFOW(fd, 2) = len;
-	WFIFOL(fd, 4) = sd->avail_quests;
+
+	len = sizeof(struct packet_quest_list_header)
+	    + sd->avail_quests * (sizeof(struct packet_quest_list_info)
+	                         + MAX_QUEST_OBJECTIVES * sizeof(struct packet_mission_info_sub)); // >= than the actual length
+	buf = aMalloc(len);
+	packet = (struct packet_quest_list_header *)WBUFP(buf, 0);
+	real_len = sizeof(*packet);
+
+	packet->PacketType = questListType;
+	packet->questCount = sd->avail_quests;
 
 	for (i = 0; i < sd->avail_quests; i++) {
-	#if PACKETVER >= 20141022
+		struct packet_quest_list_info *info = (struct packet_quest_list_info *)(buf+real_len);
+#if PACKETVER >= 20141022
 		struct quest_db *qi = quest->db(sd->quest_log[i].quest_id);
-	#endif
-		WFIFOL(fd, i*info_len+8) = sd->quest_log[i].quest_id;
-		WFIFOB(fd, i*info_len+12) = sd->quest_log[i].state;
-	#if PACKETVER >= 20141022
-		WFIFOL(fd, i*info_len+13) = sd->quest_log[i].time - qi->time;
-		WFIFOL(fd, i*info_len+17) = sd->quest_log[i].time;
-		WFIFOW(fd, i*info_len+21) = qi->objectives_count;
-	#endif
+		int j;
+#endif // PACKETVER >= 20141022
+		real_len += sizeof(*info);
+
+		info->questID = sd->quest_log[i].quest_id;
+		info->active = sd->quest_log[i].state;
+#if PACKETVER >= 20141022
+		info->quest_svrTime = sd->quest_log[i].time - qi->time;
+		info->quest_endTime = sd->quest_log[i].time;
+		info->hunting_count = qi->objectives_count;
+
+		for (j = 0; j < qi->objectives_count; j++) {
+			struct mob_db *mob_data;
+			Assert_retb(j < MAX_QUEST_OBJECTIVES);
+			real_len += sizeof(info->objectives[j]);
+
+			mob_data = mob->db(qi->objectives[j].mob);
+
+			info->objectives[j].mob_id = qi->objectives[j].mob;
+			info->objectives[j].huntCount = sd->quest_log[i].count[j];
+			info->objectives[j].maxCount = qi->objectives[j].count;
+			safestrncpy(info->objectives[j].mobName, mob_data->jname, sizeof(info->objectives[j].mobName));
+		}
+#endif // PACKETVER >= 20141022
 	}
-	WFIFOSET(fd, len);
+	packet->PacketLength = real_len;
+	clif->send(buf, real_len, &sd->bl, SELF);
 }
 
 /// Sends list of all quest missions (ZC_ALL_QUEST_MISSION).
@@ -18362,7 +18379,7 @@ void clif_openmergeitem(int fd, struct map_session_data *sd)
 	for (i = 0; i < MAX_INVENTORY; i++) {
 		struct item *item_data = &sd->status.inventory[i];
 
-		if (item_data->nameid == 0 || !itemdb->isstackable(item_data->nameid))
+		if (item_data->nameid == 0 || !itemdb->isstackable(item_data->nameid) || item_data->bound != IBT_NONE)
 			continue;
 
 		merge_items[n].nameid = item_data->nameid;
@@ -18436,7 +18453,7 @@ void clif_ackmergeitems(int fd, struct map_session_data *sd)
 
 		it = &sd->status.inventory[idx];
 
-		if (it->nameid == 0 || !itemdb->isstackable(it->nameid))
+		if (it->nameid == 0 || !itemdb->isstackable(it->nameid) || it->bound != IBT_NONE)
 			continue;
 
 		if (nameid == 0)
@@ -18578,12 +18595,12 @@ int clif_parse(int fd) {
 		if (RFIFOREST(fd) < 2)
 			return 0;
 
-		if( HPM->packetsc[hpClif_Parse] ) {
-			int r;
-			if( (r = HPM->parse_packets(fd,hpClif_Parse)) ) {
-				if( r == 1 ) continue;
-				if( r == 2 ) return 0;
-			}
+		if (VECTOR_LENGTH(HPM->packets[hpClif_Parse]) > 0) {
+			int result = HPM->parse_packets(fd,hpClif_Parse);
+			if (result == 1)
+				continue;
+			if (result == 2)
+				return 0;
 		}
 
 		if( sd )
@@ -18678,6 +18695,19 @@ int clif_parse(int fd) {
 	}; // main loop end
 
 	return 0;
+}
+
+/**
+ * Returns information about the given packet ID.
+ *
+ * @param packet_id The packet ID.
+ * @return The corresponding packet_db entry, if any.
+ */
+const struct s_packet_db *clif_packet(int packet_id)
+{
+	if (packet_id < MIN_PACKET_DB || packet_id > MAX_PACKET_DB || packet_db[packet_id].len == 0)
+		return NULL;
+	return &packet_db[packet_id];
 }
 
 static void __attribute__ ((unused)) packetdb_addpacket(short cmd, int len, ...) {
@@ -18815,6 +18845,7 @@ void clif_defaults(void) {
 	clif->parse = clif_parse;
 	clif->parse_cmd = clif_parse_cmd_optional;
 	clif->decrypt_cmd = clif_decrypt_cmd;
+	clif->packet = clif_packet;
 	/* auth */
 	clif->authok = clif_authok;
 	clif->authrefuse = clif_authrefuse;

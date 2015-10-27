@@ -37,8 +37,8 @@ force_4-1,99,20,4	script	Octus#arena	4_F_TELEPORTER,{
 
 OnStart:
 	initnpctimer;
-	$arena_min80st = gettime(2);
-	$arena_sec80st = gettime(1);
+	$arena_min80st = gettime(MINUTE);
+	$arena_sec80st = gettime(SECOND);
 	end;
 
 OnTimer3000:
@@ -730,8 +730,8 @@ OnMyMobDead:
 		donpcevent "Octus#arena::On09_End";
 		donpcevent "arena#80::OnReset_09";
 		donpcevent "arena#80::OnReset_All";
-		$arena_min80end = gettime(2);
-		$arena_sec80end = gettime(1);
+		$arena_min80end = gettime(MINUTE);
+		$arena_sec80end = gettime(SECOND);
 	}
 	end;
 }

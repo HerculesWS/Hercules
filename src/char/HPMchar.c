@@ -31,7 +31,7 @@
 #include "common/db.h"
 #include "common/des.h"
 #include "common/ers.h"
-#include "common/malloc.h"
+#include "common/memmgr.h"
 #include "common/mapindex.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
@@ -47,13 +47,19 @@
 // HPMDataCheck comes after all the other includes
 #include "common/HPMDataCheck.h"
 
-bool HPM_char_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr) {
-	/* record address */
-	switch( type ) {
+/**
+ * HPM plugin data store validator sub-handler (char-server)
+ *
+ * @see HPM_interface::data_store_validate
+ */
+bool HPM_char_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize)
+{
+	switch (type) {
+		// No supported types at the moment.
 		default:
-			return false;
+			break;
 	}
-	return true;
+	return false;
 }
 
 void HPM_char_plugin_load_sub(struct hplugin *plugin) {
@@ -61,6 +67,8 @@ void HPM_char_plugin_load_sub(struct hplugin *plugin) {
 }
 
 void HPM_char_do_init(void) {
+	HPM->load_sub = HPM_char_plugin_load_sub;
+	HPM->data_store_validate_sub = HPM_char_data_store_validate;
 	HPM->datacheck_init(HPMDataCheck, HPMDataCheckLen, HPMDataCheckVer);
 	HPM_shared_symbols(SERVER_TYPE_CHAR);
 }
