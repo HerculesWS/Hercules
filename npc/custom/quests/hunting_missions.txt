@@ -271,8 +271,8 @@ OnNPCKillEvent:
 	} else if (.Party) {
 		set .@mob, killedrid;
 		getmapxy(.@map1$,.@x1,.@y1,0);
-		getpartymember getcharid(1),1;
-		getpartymember getcharid(1),2;
+		getpartymember getcharid(1),PARTYMEMBER_CID;
+		getpartymember getcharid(1),PARTYMEMBER_AID;
 		for(set .@i,0; .@i<$@partymembercount; set .@i,.@i+1) {
 			if (isloggedin($@partymemberaid[.@i], $@partymembercid[.@i])) {
 				attachrid $@partymemberaid[.@i];

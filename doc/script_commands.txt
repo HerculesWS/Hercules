@@ -2505,33 +2505,22 @@ Lets say the ID of a party was saved as a global variable:
 
 *getpartymember <party id>{,<type>};
 
-This command will find all members of a specified party and returns their 
-names (or character id or account id depending on the value of "type") 
-into an array of temporary global variables. There's actually quite a few 
-commands like this which will fill a special variable with data upon 
-execution and not do anything else.
+This command will find all members of a specified guild and returns their names 
+(or character id or account id depending on the value of "type") into an array
+of temporary global variables.
 
-Upon executing this,
-
-$@partymembername$[] is a global temporary string array which contains all 
-                     the names of these party members.
-                     (only set when type is 0 or not specified)
-
-$@partymembercid[]   is a global temporary number array which contains the 
-                     character id of these party members.
-                     (only set when type is 1)
-
-$@partymemberaid[]   is a global temporary number array which contains the 
-                     account id of these party members.
-                     (only set when type is 2)
-
-$@partymembercount   is the number of party members that were found.
-
-The party members will (apparently) be found regardless of whether they 
-are online or offline. Note that the names come in no particular order.
+Valid types are listed in const.txt:
+	0 - PARTYMEMBER_NAME	- return Character Name, stored in $@partymembername$[]
+	1 - PARTYMEMBER_CID		- return Character ID, stored in $@partymembercid[]
+	2 - PARTYMEMBER_AID		- return Account ID, stored in $@partymemberaid[]
+	
+variable $@partymembercount stored the number of party members that were found regardless
+of whether they are online or offline. 
+Note that the names come in no particular order.
 
 Be sure to use $@partymembercount to go through this array, and not 
 'getarraysize', because it is not cleared between runs of 'getpartymember'.
+
 If someone with 7 party members invokes this script, the array would have 
 7 elements. But if another person calls up the NPC, and he has a party of 
 5, the server will not clear the array for you, overwriting the values 
@@ -2544,7 +2533,7 @@ return 7 in this case.
 Example 1: list party member names
 
 	// get the party member names
-	getpartymember getcharid(1),0;
+	getpartymember getcharid(1),PARTYMEMBER_NAME;
 	
 	// It's a good idea to copy the global temporary $@partymember***** 
 	// variables to your own scope variables because if you have pauses in 
@@ -2566,8 +2555,8 @@ Example 2: check party count (with a 'next' pause), before warping to event
 	.register_num = 5; // How many party members are required?
 	
 	// get the charID and accountID of character's party members
-	getpartymember getcharid(1), 1;
-	getpartymember getcharid(1), 2;
+	getpartymember getcharid(1), PARTYMEMBER_CID;
+	getpartymember getcharid(1), PARTYMEMBER_AID;
 	
 	if ($@partymembercount != .register_num) {
 		mes "Please form a party of "+ .register_num +" to continue";
@@ -2601,7 +2590,7 @@ Example 2: check party count (with a 'next' pause), before warping to event
 	// party. To prevent this, we call getpartymember again and compare 
 	// with the original values.
 	
-	getpartymember getcharid(1), 1;
+	getpartymember getcharid(1), PARTYMEMBER_CID;
 	if ($@partymembercount != .register_num) {
 		mes "You've made changes to your party !";
 		close;
@@ -3422,23 +3411,13 @@ This command will find all members of a specified guild and returns their names
 (or character id or account id depending on the value of "type") into an array
 of temporary global variables.
 
-Upon executing this,
-
-$@guildmembername$[] is a global temporary string array which contains all the 
-                     names of these guild members.
-                     (only set when type is 0 or not specified)
-
-$@guildmembercid[]   is a global temporary number array which contains the 
-                     character id of these guild members.
-                     (only set when type is 1)
-
-$@guildmemberaid[]   is a global temporary number array which contains the 
-                     account id of these guild members.
-                     (only set when type is 2)
-
-$@guildmembercount   is the number of guild members that were found.
-
-The guild members will be found regardless of whether they are online or offline.
+Valid types are listed in const.txt:
+	0 - GUILDMEMBER_NAME	- return Character Name, stored in $@guildmembername$[]
+	1 - GUILDMEMBER_CID		- return Character ID, stored in $@guildmembercid[]
+	2 - GUILDMEMBER_AID		- return Account ID, stored in $@guildmemberaid[]
+	
+variable $@guildmembercount stored the number of guild members that were found regardless
+of whether they are online or offline. 
 Note that the names come in no particular order.
 
 Be sure to use $@guildmembercount to go through this array, and not 
