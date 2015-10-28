@@ -15529,6 +15529,7 @@ void clif_quest_send_list(struct map_session_data *sd)
 	}
 	packet->PacketLength = real_len;
 	clif->send(buf, real_len, &sd->bl, SELF);
+	aFree(buf);
 }
 
 /// Sends list of all quest missions (ZC_ALL_QUEST_MISSION).
