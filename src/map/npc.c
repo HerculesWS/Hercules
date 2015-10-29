@@ -137,6 +137,9 @@ int npc_isnear_sub(struct block_list* bl, va_list args) {
 	if( nd->option & (OPTION_HIDE|OPTION_INVISIBLE) )
 		return 0;
 
+	if( battle_config.vendchat_near_hiddennpc && ( nd->class_ == -1 || nd->class_ == 139 ) )
+		return 0;
+
 	return 1;
 }
 
