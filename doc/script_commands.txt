@@ -5860,11 +5860,13 @@ Examples:
 ---------------------------------------
 
 *pcblockmove <id>,<option>;
-	
-Prevents the given ID from moving when the option != 0, and 0 enables the 
-ID to move again. The ID can either be the GID of a monster/NPC or account 
-ID of a character, and will run for the attached player if zero is 
-supplied.
+*pcblockattack <id>,<option>;
+*pcblockskill <id>,<option>;
+*pcimmune <id>,<option>;
+
+Prevents the given player to do following actions when the option > 0,
+and 0 enables it again. The ID only works for player, and will run for
+the attached player if zero is supplied.
 
 Examples:
 
@@ -5874,6 +5876,8 @@ Examples:
 // Enables the current char to move again.
 	pcblockmove getcharid(3),0;
 
+// Makes the current player invulnerable, same as @monsterignore
+	pcimmune getcharid(3),1;
 
 ---------------------------------------
 //=====================================
