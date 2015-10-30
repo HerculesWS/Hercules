@@ -172,6 +172,9 @@ struct map_session_data {
 		unsigned int size :2; // for tiny/large types
 		unsigned int night :1; //Holds whether or not the player currently has the SI_NIGHT effect on. [Skotlex]
 		unsigned int blockedmove :1;
+		unsigned int blockedattack :1;
+		unsigned int blockedskill :1;
+		unsigned int blockedchat :1;
 		unsigned int using_fake_npc :1;
 		unsigned int rewarp :1; //Signals that a player should warp as soon as he is done loading a map. [Skotlex]
 		unsigned int killer : 1;
