@@ -16300,6 +16300,78 @@ BUILDIN(pcblockmove) {
 	return true;
 }
 
+BUILDIN(pcblockattack) {
+	int id, flag;
+	TBL_PC *sd = NULL;
+
+	id = script_getnum(st,2);
+	flag = script_getnum(st,3);
+
+	if(id)
+		sd = map->id2sd(id);
+	else
+		sd = script->rid2sd(st);
+
+	if(sd)
+		sd->state.blockedattack = flag > 0;
+
+	return true;
+}
+
+BUILDIN(pcblockskill) {
+	int id, flag;
+	TBL_PC *sd = NULL;
+
+	id = script_getnum(st,2);
+	flag = script_getnum(st,3);
+
+	if(id)
+		sd = map->id2sd(id);
+	else
+		sd = script->rid2sd(st);
+
+	if(sd)
+		sd->state.blockedskill = flag > 0;
+
+	return true;
+}
+
+BUILDIN(pcblockchat) {
+	int id, flag;
+	TBL_PC *sd = NULL;
+
+	id = script_getnum(st,2);
+	flag = script_getnum(st,3);
+
+	if(id)
+		sd = map->id2sd(id);
+	else
+		sd = script->rid2sd(st);
+
+	if(sd)
+		sd->state.blockedchat = flag > 0;
+
+	return true;
+}
+
+BUILDIN(pcimmune) {
+	int id, flag;
+	TBL_PC *sd = NULL;
+
+	id = script_getnum(st,2);
+	flag = script_getnum(st,3);
+
+	if(id)
+		sd = map->id2sd(id);
+	else
+		sd = script->rid2sd(st);
+
+	if(sd)
+		sd->state.monster_ignore = flag > 0;
+
+	return true;
+}
+
 BUILDIN(pcfollow) {
 	int id, targetid;
 	TBL_PC *sd = NULL;
@@ -20234,6 +20306,10 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(pcfollow,"ii"),
 		BUILDIN_DEF(pcstopfollow,"i"),
 		BUILDIN_DEF(pcblockmove,"ii"),
+		BUILDIN_DEF(pcblockattack,"ii"),
+		BUILDIN_DEF(pcblockskill,"ii"),
+		BUILDIN_DEF(pcblockchat,"ii"),
+		BUILDIN_DEF(pcimmune,"ii"),
 		// <--- [zBuffer] List of player cont commands
 		// [zBuffer] List of mob control commands --->
 		BUILDIN_DEF(unitwalk,"ii?"),
