@@ -137,7 +137,7 @@ int npc_isnear_sub(struct block_list* bl, va_list args) {
 	if( nd->option & (OPTION_HIDE|OPTION_INVISIBLE) )
 		return 0;
 
-	if( battle_config.vendchat_near_hiddennpc && ( nd->class_ == -1 || nd->class_ == 139 ) )
+	if( battle_config.vendchat_near_hiddennpc && ( nd->class_ == FAKE_NPC || nd->class_ == HIDDEN_WARP_CLASS ) )
 		return 0;
 
 	return 1;
@@ -4646,7 +4646,7 @@ int do_init_npc(bool minimal) {
 	npc->fake_nd = (struct npc_data *)aCalloc(1,sizeof(struct npc_data));
 	npc->fake_nd->bl.m = -1;
 	npc->fake_nd->bl.id = npc->get_new_npc_id();
-	npc->fake_nd->class_ = -1;
+	npc->fake_nd->class_ = FAKE_NPC;
 	npc->fake_nd->speed = 200;
 	strcpy(npc->fake_nd->name,"FAKE_NPC");
 	memcpy(npc->fake_nd->exname, npc->fake_nd->name, 9);
