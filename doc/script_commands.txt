@@ -5910,7 +5910,11 @@ Examples:
 ---------------------------------------
 
 *pcblockmove(<id>, <option>)
-	
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ /!\ This command is deprecated @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 Prevents the given ID from moving when the optionis true , and false
 enables the ID to move again. The ID can either be the GID of a
 monster/NPC or account ID of a character, and will run for the attached
@@ -5924,6 +5928,56 @@ Examples:
 // Enables the current char to move again.
 	pcblockmove(getcharid(3), false);
 
+---------------------------------------
+
+*pcblock(<type>,<option>{,<account ID>});
+
+Prevents the player from doing the following action when the <option> is
+true(1), and false(0) will allow those actions again. If there is no
+account ID given, the script will run for the current attached player.
+
+@return 
+	* true  upon success.
+	* false upon failure.
+
+The <type> listed are :-
+	PCBLOCK_MOVE
+	PCBLOCK_ATTACK
+	PCBLOCK_SKILL
+	PCBLOCK_USEITEM
+	PCBLOCK_CHAT
+	PCBLOCK_IMMUNE
+	PCBLOCK_SITSTAND
+	PCBLOCK_COMMANDS
+
+Examples:
+
+// Make the current attached player invulnerable, same as @monsterignore
+	pcblock(BLOCK_IMMUNE, true);
+
+// Prevents the current char from attacking
+	pcblock(BLOCK_ATTACK, true, getcharid(3));
+
+---------------------------------------
+
+*getpcblock(<type>, {<account ID>})
+
+This command will return the status of the block type of the current attached player used by
+'pcblock' command. Additionally, you may insert account ID within the bracket
+to check on another player.
+
+@return 
+	* false if given block type is not enabled
+	* any positive value if block type is enabled
+	* -1 if function fails
+
+Examples:
+
+	if (getpcblock(PCBLOCK_IMMUNE) > 0)
+		mes "You are invulnerable!";
+
+	if (getpcblock(PCBLOCK_ATTACK) == 0)
+		mes "You are able to attack";
 
 ---------------------------------------
 //=====================================

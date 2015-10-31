@@ -5197,7 +5197,7 @@ int script_load_translation(const char *file, uint8 lang_id)
 			VECTOR_TRUNCATE(msgstr);
 			continue;
 		}
-		
+
 		if (strncasecmp(line, "msgid \"", 7) == 0) {
 			VECTOR_TRUNCATE(msgid);
 			for (i = 7; i < len - 2; i++) {
@@ -16923,9 +16923,103 @@ BUILDIN(pcblockmove) {
 	else
 		sd = script->rid2sd(st);
 
-	if (sd != NULL)
-		sd->state.blockedmove = flag > 0;
+	if(!sd)
+		return true;
 
+	if(flag)
+		sd->block_action.move = 1;
+	else
+		sd->block_action.move = 0;
+
+	return true;
+}
+
+BUILDIN(pcblock) {
+	int flag = (script_getnum(st, 3) > 0) ? 1 : 0;
+	enum block_action_flag type = script_getnum(st, 2);
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	switch (type) {
+	case PCBLOCK_MOVE:
+		sd->block_action.move = flag;
+		break;
+	case PCBLOCK_ATTACK:
+		sd->block_action.attack = flag;
+		break;
+	case PCBLOCK_SKILL:
+		sd->block_action.skill = flag;
+		break;
+	case PCBLOCK_USEITEM:
+		sd->block_action.useitem = flag;
+		break;
+	case PCBLOCK_CHAT:
+		sd->block_action.chat = flag;
+		break;
+	case PCBLOCK_IMMUNE:
+		sd->block_action.immune = flag;
+		break;
+	case PCBLOCK_SITSTAND:
+		sd->block_action.sitstand = flag;
+		break;
+	case PCBLOCK_COMMANDS:
+		sd->block_action.commands = flag;
+		break;
+	default:
+		ShowError("buildin_pcblock: unknow block type passed (%d) \n", type);
+		script_pushint(st, 0);
+		return false;
+		break;
+	}
+
+	script_pushint(st, 1);
+	return true;
+}
+
+BUILDIN(getpcblock) {
+	struct map_session_data *sd = script->rid2sd(st);
+	enum block_action_flag type = script_getnum(st, 2);
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	switch (type) {
+	case PCBLOCK_MOVE:
+		script_pushint(st, sd->block_action.move);
+		break;
+	case PCBLOCK_ATTACK:
+		script_pushint(st, sd->block_action.attack);
+		break;
+	case PCBLOCK_SKILL:
+		script_pushint(st, sd->block_action.skill);
+		break;
+	case PCBLOCK_USEITEM:
+		script_pushint(st, sd->block_action.useitem);
+		break;
+	case PCBLOCK_CHAT:
+		script_pushint(st, sd->block_action.chat);
+		break;
+	case PCBLOCK_IMMUNE:
+		script_pushint(st, sd->block_action.immune);
+		break;
+	case PCBLOCK_SITSTAND:
+		script_pushint(st, sd->block_action.sitstand);
+		break;
+	case PCBLOCK_COMMANDS:
+		script_pushint(st, sd->block_action.commands);
+		break;
+	default:
+		ShowError("buildin_getpcblock: unknow block type passed (%d) \n", type);
+		script_pushint(st, -1);
+		return false;
+		break;
+	}
 	return true;
 }
 
@@ -21048,7 +21142,9 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(rid2name,"i"),
 		BUILDIN_DEF(pcfollow,"ii"),
 		BUILDIN_DEF(pcstopfollow,"i"),
-		BUILDIN_DEF(pcblockmove,"ii"),
+		BUILDIN_DEF_DEPRECATED(pcblockmove,"ii"), // Deprecated 2016-09-12 [Hemagx]
+		BUILDIN_DEF(pcblock,"ii"),
+		BUILDIN_DEF(getpcblock,"i"),
 		// <--- [zBuffer] List of player cont commands
 		// [zBuffer] List of mob control commands --->
 		BUILDIN_DEF(getunittype,"i"),
@@ -21383,6 +21479,16 @@ void script_hardcoded_constants(void)
 	script->set_constant("NAV_KAFRA_AND_AIRSHIP", NAV_KAFRA_AND_AIRSHIP, false, false);
 	script->set_constant("NAV_KAFRA_AND_SCROLL", NAV_KAFRA_AND_SCROLL, false, false);
 	script->set_constant("NAV_ALL", NAV_ALL, false, false);
+
+	script->constdb_comment("pc block constants, use with *pcblock* and *getpcblock*");
+	script->set_constant("PCBLOCK_MOVE",     PCBLOCK_MOVE,     false, false);
+	script->set_constant("PCBLOCK_ATTACK",   PCBLOCK_ATTACK,   false, false);
+	script->set_constant("PCBLOCK_SKILL",    PCBLOCK_SKILL,    false, false);
+	script->set_constant("PCBLOCK_USEITEM",  PCBLOCK_USEITEM,  false, false);
+	script->set_constant("PCBLOCK_CHAT",     PCBLOCK_CHAT,     false, false);
+	script->set_constant("PCBLOCK_IMMUNE",   PCBLOCK_IMMUNE,   false, false);
+	script->set_constant("PCBLOCK_SITSTAND", PCBLOCK_SITSTAND, false, false);
+	script->set_constant("PCBLOCK_COMMANDS", PCBLOCK_COMMANDS, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

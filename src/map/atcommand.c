@@ -7448,11 +7448,11 @@ ACMD(sizeguild)
  *------------------------------------------*/
 ACMD(monsterignore)
 {
-	if (!sd->state.monster_ignore) {
-		sd->state.monster_ignore = 1;
+	if (sd->block_action.immune == 0) {
+		sd->block_action.immune = 1;
 		clif->message(sd->fd, msg_fd(fd,1305)); // You are now immune to attacks.
 	} else {
-		sd->state.monster_ignore = 0;
+		sd->block_action.immune = 0;
 		clif->message(sd->fd, msg_fd(fd,1306)); // Returned to normal state.
 	}
 
@@ -9822,6 +9822,8 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 			clif->message(fd, msg_fd(fd,143));
 			return false;
 		}
+		if (sd->block_action.commands) // *pcblock script command
+			return false;
 	}
 
 	if (*message == atcommand->char_symbol)

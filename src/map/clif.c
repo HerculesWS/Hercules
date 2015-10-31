@@ -10160,6 +10160,9 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 				return;
 			}
 
+			if (sd->block_action.sitstand) // *pcblock script command
+				break;
+
 			if (sd->ud.skilltimer != INVALID_TIMER || (sd->sc.opt1 && sd->sc.opt1 != OPT1_BURNING ))
 				break;
 
@@ -10187,6 +10190,9 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 				return;
 			}
 
+			if (sd->block_action.sitstand) // *pcblock script command
+				break;
+			
 			pc->update_idle_time(sd, BCIDLE_SIT);
 
 			pc->setstand(sd);

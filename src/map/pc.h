@@ -184,10 +184,8 @@ struct map_session_data {
 		unsigned int noask :1; // [LuzZza]
 		unsigned int trading :1; //[Skotlex] is 1 only after a trade has started.
 		unsigned int deal_locked :2; //1: Clicked on OK. 2: Clicked on TRADE
-		unsigned int monster_ignore :1; // for monsters to ignore a character [Valaris] [zzo]
 		unsigned int size :2; // for tiny/large types
 		unsigned int night :1; //Holds whether or not the player currently has the SI_NIGHT effect on. [Skotlex]
-		unsigned int blockedmove :1;
 		unsigned int using_fake_npc :1;
 		unsigned int rewarp :1; //Signals that a player should warp as soon as he is done loading a map. [Skotlex]
 		unsigned int killer : 1;
@@ -388,6 +386,17 @@ BEGIN_ZEROED_BLOCK; // this block will be globally zeroed at the beginning of st
 		int add_fixcast,add_varcast;
 		int ematk; // matk bonus from equipment
 	} bonus;
+
+	struct {
+		unsigned move     : 1;
+		unsigned attack   : 1;
+		unsigned skill    : 1;
+		unsigned useitem  : 1;
+		unsigned chat     : 1;
+		unsigned immune   : 1;
+		unsigned sitstand : 1;
+		unsigned commands : 1;
+	} block_action;
 END_ZEROED_BLOCK;
 
 	// The following structures are zeroed manually in status_calc_pc_
@@ -587,7 +596,6 @@ END_ZEROED_BLOCK;
 	// temporary debugging of bug #3504
 	const char* delunit_prevfile;
 	int delunit_prevline;
-
 };
 
 #define EQP_WEAPON EQP_HAND_R

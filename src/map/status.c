@@ -1708,6 +1708,9 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 	if (src != NULL && src->type != BL_PC && status->isdead(src))
 		return 0;
 
+	if (sd != NULL && sd->block_action.skill) // *pcblock script command
+		return 0;
+
 	if (!skill_id) { //Normal attack checks.
 		if (!(st->mode&MD_CANATTACK))
 			return 0; //This mode is only needed for melee attacking.
@@ -1719,7 +1722,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 			return 0;
 	}
 
-	if( skill_id ) {
+	if (skill_id) {
 		if (src != NULL && (sd == NULL || sd->skillitem == 0)) {
 			// Items that cast skills using 'itemskill' will not be handled by map_zone_db.
 			int i;

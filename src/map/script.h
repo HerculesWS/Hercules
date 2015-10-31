@@ -349,6 +349,19 @@ enum navigation_service {
 	NAV_ALL                = NAV_AIRSHIP_ONLY + NAV_SCROLL_ONLY + NAV_KAFRA_ONLY // 111-255
 };
 
+
+enum pcblock_action_flag {
+	PCBLOCK_MOVE,
+	PCBLOCK_ATTACK,
+	PCBLOCK_SKILL,
+	PCBLOCK_USEITEM,
+	PCBLOCK_CHAT,
+	PCBLOCK_IMMUNE,
+	PCBLOCK_SITSTAND,
+	PCBLOCK_COMMANDS,
+};
+
+
 /**
  * Structures
  **/
