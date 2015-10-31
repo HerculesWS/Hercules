@@ -1600,6 +1600,10 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 
 	if( skill_id ) {
 
+		if ( src && src->type == BL_PC ) // *pcblock script command
+			if ( ((TBL_PC*)src)->block_action & PCBLOCK_SKILL )
+				return 0;
+
 		if( src && !(src->type == BL_PC && ((TBL_PC*)src)->skillitem)) { // Items that cast skills using 'itemskill' will not be handled by map_zone_db.
 			int i;
 

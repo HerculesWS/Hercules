@@ -168,10 +168,8 @@ struct map_session_data {
 		unsigned int noask :1; // [LuzZza]
 		unsigned int trading :1; //[Skotlex] is 1 only after a trade has started.
 		unsigned int deal_locked :2; //1: Clicked on OK. 2: Clicked on TRADE
-		unsigned int monster_ignore :1; // for monsters to ignore a character [Valaris] [zzo]
 		unsigned int size :2; // for tiny/large types
 		unsigned int night :1; //Holds whether or not the player currently has the SI_NIGHT effect on. [Skotlex]
-		unsigned int blockedmove :1;
 		unsigned int using_fake_npc :1;
 		unsigned int rewarp :1; //Signals that a player should warp as soon as he is done loading a map. [Skotlex]
 		unsigned int killer : 1;
@@ -571,6 +569,7 @@ END_ZEROED_BLOCK;
 	const char* delunit_prevfile;
 	int delunit_prevline;
 
+	int block_action;
 };
 
 #define EQP_WEAPON EQP_HAND_R
@@ -755,6 +754,17 @@ struct autotrade_vending {
 	struct s_vending vending[MAX_VENDING];
 	unsigned char vend_num;
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
+};
+
+enum block_action_flag {
+	PCBLOCK_MOVE     = 0x01,
+	PCBLOCK_ATTACK   = 0x02,
+	PCBLOCK_SKILL    = 0x04,
+	PCBLOCK_USEITEM  = 0x08,
+	PCBLOCK_CHAT     = 0x10,
+	PCBLOCK_IMMUNE   = 0x20,
+	PCBLOCK_SITSTAND = 0x40,
+	PCBLOCK_COMMAND  = 0x80,
 };
 
 /*=====================================

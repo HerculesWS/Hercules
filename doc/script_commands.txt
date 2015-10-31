@@ -5859,12 +5859,11 @@ Examples:
 	
 ---------------------------------------
 
-*pcblockmove <id>,<option>;
+*pcblockmove <account ID>,<option>;
 	
-Prevents the given ID from moving when the option != 0, and 0 enables the 
-ID to move again. The ID can either be the GID of a monster/NPC or account 
-ID of a character, and will run for the attached player if zero is 
-supplied.
+Prevents the player from moving when the option != 0, and 0 enables the 
+player to move again. The player has to be the account ID of a character,
+and will run for the attached player if zero is supplied.
 
 Examples:
 
@@ -5874,6 +5873,47 @@ Examples:
 // Enables the current char to move again.
 	pcblockmove getcharid(3),0;
 
+---------------------------------------
+
+*pcblock <type>,<option>{,<account ID>};
+
+Prevents the player from doing the following actions when the <option> is
+true(1), and false(0) will allow those actions again. If there is no
+account ID given, the script will run for the current attached player.
+
+The <type> listed are :-
+	BLOCK_MOVE     0x01
+	BLOCK_ATTACK   0x02
+	BLOCK_SKILL    0x04
+	BLOCK_USEITEM  0x08
+	BLOCK_CHAT     0x10
+	BLOCK_IMMUNE   0x20
+	BLOCK_SITSTAND 0x40
+	BLOCK_COMMAND  0x80
+
+Examples:
+
+// Make the current attached player invulnerable, same as @monsterignore
+	pcblock BLOCK_IMMUNE, true;
+
+// Prevents the current char from attacking and using skills
+	pcblock BLOCK_ATTACK|BLOCK_SKILL, true, getcharid(3);
+
+---------------------------------------
+
+*getpcblock({<account ID>})
+
+This command will return the options of the current attached player used by
+'pcblock' command. Additionally, you may insert account ID within the bracket
+to check on another player.
+
+Examples:
+
+	if (getpcblock() & BLOCK_IMMUNE)
+		mes "You are invulnerable!";
+
+	if (getpcblock() & (BLOCK_ATTACK|BLOCK_SKILL))
+		mes "You are unable to attack and use any skills.";
 
 ---------------------------------------
 //=====================================

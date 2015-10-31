@@ -4894,6 +4894,9 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	if( sd->status.inventory[n].nameid <= 0 || sd->status.inventory[n].amount <= 0 )
 		return 0;
 
+	if( sd->block_action & PCBLOCK_USEITEM ) // *pcblock script command
+		return 0;
+
 	if( !pc->isUseitem(sd,n) )
 		return 0;
 
@@ -8890,7 +8893,8 @@ bool pc_can_attack( struct map_session_data *sd, int target_id ) {
 		(sd->sc.data[SC_SIREN] && sd->sc.data[SC_SIREN]->val2 == target_id) ||
 		sd->sc.data[SC_BLADESTOP] ||
 		sd->sc.data[SC_DEEP_SLEEP] ||
-		sd->sc.data[SC_FALLENEMPIRE] )
+		sd->sc.data[SC_FALLENEMPIRE] ||
+		sd->block_action & PCBLOCK_ATTACK )
 			return false;
 
 	return true;
@@ -8906,7 +8910,8 @@ bool pc_can_talk( struct map_session_data *sd ) {
 
 	if( sd->sc.data[SC_BERSERK] ||
 		(sd->sc.data[SC_DEEP_SLEEP] && sd->sc.data[SC_DEEP_SLEEP]->val2) ||
-		(sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
+		(sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) ||
+		sd->block_action & PCBLOCK_CHAT )
 		return false;
 
 	return true;

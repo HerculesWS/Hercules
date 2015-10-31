@@ -1041,7 +1041,7 @@ int unit_can_move(struct block_list *bl) {
 		pc_issit(sd) ||
 		sd->state.vending ||
 		sd->state.buyingstore ||
-		sd->state.blockedmove
+		sd->block_action & PCBLOCK_MOVE
 	))
 		return 0; //Can't move
 

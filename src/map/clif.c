@@ -9963,6 +9963,9 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 				return;
 			}
 
+			if( sd->block_action & PCBLOCK_SITSTAND ) // *pcblock script command
+				return;
+
 			if (sd->ud.skilltimer != INVALID_TIMER || (sd->sc.opt1 && sd->sc.opt1 != OPT1_BURNING ))
 				break;
 
@@ -9986,6 +9989,9 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 				clif->standing(&sd->bl);
 				return;
 			}
+
+			if( sd->block_action & PCBLOCK_SITSTAND ) // *pcblock script command
+				return;
 
 			if( battle_config.idletime_criteria & BCIDLE_SIT )
 				sd->idletime = sockt->last_tick;

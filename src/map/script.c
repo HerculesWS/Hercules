@@ -16294,9 +16294,56 @@ BUILDIN(pcblockmove) {
 	else
 		sd = script->rid2sd(st);
 
-	if(sd)
-		sd->state.blockedmove = flag > 0;
+	if(!sd)
+		return true;
 
+	if(flag)
+		sd->block_action |= PCBLOCK_MOVE;
+	else
+		sd->block_action &= ~PCBLOCK_MOVE;
+
+	return true;
+}
+
+BUILDIN(pcblock) {
+	int type, flag;
+	TBL_PC *sd = NULL;
+
+	type = script_getnum(st,2);
+	flag = script_getnum(st,3);
+	if( script_hasdata(st,4) )
+		sd = map->id2sd(script_getnum(st,4));
+	else
+		sd = script->rid2sd(st);
+
+	if(!sd)
+		return true;
+
+	if(!type) {
+		ShowError("buildin_pcblock: Invalid type 0.\n");
+		return false;
+	}
+
+	if(flag)
+		sd->block_action |= type;
+	else
+		sd->block_action &= ~type;
+
+	return true;
+}
+
+BUILDIN(getpcblock) {
+	TBL_PC *sd = NULL;
+
+	if( script_hasdata(st,2) )
+		sd = map->id2sd(script_getnum(st,2));
+	else
+		sd = script->rid2sd(st);
+
+	if(!sd)
+		return true;
+
+	script_pushint(st,sd->block_action);
 	return true;
 }
 
@@ -20234,6 +20281,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(pcfollow,"ii"),
 		BUILDIN_DEF(pcstopfollow,"i"),
 		BUILDIN_DEF(pcblockmove,"ii"),
+		BUILDIN_DEF(pcblock,"ii?"),
+		BUILDIN_DEF(getpcblock,"?"),
 		// <--- [zBuffer] List of player cont commands
 		// [zBuffer] List of mob control commands --->
 		BUILDIN_DEF(unitwalk,"ii?"),
@@ -20509,6 +20558,16 @@ void script_hardcoded_constants(void) {
 	script->set_constant("BG_AREA_WOS",BG_AREA_WOS,false);
 	script->set_constant("BG_QUEUE",BG_QUEUE,false);
 
+	/* pc_block_action */
+	script->set_constant("BLOCK_MOVE",PCBLOCK_MOVE,false);
+	script->set_constant("BLOCK_ATTACK",PCBLOCK_ATTACK,false);
+	script->set_constant("BLOCK_SKILL",PCBLOCK_SKILL,false);
+	script->set_constant("BLOCK_USEITEM",PCBLOCK_USEITEM,false);
+	script->set_constant("BLOCK_CHAT",PCBLOCK_CHAT,false);
+	script->set_constant("BLOCK_IMMUNE",PCBLOCK_IMMUNE,false);
+	script->set_constant("BLOCK_SITSTAND",PCBLOCK_SITSTAND,false);
+	script->set_constant("BLOCK_COMMAND",PCBLOCK_COMMAND,false);
+	
 	/* Renewal */
 #ifdef RENEWAL
 	script->set_constant("RENEWAL", 1, false);
