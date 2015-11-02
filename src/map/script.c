@@ -5255,11 +5255,14 @@ bool script_load_translation_addstring(const char *file, uint8 lang_id, const ch
 
 	if (strcasecmp(msgctxt, "messages.conf") == 0) {
 		int i;
+		struct lang_table *baselang = &VECTOR_FIRST(atcommand->languages);
+		struct lang_table *lang = &VECTOR_INDEX(atcommand->languages, lang_id);
+
 		for (i = 0; i < MAX_MSG; i++) {
-			if (atcommand->msg_table[0][i] != NULL && strcmpi(atcommand->msg_table[0][i], VECTOR_DATA(*msgid)) == 0) {
-				if (atcommand->msg_table[lang_id][i] != NULL)
-					aFree(atcommand->msg_table[lang_id][i]);
-				atcommand->msg_table[lang_id][i] = aStrdup(VECTOR_DATA(*msgstr));
+			if (baselang->messages[i] != NULL && strcmpi(baselang->messages[i], VECTOR_DATA(*msgid)) == 0) {
+				if (lang->messages[i] != NULL)
+					aFree(lang->messages[i]);
+				lang->messages[i] = aStrdup(VECTOR_DATA(*msgstr));
 				break;
 			}
 		}
@@ -5296,6 +5299,8 @@ bool script_load_translation_addstring(const char *file, uint8 lang_id, const ch
  * @param file The filename to parse.
  * @param lang_id The language identifier.
  * @return The amount of strings loaded.
+ *
+ * FIXME: This would be better as a separate module. It doesn't belong to script, nor atcommand.
  */
 int script_load_translation(const char *file, uint8 lang_id)
 {
@@ -5307,6 +5312,7 @@ int script_load_translation(const char *file, uint8 lang_id)
 	struct script_string_buf msgid, msgstr;
 
 	nullpo_ret(file);
+	Assert_ret(lang_id <= VECTOR_LENGTH(atcommand->languages)); // Sanity check
 
 	if ((fp = fopen(file,"rb")) == NULL) {
 		ShowError("load_translation: failed to open '%s' for reading\n",file);
@@ -5317,8 +5323,10 @@ int script_load_translation(const char *file, uint8 lang_id)
 	VECTOR_INIT(msgstr);
 
 	script->add_language(script->get_translation_file_name(file));
-	if (lang_id >= atcommand->max_message_table)
-		atcommand->expand_message_table();
+	if (lang_id >= VECTOR_LENGTH(atcommand->languages)) {
+		VECTOR_ENSURE(atcommand->languages, 1, 1); // FIXME: We're not really ensuring it fits. Added a temp sanity check few lines above.
+		VECTOR_PUSHZEROED(atcommand->languages);
+	}
 
 	while (fgets(line, sizeof(line), fp) != NULL) {
 		int len = (int)strlen(line);

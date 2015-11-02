@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -64,6 +64,7 @@
 #include "common/conf.h"
 #include "common/console.h"
 #include "common/core.h"
+#include "common/db.h"
 #include "common/ers.h"
 #include "common/grfio.h"
 #include "common/md5calc.h"
@@ -6490,6 +6491,7 @@ int do_init(int argc, char *argv[])
 		}
 
 		battle->config_read(map->BATTLE_CONF_FILENAME, false);
+		atcommand->init_msg();
 		atcommand->msg_read(map->MSG_CONF_NAME, false);
 		map->inter_config_read(map->INTER_CONF_NAME, false);
 		logs->config_read(map->LOG_CONF_NAME, false);

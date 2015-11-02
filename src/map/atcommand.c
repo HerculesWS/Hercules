@@ -97,33 +97,68 @@ struct atcmd_binding_data* get_atcommandbind_byname(const char* name) {
 	return VECTOR_INDEX(atcommand->bindings, i);
 }
 
-const char* atcommand_msgsd(struct map_session_data *sd, int msg_number) {
-	Assert_retr("??", msg_number >= 0 && msg_number < MAX_MSG && atcommand->msg_table[0][msg_number] != NULL);
-	if (!sd || sd->lang_id >= atcommand->max_message_table || !atcommand->msg_table[sd->lang_id][msg_number])
-		return atcommand->msg_table[0][msg_number];
-	return atcommand->msg_table[sd->lang_id][msg_number];
-}
-
-const char* atcommand_msgfd(int fd, int msg_number) {
-	struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
-	Assert_retr("??", msg_number >= 0 && msg_number < MAX_MSG && atcommand->msg_table[0][msg_number] != NULL);
-	if (!sd || sd->lang_id >= atcommand->max_message_table || !atcommand->msg_table[sd->lang_id][msg_number])
-		return atcommand->msg_table[0][msg_number];
-	return atcommand->msg_table[sd->lang_id][msg_number];
-}
-
-//-----------------------------------------------------------
-// Return the message string of the specified number by [Yor]
-//-----------------------------------------------------------
-const char* atcommand_msg(int msg_number) {
+/**
+ * Returns the message with the given ID for a language table.
+ *
+ * If the language doesn't exist or doesn't contain the specified ID, the
+ * server's default language and the base language are used, in this order.
+ *
+ * @param lang_id    The language table ID.
+ * @param msg_number The message ID.
+ * @return The requested message.
+ */
+const char *atcommand_msglang(int lang_id, int msg_number)
+{
+	struct lang_table *lang = NULL;
 	Assert_retr("??", msg_number >= 0 && msg_number < MAX_MSG);
-	if (atcommand->msg_table[map->default_lang_id][msg_number] != NULL && atcommand->msg_table[map->default_lang_id][msg_number][0] != '\0')
-		return atcommand->msg_table[map->default_lang_id][msg_number];
+	if (lang_id < 0 || lang_id > VECTOR_LENGTH(atcommand->languages))
+		return atcommand->msg(msg_number);
+	lang = &VECTOR_INDEX(atcommand->languages, lang_id);
+	if (lang->messages[msg_number] == NULL)
+		return atcommand->msg(msg_number);
+	return lang->messages[msg_number];
+}
 
-	if(atcommand->msg_table[0][msg_number] != NULL && atcommand->msg_table[0][msg_number][0] != '\0')
-		return atcommand->msg_table[0][msg_number];
+/**
+ * Returns the message with the given ID for a character.
+ *
+ * @param sd         The character.
+ * @param msg_number The message ID.
+ * @return The requested message.
+ */
+const char *atcommand_msgsd(struct map_session_data *sd, int msg_number)
+{
+	nullpo_retr("??", sd);
+	return atcommand->msglang(sd->lang_id, msg_number);
+}
 
-	return "??";
+/**
+ * Returns the message with the given ID for a connection.
+ *
+ * @param fd         The connection descriptor.
+ * @param msg_number The message ID.
+ * @return The requested message.
+ */
+const char *atcommand_msgfd(int fd, int msg_number)
+{
+	return atcommand->msgsd(sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL, msg_number);
+}
+
+/**
+ * Returns the message with the given ID.
+ * @author Yor
+ *
+ * @param msg_number The message ID.
+ * @return The requested message.
+ */
+const char *atcommand_msg(int msg_number)
+{
+	struct lang_table *lang = &VECTOR_INDEX(atcommand->languages, map->default_lang_id);
+	Assert_retr("??", msg_number >= 0 && msg_number < MAX_MSG);
+	if (lang->messages[msg_number] == NULL)
+		lang = &VECTOR_FIRST(atcommand->languages);
+	Assert_retr("??", lang->messages[msg_number] != NULL);
+	return lang->messages[msg_number];
 }
 
 /**
@@ -137,6 +172,7 @@ bool msg_config_read(const char *cfg_name, bool allow_override) {
 	int msg_number;
 	char line[1024], w1[1024], w2[1024];
 	FILE *fp;
+	struct lang_table *lang = NULL;
 
 	nullpo_retr(false, cfg_name);
 	if ((fp = fopen(cfg_name, "r")) == NULL) {
@@ -144,10 +180,13 @@ bool msg_config_read(const char *cfg_name, bool allow_override) {
 		return false;
 	}
 
-	if( !atcommand->max_message_table )
-		atcommand->expand_message_table();
+	if (VECTOR_LENGTH(atcommand->languages) == 0) {
+		VECTOR_ENSURE(atcommand->languages, 1, 1);
+		VECTOR_PUSHZEROED(atcommand->languages);
+	}
+	lang = &VECTOR_FIRST(atcommand->languages);
 
-	while(fgets(line, sizeof(line), fp)) {
+	while (fgets(line, sizeof(line), fp)) {
 		if (line[0] == '/' && line[1] == '/')
 			continue;
 		if (sscanf(line, "%1023[^:]: %1023[^\r\n]", w1, w2) != 2)
@@ -155,44 +194,53 @@ bool msg_config_read(const char *cfg_name, bool allow_override) {
 
 		if (strcmpi(w1, "import") == 0) {
 			atcommand->msg_read(w2, true);
-		} else {
-			msg_number = atoi(w1);
-			if (msg_number >= 0 && msg_number < MAX_MSG) {
-				if (atcommand->msg_table[0][msg_number] != NULL) {
-					if (!allow_override) {
-						ShowError("Duplicate message: ID '%d' was already used for '%s'. Message '%s' will be ignored.\n",
-						          msg_number, w2, atcommand->msg_table[0][msg_number]);
-						continue;
-					}
-					aFree(atcommand->msg_table[0][msg_number]);
-				}
-				/* this could easily become consecutive memory like get_str() and save the malloc overhead for over 1k calls [Ind] */
-				atcommand->msg_table[0][msg_number] = (char *)aMalloc((strlen(w2) + 1)*sizeof (char));
-				strcpy(atcommand->msg_table[0][msg_number],w2);
-			}
+			continue;
 		}
+
+		msg_number = atoi(w1);
+		if (msg_number < 0 || msg_number > MAX_MSG) {
+			ShowError("Invalid message ID '%d'. Valid ID range is [0:%d]. Message '%s' will be ignored.\n", msg_number, MAX_MSG, w2);
+			continue;
+		}
+		if (lang->messages[msg_number] != NULL) {
+			if (!allow_override) {
+				ShowError("Duplicate message: ID '%d' was already used for '%s'. Message '%s' will be ignored.\n",
+					  msg_number, w2, lang->messages[msg_number]);
+				continue;
+			}
+			aFree(lang->messages[msg_number]);
+		}
+		/* this could easily become consecutive memory like get_str() and save the malloc overhead for over 1k calls [Ind] */
+		lang->messages[msg_number] = aStrdup(w2);
 	}
 	fclose(fp);
 
 	return true;
 }
 
-/*==========================================
+/**
  * Cleanup Message Data
- *------------------------------------------*/
-void do_final_msg(void) {
-	int i, j;
+ */
+void do_final_msg(void)
+{
+	int i;
 
-	for(i = 0; i < atcommand->max_message_table; i++) {
-		for (j = 0; j < MAX_MSG; j++) {
-			if( atcommand->msg_table[i][j] )
-				aFree(atcommand->msg_table[i][j]);
+	while (VECTOR_LENGTH(atcommand->languages) > 0) {
+		struct lang_table *lang = &VECTOR_POP(atcommand->languages);
+		for (i = 0; i < MAX_MSG; i++) {
+			if (lang->messages[i])
+				aFree(lang->messages[i]);
 		}
-		aFree(atcommand->msg_table[i]);
 	}
+	VECTOR_CLEAR(atcommand->languages);
+}
 
-	if( atcommand->msg_table )
-		aFree(atcommand->msg_table);
+/**
+ * Initialize Message Data
+ */
+void do_init_msg(void)
+{
+	VECTOR_INIT(atcommand->languages);
 }
 
 /**
@@ -10504,11 +10552,6 @@ void atcommand_doload(void) {
 	atcommand->config_read(map->ATCOMMAND_CONF_FILENAME);
 }
 
-void atcommand_expand_message_table(void) {
-	RECREATE(atcommand->msg_table, char **, ++atcommand->max_message_table);
-	CREATE(atcommand->msg_table[atcommand->max_message_table - 1], char *, MAX_MSG);
-}
-
 void do_init_atcommand(bool minimal) {
 	if (minimal)
 		return;
@@ -10547,6 +10590,7 @@ void atcommand_defaults(void) {
 	atcommand->exists = atcommand_exists;
 	atcommand->msg_read = msg_config_read;
 	atcommand->final_msg = do_final_msg;
+	atcommand->init_msg = do_init_msg;
 	atcommand->get_bind_byname = get_atcommandbind_byname;
 	atcommand->get_info_byname = get_atcommandinfo_byname;
 	atcommand->check_alias = atcommand_checkalias;
@@ -10569,7 +10613,7 @@ void atcommand_defaults(void) {
 	atcommand->base_commands = atcommand_basecommands;
 	atcommand->add = atcommand_add;
 	atcommand->msg = atcommand_msg;
-	atcommand->expand_message_table = atcommand_expand_message_table;
 	atcommand->msgfd = atcommand_msgfd;
 	atcommand->msgsd = atcommand_msgsd;
+	atcommand->msglang = atcommand_msglang;
 }

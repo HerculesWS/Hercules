@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2016  Hercules Dev Team
+ * Copyright (C) 2016-2018  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -217,6 +217,7 @@ void script_parser_clean_leftovers_posthook(void)
 bool msg_config_read_posthook(bool retVal, const char *cfg_name, bool allow_override)
 {
 	static int called = 1;
+	struct lang_table *lang = &VECTOR_FIRST(atcommand->languages);
 
 	if (!generating_translations || lang_export_fp == NULL)
 		return retVal;
@@ -227,12 +228,12 @@ bool msg_config_read_posthook(bool retVal, const char *cfg_name, bool allow_over
 	if (++called == 1) { // Original
 		int i;
 		for (i = 0; i < MAX_MSG; i++) {
-			if (atcommand->msg_table[0][i] == NULL)
+			if (lang->messages[i] == NULL)
 				continue;
 			fprintf(lang_export_fp, "msgctxt \"messages.conf\"\n"
 					"msgid \"%s\"\n"
 					"msgstr \"\"\n",
-					atcommand->msg_table[0][i]
+					lang->messages[i]
 			       );
 			lang_export_stringcount++;
 		}
