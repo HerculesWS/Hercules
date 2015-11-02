@@ -9431,7 +9431,7 @@ void clif_channel_msg(struct channel_data *chan, struct map_session_data *sd, ch
 	iter = db_iterator(chan->users);
 	msg_len = (int)strlen(msg) + 1;
 	Assert_retv(msg_len <= INT16_MAX - 12);
-	color = channel->config->colors[chan->color];
+	color = VECTOR_INDEX(channel->config->colors, chan->color).value;
 
 	WFIFOHEAD(sd->fd,msg_len + 12);
 	WFIFOW(sd->fd,0) = 0x2C1;
@@ -9466,7 +9466,7 @@ void clif_channel_msg2(struct channel_data *chan, char *msg)
 	iter = db_iterator(chan->users);
 	msg_len = (int)strlen(msg) + 1;
 	Assert_retv(msg_len <= INT16_MAX - 12);
-	color = channel->config->colors[chan->color];
+	color = VECTOR_INDEX(channel->config->colors, chan->color).value;
 
 	WBUFW(buf,0) = 0x2C1;
 	WBUFW(buf,2) = msg_len + 12;
@@ -10253,7 +10253,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data *sd)
 				timer->settick(sd->fontcolor_tid, td->tick+5000);
 		}
 
-		color = channel->config->colors[sd->fontcolor - 1];
+		color = VECTOR_INDEX(channel->config->colors, sd->fontcolor - 1).value;
 		WFIFOHEAD(fd, outlen + 12);
 		WFIFOW(fd,0) = 0x2C1;
 		WFIFOW(fd,2) = outlen + 12;

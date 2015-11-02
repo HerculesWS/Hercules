@@ -8916,10 +8916,11 @@ void atcommand_channel_help(int fd, const char *command, bool can_create) {
 	}
 }
 /* [Ind/Hercules] */
-ACMD(channel) {
+ACMD(channel)
+{
 	struct channel_data *chan;
 	char subcmd[HCS_NAME_LENGTH], sub1[HCS_NAME_LENGTH], sub2[HCS_NAME_LENGTH], sub3[HCS_NAME_LENGTH];
-	unsigned char k = 0;
+	int k = 0;
 	sub1[0] = sub2[0] = sub3[0] = '\0';
 
 	if (!*message || sscanf(message, "%19s %19s %19s %19s", subcmd, sub1, sub2, sub3) < 1) {
@@ -8956,10 +8957,10 @@ ACMD(channel) {
 	} else if (strcmpi(subcmd,"list") == 0) {
 		// sub1 = list type; sub2 = unused; sub3 = unused
 		if (sub1[0] != '\0' && strcmpi(sub1,"colors") == 0) {
-			for (k = 0; k < channel->config->colors_count; k++) {
-				safesnprintf(atcmd_output, sizeof(atcmd_output), "[ %s list colors ] : %s", command, channel->config->colors_name[k]);
+			for (k = 0; k < VECTOR_LENGTH(channel->config->colors); k++) {
+				safesnprintf(atcmd_output, sizeof(atcmd_output), "[ %s list colors ] : %s", command, VECTOR_INDEX(channel->config->colors, k).name);
 
-				clif->messagecolor_self(fd, channel->config->colors[k], atcmd_output);
+				clif->messagecolor_self(fd, VECTOR_INDEX(channel->config->colors, k).value, atcmd_output);
 			}
 		} else {
 			struct DBIterator *iter = db_iterator(channel->db);
@@ -9002,17 +9003,14 @@ ACMD(channel) {
 			return false;
 		}
 
-		for (k = 0; k < channel->config->colors_count; k++) {
-			if (strcmpi(sub2, channel->config->colors_name[k]) == 0)
-				break;
-		}
-		if (k == channel->config->colors_count) {
+		ARR_FIND(0, VECTOR_LENGTH(channel->config->colors), k, strcmpi(sub2, VECTOR_INDEX(channel->config->colors, k).name) == 0);
+		if (k == VECTOR_LENGTH(channel->config->colors)) {
 			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1411), sub2);// Unknown color '%s'
 			clif->message(fd, atcmd_output);
 			return false;
 		}
 		chan->color = k;
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1413), sub1, channel->config->colors_name[k]);// '%s' channel color updated to '%s'
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1413), sub1, VECTOR_INDEX(channel->config->colors, k).name);// '%s' channel color updated to '%s'
 		clif->message(fd, atcmd_output);
 	} else if (strcmpi(subcmd,"leave") == 0) {
 		// sub1 = channel name; sub2 = unused; sub3 = unused
@@ -9336,13 +9334,14 @@ ACMD(channel) {
 	return true;
 }
 /* debug only, delete after */
-ACMD(fontcolor) {
+ACMD(fontcolor)
+{
 	unsigned char k;
 
 	if (!*message) {
-		for (k = 0; k < channel->config->colors_count; k++) {
-			safesnprintf(atcmd_output, sizeof(atcmd_output), "[ %s ] : %s", command, channel->config->colors_name[k]);
-			clif->messagecolor_self(fd, channel->config->colors[k], atcmd_output);
+		for (k = 0; k < VECTOR_LENGTH(channel->config->colors); k++) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), "[ %s ] : %s", command, VECTOR_INDEX(channel->config->colors, k).name);
+			clif->messagecolor_self(fd, VECTOR_INDEX(channel->config->colors, k).value, atcmd_output);
 		}
 		return false;
 	}
@@ -9352,19 +9351,16 @@ ACMD(fontcolor) {
 		return true;
 	}
 
-	for( k = 0; k < channel->config->colors_count; k++ ) {
-		if (strcmpi(message, channel->config->colors_name[k]) == 0)
-			break;
-	}
-	if( k == channel->config->colors_count ) {
+	ARR_FIND(0, VECTOR_LENGTH(channel->config->colors), k, strcmpi(message, VECTOR_INDEX(channel->config->colors, k).name) == 0);
+	if (k == VECTOR_LENGTH(channel->config->colors)) {
 		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1411), message);// Unknown color '%s'
 		clif->message(fd, atcmd_output);
 		return false;
 	}
 
 	sd->fontcolor = k + 1;
-	safesnprintf(atcmd_output, sizeof(atcmd_output), "Color changed to '%s'", channel->config->colors_name[k]);
-	clif->messagecolor_self(fd, channel->config->colors[k], atcmd_output);
+	safesnprintf(atcmd_output, sizeof(atcmd_output), "Color changed to '%s'", VECTOR_INDEX(channel->config->colors, k).name);
+	clif->messagecolor_self(fd, VECTOR_INDEX(channel->config->colors, k).value, atcmd_output);
 
 	return true;
 }

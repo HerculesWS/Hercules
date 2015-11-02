@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2015  Hercules Dev Team
+ * Copyright (C) 2013-2018  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #ifndef MAP_CHANNEL_H
 #define MAP_CHANNEL_H
 
+#include "common/db.h"
 #include "common/hercules.h"
 #include "common/mmo.h"
 
@@ -60,16 +61,23 @@ enum channel_operation_status {
 };
 
 /**
+ * Channel color data
+ */
+struct channel_color {
+	char name[HCS_NAME_LENGTH]; ///< Color name
+	uint32 value;               ///< RGB color value
+};
+
+/**
  * Structures
  **/
 struct Channel_Config {
-	unsigned int *colors;
-	char **colors_name;
-	unsigned char colors_count;
+	// FIXME: This isn't used only by the channel system, it should be moved out of here.
+	VECTOR_DECL(struct channel_color) colors; ///< Channel colors
 	bool local, ally, irc;
 	bool local_autojoin, ally_autojoin, irc_autojoin;
 	char local_name[HCS_NAME_LENGTH], ally_name[HCS_NAME_LENGTH], irc_name[HCS_NAME_LENGTH];
-	unsigned char local_color, ally_color, irc_color;
+	int local_color, ally_color, irc_color;
 	bool closing;
 	bool allow_user_channel_creation;
 	char irc_server[40], irc_channel[50], irc_nick[40], irc_nick_pw[30];
@@ -84,7 +92,7 @@ struct channel_ban_entry {
 struct channel_data {
 	char name[HCS_NAME_LENGTH];
 	char password[HCS_NAME_LENGTH];
-	unsigned char color;
+	int color;
 	struct DBMap *users;
 	struct DBMap *banned;
 	char handlers[MAX_EVENTQUEUE][EVENT_NAME_LENGTH];
@@ -104,7 +112,7 @@ struct channel_interface {
 	void (*final) (void);
 
 	struct channel_data *(*search) (const char *name, struct map_session_data *sd);
-	struct channel_data *(*create) (enum channel_types type, const char *name, unsigned char color);
+	struct channel_data *(*create) (enum channel_types type, const char *name, int color_id);
 	void (*delete) (struct channel_data *chan);
 
 	void (*set_password) (struct channel_data *chan, const char *password);
