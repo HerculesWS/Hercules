@@ -111,6 +111,7 @@ struct npc_data {
 enum actor_classes {
 	WARP_CLASS = 45,
 	HIDDEN_WARP_CLASS = 139,
+	MOB_TOMB = 565,
 	WARP_DEBUG_CLASS = 722,
 	FLAG_CLASS = 722,
 	INVISIBLE_CLASS = 32767,
@@ -230,7 +231,7 @@ struct npc_interface {
 	void (*parsename) (struct npc_data *nd, const char *name, const char *start, const char *buffer, const char *filepath);
 	int (*parseview) (const char *w4, const char *start, const char *buffer, const char *filepath);
 	bool (*viewisid) (const char *viewid);
-	struct npc_data* (*create_npc) (int m, int x, int y);
+	struct npc_data *(*create_npc) (int m, int x, int y, uint8 dir, int16 class_);
 	struct npc_data* (*add_warp) (char *name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y);
 	const char* (*parse_warp) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	const char* (*parse_shop) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
@@ -238,7 +239,7 @@ struct npc_interface {
 	void (*convertlabel_db) (struct npc_label_list *label_list, const char *filepath);
 	const char* (*skip_script) (const char *start, const char *buffer, const char *filepath, int *retval);
 	const char* (*parse_script) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int options, int *retval);
-	bool (*duplicate_sub) (struct npc_data *nd, const struct npc_data *snd, int class_, int dir, int xs, int ys, int options);
+	bool (*duplicate_sub) (struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options);
 	const char* (*parse_duplicate) (char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int options, int *retval);
 	int (*duplicate4instance) (struct npc_data *snd, int16 m);
 	void (*setcells) (struct npc_data *nd);

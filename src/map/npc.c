@@ -2560,17 +2560,31 @@ bool npc_viewisid(const char * viewid)
 	return true;
 }
 
-struct npc_data* npc_create_npc(int m, int x, int y)
+/**
+ * Creates a new NPC.
+ *
+ * @param m       The map id.
+ * @param x       The x coordinate on map.
+ * @param y       The y coordinate on map.
+ * @param dir     The facing direction.
+ * @param class_  The NPC view class.
+ * @return A pointer to the created NPC data (ownership passed to the caller).
+ */
+struct npc_data *npc_create_npc(int m, int x, int y, uint8 dir, int16 class_)
 {
 	struct npc_data *nd;
 
 	CREATE(nd, struct npc_data, 1);
+	nd->bl.type = BL_NPC;
 	nd->bl.id = npc->get_new_npc_id();
 	nd->bl.prev = nd->bl.next = NULL;
 	nd->bl.m = m;
 	nd->bl.x = x;
 	nd->bl.y = y;
+	nd->dir = dir;
 	nd->area_size = AREA_SIZE + 1;
+	nd->class_ = class_;
+	nd->speed = 200;
 
 	return nd;
 }
@@ -2580,7 +2594,7 @@ struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short 
 	int i, flag = 0;
 	struct npc_data *nd;
 
-	nd = npc->create_npc(from_mapid, from_x, from_y);
+	nd = npc->create_npc(from_mapid, from_x, from_y, 0, battle_config.warp_point_debug ? WARP_DEBUG_CLASS : WARP_CLASS);
 	map->addnpc(from_mapid, nd);
 
 	safestrncpy(nd->exname, name, ARRAYLENGTH(nd->exname));
@@ -2594,18 +2608,11 @@ struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short 
 		snprintf(nd->exname, ARRAYLENGTH(nd->exname), "warp%d_%d_%d_%d", i, from_mapid, from_x, from_y);
 	safestrncpy(nd->name, nd->exname, ARRAYLENGTH(nd->name));
 
-	if( battle_config.warp_point_debug )
-		nd->class_ = WARP_DEBUG_CLASS;
-	else
-		nd->class_ = WARP_CLASS;
-	nd->speed = 200;
-
 	nd->u.warp.mapindex = to_mapindex;
 	nd->u.warp.x = to_x;
 	nd->u.warp.y = to_y;
 	nd->u.warp.xs = xs;
 	nd->u.warp.ys = xs;
-	nd->bl.type = BL_NPC;
 	nd->subtype = WARP;
 	npc->setcells(nd);
 	map->addblock(&nd->bl);
@@ -2649,16 +2656,10 @@ const char* npc_parse_warp(char* w1, char* w2, char* w3, char* w4, const char* s
 		return strchr(start,'\n');;//try next
 	}
 
-	nd = npc->create_npc(m, x, y);
+	nd = npc->create_npc(m, x, y, 0, battle_config.warp_point_debug ? WARP_DEBUG_CLASS : WARP_CLASS);
 	map->addnpc(m, nd);
 	npc->parsename(nd, w3, start, buffer, filepath);
 	nd->path = npc->retainpathreference(filepath);
-
-	if (!battle_config.warp_point_debug)
-		nd->class_ = WARP_CLASS;
-	else
-		nd->class_ = WARP_DEBUG_CLASS;
-	nd->speed = 200;
 
 	nd->u.warp.mapindex = i;
 	nd->u.warp.x = to_x;
@@ -2666,7 +2667,6 @@ const char* npc_parse_warp(char* w1, char* w2, char* w3, char* w4, const char* s
 	nd->u.warp.xs = xs;
 	nd->u.warp.ys = ys;
 	npc_warp++;
-	nd->bl.type = BL_NPC;
 	nd->subtype = WARP;
 	npc->setcells(nd);
 	map->addblock(&nd->bl);
@@ -2693,7 +2693,7 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 	size_t items_count = 40; // Starting items size
 
 	char *p;
-	int x, y, dir, m, i;
+	int x, y, dir, m, i, class_;
 	struct npc_data *nd;
 	enum npc_subtype type;
 
@@ -2792,7 +2792,8 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 		return strchr(start,'\n');// continue
 	}
 
-	nd = npc->create_npc(m, x, y);
+	class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
+	nd = npc->create_npc(m, x, y, dir, class_);
 	CREATE(nd->u.shop.shop_item, struct npc_item_list, i);
 	memcpy(nd->u.shop.shop_item, items, sizeof(items[0])*i);
 	aFree(items);
@@ -2800,18 +2801,14 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 	nd->u.shop.count = i;
 	npc->parsename(nd, w3, start, buffer, filepath);
 	nd->path = npc->retainpathreference(filepath);
-	nd->class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
-	nd->speed = 200;
 
 	++npc_shop;
-	nd->bl.type = BL_NPC;
 	nd->subtype = type;
 	if( m >= 0 ) {// normal shop npc
 		map->addnpc(m,nd);
 		map->addblock(&nd->bl);
 		status->set_viewdata(&nd->bl, nd->class_);
 		nd->ud = &npc->base_ud;
-		nd->dir = dir;
 		if( map->list[nd->bl.m].users )
 			clif->spawn(&nd->bl);
 	} else {// 'floating' shop
@@ -2917,7 +2914,7 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 {
 	int x, y, dir = 0, m, xs = 0, ys = 0; // [Valaris] thanks to fov
 	struct script_code *scriptroot;
-	int i;
+	int i, class_;
 	const char* end;
 	const char* script_start;
 
@@ -2974,22 +2971,20 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 		npc->convertlabel_db(label_list,filepath);
 	}
 
-	nd = npc->create_npc(m, x, y);
-	if( sscanf(w4, "%*[^,],%d,%d", &xs, &ys) == 2 )
-	{// OnTouch area defined
+	class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
+	nd = npc->create_npc(m, x, y, dir, class_);
+	if (sscanf(w4, "%*[^,],%d,%d", &xs, &ys) == 2) {
+		// OnTouch area defined
 		nd->u.scr.xs = xs;
 		nd->u.scr.ys = ys;
-	}
-	else
-	{// no OnTouch area
+	} else {
+		// no OnTouch area
 		nd->u.scr.xs = -1;
 		nd->u.scr.ys = -1;
 	}
 
 	npc->parsename(nd, w3, start, buffer, filepath);
 	nd->path = npc->retainpathreference(filepath);
-	nd->class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
-	nd->speed = 200;
 	nd->u.scr.script = scriptroot;
 	nd->u.scr.label_list = label_list;
 	nd->u.scr.label_list_num = label_list_num;
@@ -2998,13 +2993,11 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 	nd->u.scr.shop = NULL;
 
 	++npc_script;
-	nd->bl.type = BL_NPC;
 	nd->subtype = SCRIPT;
 
 	if( m >= 0 ) {
 		map->addnpc(m, nd);
 		nd->ud = &npc->base_ud;
-		nd->dir = dir;
 		npc->setcells(nd);
 		map->addblock(&nd->bl);
 		if( nd->class_ >= 0 ) {
@@ -3051,7 +3044,8 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 /**
  * Duplicates a warp, shop, cashshop or script.
  *
- * @param nd      An already initialized NPC data. Expects bl->m, bl->x, bl->y, name, exname, path to be already filled.
+ * @param nd      An already initialized NPC data. Expects bl->m, bl->x, bl->y,
+ *                name, exname, path, dir, class_, speed to be already filled.
  * @param snd     The source NPC to duplicate.
  * @param class_  The npc view class.
  * @param dir     The facing direction.
@@ -3060,15 +3054,12 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
  * @param options The NPC options.
  * @retval false if there were any issues while creating and validating the NPC.
  */
-bool npc_duplicate_sub(struct npc_data *nd, const struct npc_data *snd, int class_, int dir, int xs, int ys, int options)
+bool npc_duplicate_sub(struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options)
 {
 	int i;
 	bool retval = true;
 
-	nd->class_ = class_;
-	nd->speed = 200;
 	nd->src_id = snd->bl.id;
-	nd->bl.type = BL_NPC;
 	nd->subtype = snd->subtype;
 	switch (nd->subtype) {
 		case SCRIPT:
@@ -3091,10 +3082,6 @@ bool npc_duplicate_sub(struct npc_data *nd, const struct npc_data *snd, int clas
 
 		case WARP:
 			++npc_warp;
-			if( !battle_config.warp_point_debug )
-				nd->class_ = WARP_CLASS;
-			else
-				nd->class_ = WARP_DEBUG_CLASS;
 			nd->u.warp.xs = xs;
 			nd->u.warp.ys = ys;
 			nd->u.warp.mapindex = snd->u.warp.mapindex;
@@ -3107,7 +3094,6 @@ bool npc_duplicate_sub(struct npc_data *nd, const struct npc_data *snd, int clas
 	if (nd->bl.m >= 0) {
 		map->addnpc(nd->bl.m, nd);
 		nd->ud = &npc->base_ud;
-		nd->dir = dir;
 		npc->setcells(nd);
 		map->addblock(&nd->bl);
 		if (nd->class_ >= 0) {
@@ -3229,11 +3215,11 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 		return end;// next line, try to continue
 	}
 
-	nd = npc->create_npc(m, x, y);
+	class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
+	nd = npc->create_npc(m, x, y, dir, class_);
 	npc->parsename(nd, w3, start, buffer, filepath);
 	nd->path = npc->retainpathreference(filepath);
-	class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
-	if (!npc->duplicate_sub(nd, dnd, class_, dir, xs, ys, options)) {
+	if (!npc->duplicate_sub(nd, dnd, xs, ys, options)) {
 		if (retval) *retval = EXIT_FAILURE;
 	}
 
@@ -3284,11 +3270,11 @@ int npc_duplicate4instance(struct npc_data *snd, int16 m)
 		break;
 	}
 
-	nd = npc->create_npc(m, snd->bl.x, snd->bl.y);
+	nd = npc->create_npc(m, snd->bl.x, snd->bl.y, snd->dir, snd->class_);
 	safestrncpy(nd->name, snd->name, sizeof(nd->name));
 	safestrncpy(nd->exname, newname, sizeof(nd->exname));
 	nd->path = npc->retainpathreference("INSTANCING");
-	npc->duplicate_sub(nd, snd, snd->class_, snd->dir, xs, ys, NPO_NONE);
+	npc->duplicate_sub(nd, snd, xs, ys, NPO_NONE);
 	if (nd->subtype == WARP) {
 		// Adjust destination, if instanced
 		nd->u.warp.mapindex = map_id2index(im);

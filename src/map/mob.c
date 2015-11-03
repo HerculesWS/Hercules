@@ -142,15 +142,11 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 	if ( md->tomb_nid )
 		mob->mvptomb_destroy(md);
 
-	nd = npc->create_npc(md->bl.m, md->bl.x, md->bl.y);
+	nd = npc->create_npc(md->bl.m, md->bl.x, md->bl.y, md->ud.dir, MOB_TOMB);
 	md->tomb_nid = nd->bl.id;
-	nd->dir = md->ud.dir;
-	nd->bl.type = BL_NPC;
 
 	safestrncpy(nd->name, msg_txt(856), sizeof(nd->name)); // "Tomb"
 
-	nd->class_ = 565;
-	nd->speed = 200;
 	nd->subtype = TOMB;
 
 	nd->u.tomb.md = md;
@@ -165,7 +161,6 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 	map->addblock(&nd->bl);
 	status->set_viewdata(&nd->bl, nd->class_);
 	clif->spawn(&nd->bl);
-
 }
 
 void mvptomb_destroy(struct mob_data *md) {
