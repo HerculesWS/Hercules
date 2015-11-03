@@ -142,12 +142,10 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 	if ( md->tomb_nid )
 		mob->mvptomb_destroy(md);
 
-	nd = npc->create_npc(md->bl.m, md->bl.x, md->bl.y, md->ud.dir, MOB_TOMB);
+	nd = npc->create_npc(TOMB, md->bl.m, md->bl.x, md->bl.y, md->ud.dir, MOB_TOMB);
 	md->tomb_nid = nd->bl.id;
 
 	safestrncpy(nd->name, msg_txt(856), sizeof(nd->name)); // "Tomb"
-
-	nd->subtype = TOMB;
 
 	nd->u.tomb.md = md;
 	nd->u.tomb.kill_time = time;

@@ -231,7 +231,7 @@ struct npc_interface {
 	void (*parsename) (struct npc_data *nd, const char *name, const char *start, const char *buffer, const char *filepath);
 	int (*parseview) (const char *w4, const char *start, const char *buffer, const char *filepath);
 	bool (*viewisid) (const char *viewid);
-	struct npc_data *(*create_npc) (int m, int x, int y, uint8 dir, int16 class_);
+	struct npc_data *(*create_npc) (enum npc_subtype subtype, int m, int x, int y, uint8 dir, int16 class_);
 	struct npc_data* (*add_warp) (char *name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y);
 	const char* (*parse_warp) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	const char* (*parse_shop) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
