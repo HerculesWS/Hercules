@@ -2603,7 +2603,6 @@ struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short 
 	struct npc_data *nd;
 
 	nd = npc->create_npc(WARP, from_mapid, from_x, from_y, 0, battle_config.warp_point_debug ? WARP_DEBUG_CLASS : WARP_CLASS);
-	map->addnpc(from_mapid, nd);
 
 	safestrncpy(nd->exname, name, ARRAYLENGTH(nd->exname));
 	if (npc->name2id(nd->exname) != NULL)
@@ -2621,13 +2620,8 @@ struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short 
 	nd->u.warp.y = to_y;
 	nd->u.warp.xs = xs;
 	nd->u.warp.ys = xs;
-	npc->setcells(nd);
-	map->addblock(&nd->bl);
-	status->set_viewdata(&nd->bl, nd->class_);
-	nd->ud = &npc->base_ud;
-	if( map->list[nd->bl.m].users )
-		clif->spawn(&nd->bl);
-	strdb_put(npc->name_db, nd->exname, nd);
+
+	npc->add_to_location(nd);
 
 	return nd;
 }
@@ -2664,7 +2658,6 @@ const char* npc_parse_warp(char* w1, char* w2, char* w3, char* w4, const char* s
 	}
 
 	nd = npc->create_npc(WARP, m, x, y, 0, battle_config.warp_point_debug ? WARP_DEBUG_CLASS : WARP_CLASS);
-	map->addnpc(m, nd);
 	npc->parsename(nd, w3, start, buffer, filepath);
 	nd->path = npc->retainpathreference(filepath);
 
@@ -2674,13 +2667,8 @@ const char* npc_parse_warp(char* w1, char* w2, char* w3, char* w4, const char* s
 	nd->u.warp.xs = xs;
 	nd->u.warp.ys = ys;
 	npc_warp++;
-	npc->setcells(nd);
-	map->addblock(&nd->bl);
-	status->set_viewdata(&nd->bl, nd->class_);
-	nd->ud = &npc->base_ud;
-	if( map->list[nd->bl.m].users )
-		clif->spawn(&nd->bl);
-	strdb_put(npc->name_db, nd->exname, nd);
+
+	npc->add_to_location(nd);
 
 	return strchr(start,'\n');// continue
 }
@@ -2809,17 +2797,7 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 	nd->path = npc->retainpathreference(filepath);
 
 	++npc_shop;
-	if( m >= 0 ) {// normal shop npc
-		map->addnpc(m,nd);
-		map->addblock(&nd->bl);
-		status->set_viewdata(&nd->bl, nd->class_);
-		nd->ud = &npc->base_ud;
-		if( map->list[nd->bl.m].users )
-			clif->spawn(&nd->bl);
-	} else {// 'floating' shop
-		map->addiddb(&nd->bl);
-	}
-	strdb_put(npc->name_db, nd->exname, nd);
+	npc->add_to_location(nd);
 
 	return strchr(start,'\n');// continue
 }
@@ -2997,22 +2975,7 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 		nd->u.scr.trader = true;
 	nd->u.scr.shop = NULL;
 	++npc_script;
-
-	if( m >= 0 ) {
-		map->addnpc(m, nd);
-		nd->ud = &npc->base_ud;
-		npc->setcells(nd);
-		map->addblock(&nd->bl);
-		if( nd->class_ >= 0 ) {
-			status->set_viewdata(&nd->bl, nd->class_);
-			if( map->list[nd->bl.m].users )
-				clif->spawn(&nd->bl);
-		}
-	} else {
-		// we skip map->addnpc, but still add it to the list of ID's
-		map->addiddb(&nd->bl);
-	}
-	strdb_put(npc->name_db, nd->exname, nd);
+	npc->add_to_location(nd);
 
 	//-----------------------------------------
 	// Loop through labels to export them as necessary
@@ -3042,6 +3005,32 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 	}
 
 	return end;
+}
+
+/**
+ * Registers the NPC and adds it to its location (on map or floating).
+ *
+ * @param nd The NPC to register.
+ */
+void npc_add_to_location(struct npc_data *nd)
+{
+	nullpo_retv(nd);
+
+	if (nd->bl.m > 0) {
+		map->addnpc(nd->bl.m, nd);
+		npc->setcells(nd);
+		map->addblock(&nd->bl);
+		nd->ud = &npc->base_ud;
+		if (nd->class_ >= 0) {
+			status->set_viewdata(&nd->bl, nd->class_);
+			if( map->list[nd->bl.m].users )
+				clif->spawn(&nd->bl);
+		}
+	} else {
+		// we skip map->addnpc, but still add it to the list of ID's
+		map->addiddb(&nd->bl);
+	}
+	strdb_put(npc->name_db, nd->exname, nd);
 }
 
 /**
@@ -3094,21 +3083,7 @@ bool npc_duplicate_sub(struct npc_data *nd, const struct npc_data *snd, int xs, 
 	}
 
 	//Add the npc to its location
-	if (nd->bl.m >= 0) {
-		map->addnpc(nd->bl.m, nd);
-		nd->ud = &npc->base_ud;
-		npc->setcells(nd);
-		map->addblock(&nd->bl);
-		if (nd->class_ >= 0) {
-			status->set_viewdata(&nd->bl, nd->class_);
-			if (map->list[nd->bl.m].users)
-				clif->spawn(&nd->bl);
-		}
-	} else {
-		// we skip map->addnpc, but still add it to the list of ID's
-		map->addiddb(&nd->bl);
-	}
-	strdb_put(npc->name_db, nd->exname, nd);
+	npc->add_to_location(nd);
 
 	if (nd->subtype != SCRIPT)
 		return true;
@@ -4780,6 +4755,7 @@ void npc_defaults(void) {
 	npc->convertlabel_db = npc_convertlabel_db;
 	npc->skip_script = npc_skip_script;
 	npc->parse_script = npc_parse_script;
+	npc->add_to_location = npc_add_to_location;
 	npc->duplicate_sub = npc_duplicate_sub;
 	npc->parse_duplicate = npc_parse_duplicate;
 	npc->duplicate4instance = npc_duplicate4instance;
