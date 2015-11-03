@@ -240,6 +240,9 @@ struct npc_interface {
 	const char* (*skip_script) (const char *start, const char *buffer, const char *filepath, int *retval);
 	const char* (*parse_script) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int options, int *retval);
 	void (*add_to_location) (struct npc_data *nd);
+	bool (*duplicate_script_sub) (struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options);
+	bool (*duplicate_shop_sub) (struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options);
+	bool (*duplicate_warp_sub) (struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options);
 	bool (*duplicate_sub) (struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options);
 	const char* (*parse_duplicate) (char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int options, int *retval);
 	int (*duplicate4instance) (struct npc_data *snd, int16 m);

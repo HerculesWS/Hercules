@@ -3034,61 +3034,25 @@ void npc_add_to_location(struct npc_data *nd)
 }
 
 /**
- * Duplicates a warp, shop, cashshop or script.
- *
- * @param nd      An already initialized NPC data. Expects bl->m, bl->x, bl->y,
- *                name, exname, path, dir, class_, speed, subtype to be already
- *                filled.
- * @param snd     The source NPC to duplicate.
- * @param class_  The npc view class.
- * @param dir     The facing direction.
- * @param xs      The x-span, if any.
- * @param ys      The y-span, if any.
- * @param options The NPC options.
- * @retval false if there were any issues while creating and validating the NPC.
+ * Duplicates a script (@see npc_duplicate_sub)
  */
-bool npc_duplicate_sub(struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options)
+bool npc_duplicate_script_sub(struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options)
 {
 	int i;
 	bool retval = true;
 
-	nd->src_id = snd->bl.id;
-	switch (nd->subtype) {
-		case SCRIPT:
-			++npc_script;
-			nd->u.scr.xs = xs;
-			nd->u.scr.ys = ys;
-			nd->u.scr.script = snd->u.scr.script;
-			nd->u.scr.label_list = snd->u.scr.label_list;
-			nd->u.scr.label_list_num = snd->u.scr.label_list_num;
-			nd->u.scr.shop = snd->u.scr.shop;
-			nd->u.scr.trader = snd->u.scr.trader;
-			break;
+	++npc_script;
+	nd->u.scr.xs = xs;
+	nd->u.scr.ys = ys;
+	nd->u.scr.script = snd->u.scr.script;
+	nd->u.scr.label_list = snd->u.scr.label_list;
+	nd->u.scr.label_list_num = snd->u.scr.label_list_num;
+	nd->u.scr.shop = snd->u.scr.shop;
+	nd->u.scr.trader = snd->u.scr.trader;
 
-		case SHOP:
-		case CASHSHOP:
-			++npc_shop;
-			nd->u.shop.shop_item = snd->u.shop.shop_item;
-			nd->u.shop.count = snd->u.shop.count;
-			break;
-
-		case WARP:
-			++npc_warp;
-			nd->u.warp.xs = xs;
-			nd->u.warp.ys = ys;
-			nd->u.warp.mapindex = snd->u.warp.mapindex;
-			nd->u.warp.x = snd->u.warp.x;
-			nd->u.warp.y = snd->u.warp.y;
-			break;
-	}
-
-	//Add the npc to its location
+	//add the npc to its location
 	npc->add_to_location(nd);
 
-	if (nd->subtype != SCRIPT)
-		return true;
-
-	//-----------------------------------------
 	// Loop through labels to export them as necessary
 	for (i = 0; i < nd->u.scr.label_list_num; i++) {
 		if (npc->event_export(nd, i)) {
@@ -3114,6 +3078,73 @@ bool npc_duplicate_sub(struct npc_data *nd, const struct npc_data *snd, int xs, 
 		}
 	}
 	return retval;
+}
+
+/**
+ * Duplicates a shop or cash shop (@see npc_duplicate_sub)
+ */
+bool npc_duplicate_shop_sub(struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options)
+{
+	++npc_shop;
+	nd->u.shop.shop_item = snd->u.shop.shop_item;
+	nd->u.shop.count = snd->u.shop.count;
+
+	//add the npc to its location
+	npc->add_to_location(nd);
+
+	return true;
+}
+
+/**
+ * Duplicates a warp (@see npc_duplicate_sub)
+ */
+bool npc_duplicate_warp_sub(struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options)
+{
+	++npc_warp;
+	nd->u.warp.xs = xs;
+	nd->u.warp.ys = ys;
+	nd->u.warp.mapindex = snd->u.warp.mapindex;
+	nd->u.warp.x = snd->u.warp.x;
+	nd->u.warp.y = snd->u.warp.y;
+
+	//Add the npc to its location
+	npc->add_to_location(nd);
+
+	return true;
+}
+
+/**
+ * Duplicates a warp, shop, cashshop or script.
+ *
+ * @param nd      An already initialized NPC data. Expects bl->m, bl->x, bl->y,
+ *                name, exname, path, dir, class_, speed, subtype to be already
+ *                filled.
+ * @param snd     The source NPC to duplicate.
+ * @param class_  The npc view class.
+ * @param dir     The facing direction.
+ * @param xs      The x-span, if any.
+ * @param ys      The y-span, if any.
+ * @param options The NPC options.
+ * @retval false if there were any issues while creating and validating the NPC.
+ */
+bool npc_duplicate_sub(struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options)
+{
+	nd->src_id = snd->bl.id;
+	switch (nd->subtype) {
+		case SCRIPT:
+			return npc->duplicate_script_sub(nd, snd, xs, ys, options);
+
+		case SHOP:
+		case CASHSHOP:
+			return npc->duplicate_shop_sub(nd, snd, xs, ys, options);
+
+		case WARP:
+			return npc->duplicate_warp_sub(nd, snd, xs, ys, options);
+
+		case TOMB:
+			return false;
+	}
+	return false;
 }
 
 /// Duplicate a warp, shop, cashshop or script. [Orcao]
@@ -4756,6 +4787,9 @@ void npc_defaults(void) {
 	npc->skip_script = npc_skip_script;
 	npc->parse_script = npc_parse_script;
 	npc->add_to_location = npc_add_to_location;
+	npc->duplicate_script_sub = npc_duplicate_script_sub;
+	npc->duplicate_shop_sub = npc_duplicate_shop_sub;
+	npc->duplicate_warp_sub = npc_duplicate_warp_sub;
 	npc->duplicate_sub = npc_duplicate_sub;
 	npc->parse_duplicate = npc_parse_duplicate;
 	npc->duplicate4instance = npc_duplicate4instance;
