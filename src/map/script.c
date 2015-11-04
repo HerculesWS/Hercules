@@ -19078,8 +19078,8 @@ BUILDIN(queueiterator) {
 
 	RECREATE(script->hqi[ idx ].item, int, queue->size);
 
-	for ( i = 0; i < queue->size; i++ )
-		if ( queue->item[i] != -1 )
+	for (i = 0; i < queue->size; i++)
+		if (queue->item[i] != -1)
 			script->hqi[idx].item[count++] = queue->item[i];
 
 	script->hqi[ idx ].items = count;
