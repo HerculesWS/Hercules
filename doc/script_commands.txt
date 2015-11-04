@@ -8987,6 +8987,9 @@ Modifies <queue_id>'s <optionType>. When <option val> is not present
 Currently 3 options are available:
 HQO_OnDeath (1), HQO_OnLogout (2), HQO_OnMapChange (3)
 
+When HQO_OnMapChange event is triggered, it sets a temp char var
+@QMapChangeTo$ with the destination map name.
+
 Note: The constant names are not final.
 
 Example:

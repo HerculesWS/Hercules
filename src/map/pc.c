@@ -5452,7 +5452,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 		for( i = 0; i < sd->queues_count; i++ ) {
 			struct hQueue *queue;
 			if( (queue = script->queue(sd->queues[i])) && queue->onMapChange[0] != '\0' ) {
-				pc->setregstr(sd, script->add_str("QMapChangeTo"), map->list[m].name);
+				pc->setregstr(sd, script->add_str("@QMapChangeTo$"), map->list[m].name);
 				npc->event(sd, queue->onMapChange, 0);
 			}
 		}

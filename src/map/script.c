@@ -18959,7 +18959,7 @@ BUILDIN(queueopt) {
 				else
 					script->hq[idx].onDeath[0] = '\0';
 				break;
-			case HQO_onLogOut:
+			case HQO_OnLogOut:
 				if( script_hasdata(st, 4) )
 					safestrncpy(script->hq[idx].onLogOut, script_getstr(st, 4), EVENT_NAME_LENGTH);
 				else

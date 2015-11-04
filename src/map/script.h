@@ -225,7 +225,7 @@ typedef enum c_op {
 
 enum hQueueOpt {
 	HQO_NONE,
-	HQO_onLogOut,
+	HQO_OnLogOut,
 	HQO_OnDeath,
 	HQO_OnMapChange,
 	HQO_MAX,
