@@ -1,7 +1,22 @@
 #!/usr/bin/perl
 
-# Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-# See the LICENSE file
+# This file is part of Hercules.
+# http://herc.ws - http://github.com/HerculesWS/Hercules
+#
+# Copyright (C) 2013-2015  Hercules Dev Team
+#
+# Hercules is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use strict;
 use warnings;
@@ -430,6 +445,7 @@ foreach my $file (@files) { # Loop through the xml files
 	};
 }
 
+my $year = (localtime)[5] + 1900;
 foreach my $servertype (keys %keys) {
 	my $keysref = $keys{$servertype};
 	# Some interfaces use different names
@@ -450,11 +466,30 @@ foreach my $servertype (keys %keys) {
 			or die "cannot open > $fname: $!";
 
 		print FH <<"EOF";
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-//
-// NOTE: This file was auto-generated and should never be manually edited,
-//       as it will get overwritten.
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2015-$year  Hercules Dev Team
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * NOTE: This file was auto-generated and should never be manually edited,
+ *       as it will get overwritten.
+ */
 
 #if !defined(HERCULES_CORE)
 EOF
@@ -495,11 +530,29 @@ EOF
 		or die "cannot open > $fname: $!";
 
 	print FH <<"EOF";
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-//
-// NOTE: This file was auto-generated and should never be manually edited,
-//       as it will get overwritten.
+/**
+ * This file is part of Hercules.
+ *
+ * Copyright (C) 2013-$year  Hercules Dev Team
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * NOTE: This file was auto-generated and should never be manually edited,
+ *       as it will get overwritten.
+ */
 
 struct HookingPointData HookingPoints[] = {
 EOF
@@ -528,11 +581,30 @@ EOF
 		or die "cannot open > $fname: $!";
 
 	print FH <<"EOF";
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-//
-// NOTE: This file was auto-generated and should never be manually edited,
-//       as it will get overwritten.
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2013-$year  Hercules Dev Team
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * NOTE: This file was auto-generated and should never be manually edited,
+ *       as it will get overwritten.
+ */
 
 EOF
 	foreach my $key (@$keysref) {
@@ -548,11 +620,30 @@ EOF
 		or die "cannot open > $fname: $!";
 
 	print FH <<"EOF";
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-//
-// NOTE: This file was auto-generated and should never be manually edited,
-//       as it will get overwritten.
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2013-$year  Hercules Dev Team
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * NOTE: This file was auto-generated and should never be manually edited,
+ *       as it will get overwritten.
+ */
 
 struct {
 EOF
@@ -604,11 +695,30 @@ EOF
 		or die "cannot open > $fname: $!";
 
 	print FH <<"EOF";
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-//
-// NOTE: This file was auto-generated and should never be manually edited,
-//       as it will get overwritten.
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2013-$year  Hercules Dev Team
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * NOTE: This file was auto-generated and should never be manually edited,
+ *       as it will get overwritten.
+ */
 
 EOF
 	foreach my $key (@$keysref) {
