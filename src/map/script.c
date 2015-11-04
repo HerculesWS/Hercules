@@ -18923,6 +18923,9 @@ bool script_hqueue_remove(int idx, int var) {
 			}
 
 		}
+		else
+			return true;
+
 	}
 	return false;
 }
