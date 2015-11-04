@@ -5529,7 +5529,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 		for( i = 0; i < sd->queues_count; i++ ) {
 			struct script_queue *queue = script->queue(sd->queues[i]);
 			if (queue && queue->event_mapchange[0] != '\0') {
-				pc->setregstr(sd, script->add_str("QMapChangeTo"), map->list[m].name);
+				pc->setregstr(sd, script->add_str("@QMapChangeTo$"), map->list[m].name);
 				npc->event(sd, queue->event_mapchange, 0);
 			}
 		}
