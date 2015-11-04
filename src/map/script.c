@@ -18992,7 +18992,7 @@ bool script_hqueue_del(int idx)
 			if (script->hq[idx].item[i] >= START_ACCOUNT_NUM && (sd = map->id2sd(script->hq[idx].item[i])) != NULL) {
 				int j;
 				for(j = 0; j < sd->queues_count; j++) {
-					if( sd->queues[j] == script->hq[idx].item[i] ) {
+					if (sd->queues[j] == idx) {
 						break;
 					}
 				}
