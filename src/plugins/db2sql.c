@@ -254,7 +254,30 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 	return it?it->nameid:0;
 }
 void totable(void) {
+	time_t t;
+	struct tm *lt;
+	t = time(NULL);
+	lt = localtime(&t);
+	int year = lt->tm_year+1900;
 	fprintf(tosql.fp,
+			"-- This file is part of Hercules.\n"
+			"-- http://herc.ws - http://github.com/HerculesWS/Hercules\n"
+			"--\n"
+			"-- Copyright (C) 2013-%d  Hercules Dev Team\n"
+			"--\n"
+			"-- Hercules is free software: you can redistribute it and/or modify\n"
+			"-- it under the terms of the GNU General Public License as published by\n"
+			"-- the Free Software Foundation, either version 3 of the License, or\n"
+			"-- (at your option) any later version.\n"
+			"--\n"
+			"-- This program is distributed in the hope that it will be useful,\n"
+			"-- but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+			"-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+			"-- GNU General Public License for more details.\n"
+			"--\n"
+			"-- You should have received a copy of the GNU General Public License\n"
+			"-- along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n"
+
 			"-- NOTE: This file was auto-generated and should never be manually edited,\n"
 			"--       as it will get overwritten. If you need to modify this file,\n"
 			"--       please consider modifying the corresponding .conf file inside\n"
@@ -303,7 +326,7 @@ void totable(void) {
 			"  `unequip_script` text,\n"
 			" PRIMARY KEY (`id`)\n"
 			") ENGINE=MyISAM;\n"
-			"\n",tosql.db_name,tosql.db_name,tosql.db_name);
+			"\n", year, tosql.db_name,tosql.db_name,tosql.db_name);
 }
 void do_db2sql(void) {
 	/* link */
