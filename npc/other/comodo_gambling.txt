@@ -219,7 +219,7 @@ comodo,219,158,6	script	Kachua	4_F_02,{
 			else if ((.@gamble1 > 150) && (.@gamble1 < 201)) .@item = 2304; // Jacket[1]
 			else if ((.@gamble1 > 200) && (.@gamble1 < 251)) .@item = 2305; // Adventurer's Suit
 			else if ((.@gamble1 > 250) && (.@gamble1 < 300)) .@item = 2301; // Cotton Shirt
-			else if ((.@gamble1 > 301) && (.@gamble1 < 351)) .@item = 2307; // Mantle
+			else if ((.@gamble1 > 302) && (.@gamble1 < 351)) .@item = 2307; // Mantle
 			else if ((.@gamble1 > 350) && (.@gamble1 < 401)) .@item = 2309; // Coat
 			else if ((.@gamble1 > 400) && (.@gamble1 < 402)) .@item = 2322; // Silk Robe[1]
 			else if ((.@gamble1 > 401) && (.@gamble1 < 403)) .@item = 2310; // Coat[1]
@@ -371,7 +371,7 @@ comodo,219,158,6	script	Kachua	4_F_02,{
 			else if ((.@gamble1 >   0) && (.@gamble1 < 201)) .@item = 2101; // Guard
 			else if ((.@gamble1 > 204) && (.@gamble1 < 301)) .@item = 2103; // Buckler
 			else if ((.@gamble1 > 300) && (.@gamble1 < 401)) .@item = 2107; // Mirror Shield
-			else if ((.@gamble1 > 401) && (.@gamble1 < 481)) .@item = 2105; // Shield
+			else if ((.@gamble1 > 400) && (.@gamble1 < 481)) .@item = 2105; // Shield
 			else if ((.@gamble1 > 480) && (.@gamble1 < 501)) .@item = 2108; // Mirror Shield[1]
 	break;
 	default: // Cancel button / hack
