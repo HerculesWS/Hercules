@@ -509,6 +509,8 @@ struct Battle_Config {
 	int feature_roulette;
 
 	int show_monster_hp_bar; // [Frost]
+
+	int fix_warp_hit_delay_abuse;
 };
 
 /* criteria for battle_config.idletime_critera */

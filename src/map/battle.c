@@ -229,10 +229,13 @@ int battle_delay_damage_sub(int tid, int64 tick, int id, intptr_t data) {
 		src = map->id2bl(dat->src_id);
 
 		//Check to see if you haven't teleported. [Skotlex]
-		if( src
-		 && (target->type != BL_PC || ((TBL_PC*)target)->invincible_timer == INVALID_TIMER)
-		 && (dat->skill_id == MO_EXTREMITYFIST || (target->m == src->m && check_distance_bl(src, target, dat->distance)) )
-		) {
+		if (src && (
+		    battle_config.fix_warp_hit_delay_abuse ?
+		    (dat->skill_id == MO_EXTREMITYFIST || target->m != src->m || check_distance_bl(src, target, dat->distance))
+		    :
+		    ((target->type != BL_PC || ((TBL_PC*)target)->invincible_timer == INVALID_TIMER)
+		    && (dat->skill_id == MO_EXTREMITYFIST || (target->m == src->m && check_distance_bl(src, target, dat->distance))))
+		)) {
 			map->freeblock_lock();
 			status_fix_damage(src, target, dat->damage, dat->delay);
 			if( dat->attack_type && !status->isdead(target) && dat->additional_effects )
@@ -7136,6 +7139,7 @@ static const struct battle_data {
 	{ "boss_icewall_walk_block",            &battle_config.boss_icewall_walk_block,         0,      0,      255,            },
 	{ "feature.roulette",                   &battle_config.feature_roulette,                1,      0,      1,              },
 	{ "show_monster_hp_bar",                &battle_config.show_monster_hp_bar,             1,      0,      1,              },
+	{ "fix_warp_hit_delay_abuse",           &battle_config.fix_warp_hit_delay_abuse,        0,      0,      1,              },
 };
 #ifndef STATS_OPT_OUT
 /**
