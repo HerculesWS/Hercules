@@ -2186,6 +2186,7 @@ int pc_bonus_subele(struct map_session_data* sd, unsigned char ele, short rate, 
 int pc_bonus(struct map_session_data *sd,int type,int val) {
 	struct status_data *bst;
 	int bonus;
+	int i;
 	nullpo_ret(sd);
 
 	bst = &sd->base_status;
@@ -2436,20 +2437,48 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 				sd->matk_rate += val;
 			break;
 		case SP_IGNORE_DEF_ELE:
-			if(val >= ELE_MAX) {
+			if( (val >= ELE_MAX && val != ELE_ALL) || (val < ELE_NEUTRAL) ) {
 				ShowError("pc_bonus: SP_IGNORE_DEF_ELE: Invalid element %d\n", val);
 				break;
 			}
-			if(!sd->state.lr_flag)
-				sd->right_weapon.ignore_def_ele |= 1<<val;
-			else if(sd->state.lr_flag == 1)
-				sd->left_weapon.ignore_def_ele |= 1<<val;
+			if ( val == ELE_ALL ) {
+				for ( i = ELE_NEUTRAL; i < ELE_MAX; i++ ) {
+					if(!sd->state.lr_flag)
+						sd->right_weapon.ignore_def_ele |= 1<<i;
+					else if(sd->state.lr_flag == 1)
+						sd->left_weapon.ignore_def_ele |= 1<<i;
+				}
+			} else {
+				if(!sd->state.lr_flag)
+					sd->right_weapon.ignore_def_ele |= 1<<val;
+				else if(sd->state.lr_flag == 1)
+					sd->left_weapon.ignore_def_ele |= 1<<val;
+			}
 			break;
 		case SP_IGNORE_DEF_RACE:
-			if(!sd->state.lr_flag)
-				sd->right_weapon.ignore_def_race |= 1<<val;
-			else if(sd->state.lr_flag == 1)
-				sd->left_weapon.ignore_def_race |= 1<<val;
+			if (val == RC_MAX || (val > RC_NONDEMIPLAYER && val != RC_ALL) || val < RC_FORMLESS ) {
+				ShowWarning("pc_bonus: SP_IGNORE_DEF_RACE: Invalid Race(%d)\n",val);
+				break;
+			}
+			if ( val >= RC_MAX ) {
+				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
+					if ( (val == RC_NONPLAYER && i == RC_PLAYER) ||
+						 (val == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
+						 (val == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
+						 (val == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
+						)
+						continue;
+					if(!sd->state.lr_flag)
+						sd->right_weapon.ignore_def_race |= 1<<i;
+					else if(sd->state.lr_flag == 1)
+						sd->left_weapon.ignore_def_race |= 1<<i;
+				}
+			} else {
+				if(!sd->state.lr_flag)
+					sd->right_weapon.ignore_def_race |= 1<<val;
+				else if(sd->state.lr_flag == 1)
+					sd->left_weapon.ignore_def_race |= 1<<val;
+			}
 			break;
 		case SP_ATK_RATE:
 			if(sd->state.lr_flag != 2)
@@ -2470,16 +2499,40 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 			}
 			break;
 		case SP_IGNORE_MDEF_ELE:
-			if(val >= ELE_MAX) {
+			if( (val >= ELE_MAX && val != ELE_ALL) || (val < ELE_NEUTRAL) ) {
 				ShowError("pc_bonus: SP_IGNORE_MDEF_ELE: Invalid element %d\n", val);
 				break;
 			}
-			if(sd->state.lr_flag != 2)
-				sd->bonus.ignore_mdef_ele |= 1<<val;
+			if (sd->state.lr_flag != 2) {
+				if ( val == ELE_ALL ) {
+					for ( i = ELE_NEUTRAL; i < ELE_MAX; i++ ) {
+						sd->bonus.ignore_mdef_ele |= 1<<i;
+					}
+				} else {
+					sd->bonus.ignore_mdef_ele |= 1<<val;
+				}
+			}
 			break;
 		case SP_IGNORE_MDEF_RACE:
-			if(sd->state.lr_flag != 2)
-				sd->bonus.ignore_mdef_race |= 1<<val;
+			if (val == RC_MAX || (val > RC_NONDEMIPLAYER && val != RC_ALL) || val < RC_FORMLESS ) {
+				ShowWarning("pc_bonus: SP_IGNORE_MDEF_RACE: Invalid Race(%d)\n",val);
+				break;
+			}
+			if(sd->state.lr_flag != 2) {
+				if ( val >= RC_MAX ) {
+					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
+						if ( (val == RC_NONPLAYER && i == RC_PLAYER) ||
+							 (val == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
+							 (val == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
+							 (val == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
+							)
+							continue;
+						sd->bonus.ignore_mdef_race |= 1<<i;
+					}
+				} else {
+						sd->bonus.ignore_mdef_race |= 1<<val;
+				}
+			}
 			break;
 		case SP_PERFECT_HIT_RATE:
 			if(sd->state.lr_flag != 2 && sd->bonus.perfect_hit < val)
@@ -2494,24 +2547,48 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 				sd->critical_rate+=val;
 			break;
 		case SP_DEF_RATIO_ATK_ELE:
-			if(val >= ELE_MAX) {
+			if( (val >= ELE_MAX && val != ELE_ALL) || (val < ELE_NEUTRAL) ) {
 				ShowError("pc_bonus: SP_DEF_RATIO_ATK_ELE: Invalid element %d\n", val);
 				break;
 			}
-			if(!sd->state.lr_flag)
-				sd->right_weapon.def_ratio_atk_ele |= 1<<val;
-			else if(sd->state.lr_flag == 1)
-				sd->left_weapon.def_ratio_atk_ele |= 1<<val;
+			if ( val == ELE_ALL ) {
+				for ( i = ELE_NEUTRAL; i < ELE_MAX; i++ ) {
+					if(!sd->state.lr_flag)
+						sd->right_weapon.def_ratio_atk_ele |= 1<<i;
+					else if(sd->state.lr_flag == 1)
+						sd->left_weapon.def_ratio_atk_ele |= 1<<i;
+				}
+			} else {
+				if(!sd->state.lr_flag)
+					sd->right_weapon.def_ratio_atk_ele |= 1<<val;
+				else if(sd->state.lr_flag == 1)
+					sd->left_weapon.def_ratio_atk_ele |= 1<<val;
+			}
 			break;
 		case SP_DEF_RATIO_ATK_RACE:
-			if(val >= RC_MAX) {
-				ShowError("pc_bonus: SP_DEF_RATIO_ATK_RACE: Invalid race %d\n", val);
+			if (val == RC_MAX || (val > RC_NONDEMIPLAYER && val != RC_ALL) || val < RC_FORMLESS ) {
+				ShowWarning("pc_bonus: SP_DEF_RATIO_ATK_RACE: Invalid Race(%d)\n",val);
 				break;
 			}
-			if(!sd->state.lr_flag)
-				sd->right_weapon.def_ratio_atk_race |= 1<<val;
-			else if(sd->state.lr_flag == 1)
-				sd->left_weapon.def_ratio_atk_race |= 1<<val;
+			if ( val >= RC_MAX ) {
+				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
+					if ( (val == RC_NONPLAYER && i == RC_PLAYER) ||
+						 (val == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
+						 (val == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
+						 (val == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
+						)
+						continue;
+					if(!sd->state.lr_flag)
+						sd->right_weapon.def_ratio_atk_race |= 1<<i;
+					else if(sd->state.lr_flag == 1)
+						sd->left_weapon.def_ratio_atk_race |= 1<<i;
+				}
+			} else {
+				if(!sd->state.lr_flag)
+					sd->right_weapon.def_ratio_atk_race |= 1<<val;
+				else if(sd->state.lr_flag == 1)
+					sd->left_weapon.def_ratio_atk_race |= 1<<val;
+			}
 			break;
 		case SP_HIT_RATE:
 			if(sd->state.lr_flag != 2)
