@@ -1,30 +1,46 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Samuray22
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  SinSloth
+//= Copyright (C)  ultramage
+//= Copyright (C)  Playtester
+//= Copyright (C)  KarLaeda
+//= Copyright (C)  CBMaster
+//= Copyright (C)  Lupus
+//= Copyright (C)  Kisuka
+//= Copyright (C)  erKURITA
+//= Copyright (C)  RockmanEXE
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Gunslinger Job Quest
-//===== By: ==================================================
-//= erKURITA, RockmanEXE, Kisuka
-//===== Current Version: =====================================
-//= 2.2
-//===== Description: =========================================
+//================= Description ===========================================
 //= Gunslinger Job Change Quest
-//===== Additional Comments: =================================
-//= 1.0 Made the NPC [erKURITA]
-//= 1.5 Couple fixes to the npc, aswell as adding the missing
-//=     3 green herbs. [erKURITA]
-//= 1.6 job number->const, commonized variable name,
-//=     optimized [Lupus]
-//= 1.7 Now uses only ONE variable GUNS_Q [Lupus]
-//= 1.7a Grammar fixes, few spelling fixes, etc [CBMaster]
-//= 1.7b Parenthesis fixes [KarLaeda]
-//= 1.8 Fixed the reward you can get [Playtester]
-//= 1.9 Removed some 'clever' script constructs [ultramage]
-//= 2.0 Updated to official version - Thanks to Omega for
-//=     his first try [SinSloth] 1.10b - removed .GATs [Lupus]
-//= 2.1 Wise Bull Horn now deletes all items. Thanks to yyCC. [L0ne_W0lf]
-//= 2.1a Corrected a Typo error ";;". [Samuray22]
-//= 2.1b Corrected some typos errors. (bugreport:1549) [Samuray22]
-//= 2.1c Fixed some missing/messed up item checks. (bugreport:2693) [Kisuka]
-//= 2.2 Updated to match AEGIS script and Added Quest Log commands. [Kisuka]
-//============================================================
+//================= Current Version =======================================
+//= 2.2
+//=========================================================================
 
 que_ng,152,167,3	script	Master Miller	4_M_HUOLDARMY,{
 	if (Upper == 2) {

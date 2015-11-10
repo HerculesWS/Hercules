@@ -1,24 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Masao
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Gepard
+//= Copyright (C)  Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Warlock Job Quest
-//===== By: ==================================================
-//= Muad_Dib, Gepard & L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.4
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job change Quest from Wizard / High Wizard -> Warlock.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Masao]
-//= 1.1 Fixed some conversion mistakes, replaced numbers with
-//=     constants, added item names in comments.
-//= 1.2 Fixed the problem where NPC are not enabled and chamber
-//=     will never open for the second try or use.
-//= 1.2a Fixed a typo. [Euphy]
-//= 1.3 Updated script, optimized. [Euphy]
-//= 1.3a Added temporary coordinate fix #distorted_space_1-1. [Euphy]
-//= 1.3b Added official coordinates. [Euphy]
-//= 1.4 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.4
+//=========================================================================
 
 -	script	#distorted_space_	-1,{
 OnTouch:

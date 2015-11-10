@@ -1,19 +1,41 @@
-//===== Hercules Script ======================================
-//= Genetic Job Quest
-//===== By: ==================================================
-//= Muad_Dib, Aeomin
-//===== Current Version: =====================================
-//= 1.3a
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Joseph
+//= Copyright (C)  JayPee
+//= Copyright (C)  Masao
+//= Copyright (C)  Aeomin
+//= Copyright (C)  Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Geneticist Job Quest
+//================= Description ===========================================
 //= Job change Quest from Alchemist / Creator -> Genetic.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [Masao]
-//= 1.1 Fixed Scatter Stuff NPCs [JayPee].
-//= 1.2 Updated dialogue. Credits to Muad_Dib. [Joseph]
-//= 1.3 Updated script, optimized. [Euphy]
-//= 1.3a Moved warps to separate file. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.3a
+//=========================================================================
 
 alde_alche,35,186,5	script	Alchemist Union Member	1_M_SIGNALCHE,{
 	mes "[Alchemist Union Member]";

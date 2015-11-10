@@ -1,39 +1,48 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Kisuka
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  SinSloth
+//= Copyright (C)  Samuray22
+//= Copyright (C)  Vicious
+//= Copyright (C)  DracoRPG
+//= Copyright (C)  massdriller
+//= Copyright (C)  Komurka
+//= Copyright (C)  Lupus
+//= Copyright (C)  Shin
+//= Copyright (C)  Black Dragon
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Crusader Job Quest
-//===== By: ==================================================
-//= Made by: Black Dragon
-//= Converted by: Shin
-//===== Current Version: =====================================
-//= 3.3
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job quest for Crusader classes
-//===== Additional Comments: =================================
-//= 2.2 Updated All NPCs to the officials one [Samuray22]
-//=     -Based on the ASB 4.0 Package.
-//=-Maybe need be checked the monsters in the test 2 and 4.
-//= 2.3 Fixed some bugs that prevented from going further. [SinSloth]
-//= 2.4 Updated NPC dialogs using Aegis 10.3 files. [L0ne_W0lf]
-//=    - Fixed logic error with job change reward for job 50 swordies.
-//=    - Completely redid the 1st and third tests.
-//=    - Optimized first four NPC scripts slightly.
-//=    - Temporary character variables "@" are now ".@"
-//=    - Fixed some indentation.
-//= 2.5 Fixed some spelling and grammar in crusader quest. [L0ne_W0lf]
-//= 2.6 Fixed bug (about totally blocked baby class), optimized,
-//=     made some NPC more unique names: Monster Summon#cr1 [Lupus]
-//= 2.7 Fixed Some variables like ".@item", and changed to "@item". [Samuray22]
-//= 2.8 Fixed a little minor bug. [Samuray22]
-//= 2.9 Minor fixes, typos, an incorrect answer. Thanks to yyCC. [L0ne_W0lf]
-//= 2.9a Deleted unused variables. [Samuray22]
-//= 3.0 Updated waiting room. (Removes global var) [L0ne_W0lf]
-//= 3.1 Adding Hermemton's changes. [L0ne_W0lf]
-//= 3.2 Added Quest Log commands. [Kisuka]
-//= 3.3 Removed the need for use of 'goto.' [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 3.3
+//=========================================================================
 
-// Senior Crusader: 1st Collect Items Test
-//============================================================
+//== Senior Crusader: 1st Collect Items Test ===============
 prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 	mes "[Michael Halig]";
 	if (Upper == 1) { //the baby classes were totally blocked... due to missing == 1
@@ -312,8 +321,7 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 	close;
 }
 
-// Suffering Man: 2nd Endurance Test
-//============================================================
+//== Suffering Man: 2nd Endurance Test =====================
 prt_castle,164,32,1	script	Man in Anguish	4_M_JOB_KNIGHT1,{
 	mes "[Murnak Mijoul]";
 	if(BaseJob != Job_Swordman) {
@@ -446,8 +454,7 @@ prt_castle,164,32,1	script	Man in Anguish	4_M_JOB_KNIGHT1,{
 	close;
 }
 
-// Gabriel Valentine: 3rd Knowledge Test
-//============================================================
+//== Gabriel Valentine: 3rd Knowledge Test =================
 prt_church,95,127,3	script	Crusader	4_F_CRU,{
 	mes "[Gabriel Valentine]";
 	if(BaseJob != Job_Swordman) {
@@ -795,8 +802,7 @@ prt_church,95,127,3	script	Crusader	4_F_CRU,{
 	close;
 }
 
-// Crusader: 4th Purification Test
-//============================================================
+//== Crusader: 4th Purification Test =======================
 prt_castle,35,151,5	script	Patron Knight	4_M_CRU,{
 	mes "[Bliant Piyord]";
 	mes "Welcome.";
@@ -969,12 +975,9 @@ prt_castle,35,151,5	script	Patron Knight	4_M_CRU,{
 	close;
 }
 
-// Actual tests
-//============================================================
+//== Actual tests ==========================================
 
-//----------------------------------------------------------------------------
-// Endurance Test
-//----------------------------------------------------------------------------
+//- Endurance Test -
 job_cru,1,1,1	script	Summoner#cr1	-1,{
 OnTimer300000:
 	donpcevent "Summoner#cr1::OnReset";
@@ -1207,9 +1210,7 @@ OnTouch:
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Purification Test
-//----------------------------------------------------------------------------
+//- Purification Test -
 job_cru,24,187,4	script	Patron Knight#2	4_M_CRU,{
 	mes "[Bliant Piyord]";
 	mes "Welcome.";
@@ -1461,26 +1462,3 @@ OnStop:
 	stopnpctimer;
 	end;
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= Need optimalization and fixing
-//= thanks to Komurka, KiLLaLeN, Lupus (fixing error)
-//= just a temp Job Quest
-//= 1.2 minor fix of announcement by Freya people
-//= 1.3 Added Baby Class Support, fixed 40/50 lvl item reward
-//=     also fixed too common script names [Lupus]
-//= 1.3a fixed "dead lock" bugs [Lupus]
-//= 1.3b changed monsters ID in patience test [Komurka]
-//= 1.4 Fixed Job Level parameters mix-up. [massdriller] (Thanks to Komurka)
-//= 1.5 Fixed possible EXP abuse [Lupus]
-//= 1.6 Added a func which prevent advanced classes passing
-//=     2nd Job Quests again. It also guides adv classes where
-//=     to go. [Lupus]
-//= 1.7 Updated names and required items, Chivalry Emblem +
-//=     Hand of God allow to skip item gathering [DracoRPG]
-//= 2.0 Changed numbers to constants. [Vicious]
-//= 2.1 Fixed endless loop, wrong condition check [Lupus]
-//=     also changed all job numbers to constants, fixed logic
-//============================================================

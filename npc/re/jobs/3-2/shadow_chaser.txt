@@ -1,18 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Joseph
+//= Copyright (C)  Euphy
+//= Copyright (C)  Oshinoke
+//= Copyright (C)  ultragunner
+//= Copyright (C)  Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Shadow Chaser Job Quest
-//===== By: ==================================================
-//= Muad_Dib
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job change Quest from Rogue / Stalker -> Shadow Chaser.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [ultragunner, Oshinoke]
-//= 1.1 Standardized. [Euphy]
-//= 1.2 Updated dialogue. [Joseph]
-//= 1.3 Updated to official script. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
 morocc,156,70,3	script	Girl#sc00	4_F_04,3,3,{
 	mes "[Girl]";
@@ -1666,8 +1688,7 @@ s_atelier,70,66,4	script	Dumk#sc13_lgh	4_M_SHADOWCHASER,{
 	close;
 }
 
-// Flames
-//============================================================
+//== Flames ================================================
 tur_dun03,38,209,1	script	Blue Flame#sc_f01	4_NFWISP,{
 	if (job_sha == 5) {
 		mes "A blue flame is roaring.";
@@ -1918,8 +1939,7 @@ niflheim,230,276,1	script	Red Flame#sc_f03	4_NFWISP,{
 	close;
 }
 
-// Boxes
-//============================================================
+//== Boxes =================================================
 job3_sha01,22,78,0	script	????#keybox01	CLEAR_NPC,{
 	if (checkweight(1201,1) == 0) {
 		mes "- You can't continue on in this quest because you are overweight. -";
@@ -2265,8 +2285,7 @@ job3_sha01,71,27,0	script	????#keybox04	CLEAR_NPC,{
 	close;
 }
 
-// Brush Shops
-//============================================================
+//== Brush Shops ===========================================
 s_atelier,29,119,3	script	Max#sc05_prt	4W_M_01,{
 	mes "[Max]";
 	mes "Welcome~";
@@ -2481,8 +2500,7 @@ s_atelier,26,68,3	script	Vito#sc11_lgt	4_M_KHMAN,{
 	}
 }
 
-// Warp Portal
-//============================================================
+//== Warp Portal ===========================================
 tha_t01,149,228,0	script	#shadowc02	WARPNPC,2,2,{
 	end;
 OnTouch:
@@ -2497,8 +2515,7 @@ OnTouch:
 	close;
 }
 
-// Quest Mob Spawn
-//============================================================
+//== Quest Mob Spawn =======================================
 tur_dun03,0,0,0,0	monster	Shadow of Deception	2076,1,1000,0,0
 ice_dun02,0,0,0,0	monster	Shadow of Illusion	2077,1,1000,0,0
 niflheim,0,0,0,0	monster	Shadow of Pleasure	2078,1,1000,0,0

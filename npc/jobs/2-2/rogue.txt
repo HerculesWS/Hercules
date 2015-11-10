@@ -1,25 +1,44 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Kisuka
+//= Copyright (C)  Brainstorm
+//= Copyright (C)  Samuray22
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  SinSloth
+//= Copyright (C)  Silent
+//= Copyright (C)  Vicious
+//= Copyright (C)  Lupus
+//= Copyright (C)  kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Rogue Job Quest
-//===== By: ==================================================
-//= kobra_k88
-//===== Current Version: =====================================
-//= 2.9
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job quest for Rogue classes
-//===== Additional Comments: =================================
-//= 2.4 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//=     No longer uses function "F_BlockHigh"
-//= 2.4a Deleted unused variables. [Samuray22]
-//= 2.4b Changed a Problem with JobLevel what made
-//=     impossible get a Gladius [3]. (bugreport:481) [Samuray22]
-//= 2.4c Corrected a Typo error ";;" and a typo error with "rouge". (bugreport:909) [Samuray22]
-//= 2.5 Added dummy "OnMyMobDead" labels. (bugreport:1100) [L0ne_W0lf]
-//= 2.6 Fixed a few bugs in the Rogue Guildsman. [L0ne_W0lf]
-//= 2.7 Fixed a bug on Markie question 5, bugreport:1600 [Brainstorm]
-//= 2.8 Moved "Thug" to Morroc Ruins. [L0ne_W0lf]
-//= 2.9 Added Quest Log commands. [Kisuka]
-//============================================================
+//================= Current Version =======================================
+//= 2.9
+//=========================================================================
 
 moc_ruins,86,103,1	script	Thug#rg	2_M_THIEFMASTER,{
 	mes "[Thug]";
@@ -2009,21 +2028,3 @@ in_rogue,399,286,1	script	switch#rogreset	4_M_ORIENT01,{
 	donpcevent "resetter#rogue::OnEnable";
 	close;
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.1 fixed 3 wrong questions, added missing lines [Lupus]
-//= 1.3 Baby Class Support + 40/50 JobLevel Item fix [Lupus]
-//= 1.5 Fixed possible EXP abuse [Lupus]
-//= 1.6 Added a func which prevent advanced classes passing
-//=     2nd Job Quests again. It also guides adv classes where
-//=     to go. [Lupus]
-//= 2.0 Changed numbers to constants. [Vicious]
-//= 2.1 Removed Duplicates [Silent]
-//= 2.2 Merged JFunc [Lupus]
-//= 2.3 Added a possibility for players doing Meginjyard quest
-//=     to enter Rogue guild as there's a NPC inside [SinSloth]
-//= 2.3a fixed test4 person interaction, let BABY thieves pass
-//=     the test, too [Lupus]
-//============================================================

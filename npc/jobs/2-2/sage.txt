@@ -1,31 +1,44 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Kisuka
+//= Copyright (C)  Brainstorm
+//= Copyright (C)  Samuray22
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  KarLaeda
+//= Copyright (C)  Vicious
+//= Copyright (C)  Lupus
+//= Copyright (C)  Darkchild
+//= Copyright (C)  Athena
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Sage Job Quest
-//===== By: ==================================================
-//= jAthena (0.9) - I guess
-//= Unknown Translator (1.0)
-//= Darkchild (1.2)
-//===== Current Version: =====================================
-//= 2.8
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job quest for Sage classes
-//===== Additional Comments: =================================
-//= 2.1 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//=     No longer uses function "F_BlockHigh"
-//= 2.2 Small bug fix (== -> !=) thanks to Saithis. [L0ne_W0lf]
-//= 2.2b ANotehr smaLL bugfix, pointed out by Cara. [L0ne_W0lf]
-//= 2.3 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 2.4 Fixes bug with first room monsters not being reset. [L0ne_W0lf]
-//= 2.4a Deleted unused variables. [Samuray22]
-//= 2.5 Updated waiting room. (Removes global var) [L0ne_W0lf]
-//= 2.5a Corrected some "mes"s without the getitemname. (bugreport:1564) [Samuray22]
-//=     -Changed an incorrect "!=" to "==". (bugreport:1572)
-//=     -And Small Typo Error
-//= 2.6 Fixed Kayron Grik cutin not being removed as reported by jc1991, bugreport:1825 [Brainstorm]
-//= 2.6a Fixed a Little Bug with Whispers Summoned in the Last Test. (bugreport:2253) [Samuray22]
-//= 2.7 Added Quest Log commands. [Kisuka]
-//= 2.8 Removed the need for use of 'goto.' [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 2.8
+//=========================================================================
 
 yuno_in02,38,61,5	script	Dean of the Academy#sa	2_M_SAGE_OLD,{
 	cutin "job_sage_kayron",2;
@@ -1053,7 +1066,7 @@ L_AskQuestions:
 	}
 }
 
-//Practical Examination Professer
+//== Practical Examination Professer =======================
 yuno_in03,169,180,3	script	Practical Examination P	4_M_SAGE_C,{
 	mes "[Hermes Tris]";
 	if (BaseJob != Job_Mage) {
@@ -2890,19 +2903,3 @@ OnTimer9000:
 	stopnpctimer;
 	end;
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= Script mostly based on translated jA script
-//= Written test questions/answers weren't translated 100% corectly
-//= So a lot of those are based upon mRO site and my own info
-//= IF you by excident have (or can get) screenshots of these questions
-//= Then PLEASE send them to Darkchild
-//= 1.3 Baby class Support added [Lupus] 1.5 Fixed possible EXP abuse [Lupus]
-//= 1.6 Added a func which prevent advanced classes passing
-//= 2nd Job Quests again. It also guides adv classes where to go. [Lupus]
-//= 1.7 Fixed tuition fee. Fixed some answers, names & typos, added missing labels [Lupus]
-//= 1.7a Moved JFunc back in the main file, fixed typos [Lupus]
-//= 2.0 Changed numbers to constants. [Vicious]
-//= 2.0a Fixed double warp [KarLaeda] 2.0b Mantis Scythe Item name fix
