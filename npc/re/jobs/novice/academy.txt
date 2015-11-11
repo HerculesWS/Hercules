@@ -12849,7 +12849,7 @@ izlude_d,153,126,1	duplicate(Refinery Owner Han#iz)	Refinery Owner Han#iz_d	4_M_
 	}
 	if (countitem(.@material) > 0 && Zeny >= .@price) {
 		delitem .@material, 1;
-		Zeny -= .@material;
+		Zeny -= .@price;
 	} else {
 		mes "[Refining Machine Wagjak]";
 		mes "^FF0000- error number 8282 -^000000";
