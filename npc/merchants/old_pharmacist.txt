@@ -1,26 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Kisuka
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Lupus
+//= Copyright (C)  DZeroX
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Old Pharmacist
-//===== By: ==================================================
-//= DZeroX
-//===== Current Version: =====================================
-//= 1.4
-//===== Description: =========================================
+//================= Description ===========================================
 //= Trade in items for potions.
-//= Breakdown of arguments used:
-//= arg(0): Herb required.
-//= arg(1): Zeny cost.
-//= arg(2): Potion given.
-//===== Additional Comments: =================================
-//= 1.0 Fully working. [DZeroX]
-//= 1.0a Minor fixes [Lupus]
-//= 1.1 Added changed the dialogs and name to fit the
-//=     the official information. [DZeroX]
-//= 1.1a Removed .GATs [Lupus]
-//= 1.1b Fixed a bug in Orange Potion creating. Copy&Pasting = bad. [L0ne_W0lf]
-//= 1.2 Added checkweight, and input min/max values. [L0ne_W0lf]
-//= 1.3 Fixed minor condition check bug. (bugreport:597) [L0ne_W0lf]
-//= 1.4 Updated to match AEGIS script. [Kisuka]
-//============================================================
+//================= Current Version =======================================
+//= 1.4
+//=========================================================================
 
 alberta_in,16,28,4	script	Pharmacist	1_M_PUBMASTER,{
 	if (checkweight(1201,1) == 0) {
@@ -182,6 +195,10 @@ alberta_in,16,28,4	script	Pharmacist	1_M_PUBMASTER,{
 		close;
 	}
 
+// Arguments:
+// - 0: Herb required.
+// - 1: Zeny cost.
+// - 2: Potion given.
 L_Making:
 	next;
 	mes "[Old Pharmacist]";

@@ -1,24 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Mercurial
+//= Copyright (C)  Masao
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= 3rd Item Seller
-//===== By: ==================================================
-//= Masao, Mercurial
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Sells some 3rd Job related items:
 //= - Poison Herbs, Rune Stones, Rare Herbs, Points
-//===== Additional Comments: =================================
-//= 1.0 First Version.
-//= 1.1 Optimized Poison Herb Salesman NPC
-//= 1.2 Optimized and standardized. [Euphy]
-//= 1.3 Added Malangdo/Mora Points NPC. [Euphy]
-//= 1.4 Updated to match the official scripts. [Euphy]
-//= 1.5 Added Izlude duplicates. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
-// Poison Herb Merchants (Guillotine Cross)
-//============================================================
+//== Poison Herb Merchants (Guillotine Cross) ==============
 -	script	::phs	-1,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "- Wait a minute !! -";
@@ -83,8 +100,7 @@ job3_guil01,79,96,3	duplicate(phs)	Poison Herb Merchant	4_F_YUNYANG
 morocc,191,94,4	duplicate(phs)	Poison Herb Merchant#moc	4_F_YUNYANG	//Official: (190,96) -> in a wall
 lhz_in02,16,205,4	duplicate(phs)	Poison Herb Merchant#lhz	4_F_YUNYANG
 
-// Rune Stone Merchants (Rune Knight)
-//============================================================
+//== Rune Stone Merchants (Rune Knight) ====================
 -	script	::runesale	-1,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "- Wait a minute !! -";
@@ -151,8 +167,7 @@ lhz_in02,16,205,4	duplicate(phs)	Poison Herb Merchant#lhz	4_F_YUNYANG
 job3_rune01,90,62,3	duplicate(runesale)	Rune Merchant#job3	4_M_YURI
 prontera,168,228,3	duplicate(runesale)	Rune Merchant#prt	4_M_YURI
 
-// Rare Herb Merchants (Guillotine Cross)
-//============================================================
+//== Rare Herb Merchants (Guillotine Cross) ================
 job3_guil01,91,93,3	script	Rare Herb Collector	1_M_03,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "- Wait a minute !! -";
@@ -214,8 +229,7 @@ job3_guil01,91,93,3	script	Rare Herb Collector	1_M_03,{
 	close;
 }
 
-// Point Merchants (Sorcerer)
-//============================================================
+//== Point Merchants (Sorcerer) ============================
 -	script	::pss	-1,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "- Wait a minute !! -";

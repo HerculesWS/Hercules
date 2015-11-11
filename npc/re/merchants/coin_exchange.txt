@@ -1,21 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Dastgir
+//= Copyright (C)  rAthena Dev Team
+//= Copyright (C)  Lemongrass
+//= Copyright (C)  Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Coin Merchants
-//===== By: ==================================================
-//= Hercules Dev Team
-//===== Current Version: =====================================
-//= 1.2a
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Renewal coin redemption NPCs.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Euphy/Lemongrass]
-//= 1.1 Added remaining Malangdo traders. [Euphy/Lemongrass]
-//= 1.2 Added Eclage traders (not fully complete). [Euphy]
-//= 1.2a Completed Eclage Traders. [Dastgir]
-//============================================================
+//================= Current Version =======================================
+//= 1.2a
+//=========================================================================
 
-// Malangdo
-//============================================================
+//== Malangdo ==============================================
 malangdo,220,167,5	script	Coin Exchanger CX-1	2_VENDING_MACHINE1,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of objects. Let's try to continue after reducing those objects.";
@@ -426,7 +446,7 @@ malangdo,175,145,4	script	Can Agency Guard	4_CAT_MERMASTER,{
 
 function	script	F_mal_coin	{
 
-// Initial dialogue and checks:
+//- Initial dialogue and checks -
 // -- callfunc "F_mal_coin",0,"[<NPC Name>]",<NPC ID>;
 	if (getarg(0) == 0) {
 		if (getarg(2) != 2 && BaseLevel < 50) {
@@ -495,7 +515,7 @@ function	script	F_mal_coin	{
 		}
 	}
 
-// Exchange function:
+//- Exchange function -
 // -- callfunc "F_mal_coin",1,"[<NPC Name>]","<Display Name>",<Item ID>,<Egrade_Coin>,<Malang_Sp_Can>,<Silvervine>
 	if (getarg(0) == 1) {
 		mes getarg(1);
@@ -826,8 +846,7 @@ malangdo,150,135,5	script	Roving Merchant	4_M_MERCAT1,{
 	}
 }
 
-// Eclage
-//============================================================
+//== Eclage ================================================
 ecl_in01,66,95,3	script	Armor Merchant Naphara#e	4_F_FAIRYKID,{
 	if (!checkweight(Axe,3)) {
 		mes "- Stop Here!! -";

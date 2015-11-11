@@ -1,21 +1,38 @@
-//===== Hercules Script ======================================
-//= Arrow Quivers
-//===== By: ==================================================
-//= Muad_Dib (Prometheus Project); L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Muad_Dib (Prometheus Project)
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Arrow Quivers (Renewal)
+//================= Description ===========================================
 //= Turns arrows into Arrow Quivers.
-//= Breakdown of Subroutine "S_BuyQuiver"
-//= arg(0): Type of Arrow to be packaged (item ID).
-//= arg(1): How many of each 'getarg(0)' arrow per quiver.
-//= arg(2): The cost of making a 'getarg(0)' quiver.
-//= arg(3): The quiver given by the NPC (item ID).
-//===== Additional Comments: =================================
-//= 1.0 Added Mora NPC. [Euphy]
-//= 1.1 Updated to match the official scripts. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
 mora,106,117,3	script	Quiver Maker#mora	4_M_RAFLE_GR,{
 	if (checkweight(1201,1) == 0) {
@@ -60,6 +77,11 @@ mora,106,117,3	script	Quiver Maker#mora	4_M_RAFLE_GR,{
 	}
 	end;
 
+// Arguments:
+// 0: Type of Arrow to be packaged (item ID).
+// 1: How many of each 'getarg(0)' arrow per quiver.
+// 2: The cost of making a 'getarg(0)' quiver.
+// 3: The quiver given by the NPC (item ID).
 S_BuyQuiver:
 	if (countitem(getarg(0)) < getarg(1)) {
 		mes "[Quiver Maker]";

@@ -1,29 +1,47 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Yommy
+//= Copyright (C)  Zephyrus
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Advanced Refiner
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Refiner that uses Enriched ores to increase upgrade success.
-//= After a conversation with Doddler, it's been established that
-//= the advanced refiner works similar the the "Bubble Gum" item.
-//= The success percentage is not "increased" however, if it fails
-//= You get a second try. This tries twice at the same time,
-//= effectively giving you a re-roll on your attempt.
+//================= Additional Comments ===================================
+//= After a conversation with Doddler, it's been established that the
+//= advanced refiner works similar the the "Bubble Gum" item.
+//= The success percentage is not "increased" however, if it fails you get
+//= a second try. This tries twice at the same time, effectively giving you
+//= a re-roll on your attempt.
 //= - Dialog is only partly official to iRO.
 //= - Uses the iRO position for this NPC.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [L0ne_W0lf]
-//= 1.1 Fixed a weird carriage return. o_o [L0ne_W0lf]
-//= 1.2 Optimizing refine method [Zephyrus]
-//= 1.3 Typo fixes [Yommy]
-//= 1.4 Removed unnecessary dialogs [Zephyrus]
-//= 1.4a Added 'disable_items' command. [Euphy]
-//= 1.4b Fixed coordinates. [Euphy]
-//= 1.5 Some official script updates. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
 payon,157,146,6	script	Suhnbi#cash	4_M_03,{
 	disable_items;
