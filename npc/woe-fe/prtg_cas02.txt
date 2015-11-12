@@ -1,21 +1,39 @@
-//===== Hercules Script ======================================
-//= War of Emperium (Prontera)
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.4
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Masao
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= War of Emperium (Swanhild)
+//================= Description ===========================================
 //= NPCs that relate to Prontera Guild Castle 2
-//===== Additional Comments: =================================
-//= 1.0 First Version. No longer uses functions. [L0ne_W0lf]
-//= 1.1 Corrected flag-in spawn point. [L0ne_W0lf]
-//= 1.2 Corrected treasure room switch coordinates. [L0ne_W0lf]
-//= 1.3 Removed dialog from interior flags. [L0ne_W0lf]
-//= 1.4 Partially rewrote Script. [Masao]
-//============================================================
+//================= Current Version =======================================
+//= 1.4
+//=========================================================================
 
-// Guild Flags (Outside Castle)
-//============================================================
+//== Guild Flags (Outside Castle) ==========================
 -	script	Swanhild#1::OutsideFlagsPR2	GUILD_FLAG,{
 
 	.@GID = getcastledata("prtg_cas02",1);
@@ -71,8 +89,7 @@ prt_gld,244,128,0	duplicate(OutsideFlagsPR2)	Swanhild#2	GUILD_FLAG
 prt_gld,236,126,0	duplicate(OutsideFlagsPR2)	Swanhild#3	GUILD_FLAG
 prt_gld,236,128,0	duplicate(OutsideFlagsPR2)	Swanhild#4	GUILD_FLAG
 
-// Guild Flags (Inside Castle)
-//============================================================
+//== Guild Flags (Inside Castle) ===========================
 -	script	Swanhild#5::InsideFlagsPR2	GUILD_FLAG,{
 	end;
 
@@ -94,20 +111,16 @@ prtg_cas02,34,189,0	duplicate(InsideFlagsPR2)	Swanhild#14	GUILD_FLAG
 prtg_cas02,153,161,4	duplicate(InsideFlagsPR2)	Swanhild#15	GUILD_FLAG
 prtg_cas02,162,161,4	duplicate(InsideFlagsPR2)	Swanhild#16	GUILD_FLAG
 
-// Guild Flag (Town)
-//============================================================
+//== Guild Flag (Town) =====================================
 prontera,146,194,3	duplicate(InsideFlagsPR2)	Swanhild#17	GUILD_FLAG
 
-// Kafra Employee
-//============================================================
+//== Kafra Employee ========================================
 prtg_cas02,71,36,4	duplicate(guildkafra)	Kafra Staff#prtg_cas02	4_F_KAFRA1
 
-// Steward
-//============================================================
+//== Steward ===============================================
 prtg_cas02,94,61,4	duplicate(cm)	Roy#prtg_cas02	1_M_JOBTESTER
 
-// Treasure Room Exit
-//============================================================
+//== Treasure Room Exit ====================================
 prtg_cas02,207,228,0	script	#Lever_PR02	HIDDEN_NPC,{
 
 	mes " ";
@@ -121,18 +134,14 @@ prtg_cas02,207,228,0	script	#Lever_PR02	HIDDEN_NPC,{
 	close;
 }
 
-// Guild Dungeon Switch
-//============================================================
+//== Guild Dungeon Switch ==================================
 prtg_cas02,84,72,0	duplicate(gdlever)	#prtg_cas02	HIDDEN_NPC
 
-// Guild Treasure Spawns
-//============================================================
+//== Guild Treasure Spawns =================================
 prtg_cas02,202,228,0	duplicate(Gld_Trea_Spawn)	Treasure#prtg_cas02	-1
 
-// AGIT Manager
-//============================================================
+//== AGIT Manager ==========================================
 prtg_cas02,158,174,0	duplicate(Gld_Agit_Manager)	Agit#prtg_cas02	-1
 
-// Guardians
-//============================================================
+//== Guardians =============================================
 prtg_cas02,94,61,4	duplicate(Gld_Guard_Template)	Guardian#prtg_cas02	-1

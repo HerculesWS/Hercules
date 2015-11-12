@@ -1,19 +1,39 @@
-//===== Hercules Script ======================================
-//= War of Emperium (Al De Baran)
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Masao
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= War of Emperium (Neuschwanstein)
+//================= Description ===========================================
 //= NPCs that relate to Al De Baran Guild Castle 1
-//===== Additional Comments: =================================
-//= 1.0 First Version. No longer uses functions. [L0ne_W0lf]
-//= 1.1 Removed dialog from interior flags. [L0ne_W0lf]
-//= 1.2 Partially rewrote Script. [Masao]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
-// Guild Flags (Outside Castle)
-//============================================================
+//== Guild Flags (Outside Castle) ==========================
 -	script	Neuschwanstein#1::OutsideFlagsA1	GUILD_FLAG,{
 
 	.@GID = getcastledata("aldeg_cas01",1);
@@ -69,8 +89,7 @@ alde_gld,61,79,6	duplicate(OutsideFlagsA1)	Neuschwanstein#2	GUILD_FLAG
 alde_gld,45,87,0	duplicate(OutsideFlagsA1)	Neuschwanstein#3	GUILD_FLAG
 alde_gld,51,87,0	duplicate(OutsideFlagsA1)	Neuschwanstein#4	GUILD_FLAG
 
-// Guild Flags (Inside Castle)
-//============================================================
+//== Guild Flags (Inside Castle) ===========================
 -	script	Neuschwanstein#5::InsideFlagsA1	GUILD_FLAG,{
 	end;
 
@@ -98,20 +117,16 @@ aldeg_cas01,74,64,2	duplicate(InsideFlagsA1)	Neuschwanstein#20	GUILD_FLAG
 aldeg_cas01,203,150,4	duplicate(InsideFlagsA1)	Neuschwanstein#21	GUILD_FLAG
 aldeg_cas01,210,150,4	duplicate(InsideFlagsA1)	Neuschwanstein#22	GUILD_FLAG
 
-// Guild Flag (Town)
-//============================================================
+//== Guild Flag (Town) =====================================
 aldebaran,152,97,4	duplicate(InsideFlagsA1)	Neuschwanstein#23	GUILD_FLAG
 
-// Kafra Employee
-//============================================================
+//== Kafra Employee ========================================
 aldeg_cas01,218,170,0	duplicate(guildkafra)	Kafra Staff#aldeg_cas01	4_F_KAFRA1
 
-// Steward
-//============================================================
+//== Steward ===============================================
 aldeg_cas01,218,175,0	duplicate(cm)	Alfredo#aldeg_cas01	1_M_JOBTESTER
 
-// Treasure Room Exit
-//============================================================
+//== Treasure Room Exit ====================================
 aldeg_cas01,123,223,0	script	#lever_A01	HIDDEN_NPC,{
 
 	mes " ";
@@ -125,18 +140,14 @@ aldeg_cas01,123,223,0	script	#lever_A01	HIDDEN_NPC,{
 	close;
 }
 
-// Guild Dungeon Switch
-//============================================================
+//== Guild Dungeon Switch ==================================
 aldeg_cas01,211,181,0	duplicate(gdlever)	#aldeg_cas01	HIDDEN_NPC
 
-// Guild Treasure Spawns
-//============================================================
+//== Guild Treasure Spawns =================================
 aldeg_cas01,118,223,0	duplicate(Gld_Trea_Spawn)	Treasure#aldeg_cas01	-1
 
-// AGIT Manager
-//============================================================
+//== AGIT Manager ==========================================
 aldeg_cas01,216,24,0	duplicate(Gld_Agit_Manager)	Agit#aldeg_cas01	-1
 
-// Guardians
-//============================================================
+//== Guardians =============================================
 aldeg_cas01,218,175,0	duplicate(Gld_Guard_Template)	Guardian#aldeg_cas01	-1

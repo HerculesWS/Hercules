@@ -1,27 +1,44 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 // BattleGround System - Common NPCs
-//===== By: ==================================================
-//= ????, L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.4
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Battleground NPCs:
 //= - Generals and Aides
 //= - Battleground Warper
 //= - Kafra and Repairman.
 //= - GM Management NPC (disabled by default)
 //= - Badge Exchanger (Tierra and Flavius)
-//===== Additional Comments: =================================
-//= 1.0 First Version.
-//= 1.1 Updated several NPCs to Official.
-//= 1.2 Updated Repairman NPC
-//= 1.3 Optimized "Erundek" NPC. [Euphy]
-//= 1.4 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.4
+//=========================================================================
 
-// Generals
-//============================================================
+//== Generals ==============================================
 bat_room,161,158,3	script	Gen. Guillaume's Aide#01	4_M_KY_HEAD,{ end; }
 bat_room,161,160,3	script	Gen. Guillaume's Aide#03	4_M_KY_HEAD,{ end; }
 
@@ -170,15 +187,13 @@ bat_room,160,159,3	script	General Guillaume	4_M_KY_KIYOM,{
 	end;
 }
 
-// Flags
-//============================================================
+//== Flags =================================================
 //bat_room,140,160,3	script	Guillaume Base#roomflag1	1_FLAG_LION,{ end; }
 //bat_room,167,160,3	script	Guillaume Base#roomflag2	1_FLAG_LION,{ end; }
 //bat_room,140,139,3	script	Croix Base#roomflag1	1_FLAG_EAGLE,{ end; }
 //bat_room,167,139,3	script	Croix Base#roomflag2	1_FLAG_EAGLE,{ end; }
 
-// BattleGround Warper
-//============================================================
+//== BattleGround Warper ===================================
 bat_room,148,150,5	script	Teleporter#Battlefield	4_F_TELEPORTER,{
 	mes "[Teleporter]";
 	mes "Do you wish to leave the battlefield? Use my services to return to town.";
@@ -278,7 +293,7 @@ payon,189,105,3	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit5	4_F_J
 lighthalzen,153,86,5	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit6	4_F_JOB_KNIGHT
 rachel,149,138,3	duplicate(BatRecruit)	Maroll Battle Recruiter::BatRecruit7	4_F_JOB_KNIGHT
 
-// Additional warps
+//== Additional warps ======================================
 // Empty
 bat_room,57,81,0	warp	bat1	1,1,bat_room,154,149
 bat_room,57,90,0	warp	bat2	1,1,bat_room,154,149
@@ -307,22 +322,19 @@ bat_room,253,90,0	warp	bat30	1,1,bat_room,154,149
 bat_room,253,220,0	warp	bat31	1,1,bat_room,154,149
 bat_room,253,211,0	warp	bat32	1,1,bat_room,154,149
 
-// Kafra
-//============================================================
+//== Kafra =================================================
 bat_room,148,147,4	script	Kafra Staff::kaf_bat	4_F_KAFRA9,{
 	cutin "kafra_09",2;
 	callfunc "F_Kafra",0,2,1,150,0;
 }
 
-// Repairman
-//============================================================
+//== Repairman =============================================
 bat_room,138,144,4	script	Repairman#bg	4_M_04,{
 	callfunc "repairmain","Repairman";
 	end;
 }
 
-// GM Management NPC
-//============================================================
+//== GM Management NPC =====================================
 bat_room,1,151,3	script	Switch#batgnd	4_DOG01,{
 	.@i = callfunc("F_GM_NPC",1854,0);
 	if (.@i == -1) {
@@ -372,8 +384,7 @@ bat_room,1,151,3	script	Switch#batgnd	4_DOG01,{
 	}
 }
 
-// Badges Exchange
-//============================================================
+//== Badges Exchange =======================================
 bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";

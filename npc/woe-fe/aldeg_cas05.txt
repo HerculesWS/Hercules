@@ -1,19 +1,39 @@
-//===== Hercules Script ======================================
-//= War of Emperium (Al De Baran)
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Masao
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= War of Emperium (Rothenburg)
+//================= Description ===========================================
 //= NPCs that relate to Al De Baran Guild Castle 5
-//===== Additional Comments: =================================
-//= 1.0 First Version. No longer uses functions. [L0ne_W0lf]
-//= 1.1 Removed dialog from interior flags. [L0ne_W0lf]
-//= 1.2 Partially rewrote Script. [Masao]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
-// Guild Flag (Outside Castle)
-//============================================================
+//== Guild Flags (Outside Castle) ==========================
 -	script	Rothenburg#1::OutsideFlagsA5	GUILD_FLAG,{
 
 	.@GID = getcastledata("aldeg_cas05",1);
@@ -67,8 +87,7 @@ OnRecvCastleA05:
 alde_gld,265,93,6	duplicate(OutsideFlagsA5)	Rothenburg#1-2	GUILD_FLAG
 alde_gld,265,87,6	duplicate(OutsideFlagsA5)	Rothenburg#2	GUILD_FLAG
 
-// Guild Flag (Inside Castle)
-//============================================================
+//== Guild Flags (Inside Castle) ===========================
 -	script	Rothenburg#3::InsideFlagsA5	GUILD_FLAG,{
 	end;
 
@@ -94,20 +113,16 @@ aldeg_cas05,154,51,2	duplicate(InsideFlagsA5)	Rothenburg#16	GUILD_FLAG
 aldeg_cas05,22,211,2	duplicate(InsideFlagsA5)	Rothenburg#17	GUILD_FLAG
 aldeg_cas05,150,202,2	duplicate(InsideFlagsA5)	Rothenburg#18	GUILD_FLAG
 
-// Guild Flag (Town)
-//============================================================
+//== Guild Flag (Town) =====================================
 aldebaran,128,97,4	duplicate(InsideFlagsA5)	Rothenburg#19	GUILD_FLAG
 
-// Kafra Employee
-//============================================================
+//== Kafra Employee ========================================
 aldeg_cas05,31,190,0	duplicate(guildkafra)	Kafra Staff#aldeg_cas05	4_F_KAFRA1
 
-// Steward
-//============================================================
+//== Steward ===============================================
 aldeg_cas05,51,179,0	duplicate(cm)	Esmarehk#aldeg_cas05	1_M_JOBTESTER
 
-// Treasure Room Exit
-//============================================================
+//== Treasure Room Exit ====================================
 aldeg_cas05,64,8,0	script	#lever_A05	HIDDEN_NPC,{
 
 	mes " ";
@@ -121,18 +136,14 @@ aldeg_cas05,64,8,0	script	#lever_A05	HIDDEN_NPC,{
 	close;
 }
 
-// Guild Dungeon Switch
-//============================================================
+//== Guild Dungeon Switch ==================================
 aldeg_cas05,22,205,0	duplicate(gdlever)	#aldeg_cas05	HIDDEN_NPC
 
-// Guild Treasure Spawns
-//============================================================
+//== Guild Treasure Spawns =================================
 aldeg_cas05,62,12,0	duplicate(Gld_Trea_Spawn)	Treasure#aldeg_cas05	-1
 
-// AGIT Manager
-//============================================================
+//== AGIT Manager ==========================================
 aldeg_cas05,28,102,0	duplicate(Gld_Agit_Manager)	Agit#aldeg_cas05	-1
 
-// Guardians
-//============================================================
+//== Guardians =============================================
 aldeg_cas05,52,179,0	duplicate(Gld_Guard_Template)	Guardian#aldeg_cas05	-1
